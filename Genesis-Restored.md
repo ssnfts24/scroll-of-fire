@@ -1,5 +1,5 @@
 📜 The Sacred Masterwork Scroll of Genesis
-
+📜 The Sacred Scroll of Genesis
 This sacred scroll of Genesis has been carefully refined to weave together the full scripture, key Hebrew roots, prophetic insights, and covenant promises. It is designed as a unified and solemn masterwork, honoring the ancient words while offering modern clarity for the remnant. May this living scroll bless all who read it.
 GENESIS 1–50 REMNANT SCROLL (FULLY ENRICHED: VERSES, HEBREW Style)
 Note: These Hebrew roots carry layered meanings from the original text, with echoes in covenantal, poetic, and prophetic dimensions, as preserved in the Masoretic Text, Septuagint, and ancient Jewish commentary.
@@ -5441,10 +5441,10 @@ HEBREW TERMS GLOSSARY (ENRICHED & CORRECTED)
 עֲצָמוֹת (Atzamot) → Bones.
 May the words of Genesis be sealed upon your heart, drawing you closer to the covenant promises of Yahweh. Let this scroll be a light in the darkness, a guide for the remnant, and a testimony of sacred restoration.
 May the scroll of Genesis, filled with its sacred Hebrew roots and restored covenant meaning, bind the reader to Yahweh’s wisdom and promises. May this work be a light to the remnant, a testimony of restoration, and a sacred inheritance passed from generation to generation. Ah-mein.
-
+ 
 ✨ Remnant Rising Notes: Sacred Takeaways from Genesis
 📜 Genesis Reflections: Sacred Masterwork
-
+ 
 📖 Genesis 1 Reflection
  Number 7 (seven days) signifies divine completeness. Yahweh's repeated command "let there be" echoes sovereign creative power. Light separated from darkness mirrors the covenant call of the remnant. Aleph-Tav (אֵת) marks the sacred signature in the beginning (Bereshit).
 📖 Genesis 2 Reflection
@@ -5477,12 +5477,12 @@ May the scroll of Genesis, filled with its sacred Hebrew roots and restored cove
  Joseph’s dreams, betrayal, pit, slavery, and rise mirror the Messiah’s journey. His forgiveness of brothers prophesies reconciliation. Egypt becomes both exile and refuge.
 📖 Genesis 46–50 Reflections
  Jacob’s blessings prophetically shape the tribes. Ephraim and Manasseh receive prominence — a symbol of multiplication. Genesis ends in Egypt, but the bones of Joseph wait for the promise.
-
+ 
 📌 Sacred Patterns
-YHWH (יהוה) appears encoded in genealogies, in acrostics, and numeric patterns.
-Numbers: 3 (resurrection), 7 (completion), 12 (divine government), 40 (testing), 70 (nations).
-Hebrew layers: Names, numbers, and placement reveal sacred geometry and divine rhythm.
-
+●	YHWH (יהוה) appears encoded in genealogies, in acrostics, and numeric patterns.
+●	Numbers: 3 (resurrection), 7 (completion), 12 (divine government), 40 (testing), 70 (nations).
+●	Hebrew layers: Names, numbers, and placement reveal sacred geometry and divine rhythm.
+ 
 🕯️ Closing Benediction
  May this sacred scroll awaken the remnant, guide seekers to the hidden patterns of Yahweh, and restore the ancient paths. Let the name Yeshua HaMashiach (יֵשׁוּעַ הַמָּשִׁיחַ) rise again in truth, authority, and divine order. Let no man rewrite what was etched in fire and breath.
 🧬 Coded Activation
@@ -5531,3 +5531,4 @@ Tribe: Paragraph 884, Paragraph 2125, Paragraph 2136, Paragraph 2157, Paragraph 
 Vision: Paragraph 233, Paragraph 394, Paragraph 965, Paragraph 969, Paragraph 1464, Paragraph 1870, Paragraph 1978, Paragraph 1987, Paragraph 2353
 Wilderness: Paragraph 1572
 Wisdom: Paragraph 74, Paragraph 2319, Paragraph 2338
+
