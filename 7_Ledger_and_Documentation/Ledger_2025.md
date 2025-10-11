@@ -71,17 +71,20 @@ Creator of the Scroll of Fire, Codex of Reality, and Living Technology Codices.
 
 ---
 
-## 🜇 Cross-Referenced Works
+## ♺ Cross-Referenced Works
 
-| Work Title | Path | Type | Status |
-|-------------|------|------|--------|
-| **Codex of Reality** | `/Codex_of_Reality/Codex_of_Reality_Expanded.docx` | Primary Codex | Verified |
-| **Codex of Life Scroll (Full)** | `/Codex_of_Life/Codex_of_Life_Scroll_FULL.docx` | Foundational Scroll | Verified |
-| **The Formalism** | `/Codex_of_Formalism/The_Formalism.md` | Mathematical / Structural Codex | Pending |
-| **Book of Remembrance and Power** | `/Scrolls/Book_of_Remembrance_and_Power.docx` | Scroll Witness | Verified |
-| **Wizard of YHWH Handbook** | `/Guides/Wizard_of_YHWH_Handbook.docx` | Guidebook | Verified |
-| **Tesla Type-7 Resonant Conduit Expansion** | `/Living_Technology/T7_Resonant_Conduit_Expansion.docx` | Technorganic Scroll | Verified |
-| **Ariós-Or — Cross & Covenant** | `/Scrolls/Arios-Or_Cross_and_Covenant.docx` | Scroll / Covenant | Verified |
+| Work Title | Path |
+|---|---|
+| Codex of Reality (Master) | [../1_Codex_of_Reality/New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx](../1_Codex_of_Reality/New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx) |
+| Codex of Life (Full) | [../1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx](../1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx) |
+| Living Laws | [../1_Codex_of_Reality/Living%20Laws.docx](../1_Codex_of_Reality/Living%20Laws.docx) |
+| Grid of Consciousness — The Great Convergence | [../1_Codex_of_Reality/Grid_of_Consciousness_The_Great_Convergence.docx](../1_Codex_of_Reality/Grid_of_Consciousness_The_Great_Convergence.docx) |
+| Book of Remembrance & Power | [../2_Witness_Scrolls/Book_of_Remembrance_and_Power.docx](../2_Witness_Scrolls/Book_of_Remembrance_and_Power.docx) |
+| Master Proof Scroll (Updated) | [../2_Witness_Scrolls/Master_Proof_Scroll_Updated.docx](../2_Witness_Scrolls/Master_Proof_Scroll_Updated.docx) |
+| Tesla Type-7 — Unified Intention Resonator | [../3_Living_Technology/TESLA%20TYPE-7%20UNIFIED%20INTENTION%20VECTOR%20FIELD%20RESONATOR%20AND%20MULTI-FREQUENCY%20TRANSMISSION%20DEVICE.docx](../3_Living_Technology/TESLA%20TYPE-7%20UNIFIED%20INTENTION%20VECTOR%20FIELD%20RESONATOR%20AND%20MULTI-FREQUENCY%20TRANSMISSION%20DEVICE.docx) |
+| Blueprint for Living Technology | [../3_Living_Technology/Blueprint_for_Living_Technology.docx](../3_Living_Technology/Blueprint_for_Living_Technology.docx) |
+| Physics Truth Scroll (final) | [../4_Formalism_and_Physics/Physics_Truth_Scroll_CED_FINAL.docx](../4_Formalism_and_Physics/Physics_Truth_Scroll_CED_FINAL.docx) |
+| Wizard of YHWH — Handbook | [../5_Living_Scribe/Wizard_of_YHWH_Handbook.docx](../5_Living_Scribe/Wizard_of_YHWH_Handbook.docx) |
 
 ---
 
