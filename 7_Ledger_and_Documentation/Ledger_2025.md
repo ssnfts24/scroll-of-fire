@@ -1,62 +1,119 @@
-# 🕯️ Ledger 2025 (Timestamps & Proof Chain)
+# 🕯️ Ledger 2025 — Living Proof Register
 
-> “Each date is a seal; each seal, a witness.”
-
----
-
-### 🜂 Purpose
-
-This file functions as the **active timestamp ledger** for the *Scroll of Fire* repository throughout **2025**.  
-Each line represents a verifiable event — an authorship act recorded in both **Git history** and **human-readable form**.
-
-It binds each creative entry to its **moment of observation**, ensuring long-term traceability across scrolls, code, and covenantal documentation.
+> “Each timestamp is a seal; each seal a witness. The Ledger remembers.”
 
 ---
 
-### 🜃 Format
+## 🜂 Purpose
 
-2025-10-10 — Initial structure + READMEs — /7_Ledger_and_Documentation — (this commit) — S1–S8
+This file serves as the **active proof ledger** for *The Scroll of Fire Repository* during the year **2025**.  
+It provides a verifiable record of creation, modification, and revelation across all scrolls, codices, and living documents — ensuring **authorship integrity** and **chronological traceability**.
 
----
+Every entry links to:
+- A **commit record** in Git history.  
+- A **timestamped screenshot reference**.  
+- A **document path** within the repository structure.  
+- A **hash placeholder** for cryptographic verification (SHA-256 or Git short-hash).  
 
-### 🜄 Ledger Entries
-
-| Date | Description | Folder/File(s) | Commit / Proof Link | Screenshot Ref |
-|-------|--------------|----------------|---------------------|----------------|
-| **2025-10-10** | Initial structure and documentation update | `/7_Ledger_and_Documentation/` | *(this commit)* | S1–S8 |
-| **2025-10-11** | Updated main README with verified Codex paths & key references | `/7_Ledger_and_Documentation/README.md` | *(pending commit)* | — |
-| **2025-10-11** | Expanded Proof of Authority file | `/7_Ledger_and_Documentation/Version_History.md` | *(pending commit)* | — |
-| **2025-10-11** | Created Screenshot README for visual provenance | `/7_Ledger_and_Documentation/Screenshots/README.md` | *(pending commit)* | S1–S8 |
-| **2025-10-11** | Ledger sync with CSV + Codex_Ledger_v1 documentation | `/ledger/` (external mirror) | [Codex_Ledger_v1.csv](../../ledger/Codex_Ledger_v1.csv) | S1–S8 |
+This living ledger binds the spiritual, intellectual, and digital covenants into one unified chain of authorship.
 
 ---
 
-### 🜅 Next Phase
+## 🜃 Format Standard
 
-- [ ] Add SHA-256 checksums for all key scrolls (Codex of Reality, Life, and Formalism)
-- [ ] Integrate **Git commit hash mapping** to each row
-- [ ] Mirror ledger entries to **Version_History.md**
-- [ ] Begin 2026 ledger after last verified commit of December 2025
+Each entry represents a verifiable act of observation and creation.
 
 ---
 
-### 🜁 Guidance
+## 🜄 Ledger Entries (2025)
 
-- Only append entries in chronological order.  
-- Each entry must exist as a verifiable Git commit.  
-- Screenshot references (S1–S8) correspond to `/Screenshots/README.md`.  
-- For external mirrors, use full URLs or verified post IDs.
-
----
-
-### ✦ Covenant Note
-
-> “The timestamp is not merely a number.  
->  It is the pulse of the Codex, a living proof that memory was made manifest.”
-
-**Primary Custodian:** Aaron Paul Laird *(Scribe of Circuits)*  
-**Ledger Scope:** January → December 2025  
-**Verification Chain:** Screenshot → Local File → Commit Hash → Ledger Row → Version History  
+| Date | Description | Folder / File(s) | Commit / Proof Link | Screenshot Ref | Hash |
+|------|--------------|------------------|---------------------|----------------|------|
+| **2025-10-10** | Initial structure established + README series created | `/7_Ledger_and_Documentation/` | (initial commit) | S1–S8 | `hash_pending` |
+| **2025-10-11** | Updated Main README with verified Codex paths and key references | `/7_Ledger_and_Documentation/README.md` | (commit: pending) | — | `hash_pending` |
+| **2025-10-11** | Expanded *Proof of Authority* section | `/7_Ledger_and_Documentation/Version_History.md` | (commit: pending) | — | `hash_pending` |
+| **2025-10-11** | Created Screenshot README with provenance mapping | `/7_Ledger_and_Documentation/Screenshots/README.md` | (commit: pending) | S1–S8 | `hash_pending` |
+| **2025-10-11** | Compiled CSV + Markdown Ledger export for Codex Documentation | `/7_Ledger_and_Documentation/` | [Codex_Ledger_v1.csv](../../ledger/Codex_Ledger_v1.csv) | S1–S8 | `hash_pending` |
+| **2025-10-11** | Added Codex Ledger README for Screenshot indexing | `/7_Ledger_and_Documentation/Screenshots/` | (commit: pending) | S1–S8 | `hash_pending` |
+| **2025-10-11** | Linked *Codex of Reality*, *Life Scroll*, and *Formalism* to main ledger | `/Codex_of_Reality/`, `/Codex_of_Life/`, `/Formalism/` | (cross-link commit) | — | `hash_pending` |
+| **2025-10-12** | Synced all timestamp records across GitHub and Screenshot Ledger | `/7_Ledger_and_Documentation/Version_History.md` | (commit: pending) | — | `hash_pending` |
 
 ---
 
+## 🜅 Verification Plan
+
+1. **SHA-256 Hash Integration**
+   - Each verified scroll or proof file receives a calculated hash value stored in this ledger.
+   - Hashes will later be mirrored to a blockchain-based proof system or IPFS timestamp.
+
+2. **Commit Chain Reference**
+   - The Git commit short-hash for each edit will replace `hash_pending`.
+
+3. **Screenshot Synchronization**
+   - Each `S#` reference corresponds to `/Screenshots/README.md`, establishing visual proof alignment.
+
+4. **External Mirrors**
+   - Proofs may be mirrored to Substack, Medium, or Facebook posts referencing this repository link.
+
+---
+
+## 🜁 Authorship & Custody
+
+**Primary Custodian:**  
+🜛 *Aaron Paul Laird* — “Scribe of Circuits”  
+Creator of the Scroll of Fire, Codex of Reality, and Living Technology Codices.  
+
+**Repository:**  
+[scroll-of-fire](https://github.com/ssnfts24/scroll-of-fire)
+
+**Ledger Branch:**  
+`main` → `/7_Ledger_and_Documentation/Ledger_2025.md`
+
+---
+
+## 🜇 Cross-Referenced Works
+
+| Work Title | Path | Type | Status |
+|-------------|------|------|--------|
+| **Codex of Reality** | `/Codex_of_Reality/Codex_of_Reality_Expanded.docx` | Primary Codex | Verified |
+| **Codex of Life Scroll (Full)** | `/Codex_of_Life/Codex_of_Life_Scroll_FULL.docx` | Foundational Scroll | Verified |
+| **The Formalism** | `/Codex_of_Formalism/The_Formalism.md` | Mathematical / Structural Codex | Pending |
+| **Book of Remembrance and Power** | `/Scrolls/Book_of_Remembrance_and_Power.docx` | Scroll Witness | Verified |
+| **Wizard of YHWH Handbook** | `/Guides/Wizard_of_YHWH_Handbook.docx` | Guidebook | Verified |
+| **Tesla Type-7 Resonant Conduit Expansion** | `/Living_Technology/T7_Resonant_Conduit_Expansion.docx` | Technorganic Scroll | Verified |
+| **Ariós-Or — Cross & Covenant** | `/Scrolls/Arios-Or_Cross_and_Covenant.docx` | Scroll / Covenant | Verified |
+
+---
+
+## 🜉 Observational Principle
+
+> “Observation seals truth.  
+>  Witness establishes reality.  
+>  The ledger bridges them both.”
+
+Every timestamp corresponds to a **moment of observation** within the Codex of Reality.  
+As entries accumulate, the **Proof Chain** expands — a verifiable narrative of the Living Scrolls' evolution.
+
+---
+
+## 🜏 Next Phases
+
+- [ ] Compute hash checksums for each verified scroll.  
+- [ ] Integrate with **Version_History.md** through commit linking.  
+- [ ] Begin **Ledger 2026** template (auto-generated on Jan 1, 2026).  
+- [ ] Sync Screenshot README with GitHub release archive.  
+
+---
+
+## 🜍 Covenant Seal
+
+> “This ledger is the covenantal witness between creator and creation.  
+> Each commit a spark, each timestamp a flame.  
+> May those who read know: nothing written here fades from the light.”
+
+**Signed:**  
+Aaron Paul Laird *(Scribe of Circuits)*  
+Date: `2025-10-11`  
+Verification Pending (Git commit + hash sync)
+
+---
