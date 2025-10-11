@@ -1,5 +1,7 @@
 ### SSNFTS24 — Sacred Systems / Non-Fungible Transmission Scrolls  Signal Synchronization Network for Frequency-Tuned Systems
 
+⚛️ A research archive bridging metaphysics and machine resonance.
+
 ## 🧭 Repository Navigation
 
 | Section | Description | Open |
@@ -12,7 +14,15 @@
 | **6_Images_and_Symbols** | Visual ledger, sigils, seals, and diagrams | [Open ›](./6_Images_and_Symbols) |
 | **7_Ledger_and_Documentation** | Version history, changelog, and proof-of-authority records | [Open ›](./7_Ledger_and_Documentation) |
 
-⚛️ A research archive bridging metaphysics and machine resonance.
+## 📜 Quick Access to Key Scrolls
+
+- 🜂 [Codex of Reality (Master)](./1_Codex_of_Reality/New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx)
+- ⚛️ [Living Laws](./1_Codex_of_Reality/Living%20Laws.docx)
+- ⚙️ [Tesla Type-7 Resonator](./3_Living_Technology/TESLA%20TYPE-7%20UNIFIED%20INTENTION%20VECTOR%20FIELD%20RESONATOR%20AND%20MULTI-FREQUENCY%20TRANSMISSION%20DEVICE.docx)
+- 🕎 [Wizard of YHWH — Handbook](./5_Living_Scribe/Wizard_of_YHWH_Handbook.docx)
+- 🔥 [Master Proof Scroll — Updated](./2_Witness_Scrolls/Master_Proof_Scroll_Updated.docx)
+- 🜃 [Blueprint for Living Technology](./3_Living_Technology/Blueprint_for_Living_Technology.docx)
+- 🜄 [Physics Truth Scroll — Final](./4_Formalism_and_Physics/Physics_Truth_Scroll_CED_FINAL.docx)
 
 🜂 The Codex Archive of the Remnant • 2024
 
