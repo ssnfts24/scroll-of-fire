@@ -40,13 +40,14 @@ Referenced with acknowledgment to original author and sources:
 
 ---
 
-## 🔗 Integration Pathway
+### 🔗 Integration Pathway
 
 This file functions as the **bridge node** between:
-- `/4_Formalism_and_Physics/Physics_Truth_Scroll_CED_FINAL.docx`
-- `/1_Codex_of_Reality/New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx`
 
-and future expansions of the **Copeland–Laird Equation of Resonant Reality**.
+- [Physics_Truth_Scroll_ENHANCED_FINAL.docx](../4_Formalism_and_Physics/Physics_Truth_Scroll_ENHANCED_FINAL.docx)
+- [New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx](../1_Codex_of_Reality/New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx)
+
+and future expansions of the **Copeland–Laird Equations of Resonant Realities**.
 
 ---
 
