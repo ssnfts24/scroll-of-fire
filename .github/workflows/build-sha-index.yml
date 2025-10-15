@@ -1,0 +1,43 @@
+name: Build SHA-256 Index
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '**/*'
+
+jobs:
+  sha256:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Compute SHA-256 for all tracked files
+        run: |
+          git ls-files | while read -r f; do
+            if [ -f "$f" ]; then
+              sha=$(sha256sum "$f" | awk '{print $1}')
+              printf "%s\t%s\n" "$sha" "$f"
+            fi
+          done | sort > sha256_index.tsv
+          echo "SHA-256 index created: sha256_index.tsv"
+
+      - name: Upload SHA index as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sha256-index
+          path: sha256_index.tsv
+
+      - name: Print top 200 lines to logs
+        run: |
+          echo "----- SHA256 (sha  path) -----"
+          head -n 200 sha256_index.tsv || true
+
+      - name: Auto-update SHA256_Placeholders_2025.md (optional)
+        if: ${{ false }} # flip to true to auto-update the table later
+        run: |
+          # Example stub for future auto-rewrite if you want it
+          exit 0
