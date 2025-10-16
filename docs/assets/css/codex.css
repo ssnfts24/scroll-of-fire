@@ -1,247 +1,75 @@
-/* ==========================================================================
-   Scroll of Fire — Global Styles (Option B)
-   Author: Aaron Paul Laird (Scribe of Circuits)
-   Notes:
-   - Keeps mobile equations from overflowing
-   - Smooth reveal animation (works with IntersectionObserver in index.html)
-   - Accessible focus states, reduced motion support, print tweaks
-   ========================================================================== */
-
-/* THEME TOKENS */
-:root{
-  --bg: #0a0a0a;          /* deep space */
-  --panel: #121214;       /* section base */
-  --ink: #efe9dc;         /* primary text */
-  --muted: #b9b2a6;       /* secondary text */
-  --gold: #f3c97a;        /* accent gold */
-  --gold-soft:#ffdd9a;    /* lighter accent */
-  --rule: #26262c;        /* dividers/borders */
-  --link: #f5cf84;        /* links */
-  --shadow: 0 22px 60px rgba(0,0,0,.45);
-  --radius: 14px;
-  --glow: 0 0 24px rgba(243,201,122,.18), 0 0 64px rgba(243,201,122,.12);
-}
-
-/* BASE */
-* { box-sizing: border-box; }
-html, body { height: 100%; }
-html { -webkit-text-size-adjust: 100%; }
-body{
+body {
+  background: #0a0a0a;
+  color: #e8e4d9;
+  font-family: "Inter", system-ui, sans-serif;
   margin: 0;
-  color: var(--ink);
-  background: radial-gradient(1200px 800px at 50% -220px, #1b1b20 0%, var(--bg) 58%),
-              linear-gradient(180deg, #101014 0%, #0a0a0a 100%);
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  overflow-wrap: anywhere; /* prevents layout breaks on long strings */
+  line-height: 1.7;
 }
 
-/* WRAPPER */
-.wrap{
-  max-width: 980px;
+main {
+  max-width: 800px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 1.5rem;
 }
 
-/* TYPOGRAPHY */
-h1, h2 {
-  font-family: "Crimson Pro", serif;
-  letter-spacing: .02em;
-  margin: .25rem 0 .4rem;
-  color: var(--gold);
-  text-shadow: var(--glow);
-}
-h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; }
-h2 { font-size: clamp(20px, 3vw, 28px); font-weight: 700; }
-.subtitle{
-  margin: .2rem 0 1rem;
-  color: var(--muted);
-  font-family: "Crimson Pro", serif;
-  font-style: italic;
+.hero {
   text-align: center;
-  font-size: clamp(16px, 2.2vw, 18px);
+  margin-bottom: 2rem;
 }
 
-p { margin: .5rem 0 1rem; }
-strong { color: #fff; }
-
-/* LINKS */
-a { color: var(--link); text-decoration: none; }
-a:hover { text-decoration: underline; }
-a:focus-visible{
-  outline: 2px solid var(--gold);
-  outline-offset: 2px;
-  border-radius: 6px;
-}
-
-/* HERO */
-.hero{
-  margin-top: 10px;
-  border-radius: var(--radius);
-  overflow: hidden;
-  border: 1px solid #23232a;
-  box-shadow: var(--shadow);
-  background: #0d0d0f;
-}
-.hero img{
-  display: block;
+.hero-banner {
   width: 100%;
-  height: auto;
-  object-fit: cover;
-  filter: saturate(1.08) contrast(1.03) brightness(1.02);
-  max-height: 520px; /* keeps huge banners from dominating */
-}
-
-/* DIVIDERS */
-.divider, .goldline{
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  margin: 28px 0;
-  opacity: .55;
-  border: 0;
-}
-.goldline{
-  height: 2px;
-  opacity: .72;
-  margin: 34px 0 18px;
-}
-
-/* SECTIONS & PANELS */
-section{
-  background: linear-gradient(180deg, #15151a, #101014);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  padding: 18px 18px 16px;
-  margin: 18px 0;
-  box-shadow: var(--shadow);
-}
-
-/* OPTIONAL “card” utility (you can use inside sections if needed) */
-.card{
-  background: linear-gradient(180deg, #16161b, #121216);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  padding: 18px;
-  box-shadow: var(--shadow);
-}
-
-/* LISTS */
-ul, ol { padding-left: 1.2rem; }
-ul li, ol li { margin: .35rem 0; }
-.list{ display: grid; gap: 10px; padding-left: 1rem; }
-.list li{ margin: 0; }
-
-/* CTA */
-.cta{
-  display: inline-block;
-  margin-top: 6px;
-  background: linear-gradient(90deg, var(--gold), var(--gold-soft));
-  color: #241e0f;
-  font-weight: 800;
-  padding: 10px 14px;
+  max-width: 600px;
   border-radius: 12px;
-  border: 1px solid #3a2e19;
-  text-decoration: none;
-  box-shadow: 0 10px 28px rgba(243,201,122,.22);
-}
-.cta:hover{ filter: saturate(1.05); }
-
-/* QUOTES */
-blockquote{
-  margin: .8rem 0;
-  padding: .75rem 1rem;
-  border-left: 3px solid var(--gold);
-  background: #0e0e12;
-  border-radius: 8px;
-  color: var(--muted);
+  margin-bottom: 1rem;
+  box-shadow: 0 0 30px rgba(255, 196, 86, 0.2);
 }
 
-/* TABLES */
-table{ width: 100%; border-collapse: collapse; margin: 12px 0; display: block; overflow: auto; }
-th, td{ padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,.08); }
-th{ color: var(--gold); text-align: left; }
-
-/* CODE & KBD */
-code, kbd{
-  background: #101014;
-  border: 1px solid #2a2a30;
-  padding: 2px 6px;
-  border-radius: 6px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+h1, h2 {
+  color: #f5c76b;
+  letter-spacing: 0.5px;
 }
 
-/* EQUATIONS / MATHJAX (SVG build) */
-.eq{
-  background: #111115;
-  border: 1px solid #26262c;
-  border-radius: 12px;
-  padding: 10px 12px;
-  margin: .6rem 0;
-  overflow: auto;
-}
-mjx-container{
-  max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  display: block;
-  filter: drop-shadow(0 0 8px rgba(243,201,122,.15));
-}
-mjx-container[jax="SVG"] svg{
-  height: auto;
-  max-width: 100%;
-}
-mjx-math{ white-space: normal !important; }
+h3 { color: #f2b653; }
 
-/* FOOTER */
-footer{
-  text-align: center;
-  color: var(--muted);
-  font-size: 14px;
-  padding: 24px 8px 40px;
-  margin-top: 20px;
-}
-
-/* ANIMATION (paired with IntersectionObserver in index.html) */
-section, figure.hero, footer{
+.card {
+  background: #121212;
+  border-radius: 16px;
+  padding: 1.2rem 1.4rem;
+  margin: 1.6rem 0;
+  box-shadow: 0 0 20px rgba(255, 196, 86, 0.08);
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity .9s ease, transform .9s ease;
-  will-change: opacity, transform;
+  transform: translateY(15px);
+  transition: all 0.6s ease;
 }
-section.visible, figure.hero.visible, footer.visible{
+
+.card.visible {
   opacity: 1;
-  transform: none;
+  transform: translateY(0);
 }
 
-/* REDUCED MOTION */
-@media (prefers-reduced-motion: reduce){
-  section, figure.hero, footer{
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
+.subtitle {
+  font-style: italic;
+  color: #d6d6d6;
 }
 
-/* RESPONSIVE TWEAKS */
-@media (max-width: 720px){
-  .wrap{ padding: 18px; }
-  section{ padding: 16px 14px; }
-  .hero img{ max-height: 420px; }
-}
-@media (max-width: 480px){
-  h1{ font-size: clamp(24px, 7vw, 34px); }
-  h2{ font-size: clamp(18px, 5.6vw, 24px); }
-  .eq{ padding: 8px 10px; }
+.equation {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.8rem;
+  border-radius: 10px;
+  margin: 1rem 0;
+  font-family: 'Cambria Math', serif;
+  color: #ffdf99;
+  overflow-x: auto;
 }
 
-/* PRINT */
-@media print{
-  :root{ --bg:#ffffff; --ink:#111; --muted:#555; --gold:#9a6b00; --rule:#ccc; }
-  body{ background: #fff; color: #111; }
-  section, .hero, .eq{ box-shadow: none !important; border-color: #ddd; }
-  a{ color: #0645ad; text-decoration: underline; }
-  figure.hero img{ max-height: none; }
+ul { margin-left: 1.2rem; }
+
+footer {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: 2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
