@@ -20,6 +20,8 @@
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/" />
   <meta property="og:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-16" />
   <meta property="og:image:alt" content="Scroll of Fire — Codex of Reality banner" />
+  <meta property="og:image:width" content="1600" />
+  <meta property="og:image:height" content="900" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -44,7 +46,7 @@
   }
   </script>
 
-  <!-- Site CSS (unchanged path) -->
+  <!-- Site CSS -->
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-16" />
 
   <!-- Fonts -->
@@ -52,7 +54,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700&display=swap" rel="stylesheet" />
 
-  <!-- Preload: remote banner + local fallback (for webviews) -->
+  <!-- Preload banner (remote) + local fallback -->
   <link rel="preload" as="image" href="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-16" imagesizes="100vw" />
   <link rel="preload" as="image" href="assets/img/banner.png" imagesizes="100vw" />
 
@@ -117,7 +119,7 @@
       <aside class="card col-4" aria-labelledby="quick-links">
         <h3 id="quick-links">Quick links</h3>
         <ul class="list">
-          <li>📚 Repository root: <a href="https://github.com/ssnfts24/scroll-of-fire/tree/main" target="_blank" rel="noopener">scroll-of-fire</a></li>
+          <li>📚 Repository: <a href="https://github.com/ssnfts24/scroll-of-fire/tree/main" target="_blank" rel="noopener">scroll-of-fire</a></li>
           <li>🧭 Master Codex (.docx): <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx" target="_blank" rel="noopener">Download</a></li>
           <li>🪙 Patreon: <a href="https://www.patreon.com/cw/ScrollofFireCodexofReality" target="_blank" rel="noopener">Support the work</a></li>
           <li>🧵 Medium: <a href="https://medium.com/@l.aaronpaul24/scroll-of-fire-62da3c217352" target="_blank" rel="noopener">Scroll of Fire</a></li>
@@ -165,6 +167,7 @@
         </div>
         <p class="meta">
           Increasing awareness lifts resonance; sustained intention integrates into memory, shaping future states.
+          <em>(Note: this Witness formula is intentionally preserved pending your Codex update.)</em>
         </p>
       </article>
 
@@ -320,6 +323,22 @@
 
     <div class="goldline"></div>
 
+    <!-- Attribution & Citations -->
+    <section class="grid" aria-labelledby="credits">
+      <article class="card col-12">
+        <h2 id="credits">📜 Attribution & Citations</h2>
+        <ul class="list">
+          <li><strong>Codex of Reality</strong> — authored and curated by <strong>Aaron Paul Laird</strong> (“Scribe of Circuits”).</li>
+          <li><strong>Copeland’s Formalism</strong> (Ψ-process framing) — <em>credited to Chris Copeland</em>; referenced within the Codex where indicated.</li>
+          <li><strong>Goodwin’s Formula</strong> — attributed to its author; referenced where explicitly cited in the Codex.</li>
+          <li><strong>Witness Equation</strong> — current public version shown above; <em>pending your update in the master Codex</em>.</li>
+        </ul>
+        <p class="meta">All third-party attributions are maintained in-text and in Git history for provenance.</p>
+      </article>
+    </section>
+
+    <div class="goldline"></div>
+
     <!-- Integrity -->
     <section class="grid" aria-labelledby="integrity">
       <article class="card col-12">
@@ -389,11 +408,45 @@ Status: Verified
     </footer>
   </main>
 
-  <!-- Progressive enhancement -->
+  <!-- Progressive enhancement: external JS + robust banner fallback -->
   <script src="assets/js/Codex.js?v=2025-10-16"></script>
   <script>
-    // Ensure current year even if external JS is delayed
-    (function(){var y=document.getElementById('yr'); if(y){ y.textContent=new Date().getFullYear(); }})();
+    (function(){
+      // Ensure current year even if external JS is delayed
+      var y = document.getElementById('yr'); if (y) y.textContent = new Date().getFullYear();
+
+      // Webview detection (FB/IG/Messenger often block githubusercontent)
+      var ua = navigator.userAgent || '';
+      var isMetaWebView = /FBAN|FBAV|Facebook|Instagram|FB_IAB|FBAN\/Messenger/i.test(ua);
+
+      // Robust remote→local banner fallback (error, timeout, or webview)
+      var img = document.getElementById('heroBanner');
+      var remote = img ? img.getAttribute('data-src-raw') : null;
+      var local  = img ? img.getAttribute('data-src-local') : null;
+
+      function swapToLocal(){
+        if (!img) return;
+        if (img.src.indexOf(local) === -1 && local) {
+          img.src = local;
+        }
+      }
+
+      // If webview, immediately swap to local (prevents blank banner)
+      if (isMetaWebView) { swapToLocal(); }
+
+      // Error fallback
+      if (img) {
+        img.addEventListener('error', swapToLocal, { once:true });
+
+        // Timeout fallback (2.5s)
+        var t = setTimeout(function(){
+          // If the image hasn't finished decoding yet, prefer local
+          if (!img.complete || img.naturalWidth === 0) swapToLocal();
+        }, 2500);
+
+        img.addEventListener('load', function(){ clearTimeout(t); }, { once:true });
+      }
+    }());
   </script>
 </body>
 </html>
