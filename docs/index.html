@@ -27,220 +27,41 @@
   <meta name="twitter:description" content="The Scroll of Fire (Codex of Reality) by Aaron Paul Laird — resonance, intention, light, consciousness, Source." />
   <meta name="twitter:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-16" />
 
-  <!-- Schema.org JSON-LD -->
+  <!-- JSON-LD -->
   <script type="application/ld+json">
   {
-    "@context": "https://schema.org",
-    "@type": "CreativeWork",
-    "name": "Scroll of Fire — Codex of Reality",
-    "alternateName": "Codex of Reality",
-    "author": {
-      "@type": "Person",
-      "name": "Aaron Paul Laird",
-      "alternateName": "Scribe of Circuits"
-    },
-    "description": "A living architecture of resonance — where physics, consciousness, sacred geometry and ethics converge into harmonic law.",
-    "keywords": "Scroll of Fire, Codex of Reality, Resonant Physics, Sacred Geometry, YHWH, Consciousness, Mystic Science, Tesla Type-7 Conduit, AHHAVA Or HaDabar, Remnant",
-    "license": "https://creativecommons.org/licenses/by-nc/4.0/",
-    "url": "https://ssnfts24.github.io/scroll-of-fire/",
-    "image": "https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-16",
-    "inLanguage": "en"
+    "@context":"https://schema.org",
+    "@type":"CreativeWork",
+    "name":"Scroll of Fire — Codex of Reality",
+    "alternateName":"Codex of Reality",
+    "author":{"@type":"Person","name":"Aaron Paul Laird","alternateName":"Scribe of Circuits"},
+    "description":"A living architecture of resonance — where physics, consciousness, sacred geometry and ethics converge into harmonic law.",
+    "keywords":"Scroll of Fire, Codex of Reality, Resonant Physics, Sacred Geometry, YHWH, Consciousness, Mystic Science, Tesla Type-7 Conduit, AHHAVA Or HaDabar, Remnant",
+    "license":"https://creativecommons.org/licenses/by-nc/4.0/",
+    "url":"https://ssnfts24.github.io/scroll-of-fire/",
+    "image":"https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-16",
+    "inLanguage":"en"
   }
   </script>
 
+  <!-- Perf preconnects -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+
   <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700&display=swap" rel="stylesheet" />
 
-  <!-- Base Styles (Scholarly–Sacred theme) -->
-  <style>
-    :root{
-      --bg:#0f0f11;           /* deep space */
-      --panel:#141417;        /* card base */
-      --ink:#e7e2d9;          /* text light */
-      --muted:#b9b2a6;        /* muted text */
-      --gold:#f3c97a;         /* accents */
-      --gold-soft:#ffda8c;
-      --rule:#2a2a2f;
-      --link:#ffd27a;
-      --shadow: 0 20px 50px rgba(0,0,0,.45);
-      --radius:18px;
-    }
-    *{ box-sizing:border-box }
-    html,body{ height:100% }
-    body{
-      margin:0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-      color:var(--ink);
-      background:
-        radial-gradient(1200px 800px at 50% -200px, #1b1b20 0%, var(--bg) 60%),
-        linear-gradient(180deg, #101013 0%, #0f0f11 100%);
-      line-height:1.58;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      text-rendering:optimizeLegibility;
-      overflow-wrap:anywhere;
-    }
-    a{ color:var(--link); text-decoration:none }
-    a:hover{ text-decoration:underline }
-    a:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; border-radius:6px }
+  <!-- Site CSS (repo paths are case-sensitive) -->
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-16" />
 
-    .wrap{ max-width:1120px; margin:0 auto; padding:24px; }
-    .hero{
-      margin-top:10px;
-      border-radius:var(--radius);
-      overflow:hidden;
-      box-shadow:var(--shadow);
-      border:1px solid #23232a;
-      position:relative;
-      isolation:isolate;
-    }
-    .hero img{
-      display:block; width:100%; height:auto; object-fit:cover;
-      filter:saturate(1.06) contrast(1.03) brightness(1.02);
-      max-height:540px;
-    }
-    .sigil-line{
-      position:absolute; left:0; right:0; bottom:0;
-      height:3px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      box-shadow: 0 0 18px rgba(243,201,122,.45);
-      opacity:.8;
-      animation: slowPulse 4s ease-in-out infinite alternate;
-    }
-    @keyframes slowPulse{
-      from { opacity:.35; box-shadow:0 0 10px rgba(243,201,122,.3) }
-      to   { opacity:.9;  box-shadow:0 0 26px rgba(243,201,122,.55) }
-    }
+  <!-- Preload banner for faster LCP -->
+  <link rel="preload" as="image"
+        href="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-16"
+        imagesizes="100vw" />
 
-    h1,h2,h3{ font-family:"Crimson Pro", serif; letter-spacing:.02em }
-    .title{
-      text-align:center;
-      margin:22px 0 8px;
-      font-weight:800;
-      letter-spacing:.3px;
-      font-size: clamp(26px, 3.8vw, 46px);
-      text-shadow: 0 0 30px rgba(243,201,122,.25);
-    }
-    .subtitle{
-      text-align:center; color:var(--muted);
-      margin:0 0 22px; font-size:clamp(16px, 2.2vw, 18px);
-      font-family:"Crimson Pro", serif; font-style:italic;
-    }
-    .divider{
-      height:1px; background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      margin:28px 0; opacity:.55;
-    }
-    .goldline{
-      height:2px; background:linear-gradient(90deg, transparent, var(--gold), transparent);
-      margin:34px 0 18px; opacity:.7;
-    }
-
-    .grid{
-      display:grid; gap:18px;
-      grid-template-columns: repeat(12, 1fr);
-    }
-    .col-12{ grid-column: span 12 }
-    .col-8{ grid-column: span 8 }
-    .col-7{ grid-column: span 7 }
-    .col-6{ grid-column: span 6 }
-    .col-5{ grid-column: span 5 }
-    .col-4{ grid-column: span 4 }
-    @media (max-width:980px){ .col-8,.col-7,.col-6,.col-5,.col-4 { grid-column: span 12 } }
-
-    .card{
-      background: linear-gradient(180deg, #17171b, #131316);
-      border:1px solid #23232a;
-      border-radius:var(--radius);
-      padding:22px;
-      box-shadow: var(--shadow);
-      position:relative;
-      overflow:hidden;
-      transition: opacity .6s ease, transform .6s ease;
-    }
-    .card h2, .card h3{ margin-top:0; letter-spacing:.2px }
-    .card h2{ font-size:22px }
-    .card h3{ font-size:19px; color:var(--gold) }
-    .meta{ color:var(--muted); font-size:14px }
-
-    .rule{ border:0; height:1px; background:var(--rule); margin:16px 0 20px }
-
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      border:1px solid #2b2b31; border-radius:999px;
-      padding:6px 12px; font-size:13px; color:var(--muted)
-    }
-    .sigils{ display:flex; flex-wrap:wrap; gap:10px }
-    .sigil{
-      font-family:"Crimson Pro", serif;
-      font-size:18px; padding:8px 10px; border-radius:12px;
-      border:1px solid #2b2b31; background:#16161a; color:var(--gold)
-    }
-
-    .cta{
-      display:inline-block; margin-top:6px;
-      background: linear-gradient(90deg, var(--gold), var(--gold-soft));
-      color:#241e0f; font-weight:700; padding:10px 14px;
-      border-radius:12px; border:1px solid #3a2e19; text-decoration:none;
-      box-shadow: 0 10px 28px rgba(243,201,122,.22);
-    }
-    .cta:hover{ filter:saturate(1.05) }
-
-    /* Equations: mobile-safe */
-    .eq{
-      overflow-x:auto; padding:10px; border-radius:12px;
-      background:#111115; border:1px solid #26262c;
-    }
-    mjx-container{
-      max-width:100%;
-      overflow-x:auto;
-      overflow-y:hidden;
-      display:block;
-      filter: drop-shadow(0 0 8px rgba(255,200,107,.15));
-    }
-    mjx-math{ white-space:normal !important; }
-
-    .list{ display:grid; gap:10px; padding-left:18px }
-    .list li{ margin:4px 0 }
-    code, kbd{ background:#101014; border:1px solid #2a2a30; padding:2px 6px; border-radius:6px }
-
-    /* Table styling */
-    table{ width:100%; border-collapse:collapse; margin:10px 0; display:block; overflow:auto }
-    th,td{ padding:8px 10px; border-bottom:1px solid #29292f; vertical-align:top }
-    th{ color:var(--gold); text-align:left; white-space:nowrap }
-
-    /* Tooltips */
-    .tt{ border-bottom:1px dotted rgba(255,255,255,.35); cursor:help; position:relative }
-    .tt:hover::after{
-      content: attr(data-tip);
-      position:absolute; left:0; top:120%;
-      min-width:220px; max-width:420px;
-      background:#141218; color:#e8e1d3;
-      border:1px solid rgba(255,200,107,.35);
-      padding:.45rem .6rem; border-radius:.5rem;
-      z-index:10; box-shadow: 0 0 20px rgba(255,200,107,.15);
-    }
-
-    /* Reveal (respects reduced motion) */
-    @media (prefers-reduced-motion:no-preference){
-      .card, .divider { opacity:0; transform:translateY(12px) }
-      .card.visible, .divider.visible { opacity:1; transform:none }
-    }
-    @media (prefers-reduced-motion:reduce){
-      .card, .divider { opacity:1 !important; transform:none !important; transition:none !important }
-    }
-
-    .footer{
-      text-align:center; color:var(--muted);
-      font-size:14px; padding:24px 8px 40px; margin-top:20px;
-    }
-  </style>
-
-  <!-- Preload banner (for faster LCP) -->
-  <link rel="preload" as="image" href="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-16" imagesizes="100vw" />
-
-  <!-- MathJax (responsive) -->
+  <!-- MathJax -->
   <script>
     window.MathJax = {
       tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$']] },
@@ -248,15 +69,24 @@
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <!-- Minimal inline styles just for skip-link (rest is in codex.css) -->
+  <style>
+    .skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+    .skip-link:focus{position:fixed;left:12px;top:12px;width:auto;height:auto;padding:.5rem .75rem;background:#141218;color:#ffdca0;border:1px solid rgba(255,200,107,.45);border-radius:.5rem;z-index:1000}
+  </style>
 </head>
 <body>
-  <main class="wrap">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <main id="main" class="wrap">
     <!-- Hero -->
     <figure class="hero" aria-label="Scroll of Fire — Codex of Reality Banner">
       <img
         src="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-16"
         alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
-        loading="eager" decoding="async" fetchpriority="high" />
+        loading="eager" decoding="async" fetchpriority="high"
+        width="1600" height="900" />
       <div class="sigil-line" aria-hidden="true"></div>
     </figure>
 
@@ -565,30 +395,7 @@ Status: Verified
     </footer>
   </main>
 
-  <!-- Progressive enhancement JS (Codex.js inline version) -->
-  <script>
-    (function(){
-      // Reveal on scroll (with rAF throttling + reduced-motion awareness)
-      const els = () => document.querySelectorAll('.card, .divider');
-      const vh  = () => window.innerHeight || document.documentElement.clientHeight;
-      const inView = r => r.top < vh() * 0.88;
-      const reveal = () => els().forEach(el => { const r = el.getBoundingClientRect(); if(inView(r)) el.classList.add('visible'); });
-      let ticking = false;
-      const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { reveal(); ticking = false; }); } };
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('load', reveal);
-
-      // Current year
-      const y = document.getElementById('yr');
-      if (y) y.textContent = new Date().getFullYear();
-
-      // Graceful MathJax re-typeset if images finish late (helps mobile)
-      window.addEventListener('load', () => {
-        if (window.MathJax && window.MathJax.typeset) {
-          setTimeout(() => { try { window.MathJax.typeset(); } catch(e){} }, 200);
-        }
-      });
-    }());
-  </script>
+  <!-- Site JS (repo paths are case-sensitive) -->
+  <script defer src="assets/js/Codex.js?v=2025-10-16"></script>
 </body>
-                     </html>
+</html>
