@@ -13,23 +13,29 @@ body{
   line-height:1.6;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+  word-wrap:break-word;
+  overflow-wrap:anywhere; /* keeps long formulas/URLs from breaking layout */
 }
 
+/* Headings */
 h1,h2,h3{font-family:"Crimson Pro", serif; letter-spacing:.02em}
 h1,h2{margin:.25rem 0}
 h3{margin:0 0 .5rem}
 
+/* Container */
 .container{max-width:1000px;margin:auto;padding:24px}
 
-/* HERO / BANNER — more resilient image behavior */
+/* HERO / BANNER — resilient image behavior */
 .hero{position:relative;overflow:hidden}
 .hero__banner{
   width:100%;
   display:block;
   opacity:.88;
   filter:contrast(1.05) brightness(.9);
-  object-fit:cover;                /* NEW */
-  max-height:520px;               /* NEW (keeps huge images in check) */
+  object-fit:cover;
+  max-height:520px;
+  image-rendering:auto;
 }
 .hero__overlay{
   position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1rem;
@@ -37,38 +43,45 @@ h3{margin:0 0 .5rem}
 }
 .subtitle{margin:.25rem 0 1rem;color:var(--muted)}
 
+/* Glow text */
 .glow-xl{font-size: clamp(32px, 6vw, 64px); color:var(--gold); text-shadow: var(--glow)}
 .glow-md{font-size: clamp(22px, 3.5vw, 36px); color:#f6e7c8; text-shadow: var(--glow)}
 
+/* Pills */
 .pill{
   display:inline-block;padding:.5rem .9rem;border:1px solid rgba(255,200,107,.45);border-radius:999px;color:#f6e7c8;text-decoration:none;margin:.25rem .35rem;background:rgba(255,200,107,.08);transition:all .2s
 }
 .pill:hover{transform:translateY(-1px);box-shadow:var(--glow)}
+.pill:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
+/* Cards */
 .card{
   background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px 18px 14px;margin:18px 0
 }
 
+/* Muted helpers */
 .muted{color:var(--muted)}
-.small{font-size: .92rem;color:var(--muted)}
+.small{font-size:.92rem;color:var(--muted)}
+
+/* Lists */
 .compact{margin:.5rem 0 .25rem 1.1rem}
 .compact li{margin:.15rem 0}
 
-/* divider line with glow */
+/* Divider with glow */
 .divider{display:flex;justify-content:center;align-items:center;margin:20px 0}
 .divider::before,.divider::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,rgba(255,200,107,.55),transparent)}
 .divider span{margin:0 .8rem;color:var(--gold);text-shadow:var(--glow)}
 
-/* EQUATIONS / MATHJAX — overflow fixes + readability */
+/* EQUATIONS / MATHJAX — overflow & readability */
 .eq{
   background:rgba(255,200,107,.06);
   border:1px solid rgba(255,200,107,.2);
   border-radius:12px;
   padding:10px 14px;
   margin:.6rem 0;
-  overflow:auto;             /* was: auto; keep */
+  overflow:auto;
 }
-/* NEW: Make MathJax containers wrap within parent and scroll x on small screens */
+/* MathJax v3 (tex-svg build) */
 mjx-container{
   max-width:100%;
   overflow-x:auto;
@@ -76,24 +89,27 @@ mjx-container{
   display:block;
   filter: drop-shadow(0 0 8px rgba(255,200,107,.15));
 }
-mjx-container[jax="CHTML"] > svg{height:auto}        /* defensive */
-mjx-math{white-space:normal !important;}             /* allow wrapping where needed */
+/* SVG output specific (you’re loading tex-svg.js) */
+mjx-container[jax="SVG"] svg{height:auto; max-width:100%}
+mjx-math{white-space:normal !important;}  /* allow wraps if needed */
 
-/* simple responsive grid */
+/* Simple responsive grid */
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;padding-left:1rem}
-.grid li{list-style: "▸ "; padding-left:.35rem}
+.grid li{list-style:"▸ "; padding-left:.35rem}
 
+/* Footer */
 .footer{text-align:center;margin:24px 0 10px;color:var(--muted)}
 
+/* Hash block */
 pre.seal{
   background:#0a0a0a;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px;
   font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap
 }
 
-/* tooltips */
+/* Tooltips */
 .tt{border-bottom:1px dotted rgba(255,255,255,.35);cursor:help;position:relative}
 .tt:hover::after{
-  content: attr(data-tip);
+  content:attr(data-tip);
   position:absolute;left:0;top:120%;
   min-width:220px;max-width:420px;
   background:#141218;color:#e8e1d3;
@@ -102,15 +118,26 @@ pre.seal{
   z-index:10;box-shadow:var(--glow)
 }
 
-/* LINKS + TABLES — nicer defaults */
+/* Links & Tables */
 a{color:#ffdca0;text-decoration:none}
 a:hover{text-decoration:underline}
-table{width:100%;border-collapse:collapse;margin:12px 0}
+a:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:6px}
+table{width:100%;border-collapse:collapse;margin:12px 0;display:block;overflow:auto}
 th,td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.08)}
 th{color:var(--gold);text-align:left}
 
-/* SMALL SCREENS — tighter spacing & type scaling */
-@media (max-width: 640px){
+/* Reveal effect classes (used by JS) */
+.card, .divider { transition: opacity .6s ease, transform .6s ease }
+@media (prefers-reduced-motion:no-preference){
+  .card, .divider { opacity:0; transform:translateY(12px) }
+  .card.visible, .divider.visible { opacity:1; transform:none }
+}
+@media (prefers-reduced-motion:reduce){
+  .card, .divider { opacity:1 !important; transform:none !important; transition:none !important }
+}
+
+/* Small screens — tighter spacing & type scaling */
+@media (max-width:640px){
   .container{padding:16px}
   .hero__overlay{padding:.5rem}
   .pill{padding:.45rem .75rem}
@@ -120,7 +147,7 @@ th{color:var(--gold);text-align:left}
   .eq{padding:8px 10px}
 }
 
-/* OPTIONAL: print-friendly tweaks (keeps text dark on light printers) */
+/* Print-friendly */
 @media print{
   :root{--bg:#ffffff; --fg:#111; --muted:#555; --gold:#9a6b00}
   body{background:#fff;color:#111}
