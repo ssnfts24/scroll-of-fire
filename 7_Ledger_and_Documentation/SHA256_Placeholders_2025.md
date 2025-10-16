@@ -1,4 +1,4 @@
-# 🔐 SHA-256 Placeholders — Key Artifacts (2025)
+# 🔐 SHA-256 "Temp" Placeholders — Key Artifacts (2025)
 
 This ledger records verified cryptographic fingerprints for the sacred documents within the **Scroll of Fire / Codex of Reality** archives.
 
