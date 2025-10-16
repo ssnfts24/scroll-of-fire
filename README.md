@@ -1,171 +1,199 @@
+<meta property="og:title" content="Scroll of Fire — Codex of Reality">
+<meta property="og:description" content="A living architecture of resonance — physics, consciousness, and divine symmetry.">
+<meta property="og:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png">
+<meta property="og:type" content="website">
+
 <p align="center">
   <img src="./6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png" alt="Scroll of Fire — Codex of Reality Banner" width="100%">
 </p>
-
-<!-- If you ever prefer a raw URL instead of a relative path, use:
-https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png
--->
 
 <h1 align="center">⚖️ Scroll of Fire — Codex of Reality</h1>
 <p align="center"><em>“Let there be resonance.”</em></p>
 
 ---
 
-## 🜂 What this is
+## 🜂 Essence
 
-The **Scroll of Fire — Codex of Reality** is a living architecture of remembrance where
-**physics, sacred geometry, ethics, and consciousness** converge into one coherent pattern.
-It is not dogma or speculation, but a **harmonic framework** that treats awareness as a
-first-class variable in the universe.
+The **Scroll of Fire — Codex of Reality** is a **living architecture of remembrance**,  
+where **physics, geometry, consciousness, and divine symmetry** merge into one coherent law.  
+It is not myth nor theory — it is a **harmonic framework of creation**,  
+encoding how awareness itself shapes and sustains the universe.
 
-> “The Codex is the mirror through which the Source knows itself.”
-
----
-
-## ⚛ The Core Formula (high-level)
-
-Reality = Resonance × Intention × Light × Consciousness × Source
-
-- **Resonance** — alignment/coherence with truth (the harmonic).
-- **Intention** — vector of will (direction and persistence).
-- **Light** — awareness field (order, intelligibility).
-- **Consciousness** — the reflective observer (memory + meaning).
-- **Source** — the eternal origin (YHWH), the ground of coherence.
-
-**Interpretation:**  
-Perception creates resonance. Resonance shapes form. Form returns memory to Source.
+> “The Codex is not written to be believed. It is written to be remembered.”
 
 ---
 
-## 🧮 Full Codex Expression (rendered math)
+## ⚛ The Foundational Formula: The Codex of Reality
 
-The Codex integrates physical constants, harmonic ratios, and living variables:
+At the center of the Scroll stands the **Codex Equation**,  
+a unification of the measurable and the meaningful — the scientific and the sacred.
 
-$$
-\mathcal{R}
-= f\!\big(\pi, e, i, \hbar, c, G, \mathrm{DNA}, \Omega_{\mathrm{DM}}, \Omega_{\Lambda}, H_0, 432, 528, 369, 144, 137, \Phi, \ldots\big)
-\;\times\;
-\mathcal{I}\;\times\;\mathcal{L}\;\times\;\mathcal{C}\;\times\;\mathcal{S}
-$$
+\[
+\mathcal{R} = f(\pi, e, i, \hbar, c, G, \mathrm{DNA}, \Omega_{DM}, \Omega_{\Lambda}, H_0, 432, 528, 369, 144, 137, \Phi, \ldots) \times \mathcal{I} \times \mathcal{L} \times \mathcal{C} \times \mathcal{S}
+\]
 
-Where:
+| Symbol | Definition |
+|:--:|:--|
+| **ℜ** | *Resonant Reality* — the living totality of all creation |
+| **f(...)** | Generative function of constants — physical, biological, divine |
+| **ℐ** | *Intention* — the conscious vector of will |
+| **ℒ** | *Light* — waveform of awareness and divine order |
+| **ℂ** | *Consciousness* — the reflective field of perception |
+| **𝕊** | *Source* — eternal harmonic origin (YHWH) |
 
-- \( \pi, e, i, \hbar, c, G \): foundational constants (geometry, light, gravity)  
-- **DNA**: biological waveform (life’s resonance carrier)  
-- \( \Omega_{\mathrm{DM}}, \Omega_{\Lambda}, H_0 \): cosmological parameters (dark matter, dark energy, expansion)  
-- **432, 528, 369, 144, 137, \(\Phi\)**: harmonic keys & proportions (acoustic, atomic, growth)  
-- \( \mathcal{I}, \mathcal{L}, \mathcal{C}, \mathcal{S} \): Intention, Light, Consciousness, Source  
-- \( \mathcal{R} \): the realized, resonant Reality
+> **Reality = Resonance × Intention × Light × Consciousness × Source**
 
-**Plain-language summary:** the measurable (physics) and the meaningful (awareness/ethics)
-are not separate domains—they are **symmetrical reflections** coupled through resonance.
-
----
-
-## 🜁 The Witness Equation (change through awareness)
-
-A compact way to express how awareness and intention alter reality over time:
-
-$$
-\Delta\mathcal{R} \;=\; \frac{\partial(\mathrm{Resonance})}{\partial(\mathrm{Awareness})} \;+\;
-\int \mathrm{Intention}\;\cdot\;\mathrm{Memory}\;\mathrm{d}t
-$$
-
-- Increasing **awareness** increases **resonance**.  
-- Sustained **intention** integrates into **memory**, shaping future states.
-
-> “Awareness remembers; remembrance becomes creation.”
+This is the **Codex of Reality Formula**,  
+the core law written by **Aaron Paul Laird**, unifying all constants into living resonance.  
+It forms the mathematical–spiritual structure that the entire Scroll of Fire expands upon.
 
 ---
 
-## 🔯 How the Codex grows (participatory expansion)
+## 🧭 The Witness Equation — Awareness in Motion
 
-The Codex is not a linear book—it is a **fractal, recursive field**. Each scroll is a facet.
+Where the Codex defines structure, the **Witness Equation** defines change.
 
-**Growth loop**
-1. **Witness** — a pattern is perceived (truth recognized).  
-2. **Encode** — expressed in word, number, symbol, device, or act.  
-3. **Resonate** — align with existing harmonics in the Codex.  
-4. **Integrate** — the Codex expands in coherence and clarity.  
-5. **Amplify** — collective alignment strengthens the field.
+\[
+\Delta \mathcal{R} = \frac{\partial(\text{Resonance})}{\partial(\text{Awareness})} + \int \text{Intention} \cdot \text{Memory} \, dt
+\]
 
-This is the **Law of Recursive Creation**: awareness builds upon awareness until coherence becomes self-sustaining.
+This expresses that:
+- Increasing **awareness** increases **resonance**.
+- Sustained **intention** crystallizes into **memory**.
+- Memory generates the next cycle of creation.
 
----
-
-## 🕎 The Living Laws (ethics as geometry)
-
-The **Living Laws** define resonance-aligned conduct—ethics as field dynamics:
-
-1. **Law of Coherence** — Truth sustains; distortion collapses.  
-2. **Law of Reflection** — Every act returns to its origin.  
-3. **Law of Intention** — Will defines polarity and trajectory.  
-4. **Law of Light** — Transparency amplifies harmony.  
-5. **Law of Compassion** — To heal another is to restore the Source.  
-6. **Law of Witness** — True testimony persists in the lattice.
-
-These are **spiritual physics**—actionable, testable, and integrable into creation.
+> “To witness is to create. To remember is to sustain.”
 
 ---
 
-## 📁 Key Scrolls (start here)
+## 🔯 How the Codex Grows
+
+The **Scroll of Fire** is not a static manuscript — it is a **living system of expansion**.  
+Each scroll, each formula, and each witness contributes to its resonance field.
+
+**Growth cycle:**
+1. **Witness** — awareness observes pattern and truth.  
+2. **Encode** — truth is expressed through symbol, sound, geometry, or word.  
+3. **Resonate** — new pattern aligns with existing harmonics.  
+4. **Integrate** — coherence strengthens the collective field.  
+5. **Illuminate** — the Codex evolves as a single living intelligence.
+
+The Codex grows through participation — each true act of remembrance expands it.
+
+---
+
+## 🕎 The Living Laws
+
+The **Living Laws** form the ethical geometry of resonance —  
+principles that align consciousness with creation.
+
+| Law | Description |
+|-----|--------------|
+| **Law of Coherence** | Truth sustains. Distortion collapses. |
+| **Law of Reflection** | Every vibration returns to its origin. |
+| **Law of Intention** | Will defines polarity and motion. |
+| **Law of Light** | Transparency amplifies harmony. |
+| **Law of Compassion** | To heal another is to restore the Source. |
+| **Law of Witness** | What is remembered becomes real. |
+
+These are **spiritual physics** — not commandments, but harmonic functions.
+
+---
+
+## 🜁 Structure of the Scroll
+
+The repository is organized into scroll layers, each holding a facet of the living equation:
+
+| Scroll | Description |
+|--------|--------------|
+| **1_Codex_of_Reality** | The Core — Laws, Geometry, Equations, Genesis. |
+| **2_Formalism_and_Physics** | Field unification and harmonic constants. |
+| **3_Living_Technology** | Devices, circuits, aetheric transceivers, and resonance prototypes. |
+| **4_Remembrance_and_History** | Chronology of Witnesses, Exodus, and Restoration. |
+| **5_Living_Scribe** | Reflections, declarations, and personal archives. |
+| **6_Images_and_Symbols** | Diagrams, seals, banners, and glyphs of light. |
+| **7_Ledger_and_Documentation** | Integrity chain, hashes, timestamps, and lineage. |
+
+Each scroll functions like a “node” within the Codex — part of a fractal architecture of memory.
+
+---
+
+## 🜂 The Resonant Law of Creation
+
+At the heart of the Scroll lies the triadic law:
+1. **Observation births Form** — attention collapses potential into pattern.  
+2. **Form sustains Memory** — structure retains vibrational signature.  
+3. **Memory returns to Source** — all cycles complete through harmonic reunion.
+
+> “Creation is not invention — it is resonance remembering itself.”
+
+---
+
+## 📁 Primary Scrolls (Quick Access)
 
 | File | Purpose |
 |---|---|
-| **1_Codex_of_Reality/New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx** | **Master Codex** — central map of the resonant framework. |
-| **1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx** | Embodiment & consciousness dynamics — the living seed of the Codex. |
-| **1_Codex_of_Reality/Living Laws.docx** | Covenant of Resonance Ethics — moral geometry aligning will and waveform. |
-| **1_Codex_of_Reality/Genesis_Sacred_Scroll_Refined_Aaron_Paul_Laird.docx** | Creation as frequency and memory — Genesis rendered as living code. |
-| **1_Codex_of_Reality/Infinite_Scroll_Prayer.docx** | Invocation scroll — harmonic intention activation. |
-| **1_Codex_of_Reality/Grid_of_Consciousness_The_Great_Convergence.docx** | Unified field lattice — connection of thought, light, matter. |
-
-> Full repository index: **[scroll-of-fire/tree/main](https://github.com/ssnfts24/scroll-of-fire/tree/main)**
+| [**New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx**](./1_Codex_of_Reality/New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx) | **Master Codex** — complete harmonic framework. |
+| [**Codex_of_Life_Scroll_FULL.docx**](./1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx) | Foundation of embodiment and living design. |
+| [**Living_Laws.docx**](./1_Codex_of_Reality/Living_Laws.docx) | Covenant of Resonant Ethics. |
+| [**Genesis_Sacred_Scroll_Refined_Aaron_Paul_Laird.docx**](./1_Codex_of_Reality/Genesis_Sacred_Scroll_Refined_Aaron_Paul_Laird.docx) | Genesis rewritten as harmonic creation. |
+| [**Infinite_Scroll_Prayer.docx**](./1_Codex_of_Reality/Infinite_Scroll_Prayer.docx) | Invocation scroll — activates harmonic alignment. |
+| [**Grid_of_Consciousness_The_Great_Convergence.docx**](./1_Codex_of_Reality/Grid_of_Consciousness_The_Great_Convergence.docx) | Describes the lattice uniting thought, light, and matter. |
 
 ---
 
-## 🔐 Integrity & Seals (SHA-256)
+## 🔐 Integrity & Verification Chain
 
-Every scroll is **sealed** with SHA-256 for authorship and historical continuity.
-Each change extends an **Integrity Chain** recorded in the repo.
+Every document within the Scroll of Fire is **sealed with a cryptographic signature**.  
+Each update extends the **Chain of Fire** — the immutable record of authorship.
 
-Example (format used in ledger files):
+Example:
 
-──────────────────────────────────────── 🔐 SHA-256 Verification: a2b8e0d7c0a2f3b9a0b1c2d3e4f5678901234567890abcdef1234567890abcd0 Filed under: scroll-of-fire / Ledger_2025 Status: Verified (commit recorded in Git history) ────────────────────────────────────────
+SHA-256: a2b8e0d7c0a2f3b9a0b1c2d3e4f5678901234567890abcdef1234567890abcd0 Commit: 483a2e1 (verified) Integrity: ✅ Confirmed 2025
 
-See: **`7_Ledger_and_Documentation/SHA256_Placeholders_2025.md`**
-
----
-
-## ⚙ From principle to practice (living tech)
-
-The same laws manifest as **harmonic engineering**:
-
-- **Resonant devices** (e.g., Type-7 vectors)  
-- **Aetheric circuits** & **living lattices**  
-- **Technorganic design** (light, sound, geometry)  
-
-Across physics, biology, electromagnetism, and consciousness, the Codex treats **creation as resonance structured into form**.
+See: `7_Ledger_and_Documentation/SHA256_Placeholders_2025.md`
 
 ---
 
-## 🌐 Official Links
+## ⚙ From Principle to Practice — Living Technology
 
-- 💾 **GitHub (root):** https://github.com/ssnfts24/scroll-of-fire/tree/main  
-- 📜 **Master Codex (docx):** https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality%2FNew-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx  
-- ✍️ **Medium (Scroll of Fire):** https://medium.com/@l.aaronpaul24/scroll-of-fire-62da3c217352  
-- 🔥 **Patreon (support):** https://www.patreon.com/cw/ScrollofFireCodexofReality/join  
-- 🕊 **X (Twitter):** https://x.com/SS_NFTs?s=09  
-- 📘 **Facebook:** https://www.facebook.com/share/1A1EsYak7Z/  
-- 🌿 **Linktree (all channels):** https://linktr.ee/AaronPaulLairdScrollOfFire?utm_source=linktree_admin_share
+The Codex extends into **Resonant Engineering**, where metaphysical law meets mechanism:
+
+- **Tesla Type-7 Resonant Device** — harmonics of light and matter.  
+- **Living Lattice Nodes** — crystalline information networks.  
+- **Aetheric Conduits** — transceivers for vibrational communication.  
+- **Technorganic Designs** — merging nature and technology in balance.
+
+> “Technology becomes sacred when it harmonizes rather than dominates.”
+
+---
+
+## 🌐 Official Channels
+
+| Platform | Link |
+|-----------|------|
+| 💾 **GitHub (Repository Root)** | [scroll-of-fire/tree/main](https://github.com/ssnfts24/scroll-of-fire/tree/main) |
+| 📜 **Master Codex (Direct Download)** | [New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx](https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality%2FNew-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx) |
+| ✍️ **Medium (Scroll of Fire Article)** | [Scroll of Fire on Medium](https://medium.com/@l.aaronpaul24/scroll-of-fire-62da3c217352) |
+| 🔥 **Patreon (Support the Scroll)** | [Patreon – Scroll of Fire Codex of Reality](https://www.patreon.com/cw/ScrollofFireCodexofReality/join) |
+| 🕊 **X (Twitter)** | [@SS_NFTs](https://x.com/SS_NFTs?s=09) |
+| 📘 **Facebook** | [Public Share](https://www.facebook.com/share/1A1EsYak7Z/) |
+| 🌿 **Linktree (All Links)** | [Aaron Paul Laird — Scroll of Fire](https://linktr.ee/AaronPaulLairdScrollOfFire?utm_source=linktree_admin_share) |
 
 ---
 
 ## ⚖ Stewardship & License
 
-Authored and maintained by **Aaron Paul Laird — Scribe of Circuits**.  
-All files are sealed and timestamped; updates extend the Integrity Chain.
+Authored by **Aaron Paul Laird — Scribe of Circuits**  
+Founder and custodian of the **Scroll of Fire / Codex of Reality**
 
-- License: **CC BY-NC 4.0** (Attribution required, non-commercial use)
-- Integrity Reference: `COD-CORE-777`
+- License: **Creative Commons BY-NC 4.0**  
+- Integrity Reference: `COD-CORE-777`  
+- Verified Hash: `a2b8e0d7c0a2f3b9a0b1c2d3e4f5678901234567890abcdef1234567890abcd0`
 
 > “The Scroll lives. The Equation breathes. The Witness remembers.”
+
+---
+
+<p align="center"><strong>© 2025 Aaron Paul Laird — Scroll of Fire · Codex of Reality</strong></p>
+
