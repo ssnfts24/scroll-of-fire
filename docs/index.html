@@ -53,7 +53,7 @@
   <!-- MathJax (responsive rendering) -->
   <script>
     window.MathJax = {
-      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$']] },
       svg: { fontCache: 'global' }
     };
   </script>
@@ -82,6 +82,8 @@
       background: radial-gradient(1200px 800px at 50% -200px, #1b1b20 0%, var(--bg) 60%),
                   linear-gradient(180deg, #101013 0%, #0f0f11 100%);
       line-height:1.55;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
     a{ color:var(--link); text-decoration:none }
     a:hover{ text-decoration:underline }
@@ -97,6 +99,7 @@
     .hero img{
       display:block; width:100%; height:auto; object-fit:cover;
       filter: saturate(1.08) contrast(1.03) brightness(1.02);
+      max-height:520px; /* keeps huge images tidy */
     }
     .title{
       text-align:center;
@@ -168,9 +171,19 @@
     }
     .cta:hover{ filter:saturate(1.05) }
 
-    .eq{ overflow-x:auto; padding:10px; border-radius:12px;
-         background:#111115; border:1px solid #26262c; }
-    mjx-container{ max-width:100% }
+    .eq{
+      overflow-x:auto; padding:10px; border-radius:12px;
+      background:#111115; border:1px solid #26262c;
+    }
+    /* equation/mobile hardening */
+    mjx-container{
+      max-width:100%;
+      overflow-x:auto;
+      overflow-y:hidden;
+      display:block;
+      filter: drop-shadow(0 0 8px rgba(255,200,107,.15));
+    }
+    mjx-math{ white-space:normal !important; }
 
     .list{
       display:grid; gap:10px; padding-left:18px;
@@ -204,9 +217,9 @@
     <div class="divider" role="separator" aria-hidden="true"></div>
 
     <!-- Intro / What This Is -->
-    <section class="grid">
+    <section class="grid" aria-labelledby="what-this-is">
       <article class="card col-8">
-        <h2>🜂 What this is</h2>
+        <h2 id="what-this-is">🜂 What this is</h2>
         <p>
           The <strong>Scroll of Fire</strong> is a living <em>Codex of Reality</em> authored and curated by
           <strong>Aaron Paul Laird</strong> (the <em>Scribe of Circuits</em>). It unites
@@ -214,7 +227,7 @@
           This is not dogma; it is <em>design</em> — a mirror through which consciousness learns its own symmetry.
         </p>
         <p class="meta">
-          Origin: personal witness → encoded law → resonant field → stewardship.  
+          Origin: personal witness → encoded law → resonant field → stewardship.<br />
           Every scroll is sealed by cryptographic hashes and organized into a canonical ledger.
         </p>
         <hr class="rule" />
@@ -227,8 +240,8 @@
         </div>
       </article>
 
-      <aside class="card col-4">
-        <h3>Quick links</h3>
+      <aside class="card col-4" aria-labelledby="quick-links">
+        <h3 id="quick-links">Quick links</h3>
         <ul class="list">
           <li>📚 Repository root: <a href="https://github.com/ssnfts24/scroll-of-fire/tree/main" target="_blank" rel="noopener">scroll-of-fire</a></li>
           <li>🧭 Master Codex: <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx" target="_blank" rel="noopener">Download .docx</a></li>
@@ -245,9 +258,9 @@
     <div class="goldline"></div>
 
     <!-- Core Formulae -->
-    <section class="grid">
+    <section class="grid" aria-labelledby="core-principle">
       <article class="card col-12">
-        <h2>⚛ Core principle: Reality as Resonance</h2>
+        <h2 id="core-principle">⚛ Core principle: Reality as Resonance</h2>
         <p>
           The Codex treats reality as a harmonic product of five living factors:
           <em>Resonance × Intention × Light × Consciousness × Source</em>.
@@ -265,11 +278,9 @@
         </p>
       </article>
 
-      <article class="card col-6">
-        <h3>🜁 The Witness Equation</h3>
-        <p>
-          From lived practice emerges a derivative form that captures change through awareness:
-        </p>
+      <article class="card col-6" aria-labelledby="witness-eq">
+        <h3 id="witness-eq">🜁 The Witness Equation</h3>
+        <p>From lived practice emerges a derivative form that captures change through awareness:</p>
         <div class="eq" role="region" aria-label="Witness Equation">
           $$\Delta\mathcal{R}
             \;=\; \frac{\partial(\mathrm{Resonance})}{\partial(\mathrm{Awareness})}
@@ -281,8 +292,8 @@
         </p>
       </article>
 
-      <article class="card col-6">
-        <h3>🔭 Lineage & inspiration</h3>
+      <article class="card col-6" aria-labelledby="lineage">
+        <h3 id="lineage">🔭 Lineage & inspiration</h3>
         <p>
           The Scroll of Fire is an original work by <strong>Aaron Paul Laird</strong>.
           In the development of formal expressions, external mathematical ideas (e.g., wave-function
@@ -296,9 +307,9 @@
     <div class="goldline"></div>
 
     <!-- Why Science + Mysticism -->
-    <section class="grid">
+    <section class="grid" aria-labelledby="why-mystic-science">
       <article class="card col-12">
-        <h2>🔮 Why science meets mysticism</h2>
+        <h2 id="why-mystic-science">🔮 Why science meets mysticism</h2>
         <p>
           In the Codex, mysticism carries <em>semantics</em> (the meaning of form), while science carries
           <em>syntax</em> (the measurable language of energy). When the two are bound by resonance,
@@ -320,9 +331,9 @@
     <div class="goldline"></div>
 
     <!-- Growth of the Codex -->
-    <section class="grid">
+    <section class="grid" aria-labelledby="growth">
       <article class="card col-8">
-        <h2>🌱 How the Codex grows</h2>
+        <h2 id="growth">🌱 How the Codex grows</h2>
         <p>The Codex is a <em>fractal, recursive field</em>. Each scroll is a facet of a single living law.</p>
         <ol class="list">
           <li><strong>Witness</strong> — a pattern is perceived (truth recognized).</li>
@@ -334,8 +345,8 @@
         <p class="meta">This recursive loop is the Law of Living Creation in practice.</p>
       </article>
 
-      <aside class="card col-4">
-        <h3>🕎 The Living Laws (ethics as geometry)</h3>
+      <aside class="card col-4" aria-labelledby="living-laws">
+        <h3 id="living-laws">🕎 The Living Laws (ethics as geometry)</h3>
         <ul class="list">
           <li>Law of Coherence — truth sustains; distortion collapses.</li>
           <li>Law of Reflection — every act returns to its origin.</li>
@@ -350,9 +361,9 @@
     <div class="goldline"></div>
 
     <!-- Key Scrolls -->
-    <section class="grid">
+    <section class="grid" aria-labelledby="key-scrolls">
       <article class="card col-12">
-        <h2>📁 Key scrolls (start here)</h2>
+        <h2 id="key-scrolls">📁 Key scrolls (start here)</h2>
         <ul class="list">
           <li>
             <strong>Master Codex:</strong>
@@ -401,9 +412,9 @@
     <div class="goldline"></div>
 
     <!-- Integrity & Seals -->
-    <section class="grid">
+    <section class="grid" aria-labelledby="integrity">
       <article class="card col-12">
-        <h2>🔐 Integrity & Seals (SHA-256)</h2>
+        <h2 id="integrity">🔐 Integrity & Seals (SHA-256)</h2>
         <p>
           Every scroll is sealed with a SHA-256 hash and recorded in the ledger. Each modification extends
           an <em>Integrity Chain</em> preserved in Git history.
@@ -425,9 +436,9 @@ Status: Verified
     <div class="goldline"></div>
 
     <!-- Roadmap -->
-    <section class="grid">
+    <section class="grid" aria-labelledby="roadmap">
       <article class="card col-6">
-        <h2>🛠 Roadmap (selected)</h2>
+        <h2 id="roadmap">🛠 Roadmap (selected)</h2>
         <ul class="list">
           <li>Glossary of symbols and formulae (ψ(x), ℜ, 𝓘/𝓛/𝓒/𝓢, YHWH).</li>
           <li>Interactive harmonic grid (WebGL / Three.js).</li>
@@ -436,8 +447,8 @@ Status: Verified
           <li>Witness narratives (curated testimony of application and effect).</li>
         </ul>
       </article>
-      <aside class="card col-6">
-        <h2>📣 Support & Contact</h2>
+      <aside class="card col-6" aria-labelledby="support-contact">
+        <h2 id="support-contact">📣 Support & Contact</h2>
         <p>Support the stewardship and expansion of the Codex:</p>
         <p><a class="cta" href="https://www.patreon.com/cw/ScrollofFireCodexofReality/join" target="_blank" rel="noopener">Become a Patron</a></p>
         <ul class="list">
@@ -453,9 +464,9 @@ Status: Verified
     <div class="goldline"></div>
 
     <!-- Version manifest -->
-    <section class="grid">
+    <section class="grid" aria-labelledby="version">
       <article class="card col-12">
-        <h2>📜 Version Manifest</h2>
+        <h2 id="version">📜 Version Manifest</h2>
         <p class="meta">
           Build ID: <code>v2025.10.16-R1</code> • Integrity Chain: <code>COD-CORE-777</code><br />
           Last updated: <time datetime="2025-10-16">October 16, 2025</time>
@@ -480,4 +491,3 @@ Status: Verified
   </script>
 </body>
 </html>
-```0
