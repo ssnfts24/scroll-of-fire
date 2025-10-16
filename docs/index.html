@@ -44,16 +44,17 @@
   }
   </script>
 
+  <!-- Site CSS (unchanged path) -->
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-16" />
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700&display=swap" rel="stylesheet" />
 
-  <!-- Site CSS -->
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-16" />
-
-  <!-- Preload banner for faster LCP -->
+  <!-- Preload: remote banner + local fallback (for webviews) -->
   <link rel="preload" as="image" href="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-16" imagesizes="100vw" />
+  <link rel="preload" as="image" href="assets/img/banner.png" imagesizes="100vw" />
 
   <!-- MathJax -->
   <script>
@@ -70,10 +71,17 @@
     <!-- Hero -->
     <figure class="hero" aria-label="Scroll of Fire — Codex of Reality Banner">
       <img
+        id="heroBanner"
         src="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-16"
+        data-src-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-16"
+        data-src-local="assets/img/banner.png"
         alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
+        width="1600" height="900"
         loading="eager" decoding="async" fetchpriority="high" />
       <div class="sigil-line" aria-hidden="true"></div>
+      <noscript>
+        <img src="assets/img/banner.png" alt="Scroll of Fire — Codex of Reality banner" width="1600" height="900" />
+      </noscript>
     </figure>
 
     <h1 class="title">⚖️ Scroll of Fire — Codex of Reality</h1>
@@ -381,10 +389,10 @@ Status: Verified
     </footer>
   </main>
 
-  <!-- Small progressive enhancement -->
+  <!-- Progressive enhancement -->
   <script src="assets/js/Codex.js?v=2025-10-16"></script>
   <script>
-    // Fallback year update if JS loaded before external file
+    // Ensure current year even if external JS is delayed
     (function(){var y=document.getElementById('yr'); if(y){ y.textContent=new Date().getFullYear(); }})();
   </script>
 </body>
