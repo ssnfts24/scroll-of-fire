@@ -8,8 +8,12 @@
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);}
-
-body{font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; line-height:1.6}
+body{
+  font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
 
 h1,h2,h3{font-family:"Crimson Pro", serif; letter-spacing:.02em}
 h1,h2{margin:.25rem 0}
@@ -17,37 +21,74 @@ h3{margin:0 0 .5rem}
 
 .container{max-width:1000px;margin:auto;padding:24px}
 
+/* HERO / BANNER — more resilient image behavior */
 .hero{position:relative;overflow:hidden}
-.hero__banner{width:100%;display:block;opacity:.88;filter:contrast(1.05) brightness(.9)}
-.hero__overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1rem}
+.hero__banner{
+  width:100%;
+  display:block;
+  opacity:.88;
+  filter:contrast(1.05) brightness(.9);
+  object-fit:cover;                /* NEW */
+  max-height:520px;               /* NEW (keeps huge images in check) */
+}
+.hero__overlay{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1rem;
+  pointer-events:none;
+}
 .subtitle{margin:.25rem 0 1rem;color:var(--muted)}
 
 .glow-xl{font-size: clamp(32px, 6vw, 64px); color:var(--gold); text-shadow: var(--glow)}
 .glow-md{font-size: clamp(22px, 3.5vw, 36px); color:#f6e7c8; text-shadow: var(--glow)}
 
-.pill{display:inline-block;padding:.5rem .9rem;border:1px solid rgba(255,200,107,.45);border-radius:999px;color:#f6e7c8;text-decoration:none;margin:.25rem .35rem;background:rgba(255,200,107,.08);transition:all .2s}
+.pill{
+  display:inline-block;padding:.5rem .9rem;border:1px solid rgba(255,200,107,.45);border-radius:999px;color:#f6e7c8;text-decoration:none;margin:.25rem .35rem;background:rgba(255,200,107,.08);transition:all .2s
+}
 .pill:hover{transform:translateY(-1px);box-shadow:var(--glow)}
 
-.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px 18px 14px;margin:18px 0}
+.card{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px 18px 14px;margin:18px 0
+}
 
 .muted{color:var(--muted)}
 .small{font-size: .92rem;color:var(--muted)}
 .compact{margin:.5rem 0 .25rem 1.1rem}
 .compact li{margin:.15rem 0}
 
+/* divider line with glow */
 .divider{display:flex;justify-content:center;align-items:center;margin:20px 0}
 .divider::before,.divider::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,rgba(255,200,107,.55),transparent)}
 .divider span{margin:0 .8rem;color:var(--gold);text-shadow:var(--glow)}
 
-.eq{background:rgba(255,200,107,.06);border:1px solid rgba(255,200,107,.2);border-radius:12px;padding:10px 14px;margin:.6rem 0;overflow:auto}
-mjx-container{filter: drop-shadow(0 0 8px rgba(255,200,107,.15));}
+/* EQUATIONS / MATHJAX — overflow fixes + readability */
+.eq{
+  background:rgba(255,200,107,.06);
+  border:1px solid rgba(255,200,107,.2);
+  border-radius:12px;
+  padding:10px 14px;
+  margin:.6rem 0;
+  overflow:auto;             /* was: auto; keep */
+}
+/* NEW: Make MathJax containers wrap within parent and scroll x on small screens */
+mjx-container{
+  max-width:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+  display:block;
+  filter: drop-shadow(0 0 8px rgba(255,200,107,.15));
+}
+mjx-container[jax="CHTML"] > svg{height:auto}        /* defensive */
+mjx-math{white-space:normal !important;}             /* allow wrapping where needed */
 
+/* simple responsive grid */
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;padding-left:1rem}
 .grid li{list-style: "▸ "; padding-left:.35rem}
 
 .footer{text-align:center;margin:24px 0 10px;color:var(--muted)}
 
-pre.seal{background:#0a0a0a;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap}
+pre.seal{
+  background:#0a0a0a;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap
+}
 
 /* tooltips */
 .tt{border-bottom:1px dotted rgba(255,255,255,.35);cursor:help;position:relative}
@@ -59,4 +100,29 @@ pre.seal{background:#0a0a0a;border:1px solid rgba(255,255,255,.08);border-radius
   border:1px solid rgba(255,200,107,.35);
   padding:.45rem .6rem;border-radius:.5rem;
   z-index:10;box-shadow:var(--glow)
+}
+
+/* LINKS + TABLES — nicer defaults */
+a{color:#ffdca0;text-decoration:none}
+a:hover{text-decoration:underline}
+table{width:100%;border-collapse:collapse;margin:12px 0}
+th,td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.08)}
+th{color:var(--gold);text-align:left}
+
+/* SMALL SCREENS — tighter spacing & type scaling */
+@media (max-width: 640px){
+  .container{padding:16px}
+  .hero__overlay{padding:.5rem}
+  .pill{padding:.45rem .75rem}
+  .card{padding:14px}
+  .glow-xl{font-size: clamp(28px, 8vw, 44px)}
+  .glow-md{font-size: clamp(18px, 5vw, 28px)}
+  .eq{padding:8px 10px}
+}
+
+/* OPTIONAL: print-friendly tweaks (keeps text dark on light printers) */
+@media print{
+  :root{--bg:#ffffff; --fg:#111; --muted:#555; --gold:#9a6b00}
+  body{background:#fff;color:#111}
+  .card,.eq,.divider::before,.divider::after{filter:none;box-shadow:none}
 }
