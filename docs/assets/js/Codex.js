@@ -1,14 +1,19 @@
-// Small niceties: glow pulse on dividers and tooltip support for <abbr>.
-(function(){
-  const pulses = document.querySelectorAll('.divider.glow span');
-  pulses.forEach(el => {
-    el.animate(
-      [
-        { boxShadow: '0 0 0 rgba(255,216,107,0)' },
-        { boxShadow: '0 0 24px rgba(255,216,107,.35), 0 0 48px rgba(255,216,107,.15)' },
-        { boxShadow: '0 0 0 rgba(255,216,107,0)' }
-      ],
-      { duration: 3500, iterations: Infinity }
-    );
+// Simple fade/slide reveal on scroll
+const reveal = () => {
+  const els = document.querySelectorAll('.card, .divider');
+  const h = window.innerHeight || document.documentElement.clientHeight;
+  els.forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.top < h * 0.88) el.classList.add('visible');
   });
-})();
+};
+window.addEventListener('scroll', reveal);
+window.addEventListener('load', reveal);
+
+// Add a subtle class for CSS transitions (optional)
+document.head.insertAdjacentHTML('beforeend', `
+  <style>
+    .card, .divider { opacity:0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease }
+    .card.visible, .divider.visible { opacity:1; transform: none }
+  </style>
+`);
