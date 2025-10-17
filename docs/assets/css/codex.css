@@ -256,3 +256,72 @@ th { color: var(--gold); font-weight: 600; }
   .grid { gap: 16px; }
   .wrap { padding: 18px; }
 }
+/* ----- Mobile polish for hero, headings, spacing ----------------------- */
+:root{
+  --gold:#f3c97a;
+  --ink:#0e0f12;
+}
+
+.hero{
+  margin: clamp(8px,2vw,16px) auto 18px;
+  max-width: 1080px;          /* keeps it elegant on tablets/desktop */
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow:
+    0 8px 32px rgba(0,0,0,.45),
+    inset 0 0 24px rgba(243,201,122,.08);
+}
+
+/* make image behave like a background cover */
+.hero img{
+  display:block;
+  width: 100%;
+  height: auto;                /* desktop/tablet default */
+  image-orientation: from-image;
+  -webkit-user-select:none; user-select:none;
+  -webkit-touch-callout:none;
+  border-radius: inherit;
+}
+
+/* phones: enforce a framed 16:9 window and crop with object-fit */
+@media (max-width: 640px){
+  .hero{
+    aspect-ratio: 16 / 9;      /* stable frame on mobile */
+    max-height: 56vh;
+  }
+  .hero img{
+    height: 100% !important;   /* fill the frame */
+    width: 100% !important;
+    object-fit: cover;
+    object-position: center;
+  }
+  .title{
+    font-size: clamp(1.6rem, 6.4vw, 2.15rem);
+    line-height: 1.15;
+    letter-spacing: .2px;
+  }
+  .subtitle{
+    font-size: clamp(.95rem, 3.6vw, 1.05rem);
+    opacity: .95;
+  }
+  .wrap{ padding-left: 14px; padding-right: 14px; }
+  .card{ padding: 14px 14px 12px; border-radius: 14px; }
+  .grid{ gap: 14px; }
+  .divider{ margin: 18px 0; }
+  .eq{ padding: 10px 46px 10px 10px; border-radius: 10px; }
+}
+
+/* very small devices */
+@media (max-width: 360px){
+  .hero{ max-height: 50vh; }
+  .title{ font-size: clamp(1.45rem, 7vw, 1.85rem); }
+  .eq{ padding-right: 40px; }
+}
+
+/* optional: deep-link symbol subtle glow on hover (from JS “§” links) */
+.deeplink{
+  color: var(--gold);
+  opacity:.6;
+  transition: opacity .25s ease, text-shadow .25s ease;
+}
+.deeplink:hover{ opacity:1; text-shadow: 0 0 10px rgba(243,201,122,.35); }
