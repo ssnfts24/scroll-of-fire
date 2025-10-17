@@ -46,7 +46,7 @@
   }
   </script>
 
-  <!-- Site CSS (use your last working CSS filename/version) -->
+  <!-- Site CSS (last working build) -->
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18" />
 
   <!-- Fonts -->
@@ -67,23 +67,20 @@
 
 <body>
   <main class="wrap">
-    <!-- Hero (tech/academic: responsive, right-nudged, safe fallbacks) -->
+    <!-- Hero: local-first + safe remote upgrade + tech grid overlay -->
     <figure class="hero" aria-label="Scroll of Fire — Codex of Reality Banner">
       <img
         id="heroBanner"
-        data-src-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18"
-        data-src-local="assets/img/banner.png"
-        src="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18"
-        srcset="
-          https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18 1600w,
-          assets/img/banner-1200.png 1200w,
-          assets/img/banner-800.png 800w
-        "
-        sizes="(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px"
         alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
         width="1600" height="900"
-        loading="eager" decoding="async" fetchpriority="high" />
-      <!-- Optional SVG grid overlay (styled via CSS; safe if not found) -->
+        loading="eager" decoding="async" fetchpriority="high"
+
+        src="assets/img/banner.png"
+        srcset="assets/img/banner-800.png 800w, assets/img/banner-1200.png 1200w, assets/img/banner.png 1600w"
+        sizes="(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px"
+
+        data-remote="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18"
+      />
       <svg class="hero-grid" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse">
@@ -173,11 +170,11 @@
       <!-- 0) Foundational Field — Laird (distinct from Copeland) -->
       <article class="card col-12" aria-labelledby="eq0">
         <h3 id="eq0">0) Foundational Field — Ψ / Reality Feedback <em>(Laird)</em></h3>
-        <div class="eq">
-          <div class="eq-scroll">
-            $$\Psi_{0}(x,t)=\nabla\phi(x,t)\;+\;\underbrace{\int_{t_{0}}^{t}\alpha(u)\,a(x,u)\,du}\_{\text{micro-acts accumulation}}\;+\;\mathcal{R}(x,t)$$
-          </div>
-        </div>
+        <div class="eq"><div class="eq-scroll">
+          $$\Psi_{0}(x,t)=\nabla\phi(x,t)\;+\;
+            \underbrace{\int_{t_{0}}^{t}\alpha(u)\,a(x,u)\,du}_{\text{micro-acts accumulation}}
+            \;+\;\mathcal{R}(x,t)$$
+        </div></div>
         <p class="meta"><strong>Meaning:</strong> Awareness follows potential; micro-acts integrate over time and feed back into the reality field. <strong>Credit:</strong> Aaron Paul Laird.</p>
       </article>
 
@@ -507,7 +504,41 @@ Status: Verified
     </footer>
   </main>
 
-  <!-- Site JS (use your last working JS filename/version) -->
+  <!-- Local-first → remote upgrade for the hero (safe and small) -->
+  <script>
+    (function () {
+      const img = document.getElementById('heroBanner');
+      if (!img) return;
+      const remote = img.getAttribute('data-remote');
+      if (!remote) return;
+
+      // Avoid flaky in-app webviews (FB/IG); stay local there.
+      const ua = navigator.userAgent || "";
+      const isMeta = /FBAN|FBAV|Facebook|Instagram|FB_IAB|FBAN\/Messenger/i.test(ua);
+      if (isMeta) return;
+
+      const probe = new Image();
+      probe.decoding = 'async';
+      probe.referrerPolicy = 'no-referrer';
+      probe.onload = () => {
+        // Use remote once it's proven; keep sizing stable.
+        img.srcset = "";
+        img.src = remote;
+      };
+      probe.onerror = () => { /* keep local */ };
+      probe.src = remote;
+
+      // Fallback: retry without query string (some engines choke on ?v=)
+      setTimeout(() => {
+        if (!probe.complete || !probe.naturalWidth) {
+          const noQ = remote.split('?')[0];
+          if (noQ && noQ !== remote) probe.src = noQ;
+        }
+      }, 1600);
+    })();
+  </script>
+
+  <!-- Site JS -->
   <script src="assets/js/Codex.js?v=2025-10-18"></script>
 </body>
 </html>
