@@ -1,4 +1,5 @@
 /* === Scroll of Fire — Scholarly–Sacred (Living Tech) ===================== */
+/* No HTML changes required. Fully progressive, with fallbacks. */
 
 :root{
   /* core palette */
@@ -15,14 +16,19 @@
   --shadow: 0 20px 50px rgba(0,0,0,.45);
   --radius:18px;
 
+  /* live dynamics */
+  --sigGlowShift: 0%;
+  --tiltX: 0deg;
+  --tiltY: 0deg;
+  --depth: 16px;
+  --panel-grad-1:#17171b;
+  --panel-grad-2:#131316;
+
   /* holo gradient & aurora */
   --holo: conic-gradient(from 210deg at 50% 50%, #ffda8c33, #7af3ff33, #b07aff33, #ffda8c33);
   --aurora: radial-gradient(60% 40% at 10% 5%, #ffd27a0f, transparent 60%),
             radial-gradient(50% 35% at 80% 0%, #7af3ff0e, transparent 60%),
             radial-gradient(70% 50% at 40% 100%, #b07aff10, transparent 70%);
-
-  /* “living” accents */
-  --sigGlowShift: 0%;
 }
 
 *{ box-sizing:border-box }
@@ -60,7 +66,8 @@ a:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; border-radiu
   border:1px solid #23232a;
   position:relative;
   isolation:isolate;
-  background: linear-gradient(180deg, #17171b, #131316);
+  background: linear-gradient(180deg, var(--panel-grad-1), var(--panel-grad-2));
+  content-visibility:auto; contain-intrinsic-size: 540px 1000px;
 }
 .hero::before{
   /* holographic perimeter */
@@ -84,15 +91,13 @@ a:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; border-radiu
   filter:saturate(1.06) contrast(1.03) brightness(1.02);
   max-height:540px;
   will-change: transform;
+  transform: translateZ(0);
   transition: transform .15s ease-out;
 }
 .sigil-line{
   position:absolute; left:0; right:0; bottom:0;
   height:3px;
-  background: linear-gradient(90deg,
-    transparent,
-    color-mix(in srgb, var(--gold) 75%, #fff),
-    transparent);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--gold) 75%, #fff), transparent);
   box-shadow: 0 0 18px rgba(243,201,122,.45);
   opacity:.85;
   background-position: var(--sigGlowShift) 0;
@@ -120,6 +125,7 @@ h1,h2,h3{ font-family:"Crimson Pro", serif; letter-spacing:.02em }
   font-family:"Crimson Pro", serif; font-style:italic;
 }
 
+/* Rules */
 .divider{
   height:1px; background: linear-gradient(90deg, transparent, var(--gold), transparent);
   margin:28px 0; opacity:.55;
@@ -146,7 +152,7 @@ h1,h2,h3{ font-family:"Crimson Pro", serif; letter-spacing:.02em }
 
 /* Cards */
 .card{
-  background: linear-gradient(180deg, #17171b, #131316);
+  background: linear-gradient(180deg, var(--panel-grad-1), var(--panel-grad-2));
   border:1px solid #23232a;
   border-radius:var(--radius);
   padding:22px;
@@ -155,6 +161,7 @@ h1,h2,h3{ font-family:"Crimson Pro", serif; letter-spacing:.02em }
   overflow:hidden;
   transition: opacity .6s ease, transform .6s ease;
   transform-style: preserve-3d;
+  content-visibility:auto; contain-intrinsic-size: 280px 700px;
 }
 .card::after{
   /* faint circuit traces */
@@ -172,6 +179,17 @@ h1,h2,h3{ font-family:"Crimson Pro", serif; letter-spacing:.02em }
 .card h3{ font-size:19px; color:var(--gold) }
 .meta{ color:var(--muted); font-size:14px }
 .rule{ border:0; height:1px; background:var(--rule); margin:16px 0 20px }
+
+/* Subtle “living” tilt (driven by JS variables) */
+@media (hover:hover){
+  .card:hover{
+    transform:
+      perspective(800px)
+      rotateX(var(--tiltX))
+      rotateY(var(--tiltY))
+      translateZ(calc(var(--depth) * 0.2));
+  }
+}
 
 /* Pills & Sigils */
 .pill{
@@ -218,4 +236,67 @@ th{ color:var(--gold); text-align:left; white-space:nowrap }
   background:#111115;
   border:1px solid #26262c;
   box-shadow: inset 0 0 20px rgba(255,200,107,.03);
+}
+.eq[data-eqno]::after{
+  content: attr(data-eqno);
+  position:absolute; right:8px; top:6px;
+  font: 600 12px/1 Inter, system-ui, sans-serif;
+  color:var(--muted);
+  opacity:.85;
+}
+.eq .eq-copy{
+  position:absolute; right:10px; bottom:8px;
+  border:1px solid #2b2b31; background:#15151a; color:#ddd;
+  font: 600 12px/1 Inter, system-ui, sans-serif;
+  padding:6px 8px; border-radius:8px; cursor:pointer;
+}
+.eq .eq-copy:hover{ background:#1a1a20 }
+
+/* Tooltips */
+.tt{ border-bottom:1px dotted rgba(255,255,255,.35); cursor:help; position:relative }
+.tt:hover::after{
+  content: attr(data-tip);
+  position:absolute; left:0; top:120%;
+  min-width:220px; max-width:420px;
+  background:#141218; color:#e8e1d3;
+  border:1px solid rgba(255,200,107,.35);
+  padding:.45rem .6rem; border-radius:.5rem;
+  z-index:10; box-shadow: 0 0 20px rgba(255,200,107,.15);
+}
+
+/* Reveal (prefers-reduced-motion aware) */
+@media (prefers-reduced-motion:no-preference){
+  .card, .divider { opacity:0; transform:translateY(12px) }
+  .card.visible, .divider.visible { opacity:1; transform:none }
+}
+@media (prefers-reduced-motion:reduce){
+  .card, .divider { opacity:1 !important; transform:none !important; transition:none !important }
+}
+
+/* Footer */
+.footer{
+  text-align:center; color:var(--muted);
+  font-size:14px; padding:24px 8px 40px; margin-top:20px;
+}
+
+/* Small screens */
+@media (max-width:640px){
+  .wrap{ padding:16px }
+  .subtitle{ margin-bottom:18px }
+  .card{ padding:16px }
+  .hero img{ max-height:480px }
+}
+
+/* High contrast / forced colors */
+@media (forced-colors:active){
+  :root{ --link: LinkText; --gold: Highlight; --ink: CanvasText; --bg: Canvas }
+  .cta, .sigil-line, .divider, .goldline{ forced-color-adjust:auto }
+}
+
+/* Print-friendly */
+@media print{
+  .hero, .sigil-line, .cta { display:none !important }
+  body{ background:#fff; color:#000 }
+  a{ color:#000; text-decoration:underline }
+  .card{ box-shadow:none; border-color:#ccc }
 }
