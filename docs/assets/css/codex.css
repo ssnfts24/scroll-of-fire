@@ -1,7 +1,6 @@
-/* =========================
+/* ===========================================================
    Scroll of Fire — Codex.css
-   (mobile-first, overflow-safe)
-   ========================= */
+   =========================================================== */
 
 :root{
   --bg:#0b0b0f;
@@ -13,113 +12,109 @@
   --accent:#7af3ff;
   --shadow:rgba(0,0,0,.35);
   --maxw:1180px;
-
-  /* hero focus point (x-axis). Increase to nudge right. */
-  --hero-x: 61%;
+  --hero-x:61%; /* adjust to nudge hero image horizontally */
 }
 
-/* Global reset-ish */
-*{ box-sizing:border-box }
-html,body{ height:100% }
-html{ scroll-behavior:smooth }
+/* Base reset */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;scroll-behavior:smooth}
 body{
-  margin:0;
   color:var(--ink);
-  /* hard fallback so page never renders white */
-  background-color: #0d0d10;
-  background-image: radial-gradient(1800px 900px at 50% -10%, #13131a 20%, var(--bg) 70%);
-  font: 400 16px/1.6 Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-  overflow-x:hidden; /* prevent page-wide sideways scroll */
+  background-color:#0d0d10;
+  background-image:radial-gradient(1800px 900px at 50% -10%,#13131a 20%,var(--bg) 70%);
+  font:400 16px/1.6 "Inter",system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+  overflow-x:hidden;
 }
 
-.wrap{ max-width:var(--maxw); margin:0 auto; padding:20px 16px 80px }
+/* Container */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:20px 16px 80px}
 
 /* Headings */
 .title{
-  font-family:"Crimson Pro", Georgia, "Times New Roman", serif;
-  font-size: clamp(28px, 3.6vw, 48px);
+  font-family:"Crimson Pro",Georgia,serif;
+  font-size:clamp(28px,3.6vw,48px);
   letter-spacing:.3px;
+  text-align:center;
   margin:8px 0 4px;
-  text-align:center;
 }
-.subtitle{
-  text-align:center;
-  color:var(--muted);
-  margin:0 0 12px;
-  font-style:italic;
-}
+.subtitle{text-align:center;color:var(--muted);font-style:italic;margin-bottom:12px}
 
-/* Hero */
+/* Hero Banner */
 .hero{
-  margin: 0 auto 10px;
-  max-width: var(--maxw);
-  border-radius: 20px;
+  margin:0 auto 10px;
+  max-width:var(--maxw);
+  border-radius:20px;
   overflow:hidden;
   background:#0e0e12;
-  /* visible even before image decode */
-  min-height: 180px;
-  box-shadow: 0 10px 30px var(--shadow), inset 0 0 40px rgba(255,200,107,.05);
+  min-height:180px;
+  box-shadow:0 10px 30px var(--shadow),inset 0 0 40px rgba(255,200,107,.05);
 }
 .hero img{
   display:block;
   width:100%;
-  height: clamp(170px, 30vw, 350px); /* smaller banner; slightly taller cap */
-  object-fit: cover;
-  object-position: var(--hero-x) center; /* right nudge */
+  height:clamp(200px,30vw,360px);
+  object-fit:cover;
+  object-position:var(--hero-x) center;
+  transition:object-position .4s ease;
 }
 .sigil-line{
   height:2px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
   opacity:.6;
 }
 
-/* Divider */
+/* Dividers */
 .divider{
   height:1px;
-  background:linear-gradient(90deg, transparent, #2a2a33, transparent);
-  margin: 18px auto 24px;
+  background:linear-gradient(90deg,transparent,#2a2a33,transparent);
+  margin:18px auto 24px;
 }
 .goldline{
   height:1px;
-  background:linear-gradient(90deg, transparent, rgba(243,201,122,.5), transparent);
-  margin: 28px auto;
+  background:linear-gradient(90deg,transparent,rgba(243,201,122,.5),transparent);
+  margin:28px auto;
 }
 
-/* Grid & Cards */
-.grid{ display:grid; grid-template-columns: repeat(12, 1fr); gap:14px }
-.col-12{ grid-column: span 12 }
-.col-8{ grid-column: span 8 }
-.col-7{ grid-column: span 7 }
-.col-6{ grid-column: span 6 }
-.col-5{ grid-column: span 5 }
-.col-4{ grid-column: span 4 }
+/* Grid */
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.col-12{grid-column:span 12}
+.col-8{grid-column:span 8}
+.col-6{grid-column:span 6}
+.col-4{grid-column:span 4}
+@media(max-width:980px){.col-8,.col-6,.col-4{grid-column:span 12}}
 
-@media (max-width: 980px){
-  .col-8,.col-7,.col-6,.col-5,.col-4 { grid-column: span 12 }
-}
-
+/* Card base */
 .card{
-  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.005));
+  background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));
   border:1px solid var(--line);
   border-radius:16px;
   padding:16px 16px 14px;
-  box-shadow: 0 10px 20px var(--shadow), inset 0 0 24px rgba(255,200,107,.03);
-  transform: translateY(8px);
+  box-shadow:0 10px 20px var(--shadow),inset 0 0 24px rgba(255,200,107,.03);
+  transform:translateY(8px);
   opacity:0;
-  transition: opacity .6s ease, transform .6s ease, box-shadow .3s ease;
+  transition:opacity .6s ease,transform .6s ease,box-shadow .3s ease;
 }
-.card.visible{ transform:none; opacity:1 }
-.card h2, .card h3{ margin:.1rem 0 .6rem; font-family:"Crimson Pro", Georgia, serif }
-.rule{ border:none; height:1px; background:linear-gradient(90deg, transparent, #31313a, transparent); margin:10px 0 14px }
-.list{ margin:.3rem 0 .2rem 1.2rem; padding:0 }
-.list li{ margin:.25rem 0 }
-.meta{ color:var(--muted); font-size:.95rem }
+.card.visible{
+  transform:none;
+  opacity:1;
+  box-shadow:0 12px 28px var(--shadow),inset 0 0 26px rgba(255,200,107,.04);
+}
 
-/* Quick links CTA */
+/* Typography */
+.card h2,.card h3{margin:.1rem 0 .6rem;font-family:"Crimson Pro",serif}
+p,li{font-size:clamp(15px,1.5vw,17px)}
+.meta{color:var(--muted);font-size:.95rem}
+
+/* Lists & Rules */
+.rule{border:none;height:1px;background:linear-gradient(90deg,transparent,#31313a,transparent);margin:10px 0 14px}
+.list{margin:.3rem 0 .2rem 1.2rem}
+.list li{margin:.25rem 0}
+
+/* CTA Buttons */
 .cta{
   display:inline-block;
   margin-top:10px;
-  background:linear-gradient(180deg, rgba(243,201,122,.16), rgba(243,201,122,.05));
+  background:linear-gradient(180deg,rgba(243,201,122,.16),rgba(243,201,122,.05));
   border:1px solid rgba(243,201,122,.35);
   color:var(--ink);
   text-decoration:none;
@@ -127,109 +122,97 @@ body{
   border-radius:10px;
   transition:.2s ease;
 }
-.cta:hover{ transform: translateY(-1px); box-shadow:0 10px 16px rgba(243,201,122,.08) }
-
-/* Tables */
-table{ width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:12px; border:1px solid var(--line) }
-thead th{
-  text-align:left; padding:10px 12px; background:#14141b; border-bottom:1px solid var(--line);
-  font-weight:600;
-}
-tbody td{ padding:10px 12px; border-bottom:1px solid #22222b }
-tbody tr:last-child td{ border-bottom:none }
+.cta:hover{transform:translateY(-1px);box-shadow:0 10px 16px rgba(243,201,122,.08)}
 
 /* Footer */
-.footer{ text-align:center; color:var(--muted); margin-top:20px }
-.footer .divider{ margin:20px auto }
+.footer{text-align:center;color:var(--muted);margin-top:20px}
+.footer .divider{margin:20px auto}
 
-/* =========================
-   Equation containers (critical)
-   ========================= */
+/* ===========================================================
+   Equation containers — electric halo style
+   =========================================================== */
 
-/* Outer .eq box: soft frame + inner scroll only */
 .eq{
-  --eq-pad-inline: 12px;
   position:relative;
-  overflow:hidden;               /* contain MathJax in box */
+  overflow:hidden;
   border-radius:12px;
   background:#111115;
   border:1px solid #26262c;
-  box-shadow: inset 0 0 20px rgba(255,200,107,.03);
-  margin: 8px 0 10px;
+  box-shadow:
+    inset 0 0 20px rgba(255,200,107,.03),
+    0 0 12px rgba(122,243,255,.02);
+  margin:8px 0 10px;
+  transition:box-shadow .6s ease,transform .6s ease;
 }
-
-/* Create a dedicated scroller so page never scrolls sideways */
 .eq .eq-scroll{
   overflow-x:auto;
   overflow-y:hidden;
   max-width:100%;
-  padding: 12px var(--eq-pad-inline);
-  -webkit-overflow-scrolling: touch;
+  padding:12px 16px;
+  -webkit-overflow-scrolling:touch;
 }
 
-/* Holo halo & sweep (subtle) */
+/* Glowing electric pull */
 .eq::before,
 .eq::after{
   content:"";
   position:absolute;
   inset:0;
-  pointer-events:none;
   border-radius:inherit;
+  pointer-events:none;
 }
 .eq::before{
-  background: radial-gradient(120% 80% at 10% 5%, rgba(243,201,122,.06), transparent 70%),
-              radial-gradient(140% 90% at 100% 100%, rgba(122,243,255,.05), transparent 70%);
-  opacity:.7;
+  background:
+    radial-gradient(120% 80% at 10% 5%,rgba(243,201,122,.07),transparent 70%),
+    radial-gradient(140% 90% at 100% 100%,rgba(122,243,255,.07),transparent 70%);
+  opacity:.6;
+  filter:blur(2px);
 }
 .eq::after{
-  left:auto; right:10px; top:10px; bottom:10px; width:2px;
-  background: linear-gradient(180deg, transparent, var(--gold), transparent);
-  filter: blur(.4px);
+  right:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,transparent,var(--gold),transparent);
   opacity:.0;
-  animation: eqSweep 1.2s ease-out forwards;
-  animation-delay:.25s;
+  animation:eqSweep 1.5s ease-out infinite;
 }
 @keyframes eqSweep{
-  0%   { transform: translateX(12px); opacity:0; }
-  10%  { opacity:.9; }
-  100% { transform: translateX(-6px); opacity:0; }
+  0%{transform:translateX(12px);opacity:0}
+  10%{opacity:.9}
+  100%{transform:translateX(-6px);opacity:0}
 }
 
-/* MathJax: make SVG sit naturally and allow horizontal scroll */
+/* Electric field shimmer (optional hover) */
+.eq:hover{
+  box-shadow:
+    inset 0 0 24px rgba(255,200,107,.06),
+    0 0 16px rgba(122,243,255,.04);
+}
+
+/* MathJax adjustments */
 .eq mjx-container{
   display:block !important;
-  overflow:visible;      /* let SVG size itself, scroller handles overflow */
-  margin:0; padding:0;
+  overflow:visible;
+  margin:0;padding:0;
+  opacity:1;
+  filter:drop-shadow(0 0 10px rgba(255,200,107,.08));
+  transition:filter .4s ease;
 }
 .eq mjx-container[jax="SVG"] svg{
   height:auto !important;
-  width:auto !important;           /* prevent forced 100% width that causes overspill */
-  max-width:none !important;       /* allow true width; scroller will manage */
+  width:auto !important;
+  max-width:none !important;
 }
 
-/* Activation on reveal */
-.eq,
-.eq mjx-container{ opacity:.0; transition: opacity .5s ease .05s, filter .6s ease .05s }
-.card.visible .eq{ opacity:1 }
-.card.visible .eq mjx-container{ opacity:1; filter: drop-shadow(0 0 10px rgba(255,200,107,.08)) }
-
 /* Reduced motion */
-@media (prefers-reduced-motion: reduce){
-  .card{ transform:none !important; opacity:1 !important }
-  .eq::after{ display:none }
+@media(prefers-reduced-motion:reduce){
+  .eq::after{display:none}
+  .card{transform:none!important;opacity:1!important}
 }
 
 /* Links */
-a{ color:var(--ink); text-underline-offset:2px }
-a:hover{ color:#fff }
+a{color:var(--ink);text-underline-offset:2px}
+a:hover{color:#fff}
+.tt{border-bottom:1px dotted var(--muted);cursor:help}
 
-/* Tooltips (simple) */
-.tt{ border-bottom:1px dotted var(--muted); cursor:help }
-
-/* Small tweaks */
-article h3{ font-size: clamp(18px, 2.2vw, 22px) }
-article h2{ font-size: clamp(20px, 2.6vw, 28px) }
-p,li{ font-size: clamp(15px, 1.5vw, 17px) }
-
-/* Reveal visuals */
-.card.visible{ box-shadow: 0 12px 28px var(--shadow), inset 0 0 26px rgba(255,200,107,.04) }
+/* Responsive typography */
+article h3{font-size:clamp(18px,2.2vw,22px)}
+article h2{font-size:clamp(20px,2.6vw,28px)}
