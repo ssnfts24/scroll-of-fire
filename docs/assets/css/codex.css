@@ -1,366 +1,193 @@
-/* ============================================================
-   Scroll of Fire — Codex of Reality (FULL CSS)
-   - Dark theme + typography
-   - Grid & cards
-   - Hero banner (right-nudged, capped height)
-   - Equation activation block (as supplied)
-   - Lists, tables, buttons, utilities
-   - Responsive & reduced-motion care
-   ============================================================ */
+/* =========================
+   Scroll of Fire — Codex.css
+   (mobile-first, overflow-safe)
+   ========================= */
 
-/* ------------------
-   Root design tokens
-   ------------------ */
 :root{
-  /* colors */
-  --bg: #0d0d10;
-  --panel: #121217;
-  --panel-2: #0f0f14;
-  --text: #e9e9ef;
-  --muted: #b9bcc7;
-  --muted-2: #8c90a0;
-  --line: #26262c;
-  --gold: #f3c97a;
-  --gold-2: #f0b858;
-  --aqua: #94f0ff;
+  --bg:#0b0b0f;
+  --ink:#eae7df;
+  --muted:#b8b3a6;
+  --card:#121219;
+  --line:#2a2a33;
+  --gold:#f3c97a;
+  --accent:#7af3ff;
+  --shadow:rgba(0,0,0,.35);
+  --maxw:1180px;
 
-  /* effects */
-  --shadow-soft: 0 10px 30px rgba(0,0,0,.35);
-  --shadow-inset: inset 0 0 20px rgba(255,200,107,.03);
-
-  /* rhythm */
-  --wrap: 1120px;
-  --gap: 16px;
-  --radius: 16px;
-  --radius-lg: 20px;
-
-  /* hero alignment (nudge right) */
-  --hero-x: 60%;
+  /* hero focus point (x-axis). Increase to nudge right. */
+  --hero-x: 61%;
 }
 
-/* ------------------
-   Reset / base
-   ------------------ */
-*,
-*::before,
-*::after{ box-sizing: border-box; }
-
-html, body{
-  height: 100%;
-}
-
-html{
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-}
-
+/* Global reset-ish */
+*{ box-sizing:border-box }
+html,body{ height:100% }
+html{ scroll-behavior:smooth }
 body{
   margin:0;
-  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-  color: var(--text);
-  background: radial-gradient(120% 80% at 20% 0%, #0b0b0f, #0e0e12 40%, #0a0a0d 100%);
-  line-height: 1.6;
+  color:var(--ink);
+  /* hard fallback so page never renders white */
+  background-color: #0d0d10;
+  background-image: radial-gradient(1800px 900px at 50% -10%, #13131a 20%, var(--bg) 70%);
+  font: 400 16px/1.6 Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  overflow-x:hidden; /* prevent page-wide sideways scroll */
 }
 
-/* Selection */
-::selection{ background: rgba(243,201,122,.25); color:#fff; }
+.wrap{ max-width:var(--maxw); margin:0 auto; padding:20px 16px 80px }
 
-/* ------------------
-   Layout wrapper
-   ------------------ */
-.wrap{
-  max-width: var(--wrap);
-  margin: 0 auto;
-  padding: clamp(14px, 3.2vw, 28px);
+/* Headings */
+.title{
+  font-family:"Crimson Pro", Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 3.6vw, 48px);
+  letter-spacing:.3px;
+  margin:8px 0 4px;
+  text-align:center;
+}
+.subtitle{
+  text-align:center;
+  color:var(--muted);
+  margin:0 0 12px;
+  font-style:italic;
 }
 
-/* ------------------
-   Hero banner
-   ------------------ */
+/* Hero */
 .hero{
-  margin: 4px 0 12px;
-  border-radius: var(--radius);
-  overflow: hidden;
-  border: 1px solid var(--line);
-  background: var(--panel-2);
-  box-shadow: var(--shadow-soft);
+  margin: 0 auto 10px;
+  max-width: var(--maxw);
+  border-radius: 20px;
+  overflow:hidden;
+  background:#0e0e12;
+  /* visible even before image decode */
+  min-height: 180px;
+  box-shadow: 0 10px 30px var(--shadow), inset 0 0 40px rgba(255,200,107,.05);
 }
-
 .hero img{
   display:block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 9;
+  width:100%;
+  height: clamp(170px, 30vw, 350px); /* smaller banner; slightly taller cap */
   object-fit: cover;
-  object-position: var(--hero-x) center; /* ← slight right nudge */
-  max-height: clamp(180px, 26vw, 360px);
-  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  object-position: var(--hero-x) center; /* right nudge */
+}
+.sigil-line{
+  height:2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity:.6;
 }
 
-@media (max-width: 380px){
-  .hero img{ max-height: 210px; }
-}
-@media (min-width: 1200px){
-  .hero img{ max-height: 400px; }
-}
-
-/* ------------------
-   Headings & text
-   ------------------ */
-.title{
-  font-family: "Crimson Pro", ui-serif, Georgia, "Times New Roman", serif;
-  font-weight: 800;
-  font-size: clamp(28px, 4.8vw, 52px);
-  line-height: 1.1;
-  letter-spacing: .2px;
-  margin: 10px 0 6px;
-  background: linear-gradient(90deg, #eaeef8, #bff7ff 50%, #eaeef8 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.subtitle{
-  margin: 0 0 14px;
-  color: var(--muted);
-  font-size: clamp(15px, 2.6vw, 18px);
-  font-style: italic;
-}
-
-/* Decorative separators */
+/* Divider */
 .divider{
-  height: 1px;
-  width: 100%;
-  background: linear-gradient(90deg, transparent, rgba(243,201,122,.25), transparent);
-  margin: 8px 0 12px;
+  height:1px;
+  background:linear-gradient(90deg, transparent, #2a2a33, transparent);
+  margin: 18px auto 24px;
 }
 .goldline{
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(243,201,122,.35) 20%, rgba(243,201,122,.7) 50%, rgba(243,201,122,.35) 80%, transparent);
-  border-radius: 2px;
-  margin: 16px 0 14px;
-  filter: drop-shadow(0 0 8px rgba(243,201,122,.25));
-}
-
-/* ------------------
-   Grid system (12-col)
-   ------------------ */
-.grid{
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--gap);
-}
-
-@media (min-width: 740px){
-  .grid{
-    grid-template-columns: repeat(12, minmax(0,1fr));
-  }
-  .col-12{ grid-column: span 12; }
-  .col-8 { grid-column: span 8; }
-  .col-7 { grid-column: span 7; }
-  .col-6 { grid-column: span 6; }
-  .col-5 { grid-column: span 5; }
-  .col-4 { grid-column: span 4; }
-  .col-3 { grid-column: span 3; }
-}
-
-/* ------------------
-   Cards
-   ------------------ */
-.card{
-  background: linear-gradient(180deg, var(--panel), #0f0f12 60%);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: clamp(14px, 2.4vw, 20px);
-  box-shadow: var(--shadow-soft), var(--shadow-inset);
-  transform: translateY(8px);
-  opacity: .0;
-  transition: opacity .6s ease, transform .6s ease, box-shadow .6s ease;
-}
-
-.card.visible{
-  transform: none;
-  opacity: 1;
-}
-
-.card h2, .card h3{
-  font-family: "Crimson Pro", ui-serif, Georgia, "Times New Roman", serif;
-  margin: 0 0 10px;
-  line-height: 1.2;
-}
-.card h2{ font-weight: 800; font-size: clamp(20px, 3.2vw, 28px); color: var(--gold); }
-.card h3{ font-weight: 700; font-size: clamp(18px, 2.6vw, 22px); color: var(--gold); }
-
-.card .meta{
-  color: var(--muted-2);
-  font-size: 0.98rem;
-}
-
-.rule{
-  border:0;
   height:1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent);
-  margin: 10px 0;
+  background:linear-gradient(90deg, transparent, rgba(243,201,122,.5), transparent);
+  margin: 28px auto;
 }
 
-/* Supportive sigils row */
-.sigils{ display:flex; gap:10px; color:var(--gold); opacity:.95; font-size:18px; }
-.sigil-line{ height:3px; background:linear-gradient(90deg, transparent, rgba(243,201,122,.5), transparent); }
+/* Grid & Cards */
+.grid{ display:grid; grid-template-columns: repeat(12, 1fr); gap:14px }
+.col-12{ grid-column: span 12 }
+.col-8{ grid-column: span 8 }
+.col-7{ grid-column: span 7 }
+.col-6{ grid-column: span 6 }
+.col-5{ grid-column: span 5 }
+.col-4{ grid-column: span 4 }
 
-/* ------------------
-   Lists & links
-   ------------------ */
-.list{
-  padding-left: 1.1rem;
-  margin: .2rem 0 0;
+@media (max-width: 980px){
+  .col-8,.col-7,.col-6,.col-5,.col-4 { grid-column: span 12 }
 }
-.list li{
-  margin: .35rem 0;
-}
-a{
-  color: var(--aqua);
-  text-decoration: none;
-}
-a:hover{ text-decoration: underline; }
 
-/* CTA button */
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.005));
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px 16px 14px;
+  box-shadow: 0 10px 20px var(--shadow), inset 0 0 24px rgba(255,200,107,.03);
+  transform: translateY(8px);
+  opacity:0;
+  transition: opacity .6s ease, transform .6s ease, box-shadow .3s ease;
+}
+.card.visible{ transform:none; opacity:1 }
+.card h2, .card h3{ margin:.1rem 0 .6rem; font-family:"Crimson Pro", Georgia, serif }
+.rule{ border:none; height:1px; background:linear-gradient(90deg, transparent, #31313a, transparent); margin:10px 0 14px }
+.list{ margin:.3rem 0 .2rem 1.2rem; padding:0 }
+.list li{ margin:.25rem 0 }
+.meta{ color:var(--muted); font-size:.95rem }
+
+/* Quick links CTA */
 .cta{
   display:inline-block;
-  margin-top: 12px;
-  padding: 12px 18px;
-  border-radius: 14px;
-  background: linear-gradient(180deg, #f9d88c, #e7b85b);
-  color:#2a220e;
-  font-weight: 700;
-  box-shadow: 0 10px 26px rgba(243,201,122,.18), inset 0 -2px 0 rgba(0,0,0,.12);
-  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+  margin-top:10px;
+  background:linear-gradient(180deg, rgba(243,201,122,.16), rgba(243,201,122,.05));
+  border:1px solid rgba(243,201,122,.35);
+  color:var(--ink);
+  text-decoration:none;
+  padding:8px 12px;
+  border-radius:10px;
+  transition:.2s ease;
 }
-.cta:hover{
-  transform: translateY(-2px);
-  filter: brightness(1.02);
-  text-decoration: none;
-}
+.cta:hover{ transform: translateY(-1px); box-shadow:0 10px 16px rgba(243,201,122,.08) }
 
-/* ------------------
-   Tables (constants)
-   ------------------ */
-table{
-  width: 100%;
-  border-collapse: collapse;
-  border: 1px solid var(--line);
-  background: #0f0f13;
-  border-radius: 12px;
-  overflow: hidden;
-}
+/* Tables */
+table{ width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:12px; border:1px solid var(--line) }
 thead th{
-  text-align: left;
-  font-weight: 700;
-  padding: 10px 12px;
-  background: #14141a;
-  color: #f2e9d0;
-  border-bottom: 1px solid var(--line);
+  text-align:left; padding:10px 12px; background:#14141b; border-bottom:1px solid var(--line);
+  font-weight:600;
 }
-tbody td{
-  padding: 10px 12px;
-  border-bottom: 1px dashed #1f1f25;
-  color: #d7d9e3;
-}
-tbody tr:last-child td{ border-bottom: 0; }
+tbody td{ padding:10px 12px; border-bottom:1px solid #22222b }
+tbody tr:last-child td{ border-bottom:none }
 
-/* ------------------
-   Footer
-   ------------------ */
-.footer{
-  text-align:center;
-  color: var(--muted-2);
-  padding: 16px 0 6px;
-  font-size: .98rem;
-}
+/* Footer */
+.footer{ text-align:center; color:var(--muted); margin-top:20px }
+.footer .divider{ margin:20px auto }
 
-/* ============================================================
-   EQUATION ACTIVATION (kept exactly, with tiny safe tweaks)
-   ============================================================ */
+/* =========================
+   Equation containers (critical)
+   ========================= */
 
-/* === Equation activation (no HTML changes required) ==================== */
-
-/* base state */
+/* Outer .eq box: soft frame + inner scroll only */
 .eq{
+  --eq-pad-inline: 12px;
   position:relative;
-  overflow-x:auto;
-  -webkit-overflow-scrolling: touch; /* smooth horizontal on iOS */
-  padding:12px 60px 12px 12px;
+  overflow:hidden;               /* contain MathJax in box */
   border-radius:12px;
   background:#111115;
   border:1px solid #26262c;
   box-shadow: inset 0 0 20px rgba(255,200,107,.03);
-  opacity:0;
-  transform: translateY(8px) scale(.995);
-  transition: opacity .6s ease, transform .6s ease, box-shadow .6s ease;
+  margin: 8px 0 10px;
 }
 
-/* glow rail + holo sweep (created with pseudo elements) */
+/* Create a dedicated scroller so page never scrolls sideways */
+.eq .eq-scroll{
+  overflow-x:auto;
+  overflow-y:hidden;
+  max-width:100%;
+  padding: 12px var(--eq-pad-inline);
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Holo halo & sweep (subtle) */
 .eq::before,
 .eq::after{
   content:"";
   position:absolute;
-  pointer-events:none;
-  border-radius: inherit;
   inset:0;
+  pointer-events:none;
+  border-radius:inherit;
 }
-
-/* gold “breath” halo */
 .eq::before{
   background: radial-gradient(120% 80% at 10% 5%, rgba(243,201,122,.06), transparent 70%),
               radial-gradient(140% 90% at 100% 100%, rgba(122,243,255,.05), transparent 70%);
-  opacity:0;
-  transition: opacity .8s ease;
+  opacity:.7;
 }
-
-/* holographic sweep line */
 .eq::after{
   left:auto; right:10px; top:10px; bottom:10px; width:2px;
   background: linear-gradient(180deg, transparent, var(--gold), transparent);
   filter: blur(.4px);
-  transform: translateX(12px);
-  opacity:0;
-}
-
-/* MathJax container soft fade */
-.eq mjx-container{
   opacity:.0;
-  filter: drop-shadow(0 0 8px rgba(255,200,107,.06));
-  transition: opacity .5s ease .05s, filter .6s ease .05s;
-  white-space: nowrap;           /* keep long equations in a single row */
-}
-
-/* prevent internal SVG from shrinking oddly; allow horizontal scroll only */
-.eq mjx-container[jax="SVG"] svg{
-  display: block;
-  height: auto;
-  max-width: none;               /* avoid page-wide reflow */
-}
-
-/* activated */
-.eq.eq-on{
-  opacity:1;
-  transform: none;
-  transition-delay: var(--eq-delay, 0s);
-  box-shadow:
-    inset 0 0 24px rgba(255,200,107,.05),
-    0 0 0 0 rgba(243,201,122,0);
-}
-
-/* halo comes alive */
-.eq.eq-on::before{
-  opacity:1;
-  transition-delay: calc(var(--eq-delay,0s) + .05s);
-}
-
-/* sweep slides once */
-.eq.eq-on::after{
-  opacity:.9;
   animation: eqSweep 1.2s ease-out forwards;
-  animation-delay: calc(var(--eq-delay,0s) + .15s);
+  animation-delay:.25s;
 }
 @keyframes eqSweep{
   0%   { transform: translateX(12px); opacity:0; }
@@ -368,45 +195,41 @@ tbody tr:last-child td{ border-bottom: 0; }
   100% { transform: translateX(-6px); opacity:0; }
 }
 
-/* text brightens subtly */
-.eq.eq-on mjx-container{
-  opacity:1;
-  filter: drop-shadow(0 0 10px rgba(255,200,107,.10));
-  transition-delay: calc(var(--eq-delay,0s) + .08s);
+/* MathJax: make SVG sit naturally and allow horizontal scroll */
+.eq mjx-container{
+  display:block !important;
+  overflow:visible;      /* let SVG size itself, scroller handles overflow */
+  margin:0; padding:0;
+}
+.eq mjx-container[jax="SVG"] svg{
+  height:auto !important;
+  width:auto !important;           /* prevent forced 100% width that causes overspill */
+  max-width:none !important;       /* allow true width; scroller will manage */
 }
 
-/* A gentle “breathing” rail at the bottom edge */
-.eq.eq-on::marker{} /* noop: ensures some engines repaint */
-.eq.eq-on{
-  background-image:
-    linear-gradient(to bottom, transparent, rgba(255,210,122,.02)),
-    radial-gradient(100% 12px at 50% 100%, rgba(243,201,122,.25), transparent);
-  background-repeat: no-repeat;
-  background-size: 100% 100%, 60% 6px;
-  background-position: 0 0, 50% 100%;
-}
+/* Activation on reveal */
+.eq,
+.eq mjx-container{ opacity:.0; transition: opacity .5s ease .05s, filter .6s ease .05s }
+.card.visible .eq{ opacity:1 }
+.card.visible .eq mjx-container{ opacity:1; filter: drop-shadow(0 0 10px rgba(255,200,107,.08)) }
 
-/* Reduced motion: no fancy sweep; just fade in */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce){
-  .eq{ opacity:1; transform:none }
+  .card{ transform:none !important; opacity:1 !important }
   .eq::after{ display:none }
-  .eq mjx-container{ opacity:1 }
 }
 
-/* Optional: slightly stronger glow on hover/focus for accessibility */
-.eq:focus-within,
-.eq:hover{
-  box-shadow:
-    inset 0 0 28px rgba(255,200,107,.055),
-    0 0 0 0 rgba(243,201,122,0);
-}
+/* Links */
+a{ color:var(--ink); text-underline-offset:2px }
+a:hover{ color:#fff }
 
-/* ============================================================
-   Utilities
-   ============================================================ */
+/* Tooltips (simple) */
+.tt{ border-bottom:1px dotted var(--muted); cursor:help }
 
-.sr-only{
-  position:absolute !important;
-  width:1px; height:1px; padding:0; margin:-1px;
-  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
-}
+/* Small tweaks */
+article h3{ font-size: clamp(18px, 2.2vw, 22px) }
+article h2{ font-size: clamp(20px, 2.6vw, 28px) }
+p,li{ font-size: clamp(15px, 1.5vw, 17px) }
+
+/* Reveal visuals */
+.card.visible{ box-shadow: 0 12px 28px var(--shadow), inset 0 0 26px rgba(255,200,107,.04) }
