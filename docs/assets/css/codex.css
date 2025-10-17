@@ -1,9 +1,293 @@
+/* ============================================================
+   Scroll of Fire — Codex of Reality (FULL CSS)
+   - Dark theme + typography
+   - Grid & cards
+   - Hero banner (right-nudged, capped height)
+   - Equation activation block (as supplied)
+   - Lists, tables, buttons, utilities
+   - Responsive & reduced-motion care
+   ============================================================ */
+
+/* ------------------
+   Root design tokens
+   ------------------ */
+:root{
+  /* colors */
+  --bg: #0d0d10;
+  --panel: #121217;
+  --panel-2: #0f0f14;
+  --text: #e9e9ef;
+  --muted: #b9bcc7;
+  --muted-2: #8c90a0;
+  --line: #26262c;
+  --gold: #f3c97a;
+  --gold-2: #f0b858;
+  --aqua: #94f0ff;
+
+  /* effects */
+  --shadow-soft: 0 10px 30px rgba(0,0,0,.35);
+  --shadow-inset: inset 0 0 20px rgba(255,200,107,.03);
+
+  /* rhythm */
+  --wrap: 1120px;
+  --gap: 16px;
+  --radius: 16px;
+  --radius-lg: 20px;
+
+  /* hero alignment (nudge right) */
+  --hero-x: 60%;
+}
+
+/* ------------------
+   Reset / base
+   ------------------ */
+*,
+*::before,
+*::after{ box-sizing: border-box; }
+
+html, body{
+  height: 100%;
+}
+
+html{
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body{
+  margin:0;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  color: var(--text);
+  background: radial-gradient(120% 80% at 20% 0%, #0b0b0f, #0e0e12 40%, #0a0a0d 100%);
+  line-height: 1.6;
+}
+
+/* Selection */
+::selection{ background: rgba(243,201,122,.25); color:#fff; }
+
+/* ------------------
+   Layout wrapper
+   ------------------ */
+.wrap{
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: clamp(14px, 3.2vw, 28px);
+}
+
+/* ------------------
+   Hero banner
+   ------------------ */
+.hero{
+  margin: 4px 0 12px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  box-shadow: var(--shadow-soft);
+}
+
+.hero img{
+  display:block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: var(--hero-x) center; /* ← slight right nudge */
+  max-height: clamp(180px, 26vw, 360px);
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+
+@media (max-width: 380px){
+  .hero img{ max-height: 210px; }
+}
+@media (min-width: 1200px){
+  .hero img{ max-height: 400px; }
+}
+
+/* ------------------
+   Headings & text
+   ------------------ */
+.title{
+  font-family: "Crimson Pro", ui-serif, Georgia, "Times New Roman", serif;
+  font-weight: 800;
+  font-size: clamp(28px, 4.8vw, 52px);
+  line-height: 1.1;
+  letter-spacing: .2px;
+  margin: 10px 0 6px;
+  background: linear-gradient(90deg, #eaeef8, #bff7ff 50%, #eaeef8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle{
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: clamp(15px, 2.6vw, 18px);
+  font-style: italic;
+}
+
+/* Decorative separators */
+.divider{
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(243,201,122,.25), transparent);
+  margin: 8px 0 12px;
+}
+.goldline{
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(243,201,122,.35) 20%, rgba(243,201,122,.7) 50%, rgba(243,201,122,.35) 80%, transparent);
+  border-radius: 2px;
+  margin: 16px 0 14px;
+  filter: drop-shadow(0 0 8px rgba(243,201,122,.25));
+}
+
+/* ------------------
+   Grid system (12-col)
+   ------------------ */
+.grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap);
+}
+
+@media (min-width: 740px){
+  .grid{
+    grid-template-columns: repeat(12, minmax(0,1fr));
+  }
+  .col-12{ grid-column: span 12; }
+  .col-8 { grid-column: span 8; }
+  .col-7 { grid-column: span 7; }
+  .col-6 { grid-column: span 6; }
+  .col-5 { grid-column: span 5; }
+  .col-4 { grid-column: span 4; }
+  .col-3 { grid-column: span 3; }
+}
+
+/* ------------------
+   Cards
+   ------------------ */
+.card{
+  background: linear-gradient(180deg, var(--panel), #0f0f12 60%);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(14px, 2.4vw, 20px);
+  box-shadow: var(--shadow-soft), var(--shadow-inset);
+  transform: translateY(8px);
+  opacity: .0;
+  transition: opacity .6s ease, transform .6s ease, box-shadow .6s ease;
+}
+
+.card.visible{
+  transform: none;
+  opacity: 1;
+}
+
+.card h2, .card h3{
+  font-family: "Crimson Pro", ui-serif, Georgia, "Times New Roman", serif;
+  margin: 0 0 10px;
+  line-height: 1.2;
+}
+.card h2{ font-weight: 800; font-size: clamp(20px, 3.2vw, 28px); color: var(--gold); }
+.card h3{ font-weight: 700; font-size: clamp(18px, 2.6vw, 22px); color: var(--gold); }
+
+.card .meta{
+  color: var(--muted-2);
+  font-size: 0.98rem;
+}
+
+.rule{
+  border:0;
+  height:1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent);
+  margin: 10px 0;
+}
+
+/* Supportive sigils row */
+.sigils{ display:flex; gap:10px; color:var(--gold); opacity:.95; font-size:18px; }
+.sigil-line{ height:3px; background:linear-gradient(90deg, transparent, rgba(243,201,122,.5), transparent); }
+
+/* ------------------
+   Lists & links
+   ------------------ */
+.list{
+  padding-left: 1.1rem;
+  margin: .2rem 0 0;
+}
+.list li{
+  margin: .35rem 0;
+}
+a{
+  color: var(--aqua);
+  text-decoration: none;
+}
+a:hover{ text-decoration: underline; }
+
+/* CTA button */
+.cta{
+  display:inline-block;
+  margin-top: 12px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #f9d88c, #e7b85b);
+  color:#2a220e;
+  font-weight: 700;
+  box-shadow: 0 10px 26px rgba(243,201,122,.18), inset 0 -2px 0 rgba(0,0,0,.12);
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+.cta:hover{
+  transform: translateY(-2px);
+  filter: brightness(1.02);
+  text-decoration: none;
+}
+
+/* ------------------
+   Tables (constants)
+   ------------------ */
+table{
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--line);
+  background: #0f0f13;
+  border-radius: 12px;
+  overflow: hidden;
+}
+thead th{
+  text-align: left;
+  font-weight: 700;
+  padding: 10px 12px;
+  background: #14141a;
+  color: #f2e9d0;
+  border-bottom: 1px solid var(--line);
+}
+tbody td{
+  padding: 10px 12px;
+  border-bottom: 1px dashed #1f1f25;
+  color: #d7d9e3;
+}
+tbody tr:last-child td{ border-bottom: 0; }
+
+/* ------------------
+   Footer
+   ------------------ */
+.footer{
+  text-align:center;
+  color: var(--muted-2);
+  padding: 16px 0 6px;
+  font-size: .98rem;
+}
+
+/* ============================================================
+   EQUATION ACTIVATION (kept exactly, with tiny safe tweaks)
+   ============================================================ */
+
 /* === Equation activation (no HTML changes required) ==================== */
 
 /* base state */
 .eq{
   position:relative;
   overflow-x:auto;
+  -webkit-overflow-scrolling: touch; /* smooth horizontal on iOS */
   padding:12px 60px 12px 12px;
   border-radius:12px;
   background:#111115;
@@ -46,6 +330,14 @@
   opacity:.0;
   filter: drop-shadow(0 0 8px rgba(255,200,107,.06));
   transition: opacity .5s ease .05s, filter .6s ease .05s;
+  white-space: nowrap;           /* keep long equations in a single row */
+}
+
+/* prevent internal SVG from shrinking oddly; allow horizontal scroll only */
+.eq mjx-container[jax="SVG"] svg{
+  display: block;
+  height: auto;
+  max-width: none;               /* avoid page-wide reflow */
 }
 
 /* activated */
@@ -107,4 +399,14 @@
   box-shadow:
     inset 0 0 28px rgba(255,200,107,.055),
     0 0 0 0 rgba(243,201,122,0);
+}
+
+/* ============================================================
+   Utilities
+   ============================================================ */
+
+.sr-only{
+  position:absolute !important;
+  width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
 }
