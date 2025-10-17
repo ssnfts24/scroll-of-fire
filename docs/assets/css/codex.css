@@ -1,148 +1,200 @@
-/* ========== Scroll of Fire — Codex.css (2025-10-17) ========== */
-/* Mobile-first, grid that truly collapses, equation polish, Meta-webview safe */
+/* =========================
+   Scroll of Fire — Codex CSS
+   Mobile-first, overflow-safe
+   ========================= */
 
-/* ---- Root / theme ---- */
+/* --- Root & resets --- */
 :root{
-  --bg:#0c0c0f;
-  --panel:#121218;
-  --panel-2:#101016;
-  --text:#eae8e2;
-  --muted:#b5b0a6;
+  --bg:#0b0c0f;
+  --card:#111115;
+  --ink:#e9e5d6;
+  --muted:#b7b0a0;
   --gold:#f3c97a;
-  --aqua:#8be9ff;
-  --accent:#a7f3d0;
-  --ring:rgba(243,201,122,.18);
-  --shadow: 0 16px 40px rgba(0,0,0,.45);
-  --radius:18px;
-  --gap:18px;
+  --teal:#8be8dd;
+  --link:#79c8ff;
+  --ring:#26262c;
+  --shadow: 0 6px 24px rgba(0,0,0,.35);
+  --radius: 16px;
+  --pad: 16px;
 }
 
-/* ---- Reset-ish ---- */
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:radial-gradient(1200px 800px at 50% -20%, #14141c 0%, var(--bg) 60%) fixed var(--bg); color:var(--text)}
-img{max-width:100%;height:auto;display:block}
-a{color:var(--aqua);text-decoration:none}
-a:hover{text-decoration:underline}
-::selection{background:rgba(243,201,122,.18)}
+*{ box-sizing: border-box; }
+html, body{ height:100%; background:var(--bg); color:var(--ink); }
+html, body{ overflow-x:hidden; } /* kill side-scroll on mobile */
 
-/* ---- Typography ---- */
-:root{
-  --serif:'Crimson Pro', ui-serif, Georgia, 'Times New Roman', serif;
-  --sans: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+img{ max-width:100%; height:auto; display:block; }
+a{ color:var(--link); text-decoration: none; }
+a:hover{ text-decoration: underline; }
+strong{ font-weight: 700; }
+em{ font-style: italic; }
+
+/* --- Typography --- */
+body{
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol", sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing: antialiased;
+  margin:0;
 }
-body{font-family:var(--sans); line-height:1.55; letter-spacing:.01em}
 
-h1,h2,h3{font-family:var(--serif); line-height:1.15; margin:0 0 .6em}
-h1{
-  font-weight:800;
-  font-size:clamp(1.9rem, 3.6vw + .6rem, 3.25rem);
-  background:linear-gradient(180deg,#ffe9b6,#b3fff6 70%, #b3fff6);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  text-shadow:0 2px 24px rgba(243,201,122,.08);
+.title{
+  font-family: "Crimson Pro", Georgia, "Times New Roman", serif;
+  font-weight: 800;
+  letter-spacing:.2px;
+  font-size: clamp(28px, 6.2vw, 54px);
+  line-height:1.1;
+  margin: 14px 0 6px;
+  background: linear-gradient(90deg, var(--gold), var(--teal));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color: transparent;
 }
-h2{font-weight:700; font-size:clamp(1.35rem,2.2vw + .4rem,2rem); color:var(--gold)}
-h3{font-weight:700; font-size:clamp(1.05rem,1.4vw + .5rem,1.35rem); color:var(--gold)}
-p{margin:.75em 0; font-size:clamp(.97rem, .3vw + .9rem, 1.05rem)}
-.meta{color:var(--muted); font-size:.95em}
-.tt{border-bottom:1px dotted rgba(255,255,255,.25); cursor:help}
 
-/* ---- Wrapper / layout ---- */
-.wrap{max-width:1120px; margin:0 auto; padding:18px 14px 64px}
-.divider{height:1px; background:linear-gradient(90deg, transparent, rgba(243,201,122,.25), transparent); margin:22px 0}
-.goldline{height:1px; background:linear-gradient(90deg, transparent, rgba(243,201,122,.2), transparent); margin:28px 0}
+.subtitle{
+  color: var(--muted);
+  font-size: clamp(14px, 3.5vw, 20px);
+  margin: 4px 0 10px;
+  font-style: italic;
+}
 
-/* ---- Hero ---- */
+/* --- Layout --- */
+.wrap{
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: clamp(14px, 3.2vw, 28px);
+}
+
 .hero{
-  position:relative; margin:8px 0 14px; border-radius:24px;
-  background:radial-gradient(800px 400px at 50% -10%, rgba(243,201,122,.12), transparent 60%);
+  margin: 0 0 10px;
+  border-radius: var(--radius);
+  overflow: clip; /* ensure no overflow widens the page */
   box-shadow: var(--shadow);
-  overflow:hidden;
-  aspect-ratio:16/9;
+  background: #0f1014;
 }
-.hero img{width:100%; height:100%; object-fit:cover}
-.sigil-line{
-  position:absolute; inset:auto 0 0 0; height:72px;
-  background:radial-gradient(60% 20px at 50% 0, rgba(243,201,122,.22), transparent 70%);
-  pointer-events:none
+.hero img{
+  width:100%;
+  height:auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  transform: translateZ(0); /* fix Chrome paint gaps */
+}
+.sigil-line{ display:none; }
+
+.divider{
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(243,201,122,.35), transparent);
+  margin: 12px 0 8px;
+  opacity:.9;
 }
 
-/* ---- Grid ---- */
+/* grid system */
 .grid{
-  display:grid; grid-template-columns:1fr; gap:var(--gap);
+  display:grid;
+  grid-template-columns: 1fr; /* mobile first */
+  gap: 12px;
 }
+
+/* cards */
 .card{
-  background:linear-gradient(180deg,var(--panel),var(--panel-2));
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:var(--radius);
-  padding:18px;
-  box-shadow:0 6px 18px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.02);
-  transform:translateZ(0);
-}
-.card:hover{box-shadow:0 12px 34px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.03)}
-.card.visible{animation:raise .5s ease both}
-@keyframes raise{from{opacity:.0; transform:translateY(8px)} to{opacity:1; transform:none}}
-
-.list{list-style: none; padding-left:0; margin:0}
-.list li{margin:.55em 0; padding-left:1.15em; position:relative}
-.list li::before{content:"•"; position:absolute; left:0; color:var(--gold)}
-.list a{word-break:break-word; overflow-wrap:anywhere}
-
-/* ---- Columns (become real columns at >=960px) ---- */
-@media (min-width:960px){
-  .grid{grid-template-columns: repeat(12, 1fr)}
-  .col-12{grid-column: span 12}
-  .col-8{grid-column: span 8}
-  .col-7{grid-column: span 7}
-  .col-6{grid-column: span 6}
-  .col-5{grid-column: span 5}
-  .col-4{grid-column: span 4}
+  background: var(--card);
+  border: 1px solid var(--ring);
+  border-radius: var(--radius);
+  padding: clamp(14px, 3.5vw, 22px);
+  box-shadow: var(--shadow);
+  contain: layout paint; /* stop transforms from causing overflow */
 }
 
-/* On small screens force single column spans so nothing pinches */
-@media (max-width:959.98px){
-  [class*="col-"]{grid-column:1 / -1}
+.card h2, .card h3{
+  font-family: "Crimson Pro", Georgia, "Times New Roman", serif;
+  color: var(--gold);
+  margin: 0 0 10px;
+  line-height: 1.2;
 }
 
-/* ---- CTA ---- */
-.cta{
-  display:inline-block; margin-top:10px; padding:10px 14px; border-radius:14px;
-  background:linear-gradient(180deg, rgba(243,201,122,.14), rgba(243,201,122,.08));
-  border:1px solid rgba(243,201,122,.28);
-  color:#111; font-weight:700;
-  background-color:var(--gold); text-decoration:none;
-  box-shadow:0 10px 26px rgba(243,201,122,.25);
-}
-.cta:hover{filter:brightness(1.03)}
-
-/* ---- Table (constants) ---- */
-table{width:100%; border-collapse:separate; border-spacing:0 8px; font-size:.98rem}
-thead th{color:var(--muted); font-weight:600; text-align:left; padding:6px 10px}
-tbody td{
-  background:#0f0f14; border:1px solid rgba(255,255,255,.06);
-  padding:10px 12px; border-radius:12px
+.rule{
+  border:0;
+  height:1px;
+  background: linear-gradient(90deg, transparent, rgba(243,201,122,.25), transparent);
+  margin: 12px 0;
 }
 
-/* ---- Equations ---- */
-/* Base (mobile-first): tighter padding + safe shadows */
-.eq{
-  position:relative; overflow-x:auto;
-  padding:10px 44px 12px 12px;
-  border-radius:14px;
-  background:#111115;
-  border:1px solid #26262c;
-  box-shadow: inset 0 0 20px rgba(255,200,107,.03);
-  opacity:0; transform: translateY(8px) scale(.995);
-  transition: opacity .6s ease, transform .6s ease, box-shadow .6s ease;
-}
-
-/* Halo + sweep */
-.eq::before,.eq::after{content:""; position:absolute; pointer-events:none; border-radius:inherit; inset:0}
-.eq::before{
+.goldline{
+  height: 10px;
   background:
-   radial-gradient(120% 80% at 10% 5%, rgba(243,201,122,.07), transparent 70%),
-   radial-gradient(140% 90% at 100% 100%, rgba(122,243,255,.05), transparent 70%);
-  opacity:0; transition:opacity .8s ease;
+    radial-gradient(140% 60% at 50% 100%, rgba(243,201,122,.22), transparent 65%),
+    linear-gradient(90deg, transparent, rgba(243,201,122,.08), transparent);
+  border-radius: 999px;
+  margin: 14px 0;
 }
+
+/* lists */
+.list{
+  margin:0;
+  padding-left: 18px;
+}
+.list li{ margin: 6px 0; }
+
+/* CTA button */
+.cta{
+  display:inline-block;
+  margin-top: 10px;
+  background: linear-gradient(180deg, var(--gold), #eabf63);
+  color:#2b220f;
+  font-weight: 700;
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 0;
+  box-shadow: 0 12px 30px rgba(243,201,122,.15), inset 0 1px 0 rgba(255,255,255,.35);
+}
+.cta:hover{ text-decoration:none; filter: saturate(1.05) brightness(1.03); }
+
+/* quick fixes for long links on narrow screens */
+.card a{ overflow-wrap: anywhere; }
+
+/* responsive columns (>= 960px) */
+@media (min-width: 960px){
+  .grid{ grid-template-columns: repeat(12, 1fr); gap: 16px; }
+  .col-4{ grid-column: span 4; }
+  .col-5{ grid-column: span 5; }
+  .col-6{ grid-column: span 6; }
+  .col-7{ grid-column: span 7; }
+  .col-8{ grid-column: span 8; }
+  .col-12{ grid-column: span 12; }
+}
+
+/* --- Equation blocks (your glow style, tuned for mobile) --- */
+
+/* base */
+.eq{
+  position:relative;
+  overflow-x:auto;
+  padding: 12px 60px 12px 12px;
+  border-radius: 12px;
+  background:#0f1116; /* darker for contrast */
+  border:1px solid #22242b;
+  box-shadow: inset 0 0 18px rgba(255,200,107,.035);
+  opacity:.02;
+  transform: translateY(8px) scale(.995);
+  transition: opacity .5s ease, transform .5s ease, box-shadow .5s ease;
+}
+
+/* halo + sweep */
+.eq::before,
+.eq::after{
+  content:"";
+  position:absolute;
+  pointer-events:none;
+  border-radius: inherit;
+  inset:0;
+}
+
+.eq::before{
+  background: radial-gradient(120% 80% at 10% 5%, rgba(243,201,122,.09), transparent 70%),
+              radial-gradient(140% 90% at 100% 100%, rgba(122,243,255,.06), transparent 70%);
+  opacity:0;
+  transition: opacity .6s ease;
+}
+
+/* holographic rail */
 .eq::after{
   left:auto; right:10px; top:10px; bottom:10px; width:2px;
   background: linear-gradient(180deg, transparent, var(--gold), transparent);
@@ -151,33 +203,35 @@ tbody td{
   opacity:0;
 }
 
-/* MathJax container */
+/* MathJax container sizing/contrast */
 .eq mjx-container{
   opacity:0;
-  filter: drop-shadow(0 0 8px rgba(255,200,107,.06));
-  transition: opacity .5s ease .05s, filter .6s ease .05s;
-  /* keep equations readable on phones */
-  font-size: clamp(1.02rem, 1.2vw + .9rem, 1.25rem);
-}
-.eq mjx-container[display="true"]{ /* multi-line block eqs */
-  margin: 10px 0;
+  transition: opacity .45s ease .05s, filter .45s ease .05s;
+  filter: drop-shadow(0 0 8px rgba(255,200,107,.08));
+  /* readable math size on mobile → desktop */
+  font-size: clamp(18px, 3.8vw, 28px);
+  line-height:1.2;
 }
 
-/* Activated */
+/* activated */
 .eq.eq-on{
-  opacity:1; transform:none;
+  opacity:1;
+  transform:none;
   transition-delay: var(--eq-delay, 0s);
-  box-shadow: inset 0 0 24px rgba(255,200,107,.05);
+  box-shadow:
+    inset 0 0 22px rgba(255,200,107,.06),
+    0 0 0 0 rgba(243,201,122,0);
 }
-.eq.eq-on::before{opacity:1; transition-delay: calc(var(--eq-delay,0s) + .05s)}
+.eq.eq-on::before{ opacity:1; transition-delay: calc(var(--eq-delay,0s) + .04s); }
 .eq.eq-on::after{
-  opacity:.9; animation: eqSweep 1.2s ease-out forwards;
-  animation-delay: calc(var(--eq-delay,0s) + .15s);
+  opacity:.9;
+  animation: eqSweep 1.1s ease-out forwards;
+  animation-delay: calc(var(--eq-delay,0s) + .14s);
 }
 @keyframes eqSweep{
-  0%{ transform:translateX(12px); opacity:0 }
-  10%{ opacity:.9 }
-  100%{ transform:translateX(-6px); opacity:0 }
+  0%   { transform: translateX(12px); opacity:0; }
+  12%  { opacity:.9; }
+  100% { transform: translateX(-6px); opacity:0; }
 }
 .eq.eq-on mjx-container{
   opacity:1;
@@ -185,24 +239,49 @@ tbody td{
   transition-delay: calc(var(--eq-delay,0s) + .08s);
 }
 
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce){
-  .eq{ opacity:1; transform:none }
-  .eq::after{ display:none }
-  .eq mjx-container{ opacity:1 }
+/* gentle “breathing” rail */
+.eq.eq-on{
+  background-image:
+    linear-gradient(to bottom, transparent, rgba(255,210,122,.02)),
+    radial-gradient(100% 12px at 50% 100%, rgba(243,201,122,.28), transparent);
+  background-repeat: no-repeat;
+  background-size: 100% 100%, 60% 6px;
+  background-position: 0 0, 50% 100%;
 }
 
-/* Equation card spacing */
-.card .eq{margin-top:.65rem}
+/* hover accessibility */
+.eq:focus-within, .eq:hover{
+  box-shadow:
+    inset 0 0 26px rgba(255,200,107,.065),
+    0 0 0 0 rgba(243,201,122,0);
+}
 
-/* ---- Footer ---- */
-.footer{padding:26px 0 0; color:var(--muted); text-align:center}
-.footer .divider{margin:10px 0 16px}
+/* reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .eq{ opacity:1; transform:none; }
+  .eq::after{ display:none; }
+  .eq mjx-container{ opacity:1; }
+}
 
-/* ---- Quick fixes for tiny phones ---- */
-@media (max-width:380px){
-  .wrap{padding:14px 10px 56px}
-  .hero{border-radius:18px}
-  .card{padding:16px; border-radius:16px}
-  .cta{width:100%; text-align:center}
+/* --- Reveal on scroll (class toggled via JS) --- */
+.card.visible, .divider.visible{
+  animation: reveal .5s ease both;
+}
+@keyframes reveal{
+  from{ opacity:.01; transform: translateY(8px); }
+  to{ opacity:1; transform: none; }
+}
+
+/* --- Footer --- */
+.footer{
+  text-align:center;
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 14px;
+}
+.footer .divider{ margin: 10px 0 12px; }
+
+/* Safety: avoid long shadows widening layout on tiny screens */
+@media (max-width: 359px){
+  .card{ box-shadow: 0 4px 14px rgba(0,0,0,.35); }
 }
