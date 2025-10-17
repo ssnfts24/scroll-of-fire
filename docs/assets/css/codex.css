@@ -1,16 +1,28 @@
-/* === Scroll of Fire — Scholarly–Sacred theme === */
+/* === Scroll of Fire — Scholarly–Sacred (Living Tech) ===================== */
 
 :root{
-  --bg:#0f0f11;           /* deep space */
-  --panel:#141417;        /* card base */
-  --ink:#e7e2d9;          /* text light */
-  --muted:#b9b2a6;        /* muted text */
-  --gold:#f3c97a;         /* accents */
+  /* core palette */
+  --bg:#0f0f11;
+  --panel:#141417;
+  --ink:#e7e2d9;
+  --muted:#b9b2a6;
+  --gold:#f3c97a;
   --gold-soft:#ffda8c;
   --rule:#2a2a2f;
   --link:#ffd27a;
+
+  /* effects */
   --shadow: 0 20px 50px rgba(0,0,0,.45);
   --radius:18px;
+
+  /* holo gradient & aurora */
+  --holo: conic-gradient(from 210deg at 50% 50%, #ffda8c33, #7af3ff33, #b07aff33, #ffda8c33);
+  --aurora: radial-gradient(60% 40% at 10% 5%, #ffd27a0f, transparent 60%),
+            radial-gradient(50% 35% at 80% 0%, #7af3ff0e, transparent 60%),
+            radial-gradient(70% 50% at 40% 100%, #b07aff10, transparent 70%);
+
+  /* “living” accents */
+  --sigGlowShift: 0%;
 }
 
 *{ box-sizing:border-box }
@@ -21,7 +33,9 @@ body{
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
   background:
     radial-gradient(1200px 800px at 50% -200px, #1b1b20 0%, var(--bg) 60%),
-    linear-gradient(180deg, #101013 0%, #0f0f11 100%);
+    linear-gradient(180deg, #101013 0%, #0f0f11 100%),
+    var(--aurora);
+  background-attachment: fixed, fixed, fixed;
   line-height:1.58;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
@@ -37,6 +51,7 @@ a:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; border-radiu
 /* Layout */
 .wrap{ max-width:1120px; margin:0 auto; padding:24px }
 
+/* Hero */
 .hero{
   margin-top:10px;
   border-radius:var(--radius);
@@ -45,23 +60,48 @@ a:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; border-radiu
   border:1px solid #23232a;
   position:relative;
   isolation:isolate;
+  background: linear-gradient(180deg, #17171b, #131316);
 }
+.hero::before{
+  /* holographic perimeter */
+  content:"";
+  position:absolute; inset:0;
+  border-radius:inherit;
+  padding:1px; /* border thickness */
+  background: var(--holo);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity:.35;
+  pointer-events:none;
+  filter: blur(0.25px);
+  animation: holoSpin 12s linear infinite;
+}
+@keyframes holoSpin{ to { transform: rotate(360deg) } }
+
 .hero img{
   display:block; width:100%; height:auto; object-fit:cover;
   filter:saturate(1.06) contrast(1.03) brightness(1.02);
   max-height:540px;
+  will-change: transform;
+  transition: transform .15s ease-out;
 }
 .sigil-line{
   position:absolute; left:0; right:0; bottom:0;
   height:3px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  background: linear-gradient(90deg,
+    transparent,
+    color-mix(in srgb, var(--gold) 75%, #fff),
+    transparent);
   box-shadow: 0 0 18px rgba(243,201,122,.45);
-  opacity:.8;
+  opacity:.85;
+  background-position: var(--sigGlowShift) 0;
+  background-size: 200% 100%;
   animation: slowPulse 4s ease-in-out infinite alternate;
 }
 @keyframes slowPulse{
   from { opacity:.35; box-shadow:0 0 10px rgba(243,201,122,.30) }
-  to   { opacity:.9;  box-shadow:0 0 26px rgba(243,201,122,.55) }
+  to   { opacity:.95; box-shadow:0 0 26px rgba(243,201,122,.55) }
 }
 
 /* Headings */
@@ -114,6 +154,18 @@ h1,h2,h3{ font-family:"Crimson Pro", serif; letter-spacing:.02em }
   position:relative;
   overflow:hidden;
   transition: opacity .6s ease, transform .6s ease;
+  transform-style: preserve-3d;
+}
+.card::after{
+  /* faint circuit traces */
+  content:"";
+  position:absolute; inset:-1px;
+  background:
+    radial-gradient(800px 500px at 120% -10%, #ffd27a05, transparent 60%),
+    radial-gradient(700px 500px at -20% 110%, #7af3ff07, transparent 60%),
+    repeating-linear-gradient(90deg, #ffffff06 0 1px, transparent 1px 9px);
+  pointer-events:none;
+  opacity:.35;
 }
 .card h2, .card h3{ margin-top:0; letter-spacing:.2px }
 .card h2{ font-size:22px }
@@ -131,8 +183,11 @@ h1,h2,h3{ font-family:"Crimson Pro", serif; letter-spacing:.02em }
 .sigil{
   font-family:"Crimson Pro", serif;
   font-size:18px; padding:8px 10px; border-radius:12px;
-  border:1px solid #2b2b31; background:#16161a; color:var(--gold)
+  border:1px solid #2b2b31; background:#16161a; color:var(--gold);
+  box-shadow: 0 0 0 rgba(243,201,122,0);
+  transition: box-shadow .3s ease, transform .2s ease;
 }
+.sigil:hover{ transform: translateY(-1px); box-shadow: 0 0 20px rgba(243,201,122,.25) }
 
 /* CTA */
 .cta{
@@ -158,49 +213,9 @@ th{ color:var(--gold); text-align:left; white-space:nowrap }
 
 /* Equations */
 .eq{
-  overflow-x:auto; padding:10px; border-radius:12px;
-  background:#111115; border:1px solid #26262c;
-}
-mjx-container{
-  max-width:100%;
-  overflow-x:auto;
-  overflow-y:hidden;
-  display:block;
-  filter: drop-shadow(0 0 8px rgba(255,200,107,.15));
-}
-mjx-math{ white-space:normal !important; }
-
-/* Tooltips */
-.tt{ border-bottom:1px dotted rgba(255,255,255,.35); cursor:help; position:relative }
-.tt:hover::after{
-  content: attr(data-tip);
-  position:absolute; left:0; top:120%;
-  min-width:220px; max-width:420px;
-  background:#141218; color:#e8e1d3;
-  border:1px solid rgba(255,200,107,.35);
-  padding:.45rem .6rem; border-radius:.5rem;
-  z-index:10; box-shadow: 0 0 20px rgba(255,200,107,.15);
-}
-
-/* Reveal (prefers-reduced-motion aware) */
-@media (prefers-reduced-motion:no-preference){
-  .card, .divider { opacity:0; transform:translateY(12px) }
-  .card.visible, .divider.visible { opacity:1; transform:none }
-}
-@media (prefers-reduced-motion:reduce){
-  .card, .divider { opacity:1 !important; transform:none !important; transition:none !important }
-}
-
-/* Footer */
-.footer{
-  text-align:center; color:var(--muted);
-  font-size:14px; padding:24px 8px 40px; margin-top:20px;
-}
-
-/* Small screens */
-@media (max-width:640px){
-  .wrap{ padding:16px }
-  .subtitle{ margin-bottom:18px }
-  .card{ padding:16px }
-  .hero img{ max-height:480px }
+  position:relative;
+  overflow-x:auto; padding:12px 60px 12px 12px; border-radius:12px;
+  background:#111115;
+  border:1px solid #26262c;
+  box-shadow: inset 0 0 20px rgba(255,200,107,.03);
 }
