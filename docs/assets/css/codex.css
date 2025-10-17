@@ -1,110 +1,258 @@
-/* === Equation activation (no HTML changes required) ==================== */
+/* ============================================================
+   Scroll of Fire — Codex of Reality (Living Tech Theme)
+   Author: Aaron Paul Laird · Scribe of Circuits
+   Version: v2025.10.18-ScholarlySacred
+   ============================================================ */
 
-/* base state */
-.eq{
-  position:relative;
-  overflow-x:auto;
-  padding:12px 60px 12px 12px;
-  border-radius:12px;
-  background:#111115;
-  border:1px solid #26262c;
-  box-shadow: inset 0 0 20px rgba(255,200,107,.03);
-  opacity:0;
-  transform: translateY(8px) scale(.995);
-  transition: opacity .6s ease, transform .6s ease, box-shadow .6s ease;
+/* === ROOT VARIABLES ======================================== */
+:root {
+  --bg: #0b0b0f;
+  --panel: #141419;
+  --ink: #e9e6df;
+  --muted: #bdb6a6;
+  --gold: #f3c97a;
+  --aqua: #7af3ff;
+  --line: #2a2a33;
+  --radius: 14px;
+  --speed: .6s;
 }
 
-/* glow rail + holo sweep (created with pseudo elements) */
-.eq::before,
-.eq::after{
+/* === GLOBAL ================================================= */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.65;
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+a {
+  color: var(--gold);
+  text-decoration: none;
+  transition: color .3s ease;
+}
+a:hover { color: var(--aqua); }
+
+img { max-width: 100%; display: block; border-radius: var(--radius); }
+
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* === HEADINGS =============================================== */
+.title {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 700;
+  font-size: 42px;
+  letter-spacing: .5px;
+  text-align: center;
+  margin: 16px 0 6px;
+  background: linear-gradient(90deg, var(--gold), var(--aqua));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  color: var(--muted);
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 28px;
+}
+
+/* === HERO =================================================== */
+.hero {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #24242c;
+  box-shadow:
+    0 0 20px rgba(243,201,122,.15),
+    0 0 50px rgba(122,243,255,.05);
+  margin-bottom: 16px;
+}
+.hero img {
+  width: 100%;
+  display: block;
+  filter: brightness(1.05) contrast(1.05);
+  transition: transform 5s ease, filter 3s ease;
+}
+.hero:hover img {
+  transform: scale(1.02);
+  filter: brightness(1.15) contrast(1.15);
+}
+.sigil-line {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  animation: pulseLine 3s ease-in-out infinite;
+  opacity: .6;
+}
+@keyframes pulseLine {
+  0%,100% { opacity:.2; }
+  50% { opacity:.8; }
+}
+
+/* === DIVIDERS =============================================== */
+.divider, .goldline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(243,201,122,.5), transparent);
+  margin: 24px 0;
+}
+
+/* === GRID =================================================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+  gap: 22px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid #1d1d26;
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: 0 6px 28px rgba(0,0,0,.3);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.card.visible {
+  opacity: 1;
+  transform: none;
+}
+.card h2, .card h3 {
+  font-family: 'Crimson Pro', serif;
+  letter-spacing: .3px;
+  color: var(--gold);
+}
+.card:hover {
+  box-shadow: 0 0 24px rgba(243,201,122,.08),
+              0 0 48px rgba(122,243,255,.04);
+}
+
+/* === TABLES ================================================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+th, td {
+  padding: 8px 6px;
+  text-align: left;
+  border-bottom: 1px solid #24242c;
+}
+th { color: var(--gold); font-weight: 600; }
+
+/* === EQUATION BLOCKS ======================================= */
+.eq {
+  position: relative;
+  overflow-x: auto;
+  padding: 14px 60px 14px 14px;
+  border-radius: var(--radius);
+  background: #111115;
+  border: 1px solid #2d2d35;
+  box-shadow: inset 0 0 20px rgba(255,200,107,.03);
+  opacity: 0;
+  transform: translateY(8px) scale(.995);
+  transition: opacity var(--speed) ease, transform var(--speed) ease, box-shadow var(--speed) ease;
+}
+.eq::before, .eq::after {
   content:"";
   position:absolute;
+  border-radius:inherit;
   pointer-events:none;
-  border-radius: inherit;
   inset:0;
 }
 
-/* gold “breath” halo */
-.eq::before{
-  background: radial-gradient(120% 80% at 10% 5%, rgba(243,201,122,.06), transparent 70%),
-              radial-gradient(140% 90% at 100% 100%, rgba(122,243,255,.05), transparent 70%);
-  opacity:0;
+/* Halo shimmer */
+.eq::before {
+  background:
+    radial-gradient(120% 80% at 10% 5%, rgba(243,201,122,.08), transparent 70%),
+    radial-gradient(140% 90% at 100% 100%, rgba(122,243,255,.07), transparent 70%);
+  opacity: 0;
   transition: opacity .8s ease;
 }
 
-/* holographic sweep line */
-.eq::after{
-  left:auto; right:10px; top:10px; bottom:10px; width:2px;
+/* Light rail */
+.eq::after {
+  right:10px; top:10px; bottom:10px; width:2px;
   background: linear-gradient(180deg, transparent, var(--gold), transparent);
-  filter: blur(.4px);
+  filter: blur(.5px);
   transform: translateX(12px);
-  opacity:0;
+  opacity: 0;
 }
 
-/* MathJax container soft fade */
-.eq mjx-container{
-  opacity:.0;
-  filter: drop-shadow(0 0 8px rgba(255,200,107,.06));
+.eq mjx-container {
+  opacity: 0;
+  filter: drop-shadow(0 0 8px rgba(255,200,107,.05));
   transition: opacity .5s ease .05s, filter .6s ease .05s;
 }
 
-/* activated */
-.eq.eq-on{
-  opacity:1;
+/* Activation */
+.eq.eq-on {
+  opacity: 1;
   transform: none;
-  transition-delay: var(--eq-delay, 0s);
   box-shadow:
-    inset 0 0 24px rgba(255,200,107,.05),
-    0 0 0 0 rgba(243,201,122,0);
+    inset 0 0 26px rgba(255,200,107,.05),
+    0 0 8px rgba(243,201,122,.04);
+  background:
+    linear-gradient(to bottom, rgba(243,201,122,.015), rgba(10,10,12,0)),
+    radial-gradient(100% 12px at 50% 100%, rgba(243,201,122,.2), transparent);
 }
-
-/* halo comes alive */
-.eq.eq-on::before{
-  opacity:1;
-  transition-delay: calc(var(--eq-delay,0s) + .05s);
-}
-
-/* sweep slides once */
-.eq.eq-on::after{
+.eq.eq-on::before { opacity:1; transition-delay: .05s; }
+.eq.eq-on::after {
   opacity:.9;
-  animation: eqSweep 1.2s ease-out forwards;
-  animation-delay: calc(var(--eq-delay,0s) + .15s);
+  animation: eqSweep 1.4s ease-out forwards;
+  animation-delay: .15s;
 }
-@keyframes eqSweep{
-  0%   { transform: translateX(12px); opacity:0; }
-  10%  { opacity:.9; }
+@keyframes eqSweep {
+  0% { transform: translateX(12px); opacity:0; }
+  10% { opacity:.9; }
   100% { transform: translateX(-6px); opacity:0; }
 }
-
-/* text brightens subtly */
-.eq.eq-on mjx-container{
-  opacity:1;
-  filter: drop-shadow(0 0 10px rgba(255,200,107,.10));
-  transition-delay: calc(var(--eq-delay,0s) + .08s);
+.eq.eq-on mjx-container {
+  opacity: 1;
+  filter: drop-shadow(0 0 12px rgba(255,200,107,.12));
+  transition-delay: .08s;
 }
 
-/* A gentle “breathing” rail at the bottom edge */
-.eq.eq-on::marker{} /* noop: ensures some engines repaint */
-.eq.eq-on{
-  background-image:
-    linear-gradient(to bottom, transparent, rgba(255,210,122,.02)),
-    radial-gradient(100% 12px at 50% 100%, rgba(243,201,122,.25), transparent);
-  background-repeat: no-repeat;
-  background-size: 100% 100%, 60% 6px;
-  background-position: 0 0, 50% 100%;
-}
-
-/* Reduced motion: no fancy sweep; just fade in */
-@media (prefers-reduced-motion: reduce){
-  .eq{ opacity:1; transform:none }
-  .eq::after{ display:none }
-  .eq mjx-container{ opacity:1 }
-}
-
-/* Optional: slightly stronger glow on hover/focus for accessibility */
-.eq:focus-within,
-.eq:hover{
+/* Hover bloom */
+.eq:hover {
   box-shadow:
-    inset 0 0 28px rgba(255,200,107,.055),
-    0 0 0 0 rgba(243,201,122,0);
+    inset 0 0 30px rgba(255,200,107,.07),
+    0 0 8px rgba(122,243,255,.04);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .eq { opacity: 1; transform: none; }
+  .eq::after { display: none; }
+  .eq mjx-container { opacity: 1; }
+}
+
+/* === FOOTER ================================================= */
+.footer {
+  margin-top: 32px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+.footer p {
+  margin: 6px 0;
+}
+.footer p:first-child {
+  font-style: italic;
+  color: var(--gold);
+}
+
+/* === RESPONSIVE ============================================= */
+@media (max-width: 768px) {
+  .title { font-size: 34px; }
+  .grid { gap: 16px; }
+  .wrap { padding: 18px; }
 }
