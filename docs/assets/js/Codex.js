@@ -1,15 +1,21 @@
-/* ========== Scroll of Fire — Codex.js (2025-10-17) ========== */
-/* Eq activation, reveal on scroll, external link hardening, banner failover,
-   MathJax nudge, and (desktop only) gentle tilt on cards. */
+/* ===============================================================
+ * Scroll of Fire — Codex.js (Mobile-stable)
+ * - Year swap
+ * - External link hardening
+ * - Banner failover (Meta webviews, slow decodes)
+ * - Reveal on scroll
+ * - Equation activation + MathJax typeset
+ * - Subtle tilt only on large screens & precise pointers
+ * =============================================================== */
 
 (function () {
   "use strict";
 
-  /* ---------- utils ---------- */
+  /** utils **/
   const $ = (sel, root = document) => root.querySelector(sel);
   const $all = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const prefersNoMotion = !matchMedia("(prefers-reduced-motion: no-preference)").matches;
-  const isTouch = matchMedia("(pointer: coarse)").matches;
+  const hasFinePointer = matchMedia("(pointer: fine)").matches;
 
   const inViewport = (el, threshold = 0.9) => {
     const r = el.getBoundingClientRect();
@@ -17,22 +23,21 @@
     return r.top < vh * threshold && r.bottom > 0;
   };
 
-  /* ---------- year ---------- */
+  /** year **/
   function swapYear() {
     const y = document.getElementById("yr");
     if (y) y.textContent = String(new Date().getFullYear());
   }
 
-  /* ---------- harden external links ---------- */
+  /** external links hardening **/
   function hardenExternal() {
     $all('a[target="_blank"]').forEach((a) => {
       const rel = (a.getAttribute("rel") || "").toLowerCase();
-      if (!rel.includes("noopener"))
-        a.setAttribute("rel", (rel ? rel + " " : "") + "noopener");
+      if (!rel.includes("noopener")) a.setAttribute("rel", (rel ? rel + " " : "") + "noopener");
     });
   }
 
-  /* ---------- banner failover (works in FB/IG webview) ---------- */
+  /** banner failover **/
   function bannerFailover() {
     const img = $("#heroBanner");
     if (!img) return;
@@ -50,14 +55,10 @@
 
     if (isMetaWebView) swapToLocal();
 
-    img.addEventListener(
-      "error",
-      () => {
-        if (img.src === primary) img.src = fallbackNoQuery;
-        else swapToLocal();
-      },
-      { once: true }
-    );
+    img.addEventListener("error", () => {
+      if (img.src === primary) img.src = fallbackNoQuery;
+      else swapToLocal();
+    }, { once: true });
 
     // timeout fallback (slow decode / blocked)
     const t = setTimeout(() => {
@@ -66,43 +67,36 @@
     img.addEventListener("load", () => clearTimeout(t), { once: true });
   }
 
-  /* ---------- MathJax nudge ---------- */
-  function mathjaxTypesetSoon() {
+  /** gentle MathJax nudge **/
+  function typesetNow() {
     if (!window.MathJax) return;
     try {
       if (window.MathJax.typeset) window.MathJax.typeset();
-    } catch (_) {}
+    } catch(_) {}
   }
 
-  /* ---------- reveal on scroll ---------- */
+  /** reveal on scroll (cards/dividers) **/
   function initReveal() {
     const targets = $all(".card, .divider");
     if (!targets.length) return;
 
     if (!prefersNoMotion && "IntersectionObserver" in window) {
-      const io = new IntersectionObserver(
-        (entries) => {
-          for (const e of entries) {
-            if (e.isIntersecting) {
-              e.target.classList.add("visible");
-              io.unobserve(e.target);
-            }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("visible");
+            io.unobserve(e.target);
           }
-        },
-        { root: null, rootMargin: "0px 0px -10%" }
-      );
+        }
+      }, { rootMargin: "0px 0px -12%" });
       targets.forEach((el) => io.observe(el));
     } else {
-      const tick = () =>
-        targets.forEach((el) => inViewport(el) && el.classList.add("visible"));
+      const tick = () => targets.forEach((el) => inViewport(el) && el.classList.add("visible"));
       let ticking = false;
       const onScroll = () => {
         if (!ticking) {
           ticking = true;
-          requestAnimationFrame(() => {
-            tick();
-            ticking = false;
-          });
+          requestAnimationFrame(() => { tick(); ticking = false; });
         }
       };
       window.addEventListener("scroll", onScroll, { passive: true });
@@ -111,35 +105,31 @@
     }
   }
 
-  /* ---------- equation activation ---------- */
+  /** equation activation (no HTML changes) **/
   function initEquations() {
     const eqs = $all(".eq");
     if (!eqs.length) return;
 
-    // small stagger so first rows don't all pop at once
-    eqs.forEach((el, i) =>
-      el.style.setProperty("--eq-delay", `${Math.min(i * 0.08, 0.8)}s`)
-    );
+    // stagger delays by DOM order (small ramp)
+    eqs.forEach((el, i) => el.style.setProperty("--eq-delay", `${Math.min(i * 0.08, 0.8)}s`));
 
     const activate = (el) => {
       if (!el.classList.contains("eq-on")) {
         el.classList.add("eq-on");
-        setTimeout(mathjaxTypesetSoon, 80);
+        // nudge MathJax after styles apply
+        setTimeout(typesetNow, 80);
       }
     };
 
     if (!prefersNoMotion && "IntersectionObserver" in window) {
-      const io = new IntersectionObserver(
-        (entries) => {
-          for (const e of entries) {
-            if (e.isIntersecting) {
-              activate(e.target);
-              io.unobserve(e.target);
-            }
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            activate(e.target);
+            io.unobserve(e.target);
           }
-        },
-        { root: null, rootMargin: "0px 0px -8%" }
-      );
+        }
+      }, { rootMargin: "0px 0px -10%" });
       eqs.forEach((el) => io.observe(el));
     } else {
       const tick = () => eqs.forEach((el) => inViewport(el, 0.94) && activate(el));
@@ -147,10 +137,7 @@
       const onScroll = () => {
         if (!ticking) {
           ticking = true;
-          requestAnimationFrame(() => {
-            tick();
-            ticking = false;
-          });
+          requestAnimationFrame(() => { tick(); ticking = false; });
         }
       };
       window.addEventListener("scroll", onScroll, { passive: true });
@@ -159,9 +146,9 @@
     }
   }
 
-  /* ---------- gentle tilt (desktop only) ---------- */
+  /** subtle “living” tilt for cards — desktop only with fine pointer */
   function initTilt() {
-    if (prefersNoMotion || isTouch) return;
+    if (prefersNoMotion || !hasFinePointer || window.innerWidth < 1024) return;
     const cards = $all(".card");
     if (!cards.length) return;
 
@@ -185,7 +172,7 @@
     });
   }
 
-  /* ---------- init ---------- */
+  /** init **/
   document.addEventListener("DOMContentLoaded", () => {
     swapYear();
     hardenExternal();
@@ -193,6 +180,6 @@
     initReveal();
     initEquations();
     initTilt();
-    setTimeout(mathjaxTypesetSoon, 250);
+    setTimeout(typesetNow, 250);
   });
 })();
