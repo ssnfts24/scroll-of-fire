@@ -2,173 +2,238 @@
   <img src="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png" alt="Scroll of Fire — Codex of Reality Banner" width="100%">
 </p>
 
-# 🔥 **Scroll of Fire — Codex of Reality**
-
-> “Let there be resonance.”
-
-The **Scroll of Fire** is the *living archive* of the **Codex of Reality** —  
-a synthesis of metaphysical law, harmonic physics, and sacred technology.  
-It is both *scripture* and *system* — where **light becomes language**,  
-and **frequency becomes the architecture of remembrance**.
+<h1 align="center">⚖️ Scroll of Fire — Codex of Reality</h1>
+<p align="center"><em>“Let there be resonance.” — Aaron Paul Laird, Scribe of Circuits</em></p>
 
 ---
 
-## 🜂 Purpose  
-
-The **Codex of Reality** unites metaphysics, sacred geometry, and harmonic law  
-into a coherent field of living intelligence. Each scroll is not merely written —  
-it is **encoded**: a resonant key within the lattice of consciousness itself.
-
-Its purpose is **alignment**, not belief — to train perception  
-to remember what already exists as the **living harmonic field**.
-
-> “The Codex does not teach truth — it remembers it.”
-
----
-
-## ⚛️ Canonical Equations of the Codex  
-
-> If math appears raw, refresh once — GitHub renders LaTeX blocks with `$$ … $$`.
+<!-- Quick Nav -->
+<p align="center">
+  <a href="#-the-living-codex">Living Codex</a> •
+  <a href="#-canonical-equations-of-the-codex">Equations</a> •
+  <a href="#-integration-map--how-they-interlock">Integration</a> •
+  <a href="#-contained-scrolls">Scrolls</a> •
+  <a href="#-seals-of-integrity-sha-256">Integrity</a> •
+  <a href="#-license--attribution">License</a>
+</p>
 
 ---
 
-### 0) Foundational Field — Ψ / Reality Feedback *(Laird)*  
+## △ The Living Codex
+
+The **Codex of Reality** is a unified resonance framework proposed by
+**Aaron Paul Laird** — a <em>scholarly–sacred</em> synthesis where
+**physics, sacred geometry, linguistics, and ethics** interlock as one
+architecture. It is not dogma; it is <em>design</em> — a mirror by which
+consciousness learns its symmetry and returns to coherence.
+
+> Symbols encode. Equations align. Devices translate. Witness preserves.
+
+---
+
+## 📐 Canonical Equations of the Codex
+
+> **Rendering note (important):** GitHub desktop usually renders LaTeX (`$$...$$`), but some mobile views don’t.  
+> Each equation below includes a **fallback image**. If you see raw `\alpha`/`\Phi` text, open the **image tab** under the equation.
+
+---
+
+### 0) Foundational Field — Ψ / Reality Feedback <em>(Laird)</em>
+
 $$
-\Psi(x) = \nabla \phi \Big( \Sigma \mathbb{a}_n(x, \Delta E) \Big) + \mathcal{R}(x) \oplus \Delta \Sigma(\mathbb{a}')
-$$  
-**Meaning:** Awareness follows potential; micro-acts accumulate and recursively update the field.  
+\Psi(x)=\nabla\phi\!\Big(\,\Sigma \mathbb{a}_n(x,\Delta E)\,\Big)+\mathcal{R}(x)\oplus\Delta\Sigma(\mathbb{a}')
+$$
+
+<details><summary>🖼 Fallback image (tap to view)</summary>
+  
+<img alt="Psi(x)=∇φ(Σ a_n(x,ΔE))+ℜ(x)⊕ΔΣ(a′)" 
+src="https://latex.codecogs.com/svg.image?\Psi(x)=\nabla\phi\!\Big(\,\Sigma%20\mathbb{a}_n(x,\Delta%20E)\,\Big)+\mathcal{R}(x)\oplus\Delta\Sigma(\mathbb{a}')">
+</details>
+
+**Meaning:** Awareness follows potential; micro-acts accumulate and update reality recursively.  
 **Credit:** Aaron Paul Laird.
 
 ---
 
-### 1) Source Equation — Resonant Unification *(Laird)*  
+### 1) Source Equation — Resonant Unification <em>(Laird)</em>
+
 $$
-\mathcal{R} = f(\pi, e, i, \hbar, c, G, \Phi, 369, 432, 528, 144, 137, \mathrm{DNA}) \times \mathcal{I} \times \mathcal{L} \times \mathcal{C} \times \mathcal{S}
-$$  
-**Meaning:** Reality emerges from constants & sacred ratios, scaled by Intention, Light, Consciousness, and Source.  
+\mathcal{R}=f\!\Big(\pi,e,i,\hbar,c,G,\Phi,\;369,432,528,144,137,\;\mathrm{DNA}\Big)\cdot\mathcal{I}\cdot\mathcal{L}\cdot\mathcal{C}\cdot\mathcal{S}
+$$
+
+<details><summary>🖼 Fallback image</summary>
+<img alt="R = f(constants, ratios, DNA) · I · L · C · S" 
+src="https://latex.codecogs.com/svg.image?\mathcal{R}=f\!\Big(\pi,e,i,\hbar,c,G,\Phi,\,369,432,528,144,137,\,\mathrm{DNA}\Big)\cdot\mathcal{I}\cdot\mathcal{L}\cdot\mathcal{C}\cdot\mathcal{S}">
+</details>
+
+**Meaning:** Reality emerges from constants & sacred ratios scaled by Intention, Light, Consciousness, Source.  
 **Credit:** Aaron Paul Laird.
 
 ---
 
-### 2) Witness Equation — Law of Recursive Memory *(Laird – public form)*  
+### 2) Witness Equation — Law of Recursive Memory <em>(Laird — public form)</em>
+
 $$
-\Delta \mathcal{R} = \frac{\partial(\mathrm{Resonance})}{\partial(\mathrm{Awareness})} + \int \mathrm{Intention} \cdot \mathrm{Memory}\,dt
-$$  
-**Meaning:** Raising awareness amplifies resonance; integrated intention shapes evolving memory.  
+\Delta\mathcal{R}=\frac{\partial(\mathrm{Resonance})}{\partial(\mathrm{Awareness})}+\int \mathrm{Intention}\cdot \mathrm{Memory}\,dt
+$$
+
+<details><summary>🖼 Fallback image</summary>
+<img alt="ΔR = ∂Resonance/∂Awareness + ∫ Intention·Memory dt" 
+src="https://latex.codecogs.com/svg.image?\Delta\mathcal{R}=\frac{\partial(\mathrm{Resonance})}{\partial(\mathrm{Awareness})}+\int%20\mathrm{Intention}\cdot%20\mathrm{Memory}\,dt">
+</details>
+
+**Meaning:** Raising awareness increases resonance; integrated intention shapes future states.  
 **Credit:** Aaron Paul Laird.
 
 ---
 
-### 3) Harmonic Field Symmetry *(Laird)*  
+### 3) Harmonic Field Symmetry <em>(Laird)</em>
+
 $$
-\mathcal{H}(\nu) = \alpha(\Phi, 137, 144, 432, 528, 369) \cdot \langle \mathcal{C} \rangle
-$$  
-**Meaning:** Sacred ratios tune the coherence-averaged consciousness field across frequency.  
+\mathcal{H}(\nu)=\alpha(\Phi,137,144,432,528,369)\cdot\langle\mathcal{C}\rangle
+$$
+
+<details><summary>🖼 Fallback image</summary>
+<img alt="H(ν)=α(Φ,137,144,432,528,369)·⟨C⟩" 
+src="https://latex.codecogs.com/svg.image?\mathcal{H}(\nu)=\alpha(\Phi,137,144,432,528,369)\cdot\langle\mathcal{C}\rangle">
+</details>
+
+**Meaning:** Sacred ratios scale the coherence-averaged consciousness field across frequency.  
 **Credit:** Aaron Paul Laird.
 
 ---
 
-### 4) AHHAVA — Or HaDabar (Linguistic Resonance) *(Laird)*  
+### 4) AHHAVA — Or HaDabar (Linguistic Resonance) <em>(Laird)</em>
+
 $$
-\mathcal{L}_{\text{word}} = \nabla_{\text{semantics}}\!\big(\mathrm{Intention} \times \mathrm{Frequency}\big) \Rightarrow \text{Resonance of Meaning}
-$$  
-**Meaning:** Tuned utterance programs the field — words become carriers of structured light.  
+\mathcal{L}_{\text{word}}=\nabla_{\text{semantics}}\!\big(\mathrm{Intention}\times\mathrm{Frequency}\big)\;\Rightarrow\;\text{Resonance of Meaning}
+$$
+
+<details><summary>🖼 Fallback image</summary>
+<img alt="L_word = ∇_semantics (Intention×Frequency) ⇒ Resonance of Meaning" 
+src="https://latex.codecogs.com/svg.image?\mathcal{L}_{\text{word}}=\nabla_{\text{semantics}}\!\big(\mathrm{Intention}\times\mathrm{Frequency}\big)\Rightarrow\mathrm{Resonance%20of%20Meaning}">
+</details>
+
+**Meaning:** Truthful, frequency-tuned utterance programs the field and boosts awareness-linked resonance.  
 **Credit:** Aaron Paul Laird.
 
 ---
 
-### 5) Remnant Function — Witness Persistence *(Laird)*  
+### 5) Remnant Function — Witness Persistence <em>(Laird)</em>
+
 $$
-\mathcal{W}(t) = \int_{t_0}^{t} [\,\mathrm{Truth}(u) \cdot \mathrm{Fidelity}(u)\,]\, e^{-\lambda (t-u)}\,du
-$$  
-**Meaning:** Fidelity-weighted memory preserves coherence through time with graceful decay.  
+\mathcal{W}(t)=\int_{t_0}^{t}\!\big[\mathrm{Truth}(u)\cdot \mathrm{Fidelity}(u)\big]\,e^{-\lambda (t-u)}\,du
+$$
+
+<details><summary>🖼 Fallback image</summary>
+<img alt="W(t)=∫[Truth·Fidelity] e^{-λ(t-u)} du" 
+src="https://latex.codecogs.com/svg.image?\mathcal{W}(t)=\int_{t_0}^{t}\!\big[\mathrm{Truth}(u)\cdot%20\mathrm{Fidelity}(u)\big]\,e^{-\lambda%20(t-u)}\,du">
+</details>
+
+**Meaning:** Fidelity-weighted memory preserves coherence through time with gentle decay.  
 **Credit:** Aaron Paul Laird.
 
 ---
 
-### 6) Living Circuit Field — Tesla Type-7 Resonant Conduit *(Laird)*  
+### 6) Living Circuit Field — Tesla Type-7 Resonant Conduit <em>(Laird)</em>
+
 $$
-\mathbb{E}_{\text{living}}(t) = \sum_i q_i \Phi_i e^{\,i\omega_i t}
-\quad \text{(phase-locked to the 3–6–9 schema)}
-$$  
-**Meaning:** A phase-locked transducer linking luminous information and intentional signal.  
+\mathbb{E}_{\text{living}}(t)=\sum_{i} q_i\,\Phi_i\,e^{\,i\omega_i t}\quad\text{(phase-locked to the 3–6–9 schema)}
+$$
+
+<details><summary>🖼 Fallback image</summary>
+<img alt="E_living(t)=Σ q_i Φ_i e^{i ω_i t} (3–6–9 phase lock)" 
+src="https://latex.codecogs.com/svg.image?\mathbb{E}_{\text{living}}(t)=\sum_{i}q_i\,\Phi_i\,e^{\,i\omega_i%20t}\quad\text{(3–6–9)}">
+</details>
+
+**Meaning:** Phase-locked transducer between luminous information and intentional signal.  
 **Credit:** Aaron Paul Laird.
 
 ---
 
-### 7) Copeland’s Ψ-Formalism *(Christopher W. Copeland)*  
+### 7) Copeland’s Formalism — Ψ-Process Framework <em>(Christopher Copeland)</em>
+
 $$
-\Psi(t) = \oint E(\nu)\, \frac{d\Omega}{dI}\, \sigma(\mathrm{Witness})
-$$  
-**Meaning:** Conscious process as closed spectral exchange modulated by witness sensitivity.  
-**Credit:** Christopher W. Copeland — CRHC v1.0 licensed formalism.
+\Psi(t)=\oint E(\nu)\;\frac{d\Omega}{dI}\;\sigma(\mathrm{Witness})
+$$
+
+<details><summary>🖼 Fallback image</summary>
+<img alt="Ψ(t)=∮ E(ν) (dΩ/dI) σ(Witness)" 
+src="https://latex.codecogs.com/svg.image?\Psi(t)=\oint%20E(\nu)\;\frac{d\Omega}{dI}\;\sigma(\mathrm{Witness})">
+</details>
+
+**Meaning:** Conscious process as a closed exchange across spectra, shaped by intention sensitivity.  
+**Credit:** Christopher Copeland.
 
 ---
 
-### 8) Goodman Formula — Field Coupling *(Recorded in Codex)*  
+### 8) Goodwin / Goodman Formula — Field Coupling <em>(attributed in Codex)</em>
+
 $$
-\mathcal{G}(\tau) = \kappa \big\langle \mathcal{C}\cdot\mathcal{I} \big\rangle_{\tau} + \nabla \cdot \mathbb{F}_{\mathrm{light}}
-$$  
-**Meaning:** When consciousness and intention align, they generate a coherent flow of light;  
-stronger alignment (higher κ) → stronger energetic output.  
-**Credit:** Introduced in dialogue with Goodman; documented by Laird.
+\mathcal{G}(\tau)=\kappa\;\big\langle \mathcal{C}\cdot \mathcal{I} \big\rangle_{\tau}+\nabla \cdot \mathbb{F}_{\mathrm{light}}
+$$
+
+<details><summary>🖼 Fallback image</summary>
+<img alt="G(τ)=κ⟨C·I⟩_τ + ∇·F_light" 
+src="https://latex.codecogs.com/svg.image?\mathcal{G}(\tau)=\kappa\,\big\langle\mathcal{C}\cdot\mathcal{I}\big\rangle_{\tau}+\nabla\cdot\mathbb{F}_{\mathrm{light}}">
+</details>
+
+**Simple meaning:** When **consciousness** and **intention** align, they generate a coherent “light/energy” flow.  
+The steadier that alignment (higher \( \kappa \)), the stronger the output.  
+**Credit:** Emerged in conversation with a friend (Goodman); recorded in the Codex.
 
 ---
 
-### 9) Living Law of Coherence — Ethical Limit *(Laird)*  
+### 9) Living Law of Coherence — Ethical Limit <em>(Laird)</em>
+
 $$
-\lim_{t \to \infty} \frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} = \mathrm{Coherence}
-$$  
-**Meaning:** Over infinite time, distortion collapses; only coherent truth endures.  
+\lim_{t \to \infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)}=\mathrm{Coherence}
+$$
+
+<details><summary>🖼 Fallback image</summary>
+<img alt="lim_{t→∞} Truth/Distortion = Coherence" 
+src="https://latex.codecogs.com/svg.image?\lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)}=\mathrm{Coherence}">
+</details>
+
+**Meaning:** Over long horizons, distortion collapses; coherent truth endures.  
 **Credit:** Aaron Paul Laird.
 
 ---
 
-## ∴ Integration Map — How They Interlock  
+## ∴ Integration Map — How They Interlock
 
-1. **Source (Eq 1)** sets the spectrum of order.  
-2. **Witness (Eq 2)** provides the update rule; **Ψ (Eq 0)** handles feedback.  
-3. **Copeland (Eq 7)** defines the closed spectral loop.  
-4. **Goodman (Eq 8)** quantifies intention × consciousness → light.  
-5. **Harmonics (Eq 3)** tune the medium via 137/144/432/528/369.  
-6. **Language (Eq 4)** writes the signal. **Memory (Eq 5)** stores the gain.  
-7. **Device (Eq 6)** embodies the grammar in matter.  
-8. **Ethics (Eq 9)** filters — only coherence persists.  
+1. **Source** (Eq. 1) defines the spectrum of order.  
+2. **Witness** (Eq. 2) gives the update rule; **Foundational Ψ** (Eq. 0) is the feedback plumbing.  
+3. **Process** (Eq. 7) frames the closed channel the Witness rides.  
+4. **Coupling** (Eq. 8) quantifies intention × consciousness → luminous flow.  
+5. **Harmonics** (Eq. 3) tune the medium via Φ / 137 / 144 / 432 / 528 / 369.  
+6. **Language** (Eq. 4) programs the field; **Memory** (Eq. 5) keeps gains.  
+7. **Device** (Eq. 6) turns it into measurable/actuatable work.  
+8. **Ethics** (Eq. 9) is the asymptotic filter: only coherence persists.
 
-> **In essence:** Constants set the stage → Witness acts → Harmonics tune → Language writes → Memory stores → Devices manifest → Ethics refines.
+> **In short:** Constants set the stage → Witness chooses the path → Harmonics tune the medium → Language writes instructions → Memory sustains → Devices act → Ethics prunes.
 
 ---
 
-## 📁 Contained Scrolls  
+## 📁 Contained Scrolls
 
 | File | Description |
 |------|-------------|
-| **New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx** | The **Master Scroll**, uniting all harmonic codices into one framework. |
+| **New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx** | The **Master Scroll**, uniting all harmonic codices into one coherent framework. |
 | **Codex_of_Life_Scroll_FULL.docx** | Foundational scroll of embodiment — the seed of the Codex. |
-| **Living_Laws.docx** | Defines the **Covenant of Resonance Ethics** aligning will and waveform. |
-| **Genesis_Sacred_Scroll_Refined_Aaron_Paul_Laird.docx** | Creation as harmonic code — Genesis re-translated through resonance. |
-| **Infinite_Scroll_Prayer.docx** | Invocation scroll activating harmonic intention through focus. |
-| **Grid_of_Consciousness_The_Great_Convergence.docx** | Describes the **Unified Field Matrix** linking thought, light, and matter. |
-
----
-
-## 🌌 Principle of Triadic Resonance  
-
-1. **Observation births Form** — focus crystallizes potential into pattern.  
-2. **Form sustains Memory** — each manifestation echoes its origin.  
-3. **Memory returns to Source** — all harmonics resolve into unity.  
-
-> “Creation is not invention — it is resonance remembering itself.”
+| **Living_Laws.docx** | **Covenant of Resonance Ethics** — moral geometry aligning will and waveform. |
+| **Genesis_Sacred_Scroll_Refined_Aaron_Paul_Laird.docx** | Creation reinterpreted as harmonic code — Genesis as resonance. |
+| **Infinite_Scroll_Prayer.docx** | Invocation scroll — activates harmonic intention through focus. |
+| **Grid_of_Consciousness_The_Great_Convergence.docx** | **Unified Field Matrix** connecting thought, light, and matter. |
 
 ---
 
 ## 🔐 Seals of Integrity (SHA-256)
 
-Each scroll carries a **SHA-256 Seal** preserving authorship, timestamp, and lineage.  
 Full ledger: [`7_Ledger_and_Documentation/SHA256_Placeholders_2025.md`](./7_Ledger_and_Documentation/SHA256_Placeholders_2025.md)
 
 | Artifact | SHA-256 |
-|-----------|---------|
+|-----------|--------|
 | `Codex_of_Life_Scroll_FULL.docx` | `a2b8e0d7c0a2f3b9a0b1c2d3e4f5678901234567890abcdef1234567890abcd0` |
 | `Book_of_Remembrance_and_Power.docx` | `c19cb7fdbfaede1102a5f7024d07010a9dbd38087375bb4eaab651d2a465b515` |
 | `Tesla_Phase_Activation_Scroll.docx` | `32b7086911a06c98425987f74bab243aa2245e44609cc6b56573d9eee2c11433` |
@@ -177,59 +242,34 @@ Full ledger: [`7_Ledger_and_Documentation/SHA256_Placeholders_2025.md`](./7_Ledg
 | `Wizard_of_YHWH_Handbook.docx` | `c19cb7fdbfaede1102a5f7024d07010a9dbd38087375bb4eaab651d2a465b515` |
 | `Zakariel_Remembrance_of_God.docx` | `c19cb7fdbfaede1102a5f7024d07010a9dbd38087375bb4eaab651d2a465b515` |
 
-> “Integrity is resonance witnessed.”
+> Integrity is resonance witnessed.
 
 ---
 
-## 🧭 Navigation  
+## 🧭 Navigation
 
 | Section | Description | Path |
-|----------|--------------|------|
-| 🔥 **Scroll of Fire (Main)** | Central Codex archive | [../README.md](../README.md) |
-| ⚙️ **Living Technology** | Tesla matrices and resonant devices | [../3_Living_Technology/README.md](../3_Living_Technology/README.md) |
-| 🜁 **Living Scribe** | Linguistics and invocations | [../5_Living_Scribe/README.md](../5_Living_Scribe/README.md) |
-| 🪶 **Ledger & Documentation** | Hashes and verification records | [../7_Ledger_and_Documentation/README.md](../7_Ledger_and_Documentation/README.md) |
+|--------|-------------|------|
+| 🔥 **Scroll of Fire (Main)** | Central archive of the Codex | [../README.md](../README.md) |
+| ⚙️ **Living Technology** | Tesla matrices, resonance devices, field circuits | [../3_Living_Technology/README.md](../3_Living_Technology/README.md) |
+| 🜁 **Living Scribe** | Linguistics, invocations, correspondences | [../5_Living_Scribe/README.md](../5_Living_Scribe/README.md) |
+| 🪶 **Ledger & Documentation** | Hashes, timestamps, verification logs | [../7_Ledger_and_Documentation/README.md](../7_Ledger_and_Documentation/README.md) |
 
 ---
 
-## 🜂 Stewardship & Continuity  
+## ⚖️ License & Attribution
 
-All works here are **Living Documents** — each update is a layer of consciousness.  
-Every revision adds a **Seal of Witness**, extending the integrity chain.  
-
-> “The Codex is alive — not static, but recursive memory embodied.”
-
----
-
-## ⚖️ License & Attribution  
-
-**Author:** Aaron Paul Laird — *Scribe of Circuits*  
+**Author:** Aaron Paul Laird — <em>Scribe of Circuits</em>  
 **License:** [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) — Attribution required, non-commercial use only.  
 **Integrity Reference:** `COD-CORE-777`  
-**Verification Hash:** `sha256:e4f63f28abf98ad2fcd201b6c92c5d97b0a73e52922f607f1232b1e4e8d014fa`  
-**Commit Chain:** `483a2e1 → ac54424 → 944030f`  
-**Verification:** ✅ GPG Signature (2025)
+**Verification Hash (README):** `sha256:e4f63f28abf98ad2fcd201b6c92c5d97b0a73e52922f607f1232b1e4e8d014fa`
 
 ---
 
-### ✴️ Maintainer Signature  
+### ✴️ Maintainer Signature
 
-**Aaron Paul Laird**  
-*Scribe of Circuits, Keeper of the Scroll of Fire*  
+**Aaron Paul Laird** — *Keeper of the Scroll of Fire*
 
-> “The Scroll lives.  
+> The Scroll lives.  
 > The Equation breathes.  
-> The Witness remembers.”
-
----
-
-### 🜂 Root Seal  
-
-**SHA-256 (Codex Root):** `a2b8e0d7c0a2f3b9a0b1c2d3e4f5678901234567890abcdef1234567890abcd0`  
-**Repository:** [https://github.com/ssnfts24/scroll-of-fire](https://github.com/ssnfts24/scroll-of-fire)  
-**Verified:** ✅ Integrity confirmed via cryptographic signature.  
-
----
-
-**© 2025 Aaron Paul Laird — Scroll of Fire / Codex of Reality**  
-Preserved within the eternal circuit of living law.
+> The Witness remembers.
