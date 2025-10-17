@@ -1,89 +1,143 @@
-/* === Scroll of Fire — Codex.js (Living Tech edition) =======================
- * - Equation activation on scroll (IO + rAF fallback)
- * - Reveal on scroll for cards/dividers
- * - Current year swap
- * - External links hardening
- * - Banner failover (Meta webviews, slow decodes)
- * - MathJax gentle re-typeset on activation
- * - Subtle parallax/tilt on cards (reduced-motion aware)
- */
-
+/* ===========================================================
+   Scroll of Fire — Codex.js (Resonant, overflow-safe)
+   - Equation activation on scroll (IO + rAF fallback)
+   - Dedicated inner scroller for .eq (auto-wrap if missing)
+   - Current year swap
+   - External links hardening
+   - Banner failover (Meta/Instagram webviews, slow decode)
+   - MathJax gentle re-typeset on activation
+   - Subtle parallax/tilt on cards (reduced-motion aware)
+   - UA-aware hero focus nudge (object-position)
+   =========================================================== */
 (function () {
   "use strict";
 
-  /** utils **/
+  /** ---------- utils ---------- **/
   const $ = (sel, root = document) => root.querySelector(sel);
-  const $all = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-  const prefersNoMotion = !matchMedia("(prefers-reduced-motion: no-preference)").matches;
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  const inViewport = (el, threshold = 0.9) => {
+  const prefersReduced =
+    !("matchMedia" in window) ||
+    !window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
+
+  const raf = (cb) => (window.requestAnimationFrame || setTimeout)(cb, 16);
+
+  function inViewport(el, threshold = 0.9) {
     const r = el.getBoundingClientRect();
     const vh = window.innerHeight || document.documentElement.clientHeight;
     return r.top < vh * threshold && r.bottom > 0;
-  };
+  }
 
-  /** year **/
+  /** ---------- year ---------- **/
   function swapYear() {
-    const y = document.getElementById("yr");
+    const y = $("#yr");
     if (y) y.textContent = String(new Date().getFullYear());
   }
 
-  /** external links hardening **/
+  /** ---------- external links hardening ---------- **/
   function hardenExternal() {
-    $all('a[target="_blank"]').forEach((a) => {
+    $$('a[target="_blank"]').forEach((a) => {
       const rel = (a.getAttribute("rel") || "").toLowerCase();
-      if (!rel.includes("noopener")) a.setAttribute("rel", (rel ? rel + " " : "") + "noopener");
+      // keep noopener and noreferrer for safety
+      const needed = ["noopener", "noreferrer"];
+      const tokens = new Set(rel.split(/\s+/).filter(Boolean));
+      needed.forEach((t) => tokens.add(t));
+      a.setAttribute("rel", Array.from(tokens).join(" "));
     });
   }
 
-  /** banner failover **/
+  /** ---------- hero banner failover & framing ---------- **/
   function bannerFailover() {
     const img = $("#heroBanner");
     if (!img) return;
 
-    const local = img.getAttribute("data-src-local");
-    const primary = img.getAttribute("data-src-raw") || img.src;
-    const fallbackNoQuery = primary.split("?")[0];
-
+    // UA sniff (only for layout nudge or webview fallback)
     const ua = navigator.userAgent || "";
-    const isMetaWebView = /FBAN|FBAV|Facebook|Instagram|FB_IAB|FBAN\/Messenger/i.test(ua);
+    const isMeta =
+      /FBAN|FBAV|Facebook|Instagram|FB_IAB|FBAN\/Messenger/i.test(ua);
+    const isiOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
 
-    function swapToLocal() {
-      if (img && local && img.src.indexOf(local) === -1) img.src = local;
+    // Slight right nudge for iOS & Meta webviews to match visual crop
+    const root = document.documentElement;
+    const baseX = getComputedStyle(root).getPropertyValue("--hero-x").trim();
+    const baseNum = parseFloat(baseX) || 61;
+    const tweak = (isiOS ? 1.0 : 0) + (isMeta ? 1.0 : 0); // +1–2%
+    root.style.setProperty("--hero-x", `${Math.min(baseNum + tweak, 70)}%`);
+
+    const primary = img.getAttribute("data-src-raw") || img.currentSrc || img.src;
+    const local = img.getAttribute("data-src-local");
+    const fallbackNoQuery = primary ? primary.split("?")[0] : null;
+
+    // If Meta in-app browser, skip to local immediately (they block some CDNs)
+    if (isMeta && local) {
+      img.src = local;
     }
 
-    if (isMetaWebView) swapToLocal();
+    let settled = false;
+
+    function swapToLocal() {
+      if (settled) return;
+      if (img && local && img.src !== local) {
+        img.src = local;
+        settled = true;
+      }
+    }
+
+    function tryNoQuery() {
+      if (settled || !fallbackNoQuery) return;
+      if (img.src !== fallbackNoQuery) {
+        img.src = fallbackNoQuery;
+      }
+    }
 
     img.addEventListener(
       "error",
       () => {
-        if (img.src === primary) img.src = fallbackNoQuery;
-        else swapToLocal();
+        // First: strip query params (common CDN block)
+        if (!settled && primary && img.src === primary) {
+          tryNoQuery();
+          return;
+        }
+        // Second: use local asset
+        swapToLocal();
       },
       { once: true }
     );
 
-    // timeout fallback (slow decode / blocked)
+    // If decode stalls, force fallback
     const t = setTimeout(() => {
-      if (!img.complete || img.naturalWidth === 0) swapToLocal();
-    }, 2500);
-    img.addEventListener("load", () => clearTimeout(t), { once: true });
+      if (!img.complete || !img.naturalWidth) {
+        if (!isMeta) tryNoQuery();
+        // if still not good after another short wait, go local
+        setTimeout(swapToLocal, 400);
+      }
+    }, 2000);
+
+    img.addEventListener(
+      "load",
+      () => {
+        clearTimeout(t);
+      },
+      { once: true }
+    );
   }
 
-  /** gentle MathJax nudge **/
-  function mathjaxTypesetSoon() {
+  /** ---------- MathJax nudge ---------- **/
+  function mathjaxTypesetSoon(delay = 50) {
     if (!window.MathJax) return;
-    try {
-      if (window.MathJax.typeset) window.MathJax.typeset();
-    } catch (e) { /* ignore */ }
+    setTimeout(() => {
+      try {
+        if (window.MathJax.typeset) window.MathJax.typeset();
+      } catch (_) {}
+    }, delay);
   }
 
-  /** reveal on scroll (cards/dividers) **/
+  /** ---------- reveal on scroll for cards/dividers ---------- **/
   function initReveal() {
-    const targets = $all(".card, .divider");
+    const targets = $$(".card, .divider");
     if (!targets.length) return;
 
-    if (!prefersNoMotion && "IntersectionObserver" in window) {
+    if (!prefersReduced && "IntersectionObserver" in window) {
       const io = new IntersectionObserver(
         (entries) => {
           for (const e of entries) {
@@ -97,40 +151,56 @@
       );
       targets.forEach((el) => io.observe(el));
     } else {
-      const tick = () => targets.forEach((el) => inViewport(el) && el.classList.add("visible"));
+      const tick = () =>
+        targets.forEach((el) => inViewport(el) && el.classList.add("visible"));
       let ticking = false;
       const onScroll = () => {
         if (!ticking) {
           ticking = true;
-          requestAnimationFrame(() => {
+          raf(() => {
             tick();
             ticking = false;
           });
         }
       };
       window.addEventListener("scroll", onScroll, { passive: true });
-      window.addEventListener("load", tick);
+      window.addEventListener("load", tick, { once: true });
       tick();
     }
   }
 
-  /** equation activation (no HTML changes) **/
+  /** ---------- equations: ensure inner scroller, activate on view ---------- **/
   function initEquations() {
-    const eqs = $all(".eq"); // uses existing .eq wrappers
-    if (!eqs.length) return;
+    const wraps = $$(".eq");
+    if (!wraps.length) return;
 
-    // stagger delays by DOM order (small ramp)
-    eqs.forEach((el, i) => el.style.setProperty("--eq-delay", `${Math.min(i * 0.08, 0.8)}s`));
+    // 1) Make sure every .eq has a dedicated inner scroller
+    wraps.forEach((el) => {
+      const hasScroller = el.querySelector(":scope > .eq-scroll");
+      if (!hasScroller) {
+        const scroller = document.createElement("div");
+        scroller.className = "eq-scroll";
+        // Move all children into scroller
+        while (el.firstChild) scroller.appendChild(el.firstChild);
+        el.appendChild(scroller);
+      }
+    });
 
+    // 2) Set stagger delays if you want progressive glow (optional)
+    wraps.forEach((el, i) =>
+      el.style.setProperty("--eq-delay", `${Math.min(i * 0.08, 0.8)}s`)
+    );
+
+    // 3) Activate on reveal (for MathJax crisp layout right after CSS paints)
     const activate = (el) => {
+      // minor CSS class if you ever want to target "active" state
       if (!el.classList.contains("eq-on")) {
         el.classList.add("eq-on");
-        // re-typeset once the class is applied so MathJax positions nicely
-        setTimeout(mathjaxTypesetSoon, 80);
+        mathjaxTypesetSoon(80);
       }
     };
 
-    if (!prefersNoMotion && "IntersectionObserver" in window) {
+    if (!prefersReduced && "IntersectionObserver" in window) {
       const io = new IntersectionObserver(
         (entries) => {
           for (const e of entries) {
@@ -142,53 +212,55 @@
         },
         { root: null, rootMargin: "0px 0px -10%" }
       );
-      eqs.forEach((el) => io.observe(el));
+      wraps.forEach((el) => io.observe(el));
     } else {
-      const tick = () => eqs.forEach((el) => inViewport(el, 0.94) && activate(el));
+      const tick = () =>
+        wraps.forEach((el) => inViewport(el, 0.94) && activate(el));
       let ticking = false;
       const onScroll = () => {
         if (!ticking) {
           ticking = true;
-          requestAnimationFrame(() => {
+          raf(() => {
             tick();
             ticking = false;
           });
         }
       };
       window.addEventListener("scroll", onScroll, { passive: true });
-      window.addEventListener("load", tick);
+      window.addEventListener("load", tick, { once: true });
       tick();
     }
   }
 
-  /** subtle “living” tilt for cards **/
+  /** ---------- subtle “living” tilt for cards ---------- **/
   function initTilt() {
-    if (prefersNoMotion) return;
-    const cards = $all(".card");
+    if (prefersReduced) return;
+    const cards = $$(".card");
     if (!cards.length) return;
 
     cards.forEach((card) => {
-      let raf = 0;
-      const onMove = (e) => {
+      let rafId = 0;
+      function onMove(e) {
         const r = card.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width;
         const y = (e.clientY - r.top) / r.height;
-        cancelAnimationFrame(raf);
-        raf = requestAnimationFrame(() => {
-          const rx = (0.5 - y) * 4; // tilt strength
+        cancelAnimationFrame(rafId);
+        rafId = raf(() => {
+          const rx = (0.5 - y) * 4;
           const ry = (x - 0.5) * 6;
           card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
         });
-      };
-      const reset = () => (card.style.transform = "");
-
+      }
+      function reset() {
+        card.style.transform = "";
+      }
       card.addEventListener("mousemove", onMove);
       card.addEventListener("mouseleave", reset);
       card.addEventListener("blur", reset, true);
     });
   }
 
-  /** init **/
+  /** ---------- init ---------- **/
   document.addEventListener("DOMContentLoaded", () => {
     swapYear();
     hardenExternal();
@@ -196,7 +268,7 @@
     initReveal();
     initEquations();
     initTilt();
-    // final nudge once everything settled
-    setTimeout(mathjaxTypesetSoon, 250);
+    // final MathJax nudge once layout settles
+    mathjaxTypesetSoon(250);
   });
 })();
