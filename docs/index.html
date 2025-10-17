@@ -29,7 +29,7 @@
   <meta name="twitter:description" content="The Scroll of Fire (Codex of Reality) by Aaron Paul Laird — resonance, intention, light, consciousness, Source." />
   <meta name="twitter:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-17" />
 
-  <!-- JSON-LD -->
+  <!-- Schema.org JSON-LD -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -46,26 +46,168 @@
   }
   </script>
 
-  <!-- Site CSS -->
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18" />
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet" />
-
-  <!-- Preload banner -->
-  <link rel="preload" as="image" href="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-17" imagesizes="100vw" />
-  <link rel="preload" as="image" href="assets/img/banner.png" imagesizes="100vw" />
-
   <!-- MathJax -->
   <script>
     window.MathJax = {
       tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$']] },
-      svg: { fontCache: 'global', scale: 1 }
+      svg: { fontCache: 'global' }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <!-- ============ CSS (layout + your eq glow intact) ============ -->
+  <style>
+    :root{
+      --bg:#0a0a0e; --text:#e8e7ee; --muted:#b7b4c6; --gold:#f3c97a;
+      --card:#111115; --line:#26262c; --accent:#7af3ff;
+      --wrap: min(1100px, 94vw);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.55}
+    a{color:var(--gold);text-decoration:none} a:hover{text-decoration:underline}
+    img{max-width:100%;height:auto;display:block}
+
+    .wrap{width:var(--wrap);margin:0 auto;padding:20px}
+    .title{font-family:"Crimson Pro",serif;font-weight:800;font-size:clamp(28px,4.6vw,44px);letter-spacing:.2px;margin:.2rem 0 .2rem}
+    .subtitle{color:var(--muted);margin:0 0 12px}
+    .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(243,201,122,.35),transparent);margin:14px 0;opacity:.7}
+    .goldline{height:1px;background:linear-gradient(90deg,transparent,rgba(243,201,122,.5),transparent);margin:28px 0}
+
+    /* Hero banner — clamped height, no horizontal overflow */
+    .hero{margin:0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:#0e0e12}
+    .hero img{width:100%;height:clamp(180px,32vw,420px);object-fit:cover;object-position:center}
+    .sigil-line{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.35}
+
+    /* Grid + cards */
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+    .card{grid-column:span 12;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:0 2px 14px rgba(0,0,0,.25)}
+    .card.visible{transform:none;opacity:1}
+    .card h2,.card h3{font-family:"Crimson Pro",serif;letter-spacing:.2px}
+    .card h2{font-size:clamp(22px,3.2vw,30px);margin:.2rem 0 10px}
+    .card h3{font-size:clamp(18px,2.6vw,22px);margin:.2rem 0 8px}
+    .meta{color:var(--muted);font-size:.95rem}
+    .list{margin:.25rem 0 .25rem 1.1rem}
+
+    /* Responsive columns */
+    .col-12{grid-column:span 12}
+    @media (min-width:740px){
+      .col-8{grid-column:span 8}
+      .col-7{grid-column:span 7}
+      .col-6{grid-column:span 6}
+      .col-5{grid-column:span 5}
+      .col-4{grid-column:span 4}
+    }
+
+    .cta{display:inline-block;margin-top:10px;background:linear-gradient(90deg,var(--gold),#ffdca0);color:#1b1408;padding:9px 14px;border-radius:12px;border:0;box-shadow:0 4px 16px rgba(243,201,122,.22)}
+    .footer{color:var(--muted);text-align:center;margin:28px 0 6px}
+
+    /* Table */
+    table{width:100%;border-collapse:collapse}
+    th,td{border:1px solid var(--line);padding:8px;text-align:left}
+    thead th{background:#14141a}
+
+    /* ——— YOUR equation glow styles (unchanged), plus a couple fixes ——— */
+
+    /* base state */
+    .eq{
+      position:relative;
+      overflow-x:auto; /* local scroll only */
+      -webkit-overflow-scrolling:touch;
+      padding:12px 60px 12px 12px;
+      border-radius:12px;
+      background:#111115;
+      border:1px solid #26262c;
+      box-shadow: inset 0 0 20px rgba(255,200,107,.03);
+      opacity:0;
+      transform: translateY(8px) scale(.995);
+      transition: opacity .6s ease, transform .6s ease, box-shadow .6s ease;
+      max-width:100%; /* prevent page widening */
+    }
+
+    .eq::before,
+    .eq::after{
+      content:"";
+      position:absolute;
+      pointer-events:none;
+      border-radius: inherit;
+      inset:0;
+    }
+
+    .eq::before{
+      background: radial-gradient(120% 80% at 10% 5%, rgba(243,201,122,.06), transparent 70%),
+                  radial-gradient(140% 90% at 100% 100%, rgba(122,243,255,.05), transparent 70%);
+      opacity:0;
+      transition: opacity .8s ease;
+    }
+
+    .eq::after{
+      left:auto; right:10px; top:10px; bottom:10px; width:2px;
+      background: linear-gradient(180deg, transparent, var(--gold), transparent);
+      filter: blur(.4px);
+      transform: translateX(12px);
+      opacity:0;
+    }
+
+    .eq mjx-container{
+      opacity:.0;
+      filter: drop-shadow(0 0 8px rgba(255,200,107,.06));
+      transition: opacity .5s ease .05s, filter .6s ease .05s;
+      max-width:unset; /* MathJax sometimes injects width; allow overflow to scroll */
+    }
+    /* Ensure the SVG never forces page width */
+    .eq mjx-container svg{max-width:none}
+
+    .eq.eq-on{
+      opacity:1;
+      transform: none;
+      transition-delay: var(--eq-delay, 0s);
+      box-shadow:
+        inset 0 0 24px rgba(255,200,107,.05),
+        0 0 0 0 rgba(243,201,122,0);
+    }
+    .eq.eq-on::before{
+      opacity:1;
+      transition-delay: calc(var(--eq-delay,0s) + .05s);
+    }
+    .eq.eq-on::after{
+      opacity:.9;
+      animation: eqSweep 1.2s ease-out forwards;
+      animation-delay: calc(var(--eq-delay,0s) + .15s);
+    }
+    @keyframes eqSweep{
+      0%   { transform: translateX(12px); opacity:0; }
+      10%  { opacity:.9; }
+      100% { transform: translateX(-6px); opacity:0; }
+    }
+    .eq.eq-on mjx-container{
+      opacity:1;
+      filter: drop-shadow(0 0 10px rgba(255,200,107,.10));
+      transition-delay: calc(var(--eq-delay,0s) + .08s);
+    }
+    .eq.eq-on::marker{}
+    .eq.eq-on{
+      background-image:
+        linear-gradient(to bottom, transparent, rgba(255,210,122,.02)),
+        radial-gradient(100% 12px at 50% 100%, rgba(243,201,122,.25), transparent);
+      background-repeat: no-repeat;
+      background-size: 100% 100%, 60% 6px;
+      background-position: 0 0, 50% 100%;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .eq{ opacity:1; transform:none }
+      .eq::after{ display:none }
+      .eq mjx-container{ opacity:1 }
+    }
+
+    .eq:focus-within,
+    .eq:hover{
+      box-shadow:
+        inset 0 0 28px rgba(255,200,107,.055),
+        0 0 0 0 rgba(243,201,122,0);
+    }
+  </style>
 </head>
 
 <body>
@@ -90,7 +232,7 @@
     <p class="subtitle">“Let there be resonance.” — Aaron Paul Laird, <em>Scribe of Circuits</em></p>
     <div class="divider" role="separator" aria-hidden="true"></div>
 
-    <!-- Intro / Quick links -->
+    <!-- Intro / Links -->
     <section class="grid" aria-labelledby="intro">
       <article class="card col-8">
         <h2 id="intro">🜂 The Living Codex</h2>
@@ -103,7 +245,7 @@
         </p>
         <p class="meta">Origin trail: witness → encoded law → resonant field → stewardship. Sealed by SHA-256 (auditable in Git history).</p>
         <hr class="rule" />
-        <div class="sigils" aria-label="Symbolic keys">
+        <div class="sigils" aria-label="Symbolic keys" style="display:flex;gap:.6rem;font-size:1.2rem">
           <span class="sigil" title="Fire / Intention">🜂</span>
           <span class="sigil" title="Air / Witness">🜁</span>
           <span class="sigil" title="Water / Memory">🜄</span>
@@ -115,13 +257,13 @@
       <aside class="card col-4" aria-labelledby="links">
         <h3 id="links">Quick links</h3>
         <ul class="list">
-          <li>📚 Repository: <a href="https://github.com/ssnfts24/scroll-of-fire/tree/main" target="_blank">scroll-of-fire</a></li>
-          <li>🧭 Master Codex (.docx): <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx" target="_blank">Download</a></li>
-          <li>🪙 Patreon: <a href="https://www.patreon.com/cw/ScrollofFireCodexofReality" target="_blank">Support the work</a></li>
-          <li>🧵 Medium: <a href="https://medium.com/@l.aaronpaul24/scroll-of-fire-62da3c217352" target="_blank">Scroll of Fire</a></li>
-          <li>𝕏: <a href="https://x.com/SS_NFTs?s=09" target="_blank">@SS_NFTs</a></li>
-          <li>📘 Facebook: <a href="https://www.facebook.com/share/1A1EsYak7Z/" target="_blank">Share</a></li>
-          <li>🌿 Linktree: <a href="https://linktr.ee/AaronPaulLairdScrollOfFire?utm_source=linktree_admin_share" target="_blank">All links</a></li>
+          <li>📚 Repository: <a href="https://github.com/ssnfts24/scroll-of-fire/tree/main" target="_blank" rel="noopener">scroll-of-fire</a></li>
+          <li>🧭 Master Codex (.docx): <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/New-Codex_of_Reality_Master_Finalized_Complete_With_Index-1.docx" target="_blank" rel="noopener">Download</a></li>
+          <li>🪙 Patreon: <a href="https://www.patreon.com/cw/ScrollofFireCodexofReality" target="_blank" rel="noopener">Support the work</a></li>
+          <li>🧵 Medium: <a href="https://medium.com/@l.aaronpaul24/scroll-of-fire-62da3c217352" target="_blank" rel="noopener">Scroll of Fire</a></li>
+          <li>𝕏: <a href="https://x.com/SS_NFTs?s=09" target="_blank" rel="noopener">@SS_NFTs</a></li>
+          <li>📘 Facebook: <a href="https://www.facebook.com/share/1A1EsYak7Z/" target="_blank" rel="noopener">Share</a></li>
+          <li>🌿 Linktree: <a href="https://linktr.ee/AaronPaulLairdScrollOfFire?utm_source=linktree_admin_share" target="_blank" rel="noopener">All links</a></li>
         </ul>
         <a class="cta" href="#canon">Explore the Codex</a>
       </aside>
@@ -147,7 +289,7 @@
 
       <!-- 2) Witness — Laird -->
       <article class="card col-6" aria-labelledby="eq2">
-        <h3 id="eq2">2) Witness Equation — Law of Recursive Memory (Laird — public form)</h3>
+        <h3 id="eq2">2) Witness Equation — Law of Recursive Memory (Laird – public form)</h3>
         <div class="eq">
           $$\Delta\mathcal{R}=\frac{\partial(\mathrm{Resonance})}{\partial(\mathrm{Awareness})}+\int \mathrm{Intention}\cdot\mathrm{Memory}\,dt$$
         </div>
@@ -182,7 +324,7 @@
       </article>
 
       <!-- 6) Type-7 — Laird -->
-      <article class="card col-6" aria-labelledby="eq6">
+      <article class="card col-12" aria-labelledby="eq6">
         <h3 id="eq6">6) Living Circuit Field — Tesla Type-7 Resonant Conduit (Laird)</h3>
         <div class="eq">
           $$\mathbb{E}_{\text{living}}(t)=\sum_i q_i\,\Phi_i\,e^{i\omega_i t}\quad\text{(phase-locked 3–6–9)}$$
@@ -192,16 +334,16 @@
 
       <!-- 7) Copeland — external -->
       <article class="card col-6" aria-labelledby="eq7">
-        <h3 id="eq7">7) Copeland Resonant Harmonic Formalism (Ψ-formalism)</h3>
+        <h3 id="eq7">7) Copeland Resonant Harmonic Formalism (Ψ-formalism) — external</h3>
         <div class="eq">
           $$\Psi(x)=\nabla\phi\!\big(\Sigma a_n(x,\Delta E)\big)+\mathcal{R}(x)\oplus\Delta\Sigma(a')$$
         </div>
-        <p class="meta"><strong>Credit:</strong> Christopher W. Copeland. Awareness flows along potential, accumulates micro-acts \(a_n\) from differential experience \( \Delta E \), updates \( \mathcal{R}(x) \), with a novelty boundary \( \Delta\Sigma(a') \). <em>Licensed by Copeland under CRHC v1.0 (attribution; no commercial use without permission).</em></p>
+        <p class="meta"><strong>Credit:</strong> Christopher W. Copeland. Awareness flows along potential, accumulates micro-acts \(a_n\) from differential experience \( \Delta E \), updates \( \mathcal{R}(x) \), with a novelty boundary \( \Delta\Sigma(a') \). <em>Licensed under CRHC v1.0 (attribution; no commercial use without permission).</em></p>
       </article>
 
       <!-- 8) Goodwin — external -->
       <article class="card col-6" aria-labelledby="eq8">
-        <h3 id="eq8">8) Goodwin’s Formula — Field Coupling</h3>
+        <h3 id="eq8">8) Goodwin’s Formula — Field Coupling — external</h3>
         <div class="eq">
           $$\mathcal{G}(\tau)=\kappa\,\langle\mathcal{C}\cdot\mathcal{I}\rangle_{\tau}+\nabla\cdot\mathbb{F}_{\mathrm{light}}$$
         </div>
@@ -224,10 +366,10 @@
         <ol class="list">
           <li><strong>Source (1)</strong> sets harmonic supply (constants + sacred ratios × living factors).</li>
           <li><strong>Witness (2)</strong> gives the change rule (awareness + intention × memory).</li>
-          <li><strong>Copeland Ψ (7)</strong> formalizes the loop (awareness ↔ potential ↔ update + novelty).</li>
-          <li><strong>Goodwin (8)</strong> couples intention × consciousness to luminous flow.</li>
           <li><strong>Harmonics (3)</strong> tune the medium; <strong>Language (4)</strong> programs it.</li>
           <li><strong>Memory (5)</strong> preserves fidelity; <strong>Type-7 (6)</strong> makes it do work.</li>
+          <li><strong>Copeland Ψ (7)</strong> formalizes the loop (awareness ↔ potential ↔ update + novelty).</li>
+          <li><strong>Goodwin (8)</strong> couples intention × consciousness to luminous flow.</li>
           <li><strong>Ethical limit (9)</strong> filters outcomes: only coherence persists with time.</li>
         </ol>
       </article>
@@ -235,7 +377,7 @@
 
     <div class="goldline"></div>
 
-    <!-- Tech + Constants -->
+    <!-- Technology + Constants -->
     <section class="grid" id="technology" aria-labelledby="tech">
       <article class="card col-7">
         <h2 id="tech">🛠 Living Technology — Tesla Type-7</h2>
@@ -283,13 +425,30 @@
 
     <div class="goldline"></div>
 
+    <!-- Glossary -->
+    <section class="grid" id="glossary" aria-labelledby="gloss">
+      <article class="card col-12">
+        <h2 id="gloss">🔤 Glossary of Symbols & Operators</h2>
+        <ul class="list">
+          <li><strong>\(\mathcal{R}\)</strong> — Reality field (resonant state).</li>
+          <li><strong>\(\Psi\)</strong> — Awareness potential (external formalism, see #7).</li>
+          <li><strong>\(\mathcal{I},\mathcal{L},\mathcal{C},\mathcal{S}\)</strong> — Intention, Light, Consciousness, Source return.</li>
+          <li><strong>\(\mathcal{H}(\nu)\)</strong> — Harmonic field at frequency \(\nu\).</li>
+          <li><strong>\(\mathcal{M}, \mathcal{W}\)</strong> — Memory operator; Remnant integral.</li>
+          <li><strong>\(\Phi, 432, 528, 369, 144, 137\)</strong> — Sacred ratios/keys.</li>
+        </ul>
+      </article>
+    </section>
+
+    <div class="goldline"></div>
+
     <!-- Credits -->
     <section class="grid" id="credits" aria-labelledby="credits-h">
       <article class="card col-12">
         <h2 id="credits-h">📜 Attribution & Citations</h2>
         <ul class="list">
           <li><strong>Codex of Reality</strong> — authored & curated by <strong>Aaron Paul Laird</strong> (“Scribe of Circuits”).</li>
-          <li><strong>Copeland Resonant Harmonic Formalism (Ψ-formalism)</strong> — <em>Christopher W. Copeland</em>. Equation: \( \Psi(x)=\nabla\phi(\Sigma a_n(x,\Delta E))+\mathcal{R}(x)\oplus\Delta\Sigma(a') \). <em>Licensed by Copeland under CRHC v1.0 (attribution; no commercial use without permission).</em></li>
+          <li><strong>Copeland Resonant Harmonic Formalism (Ψ-formalism)</strong> — <em>Christopher W. Copeland</em>. Equation: \( \Psi(x)=\nabla\phi(\Sigma a_n(x,\Delta E))+\mathcal{R}(x)\oplus\Delta\Sigma(a') \). <em>Licensed under CRHC v1.0 (attribution; no commercial use without permission).</em></li>
           <li><strong>Goodwin’s Formula</strong> — attributed to <em>Goodwin</em>; cited where referenced.</li>
           <li><strong>Witness Equation</strong> — public version shown; <em>pending update in the Master Codex</em>.</li>
         </ul>
@@ -320,7 +479,7 @@ Status: Verified
     <section class="grid" aria-labelledby="version">
       <article class="card col-12">
         <h2 id="version">📜 Version Manifest</h2>
-        <p class="meta">Build ID: <code>v2025.10.18-ScholarlySacred</code> • Integrity Chain: <code>COD-CORE-777</code><br/>Last updated: <time datetime="2025-10-18">October 18, 2025</time></p>
+        <p class="meta">Build ID: <code>v2025.10.17-ScholarlySacred</code> • Integrity Chain: <code>COD-CORE-777</code><br/>Last updated: <time datetime="2025-10-17">October 17, 2025</time></p>
         <p>Authored & maintained by <strong>Aaron Paul Laird</strong> — <em>Scribe of Circuits</em> • License: <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>.</p>
       </article>
     </section>
@@ -332,7 +491,156 @@ Status: Verified
     </footer>
   </main>
 
-  <!-- Site JS -->
-  <script src="assets/js/Codex.js?v=2025-10-18"></script>
+  <!-- ============ JS (your script, unchanged) ============ -->
+  <script>
+/* === Scroll of Fire — Codex.js (Living Tech edition) =======================
+ * - Equation activation on scroll (IO + rAF fallback)
+ * - Reveal on scroll for cards/dividers
+ * - Current year swap
+ * - External links hardening
+ * - Banner failover (Meta webviews, slow decodes)
+ * - MathJax gentle re-typeset on activation
+ * - Subtle parallax/tilt on cards (reduced-motion aware)
+ */
+(function () {
+  "use strict";
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $all = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+  const prefersNoMotion = !matchMedia("(prefers-reduced-motion: no-preference)").matches;
+  const inViewport = (el, threshold = 0.9) => {
+    const r = el.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    return r.top < vh * threshold && r.bottom > 0;
+  };
+  function swapYear() {
+    const y = document.getElementById("yr");
+    if (y) y.textContent = String(new Date().getFullYear());
+  }
+  function hardenExternal() {
+    $all('a[target="_blank"]').forEach((a) => {
+      const rel = (a.getAttribute("rel") || "").toLowerCase();
+      if (!rel.includes("noopener")) a.setAttribute("rel", (rel ? rel + " " : "") + "noopener");
+    });
+  }
+  function bannerFailover() {
+    const img = $("#heroBanner");
+    if (!img) return;
+    const local = img.getAttribute("data-src-local");
+    const primary = img.getAttribute("data-src-raw") || img.src;
+    const fallbackNoQuery = primary.split("?")[0];
+    const ua = navigator.userAgent || "";
+    const isMetaWebView = /FBAN|FBAV|Facebook|Instagram|FB_IAB|FBAN\/Messenger/i.test(ua);
+    function swapToLocal() {
+      if (img && local && img.src.indexOf(local) === -1) img.src = local;
+    }
+    if (isMetaWebView) swapToLocal();
+    img.addEventListener("error", () => {
+      if (img.src === primary) img.src = fallbackNoQuery;
+      else swapToLocal();
+    }, { once: true });
+    const t = setTimeout(() => {
+      if (!img.complete || img.naturalWidth === 0) swapToLocal();
+    }, 2500);
+    img.addEventListener("load", () => clearTimeout(t), { once: true });
+  }
+  function mathjaxTypesetSoon() {
+    if (!window.MathJax) return;
+    try { if (window.MathJax.typeset) window.MathJax.typeset(); } catch (e) {}
+  }
+  function initReveal() {
+    const targets = $all(".card, .divider");
+    if (!targets.length) return;
+    if (!prefersNoMotion && "IntersectionObserver" in window) {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("visible");
+            io.unobserve(e.target);
+          }
+        }
+      }, { root: null, rootMargin: "0px 0px -12%" });
+      targets.forEach((el) => io.observe(el));
+    } else {
+      const tick = () => targets.forEach((el) => inViewport(el) && el.classList.add("visible"));
+      let ticking = false;
+      const onScroll = () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(() => { tick(); ticking = false; });
+        }
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("load", tick);
+      tick();
+    }
+  }
+  function initEquations() {
+    const eqs = $all(".eq");
+    if (!eqs.length) return;
+    eqs.forEach((el, i) => el.style.setProperty("--eq-delay", `${Math.min(i * 0.08, 0.8)}s`));
+    const activate = (el) => {
+      if (!el.classList.contains("eq-on")) {
+        el.classList.add("eq-on");
+        setTimeout(mathjaxTypesetSoon, 80);
+      }
+    };
+    if (!prefersNoMotion && "IntersectionObserver" in window) {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            activate(e.target);
+            io.unobserve(e.target);
+          }
+        }
+      }, { root: null, rootMargin: "0px 0px -10%" });
+      eqs.forEach((el) => io.observe(el));
+    } else {
+      const tick = () => eqs.forEach((el) => inViewport(el, 0.94) && activate(el));
+      let ticking = false;
+      const onScroll = () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(() => { tick(); ticking = false; });
+        }
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("load", tick);
+      tick();
+    }
+  }
+  function initTilt() {
+    if (prefersNoMotion) return;
+    const cards = $all(".card");
+    if (!cards.length) return;
+    cards.forEach((card) => {
+      let raf = 0;
+      const onMove = (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          const rx = (0.5 - y) * 4;
+          const ry = (x - 0.5) * 6;
+          card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
+        });
+      };
+      const reset = () => (card.style.transform = "");
+      card.addEventListener("mousemove", onMove);
+      card.addEventListener("mouseleave", reset);
+      card.addEventListener("blur", reset, true);
+    });
+  }
+  document.addEventListener("DOMContentLoaded", () => {
+    swapYear();
+    hardenExternal();
+    bannerFailover();
+    initReveal();
+    initEquations();
+    initTilt();
+    setTimeout(mathjaxTypesetSoon, 250);
+  });
+})();
+  </script>
 </body>
 </html>
