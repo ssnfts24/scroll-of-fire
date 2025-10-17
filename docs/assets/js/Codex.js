@@ -1,160 +1,202 @@
-/* === Scroll of Fire — Codex.js (Living Tech) ===============================
- * - Reveal on scroll (IO + rAF fallback)
+/* === Scroll of Fire — Codex.js (Living Tech edition) =======================
+ * - Equation activation on scroll (IO + rAF fallback)
+ * - Reveal on scroll for cards/dividers
  * - Current year swap
  * - External links hardening
- * - Robust banner failover (Meta webviews)
- * - MathJax gentle re-typeset
- * - Live cosmetics: parallax hero, scroll-linked glow, card tilt
- * - Equation helpers: auto-number + copy-LaTeX buttons
- * No HTML edits required.
+ * - Banner failover (Meta webviews, slow decodes)
+ * - MathJax gentle re-typeset on activation
+ * - Subtle parallax/tilt on cards (reduced-motion aware)
  */
 
 (function () {
   "use strict";
 
-  /* ---------- utils ---------- */
-  const $  = (sel, root=document) => root.querySelector(sel);
-  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
-  const inVP = (el, threshold=0.88) => {
+  /** utils **/
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $all = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+  const prefersNoMotion = !matchMedia("(prefers-reduced-motion: no-preference)").matches;
+
+  const inViewport = (el, threshold = 0.9) => {
     const r = el.getBoundingClientRect();
     const vh = window.innerHeight || document.documentElement.clientHeight;
-    return r.top < vh * threshold;
+    return r.top < vh * threshold && r.bottom > 0;
   };
 
-  /* ---------- reveal on scroll ---------- */
-  const useIO = "IntersectionObserver" in window &&
-    matchMedia("(prefers-reduced-motion: no-preference)").matches;
+  /** year **/
+  function swapYear() {
+    const y = document.getElementById("yr");
+    if (y) y.textContent = String(new Date().getFullYear());
+  }
 
-  function initReveal(){
-    const targets = $$(".card, .divider");
-    if (useIO){
-      const io = new IntersectionObserver((ents)=>{
-        for (const e of ents){
-          if (e.isIntersecting){ e.target.classList.add("visible"); io.unobserve(e.target); }
-        }
-      }, { root: null, rootMargin: "0px 0px -12%" });
-      targets.forEach(el => io.observe(el));
+  /** external links hardening **/
+  function hardenExternal() {
+    $all('a[target="_blank"]').forEach((a) => {
+      const rel = (a.getAttribute("rel") || "").toLowerCase();
+      if (!rel.includes("noopener")) a.setAttribute("rel", (rel ? rel + " " : "") + "noopener");
+    });
+  }
+
+  /** banner failover **/
+  function bannerFailover() {
+    const img = $("#heroBanner");
+    if (!img) return;
+
+    const local = img.getAttribute("data-src-local");
+    const primary = img.getAttribute("data-src-raw") || img.src;
+    const fallbackNoQuery = primary.split("?")[0];
+
+    const ua = navigator.userAgent || "";
+    const isMetaWebView = /FBAN|FBAV|Facebook|Instagram|FB_IAB|FBAN\/Messenger/i.test(ua);
+
+    function swapToLocal() {
+      if (img && local && img.src.indexOf(local) === -1) img.src = local;
+    }
+
+    if (isMetaWebView) swapToLocal();
+
+    img.addEventListener(
+      "error",
+      () => {
+        if (img.src === primary) img.src = fallbackNoQuery;
+        else swapToLocal();
+      },
+      { once: true }
+    );
+
+    // timeout fallback (slow decode / blocked)
+    const t = setTimeout(() => {
+      if (!img.complete || img.naturalWidth === 0) swapToLocal();
+    }, 2500);
+    img.addEventListener("load", () => clearTimeout(t), { once: true });
+  }
+
+  /** gentle MathJax nudge **/
+  function mathjaxTypesetSoon() {
+    if (!window.MathJax) return;
+    try {
+      if (window.MathJax.typeset) window.MathJax.typeset();
+    } catch (e) { /* ignore */ }
+  }
+
+  /** reveal on scroll (cards/dividers) **/
+  function initReveal() {
+    const targets = $all(".card, .divider");
+    if (!targets.length) return;
+
+    if (!prefersNoMotion && "IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { root: null, rootMargin: "0px 0px -12%" }
+      );
+      targets.forEach((el) => io.observe(el));
     } else {
-      const tick = () => targets.forEach(el => inVP(el) && el.classList.add("visible"));
+      const tick = () => targets.forEach((el) => inViewport(el) && el.classList.add("visible"));
       let ticking = false;
-      const onScroll = () => { if (!ticking){ ticking = true; requestAnimationFrame(()=>{ tick(); ticking = false; }); } };
-      window.addEventListener("scroll", onScroll, { passive:true });
-      window.addEventListener("load", tick, { once:true });
+      const onScroll = () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(() => {
+            tick();
+            ticking = false;
+          });
+        }
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("load", tick);
       tick();
     }
   }
 
-  /* ---------- current year ---------- */
-  function swapYear(){
-    const y = $("#yr"); if (y) y.textContent = String(new Date().getFullYear());
-  }
+  /** equation activation (no HTML changes) **/
+  function initEquations() {
+    const eqs = $all(".eq"); // uses existing .eq wrappers
+    if (!eqs.length) return;
 
-  /* ---------- harden external links ---------- */
-  function hardenExternal(){
-    $$('a[target="_blank"]').forEach(a=>{
-      const rel = (a.getAttribute("rel")||"").toLowerCase();
-      if (!rel.includes("noopener")) a.setAttribute("rel", (rel ? rel+" " : "") + "noopener");
-    });
-  }
+    // stagger delays by DOM order (small ramp)
+    eqs.forEach((el, i) => el.style.setProperty("--eq-delay", `${Math.min(i * 0.08, 0.8)}s`));
 
-  /* ---------- banner failover (Meta webviews / slow decode) ---------- */
-  function bannerFailover(){
-    const img = $("#heroBanner"); if (!img) return;
-    const ua  = navigator.userAgent || "";
-    const isMeta = /FBAN|FBAV|Facebook|Instagram|FB_IAB|FBAN\/Messenger/i.test(ua);
-    const local  = img.getAttribute("data-src-local");
+    const activate = (el) => {
+      if (!el.classList.contains("eq-on")) {
+        el.classList.add("eq-on");
+        // re-typeset once the class is applied so MathJax positions nicely
+        setTimeout(mathjaxTypesetSoon, 80);
+      }
+    };
 
-    const swapToLocal = ()=>{ if (local && !img.src.includes(local)) img.src = local; };
-
-    if (isMeta) swapToLocal();
-    img.addEventListener("error", swapToLocal, { once:true });
-    const t = setTimeout(()=>{ if (!img.complete || img.naturalWidth === 0) swapToLocal(); }, 2500);
-    img.addEventListener("load", ()=>clearTimeout(t), { once:true });
-  }
-
-  /* ---------- MathJax gentle re-typeset ---------- */
-  function mathjaxNudge(){
-    if (!window.MathJax) return;
-    const run = () => { try { window.MathJax.typeset && window.MathJax.typeset(); } catch(_){} };
-    window.addEventListener("load", () => setTimeout(run, 200));
-  }
-
-  /* ---------- live cosmetics: parallax + glow + tilt ---------- */
-  function initLiveCosmetics(){
-    const hero = $(".hero img");
-    const sigLine = $(".sigil-line");
-    if (hero){
-      const parallax = () => {
-        const y = window.scrollY || window.pageYOffset || 0;
-        const damp = Math.max(0, Math.min(1, 1 - y/900));
-        hero.style.transform = `translateY(${y * -0.08}px) scale(${1 + y*0.00006})`;
-        if (sigLine) sigLine.style.setProperty("--sigGlowShift", `${(y*0.25)%200}%`);
-      };
-      window.addEventListener("scroll", parallax, { passive:true });
-      parallax();
-    }
-
-    // subtle card tilt on pointer
-    if (matchMedia("(hover:hover)").matches){
-      const cards = $$(".card");
-      cards.forEach(card=>{
-        card.addEventListener("mousemove", (e)=>{
-          const r = card.getBoundingClientRect();
-          const cx = r.left + r.width/2, cy = r.top + r.height/2;
-          const dx = (e.clientX - cx)/r.width;
-          const dy = (e.clientY - cy)/r.height;
-          card.style.setProperty("--tiltY", `${dx*4}deg`);
-          card.style.setProperty("--tiltX", `${-dy*4}deg`);
-        });
-        card.addEventListener("mouseleave", ()=>{
-          card.style.setProperty("--tiltY", "0deg");
-          card.style.setProperty("--tiltX", "0deg");
-        });
-      });
-    }
-  }
-
-  /* ---------- equations: auto-number + copy buttons ---------- */
-  function enhanceEquations(){
-    const blocks = $$(".eq");
-    let n = 0;
-    blocks.forEach((b)=>{
-      n += 1;
-      b.setAttribute("data-eqno", `[Eq. ${n}]`);
-      // add copy button (copies LaTeX inside block)
-      const btn = document.createElement("button");
-      btn.className = "eq-copy";
-      btn.type = "button";
-      btn.textContent = "Copy";
-      btn.addEventListener("click", ()=>{
-        // Try to find MathJax source; fallback to text content
-        let latex = "";
-        // If MathJax v3 generated <mjx-container>, we grab the <script> tex source if present
-        const src = b.querySelector('script[type="math/tex"], script[type="math/tex; mode=display"]');
-        if (src) latex = src.textContent.trim();
-        if (!latex){
-          // fallback: extract from original math text if $$...$$ present
-          const raw = b.textContent || "";
-          const m = raw.match(/\$\$([\s\S]*?)\$\$/);
-          latex = m ? m[1].trim() : raw.trim();
+    if (!prefersNoMotion && "IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              activate(e.target);
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { root: null, rootMargin: "0px 0px -10%" }
+      );
+      eqs.forEach((el) => io.observe(el));
+    } else {
+      const tick = () => eqs.forEach((el) => inViewport(el, 0.94) && activate(el));
+      let ticking = false;
+      const onScroll = () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(() => {
+            tick();
+            ticking = false;
+          });
         }
-        navigator.clipboard.writeText(latex).then(()=>{
-          btn.textContent = "Copied!";
-          setTimeout(()=>btn.textContent="Copy", 1200);
-        }).catch(()=>{ btn.textContent = "Error"; setTimeout(()=>btn.textContent="Copy", 1200); });
-      });
-      b.appendChild(btn);
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("load", tick);
+      tick();
+    }
+  }
+
+  /** subtle “living” tilt for cards **/
+  function initTilt() {
+    if (prefersNoMotion) return;
+    const cards = $all(".card");
+    if (!cards.length) return;
+
+    cards.forEach((card) => {
+      let raf = 0;
+      const onMove = (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          const rx = (0.5 - y) * 4; // tilt strength
+          const ry = (x - 0.5) * 6;
+          card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
+        });
+      };
+      const reset = () => (card.style.transform = "");
+
+      card.addEventListener("mousemove", onMove);
+      card.addEventListener("mouseleave", reset);
+      card.addEventListener("blur", reset, true);
     });
   }
 
-  /* ---------- init ---------- */
-  document.addEventListener("DOMContentLoaded", ()=>{
-    initReveal();
+  /** init **/
+  document.addEventListener("DOMContentLoaded", () => {
     swapYear();
     hardenExternal();
     bannerFailover();
-    mathjaxNudge();
-    initLiveCosmetics();
-    enhanceEquations();
+    initReveal();
+    initEquations();
+    initTilt();
+    // final nudge once everything settled
+    setTimeout(mathjaxTypesetSoon, 250);
   });
 })();
