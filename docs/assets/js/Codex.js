@@ -1,9 +1,11 @@
-/* === Scroll of Fire — Codex.js (stability + mobile-safe equations) =======
- * - Reveal on scroll (cards/dividers)
+/* === Scroll of Fire — Codex.js (Living Tech edition) =======================
+ * - Equation activation on scroll (IO + rAF fallback)
+ * - Reveal on scroll for cards/dividers
+ * - Current year swap
  * - External links hardening
  * - Banner failover (Meta webviews, slow decodes)
  * - MathJax gentle re-typeset on activation
- * - Optional subtle tilt on cards (reduced-motion aware)
+ * - Subtle parallax/tilt on cards (reduced-motion aware)
  */
 
 (function () {
@@ -64,16 +66,16 @@
     // timeout fallback (slow decode / blocked)
     const t = setTimeout(() => {
       if (!img.complete || img.naturalWidth === 0) swapToLocal();
-    }, 2200);
+    }, 2500);
     img.addEventListener("load", () => clearTimeout(t), { once: true });
   }
 
   /** gentle MathJax nudge **/
-  function typesetSoon(delay = 100) {
+  function mathjaxTypesetSoon() {
     if (!window.MathJax) return;
-    setTimeout(() => {
-      try { window.MathJax.typeset && window.MathJax.typeset(); } catch(e){}
-    }, delay);
+    try {
+      if (window.MathJax.typeset) window.MathJax.typeset();
+    } catch (e) { /* ignore */ }
   }
 
   /** reveal on scroll (cards/dividers) **/
@@ -81,26 +83,29 @@
     const targets = $all(".card, .divider");
     if (!targets.length) return;
 
-    const reveal = (el) => el.classList.add("visible");
-
     if (!prefersNoMotion && "IntersectionObserver" in window) {
       const io = new IntersectionObserver(
-        (entries) => entries.forEach((e) => {
-          if (e.isIntersecting) {
-            reveal(e.target);
-            io.unobserve(e.target);
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              io.unobserve(e.target);
+            }
           }
-        }),
+        },
         { root: null, rootMargin: "0px 0px -12%" }
       );
       targets.forEach((el) => io.observe(el));
     } else {
-      const tick = () => targets.forEach((el) => inViewport(el) && reveal(el));
+      const tick = () => targets.forEach((el) => inViewport(el) && el.classList.add("visible"));
       let ticking = false;
       const onScroll = () => {
         if (!ticking) {
           ticking = true;
-          requestAnimationFrame(() => { tick(); ticking = false; });
+          requestAnimationFrame(() => {
+            tick();
+            ticking = false;
+          });
         }
       };
       window.addEventListener("scroll", onScroll, { passive: true });
@@ -109,20 +114,51 @@
     }
   }
 
-  /** prepare equation scrollers (wrap inner mjx in .eq-scroll if missing) */
-  function initEqScrollers() {
-    $all(".eq").forEach(eq => {
-      // If developer pasted plain $$...$$ inside .eq, MathJax adds <mjx-container>.
-      // We ensure those mjx nodes live inside a dedicated horizontally-scrollable div.
-      const hasScroll = eq.querySelector(".eq-scroll");
-      if (!hasScroll) {
-        const scroller = document.createElement("div");
-        scroller.className = "eq-scroll";
-        while (eq.firstChild) scroller.appendChild(eq.firstChild);
-        eq.appendChild(scroller);
+  /** equation activation (no HTML changes) **/
+  function initEquations() {
+    const eqs = $all(".eq"); // uses existing .eq wrappers
+    if (!eqs.length) return;
+
+    // stagger delays by DOM order (small ramp)
+    eqs.forEach((el, i) => el.style.setProperty("--eq-delay", `${Math.min(i * 0.08, 0.8)}s`));
+
+    const activate = (el) => {
+      if (!el.classList.contains("eq-on")) {
+        el.classList.add("eq-on");
+        // re-typeset once the class is applied so MathJax positions nicely
+        setTimeout(mathjaxTypesetSoon, 80);
       }
-    });
-    typesetSoon(150);
+    };
+
+    if (!prefersNoMotion && "IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              activate(e.target);
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { root: null, rootMargin: "0px 0px -10%" }
+      );
+      eqs.forEach((el) => io.observe(el));
+    } else {
+      const tick = () => eqs.forEach((el) => inViewport(el, 0.94) && activate(el));
+      let ticking = false;
+      const onScroll = () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(() => {
+            tick();
+            ticking = false;
+          });
+        }
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("load", tick);
+      tick();
+    }
   }
 
   /** subtle “living” tilt for cards **/
@@ -139,12 +175,13 @@
         const y = (e.clientY - r.top) / r.height;
         cancelAnimationFrame(raf);
         raf = requestAnimationFrame(() => {
-          const rx = (0.5 - y) * 3.5;
-          const ry = (x - 0.5) * 5.5;
+          const rx = (0.5 - y) * 4; // tilt strength
+          const ry = (x - 0.5) * 6;
           card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
         });
       };
       const reset = () => (card.style.transform = "");
+
       card.addEventListener("mousemove", onMove);
       card.addEventListener("mouseleave", reset);
       card.addEventListener("blur", reset, true);
@@ -153,17 +190,13 @@
 
   /** init **/
   document.addEventListener("DOMContentLoaded", () => {
-    // year + hardening + banner
-    const y = document.getElementById("yr"); if (y) y.textContent = String(new Date().getFullYear());
+    swapYear();
     hardenExternal();
     bannerFailover();
-
-    // visuals
     initReveal();
-    initEqScrollers();
+    initEquations();
     initTilt();
-
-    // final typeset nudge once everything is visible
-    typesetSoon(350);
+    // final nudge once everything settled
+    setTimeout(mathjaxTypesetSoon, 250);
   });
 })();
