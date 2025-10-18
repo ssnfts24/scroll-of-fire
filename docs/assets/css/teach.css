@@ -1,0 +1,67 @@
+/* Teaching Lab theme — neon glass + motion (no external libs) */
+.lab-wrap { padding-top: 14px }
+.fancy-head { position: relative; overflow: hidden }
+.fancy-head::after{
+  content:""; position:absolute; inset:-40%; pointer-events:none;
+  background: radial-gradient(1200px 600px at 20% -10%, rgba(122,243,255,.08), transparent 60%),
+              radial-gradient(1200px 600px at 80% -10%, rgba(243,201,122,.06), transparent 60%);
+  filter: blur(10px);
+}
+
+/* Tabs */
+.pill-tabs{ display:flex; align-items:center; gap:8px; padding:8px; background:#0f0f14; border:1px solid #2a2a33; border-radius:999px }
+.pill{ border:1px solid #2a2a33; background:#121219; color:#eae7df; padding:8px 12px; border-radius:999px; cursor:pointer }
+.pill.active{ border-color:#3a3a44; box-shadow:0 0 0 1px rgba(122,243,255,.25), inset 0 0 20px rgba(122,243,255,.06) }
+.flex{ flex:1 }
+.coach-toggle{ display:flex; align-items:center; gap:6px }
+.coach-toggle.small{ opacity:.9; font-size:.95em }
+
+/* Tabs content */
+.tab{ display:none; margin-top:14px }
+.tab.active{ display:block }
+
+/* Ring timer */
+.ring-timer{ display:grid; grid-template-columns: 240px 1fr; gap:14px; align-items:center }
+@media (max-width:920px){ .ring-timer{ grid-template-columns: 1fr } }
+.ring{ width:100%; height:auto }
+.ring-bg{ fill:none; stroke:#1c1c25; stroke-width:6 }
+.ring-fg{ fill:none; stroke:url(#ringGrad); stroke-width:6; stroke-linecap:round; transform:rotate(-90deg); transform-origin:60px 60px; stroke-dasharray:100 100; stroke-dashoffset:100 }
+.ring-phase{ fill:#eae7df; font:700 12px Inter,system-ui; letter-spacing:.3px }
+.ring-count{ fill:#b8b3a6; font:600 10px Inter,system-ui }
+.ring-controls{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
+
+/* Audio lab */
+.audio-pane{ display:grid; gap:8px }
+.audio-controls{ display:flex; gap:10px; align-items:center }
+.audio-hint{ color:#b8b3a6 }
+canvas{ width:100%; background:#0f0f14; border:1px solid #2a2a33; border-radius:12px }
+
+/* Phrase Tuner Pro */
+.chip-lane{ display:flex; gap:8px; flex-wrap:wrap; min-height:40px; margin:8px 0 }
+.chip{ padding:6px 10px; border-radius:999px; border:1px solid #2a2a33; background:#13131a; cursor:grab; user-select:none }
+.chip.dragging{ opacity:.7; transform:scale(.98) }
+.chip .w{ color:#7af3ff; margin-left:6px; font-variant-numeric:tabular-nums }
+.phrase-actions{ display:flex; align-items:center; gap:10px }
+#phraseOut mark{ background: rgba(243,201,122,.25); padding:0 4px; border-radius:4px }
+
+/* Coherence Desk */
+.desk-grid{ display:grid; gap:12px; grid-template-columns: 1fr 1fr }
+@media (max-width:920px){ .desk-grid{ grid-template-columns: 1fr } }
+.desk-card{ background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005)); border:1px solid #2a2a33; border-radius:14px; padding:12px }
+.big{ font-size:1.15rem }
+
+/* Ledger */
+.ledger-top, .ledger-actions{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
+.badges{ display:flex; gap:8px; margin-top:8px }
+.badge{ display:inline-flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:50%;
+  background:#0f0f14; border:1px solid #2a2a33; box-shadow: inset 0 0 20px rgba(122,243,255,.05) }
+.badge.unlit{ filter:grayscale(.8); opacity:.6 }
+
+/* Coach tips */
+.coach{ position:relative }
+.coach[data-coach]::after{
+  content:attr(data-coach); position:absolute; left:0; right:0; bottom:-10px;
+  transform:translateY(100%); background:#0f0f14; border:1px dashed #2a2a33; color:#b8b3a6;
+  padding:8px 10px; border-radius:10px; opacity:0; pointer-events:none; transition:.25s ease;
+}
+body.coach-on .coach[data-coach]::after{ opacity:1 }
