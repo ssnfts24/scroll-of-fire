@@ -1,11 +1,8 @@
 /* ======================================================================
-   Scroll of Fire — Codex.js
-   Bulletproof banner swap • equation activation • reveal effects • a11y
-   - Extra hardening for FB/IG/Messenger in-app webviews and iOS Safari
-   - Motion & data savers respected; offline-safe; resize/rotation debounced
-   - MathJax queued safely; visibility/page cache restores re-typeset
+   Scroll of Fire — Codex.js (v2)
+   Bulletproof banner • hero toolbar • palette • mini-TOC • a11y/perf
    ====================================================================== */
-(function () {
+(() => {
   "use strict";
 
   /* ---------------------------- tiny utilities ---------------------------- */
@@ -13,9 +10,15 @@
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const on = (t, e, f, o) => t && t.addEventListener && t.addEventListener(e, f, o);
 
-  const raf  = (fn) => (window.requestAnimationFrame || ((f) => setTimeout(f,16)))(fn);
-  const caf  = (id) => (window.cancelAnimationFrame || clearTimeout)(id);
-  const now  = () => (performance && performance.now ? performance.now() : Date.now());
+  const raf = (fn) => (window.requestAnimationFrame || ((f)=>setTimeout(f,16)))(fn);
+  const caf = (id) => (window.cancelAnimationFrame || clearTimeout)(id);
+  const now = () => (performance && performance.now ? performance.now() : Date.now());
+
+  const store = {
+    get(k, d=null){ try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+    set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+    del(k){ try { localStorage.removeItem(k); } catch {} }
+  };
 
   const conn  = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   const saveD = !!(conn && conn.saveData);
@@ -27,7 +30,6 @@
 
   const UA = navigator.userAgent || "";
   const isMetaApp = /FBAN|FBAV|Facebook|Instagram|FB_IAB|FBAN\/Messenger/i.test(UA);
-  const isWebKit  = /WebKit/i.test(UA) && !/Edge/i.test(UA);
   const isOffline = () => !navigator.onLine;
 
   const inViewport = (el, thr = 0.9) => {
@@ -35,336 +37,425 @@
     const vh = window.innerHeight || document.documentElement.clientHeight || 0;
     return r.top < vh * thr && r.bottom > 0;
   };
+  const debounce = (fn, ms = 120) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; };
+  const throttleRAF = (fn) => { let running=false; return (...a)=>{ if(running) return; running=true; raf(()=>{ running=false; fn(...a); }); }; };
 
-  const debounce = (fn, ms = 120) => {
-    let t;
-    return (...args) => {
-      clearTimeout(t);
-      t = setTimeout(() => fn.apply(null, args), ms);
-    };
-  };
-
-  const throttleRAF = (fn) => {
-    let running = false;
-    return (...args) => {
-      if (running) return;
-      running = true;
-      raf(() => { running = false; fn.apply(null, args); });
-    };
-  };
-
-  /* ------------------------------ basic polish ---------------------------- */
-  function setYear() {
-    const y = $("#yr");
-    if (y) y.textContent = String(new Date().getFullYear());
-  }
-
-  function hardenExternal() {
-    const hereHost = location.hostname.replace(/^www\./, "");
-    $$('a[target="_blank"]').forEach(a => {
-      const rel = (a.getAttribute("rel") || "").toLowerCase();
-      const parts = new Set(rel.split(/\s+/).filter(Boolean));
-      parts.add("noopener"); parts.add("noreferrer");
-
-      try {
-        const u = new URL(a.href, location.href);
-        if (u.hostname.replace(/^www\./, "") !== hereHost && !a.getAttribute("aria-label")) {
-          const txt = (a.textContent || "").trim();
-          if (txt) a.setAttribute("aria-label", `${txt} (opens in new tab)`);
+  /* --------------------------- site basics / a11y -------------------------- */
+  function setYear(){ const y=$("#yr"); if (y) y.textContent=String(new Date().getFullYear()); }
+  function hardenExternal(){
+    const hereHost = location.hostname.replace(/^www\./,"");
+    $$('a[target="_blank"]').forEach(a=>{
+      const rel = new Set((a.getAttribute("rel")||"").toLowerCase().split(/\s+/).filter(Boolean));
+      rel.add("noopener"); rel.add("noreferrer");
+      try{
+        const u=new URL(a.href,location.href);
+        if(u.hostname.replace(/^www\./,"")!==hereHost && !a.getAttribute("aria-label")){
+          const t=(a.textContent||"").trim(); if(t) a.setAttribute("aria-label",`${t} (opens in new tab)`);
         }
-      } catch { /* ignore malformed hrefs */ }
-
-      a.setAttribute("rel", Array.from(parts).join(" "));
+      }catch{}
+      a.setAttribute("rel",[...rel].join(" "));
     });
   }
 
-  /* ------------------------------- banner -------------------------------- */
-  function initBanner() {
-    const img  = $("#heroBanner");
-    if (!img) return;
+  /* ------------------------------- simple mode ----------------------------- */
+  function wireSimpleMode(){
+    const c1 = $("#simple");
+    const c2 = $("#simple-dup");
+    const apply = (on)=>{
+      document.body.classList.toggle("simple-on", !!on);
+      if (c1 && c1.checked!==on) c1.checked=on;
+      if (c2 && c2.checked!==on) c2.checked=on;
+      store.set("codex:simple", !!on);
+    };
+    const saved = store.get("codex:simple", false);
+    apply(!!saved);
 
-    const hero = img.closest(".hero");
-    const remote   = img.getAttribute("data-src-raw") || "";
-    const remoteSet= img.getAttribute("data-srcset-raw") || "";
-    const localSet = img.getAttribute("data-srcset-local") || "";
-    const sizesAttr= img.getAttribute("data-sizes") ||
-        "(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px";
-    const authorWantsContain = (img.getAttribute("data-fit") || "").toLowerCase() === "contain";
+    [c1,c2].forEach(c=> c && on(c,"change",()=>apply(c.checked)));
+  }
 
-    applyHeroAspectAndFocal(img);
-    enforceHeroFit(hero, img, authorWantsContain);
+  /* -------------------------------- banner --------------------------------- */
+  function initBanner(){
+    const img = $("#heroBanner");
+    const fig = img && img.closest(".hero");
+    if(!img || !fig) return;
 
-    // Always seed with local srcset so layout picks an optimal size early.
-    if (localSet) {
-      img.srcset = localSet;
-      img.sizes  = sizesAttr;
-    }
+    // robust local/remote sources (attr-based, set in HTML)
+    const localSrc   = img.getAttribute("data-src-local") || img.getAttribute("src") || "";
+    const remoteSrc  = img.getAttribute("data-src-raw")   || "";
+    const localSet   = img.getAttribute("data-srcset-local") || "";
+    const remoteSet  = img.getAttribute("data-srcset-raw")   || "";
+    const sizesAttr  = img.getAttribute("data-sizes") || "(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px";
+    const authorFit  = (img.getAttribute("data-fit")||"").toLowerCase(); // "contain"|"cover"|"" (auto)
+    const prefFit    = store.get("codex:hero-fit", authorFit || "auto");
 
-    // Ensure visible in tricky in-app browsers.
+    // apply saved fit first (persisted toolbar pref)
+    setHeroFit(fig, prefFit);
+
+    // seed local srcset for first paint
+    if (localSet){ img.srcset = localSet; img.sizes = sizesAttr; }
+    else if (localSrc){ img.src = localSrc; }
+
+    // make sure we always see *something* (GitHub Raw fallback if error)
+    img.onerror = () => {
+      if (remoteSrc && !img.src.includes(remoteSrc)) {
+        img.src = remoteSrc;
+      } else if (localSrc && !img.src.includes(localSrc)) {
+        img.src = localSrc;
+      }
+    };
+
+    // ready class to appease weird in-app browsers
     img.classList.add("hero-ready");
 
-    const onImgLoad = () => enforceHeroFit(hero, img, authorWantsContain);
-    if (img.complete && img.naturalWidth > 0) onImgLoad();
-    else on(img, "load", onImgLoad, { once: true });
+    const onLoad = () => checkFitAuto(fig, img, prefFit);
+    if (img.complete && img.naturalWidth>0) onLoad(); else on(img,"load",onLoad,{once:true});
 
-    // Bail on remote swap in cautious contexts
-    if (!remote || isMetaApp || isOffline() || saveD) {
-      wireHeroFitListeners(hero, img, authorWantsContain);
+    // cautious contexts: skip remote swap
+    if (!remoteSrc || isMetaApp || isOffline() || saveD) {
+      wireHeroObservers(fig, img, prefFit);
+      buildHeroToolbar(fig, img);
       return;
     }
 
-    // Probe remote first (avoid broken image flash)
+    // probe remote first; only swap when confirmed
     const probe = new Image();
-    probe.decoding = "async";
-    probe.loading  = "eager";
-    probe.referrerPolicy = "no-referrer";
-
-    const swapToRemote = () => {
-      if (!img) return;
-      if (remoteSet && !authorWantsContain) {
-        img.srcset = remoteSet;
-        img.sizes  = sizesAttr;
-        // Safari selection nudge
-        img.setAttribute("data-rselect", String(Date.now()));
-        void img.currentSrc;
-      } else {
-        img.src = remote;
-        img.removeAttribute("srcset");
-        img.removeAttribute("sizes");
-      }
+    probe.decoding="async"; probe.loading="eager"; probe.referrerPolicy="no-referrer";
+    const swap = ()=> {
+      if (remoteSet && prefFit!=="contain"){ img.srcset = remoteSet; img.sizes = sizesAttr; void img.currentSrc; }
+      else { img.src = remoteSrc; img.removeAttribute("srcset"); img.removeAttribute("sizes"); }
     };
+    const safeSwap = ()=> (typeof probe.decode==="function" ? probe.decode().then(swap).catch(swap) : swap());
+    on(probe,"load",safeSwap,{once:true});
+    on(probe,"error",()=>{/* keep local */},{once:true});
+    probe.src = remoteSrc;
 
-    const safeSwap = () => {
-      if (typeof probe.decode === "function") {
-        probe.decode().then(swapToRemote).catch(swapToRemote);
-      } else { swapToRemote(); }
-    };
-
-    on(probe, "load",  safeSwap, { once: true });
-    on(probe, "error", () => {/* keep local silently */}, { once: true });
-    probe.src = remote;
-
-    // Retry once if we come back online.
+    // retry once when back online
     const retryOnce = () => {
       window.removeEventListener("online", retryOnce);
-      if (img && remote && (img.currentSrc || img.src || "").indexOf(remote) === -1) {
-        probe.src = remote + (remote.includes("?") ? "&" : "?") + "r=" + Date.now();
+      if (img && remoteSrc && !img.src.includes(remoteSrc)) {
+        probe.src = remoteSrc + (remoteSrc.includes("?") ? "&" : "?") + "r=" + Date.now();
       }
     };
-    on(window, "online", retryOnce, { once: true });
+    on(window,"online",retryOnce,{once:true});
 
-    wireHeroFitListeners(hero, img, authorWantsContain);
+    wireHeroObservers(fig, img, prefFit);
+    buildHeroToolbar(fig, img);
   }
 
-  function applyHeroAspectAndFocal(img) {
-    const aspect = img.getAttribute("data-aspect") || "16/9";
-    img.style.setProperty("--hero-aspect", aspect);
-    const mobile = img.getAttribute("data-focal-mobile") || "63% 50%";
-    const desk   = img.getAttribute("data-focal-desktop") || "59% 50%";
-    const bpDesk = window.matchMedia && window.matchMedia("(min-width: 860px)").matches;
-    img.style.objectPosition = bpDesk ? desk : mobile;
+  function setHeroFit(fig, mode){ // mode: "cover" | "contain" | "auto"
+    fig.dataset.fit = mode;
+    fig.classList.toggle("hero--contain", mode==="contain");
+    fig.classList.toggle("hero--cover",   mode==="cover");
+    store.set("codex:hero-fit", mode);
   }
 
-  function enforceHeroFit(hero, img, forceContain = false) {
-    if (!hero || !img) return;
-    if (forceContain) { hero.classList.add("hero--contain"); return; }
-
-    // If aspect diverges a lot from container’s aspect, prefer contain
-    const natW = img.naturalWidth  || parseInt(img.getAttribute("width")  || "0", 10);
-    const natH = img.naturalHeight || parseInt(img.getAttribute("height") || "0", 10);
-
-    const cssAspect = getComputedStyle(img).getPropertyValue("--hero-aspect").trim() || "16/9";
-    const contAspect = parseAspect(cssAspect) || 16/9;
-    if (natW > 0 && natH > 0) {
-      const imgAspect = natW / natH;
-      const diff = Math.abs(imgAspect - contAspect) / contAspect;
-      if (diff > 0.25) hero.classList.add("hero--contain");
-      else hero.classList.remove("hero--contain");
-    }
-  }
-
-  function parseAspect(expr) {
+  function parseAspect(expr){
     if (!expr) return null;
-    const parts = String(expr).split("/");
-    if (parts.length === 2) {
-      const a = parseFloat(parts[0]), b = parseFloat(parts[1]);
-      return (a > 0 && b > 0) ? a / b : null;
+    const parts = (""+expr).split("/");
+    if (parts.length===2){
+      const a=+parts[0], b=+parts[1];
+      return (a>0 && b>0) ? a/b : null;
     }
     const n = parseFloat(expr);
-    return isFinite(n) && n > 0 ? n : null;
+    return Number.isFinite(n) && n>0 ? n : null;
   }
 
-  function wireHeroFitListeners(hero, img, authorWantsContain) {
-    const onReflow = throttleRAF(() => {
-      applyHeroAspectAndFocal(img);
-      enforceHeroFit(hero, img, authorWantsContain);
-    });
-
-    on(window, "resize", onReflow, { passive: true });
-    on(window, "orientationchange", onReflow, { passive: true });
-
-    if (hasRO) {
-      const ro = new ResizeObserver(onReflow);
-      ro.observe(hero);
-    } else {
-      // Fallback debounce for older webviews
-      on(window, "resize", debounce(onReflow, 150), { passive: true });
+  function checkFitAuto(fig, img, pref){
+    if (pref==="contain" || pref==="cover") return; // user forced
+    const natW = img.naturalWidth  || +img.getAttribute("width")  || 0;
+    const natH = img.naturalHeight || +img.getAttribute("height") || 0;
+    const cssAspect = getComputedStyle(img).getPropertyValue("--hero-aspect").trim() || "16/9";
+    const contAspect = parseAspect(cssAspect) || (16/9);
+    if (natW>0 && natH>0){
+      const imgAspect = natW / natH;
+      const diff = Math.abs(imgAspect - contAspect) / contAspect;
+      fig.classList.toggle("hero--contain", diff>0.25);
+      fig.classList.toggle("hero--cover", diff<=0.25);
+      fig.dataset.fit = "auto";
+      store.set("codex:hero-fit", "auto");
     }
   }
 
-  /* ------------------------------ MathJax ------------------------------- */
-  function typesetSoon(delay = 80) {
-    const mj = window.MathJax;
-    if (!mj) return;
+  function wireHeroObservers(fig, img, pref){
+    const reflow = throttleRAF(()=> checkFitAuto(fig, img, pref));
+    on(window,"resize",reflow,{passive:true});
+    on(window,"orientationchange",reflow,{passive:true});
+    if (hasRO){ const ro=new ResizeObserver(reflow); ro.observe(fig); }
+  }
 
+  /* ----------------------------- hero toolbar ----------------------------- */
+  function buildHeroToolbar(fig, img){
+    if ($(".hero-ui", fig)) return;
+
+    const ui = document.createElement("div");
+    ui.className = "hero-ui";
+    ui.innerHTML = `
+      <button class="hero-btn" data-act="fit">Contain</button>
+      <button class="hero-btn" data-act="zoom">Zoom</button>
+      <button class="hero-btn" data-act="pulse">Pulse</button>
+    `;
+    fig.appendChild(ui);
+
+    // init button labels by state
+    const bFit = $('[data-act="fit"]', ui);
+    const bZoom= $('[data-act="zoom"]', ui);
+    const bPulse=$('[data-act="pulse"]', ui);
+
+    const updateFitLabel = ()=>{
+      const m = fig.dataset.fit || "auto";
+      bFit.textContent = (m==="contain" ? "Cover" : "Contain");
+    };
+    const updatePulseState = ()=>{
+      const on = fig.classList.contains("pulse");
+      bPulse.textContent = on ? "Pulse: On" : "Pulse: Off";
+    };
+    updateFitLabel(); updatePulseState();
+
+    on(bFit,"click",()=>{
+      const m = fig.dataset.fit || "auto";
+      const next = (m==="contain" ? "cover" : "contain");
+      setHeroFit(fig, next);
+      updateFitLabel();
+    });
+    on(bZoom,"click",()=>{
+      fig.classList.toggle("is-zoomed");
+      bZoom.textContent = fig.classList.contains("is-zoomed") ? "Close" : "Zoom";
+      if (fig.classList.contains("is-zoomed")) document.documentElement.style.overflow="hidden";
+      else document.documentElement.style.overflow="";
+    });
+    on(bPulse,"click",()=>{
+      const nowOn = !fig.classList.contains("pulse");
+      fig.classList.toggle("pulse", nowOn);
+      updatePulseState();
+      store.set("codex:hero-pulse", nowOn);
+    });
+
+    // restore pulse pref
+    const pulsePref = store.get("codex:hero-pulse", true);
+    fig.classList.toggle("pulse", !!pulsePref);
+    updatePulseState();
+
+    // close zoom on ESC
+    on(document,"keydown",(e)=>{
+      if (e.key==="Escape" && fig.classList.contains("is-zoomed")){
+        fig.classList.remove("is-zoomed"); bZoom.textContent="Zoom"; document.documentElement.style.overflow="";
+      }
+    });
+  }
+
+  /* ------------------------------ MathJax safe ----------------------------- */
+  function typesetSoon(delay=80){
+    const mj = window.MathJax; if(!mj) return;
     const run = () => {
       try {
-        if (mj.typesetClear) mj.typesetClear(); // no-op if not supported
+        if (mj.typesetClear) mj.typesetClear();
         if (mj.typesetPromise) mj.typesetPromise().catch(()=>{});
         else if (mj.typeset) mj.typeset();
-      } catch {/* ignore */}
+      } catch {}
     };
-
-    if (mj.startup && mj.startup.promise) {
-      mj.startup.promise.then(() => setTimeout(run, delay)).catch(run);
-    } else {
-      setTimeout(run, delay);
-    }
+    if (mj.startup && mj.startup.promise) mj.startup.promise.then(()=>setTimeout(run,delay)).catch(run);
+    else setTimeout(run, delay);
   }
-
-  function typesetOnFontsReady() {
+  function typesetOnFontsReady(){
     if (!document.fonts || !document.fonts.ready) return;
-    document.fonts.ready.then(() => typesetSoon(50)).catch(() => {});
+    document.fonts.ready.then(()=>typesetSoon(50)).catch(()=>{});
   }
 
-  /* -------------------------- reveal-on-scroll -------------------------- */
-  function revealOnScroll() {
-    const cards = $$(".card");
-    if (!cards.length) return;
-
-    if (!prefersReduced && hasIO) {
-      const io = new IntersectionObserver((entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.classList.add("visible");
-            io.unobserve(e.target);
-          }
-        }
-      }, { root: null, rootMargin: "0px 0px -12%", threshold: 0.08 });
-      cards.forEach(el => io.observe(el));
-      return;
+  /* ------------------------- reveal-on-scroll cards ------------------------ */
+  function revealOnScroll(){
+    const cards = $$(".card"); if (!cards.length) return;
+    if (!prefersReduced && hasIO){
+      const io = new IntersectionObserver((entries)=>{
+        for(const e of entries) if(e.isIntersecting){ e.target.classList.add("visible"); io.unobserve(e.target); }
+      }, { root:null, rootMargin:"0px 0px -12%", threshold:0.08 });
+      cards.forEach(el=>io.observe(el));
+    } else {
+      const tick = ()=> cards.forEach(el=> inViewport(el) && el.classList.add("visible"));
+      const onS = throttleRAF(tick);
+      on(window,"scroll",onS,{passive:true}); on(window,"load",tick); tick();
     }
-
-    const tick = () => cards.forEach(el => inViewport(el) && el.classList.add("visible"));
-    const onS  = throttleRAF(tick);
-    on(window, "scroll", onS, { passive: true });
-    on(window, "load", tick);
-    tick();
   }
 
-  /* --------------------------- equation activator ----------------------- */
-  function activateEquations() {
-    const blocks = $$(".eq");
-    if (!blocks.length) return;
-
-    const activate = (el) => {
-      if (!el.classList.contains("eq-on")) {
-        el.classList.add("eq-on");
-        typesetSoon(120);
-      }
-    };
-
-    if (!prefersReduced && hasIO) {
-      const io = new IntersectionObserver((entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            activate(e.target);
-            io.unobserve(e.target);
-          }
-        }
-      }, { root: null, rootMargin: "0px 0px -10%", threshold: 0.06 });
-      blocks.forEach(el => io.observe(el));
-      return;
+  /* --------------------------- equation activator -------------------------- */
+  function activateEquations(){
+    const blocks = $$(".eq"); if(!blocks.length) return;
+    const act = (el)=>{ if(!el.classList.contains("eq-on")){ el.classList.add("eq-on"); typesetSoon(120); } };
+    if (!prefersReduced && hasIO){
+      const io = new IntersectionObserver((entries)=>{
+        for(const e of entries) if(e.isIntersecting){ act(e.target); io.unobserve(e.target); }
+      }, { root:null, rootMargin:"0px 0px -10%", threshold:0.06 });
+      blocks.forEach(el=>io.observe(el));
+    } else {
+      const tick = ()=> blocks.forEach(el=> inViewport(el, .94) && act(el));
+      const onS = throttleRAF(tick);
+      on(window,"scroll",onS,{passive:true}); on(window,"load",tick); tick();
     }
-
-    const tick = () => blocks.forEach(el => inViewport(el, 0.94) && activate(el));
-    const onS  = throttleRAF(tick);
-    on(window, "scroll", onS, { passive: true });
-    on(window, "load", tick);
-    tick();
   }
 
-  /* ------------------------------- card tilt ---------------------------- */
-  function tiltCards() {
+  /* ------------------------------ card tilt -------------------------------- */
+  function tiltCards(){
     if (prefersReduced) return;
-
-    $$(".card").forEach(card => {
-      let rid = 0;
-      const onMove = (e) => {
-        const r = card.getBoundingClientRect();
-        const cx = ("touches" in e && e.touches.length ? e.touches[0].clientX : e.clientX);
-        const cy = ("touches" in e && e.touches.length ? e.touches[0].clientY : e.clientY);
-        const x = (cx - r.left) / r.width;
-        const y = (cy - r.top) / r.height;
-
-        caf(rid);
-        rid = raf(() => {
-          const rx = (0.5 - y) * 4;
-          const ry = (x - 0.5) * 6;
-          card.style.transform =
-            `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
+    $$(".card").forEach(card=>{
+      let rid=0;
+      const onMove=(e)=>{
+        const r=card.getBoundingClientRect();
+        const p = "touches" in e && e.touches.length ? e.touches[0] : e;
+        const x=(p.clientX - r.left)/r.width, y=(p.clientY - r.top)/r.height;
+        caf(rid); rid=raf(()=>{
+          const rx=(0.5-y)*4, ry=(x-0.5)*6;
+          card.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
         });
       };
-      const reset = () => { card.style.transform = ""; };
-
-      on(card, "mousemove", onMove);
-      on(card, "mouseleave", reset);
-      on(card, "blur", reset, true);
-      on(card, "touchstart", reset, { passive: true });
+      const reset=()=>{ card.style.transform=""; };
+      on(card,"mousemove",onMove);
+      on(card,"mouseleave",reset);
+      on(card,"blur",reset,true);
+      on(card,"touchstart",reset,{passive:true});
     });
-
-    // If user toggles reduced-motion after load, clear transforms
-    on(mqReduced, "change", (e) => { if (e.matches) $$(".card").forEach(c => c.style.transform = ""); });
+    on(mqReduced,"change",(e)=>{ if(e.matches) $$(".card").forEach(c=> c.style.transform=""); });
   }
 
-  /* ------------------------------ anchor a11y --------------------------- */
-  function focusAnchors() {
-    on(document, "click", (ev) => {
+  /* ------------------------------- back to top ----------------------------- */
+  function backToTop(){
+    let btn = $(".to-top");
+    if (!btn){
+      btn = document.createElement("button");
+      btn.className="to-top"; btn.type="button"; btn.textContent="↑ Top";
+      document.body.appendChild(btn);
+    }
+    on(btn, "click", ()=> window.scrollTo({top:0, behavior:"smooth"}));
+    const reveal = throttleRAF(()=>{
+      const y = window.scrollY || document.documentElement.scrollTop;
+      btn.classList.toggle("show", y > 600);
+    });
+    on(window,"scroll",reveal,{passive:true}); reveal();
+  }
+
+  /* ------------------------------- mini TOC -------------------------------- */
+  function miniTOCHighlight(){
+    const links = $$(".mini-toc a[href^='#']");
+    if (!links.length || !hasIO) return;
+    const map = new Map();
+    links.forEach(a=>{
+      const id = a.getAttribute("href").slice(1);
+      const el = id && document.getElementById(id);
+      if (el) map.set(el, a);
+    });
+    const activeClass = "active";
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        const a = map.get(e.target); if (!a) return;
+        if (e.isIntersecting) {
+          links.forEach(l=>l.classList.remove(activeClass));
+          a.classList.add(activeClass);
+        }
+      });
+    }, { rootMargin:"-30% 0px -60% 0px", threshold: [0, 1e-4, 0.1] });
+    map.forEach((_, el)=> io.observe(el));
+  }
+
+  /* ----------------------------- command palette --------------------------- */
+  function palette(){
+    // shell markup (CSS already supports .palette)
+    let shell = $(".palette");
+    if (!shell){
+      shell = document.createElement("div");
+      shell.className="palette";
+      shell.innerHTML = `
+        <div class="panel" role="dialog" aria-modal="true" aria-label="Command palette">
+          <input type="search" placeholder="Jump to… (type to filter, ↑/↓, Enter)" aria-label="Filter commands" />
+          <ul></ul>
+        </div>`;
+      document.body.appendChild(shell);
+    }
+    const input = $("input", shell), list = $("ul", shell);
+
+    // data: sections + quick links
+    const items = [];
+    $$("main h2[id], main h3[id]").forEach(h=>{
+      items.push({label:h.textContent.trim(), href:"#"+h.id});
+    });
+    // quick links block
+    $$(".list a[href]").slice(0,10).forEach(a=>{
+      items.push({label:(a.textContent||a.href).trim(), href:a.href});
+    });
+
+    const open = ()=>{
+      shell.classList.add("open");
+      input.value=""; render(""); setTimeout(()=>input.focus(), 20);
+      document.documentElement.style.overflow="hidden";
+    };
+    const close = ()=>{
+      shell.classList.remove("open");
+      document.documentElement.style.overflow="";
+      input.blur();
+    };
+    const render = (q)=>{
+      const qq = q.toLowerCase().trim();
+      const rows = items.filter(it => !qq || it.label.toLowerCase().includes(qq)).slice(0, 30);
+      list.innerHTML = rows.map((it,i)=>`<li data-i="${i}" tabindex="0">${it.label}</li>`).join("");
+      // keyboard nav
+      let idx=0; const setSel=(n)=>{
+        idx=Math.max(0, Math.min(n, list.children.length-1));
+        [...list.children].forEach((li,i)=> li.classList.toggle("sel", i===idx));
+      };
+      setSel(0);
+      const go=()=>{
+        const li=list.children[idx]; if(!li) return;
+        const it=rows[+li.dataset.i]; close();
+        if (it.href.startsWith("#")){
+          const el=document.getElementById(it.href.slice(1));
+          if(el){ el.scrollIntoView({behavior:"smooth", block:"start"}); el.setAttribute("tabindex","-1"); el.focus({preventScroll:true}); }
+        } else { location.href = it.href; }
+      };
+      on(list, "click", (e)=>{ const li=e.target.closest("li"); if(li){ idx=[...list.children].indexOf(li); go(); } });
+      on(input, "keydown", (e)=>{
+        if (e.key==="ArrowDown"){ e.preventDefault(); setSel(idx+1); }
+        else if (e.key==="ArrowUp"){ e.preventDefault(); setSel(idx-1); }
+        else if (e.key==="Enter"){ e.preventDefault(); go(); }
+        else if (e.key==="Escape"){ e.preventDefault(); close(); }
+      });
+    };
+
+    on(document, "keydown", (e)=>{
+      const meta = e.ctrlKey || e.metaKey;
+      if (meta && (e.key==="k" || e.key==="K")){ e.preventDefault(); shell.classList.contains("open") ? close() : open(); }
+      if (e.key==="Escape" && shell.classList.contains("open")){ close(); }
+    });
+    on(shell, "click", (e)=>{ if (e.target === shell) { /* backdrop */ shell.classList.remove("open"); document.documentElement.style.overflow=""; }});
+    on(input, "input", ()=> render(input.value));
+  }
+
+  /* ------------------------------ anchor focus ----------------------------- */
+  function focusAnchors(){
+    on(document, "click", (ev)=>{
       const a = ev.target && ev.target.closest && ev.target.closest("a[href^='#']");
       if (!a) return;
       const id = a.getAttribute("href").slice(1);
       const tgt = id && document.getElementById(id);
-      if (tgt) {
-        if (!tgt.hasAttribute("tabindex")) tgt.setAttribute("tabindex", "-1");
-        tgt.focus({ preventScroll: true });
-      }
+      if (tgt){ if(!tgt.hasAttribute("tabindex")) tgt.setAttribute("tabindex","-1"); tgt.focus({preventScroll:true}); }
     });
   }
 
-  /* --------------------------- visibility hygiene ----------------------- */
-  function attachVisibilityFixes() {
-    // Some webviews cache the page; re-typeset and re-fit banner on return.
-    on(document, "visibilitychange", () => {
+  /* --------------------------- visibility hygiene -------------------------- */
+  function visibilityFixes(){
+    on(document, "visibilitychange", ()=>{
       if (document.visibilityState === "visible") {
         typesetSoon(80);
-        const img = $("#heroBanner");
-        if (img) enforceHeroFit(img.closest(".hero"), img, (img.dataset.fit||"").toLowerCase()==="contain");
+        const img=$("#heroBanner"), fig=img && img.closest(".hero");
+        if (img && fig) checkFitAuto(fig, img, fig.dataset.fit||"auto");
       }
     });
-
-    on(window, "pageshow", (e) => {
-      if (e && e.persisted) {
-        setYear();
-        initBanner(); // includes re-fit
-        typesetSoon(100);
-      }
+    on(window,"pageshow",(e)=>{
+      if (e && e.persisted){ setYear(); initBanner(); typesetSoon(100); }
     });
   }
 
-  /* ------------------------------- boot --------------------------------- */
-  function boot() {
+  /* --------------------------------- boot ---------------------------------- */
+  function boot(){
     setYear();
     hardenExternal();
+    wireSimpleMode();
     initBanner();
     revealOnScroll();
     activateEquations();
@@ -372,21 +463,22 @@
     typesetSoon(250);
     typesetOnFontsReady();
     focusAnchors();
-    attachVisibilityFixes();
+    backToTop();
+    miniTOCHighlight();
+    palette();
+    visibilityFixes();
   }
+  on(document,"DOMContentLoaded",boot);
 
-  on(document, "DOMContentLoaded", boot);
-
-  // Non-RO fallback to keep MathJax tidy on layout shifts
-  if (hasRO) {
-    const ro = new ResizeObserver(debounce(() => typesetSoon(120), 120));
-    $$(".eq").forEach(el => ro.observe(el));
+  // Keep MathJax tidy on resizes (and when RO is absent)
+  if (hasRO){
+    const ro = new ResizeObserver(debounce(()=>typesetSoon(120),120));
+    $$(".eq").forEach(el=> ro.observe(el));
   } else {
-    on(window, "resize", debounce(() => typesetSoon(120), 200), { passive: true });
+    on(window,"resize", debounce(()=>typesetSoon(120),200), {passive:true});
   }
 
-  /* ------------------------------ telemetry (opt-in) --------------------- */
-  // Set window.SOFTelemetry = true in console to log basic milestones.
-  function log(msg){ if (window.SOFTelemetry) console.log("[Codex.js]", msg); }
+  // Opt-in telemetry
+  function log(m){ if (window.SOFTelemetry) console.log("[Codex.js]", m); }
   log("ready @ " + Math.round(now()) + "ms");
 })();
