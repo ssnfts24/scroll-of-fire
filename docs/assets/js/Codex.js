@@ -49,6 +49,7 @@
     const img = $("#heroBanner");
     if (!img) return;
 
+    const hero = img.closest(".hero");
     const remote = img.getAttribute("data-src-raw") || "";
     const remoteSet = img.getAttribute("data-srcset-raw") || "";
     const localSet  = img.getAttribute("data-srcset-local") || "";
@@ -60,11 +61,18 @@
     const isOffline = !navigator.onLine;
 
     applyHeroAspectAndFocal(img);
+    // If the author explicitly wants contain mode, honor it immediately.
+    enforceHeroFit(hero, img);
 
     if (img.complete && img.naturalWidth > 0) {
       img.classList.add("hero-ready");
+      // Re-evaluate fit once natural sizes are known
+      enforceHeroFit(hero, img);
     } else {
-      on(img, "load", () => img.classList.add("hero-ready"), { once: true });
+      on(img, "load", () => {
+        img.classList.add("hero-ready");
+        enforceHeroFit(hero, img);
+      }, { once: true });
     }
 
     // Always give browsers a local srcset to pick an optimal size early.
@@ -74,7 +82,10 @@
     }
 
     // Don’t attempt remote upgrade in flaky contexts.
-    if (!remote || isMetaApp || isOffline) return;
+    if (!remote || isMetaApp || isOffline) {
+      wireHeroFitListeners(hero, img);
+      return;
+    }
 
     const swapToRemote = () => {
       if (remoteSet) {
@@ -113,10 +124,10 @@
     };
     on(window, "online", retryOnce, { once: true });
 
-    on(window, "resize", () => applyHeroAspectAndFocal(img), { passive: true });
-    on(window, "orientationchange", () => applyHeroAspectAndFocal(img), { passive: true });
+    wireHeroFitListeners(hero, img);
   }
 
+  // Apply aspect & focal point (CSS custom properties + object-position)
   function applyHeroAspectAndFocal(img) {
     const aspect = img.getAttribute("data-aspect") || "16/9";
     img.style.setProperty("--hero-aspect", aspect);
@@ -124,6 +135,61 @@
     const desk   = img.getAttribute("data-focal-desktop") || "59% 50%";
     const bpDesk = window.matchMedia("(min-width: 860px)").matches;
     img.style.objectPosition = bpDesk ? desk : mobile;
+  }
+
+  // Decide whether to show entire image (contain) vs edge-to-edge (cover)
+  function enforceHeroFit(hero, img) {
+    if (!hero || !img) return;
+
+    // 1) Author override
+    const forceContain = (img.getAttribute("data-fit") || "").toLowerCase() === "contain";
+    if (forceContain) {
+      hero.classList.add("hero--contain");
+      return;
+    }
+
+    // 2) Heuristic: if aspect mismatch is large, prefer contain
+    const natW = img.naturalWidth || parseInt(img.getAttribute("width") || "0", 10);
+    const natH = img.naturalHeight || parseInt(img.getAttribute("height") || "0", 10);
+    const containerW = hero.clientWidth || img.clientWidth || 1;
+    const cssAspect = getComputedStyle(img).getPropertyValue("--hero-aspect").trim() || "16/9";
+    const contAspect = parseAspect(cssAspect) || (containerW / Math.max(hero.clientHeight, 1));
+
+    if (natW > 0 && natH > 0) {
+      const imgAspect = natW / natH;          // >1 wide, <1 tall
+      const diff = Math.abs(imgAspect - contAspect) / contAspect; // relative difference
+      if (diff > 0.25) hero.classList.add("hero--contain");
+      else hero.classList.remove("hero--contain");
+    }
+  }
+
+  function parseAspect(expr) {
+    // Accept "16/9", "4/3", "1.777", etc.
+    if (!expr) return null;
+    const parts = String(expr).split("/");
+    if (parts.length === 2) {
+      const a = parseFloat(parts[0].trim());
+      const b = parseFloat(parts[1].trim());
+      if (a > 0 && b > 0) return a / b;
+      return null;
+    }
+    const n = parseFloat(expr);
+    return isFinite(n) && n > 0 ? n : null;
+  }
+
+  function wireHeroFitListeners(hero, img) {
+    const onReflow = () => {
+      applyHeroAspectAndFocal(img);
+      enforceHeroFit(hero, img);
+    };
+    on(window, "resize", onReflow, { passive: true });
+    on(window, "orientationchange", onReflow, { passive: true });
+
+    // In case fonts/layout shift height, observe hero box if available
+    if ("ResizeObserver" in window) {
+      const ro = new ResizeObserver(onReflow);
+      ro.observe(hero);
+    }
   }
 
   /* --------------------------- MathJax helpers ------------------------- */
