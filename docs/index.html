@@ -22,7 +22,7 @@
   <meta property="og:description" content="A living architecture of resonance — uniting physics, consciousness, ethics, language, and sacred geometry into a coherent harmonic framework." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/" />
-  <meta property="og:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png" />
   <meta property="og:image:alt" content="Scroll of Fire — Codex of Reality banner" />
   <meta property="og:image:width" content="1600" />
   <meta property="og:image:height" content="900" />
@@ -31,7 +31,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Scroll of Fire — Codex of Reality" />
   <meta name="twitter:description" content="The Scroll of Fire (Codex of Reality) by Aaron Paul Laird — resonance, intention, light, consciousness, Source." />
-  <meta name="twitter:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18" />
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png" />
 
   <!-- JSON-LD -->
   <script type="application/ld+json">
@@ -45,7 +45,7 @@
     "keywords":"Scroll of Fire, Codex of Reality, Resonant Physics, Sacred Geometry, YHWH, Consciousness, Tesla Type-7, AHHAVA, Remnant, Witness, Copeland Ψ-formalism, Goodwin Formula, 3-6-9",
     "license":"https://creativecommons.org/licenses/by-nc/4.0/",
     "url":"https://ssnfts24.github.io/scroll-of-fire/",
-    "image":"https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18",
+    "image":"https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png",
     "inLanguage":"en"
   }
   </script>
@@ -56,7 +56,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet" />
 
   <!-- Preload banner (local-first) -->
-  <link rel="preload" as="image" href="assets/img/banner.png" imagesizes="100vw" fetchpriority="high">
+  <link rel="preload" as="image" href="docs/assets/file_0000000052e861f98b087ad0b80cbefc (1).png" imagesizes="100vw" fetchpriority="high">
 
   <!-- Critical CSS -->
   <style>
@@ -78,7 +78,7 @@
     .subtitle{text-align:center;color:var(--muted);font-style:italic;margin:0 0 12px}
     .divider{height:1px;background:linear-gradient(90deg,transparent,#2a2a33,transparent);margin:18px auto 24px}
 
-    /* HERO (stable aspect, smooth fade-in) */
+    /* HERO (stable aspect, smooth fade-in, 'contain' variant shows full image) */
     .hero{
       position:relative;margin:0 auto 10px;max-width:var(--maxw);border-radius:20px;
       overflow:hidden;background:#0e0e12;box-shadow:0 10px 30px var(--shadow),inset 0 0 40px rgba(255,200,107,.05)
@@ -89,7 +89,6 @@
       opacity:.001;transition:opacity .35s ease;
       background:#0e0e12;
     }
-    /* contain variant — always show full image, centered */
     .hero.hero--contain > img{
       object-fit:contain !important;
       object-position:center center !important;
@@ -131,6 +130,16 @@
     .eq mjx-container{display:block !important;filter:drop-shadow(0 0 10px rgba(255,200,107,.08))}
     .eq.eq-on{outline:1px solid rgba(243,201,122,.2)}
 
+    /* Prevent inline MathJax from overflowing (e.g., in Credits) */
+    li mjx-container[display="inline"],
+    p mjx-container[display="inline"]{
+      display:block;
+      max-width:100%;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      padding-bottom:2px;
+    }
+
     a{color:var(--ink);text-underline-offset:2px}
     .cta{display:inline-block;margin-top:10px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);text-decoration:none}
     .cta:hover{border-color:#3a3a44}
@@ -139,13 +148,13 @@
   </style>
 
   <!-- Site CSS (optional additional styles) -->
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18f" />
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18g" />
 
   <!-- MathJax -->
   <script>
     window.MathJax = {
       tex:{ inlineMath:[['$','$'],['\\(','\\)']], displayMath:[['$$','$$']] },
-      svg:{ fontCache:'global' }
+      svg:{ fontCache:'global', linebreaks:{ automatic:true, width:'container' } }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
@@ -156,10 +165,10 @@
     <!-- HERO: local-first; JS upgrades to remote if reachable -->
     <figure class="hero hero--contain" aria-label="Scroll of Fire — Codex of Reality Banner">
       <img id="heroBanner"
-           src="assets/img/banner.png"
-           data-src-raw="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
-           data-srcset-raw="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png 1600w"
-           data-srcset-local="assets/img/banner.png 1600w, assets/img/banner-1200.png 1200w, assets/img/banner-800.png 800w"
+           src="docs/assets/file_0000000052e861f98b087ad0b80cbefc (1).png"
+           data-src-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
+           data-srcset-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png 1600w"
+           data-srcset-local="docs/assets/file_0000000052e861f98b087ad0b80cbefc (1).png 1600w"
            data-sizes="(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px"
            data-aspect="16/9"
            data-focal-mobile="50% 50%"
@@ -174,7 +183,7 @@
         <rect width="100%" height="100%" fill="url(#grid)"></rect>
       </svg>
       <div class="sigil-line" aria-hidden="true"></div>
-      <noscript><img src="assets/img/banner.png" alt="Scroll of Fire — Codex of Reality banner" width="1600" height="900"></noscript>
+      <noscript><img src="docs/assets/file_0000000052e861f98b087ad0b80cbefc (1).png" alt="Scroll of Fire — Codex of Reality banner" width="1600" height="900"></noscript>
     </figure>
 
     <h1 class="title">⚖️ Scroll of Fire — Codex of Reality</h1>
@@ -759,7 +768,7 @@ Status: Verified
         on(img, "load", () => img.classList.add("hero-ready"), { once: true });
       }
 
-      // Always give browsers a local srcset to pick an optimal size early.
+      // Give browsers a local srcset if available.
       if (localSet) {
         img.srcset = localSet;
         img.sizes  = sizesAttr;
