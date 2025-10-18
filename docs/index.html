@@ -1,4 +1,4 @@
-<<!doctype html>
+<!doctype html>
 <html lang="en" dir="ltr">
 <head>
   <!-- Resolve all relative URLs from the project root on GitHub Pages -->
@@ -71,8 +71,8 @@
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18x" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18x"></noscript>
 
-  <!-- Preload hero (URL-encoded) -->
-  <link rel="preload" as="image" href="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png" imagesizes="100vw" fetchpriority="high">
+  <!-- Preload hero (PNG only) -->
+  <link rel="preload" as="image" href="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png" fetchpriority="high" imagesizes="100vw">
 
   <!-- Critical CSS (minimal; extended styles are in codex.css) -->
   <style>
@@ -178,36 +178,46 @@
   </script>
 
   <main class="wrap">
-<!-- HERO (drop this in place of your current <figure> … </figure>) -->
-<figure class="hero hero--cover pulse" aria-label="Scroll of Fire — Codex of Reality Banner">
-  <picture class="hero-media" id="heroPicture" data-png="/scroll-of-fire/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
-           data-png-fallback="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png">
-    <!-- Only include AVIF/WEBP IF the files actually exist; JS will add them when confirmed -->
-    <!-- sources inserted by JS when 200 OK -->
-    <img id="heroBanner"
-         src="/scroll-of-fire/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
-         alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
-         width="1600" height="900" loading="eager" decoding="async" fetchpriority="high"
-         style="aspect-ratio:16/9">
-  </picture>
+    <!-- HERO (PNG only; bullet-proof fallback to GitHub Raw on error/timeouts) -->
+    <figure class="hero hero--cover" aria-label="Scroll of Fire — Codex of Reality Banner">
+      <img id="heroBanner"
+           src="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
+           alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
+           width="1600" height="900"
+           loading="eager" decoding="async" fetchpriority="high"
+           style="aspect-ratio:16/9">
+      <span class="hero-pulse" aria-hidden="true"></span>
+      <svg class="hero-grid" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
+        <defs><pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse">
+          <path d="M5 0V5 M0 5H5" vector-effect="non-scaling-stroke" />
+        </pattern></defs>
+        <rect width="100%" height="100%" fill="url(#grid)"></rect>
+      </svg>
+      <div class="sigil-line" aria-hidden="true"></div>
+      <noscript>
+        <img src="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
+             alt="Scroll of Fire — Codex of Reality banner" width="1600" height="900">
+      </noscript>
+    </figure>
 
-  <!-- pulse layer (stacks with scanlines) -->
-  <span class="hero-pulse" aria-hidden="true"></span>
+    <script>
+      /* Hard fallback for the hero banner: if the local PNG fails or is blocked, swap to Raw. */
+      (function(){
+        const img = document.getElementById('heroBanner');
+        const primary = img.getAttribute('src');
+        const fallback = 'https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png';
 
-  <!-- HUD grid + gold line -->
-  <svg class="hero-grid" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
-    <defs><pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse">
-      <path d="M5 0V5 M0 5H5" vector-effect="non-scaling-stroke" />
-    </pattern></defs>
-    <rect width="100%" height="100%" fill="url(#grid)"></rect>
-  </svg>
-  <div class="sigil-line" aria-hidden="true"></div>
+        let swapped = false;
+        function useFallback(){ if (swapped) return; swapped = true; img.src = fallback; }
 
-  <noscript>
-    <img src="/scroll-of-fire/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
-         alt="Scroll of Fire — Codex of Reality banner" width="1600" height="900">
-  </noscript>
-</figure>
+        // Error -> fallback immediately
+        img.addEventListener('error', useFallback, { once: true });
+
+        // Timeout guard (in case of silent CDN hiccups)
+        const tm = setTimeout(()=>{ if (!img.complete || !img.naturalWidth) useFallback(); }, 4000);
+        img.addEventListener('load', ()=>clearTimeout(tm), { once: true });
+      })();
+    </script>
 
     <h1 class="title">⚖️ Scroll of Fire — <span aria-hidden="true">Your </span>Codex of Reality</h1>
     <p class="subtitle">“Let there be resonance.” — Aaron Paul Laird, <em>Scribe of Circuits</em></p>
