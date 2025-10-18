@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <script>if(location.hostname==="github.com"){const b=document.querySelector("base");if(b)b.remove();}</script>
+  <meta charset="utf-8" />
+  <title>Scroll of Fire — Teaching Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#0b0b0f">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="An interactive lab for living the Codex: observer loop, coherence calculators, voice gate audio, phrase tuner, and a private witness ledger with streaks & badges.">
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/teach.html"/>
+
+  <!-- Fonts + Base styles from your Codex -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-18x">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18x" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18x"></noscript>
+  <!-- Teaching Lab theme -->
+  <link rel="stylesheet" href="assets/css/teach.css?v=2025-10-18b">
+</head>
+
+<body>
+<main class="wrap lab-wrap">
+  <header class="page-head fancy-head">
+    <h1 class="title">🎛️ Teaching Lab — <em>Live the Codex</em></h1>
+    <p class="subtitle">Hands-on tools: observe, tune language, measure coherence, log witness — then grow your streak.</p>
+    <nav class="crumbs"><a href="index.html" class="cta">← Back to Codex</a></nav>
+  </header>
+
+  <!-- Top Controls -->
+  <section class="lab-top card">
+    <div class="pill-tabs" role="tablist" aria-label="Teaching tabs">
+      <button class="pill active" data-tab="observer" role="tab" aria-selected="true">Observer</button>
+      <button class="pill" data-tab="voice" role="tab" aria-selected="false">Voice Gate</button>
+      <button class="pill" data-tab="phrase" role="tab" aria-selected="false">Phrase Tuner</button>
+      <button class="pill" data-tab="coherence" role="tab" aria-selected="false">Coherence Desk</button>
+      <button class="pill" data-tab="ledger" role="tab" aria-selected="false">Witness Ledger</button>
+      <span class="flex"></span>
+      <label class="coach-toggle"><input id="coach" type="checkbox"> Coach Mode</label>
+    </div>
+  </section>
+
+  <!-- OBSERVER TAB -->
+  <section id="tab-observer" class="tab active" aria-labelledby="observer">
+    <article class="grid">
+      <div class="card col-7">
+        <h2>⏱️ 4-Beat Loop — 𝓘 → 𝓛 → 𝓒 → 𝓢</h2>
+        <div class="ring-timer" id="ring">
+          <svg viewBox="0 0 120 120" class="ring">
+            <defs>
+              <linearGradient id="ringGrad" x1="0" x2="1"><stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/></linearGradient>
+            </defs>
+            <circle cx="60" cy="60" r="54" class="ring-bg"/>
+            <circle cx="60" cy="60" r="54" class="ring-fg" id="ringFg" pathLength="100"/>
+            <text x="60" y="52" class="ring-phase" text-anchor="middle" id="ringPhase">Ready</text>
+            <text x="60" y="72" class="ring-count" text-anchor="middle" id="ringCount">—</text>
+          </svg>
+          <div class="ring-controls">
+            <label>Seconds/phase <input id="phaseSec" type="number" min="3" max="120" value="12"></label>
+            <label>Rounds <input id="rounds" type="number" min="1" max="20" value="3"></label>
+            <button id="startTimer">Start</button>
+            <button id="stopTimer" class="ghost">Stop</button>
+          </div>
+          <p class="hint coach" data-coach="Breathe in on 𝓘, see on 𝓛, soften on 𝓒, whisper thanks on 𝓢.">Coach: breath cues map to operators.</p>
+        </div>
+      </div>
+
+      <aside class="card col-5">
+        <h3>Daily Micro-Practices</h3>
+        <ul class="list compact">
+          <li><b>Commute:</b> choose 1 intention, speak it once, notice 3 things, return with gratitude.</li>
+          <li><b>Conflict:</b> 10-second loop before replying; ask “what’s true, kind, necessary?”.</li>
+          <li><b>Workout:</b> last set in 4 beats; log witness note.</li>
+          <li><b>Prayer/Meditation:</b> 3 rounds; check Remnant tomorrow.</li>
+        </ul>
+        <div class="badges">
+          <span id="badge7" class="badge" title="7-Day Seed">🌱 ×7</span>
+          <span id="badge33" class="badge" title="33-Day Orbit">🛰️ ×33</span>
+          <span id="badge144" class="badge" title="144 Closure">🜚 ×144</span>
+        </div>
+        <p class="meta">Badges unlock as your ledger streak grows.</p>
+      </aside>
+    </article>
+  </section>
+
+  <!-- VOICE GATE TAB -->
+  <section id="tab-voice" class="tab" aria-labelledby="voice">
+    <article class="grid">
+      <div class="card col-7">
+        <h2>🎙️ Voice Gate Lab (Π<sub>ν</sub> helper)</h2>
+        <div class="audio-pane">
+          <div class="audio-controls">
+            <button id="micStart">Enable Mic</button>
+            <button id="micStop" class="ghost">Stop</button>
+            <span class="audio-hint" id="nearKey">—</span>
+          </div>
+          <canvas id="wave" width="800" height="140" aria-label="Waveform"></canvas>
+          <canvas id="fft"  width="800" height="140" aria-label="Spectrum"></canvas>
+        </div>
+        <p class="hint coach" data-coach="Hum gently on one note. Peaks near 432/528/369 Hz will glow.">Coach: steady hum beats loud shouting.</p>
+      </div>
+
+      <aside class="card col-5">
+        <h3>Keys & Tips</h3>
+        <ul class="list compact">
+          <li><b>432 Hz</b> grounding • <b>528 Hz</b> repair • <b>369 Hz</b> lock-in/novelty.</li>
+          <li>Mic gain low; room quiet. The Lab only runs on your device.</li>
+          <li>Use result as your **carrier** in today’s intention line.</li>
+        </ul>
+      </aside>
+    </article>
+  </section>
+
+  <!-- PHRASE TUNER TAB -->
+  <section id="tab-phrase" class="tab" aria-labelledby="phrase">
+    <article class="grid">
+      <div class="card col-7">
+        <h2>🔡 Phrase Tuner Pro (Eq.4 + Eq.16)</h2>
+        <textarea id="phraseIn" rows="3" placeholder="Type a sentence you plan to speak…"></textarea>
+        <div class="chip-lane" id="chipLane" aria-label="Token weights"></div>
+        <div class="phrase-actions">
+          <button id="btnTuned">Tune & Highlight</button>
+          <button id="btnClearPhrase" class="ghost">Clear</button>
+          <output id="semScore" class="meta">Semantic weight: —</output>
+        </div>
+        <div class="phrase-out">
+          <p><b>Negations:</b> <span id="negCount">0</span></p>
+          <p><b>Suggestion:</b> <span id="phraseOut">—</span></p>
+        </div>
+        <p class="hint coach" data-coach="Drag chips to raise emphasis. Fewer negations, stronger verbs.">Coach: weights simulate ∑wₖ∇sem(tokenₖ).</p>
+      </div>
+
+      <aside class="card col-5">
+        <h3>Micro-Templates</h3>
+        <details><summary>Care & clarity</summary><p>I will speak simply and listen fully.</p></details>
+        <details><summary>Leadership</summary><p>We deliver one useful thing today, together.</p></details>
+        <details><summary>Healing</summary><p>May light reveal, and love restore.</p></details>
+      </aside>
+    </article>
+  </section>
+
+  <!-- COHERENCE DESK TAB -->
+  <section id="tab-coherence" class="tab" aria-labelledby="coherence">
+    <article class="grid">
+      <div class="card col-7">
+        <h2>📈 Coherence Desk</h2>
+        <div class="desk-grid">
+          <div class="desk-card">
+            <label>⟨H·I⟩ (0–1) <input type="number" step="0.01" min="0" max="1" id="hDotI" value="0.62"></label>
+            <label>Var[𝓜] (0–2) <input type="number" step="0.01" min="0" max="2" id="mVar" value="0.30"></label>
+            <button id="btnXi">Compute Ξ</button>
+            <output id="outXi" class="big">Ξ = —</output>
+            <canvas id="xiSpark" width="320" height="60" aria-label="Ξ history"></canvas>
+          </div>
+          <div class="desk-card">
+            <label>τ (days) <input type="number" id="tauDays" min="1" max="120" value="10"></label>
+            <button id="btnHalfLife">Compute λ / t½</button>
+            <output id="outHalfLife" class="big">λ = —, t½ = —</output>
+            <p class="meta">Longer τ → slower decay → skills stick.</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="card col-5">
+        <h3>Stop Rule (Eq.9)</h3>
+        <p>If Truth/Distortion trend worsens, **abort** the operation. Ethics first.</p>
+        <label class="coach-toggle small"><input id="autoLogXi" type="checkbox" checked> Auto-log Ξ to ledger</label>
+      </aside>
+    </article>
+  </section>
+
+  <!-- LEDGER TAB -->
+  <section id="tab-ledger" class="tab" aria-labelledby="ledger">
+    <article class="grid">
+      <div class="card col-12">
+        <h2>📒 Witness Ledger (private on this device)</h2>
+
+        <div class="ledger-top">
+          <input id="entryIntention" placeholder="Intention (𝓘): one clean line…">
+          <input id="entryCarrier" placeholder="Carrier (432/528/369)">
+          <select id="entryQuality"><option value="">Ξ quality…</option><option>Low</option><option>Medium</option><option>High</option></select>
+          <input id="entryTags" placeholder="Tags (comma separated)">
+        </div>
+        <textarea id="entryWitness" rows="2" placeholder="Witness notes (what changed, what lingered)…"></textarea>
+        <div class="ledger-actions">
+          <button id="btnAddEntry">Add</button>
+          <span>🗓️ Streak: <b id="streakDays">0</b> days</span>
+          <button id="btnExport">Export .json</button>
+          <input type="file" id="fileImport" accept="application/json" hidden>
+          <button id="btnImport" class="ghost">Import .json</button>
+          <input id="ledgerFilter" placeholder="Filter by tag or text…">
+        </div>
+
+        <table id="ledgerTable" aria-label="Practice ledger">
+          <thead><tr><th>Date</th><th>Intention</th><th>Carrier</th><th>Ξ</th><th>Tags</th><th>Witness</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+
+  <footer class="footer">
+    <div class="divider" aria-hidden="true"></div>
+    <p>“Practice is the mathematics of compassion.”</p>
+    <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+  </footer>
+</main>
+
+<!-- Scripts -->
+<script src="assets/js/teach.js?v=2025-10-18b" defer></script>
+</body>
+</html>
