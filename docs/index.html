@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en" dir="ltr"><head>
+<html lang="en" dir="ltr">
+<head>
   <!-- Resolve all relative URLs from the project root on GitHub Pages -->
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
@@ -91,11 +92,14 @@
 
     .title{
       font-family:"Crimson Pro",Georgia,serif;font-weight:800;text-align:center;
-      font-size:clamp(28px,3.6vw,48px);margin:8px 0 4px;letter-spacing:.3px;
+      font-size:clamp(28px,3.6vw,44px); /* smaller top clamp for mobile headings */
+      margin:8px 0 4px;letter-spacing:.3px;
       background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#a7f6ff 100%);
       -webkit-background-clip:text;background-clip:text;color:transparent;
       text-shadow:0 0 24px rgba(122,243,255,.12);
+      word-break:keep-all;
     }
+    h2{font-size:clamp(20px,2.8vw,28px); line-height:1.25; word-wrap:break-word}
     .subtitle{text-align:center;color:var(--muted);font-style:italic;margin:0 0 12px}
     .divider{height:1px;background:
       linear-gradient(90deg,transparent,rgba(122,243,255,.45),transparent),
@@ -197,7 +201,7 @@
   <!-- MathJax (standard delimiters only) -->
   <script>
     window.MathJax = {
-      tex:{ inlineMath:[['\','\']], displayMath:[['$$','$$']] },
+      tex:{ inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']] },
       svg:{ fontCache:'global', linebreaks:{ automatic:true, width:'container' } }
     };
   </script>
@@ -242,7 +246,7 @@
     <section class="grid" aria-labelledby="tldr">
       <article class="card col-12">
         <h2 id="tldr">⚡ TL;DR — What this is & how to use it</h2>
-        <p>The Codex is a <em>design</em> for working with resonance. Constants and sacred ratios provide a steady supply; four living operators — <abbr title="Intention">𝓘</abbr>, <abbr title="Light / Revelation">𝓛</abbr>, <abbr title="Consciousness / Witness">𝓒</abbr>, <abbr title="Source / Return">𝓢</abbr> — shape that supply into experience. Harmonics pick the lane, language programs meaning into the carrier, memory decides what echoes, and an ethical law demands that <strong>truth outlast distortion</strong>. Try it gently: choose a voice carrier (432/528/369), speak one clear line, measure coherence, and keep only what raises witness.</p>
+        <p><strong>Your Codex</strong> is a <em>design</em> for working with resonance. Constants and sacred ratios provide a steady supply; four living operators — <abbr title="Intention">𝓘</abbr>, <abbr title="Light / Revelation">𝓛</abbr>, <abbr title="Consciousness / Witness">𝓒</abbr>, <abbr title="Source / Return">𝓢</abbr> — shape that supply into experience. Harmonics pick the lane, language programs meaning into the carrier, memory decides what echoes, and an ethical law demands that <strong>truth outlast distortion</strong>. Try it gently: choose a voice carrier (432/528/369), speak one clear line, measure coherence, and keep only what raises witness.</p>
       </article>
     </section>
 
@@ -360,9 +364,12 @@
     <!-- CANONICAL EQUATIONS (your original full set) -->
     <section class="grid" id="canon" aria-labelledby="equations">
       <article class="card col-12">
-        <h2 id="equations">📐 Canonical Equations of the Codex</h2>
-        <p class="meta">Your Codex equations lead. External formalisms follow with clear attribution. Copeland’s Ψ-formalism is #7 and remains external by design.</p>
+        <h2 id="equations">📐 Canonical Equations of <em>The Codex</em></h2>
+        <p class="meta"><strong>The Codex</strong> equations lead. External formalisms follow with clear attribution. Copeland’s Ψ-formalism is #7 and remains external by design.</p>
       </article>
+
+
+      
 
       <!-- 0) Foundational Field — Laird -->
       <article class="card col-12" aria-labelledby="eq0">
