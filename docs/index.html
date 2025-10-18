@@ -78,7 +78,7 @@
     .subtitle{text-align:center;color:var(--muted);font-style:italic;margin:0 0 12px}
     .divider{height:1px;background:linear-gradient(90deg,transparent,#2a2a33,transparent);margin:18px auto 24px}
 
-    /* HERO (stable aspect, smooth fade-in, breakpoint focal control) */
+    /* HERO (stable aspect, smooth fade-in) */
     .hero{
       position:relative;margin:0 auto 10px;max-width:var(--maxw);border-radius:20px;
       overflow:hidden;background:#0e0e12;box-shadow:0 10px 30px var(--shadow),inset 0 0 40px rgba(255,200,107,.05)
@@ -87,6 +87,14 @@
       display:block;width:100%;height:auto;aspect-ratio:var(--hero-aspect, 16/9);
       object-fit:cover;object-position:63% 50%;
       opacity:.001;transition:opacity .35s ease;
+      background:#0e0e12;
+    }
+    /* contain variant — always show full image, centered */
+    .hero.hero--contain > img{
+      object-fit:contain !important;
+      object-position:center center !important;
+      height:auto !important;
+      aspect-ratio:var(--hero-aspect, 16/9);
     }
     .hero > img.hero-ready{opacity:1}
     .hero-grid{position:absolute;inset:0;pointer-events:none;opacity:.2}
@@ -146,16 +154,17 @@
 <body>
   <main class="wrap">
     <!-- HERO: local-first; JS upgrades to remote if reachable -->
-    <figure class="hero" aria-label="Scroll of Fire — Codex of Reality Banner">
+    <figure class="hero hero--contain" aria-label="Scroll of Fire — Codex of Reality Banner">
       <img id="heroBanner"
            src="assets/img/banner.png"
-           data-src-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18"
-           data-srcset-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18 1600w"
+           data-src-raw="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
+           data-srcset-raw="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png 1600w"
            data-srcset-local="assets/img/banner.png 1600w, assets/img/banner-1200.png 1200w, assets/img/banner-800.png 800w"
            data-sizes="(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px"
            data-aspect="16/9"
-           data-focal-mobile="63% 50%"
-           data-focal-desktop="59% 50%"
+           data-focal-mobile="50% 50%"
+           data-focal-desktop="50% 50%"
+           data-fit="contain"
            alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
            width="1600" height="900" loading="eager" decoding="async" fetchpriority="high">
       <svg class="hero-grid" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
@@ -326,7 +335,7 @@
         <p class="meta">Only coherent patterns persist across scales and time.</p>
       </article>
 
-      <!-- 10..17 — Extensions created today -->
+      <!-- 10..17 — Extensions -->
       <article class="card col-6" aria-labelledby="eq10">
         <h3 id="eq10">10) Dimensional Ladder (Laird)</h3>
         <div class="eq"><div class="eq-scroll">
@@ -760,14 +769,16 @@ Status: Verified
       if (!remote || isMetaApp || isOffline) return;
 
       const swapToRemote = () => {
-        if (remoteSet) {
+        const isContain = (img.dataset.fit || "").toLowerCase() === "contain";
+        if (remoteSet && !isContain) {
           img.srcset = remoteSet;
           img.sizes  = sizesAttr;
-          // Safari/iOS nudge to recompute source selection
           img.setAttribute("data-rselect", String(Date.now()));
           void img.currentSrc;
         } else {
           img.src = remote;
+          img.removeAttribute("srcset");
+          img.removeAttribute("sizes");
         }
       };
 
@@ -973,4 +984,4 @@ Status: Verified
   })();
   </script>
 </body>
-  </html>
+</html>
