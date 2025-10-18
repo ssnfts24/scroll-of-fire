@@ -14,7 +14,7 @@
   <title>Scroll of Fire — Codex of Reality</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Dark theme to prevent white flashes -->
+  <!-- Dark theme -->
   <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#0b0b0f">
   <meta name="color-scheme" content="dark">
@@ -74,7 +74,7 @@
   <!-- Preload hero (PNG only) -->
   <link rel="preload" as="image" href="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png" fetchpriority="high" imagesizes="100vw">
 
-  <!-- Critical CSS (minimal; extended styles are in codex.css) -->
+  <!-- Minimal critical CSS (extended styles live in codex.css) -->
   <style>
     :root{ --bg:#0b0b0f; --ink:#eae7df; --muted:#b8b3a6; --card:#121219; --line:#2a2a33; --gold:#f3c97a; --accent:#7af3ff; --shadow:rgba(0,0,0,.35); --maxw:1180px; --hero-aspect:16/9; }
     html,body{height:100%}
@@ -134,11 +134,10 @@
     .cta:hover{border-color:#3a3a44}
     footer.footer{text-align:center;color:var(--muted);margin-top:20px}
     .meta{color:var(--muted)} .hint{color:var(--muted);font-size:.95em}
-    /* Performance: content-visibility for offscreen blocks */
     @supports (content-visibility:auto){ section, article, .card { content-visibility:auto; contain-intrinsic-size:600px; } .card{ contain-intrinsic-size:360px; } }
   </style>
 
-  <!-- Lazy MathJax: only load when an equation is near view -->
+  <!-- Lazy MathJax loader -->
   <script>
   (function () {
     function loadMJ(){
@@ -166,7 +165,7 @@
 </head>
 
 <body>
-  <!-- Fast Mode for low-power / Save-Data; warm-up to reduce heavy paints on first render -->
+  <!-- Warm-up / Fast mode -->
   <script>
     (function(){
       document.body.classList.add('performance-warming');
@@ -178,57 +177,64 @@
   </script>
 
   <main class="wrap">
-    <!-- HERO (PNG only; bullet-proof fallback to GitHub Raw on error/timeouts) -->
-    <!-- HERO -->
-<figure id="hero" class="hero has-effects" data-fit="cover" aria-label="Scroll of Fire — Codex of Reality Banner">
-  <img id="heroBanner"
-       src="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
-       alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
-       width="1600" height="900" loading="eager" decoding="async" fetchpriority="high" />
+    <!-- HERO (PNG only; bullet-proof fallback) -->
+    <figure id="hero" class="hero has-effects hero--cover" data-fit="cover" aria-label="Scroll of Fire — Codex of Reality Banner">
+      <img id="heroBanner"
+           src="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
+           alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
+           width="1600" height="900" loading="eager" decoding="async" fetchpriority="high" />
 
-  <!-- overlay controls -->
-  <div class="hero-ui" role="toolbar" aria-label="Banner controls">
-    <button type="button" id="heroFit" class="hero-btn" aria-pressed="false" title="Toggle fit">
-      Fit: <span data-fit-label>cover</span>
-    </button>
-    <button type="button" id="heroZoom" class="hero-btn" title="View full screen">Fullscreen</button>
-  </div>
+      <!-- overlay controls -->
+      <div class="hero-ui" role="toolbar" aria-label="Banner controls">
+        <button type="button" id="heroFit" class="hero-btn" aria-pressed="false" title="Toggle fit">
+          Fit: <span data-fit-label>cover</span>
+        </button>
+        <button type="button" id="heroZoom" class="hero-btn" title="View full screen">Fullscreen</button>
+      </div>
 
-  <!-- visual HUD -->
-  <span class="hero-pulse" aria-hidden="true"></span>
-  <svg class="hero-grid" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
-    <defs><pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse">
-      <path d="M5 0V5 M0 5H5" vector-effect="non-scaling-stroke" />
-    </pattern></defs>
-    <rect width="100%" height="100%" fill="url(#grid)"></rect>
-  </svg>
-  <div class="sigil-line" aria-hidden="true"></div>
+      <!-- visual HUD -->
+      <span class="hero-pulse" aria-hidden="true"></span>
+      <svg class="hero-grid" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
+        <defs><pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse">
+          <path d="M5 0V5 M0 5H5" vector-effect="non-scaling-stroke" />
+        </pattern></defs>
+        <rect width="100%" height="100%" fill="url(#grid)"></rect>
+      </svg>
+      <div class="sigil-line" aria-hidden="true"></div>
 
-  <noscript>
-    <img src="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png" alt="Scroll of Fire — Codex of Reality banner" width="1600" height="900">
-  </noscript>
-</figure>
+      <noscript>
+        <img src="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png" alt="Scroll of Fire — Codex of Reality banner" width="1600" height="900">
+      </noscript>
+    </figure>
 
-    
+    <!-- Fallback to Raw if hero fails or stalls -->
     <script>
-      /* Hard fallback for the hero banner: if the local PNG fails or is blocked, swap to Raw. */
       (function(){
         const img = document.getElementById('heroBanner');
-        const primary = img.getAttribute('src');
         const fallback = 'https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png';
-
         let swapped = false;
         function useFallback(){ if (swapped) return; swapped = true; img.src = fallback; }
-
-        // Error -> fallback immediately
         img.addEventListener('error', useFallback, { once: true });
-
-        // Timeout guard (in case of silent CDN hiccups)
         const tm = setTimeout(()=>{ if (!img.complete || !img.naturalWidth) useFallback(); }, 4000);
         img.addEventListener('load', ()=>clearTimeout(tm), { once: true });
       })();
     </script>
 
+
+
+
+
+
+    <!-- Part 2...-->
+
+
+
+
+
+
+
+
+    
     <h1 class="title">⚖️ Scroll of Fire — <span aria-hidden="true">Your </span>Codex of Reality</h1>
     <p class="subtitle">“Let there be resonance.” — Aaron Paul Laird, <em>Scribe of Circuits</em></p>
 
@@ -356,15 +362,12 @@
 
     <div class="goldline"></div>
 
-    <!-- CANONICAL EQUATIONS (your original full set) -->
+    <!-- CANONICAL EQUATIONS -->
     <section class="grid" id="canon" aria-labelledby="equations">
       <article class="card col-12">
         <h2 id="equations">📐 Canonical Equations of <em>The Codex</em></h2>
         <p class="meta"><strong>The Codex</strong> equations lead. External formalisms follow with clear attribution. Copeland’s Ψ-formalism is #7 and remains external by design.</p>
       </article>
-
-
-      
 
       <!-- 0) Foundational Field — Laird -->
       <article class="card col-12" aria-labelledby="eq0">
@@ -375,7 +378,6 @@
         <p class="eq-note">Awareness follows potential; micro-acts integrate over time and feed back into the reality field.</p>
       </article>
 
-      <!-- 1..17 & externals (unchanged content you provided, with notes added) -->
       <article class="card col-6" aria-labelledby="eq1">
         <h3 id="eq1">1) Source Equation — Resonant Unification (Laird)</h3>
         <div class="eq"><div class="eq-scroll">
@@ -722,9 +724,7 @@
 
       <article class="card col-6">
         <h3>2) Memory Windowing Study</h3>
-        <ul
-
-class="list">
+        <ul class="list">
           <li><strong>Goal:</strong> Tune the echo-time of experiences using \mathcal{M}_\tau (Eq.15).</li>
           <li><strong>Steps:</strong> vary \tau over sessions; log changes in recall & stability; correlate with \lambda \approx 1/\tau.</li>
           <li><strong>Outcome:</strong> a personalized map from practice duration to remnant strength.</li>
@@ -760,8 +760,22 @@ class="list">
     </section>
 
     <div class="goldline"></div>
+    <!-- END PART 2 -->
 
-    <!-- LAWS -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- LAWS -->
     <section class="grid" id="laws" aria-labelledby="living-laws">
       <article class="card col-12">
         <h2 id="living-laws">🕎 The Living Laws</h2>
@@ -885,7 +899,7 @@ Status: Verified
       "use strict";
       const $  = (s, r=document) => r.querySelector(s);
       const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
-      const on = (t,e,f,o) => t.addEventListener(e,f,o);
+      const on = (t,e,f,o) => t && t.addEventListener && t.addEventListener(e,f,o);
       const raf = (fn) => (window.requestAnimationFrame||setTimeout)(fn,16);
 
       const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -903,7 +917,7 @@ Status: Verified
           try{
             const u = new URL(a.href, location.href);
             if (u.hostname.replace(/^www\./,"") !== here && !a.getAttribute("aria-label")) {
-              const txt = a.textContent.trim(); if (txt) a.setAttribute("aria-label", txt+" (opens in new tab)");
+              const txt = (a.textContent||"").trim(); if (txt) a.setAttribute("aria-label", txt+" (opens in new tab)");
             }
           }catch(_){}
           a.setAttribute("rel", Array.from(rel).join(" "));
@@ -936,15 +950,15 @@ Status: Verified
         apply();
       }
 
-      /* MathJax: patch inline delimiters to support both \( \) and U+E001 markers if present */
+      /* MathJax: allow \( \) and private marker U+E001 */
       function patchMathJaxDelimiters(){
         const mj = window.MathJax; if (!mj) return;
         try{
           const tex = (mj.config && mj.config.tex) ? mj.config.tex : (mj.config.tex = {});
           tex.inlineMath = tex.inlineMath || [];
           const addPair = (a,b)=>{ if (!tex.inlineMath.some(p=>p[0]===a && p[1]===b)) tex.inlineMath.push([a,b]); };
-          addPair("\\\\(","\\\\)");                 // support \( ... \)
-          addPair("\uE001","\uE001");              // support  ...  if used
+          addPair("\\\\(","\\\\)");
+          addPair("\uE001","\uE001");
         }catch(_){}
       }
 
@@ -974,15 +988,15 @@ Status: Verified
         if (prefersReduced) return;
         $$(".card").forEach(card=>{
           let rid=0;
-          card.addEventListener("mousemove",(e)=>{
+          const reset=()=>{ card.style.transform=""; };
+          on(card,"mousemove",(e)=>{
             const r=card.getBoundingClientRect();
             const x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
             rid = raf(()=>{ card.style.transform=`perspective(900px) rotateX(${(0.5-y)*4}deg) rotateY(${(x-0.5)*6}deg)`; });
           });
-          const reset=()=>{ card.style.transform=""; };
-          card.addEventListener("mouseleave",reset);
-          card.addEventListener("blur",reset,true);
-          card.addEventListener("touchstart",reset,{passive:true});
+          on(card,"mouseleave",reset);
+          on(card,"blur",reset,true);
+          on(card,"touchstart",reset,{passive:true});
         });
       }
 
@@ -991,7 +1005,7 @@ Status: Verified
         hardenExternal();
         revealOnScroll();
         initSimpleMode();
-        patchMathJaxDelimiters();   // ensure both \( \) and ... work
+        patchMathJaxDelimiters();
         activateEquations();
         tiltCards();
         typesetSoon(250);
@@ -1001,4 +1015,4 @@ Status: Verified
   </script>
 </body>
 </html>
-```0
+    
