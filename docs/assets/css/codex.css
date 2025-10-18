@@ -1,7 +1,7 @@
 /* ======================================================================
    Scroll of Fire — Codex of Reality
    Global Stylesheet (codex.css)
-   - Dark UI, responsive grid, hero banner polish
+   - Dark UI, responsive grid, hero banner (cover + contain modes)
    - Cards, lists, tables, equations
    - Motion-safe reveal, focus visibility, print styles
    ====================================================================== */
@@ -186,19 +186,31 @@ a:where([rel~="external"])::after {
   width: 100%;
   height: auto;
   aspect-ratio: var(--hero-aspect);
-  object-fit: cover;
+  object-fit: cover; /* default = edge-to-edge */
   object-position: var(--hero-focal-mobile);
   opacity: .001; /* fade in when ready */
   transition: opacity .35s var(--ease);
   will-change: opacity;
+  background: var(--bg-elev);
+  image-rendering: auto;
 }
 
-@media (min-width: 860px) {
-  .hero > img { object-position: var(--hero-focal-desktop); }
+/* Contain mode — always show the whole image centered */
+.hero.hero--contain {
+  /* gentle letterbox that blends into page background */
+  background:
+    radial-gradient(1200px 600px at 50% 0%, rgba(255,200,107,.06), transparent 60%) ,
+    var(--bg-elev);
+}
+.hero.hero--contain > img {
+  object-fit: contain !important;
+  object-position: center center !important;
+  height: auto !important;
+  aspect-ratio: var(--hero-aspect);
+  background: transparent;
 }
 
-.hero > img.hero-ready { opacity: 1; }
-
+/* small cosmetic grid & rule over hero */
 .hero-grid {
   position: absolute;
   inset: 0;
@@ -206,8 +218,13 @@ a:where([rel~="external"])::after {
   opacity: .2;
   mix-blend-mode: normal;
 }
-
 .sigil-line { height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: .6; }
+
+@media (min-width: 860px) {
+  .hero > img { object-position: var(--hero-focal-desktop); }
+}
+
+.hero > img.hero-ready { opacity: 1; }
 
 /* ------------------------------ Grid System ------------------------------ */
 
@@ -248,6 +265,8 @@ a:where([rel~="external"])::after {
   will-change: transform, opacity;
   opacity: .98;
   backface-visibility: hidden;
+  transform-style: preserve-3d;
+  perspective: 900px;
 }
 
 /* Reveal animation (toggled via JS by adding .visible) */
@@ -427,15 +446,6 @@ p, li, td, th { word-wrap: break-word; overflow-wrap: anywhere; }
   mjx-container { filter: none !important; }
 }
 
-/* ------------------------------ Optional Fancy (Tilt polish) ------------------------------ */
-
-/* Smooth out GPU transforms applied by JS tilt */
-.card {
-  transform-style: preserve-3d;
-  perspective: 900px;
-  will-change: transform, opacity;
-}
-
 /* ------------------------------ Scrollbar Global (non-equation areas) ------------------------------ */
 
 @supports selector(:root:has(body)) {
@@ -482,3 +492,4 @@ p, li, td, th { word-wrap: break-word; overflow-wrap: anywhere; }
 }
 
 /* ------------------------------ Done ------------------------------ */
+```0
