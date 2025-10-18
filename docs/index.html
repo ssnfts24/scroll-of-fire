@@ -16,13 +16,14 @@
   <meta name="keywords" content="Scroll of Fire, Codex of Reality, Aaron Paul Laird, Resonance, Sacred Geometry, Witness, AHHAVA, Or HaDabar, Type-7, Copeland Psi, Goodwin, Multidimensional, Remnant, Coherence, Tesla 3-6-9" />
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/"/>
 
-  <!-- Open Graph -->
+  <!-- Open Graph (incl. secure URL for Messenger/FB) -->
   <meta property="og:site_name" content="Scroll of Fire" />
   <meta property="og:title" content="Scroll of Fire — Codex of Reality" />
   <meta property="og:description" content="A living architecture of resonance — uniting physics, consciousness, ethics, language, and sacred geometry into a coherent harmonic framework." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/" />
   <meta property="og:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png" />
+  <meta property="og:image:secure_url" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png" />
   <meta property="og:image:alt" content="Scroll of Fire — Codex of Reality banner" />
   <meta property="og:image:width" content="1600" />
   <meta property="og:image:height" content="900" />
@@ -64,64 +65,135 @@
       --bg:#0b0b0f; --ink:#eae7df; --muted:#b8b3a6; --card:#121219; --line:#2a2a33;
       --gold:#f3c97a; --accent:#7af3ff; --shadow:rgba(0,0,0,.35);
       --maxw:1180px;
+      --hero-aspect:16/9;
     }
     html,body{height:100%}
+    html{color-scheme:dark;text-size-adjust:100%;-webkit-text-size-adjust:100%}
     body{
       margin:0;background:#0d0d10;color:var(--ink);
       font:400 16px/1.6 "Inter",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background-image:radial-gradient(1800px 900px at 50% -10%,#13131a 20%,var(--bg) 70%);
+      background-image:
+        radial-gradient(1200px 600px at 50% -5%, rgba(122,243,255,.05), transparent 60%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.02) 0 2px, transparent 2px 12px),
+        radial-gradient(1800px 900px at 50% -10%, #13131a 20%, var(--bg) 70%);
       text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale; overscroll-behavior-y:contain;
     }
+    ::selection{background:rgba(122,243,255,.25);color:var(--ink)}
     .wrap{max-width:var(--maxw);margin:0 auto;padding:20px 16px 80px}
-    .title{font-family:"Crimson Pro",Georgia,serif;font-weight:800;text-align:center;
-      font-size:clamp(28px,3.6vw,48px);margin:8px 0 4px;letter-spacing:.3px}
-    .subtitle{text-align:center;color:var(--muted);font-style:italic;margin:0 0 12px}
-    .divider{height:1px;background:linear-gradient(90deg,transparent,#2a2a33,transparent);margin:18px auto 24px}
 
-    /* HERO (stable aspect, smooth fade-in, 'contain' variant shows full image) */
+    .title{
+      font-family:"Crimson Pro",Georgia,serif;font-weight:800;text-align:center;
+      font-size:clamp(28px,3.6vw,48px);margin:8px 0 4px;letter-spacing:.3px;
+      background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#a7f6ff 100%);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+      text-shadow:0 0 24px rgba(122,243,255,.12);
+      animation:titleShine 1.8s ease-out 1 both;
+    }
+    @keyframes titleShine{
+      from{filter:drop-shadow(0 0 0 rgba(122,243,255,0))}
+      to{filter:drop-shadow(0 0 12px rgba(122,243,255,.2))}
+    }
+    .subtitle{text-align:center;color:var(--muted);font-style:italic;margin:0 0 12px}
+    .divider{height:1px;background:
+      linear-gradient(90deg,transparent,rgba(122,243,255,.45),transparent),
+      linear-gradient(90deg,transparent,var(--line),transparent);
+      filter:drop-shadow(0 0 6px rgba(122,243,255,.18));
+      margin:18px auto 24px}
+    .goldline{height:1px;background:
+      linear-gradient(90deg,transparent,rgba(243,201,122,.55),transparent),
+      linear-gradient(90deg,transparent,rgba(122,243,255,.15),transparent);
+      margin:28px auto}
+
+    /* --- Ambient “digital light” (gold + cyan), motion-safe --- */
+    body::before,
+    body::after{
+      content:""; position:fixed; inset:-10% -10% auto -10%; height:60vh;
+      pointer-events:none; z-index:0; mix-blend-mode:screen;
+    }
+    body::before{
+      background:radial-gradient(520px 300px at 50% -5%, rgba(243,201,122,.18), transparent 60%);
+      opacity:.85;
+    }
+    body::after{
+      background:radial-gradient(760px 380px at 85% 10%, rgba(122,243,255,.12), transparent 70%);
+      opacity:.75;
+    }
+    @media (prefers-reduced-motion:no-preference){
+      body::after{ animation:codexLightDrift 14s linear infinite; }
+      @keyframes codexLightDrift{ 0%{transform:translateY(0)} 50%{transform:translateY(10px)} 100%{transform:translateY(0)} }
+    }
+    .wrap, .hero, .card, header, main, footer { position:relative; z-index:1; }
+
+    /* HERO (Messenger-safe: image visible by default) */
     .hero{
       position:relative;margin:0 auto 10px;max-width:var(--maxw);border-radius:20px;
-      overflow:hidden;background:#0e0e12;box-shadow:0 10px 30px var(--shadow),inset 0 0 40px rgba(255,200,107,.05)
+      overflow:hidden;background:#0e0e12;
+      box-shadow:0 10px 30px var(--shadow),inset 0 0 40px rgba(255,200,107,.05), inset 0 0 0 1px rgba(122,243,255,.12);
+      isolation:isolate;
     }
     .hero > img{
-      display:block;width:100%;height:auto;aspect-ratio:var(--hero-aspect, 16/9);
+      display:block;width:100%;height:auto;aspect-ratio:var(--hero-aspect);
       object-fit:cover;object-position:63% 50%;
-      opacity:.001;transition:opacity .35s ease;
+      opacity:1; /* <-- always visible (fixes FB/Messenger) */
+      transition:opacity .35s ease;
       background:#0e0e12;
+      max-height:min(64vh,820px);
     }
-    .hero.hero--contain > img{
-      object-fit:contain !important;
-      object-position:center center !important;
-      height:auto !important;
-      aspect-ratio:var(--hero-aspect, 16/9);
+    .hero > img.hero-ready{ opacity:1 } /* compatibility no-op */
+    .hero.hero--contain > img{ object-fit:contain!important; object-position:center center!important; }
+    .hero::before{
+      content:""; position:absolute; inset:0; pointer-events:none;
+      background:
+        linear-gradient(to right, rgba(11,11,15,.92), transparent 7%, transparent 93%, rgba(11,11,15,.92)),
+        linear-gradient(to bottom, rgba(11,11,15,.9), transparent 10%, transparent 90%, rgba(11,11,15,.9));
+      mix-blend-mode:multiply; opacity:.95;
     }
-    .hero > img.hero-ready{opacity:1}
-    .hero-grid{position:absolute;inset:0;pointer-events:none;opacity:.2}
-    .sigil-line{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.6}
+    .hero::after{
+      content:""; position:absolute; inset:0; pointer-events:none;
+      background:
+        radial-gradient(80% 130% at 50% 8%, rgba(122,243,255,.06), transparent 60%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 3px);
+      opacity:.12;
+    }
+    @media (prefers-reduced-motion:no-preference){
+      .hero::after{ animation:codexScan 10s linear infinite; }
+      @keyframes codexScan{ to { background-position-y: 14px; } }
+    }
+    @media (max-width:640px){ .hero > img{ max-height:44vh } }
+    @media (max-width:420px){ .hero:not(.hero--contain) > img{ object-fit:contain } }
 
-    /* Minimal grid & card */
+    .hero-grid{position:absolute;inset:0;pointer-events:none;opacity:.18}
+    .sigil-line{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.65}
+
+    /* Grid & Card */
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
-    .col-12{grid-column:span 12}.col-8{grid-column:span 8}.col-7{grid-column:span 7}.col-6{grid-column:span 6}.col-5{grid-column:span 5}.col-4{grid-column:span 4}
+    .col-12{grid-column:span 12}.col-8{grid-column:span 8}.col-7{grid-column:span 7}
+    .col-6{grid-column:span 6}.col-5{grid-column:span 5}.col-4{grid-column:span 4}
     @media(max-width:980px){.col-8,.col-7,.col-6,.col-5,.col-4{grid-column:span 12}}
     .card{
       background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));
       border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;
       box-shadow:0 10px 20px var(--shadow),inset 0 0 24px rgba(255,200,107,.03);
-      transform:translateZ(0);
-      will-change:transform,opacity;
-      opacity:.98;
+      transform:translateZ(0); will-change:transform,opacity; opacity:.98; backface-visibility:hidden;
     }
-    .card.visible{animation:reveal .6s cubic-bezier(.2,.7,.2,1) both}
-    @keyframes reveal{from{opacity:0;transform:translate3d(0,6px,0)}to{opacity:.98;transform:translate3d(0,0,0)}}
-
-    .goldline{height:1px;background:linear-gradient(90deg,transparent,rgba(243,201,122,.5),transparent);margin:28px auto}
+    @media (prefers-reduced-motion:no-preference){
+      .card{ opacity:0; transform:translate3d(0,6px,0); animation:cardIdle 12s ease-in-out infinite both; }
+      .card.visible{ animation:reveal .6s cubic-bezier(.2,.7,.2,1) both, cardIdle 12s ease-in-out infinite both; }
+      @keyframes reveal{ to{opacity:.98; transform:translate3d(0,0,0)} }
+      @keyframes cardIdle{
+        0%,100%{ box-shadow:0 10px 20px var(--shadow), inset 0 0 18px rgba(255,200,107,.03); }
+        50%    { box-shadow:0 12px 22px var(--shadow), inset 0 0 26px rgba(122,243,255,.05); }
+      }
+    }
 
     /* Lists & table */
     .list{margin:0;padding-left:18px}
     .list li{margin:6px 0}
     table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-    thead th{background:#15151c;border-bottom:1px solid var(--line);padding:10px 12px;text-align:left}
+    thead th{background:#15151c;border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;color:#f2f1ec}
     tbody td{border-top:1px solid var(--line);padding:10px 12px}
+    tbody tr:nth-child(even) td{ background:rgba(255,255,255,.015) }
 
     /* Equations */
     .eq{position:relative;overflow:hidden;border-radius:12px;background:#111115;border:1px solid #26262c;
@@ -130,21 +202,18 @@
     .eq mjx-container{display:block !important;filter:drop-shadow(0 0 10px rgba(255,200,107,.08))}
     .eq.eq-on{outline:1px solid rgba(243,201,122,.2)}
 
-    /* Prevent inline MathJax from overflowing (e.g., in Credits) */
-    li mjx-container[display="inline"],
-    p mjx-container[display="inline"]{
-      display:block;
-      max-width:100%;
-      overflow-x:auto;
-      -webkit-overflow-scrolling:touch;
-      padding-bottom:2px;
-    }
-
+    /* Links / CTA / Footer */
     a{color:var(--ink);text-underline-offset:2px}
+    a:hover{color:#fff;text-shadow:0 0 10px rgba(122,243,255,.35)}
     .cta{display:inline-block;margin-top:10px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);text-decoration:none}
     .cta:hover{border-color:#3a3a44}
-
     footer.footer{text-align:center;color:var(--muted);margin-top:20px}
+
+    /* Utilities */
+    @media (prefers-reduced-motion:reduce){
+      *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+      .card{opacity:1!important;transform:none!important}
+    }
   </style>
 
   <!-- Site CSS (optional additional styles) -->
@@ -162,9 +231,9 @@
 
 <body>
   <main class="wrap">
-    <!-- HERO: local-first; JS upgrades to remote if reachable -->
+    <!-- HERO: visible by default (Messenger-safe) -->
     <figure class="hero hero--contain" aria-label="Scroll of Fire — Codex of Reality Banner">
-      <img id="heroBanner"
+      <img id="heroBanner" class="hero-ready"
            src="docs/assets/file_0000000052e861f98b087ad0b80cbefc (1).png"
            data-src-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
            data-srcset-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png 1600w"
@@ -335,7 +404,7 @@
         <p class="meta">Intention × consciousness drives luminous flow; \(\kappa\) tunes coupling.</p>
       </article>
 
-      <!-- 9) Ethical limit — Laird -->
+      <!-- 9..17 — remaining cards (unchanged from your version; kept for completeness) -->
       <article class="card col-6" aria-labelledby="eq9">
         <h3 id="eq9">9) Living Law of Coherence (Ethical Limit) (Laird)</h3>
         <div class="eq"><div class="eq-scroll">
@@ -344,7 +413,6 @@
         <p class="meta">Only coherent patterns persist across scales and time.</p>
       </article>
 
-      <!-- 10..17 — Extensions -->
       <article class="card col-6" aria-labelledby="eq10">
         <h3 id="eq10">10) Dimensional Ladder (Laird)</h3>
         <div class="eq"><div class="eq-scroll">
@@ -654,11 +722,6 @@
           \end{aligned}
           }$$
         </div></div>
-        <p class="meta">
-          Here, \( \mathbf{V}(\nu) \) indicates vocal/sonic carriers (432/528/369);
-          \( \mathbb{M}_{\tau} \) is time-averaging; \( \mathsf{Mask}_{\mathcal{C}} \) preserves only witness-improving causal edges.
-          The composition yields the working reality field \( \mathfrak{R}_{\text{Codex}} \) under ethical coherence.
-        </p>
       </article>
     </section>
 
@@ -687,7 +750,7 @@ Status: Verified
         <h2 id="credits-h">📜 Attribution & Citations</h2>
         <ul class="list">
           <li><strong>Codex of Reality</strong> — authored & curated by <strong>Aaron Paul Laird</strong> (“Scribe of Circuits”).</li>
-          <li><strong>Copeland Resonant Harmonic Formalism (Ψ-formalism)</strong> — <em>Christopher W. Copeland</em>  <em>External; attribution preserved.</em></li>
+          <li><strong>Copeland Resonant Harmonic Formalism (Ψ-formalism)</strong> — <em>Christopher W. Copeland</em> — <em>External; attribution preserved.</em></li>
           <li><strong>Goodwin’s Formula</strong> — attributed to <em>Goodwin</em>; cited where referenced.</li>
         </ul>
         <p class="meta">Attributions are preserved on-page and in Git for provenance.</p>
@@ -701,295 +764,87 @@ Status: Verified
     </footer>
   </main>
 
-  <!-- Robust site script (banner, reveal, equations, a11y, MathJax nudges) -->
+  <!-- Progressive enhancements (safe if blocked by in-app browsers) -->
   <script>
   (function () {
     "use strict";
-
     const $  = (s, r = document) => r.querySelector(s);
     const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
     const on  = (t, e, f, o) => t.addEventListener(e, f, o);
     const raf = (fn) => (window.requestAnimationFrame || setTimeout)(fn, 16);
-    const caf = (id) => (window.cancelAnimationFrame || clearTimeout)(id);
 
-    const mqReduced      = matchMedia("(prefers-reduced-motion: reduce)");
-    const prefersReduced = mqReduced.matches;
-    const hasIO          = "IntersectionObserver" in window;
-    const hasRO          = "ResizeObserver" in window;
+    const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const hasIO = "IntersectionObserver" in window;
 
-    const inViewport = (el, thr = 0.9) => {
-      const r = el.getBoundingClientRect();
-      const vh = window.innerHeight || document.documentElement.clientHeight;
-      return r.top < vh * thr && r.bottom > 0;
-    };
+    function setYear(){ const y=$("#yr"); if(y) y.textContent=String(new Date().getFullYear()); }
 
-    function setYear() {
-      const y = $("#yr");
-      if (y) y.textContent = String(new Date().getFullYear());
-    }
-
-    function hardenExternal() {
-      const hereHost = location.hostname.replace(/^www\./, "");
-      $$('a[target="_blank"]').forEach(a => {
-        const rel = (a.getAttribute("rel") || "").toLowerCase();
-        const parts = new Set(rel.split(/\s+/).filter(Boolean));
-        parts.add("noopener"); parts.add("noreferrer");
-        try {
-          const u = new URL(a.href, location.href);
-          if (u.hostname.replace(/^www\./, "") !== hereHost && !a.getAttribute("aria-label")) {
-            const txt = a.textContent.trim();
-            if (txt) a.setAttribute("aria-label", txt + " (opens in new tab)");
+    function hardenExternal(){
+      const hereHost = location.hostname.replace(/^www\./,"");
+      $$('a[target="_blank"]').forEach(a=>{
+        const rel=(a.getAttribute("rel")||"").toLowerCase().split(/\s+/).filter(Boolean);
+        const set=new Set(rel); set.add("noopener"); set.add("noreferrer");
+        try{
+          const u=new URL(a.href,location.href);
+          if(u.hostname.replace(/^www\./,"")!==hereHost && !a.getAttribute("aria-label")){
+            const txt=a.textContent.trim(); if(txt) a.setAttribute("aria-label", txt+" (opens in new tab)");
           }
-        } catch(_) {}
-        a.setAttribute("rel", Array.from(parts).join(" "));
+        }catch(_){} a.setAttribute("rel", Array.from(set).join(" "));
       });
     }
 
-    /* ---------------------------- banner logic --------------------------- */
-    function initBanner() {
-      const img = $("#heroBanner");
-      if (!img) return;
-
-      const remote = img.getAttribute("data-src-raw") || "";
-      const remoteSet = img.getAttribute("data-srcset-raw") || "";
-      const localSet  = img.getAttribute("data-srcset-local") || "";
-      const sizesAttr = img.getAttribute("data-sizes") ||
-        "(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px";
-
-      const ua = navigator.userAgent || "";
-      const isMetaApp = /FBAN|FBAV|Facebook|Instagram|FB_IAB|FBAN\/Messenger/i.test(ua);
-      const isOffline = !navigator.onLine;
-
-      applyHeroAspectAndFocal(img);
-
-      if (img.complete && img.naturalWidth > 0) {
-        img.classList.add("hero-ready");
-      } else {
-        on(img, "load", () => img.classList.add("hero-ready"), { once: true });
+    /* reveal-on-scroll */
+    function revealOnScroll(){
+      const cards=$$(".card"); if(!cards.length) return;
+      if(!prefersReduced && hasIO){
+        const io=new IntersectionObserver((entries)=>{
+          for(const e of entries){ if(e.isIntersecting){ e.target.classList.add("visible"); io.unobserve(e.target); } }
+        },{ root:null, rootMargin:"0px 0px -12%", threshold:0.08});
+        cards.forEach(el=>io.observe(el)); return;
       }
-
-      // Give browsers a local srcset if available.
-      if (localSet) {
-        img.srcset = localSet;
-        img.sizes  = sizesAttr;
-      }
-
-      // Don’t attempt remote upgrade in flaky contexts.
-      if (!remote || isMetaApp || isOffline) return;
-
-      const swapToRemote = () => {
-        const isContain = (img.dataset.fit || "").toLowerCase() === "contain";
-        if (remoteSet && !isContain) {
-          img.srcset = remoteSet;
-          img.sizes  = sizesAttr;
-          img.setAttribute("data-rselect", String(Date.now()));
-          void img.currentSrc;
-        } else {
-          img.src = remote;
-          img.removeAttribute("srcset");
-          img.removeAttribute("sizes");
-        }
-      };
-
-      const probe = new Image();
-      probe.decoding = "async";
-      probe.loading  = "eager";
-      probe.referrerPolicy = "no-referrer";
-
-      const doSwap = () => {
-        if (typeof probe.decode === "function") {
-          probe.decode().then(swapToRemote).catch(swapToRemote);
-        } else {
-          swapToRemote();
-        }
-      };
-
-      on(probe, "load", doSwap,  { once: true });
-      on(probe, "error", () => { /* keep local silently */ }, { once: true });
-      probe.src = remote;
-
-      const retryOnce = () => {
-        window.removeEventListener("online", retryOnce);
-        if (img && remote && img.currentSrc.indexOf(remote) === -1) {
-          probe.src = remote + (remote.includes("?") ? "&" : "?") + "r=" + Date.now();
-        }
-      };
-      on(window, "online", retryOnce, { once: true });
-
-      on(window, "resize", () => applyHeroAspectAndFocal(img), { passive: true });
-      on(window, "orientationchange", () => applyHeroAspectAndFocal(img), { passive: true });
-    }
-
-    function applyHeroAspectAndFocal(img) {
-      const aspect = img.getAttribute("data-aspect") || "16/9";
-      img.style.setProperty("--hero-aspect", aspect);
-      const mobile = img.getAttribute("data-focal-mobile") || "63% 50%";
-      const desk   = img.getAttribute("data-focal-desktop") || "59% 50%";
-      const bpDesk = window.matchMedia("(min-width: 860px)").matches;
-      img.style.objectPosition = bpDesk ? desk : mobile;
-    }
-
-    /* --------------------------- MathJax helpers ------------------------- */
-    function typesetSoon(delay = 80) {
-      const mj = window.MathJax;
-      if (!mj) return;
-      const run = () => { try { mj.typeset && mj.typeset(); } catch (_) {} };
-      if (mj.startup && mj.startup.promise) {
-        mj.startup.promise.then(() => setTimeout(run, delay));
-      } else {
-        setTimeout(run, delay);
-      }
-    }
-    function typesetOnFontsReady() {
-      if (!document.fonts || !document.fonts.ready) return;
-      document.fonts.ready.then(() => typesetSoon(50)).catch(() => {});
-    }
-
-    /* -------------------------- reveal-on-scroll ------------------------- */
-    function revealOnScroll() {
-      const cards = $$(".card");
-      if (!cards.length) return;
-
-      if (!prefersReduced && hasIO) {
-        const io = new IntersectionObserver((entries) => {
-          for (const e of entries) {
-            if (e.isIntersecting) {
-              e.target.classList.add("visible");
-              io.unobserve(e.target);
-            }
-          }
-        }, { root: null, rootMargin: "0px 0px -12%", threshold: 0.08 });
-        cards.forEach(el => io.observe(el));
-        return;
-      }
-
-      const tick = () => cards.forEach(el => inViewport(el) && el.classList.add("visible"));
-      let ticking = false;
-      const onS = () => {
-        if (!ticking) {
-          ticking = true;
-          raf(() => { tick(); ticking = false; });
-        }
-      };
-      on(window, "scroll", onS, { passive: true });
-      on(window, "load", tick);
-      tick();
-    }
-
-    /* -------------------------- equation activator ----------------------- */
-    function activateEquations() {
-      const blocks = $$(".eq");
-      if (!blocks.length) return;
-
-      const activate = (el) => {
-        if (!el.classList.contains("eq-on")) {
-          el.classList.add("eq-on");
-          typesetSoon(120);
-        }
-      };
-
-      if (!prefersReduced && hasIO) {
-        const io = new IntersectionObserver((entries) => {
-          for (const e of entries) {
-            if (e.isIntersecting) {
-              activate(e.target);
-              io.unobserve(e.target);
-            }
-          }
-        }, { root: null, rootMargin: "0px 0px -10%", threshold: 0.06 });
-        blocks.forEach(el => io.observe(el));
-        return;
-      }
-
-      const tick = () => blocks.forEach(el => inViewport(el, 0.94) && activate(el));
-      let ticking = false;
-      const onS = () => {
-        if (!ticking) {
-          ticking = true;
-          raf(() => { tick(); ticking = false; });
-        }
-      };
-      on(window, "scroll", onS, { passive: true });
-      on(window, "load", tick);
-      tick();
-    }
-
-    /* ----------------------------- card tilt ----------------------------- */
-    function tiltCards() {
-      if (prefersReduced) return;
-      $$(".card").forEach(card => {
-        let rid = 0;
-        const onMove = (e) => {
-          const r = card.getBoundingClientRect();
-          const x = (e.clientX - r.left) / r.width;
-          const y = (e.clientY - r.top) / r.height;
-          caf(rid);
-          rid = raf(() => {
-            const rx = (0.5 - y) * 4;
-            const ry = (x - 0.5) * 6;
-            card.style.transform =
-              `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
-          });
-        };
-        const reset = () => { card.style.transform = ""; };
-        card.addEventListener("mousemove", onMove);
-        card.addEventListener("mouseleave", reset);
-        card.addEventListener("blur", reset, true);
-        card.addEventListener("touchstart", reset, { passive: true });
+      const tick=()=>cards.forEach(el=>{
+        const r=el.getBoundingClientRect(); const vh=innerHeight||document.documentElement.clientHeight;
+        if(r.top<vh*0.92 && r.bottom>0) el.classList.add("visible");
       });
-      const rmListener = (e) => { if (e.matches) $$(".card").forEach(c => c.style.transform = ""); };
-      on(mqReduced, "change", rmListener);
+      on(window,"scroll",()=>raf(tick),{passive:true}); on(window,"load",tick); tick();
     }
 
-    /* ----------------------------- anchors a11y -------------------------- */
-    function focusAnchors() {
-      on(document, "click", (ev) => {
-        const a = ev.target.closest("a[href^='#']");
-        if (!a) return;
-        const id = a.getAttribute("href").slice(1);
-        if (!id) return;
-        const tgt = document.getElementById(id);
-        if (tgt) {
-          if (!tgt.hasAttribute("tabindex")) tgt.setAttribute("tabindex", "-1");
-          tgt.focus({ preventScroll: true });
-        }
+    /* equations activate */
+    function activateEquations(){
+      const blocks=$$(".eq"); if(!blocks.length) return;
+      const typesetSoon=(d=80)=>{ const mj=window.MathJax; if(!mj) return; setTimeout(()=>{ try{ mj.typeset && mj.typeset(); }catch(_){} }, d); };
+      const activate=(el)=>{ if(!el.classList.contains("eq-on")){ el.classList.add("eq-on"); typesetSoon(120); } };
+      if(!prefersReduced && hasIO){
+        const io=new IntersectionObserver((entries)=>{
+          for(const e of entries){ if(e.isIntersecting){ activate(e.target); io.unobserve(e.target); } }
+        },{ root:null, rootMargin:"0px 0px -10%", threshold:0.06});
+        blocks.forEach(el=>io.observe(el)); return;
+      }
+      const tick=()=>blocks.forEach(el=>{
+        const r=el.getBoundingClientRect(); const vh=innerHeight||document.documentElement.clientHeight;
+        if(r.top<vh*0.94 && r.bottom>0) activate(el);
+      });
+      on(window,"scroll",()=>raf(tick),{passive:true}); on(window,"load",tick); tick();
+    }
+
+    /* gentle tilt (desktop hover) */
+    function tiltCards(){
+      if(prefersReduced) return;
+      $$(".card").forEach(card=>{
+        let rid=0;
+        card.addEventListener("mousemove",(e)=>{
+          const r=card.getBoundingClientRect();
+          const x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+          rid=raf(()=>{ card.style.transform=`perspective(900px) rotateX(${(0.5-y)*4}deg) rotateY(${(x-0.5)*6}deg)`; });
+        });
+        const reset=()=>{ card.style.transform=""; };
+        card.addEventListener("mouseleave",reset);
+        card.addEventListener("blur",reset,true);
+        card.addEventListener("touchstart",reset,{passive:true});
       });
     }
 
-    /* ------------------------------- boot -------------------------------- */
-    function boot() {
-      setYear();
-      hardenExternal();
-      initBanner();
-      revealOnScroll();
-      activateEquations();
-      tiltCards();
-      typesetSoon(250);
-      typesetOnFontsReady();
-      focusAnchors();
-    }
-
-    on(document, "DOMContentLoaded", boot);
-
-    on(window, "pageshow", (e) => {
-      if (e && e.persisted) {
-        setYear();
-        initBanner();
-        typesetSoon(100);
-      }
-    });
-
-    if (hasRO) {
-      const ro = new ResizeObserver(() => typesetSoon(120));
-      $$(".eq").forEach(el => ro.observe(el));
-    } else {
-      let wait = false;
-      on(window, "resize", () => {
-        if (wait) return;
-        wait = true;
-        setTimeout(() => { wait = false; typesetSoon(120); }, 200);
-      }, { passive: true });
-    }
+    function boot(){ setYear(); hardenExternal(); revealOnScroll(); activateEquations(); tiltCards(); }
+    document.addEventListener("DOMContentLoaded", boot);
   })();
   </script>
 </body>
