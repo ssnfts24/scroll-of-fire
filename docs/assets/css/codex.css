@@ -2,9 +2,11 @@
    Scroll of Fire — Codex of Reality
    Global Stylesheet (codex.css)
    - Dark UI • responsive grid • advanced hero (cover/contain + fullscreen)
-   - Sticky header, mini-TOC, cards, tables, equations, badges
+   - Sticky header, cards, tables, equations, badges
    - Motion-safe reveal • perf modes • print
    - “Living tech” vibe (HUD grid, neon rims, scanline sweep, pulses)
+   - A11y: focus states, prefers-* media, high-contrast, reduced-data
+   - Robust mobile: safe-area, viewport units, mobile table scroll
    ====================================================================== */
 
 /* ------------------------------ Root / Theme ------------------------------ */
@@ -39,10 +41,14 @@
 
   /* Ambient */
   --ambient-gold:rgba(243,201,122,.18); --ambient-cyan:rgba(122,243,255,.12);
+
+  /* Focus ring */
+  --ring: rgba(122,243,255,.95);
+  --ring-outer: rgba(122,243,255,.12);
+  --ring-inset: rgba(122,168,255,.35);
 }
 @media (prefers-color-scheme: light){
-  :root{ --ink:#111218; --muted:#3a3a44; }
-  body{ color:#13131a; background:#f6f7fb; }
+  :root{ --ink:#111218; --muted:#3a3a44; --bg:#f6f7fb; --bg-elev:#ffffff; --card:#f7f8fb; --line:#dfe2ea }
 }
 
 /* ------------------------------ Reset & Globals ------------------------------ */
@@ -59,6 +65,14 @@ body{
   text-rendering:optimizeLegibility; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
   overscroll-behavior-y:contain; padding-bottom:var(--safe-bottom);
 }
+@media (prefers-color-scheme: light){
+  body{
+    background-image:
+      radial-gradient(1200px 600px at 50% -5%, rgba(122,168,255,.08), transparent 60%),
+      repeating-linear-gradient(0deg, rgba(0,0,0,.03) 0 2px, transparent 2px 12px),
+      radial-gradient(1800px 900px at 50% -10%, #fff 20%, var(--bg) 70%);
+  }
+}
 body::before,body::after{
   content:""; position:fixed; inset:-10% -10% auto -10%; height:60vh; pointer-events:none; z-index:0; mix-blend-mode:screen;
 }
@@ -72,15 +86,22 @@ body::after { background:radial-gradient(760px 380px at 85% 10%, var(--ambient-c
 
 ::selection{ background:rgba(122,243,255,.25); color:var(--ink) }
 :focus-visible{
-  outline:2px solid rgba(122,243,255,.95);
-  box-shadow:0 0 0 4px rgba(122,243,255,.12), 0 0 0 1px rgba(122,168,255,.35) inset;
+  outline:2px solid var(--ring);
+  box-shadow:0 0 0 4px var(--ring-outer), 0 0 0 1px var(--ring-inset) inset;
   outline-offset:2px; border-radius:8px;
 }
 
-a{ color:var(--ink); text-underline-offset:2px; word-break:break-word }
+/* Links */
+a{ color:var(--ink); text-underline-offset:2px; word-break:break-word; transition:color var(--dur-1) var(--ease), text-shadow var(--dur-1) var(--ease) }
 a:hover{ color:#fff; text-shadow:0 0 10px rgba(122,243,255,.35) }
+a:focus-visible{ text-decoration:underline }
 a[rel~="external"]::after{ content:" ↗"; font-size:.9em; opacity:.8 }
+
+/* Helpful utilities */
 .sr-only{ position:absolute!important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 }
+.center{ text-align:center }
+.right{ text-align:right }
+.nowrap{ white-space:nowrap }
 
 /* ------------------------------ Header / Nav (optional) ------------------------------ */
 header.site{
@@ -93,11 +114,18 @@ header.site{
 .brand .logo{ width:28px; height:28px; border-radius:8px; background:linear-gradient(180deg,#88f,#5ff); box-shadow:0 0 12px rgba(122,243,255,.35) inset }
 .brand h1{ font:800 clamp(18px,3.6vw,22px)/1 "Crimson Pro",Georgia,serif; margin:0 }
 .quick{ display:flex; gap:12px; align-items:center; flex-wrap:wrap }
-.quick a,.quick button{ appearance:none; border:1px solid #2a2a33; background:transparent; color:var(--ink); padding:6px 10px; border-radius:10px; font:600 14px/1 Inter; cursor:pointer }
+.quick a,.quick button{
+  appearance:none; border:1px solid #2a2a33; background:transparent; color:var(--ink);
+  padding:6px 10px; border-radius:10px; font:600 14px/1 Inter; cursor:pointer; text-decoration:none;
+}
 .quick button{ display:inline-flex; align-items:center; gap:6px }
+.quick a:hover,.quick button:hover{ border-color:#3a3a44; background:rgba(255,255,255,.02) }
 
 /* ------------------------------ Wrapper & Headings ------------------------------ */
 .wrap{ max-width:var(--maxw); margin:0 auto; padding:20px 16px calc(80px + var(--safe-bottom)) }
+@supports (height: 100svh){
+  .wrap{ padding-bottom:calc(80px + var(--safe-bottom)) }
+}
 .title{
   font-family:"Crimson Pro",Georgia,serif; font-weight:800; text-align:center; font-size:var(--fs-5);
   margin:8px 0 4px; letter-spacing:.3px;
@@ -105,10 +133,12 @@ header.site{
   -webkit-background-clip:text; background-clip:text; color:transparent;
   text-shadow:0 0 24px rgba(122,243,255,.12);
   animation:titleShine 1.8s ease-out 1 both;
+  word-break:keep-all;
 }
 @keyframes titleShine{ from{filter:drop-shadow(0 0 0 rgba(122,243,255,0))} to{filter:drop-shadow(0 0 12px rgba(122,243,255,.22))} }
 .subtitle{ text-align:center; color:var(--muted); font-style:italic; margin:0 0 12px }
 
+/* Dividers */
 .divider{
   height:1px; background:
   linear-gradient(90deg,transparent,rgba(122,243,255,.45),transparent),
@@ -130,14 +160,6 @@ header.site{
   background:linear-gradient(180deg,rgba(122,243,255,.6),rgba(243,201,122,.35));
 }
 
-/* ------------------------------ Mini TOC (optional) ------------------------------ */
-.mini-toc{ position:sticky; top:calc(58px + var(--safe-top)); align-self:start }
-.mini-toc details{ border:1px solid var(--line); border-radius:12px; background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005)); padding:8px 10px }
-.mini-toc summary{ cursor:pointer; font-weight:600 }
-.mini-toc nav ol{ margin:8px 0 0; padding-left:18px }
-.mini-toc a{ text-decoration:none }
-.mini-toc a:hover{ text-decoration:underline }
-
 /* ------------------------------ Simple Mode toggle + helpers ------------------------------ */
 .simple-toggle{ display:flex; align-items:center; gap:10px; justify-content:center; margin:0 0 14px }
 .simple-toggle input{ accent-color:#8be9ff; transform:scale(1.15) }
@@ -152,7 +174,6 @@ header.site{
   box-shadow:0 10px 30px var(--shadow), inset 0 0 40px rgba(255,200,107,.05), inset 0 0 0 1px rgba(122,243,255,.12);
   isolation:isolate; perspective:1200px;
 }
-.hero .hero-media{ display:block; width:100% }
 .hero img{
   display:block; width:100%; height:auto; aspect-ratio:var(--hero-aspect);
   object-fit:cover; object-position:var(--hero-focal-mobile);
@@ -184,7 +205,7 @@ header.site{
   .hero::after{ animation:scanFloat 8s linear infinite; will-change:background-position }
 }
 
-/* pulse layer */
+/* pulse layer (optional; Codex.js toggles .pulse) */
 .hero .hero-pulse{
   position:absolute; inset:0; pointer-events:none; z-index:2; opacity:var(--pulse-opacity); mix-blend-mode:screen;
   background:
@@ -193,7 +214,13 @@ header.site{
   background-repeat:no-repeat; background-position:center center, center center; transform:translateZ(0); display:none;
 }
 .hero.pulse .hero-pulse{ display:block }
-@keyframes pulseShock{ 0%{background-size:10% 10%,6% 6%;opacity:0} 6%{opacity:var(--pulse-opacity)} 30%{background-size:120% 120%,90% 90%;opacity:.10} 60%{background-size:220% 220%,160% 160%;opacity:.06} 100%{background-size:320% 320%,240% 240%;opacity:0} }
+@keyframes pulseShock{
+  0%{background-size:10% 10%,6% 6%;opacity:0}
+  6%{opacity:var(--pulse-opacity)}
+  30%{background-size:120% 120%,90% 90%;opacity:.10}
+  60%{background-size:220% 220%,160% 160%;opacity:.06}
+  100%{background-size:320% 320%,240% 240%;opacity:0}
+}
 @media (prefers-reduced-motion:no-preference){ .hero.pulse .hero-pulse{ animation:pulseShock 6.5s cubic-bezier(.22,.7,.15,1) infinite } }
 
 /* webview hardening & reduced modes */
@@ -203,14 +230,13 @@ header.site{
   .hero img{ opacity:1!important }
   .hero.pulse .hero-pulse{ display:none!important }
 }
-
 @media (max-width:740px){ .hero img{ max-height:56vh } }
 @media (max-width:420px){ .hero:not([data-fit="contain"]) img{ object-fit:contain } }
 
 .hero-grid{ position:absolute; inset:0; pointer-events:none; opacity:.18 }
 .sigil-line{ height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); opacity:.65 }
 
-/* hero toolbar + fullscreen zoom */
+/* hero toolbar + fullscreen zoom (Codex.js may inject buttons) */
 .hero-ui{
   position:absolute; right:12px; bottom:12px; display:flex; gap:8px; z-index:3;
   backdrop-filter:saturate(140%) blur(6px);
@@ -221,8 +247,9 @@ header.site{
   color:var(--ink); padding:6px 10px; border-radius:10px; font:600 13px/1 Inter; cursor:pointer;
 }
 .hero-btn:hover{ border-color:#3a3a44 }
+.hero-btn:focus-visible{ outline:2px solid var(--ring); box-shadow:0 0 0 4px var(--ring-outer) }
 .hero.is-zoomed{ position:fixed; inset:0; margin:0; border-radius:0; z-index:9999; background:#0a0a0d; box-shadow:none }
-.hero.is-zoomed img{ height:100vh; max-height:100vh; width:100vw; aspect-ratio:auto; object-fit:contain }
+.hero.is-zoomed img{ height:100svh; max-height:100svh; width:100vw; aspect-ratio:auto; object-fit:contain }
 .hero.is-zoomed .hero-ui{ right:16px; bottom:16px }
 
 /* ------------------------------ Grid System ------------------------------ */
@@ -270,7 +297,30 @@ header.site{
   .card:hover{ box-shadow:0 12px 24px var(--shadow), inset 0 0 28px rgba(122,243,255,.06); transform:translateZ(0) }
 }
 
-/* ------------------------------ Lists, Table, CTA ------------------------------ */
+/* ------------------------------ Typography & Utilities ------------------------------ */
+h1,h2,h3{ color:#fff; margin:8px 0 10px; line-height:1.25; text-shadow:0 0 10px rgba(122,243,255,.08) }
+h2{ font-size:var(--fs-4) } h3{ font-size:var(--fs-3) }
+p{ margin:8px 0 10px }
+.meta{ color:var(--muted); font-size:var(--fs-0); line-height:1.5 }
+.hint{ color:var(--muted); font-size:.95em }
+
+/* Definition-like looks (for lists used as glossaries) */
+#glossary .list li{ margin:8px 0 }
+
+/* Code & preformatted */
+pre,code,kbd,samp{ font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace }
+pre{
+  background:#0f0f14; color:var(--ink); border:1px solid var(--line); border-radius:12px; padding:12px 14px; overflow:auto;
+  box-shadow:inset 0 0 20px rgba(255,200,107,.03), inset 0 0 0 1px rgba(122,243,255,.14);
+}
+code{ background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); padding:.1em .35em; border-radius:6px }
+kbd{ background:#11131a; border:1px solid #343842; border-bottom-width:3px; padding:.15em .4em; border-radius:6px; box-shadow:inset 0 -2px 0 rgba(0,0,0,.25) }
+
+/* Callouts (optional, in case you add .note/.warn later) */
+.note{ border-left:3px solid var(--accent); padding:.5rem .75rem; background:rgba(122,243,255,.06); border-radius:10px }
+.warn{ border-left:3px solid var(--gold); padding:.5rem .75rem; background:rgba(243,201,122,.08); border-radius:10px }
+
+/* Lists, CTA */
 .list{ margin:0; padding-left:18px }
 .list li{ margin:6px 0 }
 .cta{
@@ -287,7 +337,7 @@ header.site{
 @media (hover:hover){ .cta:hover{ border-color:#3a3a44; transform:translateY(-1px); box-shadow:0 0 18px rgba(122,243,255,.2) } }
 .cta:active{ transform:translateY(0) }
 
-/* Tables */
+/* ------------------------------ Tables ------------------------------ */
 table{
   width:100%; border-collapse:collapse; border:1px solid var(--line);
   border-radius:12px; overflow:hidden; font-size:var(--fs-0);
@@ -300,6 +350,16 @@ thead th{
 }
 tbody td{ border-top:1px solid var(--line); padding:10px 12px; vertical-align:top; color:var(--ink) }
 tbody tr:nth-child(even) td{ background:rgba(255,255,255,.015) }
+
+/* Mobile: switch to horizontal scroll (no data-labels required) */
+@media (max-width: 560px){
+  table{ display:block; width:100%; overflow-x:auto; border-radius:12px }
+  thead, tbody, tr, th, td{ white-space:nowrap }
+}
+
+/* Section-specific tweaks */
+#technology .list li{ margin:8px 0 }
+#constants table td, #constants table th{ font-size:var(--fs-0) }
 
 /* ------------------------------ Equations (MathJax) ------------------------------ */
 .eq{
@@ -320,26 +380,12 @@ tbody tr:nth-child(even) td{ background:rgba(255,255,255,.015) }
 .eq mjx-container{ display:block!important; filter:drop-shadow(0 0 10px rgba(255,200,107,.08)) }
 .eq.eq-on{ outline:1px solid rgba(243,201,122,.22); box-shadow:inset 0 0 24px rgba(255,200,107,.05), var(--glow-gold), var(--glow-cyan) }
 
-/* Protect long inline math */
+/* Long inline math safety */
 p mjx-container[display="inline"], li mjx-container[display="inline"], h3 mjx-container[display="inline"]{
   display:block!important; max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:2px;
 }
 
-/* ------------------------------ Typography & Utilities ------------------------------ */
-h1,h2,h3{ color:#fff; margin:8px 0 10px; line-height:1.25; text-shadow:0 0 10px rgba(122,243,255,.08) }
-h2{ font-size:var(--fs-4) } h3{ font-size:var(--fs-3) }
-p{ margin:8px 0 10px }
-.meta{ color:var(--muted); font-size:var(--fs-0); line-height:1.5 }
-.hint{ color:var(--muted); font-size:.95em }
-
-/* Code blocks */
-pre,code,kbd,samp{ font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace }
-pre{
-  background:#0f0f14; color:var(--ink); border:1px solid var(--line); border-radius:12px; padding:12px 14px; overflow:auto;
-  box-shadow:inset 0 0 20px rgba(255,200,107,.03), inset 0 0 0 1px rgba(122,243,255,.14);
-}
-
-/* Living-tech utilities */
+/* ------------------------------ Living-tech utilities ------------------------------ */
 .badge{
   display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid var(--line);
   border-radius:999px; font-size:var(--fs-0); color:var(--ink);
@@ -385,9 +431,11 @@ footer.footer{ text-align:center; color:var(--muted); margin-top:20px; font-size
 @media (prefers-contrast:more){
   :root{ --line:#3c3c45 }
   .card,.eq,.cta{ border-color:#3c3c45 }
+  a{ text-decoration:underline }
 }
 @media (forced-colors:active){
   .hero,.card,.eq{ outline:1px solid CanvasText }
+  .hero::before,.hero::after{ display:none!important }
 }
 
 /* ------------------------------ Helpers ------------------------------ */
@@ -397,7 +445,7 @@ p,li,td,th{ word-wrap:break-word; overflow-wrap:anywhere }
 /* ------------------------------ Print ------------------------------ */
 @media print{
   :root{ --bg:#fff; --ink:#000; --muted:#333; --line:#ccc }
-  *{ box-shadow:none!important; text-shadow:none!important }
+  *{ box-shadow:none!important; text-shadow:none!important; background-image:none!important }
   body{ background:#fff!important; color:#000!important }
   .wrap{ max-width:100%; padding:0 12mm }
   .hero,.hero-grid,.sigil-line,.mini-toc,header.site,.to-top{ display:none!important }
@@ -405,8 +453,10 @@ p,li,td,th{ word-wrap:break-word; overflow-wrap:anywhere }
   a{ color:#000; text-decoration:underline }
   .cta{ border:1px solid #aaa }
   .goldline,.divider{ background:#ccc!important }
-  .eq{ background:#fff; border:1px solid #ccc }
+  .eq{ background:#fff; border:1px solid #ccc; box-shadow:none!important }
   mjx-container{ filter:none!important }
+  table{ border:1px solid #ccc }
+  thead th{ background:#f4f4f4; color:#000; text-shadow:none }
 }
 
 /* ------------------------------ Scrollbar ------------------------------ */
@@ -417,19 +467,6 @@ p,li,td,th{ word-wrap:break-word; overflow-wrap:anywhere }
     background:#2b2b35; border-radius:10px; border:2px solid #0f0f14;
     box-shadow: inset 0 0 12px rgba(122,243,255,.15);
   }
-}
-
-/* ------------------------------ Section Tweaks ------------------------------ */
-#technology .list li{ margin:8px 0 }
-#constants table td, #constants table th{ font-size:var(--fs-0) }
-
-/* Mobile tables */
-@media (max-width:560px){
-  table thead{ display:none }
-  table,tbody,tr,td{ display:block; width:100% }
-  tbody tr{ border-top:1px solid var(--line); padding:8px 0 }
-  tbody td{ border:0; padding:6px 0 }
-  tbody td::before{ content:attr(data-label) " "; font-weight:600; color:var(--muted); margin-right:8px }
 }
 
 /* ==== Performance accelerators ========================================== */
