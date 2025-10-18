@@ -14,8 +14,10 @@
   const raf  = (fn) => (window.requestAnimationFrame || setTimeout)(fn, 16);
   const caf  = (id) => (window.cancelAnimationFrame || clearTimeout)(id);
 
-  const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const hasIO          = "IntersectionObserver" in window;
+  const mqReduced       = matchMedia("(prefers-reduced-motion: reduce)");
+  const prefersReduced  = mqReduced.matches;
+  const hasIO           = "IntersectionObserver" in window;
+  const hasRO           = "ResizeObserver" in window;
 
   /* Viewport check for legacy fallback */
   const inViewport = (el, thr = 0.9) => {
@@ -31,14 +33,26 @@
   }
 
   // Add rel="noopener noreferrer" where target=_blank for security
+  // and mark off-site links as external for screen readers.
   function hardenExternal() {
+    const hereHost = location.hostname.replace(/^www\./, "");
     $$('a[target="_blank"]').forEach(a => {
       const rel = (a.getAttribute("rel") || "").toLowerCase();
-      if (!/\bnoopener\b/.test(rel) || !/\bnoreferrer\b/.test(rel)) {
-        const parts = new Set(rel.split(/\s+/).filter(Boolean));
-        parts.add("noopener"); parts.add("noreferrer");
-        a.setAttribute("rel", Array.from(parts).join(" "));
-      }
+      const parts = new Set(rel.split(/\s+/).filter(Boolean));
+      parts.add("noopener"); parts.add("noreferrer");
+
+      // External labeling (a11y) if different origin/host
+      try {
+        const u = new URL(a.href, location.href);
+        if (u.hostname.replace(/^www\./, "") !== hereHost) {
+          parts.add("external");
+          if (!a.getAttribute("aria-label") && a.textContent.trim().length) {
+            a.setAttribute("aria-label", `${a.textContent.trim()} (opens in new tab)`);
+          }
+        }
+      } catch(_) { /* ignore bad URLs */ }
+
+      a.setAttribute("rel", Array.from(parts).join(" "));
     });
   }
 
@@ -71,13 +85,6 @@
     // If offline or inside meta in-app browser, keep local image.
     if (!navigator.onLine || isMetaApp) return;
 
-    // Preload the remote; only swap once it's proven to load.
-    const probe = new Image();
-    probe.decoding = "async";
-    probe.loading = "eager";
-    // Some proxies strip referrers; be permissive.
-    probe.referrerPolicy = "no-referrer";
-    // Try to decode first so swap is seamless.
     const swapToRemote = () => {
       // Provide srcset/sizes when we upgrade for better density handling
       img.src = REMOTE;
@@ -86,7 +93,12 @@
       // Keep the "ready" class (already applied) to avoid fade-in flicker
     };
 
-    // If the image loads, decode (if supported) before swapping.
+    // Preload the remote; only swap once it's proven to load.
+    const probe = new Image();
+    probe.decoding = "async";
+    probe.loading = "eager";
+    probe.referrerPolicy = "no-referrer";
+
     on(probe, "load", () => {
       if (typeof probe.decode === "function") {
         probe.decode().then(swapToRemote).catch(swapToRemote);
@@ -95,19 +107,39 @@
       }
     }, { once: true });
 
-    // If loading fails, quietly keep the local banner.
-    on(probe, "error", () => { /* no-op */ }, { once: true });
+    on(probe, "error", () => { /* quietly keep local */ }, { once: true });
 
-    // Kick off probe
     probe.src = REMOTE;
+
+    // If the user comes back online later, try again once.
+    const retryOnce = () => {
+      off(window, "online", retryOnce);
+      if (img && img.src !== REMOTE) {
+        probe.src = REMOTE + "&r=" + Date.now(); // cache-bust
+      }
+    };
+    on(window, "online", retryOnce, { once: true });
   }
 
   /* --------------------------- MathJax helpers ------------------------- */
+  // Typeset when MathJax is ready (supports both v3 sync & async).
   function typesetSoon(delay = 80) {
-    if (!window.MathJax || !window.MathJax.typeset) return;
-    setTimeout(() => {
-      try { window.MathJax.typeset(); } catch (_) { /* ignore */ }
-    }, delay);
+    const mj = window.MathJax;
+    if (!mj) return;
+    const run = () => {
+      try { mj.typeset && mj.typeset(); } catch (_) { /* ignore */ }
+    };
+    if (mj.startup && mj.startup.promise) {
+      mj.startup.promise.then(() => setTimeout(run, delay));
+    } else {
+      setTimeout(run, delay);
+    }
+  }
+
+  /* Re-typeset on font load (prevents occasional reflow clipping on iOS) */
+  function typesetOnFontsReady() {
+    if (!document.fonts || !document.fonts.ready) return;
+    document.fonts.ready.then(() => typesetSoon(50)).catch(() => {});
   }
 
   /* -------------------------- reveal-on-scroll ------------------------- */
@@ -123,7 +155,7 @@
             io.unobserve(e.target);
           }
         }
-      }, { root: null, rootMargin: "0px 0px -12%" });
+      }, { root: null, rootMargin: "0px 0px -12%", threshold: 0.08 });
       cards.forEach(el => io.observe(el));
       return;
     }
@@ -162,7 +194,7 @@
             io.unobserve(e.target);
           }
         }
-      }, { root: null, rootMargin: "0px 0px -10%" });
+      }, { root: null, rootMargin: "0px 0px -10%", threshold: 0.06 });
       blocks.forEach(el => io.observe(el));
       return;
     }
@@ -206,10 +238,36 @@
       on(card, "blur", reset, true);
       on(card, "touchstart", reset, { passive: true }); // avoid tilt on touch
     });
+
+    // If user toggles reduced motion at runtime, disable tilt immediately.
+    const rmListener = (e) => {
+      if (e.matches) {
+        $$(".card").forEach(c => { c.style.transform = ""; });
+      }
+    };
+    on(mqReduced, "change", rmListener);
+  }
+
+  /* ----------------------------- anchors a11y -------------------------- */
+  // Ensure in-page anchor navigation moves programmatic focus to target
+  // so screen readers announce headings.
+  function focusAnchors() {
+    on(document, "click", (ev) => {
+      const a = ev.target.closest("a[href^='#']");
+      if (!a) return;
+      const id = a.getAttribute("href").slice(1);
+      if (!id) return;
+      const tgt = document.getElementById(id);
+      if (tgt) {
+        // Make focusable if needed, then focus without scroll jump.
+        if (!tgt.hasAttribute("tabindex")) tgt.setAttribute("tabindex", "-1");
+        tgt.focus({ preventScroll: true });
+      }
+    });
   }
 
   /* ------------------------------- boot -------------------------------- */
-  on(document, "DOMContentLoaded", () => {
+  function boot() {
     setYear();
     hardenExternal();
     initBanner();
@@ -217,5 +275,34 @@
     activateEquations();
     tiltCards();
     typesetSoon(250);
+    typesetOnFontsReady();
+    focusAnchors();
+  }
+
+  // Standard load
+  on(document, "DOMContentLoaded", boot);
+
+  // Handle bfcache restores on Safari/Firefox (pageshow with persisted=true)
+  on(window, "pageshow", (e) => {
+    if (e && e.persisted) {
+      // Re-run light init that can stale across bfcache
+      setYear();
+      initBanner();
+      typesetSoon(100);
+    }
   });
+
+  // Resize: if a container width change could affect MathJax line breaks, re-typeset.
+  if (hasRO) {
+    const ro = new ResizeObserver(() => typesetSoon(120));
+    $$(".eq").forEach(el => ro.observe(el));
+  } else {
+    // Throttled fallback
+    let wait = false;
+    on(window, "resize", () => {
+      if (wait) return;
+      wait = true;
+      setTimeout(() => { wait = false; typesetSoon(120); }, 200);
+    }, { passive: true });
+  }
 })();
