@@ -525,3 +525,37 @@ p, li, td, th { word-wrap: break-word; overflow-wrap: anywhere; }
 @supports not (mask-image: linear-gradient(#000, #000)) {
   .hero, .hero > img { -webkit-mask-image: none; mask-image: none; }
 }
+
+
+/* --- In-app browser & no-JS fallbacks: force the hero image visible --- */
+.hero > img { opacity: 1; transition: opacity .35s var(--ease); }
+
+/* iOS/WebKit & many in-app webviews (FB/IG/Messenger) */
+@supports (-webkit-touch-callout: none) {
+  .hero > img { opacity: 1 !important; filter: none !important; }
+}
+
+/* Data-saver & accessibility modes */
+@media (prefers-reduced-data: reduce), (prefers-reduced-motion: reduce) {
+  .hero::after { animation: none !important; }
+  .hero > img    { opacity: 1 !important; }
+}
+
+/* Safety: even if a “loading” class never flips, keep it visible */
+.hero:not(.force-fade) > img { opacity: 1 !important; }
+
+
+
+/* Keep from earlier, but strengthen the edge blending for webviews */
+.hero::before{
+  background:
+    linear-gradient(to right, rgba(11,11,15,.92), transparent 7%, transparent 93%, rgba(11,11,15,.92)),
+    linear-gradient(to bottom, rgba(11,11,15,.9), transparent 10%, transparent 90%, rgba(11,11,15,.9));
+  mix-blend-mode: multiply;
+  opacity: .95;
+}
+
+/* If Messenger forces contain/odd aspect, still look clean */
+@media (max-width: 480px){
+  .hero > img{ object-fit: contain; background:#0e0e12; }
+}
