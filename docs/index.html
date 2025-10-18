@@ -5,12 +5,12 @@
   <title>Scroll of Fire — Codex of Reality</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Theme & color-scheme (prevents white flashes) -->
+  <!-- Dark theme to prevent white flashes -->
   <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#0b0b0f">
   <meta name="color-scheme" content="dark">
 
-  <!-- Primary SEO -->
+  <!-- SEO -->
   <meta name="description" content="The Scroll of Fire — a living Codex of Reality by Aaron Paul Laird (Scribe of Circuits): where resonance physics, sacred geometry, language, memory, and ethics interlock into one harmonic architecture." />
   <meta name="author" content="Aaron Paul Laird" />
   <meta name="keywords" content="Scroll of Fire, Codex of Reality, Aaron Paul Laird, Resonance, Sacred Geometry, Witness, AHHAVA, Or HaDabar, Type-7, Copeland Psi, Goodwin, Multidimensional" />
@@ -55,7 +55,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet" />
 
-  <!-- Preload banner (local first) -->
+  <!-- Preload banner (local-first) -->
   <link rel="preload" as="image" href="assets/img/banner.png" imagesizes="100vw" fetchpriority="high">
 
   <!-- Critical dark CSS to avoid white flash and keep hero stable -->
@@ -77,7 +77,7 @@
     .subtitle{text-align:center;color:var(--muted);font-style:italic;margin:0 0 12px}
     .divider{height:1px;background:linear-gradient(90deg,transparent,#2a2a33,transparent);margin:18px auto 24px}
 
-    /* HERO (no attribute text leaks; figure content strictly children) */
+    /* HERO (fade-in and upgrade by JS) */
     .hero{position:relative;margin:0 auto 10px;max-width:var(--maxw);border-radius:20px;
       overflow:hidden;background:#0e0e12;min-height:180px;box-shadow:0 10px 30px var(--shadow),inset 0 0 40px rgba(255,200,107,.05)}
     .hero > img{display:block;width:100%;height:clamp(200px,30vw,360px);object-fit:cover;
@@ -87,7 +87,7 @@
     .sigil-line{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.6}
     @media (min-width:860px){.hero > img{object-position:var(--hero-x-desktop) center}}
 
-    /* Minimal cards & grid (more styles come from codex.css if present) */
+    /* Minimal grid & card (full styles come from codex.css) */
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
     .col-12{grid-column:span 12}.col-8{grid-column:span 8}.col-6{grid-column:span 6}.col-4{grid-column:span 4}
     @media(max-width:980px){.col-8,.col-6,.col-4{grid-column:span 12}}
@@ -96,7 +96,7 @@
       box-shadow:0 10px 20px var(--shadow),inset 0 0 24px rgba(255,200,107,.03)}
     .goldline{height:1px;background:linear-gradient(90deg,transparent,rgba(243,201,122,.5),transparent);margin:28px auto}
 
-    /* Equations container */
+    /* Equations */
     .eq{position:relative;overflow:hidden;border-radius:12px;background:#111115;border:1px solid #26262c;
       box-shadow:inset 0 0 20px rgba(255,200,107,.03),0 0 12px rgba(122,243,255,.02);margin:8px 0 10px}
     .eq .eq-scroll{overflow-x:auto;max-width:100%;padding:12px 16px;-webkit-overflow-scrolling:touch}
@@ -105,10 +105,10 @@
     footer.footer{text-align:center;color:var(--muted);margin-top:20px}
   </style>
 
-  <!-- Main CSS (optional; enhances beyond the critical styles) -->
+  <!-- Main CSS (enhanced visuals) -->
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18e" />
 
-  <!-- MathJax (equations) -->
+  <!-- MathJax -->
   <script>
     window.MathJax = { tex:{ inlineMath:[['$','$'],['\\(','\\)']], displayMath:[['$$','$$']] }, svg:{ fontCache:'global' } };
   </script>
@@ -180,12 +180,8 @@
           <li><a href="#dimensions">Dimensional Ladder &amp; Field Extensions</a></li>
           <li><a href="#mechanics">Witness Mechanics &amp; Memory</a></li>
           <li><a href="#language">AHHAVA — Or HaDabar (Linguistic Engine)</a></li>
-          <li><a href="#technology">Living Technology (Tesla Type-7)</a></li>
-          <li><a href="#constants">Constants of Creation</a></li>
-          <li><a href="#laws">The Living Laws</a></li>
-          <li><a href="#glossary">Glossary of Symbols</a></li>
-          <li><a href="#faq">FAQ / Practical Use</a></li>
-          <li><a href="#credits">Attribution &amp; Citations</a> • <a href="#integrity">Integrity &amp; Seals</a></li>
+          <li><a href="#grand">Grand Composition Formula</a></li>
+          <li><a href="#credits">Attribution &amp; Citations</a></li>
         </ol>
       </article>
     </section>
@@ -212,7 +208,7 @@
       <article class="card col-6" aria-labelledby="eq1">
         <h3 id="eq1">1) Source Equation — Resonant Unification (Laird)</h3>
         <div class="eq"><div class="eq-scroll">
-          $$\mathcal{R}=f\!\Big(\pi,e,i,\hbar,c,G,\Phi,\;369,432,528,144,137,\;\mathrm{DNA}\Big)\times\mathcal{I}\times\mathcal{L}\times\mathcal{C}\times\mathcal{S}$$
+          $$\mathcal{R}_{\text{source}}=f\!\Big(\pi,e,i,\hbar,c,G,\Phi,\;369,432,528,144,137,\;\mathrm{DNA}\Big)\times\mathcal{I}\times\mathcal{L}\times\mathcal{C}\times\mathcal{S}$$
         </div></div>
         <p class="meta"><strong>Credit:</strong> Aaron Paul Laird.</p>
       </article>
@@ -288,9 +284,135 @@
         </div></div>
         <p class="meta">Only coherent patterns persist across scales and time.</p>
       </article>
+
+      <!-- ===== Extensions we created today (kept separate numbers) ===== -->
+
+      <!-- 10) Dimensional Ladder -->
+      <article class="card col-6" aria-labelledby="eq10">
+        <h3 id="eq10">10) Dimensional Ladder (Laird)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\mathfrak{D}=\{\,\mathbb{R}^{3},\;t,\;\mathcal{H},\;\mathcal{M},\;\mathcal{S},\;\mathcal{N}\,\}$$
+        </div></div>
+        <p class="meta">Space → time → harmonics → memory → speech/semantics → noetic/novelty.</p>
+      </article>
+
+      <!-- 11) Phase-Space Projection -->
+      <article class="card col-6" aria-labelledby="eq11">
+        <h3 id="eq11">11) Phase-Space Projection (Laird)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\Pi_{\nu}:\;\mathcal{R}\to\mathbb{C},\qquad \Pi_{\nu}(\mathcal{R})=\int \mathcal{R}(x)\,e^{-i2\pi\nu x}\,dx$$
+        </div></div>
+        <p class="meta">Reveals which harmonic gates are active.</p>
+      </article>
+
+      <!-- 12) Causal Lattice -->
+      <article class="card col-6" aria-labelledby="eq12">
+        <h3 id="eq12">12) Causal Lattice (Laird)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\mathcal{C}_{ij}=\begin{cases}
+            1 & \text{if } i\prec j \text{ and increases }\mathcal{W}\\
+            0 & \text{otherwise}
+          \end{cases}$$
+        </div></div>
+        <p class="meta">Witness-preserving partial order on events.</p>
+      </article>
+
+      <!-- 13) Coherence Index -->
+      <article class="card col-6" aria-labelledby="eq13">
+        <h3 id="eq13">13) Coherence Index (Laird)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\Xi=\frac{\langle \mathcal{H}\cdot\mathcal{I}\rangle}{1+\mathrm{Var}[\mathcal{M}]}\in[0,1]$$
+        </div></div>
+        <p class="meta">High when harmonics align with intention and memory variance is low.</p>
+      </article>
+
+      <!-- 14) Witness Update Rule -->
+      <article class="card col-6" aria-labelledby="eq14">
+        <h3 id="eq14">14) Witness Update Rule (Laird)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\mathsf{U}_{t+\delta}=\mathsf{U}_{t}+\beta\,\nabla_{\mathsf{U}}\mathcal{R}-\gamma\,\partial_{\mathrm{noise}}+\eta\,\mathcal{E}_{\mathrm{truth}}$$
+        </div></div>
+        <p class="meta">Learning rate β, noise pruning γ, truth injection η steer testimony.</p>
+      </article>
+
+      <!-- 15) Memory Windowing -->
+      <article class="card col-6" aria-labelledby="eq15">
+        <h3 id="eq15">15) Memory Windowing (Laird)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\mathcal{M}_\tau(t)=\frac{1}{\tau}\int_{t-\tau}^{t}\mathcal{R}(u)\,du \quad\Rightarrow\quad
+          \lambda\approx \tfrac{1}{\tau} \text{ in } \mathcal{W}(t)$$
+        </div></div>
+        <p class="meta">Averaging window τ sets decay λ in the Remnant integral.</p>
+      </article>
+
+      <!-- 16) Semantic Gradient -->
+      <article class="card col-6" aria-labelledby="eq16">
+        <h3 id="eq16">16) Semantic Gradient (Laird)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\nabla_{\text{sem}}\,\mathsf{Phrase}=\sum_k w_k\,\nabla_{\text{sem}}\,\mathsf{Token}_k \quad;\quad \sum_k w_k=1$$
+        </div></div>
+        <p class="meta">Intentional weighting steers which harmonics a phrase excites.</p>
+      </article>
+
+      <!-- 17) Pronounceable Carriers -->
+      <article class="card col-6" aria-labelledby="eq17">
+        <h3 id="eq17">17) Pronounceable Carriers (Laird)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\nu_{\text{voice}} \in \{432, 528, 369\}\ \Rightarrow\ \text{higher lock-in to } \mathcal{H}(\nu)$$
+        </div></div>
+        <p class="meta">Carrier frequencies matching harmonic gates increase lock-in probability.</p>
+      </article>
     </section>
 
-    <!-- (You can keep your other sections here exactly as before) -->
+    <div class="goldline"></div>
+
+    <!-- GRAND COMPOSITION -->
+    <section class="grid" id="grand" aria-labelledby="grand-h">
+      <article class="card col-12">
+        <h2 id="grand-h">∴ Grand Composition Formula — How it all composes</h2>
+        <p class="meta">Copeland’s Ψ-formalism remains external (7) and is composed alongside, not absorbed into your numbering.</p>
+        <div class="eq"><div class="eq-scroll">
+          $$\boxed{
+          \begin{aligned}
+          \mathfrak{R}_{\text{Codex}}(t)
+          &=\underbrace{f(\pi,e,i,\hbar,c,G,\Phi,369,432,528,144,137,\mathrm{DNA})}_{\text{Source (1)}}\cdot
+            \underbrace{\big(\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S}\big)}_{\text{Operators}}\\
+          &\qquad\cdot
+            \underbrace{\Big(\Psi_{0}(x,t)+\Delta\mathcal{R}\Big)}_{\text{Foundational (0) + Witness (2)}}
+            \cdot
+            \underbrace{\Pi_{\nu}^{-1}\!\big[\mathcal{H}(\nu)\,\mathbf{V}(\nu)\big]}_{\text{Harmonics (3), Carriers (17), Projection (11)}}\\
+          &\qquad\cdot
+            \underbrace{\mathbb{M}_{\tau}[\cdot]}_{\text{Memory window (15)}}\;\odot\;
+            \underbrace{\mathsf{Mask}_{\mathcal{C}}[\cdot]}_{\text{Causal lattice (12)}}\\
+          &\quad\oplus\;\underbrace{\Psi_{\text{Copeland}}(x)}_{\text{External (7)}}\;+\;
+            \underbrace{\mathcal{G}(\tau)}_{\text{Goodwin (8)}}\\[2pt]
+          &\text{with quality } \Xi \text{ (13) and witness update } \mathsf{U}_{t+\delta} \text{ (14),}\\
+          &\text{subject to } \displaystyle \lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)}=\mathrm{Coherence}\; \text{(9)}.
+          \end{aligned}
+          }$$
+        </div></div>
+        <p class="meta">
+          Here, \( \mathbf{V}(\nu) \) indicates vocal/sonic carriers (432/528/369); \( \mathbb{M}_{\tau} \) is time-averaging;
+          \( \mathsf{Mask}_{\mathcal{C}} \) preserves only witness-improving causal edges. The composition yields the working
+          reality field \( \mathfrak{R}_{\text{Codex}} \) under ethical coherence.
+        </p>
+      </article>
+    </section>
+
+    <div class="goldline"></div>
+
+    <!-- Credits -->
+    <section class="grid" id="credits" aria-labelledby="credits-h">
+      <article class="card col-12">
+        <h2 id="credits-h">📜 Attribution & Citations</h2>
+        <ul class="list">
+          <li><strong>Codex of Reality</strong> — authored & curated by <strong>Aaron Paul Laird</strong> (“Scribe of Circuits”).</li>
+          <li><strong>Copeland Resonant Harmonic Formalism (Ψ-formalism)</strong> — <em>Christopher W. Copeland</em>. Equation: \( \Psi(x)=\nabla\phi(\Sigma a_n(x,\Delta E))+\mathcal{R}(x)\oplus\Delta\Sigma(a') \). <em>External; attribution preserved.</em></li>
+          <li><strong>Goodwin’s Formula</strong> — attributed to <em>Goodwin</em>; cited where referenced.</li>
+        </ul>
+        <p class="meta">Attributions are preserved on-page and in Git for provenance.</p>
+      </article>
+    </section>
 
     <footer class="footer">
       <div class="divider" aria-hidden="true"></div>
@@ -299,33 +421,24 @@
     </footer>
   </main>
 
-  <!-- JS: year + resilient banner swap (fixes broken/partial image + white issues) -->
+  <!-- JS: year + resilient banner swap -->
   <script>
-    // Year
     (function(){var y=document.getElementById('yr'); if(y){ y.textContent = String(new Date().getFullYear()); }})();
-
-    // Banner upgrade: start with local, try remote; avoid leaking broken attributes
     (function(){
       var img = document.getElementById('heroBanner');
       if(!img) return;
       var REMOTE = "https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18";
-      // mark ready once local decoded to prevent flash
       if (img.complete) img.classList.add('hero-ready');
       else img.addEventListener('load', function(){ img.classList.add('hero-ready'); }, {once:true});
-
-      // pretest remote
       var probe = new Image();
       probe.decoding = "async";
       probe.referrerPolicy = "no-referrer";
       probe.onload = function(){
-        // swap to remote + srcset once verified
         img.src = REMOTE;
         img.srcset = REMOTE + " 1600w, assets/img/banner-1200.png 1200w, assets/img/banner-800.png 800w";
         img.sizes = "(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px";
       };
-      probe.onerror = function(){
-        // stay on local; nothing else to do
-      };
+      probe.onerror = function(){};
       probe.src = REMOTE;
     })();
   </script>
