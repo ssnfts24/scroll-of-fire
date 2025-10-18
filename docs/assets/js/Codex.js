@@ -1,5 +1,5 @@
 /* ======================================================================
-   Scroll of Fire — Codex.js (v2)
+   Scroll of Fire — Codex.js (v2.1)
    Bulletproof banner • hero toolbar • palette • mini-TOC • a11y/perf
    ====================================================================== */
 (() => {
@@ -69,7 +69,6 @@
     };
     const saved = store.get("codex:simple", false);
     apply(!!saved);
-
     [c1,c2].forEach(c=> c && on(c,"change",()=>apply(c.checked)));
   }
 
@@ -79,45 +78,35 @@
     const fig = img && img.closest(".hero");
     if(!img || !fig) return;
 
-    // robust local/remote sources (attr-based, set in HTML)
     const localSrc   = img.getAttribute("data-src-local") || img.getAttribute("src") || "";
     const remoteSrc  = img.getAttribute("data-src-raw")   || "";
     const localSet   = img.getAttribute("data-srcset-local") || "";
     const remoteSet  = img.getAttribute("data-srcset-raw")   || "";
     const sizesAttr  = img.getAttribute("data-sizes") || "(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px";
-    const authorFit  = (img.getAttribute("data-fit")||"").toLowerCase(); // "contain"|"cover"|"" (auto)
+    const authorFit  = (img.getAttribute("data-fit")||"").toLowerCase(); // ""|"contain"|"cover"
     const prefFit    = store.get("codex:hero-fit", authorFit || "auto");
 
-    // apply saved fit first (persisted toolbar pref)
     setHeroFit(fig, prefFit);
 
-    // seed local srcset for first paint
     if (localSet){ img.srcset = localSet; img.sizes = sizesAttr; }
     else if (localSrc){ img.src = localSrc; }
 
-    // make sure we always see *something* (GitHub Raw fallback if error)
-    img.onerror = () => {
-      if (remoteSrc && !img.src.includes(remoteSrc)) {
-        img.src = remoteSrc;
-      } else if (localSrc && !img.src.includes(localSrc)) {
-        img.src = localSrc;
-      }
-    };
+    // hard fallback (silent stalls + errors)
+    let timeoutId = setTimeout(()=>{ if (!img.complete || !img.naturalWidth) { if (remoteSrc) img.src = remoteSrc; } }, 4000);
+    img.onerror = () => { if (remoteSrc && !img.src.includes(remoteSrc)) img.src = remoteSrc; };
+    on(img,"load", ()=> clearTimeout(timeoutId), { once:true });
 
-    // ready class to appease weird in-app browsers
     img.classList.add("hero-ready");
 
     const onLoad = () => checkFitAuto(fig, img, prefFit);
     if (img.complete && img.naturalWidth>0) onLoad(); else on(img,"load",onLoad,{once:true});
 
-    // cautious contexts: skip remote swap
     if (!remoteSrc || isMetaApp || isOffline() || saveD) {
       wireHeroObservers(fig, img, prefFit);
       buildHeroToolbar(fig, img);
       return;
     }
 
-    // probe remote first; only swap when confirmed
     const probe = new Image();
     probe.decoding="async"; probe.loading="eager"; probe.referrerPolicy="no-referrer";
     const swap = ()=> {
@@ -129,7 +118,6 @@
     on(probe,"error",()=>{/* keep local */},{once:true});
     probe.src = remoteSrc;
 
-    // retry once when back online
     const retryOnce = () => {
       window.removeEventListener("online", retryOnce);
       if (img && remoteSrc && !img.src.includes(remoteSrc)) {
@@ -142,13 +130,12 @@
     buildHeroToolbar(fig, img);
   }
 
-  function setHeroFit(fig, mode){ // mode: "cover" | "contain" | "auto"
+  function setHeroFit(fig, mode){ // "cover" | "contain" | "auto"
     fig.dataset.fit = mode;
     fig.classList.toggle("hero--contain", mode==="contain");
     fig.classList.toggle("hero--cover",   mode==="cover");
     store.set("codex:hero-fit", mode);
   }
-
   function parseAspect(expr){
     if (!expr) return null;
     const parts = (""+expr).split("/");
@@ -159,7 +146,6 @@
     const n = parseFloat(expr);
     return Number.isFinite(n) && n>0 ? n : null;
   }
-
   function checkFitAuto(fig, img, pref){
     if (pref==="contain" || pref==="cover") return; // user forced
     const natW = img.naturalWidth  || +img.getAttribute("width")  || 0;
@@ -175,7 +161,6 @@
       store.set("codex:hero-fit", "auto");
     }
   }
-
   function wireHeroObservers(fig, img, pref){
     const reflow = throttleRAF(()=> checkFitAuto(fig, img, pref));
     on(window,"resize",reflow,{passive:true});
@@ -184,9 +169,8 @@
   }
 
   /* ----------------------------- hero toolbar ----------------------------- */
-  function buildHeroToolbar(fig, img){
+  function buildHeroToolbar(fig){
     if ($(".hero-ui", fig)) return;
-
     const ui = document.createElement("div");
     ui.className = "hero-ui";
     ui.innerHTML = `
@@ -196,10 +180,9 @@
     `;
     fig.appendChild(ui);
 
-    // init button labels by state
-    const bFit = $('[data-act="fit"]', ui);
-    const bZoom= $('[data-act="zoom"]', ui);
-    const bPulse=$('[data-act="pulse"]', ui);
+    const bFit   = $('[data-act="fit"]', ui);
+    const bZoom  = $('[data-act="zoom"]', ui);
+    const bPulse = $('[data-act="pulse"]', ui);
 
     const updateFitLabel = ()=>{
       const m = fig.dataset.fit || "auto";
@@ -214,14 +197,12 @@
     on(bFit,"click",()=>{
       const m = fig.dataset.fit || "auto";
       const next = (m==="contain" ? "cover" : "contain");
-      setHeroFit(fig, next);
-      updateFitLabel();
+      setHeroFit(fig, next); updateFitLabel();
     });
     on(bZoom,"click",()=>{
       fig.classList.toggle("is-zoomed");
       bZoom.textContent = fig.classList.contains("is-zoomed") ? "Close" : "Zoom";
-      if (fig.classList.contains("is-zoomed")) document.documentElement.style.overflow="hidden";
-      else document.documentElement.style.overflow="";
+      document.documentElement.style.overflow = fig.classList.contains("is-zoomed") ? "hidden" : "";
     });
     on(bPulse,"click",()=>{
       const nowOn = !fig.classList.contains("pulse");
@@ -230,15 +211,14 @@
       store.set("codex:hero-pulse", nowOn);
     });
 
-    // restore pulse pref
     const pulsePref = store.get("codex:hero-pulse", true);
-    fig.classList.toggle("pulse", !!pulsePref);
-    updatePulseState();
+    fig.classList.toggle("pulse", !!pulsePref); updatePulseState();
 
-    // close zoom on ESC
     on(document,"keydown",(e)=>{
       if (e.key==="Escape" && fig.classList.contains("is-zoomed")){
-        fig.classList.remove("is-zoomed"); bZoom.textContent="Zoom"; document.documentElement.style.overflow="";
+        fig.classList.remove("is-zoomed");
+        bZoom.textContent="Zoom";
+        document.documentElement.style.overflow="";
       }
     });
   }
@@ -356,7 +336,6 @@
 
   /* ----------------------------- command palette --------------------------- */
   function palette(){
-    // shell markup (CSS already supports .palette)
     let shell = $(".palette");
     if (!shell){
       shell = document.createElement("div");
@@ -368,17 +347,38 @@
         </div>`;
       document.body.appendChild(shell);
     }
-    const input = $("input", shell), list = $("ul", shell);
+    const input = $("input", shell);
+    const list  = $("ul", shell);
 
-    // data: sections + quick links
+    // static list of items from headings + a few quick links
     const items = [];
     $$("main h2[id], main h3[id]").forEach(h=>{
       items.push({label:h.textContent.trim(), href:"#"+h.id});
     });
-    // quick links block
     $$(".list a[href]").slice(0,10).forEach(a=>{
       items.push({label:(a.textContent||a.href).trim(), href:a.href});
     });
+
+    // render once, then filter in-place (avoid rebinding handlers repeatedly)
+    let view = []; let idx = 0;
+    const setSel=(n)=>{
+      idx=Math.max(0, Math.min(n, list.children.length-1));
+      [...list.children].forEach((li,i)=> li.classList.toggle("sel", i===idx));
+    };
+    const go=()=>{
+      const li=list.children[idx]; if(!li) return;
+      const it=view[+li.dataset.i]; close();
+      if (it.href.startsWith("#")){
+        const el=document.getElementById(it.href.slice(1));
+        if(el){ el.scrollIntoView({behavior:"smooth", block:"start"}); el.setAttribute("tabindex","-1"); el.focus({preventScroll:true}); }
+      } else { location.href = it.href; }
+    };
+    const render = (q)=>{
+      const qq = q.toLowerCase().trim();
+      view = items.filter(it => !qq || it.label.toLowerCase().includes(qq)).slice(0, 30);
+      list.innerHTML = view.map((it,i)=>`<li data-i="${i}" tabindex="0">${it.label}</li>`).join("");
+      setSel(0);
+    };
 
     const open = ()=>{
       shell.classList.add("open");
@@ -390,40 +390,25 @@
       document.documentElement.style.overflow="";
       input.blur();
     };
-    const render = (q)=>{
-      const qq = q.toLowerCase().trim();
-      const rows = items.filter(it => !qq || it.label.toLowerCase().includes(qq)).slice(0, 30);
-      list.innerHTML = rows.map((it,i)=>`<li data-i="${i}" tabindex="0">${it.label}</li>`).join("");
-      // keyboard nav
-      let idx=0; const setSel=(n)=>{
-        idx=Math.max(0, Math.min(n, list.children.length-1));
-        [...list.children].forEach((li,i)=> li.classList.toggle("sel", i===idx));
-      };
-      setSel(0);
-      const go=()=>{
-        const li=list.children[idx]; if(!li) return;
-        const it=rows[+li.dataset.i]; close();
-        if (it.href.startsWith("#")){
-          const el=document.getElementById(it.href.slice(1));
-          if(el){ el.scrollIntoView({behavior:"smooth", block:"start"}); el.setAttribute("tabindex","-1"); el.focus({preventScroll:true}); }
-        } else { location.href = it.href; }
-      };
-      on(list, "click", (e)=>{ const li=e.target.closest("li"); if(li){ idx=[...list.children].indexOf(li); go(); } });
-      on(input, "keydown", (e)=>{
-        if (e.key==="ArrowDown"){ e.preventDefault(); setSel(idx+1); }
-        else if (e.key==="ArrowUp"){ e.preventDefault(); setSel(idx-1); }
-        else if (e.key==="Enter"){ e.preventDefault(); go(); }
-        else if (e.key==="Escape"){ e.preventDefault(); close(); }
-      });
-    };
 
+    // bind once
+    on(list, "click", (e)=>{ const li=e.target.closest("li"); if(li){ idx=[...list.children].indexOf(li); go(); } });
+    on(input, "keydown", (e)=>{
+      if (e.key==="ArrowDown"){ e.preventDefault(); setSel(idx+1); }
+      else if (e.key==="ArrowUp"){ e.preventDefault(); setSel(idx-1); }
+      else if (e.key==="Enter"){ e.preventDefault(); go(); }
+      else if (e.key==="Escape"){ e.preventDefault(); close(); }
+    });
+    on(input, "input", ()=> render(input.value));
     on(document, "keydown", (e)=>{
       const meta = e.ctrlKey || e.metaKey;
       if (meta && (e.key==="k" || e.key==="K")){ e.preventDefault(); shell.classList.contains("open") ? close() : open(); }
       if (e.key==="Escape" && shell.classList.contains("open")){ close(); }
     });
-    on(shell, "click", (e)=>{ if (e.target === shell) { /* backdrop */ shell.classList.remove("open"); document.documentElement.style.overflow=""; }});
-    on(input, "input", ()=> render(input.value));
+    on(shell, "click", (e)=>{ if (e.target === shell) close(); });
+
+    // initial build
+    render("");
   }
 
   /* ------------------------------ anchor focus ----------------------------- */
