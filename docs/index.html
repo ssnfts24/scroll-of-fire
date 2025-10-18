@@ -179,27 +179,37 @@
 
   <main class="wrap">
     <!-- HERO (PNG only; bullet-proof fallback to GitHub Raw on error/timeouts) -->
-    <figure class="hero hero--cover" aria-label="Scroll of Fire — Codex of Reality Banner">
-      <img id="heroBanner"
-           src="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
-           alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
-           width="1600" height="900"
-           loading="eager" decoding="async" fetchpriority="high"
-           style="aspect-ratio:16/9">
-      <span class="hero-pulse" aria-hidden="true"></span>
-      <svg class="hero-grid" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
-        <defs><pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse">
-          <path d="M5 0V5 M0 5H5" vector-effect="non-scaling-stroke" />
-        </pattern></defs>
-        <rect width="100%" height="100%" fill="url(#grid)"></rect>
-      </svg>
-      <div class="sigil-line" aria-hidden="true"></div>
-      <noscript>
-        <img src="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
-             alt="Scroll of Fire — Codex of Reality banner" width="1600" height="900">
-      </noscript>
-    </figure>
+    <!-- HERO -->
+<figure id="hero" class="hero has-effects" data-fit="cover" aria-label="Scroll of Fire — Codex of Reality Banner">
+  <img id="heroBanner"
+       src="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
+       alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
+       width="1600" height="900" loading="eager" decoding="async" fetchpriority="high" />
 
+  <!-- overlay controls -->
+  <div class="hero-ui" role="toolbar" aria-label="Banner controls">
+    <button type="button" id="heroFit" class="hero-btn" aria-pressed="false" title="Toggle fit">
+      Fit: <span data-fit-label>cover</span>
+    </button>
+    <button type="button" id="heroZoom" class="hero-btn" title="View full screen">Fullscreen</button>
+  </div>
+
+  <!-- visual HUD -->
+  <span class="hero-pulse" aria-hidden="true"></span>
+  <svg class="hero-grid" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
+    <defs><pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse">
+      <path d="M5 0V5 M0 5H5" vector-effect="non-scaling-stroke" />
+    </pattern></defs>
+    <rect width="100%" height="100%" fill="url(#grid)"></rect>
+  </svg>
+  <div class="sigil-line" aria-hidden="true"></div>
+
+  <noscript>
+    <img src="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png" alt="Scroll of Fire — Codex of Reality banner" width="1600" height="900">
+  </noscript>
+</figure>
+
+    
     <script>
       /* Hard fallback for the hero banner: if the local PNG fails or is blocked, swap to Raw. */
       (function(){
