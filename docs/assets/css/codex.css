@@ -1,76 +1,221 @@
-/* === Scroll of Fire — Codex.js ============================================ */
+/* ======================================================================
+   Scroll of Fire — Codex.js
+   (robust banner swap, equation activation, reveal effects, a11y hardening)
+   ====================================================================== */
 (function () {
   "use strict";
-  const $=(s,r=document)=>r.querySelector(s);
-  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const prefersReduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const inViewport=(el,thr=0.9)=>{const r=el.getBoundingClientRect();const vh=window.innerHeight||document.documentElement.clientHeight;return r.top<vh*thr&&r.bottom>0;};
+  /* ---------------------------- tiny helpers --------------------------- */
+  const $  = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
-  function setYear(){const y=$("#yr"); if(y) y.textContent=String(new Date().getFullYear());}
-  function hardenExternal(){ $$('a[target="_blank"]').forEach(a=>{const rel=(a.getAttribute("rel")||"").toLowerCase(); if(!rel.includes("noopener")) a.setAttribute("rel",(rel?rel+" ":"")+"noopener");}); }
+  const on   = (t, e, f, o) => t.addEventListener(e, f, o);
+  const off  = (t, e, f, o) => t.removeEventListener(e, f, o);
+  const raf  = (fn) => (window.requestAnimationFrame || setTimeout)(fn, 16);
+  const caf  = (id) => (window.cancelAnimationFrame || clearTimeout)(id);
 
-  function initBanner(){
-    const img=$("#heroBanner"); if(!img) return;
-    const remote=img.getAttribute("data-src-raw"); if(!remote) return;
-    const ua=navigator.userAgent||""; const isMeta=/FBAN|FBAV|Facebook|Instagram|FB_IAB|FBAN\/Messenger/i.test(ua);
-    if(isMeta) return; // stick with local image in in-app browsers
+  const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const hasIO          = "IntersectionObserver" in window;
 
-    const probe=new Image(); probe.decoding="async"; probe.loading="eager"; probe.src=remote;
-    probe.addEventListener("load",()=>{ img.src=remote; },{once:true});
-    // if it errors, we keep local silently
+  /* Viewport check for legacy fallback */
+  const inViewport = (el, thr = 0.9) => {
+    const r = el.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    return r.top < vh * thr && r.bottom > 0;
+  };
+
+  /* ----------------------- global small utilities ---------------------- */
+  function setYear() {
+    const y = $("#yr");
+    if (y) y.textContent = String(new Date().getFullYear());
   }
 
-  function typesetSoon(){ if(!window.MathJax) return; try{ window.MathJax.typeset && window.MathJax.typeset(); }catch(_){} }
-
-  function revealOnScroll(){
-    const t=$$(".card"); if(!t.length) return;
-    if(!prefersReduced && "IntersectionObserver" in window){
-      const io=new IntersectionObserver(es=>{ for(const e of es){ if(e.isIntersecting){ e.target.classList.add("visible"); io.unobserve(e.target); } } },{root:null,rootMargin:"0px 0px -12%"});
-      t.forEach(el=>io.observe(el));
-    }else{
-      const tick=()=>t.forEach(el=>inViewport(el)&&el.classList.add("visible"));
-      let ticking=false; const onS=()=>{ if(!ticking){ ticking=true; requestAnimationFrame(()=>{ tick(); ticking=false; }); } };
-      window.addEventListener("scroll",onS,{passive:true}); window.addEventListener("load",tick); tick();
-    }
-  }
-
-  function activateEquations(){
-    const eqs=$$(".eq"); if(!eqs.length) return;
-    const act=el=>{ if(!el.classList.contains("eq-on")){ el.classList.add("eq-on"); setTimeout(typesetSoon,80); } };
-    if(!prefersReduced && "IntersectionObserver" in window){
-      const io=new IntersectionObserver(es=>{ for(const e of es){ if(e.isIntersecting){ act(e.target); io.unobserve(e.target); } } },{root:null,rootMargin:"0px 0px -10%"});
-      eqs.forEach(el=>io.observe(el));
-    }else{
-      const tick=()=>eqs.forEach(el=>inViewport(el,0.94)&&act(el));
-      let ticking=false; const onS=()=>{ if(!ticking){ ticking=true; requestAnimationFrame(()=>{ tick(); ticking=false; }); } };
-      window.addEventListener("scroll",onS,{passive:true}); window.addEventListener("load",tick); tick();
-    }
-  }
-
-  function tiltCards(){
-    if(prefersReduced) return;
-    $$(".card").forEach(card=>{
-      let raf=0;
-      const onMove=e=>{
-        const r=card.getBoundingClientRect(); const x=(e.clientX-r.left)/r.width; const y=(e.clientY-r.top)/r.height;
-        cancelAnimationFrame(raf);
-        raf=requestAnimationFrame(()=>{ const rx=(0.5-y)*4; const ry=(x-0.5)*6; card.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`; });
-      };
-      const reset=()=>card.style.transform="";
-      card.addEventListener("mousemove",onMove);
-      card.addEventListener("mouseleave",reset);
-      card.addEventListener("blur",reset,true);
+  // Add rel="noopener noreferrer" where target=_blank for security
+  function hardenExternal() {
+    $$('a[target="_blank"]').forEach(a => {
+      const rel = (a.getAttribute("rel") || "").toLowerCase();
+      if (!/\bnoopener\b/.test(rel) || !/\bnoreferrer\b/.test(rel)) {
+        const parts = new Set(rel.split(/\s+/).filter(Boolean));
+        parts.add("noopener"); parts.add("noreferrer");
+        a.setAttribute("rel", Array.from(parts).join(" "));
+      }
     });
   }
 
-  document.addEventListener("DOMContentLoaded",()=>{
+  /* ---------------------------- banner logic --------------------------- */
+  /**
+   * Local-first banner that upgrades to remote once verified loaded.
+   * Avoids broken-image states, in-app browser quirks, and white flashes.
+   */
+  function initBanner() {
+    const img = $("#heroBanner");
+    if (!img) return;
+
+    // If HTML provides a data-src-raw use it, else fall back to canonical remote.
+    const remoteFromAttr = img.getAttribute("data-src-raw");
+    const REMOTE_FALLBACK =
+      "https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18";
+    const REMOTE = remoteFromAttr || REMOTE_FALLBACK;
+
+    // Workaround: some in-app browsers (Meta, IG, Messenger) have CORS / caching quirks.
+    const ua = navigator.userAgent || "";
+    const isMetaApp = /FBAN|FBAV|Facebook|Instagram|FB_IAB|FBAN\/Messenger/i.test(ua);
+
+    // Mark the current (local) image "ready" once decoded to prevent flash.
+    if (img.complete && img.naturalWidth > 0) {
+      img.classList.add("hero-ready");
+    } else {
+      on(img, "load", () => img.classList.add("hero-ready"), { once: true });
+    }
+
+    // If offline or inside meta in-app browser, keep local image.
+    if (!navigator.onLine || isMetaApp) return;
+
+    // Preload the remote; only swap once it's proven to load.
+    const probe = new Image();
+    probe.decoding = "async";
+    probe.loading = "eager";
+    // Some proxies strip referrers; be permissive.
+    probe.referrerPolicy = "no-referrer";
+    // Try to decode first so swap is seamless.
+    const swapToRemote = () => {
+      // Provide srcset/sizes when we upgrade for better density handling
+      img.src = REMOTE;
+      img.srcset = `${REMOTE} 1600w, assets/img/banner-1200.png 1200w, assets/img/banner-800.png 800w`;
+      img.sizes = "(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px";
+      // Keep the "ready" class (already applied) to avoid fade-in flicker
+    };
+
+    // If the image loads, decode (if supported) before swapping.
+    on(probe, "load", () => {
+      if (typeof probe.decode === "function") {
+        probe.decode().then(swapToRemote).catch(swapToRemote);
+      } else {
+        swapToRemote();
+      }
+    }, { once: true });
+
+    // If loading fails, quietly keep the local banner.
+    on(probe, "error", () => { /* no-op */ }, { once: true });
+
+    // Kick off probe
+    probe.src = REMOTE;
+  }
+
+  /* --------------------------- MathJax helpers ------------------------- */
+  function typesetSoon(delay = 80) {
+    if (!window.MathJax || !window.MathJax.typeset) return;
+    setTimeout(() => {
+      try { window.MathJax.typeset(); } catch (_) { /* ignore */ }
+    }, delay);
+  }
+
+  /* -------------------------- reveal-on-scroll ------------------------- */
+  function revealOnScroll() {
+    const cards = $$(".card");
+    if (!cards.length) return;
+
+    if (!prefersReduced && hasIO) {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("visible");
+            io.unobserve(e.target);
+          }
+        }
+      }, { root: null, rootMargin: "0px 0px -12%" });
+      cards.forEach(el => io.observe(el));
+      return;
+    }
+
+    // Fallback without IO
+    const tick = () => cards.forEach(el => inViewport(el) && el.classList.add("visible"));
+    let ticking = false;
+    const onS = () => {
+      if (!ticking) {
+        ticking = true;
+        raf(() => { tick(); ticking = false; });
+      }
+    };
+    on(window, "scroll", onS, { passive: true });
+    on(window, "load", tick);
+    tick();
+  }
+
+  /* -------------------------- equation activator ----------------------- */
+  function activateEquations() {
+    const blocks = $$(".eq");
+    if (!blocks.length) return;
+
+    const activate = (el) => {
+      if (!el.classList.contains("eq-on")) {
+        el.classList.add("eq-on");
+        typesetSoon(120);
+      }
+    };
+
+    if (!prefersReduced && hasIO) {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            activate(e.target);
+            io.unobserve(e.target);
+          }
+        }
+      }, { root: null, rootMargin: "0px 0px -10%" });
+      blocks.forEach(el => io.observe(el));
+      return;
+    }
+
+    // Fallback
+    const tick = () => blocks.forEach(el => inViewport(el, 0.94) && activate(el));
+    let ticking = false;
+    const onS = () => {
+      if (!ticking) {
+        ticking = true;
+        raf(() => { tick(); ticking = false; });
+      }
+    };
+    on(window, "scroll", onS, { passive: true });
+    on(window, "load", tick);
+    tick();
+  }
+
+  /* ----------------------------- card tilt ----------------------------- */
+  function tiltCards() {
+    if (prefersReduced) return;
+
+    $$(".card").forEach(card => {
+      let rid = 0;
+      const onMove = (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        caf(rid);
+        rid = raf(() => {
+          const rx = (0.5 - y) * 4;   // rotateX
+          const ry = (x - 0.5) * 6;   // rotateY
+          card.style.transform =
+            `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
+        });
+      };
+      const reset = () => { card.style.transform = ""; };
+
+      on(card, "mousemove", onMove);
+      on(card, "mouseleave", reset);
+      on(card, "blur", reset, true);
+      on(card, "touchstart", reset, { passive: true }); // avoid tilt on touch
+    });
+  }
+
+  /* ------------------------------- boot -------------------------------- */
+  on(document, "DOMContentLoaded", () => {
     setYear();
     hardenExternal();
     initBanner();
     revealOnScroll();
     activateEquations();
     tiltCards();
-    setTimeout(typesetSoon,250);
+    typesetSoon(250);
   });
 })();
