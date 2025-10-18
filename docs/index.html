@@ -1,16 +1,20 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8" />
   <title>Scroll of Fire — Codex of Reality</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <!-- Theme & color-scheme (prevents white flashes) -->
+  <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#0b0b0f">
+  <meta name="color-scheme" content="dark">
+
   <!-- Primary SEO -->
   <meta name="description" content="The Scroll of Fire — a living Codex of Reality by Aaron Paul Laird (Scribe of Circuits): where resonance physics, sacred geometry, language, memory, and ethics interlock into one harmonic architecture." />
   <meta name="author" content="Aaron Paul Laird" />
   <meta name="keywords" content="Scroll of Fire, Codex of Reality, Aaron Paul Laird, Resonance, Sacred Geometry, Witness, AHHAVA, Or HaDabar, Type-7, Copeland Psi, Goodwin, Multidimensional" />
-  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/" />
-  <meta name="theme-color" content="#f3c97a" />
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/"/>
 
   <!-- Open Graph -->
   <meta property="og:site_name" content="Scroll of Fire" />
@@ -29,7 +33,7 @@
   <meta name="twitter:description" content="The Scroll of Fire (Codex of Reality) by Aaron Paul Laird — resonance, intention, light, consciousness, Source." />
   <meta name="twitter:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18" />
 
-  <!-- Schema.org JSON-LD -->
+  <!-- JSON-LD -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -46,71 +50,100 @@
   }
   </script>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18c" />
-
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet" />
 
-  <!-- Preload banner (local + remote) -->
-  <link rel="preload" as="image" href="assets/img/banner.png" imagesizes="100vw" />
-  <link rel="preload" as="image" href="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18" imagesizes="100vw" />
+  <!-- Preload banner (local first) -->
+  <link rel="preload" as="image" href="assets/img/banner.png" imagesizes="100vw" fetchpriority="high">
 
-  <!-- MathJax -->
+  <!-- Critical dark CSS to avoid white flash and keep hero stable -->
+  <style>
+    :root{
+      --bg:#0b0b0f; --ink:#eae7df; --muted:#b8b3a6; --card:#121219; --line:#2a2a33;
+      --gold:#f3c97a; --accent:#7af3ff; --shadow:rgba(0,0,0,.35);
+      --maxw:1180px; --hero-x-mobile:63%; --hero-x-desktop:59%;
+    }
+    html,body{height:100%}
+    body{
+      margin:0;background:#0d0d10;color:var(--ink);
+      font:400 16px/1.6 "Inter",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background-image:radial-gradient(1800px 900px at 50% -10%,#13131a 20%,var(--bg) 70%);
+    }
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:20px 16px 80px}
+    .title{font-family:"Crimson Pro",Georgia,serif;font-weight:800;text-align:center;
+      font-size:clamp(28px,3.6vw,48px);margin:8px 0 4px;letter-spacing:.3px}
+    .subtitle{text-align:center;color:var(--muted);font-style:italic;margin:0 0 12px}
+    .divider{height:1px;background:linear-gradient(90deg,transparent,#2a2a33,transparent);margin:18px auto 24px}
+
+    /* HERO (no attribute text leaks; figure content strictly children) */
+    .hero{position:relative;margin:0 auto 10px;max-width:var(--maxw);border-radius:20px;
+      overflow:hidden;background:#0e0e12;min-height:180px;box-shadow:0 10px 30px var(--shadow),inset 0 0 40px rgba(255,200,107,.05)}
+    .hero > img{display:block;width:100%;height:clamp(200px,30vw,360px);object-fit:cover;
+      object-position:var(--hero-x-mobile) center;opacity:.001;transition:opacity .35s ease}
+    .hero > img.hero-ready{opacity:1}
+    .hero-grid{position:absolute;inset:0;pointer-events:none;opacity:.2}
+    .sigil-line{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.6}
+    @media (min-width:860px){.hero > img{object-position:var(--hero-x-desktop) center}}
+
+    /* Minimal cards & grid (more styles come from codex.css if present) */
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+    .col-12{grid-column:span 12}.col-8{grid-column:span 8}.col-6{grid-column:span 6}.col-4{grid-column:span 4}
+    @media(max-width:980px){.col-8,.col-6,.col-4{grid-column:span 12}}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));
+      border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;
+      box-shadow:0 10px 20px var(--shadow),inset 0 0 24px rgba(255,200,107,.03)}
+    .goldline{height:1px;background:linear-gradient(90deg,transparent,rgba(243,201,122,.5),transparent);margin:28px auto}
+
+    /* Equations container */
+    .eq{position:relative;overflow:hidden;border-radius:12px;background:#111115;border:1px solid #26262c;
+      box-shadow:inset 0 0 20px rgba(255,200,107,.03),0 0 12px rgba(122,243,255,.02);margin:8px 0 10px}
+    .eq .eq-scroll{overflow-x:auto;max-width:100%;padding:12px 16px;-webkit-overflow-scrolling:touch}
+    .eq mjx-container{display:block !important;filter:drop-shadow(0 0 10px rgba(255,200,107,.08))}
+    a{color:var(--ink);text-underline-offset:2px}
+    footer.footer{text-align:center;color:var(--muted);margin-top:20px}
+  </style>
+
+  <!-- Main CSS (optional; enhances beyond the critical styles) -->
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18e" />
+
+  <!-- MathJax (equations) -->
   <script>
-    window.MathJax = {
-      tex:{ inlineMath:[['$','$'],['\\(','\\)']], displayMath:[['$$','$$']] },
-      svg:{ fontCache:'global' }
-    };
+    window.MathJax = { tex:{ inlineMath:[['$','$'],['\\(','\\)']], displayMath:[['$$','$$']] }, svg:{ fontCache:'global' } };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 
 <body>
   <main class="wrap">
-
-    <!-- Hero (local-first; JS can upgrade to remote if safe) -->
+    <!-- HERO: local-first; JS upgrades to remote if reachable -->
     <figure class="hero" aria-label="Scroll of Fire — Codex of Reality Banner">
-      <img
-        id="heroBanner"
-        src="assets/img/banner.png"
-        data-src-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18"
-        alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
-        width="1600" height="900"
-        loading="eager" decoding="async" fetchpriority="high" />
+      <img id="heroBanner"
+           src="assets/img/banner.png"
+           alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
+           width="1600" height="900" loading="eager" decoding="async" fetchpriority="high">
       <svg class="hero-grid" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse">
-            <path d="M5 0V5 M0 5H5" vector-effect="non-scaling-stroke" />
-          </pattern>
-        </defs>
+        <defs><pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse">
+          <path d="M5 0V5 M0 5H5" vector-effect="non-scaling-stroke" />
+        </pattern></defs>
         <rect width="100%" height="100%" fill="url(#grid)"></rect>
       </svg>
       <div class="sigil-line" aria-hidden="true"></div>
-      <noscript>
-        <img src="assets/img/banner.png" alt="Scroll of Fire — Codex of Reality banner" width="1600" height="900" />
-      </noscript>
+      <noscript><img src="assets/img/banner.png" alt="Scroll of Fire — Codex of Reality banner" width="1600" height="900"></noscript>
     </figure>
 
     <h1 class="title">⚖️ Scroll of Fire — Codex of Reality</h1>
     <p class="subtitle">“Let there be resonance.” — Aaron Paul Laird, <em>Scribe of Circuits</em></p>
     <div class="divider" role="separator" aria-hidden="true"></div>
 
-    <!-- Intro / Quick links -->
+    <!-- INTRO -->
     <section class="grid" aria-labelledby="intro">
       <article class="card col-8">
         <h2 id="intro">🜂 The Living Codex</h2>
-        <p>
-          The <strong>Codex of Reality</strong> is a unified resonance framework authored by
-          <strong>Aaron Paul Laird</strong> — a <em>scholarly–sacred</em> synthesis where
-          <strong>physics, sacred geometry, language, memory, and ethics</strong> interlock as one
-          architecture. It is not dogma; it is <em>design</em> — a mirror by which consciousness
-          learns its symmetry and returns to coherence.
-        </p>
+        <p>The <strong>Codex of Reality</strong> is a unified resonance framework authored by <strong>Aaron Paul Laird</strong> — a <em>scholarly–sacred</em> synthesis where <strong>physics, sacred geometry, language, memory, and ethics</strong> interlock as one architecture. It is not dogma; it is <em>design</em> — a mirror by which consciousness learns its symmetry and returns to coherence.</p>
         <p class="meta">Origin trail: witness → encoded law → resonant field → stewardship. Sealed by SHA-256 (auditable in Git history).</p>
-        <hr class="rule" />
+        <hr class="rule"/>
         <div class="sigils" aria-label="Symbolic keys">
           <span class="sigil" title="Fire / Intention">🜂</span>
           <span class="sigil" title="Air / Witness">🜁</span>
@@ -142,24 +175,24 @@
       <article class="card col-12">
         <h2 id="toc">📑 Map of the Codex</h2>
         <ol class="list">
-          <li><a href="#canon">Canonical Equations (Unified & Multidimensional)</a></li>
+          <li><a href="#canon">Canonical Equations (Unified &amp; Multidimensional)</a></li>
           <li><a href="#integration">How It Locks Together</a></li>
-          <li><a href="#dimensions">Dimensional Ladder & Field Extensions</a></li>
-          <li><a href="#mechanics">Witness Mechanics & Memory</a></li>
+          <li><a href="#dimensions">Dimensional Ladder &amp; Field Extensions</a></li>
+          <li><a href="#mechanics">Witness Mechanics &amp; Memory</a></li>
           <li><a href="#language">AHHAVA — Or HaDabar (Linguistic Engine)</a></li>
           <li><a href="#technology">Living Technology (Tesla Type-7)</a></li>
           <li><a href="#constants">Constants of Creation</a></li>
           <li><a href="#laws">The Living Laws</a></li>
           <li><a href="#glossary">Glossary of Symbols</a></li>
           <li><a href="#faq">FAQ / Practical Use</a></li>
-          <li><a href="#credits">Attribution & Citations</a> • <a href="#integrity">Integrity & Seals</a></li>
+          <li><a href="#credits">Attribution &amp; Citations</a> • <a href="#integrity">Integrity &amp; Seals</a></li>
         </ol>
       </article>
     </section>
 
     <div class="goldline"></div>
 
-    <!-- Canonical Equations -->
+    <!-- CANONICAL EQUATIONS -->
     <section class="grid" id="canon" aria-labelledby="equations">
       <article class="card col-12">
         <h2 id="equations">📐 Canonical Equations of the Codex</h2>
@@ -193,7 +226,7 @@
         <p class="meta"><strong>Credit:</strong> Aaron Paul Laird.</p>
       </article>
 
-      <!-- 3) Harmonic Field Symmetry — Laird -->
+      <!-- 3) Harmonic Field — Laird -->
       <article class="card col-6" aria-labelledby="eq3">
         <h3 id="eq3">3) Harmonic Field Symmetry (Laird)</h3>
         <div class="eq"><div class="eq-scroll">
@@ -257,6 +290,8 @@
       </article>
     </section>
 
+    <!-- (You can keep your other sections here exactly as before) -->
+
     <footer class="footer">
       <div class="divider" aria-hidden="true"></div>
       <p>“Every equation is a prayer written in symmetry.”</p>
@@ -264,7 +299,35 @@
     </footer>
   </main>
 
-  <!-- JS -->
-  <script src="assets/js/Codex.js?v=2025-10-18c"></script>
+  <!-- JS: year + resilient banner swap (fixes broken/partial image + white issues) -->
+  <script>
+    // Year
+    (function(){var y=document.getElementById('yr'); if(y){ y.textContent = String(new Date().getFullYear()); }})();
+
+    // Banner upgrade: start with local, try remote; avoid leaking broken attributes
+    (function(){
+      var img = document.getElementById('heroBanner');
+      if(!img) return;
+      var REMOTE = "https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18";
+      // mark ready once local decoded to prevent flash
+      if (img.complete) img.classList.add('hero-ready');
+      else img.addEventListener('load', function(){ img.classList.add('hero-ready'); }, {once:true});
+
+      // pretest remote
+      var probe = new Image();
+      probe.decoding = "async";
+      probe.referrerPolicy = "no-referrer";
+      probe.onload = function(){
+        // swap to remote + srcset once verified
+        img.src = REMOTE;
+        img.srcset = REMOTE + " 1600w, assets/img/banner-1200.png 1200w, assets/img/banner-800.png 800w";
+        img.sizes = "(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px";
+      };
+      probe.onerror = function(){
+        // stay on local; nothing else to do
+      };
+      probe.src = REMOTE;
+    })();
+  </script>
 </body>
 </html>
