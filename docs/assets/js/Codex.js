@@ -5,10 +5,8 @@
 (function () {
   "use strict";
 
-  /* ---------------------------- tiny helpers --------------------------- */
   const $  = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
-
   const on  = (t, e, f, o) => t.addEventListener(e, f, o);
   const raf = (fn) => (window.requestAnimationFrame || setTimeout)(fn, 16);
   const caf = (id) => (window.cancelAnimationFrame || clearTimeout)(id);
@@ -18,20 +16,17 @@
   const hasIO          = "IntersectionObserver" in window;
   const hasRO          = "ResizeObserver" in window;
 
-  /* Basic viewport check for fallback paths */
   const inViewport = (el, thr = 0.9) => {
     const r = el.getBoundingClientRect();
     const vh = window.innerHeight || document.documentElement.clientHeight;
     return r.top < vh * thr && r.bottom > 0;
   };
 
-  /* ----------------------- global small utilities ---------------------- */
   function setYear() {
     const y = $("#yr");
     if (y) y.textContent = String(new Date().getFullYear());
   }
 
-  // Add rel="noopener noreferrer" where target=_blank; a11y label for externals
   function hardenExternal() {
     const hereHost = location.hostname.replace(/^www\./, "");
     $$('a[target="_blank"]').forEach(a => {
@@ -50,64 +45,49 @@
   }
 
   /* ---------------------------- banner logic --------------------------- */
-  /**
-   * Goals:
-   *  - Local-first to avoid flashes, then safe remote upgrade.
-   *  - Honor srcset for DPR/width. Work around iOS/Safari decode quirks.
-   *  - Focal control by breakpoint (object-position), no cropping surprises.
-   *  - Skip remote in Meta webviews & offline; retry when network returns.
-   */
   function initBanner() {
     const img = $("#heroBanner");
     if (!img) return;
 
-    // Inputs from HTML (see patch below)
     const remote = img.getAttribute("data-src-raw") || "";
-    const remoteSet = img.getAttribute("data-srcset-raw") || ""; // optional comma list
-    const localSet  = img.getAttribute("data-srcset-local") || ""; // optional comma list
+    const remoteSet = img.getAttribute("data-srcset-raw") || "";
+    const localSet  = img.getAttribute("data-srcset-local") || "";
     const sizesAttr = img.getAttribute("data-sizes") ||
       "(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px";
 
-    // In-app webviews (Meta) are flaky for cross-origin images — keep local there.
     const ua = navigator.userAgent || "";
     const isMetaApp = /FBAN|FBAV|Facebook|Instagram|FB_IAB|FBAN\/Messenger/i.test(ua);
     const isOffline = !navigator.onLine;
 
-    // Ensure aspect lock & focal variables are applied immediately
     applyHeroAspectAndFocal(img);
 
-    // Mark local image "ready" as soon as it’s decoded, to avoid white flash
     if (img.complete && img.naturalWidth > 0) {
       img.classList.add("hero-ready");
     } else {
       on(img, "load", () => img.classList.add("hero-ready"), { once: true });
     }
 
-    // Always provide a srcset for local too (so small screens get smaller file)
+    // Always give browsers a local srcset to pick an optimal size early.
     if (localSet) {
       img.srcset = localSet;
       img.sizes  = sizesAttr;
     }
 
-    // Bail on remote in constrained environments; local remains displayed.
+    // Don’t attempt remote upgrade in flaky contexts.
     if (!remote || isMetaApp || isOffline) return;
 
-    // If a full remote srcset is provided, prefer that; else upgrade single src.
     const swapToRemote = () => {
       if (remoteSet) {
         img.srcset = remoteSet;
         img.sizes  = sizesAttr;
-        // Force selection refresh in Safari/iOS by toggling a benign attribute
+        // Safari/iOS nudge to recompute source selection
         img.setAttribute("data-rselect", String(Date.now()));
-        // Access currentSrc to nudge layout engines to commit the choice
         void img.currentSrc;
       } else {
         img.src = remote;
       }
-      // Keep hero-ready (fade handled by CSS)
     };
 
-    // Preload & decode the remote before swapping (prevents flashes)
     const probe = new Image();
     probe.decoding = "async";
     probe.loading  = "eager";
@@ -122,10 +102,9 @@
     };
 
     on(probe, "load", doSwap,  { once: true });
-    on(probe, "error", () => { /* silently keep local */ }, { once: true });
-    probe.src = remote; // NB: enough to validate the origin; srcset validated on swap
+    on(probe, "error", () => { /* keep local silently */ }, { once: true });
+    probe.src = remote;
 
-    // Retry once when connection returns
     const retryOnce = () => {
       window.removeEventListener("online", retryOnce);
       if (img && remote && img.currentSrc.indexOf(remote) === -1) {
@@ -134,22 +113,17 @@
     };
     on(window, "online", retryOnce, { once: true });
 
-    // Update focal/object-position on resize/orientation
     on(window, "resize", () => applyHeroAspectAndFocal(img), { passive: true });
     on(window, "orientationchange", () => applyHeroAspectAndFocal(img), { passive: true });
   }
 
-  /* Aspect + focal control for consistent cropping across devices */
   function applyHeroAspectAndFocal(img) {
-    // Aspect
     const aspect = img.getAttribute("data-aspect") || "16/9";
     img.style.setProperty("--hero-aspect", aspect);
-
-    // Focal points: allow per-breakpoint control via data attributes
     const mobile = img.getAttribute("data-focal-mobile") || "63% 50%";
     const desk   = img.getAttribute("data-focal-desktop") || "59% 50%";
-    const bp     = window.matchMedia("(min-width: 860px)").matches ? desk : mobile;
-    img.style.objectPosition = bp;
+    const bpDesk = window.matchMedia("(min-width: 860px)").matches;
+    img.style.objectPosition = bpDesk ? desk : mobile;
   }
 
   /* --------------------------- MathJax helpers ------------------------- */
@@ -163,7 +137,6 @@
       setTimeout(run, delay);
     }
   }
-
   function typesetOnFontsReady() {
     if (!document.fonts || !document.fonts.ready) return;
     document.fonts.ready.then(() => typesetSoon(50)).catch(() => {});
@@ -241,7 +214,6 @@
   /* ----------------------------- card tilt ----------------------------- */
   function tiltCards() {
     if (prefersReduced) return;
-
     $$(".card").forEach(card => {
       let rid = 0;
       const onMove = (e) => {
@@ -260,9 +232,8 @@
       card.addEventListener("mousemove", onMove);
       card.addEventListener("mouseleave", reset);
       card.addEventListener("blur", reset, true);
-      card.addEventListener("touchstart", reset, { passive: true }); // disable tilt on touch
+      card.addEventListener("touchstart", reset, { passive: true });
     });
-
     const rmListener = (e) => { if (e.matches) $$(".card").forEach(c => c.style.transform = ""); };
     on(mqReduced, "change", rmListener);
   }
@@ -297,7 +268,6 @@
 
   on(document, "DOMContentLoaded", boot);
 
-  // bfcache restore (Safari/Firefox)
   on(window, "pageshow", (e) => {
     if (e && e.persisted) {
       setYear();
@@ -306,7 +276,6 @@
     }
   });
 
-  // Re-typeset on container width changes for MathJax wrapping
   if (hasRO) {
     const ro = new ResizeObserver(() => typesetSoon(120));
     $$(".eq").forEach(el => ro.observe(el));
