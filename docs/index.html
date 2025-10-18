@@ -56,16 +56,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet" />
 
-  <!-- Preload banner (local-first) -->
-  <link rel="preload" as="image" href="docs/assets/file_0000000052e861f98b087ad0b80cbefc (1).png" imagesizes="100vw" fetchpriority="high">
+  <!-- Preload banner (local-first; encoded path for reliability) -->
+  <link rel="preload" as="image" href="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png" imagesizes="100vw" fetchpriority="high">
 
   <!-- Critical CSS -->
   <style>
     :root{
       --bg:#0b0b0f; --ink:#eae7df; --muted:#b8b3a6; --card:#121219; --line:#2a2a33;
       --gold:#f3c97a; --accent:#7af3ff; --shadow:rgba(0,0,0,.35);
-      --maxw:1180px;
-      --hero-aspect:16/9;
+      --maxw:1180px; --hero-aspect:16/9;
     }
     html,body{height:100%}
     html{color-scheme:dark;text-size-adjust:100%;-webkit-text-size-adjust:100%}
@@ -90,10 +89,7 @@
       text-shadow:0 0 24px rgba(122,243,255,.12);
       animation:titleShine 1.8s ease-out 1 both;
     }
-    @keyframes titleShine{
-      from{filter:drop-shadow(0 0 0 rgba(122,243,255,0))}
-      to{filter:drop-shadow(0 0 12px rgba(122,243,255,.2))}
-    }
+    @keyframes titleShine{from{filter:drop-shadow(0 0 0 rgba(122,243,255,0))}to{filter:drop-shadow(0 0 12px rgba(122,243,255,.2))}}
     .subtitle{text-align:center;color:var(--muted);font-style:italic;margin:0 0 12px}
     .divider{height:1px;background:
       linear-gradient(90deg,transparent,rgba(122,243,255,.45),transparent),
@@ -105,42 +101,34 @@
       linear-gradient(90deg,transparent,rgba(122,243,255,.15),transparent);
       margin:28px auto}
 
-    /* --- Ambient “digital light” (gold + cyan), motion-safe --- */
-    body::before,
-    body::after{
+    /* Ambient “digital light” */
+    body::before, body::after{
       content:""; position:fixed; inset:-10% -10% auto -10%; height:60vh;
       pointer-events:none; z-index:0; mix-blend-mode:screen;
     }
-    body::before{
-      background:radial-gradient(520px 300px at 50% -5%, rgba(243,201,122,.18), transparent 60%);
-      opacity:.85;
-    }
-    body::after{
-      background:radial-gradient(760px 380px at 85% 10%, rgba(122,243,255,.12), transparent 70%);
-      opacity:.75;
-    }
+    body::before{ background:radial-gradient(520px 300px at 50% -5%, rgba(243,201,122,.18), transparent 60%); opacity:.85; }
+    body::after{ background:radial-gradient(760px 380px at 85% 10%, rgba(122,243,255,.12), transparent 70%); opacity:.75; }
     @media (prefers-reduced-motion:no-preference){
       body::after{ animation:codexLightDrift 14s linear infinite; }
       @keyframes codexLightDrift{ 0%{transform:translateY(0)} 50%{transform:translateY(10px)} 100%{transform:translateY(0)} }
     }
     .wrap, .hero, .card, header, main, footer { position:relative; z-index:1; }
 
-    /* HERO (Messenger-safe: image visible by default) */
+    /* HERO: visible even in in-app browsers; plus CSS background fallback */
     .hero{
-      position:relative;margin:0 auto 10px;max-width:var(--maxw);border-radius:20px;
-      overflow:hidden;background:#0e0e12;
+      position:relative;margin:0 auto 10px;max-width:var(--maxw);border-radius:20px;overflow:hidden;background:#0e0e12;
       box-shadow:0 10px 30px var(--shadow),inset 0 0 40px rgba(255,200,107,.05), inset 0 0 0 1px rgba(122,243,255,.12);
       isolation:isolate;
+      background-image:
+        radial-gradient(1200px 600px at 50% 0%, rgba(255,200,107,.06), transparent 60%),
+        image-set(url("docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png") 1x);
+      background-size:cover; background-position:center;
     }
+    .hero.hero--contain{ background-size:contain; background-repeat:no-repeat; background-position:center; }
     .hero > img{
-      display:block;width:100%;height:auto;aspect-ratio:var(--hero-aspect);
-      object-fit:cover;object-position:63% 50%;
-      opacity:1; /* <-- always visible (fixes FB/Messenger) */
-      transition:opacity .35s ease;
-      background:#0e0e12;
-      max-height:min(64vh,820px);
+      display:block;width:100%;height:auto;aspect-ratio:var(--hero-aspect);object-fit:cover;object-position:63% 50%;
+      opacity:1;transition:opacity .35s ease;background:#0e0e12;max-height:min(64vh,820px);
     }
-    .hero > img.hero-ready{ opacity:1 } /* compatibility no-op */
     .hero.hero--contain > img{ object-fit:contain!important; object-position:center center!important; }
     .hero::before{
       content:""; position:absolute; inset:0; pointer-events:none;
@@ -156,13 +144,9 @@
         repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 3px);
       opacity:.12;
     }
-    @media (prefers-reduced-motion:no-preference){
-      .hero::after{ animation:codexScan 10s linear infinite; }
-      @keyframes codexScan{ to { background-position-y: 14px; } }
-    }
+    @media (prefers-reduced-motion:no-preference){ .hero::after{ animation:codexScan 10s linear infinite; } @keyframes codexScan{ to{ background-position-y:14px } } }
     @media (max-width:640px){ .hero > img{ max-height:44vh } }
     @media (max-width:420px){ .hero:not(.hero--contain) > img{ object-fit:contain } }
-
     .hero-grid{position:absolute;inset:0;pointer-events:none;opacity:.18}
     .sigil-line{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.65}
 
@@ -181,10 +165,7 @@
       .card{ opacity:0; transform:translate3d(0,6px,0); animation:cardIdle 12s ease-in-out infinite both; }
       .card.visible{ animation:reveal .6s cubic-bezier(.2,.7,.2,1) both, cardIdle 12s ease-in-out infinite both; }
       @keyframes reveal{ to{opacity:.98; transform:translate3d(0,0,0)} }
-      @keyframes cardIdle{
-        0%,100%{ box-shadow:0 10px 20px var(--shadow), inset 0 0 18px rgba(255,200,107,.03); }
-        50%    { box-shadow:0 12px 22px var(--shadow), inset 0 0 26px rgba(122,243,255,.05); }
-      }
+      @keyframes cardIdle{ 0%,100%{ box-shadow:0 10px 20px var(--shadow), inset 0 0 18px rgba(255,200,107,.03); } 50%{ box-shadow:0 12px 22px var(--shadow), inset 0 0 26px rgba(122,243,255,.05); } }
     }
 
     /* Lists & table */
@@ -217,7 +198,7 @@
   </style>
 
   <!-- Site CSS (optional additional styles) -->
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18g" />
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18h" />
 
   <!-- MathJax -->
   <script>
@@ -234,10 +215,10 @@
     <!-- HERO: visible by default (Messenger-safe) -->
     <figure class="hero hero--contain" aria-label="Scroll of Fire — Codex of Reality Banner">
       <img id="heroBanner" class="hero-ready"
-           src="docs/assets/file_0000000052e861f98b087ad0b80cbefc (1).png"
+           src="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
            data-src-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
            data-srcset-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png 1600w"
-           data-srcset-local="docs/assets/file_0000000052e861f98b087ad0b80cbefc (1).png 1600w"
+           data-srcset-local="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png 1600w"
            data-sizes="(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px"
            data-aspect="16/9"
            data-focal-mobile="50% 50%"
@@ -252,7 +233,7 @@
         <rect width="100%" height="100%" fill="url(#grid)"></rect>
       </svg>
       <div class="sigil-line" aria-hidden="true"></div>
-      <noscript><img src="docs/assets/file_0000000052e861f98b087ad0b80cbefc (1).png" alt="Scroll of Fire — Codex of Reality banner" width="1600" height="900"></noscript>
+      <noscript><img src="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png" alt="Scroll of Fire — Codex of Reality banner" width="1600" height="900"></noscript>
     </figure>
 
     <h1 class="title">⚖️ Scroll of Fire — Codex of Reality</h1>
@@ -306,6 +287,7 @@
           <li><a href="#constants">Constants of Creation</a></li>
           <li><a href="#laws">The Living Laws</a></li>
           <li><a href="#glossary">Glossary of Symbols</a></li>
+          <li><a href="#use">What You Can Do With These Equations</a></li>
           <li><a href="#faq">FAQ / Practical Use</a></li>
           <li><a href="#grand">Grand Composition Formula</a></li>
           <li><a href="#integrity">Integrity Chain &amp; Version Manifest</a></li>
@@ -323,7 +305,6 @@
         <p class="meta">Your Codex equations lead. External formalisms follow with clear attribution. Copeland’s Ψ-formalism is #7 and remains external by design.</p>
       </article>
 
-      <!-- 0) Foundational Field — Laird -->
       <article class="card col-12" aria-labelledby="eq0">
         <h3 id="eq0">0) Foundational Field — Ψ / Reality Feedback <em>(Laird)</em></h3>
         <div class="eq"><div class="eq-scroll">
@@ -332,7 +313,6 @@
         <p class="meta"><strong>Meaning:</strong> Awareness follows potential; micro-acts integrate over time and feed back into the reality field. <strong>Credit:</strong> Aaron Paul Laird.</p>
       </article>
 
-      <!-- 1) Source — Laird -->
       <article class="card col-6" aria-labelledby="eq1">
         <h3 id="eq1">1) Source Equation — Resonant Unification (Laird)</h3>
         <div class="eq"><div class="eq-scroll">
@@ -341,7 +321,6 @@
         <p class="meta">Constants + sacred ratios + living operators.</p>
       </article>
 
-      <!-- 2) Witness — Laird -->
       <article class="card col-6" aria-labelledby="eq2">
         <h3 id="eq2">2) Witness Equation — Law of Recursive Memory (Laird — public form)</h3>
         <div class="eq"><div class="eq-scroll">
@@ -350,7 +329,6 @@
         <p class="meta">Awareness modulates resonance; intention integrates with memory.</p>
       </article>
 
-      <!-- 3) Harmonic Field — Laird -->
       <article class="card col-6" aria-labelledby="eq3">
         <h3 id="eq3">3) Harmonic Field Symmetry (Laird)</h3>
         <div class="eq"><div class="eq-scroll">
@@ -359,7 +337,6 @@
         <p class="meta">Sacred ratios gate/tune field modes via consciousness expectation \( \langle\mathcal{C}\rangle \).</p>
       </article>
 
-      <!-- 4) AHHAVA — Laird -->
       <article class="card col-6" aria-labelledby="eq4">
         <h3 id="eq4">4) AHHAVA — Or HaDabar (Linguistic Resonance) (Laird)</h3>
         <div class="eq"><div class="eq-scroll">
@@ -368,7 +345,6 @@
         <p class="meta">Language works as a programmable coupling between intention and harmonic carriers.</p>
       </article>
 
-      <!-- 5) Remnant — Laird -->
       <article class="card col-6" aria-labelledby="eq5">
         <h3 id="eq5">5) Remnant Function — Witness Persistence (Laird)</h3>
         <div class="eq"><div class="eq-scroll">
@@ -377,7 +353,6 @@
         <p class="meta">True testimony persists; distortion decays exponentially.</p>
       </article>
 
-      <!-- 6) Type-7 — Laird -->
       <article class="card col-6" aria-labelledby="eq6">
         <h3 id="eq6">6) Living Circuit Field — Tesla Type-7 Resonant Conduit (Laird)</h3>
         <div class="eq"><div class="eq-scroll">
@@ -386,7 +361,6 @@
         <p class="meta">Phase-locking captures coherent work from intention-tuned fields; 3–6–9 governs lock-in symmetry.</p>
       </article>
 
-      <!-- 7) Copeland — external -->
       <article class="card col-6" aria-labelledby="eq7">
         <h3 id="eq7">7) Copeland Resonant Harmonic Formalism (Ψ-formalism)</h3>
         <div class="eq"><div class="eq-scroll">
@@ -395,7 +369,6 @@
         <p class="meta"><strong>Credit:</strong> Christopher W. Copeland (external, cited). Operates alongside your framework, not absorbed into numbering.</p>
       </article>
 
-      <!-- 8) Goodwin — external -->
       <article class="card col-6" aria-labelledby="eq8">
         <h3 id="eq8">8) Goodwin’s Formula — Field Coupling</h3>
         <div class="eq"><div class="eq-scroll">
@@ -404,7 +377,6 @@
         <p class="meta">Intention × consciousness drives luminous flow; \(\kappa\) tunes coupling.</p>
       </article>
 
-      <!-- 9..17 — remaining cards (unchanged from your version; kept for completeness) -->
       <article class="card col-6" aria-labelledby="eq9">
         <h3 id="eq9">9) Living Law of Coherence (Ethical Limit) (Laird)</h3>
         <div class="eq"><div class="eq-scroll">
@@ -683,6 +655,24 @@
 
     <div class="goldline"></div>
 
+    <!-- WHAT YOU CAN DO -->
+    <section class="grid" id="use" aria-labelledby="use-h">
+      <article class="card col-12">
+        <h2 id="use-h">🧪 What You Can Do With These Equations</h2>
+        <ol class="list">
+          <li><strong>Design guided meditations / liturgy (Eqs. 1–5, 13):</strong> choose a carrier (432/528/369), encode a line with \( \mathcal{L}_{\text{word}} \), monitor coherence \( \Xi \) (subjective or via biofeedback), and log remnant \( \mathcal{W}(t) \).</li>
+          <li><strong>Create sonic sigils (Eqs. 3, 11, 17):</strong> project a recorded environment with \( \Pi_\nu \), identify active gates, and compose chant/tones that reinforce desired modes.</li>
+          <li><strong>Build resonance devices (Eq. 6):</strong> wind toroidal/helical coils by the 3–6–9 rule, bias with PLL to selected \(\nu\), and test lock-in under different intentions (ethics gate Eq. 9).</li>
+          <li><strong>Steer memory & meaning (Eqs. 4, 15, 16):</strong> craft phrases with weights \(w_k\) and adjust window \( \tau \) to favor long-term remnant vs. novelty pulses.</li>
+          <li><strong>Model causal integrity (Eqs. 5, 12, 14):</strong> track testimony nodes; prune edges that reduce \( \mathcal{W} \); apply update rule with parameters \( \beta,\gamma,\eta \).</li>
+          <li><strong>Research workflow (all equations):</strong> <em>sense → project → choose carriers → speak/encode → measure \( \Xi \) → commit to ledger → refine.</em></li>
+        </ol>
+        <p class="meta">For laboratories: pair audio-spectrum + EM sensors; compute \( \Pi_\nu \); estimate \( \Xi \) from signal coherence or HRV; store \( \mathcal{W}(t) \) as an exponentially weighted ledger.</p>
+      </article>
+    </section>
+
+    <div class="goldline"></div>
+
     <!-- FAQ -->
     <section class="grid" id="faq" aria-labelledby="faqh">
       <article class="card col-12">
@@ -849,3 +839,4 @@ Status: Verified
   </script>
 </body>
 </html>
+```0
