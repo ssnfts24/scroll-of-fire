@@ -452,3 +452,76 @@ p, li, td, th { word-wrap: break-word; overflow-wrap: anywhere; }
 @media (min-width:1280px){ .wrap{ padding-left:24px; padding-right:24px; } }
 
 /* ------------------------------ Done ------------------------------ */
+
+
+
+/* ==================== Hero Banner polish (electric + letterbox) ==================== */
+
+/* Make the container feel like a framed HUD panel */
+.hero {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-elev);
+  box-shadow:
+    0 10px 30px var(--shadow),
+    inset 0 0 40px rgba(255,200,107,.05),
+    inset 0 0 0 1px rgba(122,243,255,.12);   /* subtle cyan rim */
+  isolation: isolate;
+}
+
+/* Keep the image crisp and sized well across devices */
+.hero > img {
+  aspect-ratio: var(--hero-aspect, 16/9);
+  object-fit: cover;
+  background: #0e0e12;
+  max-height: min(64vh, 820px);              /* prevents huge banners on tall viewports */
+}
+
+/* On phones, reduce the max height a bit more for above-the-fold breathing room */
+@media (max-width: 640px) {
+  .hero > img { max-height: 44vh; }
+}
+
+/* “Contain” mode — show the entire banner without ugly hard bars */
+.hero.hero--contain {
+  /* keep the same outer frame; interior bars are handled by overlays below */
+  background: var(--bg-elev);
+}
+
+/* Edge-fade the letterbox so the banner blends with the panel instead of hard bars */
+.hero.hero--contain::before {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none;
+  /* soft top/bottom/side fades that hug the image edges */
+  background:
+    linear-gradient(to right, rgba(11,11,15,.95), transparent 7%, transparent 93%, rgba(11,11,15,.95)),
+    linear-gradient(to bottom, rgba(11,11,15,.9), transparent 10%, transparent 90%, rgba(11,11,15,.9));
+  mix-blend-mode: multiply;
+  opacity: .9;
+}
+
+/* very light scanline/vignette for tech feel—kept subtle and motion-safe */
+.hero::after {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(80% 130% at 50% 8%, rgba(122,243,255,.06), transparent 60%) ,
+    repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 3px);
+  opacity: .12;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero::after { animation: sofScan 10s linear infinite; }
+  @keyframes sofScan { to { background-position-y: 14px; } }
+}
+
+/* If you prefer the banner to never crop in cover mode, force contain on narrow phones */
+@media (max-width: 420px) {
+  /* comment this block if you always want cover on phones */
+  .hero:not(.hero--contain) > img { object-fit: contain; }
+}
+
+/* Make sure the rounded corners show cleanly even when the image is lighter at edges */
+.hero, .hero > img { -webkit-mask-image: radial-gradient(160% 130% at 50% 50%, #000 72%, #000 90%, transparent 100%); mask-image: radial-gradient(160% 130% at 50% 50%, #000 72%, #000 90%, transparent 100%); }
+@supports not (mask-image: linear-gradient(#000, #000)) {
+  .hero, .hero > img { -webkit-mask-image: none; mask-image: none; }
+}
