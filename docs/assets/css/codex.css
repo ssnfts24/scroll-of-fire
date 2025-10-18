@@ -456,6 +456,64 @@ p, li, td, th{ word-wrap:break-word; overflow-wrap:anywhere; }
   tbody td::before{ content:attr(data-label) " "; font-weight:600; color:var(--muted); margin-right:8px; }
 }
 
+
+/* ==== Perf accelerators =================================================== */
+
+/* 4.1: Skip layout/paint for offscreen sections until shown */
+@supports (content-visibility: auto) {
+  main > .grid,
+  .card,
+  section,
+  article { content-visibility: auto; contain-intrinsic-size: 600px; }
+  /* small cards get a smaller placeholder height */
+  .card { contain-intrinsic-size: 360px; }
+}
+
+/* 4.2: Reduce expensive effects by default during first second */
+@media (prefers-reduced-motion:no-preference) {
+  body.performance-warming .hero::after,
+  body.performance-warming .card::after,
+  body.performance-warming .card::before { opacity: 0.0 !important; }
+  body.performance-warming .card { box-shadow: none !important; }
+}
+@keyframes _perfWarmOff { to { opacity: 1; } }
+/* trip the flag off after a tick */
+body.performance-warming { animation: _perfWarmOff .9s linear forwards; }
+
+/* 4.3: Fast mode (auto for low-power / Save-Data; can also be toggled via class) */
+body.perf-fast,
+@media (prefers-reduced-data: reduce) {
+  body {
+    background-image: none !important;
+  }
+  body::before, body::after { display: none !important; }
+  .hero::after { display: none !important; }
+  .card { box-shadow: 0 8px 16px var(--shadow); }
+  .card::before, .card::after { display: none !important; }
+  .eq { box-shadow: inset 0 0 12px rgba(255,200,107,.03); }
+}
+
+/* 4.4: Lighter scrolling compositing */
+* { will-change: auto !important; }             /* drop global will-change to avoid extra layers */
+.hero>img { will-change: opacity; }             /* keep where it matters */
+.eq .eq-scroll { -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+
+/* 4.5: Micro-optimizations for mobile */
+@media (max-width: 480px) {
+  .title { font-size: clamp(26px, 6vw, 40px); }
+  .hero>img { max-height: 42vh; }
+  .card { padding: 14px; }
+}
+
+/* 4.6: Defer heavy shadows until hover/visible */
+@media (prefers-reduced-motion:no-preference) {
+  .card { box-shadow: 0 6px 14px var(--shadow); }
+  .card.visible { box-shadow: 0 10px 20px var(--shadow); }
+  @media (hover:hover) {
+    .card:hover { box-shadow: 0 12px 24px var(--shadow); }
+  }
+}
+
 /* ------------------------------ Banner Fallbacks ------------------------------ */
 @supports not (aspect-ratio: 16/9){ .hero>img{ height:clamp(200px,30vw,360px); } }
 
