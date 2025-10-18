@@ -58,18 +58,19 @@
   <!-- Preload banner (local-first) -->
   <link rel="preload" as="image" href="assets/img/banner.png" imagesizes="100vw" fetchpriority="high">
 
-  <!-- Critical dark CSS to avoid white flash and keep hero stable -->
+  <!-- Critical CSS -->
   <style>
     :root{
       --bg:#0b0b0f; --ink:#eae7df; --muted:#b8b3a6; --card:#121219; --line:#2a2a33;
       --gold:#f3c97a; --accent:#7af3ff; --shadow:rgba(0,0,0,.35);
-      --maxw:1180px; --hero-x-mobile:63%; --hero-x-desktop:59%;
+      --maxw:1180px;
     }
     html,body{height:100%}
     body{
       margin:0;background:#0d0d10;color:var(--ink);
       font:400 16px/1.6 "Inter",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
       background-image:radial-gradient(1800px 900px at 50% -10%,#13131a 20%,var(--bg) 70%);
+      text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;
     }
     .wrap{max-width:var(--maxw);margin:0 auto;padding:20px 16px 80px}
     .title{font-family:"Crimson Pro",Georgia,serif;font-weight:800;text-align:center;
@@ -77,35 +78,59 @@
     .subtitle{text-align:center;color:var(--muted);font-style:italic;margin:0 0 12px}
     .divider{height:1px;background:linear-gradient(90deg,transparent,#2a2a33,transparent);margin:18px auto 24px}
 
-    /* HERO (fade-in and upgrade by JS) */
-    .hero{position:relative;margin:0 auto 10px;max-width:var(--maxw);border-radius:20px;
-      overflow:hidden;background:#0e0e12;min-height:180px;box-shadow:0 10px 30px var(--shadow),inset 0 0 40px rgba(255,200,107,.05)}
-    .hero > img{display:block;width:100%;height:clamp(200px,30vw,360px);object-fit:cover;
-      object-position:var(--hero-x-mobile) center;opacity:.001;transition:opacity .35s ease}
+    /* HERO (stable aspect, smooth fade-in, breakpoint focal control) */
+    .hero{
+      position:relative;margin:0 auto 10px;max-width:var(--maxw);border-radius:20px;
+      overflow:hidden;background:#0e0e12;box-shadow:0 10px 30px var(--shadow),inset 0 0 40px rgba(255,200,107,.05)
+    }
+    .hero > img{
+      display:block;width:100%;height:auto;aspect-ratio:var(--hero-aspect, 16/9);
+      object-fit:cover;object-position:63% 50%;
+      opacity:.001;transition:opacity .35s ease;
+    }
     .hero > img.hero-ready{opacity:1}
     .hero-grid{position:absolute;inset:0;pointer-events:none;opacity:.2}
     .sigil-line{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.6}
-    @media (min-width:860px){.hero > img{object-position:var(--hero-x-desktop) center}}
 
-    /* Minimal grid & card (full styles come from codex.css) */
+    /* Minimal grid & card */
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
-    .col-12{grid-column:span 12}.col-8{grid-column:span 8}.col-6{grid-column:span 6}.col-4{grid-column:span 4}
-    @media(max-width:980px){.col-8,.col-6,.col-4{grid-column:span 12}}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));
+    .col-12{grid-column:span 12}.col-8{grid-column:span 8}.col-7{grid-column:span 7}.col-6{grid-column:span 6}.col-5{grid-column:span 5}.col-4{grid-column:span 4}
+    @media(max-width:980px){.col-8,.col-7,.col-6,.col-5,.col-4{grid-column:span 12}}
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));
       border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;
-      box-shadow:0 10px 20px var(--shadow),inset 0 0 24px rgba(255,200,107,.03)}
+      box-shadow:0 10px 20px var(--shadow),inset 0 0 24px rgba(255,200,107,.03);
+      transform:translateZ(0);
+      will-change:transform,opacity;
+      opacity:.98;
+    }
+    .card.visible{animation:reveal .6s cubic-bezier(.2,.7,.2,1) both}
+    @keyframes reveal{from{opacity:0;transform:translate3d(0,6px,0)}to{opacity:.98;transform:translate3d(0,0,0)}}
+
     .goldline{height:1px;background:linear-gradient(90deg,transparent,rgba(243,201,122,.5),transparent);margin:28px auto}
+
+    /* Lists & table */
+    .list{margin:0;padding-left:18px}
+    .list li{margin:6px 0}
+    table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+    thead th{background:#15151c;border-bottom:1px solid var(--line);padding:10px 12px;text-align:left}
+    tbody td{border-top:1px solid var(--line);padding:10px 12px}
 
     /* Equations */
     .eq{position:relative;overflow:hidden;border-radius:12px;background:#111115;border:1px solid #26262c;
       box-shadow:inset 0 0 20px rgba(255,200,107,.03),0 0 12px rgba(122,243,255,.02);margin:8px 0 10px}
     .eq .eq-scroll{overflow-x:auto;max-width:100%;padding:12px 16px;-webkit-overflow-scrolling:touch}
     .eq mjx-container{display:block !important;filter:drop-shadow(0 0 10px rgba(255,200,107,.08))}
+    .eq.eq-on{outline:1px solid rgba(243,201,122,.2)}
+
     a{color:var(--ink);text-underline-offset:2px}
+    .cta{display:inline-block;margin-top:10px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);text-decoration:none}
+    .cta:hover{border-color:#3a3a44}
+
     footer.footer{text-align:center;color:var(--muted);margin-top:20px}
   </style>
 
-  <!-- Main CSS (enhanced visuals) -->
+  <!-- Site CSS (optional additional styles) -->
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18f" />
 
   <!-- MathJax -->
@@ -125,6 +150,12 @@
       <img id="heroBanner"
            src="assets/img/banner.png"
            data-src-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18"
+           data-srcset-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?v=2025-10-18 1600w"
+           data-srcset-local="assets/img/banner.png 1600w, assets/img/banner-1200.png 1200w, assets/img/banner-800.png 800w"
+           data-sizes="(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px"
+           data-aspect="16/9"
+           data-focal-mobile="63% 50%"
+           data-focal-desktop="59% 50%"
            alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
            width="1600" height="900" loading="eager" decoding="async" fetchpriority="high">
       <svg class="hero-grid" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
@@ -197,6 +228,7 @@
     </section>
 
     <div class="goldline"></div>
+
     <!-- CANONICAL EQUATIONS -->
     <section class="grid" id="canon" aria-labelledby="equations">
       <article class="card col-12">
@@ -483,6 +515,7 @@
     </section>
 
     <div class="goldline"></div>
+
     <!-- LIVING TECHNOLOGY -->
     <section class="grid" id="technology" aria-labelledby="tech">
       <article class="card col-7">
@@ -650,7 +683,294 @@ Status: Verified
     </footer>
   </main>
 
-  <!-- JS: use the robust site script that handles banner, reveal, equations, etc. -->
-  <script src="assets/js/Codex.js?v=2025-10-18f"></script>
+  <!-- Robust site script (banner, reveal, equations, a11y, MathJax nudges) -->
+  <script>
+  (function () {
+    "use strict";
+
+    const $  = (s, r = document) => r.querySelector(s);
+    const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+    const on  = (t, e, f, o) => t.addEventListener(e, f, o);
+    const raf = (fn) => (window.requestAnimationFrame || setTimeout)(fn, 16);
+    const caf = (id) => (window.cancelAnimationFrame || clearTimeout)(id);
+
+    const mqReduced      = matchMedia("(prefers-reduced-motion: reduce)");
+    const prefersReduced = mqReduced.matches;
+    const hasIO          = "IntersectionObserver" in window;
+    const hasRO          = "ResizeObserver" in window;
+
+    const inViewport = (el, thr = 0.9) => {
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      return r.top < vh * thr && r.bottom > 0;
+    };
+
+    function setYear() {
+      const y = $("#yr");
+      if (y) y.textContent = String(new Date().getFullYear());
+    }
+
+    function hardenExternal() {
+      const hereHost = location.hostname.replace(/^www\./, "");
+      $$('a[target="_blank"]').forEach(a => {
+        const rel = (a.getAttribute("rel") || "").toLowerCase();
+        const parts = new Set(rel.split(/\s+/).filter(Boolean));
+        parts.add("noopener"); parts.add("noreferrer");
+        try {
+          const u = new URL(a.href, location.href);
+          if (u.hostname.replace(/^www\./, "") !== hereHost && !a.getAttribute("aria-label")) {
+            const txt = a.textContent.trim();
+            if (txt) a.setAttribute("aria-label", txt + " (opens in new tab)");
+          }
+        } catch(_) {}
+        a.setAttribute("rel", Array.from(parts).join(" "));
+      });
+    }
+
+    /* ---------------------------- banner logic --------------------------- */
+    function initBanner() {
+      const img = $("#heroBanner");
+      if (!img) return;
+
+      const remote = img.getAttribute("data-src-raw") || "";
+      const remoteSet = img.getAttribute("data-srcset-raw") || "";
+      const localSet  = img.getAttribute("data-srcset-local") || "";
+      const sizesAttr = img.getAttribute("data-sizes") ||
+        "(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px";
+
+      const ua = navigator.userAgent || "";
+      const isMetaApp = /FBAN|FBAV|Facebook|Instagram|FB_IAB|FBAN\/Messenger/i.test(ua);
+      const isOffline = !navigator.onLine;
+
+      applyHeroAspectAndFocal(img);
+
+      if (img.complete && img.naturalWidth > 0) {
+        img.classList.add("hero-ready");
+      } else {
+        on(img, "load", () => img.classList.add("hero-ready"), { once: true });
+      }
+
+      // Always give browsers a local srcset to pick an optimal size early.
+      if (localSet) {
+        img.srcset = localSet;
+        img.sizes  = sizesAttr;
+      }
+
+      // Don’t attempt remote upgrade in flaky contexts.
+      if (!remote || isMetaApp || isOffline) return;
+
+      const swapToRemote = () => {
+        if (remoteSet) {
+          img.srcset = remoteSet;
+          img.sizes  = sizesAttr;
+          // Safari/iOS nudge to recompute source selection
+          img.setAttribute("data-rselect", String(Date.now()));
+          void img.currentSrc;
+        } else {
+          img.src = remote;
+        }
+      };
+
+      const probe = new Image();
+      probe.decoding = "async";
+      probe.loading  = "eager";
+      probe.referrerPolicy = "no-referrer";
+
+      const doSwap = () => {
+        if (typeof probe.decode === "function") {
+          probe.decode().then(swapToRemote).catch(swapToRemote);
+        } else {
+          swapToRemote();
+        }
+      };
+
+      on(probe, "load", doSwap,  { once: true });
+      on(probe, "error", () => { /* keep local silently */ }, { once: true });
+      probe.src = remote;
+
+      const retryOnce = () => {
+        window.removeEventListener("online", retryOnce);
+        if (img && remote && img.currentSrc.indexOf(remote) === -1) {
+          probe.src = remote + (remote.includes("?") ? "&" : "?") + "r=" + Date.now();
+        }
+      };
+      on(window, "online", retryOnce, { once: true });
+
+      on(window, "resize", () => applyHeroAspectAndFocal(img), { passive: true });
+      on(window, "orientationchange", () => applyHeroAspectAndFocal(img), { passive: true });
+    }
+
+    function applyHeroAspectAndFocal(img) {
+      const aspect = img.getAttribute("data-aspect") || "16/9";
+      img.style.setProperty("--hero-aspect", aspect);
+      const mobile = img.getAttribute("data-focal-mobile") || "63% 50%";
+      const desk   = img.getAttribute("data-focal-desktop") || "59% 50%";
+      const bpDesk = window.matchMedia("(min-width: 860px)").matches;
+      img.style.objectPosition = bpDesk ? desk : mobile;
+    }
+
+    /* --------------------------- MathJax helpers ------------------------- */
+    function typesetSoon(delay = 80) {
+      const mj = window.MathJax;
+      if (!mj) return;
+      const run = () => { try { mj.typeset && mj.typeset(); } catch (_) {} };
+      if (mj.startup && mj.startup.promise) {
+        mj.startup.promise.then(() => setTimeout(run, delay));
+      } else {
+        setTimeout(run, delay);
+      }
+    }
+    function typesetOnFontsReady() {
+      if (!document.fonts || !document.fonts.ready) return;
+      document.fonts.ready.then(() => typesetSoon(50)).catch(() => {});
+    }
+
+    /* -------------------------- reveal-on-scroll ------------------------- */
+    function revealOnScroll() {
+      const cards = $$(".card");
+      if (!cards.length) return;
+
+      if (!prefersReduced && hasIO) {
+        const io = new IntersectionObserver((entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              io.unobserve(e.target);
+            }
+          }
+        }, { root: null, rootMargin: "0px 0px -12%", threshold: 0.08 });
+        cards.forEach(el => io.observe(el));
+        return;
+      }
+
+      const tick = () => cards.forEach(el => inViewport(el) && el.classList.add("visible"));
+      let ticking = false;
+      const onS = () => {
+        if (!ticking) {
+          ticking = true;
+          raf(() => { tick(); ticking = false; });
+        }
+      };
+      on(window, "scroll", onS, { passive: true });
+      on(window, "load", tick);
+      tick();
+    }
+
+    /* -------------------------- equation activator ----------------------- */
+    function activateEquations() {
+      const blocks = $$(".eq");
+      if (!blocks.length) return;
+
+      const activate = (el) => {
+        if (!el.classList.contains("eq-on")) {
+          el.classList.add("eq-on");
+          typesetSoon(120);
+        }
+      };
+
+      if (!prefersReduced && hasIO) {
+        const io = new IntersectionObserver((entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              activate(e.target);
+              io.unobserve(e.target);
+            }
+          }
+        }, { root: null, rootMargin: "0px 0px -10%", threshold: 0.06 });
+        blocks.forEach(el => io.observe(el));
+        return;
+      }
+
+      const tick = () => blocks.forEach(el => inViewport(el, 0.94) && activate(el));
+      let ticking = false;
+      const onS = () => {
+        if (!ticking) {
+          ticking = true;
+          raf(() => { tick(); ticking = false; });
+        }
+      };
+      on(window, "scroll", onS, { passive: true });
+      on(window, "load", tick);
+      tick();
+    }
+
+    /* ----------------------------- card tilt ----------------------------- */
+    function tiltCards() {
+      if (prefersReduced) return;
+      $$(".card").forEach(card => {
+        let rid = 0;
+        const onMove = (e) => {
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width;
+          const y = (e.clientY - r.top) / r.height;
+          caf(rid);
+          rid = raf(() => {
+            const rx = (0.5 - y) * 4;
+            const ry = (x - 0.5) * 6;
+            card.style.transform =
+              `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
+          });
+        };
+        const reset = () => { card.style.transform = ""; };
+        card.addEventListener("mousemove", onMove);
+        card.addEventListener("mouseleave", reset);
+        card.addEventListener("blur", reset, true);
+        card.addEventListener("touchstart", reset, { passive: true });
+      });
+      const rmListener = (e) => { if (e.matches) $$(".card").forEach(c => c.style.transform = ""); };
+      on(mqReduced, "change", rmListener);
+    }
+
+    /* ----------------------------- anchors a11y -------------------------- */
+    function focusAnchors() {
+      on(document, "click", (ev) => {
+        const a = ev.target.closest("a[href^='#']");
+        if (!a) return;
+        const id = a.getAttribute("href").slice(1);
+        if (!id) return;
+        const tgt = document.getElementById(id);
+        if (tgt) {
+          if (!tgt.hasAttribute("tabindex")) tgt.setAttribute("tabindex", "-1");
+          tgt.focus({ preventScroll: true });
+        }
+      });
+    }
+
+    /* ------------------------------- boot -------------------------------- */
+    function boot() {
+      setYear();
+      hardenExternal();
+      initBanner();
+      revealOnScroll();
+      activateEquations();
+      tiltCards();
+      typesetSoon(250);
+      typesetOnFontsReady();
+      focusAnchors();
+    }
+
+    on(document, "DOMContentLoaded", boot);
+
+    on(window, "pageshow", (e) => {
+      if (e && e.persisted) {
+        setYear();
+        initBanner();
+        typesetSoon(100);
+      }
+    });
+
+    if (hasRO) {
+      const ro = new ResizeObserver(() => typesetSoon(120));
+      $$(".eq").forEach(el => ro.observe(el));
+    } else {
+      let wait = false;
+      on(window, "resize", () => {
+        if (wait) return;
+        wait = true;
+        setTimeout(() => { wait = false; typesetSoon(120); }, 200);
+      }, { passive: true });
+    }
+  })();
+  </script>
 </body>
-</html>
+  </html>
