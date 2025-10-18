@@ -12,7 +12,7 @@
 
   <meta charset="utf-8" />
   <title>Scroll of Fire — Codex of Reality</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
   <!-- Dark theme -->
   <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
@@ -177,20 +177,15 @@
   </script>
 
   <main class="wrap">
-    <!-- HERO (PNG only; bullet-proof fallback) -->
-    <figure id="hero" class="hero has-effects hero--cover" data-fit="cover" aria-label="Scroll of Fire — Codex of Reality Banner">
+    <!-- HERO (PNG only; Codex.js builds toolbar; robust fallback to Raw) -->
+    <figure id="hero" class="hero has-effects" data-fit="auto" aria-label="Scroll of Fire — Codex of Reality Banner">
       <img id="heroBanner"
            src="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
+           data-src-local="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
+           data-src-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
+           data-sizes="(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px"
            alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
            width="1600" height="900" loading="eager" decoding="async" fetchpriority="high" />
-
-      <!-- overlay controls -->
-      <div class="hero-ui" role="toolbar" aria-label="Banner controls">
-        <button type="button" id="heroFit" class="hero-btn" aria-pressed="false" title="Toggle fit">
-          Fit: <span data-fit-label>cover</span>
-        </button>
-        <button type="button" id="heroZoom" class="hero-btn" title="View full screen">Fullscreen</button>
-      </div>
 
       <!-- visual HUD -->
       <span class="hero-pulse" aria-hidden="true"></span>
@@ -211,14 +206,27 @@
     <script>
       (function(){
         const img = document.getElementById('heroBanner');
-        const fallback = 'https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png';
+        const fallback = img.getAttribute('data-src-raw');
         let swapped = false;
-        function useFallback(){ if (swapped) return; swapped = true; img.src = fallback; }
+        function useFallback(){ if (!swapped && fallback){ swapped = true; img.src = fallback; } }
         img.addEventListener('error', useFallback, { once: true });
         const tm = setTimeout(()=>{ if (!img.complete || !img.naturalWidth) useFallback(); }, 4000);
         img.addEventListener('load', ()=>clearTimeout(tm), { once: true });
+
+        /* Save-Data / FB/IG in-app: default Pulse OFF for faster paint */
+        try{
+          const ua = navigator.userAgent || "";
+          const isMeta = /FBAN|FBAV|Facebook|Instagram|FB_IAB|FBAN\/Messenger/i.test(ua);
+          const saveData = (navigator.connection && navigator.connection.saveData);
+          if (isMeta || saveData) {
+            const fig = document.getElementById('hero');
+            fig && fig.classList.remove('pulse');
+            localStorage.setItem('codex:hero-pulse', 'false');
+          }
+        }catch{}
       })();
     </script>
+
 
 
 
