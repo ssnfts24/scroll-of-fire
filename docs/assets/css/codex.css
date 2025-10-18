@@ -6,6 +6,8 @@
    - Motion-safe reveal, focus visibility, print styles
    - ✨ Tech polish: neon rims, scanlines, notches, HUD grid + digital light
    - In-app webview (FB/Messenger/IG) hero visibility hardening
+   - 🛠 Hero now supports <picture> via .hero-media + descendant selector
+   - 🫧 Optional pulse shock: add class "pulse" to .hero
    ====================================================================== */
 
 /* ------------------------------ Root / Theme ------------------------------ */
@@ -55,6 +57,11 @@
   --hero-aspect: 16/9;
   --hero-focal-mobile: 63% 50%;
   --hero-focal-desktop: 59% 50%;
+
+  /* Pulse (hero) */
+  --pulse-opacity:.12;
+  --pulse-c1: rgba(122,243,255,.35);
+  --pulse-c2: rgba(243,201,122,.28);
 
   /* Safe-area helpers */
   --safe-top: env(safe-area-inset-top, 0px);
@@ -195,19 +202,24 @@ a:where([rel~="external"])::after{ content:" ↗"; font-size:.9em; opacity:.8; }
   isolation:isolate;
 }
 
+/* Support <picture> wrapper */
+.hero .hero-media{ display:block; width:100%; }
+
 /* Stable aspect; Messenger-safe (visible by default) */
-.hero>img{
+.hero img{
   display:block; width:100%; height:auto; aspect-ratio:var(--hero-aspect);
   object-fit:cover; object-position:var(--hero-focal-mobile);
-  opacity:1; transition:opacity .35s var(--ease); will-change:opacity;
+  opacity:1; transition:opacity .35s var(--ease);
   background:var(--bg-elev);
   max-height:min(64vh,820px);
+  will-change:opacity;
 }
-@media (min-width:860px){ .hero>img{ object-position:var(--hero-focal-desktop); } }
+@media (min-width:860px){ .hero img{ object-position:var(--hero-focal-desktop); } }
 
-/* Contain mode */
+/* Modes */
 .hero.hero--contain{ background:var(--bg-elev); }
-.hero.hero--contain>img{ object-fit:contain!important; object-position:center center!important; }
+.hero.hero--contain img{ object-fit:contain!important; object-position:center center!important; }
+.hero.hero--cover  img{ object-fit:cover!important; }
 
 /* Tech overlays */
 .hero::before, .hero::after{ content:""; position:absolute; inset:0; pointer-events:none; }
@@ -216,32 +228,54 @@ a:where([rel~="external"])::after{ content:" ↗"; font-size:.9em; opacity:.8; }
   background:
     linear-gradient(to right, rgba(11,11,15,.92), transparent 7%, transparent 93%, rgba(11,11,15,.92)),
     linear-gradient(to bottom, rgba(11,11,15,.9), transparent 10%, transparent 90%, rgba(11,11,15,.9));
-  mix-blend-mode:multiply; opacity:.95;
+  mix-blend-mode:multiply; opacity:.95; z-index:0;
 }
 .hero::after{
   /* scanlines + slight cyan bloom */
   background:
     radial-gradient(80% 130% at 50% 8%, rgba(122,243,255,.06), transparent 60%),
     repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 3px);
-  opacity:.12;
+  opacity:.12; z-index:1;
 }
 @media (prefers-reduced-motion:no-preference){
   @keyframes scanFloat{ to{ background-position-y:12px } }
   .hero::after{ animation:scanFloat 8s linear infinite; will-change:background-position; }
 }
 
-/* iOS/WebKit & many in-app webviews (FB/IG/Messenger) hardening */
+/* Optional pulse shock — add class "pulse" to .hero */
+.hero.pulse::after{
+  /* layer on top of scanlines */
+  content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
+  opacity:var(--pulse-opacity);
+  background:
+    radial-gradient(circle at 50% 55%, var(--pulse-c1) 0 6%, transparent 35%),
+    radial-gradient(circle at 50% 55%, var(--pulse-c2) 0 3%, transparent 22%);
+  mix-blend-mode:screen; background-repeat:no-repeat;
+  background-position:center center, center center; transform:translateZ(0);
+}
+@media (prefers-reduced-motion:no-preference){
+  @keyframes pulseShock{
+    0%{background-size:10% 10%,6% 6%;opacity:0}
+    6%{opacity:var(--pulse-opacity)}
+    30%{background-size:120% 120%,90% 90%;opacity:.10}
+    60%{background-size:220% 220%,160% 160%;opacity:.06}
+    100%{background-size:320% 320%,240% 240%;opacity:0}
+  }
+  .hero.pulse::after{ animation:pulseShock 6.5s cubic-bezier(.22,.7,.15,1) infinite; }
+}
+
+/* iOS/WebKit & in-app webviews hardening */
 @supports (-webkit-touch-callout:none){
-  .hero>img{ opacity:1 !important; filter:none !important; }
+  .hero img{ opacity:1 !important; filter:none !important; }
 }
 @media (prefers-reduced-data:reduce), (prefers-reduced-motion:reduce){
   .hero::after{ animation:none !important; }
-  .hero>img{ opacity:1 !important; }
+  .hero img{ opacity:1 !important; }
 }
 
 /* Graceful small phones */
-@media (max-width:640px){ .hero>img{ max-height:44vh } }
-@media (max-width:420px){ .hero:not(.hero--contain)>img{ object-fit:contain } }
+@media (max-width:640px){ .hero img{ max-height:44vh } }
+@media (max-width:420px){ .hero:not(.hero--contain) img{ object-fit:contain } }
 
 .hero-grid{ position:absolute; inset:0; pointer-events:none; opacity:.18; }
 .sigil-line{ height:2px; background:linear-gradient(90deg, transparent, var(--gold), transparent); opacity:.65; }
@@ -265,7 +299,7 @@ a:where([rel~="external"])::after{ content:" ↗"; font-size:.9em; opacity:.8; }
   border:1px solid var(--line);
   border-radius:var(--radius-md);
   padding:var(--pad-card) var(--pad-card) calc(var(--pad-card) - 2px);
-  box-shadow:0 10px 20px var(--shadow), inset 0 0 24px rgba(255,200,107,.03);
+  box-shadow:0 6px 14px var(--shadow);
   transform:translateZ(0);
   will-change:transform, opacity;
   opacity:.98; backface-visibility:hidden; transform-style:preserve-3d; perspective:900px;
@@ -296,7 +330,7 @@ a:where([rel~="external"])::after{ content:" ↗"; font-size:.9em; opacity:.8; }
 /* Reveal & micro-pulse */
 @media (prefers-reduced-motion:no-preference){
   .card{ opacity:0; transform:translate3d(0,6px,0); }
-  .card.visible{ animation:reveal var(--dur-2) var(--ease) both, cardIdle 12s ease-in-out infinite both; }
+  .card.visible{ animation:reveal var(--dur-2) var(--ease) both, cardIdle 12s ease-in-out infinite both; box-shadow:0 10px 20px var(--shadow); }
   @keyframes reveal{ to{ opacity:.98; transform:translate3d(0,0,0); } }
   @keyframes cardIdle{
     0%,100%{ box-shadow:0 10px 20px var(--shadow), inset 0 0 18px rgba(255,200,107,.03); }
@@ -488,6 +522,7 @@ body.perf-fast,
   }
   body::before, body::after { display: none !important; }
   .hero::after { display: none !important; }
+  .hero.pulse::after { display:none !important; }
   .card { box-shadow: 0 8px 16px var(--shadow); }
   .card::before, .card::after { display: none !important; }
   .eq { box-shadow: inset 0 0 12px rgba(255,200,107,.03); }
@@ -495,13 +530,13 @@ body.perf-fast,
 
 /* 4.4: Lighter scrolling compositing */
 * { will-change: auto !important; }             /* drop global will-change to avoid extra layers */
-.hero>img { will-change: opacity; }             /* keep where it matters */
+.hero img { will-change: opacity; }             /* keep where it matters */
 .eq .eq-scroll { -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
 
 /* 4.5: Micro-optimizations for mobile */
 @media (max-width: 480px) {
   .title { font-size: clamp(26px, 6vw, 40px); }
-  .hero>img { max-height: 42vh; }
+  .hero img { max-height: 42vh; }
   .card { padding: 14px; }
 }
 
@@ -515,7 +550,7 @@ body.perf-fast,
 }
 
 /* ------------------------------ Banner Fallbacks ------------------------------ */
-@supports not (aspect-ratio: 16/9){ .hero>img{ height:clamp(200px,30vw,360px); } }
+@supports not (aspect-ratio: 16/9){ .hero img{ height:clamp(200px,30vw,360px); } }
 
 /* ------------------------------ Heading Spacing in Cards ------------------------------ */
 .card h2:first-child, .card h3:first-child{ margin-top:4px; }
