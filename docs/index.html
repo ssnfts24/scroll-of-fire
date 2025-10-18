@@ -178,24 +178,23 @@
   </script>
 
   <main class="wrap">
+<!-- HERO (drop this in place of your current <figure> … </figure>) -->
 <figure class="hero hero--cover pulse" aria-label="Scroll of Fire — Codex of Reality Banner">
-  <picture class="hero-media">
-    <source type="image/avif" srcset="https://ssnfts24.github.io/scroll-of-fire/docs/assets/banner.avif">
-    <source type="image/webp" srcset="https://ssnfts24.github.io/scroll-of-fire/docs/assets/banner.webp">
+  <picture class="hero-media" id="heroPicture" data-png="/scroll-of-fire/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
+           data-png-fallback="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png">
+    <!-- Only include AVIF/WEBP IF the files actually exist; JS will add them when confirmed -->
+    <!-- sources inserted by JS when 200 OK -->
     <img id="heroBanner"
-         src="https://ssnfts24.github.io/scroll-of-fire/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
+         src="/scroll-of-fire/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
          alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
-         width="1600" height="900"
-         loading="eager" decoding="async" fetchpriority="high"
-         referrerpolicy="no-referrer"
-         style="aspect-ratio:16/9"
-         onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png';">
+         width="1600" height="900" loading="eager" decoding="async" fetchpriority="high"
+         style="aspect-ratio:16/9">
   </picture>
 
-  <!-- faint pulse layer -->
+  <!-- pulse layer (stacks with scanlines) -->
   <span class="hero-pulse" aria-hidden="true"></span>
 
-  <!-- HUD grid + gold line + noscript -->
+  <!-- HUD grid + gold line -->
   <svg class="hero-grid" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
     <defs><pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse">
       <path d="M5 0V5 M0 5H5" vector-effect="non-scaling-stroke" />
@@ -205,7 +204,7 @@
   <div class="sigil-line" aria-hidden="true"></div>
 
   <noscript>
-    <img src="https://ssnfts24.github.io/scroll-of-fire/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
+    <img src="/scroll-of-fire/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20%281%29.png"
          alt="Scroll of Fire — Codex of Reality banner" width="1600" height="900">
   </noscript>
 </figure>
