@@ -1,6 +1,10 @@
 /* ======================================================================
-   Scroll of Fire — Codex.js (v2.1)
+   Scroll of Fire — Codex.js (v2.2)
    Bulletproof banner • hero toolbar • palette • mini-TOC • a11y/perf
+   - Robust hero detection & failover (local→remote), auto-fit & persistence
+   - Motion-safe equation activation + resize tidy
+   - Deferred heavy features (palette / mini-TOC) on idle
+   - Accessibility hardening, reduced-data/motion guards
    ====================================================================== */
 (() => {
   "use strict";
@@ -13,6 +17,10 @@
   const raf = (fn) => (window.requestAnimationFrame || ((f)=>setTimeout(f,16)))(fn);
   const caf = (id) => (window.cancelAnimationFrame || clearTimeout)(id);
   const now = () => (performance && performance.now ? performance.now() : Date.now());
+  const ri = (fn, timeout=800) => {
+    const ric = window.requestIdleCallback;
+    return ric ? ric(fn, { timeout }) : setTimeout(fn, Math.min(timeout, 600));
+  };
 
   const store = {
     get(k, d=null){ try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
@@ -23,7 +31,7 @@
   const conn  = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   const saveD = !!(conn && conn.saveData);
   const mqReduced = matchMedia("(prefers-reduced-motion: reduce)");
-  const prefersReduced = mqReduced && mqReduced.matches;
+  const prefersReduced = !!(mqReduced && mqReduced.matches);
 
   const hasIO = "IntersectionObserver" in window;
   const hasRO = "ResizeObserver" in window;
@@ -40,8 +48,11 @@
   const debounce = (fn, ms = 120) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; };
   const throttleRAF = (fn) => { let running=false; return (...a)=>{ if(running) return; running=true; raf(()=>{ running=false; fn(...a); }); }; };
 
+  const log = (m)=>{ if (window.SOFTelemetry) console.log("[Codex.js]", m); };
+
   /* --------------------------- site basics / a11y -------------------------- */
   function setYear(){ const y=$("#yr"); if (y) y.textContent=String(new Date().getFullYear()); }
+
   function hardenExternal(){
     const hereHost = location.hostname.replace(/^www\./,"");
     $$('a[target="_blank"]').forEach(a=>{
@@ -61,75 +72,18 @@
   function wireSimpleMode(){
     const c1 = $("#simple");
     const c2 = $("#simple-dup");
-    const apply = (on)=>{
-      document.body.classList.toggle("simple-on", !!on);
-      if (c1 && c1.checked!==on) c1.checked=on;
-      if (c2 && c2.checked!==on) c2.checked=on;
-      store.set("codex:simple", !!on);
+    const apply = (onFlag)=>{
+      document.body.classList.toggle("simple-on", !!onFlag);
+      if (c1 && c1.checked!==onFlag) c1.checked=onFlag;
+      if (c2 && c2.checked!==onFlag) c2.checked=onFlag;
+      store.set("codex:simple", !!onFlag);
     };
     const saved = store.get("codex:simple", false);
     apply(!!saved);
     [c1,c2].forEach(c=> c && on(c,"change",()=>apply(c.checked)));
   }
 
-  /* -------------------------------- banner --------------------------------- */
-  function initBanner(){
-    const img = $("#heroBanner");
-    const fig = img && img.closest(".hero");
-    if(!img || !fig) return;
-
-    const localSrc   = img.getAttribute("data-src-local") || img.getAttribute("src") || "";
-    const remoteSrc  = img.getAttribute("data-src-raw")   || "";
-    const localSet   = img.getAttribute("data-srcset-local") || "";
-    const remoteSet  = img.getAttribute("data-srcset-raw")   || "";
-    const sizesAttr  = img.getAttribute("data-sizes") || "(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px";
-    const authorFit  = (img.getAttribute("data-fit")||"").toLowerCase(); // ""|"contain"|"cover"
-    const prefFit    = store.get("codex:hero-fit", authorFit || "auto");
-
-    setHeroFit(fig, prefFit);
-
-    if (localSet){ img.srcset = localSet; img.sizes = sizesAttr; }
-    else if (localSrc){ img.src = localSrc; }
-
-    // hard fallback (silent stalls + errors)
-    let timeoutId = setTimeout(()=>{ if (!img.complete || !img.naturalWidth) { if (remoteSrc) img.src = remoteSrc; } }, 4000);
-    img.onerror = () => { if (remoteSrc && !img.src.includes(remoteSrc)) img.src = remoteSrc; };
-    on(img,"load", ()=> clearTimeout(timeoutId), { once:true });
-
-    img.classList.add("hero-ready");
-
-    const onLoad = () => checkFitAuto(fig, img, prefFit);
-    if (img.complete && img.naturalWidth>0) onLoad(); else on(img,"load",onLoad,{once:true});
-
-    if (!remoteSrc || isMetaApp || isOffline() || saveD) {
-      wireHeroObservers(fig, img, prefFit);
-      buildHeroToolbar(fig, img);
-      return;
-    }
-
-    const probe = new Image();
-    probe.decoding="async"; probe.loading="eager"; probe.referrerPolicy="no-referrer";
-    const swap = ()=> {
-      if (remoteSet && prefFit!=="contain"){ img.srcset = remoteSet; img.sizes = sizesAttr; void img.currentSrc; }
-      else { img.src = remoteSrc; img.removeAttribute("srcset"); img.removeAttribute("sizes"); }
-    };
-    const safeSwap = ()=> (typeof probe.decode==="function" ? probe.decode().then(swap).catch(swap) : swap());
-    on(probe,"load",safeSwap,{once:true});
-    on(probe,"error",()=>{/* keep local */},{once:true});
-    probe.src = remoteSrc;
-
-    const retryOnce = () => {
-      window.removeEventListener("online", retryOnce);
-      if (img && remoteSrc && !img.src.includes(remoteSrc)) {
-        probe.src = remoteSrc + (remoteSrc.includes("?") ? "&" : "?") + "r=" + Date.now();
-      }
-    };
-    on(window,"online",retryOnce,{once:true});
-
-    wireHeroObservers(fig, img, prefFit);
-    buildHeroToolbar(fig, img);
-  }
-
+  /* ------------------------------ hero helpers ----------------------------- */
   function setHeroFit(fig, mode){ // "cover" | "contain" | "auto"
     fig.dataset.fit = mode;
     fig.classList.toggle("hero--contain", mode==="contain");
@@ -147,7 +101,7 @@
     return Number.isFinite(n) && n>0 ? n : null;
   }
   function checkFitAuto(fig, img, pref){
-    if (pref==="contain" || pref==="cover") return; // user forced
+    if (pref==="contain" || pref==="cover") return; // user-forced
     const natW = img.naturalWidth  || +img.getAttribute("width")  || 0;
     const natH = img.naturalHeight || +img.getAttribute("height") || 0;
     const cssAspect = getComputedStyle(img).getPropertyValue("--hero-aspect").trim() || "16/9";
@@ -168,15 +122,111 @@
     if (hasRO){ const ro=new ResizeObserver(reflow); ro.observe(fig); }
   }
 
+  function findHeroElements(){
+    // Primary path
+    let img = $("#heroBanner");
+    let fig = img && img.closest(".hero");
+    // Fallbacks for minor markup shifts
+    if (!fig) fig = $("#hero") || $(".hero");
+    if (!img && fig) img = $("img", fig);
+    if (!img) img = $(".hero img");
+    return { fig, img };
+  }
+
+  /* -------------------------------- banner --------------------------------- */
+  function initBanner(){
+    const { fig, img } = findHeroElements();
+    if(!img || !fig){ log("hero not found; will retry on load"); on(window,"load",()=>{ const h=findHeroElements(); if(h.img && h.fig) initBanner(); }); return; }
+
+    // Data attributes (HTML supplies local + remote)
+    const localSrc  = img.getAttribute("data-src-local") || img.getAttribute("src") || "";
+    const remoteSrc = img.getAttribute("data-src-raw")   || "";
+    const localSet  = img.getAttribute("data-srcset-local") || "";
+    const remoteSet = img.getAttribute("data-srcset-raw")   || "";
+    const sizesAttr = img.getAttribute("data-sizes") || "(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px";
+    const authorFit = (img.getAttribute("data-fit")||"").toLowerCase(); // ""|"contain"|"cover"
+    const prefFit   = store.get("codex:hero-fit", authorFit || "auto");
+
+    // Apply saved fit first
+    setHeroFit(fig, prefFit);
+
+    // Seed local srcset/src for first paint
+    if (localSet){ img.srcset = localSet; img.sizes = sizesAttr; }
+    else if (localSrc){ img.src = localSrc; }
+
+    // Hard fallback for stalls/errors (swap to remote)
+    let swapped = false;
+    const tryRemote = ()=>{
+      if (swapped) return;
+      if (remoteSrc) {
+        swapped = true;
+        img.removeAttribute("srcset");
+        img.removeAttribute("sizes");
+        img.src = remoteSrc;
+        log("hero swapped to remote");
+      }
+    };
+    // Stall timer (silent failures / throttled)
+    let stallId = setTimeout(()=>{ if (!img.complete || !img.naturalWidth) tryRemote(); }, 4000);
+    img.onerror = () => tryRemote();
+    on(img,"load", ()=> clearTimeout(stallId), { once:true });
+
+    // Ready class for weird in-app browsers
+    img.classList.add("hero-ready");
+
+    // Auto-fit when we know nat size
+    const onLoad = () => checkFitAuto(fig, img, prefFit);
+    if (img.complete && img.naturalWidth>0) onLoad(); else on(img,"load",onLoad,{once:true});
+
+    // Cautious environments: skip remote probe
+    if (!remoteSrc || isMetaApp || isOffline() || saveD) {
+      wireHeroObservers(fig, img, prefFit);
+      buildHeroToolbar(fig);
+      // Pulse default OFF for save-data/meta apps to paint faster
+      if (isMetaApp || saveD){ fig.classList.remove("pulse"); store.set("codex:hero-pulse", false); }
+      return;
+    }
+
+    // Probe remote first; only swap srcset when confirmed
+    const probe = new Image();
+    probe.decoding="async"; probe.loading="eager"; probe.referrerPolicy="no-referrer";
+    const swapSrc = ()=> {
+      if (remoteSet && (store.get("codex:hero-fit","auto")!=="contain")){
+        img.srcset = remoteSet; img.sizes = sizesAttr; void img.currentSrc;
+      } else {
+        img.src = remoteSrc; img.removeAttribute("srcset"); img.removeAttribute("sizes");
+      }
+    };
+    const safeSwap = ()=> (typeof probe.decode==="function" ? probe.decode().then(swapSrc).catch(swapSrc) : swapSrc());
+    on(probe,"load",safeSwap,{once:true});
+    on(probe,"error",()=>{/* keep local */},{once:true});
+    probe.src = remoteSrc;
+
+    // Retry once when back online
+    const retryOnce = () => {
+      window.removeEventListener("online", retryOnce);
+      if (img && remoteSrc && !img.src.includes(remoteSrc)) {
+        probe.src = remoteSrc + (remoteSrc.includes("?") ? "&" : "?") + "r=" + Date.now();
+      }
+    };
+    on(window,"online",retryOnce,{once:true});
+
+    wireHeroObservers(fig, img, prefFit);
+    buildHeroToolbar(fig);
+  }
+
   /* ----------------------------- hero toolbar ----------------------------- */
   function buildHeroToolbar(fig){
     if ($(".hero-ui", fig)) return;
+
     const ui = document.createElement("div");
     ui.className = "hero-ui";
+    ui.setAttribute("role","toolbar");
+    ui.setAttribute("aria-label","Banner controls");
     ui.innerHTML = `
-      <button class="hero-btn" data-act="fit">Contain</button>
-      <button class="hero-btn" data-act="zoom">Zoom</button>
-      <button class="hero-btn" data-act="pulse">Pulse</button>
+      <button class="hero-btn" data-act="fit" aria-pressed="false" title="Toggle fit">Contain</button>
+      <button class="hero-btn" data-act="zoom" title="View full screen">Zoom</button>
+      <button class="hero-btn" data-act="pulse" title="Toggle pulse">Pulse</button>
     `;
     fig.appendChild(ui);
 
@@ -187,10 +237,12 @@
     const updateFitLabel = ()=>{
       const m = fig.dataset.fit || "auto";
       bFit.textContent = (m==="contain" ? "Cover" : "Contain");
+      bFit.setAttribute("aria-pressed", String(m==="contain"));
     };
     const updatePulseState = ()=>{
       const on = fig.classList.contains("pulse");
       bPulse.textContent = on ? "Pulse: On" : "Pulse: Off";
+      bPulse.setAttribute("aria-pressed", String(on));
     };
     updateFitLabel(); updatePulseState();
 
@@ -203,6 +255,7 @@
       fig.classList.toggle("is-zoomed");
       bZoom.textContent = fig.classList.contains("is-zoomed") ? "Close" : "Zoom";
       document.documentElement.style.overflow = fig.classList.contains("is-zoomed") ? "hidden" : "";
+      if (!fig.classList.contains("is-zoomed")) bZoom.focus(); // focus recovery
     });
     on(bPulse,"click",()=>{
       const nowOn = !fig.classList.contains("pulse");
@@ -211,14 +264,18 @@
       store.set("codex:hero-pulse", nowOn);
     });
 
+    // Restore pulse pref (default true unless save-data / meta toggled it off)
     const pulsePref = store.get("codex:hero-pulse", true);
-    fig.classList.toggle("pulse", !!pulsePref); updatePulseState();
+    fig.classList.toggle("pulse", !!pulsePref);
+    updatePulseState();
 
+    // Close zoom on ESC
     on(document,"keydown",(e)=>{
       if (e.key==="Escape" && fig.classList.contains("is-zoomed")){
         fig.classList.remove("is-zoomed");
         bZoom.textContent="Zoom";
         document.documentElement.style.overflow="";
+        bZoom.focus();
       }
     });
   }
@@ -279,7 +336,7 @@
       let rid=0;
       const onMove=(e)=>{
         const r=card.getBoundingClientRect();
-        const p = "touches" in e && e.touches.length ? e.touches[0] : e;
+        const p = "touches" in e && e.touches && e.touches.length ? e.touches[0] : e;
         const x=(p.clientX - r.left)/r.width, y=(p.clientY - r.top)/r.height;
         caf(rid); rid=raf(()=>{
           const rx=(0.5-y)*4, ry=(x-0.5)*6;
@@ -350,16 +407,16 @@
     const input = $("input", shell);
     const list  = $("ul", shell);
 
-    // static list of items from headings + a few quick links
+    // Gather items from headings + a few quick links
     const items = [];
     $$("main h2[id], main h3[id]").forEach(h=>{
-      items.push({label:h.textContent.trim(), href:"#"+h.id});
+      const label = (h.textContent||"").trim();
+      if (label) items.push({label, href:"#"+h.id});
     });
     $$(".list a[href]").slice(0,10).forEach(a=>{
-      items.push({label:(a.textContent||a.href).trim(), href:a.href});
+      items.push({label:((a.textContent||a.href)||"").trim(), href:a.href});
     });
 
-    // render once, then filter in-place (avoid rebinding handlers repeatedly)
     let view = []; let idx = 0;
     const setSel=(n)=>{
       idx=Math.max(0, Math.min(n, list.children.length-1));
@@ -391,7 +448,7 @@
       input.blur();
     };
 
-    // bind once
+    // Bind once
     on(list, "click", (e)=>{ const li=e.target.closest("li"); if(li){ idx=[...list.children].indexOf(li); go(); } });
     on(input, "keydown", (e)=>{
       if (e.key==="ArrowDown"){ e.preventDefault(); setSel(idx+1); }
@@ -407,7 +464,6 @@
     });
     on(shell, "click", (e)=>{ if (e.target === shell) close(); });
 
-    // initial build
     render("");
   }
 
@@ -427,8 +483,7 @@
     on(document, "visibilitychange", ()=>{
       if (document.visibilityState === "visible") {
         typesetSoon(80);
-        const img=$("#heroBanner"), fig=img && img.closest(".hero");
-        if (img && fig) checkFitAuto(fig, img, fig.dataset.fit||"auto");
+        const h=findHeroElements(); if (h.img && h.fig) checkFitAuto(h.fig, h.img, h.fig.dataset.fit||"auto");
       }
     });
     on(window,"pageshow",(e)=>{
@@ -449,8 +504,8 @@
     typesetOnFontsReady();
     focusAnchors();
     backToTop();
-    miniTOCHighlight();
-    palette();
+    // Defer heavier non-critical features
+    ri(()=>{ miniTOCHighlight(); palette(); });
     visibilityFixes();
   }
   on(document,"DOMContentLoaded",boot);
@@ -458,12 +513,12 @@
   // Keep MathJax tidy on resizes (and when RO is absent)
   if (hasRO){
     const ro = new ResizeObserver(debounce(()=>typesetSoon(120),120));
-    $$(".eq").forEach(el=> ro.observe(el));
+    // Observe lazily (after DOM ready)
+    on(document,"DOMContentLoaded",()=> $$(".eq").forEach(el=> ro.observe(el)));
   } else {
     on(window,"resize", debounce(()=>typesetSoon(120),200), {passive:true});
   }
 
-  // Opt-in telemetry
-  function log(m){ if (window.SOFTelemetry) console.log("[Codex.js]", m); }
   log("ready @ " + Math.round(now()) + "ms");
 })();
+```0
