@@ -1,0 +1,29 @@
+<section class="grid">
+  <article class="card col-6">
+    <h2>Carrier Picker</h2>
+    <label>Carrier (Hz): <output id="carrierOut">528</output></label>
+    <input id="carrier" type="range" min="369" max="528" step="1" value="528">
+    <p class="hint">432 = grounding • 528 = repair • 369 = lock-in/novelty</p>
+  </article>
+
+  <article class="card col-6">
+    <h2>Phrase Weights (Eq.16)</h2>
+    <p>Distribute emphasis (sum = 1.0)</p>
+    <div class="weights">
+      <label>Verb<input type="number" step="0.05" value="0.40"></label>
+      <label>Noun<input type="number" step="0.05" value="0.35"></label>
+      <label>Qualifier<input type="number" step="0.05" value="0.25"></label>
+    </div>
+    <button class="cta" id="normalize">Normalize</button>
+    <p class="hint">Fewer negations, active verbs → higher Ξ.</p>
+  </article>
+
+  <article class="card col-12">
+    <h2>Session Journal</h2>
+    <textarea id="journal" rows="6" placeholder="Intention → Phrase → Noticed outcomes..."></textarea>
+    <button class="cta" id="saveSession">Save Entry</button>
+    <p class="hint">Weekly review computes memory window (Eq.15) and remnant trend (Eq.5).</p>
+  </article>
+</section>
+
+<script type="module" src="/assets/js/teaching-widgets.js"></script>
