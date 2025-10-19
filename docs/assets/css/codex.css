@@ -513,6 +513,136 @@ body.perf-fast,
   @media (hover:hover){ .card:hover{ box-shadow:0 12px 24px var(--shadow) } }
 }
 
+
+
+
+/* ======================================================================
+   vNext Upgrades — non-breaking, opt-in helpers
+   Paste at the end of codex.css
+   ====================================================================== */
+
+/* 1) Equation UX — snap, edge-fade, scroll shadows, larger tap targets */
+.eq .eq-scroll{
+  scroll-snap-type: x proximity;
+  mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+  scrollbar-gutter: stable both-edges;
+  cursor: grab;
+}
+.eq .eq-scroll:active{ cursor: grabbing }
+.eq mjx-container{ scroll-snap-align: start; padding-right: 24px } /* easier chunking on swipe */
+.eq.is-edge-left .eq-scroll,
+.eq .eq-scroll:is(:hover, :focus-within){
+  mask-image: linear-gradient(to right, transparent 0, #000 20px, #000 calc(100% - 20px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 20px, #000 calc(100% - 20px), transparent 100%);
+}
+/* subtle scroll shadows to hint “more content” */
+.eq::before{
+  content:""; position:absolute; inset:0 0 0 auto; width:24px; pointer-events:none;
+  background:linear-gradient(to left, rgba(0,0,0,.0), rgba(0,0,0,.25));
+  border-radius:inherit; opacity:.35;
+}
+.eq::after{ /* already defined in your sheet; boost glow slightly on hover */
+  transition:opacity .2s var(--ease);
+}
+.eq:hover::after{ opacity:1 }
+
+/* 2) Equation pop-out (JS toggles .eq--expanded on click) */
+.eq--expanded{
+  position:fixed; inset:4svh 4svw; z-index:10000; border-radius:16px;
+  background:#0b0b10; border:1px solid #2a2a33; box-shadow:0 40px 120px rgba(0,0,0,.6);
+  display:flex; flex-direction:column;
+}
+.eq--expanded .eq-scroll{
+  flex:1; padding:18px 22px; max-height:unset; overflow:auto; mask:none; -webkit-mask-image:none;
+}
+.eq--expanded .eq-close{
+  position:absolute; right:12px; top:10px; appearance:none; border:1px solid #2a2a33;
+  background:rgba(255,255,255,.03); color:var(--ink); padding:6px 10px; border-radius:10px;
+  font:600 13px/1 Inter; cursor:pointer;
+}
+@media (max-width:720px){
+  .eq--expanded{ inset:0; border-radius:0 }
+}
+
+/* 3) Card “teaching” variant — stronger rim + header strap */
+.card.card--teach{
+  border-color:#2f2f39;
+  box-shadow:0 10px 22px var(--shadow), inset 0 0 30px rgba(122,243,255,.06);
+}
+.card--teach .strap{
+  display:inline-block; margin:-6px 0 10px; padding:6px 10px; border-radius:999px;
+  border:1px solid #293042; background:linear-gradient(180deg,rgba(122,243,255,.09),rgba(122,243,255,.03));
+  font:700 12px/1 Inter; letter-spacing:.08em; text-transform:uppercase; color:#dff6ff;
+}
+
+/* 4) Sticky mini-TOC (works with your grid aside) */
+.mini-toc{
+  position:sticky; top:calc(12px + var(--safe-top)); align-self:start;
+  border-radius:12px; border:1px solid #222633; padding:10px;
+  background:linear-gradient(180deg, #0e0e14, #0b0b10);
+}
+.mini-toc a{ display:block; padding:6px 8px; border-radius:8px; font-size:var(--fs-0) }
+.mini-toc a:is(:hover,:focus-visible){ background:rgba(255,255,255,.04) }
+
+/* 5) Tabs (pure CSS, target-based) */
+.tabs{ --tab-b:#2a2a33; --tab-bg:rgba(255,255,255,.03) }
+.tabs .tab-list{ display:flex; gap:8px; flex-wrap:wrap; margin:0 0 10px }
+.tabs .tab-list a{
+  display:inline-block; padding:8px 10px; border:1px solid var(--tab-b); border-radius:10px; text-decoration:none;
+  background:var(--tab-bg); font:600 14px/1 Inter;
+}
+.tabs .tab-panel{ display:none; }
+.tabs .tab-panel:target{ display:block; }
+.tabs .tab-list a[aria-current="true"]{ border-color:#3a3a44; background:rgba(255,255,255,.06) }
+
+/* 6) Accordion (details/summary polish) */
+details.codex{
+  border:1px solid #2a2a33; border-radius:12px; padding:8px 10px; background:rgba(255,255,255,.02);
+}
+details.codex + details.codex{ margin-top:10px }
+details.codex summary{
+  cursor:pointer; list-style:none; font-weight:600;
+}
+details.codex[open]{ box-shadow:inset 0 0 18px rgba(122,243,255,.06) }
+details.codex summary::-webkit-details-marker{ display:none }
+
+/* 7) Tooltips (for inline symbols/abbr) */
+.tip{
+  position:relative; border-bottom:1px dotted rgba(255,255,255,.35); cursor:help;
+}
+.tip:hover::after{
+  content:attr(data-tip); position:absolute; left:0; top:calc(100% + 6px); z-index:20;
+  white-space:nowrap; padding:6px 8px; border-radius:8px; font-size:var(--fs-0);
+  color:var(--ink); background:#0f0f16; border:1px solid #2a2a33; box-shadow:0 10px 20px rgba(0,0,0,.35);
+}
+
+/* 8) Header anchors (auto “#” when you wrap <a class="anchor">) */
+a.anchor{ color:var(--muted); text-decoration:none; margin-left:.4em; font-weight:800; opacity:.6 }
+a.anchor:hover{ opacity:1; text-shadow:0 0 8px rgba(122,243,255,.22) }
+
+/* 9) Nicer horizontal scrollers everywhere (including tables) */
+.scroller{
+  overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-gutter:stable both-edges;
+  mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent);
+}
+
+/* 10) “Back to section” floating button (optional) */
+.to-section{
+  position:sticky; bottom:10px; margin-left:auto; display:inline-block;
+  padding:8px 10px; border-radius:10px; border:1px solid #2a2a33; background:rgba(255,255,255,.02);
+  font:600 13px/1 Inter;
+}
+
+/* 11) Focus ring helper for keyboard nav on .card and .eq */
+.card:focus-within, .eq:focus-within{
+  outline:2px solid var(--ring); outline-offset:2px; border-radius:12px;
+}
+
+/* 12) Micro-interactions for buttons/CTAs inside cards */
+.card .cta{ transition: transform .18s var(--ease), box-shadow .18s var(--ease) }
+.card .cta:active{ transform: translateY(0) scale(.99) }
 /* Banner fallback for old browsers */
 @supports not (aspect-ratio:16/9){ .hero img{ height:clamp(200px,30vw,360px) } }
 
