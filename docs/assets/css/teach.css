@@ -1,36 +1,79 @@
 /* ======================================================================
-   Scroll of Fire — Teaching Lab (lab.css)
-   Neon glass · motion-safe · ARIA-ready · mobile-first
-   Namespace: .lab-* to avoid collisions with codex.css
+   Scroll of Fire — Teaching Lab (teach.css)
+   Wizard-tech × Golden HUD · motion-safe · ARIA-ready · mobile-first
+   Namespace: .lab-*  (avoids collisions with codex.css)
    ====================================================================== */
 
 /* ------------------------------ Theme & Resets ------------------------------ */
 :root{
+  /* Core palette (harmonized with codex.css) */
   --lab-bg:#0a0a10; --lab-ink:#eae7df; --lab-muted:#b8b3a6; --lab-line:#23232c;
-  --lab-panel:#0f0f14; --lab-gold:#f3c97a; --lab-cyan:#7af3ff; --lab-blue:#7aa8ff; --lab-mint:#9cffdd;
-  --lab-shadow:rgba(0,0,0,.38); --lab-radius:14px; --lab-radius-lg:18px; --lab-pad:14px;
-  --lab-ease:cubic-bezier(.2,.7,.2,1); --lab-dur-1:.2s; --lab-dur-2:.5s;
+  --lab-panel:#0f0f14; --lab-elev:#101017;
+  --lab-gold:#f3c97a; --lab-cyan:#7af3ff; --lab-blue:#7aa8ff; --lab-mint:#9cffdd; --lab-amber:#ffdd9e;
+
+  /* FX */
+  --lab-shadow:rgba(0,0,0,.38);
+  --lab-glow-cyan:0 0 18px rgba(122,243,255,.15);
+  --lab-glow-gold:0 0 16px rgba(243,201,122,.18);
+  --lab-glow-blue:0 0 14px rgba(122,168,255,.14);
+
+  /* Layout / Type */
+  --lab-radius:14px; --lab-radius-lg:20px; --lab-pad:14px;
+  --lab-fs-0:14px; --lab-fs-1:16px; --lab-fs-2:18px; --lab-fs-3:clamp(20px,2.6vw,24px);
+
+  /* Motion */
+  --lab-ease:cubic-bezier(.2,.7,.2,1); --lab-dur-1:.22s; --lab-dur-2:.55s;
+
+  /* Rings / timers */
+  --lab-ring-width:6;
+
+  /* Focus */
+  --lab-ring:#7af3ff; --lab-ring-outer:rgba(122,243,255,.14); --lab-ring-inset:rgba(122,168,255,.38);
 }
 @media (prefers-color-scheme: light){
-  :root{ --lab-bg:#f6f7fb; --lab-ink:#101217; --lab-muted:#3a3a44; --lab-panel:#ffffff; --lab-line:#dfe2ea }
+  :root{
+    --lab-bg:#f6f7fb; --lab-ink:#101217; --lab-muted:#3a3a44; --lab-panel:#ffffff; --lab-elev:#ffffff; --lab-line:#dfe2ea;
+  }
 }
 
-.lab-wrap{ padding-top:14px; color:var(--lab-ink) }
+/* Page wrapper inherits Codex typography; we add ambience */
+.lab-wrap{
+  padding-top:14px; color:var(--lab-ink);
+  background:
+    radial-gradient(1400px 700px at 15% -10%, rgba(122,243,255,.06), transparent 60%),
+    radial-gradient(1200px 600px at 85% -8%, rgba(243,201,122,.07), transparent 62%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.02) 0 1px, transparent 1px 11px);
+}
+
+/* Star-line HUD */
+.lab-wrap::before{
+  content:""; position:fixed; inset:-4% -4% auto -4%; height:52vh; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(420px 220px at 18% -6%, rgba(243,201,122,.18), transparent 60%),
+    radial-gradient(640px 320px at 80% -4%, rgba(122,243,255,.14), transparent 70%);
+  mix-blend-mode:screen; opacity:.75; filter:blur(0.2px);
+}
+.fancy-head, .lab-card, .desk-card, .lab-eq, .pill-tabs { position:relative; z-index:1 }
+
 .lab-wrap a{ color:var(--lab-ink); text-underline-offset:2px }
 .lab-wrap ::selection{ background:rgba(122,243,255,.25) }
 .lab-wrap :focus-visible{
-  outline:2px solid rgba(122,243,255,.95);
-  box-shadow:0 0 0 4px rgba(122,243,255,.12), 0 0 0 1px rgba(122,168,255,.35) inset;
+  outline:2px solid var(--lab-ring);
+  box-shadow:0 0 0 4px var(--lab-ring-outer), 0 0 0 1px var(--lab-ring-inset) inset;
   border-radius:10px; outline-offset:2px;
 }
 
 /* Ambient head glow */
-.fancy-head{ position:relative; overflow:hidden }
+.fancy-head{ overflow:hidden }
 .fancy-head::after{
-  content:""; position:absolute; inset:-40%; pointer-events:none; filter:blur(10px);
+  content:""; position:absolute; inset:-40%; pointer-events:none; filter:blur(12px);
   background:
-    radial-gradient(1200px 600px at 20% -10%, rgba(122,243,255,.08), transparent 60%),
-    radial-gradient(1200px 600px at 80% -10%, rgba(243,201,122,.06), transparent 60%);
+    radial-gradient(1200px 600px at 20% -10%, rgba(122,243,255,.09), transparent 60%),
+    radial-gradient(1200px 600px at 80% -10%, rgba(243,201,122,.08), transparent 60%);
+}
+@media (prefers-reduced-motion:no-preference){
+  @keyframes auroraSweep{ 0%{transform:translateY(0)} 50%{transform:translateY(10px)} 100%{transform:translateY(0)} }
+  .fancy-head::after{ animation:auroraSweep 14s linear infinite }
 }
 
 /* ------------------------------ Panels / Cards ------------------------------ */
@@ -38,26 +81,47 @@
   background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.006));
   border:1px solid var(--lab-line); border-radius:var(--lab-radius); padding:var(--lab-pad);
   box-shadow:0 8px 18px var(--lab-shadow), inset 0 0 24px rgba(122,243,255,.04);
-  position:relative; isolation:isolate;
+  position:relative; isolation:isolate; backdrop-filter:saturate(120%) blur(0px);
+}
+.lab-card::before,
+.lab-card::after{ content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit }
+.lab-card::before{
+  box-shadow:
+    inset 0 0 0 1px rgba(122,243,255,.16),
+    inset 0 0 28px rgba(122,243,255,.06),
+    inset 0 0 42px rgba(243,201,122,.05);
+  opacity:.9;
 }
 .lab-card::after{
-  content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit;
-  box-shadow: inset 0 0 0 1px rgba(122,243,255,.16), inset 0 0 28px rgba(122,243,255,.06);
-  opacity:.85;
+  background:
+    conic-gradient(from 0deg at 10px 10px, rgba(122,243,255,.45) 0 25%, transparent 0 100%),
+    conic-gradient(from 90deg at calc(100% - 10px) 10px, rgba(122,168,255,.45) 0 25%, transparent 0 100%),
+    conic-gradient(from 180deg at 10px calc(100% - 10px), rgba(156,255,221,.45) 0 25%, transparent 0 100%),
+    conic-gradient(from 270deg at calc(100% - 10px) calc(100% - 10px), rgba(243,201,122,.38) 0 25%, transparent 0 100%);
+  mask:
+    radial-gradient(10px 10px at 10px 10px, #000 90%, transparent 100%),
+    radial-gradient(10px 10px at calc(100% - 10px) 10px, #000 90%, transparent 100%),
+    radial-gradient(10px 10px at 10px calc(100% - 10px), #000 90%, transparent 100%),
+    radial-gradient(10px 10px at calc(100% - 10px) calc(100% - 10px), #000 90%, transparent 100%);
+  mask-composite:exclude; opacity:.26;
 }
-@media (hover:hover){ .lab-card:hover{ box-shadow:0 12px 24px var(--lab-shadow) } }
+@media (hover:hover){
+  .lab-card:hover{ box-shadow:0 12px 24px var(--lab-shadow), inset 0 0 26px rgba(122,243,255,.06) }
+}
 
-/* Head strap (optional) */
+/* Strap / tag for sections */
 .lab-strap{
   display:inline-block; margin:-6px 0 8px; padding:6px 10px; border-radius:999px;
-  border:1px solid var(--lab-line); background:linear-gradient(180deg,rgba(122,243,255,.09),rgba(122,243,255,.03));
-  font:700 12px/1 Inter,system-ui; letter-spacing:.08em; text-transform:uppercase; color:#dff6ff;
+  border:1px solid var(--lab-line); background:linear-gradient(180deg,rgba(122,243,255,.12),rgba(122,243,255,.04));
+  font:700 12px/1 Inter,system-ui; letter-spacing:.08em; text-transform:uppercase; color:#e8fbff;
+  box-shadow:inset 0 0 12px rgba(122,243,255,.06);
 }
 
 /* ------------------------------ Tabs (ARIA-friendly) ------------------------------ */
 .pill-tabs{
   display:flex; align-items:center; gap:8px; padding:8px;
   background:var(--lab-panel); border:1px solid var(--lab-line); border-radius:999px;
+  box-shadow:var(--lab-glow-cyan);
 }
 .pill{
   border:1px solid var(--lab-line); background:#121219; color:var(--lab-ink);
@@ -65,47 +129,70 @@
   transition:border-color var(--lab-dur-1) var(--lab-ease), box-shadow var(--lab-dur-1) var(--lab-ease), background var(--lab-dur-1);
 }
 .pill[aria-selected="true"], .pill.active{
-  border-color:#3a3a44; background:rgba(255,255,255,.06);
-  box-shadow:0 0 0 1px rgba(122,243,255,.25), inset 0 0 20px rgba(122,243,255,.06);
+  border-color:#3a3a44; background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+  box-shadow:0 0 0 1px rgba(122,243,255,.28), inset 0 0 20px rgba(122,243,255,.08), var(--lab-glow-gold);
 }
 .pill:focus-visible{ outline:2px solid var(--lab-cyan) }
+.flex{ flex:1 }
 
 .tab{ display:none; margin-top:14px }
 .tab.active, .tab[aria-hidden="false"]{ display:block }
+
+/* ------------------------------ Inputs & CTAs ------------------------------ */
+.lab-input, .lab-select, .lab-textarea, .lab-btn, .lab-cta, .pill, .pill-tabs{
+  font:600 var(--lab-fs-0)/1 Inter,system-ui;
+}
+input[type="text"], input[type="number"], select, textarea{
+  background:var(--lab-elev); color:var(--lab-ink); border:1px solid var(--lab-line);
+  border-radius:10px; padding:8px 10px; box-shadow:inset 0 0 0 1px rgba(122,243,255,.08);
+}
+textarea{ width:100%; resize:vertical }
+.lab-btn{
+  appearance:none; border:1px solid var(--lab-line); background:rgba(255,255,255,.03);
+  color:var(--lab-ink); padding:8px 12px; border-radius:10px; cursor:pointer;
+  transition:transform var(--lab-dur-1) var(--lab-ease), border-color var(--lab-dur-1);
+}
+.lab-btn:hover{ border-color:#3a3a44 }
+.lab-btn:active{ transform:translateY(1px) }
+.lab-cta{
+  display:inline-block; padding:10px 12px; border-radius:10px; border:1px solid var(--lab-line);
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+}
+.lab-cta:hover{ border-color:#3a3a44 }
 
 /* ------------------------------ Ring Timer ------------------------------ */
 .ring-timer{ display:grid; grid-template-columns: 260px 1fr; gap:14px; align-items:center }
 @media (max-width:920px){ .ring-timer{ grid-template-columns: 1fr } }
 
-.ring{ width:100%; height:auto }
-.ring-bg{ fill:none; stroke:#1c1c25; stroke-width:6 }
+.ring{ width:100%; height:auto; filter:drop-shadow(0 0 10px rgba(122,243,255,.25)); }
+.ring-bg{ fill:none; stroke:#1c1c25; stroke-width:var(--lab-ring-width) }
 .ring-fg{
-  fill:none; stroke:url(#ringGrad); stroke-width:6; stroke-linecap:round;
+  fill:none; stroke:url(#ringGrad); stroke-width:var(--lab-ring-width); stroke-linecap:round;
   transform:rotate(-90deg); transform-origin:60px 60px; stroke-dasharray:100 100; stroke-dashoffset:100;
-  filter:drop-shadow(0 0 10px rgba(122,243,255,.3));
+  filter:drop-shadow(0 0 12px rgba(122,243,255,.35)) drop-shadow(0 0 10px rgba(243,201,122,.15));
 }
 .ring-phase{ fill:var(--lab-ink); font:700 12px Inter,system-ui; letter-spacing:.3px }
 .ring-count{ fill:var(--lab-muted); font:600 10px Inter,system-ui }
 .ring-controls{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
-.lab-btn{
-  appearance:none; border:1px solid var(--lab-line); background:rgba(255,255,255,.03);
-  color:var(--lab-ink); padding:8px 10px; border-radius:10px; font:600 13px/1 Inter; cursor:pointer;
-}
-.lab-btn:hover{ border-color:#3a3a44 }
-.lab-btn:active{ transform:translateY(1px) }
 
 /* ------------------------------ Audio Lab ------------------------------ */
 .audio-pane{ display:grid; gap:8px }
 .audio-controls{ display:flex; gap:10px; align-items:center; flex-wrap:wrap }
 .audio-hint{ color:var(--lab-muted) }
-canvas{ width:100%; background:var(--lab-panel); border:1px solid var(--lab-line); border-radius:12px; box-shadow:inset 0 0 20px rgba(122,243,255,.04) }
+canvas{
+  width:100%; background:var(--lab-panel); border:1px solid var(--lab-line); border-radius:12px;
+  box-shadow:inset 0 0 20px rgba(122,243,255,.05), inset 0 0 0 1px rgba(122,243,255,.10);
+}
 
 /* ------------------------------ Phrase Tuner Pro ------------------------------ */
 .chip-lane{ display:flex; gap:8px; flex-wrap:wrap; min-height:42px; margin:8px 0 }
 .chip{
   padding:6px 10px; border-radius:999px; border:1px solid var(--lab-line); background:#13131a;
-  cursor:grab; user-select:none; transition:transform var(--lab-dur-1) var(--lab-ease), opacity var(--lab-dur-1);
+  cursor:grab; user-select:none;
+  transition:transform var(--lab-dur-1) var(--lab-ease), opacity var(--lab-dur-1), box-shadow var(--lab-dur-1);
+  box-shadow:inset 0 0 0 1px rgba(122,243,255,.10);
 }
+.chip:hover{ box-shadow:inset 0 0 0 1px rgba(243,201,122,.25) }
 .chip.dragging{ opacity:.7; transform:scale(.98) }
 .chip .w{ color:var(--lab-cyan); margin-left:6px; font-variant-numeric:tabular-nums }
 .phrase-actions{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
@@ -117,7 +204,7 @@ canvas{ width:100%; background:var(--lab-panel); border:1px solid var(--lab-line
 .desk-card{
   background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));
   border:1px solid var(--lab-line); border-radius:14px; padding:12px;
-  box-shadow:inset 0 0 18px rgba(122,243,255,.04);
+  box-shadow:inset 0 0 18px rgba(122,243,255,.05), var(--lab-glow-blue);
 }
 .big{ font-size:1.15rem }
 
@@ -126,15 +213,35 @@ canvas{ width:100%; background:var(--lab-panel); border:1px solid var(--lab-line
 .badges{ display:flex; gap:8px; margin-top:8px }
 .badge{
   display:inline-flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:50%;
-  background:var(--lab-panel); border:1px solid var(--lab-line); box-shadow: inset 0 0 20px rgba(122,243,255,.05);
+  background:var(--lab-panel); border:1px solid var(--lab-line);
+  box-shadow: inset 0 0 20px rgba(122,243,255,.06), inset 0 0 0 1px rgba(122,243,255,.12);
+  transition:filter var(--lab-dur-1), box-shadow var(--lab-dur-1);
 }
-.badge.unlit{ filter:grayscale(.8); opacity:.6 }
+.badge.unlit{ filter:grayscale(.8); opacity:.65 }
+.badge.lit{ filter:none; opacity:1; box-shadow: inset 0 0 26px rgba(243,201,122,.22), 0 0 12px rgba(243,201,122,.18) }
 
-/* ------------------------------ Equation helpers (lab context) ------------------------------ */
+#ledgerTable{
+  width:100%; border-collapse:collapse; border:1px solid var(--lab-line);
+  border-radius:12px; overflow:hidden; font-size:var(--lab-fs-0);
+  box-shadow:0 0 0 1px rgba(122,243,255,.10) inset;
+}
+#ledgerTable thead th{
+  background:linear-gradient(180deg,#16161d,#12121a);
+  border-bottom:1px solid var(--lab-line); padding:10px 12px; text-align:left; font-weight:600; color:#f2f1ec;
+  text-shadow:0 0 8px rgba(122,243,255,.12);
+}
+#ledgerTable td{ border-top:1px solid var(--lab-line); padding:10px 12px; vertical-align:top; color:var(--lab-ink) }
+#ledgerTable tr:nth-child(even) td{ background:rgba(255,255,255,.015) }
+@media (max-width:560px){
+  #ledgerTable{ display:block; overflow-x:auto }
+  #ledgerTable thead, #ledgerTable tbody, #ledgerTable tr, #ledgerTable td, #ledgerTable th{ white-space:nowrap }
+}
+
+/* ------------------------------ Equations (Lab) ------------------------------ */
 .lab-eq{
   position:relative; overflow:hidden; border-radius:12px;
   background:#111115; border:1px solid #26262c; margin:8px 0 10px;
-  box-shadow:inset 0 0 20px rgba(255,200,107,.03), 0 0 16px rgba(122,243,255,.08);
+  box-shadow:inset 0 0 20px rgba(255,200,107,.04), var(--lab-glow-cyan);
 }
 .lab-eq .scroll{
   overflow-x:auto; -webkit-overflow-scrolling:touch; padding:12px 16px;
@@ -142,6 +249,11 @@ canvas{ width:100%; background:var(--lab-panel); border:1px solid var(--lab-line
   mask-image:linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
 }
 .lab-eq mjx-container{ display:block!important; scroll-snap-align:start }
+.lab-eq::after{
+  content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit;
+  box-shadow: inset 0 0 0 1px rgba(122,243,255,.22), inset 0 0 26px rgba(122,243,255,.06);
+  opacity:.9;
+}
 
 /* ------------------------------ Tooltips / Coach ------------------------------ */
 .coach{ position:relative }
@@ -149,22 +261,25 @@ canvas{ width:100%; background:var(--lab-panel); border:1px solid var(--lab-line
   content:attr(data-coach); position:absolute; left:0; right:0; bottom:-10px;
   transform:translateY(100%); background:var(--lab-panel); border:1px dashed var(--lab-line); color:var(--lab-muted);
   padding:8px 10px; border-radius:10px; opacity:0; pointer-events:none; transition:opacity .25s var(--lab-ease);
+  box-shadow:var(--lab-glow-gold);
 }
 body.coach-on .coach[data-coach]::after{ opacity:1 }
 
 /* Small coach toggle text */
 .coach-toggle{ display:flex; align-items:center; gap:6px }
-.coach-toggle.small{ opacity:.9; font-size:.95em }
+.coach-toggle.small{ opacity:.92; font-size:.95em }
 
 /* ------------------------------ Utilities ------------------------------ */
-.flex{ flex:1 }
 .lab-row{ display:flex; gap:10px; flex-wrap:wrap }
 .lab-muted{ color:var(--lab-muted) }
-.lab-cta{
-  display:inline-block; padding:10px 12px; border-radius:10px; border:1px solid var(--lab-line);
-  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+
+/* Rune divider (matches codex aesthetic) */
+.lab-runes{ display:flex; justify-content:center; gap:10px; margin:10px 0 8px; opacity:.92 }
+.lab-runes span{
+  width:10px; height:10px; border-radius:2px;
+  box-shadow:0 0 10px rgba(122,243,255,.45), inset 0 0 8px rgba(243,201,122,.25);
+  background:linear-gradient(180deg,rgba(122,243,255,.6),rgba(243,201,122,.35));
 }
-.lab-cta:hover{ border-color:#3a3a44 }
 
 /* ------------------------------ Motion & Contrast Safety ------------------------------ */
 @media (prefers-reduced-motion:reduce){
@@ -179,12 +294,12 @@ body.coach-on .coach[data-coach]::after{ opacity:1 }
   .fancy-head::after{ display:none!important }
 }
 
-/* ------------------------------ Nice scrollers ------------------------------ */
+/* ------------------------------ Scrollbars (nice) ------------------------------ */
 @supports selector(:root:has(body)){
   .lab-wrap::-webkit-scrollbar{ width:12px }
   .lab-wrap::-webkit-scrollbar-track{ background:#0f0f14 }
   .lab-wrap::-webkit-scrollbar-thumb{
     background:#2b2b35; border-radius:10px; border:2px solid #0f0f14;
-    box-shadow: inset 0 0 12px rgba(122,243,255,.15);
+    box-shadow: inset 0 0 12px rgba(122,243,255,.18);
   }
-}
+   }
