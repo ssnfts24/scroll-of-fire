@@ -1,102 +1,105 @@
+<!-- ===================== SECTION 1 — FRAME & NAV ====================== -->
 <!doctype html>
 <html lang="en" dir="ltr">
 <head>
-  <!-- Resolve all relative URLs from the project root on GitHub Pages -->
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>
-    // In GitHub repo preview (github.com), remove <base> so relative paths still work.
-    if (location.hostname === "github.com") {
-      const b = document.querySelector("base"); if (b) b.remove();
-    }
-  </script>
-
+  <script>if(location.hostname==="github.com"){const b=document.querySelector("base");if(b)b.remove();}</script>
   <meta charset="utf-8" />
-  <title>Scroll of Fire — Teaching Lab</title>
+  <title>Scroll of Fire — Teaching Lab (Manifestation Studio)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#0b0b0f">
+  <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#0b0b0f">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="An interactive lab for living the Codex: observer loop, coherence calculators, voice gate audio, phrase tuner, and a private witness ledger with streaks & badges.">
+  <meta name="description" content="A hands-on studio to manifest coherently: observer loop, voice-carrier gate, phrase tuning, coherence metrics, and a private witness ledger — all grounded in the Codex equations.">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/teach.html"/>
 
-  <!-- Social cards -->
-  <meta property="og:title" content="Teaching Lab — Live the Codex">
-  <meta property="og:description" content="Hands-on tools: observe, tune language, measure coherence, log witness — then grow your streak.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/teach.html">
-  <meta property="og:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <!-- Fonts + Base styles from your Codex -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Fonts + Base styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- Codex base CSS -->
+  <!-- Your main theme + lab theme (we'll enhance CSS later) -->
   <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-18x">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18x" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18x"></noscript>
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18x" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18x"></noscript>
+  <link rel="stylesheet" href="assets/css/lab.css?v=2025-10-18c">
 
-  <!-- Teaching Lab theme (enhanced) -->
-  <link rel="stylesheet" href="assets/css/teach.css?v=2025-10-18b">
+  <!-- (optional) MathJax lazy loader lives on main page; fine here too -->
 </head>
 
 <body>
-<a class="sr-only" href="#lab-main">Skip to content</a>
+<main class="wrap lab-wrap" data-app="manifest-studio">
+  <header class="page-head fancy-head">
+    <span class="lab-strap">Practice Suite</span>
+    <h1 class="title">🎛️ Teaching Lab — <em>Live the Codex</em></h1>
+    <p class="subtitle">A guided path to <em>coherent manifestation</em>: choose a clean intention (𝓘), align a voice carrier Π<sub>ν</sub>, run the observer loop (𝓘→𝓛→𝓒→𝓢), measure coherence (Ξ), then witness and log.</p>
 
-<main id="lab-main" class="wrap lab-wrap" data-page="teaching">
-  <!-- Header -->
-  <header class="page-head fancy-head" aria-labelledby="lab-title">
-    <span class="lab-strap" aria-hidden="true">Practice Suite</span>
-    <h1 id="lab-title" class="title">🎛️ Teaching Lab — <em>Live the Codex</em></h1>
-    <p class="subtitle">
-      Hands-on tools: observe, tune language, measure coherence, log witness — then grow your streak.
-      <span class="meta">All computations run locally in your browser.</span>
-    </p>
+    <!-- QuickStart cards -->
+    <section class="grid" aria-label="Quick start">
+      <article class="card col-4 lab-card" id="qs-1">
+        <h3>Step 1 — Intention Line (𝓘)</h3>
+        <p>One sentence; verbs of clarity; nouns of truth. No negations.</p>
+        <input id="qsIntention" placeholder="I choose calm power and precise timing.">
+      </article>
+      <article class="card col-4 lab-card" id="qs-2">
+        <h3>Step 2 — Choose Carrier Π<sub>ν</sub></h3>
+        <p>Hum or pick a preset: <button class="lab-btn" data-carrier="432">432</button> <button class="lab-btn" data-carrier="528">528</button> <button class="lab-btn" data-carrier="369">369</button> Hz</p>
+        <input id="qsCarrier" placeholder="Carrier (Hz)" inputmode="numeric">
+      </article>
+      <article class="card col-4 lab-card" id="qs-3">
+        <h3>Step 3 — Run the Loop</h3>
+        <p>2–3 rounds, slow and steady. Seal with gratitude. Then log the witness.</p>
+        <button class="lab-btn" data-nav="observer">Open Observer</button>
+      </article>
+    </section>
 
-    <!-- Mini page nav (anchors jump to tabs) -->
-    <nav class="quick mini-toc" aria-label="Sections">
-      <a class="cta" href="#tab-observer">Observer</a>
-      <a class="cta" href="#tab-voice">Voice Gate</a>
-      <a class="cta" href="#tab-phrase">Phrase Tuner</a>
-      <a class="cta" href="#tab-coherence">Coherence Desk</a>
-      <a class="cta" href="#tab-ledger">Witness Ledger</a>
-      <span class="flex"></span>
-      <a class="cta" href="index.html">← Back to Codex</a>
-    </nav>
-
-    <p class="hint meta">
-      Tip: press <kbd>1</kbd>–<kbd>5</kbd> to switch tabs • <kbd>?</kbd> for help •
-      <kbd>S</kbd> to start/stop the ring timer.
-    </p>
+    <!-- Tab strip + coach mode -->
+    <section class="lab-top card lab-card" style="margin-top:10px">
+      <div class="pill-tabs" role="tablist" aria-label="Teaching Lab tabs">
+        <button class="pill active" data-tab="observer" role="tab" aria-selected="true">Observer</button>
+        <button class="pill" data-tab="voice" role="tab" aria-selected="false">Voice Gate</button>
+        <button class="pill" data-tab="phrase" role="tab" aria-selected="false">Phrase Tuner</button>
+        <button class="pill" data-tab="coherence" role="tab" aria-selected="false">Coherence Desk</button>
+        <button class="pill" data-tab="visuals" role="tab" aria-selected="false">Visual Focus</button>
+        <button class="pill" data-tab="breath" role="tab" aria-selected="false">Breath/Biofield</button>
+        <button class="pill" data-tab="ledger" role="tab" aria-selected="false">Witness Ledger</button>
+        <span class="flex"></span>
+        <label class="coach-toggle"><input id="coach" type="checkbox" aria-pressed="false"> Coach Mode</label>
+      </div>
+      <p class="hint" id="hotkeys">Tip: press <kbd>1</kbd>–<kbd>7</kbd> to switch tabs • <kbd>?</kbd> for help • <kbd>S</kbd> to start/stop the ring timer.</p>
+      <p id="lab-status" class="meta" role="status" aria-live="polite">Ready.</p>
+      <nav class="crumbs" aria-label="Back"><a href="index.html" class="cta">← Back to Codex</a></nav>
+    </section>
   </header>
 
-  <!-- Top Controls / Tablist -->
-  <section class="lab-top card" aria-label="Lab controls">
-    <div class="pill-tabs" role="tablist" aria-label="Teaching tabs">
-      <button class="pill active" data-tab="observer" role="tab" aria-selected="true" aria-controls="tab-observer">Observer</button>
-      <button class="pill" data-tab="voice" role="tab" aria-selected="false" aria-controls="tab-voice">Voice Gate</button>
-      <button class="pill" data-tab="phrase" role="tab" aria-selected="false" aria-controls="tab-phrase">Phrase Tuner</button>
-      <button class="pill" data-tab="coherence" role="tab" aria-selected="false" aria-controls="tab-coherence">Coherence Desk</button>
-      <button class="pill" data-tab="ledger" role="tab" aria-selected="false" aria-controls="tab-ledger">Witness Ledger</button>
-      <span class="flex" aria-hidden="true"></span>
-      <label class="coach-toggle" for="coach"><input id="coach" type="checkbox"> Coach Mode</label>
-    </div>
-  </section>
 
-  <!-- OBSERVER TAB -->
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- ===================== SECTION 2 — PRACTICE SUITE =================== -->
+
+  <!-- OBSERVER -->
   <section id="tab-observer" class="tab active" role="tabpanel" aria-labelledby="observer">
     <article class="grid">
       <div class="card col-7 lab-card">
         <h2>⏱️ 4-Beat Observer Loop — 𝓘 → 𝓛 → 𝓒 → 𝓢</h2>
 
-        <div class="ring-timer" id="ring" aria-label="Observer ring timer">
+        <ol class="list">
+          <li><b>𝓘 Intend:</b> speak your line once on your chosen carrier Π<sub>ν</sub>.</li>
+          <li><b>𝓛 Look:</b> notice one undeniable detail (color, edge, shadow).</li>
+          <li><b>𝓒 Coalesce:</b> relax jaw/shoulders; exhale; feel weight.</li>
+          <li><b>𝓢 Seal:</b> whisper “thank you” and allow the scene to settle.</li>
+        </ol>
+
+        <div class="ring-timer" id="ring" aria-label="Observer timer">
           <svg viewBox="0 0 120 120" class="ring" aria-hidden="true">
-            <defs>
-              <linearGradient id="ringGrad" x1="0" x2="1">
-                <stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/>
-              </linearGradient>
-            </defs>
+            <defs><linearGradient id="ringGrad" x1="0" x2="1"><stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/></linearGradient></defs>
             <circle cx="60" cy="60" r="54" class="ring-bg"/>
             <circle cx="60" cy="60" r="54" class="ring-fg" id="ringFg" pathLength="100"/>
             <text x="60" y="52" class="ring-phase" text-anchor="middle" id="ringPhase">Ready</text>
@@ -104,238 +107,394 @@
           </svg>
 
           <div class="ring-controls">
-            <label>Seconds/phase
-              <input id="phaseSec" type="number" min="3" max="120" value="12" inputmode="numeric" aria-describedby="phaseHelp">
+            <fieldset class="lab-row" aria-label="Presets">
+              <button class="lab-btn" data-preset="8-3">8s × 3</button>
+              <button class="lab-btn" data-preset="12-3">12s × 3</button>
+              <button class="lab-btn" data-preset="20-2">20s × 2</button>
+            </fieldset>
+
+            <label>Seconds/phase <input id="phaseSec" type="number" min="3" max="120" value="12" inputmode="numeric"></label>
+            <label>Rounds <input id="rounds" type="number" min="1" max="20" value="3" inputmode="numeric"></label>
+            <label>Breath pacing
+              <select id="pace">
+                <option value="box">Box 4-4-4-4</option>
+                <option value="4-7-8">4-7-8</option>
+                <option value="free" selected>Free</option>
+              </select>
             </label>
-            <label>Rounds
-              <input id="rounds" type="number" min="1" max="20" value="3" inputmode="numeric">
-            </label>
+
             <button id="startTimer" class="lab-btn" data-hotkey="S">Start</button>
-            <button id="stopTimer"  class="lab-btn ghost">Stop</button>
+            <button id="stopTimer" class="lab-btn ghost">Stop</button>
           </div>
 
-          <p id="phaseHelp" class="hint coach" data-coach="Breathe in on 𝓘, see on 𝓛, soften on 𝓒, whisper thanks on 𝓢.">
-            Coach: breath cues map to operators.
-          </p>
+          <p class="hint coach" data-coach="Breathe in on 𝓘, see on 𝓛, soften on 𝓒, whisper thanks on 𝓢.">Coach: map breath to operators.</p>
         </div>
+
+        <details class="note" style="margin-top:10px">
+          <summary><b>Equation anchor</b> (what you’re doing)</summary>
+          <div class="eq lab-eq">
+            <div class="scroll">
+              $$ \nabla_{\text{sem}} \text{Phrase} \;=\; \sum_k w_k \,\nabla_{\text{sem}} \text{Token}_k,\quad \sum_k w_k = 1 \tag{Eq.16} $$
+              <br>
+              $$ \lim_{t\to\infty} \frac{\text{Truth}(t)}{\text{Distortion}(t)} = \text{Coherence} \tag{Eq.9} $$
+            </div>
+          </div>
+          <p class="meta">You’re weighting tokens (speech) toward clarity, then letting coherence settle in the limit.</p>
+        </details>
       </div>
 
       <aside class="card col-5 lab-card">
-        <h3>Daily Micro-Practices</h3>
-        <ul class="list compact">
-          <li><b>Commute:</b> choose 1 intention, speak it once, notice 3 things, return with gratitude.</li>
-          <li><b>Conflict:</b> 10-second loop before replying; ask “what’s true, kind, necessary?”.</li>
-          <li><b>Workout:</b> last set in 4 beats; log witness note.</li>
-          <li><b>Prayer/Meditation:</b> 3 rounds; check Remnant tomorrow.</li>
-        </ul>
+        <h3>Manifestation Run</h3>
+        <ol class="list compact">
+          <li>Pick carrier Π<sub>ν</sub> in Voice Gate (or preset).</li>
+          <li>Speak 𝓘 once; run 2–3 rounds here.</li>
+          <li>Note one change; log a witness.</li>
+        </ol>
 
-        <div class="badges" aria-label="Streak badges">
+        <div class="badges">
           <span id="badge7" class="badge unlit" title="7-Day Seed">🌱 ×7</span>
           <span id="badge33" class="badge unlit" title="33-Day Orbit">🛰️ ×33</span>
           <span id="badge144" class="badge unlit" title="144 Closure">🜚 ×144</span>
         </div>
-        <p class="meta">Badges light up as your ledger streak grows.</p>
+        <p class="meta">Badges light up as your streak grows.</p>
       </aside>
     </article>
   </section>
 
-  <!-- VOICE GATE TAB -->
+  <!-- VOICE GATE -->
   <section id="tab-voice" class="tab" role="tabpanel" aria-labelledby="voice">
     <article class="grid">
       <div class="card col-7 lab-card">
-        <h2>🎙️ Voice Gate Lab <span class="meta">(Π<sub>ν</sub> helper)</span></h2>
+        <h2>🎙️ Voice Gate — Find Your Carrier Π<sub>ν</sub></h2>
+        <ol class="list">
+          <li><b>Enable Mic</b>, hum one steady note ~3s at low volume.</li>
+          <li>Hold steady until <b>Stability</b> ≥ 60% and <b>Noise</b> is low.</li>
+          <li><b>Set as carrier</b> and craft your line on that tone.</li>
+        </ol>
 
-        <div class="audio-pane" aria-label="Audio tools">
+        <div class="audio-pane" aria-label="Audio lab">
           <div class="audio-controls">
             <button id="micStart" class="lab-btn">Enable Mic</button>
             <button id="micStop"  class="lab-btn ghost">Stop</button>
             <span class="audio-hint" id="nearKey" role="status" aria-live="polite">—</span>
           </div>
-
           <canvas id="wave" width="800" height="140" aria-label="Waveform"></canvas>
           <canvas id="fft"  width="800" height="140" aria-label="Spectrum"></canvas>
+          <div class="lab-row" aria-live="polite">
+            <span id="stability" class="meta">Stability: —</span>
+            <span id="noiseWarn" class="meta">Noise: —</span>
+            <button id="useCarrier" class="lab-btn" disabled>Set as carrier</button>
+          </div>
         </div>
 
-        <p class="hint coach" data-coach="Hum gently on one note. Peaks near 432/528/369 Hz will glow.">
-          Coach: steady hum beats loud shouting.
-        </p>
+        <details class="note" style="margin-top:10px">
+          <summary><b>Key meanings</b></summary>
+          <ul class="list">
+            <li><b>432 Hz</b> — grounding/clarity.</li>
+            <li><b>528 Hz</b> — repair/renewal.</li>
+            <li><b>369 Hz</b> — lock-in/novelty for learning.</li>
+          </ul>
+        </details>
       </div>
 
       <aside class="card col-5 lab-card">
-        <h3>Keys & Tips</h3>
-        <ul class="list compact">
-          <li><b>432 Hz</b> grounding • <b>528 Hz</b> repair • <b>369 Hz</b> lock-in/novelty.</li>
-          <li>Mic gain low; room quiet. Analysis runs only on your device.</li>
-          <li>Use the strongest line as your **carrier** in today’s intention.</li>
-        </ul>
+        <h3>Carrier Presets</h3>
+        <div class="lab-row">
+          <button class="lab-btn" data-carrier="432">432 Hz — Ground</button>
+          <button class="lab-btn" data-carrier="528">528 Hz — Repair</button>
+          <button class="lab-btn" data-carrier="369">369 Hz — Lock-in</button>
+        </div>
+
+        <h3 style="margin-top:12px">Today’s Intention</h3>
+        <label>Carrier (Hz) <input id="carrierOut" readonly placeholder="—"></label>
+        <label>Intention (𝓘) <input id="intentionFromVoice" placeholder="One clean line using this carrier…"></label>
+        <button id="sendToLedger" class="lab-btn">Send to Ledger</button>
+        <p class="meta">Sends the line to Witness Ledger → you can edit before saving.</p>
       </aside>
     </article>
   </section>
 
-  <!-- PHRASE TUNER TAB -->
+  <!-- PHRASE TUNER (Eq.16) -->
   <section id="tab-phrase" class="tab" role="tabpanel" aria-labelledby="phrase">
     <article class="grid">
       <div class="card col-7 lab-card">
-        <h2>🔡 Phrase Tuner Pro <span class="meta">(Eq. 4 + Eq. 16)</span></h2>
-
-        <textarea id="phraseIn" rows="3" placeholder="Type a sentence you plan to speak…"
-                  aria-label="Phrase to tune"></textarea>
-
-        <div class="chip-lane" id="chipLane" aria-label="Token weights (drag to emphasize)"></div>
-
+        <h2>🔡 Phrase Tuner Pro — Weight the Meaning (Eq.16)</h2>
+        <textarea id="phraseIn" rows="3" placeholder="Type a sentence you plan to speak…"></textarea>
+        <div class="chip-lane" id="chipLane" aria-label="Token weights"></div>
         <div class="phrase-actions">
           <button id="btnTuned" class="lab-btn">Tune & Highlight</button>
           <button id="btnClearPhrase" class="lab-btn ghost">Clear</button>
-          <output id="semScore" class="meta" aria-live="polite">Semantic weight: —</output>
+          <output id="semScore" class="meta">Semantic weight: —</output>
         </div>
-
         <div class="phrase-out">
           <p><b>Negations:</b> <span id="negCount">0</span></p>
           <p><b>Suggestion:</b> <span id="phraseOut">—</span></p>
         </div>
-
-        <p class="hint coach" data-coach="Drag chips to raise emphasis. Prefer verbs of clarity and nouns of truth.">
-          Coach: weights simulate ∑ wₖ ∇<sub>sem</sub>(tokenₖ).
-        </p>
+        <div class="eq lab-eq">
+          <div class="scroll">
+            $$ \nabla_{\text{sem}} \text{Phrase} \;=\; \sum_k w_k \,\nabla_{\text{sem}} \text{Token}_k \quad (\sum w_k=1) $$
+          </div>
+        </div>
+        <p class="hint coach" data-coach="Drag chips to raise emphasis. Prefer strong verbs, solid nouns; drop filler.">Coach: fewer negations → cleaner gradient.</p>
       </div>
 
       <aside class="card col-5 lab-card">
         <h3>Micro-Templates</h3>
-        <details><summary>Care & clarity</summary><p>I will speak simply and listen fully.</p></details>
+        <details open><summary>Care & Clarity</summary><p>I will speak simply and listen fully.</p></details>
         <details><summary>Leadership</summary><p>We deliver one useful thing today, together.</p></details>
         <details><summary>Healing</summary><p>May light reveal, and love restore.</p></details>
       </aside>
     </article>
   </section>
 
-  <!-- COHERENCE DESK TAB -->
+  <!-- COHERENCE DESK (Ξ + half-life) -->
   <section id="tab-coherence" class="tab" role="tabpanel" aria-labelledby="coherence">
     <article class="grid">
       <div class="card col-7 lab-card">
-        <h2>📈 Coherence Desk</h2>
-
+        <h2>📈 Coherence Desk — Ξ & Half-Life</h2>
         <div class="desk-grid">
-          <div class="desk-card" aria-label="Ξ calculator">
-            <label>⟨H·I⟩ (0–1)
-              <input type="number" step="0.01" min="0" max="1" id="hDotI" value="0.62">
-            </label>
-            <label>Var[𝓜] (0–2)
-              <input type="number" step="0.01" min="0" max="2" id="mVar" value="0.30">
-            </label>
+          <div class="desk-card">
+            <label>⟨H·I⟩ (0–1) <input type="number" step="0.01" min="0" max="1" id="hDotI" value="0.62"></label>
+            <label>Var[𝓜] (0–2) <input type="number" step="0.01" min="0" max="2" id="mVar" value="0.30"></label>
             <button id="btnXi" class="lab-btn">Compute Ξ</button>
-            <output id="outXi" class="big" aria-live="polite">Ξ = —</output>
+            <output id="outXi" class="big">Ξ = —</output>
             <canvas id="xiSpark" width="320" height="60" aria-label="Ξ history"></canvas>
           </div>
-
-          <div class="desk-card" aria-label="Memory half-life">
-            <label>τ (days)
-              <input type="number" id="tauDays" min="1" max="120" value="10">
-            </label>
+          <div class="desk-card">
+            <label>τ (days) <input type="number" id="tauDays" min="1" max="120" value="10"></label>
             <button id="btnHalfLife" class="lab-btn">Compute λ / t½</button>
-            <output id="outHalfLife" class="big" aria-live="polite">λ = —, t½ = —</output>
+            <output id="outHalfLife" class="big">λ = —, t½ = —</output>
             <p class="meta">Longer τ → slower decay → skills stick.</p>
           </div>
         </div>
+
+        <div class="eq lab-eq">
+          <div class="scroll">
+            $$ \Xi \;\approx\; \frac{\langle H \cdot I \rangle}{1 + \mathrm{Var}[\mathcal{M}]} \quad,\qquad \lambda = \tfrac{\ln 2}{t_{1/2}} $$
+          </div>
+        </div>
+        <p class="hint coach" data-coach="If Ξ trends down, stop (Eq.9 stop rule). Ethics first.">Coach: coherence beats speed.</p>
       </div>
 
       <aside class="card col-5 lab-card">
-        <h3>Stop Rule (Eq. 9)</h3>
-        <p>If Truth/Distortion trend worsens, <b>abort</b> the operation. Ethics first.</p>
+        <h3>Stop Rule (Eq.9)</h3>
+        <p>If Truth/Distortion worsens, <b>abort</b> the operation. Align, then resume.</p>
         <label class="coach-toggle small"><input id="autoLogXi" type="checkbox" checked> Auto-log Ξ to ledger</label>
       </aside>
     </article>
   </section>
 
-  <!-- LEDGER TAB -->
+  <!-- VISUAL FOCUS (new mini-lab) -->
+  <section id="tab-visuals" class="tab" role="tabpanel" aria-labelledby="visuals">
+    <article class="grid">
+      <div class="card col-7 lab-card">
+        <h2>👁️ Visual Focus — Single-Point & Expansion</h2>
+        <p>Train attention to hold, then expand—mirrors 𝓛 (Look) and 𝓒 (Coalesce).</p>
+        <canvas id="focusDot" width="600" height="280" aria-label="Focus trainer"></canvas>
+        <div class="lab-row">
+          <label>Hold (s) <input id="vfHold" type="number" value="10" min="5" max="60"></label>
+          <label>Expand (s) <input id="vfExpand" type="number" value="6" min="3" max="30"></label>
+          <button id="vfStart" class="lab-btn">Start Focus Cycle</button>
+        </div>
+        <p class="meta">Dot phase = single-point; ring phase = peripheral expansion. Sync with breath.</p>
+      </div>
+
+      <aside class="card col-5 lab-card">
+        <h3>Use in the Run</h3>
+        <ol class="list compact">
+          <li>Before Observer: 1 focus cycle to stabilize 𝓛.</li>
+          <li>After: 1 expansion to soften 𝓒.</li>
+        </ol>
+      </aside>
+    </article>
+  </section>
+
+  <!-- BREATH/BIOFIELD (new mini-lab) -->
+  <section id="tab-breath" class="tab" role="tabpanel" aria-labelledby="breath">
+    <article class="grid">
+      <div class="card col-7 lab-card">
+        <h2>🌬️ Breath / Biofield — Rhythms & HR proxy</h2>
+        <p>Choose a breath cadence; the ring guides inhale/hold/exhale/hold. Aim for smooth, silent transitions.</p>
+        <div class="ring-timer" id="breathRing">
+          <svg viewBox="0 0 120 120" class="ring" aria-hidden="true">
+            <circle cx="60" cy="60" r="54" class="ring-bg"/>
+            <circle cx="60" cy="60" r="54" class="ring-fg" id="breathFg" pathLength="100"/>
+            <text x="60" y="52" class="ring-phase" text-anchor="middle" id="breathPhase">Ready</text>
+            <text x="60" y="72" class="ring-count" text-anchor="middle" id="breathCount">—</text>
+          </svg>
+          <div class="ring-controls">
+            <label>Pattern
+              <select id="breathPattern">
+                <option value="4-4-4-4">Box 4-4-4-4</option>
+                <option value="4-7-8">4-7-8</option>
+                <option value="5-5-5-5">5-5-5-5</option>
+              </select>
+            </label>
+            <button id="breathStart" class="lab-btn">Start</button>
+            <button id="breathStop" class="lab-btn ghost">Stop</button>
+          </div>
+        </div>
+        <p class="meta">Use before Voice Gate to steady the tone; or between rounds in Observer.</p>
+      </div>
+
+      <aside class="card col-5 lab-card">
+        <h3>Physiology note</h3>
+        <p>Slow, even exhale tends to balance autonomic rhythms—often perceived as “biofield smoothing.”</p>
+      </aside>
+    </article>
+  </section>
+
+
+
+
+
+
+
+
+
+
+
+<!-- ================= SECTION 3 — LEDGER & LEARNING =================== -->
+
+  <!-- LEDGER -->
   <section id="tab-ledger" class="tab" role="tabpanel" aria-labelledby="ledger">
     <article class="grid">
       <div class="card col-12 lab-card">
-        <h2>📒 Witness Ledger <span class="meta">(private on this device)</span></h2>
+        <h2>📒 Witness Ledger (private on this device)</h2>
 
-        <div class="ledger-top" role="group" aria-label="New entry">
-          <input id="entryIntention" placeholder="Intention (𝓘): one clean line…" aria-label="Intention">
-          <input id="entryCarrier" placeholder="Carrier (432/528/369)" aria-label="Carrier frequency">
-          <select id="entryQuality" aria-label="Ξ quality">
-            <option value="">Ξ quality…</option><option>Low</option><option>Medium</option><option>High</option>
-          </select>
-          <input id="entryTags" placeholder="Tags (comma separated)" aria-label="Tags">
+        <div class="ledger-top">
+          <input id="entryIntention" placeholder="Intention (𝓘): one clean line…">
+          <input id="entryCarrier" placeholder="Carrier (432/528/369)">
+          <select id="entryQuality"><option value="">Ξ quality…</option><option>Low</option><option>Medium</option><option>High</option></select>
+          <input id="entryTags" placeholder="Tags (comma separated)">
         </div>
 
-        <textarea id="entryWitness" rows="2" placeholder="Witness notes (what changed, what lingered)…"
-                  aria-label="Witness notes"></textarea>
-
+        <textarea id="entryWitness" rows="2" placeholder="Witness notes (what changed, what lingered)…"></textarea>
         <div class="ledger-actions">
           <button id="btnAddEntry" class="lab-btn">Add</button>
           <span>🗓️ Streak: <b id="streakDays">0</b> days</span>
           <button id="btnExport" class="lab-btn">Export .json</button>
           <input type="file" id="fileImport" accept="application/json" hidden>
           <button id="btnImport" class="lab-btn ghost">Import .json</button>
-          <input id="ledgerFilter" placeholder="Filter by tag or text…" aria-label="Filter entries">
+          <input id="ledgerFilter" placeholder="Filter by tag or text…">
         </div>
 
         <table id="ledgerTable" aria-label="Practice ledger">
-          <thead>
-            <tr><th>Date</th><th>Intention</th><th>Carrier</th><th>Ξ</th><th>Tags</th><th>Witness</th><th></th></tr>
-          </thead>
+          <thead><tr><th>Date</th><th>Intention</th><th>Carrier</th><th>Ξ</th><th>Tags</th><th>Witness</th><th></th></tr></thead>
           <tbody></tbody>
         </table>
+
+        <div class="badges" style="margin-top:10px">
+          <span id="badge7b" class="badge unlit" title="7-Day Seed">🌱 ×7</span>
+          <span id="badge33b" class="badge unlit" title="33-Day Orbit">🛰️ ×33</span>
+          <span id="badge144b" class="badge unlit" title="144 Closure">🜚 ×144</span>
+        </div>
       </div>
     </article>
   </section>
 
-  <!-- Footer -->
-  <footer class="footer" role="contentinfo">
+  <!-- FAQ / ETHICS / GLOSSARY -->
+  <section class="grid" aria-label="Learning & Support">
+    <article class="card col-7 lab-card">
+      <h2>🧭 Ethics & Stop Rule</h2>
+      <p>Coherence includes care. If the Truth/Distortion ratio trends worse, <b>stop</b> (Eq. 9), re-center, and resume later.</p>
+      <ul class="list">
+        <li><b>Consent:</b> no covert influence over others; manifest your own alignment.</li>
+        <li><b>Non-harm:</b> pause if actions cause harm or degrade others’ agency.</li>
+        <li><b>Accountability:</b> log results honestly—celebrate small wins, learn from misses.</li>
+      </ul>
+    </article>
+
+    <article class="card col-5 lab-card" id="faq">
+      <h2>❓ FAQ</h2>
+      <details open><summary>Why the carrier Π<sub>ν</sub>?</summary><p>A steady tone creates a stable <em>projection</em> manifold for language; it reduces noise in ∑wₖ∇<sub>sem</sub>(tokenₖ).</p></details>
+      <details><summary>How often should I practice?</summary><p>Daily, 1–3 Manifestation Runs. Longer τ (skill memory) → longer half-life → results stick.</p></details>
+      <details><summary>What if nothing happens?</summary><p>Shorten the line, lower adjectives, increase seconds/phase, and re-tune your carrier.</p></details>
+    </article>
+  </section>
+
+  <section class="grid" id="glossary" aria-label="Glossary">
+    <article class="card col-12 lab-card">
+      <h2>📚 Compact Glossary</h2>
+      <ul class="list">
+        <li><b>𝓘 / 𝓛 / 𝓒 / 𝓢</b> — Intend / Look / Coalesce / Seal (observer loop).</li>
+        <li><b>Π<sub>ν</sub></b> — Voice carrier; steady tone you ride to speak the line.</li>
+        <li><b>Ξ</b> — Coherence metric (higher ≈ steadier alignment).</li>
+        <li><b>τ</b> — Retention window; <b>t½</b> — skill half-life; <b>λ</b> — decay rate.</li>
+      </ul>
+    </article>
+  </section>
+
+  <footer class="footer">
     <div class="divider" aria-hidden="true"></div>
     <p>“Practice is the mathematics of compassion.”</p>
     <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
   </footer>
-
-  <!-- Live region for toasts/status (filled by JS) -->
-  <div id="lab-status" class="sr-only" role="status" aria-live="polite"></div>
 </main>
 
-<!-- Help modal template (JS can attach behavior) -->
-<dialog id="lab-help" class="lab-card" aria-labelledby="help-title">
-  <h3 id="help-title">Keyboard & Navigation</h3>
-  <ul class="list">
-    <li><kbd>1</kbd>–<kbd>5</kbd> switch tabs • <kbd>?</kbd> open/close help</li>
-    <li><kbd>S</kbd> start/stop Observer ring timer</li>
-    <li><kbd>/</kbd> focus ledger filter • <kbd>Esc</kbd> blur dialogs</li>
-  </ul>
-  <form method="dialog"><button class="lab-btn">Close</button></form>
-</dialog>
+<!-- Base scripts (we’ll expand next pass) -->
+<script src="assets/js/teach.js?v=2025-10-18c" defer></script>
 
-<!-- Scripts -->
-<script defer src="assets/js/teach.js?v=2025-10-18b"></script>
+<!-- Minimal helpers to wire Section 1/2 interactions -->
 <script>
-  // Small inline helpers safe to keep here
-  document.addEventListener('DOMContentLoaded', () => {
-    // Current year
-    const yr = document.getElementById('yr'); if (yr) yr.textContent = new Date().getFullYear();
+document.addEventListener('DOMContentLoaded', () => {
+  // Tab switching
+  const pills=[...document.querySelectorAll('.pill')];
+  function openTab(name){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    pills.forEach(p=>{p.classList.toggle('active',p.dataset.tab===name);p.setAttribute('aria-selected',p.dataset.tab===name?'true':'false');});
+    const el=document.getElementById('tab-'+name); if(el){el.classList.add('active'); el.scrollIntoView({behavior:'smooth',block:'start'});}
+  }
+  pills.forEach(p=>p.addEventListener('click',()=>openTab(p.dataset.tab)));
+  document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>openTab(b.dataset.nav)));
 
-    // Optional keyboard help
-    let helpOpen = false;
-    const dlg = document.getElementById('lab-help');
-    document.addEventListener('keydown', (e) => {
-      if (e.key === '?') {
-        e.preventDefault();
-        if (dlg) { helpOpen ? dlg.close() : dlg.showModal(); helpOpen = !helpOpen; }
-      }
-    });
-
-    // Ensure hash links activate the right tab visually
-    if (location.hash) {
-      const id = location.hash.slice(1);
-      const target = document.getElementById(id);
-      const btn = document.querySelector(`.pill[data-tab="${id.replace('tab-','')}"]`);
-      if (target && btn) {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-        target.classList.add('active'); btn.classList.add('active'); btn.setAttribute('aria-selected','true');
-        target.scrollIntoView({behavior:'smooth', block:'start'});
-      }
-    }
+  // Hotkeys 1–7, S
+  addEventListener('keydown',e=>{
+    if(e.key>='1'&&e.key<='7'){const i=Number(e.key)-1; if(pills[i]) pills[i].click();}
+    if(e.key.toLowerCase()==='s'){document.getElementById('startTimer')?.click();}
+    if(e.key==='?'){alert('Use tabs 1–7 • S to start/stop • Presets set timing • “Set as carrier” copies to Ledger.');}
   });
+
+  // QuickStart carrier buttons
+  document.querySelectorAll('[data-carrier]').forEach(btn=>btn.addEventListener('click',()=>{
+    const v=btn.dataset.carrier; const o=document.getElementById('qsCarrier'); if(o) o.value=v;
+    const out=document.getElementById('carrierOut'); if(out) out.value=v;
+    document.getElementById('lab-status').textContent=`Preset carrier: ${v} Hz`;
+  }));
+
+  // Copy QS intention into Phrase Tuner input
+  document.getElementById('qsIntention')?.addEventListener('change',e=>{
+    const val=e.target.value.trim();
+    const p=document.getElementById('phraseIn'); if(val && p && !p.value) p.value=val;
+    const iVoice=document.getElementById('intentionFromVoice'); if(iVoice && !iVoice.value) iVoice.value=val;
+  });
+
+  // Voice Gate bridge: analyzer should call this with {hz,stable,noise}
+  window._labSetCarrier = function({hz, stable=0, noise=0}){
+    const near=document.getElementById('nearKey'); if(near) near.textContent=`Near key: ${Math.round(hz)} Hz`;
+    const st=document.getElementById('stability'); if(st) st.textContent=`Stability: ${(stable*100|0)}%`;
+    const nw=document.getElementById('noiseWarn'); if(nw) nw.textContent=noise>0.35?'Noise: high':'Noise: ok';
+    const use=document.getElementById('useCarrier'); if(use){use.disabled=!(hz && stable>0.6 && noise<0.5); use.dataset.hz=hz;}
+  };
+  document.getElementById('useCarrier')?.addEventListener('click',e=>{
+    const v=e.currentTarget.dataset.hz; if(!v) return;
+    (document.getElementById('carrierOut')||{}).value = Math.round(v);
+    (document.getElementById('qsCarrier')||{}).value = Math.round(v);
+    document.getElementById('lab-status').textContent=`Carrier set: ${Math.round(v)} Hz`;
+  });
+
+  // Send to Ledger
+  document.getElementById('sendToLedger')?.addEventListener('click',()=>{
+    const carr=document.getElementById('carrierOut')?.value||'';
+    const line=document.getElementById('intentionFromVoice')?.value||'';
+    if(document.getElementById('entryCarrier')) document.getElementById('entryCarrier').value=carr;
+    if(line && document.getElementById('entryIntention')) document.getElementById('entryIntention').value=line;
+    document.querySelector('.pill[data-tab="ledger"]')?.click();
+  });
+
+  // Year
+  const y=document.getElementById('yr'); if(y) y.textContent=new Date().getFullYear();
+});
 </script>
 </body>
 </html>
+  
