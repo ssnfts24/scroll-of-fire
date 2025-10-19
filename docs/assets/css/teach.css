@@ -19,7 +19,7 @@
 
   /* Layout / Type */
   --lab-radius:14px; --lab-radius-lg:20px; --lab-pad:14px;
-  --lab-fs-0:14px; --lab-fs-1:16px; --lab-fs-2:18px; --lab-fs-3:clamp(20px,2.6vw,24px);
+  --lab-fs-00:12px; --lab-fs-0:14px; --lab-fs-1:16px; --lab-fs-2:18px; --lab-fs-3:clamp(20px,2.6vw,24px);
 
   /* Motion */
   --lab-ease:cubic-bezier(.2,.7,.2,1); --lab-dur-1:.22s; --lab-dur-2:.55s;
@@ -29,6 +29,9 @@
 
   /* Focus */
   --lab-ring:#7af3ff; --lab-ring-outer:rgba(122,243,255,.14); --lab-ring-inset:rgba(122,168,255,.38);
+
+  /* Safe-area insets */
+  --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme: light){
   :root{
@@ -36,26 +39,29 @@
   }
 }
 
-/* Page wrapper inherits Codex typography; we add ambience */
+/* Base */
 .lab-wrap{
-  padding-top:14px; color:var(--lab-ink);
+  padding-top:calc(14px + var(--safe-top)); color:var(--lab-ink);
   background:
     radial-gradient(1400px 700px at 15% -10%, rgba(122,243,255,.06), transparent 60%),
     radial-gradient(1200px 600px at 85% -8%, rgba(243,201,122,.07), transparent 62%),
     repeating-linear-gradient(0deg, rgba(255,255,255,.02) 0 1px, transparent 1px 11px);
+  scroll-behavior:smooth;
 }
 
-/* Star-line HUD */
+/* Star-line HUD (ambient) */
 .lab-wrap::before{
   content:""; position:fixed; inset:-4% -4% auto -4%; height:52vh; pointer-events:none; z-index:0;
   background:
     radial-gradient(420px 220px at 18% -6%, rgba(243,201,122,.18), transparent 60%),
     radial-gradient(640px 320px at 80% -4%, rgba(122,243,255,.14), transparent 70%);
-  mix-blend-mode:screen; opacity:.75; filter:blur(0.2px);
+  mix-blend-mode:screen; opacity:.75; filter:blur(.2px);
 }
 .fancy-head, .lab-card, .desk-card, .lab-eq, .pill-tabs { position:relative; z-index:1 }
 
-.lab-wrap a{ color:var(--lab-ink); text-underline-offset:2px }
+/* Inline basics */
+.lab-wrap a{ color:var(--lab-ink); text-underline-offset:2px; transition:text-shadow var(--lab-dur-1) var(--lab-ease) }
+.lab-wrap a:hover{ text-shadow:0 0 10px rgba(122,243,255,.35) }
 .lab-wrap ::selection{ background:rgba(122,243,255,.25) }
 .lab-wrap :focus-visible{
   outline:2px solid var(--lab-ring);
@@ -82,6 +88,7 @@
   border:1px solid var(--lab-line); border-radius:var(--lab-radius); padding:var(--lab-pad);
   box-shadow:0 8px 18px var(--lab-shadow), inset 0 0 24px rgba(122,243,255,.04);
   position:relative; isolation:isolate; backdrop-filter:saturate(120%) blur(0px);
+  transition:box-shadow var(--lab-dur-2) var(--lab-ease), transform var(--lab-dur-2) var(--lab-ease);
 }
 .lab-card::before,
 .lab-card::after{ content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit }
@@ -103,10 +110,10 @@
     radial-gradient(10px 10px at calc(100% - 10px) 10px, #000 90%, transparent 100%),
     radial-gradient(10px 10px at 10px calc(100% - 10px), #000 90%, transparent 100%),
     radial-gradient(10px 10px at calc(100% - 10px) calc(100% - 10px), #000 90%, transparent 100%);
-  mask-composite:exclude; opacity:.26;
+  mask-composite:exclude; opacity:.24;
 }
 @media (hover:hover){
-  .lab-card:hover{ box-shadow:0 12px 24px var(--lab-shadow), inset 0 0 26px rgba(122,243,255,.06) }
+  .lab-card:hover{ box-shadow:0 12px 24px var(--lab-shadow), inset 0 0 26px rgba(122,243,255,.06); transform:translateY(-1px) }
 }
 
 /* Strap / tag for sections */
@@ -142,18 +149,22 @@
 .lab-input, .lab-select, .lab-textarea, .lab-btn, .lab-cta, .pill, .pill-tabs{
   font:600 var(--lab-fs-0)/1 Inter,system-ui;
 }
-input[type="text"], input[type="number"], select, textarea{
+input[type="text"], input[type="number"], input[type="search"], select, textarea{
   background:var(--lab-elev); color:var(--lab-ink); border:1px solid var(--lab-line);
   border-radius:10px; padding:8px 10px; box-shadow:inset 0 0 0 1px rgba(122,243,255,.08);
+  transition:border-color var(--lab-dur-1) var(--lab-ease), box-shadow var(--lab-dur-1) var(--lab-ease);
 }
-textarea{ width:100%; resize:vertical }
+input:focus, select:focus, textarea:focus{ border-color:#3a3a44; box-shadow:inset 0 0 0 1px rgba(122,243,255,.18) }
+textarea{ width:100%; resize:vertical; min-height:92px }
+
 .lab-btn{
   appearance:none; border:1px solid var(--lab-line); background:rgba(255,255,255,.03);
   color:var(--lab-ink); padding:8px 12px; border-radius:10px; cursor:pointer;
-  transition:transform var(--lab-dur-1) var(--lab-ease), border-color var(--lab-dur-1);
+  transition:transform var(--lab-dur-1) var(--lab-ease), border-color var(--lab-dur-1), background var(--lab-dur-1);
 }
-.lab-btn:hover{ border-color:#3a3a44 }
+.lab-btn:hover{ border-color:#3a3a44; background:rgba(255,255,255,.05) }
 .lab-btn:active{ transform:translateY(1px) }
+.lab-btn.ghost{ background:transparent; opacity:.92 }
 .lab-cta{
   display:inline-block; padding:10px 12px; border-radius:10px; border:1px solid var(--lab-line);
   background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
@@ -175,6 +186,11 @@ textarea{ width:100%; resize:vertical }
 .ring-count{ fill:var(--lab-muted); font:600 10px Inter,system-ui }
 .ring-controls{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
 
+@media (prefers-reduced-motion:no-preference){
+  @keyframes ringPulse { 0%,100%{filter:drop-shadow(0 0 10px rgba(122,243,255,.25))} 50%{filter:drop-shadow(0 0 18px rgba(122,243,255,.40))} }
+  .ring{ animation:ringPulse 6s ease-in-out infinite }
+}
+
 /* ------------------------------ Audio Lab ------------------------------ */
 .audio-pane{ display:grid; gap:8px }
 .audio-controls{ display:flex; gap:10px; align-items:center; flex-wrap:wrap }
@@ -183,16 +199,20 @@ canvas{
   width:100%; background:var(--lab-panel); border:1px solid var(--lab-line); border-radius:12px;
   box-shadow:inset 0 0 20px rgba(122,243,255,.05), inset 0 0 0 1px rgba(122,243,255,.10);
 }
+@media (prefers-reduced-motion:no-preference){
+  @keyframes scanline { to { background-position-y:12px } }
+  canvas{ background-image:repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 3px); background-size:auto 12px; animation:scanline 9s linear infinite }
+}
 
 /* ------------------------------ Phrase Tuner Pro ------------------------------ */
 .chip-lane{ display:flex; gap:8px; flex-wrap:wrap; min-height:42px; margin:8px 0 }
 .chip{
   padding:6px 10px; border-radius:999px; border:1px solid var(--lab-line); background:#13131a;
   cursor:grab; user-select:none;
-  transition:transform var(--lab-dur-1) var(--lab-ease), opacity var(--lab-dur-1), box-shadow var(--lab-dur-1);
+  transition:transform var(--lab-dur-1) var(--lab-ease), opacity var(--lab-dur-1), box-shadow var(--lab-dur-1), background var(--lab-dur-1);
   box-shadow:inset 0 0 0 1px rgba(122,243,255,.10);
 }
-.chip:hover{ box-shadow:inset 0 0 0 1px rgba(243,201,122,.25) }
+.chip:hover{ box-shadow:inset 0 0 0 1px rgba(243,201,122,.25); background:#15151e }
 .chip.dragging{ opacity:.7; transform:scale(.98) }
 .chip .w{ color:var(--lab-cyan); margin-left:6px; font-variant-numeric:tabular-nums }
 .phrase-actions{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
@@ -215,10 +235,14 @@ canvas{
   display:inline-flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:50%;
   background:var(--lab-panel); border:1px solid var(--lab-line);
   box-shadow: inset 0 0 20px rgba(122,243,255,.06), inset 0 0 0 1px rgba(122,243,255,.12);
-  transition:filter var(--lab-dur-1), box-shadow var(--lab-dur-1);
+  transition:filter var(--lab-dur-1), box-shadow var(--lab-dur-1), transform var(--lab-dur-1);
 }
 .badge.unlit{ filter:grayscale(.8); opacity:.65 }
 .badge.lit{ filter:none; opacity:1; box-shadow: inset 0 0 26px rgba(243,201,122,.22), 0 0 12px rgba(243,201,122,.18) }
+@media (prefers-reduced-motion:no-preference){
+  @keyframes badgeGlow { 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-1px) } }
+  .badge.lit{ animation:badgeGlow 6s ease-in-out infinite }
+}
 
 #ledgerTable{
   width:100%; border-collapse:collapse; border:1px solid var(--lab-line);
@@ -232,6 +256,11 @@ canvas{
 }
 #ledgerTable td{ border-top:1px solid var(--lab-line); padding:10px 12px; vertical-align:top; color:var(--lab-ink) }
 #ledgerTable tr:nth-child(even) td{ background:rgba(255,255,255,.015) }
+#ledgerTable td button{
+  appearance:none; border:1px solid var(--lab-line); background:rgba(255,255,255,.03); color:var(--lab-ink);
+  border-radius:8px; padding:4px 8px; cursor:pointer; transition:background var(--lab-dur-1), border-color var(--lab-dur-1);
+}
+#ledgerTable td button:hover{ background:rgba(255,255,255,.06); border-color:#3a3a44 }
 @media (max-width:560px){
   #ledgerTable{ display:block; overflow-x:auto }
   #ledgerTable thead, #ledgerTable tbody, #ledgerTable tr, #ledgerTable td, #ledgerTable th{ white-space:nowrap }
@@ -269,6 +298,17 @@ body.coach-on .coach[data-coach]::after{ opacity:1 }
 .coach-toggle{ display:flex; align-items:center; gap:6px }
 .coach-toggle.small{ opacity:.92; font-size:.95em }
 
+/* ------------------------------ Help Overlay (JS hook: #labHelp) ------------------------------ */
+#labHelp{
+  /* Structure is in JS; these styles are a safety net if inline styles change */
+  position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center;
+  background:rgba(10,10,14,.6); backdrop-filter:blur(8px);
+}
+#labHelp .panel{
+  max-width:720px; width:min(92vw,720px); background:#101017; border:1px solid #2a2a33; border-radius:14px; overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+
 /* ------------------------------ Utilities ------------------------------ */
 .lab-row{ display:flex; gap:10px; flex-wrap:wrap }
 .lab-muted{ color:var(--lab-muted) }
@@ -285,6 +325,9 @@ body.coach-on .coach[data-coach]::after{ opacity:1 }
 @media (prefers-reduced-motion:reduce){
   *{ animation:none!important; transition:none!important; scroll-behavior:auto!important }
 }
+@media (prefers-reduced-data:reduce){
+  .lab-wrap::before,.fancy-head::after,canvas{ background-image:none!important; animation:none!important }
+}
 @media (prefers-contrast:more){
   .lab-card,.desk-card,.lab-eq,.lab-cta,.pill{ border-color:#3c3c45 }
   .pill{ text-decoration:underline }
@@ -292,6 +335,15 @@ body.coach-on .coach[data-coach]::after{ opacity:1 }
 @media (forced-colors:active){
   .lab-card,.desk-card,.lab-eq{ outline:1px solid CanvasText }
   .fancy-head::after{ display:none!important }
+}
+
+/* ------------------------------ Print (nice) ------------------------------ */
+@media print{
+  :root{ --lab-ink:#000; --lab-muted:#222; --lab-line:#ccc }
+  .lab-wrap{ background:#fff!important }
+  .fancy-head::after, .lab-wrap::before, .pill-tabs, .audio-pane canvas, .ring, #labHelp{ display:none!important }
+  .lab-card,.desk-card,.lab-eq{ box-shadow:none!important; border-color:#ccc!important }
+  a{ color:#000; text-decoration:underline }
 }
 
 /* ------------------------------ Scrollbars (nice) ------------------------------ */
@@ -302,4 +354,10 @@ body.coach-on .coach[data-coach]::after{ opacity:1 }
     background:#2b2b35; border-radius:10px; border:2px solid #0f0f14;
     box-shadow: inset 0 0 12px rgba(122,243,255,.18);
   }
-   }
+}
+
+/* ------------------------------ Performance helpers ------------------------------ */
+@supports (content-visibility:auto){
+  .tab, .lab-card, .desk-card, .lab-eq{ content-visibility:auto; contain-intrinsic-size:420px }
+}
+```0
