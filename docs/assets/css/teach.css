@@ -1,67 +1,190 @@
-/* Teaching Lab theme — neon glass + motion (no external libs) */
-.lab-wrap { padding-top: 14px }
-.fancy-head { position: relative; overflow: hidden }
-.fancy-head::after{
-  content:""; position:absolute; inset:-40%; pointer-events:none;
-  background: radial-gradient(1200px 600px at 20% -10%, rgba(122,243,255,.08), transparent 60%),
-              radial-gradient(1200px 600px at 80% -10%, rgba(243,201,122,.06), transparent 60%);
-  filter: blur(10px);
+/* ======================================================================
+   Scroll of Fire — Teaching Lab (lab.css)
+   Neon glass · motion-safe · ARIA-ready · mobile-first
+   Namespace: .lab-* to avoid collisions with codex.css
+   ====================================================================== */
+
+/* ------------------------------ Theme & Resets ------------------------------ */
+:root{
+  --lab-bg:#0a0a10; --lab-ink:#eae7df; --lab-muted:#b8b3a6; --lab-line:#23232c;
+  --lab-panel:#0f0f14; --lab-gold:#f3c97a; --lab-cyan:#7af3ff; --lab-blue:#7aa8ff; --lab-mint:#9cffdd;
+  --lab-shadow:rgba(0,0,0,.38); --lab-radius:14px; --lab-radius-lg:18px; --lab-pad:14px;
+  --lab-ease:cubic-bezier(.2,.7,.2,1); --lab-dur-1:.2s; --lab-dur-2:.5s;
+}
+@media (prefers-color-scheme: light){
+  :root{ --lab-bg:#f6f7fb; --lab-ink:#101217; --lab-muted:#3a3a44; --lab-panel:#ffffff; --lab-line:#dfe2ea }
 }
 
-/* Tabs */
-.pill-tabs{ display:flex; align-items:center; gap:8px; padding:8px; background:#0f0f14; border:1px solid #2a2a33; border-radius:999px }
-.pill{ border:1px solid #2a2a33; background:#121219; color:#eae7df; padding:8px 12px; border-radius:999px; cursor:pointer }
-.pill.active{ border-color:#3a3a44; box-shadow:0 0 0 1px rgba(122,243,255,.25), inset 0 0 20px rgba(122,243,255,.06) }
-.flex{ flex:1 }
-.coach-toggle{ display:flex; align-items:center; gap:6px }
-.coach-toggle.small{ opacity:.9; font-size:.95em }
+.lab-wrap{ padding-top:14px; color:var(--lab-ink) }
+.lab-wrap a{ color:var(--lab-ink); text-underline-offset:2px }
+.lab-wrap ::selection{ background:rgba(122,243,255,.25) }
+.lab-wrap :focus-visible{
+  outline:2px solid rgba(122,243,255,.95);
+  box-shadow:0 0 0 4px rgba(122,243,255,.12), 0 0 0 1px rgba(122,168,255,.35) inset;
+  border-radius:10px; outline-offset:2px;
+}
 
-/* Tabs content */
+/* Ambient head glow */
+.fancy-head{ position:relative; overflow:hidden }
+.fancy-head::after{
+  content:""; position:absolute; inset:-40%; pointer-events:none; filter:blur(10px);
+  background:
+    radial-gradient(1200px 600px at 20% -10%, rgba(122,243,255,.08), transparent 60%),
+    radial-gradient(1200px 600px at 80% -10%, rgba(243,201,122,.06), transparent 60%);
+}
+
+/* ------------------------------ Panels / Cards ------------------------------ */
+.lab-card{
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.006));
+  border:1px solid var(--lab-line); border-radius:var(--lab-radius); padding:var(--lab-pad);
+  box-shadow:0 8px 18px var(--lab-shadow), inset 0 0 24px rgba(122,243,255,.04);
+  position:relative; isolation:isolate;
+}
+.lab-card::after{
+  content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit;
+  box-shadow: inset 0 0 0 1px rgba(122,243,255,.16), inset 0 0 28px rgba(122,243,255,.06);
+  opacity:.85;
+}
+@media (hover:hover){ .lab-card:hover{ box-shadow:0 12px 24px var(--lab-shadow) } }
+
+/* Head strap (optional) */
+.lab-strap{
+  display:inline-block; margin:-6px 0 8px; padding:6px 10px; border-radius:999px;
+  border:1px solid var(--lab-line); background:linear-gradient(180deg,rgba(122,243,255,.09),rgba(122,243,255,.03));
+  font:700 12px/1 Inter,system-ui; letter-spacing:.08em; text-transform:uppercase; color:#dff6ff;
+}
+
+/* ------------------------------ Tabs (ARIA-friendly) ------------------------------ */
+.pill-tabs{
+  display:flex; align-items:center; gap:8px; padding:8px;
+  background:var(--lab-panel); border:1px solid var(--lab-line); border-radius:999px;
+}
+.pill{
+  border:1px solid var(--lab-line); background:#121219; color:var(--lab-ink);
+  padding:8px 12px; border-radius:999px; cursor:pointer; user-select:none;
+  transition:border-color var(--lab-dur-1) var(--lab-ease), box-shadow var(--lab-dur-1) var(--lab-ease), background var(--lab-dur-1);
+}
+.pill[aria-selected="true"], .pill.active{
+  border-color:#3a3a44; background:rgba(255,255,255,.06);
+  box-shadow:0 0 0 1px rgba(122,243,255,.25), inset 0 0 20px rgba(122,243,255,.06);
+}
+.pill:focus-visible{ outline:2px solid var(--lab-cyan) }
+
 .tab{ display:none; margin-top:14px }
-.tab.active{ display:block }
+.tab.active, .tab[aria-hidden="false"]{ display:block }
 
-/* Ring timer */
-.ring-timer{ display:grid; grid-template-columns: 240px 1fr; gap:14px; align-items:center }
+/* ------------------------------ Ring Timer ------------------------------ */
+.ring-timer{ display:grid; grid-template-columns: 260px 1fr; gap:14px; align-items:center }
 @media (max-width:920px){ .ring-timer{ grid-template-columns: 1fr } }
+
 .ring{ width:100%; height:auto }
 .ring-bg{ fill:none; stroke:#1c1c25; stroke-width:6 }
-.ring-fg{ fill:none; stroke:url(#ringGrad); stroke-width:6; stroke-linecap:round; transform:rotate(-90deg); transform-origin:60px 60px; stroke-dasharray:100 100; stroke-dashoffset:100 }
-.ring-phase{ fill:#eae7df; font:700 12px Inter,system-ui; letter-spacing:.3px }
-.ring-count{ fill:#b8b3a6; font:600 10px Inter,system-ui }
+.ring-fg{
+  fill:none; stroke:url(#ringGrad); stroke-width:6; stroke-linecap:round;
+  transform:rotate(-90deg); transform-origin:60px 60px; stroke-dasharray:100 100; stroke-dashoffset:100;
+  filter:drop-shadow(0 0 10px rgba(122,243,255,.3));
+}
+.ring-phase{ fill:var(--lab-ink); font:700 12px Inter,system-ui; letter-spacing:.3px }
+.ring-count{ fill:var(--lab-muted); font:600 10px Inter,system-ui }
 .ring-controls{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
+.lab-btn{
+  appearance:none; border:1px solid var(--lab-line); background:rgba(255,255,255,.03);
+  color:var(--lab-ink); padding:8px 10px; border-radius:10px; font:600 13px/1 Inter; cursor:pointer;
+}
+.lab-btn:hover{ border-color:#3a3a44 }
+.lab-btn:active{ transform:translateY(1px) }
 
-/* Audio lab */
+/* ------------------------------ Audio Lab ------------------------------ */
 .audio-pane{ display:grid; gap:8px }
-.audio-controls{ display:flex; gap:10px; align-items:center }
-.audio-hint{ color:#b8b3a6 }
-canvas{ width:100%; background:#0f0f14; border:1px solid #2a2a33; border-radius:12px }
+.audio-controls{ display:flex; gap:10px; align-items:center; flex-wrap:wrap }
+.audio-hint{ color:var(--lab-muted) }
+canvas{ width:100%; background:var(--lab-panel); border:1px solid var(--lab-line); border-radius:12px; box-shadow:inset 0 0 20px rgba(122,243,255,.04) }
 
-/* Phrase Tuner Pro */
-.chip-lane{ display:flex; gap:8px; flex-wrap:wrap; min-height:40px; margin:8px 0 }
-.chip{ padding:6px 10px; border-radius:999px; border:1px solid #2a2a33; background:#13131a; cursor:grab; user-select:none }
+/* ------------------------------ Phrase Tuner Pro ------------------------------ */
+.chip-lane{ display:flex; gap:8px; flex-wrap:wrap; min-height:42px; margin:8px 0 }
+.chip{
+  padding:6px 10px; border-radius:999px; border:1px solid var(--lab-line); background:#13131a;
+  cursor:grab; user-select:none; transition:transform var(--lab-dur-1) var(--lab-ease), opacity var(--lab-dur-1);
+}
 .chip.dragging{ opacity:.7; transform:scale(.98) }
-.chip .w{ color:#7af3ff; margin-left:6px; font-variant-numeric:tabular-nums }
-.phrase-actions{ display:flex; align-items:center; gap:10px }
-#phraseOut mark{ background: rgba(243,201,122,.25); padding:0 4px; border-radius:4px }
+.chip .w{ color:var(--lab-cyan); margin-left:6px; font-variant-numeric:tabular-nums }
+.phrase-actions{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
+#phraseOut mark{ background: rgba(243,201,122,.26); padding:0 4px; border-radius:4px }
 
-/* Coherence Desk */
+/* ------------------------------ Coherence Desk ------------------------------ */
 .desk-grid{ display:grid; gap:12px; grid-template-columns: 1fr 1fr }
 @media (max-width:920px){ .desk-grid{ grid-template-columns: 1fr } }
-.desk-card{ background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005)); border:1px solid #2a2a33; border-radius:14px; padding:12px }
+.desk-card{
+  background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));
+  border:1px solid var(--lab-line); border-radius:14px; padding:12px;
+  box-shadow:inset 0 0 18px rgba(122,243,255,.04);
+}
 .big{ font-size:1.15rem }
 
-/* Ledger */
+/* ------------------------------ Ledger ------------------------------ */
 .ledger-top, .ledger-actions{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
 .badges{ display:flex; gap:8px; margin-top:8px }
-.badge{ display:inline-flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:50%;
-  background:#0f0f14; border:1px solid #2a2a33; box-shadow: inset 0 0 20px rgba(122,243,255,.05) }
+.badge{
+  display:inline-flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:50%;
+  background:var(--lab-panel); border:1px solid var(--lab-line); box-shadow: inset 0 0 20px rgba(122,243,255,.05);
+}
 .badge.unlit{ filter:grayscale(.8); opacity:.6 }
 
-/* Coach tips */
+/* ------------------------------ Equation helpers (lab context) ------------------------------ */
+.lab-eq{
+  position:relative; overflow:hidden; border-radius:12px;
+  background:#111115; border:1px solid #26262c; margin:8px 0 10px;
+  box-shadow:inset 0 0 20px rgba(255,200,107,.03), 0 0 16px rgba(122,243,255,.08);
+}
+.lab-eq .scroll{
+  overflow-x:auto; -webkit-overflow-scrolling:touch; padding:12px 16px;
+  scroll-snap-type:x proximity;
+  mask-image:linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+}
+.lab-eq mjx-container{ display:block!important; scroll-snap-align:start }
+
+/* ------------------------------ Tooltips / Coach ------------------------------ */
 .coach{ position:relative }
 .coach[data-coach]::after{
   content:attr(data-coach); position:absolute; left:0; right:0; bottom:-10px;
-  transform:translateY(100%); background:#0f0f14; border:1px dashed #2a2a33; color:#b8b3a6;
-  padding:8px 10px; border-radius:10px; opacity:0; pointer-events:none; transition:.25s ease;
+  transform:translateY(100%); background:var(--lab-panel); border:1px dashed var(--lab-line); color:var(--lab-muted);
+  padding:8px 10px; border-radius:10px; opacity:0; pointer-events:none; transition:opacity .25s var(--lab-ease);
 }
 body.coach-on .coach[data-coach]::after{ opacity:1 }
+
+/* Small coach toggle text */
+.coach-toggle{ display:flex; align-items:center; gap:6px }
+.coach-toggle.small{ opacity:.9; font-size:.95em }
+
+/* ------------------------------ Utilities ------------------------------ */
+.flex{ flex:1 }
+.lab-row{ display:flex; gap:10px; flex-wrap:wrap }
+.lab-muted{ color:var(--lab-muted) }
+.lab-cta{
+  display:inline-block; padding:10px 12px; border-radius:10px; border:1px solid var(--lab-line);
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+}
+.lab-cta:hover{ border-color:#3a3a44 }
+
+/* ------------------------------ Motion & Contrast Safety ------------------------------ */
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none!important; transition:none!important; scroll-behavior:auto!important }
+}
+@media (prefers-contrast:more){
+  .lab-card,.desk-card,.lab-eq,.lab-cta,.pill{ border-color:#3c3c45 }
+  .pill{ text-decoration:underline }
+}
+@media (forced-colors:active){
+  .lab-card,.desk-card,.lab-eq{ outline:1px solid CanvasText }
+  .fancy-head::after{ display:none!important }
+}
+
+/* ------------------------------ Nice scrollers ------------------------------ */
+@supports selector(:root:has(body)){
+  .lab-wrap::-webkit-scrollbar{ width:12px }
+  .lab-wrap::-webkit-scrollbar-track{ background:#0f0f14 }
+  .lab-wrap::-webkit-scrollbar-thumb{
+    background:#2b2b35; border-radius:10px; border:2px solid #0f0f14;
+    box-shadow: inset 0 0 12px rgba(122,243,255,.15);
+  }
+}
