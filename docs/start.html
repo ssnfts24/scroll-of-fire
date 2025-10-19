@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Quickstart — Scroll of Fire</title>
+
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/start.html"/>
+  <meta name="description" content="Quickstart: a 60-second run to use the Codex. Pick a voice carrier, speak one clear line, measure coherence, and log your witness.">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0b0b0f">
+  <meta property="og:site_name" content="Scroll of Fire">
+  <meta property="og:title" content="Quickstart — Scroll of Fire">
+  <meta property="og:description" content="Pick a carrier, speak one line, measure coherence, and log it in under a minute.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/start.html">
+  <meta property="og:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
+
+  <link rel="preload" as="style" href="assets/css/codex.css?v=qs1">
+  <link rel="stylesheet" href="assets/css/codex.css?v=qs1">
+  <style>
+    :root{ --maxw:980px }
+    .wrap{max-width:var(--maxw)}
+    .hero{border-radius:16px;margin:8px 0 14px}
+    .pill{display:inline-block;padding:.45rem .7rem;border:1px solid var(--line);border-radius:999px}
+    .controls{display:flex;flex-wrap:wrap;gap:10px}
+    .controls .pill[aria-pressed="true"]{box-shadow:0 0 0 1px rgba(122,243,255,.35), 0 8px 18px rgba(0,0,0,.35)}
+    .grid2{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
+    @media(max-width:900px){.grid2{grid-template-columns:1fr}}
+    .meter{width:100%}
+    .muted{color:var(--muted)}
+    .inline-btn{border:1px solid var(--line);padding:.5rem .7rem;border-radius:10px;background:transparent;color:inherit}
+    .inline-btn:hover{border-color:#3a3a44}
+    .log-item{border-top:1px solid var(--line);padding:10px 0}
+    .small{font-size:.95em}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <!-- Banner -->
+  <figure class="hero hero--contain" aria-label="Scroll of Fire banner">
+    <img src="docs/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
+         alt="Scroll of Fire — gilded sigil banner" width="1600" height="900" loading="eager" decoding="async">
+  </figure>
+
+  <!-- Nav -->
+  <nav class="tabs" aria-label="Primary navigation">
+    <a class="tab" href="index.html">⌂ Home</a>
+    <a class="tab" href="theory.html">📘 Theory</a>
+    <a class="tab" href="teach.html">🎓 Teach</a>
+    <a class="tab tab--primary" aria-current="page" href="start.html">⚡ Quickstart</a>
+    <a class="tab" href="ledger.html">🧾 Ledger</a>
+  </nav>
+
+  <h1 class="title">⚡ 60-Second Quickstart</h1>
+  <p class="subtitle">Pick a carrier → speak one clear line → measure coherence → save the witness.</p>
+
+  <section class="grid2" aria-label="Quickstart flow">
+    <article class="card">
+      <h2>1) Choose your voice carrier</h2>
+      <div class="controls" role="group" aria-label="Carriers">
+        <button class="pill" data-carrier="432" aria-pressed="false">432</button>
+        <button class="pill" data-carrier="528" aria-pressed="false">528</button>
+        <button class="pill" data-carrier="369" aria-pressed="false">369</button>
+        <button class="pill" data-carrier="none" aria-pressed="true">None</button>
+      </div>
+
+      <h2 style="margin-top:14px">2) One clear line (your intention)</h2>
+      <label class="muted small" for="phrase">Keep it short, pronounceable, present-tense.</label>
+      <textarea id="phrase" rows="3" style="width:100%;margin-top:6px"
+        placeholder="Example: “I carry truth with gentleness.”"></textarea>
+
+      <div style="display:flex;gap:10px;align-items:center;margin-top:10px">
+        <button id="startRun" class="inline-btn">▶ Start 60s Run</button>
+        <button id="stopRun" class="inline-btn" disabled>■ Stop</button>
+        <span id="timer" class="muted">Ready</span>
+      </div>
+
+      <h2 style="margin-top:16px">3) Coherence (felt quality)</h2>
+      <input id="coh" class="meter" type="range" min="0" max="5" step="0.5" value="0" aria-label="Coherence from 0 to 5">
+      <div class="muted small">0 = chaotic · 5 = crisp, truthful, sustained</div>
+
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+        <button id="saveEntry" class="inline-btn">💾 Save to Ledger</button>
+        <button id="exportEntries" class="inline-btn">⬇ Export JSON</button>
+        <span class="muted small">Saved locally in your browser.</span>
+      </div>
+    </article>
+
+    <aside class="card">
+      <h3>Why this works</h3>
+      <ul class="list">
+        <li><strong>Carrier →</strong> picks a harmonic lane (Eq.3, Eq.17).</li>
+        <li><strong>Phrase →</strong> programs semantics onto the carrier (Eq.4, Eq.16).</li>
+        <li><strong>Coherence →</strong> your witness quality index (Eq.13).</li>
+        <li><strong>Ledger →</strong> memory windowing builds remnant (Eq.5, Eq.15).</li>
+      </ul>
+      <div class="goldline"></div>
+      <h3>Recent entries</h3>
+      <div id="recent" class="small muted">No entries yet.</div>
+      <div style="margin-top:10px">
+        <a class="cta" href="ledger.html">Open full Ledger →</a>
+      </div>
+    </aside>
+  </section>
+
+  <footer class="footer">
+    <div class="divider" aria-hidden="true"></div>
+    <p class="small muted">Use headphones if possible. Stop if you feel off-balance — ethics first.</p>
+    <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire</p>
+  </footer>
+</main>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  const yr = $('#yr'); if (yr) yr.textContent = new Date().getFullYear();
+
+  // Carrier toggle
+  let carrier = "none";
+  $$('.pill[data-carrier]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      $$('.pill[data-carrier]').forEach(b=>b.setAttribute('aria-pressed','false'));
+      btn.setAttribute('aria-pressed','true');
+      carrier = btn.dataset.carrier;
+    });
+  });
+
+  // Timer
+  let tId=0, tLeft=60;
+  const timer = $('#timer'), start = $('#startRun'), stop = $('#stopRun');
+  function tick(){
+    timer.textContent = `${tLeft}s`;
+    if (tLeft<=0){ stopRun(); return; }
+    tLeft--; tId = setTimeout(tick, 1000);
+  }
+  function startRun(){
+    if (tId) return;
+    tLeft = 60; timer.textContent = "60s";
+    start.disabled = true; stop.disabled = false;
+    tId = setTimeout(tick, 1000);
+  }
+  function stopRun(){
+    clearTimeout(tId); tId = 0;
+    start.disabled = false; stop.disabled = true;
+    timer.textContent = "Stopped";
+  }
+  start.addEventListener('click', startRun);
+  stop.addEventListener('click', stopRun);
+
+  // Storage helpers
+  const KEY = 'sof_ledger_entries_v1';
+  const read = () => { try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch{ return []; } };
+  const write = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
+
+  // Save
+  $('#saveEntry').addEventListener('click', ()=>{
+    const phrase = ($('#phrase').value||'').trim();
+    const coherence = Number($('#coh').value);
+    const when = new Date().toISOString();
+    if (!phrase){ alert('Add a clear line first.'); return; }
+    const entry = { when, carrier, phrase, coherence };
+    const all = read(); all.unshift(entry); write(all);
+    renderRecent(all);
+    alert('Saved to Ledger (browser-local).');
+  });
+
+  // Export
+  $('#exportEntries').addEventListener('click', ()=>{
+    const data = read();
+    const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'scroll-of-fire-ledger.json';
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  });
+
+  // Recent list
+  function renderRecent(all = read()){
+    const box = $('#recent');
+    if (!all.length){ box.textContent = 'No entries yet.'; return; }
+    box.innerHTML = all.slice(0,5).map(e=>`
+      <div class="log-item">
+        <div><strong>${e.phrase.replace(/</g,'&lt;')}</strong></div>
+        <div class="small muted">${new Date(e.when).toLocaleString()} · carrier: ${e.carrier} · Ξ: ${e.coherence}</div>
+      </div>
+    `).join('');
+  }
+  renderRecent();
+})();
+</script>
+</body>
+</html>
