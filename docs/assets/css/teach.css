@@ -10,19 +10,21 @@
   --lab-bg:#0a0a10; --lab-ink:#eae7df; --lab-muted:#b8b3a6; --lab-line:#23232c;
   --lab-panel:#0f0f14; --lab-elev:#101017;
   --lab-gold:#f3c97a; --lab-cyan:#7af3ff; --lab-blue:#7aa8ff; --lab-mint:#9cffdd; --lab-amber:#ffdd9e;
+  --lab-red:#ff7a7a; --lab-green:#7affb0; --lab-violet:#b69cff;
 
-  /* FX */
+  /* Ambient FX */
   --lab-shadow:rgba(0,0,0,.38);
   --lab-glow-cyan:0 0 18px rgba(122,243,255,.15);
   --lab-glow-gold:0 0 16px rgba(243,201,122,.18);
   --lab-glow-blue:0 0 14px rgba(122,168,255,.14);
+  --lab-glow-mint:0 0 18px rgba(156,255,221,.16);
 
   /* Layout / Type */
-  --lab-radius:14px; --lab-radius-lg:20px; --lab-pad:14px;
+  --lab-radius:14px; --lab-radius-md:16px; --lab-radius-lg:20px; --lab-pad:14px;
   --lab-fs-00:12px; --lab-fs-0:14px; --lab-fs-1:16px; --lab-fs-2:18px; --lab-fs-3:clamp(20px,2.6vw,24px);
 
   /* Motion */
-  --lab-ease:cubic-bezier(.2,.7,.2,1); --lab-dur-1:.22s; --lab-dur-2:.55s;
+  --lab-ease:cubic-bezier(.2,.7,.2,1); --lab-dur-1:.22s; --lab-dur-2:.55s; --lab-dur-3:.9s;
 
   /* Rings / timers */
   --lab-ring-width:6;
@@ -32,6 +34,9 @@
 
   /* Safe-area insets */
   --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
+
+  /* HUD grid toggles (can be flipped via body classes if desired) */
+  --lab-grid-opacity:.06;
 }
 @media (prefers-color-scheme: light){
   :root{
@@ -54,10 +59,19 @@
   content:""; position:fixed; inset:-4% -4% auto -4%; height:52vh; pointer-events:none; z-index:0;
   background:
     radial-gradient(420px 220px at 18% -6%, rgba(243,201,122,.18), transparent 60%),
-    radial-gradient(640px 320px at 80% -4%, rgba(122,243,255,.14), transparent 70%);
+    radial-gradient(640px 320px at 80% -4%, rgba(122,243,255,.14), transparent 70%),
+    linear-gradient(0deg, transparent 96%, rgba(122,243,255,.06) 98% 100%);
   mix-blend-mode:screen; opacity:.75; filter:blur(.2px);
 }
-.fancy-head, .lab-card, .desk-card, .lab-eq, .pill-tabs { position:relative; z-index:1 }
+.fancy-head, .lab-card, .desk-card, .lab-eq, .pill-tabs, .lab-sticky { position:relative; z-index:1 }
+
+/* HUD grid overlay (toggle via .lab-grid-on on body) */
+body.lab-grid-on .lab-wrap::after{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:var(--lab-grid-opacity);
+  background:
+    linear-gradient(transparent 97%, rgba(122,243,255,.18) 98%) 0 0/100% 22px repeat-y,
+    linear-gradient(90deg, transparent 97%, rgba(243,201,122,.18) 98%) 0 0/22px 100% repeat-x;
+}
 
 /* Inline basics */
 .lab-wrap a{ color:var(--lab-ink); text-underline-offset:2px; transition:text-shadow var(--lab-dur-1) var(--lab-ease) }
@@ -116,12 +130,26 @@
   .lab-card:hover{ box-shadow:0 12px 24px var(--lab-shadow), inset 0 0 26px rgba(122,243,255,.06); transform:translateY(-1px) }
 }
 
+/* Reveal-on-scroll helper (paired with .visible from JS) */
+@media (prefers-reduced-motion:no-preference){
+  .lab-card{ opacity:0; transform:translate3d(0,6px,0) }
+  .lab-card.visible{ animation:labReveal var(--lab-dur-2) var(--lab-ease) both }
+  @keyframes labReveal{ to{ opacity:1; transform:translate3d(0,0,0) } }
+}
+
 /* Strap / tag for sections */
 .lab-strap{
   display:inline-block; margin:-6px 0 8px; padding:6px 10px; border-radius:999px;
   border:1px solid var(--lab-line); background:linear-gradient(180deg,rgba(122,243,255,.12),rgba(122,243,255,.04));
   font:700 12px/1 Inter,system-ui; letter-spacing:.08em; text-transform:uppercase; color:#e8fbff;
   box-shadow:inset 0 0 12px rgba(122,243,255,.06);
+}
+
+/* Sticky helper (use on any local toolbar/header) */
+.lab-sticky{
+  position:sticky; top:calc(8px + var(--safe-top));
+  background:rgba(10,10,16,.5); backdrop-filter:saturate(140%) blur(8px);
+  border:1px solid var(--lab-line); border-radius:var(--lab-radius-md); padding:8px; z-index:4;
 }
 
 /* ------------------------------ Tabs (ARIA-friendly) ------------------------------ */
@@ -132,13 +160,19 @@
 }
 .pill{
   border:1px solid var(--lab-line); background:#121219; color:var(--lab-ink);
-  padding:8px 12px; border-radius:999px; cursor:pointer; user-select:none;
+  padding:8px 12px; border-radius:999px; cursor:pointer; user-select:none; position:relative;
   transition:border-color var(--lab-dur-1) var(--lab-ease), box-shadow var(--lab-dur-1) var(--lab-ease), background var(--lab-dur-1);
+}
+.pill::after{
+  content:""; position:absolute; left:10%; right:10%; bottom:-2px; height:2px;
+  background:linear-gradient(90deg, rgba(122,243,255,.0), rgba(122,243,255,.5), rgba(243,201,122,.5), rgba(122,243,255,.0));
+  border-radius:999px; opacity:0; transform:translateY(2px); transition:opacity var(--lab-dur-1), transform var(--lab-dur-1);
 }
 .pill[aria-selected="true"], .pill.active{
   border-color:#3a3a44; background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
   box-shadow:0 0 0 1px rgba(122,243,255,.28), inset 0 0 20px rgba(122,243,255,.08), var(--lab-glow-gold);
 }
+.pill[aria-selected="true"]::after, .pill.active::after{ opacity:1; transform:translateY(0) }
 .pill:focus-visible{ outline:2px solid var(--lab-cyan) }
 .flex{ flex:1 }
 
@@ -152,7 +186,7 @@
 input[type="text"], input[type="number"], input[type="search"], select, textarea{
   background:var(--lab-elev); color:var(--lab-ink); border:1px solid var(--lab-line);
   border-radius:10px; padding:8px 10px; box-shadow:inset 0 0 0 1px rgba(122,243,255,.08);
-  transition:border-color var(--lab-dur-1) var(--lab-ease), box-shadow var(--lab-dur-1) var(--lab-ease);
+  transition:border-color var(--lab-dur-1) var(--lab-ease), box-shadow var(--lab-dur-1) var(--lab-ease), background var(--lab-dur-1);
 }
 input:focus, select:focus, textarea:focus{ border-color:#3a3a44; box-shadow:inset 0 0 0 1px rgba(122,243,255,.18) }
 textarea{ width:100%; resize:vertical; min-height:92px }
@@ -160,16 +194,41 @@ textarea{ width:100%; resize:vertical; min-height:92px }
 .lab-btn{
   appearance:none; border:1px solid var(--lab-line); background:rgba(255,255,255,.03);
   color:var(--lab-ink); padding:8px 12px; border-radius:10px; cursor:pointer;
-  transition:transform var(--lab-dur-1) var(--lab-ease), border-color var(--lab-dur-1), background var(--lab-dur-1);
+  transition:transform var(--lab-dur-1) var(--lab-ease), border-color var(--lab-dur-1), background var(--lab-dur-1), box-shadow var(--lab-dur-1);
 }
 .lab-btn:hover{ border-color:#3a3a44; background:rgba(255,255,255,.05) }
 .lab-btn:active{ transform:translateY(1px) }
-.lab-btn.ghost{ background:transparent; opacity:.92 }
+.lab-btn.primary{
+  background:linear-gradient(180deg, rgba(122,243,255,.18), rgba(122,243,255,.06));
+  box-shadow:0 0 0 1px rgba(122,243,255,.22) inset, 0 0 16px rgba(122,243,255,.08);
+}
+.lab-btn.ghost{ background:transparent; opacity:.92; border-style:dashed }
 .lab-cta{
   display:inline-block; padding:10px 12px; border-radius:10px; border:1px solid var(--lab-line);
   background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
 }
 .lab-cta:hover{ border-color:#3a3a44 }
+
+/* Toggle switch (use: <label class="lab-switch"><input type=checkbox><span/></label>) */
+.lab-switch{ display:inline-flex; align-items:center; gap:8px; cursor:pointer; user-select:none }
+.lab-switch>input{ position:absolute; opacity:0; pointer-events:none }
+.lab-switch>span{
+  width:40px; height:24px; background:#16161d; border:1px solid var(--lab-line); border-radius:999px; position:relative;
+  box-shadow:inset 0 0 0 1px rgba(122,243,255,.08); transition:background var(--lab-dur-1), border-color var(--lab-dur-1)
+}
+.lab-switch>span::after{
+  content:""; position:absolute; width:18px; height:18px; left:3px; top:2px; border-radius:50%;
+  background:linear-gradient(180deg,#aef,#78f); box-shadow:0 0 10px rgba(122,243,255,.4);
+  transition:transform var(--lab-dur-1) var(--lab-ease);
+}
+.lab-switch>input:checked+span{ background:rgba(122,243,255,.1); border-color:#3a3a44 }
+.lab-switch>input:checked+span::after{ transform:translateX(16px) }
+
+/* Hotkey badge */
+kbd{
+  background:#11131a; border:1px solid #343842; border-bottom-width:3px; padding:.15em .45em; border-radius:6px; box-shadow:inset 0 -2px 0 rgba(0,0,0,.25);
+  font:600 var(--lab-fs-00)/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; color:var(--lab-ink)
+}
 
 /* ------------------------------ Ring Timer ------------------------------ */
 .ring-timer{ display:grid; grid-template-columns: 260px 1fr; gap:14px; align-items:center }
@@ -185,11 +244,21 @@ textarea{ width:100%; resize:vertical; min-height:92px }
 .ring-phase{ fill:var(--lab-ink); font:700 12px Inter,system-ui; letter-spacing:.3px }
 .ring-count{ fill:var(--lab-muted); font:600 10px Inter,system-ui }
 .ring-controls{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
+.ring-meter{
+  height:6px; border-radius:999px; background:#17171d; border:1px solid var(--lab-line); overflow:hidden; position:relative; min-width:120px;
+}
+.ring-meter>i{ content:""; display:block; height:100%; width:0%; background:linear-gradient(90deg,#7af3ff,#f3c97a); box-shadow:0 0 14px rgba(122,243,255,.25) }
 
 @media (prefers-reduced-motion:no-preference){
   @keyframes ringPulse { 0%,100%{filter:drop-shadow(0 0 10px rgba(122,243,255,.25))} 50%{filter:drop-shadow(0 0 18px rgba(122,243,255,.40))} }
   .ring{ animation:ringPulse 6s ease-in-out infinite }
 }
+
+/* Phase-specific halo (optional: set on container .ring-timer[data-phase="0..3"]) */
+.ring-timer[data-phase="0"] .ring{ filter:drop-shadow(0 0 12px rgba(122,243,255,.45)) }
+.ring-timer[data-phase="1"] .ring{ filter:drop-shadow(0 0 12px rgba(243,201,122,.45)) }
+.ring-timer[data-phase="2"] .ring{ filter:drop-shadow(0 0 12px rgba(156,255,221,.45)) }
+.ring-timer[data-phase="3"] .ring{ filter:drop-shadow(0 0 12px rgba(122,168,255,.45)) }
 
 /* ------------------------------ Audio Lab ------------------------------ */
 .audio-pane{ display:grid; gap:8px }
@@ -199,6 +268,13 @@ canvas{
   width:100%; background:var(--lab-panel); border:1px solid var(--lab-line); border-radius:12px;
   box-shadow:inset 0 0 20px rgba(122,243,255,.05), inset 0 0 0 1px rgba(122,243,255,.10);
 }
+.audio-meters{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
+.audio-meter{
+  display:flex; align-items:center; gap:8px; padding:6px 8px; border:1px solid var(--lab-line); border-radius:10px; background:rgba(255,255,255,.02)
+}
+.audio-meter .bar{ width:120px; height:6px; border-radius:999px; background:#17171d; border:1px solid var(--lab-line); overflow:hidden }
+.audio-meter .bar>i{ display:block; height:100%; width:0%; background:linear-gradient(90deg,#7aa8ff,#9cffdd) }
+
 @media (prefers-reduced-motion:no-preference){
   @keyframes scanline { to { background-position-y:12px } }
   canvas{ background-image:repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 3px); background-size:auto 12px; animation:scanline 9s linear infinite }
@@ -218,6 +294,13 @@ canvas{
 .phrase-actions{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
 #phraseOut mark{ background: rgba(243,201,122,.26); padding:0 4px; border-radius:4px }
 
+/* Token badges (optional) */
+.token-pill{
+  display:inline-flex; gap:6px; align-items:center; padding:4px 8px; border-radius:999px;
+  border:1px solid var(--lab-line); background:rgba(255,255,255,.02); font:600 var(--lab-fs-00)/1 Inter;
+}
+.token-pill i{ font-style:normal; color:var(--lab-cyan) }
+
 /* ------------------------------ Coherence Desk ------------------------------ */
 .desk-grid{ display:grid; gap:12px; grid-template-columns: 1fr 1fr }
 @media (max-width:920px){ .desk-grid{ grid-template-columns: 1fr } }
@@ -227,6 +310,13 @@ canvas{
   box-shadow:inset 0 0 18px rgba(122,243,255,.05), var(--lab-glow-blue);
 }
 .big{ font-size:1.15rem }
+
+/* Inline callouts */
+.lab-note{ border-left:3px solid var(--lab-cyan); padding:.6rem .85rem; background:rgba(122,243,255,.06); border-radius:10px }
+.lab-warn{ border-left:3px solid var(--lab-gold); padding:.6rem .85rem; background:rgba(243,201,122,.08); border-radius:10px }
+
+/* Sparkline canvas baseline style (Xi) */
+.desk-card canvas{ background:#0f0f14; border:1px solid var(--lab-line); border-radius:10px }
 
 /* ------------------------------ Ledger ------------------------------ */
 .ledger-top, .ledger-actions{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
@@ -252,7 +342,7 @@ canvas{
 #ledgerTable thead th{
   background:linear-gradient(180deg,#16161d,#12121a);
   border-bottom:1px solid var(--lab-line); padding:10px 12px; text-align:left; font-weight:600; color:#f2f1ec;
-  text-shadow:0 0 8px rgba(122,243,255,.12);
+  text-shadow:0 0 8px rgba(122,243,255,.12); position:sticky; top:0; z-index:1;
 }
 #ledgerTable td{ border-top:1px solid var(--lab-line); padding:10px 12px; vertical-align:top; color:var(--lab-ink) }
 #ledgerTable tr:nth-child(even) td{ background:rgba(255,255,255,.015) }
@@ -293,25 +383,45 @@ canvas{
   box-shadow:var(--lab-glow-gold);
 }
 body.coach-on .coach[data-coach]::after{ opacity:1 }
-
-/* Small coach toggle text */
 .coach-toggle{ display:flex; align-items:center; gap:6px }
 .coach-toggle.small{ opacity:.92; font-size:.95em }
 
+/* Toasts (JS can toggle .show and data-variant) */
+.lab-toast{
+  position:fixed; left:50%; bottom:calc(16px + var(--safe-bottom)); transform:translateX(-50%) translateY(12px);
+  background:#0f1016; border:1px solid #2a2a33; border-radius:12px; padding:10px 14px; color:var(--lab-ink);
+  box-shadow:0 18px 44px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.14); opacity:0; pointer-events:none;
+  transition:transform var(--lab-dur-2) var(--lab-ease), opacity var(--lab-dur-2) var(--lab-ease);
+}
+.lab-toast.show{ opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0) }
+.lab-toast[data-variant="ok"]{ border-color:#244; box-shadow:0 18px 44px rgba(0,0,0,.45), 0 0 18px rgba(156,255,221,.18) }
+.lab-toast[data-variant="warn"]{ border-color:#442; box-shadow:0 18px 44px rgba(0,0,0,.45), 0 0 18px rgba(243,201,122,.18) }
+.lab-toast[data-variant="err"]{ border-color:#422; box-shadow:0 18px 44px rgba(0,0,0,.45), 0 0 18px rgba(255,122,122,.18) }
+
 /* ------------------------------ Help Overlay (JS hook: #labHelp) ------------------------------ */
 #labHelp{
-  /* Structure is in JS; these styles are a safety net if inline styles change */
-  position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center;
+  position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center;
   background:rgba(10,10,14,.6); backdrop-filter:blur(8px);
 }
+#labHelp.open{ display:flex }
 #labHelp .panel{
   max-width:720px; width:min(92vw,720px); background:#101017; border:1px solid #2a2a33; border-radius:14px; overflow:hidden;
   box-shadow:0 20px 60px rgba(0,0,0,.45);
 }
+#labHelp header{ display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom:1px solid #23232c }
+#labHelp .content{ padding:12px }
+#labHelp .foot{ display:flex; justify-content:flex-end; gap:8px; padding:10px 12px; border-top:1px solid #23232c }
+
+/* ------------------------------ Breadcrumbs & crumbs ------------------------------ */
+.crumbs { margin:8px 0 0 }
+.crumbs .cta { display:inline-block; padding:8px 10px; border-radius:10px; border:1px solid var(--lab-line) }
 
 /* ------------------------------ Utilities ------------------------------ */
-.lab-row{ display:flex; gap:10px; flex-wrap:wrap }
+.lab-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
 .lab-muted{ color:var(--lab-muted) }
+.center{ text-align:center }
+.right{ text-align:right }
+.nowrap{ white-space:nowrap }
 
 /* Rune divider (matches codex aesthetic) */
 .lab-runes{ display:flex; justify-content:center; gap:10px; margin:10px 0 8px; opacity:.92 }
@@ -321,9 +431,13 @@ body.coach-on .coach[data-coach]::after{ opacity:1 }
   background:linear-gradient(180deg,rgba(122,243,255,.6),rgba(243,201,122,.35));
 }
 
+/* Key-hint line */
+.key-hint{ font:500 12px/1.4 Inter,system-ui; color:var(--lab-muted); opacity:.95 }
+
 /* ------------------------------ Motion & Contrast Safety ------------------------------ */
 @media (prefers-reduced-motion:reduce){
   *{ animation:none!important; transition:none!important; scroll-behavior:auto!important }
+  .lab-card{ opacity:1!important; transform:none!important }
 }
 @media (prefers-reduced-data:reduce){
   .lab-wrap::before,.fancy-head::after,canvas{ background-image:none!important; animation:none!important }
@@ -341,7 +455,7 @@ body.coach-on .coach[data-coach]::after{ opacity:1 }
 @media print{
   :root{ --lab-ink:#000; --lab-muted:#222; --lab-line:#ccc }
   .lab-wrap{ background:#fff!important }
-  .fancy-head::after, .lab-wrap::before, .pill-tabs, .audio-pane canvas, .ring, #labHelp{ display:none!important }
+  .fancy-head::after, .lab-wrap::before, .pill-tabs, .audio-pane canvas, .ring, #labHelp, .lab-toast{ display:none!important }
   .lab-card,.desk-card,.lab-eq{ box-shadow:none!important; border-color:#ccc!important }
   a{ color:#000; text-decoration:underline }
 }
@@ -360,4 +474,22 @@ body.coach-on .coach[data-coach]::after{ opacity:1 }
 @supports (content-visibility:auto){
   .tab, .lab-card, .desk-card, .lab-eq{ content-visibility:auto; contain-intrinsic-size:420px }
 }
-```0
+
+/* ------------------------------ Extras you can hook with JS --------------- */
+/* Adaptive badge hues (set data-streak on body to tint) */
+body[data-streak="7"] .badge{ box-shadow: inset 0 0 20px rgba(156,255,221,.22) }
+body[data-streak="33"] .badge{ box-shadow: inset 0 0 20px rgba(122,168,255,.22) }
+body[data-streak="144"] .badge{ box-shadow: inset 0 0 24px rgba(243,201,122,.28) }
+
+/* Equation focus ring (toggle .eq-focus via JS when interacting) */
+.lab-eq.eq-focus{ box-shadow:inset 0 0 26px rgba(243,201,122,.08), 0 0 18px rgba(122,243,255,.18) }
+
+/* Mini “live status” dot (use on inline spans, set .ok / .warn / .err) */
+.lab-dot{ width:8px; height:8px; border-radius:50%; display:inline-block; vertical-align:middle; margin-right:6px; background:#555 }
+.lab-dot.ok{ background:linear-gradient(180deg,#7affb0,#47d38b) }
+.lab-dot.warn{ background:linear-gradient(180deg,#ffdd9e,#e6b85c) }
+.lab-dot.err{ background:linear-gradient(180deg,#ff9a9a,#e06b6b) }
+
+/* Meter (general-purpose; <div class="lab-meter"><i style="width:40%"></i></div>) */
+.lab-meter{ height:8px; border-radius:999px; background:#17171d; border:1px solid var(--lab-line); overflow:hidden }
+.lab-meter>i{ display:block; height:100%; width:0%; background:linear-gradient(90deg,#7af3ff,#f3c97a) }
