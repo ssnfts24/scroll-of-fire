@@ -1,9 +1,11 @@
 /* ========================================================================
    Scroll of Fire — Teaching Lab Engine  (teach.js)
+   v2025.10.19-b
    - Zero libraries, offline-first, mobile-friendly
-   - Defensive: permissions, motion/data prefs, visibility, errors handled
-   - Persistent state via localStorage (namespaced)
-   - All features gracefully skip if corresponding controls aren’t in DOM
+   - Defensive: permissions, wake-lock, motion/data prefs, visibility, errors
+   - Persistent state via localStorage (namespaced, guarded)
+   - DPR-aware canvases, hash-based tab routing (works with back button)
+   - All features no-op if corresponding controls aren’t in DOM
    ======================================================================== */
 (function () {
   "use strict";
@@ -16,28 +18,53 @@
   const nowIso = () => new Date().toISOString();
   const todayKey = () => new Date().toISOString().slice(0,10);
   const prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const prefersReducedData = matchMedia('(prefers-reduced-data: reduce)').matches;
-  const NS = 'codex:teach:'; // storage namespace
-  const S  = (k, v) => v === undefined
-    ? JSON.parse(localStorage.getItem(NS+k) || 'null')
-    : localStorage.setItem(NS+k, JSON.stringify(v));
-  const on = (el, ev, fn, opts) => el && el.addEventListener(ev, fn, opts);
+  const prefersReducedData   = ('connection' in navigator && navigator.connection?.saveData) ||
+                                matchMedia('(prefers-reduced-data: reduce)').matches;
+
+  // Storage (guarded)
+  const NS = 'codex:teach:';
+  const S  = (k, v) => {
+    try {
+      if (v === undefined) return JSON.parse(localStorage.getItem(NS+k) || 'null');
+      localStorage.setItem(NS+k, JSON.stringify(v));
+    } catch { /* quota/blocked; ignore */ }
+  };
+
+  const on = (el, ev, fn, opts) => el && el.addEventListener && el.addEventListener(ev, fn, opts);
   const vibrate = (ms=12) => (navigator.vibrate && !prefersReducedMotion) ? navigator.vibrate(ms) : void 0;
   const inFormField = (e) => e && e.target && /input|textarea|select/i.test(e.target.tagName);
+  const getNum = (inp, def=0) => { if (!inp) return def; const n = parseFloat(inp.value); return Number.isFinite(n) ? n : def; };
 
-  // Speech prompt helper (opt-in via checkbox#speakPrompts if you add one)
+  // Speech prompt helper (opt-in via #speakPrompts)
   function speak(line){
     const box = $('#speakPrompts');
     if (!('speechSynthesis' in window) || !box || !box.checked) return;
     try { window.speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(line)); } catch {}
   }
 
-  // Clamp & parse numbers from inputs safely
-  const getNum = (inp, def=0) => {
-    if (!inp) return def;
-    const n = parseFloat(inp.value);
-    return Number.isFinite(n) ? n : def;
-  };
+  // DPR-aware canvas sizing
+  function fitCanvas(c, w=c.clientWidth||c.width, h=c.clientHeight||c.height){
+    const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+    if (c.width !== Math.round(w*dpr) || c.height !== Math.round(h*dpr)) {
+      c.width = Math.round(w*dpr); c.height = Math.round(h*dpr);
+      const ctx = c.getContext('2d'); if (ctx) ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+  }
+
+  // Simple debounce
+  const debounce = (fn, ms=120) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; };
+
+  // Wake Lock (keeps screen on during ring timers if possible)
+  let wakeLock;
+  async function lockScreen(onFlag){
+    try{
+      if (!('wakeLock' in navigator)) return;
+      if (onFlag){
+        wakeLock = await navigator.wakeLock.request('screen');
+        on(document, 'visibilitychange', async () => { if (!document.hidden && wakeLock?.released) wakeLock = await navigator.wakeLock.request('screen'); });
+      } else { await wakeLock?.release(); wakeLock = null; }
+    } catch { /* ignore */ }
+  }
 
   /* -------------------- Reveal-on-scroll for cards ---------------------- */
   function revealOnScroll() {
@@ -52,17 +79,21 @@
     setTimeout(() => cards.forEach(c => c.classList.add('visible')), 900);
   }
 
-  /* ----------------------------- Tabs & Header helpers ------------------ */
+  /* ----------------------------- Tabs & Routing ------------------------- */
   function initTabs() {
     const pills  = $$('.pill[role="tab"]');
     const panels = $$('.tab');
     if (!pills.length || !panels.length) return;
 
-    function activate(name) {
+    const nameFromHash = () => (location.hash.replace('#','') || S('tab') || 'observer');
+    const setHash = (name) => { if (location.hash !== '#'+name) history.pushState(null, '', '#'+name); };
+
+    function activate(name, push=true) {
       pills.forEach(b => {
         const is = (b.dataset.tab === name);
         b.classList.toggle('active', is);
         b.setAttribute('aria-selected', is ? 'true' : 'false');
+        b.tabIndex = is ? 0 : -1;
       });
       panels.forEach(p => {
         const is = (p.id === 'tab-' + name);
@@ -72,15 +103,20 @@
       });
       S('tab', name);
       const status = $('#lab-status'); if (status) status.textContent = `Tab: ${name}`;
+      if (push) setHash(name);
     }
 
-    // click tabs
+    // clicks
     pills.forEach(b => on(b, 'click', () => activate(b.dataset.tab)));
-    // restore last tab
-    activate(S('tab') || 'observer');
-
     // data-nav buttons (QuickStart)
     $$('.lab-card [data-nav]').forEach(b => on(b, 'click', () => activate(b.dataset.nav)));
+
+    // restore from hash or storage
+    activate(nameFromHash(), false);
+
+    // hash/back-button support
+    on(window, 'hashchange', () => activate(nameFromHash(), false));
+    on(window, 'popstate', () => activate(nameFromHash(), false));
 
     // Hotkeys 1..7, ?, S (unless focused in field)
     on(document, 'keydown', (e) => {
@@ -111,8 +147,9 @@
     // Preset carrier buttons (in header + voice sidebar)
     $$('.lab-btn[data-carrier]').forEach(btn => on(btn, 'click', () => {
       const v = btn.dataset.carrier;
-      const qs = $('#qsCarrier'); if (qs) qs.value = v;
-      const out = $('#carrierOut'); if (out) out.value = v;
+      $('#qsCarrier') && ($('#qsCarrier').value = v);
+      $('#carrierOut') && ($('#carrierOut').value = v);
+      S('carrier', v);
       const status = $('#lab-status'); if (status) status.textContent = `Preset carrier: ${v} Hz`;
     }));
     // Intention propagation to Phrase & Voice intention fields
@@ -122,6 +159,10 @@
       const p = $('#phraseIn'); if (val && p && !p.value) p.value = val;
       const v = $('#intentionFromVoice'); if (v && !v.value) v.value = val;
     });
+    // Ctrl/⌘+Enter → send to Phrase Tuner
+    on(qsInt, 'keydown', (e)=>{ if ((e.ctrlKey||e.metaKey) && e.key==='Enter'){ e.preventDefault(); $('.pill[data-tab="phrase"]')?.click(); }});
+    // Restore stored carrier
+    const savedCar = S('carrier'); if (savedCar) { $('#qsCarrier') && ($('#qsCarrier').value=savedCar); $('#carrierOut') && ($('#carrierOut').value=savedCar); }
   }
 
   /* ----------------------- Observer 4-Beat Ring -------------------------- */
@@ -149,10 +190,10 @@
     }
 
     const PHASES = [
-      {k:'𝓘', label:'Intend', prompt:'Choose one clean line.'},
-      {k:'𝓛', label:'Look',   prompt:'Notice one undeniable detail.'},
+      {k:'𝓘', label:'Intend',   prompt:'Choose one clean line.'},
+      {k:'𝓛', label:'Look',     prompt:'Notice one undeniable detail.'},
       {k:'𝓒', label:'Coalesce', prompt:'Soften jaw/shoulders; exhale; feel weight.'},
-      {k:'𝓢', label:'Seal',  prompt:'Whisper thanks. Allow settling.'}
+      {k:'𝓢', label:'Seal',     prompt:'Whisper thanks. Allow settling.'}
     ];
 
     let raf=null, i=0, round=0, phaseSec=12, rounds=3, t0=0;
@@ -180,11 +221,10 @@
       phaseTxt.textContent = `${P.k} • ${P.label}`;
       countTxt.textContent = `Round ${round+1}/${rounds} • Phase ${p+1}/4`;
       vibrate(10); beep();
-      // speak based on pace choice
       const pace = paceSel?.value || 'free';
-      if (pace === 'box') { speak(`${P.label}. Gentle 4.`); }
-      else if (pace === '4-7-8') { speak(`${P.label}. Ease.`); }
-      else { speak(P.prompt); }
+      if (pace === 'box')      speak(`${P.label}. Gentle four.`);
+      else if (pace === '4-7-8') speak(`${P.label}. Ease.`);
+      else                      speak(P.prompt);
     }
 
     function tick() {
@@ -205,12 +245,12 @@
       rounds   = clamp(Number(roundsIn.value||3), 1, 20);
       S('observer:sec', phaseSec); S('observer:rounds', rounds); if (paceSel) S('observer:pace', paceSel.value);
       i = 0; round = 0; t0 = performance.now(); setPhase(i); draw(0);
-      raf = requestAnimationFrame(tick);
+      lockScreen(true); raf = requestAnimationFrame(tick);
     }
     function stop() {
       if (raf) cancelAnimationFrame(raf); raf = null;
       phaseTxt.textContent = 'Ready'; countTxt.textContent = '—'; draw(0);
-      speak('Session complete');
+      lockScreen(false); speak('Session complete');
     }
 
     on(startBtn, 'click', start);
@@ -225,14 +265,22 @@
     const stabilityTxt = $('#stability'), noiseWarn = $('#noiseWarn'), useCarrier = $('#useCarrier');
     if (!btnStart || !wave || !fft || !hint) return;
 
+    /** Resize canvases to DPR & container */
+    function resizeAll(){
+      fitCanvas(wave); fitCanvas(fft);
+      clearCanvas(wctx, wave); clearCanvas(fctx, fft);
+    }
+    const wctx = wave.getContext('2d', {alpha:false});
+    const fctx = fft.getContext('2d',  {alpha:false});
+    resizeAll();
+    on(window,'resize',debounce(resizeAll,120));
+
     /** State */
-    let ctx, src, analyser, rafId;
+    let ctx, src, analyser, rafId, stream;
     const FFT_SIZE = 2048;
     const CAR_KEYS = [432, 528, 369]; // Hz
 
     /** Drawing helpers */
-    const wctx = wave.getContext('2d', {alpha:false});
-    const fctx = fft.getContext('2d',  {alpha:false});
     function clearCanvas(ctx2d, canvas){
       ctx2d.fillStyle = '#0f0f14'; ctx2d.fillRect(0,0,canvas.width,canvas.height);
       ctx2d.strokeStyle = '#2a2a33'; ctx2d.strokeRect(0,0,canvas.width,canvas.height);
@@ -265,14 +313,13 @@
     // Simple stability + noise estimator over last few frames
     const lastPeaks = [];
     function stabilityUpdate(peakHz, energy){
-      // Keep last 15 peaks
       lastPeaks.push(peakHz); if (lastPeaks.length > 15) lastPeaks.shift();
       const mean = lastPeaks.reduce((a,b)=>a+b,0)/lastPeaks.length;
       const varSum = lastPeaks.reduce((a,b)=>a+(b-mean)*(b-mean),0)/Math.max(1,lastPeaks.length-1);
       const st = Math.max(0, 1 - Math.sqrt(varSum)/60); // rough: ±60Hz spread → 0 stability
-      if (stabilityTxt) stabilityTxt.textContent = `Stability: ${(st*100|0)}%`;
+      stabilityTxt && (stabilityTxt.textContent = `Stability: ${(st*100|0)}%`);
       const nz = Math.max(0, Math.min(1, 1 - energy)); // energy 0..1 (higher = cleaner tone), invert for "noise"
-      if (noiseWarn) noiseWarn.textContent = nz > 0.35 ? 'Noise: high' : 'Noise: ok';
+      noiseWarn && (noiseWarn.textContent = nz > 0.35 ? 'Noise: high' : 'Noise: ok');
       if (useCarrier) { useCarrier.disabled = !(peakHz && st > 0.6 && nz < 0.5); useCarrier.dataset.hz = String(peakHz); }
     }
 
@@ -306,7 +353,6 @@
           hint.textContent = `Near ${nearest} Hz (peak ≈ ${fmt(peakHz,0)} Hz)`;
           hint.style.color = close > 0.7 ? '#7af3ff' : '#b8b3a6';
           stabilityUpdate(peakHz, energy);
-          // Cross-app surface if needed by other scripts
           window._labSetCarrier?.({hz: peakHz, stable: close, noise: 1 - energy});
         } else {
           hint.textContent = '—'; hint.style.color = '#b8b3a6';
@@ -319,7 +365,7 @@
     async function start() {
       try {
         if (ctx) await stop();
-        const stream = await navigator.mediaDevices.getUserMedia({
+        stream = await navigator.mediaDevices.getUserMedia({
           audio: { echoCancellation:true, noiseSuppression:true, channelCount:1 },
           video: false
         });
@@ -331,15 +377,15 @@
         src.connect(analyser);
         loop();
       } catch (err) {
-        hint.textContent = 'Microphone permission denied/unavailable.'; hint.style.color = '#f3c97a';
+        hint.textContent = 'Microphone permission denied or unavailable.'; hint.style.color = '#f3c97a';
         console.error(err);
       }
     }
     async function stop() {
       cancelAnimationFrame(rafId);
-      if (src && src.mediaStream){ src.mediaStream.getTracks().forEach(t => t.stop()); }
-      if (ctx && ctx.state !== 'closed') await ctx.close();
-      ctx = src = analyser = null;
+      try { stream?.getTracks()?.forEach(t => t.stop()); } catch {}
+      try { if (ctx && ctx.state !== 'closed') await ctx.close(); } catch {}
+      ctx = src = analyser = stream = null;
       hint.textContent = '—'; hint.style.color = '#b8b3a6';
       clearCanvas(wctx, wave); clearCanvas(fctx, fft);
     }
@@ -352,9 +398,11 @@
     on(useCarrier, 'click', (e) => {
       const v = e.currentTarget?.dataset?.hz;
       if (!v) return;
-      const carrierOut = $('#carrierOut'); if (carrierOut) carrierOut.value = Math.round(v);
-      const qsCarrier = $('#qsCarrier'); if (qsCarrier) qsCarrier.value = Math.round(v);
-      const status = $('#lab-status'); if (status) status.textContent = `Carrier set: ${Math.round(v)} Hz`;
+      const hz = Math.round(v);
+      $('#carrierOut')  && ($('#carrierOut').value = hz);
+      $('#qsCarrier')   && ($('#qsCarrier').value = hz);
+      S('carrier', hz);
+      const status = $('#lab-status'); if (status) status.textContent = `Carrier set: ${hz} Hz`;
     });
   }
 
@@ -366,7 +414,8 @@
     const outNeg  = $('#negCount'), outSug = $('#phraseOut'), outScore = $('#semScore');
     if (!inBox || !lane) return;
 
-    const NEG = /\b(no|not|never|can't|won't|don't|isn't|aren't|shouldn't|couldn't|wouldn't|without|stop|avoid|against)\b/gi;
+    // Expanded negation list + contractions normalized
+    const NEG = /\b(no|not|never|cant|won't|wont|don't|dont|isn't|isnt|aren't|arent|shouldn't|shouldnt|couldn't|couldnt|wouldn't|wouldnt|without|stop|avoid|against|can't)\b/gi;
 
     function tokenize(s) {
       return (s || '').trim().split(/(\s+|[.,!?;:()"'`~\[\]{}<>/\\\-])/).filter(Boolean);
@@ -413,14 +462,19 @@
       const tokens = tokenize(txt);
       renderChips(tokens);
 
-      const negCount = (txt.match(NEG) || []).length;
+      const norm = txt.replace(/’/g,"'").replace(/\bcan['’]?t\b/gi,'cant').replace(/\bwon['’]?t\b/gi,'wont')
+                      .replace(/\bdon['’]?t\b/gi,'dont').replace(/\bisn['’]?t\b/gi,'isnt')
+                      .replace(/\baren['’]?t\b/gi,'arent').replace(/\bshouldn['’]?t\b/gi,'shouldnt')
+                      .replace(/\bcouldn['’]?t\b/gi,'couldnt').replace(/\bwouldn['’]?t\b/gi,'wouldnt');
+      const negCount = (norm.match(NEG) || []).length;
       outNeg.textContent = String(negCount);
 
-      const suggestion = txt
-        .replace(NEG, (m) => {
-          const map = { 'no':'choose', 'not':'choose', 'never':'always choose', "can't":'can', "won't":'will', "don't":'do', "isn't":'is', "aren't":'are', "shouldn\'t":'should', "couldn\'t":'could', "wouldn\'t":'would', 'without':'with', 'stop':'begin', 'avoid':'select', 'against':'for' };
-          return (map[m.toLowerCase()] || 'choose');
-        })
+      const map = { no:'choose', not:'choose', never:'always choose', cant:'can', "can't":'can', wont:'will', "won't":'will',
+                    dont:'do', "don't":'do', isnt:'is', "isn't":'is', arent:'are', "aren't":'are',
+                    shouldnt:'should', couldnt:'could', wouldnt:'would', without:'with', stop:'begin', avoid:'select', against:'for' };
+
+      const suggestion = norm
+        .replace(NEG, (m) => map[m.toLowerCase()] || 'choose')
         .replace(/\bI don.?t want\b/gi, 'I choose')
         .replace(/\bi want\b/gi, 'I choose')
         .replace(/\s{2,}/g, ' ')
@@ -460,6 +514,7 @@
 
     function drawSpark() {
       if (!ctx || !spark) return;
+      fitCanvas(spark, spark.clientWidth, spark.clientHeight);
       ctx.fillStyle = '#0f0f14'; ctx.fillRect(0,0,spark.width,spark.height);
       if (!hist.length) return;
       const maxN = 60; const arr = hist.slice(-maxN);
@@ -480,7 +535,7 @@
       const xi = a / (1 + v);
       outXi.textContent = `Ξ = ${fmt(xi,2)}`;
       hist.push(Number(fmt(xi,3))); S('xi:hist', hist); drawSpark();
-      if ($('#autoLogXi')?.checked) ledger.addEntry({ auto: true, xi });
+      if ($('#autoLogXi')?.checked) ledger.addEntry({ auto: true, xi: fmt(xi,3) });
     }
 
     function computeHL() {
@@ -494,6 +549,7 @@
     on(btnXi, 'click', computeXi);
     if (btnHL) on(btnHL, 'click', computeHL);
     drawSpark();
+    on(window,'resize',debounce(drawSpark,120));
   }
 
   /* --------------------------- Visual Focus ------------------------------ */
@@ -502,17 +558,19 @@
     const holdIn = $('#vfHold'), expIn = $('#vfExpand');
     if (!cvs || !btn) return;
     const ctx = cvs.getContext('2d', {alpha:false});
+    const size = ()=>fitCanvas(cvs, cvs.clientWidth||600, cvs.clientHeight||280);
+    size(); on(window,'resize',debounce(size,120));
 
     function drawDot(r){ // center dot
       ctx.fillStyle = '#0f0f14'; ctx.fillRect(0,0,cvs.width,cvs.height);
-      const cx = cvs.width/2, cy = cvs.height/2;
+      const cx = (cvs.width)/2, cy = (cvs.height)/2;
       ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
       ctx.fillStyle = '#f3c97a'; ctx.shadowColor = 'rgba(243,201,122,.6)'; ctx.shadowBlur = 12; ctx.fill();
       ctx.shadowBlur = 0;
     }
     function drawRing(r){ // expanding ring
       ctx.fillStyle = '#0f0f14'; ctx.fillRect(0,0,cvs.width,cvs.height);
-      const cx = cvs.width/2, cy = cvs.height/2;
+      const cx = (cvs.width)/2, cy = (cvs.height)/2;
       ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
       ctx.lineWidth = 6; ctx.strokeStyle = '#7af3ff';
       ctx.shadowColor = 'rgba(122,243,255,.4)'; ctx.shadowBlur = 10; ctx.stroke();
@@ -559,25 +617,22 @@
       '5-5-5-5':[5,5,5,5]
     };
     const names = ['Inhale','Hold','Exhale','Hold'];
-    let raf=null, t0=0, idx=0, segs=[4,4,4,4], tot=16, progress=0;
+    let raf=null, t0=0, idx=0, segs=[4,4,4,4], progress=0;
 
-    function draw(p) {
-      fg.style.strokeDashoffset = String(clamp(100 - p*100, 0, 100));
-    }
+    function draw(p) { fg.style.strokeDashoffset = String(clamp(100 - p*100, 0, 100)); }
     function setSeg(i) {
       const n = names[i];
       pTxt.textContent = n; cTxt.textContent = `${n} ${segs[i]}s`;
       vibrate(8); speak(n);
     }
     function start() {
-      segs = patterns[sel.value] || patterns['4-4-4-4']; tot = segs.reduce((a,b)=>a+b,0) || 1;
-      idx=0; t0=performance.now(); setSeg(idx); draw(0);
+      segs = patterns[sel.value] || patterns['4-4-4-4'];
+      idx=0; t0=performance.now(); setSeg(idx); draw(0); lockScreen(true);
       const step = () => {
         const elapsed = (performance.now()-t0)/1000;
         const segDur = segs[idx] || 0.0001;
         const p = clamp(elapsed/segDur, 0, 1);
-        // Make the ring fill during inhale/hold #1; empty during exhale/hold #2
-        const half = (idx<=1); // first half fills, second half drains
+        const half = (idx<=1);
         progress = half ? ((idx===0?0:segs[0]) + elapsed) / (segs[0]+segs[1] || 1)
                         : 1 - (((idx===2?0:segs[2]) + elapsed) / (segs[2]+segs[3] || 1));
         draw(clamp(progress,0,1));
@@ -586,7 +641,7 @@
       };
       step();
     }
-    function stop(){ cancelAnimationFrame(raf); raf=null; pTxt.textContent='Ready'; cTxt.textContent='—'; draw(0); }
+    function stop(){ cancelAnimationFrame(raf); raf=null; pTxt.textContent='Ready'; cTxt.textContent='—'; draw(0); lockScreen(false); }
 
     on(btnStart, 'click', start);
     on(btnStop, 'click', stop);
@@ -601,15 +656,17 @@
     const inI = $('#entryIntention'), inC = $('#entryCarrier'), inQ = $('#entryQuality'), inTags = $('#entryTags'), inW = $('#entryWitness');
     const btnAdd = $('#btnAddEntry'), btnExport = $('#btnExport'), btnImport = $('#btnImport'), fileImport = $('#fileImport');
     const outStreak = $('#streakDays'), filterIn = $('#ledgerFilter');
-    // badges in observer sidebar
-    const badge7 = $('#badge7'), badge33 = $('#badge33'), badge144 = $('#badge144');
-    // badges under table
-    const badge7b = $('#badge7b'), badge33b = $('#badge33b'), badge144b = $('#badge144b');
     const emptyState = $('#ledgerEmpty');
+
+    // badge sets
+    const badge7 = $('#badge7'), badge33 = $('#badge33'), badge144 = $('#badge144');
+    const badge7b = $('#badge7b'), badge33b = $('#badge33b'), badge144b = $('#badge144b');
 
     // Insights
     const chart = $('#ledgerChart'); const chartCtx = chart?.getContext('2d',{alpha:false});
     const weekCount = $('#weekCount'), highRate = $('#highRate'), topTag = $('#topTag');
+    function sizeChart(){ if (chart) fitCanvas(chart, chart.clientWidth||560, chart.clientHeight||120); }
+    sizeChart(); on(window,'resize',debounce(sizeChart,120));
 
     // Helper chips
     $$('.lab-btn[data-stamp-quality]').forEach(b => on(b,'click',()=>{ if (inQ) inQ.value = b.dataset.stampQuality; }));
@@ -618,7 +675,9 @@
 
     let rows = S('ledger') || [];
 
+    const byId = new Set(rows.map(r=>r.id)); // for dedupe on import
     function save() { S('ledger', rows); updateStreak(); paint(); drawInsights(); }
+
     function addEntry(partial={}) {
       const row = {
         id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()+Math.random()),
@@ -630,11 +689,13 @@
         witness: partial.witness ?? (inW?.value.trim() || ''),
         auto: !!partial.auto
       };
+      if (byId.has(row.id)) row.id += '-d'; // ultra-rare
+      byId.add(row.id);
       rows.unshift(row); save();
-      if (inC) inC.value=''; if (inW) inW.value=''; if (inTags) inTags.value=''; if (inQ) inQ.value='';
-      if (emptyState) emptyState.style.display = rows.length ? 'none' : 'block';
+      inC && (inC.value=''); inW && (inW.value=''); inTags && (inTags.value=''); inQ && (inQ.value='');
+      emptyState && (emptyState.style.display = rows.length ? 'none' : 'block');
     }
-    function del(id) { rows = rows.filter(r => r.id !== id); save(); if (emptyState) emptyState.style.display = rows.length ? 'none' : 'block'; }
+    function del(id) { rows = rows.filter(r => r.id !== id); byId.delete(id); save(); emptyState && (emptyState.style.display = rows.length ? 'none' : 'block'); }
 
     function esc(s){ return (s||'').replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
 
@@ -654,14 +715,14 @@
           <td><button data-del="${r.id}" aria-label="Delete entry">✕</button></td>`;
         T.appendChild(tr);
       }
-      if (emptyState) emptyState.style.display = rows.length ? 'none' : 'block';
+      emptyState && (emptyState.style.display = rows.length ? 'none' : 'block');
     }
 
     function updateStreak() {
       const set = new Set(rows.map(r => r.dt.slice(0,10)));
       let streak = 0; let d = new Date(); d.setHours(0,0,0,0);
       while (set.has(d.toISOString().slice(0,10))) { streak++; d.setDate(d.getDate()-1); }
-      if (outStreak) outStreak.textContent = String(streak);
+      outStreak && (outStreak.textContent = String(streak));
       // toggle both badge sets
       [badge7,badge7b].forEach(b => b?.classList.toggle('unlit', streak < 7));
       [badge33,badge33b].forEach(b => b?.classList.toggle('unlit', streak < 33));
@@ -670,16 +731,15 @@
     }
 
     function drawInsights() {
-      if (!chartCtx) return;
+      if (!chartCtx || !chart) return;
+      sizeChart();
       // last 7 days window
       const now = new Date(); const d7 = new Date(now.getTime() - 7*864e5);
       const recent = rows.filter(r => new Date(r.dt) >= d7);
 
-      // weekly counts
       weekCount && (weekCount.textContent = `Entries (7d): ${recent.length}`);
 
-      // High rate
-      const hi = recent.filter(r => (r.xi||'').toLowerCase().includes('high')).length;
+      const hi = recent.filter(r => (String(r.xi)||'').toLowerCase().includes('high') || parseFloat(r.xi) >= 0.8).length;
       highRate && (highRate.textContent = recent.length ? `Ξ High rate: ${Math.round(100*hi/recent.length)}%` : 'Ξ High rate: —');
 
       // Top tag (last 30d)
@@ -691,17 +751,16 @@
       const top = Object.entries(tags).sort((a,b)=>b[1]-a[1])[0];
       topTag && (topTag.textContent = top ? `Top tag: #${top[0]} (${top[1]})` : 'Top tag: —');
 
-      // Sparkline: map each recent entry to a numeric score
+      // Sparkline
       const scores = recent.map(r => {
         const x = parseFloat(r.xi);
         if (Number.isFinite(x)) return clamp(x, 0, 1);
-        const s = (r.xi||'').toLowerCase();
+        const s = (String(r.xi)||'').toLowerCase();
         if (s.includes('high')) return 0.9;
-        if (s.includes('med')) return 0.6;
-        if (s.includes('low')) return 0.3;
+        if (s.includes('med'))  return 0.6;
+        if (s.includes('low'))  return 0.3;
         return 0.5;
       });
-      // draw
       chartCtx.fillStyle = '#0f0f14'; chartCtx.fillRect(0,0,chart.width,chart.height);
       if (!scores.length) return;
       const min = Math.min(...scores), max = Math.max(...scores);
@@ -724,8 +783,14 @@
     function importJson(file) {
       const reader = new FileReader();
       reader.onload = () => {
-        try { const data = JSON.parse(reader.result); if (Array.isArray(data)) { rows = data.concat(rows); save(); } }
-        catch { alert('Invalid JSON.'); }
+        try {
+          const data = JSON.parse(reader.result);
+          if (Array.isArray(data)) {
+            for (const r of data) { if (r && !byId.has(r.id)) { byId.add(r.id); rows.push(r); } }
+            rows.sort((a,b)=> new Date(b.dt) - new Date(a.dt));
+            save();
+          }
+        } catch { alert('Invalid JSON.'); }
       };
       reader.readAsText(file);
     }
@@ -738,7 +803,7 @@
     on(filterIn, 'input', () => { paint(); drawInsights(); });
 
     updateStreak(); paint(); drawInsights();
-    if (emptyState) emptyState.style.display = rows.length ? 'none' : 'block';
+    emptyState && (emptyState.style.display = rows.length ? 'none' : 'block');
 
     return { addEntry };
   })();
@@ -793,6 +858,11 @@
       if (e.key.toLowerCase() === 'g') { e.preventDefault(); $('.pill[data-tab="voice"]')?.click(); }
       if (e.key.toLowerCase() === 'l') { e.preventDefault(); $('.pill[data-tab="ledger"]')?.click(); }
     });
+
+    // Offline hint (status line)
+    const status = $('#lab-status');
+    function net() { status && (status.textContent = navigator.onLine ? 'Ready.' : 'Offline: ledger & tools available.'); }
+    on(window,'online',net); on(window,'offline',net); net();
   }
 
   document.addEventListener('DOMContentLoaded', boot);
