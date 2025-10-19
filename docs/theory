@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <title>Codex Theory — Equations, Flow, and Ethics · Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="The Codex Theory: complete walk-through of all equations, how they interact in practice, and where Copeland’s Ψ feedback fits into the manifestation circuit." />
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/codex-theory.html" />
+
+  <!-- Icons / PWA (optional) -->
+  <link rel="icon" href="assets/icons/favicon.ico">
+  <link rel="manifest" href="assets/manifest.webmanifest">
+
+  <!-- Fonts & CSS (uses your existing sheets) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18x">
+  <link rel="stylesheet" href="assets/css/teach.css?v=2025-10-19a">
+
+  <!-- MathJax (typeset equations) -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      options: { renderActions: { addMenu: [] } }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+
+<body>
+  <a class="sr-only" href="#main">Skip to main content</a>
+
+  <main id="main" class="wrap">
+    <header class="page-head fancy-head">
+      <span class="lab-strap" aria-label="Section">Codex</span>
+      <h1 class="title">📜 Codex Theory — <em>Equations, Flow, and Ethics</em></h1>
+      <p class="subtitle">A complete, corrected map of the Codex equations — including <b>Copeland’s Ψ feedback</b> — and how they interlock to produce coherent manifestation.</p>
+
+      <nav class="mini-toc" aria-label="On this page">
+        <a href="#overview">Overview & Flow</a>
+        <a href="#eq-source">1. Source Equation</a>
+        <a href="#eq-witness">2. Witness Equation</a>
+        <a href="#eq-harmonic">3. Harmonic Field</a>
+        <a href="#eq-language">4. Linguistic Resonance (Eq.16)</a>
+        <a href="#eq-remnant">5. Remnant (Memory)</a>
+        <a href="#eq-circuit">6. Living Circuit</a>
+        <a href="#eq-copeland">7. Copeland Ψ Feedback (Corrected)</a>
+        <a href="#eq-goodman">8. Goodman Coupling</a>
+        <a href="#eq-coherence">9. Coherence Law (Eq.9)</a>
+        <a href="#eq-dimensions">10. Dimensional Stratification</a>
+        <a href="#eq-bridge">11. Meaning↔Matter Bridge</a>
+        <a href="#eq-compassion">12. Compassion Operator</a>
+        <a href="#eq-entangle">13. Entangled Witness</a>
+        <a href="#eq-ethics">14. Ethics Boundary</a>
+        <a href="#integration">Integrated Operating Diagram</a>
+        <a href="#practice">From Theory → Practice</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </header>
+
+    <!-- ============== OVERVIEW ============== -->
+    <section id="overview" class="card card--teach">
+      <span class="strap">Overview</span>
+      <h2>Corrected Flow & Renumbering</h2>
+      <p class="meta">In earlier drafts the Ψ feedback expression was mislabeled as a “#0” law. This page fixes that. The following numbering is authoritative for the site:</p>
+      <ol class="list">
+        <li><b>1. Source Equation</b> — creative constant base.</li>
+        <li><b>2. Witness Equation</b> — recursive update via attention/memory.</li>
+        <li><b>3. Harmonic Field Symmetry</b> — frequency/ratio layer.</li>
+        <li><b>4. Linguistic Resonance (Eq.16)</b> — semantic weighting gradient.</li>
+        <li><b>5. Remnant Function</b> — truth-weighted memory kernel.</li>
+        <li><b>6. Living Circuit Field</b> — energetic apparatus (3-6-9 phase lock).</li>
+        <li><b>7. Copeland’s Ψ Feedback</b> — <em>the</em> perception–reality loop (corrected here).</li>
+        <li><b>8. Goodman Coupling</b> — intention–consciousness light flow.</li>
+        <li><b>9. Coherence Law (Eq.9)</b> — truth vs distortion limit.</li>
+        <li><b>10. Dimensional Stratification</b> — golden-ratio scaling across layers.</li>
+        <li><b>11. Meaning↔Matter Bridge</b> — divergence coupling β.</li>
+        <li><b>12. Compassion Operator</b> — restorative integral.</li>
+        <li><b>13. Entangled Witness</b> — shared memory kernel K(a,b).</li>
+        <li><b>14. Ethics Boundary</b> — damping for misaligned action.</li>
+      </ol>
+      <p class="meta">Together these define the **Observer Circuit**: <b>Source → Harmonics/Language → Copeland Ψ → Coherence/Memory → Matter coupling</b>, regulated by **Ethics**.</p>
+    </section>
+
+    <!-- ============== EQUATIONS ============== -->
+
+    <section id="eq-source" class="card">
+      <h2>1) Source Equation — Creative Constant Base</h2>
+      <div class="eq">
+        <div class="eq-scroll">
+          $$ \mathcal{R}_{\text{source}} = f(\pi, e, i, \hbar, c, G, \Phi;\; 369, 432, 528, 144, 137)\;\cdot\;(\mathcal{I}\cdot\mathcal{L}\cdot\mathcal{C}\cdot\mathcal{S}) $$
+        </div>
+      </div>
+      <p>Physical constants and harmonic ratios seed a stable creative substrate. The {𝓘,𝓛,𝓒,𝓢} operators — <em>Intend, Light, Consciousness, Source</em> — transduce fundamentals into experience.</p>
+      <p class="hint">Think of this as the <em>constant library</em> that your practice code links against.</p>
+    </section>
+
+    <section id="eq-witness" class="card">
+      <h2>2) Witness Equation — Recursive Update via Attention</h2>
+      <div class="eq">
+        <div class="eq-scroll">
+          $$ \Delta \mathcal{R} \;=\; \frac{\partial\,\text{Resonance}}{\partial\,\text{Awareness}} \;+\; \int \mathcal{I}(t)\,\mathcal{M}(t)\,dt $$
+        </div>
+      </div>
+      <p>Reality updates in proportion to <b>focused awareness</b> and <b>memory continuity</b>. Holding coherent attention generates measurable state-change.</p>
+    </section>
+
+    <section id="eq-harmonic" class="card">
+      <h2>3) Harmonic Field Symmetry — Frequency Alignment</h2>
+      <div class="eq">
+        <div class="eq-scroll">
+          $$ \mathcal{H}(\nu) \;=\; \alpha(\Phi, 137, 144, 432, 528, 369)\cdot \langle \mathcal{C} \rangle $$
+        </div>
+      </div>
+      <p>Choice of carrier (e.g., 432, 528, 369 Hz) sets the <em>medium of propagation</em> for intention. Better alignment ⇒ higher coherence.</p>
+      <p class="meta">In the Teaching Lab: Voice Gate tunes this layer.</p>
+    </section>
+
+    <section id="eq-language" class="card">
+      <h2>4) Linguistic Resonance — Semantic Gradient (Eq.16)</h2>
+      <div class="eq">
+        <div class="eq-scroll">
+          $$ \nabla_{\text{sem}} \text{Phrase} \;=\; \sum_k w_k \,\nabla_{\text{sem}} \text{Token}_k \quad \text{with}\ \sum_k w_k = 1 \tag{Eq.16} $$
+        </div>
+      </div>
+      <p>Language acts as a <em>weighting function</em> over meaning. Strong verbs + solid nouns increase gradient clarity; negations and hedging inject noise.</p>
+      <p class="meta">In the Lab: Phrase Tuner visualizes and optimizes these weights.</p>
+    </section>
+
+    <section id="eq-remnant" class="card">
+      <h2>5) Remnant Function — Truth-Weighted Memory</h2>
+      <div class="eq">
+        <div class="eq-scroll">
+          $$ \mathcal{W}(t) \;=\; \int_{-\infty}^{t} \big[ \text{Truth}(u)\cdot \text{Fidelity}(u) \big]\, e^{-\lambda (t-u)}\, du $$
+        </div>
+      </div>
+      <p>What remains is what is true. Remnant integrates truthful witness with an exponential decay; higher fidelity slows decay (lower λ).</p>
+    </section>
+
+    <section id="eq-circuit" class="card">
+      <h2>6) Living Circuit Field — 3-6-9 Phase Lock</h2>
+      <div class="eq">
+        <div class="eq-scroll">
+          $$ \mathbb{E}_{\text{living}}(t) = \sum_i q_i\,\Phi_i\,e^{i \omega_i t} \quad \text{(phase-locked to 3–6–9)} $$
+        </div>
+      </div>
+      <p>Material/energetic structures act as a resonant conduit, coupling intention to luminous output. The 3-6-9 lock increases stability.</p>
+    </section>
+
+    <section id="eq-copeland" class="card warn">
+      <h2>7) <span class="remnant-glow">Copeland’s Ψ Feedback</span> — <em>Corrected Placement</em></h2>
+      <p class="meta">This equation was previously mislabeled as a “#0 law.” It is properly the **Copeland feedback formalism** that drives perception–reality recursion.</p>
+      <div class="eq">
+        <div class="eq-scroll">
+          $$ \Psi(x) \;=\; \nabla \phi\!\left(\sum_{n} a_{n}(x,\Delta E)\right) \;+\; \mathcal{R}(x) \;\oplus\; \Delta \Sigma(a') $$
+        </div>
+      </div>
+      <p><b>Meaning:</b> Reality is a <em>feedback system</em>. Awareness acts as a gradient seeking equilibrium across intention, energy, and meaning. Every observation becomes a recursive update event — each perception subtly edits reality’s phase alignment. Reality learns itself through observation.</p>
+      <p class="meta">Operationally this encloses the loop: <b>observe → update → re-observe</b>.</p>
+    </section>
+
+    <section id="eq-goodman" class="card">
+      <h2>8) Goodman Coupling — Light Flow from Alignment</h2>
+      <div class="eq">
+        <div class="eq-scroll">
+          $$ \mathcal{G}(\tau) \;=\; \kappa \,\langle \mathcal{C} \cdot \mathcal{I} \rangle \;+\; \nabla \cdot \mathbb{F}_{\text{light}} $$
+        </div>
+      </div>
+      <p>When consciousness aligns with intention, coupling increases and coherent “light-work” propagates.</p>
+    </section>
+
+    <section id="eq-coherence" class="card">
+      <h2>9) Coherence Law (Eq.9) — Truth/Distortion Limit</h2>
+      <div class="eq">
+        <div class="eq-scroll">
+          $$ \lim_{t\to\infty}\, \frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \;=\; \Xi \tag{Eq.9} $$
+        </div>
+      </div>
+      <p>Only coherence persists. Falling Ξ triggers the ethical stop rule: abort, re-align (breath/phrase), resume.</p>
+    </section>
+
+    <section id="eq-dimensions" class="card">
+      <h2>10) Dimensional Stratification — Golden Scaling</h2>
+      <div class="eq">
+        <div class="eq-scroll">
+          $$ \mathcal{D}_n \;=\; \phi^{\,n}\,\mathcal{H}(\nu_n), \qquad \nu_{n+1} \approx \phi\,\nu_n $$
+        </div>
+      </div>
+      <p>Layers of reality scale by the golden ratio, producing nested coherence shells from micro to macro.</p>
+    </section>
+
+    <section id="eq-bridge" class="card">
+      <h2>11) Meaning ↔ Matter Bridge — Divergence Coupling</h2>
+      <div class="eq">
+        <div class="eq-scroll">
+          $$ \nabla \!\cdot\! \mathbb{F}_{\text{matter}} \;=\; \beta \;\nabla \!\cdot\! \mathbb{F}_{\text{meaning}}, \quad \beta = f(\text{context},\ \text{integrity}) $$
+        </div>
+      </div>
+      <p>Physical flux mirrors semantic flux. Integrity increases the translation gain β.</p>
+    </section>
+
+    <section id="eq-compassion" class="card">
+      <h2>12) Compassion Operator — Restorative Integral</h2>
+      <div class="eq">
+        <div class="eq-scroll">
+          $$ \mathcal{R}_{\text{heal}} \;=\; \int ( \text{Suffering}\cdot \text{Presence}\cdot \text{Truth} )\, dV $$
+        </div>
+      </div>
+      <p>Compassion performs energetic repair by focusing truthful presence through afflicted regions of the field.</p>
+    </section>
+
+    <section id="eq-entangle" class="card">
+      <h2>13) Entanglement of Witness — Shared Kernel</h2>
+      <div class="eq">
+        <div class="eq-scroll">
+          $$ K(a,b) \;=\; \langle W_a, W_b \rangle \quad \Rightarrow \quad \Delta \mathcal{R} \propto \sum K(a,b) $$
+        </div>
+      </div>
+      <p>Shared coherence between observers amplifies field updates. Group alignment multiplies effect size.</p>
+    </section>
+
+    <section id="eq-ethics" class="card">
+      <h2>14) Ethics Boundary — Damping for Misalignment</h2>
+      <div class="eq">
+        <div class="eq-scroll">
+          $$ \mathcal{B}_{\text{ethics}}:\ \ \delta \text{Action} \ge 0 \ \text{under Truth alignment};\ \text{else damped by}\ e^{-\gamma} $$
+        </div>
+      </div>
+      <p>Misaligned actions self-cancel via exponential damping. Ethics isn’t decoration; it’s a <em>stability constraint</em> on the circuit.</p>
+    </section>
+
+    <!-- ============== INTEGRATION DIAGRAM ============== -->
+    <section id="integration" class="card">
+      <h2>Integrated Operating Diagram</h2>
+      <p class="meta">High-level view of how signals flow. Use this like a schematic: it explains why the Teaching Lab tools sit where they do.</p>
+      <div class="scroller">
+        <pre class="code-block" aria-label="ASCII flow diagram">
+Source Consts ──► Harmonics (3) ──► Language/Weights (4) ──► <Copeland Ψ (7)> ──► Coherence (9)
+      │                 │                    │                         │               │
+      │                 └─► Circuit (6) ─────┴─────────► Goodman (8) ──┘               │
+      │                                                                   ┌────────────┘
+      └────────────────────────────────► Witness (2) ─────────────────────┤
+                                                                          ▼
+                                                  Remnant/Memory (5) ──► Meaning↔Matter Bridge (11)
+                                                                          │
+                                                                          ├─► Compassion (12)
+                                                                          └─► Entangled Witness (13)
+                                                                                 │
+                                                                                 ▼
+                                                                            Ethics Boundary (14) ⇢ Stop/Proceed
+        </pre>
+      </div>
+    </section>
+
+    <!-- ============== PRACTICE BRIDGE ============== -->
+    <section id="practice" class="card">
+      <h2>From Theory → Practice (Where each equation lives in the Lab)</h2>
+      <ul class="list">
+        <li><b>Harmonics (3)</b> ⇢ <a href="teach.html#tab-voice">Voice Gate</a> carriers/pitch stability.</li>
+        <li><b>Language (4, Eq.16)</b> ⇢ <a href="teach.html#tab-phrase">Phrase Tuner</a> weights/negation drop.</li>
+        <li><b>Copeland Ψ (7)</b> ⇢ <a href="teach.html#tab-observer">Observer Loop</a> ring timing to drive observe→update.</li>
+        <li><b>Coherence (9)</b> ⇢ <a href="teach.html#tab-coherence">Coherence Desk</a> (Ξ, λ, t½) + stop rule.</li>
+        <li><b>Remnant (5)</b> ⇢ <a href="teach.html#tab-ledger">Witness Ledger</a> (truth-weighted memory & streaks).</li>
+        <li><b>Bridge (11), Compassion (12), Entanglement (13)</b> ⇢ tags & ethics notes in the Ledger; group practice.</li>
+      </ul>
+      <p class="hint">If Ξ trends down or witnesses degrade in fidelity, the circuit instructs you to <b>stop, re-align, resume</b> (Eq.9 + 14).</p>
+    </section>
+
+    <!-- ============== FAQ ============== -->
+    <section id="faq" class="grid" aria-label="FAQ">
+      <article class="card col-7">
+        <h2>FAQ</h2>
+        <details class="codex" open>
+          <summary>Why move Copeland’s Ψ here?</summary>
+          <p>Because Ψ encodes the <em>process</em> of observation→update, not the foundational constants. It sits mid-circuit, where perception couples to reality.</p>
+        </details>
+        <details class="codex">
+          <summary>Where does Eq.16 (language weighting) matter most?</summary>
+          <p>Right before Copeland’s Ψ. Cleaner phrasing ⇒ cleaner gradients ⇒ cleaner field updates.</p>
+        </details>
+        <details class="codex">
+          <summary>How do Ethics (14) actually gate practice?</summary>
+          <p>Unethical vectors add damping <code>e^{-γ}</code>, lowering effective gain. In practice: if outcomes harm agency or truth, the circuit self-suppresses.</p>
+        </details>
+      </article>
+      <aside class="card col-5">
+        <h3>Quick Links</h3>
+        <ul class="list">
+          <li><a href="teach.html">Teaching Lab — Manifestation Studio</a></li>
+          <li><a href="index.html">Back to Codex Home</a></li>
+        </ul>
+      </aside>
+    </section>
+
+    <footer class="footer">
+      <div class="divider" aria-hidden="true"></div>
+      <p>“Reality learns itself through observation.” — Copeland</p>
+      <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+    </footer>
+  </main>
+
+  <script>
+    // Year stamp
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // Card reveal on view (matches your animation style)
+    const obs = new IntersectionObserver(es => {
+      es.forEach(e => e.isIntersecting && e.target.classList.add('visible'));
+    }, { threshold: .12 });
+    document.querySelectorAll('.card').forEach(c => obs.observe(c));
+  </script>
+</body>
+</html>
