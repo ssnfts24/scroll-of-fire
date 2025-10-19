@@ -23,13 +23,21 @@
     : localStorage.setItem(NS+k, JSON.stringify(v));
   const on = (el, ev, fn, opts) => el && el.addEventListener(ev, fn, opts);
   const vibrate = (ms=12) => (navigator.vibrate && !prefersReducedMotion) ? navigator.vibrate(ms) : void 0;
+  const inFormField = (e) => e && e.target && /input|textarea|select/i.test(e.target.tagName);
 
-  // Announce helper (opt-in if you add a checkbox#speakPrompts in HTML)
+  // Speech prompt helper (opt-in via checkbox#speakPrompts if you add one)
   function speak(line){
     const box = $('#speakPrompts');
     if (!('speechSynthesis' in window) || !box || !box.checked) return;
     try { window.speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(line)); } catch {}
   }
+
+  // Clamp & parse numbers from inputs safely
+  const getNum = (inp, def=0) => {
+    if (!inp) return def;
+    const n = parseFloat(inp.value);
+    return Number.isFinite(n) ? n : def;
+  };
 
   /* -------------------- Reveal-on-scroll for cards ---------------------- */
   function revealOnScroll() {
@@ -44,7 +52,7 @@
     setTimeout(() => cards.forEach(c => c.classList.add('visible')), 900);
   }
 
-  /* ----------------------------- Tabs ----------------------------------- */
+  /* ----------------------------- Tabs & Header helpers ------------------ */
   function initTabs() {
     const pills  = $$('.pill[role="tab"]');
     const panels = $$('.tab');
@@ -63,21 +71,24 @@
         if (is) (p.querySelector('button, input, textarea, select, a')||p).focus({preventScroll:true});
       });
       S('tab', name);
+      const status = $('#lab-status'); if (status) status.textContent = `Tab: ${name}`;
     }
+
+    // click tabs
     pills.forEach(b => on(b, 'click', () => activate(b.dataset.tab)));
+    // restore last tab
     activate(S('tab') || 'observer');
 
-    // Optional numeric shortcuts 1..5 (if header tip mentions it)
+    // data-nav buttons (QuickStart)
+    $$('.lab-card [data-nav]').forEach(b => on(b, 'click', () => activate(b.dataset.nav)));
+
+    // Hotkeys 1..7, ?, S (unless focused in field)
     on(document, 'keydown', (e) => {
-      if (e.target && /input|textarea|select/i.test(e.target.tagName)) return;
-      const map = { '1':'observer','2':'voice','3':'phrase','4':'coherence','5':'ledger' };
+      if (inFormField(e)) return;
+      const map = { '1':'observer','2':'voice','3':'phrase','4':'coherence','5':'visuals','6':'breath','7':'ledger' };
       if (map[e.key]) { e.preventDefault(); activate(map[e.key]); }
-      if (e.key === '?' || (e.shiftKey && e.key === '/')) {
-        e.preventDefault(); toggleHelp();
-      }
-      if (e.key.toLowerCase() === 's') {
-        e.preventDefault(); $('#startTimer')?.click();
-      }
+      if (e.key === '?' || (e.shiftKey && e.key === '/')) { e.preventDefault(); toggleHelp(); }
+      if (e.key.toLowerCase() === 's') { e.preventDefault(); $('#startTimer')?.click(); }
     });
   }
 
@@ -87,28 +98,47 @@
     if (!box) return;
     const enabled = S('coach') ?? false;
     box.checked = !!enabled; toggle(box.checked);
-    function toggle(on) {
-      document.body.classList.toggle('coach-on', on);
-      S('coach', !!on);
+    function toggle(onFlag) {
+      document.body.classList.toggle('coach-on', onFlag);
+      S('coach', !!onFlag);
+      box.setAttribute('aria-pressed', onFlag ? 'true' : 'false');
     }
     on(box, 'change', () => toggle(box.checked));
+  }
+
+  /* -------------------------- QuickStart ------------------------------- */
+  function initQuickStart() {
+    // Preset carrier buttons (in header + voice sidebar)
+    $$('.lab-btn[data-carrier]').forEach(btn => on(btn, 'click', () => {
+      const v = btn.dataset.carrier;
+      const qs = $('#qsCarrier'); if (qs) qs.value = v;
+      const out = $('#carrierOut'); if (out) out.value = v;
+      const status = $('#lab-status'); if (status) status.textContent = `Preset carrier: ${v} Hz`;
+    }));
+    // Intention propagation to Phrase & Voice intention fields
+    const qsInt = $('#qsIntention');
+    on(qsInt, 'input', (e) => {
+      const val = (e.target.value || '').trim();
+      const p = $('#phraseIn'); if (val && p && !p.value) p.value = val;
+      const v = $('#intentionFromVoice'); if (v && !v.value) v.value = val;
+    });
   }
 
   /* ----------------------- Observer 4-Beat Ring -------------------------- */
   function initObserver() {
     const ringFg = $('#ringFg'), phaseTxt = $('#ringPhase'), countTxt = $('#ringCount');
-    const secIn = $('#phaseSec'), roundsIn = $('#rounds');
+    const secIn = $('#phaseSec'), roundsIn = $('#rounds'), paceSel = $('#pace');
     const startBtn = $('#startTimer'), stopBtn = $('#stopTimer');
     if (!ringFg || !phaseTxt || !secIn || !roundsIn || !startBtn || !stopBtn) return;
 
-    // Optional beeper (soft short tick at each phase boundary)
+    // Optional beeper on phase boundary
     let audioCtx, beepOsc, beepGain;
     function beep() {
       if (prefersReducedMotion || prefersReducedData) return;
       try {
         audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
         beepOsc = audioCtx.createOscillator(); beepGain = audioCtx.createGain();
-        beepOsc.frequency.value = 660; // gentle click
+        beepOsc.frequency.value = 660; // soft tick
         beepGain.gain.value = 0.0001;
         beepOsc.connect(beepGain).connect(audioCtx.destination);
         beepOsc.start();
@@ -120,20 +150,28 @@
 
     const PHASES = [
       {k:'𝓘', label:'Intend', prompt:'Choose one clean line.'},
-      {k:'𝓛', label:'Light',   prompt:'See/feel the clean line.'},
-      {k:'𝓒', label:'Witness', prompt:'Notice one factual change.'},
-      {k:'𝓢', label:'Return',  prompt:'Thank & release.'}
+      {k:'𝓛', label:'Look',   prompt:'Notice one undeniable detail.'},
+      {k:'𝓒', label:'Coalesce', prompt:'Soften jaw/shoulders; exhale; feel weight.'},
+      {k:'𝓢', label:'Seal',  prompt:'Whisper thanks. Allow settling.'}
     ];
 
     let raf=null, i=0, round=0, phaseSec=12, rounds=3, t0=0;
 
     // Restore user prefs
-    const savedSec = S('observer:sec'); const savedRounds = S('observer:rounds');
+    const savedSec = S('observer:sec'); const savedRounds = S('observer:rounds'); const savedPace = S('observer:pace') || 'free';
     if (savedSec)   secIn.value = clamp(savedSec, 3, 120);
     if (savedRounds) roundsIn.value = clamp(savedRounds, 1, 20);
+    if (paceSel) paceSel.value = savedPace;
+
+    // Presets e.g. data-preset="12-3"
+    $$('[data-preset]').forEach(b => on(b, 'click', () => {
+      const [s,r] = (b.dataset.preset || '').split('-').map(n => parseInt(n,10));
+      if (Number.isFinite(s)) secIn.value = clamp(s, 3, 120);
+      if (Number.isFinite(r)) roundsIn.value = clamp(r, 1, 20);
+    }));
 
     function draw(progress01) {
-      const dash = clamp(100 - progress01*100, 0, 100); // 0 full, 100 empty
+      const dash = clamp(100 - progress01*100, 0, 100);
       ringFg.style.strokeDashoffset = String(dash);
     }
 
@@ -141,7 +179,12 @@
       const p = idx % 4, P = PHASES[p];
       phaseTxt.textContent = `${P.k} • ${P.label}`;
       countTxt.textContent = `Round ${round+1}/${rounds} • Phase ${p+1}/4`;
-      vibrate(10); beep(); speak(P.prompt);
+      vibrate(10); beep();
+      // speak based on pace choice
+      const pace = paceSel?.value || 'free';
+      if (pace === 'box') { speak(`${P.label}. Gentle 4.`); }
+      else if (pace === '4-7-8') { speak(`${P.label}. Ease.`); }
+      else { speak(P.prompt); }
     }
 
     function tick() {
@@ -160,7 +203,7 @@
       if (raf) cancelAnimationFrame(raf);
       phaseSec = clamp(Number(secIn.value||12), 3, 120);
       rounds   = clamp(Number(roundsIn.value||3), 1, 20);
-      S('observer:sec', phaseSec); S('observer:rounds', rounds);
+      S('observer:sec', phaseSec); S('observer:rounds', rounds); if (paceSel) S('observer:pace', paceSel.value);
       i = 0; round = 0; t0 = performance.now(); setPhase(i); draw(0);
       raf = requestAnimationFrame(tick);
     }
@@ -172,7 +215,6 @@
 
     on(startBtn, 'click', start);
     on(stopBtn,  'click', stop);
-    // Battery/memory safety
     on(document, 'visibilitychange', () => { if (document.hidden) stop(); });
   }
 
@@ -180,12 +222,13 @@
   function initAudioLab() {
     const btnStart = $('#micStart'), btnStop = $('#micStop');
     const wave = $('#wave'), fft = $('#fft'), hint = $('#nearKey');
+    const stabilityTxt = $('#stability'), noiseWarn = $('#noiseWarn'), useCarrier = $('#useCarrier');
     if (!btnStart || !wave || !fft || !hint) return;
 
     /** State */
     let ctx, src, analyser, rafId;
     const FFT_SIZE = 2048;
-    const CAR_KEYS = [432, 528, 369]; // Hz (order doesn’t matter)
+    const CAR_KEYS = [432, 528, 369]; // Hz
 
     /** Drawing helpers */
     const wctx = wave.getContext('2d', {alpha:false});
@@ -219,6 +262,20 @@
       }
     }
 
+    // Simple stability + noise estimator over last few frames
+    const lastPeaks = [];
+    function stabilityUpdate(peakHz, energy){
+      // Keep last 15 peaks
+      lastPeaks.push(peakHz); if (lastPeaks.length > 15) lastPeaks.shift();
+      const mean = lastPeaks.reduce((a,b)=>a+b,0)/lastPeaks.length;
+      const varSum = lastPeaks.reduce((a,b)=>a+(b-mean)*(b-mean),0)/Math.max(1,lastPeaks.length-1);
+      const st = Math.max(0, 1 - Math.sqrt(varSum)/60); // rough: ±60Hz spread → 0 stability
+      if (stabilityTxt) stabilityTxt.textContent = `Stability: ${(st*100|0)}%`;
+      const nz = Math.max(0, Math.min(1, 1 - energy)); // energy 0..1 (higher = cleaner tone), invert for "noise"
+      if (noiseWarn) noiseWarn.textContent = nz > 0.35 ? 'Noise: high' : 'Noise: ok';
+      if (useCarrier) { useCarrier.disabled = !(peakHz && st > 0.6 && nz < 0.5); useCarrier.dataset.hz = String(peakHz); }
+    }
+
     /** Peak & nearest-key detection */
     function analyze(freqData, sampleRate, fftSize) {
       let bestBin = 0, bestVal = 0;
@@ -229,7 +286,7 @@
       const freq = bestBin * sampleRate / fftSize; // Hz
       let nearest = CAR_KEYS[0], dmin = Math.abs(freq - CAR_KEYS[0]);
       for (const k of CAR_KEYS.slice(1)) { const d = Math.abs(freq - k); if (d < dmin){ dmin=d; nearest=k; } }
-      return {peakHz: freq, nearest, diff: dmin};
+      return {peakHz: freq, nearest, diff: dmin, energy: bestVal/255};
     }
 
     /** Main loop */
@@ -243,11 +300,14 @@
         drawWave(timeData);
         drawFFT(freqData);
 
-        const {peakHz, nearest, diff} = analyze(freqData, ctx.sampleRate, analyser.fftSize);
-        if (Number.isFinite(peakHz)) {
-          const close = Math.max(0, 1 - diff/18); // within ~18Hz = strong
+        const {peakHz, nearest, diff, energy} = analyze(freqData, ctx.sampleRate, analyser.fftSize);
+        if (Number.isFinite(peakHz) && peakHz > 50) {
+          const close = Math.max(0, 1 - diff/18);
           hint.textContent = `Near ${nearest} Hz (peak ≈ ${fmt(peakHz,0)} Hz)`;
           hint.style.color = close > 0.7 ? '#7af3ff' : '#b8b3a6';
+          stabilityUpdate(peakHz, energy);
+          // Cross-app surface if needed by other scripts
+          window._labSetCarrier?.({hz: peakHz, stable: close, noise: 1 - energy});
         } else {
           hint.textContent = '—'; hint.style.color = '#b8b3a6';
         }
@@ -287,6 +347,15 @@
     on(btnStart, 'click', start);
     on(btnStop,  'click', stop);
     on(document, 'visibilitychange', () => { if (document.hidden) stop(); });
+
+    // “Set as carrier” → copy to fields + status
+    on(useCarrier, 'click', (e) => {
+      const v = e.currentTarget?.dataset?.hz;
+      if (!v) return;
+      const carrierOut = $('#carrierOut'); if (carrierOut) carrierOut.value = Math.round(v);
+      const qsCarrier = $('#qsCarrier'); if (qsCarrier) qsCarrier.value = Math.round(v);
+      const status = $('#lab-status'); if (status) status.textContent = `Carrier set: ${Math.round(v)} Hz`;
+    });
   }
 
   /* ------------------------- Phrase Tuner Pro ---------------------------- */
@@ -427,6 +496,103 @@
     drawSpark();
   }
 
+  /* --------------------------- Visual Focus ------------------------------ */
+  function initVisualFocus() {
+    const cvs = $('#focusDot'), btn = $('#vfStart');
+    const holdIn = $('#vfHold'), expIn = $('#vfExpand');
+    if (!cvs || !btn) return;
+    const ctx = cvs.getContext('2d', {alpha:false});
+
+    function drawDot(r){ // center dot
+      ctx.fillStyle = '#0f0f14'; ctx.fillRect(0,0,cvs.width,cvs.height);
+      const cx = cvs.width/2, cy = cvs.height/2;
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
+      ctx.fillStyle = '#f3c97a'; ctx.shadowColor = 'rgba(243,201,122,.6)'; ctx.shadowBlur = 12; ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+    function drawRing(r){ // expanding ring
+      ctx.fillStyle = '#0f0f14'; ctx.fillRect(0,0,cvs.width,cvs.height);
+      const cx = cvs.width/2, cy = cvs.height/2;
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
+      ctx.lineWidth = 6; ctx.strokeStyle = '#7af3ff';
+      ctx.shadowColor = 'rgba(122,243,255,.4)'; ctx.shadowBlur = 10; ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+
+    let raf=null, t0=0, phase='idle';
+    function start() {
+      cancelAnimationFrame(raf);
+      const hold = clamp(getNum(holdIn,10), 5, 60);
+      const expand = clamp(getNum(expIn,6), 3, 30);
+      const dotR = 6, maxR = Math.min(cvs.width, cvs.height)/2 - 12;
+      t0 = performance.now(); phase='hold'; speak('Single point. Hold.');
+
+      const step = () => {
+        const t = (performance.now() - t0)/1000;
+        if (phase==='hold') {
+          drawDot(dotR);
+          if (t >= hold) { phase='expand'; t0=performance.now(); speak('Expand softly.'); }
+        } else if (phase==='expand') {
+          const p = clamp(t/expand, 0, 1);
+          const r = dotR + (maxR - dotR)*p;
+          drawRing(r);
+          if (p>=1) { phase='idle'; speak('Cycle complete.'); return; }
+        } else return;
+        raf = requestAnimationFrame(step);
+      };
+      step();
+    }
+
+    on(btn, 'click', start);
+    on(document, 'visibilitychange', ()=>{ if (document.hidden) cancelAnimationFrame(raf); });
+  }
+
+  /* --------------------------- Breath Ring ------------------------------- */
+  function initBreathRing() {
+    const fg = $('#breathFg'), pTxt = $('#breathPhase'), cTxt = $('#breathCount');
+    const sel = $('#breathPattern'), btnStart = $('#breathStart'), btnStop = $('#breathStop');
+    if (!fg || !pTxt || !cTxt || !sel || !btnStart || !btnStop) return;
+
+    const patterns = {
+      '4-4-4-4': [4,4,4,4],
+      '4-7-8':  [4,7,8,0],
+      '5-5-5-5':[5,5,5,5]
+    };
+    const names = ['Inhale','Hold','Exhale','Hold'];
+    let raf=null, t0=0, idx=0, segs=[4,4,4,4], tot=16, progress=0;
+
+    function draw(p) {
+      fg.style.strokeDashoffset = String(clamp(100 - p*100, 0, 100));
+    }
+    function setSeg(i) {
+      const n = names[i];
+      pTxt.textContent = n; cTxt.textContent = `${n} ${segs[i]}s`;
+      vibrate(8); speak(n);
+    }
+    function start() {
+      segs = patterns[sel.value] || patterns['4-4-4-4']; tot = segs.reduce((a,b)=>a+b,0) || 1;
+      idx=0; t0=performance.now(); setSeg(idx); draw(0);
+      const step = () => {
+        const elapsed = (performance.now()-t0)/1000;
+        const segDur = segs[idx] || 0.0001;
+        const p = clamp(elapsed/segDur, 0, 1);
+        // Make the ring fill during inhale/hold #1; empty during exhale/hold #2
+        const half = (idx<=1); // first half fills, second half drains
+        progress = half ? ((idx===0?0:segs[0]) + elapsed) / (segs[0]+segs[1] || 1)
+                        : 1 - (((idx===2?0:segs[2]) + elapsed) / (segs[2]+segs[3] || 1));
+        draw(clamp(progress,0,1));
+        if (p>=1) { idx=(idx+1)%4; t0=performance.now(); setSeg(idx); }
+        raf = requestAnimationFrame(step);
+      };
+      step();
+    }
+    function stop(){ cancelAnimationFrame(raf); raf=null; pTxt.textContent='Ready'; cTxt.textContent='—'; draw(0); }
+
+    on(btnStart, 'click', start);
+    on(btnStop, 'click', stop);
+    on(document, 'visibilitychange', ()=>{ if (document.hidden) stop(); });
+  }
+
   /* --------------------------- Witness Ledger ---------------------------- */
   const ledger = (function () {
     const T = $('#ledgerTable tbody');
@@ -435,11 +601,24 @@
     const inI = $('#entryIntention'), inC = $('#entryCarrier'), inQ = $('#entryQuality'), inTags = $('#entryTags'), inW = $('#entryWitness');
     const btnAdd = $('#btnAddEntry'), btnExport = $('#btnExport'), btnImport = $('#btnImport'), fileImport = $('#fileImport');
     const outStreak = $('#streakDays'), filterIn = $('#ledgerFilter');
+    // badges in observer sidebar
     const badge7 = $('#badge7'), badge33 = $('#badge33'), badge144 = $('#badge144');
+    // badges under table
+    const badge7b = $('#badge7b'), badge33b = $('#badge33b'), badge144b = $('#badge144b');
+    const emptyState = $('#ledgerEmpty');
+
+    // Insights
+    const chart = $('#ledgerChart'); const chartCtx = chart?.getContext('2d',{alpha:false});
+    const weekCount = $('#weekCount'), highRate = $('#highRate'), topTag = $('#topTag');
+
+    // Helper chips
+    $$('.lab-btn[data-stamp-quality]').forEach(b => on(b,'click',()=>{ if (inQ) inQ.value = b.dataset.stampQuality; }));
+    $$('.lab-btn[data-add-tag]').forEach(b => on(b,'click',()=>{ if (!inTags) return; const t=b.dataset.addTag; const cur=(inTags.value||'').trim(); inTags.value = cur ? `${cur}, ${t}` : t; }));
+    $$('.lab-btn[data-template]').forEach(b => on(b,'click',()=>{ if (inI && !inI.value) inI.value = b.dataset.template; }));
 
     let rows = S('ledger') || [];
 
-    function save() { S('ledger', rows); updateStreak(); paint(); }
+    function save() { S('ledger', rows); updateStreak(); paint(); drawInsights(); }
     function addEntry(partial={}) {
       const row = {
         id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()+Math.random()),
@@ -453,8 +632,11 @@
       };
       rows.unshift(row); save();
       if (inC) inC.value=''; if (inW) inW.value=''; if (inTags) inTags.value=''; if (inQ) inQ.value='';
+      if (emptyState) emptyState.style.display = rows.length ? 'none' : 'block';
     }
-    function del(id) { rows = rows.filter(r => r.id !== id); save(); }
+    function del(id) { rows = rows.filter(r => r.id !== id); save(); if (emptyState) emptyState.style.display = rows.length ? 'none' : 'block'; }
+
+    function esc(s){ return (s||'').replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
 
     function paint() {
       const q = (filterIn?.value || '').toLowerCase();
@@ -472,17 +654,65 @@
           <td><button data-del="${r.id}" aria-label="Delete entry">✕</button></td>`;
         T.appendChild(tr);
       }
+      if (emptyState) emptyState.style.display = rows.length ? 'none' : 'block';
     }
-    function esc(s){ return (s||'').replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
 
     function updateStreak() {
       const set = new Set(rows.map(r => r.dt.slice(0,10)));
       let streak = 0; let d = new Date(); d.setHours(0,0,0,0);
       while (set.has(d.toISOString().slice(0,10))) { streak++; d.setDate(d.getDate()-1); }
       if (outStreak) outStreak.textContent = String(streak);
-      badge7?.classList.toggle('unlit', streak < 7);
-      badge33?.classList.toggle('unlit', streak < 33);
-      badge144?.classList.toggle('unlit', streak < 144);
+      // toggle both badge sets
+      [badge7,badge7b].forEach(b => b?.classList.toggle('unlit', streak < 7));
+      [badge33,badge33b].forEach(b => b?.classList.toggle('unlit', streak < 33));
+      [badge144,badge144b].forEach(b => b?.classList.toggle('unlit', streak < 144));
+      [badge7,badge7b,badge33,badge33b,badge144,badge144b].forEach(b => b?.classList.toggle('lit', !b?.classList.contains('unlit')));
+    }
+
+    function drawInsights() {
+      if (!chartCtx) return;
+      // last 7 days window
+      const now = new Date(); const d7 = new Date(now.getTime() - 7*864e5);
+      const recent = rows.filter(r => new Date(r.dt) >= d7);
+
+      // weekly counts
+      weekCount && (weekCount.textContent = `Entries (7d): ${recent.length}`);
+
+      // High rate
+      const hi = recent.filter(r => (r.xi||'').toLowerCase().includes('high')).length;
+      highRate && (highRate.textContent = recent.length ? `Ξ High rate: ${Math.round(100*hi/recent.length)}%` : 'Ξ High rate: —');
+
+      // Top tag (last 30d)
+      const d30 = new Date(now.getTime() - 30*864e5);
+      const tags = {};
+      rows.filter(r => new Date(r.dt) >= d30).forEach(r => {
+        (r.tags||'').split(',').map(s=>s.trim().toLowerCase()).filter(Boolean).forEach(t => tags[t]=(tags[t]||0)+1);
+      });
+      const top = Object.entries(tags).sort((a,b)=>b[1]-a[1])[0];
+      topTag && (topTag.textContent = top ? `Top tag: #${top[0]} (${top[1]})` : 'Top tag: —');
+
+      // Sparkline: map each recent entry to a numeric score
+      const scores = recent.map(r => {
+        const x = parseFloat(r.xi);
+        if (Number.isFinite(x)) return clamp(x, 0, 1);
+        const s = (r.xi||'').toLowerCase();
+        if (s.includes('high')) return 0.9;
+        if (s.includes('med')) return 0.6;
+        if (s.includes('low')) return 0.3;
+        return 0.5;
+      });
+      // draw
+      chartCtx.fillStyle = '#0f0f14'; chartCtx.fillRect(0,0,chart.width,chart.height);
+      if (!scores.length) return;
+      const min = Math.min(...scores), max = Math.max(...scores);
+      const range = Math.max(0.001, max-min);
+      chartCtx.strokeStyle = '#7af3ff'; chartCtx.lineWidth = 2; chartCtx.beginPath();
+      scores.forEach((v,i)=>{
+        const x = (i/(scores.length-1))*(chart.width-8)+4;
+        const y = chart.height-4 - ((v-min)/range)*(chart.height-8);
+        i===0 ? chartCtx.moveTo(x,y) : chartCtx.lineTo(x,y);
+      });
+      chartCtx.stroke();
     }
 
     function exportJson() {
@@ -505,9 +735,11 @@
     on(btnExport, 'click', exportJson);
     on(btnImport, 'click', () => fileImport?.click());
     on(fileImport, 'change', () => { const f = fileImport.files?.[0]; if (f) importJson(f); fileImport.value=''; });
-    on(filterIn, 'input', paint);
+    on(filterIn, 'input', () => { paint(); drawInsights(); });
 
-    updateStreak(); paint();
+    updateStreak(); paint(); drawInsights();
+    if (emptyState) emptyState.style.display = rows.length ? 'none' : 'block';
+
     return { addEntry };
   })();
 
@@ -519,10 +751,10 @@
       el.id = 'labHelp';
       el.style.cssText = 'position:fixed;inset:0;z-index:60;background:rgba(10,10,14,.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:16px';
       el.innerHTML = `
-        <div style="max-width:720px;background:#101017;border:1px solid #2a2a33;border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.45)">
+        <div class="panel" style="max-width:720px;background:#101017;border:1px solid #2a2a33;border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.45)">
           <div style="padding:14px 16px;border-bottom:1px solid #23232c;font:600 16px Inter;color:#eae7df;">Teaching Lab — Quick Keys</div>
           <div style="padding:14px 16px;color:#b8b3a6;line-height:1.6">
-            <p><b>1–5</b> switch tabs • <b>S</b> start/stop ring • <b>Ctrl/⌘+K</b> focus Phrase box • <b>Ctrl/⌘+G</b> Voice Gate • <b>Ctrl/⌘+L</b> Ledger.</p>
+            <p><b>1–7</b> switch tabs • <b>S</b> start/stop ring • <b>Ctrl/⌘+K</b> focus Phrase box • <b>Ctrl/⌘+G</b> Voice Gate • <b>Ctrl/⌘+L</b> Ledger.</p>
             <p>Click tokens in Phrase Tuner to cycle weights (0.5→1→1.5→2→0.5). Drag chips to reorder emphasis.</p>
             <p>Export your ledger to .json anytime; data stays on this device unless you export it.</p>
           </div>
@@ -543,21 +775,23 @@
     revealOnScroll();
     initTabs();
     initCoach();
+    initQuickStart();
     initObserver();
     initAudioLab();
     initPhraseTuner();
     initCoherenceDesk();
+    initVisualFocus();
+    initBreathRing();
 
     // Year in footer
     const yr = $('#yr'); if (yr) yr.textContent = String(new Date().getFullYear());
 
     // Power-user focus jumpers
     on(document, 'keydown', (e) => {
-      if (e.ctrlKey || e.metaKey) {
-        if (e.key.toLowerCase() === 'k') { e.preventDefault(); $('#phraseIn')?.focus(); }
-        if (e.key.toLowerCase() === 'g') { e.preventDefault(); $('.pill[data-tab="voice"]')?.click(); }
-        if (e.key.toLowerCase() === 'l') { e.preventDefault(); $('.pill[data-tab="ledger"]')?.click(); }
-      }
+      if (!(e.ctrlKey || e.metaKey)) return;
+      if (e.key.toLowerCase() === 'k') { e.preventDefault(); $('#phraseIn')?.focus(); }
+      if (e.key.toLowerCase() === 'g') { e.preventDefault(); $('.pill[data-tab="voice"]')?.click(); }
+      if (e.key.toLowerCase() === 'l') { e.preventDefault(); $('.pill[data-tab="ledger"]')?.click(); }
     });
   }
 
