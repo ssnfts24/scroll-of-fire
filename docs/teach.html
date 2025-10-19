@@ -32,12 +32,12 @@
   <meta name="twitter:description" content="Hands-on tools to make manifestation measurable and repeatable.">
   <meta name="twitter:image" content="assets/img/og-teach-lab.jpg">
 
-  <!-- Icons (adjust paths if you store elsewhere) -->
+  <!-- Icons -->
   <link rel="icon" href="assets/icons/favicon.ico">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
 
-  <!-- PWA (optional; safe to leave even if you don’t host a manifest yet) -->
+  <!-- PWA (optional) -->
   <link rel="manifest" href="assets/manifest.webmanifest">
 
   <!-- Fonts -->
@@ -50,10 +50,9 @@
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18x" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18x"></noscript>
 
-  <!-- Use your latest teach.css (the “wizard-tech × golden HUD” sheet we built) -->
   <link rel="stylesheet" href="assets/css/teach.css?v=2025-10-19a">
 
-  <!-- Preload JS (defer actual execution later in the file) -->
+  <!-- Preload app JS (the engine executes from a <script defer> at page end) -->
   <link rel="preload" as="script" href="assets/js/teach.js?v=2025-10-19a">
 
   <!-- Structured data (SEO) -->
@@ -66,10 +65,7 @@
     "applicationCategory":"EducationApplication",
     "operatingSystem":"Any",
     "description":"Hands-on manifestation toolkit: intention crafting, voice-carrier tuning, observer loop timing, coherence metric tracking, and a private witness ledger.",
-    "creator":{
-      "@type":"Person",
-      "name":"Aaron Paul Laird"
-    },
+    "creator":{"@type":"Person","name":"Aaron Paul Laird"},
     "featureList":[
       "Intention line builder",
       "Voice carrier (432/528/369 Hz) analyzer",
@@ -94,8 +90,9 @@
 </head>
 
 <body>
-  <!-- Skip to main content for screen readers / keyboard -->
+  <!-- Skip to main content -->
   <a class="sr-only" href="#main">Skip to main content</a>
+  <noscript><p style="padding:8px;margin:0;background:#111;color:#ffd;">JavaScript is disabled — interactive tools (ring timer, voice gate, ledger) require JS.</p></noscript>
 
   <main id="main" class="wrap lab-wrap" data-app="manifest-studio">
     <header class="page-head fancy-head" role="banner">
@@ -122,9 +119,9 @@
           <h3>Step 2 — Choose Carrier Π<sub>ν</sub></h3>
           <p>Hum or tap a preset:</p>
           <div class="lab-row" role="group" aria-label="Carrier presets">
-            <button class="lab-btn" data-carrier="432" aria-pressed="false">432 Hz</button>
-            <button class="lab-btn" data-carrier="528" aria-pressed="false">528 Hz</button>
-            <button class="lab-btn" data-carrier="369" aria-pressed="false">369 Hz</button>
+            <button class="lab-btn" data-carrier="432">432 Hz</button>
+            <button class="lab-btn" data-carrier="528">528 Hz</button>
+            <button class="lab-btn" data-carrier="369">369 Hz</button>
           </div>
           <label class="sr-only" for="qsCarrier">Custom carrier frequency</label>
           <input id="qsCarrier" class="lab-input" placeholder="Carrier (Hz)" inputmode="numeric" pattern="[0-9]*" />
@@ -145,13 +142,13 @@
       <!-- Tabs + Coach Mode -->
       <section class="lab-top card lab-card lab-sticky" style="margin-top:10px" aria-label="Navigation">
         <div class="pill-tabs" role="tablist" aria-label="Teaching Lab tabs">
-          <button class="pill active"  data-tab="observer" role="tab" aria-selected="true"  aria-controls="tab-observer">Observer</button>
-          <button class="pill"         data-tab="voice"    role="tab" aria-selected="false" aria-controls="tab-voice">Voice Gate</button>
-          <button class="pill"         data-tab="phrase"   role="tab" aria-selected="false" aria-controls="tab-phrase">Phrase Tuner</button>
-          <button class="pill"         data-tab="coherence"role="tab" aria-selected="false" aria-controls="tab-coherence">Coherence Desk</button>
-          <button class="pill"         data-tab="visuals"  role="tab" aria-selected="false" aria-controls="tab-visuals">Visual Focus</button>
-          <button class="pill"         data-tab="breath"   role="tab" aria-selected="false" aria-controls="tab-breath">Breath/Biofield</button>
-          <button class="pill"         data-tab="ledger"   role="tab" aria-selected="false" aria-controls="tab-ledger">Witness Ledger</button>
+          <button id="tabbtn-observer"  class="pill active" data-tab="observer"  role="tab" aria-selected="true"  aria-controls="tab-observer">Observer</button>
+          <button id="tabbtn-voice"     class="pill"        data-tab="voice"     role="tab" aria-selected="false" aria-controls="tab-voice">Voice Gate</button>
+          <button id="tabbtn-phrase"    class="pill"        data-tab="phrase"    role="tab" aria-selected="false" aria-controls="tab-phrase">Phrase Tuner</button>
+          <button id="tabbtn-coherence" class="pill"        data-tab="coherence" role="tab" aria-selected="false" aria-controls="tab-coherence">Coherence Desk</button>
+          <button id="tabbtn-visuals"   class="pill"        data-tab="visuals"   role="tab" aria-selected="false" aria-controls="tab-visuals">Visual Focus</button>
+          <button id="tabbtn-breath"    class="pill"        data-tab="breath"    role="tab" aria-selected="false" aria-controls="tab-breath">Breath/Biofield</button>
+          <button id="tabbtn-ledger"    class="pill"        data-tab="ledger"    role="tab" aria-selected="false" aria-controls="tab-ledger">Witness Ledger</button>
           <span class="flex" aria-hidden="true"></span>
           <label class="coach-toggle" for="coach">
             <input id="coach" type="checkbox" aria-pressed="false"> Coach Mode
@@ -181,16 +178,15 @@
 
 
 
-
-  <!-- ===================== SECTION 2 — PRACTICE SUITE =================== -->
+<!-- ===================== SECTION 2 — PRACTICE SUITE =================== -->
 
   <!-- OBSERVER -->
-  <section id="tab-observer" class="tab active" role="tabpanel" aria-labelledby="observer">
+  <section id="tab-observer" class="tab active" role="tabpanel" aria-labelledby="tabbtn-observer">
     <article class="grid">
       <div class="card col-7 lab-card">
         <h2>⏱️ 4-Beat Observer Loop — 𝓘 → 𝓛 → 𝓒 → 𝓢</h2>
 
-        <ol class="list">
+        <ol class="list" aria-describedby="obsHelp obsKeys">
           <li><b>𝓘 Intend:</b> speak your line once on the chosen carrier Π<sub>ν</sub> (soft voice).</li>
           <li><b>𝓛 Look:</b> choose one undeniable detail in view (color, edge, shadow, texture).</li>
           <li><b>𝓒 Coalesce:</b> release jaw/shoulders; longer exhale; feel weight into feet/seat.</li>
@@ -277,7 +273,7 @@
   </section>
 
   <!-- VOICE GATE -->
-  <section id="tab-voice" class="tab" role="tabpanel" aria-labelledby="voice">
+  <section id="tab-voice" class="tab" role="tabpanel" aria-labelledby="tabbtn-voice">
     <article class="grid">
       <div class="card col-7 lab-card">
         <h2>🎙️ Voice Gate — Find Your Carrier Π<sub>ν</sub></h2>
@@ -340,7 +336,7 @@
   </section>
 
   <!-- PHRASE TUNER (Eq.16) -->
-  <section id="tab-phrase" class="tab" role="tabpanel" aria-labelledby="phrase">
+  <section id="tab-phrase" class="tab" role="tabpanel" aria-labelledby="tabbtn-phrase">
     <article class="grid">
       <div class="card col-7 lab-card">
         <h2>🔡 Phrase Tuner Pro — Weight the Meaning (Eq.16)</h2>
@@ -385,7 +381,7 @@
   </section>
 
   <!-- COHERENCE DESK (Ξ + half-life) -->
-  <section id="tab-coherence" class="tab" role="tabpanel" aria-labelledby="coherence">
+  <section id="tab-coherence" class="tab" role="tabpanel" aria-labelledby="tabbtn-coherence">
     <article class="grid">
       <div class="card col-7 lab-card">
         <h2>📈 Coherence Desk — Ξ & Half-Life</h2>
@@ -440,7 +436,7 @@
   </section>
 
   <!-- VISUAL FOCUS (mini-lab) -->
-  <section id="tab-visuals" class="tab" role="tabpanel" aria-labelledby="visuals">
+  <section id="tab-visuals" class="tab" role="tabpanel" aria-labelledby="tabbtn-visuals">
     <article class="grid">
       <div class="card col-7 lab-card">
         <h2>👁️ Visual Focus — Single-Point & Expansion</h2>
@@ -474,7 +470,7 @@
   </section>
 
   <!-- BREATH/BIOFIELD (mini-lab) -->
-  <section id="tab-breath" class="tab" role="tabpanel" aria-labelledby="breath">
+  <section id="tab-breath" class="tab" role="tabpanel" aria-labelledby="tabbtn-breath">
     <article class="grid">
       <div class="card col-7 lab-card">
         <h2>🌬️ Breath / Biofield — Rhythms & HR proxy</h2>
@@ -531,10 +527,11 @@
 
 
 
+
 <!-- ================ SECTION 3 — LEDGER & LEARNING =================== -->
 
   <!-- LEDGER -->
-  <section id="tab-ledger" class="tab" role="tabpanel" aria-labelledby="ledger">
+  <section id="tab-ledger" class="tab" role="tabpanel" aria-labelledby="tabbtn-ledger">
     <article class="grid">
       <div class="card col-12 lab-card">
         <h2>📒 Witness Ledger <small class="lab-muted">(private on this device)</small></h2>
@@ -542,7 +539,7 @@
         <!-- Guidance strip -->
         <p class="meta" id="ledgerIntro">
           Log one short line per run. Keep it honest, specific, and small: what you did, what shifted, what lingered.
-          This is your evidence trail—over days, it reveals coherent trends.
+          This is your evidence trail — over days, it reveals coherent trends and shows you what actually works.
         </p>
 
         <!-- Quick helpers -->
@@ -569,10 +566,10 @@
         <!-- Entry form -->
         <div class="ledger-top" aria-label="New entry">
           <label class="sr-only" for="entryIntention">Intention</label>
-          <input id="entryIntention" placeholder="Intention (𝓘): one clean line…">
+          <input id="entryIntention" placeholder="Intention (𝓘): one clean line…" autocomplete="off" aria-describedby="ledgerIntro">
 
           <label class="sr-only" for="entryCarrier">Carrier</label>
-          <input id="entryCarrier" placeholder="Carrier (432/528/369)">
+          <input id="entryCarrier" placeholder="Carrier (432/528/369)" inputmode="numeric" pattern="[0-9]*">
 
           <label class="sr-only" for="entryQuality">Ξ quality</label>
           <select id="entryQuality" aria-label="Ξ quality">
@@ -580,15 +577,15 @@
           </select>
 
           <label class="sr-only" for="entryTags">Tags</label>
-          <input id="entryTags" placeholder="Tags (comma separated)">
+          <input id="entryTags" placeholder="Tags (comma separated)" autocomplete="off">
         </div>
 
         <label class="sr-only" for="entryWitness">Witness notes</label>
-        <textarea id="entryWitness" rows="3" placeholder="Witness notes (what changed, what lingered)…"></textarea>
+        <textarea id="entryWitness" rows="3" placeholder="Witness notes (what changed, what lingered)…" aria-describedby="ledgerIntro"></textarea>
 
         <!-- Actions -->
         <div class="ledger-actions">
-          <button id="btnAddEntry" class="lab-btn">Add</button>
+          <button id="btnAddEntry" class="lab-btn" aria-label="Add ledger entry">Add</button>
 
           <span aria-live="polite" class="meta">🗓️ Streak: <b id="streakDays">0</b> days</span>
 
@@ -597,7 +594,7 @@
           <button id="btnImport" class="lab-btn ghost" title="Load entries from a JSON file">Import .json</button>
 
           <label for="ledgerFilter" class="sr-only">Filter</label>
-          <input id="ledgerFilter" placeholder="Filter by tag or text…">
+          <input id="ledgerFilter" placeholder="Filter by tag or text…" autocomplete="off">
         </div>
 
         <!-- Empty state (shown when no rows) -->
@@ -606,22 +603,33 @@
         </div>
 
         <!-- Table -->
-        <table id="ledgerTable" aria-label="Practice ledger">
-          <thead>
-            <tr>
-              <th scope="col">Date</th>
-              <th scope="col">Intention</th>
-              <th scope="col">Carrier</th>
-              <th scope="col">Ξ</th>
-              <th scope="col">Tags</th>
-              <th scope="col">Witness</th>
-              <th scope="col" aria-label="delete column"></th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-wrap" role="region" aria-label="Practice ledger">
+          <table id="ledgerTable">
+            <colgroup>
+              <col style="width:16ch">
+              <col>
+              <col style="width:10ch">
+              <col style="width:8ch">
+              <col style="width:18ch">
+              <col>
+              <col style="width:4ch">
+            </colgroup>
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Intention</th>
+                <th scope="col">Carrier</th>
+                <th scope="col">Ξ</th>
+                <th scope="col">Tags</th>
+                <th scope="col">Witness</th>
+                <th scope="col" aria-label="delete column"></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
 
-        <!-- Badges -->
+        <!-- Badges (mirror set for the ledger view) -->
         <div class="badges" style="margin-top:10px" aria-label="Streak badges">
           <span id="badge7b"   class="badge unlit"  title="7-Day Seed">🌱 ×7</span>
           <span id="badge33b"  class="badge unlit"  title="33-Day Orbit">🛰️ ×33</span>
@@ -662,7 +670,7 @@
       <ul class="list">
         <li><b>Consent:</b> no covert influence over others; manifest your own alignment.</li>
         <li><b>Non-harm:</b> pause if actions cause harm or degrade others’ agency.</li>
-        <li><b>Accountability:</b> log results honestly—celebrate small wins, learn from misses.</li>
+        <li><b>Accountability:</b> log results honestly — celebrate small wins, learn from misses.</li>
       </ul>
       <div class="lab-eq" aria-label="Stop rule equation">
         <div class="scroll">
@@ -741,4 +749,29 @@
       }
     ]
   }
+  </script>
+
+  <!-- Mirror badges for the ledger view (keeps b-set in sync with live streak) -->
+  <script>
+    (function(){
+      const b7 = document.getElementById('badge7b');
+      const b33 = document.getElementById('badge33b');
+      const b144 = document.getElementById('badge144b');
+      const streakEl = document.getElementById('streakDays');
+      if (!b7 || !b33 || !b144 || !streakEl) return;
+
+      function refresh() {
+        const n = parseInt(streakEl.textContent || '0', 10) || 0;
+        b7.classList.toggle('unlit', n < 7);
+        b33.classList.toggle('unlit', n < 33);
+        b144.classList.toggle('unlit', n < 144);
+      }
+
+      // Initial paint + react to future changes
+      refresh();
+      const mo = new MutationObserver(refresh);
+      mo.observe(streakEl, { characterData: true, childList: true, subtree: true });
+      // Also refresh on visibility regain
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+    })();
   </script>
