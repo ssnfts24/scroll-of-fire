@@ -23,40 +23,50 @@
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
 
   <!-- Styles -->
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-18x">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18x" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-18x"></noscript>
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
   <link rel="stylesheet" href="assets/css/teach.css?v=2025-10-19a">
 
-  <!-- MathJax: load only if not already present (Teach page may have injected it) -->
+  <!-- Minimal safety override: if JS fails, make cards visible -->
+  <style>
+    .no-js .card { opacity:.98 !important; transform:none !important; }
+    .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 80px}
+    .title{ font-family:"Crimson Pro",Georgia,serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;letter-spacing:.3px;
+      background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#a7f6ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 24px rgba(122,243,255,.12);}
+    .subtitle{text-align:center;color:#b8b3a6;font-style:italic;margin:0 0 12px}
+    .mini-toc{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0 6px}
+    .mini-toc a{padding:8px 10px;border:1px solid #2a2a33;border-radius:10px;text-decoration:none}
+    .crumbs{display:flex;gap:8px;justify-content:center;margin-top:10px}
+    .cta{display:inline-block;padding:8px 12px;border-radius:10px;border:1px solid #2a2a33;text-decoration:none}
+    .strap,.lab-strap{font-variant:all-small-caps;letter-spacing:.12em;color:#b8b3a6}
+  </style>
+
+  <!-- MathJax loader (same flavor as index) -->
   <script>
     (function(){
-      if (!window.MathJax) {
-        var s = document.createElement('script');
-        s.async = true;
-        s.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
-        s.crossOrigin = 'anonymous';
+      function loadMJ(){
+        if (window.MathJax) return;
+        window.MathJax = {
+          tex:{ inlineMath:[['\\','\\']], displayMath:[['$$','$$']] },
+          svg:{ fontCache:'global', linebreaks:{ automatic:true, width:'container' } },
+          startup:{ typeset:false }
+        };
+        const s = document.createElement('script');
+        s.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
+        s.defer = true;
+        s.onload = () => MathJax.typesetPromise();
         document.head.appendChild(s);
       }
+      if ('IntersectionObserver' in window){
+        const io = new IntersectionObserver((e)=>{ if (e.some(x=>x.isIntersecting)) { io.disconnect(); loadMJ(); } }, {rootMargin:'800px 0px'});
+        io.observe(document.documentElement);
+      } else { loadMJ(); }
     })();
-  </script>
-
-  <!-- Structured data -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Article",
-    "headline":"Codex Theory — Scroll of Fire",
-    "description":"A compact but complete derivation of the Codex of Reality and how the Teaching Lab operationalizes it.",
-    "inLanguage":"en",
-    "author":{"@type":"Person","name":"Aaron Paul Laird"},
-    "about":["Coherence","Observer Dynamics","Manifestation","Ethics"],
-    "url":"https://ssnfts24.github.io/scroll-of-fire/theory.html"
-  }
   </script>
 </head>
 
-<body>
+<body class="no-js">
   <a class="sr-only" href="#main">Skip to main content</a>
 
   <main id="main" class="wrap">
@@ -299,9 +309,62 @@
     </footer>
   </main>
 
-  <!-- Small helper to stamp the current year -->
+  <!-- Reveal-on-scroll, tilt, year, MathJax typeset (same pattern as index) -->
   <script>
-    (function(){ var y=document.getElementById('yr'); if(y) y.textContent=new Date().getFullYear(); })();
+    (function () {
+      "use strict";
+      document.body.classList.remove('no-js');
+      const $  = (s, r=document) => r.querySelector(s);
+      const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+      const on = (t,e,f,o) => t && t.addEventListener && t.addEventListener(e,f,o);
+      const raf = (fn) => (window.requestAnimationFrame||setTimeout)(fn,16);
+
+      const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const hasIO = "IntersectionObserver" in window;
+
+      function setYear(){ const y=$("#yr"); if (y) y.textContent = String(new Date().getFullYear()); }
+
+      function revealOnScroll(){
+        const cards = $$(".card"); if (!cards.length) return;
+        if (!prefersReduced && hasIO){
+          const io = new IntersectionObserver((entries)=>{
+            for (const e of entries){ if (e.isIntersecting){ e.target.classList.add("visible"); io.unobserve(e.target); } }
+          }, {root:null, rootMargin:"0px 0px -12%", threshold:0.08});
+          cards.forEach(el=>io.observe(el)); return;
+        }
+        const tick=()=>cards.forEach(el=>{
+          const r = el.getBoundingClientRect(); const vh = innerHeight||document.documentElement.clientHeight;
+          if (r.top < vh*0.92 && r.bottom > 0) el.classList.add("visible");
+        });
+        on(window,"scroll",()=>raf(tick),{passive:true}); on(window,"load",tick); tick();
+      }
+
+      function tiltCards(){
+        if (prefersReduced) return;
+        $$(".card").forEach(card=>{
+          let rid=0;
+          const reset=()=>{ card.style.transform=""; };
+          on(card,"mousemove",(e)=>{
+            const r=card.getBoundingClientRect();
+            const x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+            rid = raf(()=>{ card.style.transform=`perspective(900px) rotateX(${(0.5-y)*4}deg) rotateY(${(x-0.5)*6}deg)`; });
+          });
+          on(card,"mouseleave",reset);
+          on(card,"blur",reset,true);
+          on(card,"touchstart",reset,{passive:true});
+        });
+      }
+
+      function typesetSoon(delay=120){
+        const mj = window.MathJax; if (!mj) return;
+        setTimeout(()=>{ try{ mj.typeset && mj.typeset(); }catch(_){} }, delay);
+      }
+
+      setYear();
+      revealOnScroll();
+      tiltCards();
+      typesetSoon(250);
+    })();
   </script>
 </body>
 </html>
