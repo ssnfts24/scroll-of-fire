@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <meta charset="utf-8" />
+  <title>Downloads & Integrity — Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
+  <meta name="description" content="Codex downloads: latest DOCX/PDF, commit-pinned links, SHA-256 seals, and ledger references." />
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/downloads.html" />
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
+  <style>
+    .wrap{max-width:980px;margin:0 auto;padding:20px 16px 80px}
+    .title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;
+      background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#a7f6ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .dl{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid #2a2a33;border-radius:12px;padding:12px;margin:8px 0}
+    code{user-select:all}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="page-head fancy-head">
+      <h1 class="title">⬇️ Downloads & Integrity Chain</h1>
+      <p class="subtitle">Pinned scrolls, SHAs, and provenance links.</p>
+      <nav class="crumbs" style="display:flex;gap:8px;justify-content:center">
+        <a class="cta" href="index.html">← Back</a>
+        <a class="cta" href="theory.html">Theory</a>
+        <a class="cta" href="ledger.html">Ledger</a>
+      </nav>
+    </header>
+
+    <section class="card">
+      <h2>Latest Scrolls</h2>
+      <div class="dl">
+        <div>
+          <b>Codex of Reality — Multidimensional Extended Edition (DOCX)</b><br>
+          <a class="cta" target="_blank" rel="noopener"
+             href="https://github.com/ssnfts24/scroll-of-fire/blob/80a8b2454e8c71575aa659928194ce27354eb811/1_Codex_of_Reality/Codex_of_Reality%E2%80%94Multidimensional_Extended_Edition_2025_Stylized_Update_SHA.docx">Commit-pinned link</a>
+        </div>
+        <span class="meta">SHA: <code id="shaDocx">—</code></span>
+      </div>
+
+      <div class="dl">
+        <div>
+          <b>Teaching Lab — Quick Guide (PDF)</b><br>
+          <a class="cta" target="_blank" rel="noopener" href="assets/pdf/teach_quickstart.pdf">Local PDF</a>
+        </div>
+        <span class="meta">SHA: <code id="shaPdf">—</code></span>
+      </div>
+
+      <p class="meta">Note: Hash placeholders can be replaced via your ledger tooling; see <a class="cta" target="_blank" rel="noopener" href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/SHA256_Placeholders_2025.md">SHA256_Placeholders_2025.md</a>.</p>
+    </section>
+
+    <section class="card">
+      <h2>Provenance</h2>
+      <ul class="list">
+        <li>GitHub repository: <a class="cta" target="_blank" rel="noopener" href="https://github.com/ssnfts24/scroll-of-fire">scroll-of-fire</a></li>
+        <li>Commit-pinned DOCX: above.</li>
+        <li>On-page attributions: see <a class="cta" href="index.html#provenance">Provenance</a>.</li>
+      </ul>
+    </section>
+
+    <footer class="footer">
+      <div class="divider" aria-hidden="true"></div>
+      <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+    </footer>
+  </main>
+
+  <script>
+    (function(){
+      // Optional: set placeholder SHAs (replace with your actual computed values)
+      document.getElementById("shaDocx").textContent = "a2b8e0d7c0a2f3b9…90abcd0";
+      document.getElementById("shaPdf").textContent  = "— compute and paste —";
+      document.getElementById("yr").textContent = String(new Date().getFullYear());
+    })();
+  </script>
+</body>
+</html>
