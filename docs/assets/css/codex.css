@@ -732,3 +732,55 @@ body.bg-grid-heavy{
 @media (max-width:420px){
   .hero img{ object-fit:contain; max-height:56vh }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* === Hero: buttonless living-tech upgrade ============================== */
+
+/* kill toolbar visuals if any remain */
+.hero-ui{ display:none !important }
+
+/* subtle parallax tilt (mouse) + gentle zoom on hover */
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  .hero{ transform-style:preserve-3d; will-change:transform }
+  .hero:hover{ transform:perspective(1200px) rotateX(var(--hero-tilt-x,0deg)) rotateY(var(--hero-tilt-y,0deg)) }
+}
+
+/* pulse: a touch stronger but still tasteful */
+:root{ --pulse-opacity:.16 } /* was .12 */
+.hero.pulse .hero-pulse{
+  background:
+    radial-gradient(circle at 50% 55%, var(--pulse-c1) 0 8%, transparent 40%),
+    radial-gradient(circle at 50% 55%, var(--pulse-c2) 0 5%, transparent 28%);
+}
+@media (prefers-reduced-motion:no-preference){
+  .hero.pulse .hero-pulse{ animation-duration:5.8s } /* slightly quicker */
+}
+
+/* scanline + star sparkle a bit more */
+.hero.star-scan::after{ opacity:.16 }
+@keyframes starPulse{ 0%,100%{opacity:.14} 50%{opacity:.22} }
+
+/* zoomed view: hide page scrollbars and use full viewport cleanly */
+.hero.is-zoomed{ position:fixed; inset:0; margin:0; border-radius:0; z-index:9999; background:#07070a }
+.hero.is-zoomed img{ height:100svh; max-height:100svh; width:100vw; aspect-ratio:auto; object-fit:contain }
+
+/* tiny caption hint (keyboard help) — shows on hover/focus only */
+.hero .hero-hint{
+  position:absolute; right:10px; bottom:10px; z-index:3;
+  color:var(--muted); font:500 12px/1.4 Inter; padding:6px 8px;
+  background:rgba(12,12,16,.42); border:1px solid #24242c; border-radius:8px;
+  opacity:0; transition:opacity .2s var(--ease);
+}
+.hero:focus-within .hero-hint, .hero:hover .hero-hint{ opacity:.9 }
+@media (prefers-reduced-motion:reduce){ .hero .hero-hint{ display:none } }
