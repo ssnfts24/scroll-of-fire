@@ -1,21 +1,22 @@
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" class="sof">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <meta charset="utf-8" />
   <title>Codex Theory — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0b0f">
-  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="dark light">
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
   <meta name="description" content="The Codex of Reality: foundations, operators, and equations that make coherent manifestation measurable, ethical, and repeatable." />
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/theory.html" />
 
   <!-- Social cards -->
+  <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Codex Theory — Scroll of Fire">
   <meta property="og:description" content="How reality learns itself through observation — the equations, operators, and ethics of coherent manifestation.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/img/og-teach-lab.jpg">
+  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/theory.html">
   <meta name="twitter:card" content="summary_large_image">
 
@@ -24,46 +25,93 @@
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
 
-  <!-- Styles -->
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
-  <link rel="stylesheet" href="assets/css/teach.css?v=2025-10-19a">
+  <!-- Fonts (same family as index for visual unity) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- Minimal safety override: if JS fails, make cards visible -->
+  <!-- Base styles (keep external files) -->
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
+  <link rel="stylesheet" href="assets/css/teach.css?v=2025-10-20a">
+
+  <!-- Blend & Fixes (TOC, sticky offsets, mobile polish) -->
   <style>
-    .no-js .card { opacity:.98 !important; transform:none !important; }
-    .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 80px}
-    .title{ font-family:"Crimson Pro",Georgia,serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;letter-spacing:.3px;
-      background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#a7f6ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 24px rgba(122,243,255,.12);}
-    .subtitle{text-align:center;color:#b8b3a6;font-style:italic;margin:0 0 12px}
-    .mini-toc{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0 6px}
-    .mini-toc a{padding:8px 10px;border:1px solid #2a2a33;border-radius:10px;text-decoration:none}
-    .crumbs{display:flex;gap:8px;justify-content:center;margin-top:10px}
-    .cta{display:inline-block;padding:8px 12px;border-radius:10px;border:1px solid #2a2a33;text-decoration:none}
-    .strap,.lab-strap{font-variant:all-small-caps;letter-spacing:.12em;color:#b8b3a6}
+    :root{ --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px) }
+
+    /* page shell */
+    body{ margin:0; background:var(--bg) }
+    .wrap{ max-width:1180px; margin:0 auto; padding:16px 16px calc(90px + var(--safe-bottom)) }
+
+    /* page header visuals (harmonize with index) */
+    .page-head{ text-align:center; margin:4px 0 8px }
+    .lab-strap{ font-variant:all-small-caps; letter-spacing:.12em; color:var(--muted) }
+    .title{
+      font-family:"Crimson Pro",Georgia,serif; font-weight:800; margin:8px 0 6px;
+      font-size:clamp(28px,3.8vw,44px);
+      background:linear-gradient(90deg,var(--spec-cyan),var(--spec-gold),var(--spec-violet));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      text-shadow:0 0 22px rgba(122,243,255,.16),0 0 24px rgba(200,140,255,.14);
+    }
+    .subtitle{ color:var(--muted); font-style:italic; margin:0 0 10px }
+
+    /* mini TOC: chips in a glass tray (sticky, non-overlapping) */
+    .mini-toc-wrap{
+      position:sticky; top:clamp(56px,9vh,92px); z-index:40;
+      padding:8px; margin:10px 0 14px; border-radius:14px;
+      background:linear-gradient(180deg,rgba(12,14,18,.72),rgba(12,14,18,.58));
+      border:1px solid rgba(52,56,66,.85);
+      -webkit-backdrop-filter:saturate(140%) blur(10px); backdrop-filter:saturate(140%) blur(10px);
+      overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-gutter:stable both-edges;
+    }
+    .mini-toc{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:center; margin:0 }
+    .mini-toc a{
+      display:inline-flex; align-items:center; gap:6px; padding:9px 12px; min-height:36px;
+      border:1px solid #343846; border-radius:10px; text-decoration:none; color:var(--ink);
+      background:rgba(255,255,255,.04); font:600 14px/1 Inter,system-ui;
+      transition:transform .14s var(--ease), background-color .14s var(--ease), border-color .14s var(--ease);
+      scroll-snap-align:start;
+    }
+    .mini-toc a:hover{ background:rgba(255,255,255,.07) }
+    .mini-toc a.is-active{
+      outline:2px solid rgba(122,243,255,.35);
+      box-shadow:0 0 0 4px rgba(122,243,255,.12);
+      background:rgba(255,255,255,.08);
+    }
+
+    /* cards (inherit codex.css look; ensure visibility w/o IO) */
+    .card{ position:relative }
+    html:not(.js-ready) .card{ opacity:1 !important; transform:none !important }
+
+    /* anchor offset safety */
+    :target{ scroll-margin-top: clamp(96px, 14vh, 140px) }
+
+    /* breadcrumbs row */
+    .crumbs{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:10px 0 0 }
+    .cta{ display:inline-block; padding:10px 12px; border-radius:10px; border:1px solid var(--line); text-decoration:none; }
+
+    /* equation containers: add room & safe scroll on phones */
+    .eq mjx-container{ font-size:110% }
+    .eq mjx-container[display="block"]{ overflow:auto }
+
+    /* print sanity */
+    @media print{
+      .mini-toc-wrap{ display:none !important }
+      .card{ page-break-inside:avoid }
+    }
   </style>
 
-  <!-- MathJax loader (aligned with index/manifest) -->
+  <!-- MathJax (unified with index) -->
   <script>
     (function(){
+      let loaded=false;
+      function boot(){ if(!window.MathJax) return; MathJax.startup.promise.then(()=>MathJax.typesetPromise()); }
       function loadMJ(){
-        if (window.MathJax) return;
-        window.MathJax = {
-          tex:{ inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']] },
-          svg:{ fontCache:'global', linebreaks:{ automatic:true, width:'container' } },
-          startup:{ typeset:false }
-        };
-        const s = document.createElement('script');
-        s.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
-        s.defer = true;
-        s.onload = () => MathJax.typesetPromise();
-        document.head.appendChild(s);
+        if(loaded) return; loaded=true;
+        window.MathJax={ tex:{inlineMath:[['\\(','\\)']],displayMath:[['$$','$$']]}, svg:{fontCache:'global'}, startup:{typeset:false} };
+        const s=document.createElement('script'); s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"; s.defer=true; s.onload=boot; document.head.appendChild(s);
       }
-      if ('IntersectionObserver' in window){
-        const io = new IntersectionObserver((e)=>{ if (e.some(x=>x.isIntersecting)) { io.disconnect(); loadMJ(); } }, {rootMargin:'800px 0px'});
-        io.observe(document.documentElement);
-      } else { loadMJ(); }
+      if(document.readyState!=='loading') loadMJ(); else addEventListener('DOMContentLoaded', loadMJ);
     })();
   </script>
 </head>
@@ -77,20 +125,22 @@
       <h1 class="title">📜 Codex Theory — <em>How Reality Learns Itself</em></h1>
       <p class="subtitle">The Codex formalizes reality as a feedback system where awareness tunes phase, intention shapes sampling, and coherence governs what persists.</p>
 
-      <nav class="mini-toc" aria-label="On this page">
-        <a href="#axioms">Axioms</a>
-        <a href="#operators">Operators & Notation</a>
-        <a href="#omega">Eq.Ω — Root Dynamics</a>
-        <a href="#observer">Observer Loop (𝓘→𝓛→𝓒→𝓢)</a>
-        <a href="#semantics">Semantic Gradient (Eq.16)</a>
-        <a href="#coherence">Coherence (Ξ) & Stop Rule (Eq.9)</a>
-        <a href="#carrier">Voice Carrier Π<sub>ν</sub> & Breath</a>
-        <a href="#learning">Learning, Half-Life & τ</a>
-        <a href="#ledger">Ledger, Evidence & Belief Update</a>
-        <a href="#energy">Energy Budget & Noise</a>
-        <a href="#ethics">Ethics & Constraints</a>
-        <a href="#implications">Implications & Use</a>
-      </nav>
+      <div class="mini-toc-wrap" role="navigation" aria-label="On this page">
+        <nav class="mini-toc" id="toc">
+          <a href="#axioms">Axioms</a>
+          <a href="#operators">Operators &amp; Notation</a>
+          <a href="#omega">Eq.Ω — Root Dynamics</a>
+          <a href="#observer">Observer Loop (𝓘→𝓛→𝓒→𝓢)</a>
+          <a href="#semantics">Semantic Gradient (Eq.16)</a>
+          <a href="#coherence">Coherence (Ξ) &amp; Stop Rule</a>
+          <a href="#carrier">Voice Carrier Π<sub>ν</sub> &amp; Breath</a>
+          <a href="#learning">Learning, Half-Life &amp; τ</a>
+          <a href="#ledger">Ledger &amp; Belief Update</a>
+          <a href="#energy">Energy Budget &amp; Noise</a>
+          <a href="#ethics">Ethics &amp; Constraints</a>
+          <a href="#implications">Implications &amp; Use</a>
+        </nav>
+      </div>
 
       <nav class="crumbs" aria-label="Breadcrumb">
         <a href="index.html" class="cta">← Back to Codex</a>
@@ -99,7 +149,7 @@
     </header>
 
     <!-- ================= Axioms ================= -->
-    <section id="axioms" class="card card--teach">
+    <section id="axioms" class="card card--teach" tabindex="-1">
       <span class="strap">Foundations</span>
       <h2>1) Axioms</h2>
       <ol class="list">
@@ -113,8 +163,8 @@
     </section>
 
     <!-- ================= Operators ================= -->
-    <section id="operators" class="card">
-      <h2>2) Operators & Notation</h2>
+    <section id="operators" class="card" tabindex="-1">
+      <h2>2) Operators &amp; Notation</h2>
       <ul class="list">
         <li><b>Ψ(x,t)</b> — local reality state (what is available to notice/act), at locus <i>x</i> and time <i>t</i>.</li>
         <li><b>φ</b> — phase; <b>∇<sub>φ</sub></b> or <b>𝔇<sub>φ</sub></b> — phase-gradient operator (alignment change wrt meaning).</li>
@@ -123,13 +173,13 @@
         <li><b>⊕</b> — <i>coherent merge</i>: combines terms while preserving phase consistency (contrast with simple +).</li>
         <li><b>ΔΣ(a′)</b> — incremental change to the component sum via micro-updates (e.g., tiny habit edits, new cues).</li>
         <li><b>𝓘, 𝓛, 𝓒, 𝓢</b> — Intend / Look / Coalesce / Seal (observer loop operators).</li>
-        <li><b>Π<sub>ν</sub></b> — voice carrier; the tone that stabilizes phrasing & breath (neural entrainment scaffold).</li>
+        <li><b>Π<sub>ν</sub></b> — voice carrier; the tone that stabilizes phrasing &amp; breath (neural entrainment scaffold).</li>
         <li><b>Ξ</b> — coherence; <b>H</b> — attention; <b>I</b> — intention; <b>𝓜</b> — internal model.</li>
       </ul>
     </section>
 
     <!-- ================= Root Equation Ω ================= -->
-    <section id="omega" class="card">
+    <section id="omega" class="card" tabindex="-1">
       <h2>3) <span class="remnant-glow">Eq.Ω — Root Dynamics (distinct from Copeland)</span></h2>
 
       <div class="eq eq-on" aria-label="Eq.Ω — Root Dynamics">
@@ -158,117 +208,87 @@
     </section>
 
     <!-- ================= Observer Loop ================= -->
-    <section id="observer" class="card">
+    <section id="observer" class="card" tabindex="-1">
       <h2>4) Observer Loop — 𝓘 → 𝓛 → 𝓒 → 𝓢</h2>
       <p>The loop is how attention writes to Ψ without distortion. Each operator touches a term in Eq.Ω:</p>
-
       <ul class="list">
         <li><b>𝓘 Intend:</b> set semantic weights (affects the <i>phase-guided update</i> via φ).</li>
         <li><b>𝓛 Look:</b> choose one undeniable detail (reduces model variance; prunes ℜ).</li>
         <li><b>𝓒 Coalesce:</b> relax and lengthen exhale (drops sympathetic noise; stabilizes Π<sub>ν</sub>).</li>
         <li><b>𝓢 Seal:</b> gratitude/quiet (lets the merge ⊕ settle; micro-edits ΔΣ integrate).</li>
       </ul>
-
       <div class="note">
         <b>Practice bridge:</b> the ring timer in <a href="teach.html">Manifest</a> steps these phases so Ω updates are paced, not rushed.
       </div>
     </section>
 
     <!-- ================= Semantic Gradient ================= -->
-    <section id="semantics" class="card">
+    <section id="semantics" class="card" tabindex="-1">
       <h2>5) Eq.16 — Semantic Gradient of a Phrase</h2>
-
-      <div class="eq">
-        <div class="eq-scroll">
-          $$ \nabla_{\text{sem}} \mathrm{Phrase} \;=\; \sum_k w_k \,\nabla_{\text{sem}} \mathrm{Token}_k
-             \qquad \text{with}\quad \sum_k w_k = 1 $$
-        </div>
-      </div>
-
+      <div class="eq"><div class="eq-scroll">
+        $$ \nabla_{\text{sem}} \mathrm{Phrase} \;=\; \sum_k w_k \,\nabla_{\text{sem}} \mathrm{Token}_k
+           \qquad \text{with}\quad \sum_k w_k = 1 $$
+      </div></div>
       <p><b>Read:</b> The meaning-gradient of a spoken line equals the weighted sum of its token-gradients. Fewer negations and stronger verbs produce a cleaner gradient, which gives φ a clearer direction when Eq.Ω updates Ψ.</p>
-
       <p class="meta">That’s why the <b>Phrase Tuner</b> exists: it surfaces negations/filler and lets you weight tokens before the loop begins.</p>
     </section>
 
     <!-- ================= Coherence & Stop Rule ================= -->
-    <section id="coherence" class="card">
+    <section id="coherence" class="card" tabindex="-1">
       <h2>6) Coherence (Ξ), Stop Rule (Eq.9)</h2>
-
-      <div class="eq">
-        <div class="eq-scroll">
-          $$ \Xi \;\approx\; \frac{\langle H \cdot I \rangle}{1 + \mathrm{Var}[\mathcal{M}]} $$
-        </div>
-      </div>
+      <div class="eq"><div class="eq-scroll">
+        $$ \Xi \;\approx\; \frac{\langle H \cdot I \rangle}{1 + \mathrm{Var}[\mathcal{M}]} $$
+      </div></div>
       <p><b>Read:</b> Coherence rises when attention aligns with intention and internal model variance drops. Ξ is your “green light.”</p>
-
-      <div class="eq">
-        <div class="eq-scroll">
-          $$ \text{If}\ \frac{\mathrm{Truth}(t+\Delta)}{\mathrm{Distortion}(t+\Delta)} < \frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)}
-          \;\Rightarrow\; \text{Abort, Re-align, Resume} \quad (\text{Eq.9}) $$
-        </div>
-      </div>
+      <div class="eq"><div class="eq-scroll">
+        $$ \text{If}\ \frac{\mathrm{Truth}(t+\Delta)}{\mathrm{Distortion}(t+\Delta)} < \frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)}
+        \;\Rightarrow\; \text{Abort, Re-align, Resume} \quad (\text{Eq.9}) $$
+      </div></div>
       <p class="meta">The <b>Stop Rule</b> prevents you from amplifying instability. In practice: if Ξ trends down, stop the run, re-center breath/phrase, and restart.</p>
     </section>
 
     <!-- ================= Voice Carrier & Breath ================= -->
-    <section id="carrier" class="card">
-      <h2>7) Voice Carrier Π<sub>ν</sub> & Breath Pacing</h2>
+    <section id="carrier" class="card" tabindex="-1">
+      <h2>7) Voice Carrier Π<sub>ν</sub> &amp; Breath Pacing</h2>
       <p>Π<sub>ν</sub> steadies φ by entrainment. A stable tone reduces sympathetic noise and increases the chance that ΔΣ integrates as a clean micro-edit.</p>
-
-      <div class="eq">
-        <div class="eq-scroll">
-          $$ \text{Stability}(\Pi_{\nu}) \uparrow \;\Rightarrow\; \mathrm{Var}[\mathcal{M}] \downarrow \;\Rightarrow\; \Xi \uparrow $$
-        </div>
-      </div>
-
+      <div class="eq"><div class="eq-scroll">
+        $$ \text{Stability}(\Pi_{\nu}) \uparrow \;\Rightarrow\; \mathrm{Var}[\mathcal{M}] \downarrow \;\Rightarrow\; \Xi \uparrow $$
+      </div></div>
       <ul class="list">
-        <li><b>432 Hz — Ground:</b> clarity & steadiness for simple choices.</li>
+        <li><b>432 Hz — Ground:</b> clarity &amp; steadiness for simple choices.</li>
         <li><b>528 Hz — Repair:</b> renewal after stress; resets phrasing.</li>
         <li><b>369 Hz — Lock-in:</b> pattern shift and learning consolidation.</li>
       </ul>
-
-      <p class="meta">The <b>Voice Gate</b> measures stability & noise while you hum a note. Use the <b>Breath ring</b> to keep exhale longer than inhale; this lowers model variance and boosts Ξ.</p>
+      <p class="meta">The <b>Voice Gate</b> measures stability &amp; noise while you hum a note. Use the <b>Breath ring</b> to keep exhale longer than inhale; this lowers model variance and boosts Ξ.</p>
     </section>
 
     <!-- ================= Learning & Half-life ================= -->
-    <section id="learning" class="card">
+    <section id="learning" class="card" tabindex="-1">
       <h2>8) Learning Window τ, Half-Life t½, and Decay λ</h2>
-
-      <div class="eq">
-        <div class="eq-scroll">
-          $$ \lambda = \frac{\ln 2}{t_{1/2}}, \qquad
-             \text{and practice spacing within } \tau \text{ stretches } t_{1/2} \Rightarrow \lambda \downarrow $$
-        </div>
-      </div>
-
+      <div class="eq"><div class="eq-scroll">
+        $$ \lambda = \frac{\ln 2}{t_{1/2}}, \qquad
+           \text{and practice spacing within } \tau \text{ stretches } t_{1/2} \Rightarrow \lambda \downarrow $$
+      </div></div>
       <p>Repeated high-Ξ runs within the retention window <b>τ</b> lengthen skill half-life <b>t½</b> and slow decay <b>λ</b>. In plain terms: shorter, cleaner sessions done daily beat occasional marathons.</p>
     </section>
 
     <!-- ================= Ledger & Belief Update ================= -->
-    <section id="ledger" class="card">
-      <h2>9) Witness Ledger — Evidence & Belief Update</h2>
+    <section id="ledger" class="card" tabindex="-1">
+      <h2>9) Witness Ledger — Evidence &amp; Belief Update</h2>
       <p>The ledger is a local record of ΔΣ (micro-edits) and their stability. You can model belief about “this line works here” using log-odds updates:</p>
-
-      <div class="eq">
-        <div class="eq-scroll">
-          $$ \ell_{t+1} = \ell_t + \log \frac{P(\text{witness}\mid \text{useful})}{P(\text{witness}\mid \text{not useful})} $$
-        </div>
-      </div>
-
+      <div class="eq"><div class="eq-scroll">
+        $$ \ell_{t+1} = \ell_t + \log \frac{P(\text{witness}\mid \text{useful})}{P(\text{witness}\mid \text{not useful})} $$
+      </div></div>
       <p class="meta">You don’t have to compute it; the <b>Weekly Signal</b> sparkline and <b>Ξ High rate</b> approximate the same idea. Rising trend → keep the protocol; falling → adjust carrier, phrase, or phase timing.</p>
     </section>
 
     <!-- ================= Energy Budget ================= -->
-    <section id="energy" class="card">
-      <h2>10) Energy Budget & Noise</h2>
+    <section id="energy" class="card" tabindex="-1">
+      <h2>10) Energy Budget &amp; Noise</h2>
       <p>Affordances a<sub>n</sub> are conditioned by available energy. Keep an explicit budget:</p>
-
-      <div class="eq">
-        <div class="eq-scroll">
-          $$ \Delta E_{\text{next}} \;=\; \alpha\,\text{Work}_{\mathcal{I}} \;-\; \beta\,\text{Noise} \;+\; \gamma\,\text{Restoration} $$
-        </div>
-      </div>
-
+      <div class="eq"><div class="eq-scroll">
+        $$ \Delta E_{\text{next}} \;=\; \alpha\,\text{Work}_{\mathcal{I}} \;-\; \beta\,\text{Noise} \;+\; \gamma\,\text{Restoration} $$
+      </div></div>
       <ul class="list">
         <li><b>Work<sub>𝓘</sub>:</b> action aligned to intention (productive expenditure).</li>
         <li><b>Noise:</b> rumination, hurry, conflict without consent (wasted expenditure).</li>
@@ -278,8 +298,8 @@
     </section>
 
     <!-- ================= Ethics ================= -->
-    <section id="ethics" class="card">
-      <h2>11) Ethics & Constraints (Care as Boundary Conditions)</h2>
+    <section id="ethics" class="card" tabindex="-1">
+      <h2>11) Ethics &amp; Constraints (Care as Boundary Conditions)</h2>
       <ul class="list">
         <li><b>Consent:</b> no covert influence over others; manifest your own alignment.</li>
         <li><b>Non-harm:</b> stop if the Truth/Distortion ratio worsens (Eq.9).</li>
@@ -289,8 +309,8 @@
     </section>
 
     <!-- ================= Implications ================= -->
-    <section id="implications" class="card">
-      <h2>12) Implications & How to Use the Codex</h2>
+    <section id="implications" class="card" tabindex="-1">
+      <h2>12) Implications &amp; How to Use the Codex</h2>
       <ol class="list">
         <li><b>Language is control.</b> Clean phrasing sets the gradient that drives updates in Ω.</li>
         <li><b>Breath is timing.</b> The body clocks the merge (⊕) so micro-edits ΔΣ stabilize.</li>
@@ -298,7 +318,6 @@
         <li><b>Ledger is science.</b> It’s your experiment log; trends beat anecdotes.</li>
         <li><b>Coherence is permission.</b> High Ξ means proceed; low Ξ means adjust or stop.</li>
       </ol>
-
       <div class="note">
         <p><b>One daily run:</b> Phrase (Eq.16) → Voice Gate (Π<sub>ν</sub>) → Observer Loop (𝓘→𝓛→𝓒→𝓢) → Coherence check (Ξ) → Witness → Ledger. Repeat gently. Watch the sparkline.</p>
       </div>
@@ -311,62 +330,126 @@
     </footer>
   </main>
 
-  <!-- Reveal-on-scroll, tilt, year, MathJax typeset (same pattern as index) -->
+  <!-- Behavior: reveal, tilt, MathJax typeset, TOC smooth-scroll + scroll-spy -->
   <script>
-    (function () {
-      "use strict";
-      document.body.classList.remove('no-js');
-      const $  = (s, r=document) => r.querySelector(s);
-      const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
-      const on = (t,e,f,o) => t && t.addEventListener && t.addEventListener(e,f,o);
-      const raf = (fn) => (window.requestAnimationFrame||setTimeout)(fn,16);
+  (function () {
+    "use strict";
+    document.documentElement.classList.add("js-ready");
+    document.body.classList.remove("no-js");
 
-      const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const hasIO = "IntersectionObserver" in window;
+    const $  = (s, r=document) => r.querySelector(s);
+    const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+    const on = (t,e,f,o) => t && t.addEventListener && t.addEventListener(e,f,o);
+    const raf = (fn) => (window.requestAnimationFrame||setTimeout)(fn,16);
 
-      function setYear(){ const y=$("#yr"); if (y) y.textContent = String(new Date().getFullYear()); }
+    const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const hasIO = "IntersectionObserver" in window;
 
-      function revealOnScroll(){
-        const cards = $$(".card"); if (!cards.length) return;
-        if (!prefersReduced && hasIO){
-          const io = new IntersectionObserver((entries)=>{
-            for (const e of entries){ if (e.isIntersecting){ e.target.classList.add("visible"); io.unobserve(e.target); } }
-          }, {root:null, rootMargin:"0px 0px -12%", threshold:0.08});
-          cards.forEach(el=>io.observe(el)); return;
-        }
+    /* year */
+    const y=$("#yr"); if (y) y.textContent = String(new Date().getFullYear());
+
+    /* reveal on scroll (matches index) */
+    (function revealOnScroll(){
+      const cards = $$(".card"); if (!cards.length) return;
+      if (!prefersReduced && hasIO){
+        const io = new IntersectionObserver((entries)=>{
+          for (const e of entries){ if (e.isIntersecting){ e.target.classList.add("visible"); io.unobserve(e.target); } }
+        }, {root:null, rootMargin:"0px 0px -12%", threshold:0.08});
+        cards.forEach(el=>io.observe(el));
+      } else {
         const tick=()=>cards.forEach(el=>{
-          const r = el.getBoundingClientRect(); const vh = innerHeight||document.documentElement.clientHeight;
+          const r = el.getBoundingClientRect(), vh = innerHeight||document.documentElement.clientHeight;
           if (r.top < vh*0.92 && r.bottom > 0) el.classList.add("visible");
         });
         on(window,"scroll",()=>raf(tick),{passive:true}); on(window,"load",tick); tick();
       }
-
-      function tiltCards(){
-        if (prefersReduced) return;
-        $$(".card").forEach(card=>{
-          let rid=0;
-          const reset=()=>{ card.style.transform=""; };
-          on(card,"mousemove",(e)=>{
-            const r=card.getBoundingClientRect();
-            const x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
-            rid = raf(()=>{ card.style.transform=`perspective(900px) rotateX(${(0.5-y)*4}deg) rotateY(${(x-0.5)*6}deg)`; });
-          });
-          on(card,"mouseleave",reset);
-          on(card,"blur",reset,true);
-          on(card,"touchstart",reset,{passive:true});
-        });
-      }
-
-      function typesetSoon(delay=120){
-        const mj = window.MathJax; if (!mj) return;
-        setTimeout(()=>{ try{ mj.typeset && mj.typeset(); }catch(_){} }, delay);
-      }
-
-      setYear();
-      revealOnScroll();
-      tiltCards();
-      typesetSoon(250);
     })();
+
+    /* subtle tilt */
+    (function tilt(){
+      if (prefersReduced) return;
+      $$(".card").forEach(card=>{
+        const reset=()=>{ card.style.transform=""; };
+        on(card,"mousemove",(e)=>{
+          const r=card.getBoundingClientRect();
+          const x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+          raf(()=>{ card.style.transform=`perspective(900px) rotateX(${(0.5-y)*4}deg) rotateY(${(x-0.5)*6}deg)`; });
+        });
+        on(card,"mouseleave",reset); on(card,"blur",reset,true); on(card,"touchstart",reset,{passive:true});
+      });
+    })();
+
+    /* MathJax: gently re-typeset after reveal */
+    (function typesetSoon(delay=220){
+      const mj = window.MathJax; if (!mj) return;
+      setTimeout(()=>{ try{ mj.typeset && mj.typeset(); }catch(_){} }, delay);
+    })();
+
+    /* ===== TOC: smooth scroll + scroll-spy ===== */
+    const toc = $("#toc");
+    const chips = $$("#toc a");
+
+    function headerOffset(){
+      /* matches sticky tray top + safe area */
+      return Math.max(96, Math.min(innerHeight*0.14, 140));
+    }
+
+    function smoothTo(hash){
+      const id = hash.replace("#","");
+      const target = document.getElementById(id);
+      if (!target) return;
+      const top = target.getBoundingClientRect().top + window.scrollY - headerOffset();
+      window.scrollTo({ top, behavior:"smooth" });
+      /* accessibility focus without large outline jump */
+      target.setAttribute("tabindex","-1");
+      raf(()=>target.focus({preventScroll:true}));
+    }
+
+    /* click -> smooth scroll (and keep URL hash) */
+    on(toc,"click",(e)=>{
+      const a = e.target.closest("a[href^='#']");
+      if (!a) return;
+      e.preventDefault();
+      history.pushState(null,"",a.getAttribute("href"));
+      smoothTo(a.getAttribute("href"));
+    });
+
+    /* spy: highlight chip for the nearest section */
+    const sections = chips
+      .map(a => document.getElementById(a.getAttribute("href").slice(1)))
+      .filter(Boolean);
+
+    function setActive(id){
+      chips.forEach(a => a.classList.toggle("is-active", a.getAttribute("href").slice(1) === id));
+    }
+
+    if (hasIO){
+      const spy = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if (entry.isIntersecting){
+            setActive(entry.target.id);
+          }
+        });
+      }, { root:null, rootMargin:"-40% 0px -50% 0px", threshold:[0,0.25,0.5,1] });
+      sections.forEach(s => spy.observe(s));
+    } else {
+      const tick=()=>{
+        const y=scrollY+headerOffset()+1;
+        let current = sections[0]?.id;
+        sections.forEach(sec=>{
+          const top = sec.offsetTop, h = sec.offsetHeight;
+          if (y >= top && y < top + h) current = sec.id;
+        });
+        setActive(current);
+      };
+      on(window,"scroll",()=>raf(tick),{passive:true}); tick();
+    }
+
+    /* handle initial hash on load and hash changes */
+    if (location.hash){ setTimeout(()=>smoothTo(location.hash), 60); }
+    on(window,"hashchange",()=>smoothTo(location.hash));
+
+  })();
   </script>
 </body>
 </html>
