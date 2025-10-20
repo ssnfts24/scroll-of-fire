@@ -326,5 +326,64 @@
   renderRecent();
 })();
 </script>
+  <script>
+/* Card reveal + tilt (same behavior as index) */
+(function(){
+  "use strict";
+  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+  const raf = (fn) => (window.requestAnimationFrame||setTimeout)(fn,16);
+  const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const hasIO = "IntersectionObserver" in window;
+
+  // 1) Reveal on scroll: toggles .visible so CSS animates
+  function revealOnScroll(){
+    const cards = $$(".card"); if (!cards.length) return;
+    if (!prefersReduced && hasIO){
+      const io = new IntersectionObserver((entries)=>{
+        for (const e of entries){
+          if (e.isIntersecting){ e.target.classList.add("visible"); io.unobserve(e.target); }
+        }
+      }, {root:null, rootMargin:"0px 0px -12%", threshold:0.08});
+      cards.forEach(el=>io.observe(el));
+      return;
+    }
+    const tick=()=>cards.forEach(el=>{
+      const r=el.getBoundingClientRect(); const vh=innerHeight||document.documentElement.clientHeight;
+      if (r.top < vh*0.92 && r.bottom > 0) el.classList.add("visible");
+    });
+    addEventListener("scroll", ()=>raf(tick), {passive:true});
+    addEventListener("load", tick);
+    tick();
+  }
+
+  // 2) Tilt on hover (disabled for reduced motion)
+  function tiltCards(){
+    if (prefersReduced) return;
+    $$(".card").forEach(card=>{
+      let rid=0;
+      const reset=()=>{ card.style.transform=""; };
+      card.addEventListener("mousemove", (e)=>{
+        const r=card.getBoundingClientRect();
+        const x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+        rid = raf(()=>{ card.style.transform=`perspective(900px) rotateX(${(0.5-y)*4}deg) rotateY(${(x-0.5)*6}deg)`; });
+      });
+      ["mouseleave","blur","touchstart"].forEach(ev=>card.addEventListener(ev, reset, {passive:true}));
+    });
+  }
+
+  // 3) Optional warm-up like index.html (prevents heavy glows on first paint)
+  document.body.classList.add('performance-warming');
+  const lowCore = (navigator.hardwareConcurrency||4) <= 4;
+  const saveData = navigator.connection && navigator.connection.saveData;
+  if (lowCore || saveData) document.body.classList.add('perf-fast');
+  setTimeout(()=>document.body.classList.remove('performance-warming'), 900);
+
+  // Boot
+  document.addEventListener("DOMContentLoaded", ()=>{
+    revealOnScroll();
+    tiltCards();
+  });
+})();
+  </script>
 </body>
 </html>
