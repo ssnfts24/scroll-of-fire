@@ -834,3 +834,111 @@ body.bg-grid-heavy{
   0%,100%{ filter: drop-shadow(0 0 4px #00e6ff) drop-shadow(0 0 12px #00aaff) }
   50%     { filter: drop-shadow(0 0 8px #00ffff) drop-shadow(0 0 24px #66ffff) }
 }
+
+
+
+
+
+
+
+/* ===================== SoF — Final Nav & Equation polish ===================== */
+
+/* --- Header quick actions: tighter rhythm + mobile scroll --- */
+.nav{ gap:12px }
+.quick{
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+  max-width:100%; overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-gutter:stable;
+}
+.quick a,.quick button{ height:34px; line-height:32px; padding:0 12px }
+@media (max-width:760px){
+  .brand h1{ font-size:clamp(16px,4.2vw,20px) }
+  .quick{ gap:8px }
+}
+
+/* --- Primary tabs nav: structure matches <nav class="tabs"><a class="tab">… --- */
+.tabs{ position:relative; display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:8px 0 14px }
+.tabs .tab{
+  display:inline-block; padding:8px 12px; border:1px solid var(--line);
+  border-radius:10px; text-decoration:none; font:600 14px/1 Inter;
+  background:rgba(255,255,255,.03); color:var(--ink);
+  transition:border-color var(--dur-1) var(--ease), background var(--dur-1) var(--ease), transform var(--dur-1) var(--ease);
+}
+.tabs .tab:hover{ border-color:#3a3a44; transform:translateY(-1px); background:rgba(255,255,255,.05) }
+.tabs .tab[aria-current="page"]{ border-color:#3a3a44; background:rgba(255,255,255,.06) }
+.tabs .tab-ink{
+  position:absolute; left:var(--ink-x,0px); width:var(--ink-w,0px); height:2px; bottom:-6px;
+  background:linear-gradient(90deg,#7af3ff,#f3c97a);
+  border-radius:2px; box-shadow:0 0 12px rgba(122,243,255,.45); opacity:.9;
+  transition:left .25s var(--ease), width .25s var(--ease), opacity .25s var(--ease);
+}
+@media (max-width:720px){
+  .tabs{ overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-gutter:stable both-edges; padding-bottom:4px }
+}
+
+/* Keyboard focus parity for tabs */
+.tabs .tab:focus-visible{
+  outline:2px solid var(--ring);
+  box-shadow:0 0 0 4px var(--ring-outer), 0 0 0 1px var(--ring-inset) inset;
+}
+
+/* Anchor targets account for sticky header height */
+:target{ scroll-margin-top: clamp(60px, 10vh, 100px) }
+
+/* --- Equation animations for ALL .eq (subtle by default) --- */
+.eq{
+  /* existing visuals kept; we only add gentle motion layers */
+  --eq-shimmer-speed: 7s;
+  --eq-pulse-speed: 9.5s;
+  --eq-shimmer-opacity: .65;
+}
+.eq::after{ transition:opacity .2s var(--ease) } /* already present; ensure smoothness */
+
+.eq .eq-scroll{
+  position:relative;
+  /* light shimmer */
+  --_w: 60%;
+}
+.eq .eq-scroll::after{
+  content:""; position:absolute; inset:0 0 0 -60%; width:var(--_w);
+  background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.06) 45%, rgba(255,255,255,.11) 50%, rgba(255,255,255,.06) 55%, transparent 100%);
+  filter:blur(1px); opacity:0; pointer-events:none;
+}
+@media (prefers-reduced-motion:no-preference){
+  @keyframes sofShimmer{ 0%{transform:translateX(-110%); opacity:0} 10%{opacity:var(--eq-shimmer-opacity)} 60%{opacity:var(--eq-shimmer-opacity)} 100%{transform:translateX(210%); opacity:0} }
+  .eq .eq-scroll::after{ animation: sofShimmer var(--eq-shimmer-speed) ease-in-out infinite }
+}
+
+/* coherence “breath” around the frame */
+@media (prefers-reduced-motion:no-preference){
+  @keyframes sofEqPulse{
+    0%{ box-shadow:inset 0 0 20px rgba(255,200,107,.04), 0 0 0 0 rgba(122,243,255,0) }
+    50%{ box-shadow:inset 0 0 26px rgba(255,200,107,.06), 0 0 22px 0 rgba(122,243,255,.16) }
+    100%{ box-shadow:inset 0 0 20px rgba(255,200,107,.04), 0 0 0 0 rgba(122,243,255,0) }
+  }
+  .eq{ animation: sofEqPulse var(--eq-pulse-speed) ease-in-out infinite }
+}
+
+/* Stronger presence when expanded */
+.eq--expanded{ --eq-shimmer-speed: 6s; --eq-pulse-speed: 8s; --eq-shimmer-opacity:.8 }
+.eq--expanded .eq-scroll::after{ filter:blur(0.75px) }
+
+/* Respect motion/data prefs */
+@media (prefers-reduced-motion:reduce){
+  .eq, .eq .eq-scroll::after{ animation:none !important }
+}
+@media (prefers-reduced-data:reduce){
+  .eq .eq-scroll::after{ display:none !important }
+}
+
+/* --- Eq.0 hero treatment stays special but syncs with defaults --- */
+#eq0 .eq{ animation-duration: 8.2s } /* a touch slower than the rest */
+#eq0 .eq .eq-scroll::after{ opacity:.9 } /* slightly brighter trail */
+
+/* --- Hero control buttons: consistent height with tabs/quick --- */
+.hero-btn{ height:34px; line-height:32px; padding:0 10px }
+
+/* --- Tiny fix: keep card titles tight + consistent --- */
+.card h2:first-child,.card h3:first-child{ margin-top:2px }
+
+/* --- Optional: stabilize tab ink after fonts load --- */
+@font-face{ font-family:Inter; font-display:swap; src:local("☺︎") } /* noop, but triggers font-display cascade */
