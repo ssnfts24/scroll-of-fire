@@ -188,13 +188,13 @@
 
     <!-- Primary nav -->
     <nav class="tabs" aria-label="Primary sections">
-      <a class="tab tab--primary" href="theory.html" role="tab">📘 Theory</a>
-      <a class="tab tab--primary" href="teach.html" role="tab">✨ Manifest</a>
-      <a class="tab" href="#explore" role="tab" aria-controls="explore">Explore</a>
-      <a class="tab" href="#canon" role="tab" aria-controls="canon">Canon</a>
-      <a class="tab" href="#links" role="tab" aria-controls="links">Links</a>
-      <a class="tab" href="#integrity" role="tab" aria-controls="integrity">Integrity</a>
-      <a class="tab" href="#provenance" role="tab" aria-controls="provenance">Provenance</a>
+      <a class="tab tab--primary" href="theory.html">📘 Theory</a>
+      <a class="tab tab--primary" href="teach.html">✨ Manifest</a>
+      <a class="tab" href="#explore" aria-controls="explore" data-section="explore">Explore</a>
+      <a class="tab" href="#canon" aria-controls="canon" data-section="canon">Canon</a>
+      <a class="tab" href="#links" aria-controls="links" data-section="links">Links</a>
+      <a class="tab" href="#integrity" aria-controls="integrity" data-section="integrity">Integrity</a>
+      <a class="tab" href="#provenance" aria-controls="provenance" data-section="provenance">Provenance</a>
       <span class="tab-ink" aria-hidden="true"></span>
     </nav>
 
@@ -571,30 +571,88 @@ Status: Verified
       }
       attachEqExpand();
 
-      /* 8) Tabs ink bar + internal section tabs behavior */
+      /* 7.5) Extend equation animations beyond Eq.0 (respect reduced motion) */
+      const prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!prefersReducedMotion){
+        $$('.eq').forEach((el)=>{
+          if (!el.classList.contains('eq-shimmer')) el.classList.add('eq-shimmer');
+        });
+        ['#eq6', '#eq9'].forEach(id=>{
+          const card = document.querySelector(`${id}`)?.closest('.card');
+          const block = card && card.querySelector('.eq');
+          if (block && !block.classList.contains('eq-pulse')) block.classList.add('eq-pulse');
+        });
+      }
+
+      /* 8) Tabs ink bar + section awareness (click + hashchange + scroll) */
       const tabs = $('.tabs');
       if (tabs){
         const ink = tabs.querySelector('.tab-ink');
+        const allTabs = Array.from(tabs.querySelectorAll('.tab'));
+        const sectionTabs = allTabs.filter(a => (a.getAttribute('href')||'').startsWith('#'));
+        const sections = sectionTabs
+          .map(a => ({ a, id: a.getAttribute('href').slice(1), el: document.getElementById(a.getAttribute('href').slice(1)) }))
+          .filter(x => !!x.el);
+
         const setInk = (el)=>{
+          if (!el) return;
           const r = el.getBoundingClientRect();
           const pr = tabs.getBoundingClientRect();
-          const x = r.left - pr.left; ink.style.setProperty('--ink-x', x+'px');
-          ink.style.setProperty('--ink-w', r.width+'px');
-          tabs.querySelectorAll('.tab').forEach(a=>a.removeAttribute('aria-current'));
+          ink.style.setProperty('--ink-x', (r.left - pr.left) + 'px');
+          ink.style.setProperty('--ink-w', r.width + 'px');
+          allTabs.forEach(a=>a.removeAttribute('aria-current'));
           el.setAttribute('aria-current','page');
         };
-        tabs.querySelectorAll('.tab').forEach(a=>{
+
+        // Click: smooth-scroll for hash links, normal nav for external
+        allTabs.forEach(a=>{
           a.addEventListener('click', (e)=>{
-            const href = a.getAttribute('href')||'#';
-            if (href.startsWith('#')){ e.preventDefault(); document.querySelector(href)?.scrollIntoView({behavior: (matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth')}); }
-            setInk(a);
+            const href = a.getAttribute('href') || '#';
+            if (href.startsWith('#')){
+              e.preventDefault();
+              document.querySelector(href)?.scrollIntoView({behavior:(matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth')});
+              history.pushState(null, '', href);
+              setInk(a);
+            } else {
+              setInk(a);
+            }
           });
         });
-        setTimeout(()=> setInk(tabs.querySelector('.tab[aria-current="page"]') || tabs.querySelector('.tab')), 0);
-        window.addEventListener('resize', ()=> {
-          const current = tabs.querySelector('.tab[aria-current="page"]') || tabs.querySelector('.tab');
-          current && setInk(current);
+
+        // Hashchange: deep links and back/forward
+        window.addEventListener('hashchange', ()=>{
+          const h = location.hash.replace('#','');
+          const match = sectionTabs.find(a => a.dataset.section === h || (a.getAttribute('href')||'').slice(1) === h);
+          if (match) setInk(match);
         });
+
+        // Scroll spy: highlight nearest section
+        const spy = ()=>{
+          let active = null;
+          const y = window.scrollY + 140; // header offset
+          for (const s of sections){
+            const top = s.el.getBoundingClientRect().top + window.scrollY;
+            if (top <= y) active = s.a;
+          }
+          if (active) setInk(active);
+        };
+        window.addEventListener('scroll', throttle(spy, 100), {passive:true});
+        window.addEventListener('resize', debounce(()=>setInk(tabs.querySelector('.tab[aria-current="page"]') || allTabs[0]), 120), {passive:true});
+
+        function throttle(fn, ms){ let t=0; return ()=>{ const n=Date.now(); if (n-t>ms){ t=n; fn(); } }; }
+        function debounce(fn, ms){ let id; return ()=>{ clearTimeout(id); id=setTimeout(fn, ms); }; }
+
+        // Initial paint: honor hash
+        setTimeout(()=>{
+          if (location.hash){
+            const h = location.hash.slice(1);
+            const match = sectionTabs.find(a => a.dataset.section === h || (a.getAttribute('href')||'').slice(1) === h);
+            setInk(match || allTabs[0]);
+          } else {
+            setInk(allTabs[0]);
+          }
+          spy();
+        }, 0);
       }
 
       /* 9) On-page search (client-only, simple highlight jump) */
@@ -609,7 +667,6 @@ Status: Verified
             const q = search.value.trim();
             if (!q) return;
             const sel = document.createElement('mark'); sel.textContent = q; sel.style.background = 'rgba(122,243,255,.25)';
-            // naive first hit scroll
             const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
             let node, found=false;
             while(node = walker.nextNode()){
@@ -635,4 +692,4 @@ Status: Verified
     })();
   </script>
 </body>
-</html>
+    </html>
