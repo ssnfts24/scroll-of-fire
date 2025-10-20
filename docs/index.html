@@ -1,40 +1,351 @@
-
 <!doctype html>
+<html lang="en" class="sof">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <title>Scroll of Fire — Codex of Reality</title>
 
-<html lang="en" dir="ltr">      
-<head>      
-  <!-- Resolve all relative URLs from the project root on GitHub Pages -->      
-  <base href="https://ssnfts24.github.io/scroll-of-fire/">      
-  <script>      
-    /* In GitHub repo preview (github.com), remove <base> so relative paths still work. */      
-    if (location.hostname === "github.com") {      
-      const b = document.querySelector("base"); if (b) b.remove();      
-    }      
-  </script>    <meta charset="utf-8" />      
-  <title>Scroll of Fire — Codex of Reality</title>      
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">    <!-- Theme -->    <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">      
-  <meta name="color-scheme" content="dark">    <!-- SEO -->    <meta name="description" content="The Scroll of Fire — a living Codex of Reality by Aaron Paul Laird (Scribe of Circuits): resonance physics, sacred geometry, language, memory, living technology, and ethics in one harmonic architecture.">      
-  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/"/>    <!-- Open Graph -->    <meta property="og:site_name" content="Scroll of Fire">      
-  <meta property="og:title" content="Scroll of Fire — Codex of Reality">      
-  <meta property="og:description" content="A living architecture of resonance — core equations 0–17, with dedicated Theory and Manifest pages.">      
-  <meta property="og:type" content="website">      
-  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/">      
-  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">      
-  <meta property="og:image:alt" content="Scroll of Fire — Codex of Reality banner">    <!-- Twitter -->    <meta name="twitter:card" content="summary_large_image">      
-  <meta name="twitter:title" content="Scroll of Fire — Codex of Reality">      
-  <meta name="twitter:description" content="The Scroll of Fire (Codex of Reality) by Aaron Paul Laird — resonance, intention, light, consciousness, Source.">      
-  <meta name="twitter:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">    <!-- JSON-LD -->    <script type="application/ld+json">      
-  {      
-    "@context":"https://schema.org",      
-    "@type":"CreativeWork",      
-    "name":"Scroll of Fire — Codex of Reality",      
-    "alternateName":"Codex of Reality",      
-    "author":{"@type":"Person","name":"Aaron Paul Laird","alternateName":"Scribe of Circuits"},      
-    "description":"A living architecture of resonance — where physics, consciousness, sacred geometry, memory, language, living technology, and ethics converge into harmonic law.",      
-    "keywords":"Scroll of Fire, Codex of Reality, Resonant Physics, Sacred Geometry, Consciousness, Tesla Type-7, AHHAVA, Remnant, Witness, Ψ0, 3-6-9",      
-    "license":"https://creativecommons.org/licenses/by-nc/4.0/",      
-    "url":"https://ssnfts24.github.io/scroll-of-fire/",      
-    "hasPart":[      
+  <!-- Primary stylesheet (yours) -->
+  <link rel="stylesheet" href="/css/codex.css" />
+
+  <!-- Critical micro-fixes (safe, minimal, opinionated) -->
+  <style>
+    /* 0) Safety: neutralize any late overrides that broke the page */
+    body{background-color:var(--bg)}
+    /* If someone appended heavy grid to body, gate it behind .bg-grid-heavy */
+    body:not(.bg-grid-heavy){background-image:
+      radial-gradient(1200px 600px at 50% -5%, rgba(122,243,255,.05), transparent 60%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.02) 0 2px, transparent 2px 12px),
+      radial-gradient(1800px 900px at 50% -10%, #13131a 20%, var(--bg) 70%)
+    }
+    /* 1) Ensure grid/tiles render clean even if CSS races */
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+    .col-12{grid-column:span 12}.col-6{grid-column:span 6}.col-4{grid-column:span 4}
+    @media (max-width:980px){.col-6,.col-4{grid-column:span 12}}
+    /* 2) Tile baseline */
+    .tile{display:block;text-decoration:none;border:1px solid var(--line);border-radius:12px;
+      padding:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005))}
+    .tile h4{margin:6px 0 4px;color:#fff}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--line);
+      border-radius:999px;font-size:var(--fs-0)}
+    /* 3) Hero image containment fallback (many “messed up” issues were this) */
+    .hero img{display:block;width:100%;height:auto;aspect-ratio:var(--hero-aspect,16/9);object-fit:cover}
+    @supports not (aspect-ratio:1){.hero img{height:clamp(220px,38vw,520px)}}
+    /* 4) Mini-TOC sensible defaults */
+    .mini-toc{position:sticky;top:calc(12px + var(--safe-top));align-self:start;border:1px solid #222633;
+      border-radius:12px;padding:10px;background:linear-gradient(180deg,#0e0e14,#0b0b10)}
+    .mini-toc a{display:block;padding:6px 8px;border-radius:8px}
+    /* 5) Equation popout z-fix */
+    .eq--expanded{position:fixed;inset:4svh 4svw;z-index:10000}
+    /* 6) Prevent double focus ring bursts */
+    .card:focus-within,.eq:focus-within{outline-offset:2px}
+  </style>
+</head>
+
+<body>
+  <!-- Optional ambient “laser HUD” overlay -->
+  <div class="laser-grid" aria-hidden="true"></div>
+
+  <!-- Sticky header -->
+  <header class="site" role="banner">
+    <nav class="nav" aria-label="Primary">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <h1 class="kicker">Scroll of Fire</h1>
+      </div>
+      <div class="quick">
+        <a href="#technology" class="cta">Technology</a>
+        <a href="#constants" class="cta">Constants</a>
+        <button id="toggleSimple" class="cta" type="button" aria-pressed="false">
+          Simple Mode
+        </button>
+        <button id="toggleGrid" class="cta" type="button" aria-pressed="false" title="Toggle HUD grid">HUD</button>
+        <button id="openPalette" class="cta" type="button">⌘K</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="wrap" id="top">
+    <!-- Title -->
+    <h1 class="title laser">Codex of Reality</h1>
+    <p class="subtitle">A living, breathing reference for cosmotech — with proofs, constants, and field notes.</p>
+
+    <!-- Hero -->
+    <section class="hero hero--starfield star-scan pulse" data-fit="cover" aria-label="Hero">
+      <img src="https://images.unsplash.com/photo-1520975922235-2308c0f0244b?q=80&w=1600&auto=format&fit=crop"
+           alt="Starfield and luminous structures" />
+      <div class="hero-pulse" aria-hidden="true"></div>
+
+      <div class="hero-ui" role="group" aria-label="Hero controls">
+        <button class="hero-btn" id="zoomHero" type="button" aria-pressed="false">Zoom</button>
+        <button class="hero-btn" id="fitContain" type="button">Contain</button>
+        <button class="hero-btn" id="fitCover" type="button">Cover</button>
+      </div>
+
+      <!-- subtle HUD line -->
+      <div class="sigil-line" aria-hidden="true"></div>
+    </section>
+
+    <div class="divider sweep" aria-hidden="true"></div>
+
+    <!-- Main grid: aside TOC + content -->
+    <div class="grid" style="align-items:start">
+      <!-- Sticky TOC -->
+      <aside class="col-4">
+        <nav class="mini-toc" aria-label="On this page">
+          <strong class="kicker">Sections</strong>
+          <a href="#overview">Overview</a>
+          <a href="#technology">Technology</a>
+          <a href="#equations">Equations</a>
+          <a href="#constants">Constants</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+      </aside>
+
+      <!-- Content -->
+      <section class="col-8">
+        <!-- Overview tiles -->
+        <article id="overview" class="card visible card--neon">
+          <span class="strap">Overview</span>
+          <h2>Compose your reality engine</h2>
+          <p class="meta">Pick a starting path. Everything is modular, theme-aware, and motion-safe by default.</p>
+
+          <div class="grid2" style="margin-top:10px">
+            <a class="tile" href="#technology">
+              <span class="badge">◆ Getting started</span>
+              <h4>Core Technology</h4>
+              <p>Layouts, state, hero mechanics, cards, motion safety, and perf modes.</p>
+            </a>
+            <a class="tile" href="#equations">
+              <span class="badge badge--gold">◆ Math layer</span>
+              <h4>Equations</h4>
+              <p>Edge-fade, snap scroll, pop-out, shimmer/pulse (opt-in), and inline overflow guards.</p>
+            </a>
+          </div>
+
+          <div class="grid2" style="margin-top:14px">
+            <a class="tile" href="#constants">
+              <span class="badge">◆ Data tables</span>
+              <h4>Constants</h4>
+              <p>Responsive tables with mobile scrollers, consistent typography, and print-safe styles.</p>
+            </a>
+            <a class="tile" href="#faq">
+              <span class="badge">◆ Docs & FAQ</span>
+              <h4>Knowledge</h4>
+              <p>Pattern library, tips, and best practices for the Codex in the field.</p>
+            </a>
+          </div>
+        </article>
+
+        <div class="goldline sweep" aria-hidden="true"></div>
+
+        <!-- Technology -->
+        <article id="technology" class="card">
+          <h2>Technology <a class="anchor" href="#technology">#</a></h2>
+          <p>Everything here is <span class="tip" data-tip="Respects reduced-motion & reduced-data">motion-aware</span>, grid-native, and tuned for small devices.</p>
+
+          <details class="codex">
+            <summary>Grid primer</summary>
+            <ul class="list">
+              <li>12-col grid, fluid; collapse to single column under 980px.</li>
+              <li>Use <code>.col-*</code> helpers or custom CSS grid areas.</li>
+            </ul>
+          </details>
+
+          <details class="codex">
+            <summary>Perf toggles</summary>
+            <p>Set <code>body.classList.toggle('perf-fast')</code> or <code>performance-warming</code> to soften effects on low-end devices.</p>
+          </details>
+
+          <a href="#equations" class="cta">Jump to equations</a>
+        </article>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <!-- Equations -->
+        <article id="equations" class="card">
+          <h2>Equations <a class="anchor" href="#equations">#</a></h2>
+          <p class="hint">Tap/Click to pop out. Drag horizontally. Long inline math will safely scroll.</p>
+
+          <div class="eq eq-shimmer eq-pulse" tabindex="0" role="group" aria-label="Equation block">
+            <div class="eq-scroll">
+              <!-- Drop your MathJax content here -->
+              <mjx-container display="block">E = mc^2 — plus whatever glyphs you render.</mjx-container>
+            </div>
+          </div>
+          <button class="cta" data-eq-expand>Expand equation</button>
+
+          <p class="eq-note">Equations hidden in Simple Mode.</p>
+        </article>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <!-- Constants -->
+        <article id="constants" class="card">
+          <h2>Fundamental Constants <a class="anchor" href="#constants">#</a></h2>
+
+          <div class="scroller">
+            <table>
+              <thead><tr><th>Constant</th><th>Symbol</th><th>Value</th><th>Units</th></tr></thead>
+              <tbody>
+                <tr><td>Speed of light</td><td>c</td><td>299 792 458</td><td>m·s⁻¹</td></tr>
+                <tr><td>Gravitational constant</td><td>G</td><td>6.67430×10⁻¹¹</td><td>m³·kg⁻¹·s⁻²</td></tr>
+                <tr><td>Planck constant</td><td>h</td><td>6.62607015×10⁻³⁴</td><td>J·s</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="tabs" style="margin-top:12px">
+            <div class="tab-list" role="tablist" aria-label="Constant formats">
+              <a href="#tab-si" class="tab" aria-current="page" role="tab" aria-controls="tab-si">SI</a>
+              <a href="#tab-cgs" class="tab" role="tab" aria-controls="tab-cgs">CGS</a>
+              <span class="tab-ink" aria-hidden="true"></span>
+            </div>
+            <div id="tab-si" class="tab-panel" role="tabpanel">
+              <p class="meta">SI values as of CODATA 2018/2019 defs.</p>
+            </div>
+            <div id="tab-cgs" class="tab-panel" role="tabpanel" hidden>
+              <p class="meta">CGS conversions shown here.</p>
+            </div>
+          </div>
+        </article>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <!-- FAQ -->
+        <article id="faq" class="card card--teach">
+          <span class="strap">Docs</span>
+          <h2>FAQ <a class="anchor" href="#faq">#</a></h2>
+          <details class="codex" open>
+            <summary>How do I enable Simple Mode?</summary>
+            <p>Use the button in the header; the page toggles <code>.simple-on</code> on <code>&lt;body&gt;</code>.</p>
+          </details>
+          <details class="codex">
+            <summary>How do I disable flashy bits?</summary>
+            <p>Add <code>prefers-reduced-motion: reduce</code> in your OS; we respect it. Or use <code>.perf-fast</code>.</p>
+          </details>
+        </article>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- Back to top -->
+  <button class="to-top" id="toTop" type="button" aria-label="Back to top">↑ Top</button>
+
+  <!-- Command Palette shell -->
+  <div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel">
+    <div class="panel">
+      <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette" />
+      <ul id="palList"><li>Jump to Technology</li><li>Open Equations</li><li>Show Constants</li></ul>
+    </div>
+  </div>
+
+  <!-- Tiny, focused JS (no deps) -->
+  <script>
+    (function(){
+      const $ = (s, r=document) => r.querySelector(s);
+      const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+
+      /* 1) Reveal-on-scroll for .card */
+      const io = ('IntersectionObserver' in window) ? new IntersectionObserver((entries)=>{
+        for(const e of entries){ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }
+      }, {rootMargin: '0px 0px -10% 0px'}) : null;
+      io && $$('.card').forEach(el => io.observe(el));
+
+      /* 2) Back to top */
+      const toTop = $('#toTop');
+      const onScroll = () => { (window.scrollY > 360) ? toTop.classList.add('show') : toTop.classList.remove('show'); };
+      window.addEventListener('scroll', onScroll, {passive:true});
+      toTop.addEventListener('click', () => window.scrollTo({top:0, behavior: (matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth')}));
+
+      /* 3) Simple Mode toggle */
+      const btnSimple = $('#toggleSimple');
+      btnSimple?.addEventListener('click', () => {
+        const on = document.body.classList.toggle('simple-on');
+        btnSimple.setAttribute('aria-pressed', on);
+      });
+
+      /* 4) HUD grid toggle */
+      const btnGrid = $('#toggleGrid');
+      btnGrid?.addEventListener('click', () => {
+        const on = document.body.classList.toggle('bg-grid-heavy');
+        btnGrid.setAttribute('aria-pressed', on);
+      });
+
+      /* 5) Palette */
+      const pal = $('#palette'), palInput = $('#palInput');
+      $('#openPalette')?.addEventListener('click', () => { pal.classList.add('open'); palInput.focus(); });
+      window.addEventListener('keydown', (e)=>{
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase()==='k'){ e.preventDefault(); pal.classList.add('open'); palInput.focus(); }
+        if (e.key === 'Escape' && pal.classList.contains('open')) pal.classList.remove('open');
+      });
+      pal?.addEventListener('click', (e)=>{ if(e.target===pal) pal.classList.remove('open'); });
+
+      /* 6) Hero controls */
+      const hero = $('.hero');
+      $('#fitContain')?.addEventListener('click', ()=> hero?.setAttribute('data-fit','contain'));
+      $('#fitCover')?.addEventListener('click', ()=> hero?.setAttribute('data-fit','cover'));
+      $('#zoomHero')?.addEventListener('click', (e)=>{
+        const on = hero?.classList.toggle('is-zoomed');
+        e.currentTarget.setAttribute('aria-pressed', !!on);
+      });
+
+      /* 7) Equation pop-out */
+      $$('[data-eq-expand]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const eq = btn.closest('.card')?.querySelector('.eq');
+          if(!eq) return;
+          const clone = eq.cloneNode(true);
+          clone.classList.add('eq--expanded');
+          const close = document.createElement('button');
+          close.className = 'eq-close';
+          close.type = 'button';
+          close.textContent = 'Close';
+          close.addEventListener('click', ()=> clone.remove());
+          clone.appendChild(close);
+          document.body.appendChild(clone);
+        });
+      });
+
+      /* 8) Tabs ink bar (no layout thrash) */
+      const tabs = $('.tabs');
+      if (tabs){
+        const ink = tabs.querySelector('.tab-ink');
+        const setInk = (el)=>{
+          const r = el.getBoundingClientRect();
+          const pr = tabs.getBoundingClientRect();
+          const x = r.left - pr.left; ink.style.setProperty('--ink-x', x+'px');
+          ink.style.setProperty('--ink-w', r.width+'px');
+          tabs.querySelectorAll('.tab').forEach(a=>a.removeAttribute('aria-current'));
+          el.setAttribute('aria-current','page');
+          tabs.querySelectorAll('.tab-panel').forEach(p=>p.hidden = p.id !== el.getAttribute('href').slice(1));
+        };
+        tabs.querySelectorAll('.tab').forEach(a=>{
+          a.addEventListener('click', (e)=>{ e.preventDefault(); setInk(a); history.replaceState(null,'',a.getAttribute('href')); });
+        });
+        // init to first tab
+        setInk(tabs.querySelector('.tab') || tabs.querySelector('a'));
+        window.addEventListener('resize', ()=> {
+          const current = tabs.querySelector('.tab[aria-current="page"]') || tabs.querySelector('.tab');
+          current && setInk(current);
+        });
+      }
+
+      /* 9) Respect reduced motion for smooth scroll triggers */
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches){
+        document.documentElement.style.scrollBehavior = 'auto';
+      }
+    })();
+  </script>
+
+  <footer class="footer">
+    © <span id="y"></span> Scroll of Fire. All constants are provisional until observed.
+  </footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>    "hasPart":[      
       {"@type":"WebPage","name":"Theory","url":"https://ssnfts24.github.io/scroll-of-fire/theory.html"},      
       {"@type":"WebPage","name":"Manifest (Practice)","url":"https://ssnfts24.github.io/scroll-of-fire/teach.html"},      
       {"@type":"WebPage","name":"Guide","url":"https://ssnfts24.github.io/scroll-of-fire/guide.html"},      
