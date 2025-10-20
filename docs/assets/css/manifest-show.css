@@ -1,0 +1,143 @@
+/* manifest-show.css
+   Adds mobile-safe layout, touch-scroll lanes for pill rows, larger tap targets,
+   and visual polish for the Manifest / Teach studio page.
+   Designed to layer on top of codex.css and teach.css.
+*/
+
+/* --- Base helpers --- */
+:root{
+  --pill-gap: 10px;
+  --pill-minw: 84px;
+  --touch-pad: 12px;
+  --muted-2: #a8a29e;
+  --accent: #7af3ff;
+  --accent-2: #f3c97a;
+}
+
+/* Ensure the lab header/tab area is always visible & scrollable on small screens */
+.pill-tabs {
+  display:flex;
+  gap:var(--pill-gap);
+  align-items:center;
+  padding:10px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none; /* hide firefox scrollbar */
+}
+.pill-tabs::-webkit-scrollbar{ height:8px; }
+.pill-tabs::-webkit-scrollbar-thumb{ background:rgba(122,243,255,.06); border-radius:999px; }
+
+/* Pill/button styles — larger, friendlier for touch */
+.pill, .lab-btn, .carrier-btn, .carrier-btn[role="radio"] {
+  min-width: var(--pill-minw);
+  padding: .7rem .9rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.06);
+  background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00));
+  color: inherit;
+  font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  touch-action: manipulation;
+}
+
+/* Make pill active states more visible */
+.pill.active, .pill[aria-selected="true"], .pill[aria-pressed="true"],
+.lab-btn.primary, .lab-btn[aria-pressed="true"] {
+  box-shadow: 0 10px 30px rgba(122,243,255,.08), inset 0 -4px 14px rgba(0,0,0,.18);
+  border-color: rgba(122,243,255,.22);
+  background: linear-gradient(180deg, rgba(122,243,255,.045), rgba(122,243,255,.01));
+}
+
+/* Ensure horizontal lanes of many buttons remain scrollable on small screens */
+.lab-row, .lab-row[role="group"], .badges, .pill-tabs, .chip-lane, .lab-row[aria-live] {
+  display:flex;
+  gap:8px;
+  align-items:center;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:6px;
+}
+.lab-row::-webkit-scrollbar, .chip-lane::-webkit-scrollbar { height:8px; }
+.lab-row::-webkit-scrollbar-thumb, .chip-lane::-webkit-scrollbar-thumb {
+  background: rgba(122,243,255,.05);
+  border-radius:999px;
+}
+
+/* Make each scroll lane items not shrink */
+.lab-row > *, .chip-lane > * { flex: 0 0 auto; }
+
+/* Inputs / textareas — larger and full-width on small */
+.lab-input, textarea, input[type="number"], input[type="text"], select {
+  padding: .65rem .8rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.02);
+  min-height: 44px;
+  width:100%;
+  box-sizing:border-box;
+}
+
+/* Ledger top row: wrap elegantly on narrow screens */
+.ledger-actions { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.ledger-actions > * { flex: 0 1 auto; min-width: 40px; }
+
+/* Table responsiveness */
+.table-wrap { overflow:auto; -webkit-overflow-scrolling:touch; border-radius:8px; }
+#ledgerTable { width:100%; min-width:700px; border-collapse:collapse; }
+
+/* Larger hit target for small-screen buttons */
+@media (max-width:720px) {
+  :root { --pill-minw: 88px; --touch-pad: 14px; }
+  .pill, .lab-btn { padding: .9rem 1rem; font-size: 1rem; }
+  .pill-tabs { gap:12px; padding:12px; }
+  .ring { width:68px; height:68px; }
+  .ring svg { width:60px; height:60px; }
+}
+
+/* Disable heavy 3D tilt transforms on small mobile devices to avoid jank */
+@media (max-width:900px) {
+  .card { transform:none !important; transition:none !important; }
+  .card.visible { opacity:1; transform:none; }
+  .hero img { object-position:center top; }
+}
+
+/* Focus outlines for keyboard users */
+.user-is-tabbing .pill:focus, .user-is-tabbing .lab-btn:focus, .user-is-tabbing input:focus, .user-is-tabbing textarea:focus {
+  outline: 3px solid rgba(122,243,255,.14);
+  outline-offset: 3px;
+  border-radius:10px;
+}
+
+/* Small showy but light-weight header shadow */
+.lab-sticky { box-shadow: 0 6px 34px rgba(3,6,12,.5); }
+
+/* subtle gradient for ring and controls */
+.ring-bg { fill: none; stroke: rgba(255,255,255,.03); stroke-width:10; }
+.ring-fg { fill:none; stroke: url(#ringGrad); stroke-width:8; stroke-linecap:round; transition: stroke-dashoffset .24s linear; }
+
+/* chip lane tokens (Phrase Tuner) */
+.chip-lane { gap:6px; padding:8px 6px; border-radius:10px; background: linear-gradient(180deg, rgba(255,255,255,.01), rgba(255,255,255,.002)); }
+.chip { display:inline-flex; align-items:center; gap:8px; padding:.35rem .6rem; border-radius:999px; border:1px solid rgba(255,255,255,.04); background: rgba(255,255,255,.02); font-weight:600; }
+
+/* coaches and hints */
+.hint, .meta, .tiny { color: var(--muted-2); font-size: .95rem; line-height:1.3; }
+
+/* Badge visible state */
+.badge { padding:.25rem .45rem; border-radius:8px; border:1px solid rgba(255,255,255,.04); display:inline-block; background:transparent; }
+.badge.unlit { opacity:.5; filter:grayscale(.35); }
+
+/* small devices: vertical stacking of quickstart steps */
+@media (max-width:640px) {
+  .grid { display:block; }
+  .col-4 { width:100%; margin-bottom:10px; }
+  .lab-top .pill-tabs { padding:8px 6px; }
+  .key-hint { font-size:.92rem; color:var(--muted-2); }
+}
+
+/* Accessibility: increase contrast where needed */
+@media (prefers-contrast: more) {
+  .pill, .lab-btn { border-color: rgba(255,255,255,.12); }
+}
