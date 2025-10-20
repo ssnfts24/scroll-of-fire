@@ -1,3 +1,4 @@
+
 /* ======================================================================
    Scroll of Fire — Codex of Reality
    Global Stylesheet (codex.css)
@@ -83,6 +84,64 @@ body::after { background:radial-gradient(760px 380px at 85% 10%, var(--ambient-c
   @keyframes ambientDrift{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(10px)} }
   body::after{ animation:ambientDrift 14s linear infinite }
 }
+
+
+
+/* === Header polish ====================================================== */
+/* Avoid notch overlap + clearer separation when scrolled */
+header.site{
+  padding-top:var(--safe-top);            /* notch/safe-area */
+  -webkit-backdrop-filter:saturate(140%) blur(8px);
+  box-shadow:0 0 0 1px rgba(0,0,0,0);     /* base: no shadow */
+  transition:box-shadow .25s var(--ease), background .25s var(--ease);
+}
+header.site.is-stuck{
+  background:rgba(11,11,15,.78);
+  box-shadow:0 6px 18px rgba(0,0,0,.35);  /* gentle drop on scroll */
+}
+
+/* Make the pill buttons scroll nicely without wrapping the brand */
+.nav{ gap:10px; }
+.quick{
+  flex:1 1 auto; justify-content:flex-end;
+  overflow-x:auto; overflow-y:hidden; padding-bottom:2px;
+  mask-image:linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+  -webkit-mask-image:linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+  scroll-snap-type:x proximity;
+}
+.quick a,.quick button{ scroll-snap-align:start; }
+
+/* On very small screens shrink the pills a hair for better fit */
+@media (max-width:480px){
+  .quick a,.quick button{ height:32px; line-height:30px; padding:0 10px; font-size:13px }
+}
+
+/* === Banner animation control & subtlety ================================ */
+/* We only run the living-tech animations when the hero is in view.
+   JS toggles .is-active (see snippet below). */
+@media (prefers-reduced-motion:no-preference){
+  .hero::after{ animation-play-state:paused; }
+  .hero.pulse .hero-pulse{ animation-play-state:paused; }
+  .hero.is-active::after{ animation-play-state:running; }
+  .hero.is-active.pulse .hero-pulse{ animation-play-state:running; }
+}
+
+/* Slightly calmer scanline when active (less busy under sticky header) */
+@media (prefers-reduced-motion:no-preference){
+  @keyframes scanFloat{ to{ background-position-y:10px } } /* was 12px */
+}
+
+/* Mobile safety: prevent banner from feeling “crowded” under header */
+@media (max-width:420px){
+  .hero{ margin-top:6px; }
+  .hero img{ object-fit:contain; max-height:56vh; }
+}
+
+/* Optional: a softer starfield/scan glow so it doesn't fight the header */
+.hero.star-scan::after{ opacity:.14; }
+
+
+
 
 ::selection{ background:rgba(122,243,255,.25); color:var(--ink) }
 :focus-visible{
