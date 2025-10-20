@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en" dir="ltr">
 <head>
-  <!-- Resolve all relative URLs from the project root on GitHub Pages -->
+  <!-- Resolve relative URLs from project root on GitHub Pages -->
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
-    // In GitHub repo preview (github.com), remove <base> so relative paths still work.
+    // When previewing on GitHub remove base so local paths work
     if (location.hostname === "github.com") {
       const b = document.querySelector("base"); if (b) b.remove();
     }
@@ -13,7 +13,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Quickstart / Start Here — Scroll of Fire</title>
-
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/start.html"/>
   <meta name="description" content="Start here. A short orientation to Scroll of Fire: how to run a 60-second session, where to find theory, practice, glossaries, and downloads, and how to keep a witness ledger.">
   <meta name="color-scheme" content="dark light">
@@ -25,15 +24,8 @@
   <meta property="og:description" content="Pick a carrier, speak one line, measure coherence, and log it in under a minute. Plus a full site map.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/start.html">
-  <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
-  <meta property="og:image:alt" content="Scroll of Fire — gilded sigil banner">
-  <meta name="twitter:card" content="summary_large_image">
 
-  <!-- Fonts / perf (optional but consistent with site) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <!-- External CSS (merged visual language from codex + teach) -->
+  <!-- Fonts + external CSS placeholders (site files) -->
   <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
@@ -43,73 +35,63 @@
   <noscript><link rel="stylesheet" href="assets/css/teach.css?v=2025-10-20"></noscript>
 
   <!-- Preload banner -->
-  <link rel="preload" as="image"
-        href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
-        imagesizes="100vw" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" imagesizes="100vw" fetchpriority="high">
 
-  <!-- Page-scoped micro CSS (kept tiny; everything else lives in external CSS) -->
   <style>
-    :root{ --maxw:1040px }
-    body{ margin:0; background:var(--bg); }
-    .wrap{ max-width:var(--maxw); margin:0 auto; padding:16px 16px 80px; }
-    /* Plasma background container (already styled in codex.css) */
-    .laser-grid{position:fixed;inset:0;z-index:-1}
-
-    /* Nav tabs: prevent overlap and make mobile scrollable */
-    .tabs{ position:sticky; top:calc(56px + var(--safe-area-inset-top,0px)); z-index:5;
-           padding:8px 12px; margin:12px 0 14px; overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-gutter:stable; }
-    .tabs .tab{ white-space:nowrap }
-
-    /* Hero with radial mask so it doesn’t look like a block */
-    .hero{ border-radius:18px; margin:8px 0 14px; overflow:hidden; position:relative; isolation:isolate; }
-    .hero img{ display:block; width:100%; height:auto; aspect-ratio:21/9; object-fit:contain; background:var(--bg-elev); }
-    .hero::after{
-      content:""; position:absolute; inset:0;
-      background: radial-gradient(120% 80% at 50% 10%, rgba(10,12,18,.0) 40%, rgba(10,12,18,.55) 100%);
-      pointer-events:none; mix-blend-mode:soft-light;
-    }
-
-    /* Layout helpers */
-    .grid2{ display:grid; grid-template-columns:1.2fr .8fr; gap:14px; }
-    @media (max-width:900px){ .grid2{ grid-template-columns:1fr } }
-    .grid4{ display:grid; grid-template-columns:repeat(12,1fr); gap:14px; }
-    .span-3{ grid-column:span 3 } .span-4{ grid-column:span 4 } .span-6{ grid-column:span 6 } .span-12{ grid-column:span 12 }
-    @media (max-width:980px){ .span-6,.span-4,.span-3{ grid-column:span 12 } }
-
-    /* Quickstart tool controls */
-    .pill{ display:inline-block; padding:.5rem .75rem; border:1px solid var(--line); border-radius:999px; background:transparent; color:inherit; }
-    .controls{ display:flex; flex-wrap:wrap; gap:10px }
-    .controls .pill[aria-pressed="true"]{ box-shadow:0 0 0 1px rgba(122,243,255,.35), 0 10px 22px rgba(0,0,0,.38) }
-    .inline-btn{ border:1px solid var(--line); padding:.55rem .8rem; border-radius:10px; background:rgba(255,255,255,.02); color:inherit }
-    .inline-btn:hover{ border-color:#3a3a44; background:rgba(255,255,255,.04) }
-    .meter{ width:100% }
-    .log-item{ border-top:1px solid var(--line); padding:10px 0 }
-    .kicker{ letter-spacing:.12em; text-transform:uppercase; font-weight:700; color:var(--muted); font-size:.85rem }
-    .list-tight{ margin:0; padding-left:18px } .list-tight li{ margin:4px 0 }
-    .badge{ font-size:.8rem; padding:.1rem .45rem; border:1px solid var(--line); border-radius:6px; margin-left:.4rem }
+    /* Page-scoped micro-css (visual details not covered by shared CSS) */
+    :root{--maxw:1100px}
+    body{margin:0}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:18px 16px 90px}
+    .title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,40px);margin:.2rem 0}
+    .subtitle{text-align:center;color:var(--muted);margin:0 0 14px}
+    .hero{border-radius:14px;overflow:hidden;margin:8px 0 16px}
+    .grid2{display:grid;grid-template-columns:1.25fr .75fr;gap:14px}
+    @media (max-width:900px){.grid2{grid-template-columns:1fr}}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+    .carrier-btn{padding:.6rem .9rem;border-radius:12px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);font-weight:600}
+    .carrier-btn[aria-pressed="true"]{box-shadow:0 8px 26px rgba(122,243,255,.12);outline:2px solid rgba(122,243,255,.18)}
+    .large-cta{display:inline-flex;gap:.6ch;align-items:center;padding:.7rem 1rem;border-radius:12px;border:1px solid var(--line);background:#0e1116;color:inherit;font-weight:700}
+    .progress-wrap{display:flex;gap:12px;align-items:center;margin-top:10px}
+    .ring{width:84px;height:84px;display:grid;place-items:center;border-radius:999px;background:conic-gradient(rgba(122,243,255,.14) 0% 0%, transparent 0);box-shadow:inset 0 -8px 24px rgba(0,0,0,.6)}
+    .ring svg{display:block;width:72px;height:72px}
+    .coherence-meter{margin-top:8px}
+    label.small{display:block;margin-top:8px;color:var(--muted);font-size:.95rem}
+    textarea#phrase{width:100%;min-height:72px;padding:.6rem;border-radius:12px;border:1px solid var(--line);background:var(--bg-elev);color:inherit}
+    .inline-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .muted.small{color:var(--muted)}
+    .card .kicker{font-weight:700;font-size:.82rem;color:var(--muted);letter-spacing:.12em}
+    .ledger-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .recent-list{max-height:260px;overflow:auto;padding-top:8px}
+    .recent-item{padding:10px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+    .tag{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid var(--line);font-size:.83rem;color:var(--muted);margin-right:6px}
+    .tiny{font-size:.85rem;color:var(--muted)}
+    .controls-foot{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .help{margin-top:10px;color:var(--muted);font-size:.95rem}
+    /* make CTA more visible on dark backgrounds */
+    .inline-btn{background:linear-gradient(180deg,rgba(122,243,255,.06),rgba(122,243,255,.02));border:1px solid rgba(122,243,255,.12)}
+    /* responsive site map spacing */
+    .grid4{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin-top:14px}
+    .span-4{grid-column:span 4} .span-12{grid-column:span 12}
+    @media (max-width:980px){.span-4{grid-column:span 12}}
   </style>
-
-  <!-- Core site JS (grid, reveal, palette, etc.) -->
-  <script src="assets/js/codex.js?v=2025-10-20" defer></script>
 </head>
 
 <body class="stars">
-  <!-- Plasma background -->
   <div class="laser-grid" aria-hidden="true"></div>
 
-  <main class="wrap" id="top">
+  <main class="wrap" id="top" role="main">
     <!-- Hero -->
-    <figure class="hero hero--contain" aria-label="Scroll of Fire banner">
-      <img
-        src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
-        data-src-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
-        onerror="if(this.dataset.srcRaw&&!this._tried){this._tried=1;this.src=this.dataset.srcRaw;}"
-        alt="Scroll of Fire — gilded sigil banner"
-        width="1600" height="900" loading="eager" decoding="async" fetchpriority="high">
-      <noscript><img src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" alt=""></noscript>
+    <figure class="hero hero--contain" aria-hidden="true">
+      <img src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
+           alt="Scroll of Fire — gilded sigil banner" width="1600" height="900"
+           loading="eager" decoding="async" fetchpriority="high"
+           onerror="this.src='assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png'">
     </figure>
 
-    <!-- Nav (scrollable, non-overlapping) -->
+    <h1 class="title">⚡ 60-Second Quickstart — Start Here</h1>
+    <p class="subtitle">Short, repeatable practice that turns phrasing into witnessable change. Follow the four-step loop below.</p>
+
+    <!-- Tabs (primary nav) -->
     <nav class="tabs" aria-label="Primary navigation">
       <a class="tab" href="index.html">⌂ Home</a>
       <a class="tab" href="theory.html">📘 Theory</a>
@@ -118,113 +100,130 @@
       <a class="tab" href="ledger.html">🧾 Ledger</a>
     </nav>
 
-    <h1 class="title">⚡ 60-Second Quickstart</h1>
-    <p class="subtitle">Pick a carrier → speak one clear line → measure coherence → save the witness.</p>
-
-    <!-- QUICK 60s TOOL -->
+    <!-- Quickstart UI -->
     <section class="grid2" aria-label="Quickstart flow">
-      <article class="card" role="region" aria-labelledby="qs-carrier">
-        <div class="kicker">Step 1</div>
-        <h2 id="qs-carrier">Choose your voice carrier</h2>
+      <!-- LEFT: tool -->
+      <article class="card" aria-labelledby="qs-h" role="region">
+        <div class="kicker">Quickstart</div>
+        <h2 id="qs-h">One line • One carrier • One minute</h2>
 
-        <div class="controls" role="radiogroup" aria-label="Carriers">
-          <button class="pill" role="radio" data-carrier="432" aria-checked="false" aria-pressed="false">432</button>
-          <button class="pill" role="radio" data-carrier="528" aria-checked="false" aria-pressed="false">528</button>
-          <button class="pill" role="radio" data-carrier="369" aria-checked="false" aria-pressed="false">369</button>
-          <button class="pill" role="radio" data-carrier="none" aria-checked="true"  aria-pressed="true">None</button>
+        <!-- Step 1: carrier -->
+        <div>
+          <label class="kicker" id="carrierLabel">Step 1 — Choose a carrier</label>
+          <div class="controls" role="radiogroup" aria-labelledby="carrierLabel">
+            <button class="carrier-btn" role="radio" data-carrier="432" aria-pressed="false" aria-checked="false">432 Hz (Ground)</button>
+            <button class="carrier-btn" role="radio" data-carrier="528" aria-pressed="false" aria-checked="false">528 Hz (Repair)</button>
+            <button class="carrier-btn" role="radio" data-carrier="369" aria-pressed="false" aria-checked="false">369 Hz (Lock-in)</button>
+            <button class="carrier-btn" role="radio" data-carrier="none" aria-pressed="true" aria-checked="true">No tone</button>
+          </div>
+          <div class="help">Tip: starting with <strong>432</strong> is gentle. Choosing <strong>none</strong> still runs the loop — carriers are optional.</div>
         </div>
 
-        <div class="kicker" style="margin-top:14px">Step 2</div>
-        <h2>One clear line (your intention)</h2>
-        <label class="muted small" for="phrase">Keep it short, pronounceable, present-tense.</label>
-        <textarea id="phrase" rows="3" style="width:100%;margin-top:6px"
-          placeholder="Example: “I carry truth with gentleness.”"></textarea>
-
-        <div style="display:flex;gap:10px;align-items:center;margin-top:10px">
-          <button id="startRun" class="inline-btn">▶ Start 60s Run</button>
-          <button id="stopRun"  class="inline-btn" disabled>■ Stop</button>
-          <span id="timer" class="muted" aria-live="polite">Ready</span>
+        <!-- Step 2: phrase -->
+        <div style="margin-top:12px">
+          <label class="kicker">Step 2 — Phrase</label>
+          <p class="tiny">Keep it short, present-tense, and positively framed. Fewer negations → clearer semantic gradient.</p>
+          <textarea id="phrase" placeholder="Example: I hold truth with gentleness." aria-label="Your intention phrase"></textarea>
         </div>
 
-        <div class="kicker" style="margin-top:16px">Step 3</div>
-        <h2>Coherence (felt quality)</h2>
-        <input id="coh" class="meter" type="range" min="0" max="5" step="0.5" value="0"
-               aria-label="Coherence from 0 to 5">
-        <div class="muted small">0 = chaotic · 5 = crisp, truthful, sustained</div>
+        <!-- Step 3: run controls -->
+        <div class="progress-wrap" style="margin-top:12px">
+          <div class="ring" aria-hidden="true" id="progressRing">
+            <!-- SVG progress ring -->
+            <svg viewBox="0 0 36 36" role="img" aria-label="Timer progress">
+              <path d="M18 2
+                       a 16 16 0 1 1 0 32
+                       a 16 16 0 1 1 0 -32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="2"></path>
+              <path id="progressArc" d="" fill="none" stroke="#7af3ff" stroke-width="2.6" stroke-linecap="round"></path>
+              <text id="timer" x="18" y="21" font-size="6" text-anchor="middle" fill="#e6f9ff">Ready</text>
+            </svg>
+          </div>
 
-        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
-          <button id="saveEntry" class="inline-btn">💾 Save to Ledger</button>
-          <button id="exportEntries" class="inline-btn">⬇ Export JSON</button>
-          <span class="muted small">Saved locally in your browser.</span>
+          <div style="flex:1">
+            <div class="inline-row">
+              <button id="startRun" class="large-cta" aria-pressed="false" title="Start 60 second run (R)">
+                ▶ Start
+              </button>
+              <button id="stopRun" class="large-cta" aria-pressed="false" disabled title="Stop run (R)">
+                ■ Stop
+              </button>
+              <div style="margin-left:auto;text-align:right">
+                <div class="tiny">Session length</div>
+                <div class="tiny">60s standard — adjustable in preferences</div>
+              </div>
+            </div>
+
+            <div class="coherence-meter" aria-hidden="false" aria-live="polite">
+              <label for="coh" class="small">Step 4 — Rate Coherence (felt quality)</label>
+              <input id="coh" class="meter" type="range" min="0" max="5" step="0.5" value="0" aria-label="Coherence rating from 0 to 5">
+              <div class="tiny muted">0 = chaotic · 5 = crisp, truthful, sustained</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ledger save row -->
+        <div style="margin-top:12px">
+          <label class="kicker">Save witness</label>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">
+            <input id="tag" placeholder="tags (comma separated) e.g., morning,432" aria-label="add tags" style="flex:1;padding:.5rem;border-radius:10px;border:1px solid var(--line);background:var(--bg-elev)">
+            <button id="saveEntry" class="inline-btn" title="Save to local ledger">💾 Save to Ledger</button>
+            <button id="exportEntries" class="inline-btn" title="Export ledger JSON">⬇ Export</button>
+            <button id="importEntries" class="inline-btn" title="Import ledger JSON">⬆ Import</button>
+          </div>
+          <div class="help tiny">Saved locally on this device. Use export to back up or share. Use Import to restore a previously exported ledger.</div>
+        </div>
+
+        <!-- ledger controls -->
+        <div class="ledger-controls" style="margin-top:10px">
+          <button id="clearLedger" class="inline-btn">Clear Local Ledger</button>
+          <button id="deleteLast" class="inline-btn">Delete Last Entry</button>
+          <div style="margin-left:auto;text-align:right">
+            <div class="tiny muted">Entries: <span id="entryCount">0</span></div>
+          </div>
+        </div>
+
+        <div class="help" style="margin-top:12px">
+          Short guide: Phrase → Start → hum (if using a carrier) → breathe with longer exhale → stop → rate → save. If coherence drops, stop and re-center (see Ethics → Stop Rule).
         </div>
       </article>
 
+      <!-- RIGHT: Why / recent -->
       <aside class="card" role="complementary" aria-labelledby="why-works">
         <h3 id="why-works">Why this works</h3>
-        <ul class="list">
-          <li><strong>Carrier →</strong> picks a harmonic lane (<a href="theory.html#eq3">Eq.3</a>, <a href="theory.html#eq17">Eq.17</a>).</li>
-          <li><strong>Phrase →</strong> programs semantics onto the carrier (<a href="theory.html#eq4">Eq.4</a>, <a href="theory.html#eq16">Eq.16</a>).</li>
-          <li><strong>Coherence →</strong> your witness quality index (<a href="theory.html#eq13">Eq.13</a>).</li>
-          <li><strong>Ledger →</strong> memory windowing builds remnant (<a href="theory.html#eq5">Eq.5</a>, <a href="theory.html#eq15">Eq.15</a>).</li>
+        <ul>
+          <li><strong>Carrier selects harmonic lanes</strong> (see Theory Eq.3, Eq.17).</li>
+          <li><strong>Phrasing shapes the semantic gradient</strong> (Eq.16) — keep verbs strong and negations low.</li>
+          <li><strong>Coherence (Ξ)</strong> is the live quality metric — rising Ξ indicates stable remnant formation.</li>
+          <li><strong>Ledger is your experimental record</strong> — trends beat anecdotes.</li>
         </ul>
-        <div class="goldline"></div>
-        <h3>Recent entries</h3>
-        <div id="recent" class="small muted">No entries yet.</div>
-        <div style="margin-top:10px">
+
+        <div class="goldline" style="margin:12px 0"></div>
+
+        <h4>Recent witness entries</h4>
+        <div id="recent" class="recent-list small muted" aria-live="polite">No entries yet.</div>
+
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
           <a class="cta" href="ledger.html">Open full Ledger →</a>
+          <a class="cta" href="guide.html">Guide →</a>
+          <a class="cta" href="ethics.html">Ethics →</a>
         </div>
       </aside>
     </section>
 
-    <div class="goldline"></div>
+    <div class="goldline" style="margin-top:18px"></div>
 
-    <!-- START HERE ORIENTATION -->
+    <!-- Short orientation + site map -->
     <section class="grid4" aria-label="Orientation">
       <article class="card span-12">
         <div class="kicker">Start Here</div>
         <h2>How to use this site in 3 minutes</h2>
         <ol class="list">
-          <li><strong>Run the 60-second tool above.</strong> One line. One slider. Save it.</li>
-          <li><strong>Skim the <a href="guide.html">Guide</a>.</strong> It’s a plain-language overview of the Codex and how each page fits.</li>
-          <li><strong>When curious, open <a href="theory.html">Theory</a>.</strong> The canonical equations (0–17) are there with notes + references.</li>
-          <li><strong>When practicing, use <a href="teach.html">Teach/Manifest</a>.</strong> Voice protocol, A/B carriers, ethics, and group runs.</li>
-          <li><strong>Record your witnesses in the <a href="ledger.html">Ledger</a>.</strong> It’s local-first (browser storage) with export.</li>
+          <li><strong>Run a 60s session:</strong> choose carrier, speak your line, breathe, rate coherence, then save.</li>
+          <li><strong>Skim Theory:</strong> canonical equations 0–17 explain the structure of the Codex.</li>
+          <li><strong>Practice with Teach:</strong> the Manifest studio contains the full protocol and A/B test tools.</li>
+          <li><strong>Log in Ledger:</strong> collect evidence, A/B, and compare carriers & phrases over time.</li>
         </ol>
-        <p class="muted small">Tip: headphones help. Keep phrases kind, precise, and present-tense. Stop if anything feels off-balance.</p>
-      </article>
-
-      <article class="card span-6">
-        <div class="kicker">Practice flow</div>
-        <h3>Daily loop (5–10 min)</h3>
-        <ul class="list-tight">
-          <li>Pick a carrier (432 / 528 / 369).</li>
-          <li>Speak one line for ~60s.</li>
-          <li>Rate coherence (0–5); note any sensations / images / words.</li>
-          <li>Save to <a href="ledger.html">Ledger</a>; add a tag (e.g., <code>morning</code>, <code>432</code>).</li>
-          <li>Optionally A/B tomorrow (swap carrier or phrase weight).</li>
-        </ul>
-        <p class="small muted">See <a href="teach.html#ab">A/B carriers</a> and <a href="teach.html#phrasing">phrase weights</a>.</p>
-      </article>
-
-      <article class="card span-6">
-        <div class="kicker">Safety & ethics</div>
-        <h3>Do no harm, seek coherence</h3>
-        <ul class="list-tight">
-          <li>Stop a run if you feel dizzy, pressured, or emotionally flooded.</li>
-          <li>Prefer truthful, non-coercive phrases (no control language).</li>
-          <li>Group work? Read the <a href="ethics.html">Ethics</a> page and apply the stop-rules.</li>
-        </ul>
-        <p class="small muted">The Codex is a learning framework, not medical advice.</p>
-      </article>
-    </section>
-
-    <div class="goldline"></div>
-
-    <!-- SITE MAP / ALL PAGES -->
-    <section class="grid4" aria-label="Site map">
-      <article class="card span-12">
-        <div class="kicker">Site Map</div>
-        <h2>Everything on this site</h2>
+        <p class="muted small">Tip: headphones improve perception. Keep phrases kind, precise, and present-tense.</p>
       </article>
 
       <article class="card span-4">
@@ -233,34 +232,26 @@
           <li>⌂ <a href="index.html">Home</a></li>
           <li>📘 <a href="theory.html">Theory</a></li>
           <li>🎓 <a href="teach.html">Teach / Manifest</a></li>
-          <li>⚡ <a href="start.html" aria-current="page">Start Here / Quickstart</a></li>
           <li>🧾 <a href="ledger.html">Ledger</a></li>
-          <li>🧭 <a href="guide.html">Guide</a></li>
-          <li>📚 <a href="glossary.html">Glossary</a></li>
-          <li>🧠 <a href="ethics.html">Ethics</a></li>
         </ul>
       </article>
 
       <article class="card span-4">
-        <h3>Experiments & references</h3>
+        <h3>Experiments</h3>
         <ul class="list">
-          <li>🔁 <a href="ab.html">A/B Carriers</a> <span class="badge">experiment</span></li>
-          <li>◯ <a href="circle.html">Circle</a> <span class="badge">group</span></li>
+          <li>🔁 <a href="ab.html">A/B Carriers</a></li>
           <li>🔣 <a href="glyphs.html">Glyphs</a></li>
-          <li>μ <a href="micro.html">Micro</a> <span class="badge">notes</span></li>
+          <li>μ <a href="micro.html">Micro-acts</a></li>
         </ul>
       </article>
 
       <article class="card span-4">
-        <h3>Files & meta</h3>
+        <h3>Files</h3>
         <ul class="list">
           <li>⬇ <a href="downloads.html">Downloads</a></li>
           <li>📜 <a href="manifest.html">Manifest (Longform)</a></li>
-          <li>🗺 <a href="sitemap.xml">Sitemap</a></li>
-          <li>🤖 <a href="robots.txt">Robots.txt</a></li>
-          <li>🚧 <a href="404.html">404 Page</a></li>
+          <li>📚 <a href="glossary.html">Glossary</a></li>
         </ul>
-        <p class="small muted">The longform “Manifest” is a printable narrative; “Teach” is the hands-on playbook.</p>
       </article>
     </section>
 
@@ -271,103 +262,290 @@
     </footer>
   </main>
 
-  <!-- Page logic (kept here; site-wide interactions live in assets/js/codex.js) -->
+  <!-- Page script: timer, audio carriers, ledger, UI polish -->
   <script>
   (function(){
+    "use strict";
     const $ = s => document.querySelector(s);
     const $$ = s => Array.from(document.querySelectorAll(s));
-    const yr = $('#yr'); if (yr) yr.textContent = new Date().getFullYear();
 
-    // Harden external links opened in new tab
+    // year
+    const y = $('#yr'); if (y) y.textContent = new Date().getFullYear();
+
+    // harden external links
     $$('a[target="_blank"]').forEach(a=>{
       const rel = new Set((a.getAttribute("rel")||"").toLowerCase().split(/\s+/).filter(Boolean));
       rel.add("noopener"); rel.add("noreferrer"); a.setAttribute("rel", Array.from(rel).join(" "));
     });
 
-    // Carrier toggle (radio-style)
-    let carrier = "none";
-    const pills = $$('.pill[data-carrier]');
-    const setCarrier = (btn) => {
-      pills.forEach(b=>{
-        b.setAttribute('aria-pressed','false');
-        b.setAttribute('aria-checked','false');
-      });
-      btn.setAttribute('aria-pressed','true');
-      btn.setAttribute('aria-checked','true');
-      carrier = btn.dataset.carrier;
+    // --- Ledger storage helpers ---
+    const KEY = 'sof_ledger_entries_v1';
+    const read = () => {
+      try { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
+      catch { return []; }
     };
-    pills.forEach(btn=>{
-      btn.addEventListener('click', ()=> setCarrier(btn));
+    const write = (arr) => {
+      try { localStorage.setItem(KEY, JSON.stringify(arr)); } catch(e) { alert('Unable to save: storage blocked.'); }
+    };
+
+    // render recent list
+    function renderRecent(all = read()){
+      const box = $('#recent'); const count = $('#entryCount');
+      if (!box) return;
+      if (!all.length){ box.innerHTML = '<div class="tiny muted">No entries yet.</div>'; if (count) count.textContent = '0'; return; }
+      if (count) count.textContent = String(all.length);
+      box.innerHTML = all.slice(0,10).map((e,idx)=>`
+        <div class="recent-item" data-idx="${idx}">
+          <div><strong>${escapeHtml(e.phrase)}</strong></div>
+          <div class="tiny muted">${new Date(e.when).toLocaleString()} · carrier: ${e.carrier} · Ξ: ${e.coherence}</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px">
+            ${ (e.tags||[]).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('') }
+            <div style="margin-left:auto;display:flex;gap:6px">
+              <button class="small-btn inline-btn" data-action="copy" data-idx="${idx}">Copy</button>
+              <button class="small-btn inline-btn" data-action="delete" data-idx="${idx}">Delete</button>
+            </div>
+          </div>
+          ${ e.note ? `<div class="tiny" style="margin-top:6px">Note: ${escapeHtml(e.note)}</div>` : '' }
+        </div>`).join('');
+    }
+
+    // small escape helper
+    function escapeHtml(s=''){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // --- Carrier audio (WebAudio) ---
+    let audioCtx = null, osc = null, gainNode = null;
+    function ensureAudio(){
+      if (audioCtx) return;
+      try{
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        gainNode = audioCtx.createGain();
+        gainNode.gain.value = 0.0;
+        gainNode.connect(audioCtx.destination);
+      }catch(e){
+        audioCtx = null;
+      }
+    }
+    function startTone(freq){
+      if (!freq) return;
+      ensureAudio();
+      if (!audioCtx || osc) return;
+      osc = audioCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      osc.connect(gainNode);
+      osc.start();
+      // ramp up gently
+      gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.09, audioCtx.currentTime + 0.12);
+    }
+    function stopTone(){
+      if (!audioCtx || !osc) return;
+      const t = audioCtx.currentTime;
+      gainNode.gain.cancelScheduledValues(t);
+      gainNode.gain.linearRampToValueAtTime(0.0001, t + 0.12);
+      try{ osc.stop(t + 0.14); }catch(e){}
+      osc.disconnect(); osc = null;
+    }
+
+    // carrier UI
+    let carrier = 'none';
+    const carrierButtons = $$('.carrier-btn[data-carrier]');
+    carrierButtons.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        carrierButtons.forEach(b=>{ b.setAttribute('aria-pressed','false'); b.setAttribute('aria-checked','false'); });
+        btn.setAttribute('aria-pressed','true'); btn.setAttribute('aria-checked','true');
+        carrier = btn.dataset.carrier;
+        // audible preview when selecting (short)
+        if (carrier !== 'none'){
+          const map = { '432':432, '528':528, '369':369 };
+          startTone(map[carrier]);
+          setTimeout(()=>stopTone(), 400);
+        }
+      });
+      // keyboard nav
       btn.addEventListener('keydown', (e)=>{
         if (!['ArrowLeft','ArrowRight'].includes(e.key)) return;
         e.preventDefault();
-        const i = pills.indexOf(btn);
-        const nxt = e.key==='ArrowRight' ? (i+1)%pills.length : (i-1+pills.length)%pills.length;
-        pills[nxt].focus(); setCarrier(pills[nxt]);
+        const idx = carrierButtons.indexOf(btn);
+        const nxt = e.key === 'ArrowRight' ? (idx+1)%carrierButtons.length : (idx-1+carrierButtons.length)%carrierButtons.length;
+        carrierButtons[nxt].focus(); carrierButtons[nxt].click();
       });
     });
 
-    // Timer
-    let tId=0, tLeft=60;
-    const timer = $('#timer'), start = $('#startRun'), stop = $('#stopRun');
-    function tick(){ timer.textContent = `${tLeft}s`; if (tLeft<=0){ stopRun(); return; } tLeft--; tId = setTimeout(tick, 1000); }
-    function startRun(){ if (tId) return; if (!start||!stop||!timer) return;
-      tLeft = 60; timer.textContent = "60s"; start.disabled = true; stop.disabled = false; tId = setTimeout(tick, 1000); }
-    function stopRun(){ clearTimeout(tId); tId = 0; if (!start||!stop||!timer) return;
-      start.disabled = false; stop.disabled = true; timer.textContent = "Stopped"; }
-    if (start && stop){ start.addEventListener('click', startRun); stop.addEventListener('click', stopRun); }
+    // --- Timer + progress ring ---
+    const START_BTN = $('#startRun'), STOP_BTN = $('#stopRun'), TIMER_TEXT = $('#timer');
+    const PROG = document.getElementById('progressArc');
+    let tId = 0, tLeft = 60, RUNNING=false;
+    function setProgress(pct){
+      // pct 0..1 -> stroke-dasharray mapping on circle path approximated by arc path creation
+      const r=16, c=2*Math.PI*r;
+      const dash = (pct * c).toFixed(2);
+      PROG.setAttribute('stroke-dasharray', `${dash} ${c}`);
+      // rotate so it starts at top
+      PROG.setAttribute('transform','rotate(-90 18 18)');
+    }
+    function displayTimerText(txt){ TIMER_TEXT.textContent = txt; }
+    function tick(){
+      if (tLeft <= 0){ stopRun(); return; }
+      tLeft--;
+      displayTimerText(tLeft + 's');
+      setProgress((60 - tLeft)/60);
+      tId = setTimeout(tick, 1000);
+    }
+    function startRun(){
+      if (RUNNING) return;
+      // autoplay policy: resume context on user gesture if required
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
+      RUNNING = true;
+      tLeft = 60;
+      displayTimerText('60s');
+      setProgress(0);
+      START_BTN.disabled = true; STOP_BTN.disabled = false;
+      START_BTN.setAttribute('aria-pressed','true');
+      STOP_BTN.setAttribute('aria-pressed','false');
+      // start tone if selected
+      if (carrier !== 'none') startTone(Number(carrier));
+      // small vibrate if available
+      if (navigator.vibrate) navigator.vibrate(60);
+      tId = setTimeout(tick, 1000);
+    }
+    function stopRun(){
+      clearTimeout(tId); tId = 0;
+      RUNNING = false;
+      START_BTN.disabled = false; STOP_BTN.disabled = true;
+      START_BTN.setAttribute('aria-pressed','false');
+      STOP_BTN.setAttribute('aria-pressed','true');
+      displayTimerText('Stopped');
+      setProgress(0);
+      stopTone();
+    }
+    START_BTN && START_BTN.addEventListener('click', startRun);
+    STOP_BTN && STOP_BTN.addEventListener('click', stopRun);
 
-    // Storage
-    const KEY = 'sof_ledger_entries_v1';
-    const read = () => { try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch{ return []; } };
-    const write = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
-
-    // Save
-    const saveBtn = $('#saveEntry');
-    if (saveBtn) saveBtn.addEventListener('click', ()=>{
-      const phrase = ($('#phrase')?.value||'').trim();
-      const coherence = Number($('#coh')?.value||0);
-      const when = new Date().toISOString();
-      if (!phrase){ alert('Add a clear line first.'); return; }
-      const entry = { when, carrier, phrase, coherence };
-      const all = read(); all.unshift(entry); write(all);
-      renderRecent(all);
-      alert('Saved to Ledger (browser-local).');
+    // keyboard shortcuts: / focus phrase, r start/stop, Esc clear
+    document.addEventListener('keydown', (e)=>{
+      if (e.key === '/') { e.preventDefault(); $('#phrase').focus(); }
+      if (e.key === 'r' || e.key === 'R') { if (RUNNING) stopRun(); else startRun(); }
+      if (e.key === 'Escape') { $('#phrase').value=''; $('#coh').value = 0; }
     });
 
-    // Export
-    const exportBtn = $('#exportEntries');
-    if (exportBtn) exportBtn.addEventListener('click', ()=>{
+    // --- Save / export / import / delete ---
+    $('#saveEntry').addEventListener('click', ()=>{
+      const phrase = ($('#phrase')?.value||'').trim();
+      const coherence = Number($('#coh')?.value||0);
+      const tagsRaw = ($('#tag')?.value||'').trim();
+      const tags = tagsRaw ? tagsRaw.split(',').map(s=>s.trim()).filter(Boolean) : [];
+      if (!phrase){ alert('Please enter a clear line to save.'); $('#phrase').focus(); return; }
+      const entry = { when: new Date().toISOString(), carrier, phrase, coherence, tags, note: '' };
+      const arr = read(); arr.unshift(entry); write(arr); renderRecent(arr);
+      alert('Saved to Ledger (local).');
+    });
+
+    $('#exportEntries').addEventListener('click', ()=>{
       const data = read();
-      const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+      if (!data.length){ alert('No entries to export.'); return; }
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = 'scroll-of-fire-ledger.json';
       document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     });
 
-    // Recent list
-    function renderRecent(all = read()){
-      const box = $('#recent');
-      if (!box) return;
-      if (!all.length){ box.textContent = 'No entries yet.'; return; }
-      box.innerHTML = all.slice(0,5).map(e=>`
-        <div class="log-item">
-          <div><strong>${e.phrase.replace(/</g,'&lt;')}</strong></div>
-          <div class="small muted">${new Date(e.when).toLocaleString()} · carrier: ${e.carrier} · Ξ: ${e.coherence}</div>
-        </div>`).join('');
-    }
-    renderRecent();
-  })();
-  </script>
+    $('#importEntries').addEventListener('click', ()=>{
+      const input = document.createElement('input');
+      input.type = 'file'; input.accept = 'application/json';
+      input.onchange = e => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+          try{
+            const parsed = JSON.parse(ev.target.result);
+            if (!Array.isArray(parsed)) throw Error('Invalid format');
+            // merge but avoid duplicates by timestamp
+            const existing = read();
+            const ids = new Set(existing.map(x=>x.when));
+            const merged = parsed.concat(existing.filter(x=>!ids.has(x.when)));
+            write(merged);
+            renderRecent(merged);
+            alert('Imported ledger (merged).');
+          }catch(err){
+            alert('Import failed: ' + (err.message || err));
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    });
 
-  <!-- Card reveal + tilt are handled globally in codex.js; we keep only a tiny warm-up here -->
-  <script>
-  (function(){
-    document.body.classList.add('performance-warming');
-    const lowCore=(navigator.hardwareConcurrency||4)<=4;
-    const saveData=(navigator.connection&&navigator.connection.saveData)||false;
-    if(lowCore||saveData) document.body.classList.add('perf-fast');
-    setTimeout(()=>document.body.classList.remove('performance-warming'),900);
+    $('#clearLedger').addEventListener('click', ()=>{
+      if (!confirm('Clear local ledger? This cannot be undone.')) return;
+      write([]); renderRecent([]);
+    });
+
+    $('#deleteLast').addEventListener('click', ()=>{
+      const arr = read();
+      if (!arr.length) return alert('No entries to delete.');
+      if (!confirm('Delete the last (most recent) entry?')) return;
+      arr.shift(); write(arr); renderRecent(arr);
+    });
+
+    // copy/delete handlers for recent list (event delegation)
+    $('#recent').addEventListener('click', (e)=>{
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const action = btn.dataset.action, idx = Number(btn.dataset.idx);
+      const arr = read();
+      if (action === 'copy'){
+        const entry = arr[idx];
+        if (!entry) return;
+        const txt = `${entry.phrase}\ncarrier:${entry.carrier} · Ξ:${entry.coherence} · ${new Date(entry.when).toLocaleString()}`;
+        navigator.clipboard && navigator.clipboard.writeText(txt).then(()=>{ alert('Copied entry to clipboard.'); }).catch(()=>{ alert('Copy failed.'); });
+      } else if (action === 'delete'){
+        if (!confirm('Delete this entry?')) return;
+        arr.splice(idx,1); write(arr); renderRecent(arr);
+      }
+    });
+
+    // initial render
+    renderRecent();
+
+    // helpers: escapeHtml referenced earlier
+    function escapeHtml(s=''){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // --- small UX niceties ---
+    // reflect coherence slider visually on ring color
+    const COH = $('#coh');
+    COH && COH.addEventListener('input', ()=> {
+      const v = Number(COH.value);
+      // map 0..5 to hue (red -> yellow -> cyan)
+      const pct = v/5;
+      const hue = Math.round(200 * pct); // 0..200
+      const color = `hsl(${hue} 90% 60%)`;
+      PROG.style.stroke = color;
+    });
+
+    // make progressArc path a circle path we can stroke-dash
+    // approximate circle circumference using radius 16 (SVG user coords)
+    (function prepareArc(){
+      const path = "M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32";
+      PROG.setAttribute('d', path);
+      PROG.setAttribute('stroke-linecap','round');
+      // ensure dash array initially zero
+      PROG.setAttribute('stroke-dasharray', '0 1000');
+    })();
+
+    // resume audio on first user gesture if required
+    ['click','touchstart','keydown'].forEach(ev=>{
+      window.addEventListener(ev, function resumeAudioOnce(){
+        if (!audioCtx) { try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); audioCtx.suspend(); audioCtx.close(); audioCtx = null; }catch(e){} }
+        window.removeEventListener(ev, resumeAudioOnce);
+      }, {once:true});
+    });
+
+    // ensure visible focus outlines for accessibility
+    document.body.addEventListener('keydown', (e)=>{
+      if (e.key === 'Tab') document.body.classList.add('user-is-tabbing');
+    }, {once:true});
   })();
   </script>
 </body>
