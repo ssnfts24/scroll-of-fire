@@ -40,18 +40,28 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- Base styles -->
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
-  <link rel="stylesheet" href="assets/css/teach.css?v=2025-10-19a">
+  <!-- Styles (order: base → page theme → local tweaks) -->
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
+
+  <!-- NEW: your manifest visual skin for this page -->
+  <link rel="stylesheet" href="assets/css/manifest-show.css?v=2025-10-20">
+
+  <!-- Keep teach.css for any page-specific overrides -->
+  <link rel="stylesheet" href="assets/css/teach.css?v=2025-10-20a">
 
   <!-- Minimal safety override: if JS fails, make cards visible -->
   <style>
     .no-js .card { opacity:.98 !important; transform:none !important; }
     .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 80px}
-    .title{ font-family:"Crimson Pro",Georgia,serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;letter-spacing:.3px;
-      background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#a7f6ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 24px rgba(122,243,255,.12);}
+    .title{
+      font-family:"Crimson Pro",Georgia,serif;font-weight:800;text-align:center;
+      font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;letter-spacing:.3px;
+      background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#a7f6ff 100%);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+      text-shadow:0 0 24px rgba(122,243,255,.12)
+    }
     .subtitle{text-align:center;color:#b8b3a6;font-style:italic;margin:0 0 12px}
     .mini-toc,.crumbs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
     .cta{display:inline-block;padding:8px 12px;border-radius:10px;border:1px solid #2a2a33;text-decoration:none}
@@ -64,7 +74,7 @@
       function loadMJ(){
         if (window.MathJax) return;
         window.MathJax = {
-          tex:{ inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']] },
+          tex:{ inlineMath:[['\','\']], displayMath:[['$$','$$']] },
           svg:{ fontCache:'global', linebreaks:{ automatic:true, width:'container' } },
           startup:{ typeset:false }
         };
@@ -176,7 +186,11 @@
 
           <div class="ring-timer" id="ring" aria-label="Observer timer">
             <svg viewBox="0 0 120 120" class="ring" role="img" aria-label="Observer loop ring">
-              <defs><linearGradient id="ringGrad" x1="0" x2="1"><stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/></linearGradient></defs>
+              <defs>
+                <linearGradient id="ringGrad" x1="0" x2="1">
+                  <stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/>
+                </linearGradient>
+              </defs>
               <circle cx="60" cy="60" r="54" class="ring-bg"/>
               <circle cx="60" cy="60" r="54" class="ring-fg" id="ringFg" pathLength="100"/>
               <text x="60" y="52" class="ring-phase" text-anchor="middle" id="ringPhase">Ready</text>
@@ -548,8 +562,8 @@
 
           <div class="badges" style="margin-top:10px" aria-label="Streak badges">
             <span id="badge7b"   class="badge unlit"  title="7-Day Seed">🌱 ×7</span>
-            <span id="badge33b"  class="badge unlit"  title="33-Day Orbit">🛰️ ×33</span>
-            <span id="badge144b" class="badge unlit"  title="144 Closure">🜚 ×144</span>
+            <span id="badge33b"  class="badge unlit" title="33-Day Orbit">🛰️ ×33</span>
+            <span id="badge144b" class="badge unlit" title="144 Closure">🜚 ×144</span>
           </div>
 
           <div class="desk-grid" style="margin-top:14px" aria-label="Insights">
@@ -676,28 +690,45 @@
         }
         const tick=()=>cards.forEach(el=>{
           const r = el.getBoundingClientRect(); const vh = innerHeight||document.documentElement.clientHeight;
-          if (r.top < vh*0.92 && r.bottom > 0) el.classList.add("visible");
-        });
-        on(window,"scroll",()=>raf(tick),{passive:true}); on(window,"load",tick); tick();
+          if (r.top < vh*0.92&& r.bottom > 0) el.classList.add("visible");
+          });
+        };
+        on(window,"scroll",()=>raf(tick),{passive:true});
+        on(window,"load",tick);
+        tick();
       }
+
       function tiltCards(){
         if (prefersReduced) return;
         $$(".card").forEach(card=>{
           const reset=()=>{ card.style.transform=""; };
           on(card,"mousemove",(e)=>{
-            const r=card.getBoundingClientRect();
-            const x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
-            raf(()=>{ card.style.transform=`perspective(900px) rotateX(${(0.5-y)*4}deg) rotateY(${(x-0.5)*6}deg)`; });
+            const r = card.getBoundingClientRect();
+            const x = (e.clientX - r.left) / r.width;
+            const y = (e.clientY - r.top)  / r.height;
+            raf(()=>{ card.style.transform =
+              `perspective(900px) rotateX(${(0.5 - y) * 4}deg) rotateY(${(x - 0.5) * 6}deg)`; });
           });
           on(card,"mouseleave",reset);
         });
       }
-      function typesetSoon(delay=250){ const mj=window.MathJax; if(mj){ setTimeout(()=>{ try{ mj.typeset && mj.typeset(); }catch(_){} }, delay); } }
-      setYear(); revealOnScroll(); tiltCards(); typesetSoon();
+
+      function typesetSoon(delay=250){
+        const mj = window.MathJax;
+        if (mj){
+          setTimeout(()=>{ try { mj.typeset && mj.typeset(); } catch(_){} }, delay);
+        }
+      }
+
+      setYear();
+      revealOnScroll();
+      tiltCards();
+      typesetSoon();
     })();
   </script>
 
-  <!-- App engine (defer) -->
-  <script defer src="assets/js/teach.js?v=2025-10-19a"></script>
+  <!-- App engine (page logic) -->
+  <script defer src="assets/js/teach.js?v=2025-10-20a"></script>
 </body>
 </html>
+
