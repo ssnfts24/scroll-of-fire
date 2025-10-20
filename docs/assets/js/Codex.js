@@ -208,3 +208,14 @@
     setTimeout(()=>setInk(a.closest('.tab') || activeTab()), 50);
   });
 })();
+
+
+
+
+
+
+const toTop=document.getElementById('toTop');
+window.addEventListener('scroll',()=> {
+  toTop.classList.toggle('visible',window.scrollY>600);
+});
+toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
