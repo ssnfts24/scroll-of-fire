@@ -5,95 +5,188 @@
   <meta charset="utf-8" />
   <title>Voice-Glyph Synth — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0b0f">
-  <meta name="color-scheme" content="dark">
-  <meta name="description" content="Project a tuned phrase (Eq.16) into a polar lattice (Eq.11) to mint a resonant glyph. Save PNG and attach to ledger notes.">
+  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
+  <meta name="description" content="Turn a tuned phrase (Eq.16) into an elegant resonance glyph (Eq.11). See token weights, tweak style, and save as PNG for your ledger." />
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/glyphs.html" />
 
-  <!-- Global Codex Styles -->
+  <!-- Site styles -->
   <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
 
+  <!-- Page polish -->
   <style>
-    :root{--maxw:980px}
-    body{overflow-x:hidden}
-    .wrap{max-width:var(--maxw);margin:0 auto;padding:24px 16px 100px}
+    :root{
+      --maxw: 1040px;
+      --gold: rgb(243 201 122 / 0.9);
+      --gold-fill: rgb(243 201 122 / 0.14);
+      --aqua: rgb(122 243 255 / 0.85);
+      --grid: rgb(122 243 255 / 0.12);
+      --ring: rgb(122 243 255 / 0.10);
+    }
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:22px 16px 96px}
+
     .title{
       font-family:"Crimson Pro",serif;font-weight:800;text-align:center;
-      font-size:clamp(30px,3.8vw,46px);margin:8px 0 4px;
+      font-size:clamp(30px,3.8vw,46px);margin:8px 0 6px;letter-spacing:.2px;
       background:linear-gradient(180deg,#fff 0%,#baf7ff 60%,#7af3ff 100%);
-      -webkit-background-clip:text;background-clip:text;color:transparent;
+      -webkit-background-clip:text;background-clip:text;color:transparent
     }
-    textarea{
-      width:100%;padding:10px;border:1px solid var(--line);
-      border-radius:10px;background:var(--bg-elev);color:var(--ink);
-      font-size:1rem;resize:vertical;
+    .lead{color:var(--muted);text-align:center;margin:0 0 12px}
+
+    /* Layout */
+    .studio{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
+    @media (max-width:960px){.studio{grid-template-columns:1fr}}
+
+    /* Inputs & buttons */
+    .field label{display:block;font-weight:700;margin:0 0 6px}
+    textarea#phrase{
+      width:100%;min-height:96px;padding:12px 12px 14px;border:1px solid var(--line);
+      border-radius:12px;background:var(--bg-elev);color:var(--ink);font-size:1rem;line-height:1.4
     }
-    .lab-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-    .lab-btn{
-      background:var(--accent);color:#000;border:none;
-      border-radius:8px;padding:.6rem 1rem;font-weight:600;
-      cursor:pointer;transition:background .3s,transform .2s;
+    .controls{display:grid;grid-template-columns:repeat(12,1fr);gap:10px;margin-top:10px}
+    .controls .full{grid-column:1/-1}
+    .controls .half{grid-column:span 6}
+    @media(max-width:720px){.controls .half{grid-column:1/-1}}
+    .seg{display:flex;gap:8px;flex-wrap:wrap}
+    .seg .chip{
+      padding:.55rem .8rem;border:1px solid var(--line);border-radius:999px;background:transparent;color:inherit;
+      cursor:pointer
     }
-    .lab-btn:hover{background:var(--accent-2);transform:translateY(-2px)}
-    .lab-btn.ghost{
-      background:transparent;color:var(--ink);border:1px solid var(--line);
+    .seg .chip[aria-pressed="true"]{box-shadow:0 0 0 1px rgba(122,243,255,.4), 0 8px 18px rgba(0,0,0,.35)}
+    select, input[type="range"]{
+      width:100%;padding:.55rem .6rem;border:1px solid var(--line);border-radius:10px;background:var(--bg-elev);color:inherit
     }
+
+    .primary{
+      display:inline-flex;align-items:center;justify-content:center;gap:.5ch;
+      width:100%;padding:.8rem 1rem;border-radius:12px;border:1px solid #2a2a33;
+      background:linear-gradient(180deg,#baf7ff,#7af3ff);color:#07090d;font-weight:800;letter-spacing:.03em;
+      box-shadow:0 10px 28px rgba(22,26,36,.45), inset 0 1px 0 rgba(255,255,255,.25);
+      transition:transform .12s ease, filter .12s ease
+    }
+    .primary:hover{transform:translateY(-1px)}
+    .primary:disabled{filter:saturate(.2) opacity(.7);cursor:not-allowed}
+
+    /* Token weights list */
+    .weights{display:grid;grid-template-columns:1fr auto;gap:6px 10px;margin-top:10px}
+    .weights .bar{position:relative;height:8px;border-radius:999px;background:#161820;border:1px solid var(--line);overflow:hidden}
+    .weights .bar span{position:absolute;inset:0 100% 0 0;background:linear-gradient(90deg,#7af3ff,#f3c97a)}
+
+    /* Canvas block */
+    .canvas-wrap{position:relative}
     canvas{
-      width:100%;max-width:580px;height:auto;
-      border:1px solid var(--line);border-radius:14px;
-      background:radial-gradient(circle at 50% 50%,#0f0f14 60%,#050509);
-      display:block;margin:16px auto 12px;
-      box-shadow:0 0 24px rgba(122,243,255,.15);
+      width:100%;max-width:620px;height:auto;display:block;margin:12px auto;border-radius:16px;
+      background:
+        radial-gradient(120% 120% at 50% 50%, #0b0c12 0%, #0a0b10 55%, #05060b 100%),
+        #0a0b10;
+      border:1px solid var(--line);
+      box-shadow:0 0 26px rgba(122,243,255,.16), inset 0 0 80px rgba(122,243,255,.06)
     }
-    .eq-scroll{overflow-x:auto;font-family:serif;font-size:1.1em;text-align:center}
-    @media(prefers-reduced-motion:no-preference){
-      canvas{animation:pulseGlow 6s ease-in-out infinite alternate}
-      @keyframes pulseGlow{
-        0%{box-shadow:0 0 12px rgba(122,243,255,.15)}
-        100%{box-shadow:0 0 22px rgba(122,243,255,.35)}
-      }
-    }
+    .save-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .ghost{background:transparent;color:inherit;border:1px solid var(--line);border-radius:10px;padding:.6rem .9rem}
+
+    /* Help */
+    .help-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:900px){.help-grid{grid-template-columns:1fr}}
+    .tip{border:1px solid var(--line);border-radius:12px;padding:10px;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.01))}
+    .tip b{color:#eae7df}
   </style>
 </head>
 <body>
 <main class="wrap">
   <header class="page-head fancy-head">
     <h1 class="title">🔷 Voice-Glyph Synth</h1>
-    <p class="subtitle" style="text-align:center">
-      Eq.16 → Eq.11: Token weights → polar projection → glyph. Save and attach to your ledger.
-    </p>
+    <p class="lead">Turn a short, tuned phrase into a geometric signature. The weights of your words shape the polygon; rings and a rose overlay reveal balance and emphasis.</p>
     <nav class="crumbs" style="display:flex;gap:10px;justify-content:center;margin-top:10px">
       <a class="cta" href="index.html">← Codex</a>
       <a class="cta" href="teach.html">Teaching Lab</a>
+      <a class="cta" href="ledger.html">Ledger</a>
     </nav>
   </header>
 
-  <!-- Phrase input -->
-  <section class="card">
-    <h2>Phrase</h2>
-    <textarea id="phrase" rows="3" placeholder="Type your tuned phrase…"></textarea>
-    <div class="lab-row">
-      <button id="render" class="lab-btn">Render Glyph</button>
-      <button id="save" class="lab-btn ghost" disabled>Save .png</button>
-    </div>
-    <p class="meta">
-      Weights are inferred by simple heuristics (verbs, nouns ↑; filler ↓).  
-      For precision, tune in <a href="teach.html#phrase">Phrase Tuner</a> first.
-    </p>
+  <section class="studio">
+    <!-- LEFT: Controls -->
+    <article class="card">
+      <div class="field">
+        <label for="phrase">1) Phrase (present-tense, pronounceable)</label>
+        <textarea id="phrase" placeholder="Example: “I carry truth with gentleness.”"></textarea>
+      </div>
+
+      <div class="controls">
+        <div class="full">
+          <label>2) Carrier (optional, color accent)</label>
+          <div class="seg" role="group" aria-label="Carrier">
+            <button class="chip" data-carrier="none" aria-pressed="true">None</button>
+            <button class="chip" data-carrier="432">432 — Ground</button>
+            <button class="chip" data-carrier="528">528 — Repair</button>
+            <button class="chip" data-carrier="369">369 — Lock-in</button>
+          </div>
+        </div>
+
+        <div class="half">
+          <label for="style">3) Style</label>
+          <select id="style">
+            <option value="classic">Classic Polygon</option>
+            <option value="rose">Polygon + Rose Overlay</option>
+          </select>
+        </div>
+
+        <div class="half">
+          <label for="density">Rings / Grid Density</label>
+          <input id="density" type="range" min="3" max="9" step="1" value="6">
+        </div>
+
+        <div class="half">
+          <label for="rotation">Rotation</label>
+          <input id="rotation" type="range" min="0" max="360" step="1" value="0">
+        </div>
+
+        <div class="full">
+          <button id="render" class="primary" disabled>⚡ Render glyph</button>
+        </div>
+      </div>
+
+      <div id="weightBox" class="weights" aria-live="polite" style="display:none"></div>
+
+      <p class="meta" style="margin-top:10px">
+        How it works: Eq.16 converts your phrase into token weights (verbs/nouns ↑, filler ↓).  
+        Those weights map to radii around a circle; Eq.11 projects the pattern. Carrier simply changes accent hues.
+      </p>
+    </article>
+
+    <!-- RIGHT: Output -->
+    <aside class="card">
+      <h3>Glyph</h3>
+      <div class="canvas-wrap">
+        <canvas id="cv" width="1000" height="1000" aria-label="Voice glyph output"></canvas>
+      </div>
+      <div class="save-row">
+        <button id="save" class="ghost" disabled>Save PNG</button>
+      </div>
+
+      <div class="eq" style="margin-top:10px"><div class="eq-scroll">
+        $$ \Pi_{\nu}:\ \mathcal{R}\to\mathbb{C}, \quad
+           \Pi_{\nu}(\mathcal{R})=\int \mathcal{R}(x)e^{-i2\pi\nu x}\,dx \tag{Eq.11} $$
+        $$ \nabla_{\text{sem}}\mathrm{Phrase}=\sum_k w_k \nabla_{\text{sem}}\mathrm{Token}_k \tag{Eq.16} $$
+      </div></div>
+    </aside>
   </section>
 
-  <!-- Glyph output -->
-  <section class="card">
-    <h2>Glyph</h2>
-    <canvas id="cv" width="800" height="800" aria-label="Voice glyph"></canvas>
-    <div class="eq">
-      <div class="eq-scroll">
-        $$ \Pi_{\nu}:\ \mathcal{R}\to\mathbb{C},\quad 
-           \Pi_{\nu}(\mathcal{R})=\int \mathcal{R}(x)e^{-i2\pi\nu x}\,dx \tag{Eq.11} $$
-        $$ \nabla_{\text{sem}}\mathrm{Phrase} = 
-           \sum w_k \nabla_{\text{sem}}\mathrm{Token}_k \tag{Eq.16} $$
+  <section class="card" style="margin-top:14px">
+    <h2>Read this like a map</h2>
+    <div class="help-grid">
+      <div class="tip">
+        <b>Rings = stability window.</b> Consistent shapes across days ⇒ your phrase is clear. If the polygon wobbles wildly, trim words or swap a verb.
+      </div>
+      <div class="tip">
+        <b>Rose overlay = emphasis rhythm.</b> The more petals, the more “beats” your phrase carries. Try removing conjunctions to simplify.
+      </div>
+      <div class="tip">
+        <b>Carrier doesn’t “force” meaning.</b> It just sets a tonal lane (432/528/369). Phrase quality still leads the geometry.
+      </div>
+      <div class="tip">
+        <b>Save to your ledger.</b> Add the glyph PNG to the corresponding witness note so your changes remain visible over time.
       </div>
     </div>
   </section>
@@ -104,91 +197,179 @@
   </footer>
 </main>
 
-<!-- ============================================================ -->
-<!--  Glyph Generator Script                                      -->
-<!-- ============================================================ -->
+<!-- Logic -->
 <script>
 (function(){
-  const yr=document.getElementById('yr');
-  if(yr) yr.textContent=new Date().getFullYear();
+  const $ = (s, r=document)=>r.querySelector(s);
+  const $$ = (s, r=document)=>Array.from(r.querySelectorAll(s));
 
-  // --- token ranking heuristic ---
-  function rank(t){
-    t=t.toLowerCase();
-    if(/(not|never|no|can't|won't|don't)/.test(t)) return 0.1;
-    if(/(choose|deliver|build|learn|restore|reveal|listen|act|serve)/.test(t)) return 1.0;
-    if(/(love|truth|light|care|power|calm|timing|thanks)/.test(t)) return 0.85;
-    if(/(and|the|a|to|of|for|with|that|this)/.test(t)) return 0.2;
+  // Year
+  const y = $('#yr'); if (y) y.textContent = String(new Date().getFullYear());
+
+  // Accent by carrier
+  let accent = {stroke:"var(--gold)", fill:"var(--gold-fill)", glow:"rgba(122,243,255,.55)"};
+  function setCarrier(c){
+    const map = {
+      "none": {stroke:"var(--gold)", fill:"var(--gold-fill)", glow:"rgba(122,243,255,.55)"},
+      "432":  {stroke:"rgba(243,201,122,.95)", fill:"rgba(243,201,122,.18)", glow:"rgba(180,140,80,.55)"},
+      "528":  {stroke:"rgba(140,255,190,.95)", fill:"rgba(140,255,190,.18)", glow:"rgba(110,220,170,.55)"},
+      "369":  {stroke:"rgba(180,180,255,.95)", fill:"rgba(180,180,255,.18)", glow:"rgba(140,140,255,.55)"}
+    };
+    accent = map[c] || map.none;
+  }
+
+  // Token ranking heuristic
+  function rank(token){
+    const t = token.toLowerCase();
+    if (/(not|never|no|can't|won't|don't)/.test(t)) return 0.1;
+    if (/(choose|deliver|build|learn|restore|reveal|listen|act|serve|offer|care|guide)/.test(t)) return 1.0;
+    if (/(love|truth|light|calm|gentleness|power|timing|thanks|clarity)/.test(t)) return 0.85;
+    if (/(and|the|a|to|of|for|with|that|this|is|as|in|on|at)/.test(t)) return 0.2;
     return 0.6;
   }
 
-  // --- compute normalized weights ---
   function weights(text){
-    let toks=text.trim().split(/\s+/).filter(Boolean).slice(0,24);
-    if(!toks.length) toks=["empty"];
-    let raw=toks.map(rank);
-    const sum=raw.reduce((a,b)=>a+b,0)||1;
-    return toks.map((t,i)=>({t,w:raw[i]/sum}));
+    const toks = text.trim().split(/\s+/).filter(Boolean).slice(0,32);
+    if (!toks.length) return [{t:"(empty)", w:1}];
+    const raw = toks.map(rank);
+    const s   = raw.reduce((a,b)=>a+b,0)||1;
+    return toks.map((t,i)=>({t, w: raw[i]/s}));
   }
 
-  // --- draw glyph ---
-  function drawGlyph(list){
-    const c=document.getElementById('cv'), ctx=c.getContext('2d');
-    ctx.clearRect(0,0,c.width,c.height);
-    const W=c.width, H=c.height, cx=W/2, cy=H/2, R=Math.min(cx,cy)*0.85;
+  // UI: show weights list
+  function showWeights(list){
+    const box = $('#weightBox');
+    if (!box) return;
+    box.style.display = 'grid';
+    box.innerHTML = list.map(o => `
+      <div class="meta">${o.t}</div>
+      <div class="bar" aria-hidden="true"><span style="inset:0 ${Math.max(0,100 - Math.round(o.w*100))}% 0 0"></span></div>
+    `).join('');
+  }
 
-    // background grid
-    ctx.strokeStyle="rgba(122,243,255,.12)"; ctx.lineWidth=1;
-    for(let i=0;i<12;i++){
-      let a=(i/12)*Math.PI*2;
-      ctx.beginPath(); ctx.moveTo(cx,cy);
-      ctx.lineTo(cx+R*Math.cos(a), cy+R*Math.sin(a)); ctx.stroke();
+  // Drawing
+  function drawGlyph(list, opts){
+    const c = $('#cv'), ctx = c.getContext('2d');
+    const W = c.width, H = c.height, cx=W/2, cy=H/2;
+    const R = Math.min(cx,cy)*0.84;
+
+    // Clear
+    ctx.clearRect(0,0,W,H);
+
+    // Grid rings
+    const rings = opts.rings;
+    ctx.lineWidth = 1;
+    for (let i=1;i<=rings;i++){
+      ctx.beginPath();
+      ctx.strokeStyle = "var(--ring)";
+      ctx.arc(cx,cy,R*(i/rings),0,Math.PI*2); ctx.stroke();
     }
-    ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.stroke();
 
-    // token polygon
+    // Spokes (fixed 12 for readability)
+    for (let i=0;i<12;i++){
+      const a = (i/12)*Math.PI*2 + opts.rot;
+      ctx.beginPath();
+      ctx.moveTo(cx,cy);
+      ctx.lineTo(cx+R*Math.cos(a), cy+R*Math.sin(a));
+      ctx.strokeStyle="var(--grid)"; ctx.stroke();
+    }
+
+    // Polygon path from weights
+    const n   = list.length;
+    const step= (Math.PI*2)/n;
     ctx.beginPath();
-    let ang=0, step=(Math.PI*2)/list.length;
-    list.forEach((o,idx)=>{
-      const r=0.35*R + o.w*R*0.55;
-      const x=cx+r*Math.cos(ang);
-      const y=cy+r*Math.sin(ang);
-      idx?ctx.lineTo(x,y):ctx.moveTo(x,y);
-      ang+=step;
-    });
+    for (let i=0;i<n;i++){
+      const r = 0.35*R + list[i].w*R*0.55;
+      const a = i*step + opts.rot;
+      const x = cx + r*Math.cos(a);
+      const y = cy + r*Math.sin(a);
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    }
     ctx.closePath();
-    ctx.strokeStyle="rgba(243,201,122,.9)";
-    ctx.lineWidth=2; ctx.stroke();
-    ctx.fillStyle="rgba(243,201,122,.12)"; ctx.fill();
 
-    // center seal
+    // Fill + stroke with accent
+    ctx.fillStyle = accent.fill; ctx.fill();
+    ctx.strokeStyle = accent.stroke; ctx.lineWidth = 2; ctx.stroke();
+
+    // Optional rose overlay
+    if (opts.style==='rose' && n>3){
+      const k = Math.max(2, Math.min(9, Math.round((n%7)+2))); // petals 2..9 from token count
+      const A = 0.55*R;
+      ctx.beginPath();
+      for (let t=0;t<=Math.PI*2+0.0001;t+=0.006){
+        const r = A*Math.cos(k*t);
+        const x = cx + r*Math.cos(t+opts.rot);
+        const y = cy + r*Math.sin(t+opts.rot);
+        t===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.strokeStyle = "rgba(122,243,255,.55)";
+      ctx.lineWidth   = 1.25;
+      ctx.stroke();
+    }
+
+    // Center seal
     ctx.beginPath();
-    ctx.arc(cx,cy,6,0,Math.PI*2);
-    ctx.fillStyle="rgba(122,243,255,.8)";
-    ctx.shadowBlur=12; ctx.shadowColor="rgba(122,243,255,.5)";
-    ctx.fill();
-    ctx.shadowBlur=0;
+    ctx.arc(cx,cy,7,0,Math.PI*2);
+    ctx.fillStyle="var(--aqua)";
+    ctx.shadowBlur=16; ctx.shadowColor=accent.glow; ctx.fill(); ctx.shadowBlur=0;
   }
 
-  // --- controls ---
-  const render=document.getElementById('render');
-  const save=document.getElementById('save');
-  render.addEventListener('click',()=>{
-    const phrase=document.getElementById('phrase').value;
-    const list=weights(phrase);
-    drawGlyph(list);
-    save.disabled=false;
+  // Controls
+  let currentCarrier = 'none';
+  $$('.chip[data-carrier]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      $$('.chip[data-carrier]').forEach(b=>b.setAttribute('aria-pressed','false'));
+      btn.setAttribute('aria-pressed','true');
+      currentCarrier = btn.dataset.carrier;
+      setCarrier(currentCarrier);
+      if ($('#phrase').value.trim()) renderNow();
+    });
   });
-  save.addEventListener('click',()=>{
-    const url=document.getElementById('cv').toDataURL("image/png");
+
+  const styleSel = $('#style');
+  const dens = $('#density');
+  const rot  = $('#rotation');
+  const renderBtn = $('#render');
+  const saveBtn   = $('#save');
+
+  function opts(){
+    return {
+      style: styleSel.value,
+      rings: parseInt(dens.value,10),
+      rot:   (parseInt(rot.value,10) * Math.PI)/180
+    };
+  }
+
+  // Debounced auto-render on typing
+  let t=0;
+  $('#phrase').addEventListener('input', e=>{
+    const has = e.target.value.trim().length>0;
+    renderBtn.disabled = !has;
+    if (!has) { saveBtn.disabled=true; return; }
+    clearTimeout(t); t=setTimeout(renderNow, 180);
+  });
+
+  [styleSel,dens,rot].forEach(el=>el.addEventListener('input', ()=>{ if ($('#phrase').value.trim()) renderNow(); }));
+
+  function renderNow(){
+    const list = weights($('#phrase').value);
+    showWeights(list);
+    drawGlyph(list, opts());
+    saveBtn.disabled=false;
+  }
+
+  renderBtn.addEventListener('click', renderNow);
+
+  saveBtn.addEventListener('click', ()=>{
+    const url=$('#cv').toDataURL("image/png");
     const a=document.createElement('a');
-    a.href=url; a.download="voice-glyph.png"; a.click();
+    a.href=url; a.download="voice-glyph.png";
+    document.body.appendChild(a); a.click(); a.remove();
   });
 })();
 </script>
 
-<!-- Optional: MathJax for live equation rendering -->
-<script defer id="MathJax-script"
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<!-- MathJax for equations (optional but nice) -->
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </body>
 </html>
