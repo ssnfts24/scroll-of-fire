@@ -1,33 +1,147 @@
 <!doctype html>
 <html lang="en" dir="ltr">
 <head>
+  <!-- Resolve all relative URLs from the project root on GitHub Pages -->
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <script>
+    // In GitHub repo preview (github.com), remove <base> so relative paths still work.
+    if (location.hostname === "github.com") {
+      const b = document.querySelector("base"); if (b) b.remove();
+    }
+  </script>
+
   <meta charset="utf-8" />
   <title>Circle Sync — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
-  <meta name="description" content="A lightweight circle protocol: shared cadence, staggered entry, and a single closing seal. Tracks local Ξ impressions—ethics-first.">
+  <meta name="description" content="Circle protocol: shared cadence, staggered entry, and a single closing seal. Tracks local Ξ impressions—ethics-first.">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/circle.html" />
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
-  <style>.wrap{max-width:1000px;margin:0 auto;padding:20px 16px 80px}.title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);-webkit-background-clip:text;background-clip:text;color:transparent}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media(max-width:900px){.grid3{grid-template-columns:1fr}}</style>
+
+  <!-- Social -->
+  <meta property="og:site_name" content="Scroll of Fire">
+  <meta property="og:title" content="Circle Sync — Scroll of Fire">
+  <meta property="og:description" content="Group-run scaffold based on Type-7 summation (Eq.6). Keep it ethical, simple, and measurable.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/circle.html">
+  <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
+
+  <!-- CSS -->
+  <link rel="preload" as="style" href="assets/css/codex.css?v=circle1">
+  <link rel="stylesheet" href="assets/css/codex.css?v=circle1">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=circle1"></noscript>
+
+  <!-- Preload banner -->
+  <link rel="preload" as="image"
+        href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
+        imagesizes="100vw" fetchpriority="high">
+
+  <!-- Lazy MathJax -->
+  <script>
+  (function(){
+    function loadMJ(){
+      if (window.MathJax) return;
+      window.MathJax = {
+        tex:{inlineMath:[['\\(','\\)']],displayMath:[['$$','$$']]},
+        svg:{fontCache:'global',linebreaks:{automatic:true,width:'container'}},
+        startup:{typeset:false}
+      };
+      const s=document.createElement('script');
+      s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
+      s.defer=true;
+      s.onload=()=>window.MathJax.typeset && window.MathJax.typeset();
+      document.head.appendChild(s);
+    }
+    addEventListener('DOMContentLoaded', ()=>{
+      const tgt=document.querySelector('.eq')||document.body;
+      if('IntersectionObserver'in window){
+        const io=new IntersectionObserver((e)=>{ if(e.some(x=>x.isIntersecting)){ io.disconnect(); loadMJ(); }},{rootMargin:'800px 0'});
+        io.observe(tgt);
+      } else loadMJ();
+    });
+  })();
+  </script>
+
+  <style>
+    :root{ --maxw:1100px }
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:20px 16px 80px}
+    .title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;
+      font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;
+      background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);
+      -webkit-background-clip:text;background-clip:text;color:transparent}
+    .subtitle{text-align:center;color:var(--muted);margin:0 0 10px}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    @media(max-width:900px){.grid3{grid-template-columns:1fr}}
+    .desk-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:rgba(255,255,255,.02)}
+    .desk-card b{display:block;margin-bottom:6px}
+    .desk-card label{display:block;margin:6px 0}
+    .desk-card input{width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--line);background:#0f0f14;color:var(--ink)}
+    .lab-row{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+    .lab-btn{
+      appearance:none;border:1px solid var(--line);background:transparent;color:var(--ink);
+      padding:.55rem .8rem;border-radius:10px;font:600 14px/1 Inter;cursor:pointer
+    }
+    .lab-btn:hover{border-color:#3a3a44}
+    .lab-btn.ghost{opacity:.9}
+    textarea#wit{width:100%;margin-top:8px;padding:.65rem .75rem;border-radius:10px;border:1px solid var(--line);background:#0f0f14;color:var(--ink)}
+
+    /* Ring visual */
+    .ring-bg{fill:none;stroke:#1f1f28;stroke-width:4}
+    .ring-fg{fill:none;stroke:url(#gRing);stroke-width:6;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset .9s var(--ease)}
+    .ring-phase{fill:#eae7df;font:800 14px/1 Inter}
+    .ring-count{fill:#b8b3a6;font:600 12px/1 Inter}
+    /* SVG gradient */
+    svg#ring defs linearGradient stop{ transition:stop-color .25s var(--ease) }
+    /* Kicker badges (phase labels) */
+    .phase-legend{display:flex;gap:8px;justify-content:center;margin:6px 0 0}
+    .phase-legend .badge{font-size:.8rem}
+  </style>
 </head>
 <body>
 <main class="wrap">
+
+  <!-- Banner -->
+  <figure class="hero hero--contain" aria-label="Scroll of Fire banner" style="margin-bottom:10px">
+    <img
+      src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
+      data-src-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
+      onerror="if(this.dataset.srcRaw&&!this._tried){this._tried=1;this.src=this.dataset.srcRaw;}"
+      alt="Scroll of Fire — gilded sigil banner"
+      width="1600" height="900" loading="lazy" decoding="async">
+  </figure>
+
+  <!-- Nav -->
+  <nav class="tabs" aria-label="Primary navigation">
+    <a class="tab" href="index.html">⌂ Home</a>
+    <a class="tab" href="theory.html">📘 Theory</a>
+    <a class="tab" href="teach.html">🎓 Teach</a>
+    <a class="tab tab--primary" aria-current="page" href="circle.html">◯ Circle</a>
+    <a class="tab" href="ledger.html">🧾 Ledger</a>
+  </nav>
+
   <header class="page-head fancy-head">
     <h1 class="title">🕯️ Circle Sync</h1>
-    <p class="subtitle">Group-run scaffold based on Type-7 summation (Eq.6). Keep it ethical, simple, and measurable.</p>
+    <p class="subtitle">Group-run scaffold based on Type-7 summation (<a href="theory.html#eq6">Eq.6</a>). Keep it ethical, simple, and measurable.</p>
     <nav class="crumbs" style="display:flex;gap:8px;justify-content:center">
-      <a class="cta" href="index.html">← Codex</a><a class="cta" href="teach.html">Teaching Lab</a>
+      <a class="cta" href="start.html">← Start Here</a>
+      <a class="cta" href="teach.html#circle">Teaching Lab</a>
     </nav>
   </header>
 
   <section class="card">
-    <h2>Setup (5 min)</h2>
+    <h2>Setup (≈5 min)</h2>
     <div class="grid3">
-      <div class="desk-card"><b>Consent</b><p>Everyone opts in; intentions are self-aligned (no targeting others).</p></div>
-      <div class="desk-card"><b>Carrier</b><p>Pick one shared Π<sub>ν</sub> (432 / 528 / 369). Hum quietly; mics off on calls.</p></div>
-      <div class="desk-card"><b>Cadence</b><p>Ring: 10s phases • 3 rounds. Stagger entries by 1s clockwise.</p></div>
+      <div class="desk-card">
+        <b>Consent</b>
+        <p>Everyone opts in; intentions are self-aligned (no targeting others).</p>
+      </div>
+      <div class="desk-card">
+        <b>Carrier</b>
+        <p>Pick one shared Π<sub>ν</sub> (432 / 528 / 369). Hum quietly; mics off on calls.</p>
+      </div>
+      <div class="desk-card">
+        <b>Cadence</b>
+        <p>Ring: 10s phases • 3 rounds. Stagger entries by 1s clockwise.</p>
+      </div>
     </div>
     <div class="eq"><div class="eq-scroll">
       $$ \mathbb{E}_{\text{living}}(t)=\sum_i q_i\,\Phi_i\,e^{i\omega_i t}\quad\text{(phase-locked 3–6–9)} \tag{Eq.6} $$
@@ -38,14 +152,28 @@
     <h2>Run</h2>
     <ol class="list">
       <li><b>Round 1:</b> everyone whispers their line once on the shared Π<sub>ν</sub>.</li>
-      <li><b>Round 2:</b> Look → Coalesce as a group (quiet, no chat).</li>
+      <li><b>Round 2:</b> Look → coalesce as a group (quiet, no chat).</li>
       <li><b>Round 3:</b> Seal together on exhale; no discussing results yet.</li>
     </ol>
-    <div class="lab-row">
-      <button id="start" class="lab-btn">Start 3×10s Ring</button>
-      <button id="stop" class="lab-btn ghost">Stop</button>
+
+    <div class="phase-legend">
+      <span class="badge">𝓘 — intention</span>
+      <span class="badge">𝓛 — light</span>
+      <span class="badge"> 𝓒 — witness</span>
     </div>
-    <svg id="ring" viewBox="0 0 120 120" style="width:220px;display:block;margin:8px auto">
+
+    <div class="lab-row" role="group" aria-label="Circle controls">
+      <button id="start" class="lab-btn">▶ Start 3×10s Ring</button>
+      <button id="stop" class="lab-btn ghost" disabled>■ Stop</button>
+    </div>
+
+    <!-- Progress Ring -->
+    <svg id="ring" viewBox="0 0 120 120" style="width:220px;display:block;margin:8px auto" role="img" aria-label="Phase ring">
+      <defs>
+        <linearGradient id="gRing" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/>
+        </linearGradient>
+      </defs>
       <circle cx="60" cy="60" r="54" class="ring-bg"/>
       <circle id="fg" cx="60" cy="60" r="54" class="ring-fg" pathLength="100"/>
       <text id="phase" x="60" y="52" class="ring-phase" text-anchor="middle">Ready</text>
@@ -54,17 +182,17 @@
   </section>
 
   <section class="card">
-    <h2>Silent Survey (1 min)</h2>
+    <h2>Silent Survey (≈1 min)</h2>
     <p>Each person logs privately (no persuasion):</p>
-    <div class="grid3">
-      <div class="desk-card"><label>Ξ (0–1)<input id="xi" type="number" step="0.01" min="0" max="1" value="0.65"></label></div>
-      <div class="desk-card"><label>Carrier<input id="carrier" placeholder="432/528/369"></label></div>
-      <div class="desk-card"><label>Line<input id="line" placeholder="8–12 words"></label></div>
+    <div class="grid3" style="margin-bottom:6px">
+      <div class="desk-card"><label for="xi">Ξ (0–1)</label><input id="xi" type="number" step="0.01" min="0" max="1" value="0.65"></div>
+      <div class="desk-card"><label for="carrier">Carrier</label><input id="carrier" placeholder="432 / 528 / 369"></div>
+      <div class="desk-card"><label for="line">Line</label><input id="line" placeholder="8–12 words"></div>
     </div>
-    <label class="sr-only" for="wit"></label>
+    <label class="sr-only" for="wit">Witness</label>
     <textarea id="wit" rows="3" placeholder="One undeniable detail…"></textarea>
     <div class="lab-row">
-      <button id="toLedger" class="lab-btn">Send to Ledger</button>
+      <button id="toLedger" class="lab-btn">💾 Send to Ledger</button>
     </div>
     <div class="eq"><div class="eq-scroll">
       $$ \text{Stop rule: if } \frac{\mathrm{Truth}}{\mathrm{Distortion}}\downarrow \Rightarrow \text{Abort, Re-align, Resume} \tag{Eq.9} $$
@@ -77,27 +205,115 @@
   </footer>
 </main>
 
+<!-- Page logic -->
 <script>
 (function(){
+  // Year
   const y=document.getElementById('yr'); if(y) y.textContent=String(new Date().getFullYear());
-  function $(s,r=document){return r.querySelector(s);}
-  const start=$("#start"), stop=$("#stop"), fg=$("#fg"), phase=$("#phase"), count=$("#count");
-  let timer=null, idx=0, phs=[{k:"𝓘",s:10},{k:"𝓛",s:10},{k:"𝓒",s:10}], rounds=3, t=0, total=phs.reduce((a,b)=>a+b.s,0)*rounds;
-  start.addEventListener('click', ()=>{
-    if(timer) return; idx=0; let r=0, rem=phs[0].s; t=0; phase.textContent="𝓘";
-    timer=setInterval(()=>{
-      if(rem<=0){ idx++; if(idx>=phs.length){ r++; idx=0; if(r>=rounds){ clearInterval(timer); timer=null; phase.textContent="Done"; count.textContent="—"; return; } } rem=phs[idx].s; phase.textContent=phs[idx].k; }
-      rem--; t++; count.textContent=String(rem+1)+"s"; fg.style.strokeDashoffset=String(100-100*(t/total));
-    },1000);
-  });
-  stop.addEventListener('click', ()=>{ clearInterval(timer); timer=null; phase.textContent="—"; count.textContent="—"; });
+
+  // Perf warm-up (aligns with other pages)
+  document.body.classList.add('performance-warming');
+  const lowCore=(navigator.hardwareConcurrency||4)<=4;
+  const saveData=navigator.connection && navigator.connection.saveData;
+  if (lowCore || saveData) document.body.classList.add('perf-fast');
+  setTimeout(()=>document.body.classList.remove('performance-warming'), 900);
+
+  // Helpers
+  const $=(s,r=document)=>r.querySelector(s);
+  const fg=$("#fg"), phase=$("#phase"), count=$("#count");
+  const btnStart=$("#start"), btnStop=$("#stop");
+
+  // Ring + phases
+  const phases=[{k:"𝓘", s:10, label:"Intention"},{k:"𝓛", s:10, label:"Light"},{k:"𝓒", s:10, label:"Witness"}];
+  const rounds=3;
+  const total=phases.reduce((a,b)=>a+b.s,0)*rounds;
+  let timer=null, t=0, idx=0, rd=0, rem=phases[0].s;
+
+  function tick(){
+    if(rem<=0){
+      idx++;
+      if(idx>=phases.length){ rd++; idx=0; if(rd>=rounds){ stop(); phase.textContent="Done"; count.textContent="—"; return; } }
+      rem=phases[idx].s;
+      phase.textContent=phases[idx].k;
+      count.textContent=rem+"s";
+    }
+    rem--; t++;
+    fg.style.strokeDashoffset=String(100-100*(t/total));
+    if(rem>=0) count.textContent=(rem+1)+"s";
+  }
+
+  function start(){
+    if(timer) return;
+    // reset
+    t=0; idx=0; rd=0; rem=phases[0].s;
+    fg.style.strokeDashoffset="0"; // start from 0 and animate with CSS transition
+    fg.getBoundingClientRect();   // force reflow
+    fg.style.strokeDashoffset="100"; // then decrease each tick
+    phase.textContent=phases[0].k; count.textContent=(rem)+"s";
+    btnStart.disabled=true; btnStop.disabled=false;
+    timer=setInterval(tick,1000);
+  }
+
+  function stop(){
+    clearInterval(timer); timer=null;
+    btnStart.disabled=false; btnStop.disabled=true;
+  }
+
+  btnStart.addEventListener('click', start);
+  btnStop.addEventListener('click', ()=>{ stop(); phase.textContent="—"; count.textContent="—"; });
+
+  // Send to Ledger
   $("#toLedger").addEventListener('click', ()=>{
     try{
-      const payload={intent:$("#line").value||"Circle run", carrier:$("#carrier").value||"", witness:$("#wit").value||"", xi:parseFloat($("#xi").value)||null, quality:"", tags:"#circle", t:Date.now()};
+      const payload={
+        intent:($("#line").value||"Circle run").trim(),
+        carrier:($("#carrier").value||"").trim(),
+        witness:($("#wit").value||"").trim(),
+        xi:Number.parseFloat($("#xi").value)||null,
+        quality:"",
+        tags:"#circle",
+        t:Date.now()
+      };
       localStorage.setItem("codex_ledger_inbox", JSON.stringify(payload));
       alert("Sent to Ledger. Open the Witness Ledger tab to add.");
     }catch(_){ alert("Local save failed—copy your note."); }
   });
+
+  // Reveal-on-scroll + tilt (match site feel)
+  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const raf=(fn)=>(window.requestAnimationFrame||setTimeout)(fn,16);
+  const prefersReduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const hasIO="IntersectionObserver" in window;
+
+  function revealOnScroll(){
+    const cards=$$(".card"); if(!cards.length) return;
+    if(!prefersReduced && hasIO){
+      const io=new IntersectionObserver((entries)=>{
+        for(const e of entries){ if(e.isIntersecting){ e.target.classList.add("visible"); io.unobserve(e.target); } }
+      },{root:null,rootMargin:"0px 0px -12%",threshold:0.08});
+      cards.forEach(el=>io.observe(el)); return;
+    }
+    const tick=()=>cards.forEach(el=>{
+      const r=el.getBoundingClientRect(), vh=innerHeight||document.documentElement.clientHeight;
+      if(r.top<vh*0.92 && r.bottom>0) el.classList.add("visible");
+    });
+    addEventListener("scroll",()=>raf(tick),{passive:true}); addEventListener("load",tick); tick();
+  }
+  function tiltCards(){
+    if(prefersReduced) return;
+    $$(".card").forEach(card=>{
+      const reset=()=>{ card.style.transform=""; };
+      card.addEventListener("mousemove",(e)=>{
+        const r=card.getBoundingClientRect();
+        const x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+        raf(()=>{ card.style.transform=`perspective(900px) rotateX(${(0.5-y)*4}deg) rotateY(${(x-0.5)*6}deg)`; });
+      });
+      ["mouseleave","blur","touchstart"].forEach(ev=>card.addEventListener(ev, reset, {passive:true}));
+    });
+  }
+  document.addEventListener("DOMContentLoaded", ()=>{ revealOnScroll(); tiltCards(); });
 })();
 </script>
-</body></html>
+</body>
+</html>
+```0
