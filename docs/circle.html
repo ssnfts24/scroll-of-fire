@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <meta charset="utf-8" />
+  <title>Circle Sync — Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
+  <meta name="description" content="A lightweight circle protocol: shared cadence, staggered entry, and a single closing seal. Tracks local Ξ impressions—ethics-first.">
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/circle.html" />
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
+  <style>.wrap{max-width:1000px;margin:0 auto;padding:20px 16px 80px}.title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);-webkit-background-clip:text;background-clip:text;color:transparent}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media(max-width:900px){.grid3{grid-template-columns:1fr}}</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="page-head fancy-head">
+    <h1 class="title">🕯️ Circle Sync</h1>
+    <p class="subtitle">Group-run scaffold based on Type-7 summation (Eq.6). Keep it ethical, simple, and measurable.</p>
+    <nav class="crumbs" style="display:flex;gap:8px;justify-content:center">
+      <a class="cta" href="index.html">← Codex</a><a class="cta" href="teach.html">Teaching Lab</a>
+    </nav>
+  </header>
+
+  <section class="card">
+    <h2>Setup (5 min)</h2>
+    <div class="grid3">
+      <div class="desk-card"><b>Consent</b><p>Everyone opts in; intentions are self-aligned (no targeting others).</p></div>
+      <div class="desk-card"><b>Carrier</b><p>Pick one shared Π<sub>ν</sub> (432 / 528 / 369). Hum quietly; mics off on calls.</p></div>
+      <div class="desk-card"><b>Cadence</b><p>Ring: 10s phases • 3 rounds. Stagger entries by 1s clockwise.</p></div>
+    </div>
+    <div class="eq"><div class="eq-scroll">
+      $$ \mathbb{E}_{\text{living}}(t)=\sum_i q_i\,\Phi_i\,e^{i\omega_i t}\quad\text{(phase-locked 3–6–9)} \tag{Eq.6} $$
+    </div></div>
+  </section>
+
+  <section class="card">
+    <h2>Run</h2>
+    <ol class="list">
+      <li><b>Round 1:</b> everyone whispers their line once on the shared Π<sub>ν</sub>.</li>
+      <li><b>Round 2:</b> Look → Coalesce as a group (quiet, no chat).</li>
+      <li><b>Round 3:</b> Seal together on exhale; no discussing results yet.</li>
+    </ol>
+    <div class="lab-row">
+      <button id="start" class="lab-btn">Start 3×10s Ring</button>
+      <button id="stop" class="lab-btn ghost">Stop</button>
+    </div>
+    <svg id="ring" viewBox="0 0 120 120" style="width:220px;display:block;margin:8px auto">
+      <circle cx="60" cy="60" r="54" class="ring-bg"/>
+      <circle id="fg" cx="60" cy="60" r="54" class="ring-fg" pathLength="100"/>
+      <text id="phase" x="60" y="52" class="ring-phase" text-anchor="middle">Ready</text>
+      <text id="count" x="60" y="72" class="ring-count" text-anchor="middle">—</text>
+    </svg>
+  </section>
+
+  <section class="card">
+    <h2>Silent Survey (1 min)</h2>
+    <p>Each person logs privately (no persuasion):</p>
+    <div class="grid3">
+      <div class="desk-card"><label>Ξ (0–1)<input id="xi" type="number" step="0.01" min="0" max="1" value="0.65"></label></div>
+      <div class="desk-card"><label>Carrier<input id="carrier" placeholder="432/528/369"></label></div>
+      <div class="desk-card"><label>Line<input id="line" placeholder="8–12 words"></label></div>
+    </div>
+    <label class="sr-only" for="wit"></label>
+    <textarea id="wit" rows="3" placeholder="One undeniable detail…"></textarea>
+    <div class="lab-row">
+      <button id="toLedger" class="lab-btn">Send to Ledger</button>
+    </div>
+    <div class="eq"><div class="eq-scroll">
+      $$ \text{Stop rule: if } \frac{\mathrm{Truth}}{\mathrm{Distortion}}\downarrow \Rightarrow \text{Abort, Re-align, Resume} \tag{Eq.9} $$
+    </div></div>
+  </section>
+
+  <footer class="footer">
+    <div class="divider" aria-hidden="true"></div>
+    <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+  </footer>
+</main>
+
+<script>
+(function(){
+  const y=document.getElementById('yr'); if(y) y.textContent=String(new Date().getFullYear());
+  function $(s,r=document){return r.querySelector(s);}
+  const start=$("#start"), stop=$("#stop"), fg=$("#fg"), phase=$("#phase"), count=$("#count");
+  let timer=null, idx=0, phs=[{k:"𝓘",s:10},{k:"𝓛",s:10},{k:"𝓒",s:10}], rounds=3, t=0, total=phs.reduce((a,b)=>a+b.s,0)*rounds;
+  start.addEventListener('click', ()=>{
+    if(timer) return; idx=0; let r=0, rem=phs[0].s; t=0; phase.textContent="𝓘";
+    timer=setInterval(()=>{
+      if(rem<=0){ idx++; if(idx>=phs.length){ r++; idx=0; if(r>=rounds){ clearInterval(timer); timer=null; phase.textContent="Done"; count.textContent="—"; return; } } rem=phs[idx].s; phase.textContent=phs[idx].k; }
+      rem--; t++; count.textContent=String(rem+1)+"s"; fg.style.strokeDashoffset=String(100-100*(t/total));
+    },1000);
+  });
+  stop.addEventListener('click', ()=>{ clearInterval(timer); timer=null; phase.textContent="—"; count.textContent="—"; });
+  $("#toLedger").addEventListener('click', ()=>{
+    try{
+      const payload={intent:$("#line").value||"Circle run", carrier:$("#carrier").value||"", witness:$("#wit").value||"", xi:parseFloat($("#xi").value)||null, quality:"", tags:"#circle", t:Date.now()};
+      localStorage.setItem("codex_ledger_inbox", JSON.stringify(payload));
+      alert("Sent to Ledger. Open the Witness Ledger tab to add.");
+    }catch(_){ alert("Local save failed—copy your note."); }
+  });
+})();
+</script>
+</body></html>
