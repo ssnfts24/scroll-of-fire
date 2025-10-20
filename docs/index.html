@@ -64,7 +64,7 @@
   <!-- Preload hero -->
   <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" imagesizes="100vw" fetchpriority="high">
 
-  <!-- Critical micro-fixes + overrides for this page -->
+  <!-- Critical micro-fixes + page overrides -->
   <style>
     :root{--safe-top:env(safe-area-inset-top);--safe-bot:env(safe-area-inset-bottom)}
     body{background:var(--bg);margin:0}
@@ -75,53 +75,58 @@
     .wrap{padding:16px;max-width:1200px;margin:0 auto}
     .hidden{display:none!important}
 
-    /* ------- Nav consolidation: utilities-only header + glass tabs ------- */
+    /* Skip link */
     a.skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
     a.skip:focus{left:12px;top:12px;width:auto;height:auto;padding:8px 10px;z-index:70;background:#0f1118;color:#fff;border:1px solid #343846;border-radius:10px;-webkit-backdrop-filter:saturate(140%) blur(8px);backdrop-filter:saturate(140%) blur(8px)}
 
+    /* Header utilities */
     header.site{background:rgba(9,10,14,.88);-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid rgba(52,56,66,.8)}
     .quick.quick--utils{gap:10px;padding:6px 8px;border-radius:12px;background:rgba(16,18,24,.55);border:1px solid rgba(52,56,66,.9)}
     .quick.quick--utils .cta{background:rgba(255,255,255,.04);border-color:#343846}
 
+    /* Glass tabs (single menu, darker backdrop) */
     .tabs{position:sticky;top:calc(56px + var(--safe-top,0px));z-index:55;padding:8px 12px;margin:10px 0 14px;border-radius:14px;background:linear-gradient(180deg,rgba(12,14,18,.74),rgba(12,14,18,.58));-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border:1px solid rgba(52,56,66,.85);overflow:auto;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable both-edges}
     .tabs .tab{background:rgba(255,255,255,.04);border-color:#343846}
     .tabs .tab:hover{background:rgba(255,255,255,.07)}
     .tabs .tab-ink{bottom:-6px}
     :target{scroll-margin-top:clamp(96px,13vh,140px)}
 
-    /* ------- Hero hard-lock: use your PNG and respect cover/contain ------ */
+    /* Hero: fit image (no crop) */
     .hero{--hero-aspect:21/9;border-radius:20px;overflow:hidden;isolation:isolate}
-    .hero img{display:block;width:100%;height:auto;aspect-ratio:var(--hero-aspect,21/9);object-fit:var(--_fit,cover);background:var(--bg-elev);filter:none !important;mix-blend-mode:normal !important}
+    .hero img{display:block;width:100%;height:auto;aspect-ratio:var(--hero-aspect,21/9);object-fit:var(--_fit,contain);background:var(--bg-elev)}
     .hero[data-fit="contain"] img{--_fit:contain}
     .hero[data-fit="cover"] img{--_fit:cover}
     @supports not (aspect-ratio:1){.hero img{height:clamp(220px,38vw,520px)}}
 
-    /* ------- MathJax comfort & safe overflow ---------------------------- */
+    /* MathJax comfort / safety */
     .eq mjx-container{font-size:110%}
     .eq mjx-container[display="block"]{overflow:auto}
-    .eq .eq-scroll{cursor:grab}
-    .eq .eq-scroll:active{cursor:grabbing}
-
-    /* Keep search suggest above content */
     #site-suggest{z-index:70}
   </style>
 
-  <!-- Lazy MathJax -->
+  <!-- MathJax: robust load + force typeset -->
   <script>
   (function(){
     let loaded=false;
-    function loadMJ(){
-      if(loaded) return; loaded=true;
-      window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['$$','$$']]},svg:{fontCache:'global'},startup:{typeset:false}};
-      const s=document.createElement('script'); s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"; s.defer=true; document.head.appendChild(s);
+    function boot(){
+      if (!window.MathJax) return;
+      MathJax.startup.promise.then(()=>MathJax.typesetPromise());
     }
-    addEventListener('DOMContentLoaded',()=>{
-      const t=document.querySelector('.eq')||document.body;
-      if('IntersectionObserver'in window){
-        const io=new IntersectionObserver(es=>{if(es.some(x=>x.isIntersecting)){io.disconnect();loadMJ();}}, {rootMargin:'800px 0px'});
-        io.observe(t);
-      } else {loadMJ();}
-    });
+    function loadMJ(){
+      if (loaded) return; loaded=true;
+      window.MathJax = {
+        tex:{ inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']] },
+        svg:{ fontCache:'global' },
+        startup:{ typeset:false }
+      };
+      const s=document.createElement('script');
+      s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
+      s.defer=true;
+      s.onload=boot;
+      document.head.appendChild(s);
+    }
+    if (document.readyState!=='loading') loadMJ();
+    else document.addEventListener('DOMContentLoaded', loadMJ);
   })();
   </script>
 
@@ -158,8 +163,8 @@
   </header>
 
   <main class="wrap" id="top">
-    <!-- Use original banner path; no srcset -->
-    <figure id="hero" class="hero hero--clean" aria-label="Scroll of Fire banner" data-fit="cover">
+    <!-- Original banner path; fit without cropping -->
+    <figure id="hero" class="hero hero--clean" aria-label="Scroll of Fire banner" data-fit="contain">
       <img id="heroBanner"
            src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
            alt="Scroll of Fire — sigil and equations"
@@ -391,7 +396,7 @@ Status: Verified
           <li><strong>Operators & Process</strong> — Ordered living operators and the integration pipeline.</li>
           <li><strong>Living Technology</strong> — Tesla Type-7 conduit description & safety/ethics gate.</li>
         </ul>
-        <div class="eq"><div class="eq-scroll">$$\mathbf{Original\ Frame:}\ \mathfrak{R}_{\text{Codex}} = f(\text{constants},\ \text{ratios})\cdot(\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})\cdot\bigl(\Psi_{0} + \Delta\mathcal{R}\bigr)\cdot\Pi_{\nu}^{-1}\!\bigl[\mathcal{H}(\nu)\,\\mathbf{V}(\nu)\bigr]\;\odot\;\mathbb{M}_\tau[\\cdot]\;\text{ masked by }\;\mathsf{Mask}_{\mathcal{C}}[\cdot]$$</div></div>
+        <div class="eq"><div class="eq-scroll">$$\mathbf{Original\ Frame:}\ \mathfrak{R}_{\text{Codex}} = f(\text{constants},\ \text{ratios})\cdot(\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})\cdot\bigl(\Psi_{0} + \Delta\mathcal{R}\bigr)\cdot\Pi_{\nu}^{-1}\!\bigl[\mathcal{H}(\nu)\,\mathbf{V}(\nu)\bigr]\;\odot\;\mathbb{M}_\tau[\cdot]\;\text{ masked by }\;\mathsf{Mask}_{\mathcal{C}}[\cdot]$$</div></div>
         <p class="eq-note">Self-contained architecture; external formalisms remain adjunct.</p>
       </article>
       <article class="card col-5">
@@ -422,4 +427,4 @@ Status: Verified
 
   <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
 </body>
-                                                                                     </html>
+        </html>
