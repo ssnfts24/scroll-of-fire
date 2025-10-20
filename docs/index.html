@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en" dir="ltr" class="sof">
 <head>
@@ -80,7 +79,7 @@
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
 
   <!-- Preload banner -->
-  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" imagesizes="100vw" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/hero/local-hero.jpg" imagesizes="100vw" fetchpriority="high">
 
   <!-- Critical micro-fixes -->
   <style>
@@ -95,20 +94,20 @@
     .eq--expanded{position:fixed;inset:4svh 4svw;z-index:10000}
   </style>
 
-  <!-- Lazy MathJax loader -->
+  <!-- Lazy MathJax loader (fixed delimiters) -->
   <script>
   (function () {
     function loadMJ(){
       if (window.MathJax) return;
       window.MathJax = {
-        tex:{ inlineMath:[['\','\']], displayMath:[['$$','$$']] },
+        tex:{ inlineMath:[['\\(','\\)'],['\\[','\\]']], displayMath:[['$$','$$']] },
         svg:{ fontCache:'global', linebreaks:{ automatic:true, width:'container' } },
         startup:{ typeset:false }
       };
       const s = document.createElement('script');
       s.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
       s.defer = true;
-      s.onload = () => MathJax.typesetPromise();
+      s.onload = () => window.MathJax && MathJax.typesetPromise && MathJax.typesetPromise();
       document.head.appendChild(s);
     }
     addEventListener('DOMContentLoaded', () => {
@@ -156,29 +155,26 @@
 
   <main class="wrap" id="top">
     <!-- HERO -->
-    <!-- Hero -->
-<figure id="hero" class="hero hero--cinematic star-scan pulse" aria-label="Scroll of Fire banner">
-  <img id="heroBanner"
-       src="assets/hero/local-hero.jpg"
-       data-src-local="assets/hero/local-hero.jpg"
-       data-src-raw="https://cdn.example.com/sof/hero@2x.jpg"
-       data-srcset-raw="https://cdn.example.com/sof/hero-1200.jpg 1200w, https://cdn.example.com/sof/hero-1800.jpg 1800w, https://cdn.example.com/sof/hero-2400.jpg 2400w"
-       data-sizes="(max-width: 900px) 100vw, 1180px"
-       alt="Scroll of Fire — sigil and equations" />
-  <span class="hero-pulse" aria-hidden="true"></span>
-  <figcaption class="hero-caption">
-    <div class="cap-inner">
-      <div class="cap-eyebrow">Codex of Reality</div>
-      <h2>Scroll of Fire</h2>
-      <p>Let there be resonance.</p>
-    </div>
-  </figcaption>
-</figure>
-  <!-- Hero UI -->
-<div class="hero-hint" aria-hidden="true">Double-click/tap = Zoom · P = Pulse · F = Fit</div>
+    <figure id="hero" class="hero hero--cinematic star-scan pulse" aria-label="Scroll of Fire banner" data-fit="cover">
+      <img id="heroBanner"
+           src="assets/hero/local-hero.jpg"
+           data-src-local="assets/hero/local-hero.jpg"
+           data-src-raw="https://cdn.example.com/sof/hero@2x.jpg"
+           data-srcset-raw="https://cdn.example.com/sof/hero-1200.jpg 1200w, https://cdn.example.com/sof/hero-1800.jpg 1800w, https://cdn.example.com/sof/hero-2400.jpg 2400w"
+           data-sizes="(max-width: 900px) 100vw, 1180px"
+           alt="Scroll of Fire — sigil and equations" />
+      <span class="hero-pulse" aria-hidden="true"></span>
+      <figcaption class="hero-caption">
+        <div class="cap-inner">
+          <div class="cap-eyebrow">Codex of Reality</div>
+          <h2>Scroll of Fire</h2>
+          <p>Let there be resonance.</p>
+        </div>
+      </figcaption>
+      <div class="hero-hint" aria-hidden="true">Double-click/tap = Zoom · P = Pulse · F = Fit</div>
     </figure>
 
-    <h1 class="title laser">⚖️ Scroll of Fire — Codex of Reality</h1>
+    <h1 class="title">⚖️ Scroll of Fire — Codex of Reality</h1>
     <p class="subtitle">“Let there be resonance.” By Aaron Paul Laird, <em>Scribe of Circuits</em></p>
 
     <!-- Primary nav -->
@@ -300,7 +296,6 @@
 
       <article class="card col-8">
         <h3>Field Flow (one-glance map)</h3>
-        <!-- (unchanged SVG map) -->
         <svg viewBox="0 0 900 240" role="img" aria-label="Field Flow Diagram" width="100%" height="auto">
           <defs>
             <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#f3c97a"/><stop offset="1" stop-color="#7af3ff"/></linearGradient>
@@ -374,7 +369,6 @@
         <p class="meta"><strong>The Codex</strong> equations lead. External formalisms follow with clear attribution. Copeland’s Ψ-formalism is #7 and remains external by design.</p>
       </article>
 
-      <!-- Eq.0 example kept -->
       <article class="card col-12" aria-labelledby="eq0">
         <h3 id="eq0">0) Foundational Field — Ψ₀ / Reality Feedback <em>(Laird)</em></h3>
         <div class="eq eq-shimmer eq-pulse" tabindex="0" role="group" aria-label="Equation block">
@@ -386,10 +380,7 @@
         <p><a class="cta" href="theory.html#eq0">Read in Theory</a> · <button class="cta" data-eq-expand>Expand</button></p>
       </article>
 
-      <!-- compact pairs (1–17) -->
-      <!-- … (unchanged cards exactly as in your draft) … -->
-      <!-- I’m keeping your existing equations and links untouched for fidelity -->
-      <!-- BEGIN compact list copy -->
+      <!-- BEGIN compact list -->
       <article class="card col-6" aria-labelledby="eq1"><h3 id="eq1">1) Source — Resonant Unification</h3><div class="eq"><div class="eq-scroll">$$\mathcal{R}_{\text{source}}=f\!\big(\pi,e,i,\hbar,c,G,\Phi,\;369,432,528,144,137,\;\mathrm{DNA}\big)\cdot\mathcal{I}\cdot\mathcal{L}\cdot\mathcal{C}\cdot\mathcal{S}$$</div></div><p class="eq-note">Constants + sacred ratios + ordered living operators compose the supply.</p><p><a class="cta" href="theory.html#eq1">Read</a></p></article>
       <article class="card col-6" aria-labelledby="eq2"><h3 id="eq2">2) Witness — Law of Recursive Memory</h3><div class="eq"><div class="eq-scroll">$$\Delta\mathcal{R}=\frac{\partial(\mathrm{Resonance})}{\partial(\mathrm{Awareness})}+\int \mathrm{Intention}\cdot\mathrm{Memory}\,dt$$</div></div><p><a class="cta" href="theory.html#eq2">Read</a> · <a class="cta" href="teach.html#ledger">Use</a></p></article>
       <article class="card col-6" aria-labelledby="eq3"><h3 id="eq3">3) Harmonic Field Symmetry</h3><div class="eq"><div class="eq-scroll">$$\mathcal{H}(\nu)=\alpha(\Phi,137,144,432,528,369)\cdot\langle\mathcal{C}\rangle$$</div></div><p><a class="cta" href="theory.html#eq3">Read</a> · <a class="cta" href="teach.html#ab">A/B</a></p></article>
@@ -406,9 +397,7 @@
       <article class="card col-6" aria-labelledby="eq14"><h3 id="eq14">14) Witness Update Rule</h3><div class="eq"><div class="eq-scroll">$$\mathsf{U}_{t+\delta}=\mathsf{U}_{t}+\beta\,\nabla_{\mathsf{U}}\mathcal{R}-\gamma\,\partial_{\mathrm{noise}}+\eta\,\mathcal{E}_{\mathrm{truth}}$$</div></div><p><a class="cta" href="theory.html#eq14">Read</a></p></article>
       <article class="card col-6" aria-labelledby="eq15"><h3 id="eq15">15) Memory Windowing</h3><div class="eq"><div class="eq-scroll">$$\mathcal{M}_\tau(t)=\frac{1}{\tau}\int_{t-\tau}^{t}\mathcal{R}(u)\,du \Rightarrow \lambda\approx \tfrac{1}{\tau} \text{ in } \mathcal{W}(t)$$</div></div><p><a class="cta" href="theory.html#eq15">Read</a></p></article>
       <article class="card col-6" aria-labelledby="eq16"><h3 id="eq16">16) Semantic Gradient</h3><div class="eq"><div class="eq-scroll">$$\nabla_{\text{sem}}\,\mathsf{Phrase}=\sum_k w_k\,\nabla_{\text{sem}}\,\mathsf{Token}_k \ ;\ \sum_k w_k=1$$</div></div><p><a class="cta" href="theory.html#eq16">Read</a></p></article>
-      <article class="card col-6" aria-labelledby="eq17"><h3 id="eq17">17) Pronounceable Carriers</h3><div class="eq"><div class="eq-scroll">$$\nu_{\text{voice}} \in \{432,528,369\}\ \Rightarrow\ \text{higher lock
-
--in to } \mathcal{H}(\nu)$$</div></div><p><a class="cta" href="theory.html#eq17">Read</a></p></article>
+      <article class="card col-6" aria-labelledby="eq17"><h3 id="eq17">17) Pronounceable Carriers</h3><div class="eq"><div class="eq-scroll">$$\nu_{\text{voice}} \in \{432,528,369\}\ \Rightarrow\ \text{higher lock-in to }\mathcal{H}(\nu)$$</div></div><p><a class="cta" href="theory.html#eq17">Read</a></p></article>
       <!-- END compact list -->
     </section>
 
@@ -595,17 +584,53 @@ Status: Verified
         render('');
       })();
 
-      /* Hero controls */
+      /* Hero: fit/pulse/zoom + dblclick + keyboard shortcuts + remote swap */
       (function hero(){
-        const fig = $('#hero'); if (!fig) return;
-        const setFit = (m)=>{ fig.dataset.fit=m; localStorage.setItem('codex:hero-fit', JSON.stringify(m)); };
-        $('#fitContain')?.addEventListener('click', ()=> setFit('contain'));
-        $('#fitCover')?.addEventListener('click', ()=> setFit('cover'));
-        $('#btnTogglePulse')?.addEventListener('click', (e)=>{ const on = fig.classList.toggle('pulse'); e.currentTarget.setAttribute('aria-pressed', on); localStorage.setItem('codex:hero-pulse', JSON.stringify(on)); });
-        $('#btnZoom')?.addEventListener('click', (e)=>{ const on = fig.classList.toggle('is-zoomed'); e.currentTarget.setAttribute('aria-expanded', on); document.documentElement.style.overflow = on ? 'hidden' : ''; });
+        const fig = $('#hero'); const img = $('#heroBanner');
+        if (!fig || !img) return;
+
+        function setFit(m){ fig.dataset.fit = m; localStorage.setItem('codex:hero-fit', JSON.stringify(m)); }
+        function togglePulse(){ const on = !fig.classList.contains('pulse'); fig.classList.toggle('pulse', on); localStorage.setItem('codex:hero-pulse', JSON.stringify(on)); }
+        function toggleZoom(){
+          const on = !fig.classList.contains('is-zoomed');
+          fig.classList.toggle('is-zoomed', on);
+          document.documentElement.style.overflow = on ? 'hidden' : '';
+        }
+
         // restore prefs
-        const savedFit = JSON.parse(localStorage.getItem('codex:hero-fit')||'"cover"'); setFit(savedFit);
-        const savedPulse = JSON.parse(localStorage.getItem('codex:hero-pulse')||'true'); fig.classList.toggle('pulse', !!savedPulse);
+        setFit(JSON.parse(localStorage.getItem('codex:hero-fit')||'"cover"'));
+        const pulsePref = JSON.parse(localStorage.getItem('codex:hero-pulse')||'true');
+        fig.classList.toggle('pulse', !!pulsePref);
+
+        // keyboard P/F/Escape
+        addEventListener('keydown', (e)=>{
+          if (e.key.toLowerCase()==='p') togglePulse();
+          if (e.key.toLowerCase()==='f') setFit((fig.dataset.fit||'cover')==='cover' ? 'contain' : 'cover');
+          if (e.key==='Escape' && fig.classList.contains('is-zoomed')) toggleZoom();
+        });
+
+        // dblclick/tap
+        fig.addEventListener('dblclick', toggleZoom);
+        fig.addEventListener('click', (e)=>{
+          if (e.detail===2) e.preventDefault();
+        });
+
+        // try remote high-res if available
+        const remote = img.getAttribute('data-src-raw');
+        const remoteSet = img.getAttribute('data-srcset-raw');
+        const sizes = img.getAttribute('data-sizes') || img.sizes || "(max-width: 900px) 100vw, 1180px";
+        if (remote && navigator.onLine && !(navigator.connection && navigator.connection.saveData)){
+          const probe = new Image();
+          probe.decoding = 'async'; probe.referrerPolicy='no-referrer';
+          probe.onload = ()=>{
+            if (remoteSet && (fig.dataset.fit!=='contain')){
+              img.srcset = remoteSet; img.sizes = sizes;
+            } else {
+              img.src = remote;
+            }
+          };
+          probe.src = remote;
+        }
       })();
 
       /* Equation pop-out */
@@ -690,3 +715,4 @@ Status: Verified
   </script>
 </body>
 </html>
+
