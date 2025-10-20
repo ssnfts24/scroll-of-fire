@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <meta charset="utf-8" />
+  <title>Ethics & Coherence Law — Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
+  <meta name="description" content="Living Laws of the Codex: consent, non-harm, accountability, and the Coherence Stop Rule (Eq.9), with a personal covenant you can seal." />
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/ethics.html" />
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
+  <style>
+    .wrap{max-width:980px;margin:0 auto;padding:20px 16px 80px}
+    .title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;
+      background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#a7f6ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .tablet{border:1px solid #3a3a44;border-radius:16px;padding:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));margin:10px 0}
+    .seal{display:flex;gap:8px;align-items:center;margin-top:8px}
+    .seal output{font-weight:600}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="page-head fancy-head">
+      <h1 class="title">⚖️ Ethics & Coherence Law</h1>
+      <p class="subtitle">Care as constraint. If coherence drops, we stop. If consent is absent, we abstain.</p>
+      <nav class="crumbs" style="display:flex;gap:8px;justify-content:center">
+        <a class="cta" href="index.html">← Back</a>
+        <a class="cta" href="theory.html#coherence">Theory: Eq.9</a>
+        <a class="cta" href="teach.html#ethics">Teach: Stop Rule</a>
+      </nav>
+    </header>
+
+    <section class="card">
+      <h2>Law Tablets</h2>
+      <article class="tablet card">
+        <h3>1) Consent</h3>
+        <p>Manifest your own alignment; no covert influence or coercion over others’ agency.</p>
+      </article>
+      <article class="tablet card">
+        <h3>2) Non-harm</h3>
+        <p>Abort the run if actions degrade well-being or dignity. Realign, then resume.</p>
+      </article>
+      <article class="tablet card">
+        <h3>3) Accountability</h3>
+        <p>Log honestly; study trends; course-correct; share remnant proofs (when appropriate).</p>
+      </article>
+      <article class="tablet card">
+        <h3>4) Coherence Stop Rule (Eq.9)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \text{If}\ \frac{\mathrm{Truth}(t+\Delta)}{\mathrm{Distortion}(t+\Delta)} < \frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)}\ \Rightarrow\ \text{Abort, Re-align, Resume} $$
+        </div></div>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2>Personal Covenant</h2>
+      <p>Seal your intention to uphold the Living Laws during practice and application.</p>
+      <textarea id="pledge" rows="3" style="width:100%" placeholder="I choose to practice with care, consent, and coherence…"></textarea>
+      <div class="seal">
+        <button id="seal" class="cta">Seal & Save</button>
+        <output id="sealOut">—</output>
+      </div>
+      <p class="meta">Stored only on this device. You can clear it by emptying the box and sealing again.</p>
+    </section>
+
+    <footer class="footer">
+      <div class="divider" aria-hidden="true"></div>
+      <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+    </footer>
+  </main>
+
+  <script>
+    (function(){
+      const key="codex_ethic_pledge_v1";
+      const $=s=>document.querySelector(s);
+      $("#pledge").value = localStorage.getItem(key)||"";
+      $("#sealOut").textContent = $("#pledge").value ? "Sealed." : "—";
+      $("#seal").addEventListener("click", ()=>{
+        const v=$("#pledge").value.trim();
+        if(v){ localStorage.setItem(key,v); $("#sealOut").textContent="Sealed."; }
+        else { localStorage.removeItem(key); $("#sealOut").textContent="Cleared."; }
+      });
+      document.getElementById("yr").textContent=String(new Date().getFullYear());
+    })();
+  </script>
+</body>
+</html>
