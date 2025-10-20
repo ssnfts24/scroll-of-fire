@@ -1,0 +1,220 @@
+/* start-show.css
+   Fancy interactive theme for start.html
+   Scoped under .start-stage to avoid conflict with site-wide CSS
+---------------------------------------------------------------*/
+
+.start-stage { /* attach to <body> or main wrapper */
+  --bg: linear-gradient(180deg,#07080a 0%, #090a0e 60%);
+  --panel: rgba(16,18,24,.66);
+  --glass: rgba(255,255,255,.03);
+  --accent: #7af3ff;
+  --accent-2: #f3c97a;
+  --muted: #a9a29a;
+  --line: rgba(255,255,255,.06);
+  --glass-border: rgba(255,255,255,.04);
+  --radius: 14px;
+  color-scheme: dark;
+  background: var(--bg);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* ===================================================================
+   Stage background / particle flare. Pure CSS "show" using radial gradients
+   and layered motion. Accessible: reduce-motion honored.
+   =================================================================== */
+.start-stage::before,
+.start-stage::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  mix-blend-mode: screen;
+  opacity: .42;
+}
+
+.start-stage::before{
+  background:
+    radial-gradient(800px 380px at 10% 20%, rgba(122,243,255,.06), transparent 12%),
+    radial-gradient(700px 420px at 85% 70%, rgba(243,201,122,.04), transparent 14%),
+    radial-gradient(1200px 360px at 50% 0%, rgba(122,243,255,.03), transparent 20%);
+  transform: translateZ(0);
+  animation: stage-slow 18s linear infinite;
+}
+
+.start-stage::after{
+  background:
+    radial-gradient(26px 12px at 12% 25%, rgba(255,255,255,.02), transparent 30%),
+    radial-gradient(18px 10px at 60% 80%, rgba(255,255,255,.02), transparent 30%),
+    linear-gradient(180deg, rgba(255,255,255,.01), transparent 50%);
+  animation: stage-wobble 12s ease-in-out infinite;
+}
+
+/* reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .start-stage::before, .start-stage::after { animation: none; opacity:.18; }
+}
+
+/* animations */
+@keyframes stage-slow { 0%{transform:translateY(0) } 50%{transform:translateY(-6px)} 100%{transform:translateY(0)} }
+@keyframes stage-wobble { 0%{transform:translateX(0) rotate(0)} 50%{transform:translateX(8px) rotate(.3deg)} 100%{transform:translateX(0) rotate(0)} }
+
+/* ===================================================================
+   Hero shimmer — make the banner feel lit
+   =================================================================== */
+.start-stage .hero {
+  border-radius: calc(var(--radius) + 4px);
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(4,6,10,.6), inset 0 1px 0 rgba(255,255,255,.02);
+  border: 1px solid var(--glass-border);
+  background: linear-gradient(180deg, rgba(255,255,255,.01), transparent 30%);
+  position: relative;
+}
+
+.start-stage .hero img{
+  display:block; width:100%; height:auto; object-fit:cover; filter: saturate(1.02) contrast(.98);
+  transition: transform .9s cubic-bezier(.2,.9,.3,1), filter .6s;
+}
+.start-stage .hero:hover img { transform: scale(1.02) translateY(-2px); filter: saturate(1.05) contrast(1.02); }
+
+/* subtle spotlight over image */
+.start-stage .hero::after{
+  content:"";
+  position:absolute; inset:0;
+  background: radial-gradient(600px 240px at 28% 18%, rgba(122,243,255,.03), transparent 18%);
+  mix-blend-mode: overlay; pointer-events:none;
+}
+
+/* ===================================================================
+   Cards / panels
+   =================================================================== */
+.start-stage .card {
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(12,14,18,.66), rgba(10,11,14,.5));
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 10px 30px rgba(2,4,8,.6);
+  padding: 14px;
+  transition: transform .28s ease, box-shadow .28s;
+  backdrop-filter: blur(6px) saturate(120%);
+}
+
+.start-stage .card.visible { transform: translateY(-6px); box-shadow: 0 18px 42px rgba(2,8,12,.7); }
+
+/* headings */
+.start-stage h1.title {
+  font-family: "Crimson Pro", Georgia, serif;
+  font-weight:800;
+  font-size: clamp(28px, 4.6vw, 40px);
+  text-align:center;
+  margin: .2rem 0 .4rem;
+  background: linear-gradient(90deg, #fff, var(--accent-2), var(--accent));
+  -webkit-background-clip: text;
+  color: transparent;
+  letter-spacing: .2px;
+  text-shadow: 0 6px 28px rgba(10,12,16,.5);
+}
+
+/* subtitle */
+.start-stage .subtitle { text-align:center; color:var(--muted); margin-bottom:10px; }
+
+/* small kicker */
+.start-stage .kicker { font-weight:700; color:var(--muted); font-size:.86rem; letter-spacing:.12em; }
+
+/* ===================================================================
+   Carrier buttons — neon glass style, showy hover and active states
+   =================================================================== */
+.start-stage .carrier-btn{
+  background: linear-gradient(180deg, rgba(255,255,255,.01), rgba(255,255,255,.014));
+  border: 1px solid rgba(122,243,255,.06);
+  color: #eafcff;
+  padding: .6rem .95rem;
+  border-radius: 12px;
+  cursor:pointer;
+  transition: transform .18s cubic-bezier(.2,.9,.3,1), box-shadow .18s;
+  box-shadow: 0 6px 18px rgba(9,10,12,.55), inset 0 -2px 10px rgba(0,0,0,.3);
+  font-weight:700;
+}
+.start-stage .carrier-btn:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 18px 48px rgba(122,243,255,.06); }
+.start-stage .carrier-btn[aria-pressed="true"]{
+  background: linear-gradient(180deg, rgba(122,243,255,.08), rgba(122,243,255,.02));
+  border-color: rgba(122,243,255,.24);
+  box-shadow: 0 26px 66px rgba(122,243,255,.08), 0 4px 14px rgba(0,0,0,.6);
+  transform: translateY(-6px);
+  color: #001319;
+}
+
+/* additional tiny pulse */
+.start-stage .carrier-btn[aria-pressed="true"]::after {
+  content: "";
+  display:block;
+  position:absolute;
+  width:100%; height:100%;
+  left:0; top:0; border-radius:12px;
+  box-shadow: 0 0 40px rgba(122,243,255,.09);
+  opacity:.9; pointer-events:none;
+}
+
+/* ===================================================================
+   Progress ring / timer styling hooks (styles for the surrounding ring)
+   =================================================================== */
+.start-stage .ring { border-radius:999px; width:92px; height:92px; display:grid; place-items:center; background: radial-gradient(60% 60% at 40% 30%, rgba(122,243,255,.02), transparent 30%); border:1px solid var(--line); }
+.start-stage svg path#progressArc { filter: drop-shadow(0 4px 10px rgba(0,0,0,.6)); transition: stroke .24s linear; stroke-linecap: round; }
+
+/* timer text */
+.start-stage #timer { font-weight:700; fill:#bfffff; font-family: Inter, system-ui, -apple-system; }
+
+/* ===================================================================
+   Buttons / CTAs
+   =================================================================== */
+.start-stage .large-cta {
+  padding: .65rem .95rem;
+  border-radius: 12px;
+  display:inline-flex; gap:.6rem; align-items:center;
+  background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+  border: 1px solid rgba(122,243,255,.06);
+  color: #e7fbff;
+  cursor:pointer; font-weight:800;
+  transition: transform .14s, box-shadow .2s;
+}
+.start-stage .large-cta:hover { transform: translateY(-4px); box-shadow: 0 22px 48px rgba(122,243,255,.06); }
+.start-stage .large-cta:active { transform: translateY(-1px) scale(.995); }
+
+/* inline small CTA */
+.start-stage .inline-btn {
+  padding: .5rem .75rem; border-radius:10px; border:1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255,255,255,.01), rgba(255,255,255,.005));
+  color:var(--accent); font-weight:700; cursor:pointer;
+  transition: transform .12s, box-shadow .12s;
+}
+.start-stage .inline-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 26px rgba(122,243,255,.04); }
+
+/* small round tag */
+.start-stage .tag { padding:6px 10px; border-radius:999px; background: rgba(255,255,255,.02); border:1px solid var(--line); color:var(--muted); font-weight:600; }
+
+/* ledger list item */
+.start-stage .recent-item { border-radius:8px; padding:10px; background: linear-gradient(180deg, rgba(255,255,255,.01), transparent); margin-bottom:8px; }
+
+/* small utility button */
+.start-stage .small-btn { font-size:.85rem; padding:.4rem .6rem; }
+
+/* ===================================================================
+   Help text / small elements
+   =================================================================== */
+.start-stage .help { color:var(--muted); font-size:.95rem; }
+.start-stage .tiny { color:var(--muted); font-size:.88rem; }
+
+/* ===================================================================
+   Accessibility / reduced motion fallback
+   =================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .start-stage .carrier-btn, .start-stage .large-cta, .start-stage .inline-btn { transition: none; transform: none; }
+  .start-stage .hero img { transition: none; transform:none; }
+  .start-stage::before, .start-stage::after { animation: none; opacity:.15; }
+}
+
+/* ===================================================================
+   Namespacing tips:
+   - Use .start-stage on <body> or on #top <main> so rules are scoped.
+   =================================================================== */
