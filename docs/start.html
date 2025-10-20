@@ -48,15 +48,16 @@
     .grid2{display:grid;grid-template-columns:1.25fr .75fr;gap:14px}
     @media (max-width:900px){.grid2{grid-template-columns:1fr}}
     .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-    .carrier-btn{padding:.6rem .9rem;border-radius:12px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);font-weight:600}
+    .carrier-btn{padding:.6rem .9rem;border-radius:12px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);font-weight:600;cursor:pointer;position:relative}
     .carrier-btn[aria-pressed="true"]{box-shadow:0 8px 26px rgba(122,243,255,.12);outline:2px solid rgba(122,243,255,.18)}
-    .large-cta{display:inline-flex;gap:.6ch;align-items:center;padding:.7rem 1rem;border-radius:12px;border:1px solid var(--line);background:#0e1116;color:inherit;font-weight:700}
+    .large-cta{display:inline-flex;gap:.6ch;align-items:center;padding:.7rem 1rem;border-radius:12px;border:1px solid var(--line);background:#0e1116;color:inherit;font-weight:700;cursor:pointer}
+    .large-cta[disabled]{opacity:.5;cursor:not-allowed}
     .progress-wrap{display:flex;gap:12px;align-items:center;margin-top:10px}
     .ring{width:84px;height:84px;display:grid;place-items:center;border-radius:999px;background:conic-gradient(rgba(122,243,255,.14) 0% 0%, transparent 0);box-shadow:inset 0 -8px 24px rgba(0,0,0,.6)}
     .ring svg{display:block;width:72px;height:72px}
     .coherence-meter{margin-top:8px}
     label.small{display:block;margin-top:8px;color:var(--muted);font-size:.95rem}
-    textarea#phrase{width:100%;min-height:72px;padding:.6rem;border-radius:12px;border:1px solid var(--line);background:var(--bg-elev);color:inherit}
+    textarea#phrase{width:100%;min-height:72px;padding:.6rem;border-radius:12px;border:1px solid var(--line);background:var(--bg-elev);color:inherit;resize:vertical}
     .inline-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .muted.small{color:var(--muted)}
     .card .kicker{font-weight:700;font-size:.82rem;color:var(--muted);letter-spacing:.12em}
@@ -67,12 +68,16 @@
     .tiny{font-size:.85rem;color:var(--muted)}
     .controls-foot{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
     .help{margin-top:10px;color:var(--muted);font-size:.95rem}
-    /* make CTA more visible on dark backgrounds */
-    .inline-btn{background:linear-gradient(180deg,rgba(122,243,255,.06),rgba(122,243,255,.02));border:1px solid rgba(122,243,255,.12)}
+    .inline-btn{background:linear-gradient(180deg,rgba(122,243,255,.06),rgba(122,243,255,.02));border:1px solid rgba(122,243,255,.12);padding:.5rem .75rem;border-radius:10px;cursor:pointer}
+    .inline-btn:active{transform:translateY(1px)}
     /* responsive site map spacing */
     .grid4{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin-top:14px}
     .span-4{grid-column:span 4} .span-12{grid-column:span 12}
     @media (max-width:980px){.span-4{grid-column:span 12}}
+    /* small performance hint styles */
+    .user-is-tabbing :focus { outline: 3px solid rgba(122,243,255,.14); outline-offset:3px; border-radius:8px; }
+    /* will-change hints */
+    #progressArc { will-change: stroke-dasharray, transform; }
   </style>
 </head>
 
@@ -131,9 +136,7 @@
           <div class="ring" aria-hidden="true" id="progressRing">
             <!-- SVG progress ring -->
             <svg viewBox="0 0 36 36" role="img" aria-label="Timer progress">
-              <path d="M18 2
-                       a 16 16 0 1 1 0 32
-                       a 16 16 0 1 1 0 -32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="2"></path>
+              <path d="M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="2"></path>
               <path id="progressArc" d="" fill="none" stroke="#7af3ff" stroke-width="2.6" stroke-linecap="round"></path>
               <text id="timer" x="18" y="21" font-size="6" text-anchor="middle" fill="#e6f9ff">Ready</text>
             </svg>
@@ -262,70 +265,100 @@
     </footer>
   </main>
 
-  <!-- Page script: timer, audio carriers, ledger, UI polish -->
+  <!-- Page script: optimized timer, audio carriers, ledger, UI polish -->
   <script>
   (function(){
     "use strict";
+
+    /* ---------- utilities & cached nodes ---------- */
     const $ = s => document.querySelector(s);
     const $$ = s => Array.from(document.querySelectorAll(s));
 
-    // year
-    const y = $('#yr'); if (y) y.textContent = new Date().getFullYear();
+    const YEAR = $('#yr'); if (YEAR) YEAR.textContent = new Date().getFullYear();
 
-    // harden external links
+    // Harden external links
     $$('a[target="_blank"]').forEach(a=>{
       const rel = new Set((a.getAttribute("rel")||"").toLowerCase().split(/\s+/).filter(Boolean));
       rel.add("noopener"); rel.add("noreferrer"); a.setAttribute("rel", Array.from(rel).join(" "));
     });
 
-    // --- Ledger storage helpers ---
+    // Storage key
     const KEY = 'sof_ledger_entries_v1';
+    const safeParse = s => { try { return JSON.parse(s||'[]'); } catch { return []; } };
+
+    // read/write with tiny guard
     const read = () => {
-      try { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
+      try { return safeParse(localStorage.getItem(KEY)); }
       catch { return []; }
     };
     const write = (arr) => {
-      try { localStorage.setItem(KEY, JSON.stringify(arr)); } catch(e) { alert('Unable to save: storage blocked.'); }
+      try { localStorage.setItem(KEY, JSON.stringify(arr)); }
+      catch (e) { console.warn('save failed', e); }
     };
 
-    // render recent list
+    // escape helper
+    const escapeHtml = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+    // cache nodes used often
+    const RECENT = $('#recent'), ENTRY_COUNT = $('#entryCount');
+    const START_BTN = $('#startRun'), STOP_BTN = $('#stopRun'), TIMER_TEXT = $('#timer');
+    const PROG = document.getElementById('progressArc');
+    const PHRASE = $('#phrase'), COH = $('#coh'), TAG_INPUT = $('#tag');
+    const CARRIER_BUTTONS = $$('.carrier-btn');
+
+    // small priority rendering: use requestIdleCallback when available for non-critical work
+    const idle = window.requestIdleCallback ? window.requestIdleCallback : (fn)=>setTimeout(fn,200);
+
+    /* ---------- render recent entries (low-cost) ---------- */
     function renderRecent(all = read()){
-      const box = $('#recent'); const count = $('#entryCount');
-      if (!box) return;
-      if (!all.length){ box.innerHTML = '<div class="tiny muted">No entries yet.</div>'; if (count) count.textContent = '0'; return; }
-      if (count) count.textContent = String(all.length);
-      box.innerHTML = all.slice(0,10).map((e,idx)=>`
-        <div class="recent-item" data-idx="${idx}">
-          <div><strong>${escapeHtml(e.phrase)}</strong></div>
-          <div class="tiny muted">${new Date(e.when).toLocaleString()} · carrier: ${e.carrier} · Ξ: ${e.coherence}</div>
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px">
-            ${ (e.tags||[]).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('') }
-            <div style="margin-left:auto;display:flex;gap:6px">
-              <button class="small-btn inline-btn" data-action="copy" data-idx="${idx}">Copy</button>
-              <button class="small-btn inline-btn" data-action="delete" data-idx="${idx}">Delete</button>
-            </div>
-          </div>
-          ${ e.note ? `<div class="tiny" style="margin-top:6px">Note: ${escapeHtml(e.note)}</div>` : '' }
-        </div>`).join('');
+      // schedule low-priority rendering to avoid blocking interaction
+      idle(()=> {
+        if (!RECENT) return;
+        if (!all.length) {
+          RECENT.innerHTML = '<div class="tiny muted">No entries yet.</div>';
+          ENTRY_COUNT && (ENTRY_COUNT.textContent = '0');
+          return;
+        }
+        ENTRY_COUNT && (ENTRY_COUNT.textContent = String(all.length));
+        // render up to 12 items
+        const slice = all.slice(0,12);
+        RECENT.innerHTML = slice.map((e, idx) => {
+          const tags = (e.tags||[]).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('');
+          return `
+            <div class="recent-item" data-idx="${idx}">
+              <div><strong>${escapeHtml(e.phrase)}</strong></div>
+              <div class="tiny muted">${new Date(e.when).toLocaleString()} · carrier: ${escapeHtml(e.carrier)} · Ξ: ${escapeHtml(e.coherence)}</div>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px">
+                ${tags}
+                <div style="margin-left:auto;display:flex;gap:6px">
+                  <button class="small-btn inline-btn" data-action="copy" data-idx="${idx}">Copy</button>
+                  <button class="small-btn inline-btn" data-action="delete" data-idx="${idx}">Delete</button>
+                </div>
+              </div>
+              ${ e.note ? `<div class="tiny" style="margin-top:6px">Note: ${escapeHtml(e.note)}</div>` : '' }
+            </div>`;
+        }).join('');
+      });
     }
 
-    // small escape helper
-    function escapeHtml(s=''){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    // initial render
+    renderRecent();
 
-    // --- Carrier audio (WebAudio) ---
+    /* ---------- audio: lightweight WebAudio oscillator ---------- */
     let audioCtx = null, osc = null, gainNode = null;
-    function ensureAudio(){
+    function ensureAudio() {
       if (audioCtx) return;
-      try{
+      try {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         gainNode = audioCtx.createGain();
         gainNode.gain.value = 0.0;
         gainNode.connect(audioCtx.destination);
-      }catch(e){
+      } catch (e) {
         audioCtx = null;
       }
     }
-    function startTone(freq){
+
+    function startTone(freq) {
       if (!freq) return;
       ensureAudio();
       if (!audioCtx || osc) return;
@@ -334,218 +367,283 @@
       osc.frequency.value = freq;
       osc.connect(gainNode);
       osc.start();
-      // ramp up gently
-      gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
-      gainNode.gain.linearRampToValueAtTime(0.09, audioCtx.currentTime + 0.12);
+      const t = audioCtx.currentTime;
+      gainNode.gain.cancelScheduledValues(t);
+      gainNode.gain.linearRampToValueAtTime(0.08, t + 0.08);
     }
-    function stopTone(){
+
+    function stopTone() {
       if (!audioCtx || !osc) return;
       const t = audioCtx.currentTime;
       gainNode.gain.cancelScheduledValues(t);
-      gainNode.gain.linearRampToValueAtTime(0.0001, t + 0.12);
-      try{ osc.stop(t + 0.14); }catch(e){}
-      osc.disconnect(); osc = null;
+      gainNode.gain.linearRampToValueAtTime(0.0001, t + 0.08);
+      try { osc.stop(t + 0.09); } catch(e) {}
+      osc.disconnect && osc.disconnect();
+      osc = null;
     }
 
-    // carrier UI
+    // warm audio on first user gesture (no autoplay)
+    function warmAudioOnFirstGesture(){
+      const resume = () => {
+        try { ensureAudio(); if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); } catch(e){}
+        window.removeEventListener('pointerdown', resume);
+        window.removeEventListener('keydown', resume);
+      };
+      window.addEventListener('pointerdown', resume, {once:true, passive:true});
+      window.addEventListener('keydown', resume, {once:true, passive:true});
+    }
+    warmAudioOnFirstGesture();
+
+    /* ---------- carrier UI ---------- */
     let carrier = 'none';
-    const carrierButtons = $$('.carrier-btn[data-carrier]');
-    carrierButtons.forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        carrierButtons.forEach(b=>{ b.setAttribute('aria-pressed','false'); b.setAttribute('aria-checked','false'); });
+    CARRIER_BUTTONS.forEach(btn => {
+      btn.addEventListener('click', () => {
+        CARRIER_BUTTONS.forEach(b => { b.setAttribute('aria-pressed','false'); b.setAttribute('aria-checked','false'); });
         btn.setAttribute('aria-pressed','true'); btn.setAttribute('aria-checked','true');
-        carrier = btn.dataset.carrier;
-        // audible preview when selecting (short)
-        if (carrier !== 'none'){
-          const map = { '432':432, '528':528, '369':369 };
-          startTone(map[carrier]);
-          setTimeout(()=>stopTone(), 400);
+        carrier = btn.dataset.carrier || 'none';
+        // audible preview
+        if (carrier !== 'none') {
+          startTone(Number(carrier));
+          setTimeout(()=>stopTone(), 380);
         }
-      });
-      // keyboard nav
+      }, {passive:true});
+      // keyboard navigation
       btn.addEventListener('keydown', (e)=>{
         if (!['ArrowLeft','ArrowRight'].includes(e.key)) return;
         e.preventDefault();
-        const idx = carrierButtons.indexOf(btn);
-        const nxt = e.key === 'ArrowRight' ? (idx+1)%carrierButtons.length : (idx-1+carrierButtons.length)%carrierButtons.length;
-        carrierButtons[nxt].focus(); carrierButtons[nxt].click();
+        const idx = CARRIER_BUTTONS.indexOf(btn);
+        const nxt = e.key === 'ArrowRight' ? (idx + 1) % CARRIER_BUTTONS.length : (idx - 1 + CARRIER_BUTTONS.length) % CARRIER_BUTTONS.length;
+        CARRIER_BUTTONS[nxt].focus();
+        CARRIER_BUTTONS[nxt].click();
       });
     });
 
-    // --- Timer + progress ring ---
-    const START_BTN = $('#startRun'), STOP_BTN = $('#stopRun'), TIMER_TEXT = $('#timer');
-    const PROG = document.getElementById('progressArc');
-    let tId = 0, tLeft = 60, RUNNING=false;
-    function setProgress(pct){
-      // pct 0..1 -> stroke-dasharray mapping on circle path approximated by arc path creation
-      const r=16, c=2*Math.PI*r;
-      const dash = (pct * c).toFixed(2);
-      PROG.setAttribute('stroke-dasharray', `${dash} ${c}`);
-      // rotate so it starts at top
+    /* ---------- efficient timer using requestAnimationFrame ---------- */
+    // Duration adjustable easily
+    const DURATION_SECONDS = 60;
+
+    // RAF loop state
+    let rafId = null;
+    let endTime = 0;   // performance.now() target
+    let lastDisplayed = null; // for throttled DOM updates
+
+    // prepare arc path and stroke-dash baseline (circumference of radius 16)
+    (function prepareArc(){
+      if (!PROG) return;
+      const path = "M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32";
+      PROG.setAttribute('d', path);
+      PROG.setAttribute('stroke-linecap','round');
+      // circumference for r=16
+      const circumference = 2 * Math.PI * 16;
+      PROG.dataset.circ = String(circumference);
+      PROG.setAttribute('stroke-dasharray', `0 ${circumference}`);
       PROG.setAttribute('transform','rotate(-90 18 18)');
+    })();
+
+    function setProgressFraction(frac){
+      // frac 0..1
+      const circ = Number(PROG.dataset.circ) || (2*Math.PI*16);
+      const dash = Math.max(0, Math.min(1, frac)) * circ;
+      // only update attributes if changed to avoid layout thrash
+      PROG.setAttribute('stroke-dasharray', `${dash.toFixed(2)} ${circ.toFixed(2)}`);
     }
-    function displayTimerText(txt){ TIMER_TEXT.textContent = txt; }
-    function tick(){
-      if (tLeft <= 0){ stopRun(); return; }
-      tLeft--;
-      displayTimerText(tLeft + 's');
-      setProgress((60 - tLeft)/60);
-      tId = setTimeout(tick, 1000);
+
+    function updateTimerText(text){
+      if (TIMER_TEXT && TIMER_TEXT.textContent !== text) TIMER_TEXT.textContent = text;
     }
+
+    function rafTick(now) {
+      // now is performance.now()
+      const remainingMS = Math.max(0, endTime - now);
+      const remainingSecs = Math.ceil(remainingMS / 1000);
+      const elapsed = Math.max(0, (DURATION_SECONDS * 1000 - remainingMS));
+      const frac = elapsed / (DURATION_SECONDS * 1000);
+
+      // throttle DOM writes: only update text when displayed seconds change
+      if (lastDisplayed !== remainingSecs) {
+        updateTimerText(remainingSecs > 0 ? `${remainingSecs}s` : '0s');
+        lastDisplayed = remainingSecs;
+      }
+      setProgressFraction(frac);
+
+      if (remainingMS <= 0) {
+        // finish
+        stopRun();
+        return;
+      }
+      rafId = requestAnimationFrame(rafTick);
+    }
+
+    let RUNNING = false;
+
     function startRun(){
       if (RUNNING) return;
-      // autoplay policy: resume context on user gesture if required
-      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
       RUNNING = true;
-      tLeft = 60;
-      displayTimerText('60s');
-      setProgress(0);
+      // resume audio if suspended
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(()=>{/* ignore */});
+      }
+      // tone
+      if (carrier !== 'none') startTone(Number(carrier));
+      // set UI states
       START_BTN.disabled = true; STOP_BTN.disabled = false;
       START_BTN.setAttribute('aria-pressed','true');
       STOP_BTN.setAttribute('aria-pressed','false');
-      // start tone if selected
-      if (carrier !== 'none') startTone(Number(carrier));
-      // small vibrate if available
-      if (navigator.vibrate) navigator.vibrate(60);
-      tId = setTimeout(tick, 1000);
+      // set timers
+      const now = performance.now();
+      endTime = now + DURATION_SECONDS * 1000;
+      lastDisplayed = null;
+      rafId = requestAnimationFrame(rafTick);
+      // small device feedback
+      if (navigator.vibrate) navigator.vibrate(50);
     }
+
     function stopRun(){
-      clearTimeout(tId); tId = 0;
+      if (!RUNNING) {
+        // ensure UI reflects stopped state
+        START_BTN.disabled = false; STOP_BTN.disabled = true;
+        STOP_BTN.setAttribute('aria-pressed','true');
+        START_BTN.setAttribute('aria-pressed','false');
+        // reset UI
+        updateTimerText('Stopped');
+        setProgressFraction(0);
+        return;
+      }
       RUNNING = false;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+      // stop tone
+      stopTone();
+      // reflect UI
       START_BTN.disabled = false; STOP_BTN.disabled = true;
       START_BTN.setAttribute('aria-pressed','false');
       STOP_BTN.setAttribute('aria-pressed','true');
-      displayTimerText('Stopped');
-      setProgress(0);
-      stopTone();
+      updateTimerText('Stopped');
+      setProgressFraction(0);
     }
+
+    // wire buttons
     START_BTN && START_BTN.addEventListener('click', startRun);
     STOP_BTN && STOP_BTN.addEventListener('click', stopRun);
 
-    // keyboard shortcuts: / focus phrase, r start/stop, Esc clear
-    document.addEventListener('keydown', (e)=>{
-      if (e.key === '/') { e.preventDefault(); $('#phrase').focus(); }
+    // keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '/') { e.preventDefault(); PHRASE && PHRASE.focus(); }
       if (e.key === 'r' || e.key === 'R') { if (RUNNING) stopRun(); else startRun(); }
-      if (e.key === 'Escape') { $('#phrase').value=''; $('#coh').value = 0; }
-    });
+      if (e.key === 'Escape') { if (PHRASE) PHRASE.value = ''; if (COH) COH.value = 0; }
+      // tab detection for outlines
+      if (e.key === 'Tab') document.body.classList.add('user-is-tabbing');
+    }, {passive:true});
 
-    // --- Save / export / import / delete ---
-    $('#saveEntry').addEventListener('click', ()=>{
-      const phrase = ($('#phrase')?.value||'').trim();
-      const coherence = Number($('#coh')?.value||0);
-      const tagsRaw = ($('#tag')?.value||'').trim();
+    /* ---------- ledger actions ---------- */
+    $('#saveEntry').addEventListener('click', () => {
+      const phrase = (PHRASE && PHRASE.value || '').trim();
+      const coherence = Number(COH && COH.value || 0);
+      const tagsRaw = (TAG_INPUT && TAG_INPUT.value || '').trim();
       const tags = tagsRaw ? tagsRaw.split(',').map(s=>s.trim()).filter(Boolean) : [];
-      if (!phrase){ alert('Please enter a clear line to save.'); $('#phrase').focus(); return; }
+      if (!phrase) { alert('Please enter a clear line to save.'); PHRASE && PHRASE.focus(); return; }
       const entry = { when: new Date().toISOString(), carrier, phrase, coherence, tags, note: '' };
       const arr = read(); arr.unshift(entry); write(arr); renderRecent(arr);
-      alert('Saved to Ledger (local).');
-    });
+      // small visual feedback
+      try { if (navigator.vibrate) navigator.vibrate([30]); } catch(e){}
+    }, {passive:true});
 
-    $('#exportEntries').addEventListener('click', ()=>{
+    $('#exportEntries').addEventListener('click', () => {
       const data = read();
-      if (!data.length){ alert('No entries to export.'); return; }
+      if (!data.length) return alert('No entries to export.');
       const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = 'scroll-of-fire-ledger.json';
       document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-    });
+    }, {passive:true});
 
-    $('#importEntries').addEventListener('click', ()=>{
-      const input = document.createElement('input');
-      input.type = 'file'; input.accept = 'application/json';
-      input.onchange = e => {
+    $('#importEntries').addEventListener('click', () => {
+      const input = document.createElement('input'); input.type='file'; input.accept='application/json';
+      input.onchange = (e) => {
         const file = e.target.files && e.target.files[0];
         if (!file) return;
         const reader = new FileReader();
         reader.onload = ev => {
-          try{
+          try {
             const parsed = JSON.parse(ev.target.result);
-            if (!Array.isArray(parsed)) throw Error('Invalid format');
-            // merge but avoid duplicates by timestamp
+            if (!Array.isArray(parsed)) throw Error('Expected array');
             const existing = read();
-            const ids = new Set(existing.map(x=>x.when));
-            const merged = parsed.concat(existing.filter(x=>!ids.has(x.when)));
+            const existingIDs = new Set(existing.map(x=>x.when));
+            const merged = parsed.concat(existing.filter(x=>!existingIDs.has(x.when)));
             write(merged);
             renderRecent(merged);
             alert('Imported ledger (merged).');
-          }catch(err){
+          } catch (err) {
             alert('Import failed: ' + (err.message || err));
           }
         };
         reader.readAsText(file);
       };
       input.click();
-    });
+    }, {passive:true});
 
-    $('#clearLedger').addEventListener('click', ()=>{
+    $('#clearLedger').addEventListener('click', () => {
       if (!confirm('Clear local ledger? This cannot be undone.')) return;
       write([]); renderRecent([]);
-    });
+    }, {passive:true});
 
-    $('#deleteLast').addEventListener('click', ()=>{
+    $('#deleteLast').addEventListener('click', () => {
       const arr = read();
       if (!arr.length) return alert('No entries to delete.');
       if (!confirm('Delete the last (most recent) entry?')) return;
       arr.shift(); write(arr); renderRecent(arr);
-    });
+    }, {passive:true});
 
-    // copy/delete handlers for recent list (event delegation)
-    $('#recent').addEventListener('click', (e)=>{
-      const btn = e.target.closest('button');
+    // copy/delete handlers for recent list (delegation)
+    RECENT && RECENT.addEventListener('click', (ev) => {
+      const btn = ev.target.closest('button');
       if (!btn) return;
-      const action = btn.dataset.action, idx = Number(btn.dataset.idx);
+      const action = btn.dataset.action;
+      const idx = Number(btn.dataset.idx);
       const arr = read();
-      if (action === 'copy'){
+      if (action === 'copy') {
         const entry = arr[idx];
         if (!entry) return;
         const txt = `${entry.phrase}\ncarrier:${entry.carrier} · Ξ:${entry.coherence} · ${new Date(entry.when).toLocaleString()}`;
-        navigator.clipboard && navigator.clipboard.writeText(txt).then(()=>{ alert('Copied entry to clipboard.'); }).catch(()=>{ alert('Copy failed.'); });
-      } else if (action === 'delete'){
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(txt).then(()=>alert('Copied entry to clipboard.'), ()=>alert('Copy failed.'));
+        } else {
+          prompt('Copy this text', txt);
+        }
+      } else if (action === 'delete') {
         if (!confirm('Delete this entry?')) return;
         arr.splice(idx,1); write(arr); renderRecent(arr);
       }
-    });
+    }, {passive:true});
 
-    // initial render
-    renderRecent();
-
-    // helpers: escapeHtml referenced earlier
-    function escapeHtml(s=''){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-    // --- small UX niceties ---
-    // reflect coherence slider visually on ring color
-    const COH = $('#coh');
+    /* ---------- coherence slider visual feedback (fast) ---------- */
     COH && COH.addEventListener('input', ()=> {
       const v = Number(COH.value);
-      // map 0..5 to hue (red -> yellow -> cyan)
-      const pct = v/5;
-      const hue = Math.round(200 * pct); // 0..200
-      const color = `hsl(${hue} 90% 60%)`;
-      PROG.style.stroke = color;
-    });
+      const pct = Math.max(0, Math.min(1, v / 5));
+      // map to hue 0 (red)-200 (cyan)
+      const hue = Math.round(200 * pct);
+      PROG && PROG.setAttribute('stroke', `hsl(${hue} 90% 60%)`);
+    }, {passive:true});
 
-    // make progressArc path a circle path we can stroke-dash
-    // approximate circle circumference using radius 16 (SVG user coords)
-    (function prepareArc(){
-      const path = "M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32";
-      PROG.setAttribute('d', path);
-      PROG.setAttribute('stroke-linecap','round');
-      // ensure dash array initially zero
-      PROG.setAttribute('stroke-dasharray', '0 1000');
+    // initial small UI setup: set progress arc, show entries
+    (function init(){
+      // ensure arc prepared
+      if (PROG && !PROG.dataset.circ) {
+        const circ = 2*Math.PI*16;
+        PROG.dataset.circ = String(circ);
+        PROG.setAttribute('stroke-dasharray', `0 ${circ}`);
+      }
+      renderRecent();
     })();
 
-    // resume audio on first user gesture if required
-    ['click','touchstart','keydown'].forEach(ev=>{
-      window.addEventListener(ev, function resumeAudioOnce(){
-        if (!audioCtx) { try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); audioCtx.suspend(); audioCtx.close(); audioCtx = null; }catch(e){} }
-        window.removeEventListener(ev, resumeAudioOnce);
-      }, {once:true});
-    });
+    // Accessibility: detect tabbing for visible outlines
+    document.addEventListener('keydown', (e)=>{ if (e.key === 'Tab') document.body.classList.add('user-is-tabbing'); }, {once:true});
 
-    // ensure visible focus outlines for accessibility
-    document.body.addEventListener('keydown', (e)=>{
-      if (e.key === 'Tab') document.body.classList.add('user-is-tabbing');
-    }, {once:true});
+    // keep a small safety: on pagehide, stop sound and RAF
+    window.addEventListener('pagehide', ()=>{ stopRun(); if (audioCtx && audioCtx.state === 'running') audioCtx.suspend().catch(()=>{}); }, {passive:true});
+    // pause if tab hidden
+    document.addEventListener('visibilitychange', ()=>{ if (document.hidden) { stopRun(); } }, {passive:true});
+
   })();
   </script>
 </body>
