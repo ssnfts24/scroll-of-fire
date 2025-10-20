@@ -1,13 +1,14 @@
 <script>
 /* ======================================================================
-   Scroll of Fire — Codex.js (v2.4)
-   Bulletproof banner • hero toolbar (new+legacy) • tabs ink • palette • TOC
+   Scroll of Fire — Codex.js (v3.0)
+   Bulletproof banner • buttonless hero (active-on-view, parallax tilt)
+   Sticky header polish • tabs ink • palette • mini-TOC
    Echo View • HUD toggle • on-page search • equation pop-out
    - Robust hero detection & failover (local→remote), auto-fit & persistence
    - Motion-safe equation activation + resize tidy
    - Deferred heavy features (palette / mini-TOC) on idle
    - Accessibility hardening, reduced-data/motion guards
-   - Matches index.html + codex.css (2025-10-20)
+   - Matches index.html + codex.css (updated)
    ====================================================================== */
 (() => {
   "use strict";
@@ -20,11 +21,10 @@
   const raf = (fn) => (window.requestAnimationFrame || ((f)=>setTimeout(f,16)))(fn);
   const caf = (id) => (window.cancelAnimationFrame || clearTimeout)(id);
   const now = () => (performance && performance.now ? performance.now() : Date.now());
-  const ri = (fn, timeout=800) => {
-    const ric = window.requestIdleCallback;
-    return ric ? ric(fn, { timeout }) : setTimeout(fn, Math.min(timeout, 600));
-  };
-  const debounce = (fn, ms = 120) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; };
+  const ri  = (fn, timeout=800) => (window.requestIdleCallback
+                  ? window.requestIdleCallback(fn, { timeout })
+                  : setTimeout(fn, Math.min(timeout, 600)));
+  const debounce    = (fn, ms = 120) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; };
   const throttleRAF = (fn) => { let running=false; return (...a)=>{ if(running) return; running=true; raf(()=>{ running=false; fn(...a); }); }; };
 
   const store = {
@@ -135,6 +135,15 @@
     });
   }
 
+  /* ------------------------------ header polish ---------------------------- */
+  function stickyHeader(){
+    const hdr = $("header.site"); if (!hdr) return;
+    const tick = throttleRAF(()=>{
+      hdr.classList.toggle("is-stuck", (window.scrollY||document.documentElement.scrollTop) > 2);
+    });
+    on(window,"scroll", tick, {passive:true}); tick();
+  }
+
   /* ------------------------------ hero helpers ----------------------------- */
   function setHeroFit(fig, mode){ // "cover" | "contain" | "auto"
     fig.dataset.fit = mode;
@@ -183,10 +192,48 @@
     return { fig, img };
   }
 
+  /* ------------------------------ hero active gate ------------------------- */
+  function activateHeroWhenVisible(fig){
+    if (!fig) return;
+    const set = (on)=> fig.classList.toggle("is-active", !!on);
+    if (!prefersReduced && hasIO){
+      const io = new IntersectionObserver((entries)=>{
+        for (const e of entries) set(e.isIntersecting);
+      }, {root:null, rootMargin:"-8% 0px -12% 0px", threshold:0.08});
+      io.observe(fig);
+    } else {
+      const tick = ()=> set(inViewport(fig, .92));
+      const onS = throttleRAF(tick);
+      on(window,"scroll",onS,{passive:true}); tick();
+    }
+  }
+
+  /* ------------------------------ hero parallax ---------------------------- */
+  function heroParallax(fig){
+    if (!fig || prefersReduced) return;
+    let rid=0;
+    const onMove=(e)=>{
+      const r=fig.getBoundingClientRect();
+      const p = "touches" in e && e.touches && e.touches.length ? e.touches[0] : e;
+      const x=(p.clientX - r.left)/r.width, y=(p.clientY - r.top)/r.height;
+      caf(rid); rid=raf(()=>{
+        const rx=(0.5-y)*4;   // matches CSS expectations
+        const ry=(x-0.5)*6;
+        fig.style.setProperty("--hero-tilt-x", rx.toFixed(2)+"deg");
+        fig.style.setProperty("--hero-tilt-y", ry.toFixed(2)+"deg");
+      });
+    };
+    const reset=()=>{ fig.style.removeProperty("--hero-tilt-x"); fig.style.removeProperty("--hero-tilt-y"); };
+    on(fig,"mousemove",onMove);
+    on(fig,"mouseleave",reset);
+    on(fig,"touchstart",reset,{passive:true});
+    on(mqReduced,"change",(e)=>{ if(e.matches) reset(); });
+  }
+
   /* -------------------------------- banner --------------------------------- */
   function initBanner(){
     const { fig, img } = findHeroElements();
-    if(!img || !fig){ log("hero not found; will retry on load"); on(window,"load",()=>{ const h=findHeroElements(); if(h.img && h.fig) initBanner(); }); return; }
+    if(!img || !fig){ log("hero not found; retry on load"); on(window,"load",()=>{ const h=findHeroElements(); if(h.img && h.fig) initBanner(); }); return; }
 
     const localSrc  = img.getAttribute("data-src-local") || img.getAttribute("src") || "";
     const remoteSrc = img.getAttribute("data-src-raw")   || "";
@@ -201,16 +248,13 @@
     if (localSet){ img.srcset = localSet; img.sizes = sizesAttr; }
     else if (localSrc){ img.src = localSrc; }
 
+    // Swap to remote only if it actually resolves (avoid blank hero in in-app browsers)
     let swapped = false;
     const tryRemote = ()=>{
-      if (swapped) return;
-      if (remoteSrc) {
-        swapped = true;
-        img.removeAttribute("srcset");
-        img.removeAttribute("sizes");
-        img.src = remoteSrc;
-        log("hero swapped to remote");
-      }
+      if (swapped || !remoteSrc) return;
+      swapped = true;
+      img.removeAttribute("srcset"); img.removeAttribute("sizes");
+      img.src = remoteSrc; log("hero swapped to remote");
     };
     let stallId = setTimeout(()=>{ if (!img.complete || !img.naturalWidth) tryRemote(); }, 4000);
     img.onerror = () => tryRemote();
@@ -219,117 +263,44 @@
     const onLoad = () => checkFitAuto(fig, img, prefFit);
     if (img.complete && img.naturalWidth>0) onLoad(); else on(img,"load",onLoad,{once:true});
 
-    if (!remoteSrc || isMetaApp || isOffline() || saveD) {
-      wireHeroObservers(fig, img, prefFit);
-      wireHeroToolbar(fig);
-      return;
+    // Pre-probe remote for nicer swap when allowed
+    if (remoteSrc && !isMetaApp && !isOffline() && !saveD){
+      const probe = new Image();
+      probe.decoding="async"; probe.loading="eager"; probe.referrerPolicy="no-referrer";
+      const swapSrc = ()=> {
+        if (remoteSet && (store.get("codex:hero-fit","auto")!=="contain")){
+          img.srcset = remoteSet; img.sizes = sizesAttr; void img.currentSrc;
+        } else {
+          img.src = remoteSrc; img.removeAttribute("srcset"); img.removeAttribute("sizes");
+        }
+      };
+      const safeSwap = ()=> (typeof probe.decode==="function" ? probe.decode().then(swapSrc).catch(swapSrc) : swapSrc());
+      on(probe,"load",safeSwap,{once:true});
+      on(probe,"error",()=>{/* keep local */},{once:true});
+      probe.src = remoteSrc;
+      on(window,"online",()=>{ if (!img.src.includes(remoteSrc)) { probe.src = remoteSrc + (remoteSrc.includes("?") ? "&" : "?") + "r=" + Date.now(); } }, {once:true});
     }
-
-    const probe = new Image();
-    probe.decoding="async"; probe.loading="eager"; probe.referrerPolicy="no-referrer";
-    const swapSrc = ()=> {
-      if (remoteSet && (store.get("codex:hero-fit","auto")!=="contain")){
-        img.srcset = remoteSet; img.sizes = sizesAttr; void img.currentSrc;
-      } else {
-        img.src = remoteSrc; img.removeAttribute("srcset"); img.removeAttribute("sizes");
-      }
-    };
-    const safeSwap = ()=> (typeof probe.decode==="function" ? probe.decode().then(swapSrc).catch(swapSrc) : swapSrc());
-    on(probe,"load",safeSwap,{once:true});
-    on(probe,"error",()=>{/* keep local */},{once:true});
-    probe.src = remoteSrc;
-
-    const retryOnce = () => {
-      window.removeEventListener("online", retryOnce);
-      if (img && remoteSrc && !img.src.includes(remoteSrc)) {
-        probe.src = remoteSrc + (remoteSrc.includes("?") ? "&" : "?") + "r=" + Date.now();
-      }
-    };
-    on(window,"online",retryOnce,{once:true});
 
     wireHeroObservers(fig, img, prefFit);
-    wireHeroToolbar(fig);
-  }
+    activateHeroWhenVisible(fig);
+    heroParallax(fig);
 
-  /* ----------------------------- hero toolbar ----------------------------- */
-  function wireHeroToolbar(fig){
-    const legacy = $(".hero-ui", fig);
-    if (legacy){
-      const bContain = $("#fitContain");
-      const bCover   = $("#fitCover");
-      const bPulse   = $("#btnTogglePulse");
-      const bZoom    = $("#btnZoom");
-
-      const mode = store.get("codex:hero-fit", fig.dataset.fit || "auto");
-      setHeroFit(fig, mode);
-
-      bContain && on(bContain,"click",()=>{ setHeroFit(fig,"contain"); bContain.setAttribute("aria-pressed","true"); bCover && bCover.setAttribute("aria-pressed","false"); });
-      bCover   && on(bCover,"click",  ()=>{ setHeroFit(fig,"cover");   bCover.setAttribute("aria-pressed","true");   bContain && bContain.setAttribute("aria-pressed","false"); });
-      bPulse   && on(bPulse,"click",  (e)=>{ const onNow = !fig.classList.contains("pulse"); fig.classList.toggle("pulse", onNow); e.currentTarget.setAttribute("aria-pressed",String(onNow)); store.set("codex:hero-pulse", onNow); });
-      bZoom    && on(bZoom,"click",   (e)=>{ const onNow = fig.classList.toggle("is-zoomed"); e.currentTarget.setAttribute("aria-expanded",String(onNow)); document.documentElement.style.overflow = onNow ? "hidden" : ""; });
-
-      const pulsePref = store.get("codex:hero-pulse", !saveD && !isMetaApp);
-      fig.classList.toggle("pulse", !!pulsePref);
-      bPulse && bPulse.setAttribute("aria-pressed", String(!!pulsePref));
-      return;
-    }
-
-    // lightweight v2 toolbar
-    const ui = document.createElement("div");
-    ui.className = "hero-ui";
-    ui.setAttribute("role","toolbar");
-    ui.setAttribute("aria-label","Banner controls");
-    ui.innerHTML = `
-      <button class="hero-btn" data-act="fit" aria-pressed="false" title="Toggle fit">Contain</button>
-      <button class="hero-btn" data-act="zoom" title="View full screen">Zoom</button>
-      <button class="hero-btn" data-act="pulse" title="Toggle pulse">Pulse</button>
-    `;
-    fig.appendChild(ui);
-
-    const bFit   = $('[data-act="fit"]', ui);
-    const bZoom  = $('[data-act="zoom"]', ui);
-    const bPulse = $('[data-act="pulse"]', ui);
-
-    const updateFitLabel = ()=>{
-      const m = fig.dataset.fit || "auto";
-      bFit.textContent = (m==="contain" ? "Cover" : "Contain");
-      bFit.setAttribute("aria-pressed", String(m==="contain"));
-    };
-    const updatePulseState = ()=>{
-      const on = fig.classList.contains("pulse");
-      bPulse.textContent = on ? "Pulse: On" : "Pulse: Off";
-      bPulse.setAttribute("aria-pressed", String(on));
-    };
-    updateFitLabel(); updatePulseState();
-
-    on(bFit,"click",()=>{
-      const m = fig.dataset.fit || "auto";
-      const next = (m==="contain" ? "cover" : "contain");
-      setHeroFit(fig, next); updateFitLabel();
-    });
-    on(bZoom,"click",()=>{
-      fig.classList.toggle("is-zoomed");
-      bZoom.textContent = fig.classList.contains("is-zoomed") ? "Close" : "Zoom";
-      document.documentElement.style.overflow = fig.classList.contains("is-zoomed") ? "hidden" : "";
-      if (!fig.classList.contains("is-zoomed")) bZoom.focus();
-    });
-    on(bPulse,"click",()=>{
-      const nowOn = !fig.classList.contains("pulse");
-      fig.classList.toggle("pulse", nowOn);
-      updatePulseState();
-      store.set("codex:hero-pulse", nowOn);
-    });
-
+    // Pulse preference (no UI; honor saved pref, default on unless save-data/IAB)
     const pulsePref = store.get("codex:hero-pulse", !saveD && !isMetaApp);
     fig.classList.toggle("pulse", !!pulsePref);
-    updatePulseState();
 
+    // Zoom shortcut (if author wired an external trigger)
+    on(document, "click", (e)=>{
+      const t = e.target.closest && e.target.closest("[data-hero-zoom]");
+      if (!t) return;
+      e.preventDefault();
+      const onNow = fig.classList.toggle("is-zoomed");
+      document.documentElement.style.overflow = onNow ? "hidden" : "";
+    });
     on(document,"keydown",(e)=>{
       if (e.key==="Escape" && fig.classList.contains("is-zoomed")){
         fig.classList.remove("is-zoomed");
-        bZoom.textContent="Zoom";
         document.documentElement.style.overflow="";
-        bZoom.focus();
       }
     });
   }
@@ -387,7 +358,7 @@
   function wireEqExpand(scope=document){
     $$("[data-eq-expand]", scope).forEach(btn=>{
       on(btn,"click", ()=>{
-        const eq = btn.closest(".card")?.querySelector(".eq");
+        const eq = btn.closest(".card")?.querySelector(".eq") || btn.closest(".eq");
         if(!eq) return;
         const clone = eq.cloneNode(true);
         clone.classList.add("eq--expanded");
@@ -607,6 +578,7 @@
   function boot(){
     setYear();
     hardenExternal();
+    stickyHeader();
     wireSimpleMode();
     wireHUD();
     wirePageSearch();
