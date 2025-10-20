@@ -662,3 +662,101 @@ body.perf-fast,
 .hero.star-scan::after{ animation:scanFloat 8s linear infinite, starPulse 9.5s ease-in-out infinite; animation-play-state:paused }
 @keyframes starPulse{ 0%,100%{opacity:.12} 50%{opacity:.18} }
 
+/* === HERO: calmer, buttonless, more cinematic ========================== */
+
+/* shared caption styles */
+.hero-caption{
+  position:absolute; inset:auto 0 6% 0; display:grid; place-items:center; pointer-events:none; z-index:2;
+  padding:0 16px;
+}
+.hero-caption .cap-inner{
+  max-width:min(92vw, 980px);
+  border-radius:14px;
+  background:linear-gradient(180deg, rgba(12,12,16,.58), rgba(12,12,16,.28));
+  border:1px solid rgba(36,36,44,.85);
+  box-shadow:0 20px 60px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.10);
+  backdrop-filter:blur(8px) saturate(140%);
+  padding:14px 18px;
+  text-align:center;
+}
+.hero-caption .cap-eyebrow{
+  font:700 12px/1.2 Inter, system-ui; letter-spacing:.18em; text-transform:uppercase;
+  color:rgba(122,243,255,.85); margin-bottom:6px;
+}
+.hero-caption h2{
+  margin:0 0 2px; font:800 clamp(22px,4.8vw,36px)/1.1 "Crimson Pro", Georgia, serif;
+  background:linear-gradient(180deg,#fff 0%,#cfefff 55%,#a7f6ff 100%); -webkit-background-clip:text; color:transparent;
+  text-shadow:0 0 18px rgba(122,243,255,.12);
+}
+.hero-caption p{ margin:0; color:var(--muted); font-style:italic }
+
+/* tone down frames & scan so header doesn’t compete */
+.hero::before{ opacity:.82 }                  /* was .95 */
+.hero.star-scan::after{ opacity:.14 }         /* calmer */
+@media (prefers-reduced-motion:no-preference){
+  @keyframes scanFloat{ to{ background-position-y:10px } } /* was 12px */
+}
+
+/* size & aspect tuning */
+.hero img{ max-height:min(64vh, 820px) }
+@media (min-width:960px){
+  .hero img{ max-height:min(68vh, 880px) }
+}
+@media (max-width:480px){
+  .hero{ margin-top:6px }
+  .hero img{ object-fit:contain; max-height:56vh }
+  .hero-caption .cap-inner{ padding:12px 14px }
+}
+
+/* stronger but tasteful pulse (matches your variables tweak) */
+:root{ --pulse-opacity:.16 }
+.hero.pulse .hero-pulse{
+  background:
+    radial-gradient(circle at 50% 55%, var(--pulse-c1) 0 8%, transparent 40%),
+    radial-gradient(circle at 50% 55%, var(--pulse-c2) 0 5%, transparent 28%);
+}
+@media (prefers-reduced-motion:no-preference){
+  .hero.is-active.pulse .hero-pulse{ animation-duration:5.8s } /* active only */
+}
+
+/* gate animations so they only run in view (Codex.js sets .is-active) */
+@media (prefers-reduced-motion:no-preference){
+  .hero::after, .hero .hero-pulse{ animation-play-state:paused }
+  .hero.is-active::after, .hero.is-active .hero-pulse{ animation-play-state:running }
+}
+
+/* hover parallax hint but no visible buttons */
+.hero-ui{ display:none !important }
+
+/* === ALT LAYOUTS (choose one on the <figure>) =========================== */
+
+/* 1) hero--cinematic (centered caption; default above) */
+.hero--cinematic .hero-caption{ inset:auto 0 6% 0 }
+
+/* 2) hero--poster (image contains; caption inside frame) */
+.hero--poster img{ object-fit:contain!important; background:#0d0d12 }
+.hero--poster .hero-caption .cap-inner{ background:rgba(12,12,16,.48) }
+
+/* 3) hero--split (left text, right image on desktop) */
+@media (min-width:980px){
+  .hero--split{ display:grid; grid-template-columns:1.1fr .9fr; align-items:center }
+  .hero--split img{ object-position:60% 50% }
+  .hero--split .hero-caption{ inset:0 auto 0 0; display:flex; align-items:center; justify-content:center }
+  .hero--split .cap-inner{ margin-left:4%; max-width:560px; text-align:left }
+}
+
+/* === HEADER polish sync (works with JS sticky state) ===================== */
+header.site{ padding-top:var(--safe-top); transition:box-shadow .25s var(--ease), background .25s var(--ease) }
+header.site.is-stuck{ background:rgba(11,11,15,.78); box-shadow:0 6px 18px rgba(0,0,0,.35) }
+
+/* === HOMEPAGE cards & spacing refresh =================================== */
+.wrap{ padding-top:16px }
+.grid{ gap:16px }
+.card{ border-radius:14px }
+.card h3{ margin-top:4px }
+.tile{ border-radius:14px }
+
+/* compact tabs on small screens */
+@media (max-width:540px){
+  .tabs .tab{ padding:7px 10px; font-size:13px }
+}
