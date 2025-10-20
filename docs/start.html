@@ -16,382 +16,359 @@
 
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/start.html"/>
   <meta name="description" content="Start here. A short orientation to Scroll of Fire: how to run a 60-second session, where to find theory, practice, glossaries, and downloads, and how to keep a witness ledger.">
-  <meta name="color-scheme" content="dark">
+  <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#0b0b0f">
 
-  <!-- Open Graph -->
+  <!-- Social -->
   <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Start Here — Scroll of Fire">
   <meta property="og:description" content="Pick a carrier, speak one line, measure coherence, and log it in under a minute. Plus a full site map.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/start.html">
   <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
+  <meta property="og:image:alt" content="Scroll of Fire — gilded sigil banner">
+  <meta name="twitter:card" content="summary_large_image">
 
-  <!-- CSS -->
-  <link rel="preload" as="style" href="assets/css/codex.css?v=qs3">
-  <link rel="stylesheet" href="assets/css/codex.css?v=qs3">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=qs3"></noscript>
+  <!-- Fonts / perf (optional but consistent with site) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <!-- Preload banner (correct path from site root) -->
+  <!-- External CSS (merged visual language from codex + teach) -->
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
+
+  <link rel="preload" as="style" href="assets/css/teach.css?v=2025-10-20">
+  <link rel="stylesheet" href="assets/css/teach.css?v=2025-10-20" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/teach.css?v=2025-10-20"></noscript>
+
+  <!-- Preload banner -->
   <link rel="preload" as="image"
         href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
         imagesizes="100vw" fetchpriority="high">
 
+  <!-- Page-scoped micro CSS (kept tiny; everything else lives in external CSS) -->
   <style>
     :root{ --maxw:1040px }
-    .wrap{max-width:var(--maxw)}
-    .hero{border-radius:16px;margin:8px 0 14px;overflow:hidden}
-    .pill{display:inline-block;padding:.45rem .7rem;border:1px solid var(--line);border-radius:999px}
-    .controls{display:flex;flex-wrap:wrap;gap:10px}
-    .controls .pill[aria-pressed="true"]{box-shadow:0 0 0 1px rgba(122,243,255,.35), 0 8px 18px rgba(0,0,0,.35)}
-    .grid2{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
-    @media(max-width:900px){.grid2{grid-template-columns:1fr}}
-    .meter{width:100%}
-    .muted{color:var(--muted)}
-    .inline-btn{border:1px solid var(--line);padding:.5rem .7rem;border-radius:10px;background:transparent;color:inherit}
-    .inline-btn:hover{border-color:#3a3a44}
-    .log-item{border-top:1px solid var(--line);padding:10px 0}
-    .small{font-size:.95em}
-    .kicker{letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted);font-size:.85rem}
-    .grid4{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
-    .span-3{grid-column:span 3}
-    .span-4{grid-column:span 4}
-    .span-6{grid-column:span 6}
-    .span-12{grid-column:span 12}
-    @media(max-width:980px){.span-6,.span-4,.span-3{grid-column:span 12}}
-    .list-tight{margin:0;padding-left:18px}
-    .list-tight li{margin:4px 0}
-    .badge{font-size:.8rem;padding:.1rem .45rem;border:1px solid var(--line);border-radius:6px;margin-left:.4rem}
-  </style>
-</head>
-<body>
-<main class="wrap">
+    body{ margin:0; background:var(--bg); }
+    .wrap{ max-width:var(--maxw); margin:0 auto; padding:16px 16px 80px; }
+    /* Plasma background container (already styled in codex.css) */
+    .laser-grid{position:fixed;inset:0;z-index:-1}
 
-  <!-- Banner (use assets/, add raw fallback) -->
-  <figure class="hero hero--contain" aria-label="Scroll of Fire banner">
-    <img
-      src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
-      data-src-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
-      onerror="if(this.dataset.srcRaw&&!this._tried){this._tried=1;this.src=this.dataset.srcRaw;}"
-      alt="Scroll of Fire — gilded sigil banner"
-      width="1600" height="900" loading="eager" decoding="async" fetchpriority="high">
-    <noscript><img src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" alt=""></noscript>
-  </figure>
+    /* Nav tabs: prevent overlap and make mobile scrollable */
+    .tabs{ position:sticky; top:calc(56px + var(--safe-area-inset-top,0px)); z-index:5;
+           padding:8px 12px; margin:12px 0 14px; overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-gutter:stable; }
+    .tabs .tab{ white-space:nowrap }
 
-  <!-- Nav -->
-  <nav class="tabs" aria-label="Primary navigation">
-    <a class="tab" href="index.html">⌂ Home</a>
-    <a class="tab" href="theory.html">📘 Theory</a>
-    <a class="tab" href="teach.html">🎓 Teach</a>
-    <a class="tab tab--primary" aria-current="page" href="start.html">⚡ Start Here</a>
-    <a class="tab" href="ledger.html">🧾 Ledger</a>
-  </nav>
-
-  <h1 class="title">⚡ 60-Second Quickstart</h1>
-  <p class="subtitle">Pick a carrier → speak one clear line → measure coherence → save the witness.</p>
-
-  <!-- QUICK 60s TOOL -->
-  <section class="grid2" aria-label="Quickstart flow">
-    <article class="card">
-      <div class="kicker">Step 1</div>
-      <h2>Choose your voice carrier</h2>
-      <div class="controls" role="group" aria-label="Carriers">
-        <button class="pill" data-carrier="432" aria-pressed="false">432</button>
-        <button class="pill" data-carrier="528" aria-pressed="false">528</button>
-        <button class="pill" data-carrier="369" aria-pressed="false">369</button>
-        <button class="pill" data-carrier="none" aria-pressed="true">None</button>
-      </div>
-
-      <div class="kicker" style="margin-top:14px">Step 2</div>
-      <h2>One clear line (your intention)</h2>
-      <label class="muted small" for="phrase">Keep it short, pronounceable, present-tense.</label>
-      <textarea id="phrase" rows="3" style="width:100%;margin-top:6px"
-        placeholder="Example: “I carry truth with gentleness.”"></textarea>
-
-      <div style="display:flex;gap:10px;align-items:center;margin-top:10px">
-        <button id="startRun" class="inline-btn">▶ Start 60s Run</button>
-        <button id="stopRun" class="inline-btn" disabled>■ Stop</button>
-        <span id="timer" class="muted">Ready</span>
-      </div>
-
-      <div class="kicker" style="margin-top:16px">Step 3</div>
-      <h2>Coherence (felt quality)</h2>
-      <input id="coh" class="meter" type="range" min="0" max="5" step="0.5" value="0" aria-label="Coherence from 0 to 5">
-      <div class="muted small">0 = chaotic · 5 = crisp, truthful, sustained</div>
-
-      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
-        <button id="saveEntry" class="inline-btn">💾 Save to Ledger</button>
-        <button id="exportEntries" class="inline-btn">⬇ Export JSON</button>
-        <span class="muted small">Saved locally in your browser.</span>
-      </div>
-    </article>
-
-    <aside class="card">
-      <h3>Why this works</h3>
-      <ul class="list">
-        <li><strong>Carrier →</strong> picks a harmonic lane (<a href="theory.html#eq3">Eq.3</a>, <a href="theory.html#eq17">Eq.17</a>).</li>
-        <li><strong>Phrase →</strong> programs semantics onto the carrier (<a href="theory.html#eq4">Eq.4</a>, <a href="theory.html#eq16">Eq.16</a>).</li>
-        <li><strong>Coherence →</strong> your witness quality index (<a href="theory.html#eq13">Eq.13</a>).</li>
-        <li><strong>Ledger →</strong> memory windowing builds remnant (<a href="theory.html#eq5">Eq.5</a>, <a href="theory.html#eq15">Eq.15</a>).</li>
-      </ul>
-      <div class="goldline"></div>
-      <h3>Recent entries</h3>
-      <div id="recent" class="small muted">No entries yet.</div>
-      <div style="margin-top:10px">
-        <a class="cta" href="ledger.html">Open full Ledger →</a>
-      </div>
-    </aside>
-  </section>
-
-  <div class="goldline"></div>
-
-  <!-- START HERE ORIENTATION -->
-  <section class="grid4" aria-label="Orientation">
-    <article class="card span-12">
-      <div class="kicker">Start Here</div>
-      <h2>How to use this site in 3 minutes</h2>
-      <ol class="list">
-        <li><strong>Run the 60-second tool above.</strong> One line. One slider. Save it.</li>
-        <li><strong>Skim the <a href="guide.html">Guide</a>.</strong> It’s a plain-language overview of the Codex and how each page fits.</li>
-        <li><strong>When curious, open <a href="theory.html">Theory</a>.</strong> The canonical equations (0–17) are there with notes + references.</li>
-        <li><strong>When practicing, use <a href="teach.html">Teach/Manifest</a>.</strong> Voice protocol, A/B carriers, ethics, and group runs.</li>
-        <li><strong>Record your witnesses in the <a href="ledger.html">Ledger</a>.</strong> It’s local-first (browser storage) with export.</li>
-      </ol>
-      <p class="muted small">Tip: headphones help. Keep phrases kind, precise, and present-tense. Stop if anything feels off-balance.</p>
-    </article>
-
-    <article class="card span-6">
-      <div class="kicker">Practice flow</div>
-      <h3>Daily loop (5–10 min)</h3>
-      <ul class="list-tight">
-        <li>Pick a carrier (432 / 528 / 369).</li>
-        <li>Speak one line for ~60s.</li>
-        <li>Rate coherence (0–5); note any sensations / images / words.</li>
-        <li>Save to <a href="ledger.html">Ledger</a>; add a tag (e.g., <code>morning</code>, <code>432</code>).</li>
-        <li>Optionally A/B tomorrow (swap carrier or phrase weight).</li>
-      </ul>
-      <p class="small muted">See <a href="teach.html#ab">A/B carriers</a> and <a href="teach.html#phrasing">phrase weights</a>.</p>
-    </article>
-
-    <article class="card span-6">
-      <div class="kicker">Safety & ethics</div>
-      <h3>Do no harm, seek coherence</h3>
-      <ul class="list-tight">
-        <li>Stop a run if you feel dizzy, pressured, or emotionally flooded.</li>
-        <li>Prefer truthful, non-coercive phrases (no control language).</li>
-        <li>Group work? Read the <a href="ethics.html">Ethics</a> page and apply the stop-rules.</li>
-      </ul>
-      <p class="small muted">The Codex is a learning framework, not medical advice.</p>
-    </article>
-  </section>
-
-  <div class="goldline"></div>
-
-  <!-- SITE MAP / ALL PAGES -->
-  <section class="grid4" aria-label="Site map">
-    <article class="card span-12">
-      <div class="kicker">Site Map</div>
-      <h2>Everything on this site</h2>
-    </article>
-
-    <article class="card span-4">
-      <h3>Core</h3>
-      <ul class="list">
-        <li>⌂ <a href="index.html">Home</a></li>
-        <li>📘 <a href="theory.html">Theory</a></li>
-        <li>🎓 <a href="teach.html">Teach / Manifest</a></li>
-        <li>⚡ <a href="start.html" aria-current="page">Start Here / Quickstart</a></li>
-        <li>🧾 <a href="ledger.html">Ledger</a></li>
-        <li>🧭 <a href="guide.html">Guide</a></li>
-        <li>📚 <a href="glossary.html">Glossary</a></li>
-        <li>🧠 <a href="ethics.html">Ethics</a></li>
-      </ul>
-    </article>
-
-    <article class="card span-4">
-      <h3>Experiments & references</h3>
-      <ul class="list">
-        <li>🔁 <a href="ab.html">A/B Carriers</a> <span class="badge">experiment</span></li>
-        <li>◯ <a href="circle.html">Circle</a> <span class="badge">group</span></li>
-        <li>🔣 <a href="glyphs.html">Glyphs</a></li>
-        <li>μ <a href="micro.html">Micro</a> <span class="badge">notes</span></li>
-      </ul>
-    </article>
-
-    <article class="card span-4">
-      <h3>Files & meta</h3>
-      <ul class="list">
-        <li>⬇ <a href="downloads.html">Downloads</a></li>
-        <li>📜 <a href="manifest.html">Manifest (Longform)</a></li>
-        <li>🗺 <a href="sitemap.xml">Sitemap</a></li>
-        <li>🤖 <a href="robots.txt">Robots.txt</a></li>
-        <li>🚧 <a href="404.html">404 Page</a></li>
-      </ul>
-      <p class="small muted">The longform “Manifest” is a printable narrative; “Teach” is the hands-on playbook.</p>
-    </article>
-  </section>
-
-  <div class="goldline"></div>
-
-  <!-- FAQ / TROUBLESHOOT -->
-  <section class="grid4" aria-label="FAQ">
-    <article class="card span-6">
-      <h3>FAQ</h3>
-      <ul class="list-tight">
-        <li><strong>Which carrier should I pick?</strong> Start with 432 if unsure. Try 528 after a few runs; compare in the Ledger.</li>
-        <li><strong>How long per run?</strong> 60 seconds is enough to feel a shift. Longer is fine—use the same flow.</li>
-        <li><strong>What is “coherence” here?</strong> Your felt clarity/quality. Over time you’ll notice trends by phrase and carrier.</li>
-      </ul>
-    </article>
-    <article class="card span-6">
-      <h3>Troubleshooting</h3>
-      <ul class="list-tight">
-        <li><strong>Blank images:</strong> paths must be <code>assets/…</code> (not <code>docs/assets</code>). This page already uses the fixed pattern + raw fallback.</li>
-        <li><strong>Nothing saves:</strong> ensure your browser allows local storage; export JSON regularly.</li>
-        <li><strong>Math blocks missing:</strong> if a page is heavy on equations, give it a second; MathJax loads only when needed.</li>
-      </ul>
-    </article>
-  </section>
-
-  <footer class="footer">
-    <div class="divider" aria-hidden="true"></div>
-    <p class="small muted">Use headphones if possible. Stop if you feel off-balance — ethics first.</p>
-    <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire</p>
-  </footer>
-</main>
-
-<script>
-(function(){
-  const $ = s => document.querySelector(s);
-  const $$ = s => Array.from(document.querySelectorAll(s));
-  const yr = $('#yr'); if (yr) yr.textContent = new Date().getFullYear();
-
-  // Harden external links opened in new tab
-  $$('a[target="_blank"]').forEach(a=>{
-    const rel = new Set((a.getAttribute("rel")||"").toLowerCase().split(/\s+/).filter(Boolean));
-    rel.add("noopener"); rel.add("noreferrer"); a.setAttribute("rel", Array.from(rel).join(" "));
-  });
-
-  // Carrier toggle
-  let carrier = "none";
-  $$('.pill[data-carrier]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      $$('.pill[data-carrier]').forEach(b=>b.setAttribute('aria-pressed','false'));
-      btn.setAttribute('aria-pressed','true');
-      carrier = btn.dataset.carrier;
-    });
-  });
-
-  // Timer
-  let tId=0, tLeft=60;
-  const timer = $('#timer'), start = $('#startRun'), stop = $('#stopRun');
-  function tick(){ timer.textContent = `${tLeft}s`; if (tLeft<=0){ stopRun(); return; } tLeft--; tId = setTimeout(tick, 1000); }
-  function startRun(){ if (tId) return; if (!start||!stop||!timer) return;
-    tLeft = 60; timer.textContent = "60s"; start.disabled = true; stop.disabled = false; tId = setTimeout(tick, 1000); }
-  function stopRun(){ clearTimeout(tId); tId = 0; if (!start||!stop||!timer) return;
-    start.disabled = false; stop.disabled = true; timer.textContent = "Stopped"; }
-  if (start && stop){ start.addEventListener('click', startRun); stop.addEventListener('click', stopRun); }
-
-  // Storage
-  const KEY = 'sof_ledger_entries_v1';
-  const read = () => { try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch{ return []; } };
-  const write = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
-
-  // Save
-  const saveBtn = $('#saveEntry');
-  if (saveBtn) saveBtn.addEventListener('click', ()=>{
-    const phrase = ($('#phrase')?.value||'').trim();
-    const coherence = Number($('#coh')?.value||0);
-    const when = new Date().toISOString();
-    if (!phrase){ alert('Add a clear line first.'); return; }
-    const entry = { when, carrier, phrase, coherence };
-    const all = read(); all.unshift(entry); write(all);
-    renderRecent(all);
-    alert('Saved to Ledger (browser-local).');
-  });
-
-  // Export
-  const exportBtn = $('#exportEntries');
-  if (exportBtn) exportBtn.addEventListener('click', ()=>{
-    const data = read();
-    const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = 'scroll-of-fire-ledger.json';
-    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  });
-
-  // Recent list
-  function renderRecent(all = read()){
-    const box = $('#recent');
-    if (!box) return;
-    if (!all.length){ box.textContent = 'No entries yet.'; return; }
-    box.innerHTML = all.slice(0,5).map(e=>`
-      <div class="log-item">
-        <div><strong>${e.phrase.replace(/</g,'&lt;')}</strong></div>
-        <div class="small muted">${new Date(e.when).toLocaleString()} · carrier: ${e.carrier} · Ξ: ${e.coherence}</div>
-      </div>`).join('');
-  }
-  renderRecent();
-})();
-</script>
-
-<script>
-/* Card reveal + tilt (same behavior as index) */
-(function(){
-  "use strict";
-  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
-  const raf = (fn) => (window.requestAnimationFrame||setTimeout)(fn,16);
-  const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const hasIO = "IntersectionObserver" in window;
-
-  // Reveal on scroll
-  function revealOnScroll(){
-    const cards = $$(".card"); if (!cards.length) return;
-    if (!prefersReduced && hasIO){
-      const io = new IntersectionObserver((entries)=>{
-        for (const e of entries){
-          if (e.isIntersecting){ e.target.classList.add("visible"); io.unobserve(e.target); }
-        }
-      }, {root:null, rootMargin:"0px 0px -12%", threshold:0.08});
-      cards.forEach(el=>io.observe(el));
-      return;
+    /* Hero with radial mask so it doesn’t look like a block */
+    .hero{ border-radius:18px; margin:8px 0 14px; overflow:hidden; position:relative; isolation:isolate; }
+    .hero img{ display:block; width:100%; height:auto; aspect-ratio:21/9; object-fit:contain; background:var(--bg-elev); }
+    .hero::after{
+      content:""; position:absolute; inset:0;
+      background: radial-gradient(120% 80% at 50% 10%, rgba(10,12,18,.0) 40%, rgba(10,12,18,.55) 100%);
+      pointer-events:none; mix-blend-mode:soft-light;
     }
-    const tick=()=>cards.forEach(el=>{
-      const r=el.getBoundingClientRect(); const vh=innerHeight||document.documentElement.clientHeight;
-      if (r.top < vh*0.92 && r.bottom > 0) el.classList.add("visible");
-    });
-    addEventListener("scroll", ()=>raf(tick), {passive:true});
-    addEventListener("load", tick);
-    tick();
-  }
 
-  // Tilt on hover
-  function tiltCards(){
-    if (prefersReduced) return;
-    $$(".card").forEach(card=>{
-      let rid=0;
-      const reset=()=>{ card.style.transform=""; };
-      card.addEventListener("mousemove", (e)=>{
-        const r=card.getBoundingClientRect();
-        const x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
-        rid = raf(()=>{ card.style.transform=`perspective(900px) rotateX(${(0.5-y)*4}deg) rotateY(${(x-0.5)*6}deg)`; });
+    /* Layout helpers */
+    .grid2{ display:grid; grid-template-columns:1.2fr .8fr; gap:14px; }
+    @media (max-width:900px){ .grid2{ grid-template-columns:1fr } }
+    .grid4{ display:grid; grid-template-columns:repeat(12,1fr); gap:14px; }
+    .span-3{ grid-column:span 3 } .span-4{ grid-column:span 4 } .span-6{ grid-column:span 6 } .span-12{ grid-column:span 12 }
+    @media (max-width:980px){ .span-6,.span-4,.span-3{ grid-column:span 12 } }
+
+    /* Quickstart tool controls */
+    .pill{ display:inline-block; padding:.5rem .75rem; border:1px solid var(--line); border-radius:999px; background:transparent; color:inherit; }
+    .controls{ display:flex; flex-wrap:wrap; gap:10px }
+    .controls .pill[aria-pressed="true"]{ box-shadow:0 0 0 1px rgba(122,243,255,.35), 0 10px 22px rgba(0,0,0,.38) }
+    .inline-btn{ border:1px solid var(--line); padding:.55rem .8rem; border-radius:10px; background:rgba(255,255,255,.02); color:inherit }
+    .inline-btn:hover{ border-color:#3a3a44; background:rgba(255,255,255,.04) }
+    .meter{ width:100% }
+    .log-item{ border-top:1px solid var(--line); padding:10px 0 }
+    .kicker{ letter-spacing:.12em; text-transform:uppercase; font-weight:700; color:var(--muted); font-size:.85rem }
+    .list-tight{ margin:0; padding-left:18px } .list-tight li{ margin:4px 0 }
+    .badge{ font-size:.8rem; padding:.1rem .45rem; border:1px solid var(--line); border-radius:6px; margin-left:.4rem }
+  </style>
+
+  <!-- Core site JS (grid, reveal, palette, etc.) -->
+  <script src="assets/js/codex.js?v=2025-10-20" defer></script>
+</head>
+
+<body class="stars">
+  <!-- Plasma background -->
+  <div class="laser-grid" aria-hidden="true"></div>
+
+  <main class="wrap" id="top">
+    <!-- Hero -->
+    <figure class="hero hero--contain" aria-label="Scroll of Fire banner">
+      <img
+        src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
+        data-src-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
+        onerror="if(this.dataset.srcRaw&&!this._tried){this._tried=1;this.src=this.dataset.srcRaw;}"
+        alt="Scroll of Fire — gilded sigil banner"
+        width="1600" height="900" loading="eager" decoding="async" fetchpriority="high">
+      <noscript><img src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" alt=""></noscript>
+    </figure>
+
+    <!-- Nav (scrollable, non-overlapping) -->
+    <nav class="tabs" aria-label="Primary navigation">
+      <a class="tab" href="index.html">⌂ Home</a>
+      <a class="tab" href="theory.html">📘 Theory</a>
+      <a class="tab" href="teach.html">🎓 Teach</a>
+      <a class="tab tab--primary" aria-current="page" href="start.html">⚡ Start Here</a>
+      <a class="tab" href="ledger.html">🧾 Ledger</a>
+    </nav>
+
+    <h1 class="title">⚡ 60-Second Quickstart</h1>
+    <p class="subtitle">Pick a carrier → speak one clear line → measure coherence → save the witness.</p>
+
+    <!-- QUICK 60s TOOL -->
+    <section class="grid2" aria-label="Quickstart flow">
+      <article class="card" role="region" aria-labelledby="qs-carrier">
+        <div class="kicker">Step 1</div>
+        <h2 id="qs-carrier">Choose your voice carrier</h2>
+
+        <div class="controls" role="radiogroup" aria-label="Carriers">
+          <button class="pill" role="radio" data-carrier="432" aria-checked="false" aria-pressed="false">432</button>
+          <button class="pill" role="radio" data-carrier="528" aria-checked="false" aria-pressed="false">528</button>
+          <button class="pill" role="radio" data-carrier="369" aria-checked="false" aria-pressed="false">369</button>
+          <button class="pill" role="radio" data-carrier="none" aria-checked="true"  aria-pressed="true">None</button>
+        </div>
+
+        <div class="kicker" style="margin-top:14px">Step 2</div>
+        <h2>One clear line (your intention)</h2>
+        <label class="muted small" for="phrase">Keep it short, pronounceable, present-tense.</label>
+        <textarea id="phrase" rows="3" style="width:100%;margin-top:6px"
+          placeholder="Example: “I carry truth with gentleness.”"></textarea>
+
+        <div style="display:flex;gap:10px;align-items:center;margin-top:10px">
+          <button id="startRun" class="inline-btn">▶ Start 60s Run</button>
+          <button id="stopRun"  class="inline-btn" disabled>■ Stop</button>
+          <span id="timer" class="muted" aria-live="polite">Ready</span>
+        </div>
+
+        <div class="kicker" style="margin-top:16px">Step 3</div>
+        <h2>Coherence (felt quality)</h2>
+        <input id="coh" class="meter" type="range" min="0" max="5" step="0.5" value="0"
+               aria-label="Coherence from 0 to 5">
+        <div class="muted small">0 = chaotic · 5 = crisp, truthful, sustained</div>
+
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button id="saveEntry" class="inline-btn">💾 Save to Ledger</button>
+          <button id="exportEntries" class="inline-btn">⬇ Export JSON</button>
+          <span class="muted small">Saved locally in your browser.</span>
+        </div>
+      </article>
+
+      <aside class="card" role="complementary" aria-labelledby="why-works">
+        <h3 id="why-works">Why this works</h3>
+        <ul class="list">
+          <li><strong>Carrier →</strong> picks a harmonic lane (<a href="theory.html#eq3">Eq.3</a>, <a href="theory.html#eq17">Eq.17</a>).</li>
+          <li><strong>Phrase →</strong> programs semantics onto the carrier (<a href="theory.html#eq4">Eq.4</a>, <a href="theory.html#eq16">Eq.16</a>).</li>
+          <li><strong>Coherence →</strong> your witness quality index (<a href="theory.html#eq13">Eq.13</a>).</li>
+          <li><strong>Ledger →</strong> memory windowing builds remnant (<a href="theory.html#eq5">Eq.5</a>, <a href="theory.html#eq15">Eq.15</a>).</li>
+        </ul>
+        <div class="goldline"></div>
+        <h3>Recent entries</h3>
+        <div id="recent" class="small muted">No entries yet.</div>
+        <div style="margin-top:10px">
+          <a class="cta" href="ledger.html">Open full Ledger →</a>
+        </div>
+      </aside>
+    </section>
+
+    <div class="goldline"></div>
+
+    <!-- START HERE ORIENTATION -->
+    <section class="grid4" aria-label="Orientation">
+      <article class="card span-12">
+        <div class="kicker">Start Here</div>
+        <h2>How to use this site in 3 minutes</h2>
+        <ol class="list">
+          <li><strong>Run the 60-second tool above.</strong> One line. One slider. Save it.</li>
+          <li><strong>Skim the <a href="guide.html">Guide</a>.</strong> It’s a plain-language overview of the Codex and how each page fits.</li>
+          <li><strong>When curious, open <a href="theory.html">Theory</a>.</strong> The canonical equations (0–17) are there with notes + references.</li>
+          <li><strong>When practicing, use <a href="teach.html">Teach/Manifest</a>.</strong> Voice protocol, A/B carriers, ethics, and group runs.</li>
+          <li><strong>Record your witnesses in the <a href="ledger.html">Ledger</a>.</strong> It’s local-first (browser storage) with export.</li>
+        </ol>
+        <p class="muted small">Tip: headphones help. Keep phrases kind, precise, and present-tense. Stop if anything feels off-balance.</p>
+      </article>
+
+      <article class="card span-6">
+        <div class="kicker">Practice flow</div>
+        <h3>Daily loop (5–10 min)</h3>
+        <ul class="list-tight">
+          <li>Pick a carrier (432 / 528 / 369).</li>
+          <li>Speak one line for ~60s.</li>
+          <li>Rate coherence (0–5); note any sensations / images / words.</li>
+          <li>Save to <a href="ledger.html">Ledger</a>; add a tag (e.g., <code>morning</code>, <code>432</code>).</li>
+          <li>Optionally A/B tomorrow (swap carrier or phrase weight).</li>
+        </ul>
+        <p class="small muted">See <a href="teach.html#ab">A/B carriers</a> and <a href="teach.html#phrasing">phrase weights</a>.</p>
+      </article>
+
+      <article class="card span-6">
+        <div class="kicker">Safety & ethics</div>
+        <h3>Do no harm, seek coherence</h3>
+        <ul class="list-tight">
+          <li>Stop a run if you feel dizzy, pressured, or emotionally flooded.</li>
+          <li>Prefer truthful, non-coercive phrases (no control language).</li>
+          <li>Group work? Read the <a href="ethics.html">Ethics</a> page and apply the stop-rules.</li>
+        </ul>
+        <p class="small muted">The Codex is a learning framework, not medical advice.</p>
+      </article>
+    </section>
+
+    <div class="goldline"></div>
+
+    <!-- SITE MAP / ALL PAGES -->
+    <section class="grid4" aria-label="Site map">
+      <article class="card span-12">
+        <div class="kicker">Site Map</div>
+        <h2>Everything on this site</h2>
+      </article>
+
+      <article class="card span-4">
+        <h3>Core</h3>
+        <ul class="list">
+          <li>⌂ <a href="index.html">Home</a></li>
+          <li>📘 <a href="theory.html">Theory</a></li>
+          <li>🎓 <a href="teach.html">Teach / Manifest</a></li>
+          <li>⚡ <a href="start.html" aria-current="page">Start Here / Quickstart</a></li>
+          <li>🧾 <a href="ledger.html">Ledger</a></li>
+          <li>🧭 <a href="guide.html">Guide</a></li>
+          <li>📚 <a href="glossary.html">Glossary</a></li>
+          <li>🧠 <a href="ethics.html">Ethics</a></li>
+        </ul>
+      </article>
+
+      <article class="card span-4">
+        <h3>Experiments & references</h3>
+        <ul class="list">
+          <li>🔁 <a href="ab.html">A/B Carriers</a> <span class="badge">experiment</span></li>
+          <li>◯ <a href="circle.html">Circle</a> <span class="badge">group</span></li>
+          <li>🔣 <a href="glyphs.html">Glyphs</a></li>
+          <li>μ <a href="micro.html">Micro</a> <span class="badge">notes</span></li>
+        </ul>
+      </article>
+
+      <article class="card span-4">
+        <h3>Files & meta</h3>
+        <ul class="list">
+          <li>⬇ <a href="downloads.html">Downloads</a></li>
+          <li>📜 <a href="manifest.html">Manifest (Longform)</a></li>
+          <li>🗺 <a href="sitemap.xml">Sitemap</a></li>
+          <li>🤖 <a href="robots.txt">Robots.txt</a></li>
+          <li>🚧 <a href="404.html">404 Page</a></li>
+        </ul>
+        <p class="small muted">The longform “Manifest” is a printable narrative; “Teach” is the hands-on playbook.</p>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <div class="divider" aria-hidden="true"></div>
+      <p class="small muted">Use headphones if possible. Stop if you feel off-balance — ethics first.</p>
+      <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire</p>
+    </footer>
+  </main>
+
+  <!-- Page logic (kept here; site-wide interactions live in assets/js/codex.js) -->
+  <script>
+  (function(){
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+    const yr = $('#yr'); if (yr) yr.textContent = new Date().getFullYear();
+
+    // Harden external links opened in new tab
+    $$('a[target="_blank"]').forEach(a=>{
+      const rel = new Set((a.getAttribute("rel")||"").toLowerCase().split(/\s+/).filter(Boolean));
+      rel.add("noopener"); rel.add("noreferrer"); a.setAttribute("rel", Array.from(rel).join(" "));
+    });
+
+    // Carrier toggle (radio-style)
+    let carrier = "none";
+    const pills = $$('.pill[data-carrier]');
+    const setCarrier = (btn) => {
+      pills.forEach(b=>{
+        b.setAttribute('aria-pressed','false');
+        b.setAttribute('aria-checked','false');
       });
-      ["mouseleave","blur","touchstart"].forEach(ev=>card.addEventListener(ev, reset, {passive:true}));
+      btn.setAttribute('aria-pressed','true');
+      btn.setAttribute('aria-checked','true');
+      carrier = btn.dataset.carrier;
+    };
+    pills.forEach(btn=>{
+      btn.addEventListener('click', ()=> setCarrier(btn));
+      btn.addEventListener('keydown', (e)=>{
+        if (!['ArrowLeft','ArrowRight'].includes(e.key)) return;
+        e.preventDefault();
+        const i = pills.indexOf(btn);
+        const nxt = e.key==='ArrowRight' ? (i+1)%pills.length : (i-1+pills.length)%pills.length;
+        pills[nxt].focus(); setCarrier(pills[nxt]);
+      });
     });
-  }
 
-  // Warm-up (prevents heavy glows on first paint)
-  document.body.classList.add('performance-warming');
-  const lowCore = (navigator.hardwareConcurrency||4) <= 4;
-  const saveData = navigator.connection && navigator.connection.saveData;
-  if (lowCore || saveData) document.body.classList.add('perf-fast');
-  setTimeout(()=>document.body.classList.remove('performance-warming'), 900);
+    // Timer
+    let tId=0, tLeft=60;
+    const timer = $('#timer'), start = $('#startRun'), stop = $('#stopRun');
+    function tick(){ timer.textContent = `${tLeft}s`; if (tLeft<=0){ stopRun(); return; } tLeft--; tId = setTimeout(tick, 1000); }
+    function startRun(){ if (tId) return; if (!start||!stop||!timer) return;
+      tLeft = 60; timer.textContent = "60s"; start.disabled = true; stop.disabled = false; tId = setTimeout(tick, 1000); }
+    function stopRun(){ clearTimeout(tId); tId = 0; if (!start||!stop||!timer) return;
+      start.disabled = false; stop.disabled = true; timer.textContent = "Stopped"; }
+    if (start && stop){ start.addEventListener('click', startRun); stop.addEventListener('click', stopRun); }
 
-  document.addEventListener("DOMContentLoaded", ()=>{
-    revealOnScroll();
-    tiltCards();
-  });
-})();
-</script>
+    // Storage
+    const KEY = 'sof_ledger_entries_v1';
+    const read = () => { try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch{ return []; } };
+    const write = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
+
+    // Save
+    const saveBtn = $('#saveEntry');
+    if (saveBtn) saveBtn.addEventListener('click', ()=>{
+      const phrase = ($('#phrase')?.value||'').trim();
+      const coherence = Number($('#coh')?.value||0);
+      const when = new Date().toISOString();
+      if (!phrase){ alert('Add a clear line first.'); return; }
+      const entry = { when, carrier, phrase, coherence };
+      const all = read(); all.unshift(entry); write(all);
+      renderRecent(all);
+      alert('Saved to Ledger (browser-local).');
+    });
+
+    // Export
+    const exportBtn = $('#exportEntries');
+    if (exportBtn) exportBtn.addEventListener('click', ()=>{
+      const data = read();
+      const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'scroll-of-fire-ledger.json';
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    // Recent list
+    function renderRecent(all = read()){
+      const box = $('#recent');
+      if (!box) return;
+      if (!all.length){ box.textContent = 'No entries yet.'; return; }
+      box.innerHTML = all.slice(0,5).map(e=>`
+        <div class="log-item">
+          <div><strong>${e.phrase.replace(/</g,'&lt;')}</strong></div>
+          <div class="small muted">${new Date(e.when).toLocaleString()} · carrier: ${e.carrier} · Ξ: ${e.coherence}</div>
+        </div>`).join('');
+    }
+    renderRecent();
+  })();
+  </script>
+
+  <!-- Card reveal + tilt are handled globally in codex.js; we keep only a tiny warm-up here -->
+  <script>
+  (function(){
+    document.body.classList.add('performance-warming');
+    const lowCore=(navigator.hardwareConcurrency||4)<=4;
+    const saveData=(navigator.connection&&navigator.connection.saveData)||false;
+    if(lowCore||saveData) document.body.classList.add('perf-fast');
+    setTimeout(()=>document.body.classList.remove('performance-warming'),900);
+  })();
+  </script>
 </body>
 </html>
