@@ -820,3 +820,29 @@ a.anchor:hover{ opacity:1; text-shadow:0 0 8px rgba(122,243,255,.22) }
 @media (prefers-reduced-motion:no-preference){
   .card.visible.card--neon{ will-change: filter, transform; }
 }
+
+
+
+
+
+
+
+
+
+.eq-scroll {
+  animation: pulseGlow 6s ease-in-out infinite;
+  text-shadow: 0 0 8px rgba(100,255,255,0.6), 0 0 16px rgba(64,224,255,0.4);
+}
+@keyframes pulseGlow {
+  0%,100% { filter: drop-shadow(0 0 4px #00e6ff) drop-shadow(0 0 12px #00aaff); }
+  50%     { filter: drop-shadow(0 0 8px #00ffff) drop-shadow(0 0 24px #66ffff); }
+}
+
+
+
+
+body {
+  background: radial-gradient(circle at 50% 50%, #0b0b0f 0%, #050507 80%);
+  background-image: repeating-linear-gradient(0deg, rgba(0,255,255,0.03) 0 1px, transparent 1px 60px),
+                    repeating-linear-gradient(90deg, rgba(0,255,255,0.03) 0 1px, transparent 1px 60px);
+}
