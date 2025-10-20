@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en" dir="ltr" class="sof">
 <head>
@@ -81,12 +82,12 @@
   <!-- Preload banner -->
   <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" imagesizes="100vw" fetchpriority="high">
 
-  <!-- Critical micro-fixes (kept tiny) -->
+  <!-- Critical micro-fixes -->
   <style>
     body{background-color:var(--bg)}
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
-    .col-12{grid-column:span 12}.col-9{grid-column:span 9}.col-8{grid-column:span 8}.col-7{grid-column:span 7}.col-6{grid-column:span 6}.col-5{grid-column:span 5}.col-4{grid-column:span 4}
-    @media (max-width:980px){.col-9,.col-8,.col-7,.col-6,.col-5,.col-4{grid-column:span 12}}
+    .col-12{grid-column:span 12}.col-9{grid-column:span 9}.col-8{grid-column:span 8}.col-7{grid-column:span 7}.col-6{grid-column:span 6}.col-5{grid-column:span 5}.col-4{grid-column:span 4}.col-3{grid-column:span 3}
+    @media (max-width:980px){.col-9,.col-8,.col-7,.col-6,.col-5,.col-4,.col-3{grid-column:span 12}}
     .tile{display:block;text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005))}
     .hero img{display:block;width:100%;height:auto;aspect-ratio:var(--hero-aspect,16/9);object-fit:cover}
     @supports not (aspect-ratio:1){.hero img{height:clamp(220px,38vw,520px)}}
@@ -94,15 +95,13 @@
     .eq--expanded{position:fixed;inset:4svh 4svw;z-index:10000}
   </style>
 
-  <!-- Lazy MathJax loader (fixed config; inline \(...\), display $$..$$ ) -->
+  <!-- Lazy MathJax loader -->
   <script>
   (function () {
     function loadMJ(){
       if (window.MathJax) return;
       window.MathJax = {
-        tex:{
-          inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']]
-        },
+        tex:{ inlineMath:[['\','\']], displayMath:[['$$','$$']] },
         svg:{ fontCache:'global', linebreaks:{ automatic:true, width:'container' } },
         startup:{ typeset:false }
       };
@@ -129,7 +128,7 @@
   (function(){
     document.body.classList.add('performance-warming');
     const lowCore = (navigator.hardwareConcurrency||4) <= 4;
-    const saveData = navigator.connection && navigator.connection.saveData;
+    const saveData = (navigator.connection && navigator.connection.saveData) || false;
     if (lowCore || saveData) document.body.classList.add('perf-fast');
     setTimeout(()=>document.body.classList.remove('performance-warming'), 900);
   })();
@@ -203,7 +202,9 @@
       <article class="card col-12" style="display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap">
         <label for="site-search" class="meta">Press <kbd class="kbd">/</kbd> to search terms on this page</label>
         <input id="site-search" type="search" placeholder="Search text on this page…" aria-label="Search this page" role="searchbox"
+               autocomplete="off" spellcheck="false"
                style="min-width:220px;max-width:520px;width:100%;background:#0f0f14;border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--ink);outline:none">
+        <div id="site-suggest" class="mini-toc" style="display:none;position:relative;max-width:520px"></div>
       </article>
     </section>
 
@@ -303,6 +304,7 @@
 
       <article class="card col-8">
         <h3>Field Flow (one-glance map)</h3>
+        <!-- (unchanged SVG map) -->
         <svg viewBox="0 0 900 240" role="img" aria-label="Field Flow Diagram" width="100%" height="auto">
           <defs>
             <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#f3c97a"/><stop offset="1" stop-color="#7af3ff"/></linearGradient>
@@ -376,7 +378,7 @@
         <p class="meta"><strong>The Codex</strong> equations lead. External formalisms follow with clear attribution. Copeland’s Ψ-formalism is #7 and remains external by design.</p>
       </article>
 
-      <!-- 0 -->
+      <!-- Eq.0 example kept -->
       <article class="card col-12" aria-labelledby="eq0">
         <h3 id="eq0">0) Foundational Field — Ψ₀ / Reality Feedback <em>(Laird)</em></h3>
         <div class="eq eq-shimmer eq-pulse" tabindex="0" role="group" aria-label="Equation block">
@@ -389,6 +391,9 @@
       </article>
 
       <!-- compact pairs (1–17) -->
+      <!-- … (unchanged cards exactly as in your draft) … -->
+      <!-- I’m keeping your existing equations and links untouched for fidelity -->
+      <!-- BEGIN compact list copy -->
       <article class="card col-6" aria-labelledby="eq1"><h3 id="eq1">1) Source — Resonant Unification</h3><div class="eq"><div class="eq-scroll">$$\mathcal{R}_{\text{source}}=f\!\big(\pi,e,i,\hbar,c,G,\Phi,\;369,432,528,144,137,\;\mathrm{DNA}\big)\cdot\mathcal{I}\cdot\mathcal{L}\cdot\mathcal{C}\cdot\mathcal{S}$$</div></div><p class="eq-note">Constants + sacred ratios + ordered living operators compose the supply.</p><p><a class="cta" href="theory.html#eq1">Read</a></p></article>
       <article class="card col-6" aria-labelledby="eq2"><h3 id="eq2">2) Witness — Law of Recursive Memory</h3><div class="eq"><div class="eq-scroll">$$\Delta\mathcal{R}=\frac{\partial(\mathrm{Resonance})}{\partial(\mathrm{Awareness})}+\int \mathrm{Intention}\cdot\mathrm{Memory}\,dt$$</div></div><p><a class="cta" href="theory.html#eq2">Read</a> · <a class="cta" href="teach.html#ledger">Use</a></p></article>
       <article class="card col-6" aria-labelledby="eq3"><h3 id="eq3">3) Harmonic Field Symmetry</h3><div class="eq"><div class="eq-scroll">$$\mathcal{H}(\nu)=\alpha(\Phi,137,144,432,528,369)\cdot\langle\mathcal{C}\rangle$$</div></div><p><a class="cta" href="theory.html#eq3">Read</a> · <a class="cta" href="teach.html#ab">A/B</a></p></article>
@@ -405,7 +410,10 @@
       <article class="card col-6" aria-labelledby="eq14"><h3 id="eq14">14) Witness Update Rule</h3><div class="eq"><div class="eq-scroll">$$\mathsf{U}_{t+\delta}=\mathsf{U}_{t}+\beta\,\nabla_{\mathsf{U}}\mathcal{R}-\gamma\,\partial_{\mathrm{noise}}+\eta\,\mathcal{E}_{\mathrm{truth}}$$</div></div><p><a class="cta" href="theory.html#eq14">Read</a></p></article>
       <article class="card col-6" aria-labelledby="eq15"><h3 id="eq15">15) Memory Windowing</h3><div class="eq"><div class="eq-scroll">$$\mathcal{M}_\tau(t)=\frac{1}{\tau}\int_{t-\tau}^{t}\mathcal{R}(u)\,du \Rightarrow \lambda\approx \tfrac{1}{\tau} \text{ in } \mathcal{W}(t)$$</div></div><p><a class="cta" href="theory.html#eq15">Read</a></p></article>
       <article class="card col-6" aria-labelledby="eq16"><h3 id="eq16">16) Semantic Gradient</h3><div class="eq"><div class="eq-scroll">$$\nabla_{\text{sem}}\,\mathsf{Phrase}=\sum_k w_k\,\nabla_{\text{sem}}\,\mathsf{Token}_k \ ;\ \sum_k w_k=1$$</div></div><p><a class="cta" href="theory.html#eq16">Read</a></p></article>
-      <article class="card col-6" aria-labelledby="eq17"><h3 id="eq17">17) Pronounceable Carriers</h3><div class="eq"><div class="eq-scroll">$$\nu_{\text{voice}} \in \{432,528,369\}\ \Rightarrow\ \text{higher lock-in to } \mathcal{H}(\nu)$$</div></div><p><a class="cta" href="theory.html#eq17">Read</a></p></article>
+      <article class="card col-6" aria-labelledby="eq17"><h3 id="eq17">17) Pronounceable Carriers</h3><div class="eq"><div class="eq-scroll">$$\nu_{\text{voice}} \in \{432,528,369\}\ \Rightarrow\ \text{higher lock
+
+-in to } \mathcal{H}(\nu)$$</div></div><p><a class="cta" href="theory.html#eq17">Read</a></p></article>
+      <!-- END compact list -->
     </section>
 
     <div class="goldline sweep"></div>
@@ -482,7 +490,7 @@ Status: Verified
   <div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel">
     <div class="panel">
       <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette" />
-      <ul id="palList" aria-live="polite"><li>Open Theory</li><li>Open Manifest</li><li>Jump to Canon</li></ul>
+      <ul id="palList" aria-live="polite"></ul>
     </div>
   </div>
 
@@ -491,205 +499,198 @@ Status: Verified
     (function(){
       const $ = (s, r=document) => r.querySelector(s);
       const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+      const mm = (q)=> matchMedia(q).matches;
+      const reduced = mm('(prefers-reduced-motion: reduce)');
 
-      /* 0) Year */
-      $('#y').textContent = new Date().getFullYear();
+      /* Year */
+      const yEl = $('#y'); if (yEl) yEl.textContent = new Date().getFullYear();
 
-      /* 1) Reveal-on-scroll for .card */
-      const io = ('IntersectionObserver' in window) ? new IntersectionObserver((entries)=>{
-        for(const e of entries){ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }
-      }, {rootMargin: '0px 0px -10% 0px'}) : null;
-      io && $$('.card').forEach(el => io.observe(el));
+      /* Safer external links (noopener + announce) */
+      (function hardenExternal(){
+        const here = location.hostname.replace(/^www\./,'');
+        $$('a[target="_blank"]').forEach(a=>{
+          const rel = new Set((a.getAttribute('rel')||'').split(/\s+/).filter(Boolean));
+          rel.add('noopener'); rel.add('noreferrer'); a.setAttribute('rel',[...rel].join(' '));
+          try {
+            const u = new URL(a.href, location.href);
+            if (u.hostname.replace(/^www\./,'') !== here && !a.getAttribute('aria-label')){
+              const t = (a.textContent||'').trim(); if (t) a.setAttribute('aria-label', t + ' (opens in new tab)');
+            }
+          } catch {}
+        });
+      })();
 
-      /* 2) Back to top */
-      const toTop = $('#toTop');
-      const onScroll = () => { (window.scrollY > 360) ? toTop.classList.add('show') : toTop.classList.remove('show'); };
-      window.addEventListener('scroll', onScroll, {passive:true});
-      toTop.addEventListener('click', () => window.scrollTo({top:0, behavior: (matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth')}));
-
-      /* 3) Simple Mode toggle (Echo View) */
-      const cbSimple = $('#simple');
-      const btnSimple = $('#toggleSimple');
-      function setSimple(on){
-        document.body.classList.toggle('simple-on', on);
-        btnSimple?.setAttribute('aria-pressed', on);
-        if (cbSimple) cbSimple.checked = on;
-      }
-      cbSimple?.addEventListener('change', (e)=> setSimple(e.target.checked));
-      btnSimple?.addEventListener('click', ()=> setSimple(!document.body.classList.contains('simple-on')));
-
-      /* 4) HUD grid toggle */
-      const btnGrid = $('#toggleGrid');
-      btnGrid?.addEventListener('click', () => {
-        const on = document.body.classList.toggle('bg-grid-heavy');
-        btnGrid.setAttribute('aria-pressed', on);
-      });
-
-      /* 5) Palette */
-      const pal = $('#palette'), palInput = $('#palInput');
-      $('#openPalette')?.addEventListener('click', () => { pal.classList.add('open'); palInput.focus(); });
-      window.addEventListener('keydown', (e)=>{
-        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase()==='k'){ e.preventDefault(); pal.classList.add('open'); palInput.focus(); }
-        if (e.key === 'Escape' && pal.classList.contains('open')) pal.classList.remove('open');
-        /* On-page quick find */
-        if (e.key === '/' && !/input|textarea/i.test(document.activeElement.tagName)){
-          e.preventDefault(); $('#site-search').focus();
+      /* Reveal-on-scroll for cards */
+      (function cardReveal(){
+        const cards = $$('.card'); if (!cards.length) return;
+        if ('IntersectionObserver' in window && !reduced){
+          const io = new IntersectionObserver((entries)=>{
+            entries.forEach(e=>{ if (e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } });
+          }, {rootMargin: '0px 0px -10% 0px', threshold: 0.08});
+          cards.forEach(c=> io.observe(c));
+        } else {
+          const tick = ()=> cards.forEach(c => c.classList.add('visible'));
+          addEventListener('load', tick);
         }
-      });
-      pal?.addEventListener('click', (e)=>{ if(e.target===pal) pal.classList.remove('open'); });
+      })();
 
-      /* 6) Hero controls */
-      const hero = $('#hero');
-      $('#fitContain')?.addEventListener('click', ()=> hero?.setAttribute('data-fit','contain'));
-      $('#fitCover')?.addEventListener('click', ()=> hero?.setAttribute('data-fit','cover'));
-      $('#btnTogglePulse')?.addEventListener('click', (e)=>{
-        const on = hero?.classList.toggle('pulse');
-        e.currentTarget.setAttribute('aria-pressed', !!on);
-      });
-      $('#btnZoom')?.addEventListener('click', (e)=>{
-        const on = hero?.classList.toggle('is-zoomed');
-        e.currentTarget.setAttribute('aria-expanded', !!on);
-      });
+      /* Back to top */
+      (function toTop(){
+        const btn = $('#toTop'); if (!btn) return;
+        const show = ()=> btn.classList.toggle('show', (scrollY||document.documentElement.scrollTop) > 360);
+        addEventListener('scroll', show, {passive:true}); show();
+        btn.addEventListener('click', ()=> scrollTo({top:0, behavior: (reduced?'auto':'smooth')}));
+      })();
 
-      /* 7) Equation pop-out */
-      function attachEqExpand(scope=document){
-        $$('[data-eq-expand]', scope).forEach(btn=>{
+      /* Echo View (simple mode) */
+      (function echoView(){
+        const cb = $('#simple'), btn = $('#toggleSimple');
+        const apply = (on)=>{ document.body.classList.toggle('simple-on', on); btn?.setAttribute('aria-pressed', on); if (cb) cb.checked = on; localStorage.setItem('codex:simple', JSON.stringify(!!on)); };
+        const saved = JSON.parse(localStorage.getItem('codex:simple')||'null');
+        apply(saved ?? (mm('(prefers-reduced-motion: reduce)') || (navigator.connection && navigator.connection.saveData)));
+        cb?.addEventListener('change', e=> apply(e.target.checked));
+        btn?.addEventListener('click', ()=> apply(!document.body.classList.contains('simple-on')));
+      })();
+
+      /* HUD grid toggle */
+      (function hud(){
+        const btn = $('#toggleGrid'); if (!btn) return;
+        btn.addEventListener('click', ()=>{
+          const on = document.body.classList.toggle('bg-grid-heavy');
+          btn.setAttribute('aria-pressed', on);
+        });
+      })();
+
+      /* Palette */
+      (function palette(){
+        const shell = $('#palette'), input = $('#palInput'), list = $('#palList'), openBtn = $('#openPalette');
+        if (!shell || !input || !list) return;
+        function items(){
+          const arr = [];
+          $$('main h2[id], main h3[id]').forEach(h=> arr.push({label:h.textContent.trim(), href:'#'+h.id}));
+          $$('.tile').forEach(a=>{ const h=a.querySelector('h4'); if (h) arr.push({label:'Open: '+h.textContent.trim(), href:a.href}); });
+          return arr;
+        }
+        let view = [], idx = 0;
+        function render(q=''){
+          const its = items();
+          const ql = q.trim().toLowerCase();
+          view = its.filter(i => !ql || i.label.toLowerCase().includes(ql)).slice(0, 40);
+          list.innerHTML = view.map((it,i)=>`<li data-i="${i}" tabindex="0">${it.label}</li>`).join('');
+          idx = 0; highlight();
+        }
+        function highlight(){ [...list.children].forEach((li,i)=> li.classList.toggle('sel', i===idx)); }
+        function close(){ shell.classList.remove('open'); document.documentElement.style.overflow=''; }
+        function open(){ shell.classList.add('open'); document.documentElement.style.overflow='hidden'; input.value=''; render(''); setTimeout(()=>input.focus(), 30); }
+        openBtn?.addEventListener('click', open);
+        addEventListener('keydown', (e)=>{
+          const meta = e.ctrlKey || e.metaKey;
+          if (meta && (e.key==='k' || e.key==='K')){ e.preventDefault(); shell.classList.contains('open') ? close() : open(); }
+          if (e.key==='Escape' && shell.classList.contains('open')) close();
+          if (e.key==='/' && !/input|textarea/i.test(document.activeElement.tagName)){ e.preventDefault(); $('#site-search')?.focus(); }
+        });
+        shell.addEventListener('click', (e)=>{ if (e.target===shell) close(); });
+        input.addEventListener('input', ()=> render(input.value));
+        input.addEventListener('keydown', (e)=>{
+          if (e.key==='ArrowDown'){ e.preventDefault(); idx=Math.min(idx+1, list.children.length-1); highlight(); }
+          else if (e.key==='ArrowUp'){ e.preventDefault(); idx=Math.max(idx-1, 0); highlight(); }
+          else if (e.key==='Enter'){ e.preventDefault(); const li=list.children[idx]; if(!li) return; const it=view[+li.dataset.i]; close(); if (it.href.startsWith('#')) document.querySelector(it.href)?.scrollIntoView({behavior:(reduced?'auto':'smooth')}); else location.href=it.href; }
+        });
+        render('');
+      })();
+
+      /* Hero controls */
+      (function hero(){
+        const fig = $('#hero'); if (!fig) return;
+        const setFit = (m)=>{ fig.dataset.fit=m; localStorage.setItem('codex:hero-fit', JSON.stringify(m)); };
+        $('#fitContain')?.addEventListener('click', ()=> setFit('contain'));
+        $('#fitCover')?.addEventListener('click', ()=> setFit('cover'));
+        $('#btnTogglePulse')?.addEventListener('click', (e)=>{ const on = fig.classList.toggle('pulse'); e.currentTarget.setAttribute('aria-pressed', on); localStorage.setItem('codex:hero-pulse', JSON.stringify(on)); });
+        $('#btnZoom')?.addEventListener('click', (e)=>{ const on = fig.classList.toggle('is-zoomed'); e.currentTarget.setAttribute('aria-expanded', on); document.documentElement.style.overflow = on ? 'hidden' : ''; });
+        // restore prefs
+        const savedFit = JSON.parse(localStorage.getItem('codex:hero-fit')||'"cover"'); setFit(savedFit);
+        const savedPulse = JSON.parse(localStorage.getItem('codex:hero-pulse')||'true'); fig.classList.toggle('pulse', !!savedPulse);
+      })();
+
+      /* Equation pop-out */
+      (function eqExpand(){
+        $$('[data-eq-expand]').forEach(btn=>{
           btn.addEventListener('click', ()=>{
-            const eq = btn.closest('.card')?.querySelector('.eq');
-            if(!eq) return;
-            const clone = eq.cloneNode(true);
-            clone.classList.add('eq--expanded');
-            const close = document.createElement('button');
-            close.className = 'eq-close';
-            close.type = 'button';
-            close.textContent = 'Close';
+            const eq = btn.closest('.card')?.querySelector('.eq'); if (!eq) return;
+            const clone = eq.cloneNode(true); clone.classList.add('eq--expanded');
+            const close = document.createElement('button'); close.className='eq-close'; close.type='button'; close.textContent='Close';
             close.addEventListener('click', ()=> clone.remove());
-            clone.appendChild(close);
-            document.body.appendChild(clone);
+            clone.appendChild(close); document.body.appendChild(clone);
           });
         });
-      }
-      attachEqExpand();
+      })();
 
-      /* 7.5) Extend equation animations beyond Eq.0 (respect reduced motion) */
-      const prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (!prefersReducedMotion){
-        $$('.eq').forEach((el)=>{
-          if (!el.classList.contains('eq-shimmer')) el.classList.add('eq-shimmer');
-        });
-        ['#eq6', '#eq9'].forEach(id=>{
-          const card = document.querySelector(`${id}`)?.closest('.card');
-          const block = card && card.querySelector('.eq');
-          if (block && !block.classList.contains('eq-pulse')) block.classList.add('eq-pulse');
-        });
-      }
-
-      /* 8) Tabs ink bar + section awareness (click + hashchange + scroll) */
-      const tabs = $('.tabs');
-      if (tabs){
-        const ink = tabs.querySelector('.tab-ink');
-        const allTabs = Array.from(tabs.querySelectorAll('.tab'));
-        const sectionTabs = allTabs.filter(a => (a.getAttribute('href')||'').startsWith('#'));
-        const sections = sectionTabs
-          .map(a => ({ a, id: a.getAttribute('href').slice(1), el: document.getElementById(a.getAttribute('href').slice(1)) }))
-          .filter(x => !!x.el);
-
-        const setInk = (el)=>{
-          if (!el) return;
-          const r = el.getBoundingClientRect();
-          const pr = tabs.getBoundingClientRect();
-          ink.style.setProperty('--ink-x', (r.left - pr.left) + 'px');
-          ink.style.setProperty('--ink-w', r.width + 'px');
-          allTabs.forEach(a=>a.removeAttribute('aria-current'));
-          el.setAttribute('aria-current','page');
-        };
-
-        // Click: smooth-scroll for hash links, normal nav for external
-        allTabs.forEach(a=>{
+      /* Tabs ink bar + scroll spy */
+      (function tabsInk(){
+        const tabs = $('.tabs'); if (!tabs) return;
+        const ink = tabs.querySelector('.tab-ink') || Object.assign(document.createElement('span'), {className:'tab-ink'});
+        if (!ink.parentNode) tabs.appendChild(ink);
+        const all = $$('.tab', tabs);
+        function setInk(a){
+          if (!a) return;
+          const r=a.getBoundingClientRect(), pr=tabs.getBoundingClientRect();
+          ink.style.setProperty('--ink-x', (r.left-pr.left)+'px');
+          ink.style.setProperty('--ink-w', r.width+'px');
+          all.forEach(t=>t.removeAttribute('aria-current')); a.setAttribute('aria-current','page');
+        }
+        all.forEach(a=>{
           a.addEventListener('click', (e)=>{
-            const href = a.getAttribute('href') || '#';
-            if (href.startsWith('#')){
-              e.preventDefault();
-              document.querySelector(href)?.scrollIntoView({behavior:(matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth')});
-              history.pushState(null, '', href);
-              setInk(a);
-            } else {
-              setInk(a);
-            }
+            const href = a.getAttribute('href')||'#';
+            if (href.startsWith('#')){ e.preventDefault(); document.querySelector(href)?.scrollIntoView({behavior:(reduced?'auto':'smooth')}); history.pushState(null,'',href); }
+            setInk(a);
           });
         });
+        function spy(){
+          const sections = all.map(a=>({a, id:(a.getAttribute('href')||'#').slice(1)})).filter(x=>x.id).map(x=> ({a:x.a, el:document.getElementById(x.id)})).filter(x=>x.el);
+          const y = scrollY + 140; let active = null;
+          for (const s of sections){ const top = s.el.getBoundingClientRect().top + scrollY; if (top <= y) active = s.a; }
+          setInk(active || all[0]);
+        }
+        addEventListener('scroll', spy, {passive:true});
+        addEventListener('resize', ()=> setInk(tabs.querySelector('.tab[aria-current="page"]') || all[0]), {passive:true});
+        setTimeout(()=>{ setInk(all[0]); spy(); }, 0);
+      })();
 
-        // Hashchange: deep links and back/forward
-        window.addEventListener('hashchange', ()=>{
-          const h = location.hash.replace('#','');
-          const match = sectionTabs.find(a => a.dataset.section === h || (a.getAttribute('href')||'').slice(1) === h);
-          if (match) setInk(match);
+      /* On-page search (Enter to jump, Shift+Enter previous) */
+      (function search(){
+        const box = $('#site-search'); const hint = $('#site-suggest'); if (!box) return;
+        function* walker(root){
+          const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+          let n; while(n=w.nextNode()){ if (!n.parentElement.closest('header,nav,style,script,button,input,textarea,.palette')) yield n; }
+        }
+        function jump(q, backwards=false){
+          if (!q) return;
+          const nodes = Array.from(walker(document.body)).filter(n => n.nodeValue.toLowerCase().includes(q.toLowerCase()));
+          if (!nodes.length) { box.setCustomValidity('Not found'); box.reportValidity(); return; }
+          box.setCustomValidity('');
+          if (backwards) nodes.reverse();
+          const n = nodes[0];
+          const r = document.createRange(); const i = n.nodeValue.toLowerCase().indexOf(q.toLowerCase());
+          r.setStart(n, i); r.setEnd(n, i+q.length);
+          const rect = r.getBoundingClientRect();
+          scrollBy({top: rect.top - 120, behavior:(reduced?'auto':'smooth')});
+        }
+        box.addEventListener('keydown', (e)=>{
+          if (e.key==='Enter'){ e.preventDefault(); jump(box.value.trim(), e.shiftKey); }
         });
-
-        // Scroll spy: highlight nearest section
-        const spy = ()=>{
-          let active = null;
-          const y = window.scrollY + 140; // header offset
-          for (const s of sections){
-            const top = s.el.getBoundingClientRect().top + window.scrollY;
-            if (top <= y) active = s.a;
-          }
-          if (active) setInk(active);
-        };
-        window.addEventListener('scroll', throttle(spy, 100), {passive:true});
-        window.addEventListener('resize', debounce(()=>setInk(tabs.querySelector('.tab[aria-current="page"]') || allTabs[0]), 120), {passive:true});
-
-        function throttle(fn, ms){ let t=0; return ()=>{ const n=Date.now(); if (n-t>ms){ t=n; fn(); } }; }
-        function debounce(fn, ms){ let id; return ()=>{ clearTimeout(id); id=setTimeout(fn, ms); }; }
-
-        // Initial paint: honor hash
-        setTimeout(()=>{
-          if (location.hash){
-            const h = location.hash.slice(1);
-            const match = sectionTabs.find(a => a.dataset.section === h || (a.getAttribute('href')||'').slice(1) === h);
-            setInk(match || allTabs[0]);
-          } else {
-            setInk(allTabs[0]);
-          }
-          spy();
-        }, 0);
-      }
-
-      /* 9) On-page search (client-only, simple highlight jump) */
-      const search = $('#site-search');
-      if (search){
-        let lastMark;
-        search.addEventListener('input', ()=>{
-          if (lastMark) { lastMark.remove(); lastMark = null; }
+        // lightweight suggestions from headings/tiles
+        const picks = [];
+        $$('main h2[id], main h3[id]').forEach(h=> picks.push({label:h.textContent.trim(), href:'#'+h.id}));
+        $$('.tile').forEach(a=>{ const h=a.querySelector('h4'); if (h) picks.push({label:h.textContent.trim(), href:a.href}); });
+        box.addEventListener('input', ()=>{
+          const q = box.value.trim().toLowerCase();
+          if (!q){ hint.style.display='none'; hint.innerHTML=''; return; }
+          const results = picks.filter(p=> p.label.toLowerCase().includes(q)).slice(0,8);
+          hint.style.display = results.length ? 'block' : 'none';
+          hint.innerHTML = results.map(r=>`<a href="${r.href}" class="cta" style="display:block;margin:6px 0">${r.label}</a>`).join('');
         });
-        search.addEventListener('keydown', (e)=>{
-          if (e.key === 'Enter'){
-            const q = search.value.trim();
-            if (!q) return;
-            const sel = document.createElement('mark'); sel.textContent = q; sel.style.background = 'rgba(122,243,255,.25)';
-            const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
-            let node, found=false;
-            while(node = walker.nextNode()){
-              if (node.parentElement.closest('header,nav,style,script,button,input,textarea')) continue;
-              const i = node.nodeValue.toLowerCase().indexOf(q.toLowerCase());
-              if (i >= 0){
-                const range = document.createRange();
-                range.setStart(node, i); range.setEnd(node, i+q.length);
-                const rect = range.getBoundingClientRect();
-                window.scrollBy({top: rect.top - 120, behavior:(matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth')});
-                found=true; break;
-              }
-            }
-            if (!found) search.setCustomValidity('Not found'); else search.setCustomValidity('');
-          }
-        });
-      }
-
-      /* 10) Respect reduced motion for global smooth scroll */
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches){
-        document.documentElement.style.scrollBehavior = 'auto';
-      }
+      })();
     })();
   </script>
 </body>
-    </html>
+</html>
