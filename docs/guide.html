@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <meta charset="utf-8" />
+  <title>Field Guide — Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
+  <meta name="description" content="Daily/weekly playbook for coherent manifestation: clean phrasing, carrier tuning, loop cadence, stop rule, and ledger science.">
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/guide.html" />
+
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
+
+  <style>
+    .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 80px}
+    .title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;
+      background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .mini-toc{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+    .mini-toc a{padding:8px 10px;border:1px solid #2a2a33;border-radius:10px;text-decoration:none}
+    .two{display:grid;grid-template-columns:2fr 1fr;gap:12px} @media(max-width:980px){.two{grid-template-columns:1fr}}
+  </style>
+
+  <!-- Lazy MathJax (same flavor as other pages) -->
+  <script>
+    (function(){
+      function loadMJ(){
+        if (window.MathJax) return;
+        window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['$$','$$']]},svg:{fontCache:'global'},startup:{typeset:false}};
+        const s=document.createElement('script'); s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"; s.defer=true;
+        s.onload=()=>MathJax.typesetPromise(); document.head.appendChild(s);
+      }
+      if('IntersectionObserver'in window){
+        const io=new IntersectionObserver(e=>{ if(e.some(x=>x.isIntersecting)){io.disconnect();loadMJ();}}, {rootMargin:'800px 0'}); io.observe(document.documentElement);
+      } else { loadMJ(); }
+    })();
+  </script>
+</head>
+
+<body class="no-js">
+<main class="wrap">
+  <header class="page-head fancy-head">
+    <h1 class="title">🧭 Field Guide — <em>Practice that Sticks</em></h1>
+    <p class="subtitle">A concise playbook that ties the math to your daily moves.</p>
+    <nav class="mini-toc" aria-label="On this page">
+      <a href="#daily">Daily Run</a><a href="#weekly">Weekly Rhythm</a><a href="#troubleshoot">Troubleshooting</a>
+      <a href="#ethics">Ethics & Stop Rule</a><a href="#hotkeys">Hotkeys</a><a href="#appendix">Appendix: Equations</a>
+    </nav>
+    <nav class="crumbs" style="display:flex;gap:8px;justify-content:center">
+      <a class="cta" href="index.html">← Codex</a>
+      <a class="cta" href="teach.html">Teaching Lab</a>
+    </nav>
+  </header>
+
+  <section id="daily" class="card">
+    <h2>1) Daily Run (12–18 min total)</h2>
+    <ol class="list">
+      <li><b>Phrase (Eq.16):</b> one line, 8–12 words; verbs of action, nouns of truth; remove negations.</li>
+      <li><b>Carrier Π<sub>ν</sub>:</b> hum 3–5s in Voice Gate; Stability ≥ 60%, Noise low. Presets: 432 / 528 / 369.</li>
+      <li><b>Observer loop:</b> 12s × 3 rounds – 𝓘 → 𝓛 → 𝓒 → 𝓢 (ring on <a href="teach.html#tab-observer">Teach</a>).</li>
+      <li><b>Ξ check:</b> If trending down, apply Eq.9 (stop, re-align, resume).</li>
+      <li><b>Witness:</b> log one undeniable detail in the <a href="teach.html#tab-ledger">Ledger</a>.</li>
+    </ol>
+    <div class="eq"><div class="eq-scroll">
+      $$ \nabla_{\text{sem}}\text{Phrase}=\sum_k w_k \nabla_{\text{sem}}\text{Token}_k \quad (Eq.16)\qquad
+         \Xi \approx \frac{\langle H\cdot I\rangle}{1+\mathrm{Var}[\mathcal{M}]} $$
+    </div></div>
+  </section>
+
+  <section id="weekly" class="card two">
+    <article class="lab-card">
+      <h2>2) Weekly Rhythm (τ, t½, λ)</h2>
+      <ul class="list">
+        <li><b>Mon–Thu:</b> 1–2 runs/day, same line. Build remanence (ℜ) on purpose.</li>
+        <li><b>Fri:</b> A/B a carrier or adjust seconds/phase (small ΔΣ only).</li>
+        <li><b>Sat:</b> Micro-run (<a href="micro.html">90s</a>) + ledger review (sparkline).</li>
+        <li><b>Sun:</b> Rest / nature / gratitude; let updates settle (⊕).</li>
+      </ul>
+      <p class="meta">Spacing inside τ lengthens t½ and lowers λ (decay). Short + steady beats sporadic marathons.</p>
+    </article>
+    <aside class="card">
+      <h3>Half-Life math</h3>
+      <div class="eq"><div class="eq-scroll">
+        $$ \lambda = \frac{\ln 2}{t_{1/2}}\,,\qquad \text{practice within }\tau \Rightarrow t_{1/2}\uparrow\Rightarrow \lambda\downarrow $$
+      </div></div>
+      <a class="cta" href="teach.html#tab-coherence">Compute on the Coherence Desk →</a>
+    </aside>
+  </section>
+
+  <section id="troubleshoot" class="card">
+    <h2>3) Troubleshooting (fast checks)</h2>
+    <ul class="list compact">
+      <li><b>Foggy witness?</b> Shrink the line; swap “want/try” → “choose”.</li>
+      <li><b>Wobbly tone?</b> Re-tune carrier; extend exhale; check room noise.</li>
+      <li><b>Ξ flat?</b> Increase seconds/phase (e.g., 8→12 or 12→20).</li>
+      <li><b>Overheated?</b> Stop per Eq.9; drink water; walk; resume later.</li>
+      <li><b>Plateau?</b> Run <a href="ab.html">A/B Protocol</a> or <a href="glyphs.html">Glyph</a> to refresh salience.</li>
+    </ul>
+  </section>
+
+  <section id="ethics" class="card">
+    <h2>4) Ethics & Stop Rule</h2>
+    <p>Consent, non-harm, accountability. If coherence worsens, abort the run, re-align, resume later.</p>
+    <div class="eq"><div class="eq-scroll">
+      $$ \text{If}\ \frac{\mathrm{Truth}(t+\Delta)}{\mathrm{Distortion}(t+\Delta)} < \frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \Rightarrow \text{Abort, Re-align, Resume} \quad (Eq.9) $$
+    </div></div>
+  </section>
+
+  <section id="hotkeys" class="card">
+    <h2>5) Quick Keys</h2>
+    <ul class="list compact">
+      <li><b>Tabs:</b> <kbd>1</kbd>–<kbd>7</kbd></li>
+      <li><b>Ring:</b> <kbd>S</kbd></li>
+      <li><b>Voice Gate:</b> <kbd>G</kbd></li>
+      <li><b>Ledger:</b> <kbd>L</kbd></li>
+      <li><b>Phrase box:</b> <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>K</kbd></li>
+      <li><b>Help:</b> <kbd>?</kbd></li>
+    </ul>
+  </section>
+
+  <section id="appendix" class="card">
+    <h2>Appendix — Equations at a glance</h2>
+    <ul class="list">
+      <li><b>Eq.Ω:</b> phase-guided update ⊕ remanence ⊕ micro-edits.</li>
+      <li><b>Eq.16:</b> semantic gradient of a phrase (token weights).</li>
+      <li><b>Ξ (≈Eq.13):</b> alignment over model variance.</li>
+      <li><b>Eq.9:</b> stop rule (Truth/Distortion check).</li>
+      <li><b>τ,t½,λ:</b> learning window, half-life, decay.</li>
+    </ul>
+  </section>
+
+  <footer class="footer">
+    <div class="divider" aria-hidden="true"></div>
+    <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+  </footer>
+</main>
+
+<script>
+  (function(){ const y=document.getElementById('yr'); if(y) y.textContent=String(new Date().getFullYear()); })();
+</script>
+</body>
+</html>
