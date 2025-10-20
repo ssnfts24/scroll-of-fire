@@ -1,14 +1,12 @@
 <script>
 /* ======================================================================
-   Scroll of Fire — Codex.js (v3.0)
-   Bulletproof banner • buttonless hero (active-on-view, parallax tilt)
-   Sticky header polish • tabs ink • palette • mini-TOC
-   Echo View • HUD toggle • on-page search • equation pop-out
-   - Robust hero detection & failover (local→remote), auto-fit & persistence
-   - Motion-safe equation activation + resize tidy
-   - Deferred heavy features (palette / mini-TOC) on idle
-   - Accessibility hardening, reduced-data/motion guards
-   - Matches index.html + codex.css (updated)
+   Scroll of Fire — Codex.js (v3.2)
+   - Bulletproof banner (local→remote probe, auto-fit with persistence)
+   - Buttonless hero: active-on-view, optional parallax tilt
+   - Sticky header polish, tabs ink + scroll spy, anchor focus
+   - Echo View, HUD toggle, on-page search, equation pop-out
+   - Motion/Data guards, RO/IO fallbacks, visibility hygiene
+   - Matches updated codex.css (hero--clean removes overlays)
    ====================================================================== */
 (() => {
   "use strict";
@@ -20,10 +18,9 @@
 
   const raf = (fn) => (window.requestAnimationFrame || ((f)=>setTimeout(f,16)))(fn);
   const caf = (id) => (window.cancelAnimationFrame || clearTimeout)(id);
-  const now = () => (performance && performance.now ? performance.now() : Date.now());
   const ri  = (fn, timeout=800) => (window.requestIdleCallback
-                  ? window.requestIdleCallback(fn, { timeout })
-                  : setTimeout(fn, Math.min(timeout, 600)));
+                    ? window.requestIdleCallback(fn, { timeout })
+                    : setTimeout(fn, Math.min(timeout, 600)));
   const debounce    = (fn, ms = 120) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; };
   const throttleRAF = (fn) => { let running=false; return (...a)=>{ if(running) return; running=true; raf(()=>{ running=false; fn(...a); }); }; };
 
@@ -43,6 +40,7 @@
 
   const UA = navigator.userAgent || "";
   const isMetaApp = /FBAN|FBAV|Facebook|Instagram|FB_IAB|FBAN\/Messenger/i.test(UA);
+  const isIOS     = /iP(hone|ad|od)/i.test(UA);
   const isOffline = () => !navigator.onLine;
 
   const inViewport = (el, thr = 0.9) => {
@@ -58,7 +56,6 @@
     const y = $("#y") || $("#yr");
     if (y) y.textContent = String(new Date().getFullYear());
   }
-
   function hardenExternal(){
     const hereHost = location.hostname.replace(/^www\./,"");
     $$('a[target="_blank"]').forEach(a=>{
@@ -92,14 +89,14 @@
   }
 
   /* ------------------------------ HUD toggle ------------------------------- */
-  function wireHUD(){
+  const wireHUD = () => {
     const btn = $("#toggleGrid");
     if (!btn) return;
     on(btn,"click", ()=>{
       const onFlag = document.body.classList.toggle("bg-grid-heavy");
       btn.setAttribute("aria-pressed", String(onFlag));
     });
-  }
+  };
 
   /* ------------------------------ on-page search ---------------------------- */
   function wirePageSearch(){
@@ -127,7 +124,7 @@
       }
       if (!found){ box.setCustomValidity("Not found"); box.reportValidity(); lastValidity="nf"; }
     });
-    // quick shortcut: "/" to focus search
+    // "/" to focus
     on(window,"keydown",(e)=>{
       if (e.key === "/" && !/input|textarea/i.test(document.activeElement.tagName) && !e.metaKey && !e.ctrlKey){
         e.preventDefault(); box.focus();
@@ -151,7 +148,7 @@
     fig.classList.toggle("hero--cover",   mode==="cover");
     store.set("codex:hero-fit", mode);
   }
-  function parseAspect(expr){
+  const parseAspect = (expr)=>{
     if (!expr) return null;
     const parts = (""+expr).split("/");
     if (parts.length===2){
@@ -160,7 +157,7 @@
     }
     const n = parseFloat(expr);
     return Number.isFinite(n) && n>0 ? n : null;
-  }
+  };
   function checkFitAuto(fig, img, pref){
     if (pref==="contain" || pref==="cover") return; // user-forced
     const natW = img.naturalWidth  || +img.getAttribute("width")  || 0;
@@ -197,27 +194,27 @@
     if (!fig) return;
     const set = (on)=> fig.classList.toggle("is-active", !!on);
     if (!prefersReduced && hasIO){
-      const io = new IntersectionObserver((entries)=>{
-        for (const e of entries) set(e.isIntersecting);
+      const io = new IntersectionObserver((en)=>{
+        for (const e of en) set(e.isIntersecting);
       }, {root:null, rootMargin:"-8% 0px -12% 0px", threshold:0.08});
       io.observe(fig);
     } else {
       const tick = ()=> set(inViewport(fig, .92));
       const onS = throttleRAF(tick);
-      on(window,"scroll",onS,{passive:true}); tick();
+      on(window,"scroll", onS, {passive:true}); tick();
     }
   }
 
   /* ------------------------------ hero parallax ---------------------------- */
   function heroParallax(fig){
-    if (!fig || prefersReduced) return;
+    if (!fig || prefersReduced || fig.classList.contains("hero--clean")) return; // no tilt if clean banner
     let rid=0;
     const onMove=(e)=>{
       const r=fig.getBoundingClientRect();
       const p = "touches" in e && e.touches && e.touches.length ? e.touches[0] : e;
       const x=(p.clientX - r.left)/r.width, y=(p.clientY - r.top)/r.height;
       caf(rid); rid=raf(()=>{
-        const rx=(0.5-y)*4;   // matches CSS expectations
+        const rx=(0.5-y)*4;   // subtle, matches CSS
         const ry=(x-0.5)*6;
         fig.style.setProperty("--hero-tilt-x", rx.toFixed(2)+"deg");
         fig.style.setProperty("--hero-tilt-y", ry.toFixed(2)+"deg");
@@ -235,6 +232,11 @@
     const { fig, img } = findHeroElements();
     if(!img || !fig){ log("hero not found; retry on load"); on(window,"load",()=>{ const h=findHeroElements(); if(h.img && h.fig) initBanner(); }); return; }
 
+    // If author uses hero--clean, ensure no runtime overlay toggles remain
+    if (fig.classList.contains("hero--clean")) {
+      fig.removeAttribute("data-fit"); // CSS handles contain/cover; JS still sets computed mode below
+    }
+
     const localSrc  = img.getAttribute("data-src-local") || img.getAttribute("src") || "";
     const remoteSrc = img.getAttribute("data-src-raw")   || "";
     const localSet  = img.getAttribute("data-srcset-local") || "";
@@ -245,58 +247,47 @@
 
     setHeroFit(fig, prefFit);
 
+    // Always set something immediately (prevents blank in iOS IAB)
     if (localSet){ img.srcset = localSet; img.sizes = sizesAttr; }
-    else if (localSrc){ img.src = localSrc; }
+    if (!img.currentSrc && localSrc){ img.src = localSrc; }
 
-    // Swap to remote only if it actually resolves (avoid blank hero in in-app browsers)
-    let swapped = false;
-    const tryRemote = ()=>{
-      if (swapped || !remoteSrc) return;
-      swapped = true;
-      img.removeAttribute("srcset"); img.removeAttribute("sizes");
-      img.src = remoteSrc; log("hero swapped to remote");
-    };
-    let stallId = setTimeout(()=>{ if (!img.complete || !img.naturalWidth) tryRemote(); }, 4000);
-    img.onerror = () => tryRemote();
-    on(img,"load", ()=> clearTimeout(stallId), { once:true });
-
-    const onLoad = () => checkFitAuto(fig, img, prefFit);
-    if (img.complete && img.naturalWidth>0) onLoad(); else on(img,"load",onLoad,{once:true});
-
-    // Pre-probe remote for nicer swap when allowed
-    if (remoteSrc && !isMetaApp && !isOffline() && !saveD){
+    // Swap to remote only if it resolves and we’re not in save-data/IAB
+    const allowRemote = remoteSrc && !isMetaApp && !saveD && !isOffline();
+    if (allowRemote){
       const probe = new Image();
-      probe.decoding="async"; probe.loading="eager"; probe.referrerPolicy="no-referrer";
+      probe.decoding="async"; probe.loading="eager";
       const swapSrc = ()=> {
-        if (remoteSet && (store.get("codex:hero-fit","auto")!=="contain")){
+        if (remoteSet && store.get("codex:hero-fit","auto")!=="contain"){
           img.srcset = remoteSet; img.sizes = sizesAttr; void img.currentSrc;
         } else {
           img.src = remoteSrc; img.removeAttribute("srcset"); img.removeAttribute("sizes");
         }
+        log("hero swapped to remote");
       };
       const safeSwap = ()=> (typeof probe.decode==="function" ? probe.decode().then(swapSrc).catch(swapSrc) : swapSrc());
       on(probe,"load",safeSwap,{once:true});
       on(probe,"error",()=>{/* keep local */},{once:true});
       probe.src = remoteSrc;
-      on(window,"online",()=>{ if (!img.src.includes(remoteSrc)) { probe.src = remoteSrc + (remoteSrc.includes("?") ? "&" : "?") + "r=" + Date.now(); } }, {once:true});
+
+      // Fallback if local never paints (rare, but some iOS IABs stall)
+      const stallId = setTimeout(()=>{ if (!img.complete || !img.naturalWidth) swapSrc(); }, 4000);
+      on(img,"load", ()=> clearTimeout(stallId), {once:true});
+      on(img,"error", swapSrc, {once:true});
     }
+
+    // Auto-fit decision after first paint
+    const onLoad = () => checkFitAuto(fig, img, prefFit);
+    if (img.complete && img.naturalWidth>0) onLoad(); else on(img,"load",onLoad,{once:true});
 
     wireHeroObservers(fig, img, prefFit);
     activateHeroWhenVisible(fig);
     heroParallax(fig);
 
-    // Pulse preference (no UI; honor saved pref, default on unless save-data/IAB)
+    // Pulse preference (default on unless save-data/IAB)
     const pulsePref = store.get("codex:hero-pulse", !saveD && !isMetaApp);
     fig.classList.toggle("pulse", !!pulsePref);
 
-    // Zoom shortcut (if author wired an external trigger)
-    on(document, "click", (e)=>{
-      const t = e.target.closest && e.target.closest("[data-hero-zoom]");
-      if (!t) return;
-      e.preventDefault();
-      const onNow = fig.classList.toggle("is-zoomed");
-      document.documentElement.style.overflow = onNow ? "hidden" : "";
-    });
+    // Escape closes any zoomed hero
     on(document,"keydown",(e)=>{
       if (e.key==="Escape" && fig.classList.contains("is-zoomed")){
         fig.classList.remove("is-zoomed");
@@ -372,29 +363,6 @@
     });
   }
 
-  /* ------------------------------ card tilt -------------------------------- */
-  function tiltCards(){
-    if (prefersReduced) return;
-    $$(".card").forEach(card=>{
-      let rid=0;
-      const onMove=(e)=>{
-        const r=card.getBoundingClientRect();
-        const p = "touches" in e && e.touches && e.touches.length ? e.touches[0] : e;
-        const x=(p.clientX - r.left)/r.width, y=(p.clientY - r.top)/r.height;
-        caf(rid); rid=raf(()=>{
-          const rx=(0.5-y)*4, ry=(x-0.5)*6;
-          card.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
-        });
-      };
-      const reset=()=>{ card.style.transform=""; };
-      on(card,"mousemove",onMove);
-      on(card,"mouseleave",reset);
-      on(card,"blur",reset,true);
-      on(card,"touchstart",reset,{passive:true});
-    });
-    on(mqReduced,"change",(e)=>{ if(e.matches) $$(".card").forEach(c=> c.style.transform=""); });
-  }
-
   /* ------------------------------- back to top ----------------------------- */
   function backToTop(){
     let btn = $(".to-top");
@@ -456,7 +424,7 @@
       const label = (h.textContent||"").trim();
       if (label) items.push({label, href:"#"+h.id});
     });
-    $$(".list a[href]").slice(0,10).forEach(a=>{
+    $$(".tile[href], .list a[href]").forEach(a=>{
       items.push({label:((a.textContent||a.href)||"").trim(), href:a.href});
     });
 
@@ -475,7 +443,7 @@
     };
     const render = (q)=>{
       const qq = q.toLowerCase().trim();
-      view = items.filter(it => !qq || it.label.toLowerCase().includes(qq)).slice(0, 30);
+      view = items.filter(it => !qq || it.label.toLowerCase().includes(qq)).slice(0, 40);
       list.innerHTML = view.map((it,i)=>`<li data-i="${i}" tabindex="0">${it.label}</li>`).join("");
       setSel(0);
     };
@@ -491,9 +459,7 @@
       input.blur();
     };
 
-    // button hook
     on($("#openPalette"),"click", open);
-    // list + keys
     on(list, "click", (e)=>{ const li=e.target.closest("li"); if(li){ idx=[...list.children].indexOf(li); go(); } });
     on(input, "keydown", (e)=>{
       if (e.key==="ArrowDown"){ e.preventDefault(); setSel(idx+1); }
@@ -541,7 +507,8 @@
       el.setAttribute("aria-current","page");
     }
 
-    tabs.querySelectorAll(".tab").forEach(a=>{
+    const all = Array.from(tabs.querySelectorAll(".tab"));
+    all.forEach(a=>{
       on(a, "click", (e)=>{
         const href = a.getAttribute("href")||"#";
         if (href.startsWith("#")){
@@ -553,12 +520,31 @@
       });
     });
 
-    const start = (location.hash && tabs.querySelector(`.tab[href='${location.hash}']`)) || tabs.querySelector(".tab");
-    setInk(start);
+    // Scroll spy: mark the last section passed in view
+    const spy = ()=>{
+      const sections = all.map(a=>({a, id:(a.getAttribute('href')||'#').slice(1)}))
+                          .filter(x=>x.id)
+                          .map(x=> ({a:x.a, el:document.getElementById(x.id)}))
+                          .filter(x=>x.el);
+      const y = (window.scrollY || document.documentElement.scrollTop) + 140;
+      let active = null;
+      for (const s of sections){
+        const top = s.el.getBoundingClientRect().top + (window.scrollY || document.documentElement.scrollTop);
+        if (top <= y) active = s.a;
+      }
+      setInk(active || all[0]);
+    };
 
-    const align = ()=> setInk(tabs.querySelector('.tab[aria-current="page"]') || tabs.querySelector('.tab'));
-    on(window,"resize", throttleRAF(align), {passive:true});
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(align).catch(()=>{});
+    const start = (location.hash && tabs.querySelector(`.tab[href='${location.hash}']`)) || all[0];
+    setInk(start);
+    on(window,"scroll", throttleRAF(spy), {passive:true});
+    on(window,"resize", throttleRAF(()=> setInk(tabs.querySelector('.tab[aria-current="page"]') || all[0])), {passive:true});
+    on(window,"hashchange", ()=> {
+      const current = tabs.querySelector(`.tab[href='${location.hash}']`);
+      if (current) setInk(current);
+    }, {passive:true});
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(spy).catch(()=>{});
+    spy();
   }
 
   /* --------------------------- visibility hygiene -------------------------- */
@@ -586,7 +572,6 @@
     revealOnScroll();
     activateEquations();
     wireEqExpand();
-    tiltCards();
     typesetSoon(250);
     typesetOnFontsReady();
     focusAnchors();
@@ -605,6 +590,6 @@
     on(window,"resize", debounce(()=>typesetSoon(120),200), {passive:true});
   }
 
-  log("ready @ " + Math.round(now()) + "ms");
+  log("ready");
 })();
 </script>
