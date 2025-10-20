@@ -576,3 +576,75 @@ body.performance-warming{ animation:warmOff .9s linear forwards }
   box-shadow:0 0 8px var(--spec-uv);
 }
 .hum-on .hum-indicator{ display:flex }
+
+
+
+
+
+
+
+
+/* === SoF Hotfix v3 — header/tabs glass, hero lock, MathJax sizing, mobile spacing === */
+
+/* 2.1 Sticky header glass + darker quick row */
+header.site{
+  background:rgba(9,10,14,.88);
+  -webkit-backdrop-filter:saturate(140%) blur(10px);
+  backdrop-filter:saturate(140%) blur(10px);
+  border-bottom:1px solid rgba(52,56,66,.8);
+}
+.nav{ position:relative }
+.nav::after{
+  content:""; position:absolute; inset:-8px -12px -8px -12px; z-index:-1;
+  border-radius:16px;
+  background:linear-gradient(180deg, rgba(12,14,18,.75), rgba(12,14,18,.55));
+  box-shadow:0 10px 24px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.10);
+}
+
+/* quick row chips on a darker tray */
+.quick{
+  gap:10px; padding:6px;
+  background:rgba(16,18,24,.55);
+  border:1px solid rgba(52,56,66,.9);
+  border-radius:14px;
+}
+.quick a,.quick button{
+  background:rgba(255,255,255,.04);
+  border-color:#343846;
+}
+
+/* 2.2 Tabs: sticky glass bar with separation from content */
+.tabs{
+  position:sticky; top:calc(56px + var(--safe-top,0px)); z-index:55;
+  padding:8px 12px; margin:10px 0 14px;
+  background:linear-gradient(180deg, rgba(12,14,18,.72), rgba(12,14,18,.58));
+  -webkit-backdrop-filter:saturate(140%) blur(10px);
+  backdrop-filter:saturate(140%) blur(10px);
+  border:1px solid rgba(52,56,66,.85);
+  border-radius:14px;
+}
+.tabs .tab{ background:rgba(255,255,255,.04); border-color:#343846 }
+.tabs .tab:hover{ background:rgba(255,255,255,.07) }
+.tabs .tab-ink{ bottom:-6px }
+
+/* 2.3 Ensure content never hides under sticky elements when using anchors */
+:target{ scroll-margin-top: clamp(96px, 13vh, 140px) }
+
+/* 2.4 Hero: never muted, respect your image, support cover/contain switches */
+.hero{ isolation:isolate; border-radius:20px; overflow:hidden }
+.hero img{
+  display:block; width:100%; height:auto; max-height:min(68vh, 880px);
+  object-fit:var(--_fit, cover);
+  background:var(--bg-elev);
+  filter:none !important; mix-blend-mode:normal !important;
+}
+.hero[data-fit="contain"] img{ --_fit:contain }
+.hero[data-fit="cover"]   img{ --_fit:cover }
+
+/* 2.5 MathJax: make space while rendering + better mobile overflow */
+.eq mjx-container{ font-size: 110% }                       /* a touch larger */
+.eq mjx-container[display="block"]{ overflow:auto }        /* protect on phones */
+.eq .eq-scroll{ cursor:grab } .eq .eq-scroll:active{ cursor:grabbing }
+
+/* 2.6 Card stacking: never let tabs overlap text while scrolling fast */
+.card{ z-index:1 }
