@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <meta charset="utf-8" />
+  <title>Glossary — Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
+  <meta name="description" content="Codex lexicon: Ψ, Ω, φ, Πν, Ξ, τ, ΔΣ, and more — with plain-language mappings and links to equations and practice." />
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/glossary.html" />
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
+  <style>
+    .wrap{max-width:980px;margin:0 auto;padding:20px 16px 80px}
+    .title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;
+      background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#a7f6ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .search{display:flex;gap:8px;margin:8px auto 16px;max-width:680px}
+    .term{border:1px solid #2a2a33;border-radius:12px;padding:12px;margin:8px 0;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005))}
+    .term h3{margin:0 0 4px}
+    .pill{display:inline-block;border:1px solid #2a2a33;border-radius:999px;padding:4px 8px;margin-right:6px;font-size:.9em;color:#b8b3a6}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="page-head fancy-head">
+      <h1 class="title">📚 Glossary of the Codex</h1>
+      <p class="subtitle">Formal symbols + plain words, linked into Theory and Practice.</p>
+      <nav class="crumbs" style="display:flex;gap:8px;justify-content:center">
+        <a class="cta" href="index.html">← Back</a>
+        <a class="cta" href="theory.html">Theory</a>
+        <a class="cta" href="teach.html">Teach</a>
+      </nav>
+      <div class="search">
+        <input id="q" placeholder="Search terms or synonyms…" autocomplete="off" style="flex:1">
+        <button id="clear" class="cta">Clear</button>
+      </div>
+    </header>
+
+    <section id="terms"></section>
+
+    <footer class="footer">
+      <div class="divider" aria-hidden="true"></div>
+      <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+    </footer>
+  </main>
+
+  <script>
+  (function(){
+    const data = [
+      { k:"Ψ(x,t)", plain:"Local reality state — what is available to notice/act now.", links:[["theory.html#omega","Eq.Ω"]], tags:["state","field"] },
+      { k:"Ω (Eq.Ω)", plain:"Root dynamics: phase-guided update ⊕ remanence ⊕ micro-edits ΔΣ.", links:[["theory.html#omega","Theory"]], tags:["foundation"] },
+      { k:"φ", plain:"Phase — alignment relation that changes with meaning and attention.", links:[["theory.html#operators","Operators"]], tags:["phase"] },
+      { k:"Πν (voice carrier)", plain:"Steady tone used to stabilize breath/phrase and reduce internal noise.", links:[["teach.html#tab-voice","Voice Gate"],["theory.html#carrier","Carrier"]], tags:["practice","audio"] },
+      { k:"Ξ (coherence)", plain:"Alignment quality ≈ ⟨H·I⟩ / (1 + Var[𝓜]).", links:[["theory.html#coherence","Eq.Ξ"],["teach.html#tab-coherence","Desk"]], tags:["metric"] },
+      { k:"𝓘 · 𝓛 · 𝓒 · 𝓢", plain:"Observer loop: Intend → Look → Coalesce → Seal.", links:[["teach.html#tab-observer","Observer"],["theory.html#observer","Theory"]], tags:["loop"] },
+      { k:"ΔΣ (micro-edits)", plain:"Tiny changes introduced by observation/action that accumulate in Ω.", links:[["theory.html#omega","Eq.Ω"],["ledger.html","Ledger"]], tags:["learning"] },
+      { k:"τ (retention window)", plain:"Timespan where practice consolidates; longer τ → longer half-life.", links:[["theory.html#learning","Learning"]], tags:["memory"] },
+      { k:"t½ (half-life)", plain:"How long a learned effect remains at half strength.", links:[["theory.html#learning","Learning"]], tags:["memory"] },
+      { k:"Eq.9 (stop rule)", plain:"If Truth/Distortion worsens → Abort, Re-align, Resume.", links:[["theory.html#coherence","Stop Rule"],["teach.html#tab-coherence","Desk"]], tags:["ethics"] },
+      { k:"Remnant", plain:"What persists after decay — evidence of truth stabilizing.", links:[["index.html#eq5","Canon Eq.5"]], tags:["persistence"] },
+    ];
+
+    const $=s=>document.querySelector(s), terms=$("#terms"), q=$("#q"), clear=$("#clear");
+    function render(list){
+      terms.innerHTML = list.map(t=>`
+        <article class="term card">
+          <h3>${t.k}</h3>
+          <p>${t.plain}</p>
+          <p>${t.links.map(([href,label])=>`<a class="cta" href="${href}">${label}</a>`).join(" ")}</p>
+          <p>${t.tags.map(tag=>`<span class="pill">#${tag}</span>`).join(" ")}</p>
+        </article>
+      `).join("");
+    }
+    function search(){
+      const s=(q.value||"").toLowerCase();
+      const out = !s ? data : data.filter(t =>
+        (t.k+" "+t.plain+" "+t.tags.join(" ")).toLowerCase().includes(s)
+      );
+      render(out);
+    }
+    q.addEventListener("input",search); clear.addEventListener("click",()=>{ q.value=""; search(); });
+    document.getElementById("yr").textContent=String(new Date().getFullYear());
+    render(data);
+  })();
+  </script>
+</body>
+</html>
