@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <meta charset="utf-8" />
+  <title>90-Second Micro-Run — Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
+  <meta name="description" content="A single compact 90-second loop that paces Eq.Ω updates with breath, then logs one undeniable witness.">
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/micro.html" />
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
+  <style>.wrap{max-width:840px;margin:0 auto;padding:20px 16px 80px}.title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);-webkit-background-clip:text;background-clip:text;color:transparent}#ring{width:220px;display:block;margin:8px auto}</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="page-head fancy-head">
+    <h1 class="title">⏳ 90-Second Micro-Run</h1>
+    <p class="subtitle">Eq.Ω cadence in one minute-and-a-half: <b>𝓘 → 𝓛 → 𝓒 → 𝓢</b>, then one witness line.</p>
+    <nav class="crumbs" style="display:flex;gap:8px;justify-content:center">
+      <a class="cta" href="index.html">← Codex</a><a class="cta" href="teach.html">Teaching Lab</a>
+    </nav>
+  </header>
+
+  <section class="card">
+    <h2>Protocol</h2>
+    <ol class="list">
+      <li>Set a carrier Π<sub>ν</sub> (type or leave blank).</li>
+      <li>Type one clean intention line (Eq.16).</li>
+      <li>Press <b>Start</b>. Follow the prompts. Total ≈ 90s.</li>
+    </ol>
+    <div class="lab-row" style="gap:12px">
+      <input id="car" class="lab-input" placeholder="Carrier (432 / 528 / 369)">
+      <input id="line" class="lab-input" placeholder="Intention line (8–12 words)…">
+      <button id="go" class="lab-btn">Start</button>
+    </div>
+
+    <svg id="ring" viewBox="0 0 120 120" aria-label="micro ring">
+      <circle cx="60" cy="60" r="54" class="ring-bg"/>
+      <circle id="fg" cx="60" cy="60" r="54" class="ring-fg" pathLength="100"/>
+      <text id="phase" x="60" y="52" class="ring-phase" text-anchor="middle">Ready</text>
+      <text id="count" x="60" y="72" class="ring-count" text-anchor="middle">—</text>
+    </svg>
+
+    <div class="lab-row" style="justify-content:center">
+      <button id="stop" class="lab-btn ghost">Stop</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Witness</h2>
+    <textarea id="wit" rows="3" placeholder="One undeniable detail…"></textarea>
+    <div class="lab-row">
+      <button id="toLedger" class="lab-btn" disabled>Send to Ledger</button>
+    </div>
+    <p class="meta">Short + honest > long + vague.</p>
+  </section>
+
+  <footer class="footer">
+    <div class="divider" aria-hidden="true"></div>
+    <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+  </footer>
+</main>
+
+<script>
+(function(){
+  const y=document.getElementById('yr'); if(y) y.textContent=String(new Date().getFullYear());
+  const go=$("#go"),stop=$("#stop"),fg=$("#fg"),phase=$("#phase"),count=$("#count"),toLedger=$("#toLedger");
+  const line=$("#line"), car=$("#car"), wit=$("#wit");
+  function $(s,r=document){return r.querySelector(s);}
+  let timer=null, t=0, plan=null; // plan phases in seconds
+  function setStroke(p){ fg.style.strokeDasharray="100"; fg.style.strokeDashoffset=String(100-p); }
+
+  function buildPlan(){ // 90s total
+    // 𝓘 20s • 𝓛 20s • 𝓒 30s • 𝓢 20s
+    return [
+      {k:"𝓘 Intend", s:20, note:"speak once on Πν"},
+      {k:"𝓛 Look",   s:20, note:"one undeniable detail"},
+      {k:"𝓒 Coalesce",s:30, note:"exhale longer, soften jaw"},
+      {k:"𝓢 Seal",   s:20, note:"whisper thanks; let settle"},
+    ];
+  }
+
+  function start(){
+    if(timer) return;
+    plan=buildPlan(); t=0; let idx=0, elapsed=0, total=plan.reduce((a,b)=>a+b.s,0);
+    toLedger.disabled=false;
+    tick();
+    timer=setInterval(tick,1000);
+    function tick(){
+      if(!plan) return;
+      if(elapsed>=plan[idx].s){ idx++; elapsed=0; if(idx>=plan.length){ stopRun(); return; } }
+      const ph=plan[idx]; phase.textContent=ph.k; count.textContent=(ph.s-elapsed)+"s"; setStroke((t/total)*100);
+      elapsed++; t++;
+    }
+  }
+  function stopRun(){ clearInterval(timer); timer=null; phase.textContent="Done"; count.textContent="—"; setStroke(100); }
+
+  go.addEventListener('click',start); stop.addEventListener('click',stopRun);
+  toLedger.addEventListener('click', ()=>{
+    try{
+      const payload={intent:line.value||"Micro-run", carrier:car.value||"", witness:wit.value||"", tags:"#micro", quality:"", xi:null, t:Date.now()};
+      localStorage.setItem("codex_ledger_inbox", JSON.stringify(payload));
+      alert("Sent to Ledger. Open the Witness Ledger tab to add.");
+    }catch(_){ alert("Could not save locally—copy your note.");}
+  });
+})();
+</script>
+</body></html>
