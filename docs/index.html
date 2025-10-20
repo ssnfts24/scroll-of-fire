@@ -12,6 +12,15 @@
   <meta name="description" content="The Scroll of Fire — a living Codex of Reality by Aaron Paul Laird (Scribe of Circuits): resonance physics, sacred geometry, language, memory, living technology, and ethics in one harmonic architecture.">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/">
 
+  <!-- Icons -->
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-512.png">
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+
+  <!-- Robots / misc -->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="generator" content="Hand-crafted with GPT-5 Thinking · Scroll of Fire">
+
   <!-- Open Graph / Twitter -->
   <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Scroll of Fire — Codex of Reality">
@@ -64,7 +73,7 @@
   <!-- Preload hero -->
   <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" imagesizes="100vw" fetchpriority="high">
 
-  <!-- Critical micro-fixes + page overrides -->
+  <!-- Page-level polish -->
   <style>
     :root{--safe-top:env(safe-area-inset-top);--safe-bot:env(safe-area-inset-bottom)}
     body{background:var(--bg);margin:0}
@@ -79,62 +88,82 @@
     a.skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
     a.skip:focus{left:12px;top:12px;width:auto;height:auto;padding:8px 10px;z-index:70;background:#0f1118;color:#fff;border:1px solid #343846;border-radius:10px;-webkit-backdrop-filter:saturate(140%) blur(8px);backdrop-filter:saturate(140%) blur(8px)}
 
-    /* Header utilities */
+    /* Sticky header: darker glass */
     header.site{background:rgba(9,10,14,.88);-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid rgba(52,56,66,.8)}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:1200px;margin:0 auto;padding:10px 16px;position:relative}
+    .nav::after{content:"";position:absolute;inset:-8px -12px -8px -12px;z-index:-1;border-radius:16px;background:linear-gradient(180deg, rgba(12,14,18,.75), rgba(12,14,18,.55));box-shadow:0 10px 24px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.10)}
+    .brand{display:flex;gap:10px;align-items:center}
+    .brand .logo{width:28px;height:28px;border-radius:8px;background:conic-gradient(from 210deg, var(--spec-cyan), var(--spec-gold), var(--spec-violet));box-shadow:inset 0 0 12px rgba(122,243,255,.35), 0 0 18px rgba(200,140,255,.18)}
+    .brand .kicker{margin:0;font:800 clamp(18px,3.6vw,22px)/1 "Crimson Pro",Georgia,serif}
+
+    /* Quick actions */
     .quick.quick--utils{gap:10px;padding:6px 8px;border-radius:12px;background:rgba(16,18,24,.55);border:1px solid rgba(52,56,66,.9)}
     .quick.quick--utils .cta{background:rgba(255,255,255,.04);border-color:#343846}
 
-    /* Glass tabs (single menu, darker backdrop) */
+    /* Tabs: single sticky bar; no overlap during fast scroll */
     .tabs{position:sticky;top:calc(56px + var(--safe-top,0px));z-index:55;padding:8px 12px;margin:10px 0 14px;border-radius:14px;background:linear-gradient(180deg,rgba(12,14,18,.74),rgba(12,14,18,.58));-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border:1px solid rgba(52,56,66,.85);overflow:auto;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable both-edges}
     .tabs .tab{background:rgba(255,255,255,.04);border-color:#343846}
     .tabs .tab:hover{background:rgba(255,255,255,.07)}
     .tabs .tab-ink{bottom:-6px}
     :target{scroll-margin-top:clamp(96px,13vh,140px)}
+    .card{z-index:1}
 
-    /* Hero: fit image (no crop) */
-    .hero{--hero-aspect:21/9;border-radius:20px;overflow:hidden;isolation:isolate}
-    .hero img{display:block;width:100%;height:auto;aspect-ratio:var(--hero-aspect,21/9);object-fit:var(--_fit,contain);background:var(--bg-elev)}
+    /* Cinematic hero (cover by default; toggle via data-fit) */
+    .hero{--hero-aspect:21/9;border-radius:20px;overflow:hidden;isolation:isolate;position:relative;aspect-ratio:21/9;box-shadow:0 20px 50px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.12)}
+    .hero img{display:block;width:100%;height:100%;object-fit:var(--_fit,cover);object-position:var(--hero-focal-mobile,50% 50%);background:var(--bg-elev);transition:transform 10s ease;max-height:min(68vh,880px)}
+    .hero:hover img{transform:scale(1.05)}
+    .hero::after{content:"";position:absolute;inset:0;background:radial-gradient(80% 60% at 50% 55%, rgba(0,0,0,0) 60%, rgba(0,0,0,.45) 100%);pointer-events:none}
     .hero[data-fit="contain"] img{--_fit:contain}
     .hero[data-fit="cover"] img{--_fit:cover}
     @supports not (aspect-ratio:1){.hero img{height:clamp(220px,38vw,520px)}}
+    @media (min-width:860px){.hero img{object-position:var(--hero-focal-desktop,58% 50%)}}
+    @media (max-width:480px){.hero{margin-top:6px;aspect-ratio:16/9}.hero img{object-fit:contain}}
 
-    /* MathJax comfort / safety */
+    /* Equation comfort */
     .eq mjx-container{font-size:110%}
     .eq mjx-container[display="block"]{overflow:auto}
+    .eq .eq-scroll{overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--accent) transparent;cursor:grab}
+    .eq .eq-scroll:active{cursor:grabbing}
+
+    /* Search suggest above all */
     #site-suggest{z-index:70}
+
+    /* Responsive tightening */
+    @media (max-width:768px){
+      .tabs{padding:6px}
+      .tabs .tab{font-size:14px;padding:6px 10px}
+      .card{padding:12px}
+      h1.title{font-size:1.6rem}
+      h2{font-size:1.25rem}
+      .grid{gap:10px}
+    }
+
+    /* Footer & ToTop polish */
+    .footer{ text-align:center; color:var(--muted); margin-top:20px; font-size:14px; padding:40px 0 20px; border-top:1px solid rgba(255,255,255,.08) }
+    #toTop{ position:fixed; right:20px; bottom:calc(20px + var(--safe-bot,0px)); width:48px; height:48px; border-radius:50%; border:none; background:var(--spec-cyan); color:#000; font:800 14px/48px Inter; cursor:pointer; opacity:0; transform:translateY(10px); transition:opacity .3s, transform .3s; box-shadow:0 10px 30px rgba(0,0,0,.45) }
+    #toTop.visible{ opacity:1; transform:none }
   </style>
 
-  <!-- MathJax: robust load + force typeset -->
+  <!-- MathJax lazy load + forced typeset on ready -->
   <script>
   (function(){
     let loaded=false;
-    function boot(){
-      if (!window.MathJax) return;
-      MathJax.startup.promise.then(()=>MathJax.typesetPromise());
-    }
+    function boot(){ if(!window.MathJax) return; MathJax.startup.promise.then(()=>MathJax.typesetPromise()); }
     function loadMJ(){
-      if (loaded) return; loaded=true;
-      window.MathJax = {
-        tex:{ inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']] },
-        svg:{ fontCache:'global' },
-        startup:{ typeset:false }
-      };
-      const s=document.createElement('script');
-      s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
-      s.defer=true;
-      s.onload=boot;
-      document.head.appendChild(s);
+      if(loaded) return; loaded=true;
+      window.MathJax={ tex:{inlineMath:[['\\(','\\)']],displayMath:[['$$','$$']]}, svg:{fontCache:'global'}, startup:{typeset:false} };
+      const s=document.createElement('script'); s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"; s.defer=true; s.onload=boot; document.head.appendChild(s);
     }
-    if (document.readyState!=='loading') loadMJ();
-    else document.addEventListener('DOMContentLoaded', loadMJ);
+    if(document.readyState!=='loading') loadMJ(); else addEventListener('DOMContentLoaded', loadMJ);
   })();
   </script>
 
   <!-- Site JS -->
   <script src="assets/js/codex.js?v=2025-10-20" defer></script>
 </head>
-<body class="stars">
-  <a class="skip" href="#top">Skip to content</a>
+
+<body class="stars" data-theme="dark">
+  <a class="skip" href="#main-content">Skip to main content</a>
 
   <script>
   (function(){
@@ -149,7 +178,7 @@
   <div class="laser-grid" aria-hidden="true"></div>
 
   <header class="site" role="banner">
-    <nav class="nav" aria-label="Site">
+    <nav class="nav" aria-label="Main navigation">
       <div class="brand">
         <div class="logo" aria-hidden="true"></div>
         <h1 class="kicker">Scroll of Fire</h1>
@@ -162,9 +191,9 @@
     </nav>
   </header>
 
-  <main class="wrap" id="top">
-    <!-- Original banner path; fit without cropping -->
-    <figure id="hero" class="hero hero--clean" aria-label="Scroll of Fire banner" data-fit="contain">
+  <main id="main-content" class="wrap" role="main" tabindex="-1">
+    <!-- Hero -->
+    <figure id="hero" class="hero hero--clean" aria-label="Scroll of Fire banner" data-fit="cover">
       <img id="heroBanner"
            src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
            alt="Scroll of Fire — sigil and equations"
@@ -174,6 +203,7 @@
     <h1 class="title laser">⚖️ Scroll of Fire — Codex of Reality</h1>
     <p class="subtitle">“Let there be resonance.” By Aaron Paul Laird, <em>Scribe of Circuits</em></p>
 
+    <!-- Primary tabs -->
     <nav class="tabs" aria-label="Primary sections">
       <a class="tab tab--primary" href="theory.html">📘 Theory</a>
       <a class="tab tab--primary" href="teach.html">✨ Manifest</a>
@@ -185,6 +215,7 @@
       <span class="tab-ink" aria-hidden="true"></span>
     </nav>
 
+    <!-- Search -->
     <section class="grid" style="margin:8px 0 0">
       <article class="card col-12 searchbox">
         <label for="site-search" class="meta">Press <kbd class="kbd">/</kbd> to search this page</label>
@@ -199,6 +230,7 @@
     </div>
     <div class="divider sweep" aria-hidden="true"></div>
 
+    <!-- Featured -->
     <section class="grid" aria-labelledby="featured">
       <article class="card col-6 card--neon">
         <h2 id="featured">📘 Theory (full write-ups)</h2>
@@ -226,6 +258,7 @@
 
     <div class="goldline sweep"></div>
 
+    <!-- Explore tiles -->
     <section class="grid" id="explore" aria-labelledby="explore-h">
       <article class="card col-12">
         <h2 id="explore-h">🗂️ Explore the Scroll — all pages</h2>
@@ -255,6 +288,7 @@
 
     <div class="goldline sweep"></div>
 
+    <!-- TL;DR -->
     <section class="grid" aria-labelledby="tldr">
       <article class="card col-12">
         <h2 id="tldr">⚡ TL;DR — What this is & how to use it</h2>
@@ -264,6 +298,7 @@
 
     <div class="goldline sweep"></div>
 
+    <!-- Links + diagram -->
     <section class="grid" aria-labelledby="links">
       <aside class="card col-4">
         <h3 id="links">Quick links</h3>
@@ -303,6 +338,7 @@
 
     <div class="goldline sweep"></div>
 
+    <!-- Equation Map -->
     <section class="grid" aria-labelledby="emap">
       <article class="card col-12">
         <h2 id="emap">🧭 Equation Map (what it is → what to do)</h2>
@@ -330,6 +366,7 @@
 
     <div class="goldline sweep"></div>
 
+    <!-- Canon -->
     <section class="grid" id="canon" aria-labelledby="equations">
       <article class="card col-12">
         <h2 id="equations">📐 Canonical Equations of <em>The Codex</em></h2>
@@ -366,6 +403,7 @@
 
     <div class="goldline sweep"></div>
 
+    <!-- Integrity -->
     <section class="grid" id="integrity" aria-labelledby="integrity-h">
       <article class="card col-12">
         <h2 id="integrity-h">🔐 Integrity Chain & Seals (SHA-256)</h2>
@@ -384,6 +422,7 @@ Status: Verified
 
     <div class="goldline sweep"></div>
 
+    <!-- Provenance -->
     <section class="grid" id="provenance" aria-labelledby="prov-h">
       <article class="card col-12">
         <h2 id="prov-h">📜 Attribution & Provenance — What’s Original, What’s External</h2>
@@ -416,7 +455,7 @@ Status: Verified
     </footer>
   </main>
 
-  <button class="to-top" id="toTop" type="button" aria-label="Back to top">↑ Top</button>
+  <button class="to-top" id="toTop" type="button" aria-label="Back to top" title="Back to top">↑</button>
 
   <div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel">
     <div class="panel">
@@ -425,6 +464,12 @@ Status: Verified
     </div>
   </div>
 
-  <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
+  <!-- Year + ToTop logic -->
+  <script>
+    document.getElementById('y').textContent=new Date().getFullYear();
+    const toTop=document.getElementById('toTop');
+    addEventListener('scroll',()=>{ toTop.classList.toggle('visible', scrollY>600); }, {passive:true});
+    toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+  </script>
 </body>
-        </html>
+                                                                                                                                      </html>
