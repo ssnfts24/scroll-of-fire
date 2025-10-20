@@ -1,4 +1,3 @@
-
 /* ======================================================================
    Scroll of Fire — Codex of Reality
    Global Stylesheet (codex.css)
@@ -85,64 +84,6 @@ body::after { background:radial-gradient(760px 380px at 85% 10%, var(--ambient-c
   body::after{ animation:ambientDrift 14s linear infinite }
 }
 
-
-
-/* === Header polish ====================================================== */
-/* Avoid notch overlap + clearer separation when scrolled */
-header.site{
-  padding-top:var(--safe-top);            /* notch/safe-area */
-  -webkit-backdrop-filter:saturate(140%) blur(8px);
-  box-shadow:0 0 0 1px rgba(0,0,0,0);     /* base: no shadow */
-  transition:box-shadow .25s var(--ease), background .25s var(--ease);
-}
-header.site.is-stuck{
-  background:rgba(11,11,15,.78);
-  box-shadow:0 6px 18px rgba(0,0,0,.35);  /* gentle drop on scroll */
-}
-
-/* Make the pill buttons scroll nicely without wrapping the brand */
-.nav{ gap:10px; }
-.quick{
-  flex:1 1 auto; justify-content:flex-end;
-  overflow-x:auto; overflow-y:hidden; padding-bottom:2px;
-  mask-image:linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
-  -webkit-mask-image:linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
-  scroll-snap-type:x proximity;
-}
-.quick a,.quick button{ scroll-snap-align:start; }
-
-/* On very small screens shrink the pills a hair for better fit */
-@media (max-width:480px){
-  .quick a,.quick button{ height:32px; line-height:30px; padding:0 10px; font-size:13px }
-}
-
-/* === Banner animation control & subtlety ================================ */
-/* We only run the living-tech animations when the hero is in view.
-   JS toggles .is-active (see snippet below). */
-@media (prefers-reduced-motion:no-preference){
-  .hero::after{ animation-play-state:paused; }
-  .hero.pulse .hero-pulse{ animation-play-state:paused; }
-  .hero.is-active::after{ animation-play-state:running; }
-  .hero.is-active.pulse .hero-pulse{ animation-play-state:running; }
-}
-
-/* Slightly calmer scanline when active (less busy under sticky header) */
-@media (prefers-reduced-motion:no-preference){
-  @keyframes scanFloat{ to{ background-position-y:10px } } /* was 12px */
-}
-
-/* Mobile safety: prevent banner from feeling “crowded” under header */
-@media (max-width:420px){
-  .hero{ margin-top:6px; }
-  .hero img{ object-fit:contain; max-height:56vh; }
-}
-
-/* Optional: a softer starfield/scan glow so it doesn't fight the header */
-.hero.star-scan::after{ opacity:.14; }
-
-
-
-
 ::selection{ background:rgba(122,243,255,.25); color:var(--ink) }
 :focus-visible{
   outline:2px solid var(--ring);
@@ -163,30 +104,50 @@ a[rel~="external"]::after{ content:" ↗"; font-size:.9em; opacity:.8 }
 .nowrap{ white-space:nowrap }
 .kbd{ background:#11131a; border:1px solid #343842; border-bottom-width:3px; padding:.15em .4em; border-radius:6px; box-shadow:inset 0 -2px 0 rgba(0,0,0,.25); font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace }
 
-/* ------------------------------ Header / Nav ------------------------------ */
+/* ===================== Header / Nav (unified) ===================== */
 header.site{
   position:sticky; top:0; z-index:50;
-  background:rgba(11,11,15,.7); backdrop-filter:saturate(140%) blur(8px);
+  padding-top:var(--safe-top);
+  background:rgba(11,11,15,.70);
+  backdrop-filter:saturate(140%) blur(8px);
+  -webkit-backdrop-filter:saturate(140%) blur(8px);
   border-bottom:1px solid #1e1e26;
+  box-shadow:0 0 0 1px rgba(0,0,0,0);
+  transition:box-shadow var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
 }
-.nav{ display:flex; gap:12px; align-items:center; justify-content:space-between; max-width:var(--maxw); margin:0 auto; padding:10px 16px }
+header.site.is-stuck{
+  background:rgba(11,11,15,.78);
+  box-shadow:0 6px 18px rgba(0,0,0,.35);
+}
+.nav{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px; max-width:var(--maxw); margin:0 auto; padding:10px 16px;
+}
 .brand{ display:flex; gap:10px; align-items:center }
 .brand .logo{ width:28px; height:28px; border-radius:8px; background:linear-gradient(180deg,#88f,#5ff); box-shadow:0 0 12px rgba(122,243,255,.35) inset }
-.brand h1{ font:800 clamp(18px,3.6vw,22px)/1 "Crimson Pro",Georgia,serif; margin:0 }
+.brand h1{ margin:0; font:800 clamp(18px,3.6vw,22px)/1 "Crimson Pro",Georgia,serif }
 .quick{
-  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-  max-width:100%; overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-gutter:stable;
+  display:flex; align-items:center; gap:10px;
+  flex:1 1 auto; justify-content:flex-end;
+  overflow-x:auto; overflow-y:hidden; padding-bottom:2px; scrollbar-gutter:stable;
+  -webkit-overflow-scrolling:touch;
+  mask-image:linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+  -webkit-mask-image:linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+  scroll-snap-type:x proximity;
 }
 .quick a,.quick button{
   appearance:none; border:1px solid #2a2a33; background:transparent; color:var(--ink);
-  padding:0 12px; height:34px; line-height:32px;
-  border-radius:10px; font:600 14px/1 Inter; cursor:pointer; text-decoration:none;
+  padding:0 12px; height:34px; line-height:32px; border-radius:10px; font:600 14px/1 Inter;
+  text-decoration:none; cursor:pointer; scroll-snap-align:start;
 }
 .quick button{ display:inline-flex; align-items:center; gap:6px }
 .quick a:hover,.quick button:hover{ border-color:#3a3a44; background:rgba(255,255,255,.02) }
 @media (max-width:760px){
   .brand h1{ font-size:clamp(16px,4.2vw,20px) }
   .quick{ gap:8px }
+}
+@media (max-width:480px){
+  .quick a,.quick button{ height:32px; line-height:30px; padding:0 10px; font-size:13px }
 }
 
 /* ------------------------------ Wrapper & Headings ------------------------------ */
@@ -268,10 +229,6 @@ header.site{
     repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 3px);
   opacity:.12; z-index:1;
 }
-@media (prefers-reduced-motion:no-preference){
-  @keyframes scanFloat{ to{ background-position-y:12px } }
-  .hero::after{ animation:scanFloat 8s linear infinite; will-change:background-position }
-}
 
 /* pulse layer (optional; JS toggles .pulse) */
 .hero .hero-pulse{
@@ -282,14 +239,6 @@ header.site{
   background-repeat:no-repeat; background-position:center center, center center; transform:translateZ(0); display:none;
 }
 .hero.pulse .hero-pulse{ display:block }
-@keyframes pulseShock{
-  0%{background-size:10% 10%,6% 6%;opacity:0}
-  6%{opacity:var(--pulse-opacity)}
-  30%{background-size:120% 120%,90% 90%;opacity:.10}
-  60%{background-size:220% 220%,160% 160%;opacity:.06}
-  100%{background-size:320% 320%,240% 240%;opacity:0}
-}
-@media (prefers-reduced-motion:no-preference){ .hero.pulse .hero-pulse{ animation:pulseShock 6.5s cubic-bezier(.22,.7,.15,1) infinite } }
 
 /* hardening & reduced modes */
 @supports (-webkit-touch-callout:none){ .hero img{ opacity:1!important; filter:none!important } }
@@ -299,31 +248,54 @@ header.site{
   .hero.pulse .hero-pulse{ display:none!important }
 }
 @media (max-width:740px){ .hero img{ max-height:56vh } }
-@media (max-width:420px){ .hero:not([data-fit="contain"]) img{ object-fit:contain } }
+
+/* Tiny mobile safety on very narrow screens */
+@media (max-width:420px){
+  .hero{ margin-top:6px }
+  .hero:not([data-fit="contain"]) img{ object-fit:contain }
+  .hero img{ max-height:56vh }
+}
 
 .hero-grid{ position:absolute; inset:0; pointer-events:none; opacity:.18 }
 .sigil-line{ height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); opacity:.65 }
 
-/* hero toolbar + fullscreen zoom */
-.hero-ui{
-  position:absolute; right:12px; bottom:12px; display:flex; gap:8px; z-index:3;
-  backdrop-filter:saturate(140%) blur(6px);
-  background:rgba(12,12,16,.42); border:1px solid #24242c; border-radius:12px; padding:6px;
-}
-.hero-btn{
-  appearance:none; border:1px solid #2a2a33; background:rgba(255,255,255,.02);
-  color:var(--ink); padding:0 10px; height:34px; line-height:32px; border-radius:10px; font:600 13px/1 Inter; cursor:pointer;
-}
-.hero-btn:hover{ border-color:#3a3a44 }
-.hero-btn:focus-visible{ outline:2px solid var(--ring); box-shadow:0 0 0 4px var(--ring-outer) }
-.hero.is-zoomed{ position:fixed; inset:0; margin:0; border-radius:0; z-index:9999; background:#0a0a0d; box-shadow:none }
-.hero.is-zoomed img{ height:100svh; max-height:100svh; width:100vw; aspect-ratio:auto; object-fit:contain }
-.hero.is-zoomed .hero-ui{ right:16px; bottom:16px }
+/* === Banner: remove legacy toolbar ====================== */
+.hero-ui{ display:none !important }
 
-/* ------------------------------ Grid System ------------------------------ */
+/* === Hero animation control (runs only while visible) === */
+@media (prefers-reduced-motion:no-preference){
+  .hero::after{ animation:scanFloat 8s linear infinite; will-change:background-position; animation-play-state:paused }
+  .hero.pulse .hero-pulse{ animation:pulseShock 6.5s cubic-bezier(.22,.7,.15,1) infinite; animation-play-state:paused }
+  .hero.is-active::after{ animation-play-state:running }
+  .hero.is-active.pulse .hero-pulse{ animation-play-state:running }
+}
+/* one canonical scanline keyframe (calmer) */
+@keyframes scanFloat{ to{ background-position-y:10px } }
+/* pulse keyframes (from original) */
+@keyframes pulseShock{
+  0%{background-size:10% 10%,6% 6%;opacity:0}
+  6%{opacity:var(--pulse-opacity)}
+  30%{background-size:120% 120%,90% 90%;opacity:.10}
+  60%{background-size:220% 220%,160% 160%;opacity:.06}
+  100%{background-size:320% 320%,240% 240%;opacity:0}
+}
+/* star/scan balance so it doesn’t fight the header */
+.hero.star-scan::after{ opacity:.14 }
+
+/* ------------------------------ Grid System (consolidated) ------------------------------ */
 .grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:14px }
-.col-12{grid-column:span 12}.col-9{grid-column:span 9}.col-8{grid-column:span 8}.col-7{grid-column:span 7}.col-6{grid-column:span 6}.col-5{grid-column:span 5}.col-4{grid-column:span 4}
-@media (max-width:980px){ .col-9,.col-8,.col-7,.col-6,.col-5,.col-4{ grid-column:span 12 } .wrap{ padding-bottom:64px } }
+.col-12{grid-column:span 12}
+.col-9{grid-column:span 9}
+.col-8{grid-column:span 8}
+.col-7{grid-column:span 7}
+.col-6{grid-column:span 6}
+.col-5{grid-column:span 5}
+.col-4{grid-column:span 4}
+.col-3{grid-column:span 3}
+@media (max-width:980px){
+  .col-9,.col-8,.col-7,.col-6,.col-5,.col-4,.col-3{ grid-column:span 12 }
+  .wrap{ padding-bottom:64px }
+}
 @media (max-width:360px){ .grid{ gap:10px } }
 
 /* ------------------------------ Cards ------------------------------ */
@@ -526,6 +498,12 @@ footer.footer{ text-align:center; color:var(--muted); margin-top:20px; font-size
 .palette ul{ list-style:none; margin:0; padding:10px }
 .palette li{ padding:8px 10px; border-radius:10px; cursor:pointer }
 .palette li:hover{ background:#15151e }
+/* active row highlight (keyboard selection) */
+.palette li.sel{
+  background:#161621;
+  outline:2px solid rgba(122,243,255,.35);
+  box-shadow:0 0 0 4px rgba(122,243,255,.12);
+}
 
 /* ------------------------------ Tabs (primary) ------------------------------ */
 .tabs{ position:relative; display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:8px 0 14px; --ink-x:0px; --ink-w:0px }
@@ -550,6 +528,18 @@ footer.footer{ text-align:center; color:var(--muted); margin-top:20px; font-size
 @media (max-width:720px){
   .tabs{ overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-gutter:stable both-edges; padding-bottom:4px }
 }
+
+/* ------------------------------ Site search mini-suggest ------------------------------ */
+#site-suggest{
+  position:absolute; top:100%; left:0; right:0; margin-top:8px; z-index:40;
+  border:1px solid var(--line); border-radius:12px; background:#0f0f14;
+  box-shadow:0 20px 50px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.12);
+  padding:10px;
+}
+#site-suggest a{
+  display:block; padding:8px 10px; border-radius:10px; text-decoration:none; border:1px solid transparent;
+}
+#site-suggest a:hover, #site-suggest a:focus-visible{ border-color:#3a3a44; background:rgba(255,255,255,.04) }
 
 /* ------------------------------ Motion Safety ------------------------------ */
 @media (prefers-reduced-motion:reduce){
@@ -658,7 +648,7 @@ body.perf-fast,
   .laser-grid{ animation:gridDriftA 16s ease-in-out infinite, gridDriftB 22s linear infinite }
 }
 
-/* Starfield + scanline */
+/* Starfield */
 .hero.hero--starfield::before{
   content:""; position:absolute; inset:-10%; z-index:0; pointer-events:none; opacity:.25;
   background:
@@ -668,178 +658,7 @@ body.perf-fast,
     radial-gradient(2px 2px at 35% 75%, #9cffdd, transparent 40%);
   filter:drop-shadow(0 0 6px rgba(122,243,255,.25));
 }
-.hero.star-scan::after{ animation:scanFloat 8s linear infinite, starPulse 9.5s ease-in-out infinite }
+/* Scanline + star pulse */
+.hero.star-scan::after{ animation:scanFloat 8s linear infinite, starPulse 9.5s ease-in-out infinite; animation-play-state:paused }
 @keyframes starPulse{ 0%,100%{opacity:.12} 50%{opacity:.18} }
 
-/* Neon sweep */
-.card.card--neon{ position:relative; overflow:clip }
-.card.card--neon::after{
-  content:""; position:absolute; inset:-1px; border-radius:inherit; pointer-events:none;
-  background:
-    conic-gradient(from 0deg, rgba(122,243,255,.0) 0deg, rgba(122,243,255,.45) 90deg, rgba(243,201,122,.35) 180deg, rgba(122,168,255,.35) 270deg, rgba(122,243,255,.0) 360deg);
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  padding:1px; opacity:.35; filter:saturate(120%);
-}
-@media (hover:hover) and (prefers-reduced-motion:no-preference){
-  @keyframes rimSweep{ to{ transform:rotate(360deg) } }
-  .card.card--neon::after{ transform-origin:50% 50%; animation:rimSweep 14s linear infinite }
-}
-
-/* CTA ripple */
-.cta{ position:relative; overflow:hidden }
-.cta::after{
-  content:""; position:absolute; inset:auto auto 50% 50%; width:0; height:0; border-radius:999px;
-  background:radial-gradient(circle, rgba(122,243,255,.25), rgba(122,243,255,0) 60%);
-  transform:translate(-50%, 50%); opacity:0;
-}
-@media (hover:hover){
-  .cta:hover::after{ width:220px; height:220px; opacity:.45; transition:width .45s var(--ease), height .45s var(--ease), opacity .45s var(--ease) }
-}
-.cta:active{ transform:translateY(0) scale(.98) }
-
-/* ------------------------------ Homepage helpers ------------------------------ */
-.tile{
-  display:block; position:relative; padding:14px; border-radius:12px; text-decoration:none; color:var(--ink);
-  border:1px solid var(--line);
-  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.005));
-  box-shadow:0 6px 14px var(--shadow), inset 0 0 0 1px rgba(122,243,255,.12);
-  transition:transform var(--dur-1) var(--ease), box-shadow var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
-}
-.tile h4{ margin:6px 0 4px; color:#fff; font-size:var(--fs-3) }
-.tile p{ margin:0; color:var(--muted); font-size:var(--fs-1) }
-.tile .badge{ margin-bottom:6px }
-@media (hover:hover){
-  .tile:hover{ transform:translateY(-2px); border-color:#3a3a44; box-shadow:0 12px 24px var(--shadow), inset 0 0 22px rgba(122,243,255,.06) }
-}
-
-/* Simple 2-col descriptive grid */
-.grid2{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px }
-@media (max-width:860px){ .grid2{ grid-template-columns:1fr } }
-.desk-card{
-  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.005));
-  border:1px solid var(--line); border-radius:12px; padding:12px;
-  box-shadow:0 6px 14px var(--shadow);
-}
-
-/* Heavy HUD opt-in */
-body.bg-grid-heavy{
-  background: radial-gradient(circle at 50% 50%, #0b0b0f 0%, #050507 80%);
-  background-image:
-    repeating-linear-gradient(0deg, rgba(0,255,255,.03) 0 1px, transparent 1px 60px),
-    repeating-linear-gradient(90deg, rgba(0,255,255,.03) 0 1px, transparent 1px 60px);
-}
-/* --- Patch: grid columns, palette selection, suggest box ---------------- */
-
-/* Add .col-3 to both grid systems */
-.grid { display:grid; grid-template-columns:repeat(12,1fr); gap:14px }
-.col-12{grid-column:span 12}
-.col-9{grid-column:span 9}
-.col-8{grid-column:span 8}
-.col-7{grid-column:span 7}
-.col-6{grid-column:span 6}
-.col-5{grid-column:span 5}
-.col-4{grid-column:span 4}
-.col-3{grid-column:span 3} /* <-- NEW */
-
-@media (max-width:980px){
-  .col-9,.col-8,.col-7,.col-6,.col-5,.col-4,.col-3{ grid-column:span 12 } /* <-- NEW */
-}
-
-/* If you want the second “Grid System” block consistent too */
-.col-3{grid-column:span 3}
-
-/* Palette: highlight the active row and keep it accessible */
-.palette li.sel{
-  background:#161621;
-  outline:2px solid rgba(122,243,255,.35);
-  box-shadow:0 0 0 4px rgba(122,243,255,.12);
-}
-
-/* Site search mini-suggest (the little dropdown box) */
-#site-suggest{
-  position:absolute;
-  top:100%;
-  left:0;
-  right:0;
-  margin-top:8px;
-  z-index:40;
-  border:1px solid var(--line);
-  border-radius:12px;
-  background:#0f0f14;
-  box-shadow:0 20px 50px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.12);
-  padding:10px;
-}
-#site-suggest a{
-  display:block;
-  padding:8px 10px;
-  border-radius:10px;
-  text-decoration:none;
-  border:1px solid transparent;
-}
-#site-suggest a:hover,
-#site-suggest a:focus-visible{
-  border-color:#3a3a44;
-  background:rgba(255,255,255,.04);
-}
-
-/* Tabs ink bar: ensure CSS vars exist even before JS runs */
-.tabs{ --ink-x:0px; --ink-w:0px }
-
-/* Hero: prevent image from squishing on very narrow screens */
-@media (max-width:420px){
-  .hero img{ object-fit:contain; max-height:56vh }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* === Hero: buttonless living-tech upgrade ============================== */
-
-/* kill toolbar visuals if any remain */
-.hero-ui{ display:none !important }
-
-/* subtle parallax tilt (mouse) + gentle zoom on hover */
-@media (hover:hover) and (prefers-reduced-motion:no-preference){
-  .hero{ transform-style:preserve-3d; will-change:transform }
-  .hero:hover{ transform:perspective(1200px) rotateX(var(--hero-tilt-x,0deg)) rotateY(var(--hero-tilt-y,0deg)) }
-}
-
-/* pulse: a touch stronger but still tasteful */
-:root{ --pulse-opacity:.16 } /* was .12 */
-.hero.pulse .hero-pulse{
-  background:
-    radial-gradient(circle at 50% 55%, var(--pulse-c1) 0 8%, transparent 40%),
-    radial-gradient(circle at 50% 55%, var(--pulse-c2) 0 5%, transparent 28%);
-}
-@media (prefers-reduced-motion:no-preference){
-  .hero.pulse .hero-pulse{ animation-duration:5.8s } /* slightly quicker */
-}
-
-/* scanline + star sparkle a bit more */
-.hero.star-scan::after{ opacity:.16 }
-@keyframes starPulse{ 0%,100%{opacity:.14} 50%{opacity:.22} }
-
-/* zoomed view: hide page scrollbars and use full viewport cleanly */
-.hero.is-zoomed{ position:fixed; inset:0; margin:0; border-radius:0; z-index:9999; background:#07070a }
-.hero.is-zoomed img{ height:100svh; max-height:100svh; width:100vw; aspect-ratio:auto; object-fit:contain }
-
-/* tiny caption hint (keyboard help) — shows on hover/focus only */
-.hero .hero-hint{
-  position:absolute; right:10px; bottom:10px; z-index:3;
-  color:var(--muted); font:500 12px/1.4 Inter; padding:6px 8px;
-  background:rgba(12,12,16,.42); border:1px solid #24242c; border-radius:8px;
-  opacity:0; transition:opacity .2s var(--ease);
-}
-.hero:focus-within .hero-hint, .hero:hover .hero-hint{ opacity:.9 }
-@media (prefers-reduced-motion:reduce){ .hero .hero-hint{ display:none } }
