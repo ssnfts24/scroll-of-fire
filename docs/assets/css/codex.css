@@ -329,3 +329,85 @@ body.performance-warming{ animation:warmOff .9s linear forwards }
   .laser-grid,.card::before,.card::after{ display:none!important }
   .eq{ box-shadow:inset 0 0 12px rgba(255,200,107,.03) }
    }
+
+
+
+
+
+
+
+
+
+
+
+
+/* === SoF polish pack — menus, overlap, desktop nav density, hero soft-edges === */
+
+/* 1) Stable sticky math: declare heights once, then reuse */
+:root{
+  --head-h: clamp(52px, 7.2vh, 64px);
+  --tabs-h: 42px;
+}
+
+/* 2) Ensure sticky header/tabs never collide with content while scrolling */
+header.site{ min-height:var(--head-h) }
+.tabs{ top:var(--head-h) }                         /* tabs glue under header */
+:target{ scroll-margin-top: calc(var(--head-h) + var(--tabs-h) + 12px) }
+
+/* If the browser supports it, add global scroll padding so any anchor jump is safe */
+@supports selector(body:has(.tabs)){
+  html{ scroll-padding-top: calc(var(--head-h) + var(--tabs-h) + 12px) }
+}
+
+/* 3) Quick actions (Echo / HUD / ⌘K): nicer layout + no wrap jiggle */
+.quick{
+  flex-wrap:nowrap; gap:8px; scroll-snap-type:x proximity;
+}
+.quick a,.quick button{
+  padding:0 10px; min-width:80px; white-space:nowrap; flex:0 0 auto;
+}
+@media (max-width:520px){
+  .quick{ display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:6px }
+  .quick a,.quick button{ min-width:auto; padding:0 8px }
+}
+
+/* 4) Tabs: denser on desktop, compact on phones, centered so they don’t look “too wide” */
+.tabs{ justify-content:center }
+.tabs .tab{ padding:8px 12px }
+@media (max-width:560px){
+  .tabs{ justify-content:flex-start }     /* keep horizontal scroll on small screens */
+  .tabs .tab{ padding:7px 10px; min-height:36px; font-size:13px }
+}
+
+/* 5) “Explore / Start” tiles: desktop grid stays compact; no edge-to-edge jumbo pills */
+#explore .tile{ padding:12px }                      /* slightly denser */
+@media (min-width:1024px){
+  #explore{ grid-template-columns:repeat(12,1fr); gap:14px }
+  #explore .tile.col-3{ grid-column:span 3 }       /* true 4-up on wide screens */
+}
+@media (min-width:1280px){
+  .wrap{ max-width:1100px }                         /* reins in overall width on big monitors */
+}
+
+/* 6) Card overlap fix on fast scroll (extra safety) */
+.card{ z-index:1 }
+.tabs{ z-index:60 }                                 /* below header(70), above cards(1) */
+header.site{ z-index:70 }
+
+/* 7) Banner: soften “block” look with edge fade & subtle lift */
+.hero{ box-shadow:0 16px 48px rgba(0,0,0,.46), inset 0 0 0 1px rgba(122,243,255,.10) }
+.hero img{
+  /* soft edge vignette without changing your asset */
+  mask-image: radial-gradient(120% 140% at 50% 46%, #000 75%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: radial-gradient(120% 140% at 50% 46%, #000 75%, rgba(0,0,0,0) 100%);
+}
+.hero::after{
+  /* gentle ground shadow so it feels layered, not like a flat block */
+  content:""; position:absolute; left:6%; right:6%; bottom:-14px; height:28px; pointer-events:none;
+  background:radial-gradient(60% 80% at 50% 0%, rgba(0,0,0,.35), transparent 70%);
+  filter:blur(8px);
+}
+
+/* 8) Mobile spacing around the search box so chips don’t visually collide */
+.searchbox{ margin-top:6px }
+@media (max-width:560px){ .searchbox{ margin-top:2px } }
