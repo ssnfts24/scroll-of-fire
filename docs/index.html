@@ -77,13 +77,13 @@
   <!-- Perf hints -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
-  <!-- Global stylesheet (your main theme) -->
+  <!-- Global stylesheet (main theme) -->
   <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
 
   <!-- Preload banner -->
-  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" fetchpriority="high" imagesizes="100vw">
+  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" imagesizes="100vw" fetchpriority="high">
 
   <!-- Minimal critical overrides (keep tiny; the rest lives in codex.css) -->
   <style>
@@ -118,13 +118,16 @@
     .kbd{ background:#11131a; border:1px solid #343842; border-bottom-width:3px; padding:.15em .4em; border-radius:6px; box-shadow:inset 0 -2px 0 rgba(0,0,0,.25) }
   </style>
 
-  <!-- Lazy MathJax loader -->
+  <!-- Lazy MathJax loader (fixed inline/display config) -->
   <script>
   (function () {
     function loadMJ(){
       if (window.MathJax) return;
       window.MathJax = {
-        tex:{ inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']] },
+        tex:{
+          inlineMath:[['\','\'],['\','\']],
+          displayMath:[['$$','$$']]
+        },
         svg:{ fontCache:'global', linebreaks:{ automatic:true, width:'container' } },
         startup:{ typeset:false }
       };
@@ -144,10 +147,10 @@
   })();
   </script>
 </head>
-<body class="stars">
 
-<!-- Warm-up / Fast mode -->
-<script>
+<body class="stars">
+  <!-- Warm-up / Fast mode -->
+  <script>
   (function(){
     document.body.classList.add('performance-warming');
     const lowCore = (navigator.hardwareConcurrency||4) <= 4;
@@ -155,267 +158,263 @@
     if (lowCore || saveData) document.body.classList.add('perf-fast');
     setTimeout(()=>document.body.classList.remove('performance-warming'), 900);
   })();
-</script>
+  </script>
 
-<main class="wrap">
-
-  <!-- HERO -->
-  <figure id="hero" class="hero has-effects pulse" data-fit="cover" aria-label="Scroll of Fire — Codex of Reality Banner">
-    <img id="heroBanner"
-         src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
-         data-src-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
-         onerror="if(this.dataset.raw&&!this._tried){this._tried=1;this.src=this.dataset.raw;}"
-         alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
-         width="1600" height="900" loading="eager" decoding="async" fetchpriority="high">
-    <div class="hero-pulse" aria-hidden="true"></div>
-    <svg class="hero-grid" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
-      <defs><pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse">
-        <path d="M5 0V5 M0 5H5" vector-effect="non-scaling-stroke" />
-      </pattern></defs>
-      <rect width="100%" height="100%" fill="url(#grid)"></rect>
-    </svg>
-    <div class="sigil-line" aria-hidden="true"></div>
-
-    <!-- Hero UI -->
-    <div class="hero-ui" role="group" aria-label="Hero controls">
-      <button class="hero-btn" id="btnTogglePulse" type="button">Pulse</button>
-      <button class="hero-btn" id="btnZoom" type="button">Fullscreen</button>
-    </div>
-  </figure>
-
-  <h1 class="title">⚖️ Scroll of Fire — Codex of Reality</h1>
-  <p class="subtitle">“Let there be resonance.” By Aaron Paul Laird, <em>Scribe of Circuits</em></p>
-
-  <!-- Primary nav -->
-  <nav class="tabs" aria-label="Primary">
-    <a class="tab tab--primary" href="theory.html">📘 Theory</a>
-    <a class="tab tab--primary" href="teach.html">✨ Manifest</a>
-    <a class="tab" href="#explore">Explore</a>
-    <a class="tab" href="#canon">Canon</a>
-    <a class="tab" href="#links">Links</a>
-    <a class="tab" href="#integrity">Integrity</a>
-    <a class="tab" href="#provenance">Provenance</a>
-  </nav>
-
-  <!-- Quick search -->
-  <section class="grid" style="margin:8px 0 0">
-    <article class="card col-12" style="display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap">
-      <label for="site-search" class="meta">Press <span class="kbd">/</span> to search terms on this page</label>
-      <input id="site-search" type="search" placeholder="Search text on this page…" aria-label="Search page"
-             style="min-width:220px;max-width:520px;width:100%;background:#0f0f14;border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--ink);outline:none">
-    </article>
-  </section>
-
-  <!-- Simple Mode Toggle -->
-  <div class="simple-toggle">
-    <label for="simple"><strong>Echo View</strong> (hide equations, show summaries)</label>
-    <input id="simple" type="checkbox" aria-label="Toggle Simple Mode">
-  </div>
-  <div class="divider" role="separator" aria-hidden="true"></div>
-
-  <!-- Featured Duo -->
-  <section class="grid" aria-labelledby="featured">
-    <article class="card col-6">
-      <h2 id="featured">📘 Theory (full write-ups)</h2>
-      <p>Detailed exposition of the Codex: operators, updated Eq.0 foundation, canonical equations, ethical law, and dimensional scaffolding.</p>
-      <ul class="list">
-        <li><a href="theory.html#eq0">Foundational Field Ψ₀ (distinct from Copeland)</a></li>
-        <li><a href="theory.html#operators">Operators: 𝓘 · 𝓛 · 𝓒 · 𝓢</a></li>
-        <li><a href="theory.html#canon">Canon 0–17</a> &nbsp; <small class="meta">#7 Copeland, #8 Goodwin = external</small></li>
-        <li><a href="theory.html#ethics">Ethical Law of Coherence</a></li>
-      </ul>
-      <a class="cta" href="theory.html">Open Theory</a>
-    </article>
-    <article class="card col-6">
-      <h2>✨ Manifest (practice & tools)</h2>
-      <p>Turn equations into repeatable method: voice protocol, carriers (432/528/369), witness ledger, A/Bs, and group runs.</p>
-      <ul class="list">
-        <li><a href="teach.html#tab-voice">Voice Protocol</a></li>
-        <li><a href="teach.html#ledger">Witness Ledger</a></li>
-        <li><a href="teach.html#ab">A/B Carriers</a></li>
-        <li><a href="teach.html#ethics">Ethical guard & stop rules</a></li>
-      </ul>
-      <a class="cta" href="teach.html">Open Manifest</a>
-    </article>
-  </section>
-
-  <div class="goldline"></div>
-
-  <!-- Explore tiles -->
-  <section class="grid" id="explore" aria-labelledby="explore-h">
-    <article class="card col-12">
-      <h2 id="explore-h">🗂️ Explore the Scroll — all pages</h2>
-      <p class="meta">Everything live in <code>/docs</code>. These tiles mirror your repo.</p>
-    </article>
-
-    <a class="tile col-3" href="start.html"><span class="badge">Start</span><h4>Start Here</h4><p>Onboarding & how to move.</p></a>
-    <a class="tile col-3" href="guide.html"><h4>Guide</h4><p>Step-by-step walkthrough of the Codex.</p></a>
-    <a class="tile col-3" href="theory.html"><h4>Theory</h4><p>Canonical write-ups for 0–17.</p></a>
-    <a class="tile col-3" href="teach.html"><h4>Manifest (Practice)</h4><p>Protocols, carriers, ledgers.</p></a>
-
-    <a class="tile col-3" href="ab.html"><h4>A/B Carriers</h4><p>Run 432·528·369 comparisons.</p></a>
-    <a class="tile col-3" href="micro.html"><h4>Micro-acts</h4><p>Tiny actions → field feedback.</p></a>
-    <a class="tile col-3" href="circle.html"><h4>Circle</h4><p>Group coherence, facilitation.</p></a>
-    <a class="tile col-3" href="ethics.html"><h4>Ethics</h4><p>Coherence law & stop rules.</p></a>
-
-    <a class="tile col-3" href="glossary.html"><h4>Glossary</h4><p>Terms, symbols, and operators.</p></a>
-    <a class="tile col-3" href="glyphs.html"><h4>Glyphs</h4><p>Icon set & sacred marks.</p></a>
-    <a class="tile col-3" href="downloads.html"><h4>Downloads</h4><p>Docs, images, shareables.</p></a>
-    <a class="tile col-3" href="ledger.html"><h4>Ledger</h4><p>Hashes, notes, witness proofs.</p></a>
-
-    <a class="tile col-3" href="manifest.html"><h4>Site Manifest</h4><p>App/SEO/PWA meta & credits.</p></a>
-    <a class="tile col-3" href="404.html"><h4>404</h4><p>Custom not-found page.</p></a>
-    <a class="tile col-3" href="sitemap.xml" target="_blank" rel="noopener"><h4>Sitemap</h4><p>XML map for crawlers.</p></a>
-    <a class="tile col-3" href="robots.txt" target="_blank" rel="noopener"><h4>Robots.txt</h4><p>Crawler rules.</p></a>
-  </section>
-
-  <div class="goldline"></div>
-
-  <!-- TL;DR -->
-  <section class="grid" aria-labelledby="tldr">
-    <article class="card col-12">
-      <h2 id="tldr">⚡ TL;DR — What this is & how to use it</h2>
-      <p><strong>Your Codex</strong> is a <em>design</em> for working with resonance. Constants and sacred ratios provide a steady supply; four living operators — <abbr title="Intention"> 𝓘</abbr>, <abbr title="Light / Revelation">𝓛</abbr>, <abbr title="Consciousness / Witness">𝓒</abbr>, <abbr title="Source / Return">𝓢</abbr> — shape that supply into experience. Harmonics pick the lane, language programs meaning into the carrier, memory decides what echoes, and an ethical law demands that <strong>truth outlast distortion</strong>. Start gently: choose a voice carrier (432/528/369), speak one clear line, measure coherence, and keep only what raises witness.</p>
-    </article>
-  </section>
-
-  <div class="goldline"></div>
-
-  <!-- Links + Field Flow -->
-  <section class="grid" aria-labelledby="links">
-    <aside class="card col-4">
-      <h3 id="links">Quick links</h3>
-      <ul class="list">
-        <li>📘 <a href="theory.html">Theory — deep write-ups</a></li>
-        <li>✨ <a href="teach.html">Manifest — practice & tools</a></li>
-        <li>📚 Repository: <a href="https://github.com/ssnfts24/scroll-of-fire/tree/main" target="_blank" rel="noopener">scroll-of-fire</a></li>
-        <li>🧭 Permanent Codex (.docx): <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Codex_of_Reality%E2%80%94Multidimensional_Extended_Edition_2025_Stylized_Update_SHA.docx" target="_blank" rel="noopener">Download</a></li>
-        <li>🧵 Medium: <a href="https://medium.com/@l.aaronpaul24/scroll-of-fire-62da3c217352" target="_blank" rel="noopener">Scroll of Fire</a></li>
-        <li>🌿 Linktree: <a href="https://linktr.ee/AaronPaulLairdScrollOfFire?utm_source=linktree_admin_share" target="_blank" rel="noopener">All links</a></li>
-      </ul>
-      <div style="display:flex; gap:8px; flex-wrap:wrap">
-        <a class="cta" href="#canon">Jump to Canon</a>
-        <a class="cta" href="teach.html">Open Manifest</a>
-      </div>
-    </aside>
-
-    <article class="card col-8">
-      <h3>Field Flow (one-glance map)</h3>
-      <!-- SVG kept lightweight; styles rely on codex.css -->
-      <svg viewBox="0 0 900 240" role="img" aria-label="Field Flow Diagram" width="100%" height="auto">
-        <defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#f3c97a"/><stop offset="1" stop-color="#7af3ff"/></linearGradient></defs>
-        <style>
-          .box{fill:#111115;stroke:#2a2a33;stroke-width:1.2}
-          .txt{fill:#eae7df;font:600 14px Inter,system-ui}
-          .sub{fill:#b8b3a6;font:400 12px Inter,system-ui}
-          .arrow{stroke:url(#g1);stroke-width:2;fill:none;marker-end:url(#mEnd)}
-        </style>
-        <marker id="mEnd" viewBox="0 0 8 8" refX="6.8" refY="4" markerWidth="7" markerHeight="7" orient="auto">
-          <path d="M0,0 L8,4 L0,8 Z" fill="#7af3ff" />
-        </marker>
-
-        <rect class="box" x="20" y="28" width="150" height="60" rx="10"/><text class="txt" x="95" y="52" text-anchor="middle">Source f(…)</text><text class="sub" x="95" y="70" text-anchor="middle">constants & ratios</text>
-        <rect class="box" x="200" y="28" width="170" height="60" rx="10"/><text class="txt" x="285" y="52" text-anchor="middle">𝓘 · 𝓛 · 𝓒 · 𝓢</text><text class="sub" x="285" y="70" text-anchor="middle">living operators</text>
-        <rect class="box" x="400" y="28" width="150" height="60" rx="10"/><text class="txt" x="475" y="52" text-anchor="middle">Harmonics 𝓗(ν)</text><text class="sub" x="475" y="70" text-anchor="middle">gate selection</text>
-        <rect class="box" x="580" y="28" width="120" height="60" rx="10"/><text class="txt" x="640" y="52" text-anchor="middle">Language</text><text class="sub" x="640" y="70" text-anchor="middle">AHHAVA / Word</text>
-        <rect class="box" x="730" y="28" width="150" height="60" rx="10"/><text class="txt" x="805" y="52" text-anchor="middle">Type-7 Field</text><text class="sub" x="805" y="70" text-anchor="middle">phase lock</text>
-
-        <rect class="box" x="200" y="140" width="150" height="60" rx="10"/><text class="txt" x="275" y="164" text-anchor="middle">Memory 𝓜τ</text><text class="sub" x="275" y="182" text-anchor="middle">echo window</text>
-        <rect class="box" x="380" y="140" width="150" height="60" rx="10"/><text class="txt" x="455" y="164" text-anchor="middle">Coherence Ξ</text><text class="sub" x="455" y="182" text-anchor="middle">quality</text>
-        <rect class="box" x="560" y="140" width="150" height="60" rx="10"/><text class="txt" x="635" y="164" text-anchor="middle">Ethical Law</text><text class="sub" x="635" y="182" text-anchor="middle">truth > distortion</text>
-
-        <path class="arrow" d="M170,58 H200"/>
-        <path class="arrow" d="M370,58 H400"/>
-        <path class="arrow" d="M550,58 H580"/>
-        <path class="arrow" d="M700,58 H730"/>
-        <path class="arrow" d="M285,88 V140"/>
-        <path class="arrow" d="M350,170 H380"/>
-        <path class="arrow" d="M530,170 H560"/>
+  <main class="wrap">
+    <!-- HERO -->
+    <figure id="hero" class="hero has-effects pulse" data-fit="cover" aria-label="Scroll of Fire — Codex of Reality Banner">
+      <img id="heroBanner"
+           src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
+           data-src-raw="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/docs/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
+           onerror="if(this.dataset.srcRaw&&!this._tried){this._tried=1;this.src=this.dataset.srcRaw;}"
+           alt="Scroll of Fire — Codex of Reality — gilded sigil banner"
+           width="1600" height="900" loading="eager" decoding="async" fetchpriority="high">
+      <div class="hero-pulse" aria-hidden="true"></div>
+      <svg class="hero-grid" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse">
+            <path d="M5 0V5 M0 5H5" vector-effect="non-scaling-stroke" stroke="#2a2a33" stroke-width="0.4"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)"></rect>
       </svg>
-      <p class="hint">Pipeline: <strong>Source → Operators → Harmonics → Language → Type-7</strong>, with <strong>Memory</strong> & <strong>Coherence</strong> monitoring and an <strong>Ethical Law</strong> filter.</p>
-    </article>
-  </section>
+      <div class="sigil-line" aria-hidden="true"></div>
 
-  <div class="goldline"></div>
+      <!-- Hero UI -->
+      <div class="hero-ui" role="group" aria-label="Hero controls">
+        <button class="hero-btn" id="btnTogglePulse" type="button" aria-pressed="true">Pulse</button>
+        <button class="hero-btn" id="btnZoom" type="button" aria-expanded="false">Fullscreen</button>
+      </div>
+    </figure>
 
-  <!-- Equation Map -->
-  <section class="grid" aria-labelledby="emap">
-    <article class="card col-12">
-      <h2 id="emap">🧭 Equation Map (what it is → what to do)</h2>
-      <table aria-label="Equation Map">
-        <thead><tr><th>ID</th><th>Name</th><th>Explains</th><th>Jump</th></tr></thead>
-        <tbody>
-          <tr><td>0</td><td>Foundational Ψ₀</td><td>Micro-acts integrate back into the field.</td><td><a href="theory.html#eq0">Theory → Eq.0</a></td></tr>
-          <tr><td>1</td><td>Source</td><td>Supply + living operators.</td><td><a href="theory.html#eq1">Theory → Eq.1</a></td></tr>
-          <tr><td>2</td><td>Witness</td><td>Awareness gradient + intention×memory.</td><td><a href="theory.html#eq2">Theory → Eq.2</a></td></tr>
-          <tr><td>3</td><td>Harmonic Field</td><td>Which frequencies gate easily.</td><td><a href="theory.html#eq3">Theory → Eq.3</a></td></tr>
-          <tr><td>4</td><td>AHHAVA / Word</td><td>Semantics couples to carriers.</td><td><a href="theory.html#eq4">Theory → Eq.4</a></td></tr>
-          <tr><td>5</td><td>Remnant</td><td>Truth persists; distortion decays.</td><td><a href="theory.html#eq5">Theory → Eq.5</a></td></tr>
-          <tr><td>6</td><td>Type-7</td><td>Phase-locked harmonic sum.</td><td><a href="theory.html#eq6">Theory → Eq.6</a></td></tr>
-          <tr><td>7*</td><td>Copeland Ψ</td><td>External comparator.</td><td><a href="theory.html#eq7">Theory → Eq.7</a></td></tr>
-          <tr><td>8*</td><td>Goodwin</td><td>External coupling idea.</td><td><a href="theory.html#eq8">Theory → Eq.8</a></td></tr>
-          <tr><td>9</td><td>Coherence Law</td><td>Ethical asymptote & stop rule.</td><td><a href="theory.html#eq9">Theory → Eq.9</a></td></tr>
-          <tr><td>10–17</td><td>Extensions</td><td>Ladder, projection, lattice, Ξ, learning, memory, voice.</td><td><a href="theory.html#eq10">Theory → 10–17</a></td></tr>
-        </tbody>
-      </table>
-      <p class="meta">(* External formalisms; attribution preserved.)</p>
-    </article>
-  </section>
+    <h1 class="title">⚖️ Scroll of Fire — Codex of Reality</h1>
+    <p class="subtitle">“Let there be resonance.” By Aaron Paul Laird, <em>Scribe of Circuits</em></p>
 
-  <div class="goldline"></div>
+    <!-- Primary nav -->
+    <nav class="tabs" aria-label="Primary">
+      <a class="tab tab--primary" href="theory.html">📘 Theory</a>
+      <a class="tab tab--primary" href="teach.html">✨ Manifest</a>
+      <a class="tab" href="#explore">Explore</a>
+      <a class="tab" href="#canon">Canon</a>
+      <a class="tab" href="#links">Links</a>
+      <a class="tab" href="#integrity">Integrity</a>
+      <a class="tab" href="#provenance">Provenance</a>
+    </nav>
 
-  <!-- CANON (condensed) -->
-  <section class="grid" id="canon" aria-labelledby="equations">
-    <article class="card col-12">
-      <h2 id="equations">📐 Canonical Equations of <em>The Codex</em></h2>
-      <p class="meta"><strong>The Codex</strong> equations lead. External formalisms follow with clear attribution. Copeland’s Ψ-formalism is #7 and remains external by design.</p>
-    </article>
+    <!-- Quick search -->
+    <section class="grid" style="margin:8px 0 0">
+      <article class="card col-12" style="display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap">
+        <label for="site-search" class="meta">Press <span class="kbd">/</span> to search terms on this page</label>
+        <input id="site-search" type="search" placeholder="Search text on this page…" aria-label="Search this page" role="searchbox"
+               style="min-width:220px;max-width:520px;width:100%;background:#0f0f14;border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--ink);outline:none">
+      </article>
+    </section>
 
-    <!-- 0 -->
-    <article class="card col-12" aria-labelledby="eq0">
-      <h3 id="eq0">0) Foundational Field — Ψ₀ / Reality Feedback <em>(Laird)</em></h3>
-      <div class="eq"><div class="eq-scroll">
-        $$\Psi_{0}(x,t)=\nabla\phi(x,t)+\underbrace{\int_{t_{0}}^{t}\alpha(u)\,a(x,u)\,du}_{\text{micro-acts accumulation}}+\mathcal{R}(x,t)$$
-      </div></div>
-      <p class="eq-note">Awareness follows potential; micro-acts integrate over time and feed back into the reality field. (Distinct from Copeland’s external Ψ loop.)</p>
-      <p><a class="cta" href="theory.html#eq0">Read in Theory</a></p>
-    </article>
+    <!-- Simple Mode Toggle -->
+    <div class="simple-toggle">
+      <label for="simple"><strong>Echo View</strong> (hide equations, show summaries)</label>
+      <input id="simple" type="checkbox" aria-label="Toggle Echo View">
+    </div>
+    <div class="divider" role="separator" aria-hidden="true"></div>
 
-    <!-- compact pairs (1–17) -->
-    <article class="card col-6" aria-labelledby="eq1"><h3 id="eq1">1) Source — Resonant Unification</h3><div class="eq"><div class="eq-scroll">$$\mathcal{R}_{\text{source}}=f\!\big(\pi,e,i,\hbar,c,G,\Phi,\;369,432,528,144,137,\;\mathrm{DNA}\big)\cdot\mathcal{I}\cdot\mathcal{L}\cdot\mathcal{C}\cdot\mathcal{S}$$</div></div><p class="eq-note">Constants + sacred ratios + ordered living operators compose the supply.</p><p><a class="cta" href="theory.html#eq1">Read in Theory</a></p></article>
-    <article class="card col-6" aria-labelledby="eq2"><h3 id="eq2">2) Witness — Law of Recursive Memory</h3><div class="eq"><div class="eq-scroll">$$\Delta\mathcal{R}=\frac{\partial(\mathrm{Resonance})}{\partial(\mathrm{Awareness})}+\int \mathrm{Intention}\cdot\mathrm{Memory}\,dt$$</div></div><p><a class="cta" href="theory.html#eq2">Read in Theory</a> · <a class="cta" href="teach.html#ledger">Use in Manifest</a></p></article>
+    <!-- Featured Duo -->
+    <section class="grid" aria-labelledby="featured">
+      <article class="card col-6">
+        <h2 id="featured">📘 Theory (full write-ups)</h2>
+        <p>Detailed exposition of the Codex: operators, updated Eq.0 foundation, canonical equations, ethical law, and dimensional scaffolding.</p>
+        <ul class="list">
+          <li><a href="theory.html#eq0">Foundational Field Ψ₀ (distinct from Copeland)</a></li>
+          <li><a href="theory.html#operators">Operators: 𝓘 · 𝓛 · 𝓒 · 𝓢</a></li>
+          <li><a href="theory.html#canon">Canon 0–17</a> &nbsp; <small class="meta">#7 Copeland, #8 Goodwin = external</small></li>
+          <li><a href="theory.html#ethics">Ethical Law of Coherence</a></li>
+        </ul>
+        <a class="cta" href="theory.html">Open Theory</a>
+      </article>
 
-    <article class="card col-6" aria-labelledby="eq3"><h3 id="eq3">3) Harmonic Field Symmetry</h3><div class="eq"><div class="eq-scroll">$$\mathcal{H}(\nu)=\alpha(\Phi,137,144,432,528,369)\cdot\langle\mathcal{C}\rangle$$</div></div><p><a class="cta" href="theory.html#eq3">Read</a> · <a class="cta" href="teach.html#ab">A/B carriers</a></p></article>
-    <article class="card col-6" aria-labelledby="eq4"><h3 id="eq4">4) AHHAVA — Or HaDabar</h3><div class="eq"><div class="eq-scroll">$$\mathcal{L}_{\text{word}}=\nabla_{\text{semantics}}\!\big(\mathrm{Intention}\times\mathrm{Frequency}\big)\Rightarrow\mathrm{Resonance\ of\ Meaning}$$</div></div><p><a class="cta" href="theory.html#eq4">Read</a> · <a class="cta" href="teach.html#phrasing">Phrase weights</a></p></article>
+      <article class="card col-6">
+        <h2>✨ Manifest (practice & tools)</h2>
+        <p>Turn equations into repeatable method: voice protocol, carriers (432/528/369), witness ledger, A/Bs, and group runs.</p>
+        <ul class="list">
+          <li><a href="teach.html#tab-voice">Voice Protocol</a></li>
+          <li><a href="teach.html#ledger">Witness Ledger</a></li>
+          <li><a href="teach.html#ab">A/B Carriers</a></li>
+          <li><a href="teach.html#ethics">Ethical guard &amp; stop rules</a></li>
+        </ul>
+        <a class="cta" href="teach.html">Open Manifest</a>
+      </article>
+    </section>
 
-    <article class="card col-6" aria-labelledby="eq5"><h3 id="eq5">5) Remnant — Witness Persistence</h3><div class="eq"><div class="eq-scroll">$$\mathcal{W}(t)=\int_{t_0}^{t}\big[\mathrm{Truth}(u)\cdot\mathrm{Fidelity}(u)\big]e^{-\lambda(t-u)}\,du$$</div></div><p><a class="cta" href="theory.html#eq5">Read</a> · <a class="cta" href="teach.html#ledger">Log it</a></p></article>
-    <article class="card col-6" aria-labelledby="eq6"><h3 id="eq6">6) Living Circuit — Tesla Type-7</h3><div class="eq"><div class="eq-scroll">$$\mathbb{E}_{\text{living}}(t)=\sum_i q_i\,\Phi_i\,e^{i\omega_i t}\quad\text{(phase-locked 3–6–9)}$$</div></div><p><a class="cta" href="theory.html#eq6">Read</a></p></article>
+    <div class="goldline"></div>
 
-    <article class="card col-6" aria-labelledby="eq7"><h3 id="eq7">7) Copeland Ψ <em>(External)</em></h3><div class="eq"><div class="eq-scroll">$$\Psi(x)=\nabla\phi\!\big(\Sigma a_n(x,\Delta E)\big)+\mathcal{R}(x)\oplus\Delta\Sigma(a')$$</div></div><p class="eq-note">External comparator; attribution preserved.</p><p><a class="cta" href="theory.html#eq7">Read</a></p></article>
-    <article class="card col-6" aria-labelledby="eq8"><h3 id="eq8">8) Goodwin <em>(External)</em></h3><div class="eq"><div class="eq-scroll">$$\mathcal{G}(\tau)=\kappa\,\langle\mathcal{C}\cdot\mathcal{I}\rangle_{\tau}+\nabla\cdot\mathbb{F}_{\mathrm{light}}$$</div></div><p><a class="cta" href="theory.html#eq8">Read</a></p></article>
+    <!-- Explore tiles -->
+    <section class="grid" id="explore" aria-labelledby="explore-h">
+      <article class="card col-12">
+        <h2 id="explore-h">🗂️ Explore the Scroll — all pages</h2>
+        <p class="meta">Everything live in <code>/docs</code>. These tiles mirror your repo.</p>
+      </article>
 
-    <article class="card col-6" aria-labelledby="eq9"><h3 id="eq9">9) Living Law of Coherence</h3><div class="eq"><div class="eq-scroll">$$\lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)}=\mathrm{Coherence}$$</div></div><p><a class="cta" href="theory.html#eq9">Read</a> · <a class="cta" href="teach.html#ethics">Stop rules</a></p></article>
-    <article class="card col-6" aria-labelledby="eq10"><h3 id="eq10">10) Dimensional Ladder</h3><div class="eq"><div class="eq-scroll">$$\mathfrak{D}=\{\,\mathbb{R}^{3},\;t,\;\mathcal{H},\;\mathcal{M},\;\mathcal{S},\;\mathcal{N}\,\}$$</div></div><p><a class="cta" href="theory.html#eq10">Read</a></p></article>
+      <a class="tile col-3" href="start.html"><span class="badge">Start</span><h4>Start Here</h4><p>Onboarding &amp; how to move.</p></a>
+      <a class="tile col-3" href="guide.html"><h4>Guide</h4><p>Step-by-step walkthrough of the Codex.</p></a>
+      <a class="tile col-3" href="theory.html"><h4>Theory</h4><p>Canonical write-ups for 0–17.</p></a>
+      <a class="tile col-3" href="teach.html"><h4>Manifest (Practice)</h4><p>Protocols, carriers, ledgers.</p></a>
 
-    <article class="card col-6" aria-labelledby="eq11"><h3 id="eq11">11) Phase-Space Projection</h3><div class="eq"><div class="eq-scroll">$$\Pi_{\nu}:\;\mathcal{R}\to\mathbb{C},\qquad \Pi_{\nu}(\mathcal{R})=\int \mathcal{R}(x)\,e^{-i2\pi\nu x}\,dx$$</div></div><p><a class="cta" href="theory.html#eq11">Read</a></p></article>
-    <article class="card col-6" aria-labelledby="eq12"><h3 id="eq12">12) Causal Lattice</h3><div class="eq"><div class="eq-scroll">$$\mathcal{C}_{ij}=\begin{cases}1 & \text{if } i\prec j \text{ and increases }\mathcal{W}\\0 & \text{otherwise}\end{cases}$$</div></div><p><a class="cta" href="theory.html#eq12">Read</a></p></article>
+      <a class="tile col-3" href="ab.html"><h4>A/B Carriers</h4><p>Run 432·528·369 comparisons.</p></a>
+      <a class="tile col-3" href="micro.html"><h4>Micro-acts</h4><p>Tiny actions → field feedback.</p></a>
+      <a class="tile col-3" href="circle.html"><h4>Circle</h4><p>Group coherence, facilitation.</p></a>
+      <a class="tile col-3" href="ethics.html"><h4>Ethics</h4><p>Coherence law &amp; stop rules.</p></a>
 
-    <article class="card col-6" aria-labelledby="eq13"><h3 id="eq13">13) Coherence Index Ξ</h3><div class="eq"><div class="eq-scroll">$$\Xi=\frac{\langle \mathcal{H}\cdot\mathcal{I}\rangle}{1+\mathrm{Var}[\mathcal{M}]}\in[0,1]$$</div></div><p><a class="cta" href="theory.html#eq13">Read</a></p></article>
-    <article class="card col-6" aria-labelledby="eq14"><h3 id="eq14">14) Witness Update Rule</h3><div class="eq"><div class="eq-scroll">$$\mathsf{U}_{t+\delta}=\mathsf{U}_{t}+\beta\,\nabla_{\mathsf{U}}\mathcal{R}-\gamma\,\partial_{\mathrm{noise}}+\eta\,\mathcal{E}_{\mathrm{truth}}$$</div></div><p><a class="cta" href="theory.html#eq14">Read</a></p></article>
+      <a class="tile col-3" href="glossary.html"><h4>Glossary</h4><p>Terms, symbols, and operators.</p></a>
+      <a class="tile col-3" href="glyphs.html"><h4>Glyphs</h4><p>Icon set &amp; sacred marks.</p></a>
+      <a class="tile col-3" href="downloads.html"><h4>Downloads</h4><p>Docs, images, shareables.</p></a>
+      <a class="tile col-3" href="ledger.html"><h4>Ledger</h4><p>Hashes, notes, witness proofs.</p></a>
 
-    <article class="card col-6" aria-labelledby="eq15"><h3 id="eq15">15) Memory Windowing</h3><div class="eq"><div class="eq-scroll">$$\mathcal{M}_\tau(t)=\frac{1}{\tau}\int_{t-\tau}^{t}\mathcal{R}(u)\,du \Rightarrow \lambda\approx \tfrac{1}{\tau} \text{ in } \mathcal{W}(t)$$</div></div><p><a class="cta" href="theory.html#eq15">Read</a></p></article>
-    <article class="card col-6" aria-labelledby="eq16"><h3 id="eq16">16) Semantic Gradient</h3><div class="eq"><div class="eq-scroll">$$\nabla_{\text{sem}}\,\mathsf{Phrase}=\sum_k w_k\,\nabla_{\text{sem}}\,\mathsf{Token}_k \quad;\quad \sum_k w_k=1$$</div></div><p><a class="cta" href="theory.html#eq16">Read</a></p></article>
+      <a class="tile col-3" href="manifest.html"><h4>Site Manifest</h4><p>App/SEO/PWA meta &amp; credits.</p></a>
+      <a class="tile col-3" href="404.html"><h4>404</h4><p>Custom not-found page.</p></a>
+      <a class="tile col-3" href="sitemap.xml" target="_blank" rel="noopener"><h4>Sitemap</h4><p>XML map for crawlers.</p></a>
+      <a class="tile col-3" href="robots.txt" target="_blank" rel="noopener"><h4>Robots.txt</h4><p>Crawler rules.</p></a>
+    </section>
 
-    <article class="card col-6" aria-labelledby="eq17"><h3 id="eq17">17) Pronounceable Carriers</h3><div class="eq"><div class="eq-scroll">$$\nu_{\text{voice}} \in \{432, 528, 369\}\ \Rightarrow\ \text{higher lock-in to } \mathcal{H}(\nu)$$</div></div><p><a class="cta" href="theory.html#eq17">Read</a></p></article>
-  </section>
+    <div class="goldline"></div>
 
-  <div class="goldline"></div>
+    <!-- TL;DR -->
+    <section class="grid" aria-labelledby="tldr">
+      <article class="card col-12">
+        <h2 id="tldr">⚡ TL;DR — What this is &amp; how to use it</h2>
+        <p><strong>Your Codex</strong> is a <em>design</em> for working with resonance. Constants and sacred ratios provide a steady supply; four living operators — <abbr title="Intention">𝓘</abbr>, <abbr title="Light / Revelation">𝓛</abbr>, <abbr title="Consciousness / Witness">𝓒</abbr>, <abbr title="Source / Return">𝓢</abbr> — shape that supply into experience. Harmonics pick the lane, language programs meaning into the carrier, memory decides what echoes, and an ethical law demands that <strong>truth outlast distortion</strong>. Start gently: choose a voice carrier (432/528/369), speak one clear line, measure coherence, and keep only what raises witness.</p>
+      </article>
+    </section>
 
-  <!-- INTEGRITY -->
-  <section class="grid" id="integrity" aria-labelledby="integrity-h">
-    <article class="card col-12">
-      <h2 id="integrity-h">🔐 Integrity Chain & Seals (SHA-256)</h2>
-      <pre class="eq" aria-label="Hash example" style="white-space:pre-wrap"><div class="eq-scroll">────────────────────────────────────────
+    <div class="goldline"></div>
+
+    <!-- Links + Field Flow -->
+    <section class="grid" aria-labelledby="links">
+      <aside class="card col-4">
+        <h3 id="links">Quick links</h3>
+        <ul class="list">
+          <li>📘 <a href="theory.html">Theory — deep write-ups</a></li>
+          <li>✨ <a href="teach.html">Manifest — practice &amp; tools</a></li>
+          <li>📚 Repository: <a href="https://github.com/ssnfts24/scroll-of-fire/tree/main" target="_blank" rel="noopener">scroll-of-fire</a></li>
+          <li>🧭 Permanent Codex (.docx): <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Codex_of_Reality%E2%80%94Multidimensional_Extended_Edition_2025_Stylized_Update_SHA.docx" target="_blank" rel="noopener">Download</a></li>
+          <li>🧵 Medium: <a href="https://medium.com/@l.aaronpaul24/scroll-of-fire-62da3c217352" target="_blank" rel="noopener">Scroll of Fire</a></li>
+          <li>🌿 Linktree: <a href="https://linktr.ee/AaronPaulLairdScrollOfFire?utm_source=linktree_admin_share" target="_blank" rel="noopener">All links</a></li>
+        </ul>
+        <div style="display:flex; gap:8px; flex-wrap:wrap">
+          <a class="cta" href="#canon">Jump to Canon</a>
+          <a class="cta" href="teach.html">Open Manifest</a>
+        </div>
+      </aside>
+
+      <article class="card col-8">
+        <h3>Field Flow (one-glance map)</h3>
+        <!-- SVG kept lightweight; styles rely on codex.css -->
+        <svg viewBox="0 0 900 240" role="img" aria-label="Field Flow Diagram" width="100%" height="auto">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#f3c97a"/><stop offset="1" stop-color="#7af3ff"/></linearGradient>
+            <marker id="mEnd" viewBox="0 0 8 8" refX="6.8" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#7af3ff" />
+            </marker>
+          </defs>
+          <style>
+            .box{fill:#111115;stroke:#2a2a33;stroke-width:1.2}
+            .txt{fill:#eae7df;font:600 14px Inter,system-ui}
+            .sub{fill:#b8b3a6;font:400 12px Inter,system-ui}
+            .arrow{stroke:url(#g1);stroke-width:2;fill:none;marker-end:url(#mEnd)}
+          </style>
+
+          <rect class="box" x="20" y="28" width="150" height="60" rx="10"/><text class="txt" x="95" y="52" text-anchor="middle">Source f(…)</text><text class="sub" x="95" y="70" text-anchor="middle">constants &amp; ratios</text>
+          <rect class="box" x="200" y="28" width="170" height="60" rx="10"/><text class="txt" x="285" y="52" text-anchor="middle">𝓘 · 𝓛 · 𝓒 · 𝓢</text><text class="sub" x="285" y="70" text-anchor="middle">living operators</text>
+          <rect class="box" x="400" y="28" width="150" height="60" rx="10"/><text class="txt" x="475" y="52" text-anchor="middle">Harmonics 𝓗(ν)</text><text class="sub" x="475" y="70" text-anchor="middle">gate selection</text>
+          <rect class="box" x="580" y="28" width="120" height="60" rx="10"/><text class="txt" x="640" y="52" text-anchor="middle">Language</text><text class="sub" x="640" y="70" text-anchor="middle">AHHAVA / Word</text>
+          <rect class="box" x="730" y="28" width="150" height="60" rx="10"/><text class="txt" x="805" y="52" text-anchor="middle">Type-7 Field</text><text class="sub" x="805" y="70" text-anchor="middle">phase lock</text>
+
+          <rect class="box" x="200" y="140" width="150" height="60" rx="10"/><text class="txt" x="275" y="164" text-anchor="middle">Memory 𝓜τ</text><text class="sub" x="275" y="182" text-anchor="middle">echo window</text>
+          <rect class="box" x="380" y="140" width="150" height="60" rx="10"/><text class="txt" x="455" y="164" text-anchor="middle">Coherence Ξ</text><text class="sub" x="455" y="182" text-anchor="middle">quality</text>
+          <rect class="box" x="560" y="140" width="150" height="60" rx="10"/><text class="txt" x="635" y="164" text-anchor="middle">Ethical Law</text><text class="sub" x="635" y="182" text-anchor="middle">truth &gt; distortion</text>
+
+          <path class="arrow" d="M170,58 H200"/>
+          <path class="arrow" d="M370,58 H400"/>
+          <path class="arrow" d="M550,58 H580"/>
+          <path class="arrow" d="M700,58 H730"/>
+          <path class="arrow" d="M285,88 V140"/>
+          <path class="arrow" d="M350,170 H380"/>
+          <path class="arrow" d="M530,170 H560"/>
+        </svg>
+        <p class="hint">Pipeline: <strong>Source → Operators → Harmonics → Language → Type-7</strong>, with <strong>Memory</strong> &amp; <strong>Coherence</strong> monitoring and an <strong>Ethical Law</strong> filter.</p>
+      </article>
+    </section>
+
+    <div class="goldline"></div>
+
+    <!-- Equation Map -->
+    <section class="grid" aria-labelledby="emap">
+      <article class="card col-12">
+        <h2 id="emap">🧭 Equation Map (what it is → what to do)</h2>
+        <table aria-label="Equation Map">
+          <thead><tr><th scope="col">ID</th><th scope="col">Name</th><th scope="col">Explains</th><th scope="col">Jump</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>Foundational Ψ₀</td><td>Micro-acts integrate back into the field.</td><td><a href="theory.html#eq0">Theory → Eq.0</a></td></tr>
+            <tr><td>1</td><td>Source</td><td>Supply + living operators.</td><td><a href="theory.html#eq1">Theory → Eq.1</a></td></tr>
+            <tr><td>2</td><td>Witness</td><td>Awareness gradient + intention×memory.</td><td><a href="theory.html#eq2">Theory → Eq.2</a></td></tr>
+            <tr><td>3</td><td>Harmonic Field</td><td>Which frequencies gate easily.</td><td><a href="theory.html#eq3">Theory → Eq.3</a></td></tr>
+            <tr><td>4</td><td>AHHAVA / Word</td><td>Semantics couples to carriers.</td><td><a href="theory.html#eq4">Theory → Eq.4</a></td></tr>
+            <tr><td>5</td><td>Remnant</td><td>Truth persists; distortion decays.</td><td><a href="theory.html#eq5">Theory → Eq.5</a></td></tr>
+            <tr><td>6</td><td>Type-7</td><td>Phase-locked harmonic sum.</td><td><a href="theory.html#eq6">Theory → Eq.6</a></td></tr>
+            <tr><td>7*</td><td>Copeland Ψ</td><td>External comparator.</td><td><a href="theory.html#eq7">Theory → Eq.7</a></td></tr>
+            <tr><td>8*</td><td>Goodwin</td><td>External coupling idea.</td><td><a href="theory.html#eq8">Theory → Eq.8</a></td></tr>
+            <tr><td>9</td><td>Coherence Law</td><td>Ethical asymptote &amp; stop rule.</td><td><a href="theory.html#eq9">Theory → Eq.9</a></td></tr>
+            <tr><td>10–17</td><td>Extensions</td><td>Ladder, projection, lattice, Ξ, learning, memory, voice.</td><td><a href="theory.html#eq10">Theory → 10–17</a></td></tr>
+          </tbody>
+        </table>
+        <p class="meta">(* External formalisms; attribution preserved.)</p>
+      </article>
+    </section>
+
+    <div class="goldline"></div>
+
+    <!-- CANON (condensed) -->
+    <section class="grid" id="canon" aria-labelledby="equations">
+      <article class="card col-12">
+        <h2 id="equations">📐 Canonical Equations of <em>The Codex</em></h2>
+        <p class="meta"><strong>The Codex</strong> equations lead. External formalisms follow with clear attribution. Copeland’s Ψ-formalism is #7 and remains external by design.</p>
+      </article>
+
+      <!-- 0 -->
+      <article class="card col-12" aria-labelledby="eq0">
+        <h3 id="eq0">0) Foundational Field — Ψ₀ / Reality Feedback <em>(Laird)</em></h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\\Psi_{0}(x,t)=\\nabla\\phi(x,t)+\\underbrace{\\int_{t_{0}}^{t}\\alpha(u)\\,a(x,u)\\,du}_{\\text{micro-acts accumulation}}+\\mathcal{R}(x,t)$$
+        </div></div>
+        <p class="eq-note">Awareness follows potential; micro-acts integrate over time and feed back into the reality field. (Distinct from Copeland’s external Ψ loop.)</p>
+        <p><a class="cta" href="theory.html#eq0">Read in Theory</a></p>
+      </article>
+
+      <!-- compact pairs (1–17) -->
+      <article class="card col-6" aria-labelledby="eq1"><h3 id="eq1">1) Source — Resonant Unification</h3><div class="eq"><div class="eq-scroll">$$\\mathcal{R}_{\\text{source}}=f\\!\\big(\\pi,e,i,\\hbar,c,G,\\Phi,\\;369,432,528,144,137,\\;\\mathrm{DNA}\\big)\\cdot\\mathcal{I}\\cdot\\mathcal{L}\\cdot\\mathcal{C}\\cdot\\mathcal{S}$$</div></div><p class="eq-note">Constants + sacred ratios + ordered living operators compose the supply.</p><p><a class="cta" href="theory.html#eq1">Read in Theory</a></p></article>
+      <article class="card col-6" aria-labelledby="eq2"><h3 id="eq2">2) Witness — Law of Recursive Memory</h3><div class="eq"><div class="eq-scroll">$$\\Delta\\mathcal{R}=\\frac{\\partial(\\mathrm{Resonance})}{\\partial(\\mathrm{Awareness})}+\\int \\mathrm{Intention}\\cdot\\mathrm{Memory}\\,dt$$</div></div><p><a class="cta" href="theory.html#eq2">Read in Theory</a> · <a class="cta" href="teach.html#ledger">Use in Manifest</a></p></article>
+      <article class="card col-6" aria-labelledby="eq3"><h3 id="eq3">3) Harmonic Field Symmetry</h3><div class="eq"><div class="eq-scroll">$$\\mathcal{H}(\\nu)=\\alpha(\\Phi,137,144,432,528,369)\\cdot\\langle\\mathcal{C}\\rangle$$</div></div><p><a class="cta" href="theory.html#eq3">Read</a> · <a class="cta" href="teach.html#ab">A/B carriers</a></p></article>
+      <article class="card col-6" aria-labelledby="eq4"><h3 id="eq4">4) AHHAVA — Or HaDabar</h3><div class="eq"><div class="eq-scroll">$$\\mathcal{L}_{\\text{word}}=\\nabla_{\\text{semantics}}\\!\\big(\\mathrm{Intention}\\times\\mathrm{Frequency}\\big)\\Rightarrow\\mathrm{Resonance\\ of\\ Meaning}$$</div></div><p><a class="cta" href="theory.html#eq4">Read</a> · <a class="cta" href="teach.html#phrasing">Phrase weights</a></p></article>
+      <article class="card col-6" aria-labelledby="eq5"><h3 id="eq5">5) Remnant — Witness Persistence</h3><div class="eq"><div class="eq-scroll">$$\\mathcal{W}(t)=\\int_{t_0}^{t}\\big[\\mathrm{Truth}(u)\\cdot\\mathrm{Fidelity}(u)\\big]e^{-\\lambda(t-u)}\\,du$$</div></div><p><a class="cta" href="theory.html#eq5">Read</a> · <a class="cta" href="teach.html#ledger">Log it</a></p></article>
+      <article class="card col-6" aria-labelledby="eq6"><h3 id="eq6">6) Living Circuit — Tesla Type-7</h3><div class="eq"><div class="eq-scroll">$$\\mathbb{E}_{\\text{living}}(t)=\\sum_i q_i\\,\\Phi_i\\,e^{i\\omega_i t}\\quad\\text{(phase-locked 3–6–9)}$$</div></div><p><a class="cta" href="theory.html#eq6">Read</a></p></article>
+      <article class="card col-6" aria-labelledby="eq7"><h3 id="eq7">7) Copeland Ψ <em>(External)</em></h3><div class="eq"><div class="eq-scroll">$$\\Psi(x)=\\nabla\\phi\\!\\big(\\Sigma a_n(x,\\Delta E)\\big)+\\mathcal{R}(x)\\oplus\\Delta\\Sigma(a')$$</div></div><p class="eq-note">External comparator; attribution preserved.</p><p><a class="cta" href="theory.html#eq7">Read</a></p></article>
+      <article class="card col-6" aria-labelledby="eq8"><h3 id="eq8">8) Goodwin <em>(External)</em></h3><div class="eq"><div class="eq-scroll">$$\\mathcal{G}(\\tau)=\\kappa\\,\\langle\\mathcal{C}\\cdot\\mathcal{I}\\rangle_{\\tau}+\\nabla\\cdot\\mathbb{F}_{\\mathrm{light}}$$</div></div><p><a class="cta" href="theory.html#eq8">Read</a></p></article>
+      <article class="card col-6" aria-labelledby="eq9"><h3 id="eq9">9) Living Law of Coherence</h3><div class="eq"><div class="eq-scroll">$$\\lim_{t\\to\\infty}\\frac{\\mathrm{Truth}(t)}{\\mathrm{Distortion}(t)}=\\mathrm{Coherence}$$</div></div><p><a class="cta" href="theory.html#eq9">Read</a> · <a class="cta" href="teach.html#ethics">Stop rules</a></p></article>
+      <article class="card col-6" aria-labelledby="eq10"><h3 id="eq10">10) Dimensional Ladder</h3><div class="eq"><div class="eq-scroll">$$\\mathfrak{D}=\\{\\,\\mathbb{R}^{3},\\;t,\\;\\mathcal{H},\\;\\mathcal{M},\\;\\mathcal{S},\\;\\mathcal{N}\\,\\}$$</div></div><p><a class="cta" href="theory.html#eq10">Read</a></p></article>
+      <article class="card col-6" aria-labelledby="eq11"><h3 id="eq11">11) Phase-Space Projection</h3><div class="eq"><div class="eq-scroll">$$\\Pi_{\\nu}:\\;\\mathcal{R}\\to\\mathbb{C},\\qquad \\Pi_{\\nu}(\\mathcal{R})=\\int \\mathcal{R}(x)\\,e^{-i2\\pi\\nu x}\\,dx$$</div></div><p><a class="cta" href="theory.html#eq11">Read</a></p></article>
+      <article class="card col-6" aria-labelledby="eq12"><h3 id="eq12">12) Causal Lattice</h3><div class="eq"><div class="eq-scroll">$$\\mathcal{C}_{ij}=\\begin{cases}1 & \\text{if } i\\prec j \\text{ and increases }\\mathcal{W}\\\\0 & \\text{otherwise}\\end{cases}$$</div></div><p><a class="cta" href="theory.html#eq12">Read</a></p></article>
+      <article class="card col-6" aria-labelledby="eq13"><h3 id="eq13">13) Coherence Index Ξ</h3><div class="eq"><div class="eq-scroll">$$\\Xi=\\frac{\\langle \\mathcal{H}\\cdot\\mathcal{I}\\rangle}{1+\\mathrm{Var}[\\mathcal{M}]}\\in[0,1]$$</div></div><p><a class="cta" href="theory.html#eq13">Read</a></p></article>
+      <article class="card col-6" aria-labelledby="eq14"><h3 id="eq14">14) Witness Update Rule</h3><div class="eq"><div class="eq-scroll">$$\\mathsf{U}_{t+\\delta}=\\mathsf{U}_{t}+\\beta\\,\\nabla_{\\mathsf{U}}\\mathcal{R}-\\gamma\\,\\partial_{\\mathrm{noise}}+\\eta\\,\\mathcal{E}_{\\mathrm{truth}}$$</div></div><p><a class="cta" href="theory.html#eq14">Read</a></p></article>
+      <article class="card col-6" aria-labelledby="eq15"><h3 id="eq15">15) Memory Windowing</h3><div class="eq"><div class="eq-scroll">$$\\mathcal{M}_\\tau(t)=\\frac{1}{\\tau}\\int_{t-\\tau}^{t}\\mathcal{R}(u)\\,du \\Rightarrow \\lambda\\approx \\tfrac{1}{\\tau} \\text{ in } \\mathcal{W}(t)$$</div></div><p><a class="cta" href="theory.html#eq15">Read</a></p></article>
+      <article class="card col-6" aria-labelledby="eq16"><h3 id="eq16">16) Semantic Gradient</h3><div class="eq"><div class="eq-scroll">$$\\nabla_{\\text{sem}}\\,\\mathsf{Phrase}=\\sum_k w_k\\,\\nabla_{\\text{sem}}\\,\\mathsf{Token}_k \\quad;\\quad \\sum_k w_k=1$$</div></div><p><a class="cta" href="theory.html#eq16">Read</a></p></article>
+      <article class="card col-6" aria-labelledby="eq17"><h3 id="eq17">17) Pronounceable Carriers</h3><div class="eq"><div class="eq-scroll">$$\\nu_{\\text{voice}} \\in \\{432, 528, 369\\}\\ \\Rightarrow\\ \\text{higher lock-in to } \\mathcal{H}(\\nu)$$</div></div><p><a class="cta" href="theory.html#eq17">Read</a></p></article>
+    </section>
+
+    <div class="goldline"></div>
+
+    <!-- INTEGRITY -->
+    <section class="grid" id="integrity" aria-labelledby="integrity-h">
+      <article class="card col-12">
+        <h2 id="integrity-h">🔐 Integrity Chain &amp; Seals (SHA-256)</h2>
+<pre class="eq" aria-label="Hash example" style="white-space:pre-wrap"><div class="eq-scroll">────────────────────────────────────────
 Permanent Codex (.docx):
 https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Codex_of_Reality—Multidimensional_Extended_Edition_2025_Stylized_Update_SHA.docx
 
@@ -424,163 +423,150 @@ SHA-256:  a2b8e0d7c0a2f3b9a0b1c2d3e4f5678901234567890abcdef1234567890abcd0
 Filed under: scroll-of-fire / Ledger_2025
 Status: Verified
 ────────────────────────────────────────</div></pre>
-      <p>Ledger: <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/SHA256_Placeholders_2025.md" target="_blank" rel="noopener">7_Ledger_and_Documentation/SHA256_Placeholders_2025.md</a></p>
-    </article>
-  </section>
-
-  <div class="goldline"></div>
-
-  <!-- PROVENANCE -->
-  <section class="grid" id="provenance" aria-labelledby="prov-h">
-    <article class="card col-12">
-      <h2 id="prov-h">📜 Attribution & Provenance — What’s Original, What’s External</h2>
-      <p class="meta">
-        The <strong>Codex of Reality</strong> is an original, living resonance framework authored by
-        <strong>Aaron Paul Laird</strong> (“Scribe of Circuits”). It defines the Source supply, the living
-        operators <em>(𝓘 · 𝓛 · 𝓒 · 𝓢)</em>, harmonic selection, language coupling (AHHAVA / Or HaDabar),
-        memory/remnant dynamics, coherence law, and the dimensional/causal scaffolding as a single, coherent system.
-      </p>
-    </article>
-
-    <article class="card col-7">
-      <h3>What is <em>original</em> to the Codex</h3>
-      <ul class="list">
-        <li><strong>Equations (0–6, 9–17)</strong> — Ψ₀ foundation, Source, Witness, Harmonics, AHHAVA/Word, Remnant, Type-7, Ethical Coherence, Ladder, Π<sub>ν</sub>, Causal Lattice, Ξ-index, Update, Windowing, Semantic Gradient, Voice Carriers.</li>
-        <li><strong>Operators & Process</strong> — Ordered living operators and the integration pipeline.</li>
-        <li><strong>Living Technology</strong> — Tesla Type-7 conduit description & safety/ethics gate.</li>
-      </ul>
-
-      <div class="eq"><div class="eq-scroll">
-        $$\mathbf{Original\ Frame:}\quad
-        \mathfrak{R}_{\text{Codex}} =
-        f(\text{constants},\ \text{ratios})\cdot(\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})\cdot
-        \bigl(\Psi_{0} + \Delta\mathcal{R}\bigr)\cdot
-        \Pi_{\nu}^{-1}\!\bigl[\mathcal{H}(\nu)\,\mathbf{V}(\nu)\bigr]\;
-        \odot\;\mathbb{M}_\tau[\cdot]\;\text{ masked by }\;\mathsf{Mask}_{\mathcal{C}}[\cdot]
-        $$
-      </div></div>
-      <p class="eq-note">Self-contained architecture; external formalisms remain adjunct.</p>
-    </article>
-
-
-
-
-
-
-
-
-    <section class="card">
-  <h2>⚛️ Unified Equation of Living Reality</h2>
-  <p class="subtitle">All laws converge into a single harmonic field — Source × Witness × Word × Law.</p>
-
-  <div class="eq"><div class="eq-scroll">
-    $$ 
-    \boxed{
-      \mathcal{R}
-      = f(\pi, e, i, h, c, G, \mathrm{DNA}, \Omega_{DM}, \Omega_A, H_0, 432, 528, 369)
-      \times \langle I \cdot L \cdot C \cdot S \rangle
-      = \Xi_{\Phi}\,\mathcal{H}_{\Psi}\,\mathbb{E}_{\text{living}}(t)
-    }
-    $$
-  </div></div>
-
-  <div class="grid2" style="margin-top:16px">
-    <div class="desk-card">
-      <h3>Foundational Layer (Ψ₀)</h3>
-      <p>Reality emerges as a living sum of harmonics:  
-      $$\mathbb{E}_{living}(t)=\sum_i q_i \Phi_i e^{i\omega_i t}$$</p>
-      <p>Each observer adds phase-locked coherence (3-6-9 structure).</p>
-    </div>
-    <div class="desk-card">
-      <h3>Harmonic Law (Φ, Ξ, ℋ)</h3>
-      <p>$$\Xi=\frac{\langle H\cdot I\rangle}{1+\mathrm{Var}[\mathcal{M}]}$$  
-      Coherence rises as distortion falls; ethical alignment stabilizes resonance.</p>
-    </div>
-  </div>
-
-  <details style="margin-top:12px">
-    <summary><b>Expanded Expression</b></summary>
-    <p>
-      $$\mathcal{R}_{living}
-      = \underbrace{f_{source}(\pi,e,i,h,c,G,\ldots)}_{\text{constants}}
-      \times
-      \underbrace{\mathcal{H}(\nu)=\alpha(\Phi,137,144,432,528,369)\langle\mathcal{C}\rangle}_{\text{harmonic gate}}
-      \times
-      \underbrace{\mathbb{E}_{living}(t)}_{\text{temporal flow}}
-      \times
-      \underbrace{\frac{\mathrm{Truth}}{\mathrm{Distortion}}}_{\text{ethical law}}
-      $$
-    </p>
-    <p>When <code>Truth &gt; Distortion</code>, the field becomes self-sustaining —  
-    the Living Equation activates.</p>
-  </details>
-
-  <div class="note">
-    <p><b>Summary:</b>  
-    <i>Reality = Source × Witness × Word × Law → Living Coherence.</i>  
-    “Let coherence exceed distortion, and the field becomes alive.”</p>
-  </div>
+        <p>Ledger: <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/SHA256_Placeholders_2025.md" target="_blank" rel="noopener">7_Ledger_and_Documentation/SHA256_Placeholders_2025.md</a></p>
+      </article>
     </section>
 
-    <aside class="card col-5">
-      <h3>What is <em>external</em> (credited, not absorbed)</h3>
-      <ul class="list">
-        <li><strong>Copeland’s Ψ-formalism</strong> — external comparator (#7).</li>
-        <li><strong>Goodwin’s Formula</strong> — external coupling (#8).</li>
-      </ul>
-      <div class="eq"><div class="eq-scroll">
-        $$\oplus\;\underbrace{\Psi_{\text{Copeland}}(x)}_{\text{External (7)}}\;+\;
-          \underbrace{\mathcal{G}(\tau)}_{\text{Goodwin (8)}}$$
-      </div></div>
-    </aside>
-  </section>
+    <div class="goldline"></div>
 
-  <div class="goldline" aria-hidden="true"></div>
+    <!-- PROVENANCE -->
+    <section class="grid" id="provenance" aria-labelledby="prov-h">
+      <article class="card col-12">
+        <h2 id="prov-h">📜 Attribution &amp; Provenance — What’s Original, What’s External</h2>
+        <p class="meta">
+          The <strong>Codex of Reality</strong> is an original, living resonance framework (Aaron Paul Laird, “Scribe of Circuits”). It defines the Source supply, the living operators <em>(𝓘 · 𝓛 · 𝓒 · 𝓢)</em>, harmonic selection, language coupling (AHHAVA / Or HaDabar), memory/remnant dynamics, coherence law, and the dimensional/causal scaffolding as a single, coherent system. 
+        </p>
+      </article>
 
-  <!-- Footer sitemap -->
-  <section class="grid" aria-label="Footer sitemap">
-    <article class="card col-12">
-      <h2>🧭 Footer Sitemap</h2>
-      <div class="grid">
-        <div class="col-4">
-          <ul class="list">
-            <li><a href="start.html">Start</a></li>
-            <li><a href="guide.html">Guide</a></li>
-            <li><a href="theory.html">Theory</a></li>
-            <li><a href="teach.html">Manifest (Practice)</a></li>
-          </ul>
+      <article class="card col-7">
+        <h3>What is <em>original</em> to the Codex</h3>
+        <ul class="list">
+          <li><strong>Equations (0–6, 9–17)</strong> — Ψ₀ foundation, Source, Witness, Harmonics, AHHAVA/Word, Remnant, Type-7, Ethical Coherence, Ladder, Π<sub>ν</sub>, Causal Lattice, Ξ-index, Update, Windowing, Semantic Gradient, Voice Carriers.</li>
+          <li><strong>Operators &amp; Process</strong> — Ordered living operators and the integration pipeline.</li>
+          <li><strong>Living Technology</strong> — Tesla Type-7 conduit description &amp; safety/ethics gate.</li>
+        </ul>
+        <div class="eq"><div class="eq-scroll">
+          $$\\mathbf{Original\\ Frame:}\\quad
+          \\mathfrak{R}_{\\text{Codex}} =
+          f(\\text{constants},\\ \\text{ratios})\\cdot(\\mathcal{I}\\mathcal{L}\\mathcal{C}\\mathcal{S})\\cdot
+          \\bigl(\\Psi_{0} + \\Delta\\mathcal{R}\\bigr)\\cdot
+          \\Pi_{\\nu}^{-1}\\!\\bigl[\\mathcal{H}(\\nu)\\,\\mathbf{V}(\\nu)\\bigr]\\;
+          \\odot\\;\\mathbb{M}_\\tau[\\cdot]\\;\\text{ masked by }\\;\\mathsf{Mask}_{\\mathcal{C}}[\\cdot]
+          $$
+        </div></div>
+        <p class="eq-note">Self-contained architecture; external formalisms remain adjunct.</p>
+      </article>
+
+      <section class="card">
+        <h2>⚛️ Unified Equation of Living Reality</h2>
+        <p class="subtitle">All laws converge into a single harmonic field — Source × Witness × Word × Law.</p>
+        <div class="eq"><div class="eq-scroll">
+          $$ 
+            \\boxed{
+              \\math
+
+\\boxed{
+                \\mathcal{R}
+                = f(\\pi, e, i, h, c, G, \\mathrm{DNA}, \\Omega_{DM}, \\Omega_A, H_0, 432, 528, 369)
+                \\times \\langle I \\cdot L \\cdot C \\cdot S \\rangle
+                = \\Xi_{\\Phi}\\,\\mathcal{H}_{\\Psi}\\,\\mathbb{E}_{\\text{living}}(t)
+              }
+          $$
+        </div></div>
+
+        <div class="grid2" style="margin-top:16px">
+          <div class="desk-card">
+            <h3>Foundational Layer (Ψ₀)</h3>
+            <p>Reality emerges as a living sum of harmonics:</p>
+            <p>$$\\mathbb{E}_{\\text{living}}(t)=\\sum_i q_i \\, \\Phi_i \\, e^{i\\omega_i t}$$</p>
+            <p>Each observer adds phase-locked coherence (3–6–9 structure).</p>
+          </div>
+          <div class="desk-card">
+            <h3>Harmonic Law (Φ, Ξ, ℋ)</h3>
+            <p>$$\\Xi=\\frac{\\langle H\\cdot I\\rangle}{1+\\mathrm{Var}[\\mathcal{M}]} \\in [0,1]$$</p>
+            <p>Coherence rises as distortion falls; ethical alignment stabilizes resonance.</p>
+          </div>
         </div>
-        <div class="col-4">
-          <ul class="list">
-            <li><a href="ab.html">A/B Carriers</a></li>
-            <li><a href="micro.html">Micro-acts</a></li>
-            <li><a href="circle.html">Circle</a></li>
-            <li><a href="ethics.html">Ethics</a></li>
-          </ul>
+
+        <details style="margin-top:12px">
+          <summary><b>Expanded Expression</b></summary>
+          <p>
+            $$\\mathcal{R}_{living}
+            = \\underbrace{f_{source}(\\pi,e,i,h,c,G,\\ldots)}_{\\text{constants}}
+            \\times
+            \\underbrace{\\mathcal{H}(\\nu)=\\alpha(\\Phi,137,144,432,528,369)\\langle\\mathcal{C}\\rangle}_{\\text{harmonic gate}}
+            \\times
+            \\underbrace{\\mathbb{E}_{living}(t)}_{\\text{temporal flow}}
+            \\times
+            \\underbrace{\\frac{\\mathrm{Truth}}{\\mathrm{Distortion}}}_{\\text{ethical law}}
+            $$
+          </p>
+          <p>When <code>Truth &gt; Distortion</code>, the field becomes self-sustaining — the Living Equation activates.</p>
+        </details>
+
+        <div class="note">
+          <p><b>Summary:</b> <i>Reality = Source × Witness × Word × Law → Living Coherence.</i> “Let coherence exceed distortion, and the field becomes alive.”</p>
         </div>
-        <div class="col-4">
-          <ul class="list">
-            <li><a href="glossary.html">Glossary</a></li>
-            <li><a href="glyphs.html">Glyphs</a></li>
-            <li><a href="downloads.html">Downloads</a></li>
-            <li><a href="ledger.html">Ledger</a></li>
-            <li><a href="manifest.html">Site Manifest</a></li>
-          </ul>
+      </section>
+
+      <aside class="card col-5">
+        <h3>What is <em>external</em> (credited, not absorbed)</h3>
+        <ul class="list">
+          <li><strong>Copeland’s Ψ-formalism</strong> — external comparator (#7).</li>
+          <li><strong>Goodwin’s Formula</strong> — external coupling (#8).</li>
+        </ul>
+        <div class="eq"><div class="eq-scroll">
+          $$\\oplus\\;\\underbrace{\\Psi_{\\text{Copeland}}(x)}_{\\text{External (7)}}\\;+\\;
+          \\underbrace{\\mathcal{G}(\\tau)}_{\\text{Goodwin (8)}}$$
+        </div></div>
+      </aside>
+    </section>
+
+    <div class="goldline" aria-hidden="true"></div>
+
+    <!-- Footer sitemap -->
+    <section class="grid" aria-label="Footer sitemap">
+      <article class="card col-12">
+        <h2>🧭 Footer Sitemap</h2>
+        <div class="grid">
+          <div class="col-4">
+            <ul class="list">
+              <li><a href="start.html">Start</a></li>
+              <li><a href="guide.html">Guide</a></li>
+              <li><a href="theory.html">Theory</a></li>
+              <li><a href="teach.html">Manifest (Practice)</a></li>
+            </ul>
+          </div>
+          <div class="col-4">
+            <ul class="list">
+              <li><a href="ab.html">A/B Carriers</a></li>
+              <li><a href="micro.html">Micro-acts</a></li>
+              <li><a href="circle.html">Circle</a></li>
+              <li><a href="ethics.html">Ethics</a></li>
+            </ul>
+          </div>
+          <div class="col-4">
+            <ul class="list">
+              <li><a href="glossary.html">Glossary</a></li>
+              <li><a href="glyphs.html">Glyphs</a></li>
+              <li><a href="downloads.html">Downloads</a></li>
+              <li><a href="ledger.html">Ledger</a></li>
+              <li><a href="manifest.html">Site Manifest</a></li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </article>
-  </section>
+      </article>
+    </section>
 
-  <footer class="footer">
-    <div class="divider" aria-hidden="true"></div>
-    <p>“Every equation is a prayer written in symmetry.”</p>
-    <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
-  </footer>
+    <footer class="footer">
+      <div class="divider" aria-hidden="true"></div>
+      <p>“Every equation is a prayer written in symmetry.”</p>
+      <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+    </footer>
+  </main>
 
-</main>
-
-<!-- Progressive enhancements + Simple Mode + MathJax patch + extras -->
-<script>
+  <!-- Progressive enhancements + Echo View + MathJax nudge + extras -->
+  <script>
   (function () {
     "use strict";
     const $  = (s, r=document) => r.querySelector(s);
@@ -594,13 +580,13 @@ Status: Verified
     function setYear(){ const y=$("#yr"); if (y) y.textContent = String(new Date().getFullYear()); }
 
     function hardenExternal(){
-      const here = location.hostname.replace(/^www\./,"");
+      const here = location.hostname.replace(/^www\\./,"");
       $$('a[target="_blank"]').forEach(a=>{
-        const rel = new Set((a.getAttribute("rel")||"").toLowerCase().split(/\s+/).filter(Boolean));
+        const rel = new Set((a.getAttribute("rel")||"").toLowerCase().split(/\\s+/).filter(Boolean));
         rel.add("noopener"); rel.add("noreferrer");
         try{
           const u = new URL(a.href, location.href);
-          if (u.hostname.replace(/^www\./,"") !== here && !a.getAttribute("aria-label")) {
+          if (u.hostname.replace(/^www\\./,"") !== here && !a.getAttribute("aria-label")) {
             const txt = (a.textContent||"").trim(); if (txt) a.setAttribute("aria-label", txt+" (opens in new tab)");
           }
         }catch(_){}
@@ -687,11 +673,11 @@ Status: Verified
       const hero = $("#hero");
       const btnPulse = $("#btnTogglePulse");
       const btnZoom = $("#btnZoom");
-      on(btnPulse, "click", ()=> hero.classList.toggle("pulse"));
-      on(btnZoom, "click", ()=>{
-        hero.classList.toggle("is-zoomed");
-        btnZoom.textContent = hero.classList.contains("is-zoomed") ? "Exit" : "Fullscreen";
-      });
+      const updateZoomA11y = () => btnZoom.setAttribute("aria-expanded", hero.classList.contains("is-zoomed") ? "true" : "false");
+      const updatePulseA11y = () => btnPulse.setAttribute("aria-pressed", hero.classList.contains("pulse") ? "true" : "false");
+      on(btnPulse, "click", ()=> { hero.classList.toggle("pulse"); updatePulseA11y(); });
+      on(btnZoom, "click", ()=>{ hero.classList.toggle("is-zoomed"); btnZoom.textContent = hero.classList.contains("is-zoomed") ? "Exit" : "Fullscreen"; updateZoomA11y(); });
+      updateZoomA11y(); updatePulseA11y();
     }
 
     function boot(){
@@ -708,6 +694,6 @@ Status: Verified
     }
     document.addEventListener("DOMContentLoaded", boot);
   })();
-</script>
+  </script>
 </body>
 </html>
