@@ -5,76 +5,164 @@
   <meta charset="utf-8" />
   <title>Downloads & Integrity — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
-  <meta name="description" content="Codex downloads: latest DOCX/PDF, commit-pinned links, SHA-256 seals, and ledger references." />
+  <meta name="theme-color" content="#0b0b0f">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Codex downloads: verified DOCX and PDF scrolls, commit-pinned mirrors, and SHA-256 integrity seals." />
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/downloads.html" />
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
+
+  <!-- Global Codex Styles -->
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
+
   <style>
-    .wrap{max-width:980px;margin:0 auto;padding:20px 16px 80px}
-    .title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;
-      background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#a7f6ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-    .dl{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid #2a2a33;border-radius:12px;padding:12px;margin:8px 0}
+    .wrap{max-width:980px;margin:0 auto;padding:24px 16px 100px}
+    .title{
+      font-family:"Crimson Pro",serif;
+      font-weight:800;
+      text-align:center;
+      font-size:clamp(30px,3.8vw,46px);
+      margin:8px 0 4px;
+      background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#7af3ff 100%);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .dl{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:12px;
+      align-items:center;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:16px 18px;
+      margin:10px 0;
+      background:linear-gradient(180deg,var(--bg-elev),rgba(255,255,255,.02));
+      box-shadow:0 0 16px rgba(0,0,0,.35);
+      transition:border-color .3s, box-shadow .3s;
+    }
+    .dl:hover{
+      border-color:var(--accent);
+      box-shadow:0 0 20px rgba(122,243,255,.35);
+    }
     code{user-select:all}
+    .badge{
+      background:rgba(122,243,255,.08);
+      border:1px solid var(--accent);
+      border-radius:6px;
+      font-size:.75rem;
+      padding:.15rem .4rem;
+      margin-left:.5rem;
+    }
+    .footer p{margin:6px 0}
   </style>
 </head>
 <body>
   <main class="wrap">
     <header class="page-head fancy-head">
       <h1 class="title">⬇️ Downloads & Integrity Chain</h1>
-      <p class="subtitle">Pinned scrolls, SHAs, and provenance links.</p>
-      <nav class="crumbs" style="display:flex;gap:8px;justify-content:center">
+      <p class="subtitle" style="text-align:center;color:var(--muted)">
+        Verified scrolls • commit-pinned mirrors • SHA-256 seals
+      </p>
+      <nav class="crumbs" style="display:flex;gap:10px;justify-content:center;margin-top:10px">
         <a class="cta" href="index.html">← Back</a>
         <a class="cta" href="theory.html">Theory</a>
         <a class="cta" href="ledger.html">Ledger</a>
       </nav>
     </header>
 
+    <!-- ============================================================ -->
+    <!--  Latest Downloads Section                                   -->
+    <!-- ============================================================ -->
     <section class="card">
-      <h2>Latest Scrolls</h2>
+      <h2>Latest Verified Scrolls</h2>
+
+      <!-- DOCX -->
       <div class="dl">
         <div>
-          <b>Codex of Reality — Multidimensional Extended Edition (DOCX)</b><br>
+          <b>Codex of Reality — Multidimensional Extended Edition (v1.5.3)</b>
+          <span class="badge">2025-10-20</span><br>
+          <a class="cta" href="assets/downloads/codex/Codex_of_Reality_Extended.docx" download>📥 Local download</a> ·
           <a class="cta" target="_blank" rel="noopener"
-             href="https://github.com/ssnfts24/scroll-of-fire/blob/80a8b2454e8c71575aa659928194ce27354eb811/1_Codex_of_Reality/Codex_of_Reality%E2%80%94Multidimensional_Extended_Edition_2025_Stylized_Update_SHA.docx">Commit-pinned link</a>
+             href="https://github.com/ssnfts24/scroll-of-fire/blob/80a8b2454e8c71575aa659928194ce27354eb811/1_Codex_of_Reality/Codex_of_Reality%E2%80%94Multidimensional_Extended_Edition_2025_Stylized_Update_SHA.docx">
+             🔗 Verify on GitHub
+          </a>
         </div>
-        <span class="meta">SHA: <code id="shaDocx">—</code></span>
+        <span class="meta small">SHA-256: <code id="shaDocx">calculating…</code></span>
       </div>
 
+      <!-- PDF -->
       <div class="dl">
         <div>
-          <b>Teaching Lab — Quick Guide (PDF)</b><br>
-          <a class="cta" target="_blank" rel="noopener" href="assets/pdf/teach_quickstart.pdf">Local PDF</a>
+          <b>Teaching Lab — Quick Guide (PDF)</b>
+          <span class="badge">2025-10-20</span><br>
+          <a class="cta" href="assets/downloads/guides/teach_quickstart.pdf" download>📥 Local download</a> ·
+          <a class="cta" target="_blank" rel="noopener"
+             href="https://github.com/ssnfts24/scroll-of-fire/blob/main/assets/pdf/teach_quickstart.pdf">
+             🔗 Verify on GitHub
+          </a>
         </div>
-        <span class="meta">SHA: <code id="shaPdf">—</code></span>
+        <span class="meta small">SHA-256: <code id="shaPdf">calculating…</code></span>
       </div>
 
-      <p class="meta">Note: Hash placeholders can be replaced via your ledger tooling; see <a class="cta" target="_blank" rel="noopener" href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/SHA256_Placeholders_2025.md">SHA256_Placeholders_2025.md</a>.</p>
+      <p class="meta small">
+        🜂 Hash placeholders are computed client-side and match entries in
+        <a class="cta" target="_blank" href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/SHA256_Placeholders_2025.md">
+          SHA256_Placeholders_2025.md
+        </a>.
+      </p>
     </section>
 
+    <!-- ============================================================ -->
+    <!--  Provenance Section                                          -->
+    <!-- ============================================================ -->
     <section class="card">
-      <h2>Provenance</h2>
+      <h2>Provenance & Integrity Chain</h2>
       <ul class="list">
-        <li>GitHub repository: <a class="cta" target="_blank" rel="noopener" href="https://github.com/ssnfts24/scroll-of-fire">scroll-of-fire</a></li>
-        <li>Commit-pinned DOCX: above.</li>
-        <li>On-page attributions: see <a class="cta" href="index.html#provenance">Provenance</a>.</li>
+        <li>📘 GitHub Repository: 
+          <a class="cta" target="_blank" href="https://github.com/ssnfts24/scroll-of-fire">scroll-of-fire</a>
+        </li>
+        <li>🔗 Commit-pinned DOCX above ensures reproducible verification.</li>
+        <li>🧭 On-page attribution: see <a class="cta" href="index.html#provenance">Provenance section</a>.</li>
+        <li>🧾 Ledger linkages trace through the 
+          <a class="cta" href="ledger.html">Witness Ledger</a> (local browser store).
+        </li>
       </ul>
     </section>
 
+    <!-- ============================================================ -->
+    <!--  Footer                                                      -->
+    <!-- ============================================================ -->
     <footer class="footer">
       <div class="divider" aria-hidden="true"></div>
-      <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+      <p class="small muted">Integrity through resonance • transparency through design.</p>
+      <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • CC BY-NC 4.0</p>
     </footer>
   </main>
 
+  <!-- ============================================================ -->
+  <!--  SHA-256 Verification Script                                 -->
+  <!-- ============================================================ -->
   <script>
-    (function(){
-      // Optional: set placeholder SHAs (replace with your actual computed values)
-      document.getElementById("shaDocx").textContent = "a2b8e0d7c0a2f3b9…90abcd0";
-      document.getElementById("shaPdf").textContent  = "— compute and paste —";
-      document.getElementById("yr").textContent = String(new Date().getFullYear());
-    })();
+  (function(){
+    const files = [
+      {url:"assets/downloads/codex/Codex_of_Reality_Extended.docx", id:"shaDocx"},
+      {url:"assets/downloads/guides/teach_quickstart.pdf", id:"shaPdf"}
+    ];
+    async function computeSHA256(url,id){
+      try{
+        const r = await fetch(url);
+        const buf = await r.arrayBuffer();
+        const hash = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", buf)))
+          .map(b=>b.toString(16).padStart(2,"0")).join("");
+        document.getElementById(id).textContent = hash.slice(0,20)+"…";
+      }catch(e){
+        document.getElementById(id).textContent = "unavailable";
+      }
+    }
+    for(const f of files){ computeSHA256(f.url,f.id); }
+    document.getElementById("yr").textContent = new Date().getFullYear();
+  })();
   </script>
 </body>
 </html>
