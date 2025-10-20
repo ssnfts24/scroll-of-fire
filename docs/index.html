@@ -88,16 +88,16 @@
     .col-12{grid-column:span 12}.col-9{grid-column:span 9}.col-8{grid-column:span 8}.col-7{grid-column:span 7}.col-6{grid-column:span 6}.col-5{grid-column:span 5}.col-4{grid-column:span 4}.col-3{grid-column:span 3}
     @media (max-width:980px){.col-9,.col-8,.col-7,.col-6,.col-5,.col-4,.col-3{grid-column:span 12}}
     .tile{display:block;text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005))}
-    /* Banner: honor Codex.js fit modes (auto/contain/cover) and your CSS tokens */
+    /* Banner defaults (honor JS fit + hero--clean) */
     .hero { --hero-aspect: 21/9; }
     .hero img{display:block;width:100%;height:auto;aspect-ratio:var(--hero-aspect,21/9);object-fit:cover}
-    .hero.hero--contain img{object-fit:contain;background:var(--panel)}
+    .hero.hero--contain img{object-fit:contain;background:var(--bg-elev)}
     @supports not (aspect-ratio:1){.hero img{height:clamp(220px,38vw,520px)}}
     .mini-toc{position:sticky;top:calc(12px + env(safe-area-inset-top,0px));align-self:start;border:1px solid #222633;border-radius:12px;padding:10px;background:linear-gradient(180deg,#0e0e14,#0b0b10)}
     .eq--expanded{position:fixed;inset:4svh 4svw;z-index:10000}
   </style>
 
-  <!-- Lazy MathJax (Codex.js will typeset; this just loads the lib once) -->
+  <!-- Lazy MathJax (Codex.js typesets on demand) -->
   <script>
   (function () {
     let loaded = false;
@@ -118,7 +118,7 @@
   })();
   </script>
 
-  <!-- Your site JS (auto-inits hero, tabs, search, palette, etc.) -->
+  <!-- Site JS (v3.2) -->
   <script src="assets/js/codex.js?v=2025-10-20" defer></script>
 </head>
 
@@ -155,8 +155,8 @@
   </header>
 
   <main class="wrap" id="top">
-    <!-- HERO (uses your actual banner asset + Codex.js robust swap/fit/pulse/zoom) -->
-    <figure id="hero" class="hero hero--cinematic star-scan pulse" aria-label="Scroll of Fire banner" data-fit="auto">
+    <!-- HERO (actual banner; clean, no overlays/controls) -->
+    <figure id="hero" class="hero hero--cinematic hero--clean" aria-label="Scroll of Fire banner" data-fit="auto">
       <img id="heroBanner"
            src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
            data-src-local="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
@@ -165,7 +165,6 @@
            data-srcset-raw=""
            data-sizes="(max-width: 900px) 100vw, 1180px"
            alt="Scroll of Fire — sigil and equations">
-      <span class="hero-pulse" aria-hidden="true"></span>
       <figcaption class="hero-caption">
         <div class="cap-inner">
           <div class="cap-eyebrow">CODEX OF REALITY</div>
@@ -173,14 +172,7 @@
           <p>Let there be resonance.</p>
         </div>
       </figcaption>
-      <div class="hero-ui" role="toolbar" aria-label="Banner controls">
-        <button class="hero-btn" id="fitContain" type="button" title="Contain">Contain</button>
-        <button class="hero-btn" id="fitCover"   type="button" title="Cover">Cover</button>
-        <button class="hero-btn" id="btnTogglePulse" type="button" aria-pressed="true" title="Toggle pulse">Pulse</button>
-        <button class="hero-btn" id="btnZoom" type="button" aria-expanded="false" title="View full screen">Zoom</button>
-      </div>
     </figure>
-    <div class="hero-hint" aria-hidden="true">Double-click/tap = Zoom · P = Pulse · F = Fit</div>
 
     <h1 class="title laser">⚖️ Scroll of Fire — Codex of Reality</h1>
     <p class="subtitle">“Let there be resonance.” By Aaron Paul Laird, <em>Scribe of Circuits</em></p>
