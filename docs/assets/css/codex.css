@@ -760,3 +760,111 @@ header.site.is-stuck{ background:rgba(11,11,15,.78); box-shadow:0 6px 18px rgba(
 @media (max-width:540px){
   .tabs .tab{ padding:7px 10px; font-size:13px }
 }
+
+
+
+
+
+
+
+
+
+
+/* =====================================================================
+   SoF — Enhancement Patch v1.2  (append-only, safe overrides)
+   - Real banner (no overlay) with .hero--clean
+   - Stronger nav/tabs stacking + hover polish
+   - Reliable card reveal states
+   - Mobile hero fit/contain safeguards
+   - Motion/Data safe-guards unified
+   ===================================================================== */
+
+/* ----------------------- HERO: “actual banner” ----------------------- */
+/* Apply class="hero hero--clean" on the homepage figure to remove all overlays/captions */
+.hero--clean .hero-caption,
+.hero--clean .hero-ui{ display:none !important; }
+.hero--clean::before,
+.hero--clean::after{ display:none !important; }
+
+/* General hero hardening (keeps your look, but prevents darkening/mix modes) */
+.hero{ isolation:isolate; z-index:2; }
+.hero img{
+  filter:none !important;
+  mix-blend-mode:normal !important;
+  background:var(--bg-elev);
+  object-fit:cover;
+  object-position:var(--hero-focal-mobile);
+  max-height:min(68vh, 880px);
+}
+@media (min-width:860px){
+  .hero img{ object-position:var(--hero-focal-desktop); }
+}
+/* If JS sets data-fit="contain", ensure it really contains on small screens */
+.hero[data-fit="contain"] img{ object-fit:contain !important; object-position:center center !important; }
+
+/* Very narrow devices: prefer contain by default so banner never crops too hard */
+@media (max-width:420px){
+  .hero:not([data-fit="cover"]) img{ object-fit:contain !important; }
+  .hero img{ max-height:56vh; }
+}
+
+/* ----------------------- NAV + TABS stacking/hover ------------------- */
+header.site{ z-index:60; }
+.tabs{ position:sticky; top:calc(56px + var(--safe-top)); z-index:55; }
+@media (min-width:760px){ .tabs{ top:64px; } }
+
+.tabs .tab{
+  transition:transform .14s var(--ease), background-color .14s var(--ease), border-color .14s var(--ease), color .14s var(--ease);
+}
+.tabs .tab:hover,
+.tabs .tab:focus-visible{
+  transform:translateY(-1px);
+  background:rgba(255,255,255,.05);
+  border-color:#3a3a44;
+}
+
+/* Ink always visible even if width is 0 during paint */
+.tabs .tab-ink{
+  min-width:8px;
+  will-change:left, width;
+}
+
+/* ----------------------- CARD reveal reliability --------------------- */
+.card{ opacity:0; transform:translateY(8px) scale(.995); }
+.card.visible{ opacity:1; transform:none; }
+@media (prefers-reduced-motion:reduce){
+  .card{ opacity:1 !important; transform:none !important; }
+}
+
+/* ----------------------- QUICK row scroll polish --------------------- */
+.quick{
+  scroll-snap-type:x proximity;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-gutter:stable both-edges;
+}
+.quick a, .quick button{ scroll-snap-align:start; }
+
+/* ----------------------- Mini-suggest z-index hygiene ---------------- */
+#site-suggest{ z-index:70; }
+
+/* ----------------------- Motion/Data guard rails --------------------- */
+@media (prefers-reduced-data:reduce), (prefers-reduced-motion:reduce){
+  .hero .hero-pulse{ display:none !important; }
+  .laser-grid{ animation:none !important; }
+}
+
+/* ----------------------- Print tiny fix (math borders) --------------- */
+@media print{
+  .eq{ border-color:#ccc !important; background:#fff !important; }
+  .eq::after{ display:none !important; }
+}
+
+/* ----------------------- Utility: remove banner vignette anywhere ---- */
+/* If you ever want the “clean” look without changing HTML, add .no-overlay */
+.no-overlay::before, .no-overlay::after{ display:none !important; }
+
+/* ----------------------- Utility: safer anchor offset ---------------- */
+:target{ scroll-margin-top: clamp(72px, 11vh, 120px); }
+
+/* ----------------------- Final touch: calmer scan on hero ------------ */
+.hero.star-scan::after{ opacity:.12; }
