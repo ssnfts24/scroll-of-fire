@@ -868,3 +868,124 @@ header.site{ z-index:60; }
 
 /* ----------------------- Final touch: calmer scan on hero ------------ */
 .hero.star-scan::after{ opacity:.12; }
+
+
+
+
+
+
+
+/* =====================================================================
+   SoF — Enhancement Patch v1.3 (append-only)
+   - Real banner option (.hero--clean) — no overlay/caption/scanline
+   - Stronger reveal (cards always appear even if JS/IO hiccups)
+   - Mobile tabs polish: sticky, better hit targets, ink alignment
+   - Quick actions spacing + subtle glass
+   - Tile hover: richer elevation (neon rim)
+   - Z-index + safe-area fixes
+   ===================================================================== */
+
+/* ----------------------- HERO: “actual banner” ----------------------- */
+/* Use <figure class="hero hero--clean"> … </figure> on the homepage */
+.hero--clean .hero-caption,
+.hero--clean .hero-ui{ display:none !important; }
+.hero--clean::before,
+.hero--clean::after{ display:none !important; }
+/* harden defaults so the art is never muted */
+.hero{ isolation:isolate; z-index:2; }
+.hero img{
+  filter:none !important;
+  mix-blend-mode:normal !important;
+  background:var(--bg-elev);
+  object-fit:cover;
+  object-position:var(--hero-focal-mobile);
+  max-height:min(68vh, 880px);
+}
+@media (min-width:860px){
+  .hero img{ object-position:var(--hero-focal-desktop); }
+}
+/* author/JS fit preference always wins */
+.hero[data-fit="contain"] img{ object-fit:contain !important; object-position:center center !important; }
+/* very-small screens: avoid aggressive crop */
+@media (max-width:420px){
+  .hero:not([data-fit="cover"]) img{ object-fit:contain !important; }
+  .hero img{ max-height:56vh; }
+}
+
+/* ----------------------- HEADER + QUICK actions ---------------------- */
+header.site{ z-index:60; }
+.quick{
+  gap:10px; padding:4px 2px 6px;
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+  border-radius:12px;
+}
+.quick a,.quick button{
+  min-width:42px; height:36px; line-height:34px;
+  backdrop-filter:saturate(135%) blur(2px);
+}
+@media (max-width:540px){
+  .quick a,.quick button{ height:34px; line-height:32px; padding:0 10px; font-size:13px }
+}
+
+/* ----------------------- TABS: sticky + comfy hits ------------------- */
+.tabs{
+  position:sticky; top:calc(56px + var(--safe-top)); z-index:55;
+  overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-gutter:stable both-edges;
+  padding:6px 0 10px; gap:8px; scroll-snap-type:x proximity;
+}
+@media (min-width:760px){ .tabs{ top:64px; } }
+.tabs .tab{
+  display:inline-flex; align-items:center; scroll-snap-align:start;
+  padding:10px 14px; min-height:38px; border-radius:10px;
+  transition:transform .14s var(--ease), background-color .14s var(--ease), border-color .14s var(--ease);
+}
+.tabs .tab:hover, .tabs .tab:focus-visible{
+  transform:translateY(-1px); background:rgba(255,255,255,.05); border-color:#3a3a44;
+}
+.tabs .tab-ink{ min-width:8px; bottom:-4px; will-change:left,width; }
+.tab--primary{ border-color:#35404a; background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02)); }
+
+/* keep ink in view when the page loads before fonts */
+html:not(.fonts-ready) .tabs .tab-ink{ opacity:.9 }
+
+/* ----------------------- CARDS: reveal reliability ------------------- */
+/* default: visible if JS hasn’t marked them yet (prevents “blank page”) */
+html:not(.js-ready) .card{ opacity:1 !important; transform:none !important; }
+
+/* animation state (your JS will add .visible; this keeps it snappy) */
+.card{ opacity:0; transform:translateY(8px) scale(.995); }
+.card.visible{ opacity:1; transform:none; }
+
+/* ----------------------- TILES: richer hover/elevation --------------- */
+.tile{
+  position:relative; isolation:isolate;
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.005));
+  transition:transform .18s var(--ease), box-shadow .18s var(--ease), border-color .18s var(--ease);
+}
+.tile::after{
+  content:""; position:absolute; inset:-1px; border-radius:inherit; pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(122,243,255,.18), inset 0 0 18px rgba(122,243,255,.06);
+  opacity:.75; transition:opacity .18s var(--ease);
+}
+@media (hover:hover){
+  .tile:hover{ transform:translateY(-2px); border-color:#3a3a44; box-shadow:0 10px 22px rgba(0,0,0,.35); }
+  .tile:hover::after{ opacity:1; }
+}
+
+/* ----------------------- Mini suggest & overlays z-order ------------- */
+#site-suggest{ z-index:70; }
+
+/* ----------------------- Motion/Data guard rails --------------------- */
+@media (prefers-reduced-data:reduce), (prefers-reduced-motion:reduce){
+  .hero .hero-pulse{ display:none !important; }
+  .laser-grid{ animation:none !important; }
+}
+
+/* ----------------------- Utilities ----------------------------------- */
+/* remove all hero overlays anywhere without editing HTML */
+.no-overlay::before, .no-overlay::after{ display:none !important; }
+/* safer anchor offset with sticky header */
+:target{ scroll-margin-top: clamp(72px, 11vh, 120px); }
+
+/* ----------------------- Final touch: calmer scan on hero ------------ */
+.hero.star-scan::after{ opacity:.12; }
