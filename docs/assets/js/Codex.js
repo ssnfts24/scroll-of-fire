@@ -1,10 +1,12 @@
+<script>
 /* ======================================================================
-   Scroll of Fire — Codex.js (v2.2)
-   Bulletproof banner • hero toolbar • palette • mini-TOC • a11y/perf
+   Scroll of Fire — Codex.js (v2.3)
+   Bulletproof banner • hero toolbar (new+legacy) • tabs ink • palette • TOC
    - Robust hero detection & failover (local→remote), auto-fit & persistence
    - Motion-safe equation activation + resize tidy
    - Deferred heavy features (palette / mini-TOC) on idle
    - Accessibility hardening, reduced-data/motion guards
+   - Matches current index.html + codex.css (2025-10-20)
    ====================================================================== */
 (() => {
   "use strict";
@@ -51,7 +53,11 @@
   const log = (m)=>{ if (window.SOFTelemetry) console.log("[Codex.js]", m); };
 
   /* --------------------------- site basics / a11y -------------------------- */
-  function setYear(){ const y=$("#yr"); if (y) y.textContent=String(new Date().getFullYear()); }
+  function setYear(){
+    // Support both #y (current index) and older #yr
+    const y = $("#y") || $("#yr");
+    if (y) y.textContent = String(new Date().getFullYear());
+  }
 
   function hardenExternal(){
     const hereHost = location.hostname.replace(/^www\./,"");
@@ -81,6 +87,10 @@
     const saved = store.get("codex:simple", false);
     apply(!!saved);
     [c1,c2].forEach(c=> c && on(c,"change",()=>apply(c.checked)));
+
+    // Mirror header Echo View button if present
+    const btn = $("#toggleSimple");
+    btn && on(btn,"click",()=> apply(!document.body.classList.contains("simple-on")));
   }
 
   /* ------------------------------ hero helpers ----------------------------- */
@@ -123,10 +133,8 @@
   }
 
   function findHeroElements(){
-    // Primary path
     let img = $("#heroBanner");
     let fig = img && img.closest(".hero");
-    // Fallbacks for minor markup shifts
     if (!fig) fig = $("#hero") || $(".hero");
     if (!img && fig) img = $("img", fig);
     if (!img) img = $(".hero img");
@@ -138,23 +146,19 @@
     const { fig, img } = findHeroElements();
     if(!img || !fig){ log("hero not found; will retry on load"); on(window,"load",()=>{ const h=findHeroElements(); if(h.img && h.fig) initBanner(); }); return; }
 
-    // Data attributes (HTML supplies local + remote)
     const localSrc  = img.getAttribute("data-src-local") || img.getAttribute("src") || "";
     const remoteSrc = img.getAttribute("data-src-raw")   || "";
     const localSet  = img.getAttribute("data-srcset-local") || "";
     const remoteSet = img.getAttribute("data-srcset-raw")   || "";
     const sizesAttr = img.getAttribute("data-sizes") || "(max-width: 600px) 100vw, (max-width: 1100px) 94vw, 1100px";
-    const authorFit = (img.getAttribute("data-fit")||"").toLowerCase(); // ""|"contain"|"cover"
+    const authorFit = (img.getAttribute("data-fit")||"").toLowerCase();
     const prefFit   = store.get("codex:hero-fit", authorFit || "auto");
 
-    // Apply saved fit first
     setHeroFit(fig, prefFit);
 
-    // Seed local srcset/src for first paint
     if (localSet){ img.srcset = localSet; img.sizes = sizesAttr; }
     else if (localSrc){ img.src = localSrc; }
 
-    // Hard fallback for stalls/errors (swap to remote)
     let swapped = false;
     const tryRemote = ()=>{
       if (swapped) return;
@@ -166,28 +170,21 @@
         log("hero swapped to remote");
       }
     };
-    // Stall timer (silent failures / throttled)
     let stallId = setTimeout(()=>{ if (!img.complete || !img.naturalWidth) tryRemote(); }, 4000);
     img.onerror = () => tryRemote();
     on(img,"load", ()=> clearTimeout(stallId), { once:true });
 
-    // Ready class for weird in-app browsers
     img.classList.add("hero-ready");
 
-    // Auto-fit when we know nat size
     const onLoad = () => checkFitAuto(fig, img, prefFit);
     if (img.complete && img.naturalWidth>0) onLoad(); else on(img,"load",onLoad,{once:true});
 
-    // Cautious environments: skip remote probe
     if (!remoteSrc || isMetaApp || isOffline() || saveD) {
       wireHeroObservers(fig, img, prefFit);
-      buildHeroToolbar(fig);
-      // Pulse default OFF for save-data/meta apps to paint faster
-      if (isMetaApp || saveD){ fig.classList.remove("pulse"); store.set("codex:hero-pulse", false); }
+      wireHeroToolbar(fig);      // always wire toolbar (new or legacy)
       return;
     }
 
-    // Probe remote first; only swap srcset when confirmed
     const probe = new Image();
     probe.decoding="async"; probe.loading="eager"; probe.referrerPolicy="no-referrer";
     const swapSrc = ()=> {
@@ -202,7 +199,6 @@
     on(probe,"error",()=>{/* keep local */},{once:true});
     probe.src = remoteSrc;
 
-    // Retry once when back online
     const retryOnce = () => {
       window.removeEventListener("online", retryOnce);
       if (img && remoteSrc && !img.src.includes(remoteSrc)) {
@@ -212,13 +208,36 @@
     on(window,"online",retryOnce,{once:true});
 
     wireHeroObservers(fig, img, prefFit);
-    buildHeroToolbar(fig);
+    wireHeroToolbar(fig);
   }
 
   /* ----------------------------- hero toolbar ----------------------------- */
-  function buildHeroToolbar(fig){
-    if ($(".hero-ui", fig)) return;
+  function wireHeroToolbar(fig){
+    // If your page already renders the toolbar (.hero-ui with specific IDs), wire it.
+    const legacy = $(".hero-ui", fig);
+    if (legacy){
+      const bContain = $("#fitContain");
+      const bCover   = $("#fitCover");
+      const bPulse   = $("#btnTogglePulse");
+      const bZoom    = $("#btnZoom");
 
+      // Sync initial states
+      const mode = store.get("codex:hero-fit", fig.dataset.fit || "auto");
+      setHeroFit(fig, mode);
+
+      bContain && on(bContain,"click",()=>{ setHeroFit(fig,"contain"); bContain.setAttribute("aria-pressed","true"); bCover && bCover.setAttribute("aria-pressed","false"); });
+      bCover   && on(bCover,"click",  ()=>{ setHeroFit(fig,"cover");   bCover.setAttribute("aria-pressed","true");   bContain && bContain.setAttribute("aria-pressed","false"); });
+      bPulse   && on(bPulse,"click",  (e)=>{ const onNow = !fig.classList.contains("pulse"); fig.classList.toggle("pulse", onNow); e.currentTarget.setAttribute("aria-pressed",String(onNow)); store.set("codex:hero-pulse", onNow); });
+      bZoom    && on(bZoom,"click",   (e)=>{ const onNow = fig.classList.toggle("is-zoomed"); e.currentTarget.setAttribute("aria-expanded",String(onNow)); document.documentElement.style.overflow = onNow ? "hidden" : ""; });
+
+      // Respect saved pulse preference
+      const pulsePref = store.get("codex:hero-pulse", !saveD && !isMetaApp);
+      fig.classList.toggle("pulse", !!pulsePref);
+      bPulse && bPulse.setAttribute("aria-pressed", String(!!pulsePref));
+      return;
+    }
+
+    // Otherwise, build the lightweight v2 toolbar
     const ui = document.createElement("div");
     ui.className = "hero-ui";
     ui.setAttribute("role","toolbar");
@@ -255,7 +274,7 @@
       fig.classList.toggle("is-zoomed");
       bZoom.textContent = fig.classList.contains("is-zoomed") ? "Close" : "Zoom";
       document.documentElement.style.overflow = fig.classList.contains("is-zoomed") ? "hidden" : "";
-      if (!fig.classList.contains("is-zoomed")) bZoom.focus(); // focus recovery
+      if (!fig.classList.contains("is-zoomed")) bZoom.focus();
     });
     on(bPulse,"click",()=>{
       const nowOn = !fig.classList.contains("pulse");
@@ -264,12 +283,10 @@
       store.set("codex:hero-pulse", nowOn);
     });
 
-    // Restore pulse pref (default true unless save-data / meta toggled it off)
-    const pulsePref = store.get("codex:hero-pulse", true);
+    const pulsePref = store.get("codex:hero-pulse", !saveD && !isMetaApp);
     fig.classList.toggle("pulse", !!pulsePref);
     updatePulseState();
 
-    // Close zoom on ESC
     on(document,"keydown",(e)=>{
       if (e.key==="Escape" && fig.classList.contains("is-zoomed")){
         fig.classList.remove("is-zoomed");
@@ -360,7 +377,7 @@
       btn.className="to-top"; btn.type="button"; btn.textContent="↑ Top";
       document.body.appendChild(btn);
     }
-    on(btn, "click", ()=> window.scrollTo({top:0, behavior:"smooth"}));
+    on(btn, "click", ()=> window.scrollTo({top:0, behavior:(prefersReduced?'auto':'smooth')}));
     const reveal = throttleRAF(()=>{
       const y = window.scrollY || document.documentElement.scrollTop;
       btn.classList.toggle("show", y > 600);
@@ -407,7 +424,6 @@
     const input = $("input", shell);
     const list  = $("ul", shell);
 
-    // Gather items from headings + a few quick links
     const items = [];
     $$("main h2[id], main h3[id]").forEach(h=>{
       const label = (h.textContent||"").trim();
@@ -427,7 +443,7 @@
       const it=view[+li.dataset.i]; close();
       if (it.href.startsWith("#")){
         const el=document.getElementById(it.href.slice(1));
-        if(el){ el.scrollIntoView({behavior:"smooth", block:"start"}); el.setAttribute("tabindex","-1"); el.focus({preventScroll:true}); }
+        if(el){ el.scrollIntoView({behavior:(prefersReduced?'auto':'smooth'), block:"start"}); el.setAttribute("tabindex","-1"); el.focus({preventScroll:true}); }
       } else { location.href = it.href; }
     };
     const render = (q)=>{
@@ -448,7 +464,6 @@
       input.blur();
     };
 
-    // Bind once
     on(list, "click", (e)=>{ const li=e.target.closest("li"); if(li){ idx=[...list.children].indexOf(li); go(); } });
     on(input, "keydown", (e)=>{
       if (e.key==="ArrowDown"){ e.preventDefault(); setSel(idx+1); }
@@ -478,6 +493,47 @@
     });
   }
 
+  /* ------------------------------ tabs ink bar ----------------------------- */
+  function wirePrimaryTabs(){
+    const tabs = $(".tabs");
+    if (!tabs) return;
+    const ink = tabs.querySelector(".tab-ink") || (()=> {
+      const span = document.createElement("span"); span.className="tab-ink"; tabs.appendChild(span); return span;
+    })();
+
+    function setInk(el){
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const pr = tabs.getBoundingClientRect();
+      const x = r.left - pr.left;
+      ink.style.setProperty("--ink-x", x + "px");
+      ink.style.setProperty("--ink-w", r.width + "px");
+      tabs.querySelectorAll(".tab").forEach(a=>a.removeAttribute("aria-current"));
+      el.setAttribute("aria-current","page");
+    }
+
+    tabs.querySelectorAll(".tab").forEach(a=>{
+      on(a, "click", (e)=>{
+        const href = a.getAttribute("href")||"#";
+        if (href.startsWith("#")){
+          e.preventDefault();
+          const target = document.querySelector(href);
+          target && target.scrollIntoView({behavior:(prefersReduced?'auto':'smooth')});
+        }
+        setInk(a);
+      });
+    });
+
+    // initial: mark the first .tab or one matching current hash
+    const start = (location.hash && tabs.querySelector(`.tab[href='${location.hash}']`)) || tabs.querySelector(".tab");
+    setInk(start);
+
+    // keep aligned on resize & font-load
+    const align = ()=> setInk(tabs.querySelector('.tab[aria-current="page"]') || tabs.querySelector('.tab'));
+    on(window,"resize", throttleRAF(align), {passive:true});
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(align).catch(()=>{});
+  }
+
   /* --------------------------- visibility hygiene -------------------------- */
   function visibilityFixes(){
     on(document, "visibilitychange", ()=>{
@@ -503,6 +559,7 @@
     typesetSoon(250);
     typesetOnFontsReady();
     focusAnchors();
+    wirePrimaryTabs();
     backToTop();
     // Defer heavier non-critical features
     ri(()=>{ miniTOCHighlight(); palette(); });
@@ -513,7 +570,6 @@
   // Keep MathJax tidy on resizes (and when RO is absent)
   if (hasRO){
     const ro = new ResizeObserver(debounce(()=>typesetSoon(120),120));
-    // Observe lazily (after DOM ready)
     on(document,"DOMContentLoaded",()=> $$(".eq").forEach(el=> ro.observe(el)));
   } else {
     on(window,"resize", debounce(()=>typesetSoon(120),200), {passive:true});
@@ -521,4 +577,4 @@
 
   log("ready @ " + Math.round(now()) + "ms");
 })();
-```0
+</script>
