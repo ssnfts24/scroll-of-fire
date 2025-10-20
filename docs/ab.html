@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <meta charset="utf-8" />
+  <title>A/B Carrier Protocol — Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
+  <meta name="description" content="Blind A/B carrier test: 432/528/369 randomized, measure Ξ, apply the stop rule, and log to your Witness Ledger.">
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/ab.html" />
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
+  <style>.wrap{max-width:1180px;margin:0 auto;padding:20px 16px 80px}.title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);-webkit-background-clip:text;background-clip:text;color:transparent}.lab-card .big{font-size:20px}</style>
+  <script>/* MJ (lazy) */(function(){function L(){if(window.MathJax)return;window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['$$','$$']]},svg:{fontCache:'global'}};let s=document.createElement('script');s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";s.defer=1;document.head.appendChild(s);}if('IntersectionObserver'in window){let io=new IntersectionObserver(e=>{if(e.some(x=>x.isIntersecting)){io.disconnect();L();}},{rootMargin:'800px 0'});io.observe(document.documentElement);}else L();})();</script>
+</head>
+<body class="no-js">
+<main class="wrap">
+  <header class="page-head fancy-head">
+    <h1 class="title">🧪 A/B Carrier Protocol</h1>
+    <p class="subtitle">Blind test 432 / 528 / 369. Randomize, run the loop, compute Ξ (Eq.13), apply the stop rule (Eq.9), then reveal and log.</p>
+    <nav class="crumbs" style="display:flex;gap:8px;justify-content:center">
+      <a class="cta" href="index.html">← Codex</a><a class="cta" href="teach.html">Teaching Lab</a>
+    </nav>
+  </header>
+
+  <section class="grid">
+    <article class="card col-7 lab-card">
+      <h2>Step 1 — Blind Randomize</h2>
+      <p>Click <b>Randomize</b>. You’ll get “Sample A” and “Sample B” (two different carriers). Don’t peek until after both runs.</p>
+      <div class="lab-row">
+        <button id="btnRand" class="lab-btn">Randomize A/B</button>
+        <button id="btnReveal" class="lab-btn ghost" disabled>Reveal</button>
+      </div>
+      <div class="desk-grid" style="margin-top:8px">
+        <div class="desk-card"><b>Sample A</b><div id="labA" class="meta">—</div></div>
+        <div class="desk-card"><b>Sample B</b><div id="labB" class="meta">—</div></div>
+      </div>
+
+      <h2 style="margin-top:12px">Step 2 — Two Short Runs</h2>
+      <ol class="list">
+        <li>Open <a href="teach.html#tab-observer">Observer</a> in a new tab.</li>
+        <li>Use the hidden carrier value shown below (A or B). Run <b>12s × 2</b> rounds.</li>
+        <li>Come back and enter your quick Ξ estimate and one-line witness.</li>
+      </ol>
+
+      <div class="desk-grid">
+        <div class="desk-card">
+          <h3>A — quick rating</h3>
+          <label>Ξ (0–1)<input id="xiA" type="number" step="0.01" min="0" max="1" value="0.60"></label>
+          <label>Witness<input id="witA" placeholder="One detail after A…"></label>
+        </div>
+        <div class="desk-card">
+          <h3>B — quick rating</h3>
+          <label>Ξ (0–1)<input id="xiB" type="number" step="0.01" min="0" max="1" value="0.60"></label>
+          <label>Witness<input id="witB" placeholder="One detail after B…"></label>
+        </div>
+      </div>
+
+      <h2 style="margin-top:12px">Step 3 — Decide & Log</h2>
+      <p>Pick the better sample (<b>higher Ξ</b> or clearer witness). If Ξ fell or you felt foggy, apply the <b>Stop Rule</b> and re-center before any further testing.</p>
+      <div class="lab-row">
+        <button id="btnChooseA" class="lab-btn">Choose A</button>
+        <button id="btnChooseB" class="lab-btn">Choose B</button>
+        <button id="btnToLedger" class="lab-btn ghost" disabled>Send best → Ledger</button>
+      </div>
+
+      <details class="note" style="margin-top:10px">
+        <summary><b>Math anchors</b></summary>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathcal{H}(\nu)=\alpha(\Phi,137,144,432,528,369)\cdot\langle\mathcal{C}\rangle \tag{Eq.3} $$
+          $$ \Xi \approx \frac{\langle H\cdot I\rangle}{1 + \mathrm{Var}[\mathcal{M}]} \tag{Eq.13} $$
+          $$ \text{If}\ \frac{\mathrm{Truth}}{\mathrm{Distortion}}\downarrow \Rightarrow \text{Abort, Re-align, Resume} \tag{Eq.9} $$
+        </div></div>
+      </details>
+    </article>
+
+    <aside class="card col-5 lab-card">
+      <h3>Blind Tag (for your Observer tab)</h3>
+      <p>Use this frequency without revealing its label:</p>
+      <output id="blindNow" class="big">—</output>
+      <p class="meta">Click “Randomize” to populate this field.</p>
+
+      <h3 style="margin-top:12px">Notes</h3>
+      <ul class="list compact">
+        <li>Keep runs short. Fatigue raises Var[𝓜] → Ξ falls.</li>
+        <li>Use the same intention line for A and B (Eq.16 controlled).</li>
+      </ul>
+    </aside>
+  </section>
+
+  <footer class="footer">
+    <div class="divider" aria-hidden="true"></div>
+    <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+  </footer>
+</main>
+
+<script>
+(function(){
+  const y=document.getElementById('yr'); if(y) y.textContent=String(new Date().getFullYear());
+  const pick=(a)=>a[Math.floor(Math.random()*a.length)];
+  const pool=[432,528,369];
+  let A=null,B=null, best=null;
+
+  const labA=$("#labA"), labB=$("#labB"), blind=$("#blindNow");
+  const btnRand=$("#btnRand"), btnReveal=$("#btnReveal"), btnToLedger=$("#btnToLedger");
+  const xiA=$("#xiA"), xiB=$("#xiB"), witA=$("#witA"), witB=$("#witB");
+  const chooseA=$("#btnChooseA"), chooseB=$("#btnChooseB");
+  function $(s, r=document){ return r.querySelector(s); }
+
+  btnRand.addEventListener('click', ()=>{
+    const first=pick(pool), second=pick(pool.filter(x=>x!==first));
+    A=first; B=second; blind.textContent="Use “Sample A” first: "+A+" Hz";
+    labA.textContent="Hidden"; labB.textContent="Hidden";
+    btnReveal.disabled=false; btnToLedger.disabled=true; best=null;
+  });
+
+  btnReveal.addEventListener('click', ()=>{
+    if(A==null||B==null) return;
+    labA.textContent=A+" Hz"; labB.textContent=B+" Hz"; blind.textContent="—";
+  });
+
+  chooseA.addEventListener('click', ()=>{ best='A'; btnToLedger.disabled=false; });
+  chooseB.addEventListener('click', ()=>{ best='B'; btnToLedger.disabled=false; });
+
+  btnToLedger.addEventListener('click', ()=>{
+    if(!best) return;
+    const freq = (best==='A')?A:B;
+    const xi = parseFloat((best==='A'?xiA.value:xiB.value)||"");
+    const wit = (best==='A'?witA.value:witB.value)||"";
+    try{
+      // pipe to Ledger page via localStorage inbox
+      const payload = {intent:"A/B selection", carrier:String(freq), quality:isFinite(xi)?(xi>=0.7?"High":xi>=0.5?"Medium":"Low"):"", tags:"#ab,#carrier", witness:`${best} (${freq} Hz): ${wit}`, xi:xi||null, t:Date.now()};
+      localStorage.setItem("codex_ledger_inbox", JSON.stringify(payload));
+      alert("Sent to Ledger. Open the Witness Ledger tab to add.");
+    }catch(_){ alert("Saved locally failed—copy your note: "+wit); }
+  });
+})();
+</script>
+</body></html>
