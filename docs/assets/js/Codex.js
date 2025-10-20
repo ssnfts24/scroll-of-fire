@@ -1,12 +1,13 @@
 <script>
 /* ======================================================================
-   Scroll of Fire — Codex.js (v2.3)
+   Scroll of Fire — Codex.js (v2.4)
    Bulletproof banner • hero toolbar (new+legacy) • tabs ink • palette • TOC
+   Echo View • HUD toggle • on-page search • equation pop-out
    - Robust hero detection & failover (local→remote), auto-fit & persistence
    - Motion-safe equation activation + resize tidy
    - Deferred heavy features (palette / mini-TOC) on idle
    - Accessibility hardening, reduced-data/motion guards
-   - Matches current index.html + codex.css (2025-10-20)
+   - Matches index.html + codex.css (2025-10-20)
    ====================================================================== */
 (() => {
   "use strict";
@@ -23,6 +24,8 @@
     const ric = window.requestIdleCallback;
     return ric ? ric(fn, { timeout }) : setTimeout(fn, Math.min(timeout, 600));
   };
+  const debounce = (fn, ms = 120) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; };
+  const throttleRAF = (fn) => { let running=false; return (...a)=>{ if(running) return; running=true; raf(()=>{ running=false; fn(...a); }); }; };
 
   const store = {
     get(k, d=null){ try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
@@ -47,14 +50,11 @@
     const vh = window.innerHeight || document.documentElement.clientHeight || 0;
     return r.top < vh * thr && r.bottom > 0;
   };
-  const debounce = (fn, ms = 120) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; };
-  const throttleRAF = (fn) => { let running=false; return (...a)=>{ if(running) return; running=true; raf(()=>{ running=false; fn(...a); }); }; };
 
   const log = (m)=>{ if (window.SOFTelemetry) console.log("[Codex.js]", m); };
 
   /* --------------------------- site basics / a11y -------------------------- */
   function setYear(){
-    // Support both #y (current index) and older #yr
     const y = $("#y") || $("#yr");
     if (y) y.textContent = String(new Date().getFullYear());
   }
@@ -87,10 +87,52 @@
     const saved = store.get("codex:simple", false);
     apply(!!saved);
     [c1,c2].forEach(c=> c && on(c,"change",()=>apply(c.checked)));
-
-    // Mirror header Echo View button if present
     const btn = $("#toggleSimple");
     btn && on(btn,"click",()=> apply(!document.body.classList.contains("simple-on")));
+  }
+
+  /* ------------------------------ HUD toggle ------------------------------- */
+  function wireHUD(){
+    const btn = $("#toggleGrid");
+    if (!btn) return;
+    on(btn,"click", ()=>{
+      const onFlag = document.body.classList.toggle("bg-grid-heavy");
+      btn.setAttribute("aria-pressed", String(onFlag));
+    });
+  }
+
+  /* ------------------------------ on-page search ---------------------------- */
+  function wirePageSearch(){
+    const box = $("#site-search");
+    if (!box) return;
+    let lastValidity = "";
+    on(box,"input", ()=>{ if (lastValidity) { box.setCustomValidity(""); lastValidity=""; } });
+    on(box,"keydown", (e)=>{
+      if (e.key !== "Enter") return;
+      const q = box.value.trim().toLowerCase(); if(!q) return;
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+      let node, found=false;
+      while(node = walker.nextNode()){
+        const pe = node.parentElement;
+        if (!pe || pe.closest('header,nav,style,script,button,input,textarea,.palette,[aria-hidden="true"]')) continue;
+        const s = node.nodeValue.toLowerCase();
+        const i = s.indexOf(q);
+        if (i >= 0){
+          const range = document.createRange();
+          range.setStart(node, i); range.setEnd(node, i+q.length);
+          const rect = range.getBoundingClientRect();
+          window.scrollBy({ top: rect.top - 120, behavior:(prefersReduced?'auto':'smooth') });
+          found=true; break;
+        }
+      }
+      if (!found){ box.setCustomValidity("Not found"); box.reportValidity(); lastValidity="nf"; }
+    });
+    // quick shortcut: "/" to focus search
+    on(window,"keydown",(e)=>{
+      if (e.key === "/" && !/input|textarea/i.test(document.activeElement.tagName) && !e.metaKey && !e.ctrlKey){
+        e.preventDefault(); box.focus();
+      }
+    });
   }
 
   /* ------------------------------ hero helpers ----------------------------- */
@@ -174,14 +216,12 @@
     img.onerror = () => tryRemote();
     on(img,"load", ()=> clearTimeout(stallId), { once:true });
 
-    img.classList.add("hero-ready");
-
     const onLoad = () => checkFitAuto(fig, img, prefFit);
     if (img.complete && img.naturalWidth>0) onLoad(); else on(img,"load",onLoad,{once:true});
 
     if (!remoteSrc || isMetaApp || isOffline() || saveD) {
       wireHeroObservers(fig, img, prefFit);
-      wireHeroToolbar(fig);      // always wire toolbar (new or legacy)
+      wireHeroToolbar(fig);
       return;
     }
 
@@ -213,7 +253,6 @@
 
   /* ----------------------------- hero toolbar ----------------------------- */
   function wireHeroToolbar(fig){
-    // If your page already renders the toolbar (.hero-ui with specific IDs), wire it.
     const legacy = $(".hero-ui", fig);
     if (legacy){
       const bContain = $("#fitContain");
@@ -221,7 +260,6 @@
       const bPulse   = $("#btnTogglePulse");
       const bZoom    = $("#btnZoom");
 
-      // Sync initial states
       const mode = store.get("codex:hero-fit", fig.dataset.fit || "auto");
       setHeroFit(fig, mode);
 
@@ -230,14 +268,13 @@
       bPulse   && on(bPulse,"click",  (e)=>{ const onNow = !fig.classList.contains("pulse"); fig.classList.toggle("pulse", onNow); e.currentTarget.setAttribute("aria-pressed",String(onNow)); store.set("codex:hero-pulse", onNow); });
       bZoom    && on(bZoom,"click",   (e)=>{ const onNow = fig.classList.toggle("is-zoomed"); e.currentTarget.setAttribute("aria-expanded",String(onNow)); document.documentElement.style.overflow = onNow ? "hidden" : ""; });
 
-      // Respect saved pulse preference
       const pulsePref = store.get("codex:hero-pulse", !saveD && !isMetaApp);
       fig.classList.toggle("pulse", !!pulsePref);
       bPulse && bPulse.setAttribute("aria-pressed", String(!!pulsePref));
       return;
     }
 
-    // Otherwise, build the lightweight v2 toolbar
+    // lightweight v2 toolbar
     const ui = document.createElement("div");
     ui.className = "hero-ui";
     ui.setAttribute("role","toolbar");
@@ -346,6 +383,24 @@
     }
   }
 
+  /* --------------------------- equation pop-out UX ------------------------- */
+  function wireEqExpand(scope=document){
+    $$("[data-eq-expand]", scope).forEach(btn=>{
+      on(btn,"click", ()=>{
+        const eq = btn.closest(".card")?.querySelector(".eq");
+        if(!eq) return;
+        const clone = eq.cloneNode(true);
+        clone.classList.add("eq--expanded");
+        const close = document.createElement("button");
+        close.className = "eq-close"; close.type = "button"; close.textContent = "Close";
+        on(close,"click", ()=> clone.remove());
+        clone.appendChild(close);
+        document.body.appendChild(clone);
+        typesetSoon(40);
+      });
+    });
+  }
+
   /* ------------------------------ card tilt -------------------------------- */
   function tiltCards(){
     if (prefersReduced) return;
@@ -375,6 +430,7 @@
     if (!btn){
       btn = document.createElement("button");
       btn.className="to-top"; btn.type="button"; btn.textContent="↑ Top";
+      btn.setAttribute("aria-label","Back to top");
       document.body.appendChild(btn);
     }
     on(btn, "click", ()=> window.scrollTo({top:0, behavior:(prefersReduced?'auto':'smooth')}));
@@ -416,13 +472,13 @@
       shell.className="palette";
       shell.innerHTML = `
         <div class="panel" role="dialog" aria-modal="true" aria-label="Command palette">
-          <input type="search" placeholder="Jump to… (type to filter, ↑/↓, Enter)" aria-label="Filter commands" />
-          <ul></ul>
+          <input id="palInput" type="search" placeholder="Jump to… (type to filter, ↑/↓, Enter)" aria-label="Filter commands" />
+          <ul id="palList"></ul>
         </div>`;
       document.body.appendChild(shell);
     }
-    const input = $("input", shell);
-    const list  = $("ul", shell);
+    const input = $("#palInput", shell);
+    const list  = $("#palList", shell);
 
     const items = [];
     $$("main h2[id], main h3[id]").forEach(h=>{
@@ -464,6 +520,9 @@
       input.blur();
     };
 
+    // button hook
+    on($("#openPalette"),"click", open);
+    // list + keys
     on(list, "click", (e)=>{ const li=e.target.closest("li"); if(li){ idx=[...list.children].indexOf(li); go(); } });
     on(input, "keydown", (e)=>{
       if (e.key==="ArrowDown"){ e.preventDefault(); setSel(idx+1); }
@@ -471,7 +530,6 @@
       else if (e.key==="Enter"){ e.preventDefault(); go(); }
       else if (e.key==="Escape"){ e.preventDefault(); close(); }
     });
-    on(input, "input", ()=> render(input.value));
     on(document, "keydown", (e)=>{
       const meta = e.ctrlKey || e.metaKey;
       if (meta && (e.key==="k" || e.key==="K")){ e.preventDefault(); shell.classList.contains("open") ? close() : open(); }
@@ -524,11 +582,9 @@
       });
     });
 
-    // initial: mark the first .tab or one matching current hash
     const start = (location.hash && tabs.querySelector(`.tab[href='${location.hash}']`)) || tabs.querySelector(".tab");
     setInk(start);
 
-    // keep aligned on resize & font-load
     const align = ()=> setInk(tabs.querySelector('.tab[aria-current="page"]') || tabs.querySelector('.tab'));
     on(window,"resize", throttleRAF(align), {passive:true});
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(align).catch(()=>{});
@@ -552,16 +608,18 @@
     setYear();
     hardenExternal();
     wireSimpleMode();
+    wireHUD();
+    wirePageSearch();
     initBanner();
     revealOnScroll();
     activateEquations();
+    wireEqExpand();
     tiltCards();
     typesetSoon(250);
     typesetOnFontsReady();
     focusAnchors();
     wirePrimaryTabs();
     backToTop();
-    // Defer heavier non-critical features
     ri(()=>{ miniTOCHighlight(); palette(); });
     visibilityFixes();
   }
