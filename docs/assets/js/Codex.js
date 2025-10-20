@@ -315,19 +315,60 @@
   }
 
   /* ------------------------- reveal-on-scroll cards ------------------------ */
-  function revealOnScroll(){
-    const cards = $$(".card"); if (!cards.length) return;
-    if (!prefersReduced && hasIO){
-      const io = new IntersectionObserver((entries)=>{
-        for(const e of entries) if(e.isIntersecting){ e.target.classList.add("visible"); io.unobserve(e.target); }
-      }, { root:null, rootMargin:"0px 0px -12%", threshold:0.08 });
-      cards.forEach(el=>io.observe(el));
-    } else {
-      const tick = ()=> cards.forEach(el=> inViewport(el) && el.classList.add("visible"));
-      const onS = throttleRAF(tick);
-      on(window,"scroll",onS,{passive:true}); on(window,"load",tick); tick();
-    }
+  /* ------------------------- reveal-on-scroll cards (robust) ------------------ */
+function revealOnScroll(){
+  const cards = $$(".card");
+  if (!cards.length) return;
+
+  // Always ensure intrinsic size is visible to IO (content-visibility can hide).
+  cards.forEach(el => {
+    try { el.style.contentVisibility = "visible"; } catch {}
+  });
+
+  const reveal = (el) => {
+    if (!el.classList.contains("visible")) el.classList.add("visible");
+  };
+
+  // 1) Best path: IntersectionObserver
+  if (!prefersReduced && hasIO){
+    const io = new IntersectionObserver((entries)=>{
+      for (const e of entries) if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); }
+    }, { root:null, rootMargin:"0px 0px -8%", threshold:0.07 }); // slightly easier to trigger
+    cards.forEach(el=> io.observe(el));
+
+    // 2) Safety net: if nothing revealed after a moment, reveal gradually
+    setTimeout(()=>{
+      if (!cards.some(c=>c.classList.contains("visible"))){
+        let i = 0;
+        const step = ()=> { if (i < cards.length) reveal(cards[i++]); if (i < cards.length) raf(step); };
+        step();
+      }
+    }, 900);
+  } else {
+    // 3) Motion-reduced or no IO → reveal immediately
+    cards.forEach(reveal);
   }
+
+
+
+/* keep primary tabs ink in sync on hash changes */
+on(window,"hashchange", ()=>{
+  const tabs = $(".tabs");
+  if (!tabs) return;
+  const a = tabs.querySelector(`.tab[href='${location.hash}']`);
+  if (a) a.click(); // reuses the same ink-positioning logic
+});
+
+
+   
+  // 4) Extra guard for older Android WebViews
+  const tick = throttleRAF(()=>{
+    cards.forEach(el => { if (inViewport(el, 0.98)) reveal(el); });
+  });
+  on(window,"scroll", tick, {passive:true});
+  on(window,"load", tick);
+  tick();
+}
 
   /* --------------------------- equation activator -------------------------- */
   function activateEquations(){
