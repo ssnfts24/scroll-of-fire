@@ -2,7 +2,29 @@
    Scroll of Fire — Codex of Reality
    codex.css v2.1  (Electric–Aetheric • Balanced Motion • Mobile-first)
    ========================================================================== */
-
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  aspect-ratio: 21 / 9;
+  box-shadow: 0 20px 50px rgba(0,0,0,.45);
+}
+.hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 10s ease;
+}
+.hero:hover img {
+  transform: scale(1.05);
+}
+.hero::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at center,rgba(0,0,0,.0) 60%,rgba(0,0,0,.5) 100%);
+  pointer-events:none;
+}
 /* ------------------------------ Root / Theme ------------------------------ */
 :root{
   --bg:#09090d; --bg-elev:#0d0d12; --ink:#eae7df; --muted:#b8b3a6; --line:#262732; --card:#111119;
@@ -411,3 +433,92 @@ header.site{ z-index:70 }
 /* 8) Mobile spacing around the search box so chips don’t visually collide */
 .searchbox{ margin-top:6px }
 @media (max-width:560px){ .searchbox{ margin-top:2px } }
+
+
+
+
+.nav {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 clamp(12px,3vw,36px);
+  height:var(--head-h,64px);
+}
+.brand {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.brand .logo {
+  width:34px; height:34px;
+  background:url(assets/logo.svg) center/contain no-repeat;
+}
+.kicker {
+  font:600 1.1rem/1 Inter,system-ui;
+  letter-spacing:.02em;
+}
+.quick--utils .cta {
+  font:600 0.9rem/1 Inter,system-ui;
+  border-radius:8px;
+  transition:background .25s,border-color .25s;
+}
+.quick--utils .cta:hover {
+  background:rgba(255,255,255,.07);
+  border-color:var(--accent);
+}
+
+@media (max-width:768px){
+  .tabs{padding:6px;overflow-x:auto}
+  .tabs .tab{font-size:14px;padding:6px 10px}
+  .card{padding:12px}
+  h1.title{font-size:1.6rem}
+  h2{font-size:1.25rem}
+  .grid{gap:10px}
+}
+@media (max-width:480px){
+  header.site{position:sticky;top:0}
+  .quick--utils{gap:6px}
+  .hero{aspect-ratio:16/9}
+}
+
+
+
+
+
+.eq-scroll {
+  overflow-x:auto;
+  scrollbar-width:thin;
+  scrollbar-color:var(--accent,#7af3ff) transparent;
+  padding-bottom:2px;
+}
+.eq mjx-container {
+  font-size:1.1em;
+  line-height:1.4;
+}
+
+
+
+.footer{
+  text-align:center;
+  font-size:0.9rem;
+  color:var(--muted);
+  padding:40px 0 20px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.footer:hover{color:var(--accent)}
+
+
+
+#toTop{
+  position:fixed;right:20px;bottom:20px;
+  border-radius:50%;width:48px;height:48px;
+  background:var(--accent);color:#000;font-weight:700;
+  border:none;cursor:pointer;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .3s,transform .3s;
+}
+#toTop.visible{opacity:1;transform:none}
+
+
+
+
