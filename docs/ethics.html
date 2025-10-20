@@ -1,89 +1,266 @@
 <!doctype html>
 <html lang="en" dir="ltr">
 <head>
+  <!-- Resolve all relative URLs from the project root on GitHub Pages -->
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <script>
+    // In GitHub repo preview (github.com), remove <base> so relative paths still work.
+    if (location.hostname === "github.com") {
+      const b = document.querySelector("base"); if (b) b.remove();
+    }
+  </script>
+
   <meta charset="utf-8" />
   <title>Ethics & Coherence Law — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
-  <meta name="description" content="Living Laws of the Codex: consent, non-harm, accountability, and the Coherence Stop Rule (Eq.9), with a personal covenant you can seal." />
+  <meta name="description" content="Living Laws of the Codex: consent, non-harm, accountability, and the Coherence Stop Rule (Eq.9) — with a guided checklist, covenant, and incident log." />
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/ethics.html" />
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
+
+  <!-- Styles (blend site + teach lab) -->
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
+  <link rel="stylesheet" href="assets/css/teach.css?v=2025-10-20a">
+
   <style>
-    .wrap{max-width:980px;margin:0 auto;padding:20px 16px 80px}
-    .title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;
-      background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#a7f6ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-    .tablet{border:1px solid #3a3a44;border-radius:16px;padding:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));margin:10px 0}
-    .seal{display:flex;gap:8px;align-items:center;margin-top:8px}
-    .seal output{font-weight:600}
+    :root{ --maxw:1020px }
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:22px 16px 96px}
+    .title{
+      font-family:"Crimson Pro",serif;font-weight:800;text-align:center;
+      font-size:clamp(30px,3.8vw,46px);margin:8px 0 6px;letter-spacing:.2px;
+      background:linear-gradient(180deg,#fff,#baf7ff 60%,#7af3ff);-webkit-background-clip:text;background-clip:text;color:transparent
+    }
+    .subtitle{text-align:center;color:var(--muted);margin:0 0 12px}
+
+    .law-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+    .span-12{grid-column:span 12}.span-6{grid-column:span 6}.span-4{grid-column:span 4}
+    @media (max-width:980px){.span-6,.span-4{grid-column:span 12}}
+
+    .tablet{border:1px solid #343846;border-radius:14px;padding:12px;background:
+      linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.01))}
+    .badge{font-size:.75rem;padding:.08rem .4rem;border:1px solid var(--line);border-radius:6px;margin-left:.4rem}
+    .checklist li{display:flex;gap:10px;align-items:flex-start;margin:8px 0}
+    .checklist input{transform:translateY(2px)}
+    .cta--primary{
+      display:inline-flex;align-items:center;gap:.6ch;padding:.7rem 1rem;border-radius:12px;
+      background:linear-gradient(180deg,#baf7ff,#7af3ff);color:#07090d;border:1px solid #2a2a33;font-weight:800
+    }
+    .cta--primary[disabled]{opacity:.55;cursor:not-allowed}
+
+    .slim{font-size:.95em;color:var(--muted)}
+    .seal{display:flex;gap:10px;align-items:center;margin-top:8px}
+    .seal output{font-weight:700}
+    textarea{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--bg-elev);color:inherit;padding:10px}
+
+    .log-row{display:grid;grid-template-columns:1fr .8fr;gap:10px}
+    @media(max-width:800px){.log-row{grid-template-columns:1fr}}
+    .log-item{border-top:1px solid var(--line);padding:10px 0}
+    .kbd{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:.08rem .4rem}
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <header class="page-head fancy-head">
-      <h1 class="title">⚖️ Ethics & Coherence Law</h1>
-      <p class="subtitle">Care as constraint. If coherence drops, we stop. If consent is absent, we abstain.</p>
-      <nav class="crumbs" style="display:flex;gap:8px;justify-content:center">
-        <a class="cta" href="index.html">← Back</a>
-        <a class="cta" href="theory.html#coherence">Theory: Eq.9</a>
-        <a class="cta" href="teach.html#ethics">Teach: Stop Rule</a>
-      </nav>
-    </header>
+<main class="wrap">
+  <header class="page-head fancy-head">
+    <h1 class="title">⚖️ Ethics & Coherence Law</h1>
+    <p class="subtitle">Care is a boundary condition. If coherence drops, we stop. If consent is absent, we abstain.</p>
+    <nav class="crumbs" style="display:flex;gap:10px;justify-content:center">
+      <a class="cta" href="index.html">← Back</a>
+      <a class="cta" href="theory.html#coherence">Theory: Eq.9</a>
+      <a class="cta" href="teach.html#ethics">Teach: Stop Rule</a>
+    </nav>
+  </header>
 
-    <section class="card">
-      <h2>Law Tablets</h2>
-      <article class="tablet card">
-        <h3>1) Consent</h3>
-        <p>Manifest your own alignment; no covert influence or coercion over others’ agency.</p>
-      </article>
-      <article class="tablet card">
-        <h3>2) Non-harm</h3>
-        <p>Abort the run if actions degrade well-being or dignity. Realign, then resume.</p>
-      </article>
-      <article class="tablet card">
-        <h3>3) Accountability</h3>
-        <p>Log honestly; study trends; course-correct; share remnant proofs (when appropriate).</p>
-      </article>
-      <article class="tablet card">
-        <h3>4) Coherence Stop Rule (Eq.9)</h3>
-        <div class="eq"><div class="eq-scroll">
-          $$ \text{If}\ \frac{\mathrm{Truth}(t+\Delta)}{\mathrm{Distortion}(t+\Delta)} < \frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)}\ \Rightarrow\ \text{Abort, Re-align, Resume} $$
-        </div></div>
-      </article>
-    </section>
+  <!-- LAWS -->
+  <section class="law-grid" aria-label="Living Laws">
+    <article class="card span-12">
+      <h2>Living Laws (non-negotiable)</h2>
+    </article>
 
-    <section class="card">
-      <h2>Personal Covenant</h2>
-      <p>Seal your intention to uphold the Living Laws during practice and application.</p>
-      <textarea id="pledge" rows="3" style="width:100%" placeholder="I choose to practice with care, consent, and coherence…"></textarea>
-      <div class="seal">
-        <button id="seal" class="cta">Seal & Save</button>
-        <output id="sealOut">—</output>
+    <article class="tablet card span-6">
+      <h3>1) Consent <span class="badge">agency</span></h3>
+      <p>Manifest your own alignment; do not covertly steer another person’s will. Ask, inform, and accept “no.”</p>
+      <ul class="list-tight slim">
+        <li>Personal runs: you may include others only by their informed consent.</li>
+        <li>Group runs: publish the intent & stop rules up front.</li>
+      </ul>
+    </article>
+
+    <article class="tablet card span-6">
+      <h3>2) Non-harm <span class="badge">do no harm</span></h3>
+      <p>Abort a run that degrades well-being or dignity. Stabilize first; resume only if safe.</p>
+      <ul class="list-tight slim">
+        <li>Physical: dizziness, breath strain → stop, sit, water, slow exhale.</li>
+        <li>Emotional: flooding, agitation → stop, ground, simple phrase or silence.</li>
+      </ul>
+    </article>
+
+    <article class="tablet card span-6">
+      <h3>3) Accountability <span class="badge">witness</span></h3>
+      <p>Log honestly, study trends, and share remnant proofs when appropriate. Prefer evidence over story.</p>
+    </article>
+
+    <article class="tablet card span-6">
+      <h3>4) Coherence Stop Rule (Eq.9) <span class="badge">guardrail</span></h3>
+      <div class="eq"><div class="eq-scroll">
+        $$ \text{If}\ \frac{\mathrm{Truth}(t+\Delta)}{\mathrm{Distortion}(t+\Delta)}
+        < \frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)}
+        \ \Rightarrow\ \text{Abort, Re-align, Resume}. $$
+      </div></div>
+      <p class="slim">In practice: if your felt clarity/quality (Ξ) trends down, end the session, re-center breath/phrase, and only then continue.</p>
+    </article>
+  </section>
+
+  <!-- CHECKLIST -->
+  <section class="card" id="check">
+    <h2>Ethics Checklist (before you start)</h2>
+    <ul class="checklist list">
+      <li><input id="c1" type="checkbox"> <label for="c1">I have consent from anyone affected by my run.</label></li>
+      <li><input id="c2" type="checkbox"> <label for="c2">I will stop if coherence falls or distress rises (Eq.9).</label></li>
+      <li><input id="c3" type="checkbox"> <label for="c3">I will log honestly and avoid coercive language.</label></li>
+      <li><input id="c4" type="checkbox"> <label for="c4">I accept that this is practice, not medical advice.</label></li>
+    </ul>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button id="begin" class="cta--primary" disabled>✅ Ethics satisfied — Begin session</button>
+      <span class="slim">Emergency stop: press <span class="kbd">Esc</span> or simply stop speaking and exhale.</span>
+    </div>
+  </section>
+
+  <!-- COVENANT -->
+  <section class="card" id="covenant">
+    <h2>Personal Covenant</h2>
+    <p>Seal your intention to keep the Living Laws active in every run. Stored locally on this device.</p>
+    <textarea id="pledge" rows="3" placeholder="I choose to practice with care, consent, and coherence…"></textarea>
+    <div class="seal">
+      <button id="seal" class="cta">Seal & Save</button>
+      <output id="sealOut" aria-live="polite">—</output>
+    </div>
+    <p class="slim">Clear: empty the box and seal again.</p>
+  </section>
+
+  <!-- INCIDENT LOG -->
+  <section class="card" id="log">
+    <h2>Incident Log (optional)</h2>
+    <p class="slim">If you ever stop a run for ethics reasons, record it here. You can export logs to include with your ledger.</p>
+    <div class="log-row">
+      <div>
+        <label class="meta" for="desc">What happened?</label>
+        <textarea id="desc" rows="3" placeholder="Short note, e.g., 'Ξ dropped; agitation; stopped at 28s; switched to 432 and shorter phrase.'"></textarea>
       </div>
-      <p class="meta">Stored only on this device. You can clear it by emptying the box and sealing again.</p>
-    </section>
+      <div>
+        <label class="meta" for="sev">Severity</label>
+        <select id="sev" style="width:100%">
+          <option value="low">Low — minor wobble</option>
+          <option value="medium">Medium — needed stop/reset</option>
+          <option value="high">High — strong distress</option>
+        </select>
+        <button id="add" class="cta" style="margin-top:10px">Add to Log</button>
+        <button id="export" class="cta" style="margin-top:10px">Export JSON</button>
+      </div>
+    </div>
+    <div id="list" class="slim" style="margin-top:8px">No incidents yet.</div>
+  </section>
 
-    <footer class="footer">
-      <div class="divider" aria-hidden="true"></div>
-      <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
-    </footer>
-  </main>
+  <!-- FAQ -->
+  <section class="card" id="faq">
+    <h2>FAQ</h2>
+    <details class="tablet">
+      <summary><b>Why emphasize consent if I’m only working on myself?</b></summary>
+      <p>Because your practice touches shared space. Consent keeps agency intact and reduces hidden coercion in phrasing.</p>
+    </details>
+    <details class="tablet">
+      <summary><b>What if a facilitator ignores stop rules?</b></summary>
+      <p>Leave the run. Log the incident. Inform participants of the Living Laws page and ask for a reset with consent.</p>
+    </details>
+    <details class="tablet">
+      <summary><b>How do I know Ξ (coherence) is falling?</b></summary>
+      <p>Signs include breath strain, narrowing awareness, rushing, irritability, or loss of clarity. If unsure, stop and re-center.</p>
+    </details>
+  </section>
 
-  <script>
-    (function(){
-      const key="codex_ethic_pledge_v1";
-      const $=s=>document.querySelector(s);
-      $("#pledge").value = localStorage.getItem(key)||"";
-      $("#sealOut").textContent = $("#pledge").value ? "Sealed." : "—";
-      $("#seal").addEventListener("click", ()=>{
-        const v=$("#pledge").value.trim();
-        if(v){ localStorage.setItem(key,v); $("#sealOut").textContent="Sealed."; }
-        else { localStorage.removeItem(key); $("#sealOut").textContent="Cleared."; }
-      });
-      document.getElementById("yr").textContent=String(new Date().getFullYear());
-    })();
-  </script>
+  <footer class="footer">
+    <div class="divider" aria-hidden="true"></div>
+    <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+  </footer>
+</main>
+
+<!-- Page logic: covenant, checklist gate, incident log -->
+<script>
+(function(){
+  const $  = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  const YEAR = $('#yr'); if (YEAR) YEAR.textContent = String(new Date().getFullYear());
+
+  // Harden external links opened in new tab
+  $$('a[target="_blank"]').forEach(a=>{
+    const rel = new Set((a.getAttribute("rel")||"").toLowerCase().split(/\s+/).filter(Boolean));
+    rel.add("noopener"); rel.add("noreferrer"); a.setAttribute("rel", Array.from(rel).join(" "));
+  });
+
+  // Checklist gate
+  const checks = ['#c1','#c2','#c3','#c4'].map(id=>$(id));
+  const begin  = $('#begin');
+  function updateGate(){ begin.disabled = !checks.every(x=>x && x.checked); }
+  checks.forEach(x=>x && x.addEventListener('change', updateGate)); updateGate();
+  begin && begin.addEventListener('click', ()=>{
+    // Small UX nudge: scroll to Teach start if present, otherwise just confirm.
+    const link = document.querySelector('a[href="teach.html#ethics"]');
+    if (link) { location.href = 'teach.html#ethics'; }
+    else { alert('Ethics satisfied. Begin your session with care.'); }
+  });
+
+  // Covenant seal (local)
+  const KEY_PLEDGE = 'codex_ethic_pledge_v1';
+  const pledge = $('#pledge'), sealBtn = $('#seal'), sealOut = $('#sealOut');
+  if (pledge) { pledge.value = localStorage.getItem(KEY_PLEDGE)||''; }
+  if (sealOut) { sealOut.textContent = pledge && pledge.value.trim() ? 'Sealed.' : '—'; }
+  sealBtn && sealBtn.addEventListener('click', ()=>{
+    const v = (pledge.value||'').trim();
+    if (v){ localStorage.setItem(KEY_PLEDGE, v); sealOut.textContent = 'Sealed.'; }
+    else  { localStorage.removeItem(KEY_PLEDGE); sealOut.textContent = 'Cleared.'; }
+  });
+
+  // Incident log (local)
+  const KEY_LOG = 'codex_ethic_incidents_v1';
+  const desc = $('#desc'), sev = $('#sev'), add = $('#add'), list = $('#list'), ex = $('#export');
+  function read(){ try{return JSON.parse(localStorage.getItem(KEY_LOG)||'[]');}catch{return[]} }
+  function write(arr){ localStorage.setItem(KEY_LOG, JSON.stringify(arr)); }
+  function render(){
+    const all = read();
+    if (!all.length){ list.textContent = 'No incidents yet.'; return; }
+    list.innerHTML = all.map(e=>`
+      <div class="log-item">
+        <div><strong>${e.severity.toUpperCase()}</strong> — ${new Date(e.when).toLocaleString()}</div>
+        <div>${e.desc.replace(/</g,'&lt;')}</div>
+      </div>`).join('');
+  }
+  add && add.addEventListener('click', ()=>{
+    const d = (desc.value||'').trim();
+    if (!d){ alert('Add a short description.'); return; }
+    const item = { when:new Date().toISOString(), severity: sev.value||'low', desc:d };
+    const all = read(); all.unshift(item); write(all); render(); desc.value='';
+  });
+  ex && ex.addEventListener('click', ()=>{
+    const blob = new Blob([JSON.stringify(read(),null,2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'ethics-incident-log.json';
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  });
+  render();
+
+  // Emergency keyboard stop hint – broadcast a simple event any embedding page can listen to
+  addEventListener('keydown', (e)=>{
+    if (e.key === 'Escape'){
+      document.dispatchEvent(new CustomEvent('sof:emergency-stop'));
+      // Optional visual nudge:
+      begin && begin.classList.add('pulse');
+      setTimeout(()=>begin && begin.classList.remove('pulse'), 600);
+    }
+  }, {passive:true});
+})();
+</script>
+
+<!-- Equations -->
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </body>
 </html>
