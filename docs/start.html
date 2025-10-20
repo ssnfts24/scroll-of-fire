@@ -19,16 +19,18 @@
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#0b0b0f">
 
+  <!-- Open Graph -->
   <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Start Here — Scroll of Fire">
   <meta property="og:description" content="Pick a carrier, speak one line, measure coherence, and log it in under a minute. Plus a full site map.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/start.html">
-  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
+  <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
 
   <!-- CSS -->
   <link rel="preload" as="style" href="assets/css/codex.css?v=qs3">
   <link rel="stylesheet" href="assets/css/codex.css?v=qs3">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=qs3"></noscript>
 
   <!-- Preload banner (correct path from site root) -->
   <link rel="preload" as="image"
@@ -264,6 +266,12 @@
   const $$ = s => Array.from(document.querySelectorAll(s));
   const yr = $('#yr'); if (yr) yr.textContent = new Date().getFullYear();
 
+  // Harden external links opened in new tab
+  $$('a[target="_blank"]').forEach(a=>{
+    const rel = new Set((a.getAttribute("rel")||"").toLowerCase().split(/\s+/).filter(Boolean));
+    rel.add("noopener"); rel.add("noreferrer"); a.setAttribute("rel", Array.from(rel).join(" "));
+  });
+
   // Carrier toggle
   let carrier = "none";
   $$('.pill[data-carrier]').forEach(btn=>{
@@ -326,7 +334,8 @@
   renderRecent();
 })();
 </script>
-  <script>
+
+<script>
 /* Card reveal + tilt (same behavior as index) */
 (function(){
   "use strict";
@@ -335,7 +344,7 @@
   const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const hasIO = "IntersectionObserver" in window;
 
-  // 1) Reveal on scroll: toggles .visible so CSS animates
+  // Reveal on scroll
   function revealOnScroll(){
     const cards = $$(".card"); if (!cards.length) return;
     if (!prefersReduced && hasIO){
@@ -356,7 +365,7 @@
     tick();
   }
 
-  // 2) Tilt on hover (disabled for reduced motion)
+  // Tilt on hover
   function tiltCards(){
     if (prefersReduced) return;
     $$(".card").forEach(card=>{
@@ -371,19 +380,18 @@
     });
   }
 
-  // 3) Optional warm-up like index.html (prevents heavy glows on first paint)
+  // Warm-up (prevents heavy glows on first paint)
   document.body.classList.add('performance-warming');
   const lowCore = (navigator.hardwareConcurrency||4) <= 4;
   const saveData = navigator.connection && navigator.connection.saveData;
   if (lowCore || saveData) document.body.classList.add('perf-fast');
   setTimeout(()=>document.body.classList.remove('performance-warming'), 900);
 
-  // Boot
   document.addEventListener("DOMContentLoaded", ()=>{
     revealOnScroll();
     tiltCards();
   });
 })();
-  </script>
+</script>
 </body>
 </html>
