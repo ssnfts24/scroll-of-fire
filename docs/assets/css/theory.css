@@ -1,47 +1,74 @@
 /* ==========================================================================
    Scroll of Fire — Theory page overrides
-   theory.css v1.0  (Loads after codex.css)
+   theory.css v1.2 (pairs with codex.css v2.2)
    ========================================================================== */
 
-/* Narrower reading width + slightly larger math for study pages */
-.wrap { max-width: 980px; }
-.eq mjx-container { font-size: 118%; }
+/* Tighter reading width for theory text */
+.wrap { max-width: 1060px }
 
-/* Sticky local mini-TOC */
-.mini-toc {
-  position: sticky; top: calc(var(--head-h) + var(--tabs-h) + 10px);
-  border:1px solid var(--line); border-radius:12px; padding:10px; margin: 0 0 14px;
-  background:#0f0f14; box-shadow:0 12px 28px rgba(0,0,0,.35), inset 0 0 0 1px rgba(122,243,255,.1);
+/* Mini-TOC: sticky + compact */
+.mini-toc{
+  position: sticky; top: calc(var(--head-h) + var(--tabs-h) + 12px);
+  border:1px solid var(--line); border-radius:12px; padding:12px; margin:10px 0 18px;
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.005));
+  box-shadow:0 6px 14px rgba(0,0,0,.35), inset 0 0 0 1px rgba(122,243,255,.12);
 }
-.mini-toc h4 { margin:0 0 6px; font:700 13px/1 Inter,system-ui; color:#eae7df }
-.mini-toc a { display:block; padding:6px 8px; border-radius:8px; text-decoration:none; font-size:13px }
-.mini-toc a:hover,.mini-toc a:focus-visible { background:rgba(255,255,255,.05); border:1px solid #343846 }
-
-/* Equation callouts */
-.callout {
-  border-left:3px solid var(--spec-gold);
-  padding:10px 12px; background:rgba(255,255,255,.02);
-  border-radius:10px; margin:8px 0 10px;
+.mini-toc h4{ margin:0 0 8px; font:700 14px/1.2 Inter,system-ui; color:#fff }
+.mini-toc a{
+  display:block; padding:6px 8px; border-radius:8px; text-decoration:none; border:1px solid transparent;
+  color:var(--ink); font:600 13px/1.1 Inter,system-ui;
 }
+.mini-toc a:hover,.mini-toc a:focus-visible{ border-color:#3a3a44; background:rgba(255,255,255,.04) }
 
-/* Card headers tighter for long lists */
-.card h3 { margin-top:2px; }
-
-/* Banner caption (optional) */
-.hero-caption {
-  text-align:center; color:var(--muted); font-size:.95rem; margin:-6px 0 8px;
+/* Hero caption beneath the banner */
+.hero-caption{
+  text-align:center; margin:-6px 0 10px; color:var(--muted); font-style:italic;
 }
 
-/* On very small screens give more air to math blocks */
-@media (max-width:520px){
-  .eq .eq-scroll{ padding:12px 12px }
+/* Section CTA */
+.cta--section{ margin-top:10px }
+
+/* Denser inner grids for operator lists */
+.grid--tight{ gap:12px }
+
+/* Back-to-Canon floating pill (shows on scroll) */
+.back-canon{
+  position:fixed; right:14px; bottom:calc(16px + var(--safe-bottom)); z-index:50;
+  display:inline-block; padding:10px 12px; border-radius:999px; border:1px solid #2a2a33;
+  background:rgba(12,12,16,.55); backdrop-filter:blur(6px);
+  font:600 13px/1 Inter,system-ui; color:var(--ink); text-decoration:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.38), inset 0 0 0 1px rgba(122,243,255,.12);
+  opacity:0; transform:translateY(10px); transition:opacity .3s, transform .3s;
+}
+.back-canon.show{ opacity:1; transform:none }
+
+/* Tabs: ensure in-page anchors never feel cramped */
+.tabs .tab{ padding:8px 12px }
+@media (max-width:560px){ .tabs .tab{ padding:7px 10px; min-height:36px; font-size:13px } }
+
+/* Equation polish: slightly larger */
+.eq mjx-container{ font-size:112% }
+
+/* Make sure anchors don’t hide behind sticky header+tabs */
+:target{ scroll-margin-top: calc(var(--head-h) + var(--tabs-h) + 16px) }
+
+/* Quick bar: treat as section jumps */
+.quick.quick--utils{ gap:8px; flex-wrap:nowrap }
+.quick.quick--utils .cta{ min-width:92px; white-space:nowrap }
+
+/* Accessibility: visible focus on quick bar links */
+.quick.quick--utils .cta:focus-visible{
+  outline:2px solid var(--ring);
+  box-shadow:0 0 0 4px var(--ring-outer), 0 0 0 1px var(--ring-inset) inset;
 }
 
-/* “Back to Canon” floating pill for quick jump */
-.back-canon {
-  position:fixed; right:14px; bottom:calc(74px + var(--safe-bottom));
-  z-index:22; display:none; padding:9px 12px; border-radius:12px;
-  border:1px solid #2a2a33; background:rgba(12,12,16,.55); backdrop-filter:blur(6px);
-  font:600 13px/1 Inter; color:var(--ink); text-decoration:none;
+/* Small screens: spacing and density */
+@media (max-width:768px){
+  .wrap{ padding:14px 14px calc(80px + var(--safe-bottom)) }
+  .mini-toc{ display:none }  /* keep page light on phones */
 }
-.back-canon.show{ display:inline-block }
+
+/* Print tweaks (inherits codex.css print rules) */
+@media print{
+  .mini-toc,.back-canon{ display:none!important }
+}
