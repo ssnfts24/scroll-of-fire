@@ -1,0 +1,47 @@
+/* ==========================================================================
+   Scroll of Fire — Theory page overrides
+   theory.css v1.0  (Loads after codex.css)
+   ========================================================================== */
+
+/* Narrower reading width + slightly larger math for study pages */
+.wrap { max-width: 980px; }
+.eq mjx-container { font-size: 118%; }
+
+/* Sticky local mini-TOC */
+.mini-toc {
+  position: sticky; top: calc(var(--head-h) + var(--tabs-h) + 10px);
+  border:1px solid var(--line); border-radius:12px; padding:10px; margin: 0 0 14px;
+  background:#0f0f14; box-shadow:0 12px 28px rgba(0,0,0,.35), inset 0 0 0 1px rgba(122,243,255,.1);
+}
+.mini-toc h4 { margin:0 0 6px; font:700 13px/1 Inter,system-ui; color:#eae7df }
+.mini-toc a { display:block; padding:6px 8px; border-radius:8px; text-decoration:none; font-size:13px }
+.mini-toc a:hover,.mini-toc a:focus-visible { background:rgba(255,255,255,.05); border:1px solid #343846 }
+
+/* Equation callouts */
+.callout {
+  border-left:3px solid var(--spec-gold);
+  padding:10px 12px; background:rgba(255,255,255,.02);
+  border-radius:10px; margin:8px 0 10px;
+}
+
+/* Card headers tighter for long lists */
+.card h3 { margin-top:2px; }
+
+/* Banner caption (optional) */
+.hero-caption {
+  text-align:center; color:var(--muted); font-size:.95rem; margin:-6px 0 8px;
+}
+
+/* On very small screens give more air to math blocks */
+@media (max-width:520px){
+  .eq .eq-scroll{ padding:12px 12px }
+}
+
+/* “Back to Canon” floating pill for quick jump */
+.back-canon {
+  position:fixed; right:14px; bottom:calc(74px + var(--safe-bottom));
+  z-index:22; display:none; padding:9px 12px; border-radius:12px;
+  border:1px solid #2a2a33; background:rgba(12,12,16,.55); backdrop-filter:blur(6px);
+  font:600 13px/1 Inter; color:var(--ink); text-decoration:none;
+}
+.back-canon.show{ display:inline-block }
