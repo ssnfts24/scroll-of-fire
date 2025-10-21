@@ -25,6 +25,21 @@
   background:radial-gradient(circle at center,rgba(0,0,0,.0) 60%,rgba(0,0,0,.5) 100%);
   pointer-events:none;
 }
+
+.hero img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 21/9;
+  max-height: clamp(220px, 40vh, 420px);
+  object-fit: cover;
+  object-position: center top;
+}
+@media (min-width: 800px) {
+  .hero img {
+    max-height: 480px;
+    object-position: center 40%;
+  }
+}
 /* ------------------------------ Root / Theme ------------------------------ */
 :root{
   --bg:#09090d; --bg-elev:#0d0d12; --ink:#eae7df; --muted:#b8b3a6; --line:#262732; --card:#111119;
