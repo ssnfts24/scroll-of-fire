@@ -2,60 +2,168 @@
    Scroll of Fire — Codex of Reality
    codex.css v2.1  (Electric–Aetheric • Balanced Motion • Mobile-first)
    ========================================================================== */
-.hero {
-  position: relative;
-  overflow: hidden;
-  border-radius: 20px;
-  aspect-ratio: 21 / 9;
-  box-shadow: 0 20px 50px rgba(0,0,0,.45);
-}
-.hero img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 10s ease;
-}
-.hero:hover img {
-  transform: scale(1.05);
-}
-.hero::after {
-  content:"";
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at center,rgba(0,0,0,.0) 60%,rgba(0,0,0,.5) 100%);
-  pointer-events:none;
+/* ====================== HERO (single source of truth) ====================== */
+/* Controls:
+   --hero-fit: contain | cover (default: contain on mobile)
+   --hero-focal-mobile / --hero-focal-desktop: 'x y' object-position values
+*/
+:root{
+  --hero-fit: contain;
+  --hero-focal-mobile: 50% 40%;      /* tilt up slightly on phones */
+  --hero-focal-desktop: 58% 50%;
+  --accent: var(--spec-cyan);        /* ensure accent is defined */
 }
 
-.hero img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 21/9;
-  max-height: clamp(220px, 40vh, 420px);
-  object-fit: cover;
-  object-position: center top;
+/* Container */
+.hero{
+  position:relative;
+  margin:0 auto 10px;
+  max-width:var(--maxw);
+  border-radius:var(--radius-xl);
+  overflow:hidden;
+  background:var(--bg-elev);
+  isolation:isolate;
+  box-shadow:
+    0 16px 48px rgba(0,0,0,.46),
+    inset 0 0 0 1px rgba(122,243,255,.10);
 }
-@media (min-width: 800px) {
-  .hero img {
-    max-height: 480px;
-    object-position: center 40%;
+
+/* Image */
+.hero img{
+  display:block;
+  width:100%;
+  height:auto;
+  aspect-ratio:16 / 9;               /* stable intrinsic ratio */
+  object-fit:var(--hero-fit);
+  object-position:var(--hero-focal-mobile);
+  background:var(--bg-elev);
+  max-height:min(56vh, 520px);       /* prevent monster banners on phones */
+  transition:transform 8s ease;
+  /* soft edge vignette without editing asset */
+  -webkit-mask-image: radial-gradient(120% 140% at 50% 46%, #000 75%, rgba(0,0,0,0) 100%);
+  mask-image: radial-gradient(120% 140% at 50% 46%, #000 75%, rgba(0,0,0,0) 100%);
+}
+
+/* Hover grow (disabled for reduce-motion) */
+@media (hover:hover){
+  .hero:hover img{ transform:scale(1.035) }
+}
+@media (prefers-reduced-motion:reduce){
+  .hero img{ transition:none !important }
+}
+
+/* Decorative ground shadow so the banner feels layered */
+.hero::after{
+  content:"";
+  position:absolute;
+  left:6%; right:6%; bottom:-14px; height:28px;
+  pointer-events:none;
+  background:radial-gradient(60% 80% at 50% 0%, rgba(0,0,0,.35), transparent 70%);
+  filter:blur(8px);
+}
+
+/* Cover mode opt-in via data attribute (keeps focal controls) */
+.hero[data-fit="cover"] img{ --hero-fit: cover }
+
+/* Desktop refinements */
+@media (min-width:860px){
+  .hero img{
+    max-height:min(70vh, 720px);
+    object-position:var(--hero-focal-desktop);
   }
 }
-/* ------------------------------ Root / Theme ------------------------------ */
-:root{
-  --bg:#09090d; --bg-elev:#0d0d12; --ink:#eae7df; --muted:#b8b3a6; --line:#262732; --card:#111119;
-  --spec-red:#ff6b6b; --spec-orange:#ff9d57; --spec-gold:#f3c97a; --spec-green:#7cffb2;
-  --spec-cyan:#7af3ff; --spec-blue:#7aa8ff; --spec-violet:#c09cff; --spec-uv:rgba(200,140,255,.85);
-  --glow-gold:0 0 18px rgba(243,201,122,.26); --glow-cyan:0 0 18px rgba(122,243,255,.22); --glow-blue:0 0 18px rgba(122,168,255,.18); --glow-uv:0 0 22px rgba(200,140,255,.26);
-  --maxw:1180px; --radius-xl:22px; --radius-lg:18px; --radius-md:14px; --radius-sm:10px; --pad-card:16px;
-  --fs-00:12px; --fs-0:14px; --fs-1:16px; --fs-2:18px; --fs-3:clamp(20px,2.6vw,24px); --fs-4:clamp(24px,3.6vw,32px); --fs-5:clamp(28px,4.8vw,48px);
-  --ease:cubic-bezier(.22,.7,.2,1); --ease-slow:cubic-bezier(.22,.55,.08,1); --dur-1:.22s; --dur-2:.6s; --dur-3:1.2s;
-  --hero-aspect:16/9; --pulse-opacity:.18; --pulse-c1:rgba(122,243,255,.35); --pulse-c2:rgba(243,201,122,.28);
-  --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
-  --ring:rgba(122,243,255,.95); --ring-outer:rgba(122,243,255,.15); --ring-inset:rgba(122,168,255,.35);
+
+/* If you want cinematic crop on bigger screens by default */
+@media (min-width:980px){
+  .hero img{ --hero-fit: cover }
 }
-@media (prefers-color-scheme: light){
-  :root{ --ink:#0e1016; --muted:#3c4150; --bg:#f6f7fb; --bg-elev:#ffffff; --card:#f7f8fb; --line:#dfe2ea }
+
+
+/* ====================== Explore CTA ====================== */
+.cta--explore{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  width:100%;
+  padding:14px 16px;
+  border-radius:14px;
+  border:1px solid #2d313d;
+  text-decoration:none;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),
+    radial-gradient(120% 120% at 20% -20%, rgba(122,243,255,.08), transparent 60%);
+  box-shadow:0 8px 22px rgba(0,0,0,.38), inset 0 0 0 1px rgba(122,243,255,.14);
+  transition:transform .16s var(--ease), border-color .16s var(--ease), box-shadow .16s var(--ease);
 }
+.cta--explore:hover{ transform:translateY(-1px); border-color:#3a3f49 }
+.cta--explore:active{ transform:translateY(0) scale(.997) }
+
+.cta--explore .cta-title{
+  font:800 clamp(18px,3.6vw,22px)/1 "Crimson Pro", Georgia, serif;
+  letter-spacing:.2px;
+  background:linear-gradient(90deg, var(--spec-cyan), var(--spec-gold), var(--spec-violet));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 18px rgba(122,243,255,.18);
+}
+.cta--explore .cta-sub{ color:var(--muted); font-size:var(--fs-0); margin-top:4px }
+.cta--explore .cta-icon{
+  flex:0 0 auto;
+  width:42px; height:42px; border-radius:50%;
+  display:grid; place-items:center;
+  border:1px solid #38404a;
+  background:radial-gradient(circle at 50% 40%, rgba(122,243,255,.22), rgba(122,243,255,.06));
+  box-shadow:inset 0 0 0 1px rgba(122,243,255,.2);
+  font:800 20px/1 Inter, system-ui;
+  color:#0c0f12;
+}
+
+
+/* ====================== Explore Dock (mobile helper) ====================== */
+.explore-dock{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%) translateY(100%);
+  bottom:calc(10px + var(--safe-bottom));
+  z-index:65;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid #2a2f3a;
+  background:rgba(12,14,18,.72);
+  -webkit-backdrop-filter:saturate(140%) blur(8px);
+  backdrop-filter:saturate(140%) blur(8px);
+  box-shadow:0 12px 28px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.12);
+  transition:transform .28s var(--ease), opacity .28s var(--ease);
+  opacity:.0;
+}
+.explore-dock.show{
+  transform:translateX(-50%) translateY(0);
+  opacity:1;
+}
+.explore-dock .btn{
+  appearance:none;
+  border:1px solid #363c49;
+  border-radius:10px;
+  padding:8px 12px;
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  color:var(--ink);
+  font:600 14px/1 Inter, system-ui;
+  text-decoration:none;
+}
+.explore-dock .btn--primary{
+  border-color:#3a4250;
+  box-shadow:0 0 0 1px rgba(122,243,255,.18) inset;
+}
+@media (min-width:900px){
+  .explore-dock{ display:none } /* desktop doesn’t need it */
+}
+
+
+
+
 
 /* ------------------------------ Reset & Base ------------------------------ */
 *,*::before,*::after{ box-sizing:border-box }
