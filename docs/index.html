@@ -80,7 +80,9 @@
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
     .col-12{grid-column:span 12}.col-9{grid-column:span 9}.col-8{grid-column:span 8}.col-7{grid-column:span 7}.col-6{grid-column:span 6}.col-5{grid-column:span 5}.col-4{grid-column:span 4}.col-3{grid-column:span 3}
     @media (max-width:980px){.col-9,.col-8,.col-7,.col-6,.col-5,.col-4,.col-3{grid-column:span 12}}
-    .tile{display:block;text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005))}
+    .tile{display:block;text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));transition:transform .18s ease, box-shadow .18s ease}
+    .tile:hover,.tile:focus-visible{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.35)}
+    .tile h4{display:flex;align-items:center;gap:8px;margin:0 0 4px}
     .wrap{padding:16px;max-width:1200px;margin:0 auto}
     .hidden{display:none!important}
 
@@ -100,7 +102,7 @@
     .quick.quick--utils{gap:10px;padding:6px 8px;border-radius:12px;background:rgba(16,18,24,.55);border:1px solid rgba(52,56,66,.9)}
     .quick.quick--utils .cta{background:rgba(255,255,255,.04);border-color:#343846}
 
-    /* Tabs: single sticky bar; no overlap during fast scroll */
+    /* Tabs: single sticky bar */
     .tabs{position:sticky;top:calc(56px + var(--safe-top,0px));z-index:55;padding:8px 12px;margin:10px 0 14px;border-radius:14px;background:linear-gradient(180deg,rgba(12,14,18,.74),rgba(12,14,18,.58));-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border:1px solid rgba(52,56,66,.85);overflow:auto;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable both-edges}
     .tabs .tab{background:rgba(255,255,255,.04);border-color:#343846}
     .tabs .tab:hover{background:rgba(255,255,255,.07)}
@@ -108,7 +110,7 @@
     :target{scroll-margin-top:clamp(96px,13vh,140px)}
     .card{z-index:1}
 
-    /* Cinematic hero (cover by default; toggle via data-fit) */
+    /* Cinematic hero — now auto cover/contain for “web view” */
     .hero{--hero-aspect:21/9;border-radius:20px;overflow:hidden;isolation:isolate;position:relative;aspect-ratio:21/9;box-shadow:0 20px 50px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.12)}
     .hero img{display:block;width:100%;height:100%;object-fit:var(--_fit,cover);object-position:var(--hero-focal-mobile,50% 50%);background:var(--bg-elev);transition:transform 10s ease;max-height:min(68vh,880px)}
     .hero:hover img{transform:scale(1.05)}
@@ -117,7 +119,15 @@
     .hero[data-fit="cover"] img{--_fit:cover}
     @supports not (aspect-ratio:1){.hero img{height:clamp(220px,38vw,520px)}}
     @media (min-width:860px){.hero img{object-position:var(--hero-focal-desktop,58% 50%)}}
-    @media (max-width:480px){.hero{margin-top:6px;aspect-ratio:16/9}.hero img{object-fit:contain}}
+
+    /* Mega Explore button (web) */
+    .mega{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px 0 6px;padding:14px 16px;border-radius:14px;border:1px solid rgba(122,243,255,.18);background:linear-gradient(180deg,rgba(12,14,18,.65),rgba(12,14,18,.45));box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)}
+    .mega .ico{font-size:20px}
+    .mega strong{font:800 16px/1 Inter,system-ui;letter-spacing:.2px}
+    .mega .sub{color:var(--muted)}
+    .mega:hover,.mega:focus-visible{outline:none;box-shadow:0 14px 40px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.28);transform:translateY(-1px)}
+    .mega .arrow{margin-left:auto;transition:transform .18s ease}
+    .mega:hover .arrow{transform:translateX(4px)}
 
     /* Equation comfort */
     .eq mjx-container{font-size:110%}
@@ -136,12 +146,13 @@
       h1.title{font-size:1.6rem}
       h2{font-size:1.25rem}
       .grid{gap:10px}
+      .mega{padding:12px}
     }
 
     /* Footer & ToTop polish */
-    .footer{ text-align:center; color:var(--muted); margin-top:20px; font-size:14px; padding:40px 0 20px; border-top:1px solid rgba(255,255,255,.08) }
-    #toTop{ position:fixed; right:20px; bottom:calc(20px + var(--safe-bot,0px)); width:48px; height:48px; border-radius:50%; border:none; background:var(--spec-cyan); color:#000; font:800 14px/48px Inter; cursor:pointer; opacity:0; transform:translateY(10px); transition:opacity .3s, transform .3s; box-shadow:0 10px 30px rgba(0,0,0,.45) }
-    #toTop.visible{ opacity:1; transform:none }
+    .footer{text-align:center;color:var(--muted);margin-top:20px;font-size:14px;padding:40px 0 20px;border-top:1px solid rgba(255,255,255,.08)}
+    #toTop{position:fixed;right:20px;bottom:calc(20px + var(--safe-bot,0px));width:48px;height:48px;border-radius:50%;border:none;background:var(--spec-cyan);color:#000;font:800 14px/48px Inter;cursor:pointer;opacity:0;transform:translateY(10px);transition:opacity .3s, transform .3s;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+    #toTop.visible{opacity:1;transform:none}
   </style>
 
   <!-- MathJax lazy load + forced typeset on ready -->
@@ -166,6 +177,7 @@
   <a class="skip" href="#main-content">Skip to main content</a>
 
   <script>
+  /* Perf flags */
   (function(){
     document.body.classList.add('performance-warming');
     const lowCore=(navigator.hardwareConcurrency||4)<=4;
@@ -203,11 +215,18 @@
     <h1 class="title laser">⚖️ Scroll of Fire — Codex of Reality</h1>
     <p class="subtitle">“Let there be resonance.” By Aaron Paul Laird, <em>Scribe of Circuits</em></p>
 
+    <!-- Mega Explore button (improves 'Explore the Scroll' on web) -->
+    <a href="#explore" class="mega" aria-label="Explore the Scroll — jump to all pages">
+      <span class="ico">🗂️</span>
+      <span><strong>Explore the Scroll</strong><br><span class="sub">All pages • tiles mirror your repo</span></span>
+      <span class="arrow" aria-hidden="true">➜</span>
+    </a>
+
     <!-- Primary tabs -->
     <nav class="tabs" aria-label="Primary sections">
       <a class="tab tab--primary" href="theory.html">📘 Theory</a>
       <a class="tab tab--primary" href="teach.html">✨ Manifest</a>
-      <a class="tab" href="#explore" data-section="explore">Explore</a>
+      <a class="tab" href="#explore" data-section="explore" title="Jump to Explore">Explore</a>
       <a class="tab" href="#canon" data-section="canon">Canon</a>
       <a class="tab" href="#links" data-section="links">Links</a>
       <a class="tab" href="#integrity" data-section="integrity">Integrity</a>
@@ -262,28 +281,28 @@
     <section class="grid" id="explore" aria-labelledby="explore-h">
       <article class="card col-12">
         <h2 id="explore-h">🗂️ Explore the Scroll — all pages</h2>
-        <p class="meta">Everything live in <code>/docs</code>. These tiles mirror your repo.</p>
+        <p class="meta">Everything lives in <code>/docs</code>. These tiles mirror your repo. Tip: press <kbd>G</kbd> then type a page name.</p>
       </article>
 
-      <a class="tile col-3" href="start.html"><span class="badge">Start</span><h4>Start Here</h4><p>Onboarding & how to move.</p></a>
-      <a class="tile col-3" href="guide.html"><h4>Guide</h4><p>Step-by-step walkthrough of the Codex.</p></a>
-      <a class="tile col-3" href="theory.html"><h4>Theory</h4><p>Canonical write-ups for 0–17.</p></a>
-      <a class="tile col-3" href="teach.html"><h4>Manifest (Practice)</h4><p>Protocols, carriers, ledgers.</p></a>
+      <a class="tile col-3" href="start.html"><h4>🚀 Start Here</h4><p>Onboarding & how to move.</p></a>
+      <a class="tile col-3" href="guide.html"><h4>🧭 Guide</h4><p>Step-by-step walkthrough of the Codex.</p></a>
+      <a class="tile col-3" href="theory.html"><h4>📘 Theory</h4><p>Canonical write-ups for 0–17.</p></a>
+      <a class="tile col-3" href="teach.html"><h4>✨ Manifest (Practice)</h4><p>Protocols, carriers, ledgers.</p></a>
 
-      <a class="tile col-3" href="ab.html"><h4>A/B Carriers</h4><p>Run 432·528·369 comparisons.</p></a>
-      <a class="tile col-3" href="micro.html"><h4>Micro-acts</h4><p>Tiny actions → field feedback.</p></a>
-      <a class="tile col-3" href="circle.html"><h4>Circle</h4><p>Group coherence, facilitation.</p></a>
-      <a class="tile col-3" href="ethics.html"><h4>Ethics</h4><p>Coherence law & stop rules.</p></a>
+      <a class="tile col-3" href="ab.html"><h4>🧪 A/B Carriers</h4><p>Run 432·528·369 comparisons.</p></a>
+      <a class="tile col-3" href="micro.html"><h4>🔬 Micro-acts</h4><p>Tiny actions → field feedback.</p></a>
+      <a class="tile col-3" href="circle.html"><h4>🔗 Circle</h4><p>Group coherence, facilitation.</p></a>
+      <a class="tile col-3" href="ethics.html"><h4>🧭 Ethics</h4><p>Coherence law & stop rules.</p></a>
 
-      <a class="tile col-3" href="glossary.html"><h4>Glossary</h4><p>Terms, symbols, and operators.</p></a>
-      <a class="tile col-3" href="glyphs.html"><h4>Glyphs</h4><p>Icon set & sacred marks.</p></a>
-      <a class="tile col-3" href="downloads.html"><h4>Downloads</h4><p>Docs, images, shareables.</p></a>
-      <a class="tile col-3" href="ledger.html"><h4>Ledger</h4><p>Hashes, notes, witness proofs.</p></a>
+      <a class="tile col-3" href="glossary.html"><h4>📚 Glossary</h4><p>Terms, symbols, and operators.</p></a>
+      <a class="tile col-3" href="glyphs.html"><h4>🔱 Glyphs</h4><p>Icon set & sacred marks.</p></a>
+      <a class="tile col-3" href="downloads.html"><h4>⬇️ Downloads</h4><p>Docs, images, shareables.</p></a>
+      <a class="tile col-3" href="ledger.html"><h4>📒 Ledger</h4><p>Hashes, notes, witness proofs.</p></a>
 
-      <a class="tile col-3" href="manifest.html"><h4>Site Manifest</h4><p>App/SEO/PWA meta & credits.</p></a>
-      <a class="tile col-3" href="404.html"><h4>404</h4><p>Custom not-found page.</p></a>
-      <a class="tile col-3" href="sitemap.xml" target="_blank" rel="noopener"><h4>Sitemap</h4><p>XML map for crawlers.</p></a>
-      <a class="tile col-3" href="robots.txt" target="_blank" rel="noopener"><h4>Robots.txt</h4><p>Crawler rules.</p></a>
+      <a class="tile col-3" href="manifest.html"><h4>🧾 Site Manifest</h4><p>App/SEO/PWA meta & credits.</p></a>
+      <a class="tile col-3" href="404.html"><h4>🛰️ 404</h4><p>Custom not-found page.</p></a>
+      <a class="tile col-3" href="sitemap.xml" target="_blank" rel="noopener"><h4>🗺️ Sitemap</h4><p>XML map for crawlers.</p></a>
+      <a class="tile col-3" href="robots.txt" target="_blank" rel="noopener"><h4>🤖 Robots.txt</h4><p>Crawler rules.</p></a>
     </section>
 
     <div class="goldline sweep"></div>
@@ -464,12 +483,37 @@ Status: Verified
     </div>
   </div>
 
-  <!-- Year + ToTop logic -->
+  <!-- Year + ToTop + Hero fit logic -->
   <script>
     document.getElementById('y').textContent=new Date().getFullYear();
     const toTop=document.getElementById('toTop');
     addEventListener('scroll',()=>{ toTop.classList.toggle('visible', scrollY>600); }, {passive:true});
     toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+
+    /* HERO AUTO-FIT:
+       Some in-app web views crop the banner when address bars overlap.
+       We compute container vs image aspect and flip to `contain` when needed. */
+    (function autoHeroFit(){
+      const hero=document.getElementById('hero');
+      const img=document.getElementById('heroBanner');
+      if(!hero||!img) return;
+
+      function setFit(){
+        const cw=hero.clientWidth||window.innerWidth;
+        const ch=Math.min(hero.clientHeight||0, window.innerHeight*0.68)||hero.clientHeight||1;
+        const containerAR=cw/ch;
+        const imgAR=(img.naturalWidth||2100)/(img.naturalHeight||900);
+        // If container is taller/narrower than the image, use contain to avoid cropping.
+        const useContain = containerAR < imgAR*0.92;
+        hero.dataset.fit = useContain ? 'contain' : 'cover';
+      }
+
+      if (img.complete) setFit(); else img.addEventListener('load', setFit, {once:true});
+      const ro = new ResizeObserver(setFit);
+      ro.observe(hero);
+      addEventListener('orientationchange', setFit);
+      addEventListener('visibilitychange', ()=>!document.hidden&&setFit());
+    })();
   </script>
 </body>
-                                                                                                                                      </html>
+</html>
