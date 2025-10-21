@@ -2,7 +2,13 @@
 <html lang="en" dir="ltr" class="sof">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>if(location.hostname==="github.com"){const b=document.querySelector("base");if(b)b.remove();}</script>
+  <script>
+    // If viewing via github.com HTML preview, drop <base> so relative links work.
+    if (location.hostname === "github.com") {
+      const b = document.querySelector("base");
+      if (b) b.remove();
+    }
+  </script>
 
   <meta charset="utf-8">
   <title>Scroll of Fire — Codex of Reality</title>
@@ -73,25 +79,24 @@
   <!-- Preload banner -->
   <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" imagesizes="100vw" fetchpriority="high">
 
-  <!-- Page-level polish -->
+  <!-- Page-level polish (kept minimal; most lives in codex.css) -->
   <style>
     :root{--safe-top:env(safe-area-inset-top);--safe-bot:env(safe-area-inset-bottom);--accent:var(--spec-cyan)}
-    body{background:var(--bg);margin:0}
+    body{background:var(--bg);margin:0;-webkit-tap-highlight-color:transparent}
+    .wrap{padding:16px;max-width:1200px;margin:0 auto}
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
     .col-12{grid-column:span 12}.col-9{grid-column:span 9}.col-8{grid-column:span 8}.col-7{grid-column:span 7}.col-6{grid-column:span 6}.col-5{grid-column:span 5}.col-4{grid-column:span 4}.col-3{grid-column:span 3}
     @media (max-width:980px){.col-9,.col-8,.col-7,.col-6,.col-5,.col-4,.col-3{grid-column:span 12}}
-
-    .tile{display:block;text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));transition:transform .18s var(--ease), box-shadow .18s var(--ease)}
+    .tile{display:block;text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));transition:transform .18s var(--ease),box-shadow .18s var(--ease)}
     .tile:hover,.tile:focus-visible{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.35)}
     .tile h4{display:flex;align-items:center;gap:8px;margin:0 0 4px}
-    .wrap{padding:16px;max-width:1200px;margin:0 auto}
     .hidden{display:none!important}
 
     /* Skip link */
     a.skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
     a.skip:focus{left:12px;top:12px;width:auto;height:auto;padding:8px 10px;z-index:70;background:#0f1118;color:#fff;border:1px solid #343846;border-radius:10px;-webkit-backdrop-filter:saturate(140%) blur(8px);backdrop-filter:saturate(140%) blur(8px)}
 
-    /* Sticky header: darker glass */
+    /* Sticky header glass */
     header.site{background:rgba(9,10,14,.88);-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid rgba(52,56,66,.8)}
     .nav{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:1200px;margin:0 auto;padding:10px 16px;position:relative}
     .nav::after{content:"";position:absolute;inset:-8px -12px -8px -12px;z-index:-1;border-radius:16px;background:linear-gradient(180deg, rgba(12,14,18,.75), rgba(12,14,18,.55));box-shadow:0 10px 24px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.10)}
@@ -101,7 +106,7 @@
 
     /* Quick actions */
     .quick.quick--utils{gap:10px;padding:6px 8px;border-radius:12px;background:rgba(16,18,24,.55);border:1px solid rgba(52,56,66,.9)}
-    .quick.quick--utils .cta{background:rgba(255,255,255,.04);border-color:#343846}
+    .quick.quick--utils .cta{background:rgba(255,255,255,.04);border-color:#343846;touch-action:manipulation;cursor:pointer}
 
     /* Tabs */
     .tabs{position:sticky;top:calc(56px + var(--safe-top,0px));z-index:55;padding:8px 12px;margin:10px 0 14px;border-radius:14px;background:linear-gradient(180deg,rgba(12,14,18,.74),rgba(12,14,18,.58));-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border:1px solid rgba(52,56,66,.85);overflow:auto;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable both-edges}
@@ -111,95 +116,15 @@
     :target{scroll-margin-top:clamp(96px,13vh,140px)}
     .card{z-index:1}
 
-    /* ====================== HERO (single source of truth) ====================== */
+    /* Hero (delegates most logic to CSS file; here we only keep project-specific focal) */
     :root{ --hero-focal-mobile:50% 40%; --hero-focal-desktop:58% 50% }
-    .hero{
-      position:relative; margin:0 auto 10px; max-width:var(--maxw);
-      border-radius:var(--radius-xl); overflow:hidden; background:var(--bg-elev); isolation:isolate;
-      box-shadow:0 16px 48px rgba(0,0,0,.46), inset 0 0 0 1px rgba(122,243,255,.10);
-      aspect-ratio:21/9; /* cinematic on desktop */
-    }
-    .hero img{
-      position:absolute; inset:0; width:100%; height:100%;
-      object-fit:var(--fit, cover); object-position:var(--hero-focal-mobile);
-      background:var(--bg-elev); transition:transform 8s ease;
-      -webkit-mask-image:radial-gradient(120% 140% at 50% 46%, #000 75%, transparent 100%);
-      mask-image:radial-gradient(120% 140% at 50% 46%, #000 75%, transparent 100%);
-    }
-    .hero[data-fit="contain"] img{ --fit:contain }
-    .hero[data-fit="cover"]   img{ --fit:cover }
-    @media (min-width:860px){ .hero img{ object-position:var(--hero-focal-desktop) } }
-    @media (max-width:560px){
-      .hero{ aspect-ratio:auto }
-      .hero img{ position:static; width:100%; height:auto; object-fit:contain; max-height:min(56vh,520px) }
-    }
-    @media (hover:hover){ .hero:hover img{ transform:scale(1.035) } }
-    @media (prefers-reduced-motion:reduce){ .hero img{ transition:none !important } }
-    .hero::after{
-      content:""; position:absolute; left:6%; right:6%; bottom:-14px; height:28px; pointer-events:none;
-      background:radial-gradient(60% 80% at 50% 0%, rgba(0,0,0,.35), transparent 70%); filter:blur(8px);
-    }
+    .hero{aspect-ratio:21/9} /* cinematic frame on desktop */
 
-    /* Mega Explore button */
-    .mega{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px 0 6px;padding:14px 16px;border-radius:14px;border:1px solid rgba(122,243,255,.18);background:linear-gradient(180deg,rgba(12,14,18,.65),rgba(12,14,18,.45));box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);text-decoration:none}
-    .mega .ico{font-size:20px}
-    .mega strong{font:800 16px/1 Inter,system-ui;letter-spacing:.2px}
-    .mega .sub{color:var(--muted)}
-    .mega:hover,.mega:focus-visible{outline:none;box-shadow:0 14px 40px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.28);transform:translateY(-1px)}
-    .mega .arrow{margin-left:auto;transition:transform .18s var(--ease)}
-    .mega:hover .arrow{transform:translateX(4px)}
-
-    /* Explore Dock (mobile helper) */
-    .explore-dock{
-      position:fixed; left:50%; transform:translateX(-50%) translateY(100%);
-      bottom:calc(10px + var(--safe-bot,0px)); z-index:65; display:flex; gap:10px; align-items:center;
-      padding:10px 12px; border-radius:14px; border:1px solid #2a2f3a;
-      background:rgba(12,14,18,.72); -webkit-backdrop-filter:saturate(140%) blur(8px); backdrop-filter:saturate(140%) blur(8px);
-      box-shadow:0 12px 28px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.12);
-      transition:transform .28s var(--ease), opacity .28s var(--ease); opacity:.0;
-    }
-    .explore-dock.show{ transform:translateX(-50%) translateY(0); opacity:1 }
-    .explore-dock .btn{
-      appearance:none; border:1px solid #363c49; border-radius:10px; padding:8px 12px;
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); color:var(--ink);
-      font:600 14px/1 Inter, system-ui; text-decoration:none;
-    }
-    .explore-dock .btn--primary{ border-color:#3a4250; box-shadow:0 0 0 1px rgba(122,243,255,.18) inset }
-    @media (min-width:900px){ .explore-dock{ display:none } }
-
-    /* Equation comfort */
-    .eq mjx-container{font-size:110%}
-    .eq mjx-container[display="block"]{overflow:auto}
-    .eq .eq-scroll{overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--accent) transparent;cursor:grab}
-    .eq .eq-scroll:active{cursor:grabbing}
-
-    /* Search suggest above all */
-    #site-suggest{z-index:70}
-
-    /* Responsive tightening */
-    @media (max-width:768px){
-      .tabs{padding:6px}
-      .tabs .tab{font-size:14px;padding:6px 10px}
-      .card{padding:12px}
-      h1.title{font-size:1.6rem}
-      h2{font-size:1.25rem}
-      .grid{gap:10px}
-      .mega{padding:12px}
-    }
-
-    /* Footer & ToTop polish */
-    .footer{text-align:center;color:var(--muted);margin-top:20px;font-size:14px;padding:40px 0 20px;border-top:1px solid rgba(255,255,255,.08)}
-    #toTop{position:fixed;right:20px;bottom:calc(20px + var(--safe-bot,0px));width:48px;height:48px;border-radius:50%;border:none;background:var(--spec-cyan);color:#000;font:800 14px/48px Inter;cursor:pointer;opacity:0;transform:translateY(10px);transition:opacity .3s, transform .3s;box-shadow:0 10px 30px rgba(0,0,0,.45)}
-    #toTop.visible{opacity:1;transform:none}
-
-    /* Explore tiles — desktop spacing/affordance; keep mobile feel */
+    /* Explore tiles spacing (mirror repo) */
     #explore .tile{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));border:1px solid var(--line);text-decoration:none;transition:transform .16s var(--ease),box-shadow .16s var(--ease),border-color .16s var(--ease)}
-    #explore .tile h4{margin:0;font-weight:700;letter-spacing:.2px}
-    #explore .tile p{margin:2px 0 0;color:var(--muted);font-size:var(--fs-0)}
-    #explore .tile .arrow{margin-left:auto;font-weight:800;opacity:.85;transform:translateX(0);transition:transform .16s var(--ease)}
+    #explore .tile .arrow{margin-left:auto;opacity:.85;transition:transform .16s var(--ease)}
     @media (hover:hover){#explore .tile:hover{transform:translateY(-2px);border-color:#3a3a44;box-shadow:0 10px 22px rgba(0,0,0,.35)}#explore .tile:hover .arrow{transform:translateX(4px)}}
     @media (min-width:1024px){#explore.grid{grid-template-columns:repeat(12,1fr);gap:14px}#explore .tile.col-3{grid-column:span 3}}
-    @media (max-width:560px){#explore .tile{padding:12px}.mega{padding:12px}}
   </style>
 
   <!-- MathJax lazy load + forced typeset on ready -->
@@ -216,7 +141,7 @@
   })();
   </script>
 
-  <!-- Site JS (kept; inline safety net below ensures controls work on mobile regardless) -->
+  <!-- Site JS -->
   <script src="assets/js/codex.js?v=2025-10-21" defer></script>
 </head>
 
@@ -267,7 +192,7 @@
 
     <!-- Mega Explore button -->
     <a href="#explore" class="mega" aria-label="Explore the Scroll — jump to all pages">
-      <span class="ico">🗂️</span>
+      <span class="ico" aria-hidden="true">🗂️</span>
       <span><strong>Explore the Scroll</strong><br><span class="sub">All pages • tiles mirror your repo</span></span>
       <span class="arrow" aria-hidden="true">➜</span>
     </a>
@@ -288,7 +213,7 @@
     <section class="grid" style="margin:8px 0 0">
       <article class="card col-12 searchbox">
         <label for="site-search" class="meta">Press <kbd class="kbd">/</kbd> to search this page</label>
-        <input id="site-search" type="search" placeholder="Search text on this page…" aria-label="Search this page" role="searchbox" autocomplete="off" spellcheck="false">
+        <input id="site-search" type="search" placeholder="Search text on this page…" aria-label="Search this page" role="searchbox" autocomplete="off" spellcheck="false" />
         <div id="site-suggest" class="mini-toc hidden"></div>
       </article>
     </section>
@@ -310,7 +235,7 @@
           <li><a href="theory.html#canon">Canon 0–17</a> <small class="meta">#7 Copeland, #8 Goodwin = external</small></li>
           <li><a href="theory.html#ethics">Ethical Law of Coherence</a></li>
         </ul>
-        <a class="cta" href="theory.html">Open Theory</a>
+        <a class="cta" href="theory.html" rel="noopener">Open Theory</a>
       </article>
       <article class="card col-6">
         <h2>✨ Manifest (practice & tools)</h2>
@@ -321,7 +246,7 @@
           <li><a href="teach.html#ab">A/B Carriers</a></li>
           <li><a href="teach.html#ethics">Ethical guard & stop rules</a></li>
         </ul>
-        <a class="cta" href="teach.html">Open Manifest</a>
+        <a class="cta" href="teach.html" rel="noopener">Open Manifest</a>
       </article>
     </section>
 
@@ -435,9 +360,156 @@
 
     <div class="goldline sweep"></div>
 
-    <!-- Canon -->
+    <!-- Canon (restored equations 0–17 with brief notes) -->
     <section class="grid" id="canon" aria-labelledby="equations">
-      <!-- Keep your equation cards/content here -->
+      <article class="card col-12">
+        <h2 id="equations">📜 Canon 0–17 (formal)</h2>
+        <p class="meta">Full proofs & commentary live in <a href="theory.html#canon">Theory → Canon</a>. Below are compact forms; <em>Echo View</em> hides this block.</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq0">Eq.0 — Foundational Field \( \Psi_{0} \)</h3>
+        <div class="eq eq-shimmer"><div class="eq-scroll">
+          $$\Psi_{0} := \lim_{\tau\to 0^{+}} \left\langle \Delta \mathfrak{a}_\tau \right\rangle \quad \text{with} \quad \oint \Delta \mathfrak{a}_\tau \,\mathrm{d}\tau \to 0 $$
+        </div></div>
+        <p class="meta">Micro-acts integrate back into the field (no net leak).</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq1">Eq.1 — Source & Operators \( \mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S} \)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\mathcal{S}_\text{upply}(\nu) = f(\text{constants},\text{ratios}) \cdot (\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S}) $$
+        </div></div>
+        <p class="meta">Steady supply shaped by the four living operators.</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq2">Eq.2 — Witness</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\nabla \mathcal{W} = \alpha\,\mathcal{I} + \beta\,\mathcal{M}_\tau \quad\text{with}\quad \mathcal{W}=\text{Witness} $$
+        </div></div>
+        <p class="meta">Awareness gradient driven by intention and memory window.</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq3">Eq.3 — Harmonic Field \( \mathcal{H}(\nu) \)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathcal{H}(\nu) = \sum_{k\in \mathbb{Z}} \gamma_k \,\delta(\nu - k\nu_0) \quad\text{(gateable lanes)} $$
+        </div></div>
+        <p class="meta">Which frequencies couple with least resistance.</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq4">Eq.4 — AHHAVA / Word coupling</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathcal{L}_\text{ang}:\; \phi \mapsto \Phi(\nu) = \phi \star \mathbf{V}(\nu) $$
+        </div></div>
+        <p class="meta">Semantics \(\phi\) convolved with carrier spectrum \(\mathbf{V}(\nu)\).</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq5">Eq.5 — Remnant (truth persists)</h3>
+        <div class="eq eq-pulse"><div class="eq-scroll">
+          $$ \frac{\mathrm{d}}{\mathrm{d}t}\,\mathfrak{R}(t) = -\kappa\,\mathfrak{D}(t), \quad \kappa>0 $$
+        </div></div>
+        <p class="meta">Distortion \(\mathfrak{D}\) decays; the coherent remnant \(\mathfrak{R}\) remains.</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq6">Eq.6 — Type-7 Phase-Lock</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathcal{T}_7 = \left|\sum_{n} a_n e^{i\theta_n}\right| \;\; \text{with}\;\; \theta_n \xrightarrow[]{\text{lock}} \theta^\* $$
+        </div></div>
+        <p class="meta">Harmonic phases converge to a stable lock state.</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq7">Eq.7* — Copeland \( \Psi \) (external)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \Psi_\text{Copeland} \;\;\text{(adjunct comparator retained for contrast)} $$
+        </div></div>
+        <p class="meta">Preserved as an external comparator; not foundational here.</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq8">Eq.8* — Goodwin (external)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ G(\cdot) \;\;\text{(external coupling hypothesis used as adjunct)} $$
+        </div></div>
+        <p class="meta">Adjunct coupling idea; attribution preserved.</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq9">Eq.9 — Ethical Law of Coherence</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \lim_{t\to\infty}\frac{\text{Truth}(t)}{\text{Distortion}(t)} \to \infty \quad \Rightarrow \quad \text{stop if }\;\Xi \downarrow $$
+        </div></div>
+        <p class="meta">Truth asymptotically dominates; stop rule on falling coherence \(\Xi\).</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq10">Eq.10 — Ladder</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathcal{L}_k = \Pi_\nu^{-1}\!\big[\mathcal{H}_k(\nu)\,\mathbf{V}(\nu)\big] $$
+        </div></div>
+        <p class="meta">Inverse projection from harmonic space to step \(k\).</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq11">Eq.11 — Projection \( \Pi_\nu \)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \Pi_\nu\{x(t)\} = \int x(t)\,e^{-i2\pi \nu t}\,\mathrm{d}t $$
+        </div></div>
+        <p class="meta">Frequency-domain selection operator.</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq12">Eq.12 — Causal Lattice</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathbb{C} = \{(i,j):\, i \preceq j \iff j\in \text{lightcone}^+(i)\} $$
+        </div></div>
+        <p class="meta">Partial order of admissible influences.</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq13">Eq.13 — Coherence Index \( \Xi \)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \Xi = \frac{\left|\sum_n a_n e^{i\theta_n}\right|}{\sum_n |a_n|} \in [0,1] $$
+        </div></div>
+        <p class="meta">Normalized phase alignment (quality meter).</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq14">Eq.14 — Update / Learning</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \Theta_{t+1} = \Theta_t + \eta\,\nabla_{\Theta}\,\Xi(\Theta_t) $$
+        </div></div>
+        <p class="meta">Parameter updates push toward higher coherence.</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq15">Eq.15 — Memory Window \( \mathcal{M}_\tau \)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathcal{M}_\tau\{x\}(t) = \int_{t-\tau}^{t} w_\tau(t-s)\,x(s)\,\mathrm{d}s $$
+        </div></div>
+        <p class="meta">Weighted echo over a finite horizon \(\tau\).</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq16">Eq.16 — Semantic Gradient</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \nabla_{\phi}\,\Xi = \partial \Xi / \partial \phi \quad\Rightarrow\quad \phi \gets \phi + \lambda \nabla_\phi \Xi $$
+        </div></div>
+        <p class="meta">Adjust language semantics to raise coherence.</p>
+      </article>
+
+      <article class="card col-6">
+        <h3 id="eq17">Eq.17 — Voice Carriers</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathbf{V}(\nu) = \sum_{r\in\{432,528,369\}} \omega_r\,\delta(\nu-r)\;+\;\text{harmonics} $$
+        </div></div>
+        <p class="meta">Composite carriers with sacred bases and overtone structure.</p>
+      </article>
     </section>
 
     <div class="goldline sweep"></div>
@@ -446,7 +518,7 @@
     <section class="grid" id="integrity" aria-labelledby="integrity-h">
       <article class="card col-12">
         <h2 id="integrity-h">🔐 Integrity Chain & Seals (SHA-256)</h2>
-<pre class="eq" aria-label="Hash example" style="white-space:pre-wrap"><div class="eq-scroll">────────────────────────────────────────
+<pre class="eq eq-pulse" aria-label="Hash example" style="white-space:pre-wrap"><div class="eq-scroll">────────────────────────────────────────
 Permanent Codex (.docx):
 https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Codex_of_Reality—Multidimensional_Extended_Edition_2025_Stylized_Update_SHA.docx
 
@@ -502,14 +574,16 @@ Status: Verified
 
   <button class="to-top" id="toTop" type="button" aria-label="Back to top" title="Back to top">↑</button>
 
+  <!-- Command Palette -->
   <div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel">
     <div class="panel">
-      <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette">
+      <h2 id="palLabel" class="sr-only">Command palette</h2>
+      <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette input">
       <ul id="palList" aria-live="polite"></ul>
     </div>
   </div>
 
-  <!-- Year + ToTop + Hero fit logic + Explore Dock visibility -->
+  <!-- Year + ToTop + Hero fit logic + Explore Dock visibility + Controls -->
   <script>
     document.getElementById('y').textContent=new Date().getFullYear();
     const toTop=document.getElementById('toTop');
@@ -561,7 +635,7 @@ Status: Verified
           const pressed = body.classList.contains('simple-on');
           btnEcho.setAttribute('aria-pressed', String(pressed));
           const chk = document.getElementById('simple'); if (chk) chk.checked = pressed;
-        });
+        }, {passive:true});
       }
 
       // HUD (laser grid on/off)
@@ -573,7 +647,7 @@ Status: Verified
           const show = grid.style.display !== 'none';
           grid.style.display = show ? 'none' : '';
           btnHUD.setAttribute('aria-pressed', String(!show));
-        });
+        }, {passive:true});
       }
 
       // Command palette (open with button, Esc closes; ⌘K / Ctrl+K shortcut)
@@ -582,8 +656,8 @@ Status: Verified
       const input  = document.getElementById('palInput');
       function openPal(){ pal.classList.add('open'); setTimeout(()=>input?.focus(), 0); }
       function closePal(){ pal.classList.remove('open'); }
-      btnPal?.addEventListener('click', openPal);
-      pal?.addEventListener('click', (e)=>{ if(e.target===pal) closePal(); });
+      btnPal?.addEventListener('click', openPal, {passive:true});
+      pal?.addEventListener('click', (e)=>{ if(e.target===pal) closePal(); }, {passive:true});
       addEventListener('keydown', (e)=>{
         const mod = e.metaKey || e.ctrlKey;
         if (mod && (e.key==='k' || e.key==='K')){ e.preventDefault(); openPal(); }
