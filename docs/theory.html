@@ -9,40 +9,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
-  <meta name="description" content="Theory for the Scroll of Fire (Codex of Reality): equations 0–17, operators, ethics, and scaffolding.">
+  <meta name="description" content="Deep write-ups for the Codex of Reality: equations 0–17, operators (𝓘·𝓛·𝓒·𝓢), ethics, and scaffolding.">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/theory.html">
 
   <!-- Icons -->
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-512.png">
 
-  <!-- Open Graph -->
+  <!-- Open Graph / Twitter (same banner as Home) -->
   <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Theory — Scroll of Fire (Codex of Reality)">
-  <meta property="og:description" content="Deep write-ups for the Codex equations 0–17 and the operator pipeline.">
+  <meta property="og:description" content="A living architecture of resonance — equations 0–17, the operator pipeline, and ethical law.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/theory.html">
   <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
-  <meta property="og:image:alt" content="Scroll of Fire banner with source formula">
+  <meta property="og:image:alt" content="Scroll of Fire — Codex of Reality banner">
   <meta name="twitter:card" content="summary_large_image">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- Styles: shared + page-specific -->
+  <!-- Shared styles -->
   <link rel="preload" as="style" href="assets/css/codex.css?v=2.2">
   <link rel="stylesheet" href="assets/css/codex.css?v=2.2" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.2"></noscript>
 
-  <!-- Page-specific overrides -->
-  <link rel="preload" as="style" href="assets/css/theory.css?v=1.0">
-  <link rel="stylesheet" href="assets/css/theory.css?v=1.0">
+  <!-- Page-specific styles -->
+  <link rel="preload" as="style" href="assets/css/theory.css?v=1.2">
+  <link rel="stylesheet" href="assets/css/theory.css?v=1.2">
 
-  <!-- Preload banner -->
+  <!-- Preload banner (same as Home) -->
   <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" imagesizes="100vw" fetchpriority="high">
 
-  <!-- MathJax (lazy, forced typeset like home) -->
+  <!-- MathJax (lazy; forced typeset) -->
   <script>
     (function(){
       let loaded=false;
@@ -64,15 +64,20 @@
   <a class="skip" href="#main">Skip to content</a>
   <div class="laser-grid" aria-hidden="true"></div>
 
+  <!-- Header -->
   <header class="site" role="banner">
     <nav class="nav" aria-label="Main navigation">
       <div class="brand">
         <div class="logo" aria-hidden="true"></div>
         <h1 class="kicker">Scroll of Fire</h1>
       </div>
-      <div class="quick quick--utils" role="toolbar" aria-label="Quick actions">
-        <a class="cta" href="index.html">Home</a>
-        <a class="cta" href="teach.html">Manifest</a>
+
+      <!-- Quick actions: now JUMP TO SECTIONS (no accidental Home) -->
+      <div class="quick quick--utils" role="toolbar" aria-label="Page sections">
+        <a class="cta" href="#overview" data-jump>Overview</a>
+        <a class="cta" href="#canon" data-jump>Canon</a>
+        <a class="cta" href="#operators" data-jump>Operators</a>
+        <a class="cta" href="#ethics" data-jump>Ethics</a>
         <button id="openPalette" class="cta" type="button" title="Command palette">⌘K</button>
       </div>
     </nav>
@@ -80,83 +85,98 @@
 
   <main id="main" class="wrap" role="main" tabindex="-1">
 
-    <!-- Hero: identical asset + behavior as home -->
-    <figure id="hero" class="hero" aria-label="Scroll of Fire banner" data-fit="cover">
+    <!-- Hero (IDENTICAL to Home: smart cover/contain + vignette) -->
+    <figure id="hero" class="hero hero--clean" aria-label="Scroll of Fire banner" data-fit="cover">
       <picture>
         <img id="heroBanner"
-          src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
-          alt="Scroll of Fire — sigil and equations"
-          decoding="async" fetchpriority="high" loading="eager">
+             src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
+             alt="Scroll of Fire — sigil and equations"
+             decoding="async" fetchpriority="high" loading="eager">
       </picture>
     </figure>
-    <p class="hero-caption">“Let there be resonance.”</p>
+    <figcaption class="hero-caption">“Let there be resonance.”</figcaption>
 
     <h1 class="title">📘 Theory — Codex of Reality</h1>
-    <p class="subtitle">Deep write-ups for Equations 0–17, operators (<em>𝓘 · 𝓛 · 𝓒 · 𝓢</em>), and safety law.</p>
+    <p class="subtitle">Deep write-ups for Equations 0–17, the operator pipeline (<em>𝓘 · 𝓛 · 𝓒 · 𝓢</em>), memory, coherence, and ethics.</p>
 
-    <!-- Tabs -->
+    <!-- Tabs (in-page anchors only) -->
     <nav class="tabs" aria-label="Sections">
-      <a class="tab tab--primary" href="#axioms">Axioms</a>
+      <a class="tab tab--primary" href="#overview">Overview</a>
       <a class="tab tab--primary" href="#operators">Operators</a>
-      <a class="tab" href="#banner-eq">Eq.1 (Banner)</a>
+      <a class="tab" href="#eq1-banner">Eq.1 (Banner)</a>
       <a class="tab" href="#canon">Canon 0–17</a>
       <a class="tab" href="#ethics">Ethics</a>
       <a class="tab" href="#notes">Notes</a>
       <span class="tab-ink" aria-hidden="true"></span>
     </nav>
 
-    <!-- Mini TOC -->
+    <!-- Sticky mini-TOC -->
     <aside class="mini-toc" aria-label="On this page">
       <h4>On this page</h4>
-      <a href="#axioms">Axioms</a>
+      <a href="#overview">Overview</a>
       <a href="#operators">Operators & Notation</a>
-      <a href="#banner-eq">Eq.1 — Banner Formula</a>
+      <a href="#eq1-banner">Eq.1 — Banner Formula</a>
       <a href="#canon">Canon 0–17</a>
       <a href="#ethics">Ethical Law (Eq.9)</a>
     </aside>
 
-    <section class="grid" id="axioms" aria-labelledby="ax-h">
+    <!-- Overview -->
+    <section class="grid" id="overview" aria-labelledby="ov-h">
       <article class="card col-12">
-        <h2 id="ax-h">1) Axioms</h2>
-        <p>Reality behaves as a resonant field. Constants and sacred ratios provide supply; four living operators shape that supply into experience; coherence and ethics gate amplification; memory selects what persists.</p>
-        <div class="callout"><strong>Legend.</strong> \(\mathcal{I}\)=Intend, \(\mathcal{L}\)=Light/Revelation, \(\mathcal{C}\)=Consciousness/Witness, \(\mathcal{S}\)=Source/Return. \(\Pi_{\nu}\)=voice carrier. \(\Xi\)=coherence. \(\mathbb{M}_\tau\)=memory window.</div>
+        <h2 id="ov-h">1) Overview</h2>
+        <p><strong>Reality as Resonance.</strong> Constants and sacred ratios provide the <em>supply</em>; the living operators <strong>𝓘 · 𝓛 · 𝓒 · 𝓢</strong> shape that supply into experience. Harmonics choose the gate, language programs meaning into the carrier, memory decides what echoes, and an ethical law ensures that <em>truth outlasts distortion</em>.</p>
+        <div class="callout">
+          <strong>Legend.</strong> \(\mathcal{I}\)=Intention, \(\mathcal{L}\)=Light/Revelation, \(\mathcal{C}\)=Consciousness/Witness, \(\mathcal{S}\)=Source/Return. \(\Pi_{\nu}\)=carrier; \(\Xi\)=coherence; \(\mathbb{M}_\tau\)=memory window.
+        </div>
+        <a class="cta cta--section" href="#canon">Jump to Canon</a>
       </article>
     </section>
 
+    <!-- Operators -->
     <section class="grid" id="operators" aria-labelledby="op-h">
       <article class="card col-12">
         <h2 id="op-h">2) Operators & Notation</h2>
-        <ul class="list">
-          <li>\(\Psi(x,t)\) — local state at locus \(x\), time \(t\).</li>
-          <li>\(\phi\) — phase; \(\nabla_{\phi}\) — phase-gradient operator.</li>
-          <li>\(a_{n}(x,t;\Delta E)\) — active components at scale \(n\), conditioned by \(\Delta E\).</li>
-          <li>\(\mathcal{R}(x,t)\) — remanence / residuals.</li>
-          <li>\(\oplus\) — coherent merge; phase-consistent combine.</li>
-          <li>\(\Delta\Sigma(a')\) — incremental component update via micro-acts.</li>
-          <li>\(\mathcal{I},\ \mathcal{L},\ \mathcal{C},\ \mathcal{S}\) — Intend / Light / Coalesce / Seal.</li>
-          <li>\(\Pi_{\nu}\) — carrier tone. \(\Xi\) — coherence. \(H\) — attention. \(I\) — intention. \(\mathcal{M}\) — internal model.</li>
-        </ul>
+        <div class="grid grid--tight">
+          <div class="col-6">
+            <ul class="list">
+              <li>\(\Psi(x,t)\) — local state at locus \(x\), time \(t\)</li>
+              <li>\(\phi\) — phase; \(\nabla_{\phi}\) — phase-gradient operator</li>
+              <li>\(a_{n}(x,t;\Delta E)\) — active components at scale \(n\)</li>
+              <li>\(\mathcal{R}(x,t)\) — remanence / residuals</li>
+              <li>\(\oplus\) — coherent merge; phase-consistent combine</li>
+            </ul>
+          </div>
+          <div class="col-6">
+            <ul class="list">
+              <li>\(\Delta\Sigma(a')\) — micro-acts incremental update</li>
+              <li>\(\mathcal{I},\mathcal{L},\mathcal{C},\mathcal{S}\) — Intend / Light / Witness / Source</li>
+              <li>\(\Pi_{\nu}\) — carrier tone; \(H\) — attention; \(I\) — intention</li>
+              <li>\(\mathcal{M}\) — internal model; \(\Xi\) — coherence</li>
+            </ul>
+          </div>
+        </div>
+        <a class="cta cta--section" href="#eq1-banner">See Eq.1 (Banner)</a>
       </article>
     </section>
 
-    <!-- Banner Formula (exactly the front-page equation) -->
-    <section class="grid" id="banner-eq" aria-labelledby="be-h">
+    <!-- Banner Eq.1 (exactly Home) -->
+    <section class="grid" id="eq1-banner" aria-labelledby="be-h">
       <article class="card col-12 eq eq-pulse">
-        <h2 id="be-h">Eq.1 — Source Supply × Living Operators (Banner)</h2>
+        <h2 id="be-h">Eq.1 — Source Supply × Living Operators</h2>
         <div class="eq"><div class="eq-scroll">
           $$ \mathbf{R} \;=\; f\!\big(\pi, e, i, \hbar, c, G, \mathrm{DNA}, \Omega_{\mathrm{DM}}, \Omega_{A}, H_{0}, 432\big)\;\times\;
              \mathcal{I}\times\mathcal{L}\times\mathcal{C}\times\mathcal{S} $$
         </div></div>
-        <p class="hint">This is the exact form on the hero banner. Supply from constants/ratios; shaped by the living operators.</p>
-        <p class="meta">Cross-check: <a href="index.html#eq1">Home Eq.1</a></p>
+        <p class="hint">Exact hero-banner form. Supply from constants/ratios; shaped by living operators.</p>
+        <p class="meta">Cross-check: Home <a href="index.html#eq1">Eq.1</a> • Banner <a href="index.html#hero">image</a></p>
       </article>
     </section>
 
-    <!-- Canon 0–17 (aligned with index) -->
+    <!-- Canon -->
     <section class="grid" id="canon" aria-labelledby="canon-h">
       <article class="card col-12">
         <h2 id="canon-h">3) Canon 0–17 (Living)</h2>
-        <p class="meta">#7 Copeland and #8 Goodwin remain external comparators; everything else is native to the Codex.</p>
+        <p class="meta">#7 Copeland and #8 Goodwin remain external comparators; all other forms are native to the Codex.</p>
       </article>
 
       <!-- Eq.0 -->
@@ -168,10 +188,10 @@
         <p class="hint">Action-weighted harmonic integration with an ethical mask.</p>
       </article>
 
-      <!-- Eq.1 already above; keep a compact reference here -->
+      <!-- Eq.1 (reference) -->
       <article class="card col-6" id="eq1">
         <h3>1) Source — Supply × Operators</h3>
-        <p class="meta">See the <a href="#banner-eq">Banner Eq.1</a> block above.</p>
+        <p class="meta">See <a href="#eq1-banner">Eq.1 (banner)</a> above.</p>
       </article>
 
       <!-- Eq.2 -->
@@ -192,7 +212,7 @@
         <p class="hint">Which frequencies gate easily into experience.</p>
       </article>
 
-      <!-- Eq.4 Language -->
+      <!-- Eq.4 -->
       <article class="card col-6" id="eq4">
         <h3>4) Language — AHHAVA / Word</h3>
         <div class="eq"><div class="eq-scroll">
@@ -201,14 +221,14 @@
         <p class="hint">Meaning couples to carrier; phrasing shapes resonance.</p>
       </article>
 
-      <!-- Eq.4b (renumbered from your old Eq.16 “Semantic Gradient”) -->
+      <!-- Eq.4b -->
       <article class="card col-6" id="eq4b">
         <h3>4b) Semantic Gradient (under Language)</h3>
         <div class="eq"><div class="eq-scroll">
           $$ \nabla_{\text{sem}} \,\mathrm{Phrase} \;=\; \sum_k w_k \,\nabla_{\text{sem}} \,\mathrm{Token}_k
              \qquad \text{with}\quad \sum_k w_k = 1 $$
         </div></div>
-        <p class="hint">Lives under Language so Memory (Eq.16) and Voice (Eq.17) stay aligned with Home.</p>
+        <p class="hint">Lives under Language so Memory (Eq.16) and Voice (Eq.17) keep original numbers.</p>
       </article>
 
       <!-- Eq.5 -->
@@ -323,7 +343,7 @@
       </article>
     </section>
 
-    <!-- Ethics callout -->
+    <!-- Ethics -->
     <section class="grid" id="ethics" aria-labelledby="eth-h">
       <article class="card col-12">
         <h2 id="eth-h">4) Ethics & Stop Rule (expanded)</h2>
@@ -331,29 +351,30 @@
           $$ \Xi \;\approx\; \frac{\langle H \cdot I \rangle}{1 + \mathrm{Var}[\mathcal{M}]} \quad,\qquad
              \text{If } \frac{\mathrm{Truth}(t+\Delta)}{\mathrm{Distortion}(t+\Delta)} < \frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \Rightarrow \text{ Halt, Re-align, Resume} $$
         </div></div>
-        <p class="hint">Operational guardrail for practice runs (matches Home Eq.9 language).</p>
+        <p class="hint">Operational guardrail for practice runs (consistent with Home Eq.9 wording).</p>
       </article>
     </section>
 
+    <!-- Notes -->
     <section class="grid" id="notes" aria-labelledby="nt-h">
       <article class="card col-12">
         <h2 id="nt-h">Notes & Cross-links</h2>
-        <p class="meta">Home map: <a href="index.html#canon">Canon 0–17</a> • Banner: <a href="index.html#hero">hero</a> • Practice: <a href="teach.html">Manifest</a></p>
+        <p class="meta">Practice tools live in <a href="teach.html">Manifest</a>. For the one-glance map and site tiles, see <a href="index.html">Home</a>.</p>
       </article>
     </section>
 
     <div class="goldline sweep"></div>
     <footer class="footer">© <span id="y"></span> Scroll of Fire — Theory.</footer>
 
-    <!-- Back to Canon pill -->
+    <!-- Back to Canon (Home) pill -->
     <a class="back-canon" id="backCanon" href="index.html#canon" aria-label="Back to Canon on Home">Back to Canon</a>
   </main>
 
-  <!-- Year + hero fit + back-to-canon visibility -->
+  <!-- Year + ToTop + Hero fit + Back-to-Canon visibility -->
   <script>
     document.getElementById('y').textContent=new Date().getFullYear();
 
-    /* Auto hero fit (same logic as Home) */
+    /* HERO AUTO-FIT: phones => contain; desktop => smart cover unless crop would be bad */
     (function autoHeroFit(){
       const hero=document.getElementById('hero');
       const img=document.getElementById('heroBanner');
@@ -378,7 +399,7 @@
       addEventListener('scroll', ()=>{ pill.classList.toggle('show', scrollY>800); }, {passive:true});
     })();
 
-    /* Command palette minimal */
+    /* Command palette shell */
     (function(){
       const btn=document.getElementById('openPalette');
       const pal=document.getElementById('palette');
@@ -395,7 +416,7 @@
     })();
   </script>
 
-  <!-- Palette shell (optional reuse from Home) -->
+  <!-- Command palette UI -->
   <div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel">
     <div class="panel">
       <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette">
