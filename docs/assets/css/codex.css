@@ -1,20 +1,28 @@
 /* ==========================================================================
    Scroll of Fire — Codex of Reality
-   codex.css v2.1  (Electric–Aetheric • Balanced Motion • Mobile-first)
+   codex.css v2.2  (Electric–Aetheric • Balanced Motion • Mobile-first)
    ========================================================================== */
-/* ====================== HERO (single source of truth) ====================== */
-/* Controls:
-   --hero-fit: contain | cover (default: contain on mobile)
-   --hero-focal-mobile / --hero-focal-desktop: 'x y' object-position values
-*/
+
+/* ====================== Root tokens & sticky math ====================== */
 :root{
-  --hero-fit: contain;
-  --hero-focal-mobile: 50% 40%;      /* tilt up slightly on phones */
+  /* Hero controls */
+  --hero-fit: contain;                 /* default safe fit on mobile */
+  --hero-focal-mobile: 50% 40%;
   --hero-focal-desktop: 58% 50%;
-  --accent: var(--spec-cyan);        /* ensure accent is defined */
+
+  /* Accents / safety */
+  --accent: var(--spec-cyan);
+
+  /* Sticky heights */
+  --head-h: clamp(52px, 7.2vh, 64px);
+  --tabs-h: 42px;
 }
 
-/* Container */
+/* ====================== HERO (single source of truth) ====================== */
+/* Controls:
+   - Use data-fit="cover|contain" on .hero to override (default is contain)
+   - Focal point via --hero-focal-mobile / --hero-focal-desktop
+*/
 .hero{
   position:relative;
   margin:0 auto 10px;
@@ -26,24 +34,23 @@
   box-shadow:
     0 16px 48px rgba(0,0,0,.46),
     inset 0 0 0 1px rgba(122,243,255,.10);
+  /* Cinematic frame that won’t blow up on tall phones */
+  aspect-ratio:21 / 9;
 }
-
-/* Image */
+@media (max-width:600px){
+  .hero{ aspect-ratio:16 / 9 }
+}
 .hero img{
-  display:block;
-  width:100%;
-  height:auto;
-  aspect-ratio:16 / 9;               /* stable intrinsic ratio */
+  position:absolute; inset:0;
+  width:100%; height:100%;
   object-fit:var(--hero-fit);
   object-position:var(--hero-focal-mobile);
   background:var(--bg-elev);
-  max-height:min(56vh, 520px);       /* prevent monster banners on phones */
   transition:transform 8s ease;
-  /* soft edge vignette without editing asset */
+  /* Soft edge vignette without editing the asset */
   -webkit-mask-image: radial-gradient(120% 140% at 50% 46%, #000 75%, rgba(0,0,0,0) 100%);
-  mask-image: radial-gradient(120% 140% at 50% 46%, #000 75%, rgba(0,0,0,0) 100%);
+          mask-image: radial-gradient(120% 140% at 50% 46%, #000 75%, rgba(0,0,0,0) 100%);
 }
-
 /* Hover grow (disabled for reduce-motion) */
 @media (hover:hover){
   .hero:hover img{ transform:scale(1.035) }
@@ -51,7 +58,6 @@
 @media (prefers-reduced-motion:reduce){
   .hero img{ transition:none !important }
 }
-
 /* Decorative ground shadow so the banner feels layered */
 .hero::after{
   content:"";
@@ -61,23 +67,13 @@
   background:radial-gradient(60% 80% at 50% 0%, rgba(0,0,0,.35), transparent 70%);
   filter:blur(8px);
 }
-
-/* Cover mode opt-in via data attribute (keeps focal controls) */
-.hero[data-fit="cover"] img{ --hero-fit: cover }
-
-/* Desktop refinements */
+/* Fit controls via data attribute (keeps focal controls) */
+.hero[data-fit="cover"]   img{ --hero-fit: cover }
+.hero[data-fit="contain"] img{ --hero-fit: contain }
+/* Desktop focal refinement */
 @media (min-width:860px){
-  .hero img{
-    max-height:min(70vh, 720px);
-    object-position:var(--hero-focal-desktop);
-  }
+  .hero img{ object-position:var(--hero-focal-desktop) }
 }
-
-/* If you want cinematic crop on bigger screens by default */
-@media (min-width:980px){
-  .hero img{ --hero-fit: cover }
-}
-
 
 /* ====================== Explore CTA ====================== */
 .cta--explore{
@@ -98,7 +94,6 @@
 }
 .cta--explore:hover{ transform:translateY(-1px); border-color:#3a3f49 }
 .cta--explore:active{ transform:translateY(0) scale(.997) }
-
 .cta--explore .cta-title{
   font:800 clamp(18px,3.6vw,22px)/1 "Crimson Pro", Georgia, serif;
   letter-spacing:.2px;
@@ -117,7 +112,6 @@
   font:800 20px/1 Inter, system-ui;
   color:#0c0f12;
 }
-
 
 /* ====================== Explore Dock (mobile helper) ====================== */
 .explore-dock{
@@ -160,10 +154,6 @@
 @media (min-width:900px){
   .explore-dock{ display:none } /* desktop doesn’t need it */
 }
-
-
-
-
 
 /* ------------------------------ Reset & Base ------------------------------ */
 *,*::before,*::after{ box-sizing:border-box }
@@ -213,6 +203,7 @@ header.site{
 .brand .logo{ width:28px; height:28px; border-radius:8px; background:conic-gradient(from 210deg, var(--spec-cyan), var(--spec-gold), var(--spec-violet)); box-shadow:inset 0 0 12px rgba(122,243,255,.35), 0 0 18px rgba(200,140,255,.18) }
 .brand .kicker{ margin:0; font:800 clamp(18px,3.6vw,22px)/1 "Crimson Pro",Georgia,serif }
 
+/* Quick actions bar */
 .quick{
   display:flex; align-items:center; gap:10px; flex:1 1 auto; justify-content:flex-end;
   overflow-x:auto; overflow-y:hidden; padding:6px; scrollbar-gutter:stable; -webkit-overflow-scrolling:touch; scroll-snap-type:x proximity;
@@ -222,6 +213,10 @@ header.site{
   appearance:none; border:1px solid #343846; background:rgba(255,255,255,.04); color:var(--ink);
   padding:0 12px; height:36px; line-height:34px; border-radius:10px; font:600 14px/1 Inter; cursor:pointer; text-decoration:none; scroll-snap-align:start;
 }
+/* Mobile tap polish */
+.quick .cta{ touch-action:manipulation; -webkit-tap-highlight-color:transparent; user-select:none }
+.quick .cta:active{ transform:translateY(0) scale(.997) }
+
 @media (max-width:540px){ .quick a,.quick button{ height:34px; line-height:32px; padding:0 10px; font-size:13px } }
 
 /* ------------------------------ Wrapper & Titles ------------------------------ */
@@ -241,7 +236,7 @@ header.site{
 
 /* ------------------------------ Tabs (glass) ------------------------------ */
 .tabs{
-  position:sticky; top:calc(56px + var(--safe-top)); z-index:55;
+  position:sticky; top:calc(var(--head-h) + var(--safe-top)); z-index:55;
   display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:10px 0 14px; padding:8px 12px;
   overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-gutter:stable both-edges;
   background:linear-gradient(180deg, rgba(12,14,18,.72), rgba(12,14,18,.58));
@@ -259,7 +254,12 @@ header.site{
 .tabs .tab-ink{ position:absolute; left:var(--ink-x); width:var(--ink-w); height:2px; bottom:-6px; background:linear-gradient(90deg, var(--spec-cyan), var(--spec-gold), var(--spec-violet)); border-radius:2px; box-shadow:0 0 12px rgba(122,243,255,.45); opacity:.95; transition:left .25s var(--ease), width .25s var(--ease), opacity .25s var(--ease) }
 
 /* Ensure anchor jumps never hide behind sticky UI */
-:target{ scroll-margin-top: clamp(96px, 13vh, 140px) }
+:target{ scroll-margin-top: calc(var(--head-h) + var(--tabs-h) + 12px) }
+
+/* Also add global scroll-padding when supported */
+@supports selector(body:has(.tabs)){
+  html{ scroll-padding-top: calc(var(--head-h) + var(--tabs-h) + 12px) }
+}
 
 /* ------------------------------ Grid ------------------------------ */
 .grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:16px }
@@ -359,24 +359,6 @@ tbody tr:nth-child(even) td{ background:rgba(255,255,255,.015) }
 @media (max-width:720px){ .eq--expanded{ inset:0; border-radius:0 } }
 p mjx-container[display="inline"], li mjx-container[display="inline"], h3 mjx-container[display="inline"]{ display:block!important; max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:2px }
 
-/* ------------------------------ Hero (fit-first) ------------------------------ */
-.hero{
-  position:relative; margin:0 auto 10px; max-width:var(--maxw);
-  border-radius:var(--radius-xl); overflow:hidden; background:var(--bg-elev);
-  box-shadow:0 12px 36px rgba(0,0,0,.45), inset 0 0 40px rgba(255,200,107,.05), inset 0 0 0 1px rgba(122,243,255,.12);
-  isolation:isolate;
-}
-.hero img{
-  display:block; width:100%; height:auto; aspect-ratio:var(--hero-aspect);
-  object-fit:var(--_fit, contain); /* default to contain to avoid crop */
-  object-position:center center; background:var(--bg-elev);
-  max-height:min(68vh,880px);
-}
-.hero[data-fit="cover"] img{ --_fit:cover }
-@media (min-width:860px){ .hero img{ max-height:min(78vh,920px) } }
-@media (max-width:480px){ .hero{ margin-top:6px } .hero img{ object-fit:contain; max-height:56vh } }
-.hero--clean .hero-caption,.hero--clean .hero-pulse{ display:none!important }
-
 /* ------------------------------ HUD / Laser Grid ------------------------------ */
 .laser-grid{
   position:fixed; inset:-10% -10% 0 -10%; pointer-events:none; z-index:0; mix-blend-mode:screen; opacity:.44;
@@ -473,36 +455,13 @@ body.performance-warming{ animation:warmOff .9s linear forwards }
   body{ background-image:none!important }
   .laser-grid,.card::before,.card::after{ display:none!important }
   .eq{ box-shadow:inset 0 0 12px rgba(255,200,107,.03) }
-   }
-
-
-
-
-
-
-
-
-
-
-
-
-/* === SoF polish pack — menus, overlap, desktop nav density, hero soft-edges === */
-
-/* 1) Stable sticky math: declare heights once, then reuse */
-:root{
-  --head-h: clamp(52px, 7.2vh, 64px);
-  --tabs-h: 42px;
 }
+
+/* === SoF polish pack — menus, overlap, desktop nav density === */
 
 /* 2) Ensure sticky header/tabs never collide with content while scrolling */
 header.site{ min-height:var(--head-h) }
 .tabs{ top:var(--head-h) }                         /* tabs glue under header */
-:target{ scroll-margin-top: calc(var(--head-h) + var(--tabs-h) + 12px) }
-
-/* If the browser supports it, add global scroll padding so any anchor jump is safe */
-@supports selector(body:has(.tabs)){
-  html{ scroll-padding-top: calc(var(--head-h) + var(--tabs-h) + 12px) }
-}
 
 /* 3) Quick actions (Echo / HUD / ⌘K): nicer layout + no wrap jiggle */
 .quick{
@@ -539,27 +498,11 @@ header.site{ min-height:var(--head-h) }
 .tabs{ z-index:60 }                                 /* below header(70), above cards(1) */
 header.site{ z-index:70 }
 
-/* 7) Banner: soften “block” look with edge fade & subtle lift */
-.hero{ box-shadow:0 16px 48px rgba(0,0,0,.46), inset 0 0 0 1px rgba(122,243,255,.10) }
-.hero img{
-  /* soft edge vignette without changing your asset */
-  mask-image: radial-gradient(120% 140% at 50% 46%, #000 75%, rgba(0,0,0,0) 100%);
-  -webkit-mask-image: radial-gradient(120% 140% at 50% 46%, #000 75%, rgba(0,0,0,0) 100%);
-}
-.hero::after{
-  /* gentle ground shadow so it feels layered, not like a flat block */
-  content:""; position:absolute; left:6%; right:6%; bottom:-14px; height:28px; pointer-events:none;
-  background:radial-gradient(60% 80% at 50% 0%, rgba(0,0,0,.35), transparent 70%);
-  filter:blur(8px);
-}
-
 /* 8) Mobile spacing around the search box so chips don’t visually collide */
 .searchbox{ margin-top:6px }
 @media (max-width:560px){ .searchbox{ margin-top:2px } }
 
-
-
-
+/* ------------- Brand/nav small refinements (kept from your file) ------------- */
 .nav {
   display:flex;
   justify-content:space-between;
@@ -567,28 +510,15 @@ header.site{ z-index:70 }
   padding:0 clamp(12px,3vw,36px);
   height:var(--head-h,64px);
 }
-.brand {
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.brand .logo {
-  width:34px; height:34px;
-  background:url(assets/logo.svg) center/contain no-repeat;
-}
-.kicker {
-  font:600 1.1rem/1 Inter,system-ui;
-  letter-spacing:.02em;
-}
+.brand { display:flex; align-items:center; gap:10px }
+.brand .logo { width:34px; height:34px; background:url(assets/logo.svg) center/contain no-repeat }
+.kicker { font:600 1.1rem/1 Inter,system-ui; letter-spacing:.02em }
 .quick--utils .cta {
   font:600 0.9rem/1 Inter,system-ui;
   border-radius:8px;
   transition:background .25s,border-color .25s;
 }
-.quick--utils .cta:hover {
-  background:rgba(255,255,255,.07);
-  border-color:var(--accent);
-}
+.quick--utils .cta:hover { background:rgba(255,255,255,.07); border-color:var(--accent) }
 
 @media (max-width:768px){
   .tabs{padding:6px;overflow-x:auto}
@@ -601,26 +531,19 @@ header.site{ z-index:70 }
 @media (max-width:480px){
   header.site{position:sticky;top:0}
   .quick--utils{gap:6px}
-  .hero{aspect-ratio:16/9}
+  /* hero aspect already handled above */
 }
 
-
-
-
-
+/* --------- Math block minor comfort (from your polish at bottom) --------- */
 .eq-scroll {
   overflow-x:auto;
   scrollbar-width:thin;
   scrollbar-color:var(--accent,#7af3ff) transparent;
   padding-bottom:2px;
 }
-.eq mjx-container {
-  font-size:1.1em;
-  line-height:1.4;
-}
+.eq mjx-container { font-size:1.1em; line-height:1.4 }
 
-
-
+/* ------------------------------ Footer ------------------------------ */
 .footer{
   text-align:center;
   font-size:0.9rem;
@@ -630,8 +553,7 @@ header.site{ z-index:70 }
 }
 .footer:hover{color:var(--accent)}
 
-
-
+/* ------------------------------ ToTop ------------------------------ */
 #toTop{
   position:fixed;right:20px;bottom:20px;
   border-radius:50%;width:48px;height:48px;
@@ -641,11 +563,6 @@ header.site{ z-index:70 }
   transition:opacity .3s,transform .3s;
 }
 #toTop.visible{opacity:1;transform:none}
-
-
-
-
-
 
 /* === Mega Explore button (HTML uses class="mega") === */
 .mega{
@@ -663,9 +580,3 @@ header.site{ z-index:70 }
   .mega:hover{ transform:translateY(-1px); box-shadow:0 14px 40px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.28) }
   .mega:hover .arrow{ transform:translateX(4px) }
 }
-
-/* Optional: desktop hero as true “fill” if you want less letterboxing */
-@media (min-width:980px){
-  .hero img{ object-fit:cover }
-}
-
