@@ -66,9 +66,9 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
   <!-- Styles -->
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-21">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-21" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-21"></noscript>
 
   <!-- Preload banner -->
   <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" imagesizes="100vw" fetchpriority="high">
@@ -76,7 +76,6 @@
   <!-- Page-level polish -->
   <style>
     :root{--safe-top:env(safe-area-inset-top);--safe-bot:env(safe-area-inset-bottom);--accent:var(--spec-cyan)}
-
     body{background:var(--bg);margin:0}
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
     .col-12{grid-column:span 12}.col-9{grid-column:span 9}.col-8{grid-column:span 8}.col-7{grid-column:span 7}.col-6{grid-column:span 6}.col-5{grid-column:span 5}.col-4{grid-column:span 4}.col-3{grid-column:span 3}
@@ -113,33 +112,33 @@
     .card{z-index:1}
 
     /* ====================== HERO (single source of truth) ====================== */
-    :root{
-      --hero-focal-mobile: 50% 46%;
-      --hero-focal-desktop: 58% 50%;
-    }
+    :root{ --hero-focal-mobile:50% 40%; --hero-focal-desktop:58% 50% }
     .hero{
       position:relative; margin:0 auto 10px; max-width:var(--maxw);
       border-radius:var(--radius-xl); overflow:hidden; background:var(--bg-elev); isolation:isolate;
       box-shadow:0 16px 48px rgba(0,0,0,.46), inset 0 0 0 1px rgba(122,243,255,.10);
-      aspect-ratio:21/9; /* fills the box on desktop */
+      aspect-ratio:21/9; /* cinematic on desktop */
     }
     .hero img{
       position:absolute; inset:0; width:100%; height:100%;
       object-fit:var(--fit, cover); object-position:var(--hero-focal-mobile);
-      background:var(--bg-elev);
-      transition:transform 8s ease;
+      background:var(--bg-elev); transition:transform 8s ease;
       -webkit-mask-image:radial-gradient(120% 140% at 50% 46%, #000 75%, transparent 100%);
       mask-image:radial-gradient(120% 140% at 50% 46%, #000 75%, transparent 100%);
     }
     .hero[data-fit="contain"] img{ --fit:contain }
     .hero[data-fit="cover"]   img{ --fit:cover }
+    @media (min-width:860px){ .hero img{ object-position:var(--hero-focal-desktop) } }
+    @media (max-width:560px){
+      .hero{ aspect-ratio:auto }
+      .hero img{ position:static; width:100%; height:auto; object-fit:contain; max-height:min(56vh,520px) }
+    }
     @media (hover:hover){ .hero:hover img{ transform:scale(1.035) } }
-    @media (prefers-reduced-motion:reduce){ .hero img{ transition:none!important } }
+    @media (prefers-reduced-motion:reduce){ .hero img{ transition:none !important } }
     .hero::after{
       content:""; position:absolute; left:6%; right:6%; bottom:-14px; height:28px; pointer-events:none;
       background:radial-gradient(60% 80% at 50% 0%, rgba(0,0,0,.35), transparent 70%); filter:blur(8px);
     }
-    @media (min-width:860px){ .hero img{ object-position:var(--hero-focal-desktop) } }
 
     /* Mega Explore button */
     .mega{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px 0 6px;padding:14px 16px;border-radius:14px;border:1px solid rgba(122,243,255,.18);background:linear-gradient(180deg,rgba(12,14,18,.65),rgba(12,14,18,.45));box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);text-decoration:none}
@@ -217,8 +216,8 @@
   })();
   </script>
 
-  <!-- Site JS -->
-  <script src="assets/js/codex.js?v=2025-10-20" defer></script>
+  <!-- Site JS (kept; inline safety net below ensures controls work on mobile regardless) -->
+  <script src="assets/js/codex.js?v=2025-10-21" defer></script>
 </head>
 
 <body class="stars" data-theme="dark">
@@ -256,7 +255,6 @@
     <!-- Hero -->
     <figure id="hero" class="hero hero--clean" aria-label="Scroll of Fire banner" data-fit="cover">
       <picture>
-        <!-- <source srcset="assets/scroll-hero.webp" type="image/webp"> -->
         <img id="heroBanner"
              src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
              alt="Scroll of Fire — sigil and equations"
@@ -439,8 +437,7 @@
 
     <!-- Canon -->
     <section class="grid" id="canon" aria-labelledby="equations">
-      <!-- (Equations section unchanged from your version) -->
-      <!-- … keep all individual equation cards here (omitted in this snippet for brevity) … -->
+      <!-- Keep your equation cards/content here -->
     </section>
 
     <div class="goldline sweep"></div>
@@ -519,23 +516,23 @@ Status: Verified
     addEventListener('scroll',()=>{ toTop.classList.toggle('visible', scrollY>600); }, {passive:true});
     toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
 
-    /* HERO AUTO-FIT (fills desktop box; uses 'contain' if image would crop bad) */
+    /* HERO AUTO-FIT: phones => contain; desktop => smart cover unless it would crop badly */
     (function autoHeroFit(){
       const hero=document.getElementById('hero');
       const img=document.getElementById('heroBanner');
       if(!hero||!img) return;
-      function setFit(){
+      function pickFit(){
+        if (matchMedia('(max-width:560px)').matches){ hero.dataset.fit='contain'; return; }
         const cw=hero.clientWidth||innerWidth;
-        const ch=Math.max(1, hero.clientHeight || innerHeight*0.45);
+        const ch=hero.clientHeight||Math.max(1, innerHeight*0.35);
         const containerAR=cw/ch;
-        const imgAR=(img.naturalWidth||2100)/(img.naturalHeight||900);
-        hero.dataset.fit = (containerAR < imgAR*0.92) ? 'contain' : 'cover';
+        const iw=img.naturalWidth||2100, ih=img.naturalHeight||900, imageAR=iw/ih;
+        hero.dataset.fit=(containerAR < imageAR*0.92)?'contain':'cover';
       }
-      if (img.complete) setFit(); else img.addEventListener('load', setFit, {once:true});
-      const ro = new ResizeObserver(setFit);
-      ro.observe(hero);
-      addEventListener('orientationchange', setFit);
-      addEventListener('visibilitychange', ()=>!document.hidden&&setFit());
+      if (img.complete) pickFit(); else img.addEventListener('load', pickFit, {once:true});
+      new ResizeObserver(pickFit).observe(hero);
+      addEventListener('orientationchange', pickFit, {passive:true});
+      addEventListener('visibilitychange', ()=>!document.hidden&&pickFit());
     })();
 
     /* Explore Dock show/hide (mobile) */
@@ -549,6 +546,52 @@ Status: Verified
       const ioExplore = new IntersectionObserver(([e])=>{ pastExplore = e.isIntersecting; update(); }, {threshold:0.05});
       function update(){ dock.classList.toggle('show', heroOut && !pastExplore); }
       ioHero.observe(hero); ioExplore.observe(explore);
+    })();
+
+    /* —— Controls fallback so buttons always work on mobile —— */
+    (function controls(){
+      const body = document.body;
+
+      // Echo (hide equations / show summaries)
+      const btnEcho = document.getElementById('toggleSimple');
+      if (btnEcho && !btnEcho._wired){
+        btnEcho._wired = true;
+        btnEcho.addEventListener('click', ()=>{
+          body.classList.toggle('simple-on');
+          const pressed = body.classList.contains('simple-on');
+          btnEcho.setAttribute('aria-pressed', String(pressed));
+          const chk = document.getElementById('simple'); if (chk) chk.checked = pressed;
+        });
+      }
+
+      // HUD (laser grid on/off)
+      const btnHUD = document.getElementById('toggleGrid');
+      const grid   = document.querySelector('.laser-grid');
+      if (btnHUD && grid && !btnHUD._wired){
+        btnHUD._wired = true;
+        btnHUD.addEventListener('click', ()=>{
+          const show = grid.style.display !== 'none';
+          grid.style.display = show ? 'none' : '';
+          btnHUD.setAttribute('aria-pressed', String(!show));
+        });
+      }
+
+      // Command palette (open with button, Esc closes; ⌘K / Ctrl+K shortcut)
+      const btnPal = document.getElementById('openPalette');
+      const pal    = document.getElementById('palette');
+      const input  = document.getElementById('palInput');
+      function openPal(){ pal.classList.add('open'); setTimeout(()=>input?.focus(), 0); }
+      function closePal(){ pal.classList.remove('open'); }
+      btnPal?.addEventListener('click', openPal);
+      pal?.addEventListener('click', (e)=>{ if(e.target===pal) closePal(); });
+      addEventListener('keydown', (e)=>{
+        const mod = e.metaKey || e.ctrlKey;
+        if (mod && (e.key==='k' || e.key==='K')){ e.preventDefault(); openPal(); }
+        if (e.key==='Escape') closePal();
+        if (e.key==='/' && document.activeElement.tagName!=='INPUT' && document.activeElement.tagName!=='TEXTAREA'){
+          const s = document.getElementById('site-search'); if(s){ e.preventDefault(); s.focus(); }
+        }
+      }, {passive:false});
     })();
   </script>
 </body>
