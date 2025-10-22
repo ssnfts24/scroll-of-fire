@@ -72,16 +72,25 @@
   <!-- Preload banner -->
   <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" imagesizes="100vw" fetchpriority="high">
 
-  <!-- Page-scoped helpers + Living Tech bridges (kept lean; honor codex.css) -->
+  <!-- Page-scoped helpers + Living Tech bridges (respect codex.css tokens) -->
   <style>
     :root{
       --safe-top:env(safe-area-inset-top);--safe-bot:env(safe-area-inset-bottom);
-      --xi:.35; /* coherence signal (driven in JS) */
+      --xi:.35; /* coherence signal (JS-driven) */
       --accent-432:#7af3ff; --accent-528:#a4ff90; --accent-369:#f3c97a;
       --accent: var(--accent-432);
     }
     .carrier-528 :root, .carrier-528{--accent:var(--accent-528)}
     .carrier-369 :root, .carrier-369{--accent:var(--accent-369)}
+
+    /* NAV mobile fixes (show all quick buttons) */
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    @media (max-width:560px){
+      .brand{flex:0 0 auto}
+      .quick{flex:1 1 100%; min-width:0; width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-gutter:stable;}
+      .quick::-webkit-scrollbar{height:10px}
+      .quick::-webkit-scrollbar-thumb{background:#2b2b35;border-radius:10px;border:2px solid #0f0f14}
+    }
 
     body{margin:0}
     .wrap{padding:16px;max-width:1200px;margin:0 auto}
@@ -90,31 +99,93 @@
     a.skip:focus{left:12px;top:12px;width:auto;height:auto;padding:8px 10px;z-index:70;background:#0f1118;color:#fff;border:1px solid #343846;border-radius:10px;-webkit-backdrop-filter:saturate(140%) blur(8px);backdrop-filter:saturate(140%) blur(8px)}
     #integrity pre.eq{background:#0e1015;border:1px solid rgba(122,243,255,.14);border-radius:12px;padding:12px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
 
-    /* ===== LIGHT LASERS inside .eq (works with codex.css) ===== */
+    /* ====== EQUATION BOX FX (slower sabers + orbits/spirals/nebula) ====== */
     .eq{ position:relative; overflow:hidden }
-    .eq .lasers{ pointer-events:none; position:absolute; inset:0; mix-blend-mode:screen; opacity:.85 }
+    .eq .fx-layer{ pointer-events:none; position:absolute; inset:0; mix-blend-mode:screen; opacity:.9 }
+
+    /* classic beams (slow) */
     .eq .beam{
-      position:absolute; width:2px; height:140%; top:-20%; left:10%;
-      background: linear-gradient(180deg, rgba(122,243,255,.0), rgba(122,243,255,.7), rgba(122,243,255,.0));
-      filter: blur(0.4px) drop-shadow(0 0 8px rgba(122,243,255,.45));
+      position:absolute; width:2px; height:160%; top:-30%;
+      background:linear-gradient(180deg, rgba(122,243,255,0), rgba(122,243,255,.75), rgba(122,243,255,0));
+      filter:blur(.5px) drop-shadow(0 0 10px rgba(122,243,255,.45));
       transform:translateX(0) rotate(12deg);
-      animation: beamSlide 9s linear infinite;
+      animation: beamSlide var(--beam-speed, 24s) linear infinite;
       animation-delay: var(--d,0s);
     }
     .eq .beam.alt{
-      width:1px; background: linear-gradient(180deg, rgba(243,201,122,.0), rgba(243,201,122,.7), rgba(243,201,122,.0));
-      transform:translateX(0) rotate(-10deg);
-      animation-duration: 7.2s;
+      width:1px;
+      background:linear-gradient(180deg, rgba(243,201,122,0), rgba(243,201,122,.8), rgba(243,201,122,0));
+      transform:translateX(0) rotate(-11deg);
+      animation-duration: var(--beam-speed-alt, 28s);
     }
-    @keyframes beamSlide{
-      0%{ left:-10% }
-      100%{ left:110% }
+    @keyframes beamSlide{0%{left:-12%}100%{left:112%}}
+
+    /* orbital sabers (clash by counter-rotation) */
+    .eq .orbit{
+      position:absolute; inset:-12% -6%; transform: rotate(var(--tilt,10deg));
+      animation: orbitSpin var(--orbit-speed, 32s) linear infinite;
+      filter: drop-shadow(0 0 12px rgba(122,243,255,.25));
     }
-    @media (prefers-reduced-motion:reduce){
-      .eq .lasers{display:none}
+    .eq .orbit.counter{ animation-direction: reverse; filter: drop-shadow(0 0 12px rgba(243,201,122,.25)) }
+    .eq .orb{
+      position:absolute; top:50%; left:50%;
+      width:2px; height:38%;
+      transform-origin:0% -20%;
+      background:linear-gradient(180deg, rgba(255,255,255,0), rgba(122,243,255,.85), rgba(255,255,255,0));
+      border-radius:2px;
+      box-shadow:0 0 10px rgba(122,243,255,.4), 0 0 18px rgba(122,243,255,.24) inset;
+    }
+    .eq .orb.gold{ background:linear-gradient(180deg, rgba(255,255,255,0), rgba(243,201,122,.9), rgba(255,255,255,0)); box-shadow:0 0 10px rgba(243,201,122,.45), 0 0 18px rgba(243,201,122,.25) inset }
+    @keyframes orbitSpin{ from{transform:rotate(var(--tilt,10deg)) rotate(0deg)} to{transform:rotate(var(--tilt,10deg)) rotate(360deg)} }
+
+    /* spiral field (soft) */
+    .eq .spiral{
+      position:absolute; inset:-20%; border-radius:50%;
+      background:
+        conic-gradient(from 0deg, rgba(122,243,255,.0) 0 40%, rgba(122,243,255,.18) 50%, rgba(122,243,255,0) 60%),
+        radial-gradient(60% 60% at 50% 50%, rgba(122,243,255,.08), transparent 70%);
+      animation: spiralSpin var(--spiral-speed, 36s) linear infinite;
+      filter: blur(0.6px);
+    }
+    .eq .spiral.alt{
+      background:
+        conic-gradient(from 0deg, rgba(243,201,122,.0) 0 42%, rgba(243,201,122,.18) 52%, rgba(243,201,122,0) 62%),
+        radial-gradient(60% 60% at 50% 50%, rgba(243,201,122,.06), transparent 70%);
+      animation-duration: var(--spiral-speed-alt, 40s);
+    }
+    @keyframes spiralSpin{ from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+    /* nebula sparkles */
+    .eq .nebula{
+      position:absolute; inset:0;
+      background-image:
+        radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,.4), transparent 60%),
+        radial-gradient(1.5px 1.5px at 70% 35%, rgba(122,243,255,.5), transparent 60%),
+        radial-gradient(2px 2px at 40% 75%, rgba(243,201,122,.5), transparent 60%),
+        radial-gradient(1px 1px at 85% 60%, rgba(200,140,255,.45), transparent 60%);
+      animation: nebulaBlink 3.6s ease-in-out infinite alternate;
+      opacity:.55;
+      filter: blur(.2px);
+    }
+    @keyframes nebulaBlink{
+      0%{opacity:.35; transform:translateY(0)}
+      50%{opacity:.7; transform:translateY(-1px)}
+      100%{opacity:.5}
     }
 
-    /* ===== Global living text hooks (match your v2.5 tokens) ===== */
+    /* per-eq variants (auto-assigned) */
+    .eq[data-fx="beams"]   .spiral,.eq[data-fx="beams"]   .orbit,.eq[data-fx="beams"]   .nebula{display:none}
+    .eq[data-fx="orbit"]   .beam,.eq[data-fx="orbit"]     .spiral{display:none}
+    .eq[data-fx="spiral"]  .beam,.eq[data-fx="spiral"]    .orbit{display:none}
+    .eq[data-fx="nebula"]  .beam,.eq[data-fx="nebula"]    .orbit,.eq[data-fx="nebula"] .spiral{display:none}
+    .eq[data-fx="combo"]   *{display:block}
+
+    @media (prefers-reduced-motion:reduce){
+      .eq .fx-layer{display:none}
+      .eq .mjx-svg{filter:none!important}
+    }
+
+    /* Living text (as before) */
     body.living-all :where(h1,h2,h3,p,li,small,em,strong,span,a,button,label,.kicker,.subtitle,.meta,.hint,.eq-note){
       background: linear-gradient(90deg, rgba(255,255,255,.95), var(--accent), rgba(255,255,255,.9));
       background-size: 300% 100%;
@@ -125,11 +196,8 @@
     .no-living, .logo, .laser-grid, img, video, canvas, svg path, svg rect, svg circle, svg polygon { background:none!important; color:inherit!important; -webkit-background-clip:initial!important; filter:none!important; animation:none!important }
     @keyframes living-slide{ 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
 
-    /* MJX SVG glow is already in codex.css; this softens per box */
     .eq .mjx-svg{ transition:filter .35s ease }
-    .eq:hover .mjx-svg{
-      filter: drop-shadow(0 0 calc(3px + 10px*var(--xi)) color-mix(in srgb, var(--accent) 40%, transparent));
-    }
+    .eq:hover .mjx-svg{ filter: drop-shadow(0 0 calc(3px + 10px*var(--xi)) color-mix(in srgb, var(--accent) 40%, transparent)); }
   </style>
 
   <!-- MathJax -->
@@ -170,6 +238,7 @@
         <button id="toggleSimple" class="cta" type="button" aria-pressed="false" title="Echo View (hide math)">Echo</button>
         <button id="toggleGrid" class="cta" type="button" aria-pressed="false" title="Toggle HUD grid">HUD</button>
         <button id="cycleCarrier" class="cta" type="button" title="Cycle carrier skin 432→528→369">Carrier</button>
+        <button id="toggleAffect" class="cta" type="button" aria-pressed="true" title="Toggle living text effects">Affect</button>
         <button id="openPalette" class="cta" type="button" title="Command palette">⌘K</button>
       </div>
     </nav>
@@ -214,7 +283,7 @@
       <article class="card col-12 searchbox">
         <label for="site-search" class="meta">Press <kbd class="kbd">/</kbd> to search this page</label>
         <input id="site-search" type="search" placeholder="Search text on this page…" aria-label="Search this page" role="searchbox" autocomplete="off" spellcheck="false">
-        <div id="site-suggest" class="mini-toc hidden"></div>
+        <div id="site-suggest" class="mini-toc hidden" role="listbox"></div>
       </article>
     </section>
 
@@ -288,8 +357,8 @@
       <!-- Eq.0 -->
       <article class="card col-6 eq-card reveal" id="eq0">
         <h3 class="sheen">0) Foundational Field Ψ₀</h3>
-        <div class="eq">
-          <div class="lasers" aria-hidden="true"></div>
+        <div class="eq" data-fx="combo">
+          <div class="fx-layer" aria-hidden="true"></div>
           <div class="eq-scroll">
             $$\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\mathcal{A}\Phi(x,t,\nu)\,d\nu\;+\;\Lambda\mathcal{E}(x,t)$$
           </div>
@@ -300,8 +369,8 @@
       <!-- Eq.1 -->
       <article class="card col-6 eq-card reveal" id="eq1" data-equation="source">
         <h3 class="sheen">1) Source — Supply × Living Operators</h3>
-        <div class="eq">
-          <div class="lasers" aria-hidden="true"></div>
+        <div class="eq" data-fx="beams">
+          <div class="fx-layer" aria-hidden="true"></div>
           <div class="eq-scroll">
             $$\mathbf{R}(x,t)= f\!\big(\pi, e, i, \hbar, c, G, \mathrm{DNA}, \Omega_{\mathrm{DM}}, \Omega_{A}, H_{0}, 432\big)\times \mathcal{I}\times\mathcal{L}\times\mathcal{C}\times\mathcal{S}$$
           </div>
@@ -312,7 +381,7 @@
       <!-- Eq.2 -->
       <article class="card col-6 eq-card reveal" id="eq2">
         <h3 class="sheen">2) Witness</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\mathcal{W}(x,t)=\partial_x\,\mathrm{Awareness}(x,t)\;+\;\mathcal{I}\cdot\mathbb{M}_\tau$$
         </div></div>
         <p class="hint">Awareness gradient with intention×memory coupling.</p>
@@ -321,7 +390,7 @@
       <!-- Eq.3 -->
       <article class="card col-6 eq-card reveal" id="eq3">
         <h3 class="sheen">3) Harmonic Field</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\mathcal{H}(\nu)\in\{0,1\},\qquad \text{gate on/off at } \nu \text{ by coherence}$$
         </div></div>
         <p class="hint">Which frequencies gate easily into experience.</p>
@@ -330,7 +399,7 @@
       <!-- Eq.4 -->
       <article class="card col-6 eq-card reveal" id="eq4">
         <h3 class="sheen">4) Language — AHHAVA / Word</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="nebula"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\mathcal{L}(x,t,\nu)=\mathsf{Semantics}(x,t)\;\otimes\;\mathbf{V}(\nu)$$
         </div></div>
         <p class="hint">Meaning couples to carrier; word shapes resonance.</p>
@@ -339,7 +408,7 @@
       <!-- Eq.5 -->
       <article class="card col-6 eq-card reveal" id="eq5">
         <h3 class="sheen">5) Remnant</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="beams"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\mathcal{R}_\infty[F]\;=\;\lim_{\tau\to\infty}\big(\mathsf{keep}_{\text{truth}}F\;-\;\mathsf{drop}_{\text{distortion}}F\big)$$
         </div></div>
         <p class="hint">Truth persists; distortion decays out of the field.</p>
@@ -348,7 +417,7 @@
       <!-- Eq.6 -->
       <article class="card col-6 eq-card reveal" id="eq6">
         <h3 class="sheen">6) Type-7 Field</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\mathbb{T}_{7}(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu)\right]$$
         </div></div>
         <p class="hint">Phase-locked harmonic sum (Tesla Type-7 conduit).</p>
@@ -357,7 +426,7 @@
       <!-- Eq.7 Copeland (external) -->
       <article class="card col-6 eq-card reveal" id="eq7">
         <h3 class="sheen">7*) Copeland Ψ (external comparator)</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\partial_{tt}\Psi - c^{2}\nabla^{2}\Psi + \mu\,\Psi \;=\;\kappa\,\mathcal{S}(x,t)$$
         </div></div>
         <p class="meta">Generic driven wave-frame attributed to Copeland; used here as a comparator only.</p>
@@ -366,7 +435,7 @@
       <!-- Eq.8 Goodwin (external) -->
       <article class="card col-6 eq-card reveal" id="eq8">
         <h3 class="sheen">8*) Goodwin Coupling (external)</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="nebula"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\begin{aligned}
           \dot{x}&=\frac{k}{1+z^{n}}-\gamma x,\\
           \dot{y}&=\alpha x-\gamma y,\\
@@ -379,7 +448,7 @@
       <!-- Eq.9 -->
       <article class="card col-6 eq-card reveal" id="eq9">
         <h3 class="sheen">9) Ethical Law of Coherence</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="beams"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\forall a:\ \mathrm{damage}(a)>0\;\Rightarrow\;\mathsf{halt},\qquad \mathrm{truth}>\mathrm{distortion}$$
         </div></div>
         <p class="hint">Stop rule on harm; asymptote favors truth.</p>
@@ -388,7 +457,7 @@
       <!-- Eq.10 -->
       <article class="card col-6 eq-card reveal" id="eq10">
         <h3 class="sheen">10) Ladder Π<sub>ν</sub></h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\Pi_{\nu}^{-1}:\ \text{observed resonance }\rightarrow \text{source terms}$$
         </div></div>
         <p class="hint">Inverse map from phenomena back to generative sources.</p>
@@ -397,7 +466,7 @@
       <!-- Eq.11 -->
       <article class="card col-6 eq-card reveal" id="eq11">
         <h3 class="sheen">11) Projection Frame</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\mathsf{Frame}(x,t)=\big(\mathsf{scope},\ \mathcal{W},\ \mathsf{ethics}\big)$$
         </div></div>
         <p class="hint">Defines scope, witness, and ethical mask for any run.</p>
@@ -406,7 +475,7 @@
       <!-- Eq.12 -->
       <article class="card col-6 eq-card reveal" id="eq12">
         <h3 class="sheen">12) Causal Lattice</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="nebula"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\mathcal{L}_c=\big(V=\text{acts},\ E=\text{consequences}\big)$$
         </div></div>
         <p class="hint">Graph of micro-acts and consequences; used for audit.</p>
@@ -415,7 +484,7 @@
       <!-- Eq.13 -->
       <article class="card col-6 eq-card reveal" id="eq13">
         <h3 class="sheen">13) Ξ-index (Coherence)</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="beams"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\Xi\in[0,1],\qquad \text{monitors field quality for learning}$$
         </div></div>
         <p class="hint">Higher Ξ → stronger retention and safer amplification.</p>
@@ -424,7 +493,7 @@
       <!-- Eq.14 -->
       <article class="card col-6 eq-card reveal" id="eq14">
         <h3 class="sheen">14) Update Rule</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R}$$
         </div></div>
         <p class="hint">Learning rate is gated by coherence.</p>
@@ -433,7 +502,7 @@
       <!-- Eq.15 -->
       <article class="card col-6 eq-card reveal" id="eq15">
         <h3 class="sheen">15) Learning & Update Kernel (Ξ)</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big)$$
         </div></div>
         <p class="hint">Smooth schedule; no learning below ethical/coherence threshold.</p>
@@ -442,7 +511,7 @@
       <!-- Eq.16 -->
       <article class="card col-6 eq-card reveal" id="eq16">
         <h3 class="sheen">16) Memory Windowing 𝓦<sub>τ</sub></h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="nebula"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t}\! w_\tau(t-s)\,F(s)\,ds,\quad \int_0^\tau w_\tau(u)\,du=1$$
         </div></div>
         <p class="hint">Finite-horizon echo with normalized kernel.</p>
@@ -451,7 +520,7 @@
       <!-- Eq.17 -->
       <article class="card col-6 eq-card reveal" id="eq17">
         <h3 class="sheen">17) Voice Carriers 𝐕(ν)</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="combo"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\mathbf{V}(\nu)=\sum_{k} a_k\,\cos(2\pi\nu_k t+\phi_k),\quad \nu\in\{432,528,369,\dots\}$$
         </div></div>
         <p class="hint">Constructive sets (432/528/369) for voice work and field alignment.</p>
@@ -467,73 +536,65 @@
         <p class="meta">Mapping of projection frames across dimensional strata (illustrative forms aligned with Codex semantics).</p>
       </article>
 
-      <!-- Δ0 -->
       <article class="card col-6 eq-card reveal" id="d0">
         <h3 class="sheen">Δ0) Scalar Substrate</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="nebula"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\Delta_0:\ \phi_0:\mathbb{R}^{+}\!\to\!\mathbb{R},\quad \Psi_0=\phi_0\circ\mathsf{Frame}$$
         </div></div>
         <p class="hint">Pure scalar field under the active Frame.</p>
       </article>
 
-      <!-- Δ1 -->
       <article class="card col-6 eq-card reveal" id="d1">
         <h3 class="sheen">Δ1) Vector Flow</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="beams"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\Delta_1:\ \mathbf{F}_1=\nabla\Psi_0,\quad \mathrm{curl}\,\mathbf{F}_1=\mathbf{0}$$
         </div></div>
         <p class="hint">Conservative flow derived from Δ0.</p>
       </article>
 
-      <!-- Δ2 -->
       <article class="card col-6 eq-card reveal" id="d2">
         <h3 class="sheen">Δ2) Surface Coupling</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\Delta_2:\ \mathbf{B}_2=\nabla\times\mathbf{A},\quad \nabla\cdot\mathbf{B}_2=0$$
         </div></div>
         <p class="hint">Area-bound flux via potential A.</p>
       </article>
 
-      <!-- Δ3 -->
       <article class="card col-6 eq-card reveal" id="d3">
         <h3 class="sheen">Δ3) Volume Integration</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\Delta_3:\ \Phi_3=\iiint_{\mathcal{V}}\rho\,dV,\quad \partial_t\rho+\nabla\cdot\mathbf{J}=0$$
         </div></div>
         <p class="hint">Conserved density and flux.</p>
       </article>
 
-      <!-- Δ4 -->
       <article class="card col-6 eq-card reveal" id="d4">
         <h3 class="sheen">Δ4) Space-Time Weave</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="nebula"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\Delta_4:\ g_{\mu\nu}=\eta_{\mu\nu}+\epsilon\,h_{\mu\nu},\quad \Box h_{\mu\nu}=-\frac{16\pi G}{c^4}T_{\mu\nu}$$
         </div></div>
         <p class="hint">Weak-field weave for propagation and coupling.</p>
       </article>
 
-      <!-- Δ5 -->
       <article class="card col-6 eq-card reveal" id="d5">
         <h3 class="sheen">Δ5) Harmonic Ladder Π<sub>ν</sub></h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="beams"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\Delta_5:\ \Pi_{\nu}:\ \mathbb{R}\to\Gamma,\quad \Gamma=\{\nu_k\},\ \ \Pi_{\nu}^{-1}\big[\mathcal{H}(\nu)\big]\mapsto \text{sources}$$
         </div></div>
         <p class="hint">Gate map between observed harmonics and sources.</p>
       </article>
 
-      <!-- Δ6 -->
       <article class="card col-6 eq-card reveal" id="d6">
         <h3 class="sheen">Δ6) Ethical Mask 𝓒</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\Delta_6:\ \mathsf{Mask}_{\mathcal{C}}[F]=F\cdot\mathbf{1}_{\mathrm{damage}\le 0}$$
         </div></div>
         <p class="hint">Zeroes any channel that violates the stop rule.</p>
       </article>
 
-      <!-- Δ7 -->
       <article class="card col-6 eq-card reveal" id="d7">
         <h3 class="sheen">Δ7) Type-7 Cohere</h3>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\Delta_7:\ \mathbb{T}_7=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu)\right],\quad \Xi\!\nearrow\Rightarrow \text{locking}$$
         </div></div>
         <p class="hint">Stack closure under coherence gain.</p>
@@ -574,7 +635,7 @@ Status: Verified
           <li><strong>Operators & Process</strong> — Ordered living operators and the integration pipeline.</li>
           <li><strong>Living Technology</strong> — Tesla Type-7 conduit & safety/ethics gate.</li>
         </ul>
-        <div class="eq"><div class="lasers" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="combo"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\mathfrak{R}_{\text{Codex}}=f(\text{constants},\text{ratios})\cdot(\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})\cdot\bigl(\Psi_{0}+\Delta\mathcal{R}\bigr)\cdot\Pi_{\nu}^{-1}\!\big[\mathcal{H}(\nu)\,\mathbf{V}(\nu)\big]\;\odot\;\mathbb{M}_{\tau}[\cdot]\;\text{ masked by }\;\mathsf{Mask}_{\mathcal{C}}[\cdot]$$
         </div></div>
         <p class="eq-note hint">Self-contained architecture; external formalisms remain adjunct.</p>
@@ -611,26 +672,26 @@ Status: Verified
     </div>
   </div>
 
-  <!-- Year + ToTop + Hero fit logic + Explore Dock + Carrier/Ξ wiring + Equation lasers -->
+  <!-- Helpers: year, hero fit, dock, controls, coherence, search, eq FX -->
   <script>
     // Year + Back to top
-    document.getElementById('y').textContent=new Date().getFullYear();
-    const toTop=document.getElementById('toTop');
-    addEventListener('scroll',()=>{ toTop.classList.toggle('visible', scrollY>600); }, {passive:true});
-    toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+    (function(){
+      const y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();
+      const toTop=document.getElementById('toTop');
+      addEventListener('scroll',()=>{ toTop.classList.toggle('visible', scrollY>600); }, {passive:true});
+      toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+    })();
 
-    /* HERO AUTO-FIT (kept) */
+    /* HERO AUTO-FIT */
     (function autoHeroFit(){
-      const hero=document.getElementById('hero');
-      const img=document.getElementById('heroBanner');
+      const hero=document.getElementById('hero'), img=document.getElementById('heroBanner');
       if(!hero||!img) return;
       function applyAR(){ const iw=img.naturalWidth||2100, ih=img.naturalHeight||900; hero.style.aspectRatio = `${iw} / ${ih}`; }
       function pickFit(){
         if (matchMedia('(max-width:560px)').matches){ hero.dataset.fit='contain'; return; }
         const iw=img.naturalWidth||2100, ih=img.naturalHeight||900, imageAR=iw/ih;
         const cw=hero.clientWidth||innerWidth, ch=hero.clientHeight||Math.max(1, innerHeight*0.35), containerAR=cw/ch;
-        const closeEnough = Math.abs(containerAR - imageAR) / imageAR < 0.06;
-        hero.dataset.fit = closeEnough ? 'cover' : 'contain';
+        hero.dataset.fit = (Math.abs(containerAR - imageAR) / imageAR < 0.06) ? 'cover' : 'contain';
       }
       function boot(){ applyAR(); pickFit(); }
       if (img.complete) boot(); else img.addEventListener('load', boot, {once:true});
@@ -652,96 +713,163 @@ Status: Verified
       ioHero.observe(hero); ioExplore.observe(explore);
     })();
 
-    /* Controls (Echo / HUD / Carrier) */
+    /* Controls (Echo / HUD / Carrier / Affect) */
     (function controls(){
-      const body = document.body;
-      const html = document.documentElement;
+      const body = document.body, html = document.documentElement;
 
       const btnEcho = document.getElementById('toggleSimple');
-      if (btnEcho && !btnEcho._wired){
-        btnEcho._wired = true;
-        btnEcho.addEventListener('click', ()=>{
-          body.classList.toggle('simple-on');
-          btnEcho.setAttribute('aria-pressed', String(body.classList.contains('simple-on')));
-          const chk = document.getElementById('simple'); if (chk) chk.checked = body.classList.contains('simple-on');
-        });
-      }
+      btnEcho?.addEventListener('click', ()=>{
+        body.classList.toggle('simple-on');
+        btnEcho.setAttribute('aria-pressed', String(body.classList.contains('simple-on')));
+        const chk = document.getElementById('simple'); if (chk) chk.checked = body.classList.contains('simple-on');
+      });
 
-      const btnHUD = document.getElementById('toggleGrid');
-      const grid   = document.querySelector('.laser-grid');
-      if (btnHUD && grid && !btnHUD._wired){
-        btnHUD._wired = true;
-        btnHUD.addEventListener('click', ()=>{
-          const show = grid.style.display !== 'none';
-          grid.style.display = show ? 'none' : '';
-          btnHUD.setAttribute('aria-pressed', String(!show));
-        });
-      }
+      const btnHUD = document.getElementById('toggleGrid'), grid = document.querySelector('.laser-grid');
+      btnHUD?.addEventListener('click', ()=>{
+        const show = grid.style.display !== 'none';
+        grid.style.display = show ? 'none' : '';
+        btnHUD.setAttribute('aria-pressed', String(!show));
+      });
 
       const btnCarrier = document.getElementById('cycleCarrier');
       const skins = ['carrier-432','carrier-528','carrier-369'];
-      function currentSkin(){ return skins.find(s=>html.classList.contains(s)) || skins[0]; }
-      function nextSkin(c){ const i = skins.indexOf(c); return skins[(i+1)%skins.length]; }
-      if (btnCarrier && !btnCarrier._wired){
-        btnCarrier._wired = true;
-        btnCarrier.addEventListener('click', ()=>{
-          const cur = currentSkin();
-          const nxt = nextSkin(cur);
-          skins.forEach(s=>html.classList.remove(s));
-          html.classList.add(nxt);
-          btnCarrier.textContent = `Carrier ${nxt.split('-')[1]}`;
-        });
-        btnCarrier.textContent = `Carrier ${currentSkin().split('-')[1]}`;
-      }
+      const curSkin = ()=> skins.find(s=>html.classList.contains(s)) || skins[0];
+      const nextSkin= c=> skins[(skins.indexOf(c)+1)%skins.length];
+      btnCarrier?.addEventListener('click', ()=>{
+        const cur=curSkin(), nxt=nextSkin(cur);
+        skins.forEach(s=>html.classList.remove(s)); html.classList.add(nxt);
+        btnCarrier.textContent = `Carrier ${nxt.split('-')[1]}`;
+      });
+      if(btnCarrier) btnCarrier.textContent = `Carrier ${curSkin().split('-')[1]}`;
+
+      const btnAffect = document.getElementById('toggleAffect');
+      btnAffect?.addEventListener('click', ()=>{
+        const off = document.body.classList.toggle('affect-off');
+        btnAffect.setAttribute('aria-pressed', String(!off));
+      });
     })();
 
-    /* Ξ coherence driver (feeds --xi for glow intensity) */
+    /* Ξ coherence driver */
     (function xiDriver(){
-      const rootStyle = document.documentElement.style;
-      const dot = document.querySelector('.xi-dot');
+      const root = document.documentElement.style, dot = document.querySelector('.xi-dot');
       let xi = 0.35;
       function step(){
-        const target = 0.25 + Math.random()*0.6;
-        const start = xi; const dur = 1800 + Math.random()*1400; const t0 = performance.now();
+        const target = 0.25 + Math.random()*0.6, start = xi, dur = 2200 + Math.random()*1600, t0 = performance.now();
         function tween(t){
-          const p = Math.min(1, (t - t0)/dur);
-          xi = start + (target - start)*(0.5 - 0.5*Math.cos(Math.PI*p));
-          rootStyle.setProperty('--xi', xi.toFixed(3));
-          if (dot) dot.style.opacity = (0.7 + 0.3*xi).toFixed(3);
-          if (p < 1) requestAnimationFrame(tween); else requestAnimationFrame(step);
-        }
-        requestAnimationFrame(tween);
-      }
-      requestAnimationFrame(step);
+          const p=Math.min(1,(t-t0)/dur); xi = start + (target-start)*(0.5-0.5*Math.cos(Math.PI*p));
+          root.setProperty('--xi', xi.toFixed(3)); if(dot) dot.style.opacity = (0.7 + 0.3*xi).toFixed(3);
+          (p<1)?requestAnimationFrame(tween):requestAnimationFrame(step);
+        } requestAnimationFrame(tween);
+      } requestAnimationFrame(step);
     })();
 
     /* Scroll reveal */
     (function reveal(){
       if(!('IntersectionObserver' in window)) { document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in')); return; }
-      const io = new IntersectionObserver((entries)=>{
-        for(const e of entries){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }
-      }, {threshold: 0.12});
+      const io=new IntersectionObserver(es=>{for(const e of es){if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target);}}},{threshold:.12});
       document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
     })();
 
-    /* Equation LASER population: randomized beams per .eq */
-    (function eqLasers(){
-      const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (prefersReduce) return;
-      const EQS = document.querySelectorAll('.eq');
-      EQS.forEach((wrap, i)=>{
-        const layer = wrap.querySelector('.lasers');
-        if(!layer) return;
-        const beams = 2 + Math.floor(Math.random()*2); // 2..3 beams
-        for(let b=0;b<beams;b++){
-          const d = document.createElement('div');
-          d.className = 'beam' + (Math.random()<0.5?' alt':'');
-          // random stagger
-          d.style.setProperty('--d', `${(Math.random()*6).toFixed(2)}s`);
-          // random slight rotation
-          d.style.transform = `translateX(0) rotate(${(Math.random()<0.5?1:-1)*(8+Math.random()*8)}deg)`;
-          layer.appendChild(d);
+    /* Page search (fixed) */
+    (function pageSearch(){
+      const box = document.getElementById('site-search');
+      const list = document.getElementById('site-suggest');
+      if(!box || !list) return;
+
+      // Focus on '/'
+      addEventListener('keydown', (e)=>{
+        if(e.key==='/' && document.activeElement!==box){
+          e.preventDefault(); box.focus(); box.select();
         }
+      });
+
+      const SOURCES = [...document.querySelectorAll('h2[id],h3[id],a.tile'), ...document.querySelectorAll('.eq-card')];
+      function items(q){
+        const s=q.trim().toLowerCase(); if(!s) return [];
+        const out=[];
+        for(const el of SOURCES){
+          const text = (el.innerText||'').trim();
+          if(text.toLowerCase().includes(s)){
+            let href = '#';
+            if(el.id) href = `#${el.id}`;
+            const a = el.tagName==='A' && el.classList.contains('tile') ? el.getAttribute('href') : href;
+            out.push({text, href:a});
+            if(out.length>12) break;
+          }
+        }
+        return out;
+      }
+      function render(arr){
+        if(!arr.length){ list.classList.add('hidden'); list.innerHTML=''; return; }
+        list.innerHTML = arr.map((o,i)=>`<a href="${o.href}" role="option" data-ix="${i}">${o.text}</a>`).join('');
+        list.classList.remove('hidden');
+      }
+      box.addEventListener('input', ()=>render(items(box.value)));
+      box.addEventListener('keydown', (e)=>{
+        const links = [...list.querySelectorAll('a')];
+        if(!links.length) return;
+        const cur = list.querySelector('.sel'); let i = cur?+cur.dataset.ix:-1;
+        if(e.key==='ArrowDown'){ e.preventDefault(); i=Math.min(links.length-1,i+1); }
+        else if(e.key==='ArrowUp'){ e.preventDefault(); i=Math.max(0,i-1); }
+        else if(e.key==='Enter'){ if(cur){location.href=cur.getAttribute('href'); list.classList.add('hidden');} return; }
+        else if(e.key==='Escape'){ list.classList.add('hidden'); return; }
+        links.forEach(a=>a.classList.remove('sel')); if(i>=0){ links[i].classList.add('sel'); }
+      });
+      addEventListener('click',(e)=>{ if(!list.contains(e.target) && e.target!==box) list.classList.add('hidden'); });
+    })();
+
+    /* Equation FX population (slower, per-box variants) */
+    (function eqFX(){
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(reduce) return;
+      const boxes = document.querySelectorAll('.eq');
+      const variants = ['beams','orbit','spiral','nebula','combo'];
+      let vix = 0;
+
+      boxes.forEach((wrap)=>{
+        // Ensure fx layer exists
+        let fx = wrap.querySelector('.fx-layer');
+        if(!fx){ fx = document.createElement('div'); fx.className='fx-layer'; wrap.prepend(fx); }
+
+        // Cycle variants & sprinkle combos
+        const chosen = variants[(vix++) % variants.length];
+        const actual = (Math.random()<0.25)?'combo':chosen;
+        wrap.setAttribute('data-fx', actual);
+
+        // Speeds (slower overall)
+        wrap.style.setProperty('--beam-speed', (22 + Math.random()*10).toFixed(2)+'s');
+        wrap.style.setProperty('--beam-speed-alt', (26 + Math.random()*12).toFixed(2)+'s');
+        wrap.style.setProperty('--orbit-speed', (30 + Math.random()*14).toFixed(2)+'s');
+        wrap.style.setProperty('--spiral-speed', (34 + Math.random()*16).toFixed(2)+'s');
+        wrap.style.setProperty('--spiral-speed-alt', (38 + Math.random()*18).toFixed(2)+'s');
+
+        // Populate elements per variant
+        function addBeams(n=2+Math.floor(Math.random()*2)){
+          for(let i=0;i<n;i++){
+            const d=document.createElement('div');
+            d.className='beam'+(Math.random()<0.5?' alt':'');
+            d.style.setProperty('--d', `${(Math.random()*8).toFixed(2)}s`);
+            const tilt = (Math.random()<0.5?1:-1)*(8+Math.random()*10);
+            d.style.transform = `translateX(0) rotate(${tilt}deg)`;
+            fx.appendChild(d);
+          }
+        }
+        function addOrbit(){
+          const o1=document.createElement('div'); o1.className='orbit'; o1.style.setProperty('--tilt', `${(8+Math.random()*14)*(Math.random()<.5?-1:1)}deg`);
+          const o2=document.createElement('div'); o2.className='orbit counter'; o2.style.setProperty('--tilt', `${(10+Math.random()*12)*(Math.random()<.5?-1:1)}deg`);
+          const b1=document.createElement('div'); b1.className='orb';
+          const b2=document.createElement('div'); b2.className='orb gold';
+          o1.appendChild(b1); o2.appendChild(b2);
+          fx.append(o1,o2);
+        }
+        function addSpiral(){ const s=document.createElement('div'); s.className='spiral'; fx.appendChild(s); if(Math.random()<.5){ const a=document.createElement('div'); a.className='spiral alt'; fx.appendChild(a); } }
+        function addNebula(){ const n=document.createElement('div'); n.className='nebula'; fx.appendChild(n); }
+
+        if(actual==='beams'){ addBeams(); }
+        else if(actual==='orbit'){ addOrbit(); }
+        else if(actual==='spiral'){ addSpiral(); }
+        else if(actual==='nebula'){ addNebula(); }
+        else { addBeams(); addOrbit(); if(Math.random()<.7) addSpiral(); if(Math.random()<.6) addNebula(); }
       });
     })();
   </script>
