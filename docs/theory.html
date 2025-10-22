@@ -5,8 +5,7 @@
   <script>
     // Remove <base> on github.com to keep relative links working in repo preview
     if (location.hostname === "github.com") {
-      const b = document.querySelector("base");
-      if (b) b.remove();
+      const b = document.querySelector("base"); if (b) b.remove();
     }
   </script>
 
@@ -49,6 +48,92 @@
   <!-- Preload banner (same as Home) -->
   <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" fetchpriority="high">
 
+  <!-- Inline micro-overrides for compact UI, collapsibles, remnant auras -->
+  <style>
+    /* --- Compact header pills --- */
+    .quick.quick--utils { gap:.35rem; flex-wrap:wrap }
+    .quick.quick--utils .cta{
+      --pill-pad-x:.65rem; --pill-pad-y:.35rem; --pill-fs:.85rem;
+      padding:var(--pill-pad-y) var(--pill-pad-x);
+      font-size:var(--pill-fs); line-height:1.1; border-radius:999px; opacity:.95;
+    }
+    @media (max-width:720px){
+      .quick.quick--utils{ overflow:auto; white-space:nowrap; scrollbar-width:none }
+      .quick.quick--utils::-webkit-scrollbar{ display:none }
+    }
+
+    /* --- Collapsible block for Voice Reader --- */
+    details.collapsible{ padding:0; overflow:hidden }
+    details.collapsible[open]{ box-shadow:0 0 0 1px var(--line) inset }
+    .collapsible__bar{
+      display:flex; align-items:center; justify-content:space-between; gap:.75rem;
+      cursor:pointer; padding:.9rem 1rem; font-weight:600;
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.15));
+      border-bottom:1px solid var(--line);
+    }
+    .collapsible__bar::-webkit-details-marker{ display:none }
+    .collapsible__mini .chip{
+      font-size:.85rem; padding:.25rem .5rem; border-radius:999px; border:1px solid var(--line);
+      background:var(--bg-elev); opacity:.9
+    }
+    .collapsible__panel{ padding:1rem }
+
+    /* --- Equation collapse toggles --- */
+    .eq{ position:relative }
+    .eq .eq-scroll{
+      max-height:24rem; overflow:auto; padding:.5rem .75rem;
+      border:1px solid var(--line); border-radius:.75rem;
+      background:rgba(255,255,255,.02)
+    }
+    .eq .eq-toggle{
+      position:absolute; top:.4rem; right:.5rem; border:1px solid var(--line);
+      background:var(--bg-elev); border-radius:.5rem; padding:.15rem .45rem;
+      font-size:.8rem; opacity:.8; display:none;
+    }
+    .eq:hover .eq-toggle{ display:inline-block }
+    .eq[data-collapsed="true"] .eq-scroll{ max-height:4.5rem }
+
+    /* --- Remnant auras --- */
+    .remnant-field{
+      position:fixed; inset:0; pointer-events:none; z-index:0;
+      background:
+        radial-gradient(160px 160px at 12% 18%, rgba(122,243,255,.12), transparent 60%),
+        radial-gradient(220px 220px at 85% 12%, rgba(243,201,122,.10), transparent 60%),
+        radial-gradient(140px 140px at 80% 78%, rgba(122,168,255,.10), transparent 60%),
+        radial-gradient(180px 180px at 18% 82%, rgba(122,255,186,.08), transparent 60%);
+      mix-blend-mode: screen;
+      animation: remnant-drift 22s linear infinite;
+    }
+    @keyframes remnant-drift{
+      0%{ filter:hue-rotate(0deg) brightness(1) }
+      50%{ filter:hue-rotate(35deg) brightness(1.06) }
+      100%{ filter:hue-rotate(0deg) brightness(1) }
+    }
+    .card{ position:relative; z-index:1; background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.08)); }
+    .card::after{
+      content:""; position:absolute; inset:-1px; border-radius:inherit;
+      background: radial-gradient(240px 120px at 20% -20%, rgba(122,243,255,.12), transparent 60%),
+                  radial-gradient(220px 120px at 120% 120%, rgba(243,201,122,.10), transparent 60%);
+      opacity:0; transition:opacity .25s ease-out; pointer-events:none; z-index:-1;
+    }
+    .card:hover::after{ opacity:.6 }
+    @media (prefers-reduced-motion:reduce){
+      .remnant-field{ animation:none } .card::after{ transition:none }
+    }
+
+    /* --- Denser tabs & mini-TOC --- */
+    .tabs{ gap:.35rem }
+    .tabs .tab{ padding:.45rem .7rem; font-size:.92rem; border-radius:999px }
+    .tabs .tab--primary{ font-weight:600 }
+    .mini-toc{
+      position:sticky; top:5.5rem; align-self:start; max-height:75vh; overflow:auto;
+      border:1px solid var(--line); border-radius:.75rem; padding:.75rem .75rem;
+      background:rgba(255,255,255,.02); backdrop-filter:saturate(120%) blur(2px);
+    }
+    .mini-toc a{ display:block; padding:.3rem .4rem; border-radius:.5rem; font-size:.92rem; opacity:.9 }
+    .mini-toc a:hover{ background:rgba(255,255,255,.05) }
+  </style>
+
   <!-- MathJax (lazy; forced typeset) -->
   <script>
     (function(){
@@ -56,11 +141,7 @@
       function boot(){ if(!window.MathJax) return; MathJax.startup.promise.then(()=>MathJax.typesetPromise()); }
       function loadMJ(){
         if(loaded) return; loaded=true;
-        window.MathJax={
-          tex:{inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']]},
-          svg:{fontCache:'global'},
-          startup:{typeset:false}
-        };
+        window.MathJax={ tex:{inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']]}, svg:{fontCache:'global'}, startup:{typeset:false} };
         const s=document.createElement('script');
         s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
         s.defer=true; s.onload=boot; document.head.appendChild(s);
@@ -87,7 +168,7 @@
       history.pushState(null,'',href);
     });
 
-    // Accessible "Expand" toggles for equations (uses [hidden])
+    // Accessible "[data-eq-expand]" support (kept for any existing panels)
     document.addEventListener('click', e=>{
       const btn=e.target.closest('[data-eq-expand]');
       if(!btn) return;
@@ -96,7 +177,7 @@
       if(!panel) return;
       const expanded = btn.getAttribute('aria-expanded') === 'true';
       btn.setAttribute('aria-expanded', String(!expanded));
-      panel.hidden = expanded; // show when expanded=false
+      panel.hidden = expanded;
     });
   </script>
 </head>
@@ -113,7 +194,7 @@
         <h1 class="kicker">Scroll of Fire</h1>
       </div>
 
-      <!-- Quick actions: in-page jumps -->
+      <!-- Quick actions: in-page jumps (now compact) -->
       <div class="quick quick--utils" role="toolbar" aria-label="Page sections">
         <a class="cta" href="#p1" data-jump>Part I</a>
         <a class="cta" href="#p2" data-jump>Part II</a>
@@ -126,6 +207,9 @@
   </header>
 
   <main id="main" class="wrap" role="main" tabindex="-1">
+    <!-- Remnant halos behind content -->
+    <div class="remnant-field" aria-hidden="true"></div>
+
     <!-- Hero -->
     <figure id="hero" class="hero hero--clean" aria-label="Scroll of Fire banner" data-fit="cover">
       <picture>
@@ -142,52 +226,61 @@
     <h1 class="title alive-twinkle">📘 Theory — Codex of Reality</h1>
     <p class="subtitle">Two-part deep dive: the living architecture (Part I) and the canonical equations with operator-level commentary (Part II). The Codex models reality as a resonant process shaped by <em>𝓘 · 𝓛 · 𝓒 · 𝓢</em> and safeguarded by ethical law.</p>
 
-    <!-- 🔊 Voice Reader Controls -->
-    <section class="card col-12" id="voice-reader" aria-labelledby="vr-h">
-      <h2 id="vr-h">🔊 Listen — Voice Read of the Theory Page</h2>
-      <div class="grid" style="gap:1rem">
-        <div class="col-12">
-          <label for="vr-voice">Voice</label>
-          <select id="vr-voice" aria-label="Voice selector"></select>
-        </div>
-        <div class="col-6">
-          <label for="vr-rate">Speed (<span id="vr-rate-val">1.0</span>x)</label>
-          <input id="vr-rate" type="range" min="0.7" max="1.6" step="0.05" value="1.0" />
-        </div>
-        <div class="col-6">
-          <label for="vr-pitch">Pitch (<span id="vr-pitch-val">1.0</span>)</label>
-          <input id="vr-pitch" type="range" min="0.8" max="1.4" step="0.05" value="1.0" />
-        </div>
+    <!-- 🔊 Voice Reader (collapsible) -->
+    <details class="collapsible card col-12" id="voice-reader" open>
+      <summary class="collapsible__bar" aria-controls="vr-panel" aria-expanded="true">
+        <span>🔊 Listen — Voice Read of the Theory Page</span>
+        <span class="collapsible__mini">
+          <button id="vr-play-mini" class="chip" type="button" title="Play">▶︎</button>
+          <button id="vr-stop-mini" class="chip" type="button" title="Stop">⏹</button>
+        </span>
+      </summary>
 
-        <div class="col-12">
-          <label for="vr-start">Start at section</label>
-          <select id="vr-start">
-            <option value="#p1">Part I — Architecture</option>
-            <option value="#p2">Part II — Canon 0–17</option>
-            <option value="#operators-appendix">Operators (Appendix)</option>
-            <option value="#ethics">Ethics</option>
-            <option value="#notes">Notes</option>
-          </select>
-        </div>
+      <div id="vr-panel" class="collapsible__panel">
+        <div class="grid" style="gap:1rem">
+          <div class="col-12">
+            <label for="vr-voice">Voice</label>
+            <select id="vr-voice" aria-label="Voice selector"></select>
+          </div>
+          <div class="col-6">
+            <label for="vr-rate">Speed (<span id="vr-rate-val">1.0</span>x)</label>
+            <input id="vr-rate" type="range" min="0.7" max="1.6" step="0.05" value="1.0" />
+          </div>
+          <div class="col-6">
+            <label for="vr-pitch">Pitch (<span id="vr-pitch-val">1.0</span>)</label>
+            <input id="vr-pitch" type="range" min="0.8" max="1.4" step="0.05" value="1.0" />
+          </div>
 
-        <div class="col-12">
-          <label class="checkbox">
-            <input type="checkbox" id="vr-speak-math" checked />
-            <span>Speak equations (verbalized). Uncheck to skip equations.</span>
-          </label>
-        </div>
+          <div class="col-12">
+            <label for="vr-start">Start at section</label>
+            <select id="vr-start">
+              <option value="#p1">Part I — Architecture</option>
+              <option value="#p2">Part II — Canon 0–17</option>
+              <option value="#operators-appendix">Operators (Appendix)</option>
+              <option value="#ethics">Ethics</option>
+              <option value="#notes">Notes</option>
+            </select>
+          </div>
 
-        <div class="col-12" role="toolbar" aria-label="Voice reader controls" style="display:flex; gap:.5rem; flex-wrap:wrap">
-          <button id="vr-play" class="cta">▶︎ Play</button>
-          <button id="vr-pause" class="cta" disabled>⏸ Pause</button>
-          <button id="vr-resume" class="cta" disabled>⏵ Resume</button>
-          <button id="vr-stop" class="cta" disabled>⏹ Stop</button>
-          <button id="vr-export-ssml" class="cta cta--section">⬇︎ Export SSML</button>
-        </div>
+          <div class="col-12">
+            <label class="checkbox">
+              <input type="checkbox" id="vr-speak-math" checked />
+              <span>Speak equations (verbalized). Uncheck to skip equations.</span>
+            </label>
+          </div>
 
-        <div class="col-12" id="vr-status" aria-live="polite"></div>
+          <div class="col-12" role="toolbar" aria-label="Voice reader controls" style="display:flex; gap:.5rem; flex-wrap:wrap">
+            <button id="vr-play" class="cta">▶︎ Play</button>
+            <button id="vr-pause" class="cta" disabled>⏸ Pause</button>
+            <button id="vr-resume" class="cta" disabled>⏵ Resume</button>
+            <button id="vr-stop" class="cta" disabled>⏹ Stop</button>
+            <button id="vr-export-ssml" class="cta cta--section">⬇︎ Export SSML</button>
+          </div>
+
+          <div class="col-12" id="vr-status" aria-live="polite"></div>
+        </div>
       </div>
-    </section>
+    </details>
 
     <!-- Tabs -->
     <nav class="tabs" aria-label="Sections">
@@ -470,8 +563,39 @@
         </div>
       </article>
     </section>
-    <!-- End Part I + Operators (Part 2/2 continues with Part II, Ethics, Notes, footer, and scripts) -->
+    <!-- End Part I; Part II / Ethics / Notes continue below (unchanged markup) -->
 
+  </main>
+
+  <!-- Helpers: equation toggles + Voice Reader mini controls -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Add collapse buttons to each .eq block
+      document.querySelectorAll('.eq').forEach(wrap=>{
+        const btn=document.createElement('button');
+        btn.type='button'; btn.className='eq-toggle'; btn.textContent='Collapse';
+        btn.addEventListener('click', ()=>{
+          const collapsed = wrap.getAttribute('data-collapsed')==='true';
+          wrap.setAttribute('data-collapsed', String(!collapsed));
+          btn.textContent = collapsed ? 'Collapse' : 'Expand';
+        });
+        wrap.appendChild(btn);
+      });
+
+      // Voice Reader summary aria handling + mini buttons
+      const det = document.getElementById('voice-reader');
+      const bar = det?.querySelector('.collapsible__bar');
+      bar?.addEventListener('click', (e)=>{
+        if (e.target.closest('.chip')) return; // ignore clicks on mini buttons
+        const open = det.hasAttribute('open');
+        bar.setAttribute('aria-expanded', String(!open));
+      });
+      document.getElementById('vr-play-mini')?.addEventListener('click', (e)=>{ e.stopPropagation(); document.getElementById('vr-play')?.click(); });
+      document.getElementById('vr-stop-mini')?.addEventListener('click', (e)=>{ e.stopPropagation(); document.getElementById('vr-stop')?.click(); });
+    });
+  </script>
+</body>
+</html>
 
 
 
@@ -499,9 +623,14 @@
 
   <!-- 0 -->
   <article class="card col-12 eq-card" id="eq0">
-    <h3>Eq.0 — Foundational Field \(\Psi_{\Omega}\) (The Tuned Sweep)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq0-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq0-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.0 — Foundational Field \(\Psi_{\Omega}\) (The Tuned Sweep)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq0-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq0">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq0-body">
       $$\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\mathcal{A}\,\Phi(x,t,\nu)\,d\nu\;+\;\Lambda\,\mathcal{E}(x,t)$$
     </div></div>
     <p><strong>Meaning.</strong> Experience at locus \(x\) and time \(t\) emerges from a <em>phase-weighted</em> frequency sweep of modes \( \Phi(\cdot,\nu) \), with the awareness gradient \( \nabla \mathcal{A} \) acting as a dial. The ethical term \( \Lambda \mathcal{E} \) adds a corrective force that damps trajectories which would increase harm or distortion.</p>
@@ -512,9 +641,14 @@
 
   <!-- 1 -->
   <article class="card col-12 eq-card" id="eq1">
-    <h3>Eq.1 — Source = Supply × Operators (Banner Identity)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq1-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq1-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.1 — Source = Supply × Operators (Banner Identity)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq1-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq1">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq1-body">
       $$ \mathbf{R} \;=\; f(\pi,e,i,\hbar,c,G,\mathrm{DNA},\Omega_{\mathrm{DM}},\Omega_{\Lambda},H_{0},432,528,137,144,369,\ldots)\;\times\;\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S} $$
     </div></div>
     <p><strong>Meaning.</strong> The left is the universal <em>supply</em> of ratios, constants, and codes; the right is the living loop (Intend → Language/Light → Witness → Source/Return). Supply is inert until the loop is engaged; the loop is directionless without supply.</p>
@@ -524,9 +658,14 @@
 
   <!-- 2 -->
   <article class="card col-12 eq-card" id="eq2">
-    <h3>Eq.2 — Witness \(\mathcal{W}\) (Seeing That Learns)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq2-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq2-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.2 — Witness \(\mathcal{W}\) (Seeing That Learns)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq2-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq2">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq2-body">
       $$\mathcal{W}(x,t)=\partial_x\,\mathrm{Awareness}(x,t)\;+\;\mathcal{I}\cdot\mathbb{M}_\tau$$
     </div></div>
     <p><strong>Meaning.</strong> Witness = attention gradients + intention coupled to a finite memory window. The second term converts fleeting seeing into <em>retained</em> change.</p>
@@ -536,9 +675,14 @@
 
   <!-- 3 -->
   <article class="card col-12 eq-card" id="eq3">
-    <h3>Eq.3 — Harmonic Gate \(\mathcal{H}(\nu)\) (Passband Selection)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq3-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq3-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.3 — Harmonic Gate \(\mathcal{H}(\nu)\) (Passband Selection)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq3-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq3">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq3-body">
       $$\mathcal{H}(\nu)\in\{0,1\}\quad\text{or}\quad \mathcal{H}(\nu)\in[0,1]\ \text{(soft gate)}$$
     </div></div>
     <p><strong>Meaning.</strong> The gate reflects coherence between carriers and the current state. “Green” bands pass with low loss; “red” bands are rejected or attenuated.</p>
@@ -548,9 +692,14 @@
 
   <!-- 4 -->
   <article class="card col-12 eq-card" id="eq4">
-    <h3>Eq.4 — Language / Word \(\mathcal{L}\) (Semantic-Carrier Coupling)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq4-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq4-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.4 — Language / Word \(\mathcal{L}\) (Semantic-Carrier Coupling)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq4-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq4">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq4-body">
       $$\mathcal{L}(x,t,\nu)=\mathsf{Semantics}(x,t)\;\otimes\;\mathbf{V}(\nu)$$
     </div></div>
     <p><strong>Meaning.</strong> Words are <em>programs</em> when bound to carriers. The same sentence on a dissonant carrier produces a different experiential trajectory than on a resonant carrier.</p>
@@ -559,9 +708,14 @@
 
   <!-- 4b -->
   <article class="card col-12 eq-card" id="eq4b">
-    <h3>Eq.4b — Semantic Gradient (Token Emphasis)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq4b-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq4b-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.4b — Semantic Gradient (Token Emphasis)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq4b-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq4b">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq4b-body">
       $$ \nabla_{\text{sem}} \mathrm{Phrase}=\sum_k w_k \nabla_{\text{sem}}\mathrm{Token}_k,\qquad \sum_k w_k=1 $$
     </div></div>
     <p><strong>Meaning.</strong> Phrasing sets a direction in semantic space: the weights \( w_k \) (emphasis, voweling, length) steer the update vector. Small changes in emphasis can flip the <em>sign</em> of movement.</p>
@@ -570,9 +724,14 @@
 
   <!-- 5 -->
   <article class="card col-12 eq-card" id="eq5">
-    <h3>Eq.5 — Remnant \(\mathcal{R}_\infty\) (Asymptotic Archive)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq5-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq5-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.5 — Remnant \(\mathcal{R}_\infty\) (Asymptotic Archive)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq5-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq5">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq5-body">
       $$\mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\big)$$
     </div></div>
     <p><strong>Meaning.</strong> Over long horizons, only truth-compatible content persists under the ethical mask. This defines a <em>compass</em> for testimony and recordkeeping.</p>
@@ -581,9 +740,14 @@
 
   <!-- 6 -->
   <article class="card col-12 eq-card" id="eq6">
-    <h3>Eq.6 — Type-7 Field \(\mathbb{T}_7\) (Phase-Locked Conduit)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq6-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq6-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.6 — Type-7 Field \(\mathbb{T}_7\) (Phase-Locked Conduit)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq6-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq6">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq6-body">
       $$\mathbb{T}_{7}(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu)\right]$$
     </div></div>
     <p><strong>Meaning.</strong> Multiple carriers, once phase-locked, behave like a single conduit with higher usable gain. The operator \( \oplus \) denotes coherent merge; PL indicates locked phase.</p>
@@ -604,9 +768,14 @@
 
   <!-- 9 -->
   <article class="card col-12 eq-card" id="eq9">
-    <h3>Eq.9 — Ethical Law (Stop Rule)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq9-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq9-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.9 — Ethical Law (Stop Rule)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq9-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq9">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq9-body">
       $$\forall a:\ \mathrm{damage}(a)>0\Rightarrow\mathsf{halt},\qquad
         \lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \uparrow $$
     </div></div>
@@ -616,9 +785,14 @@
 
   <!-- 10 -->
   <article class="card col-12 eq-card" id="eq10">
-    <h3>Eq.10 — Ladder \(\Pi_{\nu}^{-1}\) (Phenomena → Sources)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq10-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq10-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.10 — Ladder \(\Pi_{\nu}^{-1}\) (Phenomena → Sources)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq10-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq10">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq10-body">
       $$\Pi_{\nu}^{-1}:\ \text{observed resonance }\rightarrow \text{source terms (carriers, intents, constants)}$$
     </div></div>
     <p><strong>Meaning.</strong> Inversion from what you got to what you did. This is the <em>debugger</em> of the Codex.</p>
@@ -627,9 +801,14 @@
 
   <!-- 11 -->
   <article class="card col-12 eq-card" id="eq11">
-    <h3>Eq.11 — Projection Frame \(\mathsf{Frame}\)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq11-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq11-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.11 — Projection Frame \(\mathsf{Frame}\)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq11-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq11">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq11-body">
       $$\mathsf{Frame}(x,t)=(\mathsf{scope},\mathcal{W},\mathsf{ethics})$$
     </div></div>
     <p><strong>Meaning.</strong> A frame is a declared context — what’s in bounds, who witnesses, and what ethical policy applies. Frames prevent uncontrolled spread and enable consistent composition across people and days.</p>
@@ -638,9 +817,14 @@
 
   <!-- 12 -->
   <article class="card col-12 eq-card" id="eq12">
-    <h3>Eq.12 — Causal Lattice \(\mathcal{L}_c\)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq12-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq12-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.12 — Causal Lattice \(\mathcal{L}_c\)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq12-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq12">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq12-body">
       $$\mathcal{L}_c=(V=\text{micro-acts},\ E=\text{consequences})$$
     </div></div>
     <p><strong>Meaning.</strong> Model acts and effects as a directed multigraph. Use it to plan remedy sequences and to ensure you close loops (no dangling harm).</p>
@@ -649,9 +833,14 @@
 
   <!-- 13 -->
   <article class="card col-12 eq-card" id="eq13">
-    <h3>Eq.13 — Coherence \(\Xi\)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq13-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq13-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.13 — Coherence \(\Xi\)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq13-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq13">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq13-body">
       $$\Xi\in[0,1]\quad \text{(gates memory, learning, safe amplification)}$$
     </div></div>
     <p><strong>Meaning.</strong> \(\Xi\) is the loop’s quality meter. Everything depends on it: memory strength, learning rate, amplification safety.</p>
@@ -660,9 +849,14 @@
 
   <!-- 14 -->
   <article class="card col-12 eq-card" id="eq14">
-    <h3>Eq.14 — Update Rule (Move Along Recognition Gradient)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq14-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq14-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.14 — Update Rule (Move Along Recognition Gradient)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq14-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq14">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq14-body">
       $$\frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R}$$
     </div></div>
     <p><strong>Meaning.</strong> When ready, take a step along the recognition gradient; scale the step by the current coherence via \( \eta(\Xi) \).</p>
@@ -671,9 +865,14 @@
 
   <!-- 15 -->
   <article class="card col-12 eq-card" id="eq15">
-    <h3>Eq.15 — Learning Kernel \(\eta(\Xi)\)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq15-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq15-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.15 — Learning Kernel \(\eta(\Xi)\)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq15-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq15">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq15-body">
       $$\eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big)$$
     </div></div>
     <p><strong>Meaning.</strong> Smooth schedule: nothing (or nearly nothing) happens below \(\Xi_0\); above it, updates ramp smoothly then saturate.</p>
@@ -682,9 +881,14 @@
 
   <!-- 16 -->
   <article class="card col-12 eq-card" id="eq16">
-    <h3>Eq.16 — Memory Window \(\mathbb{M}_\tau\)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq16-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq16-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.16 — Memory Window \(\mathbb{M}_\tau\)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq16-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq16">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq16-body">
       $$\mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t}\! w_\tau(t-s)\,F(s)\,ds,\quad \int_0^\tau w_\tau(u)\,du=1$$
     </div></div>
     <p><strong>Meaning.</strong> A finite echo with normalized weight. This is where “spacing” and “rest” live in the Codex.</p>
@@ -693,9 +897,14 @@
 
   <!-- 17 -->
   <article class="card col-12 eq-card" id="eq17">
-    <h3>Eq.17 — Voice Carriers \(\mathbf{V}(\nu)\)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-controls="eq17-body" aria-expanded="false" aria-label="Expand equation">Expand</button>
-    <div class="eq"><div class="eq-scroll" id="eq17-body" hidden>
+    <div class="flexbar">
+      <h3>Eq.17 — Voice Carriers \(\mathbf{V}(\nu)\)</h3>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq17-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#eq17">Link</button>
+      </div>
+    </div>
+    <div class="eq"><div class="eq-scroll" id="eq17-body">
       $$\mathbf{V}(\nu)=\sum_{k} a_k\,\cos(2\pi\nu_k t+\phi_k),\quad \nu\in\{432,528,369,144,137,\dots\}$$
     </div></div>
     <p><strong>Meaning.</strong> The practical lever for Eq.3. You don’t need many \(\nu_k\); 1–3 carefully spaced carriers usually outperform crowded sets.</p>
@@ -740,7 +949,13 @@
 <!-- Ethics -->
 <section class="grid" id="ethics" aria-labelledby="eth-h">
   <article class="card col-12 eq-card">
-    <h2 id="eth-h">Ethics &amp; Stop Rule — Operational Law</h2>
+    <div class="flexbar">
+      <h2 id="eth-h">Ethics &amp; Stop Rule — Operational Law</h2>
+      <div class="eq-tools">
+        <button class="chip" data-copy-tex="#eq-eth-body">Copy TeX</button>
+        <button class="chip" data-copy-link="#ethics">Link</button>
+      </div>
+    </div>
     <div class="eq"><div class="eq-scroll" id="eq-eth-body">
       $$ \Xi \;\approx\; \frac{\langle H \cdot I \rangle}{1 + \mathrm{Var}[\mathcal{M}]} \qquad
          \text{If } \frac{\mathrm{Truth}(t+\Delta)}{\mathrm{Distortion}(t+\Delta)} < \frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \Rightarrow \text{ Halt } \to \text{ Re-align } \to \text{ Resume} $$
@@ -761,308 +976,49 @@
   </article>
 </section>
 
+<!-- Equation tools: copy TeX / deep link -->
 <script>
-(function VoiceReader(){
-  // ---- Guards ----
-  if (!('speechSynthesis' in window)) {
-    const st = document.getElementById('vr-status');
-    st && (st.textContent = 'Your browser does not support speech synthesis. Try Chrome, Edge, or Safari.');
-    return;
-  }
-
-  // ---- Elements ----
-  const selVoice  = document.getElementById('vr-voice');
-  const rateEl    = document.getElementById('vr-rate');
-  const pitchEl   = document.getElementById('vr-pitch');
-  const rateVal   = document.getElementById('vr-rate-val');
-  const pitchVal  = document.getElementById('vr-pitch-val');
-  const startSel  = document.getElementById('vr-start');
-  const speakMath = document.getElementById('vr-speak-math');
-
-  const btnPlay   = document.getElementById('vr-play');
-  const btnPause  = document.getElementById('vr-pause');
-  const btnResume = document.getElementById('vr-resume');
-  const btnStop   = document.getElementById('vr-stop');
-  // Support both ids: vr-export-ssml and older vr-export-ssML
-  const btnSSML   = document.getElementById('vr-export-ssml') || document.getElementById('vr-export-ssML');
-  const statusEl  = document.getElementById('vr-status');
-
-  let VOICES = [];
-  function loadVoices(){
-    VOICES = speechSynthesis.getVoices();
-    selVoice.innerHTML = '';
-    VOICES.forEach((v, i)=>{
-      const opt = document.createElement('option');
-      opt.value = i;
-      opt.textContent = `${v.name} — ${v.lang}${v.default ? ' (default)' : ''}`;
-      selVoice.appendChild(opt);
-    });
-    const defIndex = VOICES.findIndex(v => /en/i.test(v.lang));
-    if (defIndex >= 0) selVoice.value = String(defIndex);
-  }
-  loadVoices();
-  if (typeof speechSynthesis.onvoiceschanged !== 'undefined') {
-    speechSynthesis.onvoiceschanged = loadVoices;
-  }
-
-  // ---- Helpers: extract and clean text from the page ----
-  const SECTION_ORDER = ['#p1','#p2','#operators-appendix','#ethics','#notes'];
-  function gatherNodesFrom(startId){
-    const startIdx = SECTION_ORDER.indexOf(startId);
-    const ids = (startIdx >= 0 ? SECTION_ORDER.slice(startIdx) : SECTION_ORDER);
-    const roots = ids.map(id => document.querySelector(id)).filter(Boolean);
-    const toRead = [];
-    roots.forEach(root=>{
-      root.querySelectorAll('h2,h3,h4,p,li,figcaption,.eq .eq-scroll').forEach(n=>toRead.push(n));
-    });
-    return toRead;
-  }
-
-  const mathReplacements = [
-    {re:/\\forall/g, rep:'for all'},
-    {re:/\\Rightarrow/g, rep:'implies'},
-    {re:/\\infty/g, rep:'infinity'},
-    {re:/\\approx/g, rep:'approximately'},
-    {re:/\\frac\{([^}]+)\}\{([^}]+)\}/g, rep:(_,a,b)=>`${a} over ${b}`},
-    {re:/\\cdot/g, rep:' dot '},
-    {re:/\\oplus/g, rep:' coherent merge '},
-    {re:/\\mathcal\{([A-Za-z])\}/g, rep:(_,a)=>`script ${a}`},
-    {re:/\\mathbf\{([A-Za-z])\}/g, rep:(_,a)=>`${a}`},
-    {re:/\\Xi/g, rep:'ksee'},
-    {re:/\\Phi/g, rep:'fee'},
-    {re:/\\Pi/g, rep:'pie'},
-    {re:/\\sigma/g, rep:'sigma'},
-    {re:/\\nu/g, rep:'new'},
-    {re:/\\tau/g, rep:'tau'},
-    {re:/\\Lambda/g, rep:'lambda'},
-    {re:/\\nabla/g, rep:'gradient of'},
-    {re:/\\int/g, rep:'integral'},
-    {re:/\\sum/g, rep:'sum'},
-    {re:/\\lim/g, rep:'limit'},
-    {re:/\\mathbb\{M\}_\\tau/g, rep:'memory window M sub tau'},
-    {re:/\\mathcal\{H\}\(\\nu\)/g, rep:'harmonic gate H of new'},
-  ];
-  function verbalizeMath(tex){
-    let t = tex;
-    mathReplacements.forEach(({re,rep})=>{ t = t.replace(re, rep); });
-    t = t.replace(/\$\$?/g,' ')
-         .replace(/[{}]/g,' ')
-         .replace(/\\\\/g,' ')
-         .replace(/\s+/g,' ')
-         .trim();
-    if (t.length > 400) t = t.slice(0,380) + ' … (equation continues)';
-    return t || 'equation';
-  }
-
-  function nodeToSpeechText(node){
-    if (node.classList.contains('eq-scroll')) {
-      if (!speakMath.checked) return '';
-      const raw = node.textContent || '';
-      return 'Equation: ' + verbalizeMath(raw);
+  (function eqTools(){
+    function copy(text){
+      if (navigator.clipboard?.writeText) { navigator.clipboard.writeText(text); return; }
+      const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
     }
-    let t = (node.textContent || '').trim();
-    if (node.tagName === 'LI') t = '• ' + t;
-    t = t.replace(/\s+/g,' ').trim();
-    return t;
-  }
-
-  function chunk(text, max=220){
-    const parts = [];
-    let cur = '';
-    const sentences = text.split(/([.?!…]+)\s+/);
-    for (let i=0;i<sentences.length;i+=2){
-      const s = (sentences[i]||'') + (sentences[i+1]||' ');
-      if ((cur + s).length > max) {
-        if (cur) parts.push(cur.trim());
-        if (s.length > max) {
-          for (let j=0; j<s.length; j+=max) parts.push(s.slice(j,j+max).trim());
-          cur = '';
-        } else {
-          cur = s;
-        }
-      } else {
-        cur += s;
+    function texFrom(targetSel){
+      const el = document.querySelector(targetSel);
+      if (!el) return '';
+      // Grab raw TeX from the original source in the block (MathJax renders SVG but keeps text content).
+      // Fallback to textContent.
+      return (el.textContent || '').trim();
+    }
+    document.addEventListener('click', (e)=>{
+      const btnCopy = e.target.closest('[data-copy-tex]');
+      if (btnCopy){
+        const sel = btnCopy.getAttribute('data-copy-tex');
+        const raw = texFrom(sel);
+        if (raw){ copy(raw); btnCopy.textContent='Copied'; setTimeout(()=>btnCopy.textContent='Copy TeX', 1000); }
+        e.preventDefault(); return;
       }
-    }
-    if (cur.trim()) parts.push(cur.trim());
-    return parts.filter(Boolean);
-  }
-
-  function buildUtterances(startId){
-    const nodes = gatherNodesFrom(startId);
-    const textBlocks = nodes.map(nodeToSpeechText).filter(Boolean);
-    const allChunks = textBlocks.flatMap(t => chunk(t));
-    const utts = allChunks.map(t=>{
-      const u = new SpeechSynthesisUtterance(t);
-      const v = (speechSynthesis.getVoices()[+selVoice.value]) || null;
-      if (v) u.voice = v;
-      u.rate  = +rateEl.value;
-      u.pitch = +pitchEl.value;
-      u.lang  = v ? v.lang : 'en-US';
-      return u;
+      const btnLink = e.target.closest('[data-copy-link]');
+      if (btnLink){
+        const idSel = btnLink.getAttribute('data-copy-link');
+        const base = location.origin + location.pathname;
+        const hash = idSel.startsWith('#') ? idSel : ('#'+idSel);
+        copy(base + hash);
+        btnLink.textContent='Link Copied';
+        history.pushState(null,'',hash);
+        setTimeout(()=>btnLink.textContent='Link', 1000);
+        e.preventDefault(); return;
+      }
     });
-    return utts;
-  }
-
-  let queue = [];
-  let playing = false;
-
-  function setStatus(msg){ statusEl && (statusEl.textContent = msg); }
-  function setButtons({play=true, pause=false, resume=false, stop=false}){
-    btnPlay.disabled   = !play;
-    btnPause.disabled  = !pause;
-    btnResume.disabled = !resume;
-    btnStop.disabled   = !stop;
-  }
-
-  rateEl.addEventListener('input', ()=> rateVal.textContent = rateEl.value);
-  pitchEl.addEventListener('input', ()=> pitchVal.textContent = pitchEl.value);
-
-  btnPlay.addEventListener('click', ()=>{
-    speechSynthesis.cancel();
-    queue = buildUtterances(startSel.value);
-    if (!queue.length){ setStatus('Nothing to read.'); return; }
-    playing = true;
-    setButtons({play:false, pause:true, resume:false, stop:true});
-    setStatus('Reading…');
-    speakQueue();
-  });
-
-  btnPause.addEventListener('click', ()=>{
-    if (!playing) return;
-    speechSynthesis.pause();
-    setButtons({play:false, pause:false, resume:true, stop:true});
-    setStatus('Paused.');
-  });
-
-  btnResume.addEventListener('click', ()=>{
-    speechSynthesis.resume();
-    setButtons({play:false, pause:true, resume:false, stop:true});
-    setStatus('Reading…');
-  });
-
-  btnStop.addEventListener('click', stopReading);
-
-  function stopReading(){
-    playing = false;
-    queue.length = 0;
-    speechSynthesis.cancel();
-    setButtons({play:true, pause:false, resume:false, stop:false});
-    setStatus('Stopped.');
-  }
-
-  function speakQueue(){
-    if (!queue.length){ stopReading(); setStatus('Done.'); return; }
-    const u = queue.shift();
-    u.onend = ()=> speakQueue();
-    u.onerror = ()=> speakQueue();
-    speechSynthesis.speak(u);
-  }
-
-  if (btnSSML){
-    btnSSML.addEventListener('click', ()=>{
-      const ids = ['#p1','#p2','#operators-appendix','#ethics','#notes'];
-      const parts = [];
-      parts.push('<?xml version="1.0" encoding="UTF-8"?>');
-      parts.push('<speak version="1.1" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">');
-
-      ids.forEach(id=>{
-        const root = document.querySelector(id);
-        if (!root) return;
-        parts.push(`<p><s><emphasis level="moderate">${escapeXML(root.querySelector('h2,h3')?.textContent||'Section')}</emphasis></s></p>`);
-        root.querySelectorAll('h3,h4,p,li,figcaption,.eq .eq-scroll').forEach(node=>{
-          if (node.classList.contains('eq-scroll')) {
-            if (!speakMath.checked) return;
-            const speech = verbalizeMath(node.textContent||'');
-            parts.push(`<p><s>Equation.</s><break time="200ms"/><s>${escapeXML(speech)}</s></p>`);
-          } else {
-            const t = (node.textContent||'').trim().replace(/\s+/g,' ');
-            if (!t) return;
-            const tag = node.tagName === 'LI' ? 's' : 'p';
-            parts.push(`<${tag}>${escapeXML(t)}</${tag}>`);
-          }
-        });
-        parts.push('<break time="500ms"/>');
-      });
-
-      parts.push('</speak>');
-      const blob = new Blob([parts.join('\n')], {type:'application/ssml+xml'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'scroll-of-fire_theory.ssml';
-      a.click();
-      URL.revokeObjectURL(url);
-      setStatus('Exported SSML file. Use with Amazon Polly / Google Cloud TTS / Azure.');
-    });
-  }
-
-  function escapeXML(s){
-    return s.replace(/&/g,'&amp;')
-            .replace(/</g,'&lt;')
-            .replace(/>/g,'&gt;')
-            .replace(/"/g,'&quot;')
-            .replace(/'/g,'&apos;');
-  }
-})();
-</script>
-
-<div class="goldline sweep"></div>
-<footer class="footer">© <span id="y"></span> Scroll of Fire — Theory.</footer>
-
-<!-- Back to Canon (Home) pill -->
-<a class="back-canon" id="backCanon" href="index.html#canon" aria-label="Back to Canon on Home">Back to Canon</a>
-
-<!-- Local page helpers -->
-<script>
-  document.getElementById('y').textContent=new Date().getFullYear();
-
-  // HERO auto-fit: phones => contain; desktop => smart cover unless crop would be bad
-  (function autoHeroFit(){
-    const hero=document.getElementById('hero');
-    const img=document.getElementById('heroBanner');
-    if(!hero||!img) return;
-    function pickFit(){
-      if (matchMedia('(max-width:560px)').matches){ hero.dataset.fit='contain'; return; }
-      const cw=hero.clientWidth||innerWidth;
-      const ch=hero.clientHeight||Math.max(1, innerHeight*0.35);
-      const containerAR=cw/ch;
-      const iw=img.naturalWidth||2100, ih=img.naturalHeight||900, imageAR=iw/ih;
-      hero.dataset.fit=(containerAR < imageAR*0.92)?'contain':'cover';
-    }
-    if (img.complete) pickFit(); else img.addEventListener('load', pickFit, {once:true});
-    new ResizeObserver(pickFit).observe(hero);
-    addEventListener('orientationchange', pickFit, {passive:true});
-    addEventListener('visibilitychange', ()=>!document.hidden&&pickFit());
-  })();
-
-  // Back-to-Canon visibility
-  (function(){
-    const pill=document.getElementById('backCanon');
-    addEventListener('scroll', ()=>{ pill.classList.toggle('show', scrollY>800); }, {passive:true});
-  })();
-
-  // Command palette shell (page-local fallback)
-  (function(){
-    const btn=document.getElementById('openPalette');
-    const pal=document.getElementById('palette');
-    const input=document.getElementById('palInput');
-    function open(){ pal?.classList.add('open'); setTimeout(()=>input?.focus(), 0); }
-    function close(){ pal?.classList.remove('open'); }
-    btn?.addEventListener('click', open);
-    pal?.addEventListener('click', e=>{ if(e.target===pal) close(); });
-    addEventListener('keydown', e=>{
-      const mod=e.metaKey||e.ctrlKey;
-      if(mod&&(e.key==='k'||e.key==='K')){ e.preventDefault(); open(); }
-      if(e.key==='Escape') close();
-    }, {passive:false});
   })();
 </script>
 
-<!-- Command palette UI -->
-<div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel">
-  <div class="panel">
-    <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette">
-    <ul id="palList" aria-live="polite"></ul>
-  </div>
-</div>
+<!-- Small layout helper for heading/tool alignment -->
+<style>
+  .flexbar{display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:wrap}
+  .eq-tools{display:flex; gap:.4rem}
+  .chip{font-size:.85rem; padding:.25rem .55rem; border-radius:999px; border:1px solid var(--line); background:var(--bg-elev); opacity:.9}
+</style>
+
+<!-- (Keep the rest of your page scripts and footer below) -->
