@@ -352,6 +352,149 @@ toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
     if (io) io.observe(eq); else setTimeout(runBurst, rnd(800, 2200));
   });
 
+
+
+
+
+
+
+
+   /* ====================================================================== */
+/* Palette toggle for Alive Modes (Calm / Lively / Max / Full Off)        */
+/* Integrates with existing ⌘K palette (#openPalette / #palInput / #palList) */
+/* ====================================================================== */
+(function alivePalette(){
+  const doc = document;
+  const root = doc.documentElement;
+  const body = doc.body;
+
+  const MODES = [
+    {id:'calm',   label:'Calm — subtle, slower'},
+    {id:'lively', label:'Lively — default'},
+    {id:'max',    label:'Max — energetic'},
+    {id:'off',    label:'Full Off — disable motion'},
+  ];
+
+  // Restore persisted choice
+  const key = 'sof.alive.mode.v1';
+  const saved = localStorage.getItem(key) || 'lively';
+  applyMode(saved, {boot:true});
+
+  // Hook palette if it exists
+  const pal = doc.getElementById('palette');
+  const list = doc.getElementById('palList');
+  const input = doc.getElementById('palInput');
+
+  if (pal && list){
+    // Insert a section header + items
+    const header = itemEl('— Animation Energy —', true);
+    header.setAttribute('aria-disabled','true');
+    list.appendChild(header);
+
+    MODES.forEach(m=>{
+      const el = itemEl(`⚡ ${m.label}`, false, m.id);
+      if (m.id === saved) el.classList.add('sel');
+      el.addEventListener('click', ()=>{ applyMode(m.id); closePalette(); });
+      list.appendChild(el);
+    });
+
+    // Allow quick filtering by typing “energy” / “alive” / mode names
+    if (input){
+      input.addEventListener('input', ()=>{
+        const q = input.value.trim().toLowerCase();
+        Array.from(list.children).forEach(li=>{
+          const id = li.dataset.mode || '';
+          const txt = li.textContent.toLowerCase();
+          if (!id){ li.style.display=''; return; } // header stays
+          li.style.display = (q==='' || txt.includes(q) || id.includes(q) || /alive|energy|animation/.test(q)) ? '' : 'none';
+        });
+      });
+    }
+
+    // Close helper
+    function closePalette(){ pal.classList.remove('open'); }
+  }
+
+  // Optional: add a Quick-action button to your toolbar if desired (non-breaking)
+  try{
+    const quick = doc.querySelector('.quick.quick--utils');
+    if (quick && !quick.querySelector('#aliveToggle')){
+      const btn = doc.createElement('button');
+      btn.id='aliveToggle'; btn.className='cta'; btn.type='button';
+      btn.title='Animation energy';
+      btn.textContent= labelFor(saved);
+      btn.addEventListener('click', ()=>{
+        // Cycle Calm → Lively → Max → Off → Calm …
+        const order = ['calm','lively','max','off'];
+        const i = order.indexOf(currentMode());
+        const next = order[(i+1) % order.length];
+        applyMode(next);
+        btn.textContent = labelFor(next);
+      });
+      quick.appendChild(btn);
+    }
+  }catch(e){ /* no-op safe */ }
+
+  // Core
+  function itemEl(text, header=false, modeId=''){
+    const li = document.createElement('li');
+    li.textContent = text;
+    if (!header){ li.tabIndex=0; li.dataset.mode = modeId; }
+    return li;
+  }
+
+  function labelFor(id){
+    const m = MODES.find(x=>x.id===id);
+    return m ? `Affect: ${m.label.split(' — ')[0]}` : 'Affect: Lively';
+    // short label for toolbar button
+  }
+
+  function currentMode(){
+    if (body.classList.contains('affect-off')) return 'off';
+    return root.getAttribute('data-alive') || 'lively';
+  }
+
+  function applyMode(id, opts={}){
+    const prev = currentMode();
+
+    if (id === 'off'){
+      body.classList.add('affect-off');
+      root.removeAttribute('data-alive');
+    }else{
+      body.classList.remove('affect-off');
+      root.setAttribute('data-alive', id);
+    }
+
+    // Update selected state in palette
+    const list = document.getElementById('palList');
+    if (list){
+      Array.from(list.querySelectorAll('[data-mode]')).forEach(el=>{
+        el.classList.toggle('sel', el.dataset.mode === id);
+      });
+    }
+
+    // Persist (don’t persist on boot if user had reduce-motion)
+    const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!opts.boot || !prefersReduce){
+      localStorage.setItem(key, id);
+    }
+
+    // Nudge existing “alive pack” animations to adopt new timing
+    // by toggling a lightweight data-flag that restarts CSS animations safely.
+    if (!opts.boot){
+      root.dataset.alivePulse = '1';
+      // remove on next frame
+      requestAnimationFrame(()=> delete root.dataset.alivePulse);
+    }
+
+    // Update quick button label if present
+    const btn = document.getElementById('aliveToggle');
+    if (btn) btn.textContent = labelFor(id);
+
+    // Console breadcrumb (helpful for debugging in webviews)
+    if (prev !== id) { try{ console.debug('[SoF] Alive mode:', id); }catch(_){} }
+  }
+})();
   /* ---------- 5) Laser grid tiny breath ---------- */
   const grid = document.querySelector('.laser-grid');
   if (grid) grid.classList.add('alive');
