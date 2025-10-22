@@ -1,17 +1,31 @@
 /* ==========================================================================
    Scroll of Fire — Theory page overrides
-   theory.css v1.2 (pairs with codex.css v2.2)
+   theory.css v1.8 (pairs with codex.css >= v2.7)
    ========================================================================== */
 
-/* Tighter reading width for theory text */
-.wrap { max-width: 1060px }
+/* ---------- Layout / wrap ---------- */
+:root{
+  --sof-wrap: 1060px;
+  --sof-pill-blur: 6px;
+  --sof-chip-fs: .85rem;
+  --sof-chip-pad: .25rem .55rem;
+  --sof-ink-muted: var(--muted, #a7acb7);
+  --sof-line-strong: rgba(122,243,255,.18);
+  --sof-line-soft: rgba(122,243,255,.12);
+  --sof-card-bg: var(--bg-elev, rgba(12,12,16,.55));
+  --sof-aura-gold-1: #ffd28a;
+  --sof-aura-gold-2: #ffb74a;
+  --sof-aura-ice-1: #7af3ff;
+  --sof-aura-ice-2: #61c6ff;
+}
+.wrap{ max-width: var(--sof-wrap) }
 
-/* Mini-TOC: sticky + compact */
+/* ---------- Mini-TOC ---------- */
 .mini-toc{
   position: sticky; top: calc(var(--head-h) + var(--tabs-h) + 12px);
   border:1px solid var(--line); border-radius:12px; padding:12px; margin:10px 0 18px;
   background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.005));
-  box-shadow:0 6px 14px rgba(0,0,0,.35), inset 0 0 0 1px rgba(122,243,255,.12);
+  box-shadow:0 6px 14px rgba(0,0,0,.35), inset 0 0 0 1px var(--sof-line-soft);
 }
 .mini-toc h4{ margin:0 0 8px; font:700 14px/1.2 Inter,system-ui; color:#fff }
 .mini-toc a{
@@ -20,85 +34,150 @@
 }
 .mini-toc a:hover,.mini-toc a:focus-visible{ border-color:#3a3a44; background:rgba(255,255,255,.04) }
 
-/* Hero caption beneath the banner */
+/* ---------- Hero ---------- */
+.hero.hero--clean{ margin-bottom:10px }
+.hero .hero-img{ object-fit: var(--hero-fit, contain); object-position: var(--hero-focal-mobile, 50% 40%) }
+@media (min-width:860px){
+  .hero .hero-img{ object-position: var(--hero-focal-desktop, 58% 50%) }
+}
 .hero-caption{
-  text-align:center; margin:-6px 0 10px; color:var(--muted); font-style:italic;
+  text-align:center; margin:6px 0 10px; color:var(--muted); font-style:italic; font-size: var(--fs-0);
 }
 
-/* Section CTA */
+/* ---------- Section CTA ---------- */
 .cta--section{ margin-top:10px }
 
-/* Denser inner grids for operator lists */
-.grid--tight{ gap:12px }
-
-/* Back-to-Canon floating pill (shows on scroll) */
-.back-canon{
-  position:fixed; right:14px; bottom:calc(16px + var(--safe-bottom)); z-index:50;
-  display:inline-block; padding:10px 12px; border-radius:999px; border:1px solid #2a2a33;
-  background:rgba(12,12,16,.55); backdrop-filter:blur(6px);
-  font:600 13px/1 Inter,system-ui; color:var(--ink); text-decoration:none;
-  box-shadow:0 8px 24px rgba(0,0,0,.38), inset 0 0 0 1px rgba(122,243,255,.12);
-  opacity:0; transform:translateY(10px); transition:opacity .3s, transform .3s;
-}
-.back-canon.show{ opacity:1; transform:none }
-
-/* Tabs: ensure in-page anchors never feel cramped */
+/* ---------- Tabs: compact hit area ---------- */
 .tabs .tab{ padding:8px 12px }
-@media (max-width:560px){ .tabs .tab{ padding:7px 10px; min-height:36px; font-size:13px } }
+@media (max-width:560px){
+  .tabs .tab{ padding:7px 10px; min-height:36px; font-size:13px }
+}
 
-/* Equation polish: slightly larger */
-.eq mjx-container{ font-size:112% }
-
-/* Make sure anchors don’t hide behind sticky header+tabs */
-:target{ scroll-margin-top: calc(var(--head-h) + var(--tabs-h) + 16px) }
-
-/* Quick bar: treat as section jumps */
-.quick.quick--utils{ gap:8px; flex-wrap:nowrap }
-.quick.quick--utils .cta{ min-width:92px; white-space:nowrap }
-
-/* Accessibility: visible focus on quick bar links */
+/* ---------- Quick bar (top buttons) — compact & scrollable on small ---------- */
+.quick.quick--utils{
+  gap:8px; flex-wrap:nowrap; overflow:auto; overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+}
+.quick.quick--utils .cta{
+  min-width:auto; white-space:nowrap;
+  font: 600 13px/1 Inter, system-ui;
+  padding: 6px 10px; /* smaller buttons */
+  border-radius: 999px;
+}
 .quick.quick--utils .cta:focus-visible{
   outline:2px solid var(--ring);
   box-shadow:0 0 0 4px var(--ring-outer), 0 0 0 1px var(--ring-inset) inset;
 }
 
-/* Small screens: spacing and density */
-@media (max-width:768px){
-  .wrap{ padding:14px 14px calc(80px + var(--safe-bottom)) }
-  .mini-toc{ display:none }  /* keep page light on phones */
+/* ---------- Anchors & targets ---------- */
+:target{ scroll-margin-top: calc(var(--head-h) + var(--tabs-h) + 16px) }
+
+/* ---------- Grid density helpers ---------- */
+.grid--tight{ gap:12px }
+
+/* ---------- Back-to-Canon pill ---------- */
+.back-canon{
+  position:fixed; right:14px; bottom:calc(16px + var(--safe-bottom)); z-index:50;
+  display:inline-block; padding:10px 12px; border-radius:999px; border:1px solid #2a2a33;
+  background:var(--sof-card-bg); backdrop-filter:blur(var(--sof-pill-blur));
+  font:600 13px/1 Inter,system-ui; color:var(--ink); text-decoration:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.38), inset 0 0 0 1px var(--sof-line-soft);
+  opacity:0; transform:translateY(10px); transition:opacity .3s, transform .3s;
+}
+.back-canon.show{ opacity:1; transform:none }
+#backCanon{ bottom: calc(18px + var(--safe-bottom)) }
+
+/* ---------- Equations polish ---------- */
+.eq .mjx-container, .eq mjx-container{ font-size: clamp(15px, 0.95rem + 0.35vw, 21px) }
+.eq-card .eq-scroll{
+  max-height: clamp(160px, 24vh, 280px);
+  overflow:auto; scrollbar-width: thin;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
 }
 
-/* Print tweaks (inherits codex.css print rules) */
+/* Equation tool “chips” (Copy TeX / Link) — optional; used in updated Part II markup */
+.eq-tools{ display:flex; gap:.4rem; align-items:center }
+.chip{
+  font-size: var(--sof-chip-fs);
+  padding: var(--sof-chip-pad);
+  border-radius:999px;
+  border:1px solid var(--line);
+  background: var(--sof-card-bg);
+  color: var(--ink);
+  opacity:.95;
+}
+.chip:hover,.chip:focus-visible{ border-color: var(--sof-line-strong); opacity:1 }
+
+/* Heading+tools alignment */
+.flexbar{ display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:wrap }
+
+/* ---------- Voice Reader: collapsible styling hook ----------
+   Toggle with JS by setting [data-collapsed="true"] on #voice-reader */
+#voice-reader{ transition: grid-template-rows .25s ease, padding .2s ease }
+#voice-reader[data-collapsed="true"] .grid{ display:none }
+#voice-reader .card-title,
+#vr-h{ cursor: default }
+#voice-reader .card-title .caret,
+#vr-h .caret{
+  display:inline-block; margin-left:.4rem; transform: rotate(0deg); transition: transform .2s ease;
+}
+#voice-reader[data-collapsed="true"] .card-title .caret,
+#voice-reader[data-collapsed="true"] #vr-h .caret{ transform: rotate(-90deg) }
+
+/* ---------- Remnant halos / outlines (apply to any element) ---------- */
+.remnant{
+  position:relative;
+  border-radius:12px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.06),
+    0 8px 28px rgba(0,0,0,.35);
+}
+.remnant::after{
+  content:""; position:absolute; inset:-2px; border-radius:inherit; pointer-events:none;
+  background: radial-gradient(120% 120% at 30% 20%, rgba(255,255,255,.08) 0%, rgba(255,255,255,0) 60%),
+              conic-gradient(from 0deg, transparent 0 70%, rgba(255,255,255,.05) 85%, transparent 100%);
+  filter: blur(8px); opacity:.8; transition: opacity .25s ease, filter .25s ease;
+}
+.remnant:hover::after{ opacity:1; filter: blur(6px) }
+
+/* Aura color variants */
+.remnant--gold::before,
+.remnant--ice::before{
+  content:""; position:absolute; inset:-3px; border-radius:inherit; pointer-events:none; z-index:-1;
+}
+.remnant--gold::before{
+  background: radial-gradient(70% 70% at 30% 20%, color-mix(in oklab, var(--sof-aura-gold-1) 40%, transparent) 0%, transparent 70%),
+              0 0;
+  box-shadow:
+    0 0 40px 10px color-mix(in oklab, var(--sof-aura-gold-2) 35%, transparent),
+    inset 0 0 0 1px rgba(255,200,120,.25);
+}
+.remnant--ice::before{
+  background: radial-gradient(70% 70% at 30% 20%, color-mix(in oklab, var(--sof-aura-ice-1) 35%, transparent) 0%, transparent 70%);
+  box-shadow:
+    0 0 42px 12px color-mix(in oklab, var(--sof-aura-ice-2) 40%, transparent),
+    inset 0 0 0 1px rgba(122,243,255,.25);
+}
+
+/* Low-motion preference */
+@media (prefers-reduced-motion: reduce){
+  .back-canon{ transition:none }
+  #voice-reader{ transition:none }
+  .remnant::after{ transition:none }
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width:768px){
+  .wrap{ padding:14px 14px calc(80px + var(--safe-bottom)) }
+  .mini-toc{ display:none } /* keep page light on phones */
+}
+@media (max-width:560px){
+  .mini-toc{ position: sticky; top: calc(var(--head-h) + var(--tabs-h) + 8px) }
+  .wrap{ padding-left:14px; padding-right:14px }
+}
+
+/* ---------- Print ---------- */
 @media print{
   .mini-toc,.back-canon{ display:none!important }
 }
-
-
-
-/* Theory page polish — fixes banner placement parity with Home and tiny density tweaks */
-
-.hero.hero--clean { margin-bottom: 10px; }
-.hero .hero-img { object-fit: var(--hero-fit, contain); object-position: var(--hero-focal-mobile, 50% 40%); }
-@media (min-width: 860px){
-  .hero .hero-img { object-position: var(--hero-focal-desktop, 58% 50%); }
-}
-
-/* Caption spacing on very small screens */
-.hero-caption{
-  text-align:center; color:var(--muted);
-  margin: 6px 0 10px;
-  font-size: var(--fs-0);
-}
-
-/* Mini-TOC compactness on phones */
-@media (max-width: 560px){
-  .mini-toc{ position: sticky; top: calc(var(--head-h) + var(--tabs-h) + 8px); }
-  .wrap{ padding-left: 14px; padding-right: 14px; }
-}
-
-/* Cards + eq readability tweaks */
-.eq-card .eq-scroll{ max-height: clamp(160px, 24vh, 280px); }
-.eq .mjx-container{ font-size: clamp(15px, 0.95rem + 0.35vw, 21px); }
-
-/* Back-to-Canon pill visibility threshold slightly lower here */
-#backCanon{ bottom: calc(18px + var(--safe-bottom)); }
