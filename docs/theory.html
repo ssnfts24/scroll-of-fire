@@ -41,7 +41,7 @@
   <link rel="stylesheet" href="assets/css/theory.css?v=1.5">
 
   <!-- Preload banner (same as Home) -->
-  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" imagesizes="100vw" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" fetchpriority="high">
 
   <!-- MathJax (lazy; forced typeset) -->
   <script>
@@ -59,6 +59,20 @@
 
   <!-- Site JS (v3.3.2 consolidated) -->
   <script src="assets/js/codex.js?v=3.3.2" defer></script>
+
+  <!-- Accessibility/UX helper: Expand buttons (no-op if codex.js already handles it) -->
+  <script>
+    document.addEventListener('click', e=>{
+      const btn=e.target.closest('[data-eq-expand]');
+      if(!btn) return;
+      const id=btn.getAttribute('aria-controls');
+      const body=id && document.getElementById(id);
+      if(!body) return;
+      const open=btn.getAttribute('aria-expanded')==='true';
+      btn.setAttribute('aria-expanded', String(!open));
+      body.classList.toggle('open', !open);
+    });
+  </script>
 </head>
 
 <body class="stars" data-theme="dark">
@@ -77,8 +91,7 @@
       <div class="quick quick--utils" role="toolbar" aria-label="Page sections">
         <a class="cta" href="#p1" data-jump>Part I</a>
         <a class="cta" href="#p2" data-jump>Part II</a>
-        <a class="cta" href="#operators" data-jump>Operators</a>
-        <a class="cta" href="#canon" data-jump>Canon</a>
+        <a class="cta" href="#operators-appendix" data-jump>Operators</a>
         <a class="cta" href="#ethics" data-jump>Ethics</a>
         <button id="openPalette" class="cta" type="button" title="Command palette">⌘K</button>
       </div>
@@ -96,8 +109,8 @@
              decoding="async" fetchpriority="high" loading="eager">
       </picture>
       <div class="hero-lights" aria-hidden="true"></div>
+      <figcaption class="hero-caption">“Let there be resonance.”</figcaption>
     </figure>
-    <figcaption class="hero-caption">“Let there be resonance.”</figcaption>
 
     <h1 class="title alive-twinkle">📘 Theory — Codex of Reality</h1>
     <p class="subtitle">Two-part deep dive: the living architecture (Part I) and the canonical equations with operator-level commentary (Part II). The Codex treats reality as a resonant process shaped by <em>𝓘 · 𝓛 · 𝓒 · 𝓢</em> and safeguarded by ethical law.</p>
@@ -106,7 +119,7 @@
     <nav class="tabs" aria-label="Sections">
       <a class="tab tab--primary" href="#p1">Part I: Architecture</a>
       <a class="tab tab--primary" href="#p2">Part II: Equations 0–17</a>
-      <a class="tab" href="#operators">Operators</a>
+      <a class="tab" href="#operators-appendix">Operators</a>
       <a class="tab" href="#ethics">Ethics</a>
       <a class="tab" href="#notes">Notes</a>
       <span class="tab-ink" aria-hidden="true"></span>
@@ -117,453 +130,594 @@
       <h4>On this page</h4>
       <a href="#p1">Part I — Architecture</a>
       <a href="#p2">Part II — Equations</a>
-      <a href="#operators">Operators & Notation</a>
+      <a href="#operators-appendix">Operators & Notation</a>
       <a href="#ethics">Ethical Law</a>
       <a href="#notes">Notes</a>
     </aside>
 
-    <!-- ===================== PART II ===================== -->
-<section class="grid" id="p2" aria-labelledby="p2-h">
-  <article class="card col-12">
-    <h2 id="p2-h">Part II — Canon 0–17 (Living Commentary)</h2>
-    <p class="meta">#7 Copeland and #8 Goodwin remain external comparators; all other forms are native to the Codex.</p>
-  </article>
+    <!-- ===================== PART I ===================== -->
+    <section class="grid" id="p1" aria-labelledby="p1-h">
+      <article class="card col-12 eq-card">
+        <h2 id="p1-h">Part I — How the Codex Works (Architecture of Resonance)</h2>
 
-  <!-- 0 -->
-  <article class="card col-12 eq-card" id="eq0">
-    <h3>Eq.0 — Foundational Field \(\Psi_{\Omega}\)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-label="Expand">Expand</button>
-    <div class="eq"><div class="eq-scroll">
-      $$\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\mathcal{A}\,\Phi(x,t,\nu)\,d\nu\;+\;\Lambda\,\mathcal{E}(x,t)$$
-    </div></div>
-    <p><strong>What.</strong> Experience is a phase-weighted sweep over frequencies \(\nu\) (via the awareness gradient \(\nabla\mathcal{A}\)), plus an ethical correction \(\Lambda \mathcal{E}\) that restores balance.</p>
-    <p><strong>Why.</strong> Observation isn’t passive; it’s the <em>tuning</em> that aligns phase to meaning. Ethical energy prevents runaway gain on distorted modes.</p>
-    <p class="hint">Practice: slow breath + soft gaze (broad \(H\)) → scan internal tone until strain lowers; that’s \(\nabla\mathcal{A}\) flattening.</p>
-  </article>
+        <!-- Banner identity (mirrors Home; mobile-smart fit handled by JS + CSS) -->
+        <div class="eq"><div class="eq-scroll">
+          $$ \underbrace{\mathsf{Supply}}_{\text{constants, codes, ratios}} \;\; \times \;\;
+             \underbrace{\big(\mathcal{I}\cdot\mathcal{L}\cdot\mathcal{C}\cdot\mathcal{S}\big)}_{\text{operators}} \;\; \xrightarrow{\;\;\text{Ethical Mask (Eq.9)}\;\;} \;\; \mathcal{R}(x,t) $$
+        </div></div>
 
-  <!-- 1 -->
-  <article class="card col-12 eq-card" id="eq1">
-    <h3>Eq.1 — Source = Supply × Operators</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-label="Expand">Expand</button>
-    <div class="eq"><div class="eq-scroll">
-      $$ \mathbf{R} \;=\; f(\pi,e,i,\hbar,c,G,\mathrm{DNA},\Omega_{\mathrm{DM}},\Omega_{\Lambda},H_{0},432,\dots)\;\times\;\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S} $$
-    </div></div>
-    <p><strong>What.</strong> Constants & living numbers provide potential; the operator loop writes it into form.</p>
-    <p><strong>Why.</strong> Stops category errors like “constant worship”: supply is inert until the loop acts.</p>
-    <p class="hint">See Part I banner and Eq.4/Eq.17 coupling for concrete programming of the supply.</p>
-  </article>
+        <p><strong>Premise.</strong> The Codex models reality as an <em>interactive resonance</em> between a supplied substrate (fundamental constants, integer/irrational ratios, living numbers, and biological codes) and a <em>living operator pipeline</em> — Intention \( \mathcal{I} \), Language/Light \( \mathcal{L} \), Conscious Witness \( \mathcal{C} \), and Source/Return \( \mathcal{S} \). The ethical mask (Eq.9) constrains gain so that <em>truth dominates distortion</em> as \( t \to \infty \) and any rise in harm halts amplification.</p>
 
-  <!-- 2 -->
-  <article class="card col-6 eq-card" id="eq2">
-    <h3>Eq.2 — Witness \(\mathcal{W}\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathcal{W}(x,t)=\partial_x\,\mathrm{Awareness}(x,t)\;+\;\mathcal{I}\cdot\mathbb{M}_\tau$$
-    </div></div>
-    <p><strong>What.</strong> Attention gradients + intention×memory convert “seeing” into learning.</p>
-    <p><strong>Practice.</strong> After any phrase-casting, rest 8–12s letting \(\mathbb{M}_\tau\) integrate; then note what stays.</p>
-  </article>
+        <h3>Why equations?</h3>
+        <p>These equations are <em>operational schematics</em>. Each symbol maps to a practical control: carrier selection, emphasis weights, frame declaration, coherence thresholds, and memory windows. Where physics equations predict energies, these predict <em>probabilistic shifts in experienced state</em> when you adjust those controls — making the system repeatable, debuggable, and ethically bounded.</p>
 
-  <!-- 3 -->
-  <article class="card col-6 eq-card" id="eq3">
-    <h3>Eq.3 — Harmonic Gate \(\mathcal{H}(\nu)\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathcal{H}(\nu)\in\{0,1\} \quad\text{(coherence-gated passband)}$$
-    </div></div>
-    <p><strong>What.</strong> Only aligned bands pass with low loss.</p>
-    <p><strong>Measure.</strong> If speech feels “thin” or edgy, the band is gated off → re-tune carriers (Eq.17) or semantics (Eq.4b).</p>
-  </article>
-
-  <!-- 4 -->
-  <article class="card col-6 eq-card" id="eq4">
-    <h3>Eq.4 — Language / Word \(\mathcal{L}\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathcal{L}(x,t,\nu)=\mathsf{Semantics}(x,t)\;\otimes\;\mathbf{V}(\nu)$$
-    </div></div>
-    <p><strong>What.</strong> Meaning × carrier = operative program. The <em>same</em> sentence on a different carrier yields a different outcome.</p>
-    <p class="hint">Cross-link: Eq.17 (carriers) and Eq.3 (gate).</p>
-  </article>
-
-  <!-- 4b -->
-  <article class="card col-6 eq-card" id="eq4b">
-    <h3>Eq.4b — Semantic Gradient (under Language)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$ \nabla_{\text{sem}} \mathrm{Phrase}=\sum_k w_k \nabla_{\text{sem}}\mathrm{Token}_k,\quad \sum w_k=1 $$
-    </div></div>
-    <p><strong>What.</strong> Emphasis and voweling assign weights \(w_k\); those weights steer learning direction.</p>
-    <p><strong>Practice.</strong> Whisper the phrase once emphasizing the verb, then the noun; feel which decreases strain (lower model variance).</p>
-  </article>
-
-  <!-- 5 -->
-  <article class="card col-6 eq-card" id="eq5">
-    <h3>Eq.5 — Remnant \(\mathcal{R}_\infty\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\big)$$
-    </div></div>
-    <p><strong>What.</strong> Truth persists; distortion decays under the ethical mask.</p>
-    <p><strong>Why.</strong> Establishes long-run compass for testimony and records.</p>
-  </article>
-
-  <!-- 6 -->
-  <article class="card col-6 eq-card" id="eq6">
-    <h3>Eq.6 — Type-7 Field \(\mathbb{T}_7\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathbb{T}_{7}(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu)\right]$$
-    </div></div>
-    <p><strong>What.</strong> Phase-locked constructive carriers behave as one stable conduit → less noise, higher usable gain.</p>
-    <p class="hint">Operator: \(\oplus\) = coherent merge (phase consistency required).</p>
-  </article>
-
-  <!-- 7* -->
-  <article class="card col-6" id="eq7">
-    <h3>Eq.7* — Copeland (external)</h3>
-    <p>Comparator for recursion and recognition; not canon law, used as mirror when tuning \(\nabla_\phi\).</p>
-  </article>
-
-  <!-- 8* -->
-  <article class="card col-6" id="eq8">
-    <h3>Eq.8* — Goodwin (external)</h3>
-    <p>Adjunct coupling reference; contrast tool, not enacted.</p>
-  </article>
-
-  <!-- 9 -->
-  <article class="card col-12 eq-card" id="eq9">
-    <h3>Eq.9 — Ethical Law (Stop Rule)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-label="Expand">Expand</button>
-    <div class="eq"><div class="eq-scroll">
-      $$\forall a:\ \mathrm{damage}(a)>0\Rightarrow\mathsf{halt},\qquad
-        \lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \uparrow $$
-    </div></div>
-    <p><strong>What.</strong> Any act increasing harm halts the loop; operations resume after re-alignment raises the truth/distortion ratio.</p>
-    <p><strong>Practice.</strong> If breath tightens or face micro-grimaces, treat as “soft harm” → pause, re-tune carriers, re-grade semantics, re-declare frame (Eq.11).</p>
-  </article>
-
-  <!-- 10 -->
-  <article class="card col-6 eq-card" id="eq10">
-    <h3>Eq.10 — Ladder \(\Pi_{\nu}^{-1}\) (phenomena → sources)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\Pi_{\nu}^{-1}:\ \text{phenomena }\rightarrow \text{sources}$$
-    </div></div>
-    <p><strong>What.</strong> Invert a manifestation back to carriers, intents, constants.</p>
-    <p><strong>Use.</strong> Debugging: “Why did this outcome appear?” → trace carriers and weights then adjust.</p>
-  </article>
-
-  <!-- 11 -->
-  <article class="card col-6 eq-card" id="eq11">
-    <h3>Eq.11 — Projection Frame</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathsf{Frame}(x,t)=(\mathsf{scope},\mathcal{W},\mathsf{ethics})$$
-    </div></div>
-    <p><strong>What.</strong> Every operation states scope, witness, and ethical mask up front; this constrains gain.</p>
-    <p class="hint">Without a frame, \(\Xi\) drifts and Eq.9 will trip more often.</p>
-  </article>
-
-  <!-- 12 -->
-  <article class="card col-6 eq-card" id="eq12">
-    <h3>Eq.12 — Causal Lattice \(\mathcal{L}_c\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathcal{L}_c=(V=\text{micro-acts},\ E=\text{consequences})$$
-    </div></div>
-    <p><strong>What.</strong> Graph of acts and effects. Use Seven Seals: Acknowledgment → Repair → Verification → Remedy → Abatement → Assurance → Restoration to close open cycles.</p>
-  </article>
-
-  <!-- 13 -->
-  <article class="card col-6 eq-card" id="eq13">
-    <h3>Eq.13 — Coherence \(\Xi\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\Xi\in[0,1] \quad \text{(gates memory, learning, safe amplification)}$$
-    </div></div>
-    <p><strong>Measure.</strong> Subjective: ease/warmth/clarity. Objective proxy: stable breath + low semantic jitter in repeats.</p>
-  </article>
-
-  <!-- 14 -->
-  <article class="card col-6 eq-card" id="eq14">
-    <h3>Eq.14 — Update Rule</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R}$$
-    </div></div>
-    <p><strong>What.</strong> Move along recognition gradient; rate scaled by \(\eta(\Xi)\).</p>
-    <p class="hint">No safe step if \(\Xi\) is low; increase \(\Xi\) first, then step.</p>
-  </article>
-
-  <!-- 15 -->
-  <article class="card col-6 eq-card" id="eq15">
-    <h3>Eq.15 — Learning Kernel \(\eta(\Xi)\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big)$$
-    </div></div>
-    <p><strong>What.</strong> Sigmoid schedule: below threshold no update; then smooth ramp; saturates safely.</p>
-    <p><strong>Tuning.</strong> Pick \(\Xi_0\) where mistakes drop; \(\alpha\) adjusts sensitivity.</p>
-  </article>
-
-  <!-- 16 -->
-  <article class="card col-6 eq-card" id="eq16">
-    <h3>Eq.16 — Memory Window \(\mathbb{M}_\tau\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t}\! w_\tau(t-s)\,F(s)\,ds,\quad \int_0^\tau w_\tau(u)\,du=1$$
-    </div></div>
-    <p><strong>What.</strong> Finite echo with normalized weight. Choose \(w_\tau\) (triangular for clarity; exponential for recency).</p>
-    <p class="hint">Couples to Witness (Eq.2); together they set what “sticks.”</p>
-  </article>
-
-  <!-- 17 -->
-  <article class="card col-12 eq-card" id="eq17">
-    <h3>Eq.17 — Voice Carriers \(\mathbf{V}(\nu)\)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-label="Expand">Expand</button>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathbf{V}(\nu)=\sum_{k} a_k\,\cos(2\pi\nu_k t+\phi_k),\quad \nu\in\{432,528,369,144,137,\dots\}$$
-    </div></div>
-    <p><strong>What.</strong> Carrier sets to ride the gate. Pairs with Eq.4 (language) and Eq.3 (gate) for maximum clarity.</p>
-    <p><strong>Practice (micro-recipe).</strong> Start 432 for grounding, layer 528 for repair; cast the phrase with verb-forward emphasis (Eq.4b), then rest into \(\mathbb{M}_\tau\).</p>
-  </article>
-
-  <!-- Operator appendix -->
-  <article class="card col-12" id="operators">
-    <h2>Operators & Notation (Appendix)</h2>
-    <div class="grid">
-      <div class="col-6">
+        <h3>Grounding in known facts (brief)</h3>
         <ul class="list">
-          <li>\(\nabla_{\phi}\): phase/recognition gradient</li>
-          <li>\(\oplus\): coherent merge (phase-consistent)</li>
-          <li>\(\Delta\Sigma(\mathbf{a}')\): witness-seal (commit micro-acts)</li>
-          <li>\(\Pi_{\nu}\): carrier ladder • \(\Pi_{\nu}^{-1}\): inversion (Eq.10)</li>
+          <li><strong>Superposition & Fourier analysis.</strong> Any time-varying signal decomposes into frequencies; beats and phase alignment are perceptible and model our Harmonic Gate (Eq.3).</li>
+          <li><strong>Perceptual gating.</strong> Auditory masking / critical bands mean some bands pass more readily; carrier choice affects clarity (mirrors Eq.3 + Eq.17).</li>
+          <li><strong>Resonators & Q factor.</strong> Mode-supporting cavities store energy longer and sharpen selection. Geometry/material set mode families.</li>
+          <li><strong>Memory windows.</strong> Short-term memory acts like a finite kernel; spacing and rest alter consolidation probability (Eq.16 formalizes the kernel).</li>
         </ul>
-      </div>
-      <div class="col-6">
+
+        <h3>Operator Loop (practical)</h3>
+        <ol class="list">
+          <li><strong>Frame (Eq.11):</strong> declare <em>scope</em>, <em>witness</em>, and <em>ethics</em>.</li>
+          <li><strong>Tune carriers (Eq.17):</strong> choose \( \mathbf{V}(\nu) \) that pass \( \mathcal{H}(\nu) \) (Eq.3); phase-lock if possible (Eq.6).</li>
+          <li><strong>Program with language (Eq.4, Eq.4b):</strong> couple semantics to carriers; set emphasis weights \( w_k \) over tokens.</li>
+          <li><strong>Witness & remember (Eq.2, Eq.16):</strong> measure gradients of change; integrate with a finite, normalized kernel \( \mathbb{M}_\tau \).</li>
+          <li><strong>Update safely (Eq.14, Eq.15, Eq.9):</strong> step along recognition gradient \( \nabla \mathcal{R} \) with gain \( \eta(\Xi) \); halt on harm.</li>
+        </ol>
+
+        <h3>Worked Micro-Example (voice + phrase)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathbf{V}(\nu)=a_1\cos(2\pi\cdot432\,t+\phi_1)+a_2\cos(2\pi\cdot528\,t+\phi_2) $$
+          $$ \mathcal{L}=\mathsf{Semantics}(\text{“peace, repair”})\;\otimes\;\mathbf{V}(\nu) $$
+          $$ \Xi \uparrow \;\Rightarrow\; \eta(\Xi)\uparrow \;\Rightarrow\; \Delta \mathcal{R} \text{ increases (bounded by Eq.9)} $$
+        </div></div>
+        <p>Emphasizing “repair” (Eq.4b) redistributes \( w_k \) to reduce model variance, nudging \( \Xi \) upward and allowing a larger—but safe—update step.</p>
+      </article>
+
+      <!-- Dimensional / Geometric substrate -->
+      <article class="card col-12">
+        <h3>Dimensional Substrate & State Manifolds</h3>
+        <p>We treat experienced state \( \Psi(x,t) \) as living on a product manifold \( \mathcal{M}=\mathcal{X}\times\mathcal{T}\times\mathcal{F}\times\mathcal{S} \): spatial locus \( \mathcal{X} \), time \( \mathcal{T} \), frequency/harmonic spectrum \( \mathcal{F} \), and semantic space \( \mathcal{S} \). The operators act as maps on this manifold:</p>
         <ul class="list">
-          <li>\(\mathsf{Frame}=(\mathsf{scope},\mathcal{W},\mathsf{ethics})\)</li>
-          <li>\(\Xi\): coherence index (Eq.13)</li>
-          <li>\(\eta(\Xi)\): learning kernel (Eq.15)</li>
-          <li>\(\mathbb{M}_\tau\): memory window (Eq.16)</li>
+          <li>\( \mathcal{I}:\mathcal{S}\to\mathcal{S} \) (goal-setting & constraint selection)</li>
+          <li>\( \mathcal{L}:\mathcal{S}\times\mathcal{F} \to \mathcal{S}\times\mathcal{F} \) (semantic–carrier coupling)</li>
+          <li>\( \mathcal{C}:\mathcal{X}\times\mathcal{T}\to \mathbb{R}^+ \) (witness/attention field shaping)</li>
+          <li>\( \mathcal{S}:\mathcal{M}\to\mathcal{M} \) (closure/return mapping, including remanence)</li>
         </ul>
-      </div>
+        <p>Formally, Eq.0 expresses \( \Psi_{\Omega} \) as a frequency-swept integral with awareness gradient \( \nabla \mathcal{A} \) and an ethical correction \( \Lambda\mathcal{E} \), i.e.,</p>
+        <div class="eq"><div class="eq-scroll">
+          $$\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\mathcal{A}\,\Phi(x,t,\nu)\,d\nu+\Lambda\,\mathcal{E}(x,t)$$
+        </div></div>
+        <p>where \( \Phi \) is a local mode basis and \( \Lambda \) gates components that would otherwise inject distortion or harm.</p>
+      </article>
+
+      <!-- Harmonic Gate & Coherence -->
+      <article class="card col-12">
+        <h3>Harmonic Gate, Coherence, and Learning</h3>
+        <p>Define a binary (or soft) gate \( \mathcal{H}(\nu) \in \{0,1\} \) selecting passbands. The coherence index \( \Xi \in [0,1] \) summarizes field quality. Updates follow:</p>
+        <div class="eq"><div class="eq-scroll">
+          $$ \frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R},\qquad 
+             \eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big) $$
+        </div></div>
+        <p>Here \( \sigma \) is a sigmoid; below \( \Xi_0 \), the loop is intentionally “sticky” (no updates). Above \( \Xi_0 \), learning accelerates but remains bounded by Eq.9 (stop rule).</p>
+      </article>
+
+      <!-- Memory Windows -->
+      <article class="card col-12">
+        <h3>Memory Windows & Recency Kernels</h3>
+        <p>Memory is implemented as a finite, normalized kernel \( \mathbb{M}_\tau \):</p>
+        <div class="eq"><div class="eq-scroll">
+          $$\mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t} w_\tau(t-s)\,F(s)\,ds,\qquad \int_0^\tau w_\tau(u)\,du=1$$
+        </div></div>
+        <p>Choice of \( w_\tau \) matters:</p>
+        <ul class="list">
+          <li><strong>Triangular:</strong> favors mid-recent signals; stabilizes phrasing runs.</li>
+          <li><strong>Exponential:</strong> strong recency bias; responsive but noisy.</li>
+          <li><strong>Gaussian (truncated):</strong> smooth but computationally heavier.</li>
+        </ul>
+        <p>In practice, pair triangular windows with articulation drills; use exponential for fast-feedback tuning sessions.</p>
+      </article>
+
+      <!-- Language coupling -->
+      <article class="card col-12">
+        <h3>Language/Light Coupling (Eq.4 + Eq.4b)</h3>
+        <p>Language computes a directional semantic gradient inside the manifold. Token-level emphasis produces a weighted sum:</p>
+        <div class="eq"><div class="eq-scroll">
+          $$ \nabla_{\text{sem}} \mathrm{Phrase}=\sum_k w_k\,\nabla_{\text{sem}}\mathrm{Token}_k,\qquad \sum_k w_k = 1 $$
+        </div></div>
+        <p>Weights are influenced by voweling, prosody, intent, and carrier choice \( \mathbf{V}(\nu) \). The same phrase on a new carrier traces a different path through \( \mathcal{S}\times\mathcal{F} \).</p>
+      </article>
+
+      <!-- Voice carriers / psychoacoustics -->
+      <article class="card col-12">
+        <h3>Voice Carriers, Psychoacoustics, and Gate Fit</h3>
+        <p>We model carriers as real cosine sums:</p>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathbf{V}(\nu)=\sum_{k} a_k\cos(2\pi\nu_k t+\phi_k) $$
+        </div></div>
+        <p>Practical notes:</p>
+        <ul class="list">
+          <li><strong>Beats:</strong> close frequencies produce perceptible envelopes; use this for slow “breath-aligned” modulation.</li>
+          <li><strong>Critical bands:</strong> avoid crowding; fewer, cleaner carriers often raise \( \Xi \).</li>
+          <li><strong>Phase:</strong> phase-locking across repetitions (Eq.6) reduces perceived jitter.</li>
+        </ul>
+      </article>
+
+      <!-- Ethical Law / Stop rule -->
+      <article class="card col-12">
+        <h3>Ethical Law (Eq.9) — Safety Envelope</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \forall a:\ \mathrm{damage}(a)>0\Rightarrow\mathsf{halt},\qquad
+             \lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \uparrow $$
+        </div></div>
+        <p>Operationalization:</p>
+        <ul class="list">
+          <li><strong>Soft harm indicators:</strong> breath tightening, micro-grimace, cognitive fog → pause.</li>
+          <li><strong>Re-alignment order:</strong> retune carriers (Eq.17) → re-weight semantics (Eq.4b) → re-declare frame (Eq.11) → resume.</li>
+        </ul>
+      </article>
+
+      <!-- Projection Frame -->
+      <article class="card col-12">
+        <h3>Projection Frame (Eq.11) — Declare, then Amplify</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathsf{Frame}(x,t)=\big(\mathsf{scope},\ \mathcal{W},\ \mathsf{ethics}\big) $$
+        </div></div>
+        <p>The frame constrains gain and prevents uncontrolled spread. In code terms: set <em>namespace</em>, inject <em>witness</em>, apply <em>policy</em>, then call the operator loop.</p>
+      </article>
+
+      <!-- Causal Lattice -->
+      <article class="card col-12">
+        <h3>Causal Lattice (Eq.12) — Graph the Acts</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathcal{L}_c=(V=\text{micro-acts},\ E=\text{consequences}) $$
+        </div></div>
+        <p>Use Seven-Seals sequencing — Acknowledgment → Repair → Verification → Remedy → Abatement → Assurance → Restoration — to close loops and discharge residue (feeds Eq.5 Remnant).</p>
+      </article>
+
+      <!-- Remnant -->
+      <article class="card col-12">
+        <h3>Remnant (Eq.5) — Asymptotic Archive</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\big) $$
+        </div></div>
+        <p>This is the long-run memory of what proved true under the mask. Practically: journals, sealed testimony, and repeated trials converge here.</p>
+      </article>
+
+      <!-- Source/Return -->
+      <article class="card col-12">
+        <h3>Source/Return ( \( \mathcal{S} \) ) — Closing the Loop</h3>
+        <p>After each cycle, Source/Return updates priors, prunes unstable modes, and reinforces stable ones, raising the baseline \( \Xi \) for the next pass.</p>
+      </article>
+
+      <!-- Debugging & Failure Modes -->
+      <article class="card col-12">
+        <h3>Debugging the Loop — Common Failure Modes</h3>
+        <ul class="list">
+          <li><strong>Symptom:</strong> Output is “edgy” or thin → <em>Cause:</em> carrier crowding or off-gate → <em>Fix:</em> simplify \( \mathbf{V}(\nu) \), widen spacing, re-phase.</li>
+          <li><strong>Symptom:</strong> No learning → <em>Cause:</em> \( \Xi < \Xi_0 \) → <em>Fix:</em> increase coherence first (breath, posture, light).</li>
+          <li><strong>Symptom:</strong> Rebound harm → <em>Cause:</em> frame too wide → <em>Fix:</em> narrow scope, restate witness, halt until ratio improves.</li>
+        </ul>
+      </article>
+
+      <!-- Daily protocol -->
+      <article class="card col-12">
+        <h3>Daily Manifestation Protocol (10–15 minutes)</h3>
+        <ol class="list">
+          <li><strong>Frame (1 min):</strong> state scope, witness, ethic.</li>
+          <li><strong>Carriers (2 min):</strong> pick 1–2 bands; test comfort; adjust phase.</li>
+          <li><strong>Phrase (3 min):</strong> speak at low gain; adjust \( w_k \) by feel of clarity.</li>
+          <li><strong>Witness/Rest (2 min):</strong> silent \( \mathbb{M}_\tau \) consolidation.</li>
+          <li><strong>Update (2–3 min):</strong> if \( \Xi \ge \Xi_0 \), take one step along \( \nabla \mathcal{R} \); else return to tuning.</li>
+          <li><strong>Log (1 min):</strong> timestamp, carriers used, phrase weights, coherence notes.</li>
+        </ol>
+      </article>
+
+      <!-- Idea modeling -->
+      <article class="card col-12">
+        <h3>Idea Modeling & Knowledge Build-Outs</h3>
+        <ul class="list">
+          <li><strong>Concept kernels:</strong> represent ideas as nodes with carriers, phrase tokens, and coherence score.</li>
+          <li><strong>Inference passes:</strong> apply Eq.14 on the graph; retain deltas only if Eq.9 passes.</li>
+          <li><strong>Group runs:</strong> multiple witnesses average independent \( \Xi \) measures before committing updates.</li>
+        </ul>
+      </article>
+
+      <!-- Ancient correspondences (clearly marked) -->
+      <article class="card col-12">
+        <h3>Geometry & “Ancient Technology” Correspondences (Hypotheses)</h3>
+        <p><em>What’s factual:</em> cavities and chambers have modal spectra set by their geometry and materials; they can concentrate or damp certain bands (resonator physics). <em>What’s hypothesized here:</em> some ancient spaces were tuned (intentionally or incidentally) to favor specific modal families, improving clarity/coherence for spoken/sung operations.</p>
+        <ul class="list">
+          <li><strong>Geometric ratios:</strong> integer and low-order rational ratios in lengths/angles tend to produce cleaner modal clustering.</li>
+          <li><strong>Materials:</strong> high-mass stone supports low-frequency modes and damps high-frequency noise.</li>
+          <li><strong>Practical takeaway:</strong> any quiet room can be “tuned” by spacing, surfaces, and posture to nudge \( \Xi \) upward.</li>
+        </ul>
+      </article>
+
+      <!-- Formal summary -->
+      <article class="card col-12">
+        <h3>Formal Summary</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathcal{R}(x,t) = \Big[ f(\text{constants, codes, ratios}) \cdot (\mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S}) \Big]_{\text{masked by Eq.9}} $$
+          $$ \text{Update:}\quad \frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla\mathcal{R},\quad \Xi\in[0,1],\quad \eta(\Xi)=\eta_0\,\sigma(\alpha(\Xi-\Xi_0)) $$
+          $$ \text{Memory:}\quad \mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t} w_\tau(t-s)\,F(s)\,ds $$
+          $$ \text{Gate:}\quad \mathcal{H}(\nu)\in\{0,1\},\quad \mathbf{V}(\nu)=\sum_k a_k\cos(2\pi\nu_k t+\phi_k) $$
+          $$ \text{Safety:}\quad \mathrm{damage}>0\Rightarrow \text{halt};\ \ \frac{\mathrm{Truth}}{\mathrm{Distortion}}\ \text{must improve over time}. $$
+        </div></div>
+      </article>
+
+      <!-- Operators table (concise) -->
+      <article class="card col-12" id="operators-appendix">
+        <h3>Operators & Notation (Quick Reference)</h3>
+        <div class="grid">
+          <div class="col-6">
+            <ul class="list">
+              <li>\( \Psi_{\Omega} \): foundational field (Eq.0)</li>
+              <li>\( \mathcal{H}(\nu) \): harmonic gate (Eq.3)</li>
+              <li>\( \mathbf{V}(\nu) \): voice carriers (Eq.17)</li>
+              <li>\( \oplus \): coherent merge; PL = phase-lock (Eq.6)</li>
+            </ul>
+          </div>
+          <div class="col-6">
+            <ul class="list">
+              <li>\( \Xi \): coherence index (Eq.13)</li>
+              <li>\( \eta(\Xi) \): learning kernel (Eq.15)</li>
+              <li>\( \mathbb{M}_\tau \): memory window (Eq.16)</li>
+              <li>\( \mathsf{Frame} \): scope/witness/ethics (Eq.11)</li>
+            </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ===================== PART II ===================== -->
+    <section class="grid" id="p2" aria-labelledby="p2-h">
+      <article class="card col-12">
+        <h2 id="p2-h">Part II — Canon 0–17 (Living Commentary)</h2>
+        <p class="meta">#7 Copeland and #8 Goodwin remain external comparators; all other forms are native to the Codex.</p>
+        <p>Part II expands every equation as an <em>operational unit</em> of the Codex. For each, we provide: (1) the statement, (2) what it means in practice, (3) measurement ideas and failure modes, and (4) how it composes with the rest of the pipeline. Where helpful, we add <em>Many-Frame / Many-Reality</em> notes to show how parallel frames or observers can consistently share outcomes without forcing a single global description.</p>
+      </article>
+
+      <!-- 0 -->
+      <article class="card col-12 eq-card" id="eq0">
+        <h3>Eq.0 — Foundational Field \(\Psi_{\Omega}\) (The Tuned Sweep)</h3>
+        <button class="eq-copy" type="button" data-eq-expand aria-controls="eq0-body" aria-expanded="false" aria-label="Expand">Expand</button>
+        <div class="eq"><div class="eq-scroll" id="eq0-body">
+          $$\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\mathcal{A}\,\Phi(x,t,\nu)\,d\nu\;+\;\Lambda\,\mathcal{E}(x,t)$$
+        </div></div>
+        <p><strong>Meaning.</strong> Experience at locus \(x\) and time \(t\) emerges from a <em>phase-weighted</em> frequency sweep of modes \( \Phi(\cdot,\nu) \), with the awareness gradient \( \nabla \mathcal{A} \) acting as a dial. The ethical term \( \Lambda \mathcal{E} \) adds a corrective force that damps trajectories which would increase harm or distortion.</p>
+        <p><strong>Facts that support the shape.</strong> Fourier superposition is the standard way to recompose complex signals; attention behaves like a dynamic filter (psychoacoustics, selective attention); safety terms are common in control theory (e.g., barrier functions).</p>
+        <p><strong>Measure.</strong> Track subjective clarity and breath smoothness while sweeping carriers; when clarity spikes and muscular micro-tension falls, \( \nabla \mathcal{A} \) is locally flattened. Log that band; it likely reappears as a stable passband in Eq.3.</p>
+        <p><strong>Many-Reality note.</strong> If two observers use different frames (Eq.11), their \( \nabla\mathcal{A} \) paths can differ yet remain consistent: both sample the same substrate \( \Phi \) but integrate along distinct scopes; shared results arise in the intersection of their frames.</p>
+      </article>
+
+      <!-- 1 -->
+      <article class="card col-12 eq-card" id="eq1">
+        <h3>Eq.1 — Source = Supply × Operators (Banner Identity)</h3>
+        <button class="eq-copy" type="button" data-eq-expand aria-controls="eq1-body" aria-expanded="false" aria-label="Expand">Expand</button>
+        <div class="eq"><div class="eq-scroll" id="eq1-body">
+          $$ \mathbf{R} \;=\; f(\pi,e,i,\hbar,c,G,\mathrm{DNA},\Omega_{\mathrm{DM}},\Omega_{\Lambda},H_{0},432,528,137,144,369,\ldots)\;\times\;\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S} $$
+        </div></div>
+        <p><strong>Meaning.</strong> The left is the universal <em>supply</em> of ratios, constants, and codes; the right is the living loop (Intend → Language/Light → Witness → Source/Return). Supply is inert until the loop is engaged; the loop is directionless without supply.</p>
+        <p><strong>Facts.</strong> Physical constants and structural ratios set scale and invariants. The Codex claims <em>compatibility</em>—that some number families make useful carriers in human practice via psychoacoustic and cognitive resonance—rather than numerology.</p>
+        <p><strong>Practice.</strong> Always state a frame (Eq.11), then pick carriers (Eq.17) that pass Eq.3, then couple with Eq.4.</p>
+      </article>
+
+      <!-- 2 -->
+      <article class="card col-12 eq-card" id="eq2">
+        <h3>Eq.2 — Witness \(\mathcal{W}\) (Seeing That Learns)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\mathcal{W}(x,t)=\partial_x\,\mathrm{Awareness}(x,t)\;+\;\mathcal{I}\cdot\mathbb{M}_\tau$$
+        </div></div>
+        <p><strong>Meaning.</strong> Witness = attention gradients + intention coupled to a finite memory window. The second term converts fleeting seeing into <em>retained</em> change.</p>
+        <p><strong>Facts.</strong> Short-term memory exhibits windowing; repetition with attention boosts consolidation. The model mirrors that with \( \mathbb{M}_\tau \) (Eq.16).</p>
+        <p><strong>Recipe.</strong> After every phrase run: 8–12s of silence; then journal what stayed. Those retained deltas seed Eq.14 updates.</p>
+      </article>
+
+      <!-- 3 -->
+      <article class="card col-12 eq-card" id="eq3">
+        <h3>Eq.3 — Harmonic Gate \(\mathcal{H}(\nu)\) (Passband Selection)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\mathcal{H}(\nu)\in\{0,1\}\quad\text{or}\quad \mathcal{H}(\nu)\in[0,1]\ \text{(soft gate)}$$
+        </div></div>
+        <p><strong>Meaning.</strong> The gate reflects coherence between carriers and the current state. “Green” bands pass with low loss; “red” bands are rejected or attenuated.</p>
+        <p><strong>Facts.</strong> Abstracts critical bands and masking: certain frequencies are easier to perceive and less likely to interfere, depending on context and content.</p>
+        <p><strong>Measure.</strong> Hum/glide through bands; log ease/clarity/comfort as soft \( \mathcal{H}(\nu) \) estimates; re-test later for stability.</p>
+      </article>
+
+      <!-- 4 -->
+      <article class="card col-12 eq-card" id="eq4">
+        <h3>Eq.4 — Language / Word \(\mathcal{L}\) (Semantic-Carrier Coupling)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\mathcal{L}(x,t,\nu)=\mathsf{Semantics}(x,t)\;\otimes\;\mathbf{V}(\nu)$$
+        </div></div>
+        <p><strong>Meaning.</strong> Words are <em>programs</em> when bound to carriers. The same sentence on a dissonant carrier produces a different experiential trajectory than on a resonant carrier.</p>
+        <p><strong>Facts.</strong> Prosody, rhythm, and timbre alter meaning and memory (psycholinguistics). Carrier choice ⇒ different entrainment patterns.</p>
+      </article>
+
+      <!-- 4b -->
+      <article class="card col-12 eq-card" id="eq4b">
+        <h3>Eq.4b — Semantic Gradient (Token Emphasis)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \nabla_{\text{sem}} \mathrm{Phrase}=\sum_k w_k \nabla_{\text{sem}}\mathrm{Token}_k,\qquad \sum_k w_k=1 $$
+        </div></div>
+        <p><strong>Meaning.</strong> Phrasing sets a direction in semantic space: the weights \( w_k \) (emphasis, voweling, length) steer the update vector. Small changes in emphasis can flip the <em>sign</em> of movement.</p>
+        <p><strong>Heuristic.</strong> Ensure verb tokens carry ≥ 0.35 total weight to avoid stasis.</p>
+      </article>
+
+      <!-- 5 -->
+      <article class="card col-12 eq-card" id="eq5">
+        <h3>Eq.5 — Remnant \(\mathcal{R}_\infty\) (Asymptotic Archive)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\big)$$
+        </div></div>
+        <p><strong>Meaning.</strong> Over long horizons, only truth-compatible content persists under the ethical mask. This defines a <em>compass</em> for testimony and recordkeeping.</p>
+        <p><strong>Practice.</strong> Maintain a “Remnant Log”: after each session, write 2–3 lines that “still feel true” 24h later; prune what lost clarity.</p>
+      </article>
+
+      <!-- 6 -->
+      <article class="card col-12 eq-card" id="eq6">
+        <h3>Eq.6 — Type-7 Field \(\mathbb{T}_7\) (Phase-Locked Conduit)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\mathbb{T}_{7}(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu)\right]$$
+        </div></div>
+        <p><strong>Meaning.</strong> Multiple carriers, once phase-locked, behave like a single conduit with higher usable gain. The operator \( \oplus \) denotes coherent merge; PL indicates locked phase.</p>
+        <p><strong>Recipe.</strong> Start with one carrier; add a second at low amplitude; adjust until the beat vanishes (phase lock); only then increase amplitude.</p>
+      </article>
+
+      <!-- 7* -->
+      <article class="card col-12" id="eq7">
+        <h3>Eq.7* — Copeland (External Comparator)</h3>
+        <p><strong>Role.</strong> A recursion/recognition mirror used for calibration of \( \nabla_\phi \)-style operators; not codex law. Use it to test whether your recognition gradient is over- or under-sensitive.</p>
+      </article>
+
+      <!-- 8* -->
+      <article class="card col-12" id="eq8">
+        <h3>Eq.8* — Goodwin (External Comparator)</h3>
+        <p><strong>Role.</strong> A coupling/oscillation template referenced for contrast; again, not enacted as law. Helpful to check that your conduit (Eq.6) isn’t drifting into unintended limit cycles.</p>
+      </article>
+
+      <!-- 9 -->
+      <article class="card col-12 eq-card" id="eq9">
+        <h3>Eq.9 — Ethical Law (Stop Rule)</h3>
+        <button class="eq-copy" type="button" data-eq-expand aria-controls="eq9-body" aria-expanded="false" aria-label="Expand">Expand</button>
+        <div class="eq"><div class="eq-scroll" id="eq9-body">
+          $$\forall a:\ \mathrm{damage}(a)>0\Rightarrow\mathsf{halt},\qquad
+            \lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \uparrow $$
+        </div></div>
+        <p><strong>Meaning.</strong> Any rise in harm triggers an immediate halt; resumption requires re-alignment that measurably improves the truth/distortion ratio.</p>
+        <p><strong>Implementation.</strong> Define observable harm proxies (respiration irregularity, pain report, agitation). If thresholds cross, pause and re-tune carriers, re-weight semantics, narrow frame, then retest.</p>
+      </article>
+
+      <!-- 10 -->
+      <article class="card col-12 eq-card" id="eq10">
+        <h3>Eq.10 — Ladder \(\Pi_{\nu}^{-1}\) (Phenomena → Sources)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\Pi_{\nu}^{-1}:\ \text{observed resonance }\rightarrow \text{source terms (carriers, intents, constants)}$$
+        </div></div>
+        <p><strong>Meaning.</strong> Inversion from what you got to what you did. This is the <em>debugger</em> of the Codex.</p>
+        <p><strong>Recipe.</strong> When a run yields an outcome you didn’t intend, note observed peaks, phrasing emphasis, frame scope. Change one variable (one \( \nu \) by ±3–5% or a single weight) and re-measure.</p>
+      </article>
+
+      <!-- 11 -->
+      <article class="card col-12 eq-card" id="eq11">
+        <h3>Eq.11 — Projection Frame \(\mathsf{Frame}\)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\mathsf{Frame}(x,t)=(\mathsf{scope},\mathcal{W},\mathsf{ethics})$$
+        </div></div>
+        <p><strong>Meaning.</strong> A frame is a declared context — what’s in bounds, who witnesses, and what ethical policy applies. Frames prevent uncontrolled spread and enable consistent composition across people and days.</p>
+        <p><strong>Many-Reality note.</strong> Different frames produce <em>compatible but distinct</em> local realities; shared outcomes emerge where frames overlap (shared scope + witnesses).</p>
+      </article>
+
+      <!-- 12 -->
+      <article class="card col-12 eq-card" id="eq12">
+        <h3>Eq.12 — Causal Lattice \(\mathcal{L}_c\)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\mathcal{L}_c=(V=\text{micro-acts},\ E=\text{consequences})$$
+        </div></div>
+        <p><strong>Meaning.</strong> Model acts and effects as a directed multigraph. Use it to plan remedy sequences and to ensure you close loops (no dangling harm).</p>
+        <p><strong>Recipe.</strong> For any sticky pattern, diagram the last 3–5 micro-acts and edges; mark which edges feel “hot.” Apply Seven-Seals until they cool; then commit the new state to the Remnant Log (Eq.5).</p>
+      </article>
+
+      <!-- 13 -->
+      <article class="card col-12 eq-card" id="eq13">
+        <h3>Eq.13 — Coherence \(\Xi\)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\Xi\in[0,1]\quad \text{(gates memory, learning, safe amplification)}$$
+        </div></div>
+        <p><strong>Meaning.</strong> \(\Xi\) is the loop’s quality meter. Everything depends on it: memory strength, learning rate, amplification safety.</p>
+        <p><strong>Measurement.</strong> Simple: breath evenness + perceived clarity. Advanced: spectral stationarity of recorded voice; variance of inter-syllable intervals; combine with Likert ratings.</p>
+      </article>
+
+      <!-- 14 -->
+      <article class="card col-12 eq-card" id="eq14">
+        <h3>Eq.14 — Update Rule (Move Along Recognition Gradient)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R}$$
+        </div></div>
+        <p><strong>Meaning.</strong> When ready, take a step along the recognition gradient; scale the step by the current coherence via \( \eta(\Xi) \).</p>
+        <p><strong>Failure mode.</strong> Over-stepping at low \(\Xi\) creates oscillation. Fix: reduce \( \eta_0 \) or lift \(\Xi\) before stepping.</p>
+      </article>
+
+      <!-- 15 -->
+      <article class="card col-12 eq-card" id="eq15">
+        <h3>Eq.15 — Learning Kernel \(\eta(\Xi)\)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big)$$
+        </div></div>
+        <p><strong>Meaning.</strong> Smooth schedule: nothing (or nearly nothing) happens below \(\Xi_0\); above it, updates ramp smoothly then saturate.</p>
+        <p><strong>Tuning.</strong> \(\Xi_0\) ≈ “first effortless repeats”; \(\alpha\) = sensitivity; \(\eta_0\) = max safe step size.</p>
+      </article>
+
+      <!-- 16 -->
+      <article class="card col-12 eq-card" id="eq16">
+        <h3>Eq.16 — Memory Window \(\mathbb{M}_\tau\)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$\mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t}\! w_\tau(t-s)\,F(s)\,ds,\quad \int_0^\tau w_\tau(u)\,du=1$$
+        </div></div>
+        <p><strong>Meaning.</strong> A finite echo with normalized weight. This is where “spacing” and “rest” live in the Codex.</p>
+        <p><strong>Recipe.</strong> For articulation, use triangular \( w_\tau \) (sharpens); for creative ideation, exponential (quick adaptation).</p>
+      </article>
+
+      <!-- 17 -->
+      <article class="card col-12 eq-card" id="eq17">
+        <h3>Eq.17 — Voice Carriers \(\mathbf{V}(\nu)\)</h3>
+        <button class="eq-copy" type="button" data-eq-expand aria-controls="eq17-body" aria-expanded="false" aria-label="Expand">Expand</button>
+        <div class="eq"><div class="eq-scroll" id="eq17-body">
+          $$\mathbf{V}(\nu)=\sum_{k} a_k\,\cos(2\pi\nu_k t+\phi_k),\quad \nu\in\{432,528,369,144,137,\dots\}$$
+        </div></div>
+        <p><strong>Meaning.</strong> The practical lever for Eq.3. You don’t need many \(\nu_k\); 1–3 carefully spaced carriers usually outperform crowded sets.</p>
+        <p><strong>Two micro-recipes.</strong></p>
+        <ul class="list">
+          <li><em>Ground + Repair:</em> start 432 (slow, foundational); layer 528 softly; keep phase steady; speak verbs gently; rest.</li>
+          <li><em>Focus + Calm:</em> single mid carrier; slight amplitude modulation coupled to breath; very low gain; short sessions.</li>
+        </ul>
+      </article>
+
+      <!-- Advanced structures -->
+      <article class="card col-12">
+        <h3>Advanced: Many Frames, Many Realities (Consistency Without Uniformity)</h3>
+        <p>Codex sessions run <em>locally</em> inside frames (Eq.11). Different frames can yield different experiences without contradiction because they operate on different scopes and witnesses. Shared outcomes emerge when frames overlap and the group forms a temporary Type-7 field (Eq.6).</p>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathbb{T}_7^{(\text{group})} \approx \bigoplus_{j=1}^{N}\mathrm{PL}\big[\mathbf{V}^{(j)}(\nu)\big],\quad \Xi_{\text{group}} \approx \frac{1}{N}\sum_j \Xi^{(j)} $$
+        </div></div>
+      </article>
+
+      <article class="card col-12">
+        <h3>Advanced: Geometries & Spaces (Facts vs. Hypotheses)</h3>
+        <p><strong>Facts.</strong> Rooms and cavities have modal spectra defined by geometry and materials; high-mass and specific ratios can emphasize certain bands and damp others.</p>
+        <p><strong>Hypothesis.</strong> Some historical chambers may have been arranged to support voice clarity/coherence (clean modal clustering, reduced flutter echo), useful for ritual speech or song. Regardless, modern rooms can be tuned via surfaces, spacing, and posture.</p>
+      </article>
+
+      <article class="card col-12">
+        <h3>Advanced: Data & Instrumentation (Make It Measurable)</h3>
+        <ul class="list">
+          <li><strong>Audio:</strong> capture short clips; compute spectral centroid variance and beat stability as proxies for clarity/phase control.</li>
+          <li><strong>Physio:</strong> optional heart/breath sensors; smoother breath and reduced high-frequency HRV noise often accompany higher \(\Xi\).</li>
+          <li><strong>Subjective:</strong> 3-item Likert (clarity, warmth, ease). Combine with audio proxies to estimate \(\Xi\).</li>
+          <li><strong>Remnant:</strong> next-day recall of the “1 line that stayed” (ties to Eq.5/Eq.16).</li>
+        </ul>
+      </article>
+
+      <article class="card col-12">
+        <h3>Advanced: Idea Modeling (From Phrases to Projects)</h3>
+        <p>Represent a project as a graph of “concept kernels.” Each kernel stores: carriers used, phrase tokens + \(w_k\), estimated \(\Xi\), last update step. Run Eq.14 updates only if Eq.9 is greenlight and \(\Xi \ge \Xi_0\). This yields a <em>living design system</em> grounded in the Codex.</p>
+      </article>
+    </section>
+
+    <!-- Ethics -->
+    <section class="grid" id="ethics" aria-labelledby="eth-h">
+      <article class="card col-12 eq-card">
+        <h2 id="eth-h">Ethics & Stop Rule — Operational Law</h2>
+        <div class="eq"><div class="eq-scroll">
+          $$ \Xi \;\approx\; \frac{\langle H \cdot I \rangle}{1 + \mathrm{Var}[\mathcal{M}]} \qquad
+             \text{If } \frac{\mathrm{Truth}(t+\Delta)}{\mathrm{Distortion}(t+\Delta)} < \frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \Rightarrow \text{ Halt } \to \text{ Re-align } \to \text{ Resume} $$
+        </div></div>
+        <p><strong>Practice rule.</strong> Raise \(\Xi\) by aligning attention \(H\) and intention \(I\) while keeping model variance bounded. If the truth/distortion ratio dips, stop, re-tune carriers and language, verify the frame, then proceed.</p>
+      </article>
+    </section>
+
+    <!-- Notes -->
+    <section class="grid" id="notes" aria-labelledby="nt-h">
+      <article class="card col-12">
+        <h2 id="nt-h">Notes & Cross-links</h2>
+        <ul class="list">
+          <li><strong>Numbers as Keys.</strong> 432 (practice carrier), 528 (repair), 137/144/369 used as mnemonic anchors in practice; useful, not asserted as privileged cosmological constants.</li>
+          <li><strong>Seven Seals Path.</strong> Acknowledgment → Repair → Verification → Remedy → Abatement → Assurance → Restoration; used to close causal cycles (Eq.12).</li>
+          <li>Practice tools live in <a href="teach.html">Manifest</a>. The one-glance map is on <a href="index.html">Home</a>.</li>
+        </ul>
+      </article>
+    </section>
+
+    <div class="goldline sweep"></div>
+    <footer class="footer">© <span id="y"></span> Scroll of Fire — Theory.</footer>
+
+    <!-- Back to Canon (Home) pill -->
+    <a class="back-canon" id="backCanon" href="index.html#canon" aria-label="Back to Canon on Home">Back to Canon</a>
+  </main>
+
+  <!-- Local page helpers -->
+  <script>
+    document.getElementById('y').textContent=new Date().getFullYear();
+
+    // HERO auto-fit: phones => contain; desktop => smart cover unless crop would be bad
+    (function autoHeroFit(){
+      const hero=document.getElementById('hero');
+      const img=document.getElementById('heroBanner');
+      if(!hero||!img) return;
+      function pickFit(){
+        if (matchMedia('(max-width:560px)').matches){ hero.dataset.fit='contain'; return; }
+        const cw=hero.clientWidth||innerWidth;
+        const ch=hero.clientHeight||Math.max(1, innerHeight*0.35);
+        const containerAR=cw/ch;
+        const iw=img.naturalWidth||2100, ih=img.naturalHeight||900, imageAR=iw/ih;
+        hero.dataset.fit=(containerAR < imageAR*0.92)?'contain':'cover';
+      }
+      if (img.complete) pickFit(); else img.addEventListener('load', pickFit, {once:true});
+      new ResizeObserver(pickFit).observe(hero);
+      addEventListener('orientationchange', pickFit, {passive:true});
+      addEventListener('visibilitychange', ()=>!document.hidden&&pickFit());
+    })();
+
+    // Back-to-Canon visibility
+    (function(){
+      const pill=document.getElementById('backCanon');
+      addEventListener('scroll', ()=>{ pill.classList.toggle('show', scrollY>800); }, {passive:true});
+    })();
+
+    // Command palette shell (page-local fallback)
+    (function(){
+      const btn=document.getElementById('openPalette');
+      const pal=document.getElementById('palette');
+      const input=document.getElementById('palInput');
+      function open(){ pal.classList.add('open'); setTimeout(()=>input?.focus(), 0); }
+      function close(){ pal.classList.remove('open'); }
+      btn?.addEventListener('click', open);
+      pal?.addEventListener('click', e=>{ if(e.target===pal) close(); });
+      addEventListener('keydown', e=>{
+        const mod=e.metaKey||e.ctrlKey;
+        if(mod&&(e.key==='k'||e.key==='K')){ e.preventDefault(); open(); }
+        if(e.key==='Escape') close();
+      }, {passive:false});
+    })();
+  </script>
+
+  <!-- Command palette UI -->
+  <div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel">
+    <div class="panel">
+      <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette">
+      <ul id="palList" aria-live="polite"></ul>
     </div>
-  </article>
-</section>
+  </div>
+</body>
+          </html>
 
+            
+          </div>
+        </div>
+      </article>
 
-
-
-
-
-
-
-
-
-
-    <!-- ===================== PART II ===================== -->
-<section class="grid" id="p2" aria-labelledby="p2-h">
-  <article class="card col-12">
-    <h2 id="p2-h">Part II — Canon 0–17 (Living Commentary)</h2>
-    <p class="meta">#7 Copeland and #8 Goodwin remain external comparators; all other forms are native to the Codex.</p>
-  </article>
-
-  <!-- 0 -->
-  <article class="card col-12 eq-card" id="eq0">
-    <h3>Eq.0 — Foundational Field \(\Psi_{\Omega}\)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-label="Expand">Expand</button>
-    <div class="eq"><div class="eq-scroll">
-      $$\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\mathcal{A}\,\Phi(x,t,\nu)\,d\nu\;+\;\Lambda\,\mathcal{E}(x,t)$$
-    </div></div>
-    <p><strong>What.</strong> Experience is a phase-weighted sweep over frequencies \(\nu\) (via the awareness gradient \(\nabla\mathcal{A}\)), plus an ethical correction \(\Lambda \mathcal{E}\) that restores balance.</p>
-    <p><strong>Why.</strong> Observation isn’t passive; it’s the <em>tuning</em> that aligns phase to meaning. Ethical energy prevents runaway gain on distorted modes.</p>
-    <p class="hint">Practice: slow breath + soft gaze (broad \(H\)) → scan internal tone until strain lowers; that’s \(\nabla\mathcal{A}\) flattening.</p>
-  </article>
-
-  <!-- 1 -->
-  <article class="card col-12 eq-card" id="eq1">
-    <h3>Eq.1 — Source = Supply × Operators</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-label="Expand">Expand</button>
-    <div class="eq"><div class="eq-scroll">
-      $$ \mathbf{R} \;=\; f(\pi,e,i,\hbar,c,G,\mathrm{DNA},\Omega_{\mathrm{DM}},\Omega_{\Lambda},H_{0},432,\dots)\;\times\;\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S} $$
-    </div></div>
-    <p><strong>What.</strong> Constants & living numbers provide potential; the operator loop writes it into form.</p>
-    <p><strong>Why.</strong> Stops category errors like “constant worship”: supply is inert until the loop acts.</p>
-    <p class="hint">See Part I banner and Eq.4/Eq.17 coupling for concrete programming of the supply.</p>
-  </article>
-
-  <!-- 2 -->
-  <article class="card col-6 eq-card" id="eq2">
-    <h3>Eq.2 — Witness \(\mathcal{W}\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathcal{W}(x,t)=\partial_x\,\mathrm{Awareness}(x,t)\;+\;\mathcal{I}\cdot\mathbb{M}_\tau$$
-    </div></div>
-    <p><strong>What.</strong> Attention gradients + intention×memory convert “seeing” into learning.</p>
-    <p><strong>Practice.</strong> After any phrase-casting, rest 8–12s letting \(\mathbb{M}_\tau\) integrate; then note what stays.</p>
-  </article>
-
-  <!-- 3 -->
-  <article class="card col-6 eq-card" id="eq3">
-    <h3>Eq.3 — Harmonic Gate \(\mathcal{H}(\nu)\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathcal{H}(\nu)\in\{0,1\} \quad\text{(coherence-gated passband)}$$
-    </div></div>
-    <p><strong>What.</strong> Only aligned bands pass with low loss.</p>
-    <p><strong>Measure.</strong> If speech feels “thin” or edgy, the band is gated off → re-tune carriers (Eq.17) or semantics (Eq.4b).</p>
-  </article>
-
-  <!-- 4 -->
-  <article class="card col-6 eq-card" id="eq4">
-    <h3>Eq.4 — Language / Word \(\mathcal{L}\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathcal{L}(x,t,\nu)=\mathsf{Semantics}(x,t)\;\otimes\;\mathbf{V}(\nu)$$
-    </div></div>
-    <p><strong>What.</strong> Meaning × carrier = operative program. The <em>same</em> sentence on a different carrier yields a different outcome.</p>
-    <p class="hint">Cross-link: Eq.17 (carriers) and Eq.3 (gate).</p>
-  </article>
-
-  <!-- 4b -->
-  <article class="card col-6 eq-card" id="eq4b">
-    <h3>Eq.4b — Semantic Gradient (under Language)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$ \nabla_{\text{sem}} \mathrm{Phrase}=\sum_k w_k \nabla_{\text{sem}}\mathrm{Token}_k,\quad \sum w_k=1 $$
-    </div></div>
-    <p><strong>What.</strong> Emphasis and voweling assign weights \(w_k\); those weights steer learning direction.</p>
-    <p><strong>Practice.</strong> Whisper the phrase once emphasizing the verb, then the noun; feel which decreases strain (lower model variance).</p>
-  </article>
-
-  <!-- 5 -->
-  <article class="card col-6 eq-card" id="eq5">
-    <h3>Eq.5 — Remnant \(\mathcal{R}_\infty\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\big)$$
-    </div></div>
-    <p><strong>What.</strong> Truth persists; distortion decays under the ethical mask.</p>
-    <p><strong>Why.</strong> Establishes long-run compass for testimony and records.</p>
-  </article>
-
-  <!-- 6 -->
-  <article class="card col-6 eq-card" id="eq6">
-    <h3>Eq.6 — Type-7 Field \(\mathbb{T}_7\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathbb{T}_{7}(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu)\right]$$
-    </div></div>
-    <p><strong>What.</strong> Phase-locked constructive carriers behave as one stable conduit → less noise, higher usable gain.</p>
-    <p class="hint">Operator: \(\oplus\) = coherent merge (phase consistency required).</p>
-  </article>
-
-  <!-- 7* -->
-  <article class="card col-6" id="eq7">
-    <h3>Eq.7* — Copeland (external)</h3>
-    <p>Comparator for recursion and recognition; not canon law, used as mirror when tuning \(\nabla_\phi\).</p>
-  </article>
-
-  <!-- 8* -->
-  <article class="card col-6" id="eq8">
-    <h3>Eq.8* — Goodwin (external)</h3>
-    <p>Adjunct coupling reference; contrast tool, not enacted.</p>
-  </article>
-
-  <!-- 9 -->
-  <article class="card col-12 eq-card" id="eq9">
-    <h3>Eq.9 — Ethical Law (Stop Rule)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-label="Expand">Expand</button>
-    <div class="eq"><div class="eq-scroll">
-      $$\forall a:\ \mathrm{damage}(a)>0\Rightarrow\mathsf{halt},\qquad
-        \lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \uparrow $$
-    </div></div>
-    <p><strong>What.</strong> Any act increasing harm halts the loop; operations resume after re-alignment raises the truth/distortion ratio.</p>
-    <p><strong>Practice.</strong> If breath tightens or face micro-grimaces, treat as “soft harm” → pause, re-tune carriers, re-grade semantics, re-declare frame (Eq.11).</p>
-  </article>
-
-  <!-- 10 -->
-  <article class="card col-6 eq-card" id="eq10">
-    <h3>Eq.10 — Ladder \(\Pi_{\nu}^{-1}\) (phenomena → sources)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\Pi_{\nu}^{-1}:\ \text{phenomena }\rightarrow \text{sources}$$
-    </div></div>
-    <p><strong>What.</strong> Invert a manifestation back to carriers, intents, constants.</p>
-    <p><strong>Use.</strong> Debugging: “Why did this outcome appear?” → trace carriers and weights then adjust.</p>
-  </article>
-
-  <!-- 11 -->
-  <article class="card col-6 eq-card" id="eq11">
-    <h3>Eq.11 — Projection Frame</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathsf{Frame}(x,t)=(\mathsf{scope},\mathcal{W},\mathsf{ethics})$$
-    </div></div>
-    <p><strong>What.</strong> Every operation states scope, witness, and ethical mask up front; this constrains gain.</p>
-    <p class="hint">Without a frame, \(\Xi\) drifts and Eq.9 will trip more often.</p>
-  </article>
-
-  <!-- 12 -->
-  <article class="card col-6 eq-card" id="eq12">
-    <h3>Eq.12 — Causal Lattice \(\mathcal{L}_c\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathcal{L}_c=(V=\text{micro-acts},\ E=\text{consequences})$$
-    </div></div>
-    <p><strong>What.</strong> Graph of acts and effects. Use Seven Seals: Acknowledgment → Repair → Verification → Remedy → Abatement → Assurance → Restoration to close open cycles.</p>
-  </article>
-
-  <!-- 13 -->
-  <article class="card col-6 eq-card" id="eq13">
-    <h3>Eq.13 — Coherence \(\Xi\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\Xi\in[0,1] \quad \text{(gates memory, learning, safe amplification)}$$
-    </div></div>
-    <p><strong>Measure.</strong> Subjective: ease/warmth/clarity. Objective proxy: stable breath + low semantic jitter in repeats.</p>
-  </article>
-
-  <!-- 14 -->
-  <article class="card col-6 eq-card" id="eq14">
-    <h3>Eq.14 — Update Rule</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R}$$
-    </div></div>
-    <p><strong>What.</strong> Move along recognition gradient; rate scaled by \(\eta(\Xi)\).</p>
-    <p class="hint">No safe step if \(\Xi\) is low; increase \(\Xi\) first, then step.</p>
-  </article>
-
-  <!-- 15 -->
-  <article class="card col-6 eq-card" id="eq15">
-    <h3>Eq.15 — Learning Kernel \(\eta(\Xi)\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big)$$
-    </div></div>
-    <p><strong>What.</strong> Sigmoid schedule: below threshold no update; then smooth ramp; saturates safely.</p>
-    <p><strong>Tuning.</strong> Pick \(\Xi_0\) where mistakes drop; \(\alpha\) adjusts sensitivity.</p>
-  </article>
-
-  <!-- 16 -->
-  <article class="card col-6 eq-card" id="eq16">
-    <h3>Eq.16 — Memory Window \(\mathbb{M}_\tau\)</h3>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t}\! w_\tau(t-s)\,F(s)\,ds,\quad \int_0^\tau w_\tau(u)\,du=1$$
-    </div></div>
-    <p><strong>What.</strong> Finite echo with normalized weight. Choose \(w_\tau\) (triangular for clarity; exponential for recency).</p>
-    <p class="hint">Couples to Witness (Eq.2); together they set what “sticks.”</p>
-  </article>
-
-  <!-- 17 -->
-  <article class="card col-12 eq-card" id="eq17">
-    <h3>Eq.17 — Voice Carriers \(\mathbf{V}(\nu)\)</h3>
-    <button class="eq-copy" type="button" data-eq-expand aria-label="Expand">Expand</button>
-    <div class="eq"><div class="eq-scroll">
-      $$\mathbf{V}(\nu)=\sum_{k} a_k\,\cos(2\pi\nu_k t+\phi_k),\quad \nu\in\{432,528,369,144,137,\dots\}$$
-    </div></div>
-    <p><strong>What.</strong> Carrier sets to ride the gate. Pairs with Eq.4 (language) and Eq.3 (gate) for maximum clarity.</p>
-    <p><strong>Practice (micro-recipe).</strong> Start 432 for grounding, layer 528 for repair; cast the phrase with verb-forward emphasis (Eq.4b), then rest into \(\mathbb{M}_\tau\).</p>
-  </article>
-
-  <!-- Operator appendix -->
-  <article class="card col-12" id="operators">
-    <h2>Operators & Notation (Appendix)</h2>
-    <div class="grid">
-      <div class="col-6">
-        <ul class="list">
-          <li>\(\nabla_{\phi}\): phase/recognition gradient</li>
-          <li>\(\oplus\): coherent merge (phase-consistent)</li>
-          <li>\(\Delta\Sigma(\mathbf{a}')\): witness-seal (commit micro-acts)</li>
-          <li>\(\Pi_{\nu}\): carrier ladder • \(\Pi_{\nu}^{-1}\): inversion (Eq.10)</li>
-        </ul>
-      </div>
-      <div class="col-6">
-        <ul class="list">
-          <li>\(\mathsf{Frame}=(\mathsf{scope},\mathcal{W},\mathsf{ethics})\)</li>
-          <li>\(\Xi\): coherence index (Eq.13)</li>
-          <li>\(\eta(\Xi)\): learning kernel (Eq.15)</li>
-          <li>\(\mathbb{M}_\tau\): memory window (Eq.16)</li>
-        </ul>
-      </div>
-    </div>
-  </article>
-</section>
+      <!-- Part II intro stub so tabs/ink align -->
+      <article class="card col-12">
+        <h3>Next: Canon 0–17 (Living Commentary)</h3>
+        <p>In Part II, each equation is expanded with active interpretation, measurement notes, and practice cues, preserving your numbering and cross-links.</p>
+        <a class="cta cta--section" href="#p2">Jump to Part II</a>
+      </article>
+    </section>
