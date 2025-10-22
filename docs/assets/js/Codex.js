@@ -508,3 +508,124 @@ toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
   });
   mo.observe(body, {attributes:true, attributeFilter:['class']});
 })();
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+    Scroll of Fire — codex.js v3.3.2
+@@
+   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+   const RD = matchMedia('(prefers-reduced-data: reduce)').matches;
+   const ALLOW_MOTION = !(RM || RD);
++  // Detect the new in-page search (added inline in HTML) so we don't double-bind
++  const SEARCH_V2 = (() => {
++    const s = document.getElementById('site-suggest');
++    return !!(s && s.getAttribute('role') === 'listbox');
++  })();
+@@
+   /* ---- HUD ---- */
+   const laser = $('.laser-grid');
+   const setHUD = on => { if (!laser) return; laser.style.display = on? '' : 'none'; $('#toggleGrid')?.setAttribute('aria-pressed', on?'true':'false'); };
+   setHUD(!!laser); $('#toggleGrid')?.addEventListener('click', ()=> setHUD(laser && laser.style.display==='none'));
+ 
++  /* ---- Affect (new toolbar button) ---- */
++  const btnAffect = $('#toggleAffect');
++  const setAffect = on => {
++    document.body.classList.toggle('affect-off', !on);
++    btnAffect?.setAttribute('aria-pressed', on?'true':'false');
++  };
++  // initialize from current state
++  setAffect(!document.body.classList.contains('affect-off'));
++  btnAffect?.addEventListener('click', () => setAffect(document.body.classList.contains('affect-off')));
++
+   /* ---- Back to top ---- */
+   const toTop = $('#toTop');
+   const topBtn = () => toTop?.classList.toggle('show', scrollY>400);
+   topBtn(); addEventListener('scroll', topBtn, { passive:true });
+   toTop?.addEventListener('click', ()=> scrollTo({ top:0, behavior: ALLOW_MOTION ? 'smooth' : 'auto' }));
+ 
+-  /* ---- Page search mini-suggest + '/' ---- */
+-  const siteSearch = $('#site-search'); const siteSuggest = $('#site-suggest');
+-  const CAND = $$('h1[id],h2[id],h3[id],section[id],article[id]');
+-  const suggest = (q) => {
+-    if (!siteSuggest) return;
+-    siteSuggest.innerHTML = '';
+-    q = (q||'').trim().toLowerCase();
+-    if (!q) { siteSuggest.classList.add('hidden'); return; }
+-    const results = [
+-      ...CAND.filter(el => (el.textContent||'').toLowerCase().includes(q)).map(el => ({text:el.textContent.trim(), href:'#'+el.id})),
+-      ...$$('a[href^="#"]').filter(a => (a.textContent||'').toLowerCase().includes(q)).map(a => ({text:a.textContent.trim(), href:a.getAttribute('href')}))
+-    ].slice(0,12);
+-    results.forEach(r => { const a=document.createElement('a'); a.href=r.href; a.textContent=r.text; a.addEventListener('click',()=>siteSuggest.classList.add('hidden')); siteSuggest.appendChild(a);});
+-    siteSuggest.classList.toggle('hidden', results.length===0);
+-  };
+-  siteSearch?.addEventListener('input', e => suggest(e.currentTarget.value));
+-  siteSearch?.addEventListener('focus', e => suggest(e.currentTarget.value));
+-  document.addEventListener('click', e => { if (!siteSuggest) return; if (e.target!==siteSearch && !siteSuggest.contains(e.target)) siteSuggest.classList.add('hidden'); });
+-  document.addEventListener('keydown', e => {
+-    if (e.key==='/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+-      const tag=(document.activeElement?.tagName||'').toLowerCase(); if (tag!=='input' && tag!=='textarea'){ e.preventDefault(); siteSearch?.focus(); }
+-    }
+-  });
++  /* ---- Page search mini-suggest + '/' ----
++     Skip if the new search (v2) is present and initialized inline. */
++  if (!SEARCH_V2) {
++    const siteSearch = $('#site-search'); const siteSuggest = $('#site-suggest');
++    const CAND = $$('h1[id],h2[id],h3[id],section[id],article[id]');
++    const suggest = (q) => {
++      if (!siteSuggest) return;
++      siteSuggest.innerHTML = '';
++      q = (q||'').trim().toLowerCase();
++      if (!q) { siteSuggest.classList.add('hidden'); return; }
++      const results = [
++        ...CAND.filter(el => (el.textContent||'').toLowerCase().includes(q)).map(el => ({text:el.textContent.trim(), href:'#'+el.id})),
++        ...$$('a[href^="#"]').filter(a => (a.textContent||'').toLowerCase().includes(q)).map(a => ({text:a.textContent.trim(), href:a.getAttribute('href')}))
++      ].slice(0,12);
++      results.forEach(r => { const a=document.createElement('a'); a.href=r.href; a.textContent=r.text; a.addEventListener('click',()=>siteSuggest.classList.add('hidden')); siteSuggest.appendChild(a);});
++      siteSuggest.classList.toggle('hidden', results.length===0);
++    };
++    siteSearch?.addEventListener('input', e => suggest(e.currentTarget.value));
++    siteSearch?.addEventListener('focus', e => suggest(e.currentTarget.value));
++    document.addEventListener('click', e => { if (!siteSuggest) return; if (e.target!==siteSearch && !siteSuggest.contains(e.target)) siteSuggest.classList.add('hidden'); });
++    document.addEventListener('keydown', e => {
++      if (e.key==='/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
++        const tag=(document.activeElement?.tagName||'').toLowerCase(); if (tag!=='input' && tag!=='textarea'){ e.preventDefault(); siteSearch?.focus(); }
++      }
++    });
++  }
+@@
+   /* ---- Smooth anchor scroll accounting for sticky glass ---- */
+   document.addEventListener('click', e=>{
+@@
+   });
+ })();
+ 
+-
+-
+-
+-
+-const toTop=document.getElementById('toTop');
+-window.addEventListener('scroll',()=> {
+-  toTop.classList.toggle('visible',window.scrollY>600);
+-});
+-toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+-
+-
+-
+-
+-
+-
+-
++/* (removed duplicate toTop handlers; managed above) */
+ 
+ /* ====================================================================== */
+ /* Alive Pack (timed random affects for equations & UI)                   */
+@@
+   if (prefersReduce || body.classList.contains('affect-off')) return;
