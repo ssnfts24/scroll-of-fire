@@ -760,3 +760,121 @@ input, select, textarea {
 @media screen and (max-width: 1024px) {
   .card, .tile, .cta, .tab, .eq { border-color: rgba(255,255,255,.12); }
 }
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   Scroll of Fire — Codex of Reality
+   codex.css v2.7  (Alive Pack: timed random affects)
+   Append after v2.6
+   ========================================================================== */
+
+/* -------- Global Alive tokens -------- */
+:root{
+  --alive-amp: .9;               /* global “life” strength (0..1.2) */
+  --alive-spark-count: 18;       /* per-eq spark budget cap */
+  --alive-min-dur: 6s;           /* lower bound for random anims */
+  --alive-max-dur: 18s;          /* upper bound for random anims */
+}
+
+/* -------- Headline sheen (timed on/off via JS) -------- */
+.alive-sheen{
+  position:relative; isolation:isolate;
+}
+.alive-sheen::after{
+  content:""; position:absolute; inset:-6px -10%; z-index:-1; pointer-events:none;
+  background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.06) 45%, rgba(255,255,255,.12) 50%, rgba(255,255,255,.06) 55%, transparent 100%);
+  transform:translateX(-140%);
+  filter:blur(1px); opacity:0;
+}
+@media (prefers-reduced-motion:no-preference){
+  @keyframes sheenSweep{ 0%{transform:translateX(-140%); opacity:0} 8%{opacity:.75} 50%{opacity:.75} 100%{transform:translateX(140%); opacity:0} }
+  .alive-sheen.sheen-on::after{ animation: sheenSweep 3.6s ease-in-out both }
+}
+
+/* -------- Subtle float for cards/tiles (randomized duration) -------- */
+.alive-float{ will-change:transform; }
+@media (prefers-reduced-motion:no-preference){
+  @keyframes floatY{ 0%{ transform:translateY(0) } 50%{ transform:translateY(-3px) } 100%{ transform:translateY(0) } }
+  .alive-float{ animation: floatY var(--alive-dur, 12s) ease-in-out infinite; }
+}
+
+/* -------- Text flicker (gentle, rare) -------- */
+@media (prefers-reduced-motion:no-preference){
+  @keyframes twinkle{
+    0%,96%,100%{ text-shadow: 0 0 0 rgba(122,243,255,0) }
+    97%{ text-shadow: 0 0 10px rgba(122,243,255,.35) }
+    98%{ text-shadow: 0 0 0 rgba(122,243,255,0) }
+    99%{ text-shadow: 0 0 14px rgba(243,201,122,.25) }
+  }
+  .alive-twinkle{ animation: twinkle var(--alive-twinkle, 11s) linear infinite; }
+}
+
+/* -------- Equation: living glow & tone drift -------- */
+.eq.alive{ position:relative; }
+.eq.alive mjx-container{ filter: drop-shadow(0 0 10px rgba(255,200,107,.08)); }
+@media (prefers-reduced-motion:no-preference){
+  @keyframes eqTone{
+    0%{    filter: drop-shadow(0 0 10px rgba(255,200,107,.08)) brightness(1) }
+    50%{   filter: drop-shadow(0 0 16px rgba(122,243,255,.18)) brightness(1.06) }
+    100%{  filter: drop-shadow(0 0 10px rgba(255,200,107,.08)) brightness(1) }
+  }
+  .eq.alive mjx-container{ animation: eqTone calc(12s * var(--tempo,1)) ease-in-out infinite; }
+}
+
+/* -------- Equation: spark layer (particles) -------- */
+.eq .spark{
+  position:absolute; width:2px; height:2px; border-radius:50%;
+  background: radial-gradient(circle, #fff 0 35%, var(--accent) 60%, transparent 75%);
+  opacity:.0; pointer-events:none; mix-blend-mode:screen;
+  filter: drop-shadow(0 0 6px rgba(122,243,255,.65));
+  transform: translate3d(var(--x,0), var(--y,0), 0) scale(var(--s,1));
+}
+@media (prefers-reduced-motion:no-preference){
+  @keyframes sparkFly{
+    0%{ opacity:0; transform: translate3d(var(--x,0), var(--y,0), 0) scale(var(--s,1)) }
+    6%{ opacity:.85 }
+    50%{ opacity:.85 }
+    100%{
+      opacity:0;
+      transform: translate3d(calc(var(--x,0) + var(--dx,40px)), calc(var(--y,0) + var(--dy,-30px)), 0) scale(calc(var(--s,1) * 1.15));
+    }
+  }
+  .eq .spark.run{
+    animation: sparkFly var(--dur, 8s) ease-in-out var(--delay, 0s) both;
+  }
+}
+
+/* -------- Equation: arc tracer (rare, sweeping line) -------- */
+.eq .arc{
+  position:absolute; inset:0; pointer-events:none; opacity:0; mix-blend-mode:screen;
+  background: conic-gradient(from var(--a0,0deg) at var(--cx,50%) var(--cy,50%), rgba(122,243,255,.25), rgba(243,201,122,.18), transparent 40%);
+  -webkit-mask-image: radial-gradient(140% 80% at var(--cx,50%) var(--cy,50%), #000 30%, transparent 60%);
+          mask-image: radial-gradient(140% 80% at var(--cx,50%) var(--cy,50%), #000 30%, transparent 60%);
+  filter: blur(6px);
+}
+@media (prefers-reduced-motion:no-preference){
+  @keyframes arcSweep{ 0%{opacity:0} 10%{opacity:.9} 70%{opacity:.9} 100%{opacity:0} }
+  .eq .arc.run{ animation: arcSweep var(--ad, 5s) ease-in-out var(--delay,0s) both; }
+}
+
+/* -------- HUD grid tiny air shimmer bursts -------- */
+@media (prefers-reduced-motion:no-preference){
+  @keyframes airBurst{ 0%{opacity:.44} 50%{opacity:.52} 100%{opacity:.44} }
+  .laser-grid.alive{ animation: airBurst 9s ease-in-out infinite; }
+}
+
+/* -------- Respect global “affect-off” kill switch -------- */
+.affect-off .alive-sheen::after,
+.affect-off .alive-float,
+.affect-off .alive-twinkle,
+.affect-off .eq .spark,
+.affect-off .eq .arc,
+.affect-off .laser-grid.alive{ animation:none !important; opacity:0 !important; }
