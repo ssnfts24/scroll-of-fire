@@ -219,3 +219,149 @@ window.addEventListener('scroll',()=> {
   toTop.classList.toggle('visible',window.scrollY>600);
 });
 toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+
+
+
+
+
+
+
+
+/* ====================================================================== */
+/* Alive Pack (timed random affects for equations & UI)                   */
+/* Adds subtle, randomized life to headings, cards, and especially .eq    */
+/* ====================================================================== */
+(function alivePack(){
+  const root  = document.documentElement;
+  const body  = document.body;
+  const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduce || body.classList.contains('affect-off')) return;
+
+  const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
+  const rnd   = (a,b)=>a + Math.random()*(b-a);
+  const pick  = arr => arr[(Math.random()*arr.length)|0];
+
+  /* ---------- 1) Headline sheen pulses ---------- */
+  const sheenTargets = Array.from(document.querySelectorAll('.title, h2, h3'));
+  sheenTargets.forEach(el => el.classList.add('alive-sheen'));
+  function scheduleSheen(el){
+    const t = rnd(2600, 5200);
+    el.classList.toggle('sheen-on', true);
+    setTimeout(()=> el.classList.toggle('sheen-on', false), 2200);
+    setTimeout(()=> scheduleSheen(el), rnd(6500, 14000));
+  }
+  sheenTargets.forEach((el,i)=> setTimeout(()=> scheduleSheen(el), rnd(1200, 5400) + i*90));
+
+  /* ---------- 2) Subtle float on tiles/cards/ctas ---------- */
+  const floatTargets = Array.from(document.querySelectorAll('.tile, .card, .cta, .tab'));
+  floatTargets.forEach(el=>{
+    el.style.setProperty('--alive-dur', `${rnd(9,16).toFixed(2)}s`);
+    el.classList.add('alive-float');
+  });
+
+  /* ---------- 3) Rare twinkle on links & small text ---------- */
+  const twinkles = Array.from(document.querySelectorAll('a, .meta, .hint'));
+  twinkles.forEach(el=>{
+    if(Math.random() < 0.55){
+      el.style.setProperty('--alive-twinkle', `${rnd(9,14).toFixed(2)}s`);
+      el.classList.add('alive-twinkle');
+    }
+  });
+
+  /* ---------- 4) Equations: sparks + arcs + tone ----------- */
+  const eqs = Array.from(document.querySelectorAll('.eq'));
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(onIO, {threshold:0.15}) : null;
+
+  eqs.forEach(eq=>{
+    eq.classList.add('alive');
+    // Create spark container (reuse .eq itself)
+    const sparkBudget = Math.min( (parseInt(getComputedStyle(root).getPropertyValue('--alive-spark-count'))||18), 40 );
+
+    // Pre-build a few spark nodes to reuse
+    const pool = [];
+    for(let i=0;i<sparkBudget;i++){
+      const s = document.createElement('i');
+      s.className = 'spark';
+      eq.appendChild(s);
+      pool.push(s);
+    }
+
+    // Add a single arc tracer element
+    const arc = document.createElement('i');
+    arc.className = 'arc';
+    eq.appendChild(arc);
+
+    // Runner: randomly light a few sparks and occasional arc
+    function runBurst(){
+      if (!eq.isConnected) return;
+      const rect = eq.getBoundingClientRect();
+      // Skip if currently far offscreen (in case no IO)
+      if (rect.bottom < -200 || rect.top > innerHeight + 200) {
+        setTimeout(runBurst, rnd(1200, 2800));
+        return;
+      }
+      // Choose 2–5 sparks
+      const n = (2 + Math.random()*3)|0;
+      for(let k=0;k<n;k++){
+        const s = pick(pool);
+        // Random local positions within eq-scroll if present
+        const pad = 18;
+        const w = eq.clientWidth, h = eq.clientHeight;
+        const x = rnd(pad, Math.max(pad, w - pad));
+        const y = rnd(pad, Math.max(pad, h - pad));
+        const dx = rnd(-60, 80);
+        const dy = rnd(-50, 30);
+        const sscale = rnd(.8, 1.4);
+        const dur = rnd(6, 12).toFixed(2) + 's';
+        const delay = rnd(0, 0.8).toFixed(2) + 's';
+
+        s.style.setProperty('--x',  x.toFixed(1) + 'px');
+        s.style.setProperty('--y',  y.toFixed(1) + 'px');
+        s.style.setProperty('--dx', dx.toFixed(1) + 'px');
+        s.style.setProperty('--dy', dy.toFixed(1) + 'px');
+        s.style.setProperty('--s',  sscale.toFixed(2));
+        s.style.setProperty('--dur', dur);
+        s.style.setProperty('--delay', delay);
+
+        // retrigger
+        s.classList.remove('run'); void s.offsetWidth; s.classList.add('run');
+      }
+
+      // Occasionally sweep an arc (1 in ~5 bursts)
+      if (Math.random() < 0.2){
+        arc.style.setProperty('--cx', `${rnd(35,65).toFixed(1)}%`);
+        arc.style.setProperty('--cy', `${rnd(35,65).toFixed(1)}%`);
+        arc.style.setProperty('--a0', `${rnd(0,360).toFixed(0)}deg`);
+        arc.style.setProperty('--ad', `${rnd(3.6,6.2).toFixed(2)}s`);
+        arc.style.setProperty('--delay', `${rnd(.0,.8).toFixed(2)}s`);
+        arc.classList.remove('run'); void arc.offsetWidth; arc.classList.add('run');
+      }
+
+      setTimeout(runBurst, rnd(1400, 3600));
+    }
+
+    function onIO(entries){
+      for (const e of entries){
+        if (e.isIntersecting){
+          runBurst();
+          io && io.unobserve(e.target);
+        }
+      }
+    }
+
+    if (io) io.observe(eq); else setTimeout(runBurst, rnd(800, 2200));
+  });
+
+  /* ---------- 5) Laser grid tiny breath ---------- */
+  const grid = document.querySelector('.laser-grid');
+  if (grid) grid.classList.add('alive');
+
+  /* ---------- 6) Safety: honor global kill switch dynamically ---------- */
+  const mo = new MutationObserver(()=> {
+    if (body.classList.contains('affect-off')){
+      // Let CSS kill animations; nothing else to do
+      mo.disconnect();
+    }
+  });
+  mo.observe(body, {attributes:true, attributeFilter:['class']});
+})();
