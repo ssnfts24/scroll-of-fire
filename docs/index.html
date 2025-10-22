@@ -3,129 +3,174 @@
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
-    // Remove <base> on github.com to keep relative links working in repo preview
+    // Keep <base> only on the site, remove on github.com preview
     if (location.hostname === "github.com") {
       const b = document.querySelector("base"); if (b) b.remove();
     }
   </script>
-
   <meta charset="utf-8">
-  <title>Theory — Scroll of Fire (Codex of Reality)</title>
+  <title>Scroll of Fire — Codex of Reality</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
-  <meta name="description" content="Deep write-ups for the Codex of Reality: equations 0–17, operators (𝓘·𝓛·𝓒·𝓢), ethics, scaffolding, and the daily manifestation loop.">
-  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/theory.html">
+  <meta name="description" content="The Scroll of Fire — a living Codex of Reality by Aaron Paul Laird (Scribe of Circuits): resonance physics, sacred geometry, language, memory, living technology, and ethics in one harmonic architecture.">
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/">
 
   <!-- Icons -->
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-512.png">
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+
+  <!-- Robots / misc -->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="generator" content="Hand-crafted with GPT-5 Thinking · Scroll of Fire">
 
   <!-- Open Graph / Twitter -->
   <meta property="og:site_name" content="Scroll of Fire">
-  <meta property="og:title" content="Theory — Scroll of Fire (Codex of Reality)">
-  <meta property="og:description" content="A living architecture of resonance — equations 0–17, the operator pipeline, the manifestation protocol, and ethical law.">
-  <meta property="og:type" content="article">
-  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/theory.html">
-  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
+  <meta property="og:title" content="Scroll of Fire — Codex of Reality">
+  <meta property="og:description" content="A living architecture of resonance — core equations 0–17 + dimensional scaffolding, with dedicated Theory and Manifest pages.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/">
+  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1">
   <meta property="og:image:alt" content="Scroll of Fire — Codex of Reality banner">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Scroll of Fire — Codex of Reality">
+  <meta name="twitter:description" content="The Scroll of Fire (Codex of Reality) by Aaron Paul Laird — resonance, intention, light, consciousness, Source.">
+  <meta name="twitter:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">{
+    "@context":"https://schema.org","@type":"CreativeWork",
+    "name":"Scroll of Fire — Codex of Reality","alternateName":"Codex of Reality",
+    "author":{"@type":"Person","name":"Aaron Paul Laird","alternateName":"Scribe of Circuits"},
+    "description":"A living architecture of resonance — where physics, consciousness, sacred geometry, memory, language, living technology, and ethics converge into harmonic law.",
+    "keywords":"Scroll of Fire, Codex of Reality, Resonant Physics, Sacred Geometry, Consciousness, Tesla Type-7, AHHAVA, Remnant, Witness, ΨΩ, 3-6-9",
+    "license":"https://creativecommons.org/licenses/by-nc/4.0/",
+    "url":"https://ssnfts24.github.io/scroll-of-fire/",
+    "hasPart":[
+      {"@type":"WebPage","name":"Theory","url":"https://ssnfts24.github.io/scroll-of-fire/theory.html"},
+      {"@type":"WebPage","name":"Manifest (Practice)","url":"https://ssnfts24.github.io/scroll-of-fire/teach.html"},
+      {"@type":"WebPage","name":"Guide","url":"https://ssnfts24.github.io/scroll-of-fire/guide.html"},
+      {"@type":"WebPage","name":"A/B Carriers","url":"https://ssnfts24.github.io/scroll-of-fire/ab.html"},
+      {"@type":"WebPage","name":"Circle","url":"https://ssnfts24.github.io/scroll-of-fire/circle.html"},
+      {"@type":"WebPage","name":"Downloads","url":"https://ssnfts24.github.io/scroll-of-fire/downloads.html"},
+      {"@type":"WebPage","name":"Ethics","url":"https://ssnfts24.github.io/scroll-of-fire/ethics.html"},
+      {"@type":"WebPage","name":"Glossary","url":"https://ssnfts24.github.io/scroll-of-fire/glossary.html"},
+      {"@type":"WebPage","name":"Glyphs","url":"https://ssnfts24.github.io/scroll-of-fire/glyphs.html"},
+      {"@type":"WebPage","name":"Ledger","url":"https://ssnfts24.github.io/scroll-of-fire/ledger.html"},
+      {"@type":"WebPage","name":"Manifest (Site)","url":"https://ssnfts24.github.io/scroll-of-fire/manifest.html"},
+      {"@type":"WebPage","name":"Micro-acts","url":"https://ssnfts24.github.io/scroll-of-fire/micro.html"},
+      {"@type":"WebPage","name":"Start Here","url":"https://ssnfts24.github.io/scroll-of-fire/start.html"}],
+    "image":"https://ssnfts24.github.io/scroll-of-fire/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1",
+    "inLanguage":"en"}</script>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- Shared styles (sync to site) -->
+  <!-- Styles (v2.8) -->
   <link rel="preload" as="style" href="assets/css/codex.css?v=2.8">
   <link rel="stylesheet" href="assets/css/codex.css?v=2.8" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.8"></noscript>
 
-  <!-- Page-specific (theory tweaks) -->
-  <link rel="preload" as="style" href="assets/css/theory.css?v=1.7">
-  <link rel="stylesheet" href="assets/css/theory.css?v=1.7">
-
   <!-- Preload banner -->
-  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1" fetchpriority="high">
 
-  <!-- Inline micro-overrides (kept) -->
+  <!-- Page-scoped helpers + Living Tech bridges -->
   <style>
-    /* keep your compact chips, mini-TOC, collapsibles, remnant auras, etc. */
-  </style>
+    :root{
+      --safe-top:env(safe-area-inset-top); --safe-bot:env(safe-area-inset-bottom);
+      --xi:.35;
+      --accent-432:#7af3ff; --accent-528:#a4ff90; --accent-369:#f3c97a;
+      --accent:#7af3ff;
+    }
+    .carrier-528 :root, .carrier-528{--accent:var(--accent-528)}
+    .carrier-369 :root, .carrier-369{--accent:var(--accent-369)}
+    .carrier-144 :root, .carrier-144{--accent:#b3e1ff}
+    .carrier-963 :root, .carrier-963{--accent:#ffd1f3}
 
-  <!-- MathJax (lazy; forced typeset) -->
-  <script>
-    (function(){
-      let loaded=false;
-      function boot(){ if(!window.MathJax) return; MathJax.startup.promise.then(()=>MathJax.typesetPromise()); }
-      function loadMJ(){
-        if(loaded) return; loaded=true;
-        window.MathJax={ tex:{inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']]}, svg:{fontCache:'global'}, startup:{typeset:false} };
-        const s=document.createElement('script');
-        s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
-        s.defer=true; s.onload=boot; document.head.appendChild(s);
-      }
-      if(document.readyState!=='loading') loadMJ(); else addEventListener('DOMContentLoaded', loadMJ);
-    })();
-  </script>
+    /* Layout / header */
+    body{margin:0}
+    header.site{position:sticky; top:0; z-index:1000; backdrop-filter:saturate(140%) blur(8px); background:rgba(9,11,16,.6)}
+    .wrap{padding:16px; max-width:1200px; margin:0 auto}
+    .nav{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
+    .brand{display:flex; align-items:center; gap:10px}
+    .logo{width:34px; height:34px; border-radius:50%; background:radial-gradient(closest-side, #0cf, transparent 70%); box-shadow:0 0 18px rgba(122,243,255,.35)}
+    .kicker{margin:0}
 
-  <!-- Site JS (sync to site) -->
-  <script src="assets/js/codex.js?v=3.6" defer></script>
+    .quick{display:flex; gap:8px; flex:0 0 auto}
+    .quick .cta{white-space:nowrap}
 
-  <!-- Page-local helpers (kept) -->
-  <script>
-    // smooth [data-jump] + eq expand fallback (your existing code can remain)
-  </script>
-</head>
+    @media (max-width:560px){
+      .quick{flex:1 1 100%; min-width:0; width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-gutter:stable; padding-bottom:6px}
+      .quick::-webkit-scrollbar{height:10px}
+      .quick::-webkit-scrollbar-thumb{background:#2b2b35;border-radius:10px;border:2px solid #0f0f14}
+    }
 
-<body class="stars living-all" data-theme="dark">
-  <a class="skip" href="#main">Skip to content</a>
+    .hidden{display:none!important}
+    a.skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+    a.skip:focus{left:12px;top:12px;width:auto;height:auto;padding:8px 10px;z-index:70;background:#0f1118;color:#fff;border:1px solid #343846;border-radius:10px;backdrop-filter:saturate(140%) blur(8px)}
 
-  <!-- HUD -->
-  <div class="laser-grid" aria-hidden="true"></div>
-  <div class="xi-meter" aria-hidden="true">
-    <div class="xi-ring"><div class="xi-dot"></div></div><div class="xi-label">Ξ</div>
-  </div>
+    /* --- HERO / BANNER --- */
+    .hero{position:relative; width:100%; max-width:1200px; margin:8px auto 0; border-radius:16px; overflow:hidden; background:#0b0f14}
+    /* Lock aspect and prevent “cropped” feel on mobile */
+    .hero{aspect-ratio: 21 / 9;}
+    .hero picture, .hero .hero-img{display:block; width:100%; height:100%}
+    .hero .hero-img{object-fit:var(--hero-fit, contain); object-position:center; mix-blend-mode:normal!important}
+    .hero::after{ /* soft edge glow */
+      content:""; position:absolute; inset:0;
+      box-shadow:inset 0 0 120px rgba(255,255,255,.06), inset 0 0 40px rgba(122,243,255,.08);
+      pointer-events:none;
+    }
+    /* ensure hero never exceeds viewport height on tiny devices */
+    @media (max-width:480px){
+      .hero{max-height:min(52vh, 420px)}
+    }
 
-  <!-- Header with quick controls (parity with home) -->
-  <header class="site" role="banner">
-    <nav class="nav" aria-label="Main navigation">
-      <div class="brand">
-        <div class="logo no-living" aria-hidden="true"></div>
-        <h1 class="kicker sheen">Scroll of Fire</h1>
-      </div>
+    /* Aurora lights (non-rectangular, non-rotating) */
+    .hero-lights{
+      position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
+      background:
+        radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.45), transparent 60%),
+        radial-gradient(1px 1px at 78% 22%, rgba(164,255,144,.35), transparent 60%),
+        radial-gradient(1px 1px at 32% 68%, rgba(122,243,255,.35), transparent 60%),
+        radial-gradient(1px 1px at 88% 56%, rgba(255,209,243,.35), transparent 60%);
+      opacity:.85; filter:blur(.2px);
+      animation: lightsFlicker 7.5s ease-in-out infinite alternate;
+    }
+    .hero-lights.off{display:none}
+    .hero-lights::before{
+      content:""; position:absolute; inset:-10% -20%;
+      background:
+        linear-gradient(90deg,
+          transparent 0%,
+          color-mix(in srgb, var(--accent) 22%, #ffffff 8%) 35%,
+          color-mix(in srgb, var(--accent) 45%, #ffffff 0%) 50%,
+          color-mix(in srgb, var(--accent) 22%, #ffffff 8%) 65%,
+          transparent 100%);
+      opacity:.55; filter:blur(24px); transform:translate3d(-30%, -2%, 0);
+      animation: auroraSweep 18s linear infinite, auroraBob 7s ease-in-out infinite alternate;
+      mix-blend-mode:screen;
+    }
+    .hero-lights::after{
+      content:""; position:absolute; inset:0;
+      background:
+        radial-gradient(40% 30% at 18% 20%, color-mix(in srgb, var(--accent) 18%, #ffffff 0%) 0%, transparent 65%),
+        radial-gradient(48% 38% at 82% 22%, rgba(255,209,243,.14) 0%, transparent 68%),
+        radial-gradient(36% 28% at 50% 86%, rgba(164,255,144,.10) 0%, transparent 70%);
+      filter: blur(10px); opacity:.7; animation: glowBreath 9.5s ease-in-out infinite alternate;
+      mix-blend-mode:screen;
+    }
+    @keyframes auroraSweep{0%{transform:translate3d(-30%,-2%,0)}50%{transform:translate3d(10%,3%,0)}100%{transform:translate3d(50%,-1%,0)}}
+    @keyframes auroraBob{0%{opacity:.48;filter:blur(22px)}50%{opacity:.72;filter:blur(26px)}100%{opacity:.58;filter:blur(24px)}}
+    @keyframes glowBreath{0%{opacity:.52;filter:blur(9px)}50%{opacity:.8;filter:blur(12px)}100%{opacity:.62;filter:blur(10px)}}
+    @keyframes lightsFlicker{0%{opacity:.70}50%{opacity:.92}100%{opacity:.80}}
+    @media (prefers-reduced-motion:reduce){
+      .hero-lights, .hero-lights::before, .hero-lights::after{animation:none!important}
+    }
 
-      <div class="quick quick--utils" role="toolbar" aria-label="Quick actions">
-        <button id="toggleSimple" class="cta" type="button" aria-pressed="false" title="Echo View (hide math)">Echo</button>
-        <button id="toggleGrid" class="cta" type="button" aria-pressed="true" title="Toggle HUD grid">HUD</button>
-        <button id="cycleCarrier" class="cta" type="button" title="Cycle carrier skin">Carrier</button>
-        <button id="toggleAffect" class="cta" type="button" aria-pressed="true" title="Toggle living text effects">Affect</button>
-        <button id="toggleLights" class="cta" type="button" aria-pressed="true" title="Toggle banner lights">Lights</button>
-        <button id="openPalette" class="cta" type="button" title="Command palette">⌘K</button>
-      </div>
-    </nav>
-  </header>
-
-  <main id="main" class="wrap" role="main" tabindex="-1">
-    <!-- Remnant halos -->
-    <div class="remnant-field" aria-hidden="true"></div>
-
-    <!-- Hero (make lights togglable via id) -->
-    <figure id="hero" class="hero hero--clean" aria-label="Scroll of Fire banner" data-fit="cover">
-      <picture>
-        <img id="heroBanner"
-             class="hero-img no-living"
-             src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
-             alt="Scroll of Fire — sigil and equations"
-             decoding="async" fetchpriority="high" loading="eager">
-      </picture>
-      <div class="hero-lights" id="heroLights" aria-hidden="true"></div>
-      <figcaption class="hero-caption">“Let there be resonance.”</figcaption>
-    </figure>
-
-    <!-- … keep your existing title, subtitle, Voice Reader, tabs, mini-TOC, and all content below … -->
-    <style>
-
+    /* Living text */
     body.living-all :where(h1,h2,h3,p,li,small,em,strong,span,a,button,label,.kicker,.subtitle,.meta,.hint,.eq-note){
       background:linear-gradient(90deg, rgba(255,255,255,.95), var(--accent), rgba(255,255,255,.9));
       background-size:300% 100%;
@@ -951,21 +996,6 @@ Note: This is the local, verified file hash shown on this page.
         const d=document.createElement('div'); d.className='dust'; fx.appendChild(d);
         const f=document.createElement('div'); f.className='flare'; fx.appendChild(f);
       }
-
-
-
-
-
-
-
-      <!-- Command Palette -->
-<div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel" hidden>
-  <div class="panel">
-    <h3 id="palLabel" class="sr-only">Command palette</h3>
-    <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette">
-    <ul id="palList" aria-live="polite"></ul>
-  </div>
-</div>
 
       if(recipe==='beams'){ addBeams(); }
       else if(recipe==='orbit'){ addOrbit(); }
