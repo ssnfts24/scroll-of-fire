@@ -1,13 +1,15 @@
 /* ==========================================================================
-   Scroll of Fire — codex.js v3.3.2
+   Scroll of Fire — codex.js v3.3.2 (consolidated)
    - Sticky header, tab ink
    - Card reveal IO
    - Hero activation + light parallax (safe)
-   - Simple mode, HUD toggle
-   - Page search mini-suggest + '/' focus
+   - Simple mode, HUD toggle, Affect toggle
+   - Page search mini-suggest + '/' (skips if v2 present)
    - Command palette shell
    - Equation pop-out viewer + drag-scroll
    - MathJax: on-demand typeset (the fix)
+   - Alive Pack (sparks, arcs, sheen/float/twinkle)
+   - Alive Palette (Calm/Lively/Max/Off) with persistence
    ========================================================================== */
 (() => {
   const $  = (s, r=document) => r.querySelector(s);
@@ -17,6 +19,12 @@
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const RD = matchMedia('(prefers-reduced-data: reduce)').matches;
   const ALLOW_MOTION = !(RM || RD);
+
+  // Detect if search v2 (inline-initialized) exists so we don’t double-bind
+  const SEARCH_V2 = (() => {
+    const s = document.getElementById('site-suggest');
+    return !!(s && s.getAttribute('role') === 'listbox');
+  })();
 
   /* ---- Sticky header ---- */
   const header = $('header.site');
@@ -92,35 +100,46 @@
   const setHUD = on => { if (!laser) return; laser.style.display = on? '' : 'none'; $('#toggleGrid')?.setAttribute('aria-pressed', on?'true':'false'); };
   setHUD(!!laser); $('#toggleGrid')?.addEventListener('click', ()=> setHUD(laser && laser.style.display==='none'));
 
+  /* ---- Affect (toolbar button) ---- */
+  const btnAffect = $('#toggleAffect');
+  const setAffect = on => {
+    document.body.classList.toggle('affect-off', !on);
+    btnAffect?.setAttribute('aria-pressed', on?'true':'false');
+  };
+  setAffect(!document.body.classList.contains('affect-off'));
+  btnAffect?.addEventListener('click', () => setAffect(document.body.classList.contains('affect-off')));
+
   /* ---- Back to top ---- */
   const toTop = $('#toTop');
   const topBtn = () => toTop?.classList.toggle('show', scrollY>400);
   topBtn(); addEventListener('scroll', topBtn, { passive:true });
   toTop?.addEventListener('click', ()=> scrollTo({ top:0, behavior: ALLOW_MOTION ? 'smooth' : 'auto' }));
 
-  /* ---- Page search mini-suggest + '/' ---- */
-  const siteSearch = $('#site-search'); const siteSuggest = $('#site-suggest');
-  const CAND = $$('h1[id],h2[id],h3[id],section[id],article[id]');
-  const suggest = (q) => {
-    if (!siteSuggest) return;
-    siteSuggest.innerHTML = '';
-    q = (q||'').trim().toLowerCase();
-    if (!q) { siteSuggest.classList.add('hidden'); return; }
-    const results = [
-      ...CAND.filter(el => (el.textContent||'').toLowerCase().includes(q)).map(el => ({text:el.textContent.trim(), href:'#'+el.id})),
-      ...$$('a[href^="#"]').filter(a => (a.textContent||'').toLowerCase().includes(q)).map(a => ({text:a.textContent.trim(), href:a.getAttribute('href')}))
-    ].slice(0,12);
-    results.forEach(r => { const a=document.createElement('a'); a.href=r.href; a.textContent=r.text; a.addEventListener('click',()=>siteSuggest.classList.add('hidden')); siteSuggest.appendChild(a);});
-    siteSuggest.classList.toggle('hidden', results.length===0);
-  };
-  siteSearch?.addEventListener('input', e => suggest(e.currentTarget.value));
-  siteSearch?.addEventListener('focus', e => suggest(e.currentTarget.value));
-  document.addEventListener('click', e => { if (!siteSuggest) return; if (e.target!==siteSearch && !siteSuggest.contains(e.target)) siteSuggest.classList.add('hidden'); });
-  document.addEventListener('keydown', e => {
-    if (e.key==='/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      const tag=(document.activeElement?.tagName||'').toLowerCase(); if (tag!=='input' && tag!=='textarea'){ e.preventDefault(); siteSearch?.focus(); }
-    }
-  });
+  /* ---- Page search mini-suggest + '/' (skip if v2 exists) ---- */
+  if (!SEARCH_V2) {
+    const siteSearch = $('#site-search'); const siteSuggest = $('#site-suggest');
+    const CAND = $$('h1[id],h2[id],h3[id],section[id],article[id]');
+    const suggest = (q) => {
+      if (!siteSuggest) return;
+      siteSuggest.innerHTML = '';
+      q = (q||'').trim().toLowerCase();
+      if (!q) { siteSuggest.classList.add('hidden'); return; }
+      const results = [
+        ...CAND.filter(el => (el.textContent||'').toLowerCase().includes(q)).map(el => ({text:el.textContent.trim(), href:'#'+el.id})),
+        ...$$('a[href^="#"]').filter(a => (a.textContent||'').toLowerCase().includes(q)).map(a => ({text:a.textContent.trim(), href:a.getAttribute('href')}))
+      ].slice(0,12);
+      results.forEach(r => { const a=document.createElement('a'); a.href=r.href; a.textContent=r.text; a.addEventListener('click',()=>siteSuggest.classList.add('hidden')); siteSuggest.appendChild(a);});
+      siteSuggest.classList.toggle('hidden', results.length===0);
+    };
+    siteSearch?.addEventListener('input', e => suggest(e.currentTarget.value));
+    siteSearch?.addEventListener('focus', e => suggest(e.currentTarget.value));
+    document.addEventListener('click', e => { if (!siteSuggest) return; if (e.target!==siteSearch && !siteSuggest.contains(e.target)) siteSuggest.classList.add('hidden'); });
+    document.addEventListener('keydown', e => {
+      if (e.key==='/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        const tag=(document.activeElement?.tagName||'').toLowerCase(); if (tag!=='input' && tag!=='textarea'){ e.preventDefault(); siteSearch?.focus(); }
+      }
+    });
+  }
 
   /* ---- Command palette shell ---- */
   const palette = $('#palette'); const palInput = $('#palInput'); const palList = $('#palList');
@@ -178,7 +197,6 @@
     }, { rootMargin:'200px 0px' });
     const firstEq = $('.eq'); firstEq && ioEq.observe(firstEq);
   } else {
-    // Fallback: typeset once DOM ready
     addEventListener('load', ()=> typeset(document));
   }
 
@@ -209,27 +227,8 @@
   });
 })();
 
-
-
-
-
-
-const toTop=document.getElementById('toTop');
-window.addEventListener('scroll',()=> {
-  toTop.classList.toggle('visible',window.scrollY>600);
-});
-toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
-
-
-
-
-
-
-
-
 /* ====================================================================== */
 /* Alive Pack (timed random affects for equations & UI)                   */
-/* Adds subtle, randomized life to headings, cards, and especially .eq    */
 /* ====================================================================== */
 (function alivePack(){
   const root  = document.documentElement;
@@ -245,14 +244,13 @@ toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
   const sheenTargets = Array.from(document.querySelectorAll('.title, h2, h3'));
   sheenTargets.forEach(el => el.classList.add('alive-sheen'));
   function scheduleSheen(el){
-    const t = rnd(2600, 5200);
     el.classList.toggle('sheen-on', true);
     setTimeout(()=> el.classList.toggle('sheen-on', false), 2200);
     setTimeout(()=> scheduleSheen(el), rnd(6500, 14000));
   }
   sheenTargets.forEach((el,i)=> setTimeout(()=> scheduleSheen(el), rnd(1200, 5400) + i*90));
 
-  /* ---------- 2) Subtle float on tiles/cards/ctas ---------- */
+  /* ---------- 2) Subtle float on tiles/cards/ctas/tabs ---------- */
   const floatTargets = Array.from(document.querySelectorAll('.tile, .card, .cta, .tab'));
   floatTargets.forEach(el=>{
     el.style.setProperty('--alive-dur', `${rnd(9,16).toFixed(2)}s`);
@@ -274,10 +272,8 @@ toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
 
   eqs.forEach(eq=>{
     eq.classList.add('alive');
-    // Create spark container (reuse .eq itself)
-    const sparkBudget = Math.min( (parseInt(getComputedStyle(root).getPropertyValue('--alive-spark-count'))||18), 40 );
 
-    // Pre-build a few spark nodes to reuse
+    const sparkBudget = Math.min( (parseInt(getComputedStyle(root).getPropertyValue('--alive-spark-count'))||18), 40 );
     const pool = [];
     for(let i=0;i<sparkBudget;i++){
       const s = document.createElement('i');
@@ -286,25 +282,20 @@ toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
       pool.push(s);
     }
 
-    // Add a single arc tracer element
     const arc = document.createElement('i');
     arc.className = 'arc';
     eq.appendChild(arc);
 
-    // Runner: randomly light a few sparks and occasional arc
     function runBurst(){
       if (!eq.isConnected) return;
       const rect = eq.getBoundingClientRect();
-      // Skip if currently far offscreen (in case no IO)
       if (rect.bottom < -200 || rect.top > innerHeight + 200) {
         setTimeout(runBurst, rnd(1200, 2800));
         return;
       }
-      // Choose 2–5 sparks
       const n = (2 + Math.random()*3)|0;
       for(let k=0;k<n;k++){
         const s = pick(pool);
-        // Random local positions within eq-scroll if present
         const pad = 18;
         const w = eq.clientWidth, h = eq.clientHeight;
         const x = rnd(pad, Math.max(pad, w - pad));
@@ -323,11 +314,8 @@ toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
         s.style.setProperty('--dur', dur);
         s.style.setProperty('--delay', delay);
 
-        // retrigger
         s.classList.remove('run'); void s.offsetWidth; s.classList.add('run');
       }
-
-      // Occasionally sweep an arc (1 in ~5 bursts)
       if (Math.random() < 0.2){
         arc.style.setProperty('--cx', `${rnd(35,65).toFixed(1)}%`);
         arc.style.setProperty('--cy', `${rnd(35,65).toFixed(1)}%`);
@@ -336,7 +324,6 @@ toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
         arc.style.setProperty('--delay', `${rnd(.0,.8).toFixed(2)}s`);
         arc.classList.remove('run'); void arc.offsetWidth; arc.classList.add('run');
       }
-
       setTimeout(runBurst, rnd(1400, 3600));
     }
 
@@ -352,16 +339,22 @@ toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
     if (io) io.observe(eq); else setTimeout(runBurst, rnd(800, 2200));
   });
 
+  /* ---------- 5) Laser grid tiny breath ---------- */
+  const grid = document.querySelector('.laser-grid');
+  if (grid) grid.classList.add('alive');
 
+  /* ---------- 6) Safety: honor global kill switch dynamically ---------- */
+  const mo = new MutationObserver(()=> {
+    if (body.classList.contains('affect-off')){
+      mo.disconnect(); // CSS handles the rest
+    }
+  });
+  mo.observe(body, {attributes:true, attributeFilter:['class']});
+})();
 
-
-
-
-
-
-   /* ====================================================================== */
-/* Palette toggle for Alive Modes (Calm / Lively / Max / Full Off)        */
-/* Integrates with existing ⌘K palette (#openPalette / #palInput / #palList) */
+/* ====================================================================== */
+/* Alive Palette (Calm / Lively / Max / Full Off)                         */
+/* Integrates with ⌘K palette and optional quick toolbar button           */
 /* ====================================================================== */
 (function alivePalette(){
   const doc = document;
@@ -375,18 +368,16 @@ toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
     {id:'off',    label:'Full Off — disable motion'},
   ];
 
-  // Restore persisted choice
   const key = 'sof.alive.mode.v1';
   const saved = localStorage.getItem(key) || 'lively';
   applyMode(saved, {boot:true});
 
-  // Hook palette if it exists
+  // Hook palette if present
   const pal = doc.getElementById('palette');
   const list = doc.getElementById('palList');
   const input = doc.getElementById('palInput');
 
   if (pal && list){
-    // Insert a section header + items
     const header = itemEl('— Animation Energy —', true);
     header.setAttribute('aria-disabled','true');
     list.appendChild(header);
@@ -394,28 +385,22 @@ toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
     MODES.forEach(m=>{
       const el = itemEl(`⚡ ${m.label}`, false, m.id);
       if (m.id === saved) el.classList.add('sel');
-      el.addEventListener('click', ()=>{ applyMode(m.id); closePalette(); });
+      el.addEventListener('click', ()=>{ applyMode(m.id); pal.classList.remove('open'); });
       list.appendChild(el);
     });
 
-    // Allow quick filtering by typing “energy” / “alive” / mode names
-    if (input){
-      input.addEventListener('input', ()=>{
-        const q = input.value.trim().toLowerCase();
-        Array.from(list.children).forEach(li=>{
-          const id = li.dataset.mode || '';
-          const txt = li.textContent.toLowerCase();
-          if (!id){ li.style.display=''; return; } // header stays
-          li.style.display = (q==='' || txt.includes(q) || id.includes(q) || /alive|energy|animation/.test(q)) ? '' : 'none';
-        });
+    input?.addEventListener('input', ()=>{
+      const q = input.value.trim().toLowerCase();
+      Array.from(list.children).forEach(li=>{
+        const id = li.dataset.mode || '';
+        const txt = li.textContent.toLowerCase();
+        if (!id){ li.style.display=''; return; } // header stays
+        li.style.display = (q==='' || txt.includes(q) || id.includes(q) || /alive|energy|animation/.test(q)) ? '' : 'none';
       });
-    }
-
-    // Close helper
-    function closePalette(){ pal.classList.remove('open'); }
+    });
   }
 
-  // Optional: add a Quick-action button to your toolbar if desired (non-breaking)
+  // Optional quick button in a toolbar with .quick.quick--utils
   try{
     const quick = doc.querySelector('.quick.quick--utils');
     if (quick && !quick.querySelector('#aliveToggle')){
@@ -424,7 +409,6 @@ toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
       btn.title='Animation energy';
       btn.textContent= labelFor(saved);
       btn.addEventListener('click', ()=>{
-        // Cycle Calm → Lively → Max → Off → Calm …
         const order = ['calm','lively','max','off'];
         const i = order.indexOf(currentMode());
         const next = order[(i+1) % order.length];
@@ -433,27 +417,22 @@ toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
       });
       quick.appendChild(btn);
     }
-  }catch(e){ /* no-op safe */ }
+  }catch(e){ /* no-op */ }
 
-  // Core
   function itemEl(text, header=false, modeId=''){
     const li = document.createElement('li');
     li.textContent = text;
     if (!header){ li.tabIndex=0; li.dataset.mode = modeId; }
     return li;
   }
-
   function labelFor(id){
     const m = MODES.find(x=>x.id===id);
     return m ? `Affect: ${m.label.split(' — ')[0]}` : 'Affect: Lively';
-    // short label for toolbar button
   }
-
   function currentMode(){
     if (body.classList.contains('affect-off')) return 'off';
     return root.getAttribute('data-alive') || 'lively';
   }
-
   function applyMode(id, opts={}){
     const prev = currentMode();
 
@@ -465,167 +444,24 @@ toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
       root.setAttribute('data-alive', id);
     }
 
-    // Update selected state in palette
     const list = document.getElementById('palList');
-    if (list){
-      Array.from(list.querySelectorAll('[data-mode]')).forEach(el=>{
-        el.classList.toggle('sel', el.dataset.mode === id);
-      });
-    }
+    list && Array.from(list.querySelectorAll('[data-mode]')).forEach(el=>{
+      el.classList.toggle('sel', el.dataset.mode === id);
+    });
 
-    // Persist (don’t persist on boot if user had reduce-motion)
     const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!opts.boot || !prefersReduce){
       localStorage.setItem(key, id);
     }
 
-    // Nudge existing “alive pack” animations to adopt new timing
-    // by toggling a lightweight data-flag that restarts CSS animations safely.
     if (!opts.boot){
       root.dataset.alivePulse = '1';
-      // remove on next frame
       requestAnimationFrame(()=> delete root.dataset.alivePulse);
     }
 
-    // Update quick button label if present
     const btn = document.getElementById('aliveToggle');
     if (btn) btn.textContent = labelFor(id);
 
-    // Console breadcrumb (helpful for debugging in webviews)
     if (prev !== id) { try{ console.debug('[SoF] Alive mode:', id); }catch(_){} }
   }
 })();
-  /* ---------- 5) Laser grid tiny breath ---------- */
-  const grid = document.querySelector('.laser-grid');
-  if (grid) grid.classList.add('alive');
-
-  /* ---------- 6) Safety: honor global kill switch dynamically ---------- */
-  const mo = new MutationObserver(()=> {
-    if (body.classList.contains('affect-off')){
-      // Let CSS kill animations; nothing else to do
-      mo.disconnect();
-    }
-  });
-  mo.observe(body, {attributes:true, attributeFilter:['class']});
-})();
-
-
-
-
-
-
-
-
-
-
-/* ==========================================================================
-    Scroll of Fire — codex.js v3.3.2
-@@
-   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-   const RD = matchMedia('(prefers-reduced-data: reduce)').matches;
-   const ALLOW_MOTION = !(RM || RD);
-+  // Detect the new in-page search (added inline in HTML) so we don't double-bind
-+  const SEARCH_V2 = (() => {
-+    const s = document.getElementById('site-suggest');
-+    return !!(s && s.getAttribute('role') === 'listbox');
-+  })();
-@@
-   /* ---- HUD ---- */
-   const laser = $('.laser-grid');
-   const setHUD = on => { if (!laser) return; laser.style.display = on? '' : 'none'; $('#toggleGrid')?.setAttribute('aria-pressed', on?'true':'false'); };
-   setHUD(!!laser); $('#toggleGrid')?.addEventListener('click', ()=> setHUD(laser && laser.style.display==='none'));
- 
-+  /* ---- Affect (new toolbar button) ---- */
-+  const btnAffect = $('#toggleAffect');
-+  const setAffect = on => {
-+    document.body.classList.toggle('affect-off', !on);
-+    btnAffect?.setAttribute('aria-pressed', on?'true':'false');
-+  };
-+  // initialize from current state
-+  setAffect(!document.body.classList.contains('affect-off'));
-+  btnAffect?.addEventListener('click', () => setAffect(document.body.classList.contains('affect-off')));
-+
-   /* ---- Back to top ---- */
-   const toTop = $('#toTop');
-   const topBtn = () => toTop?.classList.toggle('show', scrollY>400);
-   topBtn(); addEventListener('scroll', topBtn, { passive:true });
-   toTop?.addEventListener('click', ()=> scrollTo({ top:0, behavior: ALLOW_MOTION ? 'smooth' : 'auto' }));
- 
--  /* ---- Page search mini-suggest + '/' ---- */
--  const siteSearch = $('#site-search'); const siteSuggest = $('#site-suggest');
--  const CAND = $$('h1[id],h2[id],h3[id],section[id],article[id]');
--  const suggest = (q) => {
--    if (!siteSuggest) return;
--    siteSuggest.innerHTML = '';
--    q = (q||'').trim().toLowerCase();
--    if (!q) { siteSuggest.classList.add('hidden'); return; }
--    const results = [
--      ...CAND.filter(el => (el.textContent||'').toLowerCase().includes(q)).map(el => ({text:el.textContent.trim(), href:'#'+el.id})),
--      ...$$('a[href^="#"]').filter(a => (a.textContent||'').toLowerCase().includes(q)).map(a => ({text:a.textContent.trim(), href:a.getAttribute('href')}))
--    ].slice(0,12);
--    results.forEach(r => { const a=document.createElement('a'); a.href=r.href; a.textContent=r.text; a.addEventListener('click',()=>siteSuggest.classList.add('hidden')); siteSuggest.appendChild(a);});
--    siteSuggest.classList.toggle('hidden', results.length===0);
--  };
--  siteSearch?.addEventListener('input', e => suggest(e.currentTarget.value));
--  siteSearch?.addEventListener('focus', e => suggest(e.currentTarget.value));
--  document.addEventListener('click', e => { if (!siteSuggest) return; if (e.target!==siteSearch && !siteSuggest.contains(e.target)) siteSuggest.classList.add('hidden'); });
--  document.addEventListener('keydown', e => {
--    if (e.key==='/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
--      const tag=(document.activeElement?.tagName||'').toLowerCase(); if (tag!=='input' && tag!=='textarea'){ e.preventDefault(); siteSearch?.focus(); }
--    }
--  });
-+  /* ---- Page search mini-suggest + '/' ----
-+     Skip if the new search (v2) is present and initialized inline. */
-+  if (!SEARCH_V2) {
-+    const siteSearch = $('#site-search'); const siteSuggest = $('#site-suggest');
-+    const CAND = $$('h1[id],h2[id],h3[id],section[id],article[id]');
-+    const suggest = (q) => {
-+      if (!siteSuggest) return;
-+      siteSuggest.innerHTML = '';
-+      q = (q||'').trim().toLowerCase();
-+      if (!q) { siteSuggest.classList.add('hidden'); return; }
-+      const results = [
-+        ...CAND.filter(el => (el.textContent||'').toLowerCase().includes(q)).map(el => ({text:el.textContent.trim(), href:'#'+el.id})),
-+        ...$$('a[href^="#"]').filter(a => (a.textContent||'').toLowerCase().includes(q)).map(a => ({text:a.textContent.trim(), href:a.getAttribute('href')}))
-+      ].slice(0,12);
-+      results.forEach(r => { const a=document.createElement('a'); a.href=r.href; a.textContent=r.text; a.addEventListener('click',()=>siteSuggest.classList.add('hidden')); siteSuggest.appendChild(a);});
-+      siteSuggest.classList.toggle('hidden', results.length===0);
-+    };
-+    siteSearch?.addEventListener('input', e => suggest(e.currentTarget.value));
-+    siteSearch?.addEventListener('focus', e => suggest(e.currentTarget.value));
-+    document.addEventListener('click', e => { if (!siteSuggest) return; if (e.target!==siteSearch && !siteSuggest.contains(e.target)) siteSuggest.classList.add('hidden'); });
-+    document.addEventListener('keydown', e => {
-+      if (e.key==='/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
-+        const tag=(document.activeElement?.tagName||'').toLowerCase(); if (tag!=='input' && tag!=='textarea'){ e.preventDefault(); siteSearch?.focus(); }
-+      }
-+    });
-+  }
-@@
-   /* ---- Smooth anchor scroll accounting for sticky glass ---- */
-   document.addEventListener('click', e=>{
-@@
-   });
- })();
- 
--
--
--
--
--const toTop=document.getElementById('toTop');
--window.addEventListener('scroll',()=> {
--  toTop.classList.toggle('visible',window.scrollY>600);
--});
--toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
--
--
--
--
--
--
--
-+/* (removed duplicate toTop handlers; managed above) */
- 
- /* ====================================================================== */
- /* Alive Pack (timed random affects for equations & UI)                   */
-@@
-   if (prefersReduce || body.classList.contains('affect-off')) return;
