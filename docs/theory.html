@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="sof">
+<html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
@@ -27,7 +27,7 @@
   <meta property="og:description" content="A living architecture of resonance — equations 0–17, the operator pipeline, the manifestation protocol, and ethical law.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/theory.html">
-  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
+  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1">
   <meta property="og:image:alt" content="Scroll of Fire — Codex of Reality banner">
   <meta name="twitter:card" content="summary_large_image">
 
@@ -36,50 +36,89 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- Shared styles (must match consolidated v2.7) -->
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2.7">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2.7" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.7"></noscript>
+  <!-- Shared styles (unified with Home) -->
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2.8">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2.8" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.8"></noscript>
 
-  <!-- Page-specific (fixes banner placement & density for Theory) -->
-  <link rel="preload" as="style" href="assets/css/theory.css?v=1.7">
-  <link rel="stylesheet" href="assets/css/theory.css?v=1.7">
+  <!-- Theory page micro-styles -->
+  <link rel="preload" as="style" href="assets/css/theory.css?v=1.8">
+  <link rel="stylesheet" href="assets/css/theory.css?v=1.8">
 
-  <!-- Preload banner (same as Home) -->
-  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" fetchpriority="high">
+  <!-- Preload banner -->
+  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1" fetchpriority="high">
 
-  <!-- Inline micro-overrides for compact UI, collapsibles, remnant auras -->
+  <!-- Page-scoped helpers -->
   <style>
-    /* --- Compact header pills --- */
-    .quick.quick--utils { gap:.35rem; flex-wrap:wrap }
-    .quick.quick--utils .cta{
-      --pill-pad-x:.65rem; --pill-pad-y:.35rem; --pill-fs:.85rem;
-      padding:var(--pill-pad-y) var(--pill-pad-x);
-      font-size:var(--pill-fs); line-height:1.1; border-radius:999px; opacity:.95;
+    :root{
+      --safe-top:env(safe-area-inset-top); --safe-bot:env(safe-area-inset-bottom);
+      --xi:.35;
+      --accent-432:#7af3ff; --accent-528:#a4ff90; --accent-369:#f3c97a; --accent:#7af3ff;
     }
+    .carrier-528 :root, .carrier-528{--accent:var(--accent-528)}
+    .carrier-369 :root, .carrier-369{--accent:var(--accent-369)}
+    .carrier-144 :root, .carrier-144{--accent:#b3e1ff}
+    .carrier-963 :root, .carrier-963{--accent:#ffd1f3}
+
+    /* Layout / header (sticky) */
+    body{margin:0}
+    header.site{position:sticky; top:0; z-index:1000; backdrop-filter:saturate(140%) blur(8px); background:rgba(9,11,16,.6)}
+    .wrap{padding:16px; max-width:1200px; margin:0 auto}
+    .nav{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
+    .brand{display:flex; align-items:center; gap:10px}
+    .logo{width:34px; height:34px; border-radius:50%; background:radial-gradient(closest-side, #0cf, transparent 70%); box-shadow:0 0 18px rgba(122,243,255,.35)}
+    .kicker{margin:0}
+    .quick{display:flex; gap:8px; flex:0 0 auto}
+    .quick .cta{white-space:nowrap}
     @media (max-width:720px){
-      .quick.quick--utils{ overflow:auto; white-space:nowrap; scrollbar-width:none }
-      .quick.quick--utils::-webkit-scrollbar{ display:none }
+      .quick{flex:1 1 100%; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-gutter:stable; padding-bottom:6px}
+      .quick::-webkit-scrollbar{height:10px}
+      .quick::-webkit-scrollbar-thumb{background:#2b2b35;border-radius:10px;border:2px solid #0f0f14}
     }
 
-    /* --- Collapsible block for Voice Reader --- */
-    details.collapsible{ padding:0; overflow:hidden }
-    details.collapsible[open]{ box-shadow:0 0 0 1px var(--line) inset }
-    .collapsible__bar{
-      display:flex; align-items:center; justify-content:space-between; gap:.75rem;
-      cursor:pointer; padding:.9rem 1rem; font-weight:600;
-      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.15));
-      border-bottom:1px solid var(--line);
-    }
-    .collapsible__bar::-webkit-details-marker{ display:none }
-    .collapsible__mini .chip{
-      font-size:.85rem; padding:.25rem .5rem; border-radius:999px; border:1px solid var(--line);
-      background:var(--bg-elev); opacity:.9
-    }
-    .collapsible__panel{ padding:1rem }
+    /* Hero */
+    .hero{position:relative; width:100%; max-width:1200px; margin:8px auto 0; border-radius:16px; overflow:hidden; background:#0b0f14; aspect-ratio:21/9}
+    .hero picture,.hero .hero-img{display:block;width:100%;height:100%}
+    .hero .hero-img{object-fit:var(--hero-fit,contain); object-position:center; mix-blend-mode:normal!important}
+    .hero::after{content:""; position:absolute; inset:0; box-shadow:inset 0 0 120px rgba(255,255,255,.06), inset 0 0 40px rgba(122,243,255,.08); pointer-events:none}
+    .hero-lights{position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
+      background:
+        radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.45), transparent 60%),
+        radial-gradient(1px 1px at 78% 22%, rgba(164,255,144,.35), transparent 60%),
+        radial-gradient(1px 1px at 32% 68%, rgba(122,243,255,.35), transparent 60%),
+        radial-gradient(1px 1px at 88% 56%, rgba(255,209,243,.35), transparent 60%);
+      opacity:.85; filter:blur(.2px); animation:lightsFlicker 7.5s ease-in-out infinite alternate}
+    .hero-lights.off{display:none}
+    .hero-lights::before{content:""; position:absolute; inset:-10% -20%;
+      background:linear-gradient(90deg,transparent 0%,color-mix(in srgb,var(--accent) 22%,#fff 8%) 35%,color-mix(in srgb,var(--accent) 45%,#fff 0%) 50%,color-mix(in srgb,var(--accent) 22%,#fff 8%) 65%,transparent 100%);
+      opacity:.55; filter:blur(24px); transform:translate3d(-30%,-2%,0); animation:auroraSweep 18s linear infinite, auroraBob 7s ease-in-out infinite alternate; mix-blend-mode:screen}
+    .hero-lights::after{content:""; position:absolute; inset:0;
+      background:
+        radial-gradient(40% 30% at 18% 20%, color-mix(in srgb, var(--accent) 18%, #fff 0%) 0%, transparent 65%),
+        radial-gradient(48% 38% at 82% 22%, rgba(255,209,243,.14) 0%, transparent 68%),
+        radial-gradient(36% 28% at 50% 86%, rgba(164,255,144,.10) 0%, transparent 70%);
+      filter: blur(10px); opacity:.7; animation: glowBreath 9.5s ease-in-out infinite alternate; mix-blend-mode:screen}
+    @keyframes auroraSweep{0%{transform:translate3d(-30%,-2%,0)}50%{transform:translate3d(10%,3%,0)}100%{transform:translate3d(50%,-1%,0)}}
+    @keyframes auroraBob{0%{opacity:.48;filter:blur(22px)}50%{opacity:.72;filter:blur(26px)}100%{opacity:.58;filter:blur(24px)}}
+    @keyframes glowBreath{0%{opacity:.52;filter:blur(9px)}50%{opacity:.8;filter:blur(12px)}100%{opacity:.62;filter:blur(10px)}}
+    @keyframes lightsFlicker{0%{opacity:.70}50%{opacity:.92}100%{opacity:.80}}
+    @media (prefers-reduced-motion:reduce){ .hero-lights, .hero-lights::before, .hero-lights::after{animation:none!important} }
 
-    /* --- Equation collapse toggles --- */
-    .eq{ position:relative }
+    /* Tabs + mini-TOC */
+    .tabs{gap:.35rem}
+    .tabs .tab{padding:.45rem .7rem; font-size:.92rem; border-radius:999px}
+    .tabs .tab--primary{font-weight:600}
+    .mini-toc{
+      position:sticky; top:5.5rem; align-self:start; max-height:75vh; overflow:auto;
+      border:1px solid var(--line); border-radius:.75rem; padding:.75rem .75rem;
+      background:rgba(255,255,255,.02); backdrop-filter:saturate(120%) blur(2px);
+      margin-top:8px;
+    }
+    .mini-toc a{display:block; padding:.3rem .4rem; border-radius:.5rem; font-size:.92rem; opacity:.9}
+    .mini-toc a:hover{background:rgba(255,255,255,.05)}
+
+    /* Equation wrappers + toggles */
+    .eq{position:relative}
     .eq .eq-scroll{
       max-height:24rem; overflow:auto; padding:.5rem .75rem;
       border:1px solid var(--line); border-radius:.75rem;
@@ -90,58 +129,37 @@
       background:var(--bg-elev); border-radius:.5rem; padding:.15rem .45rem;
       font-size:.8rem; opacity:.8; display:none;
     }
-    .eq:hover .eq-toggle{ display:inline-block }
-    .eq[data-collapsed="true"] .eq-scroll{ max-height:4.5rem }
+    .eq:hover .eq-toggle{display:inline-block}
+    .eq[data-collapsed="true"] .eq-scroll{max-height:4.5rem}
 
-    /* --- Remnant auras --- */
-    .remnant-field{
-      position:fixed; inset:0; pointer-events:none; z-index:0;
-      background:
-        radial-gradient(160px 160px at 12% 18%, rgba(122,243,255,.12), transparent 60%),
-        radial-gradient(220px 220px at 85% 12%, rgba(243,201,122,.10), transparent 60%),
-        radial-gradient(140px 140px at 80% 78%, rgba(122,168,255,.10), transparent 60%),
-        radial-gradient(180px 180px at 18% 82%, rgba(122,255,186,.08), transparent 60%);
-      mix-blend-mode: screen;
-      animation: remnant-drift 22s linear infinite;
-    }
-    @keyframes remnant-drift{
-      0%{ filter:hue-rotate(0deg) brightness(1) }
-      50%{ filter:hue-rotate(35deg) brightness(1.06) }
-      100%{ filter:hue-rotate(0deg) brightness(1) }
-    }
-    .card{ position:relative; z-index:1; background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.08)); }
+    /* Remnant auras on cards */
+    .card{position:relative; z-index:1; background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.08));}
     .card::after{
       content:""; position:absolute; inset:-1px; border-radius:inherit;
       background: radial-gradient(240px 120px at 20% -20%, rgba(122,243,255,.12), transparent 60%),
                   radial-gradient(220px 120px at 120% 120%, rgba(243,201,122,.10), transparent 60%);
       opacity:0; transition:opacity .25s ease-out; pointer-events:none; z-index:-1;
     }
-    .card:hover::after{ opacity:.6 }
-    @media (prefers-reduced-motion:reduce){
-      .remnant-field{ animation:none } .card::after{ transition:none }
-    }
+    .card:hover::after{opacity:.6}
+    @media (prefers-reduced-motion:reduce){ .card::after{transition:none} }
 
-    /* --- Denser tabs & mini-TOC --- */
-    .tabs{ gap:.35rem }
-    .tabs .tab{ padding:.45rem .7rem; font-size:.92rem; border-radius:999px }
-    .tabs .tab--primary{ font-weight:600 }
-    .mini-toc{
-      position:sticky; top:5.5rem; align-self:start; max-height:75vh; overflow:auto;
-      border:1px solid var(--line); border-radius:.75rem; padding:.75rem .75rem;
-      background:rgba(255,255,255,.02); backdrop-filter:saturate(120%) blur(2px);
-    }
-    .mini-toc a{ display:block; padding:.3rem .4rem; border-radius:.5rem; font-size:.92rem; opacity:.9 }
-    .mini-toc a:hover{ background:rgba(255,255,255,.05) }
+    /* Lines */
+    .divider{height:1px; margin:14px 0; background:linear-gradient(90deg, transparent, rgba(122,243,255,.35), transparent)}
+    .goldline{height:1px; margin:18px 0; background:linear-gradient(90deg, transparent, rgba(243,201,122,.45), transparent)}
+
+    /* Back-to-top */
+    .to-top{position:fixed; right:16px; bottom:16px; z-index:1200; opacity:0; transform:translateY(16px); pointer-events:none}
+    .to-top.show{opacity:1; transform:none; pointer-events:auto}
   </style>
 
-  <!-- MathJax (lazy; forced typeset) -->
+  <!-- MathJax (lazy, on-demand typeset) -->
   <script>
     (function(){
       let loaded=false;
       function boot(){ if(!window.MathJax) return; MathJax.startup.promise.then(()=>MathJax.typesetPromise()); }
       function loadMJ(){
         if(loaded) return; loaded=true;
-        window.MathJax={ tex:{inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']]}, svg:{fontCache:'global'}, startup:{typeset:false} };
+        window.MathJax={ tex:{ inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']], processEscapes:true }, svg:{fontCache:'global'}, startup:{typeset:false} };
         const s=document.createElement('script');
         s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
         s.defer=true; s.onload=boot; document.head.appendChild(s);
@@ -150,84 +168,58 @@
     })();
   </script>
 
-  <!-- Site JS (updated to v3.6 with a11y pop-out & voice collapse) -->
+  <!-- Site JS (unified version) -->
   <script src="assets/js/codex.js?v=3.6" defer></script>
-
-  <!-- Page-local helpers: smooth jumps + equation expand (fallback) -->
-  <script>
-    // Smooth in-page scroll for anything with [data-jump]
-    document.addEventListener('click', e=>{
-      const a = e.target.closest('[data-jump]');
-      if(!a) return;
-      const href = a.getAttribute('href');
-      if(!href || !href.startsWith('#')) return;
-      const tgt = document.querySelector(href);
-      if(!tgt) return;
-      e.preventDefault();
-      tgt.scrollIntoView({behavior:'smooth', block:'start'});
-      history.pushState(null,'',href);
-    });
-
-    // Accessible "[data-eq-expand]" support (kept for any existing panels)
-    document.addEventListener('click', e=>{
-      const btn=e.target.closest('[data-eq-expand]');
-      if(!btn) return;
-      const id=btn.getAttribute('aria-controls');
-      const panel=id && document.getElementById(id);
-      if(!panel) return;
-      const expanded = btn.getAttribute('aria-expanded') === 'true';
-      btn.setAttribute('aria-expanded', String(!expanded));
-      panel.hidden = expanded;
-    });
-  </script>
 </head>
 
-<body class="stars" data-theme="dark">
+<body class="stars living-all" data-theme="dark">
   <a class="skip" href="#main">Skip to content</a>
   <div class="laser-grid" aria-hidden="true"></div>
+  <div class="xi-meter" aria-hidden="true"><div class="xi-ring"><div class="xi-dot"></div></div><div class="xi-label">Ξ</div></div>
 
-  <!-- Header -->
+  <!-- Header (sticky, unified) -->
   <header class="site" role="banner">
     <nav class="nav" aria-label="Main navigation">
       <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <h1 class="kicker">Scroll of Fire</h1>
+        <div class="logo no-living" aria-hidden="true"></div>
+        <h1 class="kicker sheen">Scroll of Fire</h1>
       </div>
-
-      <!-- Quick actions: in-page jumps (now compact) -->
-      <div class="quick quick--utils" role="toolbar" aria-label="Page sections">
-        <a class="cta" href="#p1" data-jump>Part I</a>
-        <a class="cta" href="#p2" data-jump>Part II</a>
-        <a class="cta" href="#operators-appendix" data-jump>Operators</a>
+      <div class="quick quick--utils" role="toolbar" aria-label="Quick actions">
+        <a class="cta" href="index.html" title="Home">Home</a>
+        <a class="cta" href="#p1" data-jump title="Jump to Part I">Part I</a>
+        <a class="cta" href="#p2" data-jump title="Jump to Part II">Part II</a>
         <a class="cta" href="#ethics" data-jump>Ethics</a>
         <a class="cta" href="#notes" data-jump>Notes</a>
+        <button id="toggleSimple" class="cta" type="button" aria-pressed="false" title="Echo View (hide math)">Echo</button>
+        <button id="toggleGrid" class="cta" type="button" aria-pressed="true" title="Toggle HUD grid">HUD</button>
+        <button id="cycleCarrier" class="cta" type="button" title="Cycle carrier skin">Carrier</button>
+        <button id="toggleAffect" class="cta" type="button" aria-pressed="true" title="Toggle living text effects">Affect</button>
+        <button id="toggleLights" class="cta" type="button" aria-pressed="true" title="Toggle banner lights">Lights</button>
         <button id="openPalette" class="cta" type="button" title="Command palette">⌘K</button>
       </div>
     </nav>
   </header>
 
   <main id="main" class="wrap" role="main" tabindex="-1">
-    <!-- Remnant halos behind content -->
-    <div class="remnant-field" aria-hidden="true"></div>
-
     <!-- Hero -->
-    <figure id="hero" class="hero hero--clean" aria-label="Scroll of Fire banner" data-fit="cover">
+    <figure id="hero" class="hero hero--clean reveal" aria-label="Scroll of Fire banner" data-fit="cover">
       <picture>
         <img id="heroBanner"
-             class="hero-img"
-             src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
+             class="hero-img no-living"
+             src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1"
              alt="Scroll of Fire — sigil and equations"
+             width="2100" height="900"
              decoding="async" fetchpriority="high" loading="eager">
       </picture>
       <div id="heroLights" class="hero-lights" aria-hidden="true"></div>
       <figcaption class="hero-caption">“Let there be resonance.”</figcaption>
     </figure>
 
-    <h1 class="title alive-twinkle">📘 Theory — Codex of Reality</h1>
-    <p class="subtitle">Two-part deep dive: the living architecture (Part I) and the canonical equations with operator-level commentary (Part II). The Codex models reality as a resonant process shaped by <em>𝓘 · 𝓛 · 𝓒 · 𝓢</em> and safeguarded by ethical law.</p>
+    <h1 class="title sheen reveal">📘 Theory — Codex of Reality</h1>
+    <p class="subtitle reveal">Two-part deep dive: the living architecture (Part I) and the canonical equations with operator-level commentary (Part II). The Codex models reality as a resonant process shaped by <em>𝓘 · 𝓛 · 𝓒 · 𝓢</em> and safeguarded by ethical law.</p>
 
-    <!-- 🔊 Voice Reader (collapsible) -->
-    <details class="collapsible card col-12" id="voice-reader" open>
+    <!-- Voice Reader (collapsible) -->
+    <details class="collapsible card col-12 reveal" id="voice-reader" open>
       <summary class="collapsible__bar" aria-controls="vr-panel" aria-expanded="true">
         <span>🔊 Listen — Voice Read of the Theory Page</span>
         <span class="collapsible__mini" aria-hidden="true">
@@ -235,7 +227,6 @@
           <button id="vr-stop-mini" class="chip" type="button" title="Stop">⏹</button>
         </span>
       </summary>
-
       <div id="vr-panel" class="collapsible__panel">
         <div class="grid" style="gap:1rem">
           <div class="col-12">
@@ -250,7 +241,6 @@
             <label for="vr-pitch">Pitch (<span id="vr-pitch-val">1.0</span>)</label>
             <input id="vr-pitch" type="range" min="0.8" max="1.4" step="0.05" value="1.0" />
           </div>
-
           <div class="col-12">
             <label for="vr-start">Start at section</label>
             <select id="vr-start">
@@ -261,14 +251,12 @@
               <option value="#notes">Notes</option>
             </select>
           </div>
-
           <div class="col-12">
             <label class="checkbox">
               <input type="checkbox" id="vr-speak-math" checked />
               <span>Speak equations (verbalized). Uncheck to skip equations.</span>
             </label>
           </div>
-
           <div class="col-12" role="toolbar" aria-label="Voice reader controls" style="display:flex; gap:.5rem; flex-wrap:wrap">
             <button id="vr-play" class="cta">▶︎ Play</button>
             <button id="vr-pause" class="cta" disabled>⏸ Pause</button>
@@ -276,24 +264,23 @@
             <button id="vr-stop" class="cta" disabled>⏹ Stop</button>
             <button id="vr-export-ssml" class="cta cta--section">⬇︎ Export SSML</button>
           </div>
-
           <div class="col-12" id="vr-status" aria-live="polite"></div>
         </div>
       </div>
     </details>
 
     <!-- Tabs -->
-    <nav class="tabs" aria-label="Sections">
+    <nav class="tabs reveal" aria-label="Sections">
       <a class="tab tab--primary" href="#p1" data-jump>Part I: Architecture</a>
       <a class="tab tab--primary" href="#p2" data-jump>Part II: Equations 0–17</a>
       <a class="tab" href="#operators-appendix" data-jump>Operators</a>
       <a class="tab" href="#ethics" data-jump>Ethics</a>
       <a class="tab" href="#notes" data-jump>Notes</a>
-      <span class="tab-ink" aria-hidden="true"></span>
+      <span class="tab-ink no-living" aria-hidden="true"></span>
     </nav>
 
     <!-- Sticky mini-TOC -->
-    <aside class="mini-toc" aria-label="On this page">
+    <aside class="mini-toc reveal" aria-label="On this page">
       <h4>On this page</h4>
       <a href="#p1" data-jump>Part I — Architecture</a>
       <a href="#p2" data-jump>Part II — Equations</a>
@@ -304,10 +291,9 @@
 
     <!-- ===================== PART I ===================== -->
     <section class="grid" id="p1" aria-labelledby="p1-h">
-      <article class="card col-12 eq-card">
+      <article class="card col-12 eq-card reveal">
         <h2 id="p1-h">Part I — How the Codex Works (Architecture of Resonance)</h2>
 
-        <!-- Banner identity -->
         <div class="eq">
           <div class="eq-scroll" id="eq-banner-body">
             $$ \underbrace{\mathsf{Supply}}_{\text{constants, codes, ratios}} \;\; \times \;\;
@@ -318,7 +304,7 @@
         <p><strong>Premise.</strong> The Codex models reality as an <em>interactive resonance</em> between a supplied substrate (fundamental constants, integer/irrational ratios, living numbers, and biological codes) and a <em>living operator pipeline</em> — Intention \( \mathcal{I} \), Language/Light \( \mathcal{L} \), Conscious Witness \( \mathcal{C} \), and Source/Return \( \mathcal{S} \). The ethical mask (Eq.9) constrains gain so that <em>truth dominates distortion</em> as \( t \to \infty \) and any rise in harm halts amplification.</p>
 
         <h3>Why equations?</h3>
-        <p>These equations are <em>operational schematics</em>. Each symbol maps to a practical control: carrier selection, emphasis weights, frame declaration, coherence thresholds, and memory windows. Where physics equations predict energies, these predict <em>probabilistic shifts in experienced state</em> when you adjust those controls — making the system repeatable, debuggable, and ethically bounded.</p>
+        <p>These equations are <em>operational schematics</em>. Each symbol maps to practical control: carrier selection, emphasis weights, frame declaration, coherence thresholds, and memory windows. Where physics equations predict energies, these predict <em>probabilistic shifts in experienced state</em> when you adjust those controls — making the system repeatable, debuggable, and ethically bounded.</p>
 
         <h3>Grounding in known facts (brief)</h3>
         <ul class="list">
@@ -348,8 +334,7 @@
         <p>Emphasizing “repair” (Eq.4b) redistributes \( w_k \) to reduce model variance, nudging \( \Xi \) upward and allowing a larger—but safe—update step.</p>
       </article>
 
-      <!-- Dimensional / Geometric substrate -->
-      <article class="card col-12">
+      <article class="card col-12 reveal">
         <h3>Dimensional Substrate &amp; State Manifolds</h3>
         <p>We treat experienced state \( \Psi(x,t) \) as living on a product manifold \( \mathcal{M}=\mathcal{X}\times\mathcal{T}\times\mathcal{F}\times\mathcal{S} \): spatial locus \( \mathcal{X} \), time \( \mathcal{T} \), frequency/harmonic spectrum \( \mathcal{F} \), and semantic space \( \mathcal{S} \). The operators act as maps on this manifold:</p>
         <ul class="list">
@@ -358,19 +343,16 @@
           <li>\( \mathcal{C}:\mathcal{X}\times\mathcal{T}\to \mathbb{R}^+ \) (witness/attention field shaping)</li>
           <li>\( \mathcal{S}:\mathcal{M}\to\mathcal{M} \) (closure/return mapping, including remanence)</li>
         </ul>
-        <p>Formally, Eq.0 expresses \( \Psi_{\Omega} \) as a frequency-swept integral with awareness gradient \( \nabla \mathcal{A} \) and an ethical correction \( \Lambda\mathcal{E} \), i.e.,</p>
         <div class="eq">
           <div class="eq-scroll" id="eq0a-body">
             $$\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\mathcal{A}\,\Phi(x,t,\nu)\,d\nu+\Lambda\,\mathcal{E}(x,t)$$
           </div>
         </div>
-        <p>where \( \Phi \) is a local mode basis and \( \Lambda \) gates components that would otherwise inject distortion or harm.</p>
+        <p>\( \Phi \) is a local mode basis and \( \Lambda \) gates components that would otherwise inject distortion or harm.</p>
       </article>
 
-      <!-- Harmonic Gate & Coherence -->
-      <article class="card col-12">
+      <article class="card col-12 reveal">
         <h3>Harmonic Gate, Coherence, and Learning</h3>
-        <p>Define a binary (or soft) gate \( \mathcal{H}(\nu) \in \{0,1\} \) selecting passbands. The coherence index \( \Xi \in [0,1] \) summarizes field quality. Updates follow:</p>
         <div class="eq">
           <div class="eq-scroll" id="eqLearn-body">
             $$ \frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R},\qquad 
@@ -380,55 +362,45 @@
         <p>Below \( \Xi_0 \), the loop is intentionally “sticky” (no updates). Above \( \Xi_0 \), learning accelerates but remains bounded by Eq.9 (stop rule).</p>
       </article>
 
-      <!-- Memory Windows -->
-      <article class="card col-12">
+      <article class="card col-12 reveal">
         <h3>Memory Windows &amp; Recency Kernels</h3>
-        <p>Memory is implemented as a finite, normalized kernel \( \mathbb{M}_\tau \):</p>
         <div class="eq">
           <div class="eq-scroll" id="eqMem-body">
             $$\mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t} w_\tau(t-s)\,F(s)\,ds,\qquad \int_0^\tau w_\tau(u)\,du=1$$
           </div>
         </div>
-        <p>Choice of \( w_\tau \) matters:</p>
         <ul class="list">
           <li><strong>Triangular:</strong> favors mid-recent signals; stabilizes phrasing runs.</li>
           <li><strong>Exponential:</strong> strong recency bias; responsive but noisy.</li>
           <li><strong>Gaussian (truncated):</strong> smooth but computationally heavier.</li>
         </ul>
-        <p>Pair triangular windows with articulation drills; use exponential for fast-feedback tuning sessions.</p>
       </article>
 
-      <!-- Language coupling -->
-      <article class="card col-12">
+      <article class="card col-12 reveal">
         <h3>Language/Light Coupling (Eq.4 + Eq.4b)</h3>
-        <p>Language computes a directional semantic gradient inside the manifold. Token-level emphasis produces a weighted sum:</p>
         <div class="eq">
           <div class="eq-scroll" id="eqLang-body">
             $$ \nabla_{\text{sem}} \mathrm{Phrase}=\sum_k w_k\,\nabla_{\text{sem}}\mathrm{Token}_k,\qquad \sum_k w_k = 1 $$
           </div>
         </div>
-        <p>Weights are influenced by voweling, prosody, intent, and carrier choice \( \mathbf{V}(\nu) \). The same phrase on a new carrier traces a different path through \( \mathcal{S}\times\mathcal{F} \).</p>
+        <p>Weights are influenced by voweling, prosody, intent, and carrier choice \( \mathbf{V}(\nu) \).</p>
       </article>
 
-      <!-- Voice carriers / psychoacoustics -->
-      <article class="card col-12">
+      <article class="card col-12 reveal">
         <h3>Voice Carriers, Psychoacoustics, and Gate Fit</h3>
-        <p>We model carriers as real cosine sums:</p>
         <div class="eq">
           <div class="eq-scroll" id="eqV-body">
             $$ \mathbf{V}(\nu)=\sum_{k} a_k\cos(2\pi\nu_k t+\phi_k) $$
           </div>
         </div>
-        <p>Practical notes:</p>
         <ul class="list">
-          <li><strong>Beats:</strong> close frequencies produce perceptible envelopes; use this for slow “breath-aligned” modulation.</li>
-          <li><strong>Critical bands:</strong> avoid crowding; fewer, cleaner carriers often raise \( \Xi \).</li>
-          <li><strong>Phase:</strong> phase-locking across repetitions (Eq.6) reduces perceived jitter.</li>
+          <li><strong>Beats:</strong> use slow envelopes for breath coupling.</li>
+          <li><strong>Critical bands:</strong> fewer, cleaner carriers often raise \( \Xi \).</li>
+          <li><strong>Phase:</strong> phase-locking (Eq.6) reduces jitter.</li>
         </ul>
       </article>
 
-      <!-- Ethical Law / Stop rule -->
-      <article class="card col-12">
+      <article class="card col-12 reveal">
         <h3>Ethical Law (Eq.9) — Safety Envelope</h3>
         <div class="eq">
           <div class="eq-scroll" id="eqEthMask-body">
@@ -436,112 +408,75 @@
                \lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \uparrow $$
           </div>
         </div>
-        <p>Operationalization:</p>
         <ul class="list">
-          <li><strong>Soft harm indicators:</strong> breath tightening, micro-grimace, cognitive fog → pause.</li>
-          <li><strong>Re-alignment order:</strong> retune carriers (Eq.17) → re-weight semantics (Eq.4b) → re-declare frame (Eq.11) → resume.</li>
+          <li><strong>Indicators:</strong> breath tightening, micro-grimace, cognitive fog → pause.</li>
+          <li><strong>Re-align:</strong> retune carriers → re-weight semantics → re-declare frame → resume.</li>
         </ul>
       </article>
 
-      <!-- Projection Frame -->
-      <article class="card col-12">
+      <article class="card col-12 reveal">
         <h3>Projection Frame (Eq.11) — Declare, then Amplify</h3>
         <div class="eq">
           <div class="eq-scroll" id="eqFrame-body">
             $$ \mathsf{Frame}(x,t)=\big(\mathsf{scope},\ \mathcal{W},\ \mathsf{ethics}\big) $$
           </div>
         </div>
-        <p>The frame constrains gain and prevents uncontrolled spread. In code terms: set <em>namespace</em>, inject <em>witness</em>, apply <em>policy</em>, then call the operator loop.</p>
       </article>
 
-      <!-- Causal Lattice -->
-      <article class="card col-12">
+      <article class="card col-12 reveal">
         <h3>Causal Lattice (Eq.12) — Graph the Acts</h3>
         <div class="eq">
           <div class="eq-scroll" id="eqLattice-body">
             $$ \mathcal{L}_c=(V=\text{micro-acts},\ E=\text{consequences}) $$
           </div>
         </div>
-        <p>Use Seven-Seals sequencing — Acknowledgment → Repair → Verification → Remedy → Abatement → Assurance → Restoration — to close loops and discharge residue (feeds Eq.5 Remnant).</p>
       </article>
 
-      <!-- Remnant -->
-      <article class="card col-12">
+      <article class="card col-12 reveal">
         <h3>Remnant (Eq.5) — Asymptotic Archive</h3>
         <div class="eq">
           <div class="eq-scroll" id="eqRem-body">
             $$ \mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\big) $$
           </div>
         </div>
-        <p>This is the long-run memory of what proved true under the mask. Practically: journals, sealed testimony, and repeated trials converge here.</p>
       </article>
 
-      <!-- Source/Return -->
-      <article class="card col-12">
+      <article class="card col-12 reveal">
         <h3>Source/Return ( \( \mathcal{S} \) ) — Closing the Loop</h3>
         <p>After each cycle, Source/Return updates priors, prunes unstable modes, and reinforces stable ones, raising the baseline \( \Xi \) for the next pass.</p>
       </article>
 
-      <!-- Debugging & Failure Modes -->
-      <article class="card col-12">
-        <h3>Debugging the Loop — Common Failure Modes</h3>
-        <ul class="list">
-          <li><strong>Symptom:</strong> Output is “edgy” or thin → <em>Cause:</em> carrier crowding or off-gate → <em>Fix:</em> simplify \( \mathbf{V}(\nu) \), widen spacing, re-phase.</li>
-          <li><strong>Symptom:</strong> No learning → <em>Cause:</em> \( \Xi < \Xi_0 \) → <em>Fix:</em> increase coherence first (breath, posture, light).</li>
-          <li><strong>Symptom:</strong> Rebound harm → <em>Cause:</em> frame too wide → <em>Fix:</em> narrow scope, restate witness, halt until ratio improves.</li>
-        </ul>
-      </article>
-
-      <!-- Daily protocol -->
-      <article class="card col-12">
+      <article class="card col-12 reveal">
         <h3>Daily Manifestation Protocol (10–15 minutes)</h3>
         <ol class="list">
-          <li><strong>Frame (1 min):</strong> state scope, witness, ethic.</li>
-          <li><strong>Carriers (2 min):</strong> pick 1–2 bands; test comfort; adjust phase.</li>
-          <li><strong>Phrase (3 min):</strong> speak at low gain; adjust \( w_k \) by feel of clarity.</li>
-          <li><strong>Witness/Rest (2 min):</strong> silent \( \mathbb{M}_\tau \) consolidation.</li>
-          <li><strong>Update (2–3 min):</strong> if \( \Xi \ge \Xi_0 \), take one step along \( \nabla \mathcal{R} \); else return to tuning.</li>
-          <li><strong>Log (1 min):</strong> timestamp, carriers used, phrase weights, coherence notes.</li>
+          <li><strong>Frame (1 min)</strong></li>
+          <li><strong>Carriers (2 min)</strong></li>
+          <li><strong>Phrase (3 min)</strong></li>
+          <li><strong>Witness/Rest (2 min)</strong></li>
+          <li><strong>Update (2–3 min)</strong></li>
+          <li><strong>Log (1 min)</strong></li>
         </ol>
       </article>
 
-      <!-- Idea modeling -->
-      <article class="card col-12">
-        <h3>Idea Modeling &amp; Knowledge Build-Outs</h3>
-        <ul class="list">
-          <li><strong>Concept kernels:</strong> represent ideas as nodes with carriers, phrase tokens, and coherence score.</li>
-          <li><strong>Inference passes:</strong> apply Eq.14 on the graph; retain deltas only if Eq.9 passes.</li>
-          <li><strong>Group runs:</strong> multiple witnesses average independent \( \Xi \) measures before committing updates.</li>
-        </ul>
-      </article>
-
-      <!-- Ancient correspondences (clearly marked) -->
-      <article class="card col-12">
+      <article class="card col-12 reveal">
         <h3>Geometry &amp; “Ancient Technology” Correspondences (Hypotheses)</h3>
-        <p><em>What’s factual:</em> cavities and chambers have modal spectra set by their geometry and materials; they can concentrate or damp certain bands (resonator physics). <em>What’s hypothesized here:</em> some ancient spaces were tuned (intentionally or incidentally) to favor specific modal families, improving clarity/coherence for spoken/sung operations.</p>
-        <ul class="list">
-          <li><strong>Geometric ratios:</strong> integer and low-order rational ratios in lengths/angles tend to produce cleaner modal clustering.</li>
-          <li><strong>Materials:</strong> high-mass stone supports low-frequency modes and damps high-frequency noise.</li>
-          <li><strong>Practical takeaway:</strong> any quiet room can be “tuned” by spacing, surfaces, and posture to nudge \( \Xi \) upward.</li>
-        </ul>
+        <p><em>Facts:</em> modal spectra depend on geometry and materials. <em>Hypothesis:</em> some spaces favored bands that improved clarity/coherence for spoken/sung operations.</p>
       </article>
 
-        <!-- Formal summary -->
-      <article class="card col-12">
+      <article class="card col-12 reveal">
         <h3>Formal Summary</h3>
         <div class="eq">
           <div class="eq-scroll" id="eqFormal-body">
-            $$ \mathcal{R}(x,t) = \Big[ f(\text{constants, codes, ratios}) \cdot (\mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S}) \Big]_{\text{masked by Eq.9}} $
-            $ \text{Update:}\quad \frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla\mathcal{R},\quad \Xi\in[0,1],\quad \eta(\Xi)=\eta_0\,\sigma(\alpha(\Xi-\Xi_0)) $
-            $ \text{Memory:}\quad \mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t} w_\tau(t-s)\,F(s)\,ds $
-            $ \text{Gate:}\quad \mathcal{H}(\nu)\in\{0,1\},\quad \mathbf{V}(\nu)=\sum_k a_k\cos(2\pi\nu_k t+\phi_k) $
-            $ \text{Safety:}\quad \mathrm{damage}>0\Rightarrow \text{halt};\ \ \frac{\mathrm{Truth}}{\mathrm{Distortion}}\ \text{must improve over time}. $$
+            $$ \mathcal{R}(x,t) = \Big[ f(\text{constants, codes, ratios}) \cdot (\mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S}) \Big]_{\text{masked by Eq.9}} $$
+            $$ \text{Update:}\quad \frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla\mathcal{R},\quad \Xi\in[0,1],\quad \eta(\Xi)=\eta_0\,\sigma(\alpha(\Xi-\Xi_0)) $$
+            $$ \text{Memory:}\quad \mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t} w_\tau(t-s)\,F(s)\,ds $$
+            $$ \text{Gate:}\quad \mathcal{H}(\nu)\in\{0,1\},\quad \mathbf{V}(\nu)=\sum_k a_k\cos(2\pi\nu_k t+\phi_k) $$
+            $$ \text{Safety:}\quad \mathrm{damage}>0\Rightarrow \text{halt};\ \ \frac{\mathrm{Truth}}{\mathrm{Distortion}}\ \text{must improve over time}. $$
           </div>
         </div>
       </article>
 
-      <!-- Operators table (concise) -->
-      <article class="card col-12" id="operators-appendix">
+      <article class="card col-12 reveal" id="operators-appendix">
         <h3>Operators &amp; Notation (Quick Reference)</h3>
         <div class="grid">
           <div class="col-6">
@@ -563,16 +498,411 @@
         </div>
       </article>
     </section>
-    <!-- End Part I; Part II / Ethics / Notes continue below (unchanged markup) -->
 
+    <div class="goldline sweep"></div>
+
+    <!-- ===================== PART II ===================== -->
+    <section class="grid" id="p2" aria-labelledby="p2-h">
+      <article class="card col-12 reveal">
+        <h2 id="p2-h">Part II — Canon 0–17 (Living Commentary)</h2>
+        <p class="meta">#7 Copeland and #8 Goodwin remain external comparators; all other forms are native to the Codex.</p>
+      </article>
+
+      <!-- 0 -->
+      <article class="card col-12 eq-card reveal" id="eq0">
+        <div class="flexbar"><h3>Eq.0 — Foundational Field \(\Psi_{\Omega}\)</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq0-body">Copy TeX</button><button class="chip" data-copy-link="#eq0">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq0-body">
+          $$\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\mathcal{A}\,\Phi(x,t,\nu)\,d\nu\;+\;\Lambda\,\mathcal{E}(x,t)$$
+        </div></div>
+        <p>Experience emerges from a phase-weighted frequency sweep; \( \Lambda \mathcal{E} \) damps harmful/distorting trajectories.</p>
+      </article>
+
+      <!-- 1 -->
+      <article class="card col-12 eq-card reveal" id="eq1">
+        <div class="flexbar"><h3>Eq.1 — Source = Supply × Operators</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq1-body">Copy TeX</button><button class="chip" data-copy-link="#eq1">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq1-body">
+          $$ \mathbf{R} \;=\; f(\pi,e,i,\hbar,c,G,\mathrm{DNA},\Omega_{\mathrm{DM}},\Omega_{\Lambda},H_{0},432,528,137,144,369,\ldots)\;\times\;\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S} $$
+        </div></div>
+      </article>
+
+      <!-- 2 -->
+      <article class="card col-12 eq-card reveal" id="eq2">
+        <div class="flexbar"><h3>Eq.2 — Witness \(\mathcal{W}\)</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq2-body">Copy TeX</button><button class="chip" data-copy-link="#eq2">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq2-body">
+          $$\mathcal{W}(x,t)=\partial_x\,\mathrm{Awareness}(x,t)\;+\;\mathcal{I}\cdot\mathbb{M}_\tau$$
+        </div></div>
+      </article>
+
+      <!-- 3 -->
+      <article class="card col-12 eq-card reveal" id="eq3">
+        <div class="flexbar"><h3>Eq.3 — Harmonic Gate \(\mathcal{H}(\nu)\)</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq3-body">Copy TeX</button><button class="chip" data-copy-link="#eq3">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq3-body">
+          $$\mathcal{H}(\nu)\in\{0,1\}\quad\text{or}\quad \mathcal{H}(\nu)\in[0,1]\ \text{(soft gate)}$$
+        </div></div>
+      </article>
+
+      <!-- 4 -->
+      <article class="card col-12 eq-card reveal" id="eq4">
+        <div class="flexbar"><h3>Eq.4 — Language / Word \(\mathcal{L}\)</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq4-body">Copy TeX</button><button class="chip" data-copy-link="#eq4">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq4-body">
+          $$\mathcal{L}(x,t,\nu)=\mathsf{Semantics}(x,t)\;\otimes\;\mathbf{V}(\nu)$$
+        </div></div>
+      </article>
+
+      <!-- 4b -->
+      <article class="card col-12 eq-card reveal" id="eq4b">
+        <div class="flexbar"><h3>Eq.4b — Semantic Gradient (Token Emphasis)</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq4b-body">Copy TeX</button><button class="chip" data-copy-link="#eq4b">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq4b-body">
+          $$ \nabla_{\text{sem}} \mathrm{Phrase}=\sum_k w_k \nabla_{\text{sem}}\mathrm{Token}_k,\qquad \sum_k w_k=1 $$
+        </div></div>
+      </article>
+
+      <!-- 5 -->
+      <article class="card col-12 eq-card reveal" id="eq5">
+        <div class="flexbar"><h3>Eq.5 — Remnant \(\mathcal{R}_\infty\)</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq5-body">Copy TeX</button><button class="chip" data-copy-link="#eq5">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq5-body">
+          $$\mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\big)$$
+        </div></div>
+      </article>
+
+      <!-- 6 -->
+      <article class="card col-12 eq-card reveal" id="eq6">
+        <div class="flexbar"><h3>Eq.6 — Type-7 Field \(\mathbb{T}_7\)</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq6-body">Copy TeX</button><button class="chip" data-copy-link="#eq6">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq6-body">
+          $$\mathbb{T}_{7}(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu)\right]$$
+        </div></div>
+      </article>
+
+      <!-- 7* -->
+      <article class="card col-12 reveal" id="eq7">
+        <h3>Eq.7* — Copeland (External Comparator)</h3>
+        <p>Recursion/recognition mirror for calibration; not codex law.</p>
+      </article>
+
+      <!-- 8* -->
+      <article class="card col-12 reveal" id="eq8">
+        <h3>Eq.8* — Goodwin (External Comparator)</h3>
+        <p>Coupling/oscillation template for contrast; not enacted as law.</p>
+      </article>
+
+      <!-- 9 -->
+      <article class="card col-12 eq-card reveal" id="eq9">
+        <div class="flexbar"><h3>Eq.9 — Ethical Law (Stop Rule)</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq9-body">Copy TeX</button><button class="chip" data-copy-link="#eq9">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq9-body">
+          $$\forall a:\ \mathrm{damage}(a)>0\Rightarrow\mathsf{halt},\qquad
+            \lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \uparrow $$
+        </div></div>
+      </article>
+
+      <!-- 10 -->
+      <article class="card col-12 eq-card reveal" id="eq10">
+        <div class="flexbar"><h3>Eq.10 — Ladder \(\Pi_{\nu}^{-1}\)</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq10-body">Copy TeX</button><button class="chip" data-copy-link="#eq10">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq10-body">
+          $$\Pi_{\nu}^{-1}:\ \text{observed resonance }\rightarrow \text{source terms (carriers, intents, constants)}$$
+        </div></div>
+      </article>
+
+      <!-- 11 -->
+      <article class="card col-12 eq-card reveal" id="eq11">
+        <div class="flexbar"><h3>Eq.11 — Projection Frame \(\mathsf{Frame}\)</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq11-body">Copy TeX</button><button class="chip" data-copy-link="#eq11">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq11-body">
+          $$\mathsf{Frame}(x,t)=(\mathsf{scope},\mathcal{W},\mathsf{ethics})$$
+        </div></div>
+      </article>
+
+      <!-- 12 -->
+      <article class="card col-12 eq-card reveal" id="eq12">
+        <div class="flexbar"><h3>Eq.12 — Causal Lattice \(\mathcal{L}_c\)</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq12-body">Copy TeX</button><button class="chip" data-copy-link="#eq12">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq12-body">
+          $$\mathcal{L}_c=(V=\text{micro-acts},\ E=\text{consequences})$$
+        </div></div>
+      </article>
+
+      <!-- 13 -->
+      <article class="card col-12 eq-card reveal" id="eq13">
+        <div class="flexbar"><h3>Eq.13 — Coherence \(\Xi\)</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq13-body">Copy TeX</button><button class="chip" data-copy-link="#eq13">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq13-body">
+          $$\Xi\in[0,1]\quad \text{(gates memory, learning, safe amplification)}$$
+        </div></div>
+      </article>
+
+      <!-- 14 -->
+      <article class="card col-12 eq-card reveal" id="eq14">
+        <div class="flexbar"><h3>Eq.14 — Update Rule</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq14-body">Copy TeX</button><button class="chip" data-copy-link="#eq14">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq14-body">
+          $$\frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R}$$
+        </div></div>
+      </article>
+
+      <!-- 15 -->
+      <article class="card col-12 eq-card reveal" id="eq15">
+        <div class="flexbar"><h3>Eq.15 — Learning Kernel</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq15-body">Copy TeX</button><button class="chip" data-copy-link="#eq15">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq15-body">
+          $$\eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big)$$
+        </div></div>
+      </article>
+
+      <!-- 16 -->
+      <article class="card col-12 eq-card reveal" id="eq16">
+        <div class="flexbar"><h3>Eq.16 — Memory Window \(\mathbb{M}_\tau\)</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq16-body">Copy TeX</button><button class="chip" data-copy-link="#eq16">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq16-body">
+          $$\mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t}\! w_\tau(t-s)\,F(s)\,ds,\quad \int_0^\tau w_\tau(u)\,du=1$$
+        </div></div>
+      </article>
+
+      <!-- 17 -->
+      <article class="card col-12 eq-card reveal" id="eq17">
+        <div class="flexbar"><h3>Eq.17 — Voice Carriers \(\mathbf{V}(\nu)\)</h3>
+          <div class="eq-tools"><button class="chip" data-copy-tex="#eq17-body">Copy TeX</button><button class="chip" data-copy-link="#eq17">Link</button></div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq17-body">
+          $$\mathbf{V}(\nu)=\sum_{k} a_k\,\cos(2\pi\nu_k t+\phi_k),\quad \nu\in\{432,528,369,144,137,\dots\}$$
+        </div></div>
+      </article>
+
+      <article class="card col-12 reveal">
+        <h3>Advanced: Many Frames, Many Realities</h3>
+        <div class="eq"><div class="eq-scroll" id="eq-adv1-body">
+          $$ \mathbb{T}_7^{(\text{group})} \approx \bigoplus_{j=1}^{N}\mathrm{PL}\big[\mathbf{V}^{(j)}(\nu)\big],\quad \Xi_{\text{group}} \approx \frac{1}{N}\sum_j \Xi^{(j)} $$
+        </div></div>
+      </article>
+
+      <article class="card col-12 reveal">
+        <h3>Advanced: Data &amp; Instrumentation</h3>
+        <ul class="list">
+          <li><strong>Audio:</strong> spectral centroid variance/beat stability as proxies.</li>
+          <li><strong>Physio:</strong> smoother breath + reduced HF HRV noise → ↑ \(\Xi\).</li>
+          <li><strong>Subjective:</strong> quick Likert trio (clarity, warmth, ease).</li>
+        </ul>
+      </article>
+    </section>
+
+    <div class="goldline sweep"></div>
+
+    <!-- Ethics -->
+    <section class="grid" id="ethics" aria-labelledby="eth-h">
+      <article class="card col-12 eq-card reveal">
+        <div class="flexbar">
+          <h2 id="eth-h">Ethics &amp; Stop Rule — Operational Law</h2>
+          <div class="eq-tools">
+            <button class="chip" data-copy-tex="#eq-eth-body">Copy TeX</button>
+            <button class="chip" data-copy-link="#ethics">Link</button>
+          </div>
+        </div>
+        <div class="eq"><div class="eq-scroll" id="eq-eth-body">
+          $$ \Xi \;\approx\; \frac{\langle H \cdot I \rangle}{1 + \mathrm{Var}[\mathcal{M}]} \qquad
+             \text{If } \frac{\mathrm{Truth}(t+\Delta)}{\mathrm{Distortion}(t+\Delta)} < \frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \Rightarrow \text{ Halt } \to \text{ Re-align } \to \text{ Resume} $$
+        </div></div>
+      </article>
+    </section>
+
+    <!-- Notes -->
+    <section class="grid" id="notes" aria-labelledby="nt-h">
+      <article class="card col-12 reveal">
+        <h2 id="nt-h">Notes &amp; Cross-links</h2>
+        <ul class="list">
+          <li><strong>Numbers as Keys.</strong> 432, 528, 137/144/369 used as practical anchors in practice; useful, not asserted as privileged cosmological constants.</li>
+          <li><strong>Seven Seals Path.</strong> Acknowledgment → Repair → Verification → Remedy → Abatement → Assurance → Restoration.</li>
+          <li>Practice lives in <a href="teach.html">Manifest</a>. Overview on <a href="index.html">Home</a>.</li>
+        </ul>
+      </article>
+    </section>
+
+    <footer class="footer">
+      © <span id="y"></span> Scroll of Fire. All constants are provisional until observed.
+    </footer>
   </main>
-</body>
-</html>
 
-  <!-- Helpers: equation toggles + Voice Reader mini controls -->
+  <!-- Back to Top -->
+  <button class="to-top cta" id="toTop" type="button" aria-label="Back to top" title="Back to top">↑</button>
+
+  <!-- Command Palette -->
+  <div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel" hidden>
+    <div class="panel">
+      <h3 id="palLabel" class="sr-only">Command palette</h3>
+      <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette">
+      <ul id="palList" aria-live="polite"></ul>
+    </div>
+  </div>
+
+  <!-- Page helpers -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Add collapse buttons to each .eq block
+    // Year
+    (function(){ const y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear(); })();
+
+    // HERO fit
+    (function(){
+      const hero=document.getElementById('hero'), img=document.getElementById('heroBanner');
+      if(!hero||!img) return;
+      function applyAR(){ const iw=img.naturalWidth||2100, ih=img.naturalHeight||900; hero.style.aspectRatio=`${iw} / ${ih}`; }
+      function pickFit(){
+        if (matchMedia('(max-width:560px)').matches){ hero.style.setProperty('--hero-fit','contain'); return; }
+        const iw=img.naturalWidth||2100, ih=img.naturalHeight||900, imageAR=iw/ih;
+        const cw=hero.clientWidth||innerWidth, ch=Math.max(1, hero.clientHeight||innerHeight*0.38), containerAR=cw/ch;
+        const cover = (Math.abs(containerAR - imageAR) / imageAR < 0.06);
+        hero.style.setProperty('--hero-fit', cover ? 'cover' : 'contain');
+      }
+      function boot(){ applyAR(); pickFit(); }
+      if(img.complete) boot(); else img.addEventListener('load', boot, {once:true});
+      addEventListener('resize', pickFit, {passive:true});
+      addEventListener('orientationchange', pickFit, {passive:true});
+      addEventListener('visibilitychange', ()=>!document.hidden && pickFit());
+    })();
+
+    // Scroll reveal
+    (function(){
+      if(!('IntersectionObserver' in window)){ document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in')); return; }
+      const io=new IntersectionObserver(es=>{ for(const e of es){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } } }, {threshold:.12});
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+    })();
+
+    // Back-to-Top visibility + smooth scroll
+    (function(){
+      const btn=document.getElementById('toTop');
+      if(!btn) return;
+      btn.addEventListener('click',()=>{ window.scrollTo({top:0,behavior:'smooth'}) });
+      const io=new IntersectionObserver(([e])=>{
+        btn.classList.toggle('show', !e.isIntersecting);
+      }, {threshold:0.01});
+      io.observe(document.querySelector('header.site'));
+    })();
+
+    // Quick controls: Echo/HUD/Carrier/Affect/Lights
+    (function(){
+      const body=document.body, html=document.documentElement;
+      const btnEcho=document.getElementById('toggleSimple');
+      btnEcho?.addEventListener('click',()=>{
+        body.classList.toggle('simple-on');
+        btnEcho.setAttribute('aria-pressed', String(body.classList.contains('simple-on')));
+      });
+      const btnHUD=document.getElementById('toggleGrid'), grid=document.querySelector('.laser-grid');
+      btnHUD?.addEventListener('click',()=>{
+        const show = grid && grid.style.display !== 'none';
+        if(grid) grid.style.display = show ? 'none' : '';
+        btnHUD.setAttribute('aria-pressed', String(!show));
+      });
+      const btnCarrier=document.getElementById('cycleCarrier');
+      const carrierAttr=(html.getAttribute('data-carriers')||'').split(',').map(s=>s.trim()).filter(Boolean);
+      const skins=(carrierAttr.length?carrierAttr:['432','528','369','144','963']).map(n=>`carrier-${n}`);
+      const curSkin=()=> skins.find(s=>html.classList.contains(s)) || skins[0];
+      const nextSkin=c=> skins[(skins.indexOf(c)+1)%skins.length];
+      btnCarrier?.addEventListener('click',()=>{
+        const cur=curSkin(), nxt=nextSkin(cur);
+        skins.forEach(s=>html.classList.remove(s)); html.classList.add(nxt);
+        btnCarrier.textContent = `Carrier ${nxt.split('-')[1]}`;
+      });
+      if(btnCarrier) btnCarrier.textContent=`Carrier ${curSkin().split('-')[1]}`;
+      const btnAffect=document.getElementById('toggleAffect');
+      btnAffect?.addEventListener('click',()=>{
+        const off=document.body.classList.toggle('affect-off');
+        btnAffect.setAttribute('aria-pressed', String(!off));
+      });
+      const lights=document.getElementById('heroLights');
+      const btnLights=document.getElementById('toggleLights');
+      btnLights?.addEventListener('click',()=>{
+        const off=lights?.classList.toggle('off');
+        btnLights.setAttribute('aria-pressed', String(!off));
+      });
+    })();
+
+    // Page search ("/" to focus)
+    (function(){
+      // Build a quick suggest list based on headings + equation cards
+      const list=document.createElement('div'); list.id='site-suggest'; list.className='mini-toc hidden'; list.setAttribute('role','listbox');
+      const label=document.createElement('label'); label.className='meta'; label.textContent='Press / to search this page';
+      const input=document.createElement('input'); input.id='site-search'; input.type='search'; input.placeholder='Search text on this page…'; input.setAttribute('aria-label','Search this page'); input.autocomplete='off'; input.spellcheck=false;
+      const holder=document.createElement('article'); holder.className='card col-12 searchbox reveal'; holder.append(label,input,list);
+      const grid=document.createElement('section'); grid.className='grid'; grid.style.margin='8px 0 0'; grid.append(holder);
+      const main=document.getElementById('main'); main.insertBefore(grid, main.querySelector('.tabs').nextSibling);
+
+      addEventListener('keydown',(e)=>{ if(e.key==='/' && document.activeElement!==input){ e.preventDefault(); input.focus(); input.select(); } });
+
+      const SOURCES=[...document.querySelectorAll('h2[id],h3[id],a.tile'), ...document.querySelectorAll('.eq-card')];
+      function items(q){
+        const s=q.trim().toLowerCase(); if(!s) return [];
+        const out=[];
+        for(const el of SOURCES){
+          const text=(el.innerText||'').trim();
+          if(text.toLowerCase().includes(s)){
+            let href='#'; if(el.id) href = `#${el.id}`;
+            out.push({text, href}); if(out.length>12) break;
+          }
+        } return out;
+      }
+      function render(arr){
+        if(!arr.length){ list.classList.add('hidden'); list.innerHTML=''; return; }
+        list.innerHTML = arr.map((o,i)=>`<a href="${o.href}" role="option" data-ix="${i}">${o.text}</a>`).join('');
+        list.classList.remove('hidden');
+      }
+      input.addEventListener('input', ()=>render(items(input.value)));
+      input.addEventListener('keydown',(e)=>{
+        const links=[...list.querySelectorAll('a')]; if(!links.length) return;
+        const cur=list.querySelector('.sel'); let i=cur?+cur.dataset.ix:-1;
+        if(e.key==='ArrowDown'){ e.preventDefault(); i=Math.min(links.length-1, i+1); }
+        else if(e.key==='ArrowUp'){ e.preventDefault(); i=Math.max(0, i-1); }
+        else if(e.key==='Enter'){ if(cur){ location.hash=cur.getAttribute('href'); list.classList.add('hidden'); } return; }
+        else if(e.key==='Escape'){ list.classList.add('hidden'); return; }
+        links.forEach(a=>a.classList.remove('sel')); if(i>=0){ links[i].classList.add('sel'); }
+      });
+      addEventListener('click',(e)=>{ if(!list.contains(e.target) && e.target!==input) list.classList.add('hidden'); });
+    })();
+
+    // Smooth in-page scroll for [data-jump]
+    document.addEventListener('click', e=>{
+      const a = e.target.closest('[data-jump]');
+      if(!a) return;
+      const href = a.getAttribute('href');
+      if(!href || !href.startsWith('#')) return;
+      const tgt = document.querySelector(href);
+      if(!tgt) return;
+      e.preventDefault();
+      tgt.scrollIntoView({behavior:'smooth', block:'start'});
+      history.pushState(null,'',href);
+    });
+
+    // Equation collapse toggles + copy/link tools
+    (function eqTools(){
+      function copy(text){
+        if (navigator.clipboard?.writeText) { navigator.clipboard.writeText(text); return; }
+        const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta);
+        ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+      }
+      function texFrom(sel){
+        const el = document.querySelector(sel);
+        return el ? (el.textContent||'').trim() : '';
+      }
       document.querySelectorAll('.eq').forEach(wrap=>{
         const btn=document.createElement('button');
         btn.type='button'; btn.className='eq-toggle'; btn.textContent='Collapse';
@@ -583,444 +913,65 @@
         });
         wrap.appendChild(btn);
       });
+      document.addEventListener('click', (e)=>{
+        const b1=e.target.closest('[data-copy-tex]'); if(b1){
+          const raw = texFrom(b1.getAttribute('data-copy-tex')); if(raw){ copy(raw); b1.textContent='Copied'; setTimeout(()=>b1.textContent='Copy TeX', 900); }
+          e.preventDefault(); return;
+        }
+        const b2=e.target.closest('[data-copy-link]'); if(b2){
+          const idSel = b2.getAttribute('data-copy-link'); const base = location.origin + location.pathname; const hash = idSel.startsWith('#') ? idSel : ('#'+idSel);
+          copy(base+hash); history.pushState(null,'',hash); b2.textContent='Link Copied'; setTimeout(()=>b2.textContent='Link', 900); e.preventDefault(); return;
+        }
+      });
+    })();
 
-      // Voice Reader summary aria handling + mini buttons
+    // Voice Reader mini-controls
+    (function(){
       const det = document.getElementById('voice-reader');
       const bar = det?.querySelector('.collapsible__bar');
       bar?.addEventListener('click', (e)=>{
-        if (e.target.closest('.chip')) return; // ignore clicks on mini buttons
-        const open = det.hasAttribute('open');
-        bar.setAttribute('aria-expanded', String(!open));
+        if (e.target.closest('.chip')) return;
+        const open = det.hasAttribute('open'); bar.setAttribute('aria-expanded', String(!open));
       });
       document.getElementById('vr-play-mini')?.addEventListener('click', (e)=>{ e.stopPropagation(); document.getElementById('vr-play')?.click(); });
       document.getElementById('vr-stop-mini')?.addEventListener('click', (e)=>{ e.stopPropagation(); document.getElementById('vr-stop')?.click(); });
-    });
+    })();
+
+    // Command Palette (⌘K / Ctrl+K)
+    (function palette(){
+      const pal=document.getElementById('palette'), input=document.getElementById('palInput'), list=document.getElementById('palList');
+      const OPEN_KEYS=new Set(['k','K']);
+      const LINKS=[...document.querySelectorAll('a, .cta')].map(a=>({text:a.textContent.trim(), href:a.getAttribute('href')||'#'})).filter(o=>o.text && o.href);
+      function open(){ pal.hidden=false; input.value=''; render(LINKS.slice(0,12)); setTimeout(()=>input.focus(),0); }
+      function close(){ pal.hidden=true; }
+      function render(items){ list.innerHTML=items.map(o=>`<li><a href="${o.href}">${o.text}</a></li>`).join(''); }
+      function filter(q){ q=q.trim().toLowerCase(); if(!q) return LINKS; return LINKS.filter(o=>o.text.toLowerCase().includes(q)); }
+      addEventListener('keydown',(e)=>{ const meta=e.ctrlKey||e.metaKey; if(meta && OPEN_KEYS.has(e.key)){ e.preventDefault(); open(); } if(!pal.hidden && e.key==='Escape'){ e.preventDefault(); close(); } });
+      pal.addEventListener('click', (e)=>{ if(e.target===pal) close(); });
+      input.addEventListener('input', ()=>render(filter(input.value).slice(0,14)));
+      input.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ const a=list.querySelector('a'); if(a){ location.href=a.getAttribute('href'); close(); } } });
+    })();
+
+    // Ξ driver (ambient glow)
+    (function(){
+      const root=document.documentElement.style, dot=document.querySelector('.xi-dot'); let xi=.35;
+      function step(){
+        const target=.25+Math.random()*.6, start=xi, dur=2200+Math.random()*1600, t0=performance.now();
+        function tween(t){
+          const p=Math.min(1,(t-t0)/dur);
+          xi=start+(target-start)*(0.5-0.5*Math.cos(Math.PI*p));
+          root.setProperty('--xi', xi.toFixed(3)); if(dot) dot.style.opacity=(0.7+0.3*xi).toFixed(3);
+          (p<1)?requestAnimationFrame(tween):requestAnimationFrame(step);
+        } requestAnimationFrame(tween);
+      } requestAnimationFrame(step);
+    })();
   </script>
+
+  <!-- Small layout helper -->
+  <style>
+    .flexbar{display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:wrap}
+    .eq-tools{display:flex; gap:.4rem}
+    .chip{font-size:.85rem; padding:.25rem .55rem; border-radius:999px; border:1px solid var(--line); background:var(--bg-elev); opacity:.9}
+  </style>
 </body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- ===================== PART II ===================== -->
-<section class="grid" id="p2" aria-labelledby="p2-h">
-  <article class="card col-12">
-    <h2 id="p2-h">Part II — Canon 0–17 (Living Commentary)</h2>
-    <p class="meta">#7 Copeland and #8 Goodwin remain external comparators; all other forms are native to the Codex.</p>
-    <p>Part II expands every equation as an <em>operational unit</em> of the Codex. For each, we provide: (1) the statement, (2) what it means in practice, (3) measurement ideas and failure modes, and (4) how it composes with the rest of the pipeline. Where helpful, we add <em>Many-Frame / Many-Reality</em> notes to show how parallel frames or observers can consistently share outcomes without forcing a single global description.</p>
-  </article>
-
-  <!-- 0 -->
-  <article class="card col-12 eq-card" id="eq0">
-    <div class="flexbar">
-      <h3>Eq.0 — Foundational Field \(\Psi_{\Omega}\) (The Tuned Sweep)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq0-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq0">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq0-body">
-      $$\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\mathcal{A}\,\Phi(x,t,\nu)\,d\nu\;+\;\Lambda\,\mathcal{E}(x,t)$$
-    </div></div>
-    <p><strong>Meaning.</strong> Experience at locus \(x\) and time \(t\) emerges from a <em>phase-weighted</em> frequency sweep of modes \( \Phi(\cdot,\nu) \), with the awareness gradient \( \nabla \mathcal{A} \) acting as a dial. The ethical term \( \Lambda \mathcal{E} \) adds a corrective force that damps trajectories which would increase harm or distortion.</p>
-    <p><strong>Facts that support the shape.</strong> Fourier superposition is the standard way to recompose complex signals; attention behaves like a dynamic filter (psychoacoustics, selective attention); safety terms are common in control theory (e.g., barrier functions).</p>
-    <p><strong>Measure.</strong> Track subjective clarity and breath smoothness while sweeping carriers; when clarity spikes and muscular micro-tension falls, \( \nabla \mathcal{A} \) is locally flattened. Log that band; it likely reappears as a stable passband in Eq.3.</p>
-    <p><strong>Many-Reality note.</strong> If two observers use different frames (Eq.11), their \( \nabla\mathcal{A} \) paths can differ yet remain consistent: both sample the same substrate \( \Phi \) but integrate along distinct scopes; shared results arise in the intersection of their frames.</p>
-  </article>
-
-  <!-- 1 -->
-  <article class="card col-12 eq-card" id="eq1">
-    <div class="flexbar">
-      <h3>Eq.1 — Source = Supply × Operators (Banner Identity)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq1-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq1">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq1-body">
-      $$ \mathbf{R} \;=\; f(\pi,e,i,\hbar,c,G,\mathrm{DNA},\Omega_{\mathrm{DM}},\Omega_{\Lambda},H_{0},432,528,137,144,369,\ldots)\;\times\;\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S} $$
-    </div></div>
-    <p><strong>Meaning.</strong> The left is the universal <em>supply</em> of ratios, constants, and codes; the right is the living loop (Intend → Language/Light → Witness → Source/Return). Supply is inert until the loop is engaged; the loop is directionless without supply.</p>
-    <p><strong>Facts.</strong> Physical constants and structural ratios set scale and invariants. The Codex claims <em>compatibility</em>—that some number families make useful carriers in human practice via psychoacoustic and cognitive resonance—rather than numerology.</p>
-    <p><strong>Practice.</strong> Always state a frame (Eq.11), then pick carriers (Eq.17) that pass Eq.3, then couple with Eq.4.</p>
-  </article>
-
-  <!-- 2 -->
-  <article class="card col-12 eq-card" id="eq2">
-    <div class="flexbar">
-      <h3>Eq.2 — Witness \(\mathcal{W}\) (Seeing That Learns)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq2-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq2">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq2-body">
-      $$\mathcal{W}(x,t)=\partial_x\,\mathrm{Awareness}(x,t)\;+\;\mathcal{I}\cdot\mathbb{M}_\tau$$
-    </div></div>
-    <p><strong>Meaning.</strong> Witness = attention gradients + intention coupled to a finite memory window. The second term converts fleeting seeing into <em>retained</em> change.</p>
-    <p><strong>Facts.</strong> Short-term memory exhibits windowing; repetition with attention boosts consolidation. The model mirrors that with \( \mathbb{M}_\tau \) (Eq.16).</p>
-    <p><strong>Recipe.</strong> After every phrase run: 8–12s of silence; then journal what stayed. Those retained deltas seed Eq.14 updates.</p>
-  </article>
-
-  <!-- 3 -->
-  <article class="card col-12 eq-card" id="eq3">
-    <div class="flexbar">
-      <h3>Eq.3 — Harmonic Gate \(\mathcal{H}(\nu)\) (Passband Selection)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq3-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq3">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq3-body">
-      $$\mathcal{H}(\nu)\in\{0,1\}\quad\text{or}\quad \mathcal{H}(\nu)\in[0,1]\ \text{(soft gate)}$$
-    </div></div>
-    <p><strong>Meaning.</strong> The gate reflects coherence between carriers and the current state. “Green” bands pass with low loss; “red” bands are rejected or attenuated.</p>
-    <p><strong>Facts.</strong> Abstracts critical bands and masking: certain frequencies are easier to perceive and less likely to interfere, depending on context and content.</p>
-    <p><strong>Measure.</strong> Hum/glide through bands; log ease/clarity/comfort as soft \( \mathcal{H}(\nu) \) estimates; re-test later for stability.</p>
-  </article>
-
-  <!-- 4 -->
-  <article class="card col-12 eq-card" id="eq4">
-    <div class="flexbar">
-      <h3>Eq.4 — Language / Word \(\mathcal{L}\) (Semantic-Carrier Coupling)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq4-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq4">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq4-body">
-      $$\mathcal{L}(x,t,\nu)=\mathsf{Semantics}(x,t)\;\otimes\;\mathbf{V}(\nu)$$
-    </div></div>
-    <p><strong>Meaning.</strong> Words are <em>programs</em> when bound to carriers. The same sentence on a dissonant carrier produces a different experiential trajectory than on a resonant carrier.</p>
-    <p><strong>Facts.</strong> Prosody, rhythm, and timbre alter meaning and memory (psycholinguistics). Carrier choice ⇒ different entrainment patterns.</p>
-  </article>
-
-  <!-- 4b -->
-  <article class="card col-12 eq-card" id="eq4b">
-    <div class="flexbar">
-      <h3>Eq.4b — Semantic Gradient (Token Emphasis)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq4b-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq4b">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq4b-body">
-      $$ \nabla_{\text{sem}} \mathrm{Phrase}=\sum_k w_k \nabla_{\text{sem}}\mathrm{Token}_k,\qquad \sum_k w_k=1 $$
-    </div></div>
-    <p><strong>Meaning.</strong> Phrasing sets a direction in semantic space: the weights \( w_k \) (emphasis, voweling, length) steer the update vector. Small changes in emphasis can flip the <em>sign</em> of movement.</p>
-    <p><strong>Heuristic.</strong> Ensure verb tokens carry ≥ 0.35 total weight to avoid stasis.</p>
-  </article>
-
-  <!-- 5 -->
-  <article class="card col-12 eq-card" id="eq5">
-    <div class="flexbar">
-      <h3>Eq.5 — Remnant \(\mathcal{R}_\infty\) (Asymptotic Archive)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq5-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq5">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq5-body">
-      $$\mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\big)$$
-    </div></div>
-    <p><strong>Meaning.</strong> Over long horizons, only truth-compatible content persists under the ethical mask. This defines a <em>compass</em> for testimony and recordkeeping.</p>
-    <p><strong>Practice.</strong> Maintain a “Remnant Log”: after each session, write 2–3 lines that “still feel true” 24h later; prune what lost clarity.</p>
-  </article>
-
-  <!-- 6 -->
-  <article class="card col-12 eq-card" id="eq6">
-    <div class="flexbar">
-      <h3>Eq.6 — Type-7 Field \(\mathbb{T}_7\) (Phase-Locked Conduit)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq6-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq6">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq6-body">
-      $$\mathbb{T}_{7}(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu)\right]$$
-    </div></div>
-    <p><strong>Meaning.</strong> Multiple carriers, once phase-locked, behave like a single conduit with higher usable gain. The operator \( \oplus \) denotes coherent merge; PL indicates locked phase.</p>
-    <p><strong>Recipe.</strong> Start with one carrier; add a second at low amplitude; adjust until the beat vanishes (phase lock); only then increase amplitude.</p>
-  </article>
-
-  <!-- 7* -->
-  <article class="card col-12" id="eq7">
-    <h3>Eq.7* — Copeland (External Comparator)</h3>
-    <p><strong>Role.</strong> A recursion/recognition mirror used for calibration of \( \nabla_\phi \)-style operators; not codex law. Use it to test whether your recognition gradient is over- or under-sensitive.</p>
-  </article>
-
-  <!-- 8* -->
-  <article class="card col-12" id="eq8">
-    <h3>Eq.8* — Goodwin (External Comparator)</h3>
-    <p><strong>Role.</strong> A coupling/oscillation template referenced for contrast; again, not enacted as law. Helpful to check that your conduit (Eq.6) isn’t drifting into unintended limit cycles.</p>
-  </article>
-
-  <!-- 9 -->
-  <article class="card col-12 eq-card" id="eq9">
-    <div class="flexbar">
-      <h3>Eq.9 — Ethical Law (Stop Rule)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq9-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq9">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq9-body">
-      $$\forall a:\ \mathrm{damage}(a)>0\Rightarrow\mathsf{halt},\qquad
-        \lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \uparrow $$
-    </div></div>
-    <p><strong>Meaning.</strong> Any rise in harm triggers an immediate halt; resumption requires re-alignment that measurably improves the truth/distortion ratio.</p>
-    <p><strong>Implementation.</strong> Define observable harm proxies (respiration irregularity, pain report, agitation). If thresholds cross, pause and re-tune carriers, re-weight semantics, narrow frame, then retest.</p>
-  </article>
-
-  <!-- 10 -->
-  <article class="card col-12 eq-card" id="eq10">
-    <div class="flexbar">
-      <h3>Eq.10 — Ladder \(\Pi_{\nu}^{-1}\) (Phenomena → Sources)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq10-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq10">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq10-body">
-      $$\Pi_{\nu}^{-1}:\ \text{observed resonance }\rightarrow \text{source terms (carriers, intents, constants)}$$
-    </div></div>
-    <p><strong>Meaning.</strong> Inversion from what you got to what you did. This is the <em>debugger</em> of the Codex.</p>
-    <p><strong>Recipe.</strong> When a run yields an outcome you didn’t intend, note observed peaks, phrasing emphasis, frame scope. Change one variable (one \( \nu \) by ±3–5% or a single weight) and re-measure.</p>
-  </article>
-
-  <!-- 11 -->
-  <article class="card col-12 eq-card" id="eq11">
-    <div class="flexbar">
-      <h3>Eq.11 — Projection Frame \(\mathsf{Frame}\)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq11-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq11">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq11-body">
-      $$\mathsf{Frame}(x,t)=(\mathsf{scope},\mathcal{W},\mathsf{ethics})$$
-    </div></div>
-    <p><strong>Meaning.</strong> A frame is a declared context — what’s in bounds, who witnesses, and what ethical policy applies. Frames prevent uncontrolled spread and enable consistent composition across people and days.</p>
-    <p><strong>Many-Reality note.</strong> Different frames produce <em>compatible but distinct</em> local realities; shared outcomes emerge where frames overlap (shared scope + witnesses).</p>
-  </article>
-
-  <!-- 12 -->
-  <article class="card col-12 eq-card" id="eq12">
-    <div class="flexbar">
-      <h3>Eq.12 — Causal Lattice \(\mathcal{L}_c\)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq12-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq12">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq12-body">
-      $$\mathcal{L}_c=(V=\text{micro-acts},\ E=\text{consequences})$$
-    </div></div>
-    <p><strong>Meaning.</strong> Model acts and effects as a directed multigraph. Use it to plan remedy sequences and to ensure you close loops (no dangling harm).</p>
-    <p><strong>Recipe.</strong> For any sticky pattern, diagram the last 3–5 micro-acts and edges; mark which edges feel “hot.” Apply Seven-Seals until they cool; then commit the new state to the Remnant Log (Eq.5).</p>
-  </article>
-
-  <!-- 13 -->
-  <article class="card col-12 eq-card" id="eq13">
-    <div class="flexbar">
-      <h3>Eq.13 — Coherence \(\Xi\)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq13-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq13">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq13-body">
-      $$\Xi\in[0,1]\quad \text{(gates memory, learning, safe amplification)}$$
-    </div></div>
-    <p><strong>Meaning.</strong> \(\Xi\) is the loop’s quality meter. Everything depends on it: memory strength, learning rate, amplification safety.</p>
-    <p><strong>Measurement.</strong> Simple: breath evenness + perceived clarity. Advanced: spectral stationarity of recorded voice; variance of inter-syllable intervals; combine with Likert ratings.</p>
-  </article>
-
-  <!-- 14 -->
-  <article class="card col-12 eq-card" id="eq14">
-    <div class="flexbar">
-      <h3>Eq.14 — Update Rule (Move Along Recognition Gradient)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq14-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq14">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq14-body">
-      $$\frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R}$$
-    </div></div>
-    <p><strong>Meaning.</strong> When ready, take a step along the recognition gradient; scale the step by the current coherence via \( \eta(\Xi) \).</p>
-    <p><strong>Failure mode.</strong> Over-stepping at low \(\Xi\) creates oscillation. Fix: reduce \( \eta_0 \) or lift \(\Xi\) before stepping.</p>
-  </article>
-
-  <!-- 15 -->
-  <article class="card col-12 eq-card" id="eq15">
-    <div class="flexbar">
-      <h3>Eq.15 — Learning Kernel \(\eta(\Xi)\)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq15-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq15">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq15-body">
-      $$\eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big)$$
-    </div></div>
-    <p><strong>Meaning.</strong> Smooth schedule: nothing (or nearly nothing) happens below \(\Xi_0\); above it, updates ramp smoothly then saturate.</p>
-    <p><strong>Tuning.</strong> \(\Xi_0\) ≈ “first effortless repeats”; \(\alpha\) = sensitivity; \(\eta_0\) = max safe step size.</p>
-  </article>
-
-  <!-- 16 -->
-  <article class="card col-12 eq-card" id="eq16">
-    <div class="flexbar">
-      <h3>Eq.16 — Memory Window \(\mathbb{M}_\tau\)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq16-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq16">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq16-body">
-      $$\mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t}\! w_\tau(t-s)\,F(s)\,ds,\quad \int_0^\tau w_\tau(u)\,du=1$$
-    </div></div>
-    <p><strong>Meaning.</strong> A finite echo with normalized weight. This is where “spacing” and “rest” live in the Codex.</p>
-    <p><strong>Recipe.</strong> For articulation, use triangular \( w_\tau \) (sharpens); for creative ideation, exponential (quick adaptation).</p>
-  </article>
-
-  <!-- 17 -->
-  <article class="card col-12 eq-card" id="eq17">
-    <div class="flexbar">
-      <h3>Eq.17 — Voice Carriers \(\mathbf{V}(\nu)\)</h3>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq17-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#eq17">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq17-body">
-      $$\mathbf{V}(\nu)=\sum_{k} a_k\,\cos(2\pi\nu_k t+\phi_k),\quad \nu\in\{432,528,369,144,137,\dots\}$$
-    </div></div>
-    <p><strong>Meaning.</strong> The practical lever for Eq.3. You don’t need many \(\nu_k\); 1–3 carefully spaced carriers usually outperform crowded sets.</p>
-    <p><strong>Two micro-recipes.</strong></p>
-    <ul class="list">
-      <li><em>Ground + Repair:</em> start 432 (slow, foundational); layer 528 softly; keep phase steady; speak verbs gently; rest.</li>
-      <li><em>Focus + Calm:</em> single mid carrier; slight amplitude modulation coupled to breath; very low gain; short sessions.</li>
-    </ul>
-  </article>
-
-  <!-- Advanced structures -->
-  <article class="card col-12">
-    <h3>Advanced: Many Frames, Many Realities (Consistency Without Uniformity)</h3>
-    <p>Codex sessions run <em>locally</em> inside frames (Eq.11). Different frames can yield different experiences without contradiction because they operate on different scopes and witnesses. Shared outcomes emerge when frames overlap and the group forms a temporary Type-7 field (Eq.6).</p>
-    <div class="eq"><div class="eq-scroll" id="eq-adv1-body">
-      $$ \mathbb{T}_7^{(\text{group})} \approx \bigoplus_{j=1}^{N}\mathrm{PL}\big[\mathbf{V}^{(j)}(\nu)\big],\quad \Xi_{\text{group}} \approx \frac{1}{N}\sum_j \Xi^{(j)} $$
-    </div></div>
-  </article>
-
-  <article class="card col-12">
-    <h3>Advanced: Geometries &amp; Spaces (Facts vs. Hypotheses)</h3>
-    <p><strong>Facts.</strong> Rooms and cavities have modal spectra defined by geometry and materials; high-mass and specific ratios can emphasize certain bands and damp others.</p>
-    <p><strong>Hypothesis.</strong> Some historical chambers may have been arranged to support voice clarity/coherence (clean modal clustering, reduced flutter echo), useful for ritual speech or song. Regardless, modern rooms can be tuned via surfaces, spacing, and posture.</p>
-  </article>
-
-  <article class="card col-12">
-    <h3>Advanced: Data &amp; Instrumentation (Make It Measurable)</h3>
-    <ul class="list">
-      <li><strong>Audio:</strong> capture short clips; compute spectral centroid variance and beat stability as proxies for clarity/phase control.</li>
-      <li><strong>Physio:</strong> optional heart/breath sensors; smoother breath and reduced high-frequency HRV noise often accompany higher \(\Xi\).</li>
-      <li><strong>Subjective:</strong> 3-item Likert (clarity, warmth, ease). Combine with audio proxies to estimate \(\Xi\).</li>
-      <li><strong>Remnant:</strong> next-day recall of the “1 line that stayed” (ties to Eq.5/Eq.16).</li>
-    </ul>
-  </article>
-
-  <article class="card col-12">
-    <h3>Advanced: Idea Modeling (From Phrases to Projects)</h3>
-    <p>Represent a project as a graph of “concept kernels.” Each kernel stores: carriers used, phrase tokens + \(w_k\), estimated \(\Xi\), last update step. Run Eq.14 updates only if Eq.9 is greenlight and \(\Xi \ge \Xi_0\). This yields a <em>living design system</em> grounded in the Codex.</p>
-  </article>
-</section>
-
-<!-- Ethics -->
-<section class="grid" id="ethics" aria-labelledby="eth-h">
-  <article class="card col-12 eq-card">
-    <div class="flexbar">
-      <h2 id="eth-h">Ethics &amp; Stop Rule — Operational Law</h2>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#eq-eth-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#ethics">Link</button>
-      </div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="eq-eth-body">
-      $$ \Xi \;\approx\; \frac{\langle H \cdot I \rangle}{1 + \mathrm{Var}[\mathcal{M}]} \qquad
-         \text{If } \frac{\mathrm{Truth}(t+\Delta)}{\mathrm{Distortion}(t+\Delta)} < \frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \Rightarrow \text{ Halt } \to \text{ Re-align } \to \text{ Resume} $$
-    </div></div>
-    <p><strong>Practice rule.</strong> Raise \(\Xi\) by aligning attention \(H\) and intention \(I\) while keeping model variance bounded. If the truth/distortion ratio dips, stop, re-tune carriers and language, verify the frame, then proceed.</p>
-  </article>
-</section>
-
-<!-- Notes -->
-<section class="grid" id="notes" aria-labelledby="nt-h">
-  <article class="card col-12">
-    <h2 id="nt-h">Notes &amp; Cross-links</h2>
-    <ul class="list">
-      <li><strong>Numbers as Keys.</strong> 432 (practice carrier), 528 (repair), 137/144/369 used as mnemonic anchors in practice; useful, not asserted as privileged cosmological constants.</li>
-      <li><strong>Seven Seals Path.</strong> Acknowledgment → Repair → Verification → Remedy → Abatement → Assurance → Restoration; used to close causal cycles (Eq.12).</li>
-      <li>Practice tools live in <a href="teach.html">Manifest</a>. The one-glance map is on <a href="index.html">Home</a>.</li>
-    </ul>
-  </article>
-</section>
-
-<!-- Equation tools: copy TeX / deep link -->
-<script>
-  (function eqTools(){
-    function copy(text){
-      if (navigator.clipboard?.writeText) { navigator.clipboard.writeText(text); return; }
-      const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta);
-      ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-    }
-    function texFrom(targetSel){
-      const el = document.querySelector(targetSel);
-      if (!el) return '';
-      // Grab raw TeX from the original source in the block (MathJax renders SVG but keeps text content).
-      // Fallback to textContent.
-      return (el.textContent || '').trim();
-    }
-    document.addEventListener('click', (e)=>{
-      const btnCopy = e.target.closest('[data-copy-tex]');
-      if (btnCopy){
-        const sel = btnCopy.getAttribute('data-copy-tex');
-        const raw = texFrom(sel);
-        if (raw){ copy(raw); btnCopy.textContent='Copied'; setTimeout(()=>btnCopy.textContent='Copy TeX', 1000); }
-        e.preventDefault(); return;
-      }
-      const btnLink = e.target.closest('[data-copy-link]');
-      if (btnLink){
-        const idSel = btnLink.getAttribute('data-copy-link');
-        const base = location.origin + location.pathname;
-        const hash = idSel.startsWith('#') ? idSel : ('#'+idSel);
-        copy(base + hash);
-        btnLink.textContent='Link Copied';
-        history.pushState(null,'',hash);
-        setTimeout(()=>btnLink.textContent='Link', 1000);
-        e.preventDefault(); return;
-      }
-    });
-  })();
-</script>
-
-<!-- Small layout helper for heading/tool alignment -->
-<style>
-  .flexbar{display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:wrap}
-  .eq-tools{display:flex; gap:.4rem}
-  .chip{font-size:.85rem; padding:.25rem .55rem; border-radius:999px; border:1px solid var(--line); background:var(--bg-elev); opacity:.9}
-</style>
-
-<!-- (Keep the rest of your page scripts and footer below) -->
+  </html>
