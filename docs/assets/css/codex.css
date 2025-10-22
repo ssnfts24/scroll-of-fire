@@ -775,3 +775,23 @@ input, select, textarea {
 .affect-off .laser-grid.alive{
   animation:none !important; opacity:0 !important;
 }
+
+
+
+/* lock hero image & prevent effect bleed */
+.hero { position: relative; overflow: clip; }
+.hero .hero-img { display:block; width:100%; height:auto; object-fit: var(--hero-fit, contain); }
+body.living-all .hero .hero-img { filter:none !important; }
+
+/* aurora / light sweep overlay */
+.hero-lights{
+  position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
+  background:
+    radial-gradient(60% 40% at 20% 10%, rgba(122,243,255,.14), transparent 60%),
+    radial-gradient(70% 50% at 80% 20%, rgba(243,201,122,.10), transparent 60%),
+    conic-gradient(from 0deg at 50% 50%, rgba(122,243,255,.10), rgba(255,209,243,.08), rgba(164,255,144,.08), rgba(122,243,255,.10));
+  opacity:.75; filter:blur(1px);
+  animation: heroSweep 22s linear infinite, heroPulse 6.5s ease-in-out infinite alternate;
+}
+@keyframes heroSweep { from{ transform:rotate(0deg)} to{ transform:rotate(360deg)} }
+@keyframes heroPulse { 0%{opacity:.58} 50%{opacity:.86} 100%{opacity:.7} }
