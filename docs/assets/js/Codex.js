@@ -1,6 +1,6 @@
 <script>
 /* ==========================================================================
-   Scroll of Fire — codex.js v3.4 (consolidated)
+   Scroll of Fire — codex.js v3.6 (consolidated)
    - Sticky header, tab ink
    - Card + .reveal IO
    - Hero activation + safe parallax
@@ -9,11 +9,13 @@
    - Explore Dock IO
    - Page search mini-suggest + '/' (skips if v2 present)
    - Command palette shell
-   - Equation FX builder (DOM) + drag-scroll + pop-out
+   - Equation FX builder (DOM) + drag-scroll + pop-out (accessible)
    - MathJax: on-demand typeset (robust)
    - Alive Pack (sparks, arcs, sheen/float/twinkle)
    - Alive Palette (Calm/Lively/Max/Off) with persistence
    - Ξ driver (updates --xi)
+   - NEW: Voice Reader collapse/expand with persistence
+   - NEW: Horizontal scroll with wheel, shift-drag, and mask refresh
    ========================================================================== */
 (() => {
   const $  = (s, r=document) => r.querySelector(s);
@@ -23,6 +25,7 @@
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const RD = matchMedia('(prefers-reduced-data: reduce)').matches;
   const ALLOW_MOTION = !(RM || RD);
+  const rIC = window.requestIdleCallback || ((fn)=> setTimeout(fn, 1));
 
   // Year stamp
   const y = $('#y'); if (y) y.textContent = new Date().getFullYear();
@@ -85,13 +88,17 @@
       const io = new IntersectionObserver(es => hero.classList.toggle('is-active', es.some(e=>e.isIntersecting)), {rootMargin:'200px 0px'});
       io.observe(hero);
     } else hero.classList.add('is-active');
-    if (ALLOW_MOTION) {
-      let pz = 1;
+    if (ALLOW_MOTION && heroImg) {
+      let ticking = false;
       const onScroll = () => {
-        const r = hero.getBoundingClientRect(); const vh = innerHeight || 800;
-        const mid = r.top + r.height/2; const dist = Math.abs((vh/2)-mid)/(vh/2);
-        pz = 1 + 0.02*(1 - Math.min(1, Math.max(0, dist)));
-        heroImg && (heroImg.style.transform = `translateZ(0) scale(${pz})`);
+        if (ticking) return; ticking = true;
+        requestAnimationFrame(() => {
+          const r = hero.getBoundingClientRect(); const vh = innerHeight || 800;
+          const mid = r.top + r.height/2; const dist = Math.abs((vh/2)-mid)/(vh/2);
+          const pz = 1 + 0.02*(1 - Math.min(1, Math.max(0, dist)));
+          heroImg.style.transform = `translateZ(0) scale(${pz})`;
+          ticking = false;
+        });
       };
       addEventListener('scroll', onScroll, {passive:true}); onScroll();
     }
@@ -285,23 +292,34 @@
     });
   })();
 
-  /* ---- Equations: drag scroll ---- */
+  /* ---- Equations: drag/scroll (mouse, touch, wheel → horizontal) ---- */
   const initDragScroll = (root=document) => {
     $$('.eq .eq-scroll', root).forEach(scroller=>{
       let down=false, sx=0, sl=0;
+      const stopDrag = ()=>{ down=false; scroller.classList.remove('dragging'); };
+      // Mouse drag
       scroller.addEventListener('mousedown', e=>{ down=true; sx=e.clientX; sl=scroller.scrollLeft; scroller.classList.add('dragging'); e.preventDefault(); });
       addEventListener('mousemove', e=>{ if(!down) return; scroller.scrollLeft = sl - (e.clientX - sx); }, { passive:true });
-      addEventListener('mouseup', ()=>{ down=false; scroller.classList.remove('dragging'); });
+      addEventListener('mouseup', stopDrag);
+      // Touch drag
       scroller.addEventListener('touchstart', e=>{ down=true; sx=e.touches[0].clientX; sl=scroller.scrollLeft; }, { passive:true });
       scroller.addEventListener('touchmove', e=>{ if(!down) return; scroller.scrollLeft = sl - (e.touches[0].clientX - sx); }, { passive:true });
-      scroller.addEventListener('touchend', ()=>{ down=false; });
+      scroller.addEventListener('touchend', stopDrag, { passive:true });
+      // Wheel → horizontal
+      scroller.addEventListener('wheel', e=>{
+        // Shift+wheel or trackpad default: map vertical to horizontal
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          scroller.scrollLeft += e.deltaY;
+          e.preventDefault();
+        }
+      }, { passive:false });
     });
   };
   initDragScroll();
 
   /* === Equation polish utilities: calm bias + copy button + scroll-fade refresh === */
   (function eqPolish(){
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduce = RM;
 
     // 1) Bias toward calm if unset
     $$('.eq').forEach(b => {
@@ -309,7 +327,7 @@
       if (!hasFX || Math.random() < 0.7) b.setAttribute('data-fx','calm');
     });
 
-    // 2) Copy button
+    // 2) Copy button (de-dupe safe)
     $$('.eq-card .eq').forEach(eq => {
       if (eq.querySelector('.eq-copy')) return;
       const btn = document.createElement('button');
@@ -320,7 +338,7 @@
       btn.addEventListener('click', async () => {
         const src = eq.querySelector('.eq-scroll');
         if(!src) return;
-        const text = src.innerText.trim();
+        const text = src.innerText.replace(/\u200b/g,'').trim();
         try{
           await navigator.clipboard.writeText(text);
           const old = btn.innerHTML;
@@ -334,7 +352,7 @@
       eq.appendChild(btn);
     });
 
-    // 3) Refresh scroll fades
+    // 3) Scroll fade masks
     const refreshMask = (el)=>{
       const atTop   = el.scrollTop <= 1;
       const atBottom= el.scrollHeight - el.clientHeight - el.scrollTop <= 1;
@@ -346,22 +364,18 @@
     const scrollers = $$('.eq-card .eq-scroll');
     scrollers.forEach(s=>{
       s.addEventListener('scroll', ()=>refreshMask(s), {passive:true});
-      setTimeout(()=>refreshMask(s), 60);
+      rIC(()=>refreshMask(s));
     });
 
     if (window.MathJax && MathJax.startup && MathJax.startup.promise){
       MathJax.startup.promise.then(()=> scrollers.forEach(s=>refreshMask(s)));
-    }
-
-    if (!reduce && matchMedia('(hover: none)').matches){
-      // no-op (hover zoom already ignored on touch)
     }
   })();
 
   /* ---- MathJax on-demand typeset ---- */
   const typeset = (root=document) => {
     if (!window.MathJax || !MathJax.typesetPromise) return;
-    MathJax.typesetClear?.();
+    try { MathJax.typesetClear?.(); } catch(_){}
     MathJax.typesetPromise(Array.from(root.querySelectorAll('.eq'))).catch(()=>{});
   };
   if ('IntersectionObserver' in window) {
@@ -373,31 +387,93 @@
     addEventListener('load', ()=> typeset(document));
   }
 
-  /* ---- Equation pop-out viewer ---- */
-  let eqPop=null;
-  const closePop = () => { if (!eqPop) return; eqPop.remove(); eqPop=null; document.body.style.removeProperty('overflow'); };
+  /* ---- Equation pop-out viewer (accessible dialog + focus trap) ---- */
+  let eqPop=null, lastFocus=null;
+  const closePop = () => {
+    if (!eqPop) return;
+    eqPop.remove(); eqPop=null;
+    document.body.style.removeProperty('overflow');
+    lastFocus?.focus();
+  };
   document.addEventListener('click', e=>{
     const btn=e.target.closest('[data-eq-expand]'); if(!btn) return;
-    const eq = btn.closest('.card, .eq')?.querySelector('.eq') || btn.closest('.eq'); if(!eq) return;
+    const host = btn.closest('.card, .eq');
+    const eq = host?.querySelector('.eq') || btn.closest('.eq'); if(!eq) return;
+    lastFocus = document.activeElement;
+
     eqPop=document.createElement('div'); eqPop.className='eq eq--expanded';
+    eqPop.setAttribute('role','dialog'); eqPop.setAttribute('aria-modal','true'); eqPop.setAttribute('aria-label','Equation');
     const inner=document.createElement('div'); inner.className='eq-scroll'; inner.innerHTML = (eq.querySelector('.eq-scroll')||eq).innerHTML;
     const close=document.createElement('button'); close.className='eq-close'; close.type='button'; close.textContent='Close';
     close.addEventListener('click', closePop);
     eqPop.append(inner, close); document.body.appendChild(eqPop); document.body.style.overflow='hidden';
     initDragScroll(eqPop); typeset(eqPop);
+
+    // Focus trap
+    const trap = (ev)=>{
+      if (!eqPop) { document.removeEventListener('keydown', trap); return; }
+      if (ev.key === 'Escape') { ev.preventDefault(); closePop(); return; }
+      if (ev.key !== 'Tab') return;
+      const foci = [close, ...Array.from(eqPop.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter(x=>!x.hasAttribute('disabled'))];
+      if (!foci.length) return;
+      const first = foci[0], last = foci[foci.length-1];
+      if (ev.shiftKey && document.activeElement === first) { last.focus(); ev.preventDefault(); }
+      else if (!ev.shiftKey && document.activeElement === last) { first.focus(); ev.preventDefault(); }
+    };
+    document.addEventListener('keydown', trap);
+    close.focus();
   });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closePop(); });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape' && eqPop) closePop(); });
 
   /* ---- Smooth anchor scroll accounting for sticky glass ---- */
   document.addEventListener('click', e=>{
     const a=e.target.closest('a[href^="#"]'); if(!a) return;
-    const id=a.getAttribute('href').slice(1); const t=id?document.getElementById(id):null; if(!t) return;
+    const href = a.getAttribute('href'); if (!href || href === '#') return;
+    const id = href.slice(1); const t=id?document.getElementById(id):null; if(!t) return;
     e.preventDefault();
-    const top = t.getBoundingClientRect().top + scrollY - 96;
+    const offset = 96;
+    const top = t.getBoundingClientRect().top + scrollY - offset;
     scrollTo({ top, behavior: ALLOW_MOTION ? 'smooth' : 'auto' });
     history.pushState(null,'',`#${id}`);
     setTimeout(()=>setInk(a.closest('.tab') || activeTab()), 50);
   });
+
+  /* ---- NEW: Voice Reader collapse/expand + persistence ---- */
+  (function voiceReaderCollapse(){
+    const mod = document.getElementById('voice-reader');
+    const title = document.getElementById('vr-h');
+    if (!mod || !title) return;
+
+    // Caret injection (non-destructive)
+    if (!title.querySelector('.caret')){
+      const c = document.createElement('span'); c.className='caret'; c.setAttribute('aria-hidden','true'); c.textContent='▾';
+      title.appendChild(c);
+    }
+
+    const KEY = 'sof.voiceReader.collapsed';
+    const prefersCompact = matchMedia('(max-width: 720px)').matches;
+    const saved = localStorage.getItem(KEY);
+    const initialCollapsed = saved!=null ? (saved==='1') : prefersCompact;
+    apply(initialCollapsed);
+
+    function apply(collapsed){
+      mod.dataset.collapsed = collapsed ? 'true':'false';
+      title.setAttribute('aria-expanded', collapsed ? 'false':'true');
+    }
+
+    // Toggle on title click + remember
+    title.addEventListener('click', ()=>{
+      const now = mod.dataset.collapsed === 'true' ? false : true;
+      apply(now);
+      try{ localStorage.setItem(KEY, now ? '1':'0'); }catch(_){}
+    });
+
+    // Also toggle with keyboard (Enter/Space) on title
+    title.tabIndex = 0;
+    title.addEventListener('keydown', (e)=>{
+      if (e.key==='Enter' || e.key===' ') { e.preventDefault(); title.click(); }
+    });
+  })();
 
   /* ---- Ξ driver (updates --xi softly; CSS uses it) ---- */
   (function xiDriver(){
@@ -469,7 +545,8 @@
   eqs.forEach(eq=>{
     eq.classList.add('alive');
 
-    const sparkBudget = Math.min( (parseInt(getComputedStyle(root).getPropertyValue('--alive-spark-count'))||18), 40 );
+    const budgetVar = getComputedStyle(root).getPropertyValue('--alive-spark-count').trim();
+    const sparkBudget = Math.min( (parseInt(budgetVar||'18',10)||18), 40 );
     const pool = [];
     for(let i=0;i<sparkBudget;i++){
       const s = document.createElement('i');
@@ -605,7 +682,7 @@
   function labelFor(id){
     const m = MODES.find(x=>x.id===id);
     return m ? `Affect: ${m.label.split(' — ')[0]}` : 'Affect: Lively';
-    }
+  }
   function currentMode(){
     if (body.classList.contains('affect-off')) return 'off';
     return root.getAttribute('data-alive') || 'lively';
