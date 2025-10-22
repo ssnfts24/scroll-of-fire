@@ -184,6 +184,86 @@
   };
   initDragScroll();
 
+
+
+
+
+
+
+   /* === Equation polish utilities: calmer mix + copy button + scroll fade refresh === */
+(function eqPolish(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 1) Bias toward calm: flip many boxes to data-fx="calm" unless already set
+  const boxes = document.querySelectorAll('.eq');
+  boxes.forEach((b, i) => {
+    const hasFX = b.getAttribute('data-fx');
+    if (!hasFX || Math.random() < 0.7) b.setAttribute('data-fx','calm');
+  });
+
+  // 2) Copy button → copies TeX content inside .eq-scroll
+  document.querySelectorAll('.eq-card .eq').forEach(eq => {
+    // avoid duplicates
+    if (eq.querySelector('.eq-copy')) return;
+    const btn = document.createElement('button');
+    btn.className = 'eq-copy';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Copy equation TeX');
+    btn.innerHTML = '<span class="dot" aria-hidden="true"></span><span>Copy</span>';
+    btn.addEventListener('click', async () => {
+      const src = eq.querySelector('.eq-scroll');
+      if(!src) return;
+      const text = src.innerText.trim();
+      try{
+        await navigator.clipboard.writeText(text);
+        const old = btn.innerHTML;
+        btn.innerHTML = '<span class="dot" aria-hidden="true"></span><span>Copied</span>';
+        setTimeout(()=>btn.innerHTML = old, 1200);
+      }catch(e){
+        btn.innerHTML = '<span class="dot" aria-hidden="true"></span><span>Failed</span>';
+        setTimeout(()=>btn.innerHTML = 'Copy', 1200);
+      }
+    });
+    eq.appendChild(btn);
+  });
+
+  // 3) Refresh scroll fades when user scrolls (helps when content reflows after MathJax)
+  const refreshMask = (el)=>{
+    const atTop   = el.scrollTop <= 1;
+    const atBottom= el.scrollHeight - el.clientHeight - el.scrollTop <= 1;
+    // tweak mask to remove fade when not needed
+    const topStop = atTop ? 0 : 12;
+    const botStop = atBottom ? 0 : 12;
+    el.style.webkitMaskImage = `linear-gradient(to bottom, transparent ${topStop}px, black ${topStop+1}px, black calc(100% - ${botStop+1}px), transparent calc(100% - ${botStop}px))`;
+    el.style.maskImage = el.style.webkitMaskImage;
+  };
+
+  const scrollers = document.querySelectorAll('.eq-card .eq-scroll');
+  scrollers.forEach(s=>{
+    s.addEventListener('scroll', ()=>refreshMask(s), {passive:true});
+    // initial pass (delay helps post-typeset)
+    setTimeout(()=>refreshMask(s), 60);
+  });
+
+  // 4) If MathJax is present, re-run the fade mask after typeset
+  if (window.MathJax && MathJax.startup && MathJax.startup.promise){
+    MathJax.startup.promise.then(()=>{
+      scrollers.forEach(s=>refreshMask(s));
+    });
+  }
+
+  // 5) Optional: light hover zoom suppression on touch devices
+  if (!reduce && matchMedia('(hover: none)').matches){
+    // nothing extra, CSS hover doesn't apply on pure touch
+  }
+})();
+
+
+   
+
+
+   
+
   // On-demand MathJax typeset
   const typeset = (root=document) => {
     if (!window.MathJax || !MathJax.typesetPromise) return;
