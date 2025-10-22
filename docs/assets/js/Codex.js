@@ -1,23 +1,17 @@
 <script>
 /* ==========================================================================
-   Scroll of Fire — codex.js v3.6 (consolidated)
-   - Sticky header, tab ink
-   - Card + .reveal IO
-   - Hero activation + safe parallax
-   - Carrier cycler + Lights toggle + Year
-   - Simple mode, HUD toggle, Affect toggle
-   - Explore Dock IO
-   - Page search mini-suggest + '/' (skips if v2 present)
-   - Command palette shell
-   - Equation FX builder (DOM) + drag-scroll + pop-out (accessible)
-   - MathJax: on-demand typeset (robust)
-   - Alive Pack (sparks, arcs, sheen/float/twinkle)
-   - Alive Palette (Calm/Lively/Max/Off) with persistence
-   - Ξ driver (updates --xi)
-   - NEW: Voice Reader collapse/expand with persistence
-   - NEW: Horizontal scroll with wheel, shift-drag, and mask refresh
+   Scroll of Fire — codex.js v3.7 (consolidated)
+   - Safer listeners (passive where possible), guards, and null checks
+   - Tabs ink recalculates on container resize + font load
+   - Horizontal scroll mapping is boundary-aware; no preventDefault if unused
+   - Equation pop-out closes on backdrop click; focus trap hardened
+   - Copy button has clipboard fallback (execCommand) + trimmed payload
+   - Minor a11y: role hints, button states, Escape handling harmonized
    ========================================================================== */
 (() => {
+  if (document.documentElement.hasAttribute('data-sof-js-init')) return;
+  document.documentElement.setAttribute('data-sof-js-init','1');
+
   const $  = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   document.documentElement.classList.add('js-ready');
@@ -63,11 +57,18 @@
     const cue = (el) => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => setInk(el)); };
     cue(activeTab());
     $$('.tabs .tab').forEach(a=>{
-      a.addEventListener('mouseenter', ()=>cue(a));
-      a.addEventListener('focus',     ()=>cue(a));
+      a.addEventListener('mouseenter', ()=>cue(a), {passive:true});
+      a.addEventListener('focus',     ()=>cue(a), {passive:true});
     });
-    ['resize','hashchange'].forEach(ev => addEventListener(ev, ()=>cue(activeTab())));
-    tabs?.addEventListener('mouseleave', ()=>cue(activeTab()));
+    ['resize','hashchange'].forEach(ev => addEventListener(ev, ()=>cue(activeTab()), {passive:true}));
+    tabs?.addEventListener('mouseleave', ()=>cue(activeTab()), {passive:true});
+
+    // Recompute when fonts load and when the tabs container resizes
+    if (document.fonts?.ready) document.fonts.ready.then(()=> cue(activeTab())).catch(()=>{});
+    if ('ResizeObserver' in window && tabs){
+      const ro = new ResizeObserver(()=> cue(activeTab()));
+      ro.observe(tabs);
+    }
   };
   initInk();
 
@@ -125,7 +126,7 @@
       btn.addEventListener('click', ()=>{
         const cur=curSkin(), nxt=nextSkin(cur); skins.forEach(s=>html.classList.remove(s)); html.classList.add(nxt);
         btn.textContent = `Carrier ${nxt.split('-')[1]}`;
-      });
+      }, {passive:true});
     }
     btnLights?.addEventListener('click', ()=>{
       if (!lights) return;
@@ -183,7 +184,12 @@
         ...CAND.filter(el => (el.innerText||'').toLowerCase().includes(q)).map(el => ({text:(el.innerText||'').trim(), href:'#'+el.id})),
         ...$$('a[href^="#"]').filter(a => (a.textContent||'').toLowerCase().includes(q)).map(a => ({text:a.textContent.trim(), href:a.getAttribute('href')}))
       ].slice(0,12);
-      results.forEach(r => { const a=document.createElement('a'); a.href=r.href; a.textContent=r.text; a.addEventListener('click',()=>siteSuggest.classList.add('hidden')); siteSuggest.appendChild(a);});
+      results.forEach(r => {
+        const a=document.createElement('a');
+        a.href=r.href; a.textContent=r.text; a.role='option';
+        a.addEventListener('click',()=>siteSuggest.classList.add('hidden'));
+        siteSuggest.appendChild(a);
+      });
       siteSuggest.classList.toggle('hidden', results.length===0);
     };
     siteSearch?.addEventListener('input', e => suggest(e.currentTarget.value));
@@ -300,17 +306,17 @@
       // Mouse drag
       scroller.addEventListener('mousedown', e=>{ down=true; sx=e.clientX; sl=scroller.scrollLeft; scroller.classList.add('dragging'); e.preventDefault(); });
       addEventListener('mousemove', e=>{ if(!down) return; scroller.scrollLeft = sl - (e.clientX - sx); }, { passive:true });
-      addEventListener('mouseup', stopDrag);
+      addEventListener('mouseup', stopDrag, { passive:true });
       // Touch drag
       scroller.addEventListener('touchstart', e=>{ down=true; sx=e.touches[0].clientX; sl=scroller.scrollLeft; }, { passive:true });
       scroller.addEventListener('touchmove', e=>{ if(!down) return; scroller.scrollLeft = sl - (e.touches[0].clientX - sx); }, { passive:true });
       scroller.addEventListener('touchend', stopDrag, { passive:true });
-      // Wheel → horizontal
+      // Wheel → horizontal (only if it actually scrolls)
       scroller.addEventListener('wheel', e=>{
-        // Shift+wheel or trackpad default: map vertical to horizontal
+        const prev = scroller.scrollLeft;
         if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
           scroller.scrollLeft += e.deltaY;
-          e.preventDefault();
+          if (scroller.scrollLeft !== prev) e.preventDefault();
         }
       }, { passive:false });
     });
@@ -319,15 +325,28 @@
 
   /* === Equation polish utilities: calm bias + copy button + scroll-fade refresh === */
   (function eqPolish(){
-    const reduce = RM;
-
     // 1) Bias toward calm if unset
     $$('.eq').forEach(b => {
       const hasFX = b.getAttribute('data-fx');
       if (!hasFX || Math.random() < 0.7) b.setAttribute('data-fx','calm');
     });
 
-    // 2) Copy button (de-dupe safe)
+    // 2) Copy button (de-dupe safe + clipboard fallback)
+    const copyText = async (text) => {
+      text = (text || '').replace(/\u200b/g,'').trim();
+      try{
+        if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(text); return true; }
+      }catch(_){}
+      try{
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.position='fixed'; ta.style.top='-1000px';
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        const ok = document.execCommand('copy');
+        ta.remove();
+        return ok;
+      }catch(_){ return false; }
+    };
+
     $$('.eq-card .eq').forEach(eq => {
       if (eq.querySelector('.eq-copy')) return;
       const btn = document.createElement('button');
@@ -338,16 +357,10 @@
       btn.addEventListener('click', async () => {
         const src = eq.querySelector('.eq-scroll');
         if(!src) return;
-        const text = src.innerText.replace(/\u200b/g,'').trim();
-        try{
-          await navigator.clipboard.writeText(text);
-          const old = btn.innerHTML;
-          btn.innerHTML = '<span class="dot" aria-hidden="true"></span><span>Copied</span>';
-          setTimeout(()=>btn.innerHTML = old, 1200);
-        }catch(e){
-          btn.innerHTML = '<span class="dot" aria-hidden="true"></span><span>Failed</span>';
-          setTimeout(()=>btn.innerHTML = 'Copy', 1200);
-        }
+        const ok = await copyText(src.innerText);
+        const old = btn.innerHTML;
+        btn.innerHTML = `<span class="dot" aria-hidden="true"></span><span>${ok?'Copied':'Failed'}</span>`;
+        setTimeout(()=>btn.innerHTML = old, 1200);
       });
       eq.appendChild(btn);
     });
@@ -358,17 +371,18 @@
       const atBottom= el.scrollHeight - el.clientHeight - el.scrollTop <= 1;
       const topStop = atTop ? 0 : 12;
       const botStop = atBottom ? 0 : 12;
-      el.style.webkitMaskImage = `linear-gradient(to bottom, transparent ${topStop}px, black ${topStop+1}px, black calc(100% - ${botStop+1}px), transparent calc(100% - ${botStop}px))`;
-      el.style.maskImage = el.style.webkitMaskImage;
+      const v = `linear-gradient(to bottom, transparent ${topStop}px, black ${topStop+1}px, black calc(100% - ${botStop+1}px), transparent calc(100% - ${botStop}px))`;
+      el.style.webkitMaskImage = v; el.style.maskImage = v;
     };
     const scrollers = $$('.eq-card .eq-scroll');
     scrollers.forEach(s=>{
       s.addEventListener('scroll', ()=>refreshMask(s), {passive:true});
       rIC(()=>refreshMask(s));
     });
+    addEventListener('resize', ()=> scrollers.forEach(s=>refreshMask(s)), {passive:true});
 
-    if (window.MathJax && MathJax.startup && MathJax.startup.promise){
-      MathJax.startup.promise.then(()=> scrollers.forEach(s=>refreshMask(s)));
+    if (window.MathJax?.startup?.promise){
+      MathJax.startup.promise.then(()=> scrollers.forEach(s=>refreshMask(s))).catch(()=>{});
     }
   })();
 
@@ -384,13 +398,14 @@
     }, { rootMargin:'200px 0px' });
     const firstEq = $('.eq'); firstEq && ioEq.observe(firstEq);
   } else {
-    addEventListener('load', ()=> typeset(document));
+    addEventListener('load', ()=> typeset(document), {once:true});
   }
 
   /* ---- Equation pop-out viewer (accessible dialog + focus trap) ---- */
-  let eqPop=null, lastFocus=null;
+  let eqPop=null, lastFocus=null, untrap=null;
   const closePop = () => {
     if (!eqPop) return;
+    untrap?.(); untrap=null;
     eqPop.remove(); eqPop=null;
     document.body.style.removeProperty('overflow');
     lastFocus?.focus();
@@ -409,6 +424,9 @@
     eqPop.append(inner, close); document.body.appendChild(eqPop); document.body.style.overflow='hidden';
     initDragScroll(eqPop); typeset(eqPop);
 
+    // Backdrop click closes
+    eqPop.addEventListener('click', (ev)=>{ if (ev.target === eqPop) closePop(); });
+
     // Focus trap
     const trap = (ev)=>{
       if (!eqPop) { document.removeEventListener('keydown', trap); return; }
@@ -421,6 +439,8 @@
       else if (!ev.shiftKey && document.activeElement === last) { first.focus(); ev.preventDefault(); }
     };
     document.addEventListener('keydown', trap);
+    untrap = ()=> document.removeEventListener('keydown', trap);
+
     close.focus();
   });
   document.addEventListener('keydown', e=>{ if(e.key==='Escape' && eqPop) closePop(); });
@@ -436,15 +456,14 @@
     scrollTo({ top, behavior: ALLOW_MOTION ? 'smooth' : 'auto' });
     history.pushState(null,'',`#${id}`);
     setTimeout(()=>setInk(a.closest('.tab') || activeTab()), 50);
-  });
+  }, {passive:false});
 
-  /* ---- NEW: Voice Reader collapse/expand + persistence ---- */
+  /* ---- Voice Reader collapse/expand + persistence ---- */
   (function voiceReaderCollapse(){
     const mod = document.getElementById('voice-reader');
     const title = document.getElementById('vr-h');
     if (!mod || !title) return;
 
-    // Caret injection (non-destructive)
     if (!title.querySelector('.caret')){
       const c = document.createElement('span'); c.className='caret'; c.setAttribute('aria-hidden','true'); c.textContent='▾';
       title.appendChild(c);
@@ -461,14 +480,12 @@
       title.setAttribute('aria-expanded', collapsed ? 'false':'true');
     }
 
-    // Toggle on title click + remember
     title.addEventListener('click', ()=>{
       const now = mod.dataset.collapsed === 'true' ? false : true;
       apply(now);
       try{ localStorage.setItem(KEY, now ? '1':'0'); }catch(_){}
     });
 
-    // Also toggle with keyboard (Enter/Space) on title
     title.tabIndex = 0;
     title.addEventListener('keydown', (e)=>{
       if (e.key==='Enter' || e.key===' ') { e.preventDefault(); title.click(); }
