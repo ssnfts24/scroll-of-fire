@@ -207,8 +207,18 @@
     function boot(){ if(!window.MathJax) return; MathJax.startup.promise.then(()=>MathJax.typesetPromise()); }
     function loadMJ(){
       if(loaded) return; loaded=true;
-      window.MathJax={ tex:{inlineMath:[['\\(','\\)']],displayMath:[['$$','$$']]}, svg:{fontCache:'global'}, startup:{typeset:false} };
-      const s=document.createElement('script'); s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"; s.defer=true; s.onload=boot; document.head.appendChild(s);
+      window.MathJax={
+        tex:{
+          inlineMath:[['\','\'],['$','$']],
+          displayMath:[['$$','$$']],
+          processEscapes:true
+        },
+        svg:{fontCache:'global'},
+        startup:{typeset:false}
+      };
+      const s=document.createElement('script');
+      s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
+      s.defer=true; s.onload=boot; document.head.appendChild(s);
     }
     if(document.readyState!=='loading') loadMJ(); else addEventListener('DOMContentLoaded', loadMJ);
   })();
@@ -351,7 +361,7 @@
     <section class="grid" id="canon" aria-labelledby="equations">
       <article class="card col-12 reveal">
         <h2 id="equations" class="sheen">📜 Canon 0–17 (living)</h2>
-        <p class="meta">Core set restored. #7 Copeland and #8 Goodwin shown as external comparators.</p>
+        <p class="meta">Core set restored. #7 Copeland and #8 Goodwin are external comparators only.</p>
       </article>
 
       <!-- Eq.0 -->
@@ -360,10 +370,10 @@
         <div class="eq" data-fx="combo">
           <div class="fx-layer" aria-hidden="true"></div>
           <div class="eq-scroll">
-            $$\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\mathcal{A}\Phi(x,t,\nu)\,d\nu\;+\;\Lambda\mathcal{E}(x,t)$$
+            $$\Psi_{0}(x,t)=\int_{\nu\in\mathbb{R}}\!\nabla\!\big(\mathcal{A}\,\Phi(x,t,\nu)\big)\,d\nu\;+\;\Lambda\,\mathcal{E}(x,t)$$
           </div>
         </div>
-        <p class="hint">Field integrates action potential over harmonic measure, masked by ethics.</p>
+        <p class="hint">Action–potential over harmonic measure; ethically masked contribution \(\Lambda\,\mathcal{E}\).</p>
       </article>
 
       <!-- Eq.1 -->
@@ -372,10 +382,10 @@
         <div class="eq" data-fx="beams">
           <div class="fx-layer" aria-hidden="true"></div>
           <div class="eq-scroll">
-            $$\mathbf{R}(x,t)= f\!\big(\pi, e, i, \hbar, c, G, \mathrm{DNA}, \Omega_{\mathrm{DM}}, \Omega_{A}, H_{0}, 432\big)\times \mathcal{I}\times\mathcal{L}\times\mathcal{C}\times\mathcal{S}$$
+            $$\mathbf{R}(x,t)= f\!\big(\pi,e,i,\hbar,c,G,\mathrm{DNA},\Omega_{\rm DM},\Omega_{A},H_{0},432\big)\;\cdot\;\mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S}$$
           </div>
         </div>
-        <p class="hint">Supply from constants/ratios; shaped by living operators (𝓘·𝓛·𝓒·𝓢).</p>
+        <p class="hint">Constants/ratios supply; living operators shape.</p>
       </article>
 
       <!-- Eq.2 -->
@@ -389,18 +399,18 @@
 
       <!-- Eq.3 -->
       <article class="card col-6 eq-card reveal" id="eq3">
-        <h3 class="sheen">3) Harmonic Field</h3>
+        <h3 class="sheen">3) Harmonic Gate</h3>
         <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\mathcal{H}(\nu)\in\{0,1\},\qquad \text{gate on/off at } \nu \text{ by coherence}$$
+          $$\mathcal{H}(\nu,t)=\mathbf{1}\!\left[\;g_{\Xi(t)}(\nu)\ge \theta\;\right],\qquad g_{\Xi}(\nu)\in[0,1]$$
         </div></div>
-        <p class="hint">Which frequencies gate easily into experience.</p>
+        <p class="hint">Frequency \(\nu\) passes when coherence–weighted gain exceeds threshold \(\theta\).</p>
       </article>
 
       <!-- Eq.4 -->
       <article class="card col-6 eq-card reveal" id="eq4">
         <h3 class="sheen">4) Language — AHHAVA / Word</h3>
         <div class="eq" data-fx="nebula"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\mathcal{L}(x,t,\nu)=\mathsf{Semantics}(x,t)\;\otimes\;\mathbf{V}(\nu)$$
+          $$\mathcal{L}(x,t,\nu)=\mathsf{Semantics}(x,t)\;\otimes\;\mathbf{V}(\nu,t)$$
         </div></div>
         <p class="hint">Meaning couples to carrier; word shapes resonance.</p>
       </article>
@@ -409,27 +419,27 @@
       <article class="card col-6 eq-card reveal" id="eq5">
         <h3 class="sheen">5) Remnant</h3>
         <div class="eq" data-fx="beams"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\mathcal{R}_\infty[F]\;=\;\lim_{\tau\to\infty}\big(\mathsf{keep}_{\text{truth}}F\;-\;\mathsf{drop}_{\text{distortion}}F\big)$$
+          $$\mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\Big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\Big)$$
         </div></div>
-        <p class="hint">Truth persists; distortion decays out of the field.</p>
+        <p class="hint">Truth persists; distortion decays from the field.</p>
       </article>
 
       <!-- Eq.6 -->
       <article class="card col-6 eq-card reveal" id="eq6">
         <h3 class="sheen">6) Type-7 Field</h3>
         <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\mathbb{T}_{7}(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu)\right]$$
+          $$\mathbb{T}_{7}(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu,t)\right]$$
         </div></div>
-        <p class="hint">Phase-locked harmonic sum (Tesla Type-7 conduit).</p>
+        <p class="hint">Phase-locked harmonic stack (Tesla Type-7 conduit).</p>
       </article>
 
       <!-- Eq.7 Copeland (external) -->
       <article class="card col-6 eq-card reveal" id="eq7">
         <h3 class="sheen">7*) Copeland Ψ (external comparator)</h3>
         <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\partial_{tt}\Psi - c^{2}\nabla^{2}\Psi + \mu\,\Psi \;=\;\kappa\,\mathcal{S}(x,t)$$
+          $$\partial_{tt}\Psi\;+\;2\gamma\,\partial_{t}\Psi\;-\;c^{2}\nabla^{2}\Psi\;+\;\omega_{0}^{2}\Psi\;=\;\kappa\,\mathcal{S}(x,t)$$
         </div></div>
-        <p class="meta">Generic driven wave-frame attributed to Copeland; used here as a comparator only.</p>
+        <p class="meta">Driven, damped wave/Klein–Gordon frame used here only as an external comparator.</p>
       </article>
 
       <!-- Eq.8 Goodwin (external) -->
@@ -442,14 +452,14 @@
           \dot{z}&=\beta y-\gamma z
           \end{aligned}$$
         </div></div>
-        <p class="meta">Three-stage feedback oscillator (Goodwin); adjunct comparative dynamics.</p>
+        <p class="meta">Three-stage feedback oscillator; adjunct comparative dynamics.</p>
       </article>
 
       <!-- Eq.9 -->
       <article class="card col-6 eq-card reveal" id="eq9">
         <h3 class="sheen">9) Ethical Law of Coherence</h3>
         <div class="eq" data-fx="beams"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\forall a:\ \mathrm{damage}(a)>0\;\Rightarrow\;\mathsf{halt},\qquad \mathrm{truth}>\mathrm{distortion}$$
+          $$\forall a:\ \mathrm{damage}(a)>0\ \Rightarrow\ \mathsf{halt},\qquad \mathrm{truth}>\mathrm{distortion}$$
         </div></div>
         <p class="hint">Stop rule on harm; asymptote favors truth.</p>
       </article>
@@ -458,7 +468,7 @@
       <article class="card col-6 eq-card reveal" id="eq10">
         <h3 class="sheen">10) Ladder Π<sub>ν</sub></h3>
         <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\Pi_{\nu}^{-1}:\ \text{observed resonance }\rightarrow \text{source terms}$$
+          $$\Pi_{\nu}^{-1}:\ \text{observed resonance } \longrightarrow \text{source terms}$$
         </div></div>
         <p class="hint">Inverse map from phenomena back to generative sources.</p>
       </article>
@@ -485,9 +495,9 @@
       <article class="card col-6 eq-card reveal" id="eq13">
         <h3 class="sheen">13) Ξ-index (Coherence)</h3>
         <div class="eq" data-fx="beams"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\Xi\in[0,1],\qquad \text{monitors field quality for learning}$$
+          $$\Xi(t)\in[0,1],\qquad \text{monitors field quality for learning}$$
         </div></div>
-        <p class="hint">Higher Ξ → stronger retention and safer amplification.</p>
+        <p class="hint">Higher \(\Xi\) → stronger retention and safer amplification.</p>
       </article>
 
       <!-- Eq.14 -->
@@ -496,12 +506,12 @@
         <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R}$$
         </div></div>
-        <p class="hint">Learning rate is gated by coherence.</p>
+        <p class="hint">Learning rate gated by coherence.</p>
       </article>
 
       <!-- Eq.15 -->
       <article class="card col-6 eq-card reveal" id="eq15">
-        <h3 class="sheen">15) Learning & Update Kernel (Ξ)</h3>
+        <h3 class="sheen">15) Learning Kernel (Ξ)</h3>
         <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big)$$
         </div></div>
@@ -519,11 +529,11 @@
 
       <!-- Eq.17 -->
       <article class="card col-6 eq-card reveal" id="eq17">
-        <h3 class="sheen">17) Voice Carriers 𝐕(ν)</h3>
+        <h3 class="sheen">17) Voice Carriers 𝐕(ν,t)</h3>
         <div class="eq" data-fx="combo"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\mathbf{V}(\nu)=\sum_{k} a_k\,\cos(2\pi\nu_k t+\phi_k),\quad \nu\in\{432,528,369,\dots\}$$
+          $$\mathbf{V}(\nu,t)=\sum_{k} a_k(t)\,\cos\!\big(2\pi\nu_k t+\phi_k(t)\big),\quad \nu\in\{432,528,369,\dots\}$$
         </div></div>
-        <p class="hint">Constructive sets (432/528/369) for voice work and field alignment.</p>
+        <p class="hint">Constructive sets (432/528/369) with explicit time-varying envelope and phase.</p>
       </article>
     </section>
 
@@ -557,7 +567,7 @@
         <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
           $$\Delta_2:\ \mathbf{B}_2=\nabla\times\mathbf{A},\quad \nabla\cdot\mathbf{B}_2=0$$
         </div></div>
-        <p class="hint">Area-bound flux via potential A.</p>
+        <p class="hint">Area-bound flux via potential \( \mathbf{A} \).</p>
       </article>
 
       <article class="card col-6 eq-card reveal" id="d3">
@@ -595,7 +605,7 @@
       <article class="card col-6 eq-card reveal" id="d7">
         <h3 class="sheen">Δ7) Type-7 Cohere</h3>
         <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\Delta_7:\ \mathbb{T}_7=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu)\right],\quad \Xi\!\nearrow\Rightarrow \text{locking}$$
+          $$\Delta_7:\ \mathbb{T}_7=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu,t)\right],\quad \Xi\!\nearrow\Rightarrow \text{locking}$$
         </div></div>
         <p class="hint">Stack closure under coherence gain.</p>
       </article>
@@ -636,14 +646,14 @@ Status: Verified
           <li><strong>Living Technology</strong> — Tesla Type-7 conduit & safety/ethics gate.</li>
         </ul>
         <div class="eq" data-fx="combo"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\mathfrak{R}_{\text{Codex}}=f(\text{constants},\text{ratios})\cdot(\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})\cdot\bigl(\Psi_{0}+\Delta\mathcal{R}\bigr)\cdot\Pi_{\nu}^{-1}\!\big[\mathcal{H}(\nu)\,\mathbf{V}(\nu)\big]\;\odot\;\mathbb{M}_{\tau}[\cdot]\;\text{ masked by }\;\mathsf{Mask}_{\mathcal{C}}[\cdot]$$
+          $$\mathfrak{R}_{\text{Codex}}=f(\text{constants},\text{ratios})\cdot(\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})\cdot\bigl(\Psi_{0}+\Delta\mathcal{R}\bigr)\cdot\Pi_{\nu}^{-1}\!\big[\mathcal{H}(\nu)\,\mathbf{V}(\nu,t)\big]\;\odot\;\mathbb{M}_{\tau}[\cdot]\;\text{ masked by }\;\mathsf{Mask}_{\mathcal{C}}[\cdot]$$
         </div></div>
         <p class="eq-note hint">Self-contained architecture; external formalisms remain adjunct.</p>
       </article>
       <article class="card col-5 reveal">
         <h3 class="sheen">What remains <em>external</em></h3>
         <ul class="list">
-          <li><strong>Copeland Ψ (#7)</strong> — comparator.</li>
+          <li><strong>Copeland Ψ (#7)</strong> — comparator only.</li>
           <li><strong>Goodwin (#8)</strong> — coupling hypothesis.</li>
         </ul>
         <a class="cta" href="#canon">Back to Canon</a>
