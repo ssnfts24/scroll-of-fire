@@ -1,6 +1,7 @@
+
 /* ==========================================================================
 Scroll of Fire — Codex of Reality
-codex.css v2.8  (Electric–Aetheric • Living Tech • Mobile-first)
+codex.css v2.8.1  (Electric–Aetheric • Living Tech • Mobile-first)
 Consolidates and fixes v2.5–v2.7; aligns with new hero + equation FX
 ========================================================================== */
 
@@ -172,6 +173,11 @@ header.site{
 :target{ scroll-margin-top: calc(var(--head-h) + var(--tabs-h) + 12px) }
 @supports selector(body:has(.tabs)){ html{ scroll-padding-top: calc(var(--head-h) + var(--tabs-h) + 12px) } }
 
+/* Tiny screens: keep tabs on one line with scroll */
+@media (max-width: 420px){
+  .tabs{ flex-wrap:nowrap; justify-content:flex-start; }
+}
+
 /* ------------------------------ Grid ------------------------------ */
 .grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:16px }
 .col-12{grid-column:span 12}.col-9{grid-column:span 9}.col-8{grid-column:span 8}.col-7{grid-column:span 7}.col-6{grid-column:span 6}.col-5{grid-column:span 5}.col-4{grid-column:span 4}.col-3{grid-column:span 3}
@@ -186,7 +192,7 @@ header.site{
   box-shadow:0 6px 14px rgba(0,0,0,.35); transform:translateZ(0); overflow:hidden; isolation:isolate;
   opacity:0; transform:translateY(8px) scale(.995);
 }
-.reveal{ opacity:0; transform:translateY(8px) scale(.995); transition:opacity var(--dur-2) var(--ease), transform var(--dur-2) var(--ease) }
+.reveal{ opacity:0; transform:translateY(8px) scale(.995); transition:opacity var(--dur-2) var(--ease), transform var(--dur-2) var(--ease); will-change: opacity, transform; }
 .reveal.in,.card.visible{ opacity:1; transform:none }
 .card::before,.card::after{ content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none }
 .card::before{ box-shadow: inset 0 0 0 1px rgba(122,243,255,.18), inset 0 0 22px rgba(122,243,255,.08), inset 0 0 36px rgba(122,168,255,.06); mix-blend-mode:screen }
@@ -306,21 +312,6 @@ p{ margin:8px 0 10px } .meta{ color:var(--muted); font-size:var(--fs-0) } .hint{
 .explore-dock .btn--primary{ border-color:#3a4250; box-shadow:0 0 0 1px rgba(122,243,255,.18) inset }
 @media (min-width:900px){ .explore-dock{ display:none } }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* ------------------------------ Tables ------------------------------ */
 table{ width:100%; border-collapse:collapse; border:1px solid var(--line); border-radius:12px; overflow:hidden; font-size:var(--fs-0); box-shadow:0 0 0 1px rgba(122,243,255,.12) inset }
 thead th{ background:linear-gradient(180deg,#16161d,#12121a); border-bottom:1px solid var(--line); padding:10px 12px; text-align:left; font-weight:600; color:#f2f1ec; text-shadow:0 0 8px rgba(122,243,255,.12) }
@@ -341,36 +332,168 @@ tbody tr:nth-child(even) td{ background:rgba(255,255,255,.015) }
   overflow-x:auto; max-width:100%; padding:12px 16px; -webkit-overflow-scrolling:touch;
   background:repeating-linear-gradient(90deg, rgba(122,243,255,.05) 0 1px, transparent 1px 24px), linear-gradient(180deg, rgba(200,140,255,.05), transparent);
   scroll-snap-type:x proximity;
+  scroll-padding-inline:16px;
   mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
   scrollbar-gutter:stable both-edges; cursor:grab;
 }
 .eq .eq-scroll:active{ cursor:grabbing }
-.eq mjx-container{ display:block!important; font-size:clamp(16px, 2.2vw, 28px); line-height:1.35; filter:drop-shadow(0 0 10px rgba(255,200,107,.08)); scroll-snap-align:start; padding-right:24px }
-@media (max-width:560px){ .eq mjx-container{ font-size:clamp(16px, 4.8vw, 22px) } }
+.eq mjx-container.eq mjx-container{
+  display:block!important;
+  font-size:clamp(16px, 2.2vw, 28px);
+  line-height:1.35;
+  filter:drop-shadow(0 0 10px rgba(255,200,107,.08));
+  scroll-snap-align:start;
+  padding-right:24px;
+}
+@media (max-width:560px){
+  .eq mjx-container{ font-size:clamp(16px, 4.8vw, 22px) }
+}
+/* prevent rare clip on some mobile svg renderers */
+.eq mjx-container svg{ overflow:visible }
 
 /* Equation card polish */
 .eq-card{
   position: relative; display:flex; flex-direction:column;
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--accent) 6%, rgba(10,12,18,.66)) 0%, rgba(10,12,18,.66) 8%, rgba(10,12,18,.66) 100%);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--accent) 6%, rgba(10,12,18,.66)) 0%,
+    rgba(10,12,18,.66) 8%,
+    rgba(10,12,18,.66) 100%
+  );
   border-radius:14px;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03), 0 8px 24px rgba(0,0,0,.35), 0 1px 0 color-mix(in srgb, var(--accent) 10%, transparent);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.03),
+    0 8px 24px rgba(0,0,0,.35),
+    0 1px 0 color-mix(in srgb, var(--accent) 10%, transparent);
 }
 .eq-card::before{
   content:""; position:absolute; inset:-1px -1px auto -1px; height:12px; border-radius:14px 14px 0 0;
   background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 35%, transparent), transparent);
   opacity:.25; pointer-events:none;
 }
-.eq-card .eq{ border-radius:12px; background: radial-gradient(120% 120% at 100% 100%, rgba(255,255,255,.02), transparent 60%); box-shadow: inset 0 0 0 1px rgba(255,255,255,.02) }
-.eq-card .eq-scroll{ padding:14px 12px; max-height: clamp(140px, 22vh, 260px); overflow:auto; scrollbar-gutter:stable both-edges }
+.eq-card .eq{
+  border-radius:12px;
+  background: radial-gradient(120% 120% at 100% 100%, rgba(255,255,255,.02), transparent 60%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+  min-height:160px;
+}
+.eq-card.eq-sm .eq{ min-height:120px }
+.eq-card.eq-lg .eq{ min-height:220px }
+.eq-card .eq-scroll{
+  padding:14px 12px; /* keep single source of truth (removed conflicting later rule) */
+  max-height: clamp(140px, 22vh, 260px);
+  overflow:auto; scrollbar-gutter:stable both-edges;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 12px, black calc(100% - 12px), transparent);
+  mask-image: linear-gradient(to bottom, transparent, black 12px, black calc(100% - 12px), transparent);
+}
 .eq-card .eq-scroll::-webkit-scrollbar{ height:10px; width:10px }
 .eq-card .eq-scroll::-webkit-scrollbar-thumb{ background:#2b2f3a; border-radius:10px; border:2px solid #0e1118 }
-.eq-card .eq-scroll{ -webkit-mask-image: linear-gradient(to bottom, transparent, black 12px, black calc(100% - 12px), transparent); mask-image: linear-gradient(to bottom, transparent, black 12px, black calc(100% - 12px), transparent) }
 .eq .mjx-svg{ overflow:visible }
 @media (hover:hover) and (prefers-reduced-motion: no-preference){
   .eq-card .eq{ transition: transform .18s ease, box-shadow .18s ease }
-  .eq-card:hover .eq{ transform: translateY(-1px) scale(1.01); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 16%, rgba(255,255,255,.02)), 0 6px 18px rgba(0,0,0,.35) }
+  .eq-card:hover .eq{
+    transform: translateY(-1px) scale(1.01);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--accent) 16%, rgba(255,255,255,.02)),
+      0 6px 18px rgba(0,0,0,.35);
+  }
 }
+
+/* ====== EQUATION FX PRIMITIVES (match JS) ====== */
+.eq{ position:relative }
+.eq .fx-layer{ pointer-events:none; position:absolute; inset:0; mix-blend-mode:screen; opacity:.9 }
+.eq .beam{
+  position:absolute; width:2px; height:160%; top:-30%;
+  background:linear-gradient(180deg, rgba(122,243,255,0), rgba(122,243,255,.75), rgba(122,243,255,0));
+  filter:blur(.5px) drop-shadow(0 0 10px rgba(122,243,255,.45));
+  transform:translateX(0) rotate(12deg);
+  animation: beamSlide var(--beam-speed, 24s) linear infinite; animation-delay: var(--d,0s);
+}
+.eq .beam.alt{
+  width:1px;
+  background:linear-gradient(180deg, rgba(243,201,122,0), rgba(243,201,122,.8), rgba(243,201,122,0));
+  transform:translateX(0) rotate(-11deg);
+  animation-duration: var(--beam-speed-alt, 28s);
+}
+@keyframes beamSlide{0%{left:-12%}100%{left:112%}}
+
+.eq .orbit{
+  position:absolute; inset:-12% -6%; transform: rotate(var(--tilt,10deg));
+  animation: orbitSpin var(--orbit-speed, 32s) linear infinite;
+  filter: drop-shadow(0 0 12px rgba(122,243,255,.25));
+}
+.eq .orbit.counter{ animation-direction: reverse; filter: drop-shadow(0 0 12px rgba(243,201,122,.25)) }
+.eq .orb{
+  position:absolute; top:50%; left:50%; width:2px; height:38%; transform-origin:0% -20%;
+  background:linear-gradient(180deg, rgba(255,255,255,0), rgba(122,243,255,.85), rgba(255,255,255,0));
+  border-radius:2px; box-shadow:0 0 10px rgba(122,243,255,.4), 0 0 18px rgba(122,243,255,.24) inset;
+}
+.eq .orb.gold{
+  background:linear-gradient(180deg, rgba(255,255,255,0), rgba(243,201,122,.9), rgba(255,255,255,0));
+  box-shadow:0 0 10px rgba(243,201,122,.45), 0 0 18px rgba(243,201,122,.25) inset;
+}
+@keyframes orbitSpin{ from{transform:rotate(var(--tilt,10deg)) rotate(0deg)} to{transform:rotate(var(--tilt,10deg)) rotate(360deg)} }
+
+.eq .spiral{
+  position:absolute; inset:-20%; border-radius:50%;
+  background:
+    conic-gradient(from 0deg, rgba(122,243,255,0) 0 40%, rgba(122,243,255,.18) 50%, rgba(122,243,255,0) 60%),
+    radial-gradient(60% 60% at 50% 50%, rgba(122,243,255,.08), transparent 70%);
+  animation: spiralSpin var(--spiral-speed, 36s) linear infinite; filter: blur(0.6px);
+}
+.eq .spiral.alt{
+  background:
+    conic-gradient(from 0deg, rgba(243,201,122,0) 0 42%, rgba(243,201,122,.18) 52%, rgba(243,201,122,0) 62%),
+    radial-gradient(60% 60% at 50% 50%, rgba(243,201,122,.06), transparent 70%);
+  animation-duration: var(--spiral-speed-alt, 40s);
+}
+@keyframes spiralSpin{ from{transform:rotate(0)} to{transform:rotate(360)} }
+
+.eq .nebula{
+  position:absolute; inset:0;
+  background-image:
+    radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,.4), transparent 60%),
+    radial-gradient(1.5px 1.5px at 70% 35%, rgba(122,243,255,.5), transparent 60%),
+    radial-gradient(2px 2px at 40% 75%, rgba(243,201,122,.5), transparent 60%),
+    radial-gradient(1px 1px at 85% 60%, rgba(200,140,255,.45), transparent 60%);
+  animation: nebulaBlink 3.6s ease-in-out infinite alternate; opacity:.55; filter: blur(.2px);
+}
+@keyframes nebulaBlink{ 0%{opacity:.35; transform:translateY(0)} 50%{opacity:.7; transform:translateY(-1px)} 100%{opacity:.5} }
+
+.eq .rays, .eq .dust, .eq .flare{ position:absolute; pointer-events:none }
+.eq .rays{
+  inset:-6% -4%;
+  background:
+    repeating-linear-gradient(115deg, rgba(122,243,255,.06), rgba(122,243,255,.06) 2px, transparent 2px 6px),
+    repeating-linear-gradient(-65deg, rgba(243,201,122,.05), rgba(243,201,122,.05) 2px, transparent 2px 7px);
+  mix-blend-mode:screen; opacity:.35; filter:blur(.6px);
+  animation: raysDrift var(--rays-speed, 38s) linear infinite;
+}
+@keyframes raysDrift{ from{transform:translateX(-3%) rotate(0deg)} to{transform:translateX(3%) rotate(360deg)} }
+
+.eq .dust{
+  inset:0; opacity:.35; mix-blend-mode:screen;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.45), transparent 60%),
+    radial-gradient(1px 1px at 62% 66%, rgba(122,243,255,.35), transparent 60%),
+    radial-gradient(1px 1px at 84% 44%, rgba(243,201,122,.35), transparent 60%);
+  animation: dustBlink 4.2s ease-in-out infinite alternate;
+}
+@keyframes dustBlink{ 0%{opacity:.25} 50%{opacity:.55} 100%{opacity:.35} }
+
+.eq .flare{
+  width:120px; height:120px; right:-40px; bottom:-40px; border-radius:50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 45%, #ffffff) , transparent 68%);
+  filter: blur(10px); opacity:.25; transform:rotate(0.01deg);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .eq .fx-layer{display:none}
+  .eq mjx-container{ filter:none!important }
+}
+
+/* Calmer variant if you ever need it */
 .eq[data-fx="calm"] .fx-layer{
   opacity:.5; mix-blend-mode:screen;
   background:
@@ -384,61 +507,6 @@ tbody tr:nth-child(even) td{ background:rgba(255,255,255,.015) }
 .eq[data-fx="calm"] .rays,
 .eq[data-fx="calm"] .dust,
 .eq[data-fx="calm"] .flare { display:none !important; }
-.eq-card h3{ margin-bottom:10px }
-.eq-card .hint,.eq-card .meta{ margin-top:10px }
-
-/* ====== EQUATION FX PRIMITIVES (match JS) ====== */
-.eq{ position:relative }
-.eq .fx-layer{ pointer-events:none; position:absolute; inset:0; mix-blend-mode:screen; opacity:.9 }
-.eq-card .eq{ min-height:160px }
-.eq-card.eq-sm .eq{ min-height:120px }
-.eq-card.eq-lg .eq{ min-height:220px }
-.eq-card .eq-scroll{ padding:10px 4px }
-.eq .beam{ position:absolute; width:2px; height:160%; top:-30%;
-  background:linear-gradient(180deg, rgba(122,243,255,0), rgba(122,243,255,.75), rgba(122,243,255,0));
-  filter:blur(.5px) drop-shadow(0 0 10px rgba(122,243,255,.45));
-  transform:translateX(0) rotate(12deg);
-  animation: beamSlide var(--beam-speed, 24s) linear infinite; animation-delay: var(--d,0s) }
-.eq .beam.alt{ width:1px; background:linear-gradient(180deg, rgba(243,201,122,0), rgba(243,201,122,.8), rgba(243,201,122,0)); transform:translateX(0) rotate(-11deg); animation-duration: var(--beam-speed-alt, 28s) }
-@keyframes beamSlide{0%{left:-12%}100%{left:112%}}
-.eq .orbit{ position:absolute; inset:-12% -6%; transform: rotate(var(--tilt,10deg)); animation: orbitSpin var(--orbit-speed, 32s) linear infinite; filter: drop-shadow(0 0 12px rgba(122,243,255,.25)) }
-.eq .orbit.counter{ animation-direction: reverse; filter: drop-shadow(0 0 12px rgba(243,201,122,.25)) }
-.eq .orb{ position:absolute; top:50%; left:50%; width:2px; height:38%; transform-origin:0% -20%;
-  background:linear-gradient(180deg, rgba(255,255,255,0), rgba(122,243,255,.85), rgba(255,255,255,0));
-  border-radius:2px; box-shadow:0 0 10px rgba(122,243,255,.4), 0 0 18px rgba(122,243,255,.24) inset }
-.eq .orb.gold{ background:linear-gradient(180deg, rgba(255,255,255,0), rgba(243,201,122,.9), rgba(255,255,255,0)); box-shadow:0 0 10px rgba(243,201,122,.45), 0 0 18px rgba(243,201,122,.25) inset }
-@keyframes orbitSpin{ from{transform:rotate(var(--tilt,10deg)) rotate(0deg)} to{transform:rotate(var(--tilt,10deg)) rotate(360deg)} }
-.eq .spiral{ position:absolute; inset:-20%; border-radius:50%;
-  background: conic-gradient(from 0deg, rgba(122,243,255,.0) 0 40%, rgba(122,243,255,.18) 50%, rgba(122,243,255,0) 60%), radial-gradient(60% 60% at 50% 50%, rgba(122,243,255,.08), transparent 70%);
-  animation: spiralSpin var(--spiral-speed, 36s) linear infinite; filter: blur(0.6px) }
-.eq .spiral.alt{ background: conic-gradient(from 0deg, rgba(243,201,122,.0) 0 42%, rgba(243,201,122,.18) 52%, rgba(243,201,122,0) 62%), radial-gradient(60% 60% at 50% 50%, rgba(243,201,122,.06), transparent 70%); animation-duration: var(--spiral-speed-alt, 40s) }
-@keyframes spiralSpin{ from{transform:rotate(0)} to{transform:rotate(360)} }
-.eq .nebula{ position:absolute; inset:0; background-image:
-  radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,.4), transparent 60%),
-  radial-gradient(1.5px 1.5px at 70% 35%, rgba(122,243,255,.5), transparent 60%),
-  radial-gradient(2px 2px at 40% 75%, rgba(243,201,122,.5), transparent 60%),
-  radial-gradient(1px 1px at 85% 60%, rgba(200,140,255,.45), transparent 60%);
-  animation: nebulaBlink 3.6s ease-in-out infinite alternate; opacity:.55; filter: blur(.2px) }
-@keyframes nebulaBlink{ 0%{opacity:.35; transform:translateY(0)} 50%{opacity:.7; transform:translateY(-1px)} 100%{opacity:.5} }
-.eq .rays, .eq .dust, .eq .flare{ position:absolute; pointer-events:none }
-.eq .rays{ inset:-6% -4%;
-  background:
-    repeating-linear-gradient(115deg, rgba(122,243,255,.06), rgba(122,243,255,.06) 2px, transparent 2px, transparent 6px),
-    repeating-linear-gradient(-65deg, rgba(243,201,122,.05), rgba(243,201,122,.05) 2px, transparent 2px, transparent 7px);
-  mix-blend-mode:screen; opacity:.35; filter:blur(.6px);
-  animation: raysDrift var(--rays-speed, 38s) linear infinite }
-@keyframes raysDrift{ from{transform:translateX(-3%) rotate(0deg)} to{transform:translateX(3%) rotate(360deg)} }
-.eq .dust{ inset:0; opacity:.35; mix-blend-mode:screen;
-  background-image:
-    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.45), transparent 60%),
-    radial-gradient(1px 1px at 62% 66%, rgba(122,243,255,.35), transparent 60%),
-    radial-gradient(1px 1px at 84% 44%, rgba(243,201,122,.35), transparent 60%);
-  animation: dustBlink 4.2s ease-in-out infinite alternate }
-@keyframes dustBlink{ 0%{opacity:.25} 50%{opacity:.55} 100%{opacity:.35} }
-.eq .flare{ width:120px; height:120px; right:-40px; bottom:-40px; border-radius:50%;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 45%, #ffffff) , transparent 68%);
-  filter: blur(10px); opacity:.25; transform:rotate(0.01deg) }
-@media (prefers-reduced-motion:reduce){ .eq .fx-layer{display:none} .eq .mjx-svg{filter:none!important} }
 
 /* ------------------------------ HUD / Laser Grid ------------------------------ */
 .laser-grid{
@@ -453,6 +521,9 @@ tbody tr:nth-child(even) td{ background:rgba(255,255,255,.015) }
   @keyframes gridDriftA{ 0%{transform:translateY(0)} 50%{transform:translateY(8px)} 100%{transform:translateY(0)} }
   @keyframes gridDriftB{ 0%{background-position:0 0, 0 0, 0 0} 100%{background-position:0 0, 60px 0, 0 60px} }
   .laser-grid{ animation:gridDriftA calc(16s * var(--tempo,1)) ease-in-out infinite, gridDriftB calc(22s * var(--tempo,1)) linear infinite }
+}
+@media (prefers-reduced-motion: reduce){
+  .laser-grid{ animation:none!important; }
 }
 
 /* ------------------------------ Ξ Coherence Meter ------------------------------ */
@@ -469,11 +540,24 @@ tbody tr:nth-child(even) td{ background:rgba(255,255,255,.015) }
   @keyframes xiBreath{0%,100%{transform:scale(.85)}50%{transform:scale(1)}}
 }
 
-/* ------------------------------ Simple Mode ------------------------------ */
+/* ------------------------------ Simple / Echo Mode ------------------------------ */
 .simple-toggle{ display:flex; align-items:center; gap:10px; justify-content:center; margin:0 0 14px }
 .simple-toggle input{ accent-color:#8be9ff; transform:scale(1.1) }
 .eq-note{ display:none; color:var(--muted); font-style:italic; margin:8px 2px 0 }
-.simple-on .eq{ display:none } .simple-on .eq-note{ display:block }
+
+/* Hide math + FX aggressively for GPU/battery savings */
+body.simple-on .eq,
+body.simple-on .eq-card .eq,
+body.simple-on .eq-scroll,
+body.simple-on .eq .fx-layer,
+body.simple-on .eq .beam,
+body.simple-on .eq .orbit,
+body.simple-on .eq .spiral,
+body.simple-on .eq .nebula,
+body.simple-on .eq .rays,
+body.simple-on .eq .dust,
+body.simple-on .eq .flare { display:none !important; }
+body.simple-on .eq-note{ display:block; font-size: var(--fs-2); }
 
 /* ------------------------------ Back to Top ------------------------------ */
 .to-top{
@@ -485,18 +569,27 @@ tbody tr:nth-child(even) td{ background:rgba(255,255,255,.015) }
 .to-top:hover{ border-color:#3a3a44 }
 
 /* (Legacy id support if older JS toggles #toTop) */
-#toTop{ position:fixed;right:20px;bottom:20px;border-radius:50%;width:48px;height:48px;background:var(--accent);color:#000;font-weight:700;border:none;cursor:pointer;opacity:0;transform:translateY(10px);transition:opacity .3s,transform .3s }
+#toTop{
+  position:fixed;right:20px;bottom:20px;border-radius:50%;width:48px;height:48px;background:var(--accent);
+  color:#000;font-weight:700;border:none;cursor:pointer;opacity:0;transform:translateY(10px);transition:opacity .3s,transform .3s
+}
 #toTop.visible{opacity:1;transform:none}
 
 /* ------------------------------ Command Palette ------------------------------ */
 .palette{ position:fixed; inset:0; z-index:80; display:none; background:rgba(10,10,14,.6); backdrop-filter:blur(8px) }
 .palette.open{ display:block }
 .palette .panel{ max-width:760px; margin:12vh auto; background:#101017; border:1px solid #2a2a33; border-radius:14px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.45) }
-.palette input{ width:100%; padding:14px 16px; background:#0c0c12; color:var(--ink); border:0; border-bottom:1px solid #23232c; font:500 16px/1.4 Inter }
+.palette input{
+  width:100%; padding:14px 16px; background:#0c0c12; color:var(--ink); border:0; border-bottom:1px solid #23232c; font:500 16px/1.4 Inter
+}
 .palette ul{ list-style:none; margin:0; padding:10px }
 .palette li{ padding:8px 10px; border-radius:10px; cursor:pointer }
 .palette li:hover{ background:#15151e }
 .palette li.sel{ background:#161621; outline:2px solid rgba(122,243,255,.35); box-shadow:0 0 0 4px rgba(122,243,255,.12) }
+
+/* Better keyboard focus */
+.palette input:focus-visible{ outline:2px solid var(--ring); outline-offset:2px; }
+.palette a:focus-visible{ outline:2px solid var(--ring); border-radius:8px; }
 
 /* ------------------------------ Footer ------------------------------ */
 footer.footer{ text-align:center; color:var(--muted); margin-top:20px; font-size:var(--fs-0) }
@@ -508,7 +601,9 @@ footer.footer{ text-align:center; color:var(--muted); margin-top:20px; font-size
   box-shadow:0 20px 50px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.12);
   padding:10px;
 }
-#site-suggest a{ display:block; padding:8px 10px; border-radius:10px; text-decoration:none; border:1px solid transparent }
+#site-suggest a{
+  display:block; padding:8px 10px; border-radius:10px; text-decoration:none; border:1px solid transparent
+}
 #site-suggest a:hover,#site-suggest a:focus-visible{ border-color:#3a3a44; background:rgba(255,255,255,.04) }
 
 /* ------------------------------ Print ------------------------------ */
@@ -527,11 +622,15 @@ footer.footer{ text-align:center; color:var(--muted); margin-top:20px; font-size
   table{ border:1px solid #ccc } thead th{ background:#f4f4f4; color:#000; text-shadow:none }
 }
 
-/* ------------------------------ Scrollbar ------------------------------ */
-@supports selector(:root:has(body)){
-  body::-webkit-scrollbar{ width:12px }
-  body::-webkit-scrollbar-track{ background:#0f0f14 }
-  body::-webkit-scrollbar-thumb{ background:#2b2b35; border-radius:10px; border:2px solid #0f0f14; box-shadow: inset 0 0 12px rgba(122,243,255,.15) }
+/* ------------------------------ Scrollbar (single, no duplicates) ------------------------------ */
+body{
+  scrollbar-width: thin; scrollbar-color: #2b2b35 #0f0f14;
+}
+body::-webkit-scrollbar{ width:12px }
+body::-webkit-scrollbar-track{ background:#0f0f14 }
+body::-webkit-scrollbar-thumb{
+  background:#2b2b35; border-radius:10px; border:2px solid #0f0f14;
+  box-shadow: inset 0 0 12px rgba(122,243,255,.15)
 }
 
 /* ------------------------------ Performance / Fallbacks ------------------------------ */
@@ -556,10 +655,13 @@ body.performance-warming{ animation:warmOff .9s linear forwards }
   body{ background-image:none!important }
   .laser-grid,.card::before,.card::after{ display:none!important }
   .eq{ box-shadow:inset 0 0 12px rgba(255,200,107,.03) }
+  .eq .fx-layer{ display:none!important }
 }
 
 /* Webview / platform fallbacks */
-header.site,.tabs,.quick,.explore-dock,.palette .panel{ -webkit-backdrop-filter:saturate(140%) blur(10px); backdrop-filter:saturate(140%) blur(10px) }
+header.site,.tabs,.quick,.explore-dock,.palette .panel{
+  -webkit-backdrop-filter:saturate(140%) blur(10px); backdrop-filter:saturate(140%) blur(10px)
+}
 @supports not ((-webkit-backdrop-filter: blur(2px)) or (backdrop-filter: blur(2px))) {
   header.site,.tabs,.quick,.explore-dock,.palette{ background: rgba(12,14,18,.92) !important }
   .palette .panel{ background:#101017 !important }
@@ -575,12 +677,8 @@ header.site,.tabs{ position:-webkit-sticky; position:sticky }
   @media (min-width:601px){ .hero::before{ content:""; display:block; padding-top:42.85%; } }
   .hero > picture, .hero > img { position:absolute; inset:0; }
 }
-/* Scrollbars & momentum fallback */
+/* Scroll momentum fallback */
 html, body { -webkit-overflow-scrolling: touch; }
-body { scrollbar-width: thin; scrollbar-color: #2b2b35 #0f0f14; }
-body::-webkit-scrollbar{ width:12px }
-body::-webkit-scrollbar-track{ background:#0f0f14 }
-body::-webkit-scrollbar-thumb{ background:#2b2b35; border-radius:10px; border:2px solid #0f0f14; box-shadow: inset 0 0 12px rgba(122,243,255,.15) }
 
 /* Color-mix fallbacks */
 @supports not (color: color-mix(in srgb, red 50%, white)) {
@@ -589,10 +687,19 @@ body::-webkit-scrollbar-thumb{ background:#2b2b35; border-radius:10px; border:2p
   .goldline { background: linear-gradient(90deg,transparent,var(--accent),transparent); }
   .tabs .tab-ink { box-shadow:none; }
   input::placeholder, textarea::placeholder { color: #a7b0bb; }
-  .eq { box-shadow:
-    inset 0 0 20px rgba(255,200,107,.03),
-    0 0 14px rgba(122,243,255,.10),
-    0 0 calc(8px + 18px * var(--xi,0)) var(--accent);
+  .eq {
+    box-shadow:
+      inset 0 0 20px rgba(255,200,107,.03),
+      0 0 14px rgba(122,243,255,.10),
+      0 0 calc(8px + 18px * var(--xi,0)) var(--accent);
+  }
+  /* keep hover glow visible without color-mix */
+  @media (hover:hover){
+    .eq-card:hover .eq{
+      box-shadow:
+        inset 0 0 0 1px var(--accent),
+        0 6px 18px rgba(0,0,0,.35);
+    }
   }
 }
 
@@ -600,12 +707,12 @@ body::-webkit-scrollbar-thumb{ background:#2b2b35; border-radius:10px; border:2p
 @media (forced-colors: active) {
   :root { --line: GrayText; --ink: ButtonText; --muted: GrayText; }
   * { forced-color-adjust: auto; }
-  header.site, .tabs, .quick, .explore-dock, .palette .panel { 
+  header.site, .tabs, .quick, .explore-dock, .palette .panel {
     border: 1px solid CanvasText !important;
     background: Canvas !important;
   }
-  .card, .tile, .cta, .tab, .eq { 
-    border-color: CanvasText !important; 
+  .card, .tile, .cta, .tab, .eq {
+    border-color: CanvasText !important;
     box-shadow: none !important;
     background: Canvas !important;
   }
@@ -621,7 +728,8 @@ body::-webkit-scrollbar-thumb{ background:#2b2b35; border-radius:10px; border:2p
   .tabs { padding:6px 8px }
   .tile { padding:10px }
 }
-.searchbox{ margin-top:6px } @media (max-width:560px){ .searchbox{ margin-top:2px } }
+.searchbox{ margin-top:6px }
+@media (max-width:560px){ .searchbox{ margin-top:2px } }
 
 /* Interop with “affect-off” kill switch */
 .affect-off .title,
@@ -638,5 +746,7 @@ body.living-all :where(h1,h2,h3,p,li,small,em,strong,span,a,button,label,.kicker
   animation: living-slide 9s linear infinite;
   filter: drop-shadow(0 0 calc(2px + 6px*var(--xi)) color-mix(in srgb, var(--accent) 25%, transparent));
 }
-.no-living, .logo, .laser-grid, img, video, canvas, svg path, svg rect, svg circle, svg polygon { background:none!important; color:inherit!important; -webkit-background-clip:initial!important; filter:none!important; animation:none!important }
+.no-living, .logo, .laser-grid, img, video, canvas, svg path, svg rect, svg circle, svg polygon {
+  background:none!important; color:inherit!important; -webkit-background-clip:initial!important; filter:none!important; animation:none!important
+}
 @keyframes living-slide{ 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
