@@ -865,6 +865,30 @@ input, select, textarea {
   .eq .arc.run{ animation: arcSweep var(--ad, 5s) ease-in-out var(--delay,0s) both; }
 }
 
+
+
+
+
+
+
+
+
+
+/* === Alive mode presets (palette-controlled) === */
+:root[data-alive="calm"]{
+  --alive-amp:.6; --alive-spark-count:10; --alive-min-dur:8s; --alive-max-dur:16s;
+  --tempo:.9;
+}
+:root[data-alive="lively"]{
+  --alive-amp:.95; --alive-spark-count:18; --alive-min-dur:6s; --alive-max-dur:14s;
+  --tempo:1;
+}
+:root[data-alive="max"]{
+  --alive-amp:1.15; --alive-spark-count:28; --alive-min-dur:5s; --alive-max-dur:12s;
+  --tempo:1.1;
+}
+/* When the user kills affects, we just rely on the existing .affect-off guards */
+
 /* -------- HUD grid tiny air shimmer bursts -------- */
 @media (prefers-reduced-motion:no-preference){
   @keyframes airBurst{ 0%{opacity:.44} 50%{opacity:.52} 100%{opacity:.44} }
