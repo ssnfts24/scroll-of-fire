@@ -2,7 +2,13 @@
 <html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>if(location.hostname==="github.com"){const b=document.querySelector("base");if(b)b.remove();}</script>
+  <script>
+    // Remove <base> when previewing on github.com to keep relative links working
+    if (location.hostname === "github.com") {
+      const b = document.querySelector("base");
+      if (b) b.remove();
+    }
+  </script>
 
   <meta charset="utf-8">
   <title>Scroll of Fire — Codex of Reality</title>
@@ -61,16 +67,17 @@
     "inLanguage":"en"}</script>
 
   <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- Styles (v2.6) -->
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2.6">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2.6" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.6"></noscript>
+  <!-- Styles (v2.7) -->
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2.7">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2.7" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.7"></noscript>
 
   <!-- Preload banner -->
-  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" imagesizes="100vw" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" fetchpriority="high">
 
   <!-- Page-scoped helpers + Living Tech bridges -->
   <style>
@@ -82,7 +89,6 @@
     }
     .carrier-528 :root, .carrier-528{--accent:var(--accent-528)}
     .carrier-369 :root, .carrier-369{--accent:var(--accent-369)}
-    /* NEW carriers */
     .carrier-144 :root, .carrier-144 { --accent:#b3e1ff }
     .carrier-963 :root, .carrier-963 { --accent:#ffd1f3 }
 
@@ -102,7 +108,7 @@
     a.skip:focus{left:12px;top:12px;width:auto;height:auto;padding:8px 10px;z-index:70;background:#0f1118;color:#fff;border:1px solid #343846;border-radius:10px;-webkit-backdrop-filter:saturate(140%) blur(8px);backdrop-filter:saturate(140%) blur(8px)}
     #integrity pre.eq{background:#0e1015;border:1px solid rgba(122,243,255,.14);border-radius:12px;padding:12px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
 
-    /* ====== EQUATION BOX FX (more variety) ====== */
+    /* ====== EQUATION BOX FX ====== */
     .eq{ position:relative; overflow:hidden }
     .eq .fx-layer{ pointer-events:none; position:absolute; inset:0; mix-blend-mode:screen; opacity:.9 }
     .eq-card .eq{ min-height:160px }
@@ -110,7 +116,6 @@
     .eq-card.eq-lg .eq{ min-height:220px }
     .eq-card .eq-scroll{ padding:10px 4px }
 
-    /* beams */
     .eq .beam{ position:absolute; width:2px; height:160%; top:-30%;
       background:linear-gradient(180deg, rgba(122,243,255,0), rgba(122,243,255,.75), rgba(122,243,255,0));
       filter:blur(.5px) drop-shadow(0 0 10px rgba(122,243,255,.45));
@@ -119,7 +124,6 @@
     .eq .beam.alt{ width:1px; background:linear-gradient(180deg, rgba(243,201,122,0), rgba(243,201,122,.8), rgba(243,201,122,0)); transform:translateX(0) rotate(-11deg); animation-duration: var(--beam-speed-alt, 28s) }
     @keyframes beamSlide{0%{left:-12%}100%{left:112%}}
 
-    /* orbit */
     .eq .orbit{ position:absolute; inset:-12% -6%; transform: rotate(var(--tilt,10deg)); animation: orbitSpin var(--orbit-speed, 32s) linear infinite; filter: drop-shadow(0 0 12px rgba(122,243,255,.25)) }
     .eq .orbit.counter{ animation-direction: reverse; filter: drop-shadow(0 0 12px rgba(243,201,122,.25)) }
     .eq .orb{ position:absolute; top:50%; left:50%; width:2px; height:38%; transform-origin:0% -20%;
@@ -128,14 +132,12 @@
     .eq .orb.gold{ background:linear-gradient(180deg, rgba(255,255,255,0), rgba(243,201,122,.9), rgba(255,255,255,0)); box-shadow:0 0 10px rgba(243,201,122,.45), 0 0 18px rgba(243,201,122,.25) inset }
     @keyframes orbitSpin{ from{transform:rotate(var(--tilt,10deg)) rotate(0deg)} to{transform:rotate(var(--tilt,10deg)) rotate(360deg)} }
 
-    /* spiral */
     .eq .spiral{ position:absolute; inset:-20%; border-radius:50%;
       background: conic-gradient(from 0deg, rgba(122,243,255,.0) 0 40%, rgba(122,243,255,.18) 50%, rgba(122,243,255,0) 60%), radial-gradient(60% 60% at 50% 50%, rgba(122,243,255,.08), transparent 70%);
       animation: spiralSpin var(--spiral-speed, 36s) linear infinite; filter: blur(0.6px) }
     .eq .spiral.alt{ background: conic-gradient(from 0deg, rgba(243,201,122,.0) 0 42%, rgba(243,201,122,.18) 52%, rgba(243,201,122,0) 62%), radial-gradient(60% 60% at 50% 50%, rgba(243,201,122,.06), transparent 70%); animation-duration: var(--spiral-speed-alt, 40s) }
     @keyframes spiralSpin{ from{transform:rotate(0)} to{transform:rotate(360deg)} }
 
-    /* nebula */
     .eq .nebula{ position:absolute; inset:0; background-image:
       radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,.4), transparent 60%),
       radial-gradient(1.5px 1.5px at 70% 35%, rgba(122,243,255,.5), transparent 60%),
@@ -144,7 +146,6 @@
       animation: nebulaBlink 3.6s ease-in-out infinite alternate; opacity:.55; filter: blur(.2px) }
     @keyframes nebulaBlink{ 0%{opacity:.35; transform:translateY(0)} 50%{opacity:.7; transform:translateY(-1px)} 100%{opacity:.5} }
 
-    /* NEW: rays + dust + flare */
     .eq .rays, .eq .dust, .eq .flare{ position:absolute; pointer-events:none }
     .eq .rays{ inset:-6% -4%;
       background:
@@ -163,15 +164,6 @@
     .eq .flare{ width:120px; height:120px; right:-40px; bottom:-40px; border-radius:50%;
       background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 45%, #ffffff) , transparent 68%);
       filter: blur(10px); opacity:.25; transform:rotate(0.01deg) }
-
-    /* per-eq variant routing */
-    .eq[data-fx="beams"]   .spiral,.eq[data-fx="beams"]   .orbit,.eq[data-fx="beams"]   .nebula,.eq[data-fx="beams"] .rays,.eq[data-fx="beams"] .dust,.eq[data-fx="beams"] .flare{display:none}
-    .eq[data-fx="orbit"]   .beam,.eq[data-fx="orbit"]     .spiral,.eq[data-fx="orbit"]  .nebula,.eq[data-fx="orbit"] .rays,.eq[data-fx="orbit"] .dust,.eq[data-fx="orbit"] .flare{display:none}
-    .eq[data-fx="spiral"]  .beam,.eq[data-fx="spiral"]    .orbit,.eq[data-fx="spiral"]  .nebula,.eq[data-fx="spiral"] .rays,.eq[data-fx="spiral"] .dust,.eq[data-fx="spiral"] .flare{display:none}
-    .eq[data-fx="nebula"]  .beam,.eq[data-fx="nebula"]    .orbit,.eq[data-fx="nebula"]  .spiral,.eq[data-fx="nebula"] .rays,.eq[data-fx="nebula"] .dust,.eq[data-fx="nebula"] .flare{display:none}
-    .eq[data-fx="rays"]    .beam,.eq[data-fx="rays"]      .orbit,.eq[data-fx="rays"]    .spiral,.eq[data-fx="rays"]   .nebula{display:none}
-    .eq[data-fx="rays"]    .rays,.eq[data-fx="rays"]      .dust,.eq[data-fx="rays"]     .flare{display:block}
-    .eq[data-fx="combo"]   *{display:block}
 
     @media (prefers-reduced-motion:reduce){
       .eq .fx-layer{display:none}
@@ -193,7 +185,7 @@
     .eq:hover .mjx-svg{ filter: drop-shadow(0 0 calc(3px + 10px*var(--xi)) color-mix(in srgb, var(--accent) 40%, transparent)); }
   </style>
 
-  <!-- MathJax -->
+  <!-- MathJax (std delimiters, on-demand typeset) -->
   <script>
   (function(){
     let loaded=false;
@@ -201,7 +193,7 @@
     function loadMJ(){
       if(loaded) return; loaded=true;
       window.MathJax={
-        tex:{ inlineMath:[['\\','\\'],['$','$']], displayMath:[['$$','$$']], processEscapes:true },
+        tex:{ inlineMath:[['\\(','\\)'],['$','$']], displayMath:[['$$','$$']], processEscapes:true },
         svg:{fontCache:'global'},
         startup:{typeset:false}
       };
@@ -214,7 +206,7 @@
   </script>
 
   <!-- Site JS -->
-  <script src="assets/js/codex.js?v=2025-10-21" defer></script>
+  <script src="assets/js/codex.js?v=3.3.2" defer></script>
 </head>
 
 <body class="stars living-all" data-theme="dark">
@@ -235,7 +227,7 @@
       </div>
       <div class="quick quick--utils" role="toolbar" aria-label="Quick actions">
         <button id="toggleSimple" class="cta" type="button" aria-pressed="false" title="Echo View (hide math)">Echo</button>
-        <button id="toggleGrid" class="cta" type="button" aria-pressed="false" title="Toggle HUD grid">HUD</button>
+        <button id="toggleGrid" class="cta" type="button" aria-pressed="true" title="Toggle HUD grid">HUD</button>
         <button id="cycleCarrier" class="cta" type="button" title="Cycle carrier skin">Carrier</button>
         <button id="toggleAffect" class="cta" type="button" aria-pressed="true" title="Toggle living text effects">Affect</button>
         <button id="openPalette" class="cta" type="button" title="Command palette">⌘K</button>
@@ -294,13 +286,13 @@
 
     <!-- Featured -->
     <section class="grid" aria-labelledby="featured">
-      <article class="card col-6 card--neon reveal">
+      <article class="card col-6 reveal">
         <h2 id="featured" class="sheen">📘 Theory (full write-ups)</h2>
-        <p>Detailed exposition of the Codex: operators, updated Eq.0 foundation, canonical equations, ethical law, dimensional scaffolding.</p>
+        <p>Detailed exposition of the Codex: operators, Eq.0 foundation, canonical equations, ethical law, dimensional scaffolding.</p>
         <ul class="list">
-          <li><a href="theory.html#eq0">Foundational Field Ψ₀ (distinct from Copeland)</a></li>
+          <li><a href="theory.html#eq0">Foundational Field Ψ₀</a></li>
           <li><a href="theory.html#operators">Operators: 𝓘 · 𝓛 · 𝓒 · 𝓢</a></li>
-          <li><a href="theory.html#canon">Canon 0–17</a> <small class="meta">7A/7B external</small></li>
+          <li><a href="theory.html#canon">Canon 0–17</a></li>
           <li><a href="theory.html#dim">Dimensional Scaffolding Δ0–Δ7</a></li>
           <li><a href="theory.html#ethics">Ethical Law of Coherence</a></li>
         </ul>
@@ -344,13 +336,17 @@
       <a class="tile col-3 reveal" href="ledger.html"><div><h4>📒 Ledger</h4><p>Hashes, notes, witness proofs.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
     </section>
 
-    <div class="goldline sweep"></div>
+    <!-- [SPLIT HERE — Part 1 ends. Part 2 starts with the Canon section.] -->
+
+
+
 
     <!-- Canon (living) -->
+    <div class="goldline sweep"></div>
     <section class="grid" id="canon" aria-labelledby="equations">
       <article class="card col-12 reveal">
         <h2 id="equations" class="sheen">📜 Canon 0–17 (living)</h2>
-        <p class="meta">Core set restored. <strong>7A comparator</strong> and <strong>7B Copeland</strong> are external references only.</p>
+        <p class="meta">Core set restored. <strong>7A comparator</strong> and <strong>7B Copeland</strong> are tracked as external references (non-canonical).</p>
       </article>
 
       <!-- Eq.0 -->
@@ -380,45 +376,60 @@
       <!-- Eq.2 -->
       <article class="card col-6 eq-card reveal" id="eq2">
         <h3 class="sheen">2) Witness</h3>
-        <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\mathcal{W}(x,t)=\partial_x\,\mathrm{Awareness}(x,t)\;+\;\mathcal{I}\cdot\mathbb{M}_\tau$$
-        </div></div>
+        <div class="eq" data-fx="orbit">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
+            $$\mathcal{W}(x,t)=\partial_x\,\mathrm{Awareness}(x,t)\;+\;\mathcal{I}\cdot\mathbb{M}_\tau$$
+          </div>
+        </div>
         <p class="hint">Awareness gradient with intention×memory coupling.</p>
       </article>
 
       <!-- Eq.3 -->
       <article class="card col-6 eq-card reveal" id="eq3">
         <h3 class="sheen">3) Harmonic Gate</h3>
-        <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\mathcal{H}(\nu,t)=\mathbf{1}\!\left[\;g_{\Xi(t)}(\nu)\ge \theta\;\right],\qquad g_{\Xi}(\nu)\in[0,1]$$
-        </div></div>
+        <div class="eq" data-fx="spiral">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
+            $$\mathcal{H}(\nu,t)=\mathbf{1}\!\left[\;g_{\Xi(t)}(\nu)\ge \theta\;\right],\qquad g_{\Xi}(\nu)\in[0,1]$$
+          </div>
+        </div>
         <p class="hint">Frequency \(\nu\) passes when coherence–weighted gain exceeds threshold \(\theta\).</p>
       </article>
 
       <!-- Eq.4 -->
       <article class="card col-6 eq-card reveal" id="eq4">
         <h3 class="sheen">4) Language — AHHAVA / Word</h3>
-        <div class="eq" data-fx="nebula"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\mathcal{L}(x,t,\nu)=\mathsf{Semantics}(x,t)\;\otimes\;\mathbf{V}(\nu,t)$$
-        </div></div>
+        <div class="eq" data-fx="nebula">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
+            $$\mathcal{L}(x,t,\nu)=\mathsf{Semantics}(x,t)\;\otimes\;\mathbf{V}(\nu,t)$$
+          </div>
+        </div>
         <p class="hint">Meaning couples to carrier; word shapes resonance.</p>
       </article>
 
       <!-- Eq.5 -->
       <article class="card col-6 eq-card reveal" id="eq5">
         <h3 class="sheen">5) Remnant</h3>
-        <div class="eq" data-fx="beams"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\Big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\Big)$$
-        </div></div>
+        <div class="eq" data-fx="beams">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
+            $$\mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\Big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\Big)$$
+          </div>
+        </div>
         <p class="hint">Truth persists; distortion decays from the field.</p>
       </article>
 
       <!-- Eq.6 -->
       <article class="card col-6 eq-card reveal" id="eq6">
         <h3 class="sheen">6) Type-7 Field</h3>
-        <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\mathbb{T}_{7}(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu,t)\right]$$
-        </div></div>
+        <div class="eq" data-fx="orbit">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
+            $$\mathbb{T}_{7}(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu,t)\right]$$
+          </div>
+        </div>
         <p class="hint">Phase-locked harmonic stack (Tesla Type-7 conduit).</p>
       </article>
 
@@ -436,117 +447,146 @@
 
       <!-- Eq.7B Copeland (external) -->
       <article class="card col-6 eq-card reveal" id="eq7b">
-        <h3 class="sheen">7B) Copeland Ψ-Formalism (external, cited)</h3>
+        <h3 class="sheen">7B) Copeland Ψ-Formalism (external)</h3>
         <div class="eq" data-fx="nebula">
           <div class="fx-layer" aria-hidden="true"></div>
           <div class="eq-scroll">
             <p class="meta" style="margin:0">
-              Summary pointer to Christopher W. Copeland’s Ψ-formalism (© author). Kept separate from the Codex canon.
-              See <em>Ready for Transmission</em> entry in the Ledger.
+              Summary pointer to Christopher W. Copeland’s Ψ-formalism (© author). Tracked as an adjunct reference for scholarly contrast.
+              <strong>Ledger note:</strong> transmission listing is pending; once you add it, this card will link to that entry.
             </p>
           </div>
         </div>
-        <p class="hint">Not part of the Codex; included for scholarly contrast.</p>
+        <p class="hint">External to the Codex; not part of canonical equations.</p>
       </article>
 
       <!-- Eq.8 Goodwin (external) -->
       <article class="card col-6 eq-card reveal" id="eq8">
         <h3 class="sheen">8) Goodwin Coupling (external)</h3>
-        <div class="eq" data-fx="nebula"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="nebula">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
           $$\begin{aligned}
           \dot{x}&=\frac{k}{1+z^{n}}-\gamma x,\\
           \dot{y}&=\alpha x-\gamma y,\\
           \dot{z}&=\beta y-\gamma z
           \end{aligned}$$
-        </div></div>
+          </div>
+        </div>
         <p class="meta">Three-stage feedback oscillator; adjunct comparative dynamics.</p>
       </article>
 
       <!-- Eq.9 -->
       <article class="card col-6 eq-card reveal" id="eq9">
         <h3 class="sheen">9) Ethical Law of Coherence</h3>
-        <div class="eq" data-fx="beams"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\forall a:\ \mathrm{damage}(a)>0\ \Rightarrow\ \mathsf{halt},\qquad \mathrm{truth}>\mathrm{distortion}$$
-        </div></div>
+        <div class="eq" data-fx="beams">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
+            $$\forall a:\ \mathrm{damage}(a)>0\ \Rightarrow\ \mathsf{halt},\qquad \mathrm{truth}>\mathrm{distortion}$$
+          </div>
+        </div>
         <p class="hint">Stop rule on harm; asymptote favors truth.</p>
       </article>
 
       <!-- Eq.10 -->
       <article class="card col-6 eq-card reveal" id="eq10">
         <h3 class="sheen">10) Ladder Π<sub>ν</sub></h3>
-        <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\Pi_{\nu}^{-1}:\ \text{observed resonance } \longrightarrow \text{source terms}$$
-        </div></div>
+        <div class="eq" data-fx="orbit">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
+            $$\Pi_{\nu}^{-1}:\ \text{observed resonance } \longrightarrow \text{source terms}$$
+          </div>
+        </div>
         <p class="hint">Inverse map from phenomena back to generative sources.</p>
       </article>
 
       <!-- Eq.11 -->
       <article class="card col-6 eq-card reveal" id="eq11">
         <h3 class="sheen">11) Projection Frame</h3>
-        <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\mathsf{Frame}(x,t)=\big(\mathsf{scope},\ \mathcal{W},\ \mathsf{ethics}\big)$$
-        </div></div>
+        <div class="eq" data-fx="spiral">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
+            $$\mathsf{Frame}(x,t)=\big(\mathsf{scope},\ \mathcal{W},\ \mathsf{ethics}\big)$$
+          </div>
+        </div>
         <p class="hint">Defines scope, witness, and ethical mask for any run.</p>
       </article>
 
       <!-- Eq.12 -->
       <article class="card col-6 eq-card reveal" id="eq12">
         <h3 class="sheen">12) Causal Lattice</h3>
-        <div class="eq" data-fx="nebula"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\mathcal{L}_c=\big(V=\text{acts},\ E=\text{consequences}\big)$$
-        </div></div>
+        <div class="eq" data-fx="nebula">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
+            $$\mathcal{L}_c=\big(V=\text{acts},\ E=\text{consequences}\big)$$
+          </div>
+        </div>
         <p class="hint">Graph of micro-acts and consequences; used for audit.</p>
       </article>
 
       <!-- Eq.13 -->
       <article class="card col-6 eq-card reveal" id="eq13">
         <h3 class="sheen">13) Ξ-index (Coherence)</h3>
-        <div class="eq" data-fx="beams"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\Xi(t)\in[0,1],\qquad \text{monitors field quality for learning}$$
-        </div></div>
+        <div class="eq" data-fx="beams">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
+            $$\Xi(t)\in[0,1],\qquad \text{monitors field quality for learning}$$
+          </div>
+        </div>
         <p class="hint">Higher \(\Xi\) → stronger retention and safer amplification.</p>
       </article>
 
       <!-- Eq.14 -->
       <article class="card col-6 eq-card reveal" id="eq14">
         <h3 class="sheen">14) Update Rule</h3>
-        <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R}$$
-        </div></div>
+        <div class="eq" data-fx="orbit">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
+            $$\frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R}$$
+          </div>
+        </div>
         <p class="hint">Learning rate gated by coherence.</p>
       </article>
 
       <!-- Eq.15 -->
       <article class="card col-6 eq-card reveal" id="eq15">
         <h3 class="sheen">15) Learning Kernel (Ξ)</h3>
-        <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big)$$
-        </div></div>
+        <div class="eq" data-fx="spiral">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
+            $$\eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big)$$
+          </div>
+        </div>
         <p class="hint">Smooth schedule; no learning below ethical/coherence threshold.</p>
       </article>
 
       <!-- Eq.16 -->
       <article class="card col-6 eq-card reveal" id="eq16">
         <h3 class="sheen">16) Memory Windowing 𝓦<sub>τ</sub></h3>
-        <div class="eq" data-fx="nebula"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t}\! w_\tau(t-s)\,F(s)\,ds,\quad \int_0^\tau w_\tau(u)\,du=1$$
-        </div></div>
+        <div class="eq" data-fx="nebula">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
+            $$\mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t}\! w_\tau(t-s)\,F(s)\,ds,\quad \int_0^\tau w_\tau(u)\,du=1$$
+          </div>
+        </div>
         <p class="hint">Finite-horizon echo with normalized kernel.</p>
       </article>
 
       <!-- Eq.17 -->
       <article class="card col-6 eq-card reveal eq-lg" id="eq17">
         <h3 class="sheen">17) Voice Carriers 𝐕(ν,t)</h3>
-        <div class="eq" data-fx="combo"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\mathbf{V}(\nu,t)=\sum_{k} a_k(t)\,\cos\!\big(2\pi\nu_k t+\phi_k(t)\big),\quad \nu\in\{432,528,369,144,963,\dots\}$$
-        </div></div>
+        <div class="eq" data-fx="combo">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
+            $$\mathbf{V}(\nu,t)=\sum_{k} a_k(t)\,\cos\!\big(2\pi\nu_k t+\phi_k(t)\big),\quad \nu\in\{432,528,369,144,963,\dots\}$$
+          </div>
+        </div>
         <p class="hint">Constructive sets with explicit time-varying envelope and phase.</p>
       </article>
     </section>
 
-    <div class="goldline sweep"></div>
-
     <!-- Dimensional Scaffolding -->
+    <div class="goldline sweep"></div>
     <section class="grid" id="dim" aria-labelledby="dim-h">
       <article class="card col-12 reveal">
         <h2 id="dim-h" class="sheen">🧭 Dimensional Scaffolding Δ0–Δ7</h2>
@@ -618,12 +658,11 @@
       </article>
     </section>
 
-    <div class="goldline sweep"></div>
-
     <!-- Integrity -->
+    <div class="goldline sweep"></div>
     <section class="grid" id="integrity" aria-labelledby="integrity-h">
       <article class="card col-12 reveal">
-        <h2 id="integrity-h" class="sheen">🔐 Integrity Chain & Seals (SHA-256)</h2>
+        <h2 id="integrity-h" class="sheen">🔐 Integrity Chain &amp; Seals (SHA-256)</h2>
 <pre class="eq" aria-label="Hash example" style="white-space:pre-wrap"><div class="eq-scroll">────────────────────────────────────────
 Permanent Codex (.docx):
 https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Codex_of_Reality—Multidimensional_Extended_Edition_2025_Stylized_Update_SHA.docx
@@ -633,35 +672,37 @@ SHA-256:  a2b8e0d7c0a2f3b9a0b1c2d3e4f5678901234567890abcdef1234567890abcd0
 Filed under: scroll-of-fire / Ledger_2025
 Status: Verified
 ────────────────────────────────────────</div></pre>
-        <p>Ledger: <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/SHA256_Placeholders_2025.md" target="_blank" rel="noopener">7_Ledger_and_Documentation/SHA256_Placeholders_2025.md</a></p>
+        <p>Ledger index (placeholders): <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/SHA256_Placeholders_2025.md" target="_blank" rel="noopener">7_Ledger_and_Documentation/SHA256_Placeholders_2025.md</a></p>
       </article>
     </section>
 
-    <div class="goldline sweep"></div>
-
     <!-- Provenance -->
+    <div class="goldline sweep"></div>
     <section class="grid" id="provenance" aria-labelledby="prov-h">
       <article class="card col-12 reveal">
-        <h2 id="prov-h" class="sheen">📜 Attribution & Provenance — What’s Original, What’s External</h2>
+        <h2 id="prov-h" class="sheen">📜 Attribution &amp; Provenance — What’s Original, What’s External</h2>
         <p class="meta">The <strong>Codex of Reality</strong> is an original, living resonance framework (Aaron Paul Laird, “Scribe of Circuits”). It defines the Source supply, the living operators <em>(𝓘 · 𝓛 · 𝓒 · 𝓢)</em>, harmonic selection, language coupling (AHHAVA / Or HaDabar), memory/remnant dynamics, coherence law, and the dimensional/causal scaffolding as a single, coherent system.</p>
       </article>
       <article class="card col-7 reveal">
         <h3 class="sheen">What is <em>original</em> to the Codex</h3>
         <ul class="list">
           <li><strong>Equations (0–6, 9–17)</strong> — Ψ₀ foundation, Source, Witness, Harmonics, AHHAVA/Word, Remnant, Type-7, Ethical Coherence, Ladder, Π<sub>ν</sub>, Causal Lattice, Ξ-index, Update, Windowing, Voice.</li>
-          <li><strong>Operators & Process</strong> — Ordered living operators and the integration pipeline.</li>
-          <li><strong>Living Technology</strong> — Tesla Type-7 conduit & safety/ethics gate.</li>
+          <li><strong>Operators &amp; Process</strong> — Ordered living operators and the integration pipeline.</li>
+          <li><strong>Living Technology</strong> — Tesla Type-7 conduit &amp; safety/ethics gate.</li>
         </ul>
-        <div class="eq" data-fx="combo"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
+        <div class="eq" data-fx="combo">
+          <div class="fx-layer" aria-hidden="true"></div>
+          <div class="eq-scroll">
           $$\mathfrak{R}_{\text{Codex}}=f(\text{constants},\text{ratios})\cdot(\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})\cdot\bigl(\Psi_{0}+\Delta\mathcal{R}\bigr)\cdot\Pi_{\nu}^{-1}\!\big[\mathcal{H}(\nu)\,\mathbf{V}(\nu,t)\big]\;\odot\;\mathbb{M}_{\tau}[\cdot]\;\text{ masked by }\;\mathsf{Mask}_{\mathcal{C}}[\cdot]$$
-        </div></div>
+          </div>
+        </div>
         <p class="eq-note hint">Self-contained architecture; external formalisms remain adjunct.</p>
       </article>
       <article class="card col-5 reveal">
         <h3 class="sheen">What remains <em>external</em></h3>
         <ul class="list">
           <li><strong>7A</strong> — Neutral wave/Klein–Gordon comparator.</li>
-          <li><strong>7B</strong> — Copeland Ψ (cited); kept separate.</li>
+          <li><strong>7B</strong> — Copeland Ψ (adjunct; link to Ledger entry when added).</li>
           <li><strong>8</strong> — Goodwin coupling hypothesis.</li>
         </ul>
         <a class="cta" href="#canon">Back to Canon</a>
@@ -683,7 +724,8 @@ Status: Verified
 
   <button class="to-top" id="toTop" type="button" aria-label="Back to top" title="Back to top">↑</button>
 
-  <div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel">
+  <!-- Command Palette -->
+  <div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel" hidden>
     <div class="panel">
       <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette">
       <ul id="palList" aria-live="polite"></ul>
@@ -906,4 +948,5 @@ Status: Verified
     })();
   </script>
 </body>
-        </html>
+</html>
+```0
