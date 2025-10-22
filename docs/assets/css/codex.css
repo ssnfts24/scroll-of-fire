@@ -583,3 +583,180 @@ body.performance-warming{ animation:warmOff .9s linear forwards }
   .mega:hover{ transform:translateY(-1px); box-shadow:0 14px 40px rgba(0,0,0,.45), inset 0 0 0 1px rgba(122,243,255,.28) }
   .mega:hover .arrow{ transform:translateX(4px) }
 }
+
+
+
+
+
+
+
+/* ==========================================================================
+   Scroll of Fire — Codex of Reality
+   codex.css v2.6 (Compatibility & Webview Fallback Pack)
+   Append to v2.5
+   ========================================================================== */
+
+/* ========= 1) Sticky / Glass fallbacks (FB/IG webview & older Safari) ========= */
+header.site,
+.tabs,
+.quick,
+.explore-dock,
+.palette .panel {
+  /* Always declare both; some webviews only parse one */
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  backdrop-filter: saturate(140%) blur(10px);
+}
+
+/* If backdrop-filter isn’t supported, keep legible opaque glass */
+@supports not ((-webkit-backdrop-filter: blur(2px)) or (backdrop-filter: blur(2px))) {
+  header.site,
+  .tabs,
+  .quick,
+  .explore-dock,
+  .palette { 
+    background: rgba(12,14,18,.92) !important;
+  }
+  .palette .panel {
+    background:#101017 !important;
+  }
+}
+
+/* Sticky: iOS legacy webkit */
+header.site,
+.tabs { position: -webkit-sticky; position: sticky; }
+
+/* ========= 2) Hero masking & aspect-ratio fallback ========= */
+/* Mask fallback (older Safari/WebViews) */
+@supports not (-webkit-mask-image: radial-gradient(#000, transparent)) {
+  .hero img{
+    -webkit-mask-image:none !important;
+            mask-image:none !important;
+  }
+}
+
+/* Aspect-ratio fallback (very old Chromium/Android webviews) */
+@supports not (aspect-ratio: 1 / 1) {
+  .hero { position: relative; height:auto; }
+  /* 16:9 on mobile, ~21:9 feel on larger screens */
+  @media (max-width:600px){
+    .hero::before{ content:""; display:block; padding-top:56.25%; }
+  }
+  @media (min-width:601px){
+    .hero::before{ content:""; display:block; padding-top:42.85%; }
+  }
+  .hero > picture, .hero > img { position:absolute; inset:0; }
+}
+
+/* ========= 3) Scrollbars & momentum (Firefox + iOS) ========= */
+html, body { -webkit-overflow-scrolling: touch; }
+body {
+  /* Firefox global scrollbar colors to match eq-block setting */
+  scrollbar-width: thin;
+  scrollbar-color: #2b2b35 #0f0f14;
+}
+
+/* WebKit track/thumb fallback (in case parent @supports block doesn’t run) */
+body::-webkit-scrollbar{ width:12px }
+body::-webkit-scrollbar-track{ background:#0f0f14 }
+body::-webkit-scrollbar-thumb{
+  background:#2b2b35; border-radius:10px; border:2px solid #0f0f14;
+  box-shadow: inset 0 0 12px rgba(122,243,255,.15)
+}
+
+/* ========= 4) Color-mix fallbacks (browsers without color-mix) ========= */
+/* Provide simple accent-only substitutes wherever color-mix is used */
+@supports not (color: color-mix(in srgb, red 50%, white)) {
+  a { text-decoration-color: var(--accent); }
+  .divider { filter:none; }
+  .goldline { background: linear-gradient(90deg,transparent,var(--accent),transparent); }
+  .tabs .tab-ink { box-shadow:none; }
+  input::placeholder, textarea::placeholder { color: #a7b0bb; }
+  .eq { box-shadow:
+    inset 0 0 20px rgba(255,200,107,.03),
+    0 0 14px rgba(122,243,255,.10),
+    0 0 calc(8px + 18px * var(--xi,0)) var(--accent); }
+}
+
+/* ========= 5) Forced colors / High contrast (Windows) ========= */
+@media (forced-colors: active) {
+  :root { --line: GrayText; --ink: ButtonText; --muted: GrayText; }
+  * { forced-color-adjust: auto; }
+  header.site, .tabs, .quick, .explore-dock, .palette .panel { 
+    border: 1px solid CanvasText !important;
+    background: Canvas !important;
+  }
+  .card, .tile, .cta, .tab, .eq { 
+    border-color: CanvasText !important; 
+    box-shadow: none !important;
+    background: Canvas !important;
+  }
+  .tab-ink, .divider, .goldline { background: CanvasText !important; box-shadow:none !important }
+  a { text-decoration: underline; }
+}
+
+/* ========= 6) Motion/Data safety (further dampening) ========= */
+@media (prefers-reduced-motion: reduce){
+  .title { animation: none !important; text-shadow:none !important }
+  .eq.eq-pulse { animation: none !important }
+  .laser-grid { animation: none !important }
+}
+@media (prefers-reduced-data: reduce){
+  .title, .brand .logo, .divider, .goldline { text-shadow:none !important; filter:none !important }
+}
+
+/* ========= 7) Inputs / focus consistency across browsers ========= */
+input, select, textarea {
+  -webkit-appearance: none; appearance: none;
+  background-clip: padding-box; /* avoid gradient-clip artifacts */
+}
+:where(a,button,.tab,.tile,.cta,input,select,textarea):focus {
+  outline: none; /* let :focus-visible drive the strong ring */
+}
+:where(a,button,.tab,.tile,.cta,input,select,textarea):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+/* ========= 8) Card / Tile reveal when IntersectionObserver is missing ========= */
+@supports not (selector(:has(*))) {
+  /* crude but reliable: show them without animation */
+  .card { opacity:1 !important; transform:none !important }
+}
+
+/* ========= 9) Tabs ink guard for extreme zoom / narrow webviews ========= */
+@media (max-width:360px){
+  .tabs .tab-ink{ bottom:-4px; height:2px }
+}
+
+/* ========= 10) Interop with “affect-off” (living-tech global toggle) ========= */
+/* If the page toggles .affect-off, ensure codex glows don’t keep “ghosting” */
+.affect-off .title,
+.affect-off h1, .affect-off h2, .affect-off h3,
+.affect-off a, .affect-off .meta, .affect-off .hint {
+  text-shadow: none !important;
+}
+.affect-off .eq { box-shadow: inset 0 0 12px rgba(255,200,107,.03), 0 0 0 rgba(0,0,0,0) !important }
+.affect-off .tile, .affect-off .card, .affect-off .cta, .affect-off .tab {
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* ========= 11) Safari 15–16 gradient text clip guard ========= */
+@supports (-webkit-background-clip: text) {
+  .title { -webkit-text-fill-color: transparent; }
+}
+
+/* ========= 12) Extra tiny screens: density pass ========= */
+@media (max-width:320px){
+  .brand .kicker { font-size: 16px }
+  .quick { padding:4px }
+  .quick a,.quick button{ height:32px; line-height:30px; font-size:12px }
+  .tabs { padding:6px 8px }
+  .tile { padding:10px }
+}
+
+/* ========= 13) Legacy Android WebView safe borders ========= */
+@media screen and (max-width: 1024px) {
+  .card, .tile, .cta, .tab, .eq { border-color: rgba(255,255,255,.12); }
+}
