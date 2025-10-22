@@ -1,15 +1,19 @@
+<script>
 /* ==========================================================================
-   Scroll of Fire — codex.js v3.3.2 (consolidated)
+   Scroll of Fire — codex.js v3.4 (consolidated)
    - Sticky header, tab ink
-   - Card reveal IO
-   - Hero activation + light parallax (safe)
+   - Card + .reveal IO
+   - Hero activation + safe parallax
+   - Carrier cycler + Lights toggle + Year
    - Simple mode, HUD toggle, Affect toggle
+   - Explore Dock IO
    - Page search mini-suggest + '/' (skips if v2 present)
    - Command palette shell
-   - Equation pop-out viewer + drag-scroll
-   - MathJax: on-demand typeset (the fix)
+   - Equation FX builder (DOM) + drag-scroll + pop-out
+   - MathJax: on-demand typeset (robust)
    - Alive Pack (sparks, arcs, sheen/float/twinkle)
    - Alive Palette (Calm/Lively/Max/Off) with persistence
+   - Ξ driver (updates --xi)
    ========================================================================== */
 (() => {
   const $  = (s, r=document) => r.querySelector(s);
@@ -19,6 +23,9 @@
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const RD = matchMedia('(prefers-reduced-data: reduce)').matches;
   const ALLOW_MOTION = !(RM || RD);
+
+  // Year stamp
+  const y = $('#y'); if (y) y.textContent = new Date().getFullYear();
 
   // Detect if search v2 (inline-initialized) exists so we don’t double-bind
   const SEARCH_V2 = (() => {
@@ -61,17 +68,17 @@
   };
   initInk();
 
-  /* ---- Card reveal ---- */
+  /* ---- Card + .reveal IO ---- */
   const reveal = () => {
-    const cards = $$('.card');
-    if (!('IntersectionObserver' in window) || !ALLOW_MOTION) { cards.forEach(c=>c.classList.add('visible')); return; }
+    const nodes = $$('.card, .reveal');
+    if (!('IntersectionObserver' in window) || !ALLOW_MOTION) { nodes.forEach(c=>c.classList.add('visible','in')); return; }
     const io = new IntersectionObserver(es => es.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      if (e.isIntersecting) { e.target.classList.add('visible','in'); io.unobserve(e.target); }
     }), { rootMargin:'80px 0px' });
-    cards.forEach(c=>io.observe(c));
+    nodes.forEach(c=>io.observe(c));
   }; reveal();
 
-  /* ---- Hero activation + light parallax (safe) ---- */
+  /* ---- Hero activation + safe parallax ---- */
   const hero = $('#hero'); const heroImg = $('#heroBanner');
   if (hero) {
     if ('IntersectionObserver' in window) {
@@ -89,6 +96,36 @@
       addEventListener('scroll', onScroll, {passive:true}); onScroll();
     }
   }
+
+  /* ---- Carrier cycler + Lights toggle ---- */
+  (function carriers(){
+    const html = document.documentElement;
+    const btn  = $('#cycleCarrier');
+    const lights = $('#heroLights');
+    const btnLights = $('#toggleLights');
+
+    const skinsAttr = (html.getAttribute('data-carriers') || '')
+      .split(',').map(s=>s.trim()).filter(Boolean);
+    const skins = (skinsAttr.length ? skinsAttr : ['432','528','369','144','963'])
+      .map(n=>`carrier-${n}`);
+
+    const curSkin = ()=> skins.find(s=>html.classList.contains(s)) || skins[0];
+    const nextSkin= c=> skins[(skins.indexOf(c)+1)%skins.length];
+
+    if (btn){
+      if (!curSkin()) html.classList.add(skins[0]);
+      btn.textContent = `Carrier ${curSkin().split('-')[1]}`;
+      btn.addEventListener('click', ()=>{
+        const cur=curSkin(), nxt=nextSkin(cur); skins.forEach(s=>html.classList.remove(s)); html.classList.add(nxt);
+        btn.textContent = `Carrier ${nxt.split('-')[1]}`;
+      });
+    }
+    btnLights?.addEventListener('click', ()=>{
+      if (!lights) return;
+      const off = lights.classList.toggle('off');
+      btnLights.setAttribute('aria-pressed', String(!off));
+    });
+  })();
 
   /* ---- Simple/Echo mode ---- */
   const setSimple = on => { document.body.classList.toggle('simple-on', !!on); $('#toggleSimple')?.setAttribute('aria-pressed', on?'true':'false'); };
@@ -109,23 +146,34 @@
   setAffect(!document.body.classList.contains('affect-off'));
   btnAffect?.addEventListener('click', () => setAffect(document.body.classList.contains('affect-off')));
 
-  /* ---- Back to top ---- */
-  const toTop = $('#toTop');
+  /* ---- Back to top (supports .to-top and #toTop) ---- */
+  const toTop = $('#toTop') || $('.to-top');
   const topBtn = () => toTop?.classList.toggle('show', scrollY>400);
   topBtn(); addEventListener('scroll', topBtn, { passive:true });
   toTop?.addEventListener('click', ()=> scrollTo({ top:0, behavior: ALLOW_MOTION ? 'smooth' : 'auto' }));
 
+  /* ---- Explore Dock IO (hide near hero; hide after #explore in view) ---- */
+  (function exploreDockIO(){
+    const dock = $('#exploreDock'); const hero = $('#hero'); const explore = $('#explore');
+    if(!dock || !hero || !explore || !('IntersectionObserver' in window)) return;
+    let heroOut=false, pastExplore=false;
+    const ioHero = new IntersectionObserver(([e])=>{ heroOut = !e.isIntersecting; update(); }, {threshold:0.01});
+    const ioExplore = new IntersectionObserver(([e])=>{ pastExplore = e.isIntersecting; update(); }, {threshold:0.05});
+    function update(){ dock.classList.toggle('show', heroOut && !pastExplore); }
+    ioHero.observe(hero); ioExplore.observe(explore);
+  })();
+
   /* ---- Page search mini-suggest + '/' (skip if v2 exists) ---- */
   if (!SEARCH_V2) {
     const siteSearch = $('#site-search'); const siteSuggest = $('#site-suggest');
-    const CAND = $$('h1[id],h2[id],h3[id],section[id],article[id]');
+    const CAND = $$('h1[id],h2[id],h3[id],section[id],article[id],.eq-card[id]');
     const suggest = (q) => {
       if (!siteSuggest) return;
       siteSuggest.innerHTML = '';
       q = (q||'').trim().toLowerCase();
       if (!q) { siteSuggest.classList.add('hidden'); return; }
       const results = [
-        ...CAND.filter(el => (el.textContent||'').toLowerCase().includes(q)).map(el => ({text:el.textContent.trim(), href:'#'+el.id})),
+        ...CAND.filter(el => (el.innerText||'').toLowerCase().includes(q)).map(el => ({text:(el.innerText||'').trim(), href:'#'+el.id})),
         ...$$('a[href^="#"]').filter(a => (a.textContent||'').toLowerCase().includes(q)).map(a => ({text:a.textContent.trim(), href:a.getAttribute('href')}))
       ].slice(0,12);
       results.forEach(r => { const a=document.createElement('a'); a.href=r.href; a.textContent=r.text; a.addEventListener('click',()=>siteSuggest.classList.add('hidden')); siteSuggest.appendChild(a);});
@@ -149,7 +197,7 @@
     { label:'Go: Manifest', href:'teach.html' },
     { label:'Toggle Echo View', action:() => $('#toggleSimple')?.click() },
     { label:'Toggle HUD', action:() => $('#toggleGrid')?.click() },
-    { label:'Back to Top', action:() => $('#toTop')?.click() },
+    { label:'Back to Top', action:() => toTop?.click() },
     { label:'Jump: Explore', href:'#explore' },
     { label:'Jump: Canon', href:'#canon' },
   ];
@@ -170,7 +218,74 @@
   });
   palette?.addEventListener('click', e => { if (e.target===palette) togglePalette(false); });
 
-  /* ---- Equations: drag scroll + pop-out + MATHJAX TYPESET ---------------- */
+  /* ---- Equation FX DOM builder (matches CSS data-fx recipes) ---- */
+  (function eqFX(){
+    if (!ALLOW_MOTION) return;
+    const boxes = $$('.eq');
+    const variants = ['beams','orbit','spiral','nebula','rays','combo'];
+    let vix = 0;
+
+    boxes.forEach((wrap)=>{
+      // Ensure fx layer exists
+      let fx = wrap.querySelector('.fx-layer');
+      if(!fx){ fx = document.createElement('div'); fx.className='fx-layer'; wrap.prepend(fx); }
+
+      // Variant (respect data-fx, otherwise rotate; "calm" handled by CSS)
+      const declared = wrap.getAttribute('data-fx');
+      const chosen = declared && declared!=='combo' ? declared : variants[(vix++) % variants.length];
+      const actual = (declared==='combo' || (!declared && Math.random()<0.28)) ? 'combo' : chosen;
+      wrap.setAttribute('data-fx', actual);
+
+      // Speeds
+      wrap.style.setProperty('--beam-speed',       (22 + Math.random()*10).toFixed(2)+'s');
+      wrap.style.setProperty('--beam-speed-alt',   (26 + Math.random()*12).toFixed(2)+'s');
+      wrap.style.setProperty('--orbit-speed',      (30 + Math.random()*14).toFixed(2)+'s');
+      wrap.style.setProperty('--spiral-speed',     (34 + Math.random()*16).toFixed(2)+'s');
+      wrap.style.setProperty('--spiral-speed-alt', (38 + Math.random()*18).toFixed(2)+'s');
+      wrap.style.setProperty('--rays-speed',       (36 + Math.random()*16).toFixed(2)+'s');
+
+      // Element makers
+      function addBeams(n=2+Math.floor(Math.random()*3)){
+        for(let i=0;i<n;i++){
+          const d=document.createElement('div');
+          d.className='beam'+(Math.random()<0.45?' alt':'');
+          d.style.setProperty('--d', `${(Math.random()*9).toFixed(2)}s`);
+          const tilt = (Math.random()<0.5?1:-1)*(8+Math.random()*12);
+          d.style.transform = `translateX(0) rotate(${tilt}deg)`;
+          fx.appendChild(d);
+        }
+      }
+      function addOrbit(){
+        const o1=document.createElement('div'); o1.className='orbit';
+        o1.style.setProperty('--tilt', `${(8+Math.random()*14)*(Math.random()<.5?-1:1)}deg`);
+        const o2=document.createElement('div'); o2.className='orbit counter';
+        o2.style.setProperty('--tilt', `${(10+Math.random()*12)*(Math.random()<.5?-1:1)}deg`);
+        const b1=document.createElement('div'); b1.className='orb';
+        const b2=document.createElement('div'); b2.className='orb gold';
+        o1.appendChild(b1); o2.appendChild(b2); fx.append(o1,o2);
+      }
+      function addSpiral(){
+        const s=document.createElement('div'); s.className='spiral'; fx.appendChild(s);
+        if(Math.random()<.55){ const a=document.createElement('div'); a.className='spiral alt'; fx.appendChild(a); }
+      }
+      function addNebula(){ const n=document.createElement('div'); n.className='nebula'; fx.appendChild(n); }
+      function addRays(){
+        const r=document.createElement('div'); r.className='rays'; fx.appendChild(r);
+        const d=document.createElement('div'); d.className='dust'; fx.appendChild(d);
+        const f=document.createElement('div'); f.className='flare'; fx.appendChild(f);
+      }
+
+      // Populate
+      if(actual==='beams'){ addBeams(); }
+      else if(actual==='orbit'){ addOrbit(); }
+      else if(actual==='spiral'){ addSpiral(); }
+      else if(actual==='nebula'){ addNebula(); }
+      else if(actual==='rays'){ addRays(); }
+      else { addBeams(); addOrbit(); if(Math.random()<.7) addSpiral(); if(Math.random()<.6) addNebula(); if(Math.random()<.5) addRays(); }
+    });
+  })();
+
+  /* ---- Equations: drag scroll ---- */
   const initDragScroll = (root=document) => {
     $$('.eq .eq-scroll', root).forEach(scroller=>{
       let down=false, sx=0, sl=0;
@@ -184,93 +299,71 @@
   };
   initDragScroll();
 
+  /* === Equation polish utilities: calm bias + copy button + scroll-fade refresh === */
+  (function eqPolish(){
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-
-
-
-
-
-   /* === Equation polish utilities: calmer mix + copy button + scroll fade refresh === */
-(function eqPolish(){
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // 1) Bias toward calm: flip many boxes to data-fx="calm" unless already set
-  const boxes = document.querySelectorAll('.eq');
-  boxes.forEach((b, i) => {
-    const hasFX = b.getAttribute('data-fx');
-    if (!hasFX || Math.random() < 0.7) b.setAttribute('data-fx','calm');
-  });
-
-  // 2) Copy button → copies TeX content inside .eq-scroll
-  document.querySelectorAll('.eq-card .eq').forEach(eq => {
-    // avoid duplicates
-    if (eq.querySelector('.eq-copy')) return;
-    const btn = document.createElement('button');
-    btn.className = 'eq-copy';
-    btn.type = 'button';
-    btn.setAttribute('aria-label', 'Copy equation TeX');
-    btn.innerHTML = '<span class="dot" aria-hidden="true"></span><span>Copy</span>';
-    btn.addEventListener('click', async () => {
-      const src = eq.querySelector('.eq-scroll');
-      if(!src) return;
-      const text = src.innerText.trim();
-      try{
-        await navigator.clipboard.writeText(text);
-        const old = btn.innerHTML;
-        btn.innerHTML = '<span class="dot" aria-hidden="true"></span><span>Copied</span>';
-        setTimeout(()=>btn.innerHTML = old, 1200);
-      }catch(e){
-        btn.innerHTML = '<span class="dot" aria-hidden="true"></span><span>Failed</span>';
-        setTimeout(()=>btn.innerHTML = 'Copy', 1200);
-      }
+    // 1) Bias toward calm if unset
+    $$('.eq').forEach(b => {
+      const hasFX = b.getAttribute('data-fx');
+      if (!hasFX || Math.random() < 0.7) b.setAttribute('data-fx','calm');
     });
-    eq.appendChild(btn);
-  });
 
-  // 3) Refresh scroll fades when user scrolls (helps when content reflows after MathJax)
-  const refreshMask = (el)=>{
-    const atTop   = el.scrollTop <= 1;
-    const atBottom= el.scrollHeight - el.clientHeight - el.scrollTop <= 1;
-    // tweak mask to remove fade when not needed
-    const topStop = atTop ? 0 : 12;
-    const botStop = atBottom ? 0 : 12;
-    el.style.webkitMaskImage = `linear-gradient(to bottom, transparent ${topStop}px, black ${topStop+1}px, black calc(100% - ${botStop+1}px), transparent calc(100% - ${botStop}px))`;
-    el.style.maskImage = el.style.webkitMaskImage;
-  };
-
-  const scrollers = document.querySelectorAll('.eq-card .eq-scroll');
-  scrollers.forEach(s=>{
-    s.addEventListener('scroll', ()=>refreshMask(s), {passive:true});
-    // initial pass (delay helps post-typeset)
-    setTimeout(()=>refreshMask(s), 60);
-  });
-
-  // 4) If MathJax is present, re-run the fade mask after typeset
-  if (window.MathJax && MathJax.startup && MathJax.startup.promise){
-    MathJax.startup.promise.then(()=>{
-      scrollers.forEach(s=>refreshMask(s));
+    // 2) Copy button
+    $$('.eq-card .eq').forEach(eq => {
+      if (eq.querySelector('.eq-copy')) return;
+      const btn = document.createElement('button');
+      btn.className = 'eq-copy';
+      btn.type = 'button';
+      btn.setAttribute('aria-label', 'Copy equation TeX');
+      btn.innerHTML = '<span class="dot" aria-hidden="true"></span><span>Copy</span>';
+      btn.addEventListener('click', async () => {
+        const src = eq.querySelector('.eq-scroll');
+        if(!src) return;
+        const text = src.innerText.trim();
+        try{
+          await navigator.clipboard.writeText(text);
+          const old = btn.innerHTML;
+          btn.innerHTML = '<span class="dot" aria-hidden="true"></span><span>Copied</span>';
+          setTimeout(()=>btn.innerHTML = old, 1200);
+        }catch(e){
+          btn.innerHTML = '<span class="dot" aria-hidden="true"></span><span>Failed</span>';
+          setTimeout(()=>btn.innerHTML = 'Copy', 1200);
+        }
+      });
+      eq.appendChild(btn);
     });
-  }
 
-  // 5) Optional: light hover zoom suppression on touch devices
-  if (!reduce && matchMedia('(hover: none)').matches){
-    // nothing extra, CSS hover doesn't apply on pure touch
-  }
-})();
+    // 3) Refresh scroll fades
+    const refreshMask = (el)=>{
+      const atTop   = el.scrollTop <= 1;
+      const atBottom= el.scrollHeight - el.clientHeight - el.scrollTop <= 1;
+      const topStop = atTop ? 0 : 12;
+      const botStop = atBottom ? 0 : 12;
+      el.style.webkitMaskImage = `linear-gradient(to bottom, transparent ${topStop}px, black ${topStop+1}px, black calc(100% - ${botStop+1}px), transparent calc(100% - ${botStop}px))`;
+      el.style.maskImage = el.style.webkitMaskImage;
+    };
+    const scrollers = $$('.eq-card .eq-scroll');
+    scrollers.forEach(s=>{
+      s.addEventListener('scroll', ()=>refreshMask(s), {passive:true});
+      setTimeout(()=>refreshMask(s), 60);
+    });
 
+    if (window.MathJax && MathJax.startup && MathJax.startup.promise){
+      MathJax.startup.promise.then(()=> scrollers.forEach(s=>refreshMask(s)));
+    }
 
-   
+    if (!reduce && matchMedia('(hover: none)').matches){
+      // no-op (hover zoom already ignored on touch)
+    }
+  })();
 
-
-   
-
-  // On-demand MathJax typeset
+  /* ---- MathJax on-demand typeset ---- */
   const typeset = (root=document) => {
     if (!window.MathJax || !MathJax.typesetPromise) return;
     MathJax.typesetClear?.();
     MathJax.typesetPromise(Array.from(root.querySelectorAll('.eq'))).catch(()=>{});
   };
-  // Typeset when any .eq enters viewport
   if ('IntersectionObserver' in window) {
     const ioEq = new IntersectionObserver((es)=>{
       if (es.some(e=>e.isIntersecting)) { typeset(document); }
@@ -280,7 +373,7 @@
     addEventListener('load', ()=> typeset(document));
   }
 
-  // Pop-out viewer re-typesets inside the popout
+  /* ---- Equation pop-out viewer ---- */
   let eqPop=null;
   const closePop = () => { if (!eqPop) return; eqPop.remove(); eqPop=null; document.body.style.removeProperty('overflow'); };
   document.addEventListener('click', e=>{
@@ -305,6 +398,30 @@
     history.pushState(null,'',`#${id}`);
     setTimeout(()=>setInk(a.closest('.tab') || activeTab()), 50);
   });
+
+  /* ---- Ξ driver (updates --xi softly; CSS uses it) ---- */
+  (function xiDriver(){
+    if (!ALLOW_MOTION) return;
+    const root = document.documentElement;
+    let xi = 0.35, rafId;
+    function tween(target, dur=2200){
+      const start = xi; const t0 = performance.now();
+      cancelAnimationFrame(rafId);
+      function step(t){
+        const p=Math.min(1,(t-t0)/dur);
+        xi = start + (target-start)*(0.5-0.5*Math.cos(Math.PI*p));
+        root.style.setProperty('--xi', xi.toFixed(3));
+        rafId = requestAnimationFrame(p<1 ? step : loop);
+      }
+      rafId = requestAnimationFrame(step);
+    }
+    function loop(){
+      const target = 0.25 + Math.random()*0.6;
+      const dur = 2200 + Math.random()*1600;
+      tween(target, dur);
+    }
+    loop();
+  })();
 })();
 
 /* ====================================================================== */
@@ -316,11 +433,10 @@
   const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduce || body.classList.contains('affect-off')) return;
 
-  const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
   const rnd   = (a,b)=>a + Math.random()*(b-a);
   const pick  = arr => arr[(Math.random()*arr.length)|0];
 
-  /* ---------- 1) Headline sheen pulses ---------- */
+  /* 1) Headline sheen pulses */
   const sheenTargets = Array.from(document.querySelectorAll('.title, h2, h3'));
   sheenTargets.forEach(el => el.classList.add('alive-sheen'));
   function scheduleSheen(el){
@@ -330,14 +446,14 @@
   }
   sheenTargets.forEach((el,i)=> setTimeout(()=> scheduleSheen(el), rnd(1200, 5400) + i*90));
 
-  /* ---------- 2) Subtle float on tiles/cards/ctas/tabs ---------- */
+  /* 2) Subtle float */
   const floatTargets = Array.from(document.querySelectorAll('.tile, .card, .cta, .tab'));
   floatTargets.forEach(el=>{
     el.style.setProperty('--alive-dur', `${rnd(9,16).toFixed(2)}s`);
     el.classList.add('alive-float');
   });
 
-  /* ---------- 3) Rare twinkle on links & small text ---------- */
+  /* 3) Rare twinkle */
   const twinkles = Array.from(document.querySelectorAll('a, .meta, .hint'));
   twinkles.forEach(el=>{
     if(Math.random() < 0.55){
@@ -346,7 +462,7 @@
     }
   });
 
-  /* ---------- 4) Equations: sparks + arcs + tone ----------- */
+  /* 4) Equations: sparks + arcs */
   const eqs = Array.from(document.querySelectorAll('.eq'));
   const io = 'IntersectionObserver' in window ? new IntersectionObserver(onIO, {threshold:0.15}) : null;
 
@@ -362,9 +478,7 @@
       pool.push(s);
     }
 
-    const arc = document.createElement('i');
-    arc.className = 'arc';
-    eq.appendChild(arc);
+    const arc = document.createElement('i'); arc.className = 'arc'; eq.appendChild(arc);
 
     function runBurst(){
       if (!eq.isConnected) return;
@@ -385,7 +499,6 @@
         const sscale = rnd(.8, 1.4);
         const dur = rnd(6, 12).toFixed(2) + 's';
         const delay = rnd(0, 0.8).toFixed(2) + 's';
-
         s.style.setProperty('--x',  x.toFixed(1) + 'px');
         s.style.setProperty('--y',  y.toFixed(1) + 'px');
         s.style.setProperty('--dx', dx.toFixed(1) + 'px');
@@ -393,7 +506,6 @@
         s.style.setProperty('--s',  sscale.toFixed(2));
         s.style.setProperty('--dur', dur);
         s.style.setProperty('--delay', delay);
-
         s.classList.remove('run'); void s.offsetWidth; s.classList.add('run');
       }
       if (Math.random() < 0.2){
@@ -406,35 +518,20 @@
       }
       setTimeout(runBurst, rnd(1400, 3600));
     }
-
-    function onIO(entries){
-      for (const e of entries){
-        if (e.isIntersecting){
-          runBurst();
-          io && io.unobserve(e.target);
-        }
-      }
-    }
-
+    function onIO(entries){ for (const e of entries){ if (e.isIntersecting){ runBurst(); io && io.unobserve(e.target); } } }
     if (io) io.observe(eq); else setTimeout(runBurst, rnd(800, 2200));
   });
 
-  /* ---------- 5) Laser grid tiny breath ---------- */
-  const grid = document.querySelector('.laser-grid');
-  if (grid) grid.classList.add('alive');
+  /* 5) Laser grid tiny breath */
+  const grid = document.querySelector('.laser-grid'); if (grid) grid.classList.add('alive');
 
-  /* ---------- 6) Safety: honor global kill switch dynamically ---------- */
-  const mo = new MutationObserver(()=> {
-    if (body.classList.contains('affect-off')){
-      mo.disconnect(); // CSS handles the rest
-    }
-  });
+  /* 6) Safety: honor global kill switch dynamically */
+  const mo = new MutationObserver(()=> { if (body.classList.contains('affect-off')) mo.disconnect(); });
   mo.observe(body, {attributes:true, attributeFilter:['class']});
 })();
 
 /* ====================================================================== */
 /* Alive Palette (Calm / Lively / Max / Full Off)                         */
-/* Integrates with ⌘K palette and optional quick toolbar button           */
 /* ====================================================================== */
 (function alivePalette(){
   const doc = document;
@@ -508,7 +605,7 @@
   function labelFor(id){
     const m = MODES.find(x=>x.id===id);
     return m ? `Affect: ${m.label.split(' — ')[0]}` : 'Affect: Lively';
-  }
+    }
   function currentMode(){
     if (body.classList.contains('affect-off')) return 'off';
     return root.getAttribute('data-alive') || 'lively';
@@ -545,3 +642,4 @@
     if (prev !== id) { try{ console.debug('[SoF] Alive mode:', id); }catch(_){} }
   }
 })();
+</script>
