@@ -952,6 +952,21 @@ Note: This is the local, verified file hash shown on this page.
         const f=document.createElement('div'); f.className='flare'; fx.appendChild(f);
       }
 
+
+
+
+
+
+
+      <!-- Command Palette -->
+<div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel" hidden>
+  <div class="panel">
+    <h3 id="palLabel" class="sr-only">Command palette</h3>
+    <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette">
+    <ul id="palList" aria-live="polite"></ul>
+  </div>
+</div>
+
       if(recipe==='beams'){ addBeams(); }
       else if(recipe==='orbit'){ addOrbit(); }
       else if(recipe==='spiral'){ addSpiral(); }
