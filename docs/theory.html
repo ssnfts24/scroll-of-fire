@@ -42,8 +42,8 @@
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.7"></noscript>
 
   <!-- Page-specific (fixes banner placement & density for Theory) -->
-  <link rel="preload" as="style" href="assets/css/theory.css?v=1.6">
-  <link rel="stylesheet" href="assets/css/theory.css?v=1.6">
+  <link rel="preload" as="style" href="assets/css/theory.css?v=1.7">
+  <link rel="stylesheet" href="assets/css/theory.css?v=1.7">
 
   <!-- Preload banner (same as Home) -->
   <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" fetchpriority="high">
@@ -150,10 +150,10 @@
     })();
   </script>
 
-  <!-- Site JS (v3.3.2 consolidated) -->
-  <script src="assets/js/codex.js?v=3.3.2" defer></script>
+  <!-- Site JS (updated to v3.6 with a11y pop-out & voice collapse) -->
+  <script src="assets/js/codex.js?v=3.6" defer></script>
 
-  <!-- Page-local helpers: smooth jumps + equation expand -->
+  <!-- Page-local helpers: smooth jumps + equation expand (fallback) -->
   <script>
     // Smooth in-page scroll for anything with [data-jump]
     document.addEventListener('click', e=>{
@@ -219,7 +219,7 @@
              alt="Scroll of Fire — sigil and equations"
              decoding="async" fetchpriority="high" loading="eager">
       </picture>
-      <div class="hero-lights" aria-hidden="true"></div>
+      <div id="heroLights" class="hero-lights" aria-hidden="true"></div>
       <figcaption class="hero-caption">“Let there be resonance.”</figcaption>
     </figure>
 
@@ -230,7 +230,7 @@
     <details class="collapsible card col-12" id="voice-reader" open>
       <summary class="collapsible__bar" aria-controls="vr-panel" aria-expanded="true">
         <span>🔊 Listen — Voice Read of the Theory Page</span>
-        <span class="collapsible__mini">
+        <span class="collapsible__mini" aria-hidden="true">
           <button id="vr-play-mini" class="chip" type="button" title="Play">▶︎</button>
           <button id="vr-stop-mini" class="chip" type="button" title="Stop">⏹</button>
         </span>
@@ -526,16 +526,16 @@
         </ul>
       </article>
 
-      <!-- Formal summary -->
+        <!-- Formal summary -->
       <article class="card col-12">
         <h3>Formal Summary</h3>
         <div class="eq">
           <div class="eq-scroll" id="eqFormal-body">
-            $$ \mathcal{R}(x,t) = \Big[ f(\text{constants, codes, ratios}) \cdot (\mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S}) \Big]_{\text{masked by Eq.9}} $$
-            $$ \text{Update:}\quad \frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla\mathcal{R},\quad \Xi\in[0,1],\quad \eta(\Xi)=\eta_0\,\sigma(\alpha(\Xi-\Xi_0)) $$
-            $$ \text{Memory:}\quad \mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t} w_\tau(t-s)\,F(s)\,ds $$
-            $$ \text{Gate:}\quad \mathcal{H}(\nu)\in\{0,1\},\quad \mathbf{V}(\nu)=\sum_k a_k\cos(2\pi\nu_k t+\phi_k) $$
-            $$ \text{Safety:}\quad \mathrm{damage}>0\Rightarrow \text{halt};\ \ \frac{\mathrm{Truth}}{\mathrm{Distortion}}\ \text{must improve over time}. $$
+            $$ \mathcal{R}(x,t) = \Big[ f(\text{constants, codes, ratios}) \cdot (\mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S}) \Big]_{\text{masked by Eq.9}} $
+            $ \text{Update:}\quad \frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla\mathcal{R},\quad \Xi\in[0,1],\quad \eta(\Xi)=\eta_0\,\sigma(\alpha(\Xi-\Xi_0)) $
+            $ \text{Memory:}\quad \mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t} w_\tau(t-s)\,F(s)\,ds $
+            $ \text{Gate:}\quad \mathcal{H}(\nu)\in\{0,1\},\quad \mathbf{V}(\nu)=\sum_k a_k\cos(2\pi\nu_k t+\phi_k) $
+            $ \text{Safety:}\quad \mathrm{damage}>0\Rightarrow \text{halt};\ \ \frac{\mathrm{Truth}}{\mathrm{Distortion}}\ \text{must improve over time}. $$
           </div>
         </div>
       </article>
@@ -566,6 +566,8 @@
     <!-- End Part I; Part II / Ethics / Notes continue below (unchanged markup) -->
 
   </main>
+</body>
+</html>
 
   <!-- Helpers: equation toggles + Voice Reader mini controls -->
   <script>
