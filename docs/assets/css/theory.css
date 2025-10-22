@@ -72,3 +72,33 @@
 @media print{
   .mini-toc,.back-canon{ display:none!important }
 }
+
+
+
+/* Theory page polish — fixes banner placement parity with Home and tiny density tweaks */
+
+.hero.hero--clean { margin-bottom: 10px; }
+.hero .hero-img { object-fit: var(--hero-fit, contain); object-position: var(--hero-focal-mobile, 50% 40%); }
+@media (min-width: 860px){
+  .hero .hero-img { object-position: var(--hero-focal-desktop, 58% 50%); }
+}
+
+/* Caption spacing on very small screens */
+.hero-caption{
+  text-align:center; color:var(--muted);
+  margin: 6px 0 10px;
+  font-size: var(--fs-0);
+}
+
+/* Mini-TOC compactness on phones */
+@media (max-width: 560px){
+  .mini-toc{ position: sticky; top: calc(var(--head-h) + var(--tabs-h) + 8px); }
+  .wrap{ padding-left: 14px; padding-right: 14px; }
+}
+
+/* Cards + eq readability tweaks */
+.eq-card .eq-scroll{ max-height: clamp(160px, 24vh, 280px); }
+.eq .mjx-container{ font-size: clamp(15px, 0.95rem + 0.35vw, 21px); }
+
+/* Back-to-Canon pill visibility threshold slightly lower here */
+#backCanon{ bottom: calc(18px + var(--safe-bottom)); }
