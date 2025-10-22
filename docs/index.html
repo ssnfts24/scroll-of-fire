@@ -3,16 +3,20 @@
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
-    // Keep <base> only on the site, remove on github.com preview
-    if (location.hostname === "github.com") {
-      const b = document.querySelector("base"); if (b) b.remove();
-    }
+    // Keep <base> only on the live GitHub Pages site; remove on github.com preview and local dev
+    (function () {
+      var host = location.hostname;
+      if (host !== "ssnfts24.github.io") {
+        var b = document.querySelector("base"); if (b) b.remove();
+      }
+    })();
   </script>
   <meta charset="utf-8">
   <title>Scroll of Fire — Codex of Reality</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="description" content="The Scroll of Fire — a living Codex of Reality by Aaron Paul Laird (Scribe of Circuits): resonance physics, sacred geometry, language, memory, living technology, and ethics in one harmonic architecture.">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/">
 
@@ -69,13 +73,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- Styles (v2.8) -->
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2.8">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2.8" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.8"></noscript>
+  <!-- MathJax CDN preconnect (faster first paint when on-demand loads) -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <!-- Styles (v2.8.1) -->
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2.8.1">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2.8.1" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.8.1"></noscript>
 
   <!-- Preload banner -->
-  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1" fetchpriority="high" imagesrcset="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1 2100w">
 
   <!-- Page-scoped helpers + Living Tech bridges -->
   <style>
@@ -92,7 +99,7 @@
 
     /* Layout / header */
     body{margin:0}
-    header.site{position:sticky; top:0; z-index:1000; backdrop-filter:saturate(140%) blur(8px); background:rgba(9,11,16,.6)}
+    header.site{position:sticky; top:0; z-index:1000; -webkit-backdrop-filter:saturate(140%) blur(8px); backdrop-filter:saturate(140%) blur(8px); background:rgba(9,11,16,.6)}
     .wrap{padding:16px; max-width:1200px; margin:0 auto}
     .nav{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
     .brand{display:flex; align-items:center; gap:10px}
@@ -110,7 +117,7 @@
 
     .hidden{display:none!important}
     a.skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
-    a.skip:focus{left:12px;top:12px;width:auto;height:auto;padding:8px 10px;z-index:70;background:#0f1118;color:#fff;border:1px solid #343846;border-radius:10px;backdrop-filter:saturate(140%) blur(8px)}
+    a.skip:focus{left:12px;top:12px;width:auto;height:auto;padding:8px 10px;z-index:70;background:#0f1118;color:#fff;border:1px solid #343846;border-radius:10px;-webkit-backdrop-filter:saturate(140%) blur(8px);backdrop-filter:saturate(140%) blur(8px)}
 
     /* --- HERO / BANNER --- */
     .hero{position:relative; width:100%; max-width:1200px; margin:8px auto 0; border-radius:16px; overflow:hidden; background:#0b0f14}
@@ -214,7 +221,7 @@
   </script>
 
   <!-- Site JS (global) -->
-  <script src="assets/js/codex.js?v=3.3.3" defer></script>
+  <script src="assets/js/codex.js?v=3.7" defer></script>
 </head>
 
 <body class="stars living-all" data-theme="dark">
@@ -349,156 +356,168 @@
     </section>
 
     <!-- [SPLIT HERE — Part 1 ends. Part 2 starts with the Canon section.] -->
-
   </main>
 
-  <!-- Minimal page helpers for Part 1 -->
-  <script>
-    // Year + back-to-top visibility (button itself added in Part 2)
-    (function(){ const y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear(); })();
 
-    // HERO auto-fit: switches cover/contain based on container vs image AR
-    (function(){
-      const hero=document.getElementById('hero'), img=document.getElementById('heroBanner');
-      if(!hero||!img) return;
-      function applyAR(){ const iw=img.naturalWidth||2100, ih=img.naturalHeight||900; hero.style.aspectRatio=`${iw} / ${ih}`; }
-      function pickFit(){
-        if (matchMedia('(max-width:560px)').matches){ hero.style.setProperty('--hero-fit','contain'); return; }
-        const iw=img.naturalWidth||2100, ih=img.naturalHeight||900, imageAR=iw/ih;
-        const cw=hero.clientWidth||innerWidth, ch=Math.max(1, hero.clientHeight||innerHeight*0.38), containerAR=cw/ch;
-        const cover = (Math.abs(containerAR - imageAR) / imageAR < 0.06);
-        hero.style.setProperty('--hero-fit', cover ? 'cover' : 'contain');
+
+
+
+
+  
+
+<!-- Minimal page helpers for Part 1 -->
+<script>
+  // Guard against double-binding if included twice by mistake
+  if (!window.__sofP1) { window.__sofP1 = 1;
+
+  // Year + back-to-top visibility (button itself added in Part 2)
+  (function(){ const y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear(); })();
+
+  // HERO auto-fit: switches cover/contain based on container vs image AR
+  (function(){
+    const hero=document.getElementById('hero'), img=document.getElementById('heroBanner');
+    if(!hero||!img) return;
+    function applyAR(){ const iw=img.naturalWidth||2100, ih=img.naturalHeight||900; hero.style.aspectRatio=`${iw} / ${ih}`; }
+    function pickFit(){
+      if (matchMedia('(max-width:560px)').matches){ hero.style.setProperty('--hero-fit','contain'); return; }
+      const iw=img.naturalWidth||2100, ih=img.naturalHeight||900, imageAR=iw/ih;
+      const cw=hero.clientWidth||innerWidth, ch=Math.max(1, hero.clientHeight||innerHeight*0.38), containerAR=cw/ch;
+      const cover = (Math.abs(containerAR - imageAR) / imageAR < 0.06);
+      hero.style.setProperty('--hero-fit', cover ? 'cover' : 'contain');
+    }
+    function boot(){ applyAR(); pickFit(); }
+    if(img.complete) boot(); else img.addEventListener('load', boot, {once:true});
+    addEventListener('resize', pickFit, {passive:true});
+    addEventListener('orientationchange', pickFit, {passive:true});
+    addEventListener('visibilitychange', ()=>!document.hidden && pickFit());
+  })();
+
+  // Explore Dock appears only after hero leaves viewport (component added in Part 2)
+  (function(){
+    const dock=document.getElementById('exploreDock'), hero=document.getElementById('hero'), explore=document.getElementById('explore');
+    if(!dock||!hero||!explore||!('IntersectionObserver' in window)) return;
+    let heroOut=false, pastExplore=false;
+    const ioHero=new IntersectionObserver(([e])=>{heroOut=!e.isIntersecting; update();},{threshold:0.01});
+    const ioExplore=new IntersectionObserver(([e])=>{pastExplore=e.isIntersecting; update();},{threshold:0.05});
+    function update(){ dock.classList.toggle('show', heroOut && !pastExplore); }
+    ioHero.observe(hero); ioExplore.observe(explore);
+  })();
+
+  // Quick controls (Echo/HUD/Carrier/Affect/Lights)
+  (function(){
+    const body=document.body, html=document.documentElement;
+
+    const btnEcho=document.getElementById('toggleSimple');
+    btnEcho?.addEventListener('click',()=>{
+      body.classList.toggle('simple-on');
+      btnEcho.setAttribute('aria-pressed', String(body.classList.contains('simple-on')));
+      const chk=document.getElementById('simple'); if(chk) chk.checked=body.classList.contains('simple-on');
+    });
+
+    const btnHUD=document.getElementById('toggleGrid'), grid=document.querySelector('.laser-grid');
+    btnHUD?.addEventListener('click',()=>{
+      const show = grid && grid.style.display !== 'none';
+      if(grid) grid.style.display = show ? 'none' : '';
+      btnHUD.setAttribute('aria-pressed', String(!show));
+    });
+
+    // Carrier skins (includes 144 & 963)
+    const btnCarrier=document.getElementById('cycleCarrier');
+    const carrierAttr=(html.getAttribute('data-carriers')||'').split(',').map(s=>s.trim()).filter(Boolean);
+    const skins=(carrierAttr.length?carrierAttr:['432','528','369','144','963']).map(n=>`carrier-${n}`);
+    const curSkin=()=> skins.find(s=>html.classList.contains(s)) || skins[0];
+    const nextSkin=c=> skins[(skins.indexOf(c)+1)%skins.length];
+    btnCarrier?.addEventListener('click',()=>{
+      const cur=curSkin(), nxt=nextSkin(cur);
+      skins.forEach(s=>html.classList.remove(s)); html.classList.add(nxt);
+      btnCarrier.textContent = `Carrier ${nxt.split('-')[1]}`;
+    });
+    if(btnCarrier) btnCarrier.textContent=`Carrier ${curSkin().split('-')[1]}`;
+
+    const btnAffect=document.getElementById('toggleAffect');
+    btnAffect?.addEventListener('click',()=>{
+      const off=document.body.classList.toggle('affect-off');
+      btnAffect.setAttribute('aria-pressed', String(!off));
+    });
+
+    const lights=document.getElementById('heroLights');
+    const btnLights=document.getElementById('toggleLights');
+    btnLights?.addEventListener('click',()=>{
+      const off=lights.classList.toggle('off');
+      btnLights.setAttribute('aria-pressed', String(!off));
+    });
+  })();
+
+  // Page search ("/" to focus)
+  (function(){
+    const box=document.getElementById('site-search');
+    const list=document.getElementById('site-suggest');
+    if(!box||!list) return;
+
+    addEventListener('keydown',(e)=>{
+      if(e.key==='/' && document.activeElement!==box){
+        e.preventDefault(); box.focus(); box.select();
       }
-      function boot(){ applyAR(); pickFit(); }
-      if(img.complete) boot(); else img.addEventListener('load', boot, {once:true});
-      addEventListener('resize', pickFit, {passive:true});
-      addEventListener('orientationchange', pickFit, {passive:true});
-      addEventListener('visibilitychange', ()=>!document.hidden && pickFit());
-    })();
+    });
 
-    // Explore Dock appears only after hero leaves viewport (component added in Part 2)
-    (function(){
-      const dock=document.getElementById('exploreDock'), hero=document.getElementById('hero'), explore=document.getElementById('explore');
-      if(!dock||!hero||!explore||!('IntersectionObserver' in window)) return;
-      let heroOut=false, pastExplore=false;
-      const ioHero=new IntersectionObserver(([e])=>{heroOut=!e.isIntersecting; update();},{threshold:0.01});
-      const ioExplore=new IntersectionObserver(([e])=>{pastExplore=e.isIntersecting; update();},{threshold:0.05});
-      function update(){ dock.classList.toggle('show', heroOut && !pastExplore); }
-      ioHero.observe(hero); ioExplore.observe(explore);
-    })();
-
-    // Quick controls (Echo/HUD/Carrier/Affect/Lights) — fixed to not be blocked by any overlay
-    (function(){
-      const body=document.body, html=document.documentElement;
-
-      const btnEcho=document.getElementById('toggleSimple');
-      btnEcho?.addEventListener('click',()=>{
-        body.classList.toggle('simple-on');
-        btnEcho.setAttribute('aria-pressed', String(body.classList.contains('simple-on')));
-        const chk=document.getElementById('simple'); if(chk) chk.checked=body.classList.contains('simple-on');
-      });
-
-      const btnHUD=document.getElementById('toggleGrid'), grid=document.querySelector('.laser-grid');
-      btnHUD?.addEventListener('click',()=>{
-        const show = grid && grid.style.display !== 'none';
-        if(grid) grid.style.display = show ? 'none' : '';
-        btnHUD.setAttribute('aria-pressed', String(!show));
-      });
-
-      // Carrier skins (includes 144 & 963)
-      const btnCarrier=document.getElementById('cycleCarrier');
-      const carrierAttr=(html.getAttribute('data-carriers')||'').split(',').map(s=>s.trim()).filter(Boolean);
-      const skins=(carrierAttr.length?carrierAttr:['432','528','369','144','963']).map(n=>`carrier-${n}`);
-      const curSkin=()=> skins.find(s=>html.classList.contains(s)) || skins[0];
-      const nextSkin=c=> skins[(skins.indexOf(c)+1)%skins.length];
-      btnCarrier?.addEventListener('click',()=>{
-        const cur=curSkin(), nxt=nextSkin(cur);
-        skins.forEach(s=>html.classList.remove(s)); html.classList.add(nxt);
-        btnCarrier.textContent = `Carrier ${nxt.split('-')[1]}`;
-      });
-      if(btnCarrier) btnCarrier.textContent=`Carrier ${curSkin().split('-')[1]}`;
-
-      const btnAffect=document.getElementById('toggleAffect');
-      btnAffect?.addEventListener('click',()=>{
-        const off=document.body.classList.toggle('affect-off');
-        btnAffect.setAttribute('aria-pressed', String(!off));
-      });
-
-      const lights=document.getElementById('heroLights');
-      const btnLights=document.getElementById('toggleLights');
-      btnLights?.addEventListener('click',()=>{
-        const off=lights.classList.toggle('off');
-        btnLights.setAttribute('aria-pressed', String(!off));
-      });
-    })();
-
-    // Page search ("/" to focus)
-    (function(){
-      const box=document.getElementById('site-search');
-      const list=document.getElementById('site-suggest');
-      if(!box||!list) return;
-
-      addEventListener('keydown',(e)=>{
-        if(e.key==='/' && document.activeElement!==box){
-          e.preventDefault(); box.focus(); box.select();
+    const SOURCES=[...document.querySelectorAll('h2[id],h3[id],a.tile'), ...document.querySelectorAll('.eq-card')];
+    function items(q){
+      const s=q.trim().toLowerCase(); if(!s) return [];
+      const out=[];
+      for(const el of SOURCES){
+        const text=(el.innerText||'').trim();
+        if(text.toLowerCase().includes(s)){
+          let href='#'; if(el.id) href = `#${el.id}`;
+          const a = el.tagName==='A' && el.classList.contains('tile') ? el.getAttribute('href') : href;
+          out.push({text, href:a}); if(out.length>12) break;
         }
-      });
-
-      const SOURCES=[...document.querySelectorAll('h2[id],h3[id],a.tile'), ...document.querySelectorAll('.eq-card')];
-      function items(q){
-        const s=q.trim().toLowerCase(); if(!s) return [];
-        const out=[];
-        for(const el of SOURCES){
-          const text=(el.innerText||'').trim();
-          if(text.toLowerCase().includes(s)){
-            let href='#'; if(el.id) href = `#${el.id}`;
-            const a = el.tagName==='A' && el.classList.contains('tile') ? el.getAttribute('href') : href;
-            out.push({text, href:a}); if(out.length>12) break;
-          }
-        }
-        return out;
       }
-      function render(arr){
-        if(!arr.length){ list.classList.add('hidden'); list.innerHTML=''; return; }
-        list.innerHTML = arr.map((o,i)=>`<a href="${o.href}" role="option" data-ix="${i}">${o.text}</a>`).join('');
-        list.classList.remove('hidden');
-      }
-      box.addEventListener('input', ()=>render(items(box.value)));
-      box.addEventListener('keydown',(e)=>{
-        const links=[...list.querySelectorAll('a')]; if(!links.length) return;
-        const cur=list.querySelector('.sel'); let i=cur?+cur.dataset.ix:-1;
-        if(e.key==='ArrowDown'){ e.preventDefault(); i=Math.min(links.length-1, i+1); }
-        else if(e.key==='ArrowUp'){ e.preventDefault(); i=Math.max(0, i-1); }
-        else if(e.key==='Enter'){ if(cur){ location.href=cur.getAttribute('href'); list.classList.add('hidden'); } return; }
-        else if(e.key==='Escape'){ list.classList.add('hidden'); return; }
-        links.forEach(a=>a.classList.remove('sel')); if(i>=0){ links[i].classList.add('sel'); }
-      });
-      addEventListener('click',(e)=>{ if(!list.contains(e.target) && e.target!==box) list.classList.add('hidden'); });
-    })();
+      return out;
+    }
+    function render(arr){
+      if(!arr.length){ list.classList.add('hidden'); list.innerHTML=''; return; }
+      list.innerHTML = arr.map((o,i)=>`<a href="${o.href}" role="option" data-ix="${i}">${o.text}</a>`).join('');
+      list.classList.remove('hidden');
+    }
+    box.addEventListener('input', ()=>render(items(box.value)));
+    box.addEventListener('keydown',(e)=>{
+      const links=[...list.querySelectorAll('a')]; if(!links.length) return;
+      const cur=list.querySelector('.sel'); let i=cur?+cur.dataset.ix:-1;
+      if(e.key==='ArrowDown'){ e.preventDefault(); i=Math.min(links.length-1, i+1); }
+      else if(e.key==='ArrowUp'){ e.preventDefault(); i=Math.max(0, i-1); }
+      else if(e.key==='Enter'){ if(cur){ location.href=cur.getAttribute('href'); list.classList.add('hidden'); } return; }
+      else if(e.key==='Escape'){ list.classList.add('hidden'); return; }
+      links.forEach(a=>a.classList.remove('sel')); if(i>=0){ links[i].classList.add('sel'); }
+    });
+    addEventListener('click',(e)=>{ if(!list.contains(e.target) && e.target!==box) list.classList.add('hidden'); });
+  })();
 
-    // Scroll reveal (safe on older devices)
-    (function(){
-      if(!('IntersectionObserver' in window)){ document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in')); return; }
-      const io=new IntersectionObserver(es=>{ for(const e of es){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } } }, {threshold:.12});
-      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-    })();
+  // Scroll reveal (safe on older devices)
+  (function(){
+    if(!('IntersectionObserver' in window)){ document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in')); return; }
+    const io=new IntersectionObserver(es=>{ for(const e of es){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } } }, {threshold:.12});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  })();
 
-    // Ξ driver for living glow
-    (function(){
-      const root=document.documentElement.style, dot=document.querySelector('.xi-dot'); let xi=.35;
-      function step(){
-        const target=.25+Math.random()*.6, start=xi, dur=2200+Math.random()*1600, t0=performance.now();
-        function tween(t){
-          const p=Math.min(1,(t-t0)/dur);
-          xi=start+(target-start)*(0.5-0.5*Math.cos(Math.PI*p));
-          root.setProperty('--xi', xi.toFixed(3)); if(dot) dot.style.opacity=(0.7+0.3*xi).toFixed(3);
-          (p<1)?requestAnimationFrame(tween):requestAnimationFrame(step);
-        } requestAnimationFrame(tween);
-      } requestAnimationFrame(step);
-    })();
-  </script>
-</body>
-  </html><!-- Canon (living) -->
+  // Ξ driver for living glow
+  (function(){
+    const root=document.documentElement.style, dot=document.querySelector('.xi-dot'); let xi=.35;
+    function step(){
+      const target=.25+Math.random()*.6, start=xi, dur=2200+Math.random()*1600, t0=performance.now();
+      function tween(t){
+        const p=Math.min(1,(t-t0)/dur);
+        xi=start+(target-start)*(0.5-0.5*Math.cos(Math.PI*p));
+        root.setProperty('--xi', xi.toFixed(3)); if(dot) dot.style.opacity=(0.7+0.3*xi).toFixed(3);
+        (p<1)?requestAnimationFrame(tween):requestAnimationFrame(step);
+      } requestAnimationFrame(tween);
+    } requestAnimationFrame(step);
+  })();
+
+  } // end guard
+</script>
+
+<!-- ======== Part 2 begins (Canon, Engine, Dimensional Scaffolding, etc.) ======== -->
+
 <div class="goldline sweep"></div>
 <section class="grid" id="canon" aria-labelledby="equations">
   <article class="card col-12 reveal">
@@ -913,7 +932,7 @@ Note: This is the local, verified file hash shown on this page.
     const input=document.getElementById('palInput');
     const list=document.getElementById('palList');
     const OPEN_KEYS=new Set(['k','K']);
-    const LINKS=[...document.querySelectorAll('a.tile, nav.tabs a, .cta')].map(a=>({text:a.textContent.trim(), href:a.getAttribute('href')||'#'}));
+    const LINKS=[...document.querySelectorAll('a.tile, nav.tabs a, .cta')].map(a=>({text:a.textContent.trim(), href=a.getAttribute('href')||'#'}));
     function open(){ pal.hidden=false; input.value=''; render(LINKS.slice(0,12)); setTimeout(()=>input.focus(),0); }
     function close(){ pal.hidden=true; }
     function render(items){ list.innerHTML=items.map(o=>`<li><a href="${o.href}">${o.text}</a></li>`).join(''); }
@@ -1007,3 +1026,6 @@ Note: This is the local, verified file hash shown on this page.
   })();
 </script>
 <!-- End Part 2/2 -->
+
+</body>
+</html>
