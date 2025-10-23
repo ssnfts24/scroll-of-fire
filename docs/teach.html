@@ -1,561 +1,767 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="sof">
-<head>
-  <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>if(location.hostname==="github.com"){const b=document.querySelector("base");if(b)b.remove();}</script>
-  <meta charset="utf-8" />
-  <title>Manifest — Remnant Visual Exercise · Scroll of Fire</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
-  <meta name="description" content="Remnant Visual Exercise (RVE): compose intention (𝓘), align a carrier Πν, run the observer loop (𝓘→𝓛→𝓒→𝓢), breathe, compute Ξ, and seal to the private Witness Ledger — ethics first." />
-  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/teach.html" />
-  <meta property="og:title" content="Manifest — Remnant Visual Exercise · Scroll of Fire">
-  <meta property="og:description" content="Create. Witness. Seal. Live remnant trace, carrier tuning, breath pacing, Ξ meter, and a private ledger — Eq.9 safety mask on.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
+<html lang="en" dir="ltr" class="sof">  
+<head>  
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">  
+  <script>if(location.hostname==="github.com"){const b=document.querySelector("base");if(b)b.remove();}</script>  
+  <meta charset="utf-8" />  
+  <title>Manifest — Remnant Visual Exercise · Scroll of Fire</title>  
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />  
+  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">  
+  <meta name="description" content="Remnant Visual Exercise (RVE): compose intention (𝓘), align a carrier Πν, run 𝓘→𝓛→𝓒→𝓢, breathe, compute Ξ, and seal to the private Witness Ledger — ethics first." />  
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/teach.html" />  
+  <meta property="og:title" content="Manifest — Remnant Visual Exercise · Scroll of Fire">  
+  <meta property="og:description" content="Create. Witness. Seal. Live remnant trace, carrier tuning, breath pacing, Ξ meter, mental drills, and a private ledger — Eq.9 safety mask on.">  
+  <meta property="og:type" content="website">  
+  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>  
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">    <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-24">  
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24" media="print" onload="this.media='all'">  
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24"></noscript>    <style>  
+    :root{--maxw:1180px}  
+    body{margin:0}  
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:20px 16px 90px}  
+    .title{  
+      font-family:"Crimson Pro",serif;font-weight:800;text-align:center;  
+      font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;letter-spacing:.2px;  
+      background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);  
+      -webkit-background-clip:text;background-clip:text;color:transparent  
+    }  
+    .subtitle{text-align:center;color:var(--muted);margin:0 0 12px}  
+  
+    /* Layout */  
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}  
+    .col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-7{grid-column:span 7}.col-9{grid-column:span 9}.col-12{grid-column:span 12}  
+    @media (max-width:980px){.col-3,.col-4,.col-5,.col-7,.col-9,.col-12{grid-column:span 12}}  
+  
+    /* Cards & inputs */  
+    .card{border:1px solid var(--line);border-radius:12px;padding:12px;background:rgba(255,255,255,.02)}  
+    .lab-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}  
+    .lab-btn{padding:.6rem .85rem;border-radius:10px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);font-weight:700;cursor:pointer}  
+    .lab-btn[disabled]{opacity:.5;cursor:not-allowed}  
+    .lab-btn.primary{box-shadow:0 8px 24px rgba(122,243,255,.12)}  
+    .lab-input{width:100%;padding:.6rem;border-radius:10px;border:1px solid var(--line);background:#0f1116;color:inherit}  
+    .hint,.meta{color:#9aa4be}  
+    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}  
+  
+    /* Tabs: horizontal scroll with chevrons */  
+    .tabs-wrap{position:relative}  
+    .pill-rail{  
+      display:flex; gap:6px; align-items:center; overflow:auto; scroll-snap-type:x mandatory;  
+      padding:0 40px; /* space for chevrons */  
+      mask-image:linear-gradient(90deg,transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);  
+      -webkit-mask-image:linear-gradient(90deg,transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);  
+    }  
+    .pill{flex:0 0 auto; scroll-snap-align:start; padding:.5rem .8rem;border-radius:999px;border:1px solid var(--line);cursor:pointer;white-space:nowrap}  
+    .pill.active{border-color:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent)}  
+    .tab{display:none}.tab.active{display:block}  
+    .chev{  
+      position:absolute; top:50%; transform:translateY(-50%);  
+      width:32px; height:32px; border-radius:999px; border:1px solid var(--line);  
+      background:rgba(255,255,255,.04); display:grid; place-items:center; cursor:pointer;  
+    }  
+    .chev.left{left:4px} .chev.right{right:4px}  
+    .chev[disabled]{opacity:.4;cursor:not-allowed}  
+  
+    /* REMNANT (visual) */  
+    .stage{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#0a0e15}  
+    #trace{display:block;width:100%;height:420px;background:radial-gradient(240px 180px at 50% 50%, #0e1420, #080b12)}  
+    .hud{position:absolute;inset:auto 10px 10px 10px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}  
+    .chip{font-size:.82rem;padding:.25rem .55rem;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);pointer-events:auto}  
+  
+    /* Controls under visual */  
+    .control-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}  
+    .control-grid > * {grid-column:span 12}  
+    @media (min-width:760px){ .control-grid .span-4{grid-column:span 4} .control-grid .span-3{grid-column:span 3} .control-grid .span-6{grid-column:span 6}}  
+  
+    /* Rings */  
+    .ring-bg{fill:none;stroke:#1f1f28;stroke-width:6}  
+    .ring-fg{fill:none;stroke:url(#gradRing);stroke-width:6;stroke-linecap:round;stroke-dasharray:0 283}  
+    .ring-num{font:800 18px/1 Inter;fill:#eae7df}  
+    .ring-sub{font:600 10px/1 Inter;fill:#b8b3a6}  
+  
+    /* Hero (no crop) */  
+    .hero{margin:8px auto 0; max-width:1200px; border-radius:16px; overflow:hidden; background:#0b0f14}  
+    .hero img{display:block; width:100%; height:auto; object-fit:contain}  
+  
+    /* Ledger thumbnails + lightbox */  
+    .thumb{height:40px; width:auto; border:1px solid var(--line); border-radius:6px; vertical-align:middle; cursor:pointer}  
+    .lightbox{position:fixed; inset:0; background:rgba(0,0,0,.7); display:none; align-items:center; justify-content:center; z-index:9999}  
+    .lightbox.open{display:flex}  
+    .lightbox img{max-width:min(92vw,1200px); max-height:88vh; border-radius:12px; border:1px solid #2a3242; box-shadow:0 16px 48px rgba(0,0,0,.6)}  
+  
+    /* Gentle reveal */  
+    .visible{opacity:1;transform:none}  
+    .card{opacity:.96;transform:translateY(6px);transition:opacity .25s ease-out, transform .25s ease-out}  
+  </style>  </head>  <body class="stars">  
+  <!-- Banner -->  
+  <figure class="hero" aria-label="Scroll of Fire banner">  
+    <img src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" alt="Scroll of Fire — sigil banner" width="2100" height="900" decoding="async" loading="eager">  
+  </figure>    <main class="wrap" id="main" role="main">  
+    <header class="page-head fancy-head">  
+      <h1 class="title">✨ Manifest — <em>Remnant Visual Exercise</em></h1>  
+      <p class="subtitle">Compose a line (𝓘), tune Π<sub>ν</sub>, run 𝓘→𝓛→𝓒→𝓢, breathe, track Ξ, drill your focus, and <b>seal</b> the remnant to witness.</p>  <!-- Tabs -->  
+  <section class="card" style="margin-top:10px">  
+    <div class="tabs-wrap" role="navigation" aria-label="Manifest tabs">  
+      <button class="chev left" id="tabsPrev" aria-label="Scroll tabs left">‹</button>  
+      <div class="pill-rail" id="pillRail" role="tablist">  
+        <button class="pill active" data-tab="remnant"  role="tab" aria-selected="true">🜚 Remnant</button>  
+        <button class="pill"        data-tab="observer" role="tab" aria-selected="false">⏱ Observer</button>  
+        <button class="pill"        data-tab="voice"    role="tab" aria-selected="false">🎙 Carrier</button>  
+        <button class="pill"        data-tab="phrase"   role="tab" aria-selected="false">🔡 Phrase</button>  
+        <button class="pill"        data-tab="breath"   role="tab" aria-selected="false">🌬 Breath</button>  
+        <button class="pill"        data-tab="coherence"role="tab" aria-selected="false">📈 Ξ</button>  
+        <button class="pill"        data-tab="drills"   role="tab" aria-selected="false">🧭 Drills</button>  
+        <button class="pill"        data-tab="timer"    role="tab" aria-selected="false">⏳ Timer</button>  
+        <button class="pill"        data-tab="deck"     role="tab" aria-selected="false">🎴 Deck</button>  
+        <button class="pill"        data-tab="ledger"   role="tab" aria-selected="false">📒 Ledger</button>  
+      </div>  
+      <button class="chev right" id="tabsNext" aria-label="Scroll tabs right">›</button>  
+    </div>  
+  </section>  
+</header>  
 
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-23">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-23" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-23"></noscript>
+<!-- =================== TABS =================== -->  
 
-  <style>
-    :root{--maxw:1180px}
-    body{margin:0}
-    .wrap{max-width:var(--maxw);margin:0 auto;padding:20px 16px 90px}
-    .title{
-      font-family:"Crimson Pro",serif;font-weight:800;text-align:center;
-      font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;letter-spacing:.2px;
-      background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);
-      -webkit-background-clip:text;background-clip:text;color:transparent
-    }
-    .subtitle{text-align:center;color:var(--muted);margin:0 0 12px}
+<!-- REMNANT -->  
+<section id="tab-remnant" class="tab active" role="tabpanel">  
+  <article class="grid">  
+    <div class="card col-9">  
+      <h2>🜚 Remnant — visual exercise & seal</h2>  
 
-    /* Layout */
-    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
-    .col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-7{grid-column:span 7}.col-12{grid-column:span 12}
-    @media (max-width:980px){.col-4,.col-5,.col-7,.col-12{grid-column:span 12}}
+      <!-- Stage -->  
+      <div class="stage">  
+        <canvas id="trace" aria-label="Remnant trace"></canvas>  
+        <div class="hud">  
+          <div class="lab-row">  
+            <span class="chip" id="hudCarrier">Πν: —</span>  
+            <span class="chip" id="hudBreath">Breath: —</span>  
+            <span class="chip" id="hudXi">Ξ: —</span>  
+          </div>  
+          <div class="lab-row">  
+            <button class="chip" id="seedBtn">Seed</button>  
+            <button class="chip" id="clearBtn">Clear</button>  
+            <button class="chip" id="dlTrace">PNG</button>  
+          </div>  
+        </div>  
+      </div>  
 
-    /* Cards & inputs */
-    .card{border:1px solid var(--line);border-radius:12px;padding:12px;background:rgba(255,255,255,.02)}
-    .lab-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .lab-btn{padding:.6rem .85rem;border-radius:10px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);font-weight:700;cursor:pointer}
-    .lab-btn[disabled]{opacity:.5;cursor:not-allowed}
-    .lab-btn.primary{box-shadow:0 8px 24px rgba(122,243,255,.12)}
-    .lab-input{width:100%;padding:.6rem;border-radius:10px;border:1px solid var(--line);background:#0f1116;color:inherit}
-    .hint,.meta{color:#9aa4be}
-    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+      <!-- Controls -->  
+      <div class="control-grid" style="margin-top:10px">  
+        <label class="span-4">Mode  
+          <select id="visMode" class="lab-input">  
+            <option value="0">Flow (particle bloom)</option>  
+            <option value="1">Lattice (Lissajous net)</option>  
+            <option value="2">Torus (donut points)</option>  
+            <option value="3">Poly (icosahedron)</option>  
+            <option value="4">Rose (k-petaled)</option>  
+            <option value="5">Spiro (trochoid)</option>  
+            <option value="6">Lissajous Grid (multi-phase)</option>  
+            <option value="7">Vortex (toroidal flow)</option>  
+          </select>  
+        </label>  
+        <label class="span-3">Density <input id="visDensity" type="range" min="40" max="600" value="160" class="lab-input"></label>  
+        <label class="span-3">Speed <input id="visSpeed" type="range" min="0" max="200" value="90" class="lab-input"></label>  
+        <div class="span-6">  
+          <div class="lab-row" role="radiogroup" aria-label="Carrier">  
+            <button class="lab-btn tone" data-carrier="432">432</button>  
+            <button class="lab-btn tone" data-carrier="528">528</button>  
+            <button class="lab-btn tone" data-carrier="369">369</button>  
+            <button class="lab-btn tone" data-carrier="144">144</button>  
+            <button class="lab-btn tone" data-carrier="963">963</button>  
+            <button class="lab-btn tone" data-carrier="none">None</button>  
+          </div>  
+        </div>  
+        <div class="span-6">  
+          <label><input type="checkbox" id="binaural"> Binaural ±4 Hz</label>  
+          <label><input type="checkbox" id="carrierGate"> Keep carrier on</label>  
+          <button id="rmnRun" class="lab-btn primary">Run (1×12s)</button>  
+          <button id="rmnSeal" class="lab-btn">Seal → Ledger</button>  
+        </div>  
+        <input id="rmnLine" class="lab-input span-12" placeholder="Your intention line (𝓘)…">  
+        <p class="hint span-12">Tip: Pair Torus/Poly with 4-7-8 breath for calm; try Rose/Spiro during Focus intervals; use Vortex for energy reset.</p>  
+      </div>  
+    </div>  
 
-    /* Tabs: horizontal scroll with chevrons */
-    .tabs-wrap{position:relative}
-    .pill-rail{
-      display:flex; gap:6px; align-items:center; overflow:auto; scroll-snap-type:x mandatory;
-      padding:0 40px; /* space for chevrons */
-      mask-image:linear-gradient(90deg,transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
-      -webkit-mask-image:linear-gradient(90deg,transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
-    }
-    .pill{flex:0 0 auto; scroll-snap-align:start; padding:.5rem .8rem;border-radius:999px;border:1px solid var(--line);cursor:pointer;white-space:nowrap}
-    .pill.active{border-color:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent)}
-    .tab{display:none}.tab.active{display:block}
-    .chev{
-      position:absolute; top:50%; transform:translateY(-50%);
-      width:32px; height:32px; border-radius:999px; border:1px solid var(--line);
-      background:rgba(255,255,255,.04); display:grid; place-items:center; cursor:pointer;
-    }
-    .chev.left{left:4px} .chev.right{right:4px}
-    .chev[disabled]{opacity:.4;cursor:not-allowed}
+    <aside class="card col-3">  
+      <h3>Operator map (quick)</h3>  
+      <ol class="list compact">  
+        <li>𝓘 <b>Intend</b> — one clear line on Π<sub>ν</sub>.</li>  
+        <li>𝓛 <b>Light/Language</b> — speak it once, steady.</li>  
+        <li>𝓒 <b>Conscious Witness</b> — one undeniable detail.</li>  
+        <li>𝓢 <b>Source/Return</b> — seal, rest, update later.</li>  
+      </ol>  
+      <p class="meta">Eq.9 mask: stop if clarity drops or harm rises.</p>  
+      <div class="divider"></div>  
+      <p class="meta">Hotkeys: 1–9 tabs • S start/stop observer • P save PNG.</p>  
+    </aside>  
+  </article>  
+</section>  
 
-    /* REMNANT (visual) */
-    .stage{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#0a0e15}
-    #trace{display:block;width:100%;height:380px;background:radial-gradient(220px 160px at 50% 50%, #0e1420, #080b12)}
-    .stage .hud{position:absolute;inset:auto 10px 10px 10px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
-    .chip{font-size:.82rem;padding:.25rem .55rem;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);pointer-events:auto}
+<!-- OBSERVER -->  
+<section id="tab-observer" class="tab" role="tabpanel">  
+  <article class="grid">  
+    <div class="card col-7">  
+      <h2>⏱ Observer — 4 × paced</h2>  
+      <ol class="list">  
+        <li><b>𝓘 Intend:</b> say your line once on tone.</li>  
+        <li><b>𝓛 Look:</b> find one undeniable detail.</li>  
+        <li><b>𝓒 Coalesce:</b> soften jaw & shoulders; quiet exhale.</li>  
+        <li><b>𝓢 Seal:</b> whisper “thank you”, rest a beat.</li>  
+      </ol>  
 
-    /* Rings */
-    .ring-bg{fill:none;stroke:#1f1f28;stroke-width:6}
-    .ring-fg{fill:none;stroke:url(#gradRing);stroke-width:6;stroke-linecap:round;stroke-dasharray:0 283}
-    .ring-num{font:800 18px/1 Inter;fill:#eae7df}
-    .ring-sub{font:600 10px/1 Inter;fill:#b8b3a6}
+      <div class="lab-row">  
+        <div style="width:116px;height:116px;display:grid;place-items:center">  
+          <svg viewBox="0 0 100 100" aria-label="Observer ring">  
+            <defs><linearGradient id="gradRing" x1="0" x2="1"><stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/></linearGradient></defs>  
+            <circle cx="50" cy="50" r="45" class="ring-bg"/>  
+            <circle cx="50" cy="50" r="45" class="ring-fg" id="obsArc" pathLength="283"/>  
+            <text x="50" y="48" text-anchor="middle" class="ring-num" id="obsPhase">Ready</text>  
+            <text x="50" y="64" text-anchor="middle" class="ring-sub" id="obsCount">—</text>  
+          </svg>  
+        </div>  
+        <div>  
+          <div class="lab-row">  
+            <button id="obsStart" class="lab-btn primary">Start (3×10s)</button>  
+            <button id="obsStop" class="lab-btn" disabled>Stop</button>  
+          </div>  
+          <div class="lab-row">  
+            <label>Seconds/phase <input id="obsSec" type="number" value="10" min="3" max="180" class="lab-input" style="width:110px"></label>  
+            <label>Rounds <input id="obsRounds" type="number" value="3" min="1" max="30" class="lab-input" style="width:90px"></label>  
+          </div>  
+          <p class="hint" id="coachObs">Coach: inhale on 𝓘, see on 𝓛, soften on 𝓒, exhale/thank on 𝓢.</p>  
+        </div>  
+      </div>  
+    </div>  
 
-    /* Banner hero — full image (no crop) */
-    .hero{margin:8px auto 0; max-width:1200px; border-radius:16px; overflow:hidden; background:#0b0f14}
-    .hero img{display:block; width:100%; height:auto; object-fit:contain}
+    <aside class="card col-5">  
+      <h3>Carrier now</h3>  
+      <p id="toneNow" class="meta">Πν: none</p>  
+      <p class="meta">Keep Eq.9: if Truth/Distortion worsens → stop, re-align, resume.</p>  
+    </aside>  
+  </article>  
+</section>  
 
-    /* Ledger thumbnails + lightbox */
-    .thumb{height:40px; width:auto; border:1px solid var(--line); border-radius:6px; vertical-align:middle; cursor:pointer}
-    .lightbox{position:fixed; inset:0; background:rgba(0,0,0,.7); display:none; align-items:center; justify-content:center; z-index:9999}
-    .lightbox.open{display:flex}
-    .lightbox img{max-width:min(92vw,1200px); max-height:88vh; border-radius:12px; border:1px solid #2a3242; box-shadow:0 16px 48px rgba(0,0,0,.6)}
+<!-- CARRIER -->  
+<section id="tab-voice" class="tab" role="tabpanel">  
+  <article class="grid">  
+    <div class="card col-7">  
+      <h2>🎙 Carrier — tone & spectrum</h2>  
+      <div class="lab-row">  
+        <button id="micOn" class="lab-btn">Enable Mic</button>  
+        <button id="micOff" class="lab-btn" disabled>Stop</button>  
+        <span id="freqRead" class="meta" aria-live="polite">—</span>  
+        <button id="useTone" class="lab-btn" disabled>Use this tone</button>  
+      </div>  
+      <canvas id="wave" width="800" height="140" aria-label="Waveform"></canvas>  
+      <canvas id="fft"  width="800" height="140" aria-label="Spectrum"></canvas>  
+      <p class="hint">Optional: check “Binaural” on Remnant and leave “Keep carrier on”.</p>  
+    </div>  
 
-    /* Gentle reveal */
-    .visible{opacity:1;transform:none}
-    .card{opacity:.96;transform:translateY(6px);transition:opacity .25s ease-out, transform .25s ease-out}
-  </style>
-</head>
+    <aside class="card col-5">  
+      <h3>Presets</h3>  
+      <div class="lab-row">  
+        <button class="lab-btn tone" data-carrier="432">432</button>  
+        <button class="lab-btn tone" data-carrier="528">528</button>  
+        <button class="lab-btn tone" data-carrier="369">369</button>  
+        <button class="lab-btn tone" data-carrier="144">144</button>  
+        <button class="lab-btn tone" data-carrier="963">963</button>  
+        <button class="lab-btn tone" data-carrier="none">None</button>  
+      </div>  
+      <p class="hint">Hum ~3s; when the peak holds, “Use this tone.”</p>  
+    </aside>  
+  </article>  
+</section>  
 
-<body class="stars">
-  <!-- Banner (full image, no crop) -->
-  <figure class="hero" aria-label="Scroll of Fire banner">
-    <img src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" alt="Scroll of Fire — sigil banner" width="2100" height="900" decoding="async" loading="eager">
-  </figure>
+<!-- PHRASE -->  
+<section id="tab-phrase" class="tab" role="tabpanel">  
+  <article class="grid">  
+    <div class="card col-7">  
+      <h2>🔡 Phrase — tune meaning (Eq.4/4b)</h2>  
+      <textarea id="phraseIn" rows="3" class="lab-input" placeholder="Type your line…"></textarea>  
+      <div class="lab-row">  
+        <button id="phraseTune" class="lab-btn">Tune</button>  
+        <button id="phraseClear" class="lab-btn">Clear</button>  
+      </div>  
+      <p><b>Suggestion:</b> <span id="phraseOut" class="meta">—</span></p>  
+      <p class="hint" id="coachPhrase">Coach: fewer negations → cleaner gradient; strong verbs + concrete nouns.</p>  
+    </div>  
 
-  <main class="wrap" id="main" role="main">
-    <header class="page-head fancy-head">
-      <h1 class="title">✨ Manifest — <em>Remnant Visual Exercise</em></h1>
-      <p class="subtitle">Compose a line (𝓘), tune your carrier Π<sub>ν</sub>, run 𝓘→𝓛→𝓒→𝓢, breathe, feel Ξ rise, then <b>seal</b> the remnant to witness.</p>
+    <aside class="card col-5">  
+      <h3>Micro-templates</h3>  
+      <p>I speak simply and act kindly.</p>  
+      <p>We finish one helpful thing today.</p>  
+      <p>Light reveals; love restores.</p>  
+    </aside>  
+  </article>  
+</section>  
 
-      <!-- Top nav / tabs -->
-      <section class="card" style="margin-top:10px">
-        <div class="tabs-wrap" role="navigation" aria-label="Manifest tabs">
-          <button class="chev left" id="tabsPrev" aria-label="Scroll tabs left">‹</button>
-          <div class="pill-rail" id="pillRail" role="tablist">
-            <button class="pill active" data-tab="remnant"  role="tab" aria-selected="true">🜚 Remnant</button>
-            <button class="pill"        data-tab="observer" role="tab" aria-selected="false">⏱ Observer</button>
-            <button class="pill"        data-tab="voice"    role="tab" aria-selected="false">🎙 Voice</button>
-            <button class="pill"        data-tab="phrase"   role="tab" aria-selected="false">🔡 Phrase</button>
-            <button class="pill"        data-tab="breath"   role="tab" aria-selected="false">🌬 Breath</button>
-            <button class="pill"        data-tab="coherence"role="tab" aria-selected="false">📈 Ξ</button>
-            <button class="pill"        data-tab="ledger"   role="tab" aria-selected="false">📒 Ledger</button>
-          </div>
-          <button class="chev right" id="tabsNext" aria-label="Scroll tabs right">›</button>
-        </div>
-      </section>
-    </header>
+<!-- BREATH -->  
+<section id="tab-breath" class="tab" role="tabpanel">  
+  <article class="grid">  
+    <div class="card col-7">  
+      <h2>🌬 Breath — pacing ring</h2>  
+      <div class="lab-row">  
+        <label>Pattern  
+          <select id="breathPat" class="lab-input" style="width:auto">  
+            <option value="4-4-4-4">Box 4-4-4-4</option>  
+            <option value="4-7-8">4-7-8</option>  
+            <option value="5-5-5-5">5-5-5-5</option>  
+          </select>  
+        </label>  
+        <button id="breathStart" class="lab-btn">Start</button>  
+        <button id="breathStop" class="lab-btn" disabled>Stop</button>  
+      </div>  
+      <div style="width:116px;height:116px;display:grid;place-items:center;margin-top:6px">  
+        <svg viewBox="0 0 100 100" aria-label="Breath ring">  
+          <circle cx="50" cy="50" r="45" class="ring-bg"/>  
+          <circle cx="50" cy="50" r="45" class="ring-fg" id="breathArc" pathLength="283"/>  
+          <text x="50" y="56" text-anchor="middle" class="ring-num" id="breathPhase">Ready</text>  
+        </svg>  
+      </div>  
+      <p class="hint">Longer, quieter exhales tend to smooth the field. Stop if dizzy.</p>  
+    </div>  
 
-    <!-- =================== TABS =================== -->
+    <aside class="card col-5">  
+      <h3>Use with Observer</h3>  
+      <p>Inhale — 𝓘 · See — 𝓛 · Soften — 𝓒 · Exhale/Seal — 𝓢</p>  
+    </aside>  
+  </article>  
+</section>  
 
-    <!-- REMNANT (Visual Exercise) -->
-    <section id="tab-remnant" class="tab active" role="tabpanel">
-      <article class="grid">
-        <div class="card col-7">
-          <h2>🜚 Remnant — visual exercise & seal</h2>
+<!-- COHERENCE -->  
+<section id="tab-coherence" class="tab" role="tabpanel">  
+  <article class="grid">  
+    <div class="card col-7">  
+      <h2>📈 Coherence (Ξ)</h2>  
+      <div class="lab-row">  
+        <label>⟨H·I⟩ <input id="hi" type="number" min="0" max="1" step="0.01" value="0.62" class="lab-input" style="width:110px"></label>  
+        <label>Var[𝓜] <input id="varM" type="number" min="0" max="2" step="0.01" value="0.30" class="lab-input" style="width:110px"></label>  
+        <button id="xiCalc" class="lab-btn">Compute Ξ</button>  
+        <output id="xiOut" class="meta">Ξ = —</output>  
+      </div>  
+      <canvas id="xiSpark" width="500" height="70" aria-label="Ξ history"></canvas>  
+    </div>  
 
-          <!-- Stage -->
-          <div class="stage">
-            <canvas id="trace" aria-label="Remnant trace"></canvas>
+    <aside class="card col-5">  
+      <h3>Stop Rule (Eq.9)</h3>  
+      <p>If clarity falls or tension rises, <b>halt</b>. Re-center (carriers/breath/phrase), then resume.</p>  
+    </aside>  
+  </article>  
+</section>  
 
-            <div class="hud">
-              <div class="lab-row">
-                <button class="chip" id="visToggle">Visual: Flow</button>
-                <button class="chip" id="seedBtn">Seed</button>
-                <button class="chip" id="clearBtn">Clear</button>
-                <button class="chip" id="dlTrace">Download Trace</button>
-              </div>
-              <div class="lab-row">
-                <span class="chip" id="hudCarrier">Πν: —</span>
-                <span class="chip" id="hudBreath">Breath: —</span>
-                <span class="chip" id="hudXi">Ξ: —</span>
-              </div>
-            </div>
-          </div>
+<!-- DRILLS -->  
+<section id="tab-drills" class="tab" role="tabpanel">  
+  <article class="grid">  
+    <div class="card col-7">  
+      <h2>🧭 Drills — Prime → Focus → Seal</h2>  
+      <ol class="list">  
+        <li><b>Prime (60–120s):</b> 10 slow breaths + speak your 𝓘 line once per breath.</li>  
+        <li><b>Focus (10–25min):</b> pick one task; keep breath quiet; return to 𝓘 if mind wanders.</li>  
+        <li><b>Seal (60s):</b> name one undeniable change; whisper thanks; add to Ledger.</li>  
+      </ol>  
+      <div class="lab-row">  
+        <button id="primeNow" class="lab-btn primary">Prime (90s)</button>  
+        <button id="focus10" class="lab-btn">Focus 10</button>  
+        <button id="focus25" class="lab-btn">Focus 25</button>  
+        <button id="seal60" class="lab-btn">Seal 60</button>  
+      </div>  
+      <textarea id="drillNote" rows="3" class="lab-input" placeholder="Seal reflection (one undeniable detail)…"></textarea>  
+      <div class="lab-row">  
+        <button id="drillToLedger" class="lab-btn">Send to Ledger</button>  
+      </div>  
+      <p class="hint">Tip: set Remnant to Torus or Poly during Prime; Spiro or Rose during Focus; Flow during Seal.</p>  
+    </div>  
 
-          <div class="lab-row" style="margin-top:8px">
-            <input id="rmnLine" class="lab-input" placeholder="Your intention line (𝓘)…">
-            <div class="lab-row" role="radiogroup" aria-label="Carrier">
-              <button class="lab-btn tone" data-carrier="432">432</button>
-              <button class="lab-btn tone" data-carrier="528">528</button>
-              <button class="lab-btn tone" data-carrier="369">369</button>
-              <button class="lab-btn tone" data-carrier="144">144</button>
-              <button class="lab-btn tone" data-carrier="963">963</button>
-              <button class="lab-btn tone" data-carrier="none">None</button>
-            </div>
-          </div>
+    <aside class="card col-5">  
+      <h3>Micro-exercises</h3>  
+      <ul class="list">  
+        <li>2-Point Check: shoulders soft + jaw unhooked.</li>  
+        <li>5-Count Scan: eyes, jaw, chest, belly, hands.</li>  
+        <li>One Line Only: if mind splits, rewrite 𝓘 shorter.</li>  
+        <li>1-Minute Seal: one fact, one feeling, thank you.</li>  
+      </ul>  
+      <p class="meta">Use ⏳ Timer for cycles; Ledger for witness.</p>  
+    </aside>  
+  </article>  
+</section>  
 
-          <div class="lab-row">
-            <button id="rmnRun" class="lab-btn primary">Run (1×12s)</button>
-            <button id="rmnSeal" class="lab-btn">Seal → Ledger</button>
-          </div>
-          <p class="hint">Visual modes: Flow, Lattice, <b>Torus</b>, <b>Poly</b>. Seal stores line, carrier, Ξ, and a thumbnail remnant in the Ledger. Download saves a PNG.</p>
-        </div>
+<!-- TIMER -->  
+<section id="tab-timer" class="tab" role="tabpanel">  
+  <article class="grid">  
+    <div class="card col-7">  
+      <h2>⏳ Focus Timer — 25/5 cycles</h2>  
+      <div class="lab-row">  
+        <label>Focus (min) <input id="tmFocus" type="number" value="25" min="5" max="90" class="lab-input" style="width:100px"></label>  
+        <label>Break (min) <input id="tmBreak" type="number" value="5" min="3" max="30" class="lab-input" style="width:100px"></label>  
+        <label>Cycles <input id="tmCycles" type="number" value="2" min="1" max="12" class="lab-input" style="width:90px"></label>  
+      </div>  
+      <div class="lab-row">  
+        <button id="tmStart" class="lab-btn primary">Start</button>  
+        <button id="tmStop" class="lab-btn" disabled>Stop</button>  
+        <output id="tmOut" class="meta">—</output>  
+      </div>  
+      <p class="hint">Bonus: check “Keep carrier on” to let Π<sub>ν</sub> hum quietly during Focus blocks.</p>  
+    </div>  
 
-        <aside class="card col-5">
-          <h3>Operator map (quick)</h3>
-          <ol class="list compact">
-            <li>𝓘 <b>Intend</b> — one clear line on Π<sub>ν</sub>.</li>
-            <li>𝓛 <b>Light/Language</b> — speak it once, steady.</li>
-            <li>𝓒 <b>Conscious Witness</b> — one undeniable detail.</li>
-            <li>𝓢 <b>Source/Return</b> — seal, rest, update later.</li>
-          </ol>
-          <p class="meta">Eq.9 safety mask: stop if clarity drops or harm rises.</p>
-        </aside>
-      </article>
-    </section>
+    <aside class="card col-5">  
+      <h3>Streak</h3>  
+      <p class="meta">Daily check-in: <button id="streakMark" class="lab-btn">Mark Today</button> <span id="streakOut" class="meta">—</span></p>  
+      <p class="hint">Streaks are local to this device.</p>  
+    </aside>  
+  </article>  
+</section>  
 
-    <!-- OBSERVER -->
-    <section id="tab-observer" class="tab" role="tabpanel">
-      <article class="grid">
-        <div class="card col-7">
-          <h2>⏱ Observer — 4 steps</h2>
-          <ol class="list">
-            <li><b>𝓘 Intend:</b> say your line once on the tone.</li>
-            <li><b>𝓛 Look:</b> one undeniable detail.</li>
-            <li><b>𝓒 Coalesce:</b> soften jaw/shoulders; longer exhale.</li>
-            <li><b>𝓢 Seal:</b> whisper “thank you”, rest a beat.</li>
-          </ol>
+<!-- DECK -->  
+<section id="tab-deck" class="tab" role="tabpanel">  
+  <article class="grid">  
+    <div class="card col-7">  
+      <h2>🎴 Intention Deck</h2>  
+      <div class="lab-row">  
+        <button id="drawCard" class="lab-btn primary">Draw</button>  
+        <span id="cardText" class="meta">—</span>  
+        <button id="useCard" class="lab-btn">Use as 𝓘</button>  
+      </div>  
+    </div>  
 
-          <div class="lab-row">
-            <div style="width:116px;height:116px;display:grid;place-items:center">
-              <svg viewBox="0 0 100 100" aria-label="Observer ring">
-                <defs><linearGradient id="gradRing" x1="0" x2="1"><stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/></linearGradient></defs>
-                <circle cx="50" cy="50" r="45" class="ring-bg"/>
-                <circle cx="50" cy="50" r="45" class="ring-fg" id="obsArc" pathLength="283"/>
-                <text x="50" y="48" text-anchor="middle" class="ring-num" id="obsPhase">Ready</text>
-                <text x="50" y="64" text-anchor="middle" class="ring-sub" id="obsCount">—</text>
-              </svg>
-            </div>
-            <div>
-              <div class="lab-row">
-                <button id="obsStart" class="lab-btn primary">Start (3×10s)</button>
-                <button id="obsStop" class="lab-btn" disabled>Stop</button>
-              </div>
-              <div class="lab-row">
-                <label>Seconds/phase <input id="obsSec" type="number" value="10" min="3" max="120" class="lab-input" style="width:100px"></label>
-                <label>Rounds <input id="obsRounds" type="number" value="3" min="1" max="20" class="lab-input" style="width:90px"></label>
-              </div>
-              <p class="hint" id="coachObs">Coach: inhale on 𝓘, see on 𝓛, soften on 𝓒, exhale/thank on 𝓢.</p>
-            </div>
-          </div>
-        </div>
+    <aside class="card col-5">  
+      <h3>Exercise Picker</h3>  
+      <div class="lab-row">  
+        <button class="lab-btn" data-ex="prime60">Prime 60</button>  
+        <button class="lab-btn" data-ex="focus15">Focus 15</button>  
+        <button class="lab-btn" data-ex="seal60">Seal 60</button>  
+      </div>  
+      <p class="hint">Draw → Prime → Focus → Seal → Ledger.</p>  
+    </aside>  
+  </article>  
+</section>  
 
-        <aside class="card col-5">
-          <h3>Carrier now</h3>
-          <p id="toneNow" class="meta">Πν: none</p>
-          <p class="meta">Keep Eq.9: if Truth/Distortion worsens → stop, re-align, resume.</p>
-        </aside>
-      </article>
-    </section>
+<!-- LEDGER -->  
+<section id="tab-ledger" class="tab" role="tabpanel">  
+  <article class="grid">  
+    <div class="card col-12">  
+      <h2>📒 Witness Ledger <small class="meta">(private on this device)</small></h2>  
+      <div class="lab-row">  
+        <input id="lgLine" class="lab-input" placeholder="Intention (𝓘)…">  
+        <input id="lgCarrier" class="lab-input" placeholder="Carrier (432/528/369/144/963)">  
+        <select id="lgQ" class="lab-input" style="width:auto"><option value="">Ξ quality…</option><option>Low</option><option>Medium</option><option>High</option></select>  
+        <input id="lgTags" class="lab-input" placeholder="tags (comma)">  
+      </div>  
+      <textarea id="lgWit" rows="3" class="lab-input" placeholder="Witness (what changed, what lingered)…"></textarea>  
 
-    <!-- VOICE -->
-    <section id="tab-voice" class="tab" role="tabpanel">
-      <article class="grid">
-        <div class="card col-7">
-          <h2>🎙 Voice — find a steady carrier Π<sub>ν</sub></h2>
-          <div class="lab-row">
-            <button id="micOn" class="lab-btn">Enable Mic</button>
-            <button id="micOff" class="lab-btn" disabled>Stop</button>
-            <span id="freqRead" class="meta" aria-live="polite">—</span>
-            <button id="useTone" class="lab-btn" disabled>Use this tone</button>
-          </div>
-          <canvas id="wave" width="800" height="140" aria-label="Waveform"></canvas>
-          <canvas id="fft"  width="800" height="140" aria-label="Spectrum"></canvas>
-        </div>
+      <div class="lab-row">  
+        <button id="lgAdd" class="lab-btn primary">Add</button>  
+        <button id="lgExport" class="lab-btn">Export .json</button>  
+        <input type="file" id="lgImportFile" accept="application/json" hidden>  
+        <button id="lgImport" class="lab-btn">Import .json</button>  
+        <input id="lgFilter" class="lab-input" placeholder="Filter…" style="margin-left:auto;max-width:240px">  
+      </div>  
 
-        <aside class="card col-5">
-          <h3>Presets</h3>
-          <div class="lab-row">
-            <button class="lab-btn tone" data-carrier="432">432</button>
-            <button class="lab-btn tone" data-carrier="528">528</button>
-            <button class="lab-btn tone" data-carrier="369">369</button>
-            <button class="lab-btn tone" data-carrier="144">144</button>
-            <button class="lab-btn tone" data-carrier="963">963</button>
-            <button class="lab-btn tone" data-carrier="none">None</button>
-          </div>
-          <p class="hint">Hum softly ~3s. When the peak holds steady, “Use this tone.”</p>
-        </aside>
-      </article>
-    </section>
+      <div class="table-wrap" style="margin-top:8px">  
+        <table id="lgTable">  
+          <thead><tr><th>Date</th><th>Intention</th><th>Carrier</th><th>Ξ</th><th>Tags</th><th>Witness</th><th>Remnant</th><th></th></tr></thead>  
+          <tbody id="lgRows"></tbody>  
+        </table>  
+      </div>  
+    </div>  
+  </article>  
+</section>  
 
-    <!-- PHRASE -->
-    <section id="tab-phrase" class="tab" role="tabpanel">
-      <article class="grid">
-        <div class="card col-7">
-          <h2>🔡 Phrase — tune meaning (Eq.4/4b)</h2>
-          <textarea id="phraseIn" rows="3" class="lab-input" placeholder="Type your line…"></textarea>
-          <div class="lab-row">
-            <button id="phraseTune" class="lab-btn">Tune</button>
-            <button id="phraseClear" class="lab-btn">Clear</button>
-          </div>
-          <p><b>Suggestion:</b> <span id="phraseOut" class="meta">—</span></p>
-          <p class="hint" id="coachPhrase">Coach: fewer negations → cleaner gradient; strong verbs + concrete nouns.</p>
-        </div>
+<footer class="footer">  
+  <div class="divider" aria-hidden="true"></div>  
+  <p class="meta">© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>  
+</footer>
 
-        <aside class="card col-5">
-          <h3>Micro-templates</h3>
-          <p>I speak simply and act kindly.</p>
-          <p>We finish one helpful thing today.</p>
-          <p>Light reveals; love restores.</p>
-        </aside>
-      </article>
-    </section>
-
-    <!-- BREATH -->
-    <section id="tab-breath" class="tab" role="tabpanel">
-      <article class="grid">
-        <div class="card col-7">
-          <h2>🌬 Breath — pacing ring</h2>
-          <div class="lab-row">
-            <label>Pattern
-              <select id="breathPat" class="lab-input" style="width:auto">
-                <option value="4-4-4-4">Box 4-4-4-4</option>
-                <option value="4-7-8">4-7-8</option>
-                <option value="5-5-5-5">5-5-5-5</option>
-              </select>
-            </label>
-            <button id="breathStart" class="lab-btn">Start</button>
-            <button id="breathStop" class="lab-btn" disabled>Stop</button>
-          </div>
-          <div style="width:116px;height:116px;display:grid;place-items:center;margin-top:6px">
-            <svg viewBox="0 0 100 100" aria-label="Breath ring">
-              <circle cx="50" cy="50" r="45" class="ring-bg"/>
-              <circle cx="50" cy="50" r="45" class="ring-fg" id="breathArc" pathLength="283"/>
-              <text x="50" y="56" text-anchor="middle" class="ring-num" id="breathPhase">Ready</text>
-            </svg>
-          </div>
-          <p class="hint">Longer, quieter exhales tend to smooth the field. Stop if dizzy.</p>
-        </div>
-
-        <aside class="card col-5">
-          <h3>Use with Observer</h3>
-          <p>Inhale — 𝓘 · See — 𝓛 · Soften — 𝓒 · Exhale/Seal — 𝓢</p>
-        </aside>
-      </article>
-    </section>
-
-    <!-- COHERENCE -->
-    <section id="tab-coherence" class="tab" role="tabpanel">
-      <article class="grid">
-        <div class="card col-7">
-          <h2>📈 Coherence (Ξ)</h2>
-          <div class="lab-row">
-            <label>⟨H·I⟩ <input id="hi" type="number" min="0" max="1" step="0.01" value="0.62" class="lab-input" style="width:110px"></label>
-            <label>Var[𝓜] <input id="varM" type="number" min="0" max="2" step="0.01" value="0.30" class="lab-input" style="width:110px"></label>
-            <button id="xiCalc" class="lab-btn">Compute Ξ</button>
-            <output id="xiOut" class="meta">Ξ = —</output>
-          </div>
-          <canvas id="xiSpark" width="500" height="70" aria-label="Ξ history"></canvas>
-        </div>
-
-        <aside class="card col-5">
-          <h3>Stop Rule (Eq.9)</h3>
-          <p>If clarity falls or tension rises, <b>halt</b>. Re-center (carriers/breath/phrase), then resume.</p>
-        </aside>
-      </article>
-    </section>
-
-    <!-- LEDGER -->
-    <section id="tab-ledger" class="tab" role="tabpanel">
-      <article class="grid">
-        <div class="card col-12">
-          <h2>📒 Witness Ledger <small class="meta">(private on this device)</small></h2>
-          <div class="lab-row">
-            <input id="lgLine" class="lab-input" placeholder="Intention (𝓘)…">
-            <input id="lgCarrier" class="lab-input" placeholder="Carrier (432/528/369/144/963)">
-            <select id="lgQ" class="lab-input" style="width:auto"><option value="">Ξ quality…</option><option>Low</option><option>Medium</option><option>High</option></select>
-            <input id="lgTags" class="lab-input" placeholder="tags (comma)">
-          </div>
-          <textarea id="lgWit" rows="3" class="lab-input" placeholder="Witness (what changed, what lingered)…"></textarea>
-
-          <div class="lab-row">
-            <button id="lgAdd" class="lab-btn primary">Add</button>
-            <button id="lgExport" class="lab-btn">Export .json</button>
-            <input type="file" id="lgImportFile" accept="application/json" hidden>
-            <button id="lgImport" class="lab-btn">Import .json</button>
-            <input id="lgFilter" class="lab-input" placeholder="Filter…" style="margin-left:auto;max-width:240px">
-          </div>
-
-          <div class="table-wrap" style="margin-top:8px">
-            <table id="lgTable">
-              <thead><tr><th>Date</th><th>Intention</th><th>Carrier</th><th>Ξ</th><th>Tags</th><th>Witness</th><th>Remnant</th><th></th></tr></thead>
-              <tbody id="lgRows"></tbody>
-            </table>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <footer class="footer">
-      <div class="divider" aria-hidden="true"></div>
-      <p class="meta">© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
-    </footer>
-  </main>
-
-  <!-- ======= RVE Engine (client-only) ======= -->
-  <script>
-  (function(){
-    "use strict";
-    const $ =(s,r=document)=>r.querySelector(s);
-    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-    const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
-
-    /* -------- Tabs + horizontal scroll rail -------- */
-    const tabBtns=$$(".pill"), tabs=$$(".tab");
-    const rail=$("#pillRail"), prev=$("#tabsPrev"), next=$("#tabsNext");
-    function switchTo(id){
-      tabs.forEach(t=>t.classList.toggle("active", t.id==="tab-"+id));
-      tabBtns.forEach(b=>b.classList.toggle("active", b.dataset.tab===id));
-      const btn=[...tabBtns].find(b=>b.dataset.tab===id);
-      if(btn){ btn.scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"}); }
-    }
-    tabBtns.forEach(b=>on(b,"click",()=>switchTo(b.dataset.tab)));
-    function updateChev(){
-      prev.disabled = rail.scrollLeft<=4;
-      next.disabled = (rail.scrollLeft + rail.clientWidth) >= (rail.scrollWidth-4);
-    }
-    on(prev,"click",()=>{ rail.scrollBy({left:-rail.clientWidth*0.7,behavior:"smooth"}); });
-    on(next,"click",()=>{ rail.scrollBy({left: rail.clientWidth*0.7,behavior:"smooth"}); });
-    on(rail,"scroll",updateChev,{passive:true});
-    updateChev();
-    on(document,"keydown",(e)=>{ if(e.target.matches("input,textarea")) return;
-      const map={1:"remnant",2:"observer",3:"voice",4:"phrase",5:"breath",6:"coherence",7:"ledger"};
-      if(map[e.key]){ e.preventDefault(); switchTo(map[e.key]); }
-    });
-
-    /* -------- Reveal -------- */
-    if('IntersectionObserver' in window){
-      const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }), {threshold:.08});
-      $$(".card").forEach(c=>io.observe(c));
-    } else { $$(".card").forEach(c=>c.classList.add('visible')); }
-
-    /* -------- Year -------- */
-    $("#yr").textContent=new Date().getFullYear();
-
-    /* -------- Local storage helpers -------- */
-    const LGKEY="sof_ledger_entries_v4";
-    function load(k,fb){ try{return JSON.parse(localStorage.getItem(k)||"");}catch(_){return fb;} }
-    function save(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(_){} }
-
-    /* -------- Carrier tone engine -------- */
-    let AC=null, G=null, OSC=null, carrier="none";
-    function ensureAC(){ if(AC) return AC; try{ AC=new (window.AudioContext||window.webkitAudioContext)(); G=AC.createGain(); G.gain.value=0.00012; G.connect(AC.destination);}catch(_){ } return AC; }
-    function blip(freq, dur=0.28, vol=0.05){
-      if(!ensureAC()||!freq) return;
-      if(OSC){ try{OSC.stop();}catch(_){ } OSC=null; }
-      const o=AC.createOscillator(), g=AC.createGain();
-      o.type="sine"; o.frequency.value=freq; g.gain.value=0.0001; o.connect(g).connect(G);
-      const t=AC.currentTime; g.gain.linearRampToValueAtTime(vol,t+0.03); g.gain.linearRampToValueAtTime(0.0001,t+dur); o.start(); o.stop(t+dur+0.02); OSC=o;
-    }
-    window.addEventListener("pointerdown",()=>{ if(AC && AC.state==="suspended"){ AC.resume(); } },{once:true,passive:true});
-    $$(".tone").forEach(b=>on(b,"click",()=>{
-      const c=b.dataset.carrier||"none"; carrier=c; $("#toneNow").textContent="Πν: "+c; $("#hudCarrier").textContent="Πν: "+c;
-      if(c!=="none") blip(+c);
-    }));
-
-    /* -------- Remnant visual trace (Flow / Lattice / Torus / Poly) -------- */
-    const canvas=$("#trace"), ctx=canvas.getContext("2d");
-    function fit(){ const r=canvas.getBoundingClientRect(); canvas.width=r.width; canvas.height=380; }
-    fit(); addEventListener("resize", fit, {passive:true});
-
-    let phi=0, seed=Math.random()*1000, mode=0; // 0 Flow, 1 Lattice, 2 Torus, 3 Poly
-    let breathPhase="—"; $("#hudBreath").textContent="Breath: —";
-
-    function pal(t){ const a="rgba(122,243,255,", b="rgba(243,201,122,"; return t<0.5? a+(0.15+0.6*t)+")" : b+(0.15+0.6*(t-0.5)) +")"; }
-
-    function drawFlow(){
-      const W=canvas.width,H=canvas.height;
-      ctx.fillStyle="rgba(10,14,21,0.10)"; ctx.fillRect(0,0,W,H);
-      const base = carrier==="none"? 0.7 : ((parseFloat(carrier)%1000)/1000);
-      const n=140, r0=Math.min(W,H)*0.22;
-      for(let i=0;i<n;i++){
-        const a=i/n*Math.PI*2 + phi*0.0006;
-        const b=Math.sin(i*0.17 + seed*0.1 + phi*0.001);
-        const r=r0*(0.7 + 0.3*Math.sin(phi*0.002 + i*0.05 + base*6));
-        const x=W/2+Math.cos(a)*r*(1+0.08*b);
-        const y=H/2+Math.sin(a*(1.0+0.02*Math.cos(phi*0.003)))*r*(1-0.05*b);
-        ctx.fillStyle=pal((i%100)/100); ctx.beginPath(); ctx.arc(x,y,1+1.4*(0.5+0.5*b),0,Math.PI*2); ctx.fill();
-      }
-      phi+=(breathPhase==="In"?1.6:breathPhase==="Out"?2.2:1.0);
-    }
-
-    function drawLattice(){
-      const W=canvas.width,H=canvas.height;
-      ctx.fillStyle="rgba(10,14,21,0.14)"; ctx.fillRect(0,0,W,H);
-      const base= carrier==="none"?0.5:((+carrier%360)/360);
-      const a=1+Math.round(base*5), b=2+Math.round(base*7);
-      const R=Math.min(W,H)*0.36, steps=420;
-      ctx.beginPath();
-      for(let i=0;i<steps;i++){
-        const th=i/steps*Math.PI*2;
-        const x=W/2+R*Math.sin(a*th + phi*0.0012);
-        const y=H/2+R*Math.sin(b*th + phi*0.0016);
-        (i?ctx.lineTo(x,y):ctx.moveTo(x,y));
-      }
-      ctx.strokeStyle="rgba(243,201,122,.85)"; ctx.lineWidth=1.4; ctx.stroke();
-      phi+=1.5;
-    }
-
-    // Torus (parametric: R major, r minor), simple 3D project + depth fade
-    function drawTorus(){
-      const W=canvas.width,H=canvas.height;
-      ctx.fillStyle="rgba(10,14,21,0.12)"; ctx.fillRect(0,0,W,H);
-      const R=Math.min(W,H)*0.26, r=R*0.36;
-      const a=phi*0.002, b=phi*0.0013; // rotation
-      const ca=Math.cos(a), sa=Math.sin(a), cb=Math.cos(b), sb=Math.sin(b);
-      const nx=80, ny=28;
-      for(let i=0;i<nx;i++){
-        const u=i/nx*Math.PI*2;
-        for(let j=0;j<ny;j++){
-          const v=j/ny*Math.PI*2;
-          let x=(R + r*Math.cos(v))*Math.cos(u);
-          let y=(R + r*Math.cos(v))*Math.sin(u);
-          let z=r*Math.sin(v);
-          // rotate around Y then X
-          let X =  x*cb + z*sb;
-          let Z = -x*sb + z*cb;
-          let Y =  y*ca - Z*sa;
-          Z =  y*sa + Z*ca;
-          const d=500/(600+Z); // perspective
+  </main>    <!-- ======= Engine ======= -->    <script>  
+  (function(){  
+    "use strict";  
+    const $ =(s,r=document)=>r.querySelector(s);  
+    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));  
+    const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);  
+  
+    /* -------- Tabs + horizontal scroll rail -------- */  
+    const tabBtns=$$(".pill"), tabs=$$(".tab");  
+    const rail=$("#pillRail"), prev=$("#tabsPrev"), next=$("#tabsNext");  
+    function switchTo(id){  
+      tabs.forEach(t=>t.classList.toggle("active", t.id==="tab-"+id));  
+      tabBtns.forEach(b=>b.classList.toggle("active", b.dataset.tab===id));  
+      const btn=[...tabBtns].find(b=>b.dataset.tab===id);  
+      if(btn){ btn.scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"}); }  
+    }  
+    tabBtns.forEach(b=>on(b,"click",()=>switchTo(b.dataset.tab)));  
+    function updateChev(){  
+      prev.disabled = rail.scrollLeft<=4;  
+      next.disabled = (rail.scrollLeft + rail.clientWidth) >= (rail.scrollWidth-4);  
+    }  
+    on(prev,"click",()=>{ rail.scrollBy({left:-rail.clientWidth*0.7,behavior:"smooth"}); });  
+    on(next,"click",()=>{ rail.scrollBy({left: rail.clientWidth*0.7,behavior:"smooth"}); });  
+    on(rail,"scroll",updateChev,{passive:true});  
+    updateChev();  
+    on(document,"keydown",(e)=>{ if(e.target.matches("input,textarea")) return;  
+      const map={1:"remnant",2:"observer",3:"voice",4:"phrase",5:"breath",6:"coherence",7:"drills",8:"timer",9:"deck",0:"ledger"};  
+      if(map[e.key]){ e.preventDefault(); switchTo(map[e.key]); }  
+      if((e.key==="P"||e.key==="p") && $("#trace")){ e.preventDefault(); $("#dlTrace").click(); }  
+      if((e.key==="S"||e.key==="s")){ e.preventDefault(); const btn = $("#obsStart").disabled ? $("#obsStop") : $("#obsStart"); btn.click(); }  
+    });  
+  
+    /* -------- Reveal -------- */  
+    if('IntersectionObserver' in window){  
+      const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }), {threshold:.08});  
+      $$(".card").forEach(c=>io.observe(c));  
+    } else { $$(".card").forEach(c=>c.classList.add('visible')); }  
+  
+    /* -------- Year -------- */  
+    $("#yr").textContent=new Date().getFullYear();  
+  
+    /* -------- Local storage helpers -------- */  
+    const LGKEY="sof_ledger_entries_v5";  
+    const STREAK_KEY="sof_streak_v1";  
+    function load(k,fb){ try{return JSON.parse(localStorage.getItem(k)||"");}catch(_){return fb;} }  
+    function save(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(_){} }  
+  
+    /* -------- Carrier tone engine (with optional binaural & gate) -------- */  
+    let AC=null, G=null, OSC_L=null, OSC_R=null, PAN_L=null, PAN_R=null, carrier="none";  
+    function ensureAC(){ if(AC) return AC; try{  
+      AC=new (window.AudioContext||window.webkitAudioContext)();  
+      G=AC.createGain(); G.gain.value=0.00006; G.connect(AC.destination);  
+      PAN_L = AC.createStereoPanner ? AC.createStereoPanner() : null;  
+      PAN_R = AC.createStereoPanner ? AC.createStereoPanner() : null;  
+      if(PAN_L && PAN_R){ PAN_L.pan.value=-0.7; PAN_R.pan.value=0.7; PAN_L.connect(G); PAN_R.connect(G); }  
+    }catch(_){ } return AC; }  
+    function stopOsc(){ try{OSC_L?.stop();OSC_R?.stop();}catch(_){} OSC_L=null; OSC_R=null; }  
+    function playCarrier(freq, dur=0.4, vol=0.05){  
+      if(!ensureAC()||!freq) return;  
+      stopOsc();  
+      const binaural = $("#binaural").checked;  
+      const fL = binaural ? freq-2 : freq;  
+      const fR = binaural ? freq+2 : freq;  
+      const oL=AC.createOscillator(), gL=AC.createGain(); oL.type="sine"; oL.frequency.value=fL; gL.gain.value=0.0001;  
+      const oR=AC.createOscillator(), gR=AC.createGain(); oR.type="sine"; oR.frequency.value=fR; gR.gain.value=0.0001;  
+      oL.connect(gL).connect(PAN_L||G); oR.connect(gR).connect(PAN_R||G);  
+      const t=AC.currentTime;  
+      const gate=$("#carrierGate").checked ? dur*10 : dur;  
+      gL.gain.linearRampToValueAtTime(vol,t+0.03); gL.gain.linearRampToValueAtTime(0.0001,t+gate);  
+      gR.gain.linearRampToValueAtTime(vol,t+0.03); gR.gain.linearRampToValueAtTime(0.0001,t+gate);  
+      oL.start(); oR.start(); oL.stop(t+gate+0.02); oR.stop(t+gate+0.02);  
+      OSC_L=oL; OSC_R=oR;  
+    }  
+    window.addEventListener("pointerdown",()=>{ if(AC && AC.state==="suspended"){ AC.resume(); } },{once:true,passive:true});  
+    $$(".tone").forEach(b=>on(b,"click",()=>{  
+      const c=b.dataset.carrier||"none"; carrier=c; $("#toneNow").textContent="Πν: "+c; $("#hudCarrier").textContent="Πν: "+c;  
+      if(c!=="none") playCarrier(+c,0.6,0.06);  
+    }));  
+  
+    /* -------- Remnant visuals (8 modes) -------- */  
+    const canvas=$("#trace"), ctx=canvas.getContext("2d");  
+    function fit(){ const r=canvas.getBoundingClientRect(); canvas.width=r.width; canvas.height=420; }  
+    fit(); addEventListener("resize", fit, {passive:true});  
+  
+    const visMode=$("#visMode"), visDensity=$("#visDensity"), visSpeed=$("#visSpeed");  
+    let phi=0, seed=Math.random()*1000, mode=0, breathPhase="—";  
+    $("#hudBreath").textContent="Breath: —";  
+  
+    function pal(t){ const a="rgba(122,243,255,", b="rgba(243,201,122,"; return t<0.5? a+(0.15+0.6*t)+")" : b+(0.15+0.6*(t-0.5)) +")"; }  
+    function speed(){ return (+visSpeed.value/90); }  
+    function count(def){ const d=+visDensity.value; return Math.max(20, Math.floor(d*(def/160))); }  
+  
+    function drawFlow(){  
+      const W=canvas.width,H=canvas.height; ctx.fillStyle="rgba(10,14,21,0.10)"; ctx.fillRect(0,0,W,H);  
+      const base = carrier==="none"? 0.7 : ((parseFloat(carrier)%1000)/1000);  
+      const n=count(160), r0=Math.min(W,H)*0.22;  
+      for(let i=0;i<n;i++){  
+        const a=i/n*Math.PI*2 + phi*0.0006*speed();  
+        const b=Math.sin(i*0.17 + seed*0.1 + phi*0.001);  
+        const r=r0*(0.7 + 0.3*Math.sin(phi*0.002*speed() + i*0.05 + base*6));  
+        const x=W/2+Math.cos(a)*r*(1+0.08*b);  
+        const y=H/2+Math.sin(a*(1.0+0.02*Math.cos(phi*0.003*speed())) )*r*(1-0.05*b);  
+        ctx.fillStyle=pal((i%100)/100); ctx.beginPath(); ctx.arc(x,y,1+1.4*(0.5+0.5*b),0,Math.PI*2); ctx.fill();  
+      }  
+      phi+=(breathPhase==="In"?1.6:breathPhase==="Out"?2.2:1.0)*speed();  
+    }  
+  
+    function drawLattice(){  
+      const W=canvas.width,H=canvas.height; ctx.fillStyle="rgba(10,14,21,0.14)"; ctx.fillRect(0,0,W,H);  
+      const base= carrier==="none"?0.5:((+carrier%360)/360);  
+      const a=1+Math.round(base*5), b=2+Math.round(base*7);  
+      const R=Math.min(W,H)*0.36, steps=count(420);  
+      ctx.beginPath();  
+      for(let i=0;i<steps;i++){  
+        const th=i/steps*Math.PI*2;  
+        const x=W/2+R*Math.sin(a*th + phi*0.0012*speed());  
+        const y=H/2+R*Math.sin(b*th + phi*0.0016*speed());  
+        (i?ctx.lineTo(x,y):ctx.moveTo(x,y));  
+      }  
+      ctx.strokeStyle="rgba(243,201,122,.85)"; ctx.lineWidth=1.4; ctx.stroke();  
+      phi+=1.5*speed();  
+    }  
+  
+    function drawTorus(){  
+      const W=canvas.width,H=canvas.height; ctx.fillStyle="rgba(10,14,21,0.12)"; ctx.fillRect(0,0,W,H);  
+      const R=Math.min(W,H)*0.26, r=R*0.36;  
+      const a=phi*0.002*speed(), b=phi*0.0013*speed();  
+      const cb=Math.cos(b), sb=Math.sin(b), ca=Math.cos(a), sa=Math.sin(a);  
+      const nx=Math.max(40,Math.floor(count(80))), ny=28;  
+      for(let i=0;i<nx;i++){  
+        const u=i/nx*Math.PI*2;  
+        for(let j=0;j<ny;j++){  
+          const v=j/ny*Math.PI*2;  
+          let x=(R + r*Math.cos(v))*Math.cos(u);  
+          let y=(R + r*Math.cos(v))*Math.sin(u);  
+          let z=r*Math.sin(v);  
+          let X =  x*cb + z*sb; let Z = -x*sb + z*cb; let Y =  y*ca - Z*sa; Z =  y*sa + Z*ca;  
+          const d=500/(600const d=500/(600+Z); // perspective
           const px=W/2+X*d, py=H/2+Y*d;
-          const t=(Z+R)/ (2*R + r); // depth 0..1
+          const t=(Z+R)/(2*R + r); // 0..1 depth
           ctx.fillStyle = pal(t);
           ctx.fillRect(px,py,1.6,1.6);
         }
       }
-      phi += (breathPhase==="In"? 1.4 : breathPhase==="Out"? 1.9 : 1.2);
+      phi += (breathPhase==="In"? 1.4 : breathPhase==="Out"? 1.9 : 1.2)*speed();
     }
 
     // Poly (icosahedron wireframe rotating)
     function drawPoly(){
       const W=canvas.width,H=canvas.height;
       ctx.fillStyle="rgba(10,14,21,0.10)"; ctx.fillRect(0,0,W,H);
-      // Icosahedron vertices (φ = (1+sqrt5)/2)
-      const PHI= (1+Math.sqrt(5))/2, s= Math.min(W,H)*0.22;
-      const verts=[
-        [-1, PHI, 0],[1, PHI, 0],[-1,-PHI, 0],[1,-PHI, 0],
-        [0,-1, PHI],[0, 1, PHI],[0,-1,-PHI],[0, 1,-PHI],
+      const PHI=(1+Math.sqrt(5))/2, s=Math.min(W,H)*0.22;
+      const vtx=[
+        [-1, PHI, 0],[ 1, PHI, 0],[-1,-PHI, 0],[ 1,-PHI, 0],
+        [ 0,-1, PHI],[ 0, 1, PHI],[ 0,-1,-PHI],[ 0, 1,-PHI],
         [ PHI,0,-1],[ PHI,0, 1],[-PHI,0,-1],[-PHI,0, 1]
       ].map(v=>v.map(n=>n*s/PHI));
       const edges=[[0,1],[0,7],[0,11],[1,7],[1,9],[2,3],[2,6],[2,11],[3,6],[3,9],
                    [4,5],[4,9],[4,11],[5,9],[5,11],[6,7],[6,8],[7,8],[8,9],[8,10],[10,11],[10,7],[10,6],[11,0]];
-      const ax=phi*0.0018, ay=phi*0.0011, az=phi*0.0015;
+      const ax=phi*0.0018*speed(), ay=phi*0.0011*speed(), az=phi*0.0015*speed();
       const cx=Math.cos(ax), sx=Math.sin(ax), cy=Math.cos(ay), sy=Math.sin(ay), cz=Math.cos(az), sz=Math.sin(az);
       function rot([x,y,z]){
-        // Rz * Ry * Rx
-        let X=x, Y=y, Z=z;
-        // Rx
-        let Y1= Y*cx - Z*sx, Z1= Y*sx + Z*cx;
-        // Ry
-        let X2= X*cy + Z1*sy, Z2= -X*sy + Z1*cy, Y2=Y1;
-        // Rz
-        let X3= X2*cz - Y2*sz, Y3= X2*sz + Y2*cz, Z3=Z2;
+        let Y1= y*cx - z*sx, Z1= y*sx + z*cx; // Rx
+        let X2= x*cy + Z1*sy, Z2= -x*sy + Z1*cy, Y2=Y1; // Ry
+        let X3= X2*cz - Y2*sz, Y3= X2*sz + Y2*cz, Z3=Z2; // Rz
         return [X3,Y3,Z3];
       }
-      const pv=verts.map(v=>rot(v)).map(([x,y,z])=>{
-        const d=500/(600+z); return [W/2+x*d, H/2+y*d, z];
-      });
+      const pv=vtx.map(v=>rot(v)).map(([x,y,z])=>{ const d=500/(600+z); return [W/2+x*d, H/2+y*d, z]; });
       ctx.lineWidth=1.2;
       edges.forEach(([i,j])=>{
-        const zi=pv[i][2], zj=pv[j][2], t=( (zi+zj)/2 + s )/(2*s);
-        ctx.strokeStyle= pal(Math.max(0,Math.min(1,t)));
+        const zi=pv[i][2], zj=pv[j][2], t=((zi+zj)/2 + s)/(2*s);
+        ctx.strokeStyle=pal(Math.max(0,Math.min(1,t)));
         ctx.beginPath(); ctx.moveTo(pv[i][0],pv[i][1]); ctx.lineTo(pv[j][0],pv[j][1]); ctx.stroke();
       });
-      phi += 1.3;
+      phi += 1.2*speed();
     }
 
+    // Rose (polar rose: r = cos(kθ))
+    function drawRose(){
+      const W=canvas.width,H=canvas.height;
+      ctx.fillStyle="rgba(10,14,21,0.1)"; ctx.fillRect(0,0,W,H);
+      const base = carrier==="none"? 3 : (Math.max(2, Math.round((+carrier%1000)/120)));
+      const k = base + ((seed|0)%3); // 3..11-ish
+      const R = Math.min(W,H)*0.38;
+      const n = count(520);
+      ctx.beginPath();
+      for(let i=0;i<=n;i++){
+        const th = i/n*Math.PI*2*2;
+        const r = R * Math.cos(k*th + phi*0.0012*speed());
+        const x = W/2 + r*Math.cos(th), y= H/2 + r*Math.sin(th);
+        (i?ctx.lineTo(x,y):ctx.moveTo(x,y));
+      }
+      ctx.strokeStyle="rgba(122,243,255,.85)"; ctx.lineWidth=1.6; ctx.stroke();
+      phi += (breathPhase==="In"?1.4:1.0)*speed();
+    }
+
+    // Spirograph (hypotrochoid / epitrochoid)
+    function drawSpiro(){
+      const W=canvas.width,H=canvas.height;
+      ctx.fillStyle="rgba(10,14,21,0.12)"; ctx.fillRect(0,0,W,H);
+      const R = Math.min(W,H)*0.34;
+      const r = R * (0.25 + 0.15*Math.sin(seed*0.01));
+      const d = r * (0.8 + 0.3*Math.cos(seed*0.013));
+      const ext = 2*Math.PI*(r? (R/r): 8);
+      const steps = count(900);
+      ctx.beginPath();
+      for(let i=0;i<=steps;i++){
+        const t = i/steps*ext + phi*0.001*speed();
+        const x = (R-r)*Math.cos(t) + d*Math.cos(((R-r)/r)*t);
+        const y = (R-r)*Math.sin(t) - d*Math.sin(((R-r)/r)*t);
+        (i?ctx.lineTo(W/2+x,H/2+y):ctx.moveTo(W/2+x,H/2+y));
+      }
+      ctx.strokeStyle="rgba(243,201,122,.9)"; ctx.lineWidth=1.2; ctx.stroke();
+      phi += 1.1*speed();
+    }
+
+    // Lissajous Grid
+    function drawLissaGrid(){
+      const W=canvas.width,H=canvas.height;
+      ctx.fillStyle="rgba(10,14,21,0.10)"; ctx.fillRect(0,0,W,H);
+      const cols=6, rows=4, pad=14;
+      const cw=(W - pad*(cols+1))/cols, ch=(H - pad*(rows+1))/rows;
+      const a=2 + ((seed|0)%5), b=3 + ((seed>>2)%5);
+      for(let r=0;r<rows;r++){
+        for(let c=0;c<cols;c++){
+          const x0=pad + c*(cw+pad), y0=pad + r*(ch+pad);
+          ctx.beginPath();
+          const n=120;
+          for(let i=0;i<=n;i++){
+            const t=i/n*Math.PI*2;
+            const x = x0 + cw/2 + cw*0.42*Math.sin(a*t + 0.6*c + phi*0.0016*speed());
+            const y = y0 + ch/2 + ch*0.42*Math.sin(b*t + 0.4*r + phi*0.0012*speed());
+            (i?ctx.lineTo(x,y):ctx.moveTo(x,y));
+          }
+          ctx.strokeStyle = pal((c/cols*0.5 + r/rows*0.5));
+          ctx.lineWidth=0.8; ctx.stroke();
+        }
+      }
+      phi += 1.3*speed();
+    }
+
+    // Vortex (toroidal particle flow)
+    const vortexP=[]; // lazy-init
+    function drawVortex(){
+      const W=canvas.width,H=canvas.height;
+      ctx.fillStyle="rgba(10,14,21,0.16)"; ctx.fillRect(0,0,W,H);
+      const N = count(220);
+      while(vortexP.length<N){
+        vortexP.push({a: Math.random()*Math.PI*2, r: 0.1+Math.random()*0.9, z: (Math.random()-0.5)*2, s: 0.5+Math.random()*1.4});
+      }
+      for(let i=0;i<N;i++){
+        const p=vortexP[i];
+        p.a += 0.008 * p.s * speed();
+        p.z += 0.006 * (Math.sin(seed*0.01+i)*0.5) * speed();
+        if(p.z>1.2) p.z=-1.2;
+        const R = Math.min(W,H)*0.32;
+        const r0 = R*(0.35 + 0.25*Math.sin(p.a*3 + phi*0.002));
+        const x = (R + r0*Math.cos(p.a)) * Math.cos(p.a*0.6);
+        const y = (R + r0*Math.cos(p.a)) * Math.sin(p.a*0.6);
+        const z = r0*Math.sin(p.a) + p.z*R*0.25;
+        const d=500/(600+z);
+        const px=W/2 + x*d, py=H/2 + y*d;
+        const t=(z+R)/(2*R);
+        ctx.fillStyle=pal(Math.max(0,Math.min(1,t)));
+        ctx.fillRect(px,py,1.8,1.8);
+      }
+      phi += 1.5*speed();
+    }
+
+    // Animation loop
     let anim=true;
-    function tick(){ if(!anim) return;
-      switch(mode){ case 0: drawFlow(); break; case 1: drawLattice(); break; case 2: drawTorus(); break; default: drawPoly(); }
-      requestAnimationFrame(tick);
+    function render(){
+      if(!anim) return;
+      switch(mode){
+        case 0: drawFlow(); break;
+        case 1: drawLattice(); break;
+        case 2: drawTorus(); break;
+        case 3: drawPoly(); break;
+        case 4: drawRose(); break;
+        case 5: drawSpiro(); break;
+        case 6: drawLissaGrid(); break;
+        default: drawVortex();
+      }
+      requestAnimationFrame(render);
     }
-    tick();
+    render();
 
-    const visBtn=$("#visToggle");
-    function updateVisLabel(){ visBtn.textContent = "Visual: " + ["Flow","Lattice","Torus","Poly"][mode]; }
-    on(visBtn,"click",()=>{ mode=(mode+1)%4; updateVisLabel(); });
-    updateVisLabel();
-
+    // Visual controls
+    mode = +visMode.value|0;
+    on(visMode,"change",()=>{ mode=+visMode.value|0; });
     on($("#clearBtn"),"click",()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); });
     on($("#seedBtn"),"click",()=>{ seed = Math.random()*1000; });
     on($("#dlTrace"),"click",()=>{
@@ -565,7 +771,14 @@
       }catch(_){ toast("Download failed"); }
     });
 
-    function seedTrace(){ for(let k=0;k<40;k++){ switch(mode){case 0: drawFlow(); break; case 1: drawLattice(); break; case 2: drawTorus(); break; default: drawPoly();} } }
+    function seedTrace(frames=40){
+      for(let k=0;k<frames;k++){
+        switch(mode){
+          case 0: drawFlow(); break; case 1: drawLattice(); break; case 2: drawTorus(); break; case 3: drawPoly(); break;
+          case 4: drawRose(); break; case 5: drawSpiro(); break; case 6: drawLissaGrid(); break; default: drawVortex();
+        }
+      }
+    }
     function canvasPNG(){ try{ return canvas.toDataURL("image/png"); }catch(_){ return ""; } }
 
     /* -------- RVE Run & Seal -------- */
@@ -574,7 +787,6 @@
       switchTo("observer"); $("#obsSec").value=12; $("#obsRounds").value=1; $("#obsStart").click();
       switchTo("remnant");
     });
-
     on($("#rmnSeal"),"click",()=>{
       const line=($("#rmnLine").value||"").trim();
       if(!line) return toast("Write an intention line");
@@ -624,7 +836,7 @@
     on(obsStart,"click",obsRun);
     on(obsStop,"click",()=>{ clearInterval(obsTimer); obsStart.disabled=false; obsStop.disabled=true; obsReset(); breathPhase="—"; $("#hudBreath").textContent="Breath: —"; });
 
-    /* -------- Voice (mic) -------- */
+    /* -------- Carrier (mic) -------- */
     let micStream=null, analyser=null, wave=$("#wave"), fft=$("#fft");
     on($("#micOn"),"click", async ()=>{
       try{
@@ -643,9 +855,8 @@
     });
     on($("#useTone"),"click",()=>{
       const fr = $("#freqRead").textContent.match(/~(\d+)\s*Hz/);
-      const f = fr? +fr[1] : 432; carrier=String(f); blip(f); $("#toneNow").textContent="Πν: "+carrier; $("#hudCarrier").textContent="Πν: "+carrier;
+      const f = fr? +fr[1] : 432; carrier=String(f); playCarrier(f,0.6,0.06); $("#toneNow").textContent="Πν: "+carrier; $("#hudCarrier").textContent="Πν: "+carrier;
     });
-
     function drawAudio(){
       if(!analyser) return;
       const wctx=wave.getContext("2d"), fctx=fft.getContext("2d");
@@ -701,13 +912,13 @@
     /* -------- Ξ meter -------- */
     const xiOut=$("#xiOut"), xiSpark=$("#xiSpark").getContext("2d"); let xiHist=load("sof_xi_hist_v1",[]);
     function drawXi(){
-      const ctx=xiSpark, W=ctx.canvas.width, H=ctx.canvas.height;
-      ctx.clearRect(0,0,W,H); ctx.strokeStyle="rgba(122,243,255,.25)";
-      ctx.beginPath(); ctx.moveTo(0,H*0.25); ctx.lineTo(W,H*0.25); ctx.moveTo(0,H*0.5); ctx.lineTo(W,H*0.5); ctx.moveTo(0,H*0.75); ctx.lineTo(W,H*0.75); ctx.stroke();
+      const ctx2=xiSpark, W=ctx2.canvas.width, H=ctx2.canvas.height;
+      ctx2.clearRect(0,0,W,H); ctx2.strokeStyle="rgba(122,243,255,.25)";
+      ctx2.beginPath(); ctx2.moveTo(0,H*0.25); ctx2.lineTo(W,H*0.25); ctx2.moveTo(0,H*0.5); ctx2.lineTo(W,H*0.5); ctx2.moveTo(0,H*0.75); ctx2.lineTo(W,H*0.75); ctx2.stroke();
       if(!xiHist.length) return;
       const n=xiHist.length, xs=W/(n-1);
-      ctx.beginPath(); for(let i=0;i<n;i++){ const y=H*(1-(xiHist[i].x*0.9+0.05)); const x=W-i*xs; (i?ctx.lineTo(x,y):ctx.moveTo(x,y)); }
-      ctx.strokeStyle="rgba(243,201,122,.9)"; ctx.lineWidth=2; ctx.stroke();
+      ctx2.beginPath(); for(let i=0;i<n;i++){ const y=H*(1-(xiHist[i].x*0.9+0.05)); const x=W-i*xs; (i?ctx2.lineTo(x,y):ctx2.moveTo(x,y)); }
+      ctx2.strokeStyle="rgba(243,201,122,.9)"; ctx2.lineWidth=2; ctx2.stroke();
     }
     drawXi();
     on($("#xiCalc"),"click",()=>{
@@ -718,7 +929,84 @@
       xiHist.unshift({t:Date.now(), x:Xi}); xiHist=xiHist.slice(0,60); save("sof_xi_hist_v1",xiHist); drawXi();
     });
 
+    /* -------- Drills -------- */
+    function runTimer(ms, label, callback){
+      const end=Date.now()+ms;
+      const id=setInterval(()=>{
+        const rem=Math.max(0,end-Date.now());
+        const s=Math.ceil(rem/1000);
+        toast(label+": "+s+"s");
+        if(rem<=0){ clearInterval(id); callback&&callback(); }
+      },1000);
+    }
+    on($("#primeNow"),"click",()=>{ runTimer(90*1000,"Prime",()=>toast("Prime done")); });
+    on($("#focus10"),"click",()=>{ runTimer(10*60*1000,"Focus 10",()=>toast("Break")); });
+    on($("#focus25"),"click",()=>{ runTimer(25*60*1000,"Focus 25",()=>toast("Break")); });
+    on($("#seal60"),"click",()=>{ runTimer(60*1000,"Seal",()=>toast("Seal done")); });
+    on($("#drillToLedger"),"click",()=>{
+      const phrase=($("#rmnLine").value||$("#lgLine").value||"").trim();
+      const note=($("#drillNote").value||"").trim();
+      if(!phrase) return toast("Write 𝓘 first");
+      addLedger({when:new Date().toISOString(), carrier:carrier==="none"?"":carrier, phrase, coherence:$("#xiOut").textContent.replace(/.*?([\d.]+)$/,"$1"), tags:["drill"], note}, null);
+      $("#drillNote").value=""; toast("Added to Ledger");
+      switchTo("ledger");
+    });
+
+    /* -------- Focus Timer + Streak -------- */
+    const tmStart=$("#tmStart"), tmStop=$("#tmStop"), tmOut=$("#tmOut");
+    let tmInt=null, tmPhase="idle", tmEnd=0, tmCycle=0, tmPlan=0, tmF=25, tmB=5;
+    function tmTick(){
+      const rem=tmEnd-Date.now(); if(rem<=0){
+        if(tmPhase==="focus"){ tmPhase="break"; tmEnd=Date.now()+tmB*60*1000; toast("Break"); }
+        else if(tmPhase==="break"){ tmCycle++; if(tmCycle>=tmPlan){ tmStop.click(); toast("Done"); return; } tmPhase="focus"; tmEnd=Date.now()+tmF*60*1000; toast("Focus"); }
+      }
+      const s=Math.max(0,Math.ceil((tmEnd-Date.now())/1000));
+      tmOut.value = `${tmPhase} — ${Math.floor(s/60)}:${String(s%60).padStart(2,"0")} · ${tmCycle+1}/${tmPlan}`;
+    }
+    on(tmStart,"click",()=>{
+      tmF=+$("#tmFocus").value||25; tmB=+$("#tmBreak").value||5; tmPlan=+$("#tmCycles").value||2; tmCycle=0;
+      tmPhase="focus"; tmEnd=Date.now()+tmF*60*1000; tmStart.disabled=true; tmStop.disabled=false;
+      tmInt=setInterval(tmTick, 500); toast("Focus");
+    });
+    on(tmStop,"click",()=>{ clearInterval(tmInt); tmInt=null; tmStart.disabled=false; tmStop.disabled=true; tmPhase="idle"; tmOut.value="—"; });
+
+    function daysSinceEpoch(date=new Date()){ return Math.floor(date.getTime()/86400000); }
+    function readStreak(){ return load(STREAK_KEY,{last:-1,count:0}); }
+    function writeStreak(v){ save(STREAK_KEY,v); }
+    function showStreak(){
+      const s=readStreak(); $("#streakOut").textContent = `streak: ${s.count}`;
+    }
+    on($("#streakMark"),"click",()=>{
+      const d=daysSinceEpoch(), s=readStreak();
+      if(s.last===d) return toast("Already marked today");
+      if(s.last===d-1) s.count++; else s.count=1;
+      s.last=d; writeStreak(s); showStreak(); toast("Marked");
+    });
+    showStreak();
+
+    /* -------- Deck -------- */
+    const CARDS=[
+      "One helpful thing, done calmly.",
+      "Speak simply. Act kindly.",
+      "Small moves. True aim.",
+      "Steady breath, steady hand.",
+      "See one undeniable detail.",
+      "Return to the line.",
+      "Let the exhale do the work.",
+      "Clarity before speed.",
+      "Finish clean, thank gently."
+    ];
+    on($("#drawCard"),"click",()=>{
+      const i=Math.floor(Math.random()*CARDS.length);
+      $("#cardText").textContent=CARDS[i];
+    });
+    on($("#useCard"),"click",()=>{
+      const t=$("#cardText").textContent.trim(); if(!t) return;
+      $("#rmnLine").value=t; $("#lgLine").value=t; toast("Card → 𝓘");
+    });
+
     /* -------- Ledger -------- */
+    const LGKEY="sof_ledger_entries_v5";
     function readLedger(){ return load(LGKEY,[]); }
     function writeLedger(arr){ save(LGKEY,arr); }
     function esc(s){ return String(s||"").replace(/[&<>"']/g,m=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m])); }
@@ -774,9 +1062,6 @@
     });
     on($("#lgFilter"),"input",renderLedger);
     renderLedger();
-
-    /* -------- RVE ↔ Observer hotkey -------- */
-    on(document,"keydown",(e)=>{ if((e.key==="S"||e.key==="s") && !e.target.matches("input,textarea")){ e.preventDefault(); const btn = $("#obsStart").disabled ? $("#obsStop") : $("#obsStart"); btn.click(); } });
 
     /* -------- Tiny toast -------- */
     function toast(msg){
