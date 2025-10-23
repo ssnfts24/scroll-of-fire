@@ -1,11 +1,12 @@
 /* ========================================================================
    Scroll of Fire — Teaching Lab Engine  (teach.js)
-   v2025.10.19-b
+   v2025.10.20-a
    - Zero libraries, offline-first, mobile-friendly
    - Defensive: permissions, wake-lock, motion/data prefs, visibility, errors
    - Persistent state via localStorage (namespaced, guarded)
    - DPR-aware canvases, hash-based tab routing (works with back button)
    - All features no-op if corresponding controls aren’t in DOM
+   - NEW: carrier tone engine + self-healing visuals (no blank canvases)
    ======================================================================== */
 (function () {
   "use strict";
@@ -44,10 +45,12 @@
 
   // DPR-aware canvas sizing
   function fitCanvas(c, w=c.clientWidth||c.width, h=c.clientHeight||c.height){
+    if (!c) return;
     const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
-    if (c.width !== Math.round(w*dpr) || c.height !== Math.round(h*dpr)) {
-      c.width = Math.round(w*dpr); c.height = Math.round(h*dpr);
-      const ctx = c.getContext('2d'); if (ctx) ctx.setTransform(dpr,0,0,dpr,0,0);
+    const W = Math.max(1, Math.round(w*dpr)), H = Math.max(1, Math.round(h*dpr));
+    if (c.width !== W || c.height !== H) {
+      c.width = W; c.height = H;
+      const ctx = c.getContext?.('2d'); if (ctx) ctx.setTransform(dpr,0,0,dpr,0,0);
     }
   }
 
@@ -99,7 +102,7 @@
         const is = (p.id === 'tab-' + name);
         p.classList.toggle('active', is);
         p.setAttribute('aria-hidden', is ? 'false' : 'true');
-        if (is) (p.querySelector('button, input, textarea, select, a')||p).focus({preventScroll:true});
+        if (is) (p.querySelector('button, input, textarea, select, a')||p).focus?.({preventScroll:true});
       });
       S('tab', name);
       const status = $('#lab-status'); if (status) status.textContent = `Tab: ${name}`;
@@ -142,16 +145,48 @@
     on(box, 'change', () => toggle(box.checked));
   }
 
-  /* -------------------------- QuickStart ------------------------------- */
+  /* --------------------- Carrier Tone (NEW) ------------------------------ */
+  const carrier = (function(){
+    let ctx, osc, gain;
+    const MIN_GAIN = 0.0009; // gentle
+    function ensure(){ if (!ctx) { const AC = window.AudioContext||window.webkitAudioContext; if (!AC) return null; ctx = new AC(); } return ctx; }
+    function start(hz=432){
+      if (prefersReducedData) return;
+      const ac = ensure(); if (!ac) return;
+      stop();
+      osc = ac.createOscillator(); osc.type = 'sine'; osc.frequency.value = hz;
+      gain = ac.createGain(); gain.gain.value = MIN_GAIN;
+      osc.connect(gain).connect(ac.destination); osc.start();
+      S('carrier', hz);
+      const status = $('#lab-status'); if (status) status.textContent = `Carrier playing: ${hz} Hz`;
+    }
+    function stop(){
+      try { osc && osc.stop(); } catch {}
+      try { gain && gain.disconnect(); } catch {}
+      osc = null; gain = null;
+      const status = $('#lab-status'); if (status) status.textContent = `Carrier: off`;
+    }
+    function set(hz){ if (osc) try { osc.frequency.setTargetAtTime(hz, ensure().currentTime, 0.03); } catch {} S('carrier', hz); }
+    return { start, stop, set };
+  })();
+
+  /* -------------------------- QuickStart -------------------------------- */
   function initQuickStart() {
-    // Preset carrier buttons (in header + voice sidebar)
+    // Preset carrier buttons (in header + voice sidebar) — start tone & write-through
     $$('.lab-btn[data-carrier]').forEach(btn => on(btn, 'click', () => {
-      const v = btn.dataset.carrier;
+      const v = parseFloat(btn.dataset.carrier);
+      if (!Number.isFinite(v)) return;
       $('#qsCarrier') && ($('#qsCarrier').value = v);
       $('#carrierOut') && ($('#carrierOut').value = v);
-      S('carrier', v);
-      const status = $('#lab-status'); if (status) status.textContent = `Preset carrier: ${v} Hz`;
+      carrier.start(v);
     }));
+
+    // Custom carrier field: on change, (re)start tone
+    on($('#qsCarrier'), 'change', (e) => {
+      const v = parseFloat(e.target.value);
+      if (Number.isFinite(v) && v > 0) { $('#carrierOut') && ($('#carrierOut').value = v); carrier.start(v); }
+    });
+
     // Intention propagation to Phrase & Voice intention fields
     const qsInt = $('#qsIntention');
     on(qsInt, 'input', (e) => {
@@ -161,7 +196,8 @@
     });
     // Ctrl/⌘+Enter → send to Phrase Tuner
     on(qsInt, 'keydown', (e)=>{ if ((e.ctrlKey||e.metaKey) && e.key==='Enter'){ e.preventDefault(); $('.pill[data-tab="phrase"]')?.click(); }});
-    // Restore stored carrier
+
+    // Restore stored carrier (don’t autoplay sound, just populate)
     const savedCar = S('carrier'); if (savedCar) { $('#qsCarrier') && ($('#qsCarrier').value=savedCar); $('#carrierOut') && ($('#carrierOut').value=savedCar); }
   }
 
@@ -222,9 +258,9 @@
       countTxt.textContent = `Round ${round+1}/${rounds} • Phase ${p+1}/4`;
       vibrate(10); beep();
       const pace = paceSel?.value || 'free';
-      if (pace === 'box')      speak(`${P.label}. Gentle four.`);
+      if (pace === 'box')        speak(`${P.label}. Gentle four.`);
       else if (pace === '4-7-8') speak(`${P.label}. Ease.`);
-      else                      speak(P.prompt);
+      else                       speak(P.prompt);
     }
 
     function tick() {
@@ -265,28 +301,29 @@
     const stabilityTxt = $('#stability'), noiseWarn = $('#noiseWarn'), useCarrier = $('#useCarrier');
     if (!btnStart || !wave || !fft || !hint) return;
 
+    const wctx = wave.getContext?.('2d', {alpha:false});
+    const fctx = fft.getContext?.('2d',  {alpha:false});
+
     /** Resize canvases to DPR & container */
     function resizeAll(){
       fitCanvas(wave); fitCanvas(fft);
       clearCanvas(wctx, wave); clearCanvas(fctx, fft);
+      // keep a faint baseline frame even before mic starts
+      drawWave(new Uint8Array(Math.max(256, (wave.width||800)/3)));
+      drawFFT(new Uint8Array(Math.max(256, (fft.width||800)/3)));
     }
-    const wctx = wave.getContext('2d', {alpha:false});
-    const fctx = fft.getContext('2d',  {alpha:false});
-    resizeAll();
     on(window,'resize',debounce(resizeAll,120));
-
-    /** State */
-    let ctx, src, analyser, rafId, stream;
-    const FFT_SIZE = 2048;
-    const CAR_KEYS = [432, 528, 369]; // Hz
 
     /** Drawing helpers */
     function clearCanvas(ctx2d, canvas){
+      if(!ctx2d||!canvas) return;
       ctx2d.fillStyle = '#0f0f14'; ctx2d.fillRect(0,0,canvas.width,canvas.height);
       ctx2d.strokeStyle = '#2a2a33'; ctx2d.strokeRect(0,0,canvas.width,canvas.height);
     }
     function drawWave(data) {
+      if(!wctx||!wave) return;
       clearCanvas(wctx, wave);
+      if (!data || !data.length) return;
       wctx.beginPath(); wctx.lineWidth = 2; wctx.strokeStyle = '#7af3ff';
       const step = wave.width / data.length;
       for (let i=0;i<data.length;i++){
@@ -298,14 +335,16 @@
       wctx.stroke();
     }
     function drawFFT(freq) {
+      if(!fctx||!fft) return;
       clearCanvas(fctx, fft);
+      if (!freq || !freq.length) return;
       const N = freq.length;
       const max = Math.max(1, ...freq);
       const step = fft.width / N;
-      fctx.fillStyle = '#7aa8ff';
       for (let i=0;i<N;i++){
         const mag = freq[i]/max;
         const h = mag * (fft.height-10);
+        fctx.fillStyle = mag>.8 ? '#f3c97a' : '#7aa8ff';
         fctx.fillRect(i*step, fft.height-h, Math.max(1, step*0.9), h);
       }
     }
@@ -324,6 +363,7 @@
     }
 
     /** Peak & nearest-key detection */
+    const CAR_KEYS = [432, 528, 369]; // Hz
     function analyze(freqData, sampleRate, fftSize) {
       let bestBin = 0, bestVal = 0;
       for (let i=2;i<freqData.length-2;i++){
@@ -337,6 +377,9 @@
     }
 
     /** Main loop */
+    let ctx, src, analyser, rafId, stream;
+    const FFT_SIZE = 2048;
+
     function loop() {
       const timeData = new Uint8Array(analyser.fftSize);
       const freqData = new Uint8Array(analyser.frequencyBinCount);
@@ -364,6 +407,9 @@
 
     async function start() {
       try {
+        // avoid howl: stop any carrier tone while using mic
+        carrier.stop();
+
         if (ctx) await stop();
         stream = await navigator.mediaDevices.getUserMedia({
           audio: { echoCancellation:true, noiseSuppression:true, channelCount:1 },
@@ -388,13 +434,18 @@
       ctx = src = analyser = stream = null;
       hint.textContent = '—'; hint.style.color = '#b8b3a6';
       clearCanvas(wctx, wave); clearCanvas(fctx, fft);
+      // keep a non-blank frame
+      resizeAll();
     }
+
+    // Initial non-blank frame
+    resizeAll();
 
     on(btnStart, 'click', start);
     on(btnStop,  'click', stop);
     on(document, 'visibilitychange', () => { if (document.hidden) stop(); });
 
-    // “Set as carrier” → copy to fields + status
+    // “Set as carrier” → copy to fields + status + start tone
     on(useCarrier, 'click', (e) => {
       const v = e.currentTarget?.dataset?.hz;
       if (!v) return;
@@ -402,6 +453,7 @@
       $('#carrierOut')  && ($('#carrierOut').value = hz);
       $('#qsCarrier')   && ($('#qsCarrier').value = hz);
       S('carrier', hz);
+      carrier.start(hz);
       const status = $('#lab-status'); if (status) status.textContent = `Carrier set: ${hz} Hz`;
     });
   }
@@ -556,19 +608,30 @@
   function initVisualFocus() {
     const cvs = $('#focusDot'), btn = $('#vfStart');
     const holdIn = $('#vfHold'), expIn = $('#vfExpand');
-    if (!cvs || !btn) return;
-    const ctx = cvs.getContext('2d', {alpha:false});
-    const size = ()=>fitCanvas(cvs, cvs.clientWidth||600, cvs.clientHeight||280);
+    if (!cvs) return;
+    const ctx = cvs.getContext?.('2d', {alpha:false});
+    const size = ()=>{ fitCanvas(cvs, cvs.clientWidth||600, cvs.clientHeight||280); if (ctx) drawIdle(); };
     size(); on(window,'resize',debounce(size,120));
+    on(document,'visibilitychange',()=>{ if (!document.hidden) size(); });
 
-    function drawDot(r){ // center dot
+    function drawIdle(){
+      if (!ctx) return;
+      ctx.fillStyle = '#0f0f14'; ctx.fillRect(0,0,cvs.width,cvs.height);
+      const cx = (cvs.width)/2, cy = (cvs.height)/2;
+      ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI*2);
+      ctx.fillStyle = '#f3c97a'; ctx.shadowColor = 'rgba(243,201,122,.6)'; ctx.shadowBlur = 12; ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+    function drawDot(r){
+      if (!ctx) return;
       ctx.fillStyle = '#0f0f14'; ctx.fillRect(0,0,cvs.width,cvs.height);
       const cx = (cvs.width)/2, cy = (cvs.height)/2;
       ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
       ctx.fillStyle = '#f3c97a'; ctx.shadowColor = 'rgba(243,201,122,.6)'; ctx.shadowBlur = 12; ctx.fill();
       ctx.shadowBlur = 0;
     }
-    function drawRing(r){ // expanding ring
+    function drawRing(r){
+      if (!ctx) return;
       ctx.fillStyle = '#0f0f14'; ctx.fillRect(0,0,cvs.width,cvs.height);
       const cx = (cvs.width)/2, cy = (cvs.height)/2;
       ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
@@ -577,8 +640,12 @@
       ctx.shadowBlur = 0;
     }
 
+    // Immediately show a non-blank idle dot
+    drawIdle();
+
     let raf=null, t0=0, phase='idle';
     function start() {
+      if (!btn) return; // if controls absent, remain idle
       cancelAnimationFrame(raf);
       const hold = clamp(getNum(holdIn,10), 5, 60);
       const expand = clamp(getNum(expIn,6), 3, 30);
@@ -594,8 +661,8 @@
           const p = clamp(t/expand, 0, 1);
           const r = dotR + (maxR - dotR)*p;
           drawRing(r);
-          if (p>=1) { phase='idle'; speak('Cycle complete.'); return; }
-        } else return;
+          if (p>=1) { phase='idle'; speak('Cycle complete.'); drawIdle(); return; }
+        } else { drawIdle(); return; }
         raf = requestAnimationFrame(step);
       };
       step();
