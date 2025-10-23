@@ -1,14 +1,17 @@
 <!doctype html>
-
 <html lang="en" dir="ltr" class="sof">
 <head>
   <meta charset="utf-8" />
   <title>13 Moons · Living Clock — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
-  <meta name="description" content="Living 13 Moons clock: accurate 28‑day moons, Day Out of Time & leap‑day handling, lunar phase, numerology, shareable text, and print view — time‑zone aware." />  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <meta name="description" content="Living 13 Moons clock: accurate 28‑day moons, Day Out of Time & leap‑day handling, lunar phase, numerology, shareable text, and print view — time‑zone aware." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">  <style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
+
+  <style>
     :root{
       --maxw:1180px;
       --ink:#e6f0ff; --muted:#9aa4be; --line:#2a3242; --panel:rgba(255,255,255,.03);
@@ -68,89 +71,95 @@
       .lab-btn,.crumbs{display:none}
       .stage{display:none}
     }
-  </style></head><body class="stars">
+  </style>
+</head>
+
+<body class="stars">
   <main class="wrap" id="main" role="main">
     <header class="page-head fancy-head">
       <h1 class="title">🌗 13 Moons — <em>Living Clock</em></h1>
-      <p class="subtitle">Accurate 28‑day moons with Day Out of Time + leap‑day handling. Current Moon first. Phase, numerology, and notes — all time‑zone aware.</p><nav class="crumbs" aria-label="Breadcrumb" style="display:flex;gap:8px;justify-content:center;margin-top:10px;margin-bottom:14px">
-    <a class="lab-btn" href="index.html">← Back to Codex</a>
-    <a class="lab-btn" href="theory.html">📘 Theory</a>
-    <button class="lab-btn" id="printBtn" type="button">🖨 Print</button>
-    <button class="lab-btn" id="shareToday" type="button">🔗 Share Today</button>
-  </nav>
-</header>
+      <p class="subtitle">Accurate 28‑day moons with Day Out of Time + leap‑day handling. Current Moon first. Phase, numerology, and notes — all time‑zone aware.</p>
 
-<section class="grid">
-  <article class="card col-12" id="currentMoonCard">
-    <div class="grid">
-      <div class="col-6">
-        <h2 style="margin:.2rem 0">Today · 13‑Moon Count</h2>
-        <p class="big" id="moonLine">—</p>
-        <p class="meta" id="moonMeta">—</p>
-        <div class="lab-row" style="margin-top:6px"><span class="pill"><b id="nowDate">—</b></span><span class="pill mono" id="nowClock">—:—:—</span><span class="pill" id="nowTZ">—</span></div>
-      </div>
-      <div class="col-6">
-        <h2 style="margin:.2rem 0">Lunar Phase</h2>
-        <p class="big" id="phaseLine">—</p>
-        <p class="meta" id="phaseMeta">—</p>
-        <div class="lab-row"><span class="chip mono" id="simUTC">—</span><span class="chip" id="simPhase">Phase: —</span><span class="chip" id="simIllum">Illum: —</span><span class="chip" id="simAge">Age: —</span><span class="chip" id="simAngle">Angle: —</span></div>
-      </div>
-    </div>
-  </article>
+      <nav class="crumbs" aria-label="Breadcrumb" style="display:flex;gap:8px;justify-content:center;margin-top:10px;margin-bottom:14px">
+        <a class="lab-btn" href="index.html">← Back to Codex</a>
+        <a class="lab-btn" href="theory.html">📘 Theory</a>
+        <button class="lab-btn" id="printBtn" type="button">🖨 Print</button>
+        <button class="lab-btn" id="shareToday" type="button">🔗 Share Today</button>
+      </nav>
+    </header>
 
-  <article class="card col-12" id="yearMap">
-    <h2>Year Map · 13 Moons (Current Galactic Year)</h2>
-    <p class="hint">New Year = July 26 · Day Out of Time = July 25 · Leap Day (Feb 29) is outside the 13×28 count.</p>
-    <div class="lab-row" style="margin-bottom:8px">
-      <label>Time Zone
-        <select id="tzPick" class="lab-input" style="min-width:240px"></select>
-      </label>
-      <label>Date <input type="date" id="datePick" class="lab-input"></label>
-      <button class="lab-btn" id="btnToday" type="button">Today</button>
-      <button class="lab-btn" id="prevDay" type="button">← Previous</button>
-      <button class="lab-btn" id="nextDay" type="button">Next →</button>
-    </div>
-    <div class="table-wrap"><table id="moonTable"><thead><tr><th>Moon</th><th>Theme</th><th>Gregorian Dates</th><th>Days</th></tr></thead><tbody></tbody></table></div>
-  </article>
+    <section class="grid">
+      <article class="card col-12" id="currentMoonCard">
+        <div class="grid">
+          <div class="col-6">
+            <h2 style="margin:.2rem 0">Today · 13‑Moon Count</h2>
+            <p class="big" id="moonLine">—</p>
+            <p class="meta" id="moonMeta">—</p>
+            <div class="lab-row" style="margin-top:6px"><span class="pill"><b id="nowDate">—</b></span><span class="pill mono" id="nowClock">—:—:—</span><span class="pill" id="nowTZ">—</span></div>
+          </div>
+          <div class="col-6">
+            <h2 style="margin:.2rem 0">Lunar Phase</h2>
+            <p class="big" id="phaseLine">—</p>
+            <p class="meta" id="phaseMeta">—</p>
+            <div class="lab-row"><span class="chip mono" id="simUTC">—</span><span class="chip" id="simPhase">Phase: —</span><span class="chip" id="simIllum">Illum: —</span><span class="chip" id="simAge">Age: —</span><span class="chip" id="simAngle">Angle: —</span></div>
+          </div>
+        </div>
+      </article>
 
-  <article class="card col-12">
-    <h2 style="display:flex;align-items:center;gap:.6rem"><span>Orbital Simulation</span><span class="meta">Sun → Earth • Moon (phase/terminator)</span></h2>
-    <div class="stage" aria-label="Moon–Earth–Sun simulation"><canvas id="sky" aria-label="Lunar simulation"></canvas>
-      <div class="hud">
-        <div class="lab-row"><button class="chip" id="simPlay" type="button">▶︎ Auto</button><button class="chip" id="simSnap" type="button">Now</button><button class="chip" id="simPNG" type="button">PNG</button></div>
-      </div>
-    </div>
-    <div class="lab-row" style="margin-top:8px">
-      <label>Hour (local) <input type="number" id="hourPick" class="lab-input" min="0" max="23" step="1" value="0" style="width:92px"></label>
-      <label>Auto <input type="checkbox" id="autoPlay"></label>
-      <div class="pill"><span class="mono" id="scrubRead">—:—</span> <span class="meta" id="scrubTZ">—</span></div>
-    </div>
-    <input id="timeRange" type="range" min="0" max="24" step="0.25" value="0" aria-label="Time scrub hours" style="width:100%">
-  </article>
+      <article class="card col-12" id="yearMap">
+        <h2>Year Map · 13 Moons (Current Galactic Year)</h2>
+        <p class="hint">New Year = July 26 · Day Out of Time = July 25 · Leap Day (Feb 29) is outside the 13×28 count.</p>
+        <div class="lab-row" style="margin-bottom:8px">
+          <label>Time Zone
+            <select id="tzPick" class="lab-input" style="min-width:240px"></select>
+          </label>
+          <label>Date <input type="date" id="datePick" class="lab-input"></label>
+          <button class="lab-btn" id="btnToday" type="button">Today</button>
+          <button class="lab-btn" id="prevDay" type="button">← Previous</button>
+          <button class="lab-btn" id="nextDay" type="button">Next →</button>
+        </div>
+        <div class="table-wrap"><table id="moonTable"><thead><tr><th>Moon</th><th>Theme</th><th>Gregorian Dates</th><th>Days</th></tr></thead><tbody></tbody></table></div>
+      </article>
 
-  <article class="card col-12">
-    <h2>Naming Keys</h2>
-    <div class="grid">
-      <div class="col-6">
-        <h3>Moons (1–13)</h3>
-        <ol class="list" id="moonList"></ol>
-      </div>
-      <div class="col-6">
-        <h3>Phase Names</h3>
-        <p class="meta">New • Waxing Crescent • First Quarter • Waxing Gibbous • Full • Waning Gibbous • Last Quarter • Waning Crescent</p>
-        <p class="meta">Phase ≈ synodic age / 29.5306… days; illumination = (1 − cos(2π·phase)) / 2.</p>
-      </div>
-    </div>
-    <blockquote class="meta" style="margin-top:10px">“Teach us to number our days, that we may apply our hearts unto wisdom.” — Psalm 90:12</blockquote>
-  </article>
-</section>
+      <article class="card col-12">
+        <h2 style="display:flex;align-items:center;gap:.6rem"><span>Orbital Simulation</span><span class="meta">Sun → Earth • Moon (phase/terminator)</span></h2>
+        <div class="stage" aria-label="Moon–Earth–Sun simulation"><canvas id="sky" aria-label="Lunar simulation"></canvas>
+          <div class="hud">
+            <div class="lab-row"><button class="chip" id="simPlay" type="button">▶︎ Auto</button><button class="chip" id="simSnap" type="button">Now</button><button class="chip" id="simPNG" type="button">PNG</button></div>
+          </div>
+        </div>
+        <div class="lab-row" style="margin-top:8px">
+          <label>Hour (local) <input type="number" id="hourPick" class="lab-input" min="0" max="23" step="1" value="0" style="width:92px"></label>
+          <label>Auto <input type="checkbox" id="autoPlay"></label>
+          <div class="pill"><span class="mono" id="scrubRead">—:—</span> <span class="meta" id="scrubTZ">—</span></div>
+        </div>
+        <input id="timeRange" type="range" min="0" max="24" step="0.25" value="0" aria-label="Time scrub hours" style="width:100%">
+      </article>
 
-<footer class="footer">
-  <div class="divider" aria-hidden="true"></div>
-  <p class="meta">© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
-</footer>
+      <article class="card col-12">
+        <h2>Naming Keys</h2>
+        <div class="grid">
+          <div class="col-6">
+            <h3>Moons (1–13)</h3>
+            <ol class="list" id="moonList"></ol>
+          </div>
+          <div class="col-6">
+            <h3>Phase Names</h3>
+            <p class="meta">New • Waxing Crescent • First Quarter • Waxing Gibbous • Full • Waning Gibbous • Last Quarter • Waning Crescent</p>
+            <p class="meta">Phase ≈ synodic age / 29.5306… days; illumination = (1 − cos(2π·phase)) / 2.</p>
+          </div>
+        </div>
+        <blockquote class="meta" style="margin-top:10px">“Teach us to number our days, that we may apply our hearts unto wisdom.” — Psalm 90:12</blockquote>
+      </article>
+    </section>
 
-  </main><script>
+    <footer class="footer">
+      <div class="divider" aria-hidden="true"></div>
+      <p class="meta">© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+    </footer>
+  </main>
+
+<script>
 (function(){
   "use strict";
   const $ =(s,r=document)=>r.querySelector(s);
@@ -238,5 +247,6 @@ Phase: ${phaseLine.textContent} (${phaseMeta.textContent})`;navigator.clipboard?
 
   readURL();updateClockLine();populateYearTable();updateAll();
 })();
-</script></body>
+</script>
+</body>
 </html>
