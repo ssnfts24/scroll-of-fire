@@ -4,13 +4,13 @@
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>if(location.hostname==="github.com"){const b=document.querySelector("base");if(b)b.remove();}</script>
   <meta charset="utf-8" />
-  <title>Manifest — Play the Codex (Practice Studio)</title>
+  <title>Manifest — Creation Studio · Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark light">
-  <meta name="description" content="Game-like practice: pick a carrier, run a simple loop, breathe, rate coherence (Ξ), and log your witness. Earn XP, complete daily quests, and level up—ethics first." />
+  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
+  <meta name="description" content="Creation Studio: sculpt intention (𝓘), align a voice carrier Πν, run the observer loop (𝓘→𝓛→𝓒→𝓢), breathe, compute Ξ, and seal to the private Witness Ledger — ethics first." />
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/teach.html" />
-  <meta property="og:title" content="Manifest — Play the Codex">
-  <meta property="og:description" content="Make practice fun: daily quests, XP, achievements. Simple steps anyone can follow.">
+  <meta property="og:title" content="Manifest — Creation Studio · Scroll of Fire">
+  <meta property="og:description" content="Compose, witness, and seal. Live visuals, carrier tuning, breath pacing, Ξ meter, and a private ledger — Eq.9 safety mask on.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
 
@@ -18,17 +18,20 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-21">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-21" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-21"></noscript>
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-22">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-22" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-22"></noscript>
 
   <style>
     :root{--maxw:1180px}
     body{margin:0}
     .wrap{max-width:var(--maxw);margin:0 auto;padding:20px 16px 90px}
-    .title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;
+    .title{
+      font-family:"Crimson Pro",serif;font-weight:800;text-align:center;
       font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;letter-spacing:.2px;
-      background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+      background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);
+      -webkit-background-clip:text;background-clip:text;color:transparent
+    }
     .subtitle{text-align:center;color:var(--muted);margin:0 0 12px}
 
     /* Layout */
@@ -36,15 +39,14 @@
     .col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-7{grid-column:span 7}.col-12{grid-column:span 12}
     @media (max-width:980px){.col-4,.col-5,.col-7,.col-12{grid-column:span 12}}
 
-    /* Cards & buttons */
+    /* Cards & inputs */
     .card{border:1px solid var(--line);border-radius:12px;padding:12px;background:rgba(255,255,255,.02)}
+    .lab-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .lab-btn{padding:.6rem .85rem;border-radius:10px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);font-weight:700;cursor:pointer}
-    .lab-btn.primary{box-shadow:0 8px 24px rgba(122,243,255,.12)}
     .lab-btn[disabled]{opacity:.5;cursor:not-allowed}
-    .lab-row{display:flex;gap:10px;flex-wrap:wrap}
+    .lab-btn.primary{box-shadow:0 8px 24px rgba(122,243,255,.12)}
     .lab-input{width:100%;padding:.6rem;border-radius:10px;border:1px solid var(--line);background:#0f1116;color:inherit}
-    .hint{color:#9aa4be;font-size:.92rem}
-    .meta{color:#9aa4be}
+    .hint,.meta{color:#9aa4be}
     .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
     /* Tabs */
@@ -53,45 +55,45 @@
     .pill.active{border-color:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent)}
     .tab{display:none}.tab.active{display:block}
 
-    /* Progress ring (XP/Level) */
-    .level-hud{display:flex;align-items:center;gap:12px;justify-content:center}
-    .level-ring{width:84px;height:84px;display:grid;place-items:center}
-    .level-ring svg{width:84px;height:84px;display:block}
+    /* Creation Console (visual) */
+    .stage{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#0a0e15}
+    #trace{display:block;width:100%;height:360px;background:radial-gradient(220px 160px at 50% 50%, #0e1420, #080b12)}
+    .stage .overlay{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.8}
+    .stage .hud{position:absolute;inset:auto 10px 10px 10px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
+    .chip{font-size:.82rem;padding:.25rem .55rem;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);pointer-events:auto}
+
+    /* Rings */
     .ring-bg{fill:none;stroke:#1f1f28;stroke-width:6}
-    .ring-fg{fill:none;stroke:url(#gradXP);stroke-width:6;stroke-linecap:round;stroke-dasharray:0 283}
-    .level-num{font:800 18px/1 Inter;fill:#eae7df}
-    .level-sub{font:600 10px/1 Inter;fill:#b8b3a6}
+    .ring-fg{fill:none;stroke:url(#gradRing);stroke-width:6;stroke-linecap:round;stroke-dasharray:0 283}
+    .ring-num{font:800 18px/1 Inter;fill:#eae7df}
+    .ring-sub{font:600 10px/1 Inter;fill:#b8b3a6}
 
-    /* Achievements & badges */
-    .badges{display:flex;gap:8px;flex-wrap:wrap}
-    .badge{padding:.35rem .6rem;border:1px solid var(--line);border-radius:999px}
-    .badge.lit{border-color:#f3c97a;color:#fbe7b4;background:rgba(243,201,122,.1)}
+    /* Banner hero — restored */
+    .hero{position:relative; width:100%; max-width:1200px; margin:8px auto 0; border-radius:16px; overflow:hidden; background:#0b0f14; aspect-ratio:21/9}
+    .hero img{width:100%;height:100%;object-fit:cover}
 
-    /* Confetti */
-    #confetti{position:fixed;inset:0;pointer-events:none}
-
-    /* Friendly copies */
-    .friendly p{margin:.35rem 0}
+    /* Gentle reveal */
+    .visible{opacity:1;transform:none}
+    .card{opacity:.96;transform:translateY(6px);transition:opacity .25s ease-out, transform .25s ease-out}
   </style>
 </head>
 
 <body class="stars">
-  <canvas id="confetti" width="1920" height="1080" aria-hidden="true"></canvas>
-  <main class="wrap" id="main" role="main">
-    <!-- Banner -->
-    <figure class="hero hero--contain" aria-hidden="true" style="margin-bottom:8px">
-      <img src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" alt="Scroll of Fire — sigil banner"
-           width="1600" height="900" loading="eager" decoding="async">
-    </figure>
+  <!-- Banner (restored) -->
+  <figure class="hero" aria-label="Scroll of Fire banner">
+    <img src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" alt="Scroll of Fire — sigil banner"
+         width="2100" height="900" decoding="async" loading="eager">
+  </figure>
 
+  <main class="wrap" id="main" role="main">
     <header class="page-head fancy-head">
-      <h1 class="title">✨ Manifest — <em>Play the Codex</em></h1>
-      <p class="subtitle">No jargon. Three actions: pick a tone, say one helpful line, notice one real thing. Log it. Earn XP.</p>
+      <h1 class="title">✨ Manifest — <em>Creation Studio</em></h1>
+      <p class="subtitle">Compose a line (𝓘), tune your carrier Π<sub>ν</sub>, run the loop (𝓘→𝓛→𝓒→𝓢), breathe, feel Ξ rise, and <b>seal</b> it to witness.</p>
 
       <!-- Top nav / tabs -->
       <section class="card" style="margin-top:10px">
         <div class="pill-tabs" role="tablist" aria-label="Manifest tabs">
-          <button class="pill active" data-tab="quests"    role="tab" aria-selected="true">🎯 Quests</button>
+          <button class="pill active" data-tab="console"   role="tab" aria-selected="true">🎛 Creation Console</button>
           <button class="pill"        data-tab="observer"  role="tab" aria-selected="false">⏱ Observer</button>
           <button class="pill"        data-tab="voice"     role="tab" aria-selected="false">🎙 Voice</button>
           <button class="pill"        data-tab="phrase"    role="tab" aria-selected="false">🔡 Phrase</button>
@@ -101,104 +103,90 @@
           <span class="flex" aria-hidden="true"></span>
           <label class="hint"><input id="coach" type="checkbox"> Coach mode</label>
         </div>
-
-        <!-- Level HUD -->
-        <div class="level-hud" style="margin-top:8px">
-          <div class="level-ring">
-            <svg viewBox="0 0 100 100" aria-label="Level progress">
-              <defs>
-                <linearGradient id="gradXP" x1="0" x2="1">
-                  <stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/>
-                </linearGradient>
-              </defs>
-              <circle cx="50" cy="50" r="45" class="ring-bg"/>
-              <circle cx="50" cy="50" r="45" class="ring-fg" id="xpArc" pathLength="283"/>
-              <text x="50" y="48" text-anchor="middle" class="level-num" id="lvlNum">1</text>
-              <text x="50" y="64" text-anchor="middle" class="level-sub" id="xpText">0 / 50</text>
-            </svg>
-          </div>
-          <div class="friendly">
-            <p><b>Level up by doing:</b> run the loop, breathe once, tune a phrase, compute Ξ, add a witness, try carriers.</p>
-            <p class="meta">Ethics first. Stop if you feel worse (Stop Rule).</p>
-          </div>
-        </div>
       </section>
     </header>
 
     <!-- =================== TABS =================== -->
 
-    <!-- Quests / Onboarding -->
-    <section id="tab-quests" class="tab active" role="tabpanel">
+    <!-- CREATION CONSOLE -->
+    <section id="tab-console" class="tab active" role="tabpanel">
       <article class="grid">
-        <div class="card col-7 friendly">
-          <h2>🎯 Daily Quests</h2>
-          <ol id="questList" class="list">
-            <!-- Filled by JS -->
-          </ol>
-          <div class="lab-row">
-            <button id="btnResetQuests" class="lab-btn">Reset today</button>
-            <button id="btnCompleteAll" class="lab-btn">Mark all done</button>
+        <div class="card col-7">
+          <h2>🎛 Creation Console — live trace & seal</h2>
+
+          <!-- Stage -->
+          <div class="stage">
+            <canvas id="trace" aria-label="Creation trace"></canvas>
+            <div class="overlay" id="aurora"></div>
+
+            <div class="hud">
+              <div class="lab-row">
+                <button class="chip" id="visToggle">Visual: Flow</button>
+                <button class="chip" id="seedBtn">Seed</button>
+                <button class="chip" id="clearBtn">Clear</button>
+              </div>
+              <div class="lab-row">
+                <span class="chip" id="hudCarrier">Πν: —</span>
+                <span class="chip" id="hudBreath">Breath: —</span>
+                <span class="chip" id="hudXi">Ξ: —</span>
+              </div>
+            </div>
           </div>
-          <p class="hint">Quests reset every day. Completing all gives a bonus and lights a badge.</p>
+
+          <div class="lab-row" style="margin-top:8px">
+            <input id="consoleLine" class="lab-input" placeholder="Your intention line (𝓘)…">
+            <div class="lab-row" role="radiogroup" aria-label="Carrier">
+              <button class="lab-btn tone" data-carrier="432">432</button>
+              <button class="lab-btn tone" data-carrier="528">528</button>
+              <button class="lab-btn tone" data-carrier="369">369</button>
+              <button class="lab-btn tone" data-carrier="144">144</button>
+              <button class="lab-btn tone" data-carrier="963">963</button>
+              <button class="lab-btn tone" data-carrier="none">None</button>
+            </div>
+          </div>
+
+          <div class="lab-row">
+            <button id="consoleRun" class="lab-btn primary">Run (1×12s)</button>
+            <button id="consoleSeal" class="lab-btn">Seal → Ledger</button>
+          </div>
+          <p class="hint">Seed draws a soft trace from your carrier & breath. Seal saves the line, carrier, and a tiny image of your trace into the Ledger note.</p>
         </div>
 
-        <aside class="card col-5 friendly">
-          <h3>🔰 Tiny Tutorial (2 minutes)</h3>
+        <aside class="card col-5">
+          <h3>Operator map (quick)</h3>
           <ol class="list compact">
-            <li>Pick a <b>carrier</b> (tone) you like.</li>
-            <li>Say one short, kind line—present tense.</li>
-            <li>Run the <b>Observer</b> loop once.</li>
-            <li>Notice one real change. <b>Log it</b> in the Ledger.</li>
+            <li>𝓘 <b>Intend</b> — one clear line on Π<sub>ν</sub>.</li>
+            <li>𝓛 <b>Light/Language</b> — speak it once, steady.</li>
+            <li>𝓒 <b>Conscious Witness</b> — pick one undeniable detail.</li>
+            <li>𝓢 <b>Source/Return</b> — seal, rest, update later.</li>
           </ol>
-          <div class="badges" style="margin-top:8px">
-            <span id="bSeed" class="badge" title="7-Day Seed">🌱 7-day</span>
-            <span id="bOrbit" class="badge" title="33-Day Orbit">🛰️ 33-day</span>
-            <span id="bClosure" class="badge" title="144 Closure">🜚 144</span>
-            <span id="bAllTones" class="badge" title="Tried all five carriers">🎵 All Tones</span>
-            <span id="bFirstLedger" class="badge" title="First Ledger entry">🧾 First Witness</span>
-          </div>
+          <p class="meta">Eq.9 safety mask: stop if clarity drops or harm rises.</p>
         </aside>
       </article>
     </section>
 
-    <!-- Observer -->
+    <!-- OBSERVER -->
     <section id="tab-observer" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
-          <h2>⏱ Observer — 4 steps, gentle pace</h2>
+          <h2>⏱ Observer — 4 steps</h2>
           <ol class="list">
             <li><b>𝓘 Intend:</b> say your line once on the tone.</li>
-            <li><b>𝓛 Look:</b> spot one undeniable detail.</li>
-            <li><b>𝓒 Coalesce:</b> drop the shoulders, longer exhale.</li>
-            <li><b>𝓢 Seal:</b> whisper “thank you” and rest for a beat.</li>
+            <li><b>𝓛 Look:</b> one undeniable detail.</li>
+            <li><b>𝓒 Coalesce:</b> soften jaw/shoulders; longer exhale.</li>
+            <li><b>𝓢 Seal:</b> whisper “thank you”, rest a beat.</li>
           </ol>
 
-          <div class="lab-row" style="margin:.5rem 0">
-            <div role="radiogroup" aria-label="Carrier">
-              <button class="lab-btn tone" data-carrier="432">432 Ground</button>
-              <button class="lab-btn tone" data-carrier="528">528 Repair</button>
-              <button class="lab-btn tone" data-carrier="369">369 Lock-in</button>
-              <button class="lab-btn tone" data-carrier="144">144 Sanctuary</button>
-              <button class="lab-btn tone" data-carrier="963">963 Crown</button>
-              <button class="lab-btn tone" data-carrier="none">No tone</button>
-            </div>
-            <span id="toneNow" class="meta" aria-live="polite">Carrier: none</span>
-          </div>
-
-          <label for="intentLine" class="sr-only">Your line</label>
-          <input id="intentLine" class="lab-input" placeholder="One short, kind line…">
-
-          <!-- Ring -->
-          <div class="lab-row" style="align-items:center;margin-top:8px">
+          <div class="lab-row">
             <div style="width:116px;height:116px;display:grid;place-items:center">
               <svg viewBox="0 0 100 100" aria-label="Observer ring">
+                <defs><linearGradient id="gradRing" x1="0" x2="1"><stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/></linearGradient></defs>
                 <circle cx="50" cy="50" r="45" class="ring-bg"/>
                 <circle cx="50" cy="50" r="45" class="ring-fg" id="obsArc" pathLength="283"/>
-                <text x="50" y="48" text-anchor="middle" class="level-num" id="obsPhase">Ready</text>
-                <text x="50" y="64" text-anchor="middle" class="level-sub" id="obsCount">—</text>
+                <text x="50" y="48" text-anchor="middle" class="ring-num" id="obsPhase">Ready</text>
+                <text x="50" y="64" text-anchor="middle" class="ring-sub" id="obsCount">—</text>
               </svg>
             </div>
-
             <div>
               <div class="lab-row">
                 <button id="obsStart" class="lab-btn primary">Start (3×10s)</button>
@@ -208,24 +196,24 @@
                 <label>Seconds/phase <input id="obsSec" type="number" value="10" min="3" max="120" class="lab-input" style="width:100px"></label>
                 <label>Rounds <input id="obsRounds" type="number" value="3" min="1" max="20" class="lab-input" style="width:90px"></label>
               </div>
-              <p class="hint" id="coachObs">Coach: breathe in on 𝓘, see on 𝓛, soften on 𝓒, thank on 𝓢.</p>
+              <p class="hint" id="coachObs">Coach: inhale on 𝓘, see on 𝓛, soften on 𝓒, exhale/thank on 𝓢.</p>
             </div>
           </div>
         </div>
 
-        <aside class="card col-5 friendly">
-          <h3>Why this works (simple)</h3>
-          <p>One tone = fewer distractions. One clear line = clean direction. One real detail = proof you can point to. That’s enough to start.</p>
-          <p class="meta">If you feel worse, stop and reset. Care is the rule.</p>
+        <aside class="card col-5">
+          <h3>Carrier now</h3>
+          <p id="toneNow" class="meta">Πν: none</p>
+          <p class="meta">Keep Eq.9: if Truth/Distortion worsens → stop, re-align, resume.</p>
         </aside>
       </article>
     </section>
 
-    <!-- Voice -->
+    <!-- VOICE -->
     <section id="tab-voice" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
-          <h2>🎙 Voice — find a comfy tone</h2>
+          <h2>🎙 Voice — find a steady carrier Π<sub>ν</sub></h2>
           <div class="lab-row">
             <button id="micOn" class="lab-btn">Enable Mic</button>
             <button id="micOff" class="lab-btn" disabled>Stop</button>
@@ -236,7 +224,7 @@
           <canvas id="fft"  width="800" height="140" aria-label="Spectrum"></canvas>
         </div>
 
-        <aside class="card col-5 friendly">
+        <aside class="card col-5">
           <h3>Presets</h3>
           <div class="lab-row">
             <button class="lab-btn tone" data-carrier="432">432</button>
@@ -244,28 +232,29 @@
             <button class="lab-btn tone" data-carrier="369">369</button>
             <button class="lab-btn tone" data-carrier="144">144</button>
             <button class="lab-btn tone" data-carrier="963">963</button>
+            <button class="lab-btn tone" data-carrier="none">None</button>
           </div>
-          <p class="hint">Softly hum for ~3 seconds. When it looks steady, tap “Use this tone”.</p>
+          <p class="hint">Hum softly ~3s. When the peak holds steady, “Use this tone.”</p>
         </aside>
       </article>
     </section>
 
-    <!-- Phrase -->
+    <!-- PHRASE -->
     <section id="tab-phrase" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
-          <h2>🔡 Phrase — make it clean</h2>
+          <h2>🔡 Phrase — tune meaning (Eq.4/4b)</h2>
           <textarea id="phraseIn" rows="3" class="lab-input" placeholder="Type your line…"></textarea>
           <div class="lab-row">
             <button id="phraseTune" class="lab-btn">Tune</button>
             <button id="phraseClear" class="lab-btn">Clear</button>
           </div>
           <p><b>Suggestion:</b> <span id="phraseOut" class="meta">—</span></p>
-          <p class="hint" id="coachPhrase">Coach: fewer negations, strong verbs, concrete nouns.</p>
+          <p class="hint" id="coachPhrase">Coach: fewer negations → cleaner gradient; strong verbs + concrete nouns.</p>
         </div>
 
-        <aside class="card col-5 friendly">
-          <h3>Examples</h3>
+        <aside class="card col-5">
+          <h3>Micro-templates</h3>
           <p>I speak simply and act kindly.</p>
           <p>We finish one helpful thing today.</p>
           <p>Light reveals; love restores.</p>
@@ -273,11 +262,11 @@
       </article>
     </section>
 
-    <!-- Breath -->
+    <!-- BREATH -->
     <section id="tab-breath" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
-          <h2>🌬 Breath — gentle pacing</h2>
+          <h2>🌬 Breath — pacing ring</h2>
           <div class="lab-row">
             <label>Pattern
               <select id="breathPat" class="lab-input" style="width:auto">
@@ -293,20 +282,20 @@
             <svg viewBox="0 0 100 100" aria-label="Breath ring">
               <circle cx="50" cy="50" r="45" class="ring-bg"/>
               <circle cx="50" cy="50" r="45" class="ring-fg" id="breathArc" pathLength="283"/>
-              <text x="50" y="56" text-anchor="middle" class="level-num" id="breathPhase">Ready</text>
+              <text x="50" y="56" text-anchor="middle" class="ring-num" id="breathPhase">Ready</text>
             </svg>
           </div>
-          <p class="hint">Longer, quieter exhales often feel better. Stop if dizzy.</p>
+          <p class="hint">Longer, quieter exhales tend to smooth the field. Stop if dizzy.</p>
         </div>
 
-        <aside class="card col-5 friendly">
-          <h3>Use with the loop</h3>
-          <p>Inhale — 𝓘 · See — 𝓛 · Soften — 𝓒 · Exhale — 𝓢</p>
+        <aside class="card col-5">
+          <h3>Use with Observer</h3>
+          <p>Inhale — 𝓘 · See — 𝓛 · Soften — 𝓒 · Exhale/Seal — 𝓢</p>
         </aside>
       </article>
     </section>
 
-    <!-- Coherence -->
+    <!-- COHERENCE -->
     <section id="tab-coherence" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
@@ -320,20 +309,20 @@
           <canvas id="xiSpark" width="500" height="70" aria-label="Ξ history"></canvas>
         </div>
 
-        <aside class="card col-5 friendly">
-          <h3>Stop Rule</h3>
-          <p>If your sense of truth goes down, stop, breathe, and try later. Care beats intensity.</p>
+        <aside class="card col-5">
+          <h3>Stop Rule (Eq.9)</h3>
+          <p>If clarity falls or tension rises, <b>halt</b>. Re-center (carriers/breath/phrase), then resume.</p>
         </aside>
       </article>
     </section>
 
-    <!-- Ledger -->
+    <!-- LEDGER -->
     <section id="tab-ledger" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-12">
           <h2>📒 Witness Ledger <small class="meta">(private on this device)</small></h2>
           <div class="lab-row">
-            <input id="lgLine" class="lab-input" placeholder="Intention (one line)…">
+            <input id="lgLine" class="lab-input" placeholder="Intention (𝓘)…">
             <input id="lgCarrier" class="lab-input" placeholder="Carrier (432/528/369/144/963)">
             <select id="lgQ" class="lab-input" style="width:auto"><option value="">Ξ quality…</option><option>Low</option><option>Medium</option><option>High</option></select>
             <input id="lgTags" class="lab-input" placeholder="tags (comma)">
@@ -354,12 +343,6 @@
               <tbody id="lgRows"></tbody>
             </table>
           </div>
-
-          <div class="badges" style="margin-top:8px">
-            <span id="bdg7" class="badge">🌱 ×7</span>
-            <span id="bdg33" class="badge">🛰️ ×33</span>
-            <span id="bdg144" class="badge">🜚 ×144</span>
-          </div>
         </div>
       </article>
     </section>
@@ -370,7 +353,7 @@
     </footer>
   </main>
 
-  <!-- ======= Game Engine (client-only) ======= -->
+  <!-- ======= Creation Engine (client-only) ======= -->
   <script>
   (function(){
     "use strict";
@@ -379,174 +362,143 @@
     const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
     const raf=(f)=>(window.requestAnimationFrame||setTimeout)(f,16);
 
-    /* ---------------- TABS ---------------- */
+    /* -------- Tabs -------- */
     const tabBtns=$$(".pill"), tabs=$$(".tab");
-    function switchTo(id){
-      tabs.forEach(t=>t.classList.toggle("active", t.id==="tab-"+id));
-      tabBtns.forEach(b=>b.classList.toggle("active", b.dataset.tab===id));
-    }
+    function switchTo(id){ tabs.forEach(t=>t.classList.toggle("active", t.id==="tab-"+id)); tabBtns.forEach(b=>b.classList.toggle("active", b.dataset.tab===id)); }
     tabBtns.forEach(b=>on(b,"click",()=>switchTo(b.dataset.tab)));
+    on(document,"keydown",(e)=>{ if(e.target.matches("input,textarea")) return; const map={1:"console",2:"observer",3:"voice",4:"phrase",5:"breath",6:"coherence",7:"ledger"}; if(map[e.key]){ e.preventDefault(); switchTo(map[e.key]); } });
 
-    /* ---------------- LEVEL / XP ---------------- */
-    const XPKEY="sof_game_xp_v1";
-    const SKEY="sof_game_state_v1";
-    const LGKEY="sof_ledger_entries_v2";
-    const QSKEY="sof_daily_quests_v1";
+    /* -------- Reveal -------- */
+    if('IntersectionObserver' in window){
+      const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }), {threshold:.08});
+      $$(".card").forEach(c=>io.observe(c));
+    } else { $$(".card").forEach(c=>c.classList.add('visible')); }
 
-    const xpArc=$("#xpArc"), lvlNum=$("#lvlNum"), xpText=$("#xpText");
-    const confetti=$("#confetti"), ctxC=confetti.getContext("2d");
+    /* -------- Year -------- */
+    $("#yr").textContent=new Date().getFullYear();
 
-    let state = load(SKEY,{level:1,xp:0,carriersTried:{},firstLedger:false,lastQuestDate:null,streakDays:0,xiHistory:[]});
-    save(SKEY,state);
+    /* -------- Local storage helpers -------- */
+    const LGKEY="sof_ledger_entries_v3";
+    function load(k,fb){ try{return JSON.parse(localStorage.getItem(k)||"");}catch(_){return fb;} }
+    function save(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(_){} }
 
-    function load(k,fallback){ try{ return JSON.parse(localStorage.getItem(k)||""); }catch(_){ return fallback; } }
-    function save(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(_){} }
-
-    function lvlCap(lvl){ return 50 + (lvl-1)*25; } // 50,75,100...
-    function addXP(n, why=""){
-      let cap=lvlCap(state.level);
-      state.xp += n;
-      let leveled=false;
-      while(state.xp>=cap){ state.xp -= cap; state.level++; cap=lvlCap(state.level); leveled=true; }
-      save(SKEY,state);
-      drawXP();
-      if(leveled){ celebrate(); toast(`Level up! You are now level ${state.level}.`); }
-      else if(why){ toast(`+${n} XP · ${why}`); }
-    }
-    function drawXP(){
-      const cap=lvlCap(state.level), frac=Math.max(0,Math.min(1,state.xp/cap));
-      const dash=283*frac; xpArc.setAttribute("stroke-dasharray", `${dash} ${283-dash}`);
-      lvlNum.textContent=String(state.level); xpText.textContent = `${state.xp} / ${cap}`;
-    }
-    drawXP();
-
-    /* ---------------- CONFETTI ---------------- */
-    function celebrate(){
-      const W=confetti.width=innerWidth, H=confetti.height=innerHeight;
-      const parts=Array.from({length:140},()=>({
-        x:Math.random()*W, y:-20, vy:1+Math.random()*3, vx:(Math.random()-.5)*2,
-        r:3+Math.random()*4, a:1, s:Math.random()*2*Math.PI
-      }));
-      let t=0;
-      (function loop(){
-        ctxC.clearRect(0,0,W,H);
-        parts.forEach(p=>{
-          p.x+=p.vx; p.y+=p.vy; p.s+=0.1; p.a*=0.996;
-          ctxC.globalAlpha=Math.max(0,p.a);
-          ctxC.fillStyle = (t%2)? "#7af3ff" : "#f3c97a";
-          ctxC.beginPath(); ctxC.arc(p.x,p.y,p.r,0,Math.PI*2); ctxC.fill();
-        });
-        t++; if (t<220) requestAnimationFrame(loop);
-      })();
-    }
-
-    /* ---------------- TOAST (simple) ---------------- */
-    function toast(msg){
-      const el=document.createElement("div");
-      el.textContent=msg;
-      Object.assign(el.style,{position:"fixed",left:"50%",bottom:"22px",transform:"translateX(-50%)",
-        background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid #2a3242",borderRadius:"10px",
-        boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:9999,opacity:0,transition:"opacity .2s"});
-      document.body.appendChild(el); requestAnimationFrame(()=>{el.style.opacity=1});
-      setTimeout(()=>{el.style.opacity=0; setTimeout(()=>el.remove(),250);},1800);
-    }
-
-    /* ---------------- COACH MODE ---------------- */
-    const coach=$("#coach");
-    on(coach,"change",()=>toast(coach.checked?"Coach on":"Coach off"));
-
-    /* ---------------- DAILY QUESTS ---------------- */
-    const QUESTS_BASE=[
-      {id:"q1", text:"Run the Observer loop once", xp:20},
-      {id:"q2", text:"Do one breath cycle", xp:15},
-      {id:"q3", text:"Tune a phrase", xp:15},
-      {id:"q4", text:"Compute Ξ once", xp:15},
-      {id:"q5", text:"Add one Ledger entry", xp:25},
-    ];
-    function todayKey(){ const d=new Date(); return d.toISOString().slice(0,10); }
-    function loadQuests(){
-      const q=load(QSKEY,{date:todayKey(),done:{}});
-      if(q.date!==todayKey()) return {date:todayKey(),done:{}};
-      return q;
-    }
-    let quests=loadQuests(); save(QSKEY,quests);
-
-    function renderQuests(){
-      const wrap=$("#questList"); wrap.innerHTML="";
-      QUESTS_BASE.forEach(q=>{
-        const li=document.createElement("li");
-        const c=document.createElement("input"); c.type="checkbox"; c.checked=!!quests.done[q.id];
-        on(c,"change",()=>{
-          quests.done[q.id]=c.checked; save(QSKEY,quests);
-          if(c.checked) addXP(q.xp, q.text);
-          checkDailyComplete();
-        });
-        const label=document.createElement("label"); label.style.marginLeft="8px"; label.textContent=q.text+"  · "+q.xp+" XP";
-        li.appendChild(c); li.appendChild(label); wrap.appendChild(li);
-      });
-      checkDailyComplete();
-    }
-    function checkDailyComplete(){
-      const allDone=QUESTS_BASE.every(q=>quests.done[q.id]);
-      if(allDone && !quests.done.__bonus){
-        quests.done.__bonus=true; save(QSKEY,quests);
-        addXP(30,"Daily Bonus");
-        // streak
-        bumpStreak();
-      }
-    }
-    function bumpStreak(){
-      // naive streak by lastQuestDate
-      const d=todayKey();
-      if(state.lastQuestDate!==d){
-        const yesterday=new Date(Date.now()-86400000).toISOString().slice(0,10);
-        state.streakDays = (state.lastQuestDate===yesterday) ? (state.streakDays+1) : 1;
-        state.lastQuestDate=d; save(SKEY,state);
-        lightStreakBadges();
-      }
-    }
-    function lightStreakBadges(){
-      $("#bSeed").classList.toggle("lit", state.streakDays>=7);
-      $("#bOrbit").classList.toggle("lit", state.streakDays>=33);
-      $("#bClosure").classList.toggle("lit", state.streakDays>=144);
-      $("#bdg7").classList.toggle("lit", state.streakDays>=7);
-      $("#bdg33").classList.toggle("lit", state.streakDays>=33);
-      $("#bdg144").classList.toggle("lit", state.streakDays>=144);
-    }
-    renderQuests(); lightStreakBadges();
-    on($("#btnResetQuests"),"click",()=>{ quests={date:todayKey(),done:{}}; save(QSKEY,quests); renderQuests(); toast("Quests reset"); });
-    on($("#btnCompleteAll"),"click",()=>{ QUESTS_BASE.forEach(q=>quests.done[q.id]=true); save(QSKEY,quests); renderQuests(); });
-
-    /* ---------------- AUDIO CORE ---------------- */
-    let AC=null, G=null, OSC=null;
-    function ensureAC(){ if(AC) return AC; try{ AC=new (window.AudioContext||window.webkitAudioContext)(); G=AC.createGain(); G.gain.value=0.0001; G.connect(AC.destination);}catch(_){ } return AC; }
-    function tone(freq, dur=0.35, vol=0.06){
+    /* -------- Carrier tone engine -------- */
+    let AC=null, G=null, OSC=null, carrier="none";
+    function ensureAC(){ if(AC) return AC; try{ AC=new (window.AudioContext||window.webkitAudioContext)(); G=AC.createGain(); G.gain.value=0.00012; G.connect(AC.destination);}catch(_){ } return AC; }
+    function blip(freq, dur=0.28, vol=0.05){
       if(!ensureAC()||!freq) return;
       if(OSC){ try{OSC.stop();}catch(_){ } OSC=null; }
-      const o=AC.createOscillator(); o.type="sine"; o.frequency.value=freq; o.connect(G);
-      const t=AC.currentTime; G.gain.cancelScheduledValues(t);
-      G.gain.linearRampToValueAtTime(vol, t+0.03);
-      G.gain.linearRampToValueAtTime(0.0001, t+dur);
-      o.start(); o.stop(t+dur+0.02); OSC=o;
-    }
-    function click(vol=0.01){
-      if(!ensureAC()) return;
-      const o=AC.createOscillator(); o.type="square"; o.frequency.value=880;
-      const g=AC.createGain(); g.gain.value=0.0001; o.connect(g).connect(AC.destination);
-      const t=AC.currentTime; o.start(t); g.gain.linearRampToValueAtTime(vol,t+0.005); g.gain.linearRampToValueAtTime(0.0001,t+0.06); o.stop(t+0.08);
+      const o=AC.createOscillator(), g=AC.createGain();
+      o.type="sine"; o.frequency.value=freq; g.gain.value=0.0001; o.connect(g).connect(G);
+      const t=AC.currentTime; g.gain.linearRampToValueAtTime(vol,t+0.03); g.gain.linearRampToValueAtTime(0.0001,t+dur); o.start(); o.stop(t+dur+0.02); OSC=o;
     }
     window.addEventListener("pointerdown",()=>{ if(AC && AC.state==="suspended"){ AC.resume(); } },{once:true,passive:true});
+    $$(".tone").forEach(b=>on(b,"click",()=>{
+      const c=b.dataset.carrier||"none"; carrier=c; $("#toneNow").textContent="Πν: "+c; $("#hudCarrier").textContent="Πν: "+c;
+      if(c!=="none") blip(+c);
+    }));
 
-    /* ---------------- OBSERVER LOOP ---------------- */
+    /* -------- Creation Console visual trace -------- */
+    const canvas=$("#trace"), ctx=canvas.getContext("2d");
+    let W=canvas.clientWidth, H=canvas.clientHeight; function fit(){ const r=canvas.getBoundingClientRect(); canvas.width=W=r.width; canvas.height=H=r.height; }
+    fit(); addEventListener("resize", fit, {passive:true});
+
+    // State that responds to carrier & breath
+    let phi=0, seed=Math.random()*1000, mode=0; // 0: flow, 1: lattice
+    let breathPhase="—"; $("#hudBreath").textContent="Breath: —";
+
+    function palette(t){ // two-color aurora
+      const a="rgba(122,243,255,", b="rgba(243,201,122,";
+      return t<0.5? a+(0.15+0.6*t)+")" : b+(0.15+0.6*(t-0.5)) +")";
+    }
+
+    function drawFlow(t){
+      ctx.fillStyle="rgba(10,14,21,0.10)";
+      ctx.fillRect(0,0,W,H);
+      const base = carrier==="none"? 0.7 : ( (parseFloat(carrier)%1000)/1000 );
+      const f = 0.6 + base*0.8;
+      const n=140, r0=Math.min(W,H)*0.22;
+      for(let i=0;i<n;i++){
+        const a = i/n * Math.PI*2 + phi*0.0006;
+        const b = Math.sin(i*0.17 + seed*0.1 + phi*0.001);
+        const r = r0 * (0.7 + 0.3*Math.sin(phi*0.002 + i*0.05 + base*6));
+        const x = W/2 + Math.cos(a)*r*(1+0.08*b);
+        const y = H/2 + Math.sin(a* (1.0+0.02*Math.cos(phi*0.003)) )*r*(1-0.05*b);
+        ctx.fillStyle = palette((i%100)/100);
+        ctx.beginPath(); ctx.arc(x,y, 0.8 + 1.4*(0.5+0.5*b), 0, Math.PI*2); ctx.fill();
+      }
+      phi += (breathPhase==="In"? 1.6 : breathPhase==="Out"? 2.2 : 1.0);
+    }
+
+    function drawLattice(t){
+      ctx.fillStyle="rgba(10,14,21,0.14)";
+      ctx.fillRect(0,0,W,H);
+      const base = carrier==="none"? 0.5 : ((+carrier%360)/360);
+      const a = 1 + Math.round(base*5), b = 2 + Math.round(base*7);
+      const R = Math.min(W,H)*0.36;
+      const steps = 420;
+      ctx.beginPath();
+      for(let i=0;i<steps;i++){
+        const th = i/steps * Math.PI*2;
+        const x = W/2 + R*Math.sin(a*th + phi*0.0012);
+        const y = H/2 + R*Math.sin(b*th + phi*0.0016);
+        (i?ctx.lineTo(x,y):ctx.moveTo(x,y));
+      }
+      ctx.strokeStyle="rgba(243,201,122,.85)"; ctx.lineWidth=1.4; ctx.stroke();
+      phi += 1.5;
+    }
+
+    let anim=true;
+    (function loop(t){ if(!anim) return; (mode?drawLattice:drawFlow)(t); requestAnimationFrame(loop); })();
+
+    on($("#visToggle"),"click",()=>{ mode = (mode+1)%2; $("#visToggle").textContent = "Visual: " + (mode? "Lattice":"Flow"); });
+    on($("#clearBtn"),"click",()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); });
+    on($("#seedBtn"),"click",()=>{ seed = Math.random()*1000; });
+
+    // Seed trace on run (short pulse)
+    function seedTrace(){
+      for(let k=0;k<40;k++){ (mode?drawLattice:drawFlow)(performance.now()+k*16); }
+    }
+
+    /* -------- Console Run & Seal -------- */
+    const consoleRun=$("#consoleRun"), consoleSeal=$("#consoleSeal");
+    on(consoleRun,"click",()=>{
+      seedTrace();
+      // quick 1×12s observer ring & gentle marker
+      switchTo("observer"); $("#obsSec").value=12; $("#obsRounds").value=1; $("#obsStart").click();
+      switchTo("console");
+    });
+
+    function canvasPNG(){
+      try{ return canvas.toDataURL("image/png"); }catch(_){ return ""; }
+    }
+
+    on(consoleSeal,"click",()=>{
+      const line=($("#consoleLine").value||"").trim();
+      if(!line) return toast("Write an intention line");
+      const png = canvasPNG();
+      addLedger({
+        when:new Date().toISOString(),
+        carrier:carrier==="none"?"":carrier,
+        phrase:line,
+        coherence:($("#xiOut").textContent||"").replace(/.*?([\d.]+)$/, "$1"),
+        tags:["seal","console"],
+        note: png ? "[trace embedded]" : ""
+      }, png);
+      toast("Sealed to Ledger");
+      switchTo("ledger");
+    });
+
+    /* -------- Observer loop -------- */
     const obsArc=$("#obsArc"), obsPhase=$("#obsPhase"), obsCount=$("#obsCount");
     const obsStart=$("#obsStart"), obsStop=$("#obsStop");
     const obsSec=$("#obsSec"), obsRounds=$("#obsRounds");
-
     let obsTimer=null, obsIdx=0, obsRound=0, obsRem=0, obsPhases=["𝓘","𝓛","𝓒","𝓢"], obsTotal=0, obsTick=0;
-    function obsReset(){
-      obsArc.setAttribute("stroke-dasharray","0 283");
-      obsPhase.textContent="Ready"; obsCount.textContent="—";
-      obsIdx=0; obsRound=0; obsRem=0; obsTick=0;
+    function obsReset(){ obsArc.setAttribute("stroke-dasharray","0 283"); obsPhase.textContent="Ready"; obsCount.textContent="—"; obsIdx=0; obsRound=0; obsRem=0; obsTick=0; }
+    function click(vol=0.01){
+      if(!ensureAC()) return; const o=AC.createOscillator(), g=AC.createGain();
+      o.type="square"; o.frequency.value=880; g.gain.value=0.0001; o.connect(g).connect(AC.destination);
+      const t=AC.currentTime; o.start(t); g.gain.linearRampToValueAtTime(vol,t+0.005); g.gain.linearRampToValueAtTime(0.0001,t+0.06); o.stop(t+0.08);
     }
     function obsRun(){
       const p=+obsSec.value||10, r=+obsRounds.value||3;
@@ -556,33 +508,20 @@
       obsTimer=setInterval(()=>{
         obsTick++; obsRem--;
         const frac=obsTick/obsTotal, dash=283*frac; obsArc.setAttribute("stroke-dasharray",`${dash} ${283-dash}`);
+        // Breath phase proxy for visual trace
+        breathPhase = ["In","—","Out","—"][obsIdx]; $("#hudBreath").textContent="Breath: "+breathPhase;
         if(obsRem<=0){
           obsIdx++; click(0.008);
-          if(obsIdx>=4){ obsIdx=0; obsRound++; if(obsRound>r){ clearInterval(obsTimer); obsStart.disabled=false; obsStop.disabled=true; obsPhase.textContent="Done"; obsCount.textContent=`${r}/${r}`; addXP(20,"Observer run"); return; } obsCount.textContent=`Round ${obsRound}/${r}`; }
+          if(obsIdx>=4){ obsIdx=0; obsRound++; if(obsRound>r){ clearInterval(obsTimer); obsStart.disabled=false; obsStop.disabled=true; obsPhase.textContent="Done"; obsCount.textContent=`${r}/${r}`; breathPhase="—"; $("#hudBreath").textContent="Breath: —"; return; }
+            obsCount.textContent=`Round ${obsRound}/${r}`; }
           obsRem=p; obsPhase.textContent=obsPhases[obsIdx];
         }
       },1000);
     }
     on(obsStart,"click",obsRun);
-    on(obsStop,"click",()=>{ clearInterval(obsTimer); obsStart.disabled=false; obsStop.disabled=true; obsReset(); });
+    on(obsStop,"click",()=>{ clearInterval(obsTimer); obsStart.disabled=false; obsStop.disabled=true; obsReset(); breathPhase="—"; $("#hudBreath").textContent="Breath: —"; });
 
-    /* ---------------- TONES (CARRIERS) ---------------- */
-    let carrier="none";
-    const toneNow=$("#toneNow");
-    $$(".tone").forEach(b=>on(b,"click",()=>{
-      const c=b.dataset.carrier||"none"; carrier=c;
-      if(c!=="none"){ tone(+c,0.28,0.05); }
-      toneNow.textContent = "Carrier: " + c;
-      // achievements
-      if(c!=="none"){ state.carriersTried[c]=true; save(SKEY,state);
-        const all=["432","528","369","144","963"].every(x=>state.carriersTried[x]);
-        $("#bAllTones").classList.toggle("lit", all);
-        if(all) addXP(20,"Tried all tones");
-        else addXP(5,"Tried a tone");
-      }
-    }));
-
-    /* ---------------- VOICE (MIC) ---------------- */
+    /* -------- Voice (mic) -------- */
     let micStream=null, analyser=null, wave=$("#wave"), fft=$("#fft");
     on($("#micOn"),"click", async ()=>{
       try{
@@ -592,8 +531,7 @@
         analyser = AC.createAnalyser(); analyser.fftSize=2048; analyser.smoothingTimeConstant=0.85;
         src.connect(analyser);
         $("#micOff").disabled=false; $("#useTone").disabled=false;
-        drawAudio();
-        toast("Mic on");
+        drawAudio(); toast("Mic on");
       }catch(err){ toast("Mic failed"); }
     });
     on($("#micOff"),"click",()=>{
@@ -602,7 +540,7 @@
     });
     on($("#useTone"),"click",()=>{
       const fr = $("#freqRead").textContent.match(/~(\d+)\s*Hz/);
-      const f = fr? +fr[1] : 432; carrier=String(f); tone(f); toneNow.textContent="Carrier: "+carrier; addXP(10,"Set mic tone");
+      const f = fr? +fr[1] : 432; carrier=String(f); blip(f); $("#toneNow").textContent="Πν: "+carrier; $("#hudCarrier").textContent="Πν: "+carrier;
     });
 
     function drawAudio(){
@@ -627,7 +565,7 @@
       })();
     }
 
-    /* ---------------- PHRASE ---------------- */
+    /* -------- Phrase -------- */
     on($("#phraseTune"),"click",()=>{
       const s = ($("#phraseIn").value||"").trim();
       if(!s) return toast("Type a line first");
@@ -637,65 +575,73 @@
         .replace(/\s{2,}/g," ")
         .trim();
       $("#phraseOut").textContent = simpler || s;
-      addXP(10,"Phrase tuned");
+      const cl=$("#consoleLine"); if(cl && !cl.value) cl.value = simpler || s;
     });
     on($("#phraseClear"),"click",()=>{$("#phraseIn").value="";$("#phraseOut").textContent="—";});
 
-    /* ---------------- BREATH ---------------- */
-    const breathArc=$("#breathArc"), breathPhase=$("#breathPhase"), bStart=$("#breathStart"), bStop=$("#breathStop");
-    let bTimer=null, bT0=0, bPat=[4,4,4,4], bIdx=0;
+    /* -------- Breath ring -------- */
+    const breathArc=$("#breathArc"), breathPhaseEl=$("#breathPhase");
+    let bTimer=null, bT0=0, bPat=[4,4,4,4];
     on($("#breathPat"),"change",e=>{ bPat=e.target.value.split("-").map(n=>+n||4);});
-    on(bStart,"click",()=>{
+    on($("#breathStart"),"click",()=>{
       if(bTimer) return;
-      bT0=performance.now(); bIdx=0; bStop.disabled=false; bStart.disabled=true;
+      bT0=performance.now(); $("#breathStop").disabled=false; $("#breathStart").disabled=true;
       const total=bPat.reduce((a,b)=>a+b,0)*1000;
       bTimer=setInterval(()=>{
         const t=(performance.now()-bT0)%total;
         let acc=0, idx=0; for(let i=0;i<4;i++){ acc+=bPat[i]*1000; if(t<acc){ idx=i; break; } }
         const prev=acc-bPat[idx]*1000, p=(t-prev)/(bPat[idx]*1000);
         const dash=283*((prev+t-prev)/total); breathArc.setAttribute("stroke-dasharray",`${dash} ${283-dash}`);
-        breathPhase.textContent=["In","Hold","Out","Hold"][idx];
+        const ph=["In","Hold","Out","Hold"][idx]; breathPhaseEl.textContent=ph; breathPhase = ph; $("#hudBreath").textContent="Breath: "+ph;
       },1000/30);
     });
-    on(bStop,"click",()=>{ clearInterval(bTimer); bTimer=null; bStart.disabled=false; bStop.disabled=true; breathPhase.textContent="Ready"; addXP(15,"Breath cycle"); });
+    on($("#breathStop"),"click",()=>{ clearInterval(bTimer); bTimer=null; $("#breathStart").disabled=false; $("#breathStop").disabled=true; breathPhaseEl.textContent="Ready"; breathPhase="—"; $("#hudBreath").textContent="Breath: —"; });
 
-    /* ---------------- COHERENCE ---------------- */
-    const xiOut=$("#xiOut"), xiSpark=$("#xiSpark").getContext("2d");
-    on($("#xiCalc"),"click",()=>{
-      const hi=+$("#hi").value||0, v=+$("#varM").value||0.0001;
-      const Xi = Math.max(0, Math.min(1, (hi)/(1+v)));
-      xiOut.textContent = "Ξ = " + Xi.toFixed(2);
-      state.xiHistory.unshift({t:Date.now(), x:Xi}); state.xiHistory=state.xiHistory.slice(0,60); save(SKEY,state);
-      drawXi(); addXP(10,"Ξ computed");
-    });
+    /* -------- Ξ meter -------- */
+    const xiOut=$("#xiOut"), xiSpark=$("#xiSpark").getContext("2d"); let xiHist=load("sof_xi_hist_v1",[]);
     function drawXi(){
       const ctx=xiSpark, W=ctx.canvas.width, H=ctx.canvas.height;
       ctx.clearRect(0,0,W,H); ctx.strokeStyle="rgba(122,243,255,.25)";
       ctx.beginPath(); ctx.moveTo(0,H*0.25); ctx.lineTo(W,H*0.25); ctx.moveTo(0,H*0.5); ctx.lineTo(W,H*0.5); ctx.moveTo(0,H*0.75); ctx.lineTo(W,H*0.75); ctx.stroke();
-      if(!state.xiHistory.length) return;
-      const n=state.xiHistory.length, xs=W/(n-1);
-      ctx.beginPath(); for(let i=0;i<n;i++){ const y=H*(1-(state.xiHistory[i].x*0.9+0.05)); const x=W-i*xs; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }
+      if(!xiHist.length) return;
+      const n=xiHist.length, xs=W/(n-1);
+      ctx.beginPath(); for(let i=0;i<n;i++){ const y=H*(1-(xiHist[i].x*0.9+0.05)); const x=W-i*xs; (i?ctx.lineTo(x,y):ctx.moveTo(x,y)); }
       ctx.strokeStyle="rgba(243,201,122,.9)"; ctx.lineWidth=2; ctx.stroke();
     }
     drawXi();
+    on($("#xiCalc"),"click",()=>{
+      const hi=+$("#hi").value||0, v=+$("#varM").value||0.0001;
+      const Xi = Math.max(0, Math.min(1, hi/(1+v)));
+      xiOut.textContent = "Ξ = " + Xi.toFixed(2);
+      $("#hudXi").textContent ="Ξ: " + Xi.toFixed(2);
+      xiHist.unshift({t:Date.now(), x:Xi}); xiHist=xiHist.slice(0,60); save("sof_xi_hist_v1",xiHist); drawXi();
+    });
 
-    /* ---------------- LEDGER ---------------- */
+    /* -------- Ledger -------- */
     function readLedger(){ return load(LGKEY,[]); }
     function writeLedger(arr){ save(LGKEY,arr); }
+    function esc(s){ return String(s||"").replace(/[&<>"']/g,m=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m])); }
     function renderLedger(){
       const rows=$("#lgRows"), q=($("#lgFilter").value||"").toLowerCase(); const all=readLedger();
       const list = q ? all.filter(x=>JSON.stringify(x).toLowerCase().includes(q)) : all;
       rows.innerHTML = list.map((e,i)=>`<tr>
         <td>${new Date(e.when).toLocaleString()}</td>
         <td>${esc(e.phrase)}</td><td>${esc(e.carrier||"—")}</td><td>${esc(e.coherence||"—")}</td>
-        <td>${esc((e.tags||[]).join(", "))}</td><td>${esc(e.note||"")}</td>
+        <td>${esc((e.tags||[]).join(", "))}</td>
+        <td>${e.note && e.note.startsWith("[trace") ? (esc(e.note)+" <small class='meta'>(image)</small>") : esc(e.note||"")}</td>
         <td><button class="lab-btn" data-del="${i}">✕</button></td>
       </tr>`).join("");
       $$("#lgRows [data-del]").forEach(b=>on(b,"click",()=>{ const all=readLedger(); all.splice(+b.dataset.del,1); writeLedger(all); renderLedger(); }));
-      // achievements
-      $("#bFirstLedger").classList.toggle("lit", readLedger().length>0);
     }
-    function esc(s){ return String(s||"").replace(/[&<>"']/g,m=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m])); }
+    function addLedger(entry, png){
+      const all=readLedger();
+      if(png){ entry._traceDataUri = png; } // stored alongside; not rendered in table to keep it light
+      all.unshift(entry); writeLedger(all); renderLedger();
+      // Prefill ledger UI subtly
+      $("#lgLine").value = entry.phrase || $("#lgLine").value;
+      $("#lgCarrier").value = entry.carrier || $("#lgCarrier").value;
+      $("#lgWit").value = (entry.note||"");
+    }
     on($("#lgAdd"),"click",()=>{
       const phrase=($("#lgLine").value||"").trim(); if(!phrase) return toast("Write an intention line");
       const entry={
@@ -706,8 +652,8 @@
         tags:($("#lgTags").value||"").split(",").map(s=>s.trim()).filter(Boolean),
         note:($("#lgWit").value||"").trim()
       };
-      const all=readLedger(); all.unshift(entry); writeLedger(all); renderLedger(); addXP(25,"Ledger entry");
-      $("#lgWit").value=""; $("#lgLine").value=""; // tidy
+      addLedger(entry);
+      $("#lgWit").value="";
     });
     on($("#lgExport"),"click",()=>{
       const blob=new Blob([JSON.stringify(readLedger(),null,2)],{type:"application/json"});
@@ -715,21 +661,23 @@
     });
     on($("#lgImport"),"click",()=>$("#lgImportFile").click());
     on($("#lgImportFile"),"change",async e=>{
-      const f=e.target.files[0]; if(!f) return; try{ const txt=await f.text(); const data=JSON.parse(txt); if(Array.isArray(data)){ writeLedger(data.concat(readLedger())); renderLedger(); toast("Imported"); addXP(5,"Imported ledger"); } }catch(_){ toast("Import failed"); } e.target.value="";
+      const f=e.target.files[0]; if(!f) return; try{ const txt=await f.text(); const data=JSON.parse(txt); if(Array.isArray(data)){ writeLedger(data.concat(readLedger())); renderLedger(); toast("Imported"); } }catch(_){ toast("Import failed"); } e.target.value="";
     });
     on($("#lgFilter"),"input",renderLedger);
     renderLedger();
 
-    /* ---------------- KEYBOARD NAV ---------------- */
-    on(document,"keydown",(e)=>{
-      if(e.target.matches("input,textarea")) return;
-      const map={1:"quests",2:"observer",3:"voice",4:"phrase",5:"breath",6:"coherence",7:"ledger"};
-      if(map[e.key]){ e.preventDefault(); switchTo(map[e.key]); }
-      if(e.key==="S"||e.key==="s"){ if(!obsStart.disabled) obsStart.click(); else if(!obsStop.disabled) obsStop.click(); }
-    });
+    /* -------- Console → Observer hotkey -------- */
+    on(document,"keydown",(e)=>{ if((e.key==="S"||e.key==="s") && !e.target.matches("input,textarea")){ e.preventDefault(); const btn = $("#obsStart").disabled ? $("#obsStop") : $("#obsStart"); btn.click(); } });
 
-    /* ---------------- YEAR ---------------- */
-    $("#yr").textContent = new Date().getFullYear();
+    /* -------- Tiny toast -------- */
+    function toast(msg){
+      const el=document.createElement("div"); el.textContent=msg;
+      Object.assign(el.style,{position:"fixed",left:"50%",bottom:"22px",transform:"translateX(-50%)",
+        background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid #2a3242",borderRadius:"10px",
+        boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:9999,opacity:0,transition:"opacity .2s"});
+      document.body.appendChild(el); requestAnimationFrame(()=>{el.style.opacity=1});
+      setTimeout(()=>{el.style.opacity=0; setTimeout(()=>el.remove(),250);},1800);
+    }
 
   })();
   </script>
