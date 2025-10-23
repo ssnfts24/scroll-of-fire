@@ -1,12 +1,12 @@
 <script>
 /* ==========================================================================
-   Scroll of Fire — codex.js v3.7 (consolidated)
-   - Safer listeners (passive where possible), guards, and null checks
-   - Tabs ink recalculates on container resize + font load
-   - Horizontal scroll mapping is boundary-aware; no preventDefault if unused
-   - Equation pop-out closes on backdrop click; focus trap hardened
-   - Copy button has clipboard fallback (execCommand) + trimmed payload
-   - Minor a11y: role hints, button states, Escape handling harmonized
+   Scroll of Fire — codex.js v3.8 (refined)
+   - Year stamp supports #yr and #y
+   - Back-to-top uses .visible (matches CSS)
+   - Tabs ink: center-on-load, resize & font-ready recalcs
+   - Command palette: focus trap + return focus
+   - Smooth anchor scroll: sticky header-aware offset
+   - Non-breaking a11y hints for mini-suggest
    ========================================================================== */
 (() => {
   if (document.documentElement.hasAttribute('data-sof-js-init')) return;
@@ -21,10 +21,11 @@
   const ALLOW_MOTION = !(RM || RD);
   const rIC = window.requestIdleCallback || ((fn)=> setTimeout(fn, 1));
 
-  // Year stamp
-  const y = $('#y'); if (y) y.textContent = new Date().getFullYear();
+  /* ---- Year stamp (#yr or legacy #y) ---- */
+  const yearEl = $('#yr') || $('#y');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Detect if search v2 (inline-initialized) exists so we don’t double-bind
+  /* Detect if search v2 (inline-initialized) exists so we don’t double-bind */
   const SEARCH_V2 = (() => {
     const s = document.getElementById('site-suggest');
     return !!(s && s.getAttribute('role') === 'listbox');
@@ -55,7 +56,12 @@
   const initInk = () => {
     let raf;
     const cue = (el) => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => setInk(el)); };
-    cue(activeTab());
+    const at = activeTab();
+    cue(at);
+
+    /* ensure the active tab is on-screen */
+    try { at?.scrollIntoView({block:'nearest', inline:'center', behavior: ALLOW_MOTION ? 'smooth' : 'auto'}); } catch(_){}
+
     $$('.tabs .tab').forEach(a=>{
       a.addEventListener('mouseenter', ()=>cue(a), {passive:true});
       a.addEventListener('focus',     ()=>cue(a), {passive:true});
@@ -64,7 +70,7 @@
     tabs?.addEventListener('mouseleave', ()=>cue(activeTab()), {passive:true});
 
     // Recompute when fonts load and when the tabs container resizes
-    if (document.fonts?.ready) document.fonts.ready.then(()=> cue(activeTab())).catch(()=>{});
+    document.fonts?.ready?.then(()=> cue(activeTab())).catch(()=>{});
     if ('ResizeObserver' in window && tabs){
       const ro = new ResizeObserver(()=> cue(activeTab()));
       ro.observe(tabs);
@@ -156,7 +162,7 @@
 
   /* ---- Back to top (supports .to-top and #toTop) ---- */
   const toTop = $('#toTop') || $('.to-top');
-  const topBtn = () => toTop?.classList.toggle('show', scrollY>400);
+  const topBtn = () => toTop?.classList.toggle('visible', scrollY>400); // use .visible to match CSS
   topBtn(); addEventListener('scroll', topBtn, { passive:true });
   toTop?.addEventListener('click', ()=> scrollTo({ top:0, behavior: ALLOW_MOTION ? 'smooth' : 'auto' }));
 
@@ -174,6 +180,10 @@
   /* ---- Page search mini-suggest + '/' (skip if v2 exists) ---- */
   if (!SEARCH_V2) {
     const siteSearch = $('#site-search'); const siteSuggest = $('#site-suggest');
+    if (siteSuggest && !siteSuggest.getAttribute('role')) {
+      siteSuggest.setAttribute('role','listbox');
+      siteSuggest.setAttribute('aria-label','Suggestions');
+    }
     const CAND = $$('h1[id],h2[id],h3[id],section[id],article[id],.eq-card[id]');
     const suggest = (q) => {
       if (!siteSuggest) return;
@@ -202,15 +212,15 @@
     });
   }
 
-  /* ---- Command palette shell ---- */
+  /* ---- Command palette (focus trap + return focus) ---- */
   const palette = $('#palette'); const palInput = $('#palInput'); const palList = $('#palList');
-  const togglePalette = (open) => { if (!palette) return; palette.classList.toggle('open', !!open); open ? palInput?.focus() : palInput?.blur(); if (open) build(''); };
+  let palLastFocus = null; let palKeyTrap = null;
   const rows = [
     { label:'Go: Theory', href:'theory.html' },
     { label:'Go: Manifest', href:'teach.html' },
     { label:'Toggle Echo View', action:() => $('#toggleSimple')?.click() },
     { label:'Toggle HUD', action:() => $('#toggleGrid')?.click() },
-    { label:'Back to Top', action:() => toTop?.click() },
+    { label:'Back to Top', action:() => ( $('#toTop')||$('.to-top') )?.click() },
     { label:'Jump: Explore', href:'#explore' },
     { label:'Jump: Canon', href:'#canon' },
   ];
@@ -220,10 +230,41 @@
     q=(q||'').toLowerCase();
     rows.filter(r=>!q || r.label.toLowerCase().includes(q)).forEach((r,i)=>{
       const li=document.createElement('li'); li.textContent=r.label; if(i===0) li.classList.add('sel');
+      li.tabIndex = 0;
       li.addEventListener('click', ()=>{ r.href? location.href=r.href : r.action?.(); togglePalette(false); });
+      li.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); li.click(); } });
       palList.appendChild(li);
     });
   }
+  const trapFocus = () => {
+    if (!palette) return;
+    const selectable = Array.from(palette.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'))
+      .filter(x=>!x.hasAttribute('disabled'));
+    const first = selectable[0], last = selectable[selectable.length-1];
+    palKeyTrap = (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); togglePalette(false); return; }
+      if (e.key !== 'Tab' || selectable.length===0) return;
+      if (e.shiftKey && document.activeElement === first) { last?.focus(); e.preventDefault(); }
+      else if (!e.shiftKey && document.activeElement === last) { first?.focus(); e.preventDefault(); }
+    };
+    document.addEventListener('keydown', palKeyTrap);
+  };
+  const untrapFocus = () => { if (palKeyTrap) document.removeEventListener('keydown', palKeyTrap); palKeyTrap=null; };
+
+  const togglePalette = (open) => {
+    if (!palette) return;
+    if (open) {
+      palLastFocus = document.activeElement;
+      palette.classList.add('open');
+      build('');
+      trapFocus();
+      palInput?.focus();
+    } else {
+      untrapFocus();
+      palette.classList.remove('open');
+      palLastFocus?.focus();
+    }
+  };
   $('#openPalette')?.addEventListener('click', ()=> togglePalette(true));
   document.addEventListener('keydown', e => {
     if ((e.key.toLowerCase()==='k') && (e.metaKey||e.ctrlKey)) { e.preventDefault(); togglePalette(true); }
@@ -239,17 +280,14 @@
     let vix = 0;
 
     boxes.forEach((wrap)=>{
-      // Ensure fx layer exists
       let fx = wrap.querySelector('.fx-layer');
       if(!fx){ fx = document.createElement('div'); fx.className='fx-layer'; wrap.prepend(fx); }
 
-      // Variant (respect data-fx, otherwise rotate; "calm" handled by CSS)
       const declared = wrap.getAttribute('data-fx');
       const chosen = declared && declared!=='combo' ? declared : variants[(vix++) % variants.length];
       const actual = (declared==='combo' || (!declared && Math.random()<0.28)) ? 'combo' : chosen;
       wrap.setAttribute('data-fx', actual);
 
-      // Speeds
       wrap.style.setProperty('--beam-speed',       (22 + Math.random()*10).toFixed(2)+'s');
       wrap.style.setProperty('--beam-speed-alt',   (26 + Math.random()*12).toFixed(2)+'s');
       wrap.style.setProperty('--orbit-speed',      (30 + Math.random()*14).toFixed(2)+'s');
@@ -257,7 +295,6 @@
       wrap.style.setProperty('--spiral-speed-alt', (38 + Math.random()*18).toFixed(2)+'s');
       wrap.style.setProperty('--rays-speed',       (36 + Math.random()*16).toFixed(2)+'s');
 
-      // Element makers
       function addBeams(n=2+Math.floor(Math.random()*3)){
         for(let i=0;i<n;i++){
           const d=document.createElement('div');
@@ -288,7 +325,6 @@
         const f=document.createElement('div'); f.className='flare'; fx.appendChild(f);
       }
 
-      // Populate
       if(actual==='beams'){ addBeams(); }
       else if(actual==='orbit'){ addOrbit(); }
       else if(actual==='spiral'){ addSpiral(); }
@@ -303,15 +339,12 @@
     $$('.eq .eq-scroll', root).forEach(scroller=>{
       let down=false, sx=0, sl=0;
       const stopDrag = ()=>{ down=false; scroller.classList.remove('dragging'); };
-      // Mouse drag
       scroller.addEventListener('mousedown', e=>{ down=true; sx=e.clientX; sl=scroller.scrollLeft; scroller.classList.add('dragging'); e.preventDefault(); });
       addEventListener('mousemove', e=>{ if(!down) return; scroller.scrollLeft = sl - (e.clientX - sx); }, { passive:true });
       addEventListener('mouseup', stopDrag, { passive:true });
-      // Touch drag
       scroller.addEventListener('touchstart', e=>{ down=true; sx=e.touches[0].clientX; sl=scroller.scrollLeft; }, { passive:true });
       scroller.addEventListener('touchmove', e=>{ if(!down) return; scroller.scrollLeft = sl - (e.touches[0].clientX - sx); }, { passive:true });
       scroller.addEventListener('touchend', stopDrag, { passive:true });
-      // Wheel → horizontal (only if it actually scrolls)
       scroller.addEventListener('wheel', e=>{
         const prev = scroller.scrollLeft;
         if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
@@ -451,7 +484,8 @@
     const href = a.getAttribute('href'); if (!href || href === '#') return;
     const id = href.slice(1); const t=id?document.getElementById(id):null; if(!t) return;
     e.preventDefault();
-    const offset = 96;
+    const stickyH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--head-h')) || 96;
+    const offset = stickyH + 12;
     const top = t.getBoundingClientRect().top + scrollY - offset;
     scrollTo({ top, behavior: ALLOW_MOTION ? 'smooth' : 'auto' });
     history.pushState(null,'',`#${id}`);
