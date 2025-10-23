@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html lang="en" dir="ltr" class="sof">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
@@ -7,494 +6,155 @@
   <title>13 Moons · Living Clock — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
-  <meta name="description" content="13-Moon Living Clock focused view: Which Moon am I in? Day 1–28 progress ring, year map with Gregorian spans, Day Out of Time handling, lunar phase sim, numerology, time-zone aware, shareable." />  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <meta name="description" content="13-Moon Living Clock focused view: Which Moon am I in? Day 1–28 ring, week dots, year map, Day Out of Time handling, lunar phase sim, numerology, Kin (optional), time-zone aware, shareable, .ics export." />
+
+  <!-- Fonts + Site CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
   <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-24">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24"></noscript>  <style>
-    :root{--maxw:1180px}
-    body{margin:0}
-    .wrap{max-width:var(--maxw);margin:0 auto;padding:20px 16px 96px}
-    .title{
-      font-family:"Crimson Pro",serif;font-weight:800;text-align:center;
-      font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;letter-spacing:.2px;
-      background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);
-      -webkit-background-clip:text;background-clip:text;color:transparent
-    }
-    .subtitle{text-align:center;color:var(--muted);margin:0 0 12px}
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24">
 
-    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
-    .col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-6{grid-column:span 6}.col-7{grid-column:span 7}.col-8{grid-column:span 8}.col-12{grid-column:span 12}
-    @media (max-width:980px){.col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-12{grid-column:span 12}}
-
-    .card{border:1px solid var(--line);border-radius:12px;padding:12px;background:rgba(255,255,255,.02)}
-    .lab-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .lab-btn{padding:.6rem .85rem;border-radius:10px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);font-weight:700;cursor:pointer}
-    .lab-btn[disabled]{opacity:.5;cursor:not-allowed}
-    .lab-input{padding:.6rem;border-radius:10px;border:1px solid var(--line);background:#0f1116;color:inherit}
-    .hint,.meta{color:#9aa4be}
-
-    body.stars {
-      background:
-        radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
-        linear-gradient(180deg, #05060a 0%, #0b0e14 80%);
-      overflow-x:hidden;
-    }
-
-    /* Focused Moon banner */
-    .moon-badge{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap}
-    .pill{display:inline-grid;place-items:center;gap:2px;padding:.5rem .9rem;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
-    .pill .k{font-size:clamp(22px,3vw,30px);font-weight:800}
-    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
-
-    /* Progress ring */
-    .ring{width:120px;height:120px;display:grid;place-items:center;position:relative}
-    .ring svg{display:block}
-    .ring .label{position:absolute;text-align:center}
-    .ring .label .big{font:800 24px/1 Inter;color:#eae7df}
-    .ring .label .small{font:600 12px/1 Inter;color:#b8b3a6}
-    .ring-bg{fill:none;stroke:#1f1f28;stroke-width:8}
-    .ring-fg{fill:none;stroke:url(#rg);stroke-width:8;stroke-linecap:round;stroke-dasharray:0 316}
-
-    /* Year map */
-    .year-map{width:100%;border-collapse:separate;border-spacing:0 6px}
-    .year-map th,.year-map td{padding:8px 10px;border:1px solid var(--line)}
-    .year-map th{background:rgba(255,255,255,.03)}
-    .year-map .row{border-radius:10px;overflow:hidden}
-    .tag{display:inline-block;padding:.2rem .5rem;border:1px solid var(--line);border-radius:999px;}
-    .is-today{box-shadow:0 0 0 1px #7af3ff55,inset 0 0 0 1px #7af3ff33}
-
-    /* Lunar sim */
-    .sim{display:grid;grid-template-columns:1fr 2fr;gap:10px}
-    @media (max-width:860px){.sim{grid-template-columns:1fr}}
-    canvas#simMoon{width:100%;height:auto;display:block;background:radial-gradient(circle at 50% 40%, #0a0e15 0%, #06080d 80%);border-radius:12px;border:1px solid var(--line)}
-
-    /* Top nav */
-    nav.crumbs{display:flex;gap:8px;justify-content:center;margin-top:10px;margin-bottom:14px}
-
-    /* Toast */
-    .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#0e131c;color:#e6f9ff;padding:8px 12px;border:1px solid #2a3242;border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.35);z-index:9999;opacity:0;transition:opacity .2s}
-  </style></head><body class="stars">
+  <!-- Page-specific CSS -->
+  <link rel="preload" as="style" href="assets/css/moons.css?v=1.0.0">
+  <link rel="stylesheet" href="assets/css/moons.css?v=1.0.0">
+</head>
+<body class="stars">
   <main class="wrap" id="main" role="main">
     <header class="page-head fancy-head">
       <h1 class="title">🌗 13 Moons — <em>Living Clock</em></h1>
-      <p class="subtitle">Crystal-clear: Which Moon am I in? Day 1–28 ring, year map, DOOT handling. Lunar sim + numerology optional. Time‑zone aware.</p><nav class="crumbs" aria-label="Breadcrumb">
-    <a class="lab-btn" href="index.html">← Back to Codex</a>
-    <a class="lab-btn" href="theory.html">📘 Theory</a>
-  </nav>
+      <p class="subtitle">Crystal-clear: Which Moon am I in? Day ring + week dots, year map, DOOT handling, lunar sim, numerology, optional Kin, .ics export.</p>
 
-  <!-- Moon-first badge -->
-  <section class="card" aria-label="Current Moon">
-    <div class="moon-badge">
-      <div class="ring" aria-label="Day in Moon">
-        <svg viewBox="0 0 120 120" aria-hidden="true">
-          <defs>
-            <linearGradient id="rg" x1="0" x2="1"><stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/></linearGradient>
-          </defs>
-          <circle cx="60" cy="60" r="50" class="ring-bg"/>
-          <circle cx="60" cy="60" r="50" class="ring-fg" id="moonArc" pathLength="316"/>
-        </svg>
-        <div class="label">
-          <div class="big" id="dayInMoon">—</div>
-          <div class="small">of 28</div>
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a class="lab-btn" href="index.html">← Back to Codex</a>
+        <a class="lab-btn" href="theory.html">📘 Theory</a>
+      </nav>
+
+      <!-- Moon-first badge -->
+      <section class="card" aria-label="Current Moon">
+        <div class="moon-badge">
+          <div class="ring" aria-label="Day in Moon">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <defs><linearGradient id="rg" x1="0" x2="1"><stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/></linearGradient></defs>
+              <circle cx="60" cy="60" r="50" class="ring-bg"/>
+              <circle cx="60" cy="60" r="50" class="ring-fg" id="moonArc" pathLength="316"/>
+            </svg>
+            <div class="label">
+              <div class="big" id="dayInMoon">—</div>
+              <div class="small">of 28</div>
+            </div>
+          </div>
+          <span class="pill" id="moonChip">
+            <span class="k" id="moonName">—</span>
+            <span class="meta" id="moonEssence">—</span>
+          </span>
+          <span class="pill mono"><span id="yearSpan">—</span></span>
+          <span class="pill" id="sourceChip" title="Source (YHWH)">⟡ י־ה־ו־ה</span>
         </div>
-      </div>
-      <span class="pill" id="moonChip">
-        <span class="k" id="moonName">—</span>
-        <span class="meta" id="moonEssence">—</span>
-      </span>
-      <span class="pill mono"><span id="yearSpan">—</span></span>
-      <span class="pill" id="sourceChip" title="Source (YHWH)">⟡ י־ה־ו־ה</span>
-    </div>
-    <p class="meta" id="dootWarn" style="display:none;margin-top:8px"><b>Day Out of Time:</b> this day sits outside the 13×28 moons. Rest, reflect, reset.</p>
-  </section>
-</header>
 
-<section class="grid">
-  <!-- Today + controls -->
-  <article class="card col-8" aria-labelledby="today-head">
-    <h2 id="today-head">Today</h2>
-    <div class="lab-row" style="align-items:flex-end">
-      <span class="pill"><b id="nowDate">—</b></span>
-      <span class="pill mono" id="nowClock">—:—:—</span>
-      <span class="pill" id="nowTZ">—</span>
-      <span class="pill" id="moonLine">—</span>
-    </div>
-    <div class="lab-row" style="margin-top:8px">
-      <label>Time Zone
-        <select id="tzPick" class="lab-input" style="min-width:240px"></select>
-      </label>
-      <label>Date
-        <input type="date" id="datePick" class="lab-input">
-      </label>
-      <label>Hour
-        <input type="range" id="hourScrub" min="0" max="23" value="12" class="lab-input" style="width:160px">
-      </label>
-      <button class="lab-btn" id="btnToday" type="button">Today</button>
-      <button class="lab-btn" id="prevDay" type="button">← Prev</button>
-      <button class="lab-btn" id="nextDay" type="button">Next →</button>
-      <button class="lab-btn" id="shareLink" type="button">Copy Link</button>
-    </div>
-  </article>
+        <div class="weekrow" aria-label="Week inside the 28-day moon">
+          <span class="weeklabel">Week</span>
+          <div class="week" id="weekDots" role="group" aria-label="Week dots (1–4 × 7)"></div>
+        </div>
 
-  <!-- Lunar simulation & numerology -->
-  <aside class="card col-4">
-    <h2>Lunar Phase</h2>
-    <div class="sim">
-      <canvas id="simMoon" width="280" height="280" aria-label="Lunar phase"></canvas>
-      <div>
-        <p class="mono" id="phaseLine">—</p>
-        <p class="meta" id="phaseMeta">—</p>
-        <div class="divider" style="margin:8px 0" aria-hidden="true"></div>
-        <h3 style="margin:.2rem 0">Numerology</h3>
-        <p class="mono" id="numLine">—</p>
-        <p class="meta" id="numMeta">—</p>
-        <p class="meta" id="energyQuote" style="margin-top:6px">—</p>
-      </div>
-    </div>
-  </aside>
+        <p class="meta" id="dootWarn" style="display:none;margin-top:8px"><b>Day Out of Time:</b> this day sits outside the 13×28 moons. Rest, reflect, reset.</p>
+      </section>
+    </header>
 
-  <!-- Year map (Gregorian spans per Moon) -->
-  <article class="card col-12">
-    <h2>Year Map — Gregorian spans of the 13 Moons</h2>
-    <p class="hint">New Year = July 26 · Day Out of Time = July 25 · Leap Day (Feb 29) is skipped in the 13×28 count.</p>
-    <table class="year-map" id="yearMap">
-      <thead><tr><th>#</th><th>Moon Name</th><th>Essence</th><th>Start (TZ)</th><th>End (TZ)</th></tr></thead>
-      <tbody></tbody>
-    </table>
-    <p class="meta" id="nextMoonInfo" style="margin-top:6px">—</p>
-  </article>
-</section>
+    <section class="grid">
+      <!-- Today + controls -->
+      <article class="card col-8" aria-labelledby="today-head">
+        <h2 id="today-head">Today</h2>
+        <div class="lab-row" style="align-items:flex-end">
+          <span class="pill"><b id="nowDate">—</b></span>
+          <span class="pill mono" id="nowClock">—:—:—</span>
+          <span class="pill" id="nowTZ">—</span>
+          <span class="pill" id="moonLine">—</span>
+        </div>
+        <div class="lab-row" style="margin-top:8px">
+          <label>Time Zone
+            <select id="tzPick" class="lab-input" style="min-width:240px"></select>
+          </label>
+          <label>Date
+            <input type="date" id="datePick" class="lab-input">
+          </label>
+          <label>Hour
+            <input type="range" id="hourScrub" min="0" max="23" value="12" class="lab-input" style="width:160px">
+          </label>
+          <button class="lab-btn" id="btnToday" type="button">Today</button>
+          <button class="lab-btn" id="prevDay" type="button">← Prev</button>
+          <button class="lab-btn" id="nextDay" type="button">Next →</button>
+          <button class="lab-btn" id="shareLink" type="button">Copy Link</button>
+        </div>
+      </article>
 
-<footer class="footer">
-  <div class="divider" aria-hidden="true"></div>
-  <p class="meta">© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
-</footer>
+      <!-- Lunar simulation & numerology -->
+      <aside class="card col-4">
+        <h2>Lunar Phase</h2>
+        <div class="sim">
+          <canvas id="simMoon" width="280" height="280" aria-label="Lunar phase"></canvas>
+          <div>
+            <p class="mono" id="phaseLine">—</p>
+            <p class="meta" id="phaseMeta">—</p>
+            <div class="divider" style="margin:8px 0" aria-hidden="true"></div>
+            <h3 style="margin:.2rem 0">Numerology</h3>
+            <p class="mono" id="numLine">—</p>
+            <p class="meta" id="numMeta">—</p>
+            <p class="meta" id="energyQuote" style="margin-top:6px">—</p>
+          </div>
+        </div>
+      </aside>
 
-  </main>  <script>
-  (function(){
-    "use strict";
-    const $ =(s,r=document)=>r.querySelector(s);
-    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-    const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
-    const pad=n=>String(n).padStart(2,"0");
+      <!-- Year map -->
+      <article class="card col-12">
+        <h2>Year Map — Gregorian spans of the 13 Moons</h2>
+        <p class="hint">New Year = July 26 · Day Out of Time = July 25 · Leap Day (Feb 29) is skipped in the 13×28 count.</p>
+        <table class="year-map" id="yearMap">
+          <thead><tr><th>#</th><th>Moon Name</th><th>Essence</th><th>Start (TZ)</th><th>End (TZ)</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="meta" id="nextMoonInfo" style="margin-top:6px">—</p>
+      </article>
 
-    $("#yr").textContent=new Date().getFullYear();
+      <!-- Kin + ICS -->
+      <article class="card col-12" aria-labelledby="kin-head">
+        <h2 id="kin-head">Kin of Today (optional)</h2>
+        <div class="kin">
+          <div class="kin-row">
+            <label class="tag"><input type="checkbox" id="kinOn" /><span style="margin-left:6px">Show Kin</span></label>
+            <label class="tag">Epoch:
+              <select id="kinEpoch" class="lab-input" style="margin-left:6px">
+                <option value="1987-07-26">1987-07-26 (Dreamspell common)</option>
+                <option value="1990-01-01">1990-01-01</option>
+              </select>
+            </label>
+            <label class="tag"><input type="checkbox" id="kinSkipLeap" checked /><span style="margin-left:6px">Skip Leap Day</span></label>
+            <label class="tag"><input type="checkbox" id="kinSkipDOOT" checked /><span style="margin-left:6px">Skip DOOT</span></label>
+          </div>
+          <div class="kin-row">
+            <span class="tag" id="kinBadge">Kin —</span>
+            <span class="meta" id="kinLine">—</span>
+          </div>
+          <small class="meta">Toggle options to match external calculators exactly.</small>
+        </div>
 
-    /* -------------------- Data -------------------- */
-    const MOONS = [
-      "Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant",
-      "Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"
-    ];
-    const MOON_ESSENCE = [
-      "Attract purpose","Stabilize challenge","Activate service","Define form",
-      "Empower radiance","Balance equality","Channel inspiration",
-      "Harmonize integrity","Pulse intention","Perfect manifestation",
-      "Dissolve release","Dedicate cooperation","Endure presence"
-    ];
-    const QUOTES = [
-      "\u201CTeach us to number our days, that we may apply our hearts unto wisdom.\u201D — Psalm 90:12",
-      "\u201CFor everything there is a season\u2026\u201D — Ecclesiastes 3:1",
-      "\u201CThe light shines in the darkness, and the darkness has not overcome it.\u201D — John 1:5",
-      "\u201CIn quietness and trust is your strength.\u201D — Isaiah 30:15",
-      "\u201CHe heals the brokenhearted and binds up their wounds.\u201D — Psalm 147:3"
-    ];
+        <div class="goldline" aria-hidden="true"></div>
+        <h3 style="margin:.2rem 0">Export this 13-Moon Year</h3>
+        <p class="meta">Download an <code>.ics</code> calendar with the 13 Moon spans for the selected time-zone/year.</p>
+        <div class="lab-row">
+          <a id="dlICS" class="dl" href="#" download="13-moon-year.ics" role="button">⬇️ Download .ics</a>
+          <button class="lab-btn ghost" id="regenICS" type="button">Refresh</button>
+        </div>
+      </article>
+    </section>
 
-    /* -------------------- TZ -------------------- */
-    const TZ_KEY="sof_moons_tz";
-    const tzPick = $("#tzPick");
-    const defaultTZ = localStorage.getItem(TZ_KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
-    const COMMON_TZ = [
-      "UTC","America/Los_Angeles","America/Denver","America/Chicago","America/New_York",
-      "Europe/London","Europe/Berlin","Europe/Helsinki","Africa/Johannesburg",
-      "Asia/Dubai","Asia/Kolkata","Asia/Shanghai","Asia/Tokyo","Australia/Sydney"
-    ];
-    const ALL_TZ = Intl.supportedValuesOf ? Intl.supportedValuesOf("timeZone") : COMMON_TZ;
-    const merged = [...new Set([...COMMON_TZ, ...ALL_TZ])];
-    tzPick.innerHTML = merged.map(z=>`<option value="${z}">${z}</option>`).join("");
-    tzPick.value = defaultTZ;
-    on(tzPick,"change",()=>{ localStorage.setItem(TZ_KEY, tzPick.value); writeURL(); updateAll(); buildYearMap(); });
+    <footer class="footer">
+      <div class="divider" aria-hidden="true"></div>
+      <p class="meta">© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+    </footer>
+  </main>
 
-    /* -------------------- Date helpers -------------------- */
-    function dateInTZ(baseDate, tz, overrideHour){
-      // Create a Date that represents baseDate's wall time in tz, with optional hour override.
-      const opts={timeZone:tz, hour12:false, year:"numeric", month:"2-digit", day:"2-digit",
-                  hour:"2-digit", minute:"2-digit", second:"2-digit"};
-      const parts=new Intl.DateTimeFormat("en-CA",opts).formatToParts(baseDate);
-      const m=Object.fromEntries(parts.map(p=>[p.type,p.value]));
-      const h = (overrideHour==null? m.hour : pad(overrideHour));
-      return new Date(`${m.year}-${m.month}-${m.day}T${h}:${m.minute}:${m.second}Z`);
-    }
-    function formatDate(d, tz){ return new Intl.DateTimeFormat(undefined,{dateStyle:"full", timeZone:tz}).format(d); }
-    function formatClock(d, tz){ return new Intl.DateTimeFormat(undefined,{timeStyle:"medium", timeZone:tz}).format(d); }
-
-    /* -------------------- 13-Moon math -------------------- */
-    function isLeapYear(y){ return (y%4===0 && y%100!==0) || (y%400===0); }
-    function isLeapDayUTC(d){ return d.getUTCMonth()===1 && d.getUTCDate()===29; }
-    function isDOOT(d, tz){ const dt=dateInTZ(d,tz); return (dt.getUTCMonth()===6 && dt.getUTCDate()===25); }
-    function startOfYear13(d, tz){
-      const dt = dateInTZ(d, tz);
-      const y = dt.getUTCFullYear();
-      const anchorThis = new Date(Date.UTC(y,6,26)); // Jul 26
-      const anchorPrev = new Date(Date.UTC(y-1,6,26));
-      return dt >= anchorThis ? anchorThis : anchorPrev;
-    }
-    function utcTrunc(d){ return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())); }
-
-    function dayIndexSinceStart(d, tz){
-      const start = utcTrunc(startOfYear13(d, tz));
-      const dt = utcTrunc(dateInTZ(d, tz));
-      let days = Math.floor((dt - start)/86400000);
-      // subtract DOOT if passed
-      const doot = new Date(Date.UTC(start.getUTCFullYear()+1,6,25));
-      if (dt >= doot) days -= 1;
-      // subtract any Feb 29 crossed
-      for (let y=start.getUTCFullYear(); y<=dt.getUTCFullYear(); y++){
-        if(isLeapYear(y)){
-          const feb29 = new Date(Date.UTC(y,1,29));
-          if (dt >= feb29 && start <= feb29) days -= 1;
-        }
-      }
-      return days; // 0..363
-    }
-
-    function calc13Moon(d, tz){
-      if (isDOOT(d,tz)){
-        const s=startOfYear13(d,tz).getUTCFullYear();
-        return {special:"Day Out of Time", year:`${s}/${s+1}`};
-      }
-      if (isLeapDayUTC(dateInTZ(d,tz))){
-        const s=startOfYear13(d,tz).getUTCFullYear();
-        return {special:"Leap Day", year:`${s}/${s+1}`};
-      }
-      const idx = dayIndexSinceStart(d, tz); // 0..363
-      const moon = Math.floor(idx/28)+1; // 1..13
-      const day = (idx%28)+1; // 1..28
-      const s=startOfYear13(d,tz).getUTCFullYear();
-      return {special:null, moon, day, year:`${s}/${s+1}`};
-    }
-
-    // Build real Gregorian spans for each Moon within the year, skipping DOOT & leap day
-    function addDaysSkippingSpecials(start, n, tz){
-      let d = new Date(start);
-      let moved = 0;
-      while(moved < n){
-        d = new Date(d.getTime()+86400000);
-        if (isDOOT(d,tz) || isLeapDayUTC(d)) continue; // skip counting
-        moved++;
-      }
-      return d;
-    }
-    function yearMoonSpans(anchor, tz){
-      const spans=[];
-      // first day = anchor (Jul 26) already validated as not DOOT or leap day
-      let curStart = utcTrunc(anchor);
-      // ensure curStart is not DOOT/leap (it isn't by definition)
-      for(let m=1;m<=13;m++){
-        const start = curStart;
-        const end = utcTrunc(addDaysSkippingSpecials(start, 27, tz)); // 28 days total
-        spans.push({m, name:MOONS[m-1], essence:MOON_ESSENCE[m-1], start, end});
-        // next start = end advanced by 1 skipped-aware day
-        curStart = utcTrunc(addDaysSkippingSpecials(end, 1, tz));
-      }
-      return spans;
-    }
-
-    /* -------------------- Moon phase (approx + sim) -------------------- */
-    function moonPhase(d){
-      const syn = 29.530588853, epoch = Date.UTC(2000,0,6,18,14,0);
-      const age = ((d.getTime()-epoch)/86400000);
-      const frac = ((age % syn)+syn)%syn / syn;
-      const illum = (1 - Math.cos(2*Math.PI*frac))/2; // 0..1
-      const names = [
-        {n:"New Moon", r:[0.00,0.03]}, {n:"Waxing Crescent", r:[0.03,0.22]},
-        {n:"First Quarter", r:[0.22,0.28]}, {n:"Waxing Gibbous", r:[0.28,0.47]},
-        {n:"Full Moon", r:[0.47,0.53]}, {n:"Waning Gibbous", r:[0.53,0.72]},
-        {n:"Last Quarter", r:[0.72,0.78]}, {n:"Waning Crescent", r:[0.78,0.97]},
-        {n:"New Moon", r:[0.97,1.01]},
-      ];
-      const phase = names.find(x=> frac>=x.r[0] && frac<x.r[1])?.n || "—";
-      return {phase, ageDays: age, illum, frac};
-    }
-    function drawMoonSim(canvas, illum, sunAngle){
-      const ctx=canvas.getContext('2d'); const W=canvas.width, H=canvas.height; ctx.clearRect(0,0,W,H);
-      // Sky
-      const g=ctx.createRadialGradient(W*0.5,H*0.35,20,W*0.5,H*0.35,W*0.6); g.addColorStop(0,"#0a0e15"); g.addColorStop(1,"#06080d");
-      ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-      // Sun direction
-      const cx=W/2, cy=H/2, R=Math.min(W,H)*0.32; const sx = cx + Math.cos(sunAngle)*R*1.6; const sy = cy - Math.sin(sunAngle)*R*1.6;
-      // Moon body
-      ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.fillStyle="#1b2231"; ctx.fill();
-      // Terminator via shaded ellipse: use illum to set factor, angle via sunAngle
-      const k = 2*illum-1; // -1..+1 (new..full)
-      const rx = R*Math.abs(k), ry = R; // ellipse radii
-      ctx.save(); ctx.translate(cx,cy); ctx.rotate(-sunAngle);
-      ctx.beginPath();
-      if (k>=0){ // waxing to full: bright right side
-        ctx.ellipse(0,0,rx,ry,0,Math.PI/2,-Math.PI/2,true);
-        ctx.arc(0,0,R,-Math.PI/2,Math.PI/2,false);
-      } else { // waning: bright left side
-        ctx.ellipse(0,0,rx,ry,0,-Math.PI/2,Math.PI/2,true);
-        ctx.arc(0,0,R,Math.PI/2,-Math.PI/2,false);
-      }
-      const glow=ctx.createLinearGradient(-R,0,R,0); glow.addColorStop(0,"#7af3ff33"); glow.addColorStop(1,"#f3c97a33");
-      ctx.fillStyle=glow; ctx.fill();
-      // bright limb overlay
-      ctx.globalCompositeOperation='lighter';
-      ctx.beginPath(); ctx.arc(0,0,R*1.01,0,Math.PI*2); ctx.strokeStyle="#7af3ff22"; ctx.lineWidth=2; ctx.stroke();
-      ctx.restore(); ctx.globalCompositeOperation='source-over';
-      // Sun glyph
-      ctx.beginPath(); ctx.arc(sx,sy,6,0,Math.PI*2); ctx.fillStyle="#f3c97a"; ctx.fill();
-    }
-
-    /* -------------------- Numerology -------------------- */
-    const sumDigits = n => String(n).split("").reduce((a,b)=>a+(+b||0),0);
-    function reduceNum(n){ while(n>9 && n!==11 && n!==22 && n!==33){ n=sumDigits(n); } return n; }
-    function numerology(d, tz){
-      const dt = dateInTZ(d, tz);
-      const y=dt.getUTCFullYear(), m=dt.getUTCMonth()+1, day=dt.getUTCDate();
-      const total = reduceNum(sumDigits(y)+sumDigits(m)+sumDigits(day));
-      const monthN = reduceNum(sumDigits(y)+sumDigits(m));
-      const dayN = reduceNum(sumDigits(day));
-      return {total, monthN, dayN};
-    }
-
-    /* -------------------- UI refs -------------------- */
-    const nowDate=$("#nowDate"), nowClock=$("#nowClock"), nowTZ=$("#nowTZ");
-    const moonChip=$("#moonChip"), moonName=$("#moonName"), moonEssence=$("#moonEssence"), dayInMoon=$("#dayInMoon"), moonArc=$("#moonArc");
-    const yearSpan=$("#yearSpan"), dootWarn=$("#dootWarn"), moonLine=$("#moonLine");
-    const simMoon=$("#simMoon"), phaseLine=$("#phaseLine"), phaseMeta=$("#phaseMeta");
-    const numLine=$("#numLine"), numMeta=$("#numMeta"), energyQuote=$("#energyQuote");
-    const yearMap=$("#yearMap tbody"), nextMoonInfo=$("#nextMoonInfo");
-    const datePick=$("#datePick"), hourScrub=$("#hourScrub");
-
-    // URL sync
-    function readURL(){
-      const u=new URL(location.href);
-      const d=u.searchParams.get("d");
-      const z=u.searchParams.get("tz");
-      const h=u.searchParams.get("t");
-      if(z){ tzPick.value=z; localStorage.setItem(TZ_KEY,z); }
-      if(d){ datePick.value=d; }
-      else { const t=dateInTZ(new Date(), tzPick.value); datePick.value=t.toISOString().slice(0,10); }
-      if(h!=null){ hourScrub.value = Math.min(23,Math.max(0, +h)); }
-    }
-    function writeURL(){
-      const u=new URL(location.href);
-      u.searchParams.set("d", datePick.value);
-      u.searchParams.set("tz", tzPick.value);
-      u.searchParams.set("t", hourScrub.value);
-      history.replaceState(null,"",u);
-    }
-
-    function updateAll(){
-      const tz=tzPick.value;
-      const base=new Date();
-      const wall=dateInTZ(base, tz, +hourScrub.value);
-      nowDate.textContent = formatDate(wall, tz);
-      nowClock.textContent = formatClock(base, tz);
-      nowTZ.textContent = tz;
-
-      const sel = new Date(datePick.value + `T${pad(+hourScrub.value)}:00:00Z`);
-      const m13 = calc13Moon(sel, tz);
-      yearSpan.textContent = m13.year;
-
-      // DOOT / Leap Day banner
-      dootWarn.style.display = m13.special ? 'block' : 'none';
-
-      if(m13.special){
-        moonName.textContent = m13.special;
-        moonEssence.textContent = 'Outside the 13×28 count';
-        dayInMoon.textContent = '—';
-        moonArc.setAttribute('stroke-dasharray', '0 316');
-        moonLine.textContent = m13.special;
-      } else {
-        const idx=m13.moon-1;
-        moonName.textContent = `${MOONS[idx]} Moon (${m13.moon})`;
-        moonEssence.textContent = MOON_ESSENCE[idx];
-        dayInMoon.textContent = m13.day;
-        const dash = Math.round(316 * (m13.day/28));
-        moonArc.setAttribute('stroke-dasharray', `${dash} ${316-dash}`);
-        moonLine.textContent = `You are in ${MOONS[idx]} Moon — Day ${m13.day} of 28`;
-      }
-
-      // YHWH chip glow on resonant tones (1/4/7/11/22/33).
-      const nu = numerology(sel, tz);
-      const resonant = [1,4,7,11,22,33].includes(nu.total);
-      $("#sourceChip").style.boxShadow = resonant? '0 0 0 1px #7af3ff55, 0 8px 28px #7af3ff22' : 'none';
-      numLine.textContent = `Universal ${nu.total}`;
-      numMeta.textContent = `Month tone ${nu.monthN} • Day tone ${nu.dayN}`;
-      const qIdx = Math.abs(sel.getUTCFullYear()*372 + (sel.getUTCMonth()+1)*31 + sel.getUTCDate()) % QUOTES.length;
-      energyQuote.textContent = QUOTES[qIdx];
-
-      // Phase + sim (sunAngle tied to selected hour)
-      const ph = moonPhase(dateInTZ(sel, tz, +hourScrub.value));
-      phaseLine.textContent = `${ph.phase}`;
-      phaseMeta.textContent = `Age ≈ ${ph.ageDays.toFixed(1)} d • Illum ≈ ${(ph.illum*100).toFixed(0)}%`;
-      const sunAngle = (+hourScrub.value/24) * Math.PI*2; // simple day arc
-      drawMoonSim(simMoon, ph.illum, sunAngle);
-
-      // Year map + next moon info
-      buildYearMap();
-      const anchor = startOfYear13(sel, tz);
-      const spans = yearMoonSpans(anchor, tz);
-      if(!m13.special){
-        const cur = spans[m13.moon-1];
-        const next = spans[m13.moon] || null;
-        if(next){
-          nextMoonInfo.textContent = `Next: ${next.name} Moon starts ${formatDate(dateInTZ(next.start, tz), tz)}`;
-        } else {
-          nextMoonInfo.textContent = `This is the Cosmic Moon. Next New Year begins ${formatDate(dateInTZ(new Date(Date.UTC(anchor.getUTCFullYear()+1,6,26)), tz), tz)}`;
-        }
-      } else {
-        nextMoonInfo.textContent = `New Year begins ${formatDate(dateInTZ(new Date(Date.UTC(startOfYear13(sel,tz).getUTCFullYear()+1,6,26)), tz), tz)}`;
-      }
-    }
-
-    function buildYearMap(){
-      const tz=tzPick.value; const sel = new Date(datePick.value + `T${pad(+hourScrub.value)}:00:00Z`);
-      const anchor = startOfYear13(sel, tz);
-      const spans = yearMoonSpans(anchor, tz);
-      const todayStr = dateInTZ(sel, tz).toISOString().slice(0,10);
-      yearMap.innerHTML = spans.map(s=>{
-        const sStr = dateInTZ(s.start, tz).toISOString().slice(0,10);
-        const eStr = dateInTZ(s.end, tz).toISOString().slice(0,10);
-        const isNow = todayStr>=sStr && todayStr<=eStr;
-        return `<tr class="row ${isNow?'is-today':''}">
-          <td>${s.m}</td>
-          <td><span class="tag">${s.name}</span></td>
-          <td class="meta">${s.essence}</td>
-          <td>${formatDate(dateInTZ(s.start, tz), tz)}</td>
-          <td>${formatDate(dateInTZ(s.end, tz), tz)}</td>
-        </tr>`;
-      }).join("");
-    }
-
-    // Controls
-    on($("#btnToday"),"click",()=>{ const tz=tzPick.value; const t=dateInTZ(new Date(), tz); datePick.value=t.toISOString().slice(0,10); hourScrub.value = new Date().getHours(); writeURL(); updateAll(); });
-    on($("#prevDay"),"click",()=>{ const d=new Date(datePick.value+"T00:00:00Z"); d.setUTCDate(d.getUTCDate()-1); datePick.value=d.toISOString().slice(0,10); writeURL(); updateAll(); });
-    on($("#nextDay"),"click",()=>{ const d=new Date(datePick.value+"T00:00:00Z"); d.setUTCDate(d.getUTCDate()+1); datePick.value=d.toISOString().slice(0,10); writeURL(); updateAll(); });
-    on($("#shareLink"),"click",()=>{ writeURL(); navigator.clipboard?.writeText(location.href); toast("Link copied"); });
-    on(datePick,"change",()=>{ writeURL(); updateAll(); });
-    on(hourScrub,"input",()=>{ writeURL(); updateAll(); });
-
-    // Live clock + rollover in TZ (if viewing today at current hour)
-    setInterval(()=>{
-      nowClock.textContent = formatClock(new Date(), tzPick.value);
-      const tz=tzPick.value;
-      const today = dateInTZ(new Date(), tz).toISOString().slice(0,10);
-      const isToday = datePick.value === today;
-      if(isToday){ updateAll(); }
-    },1000);
-
-    function toast(msg){
-      const el=document.createElement("div"); el.className='toast'; el.textContent=msg; document.body.appendChild(el);
-      requestAnimationFrame(()=>{el.style.opacity=1}); setTimeout(()=>{el.style.opacity=0; setTimeout(()=>el.remove(),250);},1800);
-    }
-
-    // Init
-    readURL(); updateAll(); buildYearMap();
-  })();
-  </script></body>
+  <!-- Page JS -->
+  <script src="assets/js/moons.js?v=1.0.0" defer></script>
+</body>
 </html>
