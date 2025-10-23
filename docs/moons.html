@@ -18,8 +18,16 @@
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24">
   <link rel="stylesheet" href="assets/css/moons.css?v=2025-10-24">
 </head>
-
 <body class="stars">
+  <!-- Hidden defs so JS can recolor both gradients safely -->
+  <svg width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="mbGrad" x1="0" x2="1">
+        <stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
   <!-- Living sky -->
   <canvas id="skyBg" width="1440" height="900" aria-hidden="true"></canvas>
 
@@ -39,7 +47,7 @@
           <div class="ring" aria-label="Day in Moon">
             <svg viewBox="0 0 120 120" aria-hidden="true">
               <defs>
-                <!-- Ring gradient used by JS accent -->
+                <!-- Ring gradient recolored by JS -->
                 <linearGradient id="rg" x1="0" x2="1">
                   <stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/>
                 </linearGradient>
@@ -172,7 +180,7 @@
     <p class="meta" style="text-align:center">This page needs JavaScript to calculate moon/day, phase, and year map.</p>
   </noscript>
 
-  <!-- Page JS (external; no inline block so it can't get clipped) -->
+  <!-- Page JS (external; avoids inline truncation) -->
   <script src="assets/js/moons.js?v=2025-10-24" defer></script>
 </body>
 </html>
