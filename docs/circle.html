@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" class="sof carrier-432">
 <head>
   <!-- Resolve all relative URLs from the project root on GitHub Pages -->
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
@@ -13,8 +13,8 @@
   <meta charset="utf-8" />
   <title>Circle Sync — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
-  <meta name="description" content="Circle protocol: shared cadence, staggered entry, and a single closing seal. Tracks local Ξ impressions—ethics-first.">
+  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark light">
+  <meta name="description" content="Circle protocol: shared cadence, staggered entry, and a single closing seal. Tracks local Ξ impressions—ethics-first." />
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/circle.html" />
 
   <!-- Social -->
@@ -23,12 +23,12 @@
   <meta property="og:description" content="Group-run scaffold based on Type-7 summation (Eq.6). Keep it ethical, simple, and measurable.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/circle.html">
-  <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
+  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
 
   <!-- CSS -->
-  <link rel="preload" as="style" href="assets/css/codex.css?v=circle1">
-  <link rel="stylesheet" href="assets/css/codex.css?v=circle1">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=circle1"></noscript>
+  <link rel="preload" as="style" href="assets/css/codex.css?v=circle2">
+  <link rel="stylesheet" href="assets/css/codex.css?v=circle2">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=circle2"></noscript>
 
   <!-- Preload banner -->
   <link rel="preload" as="image"
@@ -47,8 +47,7 @@
       };
       const s=document.createElement('script');
       s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
-      s.defer=true;
-      s.onload=()=>window.MathJax.typeset && window.MathJax.typeset();
+      s.defer=true; s.onload=()=>window.MathJax.typeset && window.MathJax.typeset();
       document.head.appendChild(s);
     }
     addEventListener('DOMContentLoaded', ()=>{
@@ -63,7 +62,8 @@
 
   <style>
     :root{ --maxw:1100px }
-    .wrap{max-width:var(--maxw);margin:0 auto;padding:20px 16px 80px}
+    body{margin:0}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:20px 16px 90px}
     .title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;
       font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;
       background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);
@@ -74,11 +74,11 @@
     .desk-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:rgba(255,255,255,.02)}
     .desk-card b{display:block;margin-bottom:6px}
     .desk-card label{display:block;margin:6px 0}
-    .desk-card input{width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--line);background:#0f0f14;color:var(--ink)}
+    .desk-card input, .desk-card select{width:100%;padding:.55rem;border-radius:10px;border:1px solid var(--line);background:#0f0f14;color:var(--ink)}
     .lab-row{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
     .lab-btn{
-      appearance:none;border:1px solid var(--line);background:transparent;color:var(--ink);
-      padding:.55rem .8rem;border-radius:10px;font:600 14px/1 Inter;cursor:pointer
+      appearance:none;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
+      color:var(--ink); padding:.6rem .85rem;border-radius:10px;font:600 14px/1 Inter;cursor:pointer
     }
     .lab-btn:hover{border-color:#3a3a44}
     .lab-btn.ghost{opacity:.9}
@@ -89,15 +89,19 @@
     .ring-fg{fill:none;stroke:url(#gRing);stroke-width:6;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset .9s var(--ease)}
     .ring-phase{fill:#eae7df;font:800 14px/1 Inter}
     .ring-count{fill:#b8b3a6;font:600 12px/1 Inter}
-    /* SVG gradient */
-    svg#ring defs linearGradient stop{ transition:stop-color .25s var(--ease) }
-    /* Kicker badges (phase labels) */
     .phase-legend{display:flex;gap:8px;justify-content:center;margin:6px 0 0}
     .phase-legend .badge{font-size:.8rem}
+
+    .carrier-row{display:flex;gap:8px;flex-wrap:wrap}
+    .carrier-btn{padding:.55rem .8rem;border-radius:10px;border:1px solid var(--line);cursor:pointer;background:#0f0f14}
+    .carrier-btn[aria-pressed="true"]{outline:2px solid rgba(122,243,255,.18); box-shadow:0 8px 26px rgba(122,243,255,.12)}
+    .tiny{font-size:.86rem;color:#9aa4be}
+    .hash{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
+    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   </style>
 </head>
-<body>
-<main class="wrap">
+<body class="stars">
+<main class="wrap" id="top" role="main">
 
   <!-- Banner -->
   <figure class="hero hero--contain" aria-label="Scroll of Fire banner" style="margin-bottom:10px">
@@ -120,51 +124,69 @@
 
   <header class="page-head fancy-head">
     <h1 class="title">🕯️ Circle Sync</h1>
-    <p class="subtitle">Group-run scaffold based on Type-7 summation (<a href="theory.html#eq6">Eq.6</a>). Keep it ethical, simple, and measurable.</p>
-    <nav class="crumbs" style="display:flex;gap:8px;justify-content:center">
+    <p class="subtitle">Group-run scaffold based on Type-7 summation (<a href="theory.html#eq6">Eq.6</a>) and the live loop Σ → ∇φ → ℛ → ΔΣ. Keep it ethical, simple, and measurable.</p>
+    <nav class="crumbs" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
       <a class="cta" href="start.html">← Start Here</a>
       <a class="cta" href="teach.html#circle">Teaching Lab</a>
+      <a class="cta" href="ab.html">A/B Carriers</a>
     </nav>
   </header>
 
+  <!-- Setup -->
   <section class="card">
     <h2>Setup (≈5 min)</h2>
     <div class="grid3">
       <div class="desk-card">
         <b>Consent</b>
-        <p>Everyone opts in; intentions are self-aligned (no targeting others).</p>
+        <p>Everyone opts in; intentions are self-aligned (no targeting others). Follow Ethics / Stop rule.</p>
       </div>
       <div class="desk-card">
         <b>Carrier</b>
-        <p>Pick one shared Π<sub>ν</sub> (432 / 528 / 369). Hum quietly; mics off on calls.</p>
+        <p>Choose one shared Π<sub>ν</sub>:</p>
+        <div class="carrier-row" role="radiogroup" aria-label="Carrier">
+          <button class="carrier-btn" role="radio" data-carrier="432" aria-pressed="true" aria-checked="true">432 Ground</button>
+          <button class="carrier-btn" role="radio" data-carrier="528" aria-pressed="false" aria-checked="false">528 Repair</button>
+          <button class="carrier-btn" role="radio" data-carrier="369" aria-pressed="false" aria-checked="false">369 Lock-in</button>
+          <button class="carrier-btn" role="radio" data-carrier="144" aria-pressed="false" aria-checked="false">144 Sanctuary</button>
+          <button class="carrier-btn" role="radio" data-carrier="963" aria-pressed="false" aria-checked="false">963 Crown</button>
+          <button class="carrier-btn" role="radio" data-carrier="none" aria-pressed="false" aria-checked="false">No tone</button>
+        </div>
+        <p class="tiny">Tip: mics off on calls; hum quietly if you use a tone. Preview = click a carrier.</p>
       </div>
       <div class="desk-card">
         <b>Cadence</b>
-        <p>Ring: 10s phases • 3 rounds. Stagger entries by 1s clockwise.</p>
+        <p>Ring: <strong>3 rounds</strong> × <strong>10s phases</strong> (𝓘 → 𝓛 → 𝓒). Optional stagger: each seat enters +1s later.</p>
+        <label for="seat">Seat # (for stagger):</label>
+        <input id="seat" type="number" min="0" step="1" value="0" aria-describedby="seatHelp">
+        <div id="seatHelp" class="tiny">Seat 0 enters on time, Seat 1 at +1s, Seat 2 at +2s…</div>
       </div>
     </div>
+
     <div class="eq"><div class="eq-scroll">
       $$ \mathbb{E}_{\text{living}}(t)=\sum_i q_i\,\Phi_i\,e^{i\omega_i t}\quad\text{(phase-locked 3–6–9)} \tag{Eq.6} $$
     </div></div>
   </section>
 
+  <!-- Run -->
   <section class="card">
     <h2>Run</h2>
     <ol class="list">
-      <li><b>Round 1:</b> everyone whispers their line once on the shared Π<sub>ν</sub>.</li>
-      <li><b>Round 2:</b> Look → coalesce as a group (quiet, no chat).</li>
-      <li><b>Round 3:</b> Seal together on exhale; no discussing results yet.</li>
+      <li><b>Round 1:</b> whisper your line once on the shared Π<sub>ν</sub>.</li>
+      <li><b>Round 2:</b> look (no chat) — feel the coalescence.</li>
+      <li><b>Round 3:</b> seal together on exhale; no discussing results yet.</li>
     </ol>
 
     <div class="phase-legend">
-      <span class="badge">𝓘 — intention</span>
-      <span class="badge">𝓛 — light</span>
-      <span class="badge"> 𝓒 — witness</span>
+      <span class="badge">Σ  (intent words)</span>
+      <span class="badge">ℛ  (breath/voice)</span>
+      <span class="badge">ΔΣ (witness)</span>
     </div>
 
     <div class="lab-row" role="group" aria-label="Circle controls">
       <button id="start" class="lab-btn">▶ Start 3×10s Ring</button>
       <button id="stop" class="lab-btn ghost" disabled>■ Stop</button>
+      <button id="previewBeep" class="lab-btn ghost" title="1s tick preview">♪ Tick</button>
+      <span id="nowCarrier" class="tiny" aria-live="polite">Carrier: 432</span>
     </div>
 
     <!-- Progress Ring -->
@@ -178,22 +200,60 @@
       <circle id="fg" cx="60" cy="60" r="54" class="ring-fg" pathLength="100"/>
       <text id="phase" x="60" y="52" class="ring-phase" text-anchor="middle">Ready</text>
       <text id="count" x="60" y="72" class="ring-count" text-anchor="middle">—</text>
+      <text id="round" x="60" y="90" class="ring-count" text-anchor="middle">—</text>
     </svg>
   </section>
 
+  <!-- Silent Survey + Seal to Ledger -->
   <section class="card">
     <h2>Silent Survey (≈1 min)</h2>
     <p>Each person logs privately (no persuasion):</p>
     <div class="grid3" style="margin-bottom:6px">
-      <div class="desk-card"><label for="xi">Ξ (0–1)</label><input id="xi" type="number" step="0.01" min="0" max="1" value="0.65"></div>
-      <div class="desk-card"><label for="carrier">Carrier</label><input id="carrier" placeholder="432 / 528 / 369"></div>
-      <div class="desk-card"><label for="line">Line</label><input id="line" placeholder="8–12 words"></div>
+      <div class="desk-card">
+        <label for="xi">Ξ (0–1)</label>
+        <input id="xi" type="number" step="0.01" min="0" max="1" value="0.65">
+      </div>
+      <div class="desk-card">
+        <label for="carrierSel">Carrier</label>
+        <select id="carrierSel">
+          <option value="432" selected>432 Ground</option>
+          <option value="528">528 Repair</option>
+          <option value="369">369 Lock-in</option>
+          <option value="144">144 Sanctuary</option>
+          <option value="963">963 Crown</option>
+          <option value="none">No tone</option>
+        </select>
+      </div>
+      <div class="desk-card">
+        <label for="line">Line (8–12 words)</label>
+        <input id="line" placeholder="I hold truth with gentleness.">
+      </div>
     </div>
+
+    <div class="grid3" style="margin-bottom:6px">
+      <div class="desk-card">
+        <label for="session">Session ID</label>
+        <input id="session" placeholder="circle-YYYYMMDD-HHmm">
+      </div>
+      <div class="desk-card">
+        <label for="cow">Co-witnesses (comma)</label>
+        <input id="cow" placeholder="Ava, Luca, Noor">
+      </div>
+      <div class="desk-card">
+        <label for="tags">Tags (comma)</label>
+        <input id="tags" placeholder="#circle, #city">
+      </div>
+    </div>
+
     <label class="sr-only" for="wit">Witness</label>
     <textarea id="wit" rows="3" placeholder="One undeniable detail…"></textarea>
+
     <div class="lab-row">
-      <button id="toLedger" class="lab-btn">💾 Send to Ledger</button>
+      <button id="sealToLedger" class="lab-btn">💾 Seal → Ledger</button>
+      <button id="copyInvite" class="lab-btn ghost" title="Copy invite text">⎘ Copy Invite</button>
+      <span id="sealStatus" class="tiny" aria-live="polite"></span>
     </div>
+
     <div class="eq"><div class="eq-scroll">
       $$ \text{Stop rule: if } \frac{\mathrm{Truth}}{\mathrm{Distortion}}\downarrow \Rightarrow \text{Abort, Re-align, Resume} \tag{Eq.9} $$
     </div></div>
@@ -201,6 +261,7 @@
 
   <footer class="footer">
     <div class="divider" aria-hidden="true"></div>
+    <p class="tiny">Ethics first. No coercion. No third-party targeting. Keep data local unless you choose to export.</p>
     <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
   </footer>
 </main>
@@ -208,50 +269,61 @@
 <!-- Page logic -->
 <script>
 (function(){
+  "use strict";
+
   // Year
   const y=document.getElementById('yr'); if(y) y.textContent=String(new Date().getFullYear());
 
-  // Perf warm-up (aligns with other pages)
-  document.body.classList.add('performance-warming');
-  const lowCore=(navigator.hardwareConcurrency||4)<=4;
-  const saveData=navigator.connection && navigator.connection.saveData;
-  if (lowCore || saveData) document.body.classList.add('perf-fast');
-  setTimeout(()=>document.body.classList.remove('performance-warming'), 900);
-
   // Helpers
-  const $=(s,r=document)=>r.querySelector(s);
-  const fg=$("#fg"), phase=$("#phase"), count=$("#count");
-  const btnStart=$("#start"), btnStop=$("#stop");
+  const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const raf=(fn)=>(window.requestAnimationFrame||setTimeout)(fn,16);
 
   // Ring + phases
-  const phases=[{k:"𝓘", s:10, label:"Intention"},{k:"𝓛", s:10, label:"Light"},{k:"𝓒", s:10, label:"Witness"}];
-  const rounds=3;
-  const total=phases.reduce((a,b)=>a+b.s,0)*rounds;
-  let timer=null, t=0, idx=0, rd=0, rem=phases[0].s;
+  const fg=$("#fg"), phase=$("#phase"), count=$("#count"), roundTxt=$("#round");
+  const btnStart=$("#start"), btnStop=$("#stop"), btnTick=$("#previewBeep");
+  const nowCarrier=$("#nowCarrier"), seatInput=$("#seat");
+
+  const PHASES=[{k:"Σ", s:10, label:"Intention"},{k:"ℛ", s:10, label:"Breath/Voice"},{k:"ΔΣ", s:10, label:"Witness"}];
+  const ROUNDS=3;
+  const TOTAL=PHASES.reduce((a,b)=>a+b.s,0)*ROUNDS;
+
+  let timer=null, t=0, idx=0, rd=0, rem=PHASES[0].s;
+
+  function resetRing(){
+    t=0; idx=0; rd=0; rem=PHASES[0].s;
+    fg.style.strokeDashoffset="100";
+    phase.textContent="Ready"; count.textContent="—"; roundTxt.textContent="—";
+  }
 
   function tick(){
     if(rem<=0){
       idx++;
-      if(idx>=phases.length){ rd++; idx=0; if(rd>=rounds){ stop(); phase.textContent="Done"; count.textContent="—"; return; } }
-      rem=phases[idx].s;
-      phase.textContent=phases[idx].k;
+      if(idx>=PHASES.length){
+        rd++; idx=0;
+        if(rd>=ROUNDS){ stop(); phase.textContent="Done"; count.textContent="—"; roundTxt.textContent="3/3"; return; }
+      }
+      rem=PHASES[idx].s;
+      phase.textContent=PHASES[idx].k;
       count.textContent=rem+"s";
+      roundTxt.textContent=(rd+1)+"/3";
     }
     rem--; t++;
-    fg.style.strokeDashoffset=String(100-100*(t/total));
+    fg.style.strokeDashoffset=String(100-100*(t/TOTAL));
     if(rem>=0) count.textContent=(rem+1)+"s";
+    if(rem%1===0) clickTick(0.005); // soft tick each second
   }
 
   function start(){
     if(timer) return;
-    // reset
-    t=0; idx=0; rd=0; rem=phases[0].s;
-    fg.style.strokeDashoffset="0"; // start from 0 and animate with CSS transition
-    fg.getBoundingClientRect();   // force reflow
-    fg.style.strokeDashoffset="100"; // then decrease each tick
-    phase.textContent=phases[0].k; count.textContent=(rem)+"s";
+    // optional stagger
+    const seat = Math.max(0, parseInt(seatInput.value||"0",10)||0);
     btnStart.disabled=true; btnStop.disabled=false;
-    timer=setInterval(tick,1000);
+    setTimeout(()=>{
+      // reset & go
+      t=0; idx=0; rd=0; rem=PHASES[0].s;
+      phase.textContent=PHASES[0].k; count.textContent=rem+"s"; roundTxt.textContent="1/3";
+      timer=setInterval(tick,1000);
+    }, seat*1000);
   }
 
   function stop(){
@@ -260,37 +332,147 @@
   }
 
   btnStart.addEventListener('click', start);
-  btnStop.addEventListener('click', ()=>{ stop(); phase.textContent="—"; count.textContent="—"; });
+  btnStop.addEventListener('click', ()=>{ stop(); resetRing(); });
 
-  // Send to Ledger
-  $("#toLedger").addEventListener('click', ()=>{
+  // --- Audio: carrier preview + soft tick
+  let audioCtx=null, gain=null, osc=null;
+  function ensureAudio(){
+    if(audioCtx) return;
     try{
-      const payload={
-        intent:($("#line").value||"Circle run").trim(),
-        carrier:($("#carrier").value||"").trim(),
-        witness:($("#wit").value||"").trim(),
-        xi:Number.parseFloat($("#xi").value)||null,
-        quality:"",
-        tags:"#circle",
-        t:Date.now()
-      };
-      localStorage.setItem("codex_ledger_inbox", JSON.stringify(payload));
-      alert("Sent to Ledger. Open the Witness Ledger tab to add.");
-    }catch(_){ alert("Local save failed—copy your note."); }
+      audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+      gain = audioCtx.createGain(); gain.gain.value = 0.0; gain.connect(audioCtx.destination);
+    }catch(_){ audioCtx=null; }
+  }
+  function startTone(freq, vol=0.08, dur=0.35){
+    if(!freq || !audioCtx) return;
+    if(osc) stopTone();
+    osc = audioCtx.createOscillator(); osc.type='sine'; osc.frequency.value=freq; osc.connect(gain); osc.start();
+    const t = audioCtx.currentTime;
+    gain.gain.cancelScheduledValues(t);
+    gain.gain.linearRampToValueAtTime(vol, t + 0.05);
+    gain.gain.linearRampToValueAtTime(0.0001, t + Math.max(0.06, dur));
+    try{ osc.stop(t + Math.max(0.07, dur+0.02)); }catch(_){}
+    setTimeout(()=>{ try{osc.disconnect();}catch(_){ } osc=null; }, dur*1000+120);
+  }
+  function stopTone(){
+    if(!audioCtx||!osc) return;
+    const t=audioCtx.currentTime;
+    gain.gain.cancelScheduledValues(t);
+    gain.gain.linearRampToValueAtTime(0.0001, t+0.05);
+    try{ osc.stop(t+0.06); }catch(_){}
+    osc=null;
+  }
+  function clickTick(vol=0.01){
+    if(!audioCtx) return;
+    const o = audioCtx.createOscillator(); o.type='square'; o.frequency.value=880;
+    const g = audioCtx.createGain(); g.gain.value=0.0001;
+    o.connect(g); g.connect(audioCtx.destination);
+    const t=audioCtx.currentTime;
+    o.start(t); g.gain.linearRampToValueAtTime(vol, t+0.005); g.gain.linearRampToValueAtTime(0.0001, t+0.06);
+    o.stop(t+0.08);
+  }
+  function warmAudio(){
+    const resume=()=>{ try{ ensureAudio(); if(audioCtx.state==='suspended') audioCtx.resume(); }catch(_){ } window.removeEventListener('pointerdown',resume); window.removeEventListener('keydown',resume); };
+    window.addEventListener('pointerdown', resume, {once:true, passive:true});
+    window.addEventListener('keydown', resume, {once:true, passive:true});
+  }
+  warmAudio();
+
+  btnTick.addEventListener('click', ()=>{ ensureAudio(); clickTick(0.02); });
+
+  // Carrier selector (with preview + UI sync)
+  let carrier='432';
+  const carrierButtons=$$('.carrier-btn');
+  const carrierSel=$('#carrierSel');
+  carrierButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      carrierButtons.forEach(b=>{ b.setAttribute('aria-pressed','false'); b.setAttribute('aria-checked','false'); });
+      btn.setAttribute('aria-pressed','true'); btn.setAttribute('aria-checked','true');
+      carrier = btn.dataset.carrier || 'none';
+      if (carrierSel) carrierSel.value = carrier;
+      nowCarrier.textContent = 'Carrier: ' + carrier;
+      ensureAudio(); if (carrier !== 'none') startTone(Number(carrier), 0.06, 0.30);
+      // set body class for accent skin
+      document.documentElement.classList.remove('carrier-432','carrier-528','carrier-369','carrier-144','carrier-963');
+      if (carrier!=='none') document.documentElement.classList.add('carrier-'+carrier);
+    }, {passive:true});
+  });
+  carrierSel.addEventListener('change', ()=>{
+    const v = carrierSel.value; const btn = carrierButtons.find(b=>b.dataset.carrier===v);
+    if (btn) btn.click(); // unify behavior
   });
 
-  // Reveal-on-scroll + tilt (match site feel)
-  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const raf=(fn)=>(window.requestAnimationFrame||setTimeout)(fn,16);
-  const prefersReduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const hasIO="IntersectionObserver" in window;
+  // === Seal to Ledger (same canonical + SHA-256 as ledger v2)
+  const KEY='sof_ledger_entries_v2';
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY)||'[]'); } catch { return []; } };
+  const write = arr => { try { localStorage.setItem(KEY, JSON.stringify(arr)); } catch(_){} };
 
+  function canonicalize(obj){
+    if (obj === null || typeof obj !== 'object') return JSON.stringify(obj);
+    if (Array.isArray(obj)) return '[' + obj.map(canonicalize).join(',') + ']';
+    const keys = Object.keys(obj).sort();
+    return '{' + keys.map(k => JSON.stringify(k)+':'+canonicalize(obj[k])).join(',') + '}';
+  }
+  async function sha256Hex(str){
+    const enc = new TextEncoder().encode(str);
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+
+  // default session id
+  const sessionInput = $('#session');
+  function defaultSession(){
+    const d = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    return `circle-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}`;
+  }
+  if (sessionInput && !sessionInput.value) sessionInput.value = defaultSession();
+
+  const sealBtn = $('#sealToLedger'), status = $('#sealStatus');
+  sealBtn.addEventListener('click', async ()=>{
+    try{
+      const xi = Math.max(0, Math.min(1, Number($('#xi').value||0)));
+      const coherence = Math.round(xi*5*2)/2; // map 0–1 to 0–5 in 0.5 steps
+      const phrase = ($('#line').value||'').trim() || 'Circle run';
+      const carr = ($('#carrierSel').value||carrier||'none').trim();
+      const sessionId = ($('#session').value||'').trim() || defaultSession();
+      const tags = ($('#tags').value||'#circle').split(',').map(s=>s.trim()).filter(Boolean);
+      const coWitnesses = ($('#cow').value||'').split(',').map(s=>s.trim()).filter(Boolean);
+      const note = ($('#wit').value||'').trim();
+
+      const payload = { when:new Date().toISOString(), carrier:carr, phrase, coherence, tags, note, sessionId, coWitnesses, links:[] };
+      const canon = canonicalize(payload);
+      const hash = await sha256Hex(canon);
+      const entry = Object.assign({}, payload, { hash, seal:{stage:'I', algo:'SHA-256', canonLen:canon.length} });
+
+      const L = read(); L.unshift(entry); write(L);
+      status.textContent = 'Sealed and saved to Ledger. (hash ' + hash.slice(0,10) + '…)';
+      try { if (navigator.vibrate) navigator.vibrate([24]); } catch(_){}
+    }catch(err){
+      status.textContent = 'Save failed: ' + (err.message||err);
+    }
+  });
+
+  // Copy invite text (share session + carrier)
+  $('#copyInvite').addEventListener('click', ()=>{
+    const txt = `Scroll of Fire — Circle Sync
+Session: ${($('#session').value||defaultSession())}
+Carrier: ${($('#carrierSel').value||carrier)}
+Cadence: 3 rounds × 10s (Σ → ℛ → ΔΣ)
+Stagger: each seat +1s (optional)
+Line: (bring one 8–12 words)
+Ethics: consent, no coercion, stop rule (Eq.9)`;
+    navigator.clipboard?.writeText(txt).then(()=>{ alert('Invite copied.'); }, ()=>{ alert('Copy failed.'); });
+  });
+
+  // Reveal-on-scroll polish
   function revealOnScroll(){
     const cards=$$(".card"); if(!cards.length) return;
+    const hasIO="IntersectionObserver" in window, prefersReduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
     if(!prefersReduced && hasIO){
       const io=new IntersectionObserver((entries)=>{
         for(const e of entries){ if(e.isIntersecting){ e.target.classList.add("visible"); io.unobserve(e.target); } }
-      },{root:null,rootMargin:"0px 0px -12%",threshold:0.08});
+      },{rootMargin:"0px 0px -12%",threshold:0.08});
       cards.forEach(el=>io.observe(el)); return;
     }
     const tick=()=>cards.forEach(el=>{
@@ -300,7 +482,7 @@
     addEventListener("scroll",()=>raf(tick),{passive:true}); addEventListener("load",tick); tick();
   }
   function tiltCards(){
-    if(prefersReduced) return;
+    const prefersReduced=matchMedia("(prefers-reduced-motion: reduce)").matches; if(prefersReduced) return;
     $$(".card").forEach(card=>{
       const reset=()=>{ card.style.transform=""; };
       card.addEventListener("mousemove",(e)=>{
@@ -312,8 +494,10 @@
     });
   }
   document.addEventListener("DOMContentLoaded", ()=>{ revealOnScroll(); tiltCards(); });
+
+  // Housekeeping
+  addEventListener('pagehide', ()=>{ if(audioCtx && audioCtx.state==='running') audioCtx.suspend().catch(()=>{}); }, {passive:true});
 })();
 </script>
 </body>
 </html>
-```0
