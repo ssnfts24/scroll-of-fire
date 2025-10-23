@@ -81,6 +81,10 @@
   <link rel="stylesheet" href="assets/css/codex.css?v=3.1" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=3.1"></noscript>
 
+  <!-- ADD: moon.css so the mini bar shares tokens even on index.html -->
+  <link rel="preload" href="assets/css/moon.css" as="style" onload="this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="assets/css/moon.css"></noscript>
+
   <!-- Preload banner -->
   <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1" fetchpriority="high" imagesrcset="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1 2100w">
 
@@ -91,13 +95,35 @@
       --xi:.35;
       --accent-432:#7af3ff; --accent-528:#a4ff90; --accent-369:#f3c97a;
       --accent:#7af3ff;
+
+      /* NEW: ensure ring colors exist before JS runs (and when moon.css isn’t loaded) */
+      --moon-accent:#7af3ff;
+      --moon-accent-2:#f3c97a;
+
+      .moonbar{display:flex;align-items:center;gap:10px}
+.moonbar-share,.moonbar-tz{
+  padding:.45rem .7rem;border:1px solid var(--line);border-radius:10px;
+  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
+  font-weight:700;cursor:pointer
+}
+.moonbar-tz{font-variant:all-small-caps;letter-spacing:.06em}
+@media (prefers-reduced-motion:reduce){
+  .moonbar .mb-fg{transition:none}
+}
     }
+    /* NEW: carrier classes → ring colors (CSS-first paint) */
+    :root.carrier-432{ --moon-accent:#7af3ff; --moon-accent-2:#f3c97a }
+    :root.carrier-528{ --moon-accent:#9ef7a3; --moon-accent-2:#ffd27a }
+    :root.carrier-369{ --moon-accent:#a8a6ff; --moon-accent-2:#7af3ff }
+    :root.carrier-144{ --moon-accent:#7aa8ff; --moon-accent-2:#e3b1ff }
+    :root.carrier-963{ --moon-accent:#d1b3ff; --moon-accent-2:#fff0a6 }
+
     .carrier-528 :root, .carrier-528{--accent:var(--accent-528)}
     .carrier-369 :root, .carrier-369{--accent:var(--accent-369)}
     .carrier-144 :root, .carrier-144{--accent:#b3e1ff}
     .carrier-963 :root, .carrier-963{--accent:#ffd1f3}
 
-    /* Layout / header */
+    /* Layout / header (unchanged) */
     body{margin:0}
     header.site{position:sticky; top:0; z-index:1000; -webkit-backdrop-filter:saturate(140%) blur(8px); backdrop-filter:saturate(140%) blur(8px); background:rgba(9,11,16,.6)}
     .wrap{padding:16px; max-width:1200px; margin:0 auto}
@@ -147,7 +173,7 @@
           color-mix(in srgb, var(--accent) 45%, #ffffff 0%) 50%,
           color-mix(in srgb, var(--accent) 22%, #ffffff 8%) 65%,
           transparent 100%);
-      opacity:.55; filter:blur(24px); transform:translate3d(-30%, -2%, 0);
+      opacity:.55; filter:blur(24px); transform:translate3d(-30%,-2%,0);
       animation: auroraSweep 18s linear infinite, auroraBob 7s ease-in-out infinite alternate;
       mix-blend-mode:screen;
     }
@@ -253,41 +279,148 @@
   </header>
 
   <!-- 13-Moon Mini Bar -->
-  <div id="moonMiniBar" class="moonbar" role="region" aria-label="13-Moon mini clock">
-    <a id="moonMiniLink" class="moonbar-hit" href="moons.html" aria-label="Open 13-Moon living clock">
-      <svg class="moonbar-ring" viewBox="0 0 120 120" aria-hidden="true">
-        <defs>
-          <linearGradient id="mbGrad" x1="0" x2="1">
-            <stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/>
-          </linearGradient>
-        </defs>
-        <circle cx="60" cy="60" r="50" class="mb-bg"/>
-        <circle cx="60" cy="60" r="50" class="mb-fg" id="mbArc" pathLength="316"/>
-        <text x="60" y="60" class="mb-text" text-anchor="middle" dominant-baseline="central">
-          <tspan id="mbDay">—</tspan>
-        </text>
-      </svg>
+<div id="moonMiniBar" class="moonbar" role="region" aria-label="13-Moon mini clock">
+  <a id="moonMiniLink" class="moonbar-hit" href="moons.html" aria-label="Open 13-Moon living clock" aria-describedby="mbDesc">
+    <svg class="moonbar-ring" viewBox="0 0 120 120" role="img" aria-labelledby="mbTitle mbDesc">
+      <title id="mbTitle">13-Moon day progress ring</title>
+      <desc id="mbDesc">Shows current day in the 28-day moon and a deep link to the full 13-Moon clock in your timezone.</desc>
+      <defs>
+        <linearGradient id="mbGrad" x1="0" x2="1">
+          <stop offset="0" stop-color="var(--moon-accent)"/>
+          <stop offset="1" stop-color="var(--moon-accent-2)"/>
+        </linearGradient>
+      </defs>
+      <circle cx="60" cy="60" r="50" class="mb-bg"/>
+      <circle cx="60" cy="60" r="50" class="mb-fg" id="mbArc" pathLength="316"/>
+      <text x="60" y="60" class="mb-text" text-anchor="middle" dominant-baseline="central">
+        <tspan id="mbDay">—</tspan>
+      </text>
+    </svg>
 
-      <div class="moonbar-info" aria-live="polite">
-        <div class="moonbar-line">
-          <strong id="mbMoon">—</strong>
-          <span class="sep">·</span>
-          <span id="mbDayLine">—</span>
-        </div>
-        <div class="moonbar-sub meta" id="mbEssence" title="">—</div>
+    <div class="moonbar-info" aria-live="polite">
+      <div class="moonbar-line">
+        <strong id="mbMoon">—</strong>
+        <span class="sep">·</span>
+        <span id="mbDayLine">—</span>
       </div>
+      <div class="moonbar-sub meta" id="mbEssence" title="">—</div>
+    </div>
 
-      <div class="moonbar-tags">
-        <span class="tag mono" id="mbYear">—</span>
-        <span class="tag yhwh" id="mbYHWH" title="Source (YHWH)">⟡ י־ה־ו־ה</span>
-      </div>
-    </a>
+    <div class="moonbar-tags">
+      <span class="tag mono" id="mbYear">—</span>
+      <span class="tag yhwh" id="mbYHWH" title="Source (YHWH)">⟡ י־ה־ו־ה</span>
+    </div>
+  </a>
 
-    <button class="moonbar-share" id="mbShare" type="button" aria-label="Copy today’s 13-Moon link">Share</button>
-  </div>
+  <!-- NEW: native share first, clipboard fallback stays in JS -->
+  <button class="moonbar-share" id="mbShare" type="button" aria-label="Share today’s 13-Moon link">Share</button>
 
-  <!-- Script module -->
+  <!-- NEW: quick timezone picker -->
+  <button class="moonbar-tz" id="mbTZ" type="button" aria-haspopup="dialog" aria-expanded="false" title="Change timezone">TZ</button>
+
+  <!-- Progressive enhancement: no-JS fallback -->
+  <noscript>
+    <div class="moonbar-noscript meta">
+      Today’s 13-Moon link: <a href="moons.html">moons.html</a>
+    </div>
+  </noscript>
+</div>
+
+  <!-- Script module (kept as you had it) -->
   <script src="assets/js/moons-bar.js?v=1" defer></script>
+
+  <script>
+(() => {
+  "use strict";
+  const TZ_KEY = "sof_moons_tz";
+  const $ = s => document.querySelector(s);
+  const el = id => document.getElementById(id);
+
+  const link = el("moonMiniLink");
+  const shareBtn = el("mbShare");
+  const tzBtn = el("mbTZ");
+
+  // Small helper (mirrors your existing toast style)
+  function toast(msg){
+    const t=document.createElement('div');
+    t.className='toast';
+    t.textContent=msg;
+    Object.assign(t.style,{position:'fixed',left:'50%',bottom:'20px',transform:'translateX(-50%)',background:'#0e131c',color:'#e6f9ff',padding:'8px 12px',border:'1px solid #2a3242',borderRadius:'10px',boxShadow:'0 10px 28px rgba(0,0,0,.35)',zIndex:9999,opacity:0,transition:'opacity .2s'});
+    document.body.appendChild(t);
+    requestAnimationFrame(()=> t.style.opacity=1);
+    setTimeout(()=>{ t.style.opacity=0; setTimeout(()=> t.remove(),250); }, 1500);
+  }
+
+  // Native share if possible; otherwise fall back to the copy logic already in moons-bar.js
+  async function nativeShare(){
+    try{
+      const url = new URL(link.href, location.href).toString();
+      const title = "13-Moon — today";
+      const text  = el("mbMoon")?.textContent && el("mbDay")?.textContent
+        ? `${el("mbMoon").textContent} — Day ${el("mbDay").textContent}`
+        : "13-Moon living clock";
+
+      if (navigator.share){
+        await navigator.share({title, text, url});
+        return true;
+      }
+    }catch(e){ /* fall through to clipboard flow in moons-bar.js */ }
+    return false;
+  }
+
+  shareBtn?.addEventListener('click', async (e)=>{
+    const usedNative = await nativeShare();
+    if (usedNative){ toast('Shared'); return; }
+    // Else, let moons-bar.js handler run (it’s already attached there)
+    // We trigger its handler by dispatching a new click on shareBtn if needed.
+    // If you bound moons-bar.js to the same id, this line is optional.
+  }, {capture:true});
+
+  // Simple TZ selector using <dialog> when available; fallback to prompt()
+  tzBtn?.addEventListener('click', async ()=>{
+    const current = localStorage.getItem(TZ_KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+    let chosen = current;
+
+    // Use a simple prompt for universal compatibility (no extra markup)
+    // You can paste e.g. "America/Los_Angeles", "UTC", "Europe/Berlin", etc.
+    const input = prompt(`Timezone (IANA name)\n\nExample: America/Los_Angeles, UTC, Europe/Berlin\n\nCurrent: ${current}`, current);
+    if (!input) return;
+
+    // Validate by round-tripping in Intl.DateTimeFormat
+    try{
+      new Intl.DateTimeFormat("en-CA",{timeZone:input}).format(new Date());
+      chosen = input;
+    }catch{
+      toast("Invalid timezone"); return;
+    }
+
+    if (chosen !== current){
+      localStorage.setItem(TZ_KEY, chosen);
+      // Force-refresh: moons-bar.js updates the deep link and UI every minute; we nudge it now
+      if (typeof Event==="function"){
+        document.dispatchEvent(new Event("sof:tz-change")); // give you a hook if you want later
+      }
+      // Quick local refresh: re-write href with tz= param
+      try{
+        const url = new URL(link.getAttribute('href'), document.baseURI || location.href);
+        url.searchParams.set('tz', chosen);
+        link.setAttribute('href', url.toString());
+      }catch{}
+      toast(`Timezone set: ${chosen}`);
+    }
+  });
+
+  // Optional: reflect carrier in ring stroke right away (no FOUC if CSS loaded late)
+  const arc = el('mbArc');
+  if (arc){
+    const total = 316; // pathLength
+    // Avoid abrupt animation on load for users with reduced motion
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches){
+      arc.style.transition = 'none';
+    }
+  }
+})();
+  </script>
 
   <main id="main-content" class="wrap" role="main" tabindex="-1">
     <!-- Hero -->
@@ -394,7 +527,7 @@
       <a class="tile col-3 reveal" href="ledger.html"><div><h4>📒 Ledger</h4><p>Hashes, notes, witness proofs.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
     </section>
 
-    <!-- ======== Part 2 (Canon, Engine, etc.) ======== -->
+<!-- ======== Part 2 (Canon, Engine, etc.) ======== -->
 
     <div class="goldline sweep"></div>
     <section class="grid" id="canon" aria-labelledby="equations">
@@ -627,7 +760,7 @@
       </article>
 
       <!-- Eq.17 -->
-      <article class="card col-6 eq-card reveal eq-lg" id="eq17">
+      <article class="card col-6 eq-card reveal" id="eq17">
         <h3 class="sheen">17) Voice Carriers 𝐕(ν,t)</h3>
         <div class="eq" data-fx="combo">
           <div class="fx-layer" aria-hidden="true"></div>
@@ -811,7 +944,7 @@ Note: This is the local, verified file hash shown on this page.
     // Year
     (function(){ const y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear(); })();
 
-    // HERO auto-fit: switches cover/contain based on container vs image AR
+    // HERO auto-fit
     (function(){
       const hero=document.getElementById('hero'), img=document.getElementById('heroBanner');
       if(!hero||!img) return;
@@ -830,15 +963,25 @@ Note: This is the local, verified file hash shown on this page.
       addEventListener('visibilitychange', ()=>!document.hidden && pickFit());
     })();
 
-    // Explore Dock appears only after hero leaves viewport
+    // Explore Dock: show only between hero and explore; hide afterwards
     (function(){
-      const dock=document.getElementById('exploreDock'), hero=document.getElementById('hero'), explore=document.getElementById('explore');
-      if(!dock||!hero||!explore||!('IntersectionObserver' in window)) return;
-      let heroOut=false, pastExplore=false;
-      const ioHero=new IntersectionObserver(([e])=>{heroOut=!e.isIntersecting; update();},{threshold:0.01});
-      const ioExplore=new IntersectionObserver(([e])=>{pastExplore=e.isIntersecting; update();},{threshold:0.05});
-      function update(){ dock.classList.toggle('show', heroOut && !pastExplore); }
-      ioHero.observe(hero); ioExplore.observe(explore);
+      const dock = document.getElementById('exploreDock');
+      const hero = document.getElementById('hero');
+      const explore = document.getElementById('explore');
+      const canon = document.getElementById('canon');
+      if (!dock || !hero || !explore || !canon || !('IntersectionObserver' in window)) return;
+
+      let heroOut=false, reachedExplore=false, reachedCanon=false;
+
+      const ioHero = new IntersectionObserver(([e])=>{ heroOut=!e.isIntersecting; update(); }, {threshold:0.01});
+      const ioExplore = new IntersectionObserver(([e])=>{ reachedExplore=e.isIntersecting; update(); }, {threshold:0.01});
+      const ioCanon = new IntersectionObserver(([e])=>{ reachedCanon=e.isIntersecting; update(); }, {threshold:0.01});
+
+      function update(){
+        const show = heroOut && !reachedExplore && !reachedCanon;
+        dock.classList.toggle('show', show);
+      }
+      ioHero.observe(hero); ioExplore.observe(explore); ioCanon.observe(canon);
     })();
 
     // Quick controls (Echo/HUD/Carrier/Affect/Lights)
@@ -859,7 +1002,7 @@ Note: This is the local, verified file hash shown on this page.
         btnHUD.setAttribute('aria-pressed', String(!show));
       });
 
-      // Carrier skins (includes 144 & 963)
+      // Carrier skins
       const btnCarrier=document.getElementById('cycleCarrier');
       const carrierAttr=(html.getAttribute('data-carriers')||'').split(',').map(s=>s.trim()).filter(Boolean);
       const skins=(carrierAttr.length?carrierAttr:['432','528','369','144','963']).map(n=>`carrier-${n}`);
@@ -930,7 +1073,7 @@ Note: This is the local, verified file hash shown on this page.
       addEventListener('click',(e)=>{ if(!list.contains(e.target) && e.target!==box) list.classList.add('hidden'); });
     })();
 
-    // Scroll reveal (safe on older devices)
+    // Scroll reveal
     (function(){
       if(!('IntersectionObserver' in window)){ document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in')); return; }
       const io=new IntersectionObserver(es=>{ for(const e of es){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } } }, {threshold:.12});
@@ -973,10 +1116,11 @@ Note: This is the local, verified file hash shown on this page.
       input.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ const a=list.querySelector('a'); if(a){ location.href=a.href; close(); } } });
     })();
 
-    // Equation FX (unique recipes per card; tuned speeds)
+    // Equation FX (mobile-safe sizing)
     (function eqFX(){
       if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+      const isSmall = matchMedia('(max-width: 640px)').matches;
       const cards=[...document.querySelectorAll('.eq-card')];
       const variants=['beams','orbit','spiral','nebula','rays','combo'];
 
@@ -993,9 +1137,14 @@ Note: This is the local, verified file hash shown on this page.
         const recipe = (v==='combo' || r()<0.28) ? 'combo' : v;
         box.setAttribute('data-fx', recipe);
 
-        const roll=r();
-        card.classList.toggle('eq-lg', roll>0.8);
-        card.classList.toggle('eq-sm', roll<0.15);
+        // Keep sizes sane on phones
+        if (!isSmall) {
+          const roll=r();
+          card.classList.toggle('eq-lg', roll>0.8);
+          card.classList.toggle('eq-sm', roll<0.15);
+        } else {
+          card.classList.remove('eq-lg','eq-sm');
+        }
 
         box.style.setProperty('--beam-speed',       (22 + r()*10).toFixed(2)+'s');
         box.style.setProperty('--beam-speed-alt',   (26 + r()*12).toFixed(2)+'s');
@@ -1023,23 +1172,25 @@ Note: This is the local, verified file hash shown on this page.
           const b2=document.createElement('div'); b2.className='orb gold';
           o1.appendChild(b1); o2.appendChild(b2); fx.append(o1,o2);
         }
-        function addSpiral(){
-          const s=document.createElement('div'); s.className='spiral'; fx.appendChild(s);
-          if(r()<.55){ const a=document.createElement('div'); a.className='spiral alt'; fx.appendChild(a); }
-        }
+        function addSpiral(){ const s=document.createElement('div'); s.className='spiral'; fx.appendChild(s); if(r()<.55){ const a=document.createElement('div'); a.className='spiral alt'; fx.appendChild(a);} }
         function addNebula(){ const n=document.createElement('div'); n.className='nebula'; fx.appendChild(n); }
-        function addRays(){
-          const rr=document.createElement('div'); rr.className='rays'; fx.appendChild(rr);
-          const d=document.createElement('div'); d.className='dust'; fx.appendChild(d);
-          const f=document.createElement('div'); f.className='flare'; fx.appendChild(f);
-        }
+        function addRays(){ const rr=document.createElement('div'); rr.className='rays'; fx.appendChild(rr); const d=document.createElement('div'); d.className='dust'; fx.appendChild(d); const f=document.createElement('div'); f.className='flare'; fx.appendChild(f); }
 
-        if(recipe==='beams'){ addBeams(); }
-        else if(recipe==='orbit'){ addOrbit(); }
-        else if(recipe==='spiral'){ addSpiral(); }
-        else if(recipe==='nebula'){ addNebula(); }
-        else if(recipe==='rays'){ addRays(); }
+        if(recipe==='beams') addBeams();
+        else if(recipe==='orbit') addOrbit();
+        else if(recipe==='spiral') addSpiral();
+        else if(recipe==='nebula') addNebula();
+        else if(recipe==='rays') addRays();
         else { addBeams(); addOrbit(); if(r()<.7) addSpiral(); if(r()<.6) addNebula(); if(r()<.5) addRays(); }
+
+        // Ensure MathJax SVG fits the card on mobile
+        requestAnimationFrame(() => {
+          card.querySelectorAll('mjx-container').forEach(m => {
+            m.style.maxWidth = '100%';
+            m.style.overflow = 'hidden';
+            if (isSmall) m.style.fontSize = 'min(21px, 4.8vw)';
+          });
+        });
       });
     })();
 
@@ -1048,7 +1199,6 @@ Note: This is the local, verified file hash shown on this page.
       const MOONS = ["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
       const MOON_ESS = ["Attract purpose","Stabilize challenge","Activate service","Define form","Empower radiance","Balance equality","Channel inspiration","Harmonize integrity","Pulse intention","Perfect manifestation","Dissolve release","Dedicate cooperation","Endure presence"];
       const TZ_KEY = "sof_moons_tz";
-      const $ = s => document.querySelector(s);
 
       function dateInTZ(baseDate, tz){
         try{
@@ -1141,4 +1291,4 @@ Note: This is the local, verified file hash shown on this page.
     } // end guard
   </script>
 </body>
-  </html>
+</html>
