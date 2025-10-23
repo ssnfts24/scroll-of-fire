@@ -27,6 +27,9 @@
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24"></noscript>
 
+  <!-- Preload hero image for instant banner paint -->
+  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" imagesizes="100vw">
+
   <style>
     :root{--maxw:1180px}
     body{margin:0}
@@ -90,9 +93,16 @@
     .ring-num{font:800 18px/1 Inter;fill:#eae7df}
     .ring-sub{font:600 10px/1 Inter;fill:#b8b3a6}
 
-    /* Hero (no crop) */
-    .hero{margin:8px auto 0; max-width:1200px; border-radius:16px; overflow:hidden; background:#0b0f14}
-    .hero img{display:block; width:100%; height:auto; object-fit:contain}
+    /* --- HERO banner (responsive, no crop) --- */
+    .hero{margin:8px auto 0; max-width:1280px; border-radius:16px; overflow:hidden; background:#0b0f14}
+    .hero-frame{position:relative}
+    .hero-img{display:block; width:100%; height:auto; object-fit:contain; aspect-ratio:21/9}
+    .hero-overlay{position:absolute; inset:0; background:radial-gradient(ellipse at 50% 70%, rgba(10,16,22,.35), transparent 70%); pointer-events:none}
+    .hero-glow{position:absolute; inset:0; background:radial-gradient(circle at 50% 50%, rgba(122,243,255,.15), rgba(243,201,122,.06) 70%, transparent 100%); mix-blend-mode:screen; opacity:.45; animation:heroPulse 12s ease-in-out infinite; pointer-events:none}
+    @keyframes heroPulse{0%,100%{opacity:.35;transform:scale(1);filter:blur(0)}50%{opacity:.6;transform:scale(1.05);filter:blur(2px)}}
+    @media (prefers-reduced-motion: reduce){
+      .hero-glow{animation:none;opacity:.28}
+    }
 
     /* Ledger thumbnails + lightbox */
     .thumb{height:40px; width:auto; border:1px solid var(--line); border-radius:6px; vertical-align:middle; cursor:pointer}
@@ -123,13 +133,27 @@
       background:radial-gradient(ellipse at 50% 60%, rgba(122,243,255,.08), transparent 70%);
       pointer-events:none;
     }
+
+    /* Table overflow safety on phones */
+    .table-wrap{overflow:auto}
   </style>
 </head>
 
 <body class="stars">
   <!-- Banner -->
   <figure class="hero" aria-label="Scroll of Fire banner">
-    <img src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" alt="Scroll of Fire — sigil banner" width="2100" height="900" decoding="async" loading="eager">
+    <div class="hero-frame">
+      <img
+        src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
+        alt="Scroll of Fire — sigil banner"
+        width="2100" height="900"
+        decoding="async"
+        loading="eager"
+        fetchpriority="high"
+        class="hero-img">
+      <div class="hero-overlay"></div>
+      <div class="hero-glow"></div>
+    </div>
   </figure>
 
   <main class="wrap" id="main" role="main">
@@ -140,20 +164,20 @@
       <!-- Tabs -->
       <section class="card" style="margin-top:10px">
         <div class="tabs-wrap" role="navigation" aria-label="Manifest tabs">
-          <button class="chev left" id="tabsPrev" aria-label="Scroll tabs left">‹</button>
-          <div class="pill-rail" id="pillRail" role="tablist">
-            <button class="pill active" data-tab="remnant"  role="tab" aria-selected="true">🜚 Remnant</button>
-            <button class="pill"        data-tab="observer" role="tab" aria-selected="false">⏱ Observer</button>
-            <button class="pill"        data-tab="voice"    role="tab" aria-selected="false">🎙 Carrier</button>
-            <button class="pill"        data-tab="phrase"   role="tab" aria-selected="false">🔡 Phrase</button>
-            <button class="pill"        data-tab="breath"   role="tab" aria-selected="false">🌬 Breath</button>
-            <button class="pill"        data-tab="coherence"role="tab" aria-selected="false">📈 Ξ</button>
-            <button class="pill"        data-tab="drills"   role="tab" aria-selected="false">🧭 Drills</button>
-            <button class="pill"        data-tab="timer"    role="tab" aria-selected="false">⏳ Timer</button>
-            <button class="pill"        data-tab="deck"     role="tab" aria-selected="false">🎴 Deck</button>
-            <button class="pill"        data-tab="ledger"   role="tab" aria-selected="false">📒 Ledger</button>
+          <button class="chev left" id="tabsPrev" aria-label="Scroll tabs left" type="button">‹</button>
+          <div class="pill-rail" id="pillRail" role="tablist" tabindex="0" aria-label="Sections">
+            <button class="pill active" data-tab="remnant"  role="tab" aria-selected="true"  type="button">🜚 Remnant</button>
+            <button class="pill"        data-tab="observer" role="tab" aria-selected="false" type="button">⏱ Observer</button>
+            <button class="pill"        data-tab="voice"    role="tab" aria-selected="false" type="button">🎙 Carrier</button>
+            <button class="pill"        data-tab="phrase"   role="tab" aria-selected="false" type="button">🔡 Phrase</button>
+            <button class="pill"        data-tab="breath"   role="tab" aria-selected="false" type="button">🌬 Breath</button>
+            <button class="pill"        data-tab="coherence"role="tab" aria-selected="false" type="button">📈 Ξ</button>
+            <button class="pill"        data-tab="drills"   role="tab" aria-selected="false" type="button">🧭 Drills</button>
+            <button class="pill"        data-tab="timer"    role="tab" aria-selected="false" type="button">⏳ Timer</button>
+            <button class="pill"        data-tab="deck"     role="tab" aria-selected="false" type="button">🎴 Deck</button>
+            <button class="pill"        data-tab="ledger"   role="tab" aria-selected="false" type="button">📒 Ledger</button>
           </div>
-          <button class="chev right" id="tabsNext" aria-label="Scroll tabs right">›</button>
+          <button class="chev right" id="tabsNext" aria-label="Scroll tabs right" type="button">›</button>
         </div>
       </section>
     </header>
@@ -161,7 +185,7 @@
     <!-- =================== TABS =================== -->
 
     <!-- REMNANT -->
-    <section id="tab-remnant" class="tab active" role="tabpanel">
+    <section id="tab-remnant" class="tab active" role="tabpanel" aria-labelledby="remnant-tab">
       <article class="grid">
         <div class="card col-9">
           <h2>🜚 Remnant — visual exercise & seal</h2>
@@ -176,9 +200,9 @@
                 <span class="chip" id="hudXi">Ξ: —</span>
               </div>
               <div class="lab-row">
-                <button class="chip" id="seedBtn">Seed</button>
-                <button class="chip" id="clearBtn">Clear</button>
-                <button class="chip" id="dlTrace">PNG</button>
+                <button class="chip" id="seedBtn" type="button">Seed</button>
+                <button class="chip" id="clearBtn" type="button">Clear</button>
+                <button class="chip" id="dlTrace" type="button">PNG</button>
               </div>
             </div>
           </div>
@@ -186,7 +210,7 @@
           <!-- Controls -->
           <div class="control-grid" style="margin-top:10px">
             <label class="span-4">Mode
-              <select id="visMode" class="lab-input">
+              <select id="visMode" class="lab-input" aria-label="Visual mode">
                 <option value="0">Flow (particle bloom)</option>
                 <option value="1">Lattice (Lissajous net)</option>
                 <option value="2">Torus (donut points)</option>
@@ -197,25 +221,25 @@
                 <option value="7">Vortex (toroidal flow)</option>
               </select>
             </label>
-            <label class="span-3">Density <input id="visDensity" type="range" min="40" max="600" value="160" class="lab-input"></label>
-            <label class="span-3">Speed <input id="visSpeed" type="range" min="0" max="200" value="90" class="lab-input"></label>
+            <label class="span-3">Density <input id="visDensity" type="range" min="40" max="600" value="160" class="lab-input" aria-label="Density"></label>
+            <label class="span-3">Speed <input id="visSpeed" type="range" min="0" max="200" value="90" class="lab-input" aria-label="Speed"></label>
             <div class="span-6">
               <div class="lab-row" role="radiogroup" aria-label="Carrier">
-                <button class="lab-btn tone" data-carrier="432">432</button>
-                <button class="lab-btn tone" data-carrier="528">528</button>
-                <button class="lab-btn tone" data-carrier="369">369</button>
-                <button class="lab-btn tone" data-carrier="144">144</button>
-                <button class="lab-btn tone" data-carrier="963">963</button>
-                <button class="lab-btn tone" data-carrier="none">None</button>
+                <button class="lab-btn tone" data-carrier="432" type="button">432</button>
+                <button class="lab-btn tone" data-carrier="528" type="button">528</button>
+                <button class="lab-btn tone" data-carrier="369" type="button">369</button>
+                <button class="lab-btn tone" data-carrier="144" type="button">144</button>
+                <button class="lab-btn tone" data-carrier="963" type="button">963</button>
+                <button class="lab-btn tone" data-carrier="none" type="button">None</button>
               </div>
             </div>
             <div class="span-6">
               <label><input type="checkbox" id="binaural"> Binaural ±4 Hz</label>
               <label><input type="checkbox" id="carrierGate"> Keep carrier on</label>
-              <button id="rmnRun" class="lab-btn primary">Run (1×12s)</button>
-              <button id="rmnSeal" class="lab-btn">Seal → Ledger</button>
+              <button id="rmnRun" class="lab-btn primary" type="button">Run (1×12s)</button>
+              <button id="rmnSeal" class="lab-btn" type="button">Seal → Ledger</button>
             </div>
-            <input id="rmnLine" class="lab-input span-12" placeholder="Your intention line (𝓘)…">
+            <input id="rmnLine" class="lab-input span-12" placeholder="Your intention line (𝓘)…" aria-label="Intention line">
             <p class="hint span-12">Tip: Pair Torus/Poly with 4-7-8 breath for calm; try Rose/Spiro during Focus intervals; use Vortex for energy reset.</p>
           </div>
         </div>
@@ -236,7 +260,7 @@
     </section>
 
     <!-- OBSERVER -->
-    <section id="tab-observer" class="tab" role="tabpanel">
+    <section id="tab-observer" class="tab" role="tabpanel" aria-labelledby="observer-tab">
       <article class="grid">
         <div class="card col-7">
           <h2>⏱ Observer — 4 × paced</h2>
@@ -259,8 +283,8 @@
             </div>
             <div>
               <div class="lab-row">
-                <button id="obsStart" class="lab-btn primary">Start (3×10s)</button>
-                <button id="obsStop" class="lab-btn" disabled>Stop</button>
+                <button id="obsStart" class="lab-btn primary" type="button">Start (3×10s)</button>
+                <button id="obsStop" class="lab-btn" disabled type="button">Stop</button>
               </div>
               <div class="lab-row">
                 <label>Seconds/phase <input id="obsSec" type="number" value="10" min="3" max="180" class="lab-input" style="width:110px"></label>
@@ -280,15 +304,15 @@
     </section>
 
     <!-- CARRIER -->
-    <section id="tab-voice" class="tab" role="tabpanel">
+    <section id="tab-voice" class="tab" role="tabpanel" aria-labelledby="voice-tab">
       <article class="grid">
         <div class="card col-7">
           <h2>🎙 Carrier — tone & spectrum</h2>
           <div class="lab-row">
-            <button id="micOn" class="lab-btn">Enable Mic</button>
-            <button id="micOff" class="lab-btn" disabled>Stop</button>
+            <button id="micOn" class="lab-btn" type="button">Enable Mic</button>
+            <button id="micOff" class="lab-btn" disabled type="button">Stop</button>
             <span id="freqRead" class="meta" aria-live="polite">—</span>
-            <button id="useTone" class="lab-btn" disabled>Use this tone</button>
+            <button id="useTone" class="lab-btn" disabled type="button">Use this tone</button>
           </div>
           <canvas id="wave" width="800" height="140" aria-label="Waveform"></canvas>
           <canvas id="fft"  width="800" height="140" aria-label="Spectrum"></canvas>
@@ -298,12 +322,12 @@
         <aside class="card col-5">
           <h3>Presets</h3>
           <div class="lab-row">
-            <button class="lab-btn tone" data-carrier="432">432</button>
-            <button class="lab-btn tone" data-carrier="528">528</button>
-            <button class="lab-btn tone" data-carrier="369">369</button>
-            <button class="lab-btn tone" data-carrier="144">144</button>
-            <button class="lab-btn tone" data-carrier="963">963</button>
-            <button class="lab-btn tone" data-carrier="none">None</button>
+            <button class="lab-btn tone" data-carrier="432" type="button">432</button>
+            <button class="lab-btn tone" data-carrier="528" type="button">528</button>
+            <button class="lab-btn tone" data-carrier="369" type="button">369</button>
+            <button class="lab-btn tone" data-carrier="144" type="button">144</button>
+            <button class="lab-btn tone" data-carrier="963" type="button">963</button>
+            <button class="lab-btn tone" data-carrier="none" type="button">None</button>
           </div>
           <p class="hint">Hum ~3s; when the peak holds, “Use this tone.”</p>
         </aside>
@@ -311,14 +335,14 @@
     </section>
 
     <!-- PHRASE -->
-    <section id="tab-phrase" class="tab" role="tabpanel">
+    <section id="tab-phrase" class="tab" role="tabpanel" aria-labelledby="phrase-tab">
       <article class="grid">
         <div class="card col-7">
           <h2>🔡 Phrase — tune meaning (Eq.4/4b)</h2>
           <textarea id="phraseIn" rows="3" class="lab-input" placeholder="Type your line…"></textarea>
           <div class="lab-row">
-            <button id="phraseTune" class="lab-btn">Tune</button>
-            <button id="phraseClear" class="lab-btn">Clear</button>
+            <button id="phraseTune" class="lab-btn" type="button">Tune</button>
+            <button id="phraseClear" class="lab-btn" type="button">Clear</button>
           </div>
           <p><b>Suggestion:</b> <span id="phraseOut" class="meta">—</span></p>
           <p class="hint" id="coachPhrase">Coach: fewer negations → cleaner gradient; strong verbs + concrete nouns.</p>
@@ -334,7 +358,7 @@
     </section>
 
     <!-- BREATH -->
-    <section id="tab-breath" class="tab" role="tabpanel">
+    <section id="tab-breath" class="tab" role="tabpanel" aria-labelledby="breath-tab">
       <article class="grid">
         <div class="card col-7">
           <h2>🌬 Breath — pacing ring</h2>
@@ -346,8 +370,8 @@
                 <option value="5-5-5-5">5-5-5-5</option>
               </select>
             </label>
-            <button id="breathStart" class="lab-btn">Start</button>
-            <button id="breathStop" class="lab-btn" disabled>Stop</button>
+            <button id="breathStart" class="lab-btn" type="button">Start</button>
+            <button id="breathStop" class="lab-btn" disabled type="button">Stop</button>
           </div>
           <div style="width:116px;height:116px;display:grid;place-items:center;margin-top:6px">
             <svg viewBox="0 0 100 100" aria-label="Breath ring">
@@ -367,15 +391,15 @@
     </section>
 
     <!-- COHERENCE -->
-    <section id="tab-coherence" class="tab" role="tabpanel">
+    <section id="tab-coherence" class="tab" role="tabpanel" aria-labelledby="coherence-tab">
       <article class="grid">
         <div class="card col-7">
           <h2>📈 Coherence (Ξ)</h2>
           <div class="lab-row">
             <label>⟨H·I⟩ <input id="hi" type="number" min="0" max="1" step="0.01" value="0.62" class="lab-input" style="width:110px"></label>
             <label>Var[𝓜] <input id="varM" type="number" min="0" max="2" step="0.01" value="0.30" class="lab-input" style="width:110px"></label>
-            <button id="xiCalc" class="lab-btn">Compute Ξ</button>
-            <output id="xiOut" class="meta">Ξ = —</output>
+            <button id="xiCalc" class="lab-btn" type="button">Compute Ξ</button>
+            <output id="xiOut" class="meta" aria-live="polite">Ξ = —</output>
           </div>
           <canvas id="xiSpark" width="500" height="70" aria-label="Ξ history"></canvas>
         </div>
@@ -388,7 +412,7 @@
     </section>
 
     <!-- DRILLS -->
-    <section id="tab-drills" class="tab" role="tabpanel">
+    <section id="tab-drills" class="tab" role="tabpanel" aria-labelledby="drills-tab">
       <article class="grid">
         <div class="card col-7">
           <h2>🧭 Drills — Prime → Focus → Seal</h2>
@@ -398,14 +422,14 @@
             <li><b>Seal (60s):</b> name one undeniable change; whisper thanks; add to Ledger.</li>
           </ol>
           <div class="lab-row">
-            <button id="primeNow" class="lab-btn primary">Prime (90s)</button>
-            <button id="focus10" class="lab-btn">Focus 10</button>
-            <button id="focus25" class="lab-btn">Focus 25</button>
-            <button id="seal60" class="lab-btn">Seal 60</button>
+            <button id="primeNow" class="lab-btn primary" type="button">Prime (90s)</button>
+            <button id="focus10" class="lab-btn" type="button">Focus 10</button>
+            <button id="focus25" class="lab-btn" type="button">Focus 25</button>
+            <button id="seal60" class="lab-btn" type="button">Seal 60</button>
           </div>
           <textarea id="drillNote" rows="3" class="lab-input" placeholder="Seal reflection (one undeniable detail)…"></textarea>
           <div class="lab-row">
-            <button id="drillToLedger" class="lab-btn">Send to Ledger</button>
+            <button id="drillToLedger" class="lab-btn" type="button">Send to Ledger</button>
           </div>
           <p class="hint">Tip: set Remnant to Torus or Poly during Prime; Spiro or Rose during Focus; Flow during Seal.</p>
         </div>
@@ -424,7 +448,7 @@
     </section>
 
     <!-- TIMER -->
-    <section id="tab-timer" class="tab" role="tabpanel">
+    <section id="tab-timer" class="tab" role="tabpanel" aria-labelledby="timer-tab">
       <article class="grid">
         <div class="card col-7">
           <h2>⏳ Focus Timer — 25/5 cycles</h2>
@@ -434,8 +458,8 @@
             <label>Cycles <input id="tmCycles" type="number" value="2" min="1" max="12" class="lab-input" style="width:90px"></label>
           </div>
           <div class="lab-row">
-            <button id="tmStart" class="lab-btn primary">Start</button>
-            <button id="tmStop" class="lab-btn" disabled>Stop</button>
+            <button id="tmStart" class="lab-btn primary" type="button">Start</button>
+            <button id="tmStop" class="lab-btn" disabled type="button">Stop</button>
             <output id="tmOut" class="meta">—</output>
           </div>
           <p class="hint">Bonus: check “Keep carrier on” to let Π<sub>ν</sub> hum quietly during Focus blocks.</p>
@@ -443,30 +467,30 @@
 
         <aside class="card col-5">
           <h3>Streak</h3>
-          <p class="meta">Daily check-in: <button id="streakMark" class="lab-btn">Mark Today</button> <span id="streakOut" class="meta">—</span></p>
+          <p class="meta">Daily check-in: <button id="streakMark" class="lab-btn" type="button">Mark Today</button> <span id="streakOut" class="meta">—</span></p>
           <p class="hint">Streaks are local to this device.</p>
         </aside>
       </article>
     </section>
 
     <!-- DECK -->
-    <section id="tab-deck" class="tab" role="tabpanel">
+    <section id="tab-deck" class="tab" role="tabpanel" aria-labelledby="deck-tab">
       <article class="grid">
         <div class="card col-7">
           <h2>🎴 Intention Deck</h2>
           <div class="lab-row">
-            <button id="drawCard" class="lab-btn primary">Draw</button>
+            <button id="drawCard" class="lab-btn primary" type="button">Draw</button>
             <span id="cardText" class="meta">—</span>
-            <button id="useCard" class="lab-btn">Use as 𝓘</button>
+            <button id="useCard" class="lab-btn" type="button">Use as 𝓘</button>
           </div>
         </div>
 
         <aside class="card col-5">
           <h3>Exercise Picker</h3>
           <div class="lab-row">
-            <button class="lab-btn" data-ex="prime60">Prime 60</button>
-            <button class="lab-btn" data-ex="focus15">Focus 15</button>
-            <button class="lab-btn" data-ex="seal60">Seal 60</button>
+            <button class="lab-btn" data-ex="prime60" type="button">Prime 60</button>
+            <button class="lab-btn" data-ex="focus15" type="button">Focus 15</button>
+            <button class="lab-btn" data-ex="seal60" type="button">Seal 60</button>
           </div>
           <p class="hint">Draw → Prime → Focus → Seal → Ledger.</p>
         </aside>
@@ -474,7 +498,7 @@
     </section>
 
     <!-- LEDGER -->
-    <section id="tab-ledger" class="tab" role="tabpanel">
+    <section id="tab-ledger" class="tab" role="tabpanel" aria-labelledby="ledger-tab">
       <article class="grid">
         <div class="card col-12">
           <h2>📒 Witness Ledger <small class="meta">(private on this device)</small></h2>
@@ -487,10 +511,10 @@
           <textarea id="lgWit" rows="3" class="lab-input" placeholder="Witness (what changed, what lingered)…"></textarea>
 
           <div class="lab-row">
-            <button id="lgAdd" class="lab-btn primary">Add</button>
-            <button id="lgExport" class="lab-btn">Export .json</button>
+            <button id="lgAdd" class="lab-btn primary" type="button">Add</button>
+            <button id="lgExport" class="lab-btn" type="button">Export .json</button>
             <input type="file" id="lgImportFile" accept="application/json" hidden>
-            <button id="lgImport" class="lab-btn">Import .json</button>
+            <button id="lgImport" class="lab-btn" type="button">Import .json</button>
             <input id="lgFilter" class="lab-input" placeholder="Filter…" style="margin-left:auto;max-width:240px">
           </div>
 
@@ -518,15 +542,19 @@
     const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
     const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
 
-    /* -------- Tabs + horizontal scroll rail -------- */
+    /* -------- Tabs + horizontal scroll rail + keyboarding -------- */
     const tabBtns=$$(".pill"), tabs=$$(".tab");
     const rail=$("#pillRail"), prev=$("#tabsPrev"), next=$("#tabsNext");
     function switchTo(id){
       if(!id) return;
       tabs.forEach(t=>t.classList.toggle("active", t.id==="tab-"+id));
-      tabBtns.forEach(b=>b.classList.toggle("active", b.dataset.tab===id));
+      tabBtns.forEach(b=>{
+        const onTab = b.dataset.tab===id;
+        b.classList.toggle("active", onTab);
+        b.setAttribute("aria-selected", onTab ? "true" : "false");
+      });
       const btn=tabBtns.find(b=>b.dataset.tab===id);
-      if(btn){ btn.scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"}); }
+      if(btn){ btn.scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"}); btn.focus({preventScroll:true}); }
     }
     tabBtns.forEach(b=>on(b,"click",()=>switchTo(b.dataset.tab)));
     function updateChev(){
@@ -537,6 +565,10 @@
     on(prev,"click",()=>{ rail.scrollBy({left:-rail.clientWidth*0.7,behavior:"smooth"}); });
     on(next,"click",()=>{ rail.scrollBy({left: rail.clientWidth*0.7,behavior:"smooth"}); });
     on(rail,"scroll",updateChev,{passive:true});
+    on(rail,"keydown",(e)=>{
+      if(e.key==="ArrowRight"){ e.preventDefault(); const i=Math.max(0,tabBtns.findIndex(b=>b.classList.contains("active"))); const n=tabBtns[(i+1)%tabBtns.length]; n.click(); }
+      if(e.key==="ArrowLeft"){ e.preventDefault(); const i=Math.max(0,tabBtns.findIndex(b=>b.classList.contains("active"))); const n=tabBtns[(i-1+tabBtns.length)%tabBtns.length]; n.click(); }
+    });
     updateChev();
     on(document,"keydown",(e)=>{ if(e.target.matches("input,textarea")) return;
       const map={1:"remnant",2:"observer",3:"voice",4:"phrase",5:"breath",6:"coherence",7:"drills",8:"timer",9:"deck",0:"ledger"};
@@ -557,7 +589,7 @@
     /* -------- Local storage helpers -------- */
     const LGKEY="sof_ledger_entries_v5";
     const STREAK_KEY="sof_streak_v1";
-    function load(k,fb){ try{return JSON.parse(localStorage.getItem(k)||"");}catch(_){return fb;} }
+    function load(k,fb){ try{ const raw=localStorage.getItem(k); return raw? JSON.parse(raw): fb; }catch(_){return fb;} }
     function save(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(_){} }
 
     /* -------- Carrier tone engine (with optional binaural & gate) -------- */
@@ -594,8 +626,18 @@
 
     /* -------- Remnant visuals (8 modes) -------- */
     const canvas=$("#trace"), ctx=canvas?.getContext?.("2d");
-    function fit(){ if(!canvas||!ctx) return; const r=canvas.getBoundingClientRect(); canvas.width=r.width; canvas.height=420; }
-    fit(); addEventListener("resize", fit, {passive:true});
+    function fit(){
+      if(!canvas||!ctx) return;
+      const r=canvas.getBoundingClientRect();
+      canvas.width=r.width;
+      // Responsive height: gentle range 340–520px
+      canvas.height=Math.max(340, Math.min(520, Math.round(r.width*0.38)));
+    }
+    fit();
+    addEventListener("resize", fit, {passive:true});
+    if('ResizeObserver' in window){
+      new ResizeObserver(()=>fit()).observe(canvas.parentElement);
+    }
 
     const visMode=$("#visMode"), visDensity=$("#visDensity"), visSpeed=$("#visSpeed");
     let phi=0, seed=Math.random()*1000, mode=0, breathPhase="—";
@@ -636,7 +678,6 @@
       phi+=1.5*speed();
     }
 
-    // Fixed Torus renderer (previous syntax error killed all visuals)
     function drawTorus(){
       const W=canvas.width,H=canvas.height;
       ctx.fillStyle="rgba(10,14,21,0.12)";
@@ -656,7 +697,7 @@
           let Z = -x*sb + z*cb;
           let Y =  y*ca - Z*sa;
           Z =  y*sa + Z*ca;
-          const d=500/(600+Z);  // fixed projection
+          const d=500/(600+Z);
           const px=W/2+X*d, py=H/2+Y*d;
           const t=(Z+R)/(2*R + r);
           ctx.fillStyle = `rgba(${180+70*t},${240-100*t},${255-200*t},${0.3+0.6*t})`;
@@ -785,10 +826,13 @@
       phi += 1.5*speed();
     }
 
+    // Respect reduced motion: seed a still frame rather than animating
+    const PREFERS_RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // Animation loop
-    let anim=true;
+    let anim=!PREFERS_RM;
     function render(){
-      if(!anim || !ctx) return;
+      if(!ctx) return;
       switch(mode){
         case 0: drawFlow(); break;
         case 1: drawLattice(); break;
@@ -799,13 +843,15 @@
         case 6: drawLissaGrid(); break;
         default: drawVortex();
       }
-      requestAnimationFrame(render);
+      if(anim) requestAnimationFrame(render);
     }
-    if(ctx) render();
+    mode = +$("#visMode").value|0;
+    if(anim){ render(); } else { // seed a still frame for accessibility
+      for(let k=0;k<30;k++){ render(); }
+    }
 
     // Visual controls
-    mode = +visMode.value|0;
-    on(visMode,"change",()=>{ mode=+visMode.value|0; });
+    on($("#visMode"),"change",()=>{ mode=+$("#visMode").value|0; });
     on($("#clearBtn"),"click",()=>{ if(ctx) ctx.clearRect(0,0,canvas.width,canvas.height); });
     on($("#seedBtn"),"click",()=>{ seed = Math.random()*1000; });
     on($("#dlTrace"),"click",()=>{
@@ -938,7 +984,7 @@
     /* -------- Breath ring -------- */
     const breathArc=$("#breathArc"), breathPhaseEl=$("#breathPhase");
     let bTimer=null, bT0=0, bPat=[4,4,4,4];
-    on($("#breathPat"),"change",e=>{ bPat=e.target.value.split("-").map(n=>+n||4);});
+    on($("#breathPat"),"change",e=>{ bPat=e.target.value.split("-").map(n=>+n||4);});on($("#breathPat"),"change",e=>{ bPat=e.target.value.split("-").map(n=>+n||4);});
     on($("#breathStart"),"click",()=>{
       if(bTimer) return;
       bT0=performance.now(); $("#breathStop").disabled=false; $("#breathStart").disabled=true;
@@ -1118,4 +1164,4 @@
   })();
   </script>
 </body>
-  </html>
+</html>
