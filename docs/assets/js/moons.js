@@ -1,10 +1,14 @@
+/* 13 Moons — Living Clock (robust build) */
 (function(){
   "use strict";
-  const $ =(s,r=document)=>r.querySelector(s);
-  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
+
+  /* ---------- Tiny utils ---------- */
+  const $  =(s,r=document)=>r.querySelector(s);
+  const $$ =(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const on =(t,e,f,o)=>t&&t.addEventListener(e,f,o);
   const pad=n=>String(n).padStart(2,"0");
   const warn=(...a)=>{ try{console.warn("[Moons]",...a);}catch(_){} };
+  const safe = fn => { try{ return fn(); } catch(e){ warn(e); return void 0; } };
   const crash=(msg,err)=>{
     console.error("[Moons crash]", msg, err);
     const n=document.createElement("div");
@@ -13,7 +17,8 @@
     document.body.appendChild(n);
   };
 
-  $("#yr")?.textContent=new Date().getFullYear();
+  /* Footer year */
+  safe(()=> $("#yr") && ($("#yr").textContent=new Date().getFullYear()));
 
   /* ---------- Data ---------- */
   const MOONS = ["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
@@ -31,16 +36,16 @@
   const TZ_KEY="sof_moons_tz";
   const tzPick = $("#tzPick");
   const COMMON_TZ = ["UTC","America/Los_Angeles","America/Denver","America/Chicago","America/New_York","Europe/London","Europe/Berlin","Europe/Helsinki","Africa/Johannesburg","Asia/Dubai","Asia/Kolkata","Asia/Shanghai","Asia/Tokyo","Australia/Sydney"];
-  let defaultTZ;
-  try{ defaultTZ = localStorage.getItem(TZ_KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; }catch(_){ defaultTZ = "UTC"; }
+  let defaultTZ = "UTC";
+  safe(()=>{ defaultTZ = localStorage.getItem(TZ_KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; });
 
-  let ALL_TZ = COMMON_TZ;
-  try{
+  let ALL_TZ = COMMON_TZ.slice(0);
+  safe(()=>{
     if (Intl.supportedValuesOf) {
       const full = Intl.supportedValuesOf("timeZone");
       if (Array.isArray(full) && full.length) ALL_TZ = Array.from(new Set([...COMMON_TZ, ...full]));
     }
-  }catch(_){ /* keep COMMON_TZ */ }
+  });
 
   if (tzPick){
     try{
@@ -51,41 +56,38 @@
       tzPick.innerHTML = COMMON_TZ.map(z=>`<option value="${z}">${z}</option>`).join("");
       tzPick.value = "UTC";
     }
-    on(tzPick,"change",()=>{ try{ localStorage.setItem(TZ_KEY, tzPick.value); }catch(_){} writeURL(); updateAll(); buildYearMap(); }, {passive:true});
+    on(tzPick,"change",()=>{ safe(()=> localStorage.setItem(TZ_KEY, tzPick.value)); writeURL(); updateAll(); buildYearMap(); }, {passive:true});
   }
 
-  /* ---------- Date helpers (with legacy-safe formatting) ---------- */
+  /* ---------- Date helpers ---------- */
   function dateInTZ(baseDate, tz, overrideHour){
     try{
       const opts={timeZone:tz, hour12:false, year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", second:"2-digit"};
       const parts=new Intl.DateTimeFormat("en-CA",opts).formatToParts(baseDate);
       const m=Object.fromEntries(parts.map(p=>[p.type,p.value]));
       const h = (overrideHour==null? m.hour : pad(overrideHour));
+      // Build a UTC timestamp using the calendar date of TZ (stable across devices)
       return new Date(`${m.year}-${m.month}-${m.day}T${h}:${m.minute}:${m.second}Z`);
     }catch(e){
       warn("dateInTZ fallback", e);
       const d = new Date(baseDate);
       if (overrideHour!=null) d.setUTCHours(overrideHour,0,0,0);
-      return d; // best-effort
+      return d;
     }
   }
   function fmtDate(d,tz){
-    try{ return new Intl.DateTimeFormat(undefined,{dateStyle:"full", timeZone:tz}).format(d); }
-    catch(_){
-      return new Intl.DateTimeFormat(undefined,{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:tz}).format(d);
-    }
+    return safe(()=> new Intl.DateTimeFormat(undefined,{dateStyle:"full", timeZone:tz}).format(d))
+        || new Intl.DateTimeFormat(undefined,{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:tz}).format(d);
   }
   function fmtTime(d,tz){
-    try{ return new Intl.DateTimeFormat(undefined,{timeStyle:"medium", timeZone:tz}).format(d); }
-    catch(_){
-      return new Intl.DateTimeFormat(undefined,{hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false, timeZone:tz}).format(d);
-    }
+    return safe(()=> new Intl.DateTimeFormat(undefined,{timeStyle:"medium", timeZone:tz}).format(d))
+        || new Intl.DateTimeFormat(undefined,{hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false, timeZone:tz}).format(d);
   }
   const utcTrunc = (d)=> new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
   const validDateStr = s => /^\d{4}-\d{2}-\d{2}$/.test(s);
 
   /* ---------- 13-Moon math ---------- */
-  const isLeapYear = y=> (y%4===0 && y%100!==0) || (y%400===0);
+  const isLeapYear   = y=> (y%4===0 && y%100!==0) || (y%400===0);
   const isLeapDayUTC = d=> d.getUTCMonth()===1 && d.getUTCDate()===29;
   const isDOOT = (d, tz)=>{ const dt=dateInTZ(d,tz); return (dt.getUTCMonth()===6 && dt.getUTCDate()===25); };
 
@@ -121,7 +123,7 @@
     }
     const idx = dayIndexSinceStart(d, tz);
     const moon = Math.floor(idx/28)+1;
-    const day = (idx%28)+1;
+    const day  = (idx%28)+1;
     const s=startOfYear13(d,tz).getUTCFullYear();
     return {special:null, moon, day, year:`${s}/${s+1}`};
   }
@@ -138,7 +140,7 @@
     const spans=[]; let curStart = utcTrunc(anchor);
     for(let m=1;m<=13;m++){
       const start = curStart;
-      const end = utcTrunc(addDaysSkippingSpecials(start, 27, tz));
+      const end   = utcTrunc(addDaysSkippingSpecials(start, 27, tz));
       spans.push({m, name:MOONS[m-1], essence:MOON_ESSENCE[m-1], start, end});
       curStart = utcTrunc(addDaysSkippingSpecials(end, 1, tz));
     }
@@ -158,11 +160,13 @@
       {n:"Last Quarter", r:[0.72,0.78]}, {n:"Waning Crescent", r:[0.78,0.97]},
       {n:"New Moon", r:[0.97,1.01]},
     ];
-    const phase = names.find(x=> frac>=x.r[0] && frac<x.r[1])?.n || "—";
+    const phase = (names.find(x=> frac>=x.r[0] && frac<x.r[1])||{}).n || "—";
     return {phase, ageDays: age, illum, frac};
   }
   function drawMoonSim(canvas, illum, sunAngle){
-    const ctx=canvas.getContext("2d"); const W=canvas.width, H=canvas.height; ctx.clearRect(0,0,W,H);
+    if (!canvas) return;
+    const ctx=canvas.getContext("2d"); if(!ctx) return;
+    const W=canvas.width, H=canvas.height; ctx.clearRect(0,0,W,H);
     const g=ctx.createRadialGradient(W*0.5,H*0.35,20,W*0.5,H*0.35,W*0.6); g.addColorStop(0,"#0a0e15"); g.addColorStop(1,"#06080d");
     ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
     const cx=W/2, cy=H/2, R=Math.min(W,H)*0.32; const sx = cx + Math.cos(sunAngle)*R*1.6; const sy = cy - Math.sin(sunAngle)*R*1.6;
@@ -186,9 +190,9 @@
   function numerology(d, tz){
     const dt = dateInTZ(d, tz);
     const y=dt.getUTCFullYear(), m=dt.getUTCMonth()+1, day=dt.getUTCDate();
-    const total = reduceNum(sumDigits(y)+sumDigits(m)+sumDigits(day));
+    const total  = reduceNum(sumDigits(y)+sumDigits(m)+sumDigits(day));
     const monthN = reduceNum(sumDigits(y)+sumDigits(m));
-    const dayN = reduceNum(sumDigits(day));
+    const dayN   = reduceNum(sumDigits(day));
     return {total, monthN, dayN};
   }
 
@@ -202,7 +206,7 @@
       const doot   = isDOOT(d, tz);
       if ((isLeap && skipLeapDay) || (doot && skipDOOT)) count -= 1;
     }
-    const kin = ((count % 260) + 260) % 260 + 1;
+    const kin  = ((count % 260) + 260) % 260 + 1;
     const tone = ((kin-1) % 13) + 1;
     const seal = SEALS[(kin-1) % 20];
     return { kin, tone, seal };
@@ -245,7 +249,7 @@
 
   const kinOn = $("#kinOn"), kinEpoch = $("#kinEpoch"), kinSkipLeap = $("#kinSkipLeap"), kinSkipDOOT = $("#kinSkipDOOT");
   const kinBadge = $("#kinBadge"), kinLine = $("#kinLine");
-  const dlICS = $("#dlICS"), regenICS = $("#regenICS");
+  const dlICS = $("#dlICS");
 
   /* ---------- Week dots (build once) ---------- */
   if (weekDots && !weekDots.children.length){
@@ -257,12 +261,13 @@
 
   /* ---------- URL sync ---------- */
   function readURL(){
-    const u=new URL(location.href);
+    let u;
+    try{ u=new URL(location.href); }catch(e){ warn("URL parse",e); return; }
     const d=u.searchParams.get("d");
     const z=u.searchParams.get("tz");
     const h=u.searchParams.get("t");
-    if(z && tzPick){ tzPick.value=z; try{ localStorage.setItem(TZ_KEY,z); }catch(_){} }
-    const tz = tzPick?.value || "UTC";
+    if(z && tzPick){ tzPick.value=z; safe(()=> localStorage.setItem(TZ_KEY,z)); }
+    const tz = (tzPick&&tzPick.value) || "UTC";
     if (datePick){
       if (d && validDateStr(d)) datePick.value=d;
       else datePick.value=dateInTZ(new Date(), tz).toISOString().slice(0,10);
@@ -273,7 +278,7 @@
     }
   }
   function writeURL(){
-    const u=new URL(location.href);
+    let u; try{ u=new URL(location.href); }catch(e){ return; }
     if (datePick && validDateStr(datePick.value)) u.searchParams.set("d", datePick.value);
     if (tzPick)   u.searchParams.set("tz", tzPick.value);
     if (hourScrub)u.searchParams.set("t", hourScrub.value);
@@ -281,10 +286,10 @@
   }
 
   /* ---------- Sky (twinkle + aurora) ---------- */
-  ;(function initSky(){
+  (function initSky(){
     if (!skyBg) return;
     const RM = (typeof matchMedia==="function") && matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const ctx = skyBg.getContext("2d");
+    const ctx = skyBg.getContext("2d"); if(!ctx) return;
     const stars = Array.from({length: 130}, ()=>({
       x: Math.random()*skyBg.width,
       y: Math.random()*skyBg.height,
@@ -348,7 +353,7 @@
     const c1 = mix(cold, warm, t*0.7);
     const c2 = mix(warm, cold, (1-t)*0.7);
     setGradientStops("rg", c1, c2);
-    setGradientStops("mbGrad", c1, c2);
+    setGradientStops("mbGrad", c1, c2); // safe no-op if missing
   }
 
   /* ---------- Rendering ---------- */
@@ -382,32 +387,32 @@
       const base=new Date();
       const hour = +hourScrub?.value || 0;
       const wall=dateInTZ(base, tz, hour);
-      nowDate && (nowDate.textContent = fmtDate(wall, tz));
-      nowClock && (nowClock.textContent = fmtTime(base, tz));
-      nowTZ && (nowTZ.textContent = tz);
+      if (nowDate) nowDate.textContent = fmtDate(wall, tz);
+      if (nowClock) nowClock.textContent = fmtTime(base, tz);
+      if (nowTZ) nowTZ.textContent = tz;
 
       const selStr = validDateStr(datePick?.value) ? datePick.value : dateInTZ(new Date(), tz).toISOString().slice(0,10);
       const sel = new Date(`${selStr}T${pad(hour)}:00:00Z`);
 
       const m13 = calc13Moon(sel, tz);
-      yearSpan && (yearSpan.textContent = m13.year);
-      dootWarn && (dootWarn.style.display = m13.special ? "block" : "none");
+      if (yearSpan) yearSpan.textContent = m13.year;
+      if (dootWarn) dootWarn.style.display = m13.special ? "block" : "none";
 
       if(m13.special){
-        moonName && (moonName.textContent = m13.special);
-        moonEssence && (moonEssence.textContent = "Outside the 13×28 count");
-        dayInMoon && (dayInMoon.textContent = "—");
-        moonArc && moonArc.setAttribute("stroke-dasharray", "0 316");
-        moonLine && (moonLine.textContent = m13.special);
+        if (moonName)    moonName.textContent = m13.special;
+        if (moonEssence) moonEssence.textContent = "Outside the 13×28 count";
+        if (dayInMoon)   dayInMoon.textContent = "—";
+        if (moonArc)     moonArc.setAttribute("stroke-dasharray", "0 316");
+        if (moonLine)    moonLine.textContent = m13.special;
         if (weekDots){ [...weekDots.children].forEach(n => n.classList.remove("on")); weekDots.setAttribute("aria-label","No week/day (special)"); }
       } else {
         const idx=m13.moon-1;
-        moonName && (moonName.textContent = `${MOONS[idx]} Moon (${m13.moon})`);
-        moonEssence && (moonEssence.textContent = MOON_ESSENCE[idx]);
-        dayInMoon && (dayInMoon.textContent = m13.day);
+        if (moonName)    moonName.textContent = `${MOONS[idx]} Moon (${m13.moon})`;
+        if (moonEssence) moonEssence.textContent = MOON_ESSENCE[idx];
+        if (dayInMoon)   dayInMoon.textContent = m13.day;
         const dash = Math.round(316 * (m13.day/28));
-        moonArc && moonArc.setAttribute("stroke-dasharray", `${dash} ${316-dash}`);
-        moonLine && (moonLine.textContent = `You are in ${MOONS[idx]} Moon — Day ${m13.day} of 28`);
+        if (moonArc)     moonArc.setAttribute("stroke-dasharray", `${dash} ${316-dash}`);
+        if (moonLine)    moonLine.textContent = `You are in ${MOONS[idx]} Moon — Day ${m13.day} of 28`;
         if (weekDots){
           const { week, dow } = weekAndDow(m13.day);
           const nodes = [...weekDots.children];
@@ -419,23 +424,23 @@
       }
 
       const nu = numerology(sel, tz);
-      numLine && (numLine.textContent = `Universal ${nu.total}`);
-      numMeta && (numMeta.textContent = `Month tone ${nu.monthN} • Day tone ${nu.dayN}`);
+      if (numLine) numLine.textContent = `Universal ${nu.total}`;
+      if (numMeta) numMeta.textContent = `Month tone ${nu.monthN} • Day tone ${nu.dayN}`;
       const resonant = [1,4,7,11,22,33].includes(nu.total);
       if (sourceChip) sourceChip.style.boxShadow = resonant? "0 0 0 1px #7af3ff55, 0 8px 28px #7af3ff22" : "none";
 
       const qIdx = Math.abs(sel.getUTCFullYear()*372 + (sel.getUTCMonth()+1)*31 + sel.getUTCDate()) % QUOTES.length;
-      energyQuote && (energyQuote.textContent = QUOTES[qIdx]);
+      if (energyQuote) energyQuote.textContent = QUOTES[qIdx];
 
       const ph = moonPhase(dateInTZ(sel, tz, hour));
-      phaseLine && (phaseLine.textContent = `${ph.phase}`);
-      phaseMeta && (phaseMeta.textContent = `Age ≈ ${ph.ageDays.toFixed(1)} d • Illum ≈ ${(ph.illum*100).toFixed(0)}%`);
+      if (phaseLine) phaseLine.textContent = `${ph.phase}`;
+      if (phaseMeta) phaseMeta.textContent = `Age ≈ ${ph.ageDays.toFixed(1)} d • Illum ≈ ${(ph.illum*100).toFixed(0)}%`;
       applyPhaseAccent(ph.illum);
-      simMoon && drawMoonSim(simMoon, ph.illum, (hour/24) * Math.PI*2);
+      drawMoonSim(simMoon, ph.illum, (hour/24) * Math.PI*2);
 
       buildYearMap();
       const anchor = startOfYear13(sel, tz);
-      const spans = yearMoonSpans(anchor, tz);
+      const spans  = yearMoonSpans(anchor, tz);
       if(nextMoonInfo){
         if(!m13.special){
           const next = spans[m13.moon] || null;
@@ -447,11 +452,12 @@
         }
       }
 
+      // Kin (optional)
       if (kinOn?.checked){
         const rules = {
           epochUTC: new Date(`${kinEpoch.value}T00:00:00Z`),
           skipLeapDay: !!kinSkipLeap?.checked,
-          skipDOOT: !!kinSkipDOOT?.checked,
+          skipDOOT:    !!kinSkipDOOT?.checked,
           tz
         };
         const K = kinFromDate(sel, rules);
@@ -462,10 +468,11 @@
         if (kinLine)  kinLine.textContent  = "—";
       }
 
+      // ICS
       if (dlICS){
-        const ics = makeICS(spans, tz, `${anchor.getUTCFullYear()}/${anchor.getUTCFullYear()+1}`);
+        const ics  = makeICS(spans, tz, `${anchor.getUTCFullYear()}/${anchor.getUTCFullYear()+1}`);
         const blob = new Blob([ics], {type:"text/calendar;charset=utf-8"});
-        const url = URL.createObjectURL(blob);
+        const url  = URL.createObjectURL(blob);
         if (dlICS.dataset._url) URL.revokeObjectURL(dlICS.dataset._url);
         dlICS.href = url;
         dlICS.dataset._url = url;
@@ -476,38 +483,30 @@
 
   /* ---------- Controls ---------- */
   const btnToday=$("#btnToday"), prevDay=$("#prevDay"), nextDay=$("#nextDay"), shareLink=$("#shareLink");
-
   on(btnToday,"click",()=>{
     const tz=tzPick?.value || "UTC";
     const t=dateInTZ(new Date(), tz);
-    if (datePick) datePick.value=t.toISOString().slice(0,10);
-    if (hourScrub) hourScrub.value = new Date().getHours();
+    if (datePick)   datePick.value=t.toISOString().slice(0,10);
+    if (hourScrub)  hourScrub.value = new Date().getHours();
     writeURL(); updateAll();
   });
-
   on(prevDay,"click",()=>{
     if (!datePick || !validDateStr(datePick.value)) return;
     const d=new Date(datePick.value+"T00:00:00Z"); d.setUTCDate(d.getUTCDate()-1);
     datePick.value=d.toISOString().slice(0,10); writeURL(); updateAll();
   });
-
   on(nextDay,"click",()=>{
     if (!datePick || !validDateStr(datePick.value)) return;
     const d=new Date(datePick.value+"T00:00:00Z"); d.setUTCDate(d.getUTCDate()+1);
     datePick.value=d.toISOString().slice(0,10); writeURL(); updateAll();
   });
-
   on(shareLink,"click",()=>{
     writeURL();
-    navigator.clipboard?.writeText(location.href).catch(()=>{});
+    safe(()=> navigator.clipboard.writeText(location.href));
     const t=document.createElement("div"); t.className="toast"; t.textContent="Link copied";
     document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
     setTimeout(()=>{t.style.opacity=0; setTimeout(()=>t.remove(),250);},1800);
   });
-
-  on(datePick,"change",()=>{ writeURL(); updateAll(); }, {passive:true});
-  on(hourScrub,"input",()=>{ writeURL(); updateAll(); }, {passive:true});
-
   on($("#kinOn"), "change", updateAll, {passive:true});
   on($("#kinEpoch"), "change", updateAll, {passive:true});
   on($("#kinSkipLeap"), "change", updateAll, {passive:true});
@@ -523,10 +522,9 @@
     if(datePick.value === today){ updateAll(); }
   },1000);
 
-  // Init
+  /* ---------- Init ---------- */
   try{
     readURL();
-    // If browser rendered <select> but has no options (rare), force basic list
     if (tzPick && !tzPick.options.length){
       tzPick.innerHTML = COMMON_TZ.map(z=>`<option value="${z}">${z}</option>`).join("");
       tzPick.value = "UTC";
