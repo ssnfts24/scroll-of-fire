@@ -1,0 +1,644 @@
+<!doctype html>
+
+<html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
+<head>
+  <meta charset="utf-8">
+  <title>Invocation Lab — Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="description" content="Invocation Lab — a guided run space for Σ → ∇φ → ℛ → ΔΣ with numbers, carriers, ethics, witnesses, and sealed export to the Ledger.">
+  <link rel="canonical" href="./invoke.html">
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">  <!-- Fonts & CSS from site -->  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2.8.1">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2.8.1" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.8.1"></noscript>  <style>
+    :root{
+      --accent-432:#7af3ff; --accent-528:#a4ff90; --accent-369:#f3c97a; --accent-144:#b3e1ff; --accent-963:#ffd1f3;
+      --accent:var(--accent-432);
+    }
+    /* Carrier skin hook from body class */
+    .carrier-528 :root, .carrier-528{--accent:var(--accent-528)}
+    .carrier-369 :root, .carrier-369{--accent:var(--accent-369)}
+    .carrier-144 :root, .carrier-144{--accent:var(--accent-144)}
+    .carrier-963 :root, .carrier-963{--accent:var(--accent-963)}
+
+    /* Page-specific styles */
+    .lab-header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-top:12px}
+    .lab-title{margin:0}
+    .xi-dial{display:flex;align-items:center;gap:10px;background:rgba(122,243,255,.08);border:1px solid #2c3140;padding:8px 12px;border-radius:12px}
+    .xi-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+    .progress{height:8px;background:#171a23;border:1px solid #2c3140;border-radius:999px;overflow:hidden}
+    .progress > span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#fff3);width:0%}
+
+    .stepper{display:flex;gap:6px;overflow:auto;padding:6px 0}
+    .chip{border:1px solid #2c3140;border-radius:999px;padding:6px 10px;white-space:nowrap}
+    .chip.is-active{border-color:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent)}
+
+    .section{margin:16px 0}
+    .section[hidden]{display:none}
+
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    @media (max-width:880px){.grid-2,.grid-3{grid-template-columns:1fr}}
+
+    .list-plain{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+
+    .kbd{background:#0d1016;border:1px solid #2c3140;border-radius:6px;padding:2px 6px}
+
+    .ghost{opacity:.75}
+
+    .mini{font-size:.92rem;opacity:.85}
+
+    .pill{display:inline-block;padding:2px 8px;border:1px solid #2c3140;border-radius:999px}
+
+    .note{font-size:.9rem;opacity:.9}
+
+    /* Print summary */
+    @media print{
+      header.site, .controls, .tabs, .drawer, .no-print{display:none!important}
+      .card, .tile{break-inside:avoid}
+      body{background:#fff;color:#000}
+    }
+  </style>  <script defer src="assets/js/codex.js?v=3.7"></script></head><body class="stars living-all carrier-432" data-theme="dark">
+  <a class="skip" href="#main">Skip to content</a>  <!-- Header (kept minimal; site-level header can replace this if included globally) -->  <header class="site enhanced" role="banner">
+    <div class="nav">
+      <div class="brand">
+        <a class="logo no-living" href="./" aria-label="Home"></a>
+        <a class="brand-link" href="./"><h1 class="kicker sheen">Scroll of Fire</h1></a>
+      </div>
+      <div class="quick" role="toolbar" aria-label="Quick actions">
+        <a class="cta" href="theory.html">Theory</a>
+        <a class="cta" href="teach.html">Manifest</a>
+        <button id="cycleCarrier" class="cta" type="button" title="Cycle carrier skin">Carrier</button>
+      </div>
+    </div>
+  </header>  <main id="main" class="wrap" role="main" tabindex="-1">
+    <div class="lab-header">
+      <div>
+        <h1 class="title sheen lab-title">✨ Invocation Lab</h1>
+        <p class="subtitle">Guided run: <strong>Σ → ∇φ → ℛ → ΔΣ</strong> • seal + export to Ledger</p>
+      </div>
+      <div class="xi-dial" aria-live="polite"><span class="xi-dot" aria-hidden="true"></span> <strong id="xiLabel">Ξ 0%</strong></div>
+    </div><div class="progress" aria-label="Run progress"><span id="progressBar"></span></div>
+
+<!-- Stepper chips -->
+<nav class="stepper" aria-label="Run steps">
+  <button class="chip is-active" data-step="node">0 • Node</button>
+  <button class="chip" data-step="sigma">Σ • Activators</button>
+  <button class="chip" data-step="nabla">∇φ • Recognition</button>
+  <button class="chip" data-step="rho">ℛ • Harmonizer</button>
+  <button class="chip" data-step="delta">ΔΣ • Boundary & Witness</button>
+  <button class="chip" data-step="seal">Seal • Export</button>
+</nav>
+
+<!-- Controls -->
+<div class="controls toolbar no-print">
+  <button id="btnPrev" class="cta" type="button" disabled>← Back</button>
+  <button id="btnNext" class="cta" type="button">Next →</button>
+  <button id="btnSave" class="cta ghost" type="button" title="Save to browser (LocalStorage)">Save</button>
+  <button id="btnLoad" class="cta ghost" type="button" title="Load last saved draft">Load</button>
+  <button id="btnReset" class="cta ghost" type="button" title="Clear this run">Reset</button>
+</div>
+
+<!-- 0. Node chooser -->
+<section id="step-node" class="section card" aria-labelledby="node-h">
+  <h2 id="node-h" class="sheen">Pick a Node (the “x”)</h2>
+  <p class="meta">Choose the field you’re acting in. This preloads relevant checklists and examples.</p>
+  <div class="grid-3">
+    <label class="tile"><input type="radio" name="nodeType" value="justice"> <div><h4>⚖️ Justice</h4><p>Legal notices, due process, relief.</p></div></label>
+    <label class="tile"><input type="radio" name="nodeType" value="health"> <div><h4>💠 Health</h4><p>Care plans, nervous-system, recovery.</p></div></label>
+    <label class="tile"><input type="radio" name="nodeType" value="sanctuary"> <div><h4>🛡 Sanctuary</h4><p>Safety, shelter, peace.</p></div></label>
+    <label class="tile"><input type="radio" name="nodeType" value="city"> <div><h4>🏙 City</h4><p>Neighborhoods, mutual aid, civic asks.</p></div></label>
+    <label class="tile"><input type="radio" name="nodeType" value="personal"> <div><h4>✨ Personal</h4><p>Career, art, relationships, home.</p></div></label>
+  </div>
+
+  <div class="grid-2" style="margin-top:12px">
+    <article class="card">
+      <label class="meta" for="runTitle">Run title</label>
+      <input id="runTitle" type="text" placeholder="e.g., Sanctuary for Asha — winter quarter" required>
+      <div class="mini">Tip: clear, lawful, specific.</div>
+    </article>
+    <article class="card">
+      <label class="meta" for="runGoal">Outcome (1–2 sentences)</label>
+      <textarea id="runGoal" rows="3" placeholder="State the coherent outcome you seek (who/what/when/where)."></textarea>
+    </article>
+  </div>
+</section>
+
+<!-- Σ — Activators -->
+<section id="step-sigma" class="section card" aria-labelledby="sigma-h" hidden>
+  <h2 id="sigma-h" class="sheen">Σ — Resonant Activators</h2>
+  <div class="grid-2">
+    <article class="card">
+      <h3>Inputs</h3>
+      <label class="meta" for="intentWords">Intent words / prayer</label>
+      <textarea id="intentWords" rows="4" placeholder="Key phrases of intention…"></textarea>
+
+      <div class="grid-2" style="margin-top:10px">
+        <div>
+          <label class="meta" for="timeBudget">Time budget (minutes)</label>
+          <input id="timeBudget" type="number" min="0" step="5" value="18">
+        </div>
+        <div>
+          <label class="meta" for="energyBudget">Energy budget (1–10)</label>
+          <input id="energyBudget" type="number" min="1" max="10" value="7">
+        </div>
+      </div>
+
+      <label class="meta" for="legalNotices" style="margin-top:10px">Legal notice / covenant (optional)</label>
+      <textarea id="legalNotices" rows="3" placeholder="Citations, covenants, notices relevant to this run…"></textarea>
+
+      <label class="meta" for="glyph">Glyph (optional)</label>
+      <select id="glyph">
+        <option value="">— none —</option>
+        <option value="sigil">Sigil</option>
+        <option value="ahhava">AHHAVA</option>
+        <option value="witness">Witness</option>
+      </select>
+    </article>
+
+    <article class="card">
+      <h3>Numbers & Carriers</h3>
+      <div>
+        <div class="mini">Activation codes</div>
+        <div class="toolbar" role="group" aria-label="Number locks">
+          <label class="pill"><input type="checkbox" name="numbers" value="111"> 111</label>
+          <label class="pill"><input type="checkbox" name="numbers" value="369"> 369</label>
+          <label class="pill"><input type="checkbox" name="numbers" value="777"> 777</label>
+          <label class="pill"><input type="checkbox" name="numbers" value="1111"> 1111</label>
+        </div>
+      </div>
+
+      <div style="margin-top:10px">
+        <div class="mini">Voice carrier</div>
+        <div class="toolbar" role="group" aria-label="Carrier">
+          <label class="pill"><input type="radio" name="carrier" value="432" checked> 432</label>
+          <label class="pill"><input type="radio" name="carrier" value="528"> 528</label>
+          <label class="pill"><input type="radio" name="carrier" value="369"> 369</label>
+          <label class="pill"><input type="radio" name="carrier" value="144"> 144</label>
+          <label class="pill"><input type="radio" name="carrier" value="963"> 963</label>
+        </div>
+      </div>
+
+      <div style="margin-top:10px">
+        <label class="meta" for="media">Attach artifacts (images / pdf)</label>
+        <input id="media" type="file" multiple accept="image/*,application/pdf">
+        <div id="mediaList" class="note"></div>
+      </div>
+
+      <div style="margin-top:10px">
+        <button id="startCadence" class="cta" type="button">Start 3‑6‑9 cadence timer</button>
+        <span id="cadenceStatus" class="mini ghost" aria-live="polite"></span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ∇φ — Recognition Planner -->
+<section id="step-nabla" class="section card" aria-labelledby="nabla-h" hidden>
+  <h2 id="nabla-h" class="sheen">∇φ — Recognition Gradient</h2>
+  <div class="grid-2">
+    <article class="card">
+      <h3>Alignment pause</h3>
+      <ul class="list-plain">
+        <li><label><input type="checkbox" name="ethics" value="truth"> Aligns with truth?</label></li>
+        <li><label><input type="checkbox" name="ethics" value="dignity"> Protects dignity of all parties?</label></li>
+        <li><label><input type="checkbox" name="ethics" value="covenant"> Respects covenant / consent?</label></li>
+        <li><label><input type="checkbox" name="ethics" value="lawful"> Lawful, non‑coercive path?</label></li>
+      </ul>
+      <label class="meta" for="risks">Risks / constraints</label>
+      <textarea id="risks" rows="3" placeholder="What could fail? What will you not do?"></textarea>
+    </article>
+    <article class="card">
+      <h3>Turn into a plan</h3>
+      <div class="grid-2">
+        <div>
+          <label class="meta" for="deadline">Target date</label>
+          <input id="deadline" type="date">
+        </div>
+        <div>
+          <label class="meta" for="budget">Budget ($ or time units)</label>
+          <input id="budget" type="text" placeholder="$0 / 18m">
+        </div>
+      </div>
+      <label class="meta" for="metrics">Measures of success</label>
+      <input id="metrics" type="text" placeholder="e.g., housing secured, case # closed, pain < 2/10">
+
+      <div style="margin-top:10px">
+        <label class="meta" for="taskInput">Tasks</label>
+        <div class="toolbar">
+          <input id="taskInput" type="text" placeholder="Add a task and press +">
+          <button id="addTask" class="cta" type="button">+</button>
+        </div>
+        <ul id="taskList" class="list-plain"></ul>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ℛ — Harmonizer -->
+<section id="step-rho" class="section card" aria-labelledby="rho-h" hidden>
+  <h2 id="rho-h" class="sheen">ℛ — Spirit Harmonizer</h2>
+  <div class="grid-2">
+    <article class="card">
+      <h3>Voice + Breath (3‑6‑9)</h3>
+      <p class="note">Speak the intent on the <span class="pill">3</span>, sustain on <span class="pill">6</span>, release on <span class="pill">9</span>. Use selected carrier.</p>
+      <div class="toolbar">
+        <button id="rhoStart" class="cta" type="button">Begin 3‑6‑9 cycle</button>
+        <button id="rhoStop" class="cta" type="button" disabled>Stop</button>
+        <span id="rhoStatus" class="mini"></span>
+      </div>
+      <label class="meta" for="rhoNotes">Notes (felt sense / phrases)</label>
+      <textarea id="rhoNotes" rows="4" placeholder="What changed in voice/body/field?"></textarea>
+    </article>
+    <article class="card">
+      <h3>Group sync (optional)</h3>
+      <label class="meta" for="cowitnesses">Co‑witness emails (comma‑separated)</label>
+      <input id="cowitnesses" type="text" placeholder="friend@node.org, team@example.com">
+      <label class="meta" for="witnessClips">Attach witness artifacts</label>
+      <input id="witnessClips" type="file" multiple accept="image/*,audio/*,video/*">
+      <div id="witnessList" class="note"></div>
+    </article>
+  </div>
+  <details class="card" style="margin-top:10px">
+    <summary class="menu__trigger">A/B mode (optional)</summary>
+    <div class="card" style="margin-top:8px">
+      <div class="toolbar"><span class="mini">Compare two carriers/scripts in one run.</span></div>
+      <div class="toolbar" role="group">
+        <label class="pill"><input type="radio" name="abCarrierA" value="432" checked> A: 432</label>
+        <label class="pill"><input type="radio" name="abCarrierA" value="528"> A: 528</label>
+        <label class="pill"><input type="radio" name="abCarrierB" value="369" checked> B: 369</label>
+        <label class="pill"><input type="radio" name="abCarrierB" value="963"> B: 963</label>
+      </div>
+      <div class="grid-2" style="margin-top:8px">
+        <div>
+          <label class="meta" for="abNotesA">A — outcome notes</label>
+          <textarea id="abNotesA" rows="3"></textarea>
+        </div>
+        <div>
+          <label class="meta" for="abNotesB">B — outcome notes</label>
+          <textarea id="abNotesB" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ΔΣ — Boundary & Witness -->
+<section id="step-delta" class="section card" aria-labelledby="delta-h" hidden>
+  <h2 id="delta-h" class="sheen">ΔΣ — Boundary Check & Witness</h2>
+  <div class="grid-2">
+    <article class="card">
+      <h3>Ethical stop‑rules</h3>
+      <ul class="list-plain">
+        <li><label><input type="checkbox" name="stop" value="noncoercion"> No coercion / manipulation</label></li>
+        <li><label><input type="checkbox" name="stop" value="harm"> No deliberate harm</label></li>
+        <li><label><input type="checkbox" name="stop" value="consent"> Consent respected / revocable</label></li>
+        <li><label><input type="checkbox" name="stop" value="witnesses"> Two‑or‑three witnesses for claims</label></li>
+      </ul>
+      <label class="meta" for="boundaryNotes">Boundary notes</label>
+      <textarea id="boundaryNotes" rows="3" placeholder="Cite the rules you applied."></textarea>
+    </article>
+    <article class="card">
+      <h3>Evidence log</h3>
+      <label class="meta" for="evidence">Upload evidence</label>
+      <input id="evidence" type="file" multiple>
+      <div id="evidenceList" class="note"></div>
+      <label class="meta" for="witnessText">Witness statements</label>
+      <textarea id="witnessText" rows="3" placeholder="Short witness statements…"></textarea>
+    </article>
+  </div>
+</section>
+
+<!-- Seal / Export -->
+<section id="step-seal" class="section card" aria-labelledby="seal-h" hidden>
+  <h2 id="seal-h" class="sheen">Seal & Export</h2>
+  <div class="grid-2">
+    <article class="card">
+      <h3>Generate seal</h3>
+      <p class="note">Creates a SHA‑256 over the run data (+ artifact file names) and time‑stamps the pattern.</p>
+      <div class="toolbar">
+        <button id="btnSeal" class="cta" type="button">Generate Seal</button>
+        <button id="btnCopySeal" class="cta" type="button" disabled>Copy Seal</button>
+      </div>
+      <p id="sealOut" class="mini"></p>
+      <div class="mini">Seal path I–VII <span id="sealPath" class="pill">I</span></div>
+    </article>
+    <article class="card">
+      <h3>Export</h3>
+      <div class="toolbar">
+        <button id="btnDownloadJson" class="cta" type="button" disabled>Download JSON</button>
+        <button id="btnPrint" class="cta" type="button">Print / Save PDF</button>
+      </div>
+      <p class="note">After exporting, add to <a href="ledger.html">Ledger</a> as a witness record.</p>
+    </article>
+  </div>
+
+  <article class="card">
+    <h3>Run Summary (printable)</h3>
+    <div id="summary"></div>
+  </article>
+</section>
+
+  </main>  <footer class="wrap">
+    <div class="divider sweep" aria-hidden="true"></div>
+    <p class="mini">Comparator note: Copeland Ψ (#7B) appears only in <a href="theory.html#canon">Theory → Canon</a> / <a href="#provenance">Provenance</a> as an external comparator. This lab runs solely on ΨΩ → Σ → ∇φ → ℛ → ΔΣ.</p>
+  </footer>  <script>
+  (function(){
+    // --- Simple state store ---
+    const S = {
+      version: 'soflab-1.0',
+      nodeType: '',
+      runTitle: '',
+      runGoal: '',
+      sigma: { intentWords:'', timeBudget:18, energyBudget:7, legalNotices:'', glyph:'', numbers:[], carrier:'432', media:[] },
+      nabla: { ethics:[], risks:'', deadline:'', budget:'', metrics:'', tasks:[] },
+      rho: { notes:'', cowitnesses:[], witnessFiles:[], ab:{A:'432',B:'369',notesA:'',notesB:''} },
+      delta: { stops:[], boundaryNotes:'', evidenceFiles:[], witnessText:'' },
+      seals: { level:'I', sha256:'', ts:'' }
+    };
+
+    // Helpers
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+    const byId = id => document.getElementById(id);
+
+    function save(){
+      localStorage.setItem('invocation-lab', JSON.stringify(S));
+      toast('Saved.');
+    }
+    function load(){
+      const raw = localStorage.getItem('invocation-lab');
+      if(!raw){ toast('No saved draft.'); return; }
+      try{ Object.assign(S, JSON.parse(raw)); hydrate(); toast('Loaded.'); }catch(e){ toast('Load failed.'); }
+    }
+    function reset(){ localStorage.removeItem('invocation-lab'); location.reload(); }
+    function toast(msg){ const el=document.createElement('div'); el.textContent=msg; el.style.position='fixed'; el.style.right='10px'; el.style.bottom='10px'; el.style.background='#0d1016'; el.style.border='1px solid #2c3140'; el.style.padding='8px 10px'; el.style.borderRadius='10px'; el.style.zIndex=2000; document.body.appendChild(el); setTimeout(()=>el.remove(),1200); }
+
+    function setCarrierSkin(val){
+      document.body.classList.remove('carrier-432','carrier-528','carrier-369','carrier-144','carrier-963');
+      document.body.classList.add('carrier-'+val);
+    }
+
+    // Step router
+    const steps = ['node','sigma','nabla','rho','delta','seal'];
+    let stepIndex = 0;
+
+    function goto(i){
+      stepIndex = Math.max(0, Math.min(steps.length-1, i));
+      steps.forEach((key,idx)=>{
+        byId('step-'+key).hidden = idx!==stepIndex;
+      });
+      $$('.chip').forEach((c,idx)=> c.classList.toggle('is-active', idx===stepIndex));
+      byId('btnPrev').disabled = stepIndex===0;
+      byId('btnNext').textContent = stepIndex===steps.length-1 ? 'Finish' : 'Next →';
+      updateProgress();
+      renderSummary();
+    }
+
+    function updateProgress(){
+      const pct = Math.round((stepIndex)/(steps.length-1)*100);
+      byId('progressBar').style.width = pct+'%';
+      byId('xiLabel').textContent = 'Ξ '+pct+'%';
+    }
+
+    // --- Bind Node step ---
+    $$('input[name="nodeType"]').forEach(r=>{
+      r.addEventListener('change',()=>{ S.nodeType=r.value; saveDraftSoft(); });
+    });
+    byId('runTitle').addEventListener('input', e=>{ S.runTitle=e.target.value; saveDraftSoft(); });
+    byId('runGoal').addEventListener('input', e=>{ S.runGoal=e.target.value; saveDraftSoft(); });
+
+    // Σ
+    byId('intentWords').addEventListener('input', e=>{ S.sigma.intentWords=e.target.value; saveDraftSoft(); });
+    byId('timeBudget').addEventListener('input', e=>{ S.sigma.timeBudget=Number(e.target.value||0); saveDraftSoft(); });
+    byId('energyBudget').addEventListener('input', e=>{ S.sigma.energyBudget=Number(e.target.value||0); saveDraftSoft(); });
+    byId('legalNotices').addEventListener('input', e=>{ S.sigma.legalNotices=e.target.value; saveDraftSoft(); });
+    byId('glyph').addEventListener('change', e=>{ S.sigma.glyph=e.target.value; saveDraftSoft(); });
+    $$('input[name="numbers"]').forEach(cb=> cb.addEventListener('change',()=>{
+      S.sigma.numbers = $$('input[name="numbers"]:checked').map(c=>c.value); saveDraftSoft();
+    }));
+    $$('input[name="carrier"]').forEach(cb=> cb.addEventListener('change',()=>{
+      const v = $$('input[name="carrier"]:checked')[0]?.value || '432';
+      S.sigma.carrier = v; setCarrierSkin(v); saveDraftSoft();
+    }));
+
+    // File capture helpers
+    function listFiles(inputEl, outEl, targetArr){
+      const files = Array.from(inputEl.files||[]);
+      targetArr.length = 0;
+      files.forEach(f=> targetArr.push({name:f.name, size:f.size, type:f.type}));
+      outEl.innerHTML = files.map(f=> `${f.name} <span class="ghost mini">(${Math.round(f.size/1024)} KB)</span>`).join('<br>');
+      saveDraftSoft();
+    }
+    byId('media').addEventListener('change', ()=> listFiles(byId('media'), byId('mediaList'), S.sigma.media));
+
+    // Cadence timers
+    let cadenceTimer = null, cadencePhase = 0;
+    byId('startCadence').addEventListener('click', ()=>{
+      clearInterval(cadenceTimer); cadencePhase=0;
+      const phases = [3,6,9];
+      const labels = ['Speak (3)','Sustain (6)','Release (9)'];
+      const el = byId('cadenceStatus');
+      let t = phases[0];
+      el.textContent = labels[0]+' • '+t+'s';
+      cadenceTimer = setInterval(()=>{
+        t--; el.textContent = labels[cadencePhase]+' • '+t+'s';
+        if(t<=0){
+          cadencePhase = (cadencePhase+1)%3; t = phases[cadencePhase];
+          el.textContent = labels[cadencePhase]+' • '+t+'s';
+        }
+      },1000);
+    });
+
+    // ∇φ — ethics
+    $$('input[name="ethics"]').forEach(cb=> cb.addEventListener('change',()=>{
+      S.nabla.ethics = $$('input[name="ethics"]:checked').map(c=>c.value); saveDraftSoft();
+    }));
+    byId('risks').addEventListener('input', e=>{ S.nabla.risks=e.target.value; saveDraftSoft(); });
+    byId('deadline').addEventListener('change', e=>{ S.nabla.deadline=e.target.value; saveDraftSoft(); });
+    byId('budget').addEventListener('input', e=>{ S.nabla.budget=e.target.value; saveDraftSoft(); });
+    byId('metrics').addEventListener('input', e=>{ S.nabla.metrics=e.target.value; saveDraftSoft(); });
+
+    byId('addTask').addEventListener('click', ()=>{
+      const v = byId('taskInput').value.trim(); if(!v) return; S.nabla.tasks.push({t:v, done:false}); byId('taskInput').value=''; renderTasks(); saveDraftSoft();
+    });
+    function renderTasks(){
+      const ul = byId('taskList');
+      ul.innerHTML = '';
+      S.nabla.tasks.forEach((task,i)=>{
+        const li = document.createElement('li');
+        const id = 'task_'+i;
+        li.innerHTML = `<label><input id="${id}" type="checkbox" ${task.done?'checked':''}> ${task.t}</label> <button class="cta ghost mini" data-rm="${i}" type="button">×</button>`;
+        ul.appendChild(li);
+      });
+      ul.querySelectorAll('input[type="checkbox"]').forEach((box,i)=> box.addEventListener('change',()=>{ S.nabla.tasks[i].done=box.checked; saveDraftSoft(); }));
+      ul.querySelectorAll('button[data-rm]').forEach(btn=> btn.addEventListener('click',()=>{ const idx=Number(btn.dataset.rm); S.nabla.tasks.splice(idx,1); renderTasks(); saveDraftSoft(); }));
+    }
+
+    // ℛ
+    byId('rhoNotes').addEventListener('input', e=>{ S.rho.notes=e.target.value; saveDraftSoft(); });
+    byId('cowitnesses').addEventListener('input', e=>{ S.rho.cowitnesses = e.target.value.split(',').map(s=>s.trim()).filter(Boolean); saveDraftSoft(); });
+    byId('witnessClips').addEventListener('change', ()=> listFiles(byId('witnessClips'), byId('witnessList'), S.rho.witnessFiles));
+
+    $$('input[name="abCarrierA"]').forEach(r=> r.addEventListener('change',()=>{ S.rho.ab.A = $$('input[name="abCarrierA"]:checked')[0]?.value || '432'; saveDraftSoft(); }));
+    $$('input[name="abCarrierB"]').forEach(r=> r.addEventListener('change',()=>{ S.rho.ab.B = $$('input[name="abCarrierB"]:checked')[0]?.value || '369'; saveDraftSoft(); }));
+    byId('abNotesA').addEventListener('input', e=>{ S.rho.ab.notesA=e.target.value; saveDraftSoft(); });
+    byId('abNotesB').addEventListener('input', e=>{ S.rho.ab.notesB=e.target.value; saveDraftSoft(); });
+
+    let rhoTimer=null, rhoPhase=0, rhoT=0;
+    byId('rhoStart').addEventListener('click', ()=>{
+      clearInterval(rhoTimer); rhoPhase=0; const phases=[3,6,9]; const labels=['Speak','Sustain','Release'];
+      const s=byId('rhoStatus'); byId('rhoStop').disabled=false;
+      rhoT=phases[0]; s.textContent = `${labels[0]} • ${rhoT}s`;
+      rhoTimer=setInterval(()=>{rhoT--; s.textContent = `${labels[rhoPhase]} • ${rhoT}s`; if(rhoT<=0){rhoPhase=(rhoPhase+1)%3; rhoT=phases[rhoPhase]; s.textContent = `${labels[rhoPhase]} • ${rhoT}s`; }},1000);
+    });
+    byId('rhoStop').addEventListener('click', ()=>{ clearInterval(rhoTimer); byId('rhoStatus').textContent=''; byId('rhoStop').disabled=true; });
+
+    // ΔΣ
+    $$('input[name="stop"]').forEach(cb=> cb.addEventListener('change',()=>{ S.delta.stops = $$('input[name="stop"]:checked').map(c=>c.value); saveDraftSoft(); }));
+    byId('boundaryNotes').addEventListener('input', e=>{ S.delta.boundaryNotes=e.target.value; saveDraftSoft(); });
+    byId('evidence').addEventListener('change', ()=> listFiles(byId('evidence'), byId('evidenceList'), S.delta.evidenceFiles));
+    byId('witnessText').addEventListener('input', e=>{ S.delta.witnessText=e.target.value; saveDraftSoft(); });
+
+    // Seal & Export
+    byId('btnSeal').addEventListener('click', async ()=>{
+      const seal = await computeSeal();
+      S.seals.sha256 = seal;
+      S.seals.ts = new Date().toISOString();
+      byId('sealOut').textContent = `SHA-256: ${seal} @ ${S.seals.ts}`;
+      byId('btnCopySeal').disabled=false;
+      byId('btnDownloadJson').disabled=false;
+      renderSummary(); saveDraftSoft();
+    });
+    byId('btnCopySeal').addEventListener('click', async ()=>{
+      const t = byId('sealOut').textContent; if(!t) return; await navigator.clipboard.writeText(t); toast('Seal copied.');
+    });
+    byId('btnDownloadJson').addEventListener('click', ()=>{
+      const blob = new Blob([JSON.stringify(S,null,2)], {type:'application/json'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = (S.runTitle?.trim().replace(/\s+/g,'_') || 'invocation') + '.json'; a.click(); URL.revokeObjectURL(a.href);
+    });
+    byId('btnPrint').addEventListener('click', ()=> window.print());
+
+    // Compute SHA-256 using SubtleCrypto over a stable JSON string
+    async function computeSeal(){
+      const clean = JSON.stringify({
+        version:S.version,nodeType:S.nodeType,runTitle:S.runTitle,runGoal:S.runGoal,
+        sigma:S.sigma,nabla:S.nabla,rho:S.rho,delta:S.delta
+      });
+      const enc = new TextEncoder().encode(clean);
+      const buf = await crypto.subtle.digest('SHA-256', enc);
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+
+    // Summary renderer (printable)
+    function renderSummary(){
+      const el = byId('summary');
+      const list = (arr)=> arr && arr.length? arr.join(', '):'—';
+      const tasks = (S.nabla.tasks||[]).map(t=>`<li>${t.done?'✅':'⬜️'} ${escapeHtml(t.t)}</li>`).join('');
+      el.innerHTML = `
+        <div class="grid-2">
+          <div>
+            <p><strong>Node:</strong> ${escapeHtml(S.nodeType||'')}</p>
+            <p><strong>Title:</strong> ${escapeHtml(S.runTitle||'')}</p>
+            <p><strong>Outcome:</strong> ${escapeHtml(S.runGoal||'')}</p>
+            <p><strong>Carrier:</strong> ${escapeHtml(S.sigma.carrier||'')}</p>
+            <p><strong>Numbers:</strong> ${list(S.sigma.numbers)}</p>
+          </div>
+          <div>
+            <p><strong>Ethics:</strong> ${list(S.nabla.ethics)}</p>
+            <p><strong>Deadline:</strong> ${escapeHtml(S.nabla.deadline||'')}</p>
+            <p><strong>Budget:</strong> ${escapeHtml(S.nabla.budget||'')}</p>
+            <p><strong>Metrics:</strong> ${escapeHtml(S.nabla.metrics||'')}</p>
+            <p><strong>Stops:</strong> ${list(S.delta.stops)}</p>
+          </div>
+        </div>
+        <h4>Tasks</h4>
+        <ul>${tasks || '<li>—</li>'}</ul>
+        <h4>Witness</h4>
+        <p>${escapeHtml(S.delta.witnessText||'')}</p>
+        <p class="mini">Seal: ${escapeHtml(S.seals.sha256||'')} ${S.seals.ts? ' @ '+S.seals.ts:''}</p>
+      `;
+    }
+
+    function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
+
+    // Nav buttons
+    byId('btnPrev').addEventListener('click', ()=> goto(stepIndex-1));
+    byId('btnNext').addEventListener('click', ()=>{
+      if(stepIndex < steps.length-1){ goto(stepIndex+1); }
+      else { toast('Run complete. Export your seal.'); }
+    });
+    $$('.chip').forEach((c,i)=> c.addEventListener('click', ()=> goto(i)));
+
+    // Save/load/reset
+    byId('btnSave').addEventListener('click', save);
+    byId('btnLoad').addEventListener('click', load);
+    byId('btnReset').addEventListener('click', reset);
+
+    function saveDraftSoft(){ try{ localStorage.setItem('invocation-lab', JSON.stringify(S)); updateProgress(); }catch(e){} }
+
+    // Hydrate UI from state (after load)
+    function hydrate(){
+      if(S.nodeType){ const r = document.querySelector(`input[name="nodeType"][value="${S.nodeType}"]`); r && (r.checked=true); }
+      byId('runTitle').value = S.runTitle||'';
+      byId('runGoal').value = S.runGoal||'';
+
+      byId('intentWords').value = S.sigma.intentWords||'';
+      byId('timeBudget').value = S.sigma.timeBudget||18;
+      byId('energyBudget').value = S.sigma.energyBudget||7;
+      byId('legalNotices').value = S.sigma.legalNotices||'';
+      byId('glyph').value = S.sigma.glyph||'';
+      $$('input[name="numbers"]').forEach(cb=> cb.checked = (S.sigma.numbers||[]).includes(cb.value));
+      $$('input[name="carrier"]').forEach(cb=> cb.checked = (cb.value===S.sigma.carrier));
+      setCarrierSkin(S.sigma.carrier||'432');
+      byId('mediaList').innerHTML = (S.sigma.media||[]).map(f=> `${f.name} <span class="ghost mini">(${Math.round((f.size||0)/1024)} KB)</span>`).join('<br>');
+
+      $$('input[name="ethics"]').forEach(cb=> cb.checked = (S.nabla.ethics||[]).includes(cb.value));
+      byId('risks').value = S.nabla.risks||'';
+      byId('deadline').value = S.nabla.deadline||'';
+      byId('budget').value = S.nabla.budget||'';
+      byId('metrics').value = S.nabla.metrics||'';
+      renderTasks();
+
+      byId('rhoNotes').value = S.rho.notes||'';
+      byId('cowitnesses').value = (S.rho.cowitnesses||[]).join(', ');
+      byId('witnessList').innerHTML = (S.rho.witnessFiles||[]).map(f=> `${f.name} <span class=\"ghost mini\">(${Math.round((f.size||0)/1024)} KB)</span>`).join('<br>');
+      $$('input[name="abCarrierA"]').forEach(r=> r.checked = (r.value===S.rho.ab.A));
+      $$('input[name="abCarrierB"]').forEach(r=> r.checked = (r.value===S.rho.ab.B));
+      byId('abNotesA').value = S.rho.ab.notesA||'';
+      byId('abNotesB').value = S.rho.ab.notesB||'';
+
+      $$('input[name="stop"]').forEach(cb=> cb.checked = (S.delta.stops||[]).includes(cb.value));
+      byId('boundaryNotes').value = S.delta.boundaryNotes||'';
+      byId('evidenceList').innerHTML = (S.delta.evidenceFiles||[]).map(f=> `${f.name}`).join('<br>');
+      byId('witnessText').value = S.delta.witnessText||'';
+
+      byId('sealOut').textContent = S.seals.sha256? `SHA-256: ${S.seals.sha256} @ ${S.seals.ts||''}` : '';
+      byId('btnCopySeal').disabled = !S.seals.sha256;
+      byId('btnDownloadJson').disabled = !S.seals.sha256;
+      renderSummary();
+    }
+
+    // Carrier skin cycler (utility)
+    byId('cycleCarrier').addEventListener('click', ()=>{
+      const all=['432','528','369','144','963'];
+      const i = all.indexOf(S.sigma.carrier||'432');
+      const next = all[(i+1)%all.length];
+      S.sigma.carrier = next; setCarrierSkin(next);
+      $$('input[name="carrier"]').forEach(cb=> cb.checked = (cb.value===next));
+    });
+
+    // Boot
+    hydrate();
+    goto(0);
+  })();
+  </script></body>
+  </html>
