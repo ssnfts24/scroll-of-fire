@@ -10,15 +10,18 @@
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/ledger.html" />
   <meta property="og:title" content="Witness Ledger — Scroll of Fire">
   <meta property="og:description" content="Log runs, rate Ξ, add co-witnesses, seal and verify hashes, and export your remnant evidence.">
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
+
+  <!-- Latest Codex css -->
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2.9.0">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2.9.0" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.9.0"></noscript>
+
   <style>
     :root{--maxw:1180px}
     body{margin:0}
     .wrap{max-width:var(--maxw);margin:0 auto;padding:20px 16px 80px}
     .title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;
-      background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#a7f6ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+      background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#7af3ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
     .subtitle{text-align:center;color:var(--muted);font-style:italic;margin:0 0 12px}
     .cta{display:inline-flex;align-items:center;gap:.5ch;padding:8px 12px;border-radius:10px;border:1px solid #2a2a33;text-decoration:none;background:#0f1218}
     .grid{display:grid;gap:10px}
@@ -65,7 +68,9 @@
     <section class="card" aria-label="New entry">
       <h2>New Entry</h2>
       <div class="grid grid-5">
+        <label class="sr-only" for="iPhrase">Phrase</label>
         <input id="iPhrase" placeholder="Phrase (Σ) — one clear line…" autocomplete="off">
+        <label class="sr-only" for="iCarrier">Carrier</label>
         <select id="iCarrier" aria-label="Carrier">
           <option value="432" selected>432 Ground</option>
           <option value="528">528 Repair</option>
@@ -74,12 +79,15 @@
           <option value="963">963 Crown</option>
           <option value="none">No tone</option>
         </select>
+        <label class="sr-only" for="iXi">Coherence</label>
         <input id="iXi" type="number" min="0" max="5" step="0.5" placeholder="Ξ 0–5" aria-label="Coherence rating">
+        <label class="sr-only" for="iTags">Tags</label>
         <input id="iTags" placeholder="tags (comma separated)" autocomplete="off">
         <button id="btnAdd" class="cta" title="Add entry (Ctrl/⌘+Enter)">Add</button>
       </div>
 
       <div class="grid" style="margin-top:8px">
+        <label class="sr-only" for="iWitness">Witness notes</label>
         <textarea id="iWitness" rows="3" placeholder="Witness notes (what changed, what lingered)…"></textarea>
       </div>
 
@@ -150,12 +158,62 @@
     const $ = s => document.querySelector(s), $$ = s => Array.from(document.querySelectorAll(s));
     const YEAR = $('#yr'); if (YEAR) YEAR.textContent = new Date().getFullYear();
 
-    // Storage (aligns with start.html v2)
-    const KEY = 'sof_ledger_entries_v2';
-    const read = () => { try { return JSON.parse(localStorage.getItem(KEY)||'[]'); } catch { return []; } };
-    const write = arr => { try { localStorage.setItem(KEY, JSON.stringify(arr)); } catch(e){} };
+    /* ---------- Storage (versioned + backups + repair) ---------- */
+    const KEY = 'sof_ledger_v2';
+    const BAK1 = KEY+'.bak1', BAK2 = KEY+'.bak2';
 
-    // Canonicalize + SHA-256 (same as start.html)
+    const safeParse = (txt)=>{ try{ const v=JSON.parse(txt); return Array.isArray(v)?v: (Array.isArray(v?.entries)?v.entries:[]);}catch{return []} };
+
+    function readRaw(){
+      const main = localStorage.getItem(KEY);
+      if (main) return safeParse(main);
+      // recover from backup if needed
+      const b1 = safeParse(localStorage.getItem(BAK1));
+      if (b1.length) return b1;
+      const b2 = safeParse(localStorage.getItem(BAK2));
+      return b2;
+    }
+    function repair(list){
+      const clean=[];
+      const seen=new Set();
+      for(const e of list){
+        if (!e || typeof e!=='object') continue;
+        // coerce shapes
+        e.when = new Date(e.when||Date.now()).toISOString();
+        e.carrier = String(e.carrier||'432');
+        e.phrase = String(e.phrase||'').trim();
+        e.coherence = Number.isFinite(+e.coherence)? +e.coherence : 0;
+        e.tags = Array.isArray(e.tags)? e.tags.filter(Boolean).map(String) : [];
+        e.note = String(e.note||'');
+        e.sessionId = String(e.sessionId||'');
+        e.coWitnesses = Array.isArray(e.coWitnesses)? e.coWitnesses.filter(Boolean).map(String) : [];
+        e.links = Array.isArray(e.links)? e.links.filter(Boolean).map(String) : [];
+        // drop empties
+        if (!e.phrase) continue;
+        const id = e.hash || (e.when+'|'+e.phrase);
+        if (seen.has(id)) continue;
+        seen.add(id);
+        clean.push(e);
+      }
+      // newest first
+      clean.sort((a,b)=> (Date.parse(b.when)||0) - (Date.parse(a.when)||0));
+      return clean;
+    }
+    function read(){ return repair(readRaw()); }
+
+    function write(arr){
+      const payload = JSON.stringify(arr);
+      try{
+        // roll backups
+        localStorage.setItem(BAK2, localStorage.getItem(BAK1) || '[]');
+        localStorage.setItem(BAK1, localStorage.getItem(KEY) || '[]');
+        localStorage.setItem(KEY, payload);
+      }catch(e){
+        alert('Storage error: '+ (e?.message||e));
+      }
+    }
+
+    /* ---------- Canonicalize + SHA-256 ---------- */
     function canonicalize(obj){
       if (obj === null || typeof obj !== 'object') return JSON.stringify(obj);
       if (Array.isArray(obj)) return '[' + obj.map(canonicalize).join(',') + ']';
@@ -169,15 +227,15 @@
     }
     const escapeHtml = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-    // UI nodes
+    /* ---------- UI nodes ---------- */
     const rows = $('#rows'), filter = $('#filter'), spark = $('#spark');
     const iPhrase = $('#iPhrase'), iCarrier = $('#iCarrier'), iXi = $('#iXi'), iTags = $('#iTags'), iWitness = $('#iWitness');
     const iSession = $('#iSession'), iCoW = $('#iCoW'), iLinks = $('#iLinks');
-    const ctx = spark.getContext('2d');
+    const ctx = spark.getContext?.('2d');
     const b7=$('#b7'), b33=$('#b33'), b144=$('#b144');
     const streakEl=$('#streakDays'), xiAvgEl=$('#xiAvg'), weekCountEl=$('#weekCount');
 
-    // Add entry (Seal I)
+    /* ---------- Add entry (Seal I) ---------- */
     async function add(){
       const phrase = (iPhrase.value||'').trim();
       const carrier = (iCarrier.value||'432').trim();
@@ -191,19 +249,21 @@
 
       const payload = { when: new Date().toISOString(), carrier, phrase, coherence, tags, note, sessionId, coWitnesses, links };
       const canon = canonicalize(payload);
-      const hash = await sha256Hex(canon);
+      let hash;
+      try{ hash = await sha256Hex(canon); }
+      catch(e){ alert('Your browser blocked SHA-256. Try a modern browser or disable Private Mode.'); return; }
+
       const entry = Object.assign({}, payload, { hash, seal:{ stage:'I', algo:'SHA-256', canonLen:canon.length } });
 
       const L = read(); L.unshift(entry); write(L); render(L);
       iWitness.value=''; // keep other fields for rapid logging
     }
 
-    // Verify entry: try legacy (start.html) and extended payloads
+    /* ---------- Verify (legacy + extended) ---------- */
     async function verifyEntry(entry){
-      // Legacy minimal keys (from start.html): when, carrier, phrase, coherence, tags
+      // Legacy minimal keys (from start.html)
       const legacyPayload = { when: entry.when, carrier: entry.carrier, phrase: entry.phrase, coherence: entry.coherence, tags: entry.tags };
-      const legacyCanon = canonicalize(legacyPayload);
-      const legacyHash = await sha256Hex(legacyCanon);
+      const legacyHash = await sha256Hex(canonicalize(legacyPayload));
       if (legacyHash === entry.hash) return {ok:true, mode:'legacy'};
 
       // Extended keys (this page)
@@ -211,18 +271,18 @@
         when: entry.when, carrier: entry.carrier, phrase: entry.phrase, coherence: entry.coherence,
         tags: entry.tags, note: entry.note, sessionId: entry.sessionId, coWitnesses: entry.coWitnesses, links: entry.links
       };
-      const extCanon = canonicalize(extPayload);
-      const extHash = await sha256Hex(extCanon);
+      const extHash = await sha256Hex(canonicalize(extPayload));
       if (extHash === entry.hash) return {ok:true, mode:'extended'};
 
       return {ok:false, mode:'mismatch'};
     }
 
+    /* ---------- Render ---------- */
     function shortHash(h){ return h ? (h.slice(0,10)+'…') : '—'; }
     function tagsHTML(tags){ return (tags||[]).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join(''); }
 
     function render(list = read()){
-      const q=(filter.value||'').toLowerCase();
+      const q=(filter.value||'').toLowerCase().trim();
       const L = q ? list.filter(x => JSON.stringify(x).toLowerCase().includes(q)) : list;
 
       rows.innerHTML = L.map((e,idx)=>{
@@ -237,10 +297,10 @@
           <td class="hash"><span class="hval">${shortHash(e.hash)}</span> <span class="tiny status">…</span></td>
           <td>
             <div class="row-actions">
-              <button class="cta act-verify" title="Verify seal">✔ Verify</button>
-              <button class="cta act-pdf" title="Witness PDF">🧾 PDF</button>
-              <button class="cta act-copy" title="Copy text">⎘ Copy</button>
-              <button class="cta act-del" title="Delete">✕</button>
+              <button class="cta act-verify" title="Verify seal" aria-label="Verify">✔ Verify</button>
+              <button class="cta act-pdf" title="Witness PDF" aria-label="PDF">🧾 PDF</button>
+              <button class="cta act-copy" title="Copy text" aria-label="Copy">⎘ Copy</button>
+              <button class="cta act-del" title="Delete" aria-label="Delete">✕</button>
             </div>
           </td>
         </tr>`;
@@ -249,6 +309,7 @@
       // wire row actions
       $$('#rows .act-del').forEach(btn=>btn.addEventListener('click', () => {
         const idx = Number(btn.closest('tr').dataset.idx);
+        if (!confirm('Delete this entry?')) return;
         const arr = read(); arr.splice(idx,1); write(arr); render(arr);
       }));
 
@@ -260,7 +321,8 @@ carrier:${e.carrier} · Ξ:${e.coherence} · ${new Date(e.when).toLocaleString()
 session:${e.sessionId||'-'} · hash:${e.hash}
 tags:${(e.tags||[]).join(', ')}
 note:${e.note||''}
-witnesses:${(e.coWitnesses||[]).join(', ')}`;
+witnesses:${(e.coWitnesses||[]).join(', ')}
+links:${(e.links||[]).join(', ')}`;
         navigator.clipboard?.writeText(txt).then(()=>alert('Copied.'),()=>alert('Copy failed.'));
       }));
 
@@ -280,26 +342,26 @@ witnesses:${(e.coWitnesses||[]).join(', ')}`;
       renderMetrics(list);
     }
 
+    /* ---------- Metrics & sparkline ---------- */
     function scoreXi(x){
       const v = Number(x); if (!isFinite(v)) return 0.33;
       return Math.max(0, Math.min(1, v/5));
     }
-
     function renderMetrics(L){
       // streak
       const byDay = new Map();
       for(const e of L){ const key = new Date(e.when).toISOString().slice(0,10); byDay.set(key, (byDay.get(key)||0)+1); }
       let streak=0, d=new Date();
       while(true){ const key=d.toISOString().slice(0,10); if(byDay.has(key)){ streak++; d.setDate(d.getDate()-1); } else break; }
-      streakEl.textContent=String(streak);
-      b7.classList.toggle('lit', streak>=7); b33.classList.toggle('lit', streak>=33); b144.classList.toggle('lit', streak>=144);
+      $('#streakDays').textContent=String(streak);
+      $('#b7').classList.toggle('lit', streak>=7); $('#b33').classList.toggle('lit', streak>=33); $('#b144').classList.toggle('lit', streak>=144);
 
       // 7d stats + sparkline last 28d
       const now = Date.now(), day=86400000;
       const last7 = L.filter(e=> now - Date.parse(e.when) < 7*day );
-      weekCountEl.textContent = String(last7.length);
+      $('#weekCount').textContent = String(last7.length);
       const avg = last7.length ? (last7.reduce((s,e)=>s+Number(e.coherence||0),0)/last7.length) : null;
-      xiAvgEl.textContent = (avg==null) ? '—' : avg.toFixed(2);
+      $('#xiAvg').textContent = (avg==null) ? '—' : avg.toFixed(2);
 
       const n=28, points=[];
       for(let i=n-1;i>=0;i--){
@@ -310,8 +372,8 @@ witnesses:${(e.coWitnesses||[]).join(', ')}`;
       }
       drawSpark(points);
     }
-
     function drawSpark(arr){
+      if (!ctx) return;
       const w=spark.width, h=spark.height; const c=ctx;
       c.clearRect(0,0,w,h);
       // grid
@@ -325,7 +387,7 @@ witnesses:${(e.coWitnesses||[]).join(', ')}`;
       c.stroke();
     }
 
-    // Witness PDF (print)
+    /* ---------- Witness PDF (print) ---------- */
     function openWitnessSlip(e){
       const win = window.open('', '_blank', 'noopener,noreferrer,width=820,height=900');
       if (!win) { alert('Pop-up blocked.'); return; }
@@ -372,7 +434,7 @@ witnesses:${(e.coWitnesses||[]).join(', ')}`;
       win.document.open(); win.document.write(html); win.document.close();
     }
 
-    // Export / Import / Verify All
+    /* ---------- Export / Import / Verify All ---------- */
     $('#btnExport').addEventListener('click', () => {
       const data = read();
       if (!data.length) return alert('No entries to export.');
@@ -387,10 +449,13 @@ witnesses:${(e.coWitnesses||[]).join(', ')}`;
       const f=e.target.files?.[0]; if(!f) return;
       try{
         const txt=await f.text(); const parsed=JSON.parse(txt);
-        const list = Array.isArray(parsed) ? parsed : (Array.isArray(parsed.entries) ? parsed.entries : []);
-        const existing = read(); const ids = new Set(existing.map(x=>x.hash || x.when));
-        const merged = list.concat(existing.filter(x=>!ids.has(x.hash || x.when)));
-        write(merged); render(merged); alert('Imported (merged).');
+        const incoming = Array.isArray(parsed) ? parsed : (Array.isArray(parsed.entries) ? parsed.entries : []);
+        // verify incoming where possible
+        const verified = [];
+        for (const item of incoming){ try{ const r = await verifyEntry(item); if(r.ok) verified.push(item); }catch{ /* ignore bad */ } }
+        const existing = read(); const ids = new Set(existing.map(x=>x.hash || (x.when+'|'+x.phrase)));
+        const merged = verified.filter(x=>!ids.has(x.hash || (x.when+'|'+x.phrase))).concat(existing);
+        write(merged); render(merged); alert(`Imported ${verified.length} verified entr${verified.length===1?'y':'ies'} (merged).`);
       }catch(err){ alert('Import failed: '+(err.message||err)); }
       e.target.value='';
     });
@@ -403,12 +468,12 @@ witnesses:${(e.coWitnesses||[]).join(', ')}`;
       render(L);
     });
 
-    // Wire add / filter / shortcuts
+    /* ---------- Wire add / filter / shortcuts ---------- */
     $('#btnAdd').addEventListener('click', add);
     iWitness.addEventListener('keydown', e => { if((e.ctrlKey||e.metaKey) && e.key==='Enter') add(); });
     filter.addEventListener('input', ()=>render());
 
-    // Init
+    /* ---------- Init ---------- */
     render();
 
   })();
