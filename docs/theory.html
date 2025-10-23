@@ -1317,5 +1317,181 @@ ${paras.map(p=>`    <p>${esc(p)}</p>`).join('\n')}
     .eq-tools{display:flex; gap:.4rem}
     .chip{font-size:.85rem; padding:.25rem .55rem; border-radius:999px; border:1px solid var(--line); background:var(--bg-elev); opacity:.9}
   </style>
+
+
+  <script>
+(function(){
+  "use strict";
+  const $=(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
+
+  /* ===== Reading progress + active TOC ===== */
+  const bar=document.createElement('div');
+  bar.className='read-progress'; document.body.appendChild(bar);
+  const headings=$$('main h2[id], main h3[id]');
+  const tocLinks=$$('.mini-toc a[href^="#"]');
+
+  function setProgress(){
+    const h=document.documentElement, b=document.body;
+    const top=h.scrollTop||b.scrollTop; const max=(h.scrollHeight-h.clientHeight)||1;
+    const p=Math.max(0, Math.min(1, top/max)); bar.style.setProperty('--p', p.toFixed(4)); bar.classList.add('in');
+  }
+  function setActiveTOC(){
+    let current=null, y=innerHeight*0.24;
+    for(const h of headings){ const r=h.getBoundingClientRect(); if(r.top<=y) current=h.id; }
+    tocLinks.forEach(a=>a.classList.toggle('is-active', a.getAttribute('href').slice(1)===current));
+  }
+  addEventListener('scroll', ()=>{ setProgress(); setActiveTOC(); }, {passive:true});
+  addEventListener('resize', ()=>{ setProgress(); setActiveTOC(); }, {passive:true});
+  setProgress(); setActiveTOC();
+
+  /* ===== Reading time estimate (hero caption) ===== */
+  (function(){
+    const heroCap=$('#hero .hero-caption'); if(!heroCap) return;
+    const words=($('main')?.innerText||'').split(/\s+/).filter(Boolean).length;
+    const mins=Math.max(1, Math.round(words/230)); // ~230wpm
+    const pill=document.createElement('span'); pill.className='readtime'; pill.textContent=`~${mins} min read`;
+    heroCap.append(' ', pill);
+  })();
+
+  /* ===== Glossary popovers (plain-English helpers) ===== */
+  const GLOSS={
+    'Ξ': '<b>Ξ (Ksi)</b> · Coherence score from 0 to 1. Higher = steadier, kinder, clearer.',
+    'carrier': '<b>Carrier</b> · A steady tone or band that helps your voice and attention stay stable.',
+    'Phase-lock': '<b>Phase-lock</b> · Lining up beats so they reinforce instead of wobble.',
+    'Frame': '<b>Frame</b> · Your scope, witness, and ethics for this run (Eq.11).',
+    'Stop Rule': '<b>Stop Rule</b> · If harm rises or clarity drops, stop, re-align, and resume (Eq.9).',
+    'Memory window': '<b>Memory window</b> · Short period your brain weighs most when updating (Eq.16).'
+  };
+  function glossify(root){
+    // Light pass: mark key terms if not already inside code/math
+    const walker=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    const targets=Object.keys(GLOSS);
+    const re=new RegExp('\\b(' + targets.map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|') + ')\\b','g');
+    const batch=[];
+    while(walker.nextNode()){
+      const n=walker.currentNode;
+      if(!n.nodeValue) continue;
+      if(n.parentElement.closest('.eq, mjx-container, code, pre, .eq-scroll')) continue;
+      if(re.test(n.nodeValue)) batch.push(n);
+    }
+    for(const n of batch){
+      const span=document.createElement('span'); span.innerHTML=n.nodeValue.replace(re,(m)=>{
+        return `<span class="gloss" tabindex="0">${m}<span class="gloss-tip">${GLOSS[m]||''}</span></span>`;
+      });
+      n.parentNode.replaceChild(span, n);
+    }
+  }
+  glossify($('main'));
+
+  /* ===== Per-section tools (copy link / explain) ===== */
+  function injectHeadTools(){
+    $$('main h2[id], main h3[id]').forEach(h=>{
+      if(h.querySelector('.hd-tools')) return;
+      const wrap=document.createElement('span'); wrap.className='hd-tools';
+      const bLink=document.createElement('button'); bLink.className='chip'; bLink.textContent='Link';
+      const bCopy=document.createElement('button'); bCopy.className='chip'; bCopy.textContent='Copy';
+      wrap.append(bLink,bCopy); h.appendChild(wrap);
+      on(bLink,'click',()=>{
+        const url=location.origin+location.pathname+'#'+h.id;
+        navigator.clipboard?.writeText(url); history.pushState(null,'','#'+h.id);
+        bLink.textContent='Copied'; setTimeout(()=>bLink.textContent='Link',900);
+      });
+      on(bCopy,'click',()=>{
+        const section=h.closest('article')||h;
+        const text=(section.innerText||'').trim();
+        navigator.clipboard?.writeText(text);
+        bCopy.textContent='Copied'; setTimeout(()=>bCopy.textContent='Copy',900);
+      });
+    });
+  }
+  injectHeadTools();
+
+  /* ===== “Try in Manifest” bridges ===== */
+  function addTryButtons(){
+    const ins=[
+      {sel:'#eq17', label:'Try carriers in Manifest', data:{from:'theory#eq17'}},
+      {sel:'#p1',   label:'Open Manifest (guided)',  data:{from:'theory#p1'}}
+    ];
+    ins.forEach(({sel,label,data})=>{
+      const host=$(sel); if(!host) return;
+      if(host.querySelector('.to-manifest')) return;
+      const a=document.createElement('a');
+      a.href='teach.html#observer'; a.className='cta to-manifest'; a.innerHTML='▶ '+label;
+      on(a,'click',()=>{ try{ localStorage.setItem('sof_manifest_hint', JSON.stringify(data)); }catch(_){ } });
+      host.appendChild(a);
+    });
+  }
+  addTryButtons();
+
+  /* ===== Eq.13 inline Ξ mini-calculator (with spark) ===== */
+  (function(){
+    const eq13=$('#eq13'); if(!eq13) return;
+    if(eq13.querySelector('.xi-panel')) return;
+    const panel=document.createElement('div');
+    panel.className='xi-panel';
+    panel.innerHTML=`
+      <div class="row">
+        <label>⟨H·I⟩ <input id="xi_hi" type="number" min="0" max="1" step="0.01" value="0.62"></label>
+        <label>Var[𝓜] <input id="xi_var" type="number" min="0" max="2" step="0.01" value="0.30"></label>
+        <button id="xi_go" class="cta">Compute Ξ</button>
+        <span id="xi_val" class="xi-big meta">Ξ = —</span>
+      </div>
+      <div class="xi-bar" style="margin:.4rem 0 .2rem"><span id="xi_bar"></span></div>
+      <canvas id="xi_spark" width="420" height="46" aria-label="Ξ history"></canvas>
+    `;
+    eq13.appendChild(panel);
+    const hi=$('#xi_hi'), va=$('#xi_var'), go=$('#xi_go'), out=$('#xi_val'), barEl=$('#xi_bar');
+    const ctx=$('#xi_spark').getContext('2d'); const KEY='sof_theory_xi_hist';
+    function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(_){ return []; } }
+    function save(x){ try{ localStorage.setItem(KEY, JSON.stringify(x)); }catch(_){ } }
+
+    function draw(hist){
+      const W=ctx.canvas.width, H=ctx.canvas.height;
+      ctx.clearRect(0,0,W,H);
+      ctx.strokeStyle='rgba(122,243,255,.2)'; ctx.beginPath();
+      ctx.moveTo(0,H*.25); ctx.lineTo(W,H*.25); ctx.moveTo(0,H*.5); ctx.lineTo(W,H*.5); ctx.moveTo(0,H*.75); ctx.lineTo(W,H*.75); ctx.stroke();
+      if(!hist.length) return;
+      const n=hist.length, xs=W/Math.max(1,(n-1));
+      ctx.beginPath();
+      hist.forEach((o,i)=>{ const x=W-i*xs; const y=H*(1-(o.x*0.9+0.05)); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+      ctx.strokeStyle='rgba(243,201,122,.95)'; ctx.lineWidth=2; ctx.stroke();
+    }
+    function calc(){
+      const h=Math.max(0,Math.min(1, +hi.value||0));
+      const v=Math.max(0,Math.min(2, +va.value||0));
+      const Xi = Math.max(0, Math.min(1, h/(1+v)));
+      out.textContent='Ξ = '+Xi.toFixed(2);
+      barEl.style.width=(Xi*100).toFixed(0)+'%';
+      const hist=load(); hist.unshift({t:Date.now(),x:Xi}); save(hist.slice(0,64)); draw(hist.slice(0,64));
+    }
+    on(go,'click',calc); draw(load());
+  })();
+
+  /* ===== Echo View upgrade: optionally hide math too ===== */
+  (function(){
+    const btn=$('#toggleSimple'); if(!btn) return;
+    on(btn,'click',()=>{
+      const on=document.body.classList.toggle('echo-hide-math');
+      document.querySelectorAll('.eq, mjx-container').forEach(el=> el.style.display=on?'none':'' );
+    });
+  })();
+
+  /* ===== Nice hash navigation offsets (sticky header) ===== */
+  (function(){
+    function scrollToHash(){
+      if(!location.hash) return;
+      const el=$(location.hash); if(!el) return;
+      const top=el.getBoundingClientRect().top + scrollY - 68; // header offset
+      scrollTo({top, behavior:'smooth'});
+    }
+    if(location.hash) setTimeout(scrollToHash, 60);
+    on(document,'click',(e)=>{ const a=e.target.closest('a[href^="#"]'); if(a){ setTimeout(scrollToHash, 10); } });
+  })();
+
+})();
+  </script>
+
 </body>
 </html>
