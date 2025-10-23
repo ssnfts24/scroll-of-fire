@@ -49,11 +49,24 @@
     .hint,.meta{color:#9aa4be}
     .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-    /* Tabs */
-    .pill-tabs{display:flex;gap:6px;align-items:center}
-    .pill{padding:.5rem .8rem;border-radius:999px;border:1px solid var(--line);cursor:pointer}
+    /* Tabs: horizontal scroll with chevrons */
+    .tabs-wrap{position:relative}
+    .pill-rail{
+      display:flex; gap:6px; align-items:center; overflow:auto; scroll-snap-type:x mandatory;
+      padding:0 40px; /* space for chevrons */
+      mask-image:linear-gradient(90deg,transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
+      -webkit-mask-image:linear-gradient(90deg,transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
+    }
+    .pill{flex:0 0 auto; scroll-snap-align:start; padding:.5rem .8rem;border-radius:999px;border:1px solid var(--line);cursor:pointer;white-space:nowrap}
     .pill.active{border-color:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent)}
     .tab{display:none}.tab.active{display:block}
+    .chev{
+      position:absolute; top:50%; transform:translateY(-50%);
+      width:32px; height:32px; border-radius:999px; border:1px solid var(--line);
+      background:rgba(255,255,255,.04); display:grid; place-items:center; cursor:pointer;
+    }
+    .chev.left{left:4px} .chev.right{right:4px}
+    .chev[disabled]{opacity:.4;cursor:not-allowed}
 
     /* REMNANT (visual) */
     .stage{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#0a0e15}
@@ -67,9 +80,9 @@
     .ring-num{font:800 18px/1 Inter;fill:#eae7df}
     .ring-sub{font:600 10px/1 Inter;fill:#b8b3a6}
 
-    /* Banner hero — show full image (no crop) */
+    /* Banner hero — full image (no crop) */
     .hero{margin:8px auto 0; max-width:1200px; border-radius:16px; overflow:hidden; background:#0b0f14}
-    .hero img{display:block; width:100%; height:auto; object-fit:contain} /* full image, not cropped */
+    .hero img{display:block; width:100%; height:auto; object-fit:contain}
 
     /* Ledger thumbnails + lightbox */
     .thumb{height:40px; width:auto; border:1px solid var(--line); border-radius:6px; vertical-align:middle; cursor:pointer}
@@ -96,16 +109,18 @@
 
       <!-- Top nav / tabs -->
       <section class="card" style="margin-top:10px">
-        <div class="pill-tabs" role="tablist" aria-label="Manifest tabs">
-          <button class="pill active" data-tab="remnant"  role="tab" aria-selected="true">🜚 Remnant (Visual)</button>
-          <button class="pill"        data-tab="observer" role="tab" aria-selected="false">⏱ Observer</button>
-          <button class="pill"        data-tab="voice"    role="tab" aria-selected="false">🎙 Voice</button>
-          <button class="pill"        data-tab="phrase"   role="tab" aria-selected="false">🔡 Phrase</button>
-          <button class="pill"        data-tab="breath"   role="tab" aria-selected="false">🌬 Breath</button>
-          <button class="pill"        data-tab="coherence"role="tab" aria-selected="false">📈 Ξ</button>
-          <button class="pill"        data-tab="ledger"   role="tab" aria-selected="false">📒 Ledger</button>
-          <span class="flex" aria-hidden="true"></span>
-          <label class="hint"><input id="coach" type="checkbox"> Coach mode</label>
+        <div class="tabs-wrap" role="navigation" aria-label="Manifest tabs">
+          <button class="chev left" id="tabsPrev" aria-label="Scroll tabs left">‹</button>
+          <div class="pill-rail" id="pillRail" role="tablist">
+            <button class="pill active" data-tab="remnant"  role="tab" aria-selected="true">🜚 Remnant</button>
+            <button class="pill"        data-tab="observer" role="tab" aria-selected="false">⏱ Observer</button>
+            <button class="pill"        data-tab="voice"    role="tab" aria-selected="false">🎙 Voice</button>
+            <button class="pill"        data-tab="phrase"   role="tab" aria-selected="false">🔡 Phrase</button>
+            <button class="pill"        data-tab="breath"   role="tab" aria-selected="false">🌬 Breath</button>
+            <button class="pill"        data-tab="coherence"role="tab" aria-selected="false">📈 Ξ</button>
+            <button class="pill"        data-tab="ledger"   role="tab" aria-selected="false">📒 Ledger</button>
+          </div>
+          <button class="chev right" id="tabsNext" aria-label="Scroll tabs right">›</button>
         </div>
       </section>
     </header>
@@ -153,7 +168,7 @@
             <button id="rmnRun" class="lab-btn primary">Run (1×12s)</button>
             <button id="rmnSeal" class="lab-btn">Seal → Ledger</button>
           </div>
-          <p class="hint">Seed draws a soft trace from your carrier & breath. Seal stores the line, carrier, Ξ, and a thumbnail remnant in the Ledger. Download saves a PNG.</p>
+          <p class="hint">Visual modes: Flow, Lattice, <b>Torus</b>, <b>Poly</b>. Seal stores line, carrier, Ξ, and a thumbnail remnant in the Ledger. Download saves a PNG.</p>
         </div>
 
         <aside class="card col-5">
@@ -365,11 +380,28 @@
     const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
     const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
 
-    /* -------- Tabs -------- */
+    /* -------- Tabs + horizontal scroll rail -------- */
     const tabBtns=$$(".pill"), tabs=$$(".tab");
-    function switchTo(id){ tabs.forEach(t=>t.classList.toggle("active", t.id==="tab-"+id)); tabBtns.forEach(b=>b.classList.toggle("active", b.dataset.tab===id)); }
+    const rail=$("#pillRail"), prev=$("#tabsPrev"), next=$("#tabsNext");
+    function switchTo(id){
+      tabs.forEach(t=>t.classList.toggle("active", t.id==="tab-"+id));
+      tabBtns.forEach(b=>b.classList.toggle("active", b.dataset.tab===id));
+      const btn=[...tabBtns].find(b=>b.dataset.tab===id);
+      if(btn){ btn.scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"}); }
+    }
     tabBtns.forEach(b=>on(b,"click",()=>switchTo(b.dataset.tab)));
-    on(document,"keydown",(e)=>{ if(e.target.matches("input,textarea")) return; const map={1:"remnant",2:"observer",3:"voice",4:"phrase",5:"breath",6:"coherence",7:"ledger"}; if(map[e.key]){ e.preventDefault(); switchTo(map[e.key]); } });
+    function updateChev(){
+      prev.disabled = rail.scrollLeft<=4;
+      next.disabled = (rail.scrollLeft + rail.clientWidth) >= (rail.scrollWidth-4);
+    }
+    on(prev,"click",()=>{ rail.scrollBy({left:-rail.clientWidth*0.7,behavior:"smooth"}); });
+    on(next,"click",()=>{ rail.scrollBy({left: rail.clientWidth*0.7,behavior:"smooth"}); });
+    on(rail,"scroll",updateChev,{passive:true});
+    updateChev();
+    on(document,"keydown",(e)=>{ if(e.target.matches("input,textarea")) return;
+      const map={1:"remnant",2:"observer",3:"voice",4:"phrase",5:"breath",6:"coherence",7:"ledger"};
+      if(map[e.key]){ e.preventDefault(); switchTo(map[e.key]); }
+    });
 
     /* -------- Reveal -------- */
     if('IntersectionObserver' in window){
@@ -401,57 +433,129 @@
       if(c!=="none") blip(+c);
     }));
 
-    /* -------- Remnant visual trace -------- */
+    /* -------- Remnant visual trace (Flow / Lattice / Torus / Poly) -------- */
     const canvas=$("#trace"), ctx=canvas.getContext("2d");
     function fit(){ const r=canvas.getBoundingClientRect(); canvas.width=r.width; canvas.height=380; }
     fit(); addEventListener("resize", fit, {passive:true});
 
-    let phi=0, seed=Math.random()*1000, mode=0; // 0: flow, 1: lattice
+    let phi=0, seed=Math.random()*1000, mode=0; // 0 Flow, 1 Lattice, 2 Torus, 3 Poly
     let breathPhase="—"; $("#hudBreath").textContent="Breath: —";
 
-    function palette(t){
-      const a="rgba(122,243,255,", b="rgba(243,201,122,";
-      return t<0.5? a+(0.15+0.6*t)+")" : b+(0.15+0.6*(t-0.5)) +")";
-    }
+    function pal(t){ const a="rgba(122,243,255,", b="rgba(243,201,122,"; return t<0.5? a+(0.15+0.6*t)+")" : b+(0.15+0.6*(t-0.5)) +")"; }
 
-    function drawFlow(t){
+    function drawFlow(){
       const W=canvas.width,H=canvas.height;
       ctx.fillStyle="rgba(10,14,21,0.10)"; ctx.fillRect(0,0,W,H);
-      const base = carrier==="none"? 0.7 : ( (parseFloat(carrier)%1000)/1000 );
+      const base = carrier==="none"? 0.7 : ((parseFloat(carrier)%1000)/1000);
       const n=140, r0=Math.min(W,H)*0.22;
       for(let i=0;i<n;i++){
-        const a = i/n * Math.PI*2 + phi*0.0006;
-        const b = Math.sin(i*0.17 + seed*0.1 + phi*0.001);
-        const r = r0 * (0.7 + 0.3*Math.sin(phi*0.002 + i*0.05 + base*6));
-        const x = W/2 + Math.cos(a)*r*(1+0.08*b);
-        const y = H/2 + Math.sin(a*(1.0+0.02*Math.cos(phi*0.003)) )*r*(1-0.05*b);
-        ctx.fillStyle = palette((i%100)/100);
-        ctx.beginPath(); ctx.arc(x,y, 0.8 + 1.4*(0.5+0.5*b), 0, Math.PI*2); ctx.fill();
+        const a=i/n*Math.PI*2 + phi*0.0006;
+        const b=Math.sin(i*0.17 + seed*0.1 + phi*0.001);
+        const r=r0*(0.7 + 0.3*Math.sin(phi*0.002 + i*0.05 + base*6));
+        const x=W/2+Math.cos(a)*r*(1+0.08*b);
+        const y=H/2+Math.sin(a*(1.0+0.02*Math.cos(phi*0.003)))*r*(1-0.05*b);
+        ctx.fillStyle=pal((i%100)/100); ctx.beginPath(); ctx.arc(x,y,1+1.4*(0.5+0.5*b),0,Math.PI*2); ctx.fill();
       }
-      phi += (breathPhase==="In"? 1.6 : breathPhase==="Out"? 2.2 : 1.0);
+      phi+=(breathPhase==="In"?1.6:breathPhase==="Out"?2.2:1.0);
     }
 
-    function drawLattice(t){
+    function drawLattice(){
       const W=canvas.width,H=canvas.height;
       ctx.fillStyle="rgba(10,14,21,0.14)"; ctx.fillRect(0,0,W,H);
-      const base = carrier==="none"? 0.5 : ((+carrier%360)/360);
-      const a = 1 + Math.round(base*5), b = 2 + Math.round(base*7);
-      const R = Math.min(W,H)*0.36, steps = 420;
+      const base= carrier==="none"?0.5:((+carrier%360)/360);
+      const a=1+Math.round(base*5), b=2+Math.round(base*7);
+      const R=Math.min(W,H)*0.36, steps=420;
       ctx.beginPath();
       for(let i=0;i<steps;i++){
-        const th = i/steps * Math.PI*2;
-        const x = W/2 + R*Math.sin(a*th + phi*0.0012);
-        const y = H/2 + R*Math.sin(b*th + phi*0.0016);
+        const th=i/steps*Math.PI*2;
+        const x=W/2+R*Math.sin(a*th + phi*0.0012);
+        const y=H/2+R*Math.sin(b*th + phi*0.0016);
         (i?ctx.lineTo(x,y):ctx.moveTo(x,y));
       }
       ctx.strokeStyle="rgba(243,201,122,.85)"; ctx.lineWidth=1.4; ctx.stroke();
-      phi += 1.5;
+      phi+=1.5;
+    }
+
+    // Torus (parametric: R major, r minor), simple 3D project + depth fade
+    function drawTorus(){
+      const W=canvas.width,H=canvas.height;
+      ctx.fillStyle="rgba(10,14,21,0.12)"; ctx.fillRect(0,0,W,H);
+      const R=Math.min(W,H)*0.26, r=R*0.36;
+      const a=phi*0.002, b=phi*0.0013; // rotation
+      const ca=Math.cos(a), sa=Math.sin(a), cb=Math.cos(b), sb=Math.sin(b);
+      const nx=80, ny=28;
+      for(let i=0;i<nx;i++){
+        const u=i/nx*Math.PI*2;
+        for(let j=0;j<ny;j++){
+          const v=j/ny*Math.PI*2;
+          let x=(R + r*Math.cos(v))*Math.cos(u);
+          let y=(R + r*Math.cos(v))*Math.sin(u);
+          let z=r*Math.sin(v);
+          // rotate around Y then X
+          let X =  x*cb + z*sb;
+          let Z = -x*sb + z*cb;
+          let Y =  y*ca - Z*sa;
+          Z =  y*sa + Z*ca;
+          const d=500/(600+Z); // perspective
+          const px=W/2+X*d, py=H/2+Y*d;
+          const t=(Z+R)/ (2*R + r); // depth 0..1
+          ctx.fillStyle = pal(t);
+          ctx.fillRect(px,py,1.6,1.6);
+        }
+      }
+      phi += (breathPhase==="In"? 1.4 : breathPhase==="Out"? 1.9 : 1.2);
+    }
+
+    // Poly (icosahedron wireframe rotating)
+    function drawPoly(){
+      const W=canvas.width,H=canvas.height;
+      ctx.fillStyle="rgba(10,14,21,0.10)"; ctx.fillRect(0,0,W,H);
+      // Icosahedron vertices (φ = (1+sqrt5)/2)
+      const PHI= (1+Math.sqrt(5))/2, s= Math.min(W,H)*0.22;
+      const verts=[
+        [-1, PHI, 0],[1, PHI, 0],[-1,-PHI, 0],[1,-PHI, 0],
+        [0,-1, PHI],[0, 1, PHI],[0,-1,-PHI],[0, 1,-PHI],
+        [ PHI,0,-1],[ PHI,0, 1],[-PHI,0,-1],[-PHI,0, 1]
+      ].map(v=>v.map(n=>n*s/PHI));
+      const edges=[[0,1],[0,7],[0,11],[1,7],[1,9],[2,3],[2,6],[2,11],[3,6],[3,9],
+                   [4,5],[4,9],[4,11],[5,9],[5,11],[6,7],[6,8],[7,8],[8,9],[8,10],[10,11],[10,7],[10,6],[11,0]];
+      const ax=phi*0.0018, ay=phi*0.0011, az=phi*0.0015;
+      const cx=Math.cos(ax), sx=Math.sin(ax), cy=Math.cos(ay), sy=Math.sin(ay), cz=Math.cos(az), sz=Math.sin(az);
+      function rot([x,y,z]){
+        // Rz * Ry * Rx
+        let X=x, Y=y, Z=z;
+        // Rx
+        let Y1= Y*cx - Z*sx, Z1= Y*sx + Z*cx;
+        // Ry
+        let X2= X*cy + Z1*sy, Z2= -X*sy + Z1*cy, Y2=Y1;
+        // Rz
+        let X3= X2*cz - Y2*sz, Y3= X2*sz + Y2*cz, Z3=Z2;
+        return [X3,Y3,Z3];
+      }
+      const pv=verts.map(v=>rot(v)).map(([x,y,z])=>{
+        const d=500/(600+z); return [W/2+x*d, H/2+y*d, z];
+      });
+      ctx.lineWidth=1.2;
+      edges.forEach(([i,j])=>{
+        const zi=pv[i][2], zj=pv[j][2], t=( (zi+zj)/2 + s )/(2*s);
+        ctx.strokeStyle= pal(Math.max(0,Math.min(1,t)));
+        ctx.beginPath(); ctx.moveTo(pv[i][0],pv[i][1]); ctx.lineTo(pv[j][0],pv[j][1]); ctx.stroke();
+      });
+      phi += 1.3;
     }
 
     let anim=true;
-    (function loop(t){ if(!anim) return; (mode?drawLattice:drawFlow)(t); requestAnimationFrame(loop); })();
+    function tick(){ if(!anim) return;
+      switch(mode){ case 0: drawFlow(); break; case 1: drawLattice(); break; case 2: drawTorus(); break; default: drawPoly(); }
+      requestAnimationFrame(tick);
+    }
+    tick();
 
-    on($("#visToggle"),"click",()=>{ mode = (mode+1)%2; $("#visToggle").textContent = "Visual: " + (mode? "Lattice":"Flow"); });
+    const visBtn=$("#visToggle");
+    function updateVisLabel(){ visBtn.textContent = "Visual: " + ["Flow","Lattice","Torus","Poly"][mode]; }
+    on(visBtn,"click",()=>{ mode=(mode+1)%4; updateVisLabel(); });
+    updateVisLabel();
+
     on($("#clearBtn"),"click",()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); });
     on($("#seedBtn"),"click",()=>{ seed = Math.random()*1000; });
     on($("#dlTrace"),"click",()=>{
@@ -461,7 +565,7 @@
       }catch(_){ toast("Download failed"); }
     });
 
-    function seedTrace(){ for(let k=0;k<40;k++){ (mode?drawLattice:drawFlow)(performance.now()+k*16); } }
+    function seedTrace(){ for(let k=0;k<40;k++){ switch(mode){case 0: drawFlow(); break; case 1: drawLattice(); break; case 2: drawTorus(); break; default: drawPoly();} } }
     function canvasPNG(){ try{ return canvas.toDataURL("image/png"); }catch(_){ return ""; } }
 
     /* -------- RVE Run & Seal -------- */
@@ -634,7 +738,6 @@
         <td>${e._traceDataUri ? `<img src="${e._traceDataUri}" class="thumb" alt="Remnant" data-idx="${i}">` : "—"}</td>
         <td><button class="lab-btn" data-del="${i}">✕</button></td>
       </tr>`).join("");
-      // actions
       $$("#lgRows [data-del]").forEach(b=>on(b,"click",()=>{ const all=readLedger(); all.splice(+b.dataset.del,1); writeLedger(all); renderLedger(); }));
       $$("#lgRows img.thumb").forEach(img=>on(img,"click",()=>{
         const all=readLedger(); const i=+img.dataset.idx; const src=all[i]._traceDataUri; if(src){ lb.querySelector("img").src=src; lb.classList.add("open"); }
