@@ -749,4 +749,29 @@ body.living-all :where(h1,h2,h3,p,li,small,em,strong,span,a,button,label,.kicker
 .no-living, .logo, .laser-grid, img, video, canvas, svg path, svg rect, svg circle, svg polygon {
   background:none!important; color:inherit!important; -webkit-background-clip:initial!important; filter:none!important; animation:none!important
 }
-@keyframes living-slide{ 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
+@keyframes living-slide{ 0%{background-position:0% 50%} 100%{background-position:300Overtime.
+
+
+
+
+
+
+
+/* 13-Moon Home Bar */
+.moon-bar{
+  display:flex; align-items:center; gap:12px; text-decoration:none;
+  padding:12px 14px; border-radius:12px; position:relative;
+}
+.moon-bar .moon-dot{
+  width:14px; height:14px; border-radius:50%;
+  background: radial-gradient(closest-side, var(--accent), transparent 70%);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.moon-bar .moon-text{ display:flex; flex-direction:column; gap:2px; }
+.moon-bar #mbLabel{ font-weight:800; letter-spacing:.2px }
+.moon-bar .moon-go{ margin-left:auto; opacity:.7 }
+.moon-bar.is-doot{ border-color:#3a4050; box-shadow:0 0 0 1px #7af3ff33 inset }
+
+
+
+                        
