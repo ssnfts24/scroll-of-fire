@@ -757,21 +757,58 @@ body.living-all :where(h1,h2,h3,p,li,small,em,strong,span,a,button,label,.kicker
 
 
 
-/* 13-Moon Home Bar */
-.moon-bar{
-  display:flex; align-items:center; gap:12px; text-decoration:none;
-  padding:12px 14px; border-radius:12px; position:relative;
+/* 13-Moon Mini Bar */
+.moonbar{
+  --ring-size: 72px;
+  display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:center;
+  border:1px solid var(--line); border-radius:12px; padding:10px;
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.005));
+  box-shadow:0 6px 14px rgba(0,0,0,.35);
 }
-.moon-bar .moon-dot{
-  width:14px; height:14px; border-radius:50%;
-  background: radial-gradient(closest-side, var(--accent), transparent 70%);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 45%, transparent);
+.moonbar-hit{ display:contents; text-decoration:none; color:inherit }
+.moonbar-ring{ width:var(--ring-size); height:var(--ring-size) }
+.moonbar .mb-bg{ fill:none; stroke:#1f1f28; stroke-width:8 }
+.moonbar .mb-fg{ fill:none; stroke:url(#mbGrad); stroke-width:8; stroke-linecap:round; stroke-dasharray:0 316 }
+.moonbar .mb-text{ font:800 18px/1 Inter, system-ui; fill:#eae7df }
+
+.moonbar-info{ min-width:0 }
+.moonbar-line{ display:flex; flex-wrap:wrap; gap:6px; align-items:baseline; }
+.moonbar-line strong{ font-weight:800 }
+.moonbar-line .sep{ opacity:.6 }
+.moonbar-sub{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+
+.moonbar-tags{ display:flex; gap:6px; align-items:center }
+.moonbar .tag{ display:inline-block; padding:.2rem .5rem; border:1px solid var(--line); border-radius:999px; }
+.moonbar .tag.yhwh{ box-shadow:0 0 0 1px #7af3ff22, inset 0 0 0 1px #7af3ff18 }
+
+.moonbar-share{
+  grid-column:3; justify-self:end;
+  appearance:none; border:1px solid #343846; background:rgba(255,255,255,.04);
+  color:var(--ink); padding:.45rem .65rem; border-radius:9px; font:600 14px/1 Inter;
+  cursor:pointer;
 }
-.moon-bar .moon-text{ display:flex; flex-direction:column; gap:2px; }
-.moon-bar #mbLabel{ font-weight:800; letter-spacing:.2px }
-.moon-bar .moon-go{ margin-left:auto; opacity:.7 }
-.moon-bar.is-doot{ border-color:#3a4050; box-shadow:0 0 0 1px #7af3ff33 inset }
 
+@media (max-width:560px){
+  .moonbar{ grid-template-columns:auto 1fr; gap:10px }
+  .moonbar-share{ grid-column:2; }
+}
 
+/* Special states */
+.moonbar[data-state="doot"] .mb-fg,
+.moonbar[data-state="leap"] .mb-fg{ stroke:#b18cff }
+.moonbar[data-state="doot"] .moonbar-sub::before{
+  content:"Day Out of Time — "; color:#ffd1f3;
+}
+.moonbar[data-state="leap"] .moonbar-sub::before{
+  content:"Leap Day — "; color:#ffd1f3;
+}
 
-                        
+/* YHWH resonant glow (set via JS) */
+.moonbar.yhwh-on .tag.yhwh{
+  box-shadow:0 0 0 1px #7af3ff66, 0 0 18px #7af3ff33, inset 0 0 0 1px #7af3ff33;
+}
+
+/* Reduced motion: freeze arc transitions if you add any later */
+@media (prefers-reduced-motion: reduce){
+  .moonbar *{ transition:none !important; animation:none !important; }
+}
