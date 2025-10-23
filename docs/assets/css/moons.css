@@ -1,11 +1,14 @@
 /* =========================================================
-   13 Moons · Living Clock — Page Styles (enhanced)
-   Safe dark defaults + light fallback, a11y, and robustness
+   13 Moons · Living Clock — Page Styles (wizard/alive rev)
+   - Dark-first, light fallback, a11y-safe, robust on mobile
+   - Plays nicely with Codex carrier skins + mini moon bar
+   - Uses --moon-accent / --moon-accent-2 provided by JS
    ========================================================= */
 
 /* ---------- Color system ---------- */
 :root{
   color-scheme: dark;
+
   /* Base palette */
   --bg:#070a11;
   --fg:#e8eef7;
@@ -18,7 +21,7 @@
   --accent:#a7f6ff;
   --accent-2:#cfefff;
 
-  /* Moon accent (animated via JS) */
+  /* Moon accent (animated via JS / carriers) */
   --moon-accent:#7af3ff;
   --moon-accent-2:#f3c97a;
 
@@ -30,43 +33,52 @@
   /* Focus */
   --focus-ring:#7af3ff;
   --focus-glow:0 0 0 2px #7af3ff66, 0 0 0 6px #7af3ff22;
+
+  /* Motion */
+  --tempo: 1;
 }
 
-/* Optional light theme switch (set data-theme="light" on <html> to test) */
+/* Optional light theme switch (set data-theme="light" on <html>) */
 :root[data-theme="light"]{
   color-scheme: light;
-  --bg:#f7fbff;
-  --fg:#0b1220;
-  --muted:#44536e;
-  --line:#cfd7e6;
-  --elev:rgba(0,0,0,.02);
-  --elev-2:rgba(0,0,0,.01);
-  --accent:#007bff;
-  --accent-2:#7dc3ff;
-  --moon-accent:#007bff;
-  --moon-accent-2:#ffb84d;
+  --bg:#f7fbff; --fg:#0b1220; --muted:#44536e; --line:#cfd7e6;
+  --elev:rgba(0,0,0,.02); --elev-2:rgba(0,0,0,.01);
+  --accent:#0e84ff; --accent-2:#7dc3ff;
+  --moon-accent:#0e84ff; --moon-accent-2:#ffb84d;
 }
 
 /* High-contrast users: strengthen lines and text */
 @media (prefers-contrast: more){
-  :root{ --line: #7a8aaa; --muted:#c5d0e6 }
+  :root{ --line:#7a8aaa; --muted:#c5d0e6 }
 }
 
 /* ---------- Global ---------- */
-html,body{ background:var(--bg); color:var(--fg); }
-body{ margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"; }
+html,body{ background:var(--bg); color:var(--fg)}
+body{
+  margin:0;
+  font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  text-rendering:optimizeLegibility; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
 
 .wrap{ max-width:var(--maxw); margin:0 auto; padding:20px 16px 96px }
 
+/* Titles */
 .title{
-  font-family:"Crimson Pro",serif;font-weight:800;text-align:center;
-  font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;letter-spacing:.2px;
-  background:linear-gradient(180deg,#fff,var(--accent-2) 60%,var(--accent));
-  -webkit-background-clip:text;background-clip:text;color:transparent
+  font-family:"Crimson Pro",serif; font-weight:800; text-align:center;
+  font-size:clamp(28px,3.6vw,44px); margin:8px 0 4px; letter-spacing:.2px;
+  background:linear-gradient(90deg, #fff, var(--accent-2), var(--accent));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 24px color-mix(in srgb, var(--accent) 22%, transparent);
+  animation:titleGlow calc(2.2s * var(--tempo)) ease both;
+}
+@keyframes titleGlow{
+  0%{ filter:drop-shadow(0 0 0 rgba(122,243,255,0)) }
+  100%{ filter:drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 35%, transparent)) }
 }
 .subtitle{ text-align:center; color:var(--muted); margin:0 0 12px }
 
-/* Links inherit color but get underline on hover for clarity */
+/* Links inherit color; underline on hover for clarity */
 a{ color:inherit; text-decoration:none }
 a:hover{ text-decoration:underline }
 
@@ -78,17 +90,35 @@ a:hover{ text-decoration:underline }
 /* ---------- Cards & common UI ---------- */
 .card{
   border:1px solid var(--line); border-radius:var(--radius); padding:12px;
-  background:linear-gradient(180deg, var(--elev), var(--elev-2));
+  background:
+    linear-gradient(180deg, var(--elev), var(--elev-2)),
+    radial-gradient(70% 50% at 100% 0%, color-mix(in srgb, var(--moon-accent) 8%, transparent), transparent 60%);
   box-shadow:var(--shadow);
+  position:relative; overflow:hidden; isolation:isolate;
 }
-.lab-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
+.card::after{
+  content:""; position:absolute; inset:-20% -10% auto -10%; height:60%;
+  background:
+    radial-gradient(50% 40% at 20% 30%, color-mix(in srgb, var(--moon-accent) 14%, transparent), transparent 60%),
+    radial-gradient(50% 40% at 80% 10%, color-mix(in srgb, var(--moon-accent-2) 12%, transparent), transparent 60%);
+  mix-blend-mode:screen; opacity:.35; filter:blur(10px);
+  animation:cardAurora calc(14s * var(--tempo)) linear infinite;
+  pointer-events:none;
+}
+@keyframes cardAurora{
+  0%{ transform:translate3d(-2%,0,0)}
+  50%{ transform:translate3d(2%,3%,0)}
+  100%{ transform:translate3d(-2%,0,0)}
+}
 
+.lab-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
 .lab-btn{
   padding:.6rem .85rem; border-radius:10px; border:1px solid var(--line);
   background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
-  font-weight:700; cursor:pointer; color:inherit; transition:transform .06s ease, box-shadow .12s ease
+  font-weight:700; cursor:pointer; color:inherit;
+  transition:transform .06s ease, box-shadow .12s ease, border-color .12s ease;
 }
-.lab-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35) }
+.lab-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35); border-color:color-mix(in srgb, var(--moon-accent) 25%, var(--line)) }
 .lab-btn:active{ transform:translateY(0); box-shadow:var(--shadow) }
 .lab-btn.ghost{ background:transparent }
 .lab-btn[disabled]{ opacity:.5; cursor:not-allowed }
@@ -99,9 +129,7 @@ a:hover{ text-decoration:underline }
 }
 
 /* Range input (hour scrub) */
-input[type="range"].lab-input{
-  appearance:none; height:32px; background:transparent; padding:0
-}
+input[type="range"].lab-input{ appearance:none; height:32px; background:transparent; padding:0 }
 input[type="range"].lab-input::-webkit-slider-runnable-track{
   height:4px; background:linear-gradient(90deg, var(--moon-accent), var(--moon-accent-2)); border-radius:999px
 }
@@ -126,74 +154,112 @@ input[type="range"].lab-input::-moz-range-thumb{
 /* Help text */
 .hint,.meta{ color:var(--muted) }
 
-/* ---------- Background stars layer ---------- */
+/* ---------- Background stars + aurora sky ---------- */
 body.stars{
   background:
-    radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
+    radial-gradient(900px 600px at 60% -6%, rgba(122,243,255,.08), transparent 60%),
     linear-gradient(180deg, #05060a 0%, #0b0e14 80%);
   overflow-x:hidden;
 }
-
-/* Sky canvas (fixed) */
 #skyBg{
-  position:fixed; inset:0 0 auto 0; width:100vw; height:45vh; display:block; z-index:-1;
+  position:fixed; inset:0 0 auto 0; width:100vw; height:46vh; z-index:-1; display:block;
+  background:
+    radial-gradient(2px 2px at 12% 24%, rgba(255,255,255,.5), transparent 60%),
+    radial-gradient(1.5px 1.5px at 72% 28%, rgba(122,243,255,.45), transparent 60%),
+    radial-gradient(1.8px 1.8px at 42% 62%, rgba(243,201,122,.4), transparent 60%),
+    conic-gradient(from 0deg at 50% 50%, rgba(122,243,255,.05), rgba(255,255,255,0), rgba(243,201,122,.04), rgba(255,255,255,0));
+  mix-blend-mode:screen;
+  animation:skyDrift calc(28s * var(--tempo)) linear infinite;
   filter:saturate(115%) contrast(105%);
 }
-@media (prefers-reduced-motion:reduce){
-  #skyBg { display:none; }
-}
+@keyframes skyDrift{ from{transform:translateX(-2%)} to{transform:translateX(2%)} }
+@media (prefers-reduced-motion:reduce){ #skyBg{ display:none } }
 
-/* ---------- Moon banner ---------- */
-.moon-badge{ display:flex; align-items:center; gap:12px; justify-content:center; flex-wrap:wrap }
+/* ---------- Moon banner / badges ---------- */
+.moon-badge{
+  display:flex; align-items:center; gap:12px; justify-content:center; flex-wrap:wrap;
+  filter:drop-shadow(0 0 10px color-mix(in srgb, var(--moon-accent) 25%, transparent));
+}
 .pill{
   display:inline-grid; place-items:center; gap:2px; padding:.5rem .9rem; border-radius:999px;
-  border:1px solid var(--line); background:rgba(255,255,255,.03)
+  border:1px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
+    radial-gradient(80% 60% at 50% 20%, color-mix(in srgb, var(--moon-accent) 15%, transparent), transparent 60%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
 }
 .pill .k{ font-size:clamp(22px,3vw,30px); font-weight:800 }
 .mono{ font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace }
 
-/* ---------- Progress ring ---------- */
+/* ---------- Progress ring (alive) ---------- */
 .ring{ width:120px; height:120px; display:grid; place-items:center; position:relative }
 .ring svg{ display:block }
-.ring .label{ position:absolute; text-align:center }
-.ring .label .big{ font:800 24px/1 Inter; color:#eae7df }
+.ring .label{ position:absolute; text-align:center; pointer-events:none }
+.ring .label .big{ font:900 24px/1 Inter; color:#eae7df; letter-spacing:.3px; text-shadow:0 0 10px rgba(255,255,255,.08) }
 .ring .label .small{ font:600 12px/1 Inter; color:#b8b3a6 }
-.ring-bg{ fill:none; stroke:#1f1f28; stroke-width:8 }
-.ring-fg{ fill:none; stroke:var(--ring-grad, url(#rg)); stroke-width:8; stroke-linecap:round; stroke-dasharray:0 316 }
+.ring-bg{ fill:none; stroke:#1f2533; stroke-width:8 }
+.ring-fg{
+  fill:none; stroke:var(--ring-grad, url(#rg)); stroke-width:8; stroke-linecap:round; stroke-dasharray:0 316;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--moon-accent) 45%, transparent))
+          drop-shadow(0 0 10px color-mix(in srgb, var(--moon-accent-2) 28%, transparent));
+  transition: stroke-dasharray .45s cubic-bezier(.22,.61,.36,1);
+  animation:ringGlow calc(6.2s * var(--tempo)) ease-in-out infinite;
+}
+@keyframes ringGlow{
+  0%,100%{ filter:drop-shadow(0 0 5px color-mix(in srgb, var(--moon-accent) 40%, transparent)) }
+  50%{ filter:drop-shadow(0 0 12px color-mix(in srgb, var(--moon-accent-2) 40%, transparent)) }
+}
 
 /* ---------- Week dots ---------- */
 .weekrow{ display:flex; gap:8px; justify-content:center; align-items:center; margin-top:6px; flex-wrap:wrap }
 .week{
   display:grid; grid-template-columns:repeat(7,10px); gap:6px; padding:6px 10px;
-  border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.02)
+  border:1px solid var(--line); border-radius:999px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
+    radial-gradient(80% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
 }
 .dot{
   width:10px; height:10px; border-radius:50%;
-  background:#1f1f28; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)
+  background:#1f2533; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+  transition: transform .2s ease, box-shadow .2s ease;
 }
-.dot.on{ background:radial-gradient(circle at 40% 35%, var(--moon-accent), var(--moon-accent-2)) }
+.dot.on{
+  background: radial-gradient(circle at 40% 35%, var(--moon-accent), var(--moon-accent-2));
+  box-shadow: 0 0 0 1px rgba(255,255,255,.12) inset, 0 0 10px color-mix(in srgb, var(--moon-accent) 35%, transparent);
+  transform: translateY(-1px) scale(1.05);
+}
 .weeklabel{ font:700 12px/1 Inter; color:#b8b3a6 }
 
 /* ---------- Year map ---------- */
 .year-map{ width:100%; border-collapse:separate; border-spacing:0 6px }
 .year-map th,.year-map td{ padding:8px 10px; border:1px solid var(--line); vertical-align:top }
-.year-map th{ background:rgba(255,255,255,.03); text-align:left }
+.year-map th{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
+    radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
+  text-align:left; position:sticky; top:0; z-index:1; backdrop-filter:saturate(120%) blur(6px)
+}
 .year-map .row{ border-radius:10px; overflow:hidden }
 .tag{ display:inline-block; padding:.2rem .5rem; border:1px solid var(--line); border-radius:999px }
-.is-today{ box-shadow:0 0 0 1px #7af3ff55, inset 0 0 0 1px #7af3ff33 }
-
-/* Optional sticky header for long lists */
-@media (min-height:700px){
-  .year-map thead th{ position:sticky; top:0; backdrop-filter:saturate(120%) blur(6px) }
+.is-today{
+  box-shadow:0 0 0 1px #7af3ff55, inset 0 0 0 1px #7af3ff33, 0 10px 22px rgba(0,0,0,.35);
+  position:relative;
+}
+.is-today::after{
+  content:""; position:absolute; inset:-2px; border-radius:inherit; pointer-events:none;
+  box-shadow:inset 0 0 18px color-mix(in srgb, var(--moon-accent) 25%, transparent);
 }
 
-/* ---------- Lunar sim ---------- */
+/* ---------- Lunar sim canvas ---------- */
 .sim{ display:grid; grid-template-columns:1fr 2fr; gap:10px }
 @media (max-width:860px){ .sim{ grid-template-columns:1fr } }
 canvas#simMoon{
-  width:100%; height:auto; display:block;
-  background:radial-gradient(circle at 50% 40%, #0a0e15 0%, #06080d 80%);
-  border-radius:12px; border:1px solid var(--line)
+  width:100%; height:auto; display:block; border-radius:12px; border:1px solid var(--line);
+  background:
+    radial-gradient(circle at 50% 40%, #0a0e15 0%, #06080d 80%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.02) 0 2px, transparent 2px 4px);
+  box-shadow: 0 10px 28px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.02);
 }
 
 /* ---------- Top nav ---------- */
@@ -206,7 +272,7 @@ nav.crumbs{ display:flex; gap:8px; justify-content:center; margin-top:10px; marg
 /* ---------- Toast + download link ---------- */
 .toast{
   position:fixed; left:50%; bottom:22px; transform:translateX(-50%);
-  background:#0e131c; color:#e6f9ff; padding:8px 12px; border:1px solid #2a3242;
+  background:#0e131c; color:#e6f9ff; padding:8px 12px; border:1px solid var(--line);
   border-radius:10px; box-shadow:0 10px 28px rgba(0,0,0,.35); z-index:9999; opacity:0; transition:opacity .2s
 }
 a.dl{
@@ -221,6 +287,32 @@ a.dl:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35) }
 .kin .tag{ padding:.25rem .55rem; border-radius:999px; border:1px solid var(--line) }
 .kin small{ color:#9aa4be }
 
+/* ---------- Moon Mini Bar (shared with homepage widget) ---------- */
+.moonbar{
+  --ring-size: 76px;
+  border:1px solid var(--line); border-radius:14px; padding:8px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
+    radial-gradient(140% 80% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
+  box-shadow:0 10px 24px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.02);
+}
+.moonbar .mb-bg{ stroke:#1b2231 }
+.moonbar .mb-fg{
+  stroke:url(#mbGrad); /* stops are CSS var-powered in HTML */
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--moon-accent) 35%, transparent))
+          drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent-2) 28%, transparent));
+  transition: stroke-dasharray .45s cubic-bezier(.22,.61,.36,1);
+  animation:mbPulse calc(7.2s * var(--tempo)) ease-in-out infinite;
+}
+@keyframes mbPulse{ 0%,100%{opacity:.92} 50%{opacity:1} }
+.moonbar .tag.yhwh{ box-shadow:0 0 0 1px #7af3ff22, inset 0 0 0 1px #7af3ff18 }
+.moonbar.yhwh-on .tag.yhwh{
+  box-shadow:0 0 0 1px #7af3ff66, 0 0 18px #7af3ff33, inset 0 0 0 1px #7af3ff33;
+}
+
+/* ---------- Inputs / focus ---------- */
+:where(button, a, select, input):focus-visible{ outline:none; box-shadow:var(--focus-glow) }
+
 /* ---------- Utilities ---------- */
 .sr-only{
   position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
@@ -233,4 +325,30 @@ a.dl:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35) }
   .wrap{ padding:0 }
   #skyBg, .toast, nav.crumbs{ display:none !important }
   .card{ box-shadow:none; border-color:#000 }
+}
+
+/* ---------- Reduced motion/data ---------- */
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none !important; transition:none !important }
+  #skyBg{ display:none !important }
+}
+@media (prefers-reduced-data:reduce){
+  #skyBg, .card::after{ display:none !important }
+}
+
+/* ---------- Scrollbars ---------- */
+body{ scrollbar-width:thin; scrollbar-color:#2b2f3a #0f0f14 }
+body::-webkit-scrollbar{ width:12px }
+body::-webkit-scrollbar-track{ background:#0f0f14 }
+body::-webkit-scrollbar-thumb{ background:#2b2f3a; border-radius:10px; border:2px solid #0f0f14; box-shadow: inset 0 0 12px color-mix(in srgb, var(--moon-accent) 20%, transparent) }
+
+/* ---------- Safety: no backdrop support fallback ---------- */
+@supports not ((-webkit-backdrop-filter: blur(2px)) or (backdrop-filter: blur(2px))) {
+  .year-map th{ background:#0e131a !important }
+}
+
+/* ---------- Tiny screens polish ---------- */
+@media (max-width:340px){
+  .pill .k{ font-size:20px }
+  .ring{ width:104px; height:104px }
 }
