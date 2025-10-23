@@ -169,6 +169,52 @@
     .vr-progress{font-size:.9rem; opacity:.85; margin-top:.3rem}
   </style>
 
+
+  <style>
+  /* === Enhancement Pack: minimal CSS === */
+  /* Reading progress */
+  .read-progress{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7af3ff,#f3c97a);transform-origin:left center;transform:scaleX(0);z-index:2000}
+  .read-progress.in{transform:scaleX(var(--p,0))}
+
+  /* Mini-TOC active link */
+  .mini-toc a.is-active{background:rgba(122,243,255,.12);border-left:2px solid var(--accent);padding-left:.55rem}
+
+  /* Glossary popovers */
+  .gloss{position:relative;cursor:help;border-bottom:1px dotted color-mix(in srgb, var(--accent) 50%, #fff 0%)}
+  .gloss:hover .gloss-tip, .gloss:focus-within .gloss-tip {opacity:1;transform:translateY(0);pointer-events:auto}
+  .gloss-tip{
+    position:absolute;left:0;top:100%;transform:translateY(8px);opacity:0;pointer-events:none;
+    background:var(--bg-elev);border:1px solid var(--line);border-radius:.6rem;padding:.5rem .6rem;
+    width:min(46ch,92vw);box-shadow:0 16px 40px rgba(0,0,0,.35);z-index:1700
+  }
+  .gloss-tip b{color:#f3c97a}
+
+  /* Headline tools (copy/link) */
+  .hd-tools{display:inline-flex;gap:.35rem;margin-left:.5rem;opacity:0;transition:opacity .15s}
+  h2:hover .hd-tools, h3:hover .hd-tools{opacity:1}
+  .hd-tools .chip{font-size:.8rem;padding:.15rem .45rem;border-radius:999px;border:1px solid var(--line);background:var(--bg-elev)}
+
+  /* Ξ inline calculator */
+  .xi-panel{border:1px solid var(--line);border-radius:.75rem;padding:.6rem;background:rgba(255,255,255,.02);margin-top:.6rem}
+  .xi-panel .row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+  .xi-panel input{width:110px}
+  .xi-big{font-weight:800}
+  .xi-bar{height:6px;background:#1f2533;border-radius:999px;overflow:hidden}
+  .xi-bar span{display:block;height:100%;background:linear-gradient(90deg,#7af3ff,#f3c97a);width:0%}
+
+  /* “Try in Manifest” button */
+  .to-manifest{display:inline-flex;align-items:center;gap:.45rem;margin-top:.4rem}
+
+  /* Reading time pill */
+  .readtime{display:inline-block;font-size:.85rem;border:1px solid var(--line);border-radius:999px;padding:.2rem .55rem;margin-left:.5rem;color:#9aa4be}
+
+  @media (prefers-reduced-motion:reduce){
+    .read-progress{transition:none}
+    .gloss-tip{transition:none}
+  }
+  </style>
+  
+
   <!-- MathJax (lazy) -->
   <script>
     (function(){
