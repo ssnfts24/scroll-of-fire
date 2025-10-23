@@ -5,6 +5,13 @@
   const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
   const pad=n=>String(n).padStart(2,"0");
   const warn=(...a)=>{ try{console.warn("[Moons]",...a);}catch(_){} };
+  const crash=(msg,err)=>{
+    console.error("[Moons crash]", msg, err);
+    const n=document.createElement("div");
+    n.style.cssText="position:fixed;left:50%;top:10px;transform:translateX(-50%);z-index:99999;background:#230b0b;color:#ffd7d7;border:1px solid #712828;padding:8px 10px;border-radius:10px;font:600 13px/1.3 Inter";
+    n.textContent="Moons: "+msg;
+    document.body.appendChild(n);
+  };
 
   $("#yr")?.textContent=new Date().getFullYear();
 
@@ -29,16 +36,25 @@
 
   let ALL_TZ = COMMON_TZ;
   try{
-    if (Intl.supportedValuesOf) ALL_TZ = Array.from(new Set([...COMMON_TZ, ...Intl.supportedValuesOf("timeZone")]));
-  }catch(_){/* noop */ }
+    if (Intl.supportedValuesOf) {
+      const full = Intl.supportedValuesOf("timeZone");
+      if (Array.isArray(full) && full.length) ALL_TZ = Array.from(new Set([...COMMON_TZ, ...full]));
+    }
+  }catch(_){ /* keep COMMON_TZ */ }
 
   if (tzPick){
-    tzPick.innerHTML = ALL_TZ.map(z=>`<option value="${z}">${z}</option>`).join("");
-    tzPick.value = ALL_TZ.includes(defaultTZ) ? defaultTZ : "UTC";
+    try{
+      tzPick.innerHTML = ALL_TZ.map(z=>`<option value="${z}">${z}</option>`).join("");
+      tzPick.value = ALL_TZ.includes(defaultTZ) ? defaultTZ : "UTC";
+    }catch(e){
+      warn("TZ list build failed", e);
+      tzPick.innerHTML = COMMON_TZ.map(z=>`<option value="${z}">${z}</option>`).join("");
+      tzPick.value = "UTC";
+    }
     on(tzPick,"change",()=>{ try{ localStorage.setItem(TZ_KEY, tzPick.value); }catch(_){} writeURL(); updateAll(); buildYearMap(); }, {passive:true});
   }
 
-  /* ---------- Date helpers ---------- */
+  /* ---------- Date helpers (with legacy-safe formatting) ---------- */
   function dateInTZ(baseDate, tz, overrideHour){
     try{
       const opts={timeZone:tz, hour12:false, year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", second:"2-digit"};
@@ -53,8 +69,18 @@
       return d; // best-effort
     }
   }
-  const formatDate = (d,tz)=> new Intl.DateTimeFormat(undefined,{dateStyle:"full", timeZone:tz}).format(d);
-  const formatClock= (d,tz)=> new Intl.DateTimeFormat(undefined,{timeStyle:"medium", timeZone:tz}).format(d);
+  function fmtDate(d,tz){
+    try{ return new Intl.DateTimeFormat(undefined,{dateStyle:"full", timeZone:tz}).format(d); }
+    catch(_){
+      return new Intl.DateTimeFormat(undefined,{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:tz}).format(d);
+    }
+  }
+  function fmtTime(d,tz){
+    try{ return new Intl.DateTimeFormat(undefined,{timeStyle:"medium", timeZone:tz}).format(d); }
+    catch(_){
+      return new Intl.DateTimeFormat(undefined,{hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false, timeZone:tz}).format(d);
+    }
+  }
   const utcTrunc = (d)=> new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
   const validDateStr = s => /^\d{4}-\d{2}-\d{2}$/.test(s);
 
@@ -171,7 +197,6 @@
     const { epochUTC, skipLeapDay, skipDOOT, tz } = rules;
     let count = Math.floor((utcTrunc(selUTC) - utcTrunc(epochUTC)) / 86400000);
     const start = utcTrunc(epochUTC), end = utcTrunc(selUTC);
-    // subtract specials strictly before the selected day (not including today)
     for (let d=new Date(start); d < end; d = new Date(d.getTime()+86400000)){
       const isLeap = isLeapDayUTC(d);
       const doot   = isDOOT(d, tz);
@@ -238,12 +263,10 @@
     const h=u.searchParams.get("t");
     if(z && tzPick){ tzPick.value=z; try{ localStorage.setItem(TZ_KEY,z); }catch(_){} }
     const tz = tzPick?.value || "UTC";
-    // date
     if (datePick){
       if (d && validDateStr(d)) datePick.value=d;
       else datePick.value=dateInTZ(new Date(), tz).toISOString().slice(0,10);
     }
-    // hour
     if (hourScrub){
       const curHour = new Date().getHours();
       hourScrub.value = (h!=null && !Number.isNaN(+h)) ? Math.min(23,Math.max(0, +h)) : curHour;
@@ -258,9 +281,9 @@
   }
 
   /* ---------- Sky (twinkle + aurora) ---------- */
-  (function initSky(){
+  ;(function initSky(){
     if (!skyBg) return;
-    const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const RM = (typeof matchMedia==="function") && matchMedia("(prefers-reduced-motion: reduce)").matches;
     const ctx = skyBg.getContext("2d");
     const stars = Array.from({length: 130}, ()=>({
       x: Math.random()*skyBg.width,
@@ -304,7 +327,7 @@
     on(window,"resize", size, {passive:true});
   })();
 
-  /* ---------- Helpers: dynamic gradient ---------- */
+  /* ---------- Gradient tint by phase ---------- */
   function setGradientStops(defId, c1, c2){
     const grad = document.getElementById(defId);
     if (!grad) return;
@@ -312,7 +335,6 @@
     if (stops[0]) stops[0].setAttribute("stop-color", c1);
     if (stops[1]) stops[1].setAttribute("stop-color", c2);
   }
-  // ring gradient shifts with illumination
   function applyPhaseAccent(illum){
     const cold = "#7af3ff", warm = "#f3c97a";
     const mix = (a,b,t)=> {
@@ -326,133 +348,130 @@
     const c1 = mix(cold, warm, t*0.7);
     const c2 = mix(warm, cold, (1-t)*0.7);
     setGradientStops("rg", c1, c2);
-    setGradientStops("mbGrad", c1, c2); // mini-bar (if present)
+    setGradientStops("mbGrad", c1, c2);
   }
 
   /* ---------- Rendering ---------- */
   function buildYearMap(){
-    const tz=tzPick?.value || "UTC";
-    if (!datePick || !yearMap) return;
-    const selStr = validDateStr(datePick.value) ? datePick.value : dateInTZ(new Date(), tz).toISOString().slice(0,10);
-    const sel = new Date(`${selStr}T${pad(+hourScrub?.value || 0)}:00:00Z`);
-    const anchor = startOfYear13(sel, tz);
-    const spans = yearMoonSpans(anchor, tz);
-    const todayStr = dateInTZ(sel, tz).toISOString().slice(0,10);
-    yearMap.innerHTML = spans.map(s=>{
-      const sStr = dateInTZ(s.start, tz).toISOString().slice(0,10);
-      const eStr = dateInTZ(s.end, tz).toISOString().slice(0,10);
-      const isNow = todayStr>=sStr && todayStr<=eStr;
-      return `<tr class="row ${isNow?'is-today':''}">
-        <td>${s.m}</td>
-        <td><span class="tag">${s.name}</span></td>
-        <td class="meta">${s.essence}</td>
-        <td>${formatDate(dateInTZ(s.start, tz), tz)}</td>
-        <td>${formatDate(dateInTZ(s.end, tz), tz)}</td>
-      </tr>`;
-    }).join("");
+    try{
+      const tz=tzPick?.value || "UTC";
+      if (!datePick || !yearMap) return;
+      const selStr = validDateStr(datePick.value) ? datePick.value : dateInTZ(new Date(), tz).toISOString().slice(0,10);
+      const sel = new Date(`${selStr}T${pad(+hourScrub?.value || 0)}:00:00Z`);
+      const anchor = startOfYear13(sel, tz);
+      const spans = yearMoonSpans(anchor, tz);
+      const todayStr = dateInTZ(sel, tz).toISOString().slice(0,10);
+      yearMap.innerHTML = spans.map(s=>{
+        const sStr = dateInTZ(s.start, tz).toISOString().slice(0,10);
+        const eStr = dateInTZ(s.end, tz).toISOString().slice(0,10);
+        const isNow = todayStr>=sStr && todayStr<=eStr;
+        return `<tr class="row ${isNow?'is-today':''}">
+          <td>${s.m}</td>
+          <td><span class="tag">${s.name}</span></td>
+          <td class="meta">${s.essence}</td>
+          <td>${fmtDate(dateInTZ(s.start, tz), tz)}</td>
+          <td>${fmtDate(dateInTZ(s.end, tz), tz)}</td>
+        </tr>`;
+      }).join("");
+    }catch(e){ crash("year map failed", e); }
   }
 
   function updateAll(){
-    const tz=tzPick?.value || "UTC";
-    const base=new Date();
-    const hour = +hourScrub?.value || 0;
-    const wall=dateInTZ(base, tz, hour);
-    nowDate && (nowDate.textContent = formatDate(wall, tz));
-    nowClock && (nowClock.textContent = formatClock(base, tz));
-    nowTZ && (nowTZ.textContent = tz);
+    try{
+      const tz=tzPick?.value || "UTC";
+      const base=new Date();
+      const hour = +hourScrub?.value || 0;
+      const wall=dateInTZ(base, tz, hour);
+      nowDate && (nowDate.textContent = fmtDate(wall, tz));
+      nowClock && (nowClock.textContent = fmtTime(base, tz));
+      nowTZ && (nowTZ.textContent = tz);
 
-    // selected moment
-    const selStr = validDateStr(datePick?.value) ? datePick.value : dateInTZ(new Date(), tz).toISOString().slice(0,10);
-    const sel = new Date(`${selStr}T${pad(hour)}:00:00Z`);
+      const selStr = validDateStr(datePick?.value) ? datePick.value : dateInTZ(new Date(), tz).toISOString().slice(0,10);
+      const sel = new Date(`${selStr}T${pad(hour)}:00:00Z`);
 
-    const m13 = calc13Moon(sel, tz);
-    yearSpan && (yearSpan.textContent = m13.year);
-    dootWarn && (dootWarn.style.display = m13.special ? "block" : "none");
+      const m13 = calc13Moon(sel, tz);
+      yearSpan && (yearSpan.textContent = m13.year);
+      dootWarn && (dootWarn.style.display = m13.special ? "block" : "none");
 
-    if(m13.special){
-      moonName && (moonName.textContent = m13.special);
-      moonEssence && (moonEssence.textContent = "Outside the 13×28 count");
-      dayInMoon && (dayInMoon.textContent = "—");
-      moonArc && moonArc.setAttribute("stroke-dasharray", "0 316");
-      moonLine && (moonLine.textContent = m13.special);
-      if (weekDots){ [...weekDots.children].forEach(n => n.classList.remove("on")); weekDots.setAttribute("aria-label","No week/day (special)"); }
-    } else {
-      const idx=m13.moon-1;
-      moonName && (moonName.textContent = `${MOONS[idx]} Moon (${m13.moon})`);
-      moonEssence && (moonEssence.textContent = MOON_ESSENCE[idx]);
-      dayInMoon && (dayInMoon.textContent = m13.day);
-      const dash = Math.round(316 * (m13.day/28));
-      moonArc && moonArc.setAttribute("stroke-dasharray", `${dash} ${316-dash}`);
-      moonLine && (moonLine.textContent = `You are in ${MOONS[idx]} Moon — Day ${m13.day} of 28`);
-      if (weekDots){
-        const { week, dow } = weekAndDow(m13.day);
-        const nodes = [...weekDots.children];
-        nodes.forEach(n => n.classList.remove("on"));
-        const dotIndex = (week-1)*7 + (dow-1);
-        if (nodes[dotIndex]) nodes[dotIndex].classList.add("on");
-        weekDots.setAttribute("aria-label", `Week ${week}, Day ${dow} (1–7)`);
-      }
-    }
-
-    // Numerology + YHWH resonance
-    const nu = numerology(sel, tz);
-    numLine && (numLine.textContent = `Universal ${nu.total}`);
-    numMeta && (numMeta.textContent = `Month tone ${nu.monthN} • Day tone ${nu.dayN}`);
-    const resonant = [1,4,7,11,22,33].includes(nu.total);
-    if (sourceChip) sourceChip.style.boxShadow = resonant? "0 0 0 1px #7af3ff55, 0 8px 28px #7af3ff22" : "none";
-
-    // Quote
-    const qIdx = Math.abs(sel.getUTCFullYear()*372 + (sel.getUTCMonth()+1)*31 + sel.getUTCDate()) % QUOTES.length;
-    energyQuote && (energyQuote.textContent = QUOTES[qIdx]);
-
-    // Phase + sim + accent
-    const ph = moonPhase(dateInTZ(sel, tz, hour));
-    phaseLine && (phaseLine.textContent = `${ph.phase}`);
-    phaseMeta && (phaseMeta.textContent = `Age ≈ ${ph.ageDays.toFixed(1)} d • Illum ≈ ${(ph.illum*100).toFixed(0)}%`);
-    applyPhaseAccent(ph.illum);
-    simMoon && drawMoonSim(simMoon, ph.illum, (hour/24) * Math.PI*2);
-
-    // Year map + next moon info
-    buildYearMap();
-    const anchor = startOfYear13(sel, tz);
-    const spans = yearMoonSpans(anchor, tz);
-    if(nextMoonInfo){
-      if(!m13.special){
-        const next = spans[m13.moon] || null;
-        nextMoonInfo.textContent = next
-          ? `Next: ${next.name} Moon starts ${formatDate(dateInTZ(next.start, tz), tz)}`
-          : `This is the Cosmic Moon. New Year begins ${formatDate(dateInTZ(new Date(Date.UTC(anchor.getUTCFullYear()+1,6,26)), tz), tz)}`;
+      if(m13.special){
+        moonName && (moonName.textContent = m13.special);
+        moonEssence && (moonEssence.textContent = "Outside the 13×28 count");
+        dayInMoon && (dayInMoon.textContent = "—");
+        moonArc && moonArc.setAttribute("stroke-dasharray", "0 316");
+        moonLine && (moonLine.textContent = m13.special);
+        if (weekDots){ [...weekDots.children].forEach(n => n.classList.remove("on")); weekDots.setAttribute("aria-label","No week/day (special)"); }
       } else {
-        nextMoonInfo.textContent = `New Year begins ${formatDate(dateInTZ(new Date(Date.UTC(startOfYear13(sel,tz).getUTCFullYear()+1,6,26)), tz), tz)}`;
+        const idx=m13.moon-1;
+        moonName && (moonName.textContent = `${MOONS[idx]} Moon (${m13.moon})`);
+        moonEssence && (moonEssence.textContent = MOON_ESSENCE[idx]);
+        dayInMoon && (dayInMoon.textContent = m13.day);
+        const dash = Math.round(316 * (m13.day/28));
+        moonArc && moonArc.setAttribute("stroke-dasharray", `${dash} ${316-dash}`);
+        moonLine && (moonLine.textContent = `You are in ${MOONS[idx]} Moon — Day ${m13.day} of 28`);
+        if (weekDots){
+          const { week, dow } = weekAndDow(m13.day);
+          const nodes = [...weekDots.children];
+          nodes.forEach(n => n.classList.remove("on"));
+          const dotIndex = (week-1)*7 + (dow-1);
+          if (nodes[dotIndex]) nodes[dotIndex].classList.add("on");
+          weekDots.setAttribute("aria-label", `Week ${week}, Day ${dow} (1–7)`);
+        }
       }
-    }
 
-    // Kin (optional)
-    if (kinOn?.checked){
-      const rules = {
-        epochUTC: new Date(`${kinEpoch.value}T00:00:00Z`),
-        skipLeapDay: !!kinSkipLeap?.checked,
-        skipDOOT: !!kinSkipDOOT?.checked,
-        tz
-      };
-      const K = kinFromDate(sel, rules);
-      if (kinBadge) kinBadge.textContent = `Kin ${K.kin}`;
-      if (kinLine)  kinLine.textContent  = `Tone ${K.tone} • ${K.seal}`;
-    } else {
-      if (kinBadge) kinBadge.textContent = "Kin —";
-      if (kinLine)  kinLine.textContent  = "—";
-    }
+      const nu = numerology(sel, tz);
+      numLine && (numLine.textContent = `Universal ${nu.total}`);
+      numMeta && (numMeta.textContent = `Month tone ${nu.monthN} • Day tone ${nu.dayN}`);
+      const resonant = [1,4,7,11,22,33].includes(nu.total);
+      if (sourceChip) sourceChip.style.boxShadow = resonant? "0 0 0 1px #7af3ff55, 0 8px 28px #7af3ff22" : "none";
 
-    // ICS (rebuild + revoke old blob)
-    if (dlICS){
-      const ics = makeICS(spans, tz, `${anchor.getUTCFullYear()}/${anchor.getUTCFullYear()+1}`);
-      const blob = new Blob([ics], {type:"text/calendar;charset=utf-8"});
-      const url = URL.createObjectURL(blob);
-      if (dlICS.dataset._url) URL.revokeObjectURL(dlICS.dataset._url);
-      dlICS.href = url;
-      dlICS.dataset._url = url;
-      dlICS.download = `13-moon-${anchor.getUTCFullYear()}-${anchor.getUTCFullYear()+1}.ics`;
-    }
+      const qIdx = Math.abs(sel.getUTCFullYear()*372 + (sel.getUTCMonth()+1)*31 + sel.getUTCDate()) % QUOTES.length;
+      energyQuote && (energyQuote.textContent = QUOTES[qIdx]);
+
+      const ph = moonPhase(dateInTZ(sel, tz, hour));
+      phaseLine && (phaseLine.textContent = `${ph.phase}`);
+      phaseMeta && (phaseMeta.textContent = `Age ≈ ${ph.ageDays.toFixed(1)} d • Illum ≈ ${(ph.illum*100).toFixed(0)}%`);
+      applyPhaseAccent(ph.illum);
+      simMoon && drawMoonSim(simMoon, ph.illum, (hour/24) * Math.PI*2);
+
+      buildYearMap();
+      const anchor = startOfYear13(sel, tz);
+      const spans = yearMoonSpans(anchor, tz);
+      if(nextMoonInfo){
+        if(!m13.special){
+          const next = spans[m13.moon] || null;
+          nextMoonInfo.textContent = next
+            ? `Next: ${next.name} Moon starts ${fmtDate(dateInTZ(next.start, tz), tz)}`
+            : `This is the Cosmic Moon. New Year begins ${fmtDate(dateInTZ(new Date(Date.UTC(anchor.getUTCFullYear()+1,6,26)), tz), tz)}`;
+        } else {
+          nextMoonInfo.textContent = `New Year begins ${fmtDate(dateInTZ(new Date(Date.UTC(startOfYear13(sel,tz).getUTCFullYear()+1,6,26)), tz), tz)}`;
+        }
+      }
+
+      if (kinOn?.checked){
+        const rules = {
+          epochUTC: new Date(`${kinEpoch.value}T00:00:00Z`),
+          skipLeapDay: !!kinSkipLeap?.checked,
+          skipDOOT: !!kinSkipDOOT?.checked,
+          tz
+        };
+        const K = kinFromDate(sel, rules);
+        if (kinBadge) kinBadge.textContent = `Kin ${K.kin}`;
+        if (kinLine)  kinLine.textContent  = `Tone ${K.tone} • ${K.seal}`;
+      } else {
+        if (kinBadge) kinBadge.textContent = "Kin —";
+        if (kinLine)  kinLine.textContent  = "—";
+      }
+
+      if (dlICS){
+        const ics = makeICS(spans, tz, `${anchor.getUTCFullYear()}/${anchor.getUTCFullYear()+1}`);
+        const blob = new Blob([ics], {type:"text/calendar;charset=utf-8"});
+        const url = URL.createObjectURL(blob);
+        if (dlICS.dataset._url) URL.revokeObjectURL(dlICS.dataset._url);
+        dlICS.href = url;
+        dlICS.dataset._url = url;
+        dlICS.download = `13-moon-${anchor.getUTCFullYear()}-${anchor.getUTCFullYear()+1}.ics`;
+      }
+    }catch(e){ crash("update failed — check console", e); }
   }
 
   /* ---------- Controls ---------- */
@@ -497,7 +516,7 @@
 
   // Live clock + same-day rollover
   setInterval(()=>{
-    if (nowClock && tzPick) nowClock.textContent = formatClock(new Date(), tzPick.value);
+    if (nowClock && tzPick) nowClock.textContent = fmtTime(new Date(), tzPick.value);
     if (!tzPick || !datePick) return;
     const tz=tzPick.value;
     const today = dateInTZ(new Date(), tz).toISOString().slice(0,10);
@@ -505,5 +524,14 @@
   },1000);
 
   // Init
-  readURL(); updateAll(); buildYearMap();
+  try{
+    readURL();
+    // If browser rendered <select> but has no options (rare), force basic list
+    if (tzPick && !tzPick.options.length){
+      tzPick.innerHTML = COMMON_TZ.map(z=>`<option value="${z}">${z}</option>`).join("");
+      tzPick.value = "UTC";
+    }
+    updateAll();
+    buildYearMap();
+  }catch(e){ crash("init failed", e); }
 })();
