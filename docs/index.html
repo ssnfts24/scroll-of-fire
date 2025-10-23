@@ -198,6 +198,33 @@
     /* simple structural helpers */
     .divider{height:1px; margin:14px 0; background:linear-gradient(90deg, transparent, rgba(122,243,255,.35), transparent)}
     .goldline{height:1px; margin:18px 0; background:linear-gradient(90deg, transparent, rgba(243,201,122,.45), transparent)}
+
+
+    body.stars {
+  background:
+    radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
+    linear-gradient(180deg, #05060a 0%, #0b0e14 80%);
+  overflow-x:hidden;
+}
+canvas#trace {
+  background:
+    radial-gradient(circle at 50% 50%, #0a0e15 0%, #06080d 80%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.02) 0 2px, transparent 2px 4px);
+  box-shadow: inset 0 0 40px rgba(122,243,255,.12), 0 0 120px rgba(122,243,255,.08);
+}
+.stage::after {
+  content:"";
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 60%, rgba(122,243,255,.08), transparent 70%);
+  pointer-events:none;
+}
+
+
+
+
+
+
+    
   </style>
 
   <!-- MathJax (std delimiters, on-demand typeset) -->
