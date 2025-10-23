@@ -10,63 +10,107 @@
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="description" content="Invocation Lab — a guided run space for Σ → ∇φ → ℛ → ΔΣ with numbers, carriers, ethics, witnesses, and sealed export to the Ledger.">
   <link rel="canonical" href="./invoke.html">
-  <base href="https://ssnfts24.github.io/scroll-of-fire/">  <!-- Fonts & CSS from site -->  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <!-- Fonts & CSS from site -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
   <link rel="preload" as="style" href="assets/css/codex.css?v=2.8.1">
   <link rel="stylesheet" href="assets/css/codex.css?v=2.8.1" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.8.1"></noscript>  <style>
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.8.1"></noscript>
+  <style>
     :root{
       --accent-432:#7af3ff; --accent-528:#a4ff90; --accent-369:#f3c97a; --accent-144:#b3e1ff; --accent-963:#ffd1f3;
       --accent:var(--accent-432);
+      --ink:#eaeef7; --ink-2:#aab3c8; --panel:rgba(255,255,255,.03); --line:#2c3140; --bg:#070a10;
+      --card:rgba(12,14,20,.7);
     }
-    /* Carrier skin hook from body class */
-    .carrier-528 :root, .carrier-528{--accent:var(--accent-528)}
-    .carrier-369 :root, .carrier-369{--accent:var(--accent-369)}
-    .carrier-144 :root, .carrier-144{--accent:var(--accent-144)}
-    .carrier-963 :root, .carrier-963{--accent:var(--accent-963)}
+    @media (prefers-color-scheme: light){
+      :root{ --ink:#0b0e14; --ink-2:#3a4256; --panel:#fff; --line:#e6e8f0; --bg:#f9fbff; --card:#fff; }
+      body.stars{ background:#fff !important; }
+    }/* Carrier skin hook from body class */
+.carrier-528 :root, .carrier-528{--accent:var(--accent-528)}
+.carrier-369 :root, .carrier-369{--accent:var(--accent-369)}
+.carrier-144 :root, .carrier-144{--accent:var(--accent-144)}
+.carrier-963 :root, .carrier-963{--accent:var(--accent-963)}
 
-    /* Page-specific styles */
-    .lab-header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-top:12px}
-    .lab-title{margin:0}
-    .xi-dial{display:flex;align-items:center;gap:10px;background:rgba(122,243,255,.08);border:1px solid #2c3140;padding:8px 12px;border-radius:12px}
-    .xi-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
-    .progress{height:8px;background:#171a23;border:1px solid #2c3140;border-radius:999px;overflow:hidden}
-    .progress > span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#fff3);width:0%}
+/* Cosmic background */
+body.stars{ color:var(--ink); background:
+  radial-gradient(800px 520px at 50% 12%, rgba(122,243,255,.08), transparent 70%),
+  radial-gradient(1200px 900px at 80% 0%, rgba(243,201,122,.05), transparent 70%),
+  linear-gradient(180deg, #05060a 0%, #0b0e14 78%);
+  overflow-x:hidden;
+}
 
-    .stepper{display:flex;gap:6px;overflow:auto;padding:6px 0}
-    .chip{border:1px solid #2c3140;border-radius:999px;padding:6px 10px;white-space:nowrap}
-    .chip.is-active{border-color:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent)}
+.wrap{max-width:1180px;margin:0 auto;padding:16px 16px 80px}
 
-    .section{margin:16px 0}
-    .section[hidden]{display:none}
+/* Header */
+header.site{position:sticky;top:0;z-index:40;background:linear-gradient(180deg, rgba(4,6,10,.85), rgba(4,6,10,.65) 60%, transparent)}
+header .nav{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0}
+.brand-link{color:inherit;text-decoration:none}
+.kicker{margin:0;font-family:"Crimson Pro",serif;font-weight:800}
 
-    .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+/* Aura banner */
+.lab-hero{position:relative;margin:6px 0 14px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#0a0e15}
+.lab-hero .field{position:absolute;inset:0;pointer-events:none}
+.lab-hero .field::before{content:"";position:absolute;inset:-20%;background:conic-gradient(from 0deg at 50% 50%, rgba(122,243,255,.18), transparent 35%, rgba(243,201,122,.18), transparent 70%);filter:blur(28px);animation:spin 24s linear infinite}
+.lab-hero img{display:block;width:100%;height:auto;object-fit:contain}
+@keyframes spin{to{transform:rotate(1turn)}}
 
-    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-    @media (max-width:880px){.grid-2,.grid-3{grid-template-columns:1fr}}
+/* Page-specific styles */
+.lab-header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-top:12px}
+.lab-title{margin:0}
+.xi-dial{display:flex;align-items:center;gap:10px;background:rgba(122,243,255,.08);border:1px solid var(--line);padding:8px 12px;border-radius:12px}
+.xi-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
 
-    .list-plain{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.progress{height:10px;background:#0e1118;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.progress > span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#fff3);width:0%;transition:width .25s ease}
 
-    .kbd{background:#0d1016;border:1px solid #2c3140;border-radius:6px;padding:2px 6px}
+.stepper{display:flex;gap:6px;overflow:auto;padding:6px 0}
+.chip{border:1px solid var(--line);border-radius:999px;padding:6px 10px;white-space:nowrap;background:var(--panel);backdrop-filter:blur(6px)}
+.chip.is-active{border-color:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent)}
 
-    .ghost{opacity:.75}
+.section{margin:16px 0}
+.section[hidden]{display:none}
 
-    .mini{font-size:.92rem;opacity:.85}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 
-    .pill{display:inline-block;padding:2px 8px;border:1px solid #2c3140;border-radius:999px}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:880px){.grid-2,.grid-3{grid-template-columns:1fr}}
 
-    .note{font-size:.9rem;opacity:.9}
+.list-plain{list-style:none;padding:0;margin:0;display:grid;gap:8px}
 
-    /* Print summary */
-    @media print{
-      header.site, .controls, .tabs, .drawer, .no-print{display:none!important}
-      .card, .tile{break-inside:avoid}
-      body{background:#fff;color:#000}
-    }
-  </style>  <script defer src="assets/js/codex.js?v=3.7"></script></head><body class="stars living-all carrier-432" data-theme="dark">
-  <a class="skip" href="#main">Skip to content</a>  <!-- Header (kept minimal; site-level header can replace this if included globally) -->  <header class="site enhanced" role="banner">
+.kbd{background:#0d1016;border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+
+.ghost{opacity:.75}
+.mini{font-size:.92rem;opacity:.85}
+.pill{display:inline-block;padding:2px 8px;border:1px solid var(--line);border-radius:999px}
+.note{font-size:.9rem;opacity:.9}
+
+/* Cards */
+.card{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--card)}
+
+/* Glyph preview */
+.glyph-preview{width:120px;height:120px;border:1px solid var(--line);border-radius:12px;display:grid;place-items:center;background:radial-gradient(120px 80px at 50% 65%, rgba(122,243,255,.06), transparent 70%)}
+
+/* Sparkline */
+.spark{height:56px;width:100%;border:1px solid var(--line);border-radius:10px;display:block;background:#0e1118}
+
+/* Print summary */
+@media print{
+  header.site, .controls, .tabs, .drawer, .no-print{display:none!important}
+  .card, .tile{break-inside:avoid}
+  body{background:#fff;color:#000}
+}
+
+  </style>
+  <script defer src="assets/js/codex.js?v=3.7"></script>
+</head>
+<body class="stars living-all carrier-432" data-theme="dark">
+  <a class="skip" href="#main">Skip to content</a>
+  <!-- Header (kept minimal; site-level header can replace this if included globally) -->
+  <header class="site enhanced" role="banner">
     <div class="nav">
       <div class="brand">
         <a class="logo no-living" href="./" aria-label="Home"></a>
@@ -78,16 +122,18 @@
         <button id="cycleCarrier" class="cta" type="button" title="Cycle carrier skin">Carrier</button>
       </div>
     </div>
-  </header>  <main id="main" class="wrap" role="main" tabindex="-1">
+  </header>  <!-- Hero banner with aura -->  <figure class="lab-hero" aria-label="Scroll of Fire — Invocation Lab banner">
+    <img src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" alt="Scroll of Fire — sigil banner" width="2100" height="900" decoding="async" loading="eager">
+    <div class="field" aria-hidden="true"></div>
+  </figure>  <main id="main" class="wrap" role="main" tabindex="-1">
     <div class="lab-header">
       <div>
         <h1 class="title sheen lab-title">✨ Invocation Lab</h1>
         <p class="subtitle">Guided run: <strong>Σ → ∇φ → ℛ → ΔΣ</strong> • seal + export to Ledger</p>
       </div>
       <div class="xi-dial" aria-live="polite"><span class="xi-dot" aria-hidden="true"></span> <strong id="xiLabel">Ξ 0%</strong></div>
-    </div><div class="progress" aria-label="Run progress"><span id="progressBar"></span></div>
-
-<!-- Stepper chips -->
+    </div>
+    <div class="progress" aria-label="Run progress"><span id="progressBar"></span></div><!-- Stepper chips -->
 <nav class="stepper" aria-label="Run steps">
   <button class="chip is-active" data-step="node">0 • Node</button>
   <button class="chip" data-step="sigma">Σ • Activators</button>
@@ -99,8 +145,8 @@
 
 <!-- Controls -->
 <div class="controls toolbar no-print">
-  <button id="btnPrev" class="cta" type="button" disabled>← Back</button>
-  <button id="btnNext" class="cta" type="button">Next →</button>
+  <button id="btnPrev" class="cta" type="button" disabled title="Left Arrow">← Back</button>
+  <button id="btnNext" class="cta" type="button" title="Right Arrow">Next →</button>
   <button id="btnSave" class="cta ghost" type="button" title="Save to browser (LocalStorage)">Save</button>
   <button id="btnLoad" class="cta ghost" type="button" title="Load last saved draft">Load</button>
   <button id="btnReset" class="cta ghost" type="button" title="Clear this run">Reset</button>
@@ -129,6 +175,29 @@
       <textarea id="runGoal" rows="3" placeholder="State the coherent outcome you seek (who/what/when/where)."></textarea>
     </article>
   </div>
+
+  <!-- Visual: small glyph preview & cadence sparkline -->
+  <div class="grid-2" style="margin-top:10px">
+    <article class="card" aria-label="Glyph preview">
+      <div class="toolbar" style="justify-content:space-between;align-items:center">
+        <div>
+          <div class="mini">Live glyph</div>
+          <div class="note">Changes with Σ → Glyph selection</div>
+        </div>
+        <svg id="glyphSvg" class="glyph-preview" viewBox="0 0 120 120" role="img" aria-label="Glyph">
+          <defs>
+            <linearGradient id="gA" x1="0" x2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="#fff" stop-opacity=".6"/></linearGradient>
+          </defs>
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#2c3140" stroke-width="2"/>
+          <path id="glyphPath" d="M60 18 L92 82 L28 82 Z" fill="none" stroke="url(#gA)" stroke-width="3"/>
+        </svg>
+      </div>
+    </article>
+    <article class="card">
+      <div class="mini">Cadence energy (last 60s)</div>
+      <canvas id="spark" class="spark" width="600" height="56" aria-label="Cadence sparkline"></canvas>
+    </article>
+  </div>
 </section>
 
 <!-- Σ — Activators -->
@@ -154,13 +223,15 @@
       <label class="meta" for="legalNotices" style="margin-top:10px">Legal notice / covenant (optional)</label>
       <textarea id="legalNotices" rows="3" placeholder="Citations, covenants, notices relevant to this run…"></textarea>
 
-      <label class="meta" for="glyph">Glyph (optional)</label>
-      <select id="glyph">
-        <option value="">— none —</option>
-        <option value="sigil">Sigil</option>
-        <option value="ahhava">AHHAVA</option>
-        <option value="witness">Witness</option>
-      </select>
+      <div class="toolbar" style="margin-top:10px;justify-content:space-between">
+        <label class="meta" for="glyph">Glyph</label>
+        <select id="glyph" style="min-width:180px">
+          <option value="">— none —</option>
+          <option value="sigil">Sigil</option>
+          <option value="ahhava">AHHAVA</option>
+          <option value="witness">Witness</option>
+        </select>
+      </div>
     </article>
 
     <article class="card">
@@ -184,6 +255,8 @@
           <label class="pill"><input type="radio" name="carrier" value="144"> 144</label>
           <label class="pill"><input type="radio" name="carrier" value="963"> 963</label>
         </div>
+        <div class="mini">Carrier aura</div>
+        <div id="carrierAura" style="height:10px;border:1px solid var(--line);border-radius:999px;background:linear-gradient(90deg,var(--accent) 0%,transparent 70%);box-shadow:0 0 18px var(--accent)"></div>
       </div>
 
       <div style="margin-top:10px">
@@ -228,7 +301,7 @@
         </div>
       </div>
       <label class="meta" for="metrics">Measures of success</label>
-      <input id="metrics" type="text" placeholder="e.g., housing secured, case # closed, pain < 2/10">
+      <input id="metrics" type="text" placeholder="e.g., housing secured, case # closed, pain &lt; 2/10">
 
       <div style="margin-top:10px">
         <label class="meta" for="taskInput">Tasks</label>
@@ -346,14 +419,15 @@
   </article>
 </section>
 
-  </main>  <footer class="wrap">
+  </main>
+  <footer class="wrap">
     <div class="divider sweep" aria-hidden="true"></div>
     <p class="mini">Comparator note: Copeland Ψ (#7B) appears only in <a href="theory.html#canon">Theory → Canon</a> / <a href="#provenance">Provenance</a> as an external comparator. This lab runs solely on ΨΩ → Σ → ∇φ → ℛ → ΔΣ.</p>
   </footer>  <script>
   (function(){
     // --- Simple state store ---
     const S = {
-      version: 'soflab-1.0',
+      version: 'soflab-1.1',
       nodeType: '',
       runTitle: '',
       runGoal: '',
@@ -379,11 +453,14 @@
       try{ Object.assign(S, JSON.parse(raw)); hydrate(); toast('Loaded.'); }catch(e){ toast('Load failed.'); }
     }
     function reset(){ localStorage.removeItem('invocation-lab'); location.reload(); }
-    function toast(msg){ const el=document.createElement('div'); el.textContent=msg; el.style.position='fixed'; el.style.right='10px'; el.style.bottom='10px'; el.style.background='#0d1016'; el.style.border='1px solid #2c3140'; el.style.padding='8px 10px'; el.style.borderRadius='10px'; el.style.zIndex=2000; document.body.appendChild(el); setTimeout(()=>el.remove(),1200); }
+    function toast(msg){ const el=document.createElement('div'); el.textContent=msg; Object.assign(el.style,{position:'fixed',right:'12px',bottom:'12px',background:'#0d1016',border:'1px solid var(--line)',padding:'8px 10px',borderRadius:'10px',zIndex:2000,boxShadow:'0 10px 28px rgba(0,0,0,.35)'}); document.body.appendChild(el); setTimeout(()=>el.remove(),1400); }
 
     function setCarrierSkin(val){
       document.body.classList.remove('carrier-432','carrier-528','carrier-369','carrier-144','carrier-963');
       document.body.classList.add('carrier-'+val);
+      // Animate aura stripe
+      const aura = byId('carrierAura');
+      if(aura){ aura.style.boxShadow = '0 0 18px var(--accent), inset 0 0 12px rgba(255,255,255,.08)'; setTimeout(()=>{ aura.style.boxShadow='0 0 18px var(--accent)'; },400); }
     }
 
     // Step router
@@ -392,9 +469,7 @@
 
     function goto(i){
       stepIndex = Math.max(0, Math.min(steps.length-1, i));
-      steps.forEach((key,idx)=>{
-        byId('step-'+key).hidden = idx!==stepIndex;
-      });
+      steps.forEach((key,idx)=>{ byId('step-'+key).hidden = idx!==stepIndex; });
       $$('.chip').forEach((c,idx)=> c.classList.toggle('is-active', idx===stepIndex));
       byId('btnPrev').disabled = stepIndex===0;
       byId('btnNext').textContent = stepIndex===steps.length-1 ? 'Finish' : 'Next →';
@@ -406,13 +481,15 @@
       const pct = Math.round((stepIndex)/(steps.length-1)*100);
       byId('progressBar').style.width = pct+'%';
       byId('xiLabel').textContent = 'Ξ '+pct+'%';
+      // spark trail point
+      pushSpark(pct/100);
     }
 
     // --- Bind Node step ---
     $$('input[name="nodeType"]').forEach(r=>{
       r.addEventListener('change',()=>{ S.nodeType=r.value; saveDraftSoft(); });
     });
-    byId('runTitle').addEventListener('input', e=>{ S.runTitle=e.target.value; saveDraftSoft(); });
+    byId('runTitle').addEventListener('input', e=>{ S.runTitle=e.target.value; saveDraftSoft(); validateNext(); });
     byId('runGoal').addEventListener('input', e=>{ S.runGoal=e.target.value; saveDraftSoft(); });
 
     // Σ
@@ -420,7 +497,7 @@
     byId('timeBudget').addEventListener('input', e=>{ S.sigma.timeBudget=Number(e.target.value||0); saveDraftSoft(); });
     byId('energyBudget').addEventListener('input', e=>{ S.sigma.energyBudget=Number(e.target.value||0); saveDraftSoft(); });
     byId('legalNotices').addEventListener('input', e=>{ S.sigma.legalNotices=e.target.value; saveDraftSoft(); });
-    byId('glyph').addEventListener('change', e=>{ S.sigma.glyph=e.target.value; saveDraftSoft(); });
+    byId('glyph').addEventListener('change', e=>{ S.sigma.glyph=e.target.value; drawGlyph(e.target.value); saveDraftSoft(); });
     $$('input[name="numbers"]').forEach(cb=> cb.addEventListener('change',()=>{
       S.sigma.numbers = $$('input[name="numbers"]:checked').map(c=>c.value); saveDraftSoft();
     }));
@@ -439,8 +516,8 @@
     }
     byId('media').addEventListener('change', ()=> listFiles(byId('media'), byId('mediaList'), S.sigma.media));
 
-    // Cadence timers
-    let cadenceTimer = null, cadencePhase = 0;
+    // Cadence timers + sparkline
+    let cadenceTimer = null, cadencePhase = 0; // 0:3,1:6,2:9
     byId('startCadence').addEventListener('click', ()=>{
       clearInterval(cadenceTimer); cadencePhase=0;
       const phases = [3,6,9];
@@ -450,6 +527,8 @@
       el.textContent = labels[0]+' • '+t+'s';
       cadenceTimer = setInterval(()=>{
         t--; el.textContent = labels[cadencePhase]+' • '+t+'s';
+        // push spark value (normalized energy pulse)
+        pushSpark((cadencePhase===0? .8 : cadencePhase===1? .6 : .3));
         if(t<=0){
           cadencePhase = (cadencePhase+1)%3; t = phases[cadencePhase];
           el.textContent = labels[cadencePhase]+' • '+t+'s';
@@ -474,8 +553,7 @@
       ul.innerHTML = '';
       S.nabla.tasks.forEach((task,i)=>{
         const li = document.createElement('li');
-        const id = 'task_'+i;
-        li.innerHTML = `<label><input id="${id}" type="checkbox" ${task.done?'checked':''}> ${task.t}</label> <button class="cta ghost mini" data-rm="${i}" type="button">×</button>`;
+        li.innerHTML = `<label><input type="checkbox" ${task.done?'checked':''}> ${escapeHtml(task.t)}</label> <button class="cta ghost mini" data-rm="${i}" type="button">×</button>`;
         ul.appendChild(li);
       });
       ul.querySelectorAll('input[type="checkbox"]').forEach((box,i)=> box.addEventListener('change',()=>{ S.nabla.tasks[i].done=box.checked; saveDraftSoft(); }));
@@ -497,7 +575,7 @@
       clearInterval(rhoTimer); rhoPhase=0; const phases=[3,6,9]; const labels=['Speak','Sustain','Release'];
       const s=byId('rhoStatus'); byId('rhoStop').disabled=false;
       rhoT=phases[0]; s.textContent = `${labels[0]} • ${rhoT}s`;
-      rhoTimer=setInterval(()=>{rhoT--; s.textContent = `${labels[rhoPhase]} • ${rhoT}s`; if(rhoT<=0){rhoPhase=(rhoPhase+1)%3; rhoT=phases[rhoPhase]; s.textContent = `${labels[rhoPhase]} • ${rhoT}s`; }},1000);
+      rhoTimer=setInterval(()=>{rhoT--; s.textContent = `${labels[rhoPhase]} • ${rhoT}s`; pushSpark((rhoPhase===0? .8 : rhoPhase===1? .6 : .3)); if(rhoT<=0){rhoPhase=(rhoPhase+1)%3; rhoT=phases[rhoPhase]; s.textContent = `${labels[rhoPhase]} • ${rhoT}s`; }},1000);
     });
     byId('rhoStop').addEventListener('click', ()=>{ clearInterval(rhoTimer); byId('rhoStatus').textContent=''; byId('rhoStop').disabled=true; });
 
@@ -570,13 +648,18 @@
 
     function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
 
-    // Nav buttons
+    // Nav buttons + keyboard
     byId('btnPrev').addEventListener('click', ()=> goto(stepIndex-1));
     byId('btnNext').addEventListener('click', ()=>{
       if(stepIndex < steps.length-1){ goto(stepIndex+1); }
       else { toast('Run complete. Export your seal.'); }
     });
     $$('.chip').forEach((c,i)=> c.addEventListener('click', ()=> goto(i)));
+    window.addEventListener('keydown', (e)=>{
+      if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+      if(e.key==='ArrowRight') byId('btnNext').click();
+      if(e.key==='ArrowLeft') byId('btnPrev').click();
+    }, {passive:true});
 
     // Save/load/reset
     byId('btnSave').addEventListener('click', save);
@@ -595,7 +678,7 @@
       byId('timeBudget').value = S.sigma.timeBudget||18;
       byId('energyBudget').value = S.sigma.energyBudget||7;
       byId('legalNotices').value = S.sigma.legalNotices||'';
-      byId('glyph').value = S.sigma.glyph||'';
+      byId('glyph').value = S.sigma.glyph||''; drawGlyph(S.sigma.glyph||'');
       $$('input[name="numbers"]').forEach(cb=> cb.checked = (S.sigma.numbers||[]).includes(cb.value));
       $$('input[name="carrier"]').forEach(cb=> cb.checked = (cb.value===S.sigma.carrier));
       setCarrierSkin(S.sigma.carrier||'432');
@@ -625,6 +708,7 @@
       byId('btnCopySeal').disabled = !S.seals.sha256;
       byId('btnDownloadJson').disabled = !S.seals.sha256;
       renderSummary();
+      validateNext();
     }
 
     // Carrier skin cycler (utility)
@@ -636,9 +720,49 @@
       $$('input[name="carrier"]').forEach(cb=> cb.checked = (cb.value===next));
     });
 
+    // Glyph renderer
+    function drawGlyph(kind){
+      const p = byId('glyphPath'); if(!p) return;
+      if(kind==='sigil') p.setAttribute('d','M60 18 L92 82 L28 82 Z M60 82 L60 36');
+      else if(kind==='ahhava') p.setAttribute('d','M20 60 C20 28, 100 28, 100 60 C100 92, 20 92, 20 60 M60 30 L60 90');
+      else if(kind==='witness') p.setAttribute('d','M20 60 L60 20 L100 60 L60 100 Z M45 60 A15 15 0 1 0 75 60 A15 15 0 1 0 45 60');
+      else p.setAttribute('d','M60 18 L92 82 L28 82 Z');
+    }
+
+    // Sparkline buffer
+    const spark = byId('spark');
+    const sctx = spark.getContext('2d');
+    const SP = []; // values 0..1
+    function pushSpark(v){
+      if(!sctx) return;
+      SP.unshift(Math.max(0,Math.min(1,v)));
+      if(SP.length>120) SP.pop();
+      drawSpark();
+    }
+    function drawSpark(){
+      const W=spark.width, H=spark.height; sctx.clearRect(0,0,W,H);
+      // grid
+      sctx.strokeStyle='rgba(122,243,255,.15)'; sctx.lineWidth=1;
+      [0.25,0.5,0.75].forEach(f=>{ sctx.beginPath(); sctx.moveTo(0,H*f); sctx.lineTo(W,H*f); sctx.stroke(); });
+      if(!SP.length) return;
+      const n=SP.length, xs=W/(n-1);
+      sctx.beginPath();
+      for(let i=0;i<n;i++){
+        const x=W-i*xs, y=H*(1-(SP[i]*0.9+0.05));
+        if(i===0) sctx.moveTo(x,y); else sctx.lineTo(x,y);
+      }
+      sctx.strokeStyle='rgba(243,201,122,.9)'; sctx.lineWidth=2; sctx.stroke();
+    }
+
+    // Next gating
+    function validateNext(){
+      const ok = (S.runTitle||'').trim().length>2;
+      byId('btnNext').disabled = !ok && stepIndex===0;
+    }
+
     // Boot
     hydrate();
     goto(0);
   })();
   </script></body>
-  </html>
+</html>
