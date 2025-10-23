@@ -1,241 +1,417 @@
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" class="sof">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <meta charset="utf-8" />
   <title>Witness Ledger — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
-  <meta name="description" content="Private, device-local witness log: intentions, carriers, Ξ quality, and micro-edits (ΔΣ) with export/import and weekly signal." />
+  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark light">
+  <meta name="description" content="Device-local witness log with seals (SHA-256), group sessions, co-witnesses, verification, and export/import." />
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/ledger.html" />
   <meta property="og:title" content="Witness Ledger — Scroll of Fire">
-  <meta property="og:description" content="Log your runs, track coherence (Ξ), and export your remnant evidence.">
-  <meta property="og:image" content="assets/img/og-teach-lab.jpg">
-  <meta property="og:type" content="website">
-
-  <link rel="icon" href="assets/icons/favicon.ico">
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
+  <meta property="og:description" content="Log runs, rate Ξ, add co-witnesses, seal and verify hashes, and export your remnant evidence.">
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
   <style>
-    .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 80px}
+    :root{--maxw:1180px}
+    body{margin:0}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:20px 16px 80px}
     .title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;
       background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#a7f6ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-    .subtitle{text-align:center;color:#b8b3a6;font-style:italic;margin:0 0 12px}
-    .cta{display:inline-block;padding:8px 12px;border-radius:10px;border:1px solid #2a2a33;text-decoration:none}
-    .ledger-top{display:grid;grid-template-columns:2fr 140px 120px 1fr auto;gap:8px}
-    .table-wrap{overflow:auto;border:1px solid #2a2a33;border-radius:12px}
+    .subtitle{text-align:center;color:var(--muted);font-style:italic;margin:0 0 12px}
+    .cta{display:inline-flex;align-items:center;gap:.5ch;padding:8px 12px;border-radius:10px;border:1px solid #2a2a33;text-decoration:none;background:#0f1218}
+    .grid{display:grid;gap:10px}
+    .grid-5{grid-template-columns:2fr 130px 120px 1fr auto}
+    @media (max-width:900px){.grid-5{grid-template-columns:1fr}}
+    .card{border:1px solid #242633;border-radius:14px;padding:12px;background:#0b0f14}
+    .box{border:1px dashed #2a2d3a;border-radius:12px;padding:10px}
+    input,select,textarea{background:#0e1218;border:1px solid #2a2d3a;border-radius:10px;color:inherit;padding:.55rem}
+    textarea{resize:vertical}
+    .table-wrap{overflow:auto;border:1px solid #2a2d3a;border-radius:12px}
     table{width:100%;border-collapse:collapse}
-    thead th{background:#15151c;border-bottom:1px solid #2a2a33;padding:10px 12px;text-align:left}
-    tbody td{border-top:1px solid #2a2a33;padding:10px 12px;vertical-align:top}
+    thead th{position:sticky;top:0;background:#0f131a;border-bottom:1px solid #2a2d3a;padding:10px 12px;text-align:left}
+    tbody td{border-top:1px solid #1f2330;padding:10px 12px;vertical-align:top}
+    .hash{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
+    .tag{display:inline-block;padding:2px 6px;border-radius:999px;border:1px solid #2a2d3a;color:#9aa4be;font-size:.82rem;margin-right:6px}
+    .row-actions{display:flex;gap:6px;flex-wrap:wrap}
+    .tiny{font-size:.86rem;color:#9aa4be}
+    .badges{display:flex;gap:10px}
     .badge{opacity:.35}.badge.lit{opacity:1}
-    .note{border:1px solid #2a2a33;border-radius:12px;padding:12px}
+    .ok{color:#9ff5a2}.bad{color:#ff9a9a}
+    .muted{color:#9aa4be}
+    .slip{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;max-width:720px;margin:0 auto;padding:24px}
+    .slip h1{font-size:20px;margin:0 0 6px}
+    .slip .meta{color:#7b8499;font-size:12px;margin-bottom:12px}
+    .slip .box{border:1px solid #d8dbe6;border-radius:10px;padding:12px;margin:10px 0}
+    .slip code{background:#f5f7fb;border:1px solid #e6e9f3;border-radius:6px;padding:2px 6px}
+    canvas#spark{width:100%;height:auto;max-height:120px}
   </style>
 </head>
-<body>
+<body class="carrier-432">
   <main class="wrap">
-    <header class="page-head fancy-head">
+    <header class="page-head">
       <h1 class="title">📒 Witness Ledger</h1>
-      <p class="subtitle">Evidence of change — device-local, exportable, aligned with Eq.Ω (ΔΣ micro-edits) and Ξ.</p>
-      <nav class="crumbs" aria-label="Breadcrumb" style="display:flex;gap:8px;justify-content:center">
-        <a class="cta" href="index.html">← Back to Codex</a>
-        <a class="cta" href="theory.html">Open Theory</a>
-        <a class="cta" href="teach.html">Open Teaching Lab</a>
+      <p class="subtitle">Evidence of change — sealed (SHA-256), verifiable, and merge-friendly for groups.</p>
+      <nav style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <a class="cta" href="index.html">← Codex</a>
+        <a class="cta" href="start.html">⚡ Start Here</a>
+        <a class="cta" href="teach.html">🎓 Manifest</a>
+        <a class="cta" href="theory.html">📘 Theory</a>
       </nav>
     </header>
 
-    <section class="card">
+    <!-- New Entry -->
+    <section class="card" aria-label="New entry">
       <h2>New Entry</h2>
-      <p class="meta">Keep it specific and small: what you did, what shifted, what lingered.</p>
-      <div class="ledger-top" role="group" aria-label="New entry">
-        <input id="iInt" placeholder="Intention (𝓘) — one clean line…" autocomplete="off">
-        <input id="iCarrier" placeholder="Carrier (432/528/369)" inputmode="numeric" pattern="[0-9]*">
-        <select id="iXi" aria-label="Ξ quality"><option value="">Ξ…</option><option>Low</option><option>Medium</option><option>High</option></select>
-        <input id="iTags" placeholder="Tags (comma, e.g. morning,work)">
-        <button id="btnAdd" class="cta">Add</button>
+      <div class="grid grid-5">
+        <input id="iPhrase" placeholder="Phrase (Σ) — one clear line…" autocomplete="off">
+        <select id="iCarrier" aria-label="Carrier">
+          <option value="432" selected>432 Ground</option>
+          <option value="528">528 Repair</option>
+          <option value="369">369 Lock-in</option>
+          <option value="144">144 Sanctuary</option>
+          <option value="963">963 Crown</option>
+          <option value="none">No tone</option>
+        </select>
+        <input id="iXi" type="number" min="0" max="5" step="0.5" placeholder="Ξ 0–5" aria-label="Coherence rating">
+        <input id="iTags" placeholder="tags (comma separated)" autocomplete="off">
+        <button id="btnAdd" class="cta" title="Add entry (Ctrl/⌘+Enter)">Add</button>
       </div>
-      <textarea id="iWitness" rows="3" style="margin-top:8px;width:100%" placeholder="Witness notes (what changed, what lingered)…"></textarea>
 
-      <div class="lab-row" style="display:flex;gap:8px;align-items:center;margin-top:10px">
-        <button id="btnExport" class="cta" title="Download ledger as JSON">Export .json</button>
+      <div class="grid" style="margin-top:8px">
+        <textarea id="iWitness" rows="3" placeholder="Witness notes (what changed, what lingered)…"></textarea>
+      </div>
+
+      <!-- Group Mode -->
+      <details class="box" style="margin-top:10px">
+        <summary><strong>Group Mode (co-witnessing)</strong> — add a Session ID and co-witnesses</summary>
+        <div class="grid" style="margin-top:8px">
+          <input id="iSession" placeholder="Session ID (e.g., justice-2025-04-12-am)">
+          <input id="iCoW" placeholder="Co-witnesses (names; comma-separated)">
+          <input id="iLinks" placeholder="Links (optional media/refs; comma-separated URLs)">
+        </div>
+        <p class="tiny muted" style="margin-top:6px">
+          Tip: everyone logs the same <em>Session ID</em>. Use Export/Import to merge group runs across devices. Co-witnesses are embedded in the sealed payload.
+        </p>
+      </details>
+
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px">
+        <button id="btnExport" class="cta" title="Download ledger as JSON">⬇ Export JSON</button>
         <input type="file" id="fileImport" accept="application/json" hidden>
-        <button id="btnImport" class="cta" title="Load entries from a JSON file">Import .json</button>
-        <input id="filter" placeholder="Filter by tag or text…" autocomplete="off" style="margin-left:auto">
+        <button id="btnImport" class="cta" title="Load entries from a JSON file">⬆ Import JSON</button>
+        <button id="btnVerifyAll" class="cta" title="Recompute and check all seals">✔ Verify All</button>
+        <input id="filter" placeholder="Filter by tag/text…" autocomplete="off" style="margin-left:auto">
       </div>
 
-      <div class="lab-row" style="display:flex;gap:16px;align-items:center;margin-top:10px">
-        <span class="meta">🗓️ Streak: <b id="streakDays">0</b> days</span>
-        <span class="meta">Ξ High rate (7d): <b id="hiRate">—</b></span>
-        <span class="meta">Entries (7d): <b id="weekCount">—</b></span>
+      <div style="display:flex;gap:16px;align-items:center;margin-top:10px;flex-wrap:wrap">
+        <span class="tiny">🗓️ Streak: <b id="streakDays">0</b> days</span>
+        <span class="tiny">Ξ avg (7d): <b id="xiAvg">—</b></span>
+        <span class="tiny">Entries (7d): <b id="weekCount">—</b></span>
       </div>
+      <canvas id="spark" width="900" height="100" aria-label="Weekly signal" style="margin-top:6px"></canvas>
+    </section>
 
-      <canvas id="spark" width="900" height="90" aria-label="Weekly signal" style="margin-top:8px;width:100%;max-width:100%"></canvas>
-
-      <div class="table-wrap" style="margin-top:10px">
+    <!-- Table -->
+    <section class="card" style="margin-top:12px">
+      <div class="table-wrap">
         <table id="tab">
-          <colgroup><col style="width:16ch"><col><col style="width:10ch"><col style="width:8ch"><col style="width:18ch"><col><col style="width:4ch"></colgroup>
-          <thead><tr><th>Date</th><th>Intention</th><th>Carrier</th><th>Ξ</th><th>Tags</th><th>Witness</th><th></th></tr></thead>
+          <colgroup>
+            <col style="width:18ch"><col><col style="width:9ch"><col style="width:6ch">
+            <col style="width:20ch"><col style="width:16ch"><col style="width:18ch"><col style="width:14ch">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Date</th><th>Phrase</th><th>Carrier</th><th>Ξ</th>
+              <th>Tags</th><th>Session</th><th>Hash</th><th>Actions</th>
+            </tr>
+          </thead>
           <tbody id="rows"></tbody>
         </table>
       </div>
-
-      <div class="badges" style="margin-top:12px;display:flex;gap:10px">
+      <div class="badges" style="margin-top:10px">
         <span id="b7" class="badge" title="7-Day Seed">🌱 ×7</span>
         <span id="b33" class="badge" title="33-Day Orbit">🛰️ ×33</span>
         <span id="b144" class="badge" title="144 Closure">🜚 ×144</span>
       </div>
+      <p class="tiny muted" style="margin-top:8px">Verification notes: Seal I = SHA-256 of the canonical payload. “OK” means the recomputed hash matches the stored one.</p>
     </section>
 
-    <section class="card note" style="margin-top:12px">
-      <h3>Anchors</h3>
-      <p class="meta"><b>Eq.Ω</b> — ledger entries are ΔΣ micro-edits; <b>Ξ</b> trends indicate stability; follow <b>Eq.9</b> stop rule if coherence worsens.</p>
-    </section>
-
-    <footer class="footer">
+    <footer class="footer" style="margin-top:12px;text-align:center">
       <div class="divider" aria-hidden="true"></div>
-      <p>“Trends beat anecdotes.”</p>
+      <p class="tiny muted">“Trends beat anecdotes.” Ethics first; stop if coherence drops.</p>
       <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
     </footer>
   </main>
 
   <script>
-    (function(){
-      const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
-      const storeKey="codex_ledger_v1";
-      const rows=$("#rows"), filter=$("#filter"), streakEl=$("#streakDays");
-      const hiRate=$("#hiRate"), weekCount=$("#weekCount"), spark=$("#spark");
-      const ctx=spark.getContext("2d");
-      const b7=$("#b7"), b33=$("#b33"), b144=$("#b144");
-      const todayISO = ()=>new Date().toISOString();
+  (function(){
+    "use strict";
+    const $ = s => document.querySelector(s), $$ = s => Array.from(document.querySelectorAll(s));
+    const YEAR = $('#yr'); if (YEAR) YEAR.textContent = new Date().getFullYear();
 
-      function load(){ try{ return JSON.parse(localStorage.getItem(storeKey)||"[]"); }catch{ return []; } }
-      function save(list){ localStorage.setItem(storeKey, JSON.stringify(list)); }
+    // Storage (aligns with start.html v2)
+    const KEY = 'sof_ledger_entries_v2';
+    const read = () => { try { return JSON.parse(localStorage.getItem(KEY)||'[]'); } catch { return []; } };
+    const write = arr => { try { localStorage.setItem(KEY, JSON.stringify(arr)); } catch(e){} };
 
-      function add(){
-        const e={
-          id: crypto.randomUUID(),
-          t: todayISO(),
-          int: $("#iInt").value.trim(),
-          car: $("#iCarrier").value.trim(),
-          xi: $("#iXi").value,
-          tags: $("#iTags").value.trim(),
-          wit: $("#iWitness").value.trim()
-        };
-        if(!e.int && !e.wit) return;
-        const L=load(); L.unshift(e); save(L);
-        $("#iWitness").value=""; render();
+    // Canonicalize + SHA-256 (same as start.html)
+    function canonicalize(obj){
+      if (obj === null || typeof obj !== 'object') return JSON.stringify(obj);
+      if (Array.isArray(obj)) return '[' + obj.map(canonicalize).join(',') + ']';
+      const keys = Object.keys(obj).sort();
+      return '{' + keys.map(k => JSON.stringify(k)+':'+canonicalize(obj[k])).join(',') + '}';
+    }
+    async function sha256Hex(str){
+      const enc = new TextEncoder().encode(str);
+      const buf = await crypto.subtle.digest('SHA-256', enc);
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+    const escapeHtml = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+    // UI nodes
+    const rows = $('#rows'), filter = $('#filter'), spark = $('#spark');
+    const iPhrase = $('#iPhrase'), iCarrier = $('#iCarrier'), iXi = $('#iXi'), iTags = $('#iTags'), iWitness = $('#iWitness');
+    const iSession = $('#iSession'), iCoW = $('#iCoW'), iLinks = $('#iLinks');
+    const ctx = spark.getContext('2d');
+    const b7=$('#b7'), b33=$('#b33'), b144=$('#b144');
+    const streakEl=$('#streakDays'), xiAvgEl=$('#xiAvg'), weekCountEl=$('#weekCount');
+
+    // Add entry (Seal I)
+    async function add(){
+      const phrase = (iPhrase.value||'').trim();
+      const carrier = (iCarrier.value||'432').trim();
+      const coherence = Number(iXi.value||0);
+      const tags = (iTags.value||'').split(',').map(s=>s.trim()).filter(Boolean);
+      const note = (iWitness.value||'').trim();
+      const sessionId = (iSession.value||'').trim();
+      const coWitnesses = (iCoW.value||'').split(',').map(s=>s.trim()).filter(Boolean);
+      const links = (iLinks.value||'').split(',').map(s=>s.trim()).filter(Boolean);
+      if (!phrase) { alert('Please enter a phrase.'); iPhrase.focus(); return; }
+
+      const payload = { when: new Date().toISOString(), carrier, phrase, coherence, tags, note, sessionId, coWitnesses, links };
+      const canon = canonicalize(payload);
+      const hash = await sha256Hex(canon);
+      const entry = Object.assign({}, payload, { hash, seal:{ stage:'I', algo:'SHA-256', canonLen:canon.length } });
+
+      const L = read(); L.unshift(entry); write(L); render(L);
+      iWitness.value=''; // keep other fields for rapid logging
+    }
+
+    // Verify entry: try legacy (start.html) and extended payloads
+    async function verifyEntry(entry){
+      // Legacy minimal keys (from start.html): when, carrier, phrase, coherence, tags
+      const legacyPayload = { when: entry.when, carrier: entry.carrier, phrase: entry.phrase, coherence: entry.coherence, tags: entry.tags };
+      const legacyCanon = canonicalize(legacyPayload);
+      const legacyHash = await sha256Hex(legacyCanon);
+      if (legacyHash === entry.hash) return {ok:true, mode:'legacy'};
+
+      // Extended keys (this page)
+      const extPayload = {
+        when: entry.when, carrier: entry.carrier, phrase: entry.phrase, coherence: entry.coherence,
+        tags: entry.tags, note: entry.note, sessionId: entry.sessionId, coWitnesses: entry.coWitnesses, links: entry.links
+      };
+      const extCanon = canonicalize(extPayload);
+      const extHash = await sha256Hex(extCanon);
+      if (extHash === entry.hash) return {ok:true, mode:'extended'};
+
+      return {ok:false, mode:'mismatch'};
+    }
+
+    function shortHash(h){ return h ? (h.slice(0,10)+'…') : '—'; }
+    function tagsHTML(tags){ return (tags||[]).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join(''); }
+
+    function render(list = read()){
+      const q=(filter.value||'').toLowerCase();
+      const L = q ? list.filter(x => JSON.stringify(x).toLowerCase().includes(q)) : list;
+
+      rows.innerHTML = L.map((e,idx)=>{
+        const ds = new Date(e.when).toLocaleString();
+        return `<tr data-idx="${idx}">
+          <td>${ds}<div class="tiny muted">${escapeHtml(e.coWitnesses?.join(' · ')||'')}</div></td>
+          <td>${escapeHtml(e.phrase)}${e.note?`<div class="tiny muted" style="margin-top:4px">${escapeHtml(e.note)}</div>`:''}</td>
+          <td>${escapeHtml(e.carrier)}</td>
+          <td>${escapeHtml(e.coherence)}</td>
+          <td>${tagsHTML(e.tags)}</td>
+          <td class="hash">${escapeHtml(e.sessionId||'—')}</td>
+          <td class="hash"><span class="hval">${shortHash(e.hash)}</span> <span class="tiny status">…</span></td>
+          <td>
+            <div class="row-actions">
+              <button class="cta act-verify" title="Verify seal">✔ Verify</button>
+              <button class="cta act-pdf" title="Witness PDF">🧾 PDF</button>
+              <button class="cta act-copy" title="Copy text">⎘ Copy</button>
+              <button class="cta act-del" title="Delete">✕</button>
+            </div>
+          </td>
+        </tr>`;
+      }).join('');
+
+      // wire row actions
+      $$('#rows .act-del').forEach(btn=>btn.addEventListener('click', () => {
+        const idx = Number(btn.closest('tr').dataset.idx);
+        const arr = read(); arr.splice(idx,1); write(arr); render(arr);
+      }));
+
+      $$('#rows .act-copy').forEach(btn=>btn.addEventListener('click', () => {
+        const idx = Number(btn.closest('tr').dataset.idx);
+        const e = read()[idx]; const txt =
+`${e.phrase}
+carrier:${e.carrier} · Ξ:${e.coherence} · ${new Date(e.when).toLocaleString()}
+session:${e.sessionId||'-'} · hash:${e.hash}
+tags:${(e.tags||[]).join(', ')}
+note:${e.note||''}
+witnesses:${(e.coWitnesses||[]).join(', ')}`;
+        navigator.clipboard?.writeText(txt).then(()=>alert('Copied.'),()=>alert('Copy failed.'));
+      }));
+
+      $$('#rows .act-verify').forEach(btn=>btn.addEventListener('click', async () => {
+        const idx = Number(btn.closest('tr').dataset.idx); const e = read()[idx];
+        const res = await verifyEntry(e);
+        const status = btn.closest('tr').querySelector('.status');
+        status.textContent = res.ok ? `OK (${res.mode})` : '✖ mismatch';
+        status.className = 'tiny status ' + (res.ok ? 'ok' : 'bad');
+      }));
+
+      $$('#rows .act-pdf').forEach(btn=>btn.addEventListener('click', () => {
+        const idx = Number(btn.closest('tr').dataset.idx);
+        openWitnessSlip(read()[idx]);
+      }));
+
+      renderMetrics(list);
+    }
+
+    function scoreXi(x){
+      const v = Number(x); if (!isFinite(v)) return 0.33;
+      return Math.max(0, Math.min(1, v/5));
+    }
+
+    function renderMetrics(L){
+      // streak
+      const byDay = new Map();
+      for(const e of L){ const key = new Date(e.when).toISOString().slice(0,10); byDay.set(key, (byDay.get(key)||0)+1); }
+      let streak=0, d=new Date();
+      while(true){ const key=d.toISOString().slice(0,10); if(byDay.has(key)){ streak++; d.setDate(d.getDate()-1); } else break; }
+      streakEl.textContent=String(streak);
+      b7.classList.toggle('lit', streak>=7); b33.classList.toggle('lit', streak>=33); b144.classList.toggle('lit', streak>=144);
+
+      // 7d stats + sparkline last 28d
+      const now = Date.now(), day=86400000;
+      const last7 = L.filter(e=> now - Date.parse(e.when) < 7*day );
+      weekCountEl.textContent = String(last7.length);
+      const avg = last7.length ? (last7.reduce((s,e)=>s+Number(e.coherence||0),0)/last7.length) : null;
+      xiAvgEl.textContent = (avg==null) ? '—' : avg.toFixed(2);
+
+      const n=28, points=[];
+      for(let i=n-1;i>=0;i--){
+        const key=new Date(now - i*day).toISOString().slice(0,10);
+        const dayEntries = L.filter(e=>e.when.slice(0,10)===key);
+        const score = dayEntries.length ? dayEntries.reduce((s,e)=>s+scoreXi(e.coherence),0)/dayEntries.length : null;
+        points.push(score);
       }
+      drawSpark(points);
+    }
 
-      function del(id){
-        const L=load().filter(x=>x.id!==id); save(L); render();
-      }
+    function drawSpark(arr){
+      const w=spark.width, h=spark.height; const c=ctx;
+      c.clearRect(0,0,w,h);
+      // grid
+      c.strokeStyle="rgba(122,243,255,.22)"; c.lineWidth=1;
+      [0.25,0.5,0.75].forEach(p=>{ c.beginPath(); c.moveTo(0,h*p); c.lineTo(w,h*p); c.stroke(); });
+      // line
+      const xs = w/(arr.length-1||1);
+      c.beginPath(); c.strokeStyle="rgba(243,201,122,.9)"; c.lineWidth=2;
+      let started=false;
+      arr.forEach((v,i)=>{ if(v==null) return; const x=i*xs, y=h*(1-v*0.9-0.05); if(!started){ c.moveTo(x,y); started=true; } else c.lineTo(x,y); });
+      c.stroke();
+    }
 
-      function render(){
-        const q=(filter.value||"").toLowerCase();
-        const L=load();
-        const list = q ? L.filter(x=>JSON.stringify(x).toLowerCase().includes(q)) : L;
-        rows.innerHTML = list.map(e=>{
-          const d = new Date(e.t); const ds = d.toLocaleString();
-          return `<tr>
-            <td>${ds}</td><td>${escapeHTML(e.int)}</td><td>${escapeHTML(e.car||"—")}</td>
-            <td>${escapeHTML(e.xi||"—")}</td><td>${escapeHTML(e.tags||"—")}</td><td>${escapeHTML(e.wit)}</td>
-            <td><button class="cta" data-del="${e.id}" title="Delete entry">✕</button></td>
-          </tr>`;
-        }).join("");
+    // Witness PDF (print)
+    function openWitnessSlip(e){
+      const win = window.open('', '_blank', 'noopener,noreferrer,width=820,height=900');
+      if (!win) { alert('Pop-up blocked.'); return; }
+      const coW = (e.coWitnesses||[]).map(n=>`<code>${escapeHtml(n)}</code>`).join(' ');
+      const tags = (e.tags||[]).map(t=>`<code>${escapeHtml(t)}</code>`).join(' ');
+      const links = (e.links||[]).map(u=>`<div><a href="${escapeHtml(u)}">${escapeHtml(u)}</a></div>`).join('');
+      const html = `
+<!doctype html><html><head><meta charset="utf-8"><title>Witness — Scroll of Fire</title>
+<meta name="color-scheme" content="light dark">
+<style>
+  body{background:#fff;color:#111}
+  .slip{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;max-width:720px;margin:0 auto;padding:24px}
+  .slip h1{font-size:20px;margin:0 0 6px}
+  .slip .meta{color:#7b8499;font-size:12px;margin-bottom:12px}
+  .slip .box{border:1px solid #ccc;border-radius:10px;padding:12px;margin:10px 0}
+  .slip code{background:#f5f7fb;border:1px solid #e6e9f3;border-radius:6px;padding:2px 6px}
+</style></head><body>
+  <div class="slip">
+    <h1>Scroll of Fire — Witness Slip</h1>
+    <div class="meta">Sealed at: ${new Date(e.when).toLocaleString()}</div>
+    <div class="box">
+      <div><strong>Phrase (Σ)</strong><br>${escapeHtml(e.phrase)}</div>
+      <div style="margin-top:8px;display:flex;gap:12px;flex-wrap:wrap">
+        <div><strong>Carrier</strong><br>${escapeHtml(e.carrier)}</div>
+        <div><strong>Ξ</strong><br>${escapeHtml(e.coherence)}</div>
+        <div><strong>Session</strong><br>${escapeHtml(e.sessionId||'—')}</div>
+      </div>
+      ${e.note?`<div style="margin-top:8px"><strong>Witness</strong><br>${escapeHtml(e.note)}</div>`:''}
+      ${tags?`<div style="margin-top:8px"><strong>Tags</strong><br>${tags}</div>`:''}
+      ${coW?`<div style="margin-top:8px"><strong>Co-witnesses</strong><br>${coW}</div>`:''}
+      ${links?`<div style="margin-top:8px"><strong>Links</strong>${links}</div>`:''}
+    </div>
+    <div class="box">
+      <div><strong>Seal Stage</strong> — ${escapeHtml(e.seal?.stage || 'I')}</div>
+      <div style="margin-top:6px"><strong>Hash</strong><br><code>${escapeHtml(e.hash||'')}</code></div>
+      <div class="meta" style="margin-top:6px">Alg: ${escapeHtml(e.seal?.algo||'SHA-256')} • Canon bytes: ${e.seal?.canonLen||'—'}</div>
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:#7b8499">
+      Generated from Ledger. Store with your JSON export.
+    </div>
+  </div>
+  <script>window.addEventListener('load',()=>{ setTimeout(()=>window.print(), 200); });</script>
+</body></html>`;
+      win.document.open(); win.document.write(html); win.document.close();
+    }
 
-        // attach dels
-        $$("#rows [data-del]").forEach(b=>b.addEventListener("click",()=>del(b.dataset.del)));
+    // Export / Import / Verify All
+    $('#btnExport').addEventListener('click', () => {
+      const data = read();
+      if (!data.length) return alert('No entries to export.');
+      const blob = new Blob([JSON.stringify({version:'sof-ledger-v2', entries:data}, null, 2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'scroll-of-fire-ledger.json';
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
 
-        // metrics
-        renderMetrics(L);
-      }
+    $('#btnImport').addEventListener('click', () => $('#fileImport').click());
+    $('#fileImport').addEventListener('change', async e => {
+      const f=e.target.files?.[0]; if(!f) return;
+      try{
+        const txt=await f.text(); const parsed=JSON.parse(txt);
+        const list = Array.isArray(parsed) ? parsed : (Array.isArray(parsed.entries) ? parsed.entries : []);
+        const existing = read(); const ids = new Set(existing.map(x=>x.hash || x.when));
+        const merged = list.concat(existing.filter(x=>!ids.has(x.hash || x.when)));
+        write(merged); render(merged); alert('Imported (merged).');
+      }catch(err){ alert('Import failed: '+(err.message||err)); }
+      e.target.value='';
+    });
 
-      function renderMetrics(L){
-        // Streak (days with >=1 entry)
-        const byDay = new Map();
-        for(const e of L){
-          const key = new Date(e.t).toISOString().slice(0,10);
-          byDay.set(key, (byDay.get(key)||0)+1);
-        }
-        let streak=0, d=new Date();
-        for(;;){
-          const key=d.toISOString().slice(0,10);
-          if(byDay.has(key)){ streak++; d.setDate(d.getDate()-1); } else break;
-        }
-        streakEl.textContent = String(streak);
-        b7.classList.toggle("lit", streak>=7);
-        b33.classList.toggle("lit", streak>=33);
-        b144.classList.toggle("lit", streak>=144);
+    $('#btnVerifyAll').addEventListener('click', async () => {
+      const L = read();
+      let ok=0, bad=0;
+      for (const e of L) { const r = await verifyEntry(e); if (r.ok) ok++; else bad++; }
+      alert(`Verified: ${ok} OK, ${bad} mismatch.`);
+      render(L);
+    });
 
-        // 7-day window
-        const now = Date.now(), day=86400000;
-        const last7 = L.filter(e=>now - Date.parse(e.t) < 7*day);
-        weekCount.textContent = String(last7.length);
-        const highs = last7.filter(e=>String(e.xi).toLowerCase().startsWith("h")).length;
-        hiRate.textContent = last7.length ? Math.round(100*highs/last7.length)+"%" : "—";
+    // Wire add / filter / shortcuts
+    $('#btnAdd').addEventListener('click', add);
+    iWitness.addEventListener('keydown', e => { if((e.ctrlKey||e.metaKey) && e.key==='Enter') add(); });
+    filter.addEventListener('input', ()=>render());
 
-        // Sparkline (last 28 days; map Low/Med/High to 0/0.5/1)
-        const n=28, points=[];
-        for(let i=n-1;i>=0;i--){
-          const key=new Date(now - i*day).toISOString().slice(0,10);
-          const dayEntries = L.filter(e=>e.t.slice(0,10)===key);
-          const score = dayEntries.length
-            ? dayEntries.reduce((s,e)=>s+scoreXi(e.xi),0)/dayEntries.length
-            : null;
-          points.push(score);
-        }
-        drawSpark(points);
-      }
+    // Init
+    render();
 
-      function scoreXi(x){
-        x=(x||"").toLowerCase();
-        if(x.startsWith("h")) return 1;
-        if(x.startsWith("m")) return 0.5;
-        if(x.startsWith("l")) return 0;
-        return 0.33;
-      }
-
-      function drawSpark(arr){
-        const w=spark.width, h=spark.height;
-        ctx.clearRect(0,0,w,h);
-        ctx.globalAlpha=0.15; ctx.fillStyle="#fff"; ctx.fillRect(0,0,w,h); ctx.globalAlpha=1;
-        // grid
-        ctx.strokeStyle="rgba(122,243,255,.25)";
-        ctx.beginPath(); ctx.moveTo(0,h*0.25); ctx.lineTo(w,h*0.25); ctx.moveTo(0,h*0.5); ctx.lineTo(w,h*0.5); ctx.moveTo(0,h*0.75); ctx.lineTo(w,h*0.75); ctx.stroke();
-        // line
-        const xs = w/(arr.length-1||1);
-        ctx.beginPath(); ctx.strokeStyle="rgba(243,201,122,.85)"; ctx.lineWidth=2;
-        let started=false;
-        arr.forEach((v,i)=>{
-          if(v==null) return;
-          const x=i*xs, y=h*(1-v*0.9-0.05);
-          if(!started){ ctx.moveTo(x,y); started=true; } else ctx.lineTo(x,y);
-        }); ctx.stroke();
-      }
-
-      function escapeHTML(s){ return (s||"").replace(/[&<>"']/g,m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
-
-      // export / import
-      $("#btnExport").addEventListener("click",()=>{
-        const blob = new Blob([JSON.stringify(load(),null,2)],{type:"application/json"});
-        const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="codex_ledger.json"; a.click();
-        setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-      });
-      $("#btnImport").addEventListener("click",()=>$("#fileImport").click());
-      $("#fileImport").addEventListener("change",async e=>{
-        const f=e.target.files[0]; if(!f) return;
-        try{ const txt=await f.text(); const data=JSON.parse(txt); if(Array.isArray(data)){ save(data.concat(load())); render(); } }catch(_){}
-        e.target.value="";
-      });
-
-      // wiring
-      $("#btnAdd").addEventListener("click",add);
-      $("#iWitness").addEventListener("keydown",e=>{ if((e.ctrlKey||e.metaKey)&&e.key==="Enter") add(); });
-      filter.addEventListener("input",render);
-      $("#yr").textContent = String(new Date().getFullYear());
-      render();
-    })();
+  })();
   </script>
 </body>
 </html>
