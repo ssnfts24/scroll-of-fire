@@ -125,17 +125,16 @@
     .hero{aspect-ratio: 21 / 9;}
     .hero picture, .hero .hero-img{display:block; width:100%; height:100%}
     .hero .hero-img{object-fit:var(--hero-fit, contain); object-position:center; mix-blend-mode:normal!important}
-    .hero::after{ /* soft edge glow */
+    .hero::after{
       content:""; position:absolute; inset:0;
       box-shadow:inset 0 0 120px rgba(255,255,255,.06), inset 0 0 40px rgba(122,243,255,.08);
       pointer-events:none;
     }
-    /* ensure hero never exceeds viewport height on tiny devices */
     @media (max-width:480px){
       .hero{max-height:min(52vh, 420px)}
     }
 
-    /* Aurora lights (non-rectangular, non-rotating) */
+    /* Aurora lights */
     .hero-lights{
       position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
       background:
@@ -163,9 +162,9 @@
     .hero-lights::after{
       content:""; position:absolute; inset:0;
       background:
-        radial-gradient(40% 30% at 18% 20%, color-mix(in srgb, var(--accent) 18%, #ffffff 0%) 0%, transparent 65%),
+        radial-gradient(40% 30% at 18% 20%, rgba(164,255,144,.10) 0%, transparent 70%),
         radial-gradient(48% 38% at 82% 22%, rgba(255,209,243,.14) 0%, transparent 68%),
-        radial-gradient(36% 28% at 50% 86%, rgba(164,255,144,.10) 0%, transparent 70%);
+        radial-gradient(36% 28% at 50% 86%, rgba(122,243,255,.35) 0%, transparent 70%);
       filter: blur(10px); opacity:.7; animation: glowBreath 9.5s ease-in-out infinite alternate;
       mix-blend-mode:screen;
     }
@@ -190,12 +189,12 @@
     }
     @keyframes living-slide{0%{background-position:0% 50%}100%{background-position:300% 50%}}
 
-    /* Search card visibility (fix “beach bar” text cut) */
+    /* Search card visibility */
     .searchbox{position:relative}
     .searchbox label.meta{display:block; margin-bottom:6px; line-height:1.2}
     .searchbox .kbd{background:#0d1016; border:1px solid #2c3140; border-radius:6px; padding:1px 6px}
 
-    /* simple structural helpers */
+    /* helpers */
     .divider{height:1px; margin:14px 0; background:linear-gradient(90deg, transparent, rgba(122,243,255,.35), transparent)}
     .goldline{height:1px; margin:18px 0; background:linear-gradient(90deg, transparent, rgba(243,201,122,.45), transparent)}
   </style>
@@ -234,352 +233,167 @@
     <div class="xi-label">Ξ</div>
   </div>
 
-<!-- ===== Scroll of Fire: Improved Header & Menus (DROP-IN) =====
-HOW TO USE:
-1) Replace your existing <header>...</header> and the Primary tabs <nav class="tabs">...</nav> with this whole block.
-2) Keep your existing CSS variables and fonts; this snippet only adds scoped styles.
-3) Keep your existing quick utility buttons (Echo/HUD/Carrier/Affect/Lights) — they're already wired below.
-4) JS here is framework-free, accessible (ARIA), and degrades nicely without JS.
---><header class="site enhanced" role="banner">
-  <a class="skip" href="#main-content">Skip to main content</a>  <!-- Top bar -->  <div class="nav" aria-label="Global">
-    <div class="brand">
-      <a class="logo no-living" href="./" aria-label="Home"></a>
-      <a class="brand-link" href="./" aria-label="Scroll of Fire home">
-        <h1 class="kicker sheen">Scroll of Fire</h1>
-      </a>
-    </div><!-- Desktop Primary Menu -->
-<nav class="menu menu--primary" aria-label="Primary">
-  <!-- Pages (static) -->
-  <details class="menu__group" role="none">
-    <summary class="menu__trigger" aria-haspopup="menu" aria-expanded="false">Pages</summary>
-    <div class="menu__panel" role="menu">
-      <a role="menuitem" class="menu__item" href="start.html">🚀 Start Here</a>
-      <a role="menuitem" class="menu__item" href="guide.html">🧭 Guide</a>
-      <a role="menuitem" class="menu__item" href="theory.html">📘 Theory</a>
-      <a role="menuitem" class="menu__item" href="teach.html">✨ Manifest</a>
-      <a role="menuitem" class="menu__item" href="ab.html">🧪 A/B Carriers</a>
-      <a role="menuitem" class="menu__item" href="micro.html">🔬 Micro‑acts</a>
-      <a role="menuitem" class="menu__item" href="circle.html">🔗 Circle</a>
-      <a role="menuitem" class="menu__item" href="ethics.html">🧭 Ethics</a>
-      <a role="menuitem" class="menu__item" href="glossary.html">📚 Glossary</a>
-      <a role="menuitem" class="menu__item" href="glyphs.html">🔱 Glyphs</a>
-      <a role="menuitem" class="menu__item" href="downloads.html">⬇️ Downloads</a>
-      <a role="menuitem" class="menu__item" href="ledger.html">📒 Ledger</a>
-    </div>
-  </details>
-
-  <!-- Sections (anchors on this page) -->
-  <details class="menu__group" role="none">
-    <summary class="menu__trigger" aria-haspopup="menu" aria-expanded="false">Sections</summary>
-    <div class="menu__panel" role="menu">
-      <a role="menuitem" class="menu__item" href="#explore">🗂️ Explore</a>
-      <a role="menuitem" class="menu__item" href="#canon">📜 Canon</a>
-      <a role="menuitem" class="menu__item" href="#engine">✨ Engine</a>
-      <a role="menuitem" class="menu__item" href="#dim">🧭 Dimensional Scaffolding</a>
-      <a role="menuitem" class="menu__item" href="#integrity">🔐 Integrity</a>
-      <a role="menuitem" class="menu__item" href="#provenance">📜 Provenance</a>
-    </div>
-  </details>
-
-  <!-- Quick Jump (tiles) -->
-  <a class="menu__link" href="#explore" data-jump>Explore</a>
-  <a class="menu__link" href="teach.html">Manifest</a>
-</nav>
-
-<!-- Utility: search + quick toggles (existing IDs kept) -->
-<div class="quick quick--utils" role="toolbar" aria-label="Quick actions">
-  <button id="toggleSimple" class="cta" type="button" aria-pressed="false" title="Echo View (hide math)">Echo</button>
-  <button id="toggleGrid" class="cta" type="button" aria-pressed="true" title="Toggle HUD grid">HUD</button>
-  <button id="cycleCarrier" class="cta" type="button" title="Cycle carrier skin">Carrier</button>
-  <button id="toggleAffect" class="cta" type="button" aria-pressed="true" title="Toggle living text effects">Affect</button>
-  <button id="toggleLights" class="cta" type="button" aria-pressed="true" title="Toggle banner lights">Lights</button>
-  <button id="openPalette" class="cta" type="button" title="Command palette">⌘K</button>
-  <button id="openMobile" class="hamburger" type="button" aria-label="Open menu" aria-controls="mobileNav" aria-expanded="false">
-    <span class="hamburger__bar" aria-hidden="true"></span>
-  </button>
-</div>
-
-  </div>  <!-- Tabbar (improved) -->  <nav class="tabs tabs--enhanced" aria-label="Primary sections">
-    <a class="tab tab--primary" href="theory.html">📘 Theory</a>
-    <a class="tab tab--primary" href="teach.html">✨ Manifest</a>
-    <a class="tab" href="#explore" data-section="explore" title="Jump to Explore">Explore</a>
-    <a class="tab" href="#canon" data-section="canon">Canon</a>
-    <a class="tab" href="#engine" data-section="engine">Engine</a>
-    <a class="tab" href="#dim" data-section="dim">Dim</a>
-    <a class="tab" href="#integrity" data-section="integrity">Integrity</a>
-    <a class="tab" href="#provenance" data-section="provenance">Provenance</a>
-    <span class="tab-ink no-living" aria-hidden="true"></span>
-  </nav>  <!-- Mobile drawer -->  <aside id="mobileNav" class="drawer" role="dialog" aria-modal="true" aria-label="Navigation" hidden>
-    <div class="drawer__panel">
-      <button class="drawer__close" id="closeMobile" type="button" aria-label="Close menu">×</button>
-      <div class="drawer__section">
-        <h3>Pages</h3>
-        <ul>
-          <li><a href="start.html">Start Here</a></li>
-          <li><a href="guide.html">Guide</a></li>
-          <li><a href="theory.html">Theory</a></li>
-          <li><a href="teach.html">Manifest</a></li>
-          <li><a href="ab.html">A/B Carriers</a></li>
-          <li><a href="micro.html">Micro‑acts</a></li>
-          <li><a href="circle.html">Circle</a></li>
-          <li><a href="ethics.html">Ethics</a></li>
-          <li><a href="glossary.html">Glossary</a></li>
-          <li><a href="glyphs.html">Glyphs</a></li>
-          <li><a href="downloads.html">Downloads</a></li>
-          <li><a href="ledger.html">Ledger</a></li>
-        </ul>
+  <!-- ===== Scroll of Fire: Improved Header & Menus (DROP-IN) ===== -->
+  <header class="site enhanced" role="banner">
+    <div class="nav" aria-label="Global">
+      <div class="brand">
+        <a class="logo no-living" href="./" aria-label="Home"></a>
+        <a class="brand-link" href="./" aria-label="Scroll of Fire home">
+          <h1 class="kicker sheen">Scroll of Fire</h1>
+        </a>
       </div>
-      <div class="drawer__section">
-        <h3>This page</h3>
-        <ul>
-          <li><a href="#explore">Explore</a></li>
-          <li><a href="#canon">Canon</a></li>
-          <li><a href="#engine">Engine</a></li>
-          <li><a href="#dim">Dimensional Scaffolding</a></li>
-          <li><a href="#integrity">Integrity</a></li>
-          <li><a href="#provenance">Provenance</a></li>
-        </ul>
+
+      <!-- Desktop Primary Menu -->
+      <nav class="menu menu--primary" aria-label="Primary">
+        <!-- Pages (static) -->
+        <details class="menu__group" role="none">
+          <summary class="menu__trigger" aria-haspopup="menu" aria-expanded="false">Pages</summary>
+          <div class="menu__panel" role="menu">
+            <a role="menuitem" class="menu__item" href="start.html">🚀 Start Here</a>
+            <a role="menuitem" class="menu__item" href="guide.html">🧭 Guide</a>
+            <a role="menuitem" class="menu__item" href="theory.html">📘 Theory</a>
+            <a role="menuitem" class="menu__item" href="teach.html">✨ Manifest</a>
+            <a role="menuitem" class="menu__item" href="ab.html">🧪 A/B Carriers</a>
+            <a role="menuitem" class="menu__item" href="micro.html">🔬 Micro-acts</a>
+            <a role="menuitem" class="menu__item" href="circle.html">🔗 Circle</a>
+            <a role="menuitem" class="menu__item" href="ethics.html">🧭 Ethics</a>
+            <a role="menuitem" class="menu__item" href="glossary.html">📚 Glossary</a>
+            <a role="menuitem" class="menu__item" href="glyphs.html">🔱 Glyphs</a>
+            <a role="menuitem" class="menu__item" href="downloads.html">⬇️ Downloads</a>
+            <a role="menuitem" class="menu__item" href="ledger.html">📒 Ledger</a>
+          </div>
+        </details>
+
+        <!-- Sections (anchors on this page) -->
+        <details class="menu__group" role="none">
+          <summary class="menu__trigger" aria-haspopup="menu" aria-expanded="false">Sections</summary>
+          <div class="menu__panel" role="menu">
+            <a role="menuitem" class="menu__item" href="#explore">🗂️ Explore</a>
+            <a role="menuitem" class="menu__item" href="#canon">📜 Canon</a>
+            <a role="menuitem" class="menu__item" href="#engine">✨ Engine</a>
+            <a role="menuitem" class="menu__item" href="#dim">🧭 Dimensional Scaffolding</a>
+            <a role="menuitem" class="menu__item" href="#integrity">🔐 Integrity</a>
+            <a role="menuitem" class="menu__item" href="#provenance">📜 Provenance</a>
+          </div>
+        </details>
+
+        <!-- Quick Jump (tiles) -->
+        <a class="menu__link" href="#explore" data-jump>Explore</a>
+        <a class="menu__link" href="teach.html">Manifest</a>
+      </nav>
+
+      <!-- Utility: quick toggles (existing IDs kept) -->
+      <div class="quick quick--utils" role="toolbar" aria-label="Quick actions">
+        <button id="toggleSimple" class="cta" type="button" aria-pressed="false" title="Echo View (hide math)">Echo</button>
+        <button id="toggleGrid" class="cta" type="button" aria-pressed="true" title="Toggle HUD grid">HUD</button>
+        <button id="cycleCarrier" class="cta" type="button" title="Cycle carrier skin">Carrier</button>
+        <button id="toggleAffect" class="cta" type="button" aria-pressed="true" title="Toggle living text effects">Affect</button>
+        <button id="toggleLights" class="cta" type="button" aria-pressed="true" title="Toggle banner lights">Lights</button>
+        <button id="openPalette" class="cta" type="button" title="Command palette">⌘K</button>
+        <button id="openMobile" class="hamburger" type="button" aria-label="Open menu" aria-controls="mobileNav" aria-expanded="false">
+          <span class="hamburger__bar" aria-hidden="true"></span>
+        </button>
       </div>
     </div>
-  </aside>
-</header><!-- ===== Scoped Styles for the improved menus ===== --><style>
-  /* Layout polish */
-  header.site.enhanced{position:sticky;top:0;z-index:1000;background:rgba(9,11,16,.6);backdrop-filter:saturate(140%) blur(8px)}
-  .brand-link{text-decoration:none}
 
-  /* Primary menu */
-  .menu{display:flex;gap:12px;align-items:center}
-  .menu__link{padding:8px 10px;border-radius:10px;border:1px solid transparent}
-  .menu__link:hover{border-color:color-mix(in srgb, var(--accent) 35%, transparent)}
-
-  /* details-based dropdowns (no-JS friendly) */
-  .menu__group{position:relative}
-  .menu__trigger{list-style:none;cursor:pointer;padding:8px 12px;border-radius:10px;border:1px solid #2c3140}
-  .menu__group[open] > .menu__trigger{border-color:color-mix(in srgb, var(--accent) 35%, #2c3140)}
-  .menu__panel{position:absolute;top:calc(100% + 8px);left:0;min-width:240px;background:rgba(13,16,22,.96);border:1px solid #2c3140;border-radius:12px;padding:8px;box-shadow:0 12px 28px rgba(0,0,0,.35)}
-  .menu__item{display:block;padding:8px 10px;border-radius:8px;text-decoration:none}
-  .menu__item:hover,.menu__item:focus{background:rgba(122,243,255,.08);outline:none}
-
-  /* Enhanced tabs: scrollable, active state, ink */
-  .tabs--enhanced{display:flex;gap:8px;align-items:center;position:relative;overflow:auto;padding:8px 16px}
-  .tabs--enhanced .tab{white-space:nowrap}
-  .tabs--enhanced .tab.is-active{border-color:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent)}
-
-  /* Mobile drawer */
-  .hamburger{display:none;position:relative;width:40px;height:40px;border-radius:10px;border:1px solid #2c3140;background:#0d1016}
-  .hamburger__bar{position:absolute;inset:0;margin:auto;width:20px;height:2px;background:#d7e3ff;box-shadow:0 -6px 0 #d7e3ff,0 6px 0 #d7e3ff}
-  .drawer[hidden]{display:none}
-  .drawer{position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,.4)}
-  .drawer__panel{position:absolute;right:0;top:0;height:100%;width:min(88vw,380px);background:#0b0f14;border-left:1px solid #2c3140;box-shadow:-12px 0 30px rgba(0,0,0,.35);padding:16px;overflow:auto}
-  .drawer__close{position:absolute;top:8px;right:10px;font-size:26px;line-height:1;border:1px solid #2c3140;border-radius:10px;background:#0d1016;padding:2px 10px}
-  .drawer__section{margin-top:28px}
-  .drawer__section h3{margin:0 0 8px 0}
-  .drawer__section ul{list-style:none;padding:0;margin:0;display:grid;gap:6px}
-  .drawer__section a{display:block;padding:10px;border-radius:10px;text-decoration:none;border:1px solid #222836}
-  .drawer__section a:hover{background:rgba(122,243,255,.08);border-color:#2c3140}
-
-  @media (max-width:920px){
-    .menu{display:none}
-    .hamburger{display:inline-block}
-  }
-</style><!-- ===== Behavior: accessibility, active states, mobile drawer ===== --><script>
-(function(){
-  // Active state for tabs + menu links
-  const setActive = ()=>{
-    const cur = location.hash || location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('.tabs--enhanced .tab, .menu__item, .menu__link').forEach(a=>{
-      const href = a.getAttribute('href')||'';
-      const isHash = href.startsWith('#') && href === location.hash;
-      const isPath = !href.startsWith('#') && cur && href.endsWith(cur);
-      a.classList.toggle('is-active', isHash || isPath);
-    });
-    ink();
-  };
-
-  // Ink indicator under active tab
-  function ink(){
-    const inkEl = document.querySelector('.tabs--enhanced .tab-ink');
-    const act = document.querySelector('.tabs--enhanced .tab.is-active');
-    if(!inkEl || !act) return;
-    const r = act.getBoundingClientRect();
-    const pr = act.parentElement.getBoundingClientRect();
-    inkEl.style.position='absolute';
-    inkEl.style.height='2px';
-    inkEl.style.background='var(--accent)';
-    inkEl.style.borderRadius='2px';
-    inkEl.style.left = (r.left - pr.left) + 'px';
-    inkEl.style.width = r.width + 'px';
-    inkEl.style.bottom = '0px';
-  }
-
-  // Recompute on load + hashchange + resize
-  addEventListener('hashchange', setActive, {passive:true});
-  addEventListener('resize', ()=>requestAnimationFrame(ink), {passive:true});
-  setTimeout(setActive, 0);
-
-  // Mobile drawer
-  const openBtn = document.getElementById('openMobile');
-  const closeBtn = document.getElementById('closeMobile');
-  const drawer = document.getElementById('mobileNav');
-  const firstFocusSel = '.drawer__panel a, .drawer__close';
-  let lastFocused = null;
-
-  function openDrawer(){
-    if(!drawer) return;
-    lastFocused = document.activeElement;
-    drawer.hidden = false;
-    document.body.style.overflow='hidden';
-    const first = drawer.querySelector(firstFocusSel);
-    setTimeout(()=> first && first.focus(), 0);
-    openBtn?.setAttribute('aria-expanded','true');
-  }
-  function closeDrawer(){
-    if(!drawer) return;
-    drawer.hidden = true;
-    document.body.style.overflow='';
-    openBtn?.setAttribute('aria-expanded','false');
-    lastFocused && lastFocused.focus();
-  }
-
-  openBtn?.addEventListener('click', openDrawer);
-  closeBtn?.addEventListener('click', closeDrawer);
-  drawer?.addEventListener('click', (e)=>{ if(e.target===drawer) closeDrawer(); });
-  addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !drawer?.hidden) closeDrawer(); });
-
-  // Trap focus inside drawer when open
-  addEventListener('focus', (e)=>{
-    if(!drawer || drawer.hidden) return;
-    if(!drawer.contains(e.target)){
-      const first = drawer.querySelector(firstFocusSel);
-      first && first.focus();
-    }
-  }, true);
-
-  // Sync <details> aria-expanded for a11y
-  document.querySelectorAll('.menu__group').forEach(d=>{
-    const s=d.querySelector('summary.menu__trigger');
-    if(!s) return;
-    const sync=()=> s.setAttribute('aria-expanded', d.open? 'true':'false');
-    d.addEventListener('toggle', sync);
-    sync();
-  });
-})();
-</script>
-
-
-
-
-
-
-
-  
-
-  <main id="main-content" class="wrap" role="main" tabindex="-1">
-    <!-- Hero -->
-    <figure id="hero" class="hero" aria-label="Scroll of Fire banner" data-fit="contain" data-anim="ken-burns">
-      <picture>
-        <img id="heroBanner"
-             src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1"
-             alt="Scroll of Fire — sigil and equations"
-             width="2100" height="900"
-             decoding="async" fetchpriority="high" loading="eager"
-             class="no-living hero-img">
-      </picture>
-      <div class="hero-lights" id="heroLights" aria-hidden="true"></div>
-    </figure>
-
-    <h1 class="title sheen reveal">⚖️ Scroll of Fire — Codex of Reality</h1>
-    <p class="subtitle reveal">“Let there be resonance.” By Aaron Paul Laird, <em>Scribe of Circuits</em></p>
-
-    <!-- Mega Explore button -->
-    <a href="#explore" class="mega reveal" aria-label="Explore the Scroll — jump to all pages">
-      <span class="ico">🗂️</span>
-      <span><strong>Explore the Scroll</strong><br><span class="sub">All pages • tiles mirror your repo</span></span>
-      <span class="arrow no-living" aria-hidden="true">➜</span>
-    </a>
-
-    <!-- Primary tabs -->
-    <nav class="tabs reveal" aria-label="Primary sections">
+    <!-- Tabbar (improved) -->
+    <nav class="tabs tabs--enhanced" aria-label="Primary sections">
       <a class="tab tab--primary" href="theory.html">📘 Theory</a>
       <a class="tab tab--primary" href="teach.html">✨ Manifest</a>
       <a class="tab" href="#explore" data-section="explore" title="Jump to Explore">Explore</a>
       <a class="tab" href="#canon" data-section="canon">Canon</a>
       <a class="tab" href="#engine" data-section="engine">Engine</a>
-      <a class="tab" href="#links" data-section="links">Links</a>
+      <a class="tab" href="#dim" data-section="dim">Dim</a>
       <a class="tab" href="#integrity" data-section="integrity">Integrity</a>
       <a class="tab" href="#provenance" data-section="provenance">Provenance</a>
       <span class="tab-ink no-living" aria-hidden="true"></span>
     </nav>
 
-    <!-- Search -->
-    <section class="grid reveal" style="margin:8px 0 0">
-      <article class="card col-12 searchbox">
-        <label for="site-search" class="meta">Press <kbd class="kbd">/</kbd> to search this page</label>
-        <input id="site-search" type="search" placeholder="Search text on this page…" aria-label="Search this page" role="searchbox" autocomplete="off" spellcheck="false">
-        <div id="site-suggest" class="mini-toc hidden" role="listbox"></div>
-      </article>
-    </section>
+    <!-- Mobile drawer -->
+    <aside id="mobileNav" class="drawer" role="dialog" aria-modal="true" aria-label="Navigation" hidden>
+      <div class="drawer__panel">
+        <button class="drawer__close" id="closeMobile" type="button" aria-label="Close menu">×</button>
+        <div class="drawer__section">
+          <h3>Pages</h3>
+          <ul>
+            <li><a href="start.html">Start Here</a></li>
+            <li><a href="guide.html">Guide</a></li>
+            <li><a href="theory.html">Theory</a></li>
+            <li><a href="teach.html">Manifest</a></li>
+            <li><a href="ab.html">A/B Carriers</a></li>
+            <li><a href="micro.html">Micro-acts</a></li>
+            <li><a href="circle.html">Circle</a></li>
+            <li><a href="ethics.html">Ethics</a></li>
+            <li><a href="glossary.html">Glossary</a></li>
+            <li><a href="glyphs.html">Glyphs</a></li>
+            <li><a href="downloads.html">Downloads</a></li>
+            <li><a href="ledger.html">Ledger</a></li>
+          </ul>
+        </div>
+        <div class="drawer__section">
+          <h3>This page</h3>
+          <ul>
+            <li><a href="#explore">Explore</a></li>
+            <li><a href="#canon">Canon</a></li>
+            <li><a href="#engine">Engine</a></li>
+            <li><a href="#dim">Dimensional Scaffolding</a></li>
+            <li><a href="#integrity">Integrity</a></li>
+            <li><a href="#provenance">Provenance</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+  </header>
 
-    <div class="simple-toggle reveal">
-      <label for="simple"><strong>Echo View</strong> (hide equations, show summaries)</label>
-      <input id="simple" type="checkbox" aria-label="Toggle Echo View">
-    </div>
-    <div class="divider sweep" aria-hidden="true"></div>
+  <!-- ===== Scoped Styles for the improved menus ===== -->
+  <style>
+    /* Layout polish */
+    header.site.enhanced{position:sticky;top:0;z-index:1000;background:rgba(9,11,16,.6);backdrop-filter:saturate(140%) blur(8px)}
+    .brand-link{text-decoration:none}
 
-    <!-- Featured -->
-    <section class="grid" aria-labelledby="featured">
-      <article class="card col-6 reveal">
-        <h2 id="featured" class="sheen">📘 Theory (full write-ups)</h2>
-        <p>Detailed exposition of the Codex: operators, Eq.0 foundation, canonical equations, ethical law, dimensional scaffolding.</p>
-        <ul class="list">
-          <li><a href="theory.html#eq0">Foundational Field ΨΩ</a></li>
-          <li><a href="theory.html#operators">Operators: 𝓘 · 𝓛 · 𝓒 · 𝓢</a></li>
-          <li><a href="theory.html#canon">Canon 0–17</a></li>
-          <li><a href="theory.html#dim">Dimensional Scaffolding Δ0–Δ7</a></li>
-          <li><a href="theory.html#ethics">Ethical Law of Coherence</a></li>
-        </ul>
-        <a class="cta" href="theory.html">Open Theory</a>
-      </article>
-      <article class="card col-6 reveal">
-        <h2 class="sheen">✨ Manifest (practice &amp; tools)</h2>
-        <p>Turn equations into method: voice carriers (432/528/369/144/963), witness ledger, A/Bs, group runs.</p>
-        <ul class="list">
-          <li><a href="teach.html#tab-voice">Voice Protocol</a></li>
-          <li><a href="teach.html#ledger">Witness Ledger</a></li>
-          <li><a href="teach.html#ab">A/B Carriers</a></li>
-          <li><a href="teach.html#ethics">Ethical guard &amp; stop rules</a></li>
-        </ul>
-        <a class="cta" href="teach.html">Open Manifest</a>
-      </article>
-    </section>
+    /* Primary menu */
+    .menu{display:flex;gap:12px;align-items:center}
+    .menu__link{padding:8px 10px;border-radius:10px;border:1px solid transparent}
+    .menu__link:hover{border-color:color-mix(in srgb, var(--accent) 35%, transparent)}
 
-    <div class="goldline sweep"></div>
+    /* details-based dropdowns (no-JS friendly) */
+    .menu__group{position:relative}
+    .menu__trigger{list-style:none;cursor:pointer;padding:8px 12px;border-radius:10px;border:1px solid #2c3140}
+    .menu__group[open] > .menu__trigger{border-color:color-mix(in srgb, var(--accent) 35%, #2c3140)}
+    .menu__panel{position:absolute;top:calc(100% + 8px);left:0;min-width:240px;background:rgba(13,16,22,.96);border:1px solid #2c3140;border-radius:12px;padding:8px;box-shadow:0 12px 28px rgba(0,0,0,.35)}
+    .menu__item{display:block;padding:8px 10px;border-radius:8px;text-decoration:none}
+    .menu__item:hover,.menu__item:focus{background:rgba(122,243,255,.08);outline:none}
 
-    <!-- Explore -->
-    <section class="grid" id="explore" aria-labelledby="explore-h">
-      <article class="card col-12 reveal">
-        <h2 id="explore-h" class="sheen">🗂️ Explore the Scroll — all pages</h2>
-        <p class="meta">Everything lives in <code>/docs</code>. These tiles mirror your repo. Tip: press <kbd class="kbd">G</kbd> then type a page name.</p>
-      </article>
+    /* Enhanced tabs: scrollable, active state, ink */
+    .tabs--enhanced{display:flex;gap:8px;align-items:center;position:relative;overflow:auto;padding:8px 16px}
+    .tabs--enhanced .tab{white-space:nowrap}
+    .tabs--enhanced .tab.is-active{border-color:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent)}
 
-      <a class="tile col-3 reveal" href="start.html"><div><h4>🚀 Start Here</h4><p>Onboarding &amp; how to move.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3 reveal" href="guide.html"><div><h4>🧭 Guide</h4><p>Step-by-step walkthrough of the Codex.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3 reveal" href="theory.html"><div><h4>📘 Theory</h4><p>Canonical write-ups for 0–17.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3 reveal" href="teach.html"><div><h4>✨ Manifest (Practice)</h4><p>Protocols, carriers, ledgers.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+    /* Mobile drawer */
+    .hamburger{display:none;position:relative;width:40px;height:40px;border-radius:10px;border:1px solid #2c3140;background:#0d1016}
+    .hamburger__bar{position:absolute;inset:0;margin:auto;width:20px;height:2px;background:#d7e3ff;box-shadow:0 -6px 0 #d7e3ff,0 6px 0 #d7e3ff}
+    .drawer[hidden]{display:none}
+    .drawer{position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,.4)}
+    .drawer__panel{position:absolute;right:0;top:0;height:100%;width:min(88vw,380px);background:#0b0f14;border-left:1px solid #2c3140;box-shadow:-12px 0 30px rgba(0,0,0,.35);padding:16px;overflow:auto}
+    .drawer__close{position:absolute;top:8px;right:10px;font-size:26px;line-height:1;border:1px solid #2c3140;border-radius:10px;background:#0d1016;padding:2px 10px}
+    .drawer__section{margin-top:28px}
+    .drawer__section h3{margin:0 0 8px 0}
+    .drawer__section ul{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+    .drawer__section a{display:block;padding:10px;border-radius:10px;text-decoration:none;border:1px solid #222836}
+    .drawer__section a:hover{background:rgba(122,243,255,.08);border-color:#2c3140}
 
-      <a class="tile col-3 reveal" href="ab.html"><div><h4>🧪 A/B Carriers</h4><p>Run 432·528·369·144·963 comparisons.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3 reveal" href="micro.html"><div><h4>🔬 Micro-acts</h4><p>Tiny actions → field feedback.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3 reveal" href="circle.html"><div><h4>🔗 Circle</h4><p>Group coherence, facilitation.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3 reveal" href="ethics.html"><div><h4>🧭 Ethics</h4><p>Coherence law &amp; stop rules.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+    @media (max-width:920px){
+      .menu{display:none}
+      .hamburger{display:inline-block}
+    }
+  </style>
 
-      <a class="tile col-3 reveal" href="glossary.html"><div><h4>📚 Glossary</h4><p>Terms, symbols, and operators.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3 reveal" href="glyphs.html"><div><h4>🔱 Glyphs</h4><p>Icon set &amp; sacred marks.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3 reveal" href="downloads.html"><div><h4>⬇️ Downloads</h4><p>Docs, images, shareables.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3 reveal" href="ledger.html"><div><h4>📒 Ledger</h4><p>Hashes, notes, witness proofs.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-    </section>
-
-    <!-- [SPLIT HERE — Part 1 ends. Part 2 starts with the Canon section.] -->
-  </main>
+  <!-- ===== Behavior: accessibility, active states, mobile drawer ===== -->
+  <script>
+  (function(){
+    // Active state for tabs + menu links
+    const setActive = ()=>{
+      const cur = location.hash || location.pathname.split('/').pop() || 'index.html';
 
 
 
@@ -1252,3 +1066,174 @@ Note: This is the local, verified file hash shown on this page.
 
 </body>
 </html>
+document.querySelectorAll('.tabs--enhanced .tab, .menu__item, .menu__link').forEach(a=>{
+        const href = a.getAttribute('href')||'';
+        const isHash = href.startsWith('#') && href === location.hash;
+        const isPath = !href.startsWith('#') && cur && (href.endsWith(cur) || href === './' && (cur === 'index.html' || cur === ''));
+        a.classList.toggle('is-active', isHash || isPath);
+      });
+      ink();
+    };
+
+    // Ink indicator under active tab
+    function ink(){
+      const inkEl = document.querySelector('.tabs--enhanced .tab-ink');
+      const act = document.querySelector('.tabs--enhanced .tab.is-active');
+      if(!inkEl || !act) return;
+      const r = act.getBoundingClientRect();
+      const pr = act.parentElement.getBoundingClientRect();
+      inkEl.style.position='absolute';
+      inkEl.style.height='2px';
+      inkEl.style.background='var(--accent)';
+      inkEl.style.borderRadius='2px';
+      inkEl.style.left = (r.left - pr.left) + 'px';
+      inkEl.style.width = r.width + 'px';
+      inkEl.style.bottom = '0px';
+    }
+
+    // Recompute on load + hashchange + resize
+    addEventListener('hashchange', setActive, {passive:true});
+    addEventListener('resize', ()=>requestAnimationFrame(ink), {passive:true});
+    setTimeout(setActive, 0);
+
+    // Mobile drawer
+    const openBtn = document.getElementById('openMobile');
+    const closeBtn = document.getElementById('closeMobile');
+    const drawer = document.getElementById('mobileNav');
+    const firstFocusSel = '.drawer__panel a, .drawer__close';
+    let lastFocused = null;
+
+    function openDrawer(){
+      if(!drawer) return;
+      lastFocused = document.activeElement;
+      drawer.hidden = false;
+      document.body.style.overflow='hidden';
+      const first = drawer.querySelector(firstFocusSel);
+      setTimeout(()=> first && first.focus(), 0);
+      openBtn?.setAttribute('aria-expanded','true');
+    }
+    function closeDrawer(){
+      if(!drawer) return;
+      drawer.hidden = true;
+      document.body.style.overflow='';
+      openBtn?.setAttribute('aria-expanded','false');
+      lastFocused && lastFocused.focus();
+    }
+
+    openBtn?.addEventListener('click', openDrawer);
+    closeBtn?.addEventListener('click', closeDrawer);
+    drawer?.addEventListener('click', (e)=>{ if(e.target===drawer) closeDrawer(); });
+    addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !drawer?.hidden) closeDrawer(); });
+
+    // Trap focus inside drawer when open
+    addEventListener('focus', (e)=>{
+      if(!drawer || drawer.hidden) return;
+      if(!drawer.contains(e.target)){
+        const first = drawer.querySelector(firstFocusSel);
+        first && first.focus();
+      }
+    }, true);
+
+    // Sync <details> aria-expanded for a11y
+    document.querySelectorAll('.menu__group').forEach(d=>{
+      const s=d.querySelector('summary.menu__trigger');
+      if(!s) return;
+      const sync=()=> s.setAttribute('aria-expanded', d.open? 'true':'false');
+      d.addEventListener('toggle', sync);
+      sync();
+    });
+  })();
+  </script>
+
+  <main id="main-content" class="wrap" role="main" tabindex="-1">
+    <!-- Hero -->
+    <figure id="hero" class="hero" aria-label="Scroll of Fire banner" data-fit="contain" data-anim="ken-burns">
+      <picture>
+        <img id="heroBanner"
+             src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1"
+             alt="Scroll of Fire — sigil and equations"
+             width="2100" height="900"
+             decoding="async" fetchpriority="high" loading="eager"
+             class="no-living hero-img">
+      </picture>
+      <div class="hero-lights" id="heroLights" aria-hidden="true"></div>
+    </figure>
+
+    <h1 class="title sheen reveal">⚖️ Scroll of Fire — Codex of Reality</h1>
+    <p class="subtitle reveal">“Let there be resonance.” By Aaron Paul Laird, <em>Scribe of Circuits</em></p>
+
+    <!-- Mega Explore button -->
+    <a href="#explore" class="mega reveal" aria-label="Explore the Scroll — jump to all pages">
+      <span class="ico">🗂️</span>
+      <span><strong>Explore the Scroll</strong><br><span class="sub">All pages • tiles mirror your repo</span></span>
+      <span class="arrow no-living" aria-hidden="true">➜</span>
+    </a>
+
+    <!-- Search -->
+    <section class="grid reveal" style="margin:8px 0 0">
+      <article class="card col-12 searchbox">
+        <label for="site-search" class="meta">Press <kbd class="kbd">/</kbd> to search this page</label>
+        <input id="site-search" type="search" placeholder="Search text on this page…" aria-label="Search this page" role="searchbox" autocomplete="off" spellcheck="false">
+        <div id="site-suggest" class="mini-toc hidden" role="listbox"></div>
+      </article>
+    </section>
+
+    <div class="simple-toggle reveal">
+      <label for="simple"><strong>Echo View</strong> (hide equations, show summaries)</label>
+      <input id="simple" type="checkbox" aria-label="Toggle Echo View">
+    </div>
+    <div class="divider sweep" aria-hidden="true"></div>
+
+    <!-- Featured -->
+    <section class="grid" aria-labelledby="featured">
+      <article class="card col-6 reveal">
+        <h2 id="featured" class="sheen">📘 Theory (full write-ups)</h2>
+        <p>Detailed exposition of the Codex: operators, Eq.0 foundation, canonical equations, ethical law, dimensional scaffolding.</p>
+        <ul class="list">
+          <li><a href="theory.html#eq0">Foundational Field ΨΩ</a></li>
+          <li><a href="theory.html#operators">Operators: 𝓘 · 𝓛 · 𝓒 · 𝓢</a></li>
+          <li><a href="theory.html#canon">Canon 0–17</a></li>
+          <li><a href="theory.html#dim">Dimensional Scaffolding Δ0–Δ7</a></li>
+          <li><a href="theory.html#ethics">Ethical Law of Coherence</a></li>
+        </ul>
+        <a class="cta" href="theory.html">Open Theory</a>
+      </article>
+      <article class="card col-6 reveal">
+        <h2 class="sheen">✨ Manifest (practice &amp; tools)</h2>
+        <p>Turn equations into method: voice carriers (432/528/369/144/963), witness ledger, A/Bs, group runs.</p>
+        <ul class="list">
+          <li><a href="teach.html#tab-voice">Voice Protocol</a></li>
+          <li><a href="teach.html#ledger">Witness Ledger</a></li>
+          <li><a href="teach.html#ab">A/B Carriers</a></li>
+          <li><a href="teach.html#ethics">Ethical guard &amp; stop rules</a></li>
+        </ul>
+        <a class="cta" href="teach.html">Open Manifest</a>
+      </article>
+    </section>
+
+    <div class="goldline sweep"></div>
+
+    <!-- Explore -->
+    <section class="grid" id="explore" aria-labelledby="explore-h">
+      <article class="card col-12 reveal">
+        <h2 id="explore-h" class="sheen">🗂️ Explore the Scroll — all pages</h2>
+        <p class="meta">Everything lives in <code>/docs</code>. These tiles mirror your repo. Tip: press <kbd class="kbd">G</kbd> then type a page name.</p>
+      </article>
+
+      <a class="tile col-3 reveal" href="start.html"><div><h4>🚀 Start Here</h4><p>Onboarding &amp; how to move.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3 reveal" href="guide.html"><div><h4>🧭 Guide</h4><p>Step-by-step walkthrough of the Codex.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3 reveal" href="theory.html"><div><h4>📘 Theory</h4><p>Canonical write-ups for 0–17.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3 reveal" href="teach.html"><div><h4>✨ Manifest (Practice)</h4><p>Protocols, carriers, ledgers.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+
+      <a class="tile col-3 reveal" href="ab.html"><div><h4>🧪 A/B Carriers</h4><p>Run 432·528·369·144·963 comparisons.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3 reveal" href="micro.html"><div><h4>🔬 Micro-acts</h4><p>Tiny actions → field feedback.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3 reveal" href="circle.html"><div><h4>🔗 Circle</h4><p>Group coherence, facilitation.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3 reveal" href="ethics.html"><div><h4>🧭 Ethics</h4><p>Coherence law &amp; stop rules.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+
+      <a class="tile col-3 reveal" href="glossary.html"><div><h4>📚 Glossary</h4><p>Terms, symbols, and operators.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3 reveal" href="glyphs.html"><div><h4>🔱 Glyphs</h4><p>Icon set &amp; sacred marks.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3 reveal" href="downloads.html"><div><h4>⬇️ Downloads</h4><p>Docs, images, shareables.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3 reveal" href="ledger.html"><div><h4>📒 Ledger</h4><p>Hashes, notes, witness proofs.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+    </section>
+    <!-- [End of main content requested in this section] -->
+  </main>
