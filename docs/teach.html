@@ -1,722 +1,737 @@
 <!doctype html>
 <html lang="en" dir="ltr" class="sof">
 <head>
-  <!-- Resolve relative URLs from project root on GitHub Pages -->
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>
-    // In GitHub repo preview (github.com), remove <base> so relative paths still work.
-    if (location.hostname === "github.com") { const b=document.querySelector("base"); if(b) b.remove(); }
-  </script>
-
+  <script>if(location.hostname==="github.com"){const b=document.querySelector("base");if(b)b.remove();}</script>
   <meta charset="utf-8" />
-  <title>Scroll of Fire — Manifest (Teaching Lab • Practice Studio)</title>
+  <title>Manifest — Play the Codex (Practice Studio)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0b0f">
-  <meta name="color-scheme" content="dark">
-  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
-  <meta name="description" content="Manifest — the hands-on practice studio: intention line, voice-carrier tuning, observer loop, coherence (Ξ), focus/breath, and a private witness ledger — grounded in the Codex.">
+  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark light">
+  <meta name="description" content="Game-like practice: pick a carrier, run a simple loop, breathe, rate coherence (Ξ), and log your witness. Earn XP, complete daily quests, and level up—ethics first." />
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/teach.html" />
-
-  <!-- Social cards -->
-  <meta property="og:title" content="Manifest — Practice & Tools · Scroll of Fire">
-  <meta property="og:description" content="Practice coherent manifestation: tune your voice carrier, run the observer loop, measure Ξ, and log your witness streak.">
-  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/teach.html">
+  <meta property="og:title" content="Manifest — Play the Codex">
+  <meta property="og:description" content="Make practice fun: daily quests, XP, achievements. Simple steps anyone can follow.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/img/og-teach-lab.jpg">
-  <meta property="og:image:alt" content="Golden HUD interface of the Manifest studio with ring timer and voice spectrum.">
-  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
 
-  <!-- Icons -->
-  <link rel="icon" href="assets/icons/favicon.ico">
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
-  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- Core styles -->
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-21">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-21" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-21"></noscript>
 
-  <!-- Manifest visual skin -->
-  <link rel="stylesheet" href="assets/css/manifest-show.css?v=2025-10-20">
-
-  <!-- Page-specific overrides -->
-  <link rel="stylesheet" href="assets/css/teach.css?v=2025-10-20b">
-
-  <!-- Minimal safety override: if JS fails, make cards visible -->
   <style>
-    .no-js .card { opacity:.98 !important; transform:none !important; }
-    .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 80px}
-    .title{
-      font-family:"Crimson Pro",Georgia,serif;font-weight:800;text-align:center;
-      font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;letter-spacing:.3px;
-      background:linear-gradient(180deg,#fff 0%,#cfefff 60%,#a7f6ff 100%);
-      -webkit-background-clip:text;background-clip:text;color:transparent;
-      text-shadow:0 0 24px rgba(122,243,255,.12)
-    }
-    .subtitle{text-align:center;color:#b8b3a6;font-style:italic;margin:0 0 12px}
-    .lab-sticky{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,rgba(13,13,16,.96),rgba(13,13,16,.92));backdrop-filter:saturate(120%) blur(8px)}
-    /* Canvas placeholders so users never see a blank area while JS boots */
-    canvas[aria-label]{display:block;background:
-      radial-gradient(120px 60px at 50% 50%, #0f131c, transparent 60%),
-      repeating-linear-gradient(0deg,#0d1118 0 2px, #0e121a 2px 4px);
-      border:1px solid #293042;border-radius:12px}
-  </style>
+    :root{--maxw:1180px}
+    body{margin:0}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:20px 16px 90px}
+    .title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;
+      font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;letter-spacing:.2px;
+      background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .subtitle{text-align:center;color:var(--muted);margin:0 0 12px}
 
-  <!-- MathJax (lazy) -->
-  <script>
-    (function(){
-      function loadMJ(){
-        if (window.MathJax) return;
-        window.MathJax = {
-          tex:{ inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']] },
-          svg:{ fontCache:'global', linebreaks:{ automatic:true, width:'container' } },
-          startup:{ typeset:false }
-        };
-        const s=document.createElement('script');
-        s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
-        s.defer=true;
-        s.onload=()=>MathJax.typeset && MathJax.typeset();
-        document.head.appendChild(s);
-      }
-      if ('IntersectionObserver' in window){
-        const io=new IntersectionObserver(es=>{
-          if (es.some(e=>e.isIntersecting)){ io.disconnect(); loadMJ(); }
-        },{rootMargin:'800px 0px'});
-        io.observe(document.documentElement);
-      } else { loadMJ(); }
-    })();
-  </script>
+    /* Layout */
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-7{grid-column:span 7}.col-12{grid-column:span 12}
+    @media (max-width:980px){.col-4,.col-5,.col-7,.col-12{grid-column:span 12}}
+
+    /* Cards & buttons */
+    .card{border:1px solid var(--line);border-radius:12px;padding:12px;background:rgba(255,255,255,.02)}
+    .lab-btn{padding:.6rem .85rem;border-radius:10px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);font-weight:700;cursor:pointer}
+    .lab-btn.primary{box-shadow:0 8px 24px rgba(122,243,255,.12)}
+    .lab-btn[disabled]{opacity:.5;cursor:not-allowed}
+    .lab-row{display:flex;gap:10px;flex-wrap:wrap}
+    .lab-input{width:100%;padding:.6rem;border-radius:10px;border:1px solid var(--line);background:#0f1116;color:inherit}
+    .hint{color:#9aa4be;font-size:.92rem}
+    .meta{color:#9aa4be}
+    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+    /* Tabs */
+    .pill-tabs{display:flex;gap:6px;align-items:center}
+    .pill{padding:.5rem .8rem;border-radius:999px;border:1px solid var(--line);cursor:pointer}
+    .pill.active{border-color:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent)}
+    .tab{display:none}.tab.active{display:block}
+
+    /* Progress ring (XP/Level) */
+    .level-hud{display:flex;align-items:center;gap:12px;justify-content:center}
+    .level-ring{width:84px;height:84px;display:grid;place-items:center}
+    .level-ring svg{width:84px;height:84px;display:block}
+    .ring-bg{fill:none;stroke:#1f1f28;stroke-width:6}
+    .ring-fg{fill:none;stroke:url(#gradXP);stroke-width:6;stroke-linecap:round;stroke-dasharray:0 283}
+    .level-num{font:800 18px/1 Inter;fill:#eae7df}
+    .level-sub{font:600 10px/1 Inter;fill:#b8b3a6}
+
+    /* Achievements & badges */
+    .badges{display:flex;gap:8px;flex-wrap:wrap}
+    .badge{padding:.35rem .6rem;border:1px solid var(--line);border-radius:999px}
+    .badge.lit{border-color:#f3c97a;color:#fbe7b4;background:rgba(243,201,122,.1)}
+
+    /* Confetti */
+    #confetti{position:fixed;inset:0;pointer-events:none}
+
+    /* Friendly copies */
+    .friendly p{margin:.35rem 0}
+  </style>
 </head>
 
-<body class="no-js">
-  <a class="sr-only" href="#main">Skip to main content</a>
-  <noscript><p style="padding:8px;margin:0;background:#111;color:#ffd;">JavaScript is disabled — interactive tools (ring timer, voice gate, ledger) require JS.</p></noscript>
+<body class="stars">
+  <canvas id="confetti" width="1920" height="1080" aria-hidden="true"></canvas>
+  <main class="wrap" id="main" role="main">
+    <!-- Banner -->
+    <figure class="hero hero--contain" aria-hidden="true" style="margin-bottom:8px">
+      <img src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" alt="Scroll of Fire — sigil banner"
+           width="1600" height="900" loading="eager" decoding="async">
+    </figure>
 
-  <main id="main" class="wrap lab-wrap" data-app="manifest-studio">
-    <header class="page-head fancy-head" role="banner">
-      <span class="lab-strap" aria-label="Section">Practice Suite</span>
-      <h1 class="title">✨ Manifest — <em>Live the Codex</em></h1>
-      <p class="subtitle">
-        A guided path to <em>coherent manifestation</em>:
-        craft a clean intention (𝓘), align a voice carrier Π<sub>ν</sub>,
-        run the observer loop (𝓘 → 𝓛 → 𝓒 → 𝓢), measure coherence (Ξ),
-        then witness and log your streak.
-      </p>
+    <header class="page-head fancy-head">
+      <h1 class="title">✨ Manifest — <em>Play the Codex</em></h1>
+      <p class="subtitle">No jargon. Three actions: pick a tone, say one helpful line, notice one real thing. Log it. Earn XP.</p>
 
-      <!-- Top nav -->
-      <section class="lab-top card lab-card lab-sticky" style="margin-top:10px" aria-label="Navigation">
+      <!-- Top nav / tabs -->
+      <section class="card" style="margin-top:10px">
         <div class="pill-tabs" role="tablist" aria-label="Manifest tabs">
-          <button class="pill active" data-tab="observer"  role="tab" aria-selected="true"  aria-controls="tab-observer">Observer</button>
-          <button class="pill"        data-tab="voice"     role="tab" aria-selected="false" aria-controls="tab-voice">Voice Gate</button>
-          <button class="pill"        data-tab="phrase"    role="tab" aria-selected="false" aria-controls="tab-phrase">Phrase Tuner</button>
-          <button class="pill"        data-tab="coherence" role="tab" aria-selected="false" aria-controls="tab-coherence">Coherence Desk</button>
-          <button class="pill"        data-tab="visuals"   role="tab" aria-selected="false" aria-controls="tab-visuals">Visual Focus</button>
-          <button class="pill"        data-tab="breath"    role="tab" aria-selected="false" aria-controls="tab-breath">Breath/Biofield</button>
-          <button class="pill"        data-tab="ledger"    role="tab" aria-selected="false" aria-controls="tab-ledger">Witness Ledger</button>
+          <button class="pill active" data-tab="quests"    role="tab" aria-selected="true">🎯 Quests</button>
+          <button class="pill"        data-tab="observer"  role="tab" aria-selected="false">⏱ Observer</button>
+          <button class="pill"        data-tab="voice"     role="tab" aria-selected="false">🎙 Voice</button>
+          <button class="pill"        data-tab="phrase"    role="tab" aria-selected="false">🔡 Phrase</button>
+          <button class="pill"        data-tab="breath"    role="tab" aria-selected="false">🌬 Breath</button>
+          <button class="pill"        data-tab="coherence" role="tab" aria-selected="false">📈 Ξ</button>
+          <button class="pill"        data-tab="ledger"    role="tab" aria-selected="false">📒 Ledger</button>
           <span class="flex" aria-hidden="true"></span>
-          <label class="coach-toggle" for="coach">
-            <input id="coach" type="checkbox" aria-pressed="false"> Coach Mode
-          </label>
+          <label class="hint"><input id="coach" type="checkbox"> Coach mode</label>
         </div>
 
-        <p class="hint" id="hotkeys">
-          Shortcuts: <kbd>1</kbd>–<kbd>7</kbd> tabs • <kbd>?</kbd> help • <kbd>S</kbd> ring • <kbd>G</kbd> Voice Gate • <kbd>L</kbd> Ledger • <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>K</kbd> Phrase box
-        </p>
-        <p id="lab-status" class="meta" role="status" aria-live="polite">Ready.</p>
-
-        <nav class="crumbs" aria-label="Breadcrumb">
-          <a href="index.html" class="cta">← Back to Codex</a>
-          <a href="theory.html" class="cta">Open Theory</a>
-        </nav>
-      </section>
-
-      <!-- QuickStart -->
-      <section class="grid" aria-label="Quick start" style="margin-top:10px">
-        <article class="card col-4 lab-card" id="qs-1">
-          <h3>Step 1 — Intention Line (𝓘)</h3>
-          <p>One sentence; verbs of clarity; nouns of truth. Avoid negations and hedging.</p>
-          <label class="sr-only" for="qsIntention">Your intention</label>
-          <input id="qsIntention" class="lab-input" placeholder="I choose calm power and precise timing." autocomplete="off" />
-          <p class="key-hint">Press <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Enter</kbd> to send to the Phrase Tuner.</p>
-        </article>
-
-        <article class="card col-4 lab-card" id="qs-2">
-          <h3>Step 2 — Choose Carrier Π<sub>ν</sub></h3>
-          <p>Hum or tap a preset:</p>
-          <div class="lab-row" role="group" aria-label="Carrier presets">
-            <button class="lab-btn" data-carrier="432">432 Hz</button>
-            <button class="lab-btn" data-carrier="528">528 Hz</button>
-            <button class="lab-btn" data-carrier="369">369 Hz</button>
+        <!-- Level HUD -->
+        <div class="level-hud" style="margin-top:8px">
+          <div class="level-ring">
+            <svg viewBox="0 0 100 100" aria-label="Level progress">
+              <defs>
+                <linearGradient id="gradXP" x1="0" x2="1">
+                  <stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/>
+                </linearGradient>
+              </defs>
+              <circle cx="50" cy="50" r="45" class="ring-bg"/>
+              <circle cx="50" cy="50" r="45" class="ring-fg" id="xpArc" pathLength="283"/>
+              <text x="50" y="48" text-anchor="middle" class="level-num" id="lvlNum">1</text>
+              <text x="50" y="64" text-anchor="middle" class="level-sub" id="xpText">0 / 50</text>
+            </svg>
           </div>
-          <label class="sr-only" for="qsCarrier">Custom carrier frequency</label>
-          <input id="qsCarrier" class="lab-input" placeholder="Carrier (Hz)" inputmode="numeric" pattern="[0-9]*" />
-          <p class="key-hint">Open mic analyzer with <kbd>G</kbd> (Voice Gate).</p>
-        </article>
-
-        <article class="card col-4 lab-card" id="qs-3">
-          <h3>Step 3 — Run the Loop</h3>
-          <p>2–3 rounds, steady. Seal with gratitude; then log the witness.</p>
-          <div class="lab-row">
-            <button class="lab-btn primary" data-nav="observer" aria-controls="tab-observer">Open Observer</button>
-            <button class="lab-btn ghost" data-nav="ledger" aria-controls="tab-ledger">Open Ledger</button>
+          <div class="friendly">
+            <p><b>Level up by doing:</b> run the loop, breathe once, tune a phrase, compute Ξ, add a witness, try carriers.</p>
+            <p class="meta">Ethics first. Stop if you feel worse (Stop Rule).</p>
           </div>
-          <p class="key-hint">Start/Stop ring with <kbd>S</kbd>. Tabs: <kbd>1</kbd>–<kbd>7</kbd>.</p>
-        </article>
+        </div>
       </section>
     </header>
 
-    <!-- ===================== PRACTICE SUITE ===================== -->
+    <!-- =================== TABS =================== -->
 
-    <!-- OBSERVER -->
-    <section id="tab-observer" class="tab active" role="tabpanel" aria-labelledby="tabbtn-observer">
+    <!-- Quests / Onboarding -->
+    <section id="tab-quests" class="tab active" role="tabpanel">
       <article class="grid">
-        <div class="card col-7 lab-card">
-          <h2>⏱️ 4-Beat Observer Loop — 𝓘 → 𝓛 → 𝓒 → 𝓢</h2>
-
-          <ol class="list" aria-describedby="obsHelp obsKeys">
-            <li><b>𝓘 Intend:</b> speak your line once on the chosen carrier Π<sub>ν</sub>.</li>
-            <li><b>𝓛 Look:</b> choose one undeniable detail in view.</li>
-            <li><b>𝓒 Coalesce:</b> release jaw/shoulders; longer exhale.</li>
-            <li><b>𝓢 Seal:</b> whisper “thank you,” allow the scene to settle.</li>
+        <div class="card col-7 friendly">
+          <h2>🎯 Daily Quests</h2>
+          <ol id="questList" class="list">
+            <!-- Filled by JS -->
           </ol>
-
-          <div class="ring-timer" id="ring" aria-label="Observer timer">
-            <svg viewBox="0 0 120 120" class="ring" role="img" aria-label="Observer loop ring">
-              <defs><linearGradient id="ringGrad" x1="0" x2="1"><stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/></linearGradient></defs>
-              <circle cx="60" cy="60" r="54" class="ring-bg"/>
-              <circle cx="60" cy="60" r="54" class="ring-fg" id="ringFg" pathLength="100"/>
-              <text x="60" y="52" class="ring-phase" text-anchor="middle" id="ringPhase">Ready</text>
-              <text x="60" y="72" class="ring-count" text-anchor="middle" id="ringCount">—</text>
-            </svg>
-
-            <div class="ring-controls">
-              <fieldset class="lab-row" aria-label="Presets">
-                <legend class="sr-only">Loop presets</legend>
-                <button class="lab-btn" data-preset="8-3"  aria-controls="phaseSec rounds">8s × 3</button>
-                <button class="lab-btn" data-preset="12-3" aria-controls="phaseSec rounds">12s × 3</button>
-                <button class="lab-btn" data-preset="20-2" aria-controls="phaseSec rounds">20s × 2</button>
-              </fieldset>
-
-              <label for="phaseSec">Seconds/phase
-                <input id="phaseSec" type="number" min="3" max="120" value="12" inputmode="numeric" aria-describedby="obsHelp">
-              </label>
-
-              <label for="rounds">Rounds
-                <input id="rounds" type="number" min="1" max="20" value="3" inputmode="numeric">
-              </label>
-
-              <label for="pace">Breath pacing
-                <select id="pace">
-                  <option value="box">Box 4-4-4-4</option>
-                  <option value="4-7-8">4-7-8</option>
-                  <option value="free" selected>Free</option>
-                </select>
-              </label>
-
-              <button id="startTimer" class="lab-btn" data-hotkey="S" aria-describedby="obsKeys">Start</button>
-              <button id="stopTimer" class="lab-btn ghost">Stop</button>
-            </div>
-
-            <p id="obsHelp" class="hint coach" data-coach="Breathe in on 𝓘, see on 𝓛, soften on 𝓒, whisper thanks on 𝓢.">Coach: map breath to operators.</p>
-            <p id="obsKeys" class="meta">Hotkey: press <kbd>S</kbd> to start/stop.</p>
+          <div class="lab-row">
+            <button id="btnResetQuests" class="lab-btn">Reset today</button>
+            <button id="btnCompleteAll" class="lab-btn">Mark all done</button>
           </div>
+          <p class="hint">Quests reset every day. Completing all gives a bonus and lights a badge.</p>
         </div>
 
-        <aside class="card col-5 lab-card">
-          <h3>Manifestation Run (simple)</h3>
+        <aside class="card col-5 friendly">
+          <h3>🔰 Tiny Tutorial (2 minutes)</h3>
           <ol class="list compact">
-            <li>Pick a carrier Π<sub>ν</sub> in Voice Gate (or tap a preset).</li>
-            <li>Speak 𝓘 once, then run 2–3 rounds of the loop.</li>
-            <li>Notice one change; log a witness.</li>
+            <li>Pick a <b>carrier</b> (tone) you like.</li>
+            <li>Say one short, kind line—present tense.</li>
+            <li>Run the <b>Observer</b> loop once.</li>
+            <li>Notice one real change. <b>Log it</b> in the Ledger.</li>
           </ol>
-
-          <div class="badges" aria-label="Streak badges">
-            <span id="badge7" class="badge unlit"  title="7-Day Seed">🌱 ×7</span>
-            <span id="badge33" class="badge unlit" title="33-Day Orbit">🛰️ ×33</span>
-            <span id="badge144" class="badge unlit" title="144 Closure">🜚 ×144</span>
+          <div class="badges" style="margin-top:8px">
+            <span id="bSeed" class="badge" title="7-Day Seed">🌱 7-day</span>
+            <span id="bOrbit" class="badge" title="33-Day Orbit">🛰️ 33-day</span>
+            <span id="bClosure" class="badge" title="144 Closure">🜚 144</span>
+            <span id="bAllTones" class="badge" title="Tried all five carriers">🎵 All Tones</span>
+            <span id="bFirstLedger" class="badge" title="First Ledger entry">🧾 First Witness</span>
           </div>
-          <p class="meta">Badges light as your daily streak grows.</p>
         </aside>
       </article>
     </section>
 
-    <!-- VOICE GATE -->
+    <!-- Observer -->
+    <section id="tab-observer" class="tab" role="tabpanel">
+      <article class="grid">
+        <div class="card col-7">
+          <h2>⏱ Observer — 4 steps, gentle pace</h2>
+          <ol class="list">
+            <li><b>𝓘 Intend:</b> say your line once on the tone.</li>
+            <li><b>𝓛 Look:</b> spot one undeniable detail.</li>
+            <li><b>𝓒 Coalesce:</b> drop the shoulders, longer exhale.</li>
+            <li><b>𝓢 Seal:</b> whisper “thank you” and rest for a beat.</li>
+          </ol>
+
+          <div class="lab-row" style="margin:.5rem 0">
+            <div role="radiogroup" aria-label="Carrier">
+              <button class="lab-btn tone" data-carrier="432">432 Ground</button>
+              <button class="lab-btn tone" data-carrier="528">528 Repair</button>
+              <button class="lab-btn tone" data-carrier="369">369 Lock-in</button>
+              <button class="lab-btn tone" data-carrier="144">144 Sanctuary</button>
+              <button class="lab-btn tone" data-carrier="963">963 Crown</button>
+              <button class="lab-btn tone" data-carrier="none">No tone</button>
+            </div>
+            <span id="toneNow" class="meta" aria-live="polite">Carrier: none</span>
+          </div>
+
+          <label for="intentLine" class="sr-only">Your line</label>
+          <input id="intentLine" class="lab-input" placeholder="One short, kind line…">
+
+          <!-- Ring -->
+          <div class="lab-row" style="align-items:center;margin-top:8px">
+            <div style="width:116px;height:116px;display:grid;place-items:center">
+              <svg viewBox="0 0 100 100" aria-label="Observer ring">
+                <circle cx="50" cy="50" r="45" class="ring-bg"/>
+                <circle cx="50" cy="50" r="45" class="ring-fg" id="obsArc" pathLength="283"/>
+                <text x="50" y="48" text-anchor="middle" class="level-num" id="obsPhase">Ready</text>
+                <text x="50" y="64" text-anchor="middle" class="level-sub" id="obsCount">—</text>
+              </svg>
+            </div>
+
+            <div>
+              <div class="lab-row">
+                <button id="obsStart" class="lab-btn primary">Start (3×10s)</button>
+                <button id="obsStop" class="lab-btn" disabled>Stop</button>
+              </div>
+              <div class="lab-row">
+                <label>Seconds/phase <input id="obsSec" type="number" value="10" min="3" max="120" class="lab-input" style="width:100px"></label>
+                <label>Rounds <input id="obsRounds" type="number" value="3" min="1" max="20" class="lab-input" style="width:90px"></label>
+              </div>
+              <p class="hint" id="coachObs">Coach: breathe in on 𝓘, see on 𝓛, soften on 𝓒, thank on 𝓢.</p>
+            </div>
+          </div>
+        </div>
+
+        <aside class="card col-5 friendly">
+          <h3>Why this works (simple)</h3>
+          <p>One tone = fewer distractions. One clear line = clean direction. One real detail = proof you can point to. That’s enough to start.</p>
+          <p class="meta">If you feel worse, stop and reset. Care is the rule.</p>
+        </aside>
+      </article>
+    </section>
+
+    <!-- Voice -->
     <section id="tab-voice" class="tab" role="tabpanel">
       <article class="grid">
-        <div class="card col-7 lab-card">
-          <h2>🎙️ Voice Gate — Find Your Carrier Π<sub>ν</sub></h2>
-          <ol class="list">
-            <li><b>Enable Mic</b> and hum one steady note (~3–5s) at low volume.</li>
-            <li>Hold steady until <b>Stability</b> ≥ 60% and <b>Noise</b> is low.</li>
-            <li><b>Set as carrier</b> and craft your line to that tone.</li>
-          </ol>
-
-          <div class="audio-pane" aria-label="Audio lab">
-            <div class="audio-controls">
-              <button id="micStart" class="lab-btn">Enable Mic</button>
-              <button id="micStop"  class="lab-btn ghost">Stop</button>
-              <span class="audio-hint" id="nearKey" role="status" aria-live="polite">—</span>
-            </div>
-            <canvas id="wave" width="800" height="140" aria-label="Waveform preview"></canvas>
-            <canvas id="fft"  width="800" height="140" aria-label="Frequency spectrum"></canvas>
-            <div class="lab-row" aria-live="polite">
-              <span id="stability" class="meta">Stability: —</span>
-              <span id="noiseWarn" class="meta">Noise: —</span>
-              <button id="useCarrier" class="lab-btn" disabled>Set as carrier</button>
-            </div>
+        <div class="card col-7">
+          <h2>🎙 Voice — find a comfy tone</h2>
+          <div class="lab-row">
+            <button id="micOn" class="lab-btn">Enable Mic</button>
+            <button id="micOff" class="lab-btn" disabled>Stop</button>
+            <span id="freqRead" class="meta" aria-live="polite">—</span>
+            <button id="useTone" class="lab-btn" disabled>Use this tone</button>
           </div>
+          <canvas id="wave" width="800" height="140" aria-label="Waveform"></canvas>
+          <canvas id="fft"  width="800" height="140" aria-label="Spectrum"></canvas>
         </div>
 
-        <aside class="card col-5 lab-card">
-          <h3>Carrier Presets</h3>
-          <div class="lab-row" role="group" aria-label="Carrier presets">
-            <button class="lab-btn" data-carrier="432">432 Hz — Ground</button>
-            <button class="lab-btn" data-carrier="528">528 Hz — Repair</button>
-            <button class="lab-btn" data-carrier="369">369 Hz — Lock-in</button>
+        <aside class="card col-5 friendly">
+          <h3>Presets</h3>
+          <div class="lab-row">
+            <button class="lab-btn tone" data-carrier="432">432</button>
+            <button class="lab-btn tone" data-carrier="528">528</button>
+            <button class="lab-btn tone" data-carrier="369">369</button>
+            <button class="lab-btn tone" data-carrier="144">144</button>
+            <button class="lab-btn tone" data-carrier="963">963</button>
           </div>
-
-          <h3 style="margin-top:12px">Today’s Intention</h3>
-          <label for="carrierOut">Carrier (Hz)
-            <input id="carrierOut" class="lab-input" readonly placeholder="—">
-          </label>
-          <label for="intentionFromVoice">Intention (𝓘)
-            <input id="intentionFromVoice" class="lab-input" placeholder="One clean line using this carrier…">
-          </label>
-          <button id="sendToLedger" class="lab-btn">Send to Ledger</button>
-          <p class="meta">Edit the entry in the Witness Ledger before saving.</p>
+          <p class="hint">Softly hum for ~3 seconds. When it looks steady, tap “Use this tone”.</p>
         </aside>
       </article>
     </section>
 
-    <!-- PHRASE TUNER -->
+    <!-- Phrase -->
     <section id="tab-phrase" class="tab" role="tabpanel">
       <article class="grid">
-        <div class="card col-7 lab-card">
-          <h2>🔡 Phrase Tuner Pro — Weight the Meaning (Eq.16)</h2>
-          <textarea id="phraseIn" rows="3" placeholder="Type a sentence you plan to speak…"></textarea>
-          <div class="chip-lane" id="chipLane" aria-label="Token weights"></div>
-          <div class="phrase-actions">
-            <button id="btnTuned" class="lab-btn">Tune & Highlight</button>
-            <button id="btnClearPhrase" class="lab-btn ghost">Clear</button>
-            <output id="semScore" class="meta">Semantic weight: —</output>
-          </div>
-          <div class="phrase-out">
-            <p><b>Negations:</b> <span id="negCount">0</span></p>
-            <p><b>Suggestion:</b> <span id="phraseOut">—</span></p>
-          </div>
-          <div class="eq lab-eq"><div class="scroll">
-            $$ \nabla_{\text{sem}} \mathrm{Phrase} = \sum_k w_k \,\nabla_{\text{sem}} \mathrm{Token}_k \qquad (\sum w_k=1) $$
-          </div></div>
-          <p class="hint coach" data-coach="Drag chips to raise emphasis. Prefer strong verbs & solid nouns; drop filler and hedging.">Coach: fewer negations → cleaner gradient.</p>
-        </div>
-
-        <aside class="card col-5 lab-card">
-          <h3>Micro-Templates</h3>
-          <details open><summary>Care & clarity</summary><p>I will speak simply and listen fully.</p></details>
-          <details><summary>Leadership</summary><p>We deliver one useful thing today, together.</p></details>
-          <details><summary>Healing</summary><p>May light reveal, and love restore.</p></details>
-        </aside>
-      </article>
-    </section>
-
-    <!-- COHERENCE DESK -->
-    <section id="tab-coherence" class="tab" role="tabpanel">
-      <article class="grid">
-        <div class="card col-7 lab-card">
-          <h2>📈 Coherence Desk — Ξ & Half-Life</h2>
-          <div class="desk-grid">
-            <div class="desk-card" aria-label="Ξ calculator">
-              <label for="hDotI">⟨H·I⟩ (0–1)
-                <input type="number" step="0.01" min="0" max="1" id="hDotI" value="0.62">
-              </label>
-              <label for="mVar">Var[𝓜] (0–2)
-                <input type="number" step="0.01" min="0" max="2" id="mVar" value="0.30">
-              </label>
-              <button id="btnXi" class="lab-btn">Compute Ξ</button>
-              <output id="outXi" class="big" aria-live="polite">Ξ = —</output>
-              <canvas id="xiSpark" width="320" height="60" aria-label="Ξ history sparkline"></canvas>
-            </div>
-            <div class="desk-card" aria-label="Half-life calculator">
-              <label for="tauDays">τ (days)
-                <input type="number" id="tauDays" min="1" max="120" value="10">
-              </label>
-              <button id="btnHalfLife" class="lab-btn">Compute λ / t½</button>
-              <output id="outHalfLife" class="big" aria-live="polite">λ = —, t½ = —</output>
-              <p class="meta">Longer τ → slower decay → skills stick.</p>
-            </div>
-          </div>
-        </div>
-
-        <aside class="card col-5 lab-card">
-          <h3>Stop Rule (Eq.9)</h3>
-          <p>If Truth/Distortion worsens, <b>abort</b>. Realign (breath/phrase), then resume.</p>
-          <label class="coach-toggle small"><input id="autoLogXi" type="checkbox" checked> Auto-log Ξ to ledger</label>
-        </aside>
-      </article>
-    </section>
-
-    <!-- VISUAL FOCUS -->
-    <section id="tab-visuals" class="tab" role="tabpanel">
-      <article class="grid">
-        <div class="card col-7 lab-card">
-          <h2>👁️ Visual Focus — Single-Point & Expansion</h2>
-          <p>Train attention to hold, then expand — mirroring 𝓛 (Look) and 𝓒 (Coalesce).</p>
-          <canvas id="focusDot" width="600" height="280" aria-label="Focus trainer canvas"></canvas>
+        <div class="card col-7">
+          <h2>🔡 Phrase — make it clean</h2>
+          <textarea id="phraseIn" rows="3" class="lab-input" placeholder="Type your line…"></textarea>
           <div class="lab-row">
-            <label for="vfHold">Hold (s)
-              <input id="vfHold" type="number" value="10" min="5" max="60">
-            </label>
-            <label for="vfExpand">Expand (s)
-              <input id="vfExpand" type="number" value="6" min="3" max="30">
-            </label>
-            <button id="vfStart" class="lab-btn">Start Focus Cycle</button>
+            <button id="phraseTune" class="lab-btn">Tune</button>
+            <button id="phraseClear" class="lab-btn">Clear</button>
           </div>
-          <p class="meta">Dot phase = single-point; ring phase = peripheral expansion. Sync with breath.</p>
+          <p><b>Suggestion:</b> <span id="phraseOut" class="meta">—</span></p>
+          <p class="hint" id="coachPhrase">Coach: fewer negations, strong verbs, concrete nouns.</p>
         </div>
 
-        <aside class="card col-5 lab-card">
-          <h3>Use in the Run</h3>
-          <ol class="list compact">
-            <li>Before Observer: 1 cycle to stabilize 𝓛.</li>
-            <li>After: 1 expansion to soften 𝓒 and ease 𝓢.</li>
-          </ol>
+        <aside class="card col-5 friendly">
+          <h3>Examples</h3>
+          <p>I speak simply and act kindly.</p>
+          <p>We finish one helpful thing today.</p>
+          <p>Light reveals; love restores.</p>
         </aside>
       </article>
     </section>
 
-    <!-- BREATH/BIOFIELD -->
+    <!-- Breath -->
     <section id="tab-breath" class="tab" role="tabpanel">
       <article class="grid">
-        <div class="card col-7 lab-card">
-          <h2>🌬️ Breath / Biofield — Rhythms & HR proxy</h2>
-          <p>Choose a cadence; the ring guides inhale/hold/exhale/hold.</p>
-
-          <div class="ring-timer" id="breathRing" aria-label="Breath pacing ring">
-            <svg viewBox="0 0 120 120" class="ring" role="img" aria-label="Breath ring">
-              <circle cx="60" cy="60" r="54" class="ring-bg"/>
-              <circle cx="60" cy="60" r="54" class="ring-fg" id="breathFg" pathLength="100"/>
-              <text x="60" y="52" class="ring-phase" text-anchor="middle" id="breathPhase">Ready</text>
-              <text x="60" y="72" class="ring-count" text-anchor="middle" id="breathCount">—</text>
-            </svg>
-
-            <div class="ring-controls">
-              <label for="breathPattern">Pattern
-                <select id="breathPattern">
-                  <option value="4-4-4-4">Box 4-4-4-4</option>
-                  <option value="4-7-8">4-7-8</option>
-                  <option value="5-5-5-5">5-5-5-5</option>
-                </select>
-              </label>
-              <button id="breathStart" class="lab-btn">Start</button>
-              <button id="breathStop" class="lab-btn ghost">Stop</button>
-            </div>
+        <div class="card col-7">
+          <h2>🌬 Breath — gentle pacing</h2>
+          <div class="lab-row">
+            <label>Pattern
+              <select id="breathPat" class="lab-input" style="width:auto">
+                <option value="4-4-4-4">Box 4-4-4-4</option>
+                <option value="4-7-8">4-7-8</option>
+                <option value="5-5-5-5">5-5-5-5</option>
+              </select>
+            </label>
+            <button id="breathStart" class="lab-btn">Start</button>
+            <button id="breathStop" class="lab-btn" disabled>Stop</button>
           </div>
+          <div style="width:116px;height:116px;display:grid;place-items:center;margin-top:6px">
+            <svg viewBox="0 0 100 100" aria-label="Breath ring">
+              <circle cx="50" cy="50" r="45" class="ring-bg"/>
+              <circle cx="50" cy="50" r="45" class="ring-fg" id="breathArc" pathLength="283"/>
+              <text x="50" y="56" text-anchor="middle" class="level-num" id="breathPhase">Ready</text>
+            </svg>
+          </div>
+          <p class="hint">Longer, quieter exhales often feel better. Stop if dizzy.</p>
         </div>
 
-        <aside class="card col-5 lab-card">
-          <h3>Physiology note</h3>
-          <p>Slow nasal inhales and longer, silent exhales tend to balance autonomic rhythms — often felt as “biofield smoothing.”</p>
+        <aside class="card col-5 friendly">
+          <h3>Use with the loop</h3>
+          <p>Inhale — 𝓘 · See — 𝓛 · Soften — 𝓒 · Exhale — 𝓢</p>
         </aside>
       </article>
     </section>
 
-    <!-- LEDGER -->
+    <!-- Coherence -->
+    <section id="tab-coherence" class="tab" role="tabpanel">
+      <article class="grid">
+        <div class="card col-7">
+          <h2>📈 Coherence (Ξ)</h2>
+          <div class="lab-row">
+            <label>⟨H·I⟩ <input id="hi" type="number" min="0" max="1" step="0.01" value="0.62" class="lab-input" style="width:110px"></label>
+            <label>Var[𝓜] <input id="varM" type="number" min="0" max="2" step="0.01" value="0.30" class="lab-input" style="width:110px"></label>
+            <button id="xiCalc" class="lab-btn">Compute Ξ</button>
+            <output id="xiOut" class="meta">Ξ = —</output>
+          </div>
+          <canvas id="xiSpark" width="500" height="70" aria-label="Ξ history"></canvas>
+        </div>
+
+        <aside class="card col-5 friendly">
+          <h3>Stop Rule</h3>
+          <p>If your sense of truth goes down, stop, breathe, and try later. Care beats intensity.</p>
+        </aside>
+      </article>
+    </section>
+
+    <!-- Ledger -->
     <section id="tab-ledger" class="tab" role="tabpanel">
       <article class="grid">
-        <div class="card col-12 lab-card">
-          <h2>📒 Witness Ledger <small class="lab-muted">(private on this device)</small></h2>
-          <div class="ledger-top" aria-label="New entry">
-            <input id="entryIntention" placeholder="Intention (𝓘): one clean line…" autocomplete="off">
-            <input id="entryCarrier" placeholder="Carrier (432/528/369)" inputmode="numeric" pattern="[0-9]*">
-            <select id="entryQuality" aria-label="Ξ quality"><option value="">Ξ quality…</option><option>Low</option><option>Medium</option><option>High</option></select>
-            <input id="entryTags" placeholder="Tags (comma separated)" autocomplete="off">
+        <div class="card col-12">
+          <h2>📒 Witness Ledger <small class="meta">(private on this device)</small></h2>
+          <div class="lab-row">
+            <input id="lgLine" class="lab-input" placeholder="Intention (one line)…">
+            <input id="lgCarrier" class="lab-input" placeholder="Carrier (432/528/369/144/963)">
+            <select id="lgQ" class="lab-input" style="width:auto"><option value="">Ξ quality…</option><option>Low</option><option>Medium</option><option>High</option></select>
+            <input id="lgTags" class="lab-input" placeholder="tags (comma)">
           </div>
-          <textarea id="entryWitness" rows="3" placeholder="Witness notes (what changed, what lingered)…"></textarea>
+          <textarea id="lgWit" rows="3" class="lab-input" placeholder="Witness (what changed, what lingered)…"></textarea>
 
-          <div class="ledger-actions">
-            <button id="btnAddEntry" class="lab-btn">Add</button>
-            <span aria-live="polite" class="meta">🗓️ Streak: <b id="streakDays">0</b> days</span>
-            <button id="btnExport" class="lab-btn">Export .json</button>
-            <input type="file" id="fileImport" accept="application/json" hidden>
-            <button id="btnImport" class="lab-btn ghost">Import .json</button>
-            <input id="ledgerFilter" placeholder="Filter by tag or text…" autocomplete="off">
-          </div>
-
-          <div id="ledgerEmpty" class="lab-muted" role="note" style="display:none; margin:8px 0 6px;">
-            No entries yet. Run the Observer once, then write a 1–2 sentence witness.
+          <div class="lab-row">
+            <button id="lgAdd" class="lab-btn primary">Add</button>
+            <button id="lgExport" class="lab-btn">Export .json</button>
+            <input type="file" id="lgImportFile" accept="application/json" hidden>
+            <button id="lgImport" class="lab-btn">Import .json</button>
+            <input id="lgFilter" class="lab-input" placeholder="Filter…" style="margin-left:auto;max-width:240px">
           </div>
 
-          <div class="table-wrap" role="region" aria-label="Practice ledger">
-            <table id="ledgerTable">
-              <colgroup>
-                <col style="width:16ch"><col><col style="width:10ch"><col style="width:8ch"><col style="width:18ch"><col><col style="width:4ch">
-              </colgroup>
+          <div class="table-wrap" style="margin-top:8px">
+            <table id="lgTable">
               <thead><tr><th>Date</th><th>Intention</th><th>Carrier</th><th>Ξ</th><th>Tags</th><th>Witness</th><th></th></tr></thead>
-              <tbody></tbody>
+              <tbody id="lgRows"></tbody>
             </table>
           </div>
 
-          <div class="badges" style="margin-top:10px" aria-label="Streak badges">
-            <span id="badge7b"   class="badge unlit"  title="7-Day Seed">🌱 ×7</span>
-            <span id="badge33b"  class="badge unlit" title="33-Day Orbit">🛰️ ×33</span>
-            <span id="badge144b" class="badge unlit" title="144 Closure">🜚 ×144</span>
+          <div class="badges" style="margin-top:8px">
+            <span id="bdg7" class="badge">🌱 ×7</span>
+            <span id="bdg33" class="badge">🛰️ ×33</span>
+            <span id="bdg144" class="badge">🜚 ×144</span>
           </div>
         </div>
-      </article>
-    </section>
-
-    <!-- ETHICS/FAQ/GLOSSARY (unchanged content from your draft) -->
-    <section class="grid" aria-label="Learning & Support">
-      <article class="card col-7 lab-card" id="ethics">
-        <h2>🧭 Ethics & Stop Rule</h2>
-        <p>Coherence includes care. If the Truth/Distortion ratio trends worse, <b>stop</b> (Eq. 9), re-center, and resume later.</p>
-      </article>
-      <article class="card col-5 lab-card" id="faq">
-        <h2>❓ FAQ</h2>
-        <details open><summary>Why the carrier Π<sub>ν</sub>?</summary><p>A steady tone reduces internal noise and stabilizes breath. That keeps your semantic weights (Eq.16) intact as you act.</p></details>
       </article>
     </section>
 
     <footer class="footer">
       <div class="divider" aria-hidden="true"></div>
-      <p>“Practice is the mathematics of compassion.”</p>
-      <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+      <p class="meta">© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
     </footer>
   </main>
 
-  <!-- ======== Fallback Mini-Engine: prevents BLANK canvases & adds basic audio ======== -->
+  <!-- ======= Game Engine (client-only) ======= -->
   <script>
-    (function(){
-      "use strict";
-      document.body.classList.remove('no-js');
-      const $  = (s, r=document) => r.querySelector(s);
-      const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
-      const on = (t,e,f,o) => t && t.addEventListener && t.addEventListener(e,f,o);
-      const raf = (fn) => (window.requestAnimationFrame||setTimeout)(fn,16);
-      const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  (function(){
+    "use strict";
+    const $ =(s,r=document)=>r.querySelector(s);
+    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+    const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
+    const raf=(f)=>(window.requestAnimationFrame||setTimeout)(f,16);
 
-      // Tabs (works without external JS)
-      const tabs = $$(".pill");
-      const sections = $$(".tab");
-      function switchTo(id){
-        sections.forEach(s=>s.classList.toggle("active", s.id === "tab-"+id));
-        tabs.forEach(b=>{
-          const onTab = b.dataset.tab === id;
-          b.classList.toggle("active", onTab);
-          b.setAttribute("aria-selected", onTab?"true":"false");
-        });
-      }
-      tabs.forEach(b=> on(b,"click",()=>switchTo(b.dataset.tab)));
-      on(document,"keydown",(e)=>{
-        if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA") return;
-        const k=e.key;
-        const map={1:"observer",2:"voice",3:"phrase",4:"coherence",5:"visuals",6:"breath",7:"ledger"};
-        if(map[k]){ e.preventDefault(); switchTo(map[k]); }
-      });
+    /* ---------------- TABS ---------------- */
+    const tabBtns=$$(".pill"), tabs=$$(".tab");
+    function switchTo(id){
+      tabs.forEach(t=>t.classList.toggle("active", t.id==="tab-"+id));
+      tabBtns.forEach(b=>b.classList.toggle("active", b.dataset.tab===id));
+    }
+    tabBtns.forEach(b=>on(b,"click",()=>switchTo(b.dataset.tab)));
 
-      // Year
-      const y=$("#yr"); if (y) y.textContent = new Date().getFullYear();
+    /* ---------------- LEVEL / XP ---------------- */
+    const XPKEY="sof_game_xp_v1";
+    const SKEY="sof_game_state_v1";
+    const LGKEY="sof_ledger_entries_v2";
+    const QSKEY="sof_daily_quests_v1";
 
-      // --------- RING TIMER (observer) — draw even without teach.js ---------
-      const ringFg = $("#ringFg"), ringPhase=$("#ringPhase"), ringCount=$("#ringCount");
-      let ringTimer=null, ringRunning=false;
-      function runRing(phaseSec=+($("#phaseSec")?.value||12), rounds=+( $("#rounds")?.value||3 )){
-        if (!ringFg) return;
-        const phases=["𝓘","𝓛","𝓒","𝓢"];
-        const totalSteps=rounds*phases.length;
-        let step=0, t0=performance.now();
-        ringRunning=true; ringPhase.textContent="Ready"; ringCount.textContent="—";
+    const xpArc=$("#xpArc"), lvlNum=$("#lvlNum"), xpText=$("#xpText");
+    const confetti=$("#confetti"), ctxC=confetti.getContext("2d");
 
-        const beep = () => { try{
-          const AC = window.AudioContext||window.webkitAudioContext; const ac=new AC();
-          const o=ac.createOscillator(), g=ac.createGain(); o.type="sine"; o.frequency.value=660;
-          g.gain.value=0.0008; o.connect(g).connect(ac.destination); o.start(); g.gain.exponentialRampToValueAtTime(0.00001, ac.currentTime+0.12); o.stop(ac.currentTime+0.13);
-        }catch(_){} };
+    let state = load(SKEY,{level:1,xp:0,carriersTried:{},firstLedger:false,lastQuestDate:null,streakDays:0,xiHistory:[]});
+    save(SKEY,state);
 
-        function tick(now){
-          if(!ringRunning) return;
-          const elapsed=(now-t0)/1000;
-          const phaseIdx = Math.floor(elapsed/phaseSec) % phases.length;
-          const round = Math.floor((elapsed/(phaseSec*4)))+1;
-          if (round>rounds){ ringRunning=false; ringPhase.textContent="Done"; ringFg.style.strokeDashoffset="0"; return; }
-          ringPhase.textContent = phases[phaseIdx];
-          ringCount.textContent = `Round ${round}/${rounds}`;
-          const p = (elapsed % phaseSec)/phaseSec;
-          const dash = 100 - ( (phaseIdx/4 + p/4) * 100 );
-          ringFg.style.strokeDasharray="100 100";
-          ringFg.style.strokeDashoffset = String(dash);
-          const wholeStep = Math.floor(elapsed/phaseSec);
-          if (wholeStep !== step){ step=wholeStep; beep(); }
-          raf(tick);
-        }
-        t0=performance.now(); raf(tick);
-      }
-      on($("#startTimer"),"click",()=>{ if(!ringRunning) runRing(); });
-      on($("#stopTimer"),"click",()=>{ ringRunning=false; });
+    function load(k,fallback){ try{ return JSON.parse(localStorage.getItem(k)||""); }catch(_){ return fallback; } }
+    function save(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(_){} }
 
-      // --------- BREATH RING (simple) ---------
-      const breathFg=$("#breathFg"), breathPhase=$("#breathPhase"), breathCount=$("#breathCount");
-      let breathRun=false;
-      function startBreath(){
-        if(!breathFg) return;
-        breathRun=true; let cycles=0; const pattern=($("#breathPattern")?.value||"4-4-4-4").split("-").map(n=>+n||4);
-        const phases=["In","Hold","Out","Hold"];
-        const total=pattern.reduce((a,b)=>a+b,0);
-        let t0=performance.now();
-        function tick(now){
-          if(!breathRun) return;
-          const t=((now-t0)/1000)%total;
-          let acc=0, idx=0;
-          for(let i=0;i<4;i++){ acc+=pattern[i]; if(t<acc){ idx=i; break; } }
-          const prev=acc-pattern[idx]; const p=(t-prev)/pattern[idx];
-          breathPhase.textContent=phases[idx]; breathCount.textContent=`Cycle ${cycles+1}`;
-          breathFg.style.strokeDasharray="100 100";
-          breathFg.style.strokeDashoffset=String(100-( ( (prev + p*pattern[idx]) / total ) * 100 ));
-          if(t<0.05){ cycles++; }
-          raf(tick);
-        }
-        raf(tick);
-      }
-      on($("#breathStart"),"click", startBreath);
-      on($("#breathStop"),"click", ()=>{breathRun=false;});
+    function lvlCap(lvl){ return 50 + (lvl-1)*25; } // 50,75,100...
+    function addXP(n, why=""){
+      let cap=lvlCap(state.level);
+      state.xp += n;
+      let leveled=false;
+      while(state.xp>=cap){ state.xp -= cap; state.level++; cap=lvlCap(state.level); leveled=true; }
+      save(SKEY,state);
+      drawXP();
+      if(leveled){ celebrate(); toast(`Level up! You are now level ${state.level}.`); }
+      else if(why){ toast(`+${n} XP · ${why}`); }
+    }
+    function drawXP(){
+      const cap=lvlCap(state.level), frac=Math.max(0,Math.min(1,state.xp/cap));
+      const dash=283*frac; xpArc.setAttribute("stroke-dasharray", `${dash} ${283-dash}`);
+      lvlNum.textContent=String(state.level); xpText.textContent = `${state.xp} / ${cap}`;
+    }
+    drawXP();
 
-      // --------- VISUAL FOCUS (never blank) ---------
-      const focusCanvas=$("#focusDot");
-      if (focusCanvas){
-        const ctx=focusCanvas.getContext("2d");
-        function drawDot(r){
-          const {width:w,height:h}=focusCanvas;
-          ctx.clearRect(0,0,w,h);
-          // radial vignette
-          const g=ctx.createRadialGradient(w/2,h/2,Math.min(w,h)*0.1, w/2,h/2, Math.max(w,h)*0.6);
-          g.addColorStop(0,"#0b1018"); g.addColorStop(1,"#0a0e15");
-          ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
-          // center dot
-          ctx.beginPath(); ctx.arc(w/2,h/2,r,0,Math.PI*2);
-          ctx.fillStyle="#a7f6ff"; ctx.shadowColor="#7af3ff"; ctx.shadowBlur=18; ctx.fill(); ctx.shadowBlur=0;
-          // soft ring
-          ctx.beginPath(); ctx.arc(w/2,h/2,r*2.2,0,Math.PI*2);
-          ctx.strokeStyle="#f3c97a88"; ctx.lineWidth=2; ctx.stroke();
-        }
-        drawDot(6);
-        on($("#vfStart"),"click", ()=>{
-          const hold=+($("#vfHold")?.value||10), expand=+($("#vfExpand")?.value||6);
-          let t0=performance.now(); const base=6, max=60;
-          function anim(now){
-            const t=(now-t0)/1000;
-            if (t<hold){ const r = base + (Math.sin(t*2*Math.PI/hold)*0.5+0.5)*2; drawDot(r); }
-            else if (t<hold+expand){ const p=(t-hold)/expand; drawDot(base + p*(max-base)); }
-            else { drawDot(base); return; }
-            raf(anim);
-          }
-          raf(anim);
-        });
-      }
-
-      // --------- AUDIO: carrier tone + simple mic analyzer (no blank) ---------
-      let ac=null, osc=null, gain=null, analyser=null, micSrc=null, micStream=null;
-      const wave=$("#wave"), fft=$("#fft");
-      function ensureAC(){ try{ ac = ac || new (window.AudioContext||window.webkitAudioContext)(); }catch(_){} return ac; }
-
-      function startCarrier(freq){
-        if(!ensureAC()) return;
-        stopCarrier();
-        osc=ac.createOscillator(); osc.type="sine"; osc.frequency.value=freq;
-        gain=ac.createGain(); gain.gain.value=0.0008; // very soft
-        osc.connect(gain).connect(ac.destination); osc.start();
-        $("#carrierOut") && ($("#carrierOut").value=String(freq));
-      }
-      function stopCarrier(){ try{ osc && osc.stop(); }catch(_){} osc=null; gain=null; }
-
-      $$(".lab-btn[data-carrier]").forEach(b=> on(b,"click",()=>{
-        const f=+b.dataset.carrier; startCarrier(f);
+    /* ---------------- CONFETTI ---------------- */
+    function celebrate(){
+      const W=confetti.width=innerWidth, H=confetti.height=innerHeight;
+      const parts=Array.from({length:140},()=>({
+        x:Math.random()*W, y:-20, vy:1+Math.random()*3, vx:(Math.random()-.5)*2,
+        r:3+Math.random()*4, a:1, s:Math.random()*2*Math.PI
       }));
-      on($("#qsCarrier"),"change",(e)=>{ const v=+e.target.value||0; if(v>0) startCarrier(v); });
-
-      async function micOn(){
-        if(!ensureAC()) return;
-        micStream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false, noiseSuppression:false}, video:false});
-        micSrc = ac.createMediaStreamSource(micStream);
-        analyser = ac.createAnalyser(); analyser.fftSize=2048; analyser.smoothingTimeConstant=0.85;
-        micSrc.connect(analyser);
-        drawAudio();
-      }
-      function micOff(){ try{ micStream?.getTracks()?.forEach(t=>t.stop()); }catch(_){} micStream=null; micSrc=null; analyser=null; }
-      on($("#micStart"),"click",()=>micOn());
-      on($("#micStop"),"click",()=>micOff());
-
-      function drawAudio(){
-        if(!analyser) return;
-        const wctx=wave?.getContext("2d"), fctx=fft?.getContext("2d");
-        const w=wave.width,h=wave.height, wf=new Uint8Array(analyser.fftSize);
-        const ff=new Uint8Array(analyser.frequencyBinCount);
-        function loop(){
-          if(!analyser) return;
-          analyser.getByteTimeDomainData(wf);
-          analyser.getByteFrequencyData(ff);
-          if(wctx){
-            wctx.clearRect(0,0,w,h);
-            wctx.fillStyle="#0b1016"; wctx.fillRect(0,0,w,h);
-            wctx.beginPath(); wctx.moveTo(0,h/2);
-            for(let x=0;x<w;x++){
-              const i = Math.floor(x / w * wf.length);
-              const v = (wf[i]-128)/128;
-              const y = h/2 + v*h*0.4;
-              wctx.lineTo(x,y);
-            }
-            wctx.strokeStyle="#7af3ff"; wctx.lineWidth=2; wctx.stroke();
-          }
-          if(fctx){
-            const W=fft.width,H=fft.height; fctx.clearRect(0,0,W,H);
-            for(let i=0;i<ff.length;i++){
-              const v=ff[i]/255; const x=i/ff.length*W; const y=H*(1-v);
-              fctx.fillStyle = v>.8?"#f3c97a": v>.5?"#a7f6ff":"#6aa0ff33";
-              fctx.fillRect(x, y, W/ff.length, H-y);
-            }
-          }
-          raf(loop);
-        }
-        raf(loop);
-      }
-
-      // Use as carrier when mic is steady enough (very rough heuristic)
-      on($("#useCarrier"), "click", ()=>{
-        const guess = $("#nearKey")?.textContent?.match(/~(\d+)\s*Hz/);
-        const f = guess? +guess[1] : 432;
-        startCarrier(f);
-        switchTo("observer");
-      });
-
-      // Basic “near key” detector (peaks)
-      (function nearKeyLoop(){
-        if(!analyser) return setTimeout(nearKeyLoop, 500);
-        const ff=new Uint8Array(analyser.frequencyBinCount);
-        analyser.getByteFrequencyData(ff);
-        let maxi=0, maxv=0;
-        for(let i=4;i<ff.length;i++){ if(ff[i]>maxv){ maxv=ff[i]; maxi=i; } }
-        const freq = maxi * ac.sampleRate / analyser.fftSize;
-        if (!isFinite(freq)) return setTimeout(nearKeyLoop, 500);
-        const note = Math.round(12*Math.log2(freq/440))+69; // MIDI
-        const stable = Math.min(100, Math.max(0, (maxv/255)*100));
-        $("#nearKey").textContent = `~${Math.round(freq)} Hz • Stability ${Math.round(stable)}%`;
-        $("#useCarrier").disabled = stable < 40;
-        setTimeout(nearKeyLoop, 250);
+      let t=0;
+      (function loop(){
+        ctxC.clearRect(0,0,W,H);
+        parts.forEach(p=>{
+          p.x+=p.vx; p.y+=p.vy; p.s+=0.1; p.a*=0.996;
+          ctxC.globalAlpha=Math.max(0,p.a);
+          ctxC.fillStyle = (t%2)? "#7af3ff" : "#f3c97a";
+          ctxC.beginPath(); ctxC.arc(p.x,p.y,p.r,0,Math.PI*2); ctxC.fill();
+        });
+        t++; if (t<220) requestAnimationFrame(loop);
       })();
+    }
 
-      // Reveal-in view
-      if ('IntersectionObserver' in window && !prefersReduced){
-        const io = new IntersectionObserver(es=> es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("visible"); io.unobserve(e.target); }}), {threshold:.08});
-        $$(".card").forEach(c=>io.observe(c));
-      } else { $$(".card").forEach(c=>c.classList.add("visible")); }
-    })();
+    /* ---------------- TOAST (simple) ---------------- */
+    function toast(msg){
+      const el=document.createElement("div");
+      el.textContent=msg;
+      Object.assign(el.style,{position:"fixed",left:"50%",bottom:"22px",transform:"translateX(-50%)",
+        background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid #2a3242",borderRadius:"10px",
+        boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:9999,opacity:0,transition:"opacity .2s"});
+      document.body.appendChild(el); requestAnimationFrame(()=>{el.style.opacity=1});
+      setTimeout(()=>{el.style.opacity=0; setTimeout(()=>el.remove(),250);},1800);
+    }
+
+    /* ---------------- COACH MODE ---------------- */
+    const coach=$("#coach");
+    on(coach,"change",()=>toast(coach.checked?"Coach on":"Coach off"));
+
+    /* ---------------- DAILY QUESTS ---------------- */
+    const QUESTS_BASE=[
+      {id:"q1", text:"Run the Observer loop once", xp:20},
+      {id:"q2", text:"Do one breath cycle", xp:15},
+      {id:"q3", text:"Tune a phrase", xp:15},
+      {id:"q4", text:"Compute Ξ once", xp:15},
+      {id:"q5", text:"Add one Ledger entry", xp:25},
+    ];
+    function todayKey(){ const d=new Date(); return d.toISOString().slice(0,10); }
+    function loadQuests(){
+      const q=load(QSKEY,{date:todayKey(),done:{}});
+      if(q.date!==todayKey()) return {date:todayKey(),done:{}};
+      return q;
+    }
+    let quests=loadQuests(); save(QSKEY,quests);
+
+    function renderQuests(){
+      const wrap=$("#questList"); wrap.innerHTML="";
+      QUESTS_BASE.forEach(q=>{
+        const li=document.createElement("li");
+        const c=document.createElement("input"); c.type="checkbox"; c.checked=!!quests.done[q.id];
+        on(c,"change",()=>{
+          quests.done[q.id]=c.checked; save(QSKEY,quests);
+          if(c.checked) addXP(q.xp, q.text);
+          checkDailyComplete();
+        });
+        const label=document.createElement("label"); label.style.marginLeft="8px"; label.textContent=q.text+"  · "+q.xp+" XP";
+        li.appendChild(c); li.appendChild(label); wrap.appendChild(li);
+      });
+      checkDailyComplete();
+    }
+    function checkDailyComplete(){
+      const allDone=QUESTS_BASE.every(q=>quests.done[q.id]);
+      if(allDone && !quests.done.__bonus){
+        quests.done.__bonus=true; save(QSKEY,quests);
+        addXP(30,"Daily Bonus");
+        // streak
+        bumpStreak();
+      }
+    }
+    function bumpStreak(){
+      // naive streak by lastQuestDate
+      const d=todayKey();
+      if(state.lastQuestDate!==d){
+        const yesterday=new Date(Date.now()-86400000).toISOString().slice(0,10);
+        state.streakDays = (state.lastQuestDate===yesterday) ? (state.streakDays+1) : 1;
+        state.lastQuestDate=d; save(SKEY,state);
+        lightStreakBadges();
+      }
+    }
+    function lightStreakBadges(){
+      $("#bSeed").classList.toggle("lit", state.streakDays>=7);
+      $("#bOrbit").classList.toggle("lit", state.streakDays>=33);
+      $("#bClosure").classList.toggle("lit", state.streakDays>=144);
+      $("#bdg7").classList.toggle("lit", state.streakDays>=7);
+      $("#bdg33").classList.toggle("lit", state.streakDays>=33);
+      $("#bdg144").classList.toggle("lit", state.streakDays>=144);
+    }
+    renderQuests(); lightStreakBadges();
+    on($("#btnResetQuests"),"click",()=>{ quests={date:todayKey(),done:{}}; save(QSKEY,quests); renderQuests(); toast("Quests reset"); });
+    on($("#btnCompleteAll"),"click",()=>{ QUESTS_BASE.forEach(q=>quests.done[q.id]=true); save(QSKEY,quests); renderQuests(); });
+
+    /* ---------------- AUDIO CORE ---------------- */
+    let AC=null, G=null, OSC=null;
+    function ensureAC(){ if(AC) return AC; try{ AC=new (window.AudioContext||window.webkitAudioContext)(); G=AC.createGain(); G.gain.value=0.0001; G.connect(AC.destination);}catch(_){ } return AC; }
+    function tone(freq, dur=0.35, vol=0.06){
+      if(!ensureAC()||!freq) return;
+      if(OSC){ try{OSC.stop();}catch(_){ } OSC=null; }
+      const o=AC.createOscillator(); o.type="sine"; o.frequency.value=freq; o.connect(G);
+      const t=AC.currentTime; G.gain.cancelScheduledValues(t);
+      G.gain.linearRampToValueAtTime(vol, t+0.03);
+      G.gain.linearRampToValueAtTime(0.0001, t+dur);
+      o.start(); o.stop(t+dur+0.02); OSC=o;
+    }
+    function click(vol=0.01){
+      if(!ensureAC()) return;
+      const o=AC.createOscillator(); o.type="square"; o.frequency.value=880;
+      const g=AC.createGain(); g.gain.value=0.0001; o.connect(g).connect(AC.destination);
+      const t=AC.currentTime; o.start(t); g.gain.linearRampToValueAtTime(vol,t+0.005); g.gain.linearRampToValueAtTime(0.0001,t+0.06); o.stop(t+0.08);
+    }
+    window.addEventListener("pointerdown",()=>{ if(AC && AC.state==="suspended"){ AC.resume(); } },{once:true,passive:true});
+
+    /* ---------------- OBSERVER LOOP ---------------- */
+    const obsArc=$("#obsArc"), obsPhase=$("#obsPhase"), obsCount=$("#obsCount");
+    const obsStart=$("#obsStart"), obsStop=$("#obsStop");
+    const obsSec=$("#obsSec"), obsRounds=$("#obsRounds");
+
+    let obsTimer=null, obsIdx=0, obsRound=0, obsRem=0, obsPhases=["𝓘","𝓛","𝓒","𝓢"], obsTotal=0, obsTick=0;
+    function obsReset(){
+      obsArc.setAttribute("stroke-dasharray","0 283");
+      obsPhase.textContent="Ready"; obsCount.textContent="—";
+      obsIdx=0; obsRound=0; obsRem=0; obsTick=0;
+    }
+    function obsRun(){
+      const p=+obsSec.value||10, r=+obsRounds.value||3;
+      obsTotal = p*4*r; obsIdx=0; obsRound=1; obsRem=p; obsTick=0;
+      obsPhase.textContent=obsPhases[0]; obsCount.textContent=`Round 1/${r}`;
+      obsStart.disabled=true; obsStop.disabled=false;
+      obsTimer=setInterval(()=>{
+        obsTick++; obsRem--;
+        const frac=obsTick/obsTotal, dash=283*frac; obsArc.setAttribute("stroke-dasharray",`${dash} ${283-dash}`);
+        if(obsRem<=0){
+          obsIdx++; click(0.008);
+          if(obsIdx>=4){ obsIdx=0; obsRound++; if(obsRound>r){ clearInterval(obsTimer); obsStart.disabled=false; obsStop.disabled=true; obsPhase.textContent="Done"; obsCount.textContent=`${r}/${r}`; addXP(20,"Observer run"); return; } obsCount.textContent=`Round ${obsRound}/${r}`; }
+          obsRem=p; obsPhase.textContent=obsPhases[obsIdx];
+        }
+      },1000);
+    }
+    on(obsStart,"click",obsRun);
+    on(obsStop,"click",()=>{ clearInterval(obsTimer); obsStart.disabled=false; obsStop.disabled=true; obsReset(); });
+
+    /* ---------------- TONES (CARRIERS) ---------------- */
+    let carrier="none";
+    const toneNow=$("#toneNow");
+    $$(".tone").forEach(b=>on(b,"click",()=>{
+      const c=b.dataset.carrier||"none"; carrier=c;
+      if(c!=="none"){ tone(+c,0.28,0.05); }
+      toneNow.textContent = "Carrier: " + c;
+      // achievements
+      if(c!=="none"){ state.carriersTried[c]=true; save(SKEY,state);
+        const all=["432","528","369","144","963"].every(x=>state.carriersTried[x]);
+        $("#bAllTones").classList.toggle("lit", all);
+        if(all) addXP(20,"Tried all tones");
+        else addXP(5,"Tried a tone");
+      }
+    }));
+
+    /* ---------------- VOICE (MIC) ---------------- */
+    let micStream=null, analyser=null, wave=$("#wave"), fft=$("#fft");
+    on($("#micOn"),"click", async ()=>{
+      try{
+        if(!ensureAC()) return;
+        micStream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false},video:false});
+        const src = AC.createMediaStreamSource(micStream);
+        analyser = AC.createAnalyser(); analyser.fftSize=2048; analyser.smoothingTimeConstant=0.85;
+        src.connect(analyser);
+        $("#micOff").disabled=false; $("#useTone").disabled=false;
+        drawAudio();
+        toast("Mic on");
+      }catch(err){ toast("Mic failed"); }
+    });
+    on($("#micOff"),"click",()=>{
+      try{ micStream?.getTracks().forEach(t=>t.stop()); }catch(_){}
+      analyser=null; $("#micOff").disabled=true; $("#useTone").disabled=true; toast("Mic off");
+    });
+    on($("#useTone"),"click",()=>{
+      const fr = $("#freqRead").textContent.match(/~(\d+)\s*Hz/);
+      const f = fr? +fr[1] : 432; carrier=String(f); tone(f); toneNow.textContent="Carrier: "+carrier; addXP(10,"Set mic tone");
+    });
+
+    function drawAudio(){
+      if(!analyser) return;
+      const wctx=wave.getContext("2d"), fctx=fft.getContext("2d");
+      const wf=new Uint8Array(analyser.fftSize), ff=new Uint8Array(analyser.frequencyBinCount);
+      (function loop(){
+        if(!analyser) return;
+        analyser.getByteTimeDomainData(wf); analyser.getByteFrequencyData(ff);
+        // waveform
+        const W=wave.width,H=wave.height; wctx.clearRect(0,0,W,H);
+        wctx.fillStyle="#0b1016"; wctx.fillRect(0,0,W,H); wctx.beginPath(); wctx.moveTo(0,H/2);
+        for(let x=0;x<W;x++){ const i=Math.floor(x/W*wf.length); const v=(wf[i]-128)/128; wctx.lineTo(x,H/2+v*H*0.4); }
+        wctx.strokeStyle="#7af3ff"; wctx.lineWidth=2; wctx.stroke();
+        // spectrum + “near key”
+        const WF=fft.width, HF=fft.height; fctx.clearRect(0,0,WF,HF);
+        let maxi=0,maxv=0; for(let i=4;i<ff.length;i++){ if(ff[i]>maxv){ maxv=ff[i]; maxi=i; } }
+        const freq = maxi * (AC.sampleRate / analyser.fftSize) ;
+        for(let i=0;i<ff.length;i++){ const v=ff[i]/255; const x=i/ff.length*WF; const y=HF*(1-v); fctx.fillStyle=v>.8?"#f3c97a":v>.5?"#a7f6ff":"#6aa0ff33"; fctx.fillRect(x,y,WF/ff.length,HF-y); }
+        $("#freqRead").textContent = isFinite(freq) ? `~${Math.round(freq)} Hz (peak)` : "—";
+        requestAnimationFrame(loop);
+      })();
+    }
+
+    /* ---------------- PHRASE ---------------- */
+    on($("#phraseTune"),"click",()=>{
+      const s = ($("#phraseIn").value||"").trim();
+      if(!s) return toast("Type a line first");
+      const simpler = s
+        .replace(/\b(don't|do not|can't|cannot|won't|will not)\b/gi,"")
+        .replace(/\b(try|maybe|sort of|kinda|hopefully)\b/gi,"")
+        .replace(/\s{2,}/g," ")
+        .trim();
+      $("#phraseOut").textContent = simpler || s;
+      addXP(10,"Phrase tuned");
+    });
+    on($("#phraseClear"),"click",()=>{$("#phraseIn").value="";$("#phraseOut").textContent="—";});
+
+    /* ---------------- BREATH ---------------- */
+    const breathArc=$("#breathArc"), breathPhase=$("#breathPhase"), bStart=$("#breathStart"), bStop=$("#breathStop");
+    let bTimer=null, bT0=0, bPat=[4,4,4,4], bIdx=0;
+    on($("#breathPat"),"change",e=>{ bPat=e.target.value.split("-").map(n=>+n||4);});
+    on(bStart,"click",()=>{
+      if(bTimer) return;
+      bT0=performance.now(); bIdx=0; bStop.disabled=false; bStart.disabled=true;
+      const total=bPat.reduce((a,b)=>a+b,0)*1000;
+      bTimer=setInterval(()=>{
+        const t=(performance.now()-bT0)%total;
+        let acc=0, idx=0; for(let i=0;i<4;i++){ acc+=bPat[i]*1000; if(t<acc){ idx=i; break; } }
+        const prev=acc-bPat[idx]*1000, p=(t-prev)/(bPat[idx]*1000);
+        const dash=283*((prev+t-prev)/total); breathArc.setAttribute("stroke-dasharray",`${dash} ${283-dash}`);
+        breathPhase.textContent=["In","Hold","Out","Hold"][idx];
+      },1000/30);
+    });
+    on(bStop,"click",()=>{ clearInterval(bTimer); bTimer=null; bStart.disabled=false; bStop.disabled=true; breathPhase.textContent="Ready"; addXP(15,"Breath cycle"); });
+
+    /* ---------------- COHERENCE ---------------- */
+    const xiOut=$("#xiOut"), xiSpark=$("#xiSpark").getContext("2d");
+    on($("#xiCalc"),"click",()=>{
+      const hi=+$("#hi").value||0, v=+$("#varM").value||0.0001;
+      const Xi = Math.max(0, Math.min(1, (hi)/(1+v)));
+      xiOut.textContent = "Ξ = " + Xi.toFixed(2);
+      state.xiHistory.unshift({t:Date.now(), x:Xi}); state.xiHistory=state.xiHistory.slice(0,60); save(SKEY,state);
+      drawXi(); addXP(10,"Ξ computed");
+    });
+    function drawXi(){
+      const ctx=xiSpark, W=ctx.canvas.width, H=ctx.canvas.height;
+      ctx.clearRect(0,0,W,H); ctx.strokeStyle="rgba(122,243,255,.25)";
+      ctx.beginPath(); ctx.moveTo(0,H*0.25); ctx.lineTo(W,H*0.25); ctx.moveTo(0,H*0.5); ctx.lineTo(W,H*0.5); ctx.moveTo(0,H*0.75); ctx.lineTo(W,H*0.75); ctx.stroke();
+      if(!state.xiHistory.length) return;
+      const n=state.xiHistory.length, xs=W/(n-1);
+      ctx.beginPath(); for(let i=0;i<n;i++){ const y=H*(1-(state.xiHistory[i].x*0.9+0.05)); const x=W-i*xs; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }
+      ctx.strokeStyle="rgba(243,201,122,.9)"; ctx.lineWidth=2; ctx.stroke();
+    }
+    drawXi();
+
+    /* ---------------- LEDGER ---------------- */
+    function readLedger(){ return load(LGKEY,[]); }
+    function writeLedger(arr){ save(LGKEY,arr); }
+    function renderLedger(){
+      const rows=$("#lgRows"), q=($("#lgFilter").value||"").toLowerCase(); const all=readLedger();
+      const list = q ? all.filter(x=>JSON.stringify(x).toLowerCase().includes(q)) : all;
+      rows.innerHTML = list.map((e,i)=>`<tr>
+        <td>${new Date(e.when).toLocaleString()}</td>
+        <td>${esc(e.phrase)}</td><td>${esc(e.carrier||"—")}</td><td>${esc(e.coherence||"—")}</td>
+        <td>${esc((e.tags||[]).join(", "))}</td><td>${esc(e.note||"")}</td>
+        <td><button class="lab-btn" data-del="${i}">✕</button></td>
+      </tr>`).join("");
+      $$("#lgRows [data-del]").forEach(b=>on(b,"click",()=>{ const all=readLedger(); all.splice(+b.dataset.del,1); writeLedger(all); renderLedger(); }));
+      // achievements
+      $("#bFirstLedger").classList.toggle("lit", readLedger().length>0);
+    }
+    function esc(s){ return String(s||"").replace(/[&<>"']/g,m=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m])); }
+    on($("#lgAdd"),"click",()=>{
+      const phrase=($("#lgLine").value||"").trim(); if(!phrase) return toast("Write an intention line");
+      const entry={
+        when:new Date().toISOString(),
+        carrier:($("#lgCarrier").value||"").trim(),
+        phrase,
+        coherence:$("#lgQ").value||"",
+        tags:($("#lgTags").value||"").split(",").map(s=>s.trim()).filter(Boolean),
+        note:($("#lgWit").value||"").trim()
+      };
+      const all=readLedger(); all.unshift(entry); writeLedger(all); renderLedger(); addXP(25,"Ledger entry");
+      $("#lgWit").value=""; $("#lgLine").value=""; // tidy
+    });
+    on($("#lgExport"),"click",()=>{
+      const blob=new Blob([JSON.stringify(readLedger(),null,2)],{type:"application/json"});
+      const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="scroll-of-fire-ledger.json"; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),800);
+    });
+    on($("#lgImport"),"click",()=>$("#lgImportFile").click());
+    on($("#lgImportFile"),"change",async e=>{
+      const f=e.target.files[0]; if(!f) return; try{ const txt=await f.text(); const data=JSON.parse(txt); if(Array.isArray(data)){ writeLedger(data.concat(readLedger())); renderLedger(); toast("Imported"); addXP(5,"Imported ledger"); } }catch(_){ toast("Import failed"); } e.target.value="";
+    });
+    on($("#lgFilter"),"input",renderLedger);
+    renderLedger();
+
+    /* ---------------- KEYBOARD NAV ---------------- */
+    on(document,"keydown",(e)=>{
+      if(e.target.matches("input,textarea")) return;
+      const map={1:"quests",2:"observer",3:"voice",4:"phrase",5:"breath",6:"coherence",7:"ledger"};
+      if(map[e.key]){ e.preventDefault(); switchTo(map[e.key]); }
+      if(e.key==="S"||e.key==="s"){ if(!obsStart.disabled) obsStart.click(); else if(!obsStop.disabled) obsStop.click(); }
+    });
+
+    /* ---------------- YEAR ---------------- */
+    $("#yr").textContent = new Date().getFullYear();
+
+  })();
   </script>
-
-  <!-- Page engine (enhanced features). Safe to remove; fallback above keeps visuals working. -->
-  <script defer src="assets/js/teach.js?v=2025-10-20b"></script>
 </body>
 </html>
