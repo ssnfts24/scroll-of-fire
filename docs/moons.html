@@ -6,7 +6,7 @@
   <title>13 Moons · Living Clock — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
-  <meta name="description" content="Living 13 Moons clock: accurate 28-day moons, Day Out of Time, leap-day handling, current moon first, lunar phase, numerology, and daily notes — time-zone aware." />  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <meta name="description" content="Living 13 Moons clock: accurate 28‑day moons, Day Out of Time & leap‑day handling, lunar phase, numerology, shareable text, and print view — time‑zone aware." />  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">  <style>
     :root{
@@ -55,13 +55,19 @@
 
     .footer .divider{height:1px;background:linear-gradient(90deg,transparent, #2a3242, transparent);margin:18px 0}
 
-    /* table styles */
     table{width:100%;border-collapse:collapse}
     th,td{padding:8px 10px;border-bottom:1px solid #202938}
     th{color:#b9c6e3;text-align:left;font-weight:700}
     tr:hover td{background:rgba(255,255,255,.02)}
     .tag{display:inline-block;padding:.15rem .5rem;border:1px solid #2a3242;border-radius:999px;background:rgba(255,255,255,.04);font-size:.78rem}
     .current{outline:2px solid var(--accent);border-radius:10px}
+
+    @media print{
+      body{background:#fff;color:#111}
+      .card{box-shadow:none;border-color:#ddd}
+      .lab-btn,.crumbs{display:none}
+      .stage{display:none}
+    }
   </style></head><body class="stars">
   <main class="wrap" id="main" role="main">
     <header class="page-head fancy-head">
@@ -69,11 +75,12 @@
       <p class="subtitle">Accurate 28‑day moons with Day Out of Time + leap‑day handling. Current Moon first. Phase, numerology, and notes — all time‑zone aware.</p><nav class="crumbs" aria-label="Breadcrumb" style="display:flex;gap:8px;justify-content:center;margin-top:10px;margin-bottom:14px">
     <a class="lab-btn" href="index.html">← Back to Codex</a>
     <a class="lab-btn" href="theory.html">📘 Theory</a>
+    <button class="lab-btn" id="printBtn" type="button">🖨 Print</button>
+    <button class="lab-btn" id="shareToday" type="button">🔗 Share Today</button>
   </nav>
 </header>
 
 <section class="grid">
-  <!-- CURRENT MOON FIRST -->
   <article class="card col-12" id="currentMoonCard">
     <div class="grid">
       <div class="col-6">
@@ -91,7 +98,6 @@
     </div>
   </article>
 
-  <!-- YEAR MAP OF MOONS (EASY TO READ) -->
   <article class="card col-12" id="yearMap">
     <h2>Year Map · 13 Moons (Current Galactic Year)</h2>
     <p class="hint">New Year = July 26 · Day Out of Time = July 25 · Leap Day (Feb 29) is outside the 13×28 count.</p>
@@ -107,7 +113,6 @@
     <div class="table-wrap"><table id="moonTable"><thead><tr><th>Moon</th><th>Theme</th><th>Gregorian Dates</th><th>Days</th></tr></thead><tbody></tbody></table></div>
   </article>
 
-  <!-- ORBITAL SIMULATION -->
   <article class="card col-12">
     <h2 style="display:flex;align-items:center;gap:.6rem"><span>Orbital Simulation</span><span class="meta">Sun → Earth • Moon (phase/terminator)</span></h2>
     <div class="stage" aria-label="Moon–Earth–Sun simulation"><canvas id="sky" aria-label="Lunar simulation"></canvas>
@@ -123,7 +128,6 @@
     <input id="timeRange" type="range" min="0" max="24" step="0.25" value="0" aria-label="Time scrub hours" style="width:100%">
   </article>
 
-  <!-- QUICK KEYS -->
   <article class="card col-12">
     <h2>Naming Keys</h2>
     <div class="grid">
@@ -155,326 +159,84 @@
 
   $("#yr").textContent=new Date().getFullYear();
 
-  /* ---------- Data ---------- */
-  const MOONS = [
-    "Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant",
-    "Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"
-  ];
-  const MOON_ESSENCE = [
-    "Attract purpose","Stabilize challenge","Activate service","Define form",
-    "Empower radiance","Balance equality","Channel inspiration",
-    "Harmonize integrity","Pulse intention","Perfect manifestation",
-    "Dissolve release","Dedicate cooperation","Endure presence"
-  ];
+  const MOONS=["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
+  const MOON_ESSENCE=["Attract purpose","Stabilize challenge","Activate service","Define form","Empower radiance","Balance equality","Channel inspiration","Harmonize integrity","Pulse intention","Perfect manifestation","Dissolve release","Dedicate cooperation","Endure presence"];
 
-  const ENERGY_NOTES = [
-    "Small moves. True aim.",
-    "Clarity before speed.",
-    "Let the exhale do the work.",
-    "We finish one helpful thing today.",
-    "See one undeniable detail.",
-    "Speak simply. Act kindly.",
-    "Steady breath, steady hand.",
-    "Return to the line.",
-    "Finish clean, thank gently."
-  ];
-  const QUOTES = [
-    "Teach us to number our days, that we may apply our hearts unto wisdom. — Psalm 90:12",
-    "For everything there is a season… a time to plant, and a time to uproot. — Ecclesiastes 3:1-2",
-    "The light shines in the darkness, and the darkness has not overcome it. — John 1:5",
-    "Mark the blameless and behold the upright, for there is a future for the man of peace. — Psalm 37:37",
-    "In quietness and trust is your strength. — Isaiah 30:15"
-  ];
-
-  /* ---------- Timezone ---------- */
   const TZ_KEY="sof_moons_tz";
-  const tzPick = $("#tzPick");
-  const defaultTZ = localStorage.getItem(TZ_KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
-  const COMMON_TZ = [
-    "UTC","America/Los_Angeles","America/Denver","America/Chicago","America/New_York",
-    "Europe/London","Europe/Berlin","Europe/Helsinki","Africa/Johannesburg",
-    "Asia/Dubai","Asia/Kolkata","Asia/Shanghai","Asia/Tokyo","Australia/Sydney"
-  ];
-  const ALL_TZ = Intl.supportedValuesOf ? Intl.supportedValuesOf("timeZone") : COMMON_TZ;
-  const merged = [...new Set([...COMMON_TZ, ...ALL_TZ])];
-  tzPick.innerHTML = merged.map(z=>`<option value="${z}">${z}</option>`).join("");
-  tzPick.value = defaultTZ;
+  const tzPick=$("#tzPick");
+  const COMMON_TZ=["UTC","America/Los_Angeles","America/Denver","America/Chicago","America/New_York","Europe/London","Europe/Berlin","Europe/Helsinki","Africa/Johannesburg","Asia/Dubai","Asia/Kolkata","Asia/Shanghai","Asia/Tokyo","Australia/Sydney"];
+  const ALL_TZ=Intl.supportedValuesOf?Intl.supportedValuesOf("timeZone"):COMMON_TZ;
+  const merged=[...new Set([...COMMON_TZ,...ALL_TZ])];
+  tzPick.innerHTML=merged.map(z=>`<option value="${z}">${z}</option>`).join("");
+  tzPick.value=localStorage.getItem(TZ_KEY)||Intl.DateTimeFormat().resolvedOptions().timeZone||"UTC";
 
-  /* ---------- Helpers ---------- */
-  function dateInTZ(baseDate, tz){
-    const opts={timeZone:tz, hour12:false, year:"numeric", month:"2-digit", day:"2-digit",hour:"2-digit", minute:"2-digit", second:"2-digit"};
-    const parts=new Intl.DateTimeFormat("en-CA",opts).formatToParts(baseDate);
-    const m=Object.fromEntries(parts.map(p=>[p.type,p.value]));
-    return new Date(`${m.year}-${m.month}-${m.day}T${m.hour}:${m.minute}:${m.second}Z`);
-  }
-  function formatDate(d, tz){ return new Intl.DateTimeFormat(undefined,{dateStyle:"full", timeZone:tz}).format(d); }
-  function formatClock(d, tz){ return new Intl.DateTimeFormat(undefined,{timeStyle:"medium", timeZone:tz}).format(d); }
-  function pad2(n){ return String(n).padStart(2,"0"); }
+  function dateInTZ(baseDate,tz){const opts={timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"};const parts=new Intl.DateTimeFormat("en-CA",opts).formatToParts(baseDate);const m=Object.fromEntries(parts.map(p=>[p.type,p.value]));return new Date(`${m.year}-${m.month}-${m.day}T${m.hour}:${m.minute}:${m.second}Z`)}
+  function formatDate(d,tz){return new Intl.DateTimeFormat(undefined,{dateStyle:"full",timeZone:tz}).format(d)}
+  function formatClock(d,tz){return new Intl.DateTimeFormat(undefined,{timeStyle:"medium",timeZone:tz}).format(d)}
+  function pad2(n){return String(n).padStart(2,"0")}
 
-  /* ---------- 13‑Moon math (accurate, Moons first) ---------- */
-  function isLeapYear(y){ return (y%4===0 && y%100!==0) || (y%400===0); }
-  function isLeapDayUTC(d){ return d.getUTCMonth()===1 && d.getUTCDate()===29; } // Feb 29 UTC
+  function isLeapYear(y){return y%4===0&&y%100!==0||y%400===0}
+  function isLeapDayUTC(d){return d.getUTCMonth()===1&&d.getUTCDate()===29}
+  function startOfYear13(d,tz){const dt=dateInTZ(d,tz);const y=dt.getUTCFullYear();const aThis=new Date(Date.UTC(y,6,26));const aPrev=new Date(Date.UTC(y-1,6,26));return dt>=aThis?aThis:aPrev}
+  function isDayOutOfTime(d,tz){const dt=dateInTZ(d,tz);return dt.getUTCMonth()===6&&dt.getUTCDate()===25}
+  function dayIndexSinceStart(d,tz){const start=startOfYear13(d,tz);const dt=dateInTZ(d,tz);let a=Date.UTC(start.getUTCFullYear(),6,26);let b=Date.UTC(dt.getUTCFullYear(),dt.getUTCMonth(),dt.getUTCDate());let count=Math.floor((b-a)/86400000);const doot=Date.UTC(start.getUTCFullYear()+1,6,25);if(b>=doot)count-=1;for(let y=start.getUTCFullYear();y<=dt.getUTCFullYear();y++){if(isLeapYear(y)){const feb29=Date.UTC(y,1,29);if(a<=feb29&&b>=feb29)count-=1}}return count}
+  function calc13Moon(d,tz){const start=startOfYear13(d,tz);if(isDayOutOfTime(d,tz))return{special:"Day Out of Time",moon:null,day:null,year:`${start.getUTCFullYear()}/${start.getUTCFullYear()+1}`};if(isLeapDayUTC(dateInTZ(d,tz)))return{special:"Leap Day",moon:null,day:null,year:`${start.getUTCFullYear()}/${start.getUTCFullYear()+1}`};const idx=dayIndexSinceStart(d,tz);const moon=Math.floor(idx/28)+1;const day=(idx%28)+1;return{special:null,moon,day,year:`${start.getUTCFullYear()}/${start.getUTCFullYear()+1}`}}
 
-  // July 26 anchors the year in the viewer's timezone
-  function startOfYear13(d, tz){
-    const dt = dateInTZ(d, tz);
-    const y = dt.getUTCFullYear();
-    const anchorThis = new Date(Date.UTC(y,6,26)); // Jul 26
-    const anchorPrev = new Date(Date.UTC(y-1,6,26));
-    return dt >= anchorThis ? anchorThis : anchorPrev;
-  }
+  function moonSpansForYear(d,tz){const start=startOfYear13(d,tz);const spans=[];function addDaysSkipping(dtUTC,days){let t=Date.UTC(dtUTC.getUTCFullYear(),dtUTC.getUTCMonth(),dtUTC.getUTCDate());let added=0;while(added<days){t+=86400000;const probe=new Date(t);const isDOOT=probe.getUTCMonth()===6&&probe.getUTCDate()===25;const isLeap=probe.getUTCMonth()===1&&probe.getUTCDate()===29;if(isDOOT||isLeap)continue;added++}return new Date(t)}let mStart=new Date(Date.UTC(start.getUTCFullYear(),6,26));for(let i=0;i<13;i++){const mEnd=addDaysSkipping(mStart,27);spans.push({idx:i+1,start:mStart,end:mEnd});mStart=new Date(Date.UTC(mEnd.getUTCFullYear(),mEnd.getUTCMonth(),mEnd.getUTCDate()+1))}return spans}
 
-  function isDayOutOfTime(d, tz){
-    const dt = dateInTZ(d, tz);
-    return (dt.getUTCMonth()===6 && dt.getUTCDate()===25); // July 25 in tz
-  }
+  function moonPhase(d){const syn=29.530588853;const epoch=Date.UTC(2000,0,6,18,14,0);const days=(d.getTime()-epoch)/86400000;const age=((days%syn)+syn)%syn;const frac=age/syn;const names=[{n:"New Moon",r:[0,0.03]},{n:"Waxing Crescent",r:[0.03,0.22]},{n:"First Quarter",r:[0.22,0.28]},{n:"Waxing Gibbous",r:[0.28,0.47]},{n:"Full Moon",r:[0.47,0.53]},{n:"Waning Gibbous",r:[0.53,0.72]},{n:"Last Quarter",r:[0.72,0.78]},{n:"Waning Crescent",r:[0.78,0.97]},{n:"New Moon",r:[0.97,1.01]}];const phase=names.find(x=>frac>=x.r[0]&&frac<x.r[1])?.n||"—";const illum=(1-Math.cos(2*Math.PI*frac))/2;const angle=(frac*2*Math.PI)%(2*Math.PI);return{phase,ageDays:age,illum,angle,frac}}
 
-  // Days since start excluding Day Out of Time and any Feb 29 that passed
-  function dayIndexSinceStart(d, tz){
-    const start = startOfYear13(d, tz);
-    const dt = dateInTZ(d, tz);
-    let a = Date.UTC(start.getUTCFullYear(),6,26);   // start (Jul 26)
-    let b = Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate());
-    let count = Math.floor((b - a)/86400000); // raw days since Jul 26
+  const nowDate=$("#nowDate"),nowClock=$("#nowClock"),nowTZ=$("#nowTZ");
+  const moonLine=$("#moonLine"),moonMeta=$("#moonMeta");
+  const phaseLine=$("#phaseLine"),phaseMeta=$("#phaseMeta");
+  const moonList=$("#moonList"); MOONS.forEach((m,i)=>{const li=document.createElement("li");li.textContent=`${i+1}. ${m} — ${MOON_ESSENCE[i]}`;moonList.appendChild(li)});
 
-    // subtract Day Out of Time if we've reached/passed July 25 (next year)
-    const doot = Date.UTC(start.getUTCFullYear()+1,6,25);
-    if (b >= doot) count -= 1;
-
-    // subtract leap day(s) between a..b
-    for (let y=start.getUTCFullYear(); y<=dt.getUTCFullYear(); y++){
-      if(isLeapYear(y)){
-        const feb29 = Date.UTC(y,1,29);
-        if (a <= feb29 && b >= feb29) count -= 1;
-      }
-    }
-    return count; // 0..363
-  }
-
-  function calc13Moon(d, tz){
-    const start = startOfYear13(d, tz);
-    if(isDayOutOfTime(d, tz)) return { special:"Day Out of Time", moon:null, day:null, year:`${start.getUTCFullYear()}/${start.getUTCFullYear()+1}` };
-    if(isLeapDayUTC(dateInTZ(d, tz))) return { special:"Leap Day", moon:null, day:null, year:`${start.getUTCFullYear()}/${start.getUTCFullYear()+1}` };
-    const idx = dayIndexSinceStart(d, tz); // 0..363
-    const moon = Math.floor(idx/28)+1; // 1..13
-    const day = (idx%28)+1;            // 1..28
-    return {special:null, moon, day, year:`${start.getUTCFullYear()}/${start.getUTCFullYear()+1}`};
-  }
-
-  // Build Gregorian spans for each Moon in the viewer's year
-  function moonSpansForYear(d, tz){
-    const start = startOfYear13(d, tz); // Jul 26 (UTC-based)
-    const spans = [];
-    // Helper to add days while skipping Feb 29 and July 25 (Day Out of Time)
-    function addDaysSkipping(dtUTC, days){
-      let t = Date.UTC(dtUTC.getUTCFullYear(), dtUTC.getUTCMonth(), dtUTC.getUTCDate());
-      let added = 0;
-      while(added < days){
-        t += 86400000;
-        const probe = new Date(t);
-        const isDOOT = (probe.getUTCMonth()===6 && probe.getUTCDate()===25);
-        const isLeap = (probe.getUTCMonth()===1 && probe.getUTCDate()===29);
-        if(isDOOT || isLeap) continue; // skip outside-count days
-        added++;
-      }
-      return new Date(t);
-    }
-    // Start at Jul 26; each moon is 28 counted days
-    let mStart = new Date(Date.UTC(start.getUTCFullYear(),6,26));
-    for(let i=0;i<13;i++){
-      const mEnd = addDaysSkipping(mStart, 28-1); // inclusive end date
-      spans.push({ idx:i+1, start:mStart, end:mEnd });
-      // next start = day after end
-      const next = new Date(Date.UTC(mEnd.getUTCFullYear(), mEnd.getUTCMonth(), mEnd.getUTCDate()+1));
-      mStart = next;
-    }
-    return spans;
-  }
-
-  /* ---------- Moon phase (approx) ---------- */
-  function moonPhase(d){
-    const synodic = 29.530588853;
-    const epoch = Date.UTC(2000,0,6,18,14,0);
-    const days = (d.getTime() - epoch)/86400000;
-    const age = ((days % synodic) + synodic) % synodic;
-    const frac = age / synodic; // 0..1
-    const names = [
-      {n:"New Moon", r:[0.00, 0.03]},
-      {n:"Waxing Crescent", r:[0.03, 0.22]},
-      {n:"First Quarter", r:[0.22, 0.28]},
-      {n:"Waxing Gibbous", r:[0.28, 0.47]},
-      {n:"Full Moon", r:[0.47, 0.53]},
-      {n:"Waning Gibbous", r:[0.53, 0.72]},
-      {n:"Last Quarter", r:[0.72, 0.78]},
-      {n:"Waning Crescent", r:[0.78, 0.97]},
-      {n:"New Moon", r:[0.97, 1.01]},
-    ];
-    const phase = names.find(x=> frac>=x.r[0] && frac<x.r[1])?.n || "—";
-    const illum = (1 - Math.cos(2*Math.PI*frac))/2;
-    const angle = (frac*2*Math.PI) % (2*Math.PI);
-    return {phase, ageDays:age, illum, angle, frac};
-  }
-
-  /* ---------- Numerology ---------- */
-  function sumDigits(n){ return String(n).split("").reduce((a,b)=>a+(+b||0),0); }
-  function reduceNum(n){ while(n>9 && n!==11 && n!==22 && n!==33){ n = sumDigits(n); } return n; }
-  function numerology(d, tz){
-    const dt = dateInTZ(d, tz);
-    const y=dt.getUTCFullYear(), m=dt.getUTCMonth()+1, day=dt.getUTCDate();
-    const total = reduceNum(sumDigits(y)+sumDigits(m)+sumDigits(day));
-    const monthN = reduceNum(sumDigits(y)+sumDigits(m));
-    const dayN = reduceNum(sumDigits(day));
-    return {total, monthN, dayN};
-  }
-
-  /* ---------- UI refs ---------- */
-  const nowDate=$("#nowDate"), nowClock=$("#nowClock"), nowTZ=$("#nowTZ");
-  const moonLine=$("#moonLine"), moonMeta=$("#moonMeta");
-  const phaseLine=$("#phaseLine"), phaseMeta=$("#phaseMeta");
-  const moonList=$("#moonList"); MOONS.forEach((m,i)=>{ const li=document.createElement("li"); li.textContent = `${i+1}. ${m} — ${MOON_ESSENCE[i]}`; moonList.appendChild(li); });
-
-  const tzOut=$("#scrubTZ"), scrubRead=$("#scrubRead"), timeRange=$("#timeRange"), autoPlay=$("#autoPlay"), hourPick=$("#hourPick");
+  const tzOut=$("#scrubTZ"),scrubRead=$("#scrubRead"),timeRange=$("#timeRange"),autoPlay=$("#autoPlay"),hourPick=$("#hourPick");
   const datePick=$("#datePick");
 
-  /* ---------- URL sync ---------- */
-  function readURL(){
-    const u=new URL(location.href);
-    const d=u.searchParams.get("d");
-    const z=u.searchParams.get("tz");
-    const t=u.searchParams.get("t");
-    if(z && merged.includes(z)){ tzPick.value=z; localStorage.setItem(TZ_KEY,z); }
-    if(d){ datePick.value = d; } else {
-      const dt=dateInTZ(new Date(), tzPick.value); datePick.value = dt.toISOString().slice(0,10);
-    }
-    if(t){ const [hh,mm]=t.split(":").map(x=>+x||0); hourPick.value=Math.min(23,Math.max(0, hh + (mm>=30?1:0))); timeRange.value=Math.min(24,Math.max(0, hh + mm/60)); }
-    else { const wall=dateInTZ(new Date(), tzPick.value); hourPick.value=wall.getUTCHours(); timeRange.value=wall.getUTCHours()+wall.getUTCMinutes()/60; }
-  }
-  function writeURL(){
-    const u=new URL(location.href);
-    u.searchParams.set("d", datePick.value);
-    u.searchParams.set("tz", tzPick.value);
-    const hh=Math.floor(+timeRange.value); const mm=Math.round((+timeRange.value-hh)*60);
-    u.searchParams.set("t", `${pad2(hh)}:${pad2(mm)}`);
-    history.replaceState(null,"",u);
-  }
+  function readURL(){const u=new URL(location.href);const d=u.searchParams.get("d");const z=u.searchParams.get("tz");const t=u.searchParams.get("t");if(z&&merged.includes(z)){tzPick.value=z;localStorage.setItem(TZ_KEY,z)}if(d){datePick.value=d}else{const dt=dateInTZ(new Date(),tzPick.value);datePick.value=dt.toISOString().slice(0,10)}if(t){const[hh,mm]=t.split(":").map(x=>+x||0);hourPick.value=Math.min(23,Math.max(0,hh+(mm>=30?1:0)));timeRange.value=Math.min(24,Math.max(0,hh+mm/60))}else{const wall=dateInTZ(new Date(),tzPick.value);hourPick.value=wall.getUTCHours();timeRange.value=wall.getUTCHours()+wall.getUTCMinutes()/60}}
+  function writeURL(){const u=new URL(location.href);u.searchParams.set("d",datePick.value);u.searchParams.set("tz",tzPick.value);const hh=Math.floor(+timeRange.value);const mm=Math.round((+timeRange.value-hh)*60);u.searchParams.set("t",`${pad2(hh)}:${pad2(mm)}`);history.replaceState(null,"",u)}
+  function syncScrubFromInputs(){const h=Math.min(23,Math.max(0,+hourPick.value||0));timeRange.value=h}
+  function syncInputsFromScrub(){const h=Math.floor(+timeRange.value);hourPick.value=h}
 
-  function syncScrubFromInputs(){ const h=Math.min(23,Math.max(0,+hourPick.value||0)); timeRange.value=h; }
-  function syncInputsFromScrub(){ const h=Math.floor(+timeRange.value); hourPick.value=h; }
+  on(tzPick,"change",()=>{localStorage.setItem(TZ_KEY,tzPick.value);populateYearTable();updateAll();writeURL()});
+  on(datePick,"change",()=>{syncScrubFromInputs();populateYearTable();updateAll();writeURL()});
+  on(hourPick,"change",()=>{syncScrubFromInputs();updateAll();writeURL()});
+  on(timeRange,"input",()=>{syncInputsFromScrub();updateAll()});
+  on($("#btnToday"),"click",()=>{const tz=tzPick.value;const dt=dateInTZ(new Date(),tz);datePick.value=dt.toISOString().slice(0,10);syncScrubFromInputs();populateYearTable();updateAll();writeURL()});
+  on($("#prevDay"),"click",()=>{const d=new Date(datePick.value+"T00:00:00Z");d.setUTCDate(d.getUTCDate()-1);datePick.value=d.toISOString().slice(0,10);populateYearTable();updateAll();writeURL()});
+  on($("#nextDay"),"click",()=>{const d=new Date(datePick.value+"T00:00:00Z");d.setUTCDate(d.getUTCDate()+1);datePick.value=d.toISOString().slice(0,10);populateYearTable();updateAll();writeURL()});
+  on($("#printBtn"),"click",()=>window.print());
+  on($("#shareToday"),"click",()=>{const txt=`${moonLine.textContent} — ${moonMeta.textContent}
+Phase: ${phaseLine.textContent} (${phaseMeta.textContent})`;navigator.clipboard?.writeText(txt);toast("Copied today’s summary")});
 
-  on(tzPick,"change",()=>{ localStorage.setItem(TZ_KEY, tzPick.value); populateYearTable(); updateAll(); writeURL(); });
-  on(datePick,"change",()=>{ syncScrubFromInputs(); populateYearTable(); updateAll(); writeURL(); });
-  on(hourPick,"change",()=>{ syncScrubFromInputs(); updateAll(); writeURL(); });
-  on(timeRange,"input",()=>{ syncInputsFromScrub(); updateAll(); });
-  on($("#btnToday"),"click",()=>{ const tz=tzPick.value; const dt=dateInTZ(new Date(), tz); datePick.value=dt.toISOString().slice(0,10); syncScrubFromInputs(); populateYearTable(); updateAll(); writeURL(); });
-  on($("#prevDay"),"click",()=>{ const d=new Date(datePick.value+"T00:00:00Z"); d.setUTCDate(d.getUTCDate()-1); datePick.value=d.toISOString().slice(0,10); populateYearTable(); updateAll(); writeURL(); });
-  on($("#nextDay"),"click",()=>{ const d=new Date(datePick.value+"T00:00:00Z"); d.setUTCDate(d.getUTCDate()+1); datePick.value=d.toISOString().slice(0,10); populateYearTable(); updateAll(); writeURL(); });
+  function updateClockLine(){const tz=tzPick.value;const base=new Date();const wall=dateInTZ(base,tz);nowDate.textContent=formatDate(wall,tz);nowClock.textContent=formatClock(base,tz);nowTZ.textContent=tz;$("#simUTC").textContent=wall.toISOString().replace("T"," ").slice(0,19)+"Z"}
+  setInterval(()=>{updateClockLine();const tz=tzPick.value;const today=dateInTZ(new Date(),tz).toISOString().slice(0,10);if(datePick.value===today&&!autoPlay.checked){datePick.value=today;updateAll()}},1000);
 
-  /* ---------- Live clock ---------- */
-  function updateClockLine(){
-    const tz=tzPick.value; const base=new Date(); const wall=dateInTZ(base, tz);
-    nowDate.textContent = formatDate(wall, tz);
-    nowClock.textContent = formatClock(base, tz);
-    nowTZ.textContent = tz; $("#simUTC").textContent = wall.toISOString().replace("T"," ").slice(0,19) + "Z";
-  }
-  setInterval(()=>{ updateClockLine();
-    const tz=tzPick.value; const today=dateInTZ(new Date(), tz).toISOString().slice(0,10);
-    if(datePick.value===today && !autoPlay.checked){ datePick.value=today; updateAll(); }
-  },1000);
+  const canvas=$("#sky"),ctx=canvas.getContext("2d");
+  function fitCanvas(){const r=canvas.getBoundingClientRect();canvas.width=r.width;canvas.height=Math.max(340,Math.min(560,Math.round(r.width*0.38)))}
+  fitCanvas();addEventListener("resize",fitCanvas,{passive:true});if('ResizeObserver'in window){new ResizeObserver(()=>fitCanvas()).observe(canvas.parentElement)}
+  const PREFERS_RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;let anim=!PREFERS_RM;let rafId=null;
+  function getSelectedDateTime(){const tz=tzPick.value;const dateStr=datePick.value;const hours=+timeRange.value;const dt=new Date(`${dateStr}T00:00:00Z`);const midnight=dateInTZ(dt,tz);return new Date(midnight.getTime()+hours*3600*1000)}
+  function drawSimulation(){const tz=tzPick.value;const d=getSelectedDateTime();const ph=moonPhase(d);$("#simPhase").textContent="Phase: "+ph.phase;$("#simIllum").textContent="Illum: "+Math.round(ph.illum*100)+"%";$("#simAge").textContent="Age: "+ph.ageDays.toFixed(1)+" d";$("#simAngle").textContent="Angle: "+((ph.angle*180/Math.PI)|0)+"°";const W=canvas.width,H=canvas.height;ctx.clearRect(0,0,W,H);ctx.fillStyle="#070b11";ctx.fillRect(0,0,W,H);const g1=ctx.createRadialGradient(W*0.5,H*0.3,100,W*0.5,H*0.3,Math.max(W,H)*0.65);g1.addColorStop(0,"rgba(122,243,255,.08)");g1.addColorStop(1,"rgba(10,16,24,0)");ctx.fillStyle=g1;ctx.fillRect(0,0,W,H);const wall=dateInTZ(d,tz);const hour=wall.getUTCHours()+wall.getUTCMinutes()/60;const sunTheta=hour/24*2*Math.PI;const sunVec=[Math.cos(sunTheta),Math.sin(sunTheta)];const ex=W/2,ey=H/2,er=Math.min(W,H)*0.13;const eg=ctx.createRadialGradient(ex,ey,er*0.2,ex,ey,er);eg.addColorStop(0,"#1f2b3b");eg.addColorStop(1,"#0a121c");ctx.beginPath();ctx.arc(ex,ey,er,0,Math.PI*2);ctx.fillStyle=eg;ctx.fill();ctx.save();ctx.globalCompositeOperation="multiply";ctx.fillStyle="rgba(0,0,0,.45)";ctx.beginPath();const sx=ex-sunVec[0]*er*0.7,sy=ey-sunVec[1]*er*0.7;ctx.ellipse(sx,sy,er*1.15,er*0.95,Math.atan2(sunVec[1],sunVec[0]),0,Math.PI*2);ctx.fill();ctx.restore();const orbitR=Math.min(W,H)*0.28;const moonBaseR=Math.min(W,H)*0.05;const theta=ph.frac*2*Math.PI;const mx=ex+orbitR*Math.cos(theta);const my=ey+orbitR*Math.sin(theta);const depth=0.5+0.5*Math.sin(theta);const mr=moonBaseR*(0.9+0.15*depth);ctx.strokeStyle="rgba(122,243,255,.18)";ctx.lineWidth=1.2;ctx.setLineDash([4,6]);ctx.beginPath();ctx.ellipse(ex,ey,orbitR,orbitR*0.86,0,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);const sunX=ex+Math.cos(sunTheta)*(orbitR+er*0.9);const sunY=ey+Math.sin(sunTheta)*(orbitR+er*0.9);const sg=ctx.createRadialGradient(sunX,sunY,4,sunX,sunY,40);sg.addColorStop(0,"rgba(255,240,210,.95)");sg.addColorStop(1,"rgba(255,184,116,.08)");ctx.beginPath();ctx.arc(sunX,sunY,40,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();ctx.beginPath();ctx.arc(sunX,sunY,3.5,0,Math.PI*2);ctx.fillStyle="#ffd187";ctx.fill();const mg=ctx.createRadialGradient(mx,my,mr*0.2,mx,my,mr);mg.addColorStop(0,"#eae6dd");mg.addColorStop(1,"#aaa79e");ctx.beginPath();ctx.arc(mx,my,mr,0,Math.PI*2);ctx.fillStyle=mg;ctx.fill();const k=Math.cos(ph.frac*Math.PI*2);const off=k*mr;ctx.save();ctx.beginPath();ctx.arc(mx,my,mr,0,Math.PI*2);ctx.clip();ctx.translate(mx,my);const rot=Math.atan2(sunVec[1],sunVec[0]);ctx.rotate(rot+Math.PI);const shGrad=ctx.createLinearGradient(-mr,0,mr,0);shGrad.addColorStop(0,"rgba(0,0,0,.85)");shGrad.addColorStop(0.5,"rgba(0,0,0,.35)");shGrad.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=shGrad;ctx.beginPath();ctx.ellipse(off,0,mr,mr*1.02,0,0,Math.PI*2);ctx.fill();ctx.restore();ctx.save();ctx.globalCompositeOperation="screen";ctx.strokeStyle="rgba(255,255,255,.18)";ctx.lineWidth=1;ctx.beginPath();ctx.arc(mx,my,mr-0.5,0,Math.PI*2);ctx.stroke();ctx.restore();ctx.fillStyle="rgba(230,240,255,.9)";ctx.font="12px Inter, system-ui, -apple-system, Segoe UI, Roboto";ctx.fillText("Earth",ex-16,ey+er+14);ctx.fillText("Sun",sunX+10,sunY+4);ctx.fillText("Moon",mx-18,my+mr+12)}
 
-  /* ---------- Simulation canvas ---------- */
-  const canvas=$("#sky"), ctx=canvas.getContext("2d");
-  function fitCanvas(){ const r=canvas.getBoundingClientRect(); canvas.width=r.width; canvas.height=Math.max(340, Math.min(560, Math.round(r.width*0.38))); }
-  fitCanvas(); addEventListener("resize", fitCanvas, {passive:true}); if('ResizeObserver' in window){ new ResizeObserver(()=>fitCanvas()).observe(canvas.parentElement); }
-  const PREFERS_RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; let anim=!PREFERS_RM; let rafId=null;
+  on($("#simPNG"),"click",()=>{try{const url=canvas.toDataURL("image/png");const a=document.createElement("a");a.href=url;a.download="moon-sim.png";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),800)}catch(_){}});
+  on($("#simSnap"),"click",()=>{const tz=tzPick.value;const wall=dateInTZ(new Date(),tz);datePick.value=wall.toISOString().slice(0,10);const h=wall.getUTCHours()+wall.getUTCMinutes()/60;timeRange.value=h;hourPick.value=Math.floor(h);updateAll();writeURL()});
+  const playBtn=$("#simPlay");let anim=true,rafId=null;function loop(){drawSimulation();if(anim)rafId=requestAnimationFrame(loop)}function start(){if(!anim){anim=true;loop();playBtn.textContent="⏸︎ Pause"}}function stop(){anim=false;if(rafId)cancelAnimationFrame(rafId);rafId=null;playBtn.textContent="▶︎ Auto"}on(playBtn,"click",()=>{if(anim){stop()}else{start()}});loop();
 
-  function getSelectedDateTime(){
-    const tz = tzPick.value; const dateStr = datePick.value; const hours = +timeRange.value;
-    const dt = new Date(`${dateStr}T00:00:00Z`); const midnight = dateInTZ(dt, tz); return new Date(midnight.getTime() + hours*3600*1000);
-  }
+  function fmtYMD(d,tz){return new Intl.DateTimeFormat(undefined,{timeZone:tz,year:'numeric',month:'short',day:'2-digit'}).format(d)}
+  function populateYearTable(){const tz=tzPick.value;const selected=new Date(datePick.value+"T00:00:00Z");const tbody=$("#moonTable tbody");tbody.innerHTML="";const spans=moonSpansForYear(selected,tz);spans.forEach(sp=>{const tr=document.createElement('tr');const name=MOONS[sp.idx-1];const theme=MOON_ESSENCE[sp.idx-1];const ds=fmtYMD(sp.start,tz);const de=fmtYMD(sp.end,tz);tr.innerHTML=`<td><span class="tag">${sp.idx}</span> <b>${name}</b></td><td>${theme}</td><td>${ds} — ${de}</td><td>28</td>`;tbody.appendChild(tr)});const m=calc13Moon(selected,tz);if(!m.special){const idx=Math.max(0,Math.min(12,m.moon-1));tbody.children[idx]?.classList.add('current')}}
 
-  function drawSimulation(){
-    const tz=tzPick.value; const d=getSelectedDateTime();
-    const ph=moonPhase(d);
-    $("#simPhase").textContent = "Phase: "+ph.phase; $("#simIllum").textContent = "Illum: "+Math.round(ph.illum*100)+"%"; $("#simAge").textContent = "Age: "+ph.ageDays.toFixed(1)+" d"; $("#simAngle").textContent = "Angle: "+((ph.angle*180/Math.PI)|0)+"°";
+  function updateAll(){const tz=tzPick.value;const base=new Date();const wall=dateInTZ(base,tz);$("#simUTC").textContent=wall.toISOString().replace("T"," ").slice(0,19)+"Z";tzOut.textContent=tz;const hh=Math.floor(+timeRange.value);const mm=Math.round((+timeRange.value-hh)*60);scrubRead.textContent=`${pad2(hh)}:${pad2(mm)}`;const sel=new Date(datePick.value+"T00:00:00Z");const m13=calc13Moon(sel,tz);if(m13.special){moonLine.textContent=m13.special;moonMeta.textContent=`13‑Moon Year: ${m13.year} • Outside the 13×28 count`}else{const idx=m13.moon-1;moonLine.textContent=`${MOONS[idx]} Moon — Day ${m13.day}`;moonMeta.textContent=`${MOON_ESSENCE[idx]} • Year ${m13.year}`}
+    const ph=moonPhase(getSelectedDateTime());phaseLine.textContent=ph.phase;phaseMeta.textContent=`Age ≈ ${ph.ageDays.toFixed(1)} d • Illum ≈ ${(ph.illum*100).toFixed(0)}%`;nowDate.textContent=formatDate(wall,tz);nowClock.textContent=formatClock(base,tz);nowTZ.textContent=tz;drawSimulation()}
 
-    const W=canvas.width,H=canvas.height; ctx.clearRect(0,0,W,H); ctx.fillStyle="#070b11"; ctx.fillRect(0,0,W,H);
-    const g1=ctx.createRadialGradient(W*0.5,H*0.3,100,W*0.5,H*0.3,Math.max(W,H)*0.65); g1.addColorStop(0,"rgba(122,243,255,.08)"); g1.addColorStop(1,"rgba(10,16,24,0)"); ctx.fillStyle=g1; ctx.fillRect(0,0,W,H);
+  setInterval(()=>{if(!autoPlay.checked)return;let v=+timeRange.value+0.25;if(v>24){v=0;const d=new Date(datePick.value+"T00:00:00Z");d.setUTCDate(d.getUTCDate()+1);datePick.value=d.toISOString().slice(0,10);populateYearTable()}timeRange.value=v;syncInputsFromScrub();updateAll();writeURL()},1000);
 
-    const wall=dateInTZ(d, tz); const hour=wall.getUTCHours() + wall.getUTCMinutes()/60; const sunTheta=(hour/24)*2*Math.PI; const sunVec=[Math.cos(sunTheta), Math.sin(sunTheta)];
-    const ex=W/2, ey=H/2, er=Math.min(W,H)*0.13; const eg=ctx.createRadialGradient(ex,ey,er*0.2,ex,ey,er); eg.addColorStop(0,"#1f2b3b"); eg.addColorStop(1,"#0a121c"); ctx.beginPath(); ctx.arc(ex,ey,er,0,Math.PI*2); ctx.fillStyle=eg; ctx.fill();
-    ctx.save(); ctx.globalCompositeOperation="multiply"; ctx.fillStyle="rgba(0,0,0,.45)"; ctx.beginPath(); const sx = ex - sunVec[0]*er*0.7, sy = ey - sunVec[1]*er*0.7; ctx.ellipse(sx, sy, er*1.15, er*0.95, Math.atan2(sunVec[1],sunVec[0]), 0, Math.PI*2); ctx.fill(); ctx.restore();
+  if('IntersectionObserver'in window){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}}),{threshold:.08});$$('.card').forEach(c=>io.observe(c))}else{$$('.card').forEach(c=>c.classList.add('visible'))}
 
-    const orbitR=Math.min(W,H)*0.28; const moonBaseR=Math.min(W,H)*0.05; const theta=ph.frac*2*Math.PI; const mx=ex+orbitR*Math.cos(theta); const my=ey+orbitR*Math.sin(theta); const depth=0.5+0.5*Math.sin(theta); const mr=moonBaseR*(0.9+0.15*depth);
-    ctx.strokeStyle="rgba(122,243,255,.18)"; ctx.lineWidth=1.2; ctx.setLineDash([4,6]); ctx.beginPath(); ctx.ellipse(ex,ey,orbitR,orbitR*0.86,0,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+  function toast(msg){const el=document.createElement("div");el.textContent=msg;Object.assign(el.style,{position:"fixed",left:"50%",bottom:"22px",transform:"translateX(-50%)",background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid #2a3242",borderRadius:"10px",boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:9999,opacity:0,transition:"opacity .2s"});document.body.appendChild(el);requestAnimationFrame(()=>{el.style.opacity=1});setTimeout(()=>{el.style.opacity=0;setTimeout(()=>el.remove(),250)},1800)}
 
-    const sunX=ex+Math.cos(sunTheta)*(orbitR+er*0.9); const sunY=ey+Math.sin(sunTheta)*(orbitR+er*0.9); const sg=ctx.createRadialGradient(sunX,sunY,4,sunX,sunY,40); sg.addColorStop(0,"rgba(255,240,210,.95)"); sg.addColorStop(1,"rgba(255,184,116,.08)"); ctx.beginPath(); ctx.arc(sunX,sunY,40,0,Math.PI*2); ctx.fillStyle=sg; ctx.fill(); ctx.beginPath(); ctx.arc(sunX,sunY,3.5,0,Math.PI*2); ctx.fillStyle="#ffd187"; ctx.fill();
-
-    const mg=ctx.createRadialGradient(mx,my,mr*0.2,mx,my,mr); mg.addColorStop(0,"#eae6dd"); mg.addColorStop(1,"#aaa79e"); ctx.beginPath(); ctx.arc(mx,my,mr,0,Math.PI*2); ctx.fillStyle=mg; ctx.fill();
-
-    const k=Math.cos(ph.frac*Math.PI*2); const off=k*mr; ctx.save(); ctx.beginPath(); ctx.arc(mx,my,mr,0,Math.PI*2); ctx.clip(); ctx.translate(mx,my); const rot=Math.atan2(sunVec[1],sunVec[0]); ctx.rotate(rot+Math.PI); const shGrad=ctx.createLinearGradient(-mr,0,mr,0); shGrad.addColorStop(0,"rgba(0,0,0,.85)"); shGrad.addColorStop(0.5,"rgba(0,0,0,.35)"); shGrad.addColorStop(1,"rgba(0,0,0,0)"); ctx.fillStyle=shGrad; ctx.beginPath(); ctx.ellipse(off,0, mr, mr*1.02, 0, 0, Math.PI*2); ctx.fill(); ctx.restore();
-
-    ctx.save(); ctx.globalCompositeOperation="screen"; ctx.strokeStyle="rgba(255,255,255,.18)"; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(mx,my,mr-0.5,0,Math.PI*2); ctx.stroke(); ctx.restore();
-
-    ctx.fillStyle="rgba(230,240,255,.9)"; ctx.font="12px Inter, system-ui, -apple-system, Segoe UI, Roboto"; ctx.fillText("Earth", ex - 16, ey + er + 14); ctx.fillText("Sun", sunX + 10, sunY + 4); ctx.fillText("Moon", mx - 18, my + mr + 12);
-  }
-
-  on($("#simPNG"),"click",()=>{ try{ const url=canvas.toDataURL("image/png"); const a=document.createElement("a"); a.href=url; a.download="moon-sim.png"; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),800);}catch(_){ /* noop */ } });
-  on($("#simSnap"),"click",()=>{ const tz=tzPick.value; const wall=dateInTZ(new Date(), tz); datePick.value = wall.toISOString().slice(0,10); const h=wall.getUTCHours()+wall.getUTCMinutes()/60; timeRange.value=h; hourPick.value=Math.floor(h); updateAll(); writeURL(); });
-
-  const playBtn=$("#simPlay"); function loop(){ drawSimulation(); if(anim) rafId=requestAnimationFrame(loop); } function start(){ if(!anim){ anim=true; loop(); playBtn.textContent="⏸︎ Pause"; } } function stop(){ anim=false; if(rafId) cancelAnimationFrame(rafId); rafId=null; playBtn.textContent="▶︎ Auto"; }
-  on(playBtn,"click",()=>{ if(anim){ stop(); } else { start(); } }); if(!PREFERS_RM){ start(); }
-
-  /* ---------- Year table ---------- */
-  function fmtYMD(d, tz){ return new Intl.DateTimeFormat(undefined,{timeZone:tz, year:'numeric', month:'short', day:'2-digit'}).format(d); }
-  function populateYearTable(){
-    const tz = tzPick.value; const selected = new Date(datePick.value+"T00:00:00Z");
-    const tbody = $("#moonTable tbody"); tbody.innerHTML="";
-    const spans = moonSpansForYear(selected, tz);
-    spans.forEach(sp=>{
-      const tr=document.createElement('tr');
-      const name = MOONS[sp.idx-1]; const theme = MOON_ESSENCE[sp.idx-1];
-      const ds = fmtYMD(sp.start, tz); const de = fmtYMD(sp.end, tz);
-      tr.innerHTML = `<td><span class="tag">${sp.idx}</span> <b>${name}</b></td><td>${theme}</td><td>${ds} — ${de}</td><td>28</td>`;
-      tbody.appendChild(tr);
-    });
-
-    // highlight current moon row
-    const m = calc13Moon(selected, tz); if(!m.special){ const idx = Math.max(0, Math.min(12, m.moon-1)); tbody.children[idx]?.classList.add('current'); }
-  }
-
-  /* ---------- Page update ---------- */
-  function updateAll(){
-    const tz=tzPick.value; const base=new Date(); const wall=dateInTZ(base, tz);
-    $("#simUTC").textContent = wall.toISOString().replace("T"," ").slice(0,19) + "Z"; tzOut.textContent = tz;
-    const hh=Math.floor(+timeRange.value); const mm=Math.round((+timeRange.value - hh)*60); scrubRead.textContent=`${pad2(hh)}:${pad2(mm)}`;
-
-    const sel = new Date(datePick.value+"T00:00:00Z");
-    const m13 = calc13Moon(sel, tz);
-    if(m13.special){
-      moonLine.textContent = m13.special; moonMeta.textContent = `13‑Moon Year: ${m13.year} • Outside the 13×28 count`;
-    } else {
-      const idx = (m13.moon-1);
-      moonLine.textContent = `${MOONS[idx]} Moon — Day ${m13.day}`;
-      moonMeta.textContent = `${MOON_ESSENCE[idx]} • Year ${m13.year}`;
-    }
-
-    const ph = moonPhase(getSelectedDateTime());
-    phaseLine.textContent = ph.phase; phaseMeta.textContent = `Age ≈ ${ph.ageDays.toFixed(1)} d • Illum ≈ ${(ph.illum*100).toFixed(0)}%`;
-
-    // Now line
-    nowDate.textContent = formatDate(wall, tz); nowClock.textContent = formatClock(base, tz); nowTZ.textContent = tz;
-
-    drawSimulation();
-  }
-
-  /* ---------- Auto-play scrub ---------- */
-  setInterval(()=>{ if(!autoPlay.checked) return; let v=+timeRange.value + 0.25; if(v>24){ v=0; const d=new Date(datePick.value+"T00:00:00Z"); d.setUTCDate(d.getUTCDate()+1); datePick.value=d.toISOString().slice(0,10); populateYearTable(); } timeRange.value=v; syncInputsFromScrub(); updateAll(); writeURL(); }, 1000);
-
-  // Init
-  const merged = [...new Set([...COMMON_TZ, ...(Intl.supportedValuesOf ? Intl.supportedValuesOf('timeZone') : COMMON_TZ)])];
-  $("#tzPick").innerHTML = merged.map(z=>`<option value="${z}">${z}</option>`).join("");
-  $("#tzPick").value = defaultTZ;
-  readURL(); updateClockLine(); populateYearTable(); updateAll();
+  readURL();updateClockLine();populateYearTable();updateAll();
 })();
 </script></body>
 </html>
