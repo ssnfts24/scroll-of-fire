@@ -1,30 +1,132 @@
-:root{ --maxw:1180px; --moon-accent:#7af3ff; --moon-accent-2:#f3c97a }
-body{ margin:0 }
+/* =========================================================
+   13 Moons · Living Clock — Page Styles (enhanced)
+   Safe dark defaults + light fallback, a11y, and robustness
+   ========================================================= */
+
+/* ---------- Color system ---------- */
+:root{
+  color-scheme: dark;
+  /* Base palette */
+  --bg:#070a11;
+  --fg:#e8eef7;
+  --muted:#9aa4be;
+  --line:#2a3242;
+  --elev:rgba(255,255,255,.02);
+  --elev-2:rgba(255,255,255,.005);
+
+  /* Accents */
+  --accent:#a7f6ff;
+  --accent-2:#cfefff;
+
+  /* Moon accent (animated via JS) */
+  --moon-accent:#7af3ff;
+  --moon-accent-2:#f3c97a;
+
+  /* Layout */
+  --maxw:1180px;
+  --radius:12px;
+  --shadow:0 6px 14px rgba(0,0,0,.35);
+
+  /* Focus */
+  --focus-ring:#7af3ff;
+  --focus-glow:0 0 0 2px #7af3ff66, 0 0 0 6px #7af3ff22;
+}
+
+/* Optional light theme switch (set data-theme="light" on <html> to test) */
+:root[data-theme="light"]{
+  color-scheme: light;
+  --bg:#f7fbff;
+  --fg:#0b1220;
+  --muted:#44536e;
+  --line:#cfd7e6;
+  --elev:rgba(0,0,0,.02);
+  --elev-2:rgba(0,0,0,.01);
+  --accent:#007bff;
+  --accent-2:#7dc3ff;
+  --moon-accent:#007bff;
+  --moon-accent-2:#ffb84d;
+}
+
+/* High-contrast users: strengthen lines and text */
+@media (prefers-contrast: more){
+  :root{ --line: #7a8aaa; --muted:#c5d0e6 }
+}
+
+/* ---------- Global ---------- */
+html,body{ background:var(--bg); color:var(--fg); }
+body{ margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"; }
+
 .wrap{ max-width:var(--maxw); margin:0 auto; padding:20px 16px 96px }
 
 .title{
   font-family:"Crimson Pro",serif;font-weight:800;text-align:center;
   font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;letter-spacing:.2px;
-  background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);
+  background:linear-gradient(180deg,#fff,var(--accent-2) 60%,var(--accent));
   -webkit-background-clip:text;background-clip:text;color:transparent
 }
 .subtitle{ text-align:center; color:var(--muted); margin:0 0 12px }
 
+/* Links inherit color but get underline on hover for clarity */
+a{ color:inherit; text-decoration:none }
+a:hover{ text-decoration:underline }
+
+/* ---------- Grid ---------- */
 .grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:12px }
 .col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-6{grid-column:span 6}.col-7{grid-column:span 7}.col-8{grid-column:span 8}.col-12{grid-column:span 12}
 @media (max-width:980px){ .col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-12{ grid-column:span 12 } }
 
+/* ---------- Cards & common UI ---------- */
 .card{
-  border:1px solid var(--line); border-radius:12px; padding:12px;
-  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.005));
-  box-shadow:0 6px 14px rgba(0,0,0,.35);
+  border:1px solid var(--line); border-radius:var(--radius); padding:12px;
+  background:linear-gradient(180deg, var(--elev), var(--elev-2));
+  box-shadow:var(--shadow);
 }
 .lab-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
-.lab-btn{ padding:.6rem .85rem; border-radius:10px; border:1px solid var(--line); background:linear-gradient(180deg,rgba(255,255,255,.04),transparent); font-weight:700; cursor:pointer }
-.lab-btn[disabled]{ opacity:.5; cursor:not-allowed }
-.lab-input{ padding:.6rem; border-radius:10px; border:1px solid var(--line); background:#0f1116; color:inherit }
-.hint,.meta{ color:#9aa4be }
 
+.lab-btn{
+  padding:.6rem .85rem; border-radius:10px; border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
+  font-weight:700; cursor:pointer; color:inherit; transition:transform .06s ease, box-shadow .12s ease
+}
+.lab-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35) }
+.lab-btn:active{ transform:translateY(0); box-shadow:var(--shadow) }
+.lab-btn.ghost{ background:transparent }
+.lab-btn[disabled]{ opacity:.5; cursor:not-allowed }
+
+.lab-input{
+  padding:.6rem; border-radius:10px; border:1px solid var(--line);
+  background:#0f1116; color:inherit; min-height:40px
+}
+
+/* Range input (hour scrub) */
+input[type="range"].lab-input{
+  appearance:none; height:32px; background:transparent; padding:0
+}
+input[type="range"].lab-input::-webkit-slider-runnable-track{
+  height:4px; background:linear-gradient(90deg, var(--moon-accent), var(--moon-accent-2)); border-radius:999px
+}
+input[type="range"].lab-input::-webkit-slider-thumb{
+  appearance:none; width:18px; height:18px; border-radius:50%; background:#0f1116; border:1px solid var(--line);
+  margin-top:-7px; box-shadow:0 2px 6px rgba(0,0,0,.35)
+}
+input[type="range"].lab-input::-moz-range-track{
+  height:4px; background:linear-gradient(90deg, var(--moon-accent), var(--moon-accent-2)); border-radius:999px
+}
+input[type="range"].lab-input::-moz-range-thumb{
+  width:18px; height:18px; border-radius:50%; background:#0f1116; border:1px solid var(--line);
+  box-shadow:0 2px 6px rgba(0,0,0,.35)
+}
+
+/* Focus visibility */
+:where(button, a, select, input).lab-input:focus-visible,
+:where(button, a, .lab-btn):focus-visible{
+  outline:none; box-shadow:var(--focus-glow)
+}
+
+/* Help text */
+.hint,.meta{ color:var(--muted) }
+
+/* ---------- Background stars layer ---------- */
 body.stars{
   background:
     radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
@@ -37,14 +139,20 @@ body.stars{
   position:fixed; inset:0 0 auto 0; width:100vw; height:45vh; display:block; z-index:-1;
   filter:saturate(115%) contrast(105%);
 }
+@media (prefers-reduced-motion:reduce){
+  #skyBg { display:none; }
+}
 
-/* Moon banner */
+/* ---------- Moon banner ---------- */
 .moon-badge{ display:flex; align-items:center; gap:12px; justify-content:center; flex-wrap:wrap }
-.pill{ display:inline-grid; place-items:center; gap:2px; padding:.5rem .9rem; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.03) }
+.pill{
+  display:inline-grid; place-items:center; gap:2px; padding:.5rem .9rem; border-radius:999px;
+  border:1px solid var(--line); background:rgba(255,255,255,.03)
+}
 .pill .k{ font-size:clamp(22px,3vw,30px); font-weight:800 }
 .mono{ font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace }
 
-/* Progress ring */
+/* ---------- Progress ring ---------- */
 .ring{ width:120px; height:120px; display:grid; place-items:center; position:relative }
 .ring svg{ display:block }
 .ring .label{ position:absolute; text-align:center }
@@ -53,40 +161,76 @@ body.stars{
 .ring-bg{ fill:none; stroke:#1f1f28; stroke-width:8 }
 .ring-fg{ fill:none; stroke:var(--ring-grad, url(#rg)); stroke-width:8; stroke-linecap:round; stroke-dasharray:0 316 }
 
-/* Week dots */
+/* ---------- Week dots ---------- */
 .weekrow{ display:flex; gap:8px; justify-content:center; align-items:center; margin-top:6px; flex-wrap:wrap }
-.week{ display:grid; grid-template-columns:repeat(7,10px); gap:6px; padding:6px 10px; border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.02) }
-.dot{ width:10px; height:10px; border-radius:50%; background:#1f1f28; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08) }
+.week{
+  display:grid; grid-template-columns:repeat(7,10px); gap:6px; padding:6px 10px;
+  border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.02)
+}
+.dot{
+  width:10px; height:10px; border-radius:50%;
+  background:#1f1f28; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)
+}
 .dot.on{ background:radial-gradient(circle at 40% 35%, var(--moon-accent), var(--moon-accent-2)) }
 .weeklabel{ font:700 12px/1 Inter; color:#b8b3a6 }
 
-/* Year map */
+/* ---------- Year map ---------- */
 .year-map{ width:100%; border-collapse:separate; border-spacing:0 6px }
-.year-map th,.year-map td{ padding:8px 10px; border:1px solid var(--line) }
-.year-map th{ background:rgba(255,255,255,.03) }
+.year-map th,.year-map td{ padding:8px 10px; border:1px solid var(--line); vertical-align:top }
+.year-map th{ background:rgba(255,255,255,.03); text-align:left }
 .year-map .row{ border-radius:10px; overflow:hidden }
 .tag{ display:inline-block; padding:.2rem .5rem; border:1px solid var(--line); border-radius:999px }
 .is-today{ box-shadow:0 0 0 1px #7af3ff55, inset 0 0 0 1px #7af3ff33 }
 
-/* Lunar sim */
+/* Optional sticky header for long lists */
+@media (min-height:700px){
+  .year-map thead th{ position:sticky; top:0; backdrop-filter:saturate(120%) blur(6px) }
+}
+
+/* ---------- Lunar sim ---------- */
 .sim{ display:grid; grid-template-columns:1fr 2fr; gap:10px }
 @media (max-width:860px){ .sim{ grid-template-columns:1fr } }
-canvas#simMoon{ width:100%; height:auto; display:block; background:radial-gradient(circle at 50% 40%, #0a0e15 0%, #06080d 80%); border-radius:12px; border:1px solid var(--line) }
+canvas#simMoon{
+  width:100%; height:auto; display:block;
+  background:radial-gradient(circle at 50% 40%, #0a0e15 0%, #06080d 80%);
+  border-radius:12px; border:1px solid var(--line)
+}
 
-/* Top nav */
+/* ---------- Top nav ---------- */
 nav.crumbs{ display:flex; gap:8px; justify-content:center; margin-top:10px; margin-bottom:14px }
 
-/* Toast + download link */
-.toast{ position:fixed; left:50%; bottom:22px; transform:translateX(-50%); background:#0e131c; color:#e6f9ff; padding:8px 12px; border:1px solid #2a3242; border-radius:10px; box-shadow:0 10px 28px rgba(0,0,0,.35); z-index:9999; opacity:0; transition:opacity .2s }
-a.dl{ display:inline-block; padding:.5rem .8rem; border:1px solid var(--line); border-radius:10px; text-decoration:none; background:linear-gradient(180deg,rgba(255,255,255,.04),transparent); font-weight:700 }
+/* ---------- Dividers / ornaments ---------- */
+.divider{ height:1px; background:linear-gradient(90deg, transparent, var(--line), transparent) }
+.goldline{ height:1px; background:linear-gradient(90deg, #f3c97a44, #f3c97a, #f3c97a44); margin:10px 0 }
 
-/* Kin */
+/* ---------- Toast + download link ---------- */
+.toast{
+  position:fixed; left:50%; bottom:22px; transform:translateX(-50%);
+  background:#0e131c; color:#e6f9ff; padding:8px 12px; border:1px solid #2a3242;
+  border-radius:10px; box-shadow:0 10px 28px rgba(0,0,0,.35); z-index:9999; opacity:0; transition:opacity .2s
+}
+a.dl{
+  display:inline-block; padding:.5rem .8rem; border:1px solid var(--line); border-radius:10px;
+  text-decoration:none; background:linear-gradient(180deg,rgba(255,255,255,.04),transparent); font-weight:700
+}
+a.dl:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35) }
+
+/* ---------- Kin ---------- */
 .kin{ display:grid; grid-template-columns:1fr; gap:8px; margin-top:6px }
 .kin-row{ display:flex; gap:8px; flex-wrap:wrap; align-items:center }
 .kin .tag{ padding:.25rem .55rem; border-radius:999px; border:1px solid var(--line) }
 .kin small{ color:#9aa4be }
 
-/* Motion prefs */
-@media (prefers-reduced-motion:reduce){
-  #skyBg { display:none; }
+/* ---------- Utilities ---------- */
+.sr-only{
+  position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0,0,0,0); white-space:nowrap; border:0
+}
+
+/* ---------- Print (keep it tidy) ---------- */
+@media print{
+  body{ background:#fff; color:#000 }
+  .wrap{ padding:0 }
+  #skyBg, .toast, nav.crumbs{ display:none !important }
+  .card{ box-shadow:none; border-color:#000 }
 }
