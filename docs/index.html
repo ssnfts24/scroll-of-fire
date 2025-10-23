@@ -280,21 +280,42 @@ canvas#trace {
 
 
 
+<!-- 13-Moon Mini Bar -->
+<div id="moonMiniBar" class="moonbar" role="region" aria-label="13-Moon mini clock">
+  <a id="moonMiniLink" class="moonbar-hit" href="moons.html" aria-label="Open 13-Moon living clock">
+    <svg class="moonbar-ring" viewBox="0 0 120 120" aria-hidden="true">
+      <defs>
+        <linearGradient id="mbGrad" x1="0" x2="1">
+          <stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/>
+        </linearGradient>
+      </defs>
+      <circle cx="60" cy="60" r="50" class="mb-bg"/>
+      <circle cx="60" cy="60" r="50" class="mb-fg" id="mbArc" pathLength="316"/>
+      <text x="60" y="60" class="mb-text" text-anchor="middle" dominant-baseline="central">
+        <tspan id="mbDay">—</tspan>
+      </text>
+    </svg>
 
-<!-- 13-Moon Home Bar -->
-<a href="moons.html" class="tile moon-bar" id="moonBar" aria-label="Open 13 Moons — Living Clock">
-  <span class="moon-dot" aria-hidden="true"></span>
-  <span class="moon-text">
-    <b id="mbLabel">13 Moons</b>
-    <small class="meta" id="mbMeta">Loading…</small>
-  </span>
-  <span class="moon-go" aria-hidden="true">↗</span>
-</a>
-<noscript>
-  <a class="tile" href="moons.html">13 Moons — open</a>
-</noscript>
+    <div class="moonbar-info" aria-live="polite">
+      <div class="moonbar-line">
+        <strong id="mbMoon">—</strong>
+        <span class="sep">·</span>
+        <span id="mbDayLine">—</span>
+      </div>
+      <div class="moonbar-sub meta" id="mbEssence" title="">—</div>
+    </div>
 
+    <div class="moonbar-tags">
+      <span class="tag mono" id="mbYear">—</span>
+      <span class="tag yhwh" id="mbYHWH" title="Source (YHWH)">⟡ י־ה־ו־ה</span>
+    </div>
+  </a>
 
+  <button class="moonbar-share" id="mbShare" type="button" aria-label="Copy today’s 13-Moon link">Share</button>
+</div>
+
+<!-- Script module -->
+<script src="assets/js/moons-bar.js?v=1" defer></script>
 
 
   
