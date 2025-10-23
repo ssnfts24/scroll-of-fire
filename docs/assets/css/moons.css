@@ -1,0 +1,80 @@
+:root{ --maxw:1180px }
+body{ margin:0 }
+.wrap{ max-width:var(--maxw); margin:0 auto; padding:20px 16px 96px }
+
+.title{
+  font-family:"Crimson Pro",serif;font-weight:800;text-align:center;
+  font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;letter-spacing:.2px;
+  background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);
+  -webkit-background-clip:text;background-clip:text;color:transparent
+}
+.subtitle{ text-align:center; color:var(--muted); margin:0 0 12px }
+
+.grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:12px }
+.col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-6{grid-column:span 6}.col-7{grid-column:span 7}.col-8{grid-column:span 8}.col-12{grid-column:span 12}
+@media (max-width:980px){ .col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-12{ grid-column:span 12 } }
+
+.card{ border:1px solid var(--line); border-radius:12px; padding:12px; background:rgba(255,255,255,.02) }
+.lab-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
+.lab-btn{ padding:.6rem .85rem; border-radius:10px; border:1px solid var(--line); background:linear-gradient(180deg,rgba(255,255,255,.04),transparent); font-weight:700; cursor:pointer }
+.lab-btn[disabled]{ opacity:.5; cursor:not-allowed }
+.lab-input{ padding:.6rem; border-radius:10px; border:1px solid var(--line); background:#0f1116; color:inherit }
+.hint,.meta{ color:#9aa4be }
+
+body.stars{
+  background:
+    radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
+    linear-gradient(180deg, #05060a 0%, #0b0e14 80%);
+  overflow-x:hidden;
+}
+
+/* Moon banner */
+.moon-badge{ display:flex; align-items:center; gap:12px; justify-content:center; flex-wrap:wrap }
+.pill{ display:inline-grid; place-items:center; gap:2px; padding:.5rem .9rem; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.03) }
+.pill .k{ font-size:clamp(22px,3vw,30px); font-weight:800 }
+.mono{ font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace }
+
+/* Progress ring */
+.ring{ width:120px; height:120px; display:grid; place-items:center; position:relative }
+.ring svg{ display:block }
+.ring .label{ position:absolute; text-align:center }
+.ring .label .big{ font:800 24px/1 Inter; color:#eae7df }
+.ring .label .small{ font:600 12px/1 Inter; color:#b8b3a6 }
+.ring-bg{ fill:none; stroke:#1f1f28; stroke-width:8 }
+.ring-fg{ fill:none; stroke:url(#rg); stroke-width:8; stroke-linecap:round; stroke-dasharray:0 316 }
+
+/* Week dots */
+.weekrow{ display:flex; gap:8px; justify-content:center; align-items:center; margin-top:6px; flex-wrap:wrap }
+.week{ display:grid; grid-template-columns:repeat(7,10px); gap:6px; padding:6px 10px; border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.02) }
+.dot{ width:10px; height:10px; border-radius:50%; background:#1f1f28; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08) }
+.dot.on{ background:linear-gradient(180deg,#7af3ff,#f3c97a) }
+.weeklabel{ font:700 12px/1 Inter; color:#b8b3a6 }
+
+/* Year map */
+.year-map{ width:100%; border-collapse:separate; border-spacing:0 6px }
+.year-map th,.year-map td{ padding:8px 10px; border:1px solid var(--line) }
+.year-map th{ background:rgba(255,255,255,.03) }
+.year-map .row{ border-radius:10px; overflow:hidden }
+.tag{ display:inline-block; padding:.2rem .5rem; border:1px solid var(--line); border-radius:999px }
+.is-today{ box-shadow:0 0 0 1px #7af3ff55, inset 0 0 0 1px #7af3ff33 }
+
+/* Lunar sim */
+.sim{ display:grid; grid-template-columns:1fr 2fr; gap:10px }
+@media (max-width:860px){ .sim{ grid-template-columns:1fr } }
+canvas#simMoon{ width:100%; height:auto; display:block; background:radial-gradient(circle at 50% 40%, #0a0e15 0%, #06080d 80%); border-radius:12px; border:1px solid var(--line) }
+
+/* Top nav */
+nav.crumbs{ display:flex; gap:8px; justify-content:center; margin-top:10px; margin-bottom:14px }
+
+/* Toast + download link */
+.toast{ position:fixed; left:50%; bottom:22px; transform:translateX(-50%); background:#0e131c; color:#e6f9ff; padding:8px 12px; border:1px solid #2a3242; border-radius:10px; box-shadow:0 10px 28px rgba(0,0,0,.35); z-index:9999; opacity:0; transition:opacity .2s }
+a.dl{ display:inline-block; padding:.5rem .8rem; border:1px solid var(--line); border-radius:10px; text-decoration:none; background:linear-gradient(180deg,rgba(255,255,255,.04),transparent); font-weight:700 }
+
+/* Kin */
+.kin{ display:grid; grid-template-columns:1fr; gap:8px; margin-top:6px }
+.kin-row{ display:flex; gap:8px; flex-wrap:wrap; align-items:center }
+.kin .tag{ padding:.25rem .55rem; border-radius:999px; border:1px solid var(--line) }
+.kin small{ color:#9aa4be }
+
+/* Ghost button */
+.lab-row .ghost{ background:transparent }
