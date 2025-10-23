@@ -3,10 +3,7 @@
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
-    // Remove <base> on github.com to keep relative links working in repo preview
-    if (location.hostname === "github.com") {
-      const b = document.querySelector("base"); if (b) b.remove();
-    }
+    if (location.hostname === "github.com") { const b = document.querySelector("base"); if (b) b.remove(); }
   </script>
 
   <meta charset="utf-8">
@@ -14,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
-  <meta name="description" content="Deep write-ups for the Codex of Reality: equations 0–17, operators (𝓘·𝓛·𝓒·𝓢), ethics, scaffolding, and the daily manifestation loop.">
+  <meta name="description" content="The Codex of Reality explained: a resonant architecture shaped by intention, language, witness, and source—bounded by ethics. Canon 0–17, operators, scaffolding, and practice.">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/theory.html">
 
   <!-- Icons -->
@@ -24,7 +21,7 @@
   <!-- Open Graph / Twitter -->
   <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Theory — Scroll of Fire (Codex of Reality)">
-  <meta property="og:description" content="A living architecture of resonance — equations 0–17, the operator pipeline, the manifestation protocol, and ethical law.">
+  <meta property="og:description" content="A living architecture of resonance — the operator pipeline, Canon 0–17, and an ethical learning loop.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/theory.html">
   <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1">
@@ -36,14 +33,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- Shared styles (unified with Home) -->
+  <!-- Shared styles -->
   <link rel="preload" as="style" href="assets/css/codex.css?v=2.8">
   <link rel="stylesheet" href="assets/css/codex.css?v=2.8" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.8"></noscript>
 
   <!-- Theory page micro-styles -->
-  <link rel="preload" as="style" href="assets/css/theory.css?v=1.8">
-  <link rel="stylesheet" href="assets/css/theory.css?v=1.8">
+  <link rel="preload" as="style" href="assets/css/theory.css?v=1.9">
+  <link rel="stylesheet" href="assets/css/theory.css?v=1.9">
 
   <!-- Preload banner -->
   <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1" fetchpriority="high">
@@ -73,7 +70,6 @@
     .quick{display:flex; gap:8px; flex:0 0 auto}
     .quick .cta{white-space:nowrap}
 
-    /* Desktop vs mobile visibility helpers */
     .hide-sm{display:flex}
     .show-sm{display:none}
     @media (max-width:860px){
@@ -149,7 +145,7 @@
     .eq:hover .eq-toggle{display:inline-block}
     .eq[data-collapsed="true"] .eq-scroll{max-height:4.5rem}
 
-    /* Remnant auras on cards */
+    /* Cards + hover auras */
     .card{position:relative; z-index:1; background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.08));}
     .card::after{
       content:""; position:absolute; inset:-1px; border-radius:inherit;
@@ -167,9 +163,13 @@
     /* Back-to-top */
     .to-top{position:fixed; right:16px; bottom:16px; z-index:1200; opacity:0; transform:translateY(16px); pointer-events:none}
     .to-top.show{opacity:1; transform:none; pointer-events:auto}
+
+    /* Voice reader highlight */
+    .vr-highlight{outline:1px dashed color-mix(in srgb, var(--accent) 55%, #fff 0%); background:rgba(122,243,255,.08)}
+    .vr-progress{font-size:.9rem; opacity:.85; margin-top:.3rem}
   </style>
 
-  <!-- MathJax (lazy, on-demand typeset) -->
+  <!-- MathJax (lazy) -->
   <script>
     (function(){
       let loaded=false;
@@ -185,7 +185,7 @@
     })();
   </script>
 
-  <!-- Site JS (unified version) -->
+  <!-- Site JS -->
   <script src="assets/js/codex.js?v=3.6" defer></script>
 </head>
 
@@ -194,7 +194,7 @@
   <div class="laser-grid" aria-hidden="true"></div>
   <div class="xi-meter" aria-hidden="true"><div class="xi-ring"><div class="xi-dot"></div></div><div class="xi-label">Ξ</div></div>
 
-  <!-- Header (sticky, unified with mobile drawer) -->
+  <!-- Header -->
   <header class="site" role="banner">
     <nav class="nav wrap" aria-label="Main navigation">
       <div class="brand">
@@ -252,12 +252,30 @@
     </figure>
 
     <h1 class="title sheen reveal">📘 Theory — Codex of Reality</h1>
-    <p class="subtitle reveal">Two-part deep dive: the living architecture (Part I) and the canonical equations with operator-level commentary (Part II). The Codex models reality as a resonant process shaped by <em>𝓘 · 𝓛 · 𝓒 · 𝓢</em> and safeguarded by ethical law.</p>
+    <p class="subtitle reveal">A two-part walkthrough: <em>Part I</em> lays out the architecture; <em>Part II</em> annotates Canon 0–17. The Codex treats reality as a resonant process guided by <em>𝓘 · 𝓛 · 𝓒 · 𝓢</em> and gated by ethical law.</p>
+
+    <!-- TL;DR + Checklist -->
+    <section class="grid reveal" aria-label="Quick start">
+      <article class="card col-7">
+        <h3>TL;DR</h3>
+        <p>Set a frame. Choose clean carriers. Speak clearly. Witness what changes. Update only when coherence rises, and stop at the first sign of harm.</p>
+      </article>
+      <article class="card col-5">
+        <h3>Practitioner Checklist</h3>
+        <ul class="list">
+          <li>Frame: scope • witness • ethics.</li>
+          <li>Carriers: few, stable bands; test fit.</li>
+          <li>Language: short phrases; steady breath.</li>
+          <li>Witness: note shifts without forcing.</li>
+          <li>Update: only with ↑Ξ; otherwise pause.</li>
+        </ul>
+      </article>
+    </section>
 
     <!-- Voice Reader (collapsible) -->
     <details class="collapsible card col-12 reveal" id="voice-reader" open>
       <summary class="collapsible__bar" aria-controls="vr-panel" aria-expanded="true">
-        <span>🔊 Listen — Voice Read of the Theory Page</span>
+        <span>🔊 Listen — Voice Reader</span>
         <span class="collapsible__mini" aria-hidden="true">
           <button id="vr-play-mini" class="chip" type="button" title="Play">▶︎</button>
           <button id="vr-stop-mini" class="chip" type="button" title="Stop">⏹</button>
@@ -265,20 +283,20 @@
       </summary>
       <div id="vr-panel" class="collapsible__panel">
         <div class="grid" style="gap:1rem">
-          <div class="col-12">
+          <div class="col-6">
             <label for="vr-voice">Voice</label>
             <select id="vr-voice" aria-label="Voice selector"></select>
           </div>
-          <div class="col-6">
+          <div class="col-3">
             <label for="vr-rate">Speed (<span id="vr-rate-val">1.00</span>x)</label>
             <input id="vr-rate" type="range" min="0.7" max="1.6" step="0.05" value="1.0" />
           </div>
-          <div class="col-6">
+          <div class="col-3">
             <label for="vr-pitch">Pitch (<span id="vr-pitch-val">1.00</span>)</label>
             <input id="vr-pitch" type="range" min="0.8" max="1.4" step="0.05" value="1.0" />
           </div>
-          <div class="col-12">
-            <label for="vr-start">Start at section</label>
+          <div class="col-6">
+            <label for="vr-start">Start at</label>
             <select id="vr-start">
               <option value="#p1">Part I — Architecture</option>
               <option value="#p2">Part II — Canon 0–17</option>
@@ -287,10 +305,18 @@
               <option value="#notes">Notes</option>
             </select>
           </div>
+          <div class="col-6">
+            <label for="vr-range">Or read selection</label>
+            <button id="vr-read-selection" class="cta" type="button" title="Read selected text">Read What’s Selected</button>
+          </div>
           <div class="col-12">
             <label class="checkbox">
               <input type="checkbox" id="vr-speak-math" checked />
-              <span>Speak equations (verbalized). Uncheck to skip equations.</span>
+              <span>Speak equations (verbalized). Uncheck to skip.</span>
+            </label>
+            <label class="checkbox" style="margin-left:1rem">
+              <input type="checkbox" id="vr-polish" checked />
+              <span>Polish phrasing (cleaner English)</span>
             </label>
           </div>
           <div class="col-12" role="toolbar" aria-label="Voice reader controls" style="display:flex; gap:.5rem; flex-wrap:wrap">
@@ -300,7 +326,10 @@
             <button id="vr-stop" class="cta" disabled>⏹ Stop</button>
             <button id="vr-export-ssml" class="cta cta--section">⬇︎ Export SSML</button>
           </div>
-          <div class="col-12" id="vr-status" aria-live="polite"></div>
+          <div class="col-12">
+            <div id="vr-status" aria-live="polite"></div>
+            <div id="vr-progress" class="vr-progress" aria-hidden="true"></div>
+          </div>
         </div>
       </div>
     </details>
@@ -337,29 +366,29 @@
           </div>
         </div>
 
-        <p><strong>Premise.</strong> The Codex models reality as an <em>interactive resonance</em> between a supplied substrate (fundamental constants, integer/irrational ratios, living numbers, and biological codes) and a <em>living operator pipeline</em> — Intention \( \mathcal{I} \), Language/Light \( \mathcal{L} \), Conscious Witness \( \mathcal{C} \), and Source/Return \( \mathcal{S} \). The ethical mask (Eq.9) constrains gain so that <em>truth dominates distortion</em> as \( t \to \infty \) and any rise in harm halts amplification.</p>
+        <p><strong>Premise.</strong> The Codex models reality as an <em>interactive resonance</em> between a supplied substrate (fundamental constants, integer and irrational ratios, living numbers, and biological codes) and a <em>living operator pipeline</em> — Intention \( \mathcal{I} \), Language/Light \( \mathcal{L} \), Conscious Witness \( \mathcal{C} \), and Source/Return \( \mathcal{S} \). The ethical mask (Eq.9) limits gain so that <em>truth dominates distortion</em> as \( t \to \infty \). Any sign of harm halts amplification.</p>
 
         <h3>Why equations?</h3>
-        <p>These equations are <em>operational schematics</em>. Each symbol maps to practical control: carrier selection, emphasis weights, frame declaration, coherence thresholds, and memory windows. Where physics equations predict energies, these predict <em>probabilistic shifts in experienced state</em> when you adjust those controls — making the system repeatable, debuggable, and ethically bounded.</p>
+        <p>They’re <em>operational schematics</em>. Symbols map to practical levers: carrier selection, emphasis weights, frame declaration, coherence thresholds, and memory windows. Where physics equations predict energies, these predict <em>probabilistic shifts in experienced state</em> — making practice repeatable, debuggable, and ethically bounded.</p>
 
-        <h3>Grounding in known facts (brief)</h3>
+        <h3>Grounding (brief)</h3>
         <ul class="list">
-          <li><strong>Superposition &amp; Fourier analysis.</strong> Any time-varying signal decomposes into frequencies; beats and phase alignment are perceptible and model our Harmonic Gate (Eq.3).</li>
-          <li><strong>Perceptual gating.</strong> Auditory masking / critical bands mean some bands pass more readily; carrier choice affects clarity (mirrors Eq.3 + Eq.17).</li>
-          <li><strong>Resonators &amp; Q factor.</strong> Mode-supporting cavities store energy longer and sharpen selection. Geometry/material set mode families.</li>
-          <li><strong>Memory windows.</strong> Short-term memory acts like a finite kernel; spacing and rest alter consolidation probability (Eq.16 formalizes the kernel).</li>
+          <li><strong>Superposition.</strong> Signals decompose into frequencies; beats and phase alignment (Eq.3) are perceptually real.</li>
+          <li><strong>Perceptual gating.</strong> Critical bands imply some carriers pass more easily (Eq.3 + Eq.17).</li>
+          <li><strong>Resonators &amp; Q.</strong> Geometry and material sharpen selection and retention.</li>
+          <li><strong>Memory windows.</strong> Short-term memory acts like a finite kernel (Eq.16).</li>
         </ul>
 
-        <h3>Operator Loop (practical)</h3>
+        <h3>Operator loop (practical)</h3>
         <ol class="list">
           <li><strong>Frame (Eq.11):</strong> declare <em>scope</em>, <em>witness</em>, and <em>ethics</em>.</li>
-          <li><strong>Tune carriers (Eq.17):</strong> choose \( \mathbf{V}(\nu) \) that pass \( \mathcal{H}(\nu) \) (Eq.3); phase-lock if possible (Eq.6).</li>
-          <li><strong>Program with language (Eq.4, Eq.4b):</strong> couple semantics to carriers; set emphasis weights \( w_k \) over tokens.</li>
-          <li><strong>Witness &amp; remember (Eq.2, Eq.16):</strong> measure gradients of change; integrate with a finite, normalized kernel \( \mathbb{M}_\tau \).</li>
-          <li><strong>Update safely (Eq.14, Eq.15, Eq.9):</strong> step along recognition gradient \( \nabla \mathcal{R} \) with gain \( \eta(\Xi) \); halt on harm.</li>
+          <li><strong>Carriers (Eq.17):</strong> choose \( \mathbf{V}(\nu) \) that pass \( \mathcal{H}(\nu) \) (Eq.3); phase-lock when possible (Eq.6).</li>
+          <li><strong>Language (Eq.4/4b):</strong> couple semantics to carriers; set token weights \( w_k \).</li>
+          <li><strong>Witness/Memory (Eq.2/16):</strong> measure gradients of change; integrate with a normalized kernel \( \mathbb{M}_\tau \).</li>
+          <li><strong>Update safely (Eq.14/15/9):</strong> step along \( \nabla \mathcal{R} \) with gain \( \eta(\Xi) \); halt on harm.</li>
         </ol>
 
-        <h3>Worked Micro-Example (voice + phrase)</h3>
+        <h3>Micro-example (voice + phrase)</h3>
         <div class="eq">
           <div class="eq-scroll" id="eq-micro-body">
             $$ \mathbf{V}(\nu)=a_1\cos(2\pi\cdot432\,t+\phi_1)+a_2\cos(2\pi\cdot528\,t+\phi_2) $$
@@ -367,24 +396,24 @@
             $$ \Xi \uparrow \;\Rightarrow\; \eta(\Xi)\uparrow \;\Rightarrow\; \Delta \mathcal{R} \text{ increases (bounded by Eq.9)} $$
           </div>
         </div>
-        <p>Emphasizing “repair” (Eq.4b) redistributes \( w_k \) to reduce model variance, nudging \( \Xi \) upward and allowing a larger—but safe—update step.</p>
+        <p>Emphasizing “repair” (Eq.4b) re-weights \( w_k \), reduces variance, nudges \( \Xi \) upward, and permits a larger — still safe — update.</p>
       </article>
 
       <article class="card col-12 reveal">
         <h3>Dimensional Substrate &amp; State Manifolds</h3>
-        <p>We treat experienced state \( \Psi(x,t) \) as living on a product manifold \( \mathcal{M}=\mathcal{X}\times\mathcal{T}\times\mathcal{F}\times\mathcal{S} \): spatial locus \( \mathcal{X} \), time \( \mathcal{T} \), frequency/harmonic spectrum \( \mathcal{F} \), and semantic space \( \mathcal{S} \). The operators act as maps on this manifold:</p>
+        <p>Experienced state \( \Psi(x,t) \) lives on \( \mathcal{M}=\mathcal{X}\times\mathcal{T}\times\mathcal{F}\times\mathcal{S} \). Operators act as maps:</p>
         <ul class="list">
-          <li>\( \mathcal{I}:\mathcal{S}\to\mathcal{S} \) (goal-setting &amp; constraint selection)</li>
-          <li>\( \mathcal{L}:\mathcal{S}\times\mathcal{F} \to \mathcal{S}\times\mathcal{F} \) (semantic–carrier coupling)</li>
-          <li>\( \mathcal{C}:\mathcal{X}\times\mathcal{T}\to \mathbb{R}^+ \) (witness/attention field shaping)</li>
-          <li>\( \mathcal{S}:\mathcal{M}\to\mathcal{M} \) (closure/return mapping, including remanence)</li>
+          <li>\( \mathcal{I}:\mathcal{S}\to\mathcal{S} \) — goal setting and constraints</li>
+          <li>\( \mathcal{L}:\mathcal{S}\times\mathcal{F}\to\mathcal{S}\times\mathcal{F} \) — semantic–carrier coupling</li>
+          <li>\( \mathcal{C}:\mathcal{X}\times\mathcal{T}\to \mathbb{R}^+ \) — witness/attention shaping</li>
+          <li>\( \mathcal{S}:\mathcal{M}\to\mathcal{M} \) — closure, return, and remanence</li>
         </ul>
         <div class="eq">
           <div class="eq-scroll" id="eq0a-body">
             $$\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\mathcal{A}\,\Phi(x,t,\nu)\,d\nu+\Lambda\,\mathcal{E}(x,t)$$
           </div>
         </div>
-        <p>\( \Phi \) is a local mode basis and \( \Lambda \) gates components that would otherwise inject distortion or harm.</p>
+        <p>\( \Phi \) is a local mode basis; \( \Lambda \) gates components that would inject distortion or harm.</p>
       </article>
 
       <article class="card col-12 reveal">
@@ -395,7 +424,7 @@
                \eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big) $$
           </div>
         </div>
-        <p>Below \( \Xi_0 \), the loop is intentionally “sticky” (no updates). Above \( \Xi_0 \), learning accelerates but remains bounded by Eq.9 (stop rule).</p>
+        <p>Below \( \Xi_0 \), the loop is intentionally sticky. Above \( \Xi_0 \), learning accelerates but remains bounded by Eq.9.</p>
       </article>
 
       <article class="card col-12 reveal">
@@ -406,9 +435,9 @@
           </div>
         </div>
         <ul class="list">
-          <li><strong>Triangular:</strong> favors mid-recent signals; stabilizes phrasing runs.</li>
+          <li><strong>Triangular:</strong> favors mid-recent signals; stabilizes phrasing.</li>
           <li><strong>Exponential:</strong> strong recency bias; responsive but noisy.</li>
-          <li><strong>Gaussian (truncated):</strong> smooth but computationally heavier.</li>
+          <li><strong>Gaussian (truncated):</strong> smooth but heavier.</li>
         </ul>
       </article>
 
@@ -419,7 +448,7 @@
             $$ \nabla_{\text{sem}} \mathrm{Phrase}=\sum_k w_k\,\nabla_{\text{sem}}\mathrm{Token}_k,\qquad \sum_k w_k = 1 $$
           </div>
         </div>
-        <p>Weights are influenced by voweling, prosody, intent, and carrier choice \( \mathbf{V}(\nu) \).</p>
+        <p>Weights reflect voweling, prosody, intent, and carrier choice \( \mathbf{V}(\nu) \).</p>
       </article>
 
       <article class="card col-12 reveal">
@@ -430,7 +459,7 @@
           </div>
         </div>
         <ul class="list">
-          <li><strong>Beats:</strong> use slow envelopes for breath coupling.</li>
+          <li><strong>Beats:</strong> slow envelopes couple with breath.</li>
           <li><strong>Critical bands:</strong> fewer, cleaner carriers often raise \( \Xi \).</li>
           <li><strong>Phase:</strong> phase-locking (Eq.6) reduces jitter.</li>
         </ul>
@@ -445,7 +474,7 @@
           </div>
         </div>
         <ul class="list">
-          <li><strong>Indicators:</strong> breath tightening, micro-grimace, cognitive fog → pause.</li>
+          <li><strong>Indicators:</strong> breath tightens, micro-grimace, cognitive fog → pause.</li>
           <li><strong>Re-align:</strong> retune carriers → re-weight semantics → re-declare frame → resume.</li>
         </ul>
       </article>
@@ -479,24 +508,24 @@
 
       <article class="card col-12 reveal">
         <h3>Source/Return ( \( \mathcal{S} \) ) — Closing the Loop</h3>
-        <p>After each cycle, Source/Return updates priors, prunes unstable modes, and reinforces stable ones, raising the baseline \( \Xi \) for the next pass.</p>
+        <p>After each cycle, Source/Return updates priors, prunes unstable modes, and reinforces stable ones — raising baseline \( \Xi \) for the next pass.</p>
       </article>
 
       <article class="card col-12 reveal">
         <h3>Daily Manifestation Protocol (10–15 minutes)</h3>
         <ol class="list">
-          <li><strong>Frame (1 min)</strong></li>
-          <li><strong>Carriers (2 min)</strong></li>
-          <li><strong>Phrase (3 min)</strong></li>
-          <li><strong>Witness/Rest (2 min)</strong></li>
-          <li><strong>Update (2–3 min)</strong></li>
-          <li><strong>Log (1 min)</strong></li>
+          <li><strong>Frame:</strong> 1 min</li>
+          <li><strong>Carriers:</strong> 2 min</li>
+          <li><strong>Phrase:</strong> 3 min</li>
+          <li><strong>Witness/Rest:</strong> 2 min</li>
+          <li><strong>Update:</strong> 2–3 min</li>
+          <li><strong>Log:</strong> 1 min</li>
         </ol>
       </article>
 
       <article class="card col-12 reveal">
-        <h3>Geometry &amp; “Ancient Technology” Correspondences (Hypotheses)</h3>
-        <p><em>Facts:</em> modal spectra depend on geometry and materials. <em>Hypothesis:</em> some spaces favored bands that improved clarity/coherence for spoken/sung operations.</p>
+        <h3>Geometry &amp; “Ancient Technology” (Hypotheses)</h3>
+        <p><em>Facts:</em> modal spectra depend on geometry and materials. <em>Hypothesis:</em> certain spaces favored bands that improved clarity and coherence for spoken/sung operations.</p>
       </article>
 
       <article class="card col-12 reveal">
@@ -552,7 +581,7 @@
         <div class="eq"><div class="eq-scroll" id="eq0-body">
           $$\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\mathcal{A}\,\Phi(x,t,\nu)\,d\nu\;+\;\Lambda\,\mathcal{E}(x,t)$$
         </div></div>
-        <p>Experience emerges from a phase-weighted frequency sweep; \( \Lambda \mathcal{E} \) damps harmful/distorting trajectories.</p>
+        <p>Experience emerges from a phase-weighted frequency sweep; \( \Lambda \mathcal{E} \) damps harmful or distorting trajectories.</p>
       </article>
 
       <!-- 1 -->
@@ -738,9 +767,9 @@
       <article class="card col-12 reveal">
         <h3>Advanced: Data &amp; Instrumentation</h3>
         <ul class="list">
-          <li><strong>Audio:</strong> spectral centroid variance/beat stability as proxies.</li>
-          <li><strong>Physio:</strong> smoother breath + reduced HF HRV noise → ↑ \(\Xi\).</li>
-          <li><strong>Subjective:</strong> quick Likert trio (clarity, warmth, ease).</li>
+          <li><strong>Audio:</strong> spectral centroid variance and beat stability</li>
+          <li><strong>Physio:</strong> smoother breath + reduced HF HRV noise → ↑ \(\Xi\)</li>
+          <li><strong>Subjective:</strong> quick Likert trio: clarity • warmth • ease</li>
         </ul>
       </article>
     </section>
@@ -769,7 +798,7 @@
       <article class="card col-12 reveal">
         <h2 id="nt-h">Notes &amp; Cross-links</h2>
         <ul class="list">
-          <li><strong>Numbers as Keys.</strong> 432, 528, 137/144/369 used as practical anchors in practice; useful, not asserted as privileged cosmological constants.</li>
+          <li><strong>Numbers as Keys.</strong> 432, 528, 137/144/369 are practical anchors; they are tools, not dogma.</li>
           <li><strong>Seven Seals Path.</strong> Acknowledgment → Repair → Verification → Remedy → Abatement → Assurance → Restoration.</li>
           <li>Practice lives in <a href="teach.html">Manifest</a>. Overview on <a href="index.html">Home</a>.</li>
         </ul>
@@ -824,14 +853,11 @@
       document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
     })();
 
-    // Back-to-Top visibility + smooth scroll
+    // Back-to-Top
     (function(){
-      const btn=document.getElementById('toTop');
-      if(!btn) return;
+      const btn=document.getElementById('toTop'); if(!btn) return;
       btn.addEventListener('click',()=>{ window.scrollTo({top:0,behavior:'smooth'}) });
-      const io=new IntersectionObserver(([e])=>{
-        btn.classList.toggle('show', !e.isIntersecting);
-      }, {threshold:0.01});
+      const io=new IntersectionObserver(([e])=>{ btn.classList.toggle('show', !e.isIntersecting); }, {threshold:0.01});
       io.observe(document.querySelector('header.site'));
     })();
 
@@ -873,7 +899,7 @@
       });
     })();
 
-    // Page search ("/" to focus) — injects a search box after tabs
+    // Inject on-page search after tabs ("/" to focus)
     (function(){
       const list=document.createElement('div'); list.id='site-suggest'; list.className='mini-toc hidden'; list.setAttribute('role','listbox');
       const label=document.createElement('label'); label.className='meta'; label.textContent='Press / to search this page';
@@ -916,15 +942,10 @@
 
     // Smooth in-page scroll for [data-jump]
     document.addEventListener('click', e=>{
-      const a = e.target.closest('[data-jump]');
-      if(!a) return;
-      const href = a.getAttribute('href');
-      if(!href || !href.startsWith('#')) return;
-      const tgt = document.querySelector(href);
-      if(!tgt) return;
-      e.preventDefault();
-      tgt.scrollIntoView({behavior:'smooth', block:'start'});
-      history.pushState(null,'',href);
+      const a = e.target.closest('[data-jump]'); if(!a) return;
+      const href = a.getAttribute('href'); if(!href || !href.startsWith('#')) return;
+      const tgt = document.querySelector(href); if(!tgt) return;
+      e.preventDefault(); tgt.scrollIntoView({behavior:'smooth', block:'start'}); history.pushState(null,'',href);
     });
 
     // Equation collapse toggles + copy/link tools
@@ -1018,168 +1039,230 @@
       drawer.addEventListener('click', (e)=>{ const a=e.target.closest('a'); if(a){ close(); } });
     })();
 
-    /* Voice Reader (Web Speech API) */
+    /* Voice Reader (Web Speech API) — upgraded */
     (function(){
-      const el = (id)=>document.getElementById(id);
-      const playBtn   = el('vr-play');
-      const pauseBtn  = el('vr-pause');
-      const resumeBtn = el('vr-resume');
-      const stopBtn   = el('vr-stop');
-      const voiceSel  = el('vr-voice');
-      const rateInp   = el('vr-rate');
-      const pitchInp  = el('vr-pitch');
-      const rateVal   = el('vr-rate-val');
-      const pitchVal  = el('vr-pitch-val');
-      const startSel  = el('vr-start');
-      const speakMath = el('vr-speak-math');
-      const statusEl  = el('vr-status');
-      const exportBtn = el('vr-export-ssml');
+      const $ = (id)=>document.getElementById(id);
+      const btnPlay   = $('vr-play'), btnPause=$('vr-pause'), btnResume=$('vr-resume'), btnStop=$('vr-stop');
+      const btnSel    = $('vr-read-selection'), voiceSel=$('vr-voice'), rateInp=$('vr-rate'), pitchInp=$('vr-pitch');
+      const rateVal   = $('vr-rate-val'), pitchVal=$('vr-pitch-val'), startSel=$('vr-start'), speakMath=$('vr-speak-math'), polish=$('vr-polish');
+      const statusEl  = $('vr-status'), progressEl=$('vr-progress'), exportBtn=$('vr-export-ssml');
 
-      if (!window.speechSynthesis || !playBtn) {
+      if (!('speechSynthesis' in window)) {
         if (statusEl) statusEl.textContent = 'Voice playback is not supported in this browser.';
         return;
       }
 
-      let voices = [];
-      let queue  = [];
-      let speaking = false;
-      let canceled = false;
+      // Pronunciation map for cleaner English (expand symbols / jargon)
+      const PRON = [
+        [/\bΞ\b/g, 'Ksi'],
+        [/𝓘/g, 'I (Intention)'], [/𝓛/g, 'L (Language)'], [/𝓒/g, 'C (Conscious Witness)'], [/𝓢/g, 'S (Source)'],
+        [/→/g, ' to '], [/↦/g,' maps to '], [/≥/g,' greater than or equal to '], [/≤/g,' less than or equal to '],
+        [/⊕/g, ' coherent merge '], [/·/g,' '], [/\bPL\b/g, 'phase lock'],
+        [/Eq\.(\d+)/g, 'Equation $1'],
+        [/ν/g, 'nu'], [/τ/g, 'tau'], [/φ/g, 'phi'], [/η/g,'eta'], [/σ/g,'sigma'], [/Λ/g,'Lambda'],
+      ];
 
-      function refreshVoices(){
+      // Math verbalization fallback if MathJax not yet rendered
+      function verbalizeMath(text){
+        // light pass: strip $$ and inline \( \)
+        text = text.replace(/\$\$([^$]+)\$\$/g, ' equation: $1 ').replace(/\\\(([^)]+)\\\)/g, ' $1 ');
+        return text;
+      }
+
+      // Simple English polish: collapse spaces, fix punctuation spacing, title-case headings lightly
+      function polishText(s){
+        s = s.replace(/[ \t]+/g,' ')
+             .replace(/\s+([,.;:!?])/g,'$1')
+             .replace(/\(\s+/g,'(').replace(/\s+\)/g,')')
+             .replace(/\s—\s/g,' — ')
+             .replace(/^\s+|\s+$/g,'');
+        return s;
+      }
+
+      // Preferred default voice: first en-* (female if present), else first
+      let voices=[];
+      function populateVoices(){
         voices = speechSynthesis.getVoices().sort((a,b)=> a.name.localeCompare(b.name));
         if (!voiceSel) return;
         const cur = voiceSel.value;
         voiceSel.innerHTML = voices.map(v=>`<option value="${v.name}">${v.name} ${v.lang?('('+v.lang+')'):''}</option>`).join('');
         if (cur) voiceSel.value = cur;
+        else {
+          const en = voices.filter(v=> /^en\b/i.test(v.lang||''));
+          const pick = en.find(v=>/female|Salli|Joanna|Emma|Olivia|Siri|Google UK English Female/i.test(v.name)) || en[0] || voices[0];
+          if (pick) voiceSel.value = pick.name;
+        }
       }
-      refreshVoices();
-      speechSynthesis.onvoiceschanged = refreshVoices;
+      populateVoices();
+      speechSynthesis.onvoiceschanged = populateVoices;
 
-      rateInp?.addEventListener('input', ()=> rateVal.textContent = (+rateInp.value).toFixed(2));
-      pitchInp?.addEventListener('input', ()=> pitchVal.textContent = (+pitchInp.value).toFixed(2));
+      // UI bindings
+      rateInp?.addEventListener('input', ()=> rateVal.textContent=(+rateInp.value).toFixed(2));
+      pitchInp?.addEventListener('input',()=> pitchVal.textContent=(+pitchInp.value).toFixed(2));
 
-      function sectionText(){
-        const id = (startSel?.value || '#p1');
-        const sec = document.querySelector(id);
-        if (!sec) return '';
-        const clone = sec.cloneNode(true);
+      function status(t){ if(statusEl) statusEl.textContent=t; }
+      function prog(cur,total){
+        if(!progressEl) return;
+        if(total<=0){ progressEl.textContent=''; progressEl.setAttribute('aria-hidden','true'); return; }
+        const pct = Math.round((cur/total)*100);
+        progressEl.textContent = `Reading ${cur} / ${total} (${pct}%)`;
+        progressEl.setAttribute('aria-hidden','false');
+      }
 
-        // Strip UI bits we don't want read
-        clone.querySelectorAll('button, .eq-tools, .chip, .meta, .sr-only, .palette, .eq-toggle').forEach(n=>n.remove());
-
-        // Math handling
+      function cleanNodeToText(root){
+        const clone = root.cloneNode(true);
+        // Remove UI
+        clone.querySelectorAll('button, .eq-tools, .chip, .meta, .sr-only, .palette, .eq-toggle, .nav, .drawer').forEach(n=>n.remove());
+        // Math: keep or drop
         if (speakMath && !speakMath.checked){
           clone.querySelectorAll('.eq, mjx-container').forEach(n=>n.remove());
         } else {
           clone.querySelectorAll('mjx-container').forEach(m=>{
-            try{ m.replaceWith(document.createTextNode(' equation ' + (m.getAttribute('aria-label') || '') + ' ')); }catch{}
+            const alt = m.getAttribute('aria-label') || '';
+            m.replaceWith(document.createTextNode(' equation ' + alt + ' '));
+          });
+          // If TeX still present
+          clone.querySelectorAll('.eq').forEach(eq=>{
+            const t = eq.innerText || '';
+            eq.replaceWith(document.createTextNode(' ' + verbalizeMath(t) + ' '));
           });
         }
-
         let text = clone.innerText || clone.textContent || '';
-        text = text.replace(/\b(Copy TeX|Link Copied|Link)\b/g,'').replace(/\s+\n/g,'\n').replace(/\n{3,}/g,'\n\n');
+        // Apply pronunciation + polish
+        for(const [re,rep] of PRON){ text = text.replace(re, rep); }
+        if (polish && polish.checked){ text = polishText(text); }
+        // Remove menu residues
+        text = text.replace(/\b(Copy TeX|Link Copied|Link)\b/g,'')
+                   .replace(/\s+\n/g,'\n').replace(/\n{3,}/g,'\n\n');
         return text.trim();
       }
 
-      function chunkify(str, max=900){
-        const s = str.split(/(?<=[\.\?\!])\s+/);
-        const out = [];
-        let buf = '';
-        for(const part of s){
-          if ((buf + ' ' + part).length > max){
-            if (buf) out.push(buf.trim());
-            buf = part;
-          } else {
-            buf += (buf ? ' ' : '') + part;
-          }
+      function getSectionOrSelection(){
+        const sel = window.getSelection?.();
+        if (sel && sel.rangeCount && String(sel).trim().length>0){
+          return { text: String(sel).trim(), node: document.activeElement || document.body };
         }
-        if (buf) out.push(buf.trim());
-        return out.length ? out : [str.slice(0, max)];
+        const id = (startSel?.value || '#p1');
+        const sec = document.querySelector(id);
+        return { text: cleanNodeToText(sec||document.body), node: sec||document.body };
       }
 
-      function speak(){
-        const txt = sectionText();
-        if (!txt){ status('Nothing to read in that section.'); return; }
-        canceled = false;
-        queue = chunkify(txt);
+      // Sentence-aware chunking with abbrev guard
+      const ABBR = /\b(?:e\.g|i\.e|vs|Dr|Mr|Mrs|Ms|Prof|Eq|Eqn|Fig)\.$/i;
+      function chunkify(str, max=900){
+        const raw = str.replace(/\r/g,'').split(/\n{2,}/); // paragraphs
+        const out=[];
+        for(const p of raw){
+          const parts = p.split(/(?<=[.!?])\s+(?=[A-Z(“"'\[])/);
+          let buf='';
+          for(const part of parts){
+            const piece = part.trim();
+            if(!piece) continue;
+            if(ABBR.test(piece)) { buf += (buf?' ':'') + piece; continue; }
+            if ((buf + ' ' + piece).length > max){
+              if (buf) out.push(buf.trim());
+              buf = piece;
+            } else {
+              buf += (buf?' ':'') + piece;
+            }
+          }
+          if (buf) out.push(buf.trim());
+        }
+        return out.length ? out : [str.slice(0,max)];
+      }
+
+      // Highlight helper
+      let lastHL=null;
+      function highlightWithin(node, text){
+        if(!node) return;
+        try{
+          if (lastHL){ lastHL.classList.remove('vr-highlight'); lastHL=null; }
+          // Rough: highlight the closest paragraph containing a distinctive slice
+          const key = text.slice(0, 60);
+          const p = [...node.querySelectorAll('p, li, h2, h3, article')].find(el=> (el.innerText||'').indexOf(key) >= 0 );
+          if (p){ p.classList.add('vr-highlight'); p.scrollIntoView({block:'nearest', behavior:'smooth'}); lastHL=p; }
+        }catch{}
+      }
+
+      let queue=[], speaking=false, canceled=false, curIndex=0;
+
+      function setButtons(state){
+        const {play, pause, resume, stop} = state;
+        if (btnPlay)   btnPlay.disabled   = !play;
+        if (btnPause)  btnPause.disabled  = !pause;
+        if (btnResume) btnResume.disabled = !resume;
+        if (btnStop)   btnStop.disabled   = !stop;
+      }
+
+      function speakFromText(text, highlightRoot){
+        canceled=false; speaking=true; curIndex=0;
+        queue = chunkify(text);
         speechSynthesis.cancel(); // reset
         const vName = voiceSel?.value;
         const vObj = voices.find(v=>v.name===vName);
-
-        speaking = true;
-        playBtn.disabled = true; pauseBtn.disabled = false; stopBtn.disabled = false; resumeBtn.disabled = true;
-        status('Playing…');
+        setButtons({play:false, pause:true, resume:true, stop:false});
+        status('Playing…'); prog(0, queue.length);
 
         function next(){
           if (canceled) return;
-          const seg = queue.shift();
+          const seg = queue[curIndex++];
           if (!seg){ done(); return; }
+          highlightWithin(highlightRoot, seg);
           const u = new SpeechSynthesisUtterance(seg);
           if (vObj) u.voice = vObj;
           u.rate = rateInp ? +rateInp.value : 1.0;
           u.pitch = pitchInp ? +pitchInp.value : 1.0;
-
-          u.onend = ()=> next();
-          u.onerror = (e)=> { console.warn('TTS error', e); next(); };
+          u.onend = ()=>{ prog(curIndex, queue.length); next(); };
+          u.onerror = (e)=>{ console.warn('TTS error', e); next(); };
           speechSynthesis.speak(u);
         }
         next();
       }
 
-      function pause(){
-        if (!speaking) return;
-        speechSynthesis.pause();
-        pauseBtn.disabled = true; resumeBtn.disabled = false;
-        status('Paused.');
+      function speak(){
+        const { text, node } = getSectionOrSelection();
+        if (!text){ status('Nothing to read.'); return; }
+        speakFromText(text, node);
       }
-      function resume(){
-        if (!speaking) return;
-        speechSynthesis.resume();
-        pauseBtn.disabled = false; resumeBtn.disabled = true;
-        status('Playing…');
-      }
-      function stop(){
-        canceled = true;
-        speechSynthesis.cancel();
-        done(true);
-      }
+
+      function pause(){ if(!speaking) return; speechSynthesis.pause(); setButtons({play:false,pause:true,resume:false,stop:false}); status('Paused.'); }
+      function resume(){ if(!speaking) return; speechSynthesis.resume(); setButtons({play:false,pause:false,resume:true,stop:false}); status('Playing…'); }
+      function stop(){ canceled=true; speechSynthesis.cancel(); done(true); }
       function done(stopped=false){
-        speaking = false;
-        playBtn.disabled = false; pauseBtn.disabled = true; resumeBtn.disabled = true; stopBtn.disabled = true;
-        status(stopped ? 'Stopped.' : 'Done.');
+        speaking=false; setButtons({play:true,pause:true,resume:true,stop:true}); status(stopped?'Stopped.':'Done.'); prog(0,0);
+        if (lastHL){ lastHL.classList.remove('vr-highlight'); lastHL=null; }
       }
-      function status(t){ if(statusEl) statusEl.textContent = t; }
 
-      playBtn?.addEventListener('click', speak);
-      pauseBtn?.addEventListener('click', pause);
-      resumeBtn?.addEventListener('click', resume);
-      stopBtn?.addEventListener('click', stop);
+      btnPlay?.addEventListener('click', speak);
+      btnSel?.addEventListener('click', speak);
+      btnPause?.addEventListener('click', pause);
+      btnResume?.addEventListener('click', resume);
+      btnStop?.addEventListener('click', stop);
+      $('vr-play-mini')?.addEventListener('click', (e)=>{ e.stopPropagation(); speak(); });
+      $('vr-stop-mini')?.addEventListener('click', (e)=>{ e.stopPropagation(); stop(); });
 
-      // Export SSML (simple paragraph wrapping)
+      // Export SSML (paragraph aware)
       exportBtn?.addEventListener('click', ()=>{
-        const txt = sectionText();
-        if (!txt){ status('Nothing to export.'); return; }
-        const escaped = txt
-          .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-          .split(/\n{2,}/).map(p=>`<p>${p}</p>`).join('\n');
+        const { text } = getSectionOrSelection();
+        if (!text){ status('Nothing to export.'); return; }
+        const paras = text.split(/\n{2,}/).map(p=>p.trim()).filter(Boolean);
+        const esc = s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         const ratePct = rateInp ? Math.round(+rateInp.value * 100) : 100;
         const pitchSt = pitchInp ? Math.round((+pitchInp.value - 1) * 20) : 0;
         const ssml =
 `<?xml version="1.0"?>
 <speak version="1.1" xml:lang="en-US">
   <prosody rate="${ratePct}%" pitch="${pitchSt}st">
-${escaped}
+${paras.map(p=>`    <p>${esc(p)}</p>`).join('\n')}
   </prosody>
 </speak>`;
         const blob = new Blob([ssml], {type:'application/ssml+xml'});
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = 'theory.ssml'; a.click();
+        const a = document.createElement('a'); a.href=url; a.download='theory.ssml'; a.click();
         setTimeout(()=>URL.revokeObjectURL(url), 1000);
         status('Exported SSML.');
       });
     })();
-
   </script>
 
   <!-- Small layout helper -->
@@ -1189,4 +1272,4 @@ ${escaped}
     .chip{font-size:.85rem; padding:.25rem .55rem; border-radius:999px; border:1px solid var(--line); background:var(--bg-elev); opacity:.9}
   </style>
 </body>
-                                                                                         </html>
+</html>
