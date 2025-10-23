@@ -93,6 +93,29 @@
     /* Gentle reveal */  
     .visible{opacity:1;transform:none}  
     .card{opacity:.96;transform:translateY(6px);transition:opacity .25s ease-out, transform .25s ease-out}  
+
+
+
+body.stars {
+  background:
+    radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
+    linear-gradient(180deg, #05060a 0%, #0b0e14 80%);
+  overflow-x:hidden;
+}
+canvas#trace {
+  background:
+    radial-gradient(circle at 50% 50%, #0a0e15 0%, #06080d 80%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.02) 0 2px, transparent 2px 4px);
+  box-shadow: inset 0 0 40px rgba(122,243,255,.12), 0 0 120px rgba(122,243,255,.08);
+}
+.stage::after {
+  content:"";
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 60%, rgba(122,243,255,.08), transparent 70%);
+  pointer-events:none;
+}
+
+    
   </style>  </head>  <body class="stars">  
   <!-- Banner -->  
   <figure class="hero" aria-label="Scroll of Fire banner">  
@@ -595,29 +618,36 @@
       phi+=1.5*speed();  
     }  
   
-    function drawTorus(){  
-      const W=canvas.width,H=canvas.height; ctx.fillStyle="rgba(10,14,21,0.12)"; ctx.fillRect(0,0,W,H);  
-      const R=Math.min(W,H)*0.26, r=R*0.36;  
-      const a=phi*0.002*speed(), b=phi*0.0013*speed();  
-      const cb=Math.cos(b), sb=Math.sin(b), ca=Math.cos(a), sa=Math.sin(a);  
-      const nx=Math.max(40,Math.floor(count(80))), ny=28;  
-      for(let i=0;i<nx;i++){  
-        const u=i/nx*Math.PI*2;  
-        for(let j=0;j<ny;j++){  
-          const v=j/ny*Math.PI*2;  
-          let x=(R + r*Math.cos(v))*Math.cos(u);  
-          let y=(R + r*Math.cos(v))*Math.sin(u);  
-          let z=r*Math.sin(v);  
-          let X =  x*cb + z*sb; let Z = -x*sb + z*cb; let Y =  y*ca - Z*sa; Z =  y*sa + Z*ca;  
-          const d=500/(600const d=500/(600+Z); // perspective
-          const px=W/2+X*d, py=H/2+Y*d;
-          const t=(Z+R)/(2*R + r); // 0..1 depth
-          ctx.fillStyle = pal(t);
-          ctx.fillRect(px,py,1.6,1.6);
-        }
-      }
-      phi += (breathPhase==="In"? 1.4 : breathPhase==="Out"? 1.9 : 1.2)*speed();
+function drawTorus(){
+  const W=canvas.width,H=canvas.height;
+  ctx.fillStyle="rgba(10,14,21,0.12)";
+  ctx.fillRect(0,0,W,H);
+  const R=Math.min(W,H)*0.26, r=R*0.36;
+  const a=phi*0.002*speed(), b=phi*0.0013*speed();
+  const cb=Math.cos(b), sb=Math.sin(b), ca=Math.cos(a), sa=Math.sin(a);
+  const nx=Math.max(40,Math.floor(count(80))), ny=28;
+  for(let i=0;i<nx;i++){
+    const u=i/nx*Math.PI*2;
+    for(let j=0;j<ny;j++){
+      const v=j/ny*Math.PI*2;
+      let x=(R + r*Math.cos(v))*Math.cos(u);
+      let y=(R + r*Math.cos(v))*Math.sin(u);
+      let z=r*Math.sin(v);
+      let X =  x*cb + z*sb;
+      let Z = -x*sb + z*cb;
+      let Y =  y*ca - Z*sa;
+      Z =  y*sa + Z*ca;
+      const d=500/(600+Z);  // fixed projection
+      const px=W/2+X*d, py=H/2+Y*d;
+      const t=(Z+R)/(2*R + r);
+      ctx.fillStyle = `rgba(${180+70*t},${240-100*t},${255-200*t},${0.3+0.6*t})`;
+      ctx.beginPath();
+      ctx.arc(px,py,1.6+1.2*Math.sin(t*12+phi*0.002),0,Math.PI*2);
+      ctx.fill();
     }
+  }
+  phi += (breathPhase==="In"?1.4:breathPhase==="Out"?1.9:1.2)*speed();
+}
 
     // Poly (icosahedron wireframe rotating)
     function drawPoly(){
