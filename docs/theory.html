@@ -66,15 +66,31 @@
     .wrap{padding:16px; max-width:1200px; margin:0 auto}
     .nav{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
     .brand{display:flex; align-items:center; gap:10px}
-    .logo{width:34px; height:34px; border-radius:50%; background:radial-gradient(closest-side, #0cf, transparent 70%); box-shadow:0 0 18px rgba(122,243,255,.35)}
+    .logo{display:inline-block; width:34px; height:34px; border-radius:50%;
+      background:radial-gradient(closest-side, #0cf, transparent 70%);
+      box-shadow:0 0 18px rgba(122,243,255,.35)}
     .kicker{margin:0}
     .quick{display:flex; gap:8px; flex:0 0 auto}
     .quick .cta{white-space:nowrap}
-    @media (max-width:720px){
-      .quick{flex:1 1 100%; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-gutter:stable; padding-bottom:6px}
-      .quick::-webkit-scrollbar{height:10px}
-      .quick::-webkit-scrollbar-thumb{background:#2b2b35;border-radius:10px;border:2px solid #0f0f14}
+
+    /* Desktop vs mobile visibility helpers */
+    .hide-sm{display:flex}
+    .show-sm{display:none}
+    @media (max-width:860px){
+      .hide-sm{display:none!important}
+      .show-sm{display:inline-flex; align-items:center; justify-content:center;
+        width:40px; height:40px; border:1px solid var(--line); background:var(--bg-elev);
+        border-radius:.6rem; font-size:1.1rem}
+      header.site .wrap{padding:12px 16px}
     }
+
+    /* Mobile drawer */
+    .drawer{position:sticky; top:4rem; z-index:999; background:rgba(12,14,20,.92);
+      backdrop-filter:saturate(140%) blur(8px); border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line); padding:.5rem .75rem}
+    .drawer .dlink{display:block; padding:.65rem .5rem; border-radius:.5rem}
+    .drawer .dlink:hover{background:rgba(255,255,255,.05)}
+    .drawer[hidden]{display:none}
 
     /* Hero */
     .hero{position:relative; width:100%; max-width:1200px; margin:8px auto 0; border-radius:16px; overflow:hidden; background:#0b0f14; aspect-ratio:21/9}
@@ -103,6 +119,7 @@
     @keyframes glowBreath{0%{opacity:.52;filter:blur(9px)}50%{opacity:.8;filter:blur(12px)}100%{opacity:.62;filter:blur(10px)}}
     @keyframes lightsFlicker{0%{opacity:.70}50%{opacity:.92}100%{opacity:.80}}
     @media (prefers-reduced-motion:reduce){ .hero-lights, .hero-lights::before, .hero-lights::after{animation:none!important} }
+    @media (max-width: 860px){ .hero{margin-top:6px} }
 
     /* Tabs + mini-TOC */
     .tabs{gap:.35rem}
@@ -177,19 +194,23 @@
   <div class="laser-grid" aria-hidden="true"></div>
   <div class="xi-meter" aria-hidden="true"><div class="xi-ring"><div class="xi-dot"></div></div><div class="xi-label">Ξ</div></div>
 
-  <!-- Header (sticky, unified) -->
+  <!-- Header (sticky, unified with mobile drawer) -->
   <header class="site" role="banner">
-    <nav class="nav" aria-label="Main navigation">
+    <nav class="nav wrap" aria-label="Main navigation">
       <div class="brand">
-        <div class="logo no-living" aria-hidden="true"></div>
-        <h1 class="kicker sheen">Scroll of Fire</h1>
+        <a class="logo no-living" href="index.html" aria-label="Home"></a>
+        <a href="index.html" class="kicker sheen" style="text-decoration:none"><h1 class="kicker sheen">Scroll of Fire</h1></a>
       </div>
-      <div class="quick quick--utils" role="toolbar" aria-label="Quick actions">
+
+      <!-- Desktop quick actions -->
+      <div class="quick quick--utils hide-sm" role="toolbar" aria-label="Quick actions">
         <a class="cta" href="index.html" title="Home">Home</a>
         <a class="cta" href="#p1" data-jump title="Jump to Part I">Part I</a>
         <a class="cta" href="#p2" data-jump title="Jump to Part II">Part II</a>
         <a class="cta" href="#ethics" data-jump>Ethics</a>
         <a class="cta" href="#notes" data-jump>Notes</a>
+        <a class="cta cta--section" href="#p2" title="Back to Codex">Back to Codex</a>
+        <a class="cta" href="teach.html" title="Manifest">Manifest</a>
         <button id="toggleSimple" class="cta" type="button" aria-pressed="false" title="Echo View (hide math)">Echo</button>
         <button id="toggleGrid" class="cta" type="button" aria-pressed="true" title="Toggle HUD grid">HUD</button>
         <button id="cycleCarrier" class="cta" type="button" title="Cycle carrier skin">Carrier</button>
@@ -197,7 +218,22 @@
         <button id="toggleLights" class="cta" type="button" aria-pressed="true" title="Toggle banner lights">Lights</button>
         <button id="openPalette" class="cta" type="button" title="Command palette">⌘K</button>
       </div>
+
+      <!-- Mobile toggler -->
+      <button id="navToggle" class="menu-toggle show-sm" type="button" aria-controls="navDrawer" aria-expanded="false" aria-label="Open menu">☰</button>
     </nav>
+
+    <!-- Mobile drawer -->
+    <div id="navDrawer" class="drawer" hidden>
+      <a class="dlink" href="index.html">Home</a>
+      <a class="dlink" href="#p1" data-jump>Part I — Architecture</a>
+      <a class="dlink" href="#p2" data-jump>Part II — Canon</a>
+      <a class="dlink" href="#ethics" data-jump>Ethics</a>
+      <a class="dlink" href="#notes" data-jump>Notes</a>
+      <hr>
+      <a class="dlink" href="#p2">Back to Codex</a>
+      <a class="dlink" href="teach.html">Manifest</a>
+    </div>
   </header>
 
   <main id="main" class="wrap" role="main" tabindex="-1">
@@ -234,11 +270,11 @@
             <select id="vr-voice" aria-label="Voice selector"></select>
           </div>
           <div class="col-6">
-            <label for="vr-rate">Speed (<span id="vr-rate-val">1.0</span>x)</label>
+            <label for="vr-rate">Speed (<span id="vr-rate-val">1.00</span>x)</label>
             <input id="vr-rate" type="range" min="0.7" max="1.6" step="0.05" value="1.0" />
           </div>
           <div class="col-6">
-            <label for="vr-pitch">Pitch (<span id="vr-pitch-val">1.0</span>)</label>
+            <label for="vr-pitch">Pitch (<span id="vr-pitch-val">1.00</span>)</label>
             <input id="vr-pitch" type="range" min="0.8" max="1.4" step="0.05" value="1.0" />
           </div>
           <div class="col-12">
@@ -837,15 +873,14 @@
       });
     })();
 
-    // Page search ("/" to focus)
+    // Page search ("/" to focus) — injects a search box after tabs
     (function(){
-      // Build a quick suggest list based on headings + equation cards
       const list=document.createElement('div'); list.id='site-suggest'; list.className='mini-toc hidden'; list.setAttribute('role','listbox');
       const label=document.createElement('label'); label.className='meta'; label.textContent='Press / to search this page';
       const input=document.createElement('input'); input.id='site-search'; input.type='search'; input.placeholder='Search text on this page…'; input.setAttribute('aria-label','Search this page'); input.autocomplete='off'; input.spellcheck=false;
       const holder=document.createElement('article'); holder.className='card col-12 searchbox reveal'; holder.append(label,input,list);
       const grid=document.createElement('section'); grid.className='grid'; grid.style.margin='8px 0 0'; grid.append(holder);
-      const main=document.getElementById('main'); main.insertBefore(grid, main.querySelector('.tabs').nextSibling);
+      const main=document.getElementById('main'); const tabs=main.querySelector('.tabs'); tabs && main.insertBefore(grid, tabs.nextSibling);
 
       addEventListener('keydown',(e)=>{ if(e.key==='/' && document.activeElement!==input){ e.preventDefault(); input.focus(); input.select(); } });
 
@@ -925,7 +960,7 @@
       });
     })();
 
-    // Voice Reader mini-controls
+    // Voice Reader mini-controls + collapsible bar a11y
     (function(){
       const det = document.getElementById('voice-reader');
       const bar = det?.querySelector('.collapsible__bar');
@@ -965,6 +1000,186 @@
         } requestAnimationFrame(tween);
       } requestAnimationFrame(step);
     })();
+
+    /* Mobile drawer: open/close + a11y */
+    (function(){
+      const btn = document.getElementById('navToggle');
+      const drawer = document.getElementById('navDrawer');
+      if(!btn || !drawer) return;
+      function open(){ drawer.hidden = false; btn.setAttribute('aria-expanded','true'); }
+      function close(){ drawer.hidden = true; btn.setAttribute('aria-expanded','false'); }
+      btn.addEventListener('click', ()=> drawer.hidden ? open() : close());
+      document.addEventListener('click', (e)=>{
+        if (drawer.hidden) return;
+        if (e.target === btn) return;
+        if (!drawer.contains(e.target)) close();
+      });
+      addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !drawer.hidden) close(); });
+      drawer.addEventListener('click', (e)=>{ const a=e.target.closest('a'); if(a){ close(); } });
+    })();
+
+    /* Voice Reader (Web Speech API) */
+    (function(){
+      const el = (id)=>document.getElementById(id);
+      const playBtn   = el('vr-play');
+      const pauseBtn  = el('vr-pause');
+      const resumeBtn = el('vr-resume');
+      const stopBtn   = el('vr-stop');
+      const voiceSel  = el('vr-voice');
+      const rateInp   = el('vr-rate');
+      const pitchInp  = el('vr-pitch');
+      const rateVal   = el('vr-rate-val');
+      const pitchVal  = el('vr-pitch-val');
+      const startSel  = el('vr-start');
+      const speakMath = el('vr-speak-math');
+      const statusEl  = el('vr-status');
+      const exportBtn = el('vr-export-ssml');
+
+      if (!window.speechSynthesis || !playBtn) {
+        if (statusEl) statusEl.textContent = 'Voice playback is not supported in this browser.';
+        return;
+      }
+
+      let voices = [];
+      let queue  = [];
+      let speaking = false;
+      let canceled = false;
+
+      function refreshVoices(){
+        voices = speechSynthesis.getVoices().sort((a,b)=> a.name.localeCompare(b.name));
+        if (!voiceSel) return;
+        const cur = voiceSel.value;
+        voiceSel.innerHTML = voices.map(v=>`<option value="${v.name}">${v.name} ${v.lang?('('+v.lang+')'):''}</option>`).join('');
+        if (cur) voiceSel.value = cur;
+      }
+      refreshVoices();
+      speechSynthesis.onvoiceschanged = refreshVoices;
+
+      rateInp?.addEventListener('input', ()=> rateVal.textContent = (+rateInp.value).toFixed(2));
+      pitchInp?.addEventListener('input', ()=> pitchVal.textContent = (+pitchInp.value).toFixed(2));
+
+      function sectionText(){
+        const id = (startSel?.value || '#p1');
+        const sec = document.querySelector(id);
+        if (!sec) return '';
+        const clone = sec.cloneNode(true);
+
+        // Strip UI bits we don't want read
+        clone.querySelectorAll('button, .eq-tools, .chip, .meta, .sr-only, .palette, .eq-toggle').forEach(n=>n.remove());
+
+        // Math handling
+        if (speakMath && !speakMath.checked){
+          clone.querySelectorAll('.eq, mjx-container').forEach(n=>n.remove());
+        } else {
+          clone.querySelectorAll('mjx-container').forEach(m=>{
+            try{ m.replaceWith(document.createTextNode(' equation ' + (m.getAttribute('aria-label') || '') + ' ')); }catch{}
+          });
+        }
+
+        let text = clone.innerText || clone.textContent || '';
+        text = text.replace(/\b(Copy TeX|Link Copied|Link)\b/g,'').replace(/\s+\n/g,'\n').replace(/\n{3,}/g,'\n\n');
+        return text.trim();
+      }
+
+      function chunkify(str, max=900){
+        const s = str.split(/(?<=[\.\?\!])\s+/);
+        const out = [];
+        let buf = '';
+        for(const part of s){
+          if ((buf + ' ' + part).length > max){
+            if (buf) out.push(buf.trim());
+            buf = part;
+          } else {
+            buf += (buf ? ' ' : '') + part;
+          }
+        }
+        if (buf) out.push(buf.trim());
+        return out.length ? out : [str.slice(0, max)];
+      }
+
+      function speak(){
+        const txt = sectionText();
+        if (!txt){ status('Nothing to read in that section.'); return; }
+        canceled = false;
+        queue = chunkify(txt);
+        speechSynthesis.cancel(); // reset
+        const vName = voiceSel?.value;
+        const vObj = voices.find(v=>v.name===vName);
+
+        speaking = true;
+        playBtn.disabled = true; pauseBtn.disabled = false; stopBtn.disabled = false; resumeBtn.disabled = true;
+        status('Playing…');
+
+        function next(){
+          if (canceled) return;
+          const seg = queue.shift();
+          if (!seg){ done(); return; }
+          const u = new SpeechSynthesisUtterance(seg);
+          if (vObj) u.voice = vObj;
+          u.rate = rateInp ? +rateInp.value : 1.0;
+          u.pitch = pitchInp ? +pitchInp.value : 1.0;
+
+          u.onend = ()=> next();
+          u.onerror = (e)=> { console.warn('TTS error', e); next(); };
+          speechSynthesis.speak(u);
+        }
+        next();
+      }
+
+      function pause(){
+        if (!speaking) return;
+        speechSynthesis.pause();
+        pauseBtn.disabled = true; resumeBtn.disabled = false;
+        status('Paused.');
+      }
+      function resume(){
+        if (!speaking) return;
+        speechSynthesis.resume();
+        pauseBtn.disabled = false; resumeBtn.disabled = true;
+        status('Playing…');
+      }
+      function stop(){
+        canceled = true;
+        speechSynthesis.cancel();
+        done(true);
+      }
+      function done(stopped=false){
+        speaking = false;
+        playBtn.disabled = false; pauseBtn.disabled = true; resumeBtn.disabled = true; stopBtn.disabled = true;
+        status(stopped ? 'Stopped.' : 'Done.');
+      }
+      function status(t){ if(statusEl) statusEl.textContent = t; }
+
+      playBtn?.addEventListener('click', speak);
+      pauseBtn?.addEventListener('click', pause);
+      resumeBtn?.addEventListener('click', resume);
+      stopBtn?.addEventListener('click', stop);
+
+      // Export SSML (simple paragraph wrapping)
+      exportBtn?.addEventListener('click', ()=>{
+        const txt = sectionText();
+        if (!txt){ status('Nothing to export.'); return; }
+        const escaped = txt
+          .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+          .split(/\n{2,}/).map(p=>`<p>${p}</p>`).join('\n');
+        const ratePct = rateInp ? Math.round(+rateInp.value * 100) : 100;
+        const pitchSt = pitchInp ? Math.round((+pitchInp.value - 1) * 20) : 0;
+        const ssml =
+`<?xml version="1.0"?>
+<speak version="1.1" xml:lang="en-US">
+  <prosody rate="${ratePct}%" pitch="${pitchSt}st">
+${escaped}
+  </prosody>
+</speak>`;
+        const blob = new Blob([ssml], {type:'application/ssml+xml'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'theory.ssml'; a.click();
+        setTimeout(()=>URL.revokeObjectURL(url), 1000);
+        status('Exported SSML.');
+      });
+    })();
+
   </script>
 
   <!-- Small layout helper -->
@@ -974,4 +1189,4 @@
     .chip{font-size:.85rem; padding:.25rem .55rem; border-radius:999px; border:1px solid var(--line); background:var(--bg-elev); opacity:.9}
   </style>
 </body>
-  </html>
+                                                                                         </html>
