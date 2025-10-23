@@ -278,6 +278,27 @@ canvas#trace {
     </nav>
   </header>
 
+
+
+
+<!-- 13-Moon Home Bar -->
+<a href="moons.html" class="tile moon-bar" id="moonBar" aria-label="Open 13 Moons — Living Clock">
+  <span class="moon-dot" aria-hidden="true"></span>
+  <span class="moon-text">
+    <b id="mbLabel">13 Moons</b>
+    <small class="meta" id="mbMeta">Loading…</small>
+  </span>
+  <span class="moon-go" aria-hidden="true">↗</span>
+</a>
+<noscript>
+  <a class="tile" href="moons.html">13 Moons — open</a>
+</noscript>
+
+
+
+
+  
+
   <main id="main-content" class="wrap" role="main" tabindex="-1">
     <!-- Hero -->
     <figure id="hero" class="hero" aria-label="Scroll of Fire banner" data-fit="contain" data-anim="ken-burns">
@@ -1052,6 +1073,106 @@ Note: This is the local, verified file hash shown on this page.
     });
   })();
 </script>
+
+
+
+
+
+
+
+  <script>
+(() => {
+  // ---- minimal helpers (same rules as moons.html) ----
+  const MOONS = ["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
+  const MOON_ESS = ["Attract purpose","Stabilize challenge","Activate service","Define form","Empower radiance","Balance equality","Channel inspiration","Harmonize integrity","Pulse intention","Perfect manifestation","Dissolve release","Dedicate cooperation","Endure presence"];
+  const TZ_KEY = "sof_moons_tz";
+  const pad = n => String(n).padStart(2,"0");
+  const $ = s => document.querySelector(s);
+
+  function dateInTZ(baseDate, tz){
+    try{
+      const parts=new Intl.DateTimeFormat("en-CA",{timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"}).formatToParts(baseDate);
+      const m=Object.fromEntries(parts.map(p=>[p.type,p.value]));
+      return new Date(`${m.year}-${m.month}-${m.day}T${m.hour}:${m.minute}:${m.second}Z`);
+    }catch(_){ return new Date(baseDate); }
+  }
+  const isLeapYear = y => (y%4===0 && y%100!==0) || (y%400===0);
+  const isLeapDayUTC = d => d.getUTCMonth()===1 && d.getUTCDate()===29;
+  const isDOOT = (d, tz) => { const dt=dateInTZ(d, tz); return (dt.getUTCMonth()===6 && dt.getUTCDate()===25); }; // Jul 25 in TZ
+  function startOfYear13(d, tz){
+    const dt = dateInTZ(d, tz);
+    const y = dt.getUTCFullYear();
+    const aThis = new Date(Date.UTC(y,6,26)); // Jul 26
+    const aPrev = new Date(Date.UTC(y-1,6,26));
+    return dt >= aThis ? aThis : aPrev;
+  }
+  const utcTrunc = d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+  function dayIndexSinceStart(d, tz){
+    const start = utcTrunc(startOfYear13(d, tz));
+    const dt = utcTrunc(dateInTZ(d, tz));
+    let days = Math.floor((dt - start)/86400000);
+    const doot = new Date(Date.UTC(start.getUTCFullYear()+1,6,25)); // next Jul 25
+    if (dt >= doot) days -= 1;
+    for (let y=start.getUTCFullYear(); y<=dt.getUTCFullYear(); y++){
+      if(isLeapYear(y)){
+        const feb29 = new Date(Date.UTC(y,1,29));
+        if (dt >= feb29 && start <= feb29) days -= 1;
+      }
+    }
+    return days;
+  }
+  function calc13Moon(d, tz){
+    if (isDOOT(d,tz)){
+      const s=startOfYear13(d,tz).getUTCFullYear();
+      return {special:"Day Out of Time", year:`${s}/${s+1}`};
+    }
+    if (isLeapDayUTC(dateInTZ(d,tz))){
+      const s=startOfYear13(d,tz).getUTCFullYear();
+      return {special:"Leap Day", year:`${s}/${s+1}`};
+    }
+    const idx = dayIndexSinceStart(d, tz); // 0..363
+    const moon = Math.floor(idx/28)+1;     // 1..13
+    const day  = (idx%28)+1;               // 1..28
+    const s=startOfYear13(d,tz).getUTCFullYear();
+    return {special:null, moon, day, year:`${s}/${s+1}`};
+  }
+
+  // ---- render the bar ----
+  function renderMoonBar(){
+    const el = document.getElementById('moonBar'); if (!el) return;
+    const label = document.getElementById('mbLabel');
+    const meta  = document.getElementById('mbMeta');
+
+    const tz = localStorage.getItem(TZ_KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+    const now = new Date();
+    const todayWall = dateInTZ(now, tz);
+    const dStr = todayWall.toISOString().slice(0,10);
+
+    const m13 = calc13Moon(now, tz);
+
+    if (m13.special){
+      label.textContent = m13.special;
+      meta.textContent  = `13-Moon Year ${m13.year} • ${new Intl.DateTimeFormat(undefined,{dateStyle:"medium", timeZone:tz}).format(todayWall)} • ${tz}`;
+      el.classList.add('is-doot');
+    } else {
+      const idx = m13.moon - 1;
+      label.textContent = `${MOONS[idx]} Moon — Day ${m13.day} of 28`;
+      meta.textContent  = `${MOON_ESS[idx]} • Year ${m13.year} • ${new Intl.DateTimeFormat(undefined,{dateStyle:"medium", timeZone:tz}).format(todayWall)} • ${tz}`;
+      el.classList.remove('is-doot');
+    }
+
+    // Deep-link to moons page with date + tz preselected
+    const url = new URL(el.getAttribute('href'), document.baseURI);
+    url.searchParams.set('d', dStr);
+    url.searchParams.set('tz', tz);
+    el.setAttribute('href', url.toString());
+  }
+
+  renderMoonBar();
+  // keep it fresh at midnight rollovers in chosen TZ
+  setInterval(renderMoonBar, 60*1000);
+})();
+  </script>
 <!-- End Part 2/2 -->
 
 </body>
