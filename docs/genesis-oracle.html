@@ -9,9 +9,7 @@
        ========================================================= -->
   <!-- Keep <base> on prod, remove on local/dev -->
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>
-    (function(){ if(location.hostname!=="ssnfts24.github.io"){ const b=document.querySelector("base"); if(b) b.remove(); } })();
-  </script>
+  <script>(function(){if(location.hostname!=="ssnfts24.github.io"){const b=document.querySelector("base");if(b)b.remove();}})();</script>
 
   <meta charset="utf-8" />
   <title>The Genesis Oracle — Seal of Becoming | Scroll of Fire</title>
@@ -37,8 +35,7 @@
     "@context":"https://schema.org","@type":"WebApplication",
     "name":"The Genesis Oracle — Seal of Becoming",
     "url":"https://ssnfts24.github.io/scroll-of-fire/genesis-oracle.html",
-    "applicationCategory":"Utility",
-    "operatingSystem":"Any",
+    "applicationCategory":"Utility","operatingSystem":"Any",
     "description":"A Remnant system for reading the law of one’s birth: 13 Moons, Day, Week, Tone, and resonant numerology.",
     "creator":{"@type":"Person","name":"Aaron Paul Laird"}
   }</script>
@@ -48,7 +45,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- Site CSS (share exact skin with moons.html) -->
+  <!-- Shared skin -->
   <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-24">
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24"></noscript>
@@ -57,13 +54,9 @@
   <link rel="stylesheet" href="assets/css/moons.css?v=2025-10-24" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/moons.css?v=2025-10-24"></noscript>
 
-  <!-- Page-local polish (Remnant signature + widget baseline) -->
+  <!-- Page-local polish (moonbar upgraded) -->
   <style>
-    :root{
-      --accent:#7af3ff; --line:#2a3242;
-      --moon-accent:#7af3ff; --moon-accent-2:#f3c97a; /* prepaint before JS */
-      --ring-size: 76px;
-    }
+    :root{ --accent:#7af3ff; --line:#2a3242; --moon-accent:#7af3ff; --moon-accent-2:#f3c97a; --ring-size:76px }
     body.stars{
       background:
         radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
@@ -75,99 +68,42 @@
     .title{ text-align:center }
     .subtitle{ text-align:center; color:var(--muted,#9aa4be) }
 
-    /* Small moons widget @ top */
-    .moonbar{display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:10px;
-      border:1px solid var(--line); border-radius:14px; padding:8px;
-      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
-                 radial-gradient(140% 80% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
-      box-shadow:0 10px 24px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.02);
+    /* Upgraded compact moonbar */
+    .moonbar{
+      display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:10px;
+      border:1px solid var(--line); border-radius:14px; padding:10px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012)),
+        radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--moon-accent) 11%, transparent), transparent 60%),
+        var(--remnant-veil, transparent);
+      box-shadow:0 10px 24px rgba(0,0,0,.42), inset 0 0 0 1px rgba(255,255,255,.03);
+      position:relative; isolation:isolate;
     }
-    .moonbar .mb-bg{ fill:none; stroke:#1b2231; stroke-width:8 }
-    .moonbar .mb-fg{ fill:none; stroke:url(#mbGrad); stroke-width:8; stroke-linecap:round; stroke-dasharray:0 316;
-      filter:drop-shadow(0 0 6px color-mix(in srgb, var(--moon-accent) 35%, transparent)) drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent-2) 28%, transparent));
+    .moonbar::after{
+      content:""; position:absolute; inset:-1px; border-radius:14px; pointer-events:none; opacity:.5; z-index:-1;
+      background:
+        conic-gradient(from var(--spin,0deg) at 12px 12px, color-mix(in srgb, var(--moon-accent) 28%, transparent) 0 25%, transparent 25% 100%),
+        conic-gradient(from calc(var(--spin,0deg)+90deg) at calc(100% - 12px) 12px, color-mix(in srgb, var(--moon-accent-2) 24%, transparent) 0 25%, transparent 25% 100%);
+      filter: blur(7px) saturate(115%); animation: mbSpin 22s linear infinite;
+    }
+    @keyframes mbSpin{to{--spin:360deg}}
+    .moonbar .mb-bg{ fill:none; stroke:#121a28; stroke-width:8 }
+    .moonbar .mb-fg{
+      fill:none; stroke:url(#mbGrad); stroke-width:8; stroke-linecap:round; stroke-dasharray:0 316;
+      filter:drop-shadow(0 0 6px color-mix(in srgb, var(--moon-accent) 35%, transparent))
+             drop-shadow(0 0 12px color-mix(in srgb, var(--moon-accent-2) 22%, transparent));
     }
     .moonbar-info{ display:grid; gap:4px; min-width:0 }
     .moonbar-line{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; font-weight:800; letter-spacing:.2px }
     .moonbar-sub.meta{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:clamp(220px,26vw,360px) }
-    .moonbar .tag{ display:inline-block; padding:.2rem .45rem; border:1px solid var(--line); border-radius:999px;
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); font-weight:700; }
-    .moonbar-share,.moonbar-tz{ padding:.45rem .7rem; border:1px solid var(--line); border-radius:10px;
-      background:linear-gradient(180deg,rgba(255,255,255,.04),transparent); font-weight:700; cursor:pointer; color:inherit }
+    .moonbar .tag{ display:inline-block; padding:.25rem .5rem; border:1px solid var(--line); border-radius:999px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); font-weight:800 }
+    .moonbar .tone{ font-variant-numeric:tabular-nums }
+    .moonbar-share,.moonbar-tz{ padding:.5rem .8rem; border:1px solid var(--line); border-radius:10px;
+      background:linear-gradient(180deg,rgba(255,255,255,.05),transparent); font-weight:800; cursor:pointer; color:inherit }
     .moonbar .yhwh{ box-shadow:0 0 0 1px #7af3ff22, inset 0 0 0 1px #7af3ff18 }
-    .moonbar.yhwh-on .yhwh{ box-shadow:0 0 0 1px #7af3ff66, 0 0 18px #7af3ff33, inset 0 0 0 1px #7af3ff33 }
-    .moonbar, .moonbar *{ color: var(--fg, #e9eef6) !important; text-shadow: 0 1px 1px rgba(0,0,0,.55) }
-
-    /* Layout cards */
-    .grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:12px }
-    .col-4{grid-column:span 4}.col-6{grid-column:span 6}.col-8{grid-column:span 8}.col-12{grid-column:span 12}
-    @media (max-width:980px){ .grid > *{ grid-column:1 / -1 } }
-
-    .card{
-      border:1px solid var(--line); border-radius:12px; padding:14px;
-      background:
-        linear-gradient(180deg, var(--elev, rgba(255,255,255,.02)), var(--elev-2, rgba(255,255,255,.006))),
-        radial-gradient(70% 50% at 100% 0%, color-mix(in srgb, var(--moon-accent) 8%, transparent), transparent 60%);
-      box-shadow:0 6px 14px rgba(0,0,0,.35);
-    }
-    .shine{ position:relative; isolation:isolate }
-    .shine::after{
-      content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:.55; z-index:-1;
-      background: conic-gradient(from var(--spin,0deg),
-                  color-mix(in srgb, var(--moon-accent) 24%, transparent),
-                  transparent 12% 25%,
-                  color-mix(in srgb, var(--moon-accent-2) 20%, transparent),
-                  transparent 37% 50%,
-                  color-mix(in srgb, var(--accent) 20%, transparent),
-                  transparent 62% 75%,
-                  color-mix(in srgb, var(--accent-2,#cfefff) 18%, transparent),
-                  transparent 87% 100%);
-      filter: blur(8px) saturate(120%);
-      animation: spinAureole 18s linear infinite;
-    }
-    @keyframes spinAureole{ to{ --spin: 360deg } }
-
-    .lab-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:end }
-    .lab-input, select, input, button{ font:inherit }
-    .lab-input{ padding:.6rem; min-height:40px; border-radius:10px; border:1px solid var(--line); background:#0f1116; color:inherit }
-    .lab-btn{
-      padding:.62rem .95rem; min-height:40px; border-radius:10px; border:1px solid var(--line);
-      background:linear-gradient(180deg,rgba(255,255,255,.05),transparent); color:inherit; font-weight:800; cursor:pointer;
-      transition:transform .06s ease, box-shadow .12s ease, border-color .12s ease, filter .12s ease;
-    }
-    .lab-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35); border-color:color-mix(in srgb, var(--moon-accent) 30%, var(--line)); filter:drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 25%, transparent)) }
-
-    .meta{ color:var(--muted, #9aa4be) }
-    .hint{ color:var(--muted, #9aa4be) }
-    .kbd{ display:inline-block; padding:.12rem .35rem; border-radius:6px; border:1px solid var(--line); background:#0f1116; font:700 12px/1 Inter }
-
-    /* Birth Summary grid */
-    .summary{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px }
-    .summary .pill{ display:grid; gap:2px; border:1px solid var(--line); border-radius:10px; padding:.55rem .8rem; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)) }
-    .summary .k{ font-weight:800 }
-    @media (max-width:880px){ .summary{ grid-template-columns:1fr 1fr } }
-
-    /* Week dots mini */
-    .weekrow{ display:flex; gap:8px; align-items:center; margin-top:6px; flex-wrap:wrap }
-    .week{ display:grid; grid-template-columns:repeat(7,10px); gap:6px; padding:6px 10px; border:1px solid var(--line); border-radius:999px;
-      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), radial-gradient(80% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
-    }
-    .dot{ width:10px; height:10px; border-radius:50%; background:#1f2533; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08) }
-    .dot.on{ background:radial-gradient(circle at 40% 35%, var(--moon-accent), var(--moon-accent-2)); box-shadow:0 0 0 1px rgba(255,255,255,.12) inset, 0 0 10px color-mix(in srgb, var(--moon-accent) 35%, transparent) }
-
-    /* Results blocks */
-    .result-title{ font-family:"Crimson Pro",serif; font-weight:800; letter-spacing:.2px; margin:.3rem 0 .5rem }
-    .mono{ font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace }
-
-    .divider{ height:1px; background:linear-gradient(90deg, transparent, var(--line), transparent); margin:10px 0 }
-    .goldline{ height:1px; background:linear-gradient(90deg, #f3c97a44, #f3c97a, #f3c97a44); margin:10px 0 }
-
-    /* Toast */
-    .toast{ position:fixed; left:50%; bottom:calc(22px + env(safe-area-inset-bottom)); transform:translateX(-50%);
-      background:#0e131c; color:#e6f9ff; padding:8px 12px; border:1px solid var(--line); border-radius:10px;
-      box-shadow:0 10px 28px rgba(0,0,0,.35); z-index:9999; opacity:0; transition:opacity .2s }
-
-    /* Reduce motion */
-    @media (prefers-reduced-motion:reduce){ .moonbar .mb-fg, .shine::after{ animation:none !important } }
+    .moonbar.yhwh-on .yhwh{ box-shadow:0 0 0 1px #7af3ff66, 0 0 18px #7af3ff40, inset 0 0 0 1px #7af3ff33 }
+    .moonbar, .moonbar *{ color:#e9eef6 !important; text-shadow:0 1px 1px rgba(0,0,0,.55) }
   </style>
 
   <!-- Hidden defs so JS can recolor gradients safely -->
@@ -194,7 +130,7 @@
     </nav>
   </header>
 
-  <!-- Small 13-Moon widget (shared behavior with moons.html) -->
+  <!-- Small 13-Moon widget (no opener here; this IS the oracle) -->
   <section class="wrap" aria-label="Live Moon">
     <div class="moonbar remnant-frame" role="region" aria-label="13-Moon mini clock" style="margin-top:12px">
       <svg class="moonbar-ring" viewBox="0 0 120 120" role="img" aria-labelledby="mbTitle mbDesc" width="var(--ring-size)" height="var(--ring-size)">
@@ -212,6 +148,7 @@
           <strong id="mbMoon">—</strong>
           <span class="sep">•</span>
           <span id="mbDayLine">—</span>
+          <span class="tag tone" id="mbTone" title="Daily Tone (1–13)">Tone —</span>
         </div>
         <div class="moonbar-sub meta" id="mbEssence">—</div>
       </div>
@@ -225,6 +162,34 @@
       <button class="moonbar-tz" id="mbTZ" type="button" aria-haspopup="dialog" aria-expanded="false" title="Change timezone">TZ</button>
     </div>
   </section>
+
+  <!-- Mini glue for Tone chip + resonant YHWH glow -->
+  <script>
+  (function(){
+    "use strict";
+    const $=s=>document.querySelector(s);
+    const mbDay=$("#mbDay"), mbTone=$("#mbTone"), bar=$(".moonbar");
+    const sumDigits = n => String(n).split("").reduce((a,b)=>a+(+b||0),0);
+    const reduceNum = n => {while(n>9 && n!==11 && n!==22 && n!==33){n=sumDigits(n);} return n;};
+
+    function refreshTone(){
+      const d = Number((mbDay?.textContent||"").replace(/\D+/g,""));
+      if(!d) return;
+      const tone = ((d-1)%13)+1;
+      if(mbTone) mbTone.textContent = `Tone ${tone}`;
+    }
+    function glowYHWH(date){
+      const y=date.getUTCFullYear(), m=date.getUTCMonth()+1, day=date.getUTCDate();
+      const total = reduceNum(sumDigits(y)+sumDigits(m)+sumDigits(day));
+      bar && bar.classList.toggle("yhwh-on", [1,4,7,11,22,33].includes(total));
+    }
+
+    // Observe day changes (moons.js updates the ring)
+    const mo = new MutationObserver(refreshTone);
+    mbDay && mo.observe(mbDay, {childList:true, characterData:true, subtree:true});
+    refreshTone(); glowYHWH(new Date());
+  })();
+  </script>
 
   <!-- Main -->
   <main id="main" class="wrap" role="main">
