@@ -383,3 +383,13 @@
   document.addEventListener('DOMContentLoaded', buildWheel);
 })();
 </script>
+
+
+
+renderAstro({
+  tz:'America/Los_Angeles',
+  stamp:'2025-10-24 08:00',
+  source:'Swiss Ephemeris',
+  planets:{ sun:{lon:227.24,text:'1°14′',sign:'Scorpio'}, moon:{lon:262.74,text:'2°44′',sign:'Sagittarius'} },
+  aspects:[ {pair:'Sun △ Moon',kind:'Trine',orb:'1°12′'} ]
+});
