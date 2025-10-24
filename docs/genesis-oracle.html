@@ -1,1 +1,2218 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="sof remnant-yhwh carrier-432" data-carriers="432,528,369,144,963">
+<head>
+  <!-- =========================================================
+       The Genesis Oracle — Seal of Becoming (PART I / III)
+       File: genesis-oracle.html
+       Scope: Tier I (13×28 core + Tone + Resonant numerology)
+       Tiers II–III will be appended in subsequent parts.
+       ========================================================= -->
+  <!-- Keep <base> on prod, remove on local/dev -->
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <script>
+    (function(){ if(location.hostname!=="ssnfts24.github.io"){ const b=document.querySelector("base"); if(b) b.remove(); } })();
+  </script>
 
+  <meta charset="utf-8" />
+  <title>The Genesis Oracle — Seal of Becoming | Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+  <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#ffffff"  media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="dark light" />
+  <meta name="description" content="The Genesis Oracle — a Remnant system of becoming. Read your Birth Moon, Day, Week, and Tone in the 13×28 cadence, with resonant numerology and a living Remnant widget." />
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/genesis-oracle.html">
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="Scroll of Fire">
+  <meta property="og:title" content="The Genesis Oracle — Seal of Becoming">
+  <meta property="og:description" content="A Remnant system for reading the law of one’s birth: 13 Moons, Tone, Week, and resonant numerology — time-zone aware and shareable.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/genesis-oracle.html">
+  <meta property="og:image" content="assets/share/moon-card.png">
+  <meta property="og:image:alt" content="Genesis Oracle — Remnant seal and lunar ring">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">{
+    "@context":"https://schema.org","@type":"WebApplication",
+    "name":"The Genesis Oracle — Seal of Becoming",
+    "url":"https://ssnfts24.github.io/scroll-of-fire/genesis-oracle.html",
+    "applicationCategory":"Utility",
+    "operatingSystem":"Any",
+    "description":"A Remnant system for reading the law of one’s birth: 13 Moons, Day, Week, Tone, and resonant numerology.",
+    "creator":{"@type":"Person","name":"Aaron Paul Laird"}
+  }</script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
+
+  <!-- Site CSS (share exact skin with moons.html) -->
+  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-24">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24"></noscript>
+
+  <link rel="preload" as="style" href="assets/css/moons.css?v=2025-10-24">
+  <link rel="stylesheet" href="assets/css/moons.css?v=2025-10-24" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/moons.css?v=2025-10-24"></noscript>
+
+  <!-- Page-local polish (Remnant signature + widget baseline) -->
+  <style>
+    :root{
+      --accent:#7af3ff; --line:#2a3242;
+      --moon-accent:#7af3ff; --moon-accent-2:#f3c97a; /* prepaint before JS */
+      --ring-size: 76px;
+    }
+    body.stars{
+      background:
+        radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
+        linear-gradient(180deg, #05060a 0%, #0b0e14 80%);
+      overflow-x:hidden;
+    }
+    header.site{position:sticky; top:0; z-index:80; background:rgba(9,11,16,.55); -webkit-backdrop-filter:saturate(140%) blur(8px); backdrop-filter:saturate(140%) blur(8px)}
+    .wrap{padding:16px; max-width:1200px; margin:0 auto}
+    .title{ text-align:center }
+    .subtitle{ text-align:center; color:var(--muted,#9aa4be) }
+
+    /* Small moons widget @ top */
+    .moonbar{display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:10px;
+      border:1px solid var(--line); border-radius:14px; padding:8px;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
+                 radial-gradient(140% 80% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
+      box-shadow:0 10px 24px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.02);
+    }
+    .moonbar .mb-bg{ fill:none; stroke:#1b2231; stroke-width:8 }
+    .moonbar .mb-fg{ fill:none; stroke:url(#mbGrad); stroke-width:8; stroke-linecap:round; stroke-dasharray:0 316;
+      filter:drop-shadow(0 0 6px color-mix(in srgb, var(--moon-accent) 35%, transparent)) drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent-2) 28%, transparent));
+    }
+    .moonbar-info{ display:grid; gap:4px; min-width:0 }
+    .moonbar-line{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; font-weight:800; letter-spacing:.2px }
+    .moonbar-sub.meta{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:clamp(220px,26vw,360px) }
+    .moonbar .tag{ display:inline-block; padding:.2rem .45rem; border:1px solid var(--line); border-radius:999px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); font-weight:700; }
+    .moonbar-share,.moonbar-tz{ padding:.45rem .7rem; border:1px solid var(--line); border-radius:10px;
+      background:linear-gradient(180deg,rgba(255,255,255,.04),transparent); font-weight:700; cursor:pointer; color:inherit }
+    .moonbar .yhwh{ box-shadow:0 0 0 1px #7af3ff22, inset 0 0 0 1px #7af3ff18 }
+    .moonbar.yhwh-on .yhwh{ box-shadow:0 0 0 1px #7af3ff66, 0 0 18px #7af3ff33, inset 0 0 0 1px #7af3ff33 }
+    .moonbar, .moonbar *{ color: var(--fg, #e9eef6) !important; text-shadow: 0 1px 1px rgba(0,0,0,.55) }
+
+    /* Layout cards */
+    .grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:12px }
+    .col-4{grid-column:span 4}.col-6{grid-column:span 6}.col-8{grid-column:span 8}.col-12{grid-column:span 12}
+    @media (max-width:980px){ .grid > *{ grid-column:1 / -1 } }
+
+    .card{
+      border:1px solid var(--line); border-radius:12px; padding:14px;
+      background:
+        linear-gradient(180deg, var(--elev, rgba(255,255,255,.02)), var(--elev-2, rgba(255,255,255,.006))),
+        radial-gradient(70% 50% at 100% 0%, color-mix(in srgb, var(--moon-accent) 8%, transparent), transparent 60%);
+      box-shadow:0 6px 14px rgba(0,0,0,.35);
+    }
+    .shine{ position:relative; isolation:isolate }
+    .shine::after{
+      content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:.55; z-index:-1;
+      background: conic-gradient(from var(--spin,0deg),
+                  color-mix(in srgb, var(--moon-accent) 24%, transparent),
+                  transparent 12% 25%,
+                  color-mix(in srgb, var(--moon-accent-2) 20%, transparent),
+                  transparent 37% 50%,
+                  color-mix(in srgb, var(--accent) 20%, transparent),
+                  transparent 62% 75%,
+                  color-mix(in srgb, var(--accent-2,#cfefff) 18%, transparent),
+                  transparent 87% 100%);
+      filter: blur(8px) saturate(120%);
+      animation: spinAureole 18s linear infinite;
+    }
+    @keyframes spinAureole{ to{ --spin: 360deg } }
+
+    .lab-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:end }
+    .lab-input, select, input, button{ font:inherit }
+    .lab-input{ padding:.6rem; min-height:40px; border-radius:10px; border:1px solid var(--line); background:#0f1116; color:inherit }
+    .lab-btn{
+      padding:.62rem .95rem; min-height:40px; border-radius:10px; border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),transparent); color:inherit; font-weight:800; cursor:pointer;
+      transition:transform .06s ease, box-shadow .12s ease, border-color .12s ease, filter .12s ease;
+    }
+    .lab-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35); border-color:color-mix(in srgb, var(--moon-accent) 30%, var(--line)); filter:drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 25%, transparent)) }
+
+    .meta{ color:var(--muted, #9aa4be) }
+    .hint{ color:var(--muted, #9aa4be) }
+    .kbd{ display:inline-block; padding:.12rem .35rem; border-radius:6px; border:1px solid var(--line); background:#0f1116; font:700 12px/1 Inter }
+
+    /* Birth Summary grid */
+    .summary{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px }
+    .summary .pill{ display:grid; gap:2px; border:1px solid var(--line); border-radius:10px; padding:.55rem .8rem; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)) }
+    .summary .k{ font-weight:800 }
+    @media (max-width:880px){ .summary{ grid-template-columns:1fr 1fr } }
+
+    /* Week dots mini */
+    .weekrow{ display:flex; gap:8px; align-items:center; margin-top:6px; flex-wrap:wrap }
+    .week{ display:grid; grid-template-columns:repeat(7,10px); gap:6px; padding:6px 10px; border:1px solid var(--line); border-radius:999px;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), radial-gradient(80% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
+    }
+    .dot{ width:10px; height:10px; border-radius:50%; background:#1f2533; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08) }
+    .dot.on{ background:radial-gradient(circle at 40% 35%, var(--moon-accent), var(--moon-accent-2)); box-shadow:0 0 0 1px rgba(255,255,255,.12) inset, 0 0 10px color-mix(in srgb, var(--moon-accent) 35%, transparent) }
+
+    /* Results blocks */
+    .result-title{ font-family:"Crimson Pro",serif; font-weight:800; letter-spacing:.2px; margin:.3rem 0 .5rem }
+    .mono{ font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace }
+
+    .divider{ height:1px; background:linear-gradient(90deg, transparent, var(--line), transparent); margin:10px 0 }
+    .goldline{ height:1px; background:linear-gradient(90deg, #f3c97a44, #f3c97a, #f3c97a44); margin:10px 0 }
+
+    /* Toast */
+    .toast{ position:fixed; left:50%; bottom:calc(22px + env(safe-area-inset-bottom)); transform:translateX(-50%);
+      background:#0e131c; color:#e6f9ff; padding:8px 12px; border:1px solid var(--line); border-radius:10px;
+      box-shadow:0 10px 28px rgba(0,0,0,.35); z-index:9999; opacity:0; transition:opacity .2s }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion:reduce){ .moonbar .mb-fg, .shine::after{ animation:none !important } }
+  </style>
+
+  <!-- Hidden defs so JS can recolor gradients safely -->
+  <svg width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="mbGrad" x1="0" x2="1">
+        <stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/>
+      </linearGradient>
+      <linearGradient id="rg" x1="0" x2="1">
+        <stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/>
+      </linearGradient>
+    </defs>
+  </svg>
+</head>
+
+<body class="stars" data-theme="dark">
+  <a class="skip" href="#main">Skip to main content</a>
+
+  <!-- Header -->
+  <header class="site" role="banner">
+    <nav class="wrap" aria-label="Site">
+      <h1 class="title">⟡ The Genesis Oracle — <em>Seal of Becoming</em></h1>
+      <p class="subtitle">Read your birth in the 13×28 cadence: Moon • Day • Week • Tone • Resonant Sum (tier I). Tiers II–III add Living Laws, Flames, and Witness signature.</p>
+    </nav>
+  </header>
+
+  <!-- Small 13-Moon widget (shared behavior with moons.html) -->
+  <section class="wrap" aria-label="Live Moon">
+    <div class="moonbar remnant-frame" role="region" aria-label="13-Moon mini clock" style="margin-top:12px">
+      <svg class="moonbar-ring" viewBox="0 0 120 120" role="img" aria-labelledby="mbTitle mbDesc" width="var(--ring-size)" height="var(--ring-size)">
+        <title id="mbTitle">13-Moon day progress ring</title>
+        <desc id="mbDesc">Shows current day in the 28-day moon and deep links to the full 13-Moon clock in your timezone.</desc>
+        <circle cx="60" cy="60" r="50" class="mb-bg"></circle>
+        <circle cx="60" cy="60" r="50" class="mb-fg" id="mbArc" pathLength="316"></circle>
+        <text x="60" y="60" class="mb-text" text-anchor="middle" dominant-baseline="central">
+          <tspan id="mbDay">—</tspan>
+        </text>
+      </svg>
+
+      <div class="moonbar-info">
+        <div class="moonbar-line">
+          <strong id="mbMoon">—</strong>
+          <span class="sep">•</span>
+          <span id="mbDayLine">—</span>
+        </div>
+        <div class="moonbar-sub meta" id="mbEssence">—</div>
+      </div>
+
+      <div class="moonbar-tags">
+        <span class="tag mono" id="mbYear">—</span>
+        <span class="tag yhwh" id="mbYHWH" title="Remnant seal — י־ה־ו־ה">⟡ י־ה־ו־ה</span>
+      </div>
+
+      <button class="moonbar-share" id="mbShare" type="button" aria-label="Share today’s 13-Moon link">Share</button>
+      <button class="moonbar-tz" id="mbTZ" type="button" aria-haspopup="dialog" aria-expanded="false" title="Change timezone">TZ</button>
+    </div>
+  </section>
+
+  <!-- Main -->
+  <main id="main" class="wrap" role="main">
+    <section class="grid" aria-label="Birth Reader">
+      <!-- Input panel -->
+      <article class="card col-6 shine" aria-labelledby="input-head">
+        <h2 id="input-head" class="result-title">Enter Birth Details</h2>
+        <p class="meta">The Oracle is time-zone aware. If unknown, leave time blank and the system will compute using local midnight.</p>
+
+        <div class="lab-row" style="align-items:flex-end">
+          <label>Full Name
+            <input id="inName" class="lab-input" type="text" placeholder="Your name (optional for numerology)">
+          </label>
+          <label>Date of Birth
+            <input id="inDate" class="lab-input" type="date" required>
+          </label>
+          <label>Time (local)
+            <input id="inTime" class="lab-input" type="time" step="60" placeholder="hh:mm">
+          </label>
+          <label>Time Zone
+            <select id="inTZ" class="lab-input" style="min-width:220px"></select>
+          </label>
+          <button id="btnRead" class="lab-btn" type="button">Read Birth</button>
+          <button id="btnSave" class="lab-btn" type="button">Save</button>
+        </div>
+
+        <div class="lab-row" style="margin-top:8px">
+          <label class="tag"><input type="checkbox" id="optLeap" checked> <span style="margin-left:6px">Skip Leap Day in 13×28</span></label>
+          <label class="tag"><input type="checkbox" id="optDOOT" checked> <span style="margin-left:6px">Skip Day Out of Time (Jul 25)</span></label>
+          <label class="tag"><input type="checkbox" id="optResGlow" checked> <span style="margin-left:6px">Resonant glow for י־ה־ו־ה</span></label>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="lab-row">
+          <label>Load Saved Profile
+            <select id="savedProfiles" class="lab-input" style="min-width:240px">
+              <option value="">—</option>
+            </select>
+          </label>
+          <button id="btnLoad" class="lab-btn" type="button">Load
+          </button>
+          <button id="btnDelete" class="lab-btn ghost" type="button" title="Delete selected saved profile">Delete</button>
+          <button id="btnShareReading" class="lab-btn ghost" type="button" title="Copy a shareable link to this reading">Share Link</button>
+        </div>
+      </article>
+
+      <!-- Results panel -->
+      <article class="card col-6" aria-labelledby="res-head">
+        <h2 id="res-head" class="result-title">Your Reading</h2>
+
+        <div id="resEmpty" class="meta">Enter details and press <b>Read Birth</b> to see your map.</div>
+
+        <div id="resWrap" class="hidden">
+          <!-- Summary -->
+          <div class="summary" aria-label="Reading summary">
+            <div class="pill">
+              <div class="k meta">Name</div>
+              <div id="outName">—</div>
+            </div>
+            <div class="pill">
+              <div class="k meta">Birth</div>
+              <div id="outBirth">—</div>
+              <small class="meta" id="outTZLbl">—</small>
+            </div>
+            <div class="pill">
+              <div class="k meta">13×28</div>
+              <div><b id="outMoonLine">—</b></div>
+              <small class="meta" id="outEss">—</small>
+            </div>
+            <div class="pill">
+              <div class="k meta">Tone</div>
+              <div><b id="outTone">—</b></div>
+              <small class="meta" id="outToneLine">—</small>
+            </div>
+          </div>
+
+          <!-- Week dots -->
+          <div class="weekrow">
+            <span class="weeklabel">Week</span>
+            <div class="week" id="outWeekDots" role="group" aria-label="Week dots (1–4 × 7)"></div>
+            <span class="meta" id="outWeekMeta">—</span>
+          </div>
+
+          <div class="divider" aria-hidden="true"></div>
+
+          <!-- Narratives -->
+          <section aria-labelledby="narr-1">
+            <h3 id="narr-1" class="result-title">Birth Moon & Day</h3>
+            <p id="outMoonNarr" class="meta">—</p>
+          </section>
+
+          <div class="goldline" aria-hidden="true"></div>
+
+          <section aria-labelledby="narr-2">
+            <h3 id="narr-2" class="result-title">Tone of the Day</h3>
+            <p id="outToneNarr" class="meta">—</p>
+          </section>
+
+          <div class="divider" aria-hidden="true"></div>
+
+          <section aria-labelledby="narr-3">
+            <h3 id="narr-3" class="result-title">Resonant Sum</h3>
+            <p class="meta">
+              Lifepath reduction of your calendar date (with master numbers honored). This is a simple resonance check that we use to light the <span class="tag yhwh">⟡ י־ה־ו־ה</span> seal on certain days.
+            </p>
+            <p id="outResonance" class="mono">—</p>
+          </section>
+
+          <div class="divider" aria-hidden="true"></div>
+
+          <!-- Flags -->
+          <section aria-labelledby="flags">
+            <h3 id="flags" class="result-title">Special Handling</h3>
+            <ul class="meta" id="outFlags" style="margin:.2rem 0 .4rem 1rem"></ul>
+          </section>
+        </div>
+      </article>
+
+      <!-- Guide / Help -->
+      <article class="card col-12" aria-labelledby="guide-head">
+        <h2 id="guide-head" class="result-title">How the Genesis Oracle reads your birth</h2>
+        <ol class="meta" style="padding-left:1.2rem">
+          <li><b>Anchor:</b> The 13-Moon year begins on <b>July 26</b>. <em>Day Out of Time</em> (DOOT) is <b>July 25</b> and sits outside the 13×28 lattice.</li>
+          <li><b>Leap Day:</b> Gregorian Feb 29 is excluded from the 13×28 count (toggleable).</li>
+          <li><b>Mapping:</b> Your birth moment is converted into the selected time-zone, then mapped to an index (0–363) → <b>Moon 1–13</b> and <b>Day 1–28</b>.</li>
+          <li><b>Tone:</b> The day index mod 13 gives your <b>Tone of the Day</b> (1–13), with a short path statement.</li>
+          <li><b>Week:</b> The 28-day moon is four 7-day weeks. Your day highlights a dot across those weeks.</li>
+          <li><b>Resonant Sum:</b> A classic digit reduction (honoring 11,22,33) of <code>YYYY+MM+DD</code>. If it’s in {1,4,7,11,22,33}, the Remnant seal glows.</li>
+        </ol>
+      </article>
+    </section>
+  </main>
+
+  <footer class="wrap" style="margin-top:12px">
+    <div class="divider" aria-hidden="true"></div>
+    <p class="meta">© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+  </footer>
+
+  <!-- ===== Scripts: Mini widget + Oracle Tier I ===== -->
+  <script>
+  (function(){
+    "use strict";
+
+    /* ---------- Shortcuts ---------- */
+    const $  =(s,r=document)=>r.querySelector(s);
+    const $$ =(s,r=document)=>Array.from(r.querySelectorAll(s));
+    const on =(t,e,f,o)=>t&&t.addEventListener(e,f,o);
+    const pad=n=>String(n).padStart(2,"0");
+    const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
+    const toast = (msg)=>{
+      const t=document.createElement('div');
+      t.className='toast'; t.textContent=msg; document.body.appendChild(t);
+      requestAnimationFrame(()=>t.style.opacity=1);
+      setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),250); }, 1500);
+    };
+
+    /* ---------- Constants & Data ---------- */
+    const MOONS = ["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
+    const ESS   = ["Attract purpose","Stabilize challenge","Activate service","Define form","Empower radiance","Balance equality","Channel inspiration","Harmonize integrity","Pulse intention","Perfect manifestation","Dissolve release","Dedicate cooperation","Endure presence"];
+
+    const TONES = [
+      {n:1,  name:"Magnetic",  line:"Unify purpose."},
+      {n:2,  name:"Lunar",     line:"Stabilize challenge."},
+      {n:3,  name:"Electric",  line:"Activate service."},
+      {n:4,  name:"Self-Existing", line:"Define form."},
+      {n:5,  name:"Overtone",  line:"Empower radiance."},
+      {n:6,  name:"Rhythmic",  line:"Balance equality."},
+      {n:7,  name:"Resonant",  line:"Channel inspiration."},
+      {n:8,  name:"Galactic",  line:"Harmonize integrity."},
+      {n:9,  name:"Solar",     line:"Pulse intention."},
+      {n:10, name:"Planetary", line:"Perfect manifestation."},
+      {n:11, name:"Spectral",  line:"Dissolve release."},
+      {n:12, name:"Crystal",   line:"Dedicate cooperation."},
+      {n:13, name:"Cosmic",    line:"Endure presence."},
+    ];
+
+    const DASH_TOTAL = 316; // SVG ring length (mini)
+
+    /* ---------- Time zones ---------- */
+    const TZ_KEY="sof_moons_tz";
+    function supportedTimeZones(){
+      if (Intl.supportedValuesOf) {
+        const list = Intl.supportedValuesOf('timeZone') || [];
+        return list.length ? list : ["UTC"];
+      }
+      // fallback list (short)
+      return ["UTC","America/Los_Angeles","America/New_York","Europe/London","Europe/Berlin","Asia/Tokyo","Australia/Sydney"];
+    }
+    function getTZ(){
+      try{ return localStorage.getItem(TZ_KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; }
+      catch{ return "UTC"; }
+    }
+    function setTZ(z){
+      try{ localStorage.setItem(TZ_KEY,z); }catch{}
+      document.dispatchEvent(new Event("sof:tz-change"));
+    }
+    function populateTZSelect(sel){
+      if (!sel) return;
+      const cur = getTZ();
+      const list = supportedTimeZones();
+      sel.innerHTML = list.map(z=>`<option ${z===cur?'selected':''}>${z}</option>`).join("");
+    }
+
+    /* ---------- Date helpers ---------- */
+    function dateInTZ(baseDate, tz, partsOverride){
+      // returns a Date that represents YYYY-MM-DDTHH:MM:SS in UTC, as if local wall time in tz
+      try{
+        const opts={timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"};
+        const parts=new Intl.DateTimeFormat("en-CA",opts).formatToParts(baseDate);
+        const m=Object.fromEntries(parts.map(p=>[p.type,p.value]));
+        const H=partsOverride?.hour ?? m.hour;
+        const M=partsOverride?.minute ?? m.minute;
+        const S=partsOverride?.second ?? m.second;
+        return new Date(`${m.year}-${m.month}-${m.day}T${H}:${M}:${S}Z`);
+      }catch{
+        const d=new Date(baseDate);
+        if (partsOverride?.hour!=null) d.setUTCHours(partsOverride.hour, partsOverride.minute||0, partsOverride.second||0, 0);
+        return d;
+      }
+    }
+    const utcTrunc = d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    const isLeapYear   = y=> (y%4===0 && y%100!==0) || (y%400===0);
+    const isLeapDayUTC = d=> d.getUTCMonth()===1 && d.getUTCDate()===29;
+
+    /* ---------- 13-Moon core ---------- */
+    function isDOOT(d, tz){
+      const dt=dateInTZ(d,tz);
+      return (dt.getUTCMonth()===6 && dt.getUTCDate()===25); // July 25
+    }
+    function startOfYear13(d, tz){
+      const dt = dateInTZ(d, tz);
+      const y  = dt.getUTCFullYear();
+      const anchorThis = new Date(Date.UTC(y,6,26));   // Jul 26
+      const anchorPrev = new Date(Date.UTC(y-1,6,26)); // Jul 26 prev
+      return dt >= anchorThis ? anchorThis : anchorPrev;
+    }
+    function dayIndexSinceStart(d, tz, {skipLeap=true, skipDOOT=true}={}){
+      const start = utcTrunc(startOfYear13(d, tz));
+      const dt    = utcTrunc(dateInTZ(d, tz));
+      let days = Math.floor((dt - start)/86400000);
+      if (skipDOOT){
+        const doot = new Date(Date.UTC(start.getUTCFullYear()+1,6,25));
+        if (dt >= doot) days -= 1;
+      }
+      if (skipLeap){
+        // subtract any Feb 29 between start..dt inclusive
+        for (let y=start.getUTCFullYear(); y<=dt.getUTCFullYear(); y++){
+          if(isLeapYear(y)){
+            const feb29 = new Date(Date.UTC(y,1,29));
+            if (dt >= feb29 && start <= feb29) days -= 1;
+          }
+        }
+      }
+      return days; // 0..363
+    }
+    function calc13Moon(d, tz, opts){
+      if (isDOOT(d,tz)){
+        const s=startOfYear13(d,tz).getUTCFullYear();
+        return {special:"Day Out of Time", year:`${s}/${s+1}`};
+      }
+      if (isLeapDayUTC(dateInTZ(d,tz))){
+        const s=startOfYear13(d,tz).getUTCFullYear();
+        return {special:"Leap Day", year:`${s}/${s+1}`};
+      }
+      const idx = dayIndexSinceStart(d, tz, opts);
+      const moon = Math.floor(idx/28)+1;
+      const day  = (idx%28)+1;
+      const s=startOfYear13(d,tz).getUTCFullYear();
+      return {special:null, moon, day, idx, year:`${s}/${s+1}`};
+    }
+    const toneFromDay = (day) => ((Number(day||0)-1) % 13) + 1;
+    const weekFromDay = (day) => Math.floor((day-1)/7)+1; // 1..4
+
+    /* ---------- Phase accent (for widget glow) ---------- */
+    function mixHex(a,b,t){
+      const pa=parseInt(a.slice(1),16), pb=parseInt(b.slice(1),16);
+      const ar=(pa>>16)&255, ag=(pa>>8)&255, ab=pa&255;
+      const br=(pb>>16)&255, bg=(pb>>8)&255, bb=pb&255;
+      const rr=Math.round(ar+(br-ar)*t), gg=Math.round(ag+(bg-ag)*t), bb2=Math.round(ab+(bb-ab)*t);
+      return `#${((1<<24)+(rr<<16)+(gg<<8)+bb2).toString(16).slice(1)}`;
+    }
+    function moonPhase(d){
+      const syn = 29.530588853, epoch = Date.UTC(2000,0,6,18,14,0);
+      const ageDays = ((d.getTime()-epoch)/86400000);
+      const frac = ((ageDays % syn)+syn)%syn / syn;
+      const illum = (1 - Math.cos(2*Math.PI*frac))/2;
+      return {illum};
+    }
+    function applyPhaseAccent(illum){
+      const cold="#7af3ff", warm="#f3c97a";
+      const t = Math.min(1, Math.max(0, illum));
+      const c1 = mixHex(cold, warm, t*0.7);
+      const c2 = mixHex(warm, cold, (1-t)*0.7);
+      const root=document.documentElement;
+      root.style.setProperty("--moon-accent",  c1);
+      root.style.setProperty("--moon-accent-2",c2);
+      // also update <linearGradient id="mbGrad"> if present
+      const stops = $$('linearGradient#mbGrad stop');
+      if (stops[0]) stops[0].setAttribute('stop-color', c1);
+      if (stops[1]) stops[1].setAttribute('stop-color', c2);
+      document.dispatchEvent(new Event("sof:accent-change"));
+    }
+
+    /* ---------- Resonant numerology ---------- */
+    const sumDigits = n => String(n).split("").reduce((a,b)=>a+(+b||0),0);
+    function reduceNum(n){ while(n>9 && n!==11 && n!==22 && n!==33){ n=sumDigits(n); } return n; }
+    function resonantFromDate(d, tz){
+      const dt = dateInTZ(d, tz);
+      const y=dt.getUTCFullYear(), m=dt.getUTCMonth()+1, day=dt.getUTCDate();
+      const total = reduceNum(sumDigits(y)+sumDigits(m)+sumDigits(day));
+      const isKey = [1,4,7,11,22,33].includes(total);
+      return {value: total, key: isKey};
+    }
+
+    /* ---------- Mini moon widget (top) ---------- */
+    const elMbArc = $("#mbArc");
+    const elMbDay = $("#mbDay");
+    const elMbMoon= $("#mbMoon");
+    const elMbDayLine=$("#mbDayLine");
+    const elMbEss=$("#mbEssence");
+    const elMbYear=$("#mbYear");
+    const barRoot  = $(".moonbar");
+
+    function setArc(day){
+      if (!elMbArc) return;
+      const d = Math.round(DASH_TOTAL * (clamp(day,1,28)/28));
+      elMbArc.setAttribute("stroke-dasharray", `${d} ${Math.max(0,DASH_TOTAL-d)}`);
+    }
+    function updateMini(){
+      const tz=getTZ();
+      const now = new Date();
+      const wall=dateInTZ(now, tz);
+      const m13 = calc13Moon(wall, tz, {skipLeap:true,skipDOOT:true});
+      if (m13.special){
+        elMbMoon && (elMbMoon.textContent = m13.special);
+        elMbEss && (elMbEss.textContent = "Outside the 13×28 count");
+        elMbDay && (elMbDay.textContent = "—");
+        elMbDayLine && (elMbDayLine.textContent = "—/28");
+        setArc(0);
+      }else{
+        const i=m13.moon-1;
+        elMbMoon && (elMbMoon.textContent = `${MOONS[i]} Moon`);
+        elMbEss && (elMbEss.textContent = ESS[i]);
+        elMbDay && (elMbDay.textContent = `${m13.day}`);
+        elMbDayLine && (elMbDayLine.textContent = `Day ${m13.day} / 28`);
+        setArc(m13.day);
+      }
+      elMbYear && (elMbYear.textContent=m13.year);
+      // phase tint + resonant glow
+      applyPhaseAccent(moonPhase(wall).illum);
+      const res = resonantFromDate(wall, tz);
+      barRoot && barRoot.classList.toggle("yhwh-on", !!res.key);
+    }
+
+    /* ---------- UI wiring: inputs ---------- */
+    const inName = $("#inName");
+    const inDate = $("#inDate");
+    const inTime = $("#inTime");
+    const inTZ   = $("#inTZ");
+    const btnRead= $("#btnRead");
+    const btnSave= $("#btnSave");
+    const btnLoad= $("#btnLoad");
+    const btnDel = $("#btnDelete");
+    const btnShare = $("#btnShareReading");
+    const savedSel = $("#savedProfiles");
+
+    populateTZSelect(inTZ);
+
+    // Saved profiles store
+    function loadProfiles(){
+      try{ return JSON.parse(localStorage.getItem("sof_genesis_profiles")||"[]"); }catch{ return []; }
+    }
+    function saveProfiles(list){
+      try{ localStorage.setItem("sof_genesis_profiles", JSON.stringify(list)); }catch{}
+    }
+    function refreshSaved(){
+      const list=loadProfiles();
+      savedSel.innerHTML = ['<option value="">—</option>']
+        .concat(list.map((p,i)=>`<option value="${i}">${p.name||"(No name)"} — ${p.date}${p.time?(" "+p.time):""} (${p.tz})</option>`))
+        .join("");
+    }
+    refreshSaved();
+
+    /* ---------- Results targets ---------- */
+    const resEmpty = $("#resEmpty");
+    const resWrap  = $("#resWrap");
+    const outName  = $("#outName");
+    const outBirth = $("#outBirth");
+    const outTZLbl = $("#outTZLbl");
+    const outMoonLine=$("#outMoonLine");
+    const outEss   = $("#outEss");
+    const outTone  = $("#outTone");
+    const outToneLine=$("#outToneLine");
+    const outWeekDots=$("#outWeekDots");
+    const outWeekMeta=$("#outWeekMeta");
+    const outMoonNarr=$("#outMoonNarr");
+    const outToneNarr=$("#outToneNarr");
+    const outRes   = $("#outResonance");
+    const outFlags = $("#outFlags");
+
+    // week dots scaffold
+    function buildWeekDots(day){
+      outWeekDots.innerHTML="";
+      const week = weekFromDay(day); // 1..4
+      const pos  = (day-1)%7; // 0..6 within week
+      for(let i=0;i<28;i++){
+        const d=document.createElement("div"); d.className="dot";
+        if (i === (week-1)*7 + pos) d.classList.add("on");
+        outWeekDots.appendChild(d);
+      }
+      outWeekMeta.textContent = `Week ${week} • dot ${pos+1} of 7`;
+    }
+
+    /* ---------- Reading ---------- */
+    function readBirth(){
+      // collect
+      const name = inName.value.trim();
+      const date = inDate.value; // YYYY-MM-DD
+      const time = inTime.value; // hh:mm or ""
+      const tz   = inTZ.value || getTZ();
+      const skipLeap = $("#optLeap")?.checked !== false;
+      const skipDOOT = $("#optDOOT")?.checked !== false;
+      const resGlow  = $("#optResGlow")?.checked !== false;
+
+      if (!date){
+        toast("Pick a birth date"); inDate.focus(); return;
+      }
+
+      // construct date in tz
+      let base = new Date();
+      if (time){
+        const [hh,mm] = time.split(":").map(Number);
+        base = dateInTZ(new Date(date+"T00:00:00Z"), tz, {hour:pad(hh), minute:pad(mm), second:"00"});
+      }else{
+        base = dateInTZ(new Date(date+"T00:00:00Z"), tz, {hour:"00", minute:"00", second:"00"});
+      }
+
+      // calculate
+      const m13 = calc13Moon(base, tz, {skipLeap,skipDOOT});
+      const res = resonantFromDate(base, tz);
+
+      // paint summary
+      outName.textContent = name || "—";
+      outBirth.textContent = date + (time? (" " + time) : "");
+      outTZLbl.textContent = tz;
+
+      outFlags.innerHTML = "";
+      if (m13.special){
+        outMoonLine.textContent = m13.special;
+        outEss.textContent = "Outside the 13×28 count";
+        outTone.textContent = "—";
+        outToneLine.textContent = "—";
+        outMoonNarr.textContent = "Born on a liminal day beyond the lattice — a sabbatical gate between cycles.";
+        outToneNarr.textContent = "Tone does not apply on DOOT or Leap Day.";
+        outRes.textContent = `Resonant Sum: ${res.value}${res.key?" (key)":" "}`;
+        outWeekDots.innerHTML = "";
+        const li=document.createElement("li");
+        li.textContent = m13.special + " handling is enabled.";
+        outFlags.appendChild(li);
+      }else{
+        const i=m13.moon-1;
+        const tone = toneFromDay(m13.day);
+        const toneObj = TONES.find(t=>t.n===tone);
+
+        outMoonLine.textContent = `${MOONS[i]} Moon — Day ${m13.day} / 28`;
+        outEss.textContent = ESS[i];
+        outTone.textContent = `${tone} — ${toneObj.name}`;
+        outToneLine.textContent = toneObj.line;
+
+        // narratives (succinct)
+        outMoonNarr.textContent = `You entered during the ${MOONS[i]} Moon. Day ${m13.day} places your step in week ${weekFromDay(m13.day)} — a dot that orients your practice within the 28-step ring.`;
+        outToneNarr.textContent = `Your day carries the ${toneObj.name} tone: “${toneObj.line.replace(/\.$/,"")}.” This is your daily key inside the Remnant cadence.`;
+
+        // week dots
+        buildWeekDots(m13.day);
+
+        // flags
+        const flags=[];
+        if (!skipLeap) flags.push("Leap Day is INCLUDED in 13×28 for this reading.");
+        if (!skipDOOT) flags.push("DOOT is INCLUDED inside the 13×28 for this reading.");
+        if (!flags.length) flags.push("Standard handling: Leap Day and DOOT are skipped in the count.");
+        outFlags.innerHTML = flags.map(x=>`<li>${x}</li>`).join("");
+
+        // resonant sum
+        outRes.textContent = `Resonant Sum: ${res.value}${res.key?" (key)":""}`;
+      }
+
+      // reveal
+      resEmpty.classList.add("hidden");
+      resWrap.classList.remove("hidden");
+
+      // glow toggle on bar
+      if (barRoot){
+        barRoot.classList.toggle("yhwh-on", resGlow && res.key);
+      }
+    }
+
+    /* ---------- Save/Load/Delete/Share ---------- */
+    function handleSave(){
+      const name = inName.value.trim() || "(No name)";
+      const date = inDate.value; if(!date){ toast("Pick a birth date"); return; }
+      const time = inTime.value;
+      const tz   = inTZ.value || getTZ();
+      const opts = {
+        leap: $("#optLeap")?.checked !== false,
+        doot: $("#optDOOT")?.checked !== false,
+        glow: $("#optResGlow")?.checked !== false,
+      };
+      const list = loadProfiles();
+      list.push({name,date,time,tz,opts,ts:Date.now()});
+      saveProfiles(list);
+      refreshSaved();
+      toast("Saved");
+    }
+    function handleLoad(){
+      const idx = +savedSel.value;
+      if (!Number.isFinite(idx)) return;
+      const list = loadProfiles();
+      const p = list[idx];
+      if (!p){ toast("No profile"); return; }
+      inName.value = p.name || "";
+      inDate.value = p.date || "";
+      inTime.value = p.time || "";
+      if (p.tz){ inTZ.value = p.tz; setTZ(p.tz); }
+      if (p.opts){
+        $("#optLeap").checked   = !!p.opts.leap;
+        $("#optDOOT").checked   = !!p.opts.doot;
+        $("#optResGlow").checked= !!p.opts.glow;
+      }
+      readBirth();
+      toast("Loaded");
+    }
+    function handleDelete(){
+      const idx = +savedSel.value;
+      if (!Number.isFinite(idx)) return;
+      const list = loadProfiles();
+      if (!list[idx]) return;
+      list.splice(idx,1);
+      saveProfiles(list);
+      refreshSaved();
+      toast("Deleted");
+    }
+    function handleShare(){
+      // Build a share URL with query params
+      const name = inName.value.trim();
+      const date = inDate.value;
+      if (!date){ toast("Pick a birth date"); return; }
+      const time = inTime.value;
+      const tz   = inTZ.value || getTZ();
+      const leap = $("#optLeap")?.checked !== false ? "1" : "0";
+      const doot = $("#optDOOT")?.checked !== false ? "1" : "0";
+      const glow = $("#optResGlow")?.checked !== false ? "1" : "0";
+
+      let u = new URL(location.href);
+      u.searchParams.set("name", name);
+      u.searchParams.set("dob", date);
+      if (time) u.searchParams.set("t", time);
+      u.searchParams.set("tz", tz);
+      u.searchParams.set("leap", leap);
+      u.searchParams.set("doot", doot);
+      u.searchParams.set("glow", glow);
+
+      const url = u.toString();
+      (async ()=>{
+        try{
+          if (navigator.share){
+            await navigator.share({title:"Genesis Oracle — Birth Reading", url});
+            toast("Shared");
+          }else{
+            await navigator.clipboard.writeText(url);
+            toast("Link copied");
+          }
+        }catch{}
+      })();
+    }
+
+    /* ---------- Query param boot (deep link) ---------- */
+    function bootFromURL(){
+      const qp = new URLSearchParams(location.search);
+      const name = qp.get("name")||"";
+      const dob  = qp.get("dob")||"";
+      const t    = qp.get("t")||"";
+      const tz   = qp.get("tz")||"";
+      const leap = qp.get("leap")==="0" ? false : true;
+      const doot = qp.get("doot")==="0" ? false : true;
+      const glow = qp.get("glow")==="0" ? false : true;
+
+      if (name) inName.value = name;
+      if (dob)  inDate.value = dob;
+      if (t)    inTime.value = t;
+      if (tz){
+        inTZ.value = tz;
+        setTZ(tz);
+      }
+      $("#optLeap").checked   = leap;
+      $("#optDOOT").checked   = doot;
+      $("#optResGlow").checked= glow;
+
+      if (dob) readBirth();
+    }
+
+    /* ---------- Wire events ---------- */
+    on(btnRead, "click", readBirth);
+    on(btnSave, "click", handleSave);
+    on(btnLoad, "click", handleLoad);
+    on(btnDel,  "click", handleDelete);
+    on(btnShare,"click", handleShare);
+
+    on(inTZ, "change", ()=>{
+      setTZ(inTZ.value);
+      updateMini();
+    });
+
+    // Init
+    updateMini();
+    setInterval(updateMini, 60*1000);
+    bootFromURL();
+
+    // Fill current year
+    $("#yr") && ($("#yr").textContent = String(new Date().getFullYear()));
+
+  })();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+<!-- =========================================================
+       PART II / III — Living Laws + Flame Paths + Name Code
+       Insert this block right BEFORE </body></html>
+       ========================================================= -->
+
+  <!-- ============ Tier II Panels ============ -->
+  <section id="tier2" class="wrap" aria-label="Genesis Oracle — Tier II">
+    <div class="divider" aria-hidden="true" style="margin:16px 0"></div>
+    <header style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px">
+      <h2 class="title" style="font-size:22px;margin:0">Tier II — Living Laws · Flame Paths · Name & Letter Code</h2>
+      <div class="lab-row" role="toolbar" aria-label="Tier II actions">
+        <button id="t2Recalc" class="lab-btn" type="button" title="Recalculate Tier II from current inputs">Recalculate</button>
+        <button id="t2Share" class="lab-btn ghost" type="button" title="Share Tier II state">Share</button>
+      </div>
+    </header>
+
+    <!-- Tabs -->
+    <nav class="card" role="tablist" aria-label="Tier II tabs" style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="lab-btn" role="tab" aria-selected="true" id="tab-laws"   aria-controls="panel-laws">Living Laws</button>
+      <button class="lab-btn" role="tab" aria-selected="false" id="tab-flame"  aria-controls="panel-flame">Flame Paths</button>
+      <button class="lab-btn" role="tab" aria-selected="false" id="tab-name"   aria-controls="panel-name">Name & Letter Code</button>
+    </nav>
+
+    <!-- Panels -->
+    <section id="panel-laws"  role="tabpanel" aria-labelledby="tab-laws"  class="card" style="margin-top:10px">
+      <h3 class="result-title" style="margin-top:0">Living Laws of the 13 Moons</h3>
+      <p class="meta">Each Moon carries a <b>Living Law</b> — a simple imperative aligned with its Essence. Your Birth Moon binds to one Law as a lifelong orientation, and your Day sets a specific weekly micro-emphasis.</p>
+      <div class="summary" style="margin-top:10px">
+        <div class="pill">
+          <div class="k meta">Birth Moon</div>
+          <div id="t2LawMoon">—</div>
+          <small class="meta" id="t2LawEss">—</small>
+        </div>
+        <div class="pill">
+          <div class="k meta">Living Law</div>
+          <div id="t2LawName">—</div>
+          <small class="meta" id="t2LawLine">—</small>
+        </div>
+        <div class="pill">
+          <div class="k meta">Week Emphasis</div>
+          <div id="t2WeekFocus">—</div>
+          <small class="meta" id="t2WeekLine">—</small>
+        </div>
+        <div class="pill">
+          <div class="k meta">Keys</div>
+          <div id="t2LawKeys">—</div>
+          <small class="meta">triad anchors</small>
+        </div>
+      </div>
+
+      <div class="goldline" aria-hidden="true"></div>
+
+      <article>
+        <h4 class="result-title">All 13 Living Laws</h4>
+        <ol id="t2LawList" class="meta" style="padding-left:1.2rem"></ol>
+      </article>
+    </section>
+
+    <section id="panel-flame" role="tabpanel" aria-labelledby="tab-flame" class="card hidden" style="margin-top:10px">
+      <h3 class="result-title" style="margin-top:0">Flame Paths — the 13 Tones as steps of Becoming</h3>
+      <p class="meta">Your <b>Tone of the Day</b> maps to one Flame Path (1–13). Think of it as your initiatory gait: what you most naturally enact when you move through the world.</p>
+
+      <div class="summary" style="margin-top:10px">
+        <div class="pill">
+          <div class="k meta">Tone</div>
+          <div id="t2FlameTone">—</div>
+          <small class="meta" id="t2FlameToneLine">—</small>
+        </div>
+        <div class="pill">
+          <div class="k meta">Flame Path</div>
+          <div id="t2FlameName">—</div>
+          <small class="meta" id="t2FlameLine">—</small>
+        </div>
+        <div class="pill">
+          <div class="k meta">Practice</div>
+          <div id="t2FlamePractice">—</div>
+          <small class="meta">daily micro-act</small>
+        </div>
+        <div class="pill">
+          <div class="k meta">Seal (י־ה־ו־ה)</div>
+          <div id="t2FlameSeal">—</div>
+          <small class="meta">lights on resonant days</small>
+        </div>
+      </div>
+
+      <div class="goldline" aria-hidden="true"></div>
+
+      <article>
+        <h4 class="result-title">The 13 Flame Paths</h4>
+        <ol id="t2FlameList" class="meta" style="padding-left:1.2rem"></ol>
+      </article>
+    </section>
+
+    <section id="panel-name" role="tabpanel" aria-labelledby="tab-name" class="card hidden" style="margin-top:10px">
+      <h3 class="result-title" style="margin-top:0">Name & Letter Code — Latin + Hebrew</h3>
+      <p class="meta">We compute your <b>Name Number</b> three ways: Latin-Pythagorean (1–9 cycles), Latin-Simple (A1–Z26), and Hebrew (מִסְפָּר הֶכְרֵחִי). If you enter Hebrew letters (e.g., <span lang="he">אהבה</span>), we auto-detect and use Hebrew gematria.</p>
+
+      <div class="lab-row" style="align-items:flex-end">
+        <label>Override Name (optional)
+          <input id="t2NameOverride" class="lab-input" type="text" placeholder="Use another spelling or Hebrew form">
+        </label>
+        <button id="t2NameCalc" class="lab-btn" type="button">Compute Name Code</button>
+      </div>
+
+      <div class="summary" style="margin-top:10px">
+        <div class="pill">
+          <div class="k meta">Latin-Pythagorean</div>
+          <div id="t2NamePyth">—</div>
+          <small class="meta" id="t2NamePythRed">—</small>
+        </div>
+        <div class="pill">
+          <div class="k meta">Latin-Simple (A1–Z26)</div>
+          <div id="t2NameSimple">—</div>
+          <small class="meta" id="t2NameSimpleRed">—</small>
+        </div>
+        <div class="pill">
+          <div class="k meta">Hebrew</div>
+          <div id="t2NameHeb">—</div>
+          <small class="meta" id="t2NameHebRed">—</small>
+        </div>
+        <div class="pill">
+          <div class="k meta">Covenant Seal</div>
+          <div id="t2CovenantSeal">—</div>
+          <small class="meta">Tone ∴ Name ∴ Resonant</small>
+        </div>
+      </div>
+
+      <div class="goldline" aria-hidden="true"></div>
+
+      <article>
+        <h4 class="result-title">Breakdown</h4>
+        <div id="t2NameBreak" class="mono meta" style="white-space:pre-wrap">—</div>
+
+        <div class="divider" aria-hidden="true"></div>
+        <h4 class="result-title">Notes</h4>
+        <ul class="meta" style="margin-left:1.2rem">
+          <li>For Latin-Pythagorean, we map A–I → 1–9, J–R → 1–9, S–Z → 1–8.</li>
+          <li>For Hebrew, we honor standard values: א=1, ב=2, … ט=9, י=10, כ=20, … ק=100, ר=200, ש=300, ת=400 (incl. finals).</li>
+          <li>Master numbers (11, 22, 33) are held in reduction.</li>
+        </ul>
+      </article>
+    </section>
+  </section>
+
+  <!-- ============ Tier II Scripts ============ -->
+  <script>
+  (function(){
+    "use strict";
+
+    /* ---------- Local DOM utilities ---------- */
+    const $  =(s,r=document)=>r.querySelector(s);
+    const $$ =(s,r=document)=>Array.from(r.querySelectorAll(s));
+    const on =(t,e,f,o)=>t&&t.addEventListener(e,f,o);
+    const pad=n=>String(n).padStart(2,"0");
+
+    const toast = (msg)=>{
+      const t=document.createElement('div');
+      t.className='toast'; t.textContent=msg; document.body.appendChild(t);
+      requestAnimationFrame(()=>t.style.opacity=1);
+      setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),250); }, 1500);
+    };
+
+    /* ---------- Data mirrors (from Part I) ---------- */
+    const MOONS = ["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
+    const ESS   = ["Attract purpose","Stabilize challenge","Activate service","Define form","Empower radiance","Balance equality","Channel inspiration","Harmonize integrity","Pulse intention","Perfect manifestation","Dissolve release","Dedicate cooperation","Endure presence"];
+
+    const TONES = [
+      {n:1,  name:"Magnetic",  line:"Unify purpose."},
+      {n:2,  name:"Lunar",     line:"Stabilize challenge."},
+      {n:3,  name:"Electric",  line:"Activate service."},
+      {n:4,  name:"Self-Existing", line:"Define form."},
+      {n:5,  name:"Overtone",  line:"Empower radiance."},
+      {n:6,  name:"Rhythmic",  line:"Balance equality."},
+      {n:7,  name:"Resonant",  line:"Channel inspiration."},
+      {n:8,  name:"Galactic",  line:"Harmonize integrity."},
+      {n:9,  name:"Solar",     line:"Pulse intention."},
+      {n:10, name:"Planetary", line:"Perfect manifestation."},
+      {n:11, name:"Spectral",  line:"Dissolve release."},
+      {n:12, name:"Crystal",   line:"Dedicate cooperation."},
+      {n:13, name:"Cosmic",    line:"Endure presence."},
+    ];
+
+    /* ---------- Tier II doctrine ---------- */
+    const LAWS = [
+      {i:1,  name:"Law of Attraction of Purpose", keys:["Purpose","Calling","Orientation"],
+        line:"Center yourself on why you are here; align daily choices to your core intention."},
+      {i:2,  name:"Law of Stabilized Challenge", keys:["Polarity","Boundaries","Endurance"],
+        line:"Face the tension honestly; create fair limits; hold your ground with grace."},
+      {i:3,  name:"Law of Service Activation", keys:["Gift","Charge","Generosity"],
+        line:"Offer your unique current to the body; initiate support without self-erasure."},
+      {i:4,  name:"Law of Form Definition", keys:["Measure","Pattern","Craft"],
+        line:"Name the structure; draw the line; give your work a clear and living form."},
+      {i:5,  name:"Law of Overtone Radiance", keys:["Authority","Blessing","Witness"],
+        line:"Shine without domination; amplify what is true; govern by example."},
+      {i:6,  name:"Law of Rhythmic Equality", keys:["Balance","Reciprocity","Pace"],
+        line:"Keep equal weights; match pace to breath; honor mutual exchange."},
+      {i:7,  name:"Law of Resonant Channel", keys:["Listening","Attunement","Signal"],
+        line:"Tune your vessel; receive accurately; transmit without distortion."},
+      {i:8,  name:"Law of Galactic Integrity", keys:["Truth","Coherence","Ethic"],
+        line:"Live what you teach; remove contradiction; integrate your worlds."},
+      {i:9,  name:"Law of Solar Intention", keys:["Will","Focus","Prayer"],
+        line:"Aim cleanly; speak intention aloud; move with steady heat."},
+      {i:10, name:"Law of Planetary Perfection", keys:["Completion","Stewardship","Impact"],
+        line:"Finish what you start; tend the field; ensure your work serves the whole."},
+      {i:11, name:"Law of Spectral Release", keys:["Liberation","Unbinding","Rest"],
+        line:"Loosen the knot; compost the husk; let the current run free."},
+      {i:12, name:"Law of Crystal Cooperation", keys:["Council","Patterning","Network"],
+        line:"Gather the circle; crystallize agreement; rehearse the new pattern."},
+      {i:13, name:"Law of Cosmic Presence", keys:["Abiding","Sabbath","Return"],
+        line:"Abide in Source; keep Sabbath; let the cycle complete you."},
+    ];
+
+    const FLAMES = [
+      {n:1,  name:"The First Flame — Unification", line:"Gather the scattered and make them one within a clear purpose.", practice:"Write a one-line vow today."},
+      {n:2,  name:"The Second Flame — Bifurcation", line:"Distinguish the two that must stand apart.", practice:"Name one boundary you will keep."},
+      {n:3,  name:"The Third Flame — Charge of Service", line:"Spark action in the field you can bless.", practice:"Do one generous act anonymously."},
+      {n:4,  name:"The Fourth Flame — Measure of Form", line:"Give your intention a defined container.", practice:"Draft a simple rule for your work."},
+      {n:5,  name:"The Fifth Flame — Crown of Radiance", line:"Bless without boasting; govern by witness.", practice:"Offer praise that costs you time."},
+      {n:6,  name:"The Sixth Flame — Equal Scales", line:"Match pace and weight; restore symmetry.", practice:"Balance a ledger: give back where you took."},
+      {n:7,  name:"The Seventh Flame — Resonant Channel", line:"Empty, tune, and transmit the clean signal.", practice:"10 minutes of silent listening."},
+      {n:8,  name:"The Eighth Flame — Integrity Dial", line:"Align speech and deed across domains.", practice:"Remove one contradiction today."},
+      {n:9,  name:"The Ninth Flame — Arrow of Intention", line:"Focus desire; release it like a prayer.", practice:"Write and speak one clear aim."},
+      {n:10, name:"The Tenth Flame — Steward’s Perfection", line:"Complete cycles so the field can breathe.", practice:"Finish something half-done."},
+      {n:11, name:"The Eleventh Flame — Spectral Unbinding", line:"Dissolve the excess; free the flow.", practice:"Let one attachment go on purpose."},
+      {n:12, name:"The Twelfth Flame — Crystal Council", line:"Pattern cooperation into durable order.", practice:"Ask two allies to clarify a pact."},
+      {n:13, name:"The Thirteenth Flame — Sabbath Presence", line:"Rest in the One; become a dwelling.", practice:"Stop, bless, and do no work for one hour."},
+    ];
+
+    const WEEK_EMPHASIS = [
+      {w:1, line:"In week 1, begin — emphasis on priming and orientation."},
+      {w:2, line:"In week 2, test — emphasis on boundary and skill."},
+      {w:3, line:"In week 3, serve — emphasis on circulation and gift."},
+      {w:4, line:"In week 4, crown — emphasis on integration and release."},
+    ];
+
+    /* ---------- Shared math (replicated from Part I) ---------- */
+    function supportedTimeZones(){
+      if (Intl.supportedValuesOf) {
+        const list = Intl.supportedValuesOf('timeZone') || [];
+        return list.length ? list : ["UTC"];
+      }
+      return ["UTC","America/Los_Angeles","America/New_York","Europe/London","Europe/Berlin","Asia/Tokyo","Australia/Sydney"];
+    }
+    function getTZ(){
+      try{ return localStorage.getItem("sof_moons_tz") || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; }
+      catch{ return "UTC"; }
+    }
+    function dateInTZ(baseDate, tz, partsOverride){
+      try{
+        const opts={timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"};
+        const parts=new Intl.DateTimeFormat("en-CA",opts).formatToParts(baseDate);
+        const m=Object.fromEntries(parts.map(p=>[p.type,p.value]));
+        const H=partsOverride?.hour ?? m.hour;
+        const M=partsOverride?.minute ?? m.minute;
+        const S=partsOverride?.second ?? m.second;
+        return new Date(`${m.year}-${m.month}-${m.day}T${H}:${M}:${S}Z`);
+      }catch{
+        const d=new Date(baseDate);
+        if (partsOverride?.hour!=null) d.setUTCHours(partsOverride.hour, partsOverride.minute||0, partsOverride.second||0, 0);
+        return d;
+      }
+    }
+    const utcTrunc = d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    const isLeapYear   = y=> (y%4===0 && y%100!==0) || (y%400===0);
+    const isLeapDayUTC = d=> d.getUTCMonth()===1 && d.getUTCDate()===29;
+
+    function isDOOT(d, tz){
+      const dt=dateInTZ(d,tz);
+      return (dt.getUTCMonth()===6 && dt.getUTCDate()===25);
+    }
+    function startOfYear13(d, tz){
+      const dt = dateInTZ(d, tz);
+      const y  = dt.getUTCFullYear();
+      const anchorThis = new Date(Date.UTC(y,6,26));
+      const anchorPrev = new Date(Date.UTC(y-1,6,26));
+      return dt >= anchorThis ? anchorThis : anchorPrev;
+    }
+    function dayIndexSinceStart(d, tz, {skipLeap=true, skipDOOT=true}={}){
+      const start = utcTrunc(startOfYear13(d, tz));
+      const dt    = utcTrunc(dateInTZ(d, tz));
+      let days = Math.floor((dt - start)/86400000);
+      if (skipDOOT){
+        const doot = new Date(Date.UTC(start.getUTCFullYear()+1,6,25));
+        if (dt >= doot) days -= 1;
+      }
+      if (skipLeap){
+        for (let y=start.getUTCFullYear(); y<=dt.getUTCFullYear(); y++){
+          if(isLeapYear(y)){
+            const feb29 = new Date(Date.UTC(y,1,29));
+            if (dt >= feb29 && start <= feb29) days -= 1;
+          }
+        }
+      }
+      return days;
+    }
+    function calc13Moon(d, tz, opts){
+      if (isDOOT(d,tz)){
+        const s=startOfYear13(d,tz).getUTCFullYear();
+        return {special:"Day Out of Time", year:`${s}/${s+1}`};
+      }
+      if (isLeapDayUTC(dateInTZ(d,tz))){
+        const s=startOfYear13(d,tz).getUTCFullYear();
+        return {special:"Leap Day", year:`${s}/${s+1}`};
+      }
+      const idx = dayIndexSinceStart(d, tz, opts);
+      const moon = Math.floor(idx/28)+1;
+      const day  = (idx%28)+1;
+      const s=startOfYear13(d,tz).getUTCFullYear();
+      return {special:null, moon, day, idx, year:`${s}/${s+1}`};
+    }
+    const toneFromDay = (day) => ((Number(day||0)-1) % 13) + 1;
+    const weekFromDay = (day) => Math.floor((day-1)/7)+1;
+
+    const sumDigits = n => String(n).split("").reduce((a,b)=>a+(+b||0),0);
+    function reduceNum(n){ while(n>9 && n!==11 && n!==22 && n!==33){ n=sumDigits(n); } return n; }
+    function resonantFromDate(d, tz){
+      const dt = dateInTZ(d, tz);
+      const y=dt.getUTCFullYear(), m=dt.getUTCMonth()+1, day=dt.getUTCDate();
+      const total = reduceNum(sumDigits(y)+sumDigits(m)+sumDigits(day));
+      const isKey = [1,4,7,11,22,33].includes(total);
+      return {value: total, key: isKey};
+    }
+
+    /* ---------- Name & Letter Code ---------- */
+    const A2Z_PYTH = {A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8,I:9,J:1,K:2,L:3,M:4,N:5,O:6,P:7,Q:8,R:9,S:1,T:2,U:3,V:4,W:5,X:6,Y:7,Z:8};
+    const A2Z_SIMPLE = Object.fromEntries("ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((ch,i)=>[ch,i+1]));
+
+    // Hebrew (Mispar Hechrechi), inc. finals
+    const HEB = {
+      'א':1,'ב':2,'ג':3,'ד':4,'ה':5,'ו':6,'ז':7,'ח':8,'ט':9,
+      'י':10,'כ':20,'ך':20,'ל':30,'מ':40,'ם':40,'נ':50,'ן':50,'ס':60,'ע':70,'פ':80,'ף':80,'צ':90,'ץ':90,
+      'ק':100,'ר':200,'ש':300,'ת':400
+    };
+
+    function isHebrew(s){ return /[\u0590-\u05FF]/.test(s); }
+
+    function codeLatinPyth(s){
+      const letters = s.toUpperCase().replace(/[^A-Z]/g,"").split("");
+      const vals = letters.map(ch=>A2Z_PYTH[ch]||0);
+      const sum = vals.reduce((a,b)=>a+b,0);
+      const red = reduceNum(sum);
+      return {sum, red, vals, letters};
+    }
+    function codeLatinSimple(s){
+      const letters = s.toUpperCase().replace(/[^A-Z]/g,"").split("");
+      const vals = letters.map(ch=>A2Z_SIMPLE[ch]||0);
+      const sum = vals.reduce((a,b)=>a+b,0);
+      const red = reduceNum(sum);
+      return {sum, red, vals, letters};
+    }
+    function codeHebrew(s){
+      const letters = s.replace(/[^\u0590-\u05FF]/g,"").split("");
+      const vals = letters.map(ch=>HEB[ch]||0);
+      const sum = vals.reduce((a,b)=>a+b,0);
+      // Hebrew reduction traditionally can keep 10s/100s; we still provide reduced for resonance view
+      const red = reduceNum(sum);
+      return {sum, red, vals, letters};
+    }
+
+    /* ---------- DOM targets (Tier II) ---------- */
+    const tabLaws  = $("#tab-laws");
+    const tabFlame = $("#tab-flame");
+    const tabName  = $("#tab-name");
+    const panLaws  = $("#panel-laws");
+    const panFlame = $("#panel-flame");
+    const panName  = $("#panel-name");
+
+    const t2Recalc = $("#t2Recalc");
+    const t2Share  = $("#t2Share");
+
+    // Living Laws outputs
+    const t2LawMoon  = $("#t2LawMoon");
+    const t2LawEss   = $("#t2LawEss");
+    const t2LawName  = $("#t2LawName");
+    const t2LawLine  = $("#t2LawLine");
+    const t2WeekFocus= $("#t2WeekFocus");
+    const t2WeekLine = $("#t2WeekLine");
+    const t2LawKeys  = $("#t2LawKeys");
+    const t2LawList  = $("#t2LawList");
+
+    // Flame outputs
+    const t2FlameTone      = $("#t2FlameTone");
+    const t2FlameToneLine  = $("#t2FlameToneLine");
+    const t2FlameName      = $("#t2FlameName");
+    const t2FlameLine      = $("#t2FlameLine");
+    const t2FlamePractice  = $("#t2FlamePractice");
+    const t2FlameSeal      = $("#t2FlameSeal");
+    const t2FlameList      = $("#t2FlameList");
+
+    // Name code outputs
+    const t2NameOverride   = $("#t2NameOverride");
+    const t2NameCalc       = $("#t2NameCalc");
+    const t2NamePyth       = $("#t2NamePyth");
+    const t2NamePythRed    = $("#t2NamePythRed");
+    const t2NameSimple     = $("#t2NameSimple");
+    const t2NameSimpleRed  = $("#t2NameSimpleRed");
+    const t2NameHeb        = $("#t2NameHeb");
+    const t2NameHebRed     = $("#t2NameHebRed");
+    const t2CovenantSeal   = $("#t2CovenantSeal");
+    const t2NameBreak      = $("#t2NameBreak");
+
+    // Inputs from Tier I (reuse)
+    const inName = $("#inName");
+    const inDate = $("#inDate");
+    const inTime = $("#inTime");
+    const inTZ   = $("#inTZ");
+    const optLeap= $("#optLeap");
+    const optDOOT= $("#optDOOT");
+
+    /* ---------- Tab logic ---------- */
+    function setTab(which){
+      const map = {
+        laws:[tabLaws, panLaws],
+        flame:[tabFlame, panFlame],
+        name:[tabName, panName],
+      };
+      Object.entries(map).forEach(([k,[tab,panel]])=>{
+        const active = (k===which);
+        tab.setAttribute("aria-selected", String(active));
+        panel.classList.toggle("hidden", !active);
+      });
+    }
+    on(tabLaws,  "click", ()=>setTab("laws"));
+    on(tabFlame, "click", ()=>setTab("flame"));
+    on(tabName,  "click", ()=>setTab("name"));
+
+    /* ---------- Render static lists ---------- */
+    function renderAllLaws(){
+      t2LawList.innerHTML = LAWS.map(L=>{
+        const ess = ESS[L.i-1];
+        return `<li><b>#${L.i} — ${L.name}</b> · <em>${ess}</em><br>${L.line}</li>`;
+      }).join("");
+    }
+    function renderAllFlames(){
+      t2FlameList.innerHTML = FLAMES.map(F=>{
+        const T = TONES.find(x=>x.n===F.n);
+        return `<li><b>#${F.n} — ${F.name}</b> · <em>${T.line}</em><br>${F.line} <span class="meta">(${F.practice})</span></li>`;
+      }).join("");
+    }
+    renderAllLaws();
+    renderAllFlames();
+
+    /* ---------- Core reading for Tier II ---------- */
+    function getReadingFromInputs(){
+      const name = (t2NameOverride.value.trim() || inName?.value?.trim() || "");
+      const date = inDate?.value || "";
+      const time = inTime?.value || "";
+      const tz   = inTZ?.value || getTZ();
+      const skipLeap = optLeap?.checked !== false;
+      const skipDOOT = optDOOT?.checked !== false;
+
+      if (!date) return null;
+
+      let base;
+      if (time){
+        const [hh,mm] = time.split(":").map(Number);
+        base = dateInTZ(new Date(date+"T00:00:00Z"), tz, {hour:pad(hh), minute:pad(mm), second:"00"});
+      }else{
+        base = dateInTZ(new Date(date+"T00:00:00Z"), tz, {hour:"00", minute:"00", second:"00"});
+      }
+
+      const m13 = calc13Moon(base, tz, {skipLeap,skipDOOT});
+      const tone = m13.special? null : toneFromDay(m13.day);
+      const week = m13.special? null : weekFromDay(m13.day);
+      const res  = resonantFromDate(base, tz);
+
+      return {name, date, time, tz, base, m13, tone, week, res};
+    }
+
+    function paintTierII(){
+      const R = getReadingFromInputs();
+      if (!R){ toast("Tier II: set a birth date first."); return; }
+
+      /* Living Laws */
+      if (R.m13.special){
+        t2LawMoon.textContent = R.m13.special;
+        t2LawEss.textContent  = "Outside the 13×28 lattice";
+        t2LawName.textContent = "—";
+        t2LawLine.textContent = "—";
+        t2WeekFocus.textContent = "—";
+        t2WeekLine.textContent  = "—";
+        t2LawKeys.textContent   = "—";
+      }else{
+        const i = R.m13.moon - 1;
+        const L = LAWS[i];
+        const W = WEEK_EMPHASIS[(R.week||1)-1];
+        t2LawMoon.textContent = `#${R.m13.moon} — ${MOONS[i]} Moon`;
+        t2LawEss.textContent  = ESS[i];
+        t2LawName.textContent = L.name;
+        t2LawLine.textContent = L.line;
+        t2WeekFocus.textContent = `Week ${R.week}`;
+        t2WeekLine.textContent  = W.line;
+        t2LawKeys.textContent   = L.keys.join(" · ");
+      }
+
+      /* Flame Paths */
+      if (!R.tone){
+        t2FlameTone.textContent = "—";
+        t2FlameToneLine.textContent = "—";
+        t2FlameName.textContent = "—";
+        t2FlameLine.textContent = "—";
+        t2FlamePractice.textContent = "—";
+        t2FlameSeal.textContent = "Inactive (liminal day)";
+      }else{
+        const F = FLAMES[(R.tone-1)];
+        const T = TONES[(R.tone-1)];
+        t2FlameTone.textContent = `#${R.tone} — ${T.name}`;
+        t2FlameToneLine.textContent = T.line;
+        t2FlameName.textContent = F.name;
+        t2FlameLine.textContent = F.line;
+        t2FlamePractice.textContent = F.practice;
+        t2FlameSeal.textContent = R.res.key ? "Resonant (seal lit)" : "Quiet (seal at rest)";
+      }
+
+      /* Name & Letter Code — lazy compute (auto if name present) */
+      computeNameCode(); // uses current override/name automatically
+    }
+
+    /* ---------- Name & Letter Code rendering ---------- */
+    function computeNameCode(){
+      const raw = (t2NameOverride.value.trim() || inName?.value?.trim() || "");
+      if (!raw){
+        t2NamePyth.textContent = "—";
+        t2NamePythRed.textContent = "—";
+        t2NameSimple.textContent = "—";
+        t2NameSimpleRed.textContent= "—";
+        t2NameHeb.textContent = "—";
+        t2NameHebRed.textContent = "—";
+        t2NameBreak.textContent = "No name provided.";
+        t2CovenantSeal.textContent = "—";
+        return;
+      }
+
+      const R = getReadingFromInputs();
+      const isHeb = isHebrew(raw);
+      let pyth = codeLatinPyth(raw);
+      let simp = codeLatinSimple(raw);
+      let heb  = isHeb ? codeHebrew(raw) : null;
+
+      t2NamePyth.textContent = String(pyth.sum);
+      t2NamePythRed.textContent = `→ ${pyth.red}`;
+      t2NameSimple.textContent  = String(simp.sum);
+      t2NameSimpleRed.textContent = `→ ${simp.red}`;
+      if (heb){
+        t2NameHeb.textContent = String(heb.sum);
+        t2NameHebRed.textContent = `→ ${heb.red}`;
+      }else{
+        t2NameHeb.textContent = "—";
+        t2NameHebRed.textContent = "—";
+      }
+
+      // Covenant Seal = Tone ∴ Name (pref: Hebrew > Pythagorean) ∴ Resonant
+      const toneKey = R?.tone || 0;
+      const nameKey = (heb?.red || pyth.red);
+      const resKey  = R?.res?.value || 0;
+      t2CovenantSeal.textContent = `${toneKey} ∴ ${nameKey} ∴ ${resKey}`;
+
+      // Breakdown text
+      const lines=[];
+      if (isHeb){
+        lines.push(`HEBREW (${raw})`);
+        lines.push(heb.letters.map((ch,i)=>`${ch}=${heb.vals[i]}`).join(" + ") + ` = ${heb.sum} → ${heb.red}`);
+        lines.push("");
+      }
+      lines.push(`LATIN (Pythagorean):`);
+      lines.push(pyth.letters.map((ch,i)=>`${ch}=${pyth.vals[i]}`).join(" + ") + ` = ${pyth.sum} → ${pyth.red}`);
+      lines.push("");
+      lines.push(`LATIN (Simple A1–Z26):`);
+      lines.push(simp.letters.map((ch,i)=>`${ch}=${simp.vals[i]}`).join(" + ") + ` = ${simp.sum} → ${simp.red}`);
+      lines.push("");
+      if (R){
+        lines.push(`Covenant Seal = Tone (${R.tone||"—"}) ∴ Name (${nameKey}) ∴ Resonant (${R.res?.value ?? "—"})`);
+      }
+      t2NameBreak.textContent = lines.join("\n");
+    }
+
+    /* ---------- Events ---------- */
+    on($("#btnRead"), "click", paintTierII);           // sync with Tier I button
+    on(t2Recalc,     "click", paintTierII);
+    on(t2NameCalc,   "click", computeNameCode);
+
+    // Quick share: push Tier II tab state + name override, keep Tier I params if present
+    on(t2Share, "click", ()=>{
+      const u = new URL(location.href);
+      // keep existing
+      const t2tab = (tabLaws.getAttribute("aria-selected")==="true") ? "laws"
+                  : (tabFlame.getAttribute("aria-selected")==="true") ? "flame"
+                  : "name";
+      u.searchParams.set("t2", t2tab);
+      const override = t2NameOverride.value.trim();
+      if (override) u.searchParams.set("name2", override); else u.searchParams.delete("name2");
+      const url = u.toString();
+      (async ()=>{
+        try{
+          if (navigator.share){
+            await navigator.share({title:"Genesis Oracle — Tier II", url});
+            toast("Shared");
+          }else{
+            await navigator.clipboard.writeText(url);
+            toast("Link copied");
+          }
+        }catch{}
+      })();
+    });
+
+    // Restore tab/name from URL (non-destructive)
+    (function bootTier2FromURL(){
+      const qp = new URLSearchParams(location.search);
+      const tab = qp.get("t2");
+      const name2 = qp.get("name2");
+      if (name2){ t2NameOverride.value = name2; }
+      if (tab==="flame") setTab("flame");
+      else if (tab==="name") setTab("name");
+      else setTab("laws");
+      // If Tier I was pre-populated, compute now
+      if ($("#inDate")?.value) { paintTierII(); }
+    })();
+
+  })();
+  </script>
+  <!-- ======================= END PART II ======================= -->
+
+
+
+
+
+
+
+
+
+
+  <!-- =========================================================
+       PART III / III — Tesla Resonances + Witness Ledger
+       Insert this block right BEFORE </body></html>
+       ========================================================= -->
+
+  <!-- ============ Tier III Panels ============ -->
+  <section id="tier3" class="wrap" aria-label="Genesis Oracle — Tier III">
+    <div class="divider" aria-hidden="true" style="margin:18px 0"></div>
+    <header style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px">
+      <h2 class="title" style="font-size:22px;margin:0">Tier III — Tesla Resonances · Carrier Palette · Witness Ledger</h2>
+      <div class="lab-row" role="toolbar" aria-label="Tier III actions">
+        <button id="t3Recalc" class="lab-btn" type="button" title="Recalculate Tier III from current inputs">Recalculate</button>
+        <button id="t3Share"  class="lab-btn ghost" type="button" title="Share Tier III state">Share</button>
+      </div>
+    </header>
+
+    <!-- Tabs -->
+    <nav class="card" role="tablist" aria-label="Tier III tabs" style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="lab-btn" role="tab" aria-selected="true"  id="tab-tesla"  aria-controls="panel-tesla">Tesla Resonances</button>
+      <button class="lab-btn" role="tab" aria-selected="false" id="tab-ledger" aria-controls="panel-ledger">Witness Ledger</button>
+      <button class="lab-btn" role="tab" aria-selected="false" id="tab-links"  aria-controls="panel-links">Links & Print</button>
+    </nav>
+
+    <!-- ========== Tesla Resonances Panel ========== -->
+    <section id="panel-tesla" role="tabpanel" aria-labelledby="tab-tesla" class="card" style="margin-top:10px">
+      <h3 class="result-title" style="margin-top:0">Tesla Resonances & Carrier Skin</h3>
+      <p class="meta">We map your Birth <b>Tone</b> + <b>Resonant Sum</b> to a preferred <b>Carrier</b> (432, 528, 369, 144, 963). This sets both your sound seed and the site’s accent palette. You can audition tones and switch carriers; your choice persists locally.</p>
+
+      <div class="summary" style="margin-top:10px">
+        <div class="pill">
+          <div class="k meta">Tone → Carrier</div>
+          <div id="t3CarrierName">—</div>
+          <small class="meta" id="t3CarrierWhy">—</small>
+        </div>
+        <div class="pill">
+          <div class="k meta">Resonant Sum</div>
+          <div id="t3ResSum">—</div>
+          <small class="meta" id="t3ResKey">—</small>
+        </div>
+        <div class="pill">
+          <div class="k meta">Seed Frequency</div>
+          <div id="t3SeedHz">— Hz</div>
+          <small class="meta" id="t3SeedLine">—</small>
+        </div>
+        <div class="pill">
+          <div class="k meta">Palette</div>
+          <div id="t3Palette">—</div>
+          <small class="meta">auto-applied to UI</small>
+        </div>
+      </div>
+
+      <div class="goldline" aria-hidden="true"></div>
+
+      <article>
+        <h4 class="result-title">Carrier Selector & Player</h4>
+        <div class="lab-row" style="align-items:flex-end">
+          <label>Carrier
+            <select id="t3CarrierPick" class="lab-input" style="min-width:180px">
+              <option value="auto">Auto (by Tone + Sum)</option>
+              <option value="432">432</option>
+              <option value="528">528</option>
+              <option value="369">369</option>
+              <option value="144">144</option>
+              <option value="963">963</option>
+            </select>
+          </label>
+          <label>Base Pitch (A)
+            <input id="t3Pitch" class="lab-input" type="number" step="0.5" min="400" max="480" value="432">
+          </label>
+          <label>Gain
+            <input id="t3Gain" class="lab-input" type="range" min="0" max="1" step="0.01" value="0.12">
+          </label>
+          <button id="t3Play" class="lab-btn" type="button">Play</button>
+          <button id="t3Stop" class="lab-btn ghost" type="button">Stop</button>
+          <button id="t3ApplySkin" class="lab-btn" type="button" title="Apply palette skin to site">Apply Skin</button>
+        </div>
+
+        <p class="meta" id="t3Note">Tip: change Base Pitch to taste (e.g., 432, 444). We modulate a gentle binaural shimmer using your Tone index.</p>
+
+        <div class="divider" aria-hidden="true"></div>
+        <h4 class="result-title">Mapping Logic</h4>
+        <ul class="meta" style="margin-left:1.2rem">
+          <li><b>432</b> — foundational breath (tones 1/4/7/10/13 preferred; sums 1/4/7/10/13 tilt)</li>
+          <li><b>528</b> — repair & mercy (tones 5/6/11/12 tilt; sums 5/6/11/12 tilt)</li>
+          <li><b>369</b> — pattern & signal (tones 3/7/9; sums divisible by 3 tilt)</li>
+          <li><b>144</b> — witness & order (tones 4/8/12; sums with master numbers lean)</li>
+          <li><b>963</b> — crown & return (tones 9/13; high sums lean)</li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- ========== Witness Ledger Panel ========== -->
+    <section id="panel-ledger" role="tabpanel" aria-labelledby="tab-ledger" class="card hidden" style="margin-top:10px">
+      <h3 class="result-title" style="margin-top:0">Witness Ledger — Saved Birth Readings</h3>
+      <p class="meta">Store many profiles locally. Export/Import as <code>.json</code> or <code>.csv</code>. Click a row to re-load into the Oracle. Use this to keep your circle’s signatures.</p>
+
+      <div class="lab-row" style="align-items:flex-end">
+        <button id="lgExportJSON" class="lab-btn" type="button">Export JSON</button>
+        <button id="lgExportCSV"  class="lab-btn" type="button">Export CSV</button>
+        <label class="tag">Import
+          <input id="lgImport" class="lab-input" type="file" accept=".json,.csv" style="padding:.3rem .5rem">
+        </label>
+        <button id="lgClear" class="lab-btn ghost" type="button" title="Clear all saved profiles">Clear All</button>
+      </div>
+
+      <div class="divider" aria-hidden="true"></div>
+
+      <div class="ledger-wrap" style="overflow:auto; max-height:58vh; border:1px solid var(--line); border-radius:10px">
+        <table id="ledger" class="year-map" style="min-width:920px">
+          <thead>
+            <tr>
+              <th>#</th><th>Name</th><th>DOB</th><th>TZ</th><th>Moon</th><th>Day</th><th>Week</th><th>Tone</th><th>Res</th><th>Carrier</th><th>Stamp</th><th>⋯</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <small class="meta">Privacy: profiles never leave your device unless you export/share them.</small>
+    </section>
+
+    <!-- ========== Links & Print Panel ========== -->
+    <section id="panel-links" role="tabpanel" aria-labelledby="tab-links" class="card hidden" style="margin-top:10px">
+      <h3 class="result-title" style="margin-top:0">Links, Deep Integration & Print</h3>
+      <p class="meta">Deep links carry your inputs across pages, and print styling gives you a one-page reading. Use the script hook below to render the Genesis Oracle inside other pages.</p>
+
+      <div class="summary" style="margin-top:10px">
+        <div class="pill">
+          <div class="k meta">Deep Link</div>
+          <div id="t3DeepLink">—</div>
+          <small class="meta">Share or bookmark</small>
+        </div>
+        <div class="pill">
+          <div class="k meta">Moons Integration</div>
+          <div id="t3Hook">window.SOF.genesis.read({…})</div>
+          <small class="meta">API hook active</small>
+        </div>
+        <div class="pill">
+          <div class="k meta">Print</div>
+          <div>Use browser Print</div>
+          <small class="meta">auto-formats Oracle</small>
+        </div>
+      </div>
+
+      <div class="goldline" aria-hidden="true"></div>
+
+      <article>
+        <h4 class="result-title">Embed Hook (global)</h4>
+        <pre class="mono meta" style="white-space:pre-wrap"><code>window.SOF.genesis.read({
+  name: "Ada Lovelace",
+  date: "1815-12-10",
+  time: "09:00",
+  tz: "Europe/London",
+  options: { skipLeap:true, skipDOOT:true, carrier:"auto" }
+});</code></pre>
+        <p class="meta">This dispatches a synthetic read to the page, fills outputs, and updates the mini moon bar + carrier skin.</p>
+      </article>
+    </section>
+  </section>
+
+  <!-- ============ Tier III Scripts ============ -->
+  <script>
+  (function(){
+    "use strict";
+
+    /* ---------- Tiny utils ---------- */
+    const $  =(s,r=document)=>r.querySelector(s);
+    const $$ =(s,r=document)=>Array.from(r.querySelectorAll(s));
+    const on =(t,e,f,o)=>t&&t.addEventListener(e,f,o);
+    const pad=n=>String(n).padStart(2,"0");
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    const nowStamp = ()=> new Date().toISOString().replace('T',' ').replace(/\.\d+Z$/,'Z');
+
+    const toast = (msg)=>{
+      const t=document.createElement('div');
+      t.className='toast'; t.textContent=msg; document.body.appendChild(t);
+      requestAnimationFrame(()=>t.style.opacity=1);
+      setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),250); }, 1500);
+    };
+
+    /* ---------- From Tier I / II (mirrors) ---------- */
+    const MOONS = ["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
+    const ESS   = ["Attract purpose","Stabilize challenge","Activate service","Define form","Empower radiance","Balance equality","Channel inspiration","Harmonize integrity","Pulse intention","Perfect manifestation","Dissolve release","Dedicate cooperation","Endure presence"];
+
+    const TONES = [
+      {n:1,name:"Magnetic",line:"Unify purpose."},{n:2,name:"Lunar",line:"Stabilize challenge."},{n:3,name:"Electric",line:"Activate service."},
+      {n:4,name:"Self-Existing",line:"Define form."},{n:5,name:"Overtone",line:"Empower radiance."},{n:6,name:"Rhythmic",line:"Balance equality."},
+      {n:7,name:"Resonant",line:"Channel inspiration."},{n:8,name:"Galactic",line:"Harmonize integrity."},{n:9,name:"Solar",line:"Pulse intention."},
+      {n:10,name:"Planetary",line:"Perfect manifestation."},{n:11,name:"Spectral",line:"Dissolve release."},{n:12,name:"Crystal",line:"Dedicate cooperation."},
+      {n:13,name:"Cosmic",line:"Endure presence."}
+    ];
+
+    const TZ_KEY="sof_moons_tz";
+    function getTZ(){
+      try{ return localStorage.getItem(TZ_KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; }
+      catch{ return "UTC"; }
+    }
+    function dateInTZ(baseDate, tz, partsOverride){
+      try{
+        const opts={timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"};
+        const parts=new Intl.DateTimeFormat("en-CA",opts).formatToParts(baseDate);
+        const m=Object.fromEntries(parts.map(p=>[p.type,p.value]));
+        const H=partsOverride?.hour ?? m.hour;
+        const M=partsOverride?.minute ?? m.minute;
+        const S=partsOverride?.second ?? m.second;
+        return new Date(`${m.year}-${m.month}-${m.day}T${H}:${M}:${S}Z`);
+      }catch{
+        const d=new Date(baseDate);
+        if (partsOverride?.hour!=null) d.setUTCHours(partsOverride.hour, partsOverride.minute||0, partsOverride.second||0, 0);
+        return d;
+      }
+    }
+    const utcTrunc = d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    const isLeapYear   = y=> (y%4===0 && y%100!==0) || (y%400===0);
+    const isLeapDayUTC = d=> d.getUTCMonth()===1 && d.getUTCDate()===29;
+    function isDOOT(d, tz){ const dt=dateInTZ(d,tz); return (dt.getUTCMonth()===6 && dt.getUTCDate()===25); }
+    function startOfYear13(d, tz){
+      const dt = dateInTZ(d, tz);
+      const y  = dt.getUTCFullYear();
+      const anchorThis = new Date(Date.UTC(y,6,26));
+      const anchorPrev = new Date(Date.UTC(y-1,6,26));
+      return dt >= anchorThis ? anchorThis : anchorPrev;
+    }
+    function dayIndexSinceStart(d, tz, {skipLeap=true, skipDOOT=true}={}){
+      const start = utcTrunc(startOfYear13(d, tz));
+      const dt    = utcTrunc(dateInTZ(d, tz));
+      let days = Math.floor((dt - start)/86400000);
+      if (skipDOOT){
+        const doot = new Date(Date.UTC(start.getUTCFullYear()+1,6,25));
+        if (dt >= doot) days -= 1;
+      }
+      if (skipLeap){
+        for (let y=start.getUTCFullYear(); y<=dt.getUTCFullYear(); y++){
+          if(isLeapYear(y)){
+            const feb29 = new Date(Date.UTC(y,1,29));
+            if (dt >= feb29 && start <= feb29) days -= 1;
+          }
+        }
+      }
+      return days;
+    }
+    function calc13Moon(d, tz, opts){
+      if (isDOOT(d,tz)){ const s=startOfYear13(d,tz).getUTCFullYear(); return {special:"Day Out of Time", year:`${s}/${s+1}`}; }
+      if (isLeapDayUTC(dateInTZ(d,tz))){ const s=startOfYear13(d,tz).getUTCFullYear(); return {special:"Leap Day", year:`${s}/${s+1}`}; }
+      const idx = dayIndexSinceStart(d, tz, opts);
+      const moon = Math.floor(idx/28)+1;
+      const day  = (idx%28)+1;
+      const s=startOfYear13(d,tz).getUTCFullYear();
+      return {special:null, moon, day, idx, year:`${s}/${s+1}`};
+    }
+    const toneFromDay = (day) => ((Number(day||0)-1) % 13) + 1;
+    const weekFromDay = (day) => Math.floor((day-1)/7)+1;
+
+    const sumDigits = n => String(n).split("").reduce((a,b)=>a+(+b||0),0);
+    function reduceNum(n){ while(n>9 && n!==11 && n!==22 && n!==33){ n=sumDigits(n); } return n; }
+    function resonantFromDate(d, tz){
+      const dt = dateInTZ(d, tz);
+      const y=dt.getUTCFullYear(), m=dt.getUTCMonth()+1, day=dt.getUTCDate();
+      const total = reduceNum(sumDigits(y)+sumDigits(m)+sumDigits(day));
+      const isKey = [1,4,7,11,22,33].includes(total);
+      return {value: total, key: isKey};
+    }
+
+    /* ---------- DOM Tier III ---------- */
+    const tabTesla  = $("#tab-tesla");
+    const tabLedger = $("#tab-ledger");
+    const tabLinks  = $("#tab-links");
+    const panTesla  = $("#panel-tesla");
+    const panLedger = $("#panel-ledger");
+    const panLinks  = $("#panel-links");
+    const t3Recalc  = $("#t3Recalc");
+    const t3Share   = $("#t3Share");
+
+    // Tesla fields
+    const t3CarrierName = $("#t3CarrierName");
+    const t3CarrierWhy  = $("#t3CarrierWhy");
+    const t3ResSum      = $("#t3ResSum");
+    const t3ResKey      = $("#t3ResKey");
+    const t3SeedHz      = $("#t3SeedHz");
+    const t3SeedLine    = $("#t3SeedLine");
+    const t3Palette     = $("#t3Palette");
+    const t3CarrierPick = $("#t3CarrierPick");
+    const t3Pitch       = $("#t3Pitch");
+    const t3Gain        = $("#t3Gain");
+    const t3Play        = $("#t3Play");
+    const t3Stop        = $("#t3Stop");
+    const t3ApplySkin   = $("#t3ApplySkin");
+    const t3DeepLink    = $("#t3DeepLink");
+
+    // Ledger
+    const ledgerEl      = $("#ledger tbody");
+    const lgExportJSON  = $("#lgExportJSON");
+    const lgExportCSV   = $("#lgExportCSV");
+    const lgImport      = $("#lgImport");
+    const lgClear       = $("#lgClear");
+
+    // Inputs from earlier tiers
+    const inName = $("#inName");
+    const inDate = $("#inDate");
+    const inTime = $("#inTime");
+    const inTZ   = $("#inTZ");
+    const optLeap= $("#optLeap");
+    const optDOOT= $("#optDOOT");
+
+    /* ---------- Tabs ---------- */
+    function setTab3(which){
+      const map = {
+        tesla:[tabTesla, panTesla],
+        ledger:[tabLedger, panLedger],
+        links:[tabLinks, panLinks]
+      };
+      Object.entries(map).forEach(([k,[tab,panel]])=>{
+        const active = (k===which);
+        tab.setAttribute("aria-selected", String(active));
+        panel.classList.toggle("hidden", !active);
+      });
+      if (which==="links"){ buildDeepLink(); }
+    }
+    on(tabTesla,  "click", ()=>setTab3("tesla"));
+    on(tabLedger, "click", ()=>setTab3("ledger"));
+    on(tabLinks,  "click", ()=>setTab3("links"));
+
+    /* ---------- Carrier logic ---------- */
+    const CARRIERS = {
+      "432": {name:"432 — Breath",  seed:432,  skin:"carrier-432", accents:["#7af3ff","#f3c97a"]},
+      "528": {name:"528 — Repair",  seed:528,  skin:"carrier-528", accents:["#9ef7a3","#ffd27a"]},
+      "369": {name:"369 — Pattern", seed:369,  skin:"carrier-369", accents:["#a8a6ff","#7af3ff"]},
+      "144": {name:"144 — Witness", seed:144,  skin:"carrier-144", accents:["#7aa8ff","#e3b1ff"]},
+      "963": {name:"963 — Crown",   seed:963,  skin:"carrier-963", accents:["#d1b3ff","#fff0a6"]},
+    };
+
+    function chooseCarrier(tone, resValue){
+      // heuristics: prefer 432 for 1/4/7/10/13; 369 if divisible by 3; 528 for 5/6/11/12 or soft sums; 144 for master or 4/8/12; 963 for 9/13 or high sums
+      if (!tone || !resValue) return "432";
+      if (tone===9 || tone===13 || resValue>=9) return "963";
+      if (tone%3===0 || (resValue%3===0)) return "369";
+      if ([5,6,11,12].includes(tone) || [5,6,11,12].includes(resValue)) return "528";
+      if ([4,8,12].includes(tone) || [11,22,33].includes(resValue)) return "144";
+      return "432";
+    }
+
+    function applySkin(id){
+      const root = document.documentElement;
+      root.classList.remove("carrier-432","carrier-528","carrier-369","carrier-144","carrier-963");
+      root.classList.add(CARRIERS[id]?.skin || "carrier-432");
+      const [c1,c2] = CARRIERS[id]?.accents || ["#7af3ff","#f3c97a"];
+      root.style.setProperty("--moon-accent",  c1);
+      root.style.setProperty("--moon-accent-2",c2);
+      document.dispatchEvent(new Event("sof:accent-change"));
+      try{ localStorage.setItem("sof_carrier_pref", id); }catch{}
+    }
+
+    function currentInputs(){
+      const name = (inName?.value||"").trim();
+      const date = inDate?.value || "";
+      const time = inTime?.value || "";
+      const tz   = inTZ?.value || getTZ();
+      const skipLeap = optLeap?.checked !== false;
+      const skipDOOT = optDOOT?.checked !== false;
+      if (!date) return null;
+      let base;
+      if (time){
+        const [hh,mm] = time.split(":").map(Number);
+        base = dateInTZ(new Date(date+"T00:00:00Z"), tz, {hour:pad(hh), minute:pad(mm), second:"00"});
+      }else{
+        base = dateInTZ(new Date(date+"T00:00:00Z"), tz, {hour:"00", minute:"00", second:"00"});
+      }
+      const m13 = calc13Moon(base, tz, {skipLeap,skipDOOT});
+      const tone = m13.special? null : toneFromDay(m13.day);
+      const week = m13.special? null : weekFromDay(m13.day);
+      const res  = resonantFromDate(base, tz);
+      return {name,date,time,tz,skipLeap,skipDOOT,base,m13,tone,week,res};
+    }
+
+    function paintTesla(){
+      const R = currentInputs();
+      if (!R){ t3CarrierName.textContent="—"; t3CarrierWhy.textContent="Set a date first."; return; }
+      const autoId = chooseCarrier(R.tone || 1, R.res?.value || 1);
+      const pick = (t3CarrierPick.value==="auto") ? autoId : t3CarrierPick.value;
+      const carr = CARRIERS[pick] || CARRIERS["432"];
+
+      t3CarrierName.textContent = carr.name + (t3CarrierPick.value==="auto" ? " (auto)" : " (manual)");
+      t3CarrierWhy.textContent  = `Tone ${R.tone||"—"} + Resonant ${R.res?.value ?? "—"} → ${(t3CarrierPick.value==="auto")?autoId:pick}`;
+      t3ResSum.textContent      = String(R.res?.value ?? "—");
+      t3ResKey.textContent      = (R.res?.key ? "Resonant Day (seal lights)" : "Ordinary Day");
+      t3SeedHz.textContent      = `${t3Pitch.value || carr.seed} Hz`;
+      t3SeedLine.textContent    = `Seed = base pitch; we modulate subtle ±${(R.tone||1)%5+1} Hz binaural flutter by Tone.`;
+      t3Palette.textContent     = CARRIERS[pick].accents.join(" → ");
+
+      // Apply skin silently (not forced unless clicked "Apply Skin")
+      // …but if user chose manual, go ahead and apply so they see it.
+      if (t3CarrierPick.value!=="auto"){ applySkin(pick); }
+
+      // Save chosen carrier
+      try{ localStorage.setItem("sof_carrier_choice", t3CarrierPick.value); }catch{}
+    }
+
+    /* ---------- WebAudio Player ---------- */
+    let ctx, oscL, oscR, gain, pannerL, pannerR, rafId;
+    function startAudio(){
+      const R = currentInputs(); if (!R) { toast("Pick a date first."); return; }
+      const base = clamp(parseFloat(t3Pitch.value)||432, 100, 20000);
+      const tone = R.tone || 1;
+      const flutter = (tone % 5) + 1; // 1..5 Hz
+
+      if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+      stopAudio(true);
+
+      // Dual oscillators for gentle binaural effect
+      oscL = ctx.createOscillator();
+      oscR = ctx.createOscillator();
+      gain = ctx.createGain();
+      pannerL = ctx.createStereoPanner();
+      pannerR = ctx.createStereoPanner();
+
+      oscL.type = "sine"; oscR.type = "sine";
+      oscL.frequency.value = base - flutter/2;
+      oscR.frequency.value = base + flutter/2;
+
+      gain.gain.value = clamp(parseFloat(t3Gain.value)||0.1, 0, 1);
+
+      pannerL.pan.value = -0.5;
+      pannerR.pan.value = 0.5;
+
+      oscL.connect(pannerL).connect(gain).connect(ctx.destination);
+      oscR.connect(pannerR).connect(gain).connect(ctx.destination);
+
+      oscL.start(); oscR.start();
+
+      // add a slow LFO to shimmer the flutter ±0.5 Hz
+      const lfo = ctx.createOscillator(); const lfoGain = ctx.createGain();
+      lfo.type="sine"; lfo.frequency.value=0.25;
+      lfoGain.gain.value=0.5;
+      lfo.connect(lfoGain);
+      lfoGain.connect(oscL.frequency);
+      lfoGain.connect(oscR.frequency);
+      lfo.start();
+
+      t3Play.setAttribute("aria-pressed","true");
+      t3Stop.removeAttribute("aria-pressed");
+    }
+    function stopAudio(silent){
+      try{ oscL?.stop(); oscR?.stop(); }catch{}
+      try{
+        oscL?.disconnect(); oscR?.disconnect(); pannerL?.disconnect(); pannerR?.disconnect(); gain?.disconnect();
+      }catch{}
+      oscL=oscR=gain=pannerL=pannerR=null;
+      if (!silent) { t3Play.removeAttribute("aria-pressed"); t3Stop.setAttribute("aria-pressed","true"); }
+    }
+    on(t3Play,"click", startAudio);
+    on(t3Stop,"click", ()=>stopAudio(false));
+    on(t3Pitch,"change",()=>{ if(oscL){ startAudio(); } });
+    on(t3Gain,"input", ()=>{ if(gain){ gain.gain.value = clamp(parseFloat(t3Gain.value)||0.1,0,1); } });
+
+    on(t3ApplySkin,"click", ()=>{
+      const id = (t3CarrierPick.value==="auto")
+        ? chooseCarrier((currentInputs()?.tone)||1, (currentInputs()?.res?.value)||1)
+        : t3CarrierPick.value;
+      applySkin(id);
+      toast(`Applied skin: ${CARRIERS[id].name}`);
+    });
+
+    /* ---------- Ledger persistence ---------- */
+    const LG_KEY = "sof_genesis_profiles_v1";
+
+    function readLedger(){
+      try{ return JSON.parse(localStorage.getItem(LG_KEY)||"[]"); }catch{ return []; }
+    }
+    function writeLedger(list){
+      try{ localStorage.setItem(LG_KEY, JSON.stringify(list)); }catch{}
+    }
+
+    function profileFromInputs(){
+      const R = currentInputs(); if (!R) return null;
+      const i = R.m13?.moon ? (R.m13.moon-1) : 0;
+      const carrierAuto = chooseCarrier(R.tone||1, R.res?.value||1);
+      const carrierPick = localStorage.getItem("sof_carrier_choice") || "auto";
+      const carrier = (carrierPick==="auto") ? carrierAuto : carrierPick;
+
+      return {
+        id: crypto?.randomUUID?.() || ("id"+Date.now()+Math.random().toString(16).slice(2)),
+        name: R.name || "(unnamed)",
+        date: R.date,
+        time: R.time || "",
+        tz: R.tz,
+        moon: R.m13?.moon || null,
+        day:  R.m13?.day  || null,
+        week: R.week || null,
+        tone: R.tone || null,
+        res:  R.res?.value || null,
+        carrier,
+        stamp: nowStamp(),
+        moonName: R.m13?.moon ? MOONS[i]+" Moon" : R.m13?.special || "—",
+        essence:  R.m13?.moon ? ESS[i] : "—"
+      };
+    }
+
+    // Hook existing Save button from Part I (if present)
+    on($("#btnSave"), "click", ()=>{
+      const p = profileFromInputs();
+      if (!p){ toast("Set a date first."); return; }
+      const list = readLedger(); list.push(p); writeLedger(list);
+      syncSavedProfilesDropdown(list); // if Part I dropdown exists
+      renderLedger(); toast("Saved to ledger");
+    });
+
+    function syncSavedProfilesDropdown(list){
+      const sel = $("#savedProfiles"); if (!sel) return;
+      const cur = sel.value;
+      sel.innerHTML = `<option value="">—</option>` + list.map(p=>`<option value="${p.id}">${p.name} — ${p.date}</option>`).join("");
+      if (cur) sel.value = cur;
+    }
+
+    function renderLedger(){
+      const list = readLedger();
+      syncSavedProfilesDropdown(list);
+      if (!ledgerEl) return;
+      ledgerEl.innerHTML = list.map((p,idx)=>{
+        const tone = p.tone ? `#${p.tone}` : "—";
+        const res  = p.res  ?? "—";
+        const car  = CARRIERS[p.carrier]?.name?.split("—")[0].trim() || p.carrier;
+        const week = p.week ?? "—";
+        const day  = p.day ?? "—";
+        const moon = p.moon ? `#${p.moon} ${p.moonName}` : p.moonName || "—";
+        return `<tr data-id="${p.id}" role="row" tabindex="0">
+          <td class="mono">${idx+1}</td>
+          <td>${escapeHTML(p.name)}</td>
+          <td class="mono">${p.date}${p.time?(" "+p.time):""}</td>
+          <td class="mono">${p.tz}</td>
+          <td>${moon}</td>
+          <td class="mono">${day}</td>
+          <td class="mono">${week}</td>
+          <td class="mono">${tone}</td>
+          <td class="mono">${res}</td>
+          <td class="mono">${car}</td>
+          <td class="mono">${p.stamp}</td>
+          <td>
+            <button class="lab-btn ghost lgLoad"   data-id="${p.id}" title="Load">Load</button>
+            <button class="lab-btn ghost lgDelete" data-id="${p.id}" title="Delete">✕</button>
+          </td>
+        </tr>`;
+      }).join("");
+
+      // Row interactions
+      $$(".lgLoad", ledgerEl).forEach(btn=>{
+        on(btn,"click", (e)=>{ e.stopPropagation(); loadProfile(btn.dataset.id); });
+      });
+      $$(".lgDelete", ledgerEl).forEach(btn=>{
+        on(btn,"click", (e)=>{ e.stopPropagation(); deleteProfile(btn.dataset.id); });
+      });
+      $$("tr[data-id]", ledgerEl).forEach(row=>{
+        on(row,"click", ()=> loadProfile(row.dataset.id));
+        on(row,"keydown", (ev)=>{ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); loadProfile(row.dataset.id);} });
+      });
+    }
+
+    function escapeHTML(s){ return String(s||"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
+
+    function loadProfile(id){
+      const list = readLedger();
+      const p = list.find(x=>x.id===id);
+      if (!p) return;
+      inName.value = p.name || "";
+      inDate.value = p.date;
+      inTime.value = p.time || "";
+      inTZ.value   = p.tz;
+      // trigger Tier I button if exists (to repaint everything)
+      $("#btnRead")?.click();
+      // also repaint Tier II / III
+      paintTesla();
+      toast(`Loaded: ${p.name}`);
+    }
+    function deleteProfile(id){
+      const list = readLedger().filter(x=>x.id!==id);
+      writeLedger(list);
+      renderLedger();
+      toast("Deleted");
+    }
+    on(lgClear, "click", ()=>{
+      if (!confirm("Clear all saved profiles? This cannot be undone.")) return;
+      writeLedger([]); renderLedger(); syncSavedProfilesDropdown([]); toast("Cleared");
+    });
+
+    /* ---------- Export / Import ---------- */
+    function dlBlob(name, blob){ const a=document.createElement("a"); a.download=name; a.href=URL.createObjectURL(blob); document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500); }
+    on(lgExportJSON,"click", ()=>{
+      const list = readLedger();
+      const blob = new Blob([JSON.stringify(list,null,2)], {type:"application/json"});
+      dlBlob("genesis-ledger.json", blob);
+    });
+    on(lgExportCSV,"click", ()=>{
+      const list = readLedger();
+      const cols = ["id","name","date","time","tz","moon","day","week","tone","res","carrier","stamp","moonName","essence"];
+      const csv = [cols.join(",")].concat(list.map(o=>cols.map(k=>{
+        const v = (o[k]==null?"":String(o[k]).replace(/"/g,'""'));
+        return `"${v}"`;
+      }).join(","))).join("\n");
+      const blob = new Blob([csv],{type:"text/csv"});
+      dlBlob("genesis-ledger.csv", blob);
+    });
+    on(lgImport,"change", async (ev)=>{
+      const f = ev.target.files?.[0]; if (!f) return;
+      const text = await f.text();
+      let list = readLedger();
+      try{
+        if (f.name.endsWith(".json")){
+          const arr = JSON.parse(text); if (Array.isArray(arr)) list = list.concat(arr);
+        }else{
+          // naive CSV import (expects same headers)
+          const lines = text.split(/\r?\n/).filter(Boolean);
+          const headers = lines.shift().split(",").map(s=>s.replace(/^"|"$/g,""));
+          lines.forEach(line=>{
+            const cells = line.match(/("([^"]|"")*"|[^,]+)/g)||[];
+            const obj={};
+            headers.forEach((h,i)=>{
+              let v = (cells[i]||"").replace(/^"|"$/g,"").replace(/""/g,'"');
+              if (["moon","day","week","tone","res"].includes(h)) v = v===""?null:Number(v);
+              obj[h]=v;
+            });
+            if(!obj.id) obj.id = crypto?.randomUUID?.() || ("id"+Date.now()+Math.random().toString(16).slice(2));
+            list.push(obj);
+          });
+        }
+        writeLedger(list); renderLedger(); syncSavedProfilesDropdown(list); toast("Imported");
+      }catch{ toast("Import failed"); }
+      ev.target.value="";
+    });
+
+    /* ---------- Deep link & share ---------- */
+    function buildDeepLink(){
+      const R = currentInputs(); if (!R){ t3DeepLink.textContent = "—"; return; }
+      const u = new URL(location.href);
+      u.searchParams.set("name", R.name || "");
+      u.searchParams.set("date", R.date);
+      if (R.time) u.searchParams.set("time", R.time); else u.searchParams.delete("time");
+      u.searchParams.set("tz", R.tz);
+      u.searchParams.set("leap", R.skipLeap? "1":"0");
+      u.searchParams.set("doot", R.skipDOOT? "1":"0");
+      const pick = localStorage.getItem("sof_carrier_choice") || "auto";
+      u.searchParams.set("carrier", pick);
+      t3DeepLink.textContent = u.toString();
+      return u.toString();
+    }
+    on(t3Share,"click", ()=>{
+      const url = buildDeepLink() || location.href;
+      (async ()=>{
+        try{
+          if (navigator.share){ await navigator.share({title:"Genesis Oracle", url}); toast("Shared"); }
+          else { await navigator.clipboard.writeText(url); toast("Link copied"); }
+        }catch{}
+      })();
+    });
+
+    /* ---------- Tier III Recalc ---------- */
+    on(t3Recalc,"click", paintTesla);
+
+    /* ---------- Restore from URL ---------- */
+    (function bootFromURL(){
+      const qp = new URLSearchParams(location.search);
+      const name = qp.get("name"); const date = qp.get("date"); const time = qp.get("time"); const tz = qp.get("tz");
+      const leap = qp.get("leap"); const doot = qp.get("doot");
+      const carrier = qp.get("carrier");
+
+      if (name){ inName.value = name; }
+      if (date){ inDate.value = date; }
+      if (time){ inTime.value = time; }
+      if (tz){   inTZ.value   = tz; }
+      if (leap!=null){ optLeap.checked = (leap!=="0"); }
+      if (doot!=null){ optDOOT.checked = (doot!=="0"); }
+      if (carrier){ localStorage.setItem("sof_carrier_choice", carrier); }
+
+      // compute if date present
+      if (inDate.value){ $("#btnRead")?.click(); paintTesla(); }
+    })();
+
+    /* ---------- Global hook for other pages ---------- */
+    (function exposeAPI(){
+      const api = {
+        read(args){
+          try{
+            const {name,date,time,tz,options} = args||{};
+            if (name!=null) inName.value = name;
+            if (date!=null) inDate.value = date;
+            if (time!=null) inTime.value = time;
+            if (tz!=null)   inTZ.value   = tz;
+            if (options){
+              if ("skipLeap" in options) optLeap.checked = !!options.skipLeap;
+              if ("skipDOOT" in options) optDOOT.checked = !!options.skipDOOT;
+              if ("carrier" in options)  localStorage.setItem("sof_carrier_choice", options.carrier);
+            }
+            $("#btnRead")?.click(); // Tier I repaint
+            paintTesla();           // Tier III repaint
+            return currentInputs();
+          }catch(e){ console.warn("SOF.genesis.read failed", e); return null; }
+        }
+      };
+      window.SOF = window.SOF || {};
+      window.SOF.genesis = api;
+    })();
+
+    /* ---------- Boot ---------- */
+    // restore carrier UI
+    (function initCarrierPick(){
+      const stored = localStorage.getItem("sof_carrier_choice") || "auto";
+      t3CarrierPick.value = stored;
+    })();
+    renderLedger();
+    paintTesla();
+
+  })();
+  </script>
+
+  <!-- ============ Print Styles (one-page reading) ============ -->
+  <style>
+    @media print{
+      *{ -webkit-print-color-adjust:exact; print-color-adjust:exact }
+      header.site, .moonbar-share, .moonbar-tz, #mbTZ, #mbShare,
+      nav[role="tablist"], .lab-row:has(#t3Play), .lab-row:has(#lgImport){ display:none !important }
+      body{ background:#fff; color:#000 }
+      .wrap{ max-width:960px }
+      .card{ box-shadow:none; border:1px solid #ccc; background:#fff }
+      .shine::after{ display:none !important }
+      .moonbar .mb-fg{ filter:none }
+      .meta{ color:#333 !important }
+      .year-map th, .year-map td { border-color:#ddd !important }
+    }
+  </style>
+  <!-- ======================= END PART III ======================= -->
