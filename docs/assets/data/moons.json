@@ -1,0 +1,37 @@
+[
+  {
+    "idx": 1,
+    "name": "Magnetic",
+    "essence": "Attract purpose",
+    "color": "#6fe7ff",
+    "hebrew": "אַחְדוּת",
+    "psalm": "Psalm 1",
+    "codex": "theory.html#magnetic",
+    "essay": "codex/magnetic.html",
+    "sigil": "assets/sigils/magnetic.svg",
+    "image": "assets/art/magnetic.jpg",
+    "audio": "assets/audio/magnetic.mp3",
+    "practice": [
+      "Clarify purpose in one sentence.",
+      "Choose one devotion you will repeat daily this moon."
+    ]
+  },
+  {
+    "idx": 4,
+    "name": "Self-Existing",
+    "essence": "Define form",
+    "color": "#7bf3b8",
+    "hebrew": "צוּרָה",
+    "psalm": "Psalm 90:12",
+    "codex": "theory.html#self-existing",
+    "essay": "codex/self-existing.html",
+    "sigil": "assets/sigils/self-existing.svg",
+    "image": "assets/art/self-existing.jpg",
+    "audio": "assets/audio/self-existing.mp3",
+    "practice": [
+      "Draw the form of your project: inputs → alchemy → outputs.",
+      "Name constraints that actually set you free."
+    ]
+  }
+  /* …fill the rest (5–13) the same way… */
+]
