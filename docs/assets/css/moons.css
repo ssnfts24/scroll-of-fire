@@ -6,6 +6,15 @@
   - JS IDs/classes unchanged; phase accents from --moon-accent(-2)
 ========================================================= */
 
+
+.lore-grid{ display:grid; grid-template-columns:1fr 200px; gap:12px; align-items:center }
+@media (max-width:720px){ .lore-grid{ grid-template-columns:1fr } .sigil{ justify-self:center } }
+.sigil img{ width:180px; height:auto; filter:drop-shadow(0 6px 18px rgba(0,0,0,.45)) }
+.prompts{ margin:0; padding-left:1.1rem }
+.prompts li{ margin:.3rem 0 }
+.moon-media img{ width:100%; height:auto; border:1px solid var(--line); border-radius:12px; display:block; background:#0b0f16 }
+
+
 /* ---------- Tokens ---------- */
 :root{
   color-scheme: dark;
