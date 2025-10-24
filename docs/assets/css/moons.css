@@ -1,11 +1,12 @@
 /* =========================================================
-  13 Moons · Living Clock — Page Styles (ancient wizard+ v3.2)
-  - Dark-first, a11y-safe, fluid type, phone-proof moon badge
-  - Container-query aware; JS IDs/classes unchanged
-  - Phase accents via --moon-accent / --moon-accent-2
+  13 Moons · Living Clock — Page Styles (ancient wizard++ v3.6)
+  - Mobile-proof Moon badge + guaranteed "(n)" index after the name
+  - Auto-contrast for widget buttons/tags (always-readable letters)
+  - Container-query aware, a11y polish, safe-area padding
+  - JS IDs/classes unchanged; phase accents from --moon-accent(-2)
 ========================================================= */
 
-/* ---------- Core palette & tokens ---------- */
+/* ---------- Tokens ---------- */
 :root{
   color-scheme: dark;
 
@@ -13,18 +14,23 @@
   --bg:#06080e; --fg:#e9eef6; --muted:#9aa4be; --line:#2a3242;
   --elev:rgba(255,255,255,.02); --elev-2:rgba(255,255,255,.006);
 
-  /* Accents */
+  /* Accents (phase-tinted by JS) */
   --accent:#a7f6ff; --accent-2:#cfefff;
   --moon-accent:#7af3ff; --moon-accent-2:#f3c97a;
 
   /* Layout / type */
   --maxw:1180px; --radius:12px; --radius-lg:16px; --shadow:0 6px 14px rgba(0,0,0,.35);
-  --fs-body:clamp(15px, .48vw + 14px, 17px);
-  --lh:1.5;
+  --fs-body:clamp(15px, .48vw + 14px, 17px); --lh:1.5;
 
   /* Focus & motion */
   --focus-ring:#7af3ff; --focus-glow:0 0 0 2px #7af3ff66, 0 0 0 6px #7af3ff22;
   --tempo:1;
+
+  /* NEW: button/readability helpers */
+  --btn-fg:#eaf7ff;            /* default readable text on dark */
+  --btn-fg-dark:#0b1220;       /* readable on light/bright */
+  --chip-fg:#f1f7ff;
+  --chip-fg-dark:#0b1220;
 }
 
 /* Light mode opt-in */
@@ -34,6 +40,7 @@
   --elev:rgba(0,0,0,.02); --elev-2:rgba(0,0,0,.01);
   --accent:#0e84ff; --accent-2:#7dc3ff;
   --moon-accent:#0e84ff; --moon-accent-2:#ffb84d;
+  --btn-fg:#0b1220; --chip-fg:#0b1220;
 }
 
 /* High contrast preference */
@@ -60,7 +67,11 @@ body::before{
   mix-blend-mode:screen;
 }
 
-.wrap{ max-width:var(--maxw); margin:0 auto; padding:22px 16px calc(96px + env(safe-area-inset-bottom)); position:relative; z-index:1 }
+.wrap{
+  max-width:var(--maxw); margin:0 auto;
+  padding:22px 16px calc(96px + env(safe-area-inset-bottom));
+  position:relative; z-index:1
+}
 
 /* ---------- Headings ---------- */
 .title{
@@ -106,7 +117,8 @@ a{ color:inherit; text-decoration:none } a:hover{ text-decoration:underline }
 .lab-btn{
   padding:.62rem .95rem; min-height:40px; border-radius:10px; border:1px solid var(--line);
   background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
-  font-weight:800; letter-spacing:.2px; cursor:pointer; color:inherit;
+  font-weight:800; letter-spacing:.2px; cursor:pointer; color:var(--btn-fg);
+  text-shadow:0 1px 0 rgba(0,0,0,.45);  /* lift on bright accents */
   transition:transform .06s ease, box-shadow .12s ease, border-color .12s ease, filter .12s ease;
 }
 .lab-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35); border-color:color-mix(in srgb, var(--moon-accent) 30%, var(--line)); filter:drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 25%, transparent)) }
@@ -147,10 +159,9 @@ body.stars{
 @keyframes skyDrift{ from{transform:translateX(-2%)} to{transform:translateX(2%)} }
 @media (prefers-reduced-motion:reduce){ #skyBg{ display:none } }
 
-/* ---------- Moon banner / badge ---------- */
+/* ---------- Moon badge ---------- */
 .moon-badge{
-  /* turn it into a container so it can adapt to its own width */
-  container-type:inline-size;
+  container-type:inline-size; /* container queries! */
   display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap;
   filter:drop-shadow(0 0 10px color-mix(in srgb, var(--moon-accent) 25%, transparent));
   position:relative;
@@ -160,10 +171,25 @@ body.stars{
   border-radius:999px; border:1px solid var(--line);
   background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), radial-gradient(80% 60% at 50% 20%, color-mix(in srgb, var(--moon-accent) 15%, transparent), transparent 60%);
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
-  position:relative; z-index:2; /* ensures pills stay above ring label */
+  position:relative; z-index:2;
+  color:var(--chip-fg);
+  text-shadow:0 1px 0 rgba(0,0,0,.45);
 }
-.pill .k{ font-size:clamp(20px, 2.2vw, 30px); font-weight:800; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.pill .k{
+  font-size:clamp(20px, 2.2vw, 30px); font-weight:800;
+  max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+/* NEW: always show the index "(n)" after the moon name.
+   JS sets data-idx on #moonChip. */
+#moonChip[data-idx] .k::after{
+  content:" (" attr(data-idx) ")"; opacity:.9;
+  font-weight:800; letter-spacing:.2px;
+}
+
+/* Protect essence from wrapping into the ring area */
 #moonEssence{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:min(60ch, 100%) }
+
 .mono{ font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace }
 
 /* Progress ring */
@@ -206,8 +232,7 @@ body.stars{
   #moonChip{ grid-column:2; max-width:100% }
 }
 @container (max-width: 360px){
-  /* if the badge itself gets tiny, let the name pill drop beneath */
-  #moonChip{ grid-column:1 / -1 }
+  #moonChip{ grid-column:1 / -1 } /* drop under ring if extremely narrow */
 }
 
 /* Viewport fallback (older browsers) */
@@ -264,13 +289,28 @@ a.dl:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35) }
   background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), radial-gradient(140% 80% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
   box-shadow:0 10px 24px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.02);
 }
+
+/* Widget text is always legible (auto-contrast class comes from JS).
+   Default: light-on-dark. If JS detects bright accent, it adds .contrast-light. */
+.moonbar, .moonbar .tag, .moonbar-share, .moonbar-tz { color: var(--btn-fg); }
+.moonbar.contrast-light, .moonbar.contrast-light .tag,
+.moonbar.contrast-light .moonbar-share, .moonbar.contrast-light .moonbar-tz{
+  color: var(--btn-fg-dark);
+  text-shadow:none;
+}
+
 .moonbar-info{ display:grid; gap:4px; min-width:0 }
 .moonbar-line{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; font-weight:800; letter-spacing:.2px }
 .moonbar-line .sep{ opacity:.6 }
 .moonbar-sub.meta{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:clamp(220px,26vw,360px) }
 .moonbar-tags{ display:flex; align-items:center; gap:6px; flex-wrap:wrap }
-.moonbar-tags .tag{ padding:.2rem .45rem; border-radius:999px; border:1px solid var(--line) }
+.moonbar-tags .tag{
+  padding:.2rem .45rem; border-radius:999px; border:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  color:inherit; /* follows auto-contrast color */
+}
 .moonbar-tags #mbYear{ font-weight:700 }
+
 .moonbar .mb-bg{ stroke:#1b2231 }
 .moonbar .mb-fg{
   stroke:url(#mbGrad);
@@ -283,19 +323,24 @@ a.dl:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35) }
 
 /* Widget controls */
 .moonbar-share,.moonbar-tz{
-  border:1px solid var(--line); background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
-  color:inherit; font-weight:800; letter-spacing:.2px;
-  padding:.45rem .65rem; border-radius:10px; cursor:pointer;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
+  font-weight:800; letter-spacing:.2px; padding:.45rem .65rem; border-radius:10px; cursor:pointer;
+  text-shadow:0 1px 0 rgba(0,0,0,.45);
   transition:transform .06s ease, box-shadow .12s ease, border-color .12s ease, filter .12s ease;
 }
-.moonbar-share:hover,.moonbar-tz:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35); border-color:color-mix(in srgb, var(--moon-accent) 30%, var(--line)); filter:drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 25%, transparent)) }
+.moonbar-share:hover,.moonbar-tz:hover{
+  transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35);
+  border-color:color-mix(in srgb, var(--moon-accent) 30%, var(--line));
+  filter:drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 25%, transparent))
+}
 .moonbar-share:focus-visible,.moonbar-tz:focus-visible{ outline:none; box-shadow:var(--focus-glow) }
 .moonbar[data-size="compact"]{ --ring-size:64px; grid-template-columns:auto 1fr auto auto }
 
 /* ---------- Phone refinements ---------- */
 @media (max-width:560px){
   .card{ padding:12px 10px }
-  .moon-badge{ margin-bottom:6px }               /* breathing room */
+  .moon-badge{ margin-bottom:6px }
 }
 @media (max-width:420px){
   .ring-fg{ filter:none } .dot.on{ box-shadow:none }
@@ -319,4 +364,11 @@ body::-webkit-scrollbar-thumb{ background:#2b2f3a; border-radius:10px; border:2p
 /* ---------- Backdrop fallback ---------- */
 @supports not ((-webkit-backdrop-filter: blur(2px)) or (backdrop-filter: blur(2px))) {
   .year-map th{ background:#0e131a !important }
+}
+
+/* ---------- Forced colors (Windows High Contrast) ---------- */
+@media (forced-colors: active){
+  .card, .lab-btn, .tag, .moonbar-share, .moonbar-tz{ border:1px solid CanvasText }
+  .lab-btn, .moonbar-share, .moonbar-tz{ background:Canvas; color:CanvasText; text-shadow:none }
+  .ring-bg{ stroke:GrayText } .ring-fg{ filter:none }
 }
