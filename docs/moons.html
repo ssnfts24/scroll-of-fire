@@ -3,19 +3,19 @@
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <meta charset="utf-8" />
-  <title>13 Moons · Living Clock — Scroll of Fire</title>
+  <title>Remnant 13 Moons · Living Clock — Scroll of Fire</title>
 
   <!-- Viewport / color -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0b0f">
   <meta name="color-scheme" content="dark" />
-  <meta name="description" content="Which Moon am I in? Day ring + week dots, year map, Day Out of Time handling, lunar simulation, numerology, optional Kin, time-zone aware, shareable, and .ics export." />
+  <meta name="description" content="A Remnant-themed 13 Moon calendar — ancient wizard of YHWH aesthetics with day ring, week dots, year map, lunar simulation, numerology, optional Kin, share card, and .ics export." />
 
   <!-- Canonical + Social -->
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="13 Moons · Living Clock — Scroll of Fire">
-  <meta property="og:description" content="Which Moon am I in? Day ring, week dots, year map, DOOT handling, lunar simulation, numerology, Kin, .ics export — time-zone aware & shareable.">
+  <meta property="og:title" content="Remnant 13 Moons · Living Clock — Scroll of Fire">
+  <meta property="og:description" content="Which Moon am I in? Day ring, week dots, year map, DOOT handling, lunar sim, numerology, Kin, .ics export — Remnant / YHWH wizard theming.">
   <meta property="og:image" content="assets/share/moon-card.png">
   <meta name="twitter:card" content="summary_large_image">
 
@@ -30,15 +30,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- Site + page CSS -->
+  <!-- Site + page CSS (your new skin) -->
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24">
   <link rel="stylesheet" href="assets/css/moons.css?v=2025-10-24">
 
-  <!-- Fallback contrast patch so letters on moonbar are always readable -->
+  <!-- Small safety patch so text is never unreadable if CSS fails to load -->
   <style>
-    .moonbar.contrast-light,
-    .moonbar.contrast-light .tag,
-    .moonbar.contrast-light button{color:#0b1220!important}
+    .moonbar.contrast-light,.moonbar.contrast-light .tag,.moonbar.contrast-light button{color:#0b1220!important}
     .moonbar.contrast-light .mb-bg{stroke:#e1e8ff!important}
     .moonbar.contrast-light .mb-fg{filter:none!important}
     .lore-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}
@@ -53,17 +51,17 @@
   {
     "@context":"https://schema.org",
     "@type":"WebApplication",
-    "name":"13 Moons — Living Clock",
+    "name":"Remnant 13 Moons — Living Clock",
     "url":"https://ssnfts24.github.io/scroll-of-fire/moons.html",
     "applicationCategory":"Utility",
     "operatingSystem":"Any",
-    "description":"Interactive 13-Moon calendar with lunar phase simulation, numerology, optional Kin, and .ics export.",
+    "description":"Interactive 13-Moon calendar with Remnant / YHWH wizard theme: lunar phase simulation, numerology, Kin, and .ics export.",
     "creator":{"@type":"Person","name":"Aaron Paul Laird"}
   }
   </script>
 </head>
 
-<body class="stars">
+<body class="stars remnant-yhwh">
   <!-- Hidden defs so JS can recolor gradients safely -->
   <svg width="0" height="0" aria-hidden="true" focusable="false">
     <defs>
@@ -79,20 +77,44 @@
   <!-- Living sky -->
   <canvas id="skyBg" width="1440" height="900" aria-hidden="true"></canvas>
 
+  <!-- Compact Moon widget (always visible) -->
+  <section class="wrap" aria-label="Remnant Moonbar">
+    <div class="moonbar yhwh-on" data-size="compact" role="group" aria-label="Current Moon mini widget" style="display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;margin-bottom:10px;">
+      <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="26" class="mb-bg" stroke-width="6" fill="none"></circle>
+        <circle cx="32" cy="32" r="26" class="mb-fg" id="moonArcMini" pathLength="163" stroke-width="6" stroke-linecap="round" fill="none" stroke-dasharray="0 163"></circle>
+      </svg>
+      <div class="moonbar-info">
+        <div class="moonbar-line">
+          <span class="tag yhwh" title="YHWH Seal">⟡ יהוה</span>
+          <span id="mbName"><b>—</b></span>
+          <span class="sep">·</span>
+          <span id="mbEssence" class="meta">—</span>
+        </div>
+        <div class="moonbar-tags">
+          <span class="tag"><span id="mbDay">—/28</span></span>
+          <span class="tag">Year <span id="mbYear">—</span></span>
+        </div>
+      </div>
+      <div class="moonbar-actions" style="display:flex;gap:8px">
+        <button id="btnShareImage" class="moonbar-share" type="button" title="Make share card">Share</button>
+        <label class="moonbar-tz" for="tzPick" title="Time Zone">TZ</label>
+      </div>
+    </div>
+  </section>
+
   <main class="wrap" id="main" role="main">
     <header class="page-head fancy-head">
-      <h1 class="title">🌗 13 Moons — <em>Living Clock</em></h1>
-      <p class="subtitle">Crystal-clear: Which Moon am I in? Day ring + week dots, year map, DOOT handling, lunar sim, numerology, optional Kin, .ics export.</p>
+      <h1 class="title">🌗 Remnant 13 Moons — <em>Living Clock</em></h1>
+      <p class="subtitle">An ancient-modern calendar in the cadence of 13×28. Phase-tinted, time-zone aware, and trimmed with the seal of <span lang="he" title="YHWH">יהוה</span>.</p>
 
       <nav class="crumbs" aria-label="Breadcrumb">
         <a class="lab-btn" href="index.html">← Back to Codex</a>
         <a class="lab-btn" href="theory.html">📘 Theory</a>
       </nav>
 
-
-
       <!-- Moon-first badge -->
-      <section class="card" aria-label="Current Moon">
+      <section class="card shine" aria-label="Current Moon">
         <div class="moon-badge">
           <div class="ring" aria-label="Day in Moon">
             <svg viewBox="0 0 120 120" aria-hidden="true">
@@ -111,7 +133,7 @@
           </span>
 
           <span class="pill mono"><span id="yearSpan">—</span></span>
-          <span class="pill" id="sourceChip" title="Source (YHWH)">⟡ י־ה־ו־ה</span>
+          <span class="pill" id="sourceChip" title="Source Seal">⟡ י־ה־ו־ה</span>
         </div>
 
         <div class="weekrow" aria-label="Week inside the 28-day moon">
@@ -150,7 +172,7 @@
           <button class="lab-btn" id="nextDay" type="button">Next →</button>
           <button class="lab-btn" id="shareLink" type="button">Copy Link</button>
           <label class="tag" style="margin-left:auto">Go to:
-            <select id="jumpMoon" class="lab-input" style="min-width:120px;margin-left:6px" aria-label="Jump to Moon">
+            <select id="jumpMoon" class="lab-input" style="min-width:140px;margin-left:6px" aria-label="Jump to Moon">
               <option value="">—</option>
               <option value="1">#1 Magnetic</option>
               <option value="2">#2 Lunar</option>
@@ -231,7 +253,6 @@
         </div>
       </article>
 
-
       <!-- Practices -->
       <article class="card col-6" id="practiceCard" aria-labelledby="prac-head">
         <h2 id="prac-head">Practices & Prompts</h2>
@@ -243,72 +264,69 @@
         </div>
       </article>
 
+      <!-- Codex -->
+      <section class="codex card shine" id="loreCodex" aria-label="Moon Codex">
+        <aside class="codex-toc" aria-label="Codex contents">
+          <h4>Codex</h4>
+          <ol>
+            <li><a href="#cx-intro">Introduction</a></li>
+            <li><a href="#cx-practice">Practices</a></li>
+            <li><a href="#cx-notes">Notes & Footnotes</a></li>
+          </ol>
+        </aside>
 
+        <article class="codex-content">
+          <h1 id="cx-intro">The Remnant Moon Codex</h1>
+          <p class="lede dropcap">A living scroll of patterns, pulses, and presence—meant to be read like a sky.</p>
 
-      <section class="codex card shine" id="loreCodex">
-  <aside class="codex-toc" aria-label="Codex contents">
-    <h4>Codex</h4>
-    <ol>
-      <li><a href="#cx-intro">Introduction</a></li>
-      <li><a href="#cx-practice">Practices</a></li>
-      <li><a href="#cx-notes">Notes & Footnotes</a></li>
-    </ol>
-  </aside>
+          <div class="callout info">
+            <div class="head">Essence</div>
+            <div class="body">Channel inspiration. Harmonize integrity. Perfect manifestation.</div>
+          </div>
 
-  <article class="codex-content">
-    <h1 id="cx-intro">The Moon Codex</h1>
-    <p class="lede dropcap">A living scroll of patterns, pulses, and presence—meant to be read like a sky.</p>
+          <blockquote class="pull">“Number the days; crown the weeks; keep the remnant bright.”</blockquote>
 
-    <div class="callout info">
-      <div class="head">Essence</div>
-      <div class="body">Channel inspiration. Harmonize integrity. Perfect manifestation.</div>
-    </div>
+          <figure>
+            <img src="assets/media/codex-example.jpg" alt="Codex plate">
+            <figcaption>Plate VII — Harmonics of the 13×28 count.</figcaption>
+          </figure>
 
-    <blockquote class="pull">“Where the ring completes, intention flowers.”</blockquote>
+          <h2 id="cx-practice">Practice</h2>
+          <p>Mark the day’s tone in your journal. Tap the <span class="kbd">T</span> key to step hours; <span class="kbd">↑/↓</span> to step days.</p>
 
-    <figure>
-      <img src="assets/media/codex-example.jpg" alt="Codex plate">
-      <figcaption>Plate VII — Harmonics of the 13×28 count.</figcaption>
-    </figure>
+          <h3 id="cx-notes">Notes & Footnotes</h3>
+          <hr>
+          <ol class="footnotes">
+            <li id="fn1">On leap days and DOOT handling—see script options. <a href="#fnref1">↩</a></li>
+          </ol>
 
-    <h2 id="cx-practice">Practice</h2>
-    <p>Mark the day’s tone in your journal. Tap the <span class="kbd">T</span> key to step hours; <span class="kbd">↑/↓</span> to step days.</p>
+          <!-- Example codex files -->
+          <div class="codex-files" id="codexFiles">
+            <div class="file" data-ext="PDF" role="button" tabindex="0">
+              <div class="file-top">
+                <div class="name">Codex · Resonant Harmonies</div>
+                <span class="badge"><i class="dot" aria-hidden="true"></i> plate</span>
+              </div>
+              <div class="file-meta">
+                <span class="pill">2.3 MB</span>
+                <span class="pill">Updated this moon</span>
+              </div>
+            </div>
 
-    <h3 id="cx-notes">Notes & Footnotes</h3>
-    <hr>
-    <ol class="footnotes">
-      <li id="fn1">On leap days and DOOT handling—see script options. <a href="#fnref1">↩</a></li>
-    </ol>
-
-    <!-- Optional: codex file list surfaced prominently -->
-    <div class="codex-files" id="codexFiles">
-      <!-- Your JS can populate these dynamically -->
-      <div class="file" data-ext="PDF" role="button" tabindex="0">
-        <div class="file-top">
-          <div class="name">Codex · Resonant Harmonies</div>
-          <span class="badge"><i class="dot" aria-hidden="true"></i> plate</span>
-        </div>
-        <div class="file-meta">
-          <span class="pill">2.3 MB</span>
-          <span class="pill">Updated this moon</span>
-        </div>
-      </div>
-
-      <div class="file" data-ext="MD">
-        <div class="file-top">
-          <div class="name">Codex · Praxis Notes</div>
-          <span class="badge"><i class="dot"></i> notes</span>
-        </div>
-        <div class="file-meta">
-          <span class="pill">12 min read</span>
-          <span class="pill">v1.4</span>
-        </div>
-      </div>
-    </div>
-  </article>
+            <div class="file" data-ext="MD" role="button" tabindex="0">
+              <div class="file-top">
+                <div class="name">Codex · Praxis Notes</div>
+                <span class="badge"><i class="dot"></i> notes</span>
+              </div>
+              <div class="file-meta">
+                <span class="pill">12 min read</span>
+                <span class="pill">v1.4</span>
+              </div>
+            </div>
+          </div>
+        </article>
       </section>
-
-
+    </section>
 
     <footer class="footer">
       <div class="divider" aria-hidden="true"></div>
@@ -320,172 +338,123 @@
     <p class="meta" style="text-align:center">This page needs JavaScript to calculate moon/day, phase, and year map.</p>
   </noscript>
 
-  <!-- Page JS (external; avoids inline truncation) -->
-  <!-- v3.9+ includes: moons.json hydration, #moon-4 deep-link, auto-contrast, share-image, per-moon notes -->
+  <!-- Page JS (external; v3.9 fixes phase selector and drives accents) -->
   <script src="assets/js/moons.js?v=3.9" defer></script>
 
-  <!-- Tiny boot helpers bound to new UI bits -->
+  <!-- Mini glue: keep moonbar mirrored, jump-to, share-card, notes, and Remnant veil -->
   <script>
-    // keep mini bar in sync without duplicating logic (moons.js updates #moonArc + text already)
-document.addEventListener("DOMContentLoaded", () => {
-  const arcMain = document.getElementById("moonArc");
-  const arcMini = document.getElementById("moonArcMini");
-  const mbName  = document.getElementById("mbName");
-  const mbDay   = document.getElementById("mbDay");
-  const mbEss   = document.getElementById("mbEssence"); // ← fixed
-  const mbYear  = document.getElementById("mbYear");
-  const jumpSel = document.getElementById("jumpMoon");
-  const btnJump = document.getElementById("btnJump");
-  const noteBox = document.getElementById("noteText");
-});
-      /* -------- Mirror main badge -> mini bar -------- */
-      const moonChip=document.getElementById("moonChip");
-      const moonName=document.getElementById("moonName");
-      const moonEss=document.getElementById("moonEssence");
-      const dayInMoon=document.getElementById("dayInMoon");
-      const yearSpan=document.getElementById("yearSpan");
+  (function(){
+    "use strict";
 
-      // mirror function
-      function syncMini(){
-        if (mbName && moonName)  mbName.textContent = moonName.textContent || "—";
-        if (mbEss  && moonEss)   mbEss.textContent  = moonEss.textContent  || "—";
-        if (mbDay  && dayInMoon) mbDay.textContent  = (dayInMoon.textContent||"—") + "/28";
-        if (mbYear && yearSpan)  mbYear.textContent = yearSpan.textContent || "—";
+    // Cache pieces we mirror from the main badge
+    const arcMain = document.getElementById("moonArc");
+    const arcMini = document.getElementById("moonArcMini");
+    const mbName  = document.getElementById("mbName");
+    const mbDay   = document.getElementById("mbDay");
+    const mbEss   = document.getElementById("mbEssence");
+    const mbYear  = document.getElementById("mbYear");
+    const noteBox = document.getElementById("noteText");
+    const jumpSel = document.getElementById("jumpMoon");
 
-        // mirror arc length if present
-        const mainDash = arcMain?.getAttribute("stroke-dasharray");
-        if (arcMini && mainDash) arcMini.setAttribute("stroke-dasharray", mainDash);
+    const moonChip   = document.getElementById("moonChip");
+    const moonName   = document.getElementById("moonName");
+    const moonEss    = document.getElementById("moonEssence");
+    const dayInMoon  = document.getElementById("dayInMoon");
+    const yearSpan   = document.getElementById("yearSpan");
 
-        // load note for current moon idx
-        const idx = moonChip?.getAttribute("data-idx");
-        if (idx && noteBox){
-          const saved = localStorage.getItem(`sof_moon_note_${idx}`) || "";
-          if (noteBox.value !== saved) noteBox.value = saved;
-        }
+    function syncMini(){
+      if (mbName && moonName)  mbName.textContent = moonName.textContent || "—";
+      if (mbEss  && moonEss)   mbEss.textContent  = moonEss.textContent  || "—";
+      if (mbDay  && dayInMoon) mbDay.textContent  = (dayInMoon.textContent||"—") + "/28";
+      if (mbYear && yearSpan)  mbYear.textContent = yearSpan.textContent || "—";
+
+      const mainDash = arcMain?.getAttribute("stroke-dasharray");
+      if (arcMini && mainDash) arcMini.setAttribute("stroke-dasharray", mainDash);
+
+      // Load per-moon note
+      const idx = moonChip?.getAttribute("data-idx");
+      if (idx && noteBox){
+        const saved = localStorage.getItem(`sof_moon_note_${idx}`) || "";
+        if (noteBox.value !== saved) noteBox.value = saved;
       }
+    }
 
-      // Initial sync after a tick (moons.js populates first)
-      setTimeout(syncMini, 40);
+    // Run once after moons.js paints, then observe changes
+    setTimeout(syncMini, 60);
+    const mo = new MutationObserver(syncMini);
+    arcMain && mo.observe(arcMain, { attributes:true, attributeFilter:["stroke-dasharray"] });
+    moonChip && mo.observe(moonChip, { childList:true, subtree:true, attributes:true });
+    yearSpan && mo.observe(yearSpan, { childList:true, characterData:true, subtree:true });
+    document.addEventListener("sof:accent-change", syncMini);
 
-      // Keep in sync when the main ring animates or the labels change
-      const mo = new MutationObserver(syncMini);
-      if (arcMain)  mo.observe(arcMain, { attributes:true, attributeFilter:["stroke-dasharray"] });
-      if (moonChip) mo.observe(moonChip, { childList:true, subtree:true, attributes:true });
-      if (yearSpan) mo.observe(yearSpan, { childList:true, characterData:true, subtree:true });
+    // Jump-to-moon via hash (moons.js watches the hash)
+    function jump(){ const v = jumpSel?.value; if (v){ location.hash = `#moon-${v}`; } }
+    jumpSel?.addEventListener("change", jump, {passive:true});
 
-      // Also react to our custom accent-change event (colors can flip contrast)
-      document.addEventListener("sof:accent-change", syncMini);
+    // Share image card (phase-tinted)
+    function cssVar(name, fallback){ const s=getComputedStyle(document.documentElement).getPropertyValue(name).trim(); return s||fallback; }
+    function dlBlob(name, blob){
+      const a=document.createElement("a"); a.download=name; a.href=URL.createObjectURL(blob);
+      document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 400);
+    }
+    async function makeShareCard(){
+      const w=1080, h=1080, c=document.createElement("canvas"); c.width=w; c.height=h;
+      const k=c.getContext("2d");
+      const c1=cssVar("--moon-accent","#7af3ff"), c2=cssVar("--moon-accent-2","#f3c97a");
 
-      /* -------- Jump-to-moon (hash deep-link; moons.js handles it) -------- */
-      function jumpToSelected(){
-        const v = jumpSel?.value;
-        if (!v) return;
-        location.hash = `#moon-${v}`;
-        // nudge focus for a11y
-        document.getElementById("today-head")?.focus?.();
+      // background
+      const g=k.createLinearGradient(0,0,0,h); g.addColorStop(0,"#0a0e15"); g.addColorStop(1,"#06080d"); k.fillStyle=g; k.fillRect(0,0,w,h);
+      const g2=k.createLinearGradient(0,0,w,0); g2.addColorStop(0,c1+"22"); g2.addColorStop(.5,c2+"18"); g2.addColorStop(1,c1+"22");
+      k.fillStyle=g2; k.beginPath(); k.moveTo(0,240); for(let x=0;x<=w;x+=24){ k.lineTo(x,240+Math.sin(x*0.006)*20); } k.lineTo(w,0); k.lineTo(0,0); k.closePath(); k.fill();
+
+      // title
+      k.fillStyle="#e9eef6"; k.font="800 56px Inter, system-ui"; k.fillText("Remnant 13 Moons — Living Clock", 64, 112);
+
+      // main chips
+      const name=(moonName?.textContent||"—").trim();
+      const essence=(moonEss?.textContent||"—").trim();
+      const dayTxt=((dayInMoon?.textContent||"—").trim())+" / 28";
+      const yearTxt=(yearSpan?.textContent||"—").trim();
+      const sub=document.getElementById("phaseLine")?.textContent?.trim()||"";
+
+      k.font="800 92px Inter, system-ui"; k.fillText(name, 64, 260);
+      k.font="600 40px Inter, system-ui"; k.fillStyle="#c9d3e9"; k.fillText(essence, 64, 320);
+
+      k.fillStyle="#0f1116"; k.strokeStyle="#2a3242"; k.lineWidth=2;
+      function chip(x,y,txt){ const padX=18; k.font="800 38px Inter, system-ui";
+        const mw=k.measureText(txt).width, cw=mw+padX*2, ch=56;
+        k.beginPath(); k.roundRect(x,y,cw,ch,12); k.fill(); k.stroke();
+        k.fillStyle="#e9eef6"; k.fillText(txt, x+padX, y+40); k.fillStyle="#0f1116"; return x+cw+10;
       }
-      btnJump?.addEventListener("click", jumpToSelected, {passive:true});
-      jumpSel?.addEventListener("change", jumpToSelected, {passive:true});
+      let cx=64; cx=chip(cx,370,dayTxt); cx=chip(cx,370,yearTxt); chip(cx,370, sub || "—");
 
-      /* -------- Share image (quick canvas card) -------- */
-      function cssVar(name, fallback){
-        const s = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-        return s || fallback;
-      }
-      function dlBlob(name, blob){
-        const a=document.createElement("a");
-        a.download=name;
-        a.href=URL.createObjectURL(blob);
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
-      }
-      async function makeShareCard(){
-        const w=1080, h=1080;
-        const c=document.createElement("canvas");
-        c.width=w; c.height=h;
-        const k=c.getContext("2d");
+      // footer
+      k.font="600 32px Inter, system-ui"; k.fillStyle="#a8b1c9";
+      k.fillText("scroll-of-fire · ssnfts24.github.io/scroll-of-fire", 64, h-64);
 
-        // palette from current phase tint
-        const c1=cssVar("--moon-accent","#7af3ff");
-        const c2=cssVar("--moon-accent-2","#f3c97a");
+      const blob=await new Promise(res=>c.toBlob(res,"image/png",0.96)); if(blob) dlBlob(`13-moons-${name.replace(/\s+/g,"-").toLowerCase()}.png`, blob);
+    }
+    document.getElementById("btnShareImage")?.addEventListener("click", makeShareCard, {passive:true});
 
-        // bg
-        const g=k.createLinearGradient(0,0,0,h);
-        g.addColorStop(0, "#0a0e15"); g.addColorStop(1,"#06080d");
-        k.fillStyle=g; k.fillRect(0,0,w,h);
+    // Save per-moon note
+    document.getElementById("btnSaveNote")?.addEventListener("click", ()=>{
+      const idx = moonChip?.getAttribute("data-idx"); if(!idx) return;
+      localStorage.setItem(`sof_moon_note_${idx}`, noteBox?.value || "");
+      const t=document.createElement("div"); t.className="toast"; t.textContent="Note saved";
+      document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
+      setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),250); }, 1400);
+    }, {passive:true});
 
-        // aurora sweep
-        const g2=k.createLinearGradient(0,0,w,0);
-        g2.addColorStop(0, c1+"22"); g2.addColorStop(0.5, c2+"18"); g2.addColorStop(1, c1+"22");
-        k.fillStyle=g2; k.beginPath(); k.moveTo(0, 240);
-        for(let x=0; x<=w; x+=24){ k.lineTo(x, 240 + Math.sin(x*0.006)*20); }
-        k.lineTo(w,0); k.lineTo(0,0); k.closePath(); k.fill();
-
-        // title
-        k.fillStyle="#e9eef6";
-        k.font="800 56px Inter, system-ui";
-        k.fillText("13 Moons — Living Clock", 64, 112);
-
-        // main moon name
-        const name = moonName?.textContent?.trim() || "—";
-        const essence = moonEss?.textContent?.trim() || "—";
-        const dayTxt = (dayInMoon?.textContent?.trim() || "—") + " / 28";
-        const yearTxt = yearSpan?.textContent?.trim() || "—";
-        const sub = document.getElementById("phaseLine")?.textContent?.trim() || "";
-
-        k.font="800 92px Inter, system-ui";
-        k.fillText(name, 64, 260);
-        k.font="600 40px Inter, system-ui";
-        k.fillStyle="#c9d3e9";
-        k.fillText(essence, 64, 320);
-
-        // chips
-        k.fillStyle="#0f1116"; k.strokeStyle="#2a3242"; k.lineWidth=2;
-        function chip(x,y,txt){
-          const padX=18, padY=14;
-          k.font="800 38px Inter, system-ui";
-          const mw=k.measureText(txt).width;
-          const cw=mw+padX*2, ch=56;
-          k.beginPath(); k.roundRect(x,y,cw,ch,12); k.fill(); k.stroke();
-          k.fillStyle="#e9eef6"; k.fillText(txt, x+padX, y+40);
-          k.fillStyle="#0f1116";
-          return x+cw+10;
-        }
-        let cx=64;
-        cx = chip(cx, 370, dayTxt);
-        cx = chip(cx, 370, yearTxt);
-        chip(cx, 370, sub || "—");
-
-        // footer + site
-        k.font="600 32px Inter, system-ui";
-        k.fillStyle="#a8b1c9";
-        k.fillText("scroll-of-fire · ssnfts24.github.io/scroll-of-fire", 64, h-64);
-
-        // export
-        const blob = await new Promise(res=> c.toBlob(res, "image/png", 0.96));
-        if (blob) dlBlob(`13-moons-${name.replace(/\s+/g,"-").toLowerCase()}.png`, blob);
-      }
-
-      // Bind all Share buttons (mini + media card)
-      document.querySelectorAll("#btnShareImage").forEach(btn=>{
-        btn.addEventListener("click", makeShareCard, {passive:true});
-      });
-
-      /* -------- Per-moon note -------- */
-      document.getElementById("btnSaveNote")?.addEventListener("click", ()=>{
-        const idx = moonChip?.getAttribute("data-idx");
-        if (!idx) return;
-        localStorage.setItem(`sof_moon_note_${idx}`, noteBox?.value || "");
-        // toast
-        const t=document.createElement("div"); t.className="toast"; t.textContent="Note saved";
-        document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
-        setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),250); }, 1400);
-      }, {passive:true});
-
-      // If hash links to #moon-n on load, let moons.js handle it; we just reflect UI once it updates.
-      window.addEventListener("hashchange", ()=> setTimeout(syncMini, 40), {passive:true});
-    });
+    // A gentle “Remnant veil” that reacts when phase colors change
+    function refreshVeil(){
+      const c1=getComputedStyle(document.documentElement).getPropertyValue("--moon-accent").trim() || "#7af3ff";
+      const c2=getComputedStyle(document.documentElement).getPropertyValue("--moon-accent-2").trim() || "#f3c97a";
+      const veil=`conic-gradient(from 0deg at 50% 50%, ${c1}24, transparent, ${c2}20, transparent)`;
+      document.documentElement.style.setProperty("--remnant-veil", veil);
+    }
+    document.addEventListener("sof:accent-change", refreshVeil);
+    refreshVeil();
+  })();
   </script>
 </body>
 </html>
