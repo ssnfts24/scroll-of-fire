@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
   <meta name="description" content="Hub for Codex systems: Resonant Physics Engine (T-7), Frequency Governance, Mind-Renewal, Remnant Network, Linguistic Recoder, Interactive Archive.">
-  <link rel="stylesheet" href="/scroll-of-fire/assets/css/codex.css">
+  <link rel="stylesheet" href="assets/css/codex.css">
   <style>
     /* Layout */
     main{padding:clamp(16px,4vw,40px)}
@@ -57,6 +57,23 @@
     .section-h{margin:36px 0 12px}
     .muter{color:var(--muted);font-size:.94rem}
   </style>
+
+  <!-- Compat redirect: handle /systems/t7.html → /systems/t-7.html, and /systems/t-7 → /systems/t-7.html -->
+  <script>
+    (function(){
+      var p = location.pathname;
+      // Normalize repo root for project pages
+      var base = "/scroll-of-fire";
+      // if someone visits /systems/t7.html under the project root, redirect to hyphenated file
+      if (new RegExp("^" + base.replace(/\//g,"\\/") + "\\/systems\\/t7(?:\\.html)?$", "i").test(p)) {
+        location.replace(base + "/systems/t-7.html");
+      }
+      // if someone omits ".html"
+      if (new RegExp("^" + base.replace(/\//g,"\\/") + "\\/systems\\/t-7$", "i").test(p)) {
+        location.replace(base + "/systems/t-7.html");
+      }
+    })();
+  </script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to main</a>
@@ -74,7 +91,7 @@
   </aside>
 
   <header>
-    <div class="crumbs"><a href="/scroll-of-fire/index.html">Home</a> / Systems Hub</div>
+    <div class="crumbs"><a href="index.html">Home</a> / Systems Hub</div>
     <h1>Systems Hub</h1>
     <p class="lede">Pick a module. Each maps a practice to your Canon: carriers, Ξ-ethics, memory τ, witness sealing, covenant renaming, and the archive.</p>
   </header>
@@ -86,7 +103,8 @@
         <h3>Resonant Physics Engine (T-7)</h3>
         <p class="meta">Mix 432/528/369/144/963, set phase; watch Ξ &amp; τ steer Eq.14→15. Ethics first.</p>
         <div class="spacer"></div>
-        <div class="row"><a class="btn" href="/scroll-of-fire/systems/t7.html">Open</a><a class="btn" href="/scroll-of-fire/manifest.html">Manifest</a></div>
+        <!-- FIXED: hyphenated target, and made it relative to <base> -->
+        <div class="row"><a class="btn" href="systems/t-7.html">Open</a><a class="btn" href="manifest.html">Manifest</a></div>
       </article>
 
       <article class="card">
@@ -94,7 +112,7 @@
         <h3>Frequency Governance</h3>
         <p class="meta">Cards for ν (432→963). Preview tones, read role/color/channel notes.</p>
         <div class="spacer"></div>
-        <div class="row"><a class="btn" href="/scroll-of-fire/systems/frequencies.html">Open</a><span class="hint">Audio starts on tap (iOS).</span></div>
+        <div class="row"><a class="btn" href="systems/frequencies.html">Open</a><span class="hint">Audio starts on tap (iOS).</span></div>
       </article>
 
       <article class="card">
@@ -102,7 +120,7 @@
         <h3>Mind-Renewal Protocol</h3>
         <p class="meta">7-day checklist + Scripture prompts + breathing cadence + witness journal export.</p>
         <div class="spacer"></div>
-        <div class="row"><a class="btn" href="/scroll-of-fire/systems/mind-renewal.html">Open</a></div>
+        <div class="row"><a class="btn" href="systems/mind-renewal.html">Open</a></div>
       </article>
 
       <article class="card">
@@ -110,7 +128,7 @@
         <h3>Remnant Network (Witness)</h3>
         <p class="meta">Record testimony, compute SHA-256 snippets, export to paste into your public ledger.</p>
         <div class="spacer"></div>
-        <div class="row"><a class="btn" href="/scroll-of-fire/systems/witness.html">Open</a></div>
+        <div class="row"><a class="btn" href="systems/witness.html">Open</a></div>
       </article>
 
       <article class="card">
@@ -118,7 +136,7 @@
         <h3>Linguistic Recoder</h3>
         <p class="meta">Old term → Covenant rename → rationale. Export PNG cards for teaching.</p>
         <div class="spacer"></div>
-        <div class="row"><a class="btn" href="/scroll-of-fire/systems/recoder.html">Open</a></div>
+        <div class="row"><a class="btn" href="systems/recoder.html">Open</a></div>
       </article>
 
       <article class="card">
@@ -126,7 +144,7 @@
         <h3>Interactive Archive</h3>
         <p class="meta">Filter and open every scroll/page (Start, Guide, Theory, Manifest, 13 Moons, etc.).</p>
         <div class="spacer"></div>
-        <div class="row"><a class="btn" href="/scroll-of-fire/systems/archive.html">Open</a></div>
+        <div class="row"><a class="btn" href="systems/archive.html">Open</a></div>
       </article>
     </section>
 
@@ -139,7 +157,7 @@
         <h3>Manifest — Remnant Visual Exercise</h3>
         <p class="meta">Compose intention (𝓘), align a carrier Πν, run the observer loop, breathe, compute Ξ, and seal.</p>
         <div class="spacer"></div>
-        <div class="row"><a class="btn" href="/scroll-of-fire/manifest.html">Open</a></div>
+        <div class="row"><a class="btn" href="manifest.html">Open</a></div>
       </article>
 
       <article class="card">
@@ -147,7 +165,7 @@
         <h3>Theory — Codex of Reality</h3>
         <p class="meta">Canon 0–17 with plain-language summaries and external comparators clearly marked.</p>
         <div class="spacer"></div>
-        <div class="row"><a class="btn" href="/scroll-of-fire/theory.html">Open</a></div>
+        <div class="row"><a class="btn" href="theory.html">Open</a></div>
       </article>
 
       <article class="card">
@@ -155,7 +173,7 @@
         <h3>Ethics — Living Law</h3>
         <p class="meta">The covenantal guardrails that gate every engine. Ethics first.</p>
         <div class="spacer"></div>
-        <div class="row"><a class="btn" href="/scroll-of-fire/ethics.html">Open</a></div>
+        <div class="row"><a class="btn" href="ethics.html">Open</a></div>
       </article>
 
       <article class="card">
@@ -163,7 +181,7 @@
         <h3>Ledger — Proof of Witness</h3>
         <p class="meta">Hashes, provenance, and witness logs. Bind practice to public proof.</p>
         <div class="spacer"></div>
-        <div class="row"><a class="btn" href="/scroll-of-fire/ledger.html">Open</a></div>
+        <div class="row"><a class="btn" href="ledger.html">Open</a></div>
       </article>
     </section>
   </main>
