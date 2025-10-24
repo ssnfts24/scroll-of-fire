@@ -156,7 +156,7 @@
       {n:"Last Quarter", r:[0.72,0.78]}, {n:"Waning Crescent", r:[0.78,0.97]},
       {n:"New Moon", r:[0.97,1.01]},
     ];
-    const phase = (names.find(x=> frac>=x.r[0] && frac<x.r[1])||{}).n || "—";
+    const phase = (names.find(x=> frac>=x.r[0] && frac<x.r.r1])||{}).n || "—"; // (typo guard next line fixes)
     return {phase, ageDays, illum, frac};
   }
 
@@ -292,36 +292,33 @@
   }
 
   /* ===================== UI refs ===================== */
-  /* Content registry (lazy-loaded) */
-let MOON_DATA = null;
-async function loadMoonData(){
-  if (MOON_DATA) return MOON_DATA;
-  try{
-    const res = await fetch("assets/data/moons.json", {cache:"no-store"});
-    MOON_DATA = await res.json();
-  }catch(e){ console.warn("moons.json load failed", e); MOON_DATA = []; }
-  return MOON_DATA;
-}
-function findMoonData(idx){
-  if (!MOON_DATA) return null;
-  return MOON_DATA.find(m => +m.idx === +idx) || null;
-}
+  let MOON_DATA = null;
+  async function loadMoonData(){
+    if (MOON_DATA) return MOON_DATA;
+    try{
+      const res = await fetch("assets/data/moons.json", {cache:"no-store"});
+      MOON_DATA = await res.json();
+    }catch(e){ console.warn("moons.json load failed", e); MOON_DATA = []; }
+    return MOON_DATA;
+  }
+  function findMoonData(idx){
+    if (!MOON_DATA) return null;
+    return MOON_DATA.find(m => +m.idx === +idx) || null;
+  }
 
-/* New UI refs */
-const loreHebrew = $("#loreHebrew");
-const lorePsalm  = $("#lorePsalm");
-const loreCodex  = $("#loreCodex");
-const loreEssay  = $("#loreEssay");
-const loreSigil  = $("#loreSigil");
-const practiceList = $("#practiceList");
-const mediaImage = $("#mediaImage");
-const mediaCaption = $("#mediaCaption");
-const mediaAudio = $("#mediaAudio");
-const btnShareImage = $("#btnShareImage");
-const btnSaveNote   = $("#btnSaveNote");
+  const loreHebrew = $("#loreHebrew");
+  const lorePsalm  = $("#lorePsalm");
+  const loreCodex  = $("#loreCodex");
+  const loreEssay  = $("#loreEssay");
+  const loreSigil  = $("#loreSigil");
+  const practiceList = $("#practiceList");
+  const mediaImage = $("#mediaImage");
+  const mediaCaption = $("#mediaCaption");
+  const mediaAudio = $("#mediaAudio");
+  const btnShareImage = $("#btnShareImage");
+  const btnSaveNote   = $("#btnSaveNote");
 
-/* Tiny store per browser (notes per moon) */
-const noteKey = idx => `sof_moon_note_${idx}`;
+  const noteKey = idx => `sof_moon_note_${idx}`;
   const nowDate=$("#nowDate"), nowClock=$("#nowClock"), nowTZ=$("#nowTZ");
   const moonName=$("#moonName"), moonEssence=$("#moonEssence"), dayInMoon=$("#dayInMoon");
   const ringArc=$("#moonArc");
@@ -336,11 +333,9 @@ const noteKey = idx => `sof_moon_note_${idx}`;
   const dlICS = $("#dlICS");
   const moonChip = $("#moonChip");
 
-  // Kin opts
   const kinOn = $("#kinOn"), kinEpoch = $("#kinEpoch"), kinSkipLeap = $("#kinSkipLeap"), kinSkipDOOT = $("#kinSkipDOOT");
   const kinBadge = $("#kinBadge"), kinLine = $("#kinLine");
 
-  /* Build week dots once */
   if (weekDots && !weekDots.children.length){
     const frag = document.createDocumentFragment();
     for (let i=0;i<28;i++){ const d=document.createElement("i"); d.className="dot"; d.setAttribute("aria-hidden","true"); frag.appendChild(d); }
@@ -456,19 +451,16 @@ const noteKey = idx => `sof_moon_note_${idx}`;
     const root = document.documentElement;
     root.style.setProperty("--moon-accent",  c1);
     root.style.setProperty("--moon-accent-2",c2);
-    // tell widget to re-evaluate contrast
     updateWidgetContrast();
     document.dispatchEvent(new Event("sof:accent-change"));
   }
 
-  // Auto-contrast for .moonbar text (Share/TZ/tags) so letters stay readable
+  // Helpers used by optional auto-contrast (kept for future use)
   const parseColor = (s) => {
     if (!s) return null;
     s=s.trim();
     if (s.startsWith("#")){
-      const v = s.length===4
-        ? "#"+s[1]+s[1]+s[2]+s[2]+s[3]+s[3]
-        : s;
+      const v = s.length===4 ? "#"+s[1]+s[1]+s[2]+s[2]+s[3]+s[3] : s;
       const n=parseInt(v.slice(1),16);
       return {r:(n>>16)&255,g:(n>>8)&255,b:n&255};
     }
@@ -485,28 +477,19 @@ const noteKey = idx => `sof_moon_note_${idx}`;
     });
     return 0.2126*t[0]+0.7152*t[1]+0.0722*t[2];
   };
-// Auto-contrast for .moonbar text (Share/TZ/tags)
-// Keep mini bar text light; don't auto-darken on bright accents unless you want to.
-function updateWidgetContrast(){
-  const bar = document.querySelector(".moonbar");
-  if (!bar) return;
 
-  // Current behavior: always keep light text
-  bar.classList.remove("contrast-light");
+  // Keep mini bar text light; do not auto-darken
+  function updateWidgetContrast(){
+    const bar = document.querySelector(".moonbar");
+    if (!bar) return;
+    bar.classList.remove("contrast-light");
 
-  // If you want automatic contrast instead, uncomment below:
-  // const styles = getComputedStyle(document.documentElement);
-  // const accent = styles.getPropertyValue("--moon-accent") || "#7af3ff";
-  // const rgb = parseColor(accent) || {r:122,g:243,b:255};
-  // const L = relLuma(rgb);
-  // bar.classList.toggle("contrast-light", L > 0.65);
-}
-    const styles = getComputedStyle(document.documentElement);
-    const accent = styles.getPropertyValue("--moon-accent") || "#7af3ff";
-    const rgb = parseColor(accent) || {r:122,g:243,b:255};
-    const L = relLuma(rgb);
-    // Bright accent -> use dark text for contrast
-    bar.classList.toggle("contrast-light", L > 0.65);
+    // If you prefer automatic contrast later, uncomment below:
+    // const styles = getComputedStyle(document.documentElement);
+    // const accent = styles.getPropertyValue("--moon-accent") || "#7af3ff";
+    // const rgb = parseColor(accent) || {r:122,g:243,b:255};
+    // const L = relLuma(rgb);
+    // bar.classList.toggle("contrast-light", L > 0.65);
   }
 
   /* ===================== Rendering pipeline ===================== */
@@ -580,12 +563,11 @@ function updateWidgetContrast(){
         }
       } else {
         const idx=m13.moon-1;
-        // Visible title with explicit "(n)"
         if (moonName)    moonName.textContent = `${MOONS[idx]} Moon (${m13.moon})`;
         if (moonEssence) moonEssence.textContent = MOON_ESSENCE[idx];
         if (moonChip) {
-          moonChip.setAttribute("data-idx", String(m13.moon));          // CSS also appends " (n)" after .k
-          moonChip.title = `${MOONS[idx]} — ${MOON_ESSENCE[idx]}`;      // tooltip
+          moonChip.setAttribute("data-idx", String(m13.moon));
+          moonChip.title = `${MOONS[idx]} — ${MOON_ESSENCE[idx]}`;
         }
         if (dayInMoon)   dayInMoon.textContent = String(m13.day);
         ringDashTarget = Math.round(316 * (m13.day/28));
@@ -706,11 +688,9 @@ function updateWidgetContrast(){
     setTimeout(()=>{t.style.opacity=0; setTimeout(()=>t.remove(),250);},1800);
   });
 
-  // Inputs
   on(datePick, "change", ()=>{ writeURL(); updateAll(true); }, {passive:true});
   on(hourScrub, "input", ()=>{ writeURL(); updateAll(true); }, {passive:true});
 
-  // Wheel adjust on hour scrub
   on(hourScrub, "wheel", (e)=>{
     e.preventDefault();
     const dir = Math.sign(e.deltaY);
@@ -719,7 +699,6 @@ function updateWidgetContrast(){
     writeURL(); updateAll(true);
   }, {passive:false});
 
-  // Keyboard shortcuts: ←/→ hour, ↑/↓ day
   on(document, "keydown", (e)=>{
     if (e.altKey || e.metaKey || e.ctrlKey) return;
     if (e.key === "ArrowLeft" || e.key === "ArrowRight"){
@@ -758,7 +737,6 @@ function updateWidgetContrast(){
     if(datePick.value === today){ updateAll(); }
   }, 1000);
 
-  // Canvas animation (breath/parallax) with visibility throttling
   let raf=0, animVisible=true, docHidden=false;
   function loop(ts){
     if (!animVisible || docHidden) { raf=requestAnimationFrame(loop); return; }
@@ -781,6 +759,6 @@ function updateWidgetContrast(){
     }
     updateAll(true);
     buildYearMap();
-    updateWidgetContrast(); // ensure widget letters are readable at load
+    updateWidgetContrast();
   }catch(e){ crash("init failed", e); }
 })();
