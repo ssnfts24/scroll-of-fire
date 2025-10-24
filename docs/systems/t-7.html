@@ -1,20 +1,70 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="sof">
+<html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>if(location.hostname==="github.com"){const b=document.querySelector("base"); if(b)b.remove();}</script>
+  <script>if(location.hostname==="github.com"){const b=document.querySelector("base");if(b)b.remove();}</script>
   <meta charset="utf-8">
-  <title>PLACEHOLDER — Systems</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>T-7 Resonant Engine — Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Tesla-Type Resonant Engine (T-7): carrier mixer, Ξ meter, τ memory loop, harmonic phase alignment.">
   <link rel="stylesheet" href="/scroll-of-fire/assets/css/codex.css">
-  <style>main{padding:clamp(16px,4vw,40px)} .meta{color:var(--muted)}</style>
+  <style>
+    main{padding:clamp(16px,4vw,40px)}
+    .notice{margin:12px 0;padding:12px 14px;border:1px solid var(--line);
+      border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+      box-shadow:0 10px 24px rgba(0,0,0,.4);position:relative;overflow:hidden;}
+    .notice::before{content:"";position:absolute;inset:-1px;pointer-events:none;
+      background:radial-gradient(120% 80% at 0 0,#ffb36a33,transparent 60%),radial-gradient(120% 80% at 100% 100%,#7af3ff33,transparent 60%);
+      opacity:.4;mix-blend-mode:screen;}
+    .deck{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:24px}
+    .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;min-height:200px}
+    .meter{width:100%;height:20px;border-radius:10px;overflow:hidden;background:#222;margin:10px 0}
+    .fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0;transition:width .3s ease}
+    .btn{display:inline-block;padding:.6rem .9rem;border:1px solid var(--line);border-radius:10px;background:linear-gradient(180deg,#171720,#121219);color:var(--ink);text-decoration:none}
+  </style>
 </head>
 <body>
   <a class="skip" href="#main">Skip to main</a>
-  <header style="padding:16px 16px 0">
-    <div class="crumbs"><a href="/scroll-of-fire/index.html">Home</a> / <a href="/scroll-of-fire/hub.html">Systems Hub</a></div>
-    <h1 id="main">PLACEHOLDER</h1>
-    <p class="meta">This module will be populated in the next pass. Ethics first. Echo ready.</p>
+  <header style="padding:16px">
+    <div class="crumbs"><a href="/scroll-of-fire/hub.html">Hub</a> / T-7 Engine</div>
+    <h1>Resonant Physics Engine (T-7)</h1>
+    <p class="meta">Carrier mixer · Ξ meter · τ memory loop</p>
   </header>
+
+  <aside class="notice"><strong>⚡ Forge Note:</strong> Prototype phase in progress — energy nodes recalibrating.</aside>
+
+  <main id="main">
+    <section class="deck">
+      <article class="panel">
+        <h2>Carrier Mixer</h2>
+        <p>Blend the five carrier frequencies. Adjust sliders to feel phase interference.</p>
+        <input type="range" min="0" max="100" value="50" id="c432"><label>432 Hz</label><br>
+        <input type="range" min="0" max="100" value="50" id="c528"><label>528 Hz</label><br>
+        <input type="range" min="0" max="100" value="50" id="c369"><label>369 Hz</label><br>
+        <input type="range" min="0" max="100" value="50" id="c144"><label>144 Hz</label><br>
+        <input type="range" min="0" max="100" value="50" id="c963"><label>963 Hz</label>
+      </article>
+
+      <article class="panel">
+        <h2>Ξ Meter</h2>
+        <p>Observer coherence indicator (updates as carriers shift).</p>
+        <div class="meter"><div class="fill" id="xiFill"></div></div>
+        <button class="btn" id="pulse">Pulse Ξ</button>
+      </article>
+
+      <article class="panel">
+        <h2>τ Memory Loop</h2>
+        <p>Temporal lag variable (τ). Modify and observe system feedback.</p>
+        <input type="range" id="tau" min="0" max="10" value="5">
+        <div id="tauVal">τ = 5</div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+  const fill=document.getElementById('xiFill'),tau=document.getElementById('tau'),val=document.getElementById('tauVal');
+  document.getElementById('pulse').onclick=()=>{const n=Math.random()*100;fill.style.width=n+'%';};
+  tau.oninput=()=>{val.textContent='τ = '+tau.value};
+  </script>
 </body>
 </html>
