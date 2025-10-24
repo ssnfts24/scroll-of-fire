@@ -485,11 +485,21 @@ const noteKey = idx => `sof_moon_note_${idx}`;
     });
     return 0.2126*t[0]+0.7152*t[1]+0.0722*t[2];
   };
-  // Keep mini bar text light; don't auto-darken on bright accents
+// Auto-contrast for .moonbar text (Share/TZ/tags)
+// Keep mini bar text light; don't auto-darken on bright accents unless you want to.
 function updateWidgetContrast(){
   const bar = document.querySelector(".moonbar");
   if (!bar) return;
+
+  // Current behavior: always keep light text
   bar.classList.remove("contrast-light");
+
+  // If you want automatic contrast instead, uncomment below:
+  // const styles = getComputedStyle(document.documentElement);
+  // const accent = styles.getPropertyValue("--moon-accent") || "#7af3ff";
+  // const rgb = parseColor(accent) || {r:122,g:243,b:255};
+  // const L = relLuma(rgb);
+  // bar.classList.toggle("contrast-light", L > 0.65);
 }
     const styles = getComputedStyle(document.documentElement);
     const accent = styles.getPropertyValue("--moon-accent") || "#7af3ff";
