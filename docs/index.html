@@ -283,6 +283,76 @@
     </noscript>
   </div>
 
+  <!-- 🔥 Remnant Gate: Seal of Becoming -->
+<section class="wrap" id="seal-gate" aria-label="Genesis Oracle Launcher">
+  <div class="oracle-gate remnant-frame shine" role="region">
+    <svg viewBox="0 0 100 100" aria-hidden="true" class="oracle-ring">
+      <defs>
+        <linearGradient id="oracleGrad" x1="0" x2="1">
+          <stop offset="0" stop-color="#7af3ff"/>
+          <stop offset="1" stop-color="#f3c97a"/>
+        </linearGradient>
+      </defs>
+      <circle cx="50" cy="50" r="44" fill="none" stroke="#1b2231" stroke-width="8"/>
+      <circle cx="50" cy="50" r="44" fill="none" stroke="url(#oracleGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="66 138"/>
+      <text x="50" y="54" text-anchor="middle" dominant-baseline="middle"
+            font-family="Crimson Pro,serif" font-weight="800" font-size="16" fill="url(#oracleGrad)">⟡</text>
+    </svg>
+
+    <div class="oracle-info">
+      <h2 class="k">Seal of Becoming</h2>
+      <p class="meta">Invoke your <strong>Genesis Oracle</strong> — read your Moon, Day, Week & Tone in the living cadence.</p>
+    </div>
+
+    <button id="openOracle" class="lab-btn big">Open</button>
+  </div>
+</section>
+
+<style>
+.oracle-gate{
+  display:grid; grid-template-columns:auto 1fr auto; gap:16px; align-items:center;
+  border:1px solid var(--line); border-radius:14px; padding:16px;
+  background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015)),
+             radial-gradient(140% 80% at 100% 0%, color-mix(in srgb,var(--moon-accent) 10%,transparent),transparent 60%);
+  box-shadow:0 10px 28px rgba(0,0,0,.4);
+}
+.oracle-ring{width:72px;height:72px}
+.oracle-info h2{margin:0;font:800 20px/1.2 "Crimson Pro",serif}
+.oracle-info p{margin:.3rem 0 0;color:var(--muted,#9aa4be)}
+.lab-btn.big{
+  padding:.8rem 1.2rem;font-weight:900;border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(255,255,255,.06),transparent);
+  border-radius:10px;cursor:pointer;color:inherit;
+  transition:transform .08s ease, box-shadow .12s ease, filter .12s ease;
+}
+.lab-btn.big:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 20px rgba(0,0,0,.35);
+  filter:drop-shadow(0 0 10px color-mix(in srgb,var(--moon-accent) 25%,transparent));
+}
+</style>
+
+<script>
+(function(){
+  "use strict";
+  const btn=document.getElementById("openOracle");
+  function currentTZ(){
+    try{return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";}
+    catch{return "UTC";}
+  }
+  function currentDateISO(){
+    const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),dd=String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${dd}`;
+  }
+  btn?.addEventListener("click",()=>{
+    const url=new URL("genesis-oracle.html",document.baseURI||location.href);
+    url.searchParams.set("d",currentDateISO());
+    url.searchParams.set("tz",currentTZ());
+    location.href=url.toString();
+  });
+})();
+</script>
+
   <!-- Inline Mini Widget (v2.3 Remnant + Tones) -->
   <script>
   /* 13 Moons — Mini Widget (v2.3 Remnant)
