@@ -391,3 +391,32 @@ body::-webkit-scrollbar-thumb{ background:#2b2f3a; border-radius:10px; border:2p
 .moonbar.contrast-light button { color:#0b1220 !important; }
 .moonbar.contrast-light .mb-bg{ stroke:#e1e8ff !important; }
 .moonbar.contrast-light .mb-fg{ filter:none !important; }
+
+
+
+
+
+
+/* --- Force readable text on Moon Mini Bar buttons/tags --- */
+.moonbar .moonbar-share,
+.moonbar .moonbar-tz,
+.moonbar .moonbar-info,
+.moonbar .moonbar-info .tag {
+  color: var(--fg) !important;          /* always light text on dark UI */
+  text-shadow: 0 1px 1px rgba(0,0,0,.6); /* subtle lift */
+}
+
+/* If you kept the contrast toggle class anywhere, neutralize it on dark UI */
+.moonbar.contrast-light,
+.moonbar.contrast-light .tag,
+.moonbar.contrast-light .moonbar-share,
+.moonbar.contrast-light .moonbar-tz {
+  color: var(--fg) !important;
+}
+
+/* --- Ensure the day number sits on TOP of the ring ornament --- */
+.ring { position: relative; }
+.ring .label { position:absolute; inset:0; display:grid; place-items:center; z-index:2; }
+.ring::after { position:absolute; inset:10px; z-index:1; }  /* ticks stay below label */
+.ring .label .big { color:#eae7df; }
+.ring .label .small { color:#b8b3a6; }
