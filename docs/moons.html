@@ -176,6 +176,46 @@
           <small class="meta">Toggle options to match external calculators exactly.</small>
         </div>
 
+
+
+        <!-- Lore & Crosslinks (auto from moons.json) -->
+<article class="card col-12" id="loreCard" aria-labelledby="lore-head">
+  <h2 id="lore-head">Living Lore — This Moon in the Codex</h2>
+  <div class="lore-grid">
+    <div>
+      <p class="mono"><b id="loreHebrew">—</b></p>
+      <p class="meta" id="lorePsalm">—</p>
+      <p class="meta"><a id="loreCodex" href="#">Open in Theory</a> • <a id="loreEssay" href="#">Extended essay</a></p>
+    </div>
+    <div class="sigil">
+      <img id="loreSigil" alt="Moon sigil" loading="lazy">
+    </div>
+  </div>
+</article>
+
+<!-- Practices -->
+<article class="card col-6" id="practiceCard" aria-labelledby="prac-head">
+  <h2 id="prac-head">Practices & Prompts</h2>
+  <ol id="practiceList" class="prompts"></ol>
+  <div class="lab-row" style="margin-top:8px">
+    <button class="lab-btn" id="btnSaveNote" type="button">Add a note for this moon</button>
+  </div>
+</article>
+
+<!-- Media -->
+<article class="card col-6" id="mediaCard" aria-labelledby="media-head">
+  <h2 id="media-head">Media</h2>
+  <figure class="moon-media">
+    <img id="mediaImage" alt="Moon artwork" loading="lazy">
+    <figcaption class="meta" id="mediaCaption">—</figcaption>
+  </figure>
+  <audio id="mediaAudio" controls style="width:100%; margin-top:8px"></audio>
+  <div class="lab-row" style="margin-top:8px">
+    <button class="lab-btn ghost" id="btnShareImage" type="button">Generate share image</button>
+  </div>
+</article>
+
+        
         <div class="goldline" aria-hidden="true"></div>
         <h3 style="margin:.2rem 0">Export this 13-Moon Year</h3>
         <p class="meta">Download an <code>.ics</code> calendar with the 13 Moon spans for the selected time-zone/year.</p>
