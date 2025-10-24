@@ -3,11 +3,8 @@
 <head>
   <!-- =========================================================
        The Genesis Oracle — Seal of Becoming (PART I / III)
-       File: genesis-oracle.html
-       Scope: Tier I (13×28 core + Tone + Resonant numerology)
-       Tiers II–III will be appended in subsequent parts.
+       Polished header + upgraded Moonbar (mobile-first)
        ========================================================= -->
-  <!-- Keep <base> on prod, remove on local/dev -->
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>(function(){if(location.hostname!=="ssnfts24.github.io"){const b=document.querySelector("base");if(b)b.remove();}})();</script>
 
@@ -54,9 +51,13 @@
   <link rel="stylesheet" href="assets/css/moons.css?v=2025-10-24" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/moons.css?v=2025-10-24"></noscript>
 
-  <!-- Page-local polish (moonbar upgraded) -->
+  <!-- Upgraded Moonbar styles (frequency shimmer + mobile grid) -->
   <style>
-    :root{ --accent:#7af3ff; --line:#2a3242; --moon-accent:#7af3ff; --moon-accent-2:#f3c97a; --ring-size:76px }
+    :root{
+      --accent:#7af3ff; --line:#2a3242;
+      --moon-accent:#7af3ff; --moon-accent-2:#f3c97a;
+      --ring-size:76px;
+    }
     body.stars{
       background:
         radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
@@ -65,42 +66,68 @@
     }
     header.site{position:sticky; top:0; z-index:80; background:rgba(9,11,16,.55); -webkit-backdrop-filter:saturate(140%) blur(8px); backdrop-filter:saturate(140%) blur(8px)}
     .wrap{padding:16px; max-width:1200px; margin:0 auto}
-    .title{ text-align:center }
-    .subtitle{ text-align:center; color:var(--muted,#9aa4be) }
+    .title{text-align:center}
+    .subtitle{text-align:center; color:var(--muted,#9aa4be)}
 
-    /* Upgraded compact moonbar */
+    /* ===== Moonbar (grid-areas; perfect mobile stack) ===== */
     .moonbar{
-      display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:10px;
+      display:grid;
+      grid-template-columns: auto 1fr auto;
+      grid-template-areas:
+        "ring info actions"
+        "ring tags actions";
+      gap:10px; align-items:center;
       border:1px solid var(--line); border-radius:14px; padding:10px;
       background:
         linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012)),
-        radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--moon-accent) 11%, transparent), transparent 60%),
+        radial-gradient(120% 80% at 100% 0%, color-mix(in srgb,var(--moon-accent) 11%, transparent), transparent 60%),
         var(--remnant-veil, transparent);
       box-shadow:0 10px 24px rgba(0,0,0,.42), inset 0 0 0 1px rgba(255,255,255,.03);
       position:relative; isolation:isolate;
     }
-    .moonbar::after{
-      content:""; position:absolute; inset:-1px; border-radius:14px; pointer-events:none; opacity:.5; z-index:-1;
-      background:
-        conic-gradient(from var(--spin,0deg) at 12px 12px, color-mix(in srgb, var(--moon-accent) 28%, transparent) 0 25%, transparent 25% 100%),
-        conic-gradient(from calc(var(--spin,0deg)+90deg) at calc(100% - 12px) 12px, color-mix(in srgb, var(--moon-accent-2) 24%, transparent) 0 25%, transparent 25% 100%);
-      filter: blur(7px) saturate(115%); animation: mbSpin 22s linear infinite;
+    .mb-ring{ grid-area:ring; display:grid; place-items:center }
+    .mb-info{ grid-area:info; min-width:0 }
+    .mb-tags{ grid-area:tags; display:flex; flex-wrap:wrap; gap:8px }
+    .mb-actions{ grid-area:actions; display:flex; gap:8px }
+
+    /* Mobile-first stacking */
+    @media (max-width:560px){
+      .moonbar{
+        grid-template-columns: auto 1fr;
+        grid-template-areas:
+          "ring info"
+          "tags actions";
+        align-items:start;
+      }
+      .moonbar .mb-text{font-size:16px}
     }
-    @keyframes mbSpin{to{--spin:360deg}}
+
     .moonbar .mb-bg{ fill:none; stroke:#121a28; stroke-width:8 }
     .moonbar .mb-fg{
       fill:none; stroke:url(#mbGrad); stroke-width:8; stroke-linecap:round; stroke-dasharray:0 316;
       filter:drop-shadow(0 0 6px color-mix(in srgb, var(--moon-accent) 35%, transparent))
              drop-shadow(0 0 12px color-mix(in srgb, var(--moon-accent-2) 22%, transparent));
+      animation: freqShimmer 6s ease-in-out infinite;
     }
+    @keyframes freqShimmer{
+      0%,100%{ filter:drop-shadow(0 0 6px color-mix(in srgb,var(--moon-accent) 35%, transparent)) drop-shadow(0 0 12px color-mix(in srgb,var(--moon-accent-2) 18%, transparent)) }
+      50%{    filter:drop-shadow(0 0 10px color-mix(in srgb,var(--moon-accent) 55%, transparent)) drop-shadow(0 0 20px color-mix(in srgb,var(--moon-accent-2) 34%, transparent)) }
+    }
+
     .moonbar-info{ display:grid; gap:4px; min-width:0 }
     .moonbar-line{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; font-weight:800; letter-spacing:.2px }
-    .moonbar-sub.meta{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:clamp(220px,26vw,360px) }
-    .moonbar .tag{ display:inline-block; padding:.25rem .5rem; border:1px solid var(--line); border-radius:999px;
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); font-weight:800 }
-    .moonbar .tone{ font-variant-numeric:tabular-nums }
-    .moonbar-share,.moonbar-tz{ padding:.5rem .8rem; border:1px solid var(--line); border-radius:10px;
-      background:linear-gradient(180deg,rgba(255,255,255,.05),transparent); font-weight:800; cursor:pointer; color:inherit }
+    .moonbar-sub.meta{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100% }
+
+    .moonbar .tag{
+      display:inline-block; padding:.25rem .55rem; border:1px solid var(--line); border-radius:999px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); font-weight:800;
+    }
+    .tone{ font-variant-numeric: tabular-nums }
+
+    .moonbar-share,.moonbar-tz{
+      padding:.55rem .85rem; border:1px solid var(--line); border-radius:10px;
+      background:linear-gradient(180deg,rgba(255,255,255,.05),transparent); font-weight:800; cursor:pointer; color:inherit
+    }
     .moonbar .yhwh{ box-shadow:0 0 0 1px #7af3ff22, inset 0 0 0 1px #7af3ff18 }
     .moonbar.yhwh-on .yhwh{ box-shadow:0 0 0 1px #7af3ff66, 0 0 18px #7af3ff40, inset 0 0 0 1px #7af3ff33 }
     .moonbar, .moonbar *{ color:#e9eef6 !important; text-shadow:0 1px 1px rgba(0,0,0,.55) }
@@ -130,20 +157,24 @@
     </nav>
   </header>
 
-  <!-- Small 13-Moon widget (no opener here; this IS the oracle) -->
+  <!-- Compact 13-Moon widget (now with perfect mobile alignment) -->
   <section class="wrap" aria-label="Live Moon">
     <div class="moonbar remnant-frame" role="region" aria-label="13-Moon mini clock" style="margin-top:12px">
-      <svg class="moonbar-ring" viewBox="0 0 120 120" role="img" aria-labelledby="mbTitle mbDesc" width="var(--ring-size)" height="var(--ring-size)">
-        <title id="mbTitle">13-Moon day progress ring</title>
-        <desc id="mbDesc">Shows current day in the 28-day moon and deep links to the full 13-Moon clock in your timezone.</desc>
-        <circle cx="60" cy="60" r="50" class="mb-bg"></circle>
-        <circle cx="60" cy="60" r="50" class="mb-fg" id="mbArc" pathLength="316"></circle>
-        <text x="60" y="60" class="mb-text" text-anchor="middle" dominant-baseline="central">
-          <tspan id="mbDay">—</tspan>
-        </text>
-      </svg>
+      <!-- Ring -->
+      <div class="mb-ring">
+        <svg class="moonbar-ring" viewBox="0 0 120 120" role="img" aria-labelledby="mbTitle mbDesc" width="var(--ring-size)" height="var(--ring-size)">
+          <title id="mbTitle">13-Moon day progress ring</title>
+          <desc id="mbDesc">Shows current day in the 28-day moon and deep links to the full 13-Moon clock in your timezone.</desc>
+          <circle cx="60" cy="60" r="50" class="mb-bg"></circle>
+          <circle cx="60" cy="60" r="50" class="mb-fg" id="mbArc" pathLength="316"></circle>
+          <text x="60" y="60" class="mb-text" text-anchor="middle" dominant-baseline="central">
+            <tspan id="mbDay">—</tspan>
+          </text>
+        </svg>
+      </div>
 
-      <div class="moonbar-info">
+      <!-- Info -->
+      <div class="moonbar-info mb-info">
         <div class="moonbar-line">
           <strong id="mbMoon">—</strong>
           <span class="sep">•</span>
@@ -153,22 +184,28 @@
         <div class="moonbar-sub meta" id="mbEssence">—</div>
       </div>
 
-      <div class="moonbar-tags">
+      <!-- Tags -->
+      <div class="mb-tags moonbar-tags">
         <span class="tag mono" id="mbYear">—</span>
         <span class="tag yhwh" id="mbYHWH" title="Remnant seal — י־ה־ו־ה">⟡ י־ה־ו־ה</span>
       </div>
 
-      <button class="moonbar-share" id="mbShare" type="button" aria-label="Share today’s 13-Moon link">Share</button>
-      <button class="moonbar-tz" id="mbTZ" type="button" aria-haspopup="dialog" aria-expanded="false" title="Change timezone">TZ</button>
+      <!-- Actions -->
+      <div class="mb-actions">
+        <button class="moonbar-share" id="mbShare" type="button" aria-label="Share today’s 13-Moon link">Share</button>
+        <button class="moonbar-tz" id="mbTZ" type="button" aria-haspopup="dialog" aria-expanded="false" title="Change timezone">TZ</button>
+      </div>
     </div>
   </section>
 
-  <!-- Mini glue for Tone chip + resonant YHWH glow -->
+  <!-- Tone + Resonant glow glue -->
   <script>
   (function(){
     "use strict";
     const $=s=>document.querySelector(s);
     const mbDay=$("#mbDay"), mbTone=$("#mbTone"), bar=$(".moonbar");
+
+    // numerology helpers
     const sumDigits = n => String(n).split("").reduce((a,b)=>a+(+b||0),0);
     const reduceNum = n => {while(n>9 && n!==11 && n!==22 && n!==33){n=sumDigits(n);} return n;};
 
@@ -184,10 +221,22 @@
       bar && bar.classList.toggle("yhwh-on", [1,4,7,11,22,33].includes(total));
     }
 
-    // Observe day changes (moons.js updates the ring)
+    // Listen for changes from moons.js
     const mo = new MutationObserver(refreshTone);
     mbDay && mo.observe(mbDay, {childList:true, characterData:true, subtree:true});
-    refreshTone(); glowYHWH(new Date());
+
+    // Resize ring gracefully on tiny phones
+    const ring=document.querySelector(".moonbar-ring");
+    function fitRing(){
+      const w=bar?.clientWidth||320;
+      const size= w<360 ? 64 : 76;
+      bar?.style.setProperty("--ring-size", size+"px");
+    }
+    addEventListener("resize", fitRing, {passive:true});
+    fitRing();
+
+    refreshTone();
+    glowYHWH(new Date());
   })();
   </script>
 
