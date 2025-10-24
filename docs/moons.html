@@ -331,54 +331,81 @@
         </div>
       </article>
 
-      <!-- Astrology Now (optional UI kit; safe placeholders your JS can fill) -->
-      <article class="card col-12 shine" aria-labelledby="astro-head">
-        <h2 id="astro-head">Astrology Now</h2>
-        <p class="meta">A lightweight panel for current placements. Your scripts can paint the canvas/SVG and populate chips/tables as desired.</p>
+      <article class="card col-12 shine astro" aria-labelledby="astro-head">
+  <header class="astro-head">
+    <span class="seal" aria-hidden="true">⟡ <span lang="he">יהוה</span></span>
+    <h2 id="astro-head">Astrology Now</h2>
+    <p class="meta">Current sky placements in a lightweight, Remnant panel. Your ephemeris code fills the chips, wheel, and aspects via the hooks below.</p>
+  </header>
 
-        <!-- Planet chips -->
-        <div class="lab-row" id="planetChips" style="margin:.4rem 0 .8rem">
-          <span class="planet-chip pl-sun"><i class="g" aria-hidden="true"></i><span class="lbl">Sun — <span class="sg">—</span></span></span>
-          <span class="planet-chip pl-moon"><i class="g"></i><span class="lbl">Moon — <span class="sg">—</span></span></span>
-          <span class="planet-chip pl-mercury"><i class="g"></i><span class="lbl">Mercury — <span class="sg">—</span></span></span>
-          <span class="planet-chip pl-venus"><i class="g"></i><span class="lbl">Venus — <span class="sg">—</span></span></span>
-          <span class="planet-chip pl-mars"><i class="g"></i><span class="lbl">Mars — <span class="sg">—</span></span></span>
-          <span class="planet-chip pl-jupiter"><i class="g"></i><span class="lbl">Jupiter — <span class="sg">—</span></span></span>
-          <span class="planet-chip pl-saturn"><i class="g"></i><span class="lbl">Saturn — <span class="sg">—</span></span></span>
+  <section class="astro-grid" aria-label="Current placements and wheel">
+    <!-- Left: planet chips -->
+    <div class="astro-chips" role="list">
+      <button class="chip" role="listitem" data-planet="sun"    aria-live="polite"><i class="dot el-fire"></i><b>Sun</b>    <span class="mono pos"  data-pos="sun">—</span>    <span class="sign" data-sign="sun">—</span></button>
+      <button class="chip" role="listitem" data-planet="moon"   aria-live="polite"><i class="dot el-water"></i><b>Moon</b>  <span class="mono pos"  data-pos="moon">—</span>   <span class="sign" data-sign="moon">—</span></button>
+      <button class="chip" role="listitem" data-planet="mercury"><i class="dot el-air"></i><b>Mercury</b> <span class="mono pos" data-pos="mercury">—</span> <span class="sign" data-sign="mercury">—</span></button>
+      <button class="chip" role="listitem" data-planet="venus"  ><i class="dot el-earth"></i><b>Venus</b>   <span class="mono pos" data-pos="venus">—</span>   <span class="sign" data-sign="venus">—</span></button>
+      <button class="chip" role="listitem" data-planet="mars"   ><i class="dot el-fire"></i><b>Mars</b>     <span class="mono pos" data-pos="mars">—</span>    <span class="sign" data-sign="mars">—</span></button>
+      <button class="chip" role="listitem" data-planet="jupiter"><i class="dot el-air"></i><b>Jupiter</b>  <span class="mono pos" data-pos="jupiter">—</span> <span class="sign" data-sign="jupiter">—</span></button>
+      <button class="chip" role="listitem" data-planet="saturn" ><i class="dot el-earth"></i><b>Saturn</b>  <span class="mono pos" data-pos="saturn">—</span>  <span class="sign" data-sign="saturn">—</span></button>
+
+      <details class="chip more">
+        <summary><i class="dot el-aether"></i><b>Outer bodies</b></summary>
+        <div class="more-grid">
+          <div><b>Uranus</b>  <span class="mono pos" data-pos="uranus">—</span>  <span class="sign" data-sign="uranus">—</span></div>
+          <div><b>Neptune</b> <span class="mono pos" data-pos="neptune">—</span> <span class="sign" data-sign="neptune">—</span></div>
+          <div><b>Pluto</b>   <span class="mono pos" data-pos="pluto">—</span>   <span class="sign" data-sign="pluto">—</span></div>
+          <div><b>Chiron</b>  <span class="mono pos" data-pos="chiron">—</span>  <span class="sign" data-sign="chiron">—</span></div>
+          <div><b>Node ☊</b>  <span class="mono pos" data-pos="north_node">—</span> <span class="sign" data-sign="north_node">—</span></div>
         </div>
+      </details>
+    </div>
 
-        <div class="grid">
-          <section class="col-5">
-            <div class="zodiac-wheel" id="zodiacWheel" role="img" aria-label="Zodiac wheel (12 signs)">
-              <!-- Inject your SVG arcs/pointers dynamically -->
-            </div>
-          </section>
+    <!-- Right: sacred wheel -->
+    <figure class="astro-wheel">
+      <svg id="astroWheel" viewBox="0 0 360 360" role="img" aria-label="Zodiac wheel">
+        <defs>
+          <linearGradient id="awGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="var(--moon-accent)"/><stop offset="1" stop-color="var(--moon-accent-2)"/>
+          </linearGradient>
+        </defs>
+        <circle cx="180" cy="180" r="162" fill="none" stroke="#1b2231" stroke-width="2"/>
+        <circle cx="180" cy="180" r="150" fill="none" stroke="url(#awGrad)" stroke-opacity=".45" stroke-width="2"/>
+        <g id="houseLines" stroke="#2a3242" stroke-width=".8" opacity=".9"></g>
+        <g id="signLabels" fill="#a7b1ca" font-family="Inter,system-ui" font-size="10" text-anchor="middle"></g>
+        <g id="planetDots">
+          <circle r="4.6" class="dot el-fire"   data-dot="sun"    cx="180" cy="30"/>
+          <circle r="4.6" class="dot el-water"  data-dot="moon"   cx="180" cy="330"/>
+          <circle r="4.6" class="dot el-air"    data-dot="mercury" cx="30"  cy="180"/>
+          <circle r="4.6" class="dot el-earth"  data-dot="venus"   cx="330" cy="180"/>
+          <circle r="4.6" class="dot el-fire"   data-dot="mars"    cx="60"  cy="60"/>
+          <circle r="4.6" class="dot el-air"    data-dot="jupiter" cx="300" cy="300"/>
+          <circle r="4.6" class="dot el-earth"  data-dot="saturn"  cx="60"  cy="300"/>
+        </g>
+      </svg>
+      <figcaption class="meta">
+        <span id="astroStamp">—</span><span class="sep">·</span>
+        <span id="astroTZ">—</span><span class="sep">·</span>
+        Source: <span id="astroSource">—</span>
+      </figcaption>
+    </figure>
+  </section>
 
-          <section class="col-7">
-            <h3 style="margin:.2rem 0">Aspects</h3>
-            <div class="lab-row" id="aspects">
-              <span class="aspect aspect--conj">☌ Conjunction —</span>
-              <span class="aspect aspect--sext">✶ Sextile —</span>
-              <span class="aspect aspect--square">□ Square —</span>
-              <span class="aspect aspect--trine">△ Trine —</span>
-              <span class="aspect aspect--oppo">☍ Opposition —</span>
-            </div>
-
-            <div class="divider" style="margin:10px 0" aria-hidden="true"></div>
-
-            <h3 style="margin:.2rem 0">Ephemeris (Today)</h3>
-            <table class="ephem" id="ephem">
-              <thead>
-                <tr><th>Body</th><th>Sign</th><th>Degree</th><th>Speed</th><th>Note</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>Sun</td><td>—</td><td class="deg">—°—′</td><td>—</td><td class="meta">—</td></tr>
-                <tr><td>Moon</td><td>—</td><td class="deg">—°—′</td><td>—</td><td class="meta">—</td></tr>
-              </tbody>
-            </table>
-          </section>
-        </div>
-      </article>
+  <section class="astro-aspects" aria-labelledby="asp-head">
+    <h3 id="asp-head">Aspects</h3>
+    <div class="legend">
+      <span class="badge asp conj">☌ Conjunction</span>
+      <span class="badge asp sext">✶ Sextile</span>
+      <span class="badge asp sqr">□ Square</span>
+      <span class="badge asp tri">△ Trine</span>
+      <span class="badge asp opp">☍ Opposition</span>
+    </div>
+    <table class="asp-table">
+      <thead><tr><th>Pair</th><th>Aspect</th><th>Orb</th></tr></thead>
+      <tbody id="aspBody"></tbody>
+    </table>
+  </section>
+</article>
 
       <!-- Practices -->
       <article class="card col-6" id="practiceCard" aria-labelledby="prac-head">
