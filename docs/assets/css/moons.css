@@ -213,3 +213,55 @@ Phase-tinted accents via --moon-accent / --moon-accent-2 =======================
   .ring-fg{ filter:none }
   .dot.on{ box-shadow:none }
 }
+
+
+
+/* === Moon badge: mobile overlap fix (v2) ===================== */
+
+/* Grid layout on small screens */
+@media (max-width:560px){
+  .moon-badge{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    grid-template-rows:auto auto;
+    align-items:center;
+    justify-content:stretch;
+    column-gap:14px; row-gap:10px;
+  }
+  .moon-badge .ring{
+    grid-row:1 / span 2;         /* ring keeps its own column */
+    justify-self:start;
+  }
+  #moonChip{                      /* name+essence pill to the right */
+    grid-column:2; max-width:100%;
+  }
+}
+
+/* Stacking: keep the ring under the pills (no label overprint) */
+.moon-badge{ position:relative }
+.moon-badge .ring{ position:relative; z-index:0 }
+.moon-badge > .pill, #moonChip{ position:relative; z-index:2 }
+
+/* Typography clamps */
+@media (max-width:420px){
+  .ring{ width:100px; height:100px }           /* smaller ring */
+  .ring .label .big{ font-size:20px; line-height:1 }
+  .ring .label .small{ font-size:11px }
+}
+
+/* Long names never push into the ring */
+#moonChip .k{ display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+#moonEssence{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100% }
+
+/* Extra breathing room + calmer glow on tiny screens */
+.moon-badge{ gap:14px 16px }
+@media (max-width:560px){ .moon-badge{ margin-bottom:6px } }
+@media (max-width:420px){
+  .ring-fg{ filter:none }
+  .dot.on{ box-shadow:none }
+}
+
+/* Optional: below 360px, let the name pill become full width under ring */
+@media (max-width:360px){
+  #moonChip{ grid-column:1 / -1 }
+}
