@@ -292,6 +292,36 @@
   }
 
   /* ===================== UI refs ===================== */
+  /* Content registry (lazy-loaded) */
+let MOON_DATA = null;
+async function loadMoonData(){
+  if (MOON_DATA) return MOON_DATA;
+  try{
+    const res = await fetch("assets/data/moons.json", {cache:"no-store"});
+    MOON_DATA = await res.json();
+  }catch(e){ console.warn("moons.json load failed", e); MOON_DATA = []; }
+  return MOON_DATA;
+}
+function findMoonData(idx){
+  if (!MOON_DATA) return null;
+  return MOON_DATA.find(m => +m.idx === +idx) || null;
+}
+
+/* New UI refs */
+const loreHebrew = $("#loreHebrew");
+const lorePsalm  = $("#lorePsalm");
+const loreCodex  = $("#loreCodex");
+const loreEssay  = $("#loreEssay");
+const loreSigil  = $("#loreSigil");
+const practiceList = $("#practiceList");
+const mediaImage = $("#mediaImage");
+const mediaCaption = $("#mediaCaption");
+const mediaAudio = $("#mediaAudio");
+const btnShareImage = $("#btnShareImage");
+const btnSaveNote   = $("#btnSaveNote");
+
+/* Tiny store per browser (notes per moon) */
+const noteKey = idx => `sof_moon_note_${idx}`;
   const nowDate=$("#nowDate"), nowClock=$("#nowClock"), nowTZ=$("#nowTZ");
   const moonName=$("#moonName"), moonEssence=$("#moonEssence"), dayInMoon=$("#dayInMoon");
   const ringArc=$("#moonArc");
