@@ -4,28 +4,28 @@
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <meta charset="utf-8" />
   <title>13 Moons · Living Clock — Scroll of Fire</title>
+
+  <!-- Viewport / color -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0b0f">
   <meta name="color-scheme" content="dark" />
-  <meta name="description" content="13-Moon Living Clock focused view: Which Moon am I in? Day ring + week dots, year map, Day Out of Time handling, lunar phase sim, numerology, Kin (optional), time-zone aware, shareable, .ics export." />
+  <meta name="description" content="Which Moon am I in? Day ring + week dots, year map, Day Out of Time handling, lunar simulation, numerology, optional Kin, time-zone aware, shareable, and .ics export." />
 
-
+  <!-- Canonical + Social -->
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
-<meta property="og:type" content="website">
-<meta property="og:title" content="13 Moons · Living Clock — Scroll of Fire">
-<meta property="og:description" content="Which Moon am I in? Day ring, week dots, year map, DOOT handling, lunar simulation, numerology, Kin, .ics export — time-zone aware & shareable.">
-<meta property="og:image" content="assets/share/moon-card.png">
-<meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="13 Moons · Living Clock — Scroll of Fire">
+  <meta property="og:description" content="Which Moon am I in? Day ring, week dots, year map, DOOT handling, lunar simulation, numerology, Kin, .ics export — time-zone aware & shareable.">
+  <meta property="og:image" content="assets/share/moon-card.png">
+  <meta name="twitter:card" content="summary_large_image">
 
-<link rel="manifest" href="assets/manifest.webmanifest">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="13 Moons">
-<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <!-- PWA -->
+  <link rel="manifest" href="assets/manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="13 Moons">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
 
-  
-  
-  
-  <!-- Fonts + shared CSS -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
@@ -33,12 +33,44 @@
   <!-- Site + page CSS -->
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24">
   <link rel="stylesheet" href="assets/css/moons.css?v=2025-10-24">
+
+  <!-- Fallback contrast patch so letters on moonbar are always readable -->
+  <style>
+    .moonbar.contrast-light,
+    .moonbar.contrast-light .tag,
+    .moonbar.contrast-light button{color:#0b1220!important}
+    .moonbar.contrast-light .mb-bg{stroke:#e1e8ff!important}
+    .moonbar.contrast-light .mb-fg{filter:none!important}
+    .lore-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}
+    @media (max-width:780px){.lore-grid{grid-template-columns:1fr}}
+    .moon-media img{width:100%;height:auto;border-radius:12px;border:1px solid var(--line)}
+    .prompts{padding-left:1.2rem}
+    #noteText{width:100%;min-height:110px;border:1px solid var(--line);border-radius:10px;background:#0f1116;color:inherit;padding:.65rem}
+  </style>
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"13 Moons — Living Clock",
+    "url":"https://ssnfts24.github.io/scroll-of-fire/moons.html",
+    "applicationCategory":"Utility",
+    "operatingSystem":"Any",
+    "description":"Interactive 13-Moon calendar with lunar phase simulation, numerology, optional Kin, and .ics export.",
+    "creator":{"@type":"Person","name":"Aaron Paul Laird"}
+  }
+  </script>
 </head>
+
 <body class="stars">
-  <!-- Hidden defs so JS can recolor both gradients safely -->
+  <!-- Hidden defs so JS can recolor gradients safely -->
   <svg width="0" height="0" aria-hidden="true" focusable="false">
     <defs>
       <linearGradient id="mbGrad" x1="0" x2="1">
+        <stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/>
+      </linearGradient>
+      <linearGradient id="rg" x1="0" x2="1">
         <stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/>
       </linearGradient>
     </defs>
@@ -57,21 +89,40 @@
         <a class="lab-btn" href="theory.html">📘 Theory</a>
       </nav>
 
+      <!-- Compact Moon Mini Bar (quick-glance widget) -->
+      <section class="moonbar card" data-size="compact" aria-label="Moon Mini Bar">
+        <div style="display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px">
+          <svg width="76" height="76" viewBox="0 0 120 120" role="img" aria-label="Day-progress ring">
+            <circle cx="60" cy="60" r="50" class="mb-bg" fill="none" stroke-width="8"/>
+            <circle cx="60" cy="60" r="50" class="mb-fg" pathLength="316" stroke="url(#mbGrad)" fill="none" stroke-width="8" stroke-linecap="round" id="moonArcMini"/>
+          </svg>
+          <div class="moonbar-info">
+            <div class="moonbar-line">
+              <span id="mbName" class="mono">—</span><span class="sep">·</span>
+              <span id="mbDay" class="mono">—/28</span>
+            </div>
+            <div class="moonbar-sub meta" id="mbEssence">—</div>
+            <div class="moonbar-tags">
+              <span class="tag yhwh" title="Source (YHWH)">⟡ י־ה־ו־ה</span>
+              <span class="tag" id="mbYear">—</span>
+            </div>
+          </div>
+          <div class="lab-row">
+            <button class="moonbar-share" id="btnShareImage" type="button" aria-label="Share image">Share</button>
+            <button class="moonbar-tz" id="btnJump" type="button" aria-label="Jump to moon">Jump</button>
+          </div>
+        </div>
+      </section>
+
       <!-- Moon-first badge -->
       <section class="card" aria-label="Current Moon">
         <div class="moon-badge">
           <div class="ring" aria-label="Day in Moon">
             <svg viewBox="0 0 120 120" aria-hidden="true">
-              <defs>
-                <!-- Ring gradient recolored by JS -->
-                <linearGradient id="rg" x1="0" x2="1">
-                  <stop offset="0" stop-color="#7af3ff"/><stop offset="1" stop-color="#f3c97a"/>
-                </linearGradient>
-              </defs>
               <circle cx="60" cy="60" r="50" class="ring-bg"/>
               <circle cx="60" cy="60" r="50" class="ring-fg" id="moonArc" pathLength="316"/>
             </svg>
-            <div class="label">
+            <div class="label" aria-live="polite">
               <div class="big" id="dayInMoon">—</div>
               <div class="small">of 28</div>
             </div>
@@ -97,36 +148,54 @@
       </section>
     </header>
 
-    <section class="grid">
+    <section class="grid" aria-label="Controls, Simulation, and Maps">
       <!-- Today + controls -->
       <article class="card col-8" aria-labelledby="today-head">
         <h2 id="today-head">Today</h2>
         <div class="lab-row" style="align-items:flex-end">
-          <span class="pill"><b id="nowDate">—</b></span>
-          <span class="pill mono" id="nowClock">—:—:—</span>
+          <span class="pill"><b id="nowDate" aria-live="polite">—</b></span>
+          <span class="pill mono" id="nowClock" aria-live="polite">—:—:—</span>
           <span class="pill" id="nowTZ">—</span>
           <span class="pill" id="moonLine">—</span>
         </div>
         <div class="lab-row" style="margin-top:8px">
           <label>Time Zone
-            <select id="tzPick" class="lab-input" style="min-width:240px"></select>
+            <select id="tzPick" class="lab-input" style="min-width:240px" aria-label="Time Zone"></select>
           </label>
           <label>Date
-            <input type="date" id="datePick" class="lab-input">
+            <input type="date" id="datePick" class="lab-input" aria-label="Pick a date">
           </label>
           <label>Hour
-            <input type="range" id="hourScrub" min="0" max="23" value="12" class="lab-input" style="width:160px">
+            <input type="range" id="hourScrub" min="0" max="23" value="12" class="lab-input" style="width:160px" aria-label="Hour of day">
           </label>
           <button class="lab-btn" id="btnToday" type="button">Today</button>
           <button class="lab-btn" id="prevDay" type="button">← Prev</button>
           <button class="lab-btn" id="nextDay" type="button">Next →</button>
           <button class="lab-btn" id="shareLink" type="button">Copy Link</button>
+          <label class="tag" style="margin-left:auto">Go to:
+            <select id="jumpMoon" class="lab-input" style="min-width:120px;margin-left:6px" aria-label="Jump to Moon">
+              <option value="">—</option>
+              <option value="1">#1 Magnetic</option>
+              <option value="2">#2 Lunar</option>
+              <option value="3">#3 Electric</option>
+              <option value="4">#4 Self-Existing</option>
+              <option value="5">#5 Overtone</option>
+              <option value="6">#6 Rhythmic</option>
+              <option value="7">#7 Resonant</option>
+              <option value="8">#8 Galactic</option>
+              <option value="9">#9 Solar</option>
+              <option value="10">#10 Planetary</option>
+              <option value="11">#11 Spectral</option>
+              <option value="12">#12 Crystal</option>
+              <option value="13">#13 Cosmic</option>
+            </select>
+          </label>
         </div>
       </article>
 
       <!-- Lunar simulation & numerology -->
-      <aside class="card col-4">
-        <h2>Lunar Phase</h2>
+      <aside class="card col-4" aria-labelledby="lunar-head">
+        <h2 id="lunar-head">Lunar Phase</h2>
         <div class="sim">
           <canvas id="simMoon" width="280" height="280" aria-label="Lunar phase"></canvas>
           <div>
@@ -142,8 +211,8 @@
       </aside>
 
       <!-- Year map -->
-      <article class="card col-12">
-        <h2>Year Map — Gregorian spans of the 13 Moons</h2>
+      <article class="card col-12" aria-labelledby="map-head">
+        <h2 id="map-head">Year Map — Gregorian spans of the 13 Moons</h2>
         <p class="hint">New Year = July 26 · Day Out of Time = July 25 · Leap Day (Feb 29) is skipped in the 13×28 count.</p>
         <table class="year-map" id="yearMap">
           <thead>
@@ -176,52 +245,54 @@
           <small class="meta">Toggle options to match external calculators exactly.</small>
         </div>
 
-
-
-        <!-- Lore & Crosslinks (auto from moons.json) -->
-<article class="card col-12" id="loreCard" aria-labelledby="lore-head">
-  <h2 id="lore-head">Living Lore — This Moon in the Codex</h2>
-  <div class="lore-grid">
-    <div>
-      <p class="mono"><b id="loreHebrew">—</b></p>
-      <p class="meta" id="lorePsalm">—</p>
-      <p class="meta"><a id="loreCodex" href="#">Open in Theory</a> • <a id="loreEssay" href="#">Extended essay</a></p>
-    </div>
-    <div class="sigil">
-      <img id="loreSigil" alt="Moon sigil" loading="lazy">
-    </div>
-  </div>
-</article>
-
-<!-- Practices -->
-<article class="card col-6" id="practiceCard" aria-labelledby="prac-head">
-  <h2 id="prac-head">Practices & Prompts</h2>
-  <ol id="practiceList" class="prompts"></ol>
-  <div class="lab-row" style="margin-top:8px">
-    <button class="lab-btn" id="btnSaveNote" type="button">Add a note for this moon</button>
-  </div>
-</article>
-
-<!-- Media -->
-<article class="card col-6" id="mediaCard" aria-labelledby="media-head">
-  <h2 id="media-head">Media</h2>
-  <figure class="moon-media">
-    <img id="mediaImage" alt="Moon artwork" loading="lazy">
-    <figcaption class="meta" id="mediaCaption">—</figcaption>
-  </figure>
-  <audio id="mediaAudio" controls style="width:100%; margin-top:8px"></audio>
-  <div class="lab-row" style="margin-top:8px">
-    <button class="lab-btn ghost" id="btnShareImage" type="button">Generate share image</button>
-  </div>
-</article>
-
-        
         <div class="goldline" aria-hidden="true"></div>
         <h3 style="margin:.2rem 0">Export this 13-Moon Year</h3>
         <p class="meta">Download an <code>.ics</code> calendar with the 13 Moon spans for the selected time-zone/year.</p>
         <div class="lab-row">
           <a id="dlICS" class="dl" href="#" download="13-moon-year.ics" role="button">⬇️ Download .ics</a>
           <button class="lab-btn ghost" id="regenICS" type="button">Refresh</button>
+        </div>
+      </article>
+
+      <!-- Lore & Crosslinks (auto from moons.json) -->
+      <article class="card col-12" id="loreCard" aria-labelledby="lore-head">
+        <h2 id="lore-head">Living Lore — This Moon in the Codex</h2>
+        <div class="lore-grid">
+          <div>
+            <p class="mono"><b id="loreHebrew">—</b></p>
+            <p class="meta" id="lorePsalm">—</p>
+            <p class="meta">
+              <a id="loreCodex" href="#" target="_blank" rel="noopener">Open in Theory</a> •
+              <a id="loreEssay" href="#" target="_blank" rel="noopener">Extended essay</a>
+            </p>
+          </div>
+          <div class="sigil">
+            <img id="loreSigil" alt="Moon sigil" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Practices -->
+      <article class="card col-6" id="practiceCard" aria-labelledby="prac-head">
+        <h2 id="prac-head">Practices & Prompts</h2>
+        <ol id="practiceList" class="prompts"></ol>
+        <label class="meta" for="noteText" style="display:block;margin-top:10px">Your note for this moon</label>
+        <textarea id="noteText" placeholder="What are you tracking, learning, releasing?" aria-label="Note for this moon"></textarea>
+        <div class="lab-row" style="margin-top:8px">
+          <button class="lab-btn" id="btnSaveNote" type="button">Save note</button>
+        </div>
+      </article>
+
+      <!-- Media -->
+      <article class="card col-6" id="mediaCard" aria-labelledby="media-head">
+        <h2 id="media-head">Media</h2>
+        <figure class="moon-media">
+          <img id="mediaImage" alt="Moon artwork" loading="lazy">
+          <figcaption class="meta" id="mediaCaption">—</figcaption>
+        </figure>
+        <audio id="mediaAudio" controls style="width:100%; margin-top:8px"></audio>
+        <div class="lab-row" style="margin-top:8px">
+          <button class="lab-btn ghost" id="btnShareImage" type="button">Generate share image</button>
         </div>
       </article>
     </section>
@@ -237,6 +308,171 @@
   </noscript>
 
   <!-- Page JS (external; avoids inline truncation) -->
-<script src="assets/js/moons.js?v=3" defer></script>
+  <!-- v3.9+ includes: moons.json hydration, #moon-4 deep-link, auto-contrast, share-image, per-moon notes -->
+  <script src="assets/js/moons.js?v=3.9" defer></script>
+
+  <!-- Tiny boot helpers bound to new UI bits -->
+  <script>
+    // keep mini bar in sync without duplicating logic (moons.js updates #moonArc + text already)
+document.addEventListener("DOMContentLoaded", () => {
+  const arcMain = document.getElementById("moonArc");
+  const arcMini = document.getElementById("moonArcMini");
+  const mbName  = document.getElementById("mbName");
+  const mbDay   = document.getElementById("mbDay");
+  const mbEss   = document.getElementById("mbEssence"); // ← fixed
+  const mbYear  = document.getElementById("mbYear");
+  const jumpSel = document.getElementById("jumpMoon");
+  const btnJump = document.getElementById("btnJump");
+  const noteBox = document.getElementById("noteText");
+});
+      /* -------- Mirror main badge -> mini bar -------- */
+      const moonChip=document.getElementById("moonChip");
+      const moonName=document.getElementById("moonName");
+      const moonEss=document.getElementById("moonEssence");
+      const dayInMoon=document.getElementById("dayInMoon");
+      const yearSpan=document.getElementById("yearSpan");
+
+      // mirror function
+      function syncMini(){
+        if (mbName && moonName)  mbName.textContent = moonName.textContent || "—";
+        if (mbEss  && moonEss)   mbEss.textContent  = moonEss.textContent  || "—";
+        if (mbDay  && dayInMoon) mbDay.textContent  = (dayInMoon.textContent||"—") + "/28";
+        if (mbYear && yearSpan)  mbYear.textContent = yearSpan.textContent || "—";
+
+        // mirror arc length if present
+        const mainDash = arcMain?.getAttribute("stroke-dasharray");
+        if (arcMini && mainDash) arcMini.setAttribute("stroke-dasharray", mainDash);
+
+        // load note for current moon idx
+        const idx = moonChip?.getAttribute("data-idx");
+        if (idx && noteBox){
+          const saved = localStorage.getItem(`sof_moon_note_${idx}`) || "";
+          if (noteBox.value !== saved) noteBox.value = saved;
+        }
+      }
+
+      // Initial sync after a tick (moons.js populates first)
+      setTimeout(syncMini, 40);
+
+      // Keep in sync when the main ring animates or the labels change
+      const mo = new MutationObserver(syncMini);
+      if (arcMain)  mo.observe(arcMain, { attributes:true, attributeFilter:["stroke-dasharray"] });
+      if (moonChip) mo.observe(moonChip, { childList:true, subtree:true, attributes:true });
+      if (yearSpan) mo.observe(yearSpan, { childList:true, characterData:true, subtree:true });
+
+      // Also react to our custom accent-change event (colors can flip contrast)
+      document.addEventListener("sof:accent-change", syncMini);
+
+      /* -------- Jump-to-moon (hash deep-link; moons.js handles it) -------- */
+      function jumpToSelected(){
+        const v = jumpSel?.value;
+        if (!v) return;
+        location.hash = `#moon-${v}`;
+        // nudge focus for a11y
+        document.getElementById("today-head")?.focus?.();
+      }
+      btnJump?.addEventListener("click", jumpToSelected, {passive:true});
+      jumpSel?.addEventListener("change", jumpToSelected, {passive:true});
+
+      /* -------- Share image (quick canvas card) -------- */
+      function cssVar(name, fallback){
+        const s = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        return s || fallback;
+      }
+      function dlBlob(name, blob){
+        const a=document.createElement("a");
+        a.download=name;
+        a.href=URL.createObjectURL(blob);
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+      }
+      async function makeShareCard(){
+        const w=1080, h=1080;
+        const c=document.createElement("canvas");
+        c.width=w; c.height=h;
+        const k=c.getContext("2d");
+
+        // palette from current phase tint
+        const c1=cssVar("--moon-accent","#7af3ff");
+        const c2=cssVar("--moon-accent-2","#f3c97a");
+
+        // bg
+        const g=k.createLinearGradient(0,0,0,h);
+        g.addColorStop(0, "#0a0e15"); g.addColorStop(1,"#06080d");
+        k.fillStyle=g; k.fillRect(0,0,w,h);
+
+        // aurora sweep
+        const g2=k.createLinearGradient(0,0,w,0);
+        g2.addColorStop(0, c1+"22"); g2.addColorStop(0.5, c2+"18"); g2.addColorStop(1, c1+"22");
+        k.fillStyle=g2; k.beginPath(); k.moveTo(0, 240);
+        for(let x=0; x<=w; x+=24){ k.lineTo(x, 240 + Math.sin(x*0.006)*20); }
+        k.lineTo(w,0); k.lineTo(0,0); k.closePath(); k.fill();
+
+        // title
+        k.fillStyle="#e9eef6";
+        k.font="800 56px Inter, system-ui";
+        k.fillText("13 Moons — Living Clock", 64, 112);
+
+        // main moon name
+        const name = moonName?.textContent?.trim() || "—";
+        const essence = moonEss?.textContent?.trim() || "—";
+        const dayTxt = (dayInMoon?.textContent?.trim() || "—") + " / 28";
+        const yearTxt = yearSpan?.textContent?.trim() || "—";
+        const sub = document.getElementById("phaseLine")?.textContent?.trim() || "";
+
+        k.font="800 92px Inter, system-ui";
+        k.fillText(name, 64, 260);
+        k.font="600 40px Inter, system-ui";
+        k.fillStyle="#c9d3e9";
+        k.fillText(essence, 64, 320);
+
+        // chips
+        k.fillStyle="#0f1116"; k.strokeStyle="#2a3242"; k.lineWidth=2;
+        function chip(x,y,txt){
+          const padX=18, padY=14;
+          k.font="800 38px Inter, system-ui";
+          const mw=k.measureText(txt).width;
+          const cw=mw+padX*2, ch=56;
+          k.beginPath(); k.roundRect(x,y,cw,ch,12); k.fill(); k.stroke();
+          k.fillStyle="#e9eef6"; k.fillText(txt, x+padX, y+40);
+          k.fillStyle="#0f1116";
+          return x+cw+10;
+        }
+        let cx=64;
+        cx = chip(cx, 370, dayTxt);
+        cx = chip(cx, 370, yearTxt);
+        chip(cx, 370, sub || "—");
+
+        // footer + site
+        k.font="600 32px Inter, system-ui";
+        k.fillStyle="#a8b1c9";
+        k.fillText("scroll-of-fire · ssnfts24.github.io/scroll-of-fire", 64, h-64);
+
+        // export
+        const blob = await new Promise(res=> c.toBlob(res, "image/png", 0.96));
+        if (blob) dlBlob(`13-moons-${name.replace(/\s+/g,"-").toLowerCase()}.png`, blob);
+      }
+
+      // Bind all Share buttons (mini + media card)
+      document.querySelectorAll("#btnShareImage").forEach(btn=>{
+        btn.addEventListener("click", makeShareCard, {passive:true});
+      });
+
+      /* -------- Per-moon note -------- */
+      document.getElementById("btnSaveNote")?.addEventListener("click", ()=>{
+        const idx = moonChip?.getAttribute("data-idx");
+        if (!idx) return;
+        localStorage.setItem(`sof_moon_note_${idx}`, noteBox?.value || "");
+        // toast
+        const t=document.createElement("div"); t.className="toast"; t.textContent="Note saved";
+        document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
+        setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),250); }, 1400);
+      }, {passive:true});
+
+      // If hash links to #moon-n on load, let moons.js handle it; we just reflect UI once it updates.
+      window.addEventListener("hashchange", ()=> setTimeout(syncMini, 40), {passive:true});
+    });
+  </script>
 </body>
 </html>
