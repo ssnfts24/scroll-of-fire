@@ -44,6 +44,7 @@
 
   <!-- JSON-LD -->
   <script type="application/ld+json">{
+    {"@type":"WebPage","name":"Systems Hub","url":"https://ssnfts24.github.io/scroll-of-fire/hub.html"},
     "@context":"https://schema.org","@type":"CreativeWork",
     "name":"Scroll of Fire — Codex of Reality","alternateName":"Codex of Reality",
     "author":{"@type":"Person","name":"Aaron Paul Laird","alternateName":"Scribe of Circuits"},
@@ -67,6 +68,26 @@
       {"@type":"WebPage","name":"Start Here","url":"https://ssnfts24.github.io/scroll-of-fire/start.html"}],
     "image":"https://ssnfts24.github.io/scroll-of-fire/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1",
     "inLanguage":"en"}</script>
+
+
+  <!-- Prefetch the Hub so it opens snappier -->
+<link rel="prefetch" href="hub.html">
+
+<!-- Site schema with SearchAction (keeps your CreativeWork block untouched) -->
+<script type="application/ld+json">{
+  "@context":"https://schema.org",
+  "@type":"WebSite",
+  "name":"Scroll of Fire",
+  "url":"https://ssnfts24.github.io/scroll-of-fire/",
+  "potentialAction":{
+    "@type":"SearchAction",
+    "target":"https://ssnfts24.github.io/scroll-of-fire/?q={search_term_string}",
+    "query-input":"required name=search_term_string"
+  }
+}</script>
+
+
+  <link rel="preload" href="assets/css/codex.css?v=3.1" as="style" importance="high">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -646,17 +667,18 @@
     </a>
 
     <!-- Primary tabs -->
-    <nav class="tabs reveal" aria-label="Primary sections">
-      <a class="tab tab--primary" href="theory.html" title="Open Theory">📘 Theory</a>
-      <a class="tab tab--primary" href="teach.html" title="Open Manifest">✨ Manifest</a>
-      <a class="tab" href="#explore" data-section="explore" title="Jump to Explore">Explore</a>
-      <a class="tab" href="#canon" data-section="canon">Canon</a>
-      <a class="tab" href="#engine" data-section="engine">Engine</a>
-      <a class="tab" href="#links" data-section="links">Links</a>
-      <a class="tab" href="#integrity" data-section="integrity">Integrity</a>
-      <a class="tab" href="#provenance" data-section="provenance">Provenance</a>
-      <span class="tab-ink no-living" aria-hidden="true"></span>
-    </nav>
+<nav class="tabs reveal" aria-label="Primary sections">
+  <a class="tab tab--primary" href="theory.html" title="Open Theory">📘 Theory</a>
+  <a class="tab tab--primary" href="teach.html" title="Open Manifest">✨ Manifest</a>
+  <a class="tab tab--primary" href="hub.html" title="Open Systems Hub">🛠️ Hub</a>
+  <a class="tab" href="#explore" data-section="explore" title="Jump to Explore">Explore</a>
+  <a class="tab" href="#canon" data-section="canon">Canon</a>
+  <a class="tab" href="#engine" data-section="engine">Engine</a>
+  <a class="tab" href="#links" data-section="links">Links</a>
+  <a class="tab" href="#integrity" data-section="integrity">Integrity</a>
+  <a class="tab" href="#provenance" data-section="provenance">Provenance</a>
+  <span class="tab-ink no-living" aria-hidden="true"></span>
+</nav>
 
     <!-- Search -->
     <section class="grid reveal" style="margin:8px 0 0">
@@ -708,7 +730,13 @@
         <h2 id="explore-h" class="sheen">🗂️ Explore the Scroll — all pages</h2>
         <p class="meta">Everything lives in <code>/docs</code>. These tiles mirror your repo. Tip: press <kbd class="kbd">G</kbd> then type a page name.</p>
       </article>
-
+<a class="tile col-3 reveal" href="hub.html">
+  <div>
+    <h4>🛠️ Systems Hub</h4>
+    <p>Engines: T-7, Frequencies, Mind-Renewal, Witness, Recoder, Archive.</p>
+  </div>
+  <span class="arrow no-living" aria-hidden="true">➜</span>
+</a>
       <a class="tile col-3 reveal" href="start.html"><div><h4>🚀 Start Here</h4><p>Onboarding &amp; how to move.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
       <a class="tile col-3 reveal" href="guide.html"><div><h4>🧭 Guide</h4><p>Step-by-step walkthrough of the Codex.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
       <a class="tile col-3 reveal" href="theory.html"><div><h4>📘 Theory</h4><p>Canonical write-ups for 0–17.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
