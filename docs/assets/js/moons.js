@@ -1,4 +1,4 @@
-/* 13 Moons — Living Clock (advanced, DPR-aware, phase-tinted) */
+/* 13 Moons — Living Clock (advanced, DPR-aware, phase-tinted, v3.7) */
 (function(){
   "use strict";
 
@@ -10,9 +10,7 @@
   const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
   const lerp=(a,b,t)=>a+(b-a)*t;
   const ease=(t)=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2; // cubic in/out
-  const now = ()=> performance.now();
-  const warn=(...a)=>{ try{console.warn("[Moons]",...a);}catch(_){} };
-  const safe = fn => { try{ return fn(); } catch(e){ warn(e); return void 0; } };
+  const safe = fn => { try{ return fn(); } catch(e){ console.warn("[Moons]",e); return void 0; } };
   const prefersReduced = ()=> (typeof matchMedia==="function") && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const crash=(msg,err)=>{
@@ -42,8 +40,7 @@
   const TZ_KEY="sof_moons_tz";
   const tzPick = $("#tzPick");
   const COMMON_TZ = ["UTC","America/Los_Angeles","America/Denver","America/Chicago","America/New_York","Europe/London","Europe/Berlin","Europe/Helsinki","Africa/Johannesburg","Asia/Dubai","Asia/Kolkata","Asia/Shanghai","Asia/Tokyo","Australia/Sydney"];
-  let defaultTZ = "UTC";
-  safe(()=>{ defaultTZ = localStorage.getItem(TZ_KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; });
+  let defaultTZ = safe(()=> localStorage.getItem(TZ_KEY)) || safe(()=>Intl.DateTimeFormat().resolvedOptions().timeZone) || "UTC";
 
   let ALL_TZ = COMMON_TZ.slice(0);
   safe(()=>{
@@ -58,7 +55,6 @@
       tzPick.innerHTML = ALL_TZ.map(z=>`<option value="${z}">${z}</option>`).join("");
       tzPick.value = ALL_TZ.includes(defaultTZ) ? defaultTZ : "UTC";
     }catch(e){
-      warn("TZ list build failed", e);
       tzPick.innerHTML = COMMON_TZ.map(z=>`<option value="${z}">${z}</option>`).join("");
       tzPick.value = "UTC";
     }
@@ -74,20 +70,15 @@
       const h = (overrideHour==null? m.hour : pad(overrideHour));
       return new Date(`${m.year}-${m.month}-${m.day}T${h}:${m.minute}:${m.second}Z`);
     }catch(e){
-      warn("dateInTZ fallback", e);
       const d = new Date(baseDate);
       if (overrideHour!=null) d.setUTCHours(overrideHour,0,0,0);
       return d;
     }
   }
-  function fmtDate(d,tz){
-    return safe(()=> new Intl.DateTimeFormat(undefined,{dateStyle:"full", timeZone:tz}).format(d))
-        || new Intl.DateTimeFormat(undefined,{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:tz}).format(d);
-  }
-  function fmtTime(d,tz){
-    return safe(()=> new Intl.DateTimeFormat(undefined,{timeStyle:"medium", timeZone:tz}).format(d))
-        || new Intl.DateTimeFormat(undefined,{hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false, timeZone:tz}).format(d);
-  }
+  const fmtDate=(d,tz)=> safe(()=> new Intl.DateTimeFormat(undefined,{dateStyle:"full", timeZone:tz}).format(d))
+                       || new Intl.DateTimeFormat(undefined,{weekday:"long", year:"numeric", month:"long", day:"numeric", timeZone:tz}).format(d);
+  const fmtTime=(d,tz)=> safe(()=> new Intl.DateTimeFormat(undefined,{timeStyle:"medium", timeZone:tz}).format(d))
+                       || new Intl.DateTimeFormat(undefined,{hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false, timeZone:tz}).format(d);
   const utcTrunc = (d)=> new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
   const validDateStr = s => /^\d{4}-\d{2}-\d{2}$/.test(s);
 
@@ -302,7 +293,8 @@
 
   /* ===================== UI refs ===================== */
   const nowDate=$("#nowDate"), nowClock=$("#nowClock"), nowTZ=$("#nowTZ");
-  const moonName=$("#moonName"), moonEssence=$("#moonEssence"), dayInMoon=$("#dayInMoon"), moonArc=$("#moonArc");
+  const moonName=$("#moonName"), moonEssence=$("#moonEssence"), dayInMoon=$("#dayInMoon");
+  const ringArc=$("#moonArc");
   const yearSpan=$("#yearSpan"), dootWarn=$("#dootWarn"), moonLine=$("#moonLine");
   const phaseLine=$("#phaseLine"), phaseMeta=$("#phaseMeta");
   const numLine=$("#numLine"), numMeta=$("#numMeta"), energyQuote=$("#energyQuote");
@@ -312,6 +304,7 @@
   const sourceChip=$("#sourceChip");
   const skyBg=$("#skyBg");
   const dlICS = $("#dlICS");
+  const moonChip = $("#moonChip");
 
   // Kin opts
   const kinOn = $("#kinOn"), kinEpoch = $("#kinEpoch"), kinSkipLeap = $("#kinSkipLeap"), kinSkipDOOT = $("#kinSkipDOOT");
@@ -323,12 +316,11 @@
     for (let i=0;i<28;i++){ const d=document.createElement("i"); d.className="dot"; d.setAttribute("aria-hidden","true"); frag.appendChild(d); }
     weekDots.appendChild(frag);
   }
-  const weekAndDow = day => ({ week: Math.floor((day-1)/7)+1, dow: ((day-1)%7)+1 });
 
   /* ===================== URL sync ===================== */
   function readURL(){
     let u;
-    try{ u=new URL(location.href); }catch(e){ warn("URL parse",e); return; }
+    try{ u=new URL(location.href); }catch(e){ return; }
     const d=u.searchParams.get("d");
     const z=u.searchParams.get("tz");
     const h=u.searchParams.get("t");
@@ -409,7 +401,7 @@
     rafId=requestAnimationFrame(tick);
   })();
 
-  /* ===================== Phase-driven accents ===================== */
+  /* ===================== Phase-driven accents + widget contrast ===================== */
   function setGradientStops(defId, c1, c2){
     const grad = document.getElementById(defId);
     if (!grad) return;
@@ -429,23 +421,58 @@
     const t = clamp(illum, 0, 1);
     const c1 = mixHex(cold, warm, t*0.7);
     const c2 = mixHex(warm, cold, (1-t)*0.7);
-    // SVG rings (if present)
     setGradientStops("rg", c1, c2);
     setGradientStops("mbGrad", c1, c2);
-    // CSS custom props for the rest of the UI
     const root = document.documentElement;
     root.style.setProperty("--moon-accent",  c1);
     root.style.setProperty("--moon-accent-2",c2);
+    // tell widget to re-evaluate contrast
+    updateWidgetContrast();
+    document.dispatchEvent(new Event("sof:accent-change"));
+  }
+
+  // Auto-contrast for .moonbar text (Share/TZ/tags) so letters stay readable
+  const parseColor = (s) => {
+    if (!s) return null;
+    s=s.trim();
+    if (s.startsWith("#")){
+      const v = s.length===4
+        ? "#"+s[1]+s[1]+s[2]+s[2]+s[3]+s[3]
+        : s;
+      const n=parseInt(v.slice(1),16);
+      return {r:(n>>16)&255,g:(n>>8)&255,b:n&255};
+    }
+    const m = s.match(/rgba?\(([^)]+)\)/i);
+    if (m){
+      const [r,g,b]=m[1].split(",").map(x=>parseFloat(x));
+      return {r,g,b};
+    }
+    return null;
+  };
+  const relLuma = ({r,g,b})=>{
+    const t = [r,g,b].map(v=>{
+      v/=255; return (v<=0.03928)? v/12.92 : Math.pow((v+0.055)/1.055,2.4);
+    });
+    return 0.2126*t[0]+0.7152*t[1]+0.0722*t[2];
+  };
+  function updateWidgetContrast(){
+    const bar = $(".moonbar");
+    if (!bar) return;
+    const styles = getComputedStyle(document.documentElement);
+    const accent = styles.getPropertyValue("--moon-accent") || "#7af3ff";
+    const rgb = parseColor(accent) || {r:122,g:243,b:255};
+    const L = relLuma(rgb);
+    // Bright accent -> use dark text for contrast
+    bar.classList.toggle("contrast-light", L > 0.65);
   }
 
   /* ===================== Rendering pipeline ===================== */
-  const ringArc = $("#moonArc"); // foreground arc of the main ring
   let ringDashTarget = 0, ringDashNow = 0, lastTween = 0;
 
   function tweenRing(ts){
     if (!ringArc) return;
     if (lastTween===0) lastTween=ts;
-    const dt = clamp((ts - lastTween)/500, 0, 1); // 0.5s tween window
+    const dt = clamp((ts - lastTween)/500, 0, 1);
     lastTween = ts;
     const t = prefersReduced() ? 1 : ease(dt);
     ringDashNow = lerp(ringDashNow, ringDashTarget, t);
@@ -486,9 +513,9 @@
       const hour = +hourScrub?.value || 0;
       const wall=dateInTZ(base, tz, hour);
 
-      if (nowDate) nowDate.textContent = fmtDate(wall, tz);
-      if (nowClock) nowClock.textContent = fmtTime(base, tz);
-      if (nowTZ) nowTZ.textContent = tz;
+      $("#nowDate") && (nowDate.textContent = fmtDate(wall, tz));
+      $("#nowClock") && (nowClock.textContent = fmtTime(base, tz));
+      $("#nowTZ")    && (nowTZ.textContent   = tz);
 
       const selStr = validDateStr(datePick?.value) ? datePick.value : dateInTZ(new Date(), tz).toISOString().slice(0,10);
       const sel = new Date(`${selStr}T${pad(hour)}:00:00Z`);
@@ -503,20 +530,26 @@
         if (dayInMoon)   dayInMoon.textContent = "—";
         ringDashTarget = 0;
         if (moonLine)    moonLine.textContent = m13.special;
+        if (moonChip)    moonChip.removeAttribute("data-idx");
         if (weekDots){
           [...weekDots.children].forEach(n => n.classList.remove("on"));
           weekDots.setAttribute("aria-label","No week/day (special)");
         }
       } else {
         const idx=m13.moon-1;
+        // Visible title with explicit "(n)"
         if (moonName)    moonName.textContent = `${MOONS[idx]} Moon (${m13.moon})`;
         if (moonEssence) moonEssence.textContent = MOON_ESSENCE[idx];
+        if (moonChip) {
+          moonChip.setAttribute("data-idx", String(m13.moon));          // CSS also appends " (n)" after .k
+          moonChip.title = `${MOONS[idx]} — ${MOON_ESSENCE[idx]}`;      // tooltip
+        }
         if (dayInMoon)   dayInMoon.textContent = String(m13.day);
         ringDashTarget = Math.round(316 * (m13.day/28));
         if (moonLine)    moonLine.textContent = `You are in ${MOONS[idx]} Moon — Day ${m13.day} of 28`;
 
         if (weekDots){
-          const { week, dow } = { week: Math.floor((m13.day-1)/7)+1, dow: ((m13.day-1)%7)+1 };
+          const week = Math.floor((m13.day-1)/7)+1, dow = ((m13.day-1)%7)+1;
           const nodes = [...weekDots.children];
           nodes.forEach(n => n.classList.remove("on"));
           const dotIndex = (week-1)*7 + (dow-1);
@@ -527,7 +560,6 @@
 
       if (ringArc){
         if (forceTween || Math.abs(ringDashNow - ringDashTarget) > 2) {
-          // kick tween
           requestAnimationFrame(ts=>{ lastTween=ts; requestAnimationFrame(tweenRing); });
         } else {
           ringArc.setAttribute("stroke-dasharray", `${ringDashTarget} ${Math.max(0,316-ringDashTarget)}`);
@@ -675,7 +707,6 @@
   });
 
   /* ===================== Live clock + animation loop ===================== */
-  // Keep the textual clock fresh and auto-roll the selected date when “today” is selected.
   setInterval(()=>{
     if (nowClock && tzPick) nowClock.textContent = fmtTime(new Date(), tzPick.value);
     if (!tzPick || !datePick) return;
@@ -696,7 +727,6 @@
     : null;
   simIO && simIO.observe(simMoon);
   on(document, "visibilitychange", ()=>{ docHidden = document.hidden; });
-
   raf=requestAnimationFrame(loop);
 
   /* ===================== Init ===================== */
@@ -708,5 +738,6 @@
     }
     updateAll(true);
     buildYearMap();
+    updateWidgetContrast(); // ensure widget letters are readable at load
   }catch(e){ crash("init failed", e); }
 })();
