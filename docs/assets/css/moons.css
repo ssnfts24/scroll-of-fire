@@ -509,3 +509,53 @@
 .ephem{width:100%;border-collapse:separate;border-spacing:0 6px}
 .ephem th,.ephem td{padding:8px 10px;border:1px solid var(--line)}
 .ephem .deg{font-variant-numeric:tabular-nums}
+
+
+
+
+/* Astrology Now — Remnant Wizard */
+.astro-head{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;margin-bottom:8px}
+.astro-head .seal{font-weight:900;letter-spacing:.2px;padding:.25rem .5rem;border-radius:999px;border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+  color:color-mix(in srgb,var(--moon-accent) 45%,var(--fg))}
+.astro-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:12px}
+@media (max-width:980px){.astro-grid{grid-template-columns:1fr}}
+.astro-chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.astro-chips{grid-template-columns:1fr}}
+.astro .chip{display:flex;align-items:baseline;gap:8px;padding:.65rem .8rem;border:1px solid var(--line);border-radius:14px;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);font-weight:800;letter-spacing:.2px;text-shadow:0 1px 0 rgba(0,0,0,.45)}
+.astro .chip b{min-width:86px;display:inline-block}
+.astro .chip .pos{opacity:.9}.astro .chip .sign{opacity:.85;border:1px solid var(--line);padding:.06rem .4rem;border-radius:8px;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));font-weight:700}
+.astro .chip.more{grid-column:1/-1;display:block}
+.astro .chip.more summary{list-style:none;cursor:pointer}
+.astro .chip.more summary::-webkit-details-marker{display:none}
+.astro .chip.more .more-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px;font-weight:700}
+@media (max-width:560px){.astro .chip.more .more-grid{grid-template-columns:1fr}}
+.astro .dot{width:10px;height:10px;border-radius:50%;box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 0 8px color-mix(in srgb,var(--moon-accent) 35%,transparent);display:inline-block}
+.el-fire{background:radial-gradient(circle at 40% 35%,#ffb86b,var(--moon-accent-2))}
+.el-water{background:radial-gradient(circle at 40% 35%,#7af3ff,var(--moon-accent))}
+.el-air{background:radial-gradient(circle at 40% 35%,#cfefff,#7af3ff)}
+.el-earth{background:radial-gradient(circle at 40% 35%,#e9dfb1,#caa96a)}
+.el-aether{background:radial-gradient(circle at 40% 35%,#b6a0ff,#7af3ff)}
+.astro-wheel{border:1px solid var(--line);border-radius:14px;padding:10px;background:
+  linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01)),
+  radial-gradient(120% 80% at 100% 0%,color-mix(in srgb,var(--moon-accent) 10%,transparent),transparent 60%);
+  box-shadow:0 10px 24px rgba(0,0,0,.35),inset 0 0 0 1px rgba(255,255,255,.02)}
+.astro-wheel svg{display:block;width:100%;height:auto}
+.astro-wheel figcaption.meta{display:flex;gap:6px;align-items:center;justify-content:center;margin-top:6px}
+.astro-aspects{margin-top:12px}
+.astro-aspects h3{margin:.2rem 0 .5rem;font-family:"Crimson Pro",serif;font-weight:800}
+.astro-aspects .legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.badge.asp{display:inline-flex;align-items:center;gap:6px;padding:.28rem .55rem;border-radius:999px;border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));font-weight:800;letter-spacing:.2px}
+.badge.asp.conj{box-shadow:0 0 0 1px #7af3ff33 inset}
+.badge.asp.sext{box-shadow:0 0 0 1px #5ec2b333 inset}
+.badge.asp.sqr{box-shadow:0 0 0 1px #ff6b6b33 inset}
+.badge.asp.tri{box-shadow:0 0 0 1px #7fd37f33 inset}
+.badge.asp.opp{box-shadow:0 0 0 1px #caa96a33 inset}
+.asp-table{width:100%;border-collapse:separate;border-spacing:0 6px}
+.asp-table th,.asp-table td{padding:8px 10px;border:1px solid var(--line)}
+.asp-table thead th{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01))}
+.asp-table tbody tr td:first-child{font-weight:800}
