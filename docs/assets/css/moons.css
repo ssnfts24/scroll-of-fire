@@ -381,3 +381,13 @@ body::-webkit-scrollbar-thumb{ background:#2b2f3a; border-radius:10px; border:2p
   .lab-btn, .moonbar-share, .moonbar-tz{ background:Canvas; color:CanvasText; text-shadow:none }
   .ring-bg{ stroke:GrayText } .ring-fg{ filter:none }
 }
+
+
+
+
+/* === Mini moonbar contrast patch (drop at end of CSS) === */
+.moonbar.contrast-light,
+.moonbar.contrast-light .tag,
+.moonbar.contrast-light button { color:#0b1220 !important; }
+.moonbar.contrast-light .mb-bg{ stroke:#e1e8ff !important; }
+.moonbar.contrast-light .mb-fg{ filter:none !important; }
