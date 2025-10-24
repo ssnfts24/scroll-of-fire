@@ -373,3 +373,201 @@ body::-webkit-scrollbar-thumb{ background:#2b2f3a; border-radius:10px; border:2p
   .lab-btn, .moonbar-share, .moonbar-tz{ background:Canvas; color:CanvasText; text-shadow:none }
   .ring-bg{ stroke:GrayText } .ring-fg{ filter:none }
 }
+
+
+
+
+
+/* =========================================================
+   ✦ Codex & Standout Enhancements (v3.7+ add-on)
+   - Sticky Codex TOC + reading column
+   - Codex file grid with type badges
+   - Callouts, pull-quotes, drop caps
+   - Aureate "shine" border utility
+========================================================= */
+
+/* ---------- Standout utility: aureate shine border ---------- */
+.shine {
+  position: relative; isolation: isolate;
+  border:1px solid var(--line); border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, var(--elev), var(--elev-2)),
+    radial-gradient(80% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
+}
+.shine::after{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:-1; opacity:.55;
+  background: conic-gradient(from var(--spin,0deg),
+              color-mix(in srgb, var(--moon-accent) 24%, transparent),
+              transparent 12% 25%,
+              color-mix(in srgb, var(--moon-accent-2) 20%, transparent),
+              transparent 37% 50%,
+              color-mix(in srgb, var(--accent) 20%, transparent),
+              transparent 62% 75%,
+              color-mix(in srgb, var(--accent-2) 18%, transparent),
+              transparent 87% 100%);
+  filter: blur(8px) saturate(120%);
+  animation: shineSpin 18s linear infinite;
+}
+@keyframes shineSpin { to { --spin: 360deg } }
+
+/* Apply on any card or section you want to highlight: .card.shine */
+
+/* ---------- Codex layout ---------- */
+.codex{
+  display:grid; grid-template-columns: 280px minmax(0,1fr); gap:16px; align-items:start;
+}
+@media (max-width: 980px){ .codex{ grid-template-columns: 1fr } }
+
+.codex-toc{
+  position: sticky; top:12px;
+  border:1px solid var(--line); border-radius: var(--radius);
+  padding:12px; background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
+    radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--moon-accent) 8%, transparent), transparent 60%);
+  box-shadow: var(--shadow);
+}
+.codex-toc h4{ margin:.2rem 0 .4rem; font:800 13px/1 Inter; letter-spacing:.3px; color:#dbe6ff }
+.codex-toc ol, .codex-toc ul{ margin:.3rem 0 0; padding-left:1.1rem }
+.codex-toc a{ color:var(--fg); text-decoration:none }
+.codex-toc a:hover{ text-decoration:underline; color:color-mix(in srgb, var(--moon-accent) 20%, var(--fg)) }
+
+.codex-content{
+  border:1px solid var(--line); border-radius: var(--radius-lg); padding:18px;
+  background:
+    linear-gradient(180deg, var(--elev), var(--elev-2)),
+    radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--moon-accent) 8%, transparent), transparent 60%);
+  box-shadow: var(--shadow);
+}
+
+/* ---------- Codex typography ---------- */
+.codex-content h1,.codex-content h2,.codex-content h3,.codex-content h4{
+  font-family:"Crimson Pro",serif; font-weight:800; letter-spacing:.2px;
+  text-wrap:balance; margin:1.1em 0 .4em;
+}
+.codex-content h1{ font-size:clamp(28px,3vw,40px) }
+.codex-content h2{ font-size:clamp(22px,2.2vw,30px) }
+.codex-content h3{ font-size:clamp(18px,1.6vw,24px) }
+
+.codex-content p{ margin:.7em 0 }
+.codex-content p.lede{
+  font-size:clamp(16px, .6vw + 15px, 19px);
+  color: color-mix(in srgb, var(--fg) 92%, var(--accent) 8%);
+}
+.codex-content .dropcap:first-letter{
+  float:left; font:900 3.2rem/0.8 "Crimson Pro",serif; margin:.05em .18em 0 0;
+  color: color-mix(in srgb, var(--moon-accent) 65%, #fff);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--moon-accent) 28%, transparent);
+}
+
+.codex-content blockquote{
+  margin:1rem 0; padding:.9rem 1rem .9rem 1.1rem; border-left:3px solid var(--moon-accent);
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+  border-radius:10px;
+  color: color-mix(in srgb, var(--fg) 88%, var(--accent-2) 12%);
+}
+.codex-content .pull{
+  font-style:italic; font-size:clamp(18px,1.4vw,24px);
+  color: color-mix(in srgb, var(--fg) 85%, var(--moon-accent) 15%);
+  text-wrap:pretty;
+}
+
+/* Code & pre (for technical codex entries if needed) */
+.codex-content code{
+  background:#0f1116; border:1px solid var(--line); padding:.1rem .35rem; border-radius:8px;
+}
+.codex-content pre{
+  background:#0f1116; border:1px solid var(--line); border-radius:12px; padding:12px; overflow:auto;
+}
+
+/* Figures */
+.codex-content figure{ margin:1rem 0; }
+.codex-content figure img{
+  width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:12px; background:#0b0f16;
+  box-shadow: 0 10px 24px rgba(0,0,0,.35);
+}
+.codex-content figcaption{
+  color:var(--muted); font-size:.92em; margin-top:.35rem;
+}
+
+/* Footnotes / refs */
+.codex-content hr{ border:0; height:1px; background:linear-gradient(90deg, transparent, var(--line), transparent); margin:1.2rem 0 }
+.codex-content .footnotes{ font-size:.92em; color:var(--muted) }
+.codex-content sup a{ color:var(--accent-2) }
+
+/* ---------- Callouts ---------- */
+.callout{
+  border:1px solid var(--line); border-radius:12px; padding:.75rem .9rem; margin:1rem 0;
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+}
+.callout.info{ border-color: color-mix(in srgb, var(--moon-accent) 35%, var(--line)) }
+.callout.warn{ border-color: color-mix(in srgb, #f3c97a 35%, var(--line)) }
+.callout.quote{ border-color: color-mix(in srgb, var(--accent) 35%, var(--line)) }
+.callout .head{ font-weight:800; letter-spacing:.2px; margin-bottom:.3rem }
+.callout .body{ color:var(--muted) }
+
+/* ---------- Codex file list (bring out the files) ---------- */
+.codex-files{
+  display:grid; grid-template-columns:repeat(12,1fr); gap:12px; margin:.4rem 0 0;
+}
+.codex-files .file{
+  grid-column: span 4; min-width:0;
+  border:1px solid var(--line); border-radius:12px; padding:10px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01)),
+    radial-gradient(80% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
+  transition: transform .08s ease, box-shadow .15s ease, border-color .15s ease, filter .15s ease;
+  cursor:pointer;
+}
+.codex-files .file:hover{
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--moon-accent) 30%, var(--line));
+  box-shadow: 0 10px 24px rgba(0,0,0,.4);
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--moon-accent) 20%, transparent));
+}
+@media (max-width:1080px){ .codex-files .file{ grid-column: span 6 } }
+@media (max-width:600px){ .codex-files .file{ grid-column: span 12 } }
+
+.file .file-top{ display:flex; align-items:center; gap:8px; justify-content:space-between }
+.file .name{
+  font-weight:800; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.file .meta{ display:flex; gap:8px; align-items:center; color:var(--muted); font-size:.9em }
+.badge{
+  display:inline-flex; align-items:center; gap:6px; padding:.18rem .5rem; border-radius:999px; border:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); font-weight:700;
+}
+.badge .dot{ width:8px; height:8px; border-radius:50%; background: radial-gradient(circle at 40% 35%, var(--moon-accent), var(--moon-accent-2)) }
+
+.file[data-ext]:after{
+  content: attr(data-ext);
+  margin-left:auto; font:800 11px/1 Inter; opacity:.8; letter-spacing:.3px;
+  padding:.2rem .45rem; border-radius:7px; border:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+}
+
+/* ---------- File "meta bar" for Codex entries ---------- */
+.file-meta{
+  display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:.5rem 0 0;
+}
+.file-meta .pill{
+  padding:.35rem .6rem; border-radius:999px; border:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  font-weight:700; letter-spacing:.2px;
+}
+
+/* ---------- Compact audio skin (if lore has audio) ---------- */
+.codex-content audio{
+  width:100%; height:36px; display:block; border:1px solid var(--line); border-radius:10px; background:#0f1116;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+}
+
+/* ---------- Small helpers ---------- */
+.kbd{
+  display:inline-block; padding:.12rem .35rem; border-radius:6px; border:1px solid var(--line);
+  background:#0f1116; font:700 12px/1 Inter; vertical-align:baseline;
+}
+
+
+
+
