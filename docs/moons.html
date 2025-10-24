@@ -407,6 +407,172 @@
   </section>
 </article>
 
+
+      <script>
+/* ===== Astro loader (drop beneath the renderAstro() code) ===== */
+
+(() => {
+
+  // 1) Where to fetch (change this to your endpoint or file)
+  const ASTRO_URL = new URL(
+    // example local file: put one next to your CSS/JS for testing
+    'assets/data/astro-now.json',
+    document.baseURI
+  ).toString();
+
+  // 2) Build query params from your existing controls (date/tz/hour)
+  function currentQuery() {
+    const tz = (document.getElementById('tzPick')?.value)
+      || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+    const rawDate = document.getElementById('datePick')?.value;
+    const hour = document.getElementById('hourScrub')?.value ?? '0';
+    const d = rawDate ? new Date(rawDate + 'T00:00:00') : new Date();
+    d.setHours(parseInt(hour,10)||0);
+
+    // ISO seconds (no timezone suffix) for simple APIs
+    const iso = d.toISOString();
+    return { tz, iso, hour: String(hour) };
+  }
+
+  // 3) Normalize *any* reasonable JSON response into the schema:
+  // {
+  //   tz, stamp, source,
+  //   planets: { sun:{lon,text,sign}, ... },
+  //   aspects: [ {pair,kind,orb}, ... ]
+  // }
+  function normalize(raw, q) {
+    // Try a few common shapes. Adjust as needed.
+
+    // If your API already matches the target:
+    if (raw && raw.planets && typeof raw.planets === 'object') {
+      return raw;
+    }
+
+    // Example shapes handled below:
+    // A) { bodies:[{name:'Sun', lon:227.24, sign:'Scorpio', dms:'1°14′'}, ...], aspects:[...] }
+    if (raw && Array.isArray(raw.bodies)) {
+      const planets = {};
+      raw.bodies.forEach(b => {
+        const key = String(b.name||'').toLowerCase(); // 'sun','moon',...
+        if (!key) return;
+        planets[key] = {
+          lon:  typeof b.lon === 'number' ? b.lon : parseFloat(b.lon),
+          text: b.dms || b.text || '—',
+          sign: b.sign || '—'
+        };
+      });
+      return {
+        tz:     raw.tz || q.tz,
+        stamp:  raw.stamp || (q.iso.slice(0,16).replace('T',' ')),
+        source: raw.source || 'Your Ephemeris',
+        planets,
+        aspects: Array.isArray(raw.aspects) ? raw.aspects.map(a=>({
+          pair: a.pair || `${a.p1||a.a} ${a.kind||a.type||''} ${a.p2||a.b}`.trim(),
+          kind: a.kind || a.type || '—',
+          orb:  a.orb  || a.delta || a.err || '—'
+        })) : []
+      };
+    }
+
+    // B) Swiss-style: { positions:{Sun:{lon:.., sign:.., dms:..}, ...}, aspects:[...] }
+    if (raw && raw.positions && typeof raw.positions === 'object') {
+      const planets = {};
+      Object.entries(raw.positions).forEach(([name, p])=>{
+        const key = name.toLowerCase();
+        planets[key] = {
+          lon:  typeof p.lon === 'number' ? p.lon : parseFloat(p.lon),
+          text: p.dms || p.text || '—',
+          sign: p.sign || '—'
+        };
+      });
+      return {
+        tz:     raw.tz || q.tz,
+        stamp:  raw.stamp || (q.iso.slice(0,16).replace('T',' ')),
+        source: raw.source || 'Swiss Ephemeris',
+        planets,
+        aspects: Array.isArray(raw.aspects) ? raw.aspects : []
+      };
+    }
+
+    // Fallback if shape unknown — just show demo so UI proves out.
+    console.warn('[Astro] Unknown response shape; using demo data.');
+    return demoPayload(q);
+  }
+
+  // 4) Fetch + render. Shows a friendly fallback if fetch fails (CORS, 404, etc.)
+  async function loadAstro() {
+    const q = currentQuery();
+    try {
+      const u = new URL(ASTRO_URL);
+      // If your API expects date/tz, add them:
+      u.searchParams.set('datetime', q.iso);
+      u.searchParams.set('tz', q.tz);
+
+      const res = await fetch(u.toString(), { cache:'no-store', mode:'cors' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const raw = await res.json();
+      const data = normalize(raw, q);
+      // IMPORTANT: longitudes must be numbers in [0, 360)
+      coerceLongitudes(data.planets);
+      renderAstro(data);
+    } catch (err) {
+      console.error('[Astro] fetch failed:', err);
+      const data = demoPayload(q);
+      renderAstro(data);
+      toast('Astrology data: showing demo (fetch failed).');
+    }
+  }
+
+  // 5) Helpers
+  function coerceLongitudes(obj){
+    if (!obj) return;
+    for (const k of Object.keys(obj)) {
+      const v=obj[k]; if (!v) continue;
+      let lon = typeof v.lon === 'number' ? v.lon : parseFloat(v.lon);
+      if (!Number.isFinite(lon)) continue;
+      lon = ((lon % 360) + 360) % 360;
+      v.lon = lon;
+    }
+  }
+  function toast(msg){
+    const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+    document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
+    setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),250); }, 1500);
+  }
+
+  // 6) Demo payload (nice for screenshot / offline)
+  function demoPayload(q){
+    return {
+      tz: q.tz,
+      stamp: q.iso.slice(0,16).replace('T',' '),
+      source: 'Demo',
+      planets: {
+        sun:     { lon:227.24, text:'1°14′',  sign:'Scorpio'    },
+        moon:    { lon:262.74, text:'2°44′',  sign:'Sagittarius'},
+        mercury: { lon:218.10, text:'8°06′',  sign:'Scorpio'    },
+        venus:   { lon:205.90, text:'25°54′', sign:'Libra'      },
+        mars:    { lon: 16.60, text:'16°36′', sign:'Aries'      },
+        jupiter: { lon: 60.10, text:'0°06′',  sign:'Gemini'     },
+        saturn:  { lon:347.80, text:'17°48′', sign:'Pisces'     }
+      },
+      aspects: [
+        { pair:'Sun △ Moon',   kind:'Trine',      orb:'1°12′' },
+        { pair:'Mercury ☌ Sun',kind:'Conjunction',orb:'0°58′' }
+      ]
+    };
+  }
+
+  // 7) Hook into your existing controls so the panel tracks them
+  document.getElementById('tzPick')    ?.addEventListener('change', loadAstro, {passive:true});
+  document.getElementById('datePick')  ?.addEventListener('change', loadAstro, {passive:true});
+  document.getElementById('hourScrub') ?.addEventListener('input',  loadAstro, {passive:true});
+
+  // initial draw
+  document.addEventListener('DOMContentLoaded', loadAstro);
+
+})();
+      </script>
+
       <!-- Practices -->
       <article class="card col-6" id="practiceCard" aria-labelledby="prac-head">
         <h2 id="prac-head">Practices & Prompts</h2>
