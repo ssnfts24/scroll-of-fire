@@ -1,15 +1,16 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="sof">
+<html lang="en" dir="ltr" class="sof" data-alive="lively">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <meta charset="utf-8" />
   <title>Remnant 13 Moons · Living Clock — Scroll of Fire</title>
 
-  <!-- Viewport / color -->
+  <!-- Viewport / theme / color -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0b0f">
-  <meta name="color-scheme" content="dark" />
-  <meta name="description" content="A Remnant-themed 13 Moon calendar — ancient wizard of YHWH aesthetics with day ring, week dots, year map, lunar simulation, numerology, optional Kin, share card, and .ics export." />
+  <meta name="theme-color" content="#05070d" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f7fbff" media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="dark light" />
+  <meta name="description" content="A Remnant-themed 13 Moon calendar — Ancient Wizard of YHWH aesthetics with day ring, week dots, year map, lunar simulation, numerology, optional Kin, share card, and .ics export." />
 
   <!-- Canonical + Social -->
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
@@ -17,25 +18,31 @@
   <meta property="og:title" content="Remnant 13 Moons · Living Clock — Scroll of Fire">
   <meta property="og:description" content="Which Moon am I in? Day ring, week dots, year map, DOOT handling, lunar sim, numerology, Kin, .ics export — Remnant / YHWH wizard theming.">
   <meta property="og:image" content="assets/share/moon-card.png">
+  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
   <meta name="twitter:card" content="summary_large_image">
 
   <!-- PWA -->
   <link rel="manifest" href="assets/manifest.webmanifest">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="13 Moons">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/icons/icon-512.png">
+  <link rel="mask-icon" href="assets/icons/safari-pinned.svg" color="#0e131a">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- Site + page CSS -->
+  <!-- Site + page CSS (v4.1) -->
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24">
   <link rel="stylesheet" href="assets/css/moons.css?v=2025-10-24">
 
-  <!-- Safety patch so text stays readable if CSS fails -->
+  <!-- Critical safety patch so text stays readable if CSS fails / FB IAB white flash -->
   <style>
+    html,body{background:#05070d!important;color:#eaf1ff}
     .moonbar.contrast-light,.moonbar.contrast-light .tag,.moonbar.contrast-light button{color:#0b1220!important}
     .moonbar.contrast-light .mb-bg{stroke:#e1e8ff!important}
     .moonbar.contrast-light .mb-fg{filter:none!important}
@@ -44,20 +51,28 @@
     .moon-media img{width:100%;height:auto;border-radius:12px;border:1px solid var(--line)}
     .prompts{padding-left:1.2rem}
     #noteText{width:100%;min-height:110px;border:1px solid var(--line);border-radius:10px;background:#0f1116;color:inherit;padding:.65rem}
-
     /* Remnant opener */
-    .remnant-opener{ position:relative; overflow:hidden }
-    .op-grid{ display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:center }
-    .op-sigil{ width:64px; height:64px; filter: drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 30%, transparent)) }
-    .op-title{ margin:0; font:800 20px/1.15 "Crimson Pro",serif; letter-spacing:.2px }
-    .op-sub{ margin:.25rem 0 0 }
-    .lab-btn.big{ padding:.8rem 1.1rem; font-weight:900 }
-    .cta-link{ text-decoration:none; color:inherit }
-    @media (max-width:720px){
-      .op-grid{ grid-template-columns: auto 1fr; gap:10px }
-      .op-right{ grid-column: 1 / -1 }
-    }
+    .remnant-opener{position:relative;overflow:hidden}
+    .op-grid{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+    .op-sigil{width:64px;height:64px;filter:drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 30%, transparent))}
+    .op-title{margin:0;font:800 20px/1.15 "Crimson Pro",serif;letter-spacing:.2px}
+    .op-sub{margin:.25rem 0 0}
+    .lab-btn.big{padding:.8rem 1.1rem;font-weight:900}
+    .cta-link{text-decoration:none;color:inherit}
+    @media (max-width:720px){.op-grid{grid-template-columns:auto 1fr;gap:10px}.op-right{grid-column:1/-1}}
   </style>
+
+  <!-- FB in-app browser guard: add .is-fbapp to <html> -->
+  <script>
+    (function(){
+      var ua=navigator.userAgent||"";
+      if(/\bFBAN|FBAV|FB_IAB|FBAN\/Messenger\b/i.test(ua)){ document.documentElement.classList.add('is-fbapp'); }
+    })();
+  </script>
+
+  <!-- Resource hints -->
+  <link rel="prefetch" href="genesis-oracle.html" as="document">
+  <link rel="preload" href="assets/js/moons.js?v=3.9" as="script" crossorigin>
 
   <!-- Structured data -->
   <script type="application/ld+json">
@@ -70,6 +85,16 @@
     "operatingSystem":"Any",
     "description":"Interactive 13-Moon calendar with Remnant / YHWH wizard theme: lunar phase simulation, numerology, Kin, and .ics export.",
     "creator":{"@type":"Person","name":"Aaron Paul Laird"}
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"name":"Codex","item":"https://ssnfts24.github.io/scroll-of-fire/index.html"},
+      {"@type":"ListItem","position":2,"name":"13 Moons","item":"https://ssnfts24.github.io/scroll-of-fire/moons.html"}
+    ]
   }
   </script>
 </head>
@@ -99,9 +124,9 @@
       </svg>
       <div class="moonbar-info">
         <div class="moonbar-line">
-          <span class="tag yhwh" title="YHWH Seal">⟡ יהוה</span>
+          <span class="tag yhwh" title="YHWH Seal">⟡ <span lang="he">יהוה</span></span>
           <span id="mbName"><b>—</b></span>
-          <span class="sep">·</span>
+          <span class="sep" aria-hidden="true">·</span>
           <span id="mbEssence" class="meta">—</span>
         </div>
         <div class="moonbar-tags">
@@ -306,6 +331,55 @@
         </div>
       </article>
 
+      <!-- Astrology Now (optional UI kit; safe placeholders your JS can fill) -->
+      <article class="card col-12 shine" aria-labelledby="astro-head">
+        <h2 id="astro-head">Astrology Now</h2>
+        <p class="meta">A lightweight panel for current placements. Your scripts can paint the canvas/SVG and populate chips/tables as desired.</p>
+
+        <!-- Planet chips -->
+        <div class="lab-row" id="planetChips" style="margin:.4rem 0 .8rem">
+          <span class="planet-chip pl-sun"><i class="g" aria-hidden="true"></i><span class="lbl">Sun — <span class="sg">—</span></span></span>
+          <span class="planet-chip pl-moon"><i class="g"></i><span class="lbl">Moon — <span class="sg">—</span></span></span>
+          <span class="planet-chip pl-mercury"><i class="g"></i><span class="lbl">Mercury — <span class="sg">—</span></span></span>
+          <span class="planet-chip pl-venus"><i class="g"></i><span class="lbl">Venus — <span class="sg">—</span></span></span>
+          <span class="planet-chip pl-mars"><i class="g"></i><span class="lbl">Mars — <span class="sg">—</span></span></span>
+          <span class="planet-chip pl-jupiter"><i class="g"></i><span class="lbl">Jupiter — <span class="sg">—</span></span></span>
+          <span class="planet-chip pl-saturn"><i class="g"></i><span class="lbl">Saturn — <span class="sg">—</span></span></span>
+        </div>
+
+        <div class="grid">
+          <section class="col-5">
+            <div class="zodiac-wheel" id="zodiacWheel" role="img" aria-label="Zodiac wheel (12 signs)">
+              <!-- Inject your SVG arcs/pointers dynamically -->
+            </div>
+          </section>
+
+          <section class="col-7">
+            <h3 style="margin:.2rem 0">Aspects</h3>
+            <div class="lab-row" id="aspects">
+              <span class="aspect aspect--conj">☌ Conjunction —</span>
+              <span class="aspect aspect--sext">✶ Sextile —</span>
+              <span class="aspect aspect--square">□ Square —</span>
+              <span class="aspect aspect--trine">△ Trine —</span>
+              <span class="aspect aspect--oppo">☍ Opposition —</span>
+            </div>
+
+            <div class="divider" style="margin:10px 0" aria-hidden="true"></div>
+
+            <h3 style="margin:.2rem 0">Ephemeris (Today)</h3>
+            <table class="ephem" id="ephem">
+              <thead>
+                <tr><th>Body</th><th>Sign</th><th>Degree</th><th>Speed</th><th>Note</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Sun</td><td>—</td><td class="deg">—°—′</td><td>—</td><td class="meta">—</td></tr>
+                <tr><td>Moon</td><td>—</td><td class="deg">—°—′</td><td>—</td><td class="meta">—</td></tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+      </article>
+
       <!-- Practices -->
       <article class="card col-6" id="practiceCard" aria-labelledby="prac-head">
         <h2 id="prac-head">Practices & Prompts</h2>
@@ -330,7 +404,7 @@
 
         <article class="codex-content">
           <h1 id="cx-intro">The Remnant Moon Codex</h1>
-          <p class="lede dropcap">A living scroll of patterns, pulses, and presence—meant to be read like a sky.</p>
+          <p class="lede dropcap">A living scroll of patterns, pulses, and presence — meant to be read like a sky.</p>
 
           <div class="callout info">
             <div class="head">Essence</div>
@@ -340,7 +414,7 @@
           <blockquote class="pull">“Number the days; crown the weeks; keep the remnant bright.”</blockquote>
 
           <figure>
-            <img src="assets/media/codex-example.jpg" alt="Codex plate">
+            <img src="assets/media/codex-example.jpg" alt="Codex plate showing harmonics of the 13×28 count">
             <figcaption>Plate VII — Harmonics of the 13×28 count.</figcaption>
           </figure>
 
@@ -350,12 +424,12 @@
           <h3 id="cx-notes">Notes & Footnotes</h3>
           <hr>
           <ol class="footnotes">
-            <li id="fn1">On leap days and DOOT handling—see script options. <a href="#fnref1">↩</a></li>
+            <li id="fn1">On leap days and DOOT handling — see script options. <a href="#fnref1">↩</a></li>
           </ol>
 
           <!-- Example codex files -->
           <div class="codex-files" id="codexFiles">
-            <div class="file" data-ext="PDF" role="button" tabindex="0">
+            <div class="file" data-ext="PDF" role="button" tabindex="0" aria-label="Open PDF: Codex · Resonant Harmonies">
               <div class="file-top">
                 <div class="name">Codex · Resonant Harmonies</div>
                 <span class="badge"><i class="dot" aria-hidden="true"></i> plate</span>
@@ -366,10 +440,10 @@
               </div>
             </div>
 
-            <div class="file" data-ext="MD" role="button" tabindex="0">
+            <div class="file" data-ext="MD" role="button" tabindex="0" aria-label="Open notes: Codex · Praxis Notes">
               <div class="file-top">
                 <div class="name">Codex · Praxis Notes</div>
-                <span class="badge"><i class="dot"></i> notes</span>
+                <span class="badge"><i class="dot" aria-hidden="true"></i> notes</span>
               </div>
               <div class="file-meta">
                 <span class="pill">12 min read</span>
@@ -394,7 +468,7 @@
   <!-- Page JS (external; v3.9 fixes phase selector and drives accents) -->
   <script src="assets/js/moons.js?v=3.9" defer></script>
 
-  <!-- Mini glue: sync moonbar + share-card + opener deep link + veil -->
+  <!-- Mini glue: sync moonbar + share-card + opener deep link + veil + shortcuts + FB IAB polish -->
   <script>
   (function(){
     "use strict";
@@ -420,6 +494,10 @@
     const hourScrub = document.getElementById("hourScrub");
     const openSeal = document.getElementById("openSeal");
     const openSealHeader = document.getElementById("openSealHeader");
+
+    const prevBtn = document.getElementById("prevDay");
+    const nextBtn = document.getElementById("nextDay");
+    const todayBtn= document.getElementById("btnToday");
 
     // --- helpers
     const cssVar = (name, fb) => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fb;
@@ -502,7 +580,7 @@
       setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),250); }, 1400);
     }, {passive:true});
 
-    // --- Remnant veil reacts to phase
+    // --- Remnant veil reacts to phase accents
     function refreshVeil(){
       const c1=cssVar("--moon-accent","#7af3ff");
       const c2=cssVar("--moon-accent-2","#f3c97a");
@@ -523,24 +601,36 @@
       u.searchParams.set("d", dateStr);
       u.searchParams.set("tz", tz);
       u.searchParams.set("t", hour);
-      // If moons.js has set the current moon index, carry it as a hash
       const moonIdx = document.getElementById("moonChip")?.getAttribute("data-idx");
       if (moonIdx) u.hash = `moon-${moonIdx}`;
       return u.toString();
     }
-    function applySealHref(a){
-      if (!a) return;
-      a.setAttribute("href", buildSealLink());
-    }
-    // keep links fresh
+    function applySealHref(a){ if (a) a.setAttribute("href", buildSealLink()); }
     ["change","input"].forEach(evt=>{
       tzPick?.addEventListener(evt, ()=>{ applySealHref(openSeal); applySealHref(openSealHeader); }, {passive:true});
       datePick?.addEventListener(evt, ()=>{ applySealHref(openSeal); applySealHref(openSealHeader); }, {passive:true});
       hourScrub?.addEventListener(evt, ()=>{ applySealHref(openSeal); applySealHref(openSealHeader); }, {passive:true});
     });
-    // initial set
-    applySealHref(openSeal);
-    applySealHref(openSealHeader);
+    applySealHref(openSeal); applySealHref(openSealHeader);
+
+    // --- Keyboard shortcuts (non-invasive; clicks existing buttons)
+    document.addEventListener("keydown", (e)=>{
+      if (e.target && /input|select|textarea/i.test(e.target.tagName)) return;
+      if (e.key === "ArrowRight" || e.key === "PageDown"){ nextBtn?.click(); e.preventDefault(); }
+      if (e.key === "ArrowLeft"  || e.key === "PageUp"){   prevBtn?.click(); e.preventDefault(); }
+      if (e.key === "ArrowUp"){   let v=+hourScrub.value||0; hourScrub.value=Math.min(23,v+1); hourScrub.dispatchEvent(new Event("input")); e.preventDefault(); }
+      if (e.key === "ArrowDown"){ let v=+hourScrub.value||0; hourScrub.value=Math.max(0,v-1);  hourScrub.dispatchEvent(new Event("input")); e.preventDefault(); }
+      if (e.key.toLowerCase() === "t"){ todayBtn?.click(); e.preventDefault(); }
+      if (e.key.toLowerCase() === "s"){ document.getElementById("btnShareImage")?.click(); e.preventDefault(); }
+    });
+
+    // --- Cosmetic: set current year in footer
+    const yEl=document.getElementById("yr"); if(yEl){ yEl.textContent = String(new Date().getFullYear()); }
+
+    // --- Optional: register a tiny service worker if your manifest expects it
+    if ("serviceWorker" in navigator){
+      try { navigator.serviceWorker.register("assets/sw.js").catch(()=>{}); } catch(_){}
+    }
   })();
   </script>
 </body>
