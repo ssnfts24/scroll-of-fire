@@ -1,30 +1,301 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr" class="sof">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>if(location.hostname==="github.com"){const b=document.querySelector("base");if(b)b.remove();}</script>
-  <meta charset="utf-8"><title>Interactive Archive — Scroll of Fire</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script>/* GitHub file viewer fix: don’t resolve <base> on github.com */
+  if(location.hostname==="github.com"){const b=document.querySelector("base");if(b)b.remove();}
+  </script>
+  <meta charset="utf-8">
+  <title>Interactive Archive — Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="Filter and open every Scroll: Start, Guide, Theory, Manifest, Ethics, Ledger, Moons, Oracle, Systems, and more.">
   <link rel="stylesheet" href="/scroll-of-fire/assets/css/codex.css">
-  <style>ul{columns:2;list-style:none;padding:0}li{margin:.3rem 0}</style>
+  <style>
+    main{padding:clamp(16px,4vw,40px)}
+    header{padding:16px 16px 0}
+    .lede{max-width:72ch;color:var(--muted)}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+    .search{flex:1;min-width:220px}
+    .chip{display:inline-flex;align-items:center;gap:.4ch;border:1px solid var(--line);border-radius:999px;padding:.35rem .7rem;background:linear-gradient(180deg,#171720,#121219);cursor:pointer}
+    .chip.is-on{outline:2px solid color-mix(in srgb,var(--accent) 55%, transparent)}
+    .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:12px}
+    .card{background:var(--card,#121219);border:1px solid var(--line,#2a2a33);border-radius:14px;padding:14px;box-shadow:0 10px 28px rgba(0,0,0,.25);display:flex;flex-direction:column}
+    .card h3{margin:0 0 .35rem;font-size:1.06rem}
+    .meta{color:var(--muted);font-size:.92rem}
+    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .spacer{flex:1}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:.55rem .85rem;border-radius:10px;border:1px solid var(--line);background:linear-gradient(180deg,#171720,#121219);text-decoration:none;color:var(--ink)}
+    .tag{border:1px solid var(--line);border-radius:999px;padding:.15rem .5rem;font-size:.74rem}
+    .notice{margin:12px 16px 0;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015))}
+    .empty{padding:24px;border:1px dashed var(--line);border-radius:12px;text-align:center;color:var(--muted)}
+    .kbd{display:inline-grid;place-items:center;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:.05rem .35rem;font:600 .85rem/1.2 ui-monospace,monospace}
+    /* tiny list inside a card */
+    .links{display:grid;gap:6px;margin-top:10px}
+    .links a{display:inline-flex;align-items:center;gap:.6ch;text-decoration:none}
+    .links a .dot{width:.6rem;height:.6rem;border-radius:50%;background:var(--line)}
+  </style>
 </head>
 <body>
-  <header style="padding:16px"><div class="crumbs"><a href="/scroll-of-fire/hub.html">Hub</a> / Archive</div>
-  <h1>Interactive Archive</h1><p class="meta">Index of all Scroll pages.</p></header>
+  <a class="skip" href="#main">Skip to main</a>
 
-  <aside class="notice"><strong>🔥 Design Mode:</strong> indexing still in progress.</aside>
+  <header>
+    <div class="crumbs"><a href="/scroll-of-fire/hub.html">Hub</a> / Archive</div>
+    <h1>Interactive Archive</h1>
+    <p class="lede">Filter and open every Scroll: core texts, tools, and systems. <span class="meta">Quick keys: <span class="kbd">/</span> focus search, <span class="kbd">↑/↓</span> move, <span class="kbd">⏎</span> open.</span></p>
+  </header>
 
-  <main style="padding:16px">
-    <ul>
-      <li><a href="/scroll-of-fire/index.html">Home — Codex of Reality</a></li>
-      <li><a href="/scroll-of-fire/theory.html">Theory</a></li>
-      <li><a href="/scroll-of-fire/teach.html">Manifest</a></li>
-      <li><a href="/scroll-of-fire/ethics.html">Ethics</a></li>
-      <li><a href="/scroll-of-fire/ledger.html">Ledger</a></li>
-      <li><a href="/scroll-of-fire/moons.html">13 Moons Clock</a></li>
-      <li><a href="/scroll-of-fire/glossary.html">Glossary</a></li>
-      <li><a href="/scroll-of-fire/downloads.html">Downloads</a></li>
-    </ul>
+  <aside class="notice"><strong>🔥 Forge Note:</strong> Index pulls from a local manifest (no network). Additions auto-appear once you edit the manifest list in this file.</aside>
+
+  <main id="main">
+    <div class="controls" role="group" aria-label="Archive filters and search">
+      <input id="q" class="lab-input search" type="search" placeholder="Search title, path, or keywords…" aria-label="Search">
+      <button class="chip is-on" data-sec="all" aria-pressed="true">All</button>
+      <button class="chip" data-sec="core" aria-pressed="false">Core</button>
+      <button class="chip" data-sec="practice" aria-pressed="false">Practice</button>
+      <button class="chip" data-sec="systems" aria-pressed="false">Systems</button>
+      <button class="chip" data-sec="reference" aria-pressed="false">Reference</button>
+      <button class="chip" data-sec="meta" aria-pressed="false">Meta</button>
+    </div>
+
+    <section id="results" class="grid" aria-live="polite"></section>
+    <div id="empty" class="empty" hidden>No matches. Try clearing filters or changing your search.</div>
   </main>
+
+  <script>
+  (function(){
+    "use strict";
+
+    /* ---------------- Manifest ----------------
+       Keep this list in-sync with /docs + root files.
+       Each entry: {title, path, section, blurb, tags[], links?}
+    ------------------------------------------------ */
+    const PAGES = [
+      // Core
+      {title:"Home — Codex of Reality", path:"/scroll-of-fire/index.html", section:"core",
+       blurb:"Landing scroll. Canon 0–17 orientation and latest surface.",
+       tags:["start","home","canon","index"]},
+      {title:"Theory — Codex of Reality", path:"/scroll-of-fire/theory.html", section:"core",
+       blurb:"Canon 0–17 with plain-language summaries; comparators clearly flagged.",
+       tags:["theory","canon"]},
+      {title:"Ethics — Living Law", path:"/scroll-of-fire/ethics.html", section:"core",
+       blurb:"Covenantal guardrails. All engines gate through this.",
+       tags:["ethics","law","covenant"]},
+      {title:"Manifest — Visual Exercise", path:"/scroll-of-fire/manifest.html", section:"practice",
+       blurb:"Compose intention (𝓘), select carrier, observer loop, breath, compute Ξ, seal.",
+       tags:["practice","manifest","breath"]},
+      {title:"Genesis Oracle", path:"/scroll-of-fire/genesis-oracle.html", section:"practice",
+       blurb:"Remnant Birth Seal: Moon • Day • Week • Tone with sums and skin.",
+       tags:["oracle","seal","birth"]},
+      {title:"13 Moons — Living Clock", path:"/scroll-of-fire/moons.html", section:"practice",
+       blurb:"TZ-aware 13×28 ring, week dots, lunar sim, numerology, Kin, .ics export.",
+       tags:["calendar","moon","time"]},
+      {title:"Guide — Reader’s Guide", path:"/scroll-of-fire/guide.html", section:"reference",
+       blurb:"How to read the Scroll; keys, cadence, and safety.",
+       tags:["guide","how-to"]},
+      {title:"Start — New to the Scroll", path:"/scroll-of-fire/start.html", section:"reference",
+       blurb:"Orientation for new readers; a gentle first journey.",
+       tags:["start","intro","how-to"]},
+      {title:"Teach — Praxis Cards", path:"/scroll-of-fire/teach.html", section:"practice",
+       blurb:"Trainer prompts and rename cards for teaching.",
+       tags:["teaching","cards"]},
+      {title:"Ledger — Proof of Witness", path:"/scroll-of-fire/ledger.html", section:"core",
+       blurb:"Hashes, provenance, and witness logs. Bind practice to public proof.",
+       tags:["ledger","hash","proof"]},
+      {title:"Glossary", path:"/scroll-of-fire/glossary.html", section:"reference",
+       blurb:"Language keys for the Scroll.",
+       tags:["glossary","terms","language"]},
+      {title:"Glyphs", path:"/scroll-of-fire/glyphs.html", section:"reference",
+       blurb:"Symbol atlas for the Remnant aesthetic.",
+       tags:["glyphs","symbols"]},
+      {title:"Circle", path:"/scroll-of-fire/circle.html", section:"practice",
+       blurb:"Small-group cadence and circle liturgy.",
+       tags:["group","liturgy"]},
+      {title:"Invoke", path:"/scroll-of-fire/invoke.html", section:"practice",
+       blurb:"Prayers and pattern invocations, ethics-gated.",
+       tags:["prayer","invocation"]},
+      {title:"Downloads", path:"/scroll-of-fire/downloads.html", section:"meta",
+       blurb:"Offline PDFs, packs, and shareables.",
+       tags:["downloads","assets"]},
+      {title:"Hub — Systems", path:"/scroll-of-fire/hub.html", section:"systems",
+       blurb:"Entry point to engines and maps (T-7, Frequencies, Mind-Renewal, Witness, Recoder, Archive).",
+       tags:["hub","systems"]},
+      {title:"Micro", path:"/scroll-of-fire/micro.html", section:"meta",
+       blurb:"Micro demos and small utilities.",
+       tags:["micro","demos"]},
+
+      // Systems (docs/systems)
+      {title:"T-7 Resonant Engine", path:"/scroll-of-fire/docs/systems/t7.html", section:"systems",
+       blurb:"Five carriers 432/528/369/144/963 with gain/phase/pan, Ξ, τ, scopes, presets, URL state.",
+       tags:["engine","sound","resonance","t7"],
+       links:[{label:"Manifest", href:"/scroll-of-fire/manifest.html"}]},
+      {title:"Frequency Governance", path:"/scroll-of-fire/docs/systems/frequencies.html", section:"systems",
+       blurb:"ν cards with tone roles, color channels, and audio previews.",
+       tags:["frequencies","tones","map"]},
+      {title:"Mind-Renewal Protocol", path:"/scroll-of-fire/docs/systems/mind-renewal.html", section:"systems",
+       blurb:"7-day checklist with scripture prompts, breath cadence, export.",
+       tags:["renewal","checklist"]},
+      {title:"Witness (Remnant Network)", path:"/scroll-of-fire/docs/systems/witness.html", section:"systems",
+       blurb:"Record testimony → SHA-256 → export proof lines to your ledger.",
+       tags:["witness","hash","proof"]},
+      {title:"Linguistic Recoder", path:"/scroll-of-fire/docs/systems/recoder.html", section:"systems",
+       blurb:"Old term → covenant rename with rationale; export PNG cards.",
+       tags:["language","rename"]},
+      {title:"Interactive Archive (this page)", path:"/scroll-of-fire/docs/systems/archive.html", section:"systems",
+       blurb:"You are here. Filter + open all Scrolls.", tags:["archive","index"]},
+
+      // Meta files (kept visible but grouped)
+      {title:"robots.txt", path:"/scroll-of-fire/robots.txt", section:"meta",
+       blurb:"Robots policy.", tags:["robots"]},
+      {title:"sitemap.xml", path:"/scroll-of-fire/sitemap.xml", section:"meta",
+       blurb:"Sitemap for crawlers.", tags:["sitemap"]}
+    ];
+
+    /* --------- DOM refs --------- */
+    const resEl = document.getElementById('results');
+    const emptyEl = document.getElementById('empty');
+    const qEl = document.getElementById('q');
+    const chips = [...document.querySelectorAll('.chip[data-sec]')];
+
+    /* --------- State --------- */
+    let section = 'all';
+    let query = '';
+
+    /* --------- Render --------- */
+    function render(){
+      const q = query.trim().toLowerCase();
+      const out = PAGES.filter(p=>{
+        const secOK = section==='all' || p.section===section;
+        if(!secOK) return false;
+        if(!q) return true;
+        const hay = [
+          p.title,
+          p.path,
+          p.blurb||'',
+          ...(p.tags||[])
+        ].join(' ').toLowerCase();
+        return hay.includes(q);
+      });
+
+      resEl.innerHTML = '';
+      if(out.length===0){ emptyEl.hidden=false; return; }
+      emptyEl.hidden=true;
+
+      out.forEach(p=>{
+        const card = document.createElement('article');
+        card.className='card';
+        card.innerHTML = `
+          <div class="row">
+            <span class="tag">${labelForSection(p.section)}</span>
+            <span class="spacer"></span>
+            ${p.tags?.slice(0,3).map(t=>`<span class="tag">${escapeHTML(t)}</span>`).join('')||''}
+          </div>
+          <h3>${escapeHTML(p.title)}</h3>
+          <p class="meta">${escapeHTML(p.blurb||'')}</p>
+          <div class="row">
+            <a class="btn" href="${p.path}">Open</a>
+            <a class="btn" href="${p.path}" target="_blank" rel="noopener">New Tab</a>
+            <button class="btn copy" data-url="${p.path}" type="button">Copy Link</button>
+            <span class="spacer"></span>
+            <span class="meta mono" style="opacity:.8">${p.path}</span>
+          </div>
+          ${p.links? `<div class="links">${p.links.map(l=>`<a href="${l.href}"><span class="dot" aria-hidden="true"></span>${escapeHTML(l.label)}</a>`).join('')}</div>`:''}
+        `;
+        resEl.appendChild(card);
+      });
+
+      // attach copy handlers
+      resEl.querySelectorAll('.btn.copy').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const href = new URL(btn.dataset.url, document.baseURI||location.origin).toString();
+          navigator.clipboard?.writeText(href).then(()=>toast('Link copied'),()=>toast('Copy failed'));
+        }, {passive:true});
+      });
+
+      // update count in title
+      document.title = `Interactive Archive — ${out.length} item${out.length!==1?'s':''} · Scroll of Fire`;
+    }
+
+    function labelForSection(s){
+      switch(s){
+        case 'core': return 'Core';
+        case 'practice': return 'Practice';
+        case 'systems': return 'Systems';
+        case 'reference': return 'Reference';
+        case 'meta': return 'Meta';
+        default: return 'Scroll';
+      }
+    }
+
+    function escapeHTML(s){ return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+
+    /* --------- Events --------- */
+    qEl.addEventListener('input', e=>{
+      query = e.target.value || '';
+      syncHash();
+      render();
+    }, {passive:true});
+
+    chips.forEach(c=>{
+      c.addEventListener('click', ()=>{
+        chips.forEach(x=>x.classList.remove('is-on'));
+        chips.forEach(x=>x.setAttribute('aria-pressed','false'));
+        c.classList.add('is-on'); c.setAttribute('aria-pressed','true');
+        section = c.dataset.sec || 'all';
+        syncHash(); render();
+      }, {passive:true});
+    });
+
+    // keyboard: '/' focus, arrows navigate result cards, enter opens first
+    document.addEventListener('keydown', (e)=>{
+      if (e.key === '/' && document.activeElement !== qEl){
+        qEl.focus(); qEl.select(); e.preventDefault();
+      }
+      if ((e.key === 'Enter') && document.activeElement === qEl){
+        const first = resEl.querySelector('.card a.btn'); if(first){ first.click(); e.preventDefault(); }
+      }
+    });
+
+    /* --------- Toast --------- */
+    function toast(msg){
+      const t=document.createElement('div');
+      t.textContent=msg; t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0e131c;color:#e6f9ff;padding:8px 12px;border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.35);z-index:9999;opacity:0;transition:opacity .2s';
+      document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
+      setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),250); }, 1400);
+    }
+
+    /* --------- URL hash state (q + section) --------- */
+    function syncHash(){
+      const params=new URLSearchParams();
+      if(query) params.set('q', query);
+      if(section && section!=='all') params.set('sec', section);
+      const h=params.toString(); location.hash = h ? '#'+h : '';
+    }
+    function readHash(){
+      const h = location.hash.replace(/^#/,'');
+      const sp = new URLSearchParams(h);
+      const sec = sp.get('sec');
+      const q   = sp.get('q');
+      if(sec && chips.some(c=>c.dataset.sec===sec)){
+        section = sec;
+        chips.forEach(x=>{
+          const on = x.dataset.sec===sec || (sec==='all' && x.dataset.sec==='all');
+          x.classList.toggle('is-on', on);
+          x.setAttribute('aria-pressed', on?'true':'false');
+        });
+      }
+      if(q){
+        query = q; qEl.value = q;
+      }
+    }
+    window.addEventListener('hashchange', ()=>{ readHash(); render(); }, {passive:true});
+
+    // init
+    readHash(); render();
+
+    // focus search on load if URL had q
+    if((new URLSearchParams(location.hash.slice(1))).get('q')) qEl.focus();
+  })();
+  </script>
 </body>
 </html>
