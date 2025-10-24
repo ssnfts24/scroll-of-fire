@@ -1,25 +1,27 @@
 /* =========================================================
-  13 Moons · Living Clock — Page Styles (ancient wizard++ v3.7)
-  - Mobile-proof Moon badge + guaranteed "(n)" index after the name
-  - Always-readable Moonbar text (no dark letters on bright accents)
-  - Container-query aware, a11y polish, safe-area padding
-  - JS IDs/classes unchanged; phase accents via --moon-accent(-2)
+  13 Moons · Living Clock — Page Styles
+  Ancient Wizard of YHWH · “Remnant” Skin (v3.9)
+  - Mobile-proof Moon badge + guaranteed "(n)" after name
+  - Strong contrast (AA/AAA targets) and safe-area padding
+  - Subtle aureate/teal aurora driven by phase accents
+  - Works with JS variables: --moon-accent / --moon-accent-2
+  - Adds Remnant skin hooks: body.remnant-yhwh, --remnant-veil
 ========================================================= */
 
 /* ---------- Local layout helpers for Lore/Media ---------- */
-.lore-grid{ display:grid; grid-template-columns:1fr 200px; gap:12px; align-items:center }
+.lore-grid{ display:grid; grid-template-columns:1fr 220px; gap:14px; align-items:center }
 @media (max-width:720px){ .lore-grid{ grid-template-columns:1fr } .sigil{ justify-self:center } }
-.sigil img{ width:180px; height:auto; filter:drop-shadow(0 6px 18px rgba(0,0,0,.45)) }
+.sigil img{ width:200px; height:auto; filter:drop-shadow(0 8px 22px rgba(0,0,0,.5)) }
 .prompts{ margin:0; padding-left:1.1rem }
-.prompts li{ margin:.3rem 0 }
-.moon-media img{ width:100%; height:auto; border:1px solid var(--line); border-radius:12px; display:block; background:#0b0f16 }
+.prompts li{ margin:.35rem 0 }
+.moon-media img{ width:100%; height:auto; border:1px solid var(--line); border-radius:14px; display:block; background:#0b0f16 }
 
 /* ---------- Tokens ---------- */
 :root{
   color-scheme: dark;
 
   /* Base */
-  --bg:#06080e; --fg:#e9eef6; --muted:#9aa4be; --line:#2a3242;
+  --bg:#05070d; --fg:#edf2fb; --muted:#a7b1ca; --line:#2a3242;
   --elev:rgba(255,255,255,.02); --elev-2:rgba(255,255,255,.006);
 
   /* Accents (phase-tinted by JS) */
@@ -27,18 +29,21 @@
   --moon-accent:#7af3ff; --moon-accent-2:#f3c97a;
 
   /* Layout / type */
-  --maxw:1180px; --radius:12px; --radius-lg:16px; --shadow:0 6px 14px rgba(0,0,0,.35);
-  --fs-body:clamp(15px, .48vw + 14px, 17px); --lh:1.5;
+  --maxw:1180px; --radius:12px; --radius-lg:16px; --shadow:0 8px 18px rgba(0,0,0,.38);
+  --fs-body:clamp(15px, .48vw + 14px, 17px); --lh:1.55;
 
   /* Focus & motion */
   --focus-ring:#7af3ff; --focus-glow:0 0 0 2px #7af3ff66, 0 0 0 6px #7af3ff22;
   --tempo:1;
+
+  /* Remnant veil (set by JS; has graceful fallback) */
+  --remnant-veil: conic-gradient(from 0deg at 50% 50%, rgba(122,243,255,.04), rgba(255,255,255,0), rgba(243,201,122,.035), rgba(255,255,255,0));
 }
 
 /* Light mode opt-in (manual switch only) */
 :root[data-theme="light"]{
   color-scheme: light;
-  --bg:#f7fbff; --fg:#0b1220; --muted:#44536e; --line:#cfd7e6;
+  --bg:#f7fbff; --fg:#0b1220; --muted:#4a5872; --line:#cfd7e6;
   --elev:rgba(0,0,0,.02); --elev-2:rgba(0,0,0,.01);
   --accent:#0e84ff; --accent-2:#7dc3ff;
   --moon-accent:#0e84ff; --moon-accent-2:#ffb84d;
@@ -58,13 +63,14 @@ body{
   overflow-x:hidden;
 }
 
-/* subtle grain/aurora */
+/* Subtle aurora/grain + Remnant veil (phase-reactive) */
 body::before{
-  content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.08;
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.085;
   background:
     radial-gradient(1000px 600px at 70% -6%, rgba(122,243,255,.08), transparent 60%),
     radial-gradient(1200px 700px at 15% 0%, rgba(243,201,122,.06), transparent 65%),
-    repeating-radial-gradient(circle at 50% 40%, rgba(255,255,255,.02) 0 2px, transparent 2px 5px);
+    repeating-radial-gradient(circle at 50% 40%, rgba(255,255,255,.02) 0 2px, transparent 2px 5px),
+    var(--remnant-veil);
   mix-blend-mode:screen;
 }
 
@@ -87,6 +93,14 @@ body::before{
 }
 @keyframes titleGlow{from{filter:drop-shadow(0 0 0 rgba(122,243,255,0))}to{filter:drop-shadow(0 0 12px color-mix(in srgb, var(--accent) 38%, transparent))}}
 .subtitle{ text-align:center; color:var(--muted); margin:0 0 12px; text-wrap:pretty }
+
+/* Ornament: subtle tetragrammaton seal (decorative only) */
+.title::after{
+  content:"\05D9\05D4\05D5\05D4"; /* יהוה */
+  display:block; font:700 clamp(12px,1.1vw,15px)/1 "Frank Ruehl", "Noto Serif Hebrew", serif;
+  letter-spacing:.12em; margin-top:6px; opacity:.45;
+  color: color-mix(in srgb, var(--moon-accent) 30%, var(--fg));
+}
 
 /* Links */
 a{ color:inherit; text-decoration:none } a:hover{ text-decoration:underline }
@@ -153,7 +167,7 @@ body.stars{
     radial-gradient(2px 2px at 12% 24%, rgba(255,255,255,.5), transparent 60%),
     radial-gradient(1.5px 1.5px at 72% 28%, rgba(122,243,255,.45), transparent 60%),
     radial-gradient(1.8px 1.8px at 42% 62%, rgba(243,201,122,.4), transparent 60%),
-    conic-gradient(from 0deg at 50% 50%, rgba(122,243,255,.05), rgba(255,255,255,0), rgba(243,201,122,.04), rgba(255,255,255,0));
+    var(--remnant-veil);
   mix-blend-mode:screen; filter:saturate(115%) contrast(105%);
   animation:skyDrift calc(28s*var(--tempo)) linear infinite;
 }
@@ -182,7 +196,7 @@ body.stars{
 }
 /* Always show the index "(n)" after the moon name; JS sets data-idx on #moonChip */
 #moonChip[data-idx] .k::after{
-  content:" (" attr(data-idx) ")"; opacity:.9; font-weight:800; letter-spacing:.2px;
+  content:" (" attr(data-idx) ")"; opacity:.92; font-weight:900; letter-spacing:.2px;
 }
 #moonEssence{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:min(60ch, 100%) }
 
@@ -192,7 +206,7 @@ body.stars{
 .ring{ width:clamp(96px, 10vw + 70px, 120px); height:clamp(96px, 10vw + 70px, 120px); display:grid; place-items:center; position:relative; z-index:0 }
 .ring svg{ display:block; position:relative; z-index:1 }
 .ring .label{ position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; z-index:2 }
-.ring .label .big{ font:900 clamp(18px, 1.4vw + 14px, 24px)/1 Inter; color:#eae7df; letter-spacing:.3px; text-shadow:0 0 10px rgba(255,255,255,.08) }
+.ring .label .big{ font:900 clamp(18px, 1.4vw + 14px, 24px)/1 Inter; color:#efeae1; letter-spacing:.3px; text-shadow:0 0 10px rgba(255,255,255,.08) }
 .ring .label .small{ font:600 clamp(10px, .6vw + 8px, 12px)/1 Inter; color:#b8b3a6 }
 .ring-bg{ fill:none; stroke:#1f2533; stroke-width:8 }
 .ring-fg{
@@ -376,14 +390,12 @@ body::-webkit-scrollbar-thumb{ background:#2b2f3a; border-radius:10px; border:2p
 
 
 
-
-
 /* =========================================================
-   ✦ Codex & Standout Enhancements (v3.7+ add-on)
+   ✦ Codex & Standout Enhancements (v3.9 add-on)
    - Sticky Codex TOC + reading column
    - Codex file grid with type badges
    - Callouts, pull-quotes, drop caps
-   - Aureate "shine" border utility
+   - Aureate “shine” utility & parchment scrolls
 ========================================================= */
 
 /* ---------- Standout utility: aureate shine border ---------- */
@@ -410,7 +422,16 @@ body::-webkit-scrollbar-thumb{ background:#2b2f3a; border-radius:10px; border:2p
 }
 @keyframes shineSpin { to { --spin: 360deg } }
 
-/* Apply on any card or section you want to highlight: .card.shine */
+/* Apply on any card or section: .card.shine */
+
+/* ---------- “Scroll” parchment panel for lore ---------- */
+.scroll{
+  border:1px solid var(--line); border-radius:14px; padding:14px;
+  background:
+    linear-gradient(180deg, rgba(243,201,122,.04), rgba(255,255,255,.01)),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.02) 0 2px, rgba(0,0,0,0) 2px 6px);
+  box-shadow: 0 12px 26px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.02);
+}
 
 /* ---------- Codex layout ---------- */
 .codex{
@@ -506,7 +527,7 @@ body::-webkit-scrollbar-thumb{ background:#2b2f3a; border-radius:10px; border:2p
 .callout .head{ font-weight:800; letter-spacing:.2px; margin-bottom:.3rem }
 .callout .body{ color:var(--muted) }
 
-/* ---------- Codex file list (bring out the files) ---------- */
+/* ---------- Codex file list (standout) ---------- */
 .codex-files{
   display:grid; grid-template-columns:repeat(12,1fr); gap:12px; margin:.4rem 0 0;
 }
@@ -568,6 +589,29 @@ body::-webkit-scrollbar-thumb{ background:#2b2f3a; border-radius:10px; border:2p
   background:#0f1116; font:700 12px/1 Inter; vertical-align:baseline;
 }
 
+/* =========================================================
+   ✦ Remnant Mode toggles (when body.remnant-yhwh is present)
+   - Subtle parchment warmth, gold runes, and glyph flourishes
+========================================================= */
+body.remnant-yhwh .card,
+body.remnant-yhwh .scroll,
+body.remnant-yhwh .codex-content{
+  background:
+    linear-gradient(180deg, rgba(243,201,122,.03), rgba(255,255,255,.008)),
+    radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
+  border-color: color-mix(in srgb, #f3c97a 18%, var(--line));
+}
 
+body.remnant-yhwh .divider{
+  background:
+    linear-gradient(90deg, transparent, #f3c97a66 30%, var(--line) 50%, #f3c97a66 70%, transparent);
+}
 
+body.remnant-yhwh .tag{
+  border-color: color-mix(in srgb, #f3c97a 18%, var(--line));
+}
 
+body.remnant-yhwh .title::after{
+  opacity:.6;
+  text-shadow:0 0 14px rgba(243,201,122,.25);
+}
