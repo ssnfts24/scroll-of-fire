@@ -1,70 +1,631 @@
 <!doctype html>
 <html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
 <head>
+  <!-- Project base (and guard for viewing on github.com) -->
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>if(location.hostname==="github.com"){const b=document.querySelector("base");if(b)b.remove();}</script>
+  <script>if(location.hostname==="github.com"){const b=document.querySelector("base"); if(b) b.remove();}</script>
+
   <meta charset="utf-8">
   <title>T-7 Resonant Engine — Scroll of Fire</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Tesla-Type Resonant Engine (T-7): carrier mixer, Ξ meter, τ memory loop, harmonic phase alignment.">
-  <link rel="stylesheet" href="/scroll-of-fire/assets/css/codex.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="T-7 Resonant Engine: mix 432/528/369/144/963 carriers, align phase, watch Ξ coherence and τ memory, visualize the field, and export/share states.">
+  <link rel="stylesheet" href="assets/css/codex.css">
+
   <style>
-    main{padding:clamp(16px,4vw,40px)}
-    .notice{margin:12px 0;padding:12px 14px;border:1px solid var(--line);
-      border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
-      box-shadow:0 10px 24px rgba(0,0,0,.4);position:relative;overflow:hidden;}
-    .notice::before{content:"";position:absolute;inset:-1px;pointer-events:none;
-      background:radial-gradient(120% 80% at 0 0,#ffb36a33,transparent 60%),radial-gradient(120% 80% at 100% 100%,#7af3ff33,transparent 60%);
-      opacity:.4;mix-blend-mode:screen;}
-    .deck{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:24px}
-    .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;min-height:200px}
-    .meter{width:100%;height:20px;border-radius:10px;overflow:hidden;background:#222;margin:10px 0}
-    .fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0;transition:width .3s ease}
-    .btn{display:inline-block;padding:.6rem .9rem;border:1px solid var(--line);border-radius:10px;background:linear-gradient(180deg,#171720,#121219);color:var(--ink);text-decoration:none}
+    :root{
+      --card: var(--card, #11141c);
+      --ring: #2a3242;
+      --ok: #7af3ff;
+      --gold: #f3c97a;
+      --bad: #ff6a7a;
+    }
+    main{padding:clamp(14px,4vw,40px)}
+    header{padding:16px 16px 0}
+    .lede{max-width:78ch;color:var(--muted);margin:.35rem 0 1rem}
+    .grid{display:grid;gap:16px;grid-template-columns:1.2fr .8fr}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
+    .panel{
+      background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;
+      box-shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 14px 36px rgba(0,0,0,.28);
+    }
+    .panel h2{margin:.1rem 0 .6rem;font-size:1.1rem}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .spacer{flex:1}
+    .btn, .chip{
+      display:inline-flex;align-items:center;gap:8px;padding:.55rem .8rem;border-radius:12px;
+      border:1px solid var(--line); text-decoration:none; color:var(--ink);
+      background:linear-gradient(180deg,#171720,#11141c);
+    }
+    .ghost{background:transparent}
+    .small{font-size:.85rem}
+    .meter{height:20px;border-radius:12px;background:#0d1018;border:1px solid var(--line);overflow:hidden}
+    .fill{height:100%;width:0;background:linear-gradient(90deg,var(--moon-accent),var(--moon-accent-2));transition:width .2s ease}
+    .caps{font-variant:all-small-caps;letter-spacing:.08em}
+    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace}
+    .stack{display:grid;gap:12px}
+    .controls{display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+    .ctl{border:1px solid var(--line);border-radius:12px;padding:10px;background:#0c0f17}
+    .ctl h3{margin:.1rem 0 .4rem; font-size:1rem}
+    label.slim{display:flex; align-items:center; justify-content:space-between; gap:10px}
+    input[type="range"]{width:100%}
+    .scopeWrap{display:grid; gap:10px}
+    canvas{width:100%; height:auto; background:conic-gradient(from 0deg at 50% 50%, #0000, #0000), radial-gradient(120% 120% at 10% -10%, #7af3ff0d, transparent 60%); border:1px solid var(--ring); border-radius:12px}
+    .legend{display:flex; gap:8px; flex-wrap:wrap}
+    .legend .chip{padding:.35rem .6rem}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:.2rem .5rem;border:1px solid var(--line);border-radius:999px}
+    .notice{
+      margin:12px 0 18px; padding:12px 14px; border:1px solid var(--line); border-radius:14px;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      box-shadow:0 10px 24px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.02); position:relative; overflow:hidden;
+    }
+    .notice::before{
+      content:""; position:absolute; inset:-1px; pointer-events:none; opacity:.45;
+      background:
+        radial-gradient(120% 80% at 0% 0%, #ffb36a33, transparent 60%),
+        radial-gradient(120% 80% at 100% 100%, #7af3ff33, transparent 60%);
+      mix-blend-mode:screen; filter:saturate(120%);
+    }
+    .kbd{display:inline-block;padding:.08rem .35rem;border-radius:6px;border:1px solid var(--line);background:#0e1118}
+    details.help{border:1px dashed var(--line);border-radius:12px;padding:10px}
+    details.help summary{cursor:pointer}
+    .foot{margin-top:22px;color:var(--muted);font-size:.95rem}
   </style>
 </head>
+
 <body>
   <a class="skip" href="#main">Skip to main</a>
-  <header style="padding:16px">
-    <div class="crumbs"><a href="/scroll-of-fire/hub.html">Hub</a> / T-7 Engine</div>
-    <h1>Resonant Physics Engine (T-7)</h1>
-    <p class="meta">Carrier mixer · Ξ meter · τ memory loop</p>
+
+  <header>
+    <div class="crumbs"><a href="hub.html">Hub</a> / T-7 Engine</div>
+    <h1>T-7 Resonant Engine</h1>
+    <p class="lede">
+      Mix carriers <span class="mono">432 • 528 • 369 • 144 • 963</span>, align phase, and watch the field respond.
+      The <b>Ξ meter</b> estimates coherence (vector alignment) while <b>τ</b> applies memory—your “linger in the pattern.”
+      Use presets to jump into a felt state; share the exact state via URL.
+    </p>
   </header>
 
-  <aside class="notice"><strong>⚡ Forge Note:</strong> Prototype phase in progress — energy nodes recalibrating.</aside>
+  <!-- Ethos / safety -->
+  <aside class="notice">
+    <div class="row">
+      <div class="glyph" aria-hidden="true">⟡</div>
+      <div><b>Ethics first.</b> The engine is a <i>practice</i> tool (breath + attention + sound + geometry). Keep volume sane, rest ears often, and do not use while driving or needing full attention.</div>
+    </div>
+  </aside>
 
-  <main id="main">
-    <section class="deck">
-      <article class="panel">
-        <h2>Carrier Mixer</h2>
-        <p>Blend the five carrier frequencies. Adjust sliders to feel phase interference.</p>
-        <input type="range" min="0" max="100" value="50" id="c432"><label>432 Hz</label><br>
-        <input type="range" min="0" max="100" value="50" id="c528"><label>528 Hz</label><br>
-        <input type="range" min="0" max="100" value="50" id="c369"><label>369 Hz</label><br>
-        <input type="range" min="0" max="100" value="50" id="c144"><label>144 Hz</label><br>
-        <input type="range" min="0" max="100" value="50" id="c963"><label>963 Hz</label>
+  <main id="main" class="grid">
+    <!-- LEFT: Controls + meters -->
+    <section class="panel stack" aria-label="Controls and meters">
+      <div class="row">
+        <button class="btn" id="startBtn" type="button">▶ Start Audio</button>
+        <button class="btn ghost" id="alignBtn" type="button" title="Zero phases so vectors align">Align Phases</button>
+        <button class="btn ghost" id="randomizeBtn" type="button" title="Randomize phases for exploration">Randomize</button>
+        <span class="spacer"></span>
+        <span class="pill mono">Master
+          <input id="masterGain" type="range" min="0" max="1" step="0.01" value="0.4" style="width:140px">
+        </span>
+      </div>
+
+      <!-- Ξ Coherence + τ Memory -->
+      <article class="ctl">
+        <h3>Ξ Coherence</h3>
+        <p class="small">Instant vector alignment across active carriers (0–100%).</p>
+        <div class="meter" aria-label="Coherence meter"><div id="xiFill" class="fill"></div></div>
+        <div class="row small">
+          <span>Ξ=<b id="xiVal" class="mono">0.00</b></span>
+          <span class="spacer"></span>
+          <span class="pill">Beat ≈ <span id="beatVal" class="mono">—</span> Hz</span>
+          <span class="pill">Active: <span id="activeVal" class="mono">0</span></span>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <label class="slim" style="width:260px">τ Memory (s)
+            <input id="tau" type="range" min="0" max="10" step="0.1" value="4">
+          </label>
+          <span class="pill mono">τ = <span id="tauVal">4.0</span>s</span>
+          <span class="spacer"></span>
+          <button class="btn ghost small" id="freezeBtn" type="button">Freeze</button>
+          <button class="btn ghost small" id="resetBtn" type="button">Reset</button>
+        </div>
+        <p class="small">Ξ<sub>τ</sub> (smoothed): <b id="xiMem" class="mono">0.00</b></p>
       </article>
 
-      <article class="panel">
-        <h2>Ξ Meter</h2>
-        <p>Observer coherence indicator (updates as carriers shift).</p>
-        <div class="meter"><div class="fill" id="xiFill"></div></div>
-        <button class="btn" id="pulse">Pulse Ξ</button>
-      </article>
+      <!-- Carriers -->
+      <div class="controls" aria-label="Carrier controls">
+        <!-- Each block generated from JS too; left here for clarity -->
+        <article class="ctl" data-carrier="432">
+          <h3>432 Hz</h3>
+          <label class="slim">Gain <input type="range" min="0" max="1" step="0.01" value="0.5" data-role="gain"></label>
+          <label class="slim">Pan  <input type="range" min="-1" max="1" step="0.01" value="0" data-role="pan"></label>
+          <label class="slim">Phase (°) <input type="range" min="0" max="360" step="1" value="0" data-role="phase"></label>
+          <div class="row small">
+            <label><input type="checkbox" data-role="mute"> Mute</label>
+            <span class="spacer"></span>
+            <button class="chip small" data-role="solo">Solo</button>
+          </div>
+        </article>
 
-      <article class="panel">
-        <h2>τ Memory Loop</h2>
-        <p>Temporal lag variable (τ). Modify and observe system feedback.</p>
-        <input type="range" id="tau" min="0" max="10" value="5">
-        <div id="tauVal">τ = 5</div>
-      </article>
+        <article class="ctl" data-carrier="528">
+          <h3>528 Hz</h3>
+          <label class="slim">Gain <input type="range" min="0" max="1" step="0.01" value="0.5" data-role="gain"></label>
+          <label class="slim">Pan  <input type="range" min="-1" max="1" step="0.01" value="0" data-role="pan"></label>
+          <label class="slim">Phase (°) <input type="range" min="0" max="360" step="1" value="0" data-role="phase"></label>
+          <div class="row small">
+            <label><input type="checkbox" data-role="mute"> Mute</label>
+            <span class="spacer"></span>
+            <button class="chip small" data-role="solo">Solo</button>
+          </div>
+        </article>
+
+        <article class="ctl" data-carrier="369">
+          <h3>369 Hz</h3>
+          <label class="slim">Gain <input type="range" min="0" max="1" step="0.01" value="0.4" data-role="gain"></label>
+          <label class="slim">Pan  <input type="range" min="-1" max="1" step="0.01" value="0" data-role="pan"></label>
+          <label class="slim">Phase (°) <input type="range" min="0" max="360" step="1" value="0" data-role="phase"></label>
+          <div class="row small">
+            <label><input type="checkbox" data-role="mute"> Mute</label>
+            <span class="spacer"></span>
+            <button class="chip small" data-role="solo">Solo</button>
+          </div>
+        </article>
+
+        <article class="ctl" data-carrier="144">
+          <h3>144 Hz</h3>
+          <label class="slim">Gain <input type="range" min="0" max="1" step="0.01" value="0.3" data-role="gain"></label>
+          <label class="slim">Pan  <input type="range" min="-1" max="1" step="0.01" value="0" data-role="pan"></label>
+          <label class="slim">Phase (°) <input type="range" min="0" max="360" step="1" value="0" data-role="phase"></label>
+          <div class="row small">
+            <label><input type="checkbox" data-role="mute"> Mute</label>
+            <span class="spacer"></span>
+            <button class="chip small" data-role="solo">Solo</button>
+          </div>
+        </article>
+
+        <article class="ctl" data-carrier="963">
+          <h3>963 Hz</h3>
+          <label class="slim">Gain <input type="range" min="0" max="1" step="0.01" value="0.25" data-role="gain"></label>
+          <label class="slim">Pan  <input type="range" min="-1" max="1" step="0.01" value="0" data-role="pan"></label>
+          <label class="slim">Phase (°) <input type="range" min="0" max="360" step="1" value="0" data-role="phase"></label>
+          <div class="row small">
+            <label><input type="checkbox" data-role="mute"> Mute</label>
+            <span class="spacer"></span>
+            <button class="chip small" data-role="solo">Solo</button>
+          </div>
+        </article>
+      </div>
+
+      <!-- Presets / Share -->
+      <div class="row">
+        <div class="legend">
+          <button class="chip" data-preset="calm">Calm 432·528</button>
+          <button class="chip" data-preset="focus">Focus 369</button>
+          <button class="chip" data-preset="prayer">Prayer 144·963</button>
+          <button class="chip" data-preset="all">All On</button>
+          <button class="chip ghost" data-preset="mute">All Off</button>
+        </div>
+        <span class="spacer"></span>
+        <button class="btn" id="shareBtn">Share</button>
+        <button class="btn ghost" id="restoreBtn">Restore</button>
+      </div>
     </section>
+
+    <!-- RIGHT: Visualizers + docs -->
+    <aside class="panel stack" aria-label="Visualization and docs">
+      <div class="scopeWrap">
+        <div class="row"><h2 style="margin:0">Scope</h2><span class="spacer"></span>
+          <span class="pill small">FPS <span id="fps" class="mono">—</span></span>
+        </div>
+        <canvas id="osc" width="700" height="260" aria-label="Oscilloscope"></canvas>
+        <canvas id="rose" width="700" height="260" aria-label="Phase rose (polar)"></canvas>
+      </div>
+
+      <details class="help">
+        <summary><b>About T-7</b> — what’s the purpose?</summary>
+        <p>
+          T-7 is a hands-on <i>resonance practice</i>:
+          you modulate a small set of meaningful carriers, softly align their phases, and observe how attention (Ξ) and persistence (τ) behave.
+          The goal isn’t raw loudness; it’s learning how a field becomes coherent when elements agree in time.
+        </p>
+        <ul>
+          <li><b>Carriers</b> — five symbolic bands used in your scrolls (432/528/369/144/963). Use gain/pan/phase to “tune” them like strings.</li>
+          <li><b>Ξ coherence</b> — a normalized vector-sum of active carriers’ phases at this instant (0–1). When phases align, Ξ→1.</li>
+          <li><b>τ memory</b> — an exponential memory of Ξ; large τ makes states linger. In your terms: “hold the witness loop.”</li>
+          <li><b>Align</b> — sets phases so the present moment is constructive; from there, you breathe and keep them together.</li>
+          <li><b>Scope</b> — time-domain trace of the mix; <b>Rose</b> — polar plot of phase vectors; a quick read on order.</li>
+        </ul>
+        <p>
+          Practically: choose a preset, hit <b>Align Phases</b>, breathe slow for a minute, then nudge τ and gains.
+          If Ξ drifts, bring attention back and re-align lightly—don’t force it. The instrument teaches timing and humility.
+        </p>
+      </details>
+    </aside>
   </main>
 
+  <footer class="foot">
+    <div class="row">
+      <div>© <span id="yr"></span> Scroll of Fire • BY-NC 4.0</div>
+      <span class="spacer"></span>
+      <div class="small">Shortcuts: <span class="kbd">A</span> align · <span class="kbd">R</span> random · <span class="kbd">S</span> start</div>
+    </div>
+  </footer>
+
+  <!-- ===== T-7 ENGINE (no deps) ===== -->
   <script>
-  const fill=document.getElementById('xiFill'),tau=document.getElementById('tau'),val=document.getElementById('tauVal');
-  document.getElementById('pulse').onclick=()=>{const n=Math.random()*100;fill.style.width=n+'%';};
-  tau.oninput=()=>{val.textContent='τ = '+tau.value};
+  (function(){
+    "use strict";
+
+    // ---------- DOM ----------
+    const $ = (s,root=document)=>root.querySelector(s);
+    const $$ = (s,root=document)=>[...root.querySelectorAll(s)];
+    const elStart = $("#startBtn");
+    const elAlign = $("#alignBtn");
+    const elRandom= $("#randomizeBtn");
+    const elMaster= $("#masterGain");
+    const elXiFill= $("#xiFill");
+    const elXiVal = $("#xiVal");
+    const elXiMem = $("#xiMem");
+    const elBeat  = $("#beatVal");
+    const elActive= $("#activeVal");
+    const elTau   = $("#tau");
+    const elTauVal= $("#tauVal");
+    const elFreeze= $("#freezeBtn");
+    const elReset = $("#resetBtn");
+    const elOsc   = $("#osc");
+    const elRose  = $("#rose");
+    const elFps   = $("#fps");
+    const yrEl    = $("#yr");
+    const shareBtn= $("#shareBtn");
+    const restoreBtn=$("#restoreBtn");
+
+    yrEl && (yrEl.textContent = new Date().getFullYear());
+
+    // Carrier definitions (Hz) — let these mirror your “carriers” across the site
+    const CARRIERS = [432, 528, 369, 144, 963];
+
+    // ---------- Audio graph ----------
+    let ctx, master, limiter, analyser, mixNode;
+    const nodes = []; // per carrier: {osc,gain,pan,phaseRad,muted}
+    const TWO_PI = Math.PI*2;
+
+    function ensureAudio(){
+      if (ctx) return;
+      ctx = new (window.AudioContext||window.webkitAudioContext)({latencyHint:"interactive"});
+      master = ctx.createGain(); master.gain.value = parseFloat(elMaster.value);
+      limiter = ctx.createDynamicsCompressor();
+      limiter.threshold.value = -8; limiter.knee.value = 10; limiter.ratio.value=8; limiter.attack.value=0.003; limiter.release.value=0.25;
+
+      analyser = ctx.createAnalyser(); analyser.fftSize=2048;
+      mixNode = ctx.createGain(); mixNode.gain.value = 0.9;
+
+      mixNode.connect(limiter).connect(master).connect(ctx.destination);
+      mixNode.connect(analyser);
+
+      // build carriers
+      CARRIERS.forEach((hz,i)=>{
+        const osc = ctx.createOscillator();
+        // sine by default; could expose waveform selector later
+        osc.type = "sine";
+        const gain = ctx.createGain(); gain.gain.value = 0;
+        const pan = ctx.createStereoPanner(); pan.pan.value = 0;
+        osc.connect(gain).connect(pan).connect(mixNode);
+        osc.start();
+        nodes.push({hz, osc, gain, pan, phaseRad:0, muted:false});
+      });
+    }
+
+    // ---------- UI <-> Audio bindings ----------
+    function uiBindCarriers(){
+      $$(".ctl[data-carrier]").forEach(box=>{
+        const hz = +box.dataset.carrier;
+        const model = nodes.find(n=>n.hz===hz);
+        if(!model) return;
+        const g = $('[data-role="gain"]', box);
+        const p = $('[data-role="pan"]', box);
+        const ph= $('[data-role="phase"]', box);
+        const m = $('[data-role="mute"]', box);
+        const s = $('[data-role="solo"]', box);
+
+        g.addEventListener("input", ()=>{ model.gain.gain.value = m.checked?0:+g.value; saveStateDebounced(); }, {passive:true});
+        p.addEventListener("input", ()=>{ model.pan.pan.value = +p.value; saveStateDebounced(); }, {passive:true});
+        ph.addEventListener("input",()=>{ model.phaseRad = (+ph.value||0) * Math.PI/180; saveStateDebounced(); },{passive:true});
+        m.addEventListener("change",()=>{ model.muted = m.checked; model.gain.gain.value = m.checked?0:+g.value; saveStateDebounced(); });
+        s.addEventListener("click", ()=>{
+          // solo = mute others; clicking again restores others
+          const soloing = !box.classList.contains("is-solo");
+          $$(".ctl[data-carrier]").forEach(b=>b.classList.remove("is-solo"));
+          nodes.forEach(n=>{
+            const isThis = n.hz===hz;
+            const ctl = $(`.ctl[data-carrier="${n.hz}"]`);
+            const gainEl = $('[data-role="gain"]', ctl);
+            const muteEl = $('[data-role="mute"]', ctl);
+            if (soloing){
+              if(!isThis){ n.gain.gain.value=0; muteEl.checked=true; n.muted=true; }
+              else { ctl.classList.add("is-solo"); muteEl.checked=false; n.muted=false; n.gain.gain.value=+gainEl.value; }
+            } else {
+              // un-solo: restore according to their mute/gain
+              n.gain.gain.value = muteEl.checked?0:+gainEl.value;
+            }
+          });
+          saveStateDebounced();
+        });
+      });
+    }
+
+    elMaster.addEventListener("input", ()=>{ if(master) master.gain.value = +elMaster.value; saveStateDebounced(); }, {passive:true});
+
+    // ---------- Presets ----------
+    const presets = {
+      calm(){
+        setAll({gain:0, mute:true});
+        setOne(432,{gain:.55, mute:false});
+        setOne(528,{gain:.55, mute:false});
+        elTau.value = 6; elTau.dispatchEvent(new Event("input"));
+      },
+      focus(){
+        setAll({gain:0, mute:true});
+        setOne(369,{gain:.65, mute:false});
+        elTau.value = 3; elTau.dispatchEvent(new Event("input"));
+      },
+      prayer(){
+        setAll({gain:0, mute:true});
+        setOne(144,{gain:.60, mute:false});
+        setOne(963,{gain:.40, mute:false});
+        elTau.value = 8; elTau.dispatchEvent(new Event("input"));
+      },
+      all(){
+        setAll({gain:.45, mute:false});
+        elTau.value = 4; elTau.dispatchEvent(new Event("input"));
+      },
+      mute(){
+        setAll({gain:0, mute:true});
+      }
+    };
+    document.addEventListener("click",(e)=>{
+      const b = e.target.closest("[data-preset]"); if(!b) return;
+      const k = b.dataset.preset; (presets[k]||(()=>{}))(); saveStateDebounced();
+    },{passive:true});
+
+    function setAll({gain, mute}){
+      nodes.forEach(n=>{
+        const box=$(`.ctl[data-carrier="${n.hz}"]`);
+        $('[data-role="gain"]',box).value = gain;
+        $('[data-role="mute"]',box).checked = !!mute;
+        n.muted=!!mute; n.gain.gain.value = mute?0:gain;
+      });
+    }
+    function setOne(hz,{gain, mute}){
+      const n=nodes.find(x=>x.hz===hz); if(!n) return;
+      const box=$(`.ctl[data-carrier="${n.hz}"]`);
+      if(gain!=null){ $('[data-role="gain"]',box).value = gain; if(!n.muted) n.gain.gain.value=gain; }
+      if(mute!=null){ $('[data-role="mute"]',box).checked=!!mute; n.muted=!!mute; n.gain.gain.value = mute?0:+$('[data-role="gain"]',box).value; }
+    }
+
+    // ---------- Phase utilities ----------
+    function alignPhases(){
+      // zero all manual phase offsets so vectors agree at t=now
+      nodes.forEach(n=>{
+        const ctl = $(`.ctl[data-carrier="${n.hz}"]`);
+        const ph = $('[data-role="phase"]', ctl);
+        ph.value = 0; n.phaseRad = 0;
+      });
+      saveStateDebounced();
+    }
+    function randomizePhases(){
+      nodes.forEach(n=>{
+        const ctl = $(`.ctl[data-carrier="${n.hz}"]`);
+        const ph = $('[data-role="phase"]', ctl);
+        const v = Math.floor(Math.random()*360);
+        ph.value = v; n.phaseRad = v*Math.PI/180;
+      });
+      saveStateDebounced();
+    }
+    elAlign.addEventListener("click", alignPhases);
+    elRandom.addEventListener("click", randomizePhases);
+
+    // ---------- Coherence / memory ----------
+    let freeze=false;
+    let xiMem=0, lastT=0;
+    const tmpVec = {re:0, im:0};
+    function instantXi(t){
+      // Vector-sum of active carriers at time t; weights = gains
+      let sumRe=0, sumIm=0, W=0, active=0;
+      nodes.forEach(n=>{
+        const g=n.gain.gain.value||0; if(g<=0) return;
+        active++;
+        const phase = TWO_PI*n.hz*t + n.phaseRad;
+        sumRe += g * Math.cos(phase);
+        sumIm += g * Math.sin(phase);
+        W     += g;
+      });
+      const mag = Math.sqrt(sumRe*sumRe + sumIm*sumIm);
+      const xi = W>0 ? (mag/W) : 0;
+      return {xi, active, sumRe, sumIm, W};
+    }
+
+    // heuristic “beat” ≈ min spacing of active neighboring carriers
+    function approxBeat(){
+      const act = nodes.filter(n=>n.gain.gain.value>0).map(n=>n.hz).sort((a,b)=>a-b);
+      if(act.length<2) return "—";
+      let min=Infinity;
+      for(let i=1;i<act.length;i++){ min=Math.min(min, act[i]-act[i-1]); }
+      return min.toFixed(2);
+    }
+
+    elTau.addEventListener("input",()=>{ elTauVal.textContent = (+elTau.value).toFixed(1); saveStateDebounced(); }, {passive:true});
+    elFreeze.addEventListener("click", ()=>freeze=!freeze);
+    elReset.addEventListener("click", ()=>{ xiMem=0; });
+
+    // ---------- Visualizers ----------
+    const kOsc = elOsc.getContext("2d");
+    const kRose= elRose.getContext("2d");
+    function drawOsc(buffer){
+      const W=elOsc.width, H=elOsc.height;
+      kOsc.clearRect(0,0,W,H);
+      // Grid
+      kOsc.strokeStyle = "#2a3242"; kOsc.lineWidth=1;
+      kOsc.beginPath(); kOsc.moveTo(0,H/2); kOsc.lineTo(W,H/2); kOsc.stroke();
+      // Wave
+      kOsc.strokeStyle="url(#rg)"; // won’t render; set solid
+      kOsc.strokeStyle="#a7b1ca";
+      kOsc.beginPath();
+      const n=buffer.length;
+      for(let i=0;i<n;i++){
+        const x=i/n*W, y=H/2 - buffer[i]*H*0.38;
+        if(i===0) kOsc.moveTo(x,y); else kOsc.lineTo(x,y);
+      }
+      kOsc.stroke();
+    }
+    function drawRose(vec){
+      const W=elRose.width, H=elRose.height, cx=W/2, cy=H/2, R=Math.min(W,H)/2 - 12;
+      kRose.clearRect(0,0,W,H);
+      // ring
+      kRose.strokeStyle="#2a3242"; kRose.lineWidth=1.2; kRose.beginPath(); kRose.arc(cx,cy,R,0,TWO_PI); kRose.stroke();
+      // vector
+      const mag = vec.W>0? Math.sqrt(vec.sumRe*vec.sumRe+vec.sumIm*vec.sumIm)/vec.W : 0;
+      const ang = Math.atan2(vec.sumIm, vec.sumRe);
+      const x = cx + Math.cos(ang)*R*mag, y = cy + Math.sin(ang)*R*mag;
+      kRose.strokeStyle="#7af3ff"; kRose.lineWidth=2.2;
+      kRose.beginPath(); kRose.moveTo(cx,cy); kRose.lineTo(x,y); kRose.stroke();
+      // tick
+      kRose.fillStyle="#7af3ff"; kRose.beginPath(); kRose.arc(x,y,3,0,TWO_PI); kRose.fill();
+      // label
+      kRose.fillStyle="#a7b1ca";
+      kRose.fillText("Ξ="+mag.toFixed(2), 10, 18);
+    }
+
+    // ---------- Render loop ----------
+    let rafId=0, lastFpsT=performance.now(), frameCount=0;
+    const oscBufLen=1024; // visual only
+    const oscBuf=new Float32Array(oscBufLen);
+
+    function loop(){
+      rafId = requestAnimationFrame(loop);
+      if(!ctx){ elXiFill.style.width="0%"; return; }
+      const t = ctx.currentTime;
+
+      // 1) Coherence
+      const v = instantXi(t);
+      const xi = v.xi;
+      if(!freeze){
+        const tau = +elTau.value;
+        const dt = Math.max(0.001, t-(lastT||t));
+        const alpha = tau>0 ? 1 - Math.exp(-dt/tau) : 1; // EMA from RC time
+        xiMem += alpha*(xi - xiMem);
+        lastT  = t;
+      }
+      elActive.textContent = String(v.active);
+      elBeat.textContent   = approxBeat();
+      elXiVal.textContent  = xi.toFixed(3);
+      elXiMem.textContent  = xiMem.toFixed(3);
+      elXiFill.style.width = (xi*100).toFixed(1)+"%";
+
+      // 2) Oscilloscope buffer = sum of active sines with current phases
+      for(let i=0;i<oscBufLen;i++){
+        const tt = t + i/ctx.sampleRate*256; // stretch visible period
+        let s=0, W=0;
+        nodes.forEach(n=>{
+          const g=n.gain.gain.value; if(g<=0) return;
+          s += g * Math.sin(TWO_PI*n.hz*tt + n.phaseRad); W += g;
+        });
+        oscBuf[i] = W>0 ? s/W : 0;
+      }
+      drawOsc(oscBuf);
+      drawRose(v);
+
+      // 3) FPS
+      frameCount++; const now=performance.now();
+      if(now - lastFpsT > 500){
+        const fps = (frameCount*1000/(now-lastFpsT))|0;
+        elFps.textContent = String(fps);
+        frameCount=0; lastFpsT=now;
+      }
+    }
+
+    // ---------- Start / Restore / Share ----------
+    elStart.addEventListener("click", async ()=>{
+      ensureAudio();
+      try{ await ctx.resume(); }catch(_){}
+      if(!rafId) loop();
+    });
+
+    // keyboard shortcuts
+    document.addEventListener("keydown",(e)=>{
+      if(/input|select|textarea/i.test(e.target.tagName)) return;
+      const k=e.key.toLowerCase();
+      if(k==="s"){ elStart.click(); }
+      if(k==="a"){ elAlign.click(); }
+      if(k==="r"){ elRandom.click(); }
+    });
+
+    // state encode/decode → URL
+    function encodeState(){
+      const st = {
+        m:+elMaster.value,
+        t:+elTau.value,
+        c:nodes.map(n=>{
+          const box=$(`.ctl[data-carrier="${n.hz}"]`);
+          return {
+            hz:n.hz,
+            g:+$('[data-role="gain"]',box).value,
+            p:+$('[data-role="pan"]',box).value,
+            ph:+$('[data-role="phase"]',box).value,
+            m:$('[data-role="mute"]',box).checked?1:0
+          };
+        })
+      };
+      return btoa(unescape(encodeURIComponent(JSON.stringify(st))));
+    }
+    function decodeState(s){
+      try{
+        const st = JSON.parse(decodeURIComponent(escape(atob(s))));
+        if(st.m!=null){ elMaster.value=st.m; master && (master.gain.value=st.m); }
+        if(st.t!=null){ elTau.value=st.t; elTau.dispatchEvent(new Event("input")); }
+        if(Array.isArray(st.c)){
+          st.c.forEach(c=>{
+            const n=nodes.find(x=>x.hz===c.hz); if(!n) return;
+            const box=$(`.ctl[data-carrier="${n.hz}"]`);
+            $('[data-role="gain"]',box).value = c.g; if(!$('[data-role="mute"]',box).checked) n.gain.gain.value=c.g;
+            $('[data-role="pan"]',box).value  = c.p; n.pan.pan.value=c.p;
+            $('[data-role="phase"]',box).value= c.ph; n.phaseRad=c.ph*Math.PI/180;
+            const mu = !!c.m; $('[data-role="mute"]',box).checked = mu; n.muted=mu; n.gain.gain.value = mu?0:c.g;
+          });
+        }
+      }catch(err){ console.warn("Bad state:", err); }
+    }
+    function setHashFromState(){ history.replaceState(null,"", location.pathname+"#"+encodeState()); }
+    function getStateFromHash(){ return location.hash.length>1 ? location.hash.slice(1) : ""; }
+    const saveStateDebounced = debounce(setHashFromState, 250);
+
+    shareBtn.addEventListener("click", ()=>{
+      setHashFromState();
+      const url = location.href;
+      navigator.clipboard?.writeText(url).catch(()=>{});
+      toast("State URL copied");
+    });
+    restoreBtn.addEventListener("click", ()=>{
+      const s = getStateFromHash(); if(!s){ toast("No state in URL"); return; }
+      decodeState(s); toast("State restored");
+    });
+
+    function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
+    function toast(msg){
+      const t=document.createElement("div");
+      t.className="toast";
+      Object.assign(t.style,{position:"fixed",left:"50%",bottom:"20px",transform:"translateX(-50%)",
+        background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid var(--line)",borderRadius:"10px",
+        boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:"9999",opacity:"0",transition:"opacity .15s"});
+      t.textContent=msg; document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
+      setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),250); }, 1300);
+    }
+
+    // ---------- Boot ----------
+    ensureAudio(); uiBindCarriers();
+    // Restore from URL if present (before user starts audio, just sets knobs)
+    const hs = getStateFromHash(); if(hs) decodeState(hs);
+    // Start loop visually even if audio not started (shows meters at 0)
+    loop();
+
+  })();
   </script>
 </body>
 </html>
