@@ -30,11 +30,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- Site + page CSS (your new skin) -->
+  <!-- Site + page CSS -->
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-24">
   <link rel="stylesheet" href="assets/css/moons.css?v=2025-10-24">
 
-  <!-- Small safety patch so text is never unreadable if CSS fails to load -->
+  <!-- Safety patch so text stays readable if CSS fails -->
   <style>
     .moonbar.contrast-light,.moonbar.contrast-light .tag,.moonbar.contrast-light button{color:#0b1220!important}
     .moonbar.contrast-light .mb-bg{stroke:#e1e8ff!important}
@@ -44,6 +44,19 @@
     .moon-media img{width:100%;height:auto;border-radius:12px;border:1px solid var(--line)}
     .prompts{padding-left:1.2rem}
     #noteText{width:100%;min-height:110px;border:1px solid var(--line);border-radius:10px;background:#0f1116;color:inherit;padding:.65rem}
+
+    /* Remnant opener */
+    .remnant-opener{ position:relative; overflow:hidden }
+    .op-grid{ display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:center }
+    .op-sigil{ width:64px; height:64px; filter: drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 30%, transparent)) }
+    .op-title{ margin:0; font:800 20px/1.15 "Crimson Pro",serif; letter-spacing:.2px }
+    .op-sub{ margin:.25rem 0 0 }
+    .lab-btn.big{ padding:.8rem 1.1rem; font-weight:900 }
+    .cta-link{ text-decoration:none; color:inherit }
+    @media (max-width:720px){
+      .op-grid{ grid-template-columns: auto 1fr; gap:10px }
+      .op-right{ grid-column: 1 / -1 }
+    }
   </style>
 
   <!-- Structured data -->
@@ -103,14 +116,54 @@
     </div>
   </section>
 
+  <!-- Remnant Opener — The Seal of Becoming (Birth Reader portal) -->
+  <section id="remnantOpener" class="wrap">
+    <div class="remnant-opener card remnant-frame" aria-label="Open the Remnant Birth Seal" style="margin:10px 0">
+      <div class="op-grid">
+        <div class="op-left">
+          <svg class="op-sigil" viewBox="0 0 64 64" aria-hidden="true">
+            <defs>
+              <linearGradient id="opGrad" x1="0" x2="1">
+                <stop offset="0" stop-color="var(--moon-accent)"/>
+                <stop offset="1" stop-color="var(--moon-accent-2)"/>
+              </linearGradient>
+            </defs>
+            <circle cx="32" cy="32" r="26" fill="none" stroke="#1b2231" stroke-width="6"/>
+            <circle cx="32" cy="32" r="26" fill="none" stroke="url(#opGrad)" stroke-linecap="round" stroke-width="6" stroke-dasharray="78 163"></circle>
+            <text x="32" y="32" text-anchor="middle" dominant-baseline="central" font-family="Inter,system-ui" font-size="16" font-weight="900" fill="currentColor">⟡</text>
+          </svg>
+        </div>
+
+        <div class="op-mid">
+          <h3 class="op-title">The Seal of Becoming</h3>
+          <p class="op-sub meta">
+            Remnant Birth Seal — reads your <b>Moon • Day • Week • Tone</b> and <b>Name code</b>, with Resonant sums and carrier skin.
+          </p>
+          <small class="meta">Uses your selected date &amp; timezone (or today) to prefill.</small>
+        </div>
+
+        <div class="op-right">
+          <!-- Use <a> so long-press can “Open in new tab” on mobile -->
+          <a id="openSeal" class="lab-btn big cta-link" href="genesis-oracle.html" aria-describedby="opHelp">Open Birth Seal</a>
+          <p id="opHelp" class="meta" style="margin:.35rem 0 0">Deep link carries date/time/tz → <span class="mono">genesis-oracle.html</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <main class="wrap" id="main" role="main">
     <header class="page-head fancy-head">
       <h1 class="title">🌗 Remnant 13 Moons — <em>Living Clock</em></h1>
-      <p class="subtitle">An ancient-modern calendar in the cadence of 13×28. Phase-tinted, time-zone aware, and trimmed with the seal of <span lang="he" title="YHWH">יהוה</span>.</p>
+      <p class="subtitle">
+        An ancient-modern calendar in the cadence of 13×28. Phase-tinted, time-zone aware, and trimmed with the seal of
+        <span lang="he" title="YHWH">יהוה</span>.
+      </p>
 
       <nav class="crumbs" aria-label="Breadcrumb">
         <a class="lab-btn" href="index.html">← Back to Codex</a>
         <a class="lab-btn" href="theory.html">📘 Theory</a>
+        <!-- Header CTA mirrors the opener button for quick access -->
+        <a id="openSealHeader" class="lab-btn" href="genesis-oracle.html" title="Open the Remnant Birth Seal">⟡ Birth Seal</a>
       </nav>
 
       <!-- Moon-first badge -->
@@ -341,12 +394,12 @@
   <!-- Page JS (external; v3.9 fixes phase selector and drives accents) -->
   <script src="assets/js/moons.js?v=3.9" defer></script>
 
-  <!-- Mini glue: keep moonbar mirrored, jump-to, share-card, notes, and Remnant veil -->
+  <!-- Mini glue: sync moonbar + share-card + opener deep link + veil -->
   <script>
   (function(){
     "use strict";
 
-    // Cache pieces we mirror from the main badge
+    // --- cache elements
     const arcMain = document.getElementById("moonArc");
     const arcMini = document.getElementById("moonArcMini");
     const mbName  = document.getElementById("mbName");
@@ -362,6 +415,20 @@
     const dayInMoon  = document.getElementById("dayInMoon");
     const yearSpan   = document.getElementById("yearSpan");
 
+    const tzPick = document.getElementById("tzPick");
+    const datePick = document.getElementById("datePick");
+    const hourScrub = document.getElementById("hourScrub");
+    const openSeal = document.getElementById("openSeal");
+    const openSealHeader = document.getElementById("openSealHeader");
+
+    // --- helpers
+    const cssVar = (name, fb) => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fb;
+    const dl = (name, blob)=>{
+      const a=document.createElement("a"); a.download=name; a.href=URL.createObjectURL(blob);
+      document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 400);
+    };
+
+    // --- mirror main badge → mini bar
     function syncMini(){
       if (mbName && moonName)  mbName.textContent = moonName.textContent || "—";
       if (mbEss  && moonEss)   mbEss.textContent  = moonEss.textContent  || "—";
@@ -378,8 +445,6 @@
         if (noteBox.value !== saved) noteBox.value = saved;
       }
     }
-
-    // Run once after moons.js paints, then observe changes
     setTimeout(syncMini, 60);
     const mo = new MutationObserver(syncMini);
     arcMain && mo.observe(arcMain, { attributes:true, attributeFilter:["stroke-dasharray"] });
@@ -387,30 +452,22 @@
     yearSpan && mo.observe(yearSpan, { childList:true, characterData:true, subtree:true });
     document.addEventListener("sof:accent-change", syncMini);
 
-    // Jump-to-moon via hash (moons.js watches the hash)
+    // --- jump to moon
     function jump(){ const v = jumpSel?.value; if (v){ location.hash = `#moon-${v}`; } }
     jumpSel?.addEventListener("change", jump, {passive:true});
 
-    // Share image card (phase-tinted)
-    function cssVar(name, fallback){ const s=getComputedStyle(document.documentElement).getPropertyValue(name).trim(); return s||fallback; }
-    function dlBlob(name, blob){
-      const a=document.createElement("a"); a.download=name; a.href=URL.createObjectURL(blob);
-      document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 400);
-    }
+    // --- share image card
     async function makeShareCard(){
       const w=1080, h=1080, c=document.createElement("canvas"); c.width=w; c.height=h;
       const k=c.getContext("2d");
       const c1=cssVar("--moon-accent","#7af3ff"), c2=cssVar("--moon-accent-2","#f3c97a");
 
-      // background
       const g=k.createLinearGradient(0,0,0,h); g.addColorStop(0,"#0a0e15"); g.addColorStop(1,"#06080d"); k.fillStyle=g; k.fillRect(0,0,w,h);
       const g2=k.createLinearGradient(0,0,w,0); g2.addColorStop(0,c1+"22"); g2.addColorStop(.5,c2+"18"); g2.addColorStop(1,c1+"22");
       k.fillStyle=g2; k.beginPath(); k.moveTo(0,240); for(let x=0;x<=w;x+=24){ k.lineTo(x,240+Math.sin(x*0.006)*20); } k.lineTo(w,0); k.lineTo(0,0); k.closePath(); k.fill();
 
-      // title
       k.fillStyle="#e9eef6"; k.font="800 56px Inter, system-ui"; k.fillText("Remnant 13 Moons — Living Clock", 64, 112);
 
-      // main chips
       const name=(moonName?.textContent||"—").trim();
       const essence=(moonEss?.textContent||"—").trim();
       const dayTxt=((dayInMoon?.textContent||"—").trim())+" / 28";
@@ -428,32 +485,62 @@
       }
       let cx=64; cx=chip(cx,370,dayTxt); cx=chip(cx,370,yearTxt); chip(cx,370, sub || "—");
 
-      // footer
       k.font="600 32px Inter, system-ui"; k.fillStyle="#a8b1c9";
       k.fillText("scroll-of-fire · ssnfts24.github.io/scroll-of-fire", 64, h-64);
 
-      const blob=await new Promise(res=>c.toBlob(res,"image/png",0.96)); if(blob) dlBlob(`13-moons-${name.replace(/\s+/g,"-").toLowerCase()}.png`, blob);
+      const blob=await new Promise(res=>c.toBlob(res,"image/png",0.96)); if(blob) dl(`13-moons-${name.replace(/\s+/g,"-").toLowerCase()}.png`, blob);
     }
     document.getElementById("btnShareImage")?.addEventListener("click", makeShareCard, {passive:true});
 
-    // Save per-moon note
+    // --- save note
     document.getElementById("btnSaveNote")?.addEventListener("click", ()=>{
       const idx = moonChip?.getAttribute("data-idx"); if(!idx) return;
       localStorage.setItem(`sof_moon_note_${idx}`, noteBox?.value || "");
       const t=document.createElement("div"); t.className="toast"; t.textContent="Note saved";
+      Object.assign(t.style,{position:"fixed",left:"50%",bottom:"24px",transform:"translateX(-50%)",background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid var(--line)",borderRadius:"10px",boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:"9999",opacity:"0",transition:"opacity .2s"});
       document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
       setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),250); }, 1400);
     }, {passive:true});
 
-    // A gentle “Remnant veil” that reacts when phase colors change
+    // --- Remnant veil reacts to phase
     function refreshVeil(){
-      const c1=getComputedStyle(document.documentElement).getPropertyValue("--moon-accent").trim() || "#7af3ff";
-      const c2=getComputedStyle(document.documentElement).getPropertyValue("--moon-accent-2").trim() || "#f3c97a";
+      const c1=cssVar("--moon-accent","#7af3ff");
+      const c2=cssVar("--moon-accent-2","#f3c97a");
       const veil=`conic-gradient(from 0deg at 50% 50%, ${c1}24, transparent, ${c2}20, transparent)`;
       document.documentElement.style.setProperty("--remnant-veil", veil);
     }
     document.addEventListener("sof:accent-change", refreshVeil);
     refreshVeil();
+
+    // --- Build deep link for the Birth Seal opener (reads selected date/tz/hour)
+    function buildSealLink(){
+      const base = "genesis-oracle.html";
+      const tz = (tzPick && tzPick.value) || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+      const now = new Date();
+      const dateStr = (datePick && datePick.value) || new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,10);
+      const hour = (hourScrub && hourScrub.value) ? String(hourScrub.value) : String(now.getHours());
+      const u = new URL(base, document.baseURI || location.href);
+      u.searchParams.set("d", dateStr);
+      u.searchParams.set("tz", tz);
+      u.searchParams.set("t", hour);
+      // If moons.js has set the current moon index, carry it as a hash
+      const moonIdx = document.getElementById("moonChip")?.getAttribute("data-idx");
+      if (moonIdx) u.hash = `moon-${moonIdx}`;
+      return u.toString();
+    }
+    function applySealHref(a){
+      if (!a) return;
+      a.setAttribute("href", buildSealLink());
+    }
+    // keep links fresh
+    ["change","input"].forEach(evt=>{
+      tzPick?.addEventListener(evt, ()=>{ applySealHref(openSeal); applySealHref(openSealHeader); }, {passive:true});
+      datePick?.addEventListener(evt, ()=>{ applySealHref(openSeal); applySealHref(openSealHeader); }, {passive:true});
+      hourScrub?.addEventListener(evt, ()=>{ applySealHref(openSeal); applySealHref(openSealHeader); }, {passive:true});
+    });
+    // initial set
+    applySealHref(openSeal);
+    applySealHref(openSealHeader);
   })();
   </script>
 </body>
