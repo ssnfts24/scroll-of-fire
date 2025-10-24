@@ -892,3 +892,21 @@ a.dl{ border-color:#2b3344; background:linear-gradient(180deg, rgba(255,255,255,
 @media (prefers-reduced-motion: reduce){
   .ring-fg,.moonbar .mb-fg{ transition:none!important }
    }
+
+
+
+
+/* Heavenly toggle */
+.heaven-cta{
+  position: fixed; right: 14px; bottom: calc(18px + env(safe-area-inset-bottom));
+  z-index: 1000; border:1px solid var(--line); border-radius:12px;
+  padding:.48rem .7rem; font-weight:800; letter-spacing:.2px; cursor:pointer;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  text-shadow:0 1px 0 rgba(0,0,0,.45);
+}
+.heaven-cta[aria-pressed="true"]{
+  box-shadow:0 0 0 1px #7af3ff55, 0 0 16px #7af3ff33, inset 0 0 0 1px #7af3ff22;
+}
+@media (max-width:560px){ .heaven-cta{ right:10px } }
+@media (prefers-reduced-motion:reduce){ .heaven-cta{ display:none !important } }
+@media (prefers-reduced-data:reduce){ .heaven-cta{ display:none !important } }
