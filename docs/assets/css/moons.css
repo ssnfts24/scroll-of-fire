@@ -86,3 +86,53 @@ Phase-tinted accents via --moon-accent / --moon-accent-2 =======================
 /* ---------- Safety: no backdrop support fallback ---------- */ @supports not ((-webkit-backdrop-filter: blur(2px)) or (backdrop-filter: blur(2px))) { .year-map th{ background:#0e131a !important } }
 
 /* ---------- Tiny screens polish ---------- */ @media (max-width:340px){ .pill .k{ font-size:20px } .ring{ width:104px; height:104px } }
+
+
+
+
+
+
+/* === Moon Mini Widget: info/controls polish =================== */
+.moonbar-info{ display:grid; gap:4px; min-width:0 }
+.moonbar-line{
+  display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
+  font-weight:800; letter-spacing:.2px
+}
+.moonbar-line .sep{ opacity:.6 }
+.moonbar-sub.meta{
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  max-width:clamp(220px, 26vw, 360px);
+}
+
+.moonbar-tags{ display:flex; align-items:center; gap:6px; flex-wrap:wrap }
+.moonbar-tags .tag{ padding:.2rem .45rem; border-radius:999px; border:1px solid var(--line) }
+.moonbar-tags #mbYear{ font-weight:700 }
+.moonbar-tags #mbYHWH{
+  font-weight:700; letter-spacing:.05em;
+  box-shadow:0 0 0 1px #7af3ff22, inset 0 0 0 1px #7af3ff18;
+  transition: box-shadow .25s ease;
+}
+.moonbar.yhwh-on #mbYHWH{
+  box-shadow:0 0 0 1px #7af3ff66, 0 0 18px #7af3ff33, inset 0 0 0 1px #7af3ff33;
+}
+
+/* Controls: Share + TZ */
+.moonbar-share,.moonbar-tz{
+  border:1px solid var(--line); background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
+  color:inherit; font-weight:800; letter-spacing:.2px;
+  padding:.45rem .65rem; border-radius:10px; cursor:pointer;
+  transition:transform .06s ease, box-shadow .12s ease, border-color .12s ease, filter .12s ease;
+}
+.moonbar-share:hover,.moonbar-tz:hover{
+  transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35);
+  border-color:color-mix(in srgb, var(--moon-accent) 30%, var(--line));
+  filter:drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 25%, transparent))
+}
+.moonbar-share:active,.moonbar-tz:active{ transform:translateY(0) }
+.moonbar-share:focus-visible,.moonbar-tz:focus-visible{ outline:none; box-shadow:var(--focus-glow) }
+
+/* Optional compact mode */
+.moonbar[data-size="compact"]{
+  --ring-size:64px;
+  grid-template-columns:auto 1fr auto auto;
+}
