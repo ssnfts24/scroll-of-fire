@@ -485,3 +485,21 @@
   }
   body.remnant-yhwh .card.runes::before{ inset:8px auto auto 8px; transform:rotate(180deg) }
                      }
+
+
+
+
+/* Astrology panel helpers */
+.planet-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;
+  padding:.28rem .55rem;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));font-weight:700}
+.planet-chip .g{width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--moon-accent),var(--moon-accent-2))}
+.aspect{display:inline-block;border:1px solid var(--line);border-radius:10px;padding:.25rem .5rem}
+.aspect--conj{box-shadow:0 0 0 1px #9ad7ff22 inset}
+.aspect--sext{box-shadow:0 0 0 1px #7fffd422 inset}
+.aspect--square{box-shadow:0 0 0 1px #ff9aa222 inset}
+.aspect--trine{box-shadow:0 0 0 1px #adffbf22 inset}
+.aspect--oppo{box-shadow:0 0 0 1px #ffcf9a22 inset}
+.zodiac-wheel{min-height:260px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01))}
+.ephem{width:100%;border-collapse:separate;border-spacing:0 6px}
+.ephem th,.ephem td{padding:8px 10px;border:1px solid var(--line)}
+.ephem .deg{font-variant-numeric:tabular-nums}
