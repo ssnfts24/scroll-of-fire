@@ -95,23 +95,11 @@
       --xi:.35;
       --accent-432:#7af3ff; --accent-528:#a4ff90; --accent-369:#f3c97a;
       --accent:#7af3ff;
-
-      /* NEW: ensure ring colors exist before JS runs (and when moon.css isn’t loaded) */
+      /* ensure ring colors exist before JS runs (and when moon.css isn’t loaded) */
       --moon-accent:#7af3ff;
       --moon-accent-2:#f3c97a;
-
-      .moonbar{display:flex;align-items:center;gap:10px}
-.moonbar-share,.moonbar-tz{
-  padding:.45rem .7rem;border:1px solid var(--line);border-radius:10px;
-  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);
-  font-weight:700;cursor:pointer
-}
-.moonbar-tz{font-variant:all-small-caps;letter-spacing:.06em}
-@media (prefers-reduced-motion:reduce){
-  .moonbar .mb-fg{transition:none}
-}
     }
-    /* NEW: carrier classes → ring colors (CSS-first paint) */
+    /* carrier classes → ring colors (CSS-first paint) */
     :root.carrier-432{ --moon-accent:#7af3ff; --moon-accent-2:#f3c97a }
     :root.carrier-528{ --moon-accent:#9ef7a3; --moon-accent-2:#ffd27a }
     :root.carrier-369{ --moon-accent:#a8a6ff; --moon-accent-2:#7af3ff }
@@ -123,7 +111,7 @@
     .carrier-144 :root, .carrier-144{--accent:#b3e1ff}
     .carrier-963 :root, .carrier-963{--accent:#ffd1f3}
 
-    /* Layout / header (unchanged) */
+    /* Layout / header */
     body{margin:0}
     header.site{position:sticky; top:0; z-index:1000; -webkit-backdrop-filter:saturate(140%) blur(8px); backdrop-filter:saturate(140%) blur(8px); background:rgba(9,11,16,.6)}
     .wrap{padding:16px; max-width:1200px; margin:0 auto}
@@ -225,6 +213,21 @@
       box-shadow: inset 0 0 40px rgba(122,243,255,.12), 0 0 120px rgba(122,243,255,.08);
     }
     .stage::after { content:""; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 60%, rgba(122,243,255,.08), transparent 70%); pointer-events:none }
+
+    /* --- Mini Moonbar local baseline (in case moon.css isn't loaded yet) --- */
+    .moonbar{display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:10px; border:1px solid var(--line,#2a3242); border-radius:14px; padding:8px; background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01))}
+    .moonbar .mb-bg{ fill:none; stroke:#1b2231; stroke-width:8 }
+    .moonbar .mb-fg{ fill:none; stroke:url(#mbGrad); stroke-width:8; stroke-linecap:round; stroke-dasharray:0 316 }
+    .moonbar-info{ display:grid; gap:4px; min-width:0 }
+    .moonbar-line{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; font-weight:800; letter-spacing:.2px }
+    .moonbar-sub.meta{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:clamp(220px,26vw,360px) }
+    .moonbar-tags{ display:flex; align-items:center; gap:6px; flex-wrap:wrap }
+    .moonbar .tag{ display:inline-block; padding:.2rem .45rem; border:1px solid var(--line,#2a3242); border-radius:999px; background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)) }
+    .moonbar-share,.moonbar-tz{ padding:.45rem .7rem; border:1px solid var(--line,#2a3242); border-radius:10px; background:linear-gradient(180deg,rgba(255,255,255,.04),transparent); font-weight:700; cursor:pointer; color:inherit }
+    .moonbar .mb-text{ font:900 16px/1 Inter,system-ui,sans-serif; fill:currentColor }
+    .moonbar .yhwh{ box-shadow:0 0 0 1px #7af3ff22, inset 0 0 0 1px #7af3ff18 }
+    .moonbar.yhwh-on .yhwh{ box-shadow:0 0 0 1px #7af3ff66, 0 0 18px #7af3ff33, inset 0 0 0 1px #7af3ff33 }
+    @media (prefers-reduced-motion:reduce){ .moonbar .mb-fg{transition:none} }
   </style>
 
   <!-- MathJax (std delimiters, on-demand typeset) -->
@@ -279,147 +282,290 @@
   </header>
 
   <!-- 13-Moon Mini Bar -->
-<div id="moonMiniBar" class="moonbar" role="region" aria-label="13-Moon mini clock">
-  <a id="moonMiniLink" class="moonbar-hit" href="moons.html" aria-label="Open 13-Moon living clock" aria-describedby="mbDesc">
-    <svg class="moonbar-ring" viewBox="0 0 120 120" role="img" aria-labelledby="mbTitle mbDesc">
-      <title id="mbTitle">13-Moon day progress ring</title>
-      <desc id="mbDesc">Shows current day in the 28-day moon and a deep link to the full 13-Moon clock in your timezone.</desc>
-      <defs>
-        <linearGradient id="mbGrad" x1="0" x2="1">
-          <stop offset="0" stop-color="var(--moon-accent)"/>
-          <stop offset="1" stop-color="var(--moon-accent-2)"/>
-        </linearGradient>
-      </defs>
-      <circle cx="60" cy="60" r="50" class="mb-bg"/>
-      <circle cx="60" cy="60" r="50" class="mb-fg" id="mbArc" pathLength="316"/>
-      <text x="60" y="60" class="mb-text" text-anchor="middle" dominant-baseline="central">
-        <tspan id="mbDay">—</tspan>
-      </text>
-    </svg>
+  <div id="moonMiniBar" class="moonbar" role="region" aria-label="13-Moon mini clock">
+    <a id="moonMiniLink" class="moonbar-hit" href="moons.html" aria-label="Open 13-Moon living clock" aria-describedby="mbDesc">
+      <svg class="moonbar-ring" viewBox="0 0 120 120" role="img" aria-labelledby="mbTitle mbDesc" width="76" height="76">
+        <title id="mbTitle">13-Moon day progress ring</title>
+        <desc id="mbDesc">Shows current day in the 28-day moon and a deep link to the full 13-Moon clock in your timezone.</desc>
+        <defs>
+          <linearGradient id="mbGrad" x1="0" x2="1">
+            <stop offset="0" stop-color="var(--moon-accent)"/>
+            <stop offset="1" stop-color="var(--moon-accent-2)"/>
+          </linearGradient>
+        </defs>
+        <circle cx="60" cy="60" r="50" class="mb-bg"></circle>
+        <circle cx="60" cy="60" r="50" class="mb-fg" id="mbArc" pathLength="316"></circle>
+        <text x="60" y="60" class="mb-text" text-anchor="middle" dominant-baseline="central">
+          <tspan id="mbDay">—</tspan>
+        </text>
+      </svg>
 
-    <div class="moonbar-info" aria-live="polite">
-      <div class="moonbar-line">
-        <strong id="mbMoon">—</strong>
-        <span class="sep">·</span>
-        <span id="mbDayLine">—</span>
+      <div class="moonbar-info" aria-live="polite">
+        <div class="moonbar-line">
+          <strong id="mbMoon">—</strong>
+          <span class="sep">·</span>
+          <span id="mbDayLine">—</span>
+        </div>
+        <div class="moonbar-sub meta" id="mbEssence" title="">—</div>
       </div>
-      <div class="moonbar-sub meta" id="mbEssence" title="">—</div>
-    </div>
 
-    <div class="moonbar-tags">
-      <span class="tag mono" id="mbYear">—</span>
-      <span class="tag yhwh" id="mbYHWH" title="Source (YHWH)">⟡ י־ה־ו־ה</span>
-    </div>
-  </a>
+      <div class="moonbar-tags">
+        <span class="tag mono" id="mbYear">—</span>
+        <span class="tag yhwh" id="mbYHWH" title="Source (YHWH)">⟡ י־ה־ו־ה</span>
+      </div>
+    </a>
 
-  <!-- NEW: native share first, clipboard fallback stays in JS -->
-  <button class="moonbar-share" id="mbShare" type="button" aria-label="Share today’s 13-Moon link">Share</button>
+    <!-- Native share first, clipboard fallback in JS -->
+    <button class="moonbar-share" id="mbShare" type="button" aria-label="Share today’s 13-Moon link">Share</button>
 
-  <!-- NEW: quick timezone picker -->
-  <button class="moonbar-tz" id="mbTZ" type="button" aria-haspopup="dialog" aria-expanded="false" title="Change timezone">TZ</button>
+    <!-- quick timezone picker -->
+    <button class="moonbar-tz" id="mbTZ" type="button" aria-haspopup="dialog" aria-expanded="false" title="Change timezone">TZ</button>
 
-  <!-- Progressive enhancement: no-JS fallback -->
-  <noscript>
-    <div class="moonbar-noscript meta">
-      Today’s 13-Moon link: <a href="moons.html">moons.html</a>
-    </div>
-  </noscript>
-</div>
+    <!-- Progressive enhancement: no-JS fallback -->
+    <noscript>
+      <div class="moonbar-noscript meta">
+        Today’s 13-Moon link: <a href="moons.html">moons.html</a>
+      </div>
+    </noscript>
+  </div>
 
-  <!-- Script module (kept as you had it) -->
-  <script src="assets/js/moons-bar.js?v=1" defer></script>
-
+  <!-- Inline Mini Widget (v2.1) -->
   <script>
-(() => {
-  "use strict";
-  const TZ_KEY = "sof_moons_tz";
-  const $ = s => document.querySelector(s);
-  const el = id => document.getElementById(id);
+  /* 13 Moons — Mini Widget (v2.1, DPR-aware, main-page compatible)
+     - Works with IDs on this page (#mbMoon,#mbDay,#mbDayLine,#mbEssence,#mbYear,#mbArc,#mbShare,#mbTZ)
+     - Deep link: moons.html?d=YYYY-MM-DD&tz=Area/City&t=H#moon-N
+  */
+  (function(){
+    "use strict";
 
-  const link = el("moonMiniLink");
-  const shareBtn = el("mbShare");
-  const tzBtn = el("mbTZ");
+    /* ---------- Tiny utils ---------- */
+    const $  =(s,r=document)=>r.querySelector(s);
+    const on =(t,e,f,o)=>t&&t.addEventListener(e,f,o);
+    const pad=n=>String(n).padStart(2,"0");
+    const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
+    const safe = fn => { try{ return fn(); } catch(e){ return void 0; } };
+    const toast = (msg)=>{
+      const t=document.createElement('div');
+      t.className='toast'; t.textContent=msg;
+      Object.assign(t.style,{position:"fixed",left:"50%",bottom:"24px",transform:"translateX(-50%)",background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid var(--line,#2a3242)",borderRadius:"10px",boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:"9999",opacity:"0",transition:"opacity .2s"});
+      document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
+      setTimeout(()=>{t.style.opacity=0; setTimeout(()=>t.remove(),250);},1500);
+    };
 
-  // Small helper (mirrors your existing toast style)
-  function toast(msg){
-    const t=document.createElement('div');
-    t.className='toast';
-    t.textContent=msg;
-    Object.assign(t.style,{position:'fixed',left:'50%',bottom:'20px',transform:'translateX(-50%)',background:'#0e131c',color:'#e6f9ff',padding:'8px 12px',border:'1px solid #2a3242',borderRadius:'10px',boxShadow:'0 10px 28px rgba(0,0,0,.35)',zIndex:9999,opacity:0,transition:'opacity .2s'});
-    document.body.appendChild(t);
-    requestAnimationFrame(()=> t.style.opacity=1);
-    setTimeout(()=>{ t.style.opacity=0; setTimeout(()=> t.remove(),250); }, 1500);
-  }
+    /* ---------- Data ---------- */
+    const MOONS = ["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
+    const ESS   = ["Attract purpose","Stabilize challenge","Activate service","Define form","Empower radiance","Balance equality","Channel inspiration","Harmonize integrity","Pulse intention","Perfect manifestation","Dissolve release","Dedicate cooperation","Endure presence"];
 
-  // Native share if possible; otherwise fall back to the copy logic already in moons-bar.js
-  async function nativeShare(){
-    try{
-      const url = new URL(link.href, location.href).toString();
-      const title = "13-Moon — today";
-      const text  = el("mbMoon")?.textContent && el("mbDay")?.textContent
-        ? `${el("mbMoon").textContent} — Day ${el("mbDay").textContent}`
-        : "13-Moon living clock";
+    /* ---------- TZ + URL ---------- */
+    const TZ_KEY="sof_moons_tz";
+    const getTZ = ()=> safe(()=>localStorage.getItem(TZ_KEY)) || safe(()=>Intl.DateTimeFormat().resolvedOptions().timeZone) || "UTC";
+    const setTZ = z => safe(()=>localStorage.setItem(TZ_KEY,z));
 
-      if (navigator.share){
-        await navigator.share({title, text, url});
-        return true;
-      }
-    }catch(e){ /* fall through to clipboard flow in moons-bar.js */ }
-    return false;
-  }
-
-  shareBtn?.addEventListener('click', async (e)=>{
-    const usedNative = await nativeShare();
-    if (usedNative){ toast('Shared'); return; }
-    // Else, let moons-bar.js handler run (it’s already attached there)
-    // We trigger its handler by dispatching a new click on shareBtn if needed.
-    // If you bound moons-bar.js to the same id, this line is optional.
-  }, {capture:true});
-
-  // Simple TZ selector using <dialog> when available; fallback to prompt()
-  tzBtn?.addEventListener('click', async ()=>{
-    const current = localStorage.getItem(TZ_KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
-    let chosen = current;
-
-    // Use a simple prompt for universal compatibility (no extra markup)
-    // You can paste e.g. "America/Los_Angeles", "UTC", "Europe/Berlin", etc.
-    const input = prompt(`Timezone (IANA name)\n\nExample: America/Los_Angeles, UTC, Europe/Berlin\n\nCurrent: ${current}`, current);
-    if (!input) return;
-
-    // Validate by round-tripping in Intl.DateTimeFormat
-    try{
-      new Intl.DateTimeFormat("en-CA",{timeZone:input}).format(new Date());
-      chosen = input;
-    }catch{
-      toast("Invalid timezone"); return;
-    }
-
-    if (chosen !== current){
-      localStorage.setItem(TZ_KEY, chosen);
-      // Force-refresh: moons-bar.js updates the deep link and UI every minute; we nudge it now
-      if (typeof Event==="function"){
-        document.dispatchEvent(new Event("sof:tz-change")); // give you a hook if you want later
-      }
-      // Quick local refresh: re-write href with tz= param
+    const validDateStr = s => /^\d{4}-\d{2}-\d{2}$/.test(s);
+    function dateInTZ(baseDate, tz, overrideHour){
       try{
-        const url = new URL(link.getAttribute('href'), document.baseURI || location.href);
-        url.searchParams.set('tz', chosen);
-        link.setAttribute('href', url.toString());
-      }catch{}
-      toast(`Timezone set: ${chosen}`);
+        const opts={timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"};
+        const parts=new Intl.DateTimeFormat("en-CA",opts).formatToParts(baseDate);
+        const m=Object.fromEntries(parts.map(p=>[p.type,p.value]));
+        const h=(overrideHour==null? m.hour : pad(overrideHour));
+        return new Date(`${m.year}-${m.month}-${m.day}T${h}:${m.minute}:${m.second}Z`);
+      }catch{
+        const d=new Date(baseDate); if(overrideHour!=null) d.setUTCHours(overrideHour,0,0,0); return d;
+      }
     }
-  });
 
-  // Optional: reflect carrier in ring stroke right away (no FOUC if CSS loaded late)
-  const arc = el('mbArc');
-  if (arc){
-    const total = 316; // pathLength
-    // Avoid abrupt animation on load for users with reduced motion
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches){
-      arc.style.transition = 'none';
+    /* ---------- 13-Moon core ---------- */
+    const utcTrunc = d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    const isLeapYear   = y=> (y%4===0 && y%100!==0) || (y%400===0);
+    const isLeapDayUTC = d=> d.getUTCMonth()===1 && d.getUTCDate()===29;
+    const isDOOT = (d, tz)=>{ const dt=dateInTZ(d,tz); return (dt.getUTCMonth()===6 && dt.getUTCDate()===25); };
+
+    function startOfYear13(d, tz){
+      const dt = dateInTZ(d, tz);
+      const y = dt.getUTCFullYear();
+      const anchorThis = new Date(Date.UTC(y,6,26));
+      const anchorPrev = new Date(Date.UTC(y-1,6,26));
+      return dt >= anchorThis ? anchorThis : anchorPrev;
     }
-  }
-})();
+    function dayIndexSinceStart(d, tz){
+      const start = utcTrunc(startOfYear13(d, tz));
+      const dt    = utcTrunc(dateInTZ(d, tz));
+      let days = Math.floor((dt - start)/86400000);
+      const doot = new Date(Date.UTC(start.getUTCFullYear()+1,6,25));
+      if (dt >= doot) days -= 1;
+      for (let y=start.getUTCFullYear(); y<=dt.getUTCFullYear(); y++){
+        if(isLeapYear(y)){
+          const feb29 = new Date(Date.UTC(y,1,29));
+          if (dt >= feb29 && start <= feb29) days -= 1;
+        }
+      }
+      return days; // 0..363
+    }
+    function calc13Moon(d, tz){
+      if (isDOOT(d,tz)){
+        const s=startOfYear13(d,tz).getUTCFullYear();
+        return {special:"Day Out of Time", year:`${s}/${s+1}`};
+      }
+      if (isLeapDayUTC(dateInTZ(d,tz))){
+        const s=startOfYear13(d,tz).getUTCFullYear();
+        return {special:"Leap Day", year:`${s}/${s+1}`};
+      }
+      const idx = dayIndexSinceStart(d, tz);
+      const moon = Math.floor(idx/28)+1;
+      const day  = (idx%28)+1;
+      const s=startOfYear13(d,tz).getUTCFullYear();
+      return {special:null, moon, day, year:`${s}/${s+1}`};
+    }
+
+    /* ---------- Phase accent ---------- */
+    function mixHex(a,b,t){
+      const pa=parseInt(a.slice(1),16), pb=parseInt(b.slice(1),16);
+      const ar=(pa>>16)&255, ag=(pa>>8)&255, ab=pa&255;
+      const br=(pb>>16)&255, bg=(pb>>8)&255, bb=pb&255;
+      const rr=Math.round(ar+(br-ar)*t), gg=Math.round(ag+(bg-ag)*t), bb2=Math.round(ab+(bb-ab)*t);
+      return `#${((1<<24)+(rr<<16)+(gg<<8)+bb2).toString(16).slice(1)}`;
+    }
+    function moonPhase(d){
+      const syn = 29.530588853, epoch = Date.UTC(2000,0,6,18,14,0);
+      const ageDays = ((d.getTime()-epoch)/86400000);
+      const frac = ((ageDays % syn)+syn)%syn / syn;
+      const illum = (1 - Math.cos(2*Math.PI*frac))/2;
+      return {illum};
+    }
+    function setGradientStops(defId, c1, c2){
+      const grad = document.getElementById(defId);
+      if (!grad) return;
+      const stops = grad.querySelectorAll("stop");
+      if (stops[0]) stops[0].setAttribute("stop-color", c1);
+      if (stops[1]) stops[1].setAttribute("stop-color", c2);
+    }
+    function applyPhaseAccent(illum){
+      const cold = "#7af3ff", warm = "#f3c97a";
+      const t = Math.min(1, Math.max(0, illum));
+      const c1 = mixHex(cold, warm, t*0.7);
+      const c2 = mixHex(warm, cold, (1-t)*0.7);
+      const root = document.documentElement;
+      root.style.setProperty("--moon-accent",  c1);
+      root.style.setProperty("--moon-accent-2",c2);
+      setGradientStops("mbGrad", c1, c2);
+      // keep letters readable on mini bar (never force contrast-light)
+      const bar = document.querySelector(".moonbar");
+      bar && bar.classList.remove("contrast-light");
+    }
+
+    /* ---------- DOM targets ---------- */
+    const elName = $("#mbMoon");
+    const elDay  = $("#mbDay");
+    const elDayLine = $("#mbDayLine");
+    const elEss  = $("#mbEssence");
+    const elYear = $("#mbYear");
+    const arc    = $("#mbArc") || $(".mb-fg");
+    const btnShare = $("#mbShare");
+    const btnTZ    = $("#mbTZ");
+    const link     = $("#moonMiniLink");
+    const barRoot  = document.querySelector(".moonbar");
+    const DASH_TOTAL=316;
+
+    function setArc(day){
+      if (!arc) return;
+      const d = Math.round(DASH_TOTAL * (clamp(day,1,28)/28));
+      arc.setAttribute("stroke-dasharray", `${d} ${Math.max(0,DASH_TOTAL-d)}`);
+    }
+    function buildDeepLink(now, tz, m13){
+      const base = (link?.getAttribute("href")) || "moons.html";
+      let u;
+      try{ u=new URL(base, document.baseURI || location.href); }
+      catch{ u=new URL(String(base), location.href); }
+      const d = dateInTZ(now, tz).toISOString().slice(0,10);
+      u.searchParams.set("d", d);
+      u.searchParams.set("tz", tz);
+      u.searchParams.set("t", String(now.getHours()));
+      if (m13 && m13.moon) u.hash = `moon-${m13.moon}`;
+      return u.toString();
+    }
+
+    /* ---------- Populate widget ---------- */
+    function update({deepLinkOnly=false}={}){
+      const tz = getTZ();
+      const now = new Date();
+      const wall = dateInTZ(now, tz, now.getHours());
+      const m13 = calc13Moon(wall, tz);
+
+      if (!deepLinkOnly){
+        if (m13.special){
+          elName && (elName.textContent = m13.special);
+          elEss  && (elEss.textContent  = "Outside the 13×28 count");
+          elDay  && (elDay.textContent  = "—");
+          elDayLine && (elDayLine.textContent = "—/28");
+          setArc(0);
+        } else {
+          const idx=m13.moon-1;
+          elName && (elName.textContent = `${MOONS[idx]} Moon`);
+          elEss  && (elEss.textContent  = ESS[idx]);
+          elDay  && (elDay.textContent  = `${m13.day}`);
+          elDayLine && (elDayLine.textContent = `Day ${m13.day} / 28`);
+          setArc(m13.day);
+        }
+        elYear && (elYear.textContent = m13.year);
+
+        // YHWH chip highlight on resonant numerology (1,4,7,11,22,33)
+        const y = wall.getUTCFullYear(), mm = wall.getUTCMonth()+1, dd = wall.getUTCDate();
+        const sum = String(y).split("").reduce((a,b)=>a+(+b),0) + mm + dd;
+        const resonant = [1,4,7,11,22,33].includes(sum % 34);
+        barRoot && barRoot.classList.toggle("yhwh-on", !!resonant);
+
+        // Phase accents
+        applyPhaseAccent(moonPhase(wall).illum);
+      }
+
+      // Deep link
+      const dl = buildDeepLink(now, tz, m13);
+      if (link) link.setAttribute("href", dl);
+      return dl;
+    }
+
+    /* ---------- Share + TZ ---------- */
+    on(btnShare, "click", async ()=>{
+      const url = update(); // ensure fresh link
+      const title = elName?.textContent || "13 Moons";
+      try{
+        if (navigator.share){
+          await navigator.share({title, text:title, url});
+          toast("Shared");
+        } else {
+          await navigator.clipboard.writeText(url);
+          toast("Link copied");
+        }
+      }catch{}
+    });
+
+    on(btnTZ, "click", ()=>{
+      const current = getTZ();
+      const input = prompt(`Timezone (IANA)\nEx: America/Los_Angeles, UTC, Europe/Berlin\n\nCurrent: ${current}`, current);
+      if (!input) return;
+      try{
+        new Intl.DateTimeFormat("en-CA",{timeZone:input}).format(new Date());
+        setTZ(input);
+        update({deepLinkOnly:false});
+        document.dispatchEvent(new Event("sof:tz-change"));
+        toast(`Timezone set: ${input}`);
+      }catch{ toast("Invalid timezone"); }
+    });
+
+    /* ---------- Reactivity ---------- */
+    on(document, "sof:accent-change", ()=>{
+      const bar = document.querySelector(".moonbar");
+      bar && bar.classList.remove("contrast-light");
+    });
+    on(document, "sof:tz-change", ()=> update({deepLinkOnly:false}));
+
+    /* ---------- Lifecycle ---------- */
+    if (arc && matchMedia('(prefers-reduced-motion: reduce)').matches){ arc.style.transition='none'; }
+    update();
+    let iv = setInterval(update, 60*1000);
+    on(document, "visibilitychange", ()=>{ if(document.hidden){ clearInterval(iv); } else { update(); iv=setInterval(update,60*1000);} });
+    on(window, "focus", update);
+  })();
   </script>
 
   <main id="main-content" class="wrap" role="main" tabindex="-1">
@@ -527,7 +673,7 @@
       <a class="tile col-3 reveal" href="ledger.html"><div><h4>📒 Ledger</h4><p>Hashes, notes, witness proofs.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
     </section>
 
-<!-- ======== Part 2 (Canon, Engine, etc.) ======== -->
+    <!-- ======== Part 2 (Canon, Engine, etc.) ======== -->
 
     <div class="goldline sweep"></div>
     <section class="grid" id="canon" aria-labelledby="equations">
@@ -545,399 +691,395 @@
             $$\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\!\big(\mathcal{A}\,\Phi(x,t,\nu)\big)\,d\nu\;+\;\Lambda\,\mathcal{E}(x,t)$$
           </div>
         </div>
-        <p class="hint">Origin integral of awareness across ν; Λ𝓔 is the ethical-energy mask.</p>
-      </article>
+        <p class="hint">Origin integral of awareness across…ν; Λ𝓔 is the ethical-energy mask.</p> </article>
 
-      <!-- Eq.1 -->
-      <article class="card col-6 eq-card reveal" id="eq1">
-        <h3 class="sheen">1) Source — Supply × Living Operators</h3>
-        <div class="eq" data-fx="beams">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\mathbf{R}(x,t)= f\!\big(\pi,e,i,\hbar,c,G,\mathrm{DNA},\Omega_{\rm DM},\Omega_{A},H_{0},432\big)\ \cdot\ (\mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S})$$
-          </div>
-        </div>
-        <p class="hint">Constants/ratios supply; living operators shape.</p>
-      </article>
+<!-- Eq.1 -->
+  <article class="card col-6 eq-card reveal" id="eq1">
+    <h3 class="sheen">1) Source — Supply × Living Operators</h3>
+    <div class="eq" data-fx="beams">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\mathbf{R}(x,t)= f\!\big(\pi,e,i,\hbar,c,G,\mathrm{DNA},\Omega_{\rm DM},\Omega_{A},H_{0},432\big)\ \cdot\ (\mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S})$$
+      </div>
+    </div>
+    <p class="hint">Constants/ratios supply; living operators shape.</p>
+  </article>
 
-      <!-- Eq.2 -->
-      <article class="card col-6 eq-card reveal" id="eq2">
-        <h3 class="sheen">2) Witness</h3>
-        <div class="eq" data-fx="orbit">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\mathcal{W}(x,t)=\partial_x\,\mathrm{Awareness}(x,t)\;+\;\mathcal{I}\cdot\mathbb{M}_\tau$$
-          </div>
-        </div>
-        <p class="hint">Awareness gradient with intention×memory coupling.</p>
-      </article>
+  <!-- Eq.2 -->
+  <article class="card col-6 eq-card reveal" id="eq2">
+    <h3 class="sheen">2) Witness</h3>
+    <div class="eq" data-fx="orbit">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\mathcal{W}(x,t)=\partial_x\,\mathrm{Awareness}(x,t)\;+\;\mathcal{I}\cdot\mathbb{M}_\tau$$
+      </div>
+    </div>
+    <p class="hint">Awareness gradient with intention×memory coupling.</p>
+  </article>
 
-      <!-- Eq.3 -->
-      <article class="card col-6 eq-card reveal" id="eq3">
-        <h3 class="sheen">3) Harmonic Gate</h3>
-        <div class="eq" data-fx="spiral">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\mathcal{H}(\nu,t)=\mathbf{1}\!\left[\;g_{\Xi(t)}(\nu)\ge \theta\;\right],\qquad g_{\Xi}(\nu)\in[0,1]$$
-          </div>
-        </div>
-        <p class="hint">Frequency \nu passes when coherence-weighted gain exceeds threshold \theta.</p>
-      </article>
+  <!-- Eq.3 -->
+  <article class="card col-6 eq-card reveal" id="eq3">
+    <h3 class="sheen">3) Harmonic Gate</h3>
+    <div class="eq" data-fx="spiral">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\mathcal{H}(\nu,t)=\mathbf{1}\!\left[\;g_{\Xi(t)}(\nu)\ge \theta\;\right],\qquad g_{\Xi}(\nu)\in[0,1]$$
+      </div>
+    </div>
+    <p class="hint">Frequency \nu passes when coherence-weighted gain exceeds threshold \theta.</p>
+  </article>
 
-      <!-- Eq.4 -->
-      <article class="card col-6 eq-card reveal" id="eq4">
-        <h3 class="sheen">4) Language — AHHAVA / Word</h3>
-        <div class="eq" data-fx="nebula">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\mathcal{L}(x,t,\nu)=\mathsf{Semantics}(x,t)\;\otimes\;\mathbf{V}(\nu,t)$$
-          </div>
-        </div>
-        <p class="hint">Meaning couples to carrier; word shapes resonance.</p>
-      </article>
+  <!-- Eq.4 -->
+  <article class="card col-6 eq-card reveal" id="eq4">
+    <h3 class="sheen">4) Language — AHHAVA / Word</h3>
+    <div class="eq" data-fx="nebula">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\mathcal{L}(x,t,\nu)=\mathsf{Semantics}(x,t)\;\otimes\;\mathbf{V}(\nu,t)$$
+      </div>
+    </div>
+    <p class="hint">Meaning couples to carrier; word shapes resonance.</p>
+  </article>
 
-      <!-- Eq.5 -->
-      <article class="card col-6 eq-card reveal" id="eq5">
-        <h3 class="sheen">5) Remnant</h3>
-        <div class="eq" data-fx="beams">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\Big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\Big)$$
-          </div>
-        </div>
-        <p class="hint">Truth persists; distortion decays from the field.</p>
-      </article>
+  <!-- Eq.5 -->
+  <article class="card col-6 eq-card reveal" id="eq5">
+    <h3 class="sheen">5) Remnant</h3>
+    <div class="eq" data-fx="beams">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\Big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\Big)$$
+      </div>
+    </div>
+    <p class="hint">Truth persists; distortion decays from the field.</p>
+  </article>
 
-      <!-- Eq.6 -->
-      <article class="card col-6 eq-card reveal" id="eq6">
-        <h3 class="sheen">6) Type-7 Field</h3>
-        <div class="eq" data-fx="orbit">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\mathbb{T}_{7}(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu,t)\right]$$
-          </div>
-        </div>
-        <p class="hint">Phase-locked harmonic stack (Tesla Type-7 conduit).</p>
-      </article>
+  <!-- Eq.6 -->
+  <article class="card col-6 eq-card reveal" id="eq6">
+    <h3 class="sheen">6) Type-7 Field</h3>
+    <div class="eq" data-fx="orbit">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\mathbb{T}_{7}(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu,t)\right]$$
+      </div>
+    </div>
+    <p class="hint">Phase-locked harmonic stack (Tesla Type-7 conduit).</p>
+  </article>
 
-      <!-- Eq.7A comparator -->
-      <article class="card col-6 eq-card reveal" id="eq7a">
-        <h3 class="sheen">7A) External Comparator (wave/KG)</h3>
-        <div class="eq" data-fx="rays">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\partial_{tt}\Phi\;+\;2\gamma\,\partial_{t}\Phi\;-\;c^{2}\nabla^{2}\Phi\;+\;\omega_{0}^{2}\Phi\;=\;\kappa\,\mathcal{S}(x,t)$$
-          </div>
-        </div>
-        <p class="meta">Neutral driven/damped wave (Klein–Gordon) for comparison; not canonical.</p>
-      </article>
+  <!-- Eq.7A comparator -->
+  <article class="card col-6 eq-card reveal" id="eq7a">
+    <h3 class="sheen">7A) External Comparator (wave/KG)</h3>
+    <div class="eq" data-fx="rays">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\partial_{tt}\Phi\;+\;2\gamma\,\partial_{t}\Phi\;-\;c^{2}\nabla^{2}\Phi\;+\;\omega_{0}^{2}\Phi\;=\;\kappa\,\mathcal{S}(x,t)$$
+      </div>
+    </div>
+    <p class="meta">Neutral driven/damped wave (Klein–Gordon) for comparison; not canonical.</p>
+  </article>
 
-      <!-- Eq.7B Copeland (external) -->
-      <article class="card col-6 eq-card reveal" id="eq7b">
-        <h3 class="sheen">7B) Copeland Ψ-Formalism (external)</h3>
-        <div class="eq" data-fx="nebula">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            <p class="meta" style="margin:0">
-              Summary pointer to Christopher W. Copeland’s Ψ-formalism (© author). Tracked as an adjunct reference.
-              <strong>Ledger note:</strong> link this card to its Ledger entry when added.
-            </p>
-          </div>
-        </div>
-        <p class="hint">External reference; not part of the Codex canon.</p>
-      </article>
+  <!-- Eq.7B Copeland (external) -->
+  <article class="card col-6 eq-card reveal" id="eq7b">
+    <h3 class="sheen">7B) Copeland Ψ-Formalism (external)</h3>
+    <div class="eq" data-fx="nebula">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        <p class="meta" style="margin:0">
+          Summary pointer to Christopher W. Copeland’s Ψ-formalism (© author). Tracked as an adjunct reference.
+          <strong>Ledger note:</strong> link this card to its Ledger entry when added.
+        </p>
+      </div>
+    </div>
+    <p class="hint">External reference; not part of the Codex canon.</p>
+  </article>
 
-      <!-- Eq.8 Goodwin (external) -->
-      <article class="card col-6 eq-card reveal" id="eq8">
-        <h3 class="sheen">8) Goodwin Coupling (external)</h3>
-        <div class="eq" data-fx="nebula">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\begin{aligned}
-            \dot{x}&=\frac{k}{1+z^{n}}-\gamma x,\\
-            \dot{y}&=\alpha x-\gamma y,\\
-            \dot{z}&=\beta y-\gamma z
-            \end{aligned}$$
-          </div>
-        </div>
-        <p class="meta">Three-stage feedback oscillator; adjunct comparative dynamics.</p>
-      </article>
+  <!-- Eq.8 Goodwin (external) -->
+  <article class="card col-6 eq-card reveal" id="eq8">
+    <h3 class="sheen">8) Goodwin Coupling (external)</h3>
+    <div class="eq" data-fx="nebula">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\begin{aligned}
+        \dot{x}&=\frac{k}{1+z^{n}}-\gamma x,\\
+        \dot{y}&=\alpha x-\gamma y,\\
+        \dot{z}&=\beta y-\gamma z
+        \end{aligned}$$
+      </div>
+    </div>
+    <p class="meta">Three-stage feedback oscillator; adjunct comparative dynamics.</p>
+  </article>
 
-      <!-- Eq.9 -->
-      <article class="card col-6 eq-card reveal" id="eq9">
-        <h3 class="sheen">9) Ethical Law of Coherence</h3>
-        <div class="eq" data-fx="beams">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\forall a:\ \mathrm{damage}(a)>0\ \Rightarrow\ \mathsf{halt},\qquad \mathrm{truth}>\mathrm{distortion}$$
-          </div>
-        </div>
-        <p class="hint">Stop rule on harm; asymptote favors truth.</p>
-      </article>
+  <!-- Eq.9 -->
+  <article class="card col-6 eq-card reveal" id="eq9">
+    <h3 class="sheen">9) Ethical Law of Coherence</h3>
+    <div class="eq" data-fx="beams">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\forall a:\ \mathrm{damage}(a)>0\ \Rightarrow\ \mathsf{halt},\qquad \mathrm{truth}>\mathrm{distortion}$$
+      </div>
+    </div>
+    <p class="hint">Stop rule on harm; asymptote favors truth.</p>
+  </article>
 
-      <!-- Eq.10 -->
-      <article class="card col-6 eq-card reveal" id="eq10">
-        <h3 class="sheen">10) Ladder Π<sub>ν</sub></h3>
-        <div class="eq" data-fx="orbit">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\Pi_{\nu}^{-1}:\ \text{observed resonance } \longrightarrow \text{source terms}$$
-          </div>
-        </div>
-        <p class="hint">Inverse map from phenomena back to generative sources.</p>
-      </article>
+  <!-- Eq.10 -->
+  <article class="card col-6 eq-card reveal" id="eq10">
+    <h3 class="sheen">10) Ladder Π<sub>ν</sub></h3>
+    <div class="eq" data-fx="orbit">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\Pi_{\nu}^{-1}:\ \text{observed resonance } \longrightarrow \text{source terms}$$
+      </div>
+    </div>
+    <p class="hint">Inverse map from phenomena back to generative sources.</p>
+  </article>
 
-      <!-- Eq.11 -->
-      <article class="card col-6 eq-card reveal" id="eq11">
-        <h3 class="sheen">11) Projection Frame</h3>
-        <div class="eq" data-fx="spiral">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\mathsf{Frame}(x,t)=\big(\mathsf{scope},\ \mathcal{W},\ \mathsf{ethics}\big)$$
-          </div>
-        </div>
-        <p class="hint">Defines scope, witness, and ethical mask for any run.</p>
-      </article>
+  <!-- Eq.11 -->
+  <article class="card col-6 eq-card reveal" id="eq11">
+    <h3 class="sheen">11) Projection Frame</h3>
+    <div class="eq" data-fx="spiral">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\mathsf{Frame}(x,t)=\big(\mathsf{scope},\ \mathcal{W},\ \mathsf{ethics}\big)$$
+      </div>
+    </div>
+    <p class="hint">Defines scope, witness, and ethical mask for any run.</p>
+  </article>
 
-      <!-- Eq.12 -->
-      <article class="card col-6 eq-card reveal" id="eq12">
-        <h3 class="sheen">12) Causal Lattice</h3>
-        <div class="eq" data-fx="nebula">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\mathcal{L}_c=\big(V=\text{acts},\ E=\text{consequences}\big)$$
-          </div>
-        </div>
-        <p class="hint">Graph of micro-acts and consequences; used for audit.</p>
-      </article>
+  <!-- Eq.12 -->
+  <article class="card col-6 eq-card reveal" id="eq12">
+    <h3 class="sheen">12) Causal Lattice</h3>
+    <div class="eq" data-fx="nebula">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\mathcal{L}_c=\big(V=\text{acts},\ E=\text{consequences}\big)$$
+      </div>
+    </div>
+    <p class="hint">Graph of micro-acts and consequences; used for audit.</p>
+  </article>
 
-      <!-- Eq.13 -->
-      <article class="card col-6 eq-card reveal" id="eq13">
-        <h3 class="sheen">13) Ξ-index (Coherence)</h3>
-        <div class="eq" data-fx="beams">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\Xi(t)\in[0,1],\qquad \text{monitors field quality for learning}$$
-          </div>
-        </div>
-        <p class="hint">Higher \Xi → stronger retention and safer amplification.</p>
-      </article>
+  <!-- Eq.13 -->
+  <article class="card col-6 eq-card reveal" id="eq13">
+    <h3 class="sheen">13) Ξ-index (Coherence)</h3>
+    <div class="eq" data-fx="beams">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\Xi(t)\in[0,1],\qquad \text{monitors field quality for learning}$$
+      </div>
+    </div>
+    <p class="hint">Higher \Xi → stronger retention and safer amplification.</p>
+  </article>
 
-      <!-- Eq.14 -->
-      <article class="card col-6 eq-card reveal" id="eq14">
-        <h3 class="sheen">14) Update Rule</h3>
-        <div class="eq" data-fx="orbit">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R}$$
-          </div>
-        </div>
-        <p class="hint">Learning rate gated by coherence.</p>
-      </article>
+  <!-- Eq.14 -->
+  <article class="card col-6 eq-card reveal" id="eq14">
+    <h3 class="sheen">14) Update Rule</h3>
+    <div class="eq" data-fx="orbit">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R}$$
+      </div>
+    </div>
+    <p class="hint">Learning rate gated by coherence.</p>
+  </article>
 
-      <!-- Eq.15 -->
-      <article class="card col-6 eq-card reveal" id="eq15">
-        <h3 class="sheen">15) Learning Kernel (Ξ)</h3>
-        <div class="eq" data-fx="spiral">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big)$$
-          </div>
-        </div>
-        <p class="hint">Smooth schedule; no learning below ethical/coherence threshold.</p>
-      </article>
+  <!-- Eq.15 -->
+  <article class="card col-6 eq-card reveal" id="eq15">
+    <h3 class="sheen">15) Learning Kernel (Ξ)</h3>
+    <div class="eq" data-fx="spiral">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big)$$
+      </div>
+    </div>
+    <p class="hint">Smooth schedule; no learning below ethical/coherence threshold.</p>
+  </article>
 
-      <!-- Eq.16 -->
-      <article class="card col-6 eq-card reveal" id="eq16">
-        <h3 class="sheen">16) Memory Windowing 𝓦<sub>τ</sub></h3>
-        <div class="eq" data-fx="nebula">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t}\! w_\tau(t-s)\,F(s)\,ds,\quad \int_0^\tau w_\tau(u)\,du=1$$
-          </div>
-        </div>
-        <p class="hint">Finite-horizon echo with normalized kernel.</p>
-      </article>
+  <!-- Eq.16 -->
+  <article class="card col-6 eq-card reveal" id="eq16">
+    <h3 class="sheen">16) Memory Windowing 𝓦<sub>τ</sub></h3>
+    <div class="eq" data-fx="nebula">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t}\! w_\tau(t-s)\,F(s)\,ds,\quad \int_0^\tau w_\tau(u)\,du=1$$
+      </div>
+    </div>
+    <p class="hint">Finite-horizon echo with normalized kernel.</p>
+  </article>
 
-      <!-- Eq.17 -->
-      <article class="card col-6 eq-card reveal" id="eq17">
-        <h3 class="sheen">17) Voice Carriers 𝐕(ν,t)</h3>
-        <div class="eq" data-fx="combo">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-            $$\mathbf{V}(\nu,t)=\sum_{k} a_k(t)\,\cos\!\big(2\pi\nu_k t+\phi_k(t)\big),\quad \nu\in\{432,528,369,144,963,\dots\}$$
-          </div>
-        </div>
-        <p class="hint">Constructive sets with explicit time-varying envelope and phase.</p>
-      </article>
-    </section>
+  <!-- Eq.17 -->
+  <article class="card col-6 eq-card reveal" id="eq17">
+    <h3 class="sheen">17) Voice Carriers 𝐕(ν,t)</h3>
+    <div class="eq" data-fx="combo">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+        $$\mathbf{V}(\nu,t)=\sum_{k} a_k(t)\,\cos\!\big(2\pi\nu_k t+\phi_k(t)\big),\quad \nu\in\{432,528,369,144,963,\dots\}$$
+      </div>
+    </div>
+    <p class="hint">Constructive sets with explicit time-varying envelope and phase.</p>
+  </article>
+</section>
 
-    <!-- Manifestation Engine -->
-    <div class="goldline sweep"></div>
-    <section class="grid" id="engine" aria-labelledby="engine-h">
-      <article class="card col-12 reveal">
-        <h2 id="engine-h" class="sheen">✨ Manifestation Engine — Ξ-gated Learning + Carriers</h2>
-        <p>Practice summary tying the learning dynamics to voice carriers:</p>
-        <ol class="list">
-          <li><strong>Measure Ξ</strong> (Eq.13) → compute \eta(\Xi) (Eq.15).</li>
-          <li><strong>Update</strong> field intent \mathcal{R} via Eq.14.</li>
-          <li><strong>Select carriers</strong> \mathbf{V}(\nu,t) (Eq.17) through \mathcal{H}(\nu,t) (Eq.3).</li>
-          <li><strong>Respect ethics</strong> (Eq.9) — mask/damp harmful channels.</li>
-          <li><strong>Stabilize</strong> with memory \mathbb{M}_\tau and Remnant (Eq.16 &amp; Eq.5).</li>
-        </ol>
-        <a class="cta" href="teach.html#tab-voice">Open Voice Protocol</a>
-      </article>
-    </section>
+<!-- Manifestation Engine -->
+<div class="goldline sweep"></div>
+<section class="grid" id="engine" aria-labelledby="engine-h">
+  <article class="card col-12 reveal">
+    <h2 id="engine-h" class="sheen">✨ Manifestation Engine — Ξ-gated Learning + Carriers</h2>
+    <p>Practice summary tying the learning dynamics to voice carriers:</p>
+    <ol class="list">
+      <li><strong>Measure Ξ</strong> (Eq.13) → compute \eta(\Xi) (Eq.15).</li>
+      <li><strong>Update</strong> field intent \mathcal{R} via Eq.14.</li>
+      <li><strong>Select carriers</strong> \mathbf{V}(\nu,t) (Eq.17) through \mathcal{H}(\nu,t) (Eq.3).</li>
+      <li><strong>Respect ethics</strong> (Eq.9) — mask/damp harmful channels.</li>
+      <li><strong>Stabilize</strong> with memory \mathbb{M}_\tau and Remnant (Eq.16 &amp; Eq.5).</li>
+    </ol>
+    <a class="cta" href="teach.html#tab-voice">Open Voice Protocol</a>
+  </article>
+</section>
 
-    <!-- Dimensional Scaffolding -->
-    <div class="goldline sweep"></div>
-    <section class="grid" id="dim" aria-labelledby="dim-h">
-      <article class="card col-12 reveal">
-        <h2 id="dim-h" class="sheen">🧭 Dimensional Scaffolding Δ0–Δ7</h2>
-        <p class="meta">Mapping of projection frames across dimensional strata (illustrative forms aligned with Codex semantics).</p>
-      </article>
+<!-- Dimensional Scaffolding -->
+<div class="goldline sweep"></div>
+<section class="grid" id="dim" aria-labelledby="dim-h">
+  <article class="card col-12 reveal">
+    <h2 id="dim-h" class="sheen">🧭 Dimensional Scaffolding Δ0–Δ7</h2>
+    <p class="meta">Mapping of projection frames across dimensional strata (illustrative forms aligned with Codex semantics).</p>
+  </article>
 
-      <article class="card col-6 eq-card reveal" id="d0">
-        <h3 class="sheen">Δ0) Scalar Substrate</h3>
-        <div class="eq" data-fx="nebula"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\Delta_0:\ \phi_0:\mathbb{R}^{+}\!\to\!\mathbb{R},\quad \Psi_{\Omega}=\phi_0\circ\mathsf{Frame}$$
-        </div></div>
-        <p class="hint">Pure scalar field under the active Frame.</p>
-      </article>
+  <article class="card col-6 eq-card reveal" id="d0">
+    <h3 class="sheen">Δ0) Scalar Substrate</h3>
+    <div class="eq" data-fx="nebula"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
+      $$\Delta_0:\ \phi_0:\mathbb{R}^{+}\!\to\!\mathbb{R},\quad \Psi_{\Omega}=\phi_0\circ\mathsf{Frame}$$
+    </div></div>
+    <p class="hint">Pure scalar field under the active Frame.</p>
+  </article>
 
-      <article class="card col-6 eq-card reveal" id="d1">
-        <h3 class="sheen">Δ1) Vector Flow</h3>
-        <div class="eq" data-fx="beams"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\Delta_1:\ \mathbf{F}_1=\nabla\Psi_{\Omega},\quad \mathrm{curl}\,\mathbf{F}_1=\mathbf{0}$$
-        </div></div>
-        <p class="hint">Conservative flow derived from Δ0.</p>
-      </article>
+  <article class="card col-6 eq-card reveal" id="d1">
+    <h3 class="sheen">Δ1) Vector Flow</h3>
+    <div class="eq" data-fx="beams"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
+      $$\Delta_1:\ \mathbf{F}_1=\nabla\Psi_{\Omega},\quad \mathrm{curl}\,\mathbf{F}_1=\mathbf{0}$$
+    </div></div>
+    <p class="hint">Conservative flow derived from Δ0.</p>
+  </article>
 
-      <article class="card col-6 eq-card reveal" id="d2">
-        <h3 class="sheen">Δ2) Surface Coupling</h3>
-        <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\Delta_2:\ \mathbf{B}_2=\nabla\times\mathbf{A},\quad \nabla\cdot\mathbf{B}_2=0$$
-        </div></div>
-        <p class="hint">Area-bound flux via potential \mathbf{A}.</p>
-      </article>
+  <article class="card col-6 eq-card reveal" id="d2">
+    <h3 class="sheen">Δ2) Surface Coupling</h3>
+    <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
+      $$\Delta_2:\ \mathbf{B}_2=\nabla\times\mathbf{A},\quad \nabla\cdot\mathbf{B}_2=0$$
+    </div></div>
+    <p class="hint">Area-bound flux via potential \mathbf{A}.</p>
+  </article>
 
-      <article class="card col-6 eq-card reveal" id="d3">
-        <h3 class="sheen">Δ3) Volume Integration</h3>
-        <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\Delta_3:\ \Phi_3=\iiint_{\mathcal{V}}\rho\,dV,\quad \partial_t\rho+\nabla\cdot\mathbf{J}=0$$
-        </div></div>
-        <p class="hint">Conserved density and flux.</p>
-      </article>
+  <article class="card col-6 eq-card reveal" id="d3">
+    <h3 class="sheen">Δ3) Volume Integration</h3>
+    <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
+      $$\Delta_3:\ \Phi_3=\iiint_{\mathcal{V}}\rho\,dV,\quad \partial_t\rho+\nabla\cdot\mathbf{J}=0$$
+    </div></div>
+    <p class="hint">Conserved density and flux.</p>
+  </article>
 
-      <article class="card col-6 eq-card reveal" id="d4">
-        <h3 class="sheen">Δ4) Space-Time Weave</h3>
-        <div class="eq" data-fx="nebula"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\Delta_4:\ g_{\mu\nu}=\eta_{\mu\nu}+\epsilon\,h_{\mu\nu},\quad \Box h_{\mu\nu}=-\frac{16\pi G}{c^4}T_{\mu\nu}$$
-        </div></div>
-        <p class="hint">Weak-field weave for propagation and coupling.</p>
-      </article>
+  <article class="card col-6 eq-card reveal" id="d4">
+    <h3 class="sheen">Δ4) Space-Time Weave</h3>
+    <div class="eq" data-fx="nebula"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
+      $$\Delta_4:\ g_{\mu\nu}=\eta_{\mu\nu}+\epsilon\,h_{\mu\nu},\quad \Box h_{\mu\nu}=-\frac{16\pi G}{c^4}T_{\mu\nu}$$
+    </div></div>
+    <p class="hint">Weak-field weave for propagation and coupling.</p>
+  </article>
 
-      <article class="card col-6 eq-card reveal" id="d5">
-        <h3 class="sheen">Δ5) Harmonic Ladder Π<sub>ν</sub></h3>
-        <div class="eq" data-fx="beams"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\Delta_5:\ \Pi_{\nu}:\ \mathbb{R}\to\Gamma,\quad \Gamma=\{\nu_k\},\ \ \Pi_{\nu}^{-1}\big[\mathcal{H}(\nu)\big]\mapsto \text{sources}$$
-        </div></div>
-        <p class="hint">Gate map between observed harmonics and sources.</p>
-      </article>
+  <article class="card col-6 eq-card reveal" id="d5">
+    <h3 class="sheen">Δ5) Harmonic Ladder Π<sub>ν</sub></h3>
+    <div class="eq" data-fx="beams"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
+      $$\Delta_5:\ \Pi_{\nu}:\ \mathbb{R}\to\Gamma,\quad \Gamma=\{\nu_k\},\ \ \Pi_{\nu}^{-1}\big[\mathcal{H}(\nu)\big]\mapsto \text{sources}$$
+    </div></div>
+    <p class="hint">Gate map between observed harmonics and sources.</p>
+  </article>
 
-      <article class="card col-6 eq-card reveal" id="d6">
-        <h3 class="sheen">Δ6) Ethical Mask 𝓒</h3>
-        <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\Delta_6:\ \mathsf{Mask}_{\mathcal{C}}[F]=F\cdot\mathbf{1}_{\mathrm{damage}\le 0}$$
-        </div></div>
-        <p class="hint">Zeroes any channel that violates the stop rule.</p>
-      </article>
+  <article class="card col-6 eq-card reveal" id="d6">
+    <h3 class="sheen">Δ6) Ethical Mask 𝓒</h3>
+    <div class="eq" data-fx="orbit"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
+      $$\Delta_6:\ \mathsf{Mask}_{\mathcal{C}}[F]=F\cdot\mathbf{1}_{\mathrm{damage}\le 0}$$
+    </div></div>
+    <p class="hint">Zeroes any channel that violates the stop rule.</p>
+  </article>
 
-      <article class="card col-6 eq-card reveal" id="d7">
-        <h3 class="sheen">Δ7) Type-7 Cohere</h3>
-        <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
-          $$\Delta_7:\ \mathbb{T}_7=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu,t)\right],\quad \Xi\!\nearrow\Rightarrow \text{locking}$$
-        </div></div>
-        <p class="hint">Stack closure under coherence gain.</p>
-      </article>
-    </section>
+  <article class="card col-6 eq-card reveal" id="d7">
+    <h3 class="sheen">Δ7) Type-7 Cohere</h3>
+    <div class="eq" data-fx="spiral"><div class="fx-layer" aria-hidden="true"></div><div class="eq-scroll">
+      $$\Delta_7:\ \mathbb{T}_7=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu,t)\right],\quad \Xi\!\nearrow\Rightarrow \text{locking}$$
+    </div></div>
+    <p class="hint">Stack closure under coherence gain.</p>
+  </article>
+</section>
 
-    <!-- Integrity -->
-    <div class="goldline sweep"></div>
-    <section class="grid" id="integrity" aria-labelledby="integrity-h">
-      <article class="card col-12 reveal">
-        <h2 id="integrity-h" class="sheen">🔐 Integrity Chain &amp; Seals (SHA-256)</h2>
+<!-- Integrity -->
+<div class="goldline sweep"></div>
+<section class="grid" id="integrity" aria-labelledby="integrity-h">
+  <article class="card col-12 reveal">
+    <h2 id="integrity-h" class="sheen">🔐 Integrity Chain &amp; Seals (SHA-256)</h2>
 
 <pre class="eq" aria-label="Hash example" style="white-space:pre-wrap"><div class="eq-scroll">────────────────────────────────────────
 Permanent Codex (FIXED .docx):
 SHA-256:  081f90de921719834c939ff9496c436fcb8f24497e546fcf64eb53ad59ec06e1
 File:     Codex_of_Reality—Multidimensional_Extended_Edition_2025_FIXED.docx
 Note: This is the local, verified file hash shown on this page.
-────────────────────────────────────────</div></pre>
-        <p>Ledger index (placeholders): <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/SHA256_Placeholders_2025.md" target="_blank" rel="noopener">7_Ledger_and_Documentation/SHA256_Placeholders_2025.md</a></p>
-      </article>
-    </section>
+────────────────────────────────────────</div></pre><p>Ledger index (placeholders): <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/SHA256_Placeholders_2025.md" target="_blank" rel="noopener">7_Ledger_and_Documentation/SHA256_Placeholders_2025.md</a></p>
+  </article>
+</section>
 
-    <!-- Provenance -->
-    <div class="goldline sweep"></div>
-    <section class="grid" id="provenance" aria-labelledby="prov-h">
-      <article class="card col-12 reveal">
-        <h2 id="prov-h" class="sheen">📜 Attribution &amp; Provenance — What’s Original, What’s External</h2>
-        <p class="meta">The <strong>Codex of Reality</strong> is an original, living resonance framework (Aaron Paul Laird, “Scribe of Circuits”). It defines the Source supply, the living operators <em>(𝓘 · 𝓛 · 𝓒 · 𝓢)</em>, harmonic selection, language coupling (AHHAVA / Or HaDabar), memory/remnant dynamics, coherence law, and the dimensional/causal scaffolding as a single, coherent system.</p>
-      </article>
-      <article class="card col-7 reveal">
-        <h3 class="sheen">What is <em>original</em> to the Codex</h3>
-        <ul class="list">
-          <li><strong>Equations (0–6, 9–17)</strong> — ΨΩ foundation, Source, Witness, Harmonics, AHHAVA/Word, Remnant, Type-7, Ethical Coherence, Ladder, Π<sub>ν</sub>, Causal Lattice, Ξ-index, Update, Windowing, Voice.</li>
-          <li><strong>Operators &amp; Process</strong> — Ordered living operators and the integration pipeline.</li>
-          <li><strong>Living Technology</strong> — Tesla Type-7 conduit &amp; safety/ethics gate.</li>
-        </ul>
-        <div class="eq" data-fx="combo">
-          <div class="fx-layer" aria-hidden="true"></div>
-          <div class="eq-scroll">
-          $$\mathfrak{R}_{\text{Codex}}=f(\text{constants},\text{ratios})\cdot(\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})\cdot\bigl(\Psi_{\Omega}+\Delta\mathcal{R}\bigr)\cdot\Pi_{\nu}^{-1}\!\big[\mathcal{H}(\nu)\,\mathbf{V}(\nu,t)\big]\;\odot\;\mathbb{M}_{\tau}[\cdot]\;\text{ masked by }\;\mathsf{Mask}_{\mathcal{C}}[\cdot]$$
-          </div>
-        </div>
-        <p class="eq-note hint">Self-contained architecture; external formalisms remain adjunct.</p>
-      </article>
-      <article class="card col-5 reveal">
-        <h3 class="sheen">What remains <em>external</em></h3>
-        <ul class="list">
-          <li><strong>7A</strong> — Neutral wave/Klein–Gordon comparator.</li>
-          <li><strong>7B</strong> — Copeland Ψ (adjunct; link to Ledger entry when added).</li>
-          <li><strong>8</strong> — Goodwin coupling hypothesis.</li>
-        </ul>
-        <a class="cta" href="#canon">Back to Canon</a>
-      </article>
-    </section>
-
-    <div class="goldline sweep"></div>
-
-    <footer class="footer">
-      © <span id="y"></span> Scroll of Fire. All constants are provisional until observed.
-    </footer>
-
-    <!-- Sticky Explore Dock -->
-    <div class="explore-dock" id="exploreDock" role="region" aria-label="Explore shortcut">
-      <a class="btn btn--primary" href="#explore">Explore the Scroll</a>
-      <a class="btn" href="teach.html">Manifest</a>
-    </div>
-
-    <!-- Back to Top button -->
-    <button class="to-top" id="toTop" type="button" aria-label="Back to top" title="Back to top">↑</button>
-
-    <!-- Command Palette -->
-    <div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel" hidden>
-      <div class="panel">
-        <h3 id="palLabel" class="sr-only">Command palette</h3>
-        <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette">
-        <ul id="palList" aria-live="polite"></ul>
+<!-- Provenance -->
+<div class="goldline sweep"></div>
+<section class="grid" id="provenance" aria-labelledby="prov-h">
+  <article class="card col-12 reveal">
+    <h2 id="prov-h" class="sheen">📜 Attribution &amp; Provenance — What’s Original, What’s External</h2>
+    <p class="meta">The <strong>Codex of Reality</strong> is an original, living resonance framework (Aaron Paul Laird, “Scribe of Circuits”). It defines the Source supply, the living operators <em>(𝓘 · 𝓛 · 𝓒 · 𝓢)</em>, harmonic selection, language coupling (AHHAVA / Or HaDabar), memory/remnant dynamics, coherence law, and the dimensional/causal scaffolding as a single, coherent system.</p>
+  </article>
+  <article class="card col-7 reveal">
+    <h3 class="sheen">What is <em>original</em> to the Codex</h3>
+    <ul class="list">
+      <li><strong>Equations (0–6, 9–17)</strong> — ΨΩ foundation, Source, Witness, Harmonics, AHHAVA/Word, Remnant, Type-7, Ethical Coherence, Ladder, Π<sub>ν</sub>, Causal Lattice, Ξ-index, Update, Windowing, Voice.</li>
+      <li><strong>Operators &amp; Process</strong> — Ordered living operators and the integration pipeline.</li>
+      <li><strong>Living Technology</strong> — Tesla Type-7 conduit &amp; safety/ethics gate.</li>
+    </ul>
+    <div class="eq" data-fx="combo">
+      <div class="fx-layer" aria-hidden="true"></div>
+      <div class="eq-scroll">
+      $$\mathfrak{R}_{\text{Codex}}=f(\text{constants},\text{ratios})\cdot(\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})\cdot\bigl(\Psi_{\Omega}+\Delta\mathcal{R}\bigr)\cdot\Pi_{\nu}^{-1}\!\big[\mathcal{H}(\nu)\,\mathbf{V}(\nu,t)\big]\;\odot\;\mathbb{M}_{\tau}[\cdot]\;\text{ masked by }\;\mathsf{Mask}_{\mathcal{C}}[\cdot]$$
       </div>
     </div>
-  </main>
+    <p class="eq-note hint">Self-contained architecture; external formalisms remain adjunct.</p>
+  </article>
+  <article class="card col-5 reveal">
+    <h3 class="sheen">What remains <em>external</em></h3>
+    <ul class="list">
+      <li><strong>7A</strong> — Neutral wave/Klein–Gordon comparator.</li>
+      <li><strong>7B</strong> — Copeland Ψ (adjunct; link to Ledger entry when added).</li>
+      <li><strong>8</strong> — Goodwin coupling hypothesis.</li>
+    </ul>
+    <a class="cta" href="#canon">Back to Canon</a>
+  </article>
+</section>
 
-  <!-- Part 2-only scripts: Command Palette + Equation FX + helpers -->
-  <script>
+<div class="goldline sweep"></div>
+
+<footer class="footer">
+  © <span id="y"></span> Scroll of Fire. All constants are provisional until observed.
+</footer>
+
+<!-- Sticky Explore Dock -->
+<div class="explore-dock" id="exploreDock" role="region" aria-label="Explore shortcut">
+  <a class="btn btn--primary" href="#explore">Explore the Scroll</a>
+  <a class="btn" href="teach.html">Manifest</a>
+</div>
+
+<!-- Back to Top button -->
+<button class="to-top" id="toTop" type="button" aria-label="Back to top" title="Back to top">↑</button>
+
+<!-- Command Palette -->
+<div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel" hidden>
+  <div class="panel">
+    <h3 id="palLabel" class="sr-only">Command palette</h3>
+    <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette">
+    <ul id="palList" aria-live="polite"></ul>
+  </div>
+</div>
+
+  </main>  <!-- Part 2-only scripts: Command Palette + Equation FX + helpers -->  <script>
     // Guard against double-binding if included twice by mistake
     if (!window.__sofP1) { window.__sofP1 = 1;
 
@@ -1289,6 +1431,5 @@ Note: This is the local, verified file hash shown on this page.
     })();
 
     } // end guard
-  </script>
-</body>
-</html>
+  </script></body>
+  </html>
