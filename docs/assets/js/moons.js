@@ -485,9 +485,12 @@ const noteKey = idx => `sof_moon_note_${idx}`;
     });
     return 0.2126*t[0]+0.7152*t[1]+0.0722*t[2];
   };
-  function updateWidgetContrast(){
-    const bar = $(".moonbar");
-    if (!bar) return;
+  // Keep mini bar text light; don't auto-darken on bright accents
+function updateWidgetContrast(){
+  const bar = document.querySelector(".moonbar");
+  if (!bar) return;
+  bar.classList.remove("contrast-light");
+}
     const styles = getComputedStyle(document.documentElement);
     const accent = styles.getPropertyValue("--moon-accent") || "#7af3ff";
     const rgb = parseColor(accent) || {r:122,g:243,b:255};
