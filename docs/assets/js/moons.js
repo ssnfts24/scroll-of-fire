@@ -1,4 +1,4 @@
-/* 13 Moons — Living Clock (advanced, DPR-aware, phase-tinted, v3.7) */
+/* 13 Moons — Living Clock (advanced, DPR-aware, phase-tinted, v3.8 Remnant) */
 (function(){
   "use strict";
 
@@ -35,6 +35,9 @@
     "“He heals the brokenhearted and binds up their wounds.” — Psalm 147:3"
   ];
   const SEALS = ["Red Dragon","White Wind","Blue Night","Yellow Seed","Red Serpent","White Worldbridger","Blue Hand","Yellow Star","Red Moon","White Dog","Blue Monkey","Yellow Human","Red Skywalker","White Wizard","Blue Eagle","Yellow Warrior","Red Earth","White Mirror","Blue Storm","Yellow Sun"];
+
+  /* Remnant / theme knobs */
+  const REMNANT_ON = true; // turn on special theme + flourishes
 
   /* ===================== TZ setup ===================== */
   const TZ_KEY="sof_moons_tz";
@@ -147,6 +150,7 @@
   function moonPhase(d){
     const syn = 29.530588853, epoch = Date.UTC(2000,0,6,18,14,0);
     const ageDays = ((d.getTime()-epoch)/86400000);
+    pushRemnantAura(ageDays); // subtle phase-based aura
     const frac = ((ageDays % syn)+syn)%syn / syn;
     const illum = (1 - Math.cos(2*Math.PI*frac))/2;
     const names = [
@@ -156,7 +160,8 @@
       {n:"Last Quarter", r:[0.72,0.78]}, {n:"Waning Crescent", r:[0.78,0.97]},
       {n:"New Moon", r:[0.97,1.01]},
     ];
-    const phase = (names.find(x=> frac>=x.r[0] && frac<x.r.r1])||{}).n || "—"; // (typo guard next line fixes)
+    // ✅ fixed
+    const phase = (names.find(x => frac >= x.r[0] && frac < x.r[1]) || {}).n || "—";
     return {phase, ageDays, illum, frac};
   }
 
@@ -342,6 +347,68 @@
     weekDots.appendChild(frag);
   }
 
+  /* ============== Codex Renderer (Remnant-aware) ============== */
+  function renderCodexForMoon(moonIdx){
+    const data = findMoonData(moonIdx) || {};
+    // Hebrew & Psalm
+    if (loreHebrew) loreHebrew.textContent = data.hebrew || "יהוה";
+    if (lorePsalm)  lorePsalm.textContent  = data.psalm  || "Let there be light in the firmament of the heaven (Gen 1:14).";
+    // Essay
+    if (loreEssay)  loreEssay.textContent  = data.essay || "";
+    // Sigil
+    if (loreSigil){
+      if (data.sigil){ loreSigil.innerHTML = `<img alt="Sigil" src="${data.sigil}" loading="lazy">`; }
+      else loreSigil.innerHTML = "";
+    }
+    // Practices
+    if (practiceList){
+      const items = Array.isArray(data.practices)? data.practices : [];
+      practiceList.innerHTML = items.map(x=>`<li>${String(x)}</li>`).join("") || "<li>Keep the watch. Pray at dawn and dusk.</li>";
+    }
+    // Media
+    if (mediaImage){
+      if (data.image){ mediaImage.setAttribute("src", data.image); mediaImage.removeAttribute("hidden"); }
+      else { mediaImage.setAttribute("hidden",""); }
+    }
+    if (mediaCaption) mediaCaption.textContent = data.caption || "";
+    if (mediaAudio){
+      if (data.audio){ mediaAudio.innerHTML = `<audio controls preload="none" src="${data.audio}"></audio>`; }
+      else mediaAudio.innerHTML = "";
+    }
+    // Files (Codex)
+    if (loreCodex){
+      const files = Array.isArray(data.files) ? data.files : [];
+      loreCodex.innerHTML = files.length
+        ? `<ul class="prompts">${files.map(f=>`<li><a href="${f.url}" target="_blank" rel="noopener">${f.title||f.url}</a></li>`).join("")}</ul>`
+        : `<div class="hint">No codex files for this moon yet.</div>`;
+    }
+    // Notes
+    if (btnSaveNote){
+      on(btnSaveNote, "click", ()=>{
+        const area = $("#moonNote");
+        if (!area) return;
+        safe(()=> localStorage.setItem(noteKey(moonIdx), area.value||""));
+        const t=document.createElement("div"); t.className="toast"; t.textContent="Note saved";
+        document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
+        setTimeout(()=>{t.style.opacity=0; setTimeout(()=>t.remove(),250);},1500);
+      });
+    }
+    const area = $("#moonNote");
+    if (area){
+      area.value = safe(()=> localStorage.getItem(noteKey(moonIdx))) || "";
+      area.placeholder = "Your remnant notes for this moon…";
+    }
+    if (btnShareImage){
+      on(btnShareImage,"click",()=>{
+        if (!mediaImage || !mediaImage.src) return;
+        safe(()=> navigator.clipboard.writeText(mediaImage.src));
+        const t=document.createElement("div"); t.className="toast"; t.textContent="Image URL copied";
+        document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
+        setTimeout(()=>{t.style.opacity=0; setTimeout(()=>t.remove(),250);},1500);
+      });
+    }
+  }
+
   /* ===================== URL sync ===================== */
   function readURL(){
     let u;
@@ -370,9 +437,9 @@
 
   /* ===================== Sky (animated) ===================== */
   (function initSky(){
-    if (!skyBg) return;
+    const c = skyBg; if (!c) return;
     const RM = prefersReduced();
-    const c = skyBg, k = c.getContext("2d"); if(!k) return;
+    const k = c.getContext("2d"); if(!k) return;
 
     function size(){
       c.width = innerWidth;
@@ -426,7 +493,7 @@
     rafId=requestAnimationFrame(tick);
   })();
 
-  /* ===================== Phase-driven accents + widget contrast ===================== */
+  /* ===== Phase-driven accents + Remnant highlight ===== */
   function setGradientStops(defId, c1, c2){
     const grad = document.getElementById(defId);
     if (!grad) return;
@@ -454,8 +521,17 @@
     updateWidgetContrast();
     document.dispatchEvent(new Event("sof:accent-change"));
   }
+  /* tiny ambiance */
+  function pushRemnantAura(ageDays){
+    if (!REMNANT_ON) return;
+    const root=document.documentElement;
+    const t = Math.sin(ageDays*0.2)*0.5+0.5;
+    const veil = `conic-gradient(from 0deg at 50% 50%, rgba(122,243,255,${0.04+0.04*t}), rgba(255,255,255,0), rgba(243,201,122,${0.035+0.035*(1-t)}), rgba(255,255,255,0))`;
+    root.style.setProperty("--remnant-veil", veil);
+    document.body.classList.add("remnant-yhwh");
+  }
 
-  // Helpers used by optional auto-contrast (kept for future use)
+  // Helpers for potential auto-contrast (kept)
   const parseColor = (s) => {
     if (!s) return null;
     s=s.trim();
@@ -477,19 +553,10 @@
     });
     return 0.2126*t[0]+0.7152*t[1]+0.0722*t[2];
   };
-
-  // Keep mini bar text light; do not auto-darken
   function updateWidgetContrast(){
     const bar = document.querySelector(".moonbar");
     if (!bar) return;
     bar.classList.remove("contrast-light");
-
-    // If you prefer automatic contrast later, uncomment below:
-    // const styles = getComputedStyle(document.documentElement);
-    // const accent = styles.getPropertyValue("--moon-accent") || "#7af3ff";
-    // const rgb = parseColor(accent) || {r:122,g:243,b:255};
-    // const L = relLuma(rgb);
-    // bar.classList.toggle("contrast-light", L > 0.65);
   }
 
   /* ===================== Rendering pipeline ===================== */
@@ -561,6 +628,7 @@
           [...weekDots.children].forEach(n => n.classList.remove("on"));
           weekDots.setAttribute("aria-label","No week/day (special)");
         }
+        if (loreCodex) loreCodex.innerHTML = `<div class="hint">Special day — the Codex rests.</div>`;
       } else {
         const idx=m13.moon-1;
         if (moonName)    moonName.textContent = `${MOONS[idx]} Moon (${m13.moon})`;
@@ -581,6 +649,9 @@
           if (nodes[dotIndex]) nodes[dotIndex].classList.add("on");
           weekDots.setAttribute("aria-label", `Week ${week}, Day ${dow} (1–7)`);
         }
+
+        // Render codex for this moon
+        renderCodexForMoon(m13.moon);
       }
 
       if (ringArc){
@@ -592,7 +663,7 @@
         }
       }
 
-      // Numerology
+      // Numerology + Remnant highlight
       const nu = numerology(sel, tz);
       if (numLine) numLine.textContent = `Universal ${nu.total}`;
       if (numMeta) numMeta.textContent = `Month tone ${nu.monthN} • Day tone ${nu.dayN}`;
@@ -600,6 +671,8 @@
       if (sourceChip) sourceChip.style.boxShadow = resonant
         ? "0 0 0 1px #7af3ff55, 0 8px 28px #7af3ff22"
         : "none";
+      const bar = $(".moonbar");
+      if (bar) bar.classList.toggle("yhwh-on", REMNANT_ON && resonant);
 
       // Daily quote
       const qIdx = Math.abs(sel.getUTCFullYear()*372 + (sel.getUTCMonth()+1)*31 + sel.getUTCDate()) % QUOTES.length;
@@ -737,6 +810,7 @@
     if(datePick.value === today){ updateAll(); }
   }, 1000);
 
+  // Canvas animation (breath/parallax) with visibility throttling
   let raf=0, animVisible=true, docHidden=false;
   function loop(ts){
     if (!animVisible || docHidden) { raf=requestAnimationFrame(loop); return; }
@@ -757,8 +831,11 @@
       tzPick.innerHTML = COMMON_TZ.map(z=>`<option value="${z}">${z}</option>`).join("");
       tzPick.value = "UTC";
     }
-    updateAll(true);
-    buildYearMap();
-    updateWidgetContrast();
+    // pre-load codex
+    loadMoonData().finally(()=>{
+      updateAll(true);
+      buildYearMap();
+      updateWidgetContrast();
+    });
   }catch(e){ crash("init failed", e); }
 })();
