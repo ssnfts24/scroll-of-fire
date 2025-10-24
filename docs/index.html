@@ -76,30 +76,28 @@
   <!-- MathJax CDN preconnect (faster first paint when on-demand loads) -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
-  <!-- Styles (sync with codex.css v3.1+) -->
+  <!-- Styles (sync with codex.css + moons.css) -->
   <link rel="preload" as="style" href="assets/css/codex.css?v=3.1">
   <link rel="stylesheet" href="assets/css/codex.css?v=3.1" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=3.1"></noscript>
 
-  <!-- ADD: moon.css so the mini bar shares tokens even on index.html -->
-  <link rel="preload" href="assets/css/moon.css" as="style" onload="this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="assets/css/moon.css"></noscript>
+  <!-- Use the same sheet as moons.html so mini bar is pixel-identical -->
+  <link rel="preload" href="assets/css/moons.css?v=2025-10-24" as="style" onload="this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="assets/css/moons.css?v=2025-10-24"></noscript>
 
   <!-- Preload banner -->
   <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1" fetchpriority="high" imagesrcset="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1 2100w">
 
-  <!-- Page-scoped helpers + Living Tech bridges -->
+  <!-- Page-scoped helpers + Remnant signature flourishes -->
   <style>
     :root{
       --safe-top:env(safe-area-inset-top); --safe-bot:env(safe-area-inset-bottom);
       --xi:.35;
       --accent-432:#7af3ff; --accent-528:#a4ff90; --accent-369:#f3c97a;
       --accent:#7af3ff;
-      /* ensure ring colors exist before JS runs (and when moon.css isn’t loaded) */
-      --moon-accent:#7af3ff;
-      --moon-accent-2:#f3c97a;
+      --moon-accent:#7af3ff; --moon-accent-2:#f3c97a; /* prepaint before JS */
+      --line:#2a3242;
     }
-    /* carrier classes → ring colors (CSS-first paint) */
     :root.carrier-432{ --moon-accent:#7af3ff; --moon-accent-2:#f3c97a }
     :root.carrier-528{ --moon-accent:#9ef7a3; --moon-accent-2:#ffd27a }
     :root.carrier-369{ --moon-accent:#a8a6ff; --moon-accent-2:#7af3ff }
@@ -111,7 +109,6 @@
     .carrier-144 :root, .carrier-144{--accent:#b3e1ff}
     .carrier-963 :root, .carrier-963{--accent:#ffd1f3}
 
-    /* Layout / header */
     body{margin:0}
     header.site{position:sticky; top:0; z-index:1000; -webkit-backdrop-filter:saturate(140%) blur(8px); backdrop-filter:saturate(140%) blur(8px); background:rgba(9,11,16,.6)}
     .wrap{padding:16px; max-width:1200px; margin:0 auto}
@@ -129,105 +126,67 @@
       .quick::-webkit-scrollbar-thumb{background:#2b2b35;border-radius:10px;border:2px solid #0f0f14}
     }
 
-    .hidden{display:none!important}
     a.skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
     a.skip:focus{left:12px;top:12px;width:auto;height:auto;padding:8px 10px;z-index:70;background:#0f1118;color:#fff;border:1px solid #343846;border-radius:10px;-webkit-backdrop-filter:saturate(140%) blur(8px);backdrop-filter:saturate(140%) blur(8px)}
 
-    /* --- HERO / BANNER --- */
-    .hero{position:relative; width:100%; max-width:1200px; margin:8px auto 0; border-radius:16px; overflow:hidden; background:#0b0f14; aspect-ratio:21/9}
-    .hero picture, .hero .hero-img{display:block; width:100%; height:100%}
-    .hero .hero-img{object-fit:var(--hero-fit, contain); object-position:center; mix-blend-mode:normal!important}
-    .hero::after{content:""; position:absolute; inset:0; box-shadow:inset 0 0 120px rgba(255,255,255,.06), inset 0 0 40px rgba(122,243,255,.08); pointer-events:none}
-    @media (max-width:480px){ .hero{max-height:min(52vh, 420px)} }
-
-    /* Aurora lights */
-    .hero-lights{
-      position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
-      background:
-        radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.45), transparent 60%),
-        radial-gradient(1px 1px at 78% 22%, rgba(164,255,144,.35), transparent 60%),
-        radial-gradient(1px 1px at 32% 68%, rgba(122,243,255,.35), transparent 60%),
-        radial-gradient(1px 1px at 88% 56%, rgba(255,209,243,.35), transparent 60%);
-      opacity:.85; filter:blur(.2px);
-      animation: lightsFlicker 7.5s ease-in-out infinite alternate;
-    }
-    .hero-lights.off{display:none}
-    .hero-lights::before{
-      content:""; position:absolute; inset:-10% -20%;
-      background:
-        linear-gradient(90deg,
-          transparent 0%,
-          color-mix(in srgb, var(--accent) 22%, #ffffff 8%) 35%,
-          color-mix(in srgb, var(--accent) 45%, #ffffff 0%) 50%,
-          color-mix(in srgb, var(--accent) 22%, #ffffff 8%) 65%,
-          transparent 100%);
-      opacity:.55; filter:blur(24px); transform:translate3d(-30%,-2%,0);
-      animation: auroraSweep 18s linear infinite, auroraBob 7s ease-in-out infinite alternate;
-      mix-blend-mode:screen;
-    }
-    .hero-lights::after{
-      content:""; position:absolute; inset:0;
-      background:
-        radial-gradient(40% 30% at 18% 20%, color-mix(in srgb, var(--accent) 18%, #ffffff 0%) 0%, transparent 65%),
-        radial-gradient(48% 38% at 82% 22%, rgba(255,209,243,.14) 0%, transparent 68%),
-        radial-gradient(36% 28% at 50% 86%, rgba(164,255,144,.10) 0%, transparent 70%);
-      filter: blur(10px); opacity:.7; animation: glowBreath 9.5s ease-in-out infinite alternate; mix-blend-mode:screen;
-    }
-    @keyframes auroraSweep{0%{transform:translate3d(-30%,-2%,0)}50%{transform:translate3d(10%,3%,0)}100%{transform:translate3d(50%,-1%,0)}}
-    @keyframes auroraBob{0%{opacity:.48;filter:blur(22px)}50%{opacity:.72;filter:blur(26px)}100%{opacity:.58;filter:blur(24px)}}
-    @keyframes glowBreath{0%{opacity:.52;filter:blur(9px)}50%{opacity:.8;filter:blur(12px)}100%{opacity:.62;filter:blur(10px)}}
-    @keyframes lightsFlicker{0%{opacity:.70}50%{opacity:.92}100%{opacity:.80}}
-    @media (prefers-reduced-motion:reduce){ .hero-lights, .hero-lights::before, .hero-lights::after{animation:none!important} }
-
-    /* Living text */
-    body.living-all :where(h1,h2,h3,p,li,small,em,strong,span,a,button,label,.kicker,.subtitle,.meta,.hint,.eq-note){
-      background:linear-gradient(90deg, rgba(255,255,255,.95), var(--accent), rgba(255,255,255,.9));
-      background-size:300% 100%;
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      animation:living-slide 9s linear infinite;
-      filter:drop-shadow(0 0 calc(2px + 6px*var(--xi)) color-mix(in srgb, var(--accent) 25%, transparent));
-    }
-    .no-living, .logo, .laser-grid, img, video, canvas, svg path, svg rect, svg circle, svg polygon{background:none!important; color:inherit!important; -webkit-background-clip:initial!important; filter:none!important; animation:none!important}
-    @keyframes living-slide{0%{background-position:0% 50%}100%{background-position:300% 50%}}
-
-    /* Search card visibility fix */
-    .searchbox{position:relative}
-    .searchbox label.meta{display:block; margin-bottom:6px; line-height:1.2}
-    .searchbox .kbd{background:#0d1016; border:1px solid #2c3140; border-radius:6px; padding:1px 6px}
-
-    /* helpers */
-    .divider{height:1px; margin:14px 0; background:linear-gradient(90deg, transparent, rgba(122,243,255,.35), transparent)}
-    .goldline{height:1px; margin:18px 0; background:linear-gradient(90deg, transparent, rgba(243,201,122,.45), transparent)}
-
-    /* background stars */
+    /* Background */
     body.stars {
       background:
         radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
         linear-gradient(180deg, #05060a 0%, #0b0e14 80%);
       overflow-x:hidden;
     }
-    canvas#trace {
-      background:
-        radial-gradient(circle at 50% 50%, #0a0e15 0%, #06080d 80%),
-        repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.02) 0 2px, transparent 2px 4px);
-      box-shadow: inset 0 0 40px rgba(122,243,255,.12), 0 0 120px rgba(122,243,255,.08);
-    }
-    .stage::after { content:""; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 60%, rgba(122,243,255,.08), transparent 70%); pointer-events:none }
 
-    /* --- Mini Moonbar local baseline (in case moon.css isn't loaded yet) --- */
-    .moonbar{display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:10px; border:1px solid var(--line,#2a3242); border-radius:14px; padding:8px; background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01))}
+    /* --- Mini Moonbar baseline (if moons.css hasn’t painted yet) --- */
+    .moonbar{display:grid; grid-template-columns:auto 1fr auto auto; align-items:center; gap:10px; border:1px solid var(--line); border-radius:14px; padding:8px; background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01))}
     .moonbar .mb-bg{ fill:none; stroke:#1b2231; stroke-width:8 }
     .moonbar .mb-fg{ fill:none; stroke:url(#mbGrad); stroke-width:8; stroke-linecap:round; stroke-dasharray:0 316 }
     .moonbar-info{ display:grid; gap:4px; min-width:0 }
     .moonbar-line{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; font-weight:800; letter-spacing:.2px }
     .moonbar-sub.meta{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:clamp(220px,26vw,360px) }
-    .moonbar-tags{ display:flex; align-items:center; gap:6px; flex-wrap:wrap }
-    .moonbar .tag{ display:inline-block; padding:.2rem .45rem; border:1px solid var(--line,#2a3242); border-radius:999px; background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)) }
-    .moonbar-share,.moonbar-tz{ padding:.45rem .7rem; border:1px solid var(--line,#2a3242); border-radius:10px; background:linear-gradient(180deg,rgba(255,255,255,.04),transparent); font-weight:700; cursor:pointer; color:inherit }
-    .moonbar .mb-text{ font:900 16px/1 Inter,system-ui,sans-serif; fill:currentColor }
+    .moonbar .tag{ display:inline-block; padding:.2rem .45rem; border:1px solid var(--line); border-radius:999px; background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)) }
+    .moonbar-share,.moonbar-tz{ padding:.45rem .7rem; border:1px solid var(--line); border-radius:10px; background:linear-gradient(180deg,rgba(255,255,255,.04),transparent); font-weight:700; cursor:pointer; color:inherit }
     .moonbar .yhwh{ box-shadow:0 0 0 1px #7af3ff22, inset 0 0 0 1px #7af3ff18 }
     .moonbar.yhwh-on .yhwh{ box-shadow:0 0 0 1px #7af3ff66, 0 0 18px #7af3ff33, inset 0 0 0 1px #7af3ff33 }
-    @media (prefers-reduced-motion:reduce){ .moonbar .mb-fg{transition:none} }
+
+    /* Remnant signature frame */
+    .moonbar.remnant-frame{
+      position:relative; isolation:isolate;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
+        radial-gradient(140% 80% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
+      box-shadow:0 10px 24px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.02);
+    }
+    .moonbar.remnant-frame::before{
+      content:""; position:absolute; inset:-1px; border-radius:14px; pointer-events:none; z-index:-1; opacity:.55;
+      background:
+        conic-gradient(from var(--spin,0deg) at 12px 12px, color-mix(in srgb, var(--moon-accent) 34%, transparent) 0 25%, transparent 25% 100%),
+        conic-gradient(from calc(var(--spin,0deg) + 90deg) at calc(100% - 12px) 12px, color-mix(in srgb, var(--moon-accent-2) 34%, transparent) 0 25%, transparent 25% 100%),
+        conic-gradient(from calc(var(--spin,0deg) + 180deg) at 12px calc(100% - 12px), color-mix(in srgb, var(--accent) 30%, transparent) 0 25%, transparent 25% 100%),
+        conic-gradient(from calc(var(--spin,0deg) + 270deg) at calc(100% - 12px) calc(100% - 12px), color-mix(in srgb, var(--accent-2, #cfefff) 30%, transparent) 0 25%, transparent 25% 100%);
+      filter:blur(7px) saturate(120%); animation: remnantSpin 18s linear infinite;
+    }
+    .moonbar.remnant-frame::after{
+      content:"⟡"; position:absolute; left:10px; top:-10px; font:800 18px/1 "Crimson Pro",serif; color: color-mix(in srgb, var(--moon-accent) 80%, #fff);
+      text-shadow:0 0 14px color-mix(in srgb, var(--moon-accent) 30%, transparent); opacity:.9;
+    }
+    @keyframes remnantSpin{ to{ --spin: 360deg } }
+
+    /* Always-readable mini bar text */
+    .moonbar,
+    .moonbar .moonbar-info,
+    .moonbar .tag,
+    .moonbar .moonbar-share,
+    .moonbar .moonbar-tz{ color:inherit !important; text-shadow:0 1px 1px rgba(0,0,0,.55) }
+    .moonbar.contrast-light,
+    .moonbar.contrast-light .tag,
+    .moonbar.contrast-light .moonbar-share,
+    .moonbar.contrast-light .moonbar-tz{ color:inherit !important; text-shadow:0 1px 1px rgba(0,0,0,.55) }
+
+    /* Optional: a touch more glow when Tone = 7 (Resonant) */
+    .moonbar[data-tone="7"] .mb-fg{
+      filter: drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent-2) 38%, transparent));
+    }
   </style>
 
   <!-- MathJax (std delimiters, on-demand typeset) -->
@@ -257,7 +216,7 @@
 <body class="stars living-all" data-theme="dark">
   <a class="skip" href="#main-content">Skip to main content</a>
 
-  <!-- HUD: Laser Grid + Ξ coherence meter -->
+  <!-- HUD placeholders -->
   <div class="laser-grid" aria-hidden="true"></div>
   <div class="xi-meter" aria-hidden="true">
     <div class="xi-ring"><div class="xi-dot"></div></div>
@@ -281,12 +240,12 @@
     </nav>
   </header>
 
-  <!-- 13-Moon Mini Bar -->
-  <div id="moonMiniBar" class="moonbar" role="region" aria-label="13-Moon mini clock">
+  <!-- 13-Moon Mini Bar (matches moons.html structure/behavior) -->
+  <div id="moonMiniBar" class="moonbar remnant-frame" role="region" aria-label="13-Moon mini clock" style="margin:12px 16px 0">
     <a id="moonMiniLink" class="moonbar-hit" href="moons.html" aria-label="Open 13-Moon living clock" aria-describedby="mbDesc">
-      <svg class="moonbar-ring" viewBox="0 0 120 120" role="img" aria-labelledby="mbTitle mbDesc" width="76" height="76">
+      <svg class="moonbar-ring" viewBox="0 0 120 120" role="img" aria-labelledby="mbTitle mbDesc" width="var(--ring-size,76)" height="var(--ring-size,76)">
         <title id="mbTitle">13-Moon day progress ring</title>
-        <desc id="mbDesc">Shows current day in the 28-day moon and a deep link to the full 13-Moon clock in your timezone.</desc>
+        <desc id="mbDesc">Shows current day in the 28-day moon and deep links to the full 13-Moon clock in your timezone.</desc>
         <defs>
           <linearGradient id="mbGrad" x1="0" x2="1">
             <stop offset="0" stop-color="var(--moon-accent)"/>
@@ -303,7 +262,7 @@
       <div class="moonbar-info" aria-live="polite">
         <div class="moonbar-line">
           <strong id="mbMoon">—</strong>
-          <span class="sep">·</span>
+          <span class="sep">•</span>
           <span id="mbDayLine">—</span>
         </div>
         <div class="moonbar-sub meta" id="mbEssence" title="">—</div>
@@ -311,28 +270,24 @@
 
       <div class="moonbar-tags">
         <span class="tag mono" id="mbYear">—</span>
-        <span class="tag yhwh" id="mbYHWH" title="Source (YHWH)">⟡ י־ה־ו־ה</span>
+        <span class="tag" id="mbTone" title="Daily 1–13 tone">Tone —</span>
+        <span class="tag yhwh" id="mbYHWH" title="Remnant seal — י־ה־ו־ה">⟡ י־ה־ו־ה</span>
       </div>
     </a>
 
-    <!-- Native share first, clipboard fallback in JS -->
     <button class="moonbar-share" id="mbShare" type="button" aria-label="Share today’s 13-Moon link">Share</button>
-
-    <!-- quick timezone picker -->
     <button class="moonbar-tz" id="mbTZ" type="button" aria-haspopup="dialog" aria-expanded="false" title="Change timezone">TZ</button>
 
-    <!-- Progressive enhancement: no-JS fallback -->
     <noscript>
-      <div class="moonbar-noscript meta">
-        Today’s 13-Moon link: <a href="moons.html">moons.html</a>
-      </div>
+      <div class="moonbar-noscript meta">Today’s 13-Moon link: <a href="moons.html">moons.html</a></div>
     </noscript>
   </div>
 
-  <!-- Inline Mini Widget (v2.1) -->
+  <!-- Inline Mini Widget (v2.3 Remnant + Tones) -->
   <script>
-  /* 13 Moons — Mini Widget (v2.1, DPR-aware, main-page compatible)
-     - Works with IDs on this page (#mbMoon,#mbDay,#mbDayLine,#mbEssence,#mbYear,#mbArc,#mbShare,#mbTZ)
+  /* 13 Moons — Mini Widget (v2.3 Remnant)
+     - Mirrors moons.html logic (13×28, DOOT, leap day, phase tint)
+     - Tone chip (1..13) + YHWH glow on Resonant numerology OR tone==7
      - Deep link: moons.html?d=YYYY-MM-DD&tz=Area/City&t=H#moon-N
   */
   (function(){
@@ -355,13 +310,13 @@
     /* ---------- Data ---------- */
     const MOONS = ["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
     const ESS   = ["Attract purpose","Stabilize challenge","Activate service","Define form","Empower radiance","Balance equality","Channel inspiration","Harmonize integrity","Pulse intention","Perfect manifestation","Dissolve release","Dedicate cooperation","Endure presence"];
+    const TONES = MOONS.slice(); // tone names mirror the 13
 
-    /* ---------- TZ + URL ---------- */
+    /* ---------- TZ ---------- */
     const TZ_KEY="sof_moons_tz";
     const getTZ = ()=> safe(()=>localStorage.getItem(TZ_KEY)) || safe(()=>Intl.DateTimeFormat().resolvedOptions().timeZone) || "UTC";
     const setTZ = z => safe(()=>localStorage.setItem(TZ_KEY,z));
 
-    const validDateStr = s => /^\d{4}-\d{2}-\d{2}$/.test(s);
     function dateInTZ(baseDate, tz, overrideHour){
       try{
         const opts={timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"};
@@ -448,10 +403,21 @@
       root.style.setProperty("--moon-accent",  c1);
       root.style.setProperty("--moon-accent-2",c2);
       setGradientStops("mbGrad", c1, c2);
-      // keep letters readable on mini bar (never force contrast-light)
       const bar = document.querySelector(".moonbar");
       bar && bar.classList.remove("contrast-light");
+      document.dispatchEvent(new Event("sof:accent-change"));
     }
+
+    /* ---------- Numerology + Tones ---------- */
+    const sumDigits = n => String(n).split("").reduce((a,b)=>a+(+b||0),0);
+    function reduceNum(n){ while(n>9 && n!==11 && n!==22 && n!==33){ n=sumDigits(n); } return n; }
+    function isResonantDate(d, tz){
+      const dt = dateInTZ(d, tz);
+      const y=dt.getUTCFullYear(), m=dt.getUTCMonth()+1, day=dt.getUTCDate();
+      const total = reduceNum(sumDigits(y)+sumDigits(m)+sumDigits(day));
+      return [1,4,7,11,22,33].includes(total);
+    }
+    const toneFromDay = (day) => ((Number(day||0)-1) % 13) + 1; // 1..13
 
     /* ---------- DOM targets ---------- */
     const elName = $("#mbMoon");
@@ -459,6 +425,7 @@
     const elDayLine = $("#mbDayLine");
     const elEss  = $("#mbEssence");
     const elYear = $("#mbYear");
+    const elTone = $("#mbTone");
     const arc    = $("#mbArc") || $(".mb-fg");
     const btnShare = $("#mbShare");
     const btnTZ    = $("#mbTZ");
@@ -497,22 +464,26 @@
           elEss  && (elEss.textContent  = "Outside the 13×28 count");
           elDay  && (elDay.textContent  = "—");
           elDayLine && (elDayLine.textContent = "—/28");
+          elTone && (elTone.textContent = "Tone —");
+          barRoot?.removeAttribute("data-tone");
           setArc(0);
         } else {
           const idx=m13.moon-1;
+          const tone = toneFromDay(m13.day);
           elName && (elName.textContent = `${MOONS[idx]} Moon`);
           elEss  && (elEss.textContent  = ESS[idx]);
           elDay  && (elDay.textContent  = `${m13.day}`);
           elDayLine && (elDayLine.textContent = `Day ${m13.day} / 28`);
+          elTone && (elTone.textContent = `Tone ${tone} — ${TONES[tone-1]}`);
+          barRoot && barRoot.setAttribute("data-tone", tone);
           setArc(m13.day);
-        }
-        elYear && (elYear.textContent = m13.year);
 
-        // YHWH chip highlight on resonant numerology (1,4,7,11,22,33)
-        const y = wall.getUTCFullYear(), mm = wall.getUTCMonth()+1, dd = wall.getUTCDate();
-        const sum = String(y).split("").reduce((a,b)=>a+(+b),0) + mm + dd;
-        const resonant = [1,4,7,11,22,33].includes(sum % 34);
-        barRoot && barRoot.classList.toggle("yhwh-on", !!resonant);
+          // YHWH: numerology resonant OR tone 7 (Resonant)
+          const glow = isResonantDate(wall, tz) || tone === 7;
+          barRoot && barRoot.classList.toggle("yhwh-on", glow);
+        }
+
+        elYear && (elYear.textContent = m13.year);
 
         // Phase accents
         applyPhaseAccent(moonPhase(wall).illum);
@@ -567,6 +538,9 @@
     on(window, "focus", update);
   })();
   </script>
+
+  <!-- …the rest of your page content goes here… -->
+
 
   <main id="main-content" class="wrap" role="main" tabindex="-1">
     <!-- Hero -->
