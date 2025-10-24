@@ -1,294 +1,286 @@
 <!doctype html>
+
 <html lang="en" dir="ltr" class="sof">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
-    (function () { var host = location.hostname;
-      if (host !== "ssnfts24.github.io") { var b = document.querySelector("base"); if (b) b.remove(); }
+    (function(){
+      if (location.hostname !== "ssnfts24.github.io") {
+        const b = document.querySelector("base"); if (b) b.remove();
+      }
     })();
-  </script>
-
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Quickstart / Start Here — Scroll of Fire</title>
+  </script>  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+  <title>Start Here — 60‑Second Quickstart · Scroll of Fire</title>
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/start.html"/>
-  <meta name="description" content="Run one Codex loop (Σ → ∇φ → ℛ → ΔΣ) with carriers 144/369/432/528/963, rate coherence (Ξ), and save a sealed witness (SHA-256).">
+  <meta name="description" content="Pick a carrier (144/369/432/528/963), speak one line with the 3‑6‑9 cadence, rate Ξ, and save a SHA‑256 sealed witness to your local ledger." />
   <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" content="#0b0b0f">
-
-  <!-- Social -->
-  <meta property="og:site_name" content="Scroll of Fire">
+  <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">  <!-- Open Graph -->  <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Start Here — Scroll of Fire">
-  <meta property="og:description" content="Pick a carrier (144/369/432/528/963), speak one line, 3-6-9 cadence, rate Ξ, and log a sealed witness.">
+  <meta property="og:description" content="Run one Codex loop in a minute. Phrase → breathe 3‑6‑9 → rate Ξ → save & seal." />
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/start.html">
-
-  <!-- Site CSS (your existing bundles) -->
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
+  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/start.html">  <!-- CSS bundles (existing site styles) -->  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
   <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
-
-  <link rel="preload" as="style" href="assets/css/teach.css?v=2025-10-20">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>  <link rel="preload" as="style" href="assets/css/teach.css?v=2025-10-20">
   <link rel="stylesheet" href="assets/css/teach.css?v=2025-10-20" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/teach.css?v=2025-10-20"></noscript>
+  <noscript><link rel="stylesheet" href="assets/css/teach.css?v=2025-10-20"></noscript>  <!-- Banner -->  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" fetchpriority="high" imagesizes="100vw">  <style>
+    :root{ --maxw:1100px; --safe-top:env(safe-area-inset-top); --safe-bot:env(safe-area-inset-bottom); }
+    body{ margin:0 }
+    .wrap{ max-width:var(--maxw); margin:0 auto; padding:18px 16px calc(90px + var(--safe-bot,0px)); }
+    .title{ font-family:"Crimson Pro",serif; font-weight:800; text-align:center; font-size:clamp(28px,3.6vw,40px); margin:.2rem 0 }
+    .subtitle{ text-align:center; color:var(--muted); margin:0 0 14px }
+    .hero{ border-radius:14px; overflow:hidden; margin:8px 0 16px }
+    .grid2{ display:grid; grid-template-columns:1.25fr .75fr; gap:14px }
+    @media (max-width:900px){ .grid2{ grid-template-columns:1fr } }
 
-  <!-- Preload banner -->
-  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" imagesizes="100vw" fetchpriority="high">
+    .controls{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px }
+    .carrier-btn{ padding:.6rem .9rem; border-radius:12px; border:1px solid var(--line); background:linear-gradient(180deg,rgba(255,255,255,.02),transparent); font-weight:600; cursor:pointer; position:relative }
+    .carrier-btn small{ display:block; font-weight:500; color:var(--muted); line-height:1; margin-top:2px }
+    .carrier-btn[aria-pressed="true"]{ box-shadow:0 8px 26px rgba(122,243,255,.12); outline:2px solid rgba(122,243,255,.18) }
 
-  <style>
-    :root{--maxw:1100px}
-    body{margin:0}
-    .wrap{max-width:var(--maxw);margin:0 auto;padding:18px 16px 90px}
-    .title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,40px);margin:.2rem 0}
-    .subtitle{text-align:center;color:var(--muted);margin:0 0 14px}
-    .hero{border-radius:14px;overflow:hidden;margin:8px 0 16px}
-    .grid2{display:grid;grid-template-columns:1.25fr .75fr;gap:14px}
-    @media (max-width:900px){.grid2{grid-template-columns:1fr}}
-    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-    .carrier-btn{padding:.6rem .9rem;border-radius:12px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);font-weight:600;cursor:pointer;position:relative}
-    .carrier-btn small{display:block;font-weight:500;color:var(--muted);line-height:1;margin-top:2px}
-    .carrier-btn[aria-pressed="true"]{box-shadow:0 8px 26px rgba(122,243,255,.12);outline:2px solid rgba(122,243,255,.18)}
-    .large-cta{display:inline-flex;gap:.6ch;align-items:center;padding:.7rem 1rem;border-radius:12px;border:1px solid var(--line);background:#0e1116;color:inherit;font-weight:700;cursor:pointer}
-    .large-cta[disabled]{opacity:.5;cursor:not-allowed}
-    .progress-wrap{display:flex;gap:12px;align-items:center;margin-top:10px}
-    .ring{width:84px;height:84px;display:grid;place-items:center;border-radius:999px;background:conic-gradient(rgba(122,243,255,.14) 0% 0%, transparent 0);box-shadow:inset 0 -8px 24px rgba(0,0,0,.6)}
-    .ring svg{display:block;width:72px;height:72px}
-    .coherence-meter{margin-top:8px}
-    label.small{display:block;margin-top:8px;color:var(--muted);font-size:.95rem}
-    textarea#phrase{width:100%;min-height:72px;padding:.6rem;border-radius:12px;border:1px solid var(--line);background:var(--bg-elev);color:inherit;resize:vertical}
-    .inline-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .muted.small{color:var(--muted)}
-    .card .kicker{font-weight:700;font-size:.82rem;color:var(--muted);letter-spacing:.12em}
-    .ledger-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .recent-list{max-height:300px;overflow:auto;padding-top:8px}
-    .recent-item{padding:10px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
-    .tag{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid var(--line);font-size:.83rem;color:var(--muted);margin-right:6px}
-    .tiny{font-size:.85rem;color:var(--muted)}
-    .help{margin-top:10px;color:var(--muted);font-size:.95rem}
-    .inline-btn{background:linear-gradient(180deg,rgba(122,243,255,.06),rgba(122,243,255,.02));border:1px solid rgba(122,243,255,.12);padding:.5rem .75rem;border-radius:10px;cursor:pointer}
-    .inline-btn:active{transform:translateY(1px)}
-    .grid4{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin-top:14px}
-    .span-4{grid-column:span 4} .span-12{grid-column:span 12}
-    @media (max-width:980px){.span-4{grid-column:span 12}}
-    .user-is-tabbing :focus { outline: 3px solid rgba(122,243,255,.14); outline-offset:3px; border-radius:8px; }
-    #progressArc { will-change: stroke-dasharray, transform; }
-    /* print slip (new window) base */
-    .slip{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;max-width:720px;margin:0 auto;padding:24px}
-    .slip h1{font-size:20px;margin:0 0 6px}
-    .slip .meta{color:#7b8499;font-size:12px;margin-bottom:12px}
-    .slip .box{border:1px solid #d8dbe6;border-radius:10px;padding:12px;margin:10px 0}
-    .slip .row{display:flex;gap:10px;flex-wrap:wrap}
-    .slip .row > div{flex:1}
-    .slip code{background:#f5f7fb;border:1px solid #e6e9f3;border-radius:6px;padding:2px 6px}
-    @media print {.slip{box-shadow:none}}
-  </style>
-</head>
+    .large-cta{ display:inline-flex; gap:.6ch; align-items:center; padding:.7rem 1rem; border-radius:12px; border:1px solid var(--line); background:#0e1116; color:inherit; font-weight:700; cursor:pointer }
+    .large-cta[disabled]{ opacity:.5; cursor:not-allowed }
 
-<body class="stars carrier-432">
-  <div class="laser-grid" aria-hidden="true"></div>
+    .progress-wrap{ display:flex; gap:12px; align-items:center; margin-top:10px }
+    .ring{ width:84px; height:84px; display:grid; place-items:center; border-radius:999px; background:conic-gradient(rgba(122,243,255,.14) 0% 0%, transparent 0); box-shadow:inset 0 -8px 24px rgba(0,0,0,.6) }
+    .ring svg{ display:block; width:72px; height:72px }
+    #progressArc{ will-change: stroke-dasharray, transform }
 
-  <main class="wrap" id="top" role="main">
+    .coherence-meter{ margin-top:8px }
+    label.small{ display:block; margin-top:8px; color:var(--muted); font-size:.95rem }
+    textarea#phrase{ width:100%; min-height:72px; padding:.6rem; border-radius:12px; border:1px solid var(--line); background:var(--bg-elev); color:inherit; resize:vertical }
+    .inline-row{ display:flex; gap:8px; align-items:center; flex-wrap:wrap }
+    .muted.small{ color:var(--muted) }
+    .card .kicker{ font-weight:700; font-size:.82rem; color:var(--muted); letter-spacing:.12em }
+
+    .pill{ appearance:none; border:1px solid var(--line); border-radius:999px; padding:.4rem .7rem; background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02)); font-weight:700; cursor:pointer }
+    .pill[aria-pressed="true"]{ outline:2px solid rgba(122,243,255,.22) }
+
+    .inline-btn{ background:linear-gradient(180deg,rgba(122,243,255,.06),rgba(122,243,255,.02)); border:1px solid rgba(122,243,255,.12); padding:.5rem .75rem; border-radius:10px; cursor:pointer }
+    .inline-btn:active{ transform:translateY(1px) }
+
+    .ledger-controls{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px }
+    .recent-list{ max-height:320px; overflow:auto; padding-top:8px }
+    .recent-item{ padding:10px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:6px }
+    .tag{ display:inline-block; padding:4px 8px; border-radius:999px; border:1px solid var(--line); font-size:.83rem; color:var(--muted); margin-right:6px }
+    .tiny{ font-size:.85rem; color:var(--muted) }
+
+    .grid4{ display:grid; grid-template-columns:repeat(12,1fr); gap:14px; margin-top:14px }
+    .span-4{ grid-column:span 4 } .span-12{ grid-column:span 12 }
+    @media (max-width:980px){ .span-4{ grid-column:span 12 } }
+
+    .user-is-tabbing :focus{ outline:3px solid rgba(122,243,255,.14); outline-offset:3px; border-radius:8px }
+
+    .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 }
+    a.skip{ position:fixed; left:-9999px; top:calc(6px + var(--safe-top,0px)); background:#0f1118; color:#fff; padding:.6rem .8rem; border:1px solid #343846; border-radius:10px; z-index:1001 }
+    a.skip:focus{ left:12px }
+
+    /* Print slip (self-contained, light) */
+    @media print{ .no-print{ display:none !important } }
+  </style></head><body class="stars carrier-432">
+  <a class="skip" href="#main">Skip to main content</a>
+  <div class="laser-grid" aria-hidden="true"></div>  <main class="wrap" id="main" role="main" tabindex="-1">
     <figure class="hero hero--contain" aria-hidden="true">
-      <img src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
-           alt="Scroll of Fire — gilded sigil banner" width="1600" height="900"
-           loading="eager" decoding="async" fetchpriority="high">
-    </figure>
+      <img src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" alt="Scroll of Fire — gilded sigil banner" width="1600" height="900" loading="eager" decoding="async" fetchpriority="high">
+    </figure><h1 class="title">⚡ Start Here — 60‑Second Quickstart</h1>
+<p class="subtitle">Phrase → breathe <strong>3‑6‑9</strong> → rate <strong>Ξ</strong> → save & seal (SHA‑256).</p>
 
-    <h1 class="title">⚡ 60-Second Quickstart — Start Here</h1>
-    <p class="subtitle">Run one Codex loop (Σ → ∇φ → ℛ → ΔΣ): phrase, breathe (3-6-9), rate Ξ, save, and seal.</p>
+<nav class="tabs no-print" aria-label="Primary navigation">
+  <a class="tab" href="index.html">⌂ Home</a>
+  <a class="tab" href="theory.html">📘 Theory</a>
+  <a class="tab" href="teach.html">🎓 Teach</a>
+  <a class="tab tab--primary" aria-current="page" href="start.html">⚡ Start Here</a>
+  <a class="tab" href="ledger.html">🧾 Ledger</a>
+</nav>
 
-    <nav class="tabs" aria-label="Primary navigation">
-      <a class="tab" href="index.html">⌂ Home</a>
-      <a class="tab" href="theory.html">📘 Theory</a>
-      <a class="tab" href="teach.html">🎓 Teach</a>
-      <a class="tab tab--primary" aria-current="page" href="start.html">⚡ Start Here</a>
-      <a class="tab" href="ledger.html">🧾 Ledger</a>
-    </nav>
+<section class="grid2" aria-label="Quickstart flow">
+  <article class="card" aria-labelledby="qs-h" role="region">
+    <div class="kicker">Quickstart</div>
+    <h2 id="qs-h">One line • One carrier • One minute</h2>
 
-    <section class="grid2" aria-label="Quickstart flow">
-      <article class="card" aria-labelledby="qs-h" role="region">
-        <div class="kicker">Quickstart</div>
-        <h2 id="qs-h">One line • One carrier • One minute</h2>
+    <!-- Step 1: carrier -->
+    <div>
+      <label class="kicker" id="carrierLabel">Step 1 — Choose a carrier</label>
+      <div class="controls" role="radiogroup" aria-labelledby="carrierLabel">
+        <button class="carrier-btn" role="radio" data-carrier="144" aria-pressed="false" aria-checked="false">144 Hz — Sanctuary<small>shield / boundary</small></button>
+        <button class="carrier-btn" role="radio" data-carrier="369" aria-pressed="false" aria-checked="false">369 Hz — Lock‑in<small>phase / seal</small></button>
+        <button class="carrier-btn" role="radio" data-carrier="432" aria-pressed="true" aria-checked="true">432 Hz — Ground<small>root / attune</small></button>
+        <button class="carrier-btn" role="radio" data-carrier="528" aria-pressed="false" aria-checked="false">528 Hz — Repair<small>mend / restore</small></button>
+        <button class="carrier-btn" role="radio" data-carrier="963" aria-pressed="false" aria-checked="false">963 Hz — Crown<small>remembrance</small></button>
+        <button class="carrier-btn" role="radio" data-carrier="none" aria-pressed="false" aria-checked="false">No tone<small>silent run</small></button>
+      </div>
+      <div class="inline-row" style="margin-top:8px">
+        <span class="tiny">Tip: <strong>432</strong> first runs • <strong>144</strong> boundary • <strong>369</strong> seal • <strong>528</strong> repair • <strong>963</strong> remembrance.</span>
+      </div>
+    </div>
 
-        <!-- Step 1: carrier -->
-        <div>
-          <label class="kicker" id="carrierLabel">Step 1 — Choose a carrier</label>
-          <div class="controls" role="radiogroup" aria-labelledby="carrierLabel">
-            <button class="carrier-btn" role="radio" data-carrier="144" aria-pressed="false" aria-checked="false">
-              144 Hz — Sanctuary<small>shield / boundary</small>
-            </button>
-            <button class="carrier-btn" role="radio" data-carrier="369" aria-pressed="false" aria-checked="false">
-              369 Hz — Lock-in<small>phase / seal</small>
-            </button>
-            <button class="carrier-btn" role="radio" data-carrier="432" aria-pressed="true" aria-checked="true">
-              432 Hz — Ground<small>root / attune</small>
-            </button>
-            <button class="carrier-btn" role="radio" data-carrier="528" aria-pressed="false" aria-checked="false">
-              528 Hz — Repair<small>mend / restore</small>
-            </button>
-            <button class="carrier-btn" role="radio" data-carrier="963" aria-pressed="false" aria-checked="false">
-              963 Hz — Crown<small>remembrance</small>
-            </button>
-            <button class="carrier-btn" role="radio" data-carrier="none" aria-pressed="false" aria-checked="false">
-              No tone<small>silent run</small>
-            </button>
-          </div>
-          <div class="help">Tip: <strong>432</strong> for first runs; <strong>144</strong> boundary; <strong>369</strong> sealing; <strong>528</strong> repair; <strong>963</strong> remembrance.</div>
-        </div>
+    <!-- Step 2: phrase + helpers -->
+    <div style="margin-top:12px">
+      <label for="phrase" class="kicker">Step 2 — Phrase (Σ)</label>
+      <p class="tiny">Short, present‑tense, affirmative. Speak with the 3‑6‑9 breath. Examples:</p>
+      <div class="inline-row no-print">
+        <button class="pill" data-example="I hold truth with gentleness.">Use: “I hold truth with gentleness.”</button>
+        <button class="pill" data-example="I create with care and clarity.">Use: “I create with care and clarity.”</button>
+        <button class="pill" data-example="I remember who I am.">Use: “I remember who I am.”</button>
+      </div>
+      <textarea id="phrase" placeholder="Example: I hold truth with gentleness." aria-label="Your intention phrase"></textarea>
+    </div>
 
-        <!-- Step 2: phrase -->
-        <div style="margin-top:12px">
-          <label class="kicker">Step 2 — Phrase (Σ)</label>
-          <p class="tiny">Short, present-tense, affirmative. Fewer negations → clearer gradient (∇φ). Breathe 3-6-9 as you speak.</p>
-          <textarea id="phrase" placeholder="Example: I hold truth with gentleness." aria-label="Your intention phrase"></textarea>
-        </div>
+    <!-- Step 3: run controls -->
+    <div class="progress-wrap" style="margin-top:12px">
+      <div class="ring" aria-hidden="true" id="progressRing">
+        <svg viewBox="0 0 36 36" role="img" aria-label="Timer progress">
+          <path d="M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="2"></path>
+          <path id="progressArc" d="" fill="none" stroke="#7af3ff" stroke-width="2.6" stroke-linecap="round"></path>
+          <text id="timer" x="18" y="21" font-size="6" text-anchor="middle" fill="#e6f9ff">Ready</text>
+        </svg>
+      </div>
 
-        <!-- Step 3: run controls -->
-        <div class="progress-wrap" style="margin-top:12px">
-          <div class="ring" aria-hidden="true" id="progressRing">
-            <svg viewBox="0 0 36 36" role="img" aria-label="Timer progress">
-              <path d="M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="2"></path>
-              <path id="progressArc" d="" fill="none" stroke="#7af3ff" stroke-width="2.6" stroke-linecap="round"></path>
-              <text id="timer" x="18" y="21" font-size="6" text-anchor="middle" fill="#e6f9ff">Ready</text>
-            </svg>
-          </div>
-
-          <div style="flex:1">
-            <div class="inline-row">
-              <button id="startRun" class="large-cta" aria-pressed="false" title="Start 60 second run (R)">▶ Start</button>
-              <button id="stopRun" class="large-cta" aria-pressed="false" disabled title="Stop run (R)">■ Stop</button>
-              <div style="margin-left:auto;text-align:right">
-                <div class="tiny">Session length</div>
-                <div class="tiny">60s standard — adjustable in preferences</div>
-              </div>
-            </div>
-
-            <div class="coherence-meter" aria-hidden="false" aria-live="polite">
-              <label for="coh" class="small">Step 4 — Rate Coherence Ξ (ΔΣ)</label>
-              <input id="coh" class="meter" type="range" min="0" max="5" step="0.5" value="0" aria-label="Coherence rating from 0 to 5">
-              <div class="tiny muted">0 = chaotic · 5 = crisp, truthful, sustained</div>
-            </div>
+      <div style="flex:1">
+        <div class="inline-row">
+          <button id="startRun" class="large-cta" aria-pressed="false" title="Start / Stop (R)">▶ Start</button>
+          <button id="stopRun" class="large-cta" aria-pressed="false" disabled title="Stop run (R)">■ Stop</button>
+          <div class="inline-row" style="margin-left:auto">
+            <span class="tiny">Length:</span>
+            <button class="pill" data-dur="60" aria-pressed="true" title="60 seconds">60s</button>
+            <button class="pill" data-dur="90" aria-pressed="false" title="90 seconds">90s</button>
+            <button class="pill" data-dur="120" aria-pressed="false" title="120 seconds">120s</button>
           </div>
         </div>
-
-        <!-- Save / Export -->
-        <div style="margin-top:12px">
-          <label class="kicker">Save & Seal</label>
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">
-            <input id="tag" placeholder="tags (comma separated) e.g., morning,432,seal" aria-label="add tags" style="flex:1;padding:.5rem;border-radius:10px;border:1px solid var(--line);background:var(--bg-elev)">
-            <button id="saveEntry" class="inline-btn" title="Save to local ledger">💾 Save to Ledger</button>
-            <button id="exportEntries" class="inline-btn" title="Export ledger JSON (sealed)">⬇ Export JSON</button>
-            <button id="exportLastPDF" class="inline-btn" title="Create a printable Witness slip (use Save as PDF)">🧾 Witness PDF</button>
-            <button id="importEntries" class="inline-btn" title="Import ledger JSON">⬆ Import</button>
-          </div>
-          <div class="help tiny">Each save computes a SHA-256 seal over the canonical payload. “Witness PDF” opens a print-ready slip (use your browser’s “Save as PDF”).</div>
+        <div class="inline-row" style="margin-top:6px">
+          <label class="tiny" style="display:flex; align-items:center; gap:.5ch"><input type="checkbox" id="mute"> Mute tone (M)</label>
+          <button id="soundTest" class="pill" title="Play a short tone to verify audio">Sound test</button>
         </div>
 
-        <!-- ledger controls -->
-        <div class="ledger-controls" style="margin-top:10px">
-          <button id="clearLedger" class="inline-btn">Clear Local Ledger</button>
-          <button id="deleteLast" class="inline-btn">Delete Last Entry</button>
-          <div style="margin-left:auto;text-align:right">
-            <div class="tiny muted">Entries: <span id="entryCount">0</span></div>
-          </div>
+        <div class="coherence-meter" aria-hidden="false" aria-live="polite">
+          <label for="coh" class="small">Step 4 — Rate Coherence Ξ (ΔΣ)</label>
+          <input id="coh" class="meter" type="range" min="0" max="5" step="0.5" value="0" aria-label="Coherence rating from 0 to 5">
+          <div class="tiny muted">0 = chaotic · 5 = crisp, truthful, sustained</div>
         </div>
+      </div>
+    </div>
 
-        <div class="help" style="margin-top:12px">
-          Guide: Σ phrase → ▶ start → breathe 3-6-9 & speak (ℛ) → ■ stop → rate Ξ → save (ΔΣ seal) → export/print. Stop if coherence drops (Ethics → Stop Rule).
-        </div>
-      </article>
+    <!-- Save / Export -->
+    <div style="margin-top:12px">
+      <label class="kicker">Save & Seal</label>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">
+        <input id="tag" placeholder="tags (comma separated) e.g., morning,432,seal" aria-label="add tags" style="flex:1;padding:.5rem;border-radius:10px;border:1px solid var(--line);background:var(--bg-elev)">
+        <button id="saveEntry" class="inline-btn" title="Save to local ledger (S)">💾 Save</button>
+        <button id="exportEntries" class="inline-btn" title="Export ledger JSON (sealed)">⬇ JSON</button>
+        <button id="exportCSV" class="inline-btn" title="Export ledger CSV">⬇ CSV</button>
+        <button id="exportLastPDF" class="inline-btn" title="Printable Witness (use Save as PDF)">🧾 PDF</button>
+        <button id="importEntries" class="inline-btn" title="Import ledger JSON">⬆ Import</button>
+      </div>
+      <div class="help tiny">Each save computes a SHA‑256 seal over a canonical payload (stable key order). “PDF” opens a print‑ready witness slip.</div>
+    </div>
 
-      <!-- RIGHT: Why / recent -->
-      <aside class="card" role="complementary" aria-labelledby="why-works">
-        <h3 id="why-works">Why this works</h3>
-        <ul>
-          <li><strong>Carriers</strong> 144/369/432/528/963 bias harmonic lanes; “no tone” still runs.</li>
-          <li><strong>Σ → ∇φ → ℛ → ΔΣ</strong> turns phrasing into action, breath/voice phases, then boundary/witness.</li>
-          <li><strong>Ξ</strong> is the live quality metric; sealing creates repeatable, cite-able artifacts.</li>
-        </ul>
+    <!-- ledger controls -->
+    <div class="ledger-controls" style="margin-top:10px">
+      <button id="clearLedger" class="inline-btn">Clear Local Ledger</button>
+      <button id="deleteLast" class="inline-btn">Delete Last</button>
+      <div style="margin-left:auto;text-align:right">
+        <div class="tiny muted">Entries: <span id="entryCount">0</span></div>
+      </div>
+    </div>
 
-        <div class="goldline" style="margin:12px 0"></div>
+    <div class="help" style="margin-top:12px">
+      Guide: Σ phrase → ▶ start → breathe 3‑6‑9 & speak (ℛ) → ■ stop → rate Ξ → save (ΔΣ seal) → export/print. Stop if coherence drops (Ethics → Stop Rule).
+    </div>
+  </article>
 
-        <h4>Recent sealed entries</h4>
-        <div id="recent" class="recent-list small muted" aria-live="polite">No entries yet.</div>
+  <!-- RIGHT: Why / recent -->
+  <aside class="card" role="complementary" aria-labelledby="why-works">
+    <h3 id="why-works">Why this works</h3>
+    <ul>
+      <li><strong>Carriers</strong> bias harmonic lanes; “no tone” still runs.</li>
+      <li><strong>Σ → ∇φ → ℛ → ΔΣ</strong> turns phrasing into action, breath/voice phases, then boundary/witness.</li>
+      <li><strong>Ξ</strong> is the live quality metric; sealing creates repeatable, cite‑able artifacts.</li>
+    </ul>
 
-        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-          <a class="cta" href="ledger.html">Open full Ledger →</a>
-          <a class="cta" href="guide.html">Guide →</a>
-          <a class="cta" href="ethics.html">Ethics →</a>
-        </div>
-      </aside>
-    </section>
+    <div class="goldline" style="margin:12px 0"></div>
 
-    <div class="goldline" style="margin-top:18px"></div>
+    <h4>Recent sealed entries</h4>
+    <div id="recent" class="recent-list small muted" aria-live="polite">No entries yet.</div>
 
-    <section class="grid4" aria-label="Orientation">
-      <article class="card span-12">
-        <div class="kicker">Start Here</div>
-        <h2>How to use this site in 3 minutes</h2>
-        <ol class="list">
-          <li><strong>Run a 60s session:</strong> pick a carrier, speak your line, breathe 3-6-9, rate Ξ, save.</li>
-          <li><strong>Skim Theory:</strong> canonical equations 0–17 + operators Σ, ∇φ, ℛ, ΔΣ.</li>
-          <li><strong>Practice with Teach:</strong> full protocol, A/B, and Circle patterns.</li>
-          <li><strong>Log in Ledger:</strong> compare carriers, phrases, and conditions over time.</li>
-        </ol>
-        <p class="muted small">Headphones help. Keep phrases kind, precise, present-tense. Stop if off-balance.</p>
-      </article>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+      <a class="cta" href="ledger.html">Open full Ledger →</a>
+      <a class="cta" href="guide.html">Guide →</a>
+      <a class="cta" href="ethics.html">Ethics →</a>
+    </div>
+  </aside>
+</section>
 
-      <article class="card span-4">
-        <h3>Core</h3>
-        <ul class="list">
-          <li>⌂ <a href="index.html">Home</a></li>
-          <li>📘 <a href="theory.html">Theory</a></li>
-          <li>🎓 <a href="teach.html">Teach / Manifest</a></li>
-          <li>🧾 <a href="ledger.html">Ledger</a></li>
-        </ul>
-      </article>
+<div class="goldline" style="margin-top:18px"></div>
 
-      <article class="card span-4">
-        <h3>Experiments</h3>
-        <ul class="list">
-          <li>🔁 <a href="ab.html">A/B Carriers</a></li>
-          <li>🔣 <a href="glyphs.html">Glyphs</a></li>
-          <li>μ <a href="micro.html">Micro-acts</a></li>
-        </ul>
-      </article>
+<section class="grid4" aria-label="Orientation">
+  <article class="card span-12">
+    <div class="kicker">Start Here</div>
+    <h2>Use this site in 3 minutes</h2>
+    <ol class="list">
+      <li><strong>Run a 60–120s session:</strong> pick a carrier, speak your line, breathe 3‑6‑9, rate Ξ, save.</li>
+      <li><strong>Skim Theory:</strong> equations 0–17 + operators Σ, ∇φ, ℛ, ΔΣ.</li>
+      <li><strong>Practice with Teach:</strong> protocol, A/B, and Circle patterns.</li>
+      <li><strong>Log in Ledger:</strong> compare carriers, phrases, and conditions over time.</li>
+    </ol>
+    <p class="muted small">Headphones help. Keep phrases kind, precise, present‑tense. Stop if off‑balance.</p>
+  </article>
 
-      <article class="card span-4">
-        <h3>Files</h3>
-        <ul class="list">
-          <li>⬇ <a href="downloads.html">Downloads</a></li>
-          <li>📜 <a href="manifest.html">Manifest (Longform)</a></li>
-          <li>📚 <a href="glossary.html">Glossary</a></li>
-        </ul>
-      </article>
-    </section>
+  <article class="card span-4">
+    <h3>Core</h3>
+    <ul class="list">
+      <li>⌂ <a href="index.html">Home</a></li>
+      <li>📘 <a href="theory.html">Theory</a></li>
+      <li>🎓 <a href="teach.html">Teach / Manifest</a></li>
+      <li>🧾 <a href="ledger.html">Ledger</a></li>
+    </ul>
+  </article>
 
-    <footer class="footer">
-      <div class="divider" aria-hidden="true"></div>
-      <p class="small muted">Use headphones if possible. Ethics first; stop if you feel off-balance.</p>
-      <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire</p>
-    </footer>
-  </main>
+  <article class="card span-4">
+    <h3>Experiments</h3>
+    <ul class="list">
+      <li>🔁 <a href="ab.html">A/B Carriers</a></li>
+      <li>🔣 <a href="glyphs.html">Glyphs</a></li>
+      <li>μ <a href="micro.html">Micro‑acts</a></li>
+    </ul>
+  </article>
 
-  <!-- Page script: carriers, timer, sealed ledger, print-to-PDF witness -->
-  <script>
+  <article class="card span-4">
+    <h3>Files</h3>
+    <ul class="list">
+      <li>⬇ <a href="downloads.html">Downloads</a></li>
+      <li>📜 <a href="manifest.html">Manifest (Longform)</a></li>
+      <li>📚 <a href="glossary.html">Glossary</a></li>
+    </ul>
+  </article>
+</section>
+
+<footer class="footer">
+  <div class="divider" aria-hidden="true"></div>
+  <p class="small muted">Use headphones if possible. Ethics first; stop if you feel off‑balance.</p>
+  <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire</p>
+</footer>
+
+  </main>  <!-- Page script: carriers, timer, sealed ledger, CSV/PDF, URL params -->  <script>
   (function(){
     "use strict";
 
-    /* ---------- utilities & cached nodes ---------- */
+    /* ---------- utilities ---------- */
     const $ = s => document.querySelector(s);
     const $$ = s => Array.from(document.querySelectorAll(s));
 
     const YEAR = $('#yr'); if (YEAR) YEAR.textContent = new Date().getFullYear();
+    const q = new URLSearchParams(location.search);
 
     // LocalStorage keys
-    const LEDGER_KEY = 'sof_ledger_entries_v2'; // v2 adds hash + seal
-    const PREF      = 'sof_pref_carrier_v1';
+    const LEDGER_KEY = 'sof_ledger_entries_v2';
+    const PREF_CARRIER = 'sof_pref_carrier_v1';
+    const PREF_DUR = 'sof_pref_duration_v1';
+    const PREF_MUTE = 'sof_pref_mute_v1';
+
     const read = () => { try { return JSON.parse(localStorage.getItem(LEDGER_KEY) || '[]'); } catch { return []; } };
     const write = (arr) => { try { localStorage.setItem(LEDGER_KEY, JSON.stringify(arr)); } catch (e) { console.warn('save failed', e); } };
 
-    // canonical JSON (stable key order)
     function canonicalize(obj){
       if (obj === null || typeof obj !== 'object') return JSON.stringify(obj);
       if (Array.isArray(obj)) return '[' + obj.map(canonicalize).join(',') + ']';
@@ -311,12 +303,13 @@
     const PROG = document.getElementById('progressArc');
     const PHRASE = $('#phrase'), COH = $('#coh'), TAG_INPUT = $('#tag');
     const CARRIER_BUTTONS = $$('.carrier-btn');
-    const EXPORT_LAST_PDF = $('#exportLastPDF');
+    const DUR_BTNS = $$('button[data-dur]');
+    const MUTE = $('#mute');
 
-    // requestIdle poly
+    // Idle helper
     const idle = window.requestIdleCallback ? window.requestIdleCallback : (fn)=>setTimeout(fn,200);
 
-    /* ---------- audio: WebAudio oscillator ---------- */
+    /* ---------- audio ---------- */
     let audioCtx = null, osc = null, gainNode = null;
     function ensureAudio() {
       if (audioCtx) return;
@@ -328,7 +321,7 @@
       } catch (e) { audioCtx = null; }
     }
     function startTone(freq) {
-      if (!freq) return;
+      if (!freq || (MUTE && MUTE.checked)) return;
       ensureAudio();
       if (!audioCtx || osc) return;
       osc = audioCtx.createOscillator();
@@ -346,24 +339,27 @@
       try { osc.stop(t + 0.09); } catch(e) {}
       osc.disconnect && osc.disconnect(); osc = null;
     }
-    function warmAudio(){ const resume = () => {
-      try { ensureAudio(); if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); } catch(e){}
-      window.removeEventListener('pointerdown', resume); window.removeEventListener('keydown', resume);
-    }; window.addEventListener('pointerdown', resume, {once:true, passive:true}); window.addEventListener('keydown', resume, {once:true, passive:true}); }
-    warmAudio();
+    function warmAudio(){
+      const resume = () => {
+        try { ensureAudio(); if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); } catch(e){}
+        window.removeEventListener('pointerdown', resume);
+        window.removeEventListener('keydown', resume);
+      };
+      window.addEventListener('pointerdown', resume, {once:true, passive:true});
+      window.addEventListener('keydown', resume, {once:true, passive:true});
+    } warmAudio();
 
-    /* ---------- carriers + skin ---------- */
+    // sound test
+    $('#soundTest').addEventListener('click', ()=>{ startTone(Number(carrier) || 432); setTimeout(()=>stopTone(), 420); }, {passive:true});
+
+    /* ---------- carrier skin ---------- */
     const BODY = document.body;
     function setCarrierSkin(code){
       BODY.classList.remove('carrier-144','carrier-369','carrier-432','carrier-528','carrier-963');
       if (code && code !== 'none') BODY.classList.add('carrier-' + code);
     }
-    let carrier = '432'; // default
-    try {
-      const pref = localStorage.getItem(PREF);
-      if (pref) carrier = pref;
-    } catch(e){}
-    // reflect default selection
+
+    let carrier = q.get('carrier') || (localStorage.getItem(PREF_CARRIER) || '432');
     CARRIER_BUTTONS.forEach(b=>{
       const on = (b.dataset.carrier === carrier);
       b.setAttribute('aria-pressed', on ? 'true':'false');
@@ -376,22 +372,34 @@
         CARRIER_BUTTONS.forEach(b => { b.setAttribute('aria-pressed','false'); b.setAttribute('aria-checked','false'); });
         btn.setAttribute('aria-pressed','true'); btn.setAttribute('aria-checked','true');
         carrier = btn.dataset.carrier || 'none';
-        try { localStorage.setItem(PREF, carrier); } catch(e){}
+        try { localStorage.setItem(PREF_CARRIER, carrier); } catch(e){}
         setCarrierSkin(carrier);
         if (carrier !== 'none') { startTone(Number(carrier)); setTimeout(()=>stopTone(), 380); } else { stopTone(); }
       }, {passive:true});
       btn.addEventListener('keydown', (e)=>{
-        if (!['ArrowLeft','ArrowRight'].includes(e.key)) return;
+        if (!['ArrowLeft','ArrowRight','Home','End'].includes(e.key)) return;
         e.preventDefault();
         const idx = CARRIER_BUTTONS.indexOf(btn);
-        const nxt = e.key === 'ArrowRight' ? (idx + 1) % CARRIER_BUTTONS.length : (idx - 1 + CARRIER_BUTTONS.length) % CARRIER_BUTTONS.length;
-        CARRIER_BUTTONS[nxt].focus(); CARRIER_BUTTONS[nxt].click();
+        const nextIdx = e.key==='Home'?0: e.key==='End'?CARRIER_BUTTONS.length-1 : (e.key==='ArrowRight'? (idx+1)%CARRIER_BUTTONS.length : (idx-1+CARRIER_BUTTONS.length)%CARRIER_BUTTONS.length);
+        CARRIER_BUTTONS[nextIdx].focus(); CARRIER_BUTTONS[nextIdx].click();
       });
     });
 
+    // examples → textarea
+    $$('.pill[data-example]').forEach(p=> p.addEventListener('click', ()=>{ PHRASE.value = p.dataset.example || ''; PHRASE.focus(); }, {passive:true}));
+
+    /* ---------- duration ---------- */
+    let DURATION_SECONDS = Math.max(10, Number(q.get('duration') || localStorage.getItem(PREF_DUR) || 60));
+    function reflectDur(){ DUR_BTNS.forEach(b=> b.setAttribute('aria-pressed', (Number(b.dataset.dur)===DURATION_SECONDS)?'true':'false')); }
+    reflectDur();
+    DUR_BTNS.forEach(b=> b.addEventListener('click', ()=>{ DURATION_SECONDS = Number(b.dataset.dur)||60; localStorage.setItem(PREF_DUR, String(DURATION_SECONDS)); reflectDur(); }, {passive:true}));
+
+    // mute pref
+    if (localStorage.getItem(PREF_MUTE) === '1') MUTE.checked = true;
+    MUTE.addEventListener('change', ()=> localStorage.setItem(PREF_MUTE, MUTE.checked?'1':'0'));
+
     /* ---------- timer (rAF) ---------- */
-    const DURATION_SECONDS = 60;
-    let rafId = null, endTime = 0, lastDisplayed = null;
+    let rafId = null, endTime = 0, lastDisplayed = null, RUNNING = false;
 
     (function prepareArc(){
       if (!PROG) return;
@@ -409,6 +417,7 @@
       PROG.setAttribute('stroke-dasharray', `${dash.toFixed(2)} ${circ.toFixed(2)}`);
     }
     function updateTimerText(text){ if (TIMER_TEXT && TIMER_TEXT.textContent !== text) TIMER_TEXT.textContent = text; }
+
     function rafTick(now) {
       const remainingMS = Math.max(0, endTime - now);
       const remainingSecs = Math.ceil(remainingMS / 1000);
@@ -416,10 +425,10 @@
       const frac = elapsed / (DURATION_SECONDS * 1000);
       if (lastDisplayed !== remainingSecs) { updateTimerText(remainingSecs > 0 ? `${remainingSecs}s` : '0s'); lastDisplayed = remainingSecs; }
       setProgressFraction(frac);
-      if (remainingMS <= 0) { stopRun(); return; }
+      if (remainingMS <= 0) { stopRun(true); return; }
       rafId = requestAnimationFrame(rafTick);
     }
-    let RUNNING = false;
+
     function startRun(){
       if (RUNNING) return; RUNNING = true;
       if (audioCtx && audioCtx.state === 'suspended') { audioCtx.resume().catch(()=>{}); }
@@ -427,9 +436,10 @@
       START_BTN.disabled = true; STOP_BTN.disabled = false;
       START_BTN.setAttribute('aria-pressed','true'); STOP_BTN.setAttribute('aria-pressed','false');
       endTime = performance.now() + DURATION_SECONDS * 1000; lastDisplayed = null; rafId = requestAnimationFrame(rafTick);
-      if (navigator.vibrate) navigator.vibrate(50);
+      if (navigator.vibrate) navigator.vibrate(30);
     }
-    function stopRun(){
+
+    function stopRun(auto=false){
       if (!RUNNING) {
         START_BTN.disabled = false; STOP_BTN.disabled = true;
         STOP_BTN.setAttribute('aria-pressed','true'); START_BTN.setAttribute('aria-pressed','false');
@@ -441,18 +451,23 @@
       START_BTN.disabled = false; STOP_BTN.disabled = true;
       START_BTN.setAttribute('aria-pressed','false'); STOP_BTN.setAttribute('aria-pressed','true');
       updateTimerText('Stopped'); setProgressFraction(0);
+      // auto-save prompt
+      if (auto && PHRASE.value.trim()) maybeQuickSave();
     }
-    START_BTN && START_BTN.addEventListener('click', startRun);
-    STOP_BTN && STOP_BTN.addEventListener('click', stopRun);
+
+    START_BTN?.addEventListener('click', startRun);
+    STOP_BTN?.addEventListener('click', ()=>stopRun(false));
 
     document.addEventListener('keydown', (e) => {
       if (e.key === '/') { e.preventDefault(); PHRASE && PHRASE.focus(); }
-      if (e.key === 'r' || e.key === 'R') { if (RUNNING) stopRun(); else startRun(); }
+      if (e.key === 'r' || e.key === 'R') { if (RUNNING) stopRun(false); else startRun(); }
+      if (e.key === 'm' || e.key === 'M') { MUTE.checked = !MUTE.checked; localStorage.setItem(PREF_MUTE, MUTE.checked?'1':'0'); }
+      if (e.key === 's' || e.key === 'S') { e.preventDefault(); saveEntry(); }
       if (e.key === 'Escape') { if (PHRASE) PHRASE.value = ''; if (COH) COH.value = 0; }
       if (e.key === 'Tab') document.body.classList.add('user-is-tabbing');
     }, {passive:true});
 
-    /* ---------- render recent ---------- */
+    /* ---------- recent list ---------- */
     function renderRecent(all = read()){
       idle(()=> {
         if (!RECENT) return;
@@ -474,8 +489,8 @@
               <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px">
                 ${tags}
                 <div style="margin-left:auto;display:flex;gap:6px">
-                  <button class="small-btn inline-btn" data-action="pdf" data-idx="${idx}">PDF</button>
                   <button class="small-btn inline-btn" data-action="copy" data-idx="${idx}">Copy</button>
+                  <button class="small-btn inline-btn" data-action="pdf" data-idx="${idx}">PDF</button>
                   <button class="small-btn inline-btn" data-action="delete" data-idx="${idx}">Delete</button>
                 </div>
               </div>
@@ -486,7 +501,7 @@
     }
     renderRecent();
 
-    /* ---------- saving / sealing ---------- */
+    /* ---------- save / seal ---------- */
     async function buildSealedEntry(){
       const phrase = (PHRASE && PHRASE.value || '').trim();
       const coherence = Number(COH && COH.value || 0);
@@ -496,32 +511,49 @@
       const payload = {
         when: new Date().toISOString(),
         carrier, phrase, coherence, tags,
-        // room for future: node, witnesses, metrics...
+        dur: DURATION_SECONDS
       };
       const canon = canonicalize(payload);
       const hash = await sha256Hex(canon);
-      const entry = Object.assign({}, payload, {
-        hash,
-        seal: { stage: 'I', // Seal I: local attestation
-                algo: 'SHA-256',
-                canonLen: canon.length }
-      });
-      return entry;
+      return Object.assign({}, payload, { hash, seal: { stage:'I', algo:'SHA-256', canonLen: canon.length } });
     }
 
-    $('#saveEntry').addEventListener('click', async () => {
+    async function saveEntry(){
       const entry = await buildSealedEntry(); if (!entry) return;
       const arr = read(); arr.unshift(entry); write(arr); renderRecent(arr);
       try { if (navigator.vibrate) navigator.vibrate([30]); } catch(e){}
-    }, {passive:true});
+    }
 
-    /* ---------- JSON export / import ---------- */
+    function maybeQuickSave(){
+      // Auto tag carrier if not present
+      const t = (TAG_INPUT.value||'').trim();
+      if (carrier && !t.includes(carrier)) TAG_INPUT.value = (t? t+',' : '') + carrier;
+      // Offer to save
+      if (confirm('Save this run to your local ledger?')) saveEntry();
+    }
+
+    $('#saveEntry').addEventListener('click', saveEntry, {passive:true});
+
+    /* ---------- export JSON / CSV, import JSON ---------- */
     $('#exportEntries').addEventListener('click', () => {
-      const data = read();
-      if (!data.length) return alert('No entries to export.');
+      const data = read(); if (!data.length) return alert('No entries to export.');
       const blob = new Blob([JSON.stringify({version:'sof-ledger-v2', entries:data}, null, 2)], {type:'application/json'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = 'scroll-of-fire-ledger.json';
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    }, {passive:true});
+
+    $('#exportCSV').addEventListener('click', ()=>{
+      const data = read(); if (!data.length) return alert('No entries to export.');
+      const header = ['when','carrier','phrase','coherence','dur','tags','hash'];
+      const rows = [header.join(',')].concat(data.map(e=> header.map(k=>{
+        const v = (k==='tags') ? (e.tags||[]).join('|') : e[k];
+        const s = String(v==null?'':v).replace(/"/g,'""');
+        return '"'+s+'"';
+      }).join(',')));
+      const blob = new Blob([rows.join('\n')], {type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'scroll-of-fire-ledger.csv';
       document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     }, {passive:true});
 
@@ -536,8 +568,8 @@
             const list = Array.isArray(parsed) ? parsed : (Array.isArray(parsed.entries) ? parsed.entries : []);
             if (!Array.isArray(list)) throw Error('Expected an array or {entries:[]}.');
             const existing = read();
-            const existingIDs = new Set(existing.map(x=>x.hash || x.when));
-            const merged = list.concat(existing.filter(x=>!existingIDs.has(x.hash || x.when)));
+            const seen = new Set(existing.map(x=>x.hash || x.when));
+            const merged = list.filter(x=>{ const id = x.hash || x.when; if (seen.has(id)) return false; seen.add(id); return true; }).concat(existing);
             write(merged); renderRecent(merged);
             alert('Imported ledger (merged).');
           } catch (err) { alert('Import failed: ' + (err.message || err)); }
@@ -553,99 +585,96 @@
     }, {passive:true});
 
     $('#deleteLast').addEventListener('click', () => {
-      const arr = read();
-      if (!arr.length) return alert('No entries to delete.');
+      const arr = read(); if (!arr.length) return alert('No entries to delete.');
       if (!confirm('Delete the last (most recent) entry?')) return;
       arr.shift(); write(arr); renderRecent(arr);
     }, {passive:true});
 
-    // List delegation: copy / delete / PDF
-    RECENT && RECENT.addEventListener('click', (ev) => {
+    // List actions
+    RECENT?.addEventListener('click', (ev) => {
       const btn = ev.target.closest('button'); if (!btn) return;
       const action = btn.dataset.action; const idx = Number(btn.dataset.idx);
-      const arr = read(); const entry = arr[idx];
-      if (!entry) return;
-
+      const arr = read(); const entry = arr[idx]; if (!entry) return;
       if (action === 'copy') {
         const txt = `${entry.phrase}\ncarrier:${entry.carrier} · Ξ:${entry.coherence} · ${new Date(entry.when).toLocaleString()} · hash:${entry.hash}`;
-        if (navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>alert('Copied entry to clipboard.'), ()=>alert('Copy failed.'));
+        if (navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>alert('Copied to clipboard.'), ()=>alert('Copy failed.'));
         else prompt('Copy this text', txt);
       } else if (action === 'delete') {
-        if (!confirm('Delete this entry?')) return;
-        arr.splice(idx,1); write(arr); renderRecent(arr);
-      } else if (action === 'pdf') {
-        openWitnessSlip(entry);
-      }
+        if (!confirm('Delete this entry?')) return; arr.splice(idx,1); write(arr); renderRecent(arr);
+      } else if (action === 'pdf') { openWitnessSlip(entry); }
     }, {passive:true});
 
-    /* ---------- Print-to-PDF witness slip ---------- */
+    /* ---------- Witness PDF window ---------- */
     function openWitnessSlip(entry){
+      const css = `body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;margin:0;padding:24px;color:#0b0b0f}
+      .slip{max-width:720px;margin:0 auto}
+      .slip h1{font-size:20px;margin:0 0 6px}
+      .meta{color:#64708a;font-size:12px;margin-bottom:12px}
+      .box{border:1px solid #d8dbe6;border-radius:10px;padding:12px;margin:10px 0}
+      .row{display:flex;gap:10px;flex-wrap:wrap}
+      .row>div{flex:1}
+      code{background:#f5f7fb;border:1px solid #e6e9f3;border-radius:6px;padding:2px 6px}
+      @media (prefers-color-scheme: dark){ body{color:#e9eef7;background:#0b0f16} .box{border-color:#334055} code{background:#121826;border-color:#1f2633} .meta{color:#8e9bb2} }`;
       const win = window.open('', '_blank', 'noopener,noreferrer,width=820,height=900');
-      if (!win) { alert('Pop-up blocked. Please allow pop-ups for PDF.'); return; }
-      const html = `
-<!doctype html><html><head><meta charset="utf-8"><title>Witness — Scroll of Fire</title>
-<meta name="color-scheme" content="light dark">
-<style>${document.querySelector('style')?.textContent || ''}</style>
-</head><body>
-  <div class="slip">
-    <h1>Scroll of Fire — Witness Slip</h1>
-    <div class="meta">Sealed at: ${new Date().toLocaleString()}</div>
-    <div class="box">
-      <div class="row">
-        <div><strong>Phrase (Σ)</strong><br>${escapeHtml(entry.phrase)}</div>
+      if (!win) { alert('Pop‑up blocked. Please allow pop‑ups for PDF.'); return; }
+      const html = `<!doctype html><html><head><meta charset="utf-8"><title>Witness — Scroll of Fire</title><meta name="color-scheme" content="light dark"><style>${css}</style></head><body><div class="slip">
+      <h1>Scroll of Fire — Witness Slip</h1>
+      <div class="meta">Sealed at: ${new Date().toLocaleString()}</div>
+      <div class="box">
+        <div class="row">
+          <div><strong>Phrase (Σ)</strong><br>${escapeHtml(entry.phrase)}</div>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <div><strong>Carrier</strong><br>${escapeHtml(entry.carrier)}</div>
+          <div><strong>Ξ</strong><br>${escapeHtml(entry.coherence)}</div>
+          <div><strong>When</strong><br>${new Date(entry.when).toLocaleString()}</div>
+        </div>
+        ${entry.tags?.length ? `<div style="margin-top:8px"><strong>Tags</strong><br>${entry.tags.map(t=>`<code>${escapeHtml(t)}</code>`).join(' ')}</div>`:''}
       </div>
-      <div class="row" style="margin-top:8px">
-        <div><strong>Carrier</strong><br>${escapeHtml(entry.carrier)}</div>
-        <div><strong>Ξ</strong><br>${escapeHtml(entry.coherence)}</div>
-        <div><strong>When</strong><br>${new Date(entry.when).toLocaleString()}</div>
+      <div class="box">
+        <div class="row">
+          <div><strong>Seal Stage</strong><br>${escapeHtml(entry.seal?.stage || 'I')}</div>
+          <div><strong>Algorithm</strong><br>${escapeHtml(entry.seal?.algo || 'SHA-256')}</div>
+        </div>
+        <div style="margin-top:8px"><strong>Hash</strong><br><code>${escapeHtml(entry.hash)}</code></div>
+        <div class="meta" style="margin-top:6px">Canonical payload length: ${entry.seal?.canonLen || '—'} bytes</div>
       </div>
-      ${entry.tags?.length ? `<div style="margin-top:8px"><strong>Tags</strong><br>${entry.tags.map(t=>`<code>${escapeHtml(t)}</code>`).join(' ')}</div>`:''}
+      <div style="margin-top:12px;font-size:12px;color:#64708a">Generated by Start Here (Σ → ∇φ → ℛ → ΔΣ). Store this with your ledger JSON.</div>
     </div>
-    <div class="box">
-      <div class="row">
-        <div><strong>Seal Stage</strong><br>${escapeHtml(entry.seal?.stage || 'I')}</div>
-        <div><strong>Algorithm</strong><br>${escapeHtml(entry.seal?.algo || 'SHA-256')}</div>
-      </div>
-      <div style="margin-top:8px"><strong>Hash</strong><br><code>${escapeHtml(entry.hash)}</code></div>
-      <div class="meta" style="margin-top:6px">Canonical payload length: ${entry.seal?.canonLen || '—'} bytes</div>
-    </div>
-    <div style="margin-top:12px;font-size:12px;color:#7b8499">
-      Generated by Start Here (Σ → ∇φ → ℛ → ΔΣ). Store this with your ledger JSON.
-    </div>
-  </div>
-  <script>window.addEventListener('load',()=>{ setTimeout(()=>window.print(), 200); });</script>
-</body></html>`;
-      win.document.open(); win.document.write(html); win.document.close();
-    }
+    <script>window.addEventListener('load',()=>{ setTimeout(()=>window.print(), 220); });<\/script>
+  </body></html>`;
+  win.document.open(); win.document.write(html); win.document.close();
+}
 
-    EXPORT_LAST_PDF && EXPORT_LAST_PDF.addEventListener('click', () => {
-      const arr = read();
-      if (!arr.length) return alert('No entries yet.');
-      openWitnessSlip(arr[0]); // most recent
-    }, {passive:true});
+$('#exportLastPDF')?.addEventListener('click', () => {
+  const arr = read(); if (!arr.length) return alert('No entries yet.');
+  openWitnessSlip(arr[0]);
+}, {passive:true});
 
-    /* ---------- visual feedback ---------- */
-    COH && COH.addEventListener('input', ()=> {
-      const v = Number(COH.value);
-      const pct = Math.max(0, Math.min(1, v / 5));
-      const hue = Math.round(200 * pct);
-      PROG && PROG.setAttribute('stroke', `hsl(${hue} 90% 60%)`);
-    }, {passive:true});
+/* ---------- visual feedback ---------- */
+COH?.addEventListener('input', ()=> {
+  const v = Number(COH.value);
+  const pct = Math.max(0, Math.min(1, v / 5));
+  const hue = Math.round(200 * pct);
+  PROG && PROG.setAttribute('stroke', `hsl(${hue} 90% 60%)`);
+}, {passive:true});
 
-    // init
-    (function init(){
-      if (PROG && !PROG.dataset.circ) {
-        const circ = 2*Math.PI*16;
-        PROG.dataset.circ = String(circ);
-        PROG.setAttribute('stroke-dasharray', `0 ${circ}`);
-      }
-      renderRecent();
-    })();
+// Prefill from URL
+if (q.get('phrase')) { PHRASE.value = q.get('phrase'); }
 
-    // safety
-    window.addEventListener('pagehide', ()=>{ if (RUNNING) { stopRun(); } if (audioCtx && audioCtx.state === 'running') audioCtx.suspend().catch(()=>{}); }, {passive:true});
-    document.addEventListener('visibilitychange', ()=>{ if (document.hidden) { stopRun(); } }, {passive:true});
-  })();
-  </script>
+// init
+(function init(){
+  if (PROG && !PROG.dataset.circ) {
+    const circ = 2*Math.PI*16; PROG.dataset.circ = String(circ); PROG.setAttribute('stroke-dasharray', `0 ${circ}`);
+  }
+  renderRecent();
+})();
+
+// safety
+window.addEventListener('pagehide', ()=>{ if (RUNNING) { stopRun(false); } if (audioCtx && audioCtx.state === 'running') audioCtx.suspend().catch(()=>{}); }, {passive:true});
+document.addEventListener('visibilitychange', ()=>{ if (document.hidden) { stopRun(false); } }, {passive:true});
+
+})(); </script>
+
 </body>
 </html>
