@@ -136,3 +136,80 @@ Phase-tinted accents via --moon-accent / --moon-accent-2 =======================
   --ring-size:64px;
   grid-template-columns:auto 1fr auto auto;
 }
+
+
+
+
+
+/* ===== Mobile-safe moon badge layout (fixes overlap) ===== */
+
+/* 1) Prefer grid on narrow screens so the ring owns its column
+   and the pills never collide with the ring label. */
+@media (max-width: 560px){
+  .moon-badge{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    grid-template-rows:auto auto;
+    align-items:center;
+    column-gap:14px;
+    row-gap:10px;
+  }
+  .moon-badge .ring{
+    grid-row:1 / span 2; /* ring spans both rows */
+  }
+  /* Main name pill sits to the right of the ring, with ellipsis. */
+  #moonChip{
+    grid-column:2;
+    max-width:100%;
+  }
+  #moonChip .k{
+    display:block;
+    max-width:100%;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  /* Year + source wrap under the name, right column */
+  #yearSpan, #sourceChip{ /* keep existing pills, just ensure nice wrap */
+    max-width:100%;
+  }
+}
+
+/* 2) Tighten ring typography on phones so digits don’t overflow. */
+@media (max-width: 420px){
+  .ring{ width:100px; height:100px }
+  .ring .label .big{ font-size:20px; line-height:1 }
+  .ring .label .small{ font-size:11px }
+}
+
+/* 3) Add breathing room between the badge block and following content. */
+.moon-badge{ gap:14px 16px }
+@media (max-width:560px){ .moon-badge{ margin-bottom:6px } }
+
+/* 4) Make headline + subtitle more compact to avoid pushdown on tiny screens. */
+@media (max-width: 380px){
+  .title{ font-size:32px }
+  .subtitle{ font-size:14px }
+}
+
+/* 5) Ensure long moon names never force layout shift anywhere. */
+#moonName{ word-break:keep-all }
+#moonEssence{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100% }
+
+/* 6) Week row: protect from squeezing; let label wrap first if needed. */
+.weekrow{ flex-wrap:wrap; row-gap:8px }
+.weeklabel{ min-width:48px }
+
+/* 7) Card padding on compact screens to keep pills from hugging edges. */
+@media (max-width:560px){
+  .card{ padding:12px 10px }
+}
+
+/* 8) Title pill numbers sometimes visually sit over pills; lift pills slightly. */
+.pill{ position:relative; z-index:1 }
+
+/* 9) Optional – calm drop shadows on very small screens to reduce visual clash. */
+@media (max-width:420px){
+  .ring-fg{ filter:none }
+  .dot.on{ box-shadow:none }
+}
