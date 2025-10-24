@@ -1505,9 +1505,20 @@ Note: This is the local, verified file hash shown on this page.
 
   // Smooth ramps
   function rampParam(param, to, ms=1200){
-    const now = ctx.currentTime;
-    param.cancelScheduledValues(now);
-    param.setTargetAtTime(to, now, Math.max(0.001, ms/1000));
+    if(!ctx || !param) return;
+    const now = ctx.currentTime || 0;
+    try { param.cancelScheduledValues(now); } catch {}
+    if (typeof param.setTargetAtTime === 'function') {
+      // Exponential-like easing
+      param.setTargetAtTime(to, now, Math.max(0.001, ms/1000));
+    } else if (typeof param.linearRampToValueAtTime === 'function') {
+      // Fallback for non-AudioParam-like objects
+      param.setValueAtTime(param.value ?? 0, now);
+      param.linearRampToValueAtTime(to, now + ms/1000);
+    } else {
+      // Last resort
+      try { param.value = to; } catch {}
+    }
   }
 
   async function start(){
@@ -1566,5 +1577,6 @@ Note: This is the local, verified file hash shown on this page.
 })();
 </script>
 <!-- ===== end HeavenSound v2 ===== -->
-  </script></body>
-  </html>
+
+</body>
+</html>
