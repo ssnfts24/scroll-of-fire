@@ -326,3 +326,60 @@
     recompute: init
   };
 })();
+
+
+
+
+
+<script>
+(() => {
+  const TWO_PI=Math.PI*2, cx=180, cy=180, R=145;
+
+  // Build the static wheel (houses + sign labels)
+  function buildWheel(){
+    const gH=document.getElementById('houseLines');
+    const gS=document.getElementById('signLabels');
+    if(!gH||!gS) return;
+    gH.innerHTML=''; gS.innerHTML='';
+    for(let i=0;i<12;i++){
+      const a=-Math.PI/2 + i*(TWO_PI/12);
+      const x=cx+Math.cos(a)*R, y=cy+Math.sin(a)*R;
+      const x2=cx+Math.cos(a)*(R-16), y2=cy+Math.sin(a)*(R-16);
+      gH.insertAdjacentHTML('beforeend', `<line x1="${x}" y1="${y}" x2="${x2}" y2="${y2}"></line>`);
+    }
+    const signs=['A','T','G','C','L','V','L','S','C','P','A','P']; // Aries..Pisces initials
+    for(let i=0;i<12;i++){
+      const a=-Math.PI/2 + (i+0.5)*(TWO_PI/12);
+      const x=cx+Math.cos(a)*(R-26), y=cy+Math.sin(a)*(R-26)+3;
+      gS.insertAdjacentHTML('beforeend', `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}">${signs[i]}</text>`);
+    }
+  }
+  const posForLon = lon => {
+    const a = (-90 + lon) * Math.PI/180; // 0° Aries at top
+    return { x: cx + Math.cos(a)*R, y: cy + Math.sin(a)*R };
+  };
+
+  // Call this from your ephemeris code
+  window.renderAstro = (data={}) => {
+    if (data.stamp)  document.getElementById('astroStamp').textContent = data.stamp;
+    if (data.tz)     document.getElementById('astroTZ').textContent    = data.tz;
+    if (data.source) document.getElementById('astroSource').textContent= data.source;
+
+    const P = data.planets || {};
+    Object.keys(P).forEach(k=>{
+      const p=P[k];
+      document.querySelector(`.pos[data-pos="${k}"]`)?.replaceChildren(document.createTextNode(p.text||'—'));
+      document.querySelector(`.sign[data-sign="${k}"]`)?.replaceChildren(document.createTextNode(p.sign||'—'));
+      const dot=document.querySelector(`[data-dot="${k}"]`);
+      if(dot && typeof p.lon==='number'){ const xy=posForLon(p.lon); dot.setAttribute('cx',xy.x.toFixed(1)); dot.setAttribute('cy',xy.y.toFixed(1)); }
+    });
+
+    const body=document.getElementById('aspBody'); if(body){
+      body.innerHTML='';
+      (data.aspects||[]).forEach(a=> body.insertAdjacentHTML('beforeend', `<tr><td>${a.pair}</td><td>${a.kind}</td><td>${a.orb}</td></tr>`));
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', buildWheel);
+})();
+</script>
