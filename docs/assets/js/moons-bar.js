@@ -1,39 +1,39 @@
-/* 13 Moons — Mini Widget (ancient wizard / DPR-aware / synced)
-   - Populates #mbMoon, #mbDayLine, #mbEssence, #mbYear
-   - Drives mini ring arc (id="mbArc" or .mb-fg) with dash=316
-   - Phase-tints CSS vars --moon-accent / --moon-accent-2
-   - Builds deep link with d,tz,t and supports native share + TZ
+<script>
+/* 13 Moons — Mini Widget (v2.1, DPR-aware, main-page compatible)
+   - Works with NEW IDs:  #mbName, #mbDay, #mbEssence, #mbYear, #moonArcMini, #btnShareImage, #btnJump
+   - Also supports OLD IDs: #mbMoon, #mbDayLine, #mbEssence, #mbYear, #mbArc, #mbShare, #mbTZ
+   - Deep link: moons.html?d=YYYY-MM-DD&tz=Area/City&t=H#moon-N
 */
 (function(){
   "use strict";
 
   /* ---------- Tiny utils ---------- */
-  const $  = s => document.querySelector(s);
-  const el = id => document.getElementById(id);
-  const on = (t,e,f,o)=> t&&t.addEventListener(e,f,o);
-  const pad = n => String(n).padStart(2,"0");
+  const $  =(s,r=document)=>r.querySelector(s);
+  const on =(t,e,f,o)=>t&&t.addEventListener(e,f,o);
+  const pad=n=>String(n).padStart(2,"0");
   const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
+  const safe = fn => { try{ return fn(); } catch(e){ return void 0; } };
   const toast = (msg)=>{
     const t=document.createElement('div');
     t.className='toast'; t.textContent=msg;
+    Object.assign(t.style,{position:"fixed",left:"50%",bottom:"24px",transform:"translateX(-50%)",background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid var(--line,#2a3242)",borderRadius:"10px",boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:"9999",opacity:"0",transition:"opacity .2s"});
     document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
-    setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),250); }, 1500);
+    setTimeout(()=>{t.style.opacity=0; setTimeout(()=>t.remove(),250);},1500);
   };
 
   /* ---------- Data ---------- */
   const MOONS = ["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
-  const ESS  = ["Attract purpose","Stabilize challenge","Activate service","Define form","Empower radiance","Balance equality","Channel inspiration","Harmonize integrity","Pulse intention","Perfect manifestation","Dissolve release","Dedicate cooperation","Endure presence"];
+  const ESS   = ["Attract purpose","Stabilize challenge","Activate service","Define form","Empower radiance","Balance equality","Channel inspiration","Harmonize integrity","Pulse intention","Perfect manifestation","Dissolve release","Dedicate cooperation","Endure presence"];
 
   /* ---------- TZ + URL ---------- */
   const TZ_KEY="sof_moons_tz";
-  const link = el("moonMiniLink"); // optional deep link <a>
-  const getTZ = () => localStorage.getItem(TZ_KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
-  const setTZ = z => localStorage.setItem(TZ_KEY, z);
+  const getTZ = ()=> safe(()=>localStorage.getItem(TZ_KEY)) || safe(()=>Intl.DateTimeFormat().resolvedOptions().timeZone) || "UTC";
+  const setTZ = z => safe(()=>localStorage.setItem(TZ_KEY,z));
 
-  function validDateStr(s){ return /^\d{4}-\d{2}-\d{2}$/.test(s); }
+  const validDateStr = s => /^\d{4}-\d{2}-\d{2}$/.test(s);
   function dateInTZ(baseDate, tz, overrideHour){
     try{
-      const opts={timeZone:tz, hour12:false, year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", second:"2-digit"};
+      const opts={timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"};
       const parts=new Intl.DateTimeFormat("en-CA",opts).formatToParts(baseDate);
       const m=Object.fromEntries(parts.map(p=>[p.type,p.value]));
       const h = (overrideHour==null? m.hour : pad(overrideHour));
@@ -43,7 +43,7 @@
     }
   }
 
-  /* ---------- 13-moon core ---------- */
+  /* ---------- 13-Moon core ---------- */
   const utcTrunc = d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
   const isLeapYear   = y=> (y%4===0 && y%100!==0) || (y%400===0);
   const isLeapDayUTC = d=> d.getUTCMonth()===1 && d.getUTCDate()===29;
@@ -95,20 +95,27 @@
     return {special:null, moon, day, year:`${s}/${s+1}`};
   }
 
-  /* ---------- Phase hue for accents ---------- */
-  function moonPhase(d){
-    const syn = 29.530588853, epoch = Date.UTC(2000,0,6,18,14,0);
-    const age = ((d.getTime()-epoch)/86400000);
-    const frac = ((age % syn)+syn)%syn / syn;
-    const illum = (1 - Math.cos(2*Math.PI*frac))/2;
-    return {illum};
-  }
+  /* ---------- Phase accent (matches main file) ---------- */
   function mixHex(a,b,t){
     const pa=parseInt(a.slice(1),16), pb=parseInt(b.slice(1),16);
     const ar=(pa>>16)&255, ag=(pa>>8)&255, ab=pa&255;
     const br=(pb>>16)&255, bg=(pb>>8)&255, bb=pb&255;
     const rr=Math.round(ar+(br-ar)*t), gg=Math.round(ag+(bg-ag)*t), bb2=Math.round(ab+(bb-ab)*t);
     return `#${((1<<24)+(rr<<16)+(gg<<8)+bb2).toString(16).slice(1)}`;
+  }
+  function moonPhase(d){
+    const syn = 29.530588853, epoch = Date.UTC(2000,0,6,18,14,0);
+    const ageDays = ((d.getTime()-epoch)/86400000);
+    const frac = ((ageDays % syn)+syn)%syn / syn;
+    const illum = (1 - Math.cos(2*Math.PI*frac))/2;
+    return {illum};
+  }
+  function setGradientStops(defId, c1, c2){
+    const grad = document.getElementById(defId);
+    if (!grad) return;
+    const stops = grad.querySelectorAll("stop");
+    if (stops[0]) stops[0].setAttribute("stop-color", c1);
+    if (stops[1]) stops[1].setAttribute("stop-color", c2);
   }
   function applyPhaseAccent(illum){
     const cold = "#7af3ff", warm = "#f3c97a";
@@ -118,92 +125,103 @@
     const root = document.documentElement;
     root.style.setProperty("--moon-accent",  c1);
     root.style.setProperty("--moon-accent-2",c2);
+    setGradientStops("mbGrad", c1, c2);      // mini ring
+    setGradientStops("rg", c1, c2);          // main ring (if present)
+    // keep letters readable on mini bar
+    const bar = document.querySelector(".moonbar");
+    bar && bar.classList.remove("contrast-light");
+  }
+
+  /* ---------- DOM targets (new & legacy) ---------- */
+  // NEW markup
+  const elName = $("#mbName") || $("#mbMoon");
+  const elDay  = $("#mbDay")  || $("#mbDayLine");
+  const elEss  = $("#mbEssence");
+  const elYear = $("#mbYear");
+  const arc    = $("#moonArcMini") || $("#mbArc") || $(".mb-fg");
+  const btnShare = $("#btnShareImage") || $("#mbShare");
+  const btnJump  = $("#btnJump");
+  const tzBtn    = $("#mbTZ"); // legacy optional
+  const link     = $("#moonMiniLink"); // optional <a> wrapper for deep link
+  const barRoot  = document.querySelector(".moonbar");
+
+  const DASH_TOTAL = 316;
+  function setArc(day){
+    if (!arc) return;
+    const d = Math.round(DASH_TOTAL * (clamp(day,1,28)/28));
+    arc.setAttribute("stroke-dasharray", `${d} ${Math.max(0,DASH_TOTAL-d)}`);
+  }
+
+  function buildDeepLink(now, tz, m13){
+    const base = (link?.getAttribute("href")) || "moons.html";
+    let u;
+    try{ u=new URL(base, document.baseURI || location.href); }
+    catch{ u=new URL(String(base), location.href); }
+    const d = dateInTZ(now, tz).toISOString().slice(0,10);
+    u.searchParams.set("d", d);
+    u.searchParams.set("tz", tz);
+    u.searchParams.set("t", String(now.getHours()));
+    if (m13 && m13.moon) u.hash = `moon-${m13.moon}`;
+    return u.toString();
   }
 
   /* ---------- Populate widget ---------- */
-  const mbMoon    = el("mbMoon");
-  const mbDayLine = el("mbDayLine");
-  const mbEssence = el("mbEssence");
-  const mbYear    = el("mbYear");
-  const mbYHWH    = el("mbYHWH");
-  const shareBtn  = el("mbShare");
-  const tzBtn     = el("mbTZ");
-
-  // ring arc: prefer id, fallback to class
-  const arc = el("mbArc") || $(".mb-fg");
-  const DASH_TOTAL = 316;
-
-  function setArc(day){
-    if (!arc) return;
-    const dash = Math.round(DASH_TOTAL * (clamp(day,1,28)/28));
-    arc.setAttribute("stroke-dasharray", `${dash} ${Math.max(0,DASH_TOTAL-dash)}`);
-  }
-
-  function update(deepLinkOnly){
+  function update({deepLinkOnly=false}={}){
     const tz = getTZ();
     const now = new Date();
     const wall = dateInTZ(now, tz, now.getHours());
-
     const m13 = calc13Moon(wall, tz);
 
-    // labels
-    if (m13.special){
-      mbMoon && (mbMoon.textContent = m13.special);
-      mbEssence && (mbEssence.textContent = "Outside the 13×28 count");
-      mbDayLine && (mbDayLine.textContent = "—");
-      setArc(0);
-    }else{
-      const idx = m13.moon-1;
-      mbMoon && (mbMoon.textContent = `${MOONS[idx]} Moon`);
-      mbEssence && (mbEssence.textContent = ESS[idx]);
-      mbDayLine && (mbDayLine.textContent = `Day ${m13.day} / 28`);
-      setArc(m13.day);
-    }
-    mbYear && (mbYear.textContent = m13.year);
+    if (!deepLinkOnly){
+      if (m13.special){
+        elName && (elName.textContent = m13.special);
+        elEss  && (elEss.textContent  = "Outside the 13×28 count");
+        elDay  && (elDay.textContent  = "—/28");
+        setArc(0);
+      } else {
+        const idx=m13.moon-1;
+        elName && (elName.textContent = `${MOONS[idx]} Moon`);
+        elEss  && (elEss.textContent  = ESS[idx]);
+        elDay  && (elDay.textContent  = `${m13.day}/28`);
+        setArc(m13.day);
+      }
+      elYear && (elYear.textContent = m13.year);
 
-    // phase-driven accent
-    const ph = moonPhase(wall);
-    applyPhaseAccent(ph.illum);
+      // YHWH chip highlight on resonant numerology (1,4,7,11,22,33)
+      const y = wall.getUTCFullYear(), mm = wall.getUTCMonth()+1, dd = wall.getUTCDate();
+      const sum = String(y).split("").reduce((a,b)=>a+(+b),0) + mm + dd;
+      const resonant = [1,4,7,11,22,33].includes(sum % 34);
+      barRoot && barRoot.classList.toggle("yhwh-on", !!resonant);
 
-    // YHWH chip highlight on resonant numerology (1,4,7,11,22,33)
-    const resonant=[1,4,7,11,22,33].includes((((wall.getUTCFullYear()+"").split("").map(Number).reduce((a,b)=>a+b,0)) + (wall.getUTCMonth()+1) + wall.getUTCDate())%34);
-    const root = link?.closest(".moonbar") || document.querySelector(".moonbar");
-    if (root){
-      root.classList.toggle("yhwh-on", !!resonant);
+      // Phase accents
+      applyPhaseAccent(moonPhase(wall).illum);
     }
 
-    // deep link
-    if (link && !deepLinkOnly){
-      try{
-        const u = new URL(link.getAttribute("href") || "moons.html", document.baseURI || location.href);
-        const d = dateInTZ(now, tz).toISOString().slice(0,10);
-        u.searchParams.set("d", d);
-        u.searchParams.set("tz", tz);
-        u.searchParams.set("t", String(now.getHours()));
-        link.setAttribute("href", u.toString());
-      }catch{}
-    }
+    // Deep link
+    const dl = buildDeepLink(now, tz, m13);
+    if (link) link.setAttribute("href", dl);
+    return dl;
   }
 
-  /* ---------- Share + TZ ---------- */
-  async function nativeShare(){
+  /* ---------- Share + Jump + TZ ---------- */
+  on(btnShare, "click", async ()=>{
+    const url = update(); // ensure fresh link
+    const title = elName?.textContent || "13 Moons";
     try{
-      const url = new URL((link?.href)||location.href, location.href).toString();
-      const text = mbMoon?.textContent && mbDayLine?.textContent
-        ? `${mbMoon.textContent} — ${mbDayLine.textContent}`
-        : "13-Moon living clock";
-      if (navigator.share){ await navigator.share({title:"13-Moon — today", text, url}); return true; }
+      if (navigator.share){
+        await navigator.share({title, text:title, url});
+        toast("Shared");
+      } else {
+        await navigator.clipboard.writeText(url);
+        toast("Link copied");
+      }
     }catch{}
-    return false;
-  }
+  });
 
-  on(shareBtn, "click", async ()=>{
-    if (await nativeShare()){ toast("Shared"); return; }
-    try{
-      const url = new URL((link?.href)||location.href, location.href).toString();
-      await navigator.clipboard.writeText(url);
-      toast("Link copied");
-    }catch{ toast("Unable to copy"); }
+  on(btnJump, "click", ()=>{
+    const url = update();
+    // open the deep link (same tab)
+    location.href = url;
   });
 
   on(tzBtn, "click", ()=>{
@@ -213,23 +231,27 @@
     try{
       new Intl.DateTimeFormat("en-CA",{timeZone:input}).format(new Date());
       setTZ(input);
-      update(true); // refresh deep link and accents
+      update({deepLinkOnly:false});
       document.dispatchEvent(new Event("sof:tz-change"));
       toast(`Timezone set: ${input}`);
     }catch{ toast("Invalid timezone"); }
   });
 
-  /* ---------- Lifecycle ---------- */
-  function tick(){
-    update();
-  }
-  let iv = setInterval(tick, 60*1000); // refresh every minute
-  on(document, "visibilitychange", ()=>{ if(document.hidden){ clearInterval(iv); } else { tick(); iv=setInterval(tick, 60*1000);} });
-  on(window, "focus", tick);
-  on(document, "sof:tz-change", tick);
+  /* ---------- Reactivity with the main page ---------- */
+  // If the main moons.js changes the accent, keep letters readable.
+  on(document, "sof:accent-change", ()=>{
+    const bar = document.querySelector(".moonbar");
+    bar && bar.classList.remove("contrast-light");
+  });
+  // If the main page changes TZ via select, refresh our link/labels.
+  on(document, "sof:tz-change", ()=> update({deepLinkOnly:false}));
 
-  // init
-  // reduce initial FOUC for motion-sensitive users
+  /* ---------- Lifecycle ---------- */
   if (arc && matchMedia('(prefers-reduced-motion: reduce)').matches){ arc.style.transition='none'; }
-  tick();
+  update();
+  // keep fresh once a minute when visible
+  let iv = setInterval(update, 60*1000);
+  on(document, "visibilitychange", ()=>{ if(document.hidden){ clearInterval(iv); } else { update(); iv=setInterval(update,60*1000);} });
+  on(window, "focus", update);
 })();
+</script>
