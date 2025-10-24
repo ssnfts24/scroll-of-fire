@@ -489,17 +489,23 @@
 
 
 
-/* Astrology panel helpers */
-.planet-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;
-  padding:.28rem .55rem;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));font-weight:700}
-.planet-chip .g{width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--moon-accent),var(--moon-accent-2))}
-.aspect{display:inline-block;border:1px solid var(--line);border-radius:10px;padding:.25rem .5rem}
-.aspect--conj{box-shadow:0 0 0 1px #9ad7ff22 inset}
-.aspect--sext{box-shadow:0 0 0 1px #7fffd422 inset}
-.aspect--square{box-shadow:0 0 0 1px #ff9aa222 inset}
-.aspect--trine{box-shadow:0 0 0 1px #adffbf22 inset}
-.aspect--oppo{box-shadow:0 0 0 1px #ffcf9a22 inset}
-.zodiac-wheel{min-height:260px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01))}
+
+
+
+/* Astrology panel polish */
+#planetChips .planet-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);
+  border-radius:999px;padding:.32rem .65rem;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));font-weight:800}
+#planetChips .g{width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--moon-accent),var(--moon-accent-2))}
+#planetChips .rt{opacity:.75}
+.zodiac-wheel{min-height:260px;border:1px solid var(--line);border-radius:12px;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01))}
+#aspects .aspect{display:inline-block;border:1px solid var(--line);border-radius:10px;padding:.28rem .6rem;font-weight:800;margin:.25rem .35rem .25rem 0}
+#aspects .aspect.is-on{filter:drop-shadow(0 0 10px color-mix(in srgb, var(--moon-accent) 28%, transparent))}
+#aspects .aspect--square{background:linear-gradient(180deg,#ff5a5a22,#0000)}
+#aspects .aspect--trine{background:linear-gradient(180deg,#00ffd422,#0000)}
+#aspects .aspect--sext{background:linear-gradient(180deg,#8fffe822,#0000)}
+#aspects .aspect--conj{background:linear-gradient(180deg,#b8e0ff22,#0000)}
+#aspects .aspect--oppo{background:linear-gradient(180deg,#ffd79a22,#0000)}
 .ephem{width:100%;border-collapse:separate;border-spacing:0 6px}
 .ephem th,.ephem td{padding:8px 10px;border:1px solid var(--line)}
 .ephem .deg{font-variant-numeric:tabular-nums}
