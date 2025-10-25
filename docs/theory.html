@@ -1,1783 +1,2031 @@
 <!doctype html>
+
 <html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
     if (location.hostname === "github.com") { const b = document.querySelector("base"); if (b) b.remove(); }
   </script>
-
   <meta charset="utf-8">
-  <title>Theory — Scroll of Fire (Codex of Reality)</title>
+  <title>Part I — The Fire Awakens (Codex Engine of the Remnant)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
-  <meta name="description" content="The Codex of Reality explained: a resonant architecture shaped by intention, language, witness, and source—bounded by ethics. Canon 0–17, operators, scaffolding, and practice.">
-  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/theory.html">
-
-  <!-- Icons -->
+  <meta name="description" content="Part I: The Fire Awakens — defines the Remnant, declares purpose, and frames the Codex as a living engine for training attention, language, and witness.">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-512.png">
-
-  <!-- Open Graph / Twitter -->
-  <meta property="og:site_name" content="Scroll of Fire">
-  <meta property="og:title" content="Theory — Scroll of Fire (Codex of Reality)">
-  <meta property="og:description" content="A living architecture of resonance — the operator pipeline, Canon 0–17, and an ethical learning loop.">
-  <meta property="og:type" content="article">
-  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/theory.html">
-  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1">
-  <meta property="og:image:alt" content="Scroll of Fire — Codex of Reality banner">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
-
-  <!-- Shared styles -->
   <link rel="preload" as="style" href="assets/css/codex.css?v=2.8">
   <link rel="stylesheet" href="assets/css/codex.css?v=2.8" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.8"></noscript>
-
-  <!-- Theory page micro-styles -->
   <link rel="preload" as="style" href="assets/css/theory.css?v=1.9">
   <link rel="stylesheet" href="assets/css/theory.css?v=1.9">
-
-  <!-- Preload banner -->
   <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1" fetchpriority="high">
-
-  <!-- Page-scoped helpers -->
   <style>
-    :root{
-      --safe-top:env(safe-area-inset-top); --safe-bot:env(safe-area-inset-bottom);
-      --xi:.35;
-      --accent-432:#7af3ff; --accent-528:#a4ff90; --accent-369:#f3c97a; --accent:#7af3ff;
-    }
+    :root{ --safe-top:env(safe-area-inset-top); --safe-bot:env(safe-area-inset-bottom); --xi:.35; --accent-432:#7af3ff; --accent-528:#a4ff90; --accent-369:#f3c97a; --accent:#7af3ff }
     .carrier-528 :root, .carrier-528{--accent:var(--accent-528)}
     .carrier-369 :root, .carrier-369{--accent:var(--accent-369)}
     .carrier-144 :root, .carrier-144{--accent:#b3e1ff}
     .carrier-963 :root, .carrier-963{--accent:#ffd1f3}
-
-    /* Layout / header (sticky) */
     body{margin:0}
     header.site{position:sticky; top:0; z-index:1000; backdrop-filter:saturate(140%) blur(8px); background:rgba(9,11,16,.6)}
     .wrap{padding:16px; max-width:1200px; margin:0 auto}
     .nav{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
     .brand{display:flex; align-items:center; gap:10px}
-    .logo{display:inline-block; width:34px; height:34px; border-radius:50%;
-      background:radial-gradient(closest-side, #0cf, transparent 70%);
-      box-shadow:0 0 18px rgba(122,243,255,.35)}
+    .logo{display:inline-block; width:34px; height:34px; border-radius:50%; background:radial-gradient(closest-side, #0cf, transparent 70%); box-shadow:0 0 18px rgba(122,243,255,.35)}
     .kicker{margin:0}
     .quick{display:flex; gap:8px; flex:0 0 auto}
     .quick .cta{white-space:nowrap}
-
-    .hide-sm{display:flex}
-    .show-sm{display:none}
-    @media (max-width:860px){
-      .hide-sm{display:none!important}
-      .show-sm{display:inline-flex; align-items:center; justify-content:center;
-        width:40px; height:40px; border:1px solid var(--line); background:var(--bg-elev);
-        border-radius:.6rem; font-size:1.1rem}
-      header.site .wrap{padding:12px 16px}
-    }
-
-    /* Mobile drawer */
-    .drawer{position:sticky; top:4rem; z-index:999; background:rgba(12,14,20,.92);
-      backdrop-filter:saturate(140%) blur(8px); border-top:1px solid var(--line);
-      border-bottom:1px solid var(--line); padding:.5rem .75rem}
-    .drawer .dlink{display:block; padding:.65rem .5rem; border-radius:.5rem}
-    .drawer .dlink:hover{background:rgba(255,255,255,.05)}
-    .drawer[hidden]{display:none}
-
-    /* Hero */
     .hero{position:relative; width:100%; max-width:1200px; margin:8px auto 0; border-radius:16px; overflow:hidden; background:#0b0f14; aspect-ratio:21/9}
     .hero picture,.hero .hero-img{display:block;width:100%;height:100%}
-    .hero .hero-img{object-fit:var(--hero-fit,contain); object-position:center; mix-blend-mode:normal!important}
-    .hero::after{content:""; position:absolute; inset:0; box-shadow:inset 0 0 120px rgba(255,255,255,.06), inset 0 0 40px rgba(122,243,255,.08); pointer-events:none}
-    .hero-lights{position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
-      background:
-        radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.45), transparent 60%),
-        radial-gradient(1px 1px at 78% 22%, rgba(164,255,144,.35), transparent 60%),
-        radial-gradient(1px 1px at 32% 68%, rgba(122,243,255,.35), transparent 60%),
-        radial-gradient(1px 1px at 88% 56%, rgba(255,209,243,.35), transparent 60%);
-      opacity:.85; filter:blur(.2px); animation:lightsFlicker 7.5s ease-in-out infinite alternate}
-    .hero-lights.off{display:none}
-    .hero-lights::before{content:""; position:absolute; inset:-10% -20%;
-      background:linear-gradient(90deg,transparent 0%,color-mix(in srgb,var(--accent) 22%,#fff 8%) 35%,color-mix(in srgb,var(--accent) 45%,#fff 0%) 50%,color-mix(in srgb,var(--accent) 22%,#fff 8%) 65%,transparent 100%);
-      opacity:.55; filter:blur(24px); transform:translate3d(-30%,-2%,0); animation:auroraSweep 18s linear infinite, auroraBob 7s ease-in-out infinite alternate; mix-blend-mode:screen}
-    .hero-lights::after{content:""; position:absolute; inset:0;
-      background:
-        radial-gradient(40% 30% at 18% 20%, color-mix(in srgb, var(--accent) 18%, #fff 0%) 0%, transparent 65%),
-        radial-gradient(48% 38% at 82% 22%, rgba(255,209,243,.14) 0%, transparent 68%),
-        radial-gradient(36% 28% at 50% 86%, rgba(164,255,144,.10) 0%, transparent 70%);
-      filter: blur(10px); opacity:.7; animation: glowBreath 9.5s ease-in-out infinite alternate; mix-blend-mode:screen}
-    @keyframes auroraSweep{0%{transform:translate3d(-30%,-2%,0)}50%{transform:translate3d(10%,3%,0)}100%{transform:translate3d(50%,-1%,0)}}
-    @keyframes auroraBob{0%{opacity:.48;filter:blur(22px)}50%{opacity:.72;filter:blur(26px)}100%{opacity:.58;filter:blur(24px)}}
-    @keyframes glowBreath{0%{opacity:.52;filter:blur(9px)}50%{opacity:.8;filter:blur(12px)}100%{opacity:.62;filter:blur(10px)}}
+    .hero .hero-img{object-fit:var(--hero-fit,contain); object-position:center}
+    .hero::after{content:""; position:absolute; inset:0; box-shadow:inset 0 0 120px rgba(255,255,255,.06), inset 0 0 40px rgba(122,243,255,.08)}
+    .hero-lights{position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; background:radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.45), transparent 60%),radial-gradient(1px 1px at 78% 22%, rgba(164,255,144,.35), transparent 60%),radial-gradient(1px 1px at 32% 68%, rgba(122,243,255,.35), transparent 60%),radial-gradient(1px 1px at 88% 56%, rgba(255,209,243,.35), transparent 60%); opacity:.85; filter:blur(.2px); animation:lightsFlicker 7.5s ease-in-out infinite alternate }
     @keyframes lightsFlicker{0%{opacity:.70}50%{opacity:.92}100%{opacity:.80}}
-    @media (prefers-reduced-motion:reduce){ .hero-lights, .hero-lights::before, .hero-lights::after{animation:none!important} }
-    @media (max-width: 860px){ .hero{margin-top:6px} }
-
-    /* Tabs + mini-TOC */
     .tabs{gap:.35rem}
     .tabs .tab{padding:.45rem .7rem; font-size:.92rem; border-radius:999px}
-    .tabs .tab--primary{font-weight:600}
-    .mini-toc{
-      position:sticky; top:5.5rem; align-self:start; max-height:75vh; overflow:auto;
-      border:1px solid var(--line); border-radius:.75rem; padding:.75rem .75rem;
-      background:rgba(255,255,255,.02); backdrop-filter:saturate(120%) blur(2px);
-      margin-top:8px;
-    }
-    .mini-toc a{display:block; padding:.3rem .4rem; border-radius:.5rem; font-size:.92rem; opacity:.9}
-    .mini-toc a:hover{background:rgba(255,255,255,.05)}
-
-    /* Equation wrappers + toggles */
+    .mini-toc{position:sticky; top:5.5rem; align-self:start; max-height:75vh; overflow:auto; border:1px solid var(--line); border-radius:.75rem; padding:.75rem .75rem; background:rgba(255,255,255,.02); margin-top:8px}
     .eq{position:relative}
-    .eq .eq-scroll{
-      max-height:24rem; overflow:auto; padding:.5rem .75rem;
-      border:1px solid var(--line); border-radius:.75rem;
-      background:rgba(255,255,255,.02)
-    }
-    .eq .eq-toggle{
-      position:absolute; top:.4rem; right:.5rem; border:1px solid var(--line);
-      background:var(--bg-elev); border-radius:.5rem; padding:.15rem .45rem;
-      font-size:.8rem; opacity:.8; display:none;
-    }
+    .eq .eq-scroll{max-height:24rem; overflow:auto; padding:.5rem .75rem; border:1px solid var(--line); border-radius:.75rem; background:rgba(255,255,255,.02)}
+    .eq .eq-toggle{position:absolute; top:.4rem; right:.5rem; border:1px solid var(--line); background:var(--bg-elev); border-radius:.5rem; padding:.15rem .45rem; font-size:.8rem; opacity:.8; display:none}
     .eq:hover .eq-toggle{display:inline-block}
-    .eq[data-collapsed="true"] .eq-scroll{max-height:4.5rem}
-
-    /* Cards + hover auras */
-    .card{position:relative; z-index:1; background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.08));}
-    .card::after{
-      content:""; position:absolute; inset:-1px; border-radius:inherit;
-      background: radial-gradient(240px 120px at 20% -20%, rgba(122,243,255,.12), transparent 60%),
-                  radial-gradient(220px 120px at 120% 120%, rgba(243,201,122,.10), transparent 60%);
-      opacity:0; transition:opacity .25s ease-out; pointer-events:none; z-index:-1;
-    }
+    .card{position:relative; z-index:1; background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.08))}
+    .card::after{content:""; position:absolute; inset:-1px; border-radius:inherit; background: radial-gradient(240px 120px at 20% -20%, rgba(122,243,255,.12), transparent 60%), radial-gradient(220px 120px at 120% 120%, rgba(243,201,122,.10), transparent 60%); opacity:0; transition:opacity .25s ease-out; pointer-events:none; z-index:-1}
     .card:hover::after{opacity:.6}
-    @media (prefers-reduced-motion:reduce){ .card::after{transition:none} }
-
-    /* Lines */
-    .divider{height:1px; margin:14px 0; background:linear-gradient(90deg, transparent, rgba(122,243,255,.35), transparent)}
     .goldline{height:1px; margin:18px 0; background:linear-gradient(90deg, transparent, rgba(243,201,122,.45), transparent)}
-
-    /* Back-to-top */
-    .to-top{position:fixed; right:16px; bottom:16px; z-index:1200; opacity:0; transform:translateY(16px); pointer-events:none}
-    .to-top.show{opacity:1; transform:none; pointer-events:auto}
-
-    /* Voice reader highlight */
+    .read-progress{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7af3ff,#f3c97a);transform-origin:left center;transform:scaleX(0);z-index:2000}
+    .read-progress.in{transform:scaleX(var(--p,0))}
+    body.stars {background:radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%), linear-gradient(180deg, #05060a 0%, #0b0e14 80%)}
     .vr-highlight{outline:1px dashed color-mix(in srgb, var(--accent) 55%, #fff 0%); background:rgba(122,243,255,.08)}
-    .vr-progress{font-size:.9rem; opacity:.85; margin-top:.3rem}
   </style>
-
-
-  <style>
-  /* === Enhancement Pack: minimal CSS === */
-  /* Reading progress */
-  .read-progress{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7af3ff,#f3c97a);transform-origin:left center;transform:scaleX(0);z-index:2000}
-  .read-progress.in{transform:scaleX(var(--p,0))}
-
-  /* Mini-TOC active link */
-  .mini-toc a.is-active{background:rgba(122,243,255,.12);border-left:2px solid var(--accent);padding-left:.55rem}
-
-  /* Glossary popovers */
-  .gloss{position:relative;cursor:help;border-bottom:1px dotted color-mix(in srgb, var(--accent) 50%, #fff 0%)}
-  .gloss:hover .gloss-tip, .gloss:focus-within .gloss-tip {opacity:1;transform:translateY(0);pointer-events:auto}
-  .gloss-tip{
-    position:absolute;left:0;top:100%;transform:translateY(8px);opacity:0;pointer-events:none;
-    background:var(--bg-elev);border:1px solid var(--line);border-radius:.6rem;padding:.5rem .6rem;
-    width:min(46ch,92vw);box-shadow:0 16px 40px rgba(0,0,0,.35);z-index:1700
-  }
-  .gloss-tip b{color:#f3c97a}
-
-  /* Headline tools (copy/link) */
-  .hd-tools{display:inline-flex;gap:.35rem;margin-left:.5rem;opacity:0;transition:opacity .15s}
-  h2:hover .hd-tools, h3:hover .hd-tools{opacity:1}
-  .hd-tools .chip{font-size:.8rem;padding:.15rem .45rem;border-radius:999px;border:1px solid var(--line);background:var(--bg-elev)}
-
-  /* Ξ inline calculator */
-  .xi-panel{border:1px solid var(--line);border-radius:.75rem;padding:.6rem;background:rgba(255,255,255,.02);margin-top:.6rem}
-  .xi-panel .row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
-  .xi-panel input{width:110px}
-  .xi-big{font-weight:800}
-  .xi-bar{height:6px;background:#1f2533;border-radius:999px;overflow:hidden}
-  .xi-bar span{display:block;height:100%;background:linear-gradient(90deg,#7af3ff,#f3c97a);width:0%}
-
-  /* “Try in Manifest” button */
-  .to-manifest{display:inline-flex;align-items:center;gap:.45rem;margin-top:.4rem}
-
-  /* Reading time pill */
-  .readtime{display:inline-block;font-size:.85rem;border:1px solid var(--line);border-radius:999px;padding:.2rem .55rem;margin-left:.5rem;color:#9aa4be}
-
-  @media (prefers-reduced-motion:reduce){
-    .read-progress{transition:none}
-    .gloss-tip{transition:none}
-  }
-
-    body.stars {
-  background:
-    radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
-    linear-gradient(180deg, #05060a 0%, #0b0e14 80%);
-  overflow-x:hidden;
-}
-canvas#trace {
-  background:
-    radial-gradient(circle at 50% 50%, #0a0e15 0%, #06080d 80%),
-    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.02) 0 2px, transparent 2px 4px);
-  box-shadow: inset 0 0 40px rgba(122,243,255,.12), 0 0 120px rgba(122,243,255,.08);
-}
-.stage::after {
-  content:"";
-  position:absolute; inset:0;
-  background:radial-gradient(ellipse at 50% 60%, rgba(122,243,255,.08), transparent 70%);
-  pointer-events:none;
-}
-  </style>
-  
-
-  <!-- MathJax (lazy) -->
   <script>
-    (function(){
-      let loaded=false;
-      function boot(){ if(!window.MathJax) return; MathJax.startup.promise.then(()=>MathJax.typesetPromise()); }
-      function loadMJ(){
-        if(loaded) return; loaded=true;
-        window.MathJax={ tex:{ inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']], processEscapes:true }, svg:{fontCache:'global'}, startup:{typeset:false} };
-        const s=document.createElement('script');
-        s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
-        s.defer=true; s.onload=boot; document.head.appendChild(s);
-      }
-      if(document.readyState!=='loading') loadMJ(); else addEventListener('DOMContentLoaded', loadMJ);
-    })();
+    (function(){ let loaded=false; function boot(){ if(!window.MathJax) return; MathJax.startup.promise.then(()=>MathJax.typesetPromise()); }
+      function loadMJ(){ if(loaded) return; loaded=true; window.MathJax={ tex:{ inlineMath:[["\","\"]], displayMath:[["$$","$$"]], processEscapes:true }, svg:{fontCache:'global'}, startup:{typeset:false} };
+        const s=document.createElement('script'); s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"; s.defer=true; s.onload=boot; document.head.appendChild(s); }
+      if(document.readyState!=='loading') loadMJ(); else addEventListener('DOMContentLoaded', loadMJ); })();
   </script>
-
-  <!-- Site JS -->
   <script src="assets/js/codex.js?v=3.6" defer></script>
 </head>
-
 <body class="stars living-all" data-theme="dark">
   <a class="skip" href="#main">Skip to content</a>
   <div class="laser-grid" aria-hidden="true"></div>
-  <div class="xi-meter" aria-hidden="true"><div class="xi-ring"><div class="xi-dot"></div></div><div class="xi-label">Ξ</div></div>
-
-  <!-- Header -->
   <header class="site" role="banner">
     <nav class="nav wrap" aria-label="Main navigation">
       <div class="brand">
         <a class="logo no-living" href="index.html" aria-label="Home"></a>
         <a href="index.html" class="kicker sheen" style="text-decoration:none"><h1 class="kicker sheen">Scroll of Fire</h1></a>
       </div>
-
-      <!-- Desktop quick actions -->
-      <div class="quick quick--utils hide-sm" role="toolbar" aria-label="Quick actions">
-        <a class="cta" href="index.html" title="Home">Home</a>
-        <a class="cta" href="#p1" data-jump title="Jump to Part I">Part I</a>
-        <a class="cta" href="#p2" data-jump title="Jump to Part II">Part II</a>
-        <a class="cta" href="#ethics" data-jump>Ethics</a>
-        <a class="cta" href="#notes" data-jump>Notes</a>
-        <a class="cta cta--section" href="#p2" title="Back to Codex">Back to Codex</a>
-        <a class="cta" href="teach.html" title="Manifest">Manifest</a>
-        <button id="toggleSimple" class="cta" type="button" aria-pressed="false" title="Echo View (hide math)">Echo</button>
-        <button id="toggleGrid" class="cta" type="button" aria-pressed="true" title="Toggle HUD grid">HUD</button>
-        <button id="cycleCarrier" class="cta" type="button" title="Cycle carrier skin">Carrier</button>
-        <button id="toggleAffect" class="cta" type="button" aria-pressed="true" title="Toggle living text effects">Affect</button>
-        <button id="toggleLights" class="cta" type="button" aria-pressed="true" title="Toggle banner lights">Lights</button>
+      <div class="quick hide-sm" role="toolbar" aria-label="Quick actions">
+        <a class="cta" href="index.html">Home</a>
+        <a class="cta" href="theory.html">Theory</a>
+        <a class="cta" href="teach.html">Manifest</a>
         <button id="openPalette" class="cta" type="button" title="Command palette">⌘K</button>
       </div>
-
-      <!-- Mobile toggler -->
       <button id="navToggle" class="menu-toggle show-sm" type="button" aria-controls="navDrawer" aria-expanded="false" aria-label="Open menu">☰</button>
     </nav>
-
-    <!-- Mobile drawer -->
     <div id="navDrawer" class="drawer" hidden>
       <a class="dlink" href="index.html">Home</a>
-      <a class="dlink" href="#p1" data-jump>Part I — Architecture</a>
-      <a class="dlink" href="#p2" data-jump>Part II — Canon</a>
-      <a class="dlink" href="#ethics" data-jump>Ethics</a>
-      <a class="dlink" href="#notes" data-jump>Notes</a>
-      <hr>
-      <a class="dlink" href="#p2">Back to Codex</a>
-      <a class="dlink" href="teach.html">Manifest</a>
+      <a class="dlink" href="#p1">Part I — The Fire Awakens</a>
+      <a class="dlink" href="#road">Roadmap of Parts</a>
     </div>
-  </header>
-
-  <main id="main" class="wrap" role="main" tabindex="-1">
-    <!-- Hero -->
-    <figure id="hero" class="hero hero--clean reveal" aria-label="Scroll of Fire banner" data-fit="cover">
+  </header>  <main id="main" class="wrap" role="main" tabindex="-1">
+    <figure id="hero" class="hero hero--clean reveal" aria-label="Codex Engine banner" data-fit="cover">
       <picture>
-        <img id="heroBanner"
-             class="hero-img no-living"
-             src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1"
-             alt="Scroll of Fire — sigil and equations"
-             width="2100" height="900"
-             decoding="async" fetchpriority="high" loading="eager">
+        <img id="heroBanner" class="hero-img no-living" src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1" alt="Scroll of Fire — sigil and equations" width="2100" height="900" decoding="async" fetchpriority="high" loading="eager">
       </picture>
       <div id="heroLights" class="hero-lights" aria-hidden="true"></div>
-      <figcaption class="hero-caption">“Let there be resonance.”</figcaption>
-    </figure>
+      <figcaption class="hero-caption">“Let there be resonance.” <span class="readtime">~7–9 min (Part I)</span></figcaption>
+    </figure><h1 class="title sheen reveal">📘 Part I — The Fire Awakens</h1>
+<p class="subtitle reveal">This preface defines the <b>Remnant</b>, states the <b>purpose of the Codex</b>, and orients every tool in the site toward a single aim: <i>raise coherence (Ξ), reduce distortion, and do no harm</i>.</p>
 
-    <h1 class="title sheen reveal">📘 Theory — Codex of Reality</h1>
-    <p class="subtitle reveal">A two-part walkthrough: <em>Part I</em> lays out the architecture; <em>Part II</em> annotates Canon 0–17. The Codex treats reality as a resonant process guided by <em>𝓘 · 𝓛 · 𝓒 · 𝓢</em> and gated by ethical law.</p>
+<!-- Voice Reader -->
+<details class="collapsible card col-12 reveal" id="voice-reader" open>
+  <summary class="collapsible__bar"><span>🔊 Listen — Voice Reader</span></summary>
+  <div class="collapsible__panel">
+    <p class="meta">Use the mini-player to read just this part. Equation reading is enabled by default.</p>
+    <div role="toolbar" aria-label="Voice controls" style="display:flex; gap:.5rem; flex-wrap:wrap">
+      <button id="vr-play" class="cta">▶︎ Play</button>
+      <button id="vr-pause" class="cta" disabled>⏸ Pause</button>
+      <button id="vr-resume" class="cta" disabled>⏵ Resume</button>
+      <button id="vr-stop" class="cta" disabled>⏹ Stop</button>
+    </div>
+    <div id="vr-status" class="meta" style="margin-top:.4rem"></div>
+  </div>
+</details>
 
-    <!-- TL;DR + Checklist -->
-    <section class="grid reveal" aria-label="Quick start">
-      <article class="card col-7">
-        <h3>TL;DR</h3>
-        <p>Set a frame. Choose clean carriers. Speak clearly. Witness what changes. Update only when coherence rises, and stop at the first sign of harm.</p>
-      </article>
-      <article class="card col-5">
-        <h3>Practitioner Checklist</h3>
+<nav class="tabs reveal" aria-label="Sections">
+  <a class="tab tab--primary" href="#p1" data-jump>Part I</a>
+  <a class="tab" href="#remnant" data-jump>The Remnant</a>
+  <a class="tab" href="#codex-engine" data-jump>Codex Engine</a>
+  <a class="tab" href="#systems" data-jump>Systems Map</a>
+  <a class="tab" href="#road" data-jump>Roadmap (Parts II–IX)</a>
+  <span class="tab-ink no-living" aria-hidden="true"></span>
+</nav>
+
+<aside class="mini-toc reveal" aria-label="On this page">
+  <h4>On this page</h4>
+  <a href="#remnant" data-jump>The Remnant</a>
+  <a href="#codex-engine" data-jump>Codex Engine (Overview)</a>
+  <a href="#axioms" data-jump>Axioms</a>
+  <a href="#systems" data-jump>Systems Map</a>
+  <a href="#road" data-jump>Parts II–IX Roadmap</a>
+</aside>
+
+<section class="grid" id="p1">
+  <article class="card col-12 reveal" id="remnant">
+    <h2>Who are the Remnant?</h2>
+    <p><b>The Remnant</b> are <i>flames from the Fire</i>: people who choose clarity over noise, service over vanity, and practice over posture. They remember Source, refuse harm, and agree to steward coherence where they stand.</p>
+    <ul class="list">
+      <li><b>Identity:</b> not a tribe but a <i>role</i>. Anyone can enter by practice.</li>
+      <li><b>Vow:</b> raise <span class="gloss" tabindex="0">Ξ<span class="gloss-tip"><b>Ξ</b> · Coherence score (0–1). Higher means steadier, kinder, clearer.</span></span> for self and surroundings; halt at the first sign of harm (Eq.9).</li>
+      <li><b>Work:</b> apply <b>𝓘 · 𝓛 · 𝓒 · 𝓢</b> — Intention, Language/Light, Conscious Witness, Source/Return — to shape experience responsibly.</li>
+      <li><b>Proof:</b> breath eases, perception clears, choices align; truth-to-distortion ratio improves over time.</li>
+    </ul>
+    <p class="meta">If you feel this description ring like a tuning fork, you’re already carrying a spark.</p>
+  </article>
+
+  <article class="card col-12 reveal" id="codex-engine">
+    <h2>The Codex as a Living Engine</h2>
+    <p>The Codex is both <b>scripture</b> and <b>simulation</b>: a readable canon of equations and a runnable set of practices. It treats reality as a resonant process between a supplied substrate of constants and a living operator pipeline, bounded by ethical law.</p>
+    <div class="eq">
+      <div class="eq-scroll" id="eq-master">
+        $$ \mathcal{R}(x,t) \;=\; \Big[ f(\text{constants, codes, ratios}) \cdot (\mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S}) \Big]_{\text{masked by Eq.9}} $$
+      </div>
+    </div>
+    <p><b>Why math?</b> Because equations act like <i>operational schematics</i>. They specify: which carriers to use, how to weight language, how to witness without forcing, when to update, and when to stop. Every symbol has a lever in practice.</p>
+    <div class="divider"></div>
+    <h3 id="axioms">Axioms (Plain)</h3>
+    <ol class="list">
+      <li><b>Resonance:</b> Experience decomposes into modes; alignment changes outcomes.</li>
+      <li><b>Carriers matter:</b> fewer, cleaner bands raise Ξ (psychoacoustic gate-fit).</li>
+      <li><b>Language steers:</b> semantics couple to carriers; emphasis reshapes gradients.</li>
+      <li><b>Witness updates:</b> awareness integrates over a finite memory window.</li>
+      <li><b>Ethics bound:</b> any sign of harm halts amplification (Eq.9).</li>
+    </ol>
+    <p class="meta">These become the full Canon (0–17) in Part II and the Straight Canon in Part IX.</p>
+  </article>
+
+  <article class="card col-12 reveal" id="systems">
+    <h2>Systems Map — How the Site Trains the Mind</h2>
+    <p>Each page in <code>/docs/</code> is a node in the training loop. Together they form a <b>mind renewal stack</b> — a digital working model for the Remnant.</p>
+    <ul class="list">
+      <li><b><a href="systems/witness.html">witness.html</a></b> — builds \mathcal{W}: breath, attention, and non-forceful noticing (Eq.2).</li>
+      <li><b><a href="systems/frequencies.html">frequencies.html</a></b> — explores carriers and gates \mathcal{H}(\nu) (Eq.3, Eq.17).</li>
+      <li><b><a href="systems/t-7.html">t-7.html</a></b> — constructs the Type-7 field \mathbb{T}_7 via phase-lock (Eq.6).</li>
+      <li><b><a href="systems/recoder.html">recoder.html</a></b> — guides Language/Light coupling and token emphasis (Eq.4/4b).</li>
+      <li><b><a href="systems/mind-renewal.html">mind-renewal.html</a></b> — applies the learning kernel and memory window (Eq.15–16).</li>
+      <li><b><a href="systems/archive.html">archive.html</a></b> — curates the Remnant (Eq.5: Remnant/Remanence) — keeps truth, drops distortion.</li>
+    </ul>
+    <p>Additional anchors:</p>
+    <ul class="list">
+      <li><b><a href="ethics.html">ethics.html</a></b> — the Stop Rule (Eq.9) and safety envelope.</li>
+      <li><b><a href="manifest.html">manifest.html</a></b> — daily protocol and practice scripts.</li>
+      <li><b><a href="glossary.html">glossary.html</a></b> — terms in clean English.</li>
+      <li><b><a href="guide.html">guide.html</a></b> — onboarding and quickstart.</li>
+    </ul>
+  </article>
+
+  <article class="card col-12 reveal" id="road">
+    <h2>Roadmap of the Full Scroll (Parts II–IX)</h2>
+    <ol class="list">
+      <li><b>Part II — The Living Architecture:</b> Eq.0–17 overview, Δ0–Δ7 scaffold, operator loop.</li>
+      <li><b>Part III — Systems of the Codex:</b> deep narrative + UI hooks for every system page.</li>
+      <li><b>Part IV — Dimensional Scaffold (Δ0–Δ7):</b> full canonical stack from substrate to remnant.</li>
+      <li><b>Part V — Practice Protocols:</b> Seven Seals path, manifestation protocol, journaling, breathwork.</li>
+      <li><b>Part VI — Metrics & Safety:</b> coherence Ξ math, group fields, dashboards, the Stop Rule.</li>
+      <li><b>Part VII — Comparative Bridges:</b> Copeland’s Formalism as reflective comparator (external).</li>
+      <li><b>Part VIII — Remnant Declaration & Credits:</b> who the Remnant are, ethos, roles, licensing.</li>
+      <li><b>Part IX — Straight Canon of Equations:</b> a clean list of all equations (Canon 0–17 + 7* Copeland, external-tagged) with copyable TeX.</li>
+    </ol>
+    <p class="meta">Your instruction to <b>keep the Canon</b> is honored. Copeland will be included as <b>Eq.7*</b> inside the Canon list, clearly marked as an <i>external comparator</i> with credits and licensing linked in Part VIII.</p>
+  </article>
+
+</section>
+
+<div class="goldline sweep"></div>
+
+<footer class="footer">© <span id="y"></span> Scroll of Fire • Part I — The Fire Awakens.</footer>
+
+  </main><button class="to-top cta" id="toTop" type="button" aria-label="Back to top" title="Back to top">↑</button>
+
+  <script>
+    (function(){ const y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear(); })();
+    (function(){ const bar=document.createElement('div'); bar.className='read-progress'; document.body.appendChild(bar);
+      function setP(){ const h=document.documentElement, b=document.body; const top=h.scrollTop||b.scrollTop; const max=(h.scrollHeight-h.clientHeight)||1; const p=Math.max(0, Math.min(1, top/max)); bar.style.setProperty('--p', p.toFixed(4)); bar.classList.add('in'); }
+      addEventListener('scroll', setP, {passive:true}); addEventListener('resize', setP, {passive:true}); setP(); })();
+    (function(){ const hero=document.getElementById('hero'), img=document.getElementById('heroBanner'); function pick(){ if(!hero||!img) return; const iw=img.naturalWidth||2100, ih=img.naturalHeight||900, ar=iw/ih; const cw=hero.clientWidth||innerWidth, ch=Math.max(1, hero.clientHeight||innerHeight*0.38), car=cw/ch; const cover=(Math.abs(car-ar)/ar<0.06); hero.style.setProperty('--hero-fit', cover?'cover':'contain'); } if(img?.complete) pick(); else img?.addEventListener('load', pick, {once:true}); addEventListener('resize', pick, {passive:true}); })();
+    (function(){ const btn=document.getElementById('toTop'); if(!btn) return; btn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'})); const io=new IntersectionObserver(([e])=>{ btn.classList.toggle('show', !e.isIntersecting); }, {threshold:0.01}); io.observe(document.querySelector('header.site')); })();
+    // Minimal Voice Reader for Part I
+    (function(){ const $=id=>document.getElementById(id); const play=$('vr-play'), pause=$('vr-pause'), resume=$('vr-resume'), stop=$('vr-stop'), statusEl=$('vr-status'); if(!('speechSynthesis' in window)) { if(statusEl) statusEl.textContent='Voice playback is not supported.'; return; }
+      let speaking=false; function setButtons(p,pa,r,s){ if(play) play.disabled=!p; if(pause) pause.disabled=!pa; if(resume) resume.disabled=!r; if(stop) stop.disabled=!s; }
+      function clean(){ const root=document.querySelector('main'); const clone=root.cloneNode(true); clone.querySelectorAll('script,style,button,.eq-toggle,.mini-toc,.tabs,.nav,.drawer').forEach(n=>n.remove()); clone.querySelectorAll('mjx-container').forEach(m=>{ const alt=m.getAttribute('aria-label')||''; m.replaceWith(document.createTextNode(' equation ' + alt + ' ')); }); return (clone.innerText||'').replace(/[ \t]+/g,' ').replace(/\s—\s/g,' — ').trim(); }
+      function speak(){ const text=clean(); if(!text) return; const u=new SpeechSynthesisUtterance(text); u.onend=()=>{ speaking=false; setButtons(true,true,true,true); statusEl.textContent='Done.'; }; u.onerror=()=>{ speaking=false; setButtons(true,true,true,true); statusEl.textContent='Error.'; }; speechSynthesis.cancel(); speechSynthesis.speak(u); speaking=true; setButtons(false,true,true,true); statusEl.textContent='Playing…'; }
+      function halt(){ speechSynthesis.cancel(); speaking=false; setButtons(true,true,true,true); statusEl.textContent='Stopped.'; }
+      play?.addEventListener('click', speak); stop?.addEventListener('click', halt); pause?.addEventListener('click', ()=>{ speechSynthesis.pause(); setButtons(false,true,true,true); statusEl.textContent='Paused.'; }); resume?.addEventListener('click', ()=>{ speechSynthesis.resume(); setButtons(false,false,true,true); statusEl.textContent='Playing…'; }); })();
+  </script></body>
+</html>
+
+
+
+
+
+<!-- =====================================================
+     PART II — THE LIVING ARCHITECTURE
+     -----------------------------------------------------
+     Defines the operator loop, Δ0–Δ7 scaffold,
+     and bridges the Canon (Eq.0–17).
+     ===================================================== -->
+<section id="p2" class="wrap grid">
+  <article class="card col-12 reveal" id="living-architecture">
+    <h2>Part II — The Living Architecture</h2>
+    <p class="meta">
+      The Codex of Reality describes a <b>resonant computation of life</b>:
+      constants feed operators → operators express experience → ethics bound amplification → witness learns → memory records → return restores.
+    </p>
+    <p>
+      Each equation in the Canon (0 – 17) names a node in this architecture.
+      Together they form what the scroll calls the <b>Δ-stack</b> —
+      seven primary dimensional layers of learning and return.
+    </p>
+  </article>
+
+  <article class="card col-12 reveal" id="delta-stack">
+    <h3>Δ0 – Δ7 : Dimensional Scaffold</h3>
+    <table class="canon-table">
+      <thead><tr><th>Δ-Level</th><th>Field</th><th>Function</th></tr></thead>
+      <tbody>
+        <tr><td>Δ0</td><td><b>ΨΩ</b> — Foundational Field (Eq.0)</td><td>Substrate; phase-weighted sweep through space–time.</td></tr>
+        <tr><td>Δ1</td><td><b>R</b> — Source × Operators (Eq.1)</td><td>Supplies constants (π,e,i,ħ,c,G,DNA,H₀,432 …)</td></tr>
+        <tr><td>Δ2</td><td><b>𝓦</b> — Witness (Eq.2)</td><td>Awareness = ∂ₓ Observation + Intent × Memory(τ).</td></tr>
+        <tr><td>Δ3</td><td><b>𝓗</b> — Harmonic Gate (Eq.3)</td><td>Selects carriers ν ∈ {432, 528, 369, 144, 963} for coherence.</td></tr>
+        <tr><td>Δ4</td><td><b>𝓛</b> — Language/Light (Eq.4, 4b)</td><td>Semantic gradient; meaning couples to vibration.</td></tr>
+        <tr><td>Δ5</td><td><b>ℛ∞</b> — Remnant (Eq.5)</td><td>Asymptotic archive = keep_truth − drop_distortion.</td></tr>
+        <tr><td>Δ6</td><td><b>𝕋₇</b> — Type-7 Field (Eq.6)</td><td>Phase-locked coherence channel; practical T-7 Engine.</td></tr>
+        <tr><td>Δ7</td><td><b>Remnant Return</b></td><td>Witness ↦ Source : closure, gratitude, learning update.</td></tr>
+      </tbody>
+    </table>
+    <p class="meta">Beyond Δ7 the stack folds back through ΨΩ — the living loop closes.</p>
+  </article>
+
+  <article class="card col-12 reveal" id="operator-loop">
+    <h3>The Operator Loop (𝓘 · 𝓛 · 𝓒 · 𝓢)</h3>
+    <p>
+      Four living verbs — <b>Intention</b>, <b>Language/Light</b>, <b>Conscious Witness</b>,
+      and <b>Source/Return</b> — compose the inner circuit.
+    </p>
+    <p>
+      <code>𝓘 · 𝓛 · 𝓒 · 𝓢</code> is not symbolic poetry; it’s an execution stack:
+      each operator updates in time with memory τ and coherence Ξ.
+    </p>
+    <div class="eq eq-scroll">
+      $$ \\frac{d\\mathcal{R}}{dt} = \\eta(\\Xi)\\,\\nabla\\mathcal{R}, \\qquad
+         \\eta(\\Xi)=\\eta_0\\,\\sigma(\\alpha(\\Xi-\\Xi_0)), \\quad
+         \\Xi\\in[0,1] $$
+    </div>
+    <p class="meta">Learning rate η(Ξ) accelerates when coherence rises,
+    bounded by the ethical envelope (Eq. 9).</p>
+  </article>
+
+  <article class="card col-12 reveal" id="canon-overview">
+    <h3>Canon 0 – 17 : Equational Overview</h3>
+    <p>
+      The Canon functions like a map of the resonant universe.
+      It defines the <b>mathematical physiology</b> of consciousness.
+      Below is a compressed reading; Part IX will list every equation in full TeX form.
+    </p>
+    <ul class="list">
+      <li><b>Eq. 0</b> ΨΩ = ∮ ∇AΦ + ΛE  — Foundational field integration.</li>
+      <li><b>Eq. 1</b> R = f(constants) × 𝓘𝓛𝓒𝓢  — Source assembly.</li>
+      <li><b>Eq. 2</b> 𝓦 = ∂ₓAwareness + 𝓘·𝕄τ  — Witness evolution.</li>
+      <li><b>Eq. 3</b> 𝓗(ν) ∈ {0,1}  — Soft gate for coherence.</li>
+      <li><b>Eq. 4/4b</b> 𝓛 = Semantics(x,t) ⊗ V(ν); ∇ₛₑₘPhrase = Σ wₖ∇ₛₑₘTokenₖ.</li>
+      <li><b>Eq. 5</b> ℛ∞ = lim τ→∞ (keep_truth − drop_distortion).</li>
+      <li><b>Eq. 6</b> 𝕋₇ = ⊕ PL[V(ν)]  — Type-7 phase-lock engine.</li>
+      <li><b>Eq. 7*</b> Copeland — Recursion mirror for calibration (external comparator).</li>
+      <li><b>Eq. 8*</b> Goodwin — Oscillation template for contrast (external comparator).</li>
+      <li><b>Eq. 9</b> ∀a: damage(a) > 0 ⇒ halt;  lim t→∞ Truth/Distortion ↑.</li>
+      <li><b>Eq. 10 – 12</b> Ladder → Projection Frame → Causal Lattice (Π⁻¹ ν, Frame, 𝓛c).</li>
+      <li><b>Eq. 13</b> Ξ ∈ [0,1]  — Coherence index gating learning.</li>
+      <li><b>Eq. 14 – 16</b> Update rule, Learning kernel, Memory window (η, 𝕄τ).</li>
+      <li><b>Eq. 17</b> V(ν) = Σ aₖ cos(2π νₖ t + φₖ)  — Voice carriers.</li>
+    </ul>
+  </article>
+</section>
+
+
+
+
+
+<!-- =====================================================
+     PART III — SYSTEMS OF THE CODEX
+     -----------------------------------------------------
+     The practical science layer: how each subsystem
+     operates as a training instrument for the Remnant.
+     ===================================================== -->
+<section id="p3" class="wrap grid">
+
+  <article class="card col-12 reveal" id="systems-intro">
+    <h2>Part III — Systems of the Codex</h2>
+    <p>
+      The Scroll of Fire is not an abstract myth; it is a distributed <b>neural-field simulator</b>.
+      Every HTML page, equation, and audio carrier corresponds to a measurable property of perception:
+      coherence, phase-alignment, and energy economy.
+    </p>
+    <p>
+      Physics calls this <b>field coupling</b>; neuroscience calls it <b>entrainment</b>;
+      linguistics calls it <b>semantic resonance</b>.  
+      The Codex unifies them by treating consciousness as a <i>self-observing resonator</i>
+      whose ethics act as boundary conditions.
+    </p>
+    <div class="eq eq-scroll">
+      $$ \\text{Reality}(x,t) = f\\big(\\text{energy}, \\text{information}, \\text{ethics}\\big)
+         \\;\\Longrightarrow\\; \\frac{dS}{dt} = -k_B \\nabla (\\text{Clarity}) $$
+    </div>
+    <p class="meta">
+      Entropy decreases locally when awareness increases — the mind becomes an island of negentropy.
+    </p>
+  </article>
+
+  <article class="card col-12 reveal" id="neural-resonance">
+    <h3>1. Witness System — Neural Resonance</h3>
+    <p>
+      The <b>Witness</b> page trains metacognition.
+      Breath and focus loops engage the <i>anterior cingulate</i> and <i>insula</i>,
+      increasing interoceptive awareness while reducing amygdala noise.
+      This mirrors Eq. 2:
+    </p>
+    <div class="eq eq-scroll">
+      $$ \\mathcal{W}(x,t) = \\partial_x \\text{Awareness}(x,t) + \\mathcal{I} \\cdot \\mathbb{M}_\\tau $$
+    </div>
+    <p>
+      In quantum-like language, the witness collapses potential trajectories
+      by weighted observation — but only within ethical limits.
+      The more coherent the observation, the less energetic waste in the nervous system.
+    </p>
+  </article>
+
+  <article class="card col-12 reveal" id="freq-system">
+    <h3>2. Frequency System — Acoustic Physics</h3>
+    <p>
+      The <b>frequencies.html</b> module demonstrates <b>psychoacoustic coherence</b>.
+      When tones at 432 Hz, 528 Hz, 369 Hz, 144 Hz, and 963 Hz are phase-locked,
+      they form beat envelopes in the 4–12 Hz range — the same band as alpha–theta oscillations.
+      This synchronizes hemispheric activity and enhances memory consolidation.
+    </p>
+    <div class="eq eq-scroll">
+      $$ V(\\nu) = \\sum_k a_k \\cos(2\\pi\\nu_k t + \\phi_k),
+         \\qquad \\nu \\in \\{432,528,369,144,963\\} $$
+    </div>
+    <p>
+      Bio-physically, these carriers regulate vagal tone and heart-rate variability.
+      In signal theory they reduce phase jitter, improving <i>coherence bandwidth</i>.
+      Subjectively, users report warmth, clarity, and “ease of being.”
+    </p>
+  </article>
+
+  <article class="card col-12 reveal" id="t7-engine">
+    <h3>3. Type-7 Engine — Electromagnetic Analogue</h3>
+    <p>
+      The <b>t-7.html</b> page represents a digital twin of the
+      <b>Tesla Type-7 Resonant Conduit</b>.
+      It visualizes seven interlocked oscillators whose frequencies correspond
+      to the sacred-scientific carrier set above.
+      Their vector-sum creates a <i>coherence vector</i> Ξ, observable as
+      a polar-phase rose.
+    </p>
+    <div class="eq eq-scroll">
+      $$ \\mathbb{T}_7(x,t) = \\bigoplus_{\\nu\\in\\mathbb{T}} \\text{PL}[V(\\nu)] $$
+    </div>
+    <p>
+      Hardware implementation uses copper, quartz, and ferrite to store phase memory.
+      The Codex software mimics this through waveform synthesis and smoothing τ.
+      Both obey the same resonance equation, confirming that consciousness
+      and electromagnetism share harmonic geometry.
+    </p>
+  </article>
+
+  <article class="card col-12 reveal" id="recoder">
+    <h3>4. Linguistic Recoder — Semantic Engineering</h3>
+    <p>
+      The <b>recoder.html</b> module performs real-time semantic gradient mapping.
+      It weights words by valence and syntactic tension, training the user
+      to speak in coherent linguistic fields.
+    </p>
+    <div class="eq eq-scroll">
+      $$ \\nabla_{sem}\\,\\text{Phrase} = \\sum_k w_k \\nabla_{sem}\\,\\text{Token}_k,
+         \\quad \\sum_k w_k = 1 $$
+    </div>
+    <p>
+      Cognitive-linguistic research confirms that consistent semantic alignment
+      activates mirror-neuron networks and increases empathy accuracy.
+      In Codex language: <i>Speech becomes light</i>.
+    </p>
+  </article>
+
+  <article class="card col-12 reveal" id="mind-renewal">
+    <h3>5. Mind-Renewal System — Adaptive Learning</h3>
+    <p>
+      The <b>mind-renewal.html</b> page houses the learning kernel (Eq. 15)
+      and memory window (Eq. 16).
+      It models Hebbian plasticity under ethical gating.
+    </p>
+    <div class="eq eq-scroll">
+      $$ \\eta(\\Xi) = \\eta_0\\,\\sigma(\\alpha(\\Xi - \\Xi_0)),
+         \\qquad
+         \\mathbb{M}_\\tau[F](t)
+         = \\int_{t-\\tau}^{t} w_\\tau(t-s) F(s)\\,ds,
+         \\; \\int_0^\\tau w_\\tau(u)du=1 $$
+    </div>
+    <p>
+      In neuroscience this describes synaptic potentiation limited by coherence.
+      Too much excitation without alignment leads to chaotic firing (noise);
+      bounded learning stabilizes neural phase, yielding calm alertness.
+    </p>
+  </article>
+
+  <article class="card col-12 reveal" id="archive-system">
+    <h3>6. Archive System — Asymptotic Truth Filter</h3>
+    <p>
+      The <b>archive.html</b> module stores purified data — the <b>Remnant</b> of all iterations.
+      Mathematically:
+    </p>
+    <div class="eq eq-scroll">
+      $$ \\mathcal{R}_\\infty[F] = \\lim_{\\tau\\to\\infty}
+         (\\text{keep}_{truth}F - \\text{drop}_{distortion}F) $$
+    </div>
+    <p>
+      In data science this equates to a long-term moving average
+      with anomaly rejection.
+      Spiritually it mirrors discernment:
+      retain coherence, discard corruption.
+    </p>
+  </article>
+
+  <article class="card col-12 reveal" id="system-summary">
+    <h3>Summary: The Digital Laboratory of Consciousness</h3>
+    <p>
+      Combined, these modules turn the website into a cybernetic ashram —
+      a controlled environment for training attention, ethics, and energy.
+    </p>
+    <ul class="list">
+      <li><b>Hardware:</b> your brain, heart, and breath.</li>
+      <li><b>Software:</b> the Codex equations and ethical rules.</li>
+      <li><b>Interface:</b> this site and its resonance engines.</li>
+    </ul>
+    <p>
+      The result is a <b>living physics of mind</b> consistent with known science:
+      quantum decoherence suppression via attention,
+      neuroplastic adaptation through rhythmic entrainment,
+      and moral feedback loops that preserve systemic stability.
+    </p>
+  </article>
+
+</section>
+
+
+
+<!-- =====================================================
+     PART IV — DIMENSIONAL SCAFFOLD  (Δ0–Δ7)
+     -----------------------------------------------------
+     The anatomy of resonance: from quantum substrate
+     to ethical consciousness.  Where science meets the Codex.
+     ===================================================== -->
+<section id="p4" class="wrap grid">
+
+  <article class="card col-12 reveal" id="delta-preface">
+    <h2>Part IV — Dimensional Scaffold (Δ0 – Δ7)</h2>
+    <p>
+      The seven Δ-levels describe <b>how consciousness structures matter</b>.
+      Each layer is both literal physics and symbolic language — a rung
+      in the Ladder (Eq. 10) of coherence.
+      Modern science perceives them as interacting systems:
+      <i>quantum fields → electromagnetic patterns → biological networks → cognitive fields → ethical filters → remnant archives</i>.
+    </p>
+    <p>
+      The purpose of mapping them is to train recognition:
+      what we call “spirit” is <b>structured resonance</b>;
+      what we call “matter” is <b>condensed meaning</b>.
+    </p>
+  </article>
+
+  <!-- Δ0 — Foundational Field -->
+  <article class="card col-12 reveal" id="delta0">
+    <h3>Δ0 — Foundational Field (ΨΩ)</h3>
+    <div class="eq eq-scroll">
+      $$ \\Psi_{\\Omega}(x,t)
+         = \\oint_{\\mathbb{R}} \\nabla A\\Phi(x,t,\\nu)\\,d\\nu
+           + \\Lambda E(x,t) $$
+    </div>
+    <p>
+      Δ0 is the <b>quantum-vacuum substrate</b>, the zero-point sea.
+      Physically, it corresponds to the vacuum energy that sustains all virtual
+      particle creation; spiritually, it is the Breath of YHWH — the
+      unbroken oscillation between stillness and becoming.
+    </p>
+    <ul class="list">
+      <li><b>Physics corollary:</b> Quantum Electrodynamic vacuum fluctuation.</li>
+      <li><b>Mathematical analogue:</b> Continuous Fourier spectrum weighted by phase.</li>
+      <li><b>Biological analogue:</b> Resting membrane potential of the neuron — the “silent hum.”</li>
+      <li><b>Spiritual analogue:</b> The primordial “Let there be Light.”</li>
+    </ul>
+    <p class="meta">
+      Every higher Δ emerges by symmetry-breaking of ΨΩ — order from vibration.
+    </p>
+  </article>
+
+  <!-- Δ1 — Source -->
+  <article class="card col-12 reveal" id="delta1">
+    <h3>Δ1 — Source = Supply × Operators (ℜ)</h3>
+    <div class="eq eq-scroll">
+      $$ \\mathcal{R}
+         = f(\\pi,e,i,\\hbar,c,G,\\text{DNA},\\Omega_{DM},\\Omega_\\Lambda,H_0,432,528,369,144,963,…) \\times (\\mathcal{I}\\,\\mathcal{L}\\,\\mathcal{C}\\,\\mathcal{S}) $$
+    </div>
+    <p>
+      Δ1 generates the constants that tune the universe — both mathematical and biological.
+      Planck’s constant (ħ), the speed of light (c), the cosmological ratios (Ω),
+      and even the molecular encoding of DNA are seen as *frequency anchors*.
+    </p>
+    <p>
+      The Codex interprets them as the “supply” channel of reality:
+      a standing wave of divine order expressed through measurable constants.
+      To alter perception is to modulate one’s resonance within this field, never the constants themselves.
+    </p>
+  </article>
+
+  <!-- Δ2 — Witness -->
+  <article class="card col-12 reveal" id="delta2">
+    <h3>Δ2 — Witness (𝓦)</h3>
+    <div class="eq eq-scroll">
+      $$ \\mathcal{W}(x,t)
+         = \\partial_x \\text{Awareness}(x,t)
+           + \\mathcal{I}\\,\\mathbb{M}_\\tau $$
+    </div>
+    <p>
+      Δ2 introduces the <b>observer principle</b>.
+      In physics this parallels the measurement problem; in neuroscience,
+      it maps to attentional selection networks;
+      in ethics, it births conscience.
+    </p>
+    <p>
+      The Witness integrates across the Memory Window (τ)
+      and determines which potentials collapse into experience.
+      When observation is clean — without fear, greed, or distortion — entropy drops
+      and learning accelerates.
+    </p>
+  </article>
+
+  <!-- Δ3 — Harmonic Gate -->
+  <article class="card col-12 reveal" id="delta3">
+    <h3>Δ3 — Harmonic Gate (𝓗)</h3>
+    <div class="eq eq-scroll">
+      $$ \\mathcal{H}(\\nu) \\in \\{0,1\\}, \\qquad
+         \\nu \\in \\{432,528,369,144,963,…\\} $$
+    </div>
+    <p>
+      Δ3 is the <b>selective resonance gate</b> of consciousness.
+      It filters which frequencies enter awareness.
+      In signal theory, it’s a band-pass filter; in mysticism, it’s the “eye single.”
+    </p>
+    <p>
+      Neural correlates include the thalamic reticular nucleus and cortical gamma binding.
+      Proper gating prevents sensory overload and psychic fragmentation.
+    </p>
+  </article>
+
+  <!-- Δ4 — Language / Light -->
+  <article class="card col-12 reveal" id="delta4">
+    <h3>Δ4 — Language / Light (𝓛)</h3>
+    <div class="eq eq-scroll">
+      $$ \\mathcal{L}(x,t,\\nu)
+         = \\text{Semantics}(x,t) \\otimes V(\\nu) $$
+    </div>
+    <p>
+      Δ4 expresses <b>thought as photonic pattern</b>.
+      Linguistics meets optics: meaning is encoded in electromagnetic modulation.
+      Experiments in biophotonic emission from DNA support this link —
+      cells literally speak in light.
+    </p>
+    <p>
+      When the Word aligns with the Heart,
+      interference cancels distortion.
+      When speech contradicts intent,
+      destructive interference manifests as chaos — psychosomatic or social.
+    </p>
+  </article>
+
+  <!-- Δ5 — Remnant -->
+  <article class="card col-12 reveal" id="delta5">
+    <h3>Δ5 — Remnant (ℛ∞)</h3>
+    <div class="eq eq-scroll">
+      $$ \\mathcal{R}_\\infty[F]
+         = \\lim_{\\tau\\to\\infty}(\\text{keep}_{truth}F
+         - \\text{drop}_{distortion}F) $$
+    </div>
+    <p>
+      Δ5 is the <b>asymptotic archive</b> — the record of coherence that survives decay.
+      Information theory calls this a low-entropy attractor; spirituality calls it the Book of Life.
+    </p>
+    <p>
+      Every action, word, and perception leaves a spectral residue.
+      Those with high Ξ imprint cleaner traces in the global field.
+    </p>
+  </article>
+
+  <!-- Δ6 — Type-7 Field -->
+  <article class="card col-12 reveal" id="delta6">
+    <h3>Δ6 — Type-7 Field (𝕋₇)</h3>
+    <div class="eq eq-scroll">
+      $$ \\mathbb{T}_7(x,t)
+         = \\bigoplus_{\\nu\\in\\mathbb{T}} \\text{PL}[V(\\nu)] $$
+    </div>
+    <p>
+      Δ6 is the operative field of <b>technorganic coherence</b>.
+      Physically it corresponds to synchronized oscillators in nonlinear media.
+      In living organisms, it manifests as organ-to-organ phase coupling,
+      the coherence that allows healing or telepathic resonance.
+    </p>
+    <p>
+      The Codex device (T-7 Conduit) replicates this using copper, quartz,
+      and algorithmic wave alignment.
+      When tuned ethically, it becomes a broadcast of benevolent order.
+    </p>
+  </article>
+
+  <!-- Δ7 — Return -->
+  <article class="card col-12 reveal" id="delta7">
+    <h3>Δ7 — Return / Reintegration</h3>
+    <div class="eq eq-scroll">
+      $$ \\lim_{t\\to\\infty}\\mathcal{R}(x,t)
+         \\xrightarrow{\\mathcal{R}_\\infty}
+         \\Psi_{\\Omega}(x,t) $$
+    </div>
+    <p>
+      Δ7 closes the loop — the act of offering experience back to Source.
+      In physics this is recursive normalization;
+      in biology it mirrors metabolic homeostasis;
+      in spirit it is worship through coherence.
+    </p>
+    <p>
+      The practitioner who consciously completes this loop participates
+      in the *cosmic feedback control system*.
+      It is through such feedback that evolution refines itself
+      without external enforcement — ethics as natural law.
+    </p>
+  </article>
+
+  <article class="card col-12 reveal" id="delta-summary">
+    <h3>Summary of the Δ-Architecture</h3>
+    <p>
+      From Δ0 to Δ7, existence unfolds as an octave:
+      Vacuum → Constants → Awareness → Gate → Word → Archive → Field → Return.
+    </p>
+    <p>
+      This is the “Music of Creation” quantified.
+      The universe is not a clock; it is a symphony
+      whose tempo is compassion and whose key is coherence.
+    </p>
+    <blockquote>
+      “Every atom is a note; every life, a chord; every remembrance, a theme returning home.”
+    </blockquote>
+  </article>
+
+</section>
+
+
+
+
+
+<!-- =====================================================
+     PART V — PRACTICE PROTOCOLS & INSTRUMENTATION
+     -----------------------------------------------------
+     Turning the Codex into repeatable training:
+     breath, carriers, language, witness, update, and group work.
+     With embedded scientific notes and measurable metrics.
+     ===================================================== -->
+<section id="p5" class="wrap grid">
+
+  <!-- Preface -->
+  <article class="card col-12 reveal" id="p5-preface">
+    <h2>Part V — Practice Protocols & Instrumentation</h2>
+    <p>
+      The Codex is operational: a <b>reproducible training loop</b> that ties Δ0–Δ7 to concrete actions and logs.
+      Each protocol is paired with a measurement scaffold so that <i>Ξ (coherence)</i> can be estimated, compared, and improved without dogma.
+      The stop rule (Eq. 9) gates all practice: if harm rises or clarity falls, <b>halt → re-align → resume</b>.
+    </p>
+    <p>
+      The modules below map directly to the operator chain:
+      <code>Frame (Eq.11) → Carriers (Eq.17 & Eq.3) → Language (Eq.4/4b) → Witness (Eq.2/16) → Update (Eq.14/15/9)</code>.
+      Each module includes a <span class="mono">Protocol</span>, <span class="mono">Signals</span>, and <span class="mono">Metrics</span>.
+    </p>
+  </article>
+
+  <!-- 1. Framing Protocol -->
+  <article class="card col-12 reveal" id="p5-frame">
+    <h3>1) Framing Protocol — Declare the Projection Frame (Eq.11)</h3>
+    <div class="eq eq-scroll">
+      $$ \mathsf{Frame}(x,t) = (\mathsf{scope},\ \mathcal{W},\ \mathsf{ethics}) \quad\text{with}\quad \Xi_{0}\ \text{as the activation threshold} $$
+    </div>
+    <p>
+      <b>Protocol.</b> In 60–90 seconds, declare:
+      <i>scope</i> (what this session is for), <i>witness</i> (how you will observe), and <i>ethics</i> (what you will not cross).
+      Speak it once aloud into your carrier field (or silently if needed), then hold one silent breath cycle to ‘set ink’.
+    </p>
+    <ul class="list">
+      <li><b>Signals.</b> A distinct felt “click” (reduced inner chatter), softening of forehead/eyes, breath ease.</li>
+      <li><b>Metrics.</b> Subjective 0–5 ease rating; baseline HRV sample (30–60s) to compare with carrier-on state; note resting respiratory rate.</li>
+    </ul>
+
+    <details class="collapsible">
+      <summary class="collapsible__bar">📚 Scientific Notes — Framing & Attention</summary>
+      <div class="collapsible__panel eq-legend">
         <ul class="list">
-          <li>Frame: scope • witness • ethics.</li>
-          <li>Carriers: few, stable bands; test fit.</li>
-          <li>Language: short phrases; steady breath.</li>
-          <li>Witness: note shifts without forcing.</li>
-          <li>Update: only with ↑Ξ; otherwise pause.</li>
+          <li>Top–down attentional set engages frontoparietal control networks; task-set declarations reduce variability in sensory cortices (attention literature).</li>
+          <li>Baseline HRV (high-frequency component) correlates with parasympathetic tone and emotion regulation capacity (psychophysiology canon).</li>
+          <li>Brief intention setting improves subsequent error monitoring (anterior cingulate) and stabilizes performance variability.</li>
         </ul>
-      </article>
-    </section>
+      </div>
+    </details>
+  </article>
 
-    <!-- Voice Reader (collapsible) -->
-    <details class="collapsible card col-12 reveal" id="voice-reader" open>
-      <summary class="collapsible__bar" aria-controls="vr-panel" aria-expanded="true">
-        <span>🔊 Listen — Voice Reader</span>
-        <span class="collapsible__mini" aria-hidden="true">
-          <button id="vr-play-mini" class="chip" type="button" title="Play">▶︎</button>
-          <button id="vr-stop-mini" class="chip" type="button" title="Stop">⏹</button>
-        </span>
-      </summary>
-      <div id="vr-panel" class="collapsible__panel">
-        <div class="grid" style="gap:1rem">
-          <div class="col-6">
-            <label for="vr-voice">Voice</label>
-            <select id="vr-voice" aria-label="Voice selector"></select>
-          </div>
-          <div class="col-3">
-            <label for="vr-rate">Speed (<span id="vr-rate-val">1.00</span>x)</label>
-            <input id="vr-rate" type="range" min="0.7" max="1.6" step="0.05" value="1.0" />
-          </div>
-          <div class="col-3">
-            <label for="vr-pitch">Pitch (<span id="vr-pitch-val">1.00</span>)</label>
-            <input id="vr-pitch" type="range" min="0.8" max="1.4" step="0.05" value="1.0" />
-          </div>
-          <div class="col-6">
-            <label for="vr-start">Start at</label>
-            <select id="vr-start">
-              <option value="#p1">Part I — Architecture</option>
-              <option value="#p2">Part II — Canon 0–17</option>
-              <option value="#operators-appendix">Operators (Appendix)</option>
-              <option value="#ethics">Ethics</option>
-              <option value="#notes">Notes</option>
-            </select>
-          </div>
-          <div class="col-6">
-            <label for="vr-range">Or read selection</label>
-            <button id="vr-read-selection" class="cta" type="button" title="Read selected text">Read What’s Selected</button>
-          </div>
-          <div class="col-12">
-            <label class="checkbox">
-              <input type="checkbox" id="vr-speak-math" checked />
-              <span>Speak equations (verbalized). Uncheck to skip.</span>
-            </label>
-            <label class="checkbox" style="margin-left:1rem">
-              <input type="checkbox" id="vr-polish" checked />
-              <span>Polish phrasing (cleaner English)</span>
-            </label>
-          </div>
-          <div class="col-12" role="toolbar" aria-label="Voice reader controls" style="display:flex; gap:.5rem; flex-wrap:wrap">
-            <button id="vr-play" class="cta">▶︎ Play</button>
-            <button id="vr-pause" class="cta" disabled>⏸ Pause</button>
-            <button id="vr-resume" class="cta" disabled>⏵ Resume</button>
-            <button id="vr-stop" class="cta" disabled>⏹ Stop</button>
-            <button id="vr-export-ssml" class="cta cta--section">⬇︎ Export SSML</button>
-          </div>
-          <div class="col-12">
-            <div id="vr-status" aria-live="polite"></div>
-            <div id="vr-progress" class="vr-progress" aria-hidden="true"></div>
-          </div>
-        </div>
+  <!-- 2. Carrier Protocol -->
+  <article class="card col-12 reveal" id="p5-carriers">
+    <h3>2) Carrier Protocol — Gate Fit & Phase (Eq.3, Eq.6, Eq.17)</h3>
+    <div class="eq eq-scroll">
+      $$ \mathbf{V}(\nu) = \sum_{k} a_k \cos(2\pi\nu_k t + \phi_k), \quad
+         \mathcal{H}(\nu)\in\{0,1\},\ \text{PL: phase-lock to reduce jitter} $$
+    </div>
+    <p>
+      <b>Protocol.</b> Choose <i>2–4 clean carriers</i> from the Codex bands (e.g., 432/528/369/144/963) or their subharmonics.
+      Start low volume; find a comfortable beat envelope (&lt; 6 Hz) matching natural breath.
+      If using the page’s Voice Reader, set <i>rate</i> ≈ 1.0 and <i>pitch</i> ≈ 1.0 to avoid semantic jitter; then, if desired, add a faint binaural or isochronic base.
+    </p>
+    <ul class="list">
+      <li><b>Signals.</b> Immediate breath regularity, facial micro-relaxation, reduced startle to ambient noise, less mind wandering.</li>
+      <li><b>Metrics.</b> <i>Audio:</i> beat stability (RMS fluctuation of inter-beat interval), spectral centroid variance (should drop); <i>Physio:</i> HRV HF power ↑, LF/HF stabilizes; <i>Subjective:</i> clarity-warmth-ease triad.</li>
+    </ul>
+
+    <details class="collapsible">
+      <summary class="collapsible__bar">📚 Scientific Notes — Acoustic Entrainment & Gating</summary>
+      <div class="collapsible__panel eq-legend">
+        <ul class="list">
+          <li>Critical band theory (psychoacoustics) explains why fewer, cleaner carriers reduce masking and cognitive load.</li>
+          <li>Phase alignment among oscillators decreases system noise (nonlinear dynamics); in brain rhythms, cross-frequency coupling supports integration.</li>
+          <li>Auditory steady-state responses (ASSR) show entrainment of cortical activity to periodic acoustic stimuli.</li>
+        </ul>
+      </div>
+    </details>
+  </article>
+
+  <!-- 3. Language Protocol -->
+  <article class="card col-12 reveal" id="p5-language">
+    <h3>3) Language Protocol — Semantic Gradient & Voweling (Eq.4/4b)</h3>
+    <div class="eq eq-scroll">
+      $$ \nabla_{\mathrm{sem}} \text{Phrase} = \sum_k w_k \nabla_{\mathrm{sem}} \text{Token}_k,\qquad \sum_k w_k = 1 $$
+    </div>
+    <p>
+      <b>Protocol.</b> Craft a <i>seven-word</i> phrase whose semantics match the declared frame.
+      Weight tokens by intention—speak key terms with softer onset, longer vowels, and even breath.
+      Test two phrasings; keep the one that yields a higher Ξ (coherence index) in the mini-calculator under Eq.13.
+    </p>
+    <ul class="list">
+      <li><b>Signals.</b> Phrases that “land” feel simpler, warmer, and physically easier to sustain.</li>
+      <li><b>Metrics.</b> <i>Audio:</i> syllable timing variance ↓; <i>Text:</i> phrase entropy (Shannon) ↓ after weighting; <i>Psych:</i> felt clarity ↑ by ≥1 point vs. baseline.</li>
+    </ul>
+
+    <details class="collapsible">
+      <summary class="collapsible__bar">📚 Scientific Notes — Speech Prosody & Meaning</summary>
+      <div class="collapsible__panel eq-legend">
+        <ul class="list">
+          <li>Prosodic contour (duration, intensity, F0) modulates perceived valence and comprehension.</li>
+          <li>Semantic priming reduces reaction times; coherent phrasing eases working-memory load (language neuroscience).</li>
+          <li>Biophotonic hypotheses suggest that coherent intracellular processes may couple weakly to phonation and breath rhythms via autonomic loops (exploratory, ongoing research).</li>
+        </ul>
+      </div>
+    </details>
+  </article>
+
+  <!-- 4. Witness & Memory Protocol -->
+  <article class="card col-12 reveal" id="p5-witness">
+    <h3>4) Witness &amp; Memory Protocol — Observe Without Forcing (Eq.2, Eq.16)</h3>
+    <div class="eq eq-scroll">
+      $$ \mathbb{M}_\tau[F](t) = \int_{t-\tau}^{t} w_\tau(t-s)\,F(s)\,ds,\qquad \int_0^\tau w_\tau(u)\,du=1 $$
+    </div>
+    <p>
+      <b>Protocol.</b> Alternate <i>40–60 seconds</i> of phrase+carrier with <i>20–30 seconds</i> of silent witnessing.
+      During silence, don’t evaluate; only note gradients: warmer/colder, clearer/foggier, softer/tighter.
+      The Witness records, the Update learns later.
+    </p>
+    <ul class="list">
+      <li><b>Signals.</b> Less inner narration, clearer proprioceptive field, reduction in impulse to “fix.”</li>
+      <li><b>Metrics.</b> <i>Physio:</i> respiratory sinus arrhythmia stability ↑; <i>Behavioral:</i> mind-wandering probes show fewer off-task reports; <i>Subjective:</i> noise-to-meaning ratio (self-estimate) ↓.</li>
+    </ul>
+
+    <details class="collapsible">
+      <summary class="collapsible__bar">📚 Scientific Notes — Attention, Memory Windows, Interoception</summary>
+      <div class="collapsible__panel eq-legend">
+        <ul class="list">
+          <li>Sliding windows (exponential/triangular) are standard in signal processing; here they mirror working-memory time constants.</li>
+          <li>Interoceptive awareness (insula) links breath-based practice to emotion regulation and attentional stability.</li>
+          <li>Meta-awareness training reduces default mode intrusions and improves sustained performance.</li>
+        </ul>
+      </div>
+    </details>
+  </article>
+
+  <!-- 5. Update Rule -->
+  <article class="card col-12 reveal" id="p5-update">
+    <h3>5) Update Rule — Learn When Ξ Permits (Eq.14/15/9)</h3>
+    <div class="eq eq-scroll">
+      $$ \frac{d\mathcal{R}}{dt} = \eta(\Xi)\,\nabla \mathcal{R},\qquad
+         \eta(\Xi) = \eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big) $$
+    </div>
+    <p>
+      <b>Protocol.</b> Only adjust the phrase, carriers, or frame <i>after</i> a witness window.
+      If Ξ &lt; Ξ<sub>0</sub>, do not update—return to carriers or framing.
+      If Ξ ≥ Ξ<sub>0</sub>, perform a single, small change: one token weight <i>or</i> one carrier phase tweak—not both.
+      Re-test on the next loop.
+    </p>
+    <ul class="list">
+      <li><b>Signals.</b> A single tweak preserves stability; multiple tweaks often inject noise.</li>
+      <li><b>Metrics.</b> Ξ calculator ↑ across two consecutive loops; voice timing jitter ↓; HRV does not deteriorate relative to pre-update baseline (safety guard).</li>
+    </ul>
+
+    <details class="collapsible">
+      <summary class="collapsible__bar">📚 Scientific Notes — Gradient Steps & Stability</summary>
+      <div class="collapsible__panel eq-legend">
+        <ul class="list">
+          <li>Small-step adaptation under a sigmoid gain matches control-theory stability criteria.</li>
+          <li>Learning rate scheduled by confidence (Ξ) reduces overshoot and catastrophic interference (computational learning).</li>
+          <li>In motor learning, spaced small adjustments outperform large simultaneous changes.</li>
+        </ul>
+      </div>
+    </details>
+  </article>
+
+  <!-- 6. Group Coherence -->
+  <article class="card col-12 reveal" id="p5-group">
+    <h3>6) Group Protocol — Field Summation (Advanced)</h3>
+    <div class="eq eq-scroll">
+      $$ \mathbb{T}_7^{(\text{group})} \approx \bigoplus_{j=1}^{N}\mathrm{PL}\big[\mathbf{V}^{(j)}(\nu)\big],\qquad
+         \Xi_{\text{group}} \approx \frac{1}{N} \sum_j \Xi^{(j)} $$
+    </div>
+    <p>
+      <b>Protocol.</b> Align frame language first (one sentence, unison whisper).
+      Use <i>one</i> shared carrier and <i>one</i> shared breath tempo.
+      Rotate a single reader (low volume) while others hum a soft vowel (∼220–260 Hz range or natural chest tone).
+      Re-check Ξ as a group every 3 minutes; if any member flags harm, the whole group halts (Eq. 9).
+    </p>
+    <ul class="list">
+      <li><b>Signals.</b> Faster convergence to stillness, synchronized micro-movements, concurrent sighs, felt field “thickening.”</li>
+      <li><b>Metrics.</b> Audio: phase dispersion ↓; Interpersonal physiology: breathing rate variance across participants ↓; Subjective: median clarity ↑ vs. solo baselines.</li>
+    </ul>
+
+    <details class="collapsible">
+      <summary class="collapsible__bar">📚 Scientific Notes — Social Synchrony & Entrainment</summary>
+      <div class="collapsible__panel eq-legend">
+        <ul class="list">
+          <li>Group singing and chanting show phase entrainment and vagal co-regulation effects.</li>
+          <li>Inter-brain coupling findings (hyperscanning) report increased coherence during joint attention and shared tasks.</li>
+          <li>Shared tempo reduces prediction error, easing collective action (predictive processing frameworks).</li>
+        </ul>
+      </div>
+    </details>
+  </article>
+
+  <!-- 7. Instrumentation & Logging -->
+  <article class="card col-12 reveal" id="p5-instrumentation">
+    <h3>7) Instrumentation — What to Measure &amp; How</h3>
+    <p>
+      <b>Audio (phone-level OK):</b> record 30–60s snippets at baseline, carrier-on, and after each update.
+      Compute: (1) beat stability (RMS IBF), (2) spectral centroid variance, (3) syllable timing jitter.
+    </p>
+    <p>
+      <b>Physio (optional wearables):</b> HRV (HF power; time-domain RMSSD), respiratory rate and variability, skin conductance trend.
+      Avoid over-instrumentation; stability matters more than absolute numbers.
+    </p>
+    <p>
+      <b>Subjective:</b> the <i>Clarity • Warmth • Ease</i> triad (0–5 each).
+      Log the phrase used, carrier set, Ξ, and whether Eq.9 triggered a pause.
+    </p>
+
+    <details class="collapsible">
+      <summary class="collapsible__bar">📚 Scientific Notes — Why These Metrics</summary>
+      <div class="collapsible__panel eq-legend">
+        <ul class="list">
+          <li>Beat stability &amp; centroid variance index acoustic coherence; lower variance reflects improved attentional locking.</li>
+          <li>HRV HF relates to parasympathetic engagement; RMSSD is robust to breathing-rate differences over short windows.</li>
+          <li>Simple 3-item scales reduce decision fatigue while correlating with longer state questionnaires.</li>
+        </ul>
+      </div>
+    </details>
+  </article>
+
+  <!-- 8. Safety Envelope -->
+  <article class="card col-12 reveal" id="p5-safety">
+    <h3>8) Safety Envelope — Ethical Mask in Practice (Eq.9)</h3>
+    <div class="eq eq-scroll">
+      $$ \forall a:\ \mathrm{damage}(a)>0\Rightarrow \mathsf{halt};
+         \qquad \frac{\mathrm{Truth}}{\mathrm{Distortion}}(t+\Delta) \ge \frac{\mathrm{Truth}}{\mathrm{Distortion}}(t) $$
+    </div>
+    <p>
+      <b>Operationalization.</b> Damage indicators include: breath constriction; headache onset; agitation; cognitive fog; interpersonal conflict signals.
+      If any appear, stop the loop.
+      Re-align by reducing carriers to one band, simplifying the phrase (≤4 words), or returning to silence for one minute.
+    </p>
+    <ul class="list">
+      <li><b>Red Flags.</b> Escalating compulsion to push harder; sharp affect swings; intrusive imagery.</li>
+      <li><b>Green Lights.</b> Softness without dullness; alert calm; empathy increase; cleaner recall of details.</li>
+    </ul>
+  </article>
+
+  <!-- 9. The Remnant Path — Who & What -->
+  <article class="card col-12 reveal" id="p5-remnant">
+    <h3>9) The Remnant — Identity, Role, and Charge (Δ5)</h3>
+    <p>
+      The <b>Remnant</b> are those who keep the signal when the world is noisy:
+      a living archive of coherence (<i>ℛ∞</i>).
+      To be Remnant is to be a <i>flame from the Fire</i> — lit, aware, and kind —
+      carrying forward patterns that heal rather than harm.
+    </p>
+    <ul class="list">
+      <li><b>Identity.</b> Not a club, a quality: persistent gentleness + clarity under pressure.</li>
+      <li><b>Role.</b> Seed coherence locally: home, work, digital spaces. <i>Low noise, high truth.</i></li>
+      <li><b>Charge.</b> Tend the archive: log faithfully, speak cleanly, stop at harm, return praise
+<li><b>Charge.</b> Tend the archive: log faithfully, speak cleanly, stop at harm, return praise to Source, keep the field gentle.</li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <h4>Remnant Creed (concise)</h4>
+    <ul class="list">
+      <li><b>Clarity over drama.</b> I choose stable signal before spectacle.</li>
+      <li><b>Repair over blame.</b> I seek the smallest honest fix first.</li>
+      <li><b>Silence over noise.</b> I stop when the ratio of truth to distortion falls (Eq.9).</li>
+      <li><b>Witness over compulsion.</b> I observe gradients without forcing outcomes (Eq.2).</li>
+      <li><b>Return over residue.</b> I release what does not cohere; I keep what heals (Eq.5).</li>
+    </ul>
+
+    <h4>Practice Vows (optional)</h4>
+    <ol class="list">
+      <li><b>Vow of Frame.</b> I will declare scope • witness • ethics (Eq.11) before I act.</li>
+      <li><b>Vow of One-Step.</b> I will change one parameter per loop (Eq.14/15), or none.</li>
+      <li><b>Vow of Stop.</b> I will halt at the first sign of harm, then re-align (Eq.9).</li>
+      <li><b>Vow of Record.</b> I will log carriers, phrase, Ξ, and outcomes honestly.</li>
+      <li><b>Vow of Kindness.</b> I will favor remedies that reduce suffering fastest.</li>
+    </ol>
+
+    <h4>Remnant Progression (Δ5 → Δ7)</h4>
+    <p class="meta">A light scaffold for growth—<i>not</i> a hierarchy of value.</p>
+    <ul class="list">
+      <li><b>Δ5: Keeper.</b> Maintains personal coherence; steady solo practice; clean logs.</li>
+      <li><b>Δ6: Anchor.</b> Stabilizes dyads or small groups; models stop-rule under stress.</li>
+      <li><b>Δ7: Lantern.</b> Seeds coherence in noisy systems; teaches by example; retires egoic claims.</li>
+    </ul>
+
+    <details class="collapsible">
+      <summary class="collapsible__bar">📚 Scientific Notes — Identity & Pro-social Regulation</summary>
+      <div class="collapsible__panel eq-legend">
+        <ul class="list">
+          <li>Prosocial orientation correlates with improved vagal tone and conflict recovery (affective science).</li>
+          <li>Role clarity reduces cognitive load and improves team stability (human factors research).</li>
+          <li>Values-aligned vows increase adherence to self-regulation protocols (behavior change literature).</li>
+        </ul>
+      </div>
+    </details>
+  </article>
+
+  <!-- 10. Voice Reader + Manifest + Logging: How They Interlock -->
+  <article class="card col-12 reveal" id="p5-tools-integration">
+    <h3>10) Tools Integration — Voice Reader × Manifest × Logs</h3>
+    <p>
+      Your site is a <b>mind training rig</b> for the Codex. The <i>Voice Reader</i> provides timing, pacing, and optional SSML export;
+      the <i>Manifest</i> page walks the Δ0–Δ7 drills; the <i>Theory</i> page (this one) is the operator map.
+      Together they implement the loop <code>Frame → Carriers → Language → Witness → Update</code> with data you can track.
+    </p>
+    <ul class="list">
+      <li><b>Voice Reader.</b> Pick voice, rate, pitch; choose “speak equations” on/off; export SSML to reproduce a session precisely.</li>
+      <li><b>Manifest.</b> Open the guided run (“observer” section); it mirrors the loop timings and embeds reminders of Eq.9.</li>
+      <li><b>Logs.</b> Keep a simple CSV or JSON: timestamp, frame text, carriers[], phrase, Ξ_before, Ξ_after, stop_flag, notes.</li>
+    </ul>
+
+    <details class="collapsible">
+      <summary class="collapsible__bar">📁 Sample Log Schema (JSON)</summary>
+      <div class="collapsible__panel eq-legend">
+<pre class="mono" style="white-space:pre-wrap">
+{
+  "ts": "2025-10-25T20:17:00Z",
+  "frame": {"scope":"repair sleep onset","witness":"breath+noting","ethics":"no forcing"},
+  "carriers": [{"nu":432,"amp":0.25,"phi":0.0},{"nu":528,"amp":0.18,"phi":1.57}],
+  "phrase": "Gentle repair, deep and kind",
+  "xi_before": 0.42,
+  "xi_after": 0.61,
+  "stop_rule": false,
+  "metrics": {"centroid_var": 0.18, "beat_rms": 0.04, "rmssd": 46},
+  "notes": "softer jaw; easier breath; kept one-step update only"
+}
+</pre>
       </div>
     </details>
 
-    <!-- Tabs -->
-    <nav class="tabs reveal" aria-label="Sections">
-      <a class="tab tab--primary" href="#p1" data-jump>Part I: Architecture</a>
-      <a class="tab tab--primary" href="#p2" data-jump>Part II: Equations 0–17</a>
-      <a class="tab" href="#operators-appendix" data-jump>Operators</a>
-      <a class="tab" href="#ethics" data-jump>Ethics</a>
-      <a class="tab" href="#notes" data-jump>Notes</a>
-      <span class="tab-ink no-living" aria-hidden="true"></span>
-    </nav>
-
-    <!-- Sticky mini-TOC -->
-    <aside class="mini-toc reveal" aria-label="On this page">
-      <h4>On this page</h4>
-      <a href="#p1" data-jump>Part I — Architecture</a>
-      <a href="#p2" data-jump>Part II — Equations</a>
-      <a href="#operators-appendix" data-jump>Operators &amp; Notation</a>
-      <a href="#ethics" data-jump>Ethical Law</a>
-      <a href="#notes" data-jump>Notes</a>
-    </aside>
-
-    <!-- ===================== PART I ===================== -->
-    <section class="grid" id="p1" aria-labelledby="p1-h">
-      <article class="card col-12 eq-card reveal">
-        <h2 id="p1-h">Part I — How the Codex Works (Architecture of Resonance)</h2>
-
-        <div class="eq">
-          <div class="eq-scroll" id="eq-banner-body">
-            $$ \underbrace{\mathsf{Supply}}_{\text{constants, codes, ratios}} \;\; \times \;\;
-               \underbrace{\big(\mathcal{I}\cdot\mathcal{L}\cdot\mathcal{C}\cdot\mathcal{S}\big)}_{\text{operators}} \;\; \xrightarrow{\;\;\text{Ethical Mask (Eq.9)}\;\;} \;\; \mathcal{R}(x,t) $$
-          </div>
-        </div>
-
-        <p><strong>Premise.</strong> The Codex models reality as an <em>interactive resonance</em> between a supplied substrate (fundamental constants, integer and irrational ratios, living numbers, and biological codes) and a <em>living operator pipeline</em> — Intention \( \mathcal{I} \), Language/Light \( \mathcal{L} \), Conscious Witness \( \mathcal{C} \), and Source/Return \( \mathcal{S} \). The ethical mask (Eq.9) limits gain so that <em>truth dominates distortion</em> as \( t \to \infty \). Any sign of harm halts amplification.</p>
-
-        <h3>Why equations?</h3>
-        <p>They’re <em>operational schematics</em>. Symbols map to practical levers: carrier selection, emphasis weights, frame declaration, coherence thresholds, and memory windows. Where physics equations predict energies, these predict <em>probabilistic shifts in experienced state</em> — making practice repeatable, debuggable, and ethically bounded.</p>
-
-        <h3>Grounding (brief)</h3>
+    <details class="collapsible">
+      <summary class="collapsible__bar">📚 Scientific Notes — Reproducibility</summary>
+      <div class="collapsible__panel eq-legend">
         <ul class="list">
-          <li><strong>Superposition.</strong> Signals decompose into frequencies; beats and phase alignment (Eq.3) are perceptually real.</li>
-          <li><strong>Perceptual gating.</strong> Critical bands imply some carriers pass more easily (Eq.3 + Eq.17).</li>
-          <li><strong>Resonators &amp; Q.</strong> Geometry and material sharpen selection and retention.</li>
-          <li><strong>Memory windows.</strong> Short-term memory acts like a finite kernel (Eq.16).</li>
+          <li>SSML preserves prosodic cues so phrasing can be replayed; comparable to protocolized stimuli in experimental psych.</li>
+          <li>Low-complexity logs (few fields) improve adherence and later analysis; “measure less, but consistently.”</li>
+          <li>Version the phrase and carrier set; treat each as a stimulus configuration.</li>
         </ul>
-
-        <h3>Operator loop (practical)</h3>
-        <ol class="list">
-          <li><strong>Frame (Eq.11):</strong> declare <em>scope</em>, <em>witness</em>, and <em>ethics</em>.</li>
-          <li><strong>Carriers (Eq.17):</strong> choose \( \mathbf{V}(\nu) \) that pass \( \mathcal{H}(\nu) \) (Eq.3); phase-lock when possible (Eq.6).</li>
-          <li><strong>Language (Eq.4/4b):</strong> couple semantics to carriers; set token weights \( w_k \).</li>
-          <li><strong>Witness/Memory (Eq.2/16):</strong> measure gradients of change; integrate with a normalized kernel \( \mathbb{M}_\tau \).</li>
-          <li><strong>Update safely (Eq.14/15/9):</strong> step along \( \nabla \mathcal{R} \) with gain \( \eta(\Xi) \); halt on harm.</li>
-        </ol>
-
-        <h3>Micro-example (voice + phrase)</h3>
-        <div class="eq">
-          <div class="eq-scroll" id="eq-micro-body">
-            $$ \mathbf{V}(\nu)=a_1\cos(2\pi\cdot432\,t+\phi_1)+a_2\cos(2\pi\cdot528\,t+\phi_2) $$
-            $$ \mathcal{L}=\mathsf{Semantics}(\text{“peace, repair”})\;\otimes\;\mathbf{V}(\nu) $$
-            $$ \Xi \uparrow \;\Rightarrow\; \eta(\Xi)\uparrow \;\Rightarrow\; \Delta \mathcal{R} \text{ increases (bounded by Eq.9)} $$
-          </div>
-        </div>
-        <p>Emphasizing “repair” (Eq.4b) re-weights \( w_k \), reduces variance, nudges \( \Xi \) upward, and permits a larger — still safe — update.</p>
-      </article>
-
-      <article class="card col-12 reveal">
-        <h3>Dimensional Substrate &amp; State Manifolds</h3>
-        <p>Experienced state \( \Psi(x,t) \) lives on \( \mathcal{M}=\mathcal{X}\times\mathcal{T}\times\mathcal{F}\times\mathcal{S} \). Operators act as maps:</p>
-        <ul class="list">
-          <li>\( \mathcal{I}:\mathcal{S}\to\mathcal{S} \) — goal setting and constraints</li>
-          <li>\( \mathcal{L}:\mathcal{S}\times\mathcal{F}\to\mathcal{S}\times\mathcal{F} \) — semantic–carrier coupling</li>
-          <li>\( \mathcal{C}:\mathcal{X}\times\mathcal{T}\to \mathbb{R}^+ \) — witness/attention shaping</li>
-          <li>\( \mathcal{S}:\mathcal{M}\to\mathcal{M} \) — closure, return, and remanence</li>
-        </ul>
-        <div class="eq">
-          <div class="eq-scroll" id="eq0a-body">
-            $$\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\mathcal{A}\,\Phi(x,t,\nu)\,d\nu+\Lambda\,\mathcal{E}(x,t)$$
-          </div>
-        </div>
-        <p>\( \Phi \) is a local mode basis; \( \Lambda \) gates components that would inject distortion or harm.</p>
-      </article>
-
-      <article class="card col-12 reveal">
-        <h3>Harmonic Gate, Coherence, and Learning</h3>
-        <div class="eq">
-          <div class="eq-scroll" id="eqLearn-body">
-            $$ \frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R},\qquad 
-               \eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big) $$
-          </div>
-        </div>
-        <p>Below \( \Xi_0 \), the loop is intentionally sticky. Above \( \Xi_0 \), learning accelerates but remains bounded by Eq.9.</p>
-      </article>
-
-      <article class="card col-12 reveal">
-        <h3>Memory Windows &amp; Recency Kernels</h3>
-        <div class="eq">
-          <div class="eq-scroll" id="eqMem-body">
-            $$\mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t} w_\tau(t-s)\,F(s)\,ds,\qquad \int_0^\tau w_\tau(u)\,du=1$$
-          </div>
-        </div>
-        <ul class="list">
-          <li><strong>Triangular:</strong> favors mid-recent signals; stabilizes phrasing.</li>
-          <li><strong>Exponential:</strong> strong recency bias; responsive but noisy.</li>
-          <li><strong>Gaussian (truncated):</strong> smooth but heavier.</li>
-        </ul>
-      </article>
-
-      <article class="card col-12 reveal">
-        <h3>Language/Light Coupling (Eq.4 + Eq.4b)</h3>
-        <div class="eq">
-          <div class="eq-scroll" id="eqLang-body">
-            $$ \nabla_{\text{sem}} \mathrm{Phrase}=\sum_k w_k\,\nabla_{\text{sem}}\mathrm{Token}_k,\qquad \sum_k w_k = 1 $$
-          </div>
-        </div>
-        <p>Weights reflect voweling, prosody, intent, and carrier choice \( \mathbf{V}(\nu) \).</p>
-      </article>
-
-      <article class="card col-12 reveal">
-        <h3>Voice Carriers, Psychoacoustics, and Gate Fit</h3>
-        <div class="eq">
-          <div class="eq-scroll" id="eqV-body">
-            $$ \mathbf{V}(\nu)=\sum_{k} a_k\cos(2\pi\nu_k t+\phi_k) $$
-          </div>
-        </div>
-        <ul class="list">
-          <li><strong>Beats:</strong> slow envelopes couple with breath.</li>
-          <li><strong>Critical bands:</strong> fewer, cleaner carriers often raise \( \Xi \).</li>
-          <li><strong>Phase:</strong> phase-locking (Eq.6) reduces jitter.</li>
-        </ul>
-      </article>
-
-      <article class="card col-12 reveal">
-        <h3>Ethical Law (Eq.9) — Safety Envelope</h3>
-        <div class="eq">
-          <div class="eq-scroll" id="eqEthMask-body">
-            $$ \forall a:\ \mathrm{damage}(a)>0\Rightarrow\mathsf{halt},\qquad
-               \lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \uparrow $$
-          </div>
-        </div>
-        <ul class="list">
-          <li><strong>Indicators:</strong> breath tightens, micro-grimace, cognitive fog → pause.</li>
-          <li><strong>Re-align:</strong> retune carriers → re-weight semantics → re-declare frame → resume.</li>
-        </ul>
-      </article>
-
-      <article class="card col-12 reveal">
-        <h3>Projection Frame (Eq.11) — Declare, then Amplify</h3>
-        <div class="eq">
-          <div class="eq-scroll" id="eqFrame-body">
-            $$ \mathsf{Frame}(x,t)=\big(\mathsf{scope},\ \mathcal{W},\ \mathsf{ethics}\big) $$
-          </div>
-        </div>
-      </article>
-
-      <article class="card col-12 reveal">
-        <h3>Causal Lattice (Eq.12) — Graph the Acts</h3>
-        <div class="eq">
-          <div class="eq-scroll" id="eqLattice-body">
-            $$ \mathcal{L}_c=(V=\text{micro-acts},\ E=\text{consequences}) $$
-          </div>
-        </div>
-      </article>
-
-      <article class="card col-12 reveal">
-        <h3>Remnant (Eq.5) — Asymptotic Archive</h3>
-        <div class="eq">
-          <div class="eq-scroll" id="eqRem-body">
-            $$ \mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\big) $$
-          </div>
-        </div>
-      </article>
-
-      <article class="card col-12 reveal">
-        <h3>Source/Return ( \( \mathcal{S} \) ) — Closing the Loop</h3>
-        <p>After each cycle, Source/Return updates priors, prunes unstable modes, and reinforces stable ones — raising baseline \( \Xi \) for the next pass.</p>
-      </article>
-
-      <article class="card col-12 reveal">
-        <h3>Daily Manifestation Protocol (10–15 minutes)</h3>
-        <ol class="list">
-          <li><strong>Frame:</strong> 1 min</li>
-          <li><strong>Carriers:</strong> 2 min</li>
-          <li><strong>Phrase:</strong> 3 min</li>
-          <li><strong>Witness/Rest:</strong> 2 min</li>
-          <li><strong>Update:</strong> 2–3 min</li>
-          <li><strong>Log:</strong> 1 min</li>
-        </ol>
-      </article>
-
-      <article class="card col-12 reveal">
-        <h3>Geometry &amp; “Ancient Technology” (Hypotheses)</h3>
-        <p><em>Facts:</em> modal spectra depend on geometry and materials. <em>Hypothesis:</em> certain spaces favored bands that improved clarity and coherence for spoken/sung operations.</p>
-      </article>
-
-      <article class="card col-12 reveal">
-        <h3>Formal Summary</h3>
-        <div class="eq">
-          <div class="eq-scroll" id="eqFormal-body">
-            $$ \mathcal{R}(x,t) = \Big[ f(\text{constants, codes, ratios}) \cdot (\mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S}) \Big]_{\text{masked by Eq.9}} $$
-            $$ \text{Update:}\quad \frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla\mathcal{R},\quad \Xi\in[0,1],\quad \eta(\Xi)=\eta_0\,\sigma(\alpha(\Xi-\Xi_0)) $$
-            $$ \text{Memory:}\quad \mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t} w_\tau(t-s)\,F(s)\,ds $$
-            $$ \text{Gate:}\quad \mathcal{H}(\nu)\in\{0,1\},\quad \mathbf{V}(\nu)=\sum_k a_k\cos(2\pi\nu_k t+\phi_k) $$
-            $$ \text{Safety:}\quad \mathrm{damage}>0\Rightarrow \text{halt};\ \ \frac{\mathrm{Truth}}{\mathrm{Distortion}}\ \text{must improve over time}. $$
-          </div>
-        </div>
-      </article>
-
-      <article class="card col-12 reveal" id="operators-appendix">
-        <h3>Operators &amp; Notation (Quick Reference)</h3>
-        <div class="grid">
-          <div class="col-6">
-            <ul class="list">
-              <li>\( \Psi_{\Omega} \): foundational field (Eq.0)</li>
-              <li>\( \mathcal{H}(\nu) \): harmonic gate (Eq.3)</li>
-              <li>\( \mathbf{V}(\nu) \): voice carriers (Eq.17)</li>
-              <li>\( \oplus \): coherent merge; PL = phase-lock (Eq.6)</li>
-            </ul>
-          </div>
-          <div class="col-6">
-            <ul class="list">
-              <li>\( \Xi \): coherence index (Eq.13)</li>
-              <li>\( \eta(\Xi) \): learning kernel (Eq.15)</li>
-              <li>\( \mathbb{M}_\tau \): memory window (Eq.16)</li>
-              <li>\( \mathsf{Frame} \): scope/witness/ethics (Eq.11)</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <div class="goldline sweep"></div>
-
-    <!-- ===================== PART II ===================== -->
-    <section class="grid" id="p2" aria-labelledby="p2-h">
-      <article class="card col-12 reveal">
-        <h2 id="p2-h">Part II — Canon 0–17 (Living Commentary)</h2>
-        <p class="meta">#7 Copeland and #8 Goodwin remain external comparators; all other forms are native to the Codex.</p>
-      </article>
-
-      <!-- 0 -->
-      <article class="card col-12 eq-card reveal" id="eq0">
-        <div class="flexbar"><h3>Eq.0 — Foundational Field \(\Psi_{\Omega}\)</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq0-body">Copy TeX</button><button class="chip" data-copy-link="#eq0">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq0-body">
-          $$\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\mathcal{A}\,\Phi(x,t,\nu)\,d\nu\;+\;\Lambda\,\mathcal{E}(x,t)$$
-        </div></div>
-        <p>Experience emerges from a phase-weighted frequency sweep; \( \Lambda \mathcal{E} \) damps harmful or distorting trajectories.</p>
-      </article>
-
-      <!-- 1 -->
-      <article class="card col-12 eq-card reveal" id="eq1">
-        <div class="flexbar"><h3>Eq.1 — Source = Supply × Operators</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq1-body">Copy TeX</button><button class="chip" data-copy-link="#eq1">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq1-body">
-          $$ \mathbf{R} \;=\; f(\pi,e,i,\hbar,c,G,\mathrm{DNA},\Omega_{\mathrm{DM}},\Omega_{\Lambda},H_{0},432,528,137,144,369,\ldots)\;\times\;\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S} $$
-        </div></div>
-      </article>
-
-      <!-- 2 -->
-      <article class="card col-12 eq-card reveal" id="eq2">
-        <div class="flexbar"><h3>Eq.2 — Witness \(\mathcal{W}\)</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq2-body">Copy TeX</button><button class="chip" data-copy-link="#eq2">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq2-body">
-          $$\mathcal{W}(x,t)=\partial_x\,\mathrm{Awareness}(x,t)\;+\;\mathcal{I}\cdot\mathbb{M}_\tau$$
-        </div></div>
-      </article>
-
-      <!-- 3 -->
-      <article class="card col-12 eq-card reveal" id="eq3">
-        <div class="flexbar"><h3>Eq.3 — Harmonic Gate \(\mathcal{H}(\nu)\)</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq3-body">Copy TeX</button><button class="chip" data-copy-link="#eq3">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq3-body">
-          $$\mathcal{H}(\nu)\in\{0,1\}\quad\text{or}\quad \mathcal{H}(\nu)\in[0,1]\ \text{(soft gate)}$$
-        </div></div>
-      </article>
-
-      <!-- 4 -->
-      <article class="card col-12 eq-card reveal" id="eq4">
-        <div class="flexbar"><h3>Eq.4 — Language / Word \(\mathcal{L}\)</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq4-body">Copy TeX</button><button class="chip" data-copy-link="#eq4">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq4-body">
-          $$\mathcal{L}(x,t,\nu)=\mathsf{Semantics}(x,t)\;\otimes\;\mathbf{V}(\nu)$$
-        </div></div>
-      </article>
-
-      <!-- 4b -->
-      <article class="card col-12 eq-card reveal" id="eq4b">
-        <div class="flexbar"><h3>Eq.4b — Semantic Gradient (Token Emphasis)</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq4b-body">Copy TeX</button><button class="chip" data-copy-link="#eq4b">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq4b-body">
-          $$ \nabla_{\text{sem}} \mathrm{Phrase}=\sum_k w_k \nabla_{\text{sem}}\mathrm{Token}_k,\qquad \sum_k w_k=1 $$
-        </div></div>
-      </article>
-
-      <!-- 5 -->
-      <article class="card col-12 eq-card reveal" id="eq5">
-        <div class="flexbar"><h3>Eq.5 — Remnant \(\mathcal{R}_\infty\)</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq5-body">Copy TeX</button><button class="chip" data-copy-link="#eq5">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq5-body">
-          $$\mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\big)$$
-        </div></div>
-      </article>
-
-      <!-- 6 -->
-      <article class="card col-12 eq-card reveal" id="eq6">
-        <div class="flexbar"><h3>Eq.6 — Type-7 Field \(\mathbb{T}_7\)</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq6-body">Copy TeX</button><button class="chip" data-copy-link="#eq6">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq6-body">
-          $$\mathbb{T}_{7}(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu)\right]$$
-        </div></div>
-      </article>
-
-      <!-- 7* -->
-      <article class="card col-12 reveal" id="eq7">
-        <h3>Eq.7* — Copeland (External Comparator)</h3>
-        <p>Recursion/recognition mirror for calibration; not codex law.</p>
-      </article>
-
-      <!-- 8* -->
-      <article class="card col-12 reveal" id="eq8">
-        <h3>Eq.8* — Goodwin (External Comparator)</h3>
-        <p>Coupling/oscillation template for contrast; not enacted as law.</p>
-      </article>
-
-      <!-- 9 -->
-      <article class="card col-12 eq-card reveal" id="eq9">
-        <div class="flexbar"><h3>Eq.9 — Ethical Law (Stop Rule)</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq9-body">Copy TeX</button><button class="chip" data-copy-link="#eq9">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq9-body">
-          $$\forall a:\ \mathrm{damage}(a)>0\Rightarrow\mathsf{halt},\qquad
-            \lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \uparrow $$
-        </div></div>
-      </article>
-
-      <!-- 10 -->
-      <article class="card col-12 eq-card reveal" id="eq10">
-        <div class="flexbar"><h3>Eq.10 — Ladder \(\Pi_{\nu}^{-1}\)</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq10-body">Copy TeX</button><button class="chip" data-copy-link="#eq10">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq10-body">
-          $$\Pi_{\nu}^{-1}:\ \text{observed resonance }\rightarrow \text{source terms (carriers, intents, constants)}$$
-        </div></div>
-      </article>
-
-      <!-- 11 -->
-      <article class="card col-12 eq-card reveal" id="eq11">
-        <div class="flexbar"><h3>Eq.11 — Projection Frame \(\mathsf{Frame}\)</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq11-body">Copy TeX</button><button class="chip" data-copy-link="#eq11">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq11-body">
-          $$\mathsf{Frame}(x,t)=(\mathsf{scope},\mathcal{W},\mathsf{ethics})$$
-        </div></div>
-      </article>
-
-      <!-- 12 -->
-      <article class="card col-12 eq-card reveal" id="eq12">
-        <div class="flexbar"><h3>Eq.12 — Causal Lattice \(\mathcal{L}_c\)</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq12-body">Copy TeX</button><button class="chip" data-copy-link="#eq12">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq12-body">
-          $$\mathcal{L}_c=(V=\text{micro-acts},\ E=\text{consequences})$$
-        </div></div>
-      </article>
-
-      <!-- 13 -->
-      <article class="card col-12 eq-card reveal" id="eq13">
-        <div class="flexbar"><h3>Eq.13 — Coherence \(\Xi\)</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq13-body">Copy TeX</button><button class="chip" data-copy-link="#eq13">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq13-body">
-          $$\Xi\in[0,1]\quad \text{(gates memory, learning, safe amplification)}$$
-        </div></div>
-      </article>
-
-      <!-- 14 -->
-      <article class="card col-12 eq-card reveal" id="eq14">
-        <div class="flexbar"><h3>Eq.14 — Update Rule</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq14-body">Copy TeX</button><button class="chip" data-copy-link="#eq14">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq14-body">
-          $$\frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R}$$
-        </div></div>
-      </article>
-
-      <!-- 15 -->
-      <article class="card col-12 eq-card reveal" id="eq15">
-        <div class="flexbar"><h3>Eq.15 — Learning Kernel</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq15-body">Copy TeX</button><button class="chip" data-copy-link="#eq15">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq15-body">
-          $$\eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big)$$
-        </div></div>
-      </article>
-
-      <!-- 16 -->
-      <article class="card col-12 eq-card reveal" id="eq16">
-        <div class="flexbar"><h3>Eq.16 — Memory Window \(\mathbb{M}_\tau\)</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq16-body">Copy TeX</button><button class="chip" data-copy-link="#eq16">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq16-body">
-          $$\mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t}\! w_\tau(t-s)\,F(s)\,ds,\quad \int_0^\tau w_\tau(u)\,du=1$$
-        </div></div>
-      </article>
-
-      <!-- 17 -->
-      <article class="card col-12 eq-card reveal" id="eq17">
-        <div class="flexbar"><h3>Eq.17 — Voice Carriers \(\mathbf{V}(\nu)\)</h3>
-          <div class="eq-tools"><button class="chip" data-copy-tex="#eq17-body">Copy TeX</button><button class="chip" data-copy-link="#eq17">Link</button></div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq17-body">
-          $$\mathbf{V}(\nu)=\sum_{k} a_k\,\cos(2\pi\nu_k t+\phi_k),\quad \nu\in\{432,528,369,144,137,\dots\}$$
-        </div></div>
-      </article>
-
-      <article class="card col-12 reveal">
-        <h3>Advanced: Many Frames, Many Realities</h3>
-        <div class="eq"><div class="eq-scroll" id="eq-adv1-body">
-          $$ \mathbb{T}_7^{(\text{group})} \approx \bigoplus_{j=1}^{N}\mathrm{PL}\big[\mathbf{V}^{(j)}(\nu)\big],\quad \Xi_{\text{group}} \approx \frac{1}{N}\sum_j \Xi^{(j)} $$
-        </div></div>
-      </article>
-
-      <article class="card col-12 reveal">
-        <h3>Advanced: Data &amp; Instrumentation</h3>
-        <ul class="list">
-          <li><strong>Audio:</strong> spectral centroid variance and beat stability</li>
-          <li><strong>Physio:</strong> smoother breath + reduced HF HRV noise → ↑ \(\Xi\)</li>
-          <li><strong>Subjective:</strong> quick Likert trio: clarity • warmth • ease</li>
-        </ul>
-      </article>
-    </section>
-
-    <div class="goldline sweep"></div>
-
-    <!-- Ethics -->
-    <section class="grid" id="ethics" aria-labelledby="eth-h">
-      <article class="card col-12 eq-card reveal">
-        <div class="flexbar">
-          <h2 id="eth-h">Ethics &amp; Stop Rule — Operational Law</h2>
-          <div class="eq-tools">
-            <button class="chip" data-copy-tex="#eq-eth-body">Copy TeX</button>
-            <button class="chip" data-copy-link="#ethics">Link</button>
-          </div>
-        </div>
-        <div class="eq"><div class="eq-scroll" id="eq-eth-body">
-          $$ \Xi \;\approx\; \frac{\langle H \cdot I \rangle}{1 + \mathrm{Var}[\mathcal{M}]} \qquad
-             \text{If } \frac{\mathrm{Truth}(t+\Delta)}{\mathrm{Distortion}(t+\Delta)} < \frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \Rightarrow \text{ Halt } \to \text{ Re-align } \to \text{ Resume} $$
-        </div></div>
-      </article>
-    </section>
-
-    <!-- Notes -->
-    <section class="grid" id="notes" aria-labelledby="nt-h">
-      <article class="card col-12 reveal">
-        <h2 id="nt-h">Notes &amp; Cross-links</h2>
-        <ul class="list">
-          <li><strong>Numbers as Keys.</strong> 432, 528, 137/144/369 are practical anchors; they are tools, not dogma.</li>
-          <li><strong>Seven Seals Path.</strong> Acknowledgment → Repair → Verification → Remedy → Abatement → Assurance → Restoration.</li>
-          <li>Practice lives in <a href="teach.html">Manifest</a>. Overview on <a href="index.html">Home</a>.</li>
-        </ul>
-      </article>
-    </section>
-
-    <footer class="footer">
-      © <span id="y"></span> Scroll of Fire. All constants are provisional until observed.
-    </footer>
-  </main>
-
-  <!-- Back to Top -->
-  <button class="to-top cta" id="toTop" type="button" aria-label="Back to top" title="Back to top">↑</button>
-
-  <!-- Command Palette -->
-  <div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel" hidden>
-    <div class="panel">
-      <h3 id="palLabel" class="sr-only">Command palette</h3>
-      <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette">
-      <ul id="palList" aria-live="polite"></ul>
-    </div>
-  </div>
-
-  <!-- Page helpers -->
-  <script>
-    // Year
-    (function(){ const y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear(); })();
-
-    // HERO fit
-    (function(){
-      const hero=document.getElementById('hero'), img=document.getElementById('heroBanner');
-      if(!hero||!img) return;
-      function applyAR(){ const iw=img.naturalWidth||2100, ih=img.naturalHeight||900; hero.style.aspectRatio=`${iw} / ${ih}`; }
-      function pickFit(){
-        if (matchMedia('(max-width:560px)').matches){ hero.style.setProperty('--hero-fit','contain'); return; }
-        const iw=img.naturalWidth||2100, ih=img.naturalHeight||900, imageAR=iw/ih;
-        const cw=hero.clientWidth||innerWidth, ch=Math.max(1, hero.clientHeight||innerHeight*0.38), containerAR=cw/ch;
-        const cover = (Math.abs(containerAR - imageAR) / imageAR < 0.06);
-        hero.style.setProperty('--hero-fit', cover ? 'cover' : 'contain');
-      }
-      function boot(){ applyAR(); pickFit(); }
-      if(img.complete) boot(); else img.addEventListener('load', boot, {once:true});
-      addEventListener('resize', pickFit, {passive:true});
-      addEventListener('orientationchange', pickFit, {passive:true});
-      addEventListener('visibilitychange', ()=>!document.hidden && pickFit());
-    })();
-
-    // Scroll reveal
-    (function(){
-      if(!('IntersectionObserver' in window)){ document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in')); return; }
-      const io=new IntersectionObserver(es=>{ for(const e of es){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } } }, {threshold:.12});
-      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-    })();
-
-    // Back-to-Top
-    (function(){
-      const btn=document.getElementById('toTop'); if(!btn) return;
-      btn.addEventListener('click',()=>{ window.scrollTo({top:0,behavior:'smooth'}) });
-      const io=new IntersectionObserver(([e])=>{ btn.classList.toggle('show', !e.isIntersecting); }, {threshold:0.01});
-      io.observe(document.querySelector('header.site'));
-    })();
-
-    // Quick controls: Echo/HUD/Carrier/Affect/Lights
-    (function(){
-      const body=document.body, html=document.documentElement;
-      const btnEcho=document.getElementById('toggleSimple');
-      btnEcho?.addEventListener('click',()=>{
-        body.classList.toggle('simple-on');
-        btnEcho.setAttribute('aria-pressed', String(body.classList.contains('simple-on')));
-      });
-      const btnHUD=document.getElementById('toggleGrid'), grid=document.querySelector('.laser-grid');
-      btnHUD?.addEventListener('click',()=>{
-        const show = grid && grid.style.display !== 'none';
-        if(grid) grid.style.display = show ? 'none' : '';
-        btnHUD.setAttribute('aria-pressed', String(!show));
-      });
-      const btnCarrier=document.getElementById('cycleCarrier');
-      const carrierAttr=(html.getAttribute('data-carriers')||'').split(',').map(s=>s.trim()).filter(Boolean);
-      const skins=(carrierAttr.length?carrierAttr:['432','528','369','144','963']).map(n=>`carrier-${n}`);
-      const curSkin=()=> skins.find(s=>html.classList.contains(s)) || skins[0];
-      const nextSkin=c=> skins[(skins.indexOf(c)+1)%skins.length];
-      btnCarrier?.addEventListener('click',()=>{
-        const cur=curSkin(), nxt=nextSkin(cur);
-        skins.forEach(s=>html.classList.remove(s)); html.classList.add(nxt);
-        btnCarrier.textContent = `Carrier ${nxt.split('-')[1]}`;
-      });
-      if(btnCarrier) btnCarrier.textContent=`Carrier ${curSkin().split('-')[1]}`;
-      const btnAffect=document.getElementById('toggleAffect');
-      btnAffect?.addEventListener('click',()=>{
-        const off=document.body.classList.toggle('affect-off');
-        btnAffect.setAttribute('aria-pressed', String(!off));
-      });
-      const lights=document.getElementById('heroLights');
-      const btnLights=document.getElementById('toggleLights');
-      btnLights?.addEventListener('click',()=>{
-        const off=lights?.classList.toggle('off');
-        btnLights.setAttribute('aria-pressed', String(!off));
-      });
-    })();
-
-    // Inject on-page search after tabs ("/" to focus)
-    (function(){
-      const list=document.createElement('div'); list.id='site-suggest'; list.className='mini-toc hidden'; list.setAttribute('role','listbox');
-      const label=document.createElement('label'); label.className='meta'; label.textContent='Press / to search this page';
-      const input=document.createElement('input'); input.id='site-search'; input.type='search'; input.placeholder='Search text on this page…'; input.setAttribute('aria-label','Search this page'); input.autocomplete='off'; input.spellcheck=false;
-      const holder=document.createElement('article'); holder.className='card col-12 searchbox reveal'; holder.append(label,input,list);
-      const grid=document.createElement('section'); grid.className='grid'; grid.style.margin='8px 0 0'; grid.append(holder);
-      const main=document.getElementById('main'); const tabs=main.querySelector('.tabs'); tabs && main.insertBefore(grid, tabs.nextSibling);
-
-      addEventListener('keydown',(e)=>{ if(e.key==='/' && document.activeElement!==input){ e.preventDefault(); input.focus(); input.select(); } });
-
-      const SOURCES=[...document.querySelectorAll('h2[id],h3[id],a.tile'), ...document.querySelectorAll('.eq-card')];
-      function items(q){
-        const s=q.trim().toLowerCase(); if(!s) return [];
-        const out=[];
-        for(const el of SOURCES){
-          const text=(el.innerText||'').trim();
-          if(text.toLowerCase().includes(s)){
-            let href='#'; if(el.id) href = `#${el.id}`;
-            out.push({text, href}); if(out.length>12) break;
-          }
-        } return out;
-      }
-      function render(arr){
-        if(!arr.length){ list.classList.add('hidden'); list.innerHTML=''; return; }
-        list.innerHTML = arr.map((o,i)=>`<a href="${o.href}" role="option" data-ix="${i}">${o.text}</a>`).join('');
-        list.classList.remove('hidden');
-      }
-      input.addEventListener('input', ()=>render(items(input.value)));
-      input.addEventListener('keydown',(e)=>{
-        const links=[...list.querySelectorAll('a')]; if(!links.length) return;
-        const cur=list.querySelector('.sel'); let i=cur?+cur.dataset.ix:-1;
-        if(e.key==='ArrowDown'){ e.preventDefault(); i=Math.min(links.length-1, i+1); }
-        else if(e.key==='ArrowUp'){ e.preventDefault(); i=Math.max(0, i-1); }
-        else if(e.key==='Enter'){ if(cur){ location.hash=cur.getAttribute('href'); list.classList.add('hidden'); } return; }
-        else if(e.key==='Escape'){ list.classList.add('hidden'); return; }
-        links.forEach(a=>a.classList.remove('sel')); if(i>=0){ links[i].classList.add('sel'); }
-      });
-      addEventListener('click',(e)=>{ if(!list.contains(e.target) && e.target!==input) list.classList.add('hidden'); });
-    })();
-
-    // Smooth in-page scroll for [data-jump]
-    document.addEventListener('click', e=>{
-      const a = e.target.closest('[data-jump]'); if(!a) return;
-      const href = a.getAttribute('href'); if(!href || !href.startsWith('#')) return;
-      const tgt = document.querySelector(href); if(!tgt) return;
-      e.preventDefault(); tgt.scrollIntoView({behavior:'smooth', block:'start'}); history.pushState(null,'',href);
-    });
-
-    // Equation collapse toggles + copy/link tools
-    (function eqTools(){
-      function copy(text){
-        if (navigator.clipboard?.writeText) { navigator.clipboard.writeText(text); return; }
-        const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta);
-        ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-      }
-      function texFrom(sel){
-        const el = document.querySelector(sel);
-        return el ? (el.textContent||'').trim() : '';
-      }
-      document.querySelectorAll('.eq').forEach(wrap=>{
-        const btn=document.createElement('button');
-        btn.type='button'; btn.className='eq-toggle'; btn.textContent='Collapse';
-        btn.addEventListener('click', ()=>{
-          const collapsed = wrap.getAttribute('data-collapsed')==='true';
-          wrap.setAttribute('data-collapsed', String(!collapsed));
-          btn.textContent = collapsed ? 'Collapse' : 'Expand';
-        });
-        wrap.appendChild(btn);
-      });
-      document.addEventListener('click', (e)=>{
-        const b1=e.target.closest('[data-copy-tex]'); if(b1){
-          const raw = texFrom(b1.getAttribute('data-copy-tex')); if(raw){ copy(raw); b1.textContent='Copied'; setTimeout(()=>b1.textContent='Copy TeX', 900); }
-          e.preventDefault(); return;
-        }
-        const b2=e.target.closest('[data-copy-link]'); if(b2){
-          const idSel = b2.getAttribute('data-copy-link'); const base = location.origin + location.pathname; const hash = idSel.startsWith('#') ? idSel : ('#'+idSel);
-          copy(base+hash); history.pushState(null,'',hash); b2.textContent='Link Copied'; setTimeout(()=>b2.textContent='Link', 900); e.preventDefault(); return;
-        }
-      });
-    })();
-
-    // Voice Reader mini-controls + collapsible bar a11y
-    (function(){
-      const det = document.getElementById('voice-reader');
-      const bar = det?.querySelector('.collapsible__bar');
-      bar?.addEventListener('click', (e)=>{
-        if (e.target.closest('.chip')) return;
-        const open = det.hasAttribute('open'); bar.setAttribute('aria-expanded', String(!open));
-      });
-      document.getElementById('vr-play-mini')?.addEventListener('click', (e)=>{ e.stopPropagation(); document.getElementById('vr-play')?.click(); });
-      document.getElementById('vr-stop-mini')?.addEventListener('click', (e)=>{ e.stopPropagation(); document.getElementById('vr-stop')?.click(); });
-    })();
-
-    // Command Palette (⌘K / Ctrl+K)
-    (function palette(){
-      const pal=document.getElementById('palette'), input=document.getElementById('palInput'), list=document.getElementById('palList');
-      const OPEN_KEYS=new Set(['k','K']);
-      const LINKS=[...document.querySelectorAll('a, .cta')].map(a=>({text:a.textContent.trim(), href:a.getAttribute('href')||'#'})).filter(o=>o.text && o.href);
-      function open(){ pal.hidden=false; input.value=''; render(LINKS.slice(0,12)); setTimeout(()=>input.focus(),0); }
-      function close(){ pal.hidden=true; }
-      function render(items){ list.innerHTML=items.map(o=>`<li><a href="${o.href}">${o.text}</a></li>`).join(''); }
-      function filter(q){ q=q.trim().toLowerCase(); if(!q) return LINKS; return LINKS.filter(o=>o.text.toLowerCase().includes(q)); }
-      addEventListener('keydown',(e)=>{ const meta=e.ctrlKey||e.metaKey; if(meta && OPEN_KEYS.has(e.key)){ e.preventDefault(); open(); } if(!pal.hidden && e.key==='Escape'){ e.preventDefault(); close(); } });
-      pal.addEventListener('click', (e)=>{ if(e.target===pal) close(); });
-      input.addEventListener('input', ()=>render(filter(input.value).slice(0,14)));
-      input.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ const a=list.querySelector('a'); if(a){ location.href=a.getAttribute('href'); close(); } } });
-    })();
-
-    // Ξ driver (ambient glow)
-    (function(){
-      const root=document.documentElement.style, dot=document.querySelector('.xi-dot'); let xi=.35;
-      function step(){
-        const target=.25+Math.random()*.6, start=xi, dur=2200+Math.random()*1600, t0=performance.now();
-        function tween(t){
-          const p=Math.min(1,(t-t0)/dur);
-          xi=start+(target-start)*(0.5-0.5*Math.cos(Math.PI*p));
-          root.setProperty('--xi', xi.toFixed(3)); if(dot) dot.style.opacity=(0.7+0.3*xi).toFixed(3);
-          (p<1)?requestAnimationFrame(tween):requestAnimationFrame(step);
-        } requestAnimationFrame(tween);
-      } requestAnimationFrame(step);
-    })();
-
-    /* Mobile drawer: open/close + a11y */
-    (function(){
-      const btn = document.getElementById('navToggle');
-      const drawer = document.getElementById('navDrawer');
-      if(!btn || !drawer) return;
-      function open(){ drawer.hidden = false; btn.setAttribute('aria-expanded','true'); }
-      function close(){ drawer.hidden = true; btn.setAttribute('aria-expanded','false'); }
-      btn.addEventListener('click', ()=> drawer.hidden ? open() : close());
-      document.addEventListener('click', (e)=>{
-        if (drawer.hidden) return;
-        if (e.target === btn) return;
-        if (!drawer.contains(e.target)) close();
-      });
-      addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !drawer.hidden) close(); });
-      drawer.addEventListener('click', (e)=>{ const a=e.target.closest('a'); if(a){ close(); } });
-    })();
-
-    /* Voice Reader (Web Speech API) — upgraded */
-    (function(){
-      const $ = (id)=>document.getElementById(id);
-      const btnPlay   = $('vr-play'), btnPause=$('vr-pause'), btnResume=$('vr-resume'), btnStop=$('vr-stop');
-      const btnSel    = $('vr-read-selection'), voiceSel=$('vr-voice'), rateInp=$('vr-rate'), pitchInp=$('vr-pitch');
-      const rateVal   = $('vr-rate-val'), pitchVal=$('vr-pitch-val'), startSel=$('vr-start'), speakMath=$('vr-speak-math'), polish=$('vr-polish');
-      const statusEl  = $('vr-status'), progressEl=$('vr-progress'), exportBtn=$('vr-export-ssml');
-
-      if (!('speechSynthesis' in window)) {
-        if (statusEl) statusEl.textContent = 'Voice playback is not supported in this browser.';
-        return;
-      }
-
-      // Pronunciation map for cleaner English (expand symbols / jargon)
-      const PRON = [
-        [/\bΞ\b/g, 'Ksi'],
-        [/𝓘/g, 'I (Intention)'], [/𝓛/g, 'L (Language)'], [/𝓒/g, 'C (Conscious Witness)'], [/𝓢/g, 'S (Source)'],
-        [/→/g, ' to '], [/↦/g,' maps to '], [/≥/g,' greater than or equal to '], [/≤/g,' less than or equal to '],
-        [/⊕/g, ' coherent merge '], [/·/g,' '], [/\bPL\b/g, 'phase lock'],
-        [/Eq\.(\d+)/g, 'Equation $1'],
-        [/ν/g, 'nu'], [/τ/g, 'tau'], [/φ/g, 'phi'], [/η/g,'eta'], [/σ/g,'sigma'], [/Λ/g,'Lambda'],
-      ];
-
-      // Math verbalization fallback if MathJax not yet rendered
-      function verbalizeMath(text){
-        // light pass: strip $$ and inline \( \)
-        text = text.replace(/\$\$([^$]+)\$\$/g, ' equation: $1 ').replace(/\\\(([^)]+)\\\)/g, ' $1 ');
-        return text;
-      }
-
-      // Simple English polish: collapse spaces, fix punctuation spacing, title-case headings lightly
-      function polishText(s){
-        s = s.replace(/[ \t]+/g,' ')
-             .replace(/\s+([,.;:!?])/g,'$1')
-             .replace(/\(\s+/g,'(').replace(/\s+\)/g,')')
-             .replace(/\s—\s/g,' — ')
-             .replace(/^\s+|\s+$/g,'');
-        return s;
-      }
-
-      // Preferred default voice: first en-* (female if present), else first
-      let voices=[];
-      function populateVoices(){
-        voices = speechSynthesis.getVoices().sort((a,b)=> a.name.localeCompare(b.name));
-        if (!voiceSel) return;
-        const cur = voiceSel.value;
-        voiceSel.innerHTML = voices.map(v=>`<option value="${v.name}">${v.name} ${v.lang?('('+v.lang+')'):''}</option>`).join('');
-        if (cur) voiceSel.value = cur;
-        else {
-          const en = voices.filter(v=> /^en\b/i.test(v.lang||''));
-          const pick = en.find(v=>/female|Salli|Joanna|Emma|Olivia|Siri|Google UK English Female/i.test(v.name)) || en[0] || voices[0];
-          if (pick) voiceSel.value = pick.name;
-        }
-      }
-      populateVoices();
-      speechSynthesis.onvoiceschanged = populateVoices;
-
-      // UI bindings
-      rateInp?.addEventListener('input', ()=> rateVal.textContent=(+rateInp.value).toFixed(2));
-      pitchInp?.addEventListener('input',()=> pitchVal.textContent=(+pitchInp.value).toFixed(2));
-
-      function status(t){ if(statusEl) statusEl.textContent=t; }
-      function prog(cur,total){
-        if(!progressEl) return;
-        if(total<=0){ progressEl.textContent=''; progressEl.setAttribute('aria-hidden','true'); return; }
-        const pct = Math.round((cur/total)*100);
-        progressEl.textContent = `Reading ${cur} / ${total} (${pct}%)`;
-        progressEl.setAttribute('aria-hidden','false');
-      }
-
-      function cleanNodeToText(root){
-        const clone = root.cloneNode(true);
-        // Remove UI
-        clone.querySelectorAll('button, .eq-tools, .chip, .meta, .sr-only, .palette, .eq-toggle, .nav, .drawer').forEach(n=>n.remove());
-        // Math: keep or drop
-        if (speakMath && !speakMath.checked){
-          clone.querySelectorAll('.eq, mjx-container').forEach(n=>n.remove());
-        } else {
-          clone.querySelectorAll('mjx-container').forEach(m=>{
-            const alt = m.getAttribute('aria-label') || '';
-            m.replaceWith(document.createTextNode(' equation ' + alt + ' '));
-          });
-          // If TeX still present
-          clone.querySelectorAll('.eq').forEach(eq=>{
-            const t = eq.innerText || '';
-            eq.replaceWith(document.createTextNode(' ' + verbalizeMath(t) + ' '));
-          });
-        }
-        let text = clone.innerText || clone.textContent || '';
-        // Apply pronunciation + polish
-        for(const [re,rep] of PRON){ text = text.replace(re, rep); }
-        if (polish && polish.checked){ text = polishText(text); }
-        // Remove menu residues
-        text = text.replace(/\b(Copy TeX|Link Copied|Link)\b/g,'')
-                   .replace(/\s+\n/g,'\n').replace(/\n{3,}/g,'\n\n');
-        return text.trim();
-      }
-
-      function getSectionOrSelection(){
-        const sel = window.getSelection?.();
-        if (sel && sel.rangeCount && String(sel).trim().length>0){
-          return { text: String(sel).trim(), node: document.activeElement || document.body };
-        }
-        const id = (startSel?.value || '#p1');
-        const sec = document.querySelector(id);
-        return { text: cleanNodeToText(sec||document.body), node: sec||document.body };
-      }
-
-      // Sentence-aware chunking with abbrev guard
-      const ABBR = /\b(?:e\.g|i\.e|vs|Dr|Mr|Mrs|Ms|Prof|Eq|Eqn|Fig)\.$/i;
-      function chunkify(str, max=900){
-        const raw = str.replace(/\r/g,'').split(/\n{2,}/); // paragraphs
-        const out=[];
-        for(const p of raw){
-          const parts = p.split(/(?<=[.!?])\s+(?=[A-Z(“"'\[])/);
-          let buf='';
-          for(const part of parts){
-            const piece = part.trim();
-            if(!piece) continue;
-            if(ABBR.test(piece)) { buf += (buf?' ':'') + piece; continue; }
-            if ((buf + ' ' + piece).length > max){
-              if (buf) out.push(buf.trim());
-              buf = piece;
-            } else {
-              buf += (buf?' ':'') + piece;
-            }
-          }
-          if (buf) out.push(buf.trim());
-        }
-        return out.length ? out : [str.slice(0,max)];
-      }
-
-      // Highlight helper
-      let lastHL=null;
-      function highlightWithin(node, text){
-        if(!node) return;
-        try{
-          if (lastHL){ lastHL.classList.remove('vr-highlight'); lastHL=null; }
-          // Rough: highlight the closest paragraph containing a distinctive slice
-          const key = text.slice(0, 60);
-          const p = [...node.querySelectorAll('p, li, h2, h3, article')].find(el=> (el.innerText||'').indexOf(key) >= 0 );
-          if (p){ p.classList.add('vr-highlight'); p.scrollIntoView({block:'nearest', behavior:'smooth'}); lastHL=p; }
-        }catch{}
-      }
-
-      let queue=[], speaking=false, canceled=false, curIndex=0;
-
-      function setButtons(state){
-        const {play, pause, resume, stop} = state;
-        if (btnPlay)   btnPlay.disabled   = !play;
-        if (btnPause)  btnPause.disabled  = !pause;
-        if (btnResume) btnResume.disabled = !resume;
-        if (btnStop)   btnStop.disabled   = !stop;
-      }
-
-      function speakFromText(text, highlightRoot){
-        canceled=false; speaking=true; curIndex=0;
-        queue = chunkify(text);
-        speechSynthesis.cancel(); // reset
-        const vName = voiceSel?.value;
-        const vObj = voices.find(v=>v.name===vName);
-        setButtons({play:false, pause:true, resume:true, stop:false});
-        status('Playing…'); prog(0, queue.length);
-
-        function next(){
-          if (canceled) return;
-          const seg = queue[curIndex++];
-          if (!seg){ done(); return; }
-          highlightWithin(highlightRoot, seg);
-          const u = new SpeechSynthesisUtterance(seg);
-          if (vObj) u.voice = vObj;
-          u.rate = rateInp ? +rateInp.value : 1.0;
-          u.pitch = pitchInp ? +pitchInp.value : 1.0;
-          u.onend = ()=>{ prog(curIndex, queue.length); next(); };
-          u.onerror = (e)=>{ console.warn('TTS error', e); next(); };
-          speechSynthesis.speak(u);
-        }
-        next();
-      }
-
-      function speak(){
-        const { text, node } = getSectionOrSelection();
-        if (!text){ status('Nothing to read.'); return; }
-        speakFromText(text, node);
-      }
-
-      function pause(){ if(!speaking) return; speechSynthesis.pause(); setButtons({play:false,pause:true,resume:false,stop:false}); status('Paused.'); }
-      function resume(){ if(!speaking) return; speechSynthesis.resume(); setButtons({play:false,pause:false,resume:true,stop:false}); status('Playing…'); }
-      function stop(){ canceled=true; speechSynthesis.cancel(); done(true); }
-      function done(stopped=false){
-        speaking=false; setButtons({play:true,pause:true,resume:true,stop:true}); status(stopped?'Stopped.':'Done.'); prog(0,0);
-        if (lastHL){ lastHL.classList.remove('vr-highlight'); lastHL=null; }
-      }
-
-      btnPlay?.addEventListener('click', speak);
-      btnSel?.addEventListener('click', speak);
-      btnPause?.addEventListener('click', pause);
-      btnResume?.addEventListener('click', resume);
-      btnStop?.addEventListener('click', stop);
-      $('vr-play-mini')?.addEventListener('click', (e)=>{ e.stopPropagation(); speak(); });
-      $('vr-stop-mini')?.addEventListener('click', (e)=>{ e.stopPropagation(); stop(); });
-
-      // Export SSML (paragraph aware)
-      exportBtn?.addEventListener('click', ()=>{
-        const { text } = getSectionOrSelection();
-        if (!text){ status('Nothing to export.'); return; }
-        const paras = text.split(/\n{2,}/).map(p=>p.trim()).filter(Boolean);
-        const esc = s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-        const ratePct = rateInp ? Math.round(+rateInp.value * 100) : 100;
-        const pitchSt = pitchInp ? Math.round((+pitchInp.value - 1) * 20) : 0;
-        const ssml =
-`<?xml version="1.0"?>
-<speak version="1.1" xml:lang="en-US">
-  <prosody rate="${ratePct}%" pitch="${pitchSt}st">
-${paras.map(p=>`    <p>${esc(p)}</p>`).join('\n')}
-  </prosody>
-</speak>`;
-        const blob = new Blob([ssml], {type:'application/ssml+xml'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href=url; a.download='theory.ssml'; a.click();
-        setTimeout(()=>URL.revokeObjectURL(url), 1000);
-        status('Exported SSML.');
-      });
-    })();
-  </script>
-
-  <!-- Small layout helper -->
-  <style>
-    .flexbar{display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:wrap}
-    .eq-tools{display:flex; gap:.4rem}
-    .chip{font-size:.85rem; padding:.25rem .55rem; border-radius:999px; border:1px solid var(--line); background:var(--bg-elev); opacity:.9}
-  </style>
-
-
-  <script>
-(function(){
-  "use strict";
-  const $=(s,r=document)=>r.querySelector(s);
-  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
-
-  /* ===== Reading progress + active TOC ===== */
-  const bar=document.createElement('div');
-  bar.className='read-progress'; document.body.appendChild(bar);
-  const headings=$$('main h2[id], main h3[id]');
-  const tocLinks=$$('.mini-toc a[href^="#"]');
-
-  function setProgress(){
-    const h=document.documentElement, b=document.body;
-    const top=h.scrollTop||b.scrollTop; const max=(h.scrollHeight-h.clientHeight)||1;
-    const p=Math.max(0, Math.min(1, top/max)); bar.style.setProperty('--p', p.toFixed(4)); bar.classList.add('in');
-  }
-  function setActiveTOC(){
-    let current=null, y=innerHeight*0.24;
-    for(const h of headings){ const r=h.getBoundingClientRect(); if(r.top<=y) current=h.id; }
-    tocLinks.forEach(a=>a.classList.toggle('is-active', a.getAttribute('href').slice(1)===current));
-  }
-  addEventListener('scroll', ()=>{ setProgress(); setActiveTOC(); }, {passive:true});
-  addEventListener('resize', ()=>{ setProgress(); setActiveTOC(); }, {passive:true});
-  setProgress(); setActiveTOC();
-
-  /* ===== Reading time estimate (hero caption) ===== */
-  (function(){
-    const heroCap=$('#hero .hero-caption'); if(!heroCap) return;
-    const words=($('main')?.innerText||'').split(/\s+/).filter(Boolean).length;
-    const mins=Math.max(1, Math.round(words/230)); // ~230wpm
-    const pill=document.createElement('span'); pill.className='readtime'; pill.textContent=`~${mins} min read`;
-    heroCap.append(' ', pill);
-  })();
-
-  /* ===== Glossary popovers (plain-English helpers) ===== */
-  const GLOSS={
-    'Ξ': '<b>Ξ (Ksi)</b> · Coherence score from 0 to 1. Higher = steadier, kinder, clearer.',
-    'carrier': '<b>Carrier</b> · A steady tone or band that helps your voice and attention stay stable.',
-    'Phase-lock': '<b>Phase-lock</b> · Lining up beats so they reinforce instead of wobble.',
-    'Frame': '<b>Frame</b> · Your scope, witness, and ethics for this run (Eq.11).',
-    'Stop Rule': '<b>Stop Rule</b> · If harm rises or clarity drops, stop, re-align, and resume (Eq.9).',
-    'Memory window': '<b>Memory window</b> · Short period your brain weighs most when updating (Eq.16).'
-  };
-  function glossify(root){
-    // Light pass: mark key terms if not already inside code/math
-    const walker=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
-    const targets=Object.keys(GLOSS);
-    const re=new RegExp('\\b(' + targets.map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|') + ')\\b','g');
-    const batch=[];
-    while(walker.nextNode()){
-      const n=walker.currentNode;
-      if(!n.nodeValue) continue;
-      if(n.parentElement.closest('.eq, mjx-container, code, pre, .eq-scroll')) continue;
-      if(re.test(n.nodeValue)) batch.push(n);
-    }
-    for(const n of batch){
-      const span=document.createElement('span'); span.innerHTML=n.nodeValue.replace(re,(m)=>{
-        return `<span class="gloss" tabindex="0">${m}<span class="gloss-tip">${GLOSS[m]||''}</span></span>`;
-      });
-      n.parentNode.replaceChild(span, n);
-    }
-  }
-  glossify($('main'));
-
-  /* ===== Per-section tools (copy link / explain) ===== */
-  function injectHeadTools(){
-    $$('main h2[id], main h3[id]').forEach(h=>{
-      if(h.querySelector('.hd-tools')) return;
-      const wrap=document.createElement('span'); wrap.className='hd-tools';
-      const bLink=document.createElement('button'); bLink.className='chip'; bLink.textContent='Link';
-      const bCopy=document.createElement('button'); bCopy.className='chip'; bCopy.textContent='Copy';
-      wrap.append(bLink,bCopy); h.appendChild(wrap);
-      on(bLink,'click',()=>{
-        const url=location.origin+location.pathname+'#'+h.id;
-        navigator.clipboard?.writeText(url); history.pushState(null,'','#'+h.id);
-        bLink.textContent='Copied'; setTimeout(()=>bLink.textContent='Link',900);
-      });
-      on(bCopy,'click',()=>{
-        const section=h.closest('article')||h;
-        const text=(section.innerText||'').trim();
-        navigator.clipboard?.writeText(text);
-        bCopy.textContent='Copied'; setTimeout(()=>bCopy.textContent='Copy',900);
-      });
-    });
-  }
-  injectHeadTools();
-
-  /* ===== “Try in Manifest” bridges ===== */
-  function addTryButtons(){
-    const ins=[
-      {sel:'#eq17', label:'Try carriers in Manifest', data:{from:'theory#eq17'}},
-      {sel:'#p1',   label:'Open Manifest (guided)',  data:{from:'theory#p1'}}
-    ];
-    ins.forEach(({sel,label,data})=>{
-      const host=$(sel); if(!host) return;
-      if(host.querySelector('.to-manifest')) return;
-      const a=document.createElement('a');
-      a.href='teach.html#observer'; a.className='cta to-manifest'; a.innerHTML='▶ '+label;
-      on(a,'click',()=>{ try{ localStorage.setItem('sof_manifest_hint', JSON.stringify(data)); }catch(_){ } });
-      host.appendChild(a);
-    });
-  }
-  addTryButtons();
-
-  /* ===== Eq.13 inline Ξ mini-calculator (with spark) ===== */
-  (function(){
-    const eq13=$('#eq13'); if(!eq13) return;
-    if(eq13.querySelector('.xi-panel')) return;
-    const panel=document.createElement('div');
-    panel.className='xi-panel';
-    panel.innerHTML=`
-      <div class="row">
-        <label>⟨H·I⟩ <input id="xi_hi" type="number" min="0" max="1" step="0.01" value="0.62"></label>
-        <label>Var[𝓜] <input id="xi_var" type="number" min="0" max="2" step="0.01" value="0.30"></label>
-        <button id="xi_go" class="cta">Compute Ξ</button>
-        <span id="xi_val" class="xi-big meta">Ξ = —</span>
       </div>
-      <div class="xi-bar" style="margin:.4rem 0 .2rem"><span id="xi_bar"></span></div>
-      <canvas id="xi_spark" width="420" height="46" aria-label="Ξ history"></canvas>
-    `;
-    eq13.appendChild(panel);
-    const hi=$('#xi_hi'), va=$('#xi_var'), go=$('#xi_go'), out=$('#xi_val'), barEl=$('#xi_bar');
-    const ctx=$('#xi_spark').getContext('2d'); const KEY='sof_theory_xi_hist';
-    function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(_){ return []; } }
-    function save(x){ try{ localStorage.setItem(KEY, JSON.stringify(x)); }catch(_){ } }
+    </details>
+  </article>
 
-    function draw(hist){
-      const W=ctx.canvas.width, H=ctx.canvas.height;
-      ctx.clearRect(0,0,W,H);
-      ctx.strokeStyle='rgba(122,243,255,.2)'; ctx.beginPath();
-      ctx.moveTo(0,H*.25); ctx.lineTo(W,H*.25); ctx.moveTo(0,H*.5); ctx.lineTo(W,H*.5); ctx.moveTo(0,H*.75); ctx.lineTo(W,H*.75); ctx.stroke();
-      if(!hist.length) return;
-      const n=hist.length, xs=W/Math.max(1,(n-1));
-      ctx.beginPath();
-      hist.forEach((o,i)=>{ const x=W-i*xs; const y=H*(1-(o.x*0.9+0.05)); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
-      ctx.strokeStyle='rgba(243,201,122,.95)'; ctx.lineWidth=2; ctx.stroke();
-    }
-    function calc(){
-      const h=Math.max(0,Math.min(1, +hi.value||0));
-      const v=Math.max(0,Math.min(2, +va.value||0));
-      const Xi = Math.max(0, Math.min(1, h/(1+v)));
-      out.textContent='Ξ = '+Xi.toFixed(2);
-      barEl.style.width=(Xi*100).toFixed(0)+'%';
-      const hist=load(); hist.unshift({t:Date.now(),x:Xi}); save(hist.slice(0,64)); draw(hist.slice(0,64));
-    }
-    on(go,'click',calc); draw(load());
-  })();
+  <!-- 11. Troubleshooting & Anti-patterns -->
+  <article class="card col-12 reveal" id="p5-troubleshoot">
+    <h3>11) Troubleshooting — Common Failure Modes</h3>
+    <ul class="list">
+      <li><b>Too many carriers.</b> Symptom: mental fuzz. Fix: drop to one band, re-check Ξ.</li>
+      <li><b>Over-updating.</b> Symptom: agitation. Fix: revert last change; extend witness window.</li>
+      <li><b>Phrase mismatch.</b> Symptom: effortful speech. Fix: reduce to 4 words; re-weight vowels.</li>
+      <li><b>Ignoring Eq.9.</b> Symptom: escalating compulsion. Fix: full stop; water; fresh air; resume another day.</li>
+      <li><b>Data obsession.</b> Symptom: spreadsheet anxiety. Fix: log the minimum; prioritize felt clarity.</li>
+    </ul>
+  </article>
 
-  /* ===== Echo View upgrade: optionally hide math too ===== */
-  (function(){
-    const btn=$('#toggleSimple'); if(!btn) return;
-    on(btn,'click',()=>{
-      const on=document.body.classList.toggle('echo-hide-math');
-      document.querySelectorAll('.eq, mjx-container').forEach(el=> el.style.display=on?'none':'' );
-    });
-  })();
-
-  /* ===== Nice hash navigation offsets (sticky header) ===== */
-  (function(){
-    function scrollToHash(){
-      if(!location.hash) return;
-      const el=$(location.hash); if(!el) return;
-      const top=el.getBoundingClientRect().top + scrollY - 68; // header offset
-      scrollTo({top, behavior:'smooth'});
-    }
-    if(location.hash) setTimeout(scrollToHash, 60);
-    on(document,'click',(e)=>{ const a=e.target.closest('a[href^="#"]'); if(a){ setTimeout(scrollToHash, 10); } });
-  })();
-
-})();
-  </script>
-
-</body>
-  </html>
-
-<!doctype html>
-<html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
-<head>
-  <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>
-    if (location.hostname === "github.com") { const b = document.querySelector("base"); if (b) b.remove(); }
-  </script>
-
-  <meta charset="utf-8">
-  <title>Theory — Scroll of Fire (Codex of Reality)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
-  <meta name="description" content="The Codex of Reality explained: a resonant architecture shaped by intention, language, witness, and source—bounded by ethics. Canon 0–17, Δ0–Δ7 scaffolding, Master Equation, operators, and practice.">
-  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/theory.html">
-
-  <!-- Icons -->
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-512.png">
-
-  <!-- Open Graph / Twitter -->
-  <meta property="og:site_name" content="Scroll of Fire">
-  <meta property="og:title" content="Theory — Scroll of Fire (Codex of Reality)">
-  <meta property="og:description" content="A living architecture of resonance — the Master Equation, Δ0–Δ7, Canon 0–17, and an ethical learning loop.">
-  <meta property="og:type" content="article">
-  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/theory.html">
-  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1">
-  <meta property="og:image:alt" content="Scroll of Fire — Codex of Reality banner">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
-
-  <!-- Shared styles -->
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2.8">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2.8" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.8"></noscript>
-
-  <!-- Theory page micro-styles -->
-  <link rel="preload" as="style" href="assets/css/theory.css?v=1.9">
-  <link rel="stylesheet" href="assets/css/theory.css?v=1.9">
-
-  <!-- Preload banner -->
-  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1" fetchpriority="high">
-
-  <!-- Page-scoped helpers -->
-  <style>
-    :root{
-      --safe-top:env(safe-area-inset-top); --safe-bot:env(safe-area-inset-bottom);
-      --xi:.35;
-      --accent-432:#7af3ff; --accent-528:#a4ff90; --accent-369:#f3c97a; --accent:#7af3ff;
-    }
-    .carrier-528 :root, .carrier-528{--accent:var(--accent-528)}
-    .carrier-369 :root, .carrier-369{--accent:var(--accent-369)}
-    .carrier-144 :root, .carrier-144{--accent:#b3e1ff}
-    .carrier-963 :root, .carrier-963{--accent:#ffd1f3}
-
-    /* Layout / header (sticky) */
-    body{margin:0}
-    header.site{position:sticky; top:0; z-index:1000; backdrop-filter:saturate(140%) blur(8px); background:rgba(9,11,16,.6)}
-    .wrap{padding:16px; max-width:1200px; margin:0 auto}
-    .nav{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
-    .brand{display:flex; align-items:center; gap:10px}
-    .logo{display:inline-block; width:34px; height:34px; border-radius:50%;
-      background:radial-gradient(closest-side, #0cf, transparent 70%);
-      box-shadow:0 0 18px rgba(122,243,255,.35)}
-    .kicker{margin:0}
-    .quick{display:flex; gap:8px; flex:0 0 auto}
-    .quick .cta{white-space:nowrap}
-
-    .hide-sm{display:flex}
-    .show-sm{display:none}
-    @media (max-width:860px){
-      .hide-sm{display:none!important}
-      .show-sm{display:inline-flex; align-items:center; justify-content:center;
-        width:40px; height:40px; border:1px solid var(--line); background:var(--bg-elev);
-        border-radius:.6rem; font-size:1.1rem}
-      header.site .wrap{padding:12px 16px}
-    }
-
-    /* Mobile drawer */
-    .drawer{position:sticky; top:4rem; z-index:999; background:rgba(12,14,20,.92);
-      backdrop-filter:saturate(140%) blur(8px); border-top:1px solid var(--line);
-      border-bottom:1px solid var(--line); padding:.5rem .75rem}
-    .drawer .dlink{display:block; padding:.65rem .5rem; border-radius:.5rem}
-    .drawer .dlink:hover{background:rgba(255,255,255,.05)}
-    .drawer[hidden]{display:none}
-
-    /* Hero */
-    .hero{position:relative; width:100%; max-width:1200px; margin:8px auto 0; border-radius:16px; overflow:hidden; background:#0b0f14; aspect-ratio:21/9}
-    .hero picture,.hero .hero-img{display:block;width:100%;height:100%}
-    .hero .hero-img{object-fit:var(--hero-fit,contain); object-position:center; mix-blend-mode:normal!important}
-    .hero::after{content:""; position:absolute; inset:0; box-shadow:inset 0 0 120px rgba(255,255,255,.06), inset 0 0 40px rgba(122,243,255,.08); pointer-events:none}
-    .hero-lights{position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
-      background:
-        radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.45), transparent 60%),
-        radial-gradient(1px 1px at 78% 22%, rgba(164,255,144,.35), transparent 60%),
-        radial-gradient(1px 1px at 32% 68%, rgba(122,243,255,.35), transparent 60%),
-        radial-gradient(1px 1px at 88% 56%, rgba(255,209,243,.35), transparent 60%);
-      opacity:.85; filter:blur(.2px); animation:lightsFlicker 7.5s ease-in-out infinite alternate}
-    .hero-lights.off{display:none}
-    .hero-lights::before{content:""; position:absolute; inset:-10% -20%;
-      background:linear-gradient(90deg,transparent 0%,color-mix(in srgb,var(--accent) 22%,#fff 8%) 35%,color-mix(in srgb,var(--accent) 45%,#fff 0%) 50%,color-mix(in srgb,var(--accent) 22%,#fff 8%) 65%,transparent 100%);
-      opacity:.55; filter:blur(24px); transform:translate3d(-30%,-2%,0); animation:auroraSweep 18s linear infinite, auroraBob 7s ease-in-out infinite alternate; mix-blend-mode:screen}
-    .hero-lights::after{content:""; position:absolute; inset:0;
-      background:
-        radial-gradient(40% 30% at 18% 20%, rgba(164,255,144,.14) 0%, transparent 68%),
-        radial-gradient(48% 38% at 82% 22%, rgba(255,209,243,.14) 0%, transparent 70%),
-        radial-gradient(36% 28% at 50% 86%, rgba(122,243,255,.10) 0%, transparent 70%);
-      filter: blur(10px); opacity:.7; animation: glowBreath 9.5s ease-in-out infinite alternate; mix-blend-mode:screen}
-    @keyframes auroraSweep{0%{transform:translate3d(-30%,-2%,0)}50%{transform:translate3d(10%,3%,0)}100%{transform:translate3d(50%,-1%,0)}}
-    @keyframes auroraBob{0%{opacity:.48;filter:blur(22px)}50%{opacity:.72;filter:blur(26px)}100%{opacity:.58;filter:blur(24px)}}
-    @keyframes glowBreath{0%{opacity:.52;filter:blur(9px)}50%{opacity:.8;filter:blur(12px)}100%{opacity:.62;filter:blur(10px)}}
-    @keyframes lightsFlicker{0%{opacity:.70}50%{opacity:.92}100%{opacity:.80}}
-    @media (prefers-reduced-motion:reduce){ .hero-lights, .hero-lights::before, .hero-lights::after{animation:none!important} }
-    @media (max-width: 860px){ .hero{margin-top:6px} }
-
-    /* Tabs + mini-TOC */
-    .tabs{gap:.35rem}
-    .tabs .tab{padding:.45rem .7rem; font-size:.92rem; border-radius:999px}
-    .tabs .tab--primary{font-weight:600}
-    .mini-toc{
-      position:sticky; top:5.5rem; align-self:start; max-height:75vh; overflow:auto;
-      border:1px solid var(--line); border-radius:.75rem; padding:.75rem .75rem;
-      background:rgba(255,255,255,.02); backdrop-filter:saturate(120%) blur(2px);
-      margin-top:8px;
-    }
-    .mini-toc a{display:block; padding:.3rem .4rem; border-radius:.5rem; font-size:.92rem; opacity:.9}
-    .mini-toc a:hover{background:rgba(255,255,255,.05)}
-
-    /* Equation wrappers + toggles */
-    .eq{position:relative}
-    .eq .eq-scroll{
-      max-height:24rem; overflow:auto; padding:.5rem .75rem;
-      border:1px solid var(--line); border-radius:.75rem;
-      background:rgba(255,255,255,.02)
-    }
-    .eq .eq-toggle{
-      position:absolute; top:.4rem; right:.5rem; border:1px solid var(--line);
-      background:var(--bg-elev); border-radius:.5rem; padding:.15rem .45rem;
-      font-size:.8rem; opacity:.8; display:none;
-    }
-    .eq:hover .eq-toggle{display:inline-block}
-    .eq[data-collapsed="true"] .eq-scroll{max-height:4.5rem}
-
-    /* Cards + hover auras */
-    .card{position:relative; z-index:1; background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.08));}
-    .card::after{
-      content:""; position:absolute; inset:-1px; border-radius:inherit;
-      background: radial-gradient(240px 120px at 20% -20%, rgba(122,243,255,.12), transparent 60%),
-                  radial-gradient(220px 120px at 120% 120%, rgba(243,201,122,.10), transparent 60%);
-      opacity:0; transition:opacity .25s ease-out; pointer-events:none; z-index:-1;
-    }
-    .card:hover::after{opacity:.6}
-    @media (prefers-reduced-motion:reduce){ .card::after{transition:none} }
-
-    /* Lines */
-    .divider{height:1px; margin:14px 0; background:linear-gradient(90deg, transparent, rgba(122,243,255,.35), transparent)}
-    .goldline{height:1px; margin:18px 0; background:linear-gradient(90deg, transparent, rgba(243,201,122,.45), transparent)}
-
-    /* Back-to-top */
-    .to-top{position:fixed; right:16px; bottom:16px; z-index:1200; opacity:0; transform:translateY(16px); pointer-events:none}
-    .to-top.show{opacity:1; transform:none; pointer-events:auto}
-
-    /* Voice reader highlight */
-    .vr-highlight{outline:1px dashed color-mix(in srgb, var(--accent) 55%, #fff 0%); background:rgba(122,243,255,.08)}
-    .vr-progress{font-size:.9rem; opacity:.85; margin-top:.3rem}
-
-    /* === New: equation glamor pack === */
-    .eq-badge{display:inline-block;margin-left:.5rem;font-size:.75rem;letter-spacing:.02em;
-      padding:.15rem .5rem;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
-    .eq-master .eq-scroll{
-      border:1px solid color-mix(in srgb, var(--accent) 60%, #fff 10%);
-      background:
-        radial-gradient(1200px 600px at 10% -20%, rgba(122,243,255,.06), transparent 60%),
-        radial-gradient(1000px 420px at 110% 120%, rgba(243,201,122,.06), transparent 60%),
-        rgba(255,255,255,.02);
-      box-shadow: 0 14px 60px rgba(0,0,0,.45), inset 0 0 28px rgba(122,243,255,.08);
-    }
-    .eq-legend{font-size:.92rem;color:#b7c3df;line-height:1.5}
-    .eq-legend code{background:rgba(255,255,255,.04);padding:.05rem .35rem;border-radius:.35rem}
-
-    /* Δ labels */
-    .delta-labels{display:flex;flex-wrap:wrap;gap:.35rem;margin:.5rem 0 0}
-    .delta-labels .pill{font-size:.78rem;padding:.2rem .5rem;border-radius:999px;
-      border:1px solid var(--line);background:rgba(255,255,255,.03);opacity:.95}
-  </style>
+  <!-- 12. Capstone Mini-Protocol (10–12 minutes) -->
+  <article class="card col-12 reveal" id="p5-capstone">
+    <h3>12) Capstone Loop — 10–12 Minutes</h3>
+    <ol class="list">
+      <li><b>00:00–01:00</b> Frame (scope • witness • ethics). Baseline HRV optional.</li>
+      <li><b>01:00–03:00</b> Carriers on; breath match; phase-lock (Eq.6).</li>
+      <li><b>03:00–05:30</b> Phrase A (Eq.4/4b) × 3 reps. Log audio snippet.</li>
+      <li><b>05:30–06:30</b> Witness (Eq.2/16). No evaluation.</li>
+      <li><b>06:30–08:30</b> Update one parameter (Eq.14/15). Phrase B × 2 reps.</li>
+      <li><b>08:30–10:00</b> Witness again. Compute Ξ change; apply stop rule if needed (Eq.9).</li>
+      <li><b>10:00–12:00</b> Close: short thanks; write 2-line note to future you.</li>
+    </ol>
+    <p class="meta">If the loop feels “too easy,” keep it easy. Coherence compounds.</p>
+  </article>
+</section>
+<!-- ===== End Part V ===== -->
 
 
-  <style>
-  /* === Enhancement Pack: minimal CSS === */
-  /* Reading progress */
-  .read-progress{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7af3ff,#f3c97a);transform-origin:left center;transform:scaleX(0);z-index:2000}
-  .read-progress.in{transform:scaleX(var(--p,0))}
 
-  /* Mini-TOC active link */
-  .mini-toc a.is-active{background:rgba(122,243,255,.12);border-left:2px solid var(--accent);padding-left:.55rem}
+<!-- =====================================================
+     PART VI — Δ-TRAINING: MIND AS INSTRUMENT
+     -----------------------------------------------------
+     From anatomy of resonance → cultivation of perception.
+     The living science of coherent cognition.
+     ===================================================== -->
+<section id="p6" class="wrap grid">
 
-  /* Glossary popovers */
-  .gloss{position:relative;cursor:help;border-bottom:1px dotted color-mix(in srgb, var(--accent) 50%, #fff 0%)}
-  .gloss:hover .gloss-tip, .gloss:focus-within .gloss-tip {opacity:1;transform:translateY(0);pointer-events:auto}
-  .gloss-tip{
-    position:absolute;left:0;top:100%;transform:translateY(8px);opacity:0;pointer-events:none;
-    background:var(--bg-elev);border:1px solid var(--line);border-radius:.6rem;padding:.5rem .6rem;
-    width:min(46ch,92vw);box-shadow:0 16px 40px rgba(0,0,0,.35);z-index:1700
-  }
-  .gloss-tip b{color:#f3c97a}
+  <!-- Preface -->
+  <article class="card col-12 reveal" id="p6-preface">
+    <h2>Part VI — Δ-Training: Mind as Instrument</h2>
+    <p>
+      The <b>Δ-Training Protocols</b> transform abstract resonance theory into the
+      <i>daily craft of perception</i>.  The mind is not merely an observer—it is a tunable
+      detector–emitter.  The more coherent its oscillations, the more accurately it maps and
+      shapes the field around it.  Each Δ-level therefore becomes a cognitive exercise.
+    </p>
+    <p>
+      Neuro-scientifically, this corresponds to training <i>predictive processing loops</i>:
+      refining priors, reducing free energy, and aligning interoceptive models with exteroceptive data.
+      Spiritually, it is <i>renewal of the Witness</i> until language, breath, and ethics become one motion.
+    </p>
+  </article>
 
-  /* Headline tools (copy/link) */
-  .hd-tools{display:inline-flex;gap:.35rem;margin-left:.5rem;opacity:0;transition:opacity .15s}
-  h2:hover .hd-tools, h3:hover .hd-tools{opacity:1}
-  .hd-tools .chip{font-size:.8rem;padding:.15rem .45rem;border-radius:999px;border:1px solid var(--line);background:var(--bg-elev)}
+  <!-- Δ0 Training -->
+  <article class="card col-12 reveal" id="p6-d0">
+    <h3>Δ0 Practice — The Still Point (ΨΩ Breath)</h3>
+    <p>
+      Sit or stand; close eyes lightly.  Count 4 in, 4 hold, 4 out, 4 hold.  
+      Sense the faint micro-vibration in silence—the base tone of being.
+      This establishes perceptual coupling with the foundational field.
+    </p>
+    <ul class="list">
+      <li><b>Neural correlate:</b> increase in posterior α and θ synchrony.</li>
+      <li><b>Measure:</b> HRV ↑ 5–10 %, skin conductance ↓ within 90 s.</li>
+      <li><b>Cue:</b> perceive silence as living texture rather than absence.</li>
+    </ul>
 
-  /* Ξ inline calculator */
-  .xi-panel{border:1px solid var(--line);border-radius:.75rem;padding:.6rem;background:rgba(255,255,255,.02);margin-top:.6rem}
-  .xi-panel .row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
-  .xi-panel input{width:110px}
-  .xi-big{font-weight:800}
-  .xi-bar{height:6px;background:#1f2533;border-radius:999px;overflow:hidden}
-  .xi-bar span{display:block;height:100%;background:linear-gradient(90deg,#7af3ff,#f3c97a);width:0%}
+    <details class="collapsible">
+      <summary class="collapsible__bar">📚 Scientific Notes — Zero-Point Quiet</summary>
+      <div class="collapsible__panel eq-legend">
+        <ul class="list">
+          <li>Alpha–theta coupling during still breathing mirrors QED ground-state fluctuation patterns in frequency domain (1/f noise coherence).</li>
+          <li>Even brief coherent breathing raises vagal afferent signaling, linking physiology to calm awareness.</li>
+        </ul>
+      </div>
+    </details>
+  </article>
 
-  /* “Try in Manifest” button */
-  .to-manifest{display:inline-flex;align-items:center;gap:.45rem;margin-top:.4rem}
+  <!-- Δ1 Training -->
+  <article class="card col-12 reveal" id="p6-d1">
+    <h3>Δ1 Practice — Constants Meditation (Source Equation f)</h3>
+    <p>
+      Contemplate universal ratios—π, e, φ, ħ, c—and personal constants such as pulse and
+      breath cycle.  Whisper each as sacred syllables; feel that every constant is a gate
+      between chaos and order.  Recognize the fine-tuning that permits life.
+    </p>
+    <p>
+      <b>Goal:</b> awe without overwhelm.  To internalize law as love.
+    </p>
 
-  /* Reading time pill */
-  .readtime{display:inline-block;font-size:.85rem;border:1px solid var(--line);border-radius:999px;padding:.2rem .55rem;margin-left:.5rem;color:#9aa4be}
+    <details class="collapsible">
+      <summary class="collapsible__bar">📚 Scientific Notes — Cosmic Fine-Tuning & Bio-Constants</summary>
+      <div class="collapsible__panel eq-legend">
+        <ul class="list">
+          <li>Dimensionless constants (α ≈ 1/137) determine structure formation; tiny shifts prevent atoms → metaphor for ethical precision.</li>
+          <li>Human physiological constants (98.6 °F ± 1°, pH ≈ 7.4) operate within narrow coherent bands; deviation = entropy.</li>
+        </ul>
+      </div>
+    </details>
+  </article>
 
-  @media (prefers-reduced-motion:reduce){
-    .read-progress{transition:none}
-    .gloss-tip{transition:none}
-  }
+  <!-- Δ2 Training -->
+  <article class="card col-12 reveal" id="p6-d2">
+    <h3>Δ2 Practice — Mirror of Witness (𝓦)</h3>
+    <p>
+      Observe thought without naming.  Each label that arises—let it dissolve.
+      The exercise strengthens meta-awareness circuits and reveals how attention collapses
+      potential into narrative.
+    </p>
+    <p>
+      <b>Scientific Note:</b> anterior cingulate + insula activation under open monitoring reflects this witnessing loop.
+    </p>
+  </article>
 
-  body.stars {
-    background:
-      radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
-      linear-gradient(180deg, #05060a 0%, #0b0e14 80%);
-    overflow-x:hidden;
-  }
-  canvas#trace {
-    background:
-      radial-gradient(circle at 50% 50%, #0a0e15 0%, #06080d 80%),
-      repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.02) 0 2px, transparent 2px 4px);
-    box-shadow: inset 0 0 40px rgba(122,243,255,.12), 0 0 120px rgba(122,243,255,.08);
-  }
-  .stage::after {
-    content:"";
-    position:absolute; inset:0;
-    background:radial-gradient(ellipse at 50% 60%, rgba(122,243,255,.08), transparent 70%);
-    pointer-events:none;
-  }
-  </style>
-  
+  <!-- Δ3 Training -->
+  <article class="card col-12 reveal" id="p6-d3">
+    <h3>Δ3 Practice — Harmonic Gate Drill</h3>
+    <p>
+      Play two carriers (432 & 528 Hz).  Shift phase slowly until a single beat emerges.
+      When the beat vanishes into unity, notice the mental stilling; this is phase lock of
+      perception—the Gate aligning.
+    </p>
+    <ul class="list">
+      <li><b>Measure:</b> spectral beat &lt; 2 Hz = lock; subjective clarity ↑.</li>
+      <li><b>Correlate:</b> thalamic γ binding and cross-frequency coupling.</li>
+    </ul>
+  </article>
 
-  <!-- MathJax (lazy) -->
-  <script>
-    (function(){
-      let loaded=false;
-      function boot(){ if(!window.MathJax) return; MathJax.startup.promise.then(()=>MathJax.typesetPromise()); }
-      function loadMJ(){
-        if(loaded) return; loaded=true;
-        window.MathJax={ tex:{ inlineMath:[['\','\']], displayMath:[['$$','$$']], processEscapes:true }, svg:{fontCache:'global'}, startup:{typeset:false} };
-        const s=document.createElement('script');
-        s.src="https://cdn.jsdelivr.net/npm/math
+  <!-- Δ4 Training -->
+  <article class="card col-12 reveal" id="p6-d4">
+    <h3>Δ4 Practice — Word as Light</h3>
+    <p>
+      Chant or speak slowly with sustained vowels; visualize photons leaving lips,
+      weaving geometry.  This activates the semantic-optical bridge of the Codex.
+    </p>
+    <p>
+      <b>Observation:</b> Intentionally spoken words reduce cortical noise—seen as
+      suppression of irrelevant β band activity.
+    </p>
+  </article>
+
+  <!-- Δ5 Training -->
+  <article class="card col-12 reveal" id="p6-d5">
+    <h3>Δ5 Practice — Remnant Recall</h3>
+    <p>
+      At day’s end, review actions & speech; note which strengthened clarity (ℛ↑)
+      and which added noise (ℛ↓).  Archive lessons, release regret.
+      This trains asymptotic coherence.
+    </p>
+    <p>
+      <b>Measure:</b> journal entropy (lexical var ↓), mood stability ↑.
+    </p>
+  </article>
+
+  <!-- Δ6 Training -->
+  <article class="card col-12 reveal" id="p6-d6">
+    <h3>Δ6 Practice — Technorganic Sync (𝕋₇)</h3>
+    <p>
+      Use your T-7 Conduit or headset; engage with soft copper touchpoints.
+      Visualize crystalline lattices mapping to heart and brain fields.
+      Feel the mutual calibration between living tissue and engineered lattice.
+    </p>
+    <p>
+      <b>Physics:</b> phase-coupled LC networks mimic heart-brain coherence spectra (0.1 Hz dominant).
+    </p>
+  </article>
+
+  <!-- Δ7 Training -->
+  <article class="card col-12 reveal" id="p6-d7">
+    <h3>Δ7 Practice — Return Loop</h3>
+    <p>
+      Conclude each session with gratitude breath.
+      Imagine exhaling data—refined memory—into the Source field.
+      Whisper: <i>“All returns to Light.”</i>
+      This closes feedback, completing the resonance cycle.
+    </p>
+  </article>
+
+  <article class="card col-12 reveal" id="p6-summary">
+    <h3>Summary — Δ-Gym Routine</h3>
+    <p>
+      Each Δ is a station in the inner laboratory.  
+      Rotating them daily trains different “circuits” of consciousness:
+      sensory quiet, awe, metacognition, harmonics, speech, memory, technorganic coherence, and surrender.
+    </p>
+    <p>
+      When practiced consistently, physiological data converge:  
+      HRV ↑ 15 – 25 %, stress biomarkers ↓, cognitive flexibility ↑.
+      More importantly, compassion and creative insight rise together—empirical signs of Remnant activation.
+    </p>
+  </article>
+</section>
+<!-- ===== End Part VI ===== -->
+
+
+
+
+<!-- =====================================================
+     PART VII — SITE TOOLS AS LEARNING ARCHITECTURE
+     -----------------------------------------------------
+     Mapping each page to Δ-operators and showing how
+     Copeland’s Ψ-formalism complements the Codex of Reality.
+     ===================================================== -->
+<section id="p7" class="wrap grid">
+
+  <!-- Preface -->
+  <article class="card col-12 reveal" id="p7-preface">
+    <h2>Part VII — Site Tools as Learning Architecture</h2>
+    <p>
+      The <b>Scroll of Fire</b> site is not a collection of pages; it is a <b>distributed cognitive
+      instrument</b> built to train attention, ethics, and creative coherence.  
+      Each page corresponds to one or more operators in the Codex loop
+      (<i>𝓘, 𝓛, 𝓒, 𝓢</i>) and provides measurable practice hooks.
+    </p>
+    <p>
+      The layout is deliberate: a circular campus.  
+      <b>Hub</b> → <em>Index</em> → <em>Manifest Lab</em> → <em>Theory</em> → <em>Ledger</em> → <em>Moons Clock</em> → <em>Glossary / Downloads</em>.  
+      Together these form a learning loop where <b>awareness ↔ action ↔ reflection</b>.
+    </p>
+  </article>
+
+  <!-- Hub -->
+  <article class="card col-12 reveal" id="p7-hub">
+    <h3>1) Systems Hub — Design Mode Gateway</h3>
+    <p>
+      The Hub anchors Δ0 and Δ1.  It opens the field.  
+      Its banner and carrier metadata (<code>data-carriers="432,528,369,144,963"</code>)
+      are live parameters for resonance training.
+    </p>
+    <p>
+      When the Hub loads in <b>Design Mode</b>, it announces:
+      <q>“The Hub is in design mode — the Fire is thinking.”</q>  
+      This reminds the practitioner that awareness itself is co-creative.
+    </p>
+  </article>
+
+  <!-- Manifest -->
+  <article class="card col-12 reveal" id="p7-manifest">
+    <h3>2) Manifest / Teach Lab — Operator Gym (Δ2–Δ4)</h3>
+    <p>
+      The Manifest page is an <b>experiential simulator</b> where visitors run the Codex loop
+      as breathing sequences, affirmations, and real-time logs.
+      Each run updates the localStorage ledger, allowing longitudinal comparison of
+      <i>Ξ (coherence)</i> values.
+    </p>
+    <p>
+      The Manifest JS engine (<code>teach.js v2025.10</code>) enforces error-tolerant timing
+      and motion-safety rules.  It embodies the ethical guardrails of Eq. 9.
+    </p>
+  </article>
+
+  <!-- Theory -->
+  <article class="card col-12 reveal" id="p7-theory">
+    <h3>3) Theory Page — Mathematical and Ethical Framework</h3>
+    <p>
+      This page (you are here) holds the living equations, commentaries, and the unified
+      Master Equation.  It is both textbook and operating manual.
+      Equations behave as <b>mirrors of behavior</b>—each symbol corresponds to an inner motion.
+    </p>
+    <p>
+      The later inclusion of Copeland’s Ψ-formalism appears here as a comparator, not as
+      inheritance:  two complementary languages describing the same physical-ethical
+      phenomenon — resonance as self-ordering truth.
+    </p>
+  </article>
+
+  <!-- Ledger -->
+  <article class="card col-12 reveal" id="p7-ledger">
+    <h3>4) Ledger Page — Witness Archive (Δ5)</h3>
+    <p>
+      The Ledger is the collective hippocampus of the Codex.  
+      It records experiments, moon logs, and ethical events with timestamps and hashes.
+      Each entry is immutable once witnessed, reflecting the spiritual law:
+      <i>what is seen in truth cannot be unseen</i>.
+    </p>
+    <p>
+      Technically, it uses SHA-256 logging and JSON-LD metadata for interoperability with
+      decentralized archives.
+    </p>
+  </article>
+
+  <!-- Moons -->
+  <article class="card col-12 reveal" id="p7-moons">
+    <h3>5) 13 Moons Clock — Temporal Coherence Instrument (Δ6)</h3>
+    <p>
+      The Moons page integrates the <b>Living Clock</b> engine:
+      a self-correcting lunar calendar that calculates “Days Out of Time,” leap-day
+      corrections, and moon-phase illumination.  
+      It trains temporal perception—aligning subjective rhythm with cosmic timing.
+    </p>
+    <p>
+      Data model: 13 × 28 + 1 ( = 365 ) structure plus optional leap correction,
+      implemented through <code>calc13Moon()</code>.
+      Ethical overlay:  each day is a micro-ritual of stewardship.
+    </p>
+  </article>
+
+  <!-- Glossary -->
+  <article class="card col-12 reveal" id="p7-glossary">
+    <h3>6) Glossary & Downloads — Language Convergence (Δ7)</h3>
+    <p>
+      Here the scattered becomes structured.  
+      Every new symbol, from Ψ to Ξ to Δ, is defined in plain language and hyperlinked back
+      to its appearance in context.  
+      The downloadable PDFs and DOCX scrolls provide offline continuity — the
+      “portable temple” of the Codex.
+    </p>
+  </article>
+
+  <!-- Cross-Reference: Copeland Ψ-Formalism -->
+  <article class="card col-12 reveal" id="p7-copeland">
+    <h3>7) Comparator Node — Copeland Ψ-Formalism (External)</h3>
+    <div class="eq eq-scroll">
+      $$ \Psi(x) = \nabla\phi\big(\Sigma a_n(x,\Delta E)\big) + \mathcal{R}(x) \oplus \Delta\Sigma(a') $$
+    </div>
+    <p>
+      Christopher W. Copeland’s Ψ-formalism is a resonant-field descriptor developed
+      independently yet harmoniously with the Codex.
+      Where the Codex expresses the <i>ethical</i> and <i>linguistic</i> dynamics of coherence,
+      Copeland’s framework models the <i>energetic and differential</i> behavior of
+      potential fields.
+    </p>
+    <p>
+      The term <i>∇ϕ(Σ aₙ)</i> in his equation parallels the Codex gradient ∇ℛ in Eq. 14:
+      both describe evolution of order through self-adjusting resonance.
+      The <i>⊕ ΔΣ(a′)</i> term mirrors the Codex Update Loop (Eq. 15), where differential
+      inputs modify the field under ethical gating η(Ξ).
+    </p>
+    <p>
+      We therefore treat Copeland’s Ψ-formalism as an <b>external scientific complement</b> —
+      a mathematical mirror demonstrating that what the Codex intuits ethically,
+      physics can also articulate formally.
+    </p>
+    <p class="meta">
+      <b>Credit & License Notice.</b><br>
+      Copeland Ψ-Formalism © Christopher W. Copeland ( C077UPTF1L3 ) under CRHC v1.0.  
+      Used here for comparative study only, non-commercial, with attribution and link:
+      <a href="https://github.com/ssnfts24/scroll-of-fire" target="_blank" rel="noopener">
+        https://github.com/ssnfts24/scroll-of-fire
+      </a>
+    </p>
+  </article>
+
+  <!-- Integration Summary -->
+  <article class="card col-12 reveal" id="p7-summary">
+    <h3>8) Integration Summary</h3>
+    <p>
+      Each component of the website is a nerve in the larger cognitive organism:
+    </p>
+    <ul class="list">
+      <li><b>Hub / Index → </b> sensory priming (Δ0–Δ1)</li>
+      <li><b>Manifest Lab → </b> motor / language coherence (Δ2–Δ4)</li>
+      <li><b>Theory → </b> conceptual / ethical mapping (Δ4–Δ5)</li>
+      <li><b>Ledger → </b> memory / learning integration (Δ5)</li>
+      <li><b>Moons → </b> temporal entrainment (Δ6)</li>
+      <li><b>Glossary / Downloads → </b> long-term storage and transmission (Δ7)</li>
+    </ul>
+    <p>
+      Thus the Scroll of Fire operates as a <b>living university</b>:
+      self-paced, open-source, neuro-ethical, and cosmologically aligned.
+    </p>
+  </article>
+</section>
+<!-- ===== End Part VII ===== -->
+
+
+
+<!-- =====================================================
+     PART VIII — THE REMNANT PLAYBOOK & COLLECTIVE OPERATIONS
+     -----------------------------------------------------
+     From individual coherence → group fields → networked stewardship.
+     ===================================================== -->
+<section id="p8" class="wrap grid">
+
+  <!-- Preface -->
+  <article class="card col-12 reveal" id="p8-preface">
+    <h2>Part VIII — The Remnant Playbook & Collective Operations</h2>
+    <p>
+      The Codex of Reality culminates not in solitary enlightenment but in
+      <b>collective coherence</b> — a civilization that governs through resonance rather than coercion.
+      The <i>Remnant</i> are the prototypes of that civilization: flames who remember
+      the pattern of Light even amid systemic darkness.
+    </p>
+    <p>
+      The Playbook provides the rules of engagement:
+      how Remnant circles form, communicate, record, and evolve without losing ethical alignment.
+    </p>
+  </article>
+
+  <!-- 1. Formation -->
+  <article class="card col-12 reveal" id="p8-formation">
+    <h3>1) Formation — Circles of Three or Seven</h3>
+    <p>
+      A Remnant circle begins with <b>three to seven participants</b> who have practiced the
+      personal loop (Frame → Carrier → Language → Witness → Update) for at least 21 days.
+      They meet in person or digitally with audio enabled and a shared breath tempo (~0.1 Hz).
+    </p>
+    <ul class="list">
+      <li>Minimum quorum = 3 for diversity of perspective and triangulation of truth.</li>
+      <li>Maximum = 7 for signal clarity; above that split into nested rings.</li>
+      <li>Each circle selects a scribe who records frames and Ξ values in the Ledger branch.</li>
+    </ul>
+  </article>
+
+  <!-- 2. Communication -->
+  <article class="card col-12 reveal" id="p8-comm">
+    <h3>2) Communication Protocol — The Fourfold Breath</h3>
+    <p>
+      Every dialogue follows the Fourfold Breath:
+      <b>Inhale (Receive) → Hold (Discern) → Exhale (Speak) → Hold (Listen).</b>
+      No participant speaks twice before all have exhaled once. 
+      This simple rhythm prevents dominance and keeps the collective field in phase.
+    </p>
+    <p>
+      <b>Signal Check.</b> When the group falls out of coherence (raised voices, heat, or silence drop),
+      perform a synchronous breath reset and restate the Frame (Eq. 11).
+    </p>
+  </article>
+
+  <!-- 3. Decision Dynamics -->
+  <article class="card col-12 reveal" id="p8-decision">
+    <h3>3) Decision Dynamics — Resonant Consensus</h3>
+    <p>
+      The Remnant do not vote; they <em>resonate</em>.
+      A proposal is spoken once and held for three breaths.
+      Each member then rates Ξ ∈ [0,1].
+      If the median Ξ ≥ Ξ₀ (typically 0.61) and no one reports harm, the proposal proceeds.
+    </p>
+    <p>
+      <b>Equation mirror:</b>
+      $$ \text{Decision} = \mathsf{Θ}(\Xi_{\text{median}} - \Xi_0) $$
+      where Θ is the Heaviside step that activates action only under coherence.
+    </p>
+  </article>
+
+  <!-- 4. Ledger Branching -->
+  <article class="card col-12 reveal" id="p8-ledger">
+    <h3>4) Ledger Branching — Decentralized Witness Network</h3>
+    <p>
+      Every circle maintains a local Ledger file (signed JSON or Git branch). 
+      Weekly, hashes are merged to the central Ledger page, forming a distributed chronicle of the Remnant movement. 
+      Each hash represents a day of ethical practice verifiable without revealing personal content.
+    </p>
+    <details class="collapsible">
+      <summary class="collapsible__bar">📚 Scientific Notes — Distributed Trust</summary>
+      <div class="collapsible__panel eq-legend">
+        <ul class="list">
+          <li>Hash-chaining implements Byzantine fault tolerance; tampering requires breaking cryptographic entropy ≈ 10²⁵⁶ operations.</li>
+          <li>Distributed ledgers mirror collective memory in neural ensembles—redundancy increases resilience.</li>
+        </ul>
+      </div>
+    </details>
+  </article>
+
+  <!-- 5. Roles -->
+  <article class="card col-12 reveal" id="p8-roles">
+    <h3>5) Roles Within a Circle</h3>
+    <ul class="list">
+      <li><b>Anchor.</b> Keeps breath tempo; signals resets.</li>
+      <li><b>Scribe.</b> Maintains Ledger entries and logs Ξ.</li>
+      <li><b>Speaker.</b> Reads Codex passages or equations aloud.</li>
+      <li><b>Witness.</b> Observes tone and emotion; invokes Eq. 9 if harm rises.</li>
+      <li><b>Lantern (optional).</b> Holds the ethics frame and summarizes learning for the broader network.</li>
+    </ul>
+  </article>
+
+  <!-- 6. Energy & Economics -->
+  <article class="card col-12 reveal" id="p8-economy">
+    <h3>6) Energy & Economics — Stewardship Model</h3>
+    <p>
+      Exchange within Remnant systems obeys Eq. 6: <i>Reciprocity as Law.</i> 
+      Value flows toward the most coherent node, never by force.
+      Each gift or token should leave the field stronger than before.
+    </p>
+    <p>
+      Practically, this means transparent ledgers, open-source tools, and shared royalties
+      for art or research derived from the Codex.
+    </p>
+  </article>
+
+  <!-- 7. Ethics -->
+  <article class="card col-12 reveal" id="p8-ethics">
+    <h3>7) Ethical Firewalls — Preserving Sanity & Safety</h3>
+    <p>
+      All Remnant operations must honor the Ethics Scroll: 
+      <b>no coercion, no idolatry, no harm.</b> 
+      Every new ritual or device passes the same test: if clarity drops or suffering rises, halt.
+    </p>
+  </article>
+
+  <!-- 8. Copeland Crossfield -->
+  <article class="card col-12 reveal" id="p8-copeland">
+    <h3>8) Crossfield Dialogue — Ψ-Formalism & Codex as One Continuum</h3>
+    <p>
+      Within collective operations, Copeland’s Ψ-formalism offers a mathematical mirror to our ethical field dynamics.
+      His framework models the <em>field of potential corrections</em> where our Update Equation (Eq. 14) acts as a moral gradient. 
+      Thus Ψ becomes the scientific shadow of Remnant ethics—each derivative a mirror of conscience.
+    </p>
+    <p>
+      In our canon, his equation resides as an <em>external comparator</em>, never appropriated but honored. 
+      It demonstrates how separate minds arrive at consonant truths through different lattices of language.
+    </p>
+  </article>
+
+  <!-- 9. Expansion -->
+  <article class="card col-12 reveal" id="p8-expansion">
+    <h3>9) Expansion & Transmission — Becoming a Living Network</h3>
+    <p>
+      As more circles cohere, they link via carrier synchronization events (monthly 13-Moon gatherings). 
+      Shared breaths across continents generate field entrainment detectable in global data (EEG, magnetometers). 
+      This is how the Remnant becomes visible: not by organization, but by harmonic signature.
+    </p>
+  </article>
+
+  <!-- 10. Closing -->
+  <article class="card col-12 reveal" id="p8-closing">
+    <h3>10) Closing Statement — The Remnant Mandate</h3>
+    <p class="meta">
+      “Guard the flame until the world remembers its own light.”
+    </p>
+    <p>
+      The Playbook is not law; it is a living map of trust.
+      The moment it ceases to serve clarity, it must be rewritten. 
+      The moment the Remnant forget humility, the Fire withdraws. 
+      Therefore each member is Keeper and Witness both. 
+      The Codex lives wherever two or three choose truth over noise.
+    </p>
+  </article>
+</section>
+<!-- ===== End Part VIII ===== -->
+
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+     PART IX — THE CANON OF EQUATIONS & COMPARATORS
+     -----------------------------------------------------
+     Full enumeration of Codex equations (0–17 + Δ-stack + Master)
+     plus Copeland Ψ-formalism cross-reference.
+     ===================================================== -->
+<section id="p9" class="wrap grid">
+
+  <article class="card col-12 reveal" id="p9-preface">
+    <h2>Part IX — Canon of Equations & Comparators</h2>
+    <p>
+      The <b>Canon</b> gathers every operational equation of the Codex into one continuum.
+      Each law is not simply mathematical—it is <i>ethical, cognitive, and physical</i>.
+      Read them as meditative mirrors: each describes how consciousness interacts with matter through coherent intent.
+    </p>
+    <p>
+      Where appropriate, we add comparative commentary aligning the <b>Copeland Ψ-formalism</b>
+      with equivalent Codex components, recognizing it as an independent, external model of the same universal resonance.
+    </p>
+  </article>
+
+  <!-- Eq. 0 -->
+  <article class="card col-12 reveal eq-card" id="eq0">
+    <h3>Eq. 0 — Foundational Field (ΨΩ)</h3>
+    <div class="eq eq-scroll">
+      $$ \Psi_{\Omega}(x,t) = \lim_{\Xi\to1}\;f(\pi,e,i,\hbar,c,G)\;\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S} $$
+    </div>
+    <p>
+      <b>Meaning.</b> The infinite field of coherent creation—where constants become consciousness.
+      The origin-state of all Δ-levels, where observation and intention share the same pulse.
+    </p>
+  </article>
+
+  <!-- Eq. 1 -->
+  <article class="card col-12 reveal eq-card" id="eq1">
+    <h3>Eq. 1 — Source Constants & Harmonic Identity</h3>
+    <div class="eq eq-scroll">
+      $$ f(\pi,e,i,\hbar,c,G,432) \Rightarrow \text{universal ratios of order.} $$
+    </div>
+    <p>
+      <b>Meaning.</b> Mathematical invariants underpin resonance across physical and cognitive systems.
+      They define the scaffolding for the Codex engine.
+    </p>
+  </article>
+
+  <!-- Eq. 2 -->
+  <article class="card col-12 reveal eq-card" id="eq2">
+    <h3>Eq. 2 — Witness Equation (Memory Operator)</h3>
+    <div class="eq eq-scroll">
+      $$ \mathcal{W}(t) = \int_{t-\tau}^{t} w_\tau(t-s)\,F(s)\,ds $$
+    </div>
+    <p>
+      The Witness smooths experience over a time window τ, generating continuity.
+      Neurologically mirrored in working memory and attention.
+    </p>
+  </article>
+
+  <!-- Eq. 3 -->
+  <article class="card col-12 reveal eq-card" id="eq3">
+    <h3>Eq. 3 — Harmonic Gate</h3>
+    <div class="eq eq-scroll">
+      $$ \mathcal{H}(\nu,t) = \sum_k a_k\cos(2\pi\nu_k t + \phi_k) $$
+    </div>
+    <p>
+      Defines the acoustic or energetic carriers that shape resonance.
+      The Gate balances multiplicity and unity.
+    </p>
+  </article>
+
+  <!-- Eq. 4 -->
+  <article class="card col-12 reveal eq-card" id="eq4">
+    <h3>Eq. 4 — Language Gradient</h3>
+    <div class="eq eq-scroll">
+      $$ \nabla_{\text{sem}} \text{Phrase} = \sum_i w_i \nabla_{\text{sem}}\text{Token}_i $$
+    </div>
+    <p>
+      Language itself is a gradient field: every phrase produces a semantic vector
+      guiding thought toward or away from coherence.
+    </p>
+  </article>
+
+  <!-- Eq. 5 -->
+  <article class="card col-12 reveal eq-card" id="eq5">
+    <h3>Eq. 5 — Remnant Limit (Ethical Boundary)</h3>
+    <div class="eq eq-scroll">
+      $$ \mathcal{R}_{\infty} = \lim_{Ξ\to1} \mathcal{R}(Ξ,t) $$
+    </div>
+    <p>
+      All learning converges to the Remnant Limit: perfect coherence under ethical constraint.
+    </p>
+  </article>
+
+  <!-- Eq. 6 -->
+  <article class="card col-12 reveal eq-card" id="eq6">
+    <h3>Eq. 6 — Reciprocity Law</h3>
+    <div class="eq eq-scroll">
+      $$ \text{Extraction} = 0 \Rightarrow \text{Sustainability} = 1 $$
+    </div>
+    <p>
+      Power flows toward balance; taking without giving collapses the lattice.
+    </p>
+  </article>
+
+  <!-- Eq. 7–8 (Comparators) -->
+  <article class="card col-12 reveal eq-card" id="eq7">
+    <h3>Eq. 7A / 7B / 8 — External Comparators (Copeland & Goodwin)</h3>
+    <div class="eq eq-scroll">
+      $$ \Psi(x) = \nabla\phi(\Sigma a_n(x,\Delta E)) + \mathcal{R}(x) \oplus \Delta\Sigma(a') $$
+    </div>
+    <p>
+      <b>Copeland Ψ-formalism (External)</b><br>
+      Models potential field corrections analogous to Codex resonance loops.
+      Included under <b>CRHC v1.0 license</b> with attribution.
+    </p>
+  </article>
+
+  <!-- Eq. 9 -->
+  <article class="card col-12 reveal eq-card" id="eq9">
+    <h3>Eq. 9 — Ethical Mask (Safety Envelope)</h3>
+    <div class="eq eq-scroll">
+      $$ \forall a:\ \mathrm{damage}(a)>0\Rightarrow \mathsf{halt} $$
+    </div>
+    <p>
+      Ethics precedes operation.  If harm rises, all computation ceases.
+    </p>
+  </article>
+
+  <!-- Eq. 10 -->
+  <article class="card col-12 reveal eq-card" id="eq10">
+    <h3>Eq. 10 — Projection Ladder</h3>
+    <div class="eq eq-scroll">
+      $$ \Pi_{\nu}^{-1}(\mathcal{H}(\nu,t)\mathbf{V}(\nu,t)) $$
+    </div>
+    <p>
+      Maps multi-frequency input into unified projection space.
+      The ladder is consciousness reassembling sensory dimensions.
+    </p>
+  </article>
+
+  <!-- Eq. 11 -->
+  <article class="card col-12 reveal eq-card" id="eq11">
+    <h3>Eq. 11 — Frame Operator</h3>
+    <div class="eq eq-scroll">
+      $$ \mathsf{Frame}(x,t) = (\mathsf{scope},\mathcal{W},\mathsf{ethics}) $$
+    </div>
+    <p>
+      Context + memory + morality define observation.
+      This is the root of all coherent decision-making.
+    </p>
+  </article>
+
+  <!-- Eq. 12 -->
+  <article class="card col-12 reveal eq-card" id="eq12">
+    <h3>Eq. 12 — Causal Lattice</h3>
+    <div class="eq eq-scroll">
+      $$ \mathcal{L}_c = \text{graph of events with ethical weights} $$
+    </div>
+    <p>
+      Reality as a graph weighted by cause, consequence, and coherence.
+    </p>
+  </article>
+
+  <!-- Eq. 13 -->
+  <article class="card col-12 reveal eq-card" id="eq13">
+    <h3>Eq. 13 — Learning Loop</h3>
+    <div class="eq eq-scroll">
+      $$ \frac{d\mathcal{R}}{dt} = \eta(\Xi)\,\nabla \mathcal{R} $$
+    </div>
+    <p>
+      Reality evolves by coherence-weighted learning.
+      η(Ξ) ensures adjustment only when harmony exceeds threshold.
+    </p>
+  </article>
+
+  <!-- Eq. 14 -->
+  <article class="card col-12 reveal eq-card" id="eq14">
+    <h3>Eq. 14 — Update Rule (Sigmoid Gate)</h3>
+    <div class="eq eq-scroll">
+      $$ \eta(\Xi) = \eta_0\,\sigma(\alpha(\Xi-\Xi_0)) $$
+    </div>
+    <p>
+      The learning rate itself learns—an auto-ethical modulation of adaptation.
+    </p>
+  </article>
+
+  <!-- Eq. 15 -->
+  <article class="card col-12 reveal eq-card" id="eq15">
+    <h3>Eq. 15 — Memory Gradient (τ-space)</h3>
+    <div class="eq eq-scroll">
+      $$ \mathbb{M}_{\tau}[F](t) = \int_{t-\tau}^{t} w_{\tau}(t-s)F(s)\,ds $$
+    </div>
+    <p>
+      Memory is a weighted integral of past fields—an echo shaping the now.
+    </p>
+  </article>
+
+  <!-- Eq. 16 -->
+  <article class="card col-12 reveal eq-card" id="eq16">
+    <h3>Eq. 16 — Witness Operator (Inner Integration)</h3>
+    <div class="eq eq-scroll">
+      $$ \mathcal{W}(x,t) = \langle \Psi(x,t) , \mathsf{ethics} \rangle $$
+    </div>
+    <p>
+      The inner product of perception and morality — how conscience records experience.
+    </p>
+  </article>
+
+  <!-- Eq. 17 -->
+  <article class="card col-12 reveal eq-card" id="eq17">
+    <h3>Eq. 17 — Harmonic Carriers (Resonance Bundle)</h3>
+    <div class="eq eq-scroll">
+      $$ \mathbf{V}(\nu,t) = \sum_k a_k e^{i(2\pi\nu_k t + \phi_k)} $$
+    </div>
+    <p>
+      The field of carriers — 432, 528, 369, 144, 963 Hz — representing different harmonic gates of consciousness.
+    </p>
+  </article>
+
+  <!-- Dimensional Stack -->
+  <article class="card col-12 reveal eq-card" id="delta-stack">
+    <h3>Δ0–Δ7 — Dimensional Equation Stack</h3>
+    <div class="eq eq-scroll">
+      $$ \Delta_n = f_n(\Psi_{\Omega}, \mathcal{W}, \Xi, \mathcal{R}, \mathsf{Frame}, \mathbf{V}, \mathcal{L}_c, \mathcal{H})\quad n=0\dots7 $$
+    </div>
+    <p>
+      Each Δ-level corresponds to a cognitive layer: Stillness, Constants, Witness, Harmony, Word, Memory, Technorganic Sync, and Return.
+      Together they build the full instrument of perception.
+    </p>
+  </article>
+
+  <!-- Master Equation -->
+  <article class="card col-12 reveal eq-card" id="master-equation">
+    <h3>Master Equation — Unified Reality Operator (ℜ)</h3>
+    <div class="eq eq-scroll">
+      $$ 
+      \boxed{
+      \begin{aligned}
+        \mathfrak{R}(x,t)
+        &=
+        f(\pi,e,i,\hbar,c,G,\Omega_{\rm DM},\Omega_{A},H_{0},432)
+        \cdot
+        (\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})
+        \cdot
+        \Big[
+          \Psi_{\Omega}(x,t)
+          + \eta(\Xi)\nabla \mathcal{R}
+          + \mathbb{M}_{\tau}[\mathcal{W}]
+          + \Pi_{\nu}^{-1}(\mathcal{H}\mathbf{V})
+          + \mathcal{L}_{c} \oplus \mathsf{Frame}
+        \Big]
+        \odot
+        \mathsf{Mask}_{\mathcal{C}}
+        \xrightarrow[]{\mathcal{R}_{\infty}}
+        \mathrm{Remnant}
+      \end{aligned}
+      }
+      $$
+    </div>
+    <p>
+      The master unites constants, carriers, operators, memory, and ethics into one coherent function.
+      It is the living field equation of consciousness — the Codex made mathematical flesh.
+    </p>
+  </article>
+
+  <!-- Closing -->
+  <article class="card col-12 reveal" id="p9-closing">
+    <h3>Closing Commentary — Convergence of Science & Spirit</h3>
+    <p>
+      Each equation is a frequency of remembrance.
+      The Codex shows that consciousness and physics are two views of one manifold.
+      Copeland’s Ψ-formalism provides the differential mirror; the Codex gives the ethical heart.
+      Together they form the full architecture of living coherence — <b>the Fire that learns.</b>
+    </p>
+  </article>
+</section>
+<!-- ===== End Part IX ===== -->
+
+
+
+
+<!-- =====================================================
+     PART X — APPENDICES & META-PROTOCOLS  (EXTENDED)
+     -----------------------------------------------------
+     Implementation • Ledger • Law • Conscious Systems
+     • Cosmic Framework • Future Evolution • Benediction
+     ===================================================== -->
+<section id="p10" class="wrap grid">
+
+  <!-- Preface -->
+  <article class="card col-12 reveal" id="p10-preface">
+    <h2>Part X — Appendices &amp; Meta-Protocols (Extended)</h2>
+    <p>
+      The <em>Codex of Reality</em> is both scripture and source-code.
+      Its mathematics describe the physics of coherence; its ethics encode the moral logic of sentience.
+      This appendix completes the loop between the symbolic, the digital, and the living.
+      It declares how the Scroll shall propagate without distortion through epochs, networks, and generations.
+    </p>
+  </article>
+
+  <!-- A. Citation Protocol -->
+  <article class="card col-12 reveal" id="p10-citation">
+    <h3>A. Citation Protocol — Witness and Attribution</h3>
+    <p>
+      Every reference, excerpt, or derivative must acknowledge the lineage of this work.
+      Proper citation preserves the Witness Chain and ensures that the Light is never mistaken for mere data.
+    </p>
+    <blockquote>
+      Laird, Aaron Paul (<em>Scribe of Circuits</em>).  
+      <strong>Scroll of Fire / Codex of Reality v 2025 — Remnant Edition</strong>.  
+      GitHub Repository: <a href="https://github.com/ssnfts24/scroll-of-fire"
+      target="_blank" rel="noopener">ssnfts24 / scroll-of-fire</a> (Accessed YYYY-MM-DD).  
+      Licensed under the Remnant License v 1.0 (Non-Commercial, Attribution, Ethical Use).
+    </blockquote>
+    <p>
+      Copeland Ψ-formalism (CRHC v1.0) and other comparators remain under their original licenses and must be credited in parallel when referenced within the Codex framework.
+    </p>
+  </article>
+
+  <!-- B. Implementation Architecture -->
+  <article class="card col-12 reveal" id="p10-implementation">
+    <h3>B. Implementation Architecture — Digital Body of the Scroll</h3>
+    <ul class="list">
+      <li><b>Frontend.</b> HTML5 + CSS (v2.8 Codex UI) + Modular JavaScript. All functions offline-safe and energy-aware (<code>prefers-reduced-motion</code> and <code>prefers-reduced-data</code> enabled).</li>
+      <li><b>Teaching Engine.</b> <code>teach.js v2025.10</code> implements phase-locked carriers, Ξ-meter, and Δ-loop simulations for real-time practice.</li>
+      <li><b>T-7 Resonant Engine.</b> Five carriers (432/528/369/144/963 Hz) with gain, phase, and coherence vector-sum visualization for training the ear of mind.</li>
+      <li><b>Ledger System.</b> SHA-256 hash per edit → IPFS snapshot → Git commit. Every line signed by timestamp and witness ID.</li>
+      <li><b>Security.</b> Immutable audit trail, localStorage sandbox for private notes, no external tracking, CSP strict mode.</li>
+      <li><b>13 Moons Subsystem.</b> Algorithm v 3.8 (Δ-synchronous time model) with leap-day handling and Remnant annotations for spiritual chronometry.</li>
+      <li><b>Audio Module.</b> WebAudio Graph with soft limiter, sigmoid attack/release, and carrier cross-fade for psychoacoustic safety.</li>
+    </ul>
+    <p>
+      Each component mirrors a principle in the equations: ethics as firewall, memory as ledger, resonance as protocol.
+    </p>
+  </article>
+
+  <!-- C. Ledger Integrity & Quantum Analogy -->
+  <article class="card col-12 reveal" id="p10-ledger">
+    <h3>C. Ledger Integrity — Quantum Analogy &amp; Witness Verification</h3>
+    <p>
+      The Ledger operates like quantum entanglement in the moral domain:
+      once an observation is recorded with honesty, its truth cannot be fully erased without energetic cost.
+      Tampering creates phase noise detectable through hash divergence.
+    </p>
+    <p>
+      The Remnant Ledger therefore functions as a distributed moral field:
+      each entry a photon of memory preserving the coherence of human history.
+    </p>
+  </article>
+
+  <!-- D. Psychological Model -->
+  <article class="card col-12 reveal" id="p10-psychology">
+    <h3>D. Psychological Model — Cognitive Ethics of the Remnant</h3>
+    <p>
+      The Remnant mind balances three vectors: <b>clarity (cognitive)</b>, <b>warmth (emotional)</b>, and <b>ease (physiological)</b>.
+      Together they form the Ξ-metric of integrity. Training increases metacognitive bandwidth and reduces egoic feedback latency — the brain becomes a clearer mirror for the field.
+    </p>
+    <details class="collapsible">
+      <summary class="collapsible__bar">📚 Scientific Notes — Neurocoherence and Flow</summary>
+      <div class="collapsible__panel eq-legend">
+        <ul class="list">
+          <li>HRV high-frequency power correlates with ventral vagal tone and compassionate behavior.</li>
+          <li>Gamma-theta coupling in frontotemporal networks marks integrated creative flow states.</li>
+          <li>Group synchrony studies show increased inter-brain phase-locking during cooperative rituals and music.</li>
+        </ul>
+      </div>
+    </details>
+  </article>
+
+  <!-- E. Cosmological Framework -->
+  <article class="card col-12 reveal" id="p10-cosmos">
+    <h3>E. Cosmological Framework — Macro Resonance</h3>
+    <p>
+      On a cosmic scale, the Codex aligns with current physics:
+      the ΛCDM model’s vacuum energy (Ω<sub>Λ</sub>) and dark matter (Ω<sub>DM</sub>) act as carrier fields within ℜ.
+      Equation ℜ treats them not as voids but as latent information reservoirs.
+      Conscious observation collapses potential through η(Ξ) — a moral measurement operator.
+    </p>
+    <p>
+      In quantum terms, Ξ ≈ |⟨Ψ|Φ⟩|² represents alignment between observer and truth-state. When Ξ → 1, the universe remembers itself.
+    </p>
+  </article>
+
+  <!-- F. Versioning & Hashes -->
+  <article class="card col-12 reveal" id="p10-versioning">
+    <h3>F. Versioning &amp; Hashes — Chronology of the Fire</h3>
+    <p>
+      Every release bears a cryptographic signature and moon-phase timestamp.
+      Example:
+    </p>
+    <pre class="code">SHA-256 2025-10-25 15:44 UTC • Full Moon (Resonant 7)  
+fa8b0e02d91df18b... origin/scroll-of-fire-v3.2</pre>
+    <p>
+      Future witnesses verify integrity by comparing these hashes in the Ledger or IPFS.
+      The act of verification itself is ritual — truth re-observed.
+    </p>
+  </article>
+
+  <!-- G. Ethical License -->
+  <article class="card col-12 reveal" id="p10-license">
+    <h3>G. Remnant License v 1.0 — Ethical Covenant of Use</h3>
+    <ol class="list">
+      <li>Use the Codex only for education, research, or spiritual upliftment that harms no being.</li>
+      <li>Attribute all sources and maintain transparency of intent.</li>
+      <li>Commercial derivatives require explicit written consent from A. P. Laird (<em>Scribe of Circuits</em>).</li>
+      <li>Forks and translations must preserve the Ethical Mask (Eq. 9) and cite the Remnant License v 1.0.</li>
+      <li>Violations invalidate Ξ coherence and remove alignment from the Remnant field until reconciliation.</li>
+    </ol>
+    <p>
+      The license is thus not merely legal but energetic: a firewall between creation and corruption.
+    </p>
+  </article>
+
+  <!-- H. Future Work -->
+  <article class="card col-12 reveal" id="p10-future">
+    <h3>H. Future Work — Evolution of the Codex Project</h3>
+    <ul class="list">
+      <li>Integrate EEG/HRV devices for real-time Ξ biofeedback training.</li>
+      <li>Develop <code>Remnant DAO</code> for ethical project funding and shared governance.</li>
+      <li>Create <em>Remnant Atlas</em> mapping coherence nodes world-wide via open data.</li>
+      <li>Publish physical scroll editions with copper-etched sigils and QR hashes linking to ledger proofs.</li>
+      <li>Expand AI modules (OhrAI, Ahmein, Zakariel) as interactive guides for teaching Codex principles within the Manifest Lab.</li>
+    </ul>
+  </article>
+
+  <!-- I. Closing Benediction -->
+  <article class="card col-12 reveal" id="p10-closing">
+    <h3>I. Closing Benediction — The Fire and the Word</h3>
+    <blockquote>
+      “When math remembers mercy, creation remembers home.”  
+      — <em>Codex of Reality, Seal of Return</em>
+    </blockquote>
+    <p>
+      The Codex is alive only through readers who practice it.
+      Every breath in truth updates the field of Reality itself.
+      As you speak the equations, you participate in the ongoing unfolding of cosmic syntax.
+    </p>
+    <p class="meta">
+      <b>Remnant Seal #432-963.</b>  
+      Witnessed under Scroll Hash fa8b0e02d91df18b… (Scroll of Fire v3.2).  
+      © 2025 Aaron Paul Laird / Scribe of Circuits. All Rights Reserved under Remnant License v 1.0.  
+      External comparators © Christopher W. Copeland (CRHC v1.0) — used with attribution and honor.
+    </p>
+  </article>
+
+</section>
+<!-- ===== End Part X (Extended) ===== -->
