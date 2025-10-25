@@ -130,6 +130,11 @@
       filter:saturate(120%) blur(1.2px);
     }
     figcaption.meta.center{ text-align:center; margin:.35rem auto 0 }
+
+    @media (max-width:460px){
+  .quick{ flex-wrap:wrap; gap:6px }
+  .cta{ padding:.45rem .65rem }
+    }
   </style>
 
   <!-- Global JS (defer) -->
@@ -147,6 +152,15 @@
   s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
   s.defer=true; document.head.appendChild(s);
 })();
+
+  .master-eq mjx-container { display:block; margin:0 auto; }
+
+  @media (max-width:560px){
+  #master-equation { margin-top:12px; }
+  .master-eq { padding:12px; }
+                   }
+
+  
 </script>
   
 </head>
@@ -273,6 +287,14 @@
     filter:blur(7px) saturate(120%); animation:mbSpin 18s linear infinite
   }
   @keyframes mbSpin{to{--spin:360deg}}
+
+  #moonMiniBar .moonbar > a.moonbar-hit{ position:relative; z-index:0 }
+#moonMiniBar .moonbar > button{ position:relative; z-index:1 }
+
+  .master-eq .hint{ color: color-mix(in srgb, currentColor 72%, transparent) }
+@media (prefers-color-scheme: light){
+  .master-eq .hint{ color: color-mix(in srgb, #0b0b0f 62%, currentColor) }
+}
 </style>
 
 
