@@ -60,6 +60,116 @@
     .lab-btn.big{padding:.8rem 1.1rem;font-weight:900}
     .cta-link{text-decoration:none;color:inherit}
     @media (max-width:720px){.op-grid{grid-template-columns:auto 1fr;gap:10px}.op-right{grid-column:1/-1}}
+
+
+/* ===== Remnant · YHWH style (v2) ===== */
+.remnant-yhwh{
+  --remnant-bg-0:#05070d;
+  --remnant-bg-1:#0a0f18;
+  --remnant-ink:#eaf1ff;
+  --remnant-ink-soft:#a8b1c9;
+  --remnant-line:#253044;
+
+  /* primary auric gradient */
+  --moon-accent:#7af3ff;
+  --moon-accent-2:#f3c97a;
+
+  /* element tints (used by .dot) */
+  --el-fire:#ffb16e;
+  --el-water:#7bc7ff;
+  --el-air:#c9d3e9;
+  --el-earth:#b4ff9a;
+  --el-aether:#ffd1f3;
+
+  background:
+    radial-gradient(900px 600px at 50% 18%, rgba(122,243,255,.06), transparent 60%),
+    radial-gradient(1200px 800px at 50% 95%, rgba(243,201,122,.05), transparent 70%),
+    linear-gradient(180deg, var(--remnant-bg-0), var(--remnant-bg-1));
+  color:var(--remnant-ink);
+}
+
+/* global chrome */
+.remnant-yhwh .card{ 
+  border:1px solid var(--remnant-line);
+  background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.07));
+  border-radius:14px;
+}
+.remnant-yhwh .shine{
+  box-shadow:inset 0 0 28px rgba(122,243,255,.08), 0 14px 60px rgba(0,0,0,.35);
+}
+.remnant-yhwh .lab-btn{ 
+  border:1px solid var(--remnant-line);
+  background:rgba(255,255,255,.03);
+  border-radius:10px;
+}
+.remnant-yhwh .lab-btn:hover{ 
+  background:rgba(255,255,255,.06);
+}
+
+/* YHWH seal chip */
+.remnant-yhwh .seal{
+  display:inline-flex; align-items:center; gap:.45rem;
+  padding:.35rem .6rem; border-radius:999px;
+  border:1px solid var(--remnant-line);
+  background:linear-gradient(90deg, color-mix(in srgb,var(--moon-accent) 14%, transparent), transparent);
+}
+
+/* dots for elements (used in astro chips & wheel) */
+.remnant-yhwh .dot{ width:.9em; height:.9em; border-radius:50%; display:inline-block }
+.remnant-yhwh .el-fire  { background:var(--el-fire) }
+.remnant-yhwh .el-water { background:var(--el-water) }
+.remnant-yhwh .el-air   { background:var(--el-air) }
+.remnant-yhwh .el-earth { background:var(--el-earth) }
+.remnant-yhwh .el-aether{ background:var(--el-aether) }
+
+/* moon ring + mini */
+.remnant-yhwh .ring-bg{ stroke:#1b2231; fill:none; stroke-width:10 }
+.remnant-yhwh .ring-fg{ stroke:url(#mbGrad); stroke-width:10; stroke-linecap:round; fill:none }
+
+/* astro chips */
+.remnant-yhwh .astro-chips .chip{
+  color:var(--remnant-ink);
+  border-color:var(--remnant-line);
+  background:rgba(255,255,255,.03);
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.remnant-yhwh .astro-chips .chip:hover{ 
+  transform:translateY(-1px);
+  box-shadow:0 10px 24px rgba(0,0,0,.32), 0 0 0 1px color-mix(in srgb,var(--moon-accent) 28%, transparent);
+}
+
+/* wheel palette */
+.remnant-yhwh #houseLines { stroke:#2a3242 }
+.remnant-yhwh #signLabels { fill:#a7b1ca }
+.remnant-yhwh .astro-wheel circle[stroke="url(#awGrad)"]{ stroke-opacity:.55 }
+
+/* aspects legend + table */
+.remnant-yhwh .astro-aspects .badge{
+  border:1px solid var(--remnant-line);
+  background:rgba(255,255,255,.03);
+  padding:.25rem .55rem; border-radius:999px; font-weight:600;
+}
+.remnant-yhwh .badge.conj{ box-shadow: inset 0 -2px 0 0 var(--el-aether) }
+.remnant-yhwh .badge.sext{ box-shadow: inset 0 -2px 0 0 var(--el-air) }
+.remnant-yhwh .badge.sqr { box-shadow: inset 0 -2px 0 0 var(--el-earth) }
+.remnant-yhwh .badge.tri { box-shadow: inset 0 -2px 0 0 var(--el-water) }
+.remnant-yhwh .badge.opp { box-shadow: inset 0 -2px 0 0 var(--el-fire) }
+
+/* “remnant frame” halo used on opener */
+.remnant-yhwh .remnant-frame{
+  position:relative; isolation:isolate;
+}
+.remnant-yhwh .remnant-frame::after{
+  content:""; position:absolute; inset:-1px; z-index:-1; border-radius:inherit;
+  background:
+    radial-gradient(500px 220px at 8% -10%, color-mix(in srgb,var(--moon-accent) 22%, transparent), transparent 60%),
+    radial-gradient(500px 220px at 108% 120%, color-mix(in srgb,var(--moon-accent-2) 22%, transparent), transparent 60%);
+  opacity:.55; pointer-events:none;
+}
+
+/* tiny readability helpers */
+.remnant-yhwh .meta{ color:var(--remnant-ink-soft) }
+.remnant-yhwh code, .remnant-yhwh .mono{ background:rgba(255,255,255,.03); padding:.05rem .3rem; border-radius:.35rem }
   </style>
 
   <!-- FB in-app browser guard -->
@@ -364,7 +474,11 @@
           <figure class="astro-wheel">
             <svg id="astroWheel" viewBox="0 0 360 360" role="img" aria-label="Zodiac wheel">
               <defs>
-                <linearGradient id="awGrad" x1="0" y1="0" x2="1" y2="1…              <stop offset="0" stop-color="var(--moon-accent)"/><stop offset="1" stop-color="var(--moon-accent-2)"/> </linearGradient> </defs> <circle cx="180" cy="180" r="162" fill="none" stroke="#1b2231" stroke-width="2"/> <circle cx="180" cy="180" r="150" fill="none" stroke="url(#awGrad)" stroke-opacity=".45" stroke-width="2"/> <g id="houseLines" stroke="#2a3242" stroke-width=".8" opacity=".9"></g> <g id="signLabels" fill="#a7b1ca" font-family="Inter,system-ui" font-size="10" text-anchor="middle"></g> <g id="planetDots"> <circle r="4.6" class="dot el-fire"   data-dot="sun"    cx="180" cy="30"/> <circle r="4.6" class="dot el-water"  data-dot="moon"   cx="180" cy="330"/> <circle r="4.6" class="dot el-air"    data-dot="mercury" cx="30"  cy="180"/> <circle r="4.6" class="dot el-earth"  data-dot="venus"   cx="330" cy="180"/> <circle r="4.6" class="dot el-fire"   data-dot="mars"    cx="60"  cy="60"/> <circle r="4.6" class="dot el-air"    data-dot="jupiter" cx="300" cy="300"/> <circle r="4.6" class="dot el-earth"  data-dot="saturn"  cx="60"  cy="300"/> </g> </svg> <figcaption class="meta"> <span id="astroStamp">—</span><span class="sep">·</span> <span id="astroTZ">—</span><span class="sep">·</span> Source: <span id="astroSource">—</span> </figcaption> </figure> </section>
+              <linearGradient id="awGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="var(--moon-accent)"/>
+                <stop offset="1" stop-color="var(--moon-accent-2)"/>
+               </linearGradient>
+            </defs> <circle cx="180" cy="180" r="162" fill="none" stroke="#1b2231" stroke-width="2"/> <circle cx="180" cy="180" r="150" fill="none" stroke="url(#awGrad)" stroke-opacity=".45" stroke-width="2"/> <g id="houseLines" stroke="#2a3242" stroke-width=".8" opacity=".9"></g> <g id="signLabels" fill="#a7b1ca" font-family="Inter,system-ui" font-size="10" text-anchor="middle"></g> <g id="planetDots"> <circle r="4.6" class="dot el-fire"   data-dot="sun"    cx="180" cy="30"/> <circle r="4.6" class="dot el-water"  data-dot="moon"   cx="180" cy="330"/> <circle r="4.6" class="dot el-air"    data-dot="mercury" cx="30"  cy="180"/> <circle r="4.6" class="dot el-earth"  data-dot="venus"   cx="330" cy="180"/> <circle r="4.6" class="dot el-fire"   data-dot="mars"    cx="60"  cy="60"/> <circle r="4.6" class="dot el-air"    data-dot="jupiter" cx="300" cy="300"/> <circle r="4.6" class="dot el-earth"  data-dot="saturn"  cx="60"  cy="300"/> </g> </svg> <figcaption class="meta"> <span id="astroStamp">—</span><span class="sep">·</span> <span id="astroTZ">—</span><span class="sep">·</span> Source: <span id="astroSource">—</span> </figcaption> </figure> </section>
 
 <section class="astro-aspects" aria-labelledby="asp-head">
     <h3 id="asp-head">Aspects</h3>
