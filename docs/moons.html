@@ -645,8 +645,7 @@
       function helioXYZ(el, d){
         const N=(el.N + el.Nd*d) * RAD;
         const i=(el.i + el.id*d) * RAD;
-        the_w= (el.w + el.wd*d) * RAD;
-        const w=the_w;
+        const w=(el.w + el.wd*d) * RAD; // FIX: no undeclared assignment under "use strict"
         const a= el.a + el.ad*d;
         const e= el.e + el.ed*d;
         const M= norm360(el.M + el.Md*d);
@@ -657,7 +656,7 @@
         const x = r*( Math.cos(N)*Math.cos(v+w) - Math.sin(N)*Math.sin(v+w)*Math.cos(i) );
         const y = r*( Math.sin(N)*Math.cos(v+w) + Math.cos(N)*Math.sin(v+w)*Math.cos(i) );
         const z = r*( Math.sin(v+w)*Math.sin(i) );
-        return {x,y,z, lon:norm360(atan2(y,x))};
+      return {x,y,z, lon:norm360(atan2(y,x))};
       }
       function planetGeoLon(name, JD){
         const d=JD-2451543.5;
