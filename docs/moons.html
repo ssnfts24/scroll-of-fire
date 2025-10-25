@@ -892,7 +892,8 @@
     function syncMini(){
       if (mbName && moonName)  mbName.textContent = moonName.textContent || "—";
       if (mbEss  && moonEss)   mbEss.textContent  = moonEss.textContent  || "—";
-      if (mbDay  && dayIn…Moon) mbDay.textContent  = (dayInMoon.textContent||"—") + "/28"; if (mbYear && yearSpan)  mbYear.textContent = yearSpan.textContent || "—";
+if (mbDay  && dayInMoon)  mbDay.textContent  = (dayInMoon.textContent || "—") + "/28";
+if (mbYear && yearSpan)   mbYear.textContent = yearSpan.textContent   || "—";
 
 const mainDash = arcMain?.getAttribute("stroke-dasharray");
   if (arcMini && mainDash) arcMini.setAttribute("stroke-dasharray", mainDash);
