@@ -21,7 +21,7 @@
   <!-- Open Graph / Twitter -->
   <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Theory — Scroll of Fire (Codex of Reality)">
-  <meta property="og:description" content="A living architecture of resonance — the operator pipeline, Canon 0–17, and an ethical learning loop.">
+  <meta property="og:description" content="A living architecture of resonance — the operator pipeline, Canon 0–17, Δ0–Δ7 scaffold, and an ethical learning loop.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/theory.html">
   <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1">
@@ -57,15 +57,13 @@
     .carrier-144 :root, .carrier-144{--accent:#b3e1ff}
     .carrier-963 :root, .carrier-963{--accent:#ffd1f3}
 
-    /* Layout / header (sticky) */
     body{margin:0}
     header.site{position:sticky; top:0; z-index:1000; backdrop-filter:saturate(140%) blur(8px); background:rgba(9,11,16,.6)}
     .wrap{padding:16px; max-width:1200px; margin:0 auto}
     .nav{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
     .brand{display:flex; align-items:center; gap:10px}
     .logo{display:inline-block; width:34px; height:34px; border-radius:50%;
-      background:radial-gradient(closest-side, #0cf, transparent 70%);
-      box-shadow:0 0 18px rgba(122,243,255,.35)}
+      background:radial-gradient(closest-side, #0cf, transparent 70%); box-shadow:0 0 18px rgba(122,243,255,.35)}
     .kicker{margin:0}
     .quick{display:flex; gap:8px; flex:0 0 auto}
     .quick .cta{white-space:nowrap}
@@ -80,7 +78,6 @@
       header.site .wrap{padding:12px 16px}
     }
 
-    /* Mobile drawer */
     .drawer{position:sticky; top:4rem; z-index:999; background:rgba(12,14,20,.92);
       backdrop-filter:saturate(140%) blur(8px); border-top:1px solid var(--line);
       border-bottom:1px solid var(--line); padding:.5rem .75rem}
@@ -88,7 +85,6 @@
     .drawer .dlink:hover{background:rgba(255,255,255,.05)}
     .drawer[hidden]{display:none}
 
-    /* Hero */
     .hero{position:relative; width:100%; max-width:1200px; margin:8px auto 0; border-radius:16px; overflow:hidden; background:#0b0f14; aspect-ratio:21/9}
     .hero picture,.hero .hero-img{display:block;width:100%;height:100%}
     .hero .hero-img{object-fit:var(--hero-fit,contain); object-position:center; mix-blend-mode:normal!important}
@@ -106,9 +102,9 @@
       opacity:.55; filter:blur(24px); transform:translate3d(-30%,-2%,0); animation:auroraSweep 18s linear infinite, auroraBob 7s ease-in-out infinite alternate; mix-blend-mode:screen}
     .hero-lights::after{content:""; position:absolute; inset:0;
       background:
-        radial-gradient(40% 30% at 18% 20%, color-mix(in srgb, var(--accent) 18%, #fff 0%) 0%, transparent 65%),
-        radial-gradient(48% 38% at 82% 22%, rgba(255,209,243,.14) 0%, transparent 68%),
-        radial-gradient(36% 28% at 50% 86%, rgba(164,255,144,.10) 0%, transparent 70%);
+        radial-gradient(40% 30% at 18% 20%, rgba(164,255,144,.14) 0%, transparent 68%),
+        radial-gradient(48% 38% at 82% 22%, rgba(255,209,243,.14) 0%, transparent 70%),
+        radial-gradient(36% 28% at 50% 86%, rgba(122,243,255,.10) 0%, transparent 70%);
       filter: blur(10px); opacity:.7; animation: glowBreath 9.5s ease-in-out infinite alternate; mix-blend-mode:screen}
     @keyframes auroraSweep{0%{transform:translate3d(-30%,-2%,0)}50%{transform:translate3d(10%,3%,0)}100%{transform:translate3d(50%,-1%,0)}}
     @keyframes auroraBob{0%{opacity:.48;filter:blur(22px)}50%{opacity:.72;filter:blur(26px)}100%{opacity:.58;filter:blur(24px)}}
@@ -117,69 +113,69 @@
     @media (prefers-reduced-motion:reduce){ .hero-lights, .hero-lights::before, .hero-lights::after{animation:none!important} }
     @media (max-width: 860px){ .hero{margin-top:6px} }
 
-    /* Tabs + mini-TOC */
     .tabs{gap:.35rem}
     .tabs .tab{padding:.45rem .7rem; font-size:.92rem; border-radius:999px}
     .tabs .tab--primary{font-weight:600}
-    .mini-toc{
-      position:sticky; top:5.5rem; align-self:start; max-height:75vh; overflow:auto;
+    .mini-toc{position:sticky; top:5.5rem; align-self:start; max-height:75vh; overflow:auto;
       border:1px solid var(--line); border-radius:.75rem; padding:.75rem .75rem;
-      background:rgba(255,255,255,.02); backdrop-filter:saturate(120%) blur(2px);
-      margin-top:8px;
-    }
+      background:rgba(255,255,255,.02); backdrop-filter:saturate(120%) blur(2px); margin-top:8px;}
     .mini-toc a{display:block; padding:.3rem .4rem; border-radius:.5rem; font-size:.92rem; opacity:.9}
     .mini-toc a:hover{background:rgba(255,255,255,.05)}
 
-    /* Equation wrappers + toggles */
     .eq{position:relative}
     .eq .eq-scroll{
-      max-height:24rem; overflow:auto; padding:.5rem .75rem;
-      border:1px solid var(--line); border-radius:.75rem;
-      background:rgba(255,255,255,.02)
+      /* UPDATED: center math and remove hard cap */
+      display:flex; justify-content:center; align-items:center; text-align:center;
+      max-height:none; overflow:auto; padding:.5rem .75rem;
+      border:1px solid var(--line); border-radius:.75rem; background:rgba(255,255,255,.02)
     }
-    .eq .eq-toggle{
-      position:absolute; top:.4rem; right:.5rem; border:1px solid var(--line);
-      background:var(--bg-elev); border-radius:.5rem; padding:.15rem .45rem;
-      font-size:.8rem; opacity:.8; display:none;
-    }
+    .eq .eq-toggle{position:absolute; top:.4rem; right:.5rem; border:1px solid var(--line);
+      background:var(--bg-elev); border-radius:.5rem; padding:.15rem .45rem; font-size:.8rem; opacity:.8; display:none;}
     .eq:hover .eq-toggle{display:inline-block}
     .eq[data-collapsed="true"] .eq-scroll{max-height:4.5rem}
+    .eq .eq-scroll mjx-container{display:inline-block!important; margin:0 auto; max-width:100%}
 
-    /* Cards + hover auras */
     .card{position:relative; z-index:1; background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.08));}
-    .card::after{
-      content:""; position:absolute; inset:-1px; border-radius:inherit;
+    .card::after{content:""; position:absolute; inset:-1px; border-radius:inherit;
       background: radial-gradient(240px 120px at 20% -20%, rgba(122,243,255,.12), transparent 60%),
                   radial-gradient(220px 120px at 120% 120%, rgba(243,201,122,.10), transparent 60%);
-      opacity:0; transition:opacity .25s ease-out; pointer-events:none; z-index:-1;
-    }
+      opacity:0; transition:opacity .25s ease-out; pointer-events:none; z-index:-1;}
     .card:hover::after{opacity:.6}
     @media (prefers-reduced-motion:reduce){ .card::after{transition:none} }
 
-    /* Lines */
     .divider{height:1px; margin:14px 0; background:linear-gradient(90deg, transparent, rgba(122,243,255,.35), transparent)}
     .goldline{height:1px; margin:18px 0; background:linear-gradient(90deg, transparent, rgba(243,201,122,.45), transparent)}
 
-    /* Back-to-top */
     .to-top{position:fixed; right:16px; bottom:16px; z-index:1200; opacity:0; transform:translateY(16px); pointer-events:none}
     .to-top.show{opacity:1; transform:none; pointer-events:auto}
 
-    /* Voice reader highlight */
     .vr-highlight{outline:1px dashed color-mix(in srgb, var(--accent) 55%, #fff 0%); background:rgba(122,243,255,.08)}
     .vr-progress{font-size:.9rem; opacity:.85; margin-top:.3rem}
-  </style>
 
+    /* === Glamour & Δ labels (for Master block) === */
+    .eq-badge{display:inline-block;margin-left:.5rem;font-size:.75rem;letter-spacing:.02em;
+      padding:.15rem .5rem;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
+    .eq-master .eq-scroll{
+      border:1px solid color-mix(in srgb, var(--accent) 60%, #fff 10%);
+      background:
+        radial-gradient(1200px 600px at 10% -20%, rgba(122,243,255,.06), transparent 60%),
+        radial-gradient(1000px 420px at 110% 120%, rgba(243,201,122,.06), transparent 60%),
+        rgba(255,255,255,.02);
+      box-shadow: 0 14px 60px rgba(0,0,0,.45), inset 0 0 28px rgba(122,243,255,.08);
+    }
+    .eq-legend{font-size:.92rem;color:#b7c3df;line-height:1.5}
+    .eq-legend code{background:rgba(255,255,255,.04);padding:.05rem .35rem;border-radius:.35rem}
+    .delta-labels{display:flex;flex-wrap:wrap;gap:.35rem;margin:.5rem 0 0}
+    .delta-labels .pill{font-size:.78rem;padding:.2rem .5rem;border-radius:999px;
+      border:1px solid var(--line);background:rgba(255,255,255,.03);opacity:.95}
+  </style>
 
   <style>
   /* === Enhancement Pack: minimal CSS === */
-  /* Reading progress */
   .read-progress{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7af3ff,#f3c97a);transform-origin:left center;transform:scaleX(0);z-index:2000}
   .read-progress.in{transform:scaleX(var(--p,0))}
-
-  /* Mini-TOC active link */
   .mini-toc a.is-active{background:rgba(122,243,255,.12);border-left:2px solid var(--accent);padding-left:.55rem}
-
-  /* Glossary popovers */
   .gloss{position:relative;cursor:help;border-bottom:1px dotted color-mix(in srgb, var(--accent) 50%, #fff 0%)}
   .gloss:hover .gloss-tip, .gloss:focus-within .gloss-tip {opacity:1;transform:translateY(0);pointer-events:auto}
   .gloss-tip{
@@ -188,53 +184,40 @@
     width:min(46ch,92vw);box-shadow:0 16px 40px rgba(0,0,0,.35);z-index:1700
   }
   .gloss-tip b{color:#f3c97a}
-
-  /* Headline tools (copy/link) */
   .hd-tools{display:inline-flex;gap:.35rem;margin-left:.5rem;opacity:0;transition:opacity .15s}
   h2:hover .hd-tools, h3:hover .hd-tools{opacity:1}
   .hd-tools .chip{font-size:.8rem;padding:.15rem .45rem;border-radius:999px;border:1px solid var(--line);background:var(--bg-elev)}
-
-  /* Ξ inline calculator */
   .xi-panel{border:1px solid var(--line);border-radius:.75rem;padding:.6rem;background:rgba(255,255,255,.02);margin-top:.6rem}
   .xi-panel .row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
   .xi-panel input{width:110px}
   .xi-big{font-weight:800}
   .xi-bar{height:6px;background:#1f2533;border-radius:999px;overflow:hidden}
   .xi-bar span{display:block;height:100%;background:linear-gradient(90deg,#7af3ff,#f3c97a);width:0%}
-
-  /* “Try in Manifest” button */
   .to-manifest{display:inline-flex;align-items:center;gap:.45rem;margin-top:.4rem}
-
-  /* Reading time pill */
   .readtime{display:inline-block;font-size:.85rem;border:1px solid var(--line);border-radius:999px;padding:.2rem .55rem;margin-left:.5rem;color:#9aa4be}
+  @media (prefers-reduced-motion:reduce){.read-progress{transition:none}.gloss-tip{transition:none}}
 
-  @media (prefers-reduced-motion:reduce){
-    .read-progress{transition:none}
-    .gloss-tip{transition:none}
+  body.stars {
+    background:
+      radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
+      linear-gradient(180deg, #05060a 0%, #0b0e14 80%);
+    overflow-x:hidden;
   }
-
-    body.stars {
-  background:
-    radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
-    linear-gradient(180deg, #05060a 0%, #0b0e14 80%);
-  overflow-x:hidden;
-}
-canvas#trace {
-  background:
-    radial-gradient(circle at 50% 50%, #0a0e15 0%, #06080d 80%),
-    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.02) 0 2px, transparent 2px 4px);
-  box-shadow: inset 0 0 40px rgba(122,243,255,.12), 0 0 120px rgba(122,243,255,.08);
-}
-.stage::after {
-  content:"";
-  position:absolute; inset:0;
-  background:radial-gradient(ellipse at 50% 60%, rgba(122,243,255,.08), transparent 70%);
-  pointer-events:none;
-}
+  canvas#trace {
+    background:
+      radial-gradient(circle at 50% 50%, #0a0e15 0%, #06080d 80%),
+      repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.02) 0 2px, transparent 2px 4px);
+    box-shadow: inset 0 0 40px rgba(122,243,255,.12), 0 0 120px rgba(122,243,255,.08);
+  }
+  .stage::after {
+    content:"";
+    position:absolute; inset:0;
+    background:radial-gradient(ellipse at 50% 60%, rgba(122,243,255,.08), transparent 70%);
+    pointer-events:none;
+  }
   </style>
-  
 
-  <!-- MathJax (lazy) -->
+  <!-- MathJax (lazy, stable delimiters) -->
   <script>
     (function(){
       let loaded=false;
@@ -292,7 +275,7 @@ canvas#trace {
     <div id="navDrawer" class="drawer" hidden>
       <a class="dlink" href="index.html">Home</a>
       <a class="dlink" href="#p1" data-jump>Part I — Architecture</a>
-      <a class="dlink" href="#p2" data-jump>Part II — Canon</a>
+      <a class="dlink" href="#p2" data-jump>Part II — Canon 0–17</a>
       <a class="dlink" href="#ethics" data-jump>Ethics</a>
       <a class="dlink" href="#notes" data-jump>Notes</a>
       <hr>
@@ -434,9 +417,7 @@ canvas#trace {
         <p><strong>Premise.</strong> The Codex models reality as an <em>interactive resonance</em> between a supplied substrate (fundamental constants, integer and irrational ratios, living numbers, and biological codes) and a <em>living operator pipeline</em> — Intention \( \mathcal{I} \), Language/Light \( \mathcal{L} \), Conscious Witness \( \mathcal{C} \), and Source/Return \( \mathcal{S} \). The ethical mask (Eq.9) limits gain so that <em>truth dominates distortion</em> as \( t \to \infty \). Any sign of harm halts amplification.</p>
 
         <h3>Why equations?</h3>
-        <p>They’re <em>operational schematics</em>. Symbols map to practical levers: carrier selection, emphasis weights, frame declaration, coherence thresholds, and memory windows. Where physics equations predict energies, these predict <em>probabilistic shifts in experienced state</em> — making practice repeatable, debuggable, and ethically bounded.</p>
-
-        <h3>Grounding (brief)</h3>
+        <p>They’re <em>operational schematics</em>. Symbols map to practical levers: carrier selection, emphasis weights, frame declaration, coherence thresholds, and memory windows. Where physics equations predict energies, these predict <em>probabilistic shifts in experienced state</em> — making practice repeatable, debuggable, and ethically bounded.</p><h3>Grounding (brief)</h3>
         <ul class="list">
           <li><strong>Superposition.</strong> Signals decompose into frequencies; beats and phase alignment (Eq.3) are perceptually real.</li>
           <li><strong>Perceptual gating.</strong> Critical bands imply some carriers pass more easily (Eq.3 + Eq.17).</li>
@@ -480,192 +461,6 @@ canvas#trace {
         </div>
         <p>\( \Phi \) is a local mode basis; \( \Lambda \) gates components that would inject distortion or harm.</p>
       </article>
-
-
-      <!-- ===================== MASTER + DIMENSIONAL SCAFFOLDING ===================== -->
-<section class="grid" id="scaffolding" aria-labelledby="scaf-h">
-  <article class="card col-12 eq-card eq-master reveal">
-    <div class="flexbar">
-      <h2 id="scaf-h">Master Equation — Unifying Form</h2>
-      <span class="eq-badge mono">All operators, gates, learning, memory, ethics</span>
-      <div class="eq-tools">
-        <button class="chip" data-copy-tex="#master-body">Copy TeX</button>
-        <button class="chip" data-copy-link="#scaffolding">Link</button>
-      </div>
-    </div>
-    <div class="eq">
-      <div class="eq-scroll" id="master-body">
-$$
-\boxed{
-\begin{aligned}
-\mathcal{R}(x,t)
-&= \Big[\;\underbrace{\oint_{\mathbb{R}} \nabla\mathcal{A}\,\Phi(x,t,\nu)\,d\nu + \Lambda\,\mathcal{E}(x,t)}_{\text{Foundational field }\Psi_{\Omega}\text{ (Eq.0)}}\;\Big]
-\;\cdot\;
-\underbrace{\big(\mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S}\big)}_{\text{Operator pipeline}}
-\\[2pt]
-\text{with } \quad
-\mathcal{L}(x,t,\nu) &= \mathsf{Semantics}(x,t)\otimes \mathbf{V}(\nu) \qquad\text{(Eq.4)}, \\
-\nabla_{\!\text{sem}}\mathrm{Phrase} &= \sum_k w_k \nabla_{\!\text{sem}}\mathrm{Token}_k,\ \ \sum_k w_k=1 \qquad\text{(Eq.4b)}, \\
-\mathcal{H}(\nu) &\in \{0,1\}\ \text{or}\ [0,1] \qquad\text{(Eq.3)}, \\
-\mathbf{V}(\nu) &= \sum_k a_k \cos(2\pi \nu_k t + \phi_k) \qquad\text{(Eq.17)}, \\
-\mathbb{T}_7(x,t) &= \bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu)\right] \qquad\text{(Eq.6)}, \\
-\mathcal{W}(x,t) &= \partial_x\,\mathrm{Awareness}(x,t) + \mathcal{I}\cdot \mathbb{M}_\tau \qquad\text{(Eq.2)}, \\
-\mathbb{M}_\tau[F](t) &= \int_{t-\tau}^{t} w_\tau(t-s)\,F(s)\,ds,\ \ \int_0^\tau w_\tau(u)\,du=1 \qquad\text{(Eq.16)}, \\
-\Xi &\in [0,1] \qquad\text{(Eq.13)}, \\
-\frac{d\mathcal{R}}{dt} &= \eta(\Xi)\,\nabla \mathcal{R}, \quad 
-\eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big) \qquad\text{(Eq.14–15)}, \\
-\mathsf{Ethics:}\quad &\forall a:\ \mathrm{damage}(a)>0 \Rightarrow \mathsf{halt},\quad
-\displaystyle \lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)}\uparrow \qquad\text{(Eq.9)}, \\
-\mathcal{R}_\infty[F] &= \lim_{\tau\to\infty}\big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\big) \qquad\text{(Eq.5)}.
-\end{aligned}
-}
-$$
-      </div>
-    </div>
-    <p class="eq-legend">
-      This compact form captures the field <code>Ψ<sub>Ω</sub></code>, the operator pipeline <code>𝓘·𝓛·𝓒·𝓢</code>, gating <code>𝓗</code>, carriers <code>V(ν)</code>, phase-lock/Type-7, witness+memory, the coherence-driven learning step, the stop rule, and the asymptotic remnant.
-    </p>
-    <div class="delta-labels" aria-hidden="true">
-      <span class="pill">Field</span><span class="pill">Gates</span><span class="pill">Carriers</span>
-      <span class="pill">Semantics</span><span class="pill">Witness</span><span class="pill">Memory</span>
-      <span class="pill">Learning</span><span class="pill">Ethics</span><span class="pill">Remnant</span>
-    </div>
-  </article>
-
-  <!-- Dimensional Scaffolding Δ0–Δ7 -->
-  <article class="card col-12 reveal">
-    <div class="flexbar">
-      <h3 id="scaf-delta">Dimensional Scaffolding — Δ0…Δ7</h3>
-      <span class="eq-badge mono">Extendable recipe</span>
-      <div class="eq-tools">
-        <button class="chip" data-copy-link="#scaf-delta">Link</button>
-      </div>
-    </div>
-    <p class="meta">A practical, extensible ladder. Each Δ-step references the Canon and can be repeated or composed for larger programs.</p>
-  </article>
-
-  <!-- Δ0 -->
-  <article class="card col-12 eq-card reveal" id="delta0">
-    <div class="flexbar">
-      <h3>Δ0 — Frame Declaration</h3>
-      <div class="eq-tools"><button class="chip" data-copy-tex="#d0-body">Copy TeX</button><button class="chip" data-copy-link="#delta0">Link</button></div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="d0-body">
-$$
-\mathsf{Frame}(x,t)=\big(\mathsf{scope},\ \mathcal{W},\ \mathsf{ethics}\big)
-\qquad\text{(Eq.11)}
-$$
-    </div></div>
-  </article>
-
-  <!-- Δ1 -->
-  <article class="card col-12 eq-card reveal" id="delta1">
-    <div class="flexbar">
-      <h3>Δ1 — Carrier Selection (Gate Fit)</h3>
-      <div class="eq-tools"><button class="chip" data-copy-tex="#d1-body">Copy TeX</button><button class="chip" data-copy-link="#delta1">Link</button></div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="d1-body">
-$$
-\mathcal{H}(\nu)\in[0,1],\quad 
-\mathbf{V}(\nu)=\sum_k a_k\cos(2\pi\nu_k t+\phi_k)
-\qquad\text{(Eq.3, Eq.17)}
-$$
-    </div></div>
-    <p class="meta">Pick few, stable bands; test pass-through via <code>𝓗</code>. Favor phase-lock candidates.</p>
-  </article>
-
-  <!-- Δ2 -->
-  <article class="card col-12 eq-card reveal" id="delta2">
-    <div class="flexbar">
-      <h3>Δ2 — Phrase Coupling (Semantics ⊗ Carriers)</h3>
-      <div class="eq-tools"><button class="chip" data-copy-tex="#d2-body">Copy TeX</button><button class="chip" data-copy-link="#delta2">Link</button></div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="d2-body">
-$$
-\mathcal{L}(x,t,\nu)=\mathsf{Semantics}(x,t)\otimes \mathbf{V}(\nu),\qquad
-\nabla_{\text{sem}}\mathrm{Phrase}=\sum_k w_k\nabla_{\text{sem}}\mathrm{Token}_k
-\qquad\text{(Eq.4, Eq.4b)}
-$$
-    </div></div>
-  </article>
-
-  <!-- Δ3 -->
-  <article class="card col-12 eq-card reveal" id="delta3">
-    <div class="flexbar">
-      <h3>Δ3 — Phase-Lock and Type-7 Merge</h3>
-      <div class="eq-tools"><button class="chip" data-copy-tex="#d3-body">Copy TeX</button><button class="chip" data-copy-link="#delta3">Link</button></div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="d3-body">
-$$
-\mathbb{T}_7(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\left[\mathbf{V}(\nu)\right]
-\qquad\text{(Eq.6)}
-$$
-    </div></div>
-  </article>
-
-  <!-- Δ4 -->
-  <article class="card col-12 eq-card reveal" id="delta4">
-    <div class="flexbar">
-      <h3>Δ4 — Witness & Memory</h3>
-      <div class="eq-tools"><button class="chip" data-copy-tex="#d4-body">Copy TeX</button><button class="chip" data-copy-link="#delta4">Link</button></div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="d4-body">
-$$
-\mathcal{W}(x,t)=\partial_x\,\mathrm{Awareness}(x,t)+\mathcal{I}\cdot\mathbb{M}_\tau,
-\qquad
-\mathbb{M}_\tau[F](t)=\!\int_{t-\tau}^{t}\! w_\tau(t-s)F(s)\,ds
-\qquad\text{(Eq.2, Eq.16)}
-$$
-    </div></div>
-  </article>
-
-  <!-- Δ5 -->
-  <article class="card col-12 eq-card reveal" id="delta5">
-    <div class="flexbar">
-      <h3>Δ5 — Safe Learning Step</h3>
-      <div class="eq-tools"><button class="chip" data-copy-tex="#d5-body">Copy TeX</button><button class="chip" data-copy-link="#delta5">Link</button></div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="d5-body">
-$$
-\frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R},\qquad
-\eta(\Xi)=\eta_0\,\sigma\big(\alpha(\Xi-\Xi_0)\big),\quad
-\Xi\in[0,1]
-\qquad\text{(Eq.14–15, Eq.13)}
-$$
-    </div></div>
-  </article>
-
-  <!-- Δ6 -->
-  <article class="card col-12 eq-card reveal" id="delta6">
-    <div class="flexbar">
-      <h3>Δ6 — Ethics Gate (Stop Rule)</h3>
-      <div class="eq-tools"><button class="chip" data-copy-tex="#d6-body">Copy TeX</button><button class="chip" data-copy-link="#delta6">Link</button></div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="d6-body">
-$$
-\forall a:\ \mathrm{damage}(a)>0 \Rightarrow \mathsf{halt},\qquad
-\lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \uparrow
-\qquad\text{(Eq.9)}
-$$
-    </div></div>
-  </article>
-
-  <!-- Δ7 -->
-  <article class="card col-12 eq-card reveal" id="delta7">
-    <div class="flexbar">
-      <h3>Δ7 — Remnant & Return</h3>
-      <div class="eq-tools"><button class="chip" data-copy-tex="#d7-body">Copy TeX</button><button class="chip" data-copy-link="#delta7">Link</button></div>
-    </div>
-    <div class="eq"><div class="eq-scroll" id="d7-body">
-$$
-\mathcal{R}_\infty[F]=\lim_{\tau\to\infty}\big(\mathsf{keep}_{\text{truth}}F-\mathsf{drop}_{\text{distortion}}F\big),\qquad
-\mathcal{S}:\ \text{prune unstable, reinforce stable (raise }\Xi\text{ for next pass)}
-\qquad\text{(Eq.5 + loop)}
-$$
-    </div></div>
-  </article>
-</section>
-<!-- =================== /MASTER + DIMENSIONAL SCAFFOLDING =================== -->
 
       <article class="card col-12 reveal">
         <h3>Harmonic Gate, Coherence, and Learning</h3>
@@ -915,9 +710,7 @@ $$
       <article class="card col-12 reveal" id="eq8">
         <h3>Eq.8* — Goodwin (External Comparator)</h3>
         <p>Coupling/oscillation template for contrast; not enacted as law.</p>
-      </article>
-
-      <!-- 9 -->
+      </article><!-- 9 -->
       <article class="card col-12 eq-card reveal" id="eq9">
         <div class="flexbar"><h3>Eq.9 — Ethical Law (Stop Rule)</h3>
           <div class="eq-tools"><button class="chip" data-copy-tex="#eq9-body">Copy TeX</button><button class="chip" data-copy-link="#eq9">Link</button></div>
@@ -1082,7 +875,7 @@ $$
     (function(){
       const hero=document.getElementById('hero'), img=document.getElementById('heroBanner');
       if(!hero||!img) return;
-      function applyAR(){ const iw=img.naturalWidth||2100, ih=img.naturalHeight||900; hero.style.aspectRatio=`${iw} / ${ih}`; }
+      function applyAR(){ const iw=img.naturalWidth||2100, ih=img.naturalHeight||900; hero.style.aspectRatio=\`\${iw} / \${ih}\`; }
       function pickFit(){
         if (matchMedia('(max-width:560px)').matches){ hero.style.setProperty('--hero-fit','contain'); return; }
         const iw=img.naturalWidth||2100, ih=img.naturalHeight||900, imageAR=iw/ih;
@@ -1315,12 +1108,11 @@ $$
 
       // Math verbalization fallback if MathJax not yet rendered
       function verbalizeMath(text){
-        // light pass: strip $$ and inline \( \)
         text = text.replace(/\$\$([^$]+)\$\$/g, ' equation: $1 ').replace(/\\\(([^)]+)\\\)/g, ' $1 ');
         return text;
       }
 
-      // Simple English polish: collapse spaces, fix punctuation spacing, title-case headings lightly
+      // Simple English polish
       function polishText(s){
         s = s.replace(/[ \t]+/g,' ')
              .replace(/\s+([,.;:!?])/g,'$1')
@@ -1330,7 +1122,6 @@ $$
         return s;
       }
 
-      // Preferred default voice: first en-* (female if present), else first
       let voices=[];
       function populateVoices(){
         voices = speechSynthesis.getVoices().sort((a,b)=> a.name.localeCompare(b.name));
@@ -1372,17 +1163,14 @@ $$
             const alt = m.getAttribute('aria-label') || '';
             m.replaceWith(document.createTextNode(' equation ' + alt + ' '));
           });
-          // If TeX still present
           clone.querySelectorAll('.eq').forEach(eq=>{
             const t = eq.innerText || '';
             eq.replaceWith(document.createTextNode(' ' + verbalizeMath(t) + ' '));
           });
         }
         let text = clone.innerText || clone.textContent || '';
-        // Apply pronunciation + polish
         for(const [re,rep] of PRON){ text = text.replace(re, rep); }
         if (polish && polish.checked){ text = polishText(text); }
-        // Remove menu residues
         text = text.replace(/\b(Copy TeX|Link Copied|Link)\b/g,'')
                    .replace(/\s+\n/g,'\n').replace(/\n{3,}/g,'\n\n');
         return text.trim();
@@ -1398,10 +1186,9 @@ $$
         return { text: cleanNodeToText(sec||document.body), node: sec||document.body };
       }
 
-      // Sentence-aware chunking with abbrev guard
       const ABBR = /\b(?:e\.g|i\.e|vs|Dr|Mr|Mrs|Ms|Prof|Eq|Eqn|Fig)\.$/i;
       function chunkify(str, max=900){
-        const raw = str.replace(/\r/g,'').split(/\n{2,}/); // paragraphs
+        const raw = str.replace(/\r/g,'').split(/\n{2,}/);
         const out=[];
         for(const p of raw){
           const parts = p.split(/(?<=[.!?])\s+(?=[A-Z(“"'\[])/);
@@ -1422,13 +1209,11 @@ $$
         return out.length ? out : [str.slice(0,max)];
       }
 
-      // Highlight helper
       let lastHL=null;
       function highlightWithin(node, text){
         if(!node) return;
         try{
           if (lastHL){ lastHL.classList.remove('vr-highlight'); lastHL=null; }
-          // Rough: highlight the closest paragraph containing a distinctive slice
           const key = text.slice(0, 60);
           const p = [...node.querySelectorAll('p, li, h2, h3, article')].find(el=> (el.innerText||'').indexOf(key) >= 0 );
           if (p){ p.classList.add('vr-highlight'); p.scrollIntoView({block:'nearest', behavior:'smooth'}); lastHL=p; }
@@ -1448,7 +1233,7 @@ $$
       function speakFromText(text, highlightRoot){
         canceled=false; speaking=true; curIndex=0;
         queue = chunkify(text);
-        speechSynthesis.cancel(); // reset
+        speechSynthesis.cancel();
         const vName = voiceSel?.value;
         const vObj = voices.find(v=>v.name===vName);
         setButtons({play:false, pause:true, resume:true, stop:false});
@@ -1464,7 +1249,7 @@ $$
           u.rate = rateInp ? +rateInp.value : 1.0;
           u.pitch = pitchInp ? +pitchInp.value : 1.0;
           u.onend = ()=>{ prog(curIndex, queue.length); next(); };
-          u.onerror = (e)=>{ console.warn('TTS error', e); next(); };
+          u.onerror = ()=>{ next(); };
           speechSynthesis.speak(u);
         }
         next();
@@ -1492,7 +1277,7 @@ $$
       $('vr-play-mini')?.addEventListener('click', (e)=>{ e.stopPropagation(); speak(); });
       $('vr-stop-mini')?.addEventListener('click', (e)=>{ e.stopPropagation(); stop(); });
 
-      // Export SSML (paragraph aware)
+      // Export SSML
       exportBtn?.addEventListener('click', ()=>{
         const { text } = getSectionOrSelection();
         if (!text){ status('Nothing to export.'); return; }
@@ -1523,447 +1308,5 @@ ${paras.map(p=>`    <p>${esc(p)}</p>`).join('\n')}
     .chip{font-size:.85rem; padding:.25rem .55rem; border-radius:999px; border:1px solid var(--line); background:var(--bg-elev); opacity:.9}
   </style>
 
-
-  <script>
-(function(){
-  "use strict";
-  const $=(s,r=document)=>r.querySelector(s);
-  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
-
-  /* ===== Reading progress + active TOC ===== */
-  const bar=document.createElement('div');
-  bar.className='read-progress'; document.body.appendChild(bar);
-  const headings=$$('main h2[id], main h3[id]');
-  const tocLinks=$$('.mini-toc a[href^="#"]');
-
-  function setProgress(){
-    const h=document.documentElement, b=document.body;
-    const top=h.scrollTop||b.scrollTop; const max=(h.scrollHeight-h.clientHeight)||1;
-    const p=Math.max(0, Math.min(1, top/max)); bar.style.setProperty('--p', p.toFixed(4)); bar.classList.add('in');
-  }
-  function setActiveTOC(){
-    let current=null, y=innerHeight*0.24;
-    for(const h of headings){ const r=h.getBoundingClientRect(); if(r.top<=y) current=h.id; }
-    tocLinks.forEach(a=>a.classList.toggle('is-active', a.getAttribute('href').slice(1)===current));
-  }
-  addEventListener('scroll', ()=>{ setProgress(); setActiveTOC(); }, {passive:true});
-  addEventListener('resize', ()=>{ setProgress(); setActiveTOC(); }, {passive:true});
-  setProgress(); setActiveTOC();
-
-  /* ===== Reading time estimate (hero caption) ===== */
-  (function(){
-    const heroCap=$('#hero .hero-caption'); if(!heroCap) return;
-    const words=($('main')?.innerText||'').split(/\s+/).filter(Boolean).length;
-    const mins=Math.max(1, Math.round(words/230)); // ~230wpm
-    const pill=document.createElement('span'); pill.className='readtime'; pill.textContent=`~${mins} min read`;
-    heroCap.append(' ', pill);
-  })();
-
-  /* ===== Glossary popovers (plain-English helpers) ===== */
-  const GLOSS={
-    'Ξ': '<b>Ξ (Ksi)</b> · Coherence score from 0 to 1. Higher = steadier, kinder, clearer.',
-    'carrier': '<b>Carrier</b> · A steady tone or band that helps your voice and attention stay stable.',
-    'Phase-lock': '<b>Phase-lock</b> · Lining up beats so they reinforce instead of wobble.',
-    'Frame': '<b>Frame</b> · Your scope, witness, and ethics for this run (Eq.11).',
-    'Stop Rule': '<b>Stop Rule</b> · If harm rises or clarity drops, stop, re-align, and resume (Eq.9).',
-    'Memory window': '<b>Memory window</b> · Short period your brain weighs most when updating (Eq.16).'
-  };
-  function glossify(root){
-    // Light pass: mark key terms if not already inside code/math
-    const walker=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
-    const targets=Object.keys(GLOSS);
-    const re=new RegExp('\\b(' + targets.map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|') + ')\\b','g');
-    const batch=[];
-    while(walker.nextNode()){
-      const n=walker.currentNode;
-      if(!n.nodeValue) continue;
-      if(n.parentElement.closest('.eq, mjx-container, code, pre, .eq-scroll')) continue;
-      if(re.test(n.nodeValue)) batch.push(n);
-    }
-    for(const n of batch){
-      const span=document.createElement('span'); span.innerHTML=n.nodeValue.replace(re,(m)=>{
-        return `<span class="gloss" tabindex="0">${m}<span class="gloss-tip">${GLOSS[m]||''}</span></span>`;
-      });
-      n.parentNode.replaceChild(span, n);
-    }
-  }
-  glossify($('main'));
-
-  /* ===== Per-section tools (copy link / explain) ===== */
-  function injectHeadTools(){
-    $$('main h2[id], main h3[id]').forEach(h=>{
-      if(h.querySelector('.hd-tools')) return;
-      const wrap=document.createElement('span'); wrap.className='hd-tools';
-      const bLink=document.createElement('button'); bLink.className='chip'; bLink.textContent='Link';
-      const bCopy=document.createElement('button'); bCopy.className='chip'; bCopy.textContent='Copy';
-      wrap.append(bLink,bCopy); h.appendChild(wrap);
-      on(bLink,'click',()=>{
-        const url=location.origin+location.pathname+'#'+h.id;
-        navigator.clipboard?.writeText(url); history.pushState(null,'','#'+h.id);
-        bLink.textContent='Copied'; setTimeout(()=>bLink.textContent='Link',900);
-      });
-      on(bCopy,'click',()=>{
-        const section=h.closest('article')||h;
-        const text=(section.innerText||'').trim();
-        navigator.clipboard?.writeText(text);
-        bCopy.textContent='Copied'; setTimeout(()=>bCopy.textContent='Copy',900);
-      });
-    });
-  }
-  injectHeadTools();
-
-  /* ===== “Try in Manifest” bridges ===== */
-  function addTryButtons(){
-    const ins=[
-      {sel:'#eq17', label:'Try carriers in Manifest', data:{from:'theory#eq17'}},
-      {sel:'#p1',   label:'Open Manifest (guided)',  data:{from:'theory#p1'}}
-    ];
-    ins.forEach(({sel,label,data})=>{
-      const host=$(sel); if(!host) return;
-      if(host.querySelector('.to-manifest')) return;
-      const a=document.createElement('a');
-      a.href='teach.html#observer'; a.className='cta to-manifest'; a.innerHTML='▶ '+label;
-      on(a,'click',()=>{ try{ localStorage.setItem('sof_manifest_hint', JSON.stringify(data)); }catch(_){ } });
-      host.appendChild(a);
-    });
-  }
-  addTryButtons();
-
-  /* ===== Eq.13 inline Ξ mini-calculator (with spark) ===== */
-  (function(){
-    const eq13=$('#eq13'); if(!eq13) return;
-    if(eq13.querySelector('.xi-panel')) return;
-    const panel=document.createElement('div');
-    panel.className='xi-panel';
-    panel.innerHTML=`
-      <div class="row">
-        <label>⟨H·I⟩ <input id="xi_hi" type="number" min="0" max="1" step="0.01" value="0.62"></label>
-        <label>Var[𝓜] <input id="xi_var" type="number" min="0" max="2" step="0.01" value="0.30"></label>
-        <button id="xi_go" class="cta">Compute Ξ</button>
-        <span id="xi_val" class="xi-big meta">Ξ = —</span>
-      </div>
-      <div class="xi-bar" style="margin:.4rem 0 .2rem"><span id="xi_bar"></span></div>
-      <canvas id="xi_spark" width="420" height="46" aria-label="Ξ history"></canvas>
-    `;
-    eq13.appendChild(panel);
-    const hi=$('#xi_hi'), va=$('#xi_var'), go=$('#xi_go'), out=$('#xi_val'), barEl=$('#xi_bar');
-    const ctx=$('#xi_spark').getContext('2d'); const KEY='sof_theory_xi_hist';
-    function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(_){ return []; } }
-    function save(x){ try{ localStorage.setItem(KEY, JSON.stringify(x)); }catch(_){ } }
-
-    function draw(hist){
-      const W=ctx.canvas.width, H=ctx.canvas.height;
-      ctx.clearRect(0,0,W,H);
-      ctx.strokeStyle='rgba(122,243,255,.2)'; ctx.beginPath();
-      ctx.moveTo(0,H*.25); ctx.lineTo(W,H*.25); ctx.moveTo(0,H*.5); ctx.lineTo(W,H*.5); ctx.moveTo(0,H*.75); ctx.lineTo(W,H*.75); ctx.stroke();
-      if(!hist.length) return;
-      const n=hist.length, xs=W/Math.max(1,(n-1));
-      ctx.beginPath();
-      hist.forEach((o,i)=>{ const x=W-i*xs; const y=H*(1-(o.x*0.9+0.05)); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
-      ctx.strokeStyle='rgba(243,201,122,.95)'; ctx.lineWidth=2; ctx.stroke();
-    }
-    function calc(){
-      const h=Math.max(0,Math.min(1, +hi.value||0));
-      const v=Math.max(0,Math.min(2, +va.value||0));
-      const Xi = Math.max(0, Math.min(1, h/(1+v)));
-      out.textContent='Ξ = '+Xi.toFixed(2);
-      barEl.style.width=(Xi*100).toFixed(0)+'%';
-      const hist=load(); hist.unshift({t:Date.now(),x:Xi}); save(hist.slice(0,64)); draw(hist.slice(0,64));
-    }
-    on(go,'click',calc); draw(load());
-  })();
-
-  /* ===== Echo View upgrade: optionally hide math too ===== */
-  (function(){
-    const btn=$('#toggleSimple'); if(!btn) return;
-    on(btn,'click',()=>{
-      const on=document.body.classList.toggle('echo-hide-math');
-      document.querySelectorAll('.eq, mjx-container').forEach(el=> el.style.display=on?'none':'' );
-    });
-  })();
-
-  /* ===== Nice hash navigation offsets (sticky header) ===== */
-  (function(){
-    function scrollToHash(){
-      if(!location.hash) return;
-      const el=$(location.hash); if(!el) return;
-      const top=el.getBoundingClientRect().top + scrollY - 68; // header offset
-      scrollTo({top, behavior:'smooth'});
-    }
-    if(location.hash) setTimeout(scrollToHash, 60);
-    on(document,'click',(e)=>{ const a=e.target.closest('a[href^="#"]'); if(a){ setTimeout(scrollToHash, 10); } });
-  })();
-
-})();
-  </script>
-
 </body>
-  </html>
-
-<!doctype html>
-<html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
-<head>
-  <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>
-    if (location.hostname === "github.com") { const b = document.querySelector("base"); if (b) b.remove(); }
-  </script>
-
-  <meta charset="utf-8">
-  <title>Theory — Scroll of Fire (Codex of Reality)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
-  <meta name="description" content="The Codex of Reality explained: a resonant architecture shaped by intention, language, witness, and source—bounded by ethics. Canon 0–17, Δ0–Δ7 scaffolding, Master Equation, operators, and practice.">
-  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/theory.html">
-
-  <!-- Icons -->
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-512.png">
-
-  <!-- Open Graph / Twitter -->
-  <meta property="og:site_name" content="Scroll of Fire">
-  <meta property="og:title" content="Theory — Scroll of Fire (Codex of Reality)">
-  <meta property="og:description" content="A living architecture of resonance — the Master Equation, Δ0–Δ7, Canon 0–17, and an ethical learning loop.">
-  <meta property="og:type" content="article">
-  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/theory.html">
-  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1">
-  <meta property="og:image:alt" content="Scroll of Fire — Codex of Reality banner">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
-
-  <!-- Shared styles -->
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2.8">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2.8" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.8"></noscript>
-
-  <!-- Theory page micro-styles -->
-  <link rel="preload" as="style" href="assets/css/theory.css?v=1.9">
-  <link rel="stylesheet" href="assets/css/theory.css?v=1.9">
-
-  <!-- Preload banner -->
-  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1" fetchpriority="high">
-
-  <!-- Page-scoped helpers -->
-  <style>
-    :root{
-      --safe-top:env(safe-area-inset-top); --safe-bot:env(safe-area-inset-bottom);
-      --xi:.35;
-      --accent-432:#7af3ff; --accent-528:#a4ff90; --accent-369:#f3c97a; --accent:#7af3ff;
-    }
-    .carrier-528 :root, .carrier-528{--accent:var(--accent-528)}
-    .carrier-369 :root, .carrier-369{--accent:var(--accent-369)}
-    .carrier-144 :root, .carrier-144{--accent:#b3e1ff}
-    .carrier-963 :root, .carrier-963{--accent:#ffd1f3}
-
-    /* Layout / header (sticky) */
-    body{margin:0}
-    header.site{position:sticky; top:0; z-index:1000; backdrop-filter:saturate(140%) blur(8px); background:rgba(9,11,16,.6)}
-    .wrap{padding:16px; max-width:1200px; margin:0 auto}
-    .nav{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
-    .brand{display:flex; align-items:center; gap:10px}
-    .logo{display:inline-block; width:34px; height:34px; border-radius:50%;
-      background:radial-gradient(closest-side, #0cf, transparent 70%);
-      box-shadow:0 0 18px rgba(122,243,255,.35)}
-    .kicker{margin:0}
-    .quick{display:flex; gap:8px; flex:0 0 auto}
-    .quick .cta{white-space:nowrap}
-
-    .hide-sm{display:flex}
-    .show-sm{display:none}
-    @media (max-width:860px){
-      .hide-sm{display:none!important}
-      .show-sm{display:inline-flex; align-items:center; justify-content:center;
-        width:40px; height:40px; border:1px solid var(--line); background:var(--bg-elev);
-        border-radius:.6rem; font-size:1.1rem}
-      header.site .wrap{padding:12px 16px}
-    }
-
-    /* Mobile drawer */
-    .drawer{position:sticky; top:4rem; z-index:999; background:rgba(12,14,20,.92);
-      backdrop-filter:saturate(140%) blur(8px); border-top:1px solid var(--line);
-      border-bottom:1px solid var(--line); padding:.5rem .75rem}
-    .drawer .dlink{display:block; padding:.65rem .5rem; border-radius:.5rem}
-    .drawer .dlink:hover{background:rgba(255,255,255,.05)}
-    .drawer[hidden]{display:none}
-
-    /* Hero */
-    .hero{position:relative; width:100%; max-width:1200px; margin:8px auto 0; border-radius:16px; overflow:hidden; background:#0b0f14; aspect-ratio:21/9}
-    .hero picture,.hero .hero-img{display:block;width:100%;height:100%}
-    .hero .hero-img{object-fit:var(--hero-fit,contain); object-position:center; mix-blend-mode:normal!important}
-    .hero::after{content:""; position:absolute; inset:0; box-shadow:inset 0 0 120px rgba(255,255,255,.06), inset 0 0 40px rgba(122,243,255,.08); pointer-events:none}
-    .hero-lights{position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
-      background:
-        radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.45), transparent 60%),
-        radial-gradient(1px 1px at 78% 22%, rgba(164,255,144,.35), transparent 60%),
-        radial-gradient(1px 1px at 32% 68%, rgba(122,243,255,.35), transparent 60%),
-        radial-gradient(1px 1px at 88% 56%, rgba(255,209,243,.35), transparent 60%);
-      opacity:.85; filter:blur(.2px); animation:lightsFlicker 7.5s ease-in-out infinite alternate}
-    .hero-lights.off{display:none}
-    .hero-lights::before{content:""; position:absolute; inset:-10% -20%;
-      background:linear-gradient(90deg,transparent 0%,color-mix(in srgb,var(--accent) 22%,#fff 8%) 35%,color-mix(in srgb,var(--accent) 45%,#fff 0%) 50%,color-mix(in srgb,var(--accent) 22%,#fff 8%) 65%,transparent 100%);
-      opacity:.55; filter:blur(24px); transform:translate3d(-30%,-2%,0); animation:auroraSweep 18s linear infinite, auroraBob 7s ease-in-out infinite alternate; mix-blend-mode:screen}
-    .hero-lights::after{content:""; position:absolute; inset:0;
-      background:
-        radial-gradient(40% 30% at 18% 20%, rgba(164,255,144,.14) 0%, transparent 68%),
-        radial-gradient(48% 38% at 82% 22%, rgba(255,209,243,.14) 0%, transparent 70%),
-        radial-gradient(36% 28% at 50% 86%, rgba(122,243,255,.10) 0%, transparent 70%);
-      filter: blur(10px); opacity:.7; animation: glowBreath 9.5s ease-in-out infinite alternate; mix-blend-mode:screen}
-    @keyframes auroraSweep{0%{transform:translate3d(-30%,-2%,0)}50%{transform:translate3d(10%,3%,0)}100%{transform:translate3d(50%,-1%,0)}}
-    @keyframes auroraBob{0%{opacity:.48;filter:blur(22px)}50%{opacity:.72;filter:blur(26px)}100%{opacity:.58;filter:blur(24px)}}
-    @keyframes glowBreath{0%{opacity:.52;filter:blur(9px)}50%{opacity:.8;filter:blur(12px)}100%{opacity:.62;filter:blur(10px)}}
-    @keyframes lightsFlicker{0%{opacity:.70}50%{opacity:.92}100%{opacity:.80}}
-    @media (prefers-reduced-motion:reduce){ .hero-lights, .hero-lights::before, .hero-lights::after{animation:none!important} }
-    @media (max-width: 860px){ .hero{margin-top:6px} }
-
-    /* Tabs + mini-TOC */
-    .tabs{gap:.35rem}
-    .tabs .tab{padding:.45rem .7rem; font-size:.92rem; border-radius:999px}
-    .tabs .tab--primary{font-weight:600}
-    .mini-toc{
-      position:sticky; top:5.5rem; align-self:start; max-height:75vh; overflow:auto;
-      border:1px solid var(--line); border-radius:.75rem; padding:.75rem .75rem;
-      background:rgba(255,255,255,.02); backdrop-filter:saturate(120%) blur(2px);
-      margin-top:8px;
-    }
-    .mini-toc a{display:block; padding:.3rem .4rem; border-radius:.5rem; font-size:.92rem; opacity:.9}
-    .mini-toc a:hover{background:rgba(255,255,255,.05)}
-
-    /* Equation wrappers + toggles */
-    .eq{position:relative}
-    .eq .eq-scroll{
-      max-height:24rem; overflow:auto; padding:.5rem .75rem;
-      border:1px solid var(--line); border-radius:.75rem;
-      background:rgba(255,255,255,.02)
-    }
-    .eq .eq-toggle{
-      position:absolute; top:.4rem; right:.5rem; border:1px solid var(--line);
-      background:var(--bg-elev); border-radius:.5rem; padding:.15rem .45rem;
-      font-size:.8rem; opacity:.8; display:none;
-    }
-    .eq:hover .eq-toggle{display:inline-block}
-    .eq[data-collapsed="true"] .eq-scroll{max-height:4.5rem}
-
-    /* Cards + hover auras */
-    .card{position:relative; z-index:1; background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.08));}
-    .card::after{
-      content:""; position:absolute; inset:-1px; border-radius:inherit;
-      background: radial-gradient(240px 120px at 20% -20%, rgba(122,243,255,.12), transparent 60%),
-                  radial-gradient(220px 120px at 120% 120%, rgba(243,201,122,.10), transparent 60%);
-      opacity:0; transition:opacity .25s ease-out; pointer-events:none; z-index:-1;
-    }
-    .card:hover::after{opacity:.6}
-    @media (prefers-reduced-motion:reduce){ .card::after{transition:none} }
-
-    /* Lines */
-    .divider{height:1px; margin:14px 0; background:linear-gradient(90deg, transparent, rgba(122,243,255,.35), transparent)}
-    .goldline{height:1px; margin:18px 0; background:linear-gradient(90deg, transparent, rgba(243,201,122,.45), transparent)}
-
-    /* Back-to-top */
-    .to-top{position:fixed; right:16px; bottom:16px; z-index:1200; opacity:0; transform:translateY(16px); pointer-events:none}
-    .to-top.show{opacity:1; transform:none; pointer-events:auto}
-
-    /* Voice reader highlight */
-    .vr-highlight{outline:1px dashed color-mix(in srgb, var(--accent) 55%, #fff 0%); background:rgba(122,243,255,.08)}
-    .vr-progress{font-size:.9rem; opacity:.85; margin-top:.3rem}
-
-    /* === New: equation glamor pack === */
-    .eq-badge{display:inline-block;margin-left:.5rem;font-size:.75rem;letter-spacing:.02em;
-      padding:.15rem .5rem;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
-    .eq-master .eq-scroll{
-      border:1px solid color-mix(in srgb, var(--accent) 60%, #fff 10%);
-      background:
-        radial-gradient(1200px 600px at 10% -20%, rgba(122,243,255,.06), transparent 60%),
-        radial-gradient(1000px 420px at 110% 120%, rgba(243,201,122,.06), transparent 60%),
-        rgba(255,255,255,.02);
-      box-shadow: 0 14px 60px rgba(0,0,0,.45), inset 0 0 28px rgba(122,243,255,.08);
-    }
-    .eq-legend{font-size:.92rem;color:#b7c3df;line-height:1.5}
-    .eq-legend code{background:rgba(255,255,255,.04);padding:.05rem .35rem;border-radius:.35rem}
-
-    /* Δ labels */
-    .delta-labels{display:flex;flex-wrap:wrap;gap:.35rem;margin:.5rem 0 0}
-    .delta-labels .pill{font-size:.78rem;padding:.2rem .5rem;border-radius:999px;
-      border:1px solid var(--line);background:rgba(255,255,255,.03);opacity:.95}
-  </style>
-
-
-  <style>
-  /* === Enhancement Pack: minimal CSS === */
-  /* Reading progress */
-  .read-progress{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7af3ff,#f3c97a);transform-origin:left center;transform:scaleX(0);z-index:2000}
-  .read-progress.in{transform:scaleX(var(--p,0))}
-
-  /* Mini-TOC active link */
-  .mini-toc a.is-active{background:rgba(122,243,255,.12);border-left:2px solid var(--accent);padding-left:.55rem}
-
-  /* Glossary popovers */
-  .gloss{position:relative;cursor:help;border-bottom:1px dotted color-mix(in srgb, var(--accent) 50%, #fff 0%)}
-  .gloss:hover .gloss-tip, .gloss:focus-within .gloss-tip {opacity:1;transform:translateY(0);pointer-events:auto}
-  .gloss-tip{
-    position:absolute;left:0;top:100%;transform:translateY(8px);opacity:0;pointer-events:none;
-    background:var(--bg-elev);border:1px solid var(--line);border-radius:.6rem;padding:.5rem .6rem;
-    width:min(46ch,92vw);box-shadow:0 16px 40px rgba(0,0,0,.35);z-index:1700
-  }
-  .gloss-tip b{color:#f3c97a}
-
-  /* Headline tools (copy/link) */
-  .hd-tools{display:inline-flex;gap:.35rem;margin-left:.5rem;opacity:0;transition:opacity .15s}
-  h2:hover .hd-tools, h3:hover .hd-tools{opacity:1}
-  .hd-tools .chip{font-size:.8rem;padding:.15rem .45rem;border-radius:999px;border:1px solid var(--line);background:var(--bg-elev)}
-
-  /* Ξ inline calculator */
-  .xi-panel{border:1px solid var(--line);border-radius:.75rem;padding:.6rem;background:rgba(255,255,255,.02);margin-top:.6rem}
-  .xi-panel .row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
-  .xi-panel input{width:110px}
-  .xi-big{font-weight:800}
-  .xi-bar{height:6px;background:#1f2533;border-radius:999px;overflow:hidden}
-  .xi-bar span{display:block;height:100%;background:linear-gradient(90deg,#7af3ff,#f3c97a);width:0%}
-
-  /* “Try in Manifest” button */
-  .to-manifest{display:inline-flex;align-items:center;gap:.45rem;margin-top:.4rem}
-
-  /* Reading time pill */
-  .readtime{display:inline-block;font-size:.85rem;border:1px solid var(--line);border-radius:999px;padding:.2rem .55rem;margin-left:.5rem;color:#9aa4be}
-
-  @media (prefers-reduced-motion:reduce){
-    .read-progress{transition:none}
-    .gloss-tip{transition:none}
-  }
-
-  body.stars {
-    background:
-      radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
-      linear-gradient(180deg, #05060a 0%, #0b0e14 80%);
-    overflow-x:hidden;
-  }
-  canvas#trace {
-    background:
-      radial-gradient(circle at 50% 50%, #0a0e15 0%, #06080d 80%),
-      repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.02) 0 2px, transparent 2px 4px);
-    box-shadow: inset 0 0 40px rgba(122,243,255,.12), 0 0 120px rgba(122,243,255,.08);
-  }
-  .stage::after {
-    content:"";
-    position:absolute; inset:0;
-    background:radial-gradient(ellipse at 50% 60%, rgba(122,243,255,.08), transparent 70%);
-    pointer-events:none;
-  }
-  </style>
-  
-
-  <!-- MathJax (lazy) -->
-  <script>
-    (function(){
-      let loaded=false;
-      function boot(){ if(!window.MathJax) return; MathJax.startup.promise.then(()=>MathJax.typesetPromise()); }
-      function loadMJ(){
-        if(loaded) return; loaded=true;
-        window.MathJax={ tex:{ inlineMath:[['\','\']], displayMath:[['$$','$$']], processEscapes:true }, svg:{fontCache:'global'}, startup:{typeset:false} };
-        const s=document.createElement('script');
-        s.src="https://cdn.jsdelivr.net/npm/math
+</html>
