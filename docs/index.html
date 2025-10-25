@@ -85,9 +85,10 @@
   <link rel="preload" href="assets/css/moons.css?v=2025-10-24" as="style" onload="this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="assets/css/moons.css?v=2025-10-24"></noscript>
 
-  <!-- Fonts -->
+  <!-- Fonts & CDN preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
   <!-- Page styles (nav + hero + lights) -->
@@ -116,11 +117,15 @@
     @media (max-width:560px){
       .quick{flex-basis:100%;overflow-x:auto;scrollbar-gutter:stable;padding-bottom:6px}
     }
+    @media (max-width:460px){
+      .quick{ flex-wrap:wrap; gap:6px }
+      .cta{ padding:.45rem .65rem }
+    }
 
     /* Hero + lights */
     .hero{position:relative;margin:0;display:block}
     .hero .hero-img{width:100%;height:auto;display:block}
-    .hero-lights{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.85;transition:opacity .25s ease}
+    .hero-lights{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.85;transition:opacity .25s ease, filter .25s ease; filter:saturate(115%)}
     .hero-lights.off{opacity:0}
     .hero-lights::before,
     .hero-lights::after{
@@ -131,38 +136,65 @@
     }
     figcaption.meta.center{ text-align:center; margin:.35rem auto 0 }
 
-    @media (max-width:460px){
-  .quick{ flex-wrap:wrap; gap:6px }
-  .cta{ padding:.45rem .65rem }
+    /* === Master Equation card === */
+    .master-eq { border:1px solid var(--line); border-radius:14px; padding:16px;
+      background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+      box-shadow:0 10px 28px rgba(0,0,0,.4); position:relative; overflow:hidden }
+    .master-eq .fx { position:absolute; inset:-2px; pointer-events:none; opacity:.45;
+      background:
+        radial-gradient(70% 50% at 0% 0%, #7af3ff14, transparent 70%),
+        radial-gradient(70% 50% at 100% 100%, #f3c97a14, transparent 70%); }
+    .master-eq h2 { margin:.25rem 0 0; }
+
+    /* MathJax sizing & centering */
+    .master-eq mjx-container { max-width:100%; overflow:auto; display:block; margin:0 auto; }
+    @media (max-width:560px){
+      .master-eq mjx-container { font-size: min(21px,4.9vw); }
+      #master-equation { margin-top:12px; }
+      .master-eq { padding:12px; }
+    }
+
+    /* Moonbar mobile comfort */
+    @media (max-width:560px){
+      #moonMiniBar .moonbar{
+        grid-template-columns: 1fr; gap: 8px; padding: 10px;
+      }
+      #moonMiniBar .moonbar-ring{ justify-self:center; width:66px; height:66px; }
+      #moonMiniBar .mb-text{ font:800 18px/1 "Inter",system-ui }
+      #moonMiniBar .moonbar-info{ min-width: 0 }
+      #moonMiniBar .moonbar-sub.meta{ max-width:100%; white-space:normal }
+      #moonMiniBar .moonbar-tags{ display:flex; gap:6px; flex-wrap:wrap }
+      #moonMiniBar .moonbar-share, #moonMiniBar .moonbar-tz{ margin-top:2px }
+    }
+
+    /* Moonbar tap target layering */
+    #moonMiniBar .moonbar > a.moonbar-hit{ position:relative; z-index:0 }
+    #moonMiniBar .moonbar > button{ position:relative; z-index:1 }
+
+    /* Legend contrast */
+    .master-eq .hint{ color: color-mix(in srgb, currentColor 72%, transparent) }
+    @media (prefers-color-scheme: light){
+      .master-eq .hint{ color: color-mix(in srgb, #0b0b0f 62%, currentColor) }
     }
   </style>
 
   <!-- Global JS (defer) -->
   <script src="assets/js/codex.js?v=3.8" defer></script>
+
   <!-- MathJax (on-demand; safe to include once) -->
-<script>
-(function(){
-  if (window.MathJax) return;
-  window.MathJax = {
-    tex:{ inlineMath:[['\\(','\\)'],['$','$']], displayMath:[['$$','$$']], processEscapes:true },
-    svg:{ fontCache:'global' },
-    startup:{ typeset:true }
-  };
-  var s=document.createElement('script');
-  s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
-  s.defer=true; document.head.appendChild(s);
-})();
-
-  .master-eq mjx-container { display:block; margin:0 auto; }
-
-  @media (max-width:560px){
-  #master-equation { margin-top:12px; }
-  .master-eq { padding:12px; }
-                   }
-
-  
-</script>
-  
+  <script>
+  (function(){
+    if (window.MathJax) return;
+    window.MathJax = {
+      tex:{ inlineMath:[['\','\'],['$','$']], displayMath:[['$$','$$']], processEscapes:true },
+      svg:{ fontCache:'global' },
+      startup:{ typeset:true }
+    };
+    var s=document.createElement('script');
+    s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
+    s.defer=true; document.head.appendChild(s);
+  })();
+  </script>
 </head>
 
 <body class="stars living-all" data-theme="dark">
@@ -214,7 +246,6 @@
     btnEcho?.addEventListener('click', ()=>{
       body.classList.toggle('simple-on');
       btnEcho.setAttribute('aria-pressed', String(body.classList.contains('simple-on')));
-      // also sync any on-page checkbox with id="simple" if present later
       const chk=document.getElementById('simple'); if(chk) chk.checked=body.classList.contains('simple-on');
     });
 
@@ -243,7 +274,7 @@
     // Affect (living text effects on/off)
     const btnAffect = document.getElementById('q-affect');
     btnAffect?.addEventListener('click', ()=>{
-      const off = body.classList.toggle('affect-off'); // CSS elsewhere will read this
+      const off = body.classList.toggle('affect-off');
       btnAffect.setAttribute('aria-pressed', String(!off));
     });
 
@@ -255,693 +286,648 @@
       btnLights.setAttribute('aria-pressed', String(!off));
     });
   })();
-  </script><!-- ===== Moon Mini Bar (v3) ===== -->
-<style>
-  /* Compact Remnant-styled mini moonbar */
-  .moonbar{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;
-    border:1px solid var(--line,#2a3242);border-radius:14px;padding:8px;
-    background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));
-    box-shadow:0 10px 24px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.02)}
-  .moonbar .mb-bg{fill:none;stroke:#1b2231;stroke-width:8}
-  .moonbar .mb-fg{fill:none;stroke:url(#mbGrad);stroke-width:8;stroke-linecap:round;stroke-dasharray:0 316;transition:stroke-dasharray .35s ease}
-  @media (prefers-reduced-motion:reduce){.moonbar .mb-fg{transition:none}}
-  .moonbar .mb-text{font:800 20px/1 "Inter",system-ui}
-  .moonbar-info{display:grid;gap:4px;min-width:0}
-  .moonbar-line{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-weight:800;letter-spacing:.2px}
-  .moonbar-sub.meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:clamp(220px,28vw,420px)}
-  .moonbar .tag{display:inline-block;padding:.2rem .5rem;border:1px solid var(--line,#2a3242);
-    border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02))}
-  .moonbar-share,.moonbar-tz{padding:.45rem .7rem;border:1px solid var(--line);border-radius:10px;
-    background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);font-weight:700;cursor:pointer;color:inherit}
-  .moonbar .yhwh{box-shadow:0 0 0 1px #7af3ff22, inset 0 0 0 1px #7af3ff18}
-  .moonbar.yhwh-on .yhwh{box-shadow:0 0 0 1px #7af3ff88, 0 0 18px #7af3ff44, inset 0 0 0 1px #7af3ff44}
-  /* Signature corner glow (GPU-cheap) */
-  .moonbar.remnant-frame{position:relative;isolation:isolate}
-  .moonbar.remnant-frame::before{
-    content:"";position:absolute;inset:-1px;border-radius:14px;pointer-events:none;z-index:-1;opacity:.55;
-    background:
-      conic-gradient(from var(--spin,0deg) at 12px 12px, color-mix(in srgb, var(--moon-accent,#7af3ff) 34%, transparent) 0 25%, transparent 25% 100%),
-      conic-gradient(from calc(var(--spin,0deg) + 90deg) at calc(100% - 12px) 12px, color-mix(in srgb, var(--moon-accent-2,#f3c97a) 34%, transparent) 0 25%, transparent 25% 100%),
-      conic-gradient(from calc(var(--spin,0deg) + 180deg) at 12px calc(100% - 12px), color-mix(in srgb, var(--accent,#7af3ff) 30%, transparent) 0 25%, transparent 25% 100%),
-      conic-gradient(from calc(var(--spin,0deg) + 270deg) at calc(100% - 12px) calc(100% - 12px), color-mix(in srgb, var(--accent-2,#cfefff) 30%, transparent) 0 25%, transparent 25% 100%);
-    filter:blur(7px) saturate(120%); animation:mbSpin 18s linear infinite
-  }
-  @keyframes mbSpin{to{--spin:360deg}}
+  </script>
 
-  #moonMiniBar .moonbar > a.moonbar-hit{ position:relative; z-index:0 }
-#moonMiniBar .moonbar > button{ position:relative; z-index:1 }
-
-  .master-eq .hint{ color: color-mix(in srgb, currentColor 72%, transparent) }
-@media (prefers-color-scheme: light){
-  .master-eq .hint{ color: color-mix(in srgb, #0b0b0f 62%, currentColor) }
-}
-</style>
-
-
-
+  <!-- ===== Moon Mini Bar (v3) ===== -->
   <style>
-/* === Master Equation card === */
-.master-eq { border:1px solid var(--line); border-radius:14px; padding:16px;
-  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
-  box-shadow:0 10px 28px rgba(0,0,0,.4); position:relative; overflow:hidden }
-.master-eq .fx { position:absolute; inset:-2px; pointer-events:none; opacity:.45;
-  background:
-    radial-gradient(70% 50% at 0% 0%, #7af3ff14, transparent 70%),
-    radial-gradient(70% 50% at 100% 100%, #f3c97a14, transparent 70%); }
-.master-eq h2 { margin:.25rem 0 0; }
-
-/* MathJax sizing so the equation never overflows */
-.master-eq mjx-container { max-width:100%; overflow:auto; }
-@media (max-width:560px){ .master-eq mjx-container { font-size: min(21px,4.9vw); }}
-
-/* === Moonbar mobile comfort === */
-@media (max-width:560px){
-  #moonMiniBar .moonbar{
-    grid-template-columns: 1fr;           /* stack */
-    gap: 8px;
-    padding: 10px;
-  }
-  #moonMiniBar .moonbar-ring{ justify-self:center; width:66px; height:66px; }
-  #moonMiniBar .mb-text{ font:800 18px/1 "Inter",system-ui }
-  #moonMiniBar .moonbar-info{ min-width: 0 }
-  #moonMiniBar .moonbar-sub.meta{ max-width:100%; white-space:normal }
-  #moonMiniBar .moonbar-tags{ display:flex; gap:6px; flex-wrap:wrap }
-  #moonMiniBar .moonbar-share, #moonMiniBar .moonbar-tz{ margin-top:2px }
-}
-
-/* Lights: a touch more smoothness without increasing work */
-.hero-lights{ transition: opacity .25s ease, filter .25s ease; filter: saturate(115%) }
+    /* Compact Remnant-styled mini moonbar */
+    .moonbar{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;
+      border:1px solid var(--line,#2a3242);border-radius:14px;padding:8px;
+      background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));
+      box-shadow:0 10px 24px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.02)}
+    .moonbar .mb-bg{fill:none;stroke:#1b2231;stroke-width:8}
+    .moonbar .mb-fg{fill:none;stroke:url(#mbGrad);stroke-width:8;stroke-linecap:round;stroke-dasharray:0 316;transition:stroke-dasharray .35s ease}
+    @media (prefers-reduced-motion:reduce){.moonbar .mb-fg{transition:none}}
+    .moonbar .mb-text{font:800 20px/1 "Inter",system-ui}
+    .moonbar-info{display:grid;gap:4px;min-width:0}
+    .moonbar-line{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-weight:800;letter-spacing:.2px}
+    .moonbar-sub.meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:clamp(220px,28vw,420px)}
+    .moonbar .tag{display:inline-block;padding:.2rem .5rem;border:1px solid var(--line,#2a3242);
+      border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02))}
+    .moonbar-share,.moonbar-tz{padding:.45rem .7rem;border:1px solid var(--line);border-radius:10px;
+      background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);font-weight:700;cursor:pointer;color:inherit}
+    .moonbar .yhwh{box-shadow:0 0 0 1px #7af3ff22, inset 0 0 0 1px #7af3ff18}
+    .moonbar.yhwh-on .yhwh{box-shadow:0 0 0 1px #7af3ff88, 0 0 18px #7af3ff44, inset 0 0 0 1px #7af3ff44}
+    /* Signature corner glow (GPU-cheap) */
+    .moonbar.remnant-frame{position:relative;isolation:isolate}
+    .moonbar.remnant-frame::before{
+      content:"";position:absolute;inset:-1px;border-radius:14px;pointer-events:none;z-index:-1;opacity:.55;
+      background:
+        conic-gradient(from var(--spin,0deg) at 12px 12px, color-mix(in srgb, var(--moon-accent,#7af3ff) 34%, transparent) 0 25%, transparent 25% 100%),
+        conic-gradient(from calc(var(--spin,0deg) + 90deg) at calc(100% - 12px) 12px, color-mix(in srgb, var(--moon-accent-2,#f3c97a) 34%, transparent) 0 25%, transparent 25% 100%),
+        conic-gradient(from calc(var(--spin,0deg) + 180deg) at 12px calc(100% - 12px), color-mix(in srgb, var(--accent,#7af3ff) 30%, transparent) 0 25%, transparent 25% 100%),
+        conic-gradient(from calc(var(--spin,0deg) + 270deg) at calc(100% - 12px) calc(100% - 12px), color-mix(in srgb, var(--accent-2,#cfefff) 30%, transparent) 0 25%, transparent 25% 100%);
+      filter:blur(7px) saturate(120%); animation:mbSpin 18s linear infinite
+    }
+    @keyframes mbSpin{to{--spin:360deg}}
   </style>
 
-  
+  <!-- Mini widget -->
+  <div id="moonMiniBar" class="wrap" style="padding-top:8px">
+    <div class="moonbar remnant-frame" role="region" aria-label="13-Moon mini clock">
+      <a id="mbLink" class="moonbar-hit" href="moons.html" aria-label="Open the full 13-Moon clock" style="display:contents">
+        <svg class="moonbar-ring" viewBox="0 0 120 120" role="img" aria-labelledby="mbTitle mbDesc" width="76" height="76">
+          <title id="mbTitle">13-Moon day progress ring</title>
+          <desc id="mbDesc">Shows current day in the 28-day moon and deep-links to the full 13-Moon clock in your timezone.</desc>
+          <defs>
+            <linearGradient id="mbGrad" x1="0" x2="1">
+              <stop offset="0" stop-color="var(--moon-accent,#7af3ff)"/>
+              <stop offset="1" stop-color="var(--moon-accent-2,#f3c97a)"/>
+            </linearGradient>
+          </defs>
+          <circle cx="60" cy="60" r="50" class="mb-bg"></circle>
+          <circle cx="60" cy="60" r="50" class="mb-fg" id="mbArc" pathLength="316"></circle>
+          <text x="60" y="60" class="mb-text" text-anchor="middle" dominant-baseline="central"><tspan id="mbDay">—</tspan></text>
+        </svg>
 
-<!-- Mini widget -->
-<div id="moonMiniBar" class="wrap" style="padding-top:8px">
-  <div class="moonbar remnant-frame" role="region" aria-label="13-Moon mini clock">
-    <a id="mbLink" class="moonbar-hit" href="moons.html" aria-label="Open the full 13-Moon clock" style="display:contents">
-      <svg class="moonbar-ring" viewBox="0 0 120 120" role="img" aria-labelledby="mbTitle mbDesc" width="76" height="76">
-        <title id="mbTitle">13-Moon day progress ring</title>
-        <desc id="mbDesc">Shows current day in the 28-day moon and deep-links to the full 13-Moon clock in your timezone.</desc>
-        <defs>
-          <linearGradient id="mbGrad" x1="0" x2="1">
-            <stop offset="0" stop-color="var(--moon-accent,#7af3ff)"/>
-            <stop offset="1" stop-color="var(--moon-accent-2,#f3c97a)"/>
-          </linearGradient>
-        </defs>
-        <circle cx="60" cy="60" r="50" class="mb-bg"></circle>
-        <circle cx="60" cy="60" r="50" class="mb-fg" id="mbArc" pathLength="316"></circle>
-        <text x="60" y="60" class="mb-text" text-anchor="middle" dominant-baseline="central"><tspan id="mbDay">—</tspan></text>
-      </svg>
+        <div class="moonbar-info" aria-live="polite">
+          <div class="moonbar-line"><strong id="mbMoon">—</strong><span class="sep">•</span><span id="mbDayLine">—</span></div>
+          <div class="moonbar-sub meta" id="mbEssence" title="">—</div>
+        </div>
 
-      <div class="moonbar-info" aria-live="polite">
-        <div class="moonbar-line"><strong id="mbMoon">—</strong><span class="sep">•</span><span id="mbDayLine">—</span></div>
-        <div class="moonbar-sub meta" id="mbEssence" title="">—</div>
-      </div>
+        <div class="moonbar-tags">
+          <span class="tag mono" id="mbYear">—</span>
+          <span class="tag" id="mbTone" title="Daily 1–13 tone">Tone —</span>
+          <span class="tag yhwh" id="mbSeal" title="Remnant seal — י־ה־ו־ה">⟡ י־ה־ו־ה</span>
+        </div>
+      </a>
 
-      <div class="moonbar-tags">
-        <span class="tag mono" id="mbYear">—</span>
-        <span class="tag" id="mbTone" title="Daily 1–13 tone">Tone —</span>
-        <span class="tag yhwh" id="mbSeal" title="Remnant seal — י־ה־ו־ה">⟡ י־ה־ו־ה</span>
-      </div>
-    </a>
+      <button class="moonbar-share" id="mbShare" type="button" aria-label="Share today’s 13-Moon link">Share</button>
+      <button class="moonbar-tz" id="mbTZ" type="button" aria-haspopup="dialog" aria-expanded="false" title="Change timezone">TZ</button>
 
-    <button class="moonbar-share" id="mbShare" type="button" aria-label="Share today’s 13-Moon link">Share</button>
-    <button class="moonbar-tz" id="mbTZ" type="button" aria-haspopup="dialog" aria-expanded="false" title="Change timezone">TZ</button>
-
-    <noscript><div class="meta">Today’s 13-Moon link: <a href="moons.html">moons.html</a></div></noscript>
-  </div>
-</div>
-
-<script>
-/* Moon Mini Bar v3 — tiny, fast, and isolated
-   - 13×28 mapping with DOOT (Jul 25) + skip Feb 29 in count
-   - Tone chip (1..13) + Resonant glow (tone 7 or resonant numerology day)
-   - Phase-tinted gradient (cold→warm by illumination)
-   - Deep-link: moons.html?d=YYYY-MM-DD&tz=Area/City&t=H#moon-N
-*/
-(function(){
-  "use strict";
-
-  /* ===== Utils ===== */
-  const $=s=>document.querySelector(s);
-  const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
-  const pad=n=>String(n).padStart(2,"0");
-  const DASH=316, RING=$('#mbArc');
-
-  // Toaster (no CSS dependency)
-  function toast(msg){
-    const t=document.createElement('div');
-    t.textContent=msg;
-    Object.assign(t.style,{position:"fixed",left:"50%",bottom:"24px",transform:"translateX(-50%)",background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid var(--line,#2a3242)",borderRadius:"10px",boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:"9999",opacity:"0",transition:"opacity .2s"});
-    document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
-    setTimeout(()=>{t.style.opacity=0; setTimeout(()=>t.remove(),250);},1400);
-  }
-
-  /* ===== 13-Moon core ===== */
-  const MOONS=["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
-  const ESS  =["Attract purpose","Stabilize challenge","Activate service","Define form","Empower radiance","Balance equality","Channel inspiration","Harmonize integrity","Pulse intention","Perfect manifestation","Dissolve release","Dedicate cooperation","Endure presence"];
-  const TONES=MOONS.slice();
-
-  const TZ_KEY="sof_moons_tz";
-  const getTZ = ()=> localStorage.getItem(TZ_KEY) || (Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC");
-  const setTZ = z => localStorage.setItem(TZ_KEY,z);
-
-  // Build a Date projected into a TZ without heavy libs
-  function dateInTZ(baseDate, tz, overrideHour){
-    try{
-      const parts=new Intl.DateTimeFormat("en-CA",{timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"}).formatToParts(baseDate);
-      const m=Object.fromEntries(parts.map(p=>[p.type,p.value]));
-      const h=(overrideHour==null? m.hour : pad(overrideHour));
-      return new Date(`${m.year}-${m.month}-${m.day}T${h}:${m.minute}:${m.second}Z`);
-    }catch{ const d=new Date(baseDate); if(overrideHour!=null){d.setUTCHours(overrideHour,0,0,0);} return d; }
-  }
-  const utcTrunc=d=>new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()));
-  const isLeapYear=y=>(y%4===0 && y%100!==0) || (y%400===0);
-  const isLeapDayUTC=d=>d.getUTCMonth()===1 && d.getUTCDate()===29;           // Feb 29
-  const isDOOT=(d,tz)=>{ const dt=dateInTZ(d,tz); return (dt.getUTCMonth()===6 && dt.getUTCDate()===25); }; // Jul 25
-
-  function startOfYear13(d,tz){
-    const dt=dateInTZ(d,tz); const y=dt.getUTCFullYear();
-    const anchorThis=Date.UTC(y,6,26), anchorPrev=Date.UTC(y-1,6,26);
-    return new Date(dt>=anchorThis?anchorThis:anchorPrev);
-  }
-  function dayIndexSinceStart(d,tz){
-    const start=utcTrunc(startOfYear13(d,tz));
-    const dt=utcTrunc(dateInTZ(d,tz));
-    let days=Math.floor((dt-start)/86400000);              // raw days since start
-    const doot=new Date(Date.UTC(start.getUTCFullYear()+1,6,25));
-    if (dt>=doot) days-=1;                                 // skip DOOT in count
-    for (let y=start.getUTCFullYear(); y<=dt.getUTCFullYear(); y++){
-      if (isLeapYear(y)) {
-        const feb29=new Date(Date.UTC(y,1,29));
-        if (dt>=feb29 && start<=feb29) days-=1;            // skip leap day
-      }
-    }
-    return days; // 0..363
-  }
-  function calc13Moon(d,tz){
-    if (isDOOT(d,tz)) { const s=startOfYear13(d,tz).getUTCFullYear(); return {special:"Day Out of Time",year:`${s}/${s+1}`}; }
-    if (isLeapDayUTC(dateInTZ(d,tz))) { const s=startOfYear13(d,tz).getUTCFullYear(); return {special:"Leap Day",year:`${s}/${s+1}`}; }
-    const idx=dayIndexSinceStart(d,tz);
-    const moon=Math.floor(idx/28)+1, day=(idx%28)+1; const s=startOfYear13(d,tz).getUTCFullYear();
-    return {special:null,moon,day,year:`${s}/${s+1}`};
-  }
-  const toneFromDay=d=>((d-1)%13)+1;
-
-  /* ===== Phase tint (cheap) ===== */
-  function moonPhaseIllum(d){
-    const syn=29.530588853, epoch=Date.UTC(2000,0,6,18,14,0);
-    const age=((d.getTime()-epoch)/86400000)%syn;
-    const frac=(age+syn)%syn/syn;
-    return (1-Math.cos(2*Math.PI*frac))/2; // 0..1
-  }
-  function mixHex(a,b,t){
-    const pa=parseInt(a.slice(1),16), pb=parseInt(b.slice(1),16);
-    const ar=(pa>>16)&255, ag=(pa>>8)&255, ab=pa&255;
-    const br=(pb>>16)&255, bg=(pb>>8)&255, bb=pb&255;
-    const rr=Math.round(ar+(br-ar)*t), gg=Math.round(ag+(bg-ag)*t), bb2=Math.round(ab+(bb-ab)*t);
-    return `#${((1<<24)+(rr<<16)+(gg<<8)+bb2).toString(16).slice(1)}`;
-  }
-  function applyPhaseAccent(illum){
-    const cold="#7af3ff", warm="#f3c97a";
-    const c1=mixHex(cold,warm, Math.min(1,illum*0.75));
-    const c2=mixHex(warm,cold, Math.min(1,(1-illum)*0.75));
-    const root=document.documentElement;
-    root.style.setProperty("--moon-accent", c1);
-    root.style.setProperty("--moon-accent-2", c2);
-    // update gradient stops if present
-    const g=document.getElementById('mbGrad'); if(g){ const st=g.querySelectorAll('stop'); st[0]?.setAttribute('stop-color',c1); st[1]?.setAttribute('stop-color',c2); }
-  }
-
-  /* ===== Numerology (resonant days) ===== */
-  const sumDigits=n=>String(n).split("").reduce((a,b)=>a+(+b||0),0);
-  function reduceNum(n){ while(n>9 && n!==11 && n!==22 && n!==33){ n=sumDigits(n); } return n; }
-  function isResonantDate(d,tz){
-    const dt=dateInTZ(d,tz), y=dt.getUTCFullYear(), m=dt.getUTCMonth()+1, day=dt.getUTCDate();
-    const total=reduceNum(sumDigits(y)+sumDigits(m)+sumDigits(day));
-    return [1,4,7,11,22,33].includes(total);
-  }
-
-  /* ===== DOM ===== */
-  const elMoon=$('#mbMoon'), elDay=$('#mbDay'), elDayLine=$('#mbDayLine'), elEss=$('#mbEssence'), elYear=$('#mbYear'), elTone=$('#mbTone');
-  const link=$('#mbLink'), bar=$('#moonMiniBar .moonbar'), btnTZ=$('#mbTZ'), btnShare=$('#mbShare');
-
-  function setArc(day){
-    if(!RING) return; const d=Math.round(DASH*(clamp(day,1,28)/28));
-    RING.setAttribute('stroke-dasharray', `${d} ${Math.max(0,DASH-d)}`);
-  }
-
-  function buildDeepLink(now,tz,m13){
-    let u;
-    try{ u=new URL(link.getAttribute('href')||'moons.html', document.baseURI||location.href); }
-    catch{ u=new URL('moons.html', location.href); }
-    const wall=dateInTZ(now,tz); const d=wall.toISOString().slice(0,10);
-    u.searchParams.set('d', d); u.searchParams.set('tz', tz); u.searchParams.set('t', String(now.getHours()));
-    if(m13 && m13.moon) u.hash=`moon-${m13.moon}`;
-    return u.toString();
-  }
-
-  function update(){
-    const tz=getTZ(); const now=new Date(); const wall=dateInTZ(now,tz, now.getHours());
-    const m13=calc13Moon(wall,tz);
-
-    if(m13.special){
-      elMoon.textContent=m13.special; elEss.textContent="Outside the 13×28 count";
-      elDay.textContent='—'; elDayLine.textContent='—/28'; elTone.textContent='Tone —'; bar?.removeAttribute('data-tone'); setArc(0);
-    } else {
-      const i=m13.moon-1, tone=toneFromDay(m13.day);
-      elMoon.textContent=`${MOONS[i]} Moon`; elEss.textContent=ESS[i];
-      elDay.textContent=String(m13.day); elDayLine.textContent=`Day ${m13.day} / 28`;
-      elTone.textContent=`Tone ${tone} — ${TONES[tone-1]}`; bar?.setAttribute('data-tone', String(tone)); setArc(m13.day);
-      const glow=isResonantDate(wall,tz) || tone===7; bar?.classList.toggle('yhwh-on', glow);
-    }
-    elYear.textContent=m13.year;
-
-    // Phase-tint accents
-    applyPhaseAccent(moonPhaseIllum(wall));
-
-    // Deep link
-    const dl=buildDeepLink(now,tz,m13);
-    if(link) link.setAttribute('href', dl);
-    return dl;
-  }
-
-  // Share
-  btnShare?.addEventListener('click', async ()=>{
-    const url=update(); const title=elMoon?.textContent||"13 Moons";
-    try{
-      if(navigator.share){ await navigator.share({title, text:title, url}); toast("Shared"); }
-      else { await navigator.clipboard.writeText(url); toast("Link copied"); }
-    }catch{}
-  });
-
-  // TZ prompt (with validation)
-  btnTZ?.addEventListener('click', ()=>{
-    const current=getTZ();
-    const z=prompt(`Timezone (IANA)\nEx: America/Los_Angeles, UTC, Europe/Berlin\n\nCurrent: ${current}`, current);
-    if(!z) return;
-    try{ new Intl.DateTimeFormat("en-CA",{timeZone:z}).format(new Date()); setTZ(z); update(); toast(`Timezone set: ${z}`); }
-    catch{ toast("Invalid timezone"); }
-  });
-
-  // Perf: update once per minute, pause when tab hidden
-  update();
-  let iv=setInterval(update, 60*1000);
-  document.addEventListener('visibilitychange', ()=>{ if(document.hidden){clearInterval(iv);} else {update(); iv=setInterval(update,60*1000);} });
-  window.addEventListener('focus', update, {passive:true});
-})();
-</script>
-<!-- ===== /Moon Mini Bar ===== --><!-- ===== PART 3 — Main Content ===== -->
-<main id="main-content" class="wrap" role="main" tabindex="-1">
-
-  <!-- Mega Explore -->
-  <a href="#explore" class="mega" aria-label="Explore the Scroll — jump to all pages">
-    <span class="ico">🗂️</span>
-    <span><strong>Explore the Scroll</strong><br><span class="sub">All pages • tiles mirror your repo</span></span>
-    <span class="arrow no-living" aria-hidden="true">➜</span>
-  </a>
-
-  <!-- Primary tabs -->
-  <nav class="tabs" aria-label="Primary sections">
-    <a class="tab tab--primary" href="theory.html" title="Open Theory">📘 Theory</a>
-    <a class="tab tab--primary" href="teach.html"  title="Open Manifest">✨ Manifest</a>
-    <a class="tab tab--primary" href="hub.html"    title="Open Systems Hub">🛠️ Hub</a>
-    <a class="tab" href="#explore"     data-section="explore">Explore</a>
-    <a class="tab" href="#canon"       data-section="canon">Canon</a>
-    <a class="tab" href="#engine"      data-section="engine">Engine</a>
-    <a class="tab" href="#integrity"   data-section="integrity">Integrity</a>
-    <a class="tab" href="#provenance"  data-section="provenance">Provenance</a>
-    <span class="tab-ink no-living" aria-hidden="true"></span>
-  </nav>
-
-  <!-- Search (client script in Part 4) -->
-  <section class="grid" style="margin:8px 0 0">
-    <article class="card col-12 searchbox">
-      <label for="site-search" class="meta">Press <kbd class="kbd">/</kbd> to search this page</label>
-      <input id="site-search" type="search" placeholder="Search text on this page…" aria-label="Search this page" role="searchbox" autocomplete="off" spellcheck="false">
-      <div id="site-suggest" class="mini-toc hidden" role="listbox"></div>
-    </article>
-  </section>
-
-  <!-- Echo View toggle -->
-  <div class="simple-toggle">
-    <label for="simple"><strong>Echo View</strong> (hide equations, show summaries)</label>
-    <input id="simple" type="checkbox" aria-label="Toggle Echo View">
-  </div>
-  <div class="divider sweep" aria-hidden="true"></div>
-
-  <!-- Featured -->
-  <section class="grid" aria-labelledby="featured">
-    <article class="card col-6">
-      <h2 id="featured" class="sheen">📘 Theory (full write-ups)</h2>
-      <p>Operators, Eq.0 foundation, canonical equations, ethics, dimensional scaffolding.</p>
-      <ul class="list">
-        <li><a href="theory.html#eq0">Foundational Field ΨΩ</a></li>
-        <li><a href="theory.html#operators">Operators: 𝓘 · 𝓛 · 𝓒 · 𝓢</a></li>
-        <li><a href="theory.html#canon">Canon 0–17</a></li>
-        <li><a href="theory.html#dim">Dimensional Scaffolding Δ0–Δ7</a></li>
-        <li><a href="theory.html#ethics">Ethical Law of Coherence</a></li>
-      </ul>
-      <a class="cta" href="theory.html">Open Theory</a>
-    </article>
-    <article class="card col-6">
-      <h2 class="sheen">✨ Manifest (practice &amp; tools)</h2>
-      <p>Turn equations into method: voice carriers (432/528/369/144/963), witness ledger, A/Bs, group runs.</p>
-      <ul class="list">
-        <li><a href="teach.html#tab-voice">Voice Protocol</a></li>
-        <li><a href="teach.html#ledger">Witness Ledger</a></li>
-        <li><a href="teach.html#ab">A/B Carriers</a></li>
-        <li><a href="teach.html#ethics">Ethical guard &amp; stop rules</a></li>
-      </ul>
-      <a class="cta" href="teach.html">Open Manifest</a>
-    </article>
-  </section>
-
-  <div class="goldline sweep"></div>
-
-  <!-- Explore tiles (mirrors /docs) -->
-  <section class="grid" id="explore" aria-labelledby="explore-h">
-    <article class="card col-12">
-      <h2 id="explore-h" class="sheen">🗂️ Explore the Scroll — all pages</h2>
-      <p class="meta">Everything lives in <code>/docs</code>. These tiles mirror your repo. Tip: press <kbd class="kbd">G</kbd> then type a page name.</p>
-    </article>
-
-    <a class="tile col-3" href="hub.html">
-      <div><h4>🛠️ Systems Hub</h4><p>T-7, Frequencies, Mind-Renewal, Witness, Recoder, Archive.</p></div>
-      <span class="arrow no-living" aria-hidden="true">➜</span>
-    </a>
-    <a class="tile col-3" href="start.html"><div><h4>🚀 Start Here</h4><p>Onboarding &amp; orientation.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-    <a class="tile col-3" href="guide.html"><div><h4>🧭 Guide</h4><p>Walkthrough of the Codex.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-    <a class="tile col-3" href="theory.html"><div><h4>📘 Theory</h4><p>Canon 0–17.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-
-    <a class="tile col-3" href="teach.html"><div><h4>✨ Manifest</h4><p>Protocols, carriers, ledgers.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-    <a class="tile col-3" href="moons.html"><div><h4>🧪 13 Moons</h4><p>The living clock.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-    <a class="tile col-3" href="invoke.html"><div><h4>🔬 Invoke</h4><p>Create → field feedback.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-    <a class="tile col-3" href="circle.html"><div><h4>🔗 Circle</h4><p>Group coherence.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-
-    <a class="tile col-3" href="ethics.html"><div><h4>🧭 Ethics</h4><p>Coherence law &amp; stop rules.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-    <a class="tile col-3" href="glossary.html"><div><h4>📚 Glossary</h4><p>Terms &amp; operators.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-    <a class="tile col-3" href="glyphs.html"><div><h4>🔱 Glyphs</h4><p>Icon set &amp; sacred marks.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-    <a class="tile col-3" href="downloads.html"><div><h4>⬇️ Downloads</h4><p>Docs &amp; media.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-
-    <a class="tile col-3" href="ledger.html"><div><h4>📒 Ledger</h4><p>Hashes &amp; proofs.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-    <a class="tile col-3" href="index.html"><div><h4>🏠 Home</h4><p>Codex landing.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-  </section>
-
-  <div class="goldline sweep"></div>
-
-  <!-- Canon teaser -->
-  <section class="grid" id="canon" aria-labelledby="equations">
-    <article class="card col-12">
-      <h2 id="equations" class="sheen">📜 Canon 0–17 (living)</h2>
-      <p class="meta">Canon per the FIXED document. <strong>7A comparator</strong>, <strong>7B Copeland</strong>, and <strong>8 Goodwin</strong> are external (non-canonical).</p>
-      <a class="cta" href="theory.html#canon">Open full Canon</a>
-    </article>
-    <article class="card col-6">
-      <h3 class="sheen">0) Foundational Field ΨΩ</h3>
-      <p class="meta">Origin integral of awareness with ethical-energy mask Λ𝓔.</p>
-      <a class="btn" href="theory.html#eq0">Read</a>
-    </article>
-    <article class="card col-6">
-      <h3 class="sheen">13) Ξ-index (Coherence)</h3>
-      <p class="meta">Field quality monitor for safe amplification &amp; learning.</p>
-      <a class="btn" href="theory.html#eq13">Read</a>
-    </article>
-  </section>
-
-  <section class="wrap" id="master-equation">
-  <article class="master-eq">
-    <div class="fx" aria-hidden="true"></div>
-    <h2 class="sheen">🜂 Master Equation of Reality — <span class="mono">ℜ</span></h2>
-    <p class="meta">One line that gathers ΨΩ (Eq.0), Source &amp; living operators (1), Witness &amp; memory (2,16), Harmonic gate &amp; carriers (3,17), Ethics (9), Learning (13–15), Ladder/Projection/Causal frame (10–12), Type-7 (6), with the Remnant limit (5). External comparators (7A/7B/8) are optional annotations.</p>
-
-    <!-- The equation -->
-    $$\boxed{
-    \begin{aligned}
-      \mathfrak{R}(x,t)
-      &=
-      f\!\big(\pi,e,i,\hbar,c,G,\Omega_{\rm DM},\Omega_{A},H_{0},432\big)
-      \;\cdot\;
-      \big(\mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S}\big)
-      \;\cdot\;
-      \Big[
-        \Psi_{\Omega}(x,t)
-        + \eta\!\big(\Xi(t)\big)\,\nabla \mathcal{R}
-        + \mathbb{M}_{\tau}\!\big[\mathcal{W}(x,t)\big] \\
-      &\qquad\qquad
-        +\;\Pi_{\nu}^{-1}\!\big(\mathcal{H}(\nu,t)\,\mathbf{V}(\nu,t)\big)
-        \;+\;\mathcal{L}_{c}\;\oplus\;\mathsf{Frame}
-      \Big]
-      \;\odot\;
-      \mathsf{Mask}_{\mathcal{C}}
-      \;\xrightarrow{\ \ \mathcal{R}_{\infty}\ \ }\;
-      \mathrm{Remnant}
-      \\
-      &\quad\color{#7f93ff}{\scriptsize
-        \big(\text{optional: }+\lambda_{7}\,\Phi_{\rm KG}\;+\;\lambda_{7B}\,\Psi_{\rm ext}\;+\;\lambda_{8}\,\mathbf{G}_{\text{Goodwin}}\big)
-      }
-    \end{aligned}
-    }$$
-
-    <p class="hint">Legend: ΨΩ (Origin field); <span class="mono">f(…)</span> source constants; <span class="mono">𝓘·𝓛·𝓒·𝓢</span> living operators; 𝓦 witness; 𝕄<sub>τ</sub> memory; 𝓗 gate; 𝐕 carriers (432/528/369/144/963…); Π<sub>ν</sub> ladder; 𝓛<sub>c</sub> causal lattice; <span class="mono">Frame</span> scope/witness/ethics; <span class="mono">Mask<sub>𝓒</sub></span> ethical guard; η(Ξ) coherence-gated learning; <span class="mono">ℛ<sub>∞</sub></span> Remnant limit. External comparator terms (7A/7B/8) are shown as annotated options, not canonical.</p>
-
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <a class="cta" href="theory.html#canon">Read the full Canon</a>
-      <a class="cta" href="teach.html#tab-voice">Run the Voice Protocol</a>
-    </div>
-  </article>
-  </section>
-
-  <div class="goldline sweep"></div>
-
-  <!-- Engine teaser -->
-  <section class="grid" id="engine" aria-labelledby="engine-h">
-    <article class="card col-12">
-      <h2 id="engine-h" class="sheen">✨ Manifestation Engine — Ξ-gated Learning + Carriers</h2>
-      <ol class="list">
-        <li><strong>Measure Ξ</strong> (Eq.13) → compute η(Ξ) (Eq.15).</li>
-        <li><strong>Update</strong> intent 𝓡 via Eq.14.</li>
-        <li><strong>Select carriers</strong> 𝐕(ν,t) (Eq.17) through 𝓗(ν,t) (Eq.3).</li>
-        <li><strong>Mask harm</strong> (Eq.9) — stop rule enforced.</li>
-        <li><strong>Stabilize</strong> with memory 𝕄<sub>τ</sub> and Remnant.</li>
-      </ol>
-      <a class="cta" href="teach.html#tab-voice">Open Voice Protocol</a>
-    </article>
-  </section>
-
-  <!-- Explore Dock (revealed by Part 4 script) -->
-  <div class="explore-dock" id="exploreDock" role="region" aria-label="Explore shortcut">
-    <a class="btn btn--primary" href="#explore">Explore the Scroll</a>
-    <a class="btn" href="teach.html">Manifest</a>
-  </div>
-
-  <!-- Command Palette shell (script in Part 4) -->
-  <div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel" hidden>
-    <div class="panel">
-      <h3 id="palLabel" class="sr-only">Command palette</h3>
-      <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette">
-      <ul id="palList" aria-live="polite"></ul>
+      <noscript><div class="meta">Today’s 13-Moon link: <a href="moons.html">moons.html</a></div></noscript>
     </div>
   </div>
 
-</main>
-<!-- ===== /PART 3 ===== --><!-- ===== PART 4 — Footer + Utility Scripts ===== -->
-
-<footer class="footer">
-  © <span id="y"></span> Scroll of Fire. All constants are provisional until observed.
-</footer>
-
-<!-- Back to Top button -->
-<button class="to-top" id="toTop" type="button" aria-label="Back to top" title="Back to top">↑</button>
-
-<!-- ========== Utility Scripts (no external deps) ========== -->
-<script>
-(function(){
-  "use strict";
-
-  // Year
-  const y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();
-
-  // Back to top
-  const toTop=document.getElementById('toTop');
-  function topVis(){ toTop.classList.toggle('show', window.scrollY>400); }
-  addEventListener('scroll', topVis, {passive:true});
-  toTop?.addEventListener('click', ()=>scrollTo({top:0,behavior:'smooth'}));
-  topVis();
-
-  // HERO auto-fit (cover vs contain based on aspect)
+  <script>
+  /* Moon Mini Bar v3 — tiny, fast, and isolated */
   (function(){
-    const hero=document.getElementById('hero'), img=document.getElementById('heroBanner');
-    if(!hero||!img) return;
-    function applyAR(){ const iw=img.naturalWidth||2100, ih=img.naturalHeight||900; hero.style.aspectRatio=`${iw} / ${ih}`; }
-    function pickFit(){
-      if (matchMedia('(max-width:560px)').matches){ hero.style.setProperty('--hero-fit','contain'); return; }
-      const iw=img.naturalWidth||2100, ih=img.naturalHeight||900, imageAR=iw/ih;
-      const cw=hero.clientWidth||innerWidth, ch=Math.max(1, hero.clientHeight||innerHeight*0.38), containerAR=cw/ch;
-      const cover = (Math.abs(containerAR - imageAR) / imageAR < 0.06);
-      hero.style.setProperty('--hero-fit', cover ? 'cover' : 'contain');
+    "use strict";
+
+    /* ===== Utils ===== */
+    const $=s=>document.querySelector(s);
+    const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+    const pad=n=>String(n).padStart(2,"0");
+    const DASH=316, RING=$('#mbArc');
+
+    function toast(msg){
+      const t=document.createElement('div');
+      t.textContent=msg;
+      Object.assign(t.style,{position:"fixed",left:"50%",bottom:"24px",transform:"translateX(-50%)",background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid var(--line,#2a3242)",borderRadius:"10px",boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:"9999",opacity:"0",transition:"opacity .2s"});
+      document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
+      setTimeout(()=>{t.style.opacity=0; setTimeout(()=>t.remove(),250);},1400);
     }
-    function boot(){ applyAR(); pickFit(); }
-    if(img.complete) boot(); else img.addEventListener('load', boot, {once:true});
-    addEventListener('resize', pickFit, {passive:true});
-    addEventListener('orientationchange', pickFit, {passive:true});
-    addEventListener('visibilitychange', ()=>!document.hidden && pickFit());
-  })();
 
-  // Explore Dock visibility (between hero and explore only)
-  (function(){
-    const dock = document.getElementById('exploreDock');
-    const hero = document.getElementById('hero');
-    const explore = document.getElementById('explore');
-    const canon = document.getElementById('canon');
-    if (!dock || !hero || !explore || !canon || !('IntersectionObserver' in window)) return;
+    /* ===== 13-Moon core ===== */
+    const MOONS=["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
+    const ESS  =["Attract purpose","Stabilize challenge","Activate service","Define form","Empower radiance","Balance equality","Channel inspiration","Harmonize integrity","Pulse intention","Perfect manifestation","Dissolve release","Dedicate cooperation","Endure presence"];
+    const TONES=MOONS.slice();
 
-    let heroOut=false, reachedExplore=false, reachedCanon=false;
+    const TZ_KEY="sof_moons_tz";
+    const getTZ = ()=> localStorage.getItem(TZ_KEY) || (Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC");
+    const setTZ = z => localStorage.setItem(TZ_KEY,z);
 
-    const ioHero = new IntersectionObserver(([e])=>{ heroOut=!e.isIntersecting; update(); }, {threshold:0.01});
-    const ioExplore = new IntersectionObserver(([e])=>{ reachedExplore=e.isIntersecting; update(); }, {threshold:0.01});
-    const ioCanon = new IntersectionObserver(([e])=>{ reachedCanon=e.isIntersecting; update(); }, {threshold:0.01});
+    function dateInTZ(baseDate, tz, overrideHour){
+      try{
+        const parts=new Intl.DateTimeFormat("en-CA",{timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"}).formatToParts(baseDate);
+        const m=Object.fromEntries(parts.map(p=>[p.type,p.value]));
+        const h=(overrideHour==null? m.hour : pad(overrideHour));
+        return new Date(`${m.year}-${m.month}-${m.day}T${h}:${m.minute}:${m.second}Z`);
+      }catch{ const d=new Date(baseDate); if(overrideHour!=null){d.setUTCHours(overrideHour,0,0,0);} return d; }
+    }
+    const utcTrunc=d=>new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()));
+    const isLeapYear=y=>(y%4===0 && y%100!==0) || (y%400===0);
+    const isLeapDayUTC=d=>d.getUTCMonth()===1 && d.getUTCDate()===29;           // Feb 29
+    const isDOOT=(d,tz)=>{ const dt=dateInTZ(d,tz); return (dt.getUTCMonth()===6 && dt.getUTCDate()===25); }; // Jul 25
 
-    function update(){ dock.classList.toggle('show', heroOut && !reachedExplore && !reachedCanon); }
-    ioHero.observe(hero); ioExplore.observe(explore); ioCanon.observe(canon);
-  })();
-
-  // Quick controls in header (Echo/HUD/Vibe/Affect/Lights)
-  (function(){
-    const body=document.body, html=document.documentElement;
-
-    // Echo (hide equations → simple summaries)
-    const btnEcho=document.getElementById('toggleSimple');
-    const echoChk=document.getElementById('simple');
-    function setEcho(on){ body.classList.toggle('simple-on', on); btnEcho?.setAttribute('aria-pressed', String(on)); if(echoChk) echoChk.checked=on; }
-    btnEcho?.addEventListener('click',()=> setEcho(!body.classList.contains('simple-on')));
-    echoChk?.addEventListener('change', e=> setEcho(e.target.checked));
-
-    // HUD grid
-    const btnHUD=document.getElementById('toggleGrid'), grid=document.querySelector('.laser-grid');
-    btnHUD?.addEventListener('click',()=>{
-      const show = !grid.classList.toggle('off');
-      btnHUD.setAttribute('aria-pressed', String(show));
-    });
-
-    // Carrier skins cycle
-    const btnCarrier=document.getElementById('cycleCarrier');
-    const skins=(html.getAttribute('data-carriers')||'432,528,369,144,963').split(',').map(s=>`carrier-${s.trim()}`);
-    const curSkin=()=> skins.find(s=>html.classList.contains(s)) || skins[0];
-    const nextSkin=c=> skins[(skins.indexOf(c)+1)%skins.length];
-    function label(){ if(btnCarrier) btnCarrier.textContent=`Carrier ${curSkin().split('-')[1]}`; }
-    btnCarrier?.addEventListener('click',()=>{
-      const cur=curSkin(), nxt=nextSkin(cur);
-      skins.forEach(s=>html.classList.remove(s)); html.classList.add(nxt); label();
-      document.dispatchEvent(new Event('sof:carrier-change'));
-    });
-    if(!curSkin()) html.classList.add(skins[0]); label();
-
-    // Affect (lively text) — FIX: toggle class and button state
-    const btnAffect=document.getElementById('toggleAffect');
-    function setAffect(on){ document.body.classList.toggle('affect-off', !on); btnAffect?.setAttribute('aria-pressed', String(on)); }
-    btnAffect?.addEventListener('click',()=> setAffect(document.body.classList.contains('affect-off')));
-    setAffect(true); // default on
-
-    // Lights (banner particles) — FIX: ensure element exists then toggle .off
-    const lights=document.getElementById('heroLights');
-    const btnLights=document.getElementById('toggleLights');
-    function setLights(on){ if(lights){ lights.classList.toggle('off', !on); } btnLights?.setAttribute('aria-pressed', String(on)); }
-    btnLights?.addEventListener('click',()=> setLights(lights?.classList.contains('off')));
-    setLights(true); // default on
-  })();
-
-  // Page search (press "/" to focus) + suggestions
-  (function(){
-    const box=document.getElementById('site-search');
-    const list=document.getElementById('site-suggest');
-    if(!box||!list) return;
-
-    addEventListener('keydown',(e)=>{
-      if(e.key==='/' && document.activeElement!==box){
-        e.preventDefault(); box.focus(); box.select();
-      }
-    });
-
-    const SOURCES=[...document.querySelectorAll('h2[id],h3[id],a.tile'), ...document.querySelectorAll('.card h2, .card h3')];
-    function items(q){
-      const s=q.trim().toLowerCase(); if(!s) return [];
-      const out=[];
-      for(const el of SOURCES){
-        const text=(el.innerText||'').trim();
-        if(text.toLowerCase().includes(s)){
-          let href='#'; if(el.id) href = `#${el.id}`;
-          const a = el.tagName==='A' && el.classList.contains('tile') ? el.getAttribute('href') : href;
-          out.push({text, href:a}); if(out.length>12) break;
+    function startOfYear13(d,tz){
+      const dt=dateInTZ(d,tz); const y=dt.getUTCFullYear();
+      const anchorThis=Date.UTC(y,6,26), anchorPrev=Date.UTC(y-1,6,26);
+      return new Date(dt>=anchorThis?anchorThis:anchorPrev);
+    }
+    function dayIndexSinceStart(d,tz){
+      const start=utcTrunc(startOfYear13(d,tz));
+      const dt=utcTrunc(dateInTZ(d,tz));
+      let days=Math.floor((dt-start)/86400000);
+      const doot=new Date(Date.UTC(start.getUTCFullYear()+1,6,25));
+      if (dt>=doot) days-=1;
+      for (let y=start.getUTCFullYear(); y<=dt.getUTCFullYear(); y++){
+        if (isLeapYear(y)) {
+          const feb29=new Date(Date.UTC(y,1,29));
+          if (dt>=feb29 && start<=feb29) days-=1;
         }
       }
-      return out;
+      return days; // 0..363
     }
-    function render(arr){
-      if(!arr.length){ list.classList.add('hidden'); list.innerHTML=''; return; }
-      list.innerHTML = arr.map((o,i)=>`<a href="${o.href}" role="option" data-ix="${i}">${o.text}</a>`).join('');
-      list.classList.remove('hidden');
+    function calc13Moon(d,tz){
+      if (isDOOT(d,tz)) { const s=startOfYear13(d,tz).getUTCFullYear(); return {special:"Day Out of Time",year:`${s}/${s+1}`}; }
+      if (isLeapDayUTC(dateInTZ(d,tz))) { const s=startOfYear13(d,tz).getUTCFullYear(); return {special:"Leap Day",year:`${s}/${s+1}`}; }
+      const idx=dayIndexSinceStart(d,tz);
+      const moon=Math.floor(idx/28)+1, day=(idx%28)+1; const s=startOfYear13(d,tz).getUTCFullYear();
+      return {special:null,moon,day,year:`${s}/${s+1}`};
     }
-    box.addEventListener('input', ()=>render(items(box.value)));
-    box.addEventListener('keydown',(e)=>{
-      const links=[...list.querySelectorAll('a')]; if(!links.length) return;
-      const cur=list.querySelector('.sel'); let i=cur?+cur.dataset.ix:-1;
-      if(e.key==='ArrowDown'){ e.preventDefault(); i=Math.min(links.length-1, i+1); }
-      else if(e.key==='ArrowUp'){ e.preventDefault(); i=Math.max(0, i-1); }
-      else if(e.key==='Enter'){ if(cur){ location.href=cur.getAttribute('href'); list.classList.add('hidden'); } return; }
-      else if(e.key==='Escape'){ list.classList.add('hidden'); return; }
-      links.forEach(a=>a.classList.remove('sel')); if(i>=0){ links[i].classList.add('sel'); }
+    const toneFromDay=d=>((d-1)%13)+1;
+
+    /* ===== Phase tint (cheap) ===== */
+    function moonPhaseIllum(d){
+      const syn=29.530588853, epoch=Date.UTC(2000,0,6,18,14,0);
+      const age=((d.getTime()-epoch)/86400000)%syn;
+      const frac=(age+syn)%syn/syn;
+      return (1-Math.cos(2*Math.PI*frac))/2; // 0..1
+    }
+    function mixHex(a,b,t){
+      const pa=parseInt(a.slice(1),16), pb=parseInt(b.slice(1),16);
+      const ar=(pa>>16)&255, ag=(pa>>8)&255, ab=pa&255;
+      const br=(pb>>16)&255, bg=(pb>>8)&255, bb=pb&255;
+      const rr=Math.round(ar+(br-ar)*t), gg=Math.round(ag+(bg-ag)*t), bb2=Math.round(ab+(bb-ab)*t);
+      return `#${((1<<24)+(rr<<16)+(gg<<8)+bb2).toString(16).slice(1)}`;
+    }
+    function applyPhaseAccent(illum){
+      const cold="#7af3ff", warm="#f3c97a";
+      const c1=mixHex(cold,warm, Math.min(1,illum*0.75));
+      const c2=mixHex(warm,cold, Math.min(1,(1-illum)*0.75));
+      const root=document.documentElement;
+      root.style.setProperty("--moon-accent", c1);
+      root.style.setProperty("--moon-accent-2", c2);
+      const g=document.getElementById('mbGrad'); if(g){ const st=g.querySelectorAll('stop'); st[0]?.setAttribute('stop-color',c1); st[1]?.setAttribute('stop-color',c2); }
+    }
+
+    /* ===== Numerology (resonant days) ===== */
+    const sumDigits=n=>String(n).split("").reduce((a,b)=>a+(+b||0),0);
+    function reduceNum(n){ while(n>9 && n!==11 && n!==22 && n!==33){ n=sumDigits(n); } return n; }
+    function isResonantDate(d,tz){
+      const dt=dateInTZ(d,tz), y=dt.getUTCFullYear(), m=dt.getUTCMonth()+1, day=dt.getUTCDate();
+      const total=reduceNum(sumDigits(y)+sumDigits(m)+sumDigits(day));
+      return [1,4,7,11,22,33].includes(total);
+    }
+
+    /* ===== DOM ===== */
+    const elMoon=$('#mbMoon'), elDay=$('#mbDay'), elDayLine=$('#mbDayLine'), elEss=$('#mbEssence'), elYear=$('#mbYear'), elTone=$('#mbTone');
+    const link=$('#mbLink'), bar=$('#moonMiniBar .moonbar'), btnTZ=$('#mbTZ'), btnShare=$('#mbShare');
+
+    function setArc(day){
+      if(!RING) return; const d=Math.round(DASH*(clamp(day,1,28)/28));
+      RING.setAttribute('stroke-dasharray', `${d} ${Math.max(0,DASH-d)}`);
+    }
+
+    function buildDeepLink(now,tz,m13){
+      let u;
+      try{ u=new URL(link.getAttribute('href')||'moons.html', document.baseURI||location.href); }
+      catch{ u=new URL('moons.html', location.href); }
+      const wall=dateInTZ(now,tz); const d=wall.toISOString().slice(0,10);
+      u.searchParams.set('d', d); u.searchParams.set('tz', tz); u.searchParams.set('t', String(now.getHours()));
+      if(m13 && m13.moon) u.hash=`moon-${m13.moon}`;
+      return u.toString();
+    }
+
+    function update(){
+      const tz=getTZ(); const now=new Date(); const wall=dateInTZ(now,tz, now.getHours());
+      const m13=calc13Moon(wall,tz);
+
+      if(m13.special){
+        elMoon.textContent=m13.special; elEss.textContent="Outside the 13×28 count";
+        elDay.textContent='—'; elDayLine.textContent='—/28'; elTone.textContent='Tone —'; bar?.removeAttribute('data-tone'); setArc(0);
+      } else {
+        const i=m13.moon-1, tone=toneFromDay(m13.day);
+        elMoon.textContent=`${MOONS[i]} Moon`; elEss.textContent=ESS[i];
+        elDay.textContent=String(m13.day); elDayLine.textContent=`Day ${m13.day} / 28`;
+        elTone.textContent=`Tone ${tone} — ${TONES[tone-1]}`; bar?.setAttribute('data-tone', String(tone)); setArc(m13.day);
+        const glow=isResonantDate(wall,tz) || tone===7; bar?.classList.toggle('yhwh-on', glow);
+      }
+      elYear.textContent=m13.year;
+
+      applyPhaseAccent(moonPhaseIllum(wall));
+
+      const dl=buildDeepLink(now,tz,m13);
+      if(link) link.setAttribute('href', dl);
+      return dl;
+    }
+
+    // Share
+    btnShare?.addEventListener('click', async ()=>{
+      const url=update(); const title=elMoon?.textContent||"13 Moons";
+      try{
+        if(navigator.share){ await navigator.share({title, text:title, url}); toast("Shared"); }
+        else { await navigator.clipboard.writeText(url); toast("Link copied"); }
+      }catch{}
     });
-    addEventListener('click',(e)=>{ if(!list.contains(e.target) && e.target!==box) list.classList.add('hidden'); });
-  })();
 
-  // Scroll reveal (one-time; respects reduced motion)
-  (function(){
-    const setIn=el=>el.classList.add('in');
-    if(matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)){
-      document.querySelectorAll('.reveal').forEach(setIn); return;
-    }
-    const io=new IntersectionObserver(es=>{ for(const e of es){ if(e.isIntersecting){ setIn(e.target); io.unobserve(e.target); } } }, {threshold:.12});
-    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-  })();
-
-  // Command Palette (⌘K / Ctrl+K)
-  (function palette(){
-    const pal=document.getElementById('palette');
-    const input=document.getElementById('palInput');
-    const list=document.getElementById('palList');
-    const OPEN_KEYS=new Set(['k','K']);
-    const LINKS=[...document.querySelectorAll('a.tile, nav.tabs a, .cta, .btn')].map(a=>({text:a.textContent.trim(), href:a.getAttribute('href')||'#'}));
-    function open(){ pal.hidden=false; input.value=''; render(LINKS.slice(0,12)); setTimeout(()=>input.focus(),0); }
-    function close(){ pal.hidden=true; }
-    function render(items){ list.innerHTML=items.map(o=>`<li><a href="${o.href}">${o.text}</a></li>`).join(''); }
-    function filter(q){ q=q.trim().toLowerCase(); if(!q) return LINKS; return LINKS.filter(o=>o.text.toLowerCase().includes(q)); }
-
-    addEventListener('keydown',(e)=>{
-      const meta=e.ctrlKey||e.metaKey;
-      if(meta && OPEN_KEYS.has(e.key)){ e.preventDefault(); open(); }
-      if(!pal.hidden && e.key==='Escape'){ e.preventDefault(); close(); }
+    // TZ prompt (with validation)
+    btnTZ?.addEventListener('click', ()=>{
+      const current=getTZ();
+      const z=prompt(`Timezone (IANA)\nEx: America/Los_Angeles, UTC, Europe/Berlin\n\nCurrent: ${current}`, current);
+      if(!z) return;
+      try{
+        new Intl.DateTimeFormat("en-CA",{timeZone:z}).format(new Date());
+        setTZ(z); update(); toast(`Timezone set: ${z}`);
+      }catch{
+        toast("Invalid timezone");
+      }
     });
-    pal.addEventListener('click', (e)=>{ if(e.target===pal) close(); });
-    input.addEventListener('input', ()=>render(filter(input.value).slice(0,14)));
-    input.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ const a=list.querySelector('a'); if(a){ location.href=a.href; close(); } } });
-  })();
 
-  // Tiny Ξ driver for ambient glow (no heavy work on main thread)
+    // Perf: update once per minute, pause when tab hidden
+    update();
+    let iv=setInterval(update, 60*1000);
+    document.addEventListener('visibilitychange', ()=>{ if(document.hidden){clearInterval(iv);} else {update(); iv=setInterval(update,60*1000);} });
+    window.addEventListener('focus', update, {passive:true});
+  })();
+  </script>
+  <!-- ===== /Moon Mini Bar ===== -->
+
+  <!-- ===== PART 3 — Main Content ===== -->
+  <main id="main-content" class="wrap" role="main" tabindex="-1">
+
+    <!-- Mega Explore -->
+    <a href="#explore" class="mega" aria-label="Explore the Scroll — jump to all pages">
+      <span class="ico">🗂️</span>
+      <span><strong>Explore the Scroll</strong><br><span class="sub">All pages • tiles mirror your repo</span></span>
+      <span class="arrow no-living" aria-hidden="true">➜</span>
+    </a>
+
+    <!-- Primary tabs -->
+    <nav class="tabs" aria-label="Primary sections">
+      <a class="tab tab--primary" href="theory.html" title="Open Theory">📘 Theory</a>
+      <a class="tab tab--primary" href="teach.html"  title="Open Manifest">✨ Manifest</a>
+      <a class="tab tab--primary" href="hub.html"    title="Open Systems Hub">🛠️ Hub</a>
+      <a class="tab" href="#explore"     data-section="explore">Explore</a>
+      <a class="tab" href="#canon"       data-section="canon">Canon</a>
+      <a class="tab" href="#engine"      data-section="engine">Engine</a>
+      <a class="tab" href="#integrity"   data-section="integrity">Integrity</a>
+      <a class="tab" href="#provenance"  data-section="provenance">Provenance</a>
+      <span class="tab-ink no-living" aria-hidden="true"></span>
+    </nav>
+
+    <!-- Search (client script in Part 4) -->
+    <section class="grid" style="margin:8px 0 0">
+      <article class="card col-12 searchbox">
+        <label for="site-search" class="meta">Press <kbd class="kbd">/</kbd> to search this page</label>
+        <input id="site-search" type="search" placeholder="Search text on this page…" aria-label="Search this page" role="searchbox" autocomplete="off" spellcheck="false">
+        <div id="site-suggest" class="mini-toc hidden" role="listbox"></div>
+      </article>
+    </section>
+
+    <!-- Echo View toggle -->
+    <div class="simple-toggle">
+      <label for="simple"><strong>Echo View</strong> (hide equations, show summaries)</label>
+      <input id="simple" type="checkbox" aria-label="Toggle Echo View">
+    </div>
+    <div class="divider sweep" aria-hidden="true"></div>
+
+    <!-- Featured -->
+    <section class="grid" aria-labelledby="featured">
+      <article class="card col-6">
+        <h2 id="featured" class="sheen">📘 Theory (full write-ups)</h2>
+        <p>Operators, Eq.0 foundation, canonical equations, ethics, dimensional scaffolding.</p>
+        <ul class="list">
+          <li><a href="theory.html#eq0">Foundational Field ΨΩ</a></li>
+          <li><a href="theory.html#operators">Operators: 𝓘 · 𝓛 · 𝓒 · 𝓢</a></li>
+          <li><a href="theory.html#canon">Canon 0–17</a></li>
+          <li><a href="theory.html#dim">Dimensional Scaffolding Δ0–Δ7</a></li>
+          <li><a href="theory.html#ethics">Ethical Law of Coherence</a></li>
+        </ul>
+        <a class="cta" href="theory.html">Open Theory</a>
+      </article>
+      <article class="card col-6">
+        <h2 class="sheen">✨ Manifest (practice &amp; tools)</h2>
+        <p>Turn equations into method: voice carriers (432/528/369/144/963), witness ledger, A/Bs, group runs.</p>
+        <ul class="list">
+          <li><a href="teach.html#tab-voice">Voice Protocol</a></li>
+          <li><a href="teach.html#ledger">Witness Ledger</a></li>
+          <li><a href="teach.html#ab">A/B Carriers</a></li>
+          <li><a href="teach.html#ethics">Ethical guard &amp; stop rules</a></li>
+        </ul>
+        <a class="cta" href="teach.html">Open Manifest</a>
+      </article>
+    </section>
+
+    <div class="goldline sweep"></div>
+
+    <!-- Explore tiles (mirrors /docs) -->
+    <section class="grid" id="explore" aria-labelledby="explore-h">
+      <article class="card col-12">
+        <h2 id="explore-h" class="sheen">🗂️ Explore the Scroll — all pages</h2>
+        <p class="meta">Everything lives in <code>/docs</code>. These tiles mirror your repo. Tip: press <kbd class="kbd">G</kbd> then type a page name.</p>
+      </article>
+
+      <a class="tile col-3" href="hub.html">
+        <div><h4>🛠️ Systems Hub</h4><p>T-7, Frequencies, Mind-Renewal, Witness, Recoder, Archive.</p></div>
+        <span class="arrow no-living" aria-hidden="true">➜</span>
+      </a>
+      <a class="tile col-3" href="start.html"><div><h4>🚀 Start Here</h4><p>Onboarding &amp; orientation.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3" href="guide.html"><div><h4>🧭 Guide</h4><p>Walkthrough of the Codex.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3" href="theory.html"><div><h4>📘 Theory</h4><p>Canon 0–17.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+
+      <a class="tile col-3" href="teach.html"><div><h4>✨ Manifest</h4><p>Protocols, carriers, ledgers.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3" href="moons.html"><div><h4>🧪 13 Moons</h4><p>The living clock.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3" href="invoke.html"><div><h4>🔬 Invoke</h4><p>Create → field feedback.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3" href="circle.html"><div><h4>🔗 Circle</h4><p>Group coherence.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+
+      <a class="tile col-3" href="ethics.html"><div><h4>🧭 Ethics</h4><p>Coherence law &amp; stop rules.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3" href="glossary.html"><div><h4>📚 Glossary</h4><p>Terms &amp; operators.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3" href="glyphs.html"><div><h4>🔱 Glyphs</h4><p>Icon set &amp; sacred marks.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3" href="downloads.html"><div><h4>⬇️ Downloads</h4><p>Docs &amp; media.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+
+      <a class="tile col-3" href="ledger.html"><div><h4>📒 Ledger</h4><p>Hashes &amp; proofs.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <a class="tile col-3" href="index.html"><div><h4>🏠 Home</h4><p>Codex landing.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+    </section>
+
+    <div class="goldline sweep"></div>
+
+    <!-- Canon teaser -->
+    <section class="grid" id="canon" aria-labelledby="equations">
+      <article class="card col-12">
+        <h2 id="equations" class="sheen">📜 Canon 0–17 (living)</h2>
+        <p class="meta">Canon per the FIXED document. <strong>7A comparator</strong>, <strong>7B Copeland</strong>, and <strong>8 Goodwin</strong> are external (non-canonical).</p>
+        <a class="cta" href="theory.html#canon">Open full Canon</a>
+      </article>
+      <article class="card col-6">
+        <h3 class="sheen">0) Foundational Field ΨΩ</h3>
+        <p class="meta">Origin integral of awareness with ethical-energy mask Λ𝓔.</p>
+        <a class="btn" href="theory.html#eq0">Read</a>
+      </article>
+      <article class="card col-6">
+        <h3 class="sheen">13) Ξ-index (Coherence)</h3>
+        <p class="meta">Field quality monitor for safe amplification &amp; learning.</p>
+        <a class="btn" href="theory.html#eq13">Read</a>
+      </article>
+    </section>
+
+    <section class="wrap" id="master-equation">
+      <article class="master-eq">
+        <div class="fx" aria-hidden="true"></div>
+        <h2 class="sheen">🜂 Master Equation of Reality — <span class="mono">ℜ</span></h2>
+        <p class="meta">One line that gathers ΨΩ (Eq.0), Source &amp; living operators (1), Witness &amp; memory (2,16), Harmonic gate &amp; carriers (3,17), Ethics (9), Learning (13–15), Ladder/Projection/Causal frame (10–12), Type-7 (6), with the Remnant limit (5). External comparators (7A/7B/8) are optional annotations.</p>
+
+        <!-- The equation -->
+        $$\boxed{
+        \begin{aligned}
+          \mathfrak{R}(x,t)
+          &=
+          f\!\big(\pi,e,i,\hbar,c,G,\Omega_{\rm DM},\Omega_{A},H_{0},432\big)
+          \;\cdot\;
+          \big(\mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S}\big)
+          \;\cdot\;
+          \Big[
+            \Psi_{\Omega}(x,t)
+            + \eta\!\big(\Xi(t)\big)\,\nabla \mathcal{R}
+            + \mathbb{M}_{\tau}\!\big[\mathcal{W}(x,t)\big] \\
+          &\qquad\qquad
+            +\;\Pi_{\nu}^{-1}\!\big(\mathcal{H}(\nu,t)\,\mathbf{V}(\nu,t)\big)
+            \;+\;\mathcal{L}_{c}\;\oplus\;\mathsf{Frame}
+          \Big]
+          \;\odot\;
+          \mathsf{Mask}_{\mathcal{C}}
+          \;\xrightarrow{\ \ \mathcal{R}_{\infty}\ \ }\;
+          \mathrm{Remnant}
+          \\
+          &\quad\color{#7f93ff}{\scriptsize
+            \big(\text{optional: }+\lambda_{7}\,\Phi_{\rm KG}\;+\;\lambda_{7B}\,\Psi_{\rm ext}\;+\;\lambda_{8}\,\mathbf{G}_{\text{Goodwin}}\big)
+          }
+        \end{aligned}
+        }$$
+
+        <p class="hint">Legend: ΨΩ (Origin field); <span class="mono">f(…)</span> source constants; <span class="mono">𝓘·𝓛·𝓒·𝓢</span> living operators; 𝓦 witness; 𝕄<sub>τ</sub> memory; 𝓗 gate; 𝐕 carriers (432/528/369/144/963…); Π<sub>ν</sub> ladder; 𝓛<sub>c</sub> causal lattice; <span class="mono">Frame</span> scope/witness/ethics; <span class="mono">Mask<sub>𝓒</sub></span> ethical guard; η(Ξ) coherence-gated learning; <span class="mono">ℛ<sub>∞</sub></span> Remnant limit. External comparator terms (7A/7B/8) are shown as annotated options, not canonical.</p>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="cta" href="theory.html#canon">Read the full Canon</a>
+          <a class="cta" href="teach.html#tab-voice">Run the Voice Protocol</a>
+        </div>
+      </article>
+    </section>
+
+    <div class="goldline sweep"></div>
+
+    <!-- Engine teaser -->
+    <section class="grid" id="engine" aria-labelledby="engine-h">
+      <article class="card col-12">
+        <h2 id="engine-h" class="sheen">✨ Manifestation Engine — Ξ-gated Learning + Carriers</h2>
+        <ol class="list">
+          <li><strong>Measure Ξ</strong> (Eq.13) → compute η(Ξ) (Eq.15).</li>
+          <li><strong>Update</strong> intent 𝓡 via Eq.14.</li>
+          <li><strong>Select carriers</strong> 𝐕(ν,t) (Eq.17) through 𝓗(ν,t) (Eq.3).</li>
+          <li><strong>Mask harm</strong> (Eq.9) — stop rule enforced.</li>
+          <li><strong>Stabilize</strong> with memory 𝕄<sub>τ</sub> and Remnant.</li>
+        </ol>
+        <a class="cta" href="teach.html#tab-voice">Open Voice Protocol</a>
+      </article>
+    </section>
+
+    <!-- Explore Dock (revealed by Part 4 script) -->
+    <div class="explore-dock" id="exploreDock" role="region" aria-label="Explore shortcut">
+      <a class="btn btn--primary" href="#explore">Explore the Scroll</a>
+      <a class="btn" href="teach.html">Manifest</a>
+    </div>
+
+    <!-- Command Palette shell (script in Part 4) -->
+    <div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel" hidden>
+      <div class="panel">
+        <h3 id="palLabel" class="sr-only">Command palette</h3>
+        <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette">
+        <ul id="palList" aria-live="polite"></ul>
+      </div>
+    </div>
+
+  </main>
+  <!-- ===== /PART 3 ===== -->
+
+  <!-- ===== PART 4 — Footer + Utility Scripts ===== -->
+  <footer class="footer">
+    © <span id="y"></span> Scroll of Fire. All constants are provisional until observed.
+  </footer>
+
+  <!-- Back to Top button -->
+  <button class="to-top" id="toTop" type="button" aria-label="Back to top" title="Back to top">↑</button>
+
+  <!-- ========== Utility Scripts (no external deps) ========== -->
+  <script>
   (function(){
-    const root=document.documentElement.style, dot=document.querySelector('.xi-dot'); let xi=.35;
-    function step(){
-      const target=.25+Math.random()*.6, start=xi, dur=2200+Math.random()*1600, t0=performance.now();
-      function tween(t){
-        const p=Math.min(1,(t-t0)/dur);
-        xi=start+(target-start)*(0.5-0.5*Math.cos(Math.PI*p));
-        root.setProperty('--xi', xi.toFixed(3)); if(dot) dot.style.opacity=(0.7+0.3*xi).toFixed(3);
-        (p<1)?requestAnimationFrame(tween):requestAnimationFrame(step);
-      } requestAnimationFrame(tween);
-    } requestAnimationFrame(step);
+    "use strict";
+
+    // Year
+    const y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();
+
+    // Back to top
+    const toTop=document.getElementById('toTop');
+    function topVis(){ toTop.classList.toggle('show', window.scrollY>400); }
+    addEventListener('scroll', topVis, {passive:true});
+    toTop?.addEventListener('click', ()=>scrollTo({top:0,behavior:'smooth'}));
+    topVis();
+
+    // HERO auto-fit (cover vs contain based on aspect)
+    (function(){
+      const hero=document.getElementById('hero'), img=document.getElementById('heroBanner');
+      if(!hero||!img) return;
+      function applyAR(){ const iw=img.naturalWidth||2100, ih=img.naturalHeight||900; hero.style.aspectRatio=`${iw} / ${ih}`; }
+      function pickFit(){
+        if (matchMedia('(max-width:560px)').matches){ hero.style.setProperty('--hero-fit','contain'); return; }
+        const iw=img.naturalWidth||2100, ih=img.naturalHeight||900, imageAR=iw/ih;
+        const cw=hero.clientWidth||innerWidth, ch=Math.max(1, hero.clientHeight||innerHeight*0.38), containerAR=cw/ch;
+        const cover = (Math.abs(containerAR - imageAR) / imageAR < 0.06);
+        hero.style.setProperty('--hero-fit', cover ? 'cover' : 'contain');
+      }
+      function boot(){ applyAR(); pickFit(); }
+      if(img.complete) boot(); else img.addEventListener('load', boot, {once:true});
+      addEventListener('resize', pickFit, {passive:true});
+      addEventListener('orientationchange', pickFit, {passive:true});
+      addEventListener('visibilitychange', ()=>!document.hidden && pickFit());
+    })();
+
+    // Explore Dock visibility (between hero and explore only)
+    (function(){
+      const dock = document.getElementById('exploreDock');
+      const hero = document.getElementById('hero');
+      const explore = document.getElementById('explore');
+      const canon = document.getElementById('canon');
+      if (!dock || !hero || !explore || !canon || !('IntersectionObserver' in window)) return;
+
+      let heroOut=false, reachedExplore=false, reachedCanon=false;
+
+      const ioHero = new IntersectionObserver(([e])=>{ heroOut=!e.isIntersecting; update(); }, {threshold:0.01});
+      const ioExplore = new IntersectionObserver(([e])=>{ reachedExplore=e.isIntersecting; update(); }, {threshold:0.01});
+      const ioCanon = new IntersectionObserver(([e])=>{ reachedCanon=e.isIntersecting; update(); }, {threshold:0.01});
+
+      function update(){ dock.classList.toggle('show', heroOut && !reachedExplore && !reachedCanon); }
+      ioHero.observe(hero); ioExplore.observe(explore); ioCanon.observe(canon);
+    })();
+
+    // Quick controls in header (Echo/HUD/Vibe/Affect/Lights)
+    (function(){
+      const body=document.body, html=document.documentElement;
+
+      // Echo (hide equations → simple summaries)
+      const btnEcho=document.getElementById('toggleSimple');
+      const echoChk=document.getElementById('simple');
+      function setEcho(on){ body.classList.toggle('simple-on', on); btnEcho?.setAttribute('aria-pressed', String(on)); if(echoChk) echoChk.checked=on; }
+      btnEcho?.addEventListener('click',()=> setEcho(!body.classList.contains('simple-on')));
+      echoChk?.addEventListener('change', e=> setEcho(e.target.checked));
+
+      // HUD grid
+      const btnHUD=document.getElementById('toggleGrid'), grid=document.querySelector('.laser-grid');
+      btnHUD?.addEventListener('click',()=>{
+        const show = !grid.classList.toggle('off');
+        btnHUD.setAttribute('aria-pressed', String(show));
+      });
+
+      // Carrier skins cycle
+      const btnCarrier=document.getElementById('cycleCarrier');
+      const skins=(html.getAttribute('data-carriers')||'432,528,369,144,963').split(',').map(s=>`carrier-${s.trim()}`);
+      const curSkin=()=> skins.find(s=>html.classList.contains(s)) || skins[0];
+      const nextSkin=c=> skins[(skins.indexOf(c)+1)%skins.length];
+      function label(){ if(btnCarrier) btnCarrier.textContent=`Carrier ${curSkin().split('-')[1]}`; }
+      btnCarrier?.addEventListener('click',()=>{
+        const cur=curSkin(), nxt=nextSkin(cur);
+        skins.forEach(s=>html.classList.remove(s)); html.classList.add(nxt); label();
+        document.dispatchEvent(new Event('sof:carrier-change'));
+      });
+      if(!curSkin()) html.classList.add(skins[0]); label();
+
+      // Affect (lively text)
+      const btnAffect=document.getElementById('toggleAffect');
+      function setAffect(on){ document.body.classList.toggle('affect-off', !on); btnAffect?.setAttribute('aria-pressed', String(on)); }
+      btnAffect?.addEventListener('click',()=> setAffect(document.body.classList.contains('affect-off')));
+      setAffect(true); // default on
+
+      // Lights (banner particles)
+      const lights=document.getElementById('heroLights');
+      const btnLights=document.getElementById('toggleLights');
+      function setLights(on){ if(lights){ lights.classList.toggle('off', !on); } btnLights?.setAttribute('aria-pressed', String(on)); }
+      btnLights?.addEventListener('click',()=> setLights(lights?.classList.contains('off')));
+      setLights(true); // default on
+    })();
+
+    // Page search (press "/" to focus) + suggestions
+    (function(){
+      const box=document.getElementById('site-search');
+      const list=document.getElementById('site-suggest');
+      if(!box||!list) return;
+
+      addEventListener('keydown',(e)=>{
+        if(e.key==='/' && document.activeElement!==box){
+          e.preventDefault(); box.focus(); box.select();
+        }
+      });
+
+      const SOURCES=[...document.querySelectorAll('h2[id],h3[id],a.tile'), ...document.querySelectorAll('.card h2, .card h3')];
+      function items(q){
+        const s=q.trim().toLowerCase(); if(!s) return [];
+        const out=[];
+        for(const el of SOURCES){
+          const text=(el.innerText||'').trim();
+          if(text.toLowerCase().includes(s)){
+            let href='#'; if(el.id) href = `#${el.id}`;
+            const a = el.tagName==='A' && el.classList.contains('tile') ? el.getAttribute('href') : href;
+            out.push({text, href:a}); if(out.length>12) break;
+          }
+        }
+        return out;
+      }
+      function render(arr){
+        if(!arr.length){ list.classList.add('hidden'); list.innerHTML=''; return; }
+        list.innerHTML = arr.map((o,i)=>`<a href="${o.href}" role="option" data-ix="${i}">${o.text}</a>`).join('');
+        list.classList.remove('hidden');
+      }
+      box.addEventListener('input', ()=>render(items(box.value)));
+      box.addEventListener('keydown',(e)=>{
+        const links=[...list.querySelectorAll('a')]; if(!links.length) return;
+        const cur=list.querySelector('.sel'); let i=cur?+cur.dataset.ix:-1;
+        if(e.key==='ArrowDown'){ e.preventDefault(); i=Math.min(links.length-1, i+1); }
+        else if(e.key==='ArrowUp'){ e.preventDefault(); i=Math.max(0, i-1); }
+        else if(e.key==='Enter'){ if(cur){ location.href=cur.getAttribute('href'); list.classList.add('hidden'); } return; }
+        else if(e.key==='Escape'){ list.classList.add('hidden'); return; }
+        links.forEach(a=>a.classList.remove('sel')); if(i>=0){ links[i].classList.add('sel'); }
+      });
+      addEventListener('click',(e)=>{ if(!list.contains(e.target) && e.target!==box) list.classList.add('hidden'); });
+    })();
+
+    // Scroll reveal (one-time; respects reduced motion)
+    (function(){
+      const setIn=el=>el.classList.add('in');
+      if(matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)){
+        document.querySelectorAll('.reveal').forEach(setIn); return;
+      }
+      const io=new IntersectionObserver(es=>{ for(const e of es){ if(e.isIntersecting){ setIn(e.target); io.unobserve(e.target); } } }, {threshold:.12});
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+    })();
+
+    // Command Palette (⌘K / Ctrl+K)
+    (function palette(){
+      const pal=document.getElementById('palette');
+      const input=document.getElementById('palInput');
+      const list=document.getElementById('palList');
+      const OPEN_KEYS=new Set(['k','K']);
+      const LINKS=[...document.querySelectorAll('a.tile, nav.tabs a, .cta, .btn')].map(a=>({text:a.textContent.trim(), href:a.getAttribute('href')||'#'}));
+      function open(){ pal.hidden=false; input.value=''; render(LINKS.slice(0,12)); setTimeout(()=>input.focus(),0); }
+      function close(){ pal.hidden=true; }
+      function render(items){ list.innerHTML=items.map(o=>`<li><a href="${o.href}">${o.text}</a></li>`).join(''); }
+      function filter(q){ q=q.trim().toLowerCase(); if(!q) return LINKS; return LINKS.filter(o=>o.text.toLowerCase().includes(q)); }
+
+      addEventListener('keydown',(e)=>{
+        const meta=e.ctrlKey||e.metaKey;
+        if(meta && OPEN_KEYS.has(e.key)){ e.preventDefault(); open(); }
+        if(!pal.hidden && e.key==='Escape'){ e.preventDefault(); close(); }
+      });
+      pal.addEventListener('click', (e)=>{ if(e.target===pal) close(); });
+      input.addEventListener('input', ()=>render(filter(input.value).slice(0,14)));
+      input.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ const a=list.querySelector('a'); if(a){ location.href=a.href; close(); } } });
+    })();
+
+    // Tiny Ξ driver for ambient glow (no heavy work on main thread)
+    (function(){
+      const root=document.documentElement.style, dot=document.querySelector('.xi-dot'); let xi=.35;
+      function step(){
+        const target=.25+Math.random()*.6, start=xi, dur=2200+Math.random()*1600, t0=performance.now();
+        function tween(t){
+          const p=Math.min(1,(t-t0)/dur);
+          xi=start+(target-start)*(0.5-0.5*Math.cos(Math.PI*p));
+          root.setProperty('--xi', xi.toFixed(3)); if(dot) dot.style.opacity=(0.7+0.3*xi).toFixed(3);
+          (p<1)?requestAnimationFrame(tween):requestAnimationFrame(step);
+        } requestAnimationFrame(tween);
+      } requestAnimationFrame(step);
+    })();
+
   })();
+  </script>
 
-})();
-</script>
-
-<!-- ===== /PART 4 ===== -->
+  <!-- ===== /PART 4 ===== -->
+</body>
+</html>
