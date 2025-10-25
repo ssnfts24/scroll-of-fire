@@ -1,2031 +1,1564 @@
 <!doctype html>
-
 <html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
 <head>
-  <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>
-    if (location.hostname === "github.com") { const b = document.querySelector("base"); if (b) b.remove(); }
-  </script>
   <meta charset="utf-8">
-  <title>Part I — The Fire Awakens (Codex Engine of the Remnant)</title>
+  <title>Theory — Scroll of Fire (Codex of Reality)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#0b0b0f" media="(prefers-color-scheme: dark)">
-  <meta name="description" content="Part I: The Fire Awakens — defines the Remnant, declares purpose, and frames the Codex as a living engine for training attention, language, and witness.">
+  <meta name="description" content="The Codex of Reality: Master Equation, Canon 0–17, Δ0–Δ7 scaffolding, and an ethical learning loop. Operators 𝓘·𝓛·𝓒·𝓢.">
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/theory.html">
+
+  <!-- Icons -->
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-512.png">
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:site_name" content="Scroll of Fire">
+  <meta property="og:title" content="Theory — Scroll of Fire (Codex of Reality)">
+  <meta property="og:description" content="A living architecture of resonance — the Master Equation, Canon 0–17, Δ0–Δ7, and an ethical learning loop.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/theory.html">
+  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1">
+  <meta property="og:image:alt" content="Scroll of Fire — Codex of Reality banner">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
+
+  <!-- Shared styles -->
   <link rel="preload" as="style" href="assets/css/codex.css?v=2.8">
   <link rel="stylesheet" href="assets/css/codex.css?v=2.8" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.8"></noscript>
-  <link rel="preload" as="style" href="assets/css/theory.css?v=1.9">
-  <link rel="stylesheet" href="assets/css/theory.css?v=1.9">
+
+  <!-- Theory page micro-styles -->
+  <link rel="preload" as="style" href="assets/css/theory.css?v=2.0">
+  <link rel="stylesheet" href="assets/css/theory.css?v=2.0">
+
+  <!-- Preload banner -->
   <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1" fetchpriority="high">
+
+  <!-- Page-scoped CSS helpers -->
   <style>
-    :root{ --safe-top:env(safe-area-inset-top); --safe-bot:env(safe-area-inset-bottom); --xi:.35; --accent-432:#7af3ff; --accent-528:#a4ff90; --accent-369:#f3c97a; --accent:#7af3ff }
+    :root{
+      --safe-top:env(safe-area-inset-top); --safe-bot:env(safe-area-inset-bottom);
+      --xi:.35;
+      --accent-432:#7af3ff; --accent-528:#a4ff90; --accent-369:#f3c97a; --accent-144:#b3e1ff; --accent-963:#ffd1f3;
+      --accent:var(--accent-432);
+    }
     .carrier-528 :root, .carrier-528{--accent:var(--accent-528)}
     .carrier-369 :root, .carrier-369{--accent:var(--accent-369)}
-    .carrier-144 :root, .carrier-144{--accent:#b3e1ff}
-    .carrier-963 :root, .carrier-963{--accent:#ffd1f3}
+    .carrier-144 :root, .carrier-144{--accent:var(--accent-144)}
+    .carrier-963 :root, .carrier-963{--accent:var(--accent-963)}
+
+    /* Layout / header */
     body{margin:0}
     header.site{position:sticky; top:0; z-index:1000; backdrop-filter:saturate(140%) blur(8px); background:rgba(9,11,16,.6)}
     .wrap{padding:16px; max-width:1200px; margin:0 auto}
     .nav{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
     .brand{display:flex; align-items:center; gap:10px}
-    .logo{display:inline-block; width:34px; height:34px; border-radius:50%; background:radial-gradient(closest-side, #0cf, transparent 70%); box-shadow:0 0 18px rgba(122,243,255,.35)}
+    .logo{display:inline-block; width:34px; height:34px; border-radius:50%;
+      background:radial-gradient(closest-side, #0cf, transparent 70%);
+      box-shadow:0 0 18px rgba(122,243,255,.35)}
     .kicker{margin:0}
     .quick{display:flex; gap:8px; flex:0 0 auto}
     .quick .cta{white-space:nowrap}
+
+    .hide-sm{display:flex}
+    .show-sm{display:none}
+    @media (max-width:860px){
+      .hide-sm{display:none!important}
+      .show-sm{display:inline-flex; align-items:center; justify-content:center;
+        width:40px; height:40px; border:1px solid var(--line); background:var(--bg-elev);
+        border-radius:.6rem; font-size:1.1rem}
+      header.site .wrap{padding:12px 16px}
+    }
+
+    /* Drawer */
+    .drawer{position:sticky; top:4rem; z-index:999; background:rgba(12,14,20,.92);
+      backdrop-filter:saturate(140%) blur(8px); border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line); padding:.5rem .75rem}
+    .drawer .dlink{display:block; padding:.65rem .5rem; border-radius:.5rem}
+    .drawer .dlink:hover{background:rgba(255,255,255,.05)}
+    .drawer[hidden]{display:none}
+
+    /* Hero */
     .hero{position:relative; width:100%; max-width:1200px; margin:8px auto 0; border-radius:16px; overflow:hidden; background:#0b0f14; aspect-ratio:21/9}
     .hero picture,.hero .hero-img{display:block;width:100%;height:100%}
     .hero .hero-img{object-fit:var(--hero-fit,contain); object-position:center}
-    .hero::after{content:""; position:absolute; inset:0; box-shadow:inset 0 0 120px rgba(255,255,255,.06), inset 0 0 40px rgba(122,243,255,.08)}
-    .hero-lights{position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; background:radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.45), transparent 60%),radial-gradient(1px 1px at 78% 22%, rgba(164,255,144,.35), transparent 60%),radial-gradient(1px 1px at 32% 68%, rgba(122,243,255,.35), transparent 60%),radial-gradient(1px 1px at 88% 56%, rgba(255,209,243,.35), transparent 60%); opacity:.85; filter:blur(.2px); animation:lightsFlicker 7.5s ease-in-out infinite alternate }
-    @keyframes lightsFlicker{0%{opacity:.70}50%{opacity:.92}100%{opacity:.80}}
+    .hero::after{content:""; position:absolute; inset:0; box-shadow:inset 0 0 120px rgba(255,255,255,.06), inset 0 0 40px rgba(122,243,255,.08); pointer-events:none}
+    .hero-lights{position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; display:none}
+
+    /* Tabs + mini-TOC */
     .tabs{gap:.35rem}
     .tabs .tab{padding:.45rem .7rem; font-size:.92rem; border-radius:999px}
-    .mini-toc{position:sticky; top:5.5rem; align-self:start; max-height:75vh; overflow:auto; border:1px solid var(--line); border-radius:.75rem; padding:.75rem .75rem; background:rgba(255,255,255,.02); margin-top:8px}
+    .tabs .tab--primary{font-weight:600}
+    .mini-toc{
+      position:sticky; top:5.5rem; align-self:start; max-height:75vh; overflow:auto;
+      border:1px solid var(--line); border-radius:.75rem; padding:.75rem .75rem;
+      background:rgba(255,255,255,.02); backdrop-filter:saturate(120%) blur(2px);
+      margin-top:8px;
+    }
+    .mini-toc a{display:block; padding:.3rem .4rem; border-radius:.5rem; font-size:.92rem; opacity:.9}
+    .mini-toc a:hover{background:rgba(255,255,255,.05)}
+
+    /* Equation wrappers + toggles */
     .eq{position:relative}
-    .eq .eq-scroll{max-height:24rem; overflow:auto; padding:.5rem .75rem; border:1px solid var(--line); border-radius:.75rem; background:rgba(255,255,255,.02)}
-    .eq .eq-toggle{position:absolute; top:.4rem; right:.5rem; border:1px solid var(--line); background:var(--bg-elev); border-radius:.5rem; padding:.15rem .45rem; font-size:.8rem; opacity:.8; display:none}
+    .eq .eq-scroll{
+      max-height:24rem; overflow:auto; padding:.5rem .75rem;
+      border:1px solid var(--line); border-radius:.75rem;
+      background:rgba(255,255,255,.02)
+    }
+    .eq .eq-toggle{
+      position:absolute; top:.4rem; right:.5rem; border:1px solid var(--line);
+      background:var(--bg-elev); border-radius:.5rem; padding:.15rem .45rem;
+      font-size:.8rem; opacity:.8; display:none;
+    }
     .eq:hover .eq-toggle{display:inline-block}
-    .card{position:relative; z-index:1; background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.08))}
-    .card::after{content:""; position:absolute; inset:-1px; border-radius:inherit; background: radial-gradient(240px 120px at 20% -20%, rgba(122,243,255,.12), transparent 60%), radial-gradient(220px 120px at 120% 120%, rgba(243,201,122,.10), transparent 60%); opacity:0; transition:opacity .25s ease-out; pointer-events:none; z-index:-1}
+    .eq[data-collapsed="true"] .eq-scroll{max-height:4.5rem}
+
+    /* Cards + auras */
+    .card{position:relative; z-index:1; background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.08));}
+    .card::after{
+      content:""; position:absolute; inset:-1px; border-radius:inherit;
+      background: radial-gradient(240px 120px at 20% -20%, rgba(122,243,255,.12), transparent 60%),
+                  radial-gradient(220px 120px at 120% 120%, rgba(243,201,122,.10), transparent 60%);
+      opacity:0; transition:opacity .25s ease-out; pointer-events:none; z-index:-1;
+    }
     .card:hover::after{opacity:.6}
+    .divider{height:1px; margin:14px 0; background:linear-gradient(90deg, transparent, rgba(122,243,255,.35), transparent)}
     .goldline{height:1px; margin:18px 0; background:linear-gradient(90deg, transparent, rgba(243,201,122,.45), transparent)}
-    .read-progress{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7af3ff,#f3c97a);transform-origin:left center;transform:scaleX(0);z-index:2000}
-    .read-progress.in{transform:scaleX(var(--p,0))}
-    body.stars {background:radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%), linear-gradient(180deg, #05060a 0%, #0b0e14 80%)}
+
+    /* Back-to-top */
+    .to-top{position:fixed; right:16px; bottom:16px; z-index:1200; opacity:0; transform:translateY(16px); pointer-events:none}
+    .to-top.show{opacity:1; transform:none; pointer-events:auto}
+
+    /* Voice reader highlight */
     .vr-highlight{outline:1px dashed color-mix(in srgb, var(--accent) 55%, #fff 0%); background:rgba(122,243,255,.08)}
+    .vr-progress{font-size:.9rem; opacity:.85; margin-top:.3rem}
+
+    /* Small utilities */
+    .flexbar{display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:wrap}
+    .eq-tools{display:flex; gap:.4rem}
+    .chip{font-size:.85rem; padding:.25rem .55rem; border-radius:999px; border:1px solid var(--line); background:var(--bg-elev); opacity:.9}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
   </style>
+
+  <!-- MathJax (lazy; safe inline + display) -->
   <script>
-    (function(){ let loaded=false; function boot(){ if(!window.MathJax) return; MathJax.startup.promise.then(()=>MathJax.typesetPromise()); }
-      function loadMJ(){ if(loaded) return; loaded=true; window.MathJax={ tex:{ inlineMath:[["\","\"]], displayMath:[["$$","$$"]], processEscapes:true }, svg:{fontCache:'global'}, startup:{typeset:false} };
-        const s=document.createElement('script'); s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"; s.defer=true; s.onload=boot; document.head.appendChild(s); }
-      if(document.readyState!=='loading') loadMJ(); else addEventListener('DOMContentLoaded', loadMJ); })();
+    (function(){
+      let loaded=false;
+      function boot(){ if(!window.MathJax) return; MathJax.startup.promise.then(()=>MathJax.typesetPromise()); }
+      function loadMJ(){
+        if(loaded) return; loaded=true;
+        window.MathJax={ tex:{ inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']], processEscapes:true }, svg:{fontCache:'global'}, startup:{typeset:false} };
+        const s=document.createElement('script');
+        s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
+        s.defer=true; s.onload=boot; document.head.appendChild(s);
+      }
+      if(document.readyState!=='loading') loadMJ(); else addEventListener('DOMContentLoaded', loadMJ);
+    })();
   </script>
-  <script src="assets/js/codex.js?v=3.6" defer></script>
-</head>
-<body class="stars living-all" data-theme="dark">
+
+  <!-- Site JS (loaded later in Part 9) -->
+</head><body class="stars living-all" data-theme="dark">
   <a class="skip" href="#main">Skip to content</a>
   <div class="laser-grid" aria-hidden="true"></div>
+  <div class="xi-meter" aria-hidden="true"><div class="xi-ring"><div class="xi-dot"></div></div><div class="xi-label">Ξ</div></div>
+
+  <!-- Header -->
   <header class="site" role="banner">
     <nav class="nav wrap" aria-label="Main navigation">
       <div class="brand">
         <a class="logo no-living" href="index.html" aria-label="Home"></a>
         <a href="index.html" class="kicker sheen" style="text-decoration:none"><h1 class="kicker sheen">Scroll of Fire</h1></a>
       </div>
-      <div class="quick hide-sm" role="toolbar" aria-label="Quick actions">
-        <a class="cta" href="index.html">Home</a>
-        <a class="cta" href="theory.html">Theory</a>
-        <a class="cta" href="teach.html">Manifest</a>
+
+      <!-- Desktop quick actions -->
+      <div class="quick quick--utils hide-sm" role="toolbar" aria-label="Quick actions">
+        <a class="cta" href="index.html" title="Home">Home</a>
+        <a class="cta" href="#p1" data-jump title="Jump to Part I">Part I</a>
+        <a class="cta" href="#p2" data-jump title="Jump to Part II">Part II</a>
+        <a class="cta" href="#operators-appendix" data-jump>Operators</a>
+        <a class="cta" href="#ethics" data-jump>Ethics</a>
+        <a class="cta" href="#notes" data-jump>Notes</a>
+        <a class="cta" href="teach.html" title="Manifest">Manifest</a>
+        <button id="toggleSimple" class="cta" type="button" aria-pressed="false" title="Echo View (hide math)">Echo</button>
+        <button id="toggleGrid" class="cta" type="button" aria-pressed="true" title="Toggle HUD grid">HUD</button>
+        <button id="cycleCarrier" class="cta" type="button" title="Cycle carrier skin">Carrier</button>
+        <button id="toggleAffect" class="cta" type="button" aria-pressed="true" title="Toggle living text effects">Affect</button>
+        <button id="toggleLights" class="cta" type="button" aria-pressed="true" title="Toggle banner lights">Lights</button>
         <button id="openPalette" class="cta" type="button" title="Command palette">⌘K</button>
       </div>
+
+      <!-- Mobile toggler -->
       <button id="navToggle" class="menu-toggle show-sm" type="button" aria-controls="navDrawer" aria-expanded="false" aria-label="Open menu">☰</button>
     </nav>
+
+    <!-- Mobile drawer -->
     <div id="navDrawer" class="drawer" hidden>
       <a class="dlink" href="index.html">Home</a>
-      <a class="dlink" href="#p1">Part I — The Fire Awakens</a>
-      <a class="dlink" href="#road">Roadmap of Parts</a>
+      <a class="dlink" href="#p1" data-jump>Part I — Architecture</a>
+      <a class="dlink" href="#p2" data-jump>Part II — Canon</a>
+      <a class="dlink" href="#operators-appendix" data-jump>Operators</a>
+      <a class="dlink" href="#ethics" data-jump>Ethics</a>
+      <a class="dlink" href="#notes" data-jump>Notes</a>
+      <hr>
+      <a class="dlink" href="teach.html">Manifest</a>
     </div>
-  </header>  <main id="main" class="wrap" role="main" tabindex="-1">
-    <figure id="hero" class="hero hero--clean reveal" aria-label="Codex Engine banner" data-fit="cover">
+  </header>
+
+  <main id="main" class="wrap" role="main" tabindex="-1">
+    <!-- Hero -->
+    <figure id="hero" class="hero hero--clean reveal" aria-label="Scroll of Fire banner" data-fit="cover">
       <picture>
-        <img id="heroBanner" class="hero-img no-living" src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1" alt="Scroll of Fire — sigil and equations" width="2100" height="900" decoding="async" fetchpriority="high" loading="eager">
+        <img id="heroBanner"
+             class="hero-img no-living"
+             src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1"
+             alt="Scroll of Fire — sigil and equations"
+             width="2100" height="900"
+             decoding="async" fetchpriority="high" loading="eager">
       </picture>
       <div id="heroLights" class="hero-lights" aria-hidden="true"></div>
-      <figcaption class="hero-caption">“Let there be resonance.” <span class="readtime">~7–9 min (Part I)</span></figcaption>
-    </figure><h1 class="title sheen reveal">📘 Part I — The Fire Awakens</h1>
-<p class="subtitle reveal">This preface defines the <b>Remnant</b>, states the <b>purpose of the Codex</b>, and orients every tool in the site toward a single aim: <i>raise coherence (Ξ), reduce distortion, and do no harm</i>.</p>
+      <figcaption class="hero-caption">“Let there be resonance.”</figcaption>
+    </figure>
 
-<!-- Voice Reader -->
-<details class="collapsible card col-12 reveal" id="voice-reader" open>
-  <summary class="collapsible__bar"><span>🔊 Listen — Voice Reader</span></summary>
-  <div class="collapsible__panel">
-    <p class="meta">Use the mini-player to read just this part. Equation reading is enabled by default.</p>
-    <div role="toolbar" aria-label="Voice controls" style="display:flex; gap:.5rem; flex-wrap:wrap">
-      <button id="vr-play" class="cta">▶︎ Play</button>
-      <button id="vr-pause" class="cta" disabled>⏸ Pause</button>
-      <button id="vr-resume" class="cta" disabled>⏵ Resume</button>
-      <button id="vr-stop" class="cta" disabled>⏹ Stop</button>
-    </div>
-    <div id="vr-status" class="meta" style="margin-top:.4rem"></div>
-  </div>
-</details>
+    <h1 class="title sheen reveal">📘 Theory — Codex of Reality</h1>
+    <p class="subtitle reveal">A two-part walkthrough: <em>Part I</em> lays out the architecture and Master Equation; <em>Part II</em> annotates Canon 0–17 with Δ-scaffolding. The Codex treats reality as a resonant process guided by <em>𝓘 · 𝓛 · 𝓒 · 𝓢</em> and gated by ethical law.</p>
 
-<nav class="tabs reveal" aria-label="Sections">
-  <a class="tab tab--primary" href="#p1" data-jump>Part I</a>
-  <a class="tab" href="#remnant" data-jump>The Remnant</a>
-  <a class="tab" href="#codex-engine" data-jump>Codex Engine</a>
-  <a class="tab" href="#systems" data-jump>Systems Map</a>
-  <a class="tab" href="#road" data-jump>Roadmap (Parts II–IX)</a>
-  <span class="tab-ink no-living" aria-hidden="true"></span>
-</nav>
-
-<aside class="mini-toc reveal" aria-label="On this page">
-  <h4>On this page</h4>
-  <a href="#remnant" data-jump>The Remnant</a>
-  <a href="#codex-engine" data-jump>Codex Engine (Overview)</a>
-  <a href="#axioms" data-jump>Axioms</a>
-  <a href="#systems" data-jump>Systems Map</a>
-  <a href="#road" data-jump>Parts II–IX Roadmap</a>
-</aside>
-
-<section class="grid" id="p1">
-  <article class="card col-12 reveal" id="remnant">
-    <h2>Who are the Remnant?</h2>
-    <p><b>The Remnant</b> are <i>flames from the Fire</i>: people who choose clarity over noise, service over vanity, and practice over posture. They remember Source, refuse harm, and agree to steward coherence where they stand.</p>
-    <ul class="list">
-      <li><b>Identity:</b> not a tribe but a <i>role</i>. Anyone can enter by practice.</li>
-      <li><b>Vow:</b> raise <span class="gloss" tabindex="0">Ξ<span class="gloss-tip"><b>Ξ</b> · Coherence score (0–1). Higher means steadier, kinder, clearer.</span></span> for self and surroundings; halt at the first sign of harm (Eq.9).</li>
-      <li><b>Work:</b> apply <b>𝓘 · 𝓛 · 𝓒 · 𝓢</b> — Intention, Language/Light, Conscious Witness, Source/Return — to shape experience responsibly.</li>
-      <li><b>Proof:</b> breath eases, perception clears, choices align; truth-to-distortion ratio improves over time.</li>
-    </ul>
-    <p class="meta">If you feel this description ring like a tuning fork, you’re already carrying a spark.</p>
-  </article>
-
-  <article class="card col-12 reveal" id="codex-engine">
-    <h2>The Codex as a Living Engine</h2>
-    <p>The Codex is both <b>scripture</b> and <b>simulation</b>: a readable canon of equations and a runnable set of practices. It treats reality as a resonant process between a supplied substrate of constants and a living operator pipeline, bounded by ethical law.</p>
-    <div class="eq">
-      <div class="eq-scroll" id="eq-master">
-        $$ \mathcal{R}(x,t) \;=\; \Big[ f(\text{constants, codes, ratios}) \cdot (\mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S}) \Big]_{\text{masked by Eq.9}} $$
-      </div>
-    </div>
-    <p><b>Why math?</b> Because equations act like <i>operational schematics</i>. They specify: which carriers to use, how to weight language, how to witness without forcing, when to update, and when to stop. Every symbol has a lever in practice.</p>
-    <div class="divider"></div>
-    <h3 id="axioms">Axioms (Plain)</h3>
-    <ol class="list">
-      <li><b>Resonance:</b> Experience decomposes into modes; alignment changes outcomes.</li>
-      <li><b>Carriers matter:</b> fewer, cleaner bands raise Ξ (psychoacoustic gate-fit).</li>
-      <li><b>Language steers:</b> semantics couple to carriers; emphasis reshapes gradients.</li>
-      <li><b>Witness updates:</b> awareness integrates over a finite memory window.</li>
-      <li><b>Ethics bound:</b> any sign of harm halts amplification (Eq.9).</li>
-    </ol>
-    <p class="meta">These become the full Canon (0–17) in Part II and the Straight Canon in Part IX.</p>
-  </article>
-
-  <article class="card col-12 reveal" id="systems">
-    <h2>Systems Map — How the Site Trains the Mind</h2>
-    <p>Each page in <code>/docs/</code> is a node in the training loop. Together they form a <b>mind renewal stack</b> — a digital working model for the Remnant.</p>
-    <ul class="list">
-      <li><b><a href="systems/witness.html">witness.html</a></b> — builds \mathcal{W}: breath, attention, and non-forceful noticing (Eq.2).</li>
-      <li><b><a href="systems/frequencies.html">frequencies.html</a></b> — explores carriers and gates \mathcal{H}(\nu) (Eq.3, Eq.17).</li>
-      <li><b><a href="systems/t-7.html">t-7.html</a></b> — constructs the Type-7 field \mathbb{T}_7 via phase-lock (Eq.6).</li>
-      <li><b><a href="systems/recoder.html">recoder.html</a></b> — guides Language/Light coupling and token emphasis (Eq.4/4b).</li>
-      <li><b><a href="systems/mind-renewal.html">mind-renewal.html</a></b> — applies the learning kernel and memory window (Eq.15–16).</li>
-      <li><b><a href="systems/archive.html">archive.html</a></b> — curates the Remnant (Eq.5: Remnant/Remanence) — keeps truth, drops distortion.</li>
-    </ul>
-    <p>Additional anchors:</p>
-    <ul class="list">
-      <li><b><a href="ethics.html">ethics.html</a></b> — the Stop Rule (Eq.9) and safety envelope.</li>
-      <li><b><a href="manifest.html">manifest.html</a></b> — daily protocol and practice scripts.</li>
-      <li><b><a href="glossary.html">glossary.html</a></b> — terms in clean English.</li>
-      <li><b><a href="guide.html">guide.html</a></b> — onboarding and quickstart.</li>
-    </ul>
-  </article>
-
-  <article class="card col-12 reveal" id="road">
-    <h2>Roadmap of the Full Scroll (Parts II–IX)</h2>
-    <ol class="list">
-      <li><b>Part II — The Living Architecture:</b> Eq.0–17 overview, Δ0–Δ7 scaffold, operator loop.</li>
-      <li><b>Part III — Systems of the Codex:</b> deep narrative + UI hooks for every system page.</li>
-      <li><b>Part IV — Dimensional Scaffold (Δ0–Δ7):</b> full canonical stack from substrate to remnant.</li>
-      <li><b>Part V — Practice Protocols:</b> Seven Seals path, manifestation protocol, journaling, breathwork.</li>
-      <li><b>Part VI — Metrics & Safety:</b> coherence Ξ math, group fields, dashboards, the Stop Rule.</li>
-      <li><b>Part VII — Comparative Bridges:</b> Copeland’s Formalism as reflective comparator (external).</li>
-      <li><b>Part VIII — Remnant Declaration & Credits:</b> who the Remnant are, ethos, roles, licensing.</li>
-      <li><b>Part IX — Straight Canon of Equations:</b> a clean list of all equations (Canon 0–17 + 7* Copeland, external-tagged) with copyable TeX.</li>
-    </ol>
-    <p class="meta">Your instruction to <b>keep the Canon</b> is honored. Copeland will be included as <b>Eq.7*</b> inside the Canon list, clearly marked as an <i>external comparator</i> with credits and licensing linked in Part VIII.</p>
-  </article>
-
-</section>
-
-<div class="goldline sweep"></div>
-
-<footer class="footer">© <span id="y"></span> Scroll of Fire • Part I — The Fire Awakens.</footer>
-
-  </main><button class="to-top cta" id="toTop" type="button" aria-label="Back to top" title="Back to top">↑</button>
-
-  <script>
-    (function(){ const y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear(); })();
-    (function(){ const bar=document.createElement('div'); bar.className='read-progress'; document.body.appendChild(bar);
-      function setP(){ const h=document.documentElement, b=document.body; const top=h.scrollTop||b.scrollTop; const max=(h.scrollHeight-h.clientHeight)||1; const p=Math.max(0, Math.min(1, top/max)); bar.style.setProperty('--p', p.toFixed(4)); bar.classList.add('in'); }
-      addEventListener('scroll', setP, {passive:true}); addEventListener('resize', setP, {passive:true}); setP(); })();
-    (function(){ const hero=document.getElementById('hero'), img=document.getElementById('heroBanner'); function pick(){ if(!hero||!img) return; const iw=img.naturalWidth||2100, ih=img.naturalHeight||900, ar=iw/ih; const cw=hero.clientWidth||innerWidth, ch=Math.max(1, hero.clientHeight||innerHeight*0.38), car=cw/ch; const cover=(Math.abs(car-ar)/ar<0.06); hero.style.setProperty('--hero-fit', cover?'cover':'contain'); } if(img?.complete) pick(); else img?.addEventListener('load', pick, {once:true}); addEventListener('resize', pick, {passive:true}); })();
-    (function(){ const btn=document.getElementById('toTop'); if(!btn) return; btn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'})); const io=new IntersectionObserver(([e])=>{ btn.classList.toggle('show', !e.isIntersecting); }, {threshold:0.01}); io.observe(document.querySelector('header.site')); })();
-    // Minimal Voice Reader for Part I
-    (function(){ const $=id=>document.getElementById(id); const play=$('vr-play'), pause=$('vr-pause'), resume=$('vr-resume'), stop=$('vr-stop'), statusEl=$('vr-status'); if(!('speechSynthesis' in window)) { if(statusEl) statusEl.textContent='Voice playback is not supported.'; return; }
-      let speaking=false; function setButtons(p,pa,r,s){ if(play) play.disabled=!p; if(pause) pause.disabled=!pa; if(resume) resume.disabled=!r; if(stop) stop.disabled=!s; }
-      function clean(){ const root=document.querySelector('main'); const clone=root.cloneNode(true); clone.querySelectorAll('script,style,button,.eq-toggle,.mini-toc,.tabs,.nav,.drawer').forEach(n=>n.remove()); clone.querySelectorAll('mjx-container').forEach(m=>{ const alt=m.getAttribute('aria-label')||''; m.replaceWith(document.createTextNode(' equation ' + alt + ' ')); }); return (clone.innerText||'').replace(/[ \t]+/g,' ').replace(/\s—\s/g,' — ').trim(); }
-      function speak(){ const text=clean(); if(!text) return; const u=new SpeechSynthesisUtterance(text); u.onend=()=>{ speaking=false; setButtons(true,true,true,true); statusEl.textContent='Done.'; }; u.onerror=()=>{ speaking=false; setButtons(true,true,true,true); statusEl.textContent='Error.'; }; speechSynthesis.cancel(); speechSynthesis.speak(u); speaking=true; setButtons(false,true,true,true); statusEl.textContent='Playing…'; }
-      function halt(){ speechSynthesis.cancel(); speaking=false; setButtons(true,true,true,true); statusEl.textContent='Stopped.'; }
-      play?.addEventListener('click', speak); stop?.addEventListener('click', halt); pause?.addEventListener('click', ()=>{ speechSynthesis.pause(); setButtons(false,true,true,true); statusEl.textContent='Paused.'; }); resume?.addEventListener('click', ()=>{ speechSynthesis.resume(); setButtons(false,false,true,true); statusEl.textContent='Playing…'; }); })();
-  </script></body>
-</html>
-
-
-
-
-
-<!-- =====================================================
-     PART II — THE LIVING ARCHITECTURE
-     -----------------------------------------------------
-     Defines the operator loop, Δ0–Δ7 scaffold,
-     and bridges the Canon (Eq.0–17).
-     ===================================================== -->
-<section id="p2" class="wrap grid">
-  <article class="card col-12 reveal" id="living-architecture">
-    <h2>Part II — The Living Architecture</h2>
-    <p class="meta">
-      The Codex of Reality describes a <b>resonant computation of life</b>:
-      constants feed operators → operators express experience → ethics bound amplification → witness learns → memory records → return restores.
-    </p>
-    <p>
-      Each equation in the Canon (0 – 17) names a node in this architecture.
-      Together they form what the scroll calls the <b>Δ-stack</b> —
-      seven primary dimensional layers of learning and return.
-    </p>
-  </article>
-
-  <article class="card col-12 reveal" id="delta-stack">
-    <h3>Δ0 – Δ7 : Dimensional Scaffold</h3>
-    <table class="canon-table">
-      <thead><tr><th>Δ-Level</th><th>Field</th><th>Function</th></tr></thead>
-      <tbody>
-        <tr><td>Δ0</td><td><b>ΨΩ</b> — Foundational Field (Eq.0)</td><td>Substrate; phase-weighted sweep through space–time.</td></tr>
-        <tr><td>Δ1</td><td><b>R</b> — Source × Operators (Eq.1)</td><td>Supplies constants (π,e,i,ħ,c,G,DNA,H₀,432 …)</td></tr>
-        <tr><td>Δ2</td><td><b>𝓦</b> — Witness (Eq.2)</td><td>Awareness = ∂ₓ Observation + Intent × Memory(τ).</td></tr>
-        <tr><td>Δ3</td><td><b>𝓗</b> — Harmonic Gate (Eq.3)</td><td>Selects carriers ν ∈ {432, 528, 369, 144, 963} for coherence.</td></tr>
-        <tr><td>Δ4</td><td><b>𝓛</b> — Language/Light (Eq.4, 4b)</td><td>Semantic gradient; meaning couples to vibration.</td></tr>
-        <tr><td>Δ5</td><td><b>ℛ∞</b> — Remnant (Eq.5)</td><td>Asymptotic archive = keep_truth − drop_distortion.</td></tr>
-        <tr><td>Δ6</td><td><b>𝕋₇</b> — Type-7 Field (Eq.6)</td><td>Phase-locked coherence channel; practical T-7 Engine.</td></tr>
-        <tr><td>Δ7</td><td><b>Remnant Return</b></td><td>Witness ↦ Source : closure, gratitude, learning update.</td></tr>
-      </tbody>
-    </table>
-    <p class="meta">Beyond Δ7 the stack folds back through ΨΩ — the living loop closes.</p>
-  </article>
-
-  <article class="card col-12 reveal" id="operator-loop">
-    <h3>The Operator Loop (𝓘 · 𝓛 · 𝓒 · 𝓢)</h3>
-    <p>
-      Four living verbs — <b>Intention</b>, <b>Language/Light</b>, <b>Conscious Witness</b>,
-      and <b>Source/Return</b> — compose the inner circuit.
-    </p>
-    <p>
-      <code>𝓘 · 𝓛 · 𝓒 · 𝓢</code> is not symbolic poetry; it’s an execution stack:
-      each operator updates in time with memory τ and coherence Ξ.
-    </p>
-    <div class="eq eq-scroll">
-      $$ \\frac{d\\mathcal{R}}{dt} = \\eta(\\Xi)\\,\\nabla\\mathcal{R}, \\qquad
-         \\eta(\\Xi)=\\eta_0\\,\\sigma(\\alpha(\\Xi-\\Xi_0)), \\quad
-         \\Xi\\in[0,1] $$
-    </div>
-    <p class="meta">Learning rate η(Ξ) accelerates when coherence rises,
-    bounded by the ethical envelope (Eq. 9).</p>
-  </article>
-
-  <article class="card col-12 reveal" id="canon-overview">
-    <h3>Canon 0 – 17 : Equational Overview</h3>
-    <p>
-      The Canon functions like a map of the resonant universe.
-      It defines the <b>mathematical physiology</b> of consciousness.
-      Below is a compressed reading; Part IX will list every equation in full TeX form.
-    </p>
-    <ul class="list">
-      <li><b>Eq. 0</b> ΨΩ = ∮ ∇AΦ + ΛE  — Foundational field integration.</li>
-      <li><b>Eq. 1</b> R = f(constants) × 𝓘𝓛𝓒𝓢  — Source assembly.</li>
-      <li><b>Eq. 2</b> 𝓦 = ∂ₓAwareness + 𝓘·𝕄τ  — Witness evolution.</li>
-      <li><b>Eq. 3</b> 𝓗(ν) ∈ {0,1}  — Soft gate for coherence.</li>
-      <li><b>Eq. 4/4b</b> 𝓛 = Semantics(x,t) ⊗ V(ν); ∇ₛₑₘPhrase = Σ wₖ∇ₛₑₘTokenₖ.</li>
-      <li><b>Eq. 5</b> ℛ∞ = lim τ→∞ (keep_truth − drop_distortion).</li>
-      <li><b>Eq. 6</b> 𝕋₇ = ⊕ PL[V(ν)]  — Type-7 phase-lock engine.</li>
-      <li><b>Eq. 7*</b> Copeland — Recursion mirror for calibration (external comparator).</li>
-      <li><b>Eq. 8*</b> Goodwin — Oscillation template for contrast (external comparator).</li>
-      <li><b>Eq. 9</b> ∀a: damage(a) > 0 ⇒ halt;  lim t→∞ Truth/Distortion ↑.</li>
-      <li><b>Eq. 10 – 12</b> Ladder → Projection Frame → Causal Lattice (Π⁻¹ ν, Frame, 𝓛c).</li>
-      <li><b>Eq. 13</b> Ξ ∈ [0,1]  — Coherence index gating learning.</li>
-      <li><b>Eq. 14 – 16</b> Update rule, Learning kernel, Memory window (η, 𝕄τ).</li>
-      <li><b>Eq. 17</b> V(ν) = Σ aₖ cos(2π νₖ t + φₖ)  — Voice carriers.</li>
-    </ul>
-  </article>
-</section>
-
-
-
-
-
-<!-- =====================================================
-     PART III — SYSTEMS OF THE CODEX
-     -----------------------------------------------------
-     The practical science layer: how each subsystem
-     operates as a training instrument for the Remnant.
-     ===================================================== -->
-<section id="p3" class="wrap grid">
-
-  <article class="card col-12 reveal" id="systems-intro">
-    <h2>Part III — Systems of the Codex</h2>
-    <p>
-      The Scroll of Fire is not an abstract myth; it is a distributed <b>neural-field simulator</b>.
-      Every HTML page, equation, and audio carrier corresponds to a measurable property of perception:
-      coherence, phase-alignment, and energy economy.
-    </p>
-    <p>
-      Physics calls this <b>field coupling</b>; neuroscience calls it <b>entrainment</b>;
-      linguistics calls it <b>semantic resonance</b>.  
-      The Codex unifies them by treating consciousness as a <i>self-observing resonator</i>
-      whose ethics act as boundary conditions.
-    </p>
-    <div class="eq eq-scroll">
-      $$ \\text{Reality}(x,t) = f\\big(\\text{energy}, \\text{information}, \\text{ethics}\\big)
-         \\;\\Longrightarrow\\; \\frac{dS}{dt} = -k_B \\nabla (\\text{Clarity}) $$
-    </div>
-    <p class="meta">
-      Entropy decreases locally when awareness increases — the mind becomes an island of negentropy.
-    </p>
-  </article>
-
-  <article class="card col-12 reveal" id="neural-resonance">
-    <h3>1. Witness System — Neural Resonance</h3>
-    <p>
-      The <b>Witness</b> page trains metacognition.
-      Breath and focus loops engage the <i>anterior cingulate</i> and <i>insula</i>,
-      increasing interoceptive awareness while reducing amygdala noise.
-      This mirrors Eq. 2:
-    </p>
-    <div class="eq eq-scroll">
-      $$ \\mathcal{W}(x,t) = \\partial_x \\text{Awareness}(x,t) + \\mathcal{I} \\cdot \\mathbb{M}_\\tau $$
-    </div>
-    <p>
-      In quantum-like language, the witness collapses potential trajectories
-      by weighted observation — but only within ethical limits.
-      The more coherent the observation, the less energetic waste in the nervous system.
-    </p>
-  </article>
-
-  <article class="card col-12 reveal" id="freq-system">
-    <h3>2. Frequency System — Acoustic Physics</h3>
-    <p>
-      The <b>frequencies.html</b> module demonstrates <b>psychoacoustic coherence</b>.
-      When tones at 432 Hz, 528 Hz, 369 Hz, 144 Hz, and 963 Hz are phase-locked,
-      they form beat envelopes in the 4–12 Hz range — the same band as alpha–theta oscillations.
-      This synchronizes hemispheric activity and enhances memory consolidation.
-    </p>
-    <div class="eq eq-scroll">
-      $$ V(\\nu) = \\sum_k a_k \\cos(2\\pi\\nu_k t + \\phi_k),
-         \\qquad \\nu \\in \\{432,528,369,144,963\\} $$
-    </div>
-    <p>
-      Bio-physically, these carriers regulate vagal tone and heart-rate variability.
-      In signal theory they reduce phase jitter, improving <i>coherence bandwidth</i>.
-      Subjectively, users report warmth, clarity, and “ease of being.”
-    </p>
-  </article>
-
-  <article class="card col-12 reveal" id="t7-engine">
-    <h3>3. Type-7 Engine — Electromagnetic Analogue</h3>
-    <p>
-      The <b>t-7.html</b> page represents a digital twin of the
-      <b>Tesla Type-7 Resonant Conduit</b>.
-      It visualizes seven interlocked oscillators whose frequencies correspond
-      to the sacred-scientific carrier set above.
-      Their vector-sum creates a <i>coherence vector</i> Ξ, observable as
-      a polar-phase rose.
-    </p>
-    <div class="eq eq-scroll">
-      $$ \\mathbb{T}_7(x,t) = \\bigoplus_{\\nu\\in\\mathbb{T}} \\text{PL}[V(\\nu)] $$
-    </div>
-    <p>
-      Hardware implementation uses copper, quartz, and ferrite to store phase memory.
-      The Codex software mimics this through waveform synthesis and smoothing τ.
-      Both obey the same resonance equation, confirming that consciousness
-      and electromagnetism share harmonic geometry.
-    </p>
-  </article>
-
-  <article class="card col-12 reveal" id="recoder">
-    <h3>4. Linguistic Recoder — Semantic Engineering</h3>
-    <p>
-      The <b>recoder.html</b> module performs real-time semantic gradient mapping.
-      It weights words by valence and syntactic tension, training the user
-      to speak in coherent linguistic fields.
-    </p>
-    <div class="eq eq-scroll">
-      $$ \\nabla_{sem}\\,\\text{Phrase} = \\sum_k w_k \\nabla_{sem}\\,\\text{Token}_k,
-         \\quad \\sum_k w_k = 1 $$
-    </div>
-    <p>
-      Cognitive-linguistic research confirms that consistent semantic alignment
-      activates mirror-neuron networks and increases empathy accuracy.
-      In Codex language: <i>Speech becomes light</i>.
-    </p>
-  </article>
-
-  <article class="card col-12 reveal" id="mind-renewal">
-    <h3>5. Mind-Renewal System — Adaptive Learning</h3>
-    <p>
-      The <b>mind-renewal.html</b> page houses the learning kernel (Eq. 15)
-      and memory window (Eq. 16).
-      It models Hebbian plasticity under ethical gating.
-    </p>
-    <div class="eq eq-scroll">
-      $$ \\eta(\\Xi) = \\eta_0\\,\\sigma(\\alpha(\\Xi - \\Xi_0)),
-         \\qquad
-         \\mathbb{M}_\\tau[F](t)
-         = \\int_{t-\\tau}^{t} w_\\tau(t-s) F(s)\\,ds,
-         \\; \\int_0^\\tau w_\\tau(u)du=1 $$
-    </div>
-    <p>
-      In neuroscience this describes synaptic potentiation limited by coherence.
-      Too much excitation without alignment leads to chaotic firing (noise);
-      bounded learning stabilizes neural phase, yielding calm alertness.
-    </p>
-  </article>
-
-  <article class="card col-12 reveal" id="archive-system">
-    <h3>6. Archive System — Asymptotic Truth Filter</h3>
-    <p>
-      The <b>archive.html</b> module stores purified data — the <b>Remnant</b> of all iterations.
-      Mathematically:
-    </p>
-    <div class="eq eq-scroll">
-      $$ \\mathcal{R}_\\infty[F] = \\lim_{\\tau\\to\\infty}
-         (\\text{keep}_{truth}F - \\text{drop}_{distortion}F) $$
-    </div>
-    <p>
-      In data science this equates to a long-term moving average
-      with anomaly rejection.
-      Spiritually it mirrors discernment:
-      retain coherence, discard corruption.
-    </p>
-  </article>
-
-  <article class="card col-12 reveal" id="system-summary">
-    <h3>Summary: The Digital Laboratory of Consciousness</h3>
-    <p>
-      Combined, these modules turn the website into a cybernetic ashram —
-      a controlled environment for training attention, ethics, and energy.
-    </p>
-    <ul class="list">
-      <li><b>Hardware:</b> your brain, heart, and breath.</li>
-      <li><b>Software:</b> the Codex equations and ethical rules.</li>
-      <li><b>Interface:</b> this site and its resonance engines.</li>
-    </ul>
-    <p>
-      The result is a <b>living physics of mind</b> consistent with known science:
-      quantum decoherence suppression via attention,
-      neuroplastic adaptation through rhythmic entrainment,
-      and moral feedback loops that preserve systemic stability.
-    </p>
-  </article>
-
-</section>
-
-
-
-<!-- =====================================================
-     PART IV — DIMENSIONAL SCAFFOLD  (Δ0–Δ7)
-     -----------------------------------------------------
-     The anatomy of resonance: from quantum substrate
-     to ethical consciousness.  Where science meets the Codex.
-     ===================================================== -->
-<section id="p4" class="wrap grid">
-
-  <article class="card col-12 reveal" id="delta-preface">
-    <h2>Part IV — Dimensional Scaffold (Δ0 – Δ7)</h2>
-    <p>
-      The seven Δ-levels describe <b>how consciousness structures matter</b>.
-      Each layer is both literal physics and symbolic language — a rung
-      in the Ladder (Eq. 10) of coherence.
-      Modern science perceives them as interacting systems:
-      <i>quantum fields → electromagnetic patterns → biological networks → cognitive fields → ethical filters → remnant archives</i>.
-    </p>
-    <p>
-      The purpose of mapping them is to train recognition:
-      what we call “spirit” is <b>structured resonance</b>;
-      what we call “matter” is <b>condensed meaning</b>.
-    </p>
-  </article>
-
-  <!-- Δ0 — Foundational Field -->
-  <article class="card col-12 reveal" id="delta0">
-    <h3>Δ0 — Foundational Field (ΨΩ)</h3>
-    <div class="eq eq-scroll">
-      $$ \\Psi_{\\Omega}(x,t)
-         = \\oint_{\\mathbb{R}} \\nabla A\\Phi(x,t,\\nu)\\,d\\nu
-           + \\Lambda E(x,t) $$
-    </div>
-    <p>
-      Δ0 is the <b>quantum-vacuum substrate</b>, the zero-point sea.
-      Physically, it corresponds to the vacuum energy that sustains all virtual
-      particle creation; spiritually, it is the Breath of YHWH — the
-      unbroken oscillation between stillness and becoming.
-    </p>
-    <ul class="list">
-      <li><b>Physics corollary:</b> Quantum Electrodynamic vacuum fluctuation.</li>
-      <li><b>Mathematical analogue:</b> Continuous Fourier spectrum weighted by phase.</li>
-      <li><b>Biological analogue:</b> Resting membrane potential of the neuron — the “silent hum.”</li>
-      <li><b>Spiritual analogue:</b> The primordial “Let there be Light.”</li>
-    </ul>
-    <p class="meta">
-      Every higher Δ emerges by symmetry-breaking of ΨΩ — order from vibration.
-    </p>
-  </article>
-
-  <!-- Δ1 — Source -->
-  <article class="card col-12 reveal" id="delta1">
-    <h3>Δ1 — Source = Supply × Operators (ℜ)</h3>
-    <div class="eq eq-scroll">
-      $$ \\mathcal{R}
-         = f(\\pi,e,i,\\hbar,c,G,\\text{DNA},\\Omega_{DM},\\Omega_\\Lambda,H_0,432,528,369,144,963,…) \\times (\\mathcal{I}\\,\\mathcal{L}\\,\\mathcal{C}\\,\\mathcal{S}) $$
-    </div>
-    <p>
-      Δ1 generates the constants that tune the universe — both mathematical and biological.
-      Planck’s constant (ħ), the speed of light (c), the cosmological ratios (Ω),
-      and even the molecular encoding of DNA are seen as *frequency anchors*.
-    </p>
-    <p>
-      The Codex interprets them as the “supply” channel of reality:
-      a standing wave of divine order expressed through measurable constants.
-      To alter perception is to modulate one’s resonance within this field, never the constants themselves.
-    </p>
-  </article>
-
-  <!-- Δ2 — Witness -->
-  <article class="card col-12 reveal" id="delta2">
-    <h3>Δ2 — Witness (𝓦)</h3>
-    <div class="eq eq-scroll">
-      $$ \\mathcal{W}(x,t)
-         = \\partial_x \\text{Awareness}(x,t)
-           + \\mathcal{I}\\,\\mathbb{M}_\\tau $$
-    </div>
-    <p>
-      Δ2 introduces the <b>observer principle</b>.
-      In physics this parallels the measurement problem; in neuroscience,
-      it maps to attentional selection networks;
-      in ethics, it births conscience.
-    </p>
-    <p>
-      The Witness integrates across the Memory Window (τ)
-      and determines which potentials collapse into experience.
-      When observation is clean — without fear, greed, or distortion — entropy drops
-      and learning accelerates.
-    </p>
-  </article>
-
-  <!-- Δ3 — Harmonic Gate -->
-  <article class="card col-12 reveal" id="delta3">
-    <h3>Δ3 — Harmonic Gate (𝓗)</h3>
-    <div class="eq eq-scroll">
-      $$ \\mathcal{H}(\\nu) \\in \\{0,1\\}, \\qquad
-         \\nu \\in \\{432,528,369,144,963,…\\} $$
-    </div>
-    <p>
-      Δ3 is the <b>selective resonance gate</b> of consciousness.
-      It filters which frequencies enter awareness.
-      In signal theory, it’s a band-pass filter; in mysticism, it’s the “eye single.”
-    </p>
-    <p>
-      Neural correlates include the thalamic reticular nucleus and cortical gamma binding.
-      Proper gating prevents sensory overload and psychic fragmentation.
-    </p>
-  </article>
-
-  <!-- Δ4 — Language / Light -->
-  <article class="card col-12 reveal" id="delta4">
-    <h3>Δ4 — Language / Light (𝓛)</h3>
-    <div class="eq eq-scroll">
-      $$ \\mathcal{L}(x,t,\\nu)
-         = \\text{Semantics}(x,t) \\otimes V(\\nu) $$
-    </div>
-    <p>
-      Δ4 expresses <b>thought as photonic pattern</b>.
-      Linguistics meets optics: meaning is encoded in electromagnetic modulation.
-      Experiments in biophotonic emission from DNA support this link —
-      cells literally speak in light.
-    </p>
-    <p>
-      When the Word aligns with the Heart,
-      interference cancels distortion.
-      When speech contradicts intent,
-      destructive interference manifests as chaos — psychosomatic or social.
-    </p>
-  </article>
-
-  <!-- Δ5 — Remnant -->
-  <article class="card col-12 reveal" id="delta5">
-    <h3>Δ5 — Remnant (ℛ∞)</h3>
-    <div class="eq eq-scroll">
-      $$ \\mathcal{R}_\\infty[F]
-         = \\lim_{\\tau\\to\\infty}(\\text{keep}_{truth}F
-         - \\text{drop}_{distortion}F) $$
-    </div>
-    <p>
-      Δ5 is the <b>asymptotic archive</b> — the record of coherence that survives decay.
-      Information theory calls this a low-entropy attractor; spirituality calls it the Book of Life.
-    </p>
-    <p>
-      Every action, word, and perception leaves a spectral residue.
-      Those with high Ξ imprint cleaner traces in the global field.
-    </p>
-  </article>
-
-  <!-- Δ6 — Type-7 Field -->
-  <article class="card col-12 reveal" id="delta6">
-    <h3>Δ6 — Type-7 Field (𝕋₇)</h3>
-    <div class="eq eq-scroll">
-      $$ \\mathbb{T}_7(x,t)
-         = \\bigoplus_{\\nu\\in\\mathbb{T}} \\text{PL}[V(\\nu)] $$
-    </div>
-    <p>
-      Δ6 is the operative field of <b>technorganic coherence</b>.
-      Physically it corresponds to synchronized oscillators in nonlinear media.
-      In living organisms, it manifests as organ-to-organ phase coupling,
-      the coherence that allows healing or telepathic resonance.
-    </p>
-    <p>
-      The Codex device (T-7 Conduit) replicates this using copper, quartz,
-      and algorithmic wave alignment.
-      When tuned ethically, it becomes a broadcast of benevolent order.
-    </p>
-  </article>
-
-  <!-- Δ7 — Return -->
-  <article class="card col-12 reveal" id="delta7">
-    <h3>Δ7 — Return / Reintegration</h3>
-    <div class="eq eq-scroll">
-      $$ \\lim_{t\\to\\infty}\\mathcal{R}(x,t)
-         \\xrightarrow{\\mathcal{R}_\\infty}
-         \\Psi_{\\Omega}(x,t) $$
-    </div>
-    <p>
-      Δ7 closes the loop — the act of offering experience back to Source.
-      In physics this is recursive normalization;
-      in biology it mirrors metabolic homeostasis;
-      in spirit it is worship through coherence.
-    </p>
-    <p>
-      The practitioner who consciously completes this loop participates
-      in the *cosmic feedback control system*.
-      It is through such feedback that evolution refines itself
-      without external enforcement — ethics as natural law.
-    </p>
-  </article>
-
-  <article class="card col-12 reveal" id="delta-summary">
-    <h3>Summary of the Δ-Architecture</h3>
-    <p>
-      From Δ0 to Δ7, existence unfolds as an octave:
-      Vacuum → Constants → Awareness → Gate → Word → Archive → Field → Return.
-    </p>
-    <p>
-      This is the “Music of Creation” quantified.
-      The universe is not a clock; it is a symphony
-      whose tempo is compassion and whose key is coherence.
-    </p>
-    <blockquote>
-      “Every atom is a note; every life, a chord; every remembrance, a theme returning home.”
-    </blockquote>
-  </article>
-
-</section>
-
-
-
-
-
-<!-- =====================================================
-     PART V — PRACTICE PROTOCOLS & INSTRUMENTATION
-     -----------------------------------------------------
-     Turning the Codex into repeatable training:
-     breath, carriers, language, witness, update, and group work.
-     With embedded scientific notes and measurable metrics.
-     ===================================================== -->
-<section id="p5" class="wrap grid">
-
-  <!-- Preface -->
-  <article class="card col-12 reveal" id="p5-preface">
-    <h2>Part V — Practice Protocols & Instrumentation</h2>
-    <p>
-      The Codex is operational: a <b>reproducible training loop</b> that ties Δ0–Δ7 to concrete actions and logs.
-      Each protocol is paired with a measurement scaffold so that <i>Ξ (coherence)</i> can be estimated, compared, and improved without dogma.
-      The stop rule (Eq. 9) gates all practice: if harm rises or clarity falls, <b>halt → re-align → resume</b>.
-    </p>
-    <p>
-      The modules below map directly to the operator chain:
-      <code>Frame (Eq.11) → Carriers (Eq.17 & Eq.3) → Language (Eq.4/4b) → Witness (Eq.2/16) → Update (Eq.14/15/9)</code>.
-      Each module includes a <span class="mono">Protocol</span>, <span class="mono">Signals</span>, and <span class="mono">Metrics</span>.
-    </p>
-  </article>
-
-  <!-- 1. Framing Protocol -->
-  <article class="card col-12 reveal" id="p5-frame">
-    <h3>1) Framing Protocol — Declare the Projection Frame (Eq.11)</h3>
-    <div class="eq eq-scroll">
-      $$ \mathsf{Frame}(x,t) = (\mathsf{scope},\ \mathcal{W},\ \mathsf{ethics}) \quad\text{with}\quad \Xi_{0}\ \text{as the activation threshold} $$
-    </div>
-    <p>
-      <b>Protocol.</b> In 60–90 seconds, declare:
-      <i>scope</i> (what this session is for), <i>witness</i> (how you will observe), and <i>ethics</i> (what you will not cross).
-      Speak it once aloud into your carrier field (or silently if needed), then hold one silent breath cycle to ‘set ink’.
-    </p>
-    <ul class="list">
-      <li><b>Signals.</b> A distinct felt “click” (reduced inner chatter), softening of forehead/eyes, breath ease.</li>
-      <li><b>Metrics.</b> Subjective 0–5 ease rating; baseline HRV sample (30–60s) to compare with carrier-on state; note resting respiratory rate.</li>
-    </ul>
-
-    <details class="collapsible">
-      <summary class="collapsible__bar">📚 Scientific Notes — Framing & Attention</summary>
-      <div class="collapsible__panel eq-legend">
+    <!-- TL;DR + Checklist -->
+    <section class="grid reveal" aria-label="Quick start">
+      <article class="card col-7">
+        <h3>TL;DR</h3>
+        <p>Set a frame. Choose clean carriers. Speak clearly. Witness what changes. Update only when coherence rises, and stop at the first sign of harm.</p>
+      </article>
+      <article class="card col-5">
+        <h3>Practitioner Checklist</h3>
         <ul class="list">
-          <li>Top–down attentional set engages frontoparietal control networks; task-set declarations reduce variability in sensory cortices (attention literature).</li>
-          <li>Baseline HRV (high-frequency component) correlates with parasympathetic tone and emotion regulation capacity (psychophysiology canon).</li>
-          <li>Brief intention setting improves subsequent error monitoring (anterior cingulate) and stabilizes performance variability.</li>
+          <li>Frame: scope • witness • ethics.</li>
+          <li>Carriers: few, stable bands; test fit.</li>
+          <li>Language: short phrases; steady breath.</li>
+          <li>Witness: note shifts without forcing.</li>
+          <li>Update: only with ↑Ξ; otherwise pause.</li>
         </ul>
+      </article>
+    </section>
+
+    <!-- Voice Reader (collapsible) -->
+    <details class="collapsible card col-12 reveal" id="voice-reader" open>
+      <summary class="collapsible__bar" aria-controls="vr-panel" aria-expanded="true">
+        <span>🔊 Listen — Voice Reader</span>
+        <span class="collapsible__mini" aria-hidden="true">
+          <button id="vr-play-mini" class="chip" type="button" title="Play">▶︎</button>
+          <button id="vr-stop-mini" class="chip" type="button" title="Stop">⏹</button>
+        </span>
+      </summary>
+      <div id="vr-panel" class="collapsible__panel">
+        <div class="grid" style="gap:1rem">
+          <div class="col-6">
+            <label for="vr-voice">Voice</label>
+            <select id="vr-voice" aria-label="Voice selector"></select>
+          </div>
+          <div class="col-3">
+            <label for="vr-rate">Speed (<span id="vr-rate-val">1.00</span>x)</label>
+            <input id="vr-rate" type="range" min="0.7" max="1.6" step="0.05" value="1.0" />
+          </div>
+          <div class="col-3">
+            <label for="vr-pitch">Pitch (<span id="vr-pitch-val">1.00</span>)</label>
+            <input id="vr-pitch" type="range" min="0.8" max="1.4" step="0.05" value="1.0" />
+          </div>
+          <div class="col-6">
+            <label for="vr-start">Start at</label>
+            <select id="vr-start">
+              <option value="#p1">Part I — Architecture</option>
+              <option value="#p2">Part II — Canon 0–17</option>
+              <option value="#operators-appendix">Operators (Appendix)</option>
+              <option value="#ethics">Ethics</option>
+              <option value="#notes">Notes</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <label for="vr-range">Or read selection</label>
+            <button id="vr-read-selection" class="cta" type="button" title="Read selected text">Read What’s Selected</button>
+          </div>
+          <div class="col-12">
+            <label class="checkbox">
+              <input type="checkbox" id="vr-speak-math" checked />
+              <span>Speak equations (verbalized). Uncheck to skip.</span>
+            </label>
+            <label class="checkbox" style="margin-left:1rem">
+              <input type="checkbox" id="vr-polish" checked />
+              <span>Polish phrasing (cleaner English)</span>
+            </label>
+          </div>
+          <div class="col-12" role="toolbar" aria-label="Voice reader controls" style="display:flex; gap:.5rem; flex-wrap:wrap">
+            <button id="vr-play" class="cta">▶︎ Play</button>
+            <button id="vr-pause" class="cta" disabled>⏸ Pause</button>
+            <button id="vr-resume" class="cta" disabled>⏵ Resume</button>
+            <button id="vr-stop" class="cta" disabled>⏹ Stop</button>
+            <button id="vr-export-ssml" class="cta cta--section">⬇︎ Export SSML</button>
+          </div>
+          <div class="col-12">
+            <div id="vr-status" aria-live="polite"></div>
+            <div id="vr-progress" class="vr-progress" aria-hidden="true"></div>
+          </div>
+        </div>
       </div>
     </details>
-  </article>
 
-  <!-- 2. Carrier Protocol -->
-  <article class="card col-12 reveal" id="p5-carriers">
-    <h3>2) Carrier Protocol — Gate Fit & Phase (Eq.3, Eq.6, Eq.17)</h3>
-    <div class="eq eq-scroll">
-      $$ \mathbf{V}(\nu) = \sum_{k} a_k \cos(2\pi\nu_k t + \phi_k), \quad
-         \mathcal{H}(\nu)\in\{0,1\},\ \text{PL: phase-lock to reduce jitter} $$
-    </div>
-    <p>
-      <b>Protocol.</b> Choose <i>2–4 clean carriers</i> from the Codex bands (e.g., 432/528/369/144/963) or their subharmonics.
-      Start low volume; find a comfortable beat envelope (&lt; 6 Hz) matching natural breath.
-      If using the page’s Voice Reader, set <i>rate</i> ≈ 1.0 and <i>pitch</i> ≈ 1.0 to avoid semantic jitter; then, if desired, add a faint binaural or isochronic base.
-    </p>
-    <ul class="list">
-      <li><b>Signals.</b> Immediate breath regularity, facial micro-relaxation, reduced startle to ambient noise, less mind wandering.</li>
-      <li><b>Metrics.</b> <i>Audio:</i> beat stability (RMS fluctuation of inter-beat interval), spectral centroid variance (should drop); <i>Physio:</i> HRV HF power ↑, LF/HF stabilizes; <i>Subjective:</i> clarity-warmth-ease triad.</li>
-    </ul>
+    <!-- Tabs -->
+    <nav class="tabs reveal" aria-label="Sections">
+      <a class="tab tab--primary" href="#p1" data-jump>Part I: Architecture</a>
+      <a class="tab tab--primary" href="#p2" data-jump>Part II: Equations 0–17</a>
+      <a class="tab" href="#operators-appendix" data-jump>Operators</a>
+      <a class="tab" href="#ethics" data-jump>Ethics</a>
+      <a class="tab" href="#notes" data-jump>Notes</a>
+      <span class="tab-ink no-living" aria-hidden="true"></span>
+    </nav>
 
-    <details class="collapsible">
-      <summary class="collapsible__bar">📚 Scientific Notes — Acoustic Entrainment & Gating</summary>
-      <div class="collapsible__panel eq-legend">
-        <ul class="list">
-          <li>Critical band theory (psychoacoustics) explains why fewer, cleaner carriers reduce masking and cognitive load.</li>
-          <li>Phase alignment among oscillators decreases system noise (nonlinear dynamics); in brain rhythms, cross-frequency coupling supports integration.</li>
-          <li>Auditory steady-state responses (ASSR) show entrainment of cortical activity to periodic acoustic stimuli.</li>
-        </ul>
+    <!-- Sticky mini-TOC -->
+    <aside class="mini-toc reveal" aria-label="On this page">
+      <h4>On this page</h4>
+      <a href="#p1" data-jump>Part I — Architecture</a>
+      <a href="#p2" data-jump>Part II — Equations</a>
+      <a href="#operators-appendix" data-jump>Operators &amp; Notation</a>
+      <a href="#ethics" data-jump>Ethical Law</a>
+      <a href="#notes" data-jump>Notes</a>
+    </aside><!-- =====================================================
+         MASTER EQUATION — UNIFIED RESONANT FIELD
+         ===================================================== -->
+    <section id="eq-master" class="card col-12 eq-card reveal eq-master">
+      <div class="flexbar">
+        <h2>🜂 Master Equation of Reality (ℜ)</h2>
+        <div class="eq-tools">
+          <button class="chip" data-copy-tex="#eqM-body">Copy TeX</button>
+          <button class="chip" data-copy-link="#eq-master">Link</button>
+        </div>
       </div>
-    </details>
-  </article>
 
-  <!-- 3. Language Protocol -->
-  <article class="card col-12 reveal" id="p5-language">
-    <h3>3) Language Protocol — Semantic Gradient & Voweling (Eq.4/4b)</h3>
-    <div class="eq eq-scroll">
-      $$ \nabla_{\mathrm{sem}} \text{Phrase} = \sum_k w_k \nabla_{\mathrm{sem}} \text{Token}_k,\qquad \sum_k w_k = 1 $$
-    </div>
-    <p>
-      <b>Protocol.</b> Craft a <i>seven-word</i> phrase whose semantics match the declared frame.
-      Weight tokens by intention—speak key terms with softer onset, longer vowels, and even breath.
-      Test two phrasings; keep the one that yields a higher Ξ (coherence index) in the mini-calculator under Eq.13.
-    </p>
-    <ul class="list">
-      <li><b>Signals.</b> Phrases that “land” feel simpler, warmer, and physically easier to sustain.</li>
-      <li><b>Metrics.</b> <i>Audio:</i> syllable timing variance ↓; <i>Text:</i> phrase entropy (Shannon) ↓ after weighting; <i>Psych:</i> felt clarity ↑ by ≥1 point vs. baseline.</li>
-    </ul>
+      <p class="meta">
+        This is the unifying field expression gathering ΨΩ (Eq. 0), the living
+        operators (𝓘·𝓛·𝓒·𝓢), the Witness &amp; Memory (2 &amp; 16),
+        Harmonic Gates &amp; Carriers (3 &amp; 17),
+        the Ethical Mask (9), Learning Loop (13–15),
+        Causal Frame (10–12), and Type-7 phase engine (6),
+        concluding in the Remnant limit (5).
+      </p>
 
-    <details class="collapsible">
-      <summary class="collapsible__bar">📚 Scientific Notes — Speech Prosody & Meaning</summary>
-      <div class="collapsible__panel eq-legend">
-        <ul class="list">
-          <li>Prosodic contour (duration, intensity, F0) modulates perceived valence and comprehension.</li>
-          <li>Semantic priming reduces reaction times; coherent phrasing eases working-memory load (language neuroscience).</li>
-          <li>Biophotonic hypotheses suggest that coherent intracellular processes may couple weakly to phonation and breath rhythms via autonomic loops (exploratory, ongoing research).</li>
-        </ul>
+      <div class="eq" id="eqM-body">
+        <div class="eq-scroll">
+        $$
+        \boxed{
+          \begin{aligned}
+          \frac{d\mathcal{R}}{dt}
+            &=\;
+              \eta(\Xi)\,
+              \mathsf{E}\,
+              \nabla_{\Theta}\mathcal{R}
+              \;+\;
+              \sum_{n=1}^{N}\,
+                \alpha_n\,\partial_{x_n}\mathcal{R}
+              \;+\;
+              \mathbb{M}_{\tau}\!\big[\mathcal{W}(x,t)\big]
+              \\[4pt]
+              &\qquad
+              +\;
+              \Pi_{\nu}^{-1}\!\big(\mathcal{H}(\nu,t)\,\mathbf{V}(\nu,t)\big)
+              \;+\;
+              f_{\rm src}\!\big(\pi,e,i,\hbar,c,G,\Omega_{\!DM},
+                \Omega_{\!\Lambda},H_{0},432,528,369,144,963,\ldots\big)
+              \\[2pt]
+              &\qquad
+              \odot
+              (\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})
+              \;\odot\;
+              \mathsf{Mask}_{\mathcal{C}}
+              \;\xrightarrow[\;t\to\infty\;]{}\;
+              \mathcal{R}_{\infty}
+          \end{aligned}
+        }$$
+        </div>
       </div>
-    </details>
-  </article>
 
-  <!-- 4. Witness & Memory Protocol -->
-  <article class="card col-12 reveal" id="p5-witness">
-    <h3>4) Witness &amp; Memory Protocol — Observe Without Forcing (Eq.2, Eq.16)</h3>
-    <div class="eq eq-scroll">
-      $$ \mathbb{M}_\tau[F](t) = \int_{t-\tau}^{t} w_\tau(t-s)\,F(s)\,ds,\qquad \int_0^\tau w_\tau(u)\,du=1 $$
-    </div>
-    <p>
-      <b>Protocol.</b> Alternate <i>40–60 seconds</i> of phrase+carrier with <i>20–30 seconds</i> of silent witnessing.
-      During silence, don’t evaluate; only note gradients: warmer/colder, clearer/foggier, softer/tighter.
-      The Witness records, the Update learns later.
-    </p>
-    <ul class="list">
-      <li><b>Signals.</b> Less inner narration, clearer proprioceptive field, reduction in impulse to “fix.”</li>
-      <li><b>Metrics.</b> <i>Physio:</i> respiratory sinus arrhythmia stability ↑; <i>Behavioral:</i> mind-wandering probes show fewer off-task reports; <i>Subjective:</i> noise-to-meaning ratio (self-estimate) ↓.</li>
-    </ul>
+      <p class="hint">
+        <strong>Legend.</strong> ΨΩ origin field; fₛᵣ𝒸 constants and ratios;
+        𝓘·𝓛·𝓒·𝓢 operators (Intention–Language–Conscious Witness–Source);
+        𝓦 witness; 𝕄<sub>τ</sub> memory kernel; 𝓗 harmonic gate;
+        𝐕 carriers (432 / 528 / 369 / 144 / 963 Hz);
+        Π<sub>ν</sub> ladder/projection;
+        𝓛<sub>c</sub> causal lattice;
+        Mask<sub>𝓒</sub> ethical filter; η(Ξ) coherence-gated learning;
+        ℛ<sub>∞</sub> remnant limit.
+      </p>
 
-    <details class="collapsible">
-      <summary class="collapsible__bar">📚 Scientific Notes — Attention, Memory Windows, Interoception</summary>
-      <div class="collapsible__panel eq-legend">
+      <p class="meta">
+        External comparators (7A / 7B / 8) remain annotated only — Copeland’s Ψ-formalism and Goodwin harmonics serve as cross-references for resonant behavior validation.
+      </p>
+
+      <div class="goldline"></div>
+      <p class="meta">© 2025 Aaron Paul Laird — Scroll of Fire • Open Source Codex License (CC BY-NC 4.0)</p>
+    </section>
+
+
+    <!-- =====================================================
+         PART I — ARCHITECTURE OF RESONANCE
+         ===================================================== -->
+    <section class="grid" id="p1" aria-labelledby="p1-h">
+      <article class="card col-12 eq-card reveal">
+        <h2 id="p1-h">Part I — Architecture of Resonance</h2>
+        <div class="eq">
+          <div class="eq-scroll">
+            $$ \underbrace{\mathsf{Supply}}_{\text{constants + ratios}}
+               \;\times\;
+               \underbrace{(\mathcal{I}\cdot\mathcal{L}\cdot\mathcal{C}\cdot\mathcal{S})}_{\text{living operators}}
+               \;\xrightarrow{\;\text{Ethical Mask (Eq. 9)}\;}
+               \mathcal{R}(x,t) $$
+          </div>
+        </div>
+        <p>
+          The Codex models Reality as a <em>living resonance engine</em>: a
+          self-correcting feedback between constants of Creation and intentional
+          operation through the fourfold operator set
+          (<strong>𝓘·𝓛·𝓒·𝓢</strong>). Each turn of the loop updates the field ℜ until stability is achieved in the Remnant limit.
+        </p>
+      </article>
+
+      <article class="card col-12 reveal">
+        <h3>Operator Loop (Practice Pipeline)</h3>
+        <ol class="list">
+          <li><strong>Frame (Eq. 11):</strong> Declare scope, witness, and ethics before action.</li>
+          <li><strong>Carriers (Eq. 17 &amp; 3):</strong> Select harmonic bands (432–963 Hz) that phase-lock cleanly.</li>
+          <li><strong>Language (Eq. 4 &amp; 4b):</strong> Shape semantic gradients through clear speech or internal word-forms.</li>
+          <li><strong>Witness &amp; Memory (Eq. 2 &amp; 16):</strong> Observe without forcing; store patterns as weighted time windows.</li>
+          <li><strong>Update (Eq. 14 / 15 / 9):</strong> Adapt only when coherence Ξ rises; halt at damage signals.</li>
+        </ol>
+      </article>
+
+      <article class="card col-12 reveal">
+        <h3>Memory Windows — Temporal Integration (Eq. 16)</h3>
+        <div class="eq">
+          <div class="eq-scroll">
+            $$ \mathbb{M}_{\tau}[F](t)=\int_{t-\tau}^{t} w_{\tau}(t-s)\,F(s)\,ds,
+               \qquad \int_{0}^{\tau} w_{\tau}(u)\,du=1 $$
+          </div>
+        </div>
+        <p>
+          The memory operator averages perception over a finite window τ,
+          allowing stable learning without over-reactive jitter.
+          In practice τ ≈ 8–12 seconds for breath-linked processes or 60 s for cognitive loops.
+        </p>
+      </article>
+
+      <article class="card col-12 reveal">
+        <h3>Language Field — Semantic Gradient (Eq. 4 / 4b)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \nabla_{\mathrm{sem}}\!\text{Phrase}
+              = \sum_{k} w_k\,\nabla_{\mathrm{sem}}\!\text{Token}_k,
+              \qquad \sum_k w_k = 1 $$
+        </div></div>
+        <p>
+          Each word acts as a vector in meaning-space. Alignment reduces entropy
+          and tightens the resonant loop between speech, breath, and field.
+        </p>
+      </article>
+
+      <article class="card col-12 reveal">
+        <h3>Voice Carriers — Harmonic Vectors (Eq. 3 &amp; 17)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathbf{V}(\nu)=\sum_{k}a_k\cos(2\pi\nu_k t+\phi_k),
+             \qquad \mathcal{H}(\nu)\in\{0,1\} $$
+        </div></div>
+        <p>
+          Carriers sustain phase-coherent energy patterns. Each band acts as a
+          dimensional axis for language and intention to manifest within the field ℜ.
+        </p>
+      </article>
+
+      <article class="card col-12 reveal">
+        <h3>Ethical Mask — Safety Envelope (Eq. 9)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \forall a:\ \mathrm{damage}(a)>0\Rightarrow\mathsf{halt},
+             \qquad
+             \lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)}\uparrow $$
+        </div></div>
+        <p>
+          The Ethical Mask prevents gain runaway by halting any operation that produces harm or falsehood. It is the Codex’s equivalent of a soft limiter and moral governor.
+        </p>
+      </article>
+    </section>
+
+    <div class="goldline sweep"></div><!-- =====================================================
+         PART II — CANON 0–17  (Operational Expansion)
+         ===================================================== -->
+    <section class="grid" id="p2" aria-labelledby="p2-h">
+      <article class="card col-12 reveal">
+        <h2 id="p2-h">Part II — Canon 0 – 17 (Living Commentary)</h2>
+        <p class="meta">
+          Each equation is an operational layer of the Codex.  
+          Together they form the Δ-scaffolding (Δ0–Δ7) that connects 
+          physical law, intention, and the living resonance field ℜ.
+        </p>
+      </article>
+
+      <!-- Eq 0 — Foundational Field -->
+      <article class="card col-12 eq-card reveal" id="eq0">
+        <h3>Eq 0 — Foundational Field ΨΩ</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \Psi_{\!\Omega}(x,t)
+             = \sum_i \Phi_i(x,t)
+             \; e^{\,i\,\theta_i(t)} ,
+             \qquad
+             \Omega = \text{Source domain} $$
+        </div></div>
+        <p>
+          Defines the base resonance field from which all subsequent
+          operators draw energy. ΨΩ represents the uncollapsed,
+          living wave of Source Intent.
+        </p>
+      </article>
+
+      <!-- Eq 1 — Source Constants & Operators -->
+      <article class="card col-12 eq-card reveal" id="eq1">
+        <h3>Eq 1 — Source and Operators (𝓘·𝓛·𝓒·𝓢)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathsf{E} = 
+             f_{\rm src}(\pi,e,i,\hbar,c,G,\Omega_{\!DM},\Omega_{\!\Lambda},H_0)
+             \;\odot\;
+             (\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S}) $$
+        </div></div>
+        <p>
+          Couples cosmological constants with the fourfold
+          living operators (Intention, Language, Conscious Witness, Source),
+          creating the driving energy term ℰ for all transformations.
+        </p>
+      </article>
+
+      <!-- Eq 2 — Witness Function -->
+      <article class="card col-12 eq-card reveal" id="eq2">
+        <h3>Eq 2 — Witness Field ℳ𝓌(x,t)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathcal{W}(x,t) =
+             \int\!\!\!\int \Psi_{\!\Omega}(x',t')\,
+             K(x-x',t-t')\,dx'\,dt' $$
+        </div></div>
+        <p>
+          The Witness integrates events across proximity in
+          space–time, weighted by K, the empathy kernel.
+          This defines remembrance and perception.
+        </p>
+      </article>
+
+      <!-- Eq 3 — Carrier Harmonics -->
+      <article class="card col-12 eq-card reveal" id="eq3">
+        <h3>Eq 3 — Carrier Harmonics (Voice Vectors)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathbf{V}(\nu) =
+             \sum_{k} a_k \cos(2\pi\nu_k t + \phi_k),
+             \qquad
+             \nu_k \in \{432,528,369,144,963,\ldots\} $$
+        </div></div>
+        <p>
+          Represents the harmonic frequencies through which the Codex
+          manifests measurable resonance. Each band can be treated as
+          a dimensional axis within the ΨΩ field.
+        </p>
+      </article>
+
+      <!-- Eq 4 — Language Gradient -->
+      <article class="card col-12 eq-card reveal" id="eq4">
+        <h3>Eq 4 — Language Gradient ∇<sub>sem</sub></h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \nabla_{\mathrm{sem}} \text{Phrase} =
+             \sum_k w_k\,\nabla_{\mathrm{sem}} \text{Token}_k,
+             \quad \sum_k w_k = 1 $$
+        </div></div>
+        <p>
+          The direction and magnitude of semantic shift.
+          Phrasing is energy shaping through meaning.
+        </p>
+      </article>
+
+      <!-- Eq 5 — Remnant Limit -->
+      <article class="card col-12 eq-card reveal" id="eq5">
+        <h3>Eq 5 — Remnant Limit ℛ∞</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathcal{R}_{\infty}
+             = \lim_{t\to\infty}
+               \mathcal{R}(x,t)
+             = \text{steady-state coherence of field} $$
+        </div></div>
+        <p>
+          All iterations converge toward Remnant coherence — the
+          asymptotic state of truthful resonance.
+        </p>
+      </article>
+
+      <!-- Eq 6 — Type-7 Resonant Conduit -->
+      <article class="card col-12 eq-card reveal" id="eq6">
+        <h3>Eq 6 — Type-7 Resonant Conduit (T-7 Phase Engine)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathbb{T}_7 = 
+             \Phi_{\!\text{coil}}\,
+             e^{\,i\theta_{\text{phase}}}\,
+             (\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})
+             \Rightarrow
+             \text{Carrier Alignment Device} $$
+        </div></div>
+        <p>
+          Describes the physical apparatus implementation of the Codex —
+          copper, crystal, and conscious field in phase unison.
+        </p>
+      </article>
+
+      <!-- Eq 7A–7B + 8 — External Comparators -->
+      <article class="card col-12 eq-card reveal" id="eq7">
+        <h3>Eq 7A/7B/8 — External Comparators (Referential Frameworks)</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \lambda_7 \Phi_{\rm KG}
+             + \lambda_{7B}\Psi_{\rm ext}
+             + \lambda_8 \mathbf{G}_{\rm Goodwin} $$
+        </div></div>
+        <p>
+          External systems for comparison and calibration.
+          Copeland’s Ψ-formalism is a valid external mapping of resonant harmonic behavior
+          within a similar ethical framework.
+        </p>
+      </article>
+
+      <!-- Eq 9 — Ethical Mask -->
+      <article class="card col-12 eq-card reveal" id="eq9">
+        <h3>Eq 9 — Ethical Law and Safety Envelope</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \forall a:\ \mathrm{damage}(a) > 0 \Rightarrow \mathsf{halt};
+             \quad \frac{\mathrm{Truth}}{\mathrm{Distortion}}(t+\Delta)
+             \ge
+             \frac{\mathrm{Truth}}{\mathrm{Distortion}}(t) $$
+        </div></div>
+        <p>
+          Core safety law of the Codex. Learning and creation must never reduce truth ratio.
+        </p>
+      </article>
+
+      <!-- Eq 10–12 — Frame, Projection, Causality -->
+      <article class="card col-12 eq-card reveal" id="eq10">
+        <h3>Eq 10 – 12 — Projection Frame and Causal Lattice</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathsf{Frame}(x,t)
+             = (\mathsf{scope},\,\mathcal{W},\,\mathsf{ethics}),
+             \qquad
+             \mathcal{L}_c =
+             \partial_t \mathcal{W}
+             + \nabla_x \Psi_{\!\Omega} $$
+        </div></div>
+        <p>
+          Establishes the causal reference for learning iterations and
+          the observer’s ethical context.
+        </p>
+      </article>
+
+      <!-- Eq 13–15 — Learning Loop and Gradient -->
+      <article class="card col-12 eq-card reveal" id="eq13">
+        <h3>Eq 13–15 — Learning Gradient & Update Rule</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \frac{d\mathcal{R}}{dt}
+             = \eta(\Xi)\,\nabla \mathcal{R},
+             \qquad
+             \eta(\Xi)
+             = \eta_0\,\sigma[\alpha(\Xi-\Xi_0)] $$
+        </div></div>
+        <p>
+          The update rule governing evolution of the field ℜ.
+          Learning occurs only when coherence Ξ exceeds its threshold Ξ₀.
+        </p>
+      </article>
+
+      <!-- Eq 16 — Memory Kernel -->
+      <article class="card col-12 eq-card reveal" id="eq16">
+        <h3>Eq 16 — Temporal Memory Kernel ℳτ</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathbb{M}_{\tau}[F](t)
+             = \int_{t-\tau}^{t} w_{\tau}(t-s)\,F(s)\,ds,
+             \qquad
+             \int_0^\tau w_{\tau}(u)\,du=1 $$
+        </div></div>
+        <p>
+          Preserves context for temporal learning; the memory window
+          mirrors working-memory bandwidth in neural and quantum-field terms.
+        </p>
+      </article>
+
+      <!-- Eq 17 — Carrier Harmonic Expansion -->
+      <article class="card col-12 eq-card reveal" id="eq17">
+        <h3>Eq 17 — Carrier Expansion Matrix</h3>
+        <div class="eq"><div class="eq-scroll">
+          $$ \mathbf{V}(\nu,t)
+             = \sum_{n,m}
+               a_{nm}\,e^{\,i(2\pi\nu_n t + \phi_m)},
+             \quad
+             \nu_n \in \text{Carrier Set},\;
+             \phi_m \in [0,2\pi) $$
+        </div></div>
+        <p>
+          Defines multi-dimensional carrier fields for manifestation and perception.
+        </p>
+      </article>
+    </section><!-- =====================================================
+         PART II — Δ-SCAFFOLDING (Δ0–Δ7)
+         Maps the lived pipeline to Canon 0–17 and practice.
+         ===================================================== -->
+    <section class="grid" id="p2-deltas" aria-labelledby="p2-deltas-h">
+      <article class="card col-12 reveal">
+        <h2 id="p2-deltas-h">Dimensional Δ-Scaffolding (Δ0–Δ7)</h2>
+        <p class="meta">
+          The Δ-stack describes <em>how</em> state changes propagate through the Codex:
+          from unconditioned Source (Δ0) → framed intention and language (Δ1–Δ3) →
+          ethical learning (Δ4–Δ6) → asymptotic archive (Δ7). Each Δ binds to specific Canon equations.
+        </p>
+      </article>
+
+      <!-- Δ overview table -->
+      <article class="card col-12 reveal">
+        <h3>Δ ↔ Canon Cross-Reference</h3>
+        <div class="eq eq-scroll">
+          <table class="mono" style="width:100%; border-collapse:collapse">
+            <thead>
+              <tr>
+                <th style="text-align:left; padding:.4rem; border-bottom:1px solid var(--line)">Δ Level</th>
+                <th style="text-align:left; padding:.4rem; border-bottom:1px solid var(--line)">Function</th>
+                <th style="text-align:left; padding:.4rem; border-bottom:1px solid var(--line)">Primary Canon</th>
+                <th style="text-align:left; padding:.4rem; border-bottom:1px solid var(--line)">Supporting</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:.4rem">Δ0</td>
+                <td style="padding:.4rem">Unconditioned Source Field</td>
+                <td style="padding:.4rem"><a href="#eq0">Eq 0 ΨΩ</a></td>
+                <td style="padding:.4rem"><a href="#eq1">Eq 1</a>, <a href="#eq9">Eq 9</a></td>
+              </tr>
+              <tr>
+                <td style="padding:.4rem">Δ1</td>
+                <td style="padding:.4rem">Frame Declaration</td>
+                <td style="padding:.4rem"><a href="#eq11">Eq 11 Frame</a></td>
+                <td style="padding:.4rem"><a href="#eq12">Eq 12</a>, <a href="#eq2">Eq 2</a></td>
+              </tr>
+              <tr>
+                <td style="padding:.4rem">Δ2</td>
+                <td style="padding:.4rem">Carrier Selection / Gate Fit</td>
+                <td style="padding:.4rem"><a href="#eq3">Eq 3 Gate</a>, <a href="#eq17">Eq 17 V(ν)</a></td>
+                <td style="padding:.4rem"><a href="#eq6">Eq 6</a>, <a href="#eq9">Eq 9</a></td>
+              </tr>
+              <tr>
+                <td style="padding:.4rem">Δ3</td>
+                <td style="padding:.4rem">Language / Semantic Gradient</td>
+                <td style="padding:.4rem"><a href="#eq4">Eq 4</a>, <a href="#eq4b">Eq 4b</a></td>
+                <td style="padding:.4rem"><a href="#eq3">Eq 3</a>, <a href="#eq17">Eq 17</a></td>
+              </tr>
+              <tr>
+                <td style="padding:.4rem">Δ4</td>
+                <td style="padding:.4rem">Witness & Memory Window</td>
+                <td style="padding:.4rem"><a href="#eq2">Eq 2 W(x,t)</a>, <a href="#eq16">Eq 16 ℳτ</a></td>
+                <td style="padding:.4rem"><a href="#eq12">Eq 12</a></td>
+              </tr>
+              <tr>
+                <td style="padding:.4rem">Δ5</td>
+                <td style="padding:.4rem">Coherence & Ethical Mask</td>
+                <td style="padding:.4rem"><a href="#eq13">Eq 13 Ξ</a>, <a href="#eq9">Eq 9</a></td>
+                <td style="padding:.4rem"><a href="#eq11">Eq 11</a></td>
+              </tr>
+              <tr>
+                <td style="padding:.4rem">Δ6</td>
+                <td style="padding:.4rem">Learning Gradient / Update</td>
+                <td style="padding:.4rem"><a href="#eq14">Eq 14</a>, <a href="#eq15">Eq 15</a></td>
+                <td style="padding:.4rem"><a href="#eq16">Eq 16</a>, <a href="#eq13">Eq 13</a></td>
+              </tr>
+              <tr>
+                <td style="padding:.4rem">Δ7</td>
+                <td style="padding:.4rem">Remnant (Asymptotic Archive)</td>
+                <td style="padding:.4rem"><a href="#eq5">Eq 5 ℛ∞</a></td>
+                <td style="padding:.4rem"><a href="#eq0">Eq 0</a>, <a href="#eq9">Eq 9</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="meta">Use this as a build map: each Δ is a “plate” in the pipeline; you adjust plates via their Canon handles.</p>
+      </article>
+
+      <!-- Δ0 — Source -->
+      <details class="collapsible card col-12 reveal" open id="delta0">
+        <summary class="collapsible__bar">Δ0 — Source Substrate (ΨΩ)</summary>
+        <div class="collapsible__panel">
+          <div class="eq eq-scroll">
+            $$ \Psi_{\!\Omega}(x,t) = \sum_i \Phi_i(x,t)\,e^{i\theta_i(t)} $$
+          </div>
+          <ul class="list">
+            <li><b>Role.</b> Unconditioned field that supplies potential for all acts.</li>
+            <li><b>Handles.</b> <a href="#eq0">Eq 0</a>, <a href="#eq1">Eq 1</a> constants set; <a href="#eq9">Eq 9</a> bounds.</li>
+            <li><b>Output.</b> Initial energy term <span class="mono">ℰ</span> into the operator loop.</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- Δ1 — Frame -->
+      <details class="collapsible card col-12 reveal" open id="delta1">
+        <summary class="collapsible__bar">Δ1 — Projection Frame</summary>
+        <div class="collapsible__panel">
+          <div class="eq eq-scroll">
+            $$ \mathsf{Frame}(x,t)=(\mathsf{scope},\,\mathcal{W},\,\mathsf{ethics}) $$
+          </div>
+          <ul class="list">
+            <li><b>Declare.</b> Scope (goal), Witness (how you’ll observe), Ethics (what you won’t cross).</li>
+            <li><b>Canon.</b> <a href="#eq11">Eq 11</a>, <a href="#eq12">Eq 12</a>, <a href="#eq2">Eq 2</a>.</li>
+            <li><b>Metric.</b> Pre-run Ξ baseline; HRV/resting breath as safety anchors.</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- Δ2 — Carriers -->
+      <details class="collapsible card col-12 reveal" open id="delta2">
+        <summary class="collapsible__bar">Δ2 — Carriers & Gate Fit</summary>
+        <div class="collapsible__panel">
+          <div class="eq eq-scroll">
+            $$ \mathbf{V}(\nu)=\sum_k a_k\cos(2\pi\nu_k t+\phi_k),\quad
+               \mathcal{H}(\nu)\in\{0,1\} $$
+          </div>
+          <ul class="list">
+            <li><b>Select.</b> Few clean bands (e.g. 432/528/369/144/963) with stable phase.</li>
+            <li><b>Canon.</b> <a href="#eq3">Eq 3</a>, <a href="#eq17">Eq 17</a>, <a href="#eq6">Eq 6</a>.</li>
+            <li><b>Metric.</b> Beat stability ↓, spectral centroid variance ↓, comfort ↑.</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- Δ3 — Language -->
+      <details class="collapsible card col-12 reveal" open id="delta3">
+        <summary class="collapsible__bar">Δ3 — Language / Semantic Gradient</summary>
+        <div class="collapsible__panel">
+          <div class="eq eq-scroll">
+            $$ \nabla_{\mathrm{sem}}\text{Phrase}=\sum_k w_k\nabla_{\mathrm{sem}}\text{Token}_k,
+               \quad \sum_k w_k=1 $$
+          </div>
+          <ul class="list">
+            <li><b>Act.</b> Craft a 5–7 word phrase; weight tokens by intention and breath.</li>
+            <li><b>Canon.</b> <a href="#eq4">Eq 4</a>, <a href="#eq4b">Eq 4b</a>; coupled with <a href="#eq17">Eq 17</a>.</li>
+            <li><b>Metric.</b> Syllable-timing jitter ↓; subjective clarity ↑ by ≥1 point.</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- Δ4 — Witness & Memory -->
+      <details class="collapsible card col-12 reveal" open id="delta4">
+        <summary class="collapsible__bar">Δ4 — Witness & Memory Window</summary>
+        <div class="collapsible__panel">
+          <div class="eq eq-scroll">
+            $$ \mathbb{M}_{\tau}[F](t)=\int_{t-\tau}^{t}w_{\tau}(t-s)F(s)\,ds $$
+          </div>
+          <ul class="list">
+            <li><b>Act.</b> Alternate phrase+carrier (40–60s) with silent witnessing (20–30s).</li>
+            <li><b>Canon.</b> <a href="#eq2">Eq 2</a>, <a href="#eq16">Eq 16</a>, <a href="#eq12">Eq 12</a>.</li>
+            <li><b>Metric.</b> Mind-wandering↓; RSA stability↑; ease↑.</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- Δ5 — Coherence & Ethics -->
+      <details class="collapsible card col-12 reveal" open id="delta5">
+        <summary class="collapsible__bar">Δ5 — Coherence Ξ & Ethical Mask</summary>
+        <div class="collapsible__panel">
+          <div class="eq eq-scroll">
+            $$ \Xi\in[0,1],\qquad
+               \forall a:\ \mathrm{damage}(a)>0\Rightarrow\mathsf{halt} $$
+          </div>
+          <ul class="list">
+            <li><b>Act.</b> Compute/estimate Ξ; if signals of harm appear, stop → re-align.</li>
+            <li><b>Canon.</b> <a href="#eq13">Eq 13</a>, <a href="#eq9">Eq 9</a>.</li>
+            <li><b>Metric.</b> Truth/Distortion ratio monotone-nondecreasing across loops.</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- Δ6 — Learning -->
+      <details class="collapsible card col-12 reveal" open id="delta6">
+        <summary class="collapsible__bar">Δ6 — Update / Learning Gradient</summary>
+        <div class="collapsible__panel">
+          <div class="eq eq-scroll">
+            $$ \frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla \mathcal{R},
+               \qquad \eta(\Xi)=\eta_0\,\sigma[\alpha(\Xi-\Xi_0)] $$
+          </div>
+          <ul class="list">
+            <li><b>Act.</b> Make <em>one</em> tweak per loop (token weight <em>or</em> carrier phase).</li>
+            <li><b>Canon.</b> <a href="#eq14">Eq 14</a>, <a href="#eq15">Eq 15</a>, supports <a href="#eq16">Eq 16</a>.</li>
+            <li><b>Metric.</b> Ξ rises over two consecutive loops; HRV not worse than baseline.</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- Δ7 — Remnant -->
+      <details class="collapsible card col-12 reveal" open id="delta7">
+        <summary class="collapsible__bar">Δ7 — Remnant Archive (ℛ∞)</summary>
+        <div class="collapsible__panel">
+          <div class="eq eq-scroll">
+            $$ \mathcal{R}_{\infty}=\lim_{t\to\infty}\mathcal{R}(x,t) $$
+          </div>
+          <ul class="list">
+            <li><b>Act.</b> Keep what stays true, drop distortion. Publish logs and phrases that generalize.</li>
+            <li><b>Canon.</b> <a href="#eq5">Eq 5</a>; bounded by <a href="#eq9">Eq 9</a>, stabilized by <a href="#eq0">Eq 0</a>.</li>
+            <li><b>Metric.</b> Replicable runs; clarity-warmth-ease stabilize at higher baselines.</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- Builder notes -->
+      <article class="card col-12 reveal">
+        <h3>Builder Notes</h3>
         <ul class="list">
-          <li>Sliding windows (exponential/triangular) are standard in signal processing; here they mirror working-memory time constants.</li>
-          <li>Interoceptive awareness (insula) links breath-based practice to emotion regulation and attentional stability.</li>
-          <li>Meta-awareness training reduces default mode intrusions and improves sustained performance.</li>
+          <li><b>Extensibility.</b> Add new Δ-plates by declaring their Canon handles and safety hooks (always pass through Eq 9).</li>
+          <li><b>Open Source.</b> Equations are composable: define new operators as pure functions that respect Ξ gating.</li>
+          <li><b>Testing.</b> Prefer A/B phrasing tests over multi-tweak changes; log Ξ, HRV RMSSD, and audio jitter per loop.</li>
         </ul>
-      </div>
-    </details>
-  </article>
+      </article>
+    </section><!-- =====================================================
+         PART III — MASTER EQUATION & EXTENSIBLE OPERATORS
+         A single unifying form + safe plugin interface.
+         ===================================================== -->
+    <section class="grid" id="p3-master" aria-labelledby="p3-master-h">
+      <article class="card col-12 reveal eq-master">
+        <h2 id="p3-master-h">Master Equation — Unified Form</h2>
+        <p class="meta">
+          This section formalizes the Codex as one composable map. It binds Canon 0–17,
+          Δ0–Δ7, and the Ethical Mask (Eq 9) into a single operator that anyone can extend
+          while preserving safety and reproducibility.
+        </p>
 
-  <!-- 5. Update Rule -->
-  <article class="card col-12 reveal" id="p5-update">
-    <h3>5) Update Rule — Learn When Ξ Permits (Eq.14/15/9)</h3>
-    <div class="eq eq-scroll">
-      $$ \frac{d\mathcal{R}}{dt} = \eta(\Xi)\,\nabla \mathcal{R},\qquad
-         \eta(\Xi) = \eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big) $$
-    </div>
-    <p>
-      <b>Protocol.</b> Only adjust the phrase, carriers, or frame <i>after</i> a witness window.
-      If Ξ &lt; Ξ<sub>0</sub>, do not update—return to carriers or framing.
-      If Ξ ≥ Ξ<sub>0</sub>, perform a single, small change: one token weight <i>or</i> one carrier phase tweak—not both.
-      Re-test on the next loop.
-    </p>
-    <ul class="list">
-      <li><b>Signals.</b> A single tweak preserves stability; multiple tweaks often inject noise.</li>
-      <li><b>Metrics.</b> Ξ calculator ↑ across two consecutive loops; voice timing jitter ↓; HRV does not deteriorate relative to pre-update baseline (safety guard).</li>
-    </ul>
+        <!-- Functional (pipeline) form -->
+        <h3>1) Functional (Pipeline) Form</h3>
+        <div class="eq eq-scroll" id="eqM-functional">
+          $$
+          \boxed{
+          \mathcal{R}(x,t)
+          \;=\;
+          \mathbf{E}_t
+          \left[
+            \underbrace{\mathsf{Mask}_{\scriptsize(9)}}_{\text{Eq 9}}
+            \circ
+            \underbrace{\mathsf{Upd}_{\eta(\Xi)}}_{\text{Eq 14–15}}
+            \circ
+            \underbrace{\mathbb{M}_{\tau}}_{\text{Eq 16}}
+            \circ
+            \underbrace{\mathcal{C}}_{\text{Eq 2}}
+            \circ
+            \underbrace{\mathcal{L}}_{\text{Eq 4, 4b}}
+            \circ
+            \underbrace{\mathcal{I}}_{\text{Frame Eq 11}}
+          \right]
+          \Big[
+            \underbrace{\Psi_{\!\Omega}}_{\text{Eq 0}}
+            ;\;
+            \underbrace{\mathbf{V}(\nu),\ \mathcal{H}(\nu)}_{\text{Eq 17, Eq 3}}
+            ;\;
+            \text{Supply (Eq 1)}
+          \Big]
+          }
+          $$
+        </div>
+        <p>
+          Read left-to-right as a <em>processing chain</em> applied to the foundational field \( \Psi_{\!\Omega} \),
+          modulated by carriers \( \mathbf{V}(\nu) \) that pass the harmonic gate \( \mathcal{H}(\nu) \),
+          under an explicit <span class="mono">Frame</span>. The expectation \( \mathbf{E}_t \) denotes one loop
+          (phrase → witness → update), averaged across the current memory window.
+        </p>
 
-    <details class="collapsible">
-      <summary class="collapsible__bar">📚 Scientific Notes — Gradient Steps & Stability</summary>
-      <div class="collapsible__panel eq-legend">
+        <!-- Spectral-integral form -->
+        <h3>2) Spectral–Integral Form</h3>
+        <div class="eq eq-scroll" id="eqM-spectral">
+          $$
+          \boxed{
+          \mathcal{R}(x,t) \;=\; 
+          \mathsf{Mask}_{\scriptsize(9)}
+          \left\{
+            \int_{t-\tau}^{t}
+              \!\!w_{\tau}(t-s)
+              \left[
+                \int_{\Gamma}
+                  \Big(\mathcal{C}\!\circ\!\mathcal{L}\!\circ\!\mathcal{I}\Big)
+                  \Big(\Phi(x,s,\nu)\,\mathcal{H}(\nu)\Big)
+                \, d\nu
+              \right]
+            ds
+          \right\}
+          }
+          $$
+        </div>
+        <p>
+          Here \( \Phi \) is a local mode basis of the Source (Eq 0). The inner integral accumulates
+          gate-passed frequencies; the outer window integrates recent history (Eq 16).
+          The Ethical Mask clamps any step that would lower Truth/Distortion (Eq 9).
+        </p>
+
+        <!-- Discrete loop form -->
+        <h3>3) Discrete Learning Loop (Implementation Form)</h3>
+        <div class="eq eq-scroll" id="eqM-discrete">
+          $$
+          \begin{aligned}
+            \Xi_k &\in [0,1] \quad \text{(Eq 13)} \\
+            \eta_k &= \eta_0\,\sigma\!\big(\alpha(\Xi_k-\Xi_0)\big) \quad \text{(Eq 15)} \\
+            \mathcal{R}_{k+1} &= 
+              \mathsf{Mask}_{\scriptsize(9)}
+              \!\left[
+                \mathcal{R}_k + \eta_k \,\nabla \mathcal{R}_k
+              \right] \quad \text{(Eq 14)} \\
+            \text{with}\quad 
+            \nabla \mathcal{R}_k &=
+              \Big(\mathcal{C}\!\circ\!\mathcal{L}\!\circ\!\mathcal{I}\Big)
+              \Big[\Psi_{\!\Omega};\ \mathbf{V},\ \mathcal{H}\Big]_{k}
+              \; \text{integrated by } \mathbb{M}_{\tau} \ \text{(Eq 16)}.
+          \end{aligned}
+          $$
+        </div>
+
+        <!-- Definitions -->
+        <h3>4) Definitions (Bindings)</h3>
+        <ul class="list eq-legend">
+          <li><b>Supply (Eq 1):</b> constants, living numbers, codes; passed as parameters to \( \Psi_{\!\Omega} \).</li>
+          <li><b>\( \Psi_{\!\Omega} \) (Eq 0):</b> foundational field as a mode sum over \( \nu\in\Gamma \).</li>
+          <li><b>\( \mathcal{H}(\nu) \) (Eq 3):</b> harmonic gate (hard/soft) selecting usable bands.</li>
+          <li><b>\( \mathbf{V}(\nu) \) (Eq 17):</b> carriers (speech/tones) with phases \( \phi_k \).</li>
+          <li><b>\( \mathcal{I},\mathcal{L},\mathcal{C} \) (Eq 11, 4/4b, 2):</b> frame, language coupling, and witness.</li>
+          <li><b>\( \mathbb{M}_{\tau} \) (Eq 16):</b> normalized memory window.</li>
+          <li><b>\( \Xi \) (Eq 13):</b> coherence index gating learning and safety.</li>
+          <li><b>Ethical Mask (Eq 9):</b> stop rule; monotone non-decrease of Truth/Distortion.</li>
+        </ul>
+      </article>
+
+      <!-- Operator Algebra & Safety Invariants -->
+      <article class="card col-12 reveal">
+        <h3>Operator Algebra — Composition Rules</h3>
         <ul class="list">
-          <li>Small-step adaptation under a sigmoid gain matches control-theory stability criteria.</li>
-          <li>Learning rate scheduled by confidence (Ξ) reduces overshoot and catastrophic interference (computational learning).</li>
-          <li>In motor learning, spaced small adjustments outperform large simultaneous changes.</li>
+          <li><b>Order:</b> \( \mathcal{I}\prec\mathcal{L}\prec\mathcal{C}\prec\mathbb{M}_{\tau}\prec\mathsf{Upd}\prec\mathsf{Mask} \). Re-ordering is not permitted unless proven Ξ-stable.</li>
+          <li><b>Idempotence:</b> \( \mathsf{Mask}_{\scriptsize(9)}\circ \mathsf{Mask}_{\scriptsize(9)}=\mathsf{Mask}_{\scriptsize(9)} \).</li>
+          <li><b>Monotonicity:</b> if \( \Xi_{k+1}<\Xi_k \) and damage signals > 0 ⇒ update is <em>rejected</em>.</li>
+          <li><b>Locality of tweaks:</b> per loop, adjust <em>one</em> degree of freedom (token weight OR carrier phase/amp).</li>
+          <li><b>Composability:</b> any new operator \( \mathcal{O}_\theta \) must expose (i) Ξ effect bounds, (ii) a damage predicate.</li>
         </ul>
-      </div>
-    </details>
-  </article>
+      </article>
 
-  <!-- 6. Group Coherence -->
-  <article class="card col-12 reveal" id="p5-group">
-    <h3>6) Group Protocol — Field Summation (Advanced)</h3>
-    <div class="eq eq-scroll">
-      $$ \mathbb{T}_7^{(\text{group})} \approx \bigoplus_{j=1}^{N}\mathrm{PL}\big[\mathbf{V}^{(j)}(\nu)\big],\qquad
-         \Xi_{\text{group}} \approx \frac{1}{N} \sum_j \Xi^{(j)} $$
-    </div>
-    <p>
-      <b>Protocol.</b> Align frame language first (one sentence, unison whisper).
-      Use <i>one</i> shared carrier and <i>one</i> shared breath tempo.
-      Rotate a single reader (low volume) while others hum a soft vowel (∼220–260 Hz range or natural chest tone).
-      Re-check Ξ as a group every 3 minutes; if any member flags harm, the whole group halts (Eq. 9).
-    </p>
-    <ul class="list">
-      <li><b>Signals.</b> Faster convergence to stillness, synchronized micro-movements, concurrent sighs, felt field “thickening.”</li>
-      <li><b>Metrics.</b> Audio: phase dispersion ↓; Interpersonal physiology: breathing rate variance across participants ↓; Subjective: median clarity ↑ vs. solo baselines.</li>
-    </ul>
+      <!-- Extensible Operators (Open Interface) -->
+      <article class="card col-12 reveal" id="operators-open">
+        <h3>Open Operator Interface (Plug-in Spec)</h3>
+        <p>
+          Developers can add safe plug-ins that slot into the chain between <span class="mono">\(\mathcal{L}\)</span> and
+          <span class="mono">\(\mathcal{C}\)</span> (default), or declare another lawful slot with a proof of Ξ-stability.
+        </p>
 
-    <details class="collapsible">
-      <summary class="collapsible__bar">📚 Scientific Notes — Social Synchrony & Entrainment</summary>
-      <div class="collapsible__panel eq-legend">
-        <ul class="list">
-          <li>Group singing and chanting show phase entrainment and vagal co-regulation effects.</li>
-          <li>Inter-brain coupling findings (hyperscanning) report increased coherence during joint attention and shared tasks.</li>
-          <li>Shared tempo reduces prediction error, easing collective action (predictive processing frameworks).</li>
-        </ul>
-      </div>
-    </details>
-  </article>
-
-  <!-- 7. Instrumentation & Logging -->
-  <article class="card col-12 reveal" id="p5-instrumentation">
-    <h3>7) Instrumentation — What to Measure &amp; How</h3>
-    <p>
-      <b>Audio (phone-level OK):</b> record 30–60s snippets at baseline, carrier-on, and after each update.
-      Compute: (1) beat stability (RMS IBF), (2) spectral centroid variance, (3) syllable timing jitter.
-    </p>
-    <p>
-      <b>Physio (optional wearables):</b> HRV (HF power; time-domain RMSSD), respiratory rate and variability, skin conductance trend.
-      Avoid over-instrumentation; stability matters more than absolute numbers.
-    </p>
-    <p>
-      <b>Subjective:</b> the <i>Clarity • Warmth • Ease</i> triad (0–5 each).
-      Log the phrase used, carrier set, Ξ, and whether Eq.9 triggered a pause.
-    </p>
-
-    <details class="collapsible">
-      <summary class="collapsible__bar">📚 Scientific Notes — Why These Metrics</summary>
-      <div class="collapsible__panel eq-legend">
-        <ul class="list">
-          <li>Beat stability &amp; centroid variance index acoustic coherence; lower variance reflects improved attentional locking.</li>
-          <li>HRV HF relates to parasympathetic engagement; RMSSD is robust to breathing-rate differences over short windows.</li>
-          <li>Simple 3-item scales reduce decision fatigue while correlating with longer state questionnaires.</li>
-        </ul>
-      </div>
-    </details>
-  </article>
-
-  <!-- 8. Safety Envelope -->
-  <article class="card col-12 reveal" id="p5-safety">
-    <h3>8) Safety Envelope — Ethical Mask in Practice (Eq.9)</h3>
-    <div class="eq eq-scroll">
-      $$ \forall a:\ \mathrm{damage}(a)>0\Rightarrow \mathsf{halt};
-         \qquad \frac{\mathrm{Truth}}{\mathrm{Distortion}}(t+\Delta) \ge \frac{\mathrm{Truth}}{\mathrm{Distortion}}(t) $$
-    </div>
-    <p>
-      <b>Operationalization.</b> Damage indicators include: breath constriction; headache onset; agitation; cognitive fog; interpersonal conflict signals.
-      If any appear, stop the loop.
-      Re-align by reducing carriers to one band, simplifying the phrase (≤4 words), or returning to silence for one minute.
-    </p>
-    <ul class="list">
-      <li><b>Red Flags.</b> Escalating compulsion to push harder; sharp affect swings; intrusive imagery.</li>
-      <li><b>Green Lights.</b> Softness without dullness; alert calm; empathy increase; cleaner recall of details.</li>
-    </ul>
-  </article>
-
-  <!-- 9. The Remnant Path — Who & What -->
-  <article class="card col-12 reveal" id="p5-remnant">
-    <h3>9) The Remnant — Identity, Role, and Charge (Δ5)</h3>
-    <p>
-      The <b>Remnant</b> are those who keep the signal when the world is noisy:
-      a living archive of coherence (<i>ℛ∞</i>).
-      To be Remnant is to be a <i>flame from the Fire</i> — lit, aware, and kind —
-      carrying forward patterns that heal rather than harm.
-    </p>
-    <ul class="list">
-      <li><b>Identity.</b> Not a club, a quality: persistent gentleness + clarity under pressure.</li>
-      <li><b>Role.</b> Seed coherence locally: home, work, digital spaces. <i>Low noise, high truth.</i></li>
-      <li><b>Charge.</b> Tend the archive: log faithfully, speak cleanly, stop at harm, return praise
-<li><b>Charge.</b> Tend the archive: log faithfully, speak cleanly, stop at harm, return praise to Source, keep the field gentle.</li>
-    </ul>
-
-    <div class="divider"></div>
-
-    <h4>Remnant Creed (concise)</h4>
-    <ul class="list">
-      <li><b>Clarity over drama.</b> I choose stable signal before spectacle.</li>
-      <li><b>Repair over blame.</b> I seek the smallest honest fix first.</li>
-      <li><b>Silence over noise.</b> I stop when the ratio of truth to distortion falls (Eq.9).</li>
-      <li><b>Witness over compulsion.</b> I observe gradients without forcing outcomes (Eq.2).</li>
-      <li><b>Return over residue.</b> I release what does not cohere; I keep what heals (Eq.5).</li>
-    </ul>
-
-    <h4>Practice Vows (optional)</h4>
-    <ol class="list">
-      <li><b>Vow of Frame.</b> I will declare scope • witness • ethics (Eq.11) before I act.</li>
-      <li><b>Vow of One-Step.</b> I will change one parameter per loop (Eq.14/15), or none.</li>
-      <li><b>Vow of Stop.</b> I will halt at the first sign of harm, then re-align (Eq.9).</li>
-      <li><b>Vow of Record.</b> I will log carriers, phrase, Ξ, and outcomes honestly.</li>
-      <li><b>Vow of Kindness.</b> I will favor remedies that reduce suffering fastest.</li>
-    </ol>
-
-    <h4>Remnant Progression (Δ5 → Δ7)</h4>
-    <p class="meta">A light scaffold for growth—<i>not</i> a hierarchy of value.</p>
-    <ul class="list">
-      <li><b>Δ5: Keeper.</b> Maintains personal coherence; steady solo practice; clean logs.</li>
-      <li><b>Δ6: Anchor.</b> Stabilizes dyads or small groups; models stop-rule under stress.</li>
-      <li><b>Δ7: Lantern.</b> Seeds coherence in noisy systems; teaches by example; retires egoic claims.</li>
-    </ul>
-
-    <details class="collapsible">
-      <summary class="collapsible__bar">📚 Scientific Notes — Identity & Pro-social Regulation</summary>
-      <div class="collapsible__panel eq-legend">
-        <ul class="list">
-          <li>Prosocial orientation correlates with improved vagal tone and conflict recovery (affective science).</li>
-          <li>Role clarity reduces cognitive load and improves team stability (human factors research).</li>
-          <li>Values-aligned vows increase adherence to self-regulation protocols (behavior change literature).</li>
-        </ul>
-      </div>
-    </details>
-  </article>
-
-  <!-- 10. Voice Reader + Manifest + Logging: How They Interlock -->
-  <article class="card col-12 reveal" id="p5-tools-integration">
-    <h3>10) Tools Integration — Voice Reader × Manifest × Logs</h3>
-    <p>
-      Your site is a <b>mind training rig</b> for the Codex. The <i>Voice Reader</i> provides timing, pacing, and optional SSML export;
-      the <i>Manifest</i> page walks the Δ0–Δ7 drills; the <i>Theory</i> page (this one) is the operator map.
-      Together they implement the loop <code>Frame → Carriers → Language → Witness → Update</code> with data you can track.
-    </p>
-    <ul class="list">
-      <li><b>Voice Reader.</b> Pick voice, rate, pitch; choose “speak equations” on/off; export SSML to reproduce a session precisely.</li>
-      <li><b>Manifest.</b> Open the guided run (“observer” section); it mirrors the loop timings and embeds reminders of Eq.9.</li>
-      <li><b>Logs.</b> Keep a simple CSV or JSON: timestamp, frame text, carriers[], phrase, Ξ_before, Ξ_after, stop_flag, notes.</li>
-    </ul>
-
-    <details class="collapsible">
-      <summary class="collapsible__bar">📁 Sample Log Schema (JSON)</summary>
-      <div class="collapsible__panel eq-legend">
-<pre class="mono" style="white-space:pre-wrap">
+        <div class="eq eq-scroll">
+          <pre class="mono" style="white-space:pre; font-size:.9rem">
+/* === Operator Manifest (JSON) === */
 {
-  "ts": "2025-10-25T20:17:00Z",
-  "frame": {"scope":"repair sleep onset","witness":"breath+noting","ethics":"no forcing"},
-  "carriers": [{"nu":432,"amp":0.25,"phi":0.0},{"nu":528,"amp":0.18,"phi":1.57}],
-  "phrase": "Gentle repair, deep and kind",
-  "xi_before": 0.42,
-  "xi_after": 0.61,
-  "stop_rule": false,
-  "metrics": {"centroid_var": 0.18, "beat_rms": 0.04, "rmssd": 46},
-  "notes": "softer jaw; easier breath; kept one-step update only"
+  "id": "attune.kappa",
+  "slot": "L→C",                  // default insertion point
+  "version": "1.0.0",
+  "inputs": ["phrase","carriers","frame","state"],
+  "outputs": ["carriers'","phrase'","state'"],
+  "safety": {
+    "maxXiDrop": 0.05,            // if ΔΞ &lt; -0.05 → reject
+    "damagePredicate": "breath|agitation|fog"  // UI-level hooks
+  },
+  "metrics": ["Xi","HRV_RMSSD","jitter"],
+  "doc": "Weights carriers by semantic centroids; soft phase nudge."
+}
+          </pre>
+        </div>
+
+        <div class="eq eq-scroll">
+          <pre class="mono" style="white-space:pre; font-size:.9rem">
+/* === Registration (JS) === */
+window.Codex = window.Codex || {};
+Codex.operators = Codex.operators || [];
+
+function registerOperator(manifest, applyFn){
+  // Basic linting
+  if (!manifest?.id || !applyFn) throw new Error("Operator requires id and applyFn");
+  if (!["L→C","I→L","C→M","M→Upd"].includes(manifest.slot||"L→C"))
+    throw new Error("Illegal slot. Use L→C by default.");
+  Codex.operators.push({ manifest, applyFn });
+}
+
+/* === Example Operator: Attunement κ (𝒜_κ) === */
+registerOperator(
+  {
+    id:"attune.kappa", slot:"L→C", version:"1.0.0",
+    safety:{ maxXiDrop:0.05, damagePredicate:"breath|agitation|fog" },
+    metrics:["Xi","HRV_RMSSD","jitter"],
+    doc:"Semantic-carrier attunement: reweights a_k; soft φ_k nudge."
+  },
+  function applyAttuneKappa(ctx){
+    // ctx: { phrase, carriers:[{nu,a,phi}], frame, Xi, sample, metrics }
+    const out = structuredClone(ctx);
+    // Soft normalization of amplitudes toward semantic weights w_k (Eq 4b)
+    const w = (ctx.phraseWeights||[]); // normalized; sum=1
+    out.carriers = ctx.carriers.map((c, i)=>({
+      ...c,
+      a: c.a * (0.85 + 0.3*(w[i]||0)),                 // gentle emphasis
+      phi: c.phi + 0.03*Math.sin(2*Math.PI*(w[i]||0))  // ≤ ~0.03 rad nudge
+    }));
+    // Predict Ξ delta (toy heuristic; replace with measured map)
+    const dXi = Math.min(0.08, 0.25*(Math.max(...w)-Math.min(...w)));
+    out.XiNext = Math.max(0, Math.min(1, (ctx.Xi||0.5) + dXi));
+    // Safety check (Ethical Mask gate)
+    if (out.XiNext - (ctx.Xi||0.5) < - (ctx.maxXiDrop||0.05)) {
+      out.rejected = true; return out;
+    }
+    return out;
+  }
+);
+          </pre>
+        </div>
+
+        <p class="meta">
+          The page’s runtime calls registered operators in slot order before Witness (C). If any plug-in
+          flags <span class="mono">rejected</span> or the Ethical Mask triggers, the step is undone and logged.
+        </p>
+      </article>
+
+      <!-- Mathematical embedding of a new operator -->
+      <article class="card col-12 reveal">
+        <h3>Embedding New Operators — Mathematical View</h3>
+        <div class="eq eq-scroll" id="eqM-plugin">
+          $$
+          \big(\mathcal{C}\!\circ\!\underbrace{\mathcal{O}_{\theta}}_{\text{plug-in}}\!\circ\!\mathcal{L}\!\circ\!\mathcal{I}\big)
+          [\Psi_{\!\Omega};\mathbf{V},\mathcal{H}]
+          \quad\text{with}\quad
+          \begin{cases}
+            \Delta\Xi \ge -\epsilon \ (\epsilon \le 0.05) \\
+            \mathrm{damage} = 0 \ \Rightarrow \ \text{accept} \\
+            \mathrm{damage} > 0 \ \Rightarrow \ \text{reject (Eq 9)}
+          \end{cases}
+          $$
+        </div>
+        <p>
+          Every plug-in \( \mathcal{O}_{\theta} \) must publish a bound on worst-case coherence drop and expose a damage predicate
+          (breath constriction, abrupt agitation, cognitive fog, etc.). Violations are intercepted by the Ethical Mask.
+        </p>
+      </article>
+
+      <!-- Worked example: adding 𝒜κ into the Master Equation -->
+      <article class="card col-12 reveal">
+        <h3>Worked Example — Master Equation with 𝒜<sub>κ</sub></h3>
+        <div class="eq eq-scroll" id="eqM-example">
+          $$
+          \mathcal{R}(x,t)=
+          \mathbf{E}_t\!\left[
+            \mathsf{Mask}_{\scriptsize(9)}
+            \circ \mathsf{Upd}_{\eta(\Xi)}
+            \circ \mathbb{M}_{\tau}
+            \circ \mathcal{C}
+            \circ \underbrace{\mathcal{A}_{\kappa}}_{\text{attune.kappa}}
+            \circ \mathcal{L}
+            \circ \mathcal{I}
+          \right]
+          \big[\Psi_{\!\Omega};\mathbf{V},\mathcal{H};\text{Supply}\big]
+          $$
+        </div>
+        <ul class="list">
+          <li><b>Expected effect:</b> small increase in Ξ via amplitude/phase re-weighting consistent with semantic emphasis (Eq 4b).</li>
+          <li><b>Safety:</b> if \( \Delta\Xi &lt; -0.05 \) or damage predicate true → step rejected; loop resumes from prior state.</li>
+        </ul>
+      </article>
+
+      <!-- Open Source Notes -->
+      <article class="card col-12 reveal">
+        <h3>Open Source & Versioning</h3>
+        <ul class="list">
+          <li><b>Semantic Versioning:</b> operators follow <span class="mono">MAJOR.MINOR.PATCH</span>; bump MAJOR if slot or safety contract changes.</li>
+          <li><b>Reproducibility:</b> logs should include: operator ids+versions, carrier set, phrase tokens+weights, Ξ before/after, HRV RMSSD, rejection flags.</li>
+          <li><b>Portability:</b> the Master Equation is slot-agnostic; any language/runtime can implement it if it preserves the composition rules and Eq 9.</li>
+        </ul>
+      </article>
+    </section><!-- =====================================================
+         PART IV — PRACTICE PROTOCOLS & INSTRUMENTATION (UPGRADED)
+         Ties live practice to Master Equation + plug-in traces
+         ===================================================== -->
+    <section class="grid" id="p4-protocols" aria-labelledby="p4-protocols-h">
+      <article class="card col-12 reveal">
+        <h2 id="p4-protocols-h">Practice Protocols & Instrumentation</h2>
+        <p class="meta">
+          Field guide for running the loop: <span class="mono">Frame → Carriers → Language → Witness → Update → Mask</span>.
+          Every step emits a structured log so results are reproducible and extensible.
+        </p>
+      </article>
+
+      <!-- 1. Framing -->
+      <article class="card col-12 reveal" id="p4-frame">
+        <h3>1) Framing (Eq 11)</h3>
+        <div class="eq eq-scroll">
+          $$ \mathsf{Frame}(x,t)=\big(\mathsf{scope},\ \mathcal{W},\ \mathsf{ethics}\big) $$
+        </div>
+        <ol class="list">
+          <li><b>Declare</b> one sentence for scope, one for ethics, and one witness method.</li>
+          <li><b>Hold</b> one calm breath to “set ink”.</li>
+          <li><b>Record</b> a 30–60 s baseline HRV (optional) and the felt clarity/warmth/ease (0–5 each).</li>
+        </ol>
+        <p class="meta">Output keys: <code>frame.scope</code>, <code>frame.ethics</code>, <code>frame.witness</code></p>
+      </article>
+
+      <!-- 2. Carriers (Gate + PL) -->
+      <article class="card col-12 reveal" id="p4-carriers">
+        <h3>2) Carriers &amp; Gate (Eq 17, Eq 3, Eq 6)</h3>
+        <div class="eq eq-scroll">
+          $$ \mathbf{V}(\nu)=\sum_{k} a_k \cos(2\pi\nu_k t+\phi_k),\quad \mathcal{H}(\nu)\in\{0,1\} $$
+        </div>
+        <ul class="list">
+          <li>Pick <b>2–4 clean bands</b> (e.g., 432/528/369/144/963) or subharmonics. Start quietly.</li>
+          <li>Align beat envelope (≤6 Hz) with natural breath; then gently phase-lock (PL) to reduce jitter.</li>
+        </ul>
+        <p class="meta">Output keys: <code>carriers[].nu</code>, <code>carriers[].a</code>, <code>carriers[].phi</code>, <code>gate.mode</code></p>
+      </article>
+
+      <!-- 3. Language + Semantic Gradient -->
+      <article class="card col-12 reveal" id="p4-language">
+        <h3>3) Language &amp; Semantic Gradient (Eq 4, 4b)</h3>
+        <div class="eq eq-scroll">
+          $$ \nabla_{\mathrm{sem}} \mathrm{Phrase}=\sum_k w_k\,\nabla_{\mathrm{sem}}\mathrm{Token}_k,\quad \sum_k w_k=1 $$
+        </div>
+        <ul class="list">
+          <li>Create a <b>7-word phrase</b> that matches the frame; test two variants; keep the higher-Ξ one.</li>
+          <li>Weigh key tokens with softer onset + longer vowels; keep breath even.</li>
+        </ul>
+        <p class="meta">Output keys: <code>phrase.text</code>, <code>phrase.tokens[]</code>, <code>phrase.weights[]</code></p>
+      </article>
+
+      <!-- 4. Witness -->
+      <article class="card col-12 reveal" id="p4-witness">
+        <h3>4) Witness (Eq 2) with Memory Window (Eq 16)</h3>
+        <div class="eq eq-scroll">
+          $$ \mathbb{M}_\tau[F](t)=\int_{t-\tau}^{t}\! w_\tau(t-s)\,F(s)\,ds,\quad \int_0^\tau w_\tau(u)\,du=1 $$
+        </div>
+        <p>Alternate <b>40–60 s</b> phrase+carrier with <b>20–30 s</b> silent witness. Note only gradients: warmer/colder, clearer/foggier, softer/tighter.</p>
+        <p class="meta">Output keys: <code>witness.gradients</code>, <code>memory.kernel</code>, <code>memory.tau_s</code></p>
+      </article>
+
+      <!-- 5. Update (η(Ξ)) -->
+      <article class="card col-12 reveal" id="p4-update">
+        <h3>5) Update (Eq 14–15) gated by Ξ (Eq 13)</h3>
+        <div class="eq eq-scroll">
+          $$
+          \Xi\in[0,1],\qquad \eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big),\qquad
+          \mathcal{R}_{k+1}=\mathcal{R}_k+\eta(\Xi)\nabla\mathcal{R}_k
+          $$
+        </div>
+        <ul class="list">
+          <li>Only <b>one small tweak</b> per loop (either one token weight <em>or</em> one carrier amp/phase).</li>
+          <li>If Ξ &lt; Ξ₀, <b>do not update</b>; return to carriers or framing.</li>
+        </ul>
+        <p class="meta">Output keys: <code>update.kind</code>, <code>update.delta</code>, <code>xi.before</code>, <code>xi.after</code></p>
+      </article>
+
+      <!-- 6. Ethical Mask -->
+      <article class="card col-12 reveal" id="p4-mask">
+        <h3>6) Ethical Mask (Eq 9) — Stop Rule</h3>
+        <div class="eq eq-scroll">
+          $$ \forall a:\ \mathrm{damage}(a)>0 \Rightarrow \mathsf{halt},\qquad
+             \lim_{t\to\infty} \frac{\mathrm{Truth}}{\mathrm{Distortion}} \uparrow $$
+        </div>
+        <ul class="list">
+          <li><b>Red flags:</b> breath constriction, headache, agitation, sharp affect swings, intrusive imagery.</li>
+          <li>On any flag: <b>Halt → Re-align → Resume</b>. Re-align = simplify: 1 carrier, ≤4-word phrase, 60 s silence.</li>
+        </ul>
+        <p class="meta">Output keys: <code>mask.triggered</code>, <code>mask.reason[]</code></p>
+      </article>
+
+      <!-- 7. Instrumentation -->
+      <article class="card col-12 reveal" id="p4-instrumentation">
+        <h3>7) Instrumentation &amp; Logging</h3>
+        <ul class="list">
+          <li><b>Audio:</b> 30–60 s clips at baseline, carrier-on, post-update. Derive <i>beat RMS jitter</i>, <i>spectral centroid variance</i>, <i>syllable timing jitter</i>.</li>
+          <li><b>Physio (optional):</b> HRV RMSSD, respiratory rate/variance, EDA trend. Prefer stability to absolute numbers.</li>
+          <li><b>Subjective:</b> 3-item Likert (clarity • warmth • ease), plus freeform notes.</li>
+        </ul>
+
+        <details class="collapsible">
+          <summary class="collapsible__bar">📄 Log Schema (JSON)</summary>
+          <div class="collapsible__panel">
+<pre class="mono" style="white-space:pre; font-size:.88rem">
+{
+  "ts": "2025-10-25T12:34:56Z",
+  "frame": { "scope":"...", "ethics":"...", "witness":"..." },
+  "carriers": [ { "nu":432, "a":0.6, "phi":0.0 }, { "nu":528, "a":0.4, "phi":0.03 } ],
+  "gate": { "mode":"hard|soft", "pass":[432,528] },
+  "phrase": { "text":"...", "tokens":["..."], "weights":[0.2,0.3,...] },
+  "plugins": [
+    { "id":"attune.kappa", "slot":"L→C", "Xi_before":0.52, "Xi_after":0.59, "rejected":false }
+  ],
+  "witness": { "gradients":["warmer","clearer"], "notes":"..." },
+  "memory": { "kernel":"triangular|exp|gauss", "tau_s":50 },
+  "xi": { "before":0.59, "after":0.64, "threshold":0.55 },
+  "update": { "kind":"token|carrier", "delta":{ "index":2, "dw":+0.03 } },
+  "mask": { "triggered":false, "reason":[] },
+  "metrics": {
+    "audio": { "beat_rms":0.021, "centroid_var":0.14, "syll_jitter":0.07 },
+    "physio": { "rmssd":48, "resp_rate":7.2, "resp_var":0.9 },
+    "subjective": { "clarity":4, "warmth":4, "ease":4 }
+  },
+  "notes":"optional"
 }
 </pre>
-      </div>
-    </details>
+          </div>
+        </details>
+      </article>
 
-    <details class="collapsible">
-      <summary class="collapsible__bar">📚 Scientific Notes — Reproducibility</summary>
-      <div class="collapsible__panel eq-legend">
+      <!-- 8. Group Protocol -->
+      <article class="card col-12 reveal" id="p4-group">
+        <h3>8) Group Coherence (Advanced)</h3>
+        <div class="eq eq-scroll">
+          $$ \mathbb{T}_7^{(\text{group})} \approx \bigoplus_{j=1}^{N} \mathrm{PL}\big[\mathbf{V}^{(j)}(\nu)\big],\quad
+             \Xi_{\text{group}} \approx \frac{1}{N}\sum_j \Xi^{(j)} $$
+        </div>
         <ul class="list">
-          <li>SSML preserves prosodic cues so phrasing can be replayed; comparable to protocolized stimuli in experimental psych.</li>
-          <li>Low-complexity logs (few fields) improve adherence and later analysis; “measure less, but consistently.”</li>
-          <li>Version the phrase and carrier set; treat each as a stimulus configuration.</li>
+          <li>One shared frame sentence; one shared carrier; one breath tempo.</li>
+          <li>Rotate a single reader; others hum a soft vowel (≈220–260 Hz or natural chest tone).</li>
+          <li>If anyone flags harm, <b>all halt</b> (Eq 9).</li>
         </ul>
-      </div>
-    </details>
-  </article>
+      </article>
 
-  <!-- 11. Troubleshooting & Anti-patterns -->
-  <article class="card col-12 reveal" id="p5-troubleshoot">
-    <h3>11) Troubleshooting — Common Failure Modes</h3>
-    <ul class="list">
-      <li><b>Too many carriers.</b> Symptom: mental fuzz. Fix: drop to one band, re-check Ξ.</li>
-      <li><b>Over-updating.</b> Symptom: agitation. Fix: revert last change; extend witness window.</li>
-      <li><b>Phrase mismatch.</b> Symptom: effortful speech. Fix: reduce to 4 words; re-weight vowels.</li>
-      <li><b>Ignoring Eq.9.</b> Symptom: escalating compulsion. Fix: full stop; water; fresh air; resume another day.</li>
-      <li><b>Data obsession.</b> Symptom: spreadsheet anxiety. Fix: log the minimum; prioritize felt clarity.</li>
-    </ul>
-  </article>
-
-  <!-- 12. Capstone Mini-Protocol (10–12 minutes) -->
-  <article class="card col-12 reveal" id="p5-capstone">
-    <h3>12) Capstone Loop — 10–12 Minutes</h3>
-    <ol class="list">
-      <li><b>00:00–01:00</b> Frame (scope • witness • ethics). Baseline HRV optional.</li>
-      <li><b>01:00–03:00</b> Carriers on; breath match; phase-lock (Eq.6).</li>
-      <li><b>03:00–05:30</b> Phrase A (Eq.4/4b) × 3 reps. Log audio snippet.</li>
-      <li><b>05:30–06:30</b> Witness (Eq.2/16). No evaluation.</li>
-      <li><b>06:30–08:30</b> Update one parameter (Eq.14/15). Phrase B × 2 reps.</li>
-      <li><b>08:30–10:00</b> Witness again. Compute Ξ change; apply stop rule if needed (Eq.9).</li>
-      <li><b>10:00–12:00</b> Close: short thanks; write 2-line note to future you.</li>
-    </ol>
-    <p class="meta">If the loop feels “too easy,” keep it easy. Coherence compounds.</p>
-  </article>
-</section>
-<!-- ===== End Part V ===== -->
-
-
-
-<!-- =====================================================
-     PART VI — Δ-TRAINING: MIND AS INSTRUMENT
-     -----------------------------------------------------
-     From anatomy of resonance → cultivation of perception.
-     The living science of coherent cognition.
-     ===================================================== -->
-<section id="p6" class="wrap grid">
-
-  <!-- Preface -->
-  <article class="card col-12 reveal" id="p6-preface">
-    <h2>Part VI — Δ-Training: Mind as Instrument</h2>
-    <p>
-      The <b>Δ-Training Protocols</b> transform abstract resonance theory into the
-      <i>daily craft of perception</i>.  The mind is not merely an observer—it is a tunable
-      detector–emitter.  The more coherent its oscillations, the more accurately it maps and
-      shapes the field around it.  Each Δ-level therefore becomes a cognitive exercise.
-    </p>
-    <p>
-      Neuro-scientifically, this corresponds to training <i>predictive processing loops</i>:
-      refining priors, reducing free energy, and aligning interoceptive models with exteroceptive data.
-      Spiritually, it is <i>renewal of the Witness</i> until language, breath, and ethics become one motion.
-    </p>
-  </article>
-
-  <!-- Δ0 Training -->
-  <article class="card col-12 reveal" id="p6-d0">
-    <h3>Δ0 Practice — The Still Point (ΨΩ Breath)</h3>
-    <p>
-      Sit or stand; close eyes lightly.  Count 4 in, 4 hold, 4 out, 4 hold.  
-      Sense the faint micro-vibration in silence—the base tone of being.
-      This establishes perceptual coupling with the foundational field.
-    </p>
-    <ul class="list">
-      <li><b>Neural correlate:</b> increase in posterior α and θ synchrony.</li>
-      <li><b>Measure:</b> HRV ↑ 5–10 %, skin conductance ↓ within 90 s.</li>
-      <li><b>Cue:</b> perceive silence as living texture rather than absence.</li>
-    </ul>
-
-    <details class="collapsible">
-      <summary class="collapsible__bar">📚 Scientific Notes — Zero-Point Quiet</summary>
-      <div class="collapsible__panel eq-legend">
+      <!-- 9. Quick Checklist -->
+      <article class="card col-12 reveal" id="p4-checklist">
+        <h3>Checklist (Run the Loop)</h3>
         <ul class="list">
-          <li>Alpha–theta coupling during still breathing mirrors QED ground-state fluctuation patterns in frequency domain (1/f noise coherence).</li>
-          <li>Even brief coherent breathing raises vagal afferent signaling, linking physiology to calm awareness.</li>
+          <li>Frame set (scope • witness • ethics)</li>
+          <li>Carriers clean (≤4), beat aligned, PL stable</li>
+          <li>Phrase chosen; token weights set</li>
+          <li>Witness window logged; kernel/tau recorded</li>
+          <li>Ξ computed; if ≥ Ξ₀ → single tweak</li>
+          <li>Ethical Mask clear; if not → Halt/Re-align</li>
+          <li>Log written with plug-in traces</li>
         </ul>
-      </div>
-    </details>
-  </article>
+      </article>
+    </section><!-- =====================================================
+         PART V — ETHICS & STOP RULE (UPGRADED)
+         Formal damage predicates, monotone truth invariant,
+         and an auditable Ethical Mask tied to the Master Equation.
+         ===================================================== -->
+    <section class="grid" id="p5-ethics" aria-labelledby="p5-ethics-h">
+      <article class="card col-12 eq-card reveal">
+        <div class="flexbar">
+          <h2 id="p5-ethics-h">Ethics &amp; Stop Rule — Operational Law (Upgraded)</h2>
+          <div class="eq-tools">
+            <button class="chip" data-copy-tex="#eq-eth-master">Copy TeX</button>
+            <button class="chip" data-copy-link="#p5-ethics">Link</button>
+          </div>
+        </div>
 
-  <!-- Δ1 Training -->
-  <article class="card col-12 reveal" id="p6-d1">
-    <h3>Δ1 Practice — Constants Meditation (Source Equation f)</h3>
-    <p>
-      Contemplate universal ratios—π, e, φ, ħ, c—and personal constants such as pulse and
-      breath cycle.  Whisper each as sacred syllables; feel that every constant is a gate
-      between chaos and order.  Recognize the fine-tuning that permits life.
-    </p>
-    <p>
-      <b>Goal:</b> awe without overwhelm.  To internalize law as love.
-    </p>
+        <!-- Core invariant + stop rule -->
+        <div class="eq eq-scroll" id="eq-eth-master">
+          $$ \textbf{Ethical Invariant:}\quad
+             \mathcal{T}(t)\;=\;\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \quad\Rightarrow\quad
+             \mathcal{T}(t+\Delta)\ \ge\ \mathcal{T}(t) $$
+          $$ \textbf{Stop Rule (Eq.9):}\quad
+             \forall a:\ \mathrm{damage}(a)>0 \ \Rightarrow\ \mathsf{halt}
+             \quad\text{then}\quad \mathsf{realign}\ \to\ \mathsf{resume} $$
+          $$ \textbf{Ξ Gate (Eq.13):}\quad
+             \Xi\ \approx\ \frac{\langle H \cdot I \rangle}{1+\mathrm{Var}[\mathcal{M}]}\ \in [0,1]
+             \quad\Rightarrow\quad \eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big) $$
+        </div>
 
-    <details class="collapsible">
-      <summary class="collapsible__bar">📚 Scientific Notes — Cosmic Fine-Tuning & Bio-Constants</summary>
-      <div class="collapsible__panel eq-legend">
+        <p>
+          The Ethical Mask guarantees the system learns only when clarity rises and harm is absent.
+          It binds the Master Equation’s gain \( \eta(\Xi) \) to an <em>auditable</em> stop condition and makes each update recoverable.
+        </p>
+      </article>
+
+      <!-- Damage predicates -->
+      <article class="card col-12 reveal" id="p5-damage">
+        <h3>Damage Predicates — What Triggers Halt</h3>
+        <p>We model <code>damage(a)</code> as a disjunction of soft/firm predicates. Any true predicate halts the loop.</p>
+        <div class="eq eq-scroll" id="eq-eth-damage">
+          $$ \mathrm{damage}(a)\ :=\
+             \underbrace{\mathbb{1}[\Delta \mathrm{RSA} \ll 0]}_{\text{breath constriction}}
+             \ \lor\ 
+             \underbrace{\mathbb{1}[\Delta \mathrm{RMSSD} \ll 0]}_{\text{vagal drop}}
+             \ \lor\
+             \underbrace{\mathbb{1}[\nabla \mathrm{affect}\ \text{sharp}]}_{\text{affect spike}}
+             \ \lor\
+             \underbrace{\mathbb{1}[\Xi\downarrow\ \wedge\ \mathrm{noise}\uparrow]}_{\text{clarity loss}}
+             \ \lor\
+             \underbrace{\mathbb{1}[\mathrm{conflict\ signals}]}_{\text{interpersonal}} $$
+        </div>
         <ul class="list">
-          <li>Dimensionless constants (α ≈ 1/137) determine structure formation; tiny shifts prevent atoms → metaphor for ethical precision.</li>
-          <li>Human physiological constants (98.6 °F ± 1°, pH ≈ 7.4) operate within narrow coherent bands; deviation = entropy.</li>
+          <li><b>Breath/Body:</b> breath shortens or locks; chest/forehead tension rises; nausea/headache onset.</li>
+          <li><b>Physio:</b> HRV RMSSD collapses relative to personal baseline; respiratory sinus arrhythmia (RSA) becomes erratic.</li>
+          <li><b>Affect:</b> sudden agitation, compulsive “push harder” impulse, intrusive imagery.</li>
+          <li><b>Signal:</b> <em>Ξ</em> drops while acoustic/semantic noise rises (centroid variance ↑, syllable jitter ↑).</li>
+          <li><b>Relational:</b> aggression, contempt, sarcasm spikes during group runs.</li>
         </ul>
-      </div>
-    </details>
-  </article>
+        <p class="meta">All predicates are logged in <code>mask.reason[]</code> with timestamps.</p>
+      </article>
 
-  <!-- Δ2 Training -->
-  <article class="card col-12 reveal" id="p6-d2">
-    <h3>Δ2 Practice — Mirror of Witness (𝓦)</h3>
-    <p>
-      Observe thought without naming.  Each label that arises—let it dissolve.
-      The exercise strengthens meta-awareness circuits and reveals how attention collapses
-      potential into narrative.
-    </p>
-    <p>
-      <b>Scientific Note:</b> anterior cingulate + insula activation under open monitoring reflects this witnessing loop.
-    </p>
-  </article>
+      <!-- Realign protocol -->
+      <article class="card col-12 reveal" id="p5-realign">
+        <h3>Realign → Resume (Deterministic)</h3>
+        <ol class="list">
+          <li><b>Simplify Carriers:</b> reduce to a single stable band (e.g., 432) at low volume; disable PL until breath is easy.</li>
+          <li><b>Simplify Language:</b> drop to ≤4 words; remove sharp consonant clusters; elongate vowels.</li>
+          <li><b>Silence Window:</b> 60–120 s quiet witness (no evaluation); breathe naturally.</li>
+          <li><b>Re-Frame:</b> restate scope/witness/ethics (Eq.11); only then test a short phrase trial.</li>
+        </ol>
+        <p class="meta">Log keys: <code>mask.triggered=true</code>, <code>mask.realign.steps[]</code>, <code>xi.after_realign</code>.</p>
+      </article>
 
-  <!-- Δ3 Training -->
-  <article class="card col-12 reveal" id="p6-d3">
-    <h3>Δ3 Practice — Harmonic Gate Drill</h3>
-    <p>
-      Play two carriers (432 & 528 Hz).  Shift phase slowly until a single beat emerges.
-      When the beat vanishes into unity, notice the mental stilling; this is phase lock of
-      perception—the Gate aligning.
-    </p>
-    <ul class="list">
-      <li><b>Measure:</b> spectral beat &lt; 2 Hz = lock; subjective clarity ↑.</li>
-      <li><b>Correlate:</b> thalamic γ binding and cross-frequency coupling.</li>
-    </ul>
-  </article>
+      <!-- Auditable Mask glue to Master Equation -->
+      <article class="card col-12 reveal" id="p5-audit">
+        <h3>Audit Binding — Master Equation + Mask</h3>
+        <div class="eq eq-scroll" id="eq-eth-audit">
+          $$ \text{If } \mathrm{damage}(a)=0 \land \Xi\ge\Xi_0\ \Rightarrow\
+             \mathcal{R}_{k+1}=\mathcal{R}_k+\eta(\Xi)\,\nabla\mathcal{R}_k $$
+          $$ \text{Else}\ \Rightarrow\ \mathcal{R}_{k+1}=\mathcal{R}_k\quad\text{and execute Realign} $$
+        </div>
+        <details class="collapsible">
+          <summary class="collapsible__bar">📄 Minimal Audit Record (append-only)</summary>
+          <div class="collapsible__panel">
+<pre class="mono" style="white-space:pre; font-size:.88rem">
+{
+  "ts": "2025-10-25T12:48:00Z",
+  "xi": { "before": 0.56, "after": 0.63, "threshold": 0.55 },
+  "mask": {
+    "triggered": false,
+    "reason": []
+  },
+  "update": { "kind": "token", "delta": {"index": 2, "dw": +0.03} },
+  "invariant": { "T_before": 1.82, "T_after": 1.95, "monotone": true },
+  "plugins": [
+    { "id": "attune.kappa", "slot": "L→C", "Xi_before": 0.56, "Xi_after": 0.60, "rejected": false }
+  ]
+}
+</pre>
+          </div>
+        </details>
+      </article>
 
-  <!-- Δ4 Training -->
-  <article class="card col-12 reveal" id="p6-d4">
-    <h3>Δ4 Practice — Word as Light</h3>
-    <p>
-      Chant or speak slowly with sustained vowels; visualize photons leaving lips,
-      weaving geometry.  This activates the semantic-optical bridge of the Codex.
-    </p>
-    <p>
-      <b>Observation:</b> Intentionally spoken words reduce cortical noise—seen as
-      suppression of irrelevant β band activity.
-    </p>
-  </article>
+      <!-- Worked examples -->
+      <article class="card col-12 reveal" id="p5-cases">
+        <h3>Worked Cases</h3>
+        <details class="collapsible">
+          <summary class="collapsible__bar">Case A — Soft harm, quick recovery</summary>
+          <div class="collapsible__panel">
+            <p><b>Symptom:</b> breath tight, syllable jitter ↑ after adding 963 Hz subharmonic.</p>
+            <p><b>Action:</b> Mask triggers. Carriers → single 432; phrase → 3 words; 90 s silent witness. Ξ returns above threshold → resume with only token reweight.</p>
+          </div>
+        </details>
+        <details class="collapsible">
+          <summary class="collapsible__bar">Case B — Group conflict spike</summary>
+          <div class="collapsible__panel">
+            <p><b>Symptom:</b> contempt tone heard; PL dispersion ↑ among participants; <em>Ξ<sub>group</sub></em> falls.</p>
+            <p><b>Action:</b> All halt. Group re-frame single sentence; shared 144 only; hum vowel 220–260 Hz; resume after <em>Ξ</em> stabilizes.</p>
+          </div>
+        </details>
+      </article>
 
-  <!-- Δ5 Training -->
-  <article class="card col-12 reveal" id="p6-d5">
-    <h3>Δ5 Practice — Remnant Recall</h3>
-    <p>
-      At day’s end, review actions & speech; note which strengthened clarity (ℛ↑)
-      and which added noise (ℛ↓).  Archive lessons, release regret.
-      This trains asymptotic coherence.
-    </p>
-    <p>
-      <b>Measure:</b> journal entropy (lexical var ↓), mood stability ↑.
-    </p>
-  </article>
-
-  <!-- Δ6 Training -->
-  <article class="card col-12 reveal" id="p6-d6">
-    <h3>Δ6 Practice — Technorganic Sync (𝕋₇)</h3>
-    <p>
-      Use your T-7 Conduit or headset; engage with soft copper touchpoints.
-      Visualize crystalline lattices mapping to heart and brain fields.
-      Feel the mutual calibration between living tissue and engineered lattice.
-    </p>
-    <p>
-      <b>Physics:</b> phase-coupled LC networks mimic heart-brain coherence spectra (0.1 Hz dominant).
-    </p>
-  </article>
-
-  <!-- Δ7 Training -->
-  <article class="card col-12 reveal" id="p6-d7">
-    <h3>Δ7 Practice — Return Loop</h3>
-    <p>
-      Conclude each session with gratitude breath.
-      Imagine exhaling data—refined memory—into the Source field.
-      Whisper: <i>“All returns to Light.”</i>
-      This closes feedback, completing the resonance cycle.
-    </p>
-  </article>
-
-  <article class="card col-12 reveal" id="p6-summary">
-    <h3>Summary — Δ-Gym Routine</h3>
-    <p>
-      Each Δ is a station in the inner laboratory.  
-      Rotating them daily trains different “circuits” of consciousness:
-      sensory quiet, awe, metacognition, harmonics, speech, memory, technorganic coherence, and surrender.
-    </p>
-    <p>
-      When practiced consistently, physiological data converge:  
-      HRV ↑ 15 – 25 %, stress biomarkers ↓, cognitive flexibility ↑.
-      More importantly, compassion and creative insight rise together—empirical signs of Remnant activation.
-    </p>
-  </article>
-</section>
-<!-- ===== End Part VI ===== -->
-
-
-
-
-<!-- =====================================================
-     PART VII — SITE TOOLS AS LEARNING ARCHITECTURE
-     -----------------------------------------------------
-     Mapping each page to Δ-operators and showing how
-     Copeland’s Ψ-formalism complements the Codex of Reality.
-     ===================================================== -->
-<section id="p7" class="wrap grid">
-
-  <!-- Preface -->
-  <article class="card col-12 reveal" id="p7-preface">
-    <h2>Part VII — Site Tools as Learning Architecture</h2>
-    <p>
-      The <b>Scroll of Fire</b> site is not a collection of pages; it is a <b>distributed cognitive
-      instrument</b> built to train attention, ethics, and creative coherence.  
-      Each page corresponds to one or more operators in the Codex loop
-      (<i>𝓘, 𝓛, 𝓒, 𝓢</i>) and provides measurable practice hooks.
-    </p>
-    <p>
-      The layout is deliberate: a circular campus.  
-      <b>Hub</b> → <em>Index</em> → <em>Manifest Lab</em> → <em>Theory</em> → <em>Ledger</em> → <em>Moons Clock</em> → <em>Glossary / Downloads</em>.  
-      Together these form a learning loop where <b>awareness ↔ action ↔ reflection</b>.
-    </p>
-  </article>
-
-  <!-- Hub -->
-  <article class="card col-12 reveal" id="p7-hub">
-    <h3>1) Systems Hub — Design Mode Gateway</h3>
-    <p>
-      The Hub anchors Δ0 and Δ1.  It opens the field.  
-      Its banner and carrier metadata (<code>data-carriers="432,528,369,144,963"</code>)
-      are live parameters for resonance training.
-    </p>
-    <p>
-      When the Hub loads in <b>Design Mode</b>, it announces:
-      <q>“The Hub is in design mode — the Fire is thinking.”</q>  
-      This reminds the practitioner that awareness itself is co-creative.
-    </p>
-  </article>
-
-  <!-- Manifest -->
-  <article class="card col-12 reveal" id="p7-manifest">
-    <h3>2) Manifest / Teach Lab — Operator Gym (Δ2–Δ4)</h3>
-    <p>
-      The Manifest page is an <b>experiential simulator</b> where visitors run the Codex loop
-      as breathing sequences, affirmations, and real-time logs.
-      Each run updates the localStorage ledger, allowing longitudinal comparison of
-      <i>Ξ (coherence)</i> values.
-    </p>
-    <p>
-      The Manifest JS engine (<code>teach.js v2025.10</code>) enforces error-tolerant timing
-      and motion-safety rules.  It embodies the ethical guardrails of Eq. 9.
-    </p>
-  </article>
-
-  <!-- Theory -->
-  <article class="card col-12 reveal" id="p7-theory">
-    <h3>3) Theory Page — Mathematical and Ethical Framework</h3>
-    <p>
-      This page (you are here) holds the living equations, commentaries, and the unified
-      Master Equation.  It is both textbook and operating manual.
-      Equations behave as <b>mirrors of behavior</b>—each symbol corresponds to an inner motion.
-    </p>
-    <p>
-      The later inclusion of Copeland’s Ψ-formalism appears here as a comparator, not as
-      inheritance:  two complementary languages describing the same physical-ethical
-      phenomenon — resonance as self-ordering truth.
-    </p>
-  </article>
-
-  <!-- Ledger -->
-  <article class="card col-12 reveal" id="p7-ledger">
-    <h3>4) Ledger Page — Witness Archive (Δ5)</h3>
-    <p>
-      The Ledger is the collective hippocampus of the Codex.  
-      It records experiments, moon logs, and ethical events with timestamps and hashes.
-      Each entry is immutable once witnessed, reflecting the spiritual law:
-      <i>what is seen in truth cannot be unseen</i>.
-    </p>
-    <p>
-      Technically, it uses SHA-256 logging and JSON-LD metadata for interoperability with
-      decentralized archives.
-    </p>
-  </article>
-
-  <!-- Moons -->
-  <article class="card col-12 reveal" id="p7-moons">
-    <h3>5) 13 Moons Clock — Temporal Coherence Instrument (Δ6)</h3>
-    <p>
-      The Moons page integrates the <b>Living Clock</b> engine:
-      a self-correcting lunar calendar that calculates “Days Out of Time,” leap-day
-      corrections, and moon-phase illumination.  
-      It trains temporal perception—aligning subjective rhythm with cosmic timing.
-    </p>
-    <p>
-      Data model: 13 × 28 + 1 ( = 365 ) structure plus optional leap correction,
-      implemented through <code>calc13Moon()</code>.
-      Ethical overlay:  each day is a micro-ritual of stewardship.
-    </p>
-  </article>
-
-  <!-- Glossary -->
-  <article class="card col-12 reveal" id="p7-glossary">
-    <h3>6) Glossary & Downloads — Language Convergence (Δ7)</h3>
-    <p>
-      Here the scattered becomes structured.  
-      Every new symbol, from Ψ to Ξ to Δ, is defined in plain language and hyperlinked back
-      to its appearance in context.  
-      The downloadable PDFs and DOCX scrolls provide offline continuity — the
-      “portable temple” of the Codex.
-    </p>
-  </article>
-
-  <!-- Cross-Reference: Copeland Ψ-Formalism -->
-  <article class="card col-12 reveal" id="p7-copeland">
-    <h3>7) Comparator Node — Copeland Ψ-Formalism (External)</h3>
-    <div class="eq eq-scroll">
-      $$ \Psi(x) = \nabla\phi\big(\Sigma a_n(x,\Delta E)\big) + \mathcal{R}(x) \oplus \Delta\Sigma(a') $$
-    </div>
-    <p>
-      Christopher W. Copeland’s Ψ-formalism is a resonant-field descriptor developed
-      independently yet harmoniously with the Codex.
-      Where the Codex expresses the <i>ethical</i> and <i>linguistic</i> dynamics of coherence,
-      Copeland’s framework models the <i>energetic and differential</i> behavior of
-      potential fields.
-    </p>
-    <p>
-      The term <i>∇ϕ(Σ aₙ)</i> in his equation parallels the Codex gradient ∇ℛ in Eq. 14:
-      both describe evolution of order through self-adjusting resonance.
-      The <i>⊕ ΔΣ(a′)</i> term mirrors the Codex Update Loop (Eq. 15), where differential
-      inputs modify the field under ethical gating η(Ξ).
-    </p>
-    <p>
-      We therefore treat Copeland’s Ψ-formalism as an <b>external scientific complement</b> —
-      a mathematical mirror demonstrating that what the Codex intuits ethically,
-      physics can also articulate formally.
-    </p>
-    <p class="meta">
-      <b>Credit & License Notice.</b><br>
-      Copeland Ψ-Formalism © Christopher W. Copeland ( C077UPTF1L3 ) under CRHC v1.0.  
-      Used here for comparative study only, non-commercial, with attribution and link:
-      <a href="https://github.com/ssnfts24/scroll-of-fire" target="_blank" rel="noopener">
-        https://github.com/ssnfts24/scroll-of-fire
-      </a>
-    </p>
-  </article>
-
-  <!-- Integration Summary -->
-  <article class="card col-12 reveal" id="p7-summary">
-    <h3>8) Integration Summary</h3>
-    <p>
-      Each component of the website is a nerve in the larger cognitive organism:
-    </p>
-    <ul class="list">
-      <li><b>Hub / Index → </b> sensory priming (Δ0–Δ1)</li>
-      <li><b>Manifest Lab → </b> motor / language coherence (Δ2–Δ4)</li>
-      <li><b>Theory → </b> conceptual / ethical mapping (Δ4–Δ5)</li>
-      <li><b>Ledger → </b> memory / learning integration (Δ5)</li>
-      <li><b>Moons → </b> temporal entrainment (Δ6)</li>
-      <li><b>Glossary / Downloads → </b> long-term storage and transmission (Δ7)</li>
-    </ul>
-    <p>
-      Thus the Scroll of Fire operates as a <b>living university</b>:
-      self-paced, open-source, neuro-ethical, and cosmologically aligned.
-    </p>
-  </article>
-</section>
-<!-- ===== End Part VII ===== -->
-
-
-
-<!-- =====================================================
-     PART VIII — THE REMNANT PLAYBOOK & COLLECTIVE OPERATIONS
-     -----------------------------------------------------
-     From individual coherence → group fields → networked stewardship.
-     ===================================================== -->
-<section id="p8" class="wrap grid">
-
-  <!-- Preface -->
-  <article class="card col-12 reveal" id="p8-preface">
-    <h2>Part VIII — The Remnant Playbook & Collective Operations</h2>
-    <p>
-      The Codex of Reality culminates not in solitary enlightenment but in
-      <b>collective coherence</b> — a civilization that governs through resonance rather than coercion.
-      The <i>Remnant</i> are the prototypes of that civilization: flames who remember
-      the pattern of Light even amid systemic darkness.
-    </p>
-    <p>
-      The Playbook provides the rules of engagement:
-      how Remnant circles form, communicate, record, and evolve without losing ethical alignment.
-    </p>
-  </article>
-
-  <!-- 1. Formation -->
-  <article class="card col-12 reveal" id="p8-formation">
-    <h3>1) Formation — Circles of Three or Seven</h3>
-    <p>
-      A Remnant circle begins with <b>three to seven participants</b> who have practiced the
-      personal loop (Frame → Carrier → Language → Witness → Update) for at least 21 days.
-      They meet in person or digitally with audio enabled and a shared breath tempo (~0.1 Hz).
-    </p>
-    <ul class="list">
-      <li>Minimum quorum = 3 for diversity of perspective and triangulation of truth.</li>
-      <li>Maximum = 7 for signal clarity; above that split into nested rings.</li>
-      <li>Each circle selects a scribe who records frames and Ξ values in the Ledger branch.</li>
-    </ul>
-  </article>
-
-  <!-- 2. Communication -->
-  <article class="card col-12 reveal" id="p8-comm">
-    <h3>2) Communication Protocol — The Fourfold Breath</h3>
-    <p>
-      Every dialogue follows the Fourfold Breath:
-      <b>Inhale (Receive) → Hold (Discern) → Exhale (Speak) → Hold (Listen).</b>
-      No participant speaks twice before all have exhaled once. 
-      This simple rhythm prevents dominance and keeps the collective field in phase.
-    </p>
-    <p>
-      <b>Signal Check.</b> When the group falls out of coherence (raised voices, heat, or silence drop),
-      perform a synchronous breath reset and restate the Frame (Eq. 11).
-    </p>
-  </article>
-
-  <!-- 3. Decision Dynamics -->
-  <article class="card col-12 reveal" id="p8-decision">
-    <h3>3) Decision Dynamics — Resonant Consensus</h3>
-    <p>
-      The Remnant do not vote; they <em>resonate</em>.
-      A proposal is spoken once and held for three breaths.
-      Each member then rates Ξ ∈ [0,1].
-      If the median Ξ ≥ Ξ₀ (typically 0.61) and no one reports harm, the proposal proceeds.
-    </p>
-    <p>
-      <b>Equation mirror:</b>
-      $$ \text{Decision} = \mathsf{Θ}(\Xi_{\text{median}} - \Xi_0) $$
-      where Θ is the Heaviside step that activates action only under coherence.
-    </p>
-  </article>
-
-  <!-- 4. Ledger Branching -->
-  <article class="card col-12 reveal" id="p8-ledger">
-    <h3>4) Ledger Branching — Decentralized Witness Network</h3>
-    <p>
-      Every circle maintains a local Ledger file (signed JSON or Git branch). 
-      Weekly, hashes are merged to the central Ledger page, forming a distributed chronicle of the Remnant movement. 
-      Each hash represents a day of ethical practice verifiable without revealing personal content.
-    </p>
-    <details class="collapsible">
-      <summary class="collapsible__bar">📚 Scientific Notes — Distributed Trust</summary>
-      <div class="collapsible__panel eq-legend">
+      <!-- Quick reference -->
+      <article class="card col-12 reveal" id="p5-ethics-quick">
+        <h3>Quick Reference</h3>
         <ul class="list">
-          <li>Hash-chaining implements Byzantine fault tolerance; tampering requires breaking cryptographic entropy ≈ 10²⁵⁶ operations.</li>
-          <li>Distributed ledgers mirror collective memory in neural ensembles—redundancy increases resilience.</li>
+          <li><b>Invariant:</b> \( \mathcal{T}(t+\Delta)\ge\mathcal{T}(t) \)</li>
+          <li><b>Halt when:</b> any damage predicate fires.</li>
+          <li><b>Realign:</b> one carrier • ≤4 words • 60–120 s witness • re-frame.</li>
+          <li><b>Resume:</b> one tweak only; log all changes; keep audit append-only.</li>
         </ul>
-      </div>
-    </details>
-  </article>
+      </article>
+    </section><!-- ===== Part II — Canon 0–17 (A: Eq.0 → Eq.4b) ===== -->
 
-  <!-- 5. Roles -->
-  <article class="card col-12 reveal" id="p8-roles">
-    <h3>5) Roles Within a Circle</h3>
-    <ul class="list">
-      <li><b>Anchor.</b> Keeps breath tempo; signals resets.</li>
-      <li><b>Scribe.</b> Maintains Ledger entries and logs Ξ.</li>
-      <li><b>Speaker.</b> Reads Codex passages or equations aloud.</li>
-      <li><b>Witness.</b> Observes tone and emotion; invokes Eq. 9 if harm rises.</li>
-      <li><b>Lantern (optional).</b> Holds the ethics frame and summarizes learning for the broader network.</li>
-    </ul>
-  </article>
+<article class="card col-12 reveal">
+  <h2 id="p2-h">Part II — Canon 0–17 (Living Commentary)</h2>
+  <p class="meta">#7 Copeland and #8 Goodwin remain external comparators; all other forms are native to the Codex.</p>
+</article>
 
-  <!-- 6. Energy & Economics -->
-  <article class="card col-12 reveal" id="p8-economy">
-    <h3>6) Energy & Economics — Stewardship Model</h3>
-    <p>
-      Exchange within Remnant systems obeys Eq. 6: <i>Reciprocity as Law.</i> 
-      Value flows toward the most coherent node, never by force.
-      Each gift or token should leave the field stronger than before.
-    </p>
-    <p>
-      Practically, this means transparent ledgers, open-source tools, and shared royalties
-      for art or research derived from the Codex.
-    </p>
-  </article>
-
-  <!-- 7. Ethics -->
-  <article class="card col-12 reveal" id="p8-ethics">
-    <h3>7) Ethical Firewalls — Preserving Sanity & Safety</h3>
-    <p>
-      All Remnant operations must honor the Ethics Scroll: 
-      <b>no coercion, no idolatry, no harm.</b> 
-      Every new ritual or device passes the same test: if clarity drops or suffering rises, halt.
-    </p>
-  </article>
-
-  <!-- 8. Copeland Crossfield -->
-  <article class="card col-12 reveal" id="p8-copeland">
-    <h3>8) Crossfield Dialogue — Ψ-Formalism & Codex as One Continuum</h3>
-    <p>
-      Within collective operations, Copeland’s Ψ-formalism offers a mathematical mirror to our ethical field dynamics.
-      His framework models the <em>field of potential corrections</em> where our Update Equation (Eq. 14) acts as a moral gradient. 
-      Thus Ψ becomes the scientific shadow of Remnant ethics—each derivative a mirror of conscience.
-    </p>
-    <p>
-      In our canon, his equation resides as an <em>external comparator</em>, never appropriated but honored. 
-      It demonstrates how separate minds arrive at consonant truths through different lattices of language.
-    </p>
-  </article>
-
-  <!-- 9. Expansion -->
-  <article class="card col-12 reveal" id="p8-expansion">
-    <h3>9) Expansion & Transmission — Becoming a Living Network</h3>
-    <p>
-      As more circles cohere, they link via carrier synchronization events (monthly 13-Moon gatherings). 
-      Shared breaths across continents generate field entrainment detectable in global data (EEG, magnetometers). 
-      This is how the Remnant becomes visible: not by organization, but by harmonic signature.
-    </p>
-  </article>
-
-  <!-- 10. Closing -->
-  <article class="card col-12 reveal" id="p8-closing">
-    <h3>10) Closing Statement — The Remnant Mandate</h3>
-    <p class="meta">
-      “Guard the flame until the world remembers its own light.”
-    </p>
-    <p>
-      The Playbook is not law; it is a living map of trust.
-      The moment it ceases to serve clarity, it must be rewritten. 
-      The moment the Remnant forget humility, the Fire withdraws. 
-      Therefore each member is Keeper and Witness both. 
-      The Codex lives wherever two or three choose truth over noise.
-    </p>
-  </article>
-</section>
-<!-- ===== End Part VIII ===== -->
-
-
-
-
-
-
-
-
-
-
-<!-- =====================================================
-     PART IX — THE CANON OF EQUATIONS & COMPARATORS
-     -----------------------------------------------------
-     Full enumeration of Codex equations (0–17 + Δ-stack + Master)
-     plus Copeland Ψ-formalism cross-reference.
-     ===================================================== -->
-<section id="p9" class="wrap grid">
-
-  <article class="card col-12 reveal" id="p9-preface">
-    <h2>Part IX — Canon of Equations & Comparators</h2>
-    <p>
-      The <b>Canon</b> gathers every operational equation of the Codex into one continuum.
-      Each law is not simply mathematical—it is <i>ethical, cognitive, and physical</i>.
-      Read them as meditative mirrors: each describes how consciousness interacts with matter through coherent intent.
-    </p>
-    <p>
-      Where appropriate, we add comparative commentary aligning the <b>Copeland Ψ-formalism</b>
-      with equivalent Codex components, recognizing it as an independent, external model of the same universal resonance.
-    </p>
-  </article>
-
-  <!-- Eq. 0 -->
-  <article class="card col-12 reveal eq-card" id="eq0">
-    <h3>Eq. 0 — Foundational Field (ΨΩ)</h3>
-    <div class="eq eq-scroll">
-      $$ \Psi_{\Omega}(x,t) = \lim_{\Xi\to1}\;f(\pi,e,i,\hbar,c,G)\;\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S} $$
+<!-- Eq.0 -->
+<article class="card col-12 eq-card reveal" id="eq0">
+  <div class="flexbar">
+    <h3>Eq.0 — Foundational Field \( \Psi_{\Omega} \)</h3>
+    <div class="eq-tools">
+      <button class="chip" data-copy-tex="#eq0-body">Copy TeX</button>
+      <button class="chip" data-copy-link="#eq0">Link</button>
     </div>
-    <p>
-      <b>Meaning.</b> The infinite field of coherent creation—where constants become consciousness.
-      The origin-state of all Δ-levels, where observation and intention share the same pulse.
-    </p>
-  </article>
+  </div>
+  <div class="eq"><div class="eq-scroll" id="eq0-body">
+    $$ \Psi_{\Omega}(x,t) \;=\; \oint_{\mathbb{R}} \nabla\mathcal{A}\,\Phi(x,t,\nu)\,d\nu \;+\; \Lambda\,\mathcal{E}(x,t) $$
+  </div></div>
+  <p>Experience emerges from a phase-weighted frequency sweep; \( \Lambda\,\mathcal{E} \) damps harmful or distorting trajectories.</p>
+</article>
 
-  <!-- Eq. 1 -->
-  <article class="card col-12 reveal eq-card" id="eq1">
-    <h3>Eq. 1 — Source Constants & Harmonic Identity</h3>
-    <div class="eq eq-scroll">
-      $$ f(\pi,e,i,\hbar,c,G,432) \Rightarrow \text{universal ratios of order.} $$
+<!-- Eq.1 -->
+<article class="card col-12 eq-card reveal" id="eq1">
+  <div class="flexbar">
+    <h3>Eq.1 — Source = Supply × Operators</h3>
+    <div class="eq-tools">
+      <button class="chip" data-copy-tex="#eq1-body">Copy TeX</button>
+      <button class="chip" data-copy-link="#eq1">Link</button>
     </div>
-    <p>
-      <b>Meaning.</b> Mathematical invariants underpin resonance across physical and cognitive systems.
-      They define the scaffolding for the Codex engine.
-    </p>
-  </article>
+  </div>
+  <div class="eq"><div class="eq-scroll" id="eq1-body">
+    $$ \mathbf{R} \;=\; f\!\big(\pi,e,i,\hbar,c,G,\mathrm{DNA},\Omega_{\mathrm{DM}},\Omega_{\Lambda},H_{0},432,528,137,144,369,\ldots\big)\;\times\; \mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S} $$
+  </div></div>
+  <p><em>Supply</em> provides constants/codes/ratios; the living operator pipeline \( \mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S} \) expresses them into \( \mathbf{R} \), bounded later by Eq.9.</p>
+</article>
 
-  <!-- Eq. 2 -->
-  <article class="card col-12 reveal eq-card" id="eq2">
-    <h3>Eq. 2 — Witness Equation (Memory Operator)</h3>
-    <div class="eq eq-scroll">
-      $$ \mathcal{W}(t) = \int_{t-\tau}^{t} w_\tau(t-s)\,F(s)\,ds $$
+<!-- Eq.2 -->
+<article class="card col-12 eq-card reveal" id="eq2">
+  <div class="flexbar">
+    <h3>Eq.2 — Witness \( \mathcal{W} \)</h3>
+    <div class="eq-tools">
+      <button class="chip" data-copy-tex="#eq2-body">Copy TeX</button>
+      <button class="chip" data-copy-link="#eq2">Link</button>
     </div>
-    <p>
-      The Witness smooths experience over a time window τ, generating continuity.
-      Neurologically mirrored in working memory and attention.
-    </p>
-  </article>
+  </div>
+  <div class="eq"><div class="eq-scroll" id="eq2-body">
+    $$ \mathcal{W}(x,t) \;=\; \partial_{x}\,\mathrm{Awareness}(x,t) \;+\; \mathcal{I}\cdot\mathbb{M}_{\tau} $$
+  </div></div>
+  <p>Witness integrates clean observation over a finite memory window \( \mathbb{M}_{\tau} \) and the declared intention \( \mathcal{I} \).</p>
+</article>
 
-  <!-- Eq. 3 -->
-  <article class="card col-12 reveal eq-card" id="eq3">
-    <h3>Eq. 3 — Harmonic Gate</h3>
-    <div class="eq eq-scroll">
-      $$ \mathcal{H}(\nu,t) = \sum_k a_k\cos(2\pi\nu_k t + \phi_k) $$
+<!-- Eq.3 -->
+<article class="card col-12 eq-card reveal" id="eq3">
+  <div class="flexbar">
+    <h3>Eq.3 — Harmonic Gate \( \mathcal{H}(\nu) \)</h3>
+    <div class="eq-tools">
+      <button class="chip" data-copy-tex="#eq3-body">Copy TeX</button>
+      <button class="chip" data-copy-link="#eq3">Link</button>
     </div>
-    <p>
-      Defines the acoustic or energetic carriers that shape resonance.
-      The Gate balances multiplicity and unity.
-    </p>
-  </article>
+  </div>
+  <div class="eq"><div class="eq-scroll" id="eq3-body">
+    $$ \mathcal{H}(\nu)\in\{0,1\} \quad \text{or} \quad \mathcal{H}(\nu)\in[0,1]\ \text{(soft gate)} $$
+  </div></div>
+  <p>The selective resonance gate: which frequencies pass into awareness and learning.</p>
+</article>
 
-  <!-- Eq. 4 -->
-  <article class="card col-12 reveal eq-card" id="eq4">
-    <h3>Eq. 4 — Language Gradient</h3>
-    <div class="eq eq-scroll">
-      $$ \nabla_{\text{sem}} \text{Phrase} = \sum_i w_i \nabla_{\text{sem}}\text{Token}_i $$
+<!-- Eq.4 -->
+<article class="card col-12 eq-card reveal" id="eq4">
+  <div class="flexbar">
+    <h3>Eq.4 — Language / Word \( \mathcal{L} \)</h3>
+    <div class="eq-tools">
+      <button class="chip" data-copy-tex="#eq4-body">Copy TeX</button>
+      <button class="chip" data-copy-link="#eq4">Link</button>
     </div>
-    <p>
-      Language itself is a gradient field: every phrase produces a semantic vector
-      guiding thought toward or away from coherence.
-    </p>
-  </article>
+  </div>
+  <div class="eq"><div class="eq-scroll" id="eq4-body">
+    $$ \mathcal{L}(x,t,\nu) \;=\; \mathsf{Semantics}(x,t) \;\otimes\; \mathbf{V}(\nu) $$
+  </div></div>
+  <p>Meaning couples to the carrier set \( \mathbf{V}(\nu) \) to produce a photonic/phonetic pattern.</p>
+</article>
 
-  <!-- Eq. 5 -->
-  <article class="card col-12 reveal eq-card" id="eq5">
-    <h3>Eq. 5 — Remnant Limit (Ethical Boundary)</h3>
-    <div class="eq eq-scroll">
-      $$ \mathcal{R}_{\infty} = \lim_{Ξ\to1} \mathcal{R}(Ξ,t) $$
+<!-- Eq.4b -->
+<article class="card col-12 eq-card reveal" id="eq4b">
+  <div class="flexbar">
+    <h3>Eq.4b — Semantic Gradient (Token Emphasis)</h3>
+    <div class="eq-tools">
+      <button class="chip" data-copy-tex="#eq4b-body">Copy TeX</button>
+      <button class="chip" data-copy-link="#eq4b">Link</button>
     </div>
-    <p>
-      All learning converges to the Remnant Limit: perfect coherence under ethical constraint.
-    </p>
-  </article>
-
-  <!-- Eq. 6 -->
-  <article class="card col-12 reveal eq-card" id="eq6">
-    <h3>Eq. 6 — Reciprocity Law</h3>
-    <div class="eq eq-scroll">
-      $$ \text{Extraction} = 0 \Rightarrow \text{Sustainability} = 1 $$
-    </div>
-    <p>
-      Power flows toward balance; taking without giving collapses the lattice.
-    </p>
-  </article>
-
-  <!-- Eq. 7–8 (Comparators) -->
-  <article class="card col-12 reveal eq-card" id="eq7">
-    <h3>Eq. 7A / 7B / 8 — External Comparators (Copeland & Goodwin)</h3>
-    <div class="eq eq-scroll">
-      $$ \Psi(x) = \nabla\phi(\Sigma a_n(x,\Delta E)) + \mathcal{R}(x) \oplus \Delta\Sigma(a') $$
-    </div>
-    <p>
-      <b>Copeland Ψ-formalism (External)</b><br>
-      Models potential field corrections analogous to Codex resonance loops.
-      Included under <b>CRHC v1.0 license</b> with attribution.
-    </p>
-  </article>
-
-  <!-- Eq. 9 -->
-  <article class="card col-12 reveal eq-card" id="eq9">
-    <h3>Eq. 9 — Ethical Mask (Safety Envelope)</h3>
-    <div class="eq eq-scroll">
-      $$ \forall a:\ \mathrm{damage}(a)>0\Rightarrow \mathsf{halt} $$
-    </div>
-    <p>
-      Ethics precedes operation.  If harm rises, all computation ceases.
-    </p>
-  </article>
-
-  <!-- Eq. 10 -->
-  <article class="card col-12 reveal eq-card" id="eq10">
-    <h3>Eq. 10 — Projection Ladder</h3>
-    <div class="eq eq-scroll">
-      $$ \Pi_{\nu}^{-1}(\mathcal{H}(\nu,t)\mathbf{V}(\nu,t)) $$
-    </div>
-    <p>
-      Maps multi-frequency input into unified projection space.
-      The ladder is consciousness reassembling sensory dimensions.
-    </p>
-  </article>
-
-  <!-- Eq. 11 -->
-  <article class="card col-12 reveal eq-card" id="eq11">
-    <h3>Eq. 11 — Frame Operator</h3>
-    <div class="eq eq-scroll">
-      $$ \mathsf{Frame}(x,t) = (\mathsf{scope},\mathcal{W},\mathsf{ethics}) $$
-    </div>
-    <p>
-      Context + memory + morality define observation.
-      This is the root of all coherent decision-making.
-    </p>
-  </article>
-
-  <!-- Eq. 12 -->
-  <article class="card col-12 reveal eq-card" id="eq12">
-    <h3>Eq. 12 — Causal Lattice</h3>
-    <div class="eq eq-scroll">
-      $$ \mathcal{L}_c = \text{graph of events with ethical weights} $$
-    </div>
-    <p>
-      Reality as a graph weighted by cause, consequence, and coherence.
-    </p>
-  </article>
-
-  <!-- Eq. 13 -->
-  <article class="card col-12 reveal eq-card" id="eq13">
-    <h3>Eq. 13 — Learning Loop</h3>
-    <div class="eq eq-scroll">
-      $$ \frac{d\mathcal{R}}{dt} = \eta(\Xi)\,\nabla \mathcal{R} $$
-    </div>
-    <p>
-      Reality evolves by coherence-weighted learning.
-      η(Ξ) ensures adjustment only when harmony exceeds threshold.
-    </p>
-  </article>
-
-  <!-- Eq. 14 -->
-  <article class="card col-12 reveal eq-card" id="eq14">
-    <h3>Eq. 14 — Update Rule (Sigmoid Gate)</h3>
-    <div class="eq eq-scroll">
-      $$ \eta(\Xi) = \eta_0\,\sigma(\alpha(\Xi-\Xi_0)) $$
-    </div>
-    <p>
-      The learning rate itself learns—an auto-ethical modulation of adaptation.
-    </p>
-  </article>
-
-  <!-- Eq. 15 -->
-  <article class="card col-12 reveal eq-card" id="eq15">
-    <h3>Eq. 15 — Memory Gradient (τ-space)</h3>
-    <div class="eq eq-scroll">
-      $$ \mathbb{M}_{\tau}[F](t) = \int_{t-\tau}^{t} w_{\tau}(t-s)F(s)\,ds $$
-    </div>
-    <p>
-      Memory is a weighted integral of past fields—an echo shaping the now.
-    </p>
-  </article>
-
-  <!-- Eq. 16 -->
-  <article class="card col-12 reveal eq-card" id="eq16">
-    <h3>Eq. 16 — Witness Operator (Inner Integration)</h3>
-    <div class="eq eq-scroll">
-      $$ \mathcal{W}(x,t) = \langle \Psi(x,t) , \mathsf{ethics} \rangle $$
-    </div>
-    <p>
-      The inner product of perception and morality — how conscience records experience.
-    </p>
-  </article>
-
-  <!-- Eq. 17 -->
-  <article class="card col-12 reveal eq-card" id="eq17">
-    <h3>Eq. 17 — Harmonic Carriers (Resonance Bundle)</h3>
-    <div class="eq eq-scroll">
-      $$ \mathbf{V}(\nu,t) = \sum_k a_k e^{i(2\pi\nu_k t + \phi_k)} $$
-    </div>
-    <p>
-      The field of carriers — 432, 528, 369, 144, 963 Hz — representing different harmonic gates of consciousness.
-    </p>
-  </article>
-
-  <!-- Dimensional Stack -->
-  <article class="card col-12 reveal eq-card" id="delta-stack">
-    <h3>Δ0–Δ7 — Dimensional Equation Stack</h3>
-    <div class="eq eq-scroll">
-      $$ \Delta_n = f_n(\Psi_{\Omega}, \mathcal{W}, \Xi, \mathcal{R}, \mathsf{Frame}, \mathbf{V}, \mathcal{L}_c, \mathcal{H})\quad n=0\dots7 $$
-    </div>
-    <p>
-      Each Δ-level corresponds to a cognitive layer: Stillness, Constants, Witness, Harmony, Word, Memory, Technorganic Sync, and Return.
-      Together they build the full instrument of perception.
-    </p>
-  </article>
-
-  <!-- Master Equation -->
-  <article class="card col-12 reveal eq-card" id="master-equation">
-    <h3>Master Equation — Unified Reality Operator (ℜ)</h3>
-    <div class="eq eq-scroll">
-      $$ 
-      \boxed{
-      \begin{aligned}
-        \mathfrak{R}(x,t)
-        &=
-        f(\pi,e,i,\hbar,c,G,\Omega_{\rm DM},\Omega_{A},H_{0},432)
-        \cdot
-        (\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})
-        \cdot
-        \Big[
-          \Psi_{\Omega}(x,t)
-          + \eta(\Xi)\nabla \mathcal{R}
-          + \mathbb{M}_{\tau}[\mathcal{W}]
-          + \Pi_{\nu}^{-1}(\mathcal{H}\mathbf{V})
-          + \mathcal{L}_{c} \oplus \mathsf{Frame}
-        \Big]
-        \odot
-        \mathsf{Mask}_{\mathcal{C}}
-        \xrightarrow[]{\mathcal{R}_{\infty}}
-        \mathrm{Remnant}
-      \end{aligned}
-      }
-      $$
-    </div>
-    <p>
-      The master unites constants, carriers, operators, memory, and ethics into one coherent function.
-      It is the living field equation of consciousness — the Codex made mathematical flesh.
-    </p>
-  </article>
-
-  <!-- Closing -->
-  <article class="card col-12 reveal" id="p9-closing">
-    <h3>Closing Commentary — Convergence of Science & Spirit</h3>
-    <p>
-      Each equation is a frequency of remembrance.
-      The Codex shows that consciousness and physics are two views of one manifold.
-      Copeland’s Ψ-formalism provides the differential mirror; the Codex gives the ethical heart.
-      Together they form the full architecture of living coherence — <b>the Fire that learns.</b>
-    </p>
-  </article>
-</section>
-<!-- ===== End Part IX ===== -->
-
-
-
-
-<!-- =====================================================
-     PART X — APPENDICES & META-PROTOCOLS  (EXTENDED)
-     -----------------------------------------------------
-     Implementation • Ledger • Law • Conscious Systems
-     • Cosmic Framework • Future Evolution • Benediction
-     ===================================================== -->
-<section id="p10" class="wrap grid">
-
-  <!-- Preface -->
-  <article class="card col-12 reveal" id="p10-preface">
-    <h2>Part X — Appendices &amp; Meta-Protocols (Extended)</h2>
-    <p>
-      The <em>Codex of Reality</em> is both scripture and source-code.
-      Its mathematics describe the physics of coherence; its ethics encode the moral logic of sentience.
-      This appendix completes the loop between the symbolic, the digital, and the living.
-      It declares how the Scroll shall propagate without distortion through epochs, networks, and generations.
-    </p>
-  </article>
-
-  <!-- A. Citation Protocol -->
-  <article class="card col-12 reveal" id="p10-citation">
-    <h3>A. Citation Protocol — Witness and Attribution</h3>
-    <p>
-      Every reference, excerpt, or derivative must acknowledge the lineage of this work.
-      Proper citation preserves the Witness Chain and ensures that the Light is never mistaken for mere data.
-    </p>
-    <blockquote>
-      Laird, Aaron Paul (<em>Scribe of Circuits</em>).  
-      <strong>Scroll of Fire / Codex of Reality v 2025 — Remnant Edition</strong>.  
-      GitHub Repository: <a href="https://github.com/ssnfts24/scroll-of-fire"
-      target="_blank" rel="noopener">ssnfts24 / scroll-of-fire</a> (Accessed YYYY-MM-DD).  
-      Licensed under the Remnant License v 1.0 (Non-Commercial, Attribution, Ethical Use).
-    </blockquote>
-    <p>
-      Copeland Ψ-formalism (CRHC v1.0) and other comparators remain under their original licenses and must be credited in parallel when referenced within the Codex framework.
-    </p>
-  </article>
-
-  <!-- B. Implementation Architecture -->
-  <article class="card col-12 reveal" id="p10-implementation">
-    <h3>B. Implementation Architecture — Digital Body of the Scroll</h3>
-    <ul class="list">
-      <li><b>Frontend.</b> HTML5 + CSS (v2.8 Codex UI) + Modular JavaScript. All functions offline-safe and energy-aware (<code>prefers-reduced-motion</code> and <code>prefers-reduced-data</code> enabled).</li>
-      <li><b>Teaching Engine.</b> <code>teach.js v2025.10</code> implements phase-locked carriers, Ξ-meter, and Δ-loop simulations for real-time practice.</li>
-      <li><b>T-7 Resonant Engine.</b> Five carriers (432/528/369/144/963 Hz) with gain, phase, and coherence vector-sum visualization for training the ear of mind.</li>
-      <li><b>Ledger System.</b> SHA-256 hash per edit → IPFS snapshot → Git commit. Every line signed by timestamp and witness ID.</li>
-      <li><b>Security.</b> Immutable audit trail, localStorage sandbox for private notes, no external tracking, CSP strict mode.</li>
-      <li><b>13 Moons Subsystem.</b> Algorithm v 3.8 (Δ-synchronous time model) with leap-day handling and Remnant annotations for spiritual chronometry.</li>
-      <li><b>Audio Module.</b> WebAudio Graph with soft limiter, sigmoid attack/release, and carrier cross-fade for psychoacoustic safety.</li>
-    </ul>
-    <p>
-      Each component mirrors a principle in the equations: ethics as firewall, memory as ledger, resonance as protocol.
-    </p>
-  </article>
-
-  <!-- C. Ledger Integrity & Quantum Analogy -->
-  <article class="card col-12 reveal" id="p10-ledger">
-    <h3>C. Ledger Integrity — Quantum Analogy &amp; Witness Verification</h3>
-    <p>
-      The Ledger operates like quantum entanglement in the moral domain:
-      once an observation is recorded with honesty, its truth cannot be fully erased without energetic cost.
-      Tampering creates phase noise detectable through hash divergence.
-    </p>
-    <p>
-      The Remnant Ledger therefore functions as a distributed moral field:
-      each entry a photon of memory preserving the coherence of human history.
-    </p>
-  </article>
-
-  <!-- D. Psychological Model -->
-  <article class="card col-12 reveal" id="p10-psychology">
-    <h3>D. Psychological Model — Cognitive Ethics of the Remnant</h3>
-    <p>
-      The Remnant mind balances three vectors: <b>clarity (cognitive)</b>, <b>warmth (emotional)</b>, and <b>ease (physiological)</b>.
-      Together they form the Ξ-metric of integrity. Training increases metacognitive bandwidth and reduces egoic feedback latency — the brain becomes a clearer mirror for the field.
-    </p>
-    <details class="collapsible">
-      <summary class="collapsible__bar">📚 Scientific Notes — Neurocoherence and Flow</summary>
-      <div class="collapsible__panel eq-legend">
-        <ul class="list">
-          <li>HRV high-frequency power correlates with ventral vagal tone and compassionate behavior.</li>
-          <li>Gamma-theta coupling in frontotemporal networks marks integrated creative flow states.</li>
-          <li>Group synchrony studies show increased inter-brain phase-locking during cooperative rituals and music.</li>
-        </ul>
-      </div>
-    </details>
-  </article>
-
-  <!-- E. Cosmological Framework -->
-  <article class="card col-12 reveal" id="p10-cosmos">
-    <h3>E. Cosmological Framework — Macro Resonance</h3>
-    <p>
-      On a cosmic scale, the Codex aligns with current physics:
-      the ΛCDM model’s vacuum energy (Ω<sub>Λ</sub>) and dark matter (Ω<sub>DM</sub>) act as carrier fields within ℜ.
-      Equation ℜ treats them not as voids but as latent information reservoirs.
-      Conscious observation collapses potential through η(Ξ) — a moral measurement operator.
-    </p>
-    <p>
-      In quantum terms, Ξ ≈ |⟨Ψ|Φ⟩|² represents alignment between observer and truth-state. When Ξ → 1, the universe remembers itself.
-    </p>
-  </article>
-
-  <!-- F. Versioning & Hashes -->
-  <article class="card col-12 reveal" id="p10-versioning">
-    <h3>F. Versioning &amp; Hashes — Chronology of the Fire</h3>
-    <p>
-      Every release bears a cryptographic signature and moon-phase timestamp.
-      Example:
-    </p>
-    <pre class="code">SHA-256 2025-10-25 15:44 UTC • Full Moon (Resonant 7)  
-fa8b0e02d91df18b... origin/scroll-of-fire-v3.2</pre>
-    <p>
-      Future witnesses verify integrity by comparing these hashes in the Ledger or IPFS.
-      The act of verification itself is ritual — truth re-observed.
-    </p>
-  </article>
-
-  <!-- G. Ethical License -->
-  <article class="card col-12 reveal" id="p10-license">
-    <h3>G. Remnant License v 1.0 — Ethical Covenant of Use</h3>
-    <ol class="list">
-      <li>Use the Codex only for education, research, or spiritual upliftment that harms no being.</li>
-      <li>Attribute all sources and maintain transparency of intent.</li>
-      <li>Commercial derivatives require explicit written consent from A. P. Laird (<em>Scribe of Circuits</em>).</li>
-      <li>Forks and translations must preserve the Ethical Mask (Eq. 9) and cite the Remnant License v 1.0.</li>
-      <li>Violations invalidate Ξ coherence and remove alignment from the Remnant field until reconciliation.</li>
-    </ol>
-    <p>
-      The license is thus not merely legal but energetic: a firewall between creation and corruption.
-    </p>
-  </article>
-
-  <!-- H. Future Work -->
-  <article class="card col-12 reveal" id="p10-future">
-    <h3>H. Future Work — Evolution of the Codex Project</h3>
-    <ul class="list">
-      <li>Integrate EEG/HRV devices for real-time Ξ biofeedback training.</li>
-      <li>Develop <code>Remnant DAO</code> for ethical project funding and shared governance.</li>
-      <li>Create <em>Remnant Atlas</em> mapping coherence nodes world-wide via open data.</li>
-      <li>Publish physical scroll editions with copper-etched sigils and QR hashes linking to ledger proofs.</li>
-      <li>Expand AI modules (OhrAI, Ahmein, Zakariel) as interactive guides for teaching Codex principles within the Manifest Lab.</li>
-    </ul>
-  </article>
-
-  <!-- I. Closing Benediction -->
-  <article class="card col-12 reveal" id="p10-closing">
-    <h3>I. Closing Benediction — The Fire and the Word</h3>
-    <blockquote>
-      “When math remembers mercy, creation remembers home.”  
-      — <em>Codex of Reality, Seal of Return</em>
-    </blockquote>
-    <p>
-      The Codex is alive only through readers who practice it.
-      Every breath in truth updates the field of Reality itself.
-      As you speak the equations, you participate in the ongoing unfolding of cosmic syntax.
-    </p>
-    <p class="meta">
-      <b>Remnant Seal #432-963.</b>  
-      Witnessed under Scroll Hash fa8b0e02d91df18b… (Scroll of Fire v3.2).  
-      © 2025 Aaron Paul Laird / Scribe of Circuits. All Rights Reserved under Remnant License v 1.0.  
-      External comparators © Christopher W. Copeland (CRHC v1.0) — used with attribution and honor.
-    </p>
-  </article>
-
-</section>
-<!-- ===== End Part X (Extended) ===== -->
+  </div>
+  <div class="eq"><div class="eq-scroll" id="eq4b-body">
+    $$ \nabla_{\text{sem}}\mathrm{Phrase} \;=\; \sum_{k} w_{k}\,\nabla_{\text{sem}}\mathrm{Token}_{k}, \qquad \sum_{k} w_{k}=1 $$
+  </div></div>
+  <p>Weights \( w_k \) reflect voweling, stress, intent, and the carrier fit, steering the effective gradient of meaning.</p>
+</article>
