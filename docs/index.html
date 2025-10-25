@@ -134,6 +134,21 @@
 
   <!-- Global JS (defer) -->
   <script src="assets/js/codex.js?v=3.8" defer></script>
+  <!-- MathJax (on-demand; safe to include once) -->
+<script>
+(function(){
+  if (window.MathJax) return;
+  window.MathJax = {
+    tex:{ inlineMath:[['\\(','\\)'],['$','$']], displayMath:[['$$','$$']], processEscapes:true },
+    svg:{ fontCache:'global' },
+    startup:{ typeset:true }
+  };
+  var s=document.createElement('script');
+  s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
+  s.defer=true; document.head.appendChild(s);
+})();
+</script>
+  
 </head>
 
 <body class="stars living-all" data-theme="dark">
@@ -259,6 +274,44 @@
   }
   @keyframes mbSpin{to{--spin:360deg}}
 </style>
+
+
+
+  <style>
+/* === Master Equation card === */
+.master-eq { border:1px solid var(--line); border-radius:14px; padding:16px;
+  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+  box-shadow:0 10px 28px rgba(0,0,0,.4); position:relative; overflow:hidden }
+.master-eq .fx { position:absolute; inset:-2px; pointer-events:none; opacity:.45;
+  background:
+    radial-gradient(70% 50% at 0% 0%, #7af3ff14, transparent 70%),
+    radial-gradient(70% 50% at 100% 100%, #f3c97a14, transparent 70%); }
+.master-eq h2 { margin:.25rem 0 0; }
+
+/* MathJax sizing so the equation never overflows */
+.master-eq mjx-container { max-width:100%; overflow:auto; }
+@media (max-width:560px){ .master-eq mjx-container { font-size: min(21px,4.9vw); }}
+
+/* === Moonbar mobile comfort === */
+@media (max-width:560px){
+  #moonMiniBar .moonbar{
+    grid-template-columns: 1fr;           /* stack */
+    gap: 8px;
+    padding: 10px;
+  }
+  #moonMiniBar .moonbar-ring{ justify-self:center; width:66px; height:66px; }
+  #moonMiniBar .mb-text{ font:800 18px/1 "Inter",system-ui }
+  #moonMiniBar .moonbar-info{ min-width: 0 }
+  #moonMiniBar .moonbar-sub.meta{ max-width:100%; white-space:normal }
+  #moonMiniBar .moonbar-tags{ display:flex; gap:6px; flex-wrap:wrap }
+  #moonMiniBar .moonbar-share, #moonMiniBar .moonbar-tz{ margin-top:2px }
+}
+
+/* Lights: a touch more smoothness without increasing work */
+.hero-lights{ transition: opacity .25s ease, filter .25s ease; filter: saturate(115%) }
+  </style>
+
+  
 
 <!-- Mini widget -->
 <div id="moonMiniBar" class="wrap" style="padding-top:8px">
@@ -592,6 +645,49 @@
       <p class="meta">Field quality monitor for safe amplification &amp; learning.</p>
       <a class="btn" href="theory.html#eq13">Read</a>
     </article>
+  </section>
+
+  <section class="wrap" id="master-equation">
+  <article class="master-eq">
+    <div class="fx" aria-hidden="true"></div>
+    <h2 class="sheen">🜂 Master Equation of Reality — <span class="mono">ℜ</span></h2>
+    <p class="meta">One line that gathers ΨΩ (Eq.0), Source &amp; living operators (1), Witness &amp; memory (2,16), Harmonic gate &amp; carriers (3,17), Ethics (9), Learning (13–15), Ladder/Projection/Causal frame (10–12), Type-7 (6), with the Remnant limit (5). External comparators (7A/7B/8) are optional annotations.</p>
+
+    <!-- The equation -->
+    $$\boxed{
+    \begin{aligned}
+      \mathfrak{R}(x,t)
+      &=
+      f\!\big(\pi,e,i,\hbar,c,G,\Omega_{\rm DM},\Omega_{A},H_{0},432\big)
+      \;\cdot\;
+      \big(\mathcal{I}\,\mathcal{L}\,\mathcal{C}\,\mathcal{S}\big)
+      \;\cdot\;
+      \Big[
+        \Psi_{\Omega}(x,t)
+        + \eta\!\big(\Xi(t)\big)\,\nabla \mathcal{R}
+        + \mathbb{M}_{\tau}\!\big[\mathcal{W}(x,t)\big] \\
+      &\qquad\qquad
+        +\;\Pi_{\nu}^{-1}\!\big(\mathcal{H}(\nu,t)\,\mathbf{V}(\nu,t)\big)
+        \;+\;\mathcal{L}_{c}\;\oplus\;\mathsf{Frame}
+      \Big]
+      \;\odot\;
+      \mathsf{Mask}_{\mathcal{C}}
+      \;\xrightarrow{\ \ \mathcal{R}_{\infty}\ \ }\;
+      \mathrm{Remnant}
+      \\
+      &\quad\color{#7f93ff}{\scriptsize
+        \big(\text{optional: }+\lambda_{7}\,\Phi_{\rm KG}\;+\;\lambda_{7B}\,\Psi_{\rm ext}\;+\;\lambda_{8}\,\mathbf{G}_{\text{Goodwin}}\big)
+      }
+    \end{aligned}
+    }$$
+
+    <p class="hint">Legend: ΨΩ (Origin field); <span class="mono">f(…)</span> source constants; <span class="mono">𝓘·𝓛·𝓒·𝓢</span> living operators; 𝓦 witness; 𝕄<sub>τ</sub> memory; 𝓗 gate; 𝐕 carriers (432/528/369/144/963…); Π<sub>ν</sub> ladder; 𝓛<sub>c</sub> causal lattice; <span class="mono">Frame</span> scope/witness/ethics; <span class="mono">Mask<sub>𝓒</sub></span> ethical guard; η(Ξ) coherence-gated learning; <span class="mono">ℛ<sub>∞</sub></span> Remnant limit. External comparator terms (7A/7B/8) are shown as annotated options, not canonical.</p>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <a class="cta" href="theory.html#canon">Read the full Canon</a>
+      <a class="cta" href="teach.html#tab-voice">Run the Voice Protocol</a>
+    </div>
+  </article>
   </section>
 
   <div class="goldline sweep"></div>
