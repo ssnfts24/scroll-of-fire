@@ -3,6 +3,7 @@
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
+    // If running from github.com (file viewer), remove <base> so assets resolve.
     if (location.hostname === "github.com") {
       const b = document.querySelector("base"); if (b) b.remove();
     }
@@ -345,7 +346,7 @@
     });
 
     /* ---------- Hero reveal ---------- */
-    $("#yr").textContent=new Date().getFullYear();
+    $("#yr") && ($("#yr").textContent = new Date().getFullYear());
     if('IntersectionObserver' in window){
       const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }), {threshold:.08});
       $$(".card").forEach(c=>io.observe(c));
@@ -423,12 +424,11 @@
     const sym=$("#sym"), noise=$("#noise"), stroke=$("#stroke"), orbitals=$("#orbitals");
     const cMix=$("#cMix"), cPhase=$("#cPhase"), vBias=$("#vBias");
     let phi=0, seed=Math.random()*1000, mode=+visMode.value|0;
+    if(!Number.isFinite(mode) || mode<0) mode = 0;
 
     // Noise helpers
     function rng(){ const x=Math.sin(seed++)*43758.5453; return x-Math.floor(x); }
-    function n2d(x,y){ // cheap 2D noise
-      const s=Math.sin(x*12.9898+y*78.233)*43758.5453; return s-Math.floor(s);
-    }
+    function n2d(x,y){ const s=Math.sin(x*12.9898+y*78.233)*43758.5453; return s-Math.floor(s); }
 
     function speed(){ return (+visSpeed.value/90); }
     function count(def){ const d=+visDensity.value; return Math.max(20, Math.floor(d*(def/220))); }
@@ -645,7 +645,7 @@
     function drawChladni(){
       const W=canvas.width,H=canvas.height; clearFrame();
       const m=3+((seed|0)%5), n=2+((seed>>3)%5), st=+stroke.value;
-      const S=12; // sample step
+      const S=12;
       for(let y=0;y<H;y+=S){
         for(let x=0;x<W;x+=S){
           const v = Math.sin(m*Math.PI*x/W + phi*0.002*speed()) * Math.sin(n*Math.PI*y/H + cPhase.value);
@@ -688,16 +688,41 @@
       drawOrbitals, drawPhiWeave, drawAurora, drawChladni, drawGyre, drawBloomfield
     ];
 
-    // Animation loop
+    // Animation / rendering
     let anim=!PREFERS_RM, frameId=0;
-    function render(){ if(!ctx) return; modes[mode](); if(anim) frameId=requestAnimationFrame(render); }
-    function seedTrace(frames=40){ for(let k=0;k<frames;k++){ modes[mode](); } }
+    function drawOnce(){ const fn = modes[mode] || modes[0]; fn(); }
+    function render(){
+      if(!ctx) return;
+      const fn = modes[mode] || modes[0];
+      fn();
+      if(anim) frameId=requestAnimationFrame(render);
+    }
+    function seedTrace(frames=40){
+      const fn = modes[mode] || modes[0];
+      for(let k=0;k<frames;k++){ fn(); }
+    }
 
-    // UI wiring
-    on($("#visMode"),"change",()=>{ mode=+visMode.value|0; });
-    on($("#clearBtn"),"click",()=>{ if(ctx) ctx.clearRect(0,0,canvas.width,canvas.height); });
-    on($("#seedBtn"),"click",()=>{ seed = (Math.random()*1000)|0; toast("Seeded"); });
-    on($("#newSeed"),"click",()=>{ if(!$("#lockSeed").checked){ seed = (Math.random()*10000)|0; toast("New seed"); }});
+    // UI wiring + instant repaint when not animating
+    function repaint(){ if(anim) return; drawOnce(); }
+
+    on($("#visMode"),"change",()=>{ mode=+visMode.value|0; if(!Number.isFinite(mode)||mode<0||mode>=modes.length) mode=0; repaint(); });
+    ["input","change"].forEach(evt=>{
+      on($("#visDensity"),evt,repaint);
+      on($("#visSpeed"),evt,repaint);
+      on($("#visFade"),evt,repaint);
+      on($("#stroke"),evt,repaint);
+      on($("#palette"),evt,repaint);
+      on($("#sym"),evt,repaint);
+      on($("#noise"),evt,repaint);
+      on($("#orbitals"),evt,repaint);
+      on($("#cMix"),evt,repaint);
+      on($("#cPhase"),evt,repaint);
+      on($("#vBias"),evt,repaint);
+    });
+
+    on($("#clearBtn"),"click",()=>{ if(ctx){ ctx.clearRect(0,0,canvas.width,canvas.height); repaint(); } });
+    on($("#seedBtn"),"click",()=>{ seed = (Math.random()*1000)|0; toast("Seeded"); repaint(); });
+    on($("#newSeed"),"click",()=>{ if(!$("#lockSeed").checked){ seed = (Math.random()*10000)|0; toast("New seed"); repaint(); }});
     on($("#dlTrace"),"click",()=>downloadPNG(false));
     on($("#dlTraceMeta"),"click",()=>downloadPNG(true));
 
@@ -707,7 +732,6 @@
     }
     async function downloadPNG(withMeta){
       try{
-        // Optionally embed minimal tEXt metadata via a simple composite approach (fallback: filename JSON)
         const url=canvas.toDataURL("image/png");
         const meta = {
           when: new Date().toISOString(),
@@ -726,8 +750,8 @@
       }catch(_){ toast("Download failed"); }
     }
 
-    // Start up
-    if(anim){ render(); } else { seedTrace(30); }
+    // Start up (respect reduced motion)
+    if(anim){ render(); } else { drawOnce(); }
 
     // Presets
     const PRESET_KEY="sof_remnant_preset_v1";
@@ -745,7 +769,8 @@
         visMode.value=P.mode; visDensity.value=P.density; visSpeed.value=P.speed; visFade.value=P.fade;
         sym.checked=P.sym; noise.checked=P.noise; stroke.value=P.stroke; $("#palette").value=P.palette;
         orbitals.value=P.orbitals; cMix.value=P.cMix; cPhase.value=P.cPhase; vBias.value=P.vBias;
-        mode=P.mode; toast("Preset loaded");
+        mode=P.mode; if(!Number.isFinite(mode)||mode<0||mode>=modes.length) mode=0;
+        toast("Preset loaded"); repaint();
       }catch{ toast("Load failed"); }
     }
     on($("#savePreset"),"click",savePreset);
@@ -754,20 +779,18 @@
     // Auto-Pilot: runs 𝓘→𝓛→𝓒→𝓢 (12s each ×4)
     on($("#autoRun"),"click",()=>{
       const line=($("#rmnLine").value||"").trim(); if(!line) return toast("Write an intention line");
-      // Prime frame
       seedTrace(35);
-      // 𝓘: focus + gentle carrier
       if(carrier!=="none") playCarrier(+carrier,0.8,0.07);
-      let phase=0; const phases=["𝓘","𝓛","𝓒","𝓢"];
+      let phase=0;
       const t0=Date.now();
       const iv=setInterval(()=>{
         phase=(phase+1)%4;
         $("#hudBreath").textContent="Breath: " + (["In","—","Out","—"][phase]);
-        // subtle tweaks per phase
-        if(phase===0){ visMode.value="4"; mode=4; }   // Rose
-        if(phase===1){ visMode.value="1"; mode=1; }   // Lattice
-        if(phase===2){ visMode.value="0"; mode=0; }   // Flow
-        if(phase===3){ visMode.value="7"; mode=7; }   // Vortex
+        if(phase===0){ visMode.value="4"; mode=4; }
+        if(phase===1){ visMode.value="1"; mode=1; }
+        if(phase===2){ visMode.value="0"; mode=0; }
+        if(phase===3){ visMode.value="7"; mode=7; }
+        if(!anim) drawOnce();
         if(Date.now()-t0>48000){ clearInterval(iv); $("#hudBreath").textContent="Breath: —"; toast("Auto-Pilot done"); }
       }, 12000);
     });
