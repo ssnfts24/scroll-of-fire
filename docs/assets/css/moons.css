@@ -719,3 +719,115 @@
 .asp-table th,.asp-table td{padding:8px 10px;border:1px solid var(--line)}
 .asp-table thead th{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01))}
 .asp-table tbody tr td:first-child{font-weight:800}
+/* === TODAY BAR: glitch guard & unified style ========================= */
+/* place AFTER your existing layers so these win the cascade */
+
+#todayBlock,            /* if you wrap it */
+.today,                 /* your section heading area */
+#nowDate, #nowClock, #nowTZ { 
+  /* prevent transient style animations on layout/DOM updates */
+  transition: none !important;
+}
+
+/* Make the three chips look identical, regardless of legacy "chip"/"label" rules */
+#nowDate, #nowClock, #nowTZ {
+  display: inline-flex !important;
+  align-items: center;
+  gap: .5ch;
+  padding: .55rem .9rem !important;
+  min-height: 40px;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
+    radial-gradient(80% 60% at 50% 20%, color-mix(in srgb, var(--moon-accent) 15%, transparent), transparent 60%) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+  color: var(--fg) !important;
+  text-shadow: 0 1px 0 rgba(0,0,0,.45);
+  font-weight: 800;
+}
+
+/* Tabular numerals for clock; prevents width jump while ticking */
+#nowClock { 
+  font-variant-numeric: tabular-nums; 
+  font-feature-settings: "tnum" 1;
+}
+
+/* AM/PM capsule (if you render one) */
+#nowClock .ampm {
+  display:inline-block;
+  padding: .2rem .5rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  font: 900 11px/1 Inter, system-ui;
+  letter-spacing: .25px;
+}
+
+/* Ensure legacy "chip", "label", or input styles cannot override these */
+.pill #nowDate, .pill #nowClock, .pill #nowTZ,
+.card #nowDate, .card #nowClock, .card #nowTZ {
+  all: revert-layer;      /* drop lower-layer rules */
+  /* …and then re-apply our unified pill */
+  display: inline-flex !important;
+  align-items: center;
+  gap: .5ch;
+  padding: .55rem .9rem !important;
+  min-height: 40px;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
+    radial-gradient(80% 60% at 50% 20%, color-mix(in srgb, var(--moon-accent) 15%, transparent), transparent 60%) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+  color: var(--fg) !important;
+  text-shadow: 0 1px 0 rgba(0,0,0,.45);
+  font-weight: 800;
+}
+
+/* Responsive long/short date WITHOUT JS:
+   put a short date into data-short on #nowDate (we already compute fmtShort in JS).
+   If you don’t set data-short, this rule is ignored. */
+#nowDate[data-short]::after {
+  content: attr(data-short);
+  display: none;
+  font-weight: 800;
+}
+/* Show long by default, short on tighter widths */
+#nowDate { content: normal; } /* explicit reset */
+@container moonbadge (max-width: 380px) {
+  #nowDate { visibility: hidden; position: relative; }
+  #nowDate::after {
+    display: inline;
+    visibility: visible;
+    position: absolute; inset: 0;
+    padding: inherit; border-radius: inherit;
+  }
+}
+/* If you don’t use the moonbadge container, fallback to viewport width */
+@media (max-width: 420px) {
+  #nowDate { visibility: hidden; position: relative; }
+  #nowDate::after {
+    display: inline;
+    visibility: visible;
+    position: absolute; inset: 0;
+    padding: inherit; border-radius: inherit;
+  }
+}
+
+/* “You are in …” bubble: match the same pill grammar to avoid mismatch next to Today */
+#moonLine {
+  display: block;
+  padding: .8rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
+    radial-gradient(100% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
+  font-weight: 800;
+  letter-spacing: .2px;
+  text-shadow: 0 1px 0 rgba(0,0,0,.45);
+}
+
+/* Buttons adjacent to Today (Today/Next/Copy Link) line up consistently */
+.lab-row .lab-btn { min-width: 96px }
