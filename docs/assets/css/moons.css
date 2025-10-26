@@ -1,11 +1,13 @@
 /* =========================================================
   13 Moons · Living Clock — Page Styles
-  Ancient Wizard of YHWH · “Remnant” Skin (v4.1)
+  Ancient Wizard of YHWH · “Remnant” Skin (v4.1 → v5.0 Extended)
   - Cascade layers (tokens/base/components/utilities) for safe overrides
   - AA/AAA contrast, safe-area padding, FB in-app hardening
   - Moon badge guarantees "(n)" after name; container queries
   - Aureate/teal aurora (phase-reactive) + alive tempo governors
   - Astrology toolkit: zodiac, planets, aspects, houses, ephemeris
+  - NEW: Monthly calendar (13×28) with events & DOOT/leap handling
+  - NEW: Side-by-side comparison vs Gregorian month + legend
   - Remnant glyph/rune flourishes; robust :focus-visible rings
 ========================================================= */
 
@@ -50,6 +52,19 @@
 
     /* Hash-target glow */
     --target-glow: color-mix(in srgb, var(--moon-accent) 12%, transparent);
+
+    /* === Calendar tokens === */
+    --wk-hdr:#dbe6ff;               /* weekday header text */
+    --day-bg:#0f1116;               /* day cell base */
+    --day-alt:#0c1016;              /* striped rows or other-month bg */
+    --day-edge:#20283a;             /* cell border */
+    --day-today:#142032;            /* “today” halo */
+    --event-dot:#a7f6ff;            /* generic event dot */
+    --event-dot-2:#f3c97a;          /* second dot color */
+    --doot-bg:#1b0e09;              /* Day Out Of Time cell bg tint */
+    --doot-ink:#ffc99a;             /* DOOT label */
+    --leap-ink:#a7ffcf;             /* Leap day label */
+    --greg-ink:#b7c2da;             /* gregorian date number */
   }
 
   /* Light theme (manual) */
@@ -60,6 +75,10 @@
     --accent:#0e84ff; --accent-2:#7dc3ff;
     --moon-accent:#0e84ff; --moon-accent-2:#ffb84d;
     --asp-conj:#000; --target-glow: color-mix(in srgb, var(--moon-accent) 10%, transparent);
+
+    /* Light calendar tweaks */
+    --day-bg:#ffffff; --day-alt:#f5f9ff; --day-edge:#d7dfec;
+    --day-today:#eaf3ff; --doot-bg:#fff5ec; --doot-ink:#ad6a00; --greg-ink:#5b6a85;
   }
 
   /* Alive mode tempo governors */
@@ -338,6 +357,150 @@
     transition:stroke-dasharray .45s cubic-bezier(.22,.61,.36,1); animation:mbPulse calc(7.2s*var(--tempo)) ease-in-out infinite;
   }
   @keyframes mbPulse{0%,100%{opacity:.92}50%{opacity:1}}
+
+  /* === Monthly Calendar (13×28) — Remnant grid === */
+  .calendar{
+    border:1px solid var(--line); border-radius:var(--radius-lg);
+    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), radial-gradient(80% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
+    box-shadow:var(--shadow); overflow:hidden;
+  }
+  .calendar__head{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
+  }
+  .calendar__title{
+    display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
+    font-family:"Crimson Pro",serif; font-weight:800; letter-spacing:.25px;
+  }
+  .calendar__title .moon-name{ font-size:clamp(20px, 2vw, 28px) }
+  .calendar__title .ess{ color:var(--muted); font-weight:700; font-size:clamp(12px,1vw,14px) }
+  .calendar__tools{ display:flex; gap:6px; flex-wrap:wrap }
+  .calendar__tools .btn{ composes: lab-btn } /* if you use a preprocessor; otherwise duplicate .lab-btn */
+  .calendar__meta{ color:var(--muted); font-weight:700 }
+
+  .calendar__wkdays{
+    display:grid; grid-template-columns:repeat(7,1fr);
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  }
+  .calendar__wkdays .w{
+    padding:.5rem .4rem; text-align:center; font:800 12px/1 Inter; letter-spacing:.3px; color:var(--wk-hdr);
+  }
+
+  /* 4 weeks × 7 days (13-moon month is 28 days always) */
+  .calendar__grid{
+    display:grid; grid-template-columns:repeat(7,1fr); grid-auto-rows:minmax(86px, 1fr);
+  }
+  .day{
+    position:relative; border-right:1px solid var(--day-edge); border-bottom:1px solid var(--day-edge); background:var(--day-bg);
+    padding:.45rem .45rem 1.6rem; overflow:hidden;
+    transition:background .15s ease, outline-color .15s ease;
+  }
+  .day:nth-child(7n){ border-right:0 } /* last col border collapse */
+  .day__num{
+    font:900 13px/1 Inter; letter-spacing:.2px; color:#e9f1ff; opacity:.96;
+    display:flex; align-items:center; gap:6px;
+  }
+  .day__num .greg{ color:var(--greg-ink); font-weight:800; font-size:11px; opacity:.9 }
+  .day__tag{
+    position:absolute; right:6px; bottom:6px; display:flex; gap:6px;
+  }
+  .dot-evt,.dot-evt2{
+    width:8px; height:8px; border-radius:50%;
+    box-shadow:0 0 0 1px rgba(255,255,255,.12) inset, 0 0 8px rgba(0,0,0,.25);
+  }
+  .dot-evt{ background:var(--event-dot) }
+  .dot-evt2{ background:var(--event-dot-2) }
+
+  /* States */
+  .day.is-weekend { background:linear-gradient(180deg, rgba(255,255,255,.02), transparent), var(--day-bg) }
+  .day.is-today   { outline:2px solid color-mix(in srgb, var(--moon-accent) 35%, transparent); outline-offset:-2px; background:linear-gradient(180deg, color-mix(in srgb, var(--moon-accent) 8%, transparent), transparent), var(--day-today) }
+  .day.is-other-month{ background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.02)), var(--day-alt); opacity:.8 }
+
+  /* Day Out Of Time (DOOT) and Leap Day */
+  .day.is-doot{ background:linear-gradient(180deg, rgba(243,201,122,.08), rgba(243,201,122,.02)), var(--doot-bg) }
+  .day.is-doot .label{ color:var(--doot-ink); font-weight:900; font-size:11px; letter-spacing:.25px; text-transform:uppercase }
+  .day.is-leap .label{ color:var(--leap-ink);  font-weight:900; font-size:11px; letter-spacing:.25px; text-transform:uppercase }
+
+  /* Events list (optional) */
+  .day__events{ margin:.35rem 0 0; display:grid; gap:4px }
+  .evt{
+    display:flex; align-items:center; gap:6px; font-weight:700; color:var(--muted);
+    padding:.15rem .35rem; border:1px dashed var(--line); border-radius:8px; background:linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+  }
+  .evt .at{ font:900 10px/1 Inter; opacity:.9 }
+  .evt .ttl{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+
+  /* Compact month (mobile) */
+  .calendar.is-compact .calendar__grid{ grid-auto-rows:minmax(66px, 1fr) }
+  .calendar.is-compact .evt{ display:none } /* hide overflow text by default */
+  @media (max-width:560px){
+    .calendar .calendar__wkdays .w{ font-size:11px; padding:.45rem .3rem }
+    .calendar .day{ padding:.35rem .35rem 1.2rem }
+  }
+
+  /* === Calendar Comparison (Remnant ↔ Gregorian) === */
+  .compare{
+    display:grid; grid-template-columns:1fr 1fr; gap:12px;
+  }
+  @media (max-width:1020px){ .compare{ grid-template-columns:1fr } }
+
+  .panel{
+    border:1px solid var(--line); border-radius:var(--radius-lg); overflow:hidden;
+    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+    box-shadow:var(--shadow);
+  }
+  .panel__head{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line);
+    background:radial-gradient(80% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
+  }
+  .panel__title{ font-family:"Crimson Pro",serif; font-weight:900; letter-spacing:.25px }
+  .panel__meta{ color:var(--muted); font-weight:700 }
+
+  /* Gregorian month grid (standard 6 rows × 7 cols) */
+  .gregorian{
+    --row-h: minmax(86px, 1fr);
+  }
+  .gregorian__wkdays{
+    display:grid; grid-template-columns:repeat(7,1fr); border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.025));
+  }
+  .gregorian__wkdays .w{ padding:.5rem .4rem; text-align:center; font:800 12px/1 Inter; letter-spacing:.3px; color:var(--wk-hdr) }
+  .gregorian__grid{ display:grid; grid-template-columns:repeat(7,1fr); grid-template-rows:repeat(6, var(--row-h)) }
+  .gday{
+    position:relative; border-right:1px solid var(--day-edge); border-bottom:1px solid var(--day-edge); background:var(--day-bg);
+    padding:.45rem .45rem 1.6rem; overflow:hidden;
+  }
+  .gday:nth-child(7n){ border-right:0 }
+  .gday__num{
+    font:900 13px/1 Inter; letter-spacing:.2px; color:#e9f1ff; opacity:.96;
+  }
+  .gday.is-other-month{ background:var(--day-alt); opacity:.8 }
+  .gday.is-today{ outline:2px solid color-mix(in srgb, var(--moon-accent) 35%, transparent); outline-offset:-2px; background:linear-gradient(180deg, color-mix(in srgb, var(--moon-accent) 8%, transparent), transparent), var(--day-today) }
+
+  /* Comparison legend */
+  .legend{
+    display:flex; flex-wrap:wrap; gap:8px; padding:10px 12px; border-top:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+  }
+  .legend .key{
+    display:inline-flex; align-items:center; gap:8px; padding:.25rem .55rem; border:1px solid var(--line); border-radius:999px;
+    background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); font-weight:800; letter-spacing:.2px;
+  }
+  .legend .k-dot{ width:10px; height:10px; border-radius:50% }
+  .legend .k-doot{ background:var(--doot-ink) }
+  .legend .k-leap{ background:var(--leap-ink) }
+  .legend .k-evt1{ background:var(--event-dot) }
+  .legend .k-evt2{ background:var(--event-dot-2) }
+  .legend .k-today{ background:var(--moon-accent) }
+
+  /* Tooltips (lightweight) */
+  .tip{ position:relative }
+  .tip:hover::after{
+    content:attr(data-tip); position:absolute; left:50%; bottom:calc(100% + 8px); transform:translateX(-50%);
+    background:#0e131c; color:#e6f9ff; border:1px solid var(--line); border-radius:8px; padding:.25rem .45rem; white-space:nowrap;
+    box-shadow:0 10px 28px rgba(0,0,0,.35); font-weight:700; font-size:12px; z-index:20;
+  }
 }
 
 /* ---------- Astrology Toolkit ---------- */
@@ -429,6 +592,8 @@
     body{ background:#fff; color:#000; -webkit-print-color-adjust:exact; print-color-adjust:exact }
     .wrap{ padding:0 } #skyBg,.toast,nav.crumbs{ display:none !important }
     .card{ box-shadow:none; border-color:#000 }
+    .calendar, .panel{ break-inside:avoid }
+    .day, .gday{ background:#fff !important; -webkit-print-color-adjust:exact; print-color-adjust:exact }
   }
   @media (prefers-reduced-motion:reduce){ *{ animation:none !important; transition:none !important } #skyBg{ display:none !important } }
   @media (prefers-reduced-data:reduce){ #skyBg, .card::after{ display:none !important } }
@@ -446,7 +611,7 @@
 
   /* Forced colors */
   @media (forced-colors: active){
-    .card, .lab-btn, .tag, .moonbar-share, .moonbar-tz, .house, .ephem{ border:1px solid CanvasText }
+    .card, .lab-btn, .tag, .moonbar-share, .moonbar-tz, .house, .ephem, .calendar, .panel{ border:1px solid CanvasText }
     .lab-btn, .moonbar-share, .moonbar-tz{ background:Canvas; color:CanvasText; text-shadow:none }
     .ring-bg{ stroke:GrayText } .ring-fg{ filter:none }
   }
@@ -463,7 +628,9 @@
 @layer remnant {
   body.remnant-yhwh .card,
   body.remnant-yhwh .scroll,
-  body.remnant-yhwh .codex-content{
+  body.remnant-yhwh .codex-content,
+  body.remnant-yhwh .calendar,
+  body.remnant-yhwh .panel{
     background:
       linear-gradient(180deg, rgba(243,201,122,.03), rgba(255,255,255,.008)),
       radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
@@ -484,13 +651,9 @@
     text-shadow:0 0 10px rgba(243,201,122,.15);
   }
   body.remnant-yhwh .card.runes::before{ inset:8px auto auto 8px; transform:rotate(180deg) }
-                     }
+}
 
-
-
-
-
-
+/* ---------- (Existing supplemental polish you pasted) ---------- */
 
 /* Astrology panel polish */
 #planetChips .planet-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);
@@ -509,9 +672,6 @@
 .ephem{width:100%;border-collapse:separate;border-spacing:0 6px}
 .ephem th,.ephem td{padding:8px 10px;border:1px solid var(--line)}
 .ephem .deg{font-variant-numeric:tabular-nums}
-
-
-
 
 /* Astrology Now — Remnant Wizard */
 .astro-head{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;margin-bottom:8px}
