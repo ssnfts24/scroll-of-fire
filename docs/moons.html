@@ -528,6 +528,76 @@
       </article>
     </section>
 
+    <section class="calendar" aria-label="Remnant Month">
+  <header class="calendar__head">
+    <div class="calendar__title">
+      <span class="moon-name">#7 Resonant</span>
+      <span class="ess">Channel Inspiration</span>
+    </div>
+    <div class="calendar__tools">
+      <button class="lab-btn" id="prevMoon">← Prev</button>
+      <button class="lab-btn" id="nextMoon">Next →</button>
+    </div>
+    <div class="calendar__meta">Year 2025 · TZ UTC</div>
+  </header>
+
+  <div class="calendar__wkdays">
+    <div class="w">D1</div><div class="w">D2</div><div class="w">D3</div><div class="w">D4</div>
+    <div class="w">D5</div><div class="w">D6</div><div class="w">D7</div>
+  </div>
+
+  <div class="calendar__grid">
+    <!-- repeat 28 .day cells; mark states as needed -->
+    <div class="day is-weekend">
+      <div class="day__num">1 <span class="greg">Jan 12</span></div>
+      <div class="day__events">
+        <div class="evt"><span class="at">08:00</span><span class="ttl">Breath Practice</span></div>
+      </div>
+      <div class="day__tag"><i class="dot-evt"></i></div>
+    </div>
+    <!-- ... -->
+    <div class="day is-doot">
+      <div class="day__num">— <span class="label">Day Out of Time</span></div>
+    </div>
+  </div>
+    </section>
+
+    <section class="compare" aria-label="Remnant vs Gregorian">
+  <article class="panel">
+    <header class="panel__head">
+      <h3 class="panel__title">Remnant Month</h3>
+      <div class="panel__meta">13 × 28 fixed</div>
+    </header>
+    <!-- insert the .calendar block here -->
+  </article>
+
+  <article class="panel">
+    <header class="panel__head">
+      <h3 class="panel__title">Gregorian Month</h3>
+      <div class="panel__meta">Variable weeks</div>
+    </header>
+
+    <div class="gregorian__wkdays">
+      <div class="w">Sun</div><div class="w">Mon</div><div class="w">Tue</div>
+      <div class="w">Wed</div><div class="w">Thu</div><div class="w">Fri</div><div class="w">Sat</div>
+    </div>
+
+    <div class="gregorian__grid">
+      <!-- 6×7 .gday cells; mark .is-other-month and .is-today as appropriate -->
+      <div class="gday is-other-month"><div class="gday__num">27</div></div>
+      <!-- ... -->
+    </div>
+
+    <footer class="legend">
+      <span class="key"><i class="k-dot k-evt1"></i> Event</span>
+      <span class="key"><i class="k-dot k-evt2"></i> Ceremony</span>
+      <span class="key"><i class="k-dot k-doot"></i> DOOT</span>
+      <span class="key"><i class="k-dot k-leap"></i> Leap Day</span>
+      <span class="key"><i class="k-dot k-today"></i> Today</span>
+    </footer>
+  </article>
+    </section>
+
     <!-- ===== Inline Astro engine + renderer (self-contained) ===== -->
     <script>
     (function(){
