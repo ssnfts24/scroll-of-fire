@@ -7,6 +7,14 @@
     if (location.hostname === "github.com") {
       const b = document.querySelector("base"); if (b) b.remove();
     }
+
+    -webkit-text-fill-color: transparent;
+
+    .delta-labels, .delta-labels *{
+  -webkit-text-fill-color: initial;
+    }
+
+    
   </script>
 
   <meta charset="utf-8">
@@ -204,6 +212,32 @@
     }
     .stage::after { content:""; position:absolute; inset:0;
       background:radial-gradient(ellipse at 50% 60%, rgba(122,243,255,.08), transparent 70%); pointer-events:none; }
+
+
+    /* Δ0–Δ7 pill visibility hot-fix */
+.delta-labels .pill{
+  display:inline-flex; align-items:center; justify-content:center;
+  color: var(--text, #cfe7ff);              /* force visible text */
+  -webkit-text-fill-color: currentColor;    /* fix Safari/WebKit transparency */
+  font-weight: 600;
+  line-height: 1.15; letter-spacing: .01em;
+  padding: .28rem .6rem;                    /* a hair larger for legibility */
+  background: rgba(255,255,255,.06);        /* a touch more contrast */
+  border-color: color-mix(in srgb, var(--accent) 24%, #8aa4c2 30%);
+}
+
+/* When the page is in super-dark mode, add more contrast */
+@media (prefers-color-scheme: dark) {
+  .delta-labels .pill{
+    background: rgba(255,255,255,.08);
+    color: #e7f2ff;
+  }
+}
+
+/* Extra help on narrow phones: slightly larger text */
+@media (max-width: 420px){
+  .delta-labels .pill{ font-size: .86rem; }
+}
   </style>
 
   <!-- MathJax (lazy, with correct delimiters) -->
