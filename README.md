@@ -466,11 +466,17 @@ Save individual remnants → compute group mean only if nobody hit Eq. 9.
 Platform	Link
 
 💾 GitHub	https://github.com/ssnfts24/scroll-of-fire
+
 🌐 Website	https://ssnfts24.github.io/scroll-of-fire/
+
 ✍️ Medium	https://medium.com/@l.aaronpaul24/scroll-of-fire-62da3c217352
+
 🔥 Patreon	https://www.patreon.com/cw/ScrollofFireCodexofReality/join
+
 🕊 X (Twitter)	https://x.com/SS_NFTs?s=09
+
 📘 Facebook	https://www.facebook.com/share/1A1EsYak7Z/
+
 🌿 Linktree	https://linktr.ee/AaronPaulLairdScrollOfFire
 
 
