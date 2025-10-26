@@ -544,6 +544,12 @@
       const wall=dateInTZ(base, tz, hour);
 
       if (nowDate) nowDate.textContent = fmtDate(wall, tz);
+      if (nowDate) {
+  const long = fmtDate(wall, tz);
+  const short = fmtShort(wall, tz) || long;
+  nowDate.textContent = long;
+  nowDate.setAttribute("data-short", short); // <-- enables CSS long/short swap
+      }
       if (nowClock) nowClock.textContent = fmtTime(base, tz);
       if (nowTZ)    nowTZ.textContent   = tz;
 
