@@ -350,16 +350,338 @@
     </section>
 
     <!-- Voice Reader (collapsible) -->
-    <details class="collapsible card col-12 reveal" id="voice-reader" open>
-      <summary class="collapsible__bar" aria-controls="vr-panel" aria-expanded="true">
-        <span>🔊 Listen — Voice Reader</span>
-        <span class="collapsible__mini" aria-hidden="true">
-          <button id="vr-play-mini" class="chip" type="button" title="Play">▶︎</button>
-          <button id="vr-stop-mini" class="chip" type="button" title="Stop">⏹</button>
-        </span>
-      </summary>
-      <div id="vr-panel" class="collapsible__panel"> <!-- (unchanged controls UI) --> </div>
-    </details>
+<!-- Voice Reader (collapsible) — FULL DROP-IN -->
+<details class="collapsible card col-12 reveal" id="voice-reader" open>
+  <summary class="collapsible__bar" aria-controls="vr-panel" aria-expanded="true">
+    <span>🔊 Listen — Voice Reader</span>
+    <span class="collapsible__mini" aria-hidden="true">
+      <button id="vr-play-mini" class="chip" type="button" title="Play">▶︎</button>
+      <button id="vr-stop-mini" class="chip" type="button" title="Stop">⏹</button>
+    </span>
+  </summary>
+
+  <div id="vr-panel" class="collapsible__panel">
+    <div class="grid" style="gap:1rem">
+      <div class="col-6">
+        <label for="vr-voice">Voice</label>
+        <select id="vr-voice" aria-label="Voice selector"></select>
+      </div>
+      <div class="col-3">
+        <label for="vr-rate">Speed (<span id="vr-rate-val">1.00</span>x)</label>
+        <input id="vr-rate" type="range" min="0.7" max="1.6" step="0.05" value="1.0" />
+      </div>
+      <div class="col-3">
+        <label for="vr-pitch">Pitch (<span id="vr-pitch-val">1.00</span>)</label>
+        <input id="vr-pitch" type="range" min="0.8" max="1.4" step="0.05" value="1.0" />
+      </div>
+
+      <div class="col-6">
+        <label for="vr-start">Start at</label>
+        <select id="vr-start">
+          <option value="#p1">Part I — Architecture</option>
+          <option value="#p2">Part II — Canon 0–17</option>
+          <option value="#ops">Operating Section</option>
+          <option value="#moons">13 Moons</option>
+          <option value="#operators-appendix">Operators</option>
+          <option value="#ethics">Ethics</option>
+          <option value="#notes">Notes</option>
+        </select>
+      </div>
+      <div class="col-6">
+        <label for="vr-read-selection">Or read selection</label>
+        <button id="vr-read-selection" class="cta" type="button" title="Read selected text">Read What’s Selected</button>
+      </div>
+
+      <div class="col-12">
+        <label class="checkbox">
+          <input type="checkbox" id="vr-speak-math" checked />
+          <span>Speak equations (verbalized). Uncheck to skip.</span>
+        </label>
+        <label class="checkbox" style="margin-left:1rem">
+          <input type="checkbox" id="vr-polish" checked />
+          <span>Polish phrasing (cleaner English)</span>
+        </label>
+      </div>
+
+      <div class="col-12" role="toolbar" aria-label="Voice reader controls" style="display:flex; gap:.5rem; flex-wrap:wrap">
+        <button id="vr-play" class="cta">▶︎ Play</button>
+        <button id="vr-pause" class="cta" disabled>⏸ Pause</button>
+        <button id="vr-resume" class="cta" disabled>⏵ Resume</button>
+        <button id="vr-stop" class="cta" disabled>⏹ Stop</button>
+        <button id="vr-export-ssml" class="cta cta--section">⬇︎ Export SSML</button>
+      </div>
+
+      <div class="col-12">
+        <div id="vr-status" aria-live="polite"></div>
+        <div id="vr-progress" class="vr-progress" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+</details>
+
+<script>
+/* Voice Reader — resilient Web Speech API with MathJax support */
+(function(){
+  const $ = id => document.getElementById(id);
+  const btnPlay=$('vr-play'), btnPause=$('vr-pause'), btnResume=$('vr-resume'), btnStop=$('vr-stop');
+  const btnPlayMini=$('vr-play-mini'), btnStopMini=$('vr-stop-mini');
+  const btnSel=$('vr-read-selection'), voiceSel=$('vr-voice');
+  const rateInp=$('vr-rate'), pitchInp=$('vr-pitch'), startSel=$('vr-start');
+  const rateVal=$('vr-rate-val'), pitchVal=$('vr-pitch-val');
+  const speakMath=$('vr-speak-math'), polish=$('vr-polish');
+  const statusEl=$('vr-status'), progressEl=$('vr-progress');
+  const exportBtn=$('vr-export-ssml');
+
+  const hasSpeech = typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+
+  function setButtons({play,pause,resume,stop}) {
+    if (btnPlay) btnPlay.disabled = !play;
+    if (btnPause) btnPause.disabled = !pause;
+    if (btnResume) btnResume.disabled = !resume;
+    if (btnStop) btnStop.disabled = !stop;
+  }
+  function status(t){ if(statusEl) statusEl.textContent = t; }
+  function prog(cur,total){
+    if(!progressEl) return;
+    if(total<=0){ progressEl.textContent=''; progressEl.setAttribute('aria-hidden','true'); return; }
+    const pct = Math.round((cur/total)*100);
+    progressEl.textContent = `Reading ${cur} / ${total} (${pct}%)`;
+    progressEl.setAttribute('aria-hidden','false');
+  }
+
+  // If Speech API missing, disable UI cleanly
+  if (!hasSpeech) {
+    status('Voice playback is not supported in this browser.');
+    setButtons({play:false,pause:false,resume:false,stop:false});
+    return;
+  }
+
+  /* ---------------- Voices (robust loader for iOS/Safari/Chrome) ---------------- */
+  let voices = [];
+  function populateVoices(){
+    const list = window.speechSynthesis.getVoices().sort((a,b)=> a.name.localeCompare(b.name));
+    if (!list.length) return;
+    voices = list;
+    if (!voiceSel) return;
+    const cur = voiceSel.value;
+    voiceSel.innerHTML = voices.map(v=>`<option value="${v.name}">${v.name}${v.lang?(' ('+v.lang+')'):''}</option>`).join('');
+    if (cur && voices.some(v=>v.name===cur)) voiceSel.value = cur;
+    else {
+      const en = voices.filter(v=>/^en\b/i.test(v.lang||''));
+      const pick = en.find(v=>/female|Salli|Joanna|Emma|Olivia|Google UK English Female/i.test(v.name)) || en[0] || voices[0];
+      if (pick) voiceSel.value = pick.name;
+    }
+  }
+  // Multiple attempts because some browsers populate asynchronously
+  populateVoices();
+  window.speechSynthesis.onvoiceschanged = populateVoices;
+  (function retryVoices(attempt=0){
+    if (voices.length || attempt>10) return;
+    setTimeout(()=>{ populateVoices(); retryVoices(attempt+1); }, 250);
+  })();
+
+  /* ---------------- Helpers ---------------- */
+  const PRON = [
+    [/\bΞ\b/g, 'Ksi'],
+    [/𝓘/g, 'I (Intention)'], [/𝓛/g, 'L (Language)'], [/𝓒/g, 'C (Coherence)'], [/𝓢/g, 'S (Source)'],
+    [/→/g, ' to '], [/↦/g,' maps to '], [/≥/g,' greater than or equal to '], [/≤/g,' less than or equal to '],
+    [/⊕/g, ' coherent merge '], [/·/g,' '], [/\bPL\b/g, 'phase lock'],
+    [/Eq\.(\d+)/g, 'Equation $1'],
+    [/ν/g, 'nu'], [/τ/g, 'tau'], [/φ/g, 'phi'], [/η/g,'eta'], [/σ/g,'sigma'], [/Λ/g,'Lambda'],
+  ];
+
+  function polishText(s){
+    return s.replace(/[ \t]+/g,' ')
+            .replace(/\s+([,.;:!?])/g,'$1')
+            .replace(/\(\s+/g,'(').replace(/\s+\)/g,')')
+            .replace(/\s—\s/g,' — ')
+            .replace(/^\s+|\s+$/g,'');
+  }
+
+  function verbalizeMath(str){
+    // strip TeX wrappers
+    str = str.replace(/\$\$([^$]+)\$\$/g, ' equation: $1 ')
+             .replace(/\\\(([^)]+)\\\)/g, ' $1 ');
+    // gentle TeX normalization
+    str = str.replace(/\\int/g,' integral ')
+             .replace(/\\sum/g,' sum ')
+             .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g,' $1 over $2 ');
+    return str;
+  }
+
+  function cleanNodeToText(root){
+    const clone = root.cloneNode(true);
+
+    // Remove UI bits
+    clone.querySelectorAll('button, .eq-tools, .chip, .palette, .eq-toggle, .menu-toggle').forEach(n=>n.remove());
+
+    // Math: keep or drop
+    if (speakMath && !speakMath.checked){
+      clone.querySelectorAll('.eq, mjx-container').forEach(n=>n.remove());
+    } else {
+      // MathJax v3 exposes aria-label on mjx-container (svg output)
+      clone.querySelectorAll('mjx-container').forEach(m=>{
+        const alt = m.getAttribute('aria-label') || '';
+        m.replaceWith(document.createTextNode(' equation ' + (alt || '') + ' '));
+      });
+      // If raw TeX still present in .eq wrappers
+      clone.querySelectorAll('.eq').forEach(eq=>{
+        const t = eq.innerText || '';
+        eq.replaceWith(document.createTextNode(' ' + verbalizeMath(t) + ' '));
+      });
+    }
+
+    let text = clone.innerText || clone.textContent || '';
+    for (const [re, rep] of PRON) text = text.replace(re, rep);
+    if (polish && polish.checked) text = polishText(text);
+
+    // Clean leftover controls text
+    return text.replace(/\b(Copy TeX|Link Copied?|Link)\b/g,'')
+               .replace(/\s+\n/g,'\n').replace(/\n{3,}/g,'\n\n').trim();
+  }
+
+  function getSectionOrSelection(){
+    const sel = window.getSelection?.();
+    if (sel && sel.rangeCount && String(sel).trim().length>0){
+      return { text: String(sel).trim(), node: document.activeElement || document.body };
+    }
+    const id = (startSel?.value || '#p1');
+    const sec = document.querySelector(id) || document.body;
+    return { text: cleanNodeToText(sec), node: sec };
+  }
+
+  // Sentence-aware chunking with abbrev guard
+  const ABBR = /\b(?:e\.g|i\.e|vs|Dr|Mr|Mrs|Ms|Prof|Eq|Eqn|Fig)\.$/i;
+  function chunkify(str, max=900){
+    const raw = str.replace(/\r/g,'').split(/\n{2,}/); // paragraphs
+    const out=[];
+    for(const p of raw){
+      const parts = p.split(/(?<=[.!?])\s+(?=[A-Z(“"'\[])/);
+      let buf='';
+      for(const part of parts){
+        const piece = part.trim();
+        if(!piece) continue;
+        if(ABBR.test(piece)) { buf += (buf?' ':'') + piece; continue; }
+        if ((buf + ' ' + piece).length > max){
+          if (buf) out.push(buf.trim());
+          buf = piece;
+        } else {
+          buf += (buf?' ':'') + piece;
+        }
+      }
+      if (buf) out.push(buf.trim());
+    }
+    return out.length ? out : [str.slice(0,max)];
+  }
+
+  // Highlight helper
+  let lastHL=null;
+  function highlightWithin(node, text){
+    if(!node) return;
+    try{
+      if (lastHL){ lastHL.classList.remove('vr-highlight'); lastHL=null; }
+      const key = text.slice(0, 60);
+      const p = [...node.querySelectorAll('p, li, h2, h3, article')].find(el=> (el.innerText||'').indexOf(key) >= 0 );
+      if (p){ p.classList.add('vr-highlight'); p.scrollIntoView({block:'nearest', behavior:'smooth'}); lastHL=p; }
+    }catch{}
+  }
+
+  /* ---------------- Playback engine ---------------- */
+  let queue=[], speaking=false, canceled=false, curIndex=0, paused=false;
+
+  rateInp?.addEventListener('input', ()=> rateVal.textContent=(+rateInp.value).toFixed(2));
+  pitchInp?.addEventListener('input',()=> pitchVal.textContent=(+pitchInp.value).toFixed(2));
+
+  function speakFromText(text, highlightRoot){
+    // iOS/Safari quirk: cancelling before starting improves reliability
+    window.speechSynthesis.cancel();
+
+    canceled=false; speaking=true; paused=false; curIndex=0;
+    queue = chunkify(text);
+
+    const vName = voiceSel?.value;
+    const vObj = voices.find(v=>v.name===vName);
+
+    setButtons({play:false, pause:true, resume:true, stop:false});
+    status('Playing…'); prog(0, queue.length);
+
+    function next(){
+      if (canceled) return;
+      const seg = queue[curIndex++];
+      if (!seg){ done(); return; }
+
+      highlightWithin(highlightRoot, seg);
+
+      const u = new SpeechSynthesisUtterance(seg);
+      if (vObj) u.voice = vObj;
+      u.rate = rateInp ? +rateInp.value : 1.0;
+      u.pitch = pitchInp ? +pitchInp.value : 1.0;
+
+      u.onend = ()=>{ if (!paused){ prog(curIndex, queue.length); next(); } };
+      u.onerror = (e)=>{ console.warn('TTS error', e); next(); };
+
+      // Start speaking
+      try { window.speechSynthesis.speak(u); } catch(_){}
+    }
+    next();
+  }
+
+  function speak(){
+    const { text, node } = getSectionOrSelection();
+    if (!text){ status('Nothing to read.'); return; }
+    speakFromText(text, node);
+  }
+  function pause(){ if(!speaking) return; paused=true; window.speechSynthesis.pause(); setButtons({play:false,pause:true,resume:false,stop:false}); status('Paused.'); }
+  function resume(){ if(!speaking) return; paused=false; window.speechSynthesis.resume(); setButtons({play:false,pause:false,resume:true,stop:false}); status('Playing…'); }
+  function stop(){ canceled=true; window.speechSynthesis.cancel(); done(true); }
+  function done(stopped=false){
+    speaking=false; setButtons({play:true,pause:true,resume:true,stop:true}); status(stopped?'Stopped.':'Done.'); prog(0,0);
+    if (lastHL){ lastHL.classList.remove('vr-highlight'); lastHL=null; }
+  }
+
+  // Wire controls
+  btnPlay?.addEventListener('click', speak);
+  btnPlayMini?.addEventListener('click', speak);
+  btnSel?.addEventListener('click', speak);
+
+  btnPause?.addEventListener('click', pause);
+  btnResume?.addEventListener('click', resume);
+  btnStop?.addEventListener('click', stop);
+  btnStopMini?.addEventListener('click', stop);
+
+  // Collapsible summary a11y sync
+  (function(){
+    const det = document.getElementById('voice-reader');
+    const bar = det?.querySelector('.collapsible__bar');
+    bar?.addEventListener('click', (e)=>{
+      if (e.target.closest('.chip')) return;
+      const open = det.hasAttribute('open'); bar.setAttribute('aria-expanded', String(!open));
+    });
+  })();
+
+  // SSML Export
+  exportBtn?.addEventListener('click', ()=>{
+    const { text } = getSectionOrSelection();
+    if (!text){ status('Nothing to export.'); return; }
+    const paras = text.split(/\n{2,}/).map(p=>p.trim()).filter(Boolean);
+    const esc = s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const ratePct = rateInp ? Math.round(+rateInp.value * 100) : 100;
+    const pitchSt = pitchInp ? Math.round((+pitchInp.value - 1) * 20) : 0;
+    const ssml =
+`<?xml version="1.0"?>
+<speak version="1.1" xml:lang="en-US">
+  <prosody rate="${ratePct}%" pitch="${pitchSt}st">
+${paras.map(p=>`    <p>${esc(p)}</p>`).join('\n')}
+  </prosody>
+</speak>`;
+    const blob = new Blob([ssml], {type:'application/ssml+xml'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href=url; a.download='theory.ssml'; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 1000);
+    status('Exported SSML.');
+  });
+})();
+</script>
 
     <!-- Tabs -->
     <nav class="tabs reveal" aria-label="Sections">
