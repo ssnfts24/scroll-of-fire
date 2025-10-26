@@ -1663,7 +1663,7 @@
   </section>
 
   <!-- ============ Tier III Scripts ============ -->
-  <script>
+<script>
   (function(){
     "use strict";
 
@@ -1699,68 +1699,123 @@
       try{ return localStorage.getItem(TZ_KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; }
       catch{ return "UTC"; }
     }
-    function dateInTZ(baseDate, tz, partsOverride){
-      try{
-        const opts={timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"};
-        const parts=new Intl.DateTimeFormat("en-CA",opts).formatToParts(baseDate);
-        const m=Object.fromEntries(parts.map(p=>[p.type,p.value]));
-        const H=partsOverride?.hour ?? m.hour;
-        const M=partsOverride?.minute ?? m.minute;
-        const S=partsOverride?.second ?? m.second;
-        return new Date(`${m.year}-${m.month}-${m.day}T${H}:${M}:${S}Z`);
-      }catch{
-        const d=new Date(baseDate);
-        if (partsOverride?.hour!=null) d.setUTCHours(partsOverride.hour, partsOverride.minute||0, partsOverride.second||0, 0);
-        return d;
+
+    /* ---------- Robust timezone helpers ---------- */
+
+    // 1) Get wall-date parts of a Date in a given IANA timezone
+    function partsInTZ(date, tz){
+      const fmt = new Intl.DateTimeFormat("en-CA",{timeZone:tz,year:"numeric",month:"2-digit",day:"2-digit"});
+      const obj = Object.fromEntries(fmt.formatToParts(date).map(p=>[p.type,p.value]));
+      return { year:+obj.year, month:+obj.month, day:+obj.day };
+    }
+
+    // 2) Convert a wall time (YYYY-MM-DD + HH:MM in tz) to the correct UTC instant
+    function wallInTZ(ymd, hm="00:00", tz="UTC"){
+      const [Y,M,D] = ymd.split("-").map(Number);
+      const [h,m]   = hm ? hm.split(":").map(Number) : [0,0];
+
+      // First guess: treat wall time as if it were UTC; then correct by real tz offset at that instant
+      const guessUTC = Date.UTC(Y, M-1, D, h, m, 0);
+
+      // Find timezone offset (“GMT±HH[:MM]”) at a timestamp
+      function offsetMinutesAt(ts){
+        const pickFmt = () => { try{ return new Intl.DateTimeFormat("en-US",{timeZone:tz,timeZoneName:"longOffset",hour12:false}); }
+                                catch{ return new Intl.DateTimeFormat("en-US",{timeZone:tz,timeZoneName:"shortOffset",hour12:false}); } };
+        const parts = pickFmt().formatToParts(ts);
+        const name  = parts.find(p=>p.type==="timeZoneName")?.value || "GMT+0";
+        const m = name.match(/GMT([+-])(\d{1,2})(?::?(\d{2}))?/i);
+        const sign = (m && m[1]==="-") ? -1 : 1;
+        const hh   = m ? +m[2] : 0;
+        const mm   = m && m[3] ? +m[3] : 0;
+        return sign * (hh*60 + mm);
       }
+
+      const off1  = offsetMinutesAt(guessUTC);
+      let fixed   = guessUTC - off1*60_000;
+      const off2  = offsetMinutesAt(fixed);
+      if (off2 !== off1) fixed = guessUTC - off2*60_000; // stabilize around DST boundaries
+
+      return new Date(fixed);
     }
+
+    // UTC midnight for a Date's wall day in tz
     const utcTrunc = d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+
     const isLeapYear   = y=> (y%4===0 && y%100!==0) || (y%400===0);
-    const isLeapDayUTC = d=> d.getUTCMonth()===1 && d.getUTCDate()===29;
-    function isDOOT(d, tz){ const dt=dateInTZ(d,tz); return (dt.getUTCMonth()===6 && dt.getUTCDate()===25); }
-    function startOfYear13(d, tz){
-      const dt = dateInTZ(d, tz);
-      const y  = dt.getUTCFullYear();
-      const anchorThis = new Date(Date.UTC(y,6,26));
-      const anchorPrev = new Date(Date.UTC(y-1,6,26));
-      return dt >= anchorThis ? anchorThis : anchorPrev;
+
+    // Is the given instant occurring on Feb 29 in the provided tz?
+    function isLeapDayWall(d, tz){
+      const p = partsInTZ(d, tz);
+      return (p.month===2 && p.day===29);
     }
+
+    // DOOT (July 25 in tz)
+    function isDOOT(d, tz){
+      const p = partsInTZ(d, tz);
+      return (p.month===7 && p.day===25);
+    }
+
+    // Start-of-year for the 13-Moon count in tz (wall midnight of July 26)
+    function startOfYear13(d, tz){
+      const {year:y} = partsInTZ(d, tz);
+      const anchorThis = wallInTZ(`${y}-07-26`, "00:00", tz);
+      const anchorPrev = wallInTZ(`${y-1}-07-26`, "00:00", tz);
+      // Compare using the same tz-aware wall-midnight instants
+      const dt = wallInTZ(`${partsInTZ(d,tz).year}-${pad(partsInTZ(d,tz).month)}-${pad(partsInTZ(d,tz).day)}`, "00:00", tz);
+      return (dt >= anchorThis) ? anchorThis : anchorPrev;
+    }
+
     function dayIndexSinceStart(d, tz, {skipLeap=true, skipDOOT=true}={}){
       const start = utcTrunc(startOfYear13(d, tz));
-      const dt    = utcTrunc(dateInTZ(d, tz));
+      const todayWallMid = wallInTZ(`${partsInTZ(d,tz).year}-${pad(partsInTZ(d,tz).month)}-${pad(partsInTZ(d,tz).day)}`, "00:00", tz);
+      const dt = utcTrunc(todayWallMid);
+
       let days = Math.floor((dt - start)/86400000);
+
       if (skipDOOT){
-        const doot = new Date(Date.UTC(start.getUTCFullYear()+1,6,25));
+        // DOOT of the cycle occurs the day before next year's Jul 26 in tz: i.e., Jul 25
+        const doot = wallInTZ(`${partsInTZ(start,tz).year+1}-07-25`, "00:00", tz);
         if (dt >= doot) days -= 1;
       }
+
       if (skipLeap){
-        for (let y=start.getUTCFullYear(); y<=dt.getUTCFullYear(); y++){
-          if(isLeapYear(y)){
-            const feb29 = new Date(Date.UTC(y,1,29));
+        // Subtract any Feb 29 (in tz) between start..dt inclusive
+        for (let y = partsInTZ(start,tz).year; y <= partsInTZ(dt,tz).year; y++){
+          if (isLeapYear(y)){
+            const feb29 = wallInTZ(`${y}-02-29`, "00:00", tz);
             if (dt >= feb29 && start <= feb29) days -= 1;
           }
         }
       }
-      return days;
+      return days; // 0..363
     }
+
     function calc13Moon(d, tz, opts){
-      if (isDOOT(d,tz)){ const s=startOfYear13(d,tz).getUTCFullYear(); return {special:"Day Out of Time", year:`${s}/${s+1}`}; }
-      if (isLeapDayUTC(dateInTZ(d,tz))){ const s=startOfYear13(d,tz).getUTCFullYear(); return {special:"Leap Day", year:`${s}/${s+1}`}; }
-      const idx = dayIndexSinceStart(d, tz, opts);
+      if (isDOOT(d, tz)){
+        const s = partsInTZ(startOfYear13(d,tz), tz).year;
+        return {special:"Day Out of Time", year:`${s}/${s+1}`};
+      }
+      if (isLeapDayWall(d, tz)){
+        const s = partsInTZ(startOfYear13(d,tz), tz).year;
+        return {special:"Leap Day", year:`${s}/${s+1}`};
+      }
+      const idx  = dayIndexSinceStart(d, tz, opts);
       const moon = Math.floor(idx/28)+1;
       const day  = (idx%28)+1;
-      const s=startOfYear13(d,tz).getUTCFullYear();
+      const s    = partsInTZ(startOfYear13(d,tz), tz).year;
       return {special:null, moon, day, idx, year:`${s}/${s+1}`};
     }
+
     const toneFromDay = (day) => ((Number(day||0)-1) % 13) + 1;
     const weekFromDay = (day) => Math.floor((day-1)/7)+1;
 
     const sumDigits = n => String(n).split("").reduce((a,b)=>a+(+b||0),0);
     function reduceNum(n){ while(n>9 && n!==11 && n!==22 && n!==33){ n=sumDigits(n); } return n; }
+
+    // Resonant sum computed from wall date (YYYY/MM/DD in tz)
     function resonantFromDate(d, tz){
-      const dt = dateInTZ(d, tz);
-      const y=dt.getUTCFullYear(), m=dt.getUTCMonth()+1, day=dt.getUTCDate();
-      const total = reduceNum(sumDigits(y)+sumDigits(m)+sumDigits(day));
+      const p = partsInTZ(d, tz);
+      const total = reduceNum(sumDigits(p.year)+sumDigits(p.month)+sumDigits(p.day));
       const isKey = [1,4,7,11,22,33].includes(total);
       return {value: total, key: isKey};
     }
@@ -1834,7 +1889,6 @@
     };
 
     function chooseCarrier(tone, resValue){
-      // heuristics: prefer 432 for 1/4/7/10/13; 369 if divisible by 3; 528 for 5/6/11/12 or soft sums; 144 for master or 4/8/12; 963 for 9/13 or high sums
       if (!tone || !resValue) return "432";
       if (tone===9 || tone===13 || resValue>=9) return "963";
       if (tone%3===0 || (resValue%3===0)) return "369";
@@ -1862,14 +1916,12 @@
       const skipLeap = optLeap?.checked !== false;
       const skipDOOT = optDOOT?.checked !== false;
       if (!date) return null;
-      let base;
-      if (time){
-        const [hh,mm] = time.split(":").map(Number);
-        base = dateInTZ(new Date(date+"T00:00:00Z"), tz, {hour:pad(hh), minute:pad(mm), second:"00"});
-      }else{
-        base = dateInTZ(new Date(date+"T00:00:00Z"), tz, {hour:"00", minute:"00", second:"00"});
-      }
-      const m13 = calc13Moon(base, tz, {skipLeap,skipDOOT});
+
+      // Single, correct construction of the birth instant
+      const hm = time || "00:00";
+      const base = wallInTZ(date, hm, tz);
+
+      const m13  = calc13Moon(base, tz, {skipLeap,skipDOOT});
       const tone = m13.special? null : toneFromDay(m13.day);
       const week = m13.special? null : weekFromDay(m13.day);
       const res  = resonantFromDate(base, tz);
@@ -1891,11 +1943,7 @@
       t3SeedLine.textContent    = `Seed = base pitch; we modulate subtle ±${(R.tone||1)%5+1} Hz binaural flutter by Tone.`;
       t3Palette.textContent     = CARRIERS[pick].accents.join(" → ");
 
-      // Apply skin silently (not forced unless clicked "Apply Skin")
-      // …but if user chose manual, go ahead and apply so they see it.
       if (t3CarrierPick.value!=="auto"){ applySkin(pick); }
-
-      // Save chosen carrier
       try{ localStorage.setItem("sof_carrier_choice", t3CarrierPick.value); }catch{}
     }
 
@@ -2068,10 +2116,8 @@
       inDate.value = p.date;
       inTime.value = p.time || "";
       inTZ.value   = p.tz;
-      // trigger Tier I button if exists (to repaint everything)
-      $("#btnRead")?.click();
-      // also repaint Tier II / III
-      paintTesla();
+      $("#btnRead")?.click(); // Tier I repaint
+      paintTesla();           // Tier III repaint
       toast(`Loaded: ${p.name}`);
     }
     function deleteProfile(id){
@@ -2110,7 +2156,6 @@
         if (f.name.endsWith(".json")){
           const arr = JSON.parse(text); if (Array.isArray(arr)) list = list.concat(arr);
         }else{
-          // naive CSV import (expects same headers)
           const lines = text.split(/\r?\n/).filter(Boolean);
           const headers = lines.shift().split(",").map(s=>s.replace(/^"|"$/g,""));
           lines.forEach(line=>{
@@ -2173,7 +2218,6 @@
       if (doot!=null){ optDOOT.checked = (doot!=="0"); }
       if (carrier){ localStorage.setItem("sof_carrier_choice", carrier); }
 
-      // compute if date present
       if (inDate.value){ $("#btnRead")?.click(); paintTesla(); }
     })();
 
@@ -2192,8 +2236,8 @@
               if ("skipDOOT" in options) optDOOT.checked = !!options.skipDOOT;
               if ("carrier" in options)  localStorage.setItem("sof_carrier_choice", options.carrier);
             }
-            $("#btnRead")?.click(); // Tier I repaint
-            paintTesla();           // Tier III repaint
+            $("#btnRead")?.click();
+            paintTesla();
             return currentInputs();
           }catch(e){ console.warn("SOF.genesis.read failed", e); return null; }
         }
@@ -2203,7 +2247,6 @@
     })();
 
     /* ---------- Boot ---------- */
-    // restore carrier UI
     (function initCarrierPick(){
       const stored = localStorage.getItem("sof_carrier_choice") || "auto";
       t3CarrierPick.value = stored;
@@ -2212,21 +2255,4 @@
     paintTesla();
 
   })();
-  </script>
-
-  <!-- ============ Print Styles (one-page reading) ============ -->
-  <style>
-    @media print{
-      *{ -webkit-print-color-adjust:exact; print-color-adjust:exact }
-      header.site, .moonbar-share, .moonbar-tz, #mbTZ, #mbShare,
-      nav[role="tablist"], .lab-row:has(#t3Play), .lab-row:has(#lgImport){ display:none !important }
-      body{ background:#fff; color:#000 }
-      .wrap{ max-width:960px }
-      .card{ box-shadow:none; border:1px solid #ccc; background:#fff }
-      .shine::after{ display:none !important }
-      .moonbar .mb-fg{ filter:none }
-      .meta{ color:#333 !important }
-      .year-map th, .year-map td { border-color:#ddd !important }
-    }
-  </style>
-  <!-- ======================= END PART III ======================= -->
+        </script>
