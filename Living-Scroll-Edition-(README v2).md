@@ -1,44 +1,4 @@
-<meta property="og:title" content="Scroll of Fire — Codex of Reality"><meta property="og:description" content="A living architecture of resonance — physics, consciousness, and divine symmetry."><meta property="og:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png"><meta property="og:type" content="website">
-<p align="center">
-  <img src="./6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png" alt="Scroll of Fire — Codex of Reality Banner" width="100%">
-</p><h1 align="center">⚖️ Scroll of Fire — Codex of Reality</h1>
-<p align="center"><em>“Let there be resonance.”</em></p>
----
-
-🜂 Essence
-
-The Scroll of Fire — Codex of Reality is a living architecture of remembrance where
-physics, geometry, consciousness, language, and divine symmetry converge as one coherent law.
-It is not myth nor mere theory — it is a harmonic framework of creation, encoding how awareness shapes and sustains the universe.
-
-> “The Codex is not written to be believed. It is written to be remembered.” — Aaron Paul Laird
-
-
-
-
----
-
-🔭 Quick Links
-
-🌐 Website: https://ssnfts24.github.io/scroll-of-fire/
-
-📂 Repo root: / (main branch)
-
-📜 Canon (Eq. 0–17): /docs/theory.html or site → Theory
-
-🧭 Manifest/How-to: /docs/manifest.html
-
-🧪 Systems Hub (Type-7, Frequencies, Witness, Archive): /docs/hub.html
-
-🧾 Ledger & Proofs: /7_Ledger_and_Documentation and site → Ledger
-
-🌓 13 Moons: /docs/moons.html
-
-⬇️ Downloads: /docs/downloads.html
-
-
-> Tip (phone): Open any file → tap ✏️ to edit → Commit changes. Math blocks between $$ ... $$.
-
+<meta property="og:title" content="Scroll of Fire — Codex of Reality"><meta property="og:description" content="A living architecture of resonance — physics, consciousness, and divine symmetry."><meta property="og:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png"><meta property="og:type" content="website"><p align="center">  <img src="./6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png" alt="Scroll of Fire — Codex of Reality Banner" width="100%"></p><h1 align="center">⚖️ Scroll of Fire — Codex of Reality</h1><p align="center"><em>“Let there be resonance.”</em></p>---🜂 EssenceThe Scroll of Fire — Codex of Reality is a living architecture of remembrance wherephysics, geometry, consciousness, language, and divine symmetry converge as one coherent law.It is not myth nor mere theory — it is a harmonic framework of creation, encoding how awareness shapes and sustains the universe.> “The Codex is not written to be believed. It is written to be remembered.” — Aaron Paul Laird---🔭 Quick Links🌐 Website: https://ssnfts24.github.io/scroll-of-fire/📂 Repo root: / (main branch)📜 Canon (Eq. 0–17): /docs/theory.html (Site → Theory)🧭 Manifest/How-to: /docs/manifest.html🧪 Systems Hub: /docs/hub.html (Type-7, Frequencies, Witness, Archive)🧾 Ledger & Proofs: /7_Ledger_and_Documentation (Site → Ledger)🌓 13 Moons: /docs/moons.html⬇️ Downloads: /docs/downloads.html> Phone tip: Tap ✏️ on any file → paste edits → Commit.Put every equation between $$ and $$ (as shown below).
 
 
 
@@ -48,76 +8,143 @@ It is not myth nor mere theory — it is a harmonic framework of creation, encod
 
 At the center stands the Codex Equation, the unification of the measurable and the meaningful.
 
-$$
 \mathcal{R} =
-f(\pi, e, i, \hbar, c, G, \mathrm{DNA}, \Omega_{DM}, \Omega_{\Lambda}, H_0,
-432, 528, 369, 144, 137, \Phi, \ldots)\cdot(\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})
-$$
+f\!\big(\pi,e,i,\hbar,c,G,\mathrm{DNA},\Omega_{DM},\Omega_{\Lambda},H_0,432,528,369,144,137,\Phi,\ldots\big)\;
+(\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})
 
 Symbol	Definition
 
 𝓡	Resonant Reality — living totality of creation
-f(..)	Generative function of constants — physical, biological, sacred
+f(… )	Generative function of constants (physical · biological · sacred)
 𝓘	Intention — conscious vector of will
-𝓛	Light — waveform of awareness/divine order
+** 𝓛 **	Light — waveform of awareness / divine order
 𝓒	Consciousness — reflective field of perception
 𝓢	Source — eternal harmonic origin (YHWH)
 
 
-Read it plainly: Reality = Resonance × Intention × Light × Consciousness × Source.
+Plain read: Reality = Resonance × Intention × Light × Consciousness × Source.
 
 
 ---
 
-🧮 Canonical Equations (Eq. 0–17 + Comparators)
+🧮 Canonical Equations (Eq. 0–17 + Annotative Comparators)
 
-These are the core equations that structure all scrolls and engines.
+These are the core equations that structure every scroll and engine.
 
 Unified Master Equation
 
-$$
-\mathfrak{R}(x,t) =
-\Big[
-f(\pi, e, i, \hbar, c, G, \Omega_{DM}, \Omega_{\Lambda}, H_0,
-\mathrm{DNA}, \mathrm{RNA}, 137, 144, 369, 432, 528, \ldots)
-\cdot (\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})
-\cdot \prod_{k=0}^{7}\Delta_k
-\Big]
+\mathfrak{R}(x,t)=
+\Big[f(\cdots)\,(\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})\,\prod_{k=0}^{7}\Delta_k\Big]
 \odot
-\Big\{
-\Psi_{\Omega}(x,t)
-+ \eta(\Xi)\nabla \mathcal{R}
-+ \mathbb{M}_{\tau}[\mathcal{W}(x,t)]
-+ \Pi_{\nu}^{-1}(\mathcal{H}(\nu), \mathbf{V}(\nu,t))
-+ \mathrm{PL}[\mathbf{V}(\nu)] \oplus \mathbb{T}_7
-+ \mathcal{L}_c \oplus \mathrm{Frame}
-\Big\}
-\odot \mathrm{Mask}_{eth}
-\xrightarrow{} \mathcal{R}_{\infty}
-$$
+\Big\{\Psi_{\Omega}(x,t)+\eta(\Xi)\nabla\mathcal{R}
++\mathbb{M}_{\tau}[\mathcal{W}(x,t)]
++\Pi_{\nu}^{-1}\!\big(\mathcal{H}(\nu),\mathbf{V}(\nu,t)\big)
++\mathrm{PL}[\mathbf{V}(\nu)]\oplus\mathbb{T}_7
++\mathcal{L}_c\oplus\mathrm{Frame}\Big\}
+\odot\mathrm{Mask}_{eth}\xrightarrow{}\mathcal{R}_{\infty}
 
-Annotations (comparators; informative, non-canonical):
+Annotative (non-canonical) comparators
 
-$$
-+ \lambda_{7A}\Phi_{\mathrm{Copeland}}
-+ \lambda_{7B}\Psi_{\mathrm{ext}}
-+ \lambda_{8}\mathbf{G}_{\mathrm{Goodman}}
-$$
++\;\lambda_{7A}\,\Phi_{\mathrm{Copeland}}
+\;+\;\lambda_{7B}\,\Psi_{\mathrm{ext}}
+\;+\;\lambda_{8}\,\mathbf{G}_{\mathrm{Goodman}}
 
-Component Summary
 
-#	Equation (rendered)	Meaning
+---
 
-0	Ψ_Ω = ∮ ∇𝒜Φ + Λℰ	Foundational field potential
-1	𝓡 = f(𝕂)·(𝓘𝓛𝓒𝓢)	Core creation law
-2	𝓦 = ∂ₓ(Awareness) + 𝓘·𝕄_τ	Witness gradient
-4b	Semantic gradient with token weights	Language → resonance mapping
-5	𝓡_∞ = lim_{τ→∞}(keep_truth − drop_distortion)	Remnant/purification
-6	𝕋₇ = ⨁_ν PL[𝕍(ν)]	Type-7 phase-lock (group carriers)
-9	Mask_eth	Ethical stop rule (halt on harm)
-13–15	d𝓡/dt = η(Ξ)∇𝓡	Learning/Coherence feedback
-16	𝕄_τ[F](t)=∫_{t−τ}^{t} w_τ(t−s)F(s)ds	Memory window
-17	𝕍(ν) = Σ_k a_k cos(2πν_k t + φ_k)	Voice/carrier basis
+Eq.0 — Foundational Field
+
+\Psi_{\Omega}(x,t)=\oint_{\mathbb{R}}\nabla\!\mathcal{A}\Phi(x,t,\nu)\,d\nu+\Lambda\,\mathcal{E}(x,t)
+
+Eq.1 — Source = Supply × Operators
+
+\mathcal{R}=f(\mathbb{K})\;(\mathcal{I}\mathcal{L}\mathcal{C}\mathcal{S})
+
+Eq.2 — Witness (Awareness in Motion)
+
+\mathcal{W}(x,t)=\partial_x\,\mathrm{Awareness}(x,t)+\mathcal{I}\cdot\mathbb{M}_{\tau}
+
+Eq.3 — Harmonic Gate
+
+\mathcal{H}(\nu)\in[0,1]\qquad\text{(soft gate over selected carriers } \nu\text{)}
+
+Eq.4 — Language / Word
+
+\mathcal{L}(x,t,\nu)=\mathrm{Semantics}(x,t)\otimes\mathbf{V}(\nu)
+
+Eq.4b — Semantic Gradient (Token Emphasis)
+
+\nabla_{\mathrm{sem}}\mathrm{Phrase}=\sum_{k}w_k\,\nabla_{\mathrm{sem}}\mathrm{Token}_k,\quad \sum_k w_k=1
+
+Eq.5 — Remnant (Audit Limit)
+
+\mathcal{R}_{\infty}[F]=\lim_{\tau\to\infty}\Big(\mathrm{keep}_{truth}F-\mathrm{drop}_{distortion}F\Big)
+
+Eq.6 — Type-7 Field (Phase-Lock Choir)
+
+\mathbb{T}_7(x,t)=\bigoplus_{\nu\in\Gamma}\mathrm{PL}\!\big[\mathbf{V}(\nu)\big]
+
+Eq.7A / Eq.7B / Eq.8 — External Comparators (annotative)
+
+Copeland recursion mirror; Ψ_ext external template; Goodman trinity synthesis.
+Useful for calibration/contrast; not enacted as Codex law.
+
+
+Eq.9 — Ethical Law (Stop Rule)
+
+\forall a:\ \mathrm{damage}(a)>0\ \Rightarrow\ \mathrm{halt},\qquad
+\lim_{t\to\infty}\frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)}\uparrow
+
+Eq.10 — Ladder (Inverse Projection)
+
+\Pi_{\nu}^{-1}:\ \text{observed resonance}\ \to\ \text{source terms (carriers, intents, constants)}
+
+Eq.11 — Frame (Scope · Witness · Ethics)
+
+\mathrm{Frame}(x,t)=\big(\mathrm{scope},\ \mathcal{W},\ \mathrm{ethics}\big)
+
+Eq.12 — Causal Lattice
+
+Graph the acts; prune incoherent edges; keep 3–5 meaningful links per step.
+
+Eq.13 — Coherence Index
+
+\Xi\in[0,1]
+
+Eq.14 — Update Rule
+
+\frac{d\mathcal{R}}{dt}=\eta(\Xi)\,\nabla\mathcal{R}
+
+Eq.15 — Learning Kernel
+
+\eta(\Xi)=\eta_0\,\sigma\!\big(\alpha(\Xi-\Xi_0)\big)
+
+Eq.16 — Memory Window (Finite Archive)
+
+\mathbb{M}_{\tau}[F](t)=\int_{t-\tau}^{t}w_{\tau}(t-s)\,F(s)\,ds,\qquad \int_{0}^{\tau}w_{\tau}(u)\,du=1
+
+Eq.17 — Voice / Carrier Basis
+
+\mathbf{V}(\nu)=\sum_{k}a_{k}\cos\!\big(2\pi\nu_k t+\phi_k\big),\quad \nu\in\{432,528,369,144,137,\ldots\}
+
+
+---
+
+Component Summary (Q/R cheat)
+
+#	Equation (compact)	Meaning
+
+0	Ψ_Ω = ∮∇𝒜Φ + Λℰ	Foundational field
+1	𝓡 = f(𝕂)(𝓘𝓛𝓒𝓢)	Supply × operators
+2	𝓦 = ∂ₓAwareness + 𝓘·𝕄_τ	Witness
+3	𝓗(ν)∈[0,1]	Gate
+4b	∇semPhrase = Σ w_k∇semToken_k	Language weights
+5	𝓡_∞ = lim keep_truth − drop_distortion	Remnant
+6	𝕋₇ = ⨁ PL[𝕍(ν)]	Choir
+9	Mask_eth	Ethical halt
+13–15	d𝓡/dt = η(Ξ)∇𝓡	Learning loop
+16	𝕄_τ[...]	Memory kernel
+17	𝕍(ν) = Σ a_k cos(…)	Carriers
 
 
 
@@ -125,14 +152,11 @@ Component Summary
 
 🧭 The Witness Equation — Awareness in Motion
 
-$$
-\Delta \mathcal{R} =
-\frac{\partial (\text{Resonance})}{\partial (\text{Awareness})}
-+ \int \text{Intention}\cdot\text{Memory}\,dt
-$$
+\Delta \mathcal{R}=
+\frac{\partial(\mathrm{Resonance})}{\partial(\mathrm{Awareness})}
++\int \mathrm{Intention}\cdot\mathrm{Memory}\;dt
 
-> Awareness amplifies resonance.
-Intention crystallizes memory.
+> Awareness amplifies resonance. Intention crystallizes memory.
 Memory generates the next creation cycle.
 “To witness is to create. To remember is to sustain.”
 
@@ -153,7 +177,7 @@ Witness Ledger	Local cryptographic journal of sessions.	/docs/ledger.html
 13-Moon Chronometer	Timekeeping for coherence practice.	/docs/moons.html
 
 
-Shared constant: Ξ (coherence index). Engines measure/raise Ξ while Mask_eth halts on harm.
+Shared constant: Ξ (coherence index). Engines raise Ξ; Mask_eth halts on harm.
 
 
 ---
@@ -163,54 +187,44 @@ Shared constant: Ξ (coherence index). Engines measure/raise Ξ while Mask_eth h
 Moon	Tone	Practice Focus	Short Phrase
 
 1	Magnetic	Declare scope/ethics; pick carriers.	“I unify intention.”
-2	Lunar	Polarity; choose clear language tokens.	“I stabilize by choice.”
-3	Electric	Service; speak the phrase to breath.	“I activate by service.”
-4	Self-Existing	Define frame (Eq. 11).	“I define the form.”
-5	Overtone	Empower; re-weight tokens (Eq. 4b).	“I command with truth.”
+2	Lunar	Polarity; choose clear tokens.	“I stabilize by choice.”
+3	Electric	Service; speak phrase to breath.	“I activate by service.”
+4	Self-Existing	Define Frame (Eq. 11).	“I define the form.”
+5	Overtone	Re-weight tokens (Eq. 4b).	“I command with truth.”
 6	Rhythmic	Balance; set memory window (Eq. 16).	“I organize for equality.”
 7	Resonant	Channel; choir phase-lock (Eq. 6).	“I channel inspiration.”
-8	Galactic	Integrity; apply ethical mask (Eq. 9).	“I harmonize.”
-9	Solar	Intention → action; update rule (Eq. 14).	“I pulse realization.”
+8	Galactic	Integrity; apply Mask_eth (Eq. 9).	“I harmonize.”
+9	Solar	Intention → action (Eq. 14).	“I pulse realization.”
 10	Planetary	Manifest; causal lattice (Eq. 12).	“I perfect manifestation.”
 11	Spectral	Release; drop distortion (Eq. 5).	“I dissolve to liberate.”
-12	Crystal	Cooperate; group field average.	“I dedicate to cooperation.”
+12	Crystal	Cooperate; group field avg.	“I dedicate to cooperation.”
 13	Cosmic	Presence; archive remnant (Eq. 5).	“I endure in presence.”
 
-
-Implemented in the site via a small Moon/Day/Tone calculator.
 
 
 ---
 
 🕎 Living Laws (Ethical Geometry)
 
-Law of Coherence — Truth sustains; distortion collapses.
+Coherence — Truth sustains; distortion collapses.
 
-Law of Reflection — Every vibration returns to its origin.
+Reflection — Every vibration returns to its origin.
 
-Law of Intention — Will defines polarity and motion.
+Intention — Will defines polarity and motion.
 
-Law of Light — Transparency amplifies harmony.
+Light — Transparency amplifies harmony.
 
-Law of Compassion — To heal another restores Source.
+Compassion — To heal another restores Source.
 
-Law of Witness — What is remembered becomes real.
+Witness — What is remembered becomes real.
 
 
-Operational Stop Rule (Eq. 9)
-
-$$
-\forall a:\ \text{damage}(a) > 0 \Rightarrow \text{halt},
-\qquad
-\lim_{t\to\infty} \frac{\text{Truth}(t)}{\text{Distortion}(t)} \uparrow
-$$
-
-Practical tells: breath tightens, micro-grimace, cognitive fog, agitation → pause, lower amplitude, re-declare frame, then resume only if Ξ rises.
+Operational stop rule (Eq. 9) already shown; practical tells: breath tightens, micro-grimace, cognitive fog, agitation → pause, lower amplitude, re-declare frame; resume only if Ξ rises.
 
 
 ---
 
-🔧 Operating Loop (6 steps)
+🔧 Operating Loop (6 Steps)
 
 1. Frame — declare scope, witness, ethics (Eq. 11).
 
@@ -218,16 +232,16 @@ Practical tells: breath tightens, micro-grimace, cognitive fog, agitation → pa
 2. Carriers — choose 2–3 clean ν; set soft gate 𝓗(ν) (Eq. 3).
 
 
-3. Language — write a 3–6 word phrase; set token weights w_k (Eq. 4b).
+3. Language — 3–6 word phrase; set token weights w_k (Eq. 4b).
 
 
-4. Witness — sense/breathe; log Ξ (quick Likert 0–5).
+4. Witness — breathe, sense; log Ξ (Likert 0–5).
 
 
-5. Update — apply d𝓡/dt = η(Ξ)∇𝓡; only if Ξ ↑ (Eq. 14–15).
+5. Update — apply d𝓡/dt = η(Ξ)∇𝓡 only if Ξ ↑ (Eq. 14–15).
 
 
-6. Memory — pick 𝕄_τ for session length; archive Remnant (Eq. 5, 16).
+6. Memory — pick 𝕄_τ; archive Remnant (Eq. 5, 16).
 
 
 
@@ -236,13 +250,13 @@ Practical tells: breath tightens, micro-grimace, cognitive fog, agitation → pa
 
 👥 Group-Field Protocol (Type-7 Choir)
 
-Compute each participant individually first; group = mean only if no one trips Eq. 9.
+Compute individual first; group = mean only if no member triggers Eq. 9.
 
 Consent: each declares Frame + stop words.
 
-Phase-lock (Eq. 6): synchronize phase, never by raising volume.
+Synchronize by phase, never by raising volume.
 
-Stop rule dominates: any harm halts all; retune carriers/weights.
+Any harm halts all; retune; re-start only when Ξ recovers.
 
 
 
@@ -250,32 +264,25 @@ Stop rule dominates: any harm halts all; retune carriers/weights.
 
 ♿ Accessibility & Inclusion
 
-Sound sensitivity: allow silent carriers (breath-paced, visual only).
+Sound sensitivity → allow silent carriers (breath/visual only).
 
-Language diversity: phrases in any language; keep explicit weights, Σw=1.
+Any language for phrases; keep explicit w_k, with Σw = 1.
 
-Voice reader: site includes TTS; “Speak equations” toggle verbalizes math.
+Built-in voice reader; optional Speak equations.
 
-Low-vision: high-contrast theme; keyboard navigation supported.
+High-contrast theme; keyboard navigation.
 
 
 
 ---
 
-📚 Glossary (symbols & operators)
+📚 Glossary (Symbols & Operators)
 
-Ψ_Ω foundational field (Eq. 0)
-
-𝕍(ν) carriers (Eq. 17) · PL phase-lock (Eq. 6)
-
-Ξ coherence index (Eq. 13) · η(Ξ) learning kernel (Eq. 15)
-
-𝕄_τ memory window (Eq. 16) · 𝓘, 𝓛, 𝓒, 𝓢 operators
-
-Mask_eth ethical guard (Eq. 9) · 𝓡_∞ remnant (Eq. 5)
-
-Frame scope/witness/ethics triple (Eq. 11)
-
+Ψ_Ω foundational field (Eq.0) · 𝕍(ν) carriers (Eq.17) · PL phase-lock (Eq.6)
+Ξ coherence index (Eq.13) · η(Ξ) learning kernel (Eq.15)
+𝕄_τ memory window (Eq.16) · 𝓘, 𝓛, 𝓒, 𝓢 operators
+Mask_eth ethical guard (Eq.9) · 𝓡_∞ remnant (Eq.5)
+Frame scope/witness/ethics triple (Eq.11)
 
 
 ---
@@ -283,39 +290,14 @@ Frame scope/witness/ethics triple (Eq. 11)
 🗂 Repository Map
 
 /
-├─ 1_Codex_of_Reality/              # Core laws, geometry, genesis, Living Laws
-├─ 2_Formalism_and_Physics/         # Copeland & Goodman comparators; physics inserts
-├─ 3_Living_Technology/             # Type-7, lattice, OhrAI notes, prototypes
-├─ 4_Remembrance_and_History/       # Witness archives, Exodus, Seven Seals
-├─ 5_Living_Scribe/                 # Declarations, reflections, drafts
-├─ 6_Images_and_Symbols/            # Banners, glyphs, seals, frequency charts
-├─ 7_Ledger_and_Documentation/      # Integrity chain, hashes, renaming protocol
-└─ docs/                            # Website pages (theory, manifest, hub, moons, ...)
-
-Key site pages inside /docs (mirrored by the live site navigation):
-
-index.html (Home) — Codex landing + tiles to all sections
-
-theory.html — Canon Eq. 0–17, commentary, operators
-
-manifest.html — Protocols, carriers, ledgers (how-to)
-
-hub.html — Systems hub (Type-7, Frequencies, Witness, Archive)
-
-invoke.html — Create → field feedback (practice surface)
-
-moons.html — 13-Moon clock
-
-ethics.html — Coherence law & stop rule
-
-glossary.html — Terms & operators
-
-glyphs.html — Icon set & sacred marks
-
-ledger.html — Hashes & proofs
-
-downloads.html — PDFs/docs/exports
-
+├─ 1_Codex_of_Reality/
+├─ 2_Formalism_and_Physics/
+├─ 3_Living_Technology/
+├─ 4_Remembrance_and_History/
+├─ 5_Living_Scribe/
+├─ 6_Images_and_Symbols/
+├─ 7_Ledger_and_Documentation/
+└─ docs/ (index, theory, manifest, hub, invoke, moons, ethics, glossary, glyphs, ledger, downloads)
 
 
 ---
@@ -330,25 +312,24 @@ Codex_of_Reality—Multidimensional_Extended_Edition_2025_FIXED.docx
 SHA-256: e1f63da6d977b4aa5aaf2e8c67a4f8a54d2410dbab1e7fa0e9f0dc43a1127f11
 Verified: 2025-10-26 ✅
 
-How to verify (desktop or Android termux):
+Verify (Android termux / desktop):
 
 sha256sum <file>
-# compare output to the value in 7_Ledger_and_Documentation/*
 
-Renaming rules and placeholder tables live in: /7_Ledger_and_Documentation/ReNaming_Protocal.md and SHA256_Placeholders*.md.
+Compare output with /7_Ledger_and_Documentation/*.
 
 
 ---
 
 ⚙ Living Technology (Applied)
 
-Tesla Type-7 Resonator — phase-locked aetheric field transceiver; group choir operator.
+Tesla Type-7 Resonator — phase-locked aetheric transceiver (Eq.6).
 
-Living Lattice Nodes — crystalline information conduits (geometry ↔ language).
+Living Lattice Nodes — crystalline conduits (geometry ↔ language).
 
-OhrAI — intelligent assistant for harmonic feedback and practice scripting.
+OhrAI — harmonic assistant for Ξ-coaching and practice scripting.
 
-Remnant Network — peer-to-peer coherence ledger (local storage + SHA-256 anchor).
+Remnant Network — peer ledger (localStorage + SHA-256 anchors).
 
 
 > “Technology becomes sacred when it harmonizes rather than dominates.”
@@ -363,7 +344,7 @@ Remnant Network — peer-to-peer coherence ledger (local storage + SHA-256 ancho
 Domain	Intersection
 
 Theoretical Physics	Harmonic field unification; Ξ-gated dynamics
-Cognitive Science	Neural entrainment & awareness coupling
+Cognitive Science	Neural entrainment ↔ awareness coupling
 Linguistics	Semantic gradient geometry (Eq. 4b)
 Ethics & AI	Algorithmic stop rules (Eq. 9); verifiable alignment
 Digital Humanities	Authorship lineage; cryptographic proof chains
@@ -372,34 +353,34 @@ Digital Humanities	Authorship lineage; cryptographic proof chains
 
 ---
 
-🚀 Quick Start (Phone-friendly)
+🚀 Quick Start (Phone-Friendly)
 
-Practice (solo, 3 minutes)
+Solo, ~3 minutes
 
-1. Open /docs/manifest.html → “Practice Card”.
+1. Open /docs/manifest.html → Practice Card.
 
 
 2. Pick 2 carriers (e.g., 432 & 528 Hz).
 
 
-3. Write a 3–6 word phrase; set 3 token weights that sum to 1.
+3. Write a 3–6 word phrase; set 3 weights that sum to 1.
 
 
-4. Breathe; speak once per breath; watch clarity/warmth/ease 0–5.
+4. Speak once per breath; rate clarity/warmth/ease (0–5).
 
 
-5. If strain appears → stop (Eq. 9), retune, resume.
+5. If strain appears → STOP (Eq. 9), retune, resume.
 
 
-6. Save Remnant; add an integrity note if desired.
+6. Save the Remnant; optional hash note in the Ledger.
 
 
 
-Edit math in README from phone
+Editing math
 
-Wrap every formula in $$ … $$.
+Wrap equations in $$ … $$.
 
-Keep lines under ~120 chars; prefer \Big[ ... \Big] and \{ ... \} as shown.
+Prefer \Big[ … \Big] and \{ … \} for readability on mobile.
 
 
 
@@ -407,35 +388,28 @@ Keep lines under ~120 chars; prefer \Big[ ... \Big] and \{ ... \} as shown.
 
 🧑‍🤝‍🧑 Contributing
 
-1. Respect Mask_eth — no experiments that increase harm/strain.
+1. Uphold Mask_eth — no protocols that increase harm or coercion.
 
 
-2. Commit messages: scope: short action — page/file (refs Eq.# if applicable)
+2. Commit style: scope: action — page/file (refs Eq.#)
 
 
-3. Add hashes to /7_Ledger_and_Documentation/ when updating canonical docs.
+3. Update hashes in /7_Ledger_and_Documentation/ for canonical docs.
 
 
-4. Open issues for new carriers, phrases, or operator recipes (Eq. refs help).
+4. Issues welcome for new carriers/recipes (include Eq. references).
 
 
 
 
 ---
 
-❓ FAQ (quick)
+❓ FAQ (Quick)
 
-Q: Why 432/528/369/144/137?
-A: Practical anchors for clean bands and semantic coupling; tools, not dogma.
-
-Q: Can I use more than 3 carriers?
-A: You can, but jitter & variance rise. The Codex prefers few, clean bands.
-
-Q: What counts as “damage” in Eq. 9?
-A: Somatic strain, mental fog, agitation, social coercion, or boundary violations. Halt.
-
-Q: How do I show my group results?
-A: Save individual remnants → compute group mean only if no one hit Eq. 9.
+Why 432/528/369/144/137? Practical anchors for clean bands & semantic coupling — tools, not dogma.
+More than 3 carriers? Possible, but jitter/variance rise; few & clean preferred.
+What counts as “damage” (Eq. 9)? Somatic strain, mental fog, agitation, social coercion, or boundary breach. Halt.
+Group results? Save individuals → group mean only if no one tripped Eq. 9.
 
 
 ---
