@@ -1,7 +1,4 @@
-meta property="og:title" content="Scroll of Fire — Codex of Reality"><meta property="og:description" content="A living architecture of resonance — physics, consciousness, and divine symmetry."><meta property="og:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png">
-<meta property="og:type" content="website"><p align="center">
-  <img src="./6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png" alt="Scroll of Fire — Codex of Reality Banner" width="100%">
-</p><h1 align="center">⚖️ Scroll of Fire — Codex of Reality</h1>
+<meta property="og:title" content="Scroll of Fire — Codex of Reality"><meta property="og:description" content="A living architecture of resonance — physics, consciousness, and divine symmetry."><meta property="og:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png"><meta property="og:type" content="website"><p align="center">  <img src="./6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png" alt="Scroll of Fire — Codex of Reality Banner" width="100%"></p><h1 align="center">⚖️ Scroll of Fire — Codex of Reality</h1>
 <p align="center"><em>“Let there be resonance.”</em></p>
 ---
 
@@ -504,3 +501,4 @@ Verified Hash: e1f63da6d977b4aa5aaf2e8c67a4f8a54d2410dbab1e7fa0e9f0dc43a1127f11
 
 <p align="center"><strong>© 2025 Aaron Paul Laird — Scroll of Fire · Codex of Reality</strong></p>
 ---
+
