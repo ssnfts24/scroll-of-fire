@@ -348,9 +348,7 @@
         </ul>
       </article>
     </section>
-
-    <!-- Voice Reader (collapsible) -->
-<!-- Voice Reader (collapsible) — FULL DROP-IN -->
+<!-- Voice Reader (collapsible) — FULL DROP-IN (fixed) -->
 <details class="collapsible card col-12 reveal" id="voice-reader" open>
   <summary class="collapsible__bar" aria-controls="vr-panel" aria-expanded="true">
     <span>🔊 Listen — Voice Reader</span>
@@ -420,9 +418,11 @@
 </details>
 
 <script>
-/* Voice Reader — resilient Web Speech API with MathJax support */
+/* Voice Reader — resilient Web Speech API with MathJax support (fixed) */
 (function(){
   const $ = id => document.getElementById(id);
+
+  // Controls
   const btnPlay=$('vr-play'), btnPause=$('vr-pause'), btnResume=$('vr-resume'), btnStop=$('vr-stop');
   const btnPlayMini=$('vr-play-mini'), btnStopMini=$('vr-stop-mini');
   const btnSel=$('vr-read-selection'), voiceSel=$('vr-voice');
@@ -432,13 +432,14 @@
   const statusEl=$('vr-status'), progressEl=$('vr-progress');
   const exportBtn=$('vr-export-ssml');
 
+  // Guard: feature availability
   const hasSpeech = typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
 
-  function setButtons({play,pause,resume,stop}) {
-    if (btnPlay) btnPlay.disabled = !play;
-    if (btnPause) btnPause.disabled = !pause;
-    if (btnResume) btnResume.disabled = !resume;
-    if (btnStop) btnStop.disabled = !stop;
+  function setButtons({play,pause,resume,stop}){
+    if(btnPlay) btnPlay.disabled = !play;
+    if(btnPause) btnPause.disabled = !pause;
+    if(btnResume) btnResume.disabled = !resume;
+    if(btnStop) btnStop.disabled = !stop;
   }
   function status(t){ if(statusEl) statusEl.textContent = t; }
   function prog(cur,total){
@@ -449,47 +450,48 @@
     progressEl.setAttribute('aria-hidden','false');
   }
 
-  // If Speech API missing, disable UI cleanly
-  if (!hasSpeech) {
+  // If Speech API missing, degrade gracefully
+  if(!hasSpeech){
     status('Voice playback is not supported in this browser.');
     setButtons({play:false,pause:false,resume:false,stop:false});
     return;
   }
 
-  /* ---------------- Voices (robust loader for iOS/Safari/Chrome) ---------------- */
+  /* ---------------- Voices (robust loader: Chrome/iOS/Safari) ---------------- */
   let voices = [];
   function populateVoices(){
-    const list = window.speechSynthesis.getVoices().sort((a,b)=> a.name.localeCompare(b.name));
-    if (!list.length) return;
-    voices = list;
-    if (!voiceSel) return;
-    const cur = voiceSel.value;
-    voiceSel.innerHTML = voices.map(v=>`<option value="${v.name}">${v.name}${v.lang?(' ('+v.lang+')'):''}</option>`).join('');
-    if (cur && voices.some(v=>v.name===cur)) voiceSel.value = cur;
-    else {
-      const en = voices.filter(v=>/^en\b/i.test(v.lang||''));
-      const pick = en.find(v=>/female|Salli|Joanna|Emma|Olivia|Google UK English Female/i.test(v.name)) || en[0] || voices[0];
-      if (pick) voiceSel.value = pick.name;
-    }
+    try{
+      const list = window.speechSynthesis.getVoices().sort((a,b)=> a.name.localeCompare(b.name));
+      if(!list || !list.length) return;
+      voices = list;
+      if(!voiceSel) return;
+      const cur = voiceSel.value;
+      voiceSel.innerHTML = voices.map(v=>`<option value="${v.name}">${v.name}${v.lang?(' ('+v.lang+')'):''}</option>`).join('');
+      if(cur && voices.some(v=>v.name===cur)) voiceSel.value = cur;
+      else {
+        const en = voices.filter(v=>/^en\b/i.test(v.lang||''));
+        const pick = en.find(v=>/female|Salli|Joanna|Emma|Olivia|Google.*English.*Female/i.test(v.name)) || en[0] || voices[0];
+        if(pick) voiceSel.value = pick.name;
+      }
+    }catch(e){}
   }
-  // Multiple attempts because some browsers populate asynchronously
+  // iOS/Safari often needs multiple kicks
   populateVoices();
   window.speechSynthesis.onvoiceschanged = populateVoices;
-  (function retryVoices(attempt=0){
-    if (voices.length || attempt>10) return;
-    setTimeout(()=>{ populateVoices(); retryVoices(attempt+1); }, 250);
+  (function retryVoices(at=0){
+    if(voices.length || at>12) return;
+    setTimeout(()=>{ populateVoices(); retryVoices(at+1); }, 250);
   })();
 
   /* ---------------- Helpers ---------------- */
   const PRON = [
     [/\bΞ\b/g, 'Ksi'],
     [/𝓘/g, 'I (Intention)'], [/𝓛/g, 'L (Language)'], [/𝓒/g, 'C (Coherence)'], [/𝓢/g, 'S (Source)'],
-    [/→/g, ' to '], [/↦/g,' maps to '], [/≥/g,' greater than or equal to '], [/≤/g,' less than or equal to '],
-    [/⊕/g, ' coherent merge '], [/·/g,' '], [/\bPL\b/g, 'phase lock'],
+    [/→/g,' to '], [/↦/g,' maps to '], [/≥/g,' greater than or equal to '], [/≤/g,' less than or equal to '],
+    [/⊕/g,' coherent merge '], [/·/g,' '], [/\bPL\b/g,'phase lock'],
     [/Eq\.(\d+)/g, 'Equation $1'],
-    [/ν/g, 'nu'], [/τ/g, 'tau'], [/φ/g, 'phi'], [/η/g,'eta'], [/σ/g,'sigma'], [/Λ/g,'Lambda'],
+    [/ν/g,'nu'], [/τ/g,'tau'], [/φ/g,'phi'], [/η/g,'eta'], [/σ/g,'sigma'], [/Λ/g,'Lambda']
   ];
-
   function polishText(s){
     return s.replace(/[ \t]+/g,' ')
             .replace(/\s+([,.;:!?])/g,'$1')
@@ -497,12 +499,11 @@
             .replace(/\s—\s/g,' — ')
             .replace(/^\s+|\s+$/g,'');
   }
-
   function verbalizeMath(str){
     // strip TeX wrappers
     str = str.replace(/\$\$([^$]+)\$\$/g, ' equation: $1 ')
              .replace(/\\\(([^)]+)\\\)/g, ' $1 ');
-    // gentle TeX normalization
+    // mild TeX normalization
     str = str.replace(/\\int/g,' integral ')
              .replace(/\\sum/g,' sum ')
              .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g,' $1 over $2 ');
@@ -515,16 +516,16 @@
     // Remove UI bits
     clone.querySelectorAll('button, .eq-tools, .chip, .palette, .eq-toggle, .menu-toggle').forEach(n=>n.remove());
 
-    // Math: keep or drop
-    if (speakMath && !speakMath.checked){
+    // Math: include or drop
+    if(speakMath && !speakMath.checked){
       clone.querySelectorAll('.eq, mjx-container').forEach(n=>n.remove());
     } else {
-      // MathJax v3 exposes aria-label on mjx-container (svg output)
+      // MathJax v3 exposes aria-label on svg container
       clone.querySelectorAll('mjx-container').forEach(m=>{
         const alt = m.getAttribute('aria-label') || '';
         m.replaceWith(document.createTextNode(' equation ' + (alt || '') + ' '));
       });
-      // If raw TeX still present in .eq wrappers
+      // Fallback: raw TeX inside .eq
       clone.querySelectorAll('.eq').forEach(eq=>{
         const t = eq.innerText || '';
         eq.replaceWith(document.createTextNode(' ' + verbalizeMath(t) + ' '));
@@ -532,17 +533,18 @@
     }
 
     let text = clone.innerText || clone.textContent || '';
-    for (const [re, rep] of PRON) text = text.replace(re, rep);
-    if (polish && polish.checked) text = polishText(text);
+    for(const [re,rep] of PRON) text = text.replace(re, rep);
+    if(polish && polish.checked) text = polishText(text);
 
-    // Clean leftover controls text
     return text.replace(/\b(Copy TeX|Link Copied?|Link)\b/g,'')
-               .replace(/\s+\n/g,'\n').replace(/\n{3,}/g,'\n\n').trim();
+               .replace(/\s+\n/g,'\n')
+               .replace(/\n{3,}/g,'\n\n')
+               .trim();
   }
 
   function getSectionOrSelection(){
     const sel = window.getSelection?.();
-    if (sel && sel.rangeCount && String(sel).trim().length>0){
+    if(sel && sel.rangeCount && String(sel).trim().length>0){
       return { text: String(sel).trim(), node: document.activeElement || document.body };
     }
     const id = (startSel?.value || '#p1');
@@ -550,7 +552,7 @@
     return { text: cleanNodeToText(sec), node: sec };
   }
 
-  // Sentence-aware chunking with abbrev guard
+  // Sentence-aware chunking with abbrev protection
   const ABBR = /\b(?:e\.g|i\.e|vs|Dr|Mr|Mrs|Ms|Prof|Eq|Eqn|Fig)\.$/i;
   function chunkify(str, max=900){
     const raw = str.replace(/\r/g,'').split(/\n{2,}/); // paragraphs
@@ -561,15 +563,15 @@
       for(const part of parts){
         const piece = part.trim();
         if(!piece) continue;
-        if(ABBR.test(piece)) { buf += (buf?' ':'') + piece; continue; }
-        if ((buf + ' ' + piece).length > max){
-          if (buf) out.push(buf.trim());
+        if(ABBR.test(piece)){ buf += (buf?' ':'') + piece; continue; }
+        if((buf + ' ' + piece).length > max){
+          if(buf) out.push(buf.trim());
           buf = piece;
         } else {
           buf += (buf?' ':'') + piece;
         }
       }
-      if (buf) out.push(buf.trim());
+      if(buf) out.push(buf.trim());
     }
     return out.length ? out : [str.slice(0,max)];
   }
@@ -579,24 +581,24 @@
   function highlightWithin(node, text){
     if(!node) return;
     try{
-      if (lastHL){ lastHL.classList.remove('vr-highlight'); lastHL=null; }
+      if(lastHL){ lastHL.classList.remove('vr-highlight'); lastHL=null; }
       const key = text.slice(0, 60);
       const p = [...node.querySelectorAll('p, li, h2, h3, article')].find(el=> (el.innerText||'').indexOf(key) >= 0 );
-      if (p){ p.classList.add('vr-highlight'); p.scrollIntoView({block:'nearest', behavior:'smooth'}); lastHL=p; }
+      if(p){ p.classList.add('vr-highlight'); p.scrollIntoView({block:'nearest', behavior:'smooth'}); lastHL=p; }
     }catch{}
   }
 
   /* ---------------- Playback engine ---------------- */
-  let queue=[], speaking=false, canceled=false, curIndex=0, paused=false;
+  let queue=[], speaking=false, canceled=false, curIndex=0, paused=false, currentUtter=null;
 
   rateInp?.addEventListener('input', ()=> rateVal.textContent=(+rateInp.value).toFixed(2));
   pitchInp?.addEventListener('input',()=> pitchVal.textContent=(+pitchInp.value).toFixed(2));
 
   function speakFromText(text, highlightRoot){
-    // iOS/Safari quirk: cancelling before starting improves reliability
+    // iOS/Safari quirk: cancel before starting for reliability
     window.speechSynthesis.cancel();
 
-    canceled=false; speaking=true; paused=false; curIndex=0;
+    canceled=false; speaking=true; paused=false; curIndex=0; currentUtter=null;
     queue = chunkify(text);
 
     const vName = voiceSel?.value;
@@ -606,37 +608,55 @@
     status('Playing…'); prog(0, queue.length);
 
     function next(){
-      if (canceled) return;
+      if(canceled) return;
       const seg = queue[curIndex++];
-      if (!seg){ done(); return; }
+      if(!seg){ done(); return; }
 
       highlightWithin(highlightRoot, seg);
 
       const u = new SpeechSynthesisUtterance(seg);
-      if (vObj) u.voice = vObj;
+      currentUtter = u;
+      if(vObj) u.voice = vObj;
       u.rate = rateInp ? +rateInp.value : 1.0;
       u.pitch = pitchInp ? +pitchInp.value : 1.0;
 
-      u.onend = ()=>{ if (!paused){ prog(curIndex, queue.length); next(); } };
-      u.onerror = (e)=>{ console.warn('TTS error', e); next(); };
+      u.onend = ()=>{ if(!paused){ prog(curIndex, queue.length); next(); } };
+      u.onerror = ()=>{ next(); };
 
-      // Start speaking
-      try { window.speechSynthesis.speak(u); } catch(_){}
+      try { window.speechSynthesis.speak(u); } catch(_){ next(); }
     }
     next();
   }
 
   function speak(){
     const { text, node } = getSectionOrSelection();
-    if (!text){ status('Nothing to read.'); return; }
+    if(!text){ status('Nothing to read.'); return; }
     speakFromText(text, node);
   }
-  function pause(){ if(!speaking) return; paused=true; window.speechSynthesis.pause(); setButtons({play:false,pause:true,resume:false,stop:false}); status('Paused.'); }
-  function resume(){ if(!speaking) return; paused=false; window.speechSynthesis.resume(); setButtons({play:false,pause:false,resume:true,stop:false}); status('Playing…'); }
-  function stop(){ canceled=true; window.speechSynthesis.cancel(); done(true); }
+  function pause(){
+    if(!speaking) return;
+    paused=true;
+    try{ window.speechSynthesis.pause(); }catch{}
+    setButtons({play:false,pause:true,resume:false,stop:false});
+    status('Paused.');
+  }
+  function resume(){
+    if(!speaking) return;
+    paused=false;
+    try{ window.speechSynthesis.resume(); }catch{}
+    setButtons({play:false,pause:false,resume:true,stop:false});
+    status('Playing…');
+  }
+  function stop(){
+    canceled=true;
+    try{ window.speechSynthesis.cancel(); }catch{}
+    done(true);
+  }
   function done(stopped=false){
-    speaking=false; setButtons({play:true,pause:true,resume:true,stop:true}); status(stopped?'Stopped.':'Done.'); prog(0,0);
-    if (lastHL){ lastHL.classList.remove('vr-highlight'); lastHL=null; }
+    speaking=false; currentUtter=null;
+    setButtons({play:true,pause:true,resume:true,stop:true});
+    status(stopped?'Stopped.':'Done.'); prog(0,0);
+    if(lastHL){ lastHL.classList.remove('vr-highlight'); lastHL=null; }
   }
 
   // Wire controls
@@ -649,12 +669,12 @@
   btnStop?.addEventListener('click', stop);
   btnStopMini?.addEventListener('click', stop);
 
-  // Collapsible summary a11y sync
+  // Collapsible summary a11y sync (don’t let mini buttons toggle)
   (function(){
     const det = document.getElementById('voice-reader');
     const bar = det?.querySelector('.collapsible__bar');
     bar?.addEventListener('click', (e)=>{
-      if (e.target.closest('.chip')) return;
+      if(e.target.closest('.chip')) return;
       const open = det.hasAttribute('open'); bar.setAttribute('aria-expanded', String(!open));
     });
   })();
@@ -662,7 +682,7 @@
   // SSML Export
   exportBtn?.addEventListener('click', ()=>{
     const { text } = getSectionOrSelection();
-    if (!text){ status('Nothing to export.'); return; }
+    if(!text){ status('Nothing to export.'); return; }
     const paras = text.split(/\n{2,}/).map(p=>p.trim()).filter(Boolean);
     const esc = s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     const ratePct = rateInp ? Math.round(+rateInp.value * 100) : 100;
@@ -677,11 +697,20 @@ ${paras.map(p=>`    <p>${esc(p)}</p>`).join('\n')}
     const blob = new Blob([ssml], {type:'application/ssml+xml'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href=url; a.download='theory.ssml'; a.click();
-    setTimeout(()=>URL.revokeObjectURL(url), 1000);
+    setTimeout(()=>URL.revokeObjectURL(url), 1500);
     status('Exported SSML.');
   });
+
+  // Mini summary bar buttons shouldn’t collapse the <details>
+  (function(){
+    const det = document.getElementById('voice-reader');
+    document.getElementById('vr-play-mini')?.addEventListener('click', (e)=>{ e.stopPropagation(); btnPlay?.click(); });
+    document.getElementById('vr-stop-mini')?.addEventListener('click', (e)=>{ e.stopPropagation(); btnStop?.click(); });
+  })();
+
 })();
 </script>
+<!-- /Voice Reader (collapsible) — FULL DROP-IN -->
 
     <!-- Tabs -->
     <nav class="tabs reveal" aria-label="Sections">
