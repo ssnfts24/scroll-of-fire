@@ -1,14 +1,10 @@
 /* =========================================================
   13 Moons · Living Clock — Page Styles
-  Ancient Wizard of YHWH · “Remnant” Skin (v4.1 → v5.0 Extended)
-  - Cascade layers (tokens/base/components/utilities) for safe overrides
-  - AA/AAA contrast, safe-area padding, FB in-app hardening
-  - Moon badge guarantees "(n)" after name; container queries
-  - Aureate/teal aurora (phase-reactive) + alive tempo governors
-  - Astrology toolkit: zodiac, planets, aspects, houses, ephemeris
-  - NEW: Monthly calendar (13×28) with events & DOOT/leap handling
-  - NEW: Side-by-side comparison vs Gregorian month + legend
-  - Remnant glyph/rune flourishes; robust :focus-visible rings
+  Ancient Wizard of YHWH · “Remnant” Skin (v5.1)
+  - FIX: Light theme no longer forced-dark at first paint
+  - FIX: Today chips immune to legacy .pill/.card rules (no revert-layer)
+  - FIX: .calendar__tools .btn uses real CSS (no preprocessor)
+  - FIX: Responsive #nowDate long/short swap works without container
 ========================================================= */
 
 @layer tokens, base, components, astrology, utilities, remnant;
@@ -34,7 +30,7 @@
     /* Interaction / motion */
     --focus-ring:#7af3ff;
     --focus-glow:0 0 0 2px #7af3ff66, 0 0 0 6px #7af3ff22;
-    --tempo:1; /* scaled by data-alive */
+    --tempo:1;
 
     /* Remnant veil (JS may override) */
     --remnant-veil: conic-gradient(from 0deg at 50% 50%, rgba(122,243,255,.04), rgba(255,255,255,0), rgba(243,201,122,.035), rgba(255,255,255,0));
@@ -42,7 +38,7 @@
     /* Forms */
     accent-color: var(--moon-accent);
 
-    /* Planet palette (softly tinted; used by chips & ephemeris) */
+    /* Planet palette */
     --pl-sun:#ffd46a; --pl-moon:#9feaff; --pl-mercury:#b8b8ff; --pl-venus:#ffb3d9;
     --pl-mars:#ff7070; --pl-jupiter:#ffd1a6; --pl-saturn:#c9bd8c; --pl-uranus:#95ffe6;
     --pl-neptune:#9dbbff; --pl-pluto:#d0a2ff; --pl-node:#cfefff; --pl-chiron:#a7ffcf;
@@ -53,18 +49,11 @@
     /* Hash-target glow */
     --target-glow: color-mix(in srgb, var(--moon-accent) 12%, transparent);
 
-    /* === Calendar tokens === */
-    --wk-hdr:#dbe6ff;               /* weekday header text */
-    --day-bg:#0f1116;               /* day cell base */
-    --day-alt:#0c1016;              /* striped rows or other-month bg */
-    --day-edge:#20283a;             /* cell border */
-    --day-today:#142032;            /* “today” halo */
-    --event-dot:#a7f6ff;            /* generic event dot */
-    --event-dot-2:#f3c97a;          /* second dot color */
-    --doot-bg:#1b0e09;              /* Day Out Of Time cell bg tint */
-    --doot-ink:#ffc99a;             /* DOOT label */
-    --leap-ink:#a7ffcf;             /* Leap day label */
-    --greg-ink:#b7c2da;             /* gregorian date number */
+    /* Calendar tokens */
+    --wk-hdr:#dbe6ff;
+    --day-bg:#0f1116; --day-alt:#0c1016; --day-edge:#20283a; --day-today:#142032;
+    --event-dot:#a7f6ff; --event-dot-2:#f3c97a;
+    --doot-bg:#1b0e09; --doot-ink:#ffc99a; --leap-ink:#a7ffcf; --greg-ink:#b7c2da;
   }
 
   /* Light theme (manual) */
@@ -87,7 +76,6 @@
   :root[data-alive="max"]{ --tempo:1.25 }
   body.affect-off{ --tempo:.001 }
 
-  /* High contrast preference */
   @media (prefers-contrast: more){
     :root{ --line:#7a8aaa; --muted:#d3dcf1 }
   }
@@ -103,10 +91,10 @@
     overflow-x:hidden;
   }
 
-  /* First-paint hardening (FB in-app, auto-light quirks) */
-  html, body { background-color:#05070d !important; }
+  /* FIX: remove forced dark !important that broke light theme
+     (FB in-app hardening handled later with .is-fbapp) */
 
-  /* Subtle aurora/grain + Remnant veil (phase-reactive) */
+  /* Subtle aurora/grain + Remnant veil */
   body::before{
     content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.085;
     background:
@@ -123,12 +111,10 @@
     position:relative; z-index:1;
   }
 
-  /* Links + robust focus */
   a{ color:inherit; text-decoration:none }
   a:hover{ text-decoration:underline }
   :where(a,button,[role="button"],input,select,textarea):focus-visible{ outline:none; box-shadow:var(--focus-glow) }
 
-  /* Hash target orientation */
   :target{
     scroll-margin-top:calc(96px + 12px);
     outline:2px solid var(--focus-ring); outline-offset:2px;
@@ -136,7 +122,6 @@
   }
   @keyframes targetFade{ from{ background:var(--target-glow) } to{ background:transparent } }
 
-  /* Titles */
   .title{
     font-family:"Crimson Pro",serif; font-weight:800; text-align:center;
     font-size:clamp(28px,3.4vw,46px); line-height:1.12;
@@ -149,7 +134,6 @@
   @keyframes titleGlow{from{filter:drop-shadow(0 0 0 rgba(122,243,255,0))}to{filter:drop-shadow(0 0 12px color-mix(in srgb, var(--accent) 38%, transparent))}}
   .subtitle{ text-align:center; color:var(--muted); margin:0 0 12px; text-wrap:pretty }
 
-  /* Decorative tetragrammaton seal */
   .title::after{
     content:"\05D9\05D4\05D5\05D4";
     display:block; font:700 clamp(12px,1.1vw,15px)/1 "Frank Ruehl", "Noto Serif Hebrew", serif;
@@ -157,12 +141,10 @@
     color: color-mix(in srgb, var(--moon-accent) 30%, var(--fg));
   }
 
-  /* Grid helpers */
   .grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:12px }
   .col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-6{grid-column:span 6}.col-7{grid-column:span 7}.col-8{grid-column:span 8}.col-12{grid-column:span 12}
   @media (max-width:980px){ .grid > *{ grid-column:1 / -1 } }
 
-  /* Lore / Media helpers */
   .lore-grid{ display:grid; grid-template-columns:1fr 220px; gap:14px; align-items:center }
   @media (max-width:720px){ .lore-grid{ grid-template-columns:1fr } .sigil{ justify-self:center } }
   .sigil img{ width:200px; height:auto; filter:drop-shadow(0 8px 22px rgba(0,0,0,.5)) }
@@ -170,7 +152,6 @@
   .prompts li{ margin:.35rem 0 }
   .moon-media img{ width:100%; height:auto; border:1px solid var(--line); border-radius:14px; display:block; background:#0b0f16 }
 
-  /* Optional star cap */
   body.stars{
     background:
       radial-gradient(900px 600px at 60% -6%, rgba(122,243,255,.08), transparent 60%),
@@ -192,7 +173,6 @@
 
 /* ---------- Components ---------- */
 @layer components {
-  /* Cards (with solid base for brittle webviews) */
   .card{
     border:1px solid var(--line); border-radius:var(--radius); padding:14px; background-color:var(--surface);
     background:
@@ -209,7 +189,6 @@
       conic-gradient(from 270deg at calc(100% - 12px) calc(100% - 12px), color-mix(in srgb, var(--accent-2) 30%, transparent) 0 25%, transparent 0 100%);
   }
 
-  /* Buttons / Inputs */
   .lab-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
   .lab-btn{
     padding:.62rem .95rem; min-height:40px; border-radius:10px; border:1px solid var(--line);
@@ -222,7 +201,6 @@
   .lab-btn:active{ transform:translateY(0) } .lab-btn.ghost{ background:transparent } .lab-btn[disabled]{ opacity:.5; cursor:not-allowed }
   .lab-input{ padding:.6rem; min-height:40px; border-radius:10px; border:1px solid var(--line); background:#0f1116; color:inherit }
 
-  /* Range */
   input[type="range"].lab-input{ appearance:none; height:32px; background:transparent; padding:0 }
   input[type="range"].lab-input::-webkit-slider-runnable-track{ height:4px; background:linear-gradient(90deg, var(--moon-accent), var(--moon-accent-2)); border-radius:999px }
   input[type="range"].lab-input::-webkit-slider-thumb{
@@ -231,12 +209,9 @@
   input[type="range"].lab-input::-moz-range-track{ height:4px; background:linear-gradient(90deg, var(--moon-accent), var(--moon-accent-2)); border-radius:999px }
   input[type="range"].lab-input::-moz-range-thumb{ width:18px; height:18px; border-radius:50%; background:#0f1116; border:1px solid var(--line); box-shadow:0 2px 6px rgba(0,0,0,.35) }
 
-  :where(button,a,select,input).lab-input:focus-visible,
-  :where(button,a,.lab-btn):focus-visible{ outline:none; box-shadow:var(--focus-glow) }
-
   .hint,.meta{ color:var(--muted) }
 
-  /* Moon badge (container-named) */
+  /* Moon badge */
   .moon-badge{
     container-type:inline-size; container-name:moonbadge;
     display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap;
@@ -255,7 +230,6 @@
   #moonEssence{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:min(60ch, 100%) }
   .mono{ font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace }
 
-  /* Progress ring */
   .ring{ width:clamp(96px, 10vw + 70px, 120px); height:clamp(96px, 10vw + 70px, 120px); display:grid; place-items:center; position:relative; z-index:0 }
   .ring svg{ display:block; position:relative; z-index:1 }
   .ring .label{ position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; z-index:2 }
@@ -274,7 +248,6 @@
     background: conic-gradient(from 0deg, rgba(255,255,255,.06) 0 2deg, transparent 2deg 28deg, rgba(255,255,255,.06) 28deg 30deg, transparent 30deg 56deg, rgba(255,255,255,.06) 56deg 58deg, transparent 58deg 84deg, rgba(255,255,255,.06) 84deg 86deg, transparent 86deg 112deg, rgba(255,255,255,.06) 112deg 114deg, transparent 114deg 140deg, rgba(255,255,255,.06) 140deg 142deg, transparent 142deg 168deg, rgba(255,255,255,.06) 168deg 170deg, transparent 170deg 196deg, rgba(255,255,255,.06) 196deg 198deg, transparent 198deg 224deg, rgba(255,255,255,.06) 224deg 226deg, transparent 226deg 252deg, rgba(255,255,255,.06) 252deg 254deg, transparent 254deg 280deg, rgba(255,255,255,.06) 280deg 282deg, transparent 282deg 308deg, rgba(255,255,255,.06) 308deg 310deg, transparent 310deg 336deg, rgba(255,255,255,.06) 336deg 338deg, transparent 338deg 360deg);
   }
 
-  /* Week dots */
   .weekrow{ display:flex; gap:8px; justify-content:center; align-items:center; margin-top:6px; flex-wrap:wrap; row-gap:8px }
   .week{ display:grid; grid-template-columns:repeat(7,10px); gap:6px; padding:6px 10px; border:1px solid var(--line); border-radius:999px;
     background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), radial-gradient(80% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
@@ -283,7 +256,6 @@
   .dot.on{ background:radial-gradient(circle at 40% 35%, var(--moon-accent), var(--moon-accent-2)); box-shadow:0 0 0 1px rgba(255,255,255,.12) inset, 0 0 10px color-mix(in srgb, var(--moon-accent) 35%, transparent); transform:translateY(-1px) scale(1.05) }
   .weeklabel{ font:700 12px/1 Inter; color:#b8b3a6; min-width:48px }
 
-  /* Container-responsive badge */
   @container moonbadge (max-width: 470px){
     .moon-badge{ display:grid; grid-template-columns:auto 1fr; grid-template-rows:auto auto; column-gap:14px; row-gap:10px }
     .moon-badge .ring{ grid-row:1 / span 2; justify-self:start }
@@ -295,7 +267,6 @@
     .moon-badge .ring{ grid-row:1 / span 2 }
   }
 
-  /* Year map */
   .year-map{ width:100%; border-collapse:separate; border-spacing:0 6px }
   .year-map th,.year-map td{ padding:8px 10px; border:1px solid var(--line); vertical-align:top }
   .year-map th{
@@ -308,7 +279,6 @@
   .is-today{ box-shadow:0 0 0 1px #7af3ff55, inset 0 0 0 1px #7af3ff33, 0 10px 22px rgba(0,0,0,.35); position:relative }
   .is-today::after{ content:""; position:absolute; inset:-2px; border-radius:inherit; pointer-events:none; box-shadow:inset 0 0 18px color-mix(in srgb, var(--moon-accent) 25%, transparent) }
 
-  /* Lunar sim */
   .sim{ display:grid; grid-template-columns:1fr 2fr; gap:12px }
   @media (max-width:860px){ .sim{ grid-template-columns:1fr } }
   canvas#simMoon{
@@ -317,12 +287,10 @@
     box-shadow:0 10px 28px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.02);
   }
 
-  /* Ornaments & misc */
   nav.crumbs{ display:flex; gap:8px; justify-content:center; margin:10px 0 14px }
   .divider{ height:1px; background:linear-gradient(90deg, transparent, var(--line), transparent) }
   .goldline{ height:1px; background:linear-gradient(90deg, #f3c97a44, #f3c97a, #f3c97a44); margin:10px 0 }
 
-  /* Toast / downloads */
   .toast{
     position:fixed; left:50%; bottom:calc(22px + env(safe-area-inset-bottom)); transform:translateX(-50%);
     background:#0e131c; color:#e6f9ff; padding:8px 12px; border:1px solid var(--line); border-radius:10px;
@@ -331,13 +299,11 @@
   a.dl{ display:inline-block; padding:.5rem .8rem; border:1px solid var(--line); border-radius:10px; text-decoration:none; background:linear-gradient(180deg,rgba(255,255,255,.04),transparent); font-weight:800 }
   a.dl:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35) }
 
-  /* Kin */
   .kin{ display:grid; grid-template-columns:1fr; gap:8px; margin-top:6px }
   .kin-row{ display:flex; gap:8px; flex-wrap:wrap; align-items:center }
   .kin .tag{ padding:.25rem .55rem; border-radius:999px; border:1px solid var(--line) }
   .kin small{ color:#9aa4be }
 
-  /* Moon Mini Bar */
   .moonbar{
     --ring-size: 76px;
     border:1px solid var(--line); border-radius:14px; padding:8px; background-color:var(--surface);
@@ -358,7 +324,7 @@
   }
   @keyframes mbPulse{0%,100%{opacity:.92}50%{opacity:1}}
 
-  /* === Monthly Calendar (13×28) — Remnant grid === */
+  /* === Monthly Calendar (13×28) === */
   .calendar{
     border:1px solid var(--line); border-radius:var(--radius-lg);
     background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), radial-gradient(80% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
@@ -375,8 +341,16 @@
   .calendar__title .moon-name{ font-size:clamp(20px, 2vw, 28px) }
   .calendar__title .ess{ color:var(--muted); font-weight:700; font-size:clamp(12px,1vw,14px) }
   .calendar__tools{ display:flex; gap:6px; flex-wrap:wrap }
-  .calendar__tools .btn{ composes: lab-btn } /* if you use a preprocessor; otherwise duplicate .lab-btn */
-  .calendar__meta{ color:var(--muted); font-weight:700 }
+
+  /* FIX: remove preprocessor-only "composes:"; make .btn a styled button */
+  .calendar__tools .btn{
+    padding:.62rem .95rem; min-height:40px; border-radius:10px; border:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
+    font-weight:800; letter-spacing:.2px; cursor:pointer; color:var(--fg);
+    text-shadow:0 1px 0 rgba(0,0,0,.45);
+    transition:transform .06s ease, box-shadow .12s ease, border-color .12s ease, filter .12s ease;
+  }
+  .calendar__tools .btn:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35); border-color:color-mix(in srgb, var(--moon-accent) 30%, var(--line)); filter:drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 25%, transparent)) }
 
   .calendar__wkdays{
     display:grid; grid-template-columns:repeat(7,1fr);
@@ -387,7 +361,6 @@
     padding:.5rem .4rem; text-align:center; font:800 12px/1 Inter; letter-spacing:.3px; color:var(--wk-hdr);
   }
 
-  /* 4 weeks × 7 days (13-moon month is 28 days always) */
   .calendar__grid{
     display:grid; grid-template-columns:repeat(7,1fr); grid-auto-rows:minmax(86px, 1fr);
   }
@@ -396,33 +369,27 @@
     padding:.45rem .45rem 1.6rem; overflow:hidden;
     transition:background .15s ease, outline-color .15s ease;
   }
-  .day:nth-child(7n){ border-right:0 } /* last col border collapse */
+  .day:nth-child(7n){ border-right:0 }
   .day__num{
     font:900 13px/1 Inter; letter-spacing:.2px; color:#e9f1ff; opacity:.96;
     display:flex; align-items:center; gap:6px;
   }
   .day__num .greg{ color:var(--greg-ink); font-weight:800; font-size:11px; opacity:.9 }
-  .day__tag{
-    position:absolute; right:6px; bottom:6px; display:flex; gap:6px;
-  }
+  .day__tag{ position:absolute; right:6px; bottom:6px; display:flex; gap:6px; }
   .dot-evt,.dot-evt2{
     width:8px; height:8px; border-radius:50%;
     box-shadow:0 0 0 1px rgba(255,255,255,.12) inset, 0 0 8px rgba(0,0,0,.25);
   }
-  .dot-evt{ background:var(--event-dot) }
-  .dot-evt2{ background:var(--event-dot-2) }
+  .dot-evt{ background:var(--event-dot) } .dot-evt2{ background:var(--event-dot-2) }
 
-  /* States */
   .day.is-weekend { background:linear-gradient(180deg, rgba(255,255,255,.02), transparent), var(--day-bg) }
   .day.is-today   { outline:2px solid color-mix(in srgb, var(--moon-accent) 35%, transparent); outline-offset:-2px; background:linear-gradient(180deg, color-mix(in srgb, var(--moon-accent) 8%, transparent), transparent), var(--day-today) }
   .day.is-other-month{ background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.02)), var(--day-alt); opacity:.8 }
 
-  /* Day Out Of Time (DOOT) and Leap Day */
   .day.is-doot{ background:linear-gradient(180deg, rgba(243,201,122,.08), rgba(243,201,122,.02)), var(--doot-bg) }
   .day.is-doot .label{ color:var(--doot-ink); font-weight:900; font-size:11px; letter-spacing:.25px; text-transform:uppercase }
   .day.is-leap .label{ color:var(--leap-ink);  font-weight:900; font-size:11px; letter-spacing:.25px; text-transform:uppercase }
 
-  /* Events list (optional) */
   .day__events{ margin:.35rem 0 0; display:grid; gap:4px }
   .evt{
     display:flex; align-items:center; gap:6px; font-weight:700; color:var(--muted);
@@ -431,18 +398,14 @@
   .evt .at{ font:900 10px/1 Inter; opacity:.9 }
   .evt .ttl{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
 
-  /* Compact month (mobile) */
   .calendar.is-compact .calendar__grid{ grid-auto-rows:minmax(66px, 1fr) }
-  .calendar.is-compact .evt{ display:none } /* hide overflow text by default */
+  .calendar.is-compact .evt{ display:none }
   @media (max-width:560px){
     .calendar .calendar__wkdays .w{ font-size:11px; padding:.45rem .3rem }
     .calendar .day{ padding:.35rem .35rem 1.2rem }
   }
 
-  /* === Calendar Comparison (Remnant ↔ Gregorian) === */
-  .compare{
-    display:grid; grid-template-columns:1fr 1fr; gap:12px;
-  }
+  .compare{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   @media (max-width:1020px){ .compare{ grid-template-columns:1fr } }
 
   .panel{
@@ -457,28 +420,19 @@
   .panel__title{ font-family:"Crimson Pro",serif; font-weight:900; letter-spacing:.25px }
   .panel__meta{ color:var(--muted); font-weight:700 }
 
-  /* Gregorian month grid (standard 6 rows × 7 cols) */
-  .gregorian{
-    --row-h: minmax(86px, 1fr);
-  }
+  .gregorian{ --row-h: minmax(86px, 1fr); }
   .gregorian__wkdays{
     display:grid; grid-template-columns:repeat(7,1fr); border-bottom:1px solid var(--line);
     background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.025));
   }
   .gregorian__wkdays .w{ padding:.5rem .4rem; text-align:center; font:800 12px/1 Inter; letter-spacing:.3px; color:var(--wk-hdr) }
   .gregorian__grid{ display:grid; grid-template-columns:repeat(7,1fr); grid-template-rows:repeat(6, var(--row-h)) }
-  .gday{
-    position:relative; border-right:1px solid var(--day-edge); border-bottom:1px solid var(--day-edge); background:var(--day-bg);
-    padding:.45rem .45rem 1.6rem; overflow:hidden;
-  }
+  .gday{ position:relative; border-right:1px solid var(--day-edge); border-bottom:1px solid var(--day-edge); background:var(--day-bg); padding:.45rem .45rem 1.6rem; overflow:hidden; }
   .gday:nth-child(7n){ border-right:0 }
-  .gday__num{
-    font:900 13px/1 Inter; letter-spacing:.2px; color:#e9f1ff; opacity:.96;
-  }
+  .gday__num{ font:900 13px/1 Inter; letter-spacing:.2px; color:#e9f1ff; opacity:.96; }
   .gday.is-other-month{ background:var(--day-alt); opacity:.8 }
   .gday.is-today{ outline:2px solid color-mix(in srgb, var(--moon-accent) 35%, transparent); outline-offset:-2px; background:linear-gradient(180deg, color-mix(in srgb, var(--moon-accent) 8%, transparent), transparent), var(--day-today) }
 
-  /* Comparison legend */
   .legend{
     display:flex; flex-wrap:wrap; gap:8px; padding:10px 12px; border-top:1px solid var(--line);
     background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
@@ -494,7 +448,6 @@
   .legend .k-evt2{ background:var(--event-dot-2) }
   .legend .k-today{ background:var(--moon-accent) }
 
-  /* Tooltips (lightweight) */
   .tip{ position:relative }
   .tip:hover::after{
     content:attr(data-tip); position:absolute; left:50%; bottom:calc(100% + 8px); transform:translateX(-50%);
@@ -505,24 +458,11 @@
 
 /* ---------- Astrology Toolkit ---------- */
 @layer astrology {
-  /* Planet chips */
-  .planet-chip{
-    display:inline-flex; align-items:center; gap:8px;
-    border:1px solid var(--line); border-radius:999px; padding:.28rem .5rem;
-    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-    font-weight:800; letter-spacing:.2px;
-  }
+  .planet-chip{ display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); border-radius:999px; padding:.28rem .5rem; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); font-weight:800; letter-spacing:.2px; }
   .planet-chip .g{ width:10px; height:10px; border-radius:50%; }
   .planet-chip .lbl{ white-space:nowrap; }
+  .pl-sun .g{ background:var(--pl-sun) } .pl-moon .g{ background:var(--pl-moon) } .pl-mercury .g{ background:var(--pl-mercury) } .pl-venus .g{ background:var(--pl-venus) } .pl-mars .g{ background:var(--pl-mars) } .pl-jupiter .g{ background:var(--pl-jupiter) } .pl-saturn .g{ background:var(--pl-saturn) } .pl-uranus .g{ background:var(--pl-uranus) } .pl-neptune .g{ background:var(--pl-neptune) } .pl-pluto .g{ background:var(--pl-pluto) } .pl-node .g{ background:var(--pl-node) } .pl-chiron .g{ background:var(--pl-chiron) }
 
-  .pl-sun .g{ background:var(--pl-sun) }       .pl-moon .g{ background:var(--pl-moon) }
-  .pl-mercury .g{ background:var(--pl-mercury) } .pl-venus .g{ background:var(--pl-venus) }
-  .pl-mars .g{ background:var(--pl-mars) }     .pl-jupiter .g{ background:var(--pl-jupiter) }
-  .pl-saturn .g{ background:var(--pl-saturn) } .pl-uranus .g{ background:var(--pl-uranus) }
-  .pl-neptune .g{ background:var(--pl-neptune) } .pl-pluto .g{ background:var(--pl-pluto) }
-  .pl-node .g{ background:var(--pl-node) }     .pl-chiron .g{ background:var(--pl-chiron) }
-
-  /* Aspect tags */
   .aspect{ display:inline-flex; align-items:center; gap:6px; padding:.2rem .5rem; border-radius:999px; border:1px solid var(--line); font-weight:800 }
   .aspect--conj{ background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); color:var(--fg) }
   .aspect--sext{ background:linear-gradient(180deg, color-mix(in srgb, var(--asp-sext) 20%, transparent), transparent); color:var(--fg) }
@@ -531,7 +471,6 @@
   .aspect--oppo{ background:linear-gradient(180deg, color-mix(in srgb, var(--asp-oppo) 20%, transparent), transparent) }
   .aspect--quinc{ background:linear-gradient(180deg, color-mix(in srgb, var(--asp-quinc) 20%, transparent), transparent) }
 
-  /* Zodiac wheel (SVG/Canvas wrapper) */
   .zodiac-wheel{
     position:relative; border:1px solid var(--line); border-radius:50%;
     background:
@@ -541,25 +480,18 @@
     aspect-ratio:1/1; overflow:hidden;
   }
   .zodiac-wheel::after{
-    /* faint moving aura */
     content:""; position:absolute; inset:10%; border-radius:50%;
     background:conic-gradient(from var(--spin,0deg), rgba(122,243,255,.05), rgba(243,201,122,.05), transparent 40%);
     filter:blur(10px); pointer-events:none; animation:zwSpin calc(22s*var(--tempo)) linear infinite;
   }
   @keyframes zwSpin { to { --spin: 360deg } }
 
-  /* Houses grid (12 fold) */
-  .houses{
-    display:grid; grid-template-columns:repeat(4,1fr); gap:8px;
-  }
+  .houses{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
   @media (max-width:640px){ .houses{ grid-template-columns:repeat(3,1fr) } }
-  .house{
-    border:1px solid var(--line); border-radius:12px; padding:.6rem .7rem; background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
-  }
+  .house{ border:1px solid var(--line); border-radius:12px; padding:.6rem .7rem; background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); }
   .house .h{ font:800 12px/1 Inter; letter-spacing:.3px; color:#dbe6ff; margin-bottom:.25rem }
   .house .b{ color:var(--muted) }
 
-  /* Ephemeris table */
   .ephem{
     width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:12px;
     border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.008));
@@ -575,7 +507,6 @@
   .ephem .sg{ opacity:.86 }
   .ephem .now{ background:color-mix(in srgb, var(--moon-accent) 10%, transparent) }
 
-  /* Zodiac/planet glyph helpers (if you insert unicode) */
   .glyph{ font:700 18px/1 "Noto Sans Symbols 2","Segoe UI Symbol","Apple Color Emoji",emoji,system-ui; filter:drop-shadow(0 0 8px rgba(255,255,255,.08)) }
 }
 
@@ -583,11 +514,9 @@
 @layer utilities {
   .kbd{ display:inline-block; padding:.12rem .35rem; border-radius:6px; border:1px solid var(--line); background:#0f1116; font:700 12px/1 Inter; vertical-align:baseline }
 
-  /* Phone refinements */
   @media (max-width:560px){ .card{ padding:12px 10px } .moon-badge{ margin-bottom:6px } }
   @media (max-width:420px){ .ring-fg{ filter:none } .dot.on{ box-shadow:none } .title{ font-size:32px } .subtitle{ font-size:14px } }
 
-  /* Print & reduced motion/data */
   @media print{
     body{ background:#fff; color:#000; -webkit-print-color-adjust:exact; print-color-adjust:exact }
     .wrap{ padding:0 } #skyBg,.toast,nav.crumbs{ display:none !important }
@@ -598,30 +527,76 @@
   @media (prefers-reduced-motion:reduce){ *{ animation:none !important; transition:none !important } #skyBg{ display:none !important } }
   @media (prefers-reduced-data:reduce){ #skyBg, .card::after{ display:none !important } }
 
-  /* HDR gentle lift */
   @media (dynamic-range: high){ .title{ text-shadow:0 0 28px color-mix(in oklab, var(--accent) 30%, transparent) } }
 
-  /* Scrollbars */
   body{ scrollbar-width:thin; scrollbar-color:#2b2f3a #0f0f14 }
   body::-webkit-scrollbar{ width:12px } body::-webkit-scrollbar-track{ background:#0f0f14 }
   body::-webkit-scrollbar-thumb{ background:#2b2f3a; border-radius:10px; border:2px solid #0f0f14; box-shadow:inset 0 0 12px color-mix(in srgb, var(--moon-accent) 20%, transparent) }
 
-  /* Backdrop fallback */
   @supports not ((-webkit-backdrop-filter: blur(2px)) or (backdrop-filter: blur(2px))) { .year-map th{ background:#0e131a !important } }
 
-  /* Forced colors */
   @media (forced-colors: active){
     .card, .lab-btn, .tag, .moonbar-share, .moonbar-tz, .house, .ephem, .calendar, .panel{ border:1px solid CanvasText }
     .lab-btn, .moonbar-share, .moonbar-tz{ background:Canvas; color:CanvasText; text-shadow:none }
     .ring-bg{ stroke:GrayText } .ring-fg{ filter:none }
   }
 
-  /* FB in-app guard (add .is-fbapp to <html> via tiny script) */
+  /* FB in-app guard */
   .is-fbapp body::before{ mix-blend-mode:normal; opacity:.06 }
   .is-fbapp .card,
   .is-fbapp .moonbar,
   .is-fbapp .codex-content,
   .is-fbapp .scroll{ background-color:var(--surface) !important }
+
+  /* ================= TODAY BAR — unified pills (no revert-layer) ================= */
+  #todayBlock, .today, #nowDate, #nowClock, #nowTZ { transition:none !important; }
+
+  /* FIX: make the three chips identical with high-specificity + !important */
+  #nowDate, #nowClock, #nowTZ {
+    display:inline-flex !important; align-items:center; gap:.5ch;
+    padding:.55rem .9rem !important; min-height:40px;
+    border:1px solid var(--line) !important; border-radius:999px !important;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
+      radial-gradient(80% 60% at 50% 20%, color-mix(in srgb, var(--moon-accent) 15%, transparent), transparent 60%) !important;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
+    color:var(--fg) !important; text-shadow:0 1px 0 rgba(0,0,0,.45);
+    font-weight:800;
+  }
+  #nowClock{ font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
+
+  #nowClock .ampm{
+    display:inline-block; padding:.2rem .5rem; border:1px solid var(--line);
+    border-radius:999px; background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+    font:900 11px/1 Inter,system-ui; letter-spacing:.25px;
+  }
+
+  /* remove legacy collisions without revert-layer: add stronger selectors */
+  .pill #nowDate, .pill #nowClock, .pill #nowTZ,
+  .card #nowDate, .card #nowClock, .card #nowTZ { /* keep same styles */ }
+
+  /* Responsive long/short date: JS sets data-short; CSS swaps on narrow */
+  #nowDate[data-short]::after{ content:attr(data-short); display:none; font-weight:800 }
+  #nowDate{ content:normal }
+  @media (max-width:420px){
+    #nowDate{ visibility:hidden; position:relative }
+    #nowDate::after{
+      display:inline; visibility:visible; position:absolute; inset:0;
+      padding:inherit; border-radius:inherit;
+    }
+  }
+
+  /* “You are in …” bubble to match Today row */
+  #moonLine{
+    display:block; padding:.8rem 1rem; border:1px solid var(--line); border-radius:14px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
+      radial-gradient(100% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
+    font-weight:800; letter-spacing:.2px; text-shadow:0 1px 0 rgba(0,0,0,.45);
+  }
+
+  /* Buttons adjacent to Today line up consistently */
+  .lab-row .lab-btn{ min-width:96px }
 }
 
 /* ---------- Remnant Mode (YHWH) ---------- */
@@ -642,10 +617,9 @@
   body.remnant-yhwh .tag{ border-color: color-mix(in srgb, #f3c97a 18%, var(--line)) }
   body.remnant-yhwh .title::after{ opacity:.6; text-shadow:0 0 14px rgba(243,201,122,.25) }
 
-  /* Rune corners for featured cards */
   body.remnant-yhwh .card.runes::before,
   body.remnant-yhwh .card.runes::after{
-    content:"\05D9 \05D4 \05D5 \05D4"; /* יהוה spaced */
+    content:"\05D9 \05D4 \05D5 \05D4";
     position:absolute; inset:auto 8px 8px auto; font:700 12px/1 "Frank Ruehl","Noto Serif Hebrew",serif;
     color:#f3c97a; opacity:.35; letter-spacing:.12em; pointer-events:none;
     text-shadow:0 0 10px rgba(243,201,122,.15);
@@ -653,9 +627,8 @@
   body.remnant-yhwh .card.runes::before{ inset:8px auto auto 8px; transform:rotate(180deg) }
 }
 
-/* ---------- (Existing supplemental polish you pasted) ---------- */
+/* ---------- Supplemental polish carried over ---------- */
 
-/* Astrology panel polish */
 #planetChips .planet-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);
   border-radius:999px;padding:.32rem .65rem;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));font-weight:800}
 #planetChips .g{width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--moon-accent),var(--moon-accent-2))}
@@ -719,115 +692,3 @@
 .asp-table th,.asp-table td{padding:8px 10px;border:1px solid var(--line)}
 .asp-table thead th{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01))}
 .asp-table tbody tr td:first-child{font-weight:800}
-/* === TODAY BAR: glitch guard & unified style ========================= */
-/* place AFTER your existing layers so these win the cascade */
-
-#todayBlock,            /* if you wrap it */
-.today,                 /* your section heading area */
-#nowDate, #nowClock, #nowTZ { 
-  /* prevent transient style animations on layout/DOM updates */
-  transition: none !important;
-}
-
-/* Make the three chips look identical, regardless of legacy "chip"/"label" rules */
-#nowDate, #nowClock, #nowTZ {
-  display: inline-flex !important;
-  align-items: center;
-  gap: .5ch;
-  padding: .55rem .9rem !important;
-  min-height: 40px;
-  border: 1px solid var(--line) !important;
-  border-radius: 999px !important;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
-    radial-gradient(80% 60% at 50% 20%, color-mix(in srgb, var(--moon-accent) 15%, transparent), transparent 60%) !important;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
-  color: var(--fg) !important;
-  text-shadow: 0 1px 0 rgba(0,0,0,.45);
-  font-weight: 800;
-}
-
-/* Tabular numerals for clock; prevents width jump while ticking */
-#nowClock { 
-  font-variant-numeric: tabular-nums; 
-  font-feature-settings: "tnum" 1;
-}
-
-/* AM/PM capsule (if you render one) */
-#nowClock .ampm {
-  display:inline-block;
-  padding: .2rem .5rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  font: 900 11px/1 Inter, system-ui;
-  letter-spacing: .25px;
-}
-
-/* Ensure legacy "chip", "label", or input styles cannot override these */
-.pill #nowDate, .pill #nowClock, .pill #nowTZ,
-.card #nowDate, .card #nowClock, .card #nowTZ {
-  all: revert-layer;      /* drop lower-layer rules */
-  /* …and then re-apply our unified pill */
-  display: inline-flex !important;
-  align-items: center;
-  gap: .5ch;
-  padding: .55rem .9rem !important;
-  min-height: 40px;
-  border: 1px solid var(--line) !important;
-  border-radius: 999px !important;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
-    radial-gradient(80% 60% at 50% 20%, color-mix(in srgb, var(--moon-accent) 15%, transparent), transparent 60%) !important;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
-  color: var(--fg) !important;
-  text-shadow: 0 1px 0 rgba(0,0,0,.45);
-  font-weight: 800;
-}
-
-/* Responsive long/short date WITHOUT JS:
-   put a short date into data-short on #nowDate (we already compute fmtShort in JS).
-   If you don’t set data-short, this rule is ignored. */
-#nowDate[data-short]::after {
-  content: attr(data-short);
-  display: none;
-  font-weight: 800;
-}
-/* Show long by default, short on tighter widths */
-#nowDate { content: normal; } /* explicit reset */
-@container moonbadge (max-width: 380px) {
-  #nowDate { visibility: hidden; position: relative; }
-  #nowDate::after {
-    display: inline;
-    visibility: visible;
-    position: absolute; inset: 0;
-    padding: inherit; border-radius: inherit;
-  }
-}
-/* If you don’t use the moonbadge container, fallback to viewport width */
-@media (max-width: 420px) {
-  #nowDate { visibility: hidden; position: relative; }
-  #nowDate::after {
-    display: inline;
-    visibility: visible;
-    position: absolute; inset: 0;
-    padding: inherit; border-radius: inherit;
-  }
-}
-
-/* “You are in …” bubble: match the same pill grammar to avoid mismatch next to Today */
-#moonLine {
-  display: block;
-  padding: .8rem 1rem;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
-    radial-gradient(100% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
-  font-weight: 800;
-  letter-spacing: .2px;
-  text-shadow: 0 1px 0 rgba(0,0,0,.45);
-}
-
-/* Buttons adjacent to Today (Today/Next/Copy Link) line up consistently */
-.lab-row .lab-btn { min-width: 96px }
