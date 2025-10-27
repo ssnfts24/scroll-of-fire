@@ -1,4 +1,4 @@
-/* 13 Moons — Living Clock (advanced, DPR-aware, phase-tinted, v4.9 Remnant+) */
+/* 13 Moons — Living Clock (Core · DPR-aware · phase-tinted · v5.0 Remnant+) */
 (function(){
   "use strict";
 
@@ -6,19 +6,30 @@
   const $  =(s,r=document)=>r.querySelector(s);
   const $$ =(s,r=document)=>Array.from(r.querySelectorAll(s));
   const on =(t,e,f,o)=>t&&t.addEventListener(e,f,o);
+  const once=(t,e,f,o)=>t&&t.addEventListener(e,f,{...o,once:true});
   const pad=n=>String(n).padStart(2,"0");
   const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
   const lerp=(a,b,t)=>a+(b-a)*t;
   const ease=(t)=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2; // cubic in/out
   const safe = fn => { try{ return fn(); } catch(e){ console.warn("[Moons]",e); return void 0; } };
+  const isFunc = f => typeof f === "function";
   const prefersReduced = ()=> (typeof matchMedia==="function") && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const prefersData    = ()=> (typeof matchMedia==="function") && matchMedia("(prefers-reduced-data: reduce)").matches;
+  const isTouch = ()=> (typeof matchMedia==="function") && matchMedia("(pointer:coarse)").matches;
+
+  // polyfills (very small)
+  const ric = window.requestIdleCallback || (cb=>setTimeout(()=>cb({timeRemaining:()=>15}), 1));
+  const cac = window.cancelIdleCallback || clearTimeout;
 
   const crash=(msg,err)=>{
     console.error("[Moons crash]", msg, err);
     const n=document.createElement("div");
-    n.style.cssText="position:fixed;left:50%;top:10px;transform:translateX(-50%);z-index:99999;background:#230b0b;color:#ffd7d7;border:1px solid #712828;padding:8px 10px;border-radius:10px;font:600 13px/1.3 Inter";
+    n.role="status";
+    n.ariaLive="polite";
+    n.style.cssText="position:fixed;left:50%;top:10px;transform:translateX(-50%);z-index:99999;background:#230b0b;color:#ffd7d7;border:1px solid #712828;padding:8px 10px;border-radius:10px;font:600 13px/1.3 Inter;box-shadow:0 6px 18px rgba(0,0,0,.4)";
     n.textContent="Moons: "+msg;
     document.body.appendChild(n);
+    setTimeout(()=>n.remove(), 4000);
   };
 
   /* Footer year (safety) */
@@ -57,11 +68,11 @@
     try{
       tzPick.innerHTML = ALL_TZ.map(z=>`<option value="${z}">${z}</option>`).join("");
       tzPick.value = ALL_TZ.includes(defaultTZ) ? defaultTZ : "UTC";
-    }catch(e){
+    }catch{
       tzPick.innerHTML = COMMON_TZ.map(z=>`<option value="${z}">${z}</option>`).join("");
       tzPick.value = "UTC";
     }
-    on(tzPick,"change",()=>{ safe(()=> localStorage.setItem(TZ_KEY, tzPick.value)); writeURL(); updateAll(true); buildYearMap(); buildCalendars && buildCalendars(); }, {passive:true});
+    on(tzPick,"change",()=>{ safe(()=> localStorage.setItem(TZ_KEY, tzPick.value)); writeURL(); updateAll(true); buildYearMap(); isFunc(window.buildCalendars)&&window.buildCalendars(); }, {passive:true});
   }
 
   /* ===================== Date helpers ===================== */
@@ -120,7 +131,7 @@
         if (dt >= feb29 && start <= feb29) days -= 1;
       }
     }
-    return days; // 0..363
+    return days; // 0..363 (no specials)
   }
   function calc13Moon(d, tz){
     if (isDOOT(d,tz)){
@@ -166,41 +177,50 @@
     return {phase, ageDays, illum, frac};
   }
 
-  /* DPR-aware canvas */
+  /* DPR-aware canvas with ResizeObserver + throttling */
   const simMoon = $("#simMoon"); let ctx=null, DPR=1, CW=0, CH=0;
+  let ro=null, sizeRAF=0;
   function sizeCanvas(){
     if (!simMoon) return;
     DPR = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
     const rect = simMoon.getBoundingClientRect();
     const w = Math.max(300, Math.round(rect.width));
     const h = Math.max(220, Math.round(rect.height || rect.width*0.6));
+    if (w===CW && h===CH) return;
     CW = w; CH = h;
     simMoon.width  = Math.round(w * DPR);
     simMoon.height = Math.round(h * DPR);
     simMoon.style.width  = w + "px";
     simMoon.style.height = h + "px";
-    ctx = simMoon.getContext("2d");
+    ctx = simMoon.getContext("2d", {alpha:true, desynchronized:true});
     if (ctx) ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  function queueSize(){
+    if (sizeRAF) return;
+    sizeRAF = requestAnimationFrame(()=>{ sizeRAF=0; sizeCanvas(); });
   }
   if (simMoon){
     sizeCanvas();
-    const ro = ("ResizeObserver" in window) ? new ResizeObserver(sizeCanvas) : null;
+    ro = ("ResizeObserver" in window) ? new ResizeObserver(queueSize) : null;
     ro && ro.observe(simMoon);
-    on(window,"resize", sizeCanvas, {passive:true});
+    on(window,"resize", queueSize, {passive:true});
   }
 
-  /* Parallax control */
+  /* Parallax control (pointer & touch) */
   let pointerX = 0, pointerY = 0, parallax = 0;
   if (simMoon){
-    on(simMoon, "pointermove", e=>{
+    const move = e=>{
       const r = simMoon.getBoundingClientRect();
-      const x = (e.clientX - r.left)/r.width - 0.5;
-      const y = (e.clientY - r.top )/r.height - 0.5;
+      const ex = ("touches" in e && e.touches.length)? e.touches[0].clientX : e.clientX;
+      const ey = ("touches" in e && e.touches.length)? e.touches[0].clientY : e.clientY;
+      const x = (ex - r.left)/r.width - 0.5;
+      const y = (ey - r.top )/r.height - 0.5;
       pointerX = clamp(x*2, -1, 1);
       pointerY = clamp(y*2, -1, 1);
       parallax = 1;
-    }, {passive:true});
-    on(simMoon, "pointerleave", ()=>{ parallax = 0; }, {passive:true});
+    };
+    on(simMoon, isTouch() ? "touchmove" : "pointermove", move, {passive:true});
+    on(simMoon, isTouch() ? "touchend"  : "pointerleave", ()=>{ parallax = 0; }, {passive:true});
   }
 
   /* ---------- Moon Activity Ring (per-moon personality) ---------- */
@@ -232,7 +252,6 @@
 
   function drawActivity(cx, cy, R, t){
     if (!ctx || prefersReduced()) return;
-    const W=CW, H=CH;
     ctx.save();
     ctx.translate(cx,cy);
 
@@ -264,15 +283,14 @@
     });
 
     // subtle mode-specific motif
-    if (activity.mode==="resonant" || activity.mode==="solar" || activity.mode==="cosmic"){
+    if (["resonant","solar","cosmic"].includes(activity.mode)){
       ctx.strokeStyle="rgba(243,201,122,0.16)";
       ctx.lineWidth=1.2;
       for(let k=0;k<3;k++){
         const s=R*(1.1+k*0.12);
         ctx.beginPath(); ctx.arc(0,0,s,0,Math.PI*2); ctx.stroke();
       }
-    }else if (activity.mode==="electric" || activity.mode==="galactic"){
-      // triangular/hex pulses
+    }else if (["electric","galactic"].includes(activity.mode)){
       const sides = activity.mode==="electric"? 3 : 6;
       const rad = R*1.35;
       const angle = t*0.0006;
@@ -305,11 +323,13 @@
     const sx = cx + Math.cos(sunAngle)*R*1.7;
     const sy = cy - Math.sin(sunAngle)*R*1.7;
 
+    // body
     ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
     const body=ctx.createRadialGradient(cx,cy-R*0.65,R*0.2, cx,cy,R*1.05);
     body.addColorStop(0, "#1a2130"); body.addColorStop(1, "#0e131c");
     ctx.fillStyle=body; ctx.fill();
 
+    // terminator / illumination
     const k = 2*illum-1; const rx = R*Math.abs(k), ry = R;
     ctx.save(); ctx.translate(cx,cy); ctx.rotate(-sunAngle);
     ctx.beginPath();
@@ -325,6 +345,7 @@
 
     drawActivity(cx, cy, R, tBreath);
 
+    // sun marker
     ctx.beginPath(); ctx.arc(sx,sy,6,0,Math.PI*2); ctx.fillStyle="#f3c97a"; ctx.fill();
   }
 
@@ -417,6 +438,7 @@
   const dlICS = $("#dlICS");
   const moonChip = $("#moonChip");
 
+  // build week dots once
   if (weekDots && !weekDots.children.length){
     const frag = document.createDocumentFragment();
     for (let i=0;i<28;i++){ const d=document.createElement("i"); d.className="dot"; d.setAttribute("aria-hidden","true"); frag.appendChild(d); }
@@ -453,9 +475,10 @@
     }
   }
 
+  /* ===================== URL state ===================== */
   function readURL(){
     let u;
-    try{ u=new URL(location.href); }catch(e){ return; }
+    try{ u=new URL(location.href); }catch{ return; }
     const d=u.searchParams.get("d");
     const z=u.searchParams.get("tz");
     const h=u.searchParams.get("t");
@@ -471,16 +494,17 @@
     }
   }
   function writeURL(){
-    let u; try{ u=new URL(location.href); }catch(e){ return; }
+    let u; try{ u=new URL(location.href); }catch{ return; }
     if (datePick && validDateStr(datePick.value)) u.searchParams.set("d", datePick.value);
     if (tzPick)   u.searchParams.set("tz", tzPick.value);
     if (hourScrub)u.searchParams.set("t", hourScrub.value);
     history.replaceState(null,"",u);
   }
 
+  /* ===================== Sky background (off-main-thread cadence) ===================== */
   (function initSky(){
     const c = skyBg; if (!c) return;
-    const RM = prefersReduced();
+    const RM = prefersReduced() || prefersData();
     const k = c.getContext("2d"); if(!k) return;
 
     function size(){
@@ -512,9 +536,9 @@
       };
     }
 
-    let rafId=0, visible=true;
+    let rafId=0, visible=true, hidden=false;
     function tick(ts){
-      if (!visible) return;
+      if (!visible || hidden) { rafId=requestAnimationFrame(tick); return; }
       k.clearRect(0,0,c.width,c.height);
       const bg=k.createLinearGradient(0,0,0,c.height);
       bg.addColorStop(0,"#05060b"); bg.addColorStop(1,"#0b0e14");
@@ -558,12 +582,11 @@
     }) : null;
     io && io.observe(c);
 
-    let hidden=false;
     on(document,"visibilitychange", ()=>{ hidden=document.hidden; if (!hidden){ cancelAnimationFrame(rafId); rafId=requestAnimationFrame(tick);} });
-
     rafId=requestAnimationFrame(tick);
   })();
 
+  /* ===================== Phase tint / accent ===================== */
   function setGradientStops(defId, c1, c2){
     const grad = document.getElementById(defId);
     if (!grad) return;
@@ -601,6 +624,7 @@
   }
   const updateWidgetContrast=()=>{ const bar = document.querySelector(".moonbar"); if (!bar) return; bar.classList.remove("contrast-light"); };
 
+  /* ===================== Ring tween ===================== */
   let ringDashTarget = 0, ringDashNow = 0, lastTween = 0;
   function tweenRing(ts){
     if (!ringArc) return;
@@ -613,6 +637,7 @@
     if (Math.abs(ringDashNow - ringDashTarget) > 0.5) requestAnimationFrame(tweenRing);
   }
 
+  /* ===================== Year map ===================== */
   function buildYearMap(){
     try{
       const tz=tzPick?.value || "UTC";
@@ -636,6 +661,7 @@
     }catch(e){ crash("year map failed", e); }
   }
 
+  /* ===================== Update engine ===================== */
   let currentIllum = 0, currentSunAngle = 0;
 
   function updateAll(forceTween=false){
@@ -649,7 +675,7 @@
         const long = fmtDate(wall, tz);
         const short = fmtShort(wall, tz) || long;
         nowDate.textContent = long;
-        nowDate.setAttribute("data-short", short);
+        nowDate.setAttribute("data-short", short); // CSS swaps on narrow
       }
       if (nowClock) nowClock.textContent = fmtTime(base, tz);
       if (nowTZ)    nowTZ.textContent   = tz;
@@ -743,19 +769,22 @@
       }
 
       if (dlICS){
-        const ics  = makeICS(spans, tz, `${anchor.getUTCFullYear()}/${anchor.getUTCFullYear()+1}`);
-        const blob = new Blob([ics], {type:"text/calendar;charset=utf-8"});
-        const url  = URL.createObjectURL(blob);
-        if (dlICS.dataset._url) URL.revokeObjectURL(dlICS.dataset._url);
-        dlICS.href = url;
-        dlICS.dataset._url = url;
-        dlICS.download = `13-moon-${anchor.getUTCFullYear()}-${anchor.getUTCFullYear()+1}.ics`;
+        ric(()=>{ // build ICS off-idle to keep UI snappy
+          const ics  = makeICS(spans, tz, `${anchor.getUTCFullYear()}/${anchor.getUTCFullYear()+1}`);
+          const blob = new Blob([ics], {type:"text/calendar;charset=utf-8"});
+          const url  = URL.createObjectURL(blob);
+          if (dlICS.dataset._url) URL.revokeObjectURL(dlICS.dataset._url);
+          dlICS.href = url;
+          dlICS.dataset._url = url;
+          dlICS.download = `13-moon-${anchor.getUTCFullYear()}-${anchor.getUTCFullYear()+1}.ics`;
+        });
       }
 
-      buildCalendars && buildCalendars();
+      isFunc(window.buildCalendars) && window.buildCalendars();
     }catch(e){ crash("update failed — check console", e); }
   }
 
+  /* ===================== Controls / wiring ===================== */
   const btnToday=$("#btnToday"), prevDay=$("#prevDay"), nextDay=$("#nextDay"), shareLink=$("#shareLink");
 
   on(btnToday,"click",()=>{
@@ -782,6 +811,7 @@
     writeURL();
     safe(()=> navigator.clipboard.writeText(location.href));
     const t=document.createElement("div"); t.className="toast"; t.textContent="Link copied";
+    t.role="status"; t.ariaLive="polite";
     document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
     setTimeout(()=>{t.style.opacity=0; setTimeout(()=>t.remove(),250);},1800);
   });
@@ -814,6 +844,7 @@
     }
   });
 
+  // live clock tick (only if viewing "today")
   setInterval(()=>{
     if (nowClock && tzPick) nowClock.textContent = fmtTime(new Date(), tzPick.value);
     if (!tzPick || !datePick) return;
@@ -822,6 +853,7 @@
     if(datePick.value === today){ updateAll(); }
   }, 1000);
 
+  /* ===================== Render loop ===================== */
   let raf=0, animVisible=true, docHidden=false;
   function loop(ts){
     if (!animVisible || docHidden) { raf=requestAnimationFrame(loop); return; }
@@ -835,6 +867,7 @@
   on(document, "visibilitychange", ()=>{ docHidden = document.hidden; });
   raf=requestAnimationFrame(loop);
 
+  /* ===================== Init ===================== */
   try{
     readURL();
     if (tzPick && !tzPick.options.length){
@@ -845,249 +878,14 @@
       updateAll(true);
       buildYearMap();
       updateWidgetContrast();
+      document.body.classList.add("stars"); // match CSS skyBg styles
     });
   }catch(e){ crash("init failed", e); }
 
-  window.__sof_core__ = {
+  // public surface for sibling modules
+  window.__sof_core__ = Object.freeze({
     dateInTZ, fmtDate, fmtShort, pad, startOfYear13, yearMoonSpans, addDaysSkippingSpecials, validDateStr,
-    writeURL, updateAll
-  };
-
-})();
-
-/* 13 Moons — Living Clock · Calendars (Remnant + Gregorian, v4.9 Remnant+) */
-(function(){
-  "use strict";
-
-  const $  =(s,r=document)=>r.querySelector(s);
-  const on =(t,e,f,o)=>t&&t.addEventListener(e,f,o);
-  const safe = fn => { try{ return fn(); } catch(e){ console.warn("[Moons-Cal]",e); return void 0; } };
-
-  const core = window.__sof_core__ || {};
-  const {
-    dateInTZ, fmtDate, fmtShort, pad,
-    startOfYear13, yearMoonSpans, addDaysSkippingSpecials, validDateStr,
-    writeURL, updateAll
-  } = core;
-
-  const tzPick = $("#tzPick");
-  const datePick = $("#datePick");
-  const hourScrub = $("#hourScrub");
-  const ymd = (d,tz)=> dateInTZ(d,tz).toISOString().slice(0,10);
-
-  const getEv = (store, key)=> Array.isArray(store?.[key]) ? store[key] : [];
-
-  function chip(txt, cls="chip"){ const s=document.createElement('span'); s.className=cls; s.textContent=txt; return s; }
-  function cellButton(baseCls="cal__cell"){
-    const b=document.createElement('button'); b.type='button'; b.className=baseCls; return b;
-  }
-
-  function buildRemnantMonth(sel, tz){
-    const wrap = document.getElementById('remCal');
-    const remHdr=document.getElementById('remHdr');
-    const remMeta=document.getElementById('remMeta');
-    if (!wrap || !startOfYear13) return;
-    wrap.innerHTML = '';
-
-    const anchor = startOfYear13(sel, tz);
-    const spans = yearMoonSpans(anchor, tz);
-
-    const idx = (function(){
-      for (let i=0;i<spans.length;i++){
-        const s=spans[i];
-        const start = dateInTZ(s.start, tz).toISOString().slice(0,10);
-        const end   = dateInTZ(s.end, tz).toISOString().slice(0,10);
-        const cur   = ymd(sel, tz);
-        if (cur>=start && cur<=end) return i;
-      }
-      return 0;
-    })();
-
-    const span = spans[idx];
-    const start = span.start, end = span.end;
-
-    const labels=document.createElement('div'); labels.className='cal__labels';
-    ["D1","D2","D3","D4","D5","D6","D7"].forEach(l=>{
-      const el=document.createElement('div'); el.className='cal__label'; el.textContent=l; labels.appendChild(el);
-    });
-
-    const grid=document.createElement('div'); grid.className='cal__grid cal__grid--remnant';
-    let d = new Date(start);
-    for(let r=0;r<4;r++){
-      for(let c=0;c<7;c++){
-        const key=ymd(d,tz);
-        const isSel = (key === ymd(sel,tz));
-        const weekend = (c===0 || c===6);
-        const btn = cellButton();
-        if (weekend) btn.classList.add('is-weekend');
-        if (isSel)   btn.classList.add('is-today');
-
-        const top=document.createElement('div'); top.className='cal__top';
-        top.appendChild(chip(`D${r*7+c+1}`));
-        const sub=document.createElement('div'); sub.className='cal__sub mono';
-        sub.textContent = fmtShort(d, tz) || key;
-        btn.appendChild(top); btn.appendChild(sub);
-
-        const evs = getEv(window.REMNANT_EVENTS, key);
-        if (evs.length){
-          const dots=document.createElement('div'); dots.className='cal__dots';
-          evs.slice(0,2).forEach(e=>{
-            const i=document.createElement('i'); i.className='dot';
-            if (e.type) i.setAttribute('data-type', e.type);
-            dots.appendChild(i);
-          });
-          btn.appendChild(dots);
-          const ul=document.createElement('ul'); ul.className='cal__list';
-          evs.slice(0,3).forEach(e=>{
-            const li=document.createElement('li');
-            li.textContent = (e.at? `${e.at} `:'')+(e.title||'Event');
-            ul.appendChild(li);
-          });
-          btn.appendChild(ul);
-        }
-
-        btn.setAttribute('aria-label', `Remnant day ${r*7+c+1}; Gregorian ${fmtDate(d, tz)}`);
-        btn.addEventListener('click', ()=>{
-          if (datePick){ datePick.value = key; writeURL && writeURL(); updateAll && updateAll(true); }
-        }, {passive:true});
-
-        grid.appendChild(btn);
-        d = addDaysSkippingSpecials(d, 1, tz);
-      }
-    }
-
-    wrap.classList.add('cal','cal--remnant');
-    wrap.appendChild(labels);
-    wrap.appendChild(grid);
-
-    if (remHdr)  remHdr.textContent = `${span.m}. ${span.name} — ${span.essence}`;
-    if (remMeta) remMeta.textContent= `${fmtDate(start, tz)} → ${fmtDate(end, tz)} • 13×28 fixed`;
-  }
-
-  function buildGregorianMonth(sel, tz){
-    const wrap = document.getElementById('gregCal');
-    const gregHdr=document.getElementById('gregHdr');
-    const gregMeta=document.getElementById('gregMeta');
-    const legend=document.getElementById('calLegend');
-    if (!wrap || !fmtDate) return;
-    wrap.innerHTML = '';
-
-    const base = dateInTZ(sel, tz);
-    const y = base.getUTCFullYear(), m = base.getUTCMonth();
-    const first = new Date(Date.UTC(y,m,1));
-    const firstDow = first.getUTCDay();
-    const gridStart = new Date(Date.UTC(y,m,1 - firstDow));
-
-    const labels=document.createElement('div'); labels.className='cal__labels';
-    ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(l=>{
-      const el=document.createElement('div'); el.className='cal__label'; el.textContent=l; labels.appendChild(el);
-    });
-
-    const grid=document.createElement('div'); grid.className='cal__grid cal__grid--greg';
-    let d = new Date(gridStart);
-    for (let i=0; i<42; i++){
-      const key = ymd(d, tz);
-      const thisMonth = (d.getUTCMonth()===m);
-      const isToday = (key === ymd(new Date(), tz));
-      const weekend = (d.getUTCDay()===0 || d.getUTCDay()===6);
-      const evs = getEv(window.GREG_EVENTS, key);
-
-      const btn = cellButton();
-      if (!thisMonth) btn.classList.add('is-other');
-      if (weekend)    btn.classList.add('is-weekend');
-      if (isToday)    btn.classList.add('is-today');
-
-      const top=document.createElement('div'); top.className='cal__top';
-      top.appendChild(chip(String(d.getUTCDate()).padStart(2,'0')));
-      const sub=document.createElement('div'); sub.className='cal__sub meta';
-      sub.textContent = new Intl.DateTimeFormat(undefined,{month:'short', timeZone:tz}).format(d);
-      btn.appendChild(top); btn.appendChild(sub);
-
-      if (evs.length){
-        const dots=document.createElement('div'); dots.className='cal__dots';
-        evs.slice(0,2).forEach(e=>{
-          const i=document.createElement('i'); i.className='dot';
-          if (e.type) i.setAttribute('data-type', e.type);
-          dots.appendChild(i);
-        });
-        btn.appendChild(dots);
-
-        const ul=document.createElement('ul'); ul.className='cal__list';
-        evs.slice(0,3).forEach(e=>{
-          const li=document.createElement('li');
-          li.textContent = (e.at? `${e.at} `:'')+(e.title||'Event');
-          ul.appendChild(li);
-        });
-        btn.appendChild(ul);
-      }
-
-      btn.setAttribute('aria-label', `Gregorian ${fmtDate(d, tz)}`);
-      btn.addEventListener('click', ()=>{
-        if (datePick){ datePick.value = key; writeURL && writeURL(); updateAll && updateAll(true); }
-      }, {passive:true});
-
-      grid.appendChild(btn);
-      d.setUTCDate(d.getUTCDate()+1);
-    }
-
-    wrap.classList.add('cal','cal--greg');
-    wrap.appendChild(labels);
-    wrap.appendChild(grid);
-
-    if (gregHdr){
-      const monthName = new Intl.DateTimeFormat(undefined,{month:'long', year:'numeric', timeZone:tz}).format(first);
-      gregHdr.textContent = monthName;
-    }
-    if (gregMeta) gregMeta.textContent = '6×7 grid • weekends/today highlighted';
-
-    if (legend){
-      legend.innerHTML = `
-        <span class="legend__item"><i class="dot"></i> event</span>
-        <span class="legend__item"><i class="dot" data-type="ceremony"></i> ceremony</span>
-        <span class="legend__item"><i class="dot" data-type="remnant"></i> remnant</span>
-        <span class="legend__item badge is-today">today</span>
-        <span class="legend__item badge is-weekend">weekend</span>
-        <span class="legend__item badge is-other">other month</span>
-      `;
-    }
-  }
-
-  function buildCalendars(){
-    const tz = (tzPick && tzPick.value) || 'UTC';
-    const selStr = (datePick && validDateStr(datePick.value)) ? datePick.value : ymd(new Date(), tz);
-    const sel = new Date(`${selStr}T${pad(+hourScrub?.value || 0)}:00:00Z`);
-    safe(()=> buildRemnantMonth(sel, tz));
-    safe(()=> buildGregorianMonth(sel, tz));
-
-    const prevMoon=$("#prevMoon"), nextMoon=$("#nextMoon");
-    if (prevMoon && !prevMoon._wired){
-      prevMoon._wired=true;
-      prevMoon.addEventListener('click', ()=>{
-        const tz=(tzPick && tzPick.value) || 'UTC';
-        if (!datePick) return;
-        let d=new Date(`${(datePick.value||ymd(new Date(),tz))}T00:00:00Z`);
-        for (let i=0;i<28;i++) d = addDaysSkippingSpecials(d, -1, tz);
-        datePick.value = ymd(d, tz);
-        writeURL && writeURL(); updateAll && updateAll(true); buildCalendars();
-      }, {passive:true});
-    }
-    if (nextMoon && !nextMoon._wired){
-      nextMoon._wired=true;
-      nextMoon.addEventListener('click', ()=>{
-        const tz=(tzPick && tzPick.value) || 'UTC';
-        if (!datePick) return;
-        let d=new Date(`${(datePick.value||ymd(new Date(),tz))}T00:00:00Z`);
-        for (let i=0;i<28;i++) d = addDaysSkippingSpecials(d, 1, tz);
-        datePick.value = ymd(d, tz);
-        writeURL && writeURL(); updateAll && updateAll(true); buildCalendars();
-      }, {passive:true});
-    }
-  }
-
-  window.buildCalendars = buildCalendars;
-  on(datePick, "change", buildCalendars, {passive:true});
-  on(hourScrub, "input",  buildCalendars, {passive:true});
-  on(tzPick,    "change", buildCalendars, {passive:true});
-  requestAnimationFrame(buildCalendars);
+    writeURL, updateAll, MOONS, MOON_ESSENCE, numerology, moonPhase
+  });
 
 })();
