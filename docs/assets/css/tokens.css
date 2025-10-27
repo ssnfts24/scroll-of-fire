@@ -1,0 +1,195 @@
+/* ============================================================
+   Scroll of Fire — TOKENS LAYER
+   Wizard of YHWH · Remnant Astronomy Palette v4.1
+   ============================================================ */
+
+@layer tokens {
+  :root {
+    /* ----- Color Systems ----- */
+    color-scheme: dark light;
+
+    /* Dark base (“Temple of Light”) */
+    --bg:            #05070d;
+    --surface:       #0e131a;
+    --surface-2:     #151c25;
+    --fg:            #eef2fb;
+    --muted:         #9da8c4;
+    --line:          #2a3242;
+    --shadow:        rgba(0,0,0,.6);
+
+    /* Accents — tuned by JS via phase illumination */
+    --accent:        #7af3ff;   /* moon-blue */
+    --accent-2:      #f3c97a;   /* solar-gold */
+    --accent-soft:   #7aa8ff;
+    --accent-fire:   #ff6b3d;
+    --accent-earth:  #b3ff85;
+    --accent-air:    #a7f6ff;
+    --accent-water:  #7aaaff;
+
+    /* Elemental glows */
+    --fire-glow:   0 0 12px rgba(255,107,61,.55);
+    --air-glow:    0 0 12px rgba(167,246,255,.45);
+    --water-glow:  0 0 12px rgba(122,170,255,.45);
+    --earth-glow:  0 0 12px rgba(179,255,133,.45);
+    --gold-glow:   0 0 14px rgba(243,201,122,.55);
+
+    /* Typography scale */
+    --font-sans: "Inter", system-ui, sans-serif;
+    --font-serif:"Crimson Pro", serif;
+    --size-xs: 0.75rem;
+    --size-sm: 0.875rem;
+    --size-base: 1rem;
+    --size-lg: 1.25rem;
+    --size-xl: 1.75rem;
+    --size-xxl: 2.25rem;
+
+    /* Radii / Borders */
+    --r-sm: 6px;
+    --r-md: 12px;
+    --r-lg: 20px;
+
+    /* Animations */
+    --t-fast: 150ms;
+    --t-med: 350ms;
+    --t-slow: 750ms;
+    --ease: cubic-bezier(.25,.8,.25,1);
+
+    /* Shadows */
+    --elev-1: 0 0 0 1px var(--line), 0 8px 14px -6px rgba(0,0,0,.5);
+    --elev-2: 0 0 0 1px var(--line), 0 14px 28px -10px rgba(0,0,0,.6);
+    --elev-3: inset 0 0 0 1px var(--line), 0 0 16px rgba(122,243,255,.15);
+
+    /* Scrollbar (modern browsers) */
+    scrollbar-color: var(--accent) var(--surface);
+  }
+
+  /* ---------- Dark Mode ---------- */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #05070d;
+      --fg: #edf2fb;
+      --muted: #a7b1ca;
+      --line: #2a3242;
+    }
+  }
+
+  /* ---------- Light Mode ---------- */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f7fbff;
+      --surface: #ffffff;
+      --surface-2: #f0f3f8;
+      --fg: #0b0b0f;
+      --muted: #4a4a55;
+      --line: #ccd3e0;
+    }
+  }
+
+  /* ---------- Thematic Carriers ---------- */
+  .carrier-432 { --accent: #7af3ff; --accent-2: #f3c97a; }
+  .carrier-528 { --accent: #85ff7a; --accent-2: #7af3ff; }
+  .carrier-369 { --accent: #f3c97a; --accent-2: #ff7ad5; }
+  .carrier-144 { --accent: #a7f6ff; --accent-2: #7aa8ff; }
+  .carrier-963 { --accent: #f3aaff; --accent-2: #7af3ff; }
+
+  /* ---------- Font Globals ---------- */
+  html, body {
+    font-family: var(--font-sans);
+    font-size: var(--size-base);
+    color: var(--fg);
+    background: var(--bg);
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,h2,h3,h4 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    color: var(--accent-2);
+    letter-spacing: 0.02em;
+    text-shadow: var(--gold-glow);
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color var(--t-fast) var(--ease);
+  }
+  a:hover { color: var(--accent-2); }
+
+  /* ---------- Containers ---------- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 1.2rem 1.4rem;
+    box-shadow: var(--elev-1);
+    transition: transform var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease);
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: var(--elev-2); }
+
+  .shine {
+    background:
+      linear-gradient(135deg, var(--surface) 60%, rgba(255,255,255,.03)),
+      radial-gradient(circle at 25% 15%, var(--accent) 0%, transparent 60%);
+    background-blend-mode: overlay;
+  }
+
+  /* ---------- Interactive Elements ---------- */
+  .lab-btn {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: var(--r-sm);
+    font-weight: 600;
+    padding: .4rem .9rem;
+    cursor: pointer;
+    transition: all var(--t-fast) var(--ease);
+  }
+  .lab-btn:hover { background: var(--accent-2); box-shadow: var(--gold-glow); }
+
+  .lab-input {
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    color: var(--fg);
+    padding: .25rem .5rem;
+  }
+
+  .pill, .tag {
+    background: var(--surface-2);
+    color: var(--muted);
+    border-radius: var(--r-sm);
+    padding: .2rem .6rem;
+    margin-right: .3rem;
+    font-size: var(--size-sm);
+  }
+
+  /* ---------- Glow Elements ---------- */
+  .el-fire   { filter: drop-shadow(var(--fire-glow)); }
+  .el-air    { filter: drop-shadow(var(--air-glow)); }
+  .el-water  { filter: drop-shadow(var(--water-glow)); }
+  .el-earth  { filter: drop-shadow(var(--earth-glow)); }
+
+  /* ---------- Gradients ---------- */
+  .goldline {
+    height: 2px;
+    background: linear-gradient(90deg,var(--accent-2),transparent);
+    border-radius: var(--r-sm);
+  }
+
+  /* ---------- Utilities ---------- */
+  .mono   { font-family: ui-monospace, monospace; }
+  .meta   { color: var(--muted); font-size: var(--size-sm); }
+  .hint   { font-size: var(--size-sm); opacity: .7; }
+  .kbd    { background: var(--surface-2); border-radius: var(--r-sm); padding: 0 .25em; }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--accent);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-track { background: var(--surface-2); }
+}
