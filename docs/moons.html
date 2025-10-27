@@ -1,141 +1,98 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="sof" data-alive="lively">  
-<head>  
-  <base href="https://ssnfts24.github.io/scroll-of-fire/">  
-  <meta charset="utf-8" />  
+<html lang="en" dir="ltr" class="sof" data-alive="lively">
+<head>
+  <!-- 0) Theme boot: eliminate dark/light flash BEFORE CSS loads -->
+  <script>
+  (function(){
+    try{
+      var t = localStorage.getItem('theme');
+      if(!t){ t = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark'; }
+      document.documentElement.setAttribute('data-theme', t);
+    }catch(e){}
+  })();
+  </script>
+
+  <!-- 0.1) FB in-app browser guard -->
+  <script>
+  (function(){
+    var ua=navigator.userAgent||"";
+    if(/\bFBAN|FBAV|FB_IAB|FBAN\/Messenger\b/i.test(ua)){ document.documentElement.classList.add('is-fbapp'); }
+  })();
+  </script>
+
+  <meta charset="utf-8" />
   <title>Remnant 13 Moons · Living Clock — Scroll of Fire</title>
-  <!-- Viewport / theme / color -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />  
-  <meta name="theme-color" content="#05070d" media="(prefers-color-scheme: dark)">  
-  <meta name="theme-color" content="#f7fbff" media="(prefers-color-scheme: light)">  
-  <meta name="color-scheme" content="dark light" />  
-  <meta name="description" content="A Remnant-themed 13 Moon calendar — day ring, week dots, year map, lunar simulation, numerology, optional Kin, share card, and .ics export. Ancient Wizard of YHWH aesthetics." />  
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#05070d" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f7fbff" media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="dark light" />
+  <meta name="description" content="A Remnant-themed 13 Moon calendar — day ring, week dots, year map, lunar simulation, numerology, optional Kin, share card, and .ics export." />
   <meta name="robots" content="index,follow,max-image-preview:large" />
-  <!-- Canonical + Social -->
-  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">  
-  <meta property="og:type" content="website">  
-  <meta property="og:title" content="Remnant 13 Moons · Living Clock — Scroll of Fire">  
-  <meta property="og:description" content="Which Moon am I in? Day ring, week dots, year map, DOOT handling, lunar sim, numerology, Kin, .ics export — Remnant / YHWH wizard theming.">  
-  <meta property="og:image" content="assets/share/moon-card.png">  
-  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">  
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
+
+  <!-- Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Remnant 13 Moons · Living Clock — Scroll of Fire">
+  <meta property="og:description" content="Which Moon am I in? Day ring, week dots, year map, lunar sim, numerology, Kin, .ics export — Remnant / YHWH wizard theming.">
+  <meta property="og:image" content="assets/share/moon-card.png">
+  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
   <meta name="twitter:card" content="summary_large_image">
+
   <!-- PWA -->
-  <link rel="manifest" href="assets/manifest.webmanifest">  
-  <meta name="apple-mobile-web-app-capable" content="yes">  
-  <meta name="apple-mobile-web-app-title" content="13 Moons">  
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">  
-  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">  
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">  
-  <link rel="icon" type="image/png" sizes="512x512" href="assets/icons/icon-512.png">  
+  <link rel="manifest" href="assets/manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="13 Moons">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/icons/icon-512.png">
   <link rel="mask-icon" href="assets/icons/safari-pinned.svg" color="#0e131a">
+
   <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>  
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>  
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
-  <!-- Site + page CSS (v4.2) -->
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-26">  
-  <link rel="stylesheet" href="assets/css/moons.css?v=2025-10-26">
-  <!-- Critical safety patch + Remnant style + Astro mobile fixes -->
-  <style>  
-    html,body{background:#05070d!important;color:#eaf1ff}
-    body{overflow-x:hidden}
-    :focus-visible{outline:2px solid color-mix(in srgb, var(--moon-accent) 70%, #fff);outline-offset:2px}
-    .moonbar.contrast-light,.moonbar.contrast-light .tag,.moonbar.contrast-light button{color:#0b1220!important}
-    .moonbar.contrast-light .mb-bg{stroke:#e1e8ff!important}
-    .moonbar.contrast-light .mb-fg{filter:none!important}
-    .lore-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}
-    @media (max-width:780px){.lore-grid{grid-template-columns:1fr}}
-    .moon-media img{width:100%;height:auto;border-radius:12px;border:1px solid var(--line)}
-    .prompts{padding-left:1.2rem}
-    #noteText{width:100%;min-height:110px;border:1px solid var(--line);border-radius:10px;background:#0f1116;color:inherit;padding:.65rem}
-    .remnant-opener{position:relative;overflow:hidden}
-    .op-grid{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
-    .op-sigil{width:64px;height:64px;filter:drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 30%, transparent))}
-    .op-title{margin:0;font:800 20px/1.15 "Crimson Pro",serif;letter-spacing:.2px}
-    .op-sub{margin:.25rem 0 0}
-    .lab-btn.big{padding:.8rem 1.1rem;font-weight:900}
-    .cta-link{text-decoration:none;color:inherit}
-    @media (max-width:720px){.op-grid{grid-template-columns:auto 1fr;gap:10px}.op-right{grid-column:1/-1}}
-    /* ===== Remnant · YHWH style (v2) ===== */
-    .remnant-yhwh{
-      --remnant-bg-0:#05070d;
-      --remnant-bg-1:#0a0f18;
-      --remnant-ink:#eaf1ff;
-      --remnant-ink-soft:#a8b1c9;
-      --remnant-line:#253044;
-      --moon-accent:#7af3ff;
-      --moon-accent-2:#f3c97a;
-      --el-fire:#ffb16e;--el-water:#7bc7ff;--el-air:#c9d3e9;--el-earth:#b4ff9a;--el-aether:#ffd1f3;
-      background:
-        radial-gradient(900px 600px at 50% 18%, rgba(122,243,255,.06), transparent 60%),
-        radial-gradient(1200px 800px at 50% 95%, rgba(243,201,122,.05), transparent 70%),
-        linear-gradient(180deg, var(--remnant-bg-0), var(--remnant-bg-1));
-      color:var(--remnant-ink);
-    }
-    .remnant-yhwh .card{border:1px solid var(--remnant-line);background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.07));border-radius:14px}
-    .remnant-yhwh .shine{box-shadow:inset 0 0 28px rgba(122,243,255,.08), 0 14px 60px rgba(0,0,0,.35)}
-    .remnant-yhwh .lab-btn{border:1px solid var(--remnant-line);background:rgba(255,255,255,.03);border-radius:10px}
-    .remnant-yhwh .lab-btn:hover{background:rgba(255,255,255,.06)}
-    .remnant-yhwh .seal{display:inline-flex;align-items:center;gap:.45rem;padding:.35rem .6rem;border-radius:999px;border:1px solid var(--remnant-line);background:linear-gradient(90deg, color-mix(in srgb,var(--moon-accent) 14%, transparent), transparent)}
-    .remnant-yhwh .dot{width:.9em;height:.9em;border-radius:50%;display:inline-block}
-    .remnant-yhwh .el-fire{background:var(--el-fire)}
-    .remnant-yhwh .el-water{background:var(--el-water)}
-    .remnant-yhwh .el-air{background:var(--el-air)}
-    .remnant-yhwh .el-earth{background:var(--el-earth)}
-    .remnant-yhwh .el-aether{background:var(--el-aether)}
-    .remnant-yhwh .ring-bg{stroke:#1b2231;fill:none;stroke-width:10}
-    .remnant-yhwh .ring-fg{stroke:url(#mbGrad);stroke-width:10;stroke-linecap:round;fill:none}
-    .remnant-yhwh .meta{color:var(--remnant-ink-soft)}
-    .remnant-yhwh code,.remnant-yhwh .mono{background:rgba(255,255,255,.03);padding:.05rem .3rem;border-radius:.35rem}
-    /* ---------- ASTROLOGY NOW ---------- */
-    .astro{padding:12px}
-    .astro-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:8px}
-    .astro-grid{display:grid;grid-template-columns:1fr 360px;gap:12px;align-items:start}
-    .astro-chips{display:grid;grid-template-columns:1fr;gap:8px}
-    .astro-chips .chip{display:flex;align-items:center;gap:.6rem;justify-content:space-between;padding:.55rem .7rem;border:1px solid var(--remnant-line);border-radius:12px;color:var(--remnant-ink);background:rgba(255,255,255,.03);transition:transform .12s ease, box-shadow .12s ease;width:100%}
-    .astro-chips .chip b{min-width:72px}
-    .astro-chips .chip .pos{min-width:66px;text-align:right}
-    .astro-chips .chip:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(0,0,0,.32),0 0 0 1px color-mix(in srgb,var(--moon-accent) 28%, transparent)}
-    .astro-chips details.chip{padding:.35rem .7rem}
-    .astro-chips .more-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-    .astro-wheel{display:flex;flex-direction:column;align-items:center;gap:6px}
-    .astro-wheel svg{width:min(100%,360px);height:auto;display:block}
-    .astro-aspects{margin-top:10px}
-    .astro-aspects .legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
-    .astro-aspects .badge{border:1px solid var(--remnant-line);background:rgba(255,255,255,.03);padding:.25rem .55rem;border-radius:999px;font-weight:600}
-    .astro-aspects .badge.conj{box-shadow:inset 0 -2px 0 0 var(--el-aether)}
-    .astro-aspects .badge.sext{box-shadow:inset 0 -2px 0 0 var(--el-air)}
-    .astro-aspects .badge.sqr{box-shadow:inset 0 -2px 0 0 var(--el-earth)}
-    .astro-aspects .badge.tri{box-shadow:inset 0 -2px 0 0 var(--el-water)}
-    .astro-aspects .badge.opp{box-shadow:inset 0 -2px 0 0 var(--el-fire)}
-    .asp-table{width:100%;border-collapse:collapse}
-    .asp-table th,.asp-table td{padding:.45rem;border-top:1px solid var(--remnant-line);text-align:left}
-    .astro-aspects{overflow:auto;-webkit-overflow-scrolling:touch}
-    .asp-table thead th{position:sticky;top:0;background:rgba(5,7,13,.9);backdrop-filter:saturate(120%) blur(4px)}
-    @media (max-width:800px){.astro-grid{grid-template-columns:1fr}.astro-chips{grid-template-columns:1fr 1fr}.astro-chips .chip b{min-width:auto}}
-    @media (max-width:520px){.astro-chips{grid-template-columns:1fr}.astro-chips .chip .pos{min-width:auto}.astro-head{gap:6px}}
-    @media (prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}}
-    .remnant-yhwh .remnant-frame{position:relative;isolation:isolate}
-    .remnant-yhwh .remnant-frame::after{content:"";position:absolute;inset:-1px;z-index:-1;border-radius:inherit;background:
-      radial-gradient(500px 220px at 8% -10%, color-mix(in srgb,var(--moon-accent) 22%, transparent), transparent 60%),
-      radial-gradient(500px 220px at 108% 120%, color-mix(in srgb,var(--moon-accent-2) 22%, transparent), transparent 60%);opacity:.55;pointer-events:none}
-    /* TODAY BAR — unified pill */
-    #todayBlock, .today, #nowDate, #nowClock, #nowTZ { transition:none !important; }
-    #nowDate, #nowClock, #nowTZ {display:inline-flex!important;align-items:center;gap:.5ch;padding:.55rem .9rem!important;min-height:40px;border:1px solid var(--line)!important;border-radius:999px!important;background:
-      linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
-      radial-gradient(80% 60% at 50% 20%, color-mix(in srgb, var(--moon-accent) 15%, transparent), transparent 60%)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);color:var(--fg)!important;text-shadow:0 1px 0 rgba(0,0,0,.45);font-weight:800}
-    #nowClock{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
-    #nowDate[data-short]::after{content:attr(data-short);display:none;font-weight:800}
-    @media (max-width:420px){#nowDate{visibility:hidden;position:relative}#nowDate::after{display:inline;visibility:visible;position:absolute;inset:0;padding:inherit;border-radius:inherit}}
+
+  <!-- 1) Unified layer order across site -->
+  <style>/* keep layer names consistent everywhere */
+  @layer tokens, base, components, astrology, utilities, remnant, legacy;
   </style>
-  <!-- FB in-app browser guard -->
-  <script>(function(){var ua=navigator.userAgent||"";if(/\bFBAN|FBAV|FB_IAB|FBAN\/Messenger\b/i.test(ua)){document.documentElement.classList.add('is-fbapp');}})();</script>
-  <!-- Resource hints -->
-  <link rel="prefetch" href="genesis-oracle.html" as="document">  
-  <link rel="preload" href="assets/js/moons.js?v=3.9" as="script" crossorigin>
+
+  <!-- 2) CSS files (layered) -->
+  <link rel="stylesheet" href="assets/css/tokens.css?v=2025-10-27">
+  <link rel="stylesheet" href="assets/css/core.css?v=2025-10-27">
+  <link rel="stylesheet" href="assets/css/moons.css?v=2025-10-27">
+
+  <!-- 3) Last-resort bridge to beat any unlayered legacy CSS -->
+  <link rel="stylesheet" href="assets/css/bridge.css?v=2025-10-27">
+
+  <!-- Prefetch / Preload -->
+  <link rel="prefetch" href="genesis-oracle.html" as="document">
+  <link rel="preload" href="assets/js/moons.js?v=4.0" as="script" crossorigin>
+
   <!-- Structured data -->
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Remnant 13 Moons — Living Clock","url":"https://ssnfts24.github.io/scroll-of-fire/moons.html","applicationCategory":"Utility","operatingSystem":"Any","description":"Interactive 13-Moon calendar with Remnant / YHWH wizard theme: lunar phase simulation, numerology, Kin, and .ics export.","creator":{"@type":"Person","name":"Aaron Paul Laird"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Codex","item":"https://ssnfts24.github.io/scroll-of-fire/index.html"},{"@type":"ListItem","position":2,"name":"13 Moons","item":"https://ssnfts24.github.io/scroll-of-fire/moons.html"}]}</script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Remnant 13 Moons — Living Clock",
+    "url":"https://ssnfts24.github.io/scroll-of-fire/moons.html",
+    "applicationCategory":"Utility",
+    "operatingSystem":"Any",
+    "description":"Interactive 13-Moon calendar with Remnant / YHWH wizard theme: lunar phase simulation, numerology, Kin, and .ics export.",
+    "creator":{"@type":"Person","name":"Aaron Paul Laird"}
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"name":"Codex","item":"https://ssnfts24.github.io/scroll-of-fire/index.html"},
+      {"@type":"ListItem","position":2,"name":"13 Moons","item":"https://ssnfts24.github.io/scroll-of-fire/moons.html"}
+    ]
+  }
+  </script>
 </head>
 <body class="stars remnant-yhwh">
   <!-- Hidden defs so JS can recolor gradients safely -->
@@ -149,10 +106,11 @@
       </linearGradient>
     </defs>
   </svg>
+
   <!-- Living sky -->
   <canvas id="skyBg" width="1440" height="900" aria-hidden="true"></canvas>
 
-  <!-- Compact Moon widget (always visible) -->
+  <!-- Compact Moon widget -->
   <section class="wrap" aria-label="Remnant Moonbar">
     <div class="moonbar yhwh-on" data-size="compact" role="group" aria-label="Current Moon mini widget" style="display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;margin-bottom:10px;">
       <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
@@ -178,8 +136,8 @@
     </div>
   </section>
 
-  <!-- Remnant Opener — The Seal of Becoming -->
-  <section id="remnantOpener" class="wrap">
+  <!-- Opener -->
+  <section class="wrap" id="remnantOpener">
     <div class="remnant-opener card remnant-frame" aria-label="Open the Remnant Birth Seal" style="margin:10px 0">
       <div class="op-grid">
         <div class="op-left">
@@ -192,7 +150,9 @@
         </div>
         <div class="op-mid">
           <h3 class="op-title">The Seal of Becoming</h3>
-          <p class="op-sub meta">Remnant Birth Seal — reads your <b>Moon • Day • Week • Tone</b> and <b>Name code</b>, with Resonant sums and carrier skin.</p>
+          <p class="op-sub meta">
+            Remnant Birth Seal — reads your <b>Moon • Day • Week • Tone</b> and <b>Name code</b>, with Resonant sums and carrier skin.
+          </p>
           <small class="meta">Uses your selected date &amp; timezone (or today) to prefill.</small>
         </div>
         <div class="op-right">
@@ -206,7 +166,11 @@
   <main class="wrap" id="main" role="main">
     <header class="page-head fancy-head">
       <h1 class="title">🌗 Remnant 13 Moons — <em>Living Clock</em></h1>
-      <p class="subtitle">An ancient-modern calendar in the cadence of 13×28. Phase-tinted, time-zone aware, and trimmed with the seal of <span lang="he" title="YHWH">יהוה</span>.</p>
+      <p class="subtitle">
+        An ancient-modern calendar in the cadence of 13×28. Phase-tinted, time-zone aware, and trimmed with the seal of
+        <span lang="he" title="YHWH">יהוה</span>.
+      </p>
+
       <nav class="crumbs" aria-label="Breadcrumb">
         <a class="lab-btn" href="index.html">← Back to Codex</a>
         <a class="lab-btn" href="theory.html">📘 Theory</a>
@@ -241,7 +205,9 @@
           <div class="week" id="weekDots" role="group" aria-label="Week dots (1–4 × 7)"></div>
         </div>
 
-        <p class="meta" id="dootWarn" style="display:none;margin-top:8px"><b>Day Out of Time:</b> this day sits outside the 13×28 moons. Rest, reflect, reset.</p>
+        <p class="meta" id="dootWarn" style="display:none;margin-top:8px">
+          <b>Day Out of Time:</b> this day sits outside the 13×28 moons. Rest, reflect, reset.
+        </p>
       </section>
     </header>
 
@@ -347,1117 +313,236 @@
         <p class="meta">Download an <code>.ics</code> calendar with the 13 Moon spans for the selected time-zone/year.</p>
         <div class="lab-row">
           <a id="dlICS" class="dl" href="#" download="13-moon-year.ics" role="button">⬇️ Download .ics</a>
-          <button class="lab-btn ghost" id="regenICS" type="button">Refresh</button>
-        </div>
-      </article>
+          <button class="lab-btn ghost" id="regenICS" type="button…Refresh</button> </div> </article>
 
-      <!-- ASTRO PANEL -->
-      <article class="card col-12 shine astro" aria-labelledby="astro-head">
-        <header class="astro-head">
-          <span class="seal" aria-hidden="true">⟡ <span lang="he">יהוה</span></span>
-          <h2 id="astro-head">Astrology Now</h2>
-          <p class="meta">Current sky placements in a lightweight, Remnant panel. Filled by the inline ephemeris below (or your JSON if present).</p>
-        </header>
+<!-- ASTRO PANEL -->
+  <article class="card col-12 shine astro" aria-labelledby="astro-head">
+    <header class="astro-head">
+      <span class="seal" aria-hidden="true">⟡ <span lang="he">יהוה</span></span>
+      <h2 id="astro-head">Astrology Now</h2>
+      <p class="meta">Current sky placements in a lightweight, Remnant panel. Filled by the ephemeris in <code>assets/js/moons.js</code> or your JSON feed.</p>
+    </header>
 
-        <section class="astro-grid" aria-label="Current placements and wheel">
-          <!-- Left: planet chips -->
-          <div class="astro-chips" role="list">
-            <button class="chip" role="listitem" data-planet="sun"    aria-live="polite"><i class="dot el-fire"></i><b>Sun</b>    <span class="mono pos"  data-pos="sun">—</span>    <span class="sign" data-sign="sun">—</span></button>
-            <button class="chip" role="listitem" data-planet="moon"   aria-live="polite"><i class="dot el-water"></i><b>Moon</b>  <span class="mono pos"  data-pos="moon">—</span>   <span class="sign" data-sign="moon">—</span></button>
-            <<button class="chip" role="listitem" data-planet="mercury"><i class="dot el-air"></i><b>Mercury</b> <span class="mono pos" data-pos="mercury">—</span> <span class="sign" data-sign="mercury">—</span></button>
-            <button class="chip" role="listitem" data-planet="venus"  ><i class="dot el-earth"></i><b>Venus</b>   <span class="mono pos" data-pos="venus">—</span>   <span class="sign" data-sign="venus">—</span></button>
-            <button class="chip" role="listitem" data-planet="mars"   ><i class="dot el-fire"></i><b>Mars</b>     <span class="mono pos" data-pos="mars">—</span>    <span class="sign" data-sign="mars">—</span></button>
-            <button class="chip" role="listitem" data-planet="jupiter"><i class="dot el-air"></i><b>Jupiter</b>  <span class="mono pos" data-pos="jupiter">—</span> <span class="sign" data-sign="jupiter">—</span></button>
-            <button class="chip" role="listitem" data-planet="saturn" ><i class="dot el-earth"></i><b>Saturn</b>  <span class="mono pos" data-pos="saturn">—</span>  <span class="sign" data-sign="saturn">—</span></button>
+    <section class="astro-grid" aria-label="Current placements and wheel">
+      <!-- Left: planet chips -->
+      <div class="astro-chips" id="planetChips" role="list">
+        <button class="chip pl-sun"    role="listitem" data-planet="sun"    aria-live="polite"><i class="dot el-fire"></i><b>Sun</b>    <span class="mono pos"  data-pos="sun">—</span>    <span class="sign" data-sign="sun">—</span></button>
+        <button class="chip pl-moon"   role="listitem" data-planet="moon"   aria-live="polite"><i class="dot el-water"></i><b>Moon</b>  <span class="mono pos"  data-pos="moon">—</span>   <span class="sign" data-sign="moon">—</span></button>
+        <button class="chip pl-mercury"role="listitem" data-planet="mercury"><i class="dot el-air"></i><b>Mercury</b> <span class="mono pos" data-pos="mercury">—</span> <span class="sign" data-sign="mercury">—</span></button>
+        <button class="chip pl-venus"  role="listitem" data-planet="venus"  ><i class="dot el-earth"></i><b>Venus</b>   <span class="mono pos" data-pos="venus">—</span>   <span class="sign" data-sign="venus">—</span></button>
+        <button class="chip pl-mars"   role="listitem" data-planet="mars"   ><i class="dot el-fire"></i><b>Mars</b>     <span class="mono pos" data-pos="mars">—</span>    <span class="sign" data-sign="mars">—</span></button>
+        <button class="chip pl-jupiter"role="listitem" data-planet="jupiter"><i class="dot el-air"></i><b>Jupiter</b>  <span class="mono pos" data-pos="jupiter">—</span> <span class="sign" data-sign="jupiter">—</span></button>
+        <button class="chip pl-saturn" role="listitem" data-planet="saturn" ><i class="dot el-earth"></i><b>Saturn</b>  <span class="mono pos" data-pos="saturn">—</span>  <span class="sign" data-sign="saturn">—</span></button>
 
-            <details class="chip more">
-              <summary><i class="dot el-aether"></i><b>Outer bodies</b></summary>
-              <div class="more-grid">
-                <div><b>Uranus</b>  <span class="mono pos" data-pos="uranus">—</span>  <span class="sign" data-sign="uranus">—</span></div>
-                <div><b>Neptune</b> <span class="mono pos" data-pos="neptune">—</span> <span class="sign" data-sign="neptune">—</span></div>
-                <div><b>Pluto</b>   <span class="mono pos" data-pos="pluto">—</span>   <span class="sign" data-sign="pluto">—</span></div>
-                <div><b>Chiron</b>  <span class="mono pos" data-pos="chiron">—</span>  <span class="sign" data-sign="chiron">—</span></div>
-                <div><b>Node ☊</b>  <span class="mono pos" data-pos="north_node">—</span> <span class="sign" data-sign="north_node">—</span></div>
-              </div>
-            </details>
+        <details class="chip more">
+          <summary><i class="dot el-aether"></i><b>Outer bodies</b></summary>
+          <div class="more-grid">
+            <div><b>Uranus</b>  <span class="mono pos" data-pos="uranus">—</span>  <span class="sign" data-sign="uranus">—</span></div>
+            <div><b>Neptune</b> <span class="mono pos" data-pos="neptune">—</span> <span class="sign" data-sign="neptune">—</span></div>
+            <div><b>Pluto</b>   <span class="mono pos" data-pos="pluto">—</span>   <span class="sign" data-sign="pluto">—</span></div>
+            <div><b>Chiron</b>  <span class="mono pos" data-pos="chiron">—</span>  <span class="sign" data-sign="chiron">—</span></div>
+            <div><b>Node ☊</b>  <span class="mono pos" data-pos="north_node">—</span> <span class="sign" data-sign="north_node">—</span></div>
           </div>
-
-          <!-- Right: sacred wheel -->
-          <figure class="astro-wheel">
-            <svg id="astroWheel" viewBox="0 0 360 360" role="img" aria-label="Zodiac wheel">
-              <defs>
-                <linearGradient id="awGrad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="var(--moon-accent)"/>
-                  <stop offset="1" stop-color="var(--moon-accent-2)"/>
-                </linearGradient>
-              </defs>
-              <circle cx="180" cy="180" r="162" fill="none" stroke="#1b2231" stroke-width="2"/>
-              <circle cx="180" cy="180" r="150" fill="none" stroke="url(#awGrad)" stroke-opacity=".45" stroke-width="2"/>
-              <g id="houseLines" stroke="#2a3242" stroke-width=".8" opacity=".9"></g>
-              <g id="signLabels" fill="#a7b1ca" font-family="Inter,system-ui" font-size="10" text-anchor="middle"></g>
-              <g id="planetDots">
-                <circle r="4.6" class="dot el-fire"   data-dot="sun"    cx="180" cy="30"/>
-                <circle r="4.6" class="dot el-water"  data-dot="moon"   cx="180" cy="330"/>
-                <circle r="4.6" class="dot el-air"    data-dot="mercury" cx="30"  cy="180"/>
-                <circle r="4.6" class="dot el-earth"  data-dot="venus"   cx="330" cy="180"/>
-                <circle r="4.6" class="dot el-fire"   data-dot="mars"    cx="60"  cy="60"/>
-                <circle r="4.6" class="dot el-air"    data-dot="jupiter" cx="300" cy="300"/>
-                <circle r="4.6" class="dot el-earth"  data-dot="saturn"  cx="60"  cy="300"/>
-              </g>
-            </svg>
-            <figcaption class="meta">
-              <span id="astroStamp">—</span><span class="sep">·</span>
-              <span id="astroTZ">—</span><span class="sep">·</span>
-              Source: <span id="astroSource">—</span>
-            </figcaption>
-          </figure>
-        </section>
-
-        <section class="astro-aspects" aria-labelledby="asp-head">
-          <h3 id="asp-head">Aspects</h3>
-          <div class="legend">
-            <span class="badge conj">☌ Conjunction</span>
-            <span class="badge sext">✶ Sextile</span>
-            <span class="badge sqr">□ Square</span>
-            <span class="badge tri">△ Trine</span>
-            <span class="badge opp">☍ Opposition</span>
-          </div>
-          <table class="asp-table">
-            <thead><tr><th>Pair</th><th>Aspect</th><th>Orb</th></tr></thead>
-            <tbody id="aspBody"></tbody>
-          </table>
-        </section>
-      </article>
-    </section>
-
-    <!-- Your sample Remnant calendar block -->
-    <section class="calendar" aria-label="Remnant Month">
-      <header class="calendar__head">
-        <div class="calendar__title">
-          <span class="moon-name">#7 Resonant</span>
-          <span class="ess">Channel Inspiration</span>
-        </div>
-        <div class="calendar__tools">
-          <button class="lab-btn" id="prevMoon">← Prev</button>
-          <button class="lab-btn" id="nextMoon">Next →</button>
-        </div>
-        <div class="calendar__meta">Year 2025 · TZ UTC</div>
-      </header>
-
-      <div class="calendar__wkdays">
-        <div class="w">D1</div><div class="w">D2</div><div class="w">D3</div><div class="w">D4</div>
-        <div class="w">D5</div><div class="w">D6</div><div class="w">D7</div>
+        </details>
       </div>
 
-      <div class="calendar__grid">
-        <!-- repeat 28 .day cells; mark states as needed -->
-        <div class="day is-weekend">
-          <div class="day__num">1 <span class="greg">Jan 12</span></div>
-          <div class="day__events">
-            <div class="evt"><span class="at">08:00</span><span class="ttl">Breath Practice</span></div>
-          </div>
-          <div class="day__tag"><i class="dot-evt"></i></div>
+      <!-- Right: sacred wheel -->
+      <figure class="astro-wheel">
+        <svg id="astroWheel" viewBox="0 0 360 360" role="img" aria-label="Zodiac wheel">
+          <defs>
+            <linearGradient id="awGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="var(--moon-accent)"/><stop offset="1" stop-color="var(--moon-accent-2)"/>
+            </linearGradient>
+          </defs>
+          <circle cx="180" cy="180" r="162" fill="none" stroke="#1b2231" stroke-width="2"/>
+          <circle cx="180" cy="180" r="150" fill="none" stroke="url(#awGrad)" stroke-opacity=".45" stroke-width="2"/>
+          <g id="houseLines" stroke="#2a3242" stroke-width=".8" opacity=".9"></g>
+          <g id="signLabels" fill="#a7b1ca" font-family="Inter,system-ui" font-size="10" text-anchor="middle"></g>
+          <g id="planetDots">
+            <circle r="4.6" class="dot el-fire"   data-dot="sun"    cx="180" cy="30"/>
+            <circle r="4.6" class="dot el-water"  data-dot="moon"   cx="180" cy="330"/>
+            <circle r="4.6" class="dot el-air"    data-dot="mercury" cx="30"  cy="180"/>
+            <circle r="4.6" class="dot el-earth"  data-dot="venus"   cx="330" cy="180"/>
+            <circle r="4.6" class="dot el-fire"   data-dot="mars"    cx="60"  cy="60"/>
+            <circle r="4.6" class="dot el-air"    data-dot="jupiter" cx="300" cy="300"/>
+            <circle r="4.6" class="dot el-earth"  data-dot="saturn"  cx="60"  cy="300"/>
+          </g>
+        </svg>
+        <figcaption class="meta">
+          <span id="astroStamp">—</span><span class="sep">·</span>
+          <span id="astroTZ">—</span><span class="sep">·</span>
+          Source: <span id="astroSource">—</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="astro-aspects" aria-labelledby="asp-head">
+      <h3 id="asp-head">Aspects</h3>
+      <div class="legend">
+        <span class="badge asp conj">☌ Conjunction</span>
+        <span class="badge asp sext">✶ Sextile</span>
+        <span class="badge asp sqr">□ Square</span>
+        <span class="badge asp tri">△ Trine</span>
+        <span class="badge asp opp">☍ Opposition</span>
+      </div>
+      <table class="asp-table">
+        <thead><tr><th>Pair</th><th>Aspect</th><th>Orb</th></tr></thead>
+        <tbody id="aspBody"></tbody>
+      </table>
+    </section>
+  </article>
+</section>
+
+<!-- Your sample Remnant calendar block -->
+<section class="calendar" aria-label="Remnant Month">
+  <header class="calendar__head">
+    <div class="calendar__title">
+      <span class="moon-name">#7 Resonant</span>
+      <span class="ess">Channel Inspiration</span>
+    </div>
+    <div class="calendar__tools">
+      <button class="btn" id="prevMoon" type="button">← Prev</button>
+      <button class="btn" id="nextMoon" type="button">Next →</button>
+    </div>
+    <div class="calendar__meta">Year <span id="calYearMeta">2025</span> · TZ <span id="calTZMeta">UTC</span></div>
+  </header>
+
+  <div class="calendar__wkdays">
+    <div class="w">D1</div><div class="w">D2</div><div class="w">D3</div><div class="w">D4</div>
+    <div class="w">D5</div><div class="w">D6</div><div class="w">D7</div>
+  </div>
+
+  <div class="calendar__grid" id="sampleRemGrid">
+    <!-- example cells (script will render real ones) -->
+    <div class="day is-weekend">
+      <div class="day__num">1 <span class="greg">Jan 12</span></div>
+      <div class="day__events">
+        <div class="evt"><span class="at">08:00</span><span class="ttl">Breath Practice</span></div>
+      </div>
+      <div class="day__tag"><i class="dot-evt"></i></div>
+    </div>
+    <div class="day"><div class="day__num">2 <span class="greg">Jan 13</span></div></div>
+    <div class="day"><div class="day__num">3 <span class="greg">Jan 14</span></div></div>
+    <div class="day"><div class="day__num">4 <span class="greg">Jan 15</span></div></div>
+    <div class="day"><div class="day__num">5 <span class="greg">Jan 16</span></div></div>
+    <div class="day"><div class="day__num">6 <span class="greg">Jan 17</span></div></div>
+    <div class="day"><div class="day__num">7 <span class="greg">Jan 18</span></div></div>
+    <!-- … script will replace -->
+    <div class="day is-doot">
+      <div class="day__num">— <span class="label">Day Out of Time</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Comparison scaffold with official hooks -->
+<section class="compare" aria-label="Remnant vs Gregorian">
+  <article class="panel">
+    <header class="panel__head">
+      <h3 class="panel__title">Remnant Month</h3>
+      <div class="panel__meta">13 × 28 fixed</div>
+    </header>
+    <!-- script-driven calendar -->
+    <section id="remCal" class="calendar" aria-label="Remnant Month (live)"></section>
+  </article>
+
+  <article class="panel">
+    <header class="panel__head">
+      <h3 class="panel__title">Gregorian Month</h3>
+      <div class="panel__meta">Variable weeks</div>
+    </header>
+
+    <!-- script-driven Gregorian -->
+    <section id="gregCal" class="gregorian" aria-label="Gregorian Month (live)"></section>
+
+    <!-- legend hook -->
+    <footer id="calLegend" class="legend">
+      <span class="key"><i class="k-dot k-evt1"></i> Event</span>
+      <span class="key"><i class="k-dot k-evt2"></i> Ceremony</span>
+      <span class="key"><i class="k-dot k-doot"></i> DOOT</span>
+      <span class="key"><i class="k-dot k-leap"></i> Leap Day</span>
+      <span class="key"><i class="k-dot k-today"></i> Today</span>
+    </footer>
+  </article>
+</section>
+
+<!-- Practices -->
+<article class="card col-6" id="practiceCard" aria-labelledby="prac-head" style="margin-top:12px">
+  <h2 id="prac-head">Practices & Prompts</h2>
+  <ol id="practiceList" class="prompts"></ol>
+  <label class="meta" for="noteText" style="display:block;margin-top:10px">Your note for this moon</label>
+  <textarea id="noteText" placeholder="What are you tracking, learning, releasing?" aria-label="Note for this moon"></textarea>
+  <div class="lab-row" style="margin-top:8px">
+    <button class="lab-btn" id="btnSaveNote" type="button">Save note</button>
+  </div>
+</article>
+
+<!-- Codex -->
+<section class="codex card shine" id="loreCodex" aria-label="Moon Codex" style="margin-top:12px">
+  <aside class="codex-toc" aria-label="Codex contents">
+    <h4>Codex</h4>
+    <ol>
+      <li><a href="#cx-intro">Introduction</a></li>
+      <li><a href="#cx-practice">Practices</a></li>
+      <li><a href="#cx-notes">Notes & Footnotes</a></li>
+    </ol>
+  </aside>
+
+  <article class="codex-content">
+    <h1 id="cx-intro">The Remnant Moon Codex</h1>
+    <p class="lede dropcap">A living scroll of patterns, pulses, and presence — meant to be read like a sky.</p>
+
+    <div class="callout info">
+      <div class="head">Essence</div>
+      <div class="body">Channel inspiration. Harmonize integrity. Perfect manifestation.</div>
+    </div>
+
+    <blockquote class="pull">“Number the days; crown the weeks; keep the remnant bright.”</blockquote>
+
+    <figure>
+      <img src="assets/media/codex-example.jpg" alt="Codex plate showing harmonics of the 13×28 count">
+      <figcaption>Plate VII — Harmonics of the 13×28 count.</figcaption>
+    </figure>
+
+    <h2 id="cx-practice">Practice</h2>
+    <p>Mark the day’s tone in your journal. Tap the <span class="kbd">T</span> key to step hours; <span class="kbd">↑/↓</span> to step days.</p>
+
+    <h3 id="cx-notes">Notes & Footnotes</h3>
+    <hr>
+    <ol class="footnotes">
+      <li id="fn1">On leap days and DOOT handling — see script options. <a href="#fnref1">↩</a></li>
+    </ol>
+
+    <!-- Example codex files -->
+    <div class="codex-files" id="codexFiles">
+      <div class="file" data-ext="PDF" role="button" tabindex="0" aria-label="Open PDF: Codex · Resonant Harmonies">
+        <div class="file-top">
+          <div class="name">Codex · Resonant Harmonies</div>
+          <span class="badge"><i class="dot" aria-hidden="true"></i> plate</span>
         </div>
-        <!-- ... -->
-        <div class="day is-doot">
-          <div class="day__num">— <span class="label">Day Out of Time</span></div>
+        <div class="file-meta">
+          <span class="pill">2.3 MB</span>
+          <span class="pill">Updated this moon</span>
         </div>
       </div>
-    </section>
 
-    <!-- Comparison scafold with official hooks (kept additive to your example) -->
-    <section class="compare" aria-label="Remnant vs Gregorian">
-      <article class="panel">
-        <header class="panel__head">
-          <h3 class="panel__title">Remnant Month</h3>
-          <div class="panel__meta">13 × 28 fixed</div>
-        </header>
-        <!-- NEW: hook container for script-driven calendar -->
-        <section id="remCal" class="calendar" aria-label="Remnant Month (live)"></section>
-      </article>
-
-      <article class="panel">
-        <header class="panel__head">
-          <h3 class="panel__title">Gregorian Month</h3>
-          <div class="panel__meta">Variable weeks</div>
-        </header>
-
-        <!-- NEW: hook container for script-driven Gregorian month -->
-        <section id="gregCal" class="gregorian" aria-label="Gregorian Month (live)"></section>
-
-        <!-- NEW: legend hook -->
-        <footer id="calLegend" class="legend">
-          <span class="key"><i class="k-dot k-evt1"></i> Event</span>
-          <span class="key"><i class="k-dot k-evt2"></i> Ceremony</span>
-          <span class="key"><i class="k-dot k-doot"></i> DOOT</span>
-          <span class="key"><i class="k-dot k-leap"></i> Leap Day</span>
-          <span class="key"><i class="k-dot k-today"></i> Today</span>
-        </footer>
-      </article>
-    </section>
-
-    <!-- ===== Inline Astro engine + renderer (self-contained) ===== -->
-    <script>
-      (function(){
-        "use strict";
-
-        // ---------- wheel scaffolding ----------
-        const TWO_PI=Math.PI*2, cx=180, cy=180, R=145;
-        function buildWheel(){
-          const gH=document.getElementById('houseLines');
-          const gS=document.getElementById('signLabels');
-          if(!gH||!gS) return;
-          gH.innerHTML=''; gS.innerHTML='';
-          for(let i=0;i<12;i++){
-            const a=-Math.PI/2 + i*(TWO_PI/12);
-            const x=cx+Math.cos(a)*R, y=cy+Math.sin(a)*R;
-            const x2=cx+Math.cos(a)*(R-16), y2=cy+Math.sin(a)*(R-16);
-            gH.insertAdjacentHTML('beforeend', `<line x1="${x}" y1="${y}" x2="${x2}" y2="${y2}"></line>`);
-          }
-          const initials=['A','T','G','C','L','V','L','S','C','P','A','P']; // Aries..Pisces
-          for(let i=0;i<12;i++){
-            const a=-Math.PI/2 + (i+0.5)*(TWO_PI/12);
-            const x=cx+Math.cos(a)*(R-26), y=cy+Math.sin(a)*(R-26)+3;
-            gS.insertAdjacentHTML('beforeend', `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}">${initials[i]}</text>`);
-          }
-        }
-        const posForLon = lon => {
-          const a = (-90 + lon) * Math.PI/180; // 0° Aries at top
-          return { x: cx + Math.cos(a)*R, y: cy + Math.sin(a)*R };
-        };
-
-        // ---------- renderAstro (chips + dots + aspects table) ----------
-        window.renderAstro = (data={})=>{
-          if (data.stamp)  document.getElementById('astroStamp').textContent = data.stamp;
-          if (data.tz)     document.getElementById('astroTZ').textContent    = data.tz;
-          if (data.source) document.getElementById('astroSource').textContent= data.source;
-
-          const P = data.planets || {};
-          Object.keys(P).forEach(k=>{
-            const p=P[k];
-            document.querySelector(`.pos[data-pos="${k}"]`)?.replaceChildren(document.createTextNode(p.text||'—'));
-            document.querySelector(`.sign[data-sign="${k}"]`)?.replaceChildren(document.createTextNode(p.sign||'—'));
-            const dot=document.querySelector(`[data-dot="${k}"]`);
-            if(dot && typeof p.lon==='number'){
-              const xy=posForLon(p.lon);
-              dot.setAttribute('cx',xy.x.toFixed(1));
-              dot.setAttribute('cy',xy.y.toFixed(1));
-            }
-          });
-
-          const body=document.getElementById('aspBody');
-          if(body){
-            body.innerHTML='';
-            (data.aspects||[]).forEach(a=> body.insertAdjacentHTML('beforeend', `<tr><td>${a.pair}</td><td>${a.kind}</td><td>${a.orb}</td></tr>`));
-          }
-
-          // expose phase to other modules
-          if (typeof data.sunLon==='number' && typeof data.moonLon==='number'){
-            const phase = (( (data.moonLon - data.sunLon + 360) % 360) ) / 360; // 0=new, .5=full
-            window.sofAstro = { sunLon: data.sunLon, moonLon: data.moonLon, phase };
-            document.dispatchEvent(new CustomEvent('sof:astro-update', { detail: window.sofAstro }));
-          }
-        };
-
-        // ---------- math & ephemeris (Meeus-lite + Schlyter) ----------
-        const PI=Math.PI, RAD=PI/180;
-        const sin=d=>Math.sin(d*RAD), atan2=(y,x)=>Math.atan2(y,x)/RAD;
-        const norm360=d=>((d%360)+360)%360;
-        function toJD(dUTC){
-          const a=Math.floor((14-(dUTC.getUTCMonth()+1))/12);
-          const y=dUTC.getUTCFullYear()+4800-a;
-          const m=(dUTC.getUTCMonth()+1)+12*a-3;
-          const JDN=dUTC.getUTCDate()+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;
-          const frac=(dUTC.getUTCHours()-12)/24+dUTC.getUTCMinutes()/1440+dUTC.getUTCSeconds()/86400+dUTC.getUTCMilliseconds()/86400000;
-          return JDN+frac;
-        }
-        function zonedUTC(){
-          const tzSel=document.getElementById("tzPick");
-          const tz = tzSel?.value || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-          const raw = document.getElementById('datePick')?.value;
-          const hour = parseInt(document.getElementById('hourScrub')?.value ?? '0',10) || 0;
-          const base = raw ? new Date(raw+"T00:00:00") : new Date();
-          base.setHours(hour);
-          const p=new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})
-            .formatToParts(base).reduce((o,p)=>(o[p.type]=p.value,o),{});
-          return { tz, dateUTC:new Date(`${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:${p.second}Z`) };
-        }
-        function sunLonJD(JD){
-          const T=(JD-2451545)/36525;
-          const L0=norm360(280.46646+36000.76983*T+0.0003032*T*T);
-          const M =norm360(357.52911+35999.05029*T-0.0001537*T*T);
-          const C =(1.914602-0.004817*T-0.000014*T*T)*sin(M)
-                 +(0.019993-0.000101*T)*sin(2*M)
-                 +0.000289*sin(3*M);
-          return norm360(L0+C);
-        }
-        function moonLonJD(JD){
-          const D=JD-2451545.0;
-          const L0=norm360(218.3164477+13.17639648*D);
-          const Mm=norm360(134.9633964+13.06499295*D);
-          const Ms=norm360(357.5291092+0.98560028*D);
-          const F =norm360(93.2720950 +13.22935024*D);
-          const Dm=norm360(297.8501921+12.19074912*D);
-          let lon=L0
-            +6.289*sin(Mm)
-            +1.274*sin(2*Dm-Mm)
-            +0.658*sin(2*Dm)
-            +0.214*sin(2*Mm)
-            +0.11 *sin(Dm)
-            -0.186*sin(Ms)
-            -0.114*sin(2*F);
-          return norm360(lon);
-        }
-        const ELEM = {
-          Mercury: { N:48.3313, Nd: 3.24587E-5, i:7.0047,  id: 5.00E-8,  w:29.1241,  wd: 1.01444E-5, a:0.387098, ad:0,   e:0.205635, ed: 5.59E-10, M:168.6562, Md:4.0923344368 },
-          Venus:   { N:76.6799, Nd: 2.46590E-5, i:3.3946,  id: 2.75E-8,  w:54.8910,  wd: 1.38374E-5, a:0.723330, ad:0,   e:0.006773, ed:-1.30E-9,  M: 48.0052, Md:1.6021302244 },
-          Earth:   { N: 0.0,    Nd: 0,          i:0.0,     id: 0,        w:282.9404, wd: 4.70935E-5, a:1.000000, ad:0,   e:0.016709, ed:-1.151E-9, M:356.0470, Md:0.9856002585 },
-          Mars:    { N:49.5574, Nd: 2.11081E-5, i:1.8497,  id:-1.78E-8,  w:286.5016, wd: 2.92961E-5, a:1.523688, ad:0,   e:0.093405, ed: 2.516E-9, M: 18.6021, Md:0.5240207766 },
-          Jupiter: { N:100.4542,Nd: 2.76854E-5, i:1.3030,  id:-1.55E-8,  w:273.8777, wd: 1.64505E-5, a:5.20256,  ad:0,   e:0.048498, ed: 4.469E-9, M: 19.8950, Md:0.0830853001 },
-          Saturn:  { N:113.6634,Nd: 2.38980E-5, i:2.4886,  id:-1.081E-7, w:339.3939, wd: 2.97661E-5, a:9.55475,  ad:0,   e:0.055546, ed:-9.499E-9, M:316.9670, Md:0.0334442282 }
-        };
-        function kepler(M,e){
-          let E = (M + (e<0.8 ? e*Math.sin(M*RAD) : Math.PI)) ;
-          for(let k=0;k<10;k++){
-            const dE = (E - e*Math.sin(E) - M*RAD) / (1 - e*Math.cos(E));
-            E -= dE; if (Math.abs(dE) < 1e-12) break;
-          }
-          return E;
-        }
-        function helioXYZ(el, d){
-          const N=(el.N + el.Nd*d) * RAD;
-          const i=(el.i + el.id*d) * RAD;
-          const w=(el.w + el.wd*d) * RAD;
-          const a= el.a + el.ad*d;
-          const e= el.e + el.ed*d;
-          const M= norm360(el.M + el.Md*d);
-          const E= kepler(M, e);
-          const xv= a*(Math.cos(E)-e);
-          const yv= a*(Math.sqrt(1-e*e)*Math.sin(E));
-          const v = Math.atan2(yv,xv), r=Math.hypot(xv,yv);
-          const x = r*( Math.cos(N)*Math.cos(v+w) - Math.sin(N)*Math.sin(v+w)*Math.cos(i) );
-          const y = r*( Math.sin(N)*Math.cos(v+w) + Math.cos(N)*Math.sin(v+w)*Math.cos(i) );
-          const z = r*( Math.sin(v+w)*Math.sin(i) );
-          return {x,y,z, lon:norm360(atan2(y,x))};
-        }
-        function planetGeoLon(name, JD){
-          const d=JD-2451543.5;
-          const p=helioXYZ(ELEM[name], d);
-          const e=helioXYZ(ELEM.Earth, d);
-          const X=p.x-e.x, Y=p.y-e.y;
-          return norm360(atan2(Y,X));
-        }
-        function signFromLon(lon){
-          const SIGNS=["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
-          const L=norm360(lon), s=Math.floor(L/30), d=L - s*30;
-          const deg=Math.floor(d), min=Math.round((d-deg)*60);
-          const pad2=n=>String(n).padStart(2,"0");
-          return { sign:SIGNS[s], text:`${deg}°${pad2(min)}′` };
-        }
-        function aspectBetween(a,b){
-          const AS=[{k:"Conjunction",a:0,orb:6},{k:"Sextile",a:60,orb:4},{k:"Square",a:90,orb:5},{k:"Trine",a:120,orb:5},{k:"Opposition",a:180,orb:6}];
-          const d=Math.abs(norm360(a-b)); const dist=Math.min(d,360-d);
-          for(const as of AS){ const delta=Math.abs(dist-as.a); if (delta<=as.orb) return {kind:as.k, orb:`${delta.toFixed(2)}°`}; }
-          return null;
-        }
-
-        // ---------- data loader: try JSON → fallback to local compute ----------
-        const ASTRO_URL=new URL('assets/data/astro-now.json', document.baseURI).toString();
-
-        function computeLocal(){
-          const {tz, dateUTC}=zonedUTC();
-          const JD=toJD(dateUTC);
-          const pack={
-            tz,
-            stamp: dateUTC.toISOString().slice(0,16).replace('T',' '),
-            source: 'Local (Meeus/Schlyter)',
-            planets:{}
-          };
-          const sunLon = sunLonJD(JD);
-          const moonLon= moonLonJD(JD);
-          pack.planets.sun = { lon:sunLon,  ...signFromLon(sunLon) };
-          pack.planets.moon= { lon:moonLon, ...signFromLon(moonLon) };
-          ['Mercury','Venus','Mars','Jupiter','Saturn'].forEach(n=>{
-            const L=planetGeoLon(n, JD);
-            pack.planets[n.toLowerCase()]={ lon:L, ...signFromLon(L) };
-          });
-          const asp = aspectBetween(sunLon, moonLon);
-          pack.aspects = asp ? [ { pair:'Sun–Moon', kind:asp.kind, orb:asp.orb } ] : [];
-          pack.sunLon = sunLon; pack.moonLon = moonLon;
-          return pack;
-        }
-
-        async function loadAstro(){
-          const {tz, dateUTC}=zonedUTC();
-          const iso=dateUTC.toISOString();
-          try{
-            const u=new URL(ASTRO_URL);
-            u.searchParams.set('datetime', iso);
-            u.searchParams.set('tz', tz);
-            const res=await fetch(u.toString(), {cache:'no-store', mode:'cors'});
-            if(!res.ok) throw new Error('HTTP '+res.status);
-            const raw=await res.json();
-            const data = normalize(raw, {tz, iso});
-            coerceLongs(data.planets);
-            renderAstro(data);
-          }catch(err){
-            console.warn('[Astro] Falling back to local compute:', err);
-            renderAstro(computeLocal());
-          }
-        }
-
-        function normalize(raw,q){
-          if(raw && raw.planets && typeof raw.planets==='object'){
-            // optional: compute phase if present
-            if(typeof raw.sunLon!=='number' || typeof raw.moonLon!=='number'){
-              try{
-                const any = Object.assign({}, raw);
-                const sun = any.planets.sun?.lon, moon = any.planets.moon?.lon;
-                if(typeof sun==='number' && typeof moon==='number'){ any.sunLon=sun; any.moonLon=moon; return any; }
-              }catch(_){}
-            }
-            return raw;
-          }
-          if(raw && raw.positions){
-            const planets={};
-            Object.entries(raw.positions).forEach(([name,p])=>{
-              planets[name.toLowerCase()]={ lon:+p.lon, text:p.dms||p.text||signFromLon(+p.lon).text, sign:p.sign||signFromLon(+p.lon).sign };
-            });
-            const sun=+raw.positions.Sun?.lon, moon=+raw.positions.Moon?.lon;
-            return { tz:raw.tz||q.tz, stamp:raw.stamp||q.iso.slice(0,16).replace('T',' '), source:raw.source||'Swiss Ephemeris', planets, aspects:Array.isArray(raw.aspects)?raw.aspects:[], sunLon:sun, moonLon:moon };
-          }
-          if(raw && Array.isArray(raw.bodies)){
-            const planets={};
-            raw.bodies.forEach(b=>{
-              const k=String(b.name||'').toLowerCase();
-              if(!k) return;
-              const lon=typeof b.lon==='number'?b.lon:parseFloat(b.lon);
-              planets[k]={ lon, text:b.dms||b.text||signFromLon(lon).text, sign:b.sign||signFromLon(lon).sign };
-            });
-            const sun=planets.sun?.lon, moon=planets.moon?.lon;
-            return { tz:raw.tz||q.tz, stamp:raw.stamp||q.iso.slice(0,16).replace('T',' '), source:raw.source||'Your Ephemeris', planets, aspects:Array.isArray(raw.aspects)?raw.aspects:[], sunLon:sun, moonLon:moon };
-          }
-          return computeLocal();
-        }
-        function coerceLongs(obj){
-          if(!obj) return;
-          for(const k of Object.keys(obj)){
-            const v=obj[k]; if(!v) continue;
-            let L=typeof v.lon==='number'?v.lon:parseFloat(v.lon);
-            if(Number.isFinite(L)) v.lon=((L%360)+360)%360;
-          }
-        }
-
-        // ---------- live bindings ----------
-        document.addEventListener('DOMContentLoaded', ()=>{
-          buildWheel();
-          loadAstro();
-        });
-        window.addEventListener('resize', buildWheel, {passive:true});
-        document.getElementById('tzPick')   ?.addEventListener('change', loadAstro, {passive:true});
-        document.getElementById('datePick') ?.addEventListener('change', loadAstro, {passive:true});
-        document.getElementById('hourScrub')?.addEventListener('input',  loadAstro, {passive:true});
-      })();
-    </script>
-    <!-- ===== /Inline Astro engine ===== -->
-
-    <!-- Practices -->
-    <article class="card col-6" id="practiceCard" aria-labelledby="prac-head">
-      <h2 id="prac-head">Practices & Prompts</h2>
-      <ol id="practiceList" class="prompts"></ol>
-      <label class="meta" for="noteText" style="display:block;margin-top:10px">Your note for this moon</label>
-      <textarea id="noteText" placeholder="What are you tracking, learning, releasing?" aria-label="Note for this moon"></textarea>
-      <div class="lab-row" style="margin-top:8px">
-        <button class="lab-btn" id="btnSaveNote" type="button">Save note</button>
+      <div class="file" data-ext="MD" role="button" tabindex="0" aria-label="Open notes: Codex · Praxis Notes">
+        <div class="file-top">
+          <div class="name">Codex · Praxis Notes</div>
+          <span class="badge"><i class="dot" aria-hidden="true"></i> notes</span>
+        </div>
+        <div class="file-meta">
+          <span class="pill">12 min read</span>
+          <span class="pill">v1.4</span>
+        </div>
       </div>
-    </article>
+    </div>
+  </article>
+</section>
 
-    <!-- Codex -->
-    <section class="codex card shine" id="loreCodex" aria-label="Moon Codex">
-      <aside class="codex-toc" aria-label="Codex contents">
-        <h4>Codex</h4>
-        <ol>
-          <li><a href="#cx-intro">Introduction</a></li>
-          <li><a href="#cx-practice">Practices</a></li>
-          <li><a href="#cx-notes">Notes & Footnotes</a></li>
-        </ol>
-      </aside>
-
-      <article class="codex-content">
-        <h1 id="cx-intro">The Remnant Moon Codex</h1>
-        <p class="lede dropcap">A living scroll of patterns, pulses, and presence — meant to be read like a sky.</p>
-
-        <div class="callout info">
-          <div class="head">Essence</div>
-          <div class="body">Channel inspiration. Harmonize integrity. Perfect manifestation.</div>
-        </div>
-
-        <blockquote class="pull">“Number the days; crown the weeks; keep the remnant bright.”</blockquote>
-
-        <figure>
-          <img src="assets/media/codex-example.jpg" alt="Codex plate showing harmonics of the 13×28 count">
-          <figcaption>Plate VII — Harmonics of the 13×28 count.</figcaption>
-        </figure>
-
-        <h2 id="cx-practice">Practice</h2>
-        <p>Mark the day’s tone in your journal. Tap the <span class="kbd">T</span> key to step hours; <span class="kbd">↑/↓</span> to step days.</p>
-
-        <h3 id="cx-notes">Notes & Footnotes</h3>
-        <hr>
-        <ol class="footnotes">
-          <li id="fn1">On leap days and DOOT handling — see script options. <a href="#fnref1">↩</a></li>
-        </ol>
-
-        <!-- Example codex files -->
-        <div class="codex-files" id="codexFiles">
-          <div class="file" data-ext="PDF" role="button" tabindex="0" aria-label="Open PDF: Codex · Resonant Harmonies">
-            <div class="file-top">
-              <div class="name">Codex · Resonant Harmonies</div>
-              <span class="badge"><i class="dot" aria-hidden="true"></i> plate</span>
-            </div>
-            <div class="file-meta">
-              <span class="pill">2.3 MB</span>
-              <span class="pill">Updated this moon</span>
-            </div>
-          </div>
-
-          <div class="file" data-ext="MD" role="button" tabindex="0" aria-label="Open notes: Codex · Praxis Notes">
-            <div class="file-top">
-              <div class="name">Codex · Praxis Notes</div>
-              <span class="badge"><i class="dot" aria-hidden="true"></i> notes</span>
-            </div>
-            <div class="file-meta">
-              <span class="pill">12 min read</span>
-              <span class="pill">v1.4</span>
-            </div>
-          </div>
-        </div>
-      </article>
-    </section>
-
-  </main>
-  <footer class="footer">
+  </main>  <footer class="footer">
     <div class="divider" aria-hidden="true"></div>
     <p class="meta">© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
-  </footer>
-
-  <noscript>
+  </footer>  <noscript>
     <p class="meta" style="text-align:center">This page needs JavaScript to calculate moon/day, phase, and year map.</p>
-  </noscript>
-
-  <!-- Page JS (external; v3.9 drives calendar/accents) -->
-  <script src="assets/js/moons.js?v=3.9" defer></script>
-
-  <!-- Mini glue: sky, moonbar sync, share-card, deep link, keyboard, ICS, TZ list, numerology -->
-  <script>
-  (function(){
-    "use strict";
-
-    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    /* ========== STAR SKY (gentle, respectful) ========== */
-    (function sky(){
-      const c=document.getElementById('skyBg'); if(!c) return;
-      const k=c.getContext('2d',{alpha:true});
-      let W=window.innerWidth, H=Math.max(600, window.innerHeight);
-      function resize(){ W=window.innerWidth; H=Math.max(600, window.innerHeight); c.width=W; c.height=H; seed(); }
-      const stars=[]; function seed(){
-        stars.length=0;
-        const n=Math.floor((W*H)/12000);
-        for(let i=0;i<n;i++){
-          stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+0.2,a:Math.random()*0.6+0.2, p:Math.random()*Math.PI*2});
-        }
-      }
-      function draw(t){
-        if(prefersReduced){ k.clearRect(0,0,W,H); return; }
-        k.clearRect(0,0,W,H);
-        for(const s of stars){
-          const twinkle = 0.15*Math.sin((t/1800)+s.p)+s.a;
-          k.globalAlpha = Math.max(0,Math.min(1,twinkle));
-          k.beginPath(); k.arc(s.x,s.y,s.r,0,Math.PI*2); k.fillStyle='#cfe9ff'; k.fill();  
-        }
-        k.globalAlpha=1;
-        raf = requestAnimationFrame(draw);
-      }
-      let raf;
-      resize(); draw(0);
-      window.addEventListener('resize', ()=>{ cancelAnimationFrame(raf); resize(); draw(0); }, {passive:true});
-    })();
-
-    /* ========== ELEMENT REFS ========== */
-    const arcMain = document.getElementById("moonArc");
-    const arcMini = document.getElementById("moonArcMini");
-    const mbName  = document.getElementById("mbName");
-    const mbDay   = document.getElementById("mbDay");
-    const mbEss   = document.getElementById("mbEssence");
-    const mbYear  = document.getElementById("mbYear");
-    const noteBox = document.getElementById("noteText");
-    const jumpSel = document.getElementById("jumpMoon");
-
-    const moonChip   = document.getElementById("moonChip");
-    const moonName   = document.getElementById("moonName");
-    const moonEss    = document.getElementById("moonEssence");
-    const dayInMoon  = document.getElementById("dayInMoon");
-    const yearSpan   = document.getElementById("yearSpan");
-
-    const tzPick = document.getElementById("tzPick");
-    const datePick = document.getElementById("datePick");
-    const hourScrub = document.getElementById("hourScrub");
-    const openSeal = document.getElementById("openSeal");
-    const openSealHeader = document.getElementById("openSealHeader");
-
-    const prevBtn = document.getElementById("prevDay");
-    const nextBtn = document.getElementById("nextDay");
-    const todayBtn= document.getElementById("btnToday");
-
-    const phaseLine = document.getElementById("phaseLine");
-    const phaseMeta = document.getElementById("phaseMeta");
-    const simMoon   = document.getElementById("simMoon");
-    const numLine   = document.getElementById("numLine");
-    const numMeta   = document.getElementById("numMeta");
-    const energyQuote = document.getElementById("energyQuote");
-
-    /* ========== TIME ZONE POPULATE ========== */
-    (function fillTZ(){
-      try{
-        const zones = (Intl.supportedValuesOf && Intl.supportedValuesOf('timeZone')) || [
-          'UTC','America/New_York','America/Chicago','America/Denver','America/Los_Angeles','Europe/London','Europe/Berlin','Europe/Paris','Europe/Madrid','Africa/Johannesburg','Asia/Dubai','Asia/Kolkata','Asia/Bangkok','Asia/Singapore','Asia/Tokyo','Australia/Sydney'
-        ];
-        const current = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-        tzPick.innerHTML = zones.map(z=>`<option value="${z}">${z}</option>`).join('');
-        tzPick.value = zones.includes(current) ? current : 'UTC';
-        document.getElementById('nowTZ').textContent = tzPick.value;
-      }catch(_){ document.getElementById('nowTZ').textContent = 'UTC'; }
-    })();
-
-    /* ========== CLOCK + TODAY ========== */
-    function updateClock(){
-      const tz = tzPick.value || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-      const now = new Date();
-      const fmt = new Intl.DateTimeFormat('en-US',{timeZone:tz,year:'numeric',month:'short',day:'2-digit'});
-      const tm  = new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
-      const dateStr = fmt.format(now);
-      const short   = new Intl.DateTimeFormat('en-US',{timeZone:tz,month:'short',day:'2-digit'}).format(now); /* NEW */
-      const dateEl = document.getElementById('nowDate');
-      if (dateEl){ dateEl.textContent = dateStr; dateEl.setAttribute('data-short', short); } /* NEW */
-      document.getElementById('nowClock').textContent = tm.format(now);
-      document.getElementById('nowTZ').textContent = tz;
-    }
-    updateClock();
-    setInterval(updateClock, 1000);
-    document.getElementById('btnToday')?.addEventListener('click', ()=>{
-      datePick.value = '';
-      const h = new Date().getHours();
-      hourScrub.value = String(h);
-      updateClock();
-      document.dispatchEvent(new Event('sof:accent-change'));
-    }, {passive:true});
-
-    /* ========== MINI MOONBAR SYNC ========== */
-    function syncMini(){
-      if (mbName && moonName)  mbName.textContent = moonName.textContent || "—";
-      if (mbEss  && moonEss)   mbEss.textContent  = moonEss.textContent  || "—";
-      if (mbDay  && dayInMoon) mbDay.textContent  = (dayInMoon.textContent || "—") + "/28";
-      if (mbYear && yearSpan)  mbYear.textContent = yearSpan.textContent || "—";
-
-      const mainDash = arcMain?.getAttribute("stroke-dasharray");
-      if (arcMini && mainDash) arcMini.setAttribute("stroke-dasharray", mainDash);
-
-      const idx = moonChip?.getAttribute("data-idx");
-      if (idx && noteBox){
-        const saved = localStorage.getItem(`sof_moon_note_${idx}`) || "";
-        if (noteBox.value !== saved) noteBox.value = saved;
-      }
-    }
-    setTimeout(syncMini, 60);
-    const mo = new MutationObserver(syncMini);
-    arcMain   && mo.observe(arcMain,   {attributes:true, attributeFilter:["stroke-dasharray"]});
-    moonChip  && mo.observe(moonChip,  {childList:true, subtree:true, attributes:true});
-    yearSpan  && mo.observe(yearSpan,  {childList:true, characterData:true, subtree:true});
-    document.addEventListener("sof:accent-change", syncMini);
-
-    /* ========== JUMP TO MOON ========== */
-    function jump(){ const v = jumpSel?.value; if (v){ location.hash = `#moon-${v}`; } }
-    jumpSel?.addEventListener("change", jump, {passive:true});
-
-    /* ========== SHARE CARD (PNG) ========== */
-    function cssVar(name, fb){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fb; }
-    const dl = (name, blob)=>{
-      const a=document.createElement("a"); a.download=name; a.href=URL.createObjectURL(blob);
-      document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 400);
-    };
-    async function makeShareCard(){
-      const w=1080, h=1080, c=document.createElement("canvas"); c.width=w; c.height=h;
-      const k=c.getContext("2d");
-      const c1=cssVar("--moon-accent","#7af3ff"), c2=cssVar("--moon-accent-2","#f3c97a");
-
-      const g=k.createLinearGradient(0,0,0,h); g.addColorStop(0,"#0a0e15"); g.addColorStop(1,"#06080d");
-      k.fillStyle=g; k.fillRect(0,0,w,h);
-
-      const g2=k.createLinearGradient(0,0,w,0); g2.addColorStop(0,c1+"22"); g2.addColorStop(.5,c2+"18"); g2.addColorStop(1,c1+"22");
-      k.fillStyle=g2; k.beginPath(); k.moveTo(0,240);
-      for(let x=0;x<=w;x+=24){ k.lineTo(x,240+Math.sin(x*0.006)*20); }
-      k.lineTo(w,0); k.lineTo(0,0); k.closePath(); k.fill();
-
-      k.fillStyle="#e9eef6"; k.font="800 56px Inter, system-ui";
-      k.fillText("Remnant 13 Moons — Living Clock", 64, 112);
-
-      const name=(moonName?.textContent||"—").trim();
-      const essence=(moonEss?.textContent||"—").trim();
-      const dayTxt=((dayInMoon?.textContent||"—").trim())+" / 28";
-      const yearTxt=(yearSpan?.textContent||"—").trim();
-      const sub=document.getElementById("phaseLine")?.textContent?.trim()||"";
-
-      k.font="800 92px Inter, system-ui"; k.fillText(name, 64, 260);
-      k.font="600 40px Inter, system-ui"; k.fillStyle="#c9d3e9"; k.fillText(essence, 64, 320);
-
-      k.fillStyle="#0f1116"; k.strokeStyle="#2a3242"; k.lineWidth=2;
-      function chip(x,y,txt){
-        const padX=18; k.font="800 38px Inter, system-ui";
-        const mw=k.measureText(txt).width, cw=mw+padX*2, ch=56;
-        k.beginPath(); k.roundRect(x,y,cw,ch,12); k.fill(); k.stroke();
-        k.fillStyle="#e9eef6"; k.fillText(txt, x+padX, y+40); k.fillStyle="#0f1116";
-        return x+cw+10;
-      }
-      let cx=64; cx=chip(cx,370,dayTxt); cx=chip(cx,370,yearTxt); chip(cx,370, sub || "—");
-
-      k.font="600 32px Inter, system-ui"; k.fillStyle="#a8b1c9";
-      k.fillText("scroll-of-fire · ssnfts24.github.io/scroll-of-fire", 64, h-64);
-
-      const blob=await new Promise(res=>c.toBlob(res,"image/png",0.96));
-      if (blob) dl(`13-moons-${name.replace(/\s+/g,"-").toLowerCase()}.png`, blob);
-    }
-    document.getElementById("btnShareImage")?.addEventListener("click", makeShareCard, {passive:true});
-
-    /* ========== NOTES ========== */
-    document.getElementById("btnSaveNote")?.addEventListener("click", ()=>{
-      const idx = document.getElementById("moonChip")?.getAttribute("data-idx"); if(!idx) return;
-      localStorage.setItem(`sof_moon_note_${idx}`, document.getElementById("noteText")?.value || "");
-      const t=document.createElement("div"); t.className="toast"; t.textContent="Note saved";
-      Object.assign(t.style,{
-        position:"fixed",left:"50%",bottom:"24px",transform:"translateX(-50%)",
-        background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid var(--line)",
-        borderRadius:"10px",boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:"9999",opacity:"0",transition:"opacity .2s"
-      });
-      document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
-      setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),250); }, 1400);
-    }, {passive:true});
-
-    /* ========== ACCENT VEIL ========== */
-    function refreshVeil(){
-      const c1=cssVar("--moon-accent","#7af3ff");
-      const c2=cssVar("--moon-accent-2","#f3c97a");
-      const veil=`conic-gradient(from 0deg at 50% 50%, ${c1}24, transparent, ${c2}20, transparent)`;
-      document.documentElement.style.setProperty("--remnant-veil", veil);
-    }
-    document.addEventListener("sof:accent-change", refreshVeil);
-    refreshVeil();
-
-    /* ========== DEEP LINK FOR BIRTH SEAL ========== */
-    function buildSealLink(){
-      const base = "genesis-oracle.html";
-      const tz = (tzPick && tzPick.value) || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
-      const now = new Date();
-      const dateStr = (datePick && datePick.value) || new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,10);
-      const hour = (hourScrub && hourScrub.value) ? String(hourScrub.value) : String(now.getHours());
-      const u = new URL(base, document.baseURI || location.href);
-      u.searchParams.set("d", dateStr);
-      u.searchParams.set("tz", tz);
-      u.searchParams.set("t", hour);
-      const moonIdx = document.getElementById("moonChip")?.getAttribute("data-idx");
-      if (moonIdx) u.hash = `moon-${moonIdx}`;
-      return u.toString();
-    }
-    function applySealHref(a){ if (a) a.setAttribute("href", buildSealLink()); }
-    ["change","input"].forEach(evt=>{
-      tzPick?.addEventListener(evt, ()=>{ applySealHref(openSeal); applySealHref(openSealHeader); }, {passive:true});
-      datePick?.addEventListener(evt, ()=>{ applySealHref(openSeal); applySealHref(openSealHeader); }, {passive:true});
-      hourScrub?.addEventListener(evt, ()=>{ applySealHref(openSeal); applySealHref(openSealHeader); }, {passive:true});
-    });
-    applySealHref(openSeal); applySealHref(openSealHeader);
-
-    /* ========== COPY SHARE LINK ========== */
-    document.getElementById('shareLink')?.addEventListener('click', async ()=>{
-      const url = new URL(location.href);
-      const tz = tzPick.value || 'UTC';
-      const d  = datePick.value || new Date().toISOString().slice(0,10);
-      const h  = hourScrub.value || '12';
-      url.searchParams.set('tz', tz);
-      url.searchParams.set('d', d);
-      url.searchParams.set('h', h);
-      try{ await navigator.clipboard.writeText(url.toString()); }catch(_){}
-      const t=document.createElement('div'); t.textContent='Link copied'; Object.assign(t.style,{position:'fixed',right:'16px',bottom:'16px',background:'#0e131c',color:'#e6f9ff',padding:'6px 10px',border:'1px solid var(--line)',borderRadius:'10px'}); document.body.appendChild(t); setTimeout(()=>t.remove(),1200);
-    }, {passive:true});
-
-    /* ========== KEYBOARD SHORTCUTS ========== */
-    document.addEventListener("keydown", (e)=>{
-      if (e.target && /input|select|textarea/i.test(e.target.tagName)) return;
-      if (e.key === "ArrowRight" || e.key === "PageDown"){ nextBtn?.click(); e.preventDefault(); }
-      if (e.key === "ArrowLeft"  || e.key === "PageUp"){   prevBtn?.click(); e.preventDefault(); }
-      if (e.key === "ArrowUp"){   let v=+hourScrub.value||0; hourScrub.value=Math.min(23,v+1); hourScrub.dispatchEvent(new Event("input")); e.preventDefault(); }
-      if (e.key === "ArrowDown"){ let v=+hourScrub.value||0; hourScrub.value=Math.max(0,v-1); hourScrub.dispatchEvent(new Event("input")); e.preventDefault(); }
-      if (e.key === "t" || e.key === "T"){ // step hour +1
-        let v=+hourScrub.value||0; hourScrub.value=((v+1)%24); hourScrub.dispatchEvent(new Event("input")); e.preventDefault();
-      }
-    });
-
-    /* ========== PREV / NEXT DAY CONTROLS ========== */
-    function dateFromInputOrToday(){
-      const tz = tzPick.value || 'UTC';
-      const src = datePick.value ? new Date(datePick.value+"T00:00:00") : new Date();
-      // Normalize to tz calendar date (strip time)
-      const p = new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(src).reduce((o,p)=>(o[p.type]=p.value,o),{});
-      return new Date(`${p.year}-${p.month}-${p.day}T00:00:00Z`);
-    }
-    function shiftDate(days){
-      const cur = dateFromInputOrToday();
-      const target = new Date(cur.getTime() + days*86400000);
-      // Write back to <input type="date"> in local tz terms for consistency
-      const tz = tzPick.value || 'UTC';
-      const parts = new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(target).reduce((o,p)=>(o[p.type]=p.value,o),{});
-      datePick.value = `${parts.year}-${parts.month}-${parts.day}`;
-      datePick.dispatchEvent(new Event('change'));
-    }
-    prevBtn?.addEventListener('click', ()=>shiftDate(-1), {passive:true});
-    nextBtn?.addEventListener('click', ()=>shiftDate(1),  {passive:true});
-
-    /* ========== LUNAR SIM (listens to astro phase) ========== */
-    (function lunarSim(){
-      if(!simMoon) return;
-      const k = simMoon.getContext('2d');
-      function draw(phase01){
-        const w=simMoon.width, h=simMoon.height;
-        const r=Math.min(w,h)/2-10, cx=w/2, cy=h/2;
-        k.clearRect(0,0,w,h);
-        // back
-        k.fillStyle='#0b0f18'; k.beginPath(); k.arc(cx,cy,r,0,Math.PI*2); k.fill();
-        // lit portion (simple Lambert proxy)
-        const phi = (phase01%1)*Math.PI*2; // 0=new, π=full
-        const cos = Math.cos(phi);
-        // draw terminator ellipse
-        k.save();
-        k.translate(cx,cy);
-        k.scale(Math.abs(cos),1);
-        k.beginPath(); k.arc(0,0,r, -Math.PI/2, Math.PI/2, false); k.arc(0,0,r,  Math.PI/2, -Math.PI/2, false); k.closePath();
-        k.restore();
-        // choose which side lit
-        k.globalCompositeOperation = cos>=0 ? 'source-over' : 'destination-out';
-        k.fillStyle = '#cfe6ff';
-        k.beginPath(); k.arc(cx,cy,r,0,Math.PI*2); k.fill();
-        k.globalCompositeOperation = 'source-over';
-
-        // rim
-        k.strokeStyle='#243047'; k.lineWidth=2; k.beginPath(); k.arc(cx,cy,r,0,Math.PI*2); k.stroke();
-      }
-      function updateFromAstro(e){
-        const ph = (e?.detail?.phase ?? 0); // 0=new, .5=full
-        draw(ph);
-        const pct = Math.round(( (ph<=0.5 ? ph : 1-ph) )*200); // illum ~ rough
-        phaseLine.textContent = ph<0.01 ? 'New Moon'
-                          : Math.abs(ph-0.25)<0.01 ? 'First Quarter'
-                          : Math.abs(ph-0.5)<0.01  ? 'Full Moon'
-                          : Math.abs(ph-0.75)<0.01 ? 'Last Quarter'
-                          : (ph<0.25 ? 'Waxing Crescent' : ph<0.5 ? 'Waxing Gibbous' : ph<0.75 ? 'Waning Gibbous' : 'Waning Crescent');
-        phaseMeta.textContent = `~${pct}% illuminated`;
-      }
-      document.addEventListener('sof:astro-update', updateFromAstro);
-      // in case astro loads after, we’ll wait for first event; else init dark disk
-      draw(0.01);
-    })();
-
-    /* ========== REMNANT CORE (fallback if moons.js isn’t present) ========== */
-    (function remnantCore(){
-      const MOON_NAMES = [
-        {name:'#1 Magnetic', essence:'Unify Purpose'},
-        {name:'#2 Lunar',    essence:'Polarize Stability'},
-        {name:'#3 Electric', essence:'Activate Service'},
-        {name:'#4 Self-Existing', essence:'Define Form'},
-        {name:'#5 Overtone', essence:'Empower Radiance'},
-        {name:'#6 Rhythmic', essence:'Organize Equality'},
-        {name:'#7 Resonant', essence:'Channel Inspiration'},
-        {name:'#8 Galactic', essence:'Harmonize Integrity'},
-        {name:'#9 Solar',    essence:'Pulse Intention'},
-        {name:'#10 Planetary', essence:'Perfect Manifestation'},
-        {name:'#11 Spectral', essence:'Dissolve Release'},
-        {name:'#12 Crystal', essence:'Dedicate Cooperation'},
-        {name:'#13 Cosmic',  essence:'Endure Presence'}
-      ];
-      const TONE_TEXT = {
-        1:'Magnetic — Unify Purpose',2:'Lunar — Polarize Challenge',3:'Electric — Activate Service',4:'Self-Existing — Define Form',
-        5:'Overtone — Empower Radiance',6:'Rhythmic — Organize Equality',7:'Resonant — Channel Inspiration',
-        8:'Galactic — Harmonize Integrity',9:'Solar — Pulse Intention',10:'Planetary — Perfect Manifestation',
-        11:'Spectral — Dissolve Release',12:'Crystal — Dedicate Cooperation',13:'Cosmic — Endure Presence'
-      };
-
-      function tzDate(y,m,d,tz){ // m=1..12
-        const s = `${String(y).padStart(4,'0')}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}T00:00:00`;
-        const parts = new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(s)).reduce((o,p)=>(o[p.type]=p.value,o),{});
-        return new Date(`${parts.year}-${parts.month}-${parts.day}T00:00:00Z`);
-      }
-      function isLeap(y){ return (y%4===0 && (y%100!==0 || y%400===0)); }
-      function remnantYearStartFor(dateUTC, tz){
-        // If local (tz) date >= Jul 26 of that tz-year → start that Jul 26, else previous tz-year
-        const lp = new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric'}).formatToParts(dateUTC).reduce((o,p)=>(o[p.type]=p.value,o),{});
-        const y = +lp.year;
-        const jul26 = tzDate(y,7,26,tz);
-        const localDate = tzDate(+lp.year, +lp.month||1, +lp.day||1, tz); // normalize midnight
-        return (localDate.getTime() >= jul26.getTime()) ? jul26 : tzDate(y-1,7,26,tz);
-      }
-      function leapOffsetSince(startUTC, targetUTC, tz){
-        // Leap Day (Feb 29) does not advance Remnant count.
-        // If a Feb 29 local day exists between start (inclusive) and target (exclusive), subtract 1.
-        // Find any Feb 29 in range
-        let sy = +new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric'}).format(startUTC);
-        let ey = +new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric'}).format(targetUTC);
-        for(let y=sy; y<=ey; y++){
-          if(!isLeap(y)) continue;
-          const feb29 = tzDate(y,2,29,tz);
-          if (feb29.getTime()>=startUTC.getTime() && feb29.getTime()<targetUTC.getTime()) return 1;
-        }
-        return 0;
-      }
-      function computeRemnantState(){
-        const tz = tzPick.value || 'UTC';
-        const baseDateUTC = dateFromInputOrToday();
-        const startUTC = remnantYearStartFor(baseDateUTC, tz);
-        const diffDays = Math.floor((baseDateUTC - startUTC)/86400000);
-        const dootUTC = new Date(startUTC.getTime() + 364*86400000); // July 25 next year local; mapped via tz boundaries
-        const isDOOT = Math.abs(baseDateUTC - dootUTC) < 12*60*60*1000; // within same local day
-        let offset = diffDays;
-        if (!isDOOT) offset -= leapOffsetSince(startUTC, baseDateUTC, tz);
-        if (isDOOT){
-          return { tz, isDOOT:true, moonIdx:null, dayInMoon:null, yearStartUTC:startUTC };
-        }
-        const moonIdx = Math.floor(offset/28)+1; // 1..13
-        const day     = (offset%28)+1;          // 1..28
-        return { tz, isDOOT:false, moonIdx, dayInMoon:day, yearStartUTC:startUTC };
-      }
-      function fmtDate(dUTC, tz, withYear=true){
-        const opt = {timeZone:tz, month:'short', day:'2-digit'}; if(withYear) Object.assign(opt,{year:'numeric'});
-        return new Intl.DateTimeFormat('en-US', opt).format(dUTC);
-      }
-      function setWeekDots(day){
-        const wrap = document.getElementById('weekDots'); if(!wrap) return;
-        wrap.innerHTML='';
-        for(let i=1;i<=28;i++){
-          const inWeek = Math.ceil(i/7), curWeek = Math.ceil(day/7);
-          const dot = document.createElement('span');
-          dot.className = 'dot';
-          dot.style.cssText='width:10px;height:10px;border-radius:50%;display:inline-block;margin:3px;border:1px solid var(--remnant-line);background:' + (i===day?'var(--moon-accent)':'transparent');
-          dot.setAttribute('aria-label', `Day ${i}${i===day?' (today)':''}`);
-          dot.style.opacity = (inWeek===curWeek)? '1' : '.45';
-          wrap.appendChild(dot);
-        }
-      }
-      function refreshRemnantUI(){
-        const s = computeRemnantState();
-        const dootWarn = document.getElementById('dootWarn');
-        if(s.isDOOT){
-          dayInMoon.textContent = '—';
-          moonName.textContent  = 'Day Out of Time';
-          moonEss.textContent   = 'Pause, Reflect, Reset';
-          moonChip.setAttribute('data-idx','DOOT');
-          yearSpan.textContent = new Intl.DateTimeFormat('en-US',{timeZone:s.tz,year:'numeric'}).format(s.yearStartUTC) + ' Year';
-          arcMain?.setAttribute('stroke-dasharray', `0 316`);
-          dootWarn.style.display = '';
-          document.getElementById('moonLine').textContent = 'DOOT (outside 13×28)';
-          setWeekDots(1);
-          return;
-        }
-        dootWarn.style.display = 'none';
-        const meta = MOON_NAMES[(s.moonIdx-1)];
-        moonName.textContent = meta?.name || `#${s.moonIdx}`;
-        moonEss.textContent  = meta?.essence || '—';
-        moonChip.setAttribute('data-idx', String(s.moonIdx));
-        dayInMoon.textContent = String(s.dayInMoon);
-        yearSpan.textContent  = new Intl.DateTimeFormat('en-US',{timeZone:s.tz,year:'numeric'}).format(s.yearStartUTC) + ' Year';
-        document.getElementById('moonLine').textContent = `${meta?.name||'#'+s.moonIdx} · Day ${s.dayInMoon}`;
-        // arcs
-        const prog = ( (s.moonIdx-1)*28 + (s.dayInMoon-1) ) / 364;
-        const dash = (prog*316).toFixed(2);
-        arcMain?.setAttribute('stroke-dasharray', `${dash} ${316-dash}`);
-        // numerology
-        const tone = ((s.dayInMoon-1)%13)+1;
-        numLine.textContent = `Tone ${tone} — Day ${s.dayInMoon} of 28`;
-        numMeta.textContent = TONE_TEXT[tone] || '';
-        energyQuote.textContent = tone===7 ? '“Stand still; let the channel open.”' :
-                                  tone===13? '“Endure presence; seed the next ring.”' :
-                                  '—';
-        // week dots
-        setWeekDots(s.dayInMoon);
-        // year map
-        buildYearMap(s.yearStartUTC, s.tz);
-      }
-
-      // Year Map + ICS
-      function buildYearMap(startUTC, tz){
-        const tbody = document.querySelector('#yearMap tbody'); if(!tbody) return;
-        tbody.innerHTML='';
-        const rows=[];
-        for(let m=1;m<=13;m++){
-          const start = new Date(startUTC.getTime() + (m-1)*28*86400000);
-          const end   = new Date(start.getTime() + 27*86400000);
-          const meta  = MOON_NAMES[m-1];
-          const sTxt = fmtDate(start, tz, true);
-          const eTxt = fmtDate(end, tz, true);
-          const tr = `<tr><td>${m}</td><td>${meta.name}</td><td>${meta.essence}</td><td>${sTxt} (${tz})</td><td>${eTxt} (${tz})</td></tr>`;
-          rows.push({m, start, end, tz, meta});
-          tbody.insertAdjacentHTML('beforeend', tr);
-        }
-        const nextInfo = document.getElementById('nextMoonInfo');
-        if(nextInfo){
-          const nowUTC = dateFromInputOrToday();
-          let idx = rows.findIndex(r => nowUTC.getTime() <= r.end.getTime());
-          if(idx<0) idx = 12;
-          const cur = rows[idx], next = rows[Math.min(idx+1,12)];
-          nextInfo.textContent = `Now in ${cur.meta.name} → Next: ${next.meta.name} on ${fmtDate(next.start, tz, true)}.`;
-        }
-        // cache for ICS
-        currentMap = rows;
-      }
-
-      function icsEscape(s){ return String(s).replace(/[,;\\]/g,'\\$&').replace(/\n/g,'\\n'); }
-      function icsDate(d){ // UTC -> floating "local" date (no TZ) for all-day events
-        const y=d.getUTCFullYear(), m=String(d.getUTCMonth()+1).padStart(2,'0'), da=String(d.getUTCDate()).padStart(2,'0');
-        return `${y}${m}${da}`;
-      }
-      function makeICS(rows){
-        const prod='-//Scroll of Fire//Remnant 13 Moons//EN';
-        const now=new Date();
-        let out = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:${prod}
-CALSCALE:GREGORIAN
-METHOD:PUBLISH
-X-WR-CALNAME:Remnant 13 Moons
-`;
-        rows.forEach(r=>{
-          const uid = `moon-${r.m}-${r.start.getTime()}@scroll-of-fire`;
-          out += `BEGIN:VEVENT
-UID:${uid}
-DTSTAMP:${icsDate(now)}T000000Z
-DTSTART;VALUE=DATE:${icsDate(r.start)}
-DTEND;VALUE=DATE:${icsDate(new Date(r.end.getTime()+86400000))}
-SUMMARY:${icsEscape(r.meta.name)} — ${icsEscape(r.meta.essence)}
-DESCRIPTION:${icsEscape(`${r.meta.name} — ${r.meta.essence} (${r.tz})`)}
-END:VEVENT
-`;
-        });
-        // DOOT
-        const doot = new Date(rows[12].end.getTime()+86400000);
-        out += `BEGIN:VEVENT
-UID:doot-${doot.getTime()}@scroll-of-fire
-DTSTAMP:${icsDate(now)}T000000Z
-DTSTART;VALUE=DATE:${icsDate(doot)}
-DTEND;VALUE=DATE:${icsDate(new Date(doot.getTime()+86400000))}
-SUMMARY:Day Out of Time
-DESCRIPTION:This day sits outside the 13×28 moons. Rest, reflect, reset.
-END:VEVENT
-END:VCALENDAR
-`;
-        return out;
-      }
-      let currentMap = null;
-      function refreshICS(){
-        if(!currentMap) return;
-        const data = makeICS(currentMap);
-        const blob = new Blob([data], {type:'text/calendar'});
-        const url = URL.createObjectURL(blob);
-        const a = document.getElementById('dlICS');
-        if(a){ a.href = url; a.download = '13-moon-year.ics'; }
-      }
-      document.getElementById('regenICS')?.addEventListener('click', refreshICS, {passive:true});
-
-      // Hook changes
-      tzPick?.addEventListener('change', ()=>{ updateClock(); refreshRemnantUI(); refreshICS(); }, {passive:true});
-      datePick?.addEventListener('change', ()=>{ refreshRemnantUI(); }, {passive:true});
-      todayBtn?.addEventListener('click', ()=>{ refreshRemnantUI(); refreshICS(); }, {passive:true});
-
-      // Initial
-      refreshRemnantUI();
-      setTimeout(refreshICS, 50);
-    })();
-
-    /* ========== SIMPLE CALENDAR HOOKS (visual only) ========== */
-    (function calendars(){
-      const remHook = document.getElementById('remCal');
-      const gregHook= document.getElementById('gregCal');
-      if(!remHook && !gregHook) return;
-
-      function renderRemnantMonth(moonIdx, yearStartUTC, tz){
-        if(!remHook) return;
-        remHook.innerHTML='';
-        const head = document.createElement('header');
-        head.className='calendar__head';
-        const meta = document.createElement('div');
-        meta.className='calendar__meta';
-        meta.textContent = `TZ ${tz}`;
-        head.innerHTML = `<div class="calendar__title"><span class="moon-name">#${moonIdx} ${document.getElementById('moonName').textContent}</span><span class="ess">${document.getElementById('moonEssence').textContent}</span></div>`;
-        head.appendChild(meta);
-        remHook.appendChild(head);
-
-        const grid = document.createElement('div'); grid.className='calendar__grid';
-        const start = new Date(yearStartUTC.getTime() + (moonIdx-1)*28*86400000);
-        for(let d=1; d<=28; d++){
-          const g = new Date(start.getTime() + (d-1)*86400000);
-          const gtxt = new Intl.DateTimeFormat('en-US',{timeZone:tz, month:'short', day:'2-digit'}).format(g);
-          const cell = document.createElement('div'); cell.className='day';
-          cell.innerHTML = `<div class="day__num">${d} <span class="greg">${gtxt}</span></div><div class="day__events"></div><div class="day__tag"></div>`;
-          grid.appendChild(cell);
-        }
-        remHook.appendChild(grid);
-      }
-
-      function renderGregorianMonth(dateUTC, tz){
-        if(!gregHook) return;
-        gregHook.innerHTML='';
-        // Figure first of month local
-        const parts = new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit'}).formatToParts(dateUTC).reduce((o,p)=>(o[p.type]=p.value,o),{});
-        const y=+parts.year, m=+parts.month;
-        const first = new Date(`${String(y).padStart(4,'0')}-${String(m).padStart(2,'0')}-01T00:00:00Z`);
-        const next  = m===12 ? new Date(`${y+1}-01-01T00:00:00Z`) : new Date(`${y}-${String(m+1).padStart(2,'0')}-01T00:00:00Z`);
-        const days  = Math.round((next-first)/86400000);
-        const head = document.createElement('header'); head.className='calendar__head';
-        head.innerHTML = `<div class="calendar__title"><span class="moon-name">${new Intl.DateTimeFormat('en-US',{timeZone:tz,month:'long',year:'numeric'}).format(dateUTC)}</span></div><div class="calendar__meta">TZ ${tz}</div>`;
-        gregHook.appendChild(head);
-        const grid = document.createElement('div'); grid.className='calendar__grid';
-        for(let d=1; d<=days; d++){
-          const g = new Date(first.getTime() + (d-1)*86400000);
-          const gtxt = new Intl.DateTimeFormat('en-US',{timeZone:tz, weekday:'short'}).format(g);
-          const cell = document.createElement('div'); cell.className='day';
-          cell.innerHTML = `<div class="day__num">${d} <span class="label">${gtxt}</span></div><div class="day__events"></div>`;
-          grid.appendChild(cell);
-        }
-        gregHook.appendChild(grid);
-      }
-
-      function refresh(){
-        const tz = tzPick.value || 'UTC';
-        const base = dateFromInputOrToday();
-        // derive remnant year start and moon index from existing labels (computed in remnantCore)
-        const idxAttr = document.getElementById('moonChip')?.getAttribute('data-idx');
-        const moonIdx = idxAttr && /^\d+$/.test(idxAttr) ? +idxAttr : 1;
-        // reconstruct year start: sniff from yearSpan year
-        const yText = document.getElementById('yearSpan')?.textContent||'';
-        const yMatch = yText.match(/(\d{4})/);
-        const y = yMatch ? +yMatch[1] : (new Date().getUTCFullYear());
-        const yearStartUTC = (function findStart(){
-          // July 26 of that y in tz
-          const s = new Date(`${y}-07-26T00:00:00Z`);
-          return s;
-        })();
-        renderRemnantMonth(moonIdx, yearStartUTC, tz);
-        renderGregorianMonth(base, tz);
-      }
-      refresh();
-      tzPick?.addEventListener('change', refresh, {passive:true});
-      datePick?.addEventListener('change', refresh, {passive:true});
-    })();
-
-    /* ========== FOOTER YEAR ========== */
-    (function setYear(){ const y = new Date().getFullYear(); const el=document.getElementById('yr'); if(el){ el.textContent = String(y); } })();
-
-  })();
-  </script>
-</body>
+  </noscript>  <!-- JS: unified page driver (calendar/astro/ics/accents/notes) -->  <script src="assets/js/moons.js?v=4.0" defer></script></body>
 </html>
