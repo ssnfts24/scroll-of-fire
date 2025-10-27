@@ -1,735 +1,213 @@
-/* =========================================================
-  13 Moons · Living Clock — Page Styles
-  Ancient Wizard of YHWH · “Remnant” Skin (v5.2)
-  - FCP THEME: no forced-dark at first paint (respects OS light)
-  - THEME: explicit [data-theme] wins; OS pref used when unset
-  - TYPE/LAYOUT: crisper fonts, safer balances, better mobile wrap
-  - MISC: variable grouping, small a11y improvements
-========================================================= */
+/* ============================================================
+   Scroll of Fire — MOONS FEATURE LAYER
+   Living Clock / Calendar / Astronomy UI  (v4.1 Remnant)
+   Depends on: tokens.css, core.css
+   ============================================================ */
 
-@layer tokens, base, components, astrology, utilities, remnant;
+@layer astrology, utilities, remnant;
 
-/* ---------- Tokens ---------- */
-@layer tokens {
-  /* Allow UA to render either light or dark chrome until our tokens apply */
-  :root { color-scheme: light dark }
-
-  /* If no explicit theme is set, follow OS preference at first paint */
-  @media (prefers-color-scheme: light){
-    :root:not([data-theme="dark"]){
-      /* Light defaults (used only when data-theme is missing or not dark) */
-      --bg:#f7fbff; --fg:#0b1220; --muted:#4a5872; --line:#cfd7e6; --surface:#ffffff;
-      --elev:rgba(0,0,0,.02); --elev-2:rgba(0,0,0,.01);
-      --accent:#0e84ff; --accent-2:#7dc3ff;
-      --moon-accent:#0e84ff; --moon-accent-2:#ffb84d;
-      --asp-conj:#000;
-      --target-glow: color-mix(in srgb, var(--moon-accent) 10%, transparent);
-      --day-bg:#ffffff; --day-alt:#f5f9ff; --day-edge:#d7dfec;
-      --day-today:#eaf3ff; --doot-bg:#fff5ec; --doot-ink:#ad6a00; --greg-ink:#5b6a85;
-      --wk-hdr:#24324e; /* slightly darker for contrast on light */
-    }
-  }
-
-  /* Explicit dark theme (default tokens) */
-  :root,
-  :root[data-theme="dark"]{
-    /* Base palette */
-    --bg:#05070d; --fg:#edf2fb; --muted:#a7b1ca; --line:#2a3242;
-    --surface:#0e131a;
-    --elev:rgba(255,255,255,.02); --elev-2:rgba(255,255,255,.006);
-
-    /* Accents (phase-tinted by JS) */
-    --accent:#a7f6ff; --accent-2:#cfefff;
-    --moon-accent:#7af3ff; --moon-accent-2:#f3c97a;
-
-    /* Layout / type */
-    --maxw:1180px; --radius:12px; --radius-lg:16px;
-    --shadow:0 8px 18px rgba(0,0,0,.38);
-    --fs-body:clamp(15px, .48vw + 14px, 17px);
-    --lh:1.55;
-
-    /* Interaction / motion */
-    --focus-ring:#7af3ff;
-    --focus-glow:0 0 0 2px #7af3ff66, 0 0 0 6px #7af3ff22;
-    --tempo:1;
-
-    /* Veil */
-    --remnant-veil: conic-gradient(from 0deg at 50% 50%,
-                      rgba(122,243,255,.04), transparent,
-                      rgba(243,201,122,.035), transparent);
-
-    /* Forms */
-    accent-color: var(--moon-accent);
-
-    /* Planets */
-    --pl-sun:#ffd46a; --pl-moon:#9feaff; --pl-mercury:#b8b8ff; --pl-venus:#ffb3d9;
-    --pl-mars:#ff7070; --pl-jupiter:#ffd1a6; --pl-saturn:#c9bd8c; --pl-uranus:#95ffe6;
-    --pl-neptune:#9dbbff; --pl-pluto:#d0a2ff; --pl-node:#cfefff; --pl-chiron:#a7ffcf;
-
-    /* Aspects */
-    --asp-conj:#ffffff; --asp-sext:#8ef0c3; --asp-square:#ff6a6a; --asp-trine:#6ff0ff; --asp-oppo:#c39bff; --asp-quinc:#ffd87a;
-
-    /* Hash target */
-    --target-glow: color-mix(in srgb, var(--moon-accent) 12%, transparent);
-
-    /* Calendar */
-    --wk-hdr:#dbe6ff;
-    --day-bg:#0f1116; --day-alt:#0c1016; --day-edge:#20283a; --day-today:#142032;
-    --event-dot:#a7f6ff; --event-dot-2:#f3c97a;
-    --doot-bg:#1b0e09; --doot-ink:#ffc99a; --leap-ink:#a7ffcf; --greg-ink:#b7c2da;
-  }
-
-  /* Explicit light override always wins */
-  :root[data-theme="light"]{
-    color-scheme: light;
-    --bg:#f7fbff; --fg:#0b1220; --muted:#4a5872; --line:#cfd7e6; --surface:#ffffff;
-    --elev:rgba(0,0,0,.02); --elev-2:rgba(0,0,0,.01);
-    --accent:#0e84ff; --accent-2:#7dc3ff;
-    --moon-accent:#0e84ff; --moon-accent-2:#ffb84d;
-    --asp-conj:#000; --target-glow: color-mix(in srgb, var(--moon-accent) 10%, transparent);
-    --day-bg:#ffffff; --day-alt:#f5f9ff; --day-edge:#d7dfec;
-    --day-today:#eaf3ff; --doot-bg:#fff5ec; --doot-ink:#ad6a00; --greg-ink:#5b6a85;
-    --wk-hdr:#24324e;
-  }
-
-  /* Alive mode tempo governors */
-  :root[data-alive="calm"]{ --tempo:.78 }
-  :root[data-alive="lively"]{ --tempo:1 }
-  :root[data-alive="max"]{ --tempo:1.25 }
-  body.affect-off{ --tempo:.001 }
-
-  @media (prefers-contrast: more){
-    :root{ --line:#7a8aaa; --muted:#d3dcf1 }
-  }
-}
-
-/* ---------- Base ---------- */
-@layer base {
-  html,body{ background:var(--bg); color:var(--fg) }
-
-  body{
-    margin:0;
-    font:400 var(--fs-body)/var(--lh) Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans";
-    text-rendering:optimizeLegibility;
-    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-    overflow-x:hidden;
-  }
-
-  /* Subtle aurora/grain + Remnant veil */
-  body::before{
-    content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.085;
-    background:
-      radial-gradient(1000px 600px at 70% -6%, rgba(122,243,255,.08), transparent 60%),
-      radial-gradient(1200px 700px at 15% 0%, rgba(243,201,122,.06), transparent 65%),
-      repeating-radial-gradient(circle at 50% 40%, rgba(255,255,255,.02) 0 2px, transparent 2px 5px),
-      var(--remnant-veil);
-    mix-blend-mode:screen;
-  }
-
-  .wrap{
-    max-width:var(--maxw); margin:0 auto;
-    padding:22px 16px calc(96px + env(safe-area-inset-bottom));
-    position:relative; z-index:1;
-  }
-
-  a{ color:inherit; text-decoration:none }
-  a:hover{ text-decoration:underline }
-  :where(a,button,[role="button"],input,select,textarea):focus-visible{
-    outline:none; box-shadow:var(--focus-glow)
-  }
-
-  :target{
-    scroll-margin-top:calc(96px + 12px);
-    outline:2px solid var(--focus-ring); outline-offset:2px;
-    animation: targetFade calc(2.2s*var(--tempo)) ease forwards;
-  }
-  @keyframes targetFade{
-    from{ background:var(--target-glow) } to{ background:transparent }
-  }
-
-  .title{
-    font-family:"Crimson Pro",serif; font-weight:800; text-align:center;
-    font-size:clamp(28px,3.4vw,46px); line-height:1.12;
-    margin:8px 0 6px; letter-spacing:.3px;
-    background:linear-gradient(90deg,#fff,var(--accent-2),var(--accent));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    text-shadow:0 0 24px color-mix(in srgb, var(--accent) 22%, transparent);
-    text-wrap:balance; animation:titleGlow calc(2.2s*var(--tempo)) ease both;
-  }
-  @keyframes titleGlow{
-    from{filter:drop-shadow(0 0 0 rgba(122,243,255,0))}
-    to{filter:drop-shadow(0 0 12px color-mix(in srgb, var(--accent) 38%, transparent))}
-  }
-  .subtitle{ text-align:center; color:var(--muted); margin:0 0 12px; text-wrap:pretty }
-
-  .title::after{
-    content:"\05D9\05D4\05D5\05D4";
-    display:block; font:700 clamp(12px,1.1vw,15px)/1 "Frank Ruehl", "Noto Serif Hebrew", serif;
-    letter-spacing:.12em; margin-top:6px; opacity:.45;
-    color: color-mix(in srgb, var(--moon-accent) 30%, var(--fg));
-  }
-
-  .grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:12px }
-  .col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-6{grid-column:span 6}.col-7{grid-column:span 7}.col-8{grid-column:span 8}.col-12{grid-column:span 12}
-  @media (max-width:980px){ .grid > *{ grid-column:1 / -1 } }
-
-  .lore-grid{ display:grid; grid-template-columns:1fr 220px; gap:14px; align-items:center }
-  @media (max-width:720px){ .lore-grid{ grid-template-columns:1fr } .sigil{ justify-self:center } }
-  .sigil img{ width:200px; height:auto; filter:drop-shadow(0 8px 22px rgba(0,0,0,.5)) }
-  .prompts{ margin:0; padding-left:1.1rem }
-  .prompts li{ margin:.35rem 0 }
-  .moon-media img{ width:100%; height:auto; border:1px solid var(--line); border-radius:14px; display:block; background:#0b0f16 }
-
-  body.stars{
-    background:
-      radial-gradient(900px 600px at 60% -6%, rgba(122,243,255,.08), transparent 60%),
-      linear-gradient(180deg,#05060a 0%, #0b0e14 80%);
-    overflow-x:hidden;
-  }
-  #skyBg{
-    position:fixed; inset:0 0 auto 0; width:100vw; height:46vh; z-index:-1; display:block;
-    background:
-      radial-gradient(2px 2px at 12% 24%, rgba(255,255,255,.5), transparent 60%),
-      radial-gradient(1.5px 1.5px at 72% 28%, rgba(122,243,255,.45), transparent 60%),
-      radial-gradient(1.8px 1.8px at 42% 62%, rgba(243,201,122,.4), transparent 60%),
-      var(--remnant-veil);
-    mix-blend-mode:screen; filter:saturate(115%) contrast(105%);
-    animation:skyDrift calc(28s*var(--tempo)) linear infinite;
-  }
-  @keyframes skyDrift{ from{transform:translateX(-2%)} to{transform:translateX(2%)} }
-}/* ---------- Components ---------- */
-@layer components {
-  /* Card / Surface */
-  .card{
-    border:1px solid var(--line); border-radius:var(--radius); padding:14px; background-color:var(--surface);
-    background:
-      linear-gradient(180deg, var(--elev), var(--elev-2)),
-      radial-gradient(70% 50% at 100% 0%, color-mix(in srgb, var(--moon-accent) 8%, transparent), transparent 60%);
-    box-shadow:var(--shadow); position:relative; overflow:hidden; isolation:isolate;
-  }
-  .card::after{
-    content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit; opacity:.28;
-    background:
-      conic-gradient(from 0deg at 12px 12px, color-mix(in srgb, var(--moon-accent) 40%, transparent) 0 25%, transparent 0 100%),
-      conic-gradient(from 90deg at calc(100% - 12px) 12px, color-mix(in srgb, var(--moon-accent-2) 35%, transparent) 0 25%, transparent 0 100%),
-      conic-gradient(from 180deg at 12px calc(100% - 12px), color-mix(in srgb, var(--accent) 30%, transparent) 0 25%, transparent 0 100%),
-      conic-gradient(from 270deg at calc(100% - 12px) calc(100% - 12px), color-mix(in srgb, var(--accent-2) 30%, transparent) 0 25%, transparent 0 100%);
-  }
-
-  /* Controls */
-  .lab-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
-  .lab-btn{
-    padding:.62rem .95rem; min-height:40px; border-radius:10px; border:1px solid var(--line);
-    background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
-    font-weight:800; letter-spacing:.2px; cursor:pointer; color:var(--fg);
-    text-shadow:0 1px 0 rgba(0,0,0,.45);
-    transition:transform .06s ease, box-shadow .12s ease, border-color .12s ease, filter .12s ease;
-  }
-  .lab-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35);
-    border-color:color-mix(in srgb, var(--moon-accent) 30%, var(--line));
-    filter:drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 25%, transparent))
-  }
-  .lab-btn:active{ transform:translateY(0) }
-  .lab-btn.ghost{ background:transparent }
-  .lab-btn[disabled]{ opacity:.5; cursor:not-allowed }
-  .lab-input{ padding:.6rem; min-height:40px; border-radius:10px; border:1px solid var(--line); background:#0f1116; color:inherit }
-
-  input[type="range"].lab-input{ appearance:none; height:32px; background:transparent; padding:0 }
-  input[type="range"].lab-input::-webkit-slider-runnable-track{ height:4px; background:linear-gradient(90deg, var(--moon-accent), var(--moon-accent-2)); border-radius:999px }
-  input[type="range"].lab-input::-webkit-slider-thumb{
-    appearance:none; width:18px; height:18px; border-radius:50%; background:#0f1116; border:1px solid var(--line); margin-top:-7px; box-shadow:0 2px 6px rgba(0,0,0,.35)
-  }
-  input[type="range"].lab-input::-moz-range-track{ height:4px; background:linear-gradient(90deg, var(--moon-accent), var(--moon-accent-2)); border-radius:999px }
-  input[type="range"].lab-input::-moz-range-thumb{ width:18px; height:18px; border-radius:50%; background:#0f1116; border:1px solid var(--line); box-shadow:0 2px 6px rgba(0,0,0,.35) }
-
-  .hint,.meta{ color:var(--muted) }
-
-  /* Moon badge */
-  .moon-badge{
-    container-type:inline-size; container-name:moonbadge;
-    display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap;
-    filter:drop-shadow(0 0 10px color-mix(in srgb, var(--moon-accent) 25%, transparent));
-    position:relative;
-  }
-  .pill{
-    display:inline-grid; place-items:center; gap:2px; padding:.55rem .95rem;
-    border-radius:999px; border:1px solid var(--line);
-    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), radial-gradient(80% 60% at 50% 20%, color-mix(in srgb, var(--moon-accent) 15%, transparent), transparent 60%);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
-    position:relative; z-index:2; color:inherit; text-shadow:0 1px 0 rgba(0,0,0,.45);
-  }
-  .pill .k{ font-size:clamp(20px, 2.2vw, 30px); font-weight:800; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
-  #moonChip[data-idx] .k::after{ content:" (" attr(data-idx) ")"; opacity:.92; font-weight:900; letter-spacing:.2px }
-  #moonEssence{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:min(60ch, 100%) }
-  .mono{ font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace }
-
-  /* Progress ring */
-  .ring{ width:clamp(96px, 10vw + 70px, 120px); height:clamp(96px, 10vw + 70px, 120px); display:grid; place-items:center; position:relative; z-index:0 }
-  .ring svg{ display:block; position:relative; z-index:1 }
-  .ring .label{ position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; z-index:2 }
-  .ring .label .big{ font:900 clamp(18px, 1.4vw + 14px, 24px)/1 Inter; color:#efeae1; letter-spacing:.3px; text-shadow:0 0 10px rgba(255,255,255,.08) }
-  .ring .label .small{ font:600 clamp(10px, .6vw + 8px, 12px)/1 Inter; color:#b8b3a6 }
-  .ring-bg{ fill:none; stroke:#1f2533; stroke-width:8 }
-  .ring-fg{
-    fill:none; stroke:var(--ring-grad, url(#rg)); stroke-width:8; stroke-linecap:round; stroke-dasharray:0 316;
-    filter:drop-shadow(0 0 6px color-mix(in srgb, var(--moon-accent) 45%, transparent)) drop-shadow(0 0 10px color-mix(in srgb, var(--moon-accent-2) 28%, transparent));
-    transition:stroke-dasharray .45s cubic-bezier(.22,.61,.36,1);
-    animation:ringGlow calc(6.2s*var(--tempo)) ease-in-out infinite;
-  }
-  @keyframes ringGlow{0%,100%{filter:drop-shadow(0 0 5px color-mix(in srgb, var(--moon-accent) 40%, transparent))}50%{filter:drop-shadow(0 0 12px color-mix(in srgb, var(--moon-accent-2) 40%, transparent))}}
-  .ring::after{
-    content:""; position:absolute; inset:10px; border-radius:50%; pointer-events:none; opacity:.35; z-index:0;
-    background: conic-gradient(from 0deg, rgba(255,255,255,.06) 0 2deg, transparent 2deg 28deg, rgba(255,255,255,.06) 28deg 30deg, transparent 30deg 56deg, rgba(255,255,255,.06) 56deg 58deg, transparent 58deg 84deg, rgba(255,255,255,.06) 84deg 86deg, transparent 86deg 112deg, rgba(255,255,255,.06) 112deg 114deg, transparent 114deg 140deg, rgba(255,255,255,.06) 140deg 142deg, transparent 142deg 168deg, rgba(255,255,255,.06) 168deg 170deg, transparent 170deg 196deg, rgba(255,255,255,.06) 196deg 198deg, transparent 198deg 224deg, rgba(255,255,255,.06) 224deg 226deg, transparent 226deg 252deg, rgba(255,255,255,.06) 252deg 254deg, transparent 254deg 280deg, rgba(255,255,255,.06) 280deg 282deg, transparent 282deg 308deg, rgba(255,255,255,.06) 308deg 310deg, transparent 310deg 336deg, rgba(255,255,255,.06) 336deg 338deg, transparent 338deg 360deg);
-  }
-
-  /* Weeks / dots */
-  .weekrow{ display:flex; gap:8px; justify-content:center; align-items:center; margin-top:6px; flex-wrap:wrap; row-gap:8px }
-  .week{ display:grid; grid-template-columns:repeat(7,10px); gap:6px; padding:6px 10px; border:1px solid var(--line); border-radius:999px;
-    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), radial-gradient(80% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
-  }
-  .dot{ width:10px; height:10px; border-radius:50%; background:#1f2533; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); transition:transform .2s ease, box-shadow .2s ease }
-  .dot.on{ background:radial-gradient(circle at 40% 35%, var(--moon-accent), var(--moon-accent-2)); box-shadow:0 0 0 1px rgba(255,255,255,.12) inset, 0 0 10px color-mix(in srgb, var(--moon-accent) 35%, transparent); transform:translateY(-1px) scale(1.05) }
-  .weeklabel{ font:700 12px/1 Inter; color:#b8b3a6; min-width:48px }
-
-  @container moonbadge (max-width: 470px){
-    .moon-badge{ display:grid; grid-template-columns:auto 1fr; grid-template-rows:auto auto; column-gap:14px; row-gap:10px }
-    .moon-badge .ring{ grid-row:1 / span 2; justify-self:start }
-    #moonChip{ grid-column:2; max-width:100% }
-  }
-  @container moonbadge (max-width: 360px){ #moonChip{ grid-column:1 / -1 } }
-  @media (max-width:560px){
-    .moon-badge{ display:grid; grid-template-columns:auto 1fr; grid-template-rows:auto auto; column-gap:14px; row-gap:10px }
-    .moon-badge .ring{ grid-row:1 / span 2 }
-  }
-
-  /* Year map */
-  .year-map{ width:100%; border-collapse:separate; border-spacing:0 6px }
-  .year-map th,.year-map td{ padding:8px 10px; border:1px solid var(--line); vertical-align:top }
-  .year-map th{
-    background-color:var(--surface);
-    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
-    text-align:left; position:sticky; top:0; z-index:1; backdrop-filter:saturate(120%) blur(6px); -webkit-backdrop-filter:saturate(120%) blur(6px)
-  }
-  .year-map .row{ border-radius:10px; overflow:hidden }
-  .tag{ display:inline-block; padding:.2rem .5rem; border:1px solid var(--line); border-radius:999px }
-  .is-today{ box-shadow:0 0 0 1px #7af3ff55, inset 0 0 0 1px #7af3ff33, 0 10px 22px rgba(0,0,0,.35); position:relative }
-  .is-today::after{ content:""; position:absolute; inset:-2px; border-radius:inherit; pointer-events:none; box-shadow:inset 0 0 18px color-mix(in srgb, var(--moon-accent) 25%, transparent) }
-
-  /* Simulator */
-  .sim{ display:grid; grid-template-columns:1fr 2fr; gap:12px }
-  @media (max-width:860px){ .sim{ grid-template-columns:1fr } }
-  canvas#simMoon{
-    width:100%; height:auto; display:block; border-radius:var(--radius-lg); border:1px solid var(--line);
-    background:radial-gradient(circle at 50% 40%, #0a0e15 0%, #06080d 80%), repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.02) 0 2px, transparent 2px 4px);
-    box-shadow:0 10px 28px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.02);
-  }
-
-  /* Misc UI */
-  nav.crumbs{ display:flex; gap:8px; justify-content:center; margin:10px 0 14px }
-  .divider{ height:1px; background:linear-gradient(90deg, transparent, var(--line), transparent) }
-  .goldline{ height:1px; background:linear-gradient(90deg, #f3c97a44, #f3c97a, #f3c97a44); margin:10px 0 }
-
-  .toast{
-    position:fixed; left:50%; bottom:calc(22px + env(safe-area-inset-bottom)); transform:translateX(-50%);
-    background:#0e131c; color:#e6f9ff; padding:8px 12px; border:1px solid var(--line); border-radius:10px;
-    box-shadow:0 10px 28px rgba(0,0,0,.35); z-index:9999; opacity:0; transition:opacity .2s
-  }
-  a.dl{ display:inline-block; padding:.5rem .8rem; border:1px solid var(--line); border-radius:10px; text-decoration:none; background:linear-gradient(180deg,rgba(255,255,255,.04),transparent); font-weight:800 }
-  a.dl:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35) }
-
-  .kin{ display:grid; grid-template-columns:1fr; gap:8px; margin-top:6px }
-  .kin-row{ display:flex; gap:8px; flex-wrap:wrap; align-items:center }
-  .kin .tag{ padding:.25rem .55rem; border-radius:999px; border:1px solid var(--line) }
-  .kin small{ color:#9aa4be }
-
-  /* Moon Bar */
-  .moonbar{
-    --ring-size: 76px;
-    border:1px solid var(--line); border-radius:14px; padding:8px; background-color:var(--surface);
-    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), radial-gradient(140% 80% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
-    box-shadow:0 10px 24px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.02);
-  }
-  .moonbar, .moonbar .moonbar-info, .moonbar .tag, .moonbar .moonbar-share, .moonbar .moonbar-tz{ color:var(--fg) !important; text-shadow:0 1px 1px rgba(0,0,0,.55) }
-  .moonbar-info{ display:grid; gap:4px; min-width:0 }
-  .moonbar-line{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; font-weight:800; letter-spacing:.2px }
-  .moonbar-sub.meta{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:clamp(220px,26vw,360px) }
-  .moonbar-tags{ display:flex; align-items:center; gap:6px; flex-wrap:wrap }
-  .moonbar-tags .tag{ padding:.2rem .45rem; border-radius:999px; border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)) }
-  .moonbar .mb-bg{ stroke:#1b2231 }
-  .moonbar .mb-fg{
-    stroke:url(#mbGrad);
-    filter:drop-shadow(0 0 6px color-mix(in srgb, var(--moon-accent) 35%, transparent)) drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent-2) 28%, transparent));
-    transition:stroke-dasharray .45s cubic-bezier(.22,.61,.36,1); animation:mbPulse calc(7.2s*var(--tempo)) ease-in-out infinite;
-  }
-  @keyframes mbPulse{0%,100%{opacity:.92}50%{opacity:1}}
-
-  /* === Monthly Calendar (13×28) === */
-  .calendar{
-    border:1px solid var(--line); border-radius:var(--radius-lg);
-    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), radial-gradient(80% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
-    box-shadow:var(--shadow); overflow:hidden;
-  }
-  .calendar__head{
-    display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line);
-    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
-  }
-  .calendar__title{
-    display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
-    font-family:"Crimson Pro",serif; font-weight:800; letter-spacing:.25px;
-  }
-  .calendar__title .moon-name{ font-size:clamp(20px, 2vw, 28px) }
-  .calendar__title .ess{ color:var(--muted); font-weight:700; font-size:clamp(12px,1vw,14px) }
-  .calendar__tools{ display:flex; gap:6px; flex-wrap:wrap }
-
-  /* FIX: Real CSS button, no preprocessor composes */
-  .calendar__tools .btn{
-    padding:.62rem .95rem; min-height:40px; border-radius:10px; border:1px solid var(--line);
-    background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
-    font-weight:800; letter-spacing:.2px; cursor:pointer; color:var(--fg);
-    text-shadow:0 1px 0 rgba(0,0,0,.45);
-    transition:transform .06s ease, box-shadow .12s ease, border-color .12s ease, filter .12s ease;
-  }
-  .calendar__tools .btn:hover{
-    transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35);
-    border-color:color-mix(in srgb, var(--moon-accent) 30%, var(--line));
-    filter:drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 25%, transparent))
-  }
-
-  .calendar__wkdays{
-    display:grid; grid-template-columns:repeat(7,1fr);
-    border-bottom:1px solid var(--line);
-    background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-  }
-  .calendar__wkdays .w{
-    padding:.5rem .4rem; text-align:center; font:800 12px/1 Inter; letter-spacing:.3px; color:var(--wk-hdr);
-  }
-
-  .calendar__grid{
-    display:grid; grid-template-columns:repeat(7,1fr); grid-auto-rows:minmax(86px, 1fr);
-  }
-  .day{
-    position:relative; border-right:1px solid var(--day-edge); border-bottom:1px solid var(--day-edge); background:var(--day-bg);
-    padding:.45rem .45rem 1.6rem; overflow:hidden;
-    transition:background .15s ease, outline-color .15s ease;
-  }
-  .day:nth-child(7n){ border-right:0 }
-  .day__num{
-    font:900 13px/1 Inter; letter-spacing:.2px; color:#e9f1ff; opacity:.96;
-    display:flex; align-items:center; gap:6px;
-  }
-  .day__num .greg{ color:var(--greg-ink); font-weight:800; font-size:11px; opacity:.9 }
-  .day__tag{ position:absolute; right:6px; bottom:6px; display:flex; gap:6px; }
-  .dot-evt,.dot-evt2{
-    width:8px; height:8px; border-radius:50%;
-    box-shadow:0 0 0 1px rgba(255,255,255,.12) inset, 0 0 8px rgba(0,0,0,.25);
-  }
-  .dot-evt{ background:var(--event-dot) } .dot-evt2{ background:var(--event-dot-2) }
-
-  .day.is-weekend { background:linear-gradient(180deg, rgba(255,255,255,.02), transparent), var(--day-bg) }
-  .day.is-today   { outline:2px solid color-mix(in srgb, var(--moon-accent) 35%, transparent); outline-offset:-2px; background:linear-gradient(180deg, color-mix(in srgb, var(--moon-accent) 8%, transparent), transparent), var(--day-today) }
-  .day.is-other-month{ background:linear-gradient(180deg, rgba(255,255,255,.015), rgba(0,0,0,.02)), var(--day-alt); opacity:.8 }
-
-  .day.is-doot{ background:linear-gradient(180deg, rgba(243,201,122,.08), rgba(243,201,122,.02)), var(--doot-bg) }
-  .day.is-doot .label{ color:var(--doot-ink); font-weight:900; font-size:11px; letter-spacing:.25px; text-transform:uppercase }
-  .day.is-leap .label{ color:var(--leap-ink);  font-weight:900; font-size:11px; letter-spacing:.25px; text-transform:uppercase }
-
-  .day__events{ margin:.35rem 0 0; display:grid; gap:4px }
-  .evt{
-    display:flex; align-items:center; gap:6px; font-weight:700; color:var(--muted);
-    padding:.15rem .35rem; border:1px dashed var(--line); border-radius:8px; background:linear-gradient(180deg, rgba(255,255,255,.02), transparent);
-  }
-  .evt .at{ font:900 10px/1 Inter; opacity:.9 }
-  .evt .ttl{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
-
-  .calendar.is-compact .calendar__grid{ grid-auto-rows:minmax(66px, 1fr) }
-  .calendar.is-compact .evt{ display:none }
-  @media (max-width:560px){
-    .calendar .calendar__wkdays .w{ font-size:11px; padding:.45rem .3rem }
-    .calendar .day{ padding:.35rem .35rem 1.2rem }
-  }
-
-  /* Gregorian compare block */
-  .compare{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  @media (max-width:1020px){ .compare{ grid-template-columns:1fr } }
-
-  .panel{
-    border:1px solid var(--line); border-radius:var(--radius-lg); overflow:hidden;
-    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
-    box-shadow:var(--shadow);
-  }
-  .panel__head{
-    display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px; border-bottom:1px solid var(--line);
-    background:radial-gradient(80% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
-  }
-  .panel__title{ font-family:"Crimson Pro",serif; font-weight:900; letter-spacing:.25px }
-  .panel__meta{ color:var(--muted); font-weight:700 }
-
-  .gregorian{ --row-h: minmax(86px, 1fr); }
-  .gregorian__wkdays{
-    display:grid; grid-template-columns:repeat(7,1fr); border-bottom:1px solid var(--line);
-    background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.025));
-  }
-  .gregorian__wkdays .w{ padding:.5rem .4rem; text-align:center; font:800 12px/1 Inter; letter-spacing:.3px; color:var(--wk-hdr) }
-  .gregorian__grid{ display:grid; grid-template-columns:repeat(7,1fr); grid-template-rows:repeat(6, var(--row-h)) }
-  .gday{ position:relative; border-right:1px solid var(--day-edge); border-bottom:1px solid var(--day-edge); background:var(--day-bg); padding:.45rem .45rem 1.6rem; overflow:hidden; }
-  .gday:nth-child(7n){ border-right:0 }
-  .gday__num{ font:900 13px/1 Inter; letter-spacing:.2px; color:#e9f1ff; opacity:.96; }
-  .gday.is-other-month{ background:var(--day-alt); opacity:.8 }
-  .gday.is-today{ outline:2px solid color-mix(in srgb, var(--moon-accent) 35%, transparent); outline-offset:-2px; background:linear-gradient(180deg, color-mix(in srgb, var(--moon-accent) 8%, transparent), transparent), var(--day-today) }
-
-  .legend{
-    display:flex; flex-wrap:wrap; gap:8px; padding:10px 12px; border-top:1px solid var(--line);
-    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
-  }
-  .legend .key{
-    display:inline-flex; align-items:center; gap:8px; padding:.25rem .55rem; border:1px solid var(--line); border-radius:999px;
-    background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); font-weight:800; letter-spacing:.2px;
-  }
-  .legend .k-dot{ width:10px; height:10px; border-radius:50% }
-  .legend .k-doot{ background:var(--doot-ink) }
-  .legend .k-leap{ background:var(--leap-ink) }
-  .legend .k-evt1{ background:var(--event-dot) }
-  .legend .k-evt2{ background:var(--event-dot-2) }
-  .legend .k-today{ background:var(--moon-accent) }
-
-  /* Simple tooltip */
-  .tip{ position:relative }
-  .tip:hover::after{
-    content:attr(data-tip); position:absolute; left:50%; bottom:calc(100% + 8px); transform:translateX(-50%);
-    background:#0e131c; color:#e6f9ff; border:1px solid var(--line); border-radius:8px; padding:.25rem .45rem; white-space:nowrap;
-    box-shadow:0 10px 28px rgba(0,0,0,.35); font-weight:700; font-size:12px; z-index:20;
-  }
-  }/* ---------- Astrology Toolkit ---------- */
+/* ------------------------------ Sky Canvas ------------------------------ */
 @layer astrology {
-  .planet-chip{ display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); border-radius:999px; padding:.28rem .5rem; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); font-weight:800; letter-spacing:.2px; }
-  .planet-chip .g{ width:10px; height:10px; border-radius:50%; }
-  .planet-chip .lbl{ white-space:nowrap; }
-  .pl-sun .g{ background:var(--pl-sun) } .pl-moon .g{ background:var(--pl-moon) } .pl-mercury .g{ background:var(--pl-mercury) } .pl-venus .g{ background:var(--pl-venus) } .pl-mars .g{ background:var(--pl-mars) } .pl-jupiter .g{ background:var(--pl-jupiter) } .pl-saturn .g{ background:var(--pl-saturn) } .pl-uranus .g{ background:var(--pl-uranus) } .pl-neptune .g{ background:var(--pl-neptune) } .pl-pluto .g{ background:var(--pl-pluto) } .pl-node .g{ background:var(--pl-node) } .pl-chiron .g{ background:var(--pl-chiron) }
-
-  .aspect{ display:inline-flex; align-items:center; gap:6px; padding:.2rem .5rem; border-radius:999px; border:1px solid var(--line); font-weight:800 }
-  .aspect--conj{ background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); color:var(--fg) }
-  .aspect--sext{ background:linear-gradient(180deg, color-mix(in srgb, var(--asp-sext) 20%, transparent), transparent); color:var(--fg) }
-  .aspect--trine{ background:linear-gradient(180deg, color-mix(in srgb, var(--asp-trine) 22%, transparent), transparent) }
-  .aspect--square{ background:linear-gradient(180deg, color-mix(in srgb, var(--asp-square) 20%, transparent), transparent) }
-  .aspect--oppo{ background:linear-gradient(180deg, color-mix(in srgb, var(--asp-oppo) 20%, transparent), transparent) }
-  .aspect--quinc{ background:linear-gradient(180deg, color-mix(in srgb, var(--asp-quinc) 20%, transparent), transparent) }
-
-  .zodiac-wheel{
-    position:relative; border:1px solid var(--line); border-radius:50%;
-    background:
-      radial-gradient(circle at 50% 45%, rgba(255,255,255,.04), transparent 60%),
-      conic-gradient(from -90deg, rgba(255,255,255,.04) 0 30deg, transparent 30deg 60deg, rgba(255,255,255,.04) 60deg 90deg, transparent 90deg 120deg, rgba(255,255,255,.04) 120deg 150deg, transparent 150deg 180deg, rgba(255,255,255,.04) 180deg 210deg, transparent 210deg 240deg, rgba(255,255,255,.04) 240deg 270deg, transparent 270deg 300deg, rgba(255,255,255,.04) 300deg 330deg, transparent 330deg 360deg);
-    box-shadow:0 10px 28px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.02);
-    aspect-ratio:1/1; overflow:hidden;
+  #skyBg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(1600px 900px at 50% 0%, rgba(122,243,255,.05), transparent 70%),
+                radial-gradient(1400px 600px at 90% 100%, rgba(243,201,122,.05), transparent 70%),
+                var(--bg);
+    animation: skyPulse 20s ease-in-out infinite;
   }
-  .zodiac-wheel::after{
-    content:""; position:absolute; inset:10%; border-radius:50%;
-    background:conic-gradient(from var(--spin,0deg), rgba(122,243,255,.05), rgba(243,201,122,.05), transparent 40%);
-    filter:blur(10px); pointer-events:none; animation:zwSpin calc(22s*var(--tempo)) linear infinite;
-  }
-  @keyframes zwSpin { to { --spin: 360deg } }
 
-  .houses{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
-  @media (max-width:640px){ .houses{ grid-template-columns:repeat(3,1fr) } }
-  .house{ border:1px solid var(--line); border-radius:12px; padding:.6rem .7rem; background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); }
-  .house .h{ font:800 12px/1 Inter; letter-spacing:.3px; color:#dbe6ff; margin-bottom:.25rem }
-  .house .b{ color:var(--muted) }
-
-  .ephem{
-    width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:12px;
-    border:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.008));
+  @keyframes skyPulse {
+    0%,100% { opacity: 0.9; filter: brightness(1); }
+    50% { opacity: 1; filter: brightness(1.1); }
   }
-  .ephem th, .ephem td{ padding:.55rem .65rem; border-bottom:1px solid var(--line) }
-  .ephem thead th{
-    text-align:left; font:800 12px/1 Inter; letter-spacing:.3px; color:#dbe6ff; position:sticky; top:0;
-    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
-    backdrop-filter:saturate(120%) blur(6px);
-  }
-  .ephem tr:last-child td{ border-bottom:0 }
-  .ephem .deg{ font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1 }
-  .ephem .sg{ opacity:.86 }
-  .ephem .now{ background:color-mix(in srgb, var(--moon-accent) 10%, transparent) }
-
-  .glyph{ font:700 18px/1 "Noto Sans Symbols 2","Segoe UI Symbol","Apple Color Emoji",emoji,system-ui; filter:drop-shadow(0 0 8px rgba(255,255,255,.08)) }
 }
 
-/* ---------- Utilities ---------- */
+/* ------------------------------ Living Clock + Moon Simulation ------------------------------ */
+@layer astrology {
+  #simMoon {
+    border-radius: var(--r-lg);
+    background: linear-gradient(180deg,#0b0e15,#05070d);
+    border: 1px solid var(--line);
+    box-shadow: 0 0 60px rgba(122,243,255,.1), 0 0 120px rgba(243,201,122,.05);
+    transition: box-shadow var(--t-slow) var(--ease);
+  }
+
+  #simMoon:hover {
+    box-shadow: 0 0 80px rgba(122,243,255,.2), 0 0 160px rgba(243,201,122,.1);
+  }
+
+  #phaseLine { font-size: 1.1rem; font-weight: 600; }
+  #phaseMeta { opacity: .8; font-size: .9rem; }
+  #numLine   { font-weight: 700; }
+  #numMeta   { color: var(--muted); }
+}
+
+/* ------------------------------ Controls + Sliders ------------------------------ */
 @layer utilities {
-  .kbd{ display:inline-block; padding:.12rem .35rem; border-radius:6px; border:1px solid var(--line); background:#0f1116; font:700 12px/1 Inter; vertical-align:baseline }
-
-  @media (max-width:560px){ .card{ padding:12px 10px } .moon-badge{ margin-bottom:6px } }
-  @media (max-width:420px){ .ring-fg{ filter:none } .dot.on{ box-shadow:none } .title{ font-size:32px } .subtitle{ font-size:14px } }
-
-  @media print{
-    body{ background:#fff; color:#000; -webkit-print-color-adjust:exact; print-color-adjust:exact }
-    .wrap{ padding:0 } #skyBg,.toast,nav.crumbs{ display:none !important }
-    .card{ box-shadow:none; border-color:#000 }
-    .calendar, .panel{ break-inside:avoid }
-    .day, .gday{ background:#fff !important; -webkit-print-color-adjust:exact; print-color-adjust:exact }
+  input[type="range"] {
+    width: 100%;
+    appearance: none;
+    background: transparent;
   }
-  @media (prefers-reduced-motion:reduce){ *{ animation:none !important; transition:none !important } #skyBg{ display:none !important } }
-  @media (prefers-reduced-data:reduce){ #skyBg, .card::after{ display:none !important } }
-
-  @media (dynamic-range: high){ .title{ text-shadow:0 0 28px color-mix(in oklab, var(--accent) 30%, transparent) } }
-
-  body{ scrollbar-width:thin; scrollbar-color:#2b2f3a #0f0f14 }
-  body::-webkit-scrollbar{ width:12px } body::-webkit-scrollbar-track{ background:#0f0f14 }
-  body::-webkit-scrollbar-thumb{ background:#2b2f3a; border-radius:10px; border:2px solid #0f0f14; box-shadow:inset 0 0 12px color-mix(in srgb, var(--moon-accent) 20%, transparent) }
-
-  @supports not ((-webkit-backdrop-filter: blur(2px)) or (backdrop-filter: blur(2px))) { .year-map th{ background:#0e131a !important } }
-
-  @media (forced-colors: active){
-    .card, .lab-btn, .tag, .moonbar-share, .moonbar-tz, .house, .ephem, .calendar, .panel{ border:1px solid CanvasText }
-    .lab-btn, .moonbar-share, .moonbar-tz{ background:Canvas; color:CanvasText; text-shadow:none }
-    .ring-bg{ stroke:GrayText } .ring-fg{ filter:none }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-radius: 6px;
   }
-
-  /* FB in-app guard */
-  .is-fbapp body::before{ mix-blend-mode:normal; opacity:.06 }
-  .is-fbapp .card,
-  .is-fbapp .moonbar,
-  .is-fbapp .codex-content,
-  .is-fbapp .scroll{ background-color:var(--surface) !important }
-
-  /* ================= TODAY BAR — unified pills (no revert-layer) ================= */
-  #todayBlock, .today, #nowDate, #nowClock, #nowTZ { transition:none !important; }
-
-  /* FIX: make the three chips identical with high-specificity + !important */
-  #nowDate, #nowClock, #nowTZ {
-    display:inline-flex !important; align-items:center; gap:.5ch;
-    padding:.55rem .9rem !important; min-height:40px;
-    border:1px solid var(--line) !important; border-radius:999px !important;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
-      radial-gradient(80% 60% at 50% 20%, color-mix(in srgb, var(--moon-accent) 15%, transparent), transparent 60%) !important;
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
-    color:var(--fg) !important; text-shadow:0 1px 0 rgba(0,0,0,.45);
-    font-weight:800;
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+    margin-top: -6px;
+    transition: background var(--t-fast) var(--ease);
   }
-  #nowClock{ font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
-  #nowClock .ampm{
-    display:inline-block; padding:.2rem .5rem; border:1px solid var(--line);
-    border-radius:999px; background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
-    font:900 11px/1 Inter,system-ui; letter-spacing:.25px;
-  }
-
-  /* Remove legacy collisions without revert-layer */
-  .pill #nowDate, .pill #nowClock, .pill #nowTZ,
-  .card #nowDate, .card #nowClock, .card #nowTZ { /* styles held via ID specificity */ }
-
-  /* FIX: Responsive long/short date — works without container */
-  #nowDate[data-short]::after{ content:attr(data-short); display:none; font-weight:800 }
-  #nowDate{ content:normal }
-  @media (max-width:420px){
-    #nowDate{ visibility:hidden; position:relative }
-    #nowDate::after{
-      display:inline; visibility:visible; position:absolute; inset:0;
-      padding:inherit; border-radius:inherit;
-    }
-  }
-
-  /* “You are in …” bubble to match Today row */
-  #moonLine{
-    display:block; padding:.8rem 1rem; border:1px solid var(--line); border-radius:14px;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
-      radial-gradient(100% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
-    font-weight:800; letter-spacing:.2px; text-shadow:0 1px 0 rgba(0,0,0,.45);
-  }
-
-  /* Buttons adjacent to Today line up consistently */
-  .lab-row .lab-btn{ min-width:96px }
+  input[type="range"]:hover::-webkit-slider-thumb { background: var(--accent-2); }
 }
 
-/* ---------- Remnant Mode (YHWH) ---------- */
+/* ------------------------------ Remnant Calendar ------------------------------ */
 @layer remnant {
-  body.remnant-yhwh .card,
-  body.remnant-yhwh .scroll,
-  body.remnant-yhwh .codex-content,
-  body.remnant-yhwh .calendar,
-  body.remnant-yhwh .panel{
-    background:
-      linear-gradient(180deg, rgba(243,201,122,.03), rgba(255,255,255,.008)),
-      radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
-    border-color: color-mix(in srgb, #f3c97a 18%, var(--line));
+  .calendar__grid .day.is-weekend,
+  .cal__grid .cal__cell.is-weekend {
+    background: linear-gradient(180deg, rgba(122,243,255,.06), transparent), var(--surface-2);
   }
-  body.remnant-yhwh .divider{
-    background: linear-gradient(90deg, transparent, #f3c97a66 30%, var(--line) 50%, #f3c97a66 70%, transparent);
+  .calendar__grid .day.is-doot,
+  .cal__grid .cal__cell.is-doot {
+    background: linear-gradient(180deg, rgba(243,201,122,.1), transparent), var(--surface-2);
   }
-  body.remnant-yhwh .tag{ border-color: color-mix(in srgb, #f3c97a 18%, var(--line)) }
-  body.remnant-yhwh .title::after{ opacity:.6; text-shadow:0 0 14px rgba(243,201,122,.25) }
 
-  body.remnant-yhwh .card.runes::before,
-  body.remnant-yhwh .card.runes::after{
-    content:"\05D9 \05D4 \05D5 \05D4";
-    position:absolute; inset:auto 8px 8px auto; font:700 12px/1 "Frank Ruehl","Noto Serif Hebrew",serif;
-    color:#f3c97a; opacity:.35; letter-spacing:.12em; pointer-events:none;
-    text-shadow:0 0 10px rgba(243,201,122,.15);
+  /* Glow accent when active */
+  .cal__grid .cal__cell:focus-visible,
+  .cal__grid .cal__cell:active {
+    outline: 2px solid var(--accent);
+    box-shadow: var(--air-glow);
   }
-  body.remnant-yhwh .card.runes::before{ inset:8px auto auto 8px; transform:rotate(180deg) }
+
+  /* Tooltip hover for date cells (short messages) */
+  .cal__grid .cal__cell:hover::after {
+    content: attr(aria-label);
+    position: absolute;
+    bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-4px);
+    background: #0f1520;
+    color: #eaf3ff;
+    border: 1px solid #2a3242;
+    border-radius: var(--r-sm);
+    padding: .25rem .45rem;
+    font-size: .75rem;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    animation: fadeIn .25s forwards;
+  }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  /* Compact moon widget pulse */
+  .moonbar.yhwh-on {
+    animation: pulseAura 10s ease-in-out infinite;
+  }
+  @keyframes pulseAura {
+    0%,100% { box-shadow: 0 0 10px rgba(122,243,255,.25), inset 0 0 0 1px #274354; }
+    50%     { box-shadow: 0 0 20px rgba(243,201,122,.25), inset 0 0 0 1px #3c3632; }
+  }
+
+  /* Glow around active year map row */
+  .year-map tr.is-today td {
+    box-shadow: inset 0 0 0 1px var(--accent), 0 0 16px rgba(122,243,255,.1);
+  }
+
+  /* Remnant veil over entire body set by JS */
+  body.remnant-yhwh::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: var(--remnant-veil);
+    pointer-events: none;
+    z-index: -1;
+  }
 }
 
-/* ---------- Supplemental polish carried over ---------- */
-#planetChips .planet-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);
-  border-radius:999px;padding:.32rem .65rem;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));font-weight:800}
-#planetChips .g{width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--moon-accent),var(--moon-accent-2))}
-#planetChips .rt{opacity:.75}
-.zodiac-wheel{min-height:260px;border:1px solid var(--line);border-radius:12px;
-  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01))}
-#aspects .aspect{display:inline-block;border:1px solid var(--line);border-radius:10px;padding:.28rem .6rem;font-weight:800;margin:.25rem .35rem .25rem 0}
-#aspects .aspect.is-on{filter:drop-shadow(0 0 10px color-mix(in srgb, var(--moon-accent) 28%, transparent))}
-#aspects .aspect--square{background:linear-gradient(180deg,#ff5a5a22,#0000)}
-#aspects .aspect--trine{background:linear-gradient(180deg,#00ffd422,#0000)}
-#aspects .aspect--sext{background:linear-gradient(180deg,#8fffe822,#0000)}
-#aspects .aspect--conj{background:linear-gradient(180deg,#b8e0ff22,#0000)}
-#aspects .aspect--oppo{background:linear-gradient(180deg,#ffd79a22,#0000)}
-.ephem{width:100%;border-collapse:separate;border-spacing:0 6px}
-.ephem th,.ephem td{padding:8px 10px;border:1px solid var(--line)}
-.ephem .deg{font-variant-numeric:tabular-nums}
+/* ------------------------------ Astro Wheel FX ------------------------------ */
+@layer astrology {
+  #astroWheel circle[data-dot],
+  #astroWheel [data-dot] {
+    transition: transform 3s cubic-bezier(.25,.8,.25,1), filter var(--t-slow) var(--ease);
+    transform-origin: center;
+  }
+  #astroWheel [data-dot]:hover {
+    filter: drop-shadow(var(--gold-glow));
+    transform: scale(1.25);
+  }
+  #astroWheel .dot.el-fire   { fill: #ff6b3d; }
+  #astroWheel .dot.el-air    { fill: #7af3ff; }
+  #astroWheel .dot.el-water  { fill: #7aaaff; }
+  #astroWheel .dot.el-earth  { fill: #b3ff85; }
+}
 
-/* Astrology Now — Remnant Wizard */
-.astro-head{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;margin-bottom:8px}
-.astro-head .seal{font-weight:900;letter-spacing:.2px;padding:.25rem .5rem;border-radius:999px;border:1px solid var(--line);
-  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
-  color:color-mix(in srgb,var(--moon-accent) 45%,var(--fg))}
-.astro-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:12px}
-@media (max-width:980px){.astro-grid{grid-template-columns:1fr}}
-.astro-chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-@media (max-width:640px){.astro-chips{grid-template-columns:1fr}}
-.astro .chip{display:flex;align-items:baseline;gap:8px;padding:.65rem .8rem;border:1px solid var(--line);border-radius:14px;
-  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);font-weight:800;letter-spacing:.2px;text-shadow:0 1px 0 rgba(0,0,0,.45)}
-.astro .chip b{min-width:86px;display:inline-block}
-.astro .chip .pos{opacity:.9}.astro .chip .sign{opacity:.85;border:1px solid var(--line);padding:.06rem .4rem;border-radius:8px;
-  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));font-weight:700}
-.astro .chip.more{grid-column:1/-1;display:block}
-.astro .chip.more summary{list-style:none;cursor:pointer}
-.astro .chip.more summary::-webkit-details-marker{display:none}
-.astro .chip.more .more-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px;font-weight:700}
-@media (max-width:560px){.astro .chip.more .more-grid{grid-template-columns:1fr}}
-.astro .dot{width:10px;height:10px;border-radius:50%;box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 0 8px color-mix(in srgb,var(--moon-accent) 35%,transparent);display:inline-block}
-.el-fire{background:radial-gradient(circle at 40% 35%,#ffb86b,var(--moon-accent-2))}
-.el-water{background:radial-gradient(circle at 40% 35%,#7af3ff,var(--moon-accent))}
-.el-air{background:radial-gradient(circle at 40% 35%,#cfefff,#7af3ff)}
-.el-earth{background:radial-gradient(circle at 40% 35%,#e9dfb1,#caa96a)}
-.el-aether{background:radial-gradient(circle at 40% 35%,#b6a0ff,#7af3ff)}
-.astro-wheel{border:1px solid var(--line);border-radius:14px;padding:10px;background:
-  linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01)),
-  radial-gradient(120% 80% at 100% 0%,color-mix(in srgb,var(--moon-accent) 10%,transparent),transparent 60%);
-  box-shadow:0 10px 24px rgba(0,0,0,.35),inset 0 0 0 1px rgba(255,255,255,.02)}
-.astro-wheel svg{display:block;width:100%;height:auto}
-.astro-wheel figcaption.meta{display:flex;gap:6px;align-items:center;justify-content:center;margin-top:6px}
-.astro-aspects{margin-top:12px}
-.astro-aspects h3{margin:.2rem 0 .5rem;font-family:"Crimson Pro",serif;font-weight:800}
-.astro-aspects .legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-.badge.asp{display:inline-flex;align-items:center;gap:6px;padding:.28rem .55rem;border-radius:999px;border:1px solid var(--line);
-  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));font-weight:800;letter-spacing:.2px}
-.badge.asp.conj{box-shadow:0 0 0 1px #7af3ff33 inset}
-.badge.asp.sext{box-shadow:0 0 0 1px #5ec2b333 inset}
-.badge.asp.sqr{box-shadow:0 0 0 1px #ff6b6b33 inset}
-.badge.asp.tri{box-shadow:0 0 0 1px #7fd37f33 inset}
-.badge.asp.opp{box-shadow:0 0 0 1px #caa96a33 inset}
-.asp-table{width:100%;border-collapse:separate;border-spacing:0 6px}
-.asp-table th,.asp-table td{padding:8px 10px;border:1px solid var(--line)}
-.asp-table thead th{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01))}
-.asp-table tbody tr td:first-child{font-weight:800}
+/* ------------------------------ Share Card (auto-generated via JS) ------------------------------ */
+@layer utilities {
+  .share-card {
+    display:grid; grid-template-columns: auto 1fr;
+    align-items:center; gap:1rem;
+    background: linear-gradient(120deg, rgba(122,243,255,.08), rgba(243,201,122,.08));
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: .8rem 1rem;
+    box-shadow: var(--elev-1);
+  }
+  .share-card img { width: 72px; height: 72px; border-radius: var(--r-lg); }
+  .share-card .meta { color: var(--muted); }
+}
+
+/* ------------------------------ Notes + Practice ------------------------------ */
+@layer remnant {
+  #practiceCard textarea {
+    width: 100%; min-height: 120px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    background: var(--surface-2);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: .95rem;
+    padding: .5rem .6rem;
+    resize: vertical;
+  }
+  #practiceCard textarea:focus-visible {
+    outline: 2px solid var(--accent);
+  }
+  #btnSaveNote {
+    background: var(--accent);
+    color: #0b0b0f;
+    font-weight: 700;
+    border-radius: var(--r-sm);
+  }
+  #btnSaveNote:hover { background: var(--accent-2); }
+}
+
+/* ------------------------------ Responsiveness + Safety ------------------------------ */
+@layer utilities {
+  @media (max-width: 800px) {
+    #astroWheel { max-width: 100%; height: auto; }
+    .astro-wheel { padding: .4rem; }
+    .calendar__grid, .cal__grid, .greg { grid-template-columns: repeat(7, minmax(38px,1fr)); gap:4px; }
+    .day, .cal__cell { min-height: 64px; padding: .35rem; }
+  }
+  @media (max-width: 560px) {
+    .moonbar { grid-template-columns: 1fr; text-align:center; }
+    .moonbar-actions { justify-content:center; }
+  }
+}
+
+/* ------------------------------ Final YHWH Aesthetic Touch ------------------------------ */
+@layer remnant {
+  .yhwh-on .ring-fg {
+    stroke: url(#rg);
+    animation: ringGlow 6s ease-in-out infinite;
+  }
+  @keyframes ringGlow {
+    0%,100% { filter: drop-shadow(0 0 6px rgba(122,243,255,.4)); }
+    50%     { filter: drop-shadow(0 0 14px rgba(243,201,122,.35)); }
+  }
+}
