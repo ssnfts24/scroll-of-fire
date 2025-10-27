@@ -1,5 +1,4 @@
-<script>
-/* 13 Moons — Living Clock (advanced, DPR-aware, phase-tinted, v4.7 Remnant+) */
+/* 13 Moons — Living Clock (advanced, DPR-aware, phase-tinted, v4.9 Remnant+) */
 (function(){
   "use strict";
 
@@ -62,7 +61,7 @@
       tzPick.innerHTML = COMMON_TZ.map(z=>`<option value="${z}">${z}</option>`).join("");
       tzPick.value = "UTC";
     }
-    on(tzPick,"change",()=>{ safe(()=> localStorage.setItem(TZ_KEY, tzPick.value)); writeURL(); updateAll(true); buildYearMap(); buildCalendars(); }, {passive:true});
+    on(tzPick,"change",()=>{ safe(()=> localStorage.setItem(TZ_KEY, tzPick.value)); writeURL(); updateAll(true); buildYearMap(); buildCalendars && buildCalendars(); }, {passive:true});
   }
 
   /* ===================== Date helpers ===================== */
@@ -204,33 +203,113 @@
     on(simMoon, "pointerleave", ()=>{ parallax = 0; }, {passive:true});
   }
 
+  /* ---------- Moon Activity Ring (per-moon personality) ---------- */
+  let currentMoonIdx = 0;
+  let activity = {particles:[], seed:0, mode:"magnetic"};
+  function seededRand(seed){ // xorshift-ish deterministic
+    let x = Math.imul(seed ^ 0x6d2b79f5, 1);
+    return ()=> ( (x = Math.imul(x ^ (x>>>15), 1|x)) >>> 0 ) / 4294967295;
+  }
+  function buildActivityForMoon(mIdx){
+    currentMoonIdx = mIdx;
+    const rand = seededRand(0xBEEF ^ mIdx);
+    const count = 24 + Math.floor(rand()*22); // 24..46
+    const spinDir = (mIdx%2===0) ? 1 : -1;
+    const modes = ["magnetic","lunar","electric","self","overtone","rhythmic","resonant","galactic","solar","planetary","spectral","crystal","cosmic"];
+    activity.mode = modes[(mIdx-1)%modes.length];
+    activity.particles = Array.from({length:count}, (_,i)=>{
+      const base = (i/count)*Math.PI*2;
+      return {
+        a: base + rand()*0.6,             // angle
+        r: 1.15 + rand()*0.25,            // radius factor
+        s: (0.18 + rand()*0.22)*spinDir,  // speed
+        z: 0.6 + rand()*0.6,              // brightness factor
+        j: rand()*0.04 + 0.01             // jitter
+      };
+    });
+    activity.seed = mIdx;
+  }
+
+  function drawActivity(cx, cy, R, t){
+    if (!ctx || prefersReduced()) return;
+    const W=CW, H=CH;
+    ctx.save();
+    ctx.translate(cx,cy);
+
+    // faint guiding ring
+    ctx.globalCompositeOperation="lighter";
+    ctx.strokeStyle="rgba(255,255,255,0.06)";
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.arc(0,0,R*1.45,0,Math.PI*2);
+    ctx.stroke();
+
+    // particles
+    activity.particles.forEach(p=>{
+      const a = p.a + t*0.0008*p.s + Math.sin(t*0.001 + p.a*3)*p.j;
+      const rr = R * p.r * (1 + 0.02*Math.sin(t*0.0012 + p.a*5));
+      const x = Math.cos(a)*rr, y = Math.sin(a)*rr;
+      // glow dot
+      ctx.beginPath();
+      ctx.fillStyle = "rgba(255,255,255,"+(0.05+p.z*0.15)+")";
+      ctx.arc(x, y, 2.2 + p.z*1.2, 0, Math.PI*2);
+      ctx.fill();
+      // spark tail
+      ctx.beginPath();
+      ctx.strokeStyle = "rgba(199, 233, 255, "+(0.12+p.z*0.18)+")";
+      ctx.lineWidth = 1;
+      ctx.moveTo(x, y);
+      ctx.lineTo(x - Math.cos(a)*6, y - Math.sin(a)*6);
+      ctx.stroke();
+    });
+
+    // subtle mode-specific motif
+    if (activity.mode==="resonant" || activity.mode==="solar" || activity.mode==="cosmic"){
+      ctx.strokeStyle="rgba(243,201,122,0.16)";
+      ctx.lineWidth=1.2;
+      for(let k=0;k<3;k++){
+        const s=R*(1.1+k*0.12);
+        ctx.beginPath(); ctx.arc(0,0,s,0,Math.PI*2); ctx.stroke();
+      }
+    }else if (activity.mode==="electric" || activity.mode==="galactic"){
+      // triangular/hex pulses
+      const sides = activity.mode==="electric"? 3 : 6;
+      const rad = R*1.35;
+      const angle = t*0.0006;
+      ctx.strokeStyle="rgba(122,243,255,0.14)";
+      ctx.beginPath();
+      for(let i=0;i<=sides;i++){
+        const a = angle + i*(Math.PI*2/sides);
+        const x = Math.cos(a)*rad, y = Math.sin(a)*rad;
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
   function drawMoonSim(illum, sunAngle, tBreath){
     if (!ctx) return;
     const W=CW, H=CH;
     ctx.clearRect(0,0,W,H);
 
-    // Background grad with gentle aurora shimmer
     const g=ctx.createLinearGradient(0,0,0,H);
     g.addColorStop(0,"#0a0e15"); g.addColorStop(1,"#06080d");
     ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
 
-    // Parallax offset
     const offX = parallax ? pointerX*8 : 0;
     const offY = parallax ? pointerY*6 : 0;
 
-    // Moon body
     const cx=W/2 + offX, cy=H/2 + offY;
-    const R=Math.min(W,H)*0.32 * (1 + 0.015*Math.sin(tBreath*0.0016)); // tiny breath
+    const R=Math.min(W,H)*0.32 * (1 + 0.015*Math.sin(tBreath*0.0016));
     const sx = cx + Math.cos(sunAngle)*R*1.7;
     const sy = cy - Math.sin(sunAngle)*R*1.7;
 
-    // Core sphere
     ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
     const body=ctx.createRadialGradient(cx,cy-R*0.65,R*0.2, cx,cy,R*1.05);
     body.addColorStop(0, "#1a2130"); body.addColorStop(1, "#0e131c");
     ctx.fillStyle=body; ctx.fill();
 
-    // Terminator shape
     const k = 2*illum-1; const rx = R*Math.abs(k), ry = R;
     ctx.save(); ctx.translate(cx,cy); ctx.rotate(-sunAngle);
     ctx.beginPath();
@@ -244,7 +323,8 @@
     ctx.globalCompositeOperation="source-over";
     ctx.restore();
 
-    // “Sun” dot
+    drawActivity(cx, cy, R, tBreath);
+
     ctx.beginPath(); ctx.arc(sx,sy,6,0,Math.PI*2); ctx.fillStyle="#f3c97a"; ctx.fill();
   }
 
@@ -337,14 +417,12 @@
   const dlICS = $("#dlICS");
   const moonChip = $("#moonChip");
 
-  /* Week dots scaffold */
   if (weekDots && !weekDots.children.length){
     const frag = document.createDocumentFragment();
     for (let i=0;i<28;i++){ const d=document.createElement("i"); d.className="dot"; d.setAttribute("aria-hidden","true"); frag.appendChild(d); }
     weekDots.appendChild(frag);
   }
 
-  /* ============== Codex Renderer (Remnant-aware) ============== */
   function renderCodexForMoon(moonIdx){
     const data = findMoonData(moonIdx) || {};
     if (loreHebrew) loreHebrew.textContent = data.hebrew || "יהוה";
@@ -375,7 +453,6 @@
     }
   }
 
-  /* ===================== URL sync ===================== */
   function readURL(){
     let u;
     try{ u=new URL(location.href); }catch(e){ return; }
@@ -401,7 +478,6 @@
     history.replaceState(null,"",u);
   }
 
-  /* ===================== Sky (animated) ===================== */
   (function initSky(){
     const c = skyBg; if (!c) return;
     const RM = prefersReduced();
@@ -421,6 +497,20 @@
       p: Math.random()*Math.PI*2,
       s: 0.006 + Math.random()*0.012
     }));
+
+    let tail = null, lastStarTime = 0;
+    function maybeShoot(t){
+      if (RM) return;
+      if (t - lastStarTime < 9000 + Math.random()*6000) return;
+      lastStarTime = t;
+      tail = {
+        x: Math.random() * c.width * 0.6 + c.width*0.2,
+        y: c.height*0.12 + Math.random()*c.height*0.2,
+        vx: -3 - Math.random()*2,
+        vy: 1 + Math.random()*1.5,
+        life: 0
+      };
+    }
 
     let rafId=0, visible=true;
     function tick(ts){
@@ -445,6 +535,21 @@
         k.globalAlpha = a; k.beginPath(); k.arc(s.x, s.y, s.r, 0, Math.PI*2); k.fillStyle="#cfe9ff"; k.fill();
       });
       k.globalAlpha = 1;
+
+      maybeShoot(ts);
+      if (tail){
+        k.globalCompositeOperation='lighter';
+        k.strokeStyle='#cfe9ff';
+        k.lineWidth=1.2;
+        k.beginPath();
+        k.moveTo(tail.x, tail.y);
+        k.lineTo(tail.x - tail.vx*12, tail.y - tail.vy*12);
+        k.stroke();
+        k.globalCompositeOperation='source-over';
+        tail.x += tail.vx; tail.y += tail.vy; tail.life++;
+        if (tail.life>60) tail=null;
+      }
+
       rafId = requestAnimationFrame(tick);
     }
     const io = ("IntersectionObserver" in window) ? new IntersectionObserver(([e])=>{
@@ -459,7 +564,6 @@
     rafId=requestAnimationFrame(tick);
   })();
 
-  /* ===== Phase-driven accents + Remnant highlight ===== */
   function setGradientStops(defId, c1, c2){
     const grad = document.getElementById(defId);
     if (!grad) return;
@@ -497,7 +601,6 @@
   }
   const updateWidgetContrast=()=>{ const bar = document.querySelector(".moonbar"); if (!bar) return; bar.classList.remove("contrast-light"); };
 
-  /* ===================== Rendering pipeline ===================== */
   let ringDashTarget = 0, ringDashNow = 0, lastTween = 0;
   function tweenRing(ts){
     if (!ringArc) return;
@@ -533,7 +636,6 @@
     }catch(e){ crash("year map failed", e); }
   }
 
-  /* ===================== Main update ===================== */
   let currentIllum = 0, currentSunAngle = 0;
 
   function updateAll(forceTween=false){
@@ -543,12 +645,11 @@
       const hour = +hourScrub?.value || 0;
       const wall=dateInTZ(base, tz, hour);
 
-      if (nowDate) nowDate.textContent = fmtDate(wall, tz);
       if (nowDate) {
-  const long = fmtDate(wall, tz);
-  const short = fmtShort(wall, tz) || long;
-  nowDate.textContent = long;
-  nowDate.setAttribute("data-short", short); // <-- enables CSS long/short swap
+        const long = fmtDate(wall, tz);
+        const short = fmtShort(wall, tz) || long;
+        nowDate.textContent = long;
+        nowDate.setAttribute("data-short", short);
       }
       if (nowClock) nowClock.textContent = fmtTime(base, tz);
       if (nowTZ)    nowTZ.textContent   = tz;
@@ -593,8 +694,9 @@
           weekDots.setAttribute("aria-label", `Week ${week}, Day ${dow} (1–7)`);
         }
 
-        // Codex for this moon
         renderCodexForMoon(m13.moon);
+
+        if (currentMoonIdx !== m13.moon) buildActivityForMoon(m13.moon);
       }
 
       if (ringArc){
@@ -606,7 +708,6 @@
         }
       }
 
-      // Numerology + Remnant highlight
       const nu = numerology(sel, tz);
       if (numLine) numLine.textContent = `Universal ${nu.total}`;
       if (numMeta) numMeta.textContent = `Month tone ${nu.monthN} • Day tone ${nu.dayN}`;
@@ -617,11 +718,9 @@
       const bar = $(".moonbar");
       if (bar) bar.classList.toggle("yhwh-on", REMNANT_ON && resonant);
 
-      // Daily quote
       const qIdx = Math.abs(sel.getUTCFullYear()*372 + (sel.getUTCMonth()+1)*31 + sel.getUTCDate()) % QUOTES.length;
       if (energyQuote) energyQuote.textContent = QUOTES[qIdx];
 
-      // Phase + accents + sim
       const ph = moonPhase(dateInTZ(sel, tz, hour));
       if (phaseLine) phaseLine.textContent = `${ph.phase}`;
       if (phaseMeta) phaseMeta.textContent = `Age ≈ ${ph.ageDays.toFixed(1)} d • Illum ≈ ${(ph.illum*100).toFixed(0)}%`;
@@ -629,7 +728,6 @@
       currentIllum = ph.illum;
       currentSunAngle = (hour/24) * Math.PI*2;
 
-      // Year map + next moon
       buildYearMap();
       const anchor = startOfYear13(sel, tz);
       const spans  = yearMoonSpans(anchor, tz);
@@ -644,7 +742,6 @@
         }
       }
 
-      // ICS
       if (dlICS){
         const ics  = makeICS(spans, tz, `${anchor.getUTCFullYear()}/${anchor.getUTCFullYear()+1}`);
         const blob = new Blob([ics], {type:"text/calendar;charset=utf-8"});
@@ -655,12 +752,10 @@
         dlICS.download = `13-moon-${anchor.getUTCFullYear()}-${anchor.getUTCFullYear()+1}.ics`;
       }
 
-      // Comparison calendars (Part 2 defines buildCalendars)
       buildCalendars && buildCalendars();
     }catch(e){ crash("update failed — check console", e); }
   }
 
-  /* ===================== Controls & UX ===================== */
   const btnToday=$("#btnToday"), prevDay=$("#prevDay"), nextDay=$("#nextDay"), shareLink=$("#shareLink");
 
   on(btnToday,"click",()=>{
@@ -719,7 +814,6 @@
     }
   });
 
-  /* ===================== Live clock + animation loop ===================== */
   setInterval(()=>{
     if (nowClock && tzPick) nowClock.textContent = fmtTime(new Date(), tzPick.value);
     if (!tzPick || !datePick) return;
@@ -741,7 +835,6 @@
   on(document, "visibilitychange", ()=>{ docHidden = document.hidden; });
   raf=requestAnimationFrame(loop);
 
-  /* ===================== Init ===================== */
   try{
     readURL();
     if (tzPick && !tzPick.options.length){
@@ -755,54 +848,50 @@
     });
   }catch(e){ crash("init failed", e); }
 
-  /* ====== Part 2 continues below (calendar builders + comparison) ====== */
-
-  // Expose a tiny helper to Part 2:
-  window.__sof_core__ = { dateInTZ, fmtDate, fmtShort, pad, startOfYear13, yearMoonSpans, addDaysSkippingSpecials, validDateStr };
+  window.__sof_core__ = {
+    dateInTZ, fmtDate, fmtShort, pad, startOfYear13, yearMoonSpans, addDaysSkippingSpecials, validDateStr,
+    writeURL, updateAll
+  };
 
 })();
-</script>
 
-
-
-<script>
-/* 13 Moons — Living Clock · Calendars (Remnant + Gregorian, v4.7 Remnant+) */
+/* 13 Moons — Living Clock · Calendars (Remnant + Gregorian, v4.9 Remnant+) */
 (function(){
   "use strict";
 
   const $  =(s,r=document)=>r.querySelector(s);
+  const on =(t,e,f,o)=>t&&t.addEventListener(e,f,o);
   const safe = fn => { try{ return fn(); } catch(e){ console.warn("[Moons-Cal]",e); return void 0; } };
 
   const core = window.__sof_core__ || {};
-  const { dateInTZ, fmtDate, fmtShort, pad, startOfYear13, yearMoonSpans, addDaysSkippingSpecials, validDateStr } = core;
+  const {
+    dateInTZ, fmtDate, fmtShort, pad,
+    startOfYear13, yearMoonSpans, addDaysSkippingSpecials, validDateStr,
+    writeURL, updateAll
+  } = core;
 
   const tzPick = $("#tzPick");
   const datePick = $("#datePick");
   const hourScrub = $("#hourScrub");
   const ymd = (d,tz)=> dateInTZ(d,tz).toISOString().slice(0,10);
 
-  /* ---------- events helpers ---------- */
   const getEv = (store, key)=> Array.isArray(store?.[key]) ? store[key] : [];
-  const kindClass = (k)=> k ? ` data-type="${String(k)}"` : "";
 
-  /* ---------- cell/chip creators ---------- */
   function chip(txt, cls="chip"){ const s=document.createElement('span'); s.className=cls; s.textContent=txt; return s; }
   function cellButton(baseCls="cal__cell"){
     const b=document.createElement('button'); b.type='button'; b.className=baseCls; return b;
   }
 
-  /* ===================== Remnant 13×28 month builder ===================== */
   function buildRemnantMonth(sel, tz){
     const wrap = document.getElementById('remCal');
     const remHdr=document.getElementById('remHdr');
     const remMeta=document.getElementById('remMeta');
-    if (!wrap) return;
+    if (!wrap || !startOfYear13) return;
     wrap.innerHTML = '';
 
     const anchor = startOfYear13(sel, tz);
     const spans = yearMoonSpans(anchor, tz);
 
-    // find the span that contains sel (or default to first)
     const idx = (function(){
       for (let i=0;i<spans.length;i++){
         const s=spans[i];
@@ -817,13 +906,11 @@
     const span = spans[idx];
     const start = span.start, end = span.end;
 
-    // Labels (D1..D7)
     const labels=document.createElement('div'); labels.className='cal__labels';
     ["D1","D2","D3","D4","D5","D6","D7"].forEach(l=>{
       const el=document.createElement('div'); el.className='cal__label'; el.textContent=l; labels.appendChild(el);
     });
 
-    // Grid 4×7
     const grid=document.createElement('div'); grid.className='cal__grid cal__grid--remnant';
     let d = new Date(start);
     for(let r=0;r<4;r++){
@@ -841,7 +928,6 @@
         sub.textContent = fmtShort(d, tz) || key;
         btn.appendChild(top); btn.appendChild(sub);
 
-        // Events
         const evs = getEv(window.REMNANT_EVENTS, key);
         if (evs.length){
           const dots=document.createElement('div'); dots.className='cal__dots';
@@ -862,7 +948,7 @@
 
         btn.setAttribute('aria-label', `Remnant day ${r*7+c+1}; Gregorian ${fmtDate(d, tz)}`);
         btn.addEventListener('click', ()=>{
-          if (datePick){ datePick.value = key; writeURL(); updateAll(true); }
+          if (datePick){ datePick.value = key; writeURL && writeURL(); updateAll && updateAll(true); }
         }, {passive:true});
 
         grid.appendChild(btn);
@@ -870,38 +956,33 @@
       }
     }
 
-    // Attach
     wrap.classList.add('cal','cal--remnant');
     wrap.appendChild(labels);
     wrap.appendChild(grid);
 
-    // Header meta
     if (remHdr)  remHdr.textContent = `${span.m}. ${span.name} — ${span.essence}`;
     if (remMeta) remMeta.textContent= `${fmtDate(start, tz)} → ${fmtDate(end, tz)} • 13×28 fixed`;
   }
 
-  /* ===================== Gregorian month builder ===================== */
   function buildGregorianMonth(sel, tz){
     const wrap = document.getElementById('gregCal');
     const gregHdr=document.getElementById('gregHdr');
     const gregMeta=document.getElementById('gregMeta');
     const legend=document.getElementById('calLegend');
-    if (!wrap) return;
+    if (!wrap || !fmtDate) return;
     wrap.innerHTML = '';
 
     const base = dateInTZ(sel, tz);
     const y = base.getUTCFullYear(), m = base.getUTCMonth();
     const first = new Date(Date.UTC(y,m,1));
-    const firstDow = first.getUTCDay(); // 0..6
+    const firstDow = first.getUTCDay();
     const gridStart = new Date(Date.UTC(y,m,1 - firstDow));
 
-    // Labels
     const labels=document.createElement('div'); labels.className='cal__labels';
     ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(l=>{
       const el=document.createElement('div'); el.className='cal__label'; el.textContent=l; labels.appendChild(el);
     });
 
-    // Grid 6×7
     const grid=document.createElement('div'); grid.className='cal__grid cal__grid--greg';
     let d = new Date(gridStart);
     for (let i=0; i<42; i++){
@@ -942,7 +1023,7 @@
 
       btn.setAttribute('aria-label', `Gregorian ${fmtDate(d, tz)}`);
       btn.addEventListener('click', ()=>{
-        if (datePick){ datePick.value = key; writeURL(); updateAll(true); }
+        if (datePick){ datePick.value = key; writeURL && writeURL(); updateAll && updateAll(true); }
       }, {passive:true});
 
       grid.appendChild(btn);
@@ -953,14 +1034,12 @@
     wrap.appendChild(labels);
     wrap.appendChild(grid);
 
-    // Header/meta
     if (gregHdr){
       const monthName = new Intl.DateTimeFormat(undefined,{month:'long', year:'numeric', timeZone:tz}).format(first);
       gregHdr.textContent = monthName;
     }
     if (gregMeta) gregMeta.textContent = '6×7 grid • weekends/today highlighted';
 
-    // Legend
     if (legend){
       legend.innerHTML = `
         <span class="legend__item"><i class="dot"></i> event</span>
@@ -973,7 +1052,6 @@
     }
   }
 
-  /* ===================== Comparison harness & wiring ===================== */
   function buildCalendars(){
     const tz = (tzPick && tzPick.value) || 'UTC';
     const selStr = (datePick && validDateStr(datePick.value)) ? datePick.value : ymd(new Date(), tz);
@@ -981,7 +1059,6 @@
     safe(()=> buildRemnantMonth(sel, tz));
     safe(()=> buildGregorianMonth(sel, tz));
 
-    // Optional prev/next moon navigation
     const prevMoon=$("#prevMoon"), nextMoon=$("#nextMoon");
     if (prevMoon && !prevMoon._wired){
       prevMoon._wired=true;
@@ -991,7 +1068,7 @@
         let d=new Date(`${(datePick.value||ymd(new Date(),tz))}T00:00:00Z`);
         for (let i=0;i<28;i++) d = addDaysSkippingSpecials(d, -1, tz);
         datePick.value = ymd(d, tz);
-        writeURL(); updateAll(true); buildCalendars();
+        writeURL && writeURL(); updateAll && updateAll(true); buildCalendars();
       }, {passive:true});
     }
     if (nextMoon && !nextMoon._wired){
@@ -1002,21 +1079,15 @@
         let d=new Date(`${(datePick.value||ymd(new Date(),tz))}T00:00:00Z`);
         for (let i=0;i<28;i++) d = addDaysSkippingSpecials(d, 1, tz);
         datePick.value = ymd(d, tz);
-        writeURL(); updateAll(true); buildCalendars();
+        writeURL && writeURL(); updateAll && updateAll(true); buildCalendars();
       }, {passive:true});
     }
   }
 
-  // Make callable from Part 1
   window.buildCalendars = buildCalendars;
-
-  // Rebuild on input changes
   on(datePick, "change", buildCalendars, {passive:true});
   on(hourScrub, "input",  buildCalendars, {passive:true});
   on(tzPick,    "change", buildCalendars, {passive:true});
-
-  // First paint (in case Part 1 hasn’t called update yet)
   requestAnimationFrame(buildCalendars);
 
 })();
-</script>
