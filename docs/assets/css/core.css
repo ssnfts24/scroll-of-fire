@@ -1,0 +1,499 @@
+/* ============================================================
+   Scroll of Fire — CORE LAYER
+   Global Layout, Grids, Cards, Widgets
+   Wizard of YHWH · Astronomy Core v4.1
+   Depends on: tokens.css  (@layer tokens)
+   ============================================================ */
+
+@layer base, components, astrology, utilities, remnant, legacy;
+
+/* ------------------------------ Base ------------------------------ */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+  html { 
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    accent-color: var(--accent);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0;
+    background: radial-gradient(1200px 600px at 20% -10%, rgba(122,243,255,.06), transparent 55%),
+                radial-gradient(1000px 520px at 120% 0%, rgba(243,201,122,.05), transparent 50%),
+                var(--bg);
+    line-height: 1.5;
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  img, svg, canvas, video { max-width: 100%; height: auto; }
+  hr { border: 0; height: 1px; background: var(--line); }
+  code, kbd, samp { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .95em; }
+  .sr-only {
+    position: absolute !important; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+
+  /* Stability: prevent small scroll “jumps” on layout shifts */
+  html, body { overscroll-behavior-y: none; }
+}
+
+/* ------------------------------ Layout ------------------------------ */
+@layer components {
+  .wrap {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: clamp(12px, 3vw, 20px);
+  }
+  .page-head {
+    padding-block: 1.2rem .6rem;
+  }
+  .title {
+    margin: 0 0 .35rem;
+    font-size: clamp(1.6rem, 2.2rem + .8vw, 2.6rem);
+    line-height: 1.15;
+  }
+  .subtitle {
+    margin: 0 0 .8rem;
+    color: var(--muted);
+    max-width: 65ch;
+  }
+  .crumbs {
+    display: flex; flex-wrap: wrap; gap: .5rem;
+    margin: .6rem 0 1rem;
+  }
+
+  /* Cards */
+  .card { 
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 1.1rem 1.2rem;
+    box-shadow: var(--elev-1);
+  }
+  .card.shine { position: relative; overflow: hidden; }
+  .card.shine::after{
+    content:"";
+    position:absolute; inset:0;
+    background: radial-gradient(600px 300px at 120% -10%, rgba(122,243,255,.08), transparent 60%),
+                radial-gradient(500px 260px at -20% -10%, rgba(243,201,122,.06), transparent 60%);
+    pointer-events:none;
+  }
+
+  /* Grid (12-col at desktop → 6-col tablet → single column) */
+  .grid {
+    --col: 12;
+    --gap: clamp(10px, 2.6vw, 18px);
+    display: grid;
+    grid-template-columns: repeat(var(--col), minmax(0,1fr));
+    gap: var(--gap);
+    align-items: start;
+  }
+  .col-12 { grid-column: span 12; }
+  .col-8  { grid-column: span 8; }
+  .col-6  { grid-column: span 6; }
+  .col-4  { grid-column: span 4; }
+  .col-3  { grid-column: span 3; }
+
+  @media (max-width: 1200px) {
+    .grid { --col: 6; }
+    .col-8 { grid-column: span 6; }
+    .col-4 { grid-column: span 3; }
+    .col-3 { grid-column: span 3; }
+  }
+  @media (max-width: 760px) {
+    .grid { --col: 1; }
+    .col-8, .col-6, .col-4, .col-3, .col-12 { grid-column: 1 / -1; }
+  }
+
+  /* Rows & small layout helpers */
+  .lab-row {
+    display: flex; flex-wrap: wrap; gap: .6rem .8rem; align-items: center;
+  }
+  .divider { height:1px; background: var(--line); }
+  .footer { padding: 1.6rem 1rem 2.2rem; text-align: center; color: var(--muted); }
+
+  /* Buttons & Inputs (build on tokens) */
+  .lab-btn { display: inline-flex; align-items: center; gap: .4rem; }
+  .lab-btn.ghost {
+    background: transparent; color: var(--fg);
+    border: 1px solid var(--line);
+  }
+  .lab-btn.big { font-size: 1.05rem; padding: .55rem 1rem; border-radius: var(--r-lg); }
+  .lab-input { height: 34px; }
+
+  /* Download link chip */
+  .dl {
+    display: inline-flex; align-items: center; gap:.45rem;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    padding: .45rem .7rem;
+    text-decoration: none;
+    color: var(--fg);
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed; left: 50%; top: 14px; transform: translateX(-50%);
+    z-index: 99999;
+    background: #111927; color: #e7f3ff;
+    border: 1px solid #2a3b52; border-radius: 10px;
+    padding: 8px 10px; font: 600 13px/1.3 var(--font-sans);
+    box-shadow: var(--elev-2); opacity: 0; transition: opacity var(--t-med) var(--ease);
+  }
+}
+
+/* ------------------------------ Moonbar / Badge ------------------------------ */
+@layer components {
+  .moonbar {
+    --ring: url(#mbGrad);
+    background: linear-gradient(135deg, rgba(255,255,255,.03), transparent), var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: .6rem .7rem;
+    box-shadow: var(--elev-1);
+  }
+  .moonbar .mb-bg {
+    stroke: #1b2231;
+  }
+  .moonbar .mb-fg {
+    stroke: var(--accent);
+    filter: drop-shadow(var(--air-glow));
+  }
+  .moonbar-info .tag.yhwh { 
+    background: rgba(122,243,255,.08);
+    border: 1px solid #274354;
+    color: var(--fg);
+  }
+  .moonbar .sep { opacity: .45; margin: 0 .35rem; }
+  .moonbar .pill, .moonbar .tag { white-space: nowrap; }
+
+  .moon-badge {
+    display: grid; grid-template-columns: auto 1fr auto auto;
+    align-items: center; gap: .9rem;
+  }
+  .moon-badge .ring { position: relative; width: 120px; aspect-ratio: 1; }
+  .moon-badge .ring-bg { fill: none; stroke: #1b2231; stroke-width: 12; }
+  .moon-badge .ring-fg { 
+    fill: none; stroke: url(#rg); stroke-width: 12; stroke-linecap: round;
+    stroke-dasharray: 0 316;
+    filter: drop-shadow(var(--gold-glow));
+    transition: stroke-dasharray var(--t-med) var(--ease);
+  }
+  .moon-badge .label {
+    position:absolute; inset:0; display:grid; place-items:center; text-align:center;
+  }
+  .moon-badge .label .big { font-size: 1.8rem; font-weight: 800; }
+  .moon-badge .pill {
+    display: inline-flex; min-width: 200px; gap:.4rem; align-items: center;
+  }
+
+  /* Week dots */
+  .weekrow { display:flex; align-items:center; gap:.6rem; margin-top:.6rem; }
+  .weekrow .weeklabel { color: var(--muted); font-size: var(--size-sm); }
+  .week { display:grid; grid-template-columns: repeat(7, 12px); gap:6px; }
+  .week .dot { 
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #1c2432; border: 1px solid #2a3242;
+  }
+  .week .dot.on { background: var(--accent); border-color: transparent; }
+
+  /* Contrast helper variant (auto set by JS if needed) */
+  .moonbar.contrast-light {
+    background: #f5f9ff;
+    border-color: #dce3ef;
+    color: #0b0b0f;
+  }
+}
+
+/* ------------------------------ Simulation & Panels ------------------------------ */
+@layer components {
+  .sim { display: grid; grid-template-columns: 1fr; gap:.8rem; }
+  .sim canvas {
+    width: 100%; aspect-ratio: 1.2 / 1;
+    border-radius: var(--r-md);
+    background: linear-gradient(180deg, #0a0e15, #06080d);
+    border: 1px solid var(--line);
+    box-shadow: var(--elev-1);
+  }
+
+  .fancy-head { 
+    background: linear-gradient(180deg, rgba(122,243,255,.06), transparent 60%);
+    border-radius: var(--r-lg);
+  }
+
+  .lab-btn.cta-link {
+    text-decoration: none;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: #0b0b0f; font-weight: 800; letter-spacing:.02em;
+  }
+
+  /* Opener block */
+  .remnant-opener.remnant-frame {
+    border-radius: var(--r-lg);
+    box-shadow: var(--elev-2);
+    background:
+      linear-gradient(135deg, rgba(243,201,122,.08), transparent 55%),
+      linear-gradient(315deg, rgba(122,243,255,.08), transparent 55%),
+      var(--surface);
+  }
+  .op-grid { display:grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: center; }
+  @media (max-width: 780px) { .op-grid { grid-template-columns: 1fr; text-align: center; } }
+  .op-sigil { width: 72px; height: 72px; }
+  .op-title { margin: .2rem 0 .25rem; }
+  .op-sub.meta { max-width: 60ch; }
+}
+
+/* ------------------------------ Year Map (table) ------------------------------ */
+@layer components {
+  .year-map {
+    width: 100%; border-collapse: collapse; font-size: .95rem;
+    border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden;
+    box-shadow: var(--elev-1);
+  }
+  .year-map thead th {
+    text-align: left; padding: .6rem .7rem; background: #0f1520; color: var(--muted);
+    border-bottom: 1px solid var(--line);
+  }
+  .year-map tbody td {
+    padding: .55rem .7rem; border-bottom: 1px solid var(--line);
+  }
+  .year-map tbody tr:hover { background: rgba(122,243,255,.05); }
+  .year-map .tag { background: rgba(122,243,255,.08); border: 1px solid #274354; color: var(--fg); }
+  .year-map tr.is-today { background: rgba(243,201,122,.06); }
+  @media (max-width: 760px){
+    .year-map thead { display: none; }
+    .year-map, .year-map tbody, .year-map tr, .year-map td { display: block; width: 100%; }
+    .year-map tbody tr { border-bottom: 1px solid var(--line); padding: .5rem .6rem; }
+    .year-map tbody td { border: 0; padding: .25rem 0; }
+    .year-map tbody td:first-child { font-weight: 700; }
+  }
+}
+
+/* ------------------------------ Calendars (Remnant + Gregorian) ------------------------------ */
+@layer components {
+  /* Shared scaffolding */
+  .calendar, .gregorian { 
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: .8rem;
+    box-shadow: var(--elev-1);
+  }
+  .calendar__head {
+    display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .6rem;
+    margin-bottom: .6rem;
+  }
+  .calendar__title { display:flex; flex-wrap:wrap; gap:.4rem .6rem; align-items: baseline; }
+  .calendar__title .moon-name { font-weight: 800; font-size: 1.1rem; }
+  .calendar__title .ess { color: var(--muted); }
+  .calendar__tools { display:flex; gap:.4rem; }
+  .calendar__meta { color: var(--muted); font-size: var(--size-sm); }
+
+  .calendar__wkdays {
+    display:grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
+    margin: .4rem 0 .5rem;
+    color: var(--muted);
+  }
+  .calendar__wkdays .w {
+    text-align:center; padding: .2rem 0; border: 1px dashed var(--line); border-radius: var(--r-sm);
+  }
+
+  /* Sample grid block (the hand-crafted demo) */
+  .calendar__grid {
+    display:grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  }
+  .day {
+    min-height: 86px; padding:.45rem .5rem;
+    border: 1px solid var(--line); border-radius: var(--r-sm);
+    background: linear-gradient(180deg, rgba(255,255,255,.02), transparent), var(--surface-2);
+    position: relative;
+  }
+  .day.is-weekend { background: linear-gradient(180deg, rgba(122,243,255,.04), transparent), var(--surface-2); }
+  .day.is-doot { background: linear-gradient(180deg, rgba(243,201,122,.08), transparent), var(--surface-2); }
+  .day__num { font-weight: 700; display:flex; align-items:center; justify-content: space-between; }
+  .day__num .greg { font-size: .8em; color: var(--muted); }
+  .day__events { margin-top: .35rem; display:grid; gap:.25rem; }
+  .evt { display:flex; gap:.35rem; align-items: baseline; }
+  .evt .at { font-family: ui-monospace, monospace; font-size: .85em; color: var(--muted); }
+  .evt .ttl { flex: 1; }
+  .day__tag { position:absolute; right: .4rem; bottom: .35rem; }
+  .dot-evt {
+    display:inline-block; width:10px; height:10px; border-radius:50%;
+    background: var(--accent); box-shadow: 0 0 10px var(--accent);
+  }
+
+  /* Script-driven Remnant/Greg cells */
+  .cal, .greg {
+    display:grid; gap: 8px;
+  }
+  .cal__labels, .cal__grid { display:grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+  .cal__label {
+    text-align:center; padding:.2rem 0; border:1px dashed var(--line); border-radius: var(--r-sm); color: var(--muted);
+  }
+  .cal__grid .cal__cell {
+    min-height: 86px; background: var(--surface-2); border:1px solid var(--line);
+    border-radius: var(--r-sm); text-align:left; padding:.45rem .5rem; cursor: pointer;
+    transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+  }
+  .cal__grid .cal__cell:hover { transform: translateY(-1px); box-shadow: var(--elev-2); }
+  .cal__grid .cal__cell.is-weekend { background: linear-gradient(180deg, rgba(122,243,255,.04), transparent), var(--surface-2); }
+  .cal__grid .cal__cell.is-today   { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .cal__grid .cal__cell.is-other   { opacity: .6; }
+
+  .cal__top { display:flex; align-items:center; justify-content: space-between; gap:.4rem; }
+  .cal__sub.meta, .cal__sub.mono { margin-top: .15rem; }
+  .cal__dots { display:flex; gap:6px; margin-top: .3rem; }
+  .cal__dots .dot { width:10px; height:10px; border-radius:50%; background: var(--accent); }
+  .cal__dots .dot[data-type="ceremony"] { background: var(--accent-2); }
+  .cal__dots .dot[data-type="remnant"]  { background: #a78bfa; }
+  .cal__list { margin:.35rem 0 0; padding: 0 0 0 .9rem; color: var(--muted); }
+
+  /* Comparison panels */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: .8rem;
+    box-shadow: var(--elev-1);
+  }
+  .panel__head { display:flex; align-items:center; justify-content: space-between; margin-bottom:.5rem; }
+  .panel__title { margin: 0; font-size: 1.1rem; }
+  .panel__meta { color: var(--muted); }
+  .legend { display:flex; flex-wrap: wrap; gap:.5rem .8rem; color: var(--muted); margin-top:.4rem; }
+  .legend .badge, .legend .key {
+    display:inline-flex; align-items:center; gap:.35rem; background: var(--surface-2);
+    border:1px solid var(--line); border-radius: var(--r-sm); padding:.2rem .5rem;
+  }
+}
+
+/* ------------------------------ Astrology Panel ------------------------------ */
+@layer astrology {
+  .astro { position: relative; }
+  .astro-head {
+    display: grid; grid-template-columns: auto 1fr; gap:.6rem; align-items: center; margin-bottom:.6rem;
+  }
+  .astro-head .seal {
+    display:inline-flex; align-items:center; gap:.4rem;
+    background: rgba(122,243,255,.08); border:1px solid #274354; border-radius: var(--r-sm);
+    padding:.2rem .5rem; font-weight:800;
+  }
+  .astro-grid {
+    display:grid; grid-template-columns: 1fr 1fr; gap: .9rem;
+  }
+  @media (max-width: 960px){ .astro-grid { grid-template-columns: 1fr; } }
+
+  /* Planet chips */
+  .astro-chips { display:grid; gap:.5rem; align-content: start; }
+  .astro-chips .chip {
+    display:flex; align-items:center; gap:.5rem; justify-content: space-between;
+    background: var(--surface-2); border:1px solid var(--line); border-radius: var(--r-sm);
+    padding:.45rem .6rem; cursor: default;
+  }
+  .astro-chips .chip b { min-width: 76px; }
+  .astro-chips .chip .pos { opacity: .9; }
+  .astro-chips .chip .sign { color: var(--muted); }
+  .astro-chips details.more[open] {
+    border-color: var(--accent); box-shadow: var(--elev-3);
+  }
+
+  /* Wheel */
+  .astro-wheel {
+    background: radial-gradient(500px 260px at 20% 0%, rgba(122,243,255,.06), transparent 60%),
+                var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: .6rem;
+    box-shadow: var(--elev-1);
+  }
+  #astroWheel { width: 100%; height: auto; display: block; }
+  .astro-wheel .meta { color: var(--muted); margin-top: .35rem; display:flex; gap:.4rem; align-items:center; }
+  .astro-wheel .sep { opacity: .5; }
+
+  /* Aspects */
+  .astro-aspects { margin-top: .8rem; }
+  .asp-table {
+    width: 100%; border:1px solid var(--line); border-radius: var(--r-md); overflow: hidden;
+    border-collapse: collapse; box-shadow: var(--elev-1);
+  }
+  .asp-table thead th { background:#0f1520; color: var(--muted); text-align:left; padding:.5rem .6rem; }
+  .asp-table td { padding:.5rem .6rem; border-top:1px solid var(--line); }
+  .asp { display:inline-flex; align-items:center; gap:.35rem; padding:.1rem .4rem; border-radius: var(--r-sm); border:1px solid var(--line); }
+  .asp.conj { background: rgba(255,255,255,.02); }
+  .asp.sext { background: rgba(122,243,255,.08); }
+  .asp.sqr  { background: rgba(255,107,61,.1); }
+  .asp.tri  { background: rgba(179,255,133,.1); }
+  .asp.opp  { background: rgba(243,201,122,.12); }
+}
+
+/* ------------------------------ Codex Blocks ------------------------------ */
+@layer components {
+  .codex { display:grid; grid-template-columns: 260px 1fr; gap: 1rem; }
+  @media (max-width: 980px){ .codex { grid-template-columns: 1fr; } }
+  .codex-toc {
+    background: var(--surface-2); border:1px solid var(--line); border-radius: var(--r-md);
+    padding: .6rem .7rem;
+    position: sticky; top: 12px;
+  }
+  .codex-toc h4 { margin: 0 0 .4rem; }
+  .codex-toc a { display:block; padding:.25rem 0; color: var(--fg); }
+  .codex-content {
+    background: var(--surface); border:1px solid var(--line); border-radius: var(--r-md);
+    padding: 1rem 1.1rem; box-shadow: var(--elev-1);
+  }
+  .codex .lede { color: var(--muted); font-style: italic; }
+  .pull {
+    margin: .8rem 0; padding: .8rem 1rem;
+    border-left: 3px solid var(--accent-2);
+    background: linear-gradient(90deg, rgba(243,201,122,.08), transparent);
+  }
+  .file {
+    display:grid; gap:.35rem; background: var(--surface-2); border:1px solid var(--line);
+    border-radius: var(--r-sm); padding:.55rem .65rem; cursor: pointer;
+    transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+  }
+  .file:hover { transform: translateY(-1px); box-shadow: var(--elev-2); }
+  .file-top{ display:flex; align-items:center; justify-content: space-between; }
+  .file-meta{ display:flex; gap:.5rem; color: var(--muted); }
+}
+
+/* ------------------------------ Utilities & Motion ------------------------------ */
+@layer utilities {
+  .meta { color: var(--muted); }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .pill, .tag { user-select: none; }
+  .hint { opacity: .8; }
+
+  /* In-app browsers (FB/IG) adjustments */
+  .is-fbapp .wrap { padding-top: 6px; }
+
+  /* Reduce Motion: kill glow animations / transforms */
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; scroll-behavior: auto !important; }
+    .moon-badge .ring-fg { filter: none; }
+  }
+}
+
+/* ------------------------------ Remnant Flavor (low-intensity) ------------------------------ */
+@layer remnant {
+  body.remnant-yhwh {
+    background:
+      var(--remnant-veil, radial-gradient(800px 420px at 100% 0%, rgba(243,201,122,.05), transparent 65%)),
+      radial-gradient(1100px 580px at 0% 0%, rgba(122,243,255,.05), transparent 60%),
+      var(--bg);
+  }
+  .yhwh-on .tag.yhwh { box-shadow: inset 0 0 0 1px #274354, var(--air-glow); }
+}
+
+/* ------------------------------ Legacy Bridge (guard) ------------------------------ */
+@layer legacy {
+  /* If any old .btn/.pill/.card rules leak in, keep us on top */
+  .btn { all: unset; display:inline-flex; align-items:center; gap:.35rem; padding:.35rem .6rem; cursor:pointer;
+         background: var(--surface-2); border:1px solid var(--line); border-radius: var(--r-sm); color: var(--fg); }
+  .btn:hover { background: rgba(255,255,255,.04); }
+             }
