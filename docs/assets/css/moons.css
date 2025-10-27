@@ -91,9 +91,6 @@
     overflow-x:hidden;
   }
 
-  /* FIX: remove forced dark !important that broke light theme
-     (FB in-app hardening handled later with .is-fbapp) */
-
   /* Subtle aurora/grain + Remnant veil */
   body::before{
     content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.085;
