@@ -1,213 +1,418 @@
-/* ============================================================
-   Scroll of Fire — MOONS FEATURE LAYER
-   Living Clock / Calendar / Astronomy UI  (v4.1 Remnant)
-   Depends on: tokens.css, core.css
-   ============================================================ */
+/* ======================================================================
+   Scroll of Fire — 13 Moons / Living Clock
+   File: assets/css/moons.css
+   Layers: tokens, base, components, astrology, utilities, remnant, legacy
+   Purpose: page-specific polish for moons.html (widgets, wheel, maps)
+   ====================================================================== */
 
-@layer astrology, utilities, remnant;
+@layer tokens, base, components, astrology, utilities, remnant, legacy;
 
-/* ------------------------------ Sky Canvas ------------------------------ */
+/* ------------------------------ Base ----------------------------------- */
+@layer base {
+  :root{
+    /* Accents are phase-tinted by JS via --moon-accent, --moon-accent-2 */
+    --moon-accent:  #7af3ff;
+    --moon-accent-2:#f3c97a;
+
+    /* Local neutrals (blend w/ core.css) */
+    --moon-bg:      #0a0e15;
+    --moon-bg-2:    #0d121a;
+    --moon-ink:     var(--ink, #eae7df);
+    --moon-muted:   var(--muted, #a7b1ca);
+    --moon-line:    var(--line, #2a3242);
+
+    /* Cards */
+    --card-bg:      var(--card, #121219);
+    --card-outline: color-mix(in oklch, var(--moon-accent) 18%, transparent);
+    --pill-bg:      color-mix(in oklch, var(--moon-accent) 8%, #141822);
+    --pill-ink:     var(--moon-ink);
+
+    /* Dots / statuses */
+    --dot-evt1: #7af3ff;
+    --dot-evt2: #f3c97a;
+    --dot-doot: #b88cff;
+    --dot-leap: #88ffa6;
+    --dot-today:#ffffff;
+
+    /* Glow */
+    --rim: color-mix(in oklch, var(--moon-accent) 35%, transparent);
+  }
+
+  body.stars{
+    background: radial-gradient(1200px 700px at 50% -10%, #0d1420 0%, #080b12 45%, #06080d 100%);
+  }
+
+  .wrap{
+    max-width: 1150px;
+    margin-inline: auto;
+    padding-inline: clamp(12px, 3vw, 20px);
+  }
+
+  .card{
+    background: linear-gradient(180deg, color-mix(in oklch, #ffffff 2%, var(--card-bg)) 0%, var(--card-bg) 100%);
+    border: 1px solid color-mix(in oklch, var(--moon-accent) 14%, var(--moon-line));
+    border-radius: 16px;
+    padding: clamp(12px, 2.3vw, 18px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.35), inset 0 0 0 1px color-mix(in oklch, #fff 4%, transparent);
+  }
+
+  .shine{
+    position: relative;
+    overflow: clip;
+  }
+  .shine::after{
+    content:"";
+    position:absolute; inset:-1px;
+    border-radius:16px;
+    pointer-events:none;
+    background:
+      radial-gradient(1200px 60px at 50% -20px, color-mix(in oklch, var(--moon-accent) 25%, transparent), transparent 60%),
+      radial-gradient(900px 50px at 50% 102%, color-mix(in oklch, var(--moon-accent-2) 20%, transparent), transparent 60%);
+    opacity:.35;
+  }
+
+  .lab-btn{
+    display:inline-flex; align-items:center; gap:.5ch;
+    border:1px solid color-mix(in oklch, var(--moon-accent) 25%, var(--moon-line));
+    background: linear-gradient(180deg, color-mix(in oklch, var(--moon-accent) 6%, #0f141d), #0b1017);
+    color:var(--moon-ink);
+    padding:.5rem .75rem; border-radius:12px;
+    font-weight:600; text-decoration:none;
+    box-shadow: 0 1px 0 rgba(255,255,255,.06) inset;
+  }
+  .lab-btn.big{ padding:.7rem 1rem; font-size:1.02rem; border-radius:14px }
+  .lab-btn.ghost{ background: transparent }
+  .lab-input{
+    background:#101621; color:var(--moon-ink);
+    border:1px solid var(--moon-line); border-radius:10px;
+    padding:.45rem .55rem;
+  }
+  .tag, .pill{
+    display:inline-flex; align-items:center; gap:.4ch;
+    background: var(--pill-bg);
+    color: var(--pill-ink);
+    padding:.25rem .55rem; border-radius:999px;
+    border:1px solid color-mix(in oklch, var(--moon-accent) 20%, var(--moon-line));
+    font-weight:600;
+  }
+  .meta{ color: var(--moon-muted) }
+  .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Roboto Mono", monospace; font-weight:600; letter-spacing:.02em }
+  .divider{ height:1px; background:linear-gradient(90deg, transparent, var(--moon-line), transparent) }
+
+  .toast{
+    position: fixed; z-index: 4000; left:50%; top:14px; transform: translateX(-50%);
+    background: #0c111a; color: #e6f6ff;
+    border:1px solid color-mix(in oklch, var(--moon-accent) 40%, #102133);
+    padding: .5rem .8rem; border-radius: 10px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.45);
+    opacity:0; transition:opacity .22s ease;
+  }
+}
+
+/* --------------------------- Header / Moon badge ------------------------ */
+@layer components {
+  .page-head{ display:grid; gap:12px; margin: 10px 0 14px }
+  .page-head .title{ font-weight:800; letter-spacing:.3px }
+  .page-head .subtitle{ margin-top:-6px }
+
+  .crumbs{ display:flex; flex-wrap:wrap; gap:8px }
+
+  .moon-badge{
+    display:grid; grid-template-columns:auto 1fr auto auto; gap:12px; align-items:center;
+  }
+  .ring{
+    position:relative; width:120px; aspect-ratio:1;
+    place-items:center; display:grid;
+  }
+  .ring svg{ width:100%; height:auto; display:block }
+  .ring .ring-bg{ fill:none; stroke:#1b2231; stroke-width:10 }
+  .ring .ring-fg{ fill:none; stroke:url(#rg); stroke-width:10; stroke-linecap:round; stroke-dasharray:0 316; transition:stroke .2s ease }
+  .ring .label{ position:absolute; inset:0; display:grid; place-items:center }
+  .ring .big{ font-size:1.8rem; font-weight:800 }
+  .pill .k{ font-weight:800 }
+
+  .weekrow{ display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:center; margin-top:.6rem }
+  .weekrow .weeklabel{ color:var(--moon-muted); font-weight:700 }
+  .weekrow .week{
+    display:grid; grid-template-columns: repeat(28, minmax(8px, 1fr)); gap:6px;
+  }
+  .week .dot{
+    width:10px; height:10px; border-radius:50%;
+    background:#101521; border:1px solid #243043; box-shadow:0 0 0 2px #0a0f18 inset;
+  }
+  .week .dot.on{
+    background: radial-gradient(100% 100% at 30% 25%, color-mix(in oklch, var(--moon-accent) 55%, #fff), color-mix(in oklch, var(--moon-accent-2) 35%, #fff));
+    border-color: color-mix(in oklch, var(--moon-accent) 60%, #122033);
+    box-shadow: 0 0 16px color-mix(in oklch, var(--moon-accent) 45%, transparent);
+  }
+
+  /* Mini moonbar */
+  .moonbar{
+    background: linear-gradient(180deg, #0d141e, #0a1018);
+    border:1px solid color-mix(in oklch, var(--moon-accent) 18%, var(--moon-line));
+    border-radius: 14px; padding:8px 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.35);
+  }
+  .moonbar .mb-bg{ stroke:#1b2231 }
+  .moonbar .mb-fg{ stroke:url(#mbGrad); stroke-linecap:round }
+
+  .moonbar .tag.yhwh{
+    background: linear-gradient(90deg, color-mix(in oklch, var(--moon-accent) 15%, transparent), transparent);
+    border-color: color-mix(in oklch, var(--moon-accent) 40%, var(--moon-line));
+  }
+
+  .moonbar .moonbar-share{
+    border:1px solid color-mix(in oklch, var(--moon-accent-2) 40%, var(--moon-line));
+    background: linear-gradient(180deg, color-mix(in oklch, var(--moon-accent-2) 8%, #0f141d), #0b1017);
+    padding:.45rem .65rem; border-radius:10px; font-weight:700;
+  }
+  .moonbar .moonbar-tz{
+    display:inline-flex; align-items:center; justify-content:center; width:42px; border-radius:10px;
+    background:#101621; border:1px solid #273248; color:var(--moon-muted); font-weight:800;
+  }
+
+  /* Opener card */
+  .remnant-opener .op-grid{
+    display:grid; grid-template-columns: auto 1fr auto; gap:14px; align-items:center;
+  }
+  .op-left .op-sigil{ width:64px; height:64px; filter: drop-shadow(0 6px 16px color-mix(in oklch, var(--moon-accent) 25%, transparent)); }
+  .op-title{ margin:0; font-weight:800 }
+  .op-sub{ margin:.15rem 0 0 }
+  .cta-link{ cursor:pointer }
+}
+
+/* ----------------------------- Simulation -------------------------------- */
+@layer components {
+  .sim{
+    display:grid; grid-template-columns: 280px 1fr; gap:12px; align-items:center;
+  }
+  #simMoon{
+    display:block; width:100%; height:auto;
+    border-radius: 14px; border:1px solid #223047;
+    background: #0a0e15;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), 0 10px 28px rgba(0,0,0,.35);
+  }
+}
+
+/* -------------------------- Year map / Tables --------------------------- */
+@layer components {
+  .year-map{
+    width:100%; border-collapse: collapse; overflow:clip; border-radius:12px;
+    background: #0c1119; border:1px solid #212a3b;
+  }
+  .year-map th, .year-map td{
+    padding:.6rem .7rem; border-bottom:1px solid #182131; text-align:left;
+  }
+  .year-map thead th{
+    background: #0f1520; color:#e7f0ff; position:sticky; top:0; z-index:1;
+  }
+  .year-map tr.is-today{
+    outline: 2px solid color-mix(in oklch, var(--moon-accent) 40%, transparent);
+    background: linear-gradient(90deg, color-mix(in oklch, var(--moon-accent) 10%, transparent), transparent);
+  }
+  .goldline{ height:1px; margin:.8rem 0; background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--moon-accent-2) 70%, transparent), transparent) }
+}
+
+/* --------------------------- Kin + Export row --------------------------- */
+@layer components {
+  .kin{ display:grid; gap:8px }
+  .kin-row{ display:flex; flex-wrap:wrap; gap:10px; align-items:center }
+  .dl{
+    display:inline-flex; align-items:center; gap:.5ch; font-weight:800; text-decoration:none;
+    border:1px solid color-mix(in oklch, var(--moon-accent-2) 35%, var(--moon-line));
+    padding:.5rem .75rem; border-radius:10px; background:#0e131c; color:var(--moon-ink);
+  }
+}
+
+/* ---------------------------- Astro Panel ------------------------------- */
 @layer astrology {
-  #skyBg {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background: radial-gradient(1600px 900px at 50% 0%, rgba(122,243,255,.05), transparent 70%),
-                radial-gradient(1400px 600px at 90% 100%, rgba(243,201,122,.05), transparent 70%),
-                var(--bg);
-    animation: skyPulse 20s ease-in-out infinite;
+  .astro{ overflow: clip }
+  .astro-head{ display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:center; margin-bottom:.35rem }
+  .astro-head .seal{
+    display:inline-flex; align-items:center; gap:.5ch; font-weight:900;
+    background: linear-gradient(90deg, color-mix(in oklch, var(--moon-accent) 18%, transparent), transparent);
+    border: 1px solid color-mix(in oklch, var(--moon-accent) 35%, var(--moon-line));
+    padding:.25rem .55rem; border-radius:999px;
   }
+  .astro-grid{
+    display:grid; grid-template-columns: 1fr 360px; gap:14px;
+  }
+  .astro-chips{
+    display:grid; gap:8px;
+  }
+  .astro-chips .chip{
+    display:flex; align-items:center; gap:.6rem;
+    border:1px solid #243043; background:#0e141d; padding:.45rem .6rem; border-radius:12px;
+    color: var(--moon-ink); font-weight:700;
+  }
+  .astro-chips .dot{ display:inline-block; width:10px; height:10px; border-radius:50% }
+  .el-fire{ background: #ff9b6b } .el-water{ background:#80bfff } .el-air{ background:#b0f7ff } .el-earth{ background:#a8e37a } .el-aether{ background:#c1a6ff }
 
-  @keyframes skyPulse {
-    0%,100% { opacity: 0.9; filter: brightness(1); }
-    50% { opacity: 1; filter: brightness(1.1); }
+  .astro-wheel{
+    display:grid; gap:8px; place-items:center;
+    border:1px solid #243043; background:#0c1119; padding:10px; border-radius:14px;
   }
+  #astroWheel{ width:100%; height:auto; display:block }
+  .astro-aspects{ margin-top:12px }
+  .asp-table{ width:100%; border-collapse:collapse; margin-top:6px; border:1px solid #212a3b; border-radius:10px; overflow:clip; background:#0c1119 }
+  .asp-table th, .asp-table td{ padding:.5rem .6rem; border-bottom:1px solid #182131; text-align:left }
+  .badge.asp{
+    display:inline-flex; align-items:center; gap:.5ch; padding:.15rem .5rem; border-radius:999px; font-weight:800; background:#101621; border:1px solid #2a3242
+  }
+  .conj{ color:#ffd7a1; border-color:#5a4b2a }
+  .sext{ color:#b6ecff; border-color:#244a5a }
+  .sqr { color:#ffb3b3; border-color:#5a2a2a }
+  .tri { color:#b8ffb8; border-color:#2a5a2a }
+  .opp { color:#e6c1ff; border-color:#4a2a5a }
 }
 
-/* ------------------------------ Living Clock + Moon Simulation ------------------------------ */
-@layer astrology {
-  #simMoon {
-    border-radius: var(--r-lg);
-    background: linear-gradient(180deg,#0b0e15,#05070d);
-    border: 1px solid var(--line);
-    box-shadow: 0 0 60px rgba(122,243,255,.1), 0 0 120px rgba(243,201,122,.05);
-    transition: box-shadow var(--t-slow) var(--ease);
+/* -------------------------- Remnant Calendar ---------------------------- */
+@layer components {
+  .calendar{ margin-top:12px; border:1px solid #243043; border-radius:16px; background:#0c1119; overflow:clip }
+  .calendar__head{
+    display:grid; grid-template-columns: 1fr auto auto; gap:12px; align-items:center;
+    padding:10px 12px; background:#0e141d; border-bottom:1px solid #182131;
   }
-
-  #simMoon:hover {
-    box-shadow: 0 0 80px rgba(122,243,255,.2), 0 0 160px rgba(243,201,122,.1);
+  .calendar__title{ display:flex; flex-direction:column; gap:2px }
+  .calendar__title .moon-name{ font-weight:800 }
+  .calendar__tools .btn{
+    border:1px solid #273248; background:#0f141d; color:#eaf6ff; padding:.45rem .6rem; border-radius:10px; font-weight:800;
   }
+  .calendar__meta{ color:var(--moon-muted) }
 
-  #phaseLine { font-size: 1.1rem; font-weight: 600; }
-  #phaseMeta { opacity: .8; font-size: .9rem; }
-  #numLine   { font-weight: 700; }
-  #numMeta   { color: var(--muted); }
+  .calendar__wkdays{
+    display:grid; grid-template-columns: repeat(7, 1fr);
+    background:#0f1520; border-bottom:1px solid #182131;
+  }
+  .calendar__wkdays .w{
+    text-align:center; padding:.45rem 0; font-weight:800; color:#cfe1ff;
+    border-right:1px solid #141c2a;
+  }
+  .calendar__wkdays .w:last-child{ border-right:0 }
+
+  .calendar__grid{
+    display:grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap:0; background:#0c1119;
+  }
+  .calendar .day{
+    min-height:86px; border-right:1px solid #141c2a; border-bottom:1px solid #141c2a; padding:6px 8px;
+    position:relative;
+  }
+  .calendar .day:nth-child(7n){ border-right:0 }
+  .calendar .day__num{
+    display:flex; align-items:baseline; gap:.6ch; font-weight:800;
+  }
+  .calendar .day .greg{ color:#9fb3d1; font-weight:700; font-size:.84em }
+  .calendar .day.is-weekend{ background:#0b1018 }
+  .calendar .day.is-doot{
+    background: linear-gradient(135deg, color-mix(in oklch, var(--dot-doot) 12%, #0c1119), #0c1119 60%);
+  }
+  .calendar .day.is-today{
+    outline:2px solid color-mix(in oklch, var(--moon-accent) 40%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in oklch, #fff 6%, transparent);
+  }
+  .day__events{ margin-top:6px; display:grid; gap:4px }
+  .evt{ display:flex; gap:.6ch; align-items:center; font-weight:700 }
+  .evt .at{ color:#cfe1ff; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Roboto Mono", monospace }
+  .evt .ttl{ color:#eae7df }
+  .day__tag{ position:absolute; right:6px; bottom:6px }
+  .dot-evt{ width:10px; height:10px; border-radius:50%; display:inline-block; background: var(--dot-evt1) }
 }
 
-/* ------------------------------ Controls + Sliders ------------------------------ */
+/* ------------------------- Compare / Legend ------------------------------ */
+@layer components {
+  .compare{
+    margin-top:12px; display:grid; grid-template-columns: 1fr 1fr; gap:12px;
+  }
+  .panel{
+    border:1px solid #273248; border-radius:14px; background:#0c1119;
+    overflow:clip;
+  }
+  .panel__head{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    background:#0f1520; padding:8px 10px; border-bottom:1px solid #182131;
+  }
+  .legend{
+    display:flex; flex-wrap:wrap; gap:8px; padding:8px 10px; background:#0e141d; border-top:1px solid #182131
+  }
+  .key{ display:inline-flex; align-items:center; gap:.5ch; color:var(--moon-ink) }
+  .k-dot{ width:12px; height:12px; border-radius:50%; display:inline-block; outline:1px solid #273248 }
+  .k-evt1{ background:var(--dot-evt1) }
+  .k-evt2{ background:var(--dot-evt2) }
+  .k-doot{ background:var(--dot-doot) }
+  .k-leap{ background:var(--dot-leap) }
+  .k-today{ background:var(--dot-today) }
+}
+
+/* -------------------------- Codex section -------------------------------- */
+@layer components {
+  .codex{
+    display:grid; grid-template-columns: 280px 1fr; gap:12px;
+  }
+  .codex-toc{
+    background:#0e141d; border:1px solid #273248; border-radius:12px; padding:10px;
+    position:sticky; top:12px; height:max-content;
+  }
+  .codex-content{
+    background:#0c1119; border:1px solid #273248; border-radius:12px; padding:12px;
+  }
+  .pull{
+    font-style:italic; border-left:3px solid color-mix(in oklch, var(--moon-accent) 60%, #243043);
+    padding-left:10px; margin:.6rem 0;
+  }
+  .file{
+    border:1px dashed #2a364a; border-radius:12px; padding:10px; cursor:pointer;
+    display:grid; gap:8px; background:#0d121a;
+  }
+  .file-top{ display:flex; justify-content:space-between; align-items:center }
+  .file .badge{ background:#101621; padding:.2rem .5rem; border-radius:999px; border:1px solid #2a3242; font-weight:800 }
+  .file:hover{ border-color: color-mix(in oklch, var(--moon-accent) 55%, #2a364a) }
+}
+
+/* ---------------------------- Utilities ---------------------------------- */
 @layer utilities {
-  input[type="range"] {
-    width: 100%;
-    appearance: none;
-    background: transparent;
+  .grid{ display:grid; grid-template-columns: repeat(12, 1fr); gap:12px }
+  .col-12{ grid-column: span 12 }
+  .col-8{ grid-column: span 8 }
+  .col-6{ grid-column: span 6 }
+  .col-4{ grid-column: span 4 }
+
+  .lab-row{ display:flex; gap:10px; flex-wrap:wrap }
+  .hint{ color:#9fb3d1; margin-top:-4px }
+
+  .kbd{
+    display:inline-flex; align-items:center; justify-content:center;
+    padding:.05rem .35rem; border-radius:6px; font-weight:800; font-size:.92em;
+    border:1px solid #2a3242; background:#0f1520; color:#dfe9ff;
   }
-  input[type="range"]::-webkit-slider-runnable-track {
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    border-radius: 6px;
-  }
-  input[type="range"]::-webkit-slider-thumb {
-    appearance: none;
-    width: 16px; height: 16px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 6px var(--accent);
-    margin-top: -6px;
-    transition: background var(--t-fast) var(--ease);
-  }
-  input[type="range"]:hover::-webkit-slider-thumb { background: var(--accent-2); }
 }
 
-/* ------------------------------ Remnant Calendar ------------------------------ */
+/* ----------------------------- Remnant frame ----------------------------- */
 @layer remnant {
-  .calendar__grid .day.is-weekend,
-  .cal__grid .cal__cell.is-weekend {
-    background: linear-gradient(180deg, rgba(122,243,255,.06), transparent), var(--surface-2);
-  }
-  .calendar__grid .day.is-doot,
-  .cal__grid .cal__cell.is-doot {
-    background: linear-gradient(180deg, rgba(243,201,122,.1), transparent), var(--surface-2);
-  }
-
-  /* Glow accent when active */
-  .cal__grid .cal__cell:focus-visible,
-  .cal__grid .cal__cell:active {
-    outline: 2px solid var(--accent);
-    box-shadow: var(--air-glow);
-  }
-
-  /* Tooltip hover for date cells (short messages) */
-  .cal__grid .cal__cell:hover::after {
-    content: attr(aria-label);
-    position: absolute;
-    bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-4px);
-    background: #0f1520;
-    color: #eaf3ff;
-    border: 1px solid #2a3242;
-    border-radius: var(--r-sm);
-    padding: .25rem .45rem;
-    font-size: .75rem;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    animation: fadeIn .25s forwards;
-  }
-  @keyframes fadeIn { to { opacity: 1; } }
-
-  /* Compact moon widget pulse */
-  .moonbar.yhwh-on {
-    animation: pulseAura 10s ease-in-out infinite;
-  }
-  @keyframes pulseAura {
-    0%,100% { box-shadow: 0 0 10px rgba(122,243,255,.25), inset 0 0 0 1px #274354; }
-    50%     { box-shadow: 0 0 20px rgba(243,201,122,.25), inset 0 0 0 1px #3c3632; }
-  }
-
-  /* Glow around active year map row */
-  .year-map tr.is-today td {
-    box-shadow: inset 0 0 0 1px var(--accent), 0 0 16px rgba(122,243,255,.1);
-  }
-
-  /* Remnant veil over entire body set by JS */
-  body.remnant-yhwh::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: var(--remnant-veil);
-    pointer-events: none;
-    z-index: -1;
+  .remnant-frame{
+    border:1px solid color-mix(in oklch, var(--moon-accent) 30%, #273248);
+    background:
+      radial-gradient(800px 50px at 50% 0%, color-mix(in oklch, var(--moon-accent) 12%, transparent), transparent 60%),
+      linear-gradient(180deg, #0d141e, #0a1018);
+    box-shadow:
+      0 12px 32px rgba(0,0,0,.45),
+      inset 0 0 0 1px rgba(255,255,255,.04);
   }
 }
 
-/* ------------------------------ Astro Wheel FX ------------------------------ */
-@layer astrology {
-  #astroWheel circle[data-dot],
-  #astroWheel [data-dot] {
-    transition: transform 3s cubic-bezier(.25,.8,.25,1), filter var(--t-slow) var(--ease);
-    transform-origin: center;
+/* ------------------------------ Responsive -------------------------------- */
+@layer legacy {
+  @media (max-width: 980px){
+    .sim{ grid-template-columns: 1fr }
+    .astro-grid{ grid-template-columns: 1fr }
+    .compare{ grid-template-columns: 1fr }
+    .codex{ grid-template-columns: 1fr }
+    .moon-badge{ grid-template-columns:auto 1fr; grid-auto-flow:row }
+    .ring{ width:100px }
   }
-  #astroWheel [data-dot]:hover {
-    filter: drop-shadow(var(--gold-glow));
-    transform: scale(1.25);
-  }
-  #astroWheel .dot.el-fire   { fill: #ff6b3d; }
-  #astroWheel .dot.el-air    { fill: #7af3ff; }
-  #astroWheel .dot.el-water  { fill: #7aaaff; }
-  #astroWheel .dot.el-earth  { fill: #b3ff85; }
-}
-
-/* ------------------------------ Share Card (auto-generated via JS) ------------------------------ */
-@layer utilities {
-  .share-card {
-    display:grid; grid-template-columns: auto 1fr;
-    align-items:center; gap:1rem;
-    background: linear-gradient(120deg, rgba(122,243,255,.08), rgba(243,201,122,.08));
-    border: 1px solid var(--line);
-    border-radius: var(--r-md);
-    padding: .8rem 1rem;
-    box-shadow: var(--elev-1);
-  }
-  .share-card img { width: 72px; height: 72px; border-radius: var(--r-lg); }
-  .share-card .meta { color: var(--muted); }
-}
-
-/* ------------------------------ Notes + Practice ------------------------------ */
-@layer remnant {
-  #practiceCard textarea {
-    width: 100%; min-height: 120px;
-    border: 1px solid var(--line);
-    border-radius: var(--r-sm);
-    background: var(--surface-2);
-    color: var(--fg);
-    font-family: var(--font-sans);
-    font-size: .95rem;
-    padding: .5rem .6rem;
-    resize: vertical;
-  }
-  #practiceCard textarea:focus-visible {
-    outline: 2px solid var(--accent);
-  }
-  #btnSaveNote {
-    background: var(--accent);
-    color: #0b0b0f;
-    font-weight: 700;
-    border-radius: var(--r-sm);
-  }
-  #btnSaveNote:hover { background: var(--accent-2); }
-}
-
-/* ------------------------------ Responsiveness + Safety ------------------------------ */
-@layer utilities {
-  @media (max-width: 800px) {
-    #astroWheel { max-width: 100%; height: auto; }
-    .astro-wheel { padding: .4rem; }
-    .calendar__grid, .cal__grid, .greg { grid-template-columns: repeat(7, minmax(38px,1fr)); gap:4px; }
-    .day, .cal__cell { min-height: 64px; padding: .35rem; }
-  }
-  @media (max-width: 560px) {
-    .moonbar { grid-template-columns: 1fr; text-align:center; }
-    .moonbar-actions { justify-content:center; }
-  }
-}
-
-/* ------------------------------ Final YHWH Aesthetic Touch ------------------------------ */
-@layer remnant {
-  .yhwh-on .ring-fg {
-    stroke: url(#rg);
-    animation: ringGlow 6s ease-in-out infinite;
-  }
-  @keyframes ringGlow {
-    0%,100% { filter: drop-shadow(0 0 6px rgba(122,243,255,.4)); }
-    50%     { filter: drop-shadow(0 0 14px rgba(243,201,122,.35)); }
+  @media (max-width: 680px){
+    .calendar .day{ min-height:72px; padding:6px }
+    .calendar__wkdays .w{ font-size:.9em }
+    .weekrow .week{ grid-template-columns: repeat(28, 8px) }
+    .wrap{ padding-inline: 10px }
   }
 }
