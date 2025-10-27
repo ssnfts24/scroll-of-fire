@@ -1,22 +1,41 @@
 /* =========================================================
   13 Moons · Living Clock — Page Styles
-  Ancient Wizard of YHWH · “Remnant” Skin (v5.1)
-  - FIX: Light theme no longer forced-dark at first paint
-  - FIX: Today chips immune to legacy .pill/.card rules (no revert-layer)
-  - FIX: .calendar__tools .btn uses real CSS (no preprocessor)
-  - FIX: Responsive #nowDate long/short swap works without container
+  Ancient Wizard of YHWH · “Remnant” Skin (v5.2)
+  - FCP THEME: no forced-dark at first paint (respects OS light)
+  - THEME: explicit [data-theme] wins; OS pref used when unset
+  - TYPE/LAYOUT: crisper fonts, safer balances, better mobile wrap
+  - MISC: variable grouping, small a11y improvements
 ========================================================= */
 
 @layer tokens, base, components, astrology, utilities, remnant;
 
 /* ---------- Tokens ---------- */
 @layer tokens {
-  :root{
-    color-scheme: dark;
+  /* Allow UA to render either light or dark chrome until our tokens apply */
+  :root { color-scheme: light dark }
 
+  /* If no explicit theme is set, follow OS preference at first paint */
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      /* Light defaults (used only when data-theme is missing or not dark) */
+      --bg:#f7fbff; --fg:#0b1220; --muted:#4a5872; --line:#cfd7e6; --surface:#ffffff;
+      --elev:rgba(0,0,0,.02); --elev-2:rgba(0,0,0,.01);
+      --accent:#0e84ff; --accent-2:#7dc3ff;
+      --moon-accent:#0e84ff; --moon-accent-2:#ffb84d;
+      --asp-conj:#000;
+      --target-glow: color-mix(in srgb, var(--moon-accent) 10%, transparent);
+      --day-bg:#ffffff; --day-alt:#f5f9ff; --day-edge:#d7dfec;
+      --day-today:#eaf3ff; --doot-bg:#fff5ec; --doot-ink:#ad6a00; --greg-ink:#5b6a85;
+      --wk-hdr:#24324e; /* slightly darker for contrast on light */
+    }
+  }
+
+  /* Explicit dark theme (default tokens) */
+  :root,
+  :root[data-theme="dark"]{
     /* Base palette */
     --bg:#05070d; --fg:#edf2fb; --muted:#a7b1ca; --line:#2a3242;
-    --surface:#0e131a;            /* solid base under translucent layers */
+    --surface:#0e131a;
     --elev:rgba(255,255,255,.02); --elev-2:rgba(255,255,255,.006);
 
     /* Accents (phase-tinted by JS) */
@@ -24,39 +43,43 @@
     --moon-accent:#7af3ff; --moon-accent-2:#f3c97a;
 
     /* Layout / type */
-    --maxw:1180px; --radius:12px; --radius-lg:16px; --shadow:0 8px 18px rgba(0,0,0,.38);
-    --fs-body:clamp(15px, .48vw + 14px, 17px); --lh:1.55;
+    --maxw:1180px; --radius:12px; --radius-lg:16px;
+    --shadow:0 8px 18px rgba(0,0,0,.38);
+    --fs-body:clamp(15px, .48vw + 14px, 17px);
+    --lh:1.55;
 
     /* Interaction / motion */
     --focus-ring:#7af3ff;
     --focus-glow:0 0 0 2px #7af3ff66, 0 0 0 6px #7af3ff22;
     --tempo:1;
 
-    /* Remnant veil (JS may override) */
-    --remnant-veil: conic-gradient(from 0deg at 50% 50%, rgba(122,243,255,.04), rgba(255,255,255,0), rgba(243,201,122,.035), rgba(255,255,255,0));
+    /* Veil */
+    --remnant-veil: conic-gradient(from 0deg at 50% 50%,
+                      rgba(122,243,255,.04), transparent,
+                      rgba(243,201,122,.035), transparent);
 
     /* Forms */
     accent-color: var(--moon-accent);
 
-    /* Planet palette */
+    /* Planets */
     --pl-sun:#ffd46a; --pl-moon:#9feaff; --pl-mercury:#b8b8ff; --pl-venus:#ffb3d9;
     --pl-mars:#ff7070; --pl-jupiter:#ffd1a6; --pl-saturn:#c9bd8c; --pl-uranus:#95ffe6;
     --pl-neptune:#9dbbff; --pl-pluto:#d0a2ff; --pl-node:#cfefff; --pl-chiron:#a7ffcf;
 
-    /* Aspect colors */
+    /* Aspects */
     --asp-conj:#ffffff; --asp-sext:#8ef0c3; --asp-square:#ff6a6a; --asp-trine:#6ff0ff; --asp-oppo:#c39bff; --asp-quinc:#ffd87a;
 
-    /* Hash-target glow */
+    /* Hash target */
     --target-glow: color-mix(in srgb, var(--moon-accent) 12%, transparent);
 
-    /* Calendar tokens */
+    /* Calendar */
     --wk-hdr:#dbe6ff;
     --day-bg:#0f1116; --day-alt:#0c1016; --day-edge:#20283a; --day-today:#142032;
     --event-dot:#a7f6ff; --event-dot-2:#f3c97a;
     --doot-bg:#1b0e09; --doot-ink:#ffc99a; --leap-ink:#a7ffcf; --greg-ink:#b7c2da;
   }
 
-  /* Light theme (manual) */
+  /* Explicit light override always wins */
   :root[data-theme="light"]{
     color-scheme: light;
     --bg:#f7fbff; --fg:#0b1220; --muted:#4a5872; --line:#cfd7e6; --surface:#ffffff;
@@ -64,10 +87,9 @@
     --accent:#0e84ff; --accent-2:#7dc3ff;
     --moon-accent:#0e84ff; --moon-accent-2:#ffb84d;
     --asp-conj:#000; --target-glow: color-mix(in srgb, var(--moon-accent) 10%, transparent);
-
-    /* Light calendar tweaks */
     --day-bg:#ffffff; --day-alt:#f5f9ff; --day-edge:#d7dfec;
     --day-today:#eaf3ff; --doot-bg:#fff5ec; --doot-ink:#ad6a00; --greg-ink:#5b6a85;
+    --wk-hdr:#24324e;
   }
 
   /* Alive mode tempo governors */
@@ -84,10 +106,12 @@
 /* ---------- Base ---------- */
 @layer base {
   html,body{ background:var(--bg); color:var(--fg) }
+
   body{
     margin:0;
     font:400 var(--fs-body)/var(--lh) Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans";
-    text-rendering:optimizeLegibility; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    text-rendering:optimizeLegibility;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
     overflow-x:hidden;
   }
 
@@ -110,14 +134,18 @@
 
   a{ color:inherit; text-decoration:none }
   a:hover{ text-decoration:underline }
-  :where(a,button,[role="button"],input,select,textarea):focus-visible{ outline:none; box-shadow:var(--focus-glow) }
+  :where(a,button,[role="button"],input,select,textarea):focus-visible{
+    outline:none; box-shadow:var(--focus-glow)
+  }
 
   :target{
     scroll-margin-top:calc(96px + 12px);
     outline:2px solid var(--focus-ring); outline-offset:2px;
     animation: targetFade calc(2.2s*var(--tempo)) ease forwards;
   }
-  @keyframes targetFade{ from{ background:var(--target-glow) } to{ background:transparent } }
+  @keyframes targetFade{
+    from{ background:var(--target-glow) } to{ background:transparent }
+  }
 
   .title{
     font-family:"Crimson Pro",serif; font-weight:800; text-align:center;
@@ -128,7 +156,10 @@
     text-shadow:0 0 24px color-mix(in srgb, var(--accent) 22%, transparent);
     text-wrap:balance; animation:titleGlow calc(2.2s*var(--tempo)) ease both;
   }
-  @keyframes titleGlow{from{filter:drop-shadow(0 0 0 rgba(122,243,255,0))}to{filter:drop-shadow(0 0 12px color-mix(in srgb, var(--accent) 38%, transparent))}}
+  @keyframes titleGlow{
+    from{filter:drop-shadow(0 0 0 rgba(122,243,255,0))}
+    to{filter:drop-shadow(0 0 12px color-mix(in srgb, var(--accent) 38%, transparent))}
+  }
   .subtitle{ text-align:center; color:var(--muted); margin:0 0 12px; text-wrap:pretty }
 
   .title::after{
@@ -166,10 +197,9 @@
     animation:skyDrift calc(28s*var(--tempo)) linear infinite;
   }
   @keyframes skyDrift{ from{transform:translateX(-2%)} to{transform:translateX(2%)} }
-}
-
-/* ---------- Components ---------- */
+}/* ---------- Components ---------- */
 @layer components {
+  /* Card / Surface */
   .card{
     border:1px solid var(--line); border-radius:var(--radius); padding:14px; background-color:var(--surface);
     background:
@@ -186,6 +216,7 @@
       conic-gradient(from 270deg at calc(100% - 12px) calc(100% - 12px), color-mix(in srgb, var(--accent-2) 30%, transparent) 0 25%, transparent 0 100%);
   }
 
+  /* Controls */
   .lab-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
   .lab-btn{
     padding:.62rem .95rem; min-height:40px; border-radius:10px; border:1px solid var(--line);
@@ -194,8 +225,13 @@
     text-shadow:0 1px 0 rgba(0,0,0,.45);
     transition:transform .06s ease, box-shadow .12s ease, border-color .12s ease, filter .12s ease;
   }
-  .lab-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35); border-color:color-mix(in srgb, var(--moon-accent) 30%, var(--line)); filter:drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 25%, transparent)) }
-  .lab-btn:active{ transform:translateY(0) } .lab-btn.ghost{ background:transparent } .lab-btn[disabled]{ opacity:.5; cursor:not-allowed }
+  .lab-btn:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35);
+    border-color:color-mix(in srgb, var(--moon-accent) 30%, var(--line));
+    filter:drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 25%, transparent))
+  }
+  .lab-btn:active{ transform:translateY(0) }
+  .lab-btn.ghost{ background:transparent }
+  .lab-btn[disabled]{ opacity:.5; cursor:not-allowed }
   .lab-input{ padding:.6rem; min-height:40px; border-radius:10px; border:1px solid var(--line); background:#0f1116; color:inherit }
 
   input[type="range"].lab-input{ appearance:none; height:32px; background:transparent; padding:0 }
@@ -227,6 +263,7 @@
   #moonEssence{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:min(60ch, 100%) }
   .mono{ font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace }
 
+  /* Progress ring */
   .ring{ width:clamp(96px, 10vw + 70px, 120px); height:clamp(96px, 10vw + 70px, 120px); display:grid; place-items:center; position:relative; z-index:0 }
   .ring svg{ display:block; position:relative; z-index:1 }
   .ring .label{ position:absolute; inset:0; display:grid; place-items:center; pointer-events:none; z-index:2 }
@@ -245,6 +282,7 @@
     background: conic-gradient(from 0deg, rgba(255,255,255,.06) 0 2deg, transparent 2deg 28deg, rgba(255,255,255,.06) 28deg 30deg, transparent 30deg 56deg, rgba(255,255,255,.06) 56deg 58deg, transparent 58deg 84deg, rgba(255,255,255,.06) 84deg 86deg, transparent 86deg 112deg, rgba(255,255,255,.06) 112deg 114deg, transparent 114deg 140deg, rgba(255,255,255,.06) 140deg 142deg, transparent 142deg 168deg, rgba(255,255,255,.06) 168deg 170deg, transparent 170deg 196deg, rgba(255,255,255,.06) 196deg 198deg, transparent 198deg 224deg, rgba(255,255,255,.06) 224deg 226deg, transparent 226deg 252deg, rgba(255,255,255,.06) 252deg 254deg, transparent 254deg 280deg, rgba(255,255,255,.06) 280deg 282deg, transparent 282deg 308deg, rgba(255,255,255,.06) 308deg 310deg, transparent 310deg 336deg, rgba(255,255,255,.06) 336deg 338deg, transparent 338deg 360deg);
   }
 
+  /* Weeks / dots */
   .weekrow{ display:flex; gap:8px; justify-content:center; align-items:center; margin-top:6px; flex-wrap:wrap; row-gap:8px }
   .week{ display:grid; grid-template-columns:repeat(7,10px); gap:6px; padding:6px 10px; border:1px solid var(--line); border-radius:999px;
     background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), radial-gradient(80% 60% at 100% 0%, color-mix(in srgb, var(--moon-accent) 10%, transparent), transparent 60%);
@@ -264,6 +302,7 @@
     .moon-badge .ring{ grid-row:1 / span 2 }
   }
 
+  /* Year map */
   .year-map{ width:100%; border-collapse:separate; border-spacing:0 6px }
   .year-map th,.year-map td{ padding:8px 10px; border:1px solid var(--line); vertical-align:top }
   .year-map th{
@@ -276,6 +315,7 @@
   .is-today{ box-shadow:0 0 0 1px #7af3ff55, inset 0 0 0 1px #7af3ff33, 0 10px 22px rgba(0,0,0,.35); position:relative }
   .is-today::after{ content:""; position:absolute; inset:-2px; border-radius:inherit; pointer-events:none; box-shadow:inset 0 0 18px color-mix(in srgb, var(--moon-accent) 25%, transparent) }
 
+  /* Simulator */
   .sim{ display:grid; grid-template-columns:1fr 2fr; gap:12px }
   @media (max-width:860px){ .sim{ grid-template-columns:1fr } }
   canvas#simMoon{
@@ -284,6 +324,7 @@
     box-shadow:0 10px 28px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.02);
   }
 
+  /* Misc UI */
   nav.crumbs{ display:flex; gap:8px; justify-content:center; margin:10px 0 14px }
   .divider{ height:1px; background:linear-gradient(90deg, transparent, var(--line), transparent) }
   .goldline{ height:1px; background:linear-gradient(90deg, #f3c97a44, #f3c97a, #f3c97a44); margin:10px 0 }
@@ -301,6 +342,7 @@
   .kin .tag{ padding:.25rem .55rem; border-radius:999px; border:1px solid var(--line) }
   .kin small{ color:#9aa4be }
 
+  /* Moon Bar */
   .moonbar{
     --ring-size: 76px;
     border:1px solid var(--line); border-radius:14px; padding:8px; background-color:var(--surface);
@@ -339,7 +381,7 @@
   .calendar__title .ess{ color:var(--muted); font-weight:700; font-size:clamp(12px,1vw,14px) }
   .calendar__tools{ display:flex; gap:6px; flex-wrap:wrap }
 
-  /* FIX: remove preprocessor-only "composes:"; make .btn a styled button */
+  /* FIX: Real CSS button, no preprocessor composes */
   .calendar__tools .btn{
     padding:.62rem .95rem; min-height:40px; border-radius:10px; border:1px solid var(--line);
     background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
@@ -347,7 +389,11 @@
     text-shadow:0 1px 0 rgba(0,0,0,.45);
     transition:transform .06s ease, box-shadow .12s ease, border-color .12s ease, filter .12s ease;
   }
-  .calendar__tools .btn:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35); border-color:color-mix(in srgb, var(--moon-accent) 30%, var(--line)); filter:drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 25%, transparent)) }
+  .calendar__tools .btn:hover{
+    transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.35);
+    border-color:color-mix(in srgb, var(--moon-accent) 30%, var(--line));
+    filter:drop-shadow(0 0 8px color-mix(in srgb, var(--moon-accent) 25%, transparent))
+  }
 
   .calendar__wkdays{
     display:grid; grid-template-columns:repeat(7,1fr);
@@ -402,6 +448,7 @@
     .calendar .day{ padding:.35rem .35rem 1.2rem }
   }
 
+  /* Gregorian compare block */
   .compare{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   @media (max-width:1020px){ .compare{ grid-template-columns:1fr } }
 
@@ -445,15 +492,14 @@
   .legend .k-evt2{ background:var(--event-dot-2) }
   .legend .k-today{ background:var(--moon-accent) }
 
+  /* Simple tooltip */
   .tip{ position:relative }
   .tip:hover::after{
     content:attr(data-tip); position:absolute; left:50%; bottom:calc(100% + 8px); transform:translateX(-50%);
     background:#0e131c; color:#e6f9ff; border:1px solid var(--line); border-radius:8px; padding:.25rem .45rem; white-space:nowrap;
     box-shadow:0 10px 28px rgba(0,0,0,.35); font-weight:700; font-size:12px; z-index:20;
   }
-}
-
-/* ---------- Astrology Toolkit ---------- */
+  }/* ---------- Astrology Toolkit ---------- */
 @layer astrology {
   .planet-chip{ display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); border-radius:999px; padding:.28rem .5rem; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); font-weight:800; letter-spacing:.2px; }
   .planet-chip .g{ width:10px; height:10px; border-radius:50%; }
@@ -561,18 +607,17 @@
     font-weight:800;
   }
   #nowClock{ font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1; }
-
   #nowClock .ampm{
     display:inline-block; padding:.2rem .5rem; border:1px solid var(--line);
     border-radius:999px; background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
     font:900 11px/1 Inter,system-ui; letter-spacing:.25px;
   }
 
-  /* remove legacy collisions without revert-layer: add stronger selectors */
+  /* Remove legacy collisions without revert-layer */
   .pill #nowDate, .pill #nowClock, .pill #nowTZ,
-  .card #nowDate, .card #nowClock, .card #nowTZ { /* keep same styles */ }
+  .card #nowDate, .card #nowClock, .card #nowTZ { /* styles held via ID specificity */ }
 
-  /* Responsive long/short date: JS sets data-short; CSS swaps on narrow */
+  /* FIX: Responsive long/short date — works without container */
   #nowDate[data-short]::after{ content:attr(data-short); display:none; font-weight:800 }
   #nowDate{ content:normal }
   @media (max-width:420px){
@@ -625,7 +670,6 @@
 }
 
 /* ---------- Supplemental polish carried over ---------- */
-
 #planetChips .planet-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);
   border-radius:999px;padding:.32rem .65rem;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));font-weight:800}
 #planetChips .g{width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--moon-accent),var(--moon-accent-2))}
