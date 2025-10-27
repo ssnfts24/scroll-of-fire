@@ -1,26 +1,25 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="sof" data-alive="lively">
+<html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963" data-alive="lively">
 <head>
-  <!-- 0) Theme boot: eliminate dark/light flash BEFORE CSS loads -->
-  <script>(function(){try{var t=localStorage.getItem('theme');if(!t){t=(window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script>
+  <!-- Critical: kill theme-flash before CSS -->
+  <script>(function(){try{let t=localStorage.getItem('theme');if(!t){t=(matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script>
 
-  <!-- 0.1) FB in-app browser guard -->
-  <script>(function(){var ua=navigator.userAgent||"";if(/\bFBAN|FBAV|FB_IAB|FBAN\/Messenger\b/i.test(ua)){document.documentElement.classList.add('is-fbapp')}})();</script>
+  <!-- FB / in-app browser hint -->
+  <script>(function(){var ua=navigator.userAgent||''; if(/\bFBAN|FBAV|FB_IAB|FBAN\/Messenger\b/i.test(ua)){document.documentElement.classList.add('is-fbapp')}})();</script>
 
   <meta charset="utf-8" />
-  <title>Remnant 13 Moons · Living Clock — Scroll of Fire</title>
+  <title>Remnant 13 Moons — Living Clock · Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark light" />
   <meta name="theme-color" content="#05070d" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#f7fbff" media="(prefers-color-scheme: light)">
-  <meta name="color-scheme" content="dark light" />
-  <meta name="description" content="A Remnant-themed 13 Moon calendar — day ring, week dots, year map, lunar simulation, numerology, optional Kin, share card, and .ics export." />
-  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="description" content="Remnant 13-Moon Living Clock — wizard astronomy: lunar simulation, TZ-true 13×28 mapping, numerology, Kin, .ics export, and a sacred wheel." />
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
 
-  <!-- Social -->
+  <!-- OG -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Remnant 13 Moons · Living Clock — Scroll of Fire">
-  <meta property="og:description" content="Which Moon am I in? Day ring, week dots, year map, lunar sim, numerology, Kin, .ics export — Remnant / YHWH wizard theming.">
+  <meta property="og:title" content="Remnant 13 Moons — Living Clock">
+  <meta property="og:description" content="Day ring • Week dots • Year map • Lunar sim • Numerology • Kin • .ics — with YHWH seal and phase-tinted accents.">
   <meta property="og:image" content="assets/share/moon-card.png">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
   <meta name="twitter:card" content="summary_large_image">
@@ -40,37 +39,36 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- 1) Unified layer order across site -->
-  <style>@layer tokens, base, components, astrology, utilities, remnant, legacy;</style>
+  <!-- Layer plan -->
+  <style>@layer tokens, base, components, astrology, utilities, remnant, bridge;</style>
 
-  <!-- 2) CSS files (layered) -->
+  <!-- CSS -->
   <link rel="stylesheet" href="assets/css/tokens.css?v=2025-10-27">
   <link rel="stylesheet" href="assets/css/core.css?v=2025-10-27">
   <link rel="stylesheet" href="assets/css/moons.css?v=2025-10-27">
-
-  <!-- 3) Last-resort bridge to beat any unlayered legacy CSS -->
   <link rel="stylesheet" href="assets/css/bridge.css?v=2025-10-27">
 
-  <!-- Prefetch / Preload -->
+  <!-- Preloads -->
+  <link rel="preload" href="assets/js/moons.js?v=4.1" as="script" crossorigin>
   <link rel="prefetch" href="genesis-oracle.html" as="document">
-  <link rel="preload" href="assets/js/moons.js?v=4.9" as="script" crossorigin>
 
   <!-- Structured data -->
-  <script type="application/ld+json">{
-    "@context":"https://schema.org","@type":"WebApplication",
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
     "name":"Remnant 13 Moons — Living Clock",
     "url":"https://ssnfts24.github.io/scroll-of-fire/moons.html",
-    "applicationCategory":"Utility","operatingSystem":"Any",
-    "description":"Interactive 13-Moon calendar with Remnant / YHWH wizard theme: lunar phase simulation, numerology, Kin, and .ics export.",
-    "creator":{"@type":"Person","name":"Aaron Paul Laird"}}</script>
-  <script type="application/ld+json">{
-    "@context":"https://schema.org","@type":"BreadcrumbList",
-    "itemListElement":[
-      {"@type":"ListItem","position":1,"name":"Codex","item":"https://ssnfts24.github.io/scroll-of-fire/index.html"},
-      {"@type":"ListItem","position":2,"name":"13 Moons","item":"https://ssnfts24.github.io/scroll-of-fire/moons.html"}]}</script>
+    "applicationCategory":"EducationApplication",
+    "operatingSystem":"Any",
+    "description":"Interactive 13-Moon calendar with lunar phase canvas, sacred wheel, numerology, optional Kin, and ICS export — YHWH wizard astronomy theme.",
+    "creator":{"@type":"Person","name":"Aaron Paul Laird"}
+  }
+  </script>
 </head>
+
 <body class="stars remnant-yhwh">
-  <!-- Hidden defs so JS can recolor gradients safely -->
+  <!-- Hidden SVG gradients (script phase-tints them) -->
   <svg width="0" height="0" aria-hidden="true" focusable="false">
     <defs>
       <linearGradient id="mbGrad" x1="0" x2="1">
@@ -82,12 +80,12 @@
     </defs>
   </svg>
 
-  <!-- Living sky -->
+  <!-- Ambient sky (script paints if supported) -->
   <canvas id="skyBg" width="1440" height="900" aria-hidden="true"></canvas>
 
-  <!-- Compact Moon widget (now mirrors main values) -->
+  <!-- Mini Moonbar (fast status) -->
   <section class="wrap" aria-label="Remnant Moonbar">
-    <div class="moonbar yhwh-on" data-size="compact" role="group" aria-label="Current Moon mini widget" style="display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;margin-bottom:10px;">
+    <div class="moonbar yhwh-on" data-size="compact" role="group" aria-label="Current Moon mini widget">
       <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
         <circle cx="32" cy="32" r="26" class="mb-bg" stroke-width="6" fill="none"></circle>
         <circle cx="32" cy="32" r="26" class="mb-fg" id="moonArcMini" pathLength="163" stroke-width="6" stroke-linecap="round" fill="none" stroke-dasharray="0 163"></circle>
@@ -104,16 +102,16 @@
           <span class="tag">Year <span id="mbYear">—</span></span>
         </div>
       </div>
-      <div class="moonbar-actions" style="display:flex;gap:8px">
+      <div class="moonbar-actions">
         <button id="btnShareImage" class="moonbar-share" type="button" title="Make share card">Share</button>
         <label class="moonbar-tz" for="tzPick" title="Time Zone">TZ</label>
       </div>
     </div>
   </section>
 
-  <!-- Opener -->
+  <!-- Seal opener -->
   <section class="wrap" id="remnantOpener">
-    <div class="remnant-opener card remnant-frame" aria-label="Open the Remnant Birth Seal" style="margin:10px 0">
+    <div class="remnant-opener card remnant-frame" aria-label="Open the Remnant Birth Seal">
       <div class="op-grid">
         <div class="op-left">
           <svg class="op-sigil" viewBox="0 0 64 64" aria-hidden="true">
@@ -125,14 +123,12 @@
         </div>
         <div class="op-mid">
           <h3 class="op-title">The Seal of Becoming</h3>
-          <p class="op-sub meta">
-            Remnant Birth Seal — reads your <b>Moon • Day • Week • Tone</b> and <b>Name code</b>, with Resonant sums and carrier skin.
-          </p>
+          <p class="op-sub meta">Reads your <b>Moon · Day · Week · Tone</b> and <b>Name code</b>, with Resonant sums and carrier skin.</p>
           <small class="meta">Uses your selected date &amp; timezone (or today) to prefill.</small>
         </div>
         <div class="op-right">
           <a id="openSeal" class="lab-btn big cta-link" href="genesis-oracle.html" aria-describedby="opHelp">Open Birth Seal</a>
-          <p id="opHelp" class="meta" style="margin:.35rem 0 0">Deep link carries date/time/tz → <span class="mono">genesis-oracle.html</span></p>
+          <p id="opHelp" class="meta">Deep link carries date/time/tz → <span class="mono">genesis-oracle.html</span></p>
         </div>
       </div>
     </div>
@@ -141,18 +137,14 @@
   <main class="wrap" id="main" role="main">
     <header class="page-head fancy-head">
       <h1 class="title">🌗 Remnant 13 Moons — <em>Living Clock</em></h1>
-      <p class="subtitle">
-        An ancient-modern calendar in the cadence of 13×28. Phase-tinted, time-zone aware, and trimmed with the seal of
-        <span lang="he" title="YHWH">יהוה</span>.
-      </p>
-
+      <p class="subtitle">Ancient-modern calendar in the cadence of 13×28. Phase-tinted, time-zone true, trimmed with the seal of <span lang="he" title="YHWH">יהוה</span>.</p>
       <nav class="crumbs" aria-label="Breadcrumb">
         <a class="lab-btn" href="index.html">← Back to Codex</a>
         <a class="lab-btn" href="theory.html">📘 Theory</a>
         <a id="openSealHeader" class="lab-btn" href="genesis-oracle.html" title="Open the Remnant Birth Seal">⟡ Birth Seal</a>
       </nav>
 
-      <!-- Moon-first badge -->
+      <!-- Moon badge -->
       <section class="card shine" aria-label="Current Moon">
         <div class="moon-badge">
           <div class="ring" aria-label="Day in Moon">
@@ -161,8 +153,7 @@
               <circle cx="60" cy="60" r="50" class="ring-fg" id="moonArc" pathLength="316"/>
             </svg>
             <div class="label" aria-live="polite">
-              <div class="big" id="dayInMoon">—</div>
-              <div class="small">of 28</div>
+              <div class="big" id="dayInMoon">—</div><div class="small">of 28</div>
             </div>
           </div>
 
@@ -196,7 +187,7 @@
           <span class="pill" id="nowTZ">—</span>
           <span class="pill" id="moonLine">—</span>
         </div>
-        <div class="lab-row" style="margin-top:8px;flex-wrap:wrap;gap:.5rem">
+        <div class="lab-row" style="margin-top:8px">
           <label>Time Zone
             <select id="tzPick" class="lab-input" style="min-width:240px" aria-label="Time Zone"></select>
           </label>
@@ -229,6 +220,7 @@
             </select>
           </label>
         </div>
+        <p class="hint keys">Keys: <span class="kbd">↑/↓</span> day • <span class="kbd">←/→</span> hour • <span class="kbd">T</span> today</p>
       </article>
 
       <!-- Lunar simulation & numerology -->
@@ -292,24 +284,23 @@
         </div>
       </article>
 
-      <!-- ASTRO PANEL -->
+      <!-- Astrology panel (auto-hides if no ephemeris) -->
       <article class="card col-12 shine astro" aria-labelledby="astro-head">
         <header class="astro-head">
           <span class="seal" aria-hidden="true">⟡ <span lang="he">יהוה</span></span>
           <h2 id="astro-head">Astrology Now</h2>
-          <p class="meta">Current sky placements in a lightweight, Remnant panel. Filled by the ephemeris in <code>assets/js/moons.js</code> or your JSON feed.</p>
+          <p class="meta">Current placements in a lightweight, Remnant panel. Filled by <code>window.__EPHEMERIS__</code> if present.</p>
         </header>
 
-        <section class="astro-grid" aria-label="Current placements and wheel">
+        <section class="astro-grid" aria-label="Placements and wheel">
           <div class="astro-chips" id="planetChips" role="list">
-            <button class="chip pl-sun"    role="listitem" data-planet="sun"    aria-live="polite"><i class="dot el-fire"></i><b>Sun</b>    <span class="mono pos"  data-pos="sun">—</span>    <span class="sign" data-sign="sun">—</span></button>
-            <button class="chip pl-moon"   role="listitem" data-planet="moon"   aria-live="polite"><i class="dot el-water"></i><b>Moon</b>  <span class="mono pos"  data-pos="moon">—</span>   <span class="sign" data-sign="moon">—</span></button>
+            <button class="chip pl-sun"    role="listitem" data-planet="sun"><i class="dot el-fire"></i><b>Sun</b>    <span class="mono pos" data-pos="sun">—</span>    <span class="sign" data-sign="sun">—</span></button>
+            <button class="chip pl-moon"   role="listitem" data-planet="moon"><i class="dot el-water"></i><b>Moon</b>  <span class="mono pos" data-pos="moon">—</span>   <span class="sign" data-sign="moon">—</span></button>
             <button class="chip pl-mercury"role="listitem" data-planet="mercury"><i class="dot el-air"></i><b>Mercury</b> <span class="mono pos" data-pos="mercury">—</span> <span class="sign" data-sign="mercury">—</span></button>
-            <button class="chip pl-venus"  role="listitem" data-planet="venus"  ><i class="dot el-earth"></i><b>Venus</b>   <span class="mono pos" data-pos="venus">—</span>   <span class="sign" data-sign="venus">—</span></button>
-            <button class="chip pl-mars"   role="listitem" data-planet="mars"   ><i class="dot el-fire"></i><b>Mars</b>     <span class="mono pos" data-pos="mars">—</span>    <span class="sign" data-sign="mars">—</span></button>
+            <button class="chip pl-venus"  role="listitem" data-planet="venus"><i class="dot el-earth"></i><b>Venus</b>   <span class="mono pos" data-pos="venus">—</span>   <span class="sign" data-sign="venus">—</span></button>
+            <button class="chip pl-mars"   role="listitem" data-planet="mars"><i class="dot el-fire"></i><b>Mars</b>     <span class="mono pos" data-pos="mars">—</span>    <span class="sign" data-sign="mars">—</span></button>
             <button class="chip pl-jupiter"role="listitem" data-planet="jupiter"><i class="dot el-air"></i><b>Jupiter</b>  <span class="mono pos" data-pos="jupiter">—</span> <span class="sign" data-sign="jupiter">—</span></button>
-            <button class="chip pl-saturn" role="listitem" data-planet="saturn" ><i class="dot el-earth"></i><b>Saturn</b>  <span class="mono pos" data-pos="saturn">—</span>  <span class="sign" data-sign="saturn">—</span></button>
-
+            <button class="chip pl-saturn" role="listitem" data-planet="saturn"><i class="dot el-earth"></i><b>Saturn</b>  <span class="mono pos" data-pos="saturn">—</span>  <span class="sign" data-sign="saturn">—</span></button>
             <details class="chip more">
               <summary><i class="dot el-aether"></i><b>Outer bodies</b></summary>
               <div class="more-grid">
@@ -368,54 +359,23 @@
       </article>
     </section>
 
-    <!-- Your sample Remnant calendar block -->
-    <section class="calendar" aria-label="Remnant Month">
-      <header class="calendar__head">
-        <div class="calendar__title">
-          <span class="moon-name">#7 Resonant</span>
-          <span class="ess">Channel Inspiration</span>
-        </div>
-        <div class="calendar__tools">
-          <button class="btn" id="prevMoon" type="button">← Prev</button>
-          <button class="btn" id="nextMoon" type="button">Next →</button>
-        </div>
-        <div class="calendar__meta">Year <span id="calYearMeta">2025</span> · TZ <span id="calTZMeta">UTC</span></div>
-      </header>
-
-      <div class="calendar__wkdays">
-        <div class="w">D1</div><div class="w">D2</div><div class="w">D3</div><div class="w">D4</div>
-        <div class="w">D5</div><div class="w">D6</div><div class="w">D7</div>
-      </div>
-
-      <div class="calendar__grid" id="sampleRemGrid">
-        <!-- script will render real ones -->
-      </div>
-    </section>
-
-    <!-- Comparison scaffold with official hooks -->
+    <!-- Dual calendar (Remnant vs Gregorian) -->
     <section class="compare" aria-label="Remnant vs Gregorian">
       <article class="panel">
         <header class="panel__head">
-          <h3 class="panel__title">Remnant Month</h3>
-          <div class="panel__meta">13 × 28 fixed</div>
+          <h3 class="panel__title" id="remHdr">Remnant Month</h3>
+          <div class="panel__meta" id="remMeta">13 × 28 fixed</div>
         </header>
         <section id="remCal" class="calendar" aria-label="Remnant Month (live)"></section>
       </article>
 
       <article class="panel">
         <header class="panel__head">
-          <h3 class="panel__title">Gregorian Month</h3>
-          <div class="panel__meta">Variable weeks</div>
+          <h3 class="panel__title" id="gregHdr">Gregorian Month</h3>
+          <div class="panel__meta" id="gregMeta">Variable weeks</div>
         </header>
-
         <section id="gregCal" class="gregorian" aria-label="Gregorian Month (live)"></section>
-        <footer id="calLegend" class="legend">
-          <span class="key"><i class="k-dot k-evt1"></i> Event</span>
-          <span class="key"><i class="k-dot k-evt2"></i> Ceremony</span>
-          <span class="key"><i class="k-dot k-doot"></i> DOOT</span>
-          <span class="key"><i class="k-dot k-leap"></i> Leap Day</span>
-          <span class="key"><i class="k-dot k-today"></i> Today</span>
-        </footer>
+        <footer id="calLegend" class="legend"></footer>
       </article>
     </section>
 
@@ -430,7 +390,7 @@
       </div>
     </article>
 
-    <!-- Codex -->
+    <!-- Codex block -->
     <section class="codex card shine" id="loreCodex" aria-label="Moon Codex" style="margin-top:12px">
       <aside class="codex-toc" aria-label="Codex contents">
         <h4>Codex</h4>
@@ -453,7 +413,7 @@
         <blockquote class="pull">“Number the days; crown the weeks; keep the remnant bright.”</blockquote>
 
         <figure>
-          <img src="assets/media/codex-example.jpg" alt="Codex plate showing harmonics of the 13×28 count" loading="lazy">
+          <img src="assets/media/codex-example.jpg" alt="Codex plate showing harmonics of the 13×28 count">
           <figcaption>Plate VII — Harmonics of the 13×28 count.</figcaption>
         </figure>
 
@@ -465,31 +425,6 @@
         <ol class="footnotes">
           <li id="fn1">On leap days and DOOT handling — see script options. <a href="#fnref1">↩</a></li>
         </ol>
-
-        <!-- Example codex files -->
-        <div class="codex-files" id="codexFiles">
-          <div class="file" data-ext="PDF" role="button" tabindex="0" aria-label="Open PDF: Codex · Resonant Harmonies">
-            <div class="file-top">
-              <div class="name">Codex · Resonant Harmonies</div>
-              <span class="badge"><i class="dot" aria-hidden="true"></i> plate</span>
-            </div>
-            <div class="file-meta">
-              <span class="pill">2.3 MB</span>
-              <span class="pill">Updated this moon</span>
-            </div>
-          </div>
-
-          <div class="file" data-ext="MD" role="button" tabindex="0" aria-label="Open notes: Codex · Praxis Notes">
-            <div class="file-top">
-              <div class="name">Codex · Praxis Notes</div>
-              <span class="badge"><i class="dot" aria-hidden="true"></i> notes</span>
-            </div>
-            <div class="file-meta">
-              <span class="pill">12 min read</span>
-              <span class="pill">v1.4</span>
-            </div>
-          </div>
-        </div>
       </article>
     </section>
   </main>
@@ -501,98 +436,7 @@
 
   <noscript><p class="meta" style="text-align:center">This page needs JavaScript to calculate moon/day, phase, and year map.</p></noscript>
 
-  <!-- JS: unified page driver (calendar/astro/ics/accents/notes) -->
-  <script src="assets/js/moons.js?v=4.9" defer></script>
-
-  <!-- Tiny bridges that make this page play perfectly with moons.js -->
-  <script>
-  (function(){
-    "use strict";
-    const $=s=>document.querySelector(s);
-
-    // 1) Mirror main values into the compact moonbar + copy ring dash
-    function mirrorMini(){
-      const name=$("#moonName")?.textContent||"—";
-      const ess =$("#moonEssence")?.textContent||"—";
-      const day =$("#dayInMoon")?.textContent||"—";
-      const yr  =$("#yearSpan")?.textContent||"—";
-      const dash=$("#moonArc")?.getAttribute("stroke-dasharray")||"0 163";
-      $("#mbName") && ($("#mbName").textContent=name);
-      $("#mbEssence") && ($("#mbEssence").textContent=ess);
-      $("#mbDay") && ($("#mbDay").textContent=day+"/28");
-      $("#mbYear") && ($("#mbYear").textContent=yr);
-      $("#moonArcMini") && $("#moonArcMini").setAttribute("stroke-dasharray", dash.split(" ")[0]/2 + " 163");
-    }
-    const mo = new MutationObserver(mirrorMini);
-    ["#moonName","#moonEssence","#dayInMoon","#yearSpan","#moonArc"].forEach(sel=>{
-      const n=$(sel); if(n) mo.observe(n,{subtree:false,characterData:true,childList:true,attributes:true});
-    });
-    document.addEventListener("sof:accent-change", mirrorMini, {passive:true});
-    window.addEventListener("load", mirrorMini, {once:true});
-
-    // 2) Deep-link Birth Seal with current d/tz/t
-    function linkSeal(){
-      const core = window.__sof_core__||{};
-      const tz = $("#tzPick")?.value || "UTC";
-      const d  = $("#datePick")?.value || (core.dateInTZ ? core.dateInTZ(new Date(), tz).toISOString().slice(0,10) : new Date().toISOString().slice(0,10));
-      const h  = $("#hourScrub") ? String(+$("#hourScrub").value||0) : "0";
-      const q  = `?d=${encodeURIComponent(d)}&tz=${encodeURIComponent(tz)}&t=${encodeURIComponent(h)}`;
-      const set = (a)=>{ if(a) a.href = "genesis-oracle.html"+q; };
-      set($("#openSeal")); set($("#openSealHeader"));
-    }
-    ["change","input"].forEach(ev=>{
-      ["#tzPick","#datePick","#hourScrub"].forEach(sel=>{
-        const el=$(sel); if(el) el.addEventListener(ev, linkSeal, {passive:true});
-      });
-    });
-    window.addEventListener("load", linkSeal, {once:true});
-
-    // 3) Jump to Moon (sets datePick to the start of that moon in the current 13/28 year)
-    (function wireJump(){
-      const jm = $("#jumpMoon"); if(!jm) return;
-      jm.addEventListener("change", ()=>{
-        const core = window.__sof_core__||{};
-        const tz = $("#tzPick")?.value || "UTC";
-        const dStr = $("#datePick")?.value;
-        const base = dStr ? new Date(dStr+"T00:00:00Z") : new Date();
-        const anchor = core.startOfYear13 ? core.startOfYear13(base, tz) : new Date(Date.UTC(base.getUTCFullYear(),6,26));
-        let d = new Date(anchor);
-        const to = Math.max(0, Math.min(13, +jm.value||0));
-        if (to>0){
-          for (let m=1;m<to;m++){ d = core.addDaysSkippingSpecials ? core.addDaysSkippingSpecials(d, 28, tz) : new Date(d.getTime()+28*86400000); }
-        }
-        if ($("#datePick")) $("#datePick").value = (core.dateInTZ ? core.dateInTZ(d, tz) : d).toISOString().slice(0,10);
-        core.writeURL && core.writeURL();
-        core.updateAll && core.updateAll(true);
-        window.buildCalendars && window.buildCalendars();
-        linkSeal();
-        jm.value="";
-      }, {passive:true});
-    })();
-
-    // 4) ICS Refresh button just forces updateAll to recreate the blob URL
-    (function wireICS(){
-      const btn = $("#regenICS"); if(!btn) return;
-      btn.addEventListener("click", ()=>{
-        const core = window.__sof_core__||{};
-        core.updateAll && core.updateAll(true);
-      }, {passive:true});
-    })();
-
-    // 5) Fill comparison header’s year/TZ meta
-    (function syncMeta(){
-      const f = ()=>{
-        const tz = $("#tzPick")?.value || "UTC";
-        const y  = ($("#yearSpan")?.textContent||"—").trim();
-        const ym = $("#calYearMeta"), tm=$("#calTZMeta");
-        if (ym) ym.textContent = y;
-        if (tm) tm.textContent = tz;
-      };
-      document.addEventListener("sof:accent-change", f, {passive:true});
-      setInterval(f, 1500);
-      window.addEventListener("load", f, {once:true});
-    })();
-  })();
-  </script>
+  <!-- JS -->
+  <script src="assets/js/moons.js?v=4.1" defer></script>
 </body>
 </html>
