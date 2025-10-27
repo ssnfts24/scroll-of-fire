@@ -1,22 +1,21 @@
 <!doctype html>
 <html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963" data-alive="lively">
 <head>
-  <!-- Critical: kill theme-flash before CSS -->
-  <script>(function(){try{let t=localStorage.getItem('theme');if(!t){t=(matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script>
-
-  <!-- FB / in-app browser hint -->
+  <!-- 0) Prevent theme flash before CSS -->
+  <script>(function(){try{let t=localStorage.getItem('theme');if(!t){t=(matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',t)}catch{}})();</script>
+  <!-- 0.1) FB in-app browser guard -->
   <script>(function(){var ua=navigator.userAgent||''; if(/\bFBAN|FBAV|FB_IAB|FBAN\/Messenger\b/i.test(ua)){document.documentElement.classList.add('is-fbapp')}})();</script>
 
   <meta charset="utf-8" />
   <title>Remnant 13 Moons — Living Clock · Scroll of Fire</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
   <meta name="color-scheme" content="dark light" />
   <meta name="theme-color" content="#05070d" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#f7fbff" media="(prefers-color-scheme: light)">
   <meta name="description" content="Remnant 13-Moon Living Clock — wizard astronomy: lunar simulation, TZ-true 13×28 mapping, numerology, Kin, .ics export, and a sacred wheel." />
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
 
-  <!-- OG -->
+  <!-- Open Graph / Twitter -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Remnant 13 Moons — Living Clock">
   <meta property="og:description" content="Day ring • Week dots • Year map • Lunar sim • Numerology • Kin • .ics — with YHWH seal and phase-tinted accents.">
@@ -34,41 +33,33 @@
   <link rel="icon" type="image/png" sizes="512x512" href="assets/icons/icon-512.png">
   <link rel="mask-icon" href="assets/icons/safari-pinned.svg" color="#0e131a">
 
-  <!-- Fonts -->
+  <!-- Network hints -->
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <!-- Layer plan -->
-  <style>@layer tokens, base, components, astrology, utilities, remnant, bridge;</style>
+  <!-- Layer plan (must precede CSS) -->
+  <style>@layer tokens, base, components, astrology, utilities, remnant, legacy;</style>
 
-  <!-- CSS -->
+  <!-- CSS (ordered) -->
+  <link rel="stylesheet" href="assets/css/fonts.css?v=2025-10-27">
   <link rel="stylesheet" href="assets/css/tokens.css?v=2025-10-27">
   <link rel="stylesheet" href="assets/css/core.css?v=2025-10-27">
+  <link rel="stylesheet" href="assets/css/astrology.css?v=2025-10-27">
   <link rel="stylesheet" href="assets/css/moons.css?v=2025-10-27">
   <link rel="stylesheet" href="assets/css/bridge.css?v=2025-10-27">
 
-  <!-- Preloads -->
+  <!-- Preloads / Prefetch -->
   <link rel="preload" href="assets/js/moons.js?v=4.1" as="script" crossorigin>
   <link rel="prefetch" href="genesis-oracle.html" as="document">
 
   <!-- Structured data -->
   <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebApplication",
-    "name":"Remnant 13 Moons — Living Clock",
-    "url":"https://ssnfts24.github.io/scroll-of-fire/moons.html",
-    "applicationCategory":"EducationApplication",
-    "operatingSystem":"Any",
-    "description":"Interactive 13-Moon calendar with lunar phase canvas, sacred wheel, numerology, optional Kin, and ICS export — YHWH wizard astronomy theme.",
-    "creator":{"@type":"Person","name":"Aaron Paul Laird"}
-  }
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Remnant 13 Moons — Living Clock","url":"https://ssnfts24.github.io/scroll-of-fire/moons.html","applicationCategory":"EducationApplication","operatingSystem":"Any","description":"Interactive 13-Moon calendar with lunar phase canvas, sacred wheel, numerology, optional Kin, and ICS export — YHWH wizard astronomy theme.","creator":{"@type":"Person","name":"Aaron Paul Laird"}}
   </script>
 </head>
 
 <body class="stars remnant-yhwh">
-  <!-- Hidden SVG gradients (script phase-tints them) -->
+  <!-- Hidden SVG gradients for phase tinting -->
   <svg width="0" height="0" aria-hidden="true" focusable="false">
     <defs>
       <linearGradient id="mbGrad" x1="0" x2="1">
@@ -80,10 +71,10 @@
     </defs>
   </svg>
 
-  <!-- Ambient sky (script paints if supported) -->
+  <!-- Ambient sky -->
   <canvas id="skyBg" width="1440" height="900" aria-hidden="true"></canvas>
 
-  <!-- Mini Moonbar (fast status) -->
+  <!-- Mini Moonbar -->
   <section class="wrap" aria-label="Remnant Moonbar">
     <div class="moonbar yhwh-on" data-size="compact" role="group" aria-label="Current Moon mini widget">
       <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
@@ -284,7 +275,7 @@
         </div>
       </article>
 
-      <!-- Astrology panel (auto-hides if no ephemeris) -->
+      <!-- Astrology panel -->
       <article class="card col-12 shine astro" aria-labelledby="astro-head">
         <header class="astro-head">
           <span class="seal" aria-hidden="true">⟡ <span lang="he">יהוה</span></span>
@@ -359,7 +350,7 @@
       </article>
     </section>
 
-    <!-- Dual calendar (Remnant vs Gregorian) -->
+    <!-- Dual calendar -->
     <section class="compare" aria-label="Remnant vs Gregorian">
       <article class="panel">
         <header class="panel__head">
@@ -375,7 +366,13 @@
           <div class="panel__meta" id="gregMeta">Variable weeks</div>
         </header>
         <section id="gregCal" class="gregorian" aria-label="Gregorian Month (live)"></section>
-        <footer id="calLegend" class="legend"></footer>
+        <footer id="calLegend" class="legend">
+          <span class="key"><i class="k-dot k-evt1"></i> Event</span>
+          <span class="key"><i class="k-dot k-evt2"></i> Ceremony</span>
+          <span class="key"><i class="k-dot k-doot"></i> DOOT</span>
+          <span class="key"><i class="k-dot k-leap"></i> Leap Day</span>
+          <span class="key"><i class="k-dot k-today"></i> Today</span>
+        </footer>
       </article>
     </section>
 
@@ -436,7 +433,8 @@
 
   <noscript><p class="meta" style="text-align:center">This page needs JavaScript to calculate moon/day, phase, and year map.</p></noscript>
 
-  <!-- JS -->
+  <!-- JS (ordered; accents first so phase events recolor immediately) -->
+  <script src="assets/js/accents.js?v=1.0" defer></script>
   <script src="assets/js/moons.js?v=4.1" defer></script>
 </body>
 </html>
