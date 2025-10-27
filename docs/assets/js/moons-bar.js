@@ -1,7 +1,6 @@
-<script>
-/* 13 Moons — Mini Widget (v2.1, DPR-aware, main-page compatible)
-   - Works with NEW IDs:  #mbName, #mbDay, #mbEssence, #mbYear, #moonArcMini, #btnShareImage, #btnJump
-   - Also supports OLD IDs: #mbMoon, #mbDayLine, #mbEssence, #mbYear, #mbArc, #mbShare, #mbTZ
+/* 13 Moons — Mini Widget (v2.2)
+   - New IDs:  #mbName, #mbDay, #mbEssence, #mbYear, #moonArcMini, #btnShareImage, #btnJump
+   - Legacy:   #mbMoon, #mbDayLine, #mbEssence, #mbYear, #mbArc, #mbShare, #mbTZ
    - Deep link: moons.html?d=YYYY-MM-DD&tz=Area/City&t=H#moon-N
 */
 (function(){
@@ -12,11 +11,16 @@
   const on =(t,e,f,o)=>t&&t.addEventListener(e,f,o);
   const pad=n=>String(n).padStart(2,"0");
   const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
-  const safe = fn => { try{ return fn(); } catch(e){ return void 0; } };
+  const safe = fn => { try{ return fn(); } catch{ return void 0; } };
   const toast = (msg)=>{
     const t=document.createElement('div');
     t.className='toast'; t.textContent=msg;
-    Object.assign(t.style,{position:"fixed",left:"50%",bottom:"24px",transform:"translateX(-50%)",background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid var(--line,#2a3242)",borderRadius:"10px",boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:"9999",opacity:"0",transition:"opacity .2s"});
+    Object.assign(t.style,{
+      position:"fixed",left:"50%",bottom:"calc(22px + env(safe-area-inset-bottom))",
+      transform:"translateX(-50%)",background:"#0e131c",color:"#e6f9ff",
+      padding:"8px 12px",border:"1px solid var(--line,#2a3242)",borderRadius:"10px",
+      boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:"9999",opacity:"0",transition:"opacity .2s"
+    });
     document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
     setTimeout(()=>{t.style.opacity=0; setTimeout(()=>t.remove(),250);},1500);
   };
@@ -30,7 +34,6 @@
   const getTZ = ()=> safe(()=>localStorage.getItem(TZ_KEY)) || safe(()=>Intl.DateTimeFormat().resolvedOptions().timeZone) || "UTC";
   const setTZ = z => safe(()=>localStorage.setItem(TZ_KEY,z));
 
-  const validDateStr = s => /^\d{4}-\d{2}-\d{2}$/.test(s);
   function dateInTZ(baseDate, tz, overrideHour){
     try{
       const opts={timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"};
@@ -42,9 +45,6 @@
       const d=new Date(baseDate); if (overrideHour!=null) d.setUTCHours(overrideHour,0,0,0); return d;
     }
   }
-
-  /* ---------- 13-Moon core ---------- */
-  const utcTrunc = d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
   const isLeapYear   = y=> (y%4===0 && y%100!==0) || (y%400===0);
   const isLeapDayUTC = d=> d.getUTCMonth()===1 && d.getUTCDate()===29;
   const isDOOT = (d, tz)=>{ const dt=dateInTZ(d,tz); return (dt.getUTCMonth()===6 && dt.getUTCDate()===25); };
@@ -56,18 +56,9 @@
     const anchorPrev = new Date(Date.UTC(y-1,6,26));
     return dt >= anchorThis ? anchorThis : anchorPrev;
   }
-  function addDaysSkippingSpecials(start, n, tz){
-    let d = new Date(start); let moved = 0;
-    while(moved < n){
-      d = new Date(d.getTime()+86400000);
-      if (isDOOT(d,tz) || isLeapDayUTC(d)) continue;
-      moved++;
-    }
-    return d;
-  }
   function dayIndexSinceStart(d, tz){
-    const start = utcTrunc(startOfYear13(d, tz));
-    const dt = utcTrunc(dateInTZ(d, tz));
+    const start = new Date(Date.UTC(startOfYear13(d, tz).getUTCFullYear(),6,26));
+    const dt = new Date(Date.UTC(dateInTZ(d, tz).getUTCFullYear(), dateInTZ(d, tz).getUTCMonth(), dateInTZ(d, tz).getUTCDate()));
     let days = Math.floor((dt - start)/86400000);
     const doot = new Date(Date.UTC(start.getUTCFullYear()+1,6,25));
     if (dt >= doot) days -= 1;
@@ -95,7 +86,7 @@
     return {special:null, moon, day, year:`${s}/${s+1}`};
   }
 
-  /* ---------- Phase accent (matches main file) ---------- */
+  /* ---------- Phase accent (sync with CSS vars / SVG defs) ---------- */
   function mixHex(a,b,t){
     const pa=parseInt(a.slice(1),16), pb=parseInt(b.slice(1),16);
     const ar=(pa>>16)&255, ag=(pa>>8)&255, ab=pa&255;
@@ -125,15 +116,13 @@
     const root = document.documentElement;
     root.style.setProperty("--moon-accent",  c1);
     root.style.setProperty("--moon-accent-2",c2);
-    setGradientStops("mbGrad", c1, c2);      // mini ring
-    setGradientStops("rg", c1, c2);          // main ring (if present)
-    // keep letters readable on mini bar
-    const bar = document.querySelector(".moonbar");
+    setGradientStops("mbGrad", c1, c2); // mini ring
+    setGradientStops("rg", c1, c2);     // main ring (if present)
+    const bar = $(".moonbar");
     bar && bar.classList.remove("contrast-light");
   }
 
   /* ---------- DOM targets (new & legacy) ---------- */
-  // NEW markup
   const elName = $("#mbName") || $("#mbMoon");
   const elDay  = $("#mbDay")  || $("#mbDayLine");
   const elEss  = $("#mbEssence");
@@ -143,7 +132,7 @@
   const btnJump  = $("#btnJump");
   const tzBtn    = $("#mbTZ"); // legacy optional
   const link     = $("#moonMiniLink"); // optional <a> wrapper for deep link
-  const barRoot  = document.querySelector(".moonbar");
+  const barRoot  = $(".moonbar");
 
   const DASH_TOTAL = 316;
   function setArc(day){
@@ -187,13 +176,13 @@
       }
       elYear && (elYear.textContent = m13.year);
 
-      // YHWH chip highlight on resonant numerology (1,4,7,11,22,33)
+      // subtle YHWH resonance chip cue for numerology (1,4,7,11,22,33)
       const y = wall.getUTCFullYear(), mm = wall.getUTCMonth()+1, dd = wall.getUTCDate();
       const sum = String(y).split("").reduce((a,b)=>a+(+b),0) + mm + dd;
       const resonant = [1,4,7,11,22,33].includes(sum % 34);
       barRoot && barRoot.classList.toggle("yhwh-on", !!resonant);
 
-      // Phase accents
+      // phase accent match
       applyPhaseAccent(moonPhase(wall).illum);
     }
 
@@ -220,8 +209,7 @@
 
   on(btnJump, "click", ()=>{
     const url = update();
-    // open the deep link (same tab)
-    location.href = url;
+    location.href = url; // same-tab deep link
   });
 
   on(tzBtn, "click", ()=>{
@@ -238,20 +226,16 @@
   });
 
   /* ---------- Reactivity with the main page ---------- */
-  // If the main moons.js changes the accent, keep letters readable.
   on(document, "sof:accent-change", ()=>{
-    const bar = document.querySelector(".moonbar");
+    const bar = $(".moonbar");
     bar && bar.classList.remove("contrast-light");
   });
-  // If the main page changes TZ via select, refresh our link/labels.
   on(document, "sof:tz-change", ()=> update({deepLinkOnly:false}));
 
   /* ---------- Lifecycle ---------- */
   if (arc && matchMedia('(prefers-reduced-motion: reduce)').matches){ arc.style.transition='none'; }
   update();
-  // keep fresh once a minute when visible
   let iv = setInterval(update, 60*1000);
   on(document, "visibilitychange", ()=>{ if(document.hidden){ clearInterval(iv); } else { update(); iv=setInterval(update,60*1000);} });
   on(window, "focus", update);
 })();
-</script>
