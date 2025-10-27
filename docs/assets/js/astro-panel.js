@@ -1,10 +1,9 @@
-<script>
-/*! Astrology Panel · v3.0 (Sun–Saturn, no APIs)
+/*! Astrology Panel · v3.1 (Sun–Saturn, no APIs)
     - Sun/Moon: Meeus-lite
     - Mercury–Saturn: Schlyter low-precision (heliocentric → geocentric, J2000)
     - Retrograde, DMS formatting, sign names/glyphs
     - Paints modern UI: chips [data-pos]/[data-sign], sacred wheel #astroWheel [data-dot], aspects #aspBody
-    - Live updates on tz/date/hour; resizes wheel
+    - Live updates on tz/date/hour; reacts to sof:tz-change; resizes via ResizeObserver
     - Escape hatches: window.SOFAstro.render(..), .compute(..), .demo(..)
 */
 (function(){
@@ -17,6 +16,7 @@
   const norm360 = d => ((d%360)+360)%360;
   const clamp = (v,a,b)=>Math.min(b,Math.max(a,v));
   const pad2 = n => String(n).padStart(2,"0");
+  const raf = (fn)=> (window.requestAnimationFrame||setTimeout)(fn,0);
 
   // Julian Day from a UTC Date (Meeus)
   function toJD(dUTC){
@@ -36,7 +36,6 @@
     const base=new Date();
     const tz = tzSel?.value || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
 
-    // chosen calendar day (or today in tz)
     const parts=new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})
       .formatToParts(base).reduce((o,p)=>(o[p.type]=p.value,o),{});
 
@@ -45,7 +44,6 @@
     const d = (datePick?.value?.slice(8,10))|| parts.day;
     const h = (hourScrub?.value ?? parts.hour);
 
-    // synthesize a UTC string that represents wall time in tz
     return new Date(`${y}-${M}-${d}T${pad2(h)}:${parts.minute}:${parts.second}Z`);
   }
 
@@ -58,8 +56,7 @@
     const C =(1.914602-0.004817*T-0.000014*T*T)*sin(M)
            +(0.019993-0.000101*T)*sin(2*M)
            +0.000289*sin(3*M);
-    // apparent longitude (lite): ignore aberration & nutation → good enough for UI
-    return norm360(L0+C);
+    return norm360(L0+C); // apparent-enough for UI
   }
 
   function moonLonJD(JD){
@@ -81,7 +78,6 @@
     return norm360(lon);
   }
 
-  // central-difference speed (deg/day) for a lon fn
   function speedDegPerDay(fn, JD){
     const h=0.5; let a=fn(JD-h), b=fn(JD+h);
     let d=b-a; if(d>180)d-=360; if(d<-180)d+=360;
@@ -100,9 +96,8 @@
   };
 
   function keplerE(Mdeg, e){
-    // Newton for E with a good seed (radians)
     const M = Mdeg*RAD;
-    let E = (e < 0.8 ? M + e*Math.sin(M) : PI); // seed
+    let E = (e < 0.8 ? M + e*Math.sin(M) : PI);
     for(let k=0;k<10;k++){
       const f  = E - e*Math.sin(E) - M;
       const fp = 1 - e*Math.cos(E);
@@ -125,10 +120,9 @@
 
     const xv = a*(Math.cos(E) - e);
     const yv = a*(Math.sqrt(1-e*e) * Math.sin(E));
-    const v  = Math.atan2(yv, xv); // true anomaly (rad)
+    const v  = Math.atan2(yv, xv);
     const r  = Math.sqrt(xv*xv + yv*yv);
 
-    // ecliptic heliocentric
     const x = r*( Math.cos(N)*Math.cos(v+w) - Math.sin(N)*Math.sin(v+w)*Math.cos(i) );
     const y = r*( Math.sin(N)*Math.cos(v+w) + Math.cos(N)*Math.sin(v+w)*Math.cos(i) );
     const z = r*( Math.sin(v+w)*Math.sin(i) );
@@ -140,8 +134,7 @@
     const d = JD - 2451543.5;
     const p = helioXYZ(body, d);
     const e = helioXYZ("Earth", d);
-    // geocentric vector P - E  (ignore light-time/nutation → UI-grade)
-    const X=p.x - e.x, Y=p.y - e.y; // Z not used for ecliptic lon
+    const X=p.x - e.x, Y=p.y - e.y;
     return norm360(atan2d(Y, X));
   }
 
@@ -182,7 +175,6 @@
 
   /* ───────────────────────── Rendering (modern UI) ─────────────────────── */
 
-  // Static wheel scaffolding (houses + labels)
   function buildWheel(){
     const svg=document.getElementById('astroWheel');
     if(!svg) return;
@@ -190,9 +182,8 @@
     const gS=document.getElementById('signLabels');
     if(!gH||!gS) return;
 
-    const bb = svg.viewBox.baseVal;
-    const cx = bb ? bb.width/2 : 180;
-    const cy = bb ? bb.height/2: 180;
+    const bb = svg.viewBox.baseVal || {width:360,height:360};
+    const cx = bb.width/2, cy = bb.height/2;
     const R  = 145;
 
     gH.innerHTML=''; gS.innerHTML='';
@@ -269,7 +260,7 @@
     if(key==="trine") return "△";
     if(key==="oppo") return "☍";
     return "·";
-    }
+  }
 
   function setStampMeta(context){
     const {tz, iso, source} = context;
@@ -291,7 +282,6 @@
     bodies.sun  = { lon: sunLonJD(JD),  speed: speedDegPerDay(sunLonJD, JD) };
     bodies.moon = { lon: moonLonJD(JD), speed: speedDegPerDay(moonLonJD, JD) };
 
-    // classical planets
     ["Mercury","Venus","Mars","Jupiter","Saturn"].forEach(name=>{
       const lon  = planetGeoLon(name, JD);
       const lon2 = planetGeoLon(name, JD+0.5);
@@ -306,26 +296,32 @@
   /* ───────────────────────── Controller: update cycle ──────────────────── */
 
   let lastPaintKey = "";
+  let lastPlanetsCache=null;
 
   function updateAll(){
-    // build time context from UI
     const tz = document.getElementById('tzPick')?.value || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
     const dUTC = currentZonedUTC();
     const iso  = new Date(dUTC).toISOString();
 
-    // compute
-    const bodies = computePack(dUTC);
-
-    // avoid redundant repaints (minute granularity)
     const key = iso.slice(0,16) + "|" + tz;
     if (key === lastPaintKey) return;
+
+    const planets = computePack(dUTC);
+    lastPlanetsCache = planets;
     lastPaintKey = key;
 
-    // render
     setStampMeta({tz, iso, source:"In-browser"});
-    paintChips(bodies);
-    paintWheelDots(bodies);
-    paintAspectsTable(bodies);
+    paintChips(planets);
+    paintWheelDots(planets);
+    paintAspectsTable(planets);
+  }
+
+  // Repaint from cached data (e.g., on pure resize)
+  function repaintFromCache(){
+    if(!lastPlanetsCache) return updateAll();
+    raf(()=>{
+      paintWheelDots(lastPlanetsCache);
+    });
   }
 
   function bindLive(){
@@ -334,23 +330,33 @@
       el?.addEventListener("change", updateAll, {passive:true});
       if(id==="hourScrub") el?.addEventListener("input", updateAll, {passive:true});
     });
-    // resize wheel → recompute dot locations from same data
-    window.addEventListener("resize", ()=>{ lastPaintKey=""; updateAll(); }, {passive:true});
-    // periodic refresh (in case time is “now”)
-    setInterval(()=>{ lastPaintKey=""; updateAll(); }, 60*1000);
+
+    // Listen for global time-zone changes from other modules (e.g., mini bar)
+    document.addEventListener("sof:tz-change", ()=>{ lastPaintKey=""; updateAll(); }, {passive:true});
+
+    // Resize handling: window + element
+    window.addEventListener("resize", ()=>{ repaintFromCache(); }, {passive:true});
+    const svg=document.getElementById('astroWheel');
+    if (svg && "ResizeObserver" in window){
+      const ro=new ResizeObserver(()=> repaintFromCache());
+      ro.observe(svg);
+    }
+
+    // periodic refresh (minute tick)
+    const slow = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const period = slow ? 120000 : 60000;
+    setInterval(()=>{ lastPaintKey=""; updateAll(); }, period);
   }
 
   /* ───────────────────────── Public escape hatches ─────────────────────── */
 
-  // Accept an external payload and paint it to the current UI schema
   function renderExternal(data={}){
     const planets = data.planets || {};
     setStampMeta({
       tz: data.tz || "UTC",
-      iso: data.stamp ? data.stamp.replace(' ','T') : new Date().toISOString(),
+      iso: (data.stamp ? data.stamp.replace(' ','T') : new Date().toISOString()),
       source: data.source || "External"
     });
-    // coerce longitudes
     for(const k of Object.keys(planets)){
       if (typeof planets[k].lon === "number"){
         planets[k].lon = norm360(planets[k].lon);
@@ -359,6 +365,7 @@
         if (Number.isFinite(v)) planets[k].lon = norm360(v);
       }
     }
+    lastPlanetsCache = planets;
     paintChips(planets);
     paintWheelDots(planets);
     const aspBody=document.getElementById('aspBody');
@@ -382,7 +389,6 @@
     };
   }
 
-  // Expose a small API
   window.SOFAstro = {
     compute(dateLike){ return computePack(dateLike instanceof Date ? dateLike : new Date(dateLike)); },
     render(pack){ renderExternal(pack||{}); },
@@ -392,10 +398,9 @@
   /* ───────────────────────── Boot ───────────────────────── */
 
   document.addEventListener("DOMContentLoaded", ()=>{
-    buildWheel();      // once
-    updateAll();       // initial paint
-    bindLive();        // live controls
+    buildWheel();
+    updateAll();
+    bindLive();
   });
 
 })();
-</script>
