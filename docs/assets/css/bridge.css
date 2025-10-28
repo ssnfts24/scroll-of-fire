@@ -21,15 +21,16 @@
     display: inline-flex; align-items: center; gap: .5rem;
     text-decoration: none;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
   .calendar__tools .btn:hover,
   .lab-btn:hover, .dl:hover,
-  button:hover { background: color-mix(in oklab, var(--card), #ffffff 4%); }
+  button:hover { background: color-mix(in oklch, var(--card), white 4%); }
 
   /* Compact tag/pill fixes */
   .tag, .pill, .badge{
     border: 1px solid var(--line,#2a3242);
-    background: color-mix(in oklab, var(--surface,#0e131a), #ffffff 2%);
+    background: color-mix(in oklch, var(--surface,#0e131a) 98%, white);
     color: var(--muted,#a7b1ca);
     border-radius: 999px;
     padding: .25rem .5rem;
@@ -53,6 +54,8 @@
     border-bottom: 1px solid var(--line,#2a3242);
     padding:.5rem .6rem; text-align:left;
   }
+
+  /* Provide a default named container for container queries */
   .wrap{ container-type:inline-size; container-name:wrap; }
 
   /* Mobile toolbar wrapping */
@@ -64,4 +67,7 @@
 
   /* FB in-app browser guard */
   .is-fbapp .lab-btn, .is-fbapp select, .is-fbapp input{ transform: translateZ(0); }
+
+  /* Min-width fix to prevent flex children overflow clipping */
+  * { min-width: 0; }
 }
