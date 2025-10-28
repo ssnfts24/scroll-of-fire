@@ -20,7 +20,7 @@
 
   .astro-wheel{
     display:grid; gap:.4rem; justify-items:center; padding:.5rem;
-    background: color-mix(in oklab, var(--surface,#0e131a), #ffffff 3%);
+    background: color-mix(in oklch, var(--surface,#0e131a) 97%, white);
     border:1px solid var(--line); border-radius:16px;
   }
   .astro-wheel svg{ width:100%; height:auto; max-width:360px; display:block; }
@@ -40,5 +40,10 @@
   @media (max-width: 980px){
     .astro-grid{ grid-template-columns: 1fr; }
     .astro-wheel svg{ max-width: 100%; }
+  }
+  /* Narrow phones: prevent chip/wheel overflow */
+  @media (max-width: 420px){
+    .astro-chips .chip{ font-size:12.5px; padding:.4rem .55rem; }
+    .astro-wheel{ padding:.45rem; border-radius:14px; }
   }
 }
