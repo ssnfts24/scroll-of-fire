@@ -50,7 +50,7 @@
   <link rel="stylesheet" href="assets/css/moons.css?v=2025-11-02">
   <link rel="stylesheet" href="assets/css/bridge.css?v=2025-10-27">
 
-  <!-- Critical mobile nudges + calendar grid/states -->
+  <!-- Critical mobile nudges + calendar grid/states + resilient fallbacks -->
   <style>
     :root{ --safe-top: env(safe-area-inset-top, 0px) }
     .top-safe{ height: calc(var(--safe-top) + 8px) }
@@ -105,6 +105,20 @@
     .prompts{ padding-left:1.1rem }
     .prompts li{ margin:.25rem 0 }
     @media (max-width: 480px){ .footer{ padding-bottom:72px } }
+
+    /* ---- Minimal layout fallbacks (in case core.css misses) ---- */
+    .grid{display:grid;grid-template-columns:2fr 1fr;gap:12px}
+    .col-12{grid-column:1/-1}
+    .col-8{grid-column:1/2}
+    .col-6{grid-column:1/2}
+    .col-4{grid-column:2/3}
+    @media (max-width:880px){.grid{grid-template-columns:1fr}.col-8,.col-6,.col-4{grid-column:1/-1}}
+    .compare{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:880px){.compare{grid-template-columns:1fr}}
+    .panel{background:var(--bg-elev);border:1px solid var(--line);border-radius:12px;padding:12px}
+    .panel__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .astro-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .astro-wheel{display:block}
   </style>
 
   <!-- Preloads / Prefetch -->
@@ -945,7 +959,7 @@
 
       const jm=$("#jumpMoon"); if(jm&&r.moonIdx) jm.value=String(r.moonIdx);
 
-      // notify listeners (e.g., notes loader)
+      // notify listeners (e.g., notes loader, astro renderer)
       document.dispatchEvent(new Event("sof:repaint"));
     }
 
@@ -972,7 +986,7 @@
       if(e.key==="t"||e.key==="T"){e.preventDefault(); syncDeepLink({d:null,h:null}); paint(); syncSealLinks(); }
     });
 
-    // Astrology fallback labels
+    // Astrology fallback labels (kept for graceful degrade)
     function astroFallback(){
       $("#astroStamp").textContent = MoonTZ.isoDateWall(MoonTZ.nowWall());
       $("#astroTZ").textContent = MoonTZ.getTZ();
@@ -1018,5 +1032,142 @@
   <script src="assets/js/accents.js?v=1.1" defer></script>
   <!-- Main moons logic: optional, enhances precision/ephemeris if present -->
   <script src="assets/js/moons.js?v=4.3" defer></script>
+
+  <!-- ===== Astro Engine + Offline Demo Ephemeris (renders wheel/chips/aspects) ===== -->
+  <script>
+  (function(){
+    "use strict";
+    const $=(s,r=document)=>r.querySelector(s);
+
+    /* ---------- Helpers ---------- */
+    const zodiacs = [
+      {name:"Aries",start:0},{name:"Taurus",start:30},{name:"Gemini",start:60},
+      {name:"Cancer",start:90},{name:"Leo",start:120},{name:"Virgo",start:150},
+      {name:"Libra",start:180},{name:"Scorpio",start:210},{name:"Sagittarius",start:240},
+      {name:"Capricorn",start:270},{name:"Aquarius",start:300},{name:"Pisces",start:330},
+    ];
+    const aspectDefs = [
+      {name:"Conjunction", sym:"☌", key:"conj", exact:[0], orb:8},
+      {name:"Sextile",     sym:"✶", key:"sext", exact:[60,300], orb:4},
+      {name:"Square",      sym:"□", key:"sqr",  exact:[90,270],  orb:6},
+      {name:"Trine",       sym:"△", key:"tri",  exact:[120,240], orb:6},
+      {name:"Opposition",  sym:"☍", key:"opp",  exact:[180],     orb:8},
+    ];
+    const degNorm = d => ((d%360)+360)%360;
+    function angleDiff(a,b){const d=Math.abs(degNorm(a)-degNorm(b))%360;return d>180?360-d:d;}
+    function toSign(deg){
+      const d=degNorm(deg), idx=Math.floor(d/30), within=d-idx*30;
+      const dd=Math.floor(within), mm=Math.floor((within-dd)*60);
+      return {sign:zodiacs[idx].name, text:`${dd}°${String(mm).padStart(2,"0")}' ${zodiacs[idx].name}`};
+    }
+    function polarFromDeg(cx,cy,r,longDeg){const a=(longDeg-90)*Math.PI/180;return {x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)};}
+
+    /* Sign labels once */
+    (function drawSignLabels(){
+      const g=$("#signLabels"); if(!g) return; g.innerHTML="";
+      const cx=180, cy=180, r=130;
+      zodiacs.forEach(z=>{
+        const mid=z.start+15, p=polarFromDeg(cx,cy,r,mid);
+        const t=document.createElementNS("http://www.w3.org/2000/svg","text");
+        t.setAttribute("x",p.x.toFixed(1)); t.setAttribute("y",p.y.toFixed(1));
+        t.textContent=z.name; g.appendChild(t);
+      });
+    })();
+
+    function findAspects(Ls){
+      const keys=Object.keys(Ls), rows=[];
+      for(let i=0;i<keys.length;i++){
+        for(let j=i+1;j<keys.length;j++){
+          const A=keys[i], B=keys[j]; const a=Ls[A], b=Ls[B];
+          if(!Number.isFinite(a)||!Number.isFinite(b)) continue;
+          const d=angleDiff(a,b);
+          for(const def of aspectDefs){
+            if(def.exact.some(ex=>Math.abs(d-ex)<=def.orb)){
+              rows.push({pair:`${A} — ${B}`, aspect:def, orb:`${(Math.min(...def.exact.map(ex=>Math.abs(d-ex)))).toFixed(1)}°`});
+              break;
+            }
+          }
+        }
+      }
+      return rows;
+    }
+
+    function populateAstro(ephem){
+      const wall = ephem.wall || new Date();
+      $("#astroStamp") && ($("#astroStamp").textContent = new Date(wall).toLocaleString([], {hour12:false}));
+      $("#astroTZ") && ($("#astroTZ").textContent = ephem.tz || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC");
+      $("#astroSource") && ($("#astroSource").textContent = ephem.source || "Approximate (demo)");
+
+      const planets=["sun","moon","mercury","venus","mars","jupiter","saturn","uranus","neptune","pluto","chiron","north_node"];
+      planets.forEach(k=>{
+        const L = ephem.longitudes && Number.isFinite(ephem.longitudes[k]) ? degNorm(ephem.longitudes[k]) : null;
+        const posEl = document.querySelector(`[data-pos="${k}"]`);
+        const signEl= document.querySelector(`[data-sign="${k}"]`);
+        if(posEl) posEl.textContent = L==null ? "—" : `${L.toFixed(1)}°`;
+        if(signEl){ if(L==null){ signEl.textContent="—"; } else { const s=toSign(L); signEl.textContent=s.sign; signEl.title=s.text; } }
+      });
+
+      // wheel dots
+      (function(){
+        const svg=$("#astroWheel"); if(!svg||!ephem.longitudes) return;
+        const cx=180,cy=180,r=140;
+        const names=["sun","moon","mercury","venus","mars","jupiter","saturn"];
+        for(const n of names){
+          const dot=svg.querySelector(`[data-dot="${n}"]`);
+          const L=ephem.longitudes[n];
+          if(dot && Number.isFinite(L)){
+            const p=polarFromDeg(cx,cy,r,L);
+            dot.setAttribute("cx",p.x.toFixed(1));
+            dot.setAttribute("cy",p.y.toFixed(1));
+          }
+        }
+      })();
+
+      // aspects
+      (function(){
+        const body=$("#aspBody"); if(!body) return;
+        body.innerHTML="";
+        const rows=findAspects(ephem.longitudes||{});
+        if(!rows.length){ body.innerHTML=`<tr><td colspan="3" class="meta">No major aspects (demo set)</td></tr>`; return; }
+        rows.forEach(r=>body.insertAdjacentHTML("beforeend",
+          `<tr><td>${r.pair}</td><td><span class="badge asp ${r.aspect.key}" title="${r.aspect.name}">${r.aspect.sym}</span></td><td class="mono">${r.orb}</td></tr>`));
+      })();
+    }
+
+    // Demo ephemeris (approx) to keep UI alive offline
+    function makeDemoEphemeris(){
+      const now=new Date(), start=new Date(Date.UTC(now.getUTCFullYear(),0,1));
+      const day=(now-start)/86400000;
+      const Lsun=(day*0.9856)+280, Lmoon=(day*13.176)+210;
+      return {
+        source:"Demo (approx.)",
+        tz: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
+        wall: now,
+        longitudes:{
+          sun:degNorm(Lsun), moon:degNorm(Lmoon),
+          mercury:degNorm(Lsun + 20*Math.sin(day*0.2)),
+          venus:degNorm(Lsun - 30*Math.cos(day*0.08)),
+          mars:degNorm((day*0.524)+120),
+          jupiter:degNorm((day*0.083)+240),
+          saturn:degNorm((day*0.033)+60),
+          uranus:degNorm((day*0.011)+300),
+          neptune:degNorm((day*0.006)+330),
+          pluto:degNorm((day*0.004)+270),
+          chiron:degNorm((day*0.08)+15),
+          north_node:degNorm(180 - day*0.052)
+        }
+      };
+    }
+
+    function bootAstro(){
+      const ep = (window.__EPHEMERIS__ && window.__EPHEMERIS__.longitudes) ? window.__EPHEMERIS__ : makeDemoEphemeris();
+      populateAstro(ep);
+    }
+
+    // Run once and on repaint (ties into your main loop)
+    bootAstro();
+    document.addEventListener("sof:repaint", bootAstro);
+  })();
+  </script>
 </body>
 </html>
