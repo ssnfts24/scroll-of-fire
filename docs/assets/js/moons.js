@@ -1,7 +1,7 @@
 /* ========================================================================
    Scroll of Fire — 13 Moons / Living Clock Engine
    File: assets/js/moons.js
-   Version: v4.1 Remnant (2025-10-27)
+   Version: v4.2 Remnant (2025-11-01)
    ======================================================================== */
 (function () {
   "use strict";
@@ -22,8 +22,15 @@
     selISO: null,
     illum: 0,
     sunAngle: 0,
-    ringDashNow: 0, ringDashTarget: 0, lastTween: 0,
+    ringDashTarget: "0 316",
+    lastTweenTs: 0,
+    lastRingValue: 0,
     animOn: true,
+    rafRing: 0,
+    tickTimer: 0,
+    icsURL: null,
+    hidden: document.visibilityState === "hidden",
+    dpr: Math.max(1, Math.round(window.devicePixelRatio || 1))
   };
 
   /* ---------------------------- IDs / Refs -------------------------------- */
@@ -32,7 +39,7 @@
     datePick: $("#datePick"),
     hourScrub: $("#hourScrub"),
     nowDate: $("#nowDate"), nowClock: $("#nowClock"), nowTZ: $("#nowTZ"),
-    moonName: $("#moonName"), moonEss: $("#moonEssence"), dayInMoon: $("#dayInMoon"),
+    moonName: $("#moonName"), moonEssence: $("#moonEssence"), dayInMoon: $("#dayInMoon"),
     moonChip: $("#moonChip"), moonLine: $("#moonLine"),
     yearSpan: $("#yearSpan"), dootWarn: $("#dootWarn"),
     ringArc: $("#moonArc"), ringArcMini: $("#moonArcMini"),
@@ -76,6 +83,7 @@
       const parts = new Intl.DateTimeFormat("en-CA", opts).formatToParts(baseDate);
       const m = Object.fromEntries(parts.map(p => [p.type, p.value]));
       const h = (overrideHour == null ? m.hour : pad(overrideHour));
+      // Construct a UTC date using TZ parts
       return new Date(`${m.year}-${m.month}-${m.day}T${h}:${m.minute}:${m.second}Z`);
     } catch {
       const d = new Date(baseDate);
@@ -168,9 +176,21 @@
     return { illum, angle, age: frac };
   }
 
+  function sizeCanvasToDisplay(canvas, dpr = STATE.dpr) {
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const w = Math.max(1, Math.floor(rect.width * dpr));
+    const h = Math.max(1, Math.floor(rect.height * dpr));
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w; canvas.height = h;
+    }
+  }
+
   function drawMoon(ctx, illum, angle) {
     const W = ctx.canvas.width, H = ctx.canvas.height;
     ctx.clearRect(0, 0, W, H);
+    ctx.save();
+    ctx.scale(1,1);
     const r = Math.min(W, H) * 0.42, cx = W / 2, cy = H / 2;
 
     // backdrop
@@ -185,10 +205,10 @@
 
     // lit part
     const k = clamp(illum, 0, 1);
-    const dx = Math.cos(angle) * r;
+    const flip = (k < 0.5) ? -1 : 1;
     ctx.save();
     ctx.translate(cx, cy);
-    ctx.scale(k < 0.5 ? -1 : 1, 1); // waxing/waning flip
+    ctx.scale(flip, 1); // waxing/waning flip
     ctx.beginPath();
     ctx.arc(0, 0, r, -Math.PI/2, Math.PI/2, false);
     ctx.ellipse(0,0,r, Math.abs(r*(1-2*Math.abs(k-0.5))*2), 0, Math.PI/2, -Math.PI/2, true);
@@ -203,6 +223,8 @@
     ctx.strokeStyle = "rgba(255,255,255,.08)";
     ctx.lineWidth = 2;
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke();
+
+    ctx.restore();
   }
 
   /* ---------------------------- UI Populate ------------------------------- */
@@ -210,7 +232,7 @@
     const sel = refs.tzPick;
     if (!sel) return;
     const seen = new Set(COMMON_TZ);
-    const sys = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+    const sys = (Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC");
     seen.add(sys);
     sel.innerHTML = [...seen].sort().map(z => `<option value="${z}">${z}</option>`).join("");
     const saved = localStorage.getItem(TZ_KEY);
@@ -243,33 +265,41 @@
       </tr>`;
     }).join("");
     const next = spans.find(x => x.start > anchor) || spans[0];
-    refs.nextMoonInfo.textContent = `Next: ${next.name} starts ${fmtDate(next.start, tz)}.`;
+    if (refs.nextMoonInfo) refs.nextMoonInfo.textContent = `Next: ${next.name} starts ${fmtDate(next.start, tz)}.`;
   }
 
   function quoteFor(moon, day){
-    const q = QUOTES[(moon + day) % QUOTES.length];
-    return q;
+    if (!QUOTES.length) return "";
+    const idx = ((moon + day) % QUOTES.length + QUOTES.length) % QUOTES.length;
+    return QUOTES[idx];
   }
 
   /* ------------------------------ Kin (opt) ------------------------------- */
   function kinOf(d, tz, opts) {
     if (!opts) return null;
+    const base = dateInTZ(d, tz);
     const epoch = utcTrunc(new Date(opts.epoch + "T00:00:00Z"));
-    let days = Math.floor((utcTrunc(dateInTZ(d, tz)) - epoch) / 86400000);
+    let days = Math.floor((utcTrunc(base) - epoch) / 86400000);
+
     if (opts.skipLeap) {
-      for (let y = epoch.getUTCFullYear(); y <= d.getUTCFullYear(); y++) {
+      const y0 = epoch.getUTCFullYear();
+      const y1 = base.getUTCFullYear();
+      for (let y = y0; y <= y1; y++) {
         if (isLeapYear(y)) {
           const feb29 = new Date(Date.UTC(y, 1, 29));
-          if (d >= feb29 && epoch <= feb29) days -= 1;
+          if (base >= feb29 && epoch <= feb29) days -= 1;
         }
       }
     }
     if (opts.skipDOOT) {
-      for (let y = epoch.getUTCFullYear(); y <= d.getUTCFullYear(); y++) {
+      const y0 = epoch.getUTCFullYear();
+      const y1 = base.getUTCFullYear();
+      for (let y = y0; y <= y1; y++) {
         const doot = new Date(Date.UTC(y, 6, 25));
-        if (d >= doot) days -= 1;
+        if (base >= doot) days -= 1;
       }
     }
+
     const kin = ((days % 260) + 260) % 260 + 1;
     const tones = ["Mag","Lun","Ele","Self","Over","Rhyth","Res","Gal","Sol","Plan","Spec","Crys","Cos"];
     const seals = ["Dragon","Wind","Night","Seed","Serpent","Worldbridger","Hand","Star","Moon","Dog","Monkey","Human","Skywalker","Wizard","Eagle","Warrior","Earth","Mirror","Storm","Sun"];
@@ -297,6 +327,19 @@
     return new Blob([body.join("\r\n")], {type:"text/calendar"});
   }
 
+  function refreshICS() {
+    const anchorSrc = STATE.selISO ? new Date(STATE.selISO) : new Date();
+    const anchor = startOfYear13(anchorSrc, STATE.tz);
+    if (STATE.icsURL) { URL.revokeObjectURL(STATE.icsURL); STATE.icsURL = null; }
+    const blob = buildICS(anchor, STATE.tz);
+    const url = URL.createObjectURL(blob);
+    STATE.icsURL = url;
+    if (refs.dlICS) {
+      refs.dlICS.href = url;
+      refs.dlICS.download = `13-moons-${anchor.getUTCFullYear()}-${anchor.getUTCFullYear()+1}.ics`;
+    }
+  }
+
   /* --------------------------- Main Recompute ----------------------------- */
   const MOON_ACCENTS = [
     ["#7af3ff","#f3c97a"],["#a7d0ff","#ffd48a"],["#8df6cd","#ffe28a"],["#95b8ff","#e8c6ff"],
@@ -317,21 +360,28 @@
     const perim = 316; // pathLength
     const seg = perim * (day / 28);
     STATE.ringDashTarget = `${seg} ${perim}`;
-    if (!STATE.ringDashNow) STATE.ringDashNow = `0 ${perim}`;
+    STATE.lastRingValue = Math.max(0, Math.min(perim, parseFloat((refs.ringArc && refs.ringArc.getAttribute("stroke-dasharray")||"0 316").split(" ")[0]) || 0));
     if (refs.ringArcMini) refs.ringArcMini.setAttribute("stroke-dasharray", `${seg/2} 163`);
   }
 
   function tweenRing(ts) {
-    if (!refs.ringArc || prefersReduced()) return;
-    if (!STATE.lastTween) STATE.lastTween = ts;
-    const dt = clamp((ts - STATE.lastTween)/400, 0, 1);
-    const a = refs.ringArc.getAttribute("stroke-dasharray") || "0 316";
-    const [cur] = a.split(" ").map(parseFloat);
+    if (!refs.ringArc) return;
+    if (STATE.hidden || prefersReduced()) return;
+    if (!STATE.lastTweenTs) STATE.lastTweenTs = ts;
+    const perim = 316;
+    const dt = clamp((ts - STATE.lastTweenTs)/400, 0, 1);
     const [tar] = STATE.ringDashTarget.split(" ").map(parseFloat);
-    const next = cur + (tar - cur) * (dt*0.9);
-    refs.ringArc.setAttribute("stroke-dasharray", `${next} 316`);
-    STATE.lastTween = ts;
-    requestAnimationFrame(tweenRing);
+    const next = STATE.lastRingValue + (tar - STATE.lastRingValue) * (dt*0.9);
+    refs.ringArc.setAttribute("stroke-dasharray", `${next} ${perim}`);
+    STATE.lastRingValue = next;
+    STATE.lastTweenTs = ts;
+    STATE.rafRing = requestAnimationFrame(tweenRing);
+  }
+
+  function stopRingTween() {
+    if (STATE.rafRing) cancelAnimationFrame(STATE.rafRing);
+    STATE.rafRing = 0;
+    STATE.lastTweenTs = 0;
   }
 
   function recompute() {
@@ -340,58 +390,63 @@
     const dt = dateInTZ(d, STATE.tz, STATE.hour);
 
     // Now line
-    refs.nowDate && (refs.nowDate.textContent = fmtDate(dt, STATE.tz));
-    refs.nowClock && (refs.nowClock.textContent = fmtTime(dt, STATE.tz));
-    refs.nowTZ && (refs.nowTZ.textContent = STATE.tz);
+    if (refs.nowDate) refs.nowDate.textContent = fmtDate(dt, STATE.tz);
+    if (refs.nowClock) refs.nowClock.textContent = fmtTime(dt, STATE.tz);
+    if (refs.nowTZ) refs.nowTZ.textContent = STATE.tz;
 
     // 13×28
     const info = calc13Moon(dt, STATE.tz);
     if (info.special) {
-      refs.moonLine && (refs.moonLine.textContent = info.special);
-      refs.dootWarn && (refs.dootWarn.style.display = "block");
-      refs.dayInMoon && (refs.dayInMoon.textContent = "—");
-      refs.yearSpan && (refs.yearSpan.textContent = info.year);
+      if (refs.moonLine) refs.moonLine.textContent = info.special;
+      if (refs.dootWarn) refs.dootWarn.style.display = "block";
+      if (refs.dayInMoon) refs.dayInMoon.textContent = "—";
+      if (refs.yearSpan) refs.yearSpan.textContent = info.year;
       populateYearMap(startOfYear13(dt, STATE.tz), STATE.tz);
+      stopRingTween();
       return;
     }
-    refs.dootWarn && (refs.dootWarn.style.display = "none");
+    if (refs.dootWarn) refs.dootWarn.style.display = "none";
     const name = MOONS[info.moon-1], ess = MOON_ESSENCE[info.moon-1];
-    refs.moonName && (refs.moonName.textContent = name);
-    refs.moonEss && (refs.moonEssence.textContent = ess);
-    refs.dayInMoon && (refs.dayInMoon.textContent = info.day);
-    refs.moonLine && (refs.moonLine.textContent = `${name} — Day ${info.day} of 28`);
-    refs.yearSpan && (refs.yearSpan.textContent = info.year);
-    refs.mbName && (refs.mbName.textContent = name);
-    refs.mbEssence && (refs.mbEssence.textContent = ess);
-    refs.mbDay && (refs.mbDay.textContent = `${info.day}/28`);
-    refs.mbYear && (refs.mbYear.textContent = info.year);
+
+    if (refs.moonName) refs.moonName.textContent = name;
+    if (refs.moonEssence) refs.moonEssence.textContent = ess;
+    if (refs.dayInMoon) refs.dayInMoon.textContent = info.day;
+    if (refs.moonLine) refs.moonLine.textContent = `${name} — Day ${info.day} of 28`;
+    if (refs.yearSpan) refs.yearSpan.textContent = info.year;
+    if (refs.mbName) refs.mbName.textContent = name;
+    if (refs.mbEssence) refs.mbEssence.textContent = ess;
+    if (refs.mbDay) refs.mbDay.textContent = `${info.day}/28`;
+    if (refs.mbYear) refs.mbYear.textContent = info.year;
+
     populateWeekDots(info.day);
     recolorByMoon(info.moon);
     setRingTargets(info.day);
-    requestAnimationFrame(tweenRing);
+    stopRingTween();
+    STATE.rafRing = requestAnimationFrame(tweenRing);
     populateYearMap(startOfYear13(dt, STATE.tz), STATE.tz);
 
-    // Numerology (simple)
+    // Numerology (simple flavor)
     const sum = (info.moon + info.day) % 9 || 9;
-    refs.numLine && (refs.numLine.textContent = `Σ(moon,day) → ${sum}`);
-    refs.numMeta && (refs.numMeta.textContent = `Tone bias ~ ${(info.moon%13)||13}, Week ${(Math.ceil(info.day/7))}`);
-    refs.energyQuote && (refs.energyQuote.textContent = quoteFor(info.moon, info.day));
+    if (refs.numLine) refs.numLine.textContent = `Σ(moon,day) → ${sum}`;
+    if (refs.numMeta) refs.numMeta.textContent = `Tone bias ~ ${(info.moon%13)||13}, Week ${Math.ceil(info.day/7)}`;
+    if (refs.energyQuote) refs.energyQuote.textContent = quoteFor(info.moon, info.day);
 
     // Phase canvas
     const { illum, angle, age } = moonPhase(dt);
     STATE.illum = illum; STATE.sunAngle = angle;
     if (refs.simMoon) {
+      sizeCanvasToDisplay(refs.simMoon, STATE.dpr);
       const ctx = refs.simMoon.getContext("2d", {alpha:false});
       drawMoon(ctx, illum, angle);
     }
     const pct = Math.round(illum*100);
-    refs.phaseLine && (refs.phaseLine.textContent = `Illumination ${pct}% · Age ${age.toFixed(1)} d`);
-    refs.phaseMeta && (refs.phaseMeta.textContent = illum<.03?"New Moon":illum>.97?"Full Moon":angle<Math.PI?"Waxing":"Waning");
+    if (refs.phaseLine) refs.phaseLine.textContent = `Illumination ${pct}% · Age ${age.toFixed(1)} d`;
+    if (refs.phaseMeta) refs.phaseMeta.textContent = illum<.03?"New Moon":illum>.97?"Full Moon":angle<Math.PI?"Waxing":"Waning";
 
     // Astro placeholders
-    refs.astroStamp && (refs.astroStamp.textContent = fmtDate(dt, STATE.tz));
-    refs.astroTZ && (refs.astroTZ.textContent = STATE.tz);
-    refs.astroSource && (refs.astroSource.textContent = (window.__EPHEMERIS__ ? "Ephemeris feed" : "—"));
+    if (refs.astroStamp) refs.astroStamp.textContent = fmtDate(dt, STATE.tz);
+    if (refs.astroTZ) refs.astroTZ.textContent = STATE.tz;
+    if (refs.astroSource) refs.astroSource.textContent = (window.__EPHEMERIS__ ? "Ephemeris feed" : "—");
   }
 
   /* --------------------------- Events / Wiring ---------------------------- */
@@ -410,6 +465,7 @@
       STATE.tz = e.target.value;
       localStorage.setItem(TZ_KEY, STATE.tz);
       recompute();
+      refreshICS();
     });
 
     // Date
@@ -421,11 +477,11 @@
 
     // Hour
     on(refs.hourScrub, "input", e => {
-      STATE.hour = parseInt(e.target.value, 10);
+      STATE.hour = clamp(parseInt(e.target.value, 10),0,23);
       recompute();
     });
 
-    // Today / Prev / Next
+    // Today / Prev / Next + Keys
     on(refs.btnToday, "click", () => {
       STATE.selISO = null;
       if (refs.datePick) refs.datePick.value = "";
@@ -434,12 +490,13 @@
     on(refs.prevDay, "click", () => nudgeDay(-1));
     on(refs.nextDay, "click", () => nudgeDay(1));
     on(document, "keydown", (ev)=>{
-      if (["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)) return;
+      const tag = (document.activeElement && document.activeElement.tagName) || "";
+      if (["INPUT","TEXTAREA","SELECT"].includes(tag)) return;
       if (ev.key==="ArrowUp") { nudgeDay(1); }
       if (ev.key==="ArrowDown") { nudgeDay(-1); }
-      if (ev.key==="ArrowLeft") { STATE.hour = clamp(STATE.hour-1,0,23); refs.hourScrub && (refs.hourScrub.value=STATE.hour); recompute(); }
-      if (ev.key==="ArrowRight"){ STATE.hour = clamp(STATE.hour+1,0,23); refs.hourScrub && (refs.hourScrub.value=STATE.hour); recompute(); }
-      if (ev.key.toLowerCase()==="t"){ STATE.selISO=null; refs.datePick && (refs.datePick.value=""); recompute(); }
+      if (ev.key==="ArrowLeft") { STATE.hour = clamp(STATE.hour-1,0,23); if (refs.hourScrub) refs.hourScrub.value=STATE.hour; recompute(); }
+      if (ev.key==="ArrowRight"){ STATE.hour = clamp(STATE.hour+1,0,23); if (refs.hourScrub) refs.hourScrub.value=STATE.hour; recompute(); }
+      if (ev.key.toLowerCase()==="t"){ STATE.selISO=null; if (refs.datePick) refs.datePick.value=""; recompute(); }
     });
 
     // Jump to moon
@@ -452,35 +509,34 @@
       recompute();
     });
 
-    // Share link
-    on(refs.shareLink, "click", ()=>{
+    // Share link (with fallback)
+    on(refs.shareLink, "click", async ()=>{
       const u = new URL(location.href);
       if (STATE.selISO) u.searchParams.set("d", STATE.selISO.slice(0,10));
       u.searchParams.set("tz", STATE.tz);
       u.searchParams.set("h", String(STATE.hour));
-      navigator.clipboard && navigator.clipboard.writeText(u.toString());
-      refs.shareLink.textContent = "Copied ✓";
-      setTimeout(()=>refs.shareLink.textContent="Copy Link",1200);
+      const urlStr = u.toString();
+      try {
+        await (navigator.clipboard && navigator.clipboard.writeText(urlStr));
+        if (refs.shareLink) { const old = refs.shareLink.textContent; refs.shareLink.textContent = "Copied ✓"; setTimeout(()=>refs.shareLink.textContent=old||"Copy Link",1200); }
+      } catch {
+        alert(urlStr);
+      }
     });
 
     // ICS
-    const refreshICS = () => {
-      const anchor = startOfYear13(STATE.selISO?new Date(STATE.selISO):new Date(), STATE.tz);
-      const blob = buildICS(anchor, STATE.tz);
-      const url = URL.createObjectURL(blob);
-      refs.dlICS && (refs.dlICS.href = url);
-      refs.dlICS && (refs.dlICS.download = `13-moons-${anchor.getUTCFullYear()}-${anchor.getUTCFullYear()+1}.ics`);
-    };
     on(refs.regenICS, "click", refreshICS);
 
     // Kin
     const updateKin = () => {
+      if (!refs.kinBadge || !refs.kinLine) return;
       if (!refs.kinOn || !refs.kinOn.checked) { refs.kinBadge.textContent="Kin —"; refs.kinLine.textContent="—"; return; }
       const opts = {
-        epoch: refs.kinEpoch.value,
-        skipLeap: refs.kinSkipLeap.checked,
-        skipDOOT: refs.kinSkipDOOT.checked
+        epoch: refs.kinEpoch && refs.kinEpoch.value,
+        skipLeap: !!(refs.kinSkipLeap && refs.kinSkipLeap.checked),
+        skipDOOT: !!(refs.kinSkipDOOT && refs.kinSkipDOOT.checked)
       };
+      if (!opts.epoch) { refs.kinBadge.textContent="Kin —"; refs.kinLine.textContent="—"; return; }
       const k = kinOf(STATE.selISO?new Date(STATE.selISO):new Date(), STATE.tz, opts);
       if (!k) return;
       refs.kinBadge.textContent = `Kin ${k.kin}`;
@@ -495,26 +551,52 @@
 
     // Notes
     on(refs.saveNote, "click", ()=>{
+      if (!refs.noteText) return;
       const key = `${NOTES_KEY}:${STATE.tz}:${(refs.datePick && refs.datePick.value)||"today"}`;
       localStorage.setItem(key, refs.noteText.value||"");
-      refs.saveNote.textContent="Saved ✓";
-      setTimeout(()=>refs.saveNote.textContent="Save note",1000);
+      const old = refs.saveNote && refs.saveNote.textContent;
+      if (refs.saveNote) { refs.saveNote.textContent="Saved ✓"; setTimeout(()=>{ if (refs.saveNote) refs.saveNote.textContent=old||"Save note"; }, 1000); }
     });
 
     // Deep link restore
     const q = new URLSearchParams(location.search);
     const qd = q.get("d"), qtz = q.get("tz"), qh = q.get("h");
-    if (qd && validDateStr(qd)) { STATE.selISO = `${qd}T00:00:00Z`; refs.datePick && (refs.datePick.value = qd); }
-    if (qtz) { STATE.tz = qtz; refs.tzPick && (refs.tzPick.value = qtz); }
-    if (qh != null) { STATE.hour = clamp(parseInt(qh,10),0,23); refs.hourScrub && (refs.hourScrub.value = STATE.hour); }
+    if (qd && validDateStr(qd)) { STATE.selISO = `${qd}T00:00:00Z`; if (refs.datePick) refs.datePick.value = qd; }
+    if (qtz) { STATE.tz = qtz; if (refs.tzPick) refs.tzPick.value = qtz; }
+    if (qh != null) { STATE.hour = clamp(parseInt(qh,10),0,23); if (refs.hourScrub) refs.hourScrub.value = STATE.hour; }
 
-    // Initial compute + ICS + Kin
+    // Visibility / DPR / Resize
+    on(document, "visibilitychange", ()=>{
+      STATE.hidden = (document.visibilityState === "hidden");
+      if (STATE.hidden) {
+        stopRingTween();
+      } else {
+        // reflow sizes and resume
+        if (refs.simMoon) sizeCanvasToDisplay(refs.simMoon, STATE.dpr);
+        recompute();
+        STATE.rafRing = requestAnimationFrame(tweenRing);
+      }
+    });
+    on(window, "resize", ()=>{
+      STATE.dpr = Math.max(1, Math.round(window.devicePixelRatio || 1));
+      if (refs.simMoon) sizeCanvasToDisplay(refs.simMoon, STATE.dpr);
+      recompute();
+    });
+
+    // Initial compute + ICS + Kin + clock tick
     recompute();
     refreshICS();
-    updateKin();
+    // only update the clock text every second (lightweight)
+    STATE.tickTimer = window.setInterval(()=> {
+      if (!refs.nowClock) return;
+      refs.nowClock.textContent = fmtTime(dateInTZ(new Date(), STATE.tz), STATE.tz);
+    }, 1000);
 
-    // Clock tick (only time string; keep heavy ops light)
-    setInterval(()=>{ refs.nowClock && (refs.nowClock.textContent = fmtTime(dateInTZ(new Date(), STATE.tz), STATE.tz)); }, 1000);
+    // First ring tween
+    if (!prefersReduced()) {
+      stopRingTween();
+      STATE.rafRing = requestAnimationFrame(tweenRing);
+    }
   }
 
   function nudgeDay(delta) {
@@ -522,14 +604,20 @@
     const next = addDaysSkippingSpecials(base, delta, STATE.tz);
     const iso = `${next.getUTCFullYear()}-${pad(next.getUTCMonth()+1)}-${pad(next.getUTCDate())}T00:00:00Z`;
     STATE.selISO = iso;
-    refs.datePick && (refs.datePick.value = iso.slice(0,10));
+    if (refs.datePick) refs.datePick.value = iso.slice(0,10);
     recompute();
   }
 
-  // Start
+  // Start / Cleanup
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", wire);
   } else {
     wire();
   }
+
+  window.addEventListener("beforeunload", ()=>{
+    if (STATE.tickTimer) clearInterval(STATE.tickTimer);
+    stopRingTween();
+    if (STATE.icsURL) URL.revokeObjectURL(STATE.icsURL);
+  });
 })();
