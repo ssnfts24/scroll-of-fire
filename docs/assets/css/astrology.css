@@ -1,16 +1,83 @@
 @layer astrology{
-.astro{--moon-accent:var(--accent); --moon-accent-2:var(--gold)}
-.astro-head{display:flex;align-items:center;gap:10px;justify-content:space-between;margin-bottom:.5rem}
-.astro-head .seal{display:inline-flex;gap:.4rem;align-items:center}
-.astro-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
-@media (max-width:1024px){ .astro-grid{grid-template-columns:1fr} }
-.astro-chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid var(--line);border-radius:999px;padding:.35rem .6rem;background:transparent}
-.chip .dot{display:inline-block;width:.7em;height:.7em;border-radius:50%}
-.el-fire{background:#ff8a73}.el-water{background:#6fc6ff}.el-air{background:#a2b1ff}.el-earth{background:#a8e7b2}.el-aether{background:#e7d1ff}
-.astro-wheel{display:block;max-width:460px;margin-inline:auto}
-.astro-aspects .legend{display:flex;flex-wrap:wrap;gap:10px;margin:.4rem 0}
-.asp-table{display:block;max-width:100%;overflow:auto}
-.asp-table table{min-width:520px}
-.asp.conj{border-color:#b9b9b9}.asp.sext{border-color:#7ccfff}.asp.sqr{border-color:#ff9a7b}.asp.tri{border-color:#8be39f}.asp.opp{border-color:#c69bff}
+  .astro{
+    --moon-accent: var(--accent);
+    --moon-accent-2: var(--gold);
+  }
+
+  /* Header */
+  .astro-head{
+    display:flex;align-items:center;gap:10px;justify-content:space-between;margin-bottom:.5rem
+  }
+  .astro-head .seal{display:inline-flex;gap:.4rem;align-items:center}
+
+  /* Grid */
+  .astro-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+  @media (max-width:1024px){ .astro-grid{grid-template-columns:1fr} }
+
+  /* Planet chips */
+  .astro-chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    border:1px solid var(--line);border-radius:999px;padding:.35rem .6rem;background:transparent;
+    display:inline-flex;align-items:center;gap:.45rem;line-height:1;
+    transition:background-color .12s ease,border-color .12s ease,transform .06s ease;
+    color:inherit;text-decoration:none
+  }
+  .chip:hover{background:rgba(127,127,127,.08);border-color:color-mix(in oklab,var(--line) 70%,var(--accent) 30%)}
+  .chip:active{transform:translateY(1px)}
+  .chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .chip[aria-pressed="true"], .chip.active{
+    background:color-mix(in oklab,var(--accent) 10%, transparent);
+    border-color:color-mix(in oklab,var(--accent) 60%, var(--line));
+  }
+  .chip .pos{opacity:.9}
+  .chip .dot{display:inline-block;width:.7em;height:.7em;border-radius:50%}
+
+  /* Element colors */
+  .el-fire{background:#ff8a73}
+  .el-water{background:#6fc6ff}
+  .el-air{background:#a2b1ff}
+  .el-earth{background:#a8e7b2}
+  .el-aether{background:#e7d1ff}
+
+  /* Wheel */
+  .astro-wheel{display:block;max-width:460px;margin-inline:auto}
+  .astro-wheel svg{width:100%;height:auto;display:block}
+  #signLabels text{letter-spacing:.02em;paint-order:stroke;stroke:#0b0b0f;stroke-width:.9}
+  #houseLines{opacity:.9}
+  #planetDots .dot{
+    transition:transform .12s ease, r .12s ease;
+    filter:drop-shadow(0 0 .4px rgba(0,0,0,.6));
+  }
+  #planetDots .dot:hover{transform:scale(1.15)}
+  @media (prefers-reduced-motion: reduce){
+    #planetDots .dot{transition:none}
+  }
+
+  /* Aspects */
+  .astro-aspects .legend{display:flex;flex-wrap:wrap;gap:10px;margin:.4rem 0}
+  .badge.asp{background:transparent}
+  .asp.conj{border-color:#b9b9b9}
+  .asp.sext{border-color:#7ccfff}
+  .asp.sqr{border-color:#ff9a7b}
+  .asp.tri{border-color:#8be39f}
+  .asp.opp{border-color:#c69bff}
+
+  /* Aspects table container */
+  .asp-table{display:block;max-width:100%;overflow:auto;border:1px solid var(--line);border-radius:12px}
+  .asp-table table{min-width:520px;border-collapse:separate;border-spacing:0}
+  .asp-table thead th{
+    position:sticky;top:0;background:var(--bg-elev);
+    color:var(--muted);font-weight:600;text-align:left;
+    padding:.55rem .6rem;border-bottom:1px solid var(--line)
+  }
+  .asp-table tbody td{
+    padding:.55rem .6rem;border-bottom:1px solid color-mix(in oklab,var(--line) 80%, transparent)
+  }
+  .asp-table tbody tr:hover{background:rgba(127,127,127,.06)}
+  .asp-table tbody tr:last-child td{border-bottom:none}
+  .asp-table td:nth-child(3){text-align:right;font-variant-numeric:tabular-nums}
+
+  /* Small helpers */
+  .astro .meta{color:var(--muted)}
+  .astro .mono{font-variant-numeric:tabular-nums}
 }
