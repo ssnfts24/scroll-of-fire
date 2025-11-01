@@ -60,13 +60,55 @@
 
     @supports (-webkit-touch-callout:none){ input,select,textarea,button{ font-size:16px } }
 
-    /* mini-moonbar refinements */
-    .moonbar{ isolation:isolate }
-    .moonbar svg{ width:100%; height:auto; min-height:38px }
-    .moonbar .mb-bg{ stroke:#142233; stroke-width:8; opacity:.9 }
-    .moonbar .mb-fg{ stroke:url(#mbGrad), var(--moon-accent); stroke-width:10; stroke-linecap:round;
+    /* === Moonbar hardening === */
+    .moonbar{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
+      padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--bg-elev)}
+    .moonbar svg{width:56px;height:auto;min-height:56px}
+    .moonbar .moonbar-info{min-width:0}
+    .moonbar .moonbar-line{display:flex;gap:.5rem;align-items:baseline;flex-wrap:wrap}
+    .moonbar .moonbar-tags{display:flex;gap:.35rem;flex-wrap:wrap}
+    .moonbar .moonbar-actions{display:flex;gap:.5rem}
+    .moonbar .moonbar-share{border:1px solid var(--line);background:transparent;border-radius:10px;padding:.35rem .6rem}
+    .moonbar .tag.yhwh{font-weight:700}
+    .moonbar .sep{opacity:.5}
+    .moonbar .mb-bg{stroke:#142233;stroke-width:8}
+    .moonbar .mb-fg{stroke-width:10;stroke-linecap:round;stroke:url(#mbGrad), var(--moon-accent);
       filter: drop-shadow(0 0 8px color-mix(in oklch, var(--moon-accent) 55%, transparent)); }
+    @media (max-width:520px){ .moonbar{grid-template-columns:1fr;justify-items:start} .moonbar svg{width:64px} }
 
+    /* === Month grids: responsive cell size === */
+    .calendar,.gregorian{--cell:clamp(36px,8.5vw,48px);display:grid;gap:8px}
+    .calendar .head,.gregorian .head,
+    .calendar .row,.gregorian .row{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+    .daycell{min-height:var(--cell);background:var(--bg-elev);border:1px solid var(--line);
+      border-radius:10px;display:flex;align-items:flex-start;justify-content:flex-start;padding:.4rem .45rem;position:relative}
+    .daycell .n{font:600 .95rem/1 Inter,system-ui;opacity:.9}
+    .daycell .evt{position:absolute;right:.45rem;bottom:.35rem;width:6px;height:6px;border-radius:999px;background:transparent}
+    .daycell.is-dim{opacity:.35}
+    .daycell.is-today{outline:2px solid var(--accent);outline-offset:1px}
+    .daycell.is-doot{border-color: color-mix(in oklab, var(--gold) 60%, var(--line))}
+    .daycell.is-doot .evt{background: var(--gold)}
+    .daycell.is-leap{border-color: color-mix(in oklab, var(--accent-2) 60%, var(--line))}
+    .daycell.is-leap .evt{background: var(--accent-2)}
+
+    #calLegend .k-dot{display:inline-block;width:.7em;height:.7em;border-radius:50%;vertical-align:middle;margin-right:.35rem}
+    #calLegend .k-evt1{background: var(--accent)}
+    #calLegend .k-evt2{background: var(--accent-2)}
+    #calLegend .k-doot{background: var(--gold)}
+    #calLegend .k-leap{background: var(--accent-2)}
+    #calLegend .k-today{background: color-mix(in oklab, var(--accent) 60%, var(--ink))}
+
+    /* Week dots: fixed line, clean spacing */
+    .weekrow{display:flex;align-items:center;gap:.6rem;margin-top:8px;white-space:nowrap;overflow:hidden}
+    .weekrow .week{display:grid;grid-template-columns:repeat(28,1fr);gap:.35rem;max-width:100%}
+    .weekrow .dot{width:.5rem;height:.5rem;border-radius:50%}
+
+    /* header sizing */
+    .ring{width:clamp(88px,22vw,120px);height:auto}
+    .fancy-head .title{font-size:clamp(1.2rem,4.4vw,1.9rem)}
+    .subtitle{max-width:65ch}
+
+    /* small layouts */
     @media (max-width: 880px){
       .page-head .crumbs{ gap:6px; overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none }
       .page-head .crumbs::-webkit-scrollbar{ display:none }
@@ -75,36 +117,7 @@
       .astro-grid{ grid-template-columns: 1fr !important }
       .year-map{ display:block; overflow:auto; -webkit-overflow-scrolling:touch }
       .year-map thead th{ position:sticky; top:0 }
-      .ring{ width:96px }
     }
-
-    /* ---- Stable month grids + states ---- */
-    @layer components{
-      .calendar,.gregorian{ --cell:42px; display:grid; gap:8px }
-      .calendar .head,.gregorian .head{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px }
-      .calendar .row,.gregorian .row{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px }
-      .daycell{ min-height:var(--cell); background:var(--bg-elev); border:1px solid var(--line); border-radius:10px;
-        display:flex; align-items:flex-start; justify-content:flex-start; padding:.4rem .45rem; position:relative }
-      .daycell .n{ font:600 .95rem/1 Inter,system-ui; opacity:.9 }
-      .daycell .evt{ position:absolute; right:.45rem; bottom:.35rem; width:6px; height:6px; border-radius:999px; background:transparent }
-      .daycell.is-dim{ opacity:.35 }
-      .daycell.is-today{ outline:2px solid var(--accent); outline-offset:1px }
-      .daycell.is-doot{ border-color: color-mix(in oklab, var(--gold) 60%, var(--line)) }
-      .daycell.is-doot .evt{ background: var(--gold) }
-      .daycell.is-leap{ border-color: color-mix(in oklab, var(--accent-2) 60%, var(--line)) }
-      .daycell.is-leap .evt{ background: var(--accent-2) }
-      #calLegend .k-dot{ display:inline-block; width:.7em; height:.7em; border-radius:50%; vertical-align:middle; margin-right:.35rem }
-      #calLegend .k-evt1{ background: var(--accent) }
-      #calLegend .k-evt2{ background: var(--accent-2) }
-      #calLegend .k-doot{ background: var(--gold) }
-      #calLegend .k-leap{ background: var(--accent-2) }
-      #calLegend .k-today{ background: color-mix(in oklab, var(--accent) 60%, var(--ink)) }
-    }
-
-    /* prompts mobile polish */
-    .prompts{ padding-left:1.1rem }
-    .prompts li{ margin:.25rem 0 }
-    @media (max-width: 480px){ .footer{ padding-bottom:72px } }
 
     /* ---- Minimal layout fallbacks (in case core.css misses) ---- */
     .grid{display:grid;grid-template-columns:2fr 1fr;gap:12px}
@@ -149,7 +162,7 @@
   <!-- Animated ambient sky -->
   <canvas id="skyBg" width="1440" height="900" aria-hidden="true"></canvas>
 
-  <!-- Mini Moonbar -->
+  <!-- Mini Moonbar (1) -->
   <section class="wrap" aria-label="Remnant Moonbar">
     <div class="moonbar yhwh-on" data-size="compact" role="group" aria-label="Current Moon mini widget">
       <svg viewBox="0 0 64 64" aria-hidden="true">
@@ -175,7 +188,33 @@
     </div>
   </section>
 
-  <!-- Seal opener -->
+  <!-- Dual calendar (2) -->
+  <section class="compare wrap" aria-label="Remnant vs Gregorian">
+    <article class="panel">
+      <header class="panel__head">
+        <h3 class="panel__title" id="remHdr">Remnant Month</h3>
+        <div class="panel__meta" id="remMeta">13 × 28 fixed</div>
+      </header>
+      <section id="remCal" class="calendar" aria-label="Remnant Month (live)"></section>
+    </article>
+
+    <article class="panel">
+      <header class="panel__head">
+        <h3 class="panel__title" id="gregHdr">Gregorian Month</h3>
+        <div class="panel__meta" id="gregMeta">Variable weeks</div>
+      </header>
+      <section id="gregCal" class="gregorian" aria-label="Gregorian Month (live)"></section>
+      <footer id="calLegend" class="legend">
+        <span class="key"><i class="k-dot k-evt1"></i> Event</span>
+        <span class="key"><i class="k-dot k-evt2"></i> Ceremony</span>
+        <span class="key"><i class="k-dot k-doot"></i> DOOT</span>
+        <span class="key"><i class="k-dot k-leap"></i> Leap Day</span>
+        <span class="key"><i class="k-dot k-today"></i> Today</span>
+      </footer>
+    </article>
+  </section>
+
+  <!-- Seal opener (3) -->
   <section class="wrap" id="remnantOpener">
     <div class="remnant-opener card remnant-frame" aria-label="Open the Remnant Birth Seal">
       <div class="op-grid">
@@ -200,6 +239,7 @@
     </div>
   </section>
 
+  <!-- Main header & controls (4) -->
   <main class="wrap" id="main" role="main">
     <header class="page-head fancy-head">
       <h1 class="title">🌗 Remnant 13 Moons — <em>Living Clock</em></h1>
@@ -419,32 +459,6 @@
       </article>
     </section>
 
-    <!-- Dual calendar -->
-    <section class="compare" aria-label="Remnant vs Gregorian">
-      <article class="panel">
-        <header class="panel__head">
-          <h3 class="panel__title" id="remHdr">Remnant Month</h3>
-          <div class="panel__meta" id="remMeta">13 × 28 fixed</div>
-        </header>
-        <section id="remCal" class="calendar" aria-label="Remnant Month (live)"></section>
-      </article>
-
-      <article class="panel">
-        <header class="panel__head">
-          <h3 class="panel__title" id="gregHdr">Gregorian Month</h3>
-          <div class="panel__meta" id="gregMeta">Variable weeks</div>
-        </header>
-        <section id="gregCal" class="gregorian" aria-label="Gregorian Month (live)"></section>
-        <footer id="calLegend" class="legend">
-          <span class="key"><i class="k-dot k-evt1"></i> Event</span>
-          <span class="key"><i class="k-dot k-evt2"></i> Ceremony</span>
-          <span class="key"><i class="k-dot k-doot"></i> DOOT</span>
-          <span class="key"><i class="k-dot k-leap"></i> Leap Day</span>
-          <span class="key"><i class="k-dot k-today"></i> Today</span>
-        </footer>
-      </article>
-    </section>
-
     <!-- Practices -->
     <article class="card col-6" id="practiceCard" aria-labelledby="prac-head" style="margin-top:12px">
       <h2 id="prac-head">Practices & Prompts</h2>
@@ -575,7 +589,7 @@
       return {tz,year:yWall,yearSpan:`${yWall}/${yWall+1}`,inDOOT:isDOOT,dayCount,moonIdx,dayInMoon,week};
     }
 
-    /* ---------- TZ list (full IANA when supported) ---------- */
+    /* ---------- TZ list ---------- */
     (function tzList(){
       const sel=$("#tzPick"); if(!sel) return;
       const cur=MoonTZ.getTZ();
@@ -657,7 +671,7 @@
       return new Date(base.getTime()+h*3600000);
     }
 
-    /* ---------- Deep-link Birth Seal with tz/d/h ---------- */
+    /* Deep-link Birth Seal with tz/d/h */
     function sealLinkURL(){
       const tz = MoonTZ.getTZ();
       const w  = getWallFromControls();
@@ -690,7 +704,7 @@
       $("#nextMoonInfo").textContent=`Year ${yWall}/${yWall+1} in ${tz}.`;
     }
 
-    /* ---------- Practice prompts (always non-empty) ---------- */
+    /* ---------- Practice prompts ---------- */
     function injectPractices(idx){
       const list=$("#practiceList"); if(!list) return;
       const defs={1:["Clarify your purpose in one sentence.","Choose one devotion to repeat daily."],
@@ -855,7 +869,7 @@
       img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(ser);
     });
 
-    /* ---------- ICS export (leak-safe) ---------- */
+    /* ---------- ICS export ---------- */
     function buildICS(yWall,tz){
       const start=MoonTZ.wallParts(new Date(Date.UTC(yWall,6,26)),tz);
       const lines=[
@@ -885,11 +899,12 @@
       if(__icsURL){ URL.revokeObjectURL(__icsURL); __icsURL=null; }
       const blob=buildICS(yWall,tz);
       __icsURL = URL.createObjectURL(blob);
-      const a=$("#dlICS"); if(a){ a.href=__icsURL; a.download=`remnant-${yWall}-${yWall+1}.ics`; }
+      const a=$("#dlICS"); if(a){ a.href=__ICSURL; } // guard if missing
+      if(a){ a.href=__icsURL; a.download=`remnant-${yWall}-${yWall+1}.ics`; }
     }
     $("#regenICS")?.addEventListener("click",()=>{ const r=calcRemnant(getWallFromControls()); refreshICS(r.year); });
 
-    /* ---------- Notes: save per (yearSpan + moonIdx + tz) ---------- */
+    /* ---------- Notes ---------- */
     (function notes(){
       const area = document.querySelector("#noteText");
       const btn  = document.querySelector("#btnSaveNote");
@@ -914,7 +929,6 @@
       const yEl=$("#yr"); if(yEl) yEl.textContent=String(new Date().getFullYear());
       const wall=getWallFromControls();
 
-      // sync hour slider if query lacks h
       if(hourScrub && !new URLSearchParams(location.search).get("h")){
         hourScrub.value = String(wall.getUTCHours());
       }
@@ -931,11 +945,13 @@
       document.documentElement.style.setProperty('--moon-accent', color);
 
       // mini bar
+      const arcMini=$("#moonArcMini");
+      if (arcMini){ if (!arcMini.getAttribute('stroke-width')) arcMini.setAttribute('stroke-width','10'); }
       $("#mbName").textContent=name;
       $("#mbEssence").textContent=ess;
       $("#mbDay").textContent=r.dayInMoon?`${r.dayInMoon}/28`:"—/28";
       $("#mbYear").textContent=r.yearSpan;
-      const arcMini=$("#moonArcMini"); if(arcMini&&r.dayInMoon){const pct=((r.dayInMoon-1)/28)*163; arcMini.setAttribute("stroke-dasharray",`${pct} 163`); arcMini.style.stroke=color;}
+      if(arcMini&&r.dayInMoon){const pct=((r.dayInMoon-1)/28)*163; arcMini.setAttribute("stroke-dasharray",`${pct} 163`); arcMini.style.stroke=color;}
 
       // header badge
       $("#dayInMoon").textContent=r.dayInMoon?String(r.dayInMoon):"—";
@@ -959,19 +975,15 @@
 
       const jm=$("#jumpMoon"); if(jm&&r.moonIdx) jm.value=String(r.moonIdx);
 
-      // notify listeners (e.g., notes loader, astro renderer)
+      // notify listeners
       document.dispatchEvent(new Event("sof:repaint"));
     }
 
     function drawWeekDots(n){
       const box=$("#weekDots"); if(!box) return;
-      box.innerHTML="";
-      for(let i=1;i<=28;i++){
-        const el=document.createElement("i");
-        el.className="dot wk";
-        if(n && i<=n) el.classList.add("on");
-        box.appendChild(el);
-      }
+      const total=28, on = Math.max(0, Math.min(total, Number(n)||0));
+      box.innerHTML = Array.from({length:total}, (_,i)=>
+        `<i class="dot wk${i<on?' on':''}"></i>`).join("");
     }
 
     // tick clock
@@ -986,7 +998,7 @@
       if(e.key==="t"||e.key==="T"){e.preventDefault(); syncDeepLink({d:null,h:null}); paint(); syncSealLinks(); }
     });
 
-    // Astrology fallback labels (kept for graceful degrade)
+    // Astrology fallback labels
     function astroFallback(){
       $("#astroStamp").textContent = MoonTZ.isoDateWall(MoonTZ.nowWall());
       $("#astroTZ").textContent = MoonTZ.getTZ();
@@ -1000,10 +1012,8 @@
     (function sky(){
       const c=$("#skyBg"); if(!c) return;
       const ctx=c.getContext("2d",{alpha:true});
-
       function size(){ c.width=innerWidth; c.height=innerHeight; }
       size();
-
       let stars=Array.from({length:120},()=>({x:Math.random()*c.width,y:Math.random()*c.height,z:0.2+Math.random()*0.8,s:0.5+Math.random()*1.5}));
       const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
       function frame(){
@@ -1033,7 +1043,7 @@
   <!-- Main moons logic: optional, enhances precision/ephemeris if present -->
   <script src="assets/js/moons.js?v=4.3" defer></script>
 
-  <!-- ===== Astro Engine + Offline Demo Ephemeris (renders wheel/chips/aspects) ===== -->
+  <!-- ===== Astro Engine + Offline Demo Ephemeris ===== -->
   <script>
   (function(){
     "use strict";
