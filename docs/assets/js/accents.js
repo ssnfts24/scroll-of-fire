@@ -1,75 +1,61 @@
 /* ==========================================================================
-   Scroll of Fire — Accents + Theme micro-engine
-   - Syncs --moon-accent variables with current phase/selection
-   - Provides theme toggle + persists to localStorage("theme")
-   - Exposes small API: window.SOF_ACCENTS.set(hex1, hex2)
+   Scroll of Fire — Accent & Theme Helpers
+   - Stores/reads TZ + theme
+   - Sets phase/season accent vars on <html>
+   - Emits 'accent:change' when major values change
    ========================================================================== */
-(function(){
+(() => {
   "use strict";
+  const doc = document.documentElement;
+  const store = (k, v) => { try { localStorage.setItem(k, v); } catch {} };
+  const load  = (k, d) => { try { return localStorage.getItem(k) || d; } catch { return d } };
 
-  const root = document.documentElement;
-  const THEME_KEY = "theme";
-
-  function setVar(name, value){ root.style.setProperty(name, value); }
-  function mixHex(a,b,t){
-    const pa=parseInt(a.slice(1),16), pb=parseInt(b.slice(1),16);
-    const ar=(pa>>16)&255, ag=(pa>>8)&255, ab=pa&255;
-    const br=(pb>>16)&255, bg=(pb>>8)&255, bb=pb&255;
-    const rr=Math.round(ar+(br-ar)*t), gg=Math.round(ag+(bg-ag)*t), bb2=Math.round(ab+(bb-ab)*t);
-    return `#${((1<<24)+(rr<<16)+(gg<<8)+bb2).toString(16).slice(1)}`;
+  /* ---------- Theme (persist + toggle API) ---------- */
+  const THEME_KEY = "sofc.theme";
+  function setTheme(next){
+    doc.setAttribute("data-theme", next);
+    store(THEME_KEY, next);
+    window.dispatchEvent(new CustomEvent("accent:change", {detail:{theme:next}}));
   }
+  const startingTheme = load(THEME_KEY,
+    (matchMedia && matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark");
+  setTheme(startingTheme);
+  window.SOFTheme = { get: () => doc.getAttribute("data-theme"), set: setTheme, toggle(){
+    setTheme(this.get()==="dark" ? "light":"dark");
+  }};
 
-  function applyToGrad(id, c1, c2){
-    const g = document.getElementById(id);
-    if (!g) return;
-    const stops = g.querySelectorAll("stop");
-    if (stops[0]) stops[0].setAttribute("stop-color", c1);
-    if (stops[1]) stops[1].setAttribute("stop-color", c2);
+  /* ---------- Time Zone (single source of truth) ---------- */
+  const TZ_KEY = "sofc.tz";
+  const url = new URL(location.href);
+  const paramTZ = url.searchParams.get("tz");
+  const tz = paramTZ || load(TZ_KEY, Intl.DateTimeFormat().resolvedOptions().timeZone);
+  store(TZ_KEY, tz);
+  doc.dataset.tz = tz;
+  window.SOFTZ = { get: () => doc.dataset.tz, set: (z) => { doc.dataset.tz = z; store(TZ_KEY, z); window.dispatchEvent(new CustomEvent("accent:change",{detail:{tz:z}})); } };
+
+  /* ---------- Accent variables (season + lunar tint) ---------- */
+  function setAccents(seed = Date.now()){
+    // gentle daily hue drift + lunar weighting (if exposed by moons.js)
+    const day = Math.floor(seed / 86400000);
+    const base = (day % 360);
+    const lunar = (window.__LUNAR_ACCENT__ || 0); // 0-1
+    const hueA = (base + 182) % 360;
+    const hueB = (base + 32)  % 360;
+
+    // lerp to aqua/gold by lunar intensity
+    const aqua = `oklch(0.86 0.12 ${200 + lunar*10})`;
+    const gold = `oklch(0.86 0.14 ${95  + lunar*10})`;
+
+    doc.style.setProperty("--accent", aqua);
+    doc.style.setProperty("--accent-2", gold);
+    doc.style.setProperty("--moon-accent", aqua);
+    doc.style.setProperty("--moon-accent-2", gold);
+    doc.style.setProperty("--season-a", `oklch(0.25 0.06 ${hueA})`);
+    doc.style.setProperty("--season-b", `oklch(0.18 0.04 ${hueB})`);
   }
+  setAccents();
+  window.addEventListener("accent:lunar", (e)=>{ window.__LUNAR_ACCENT__ = e.detail.intensity||0; setAccents(); });
 
-  function setAccents(c1, c2){
-    setVar("--moon-accent", c1);
-    setVar("--moon-accent-2", c2);
-    applyToGrad("mbGrad", c1, c2);
-    applyToGrad("rg", c1, c2);
-    document.dispatchEvent(new Event("sof:accent-change"));
-  }
-
-  // Theme toggle (optional button with [data-theme-toggle])
-  function getTheme(){
-    try{
-      return localStorage.getItem(THEME_KEY) ||
-        ((window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark");
-    }catch{ return "dark"; }
-  }
-  function setTheme(t){
-    root.setAttribute("data-theme", t);
-    try{ localStorage.setItem(THEME_KEY, t); }catch{}
-    document.dispatchEvent(new CustomEvent("sof:theme", {detail:{theme:t}}));
-  }
-
-  document.addEventListener("click", (e)=>{
-    const btn = e.target.closest("[data-theme-toggle]");
-    if (!btn) return;
-    const cur = getTheme();
-    setTheme(cur === "dark" ? "light" : "dark");
-  }, {passive:true});
-
-  // Hook: moons.js can dispatch sof:phase to tint accents
-  document.addEventListener("sof:phase", (e)=>{
-    const illum = Math.max(0, Math.min(1, Number(e.detail?.illum ?? 0)));
-    const cold = "#7af3ff", warm = "#f3c97a";
-    const c1 = mixHex(cold, warm, illum*0.7);
-    const c2 = mixHex(warm, cold, (1-illum)*0.7);
-    setAccents(c1, c2);
-  });
-
-  // Public
-  window.SOF_ACCENTS = {
-    set: setAccents,
-    theme: { get:getTheme, set:setTheme }
-  };
-
-  // Initialize now
-  setTheme(getTheme());
+  /* ---------- helpers on window (opt) ---------- */
+  window.SOFAccents = { refresh: setAccents };
 })();
