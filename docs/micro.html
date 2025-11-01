@@ -2,49 +2,103 @@
 <html lang="en" dir="ltr">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <script>
+    // Keep <base> only on the live GitHub Pages site; remove for repo preview/local
+    (function () {
+      var live = "ssnfts24.github.io";
+      if (location.hostname !== live) {
+        var b = document.querySelector("base"); if (b) b.remove();
+      }
+    })();
+  </script>
+
   <meta charset="utf-8" />
-  <title>90-Second Micro-Run — Scroll of Fire</title>
+  <title>⏳ 90-Second Micro-Run — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
-  <meta name="description" content="A single compact 90-second loop that paces Eq.Ω updates with breath, then logs one undeniable witness.">
+  <meta name="description" content="A compact 90-second loop that paces Eq.Ω with breath, then logs one undeniable witness to your Ledger.">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/micro.html" />
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
-  <style>.wrap{max-width:840px;margin:0 auto;padding:20px 16px 80px}.title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);-webkit-background-clip:text;background-clip:text;color:transparent}#ring{width:220px;display:block;margin:8px auto}</style>
+
+  <!-- CSS -->
+  <link rel="preload" as="style" href="assets/css/codex.css?v=3.1">
+  <link rel="stylesheet" href="assets/css/codex.css?v=3.1" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=3.1"></noscript>
+
+  <!-- Page polish -->
+  <style>
+    :root{ --ring-size: clamp(200px, 38vw, 260px); }
+    body{ margin:0 }
+    .wrap{ max-width:880px; margin:0 auto; padding:20px 16px 84px; }
+    .title{
+      font-family:"Crimson Pro",serif; font-weight:800; text-align:center;
+      font-size: clamp(28px,3.6vw,44px); margin:8px 0 6px;
+      background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);
+      -webkit-background-clip:text; background-clip:text; color:transparent
+    }
+    .subtitle{ text-align:center; margin:0 0 10px }
+    .crumbs{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap }
+    #ring{ width:var(--ring-size); display:block; margin:12px auto }
+    .ring-bg{ fill:none; stroke:#202534; stroke-width:10 }
+    .ring-fg{ fill:none; stroke:url(#grad); stroke-width:10; stroke-linecap:round; transition:stroke-dashoffset .9s linear }
+    .ring-phase{ font-weight:800; font-size:18px }
+    .ring-count{ font:700 16px/1 system-ui, -apple-system, Segoe UI; opacity:.9 }
+    .lab-row{ display:flex; flex-wrap:wrap; gap:10px; }
+    .lab-input{ flex:1 1 220px }
+    .row-center{ justify-content:center }
+    .ghost{ background:transparent }
+    .meta.small{ font-size:.9rem; opacity:.8 }
+    .hint{ color: color-mix(in srgb, currentColor 70%, transparent) }
+    .kbd{ font-weight:700; border:1px solid var(--line,#2a3242); border-radius:8px; padding:.12rem .36rem }
+    @media (prefers-reduced-motion:reduce){
+      .ring-fg{ transition:none }
+    }
+  </style>
 </head>
 <body>
 <main class="wrap">
   <header class="page-head fancy-head">
     <h1 class="title">⏳ 90-Second Micro-Run</h1>
-    <p class="subtitle">Eq.Ω cadence in one minute-and-a-half: <b>𝓘 → 𝓛 → 𝓒 → 𝓢</b>, then one witness line.</p>
-    <nav class="crumbs" style="display:flex;gap:8px;justify-content:center">
-      <a class="cta" href="index.html">← Codex</a><a class="cta" href="teach.html">Teaching Lab</a>
+    <p class="subtitle">Eq.Ω cadence: <b>𝓘 → 𝓛 → 𝓒 → 𝓢</b>, then log one witness line.</p>
+    <nav class="crumbs">
+      <a class="cta" href="index.html">← Codex</a>
+      <a class="cta" href="teach.html">Teaching Lab</a>
     </nav>
   </header>
 
   <section class="card">
     <h2>Protocol</h2>
     <ol class="list">
-      <li>Set a carrier Π<sub>ν</sub> (type or leave blank).</li>
+      <li>Set a carrier Π<sub>ν</sub> (or leave blank).</li>
       <li>Type one clean intention line (Eq.16).</li>
       <li>Press <b>Start</b>. Follow the prompts. Total ≈ 90s.</li>
     </ol>
+
     <div class="lab-row" style="gap:12px">
-      <input id="car" class="lab-input" placeholder="Carrier (432 / 528 / 369)">
+      <input id="car" class="lab-input" inputmode="numeric" pattern="[0-9]*" placeholder="Carrier (432 / 528 / 369)">
       <input id="line" class="lab-input" placeholder="Intention line (8–12 words)…">
       <button id="go" class="lab-btn">Start</button>
+      <button id="pause" class="lab-btn ghost" disabled>Pause</button>
+      <button id="reset" class="lab-btn ghost" disabled>Reset</button>
     </div>
 
-    <svg id="ring" viewBox="0 0 120 120" aria-label="micro ring">
+    <svg id="ring" viewBox="0 0 120 120" aria-label="Micro-run progress">
+      <defs>
+        <linearGradient id="grad" x1="0" x2="1">
+          <stop offset="0" stop-color="var(--accent,#7af3ff)"/>
+          <stop offset="1" stop-color="var(--accent-2,#f3c97a)"/>
+        </linearGradient>
+      </defs>
       <circle cx="60" cy="60" r="54" class="ring-bg"/>
       <circle id="fg" cx="60" cy="60" r="54" class="ring-fg" pathLength="100"/>
       <text id="phase" x="60" y="52" class="ring-phase" text-anchor="middle">Ready</text>
       <text id="count" x="60" y="72" class="ring-count" text-anchor="middle">—</text>
+      <title id="ringTitle">Micro-run progress ring</title>
     </svg>
 
-    <div class="lab-row" style="justify-content:center">
-      <button id="stop" class="lab-btn ghost">Stop</button>
+    <div class="lab-row row-center">
+      <button id="stop" class="lab-btn ghost" disabled>Stop</button>
     </div>
+    <p class="meta small hint">Shortcuts: <span class="kbd">Enter</span>/<span class="kbd">Space</span> start • <span class="kbd">P</span> pause/resume • <span class="kbd">Esc</span> stop.</p>
   </section>
 
   <section class="card">
@@ -52,58 +106,247 @@
     <textarea id="wit" rows="3" placeholder="One undeniable detail…"></textarea>
     <div class="lab-row">
       <button id="toLedger" class="lab-btn" disabled>Send to Ledger</button>
+      <button id="copy" class="lab-btn ghost">Copy</button>
+      <button id="clear" class="lab-btn ghost">Clear</button>
     </div>
-    <p class="meta">Short + honest > long + vague.</p>
+    <p class="meta">Short + honest &gt; long + vague.</p>
   </section>
 
   <footer class="footer">
     <div class="divider" aria-hidden="true"></div>
     <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+    <p class="meta small">TZ: <code id="tzLabel">—</code> • Date: <code id="dateLabel">—</code></p>
   </footer>
 </main>
 
+<!-- ===== Shared TZ core (keeps wall-time in sync with index) ===== -->
+<script>
+window.MoonTZ = (function(){
+  "use strict";
+  const KEY = "sof_moons_tz";
+  function getTZ(){
+    return localStorage.getItem(KEY)
+      || (new URLSearchParams(location.search).get("tz"))
+      || Intl.DateTimeFormat().resolvedOptions().timeZone
+      || "UTC";
+  }
+  function setTZ(z){ localStorage.setItem(KEY, z); }
+  function wallParts(d, tz){
+    try{
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: tz, hour12:false, year:"numeric", month:"2-digit", day:"2-digit",
+        hour:"2-digit", minute:"2-digit", second:"2-digit"
+      }).formatToParts(d).reduce((m,p)=> (m[p.type]=p.value, m), {});
+      const Y=+parts.year, M=+parts.month, D=+parts.day, h=+parts.hour, m=+parts.minute, s=+parts.second;
+      return new Date(Date.UTC(Y, M-1, D, h, m, s));
+    }catch{ return new Date(d); }
+  }
+  function nowWall(){ return wallParts(new Date(), getTZ()); }
+  function isoDateWall(d){
+    const w = wallParts(d||new Date(), getTZ());
+    const y=w.getUTCFullYear(), m=String(w.getUTCMonth()+1).padStart(2,"0"), da=String(w.getUTCDate()).padStart(2,"0");
+    return `${y}-${m}-${da}`;
+  }
+  (function seed(){
+    const z=new URLSearchParams(location.search).get("tz");
+    if(z){
+      try{ new Intl.DateTimeFormat("en-CA",{timeZone:z}).format(new Date()); setTZ(z); }catch{}
+    }
+  })();
+  return { getTZ, setTZ, nowWall, isoDateWall };
+})();
+</script>
+
+<!-- ===== App Script (no deps) ===== -->
 <script>
 (function(){
-  const y=document.getElementById('yr'); if(y) y.textContent=String(new Date().getFullYear());
-  const go=$("#go"),stop=$("#stop"),fg=$("#fg"),phase=$("#phase"),count=$("#count"),toLedger=$("#toLedger");
-  const line=$("#line"), car=$("#car"), wit=$("#wit");
-  function $(s,r=document){return r.querySelector(s);}
-  let timer=null, t=0, plan=null; // plan phases in seconds
-  function setStroke(p){ fg.style.strokeDasharray="100"; fg.style.strokeDashoffset=String(100-p); }
+  "use strict";
+  const $ = (s, r=document)=>r.querySelector(s);
 
-  function buildPlan(){ // 90s total
-    // 𝓘 20s • 𝓛 20s • 𝓒 30s • 𝓢 20s
+  // DOM
+  const y=$("#yr"), tzLab=$("#tzLabel"), dateLab=$("#dateLabel");
+  const go=$("#go"), pauseBtn=$("#pause"), resetBtn=$("#reset"), stopBtn=$("#stop");
+  const fg=$("#fg"), phase=$("#phase"), count=$("#count");
+  const car=$("#car"), line=$("#line"), wit=$("#wit");
+  const toLedger=$("#toLedger"), btnCopy=$("#copy"), btnClear=$("#clear");
+
+  // Year & labels
+  y.textContent = String(new Date().getFullYear());
+  function paintLabels(){
+    tzLab.textContent = MoonTZ.getTZ();
+    dateLab.textContent = MoonTZ.isoDateWall();
+  }
+  paintLabels();
+
+  // Autosave (local)
+  const K = {
+    car: "sof_micro_car",
+    line: "sof_micro_line",
+    wit: "sof_micro_wit"
+  };
+  function save(){ try{
+    localStorage.setItem(K.car, car.value||"");
+    localStorage.setItem(K.line, line.value||"");
+    localStorage.setItem(K.wit, wit.value||"");
+  }catch{}}
+  function load(){ try{
+    car.value = localStorage.getItem(K.car)||"";
+    line.value = localStorage.getItem(K.line)||"";
+    wit.value  = localStorage.getItem(K.wit)||"";
+  }catch{}}
+  load();
+  ["input","change","keyup"].forEach(evt=>{
+    car.addEventListener(evt, save, {passive:true});
+    line.addEventListener(evt, save, {passive:true});
+    wit.addEventListener(evt, save, {passive:true});
+  });
+
+  // Haptics helper
+  const vibe = ms => { try{ navigator.vibrate && navigator.vibrate(ms); }catch{} };
+
+  // Ring helpers
+  function setStroke(pct){
+    // pct is 0..100
+    fg.style.strokeDasharray = "100";
+    fg.style.strokeDashoffset = String(100-pct);
+  }
+
+  // Plan (90s total): 20 + 20 + 30 + 20
+  function buildPlan(){
     return [
-      {k:"𝓘 Intend", s:20, note:"speak once on Πν"},
-      {k:"𝓛 Look",   s:20, note:"one undeniable detail"},
-      {k:"𝓒 Coalesce",s:30, note:"exhale longer, soften jaw"},
-      {k:"𝓢 Seal",   s:20, note:"whisper thanks; let settle"},
+      { key:"𝓘 Intend",   sec:20, note:"Speak once on Πν" },
+      { key:"𝓛 Look",     sec:20, note:"One undeniable detail" },
+      { key:"𝓒 Coalesce", sec:30, note:"Exhale longer, soften jaw" },
+      { key:"𝓢 Seal",     sec:20, note:"Whisper thanks; let settle" },
     ];
   }
 
-  function start(){
-    if(timer) return;
-    plan=buildPlan(); t=0; let idx=0, elapsed=0, total=plan.reduce((a,b)=>a+b.s,0);
-    toLedger.disabled=false;
-    tick();
-    timer=setInterval(tick,1000);
-    function tick(){
-      if(!plan) return;
-      if(elapsed>=plan[idx].s){ idx++; elapsed=0; if(idx>=plan.length){ stopRun(); return; } }
-      const ph=plan[idx]; phase.textContent=ph.k; count.textContent=(ph.s-elapsed)+"s"; setStroke((t/total)*100);
-      elapsed++; t++;
-    }
-  }
-  function stopRun(){ clearInterval(timer); timer=null; phase.textContent="Done"; count.textContent="—"; setStroke(100); }
+  // State
+  let plan=null, total=0, t=0, idx=0, elapsed=0, timer=null, running=false, paused=false;
 
-  go.addEventListener('click',start); stop.addEventListener('click',stopRun);
+  function enableRunUI(on){
+    pauseBtn.disabled = !on;
+    stopBtn.disabled  = !on;
+    resetBtn.disabled = !on;
+    toLedger.disabled = false;
+  }
+  function disableRunUI(){
+    pauseBtn.disabled = true;
+    stopBtn.disabled  = true;
+    resetBtn.disabled = true;
+  }
+
+  function start(){
+    if (running) return;
+    plan = buildPlan();
+    total = plan.reduce((a,b)=>a+b.sec,0);
+    t=0; idx=0; elapsed=0; running=true; paused=false;
+    go.textContent="Running…";
+    enableRunUI(true);
+    tick(); timer=setInterval(tick, 1000);
+    vibe(20);
+  }
+
+  function tick(){
+    if (!plan || paused) return;
+    if (elapsed >= plan[idx].sec){
+      idx++; elapsed=0;
+      if (idx >= plan.length){ return stopRun(true); }
+      vibe(15);
+    }
+    const ph = plan[idx];
+    phase.textContent = ph.key;
+    count.textContent = (ph.sec - elapsed) + "s";
+    setStroke((t/total)*100);
+    elapsed++; t++;
+  }
+
+  function pause(){
+    if (!running) return;
+    paused = !paused;
+    pauseBtn.textContent = paused ? "Resume" : "Pause";
+    vibe(10);
+  }
+
+  function reset(){
+    clearInterval(timer); timer=null;
+    running=false; paused=false; plan=null; total=0; t=0; idx=0; elapsed=0;
+    phase.textContent="Ready"; count.textContent="—"; setStroke(0);
+    go.textContent="Start"; disableRunUI();
+  }
+
+  function stopRun(done){
+    clearInterval(timer); timer=null; running=false; paused=false;
+    phase.textContent = done ? "Done" : "Stopped";
+    count.textContent = "—";
+    setStroke(100);
+    go.textContent="Start";
+    disableRunUI();
+    vibe(30);
+  }
+
+  // Buttons
+  go.addEventListener('click', start);
+  pauseBtn.addEventListener('click', pause);
+  resetBtn.addEventListener('click', reset);
+  stopBtn.addEventListener('click', ()=>stopRun(false));
+
+  // Keyboard shortcuts
+  addEventListener('keydown', (e)=>{
+    if (e.key === "Enter" || e.key === " "){ e.preventDefault(); if(!running) start(); else if(!paused) pause(); return; }
+    if (e.key.toLowerCase() === "p"){ e.preventDefault(); pause(); return; }
+    if (e.key === "Escape"){ e.preventDefault(); stopRun(false); return; }
+  });
+
+  // Ledger / copy / clear
   toLedger.addEventListener('click', ()=>{
     try{
-      const payload={intent:line.value||"Micro-run", carrier:car.value||"", witness:wit.value||"", tags:"#micro", quality:"", xi:null, t:Date.now()};
+      const payload = {
+        intent:  (line.value||"Micro-run").trim(),
+        carrier: (car.value||"").trim(),
+        witness: (wit.value||"").trim(),
+        tags: "#micro",
+        quality: "",
+        xi: null,
+        tz: MoonTZ.getTZ(),
+        date: MoonTZ.isoDateWall(),
+        t_wall_utc: MoonTZ.nowWall().toISOString(),
+        t: Date.now()
+      };
       localStorage.setItem("codex_ledger_inbox", JSON.stringify(payload));
       alert("Sent to Ledger. Open the Witness Ledger tab to add.");
-    }catch(_){ alert("Could not save locally—copy your note.");}
+    }catch(_){ alert("Could not save locally—copy your note."); }
   });
+
+  btnCopy.addEventListener('click', async ()=>{
+    try{
+      const txt = [line.value, wit.value].filter(Boolean).join(" — ");
+      await navigator.clipboard.writeText(txt || "");
+      btnCopy.textContent = "Copied"; setTimeout(()=>btnCopy.textContent="Copy", 900);
+    }catch{}
+  });
+
+  btnClear.addEventListener('click', ()=>{
+    if (!confirm("Clear carrier, line, and witness?")) return;
+    car.value = ""; line.value=""; wit.value="";
+    save();
+  });
+
+  // Validate carrier (optional—keeps your field clean)
+  car.addEventListener('blur', ()=>{
+    const v = car.value.trim();
+    if (!v) return;
+    if (!/^\d{3}$/.test(v)) { car.value=""; return; }
+    if (!["432","528","369","144","963","137"].includes(v)){ /* allow custom, but keep it numeric */ }
+  });
+
+  // Keep labels fresh if tab regains focus (TZ could change from index)
+  addEventListener('visibilitychange', ()=>{ if(!document.hidden) paintLabels(); });
+  addEventListener('focus', paintLabels, {passive:true});
+
+  // Initial ring state
+  setStroke(0);
 })();
 </script>
-</body></html>
+</body>
+</html>
