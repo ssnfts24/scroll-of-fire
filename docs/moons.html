@@ -73,7 +73,7 @@
       .ring{ width:96px }
     }
 
-    /* ---- Stable month grids + states (was only in legend before) ---- */
+    /* ---- Stable month grids + states ---- */
     @layer components{
       .calendar,.gregorian{ --cell:42px; display:grid; gap:8px }
       .calendar .head,.gregorian .head{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px }
@@ -95,6 +95,11 @@
       #calLegend .k-leap{ background: var(--accent-2) }
       #calLegend .k-today{ background: color-mix(in oklab, var(--accent) 60%, var(--ink)) }
     }
+
+    /* prompts mobile polish */
+    .prompts{ padding-left:1.1rem }
+    .prompts li{ margin:.25rem 0 }
+    @media (max-width: 480px){ .footer{ padding-bottom:72px } }
   </style>
 
   <!-- Preloads / Prefetch -->
@@ -664,7 +669,7 @@
       $("#nextMoonInfo").textContent=`Year ${yWall}/${yWall+1} in ${tz}.`;
     }
 
-    /* ---------- Practice prompts ---------- */
+    /* ---------- Practice prompts (always non-empty) ---------- */
     function injectPractices(idx){
       const list=$("#practiceList"); if(!list) return;
       const defs={1:["Clarify your purpose in one sentence.","Choose one devotion to repeat daily."],
@@ -680,7 +685,9 @@
         11:["Drop one non-essential.","Do a 10-minute release."],
         12:["Schedule one collaboration.","Name how this serves the whole."],
         13:["Thirteen breaths of stillness.","Close one loop with gratitude."]};
-      list.innerHTML=(defs[idx]||[]).map(t=>`<li>${t}</li>`).join("")||"<li class='meta'>—</li>";
+      const fallback=["Anchor your day with one clean act.","Name one integrity move you will make."];
+      const items = defs[idx] && defs[idx].length ? defs[idx] : fallback;
+      list.innerHTML=items.map(t=>`<li>${t}</li>`).join("");
     }
 
     /* ---------- Dual calendars ---------- */
@@ -702,25 +709,26 @@
       $("#remMeta").textContent= "13 × 28 fixed";
     }
 
+    // Sunday-first Gregorian grid
     function renderGregorianMonth(wall){
       const host=$("#gregCal"); if(!host) return;
       host.innerHTML="";
       const tz=MoonTZ.getTZ();
       const y=wall.getUTCFullYear(), m=wall.getUTCMonth();
       const first=new Date(Date.UTC(y,m,1)), last=new Date(Date.UTC(y,m+1,0));
-      const firstDow=(first.getUTCDay()+6)%7; // Mon=0
+      const firstDow=first.getUTCDay(); // 0=Sun
       const days=last.getUTCDate();
 
       const head=document.createElement("div"); head.className="head";
-      ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].forEach(d=>head.insertAdjacentHTML("beforeend",`<div class="dow">${d}</div>`));
+      ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(d=>head.insertAdjacentHTML("beforeend",`<div class="dow">${d}</div>`));
       host.appendChild(head);
 
       const row=document.createElement("div"); row.className="row";
       for(let i=0;i<firstDow;i++){ row.appendChild(blankCell()); }
+      const todayIso = MoonTZ.isoDateWall(MoonTZ.nowWall());
       for(let d=1; d<=days; d++){
         const cell=document.createElement("div"); cell.className="daycell gregorian";
         const thisWall = MoonTZ.wallParts(new Date(Date.UTC(y,m,d)),tz);
-        const todayIso = MoonTZ.isoDateWall(MoonTZ.nowWall());
         const cellIso  = MoonTZ.isoDateWall(thisWall);
         if(cellIso===todayIso) cell.classList.add("is-today");
         if(m===6 && d===25) cell.classList.add("is-doot");
@@ -860,6 +868,26 @@
     }
     $("#regenICS")?.addEventListener("click",()=>{ const r=calcRemnant(getWallFromControls()); refreshICS(r.year); });
 
+    /* ---------- Notes: save per (yearSpan + moonIdx + tz) ---------- */
+    (function notes(){
+      const area = document.querySelector("#noteText");
+      const btn  = document.querySelector("#btnSaveNote");
+      if(!area || !btn) return;
+
+      function key(){
+        const tz = MoonTZ.getTZ();
+        const w  = getWallFromControls();
+        const r  = calcRemnant(w);
+        return `sof_note_${r.yearSpan}_m${r.moonIdx}_${tz}`;
+      }
+      function load(){ try{ area.value = localStorage.getItem(key()) || ""; }catch{} }
+      function save(){ try{ localStorage.setItem(key(), area.value.trim()); toast("Note saved"); }catch{} }
+
+      btn.addEventListener("click", save);
+      addEventListener("sof:repaint", load);
+      load();
+    })();
+
     /* ---------- Paint loop ---------- */
     function paint(){
       const yEl=$("#yr"); if(yEl) yEl.textContent=String(new Date().getFullYear());
@@ -909,6 +937,9 @@
       if(r.inDOOT){ $("#remMeta").textContent = "Day Out of Time · outside 13×28"; }
 
       const jm=$("#jumpMoon"); if(jm&&r.moonIdx) jm.value=String(r.moonIdx);
+
+      // notify listeners (e.g., notes loader)
+      document.dispatchEvent(new Event("sof:repaint"));
     }
 
     function drawWeekDots(n){
@@ -963,8 +994,8 @@
       addEventListener("resize",()=>{c.width=innerWidth; c.height=innerHeight;});
     })();
 
-    // First paint + seal links
-    paint(); syncSealLinks();
+    // First paint + seal links + astro fallback
+    paint(); syncSealLinks(); astroFallback();
 
     // Mini moonbar patch if CSS didn't apply stroke-width
     (function(){ const fg=$("#moonArcMini"); if(fg && !fg.getAttribute('stroke-width')) fg.setAttribute('stroke-width','10'); })();
