@@ -1,70 +1,23 @@
-/* ==========================================================================
-   Scroll of Fire — Design Tokens
-   - Color system (OKLCH-first), spacing, radii, shadows, z-index
-   - Light/Dark surfaces + accent pair wired to JS (accents.js)
-   ========================================================================== */
-@layer tokens {
-  :root{
-    /* Base palette (will be nudged by accents.js) */
-    --accent: oklch(0.86 0.12 200);
-    --accent-2: oklch(0.86 0.14 95);
-    --moon-accent: var(--accent);
-    --moon-accent-2: var(--accent-2);
-    --season-a: oklch(0.25 0.06 182);
-    --season-b: oklch(0.18 0.04 32);
+@layer tokens{
+:root{
+  /* base palette */
+  --bg:#0b0b0f; --bg-elev:#0e0e12; --card:#121219; --ink:#eae7df; --muted:#b8b3a6; --line:#2a2a33;
+  --accent:#7af3ff; --accent-2:#7aa8ff; --gold:#f3c97a; --alert:#ff7864; --good:#6fe7a0;
 
-    /* Light */
-    --bg: #f7fbff;
-    --bg-elev: #eef3f8;
-    --ink: #0c0f14;
-    --muted: #5c6474;
-    --line: #d7dde6;
-    --card: #ffffff;
-    --glow-a: 0 0 0 1px color-mix(in oklch, var(--accent) 14%, transparent),
-              0 0 30px color-mix(in oklch, var(--accent) 18%, transparent);
+  /* moon hues */
+  --moon-1:#6FE7FF; --moon-2:#B1C7FF; --moon-3:#7AF3FF; --moon-4:#7BF3B8; --moon-5:#FFD27A;
+  --moon-6:#A7FFCF; --moon-7:#7AF3FF; --moon-8:#9BD3FF; --moon-9:#FFBC6F; --moon-10:#FFD9A6;
+  --moon-11:#B8C7FF; --moon-12:#CFEFFF; --moon-13:#E7D1FF;
 
-    /* Typo */
-    --font-sans: Inter, ui-sans-serif, system-ui, Segoe UI, Roboto, Apple Color Emoji, Noto Color Emoji, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-    --font-serif: "Crimson Pro", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  /* sizing */
+  --radius:16px; --radius-lg:22px; --pad:14px;
 
-    /* Scale */
-    --radius: 14px;
-    --radius-lg: 20px;
-    --radius-sm: 10px;
-    --space-1: 4px;
-    --space-2: 8px;
-    --space-3: 12px;
-    --space-4: 16px;
-    --space-5: 20px;
-    --space-6: 24px;
-    --space-8: 32px;
-    --space-10: 40px;
-
-    /* Shadows */
-    --shadow-1: 0 1px 1px rgba(0,0,0,.05), 0 2px 6px rgba(0,0,0,.06);
-    --shadow-2: 0 6px 20px rgba(0,0,0,.10);
-    --shadow-3: 0 10px 34px rgba(0,0,0,.14);
-
-    /* Z */
-    --z-header: 40;
-    --z-fx: 0;
-  }
-
-  /* Dark theme surfaces */
-  html[data-theme="dark"]{
-    --bg: #0b0b0f;
-    --bg-elev: #0f1118;
-    --ink: #ece7dd;
-    --muted: #a7b1ca;
-    --line: #202636;
-    --card: #12141d;
-    --shadow-1: 0 1px 1px rgba(0,0,0,.2), 0 2px 10px rgba(0,0,0,.25);
-    --shadow-2: 0 8px 26px rgba(0,0,0,.35);
-    --shadow-3: 0 14px 44px rgba(0,0,0,.48);
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    :root{ scroll-behavior: auto }
-  }
+  /* fx */
+  --rim:0 0 0 1px color-mix(in oklch, var(--ink) 6%, transparent), 0 10px 26px rgba(0,0,0,.35);
+  --shine:linear-gradient(180deg, rgba(255,255,255,.06), transparent);
+}
+:root[data-theme="light"]{
+  --bg:#f7fbff; --bg-elev:#ffffff; --card:#fff; --ink:#171a20; --muted:#57607a; --line:#dfe6ef;
+  --accent:#007e92; --accent-2:#3b6fff; --gold:#8c6a1e;
+}
 }
