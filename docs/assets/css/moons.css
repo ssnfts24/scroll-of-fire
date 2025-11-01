@@ -2,7 +2,7 @@
    Scroll of Fire — 13 Moons / Living Clock
    File: assets/css/moons.css
    Purpose: page-specific polish for moons.html (widgets, wheel, maps)
-   Version: v1.2 (2025-11-01) — mobile-first + safe-area + fluid type
+   Version: v1.3 (2025-11-01) — visibility hardening + mobile grids + sticky heads
    ====================================================================== */
 
 @layer tokens, base, components, astrology, utilities, remnant, legacy;
@@ -160,15 +160,21 @@
     box-shadow: 0 0 16px color-mix(in oklch, var(--moon-accent) 45%, transparent);
   }
 
-  /* Mini moonbar */
+  /* Mini moonbar — visibility hardening */
   .moonbar{
     background: linear-gradient(180deg, #0d141e, #0a1018);
     border:1px solid color-mix(in oklch, var(--moon-accent) 18%, var(--moon-line));
     border-radius: 14px; padding:8px 10px;
     box-shadow: 0 6px 20px rgba(0,0,0,.35);
+    isolation:isolate;
   }
-  .moonbar .mb-bg{ stroke:#1b2231 }
-  .moonbar .mb-fg{ stroke:url(#mbGrad); stroke-linecap:round }
+  .moonbar svg{ width:100%; height:auto; min-height:38px; display:block }
+  .moonbar .mb-bg{ stroke:#1b2231; stroke-width:8 }
+  .moonbar .mb-fg{
+    stroke:url(#mbGrad), var(--moon-accent);
+    stroke-linecap:round; stroke-width:10;
+    filter: drop-shadow(0 0 8px color-mix(in oklch, var(--moon-accent) 55%, transparent));
+  }
 
   .moonbar .tag.yhwh{
     background: linear-gradient(90deg, color-mix(in oklch, var(--moon-accent) 15%, transparent), transparent);
