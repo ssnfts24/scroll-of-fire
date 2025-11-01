@@ -1,221 +1,133 @@
 /* ==========================================================================
-   Scroll of Fire — Moons Page Skin
+   Scroll of Fire — Astrology Panel Skin
    Depends on: tokens.css, core.css
-   Scopes: moon badge, week dots, year map, dual calendars, practice,
-           codex block, mini share card, mobile polish
-   Theme: Wizard of YHWH • lunar aqua→gold tints
+   Scopes: planet chips, zodiac wheel labels, house lines, aspects table,
+           badges/legend, responsive polish
+   Theme: Wizard of YHWH — aqua↔gold gradients, soft star glows
    ========================================================================== */
 
-@layer components, utilities;
+@layer astrology, utilities;
 
-/* ------------------------------ Moon Badge -------------------------------- */
-@layer components {
-  .moon-badge{
-    display:flex; flex-wrap:wrap; align-items:center; gap:14px;
+/* ------------------------------ Planet Chips ------------------------------ */
+@layer astrology {
+  .astro .chip{
+    transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
   }
-  .moon-badge .pill{background:rgba(255,255,255,.03)}
-  #moonChip{
-    --glow-c: color-mix(in oklch, var(--aqua) 40%, transparent);
-    box-shadow: 0 0 0 1px var(--line), 0 0 24px var(--glow-c) inset;
-    padding:8px 12px;
+  .astro .chip:focus-visible{ outline: none; box-shadow: 0 0 0 2px var(--focus), var(--glow-aqua) }
+  .astro .chip:hover{ transform: translateY(-1px); box-shadow: 0 4px 18px rgba(0,0,0,.28), var(--glow-aqua) }
+  .astro .chip[aria-pressed="true"]{
+    background: linear-gradient(180deg, rgba(122,243,255,.12), rgba(243,201,122,.10));
+    border-color: color-mix(in oklch, var(--aqua) 45%, var(--line));
   }
-  #sourceChip{
-    border-color:color-mix(in oklch, var(--gold) 40%, var(--line));
-    box-shadow:var(--glow-gold)
-  }
-  .weekrow{display:flex; align-items:center; gap:10px; margin-top:8px}
-  .weeklabel{color:var(--muted); font-size:var(--fs-sm)}
-  #weekDots{
-    --dot: 11px;
-    display:grid; grid-template-columns: repeat(7, var(--dot)); gap:7px;
-    padding:6px 8px; background:rgba(255,255,255,.02);
-    border:1px solid var(--line); border-radius:10px;
-  }
-  #weekDots .d{
-    width:var(--dot); height:var(--dot); border-radius:999px; background:var(--line);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
-  }
-  #weekDots .d.is-past{ background: color-mix(in oklch, var(--aqua) 35%, var(--line)) }
-  #weekDots .d.is-now{
-    background: var(--aqua);
-    box-shadow: 0 0 0 3px color-mix(in oklch, var(--aqua) 25%, transparent);
-  }
-
-  /* Day Out Of Time notice */
-  #dootWarn{background:rgba(122,168,255,.06); border:1px solid #2a3b66; padding:10px 12px; border-radius:12px}
+  .astro .chip b{ letter-spacing:.2px }
+  .astro .chip .pos{ opacity:.85 }
+  .astro .chip .sign{ opacity:.9; color: var(--aqua) }
+  .astro .more summary{ cursor:pointer; list-style:none }
+  .astro .more summary::-webkit-details-marker{ display:none }
 }
 
-/* ------------------------------ Mini Moonbar ------------------------------ */
-@layer components {
-  .moonbar[data-size="compact"]{margin-top:10px}
-  .moonbar .moonbar-share{background:rgba(255,255,255,.02)}
-  .moonbar .moonbar-share:hover{filter:brightness(1.1)}
-  .moonbar .moonbar-tz{
-    display:inline-flex; align-items:center; justify-content:center;
-    width:38px; height:34px; border-radius:10px; border:1px dashed var(--line);
-    font-weight:700; letter-spacing:.4px; color:var(--muted);
+/* ------------------------------ Zodiac Wheel ------------------------------ */
+@layer astrology {
+  .astro-wheel{
+    --label: #a7b1ca;
+    --tick:  #2a3242;
+    --rim:   color-mix(in oklch, var(--aqua) 60%, transparent);
+    position:relative; padding:8px; border:1px solid var(--line); border-radius:16px;
+    background: linear-gradient(145deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
   }
-}
-
-/* ------------------------------ Controls ---------------------------------- */
-@layer components {
-  #today-head{display:flex; align-items:center; gap:8px}
-  #moonLine{opacity:.9}
-  .keys{margin-top:4px}
-  #jumpMoon{background:rgba(255,255,255,.03)}
-}
-
-/* ------------------------------ Lunar Sim --------------------------------- */
-@layer components {
-  .sim{display:grid; grid-template-columns: 280px 1fr; align-items:center; gap:14px}
-  #simMoon{
-    border-radius:999px; background: radial-gradient(130% 130% at 50% 40%, #0d111a, #07090f);
-    border:1px solid var(--line); box-shadow: var(--shadow-soft), var(--glow-aqua);
+  .astro-wheel::after{
+    content:""; position:absolute; inset:0; border-radius:16px; pointer-events:none;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.04) inset, 0 0 32px rgba(122,243,255,.06) inset;
   }
-  #phaseLine{font-weight:700}
-  #phaseMeta{color:var(--muted)}
-  #numLine{font-weight:700}
-  #energyQuote{font-style:italic}
-  @media (max-width: 780px){
-    .sim{grid-template-columns: 1fr}
-    #simMoon{margin:auto}
+
+  /* SVG labels/ticks default styles (populated by JS) */
+  #houseLines line{ stroke: var(--tick); stroke-width:.9 }
+  #signLabels text{
+    fill: var(--label);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing:.4px;
+    paint-order: stroke;
+    stroke: #0b0f16;
+    stroke-width: 2px; /* halo */
+  }
+
+  /* Planet dots inherit element-color classes from core.css */
+  #planetDots .dot{ filter: drop-shadow(0 0 6px rgba(0,0,0,.3)) }
+
+  /* Animated sweep when new data arrives (JS toggles .sweep) */
+  #astroWheel.sweep { animation: aw-sweep 1400ms ease }
+  @keyframes aw-sweep {
+    from { opacity:.65; transform: scale(.985) }
+    60%  { opacity:1;   transform: scale(1) }
+    to   { opacity:1 }
   }
 }
 
-/* ------------------------------ Year Map ---------------------------------- */
-@layer components {
-  .year-map{min-width:680px}
-  .year-map th:nth-child(1), .year-map td:nth-child(1){text-align:center; width:44px}
-  .year-map th:nth-child(4), .year-map th:nth-child(5){width:220px}
-  .year-map tbody tr:hover td:nth-child(1){filter:brightness(1.2)}
+/* ------------------------------ Aspect Legend/Table ----------------------- */
+@layer astrology {
+  .legend{
+    display:flex; flex-wrap:wrap; gap:8px; padding:6px 0;
+  }
+  .legend .badge{
+    font-weight:700; border-radius:999px; padding:6px 10px;
+    background: rgba(255,255,255,.04); border:1px solid var(--line);
+  }
+  .asp-table{
+    width:100%; margin-top:6px; border-collapse:separate; border-spacing:0;
+  }
+  .asp-table thead th{
+    font-size: var(--fs-sm); color: var(--muted); font-weight:700;
+    border-bottom:1px solid var(--line); padding:8px 10px;
+  }
+  .asp-table tbody td{
+    padding:10px; border-bottom:1px dashed var(--line); vertical-align:middle;
+  }
+  .asp-table tbody tr:hover{
+    background: linear-gradient(90deg, rgba(122,243,255,.06), transparent);
+  }
+  .asp-table .deg{ font-variant-numeric: tabular-nums; letter-spacing:.2px }
+  .asp-table .orb-tight{ color: var(--aqua) }
+  .asp-table .orb-wide{ color: var(--muted) }
 }
 
-/* ------------------------------ Compare (Dual Calendars) ------------------ */
-@layer components {
-  .compare{
-    display:grid; gap:var(--grid-gap);
-    grid-template-columns: 1fr 1fr;
-    margin-top:14px;
+/* ------------------------------ Glyph Helpers ----------------------------- */
+@layer astrology {
+  /* Optional fallback emoji for platforms without glyph font */
+  .z-glyph{
+    font-family: ui-symbols, "Segoe UI Symbol", "Apple Color Emoji", "Noto Color Emoji", system-ui, sans-serif;
+    font-size: 12px; opacity:.9;
   }
-  .compare .panel{min-height:320px}
-  .calendar, .gregorian{padding:10px 12px}
+  .pl-glyph{
+    font-family: ui-symbols, "Segoe UI Symbol", "Apple Color Emoji", "Noto Color Emoji", system-ui, sans-serif;
+    font-size: 12px; opacity:.95;
+  }
+}
 
-  /* Remnant month (13×28) */
-  #remCal{
-    --cell: 36px;
-    display:grid; gap:6px;
-    grid-template-columns: repeat(7, var(--cell));
-    grid-auto-rows: var(--cell);
-    background:linear-gradient( to bottom right, rgba(255,255,255,.02), rgba(255,255,255,.01) );
-    border:1px solid var(--line); border-radius:16px; padding:10px;
-  }
-  #remCal .c{
-    display:grid; place-items:center;
-    border-radius:10px; border:1px solid var(--line); background:rgba(255,255,255,.02);
-    font:700 13px/1 var(--font-sans);
-  }
-  #remCal .c.is-today{outline:3px solid color-mix(in oklch, var(--aqua) 35%, transparent)}
-  #remCal .c.is-dow{background:rgba(122,243,255,.06)}
-  #remCal .c.is-doot{background:rgba(122,168,255,.08); border-style:dashed}
+/* ------------------------------ Footer/meta of the panel ------------------ */
+@layer astrology {
+  .astro figcaption{ margin-top:8px; display:flex; align-items:center; gap:8px; justify-content:center }
+  .astro figcaption .sep{ opacity:.5 }
+  #astroSource{ color: var(--aqua) }
+}
 
-  /* Gregorian month */
-  #gregCal{
-    --cell: 36px;
-    display:grid; gap:6px; grid-template-columns: repeat(7, var(--cell));
-    grid-auto-rows: var(--cell);
-    background:linear-gradient( to bottom right, rgba(255,255,255,.02), rgba(255,255,255,.01) );
-    border:1px solid var(--line); border-radius:16px; padding:10px; position:relative;
-  }
-  #gregCal .wday{
-    grid-column: span 7; display:grid; grid-template-columns: repeat(7, 1fr);
-    gap:6px; margin-bottom:6px; color:var(--muted); font-size:var(--fs-sm)
-  }
-  #gregCal .cell{
-    position:relative; display:grid; place-items:center;
-    border-radius:10px; border:1px solid var(--line); background:rgba(255,255,255,.02);
-    font:700 13px/1 var(--font-sans);
-  }
-  #gregCal .cell .dots{position:absolute; left:6px; bottom:6px; display:flex; gap:4px}
-  #gregCal .evt1,.evt2,.doot,.leap,.today{width:6px;height:6px;border-radius:99px}
-  #gregCal .evt1{background:var(--aqua)}
-  #gregCal .evt2{background:var(--gold)}
-  #gregCal .doot{background:#7aa8ff}
-  #gregCal .leap{background:#9b88ff}
-  #gregCal .today{background:#9cff9a}
-  #calLegend{margin-top:10px}
-
+/* ------------------------------ Responsive ------------------------------- */
+@layer astrology {
   @media (max-width: 1040px){
-    .compare{grid-template-columns: 1fr}
+    .astro .chip{padding:7px 9px}
+    #astroWheel{ max-width: 520px }
+  }
+  @media (max-width: 640px){
+    .astro .chip{ font-size: 13px }
+    #astroWheel{ max-width: 420px }
   }
 }
 
-/* ------------------------------ Practice Card ----------------------------- */
-@layer components {
-  #practiceCard .prompts{margin:0 0 8px 18px}
-  #practiceCard .prompts li{margin:6px 0}
-  #btnSaveNote{box-shadow:var(--glow-aqua)}
-}
-
-/* ------------------------------ Codex Block ------------------------------- */
-@layer components {
-  .codex{display:grid; grid-template-columns: 260px 1fr; gap:16px}
-  .codex .pull{
-    font:italic 600 18px/1.3 var(--font-serif);
-    margin:8px 0; color:color-mix(in oklch, var(--aqua) 84%, var(--ink))
-  }
-  .codex-toc{
-    border:1px solid var(--line); border-radius:16px; padding:12px;
-    background:rgba(255,255,255,.02); position:sticky; top:12px; height:max-content
-  }
-  .codex-content img{border-radius:14px; border:1px solid var(--line)}
-  .goldline{height:1px; background:linear-gradient(90deg, transparent, var(--gold), transparent); margin:12px 0}
-
-  @media (max-width: 1040px){
-    .codex{grid-template-columns: 1fr}
-    .codex-toc{position:static}
-  }
-}
-
-/* ------------------------------ Astrology Panel (shell only) -------------- */
-@layer components {
-  .astro{position:relative}
-  .astro-head{display:flex; align-items:center; gap:10px; margin-bottom:8px}
-  .astro-head .seal{
-    padding:6px 8px; border-radius:12px; border:1px solid var(--line);
-    background:rgba(255,255,255,.03); box-shadow:var(--glow-gold)
-  }
-  .astro-grid{
-    display:grid; gap:12px; grid-template-columns: 1.2fr .8fr;
-  }
-  .astro-chips{display:flex; flex-wrap:wrap; gap:8px}
-  .chip{
-    display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:12px;
-    background:rgba(255,255,255,.03); border:1px solid var(--line); cursor:pointer;
-  }
-  .chip .dot{width:8px;height:8px;border-radius:99px}
-  .el-fire{background:#ff9a7a} .el-water{background:#7abfff}
-  .el-air{background:#9fe7ff}  .el-earth{background:#b7f1c9}
-  .el-aether{background:#e7d1ff}
-
-  .astro-wheel{display:grid; place-items:center}
-  #astroWheel{width:100%; max-width:420px; height:auto}
-
-  .asp-table{width:100%}
-  .asp-table td, .asp-table th{text-align:left}
-  .badge.asp{border-color:var(--line)}
-  .asp.conj{background:rgba(255,255,255,.05)}
-  .asp.sext{background:rgba(183,241,201,.08)}
-  .asp.sqr{background:rgba(255,154,122,.08)}
-  .asp.tri{background:rgba(159,231,255,.08)}
-  .asp.opp{background:rgba(231,209,255,.08)}
-
-  @media (max-width: 1040px){
-    .astro-grid{grid-template-columns: 1fr}
-  }
-}
-
-/* ------------------------------ Utilities --------------------------------- */
+/* ------------------------------ Utilities -------------------------------- */
 @layer utilities {
-  .ring-fg{stroke:var(--ring-fg)}
-  .ring-bg{stroke:var(--ring-bg)}
+  .asp.conj { border-color:#3a4254 }
+  .asp.sext { border-color:#2f5a46 }
+  .asp.sqr  { border-color:#5a3a32 }
+  .asp.tri  { border-color:#2b5568 }
+  .asp.opp  { border-color:#564268 }
 }
