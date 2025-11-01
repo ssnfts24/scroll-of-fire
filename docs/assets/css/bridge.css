@@ -1,125 +1,25 @@
 /* ==========================================================================
-   Scroll of Fire — Bridge (last-resort overrides)
-   Purpose: tame legacy/unlayered styles, fix specificity gaps, prevent jank
-   Layer: legacy (loads last)
-   Version: v1.3 · Remnant Sync (2025-11-01)
+   Scroll of Fire — Bridge / Legacy Aliases
+   - Ensures older HTML classnames still look OK after the refactor
+   - Safe to remove once all pages use the new classes
    ========================================================================== */
 @layer legacy {
+  /* Legacy pills/tags */
+  .badge { @apply .tag; } /* noop if your build doesn't support @apply; just map styles */
+  .button { @apply .lab-btn; }
 
-  /* ---------- Normalization: buttons, links-as-buttons, inputs ---------- */
-  .calendar__tools .btn,
-  .lab-btn,
-  .dl,
-  button,
-  [role="button"],
-  input[type="button"],
-  input[type="submit"],
-  input[type="reset"] {
-    font: 600 14px/1.2 var(--ui, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif);
-    border-radius: 12px;
-    border: 1px solid var(--line, #2a3242);
-    background: var(--card, #0e131a);
-    color: var(--ink, #edf2fb);
-    padding: 8px 12px;
-    display: inline-flex; align-items: center; gap: .5rem;
-    text-decoration: none;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-appearance: none;
-  }
-  .calendar__tools .btn:hover,
-  .lab-btn:hover,
-  .dl:hover,
-  button:hover,
-  [role="button"]:hover {
-    background: color-mix(in oklch, var(--card, #0e131a), white 4%);
-  }
-  /* Disabled / aria-disabled hardening */
-  button:disabled,
-  .lab-btn[aria-disabled="true"] {
-    opacity: .55;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
+  /* Older section wrappers */
+  .panel-head, .panel_head, .panel-header { border-bottom: 1px solid var(--line); padding: 10px 12px }
+  .panel-title, .panel__ttl { font: 800 18px/1.2 var(--font-sans); margin: 0 }
 
-  /* Inputs: avoid iOS zoom jump + inherit typography */
-  input, select, textarea, button {
-    font: inherit;
-    font-size: 16px; /* iOS zoom guard */
-  }
+  /* Pre-refactor calendar cells */
+  .cal .cell { composes: daycell; } /* if composes unsupported, duplicate minimal style: */
+  .cal .cell { height: 40px; display:grid; place-items:center; border-radius:10px; border:1px solid var(--line); background: var(--bg-elev) }
 
-  /* ---------- Compact tag/pill/badge fixes ---------- */
-  .tag, .pill, .badge {
-    border: 1px solid var(--line, #2a3242);
-    background: color-mix(in oklch, var(--surface, #0e131a) 98%, white);
-    color: var(--muted, #a7b1ca);
-    border-radius: 999px;
-    padding: .25rem .5rem;
-    display: inline-flex; align-items: center; gap: .35rem;
-    white-space: nowrap;
-  }
+  /* Old “tag” shapes */
+  .chip-outline { border:1px dashed var(--line); border-radius: 12px; padding: 6px 10px }
+  .muted { color: var(--muted) }
 
-  /* ---------- Focus visibility (keyboard) ---------- */
-  :where(a, button, [role="button"], .lab-btn, .dl):focus-visible {
-    outline: 2px solid color-mix(in oklch, var(--accent, #7af3ff) 75%, #123);
-    outline-offset: 2px;
-  }
-
-  /* ---------- Moonbar ring dash compat / fallbacks ---------- */
-  #moonArc[pathLength], #moonArcMini[pathLength] {
-    stroke-linecap: round;
-    stroke: url(#mbGrad);
-    fill: none;
-  }
-  /* If gradient id missing, fall back to accent */
-  #moonArc:not([stroke]) { stroke: var(--accent, #7af3ff); }
-  #moonArcMini:not([stroke]) { stroke: var(--accent, #7af3ff); }
-
-  /* ---------- Anti-jump on iOS toolbars ---------- */
-  html, body { overscroll-behavior: contain; }
-
-  /* ---------- Table overflow safety ---------- */
-  .year-map { width: 100%; border-collapse: collapse; }
-  .year-map th, .year-map td {
-    border-bottom: 1px solid var(--line, #2a3242);
-    padding: .5rem .6rem; text-align: left;
-    min-width: 0; /* prevent cell overflow clipping */
-  }
-
-  /* ---------- Provide a default named container for container queries ---------- */
-  .wrap { container-type: inline-size; container-name: wrap; }
-
-  /* ---------- Mobile toolbar wrapping ---------- */
-  @container wrap (max-width: 720px) {
-    .lab-row { flex-wrap: wrap; gap: .5rem; }
-    .moonbar { grid-template-columns: auto 1fr; }
-    .moonbar-actions { grid-column: 1 / -1; justify-content: flex-end; }
-  }
-
-  /* ---------- FB in-app browser guard ---------- */
-  .is-fbapp .lab-btn,
-  .is-fbapp select,
-  .is-fbapp input { transform: translateZ(0); }
-
-  /* ---------- Safety utilities ---------- */
-  /* Ensure flex/grid children can shrink instead of overflow */
-  * { min-width: 0; min-height: 0; }
-
-  /* Larger tap targets on coarse pointers when needed */
-  @media (pointer: coarse) {
-    .lab-btn, .dl, button, [role="button"] { min-height: 44px; }
-  }
-
-  /* High-contrast helper for OS accessibility toggles */
-  @media (prefers-contrast: more) {
-    .lab-btn, .dl, button, [role="button"] {
-      border-color: color-mix(in oklch, var(--accent, #7af3ff) 40%, var(--line, #2a3242));
-      box-shadow: 0 0 0 2px color-mix(in oklch, var(--accent, #7af3ff) 20%, transparent);
-    }
-  }
-
-  /* Reduce Motion: kill subtle background blends that could shimmer */
-  @media (prefers-reduced-motion: reduce) {
-    .lab-btn, .dl, button { transition: none !important; }
-  }
+  /* Fallback if @apply/composes unsupported (pure CSS copy) */
+  .badge, .chip-outline { background: color-mix(in oklch, var(--accent) 8%, var(--card)) }
 }
