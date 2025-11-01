@@ -1,15 +1,7 @@
 /* ==========================================================================
    Scroll of Fire — Moons UI (consolidated)
-   Layers: tokens (separate file) → base → components → astrology → utilities
-   v2025.11.02-c
-   --------------------------------------------------------------------------
-   Highlights
-   - Flashless typography + stable layout on mobile
-   - Larger ring on phones; crisp DPR rendering
-   - Week dots never wrap/jitter; sticky year map head
-   - Mini moonbar scales cleanly; long names ellipsize
-   - Calendar grid + states unified with legend keys
-   - Motion-safe effects (respects prefers-reduced-motion)
+   Layers: tokens → base → components → astrology → utilities
+   v2025.11.02-d (visual polish pass)
    ========================================================================== */
 
 /* ============================== BASE ==================================== */
@@ -17,124 +9,138 @@
   *{box-sizing:border-box}
   html,body{height:100%}
   html{color-scheme:dark light}
+  :root{
+    /* soft fallbacks in case tokens.css isn’t loaded */
+    --bg: #0b0b0f; --bg-elev:#10131b; --card:#121622;
+    --ink:#eae7df; --muted:#b8b3a6; --line:#202738;
+    --accent:#7af3ff; --accent-2:#7aa8ff; --gold:#f3c97a;
+    --radius:14px; --pad:14px;
+    --rim: 0 0 0 1px color-mix(in oklch, var(--line) 60%, transparent),
+           0 10px 30px rgba(0,0,0,.28);
+  }
   body{
     margin:0;background:var(--bg);color:var(--ink);
-    font:400 16px/1.55 Inter, system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial;
-    text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    font:400 16px/1.58 Inter, system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
   }
   img,svg,canvas{max-width:100%;height:auto}
   a{color:var(--accent);text-decoration:none}
   a:hover{text-decoration:underline}
-  .wrap{max-width:1100px;margin-inline:auto;padding-inline:clamp(12px,4vw,20px)}
-  .card{background:var(--bg-elev);border-radius:var(--radius);box-shadow:var(--rim);padding:var(--pad)}
-  .shine{background:linear-gradient(180deg,rgba(255,255,255,.025),transparent),var(--bg-elev)}
+  .wrap{max-width:1120px;margin-inline:auto;padding-inline:clamp(12px,4vw,22px)}
+  .card{background:
+        linear-gradient(180deg, rgba(255,255,255,.02), transparent),
+        var(--bg-elev);
+        border-radius:var(--radius);box-shadow:var(--rim);padding:var(--pad)}
+  .shine{background:
+        linear-gradient(180deg, rgba(255,255,255,.035), transparent 36%),
+        var(--bg-elev)}
   .divider{height:1px;background:var(--line);opacity:.65}
   .meta{color:var(--muted)}
   .mono{font-variant-numeric:tabular-nums;letter-spacing:.02em}
-  .kbd{font-family:ui-monospace, Menlo, Consolas, monospace;background:rgba(127,127,127,.12);border-radius:8px;padding:.08rem .35rem}
+  .kbd{font-family:ui-monospace, Menlo, Consolas, monospace;background:rgba(127,127,127,.14);border-radius:8px;padding:.08rem .35rem}
   .tag{display:inline-flex;gap:.35rem;align-items:center;border:1px solid var(--line);border-radius:999px;padding:.15rem .55rem}
-  .pill{display:inline-flex;gap:.35rem;align-items:center;border-radius:999px;background:rgba(127,127,127,.12);padding:.25rem .6rem}
+  .pill{display:inline-flex;gap:.35rem;align-items:center;border-radius:999px;background:rgba(127,127,127,.10);padding:.25rem .6rem}
   .lab-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  .lab-btn{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--line);padding:.45rem .75rem;border-radius:10px;background:transparent}
+  .lab-btn{
+    display:inline-flex;align-items:center;gap:.5rem;
+    border:1px solid var(--line);padding:.48rem .78rem;border-radius:11px;background:transparent;
+    transition:transform .08s ease, background-color .12s ease, border-color .12s ease;
+  }
+  .lab-btn:hover{background:rgba(127,127,127,.10);border-color:color-mix(in oklch, var(--line) 70%, var(--accent))}
+  .lab-btn:active{transform:translateY(1px)}
   .lab-btn.ghost{background:transparent}
-  .lab-input{border:1px solid var(--line);border-radius:10px;background:transparent;color:inherit;padding:.45rem .55rem}
-  .grid{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+  .lab-input{border:1px solid var(--line);border-radius:11px;background:transparent;color:inherit;padding:.48rem .55rem}
+  .grid{display:grid;grid-template-columns:2fr 1fr;gap:16px}
   .col-12{grid-column:1/-1} .col-8{grid-column:1/2} .col-4{grid-column:2/3} .col-6{grid-column:span 1}
   @media (max-width:960px){ .grid{grid-template-columns:1fr} .col-8,.col-6,.col-4{grid-column:1/-1}}
 
-  .fancy-head .title{margin:.2rem 0; font-size:clamp(1.25rem,4.3vw,1.75rem); line-height:1.1}
-  .subtitle{margin:.2rem 0 1rem 0; max-width:70ch}
+  .fancy-head .title{margin:.15rem 0;font-size:clamp(1.28rem,4.4vw,1.85rem);line-height:1.08}
+  .subtitle{margin:.2rem 0 1rem;max-width:70ch}
   .crumbs{display:flex;gap:8px;flex-wrap:nowrap;overflow:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .crumbs::-webkit-scrollbar{display:none}
 
-  .footer{max-width:1100px;margin:.8rem auto;padding:10px 16px}
+  .footer{max-width:1120px;margin:.9rem auto;padding:12px 16px}
   .sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
 }
 
 /* ============================ COMPONENTS ================================= */
 @layer components{
   /* -------- Header badge -------- */
-  .moon-badge{
-    display:flex;align-items:center;gap:12px;flex-wrap:wrap;row-gap:10px;
-  }
-  .ring{
-    width:clamp(104px,28vw,132px);position:relative;flex:0 0 auto;
-  }
+  .moon-badge{display:flex;align-items:center;gap:14px;flex-wrap:wrap;row-gap:10px}
+  .ring{width:clamp(116px,30vw,144px);position:relative;flex:0 0 auto}
   .ring .label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-  .ring .ring-bg{stroke:#1b2231;stroke-width:10;fill:none}
+  .ring .ring-bg{stroke:#152033;stroke-width:11;fill:none}
   .ring .ring-fg{
-    stroke:url(#rg), var(--accent);stroke-linecap:round;stroke-width:12;fill:none;stroke-dasharray:0 316;
-    filter:drop-shadow(0 0 8px color-mix(in oklch,var(--accent) 55%, transparent))
+    stroke:url(#rg), var(--accent);stroke-linecap:round;stroke-width:13;fill:none;stroke-dasharray:0 316;
+    filter:drop-shadow(0 0 10px color-mix(in oklch, var(--accent) 55%, transparent));
   }
 
-  /* -------- Week dots -------- */
+  /* -------- Week dots (no wrap / no jitter) -------- */
   .weekrow{display:flex;gap:10px;align-items:center;margin-top:10px}
   .weeklabel{opacity:.7;white-space:nowrap}
   .week{
-    display:grid;gap:6px;grid-template-columns:repeat(28,1fr);
-    min-width:min(560px,100%);
+    display:grid;grid-template-columns:repeat(28, minmax(8px, 1fr));gap:6px;min-width:min(560px,100%);
   }
-  .week .dot{height:8px;width:8px;border-radius:999px;background:#2a3242}
-  .week .dot.on{background:color-mix(in oklab,var(--accent) 80%, transparent)}
-  @media (max-width:720px){ .week{grid-template-columns:repeat(14,1fr)} }
+  .week .dot{height:8px;width:8px;border-radius:999px;background:#2a3242;box-shadow:0 1px 0 rgba(0,0,0,.35)}
+  .week .dot.on{background:color-mix(in oklab,var(--accent) 82%, transparent)}
+  @media (max-width:720px){ .week{grid-template-columns:repeat(14, minmax(8px, 1fr))} }
 
   /* -------- Compare calendars -------- */
-  .compare{display:grid;gap:12px;grid-template-columns:1fr}
+  .compare{display:grid;gap:14px;grid-template-columns:1fr}
   @media (min-width:960px){ .compare{grid-template-columns:1fr 1fr} }
   .panel{background:var(--bg-elev);border-radius:var(--radius);box-shadow:var(--rim)}
   .panel__head{display:flex;justify-content:space-between;align-items:end;gap:10px;padding:var(--pad)}
   .panel .calendar,.panel .gregorian{padding:var(--pad)}
   .legend{display:flex;flex-wrap:wrap;gap:10px;padding:0 var(--pad) var(--pad)}
 
-  /* -------- Year map -------- */
-  .year-map{border-collapse:separate;border-spacing:0;min-width:720px;width:100%}
+  /* -------- Year map (sticky head + compact TZ) -------- */
+  .year-map{border-collapse:separate;border-spacing:0;min-width:760px;width:100%}
   .year-map thead th{
     position:sticky;top:0;background:var(--bg-elev);z-index:1;border-bottom:1px solid var(--line)
   }
   .year-map tbody tr:nth-child(odd){background:color-mix(in oklab,var(--card) 85%, transparent)}
-  .year-map td,.year-map th{padding:.55rem .65rem}
+  .year-map td,.year-map th{padding:.58rem .7rem;vertical-align:middle}
+  .year-map td:nth-child(4), .year-map td:nth-child(5){white-space:nowrap;font-variant-numeric:tabular-nums}
+  .year-map .tz{opacity:.75;font-size:.925em}
 
-  /* -------- Mini moonbar -------- */
+  /* -------- Mini moonbar (crisp & scalable) -------- */
   .moonbar{
-    display:flex;align-items:center;gap:10px;padding:.5rem .65rem;border-radius:999px;
-    background:rgba(127,127,127,.08);border:1px solid var(--line);isolation:isolate
+    display:flex;align-items:center;gap:10px;padding:.55rem .7rem;border-radius:999px;
+    background:rgba(127,127,127,.09);border:1px solid var(--line);isolation:isolate
   }
-  .moonbar svg{width:40px;height:40px;min-height:38px;flex:0 0 auto}
-  .moonbar .mb-bg{stroke:#142233;stroke-width:8;opacity:.9}
+  .moonbar svg{width:44px;height:44px;min-height:38px;flex:0 0 auto}
+  .moonbar .mb-bg{stroke:#142233;stroke-width:9.5;opacity:.95}
   .moonbar .mb-fg{
-    stroke:url(#mbGrad), var(--accent);stroke-width:9;stroke-linecap:round;
-    filter:drop-shadow(0 0 6px color-mix(in oklch,var(--accent) 55%, transparent))
+    stroke:url(#mbGrad), var(--accent);stroke-width:10.5;stroke-linecap:round;
+    filter:drop-shadow(0 0 7px color-mix(in oklch,var(--accent) 55%, transparent))
   }
   .moonbar-info{display:flex;flex-direction:column;gap:2px;min-width:0}
   .moonbar-line{display:flex;gap:8px;align-items:center;min-width:0}
-  .moonbar-line #mbName{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw}
+  .moonbar-line #mbName{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:58vw}
   .moonbar-actions{margin-left:auto;display:flex;gap:6px;align-items:center}
-  .moonbar .moonbar-share{padding:.35rem .6rem;border:1px solid var(--line);border-radius:10px;background:transparent}
-  @media (min-width:880px){ .moonbar .mb-fg{stroke-width:10} }
+  .moonbar .moonbar-share{padding:.36rem .62rem;border:1px solid var(--line);border-radius:10px;background:transparent}
 
   /* -------- Calendar grid primitives -------- */
-  .calendar,.gregorian{ --cell:42px; display:grid; gap:8px }
+  .calendar,.gregorian{ --cell:44px; display:grid; gap:8px }
   .calendar .head,.gregorian .head{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px }
   .calendar .row,.gregorian .row{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px }
 
-  /* -------- Day cells -------- */
+  /* -------- Day cells + states -------- */
   .daycell{
-    min-height:var(--cell); background:var(--bg-elev); border:1px solid var(--line); border-radius:10px;
-    display:flex; align-items:flex-start; justify-content:flex-start; padding:.4rem .45rem; position:relative;
+    min-height:var(--cell); background:var(--bg-elev); border:1px solid var(--line); border-radius:11px;
+    display:flex; align-items:flex-start; justify-content:flex-start; padding:.45rem .5rem; position:relative;
   }
-  .daycell .n{ font:600 .95rem/1 Inter,system-ui; opacity:.9 }
-  .daycell .evt{ position:absolute; right:.45rem; bottom:.35rem; width:6px; height:6px; border-radius:999px; background:transparent }
-
-  /* -------- Day states -------- */
+  .daycell .n{ font:600 .97rem/1 Inter,system-ui; opacity:.92 }
+  .daycell .evt{ position:absolute; right:.5rem; bottom:.38rem; width:6px; height:6px; border-radius:999px; background:transparent }
   .daycell.is-dim{ opacity:.35 }
-  .daycell.is-today{ outline:2px solid var(--accent); outline-offset:1px }
-  .daycell.is-doot{ border-color: color-mix(in oklab, var(--gold) 60%, var(--line)) }
+  .daycell.is-today{ outline:2px solid var(--accent); outline-offset:1px; box-shadow:0 0 0 2px rgba(0,0,0,.12) inset }
+  .daycell.is-doot{ border-color: color-mix(in oklab, var(--gold) 62%, var(--line)) }
   .daycell.is-doot .evt{ background: var(--gold) }
-  .daycell.is-leap{ border-color: color-mix(in oklab, var(--accent-2) 60%, var(--line)) }
+  .daycell.is-leap{ border-color: color-mix(in oklab, var(--accent-2) 62%, var(--line)) }
   .daycell.is-leap .evt{ background: var(--accent-2) }
 
-  /* -------- Legend dots (match states) -------- */
-  #calLegend .k-dot{ display:inline-block; width:.7em; height:.7em; border-radius:50%; vertical-align:middle; margin-right:.35rem }
+  /* -------- Legend dots (mirror states) -------- */
+  #calLegend .k-dot{ display:inline-block; width:.72em; height:.72em; border-radius:50%; vertical-align:middle; margin-right:.35rem }
   #calLegend .k-evt1{ background: var(--accent) }
   #calLegend .k-evt2{ background: var(--accent-2) }
   #calLegend .k-doot{ background: var(--gold) }
@@ -142,36 +148,78 @@
   #calLegend .k-today{ background: color-mix(in oklab, var(--accent) 60%, var(--ink)) }
 
   /* -------- Inputs -------- */
-  #noteText{width:100%;min-height:120px;resize:vertical}
+  #noteText{
+    width:100%;min-height:130px;resize:vertical;
+    border:1px solid var(--line);border-radius:12px;background:rgba(127,127,127,.05);color:inherit;
+    padding:.65rem .75rem;
+  }
+
+  /* -------- Prompts list with clean counters -------- */
+  .prompts{counter-reset: p}
+  .prompts li{list-style:none;position:relative;padding-left:1.6rem;margin:.35rem 0}
+  .prompts li::before{
+    counter-increment:p;content:counter(p) ".";
+    position:absolute;left:0;top:0;color:var(--muted);font-variant-numeric:tabular-nums
+  }
+}
+
+/* ========================== LUNAR SIM POLISH ============================ */
+@layer components{
+  .sim{display:grid;grid-template-columns:280px 1fr;gap:12px;align-items:center}
+  @media (max-width:520px){ .sim{grid-template-columns:1fr} }
+  #simMoon{
+    background:
+      radial-gradient(120px 120px at 50% 45%, rgba(255,255,255,.05), transparent 60%),
+      linear-gradient(180deg, rgba(255,255,255,.02), transparent 35%);
+    border-radius:16px;border:1px solid var(--line);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.02), 0 10px 28px rgba(0,0,0,.25);
+  }
 }
 
 /* ============================= ASTROLOGY ================================ */
 @layer astrology{
   .astro{--moon-accent:var(--accent); --moon-accent-2:var(--gold)}
-  .astro-head{display:flex;align-items:center;gap:10px;justify-content:space-between;margin-bottom:.5rem}
+  .astro-head{display:flex;align-items:center;gap:10px;justify-content:space-between;margin-bottom:.55rem}
   .astro-head .seal{display:inline-flex;gap:.4rem;align-items:center}
-  .astro-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+  .astro-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
   @media (max-width:1024px){ .astro-grid{grid-template-columns:1fr} }
+
   .astro-chips{display:flex;flex-wrap:wrap;gap:8px}
-  .chip{border:1px solid var(--line);border-radius:999px;padding:.35rem .6rem;background:transparent}
-  .chip .dot{display:inline-block;width:.7em;height:.7em;border-radius:50%}
+  .chip{
+    border:1px solid var(--line);border-radius:999px;padding:.38rem .68rem;background:transparent;
+    transition:background-color .12s ease, border-color .12s ease;
+  }
+  .chip:hover{background:rgba(127,127,127,.10);border-color:color-mix(in oklch, var(--line) 70%, var(--accent))}
+  .chip .dot{display:inline-block;width:.72em;height:.72em;border-radius:50%}
   .el-fire{background:#ff8a73}.el-water{background:#6fc6ff}.el-air{background:#a2b1ff}.el-earth{background:#a8e7b2}.el-aether{background:#e7d1ff}
+
   .astro-wheel{display:block;max-width:460px;margin-inline:auto}
-  .astro-aspects .legend{display:flex;flex-wrap:wrap;gap:10px;margin:.4rem 0}
+  /* clearer ring & labels */
+  #astroWheel circle[stroke="#1b2231"]{stroke:#182235}
+  #astroWheel circle[stroke-opacity]{stroke-opacity:.52}
+  #signLabels text{fill:#b7c2de;font-weight:600;letter-spacing:.02em}
+
+  .astro-aspects .legend{display:flex;flex-wrap:wrap;gap:10px;margin:.5rem 0}
   .asp-table{display:block;max-width:100%;overflow:auto}
-  .asp-table table{min-width:520px}
+  .asp-table table{min-width:560px}
   .asp.conj{border-color:#b9b9b9}.asp.sext{border-color:#7ccfff}.asp.sqr{border-color:#ff9a7b}.asp.tri{border-color:#8be39f}.asp.opp{border-color:#c69bff}
 }
 
 /* ============================== UTILITIES =============================== */
 @layer utilities{
-  .badge{display:inline-flex;gap:.35rem;align-items:center;padding:.2rem .5rem;border:1px solid var(--line);border-radius:8px}
-  .pull{font-style:italic;border-left:3px solid var(--gold);padding-left:.8rem;opacity:.9}
+  .badge{display:inline-flex;gap:.35rem;align-items:center;padding:.22rem .52rem;border:1px solid var(--line);border-radius:9px}
+  .pull{font-style:italic;border-left:3px solid var(--gold);padding-left:.8rem;opacity:.93}
   .goldline{height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
-  .dl{display:inline-flex;align-items:center;gap:.35rem;border:1px dashed var(--line);padding:.45rem .75rem;border-radius:10px}
+  .dl{display:inline-flex;align-items:center;gap:.35rem;border:1px dashed var(--line);padding:.48rem .78rem;border-radius:11px}
+
+  /* Focus visibility across the page */
+  :is(a, button, [tabindex], .lab-input):focus-visible{
+    outline:2px solid color-mix(in oklch, var(--accent) 75%, white);
+    outline-offset:2px;border-radius:12px;
+  }
 
   /* Motion safety */
   @media (prefers-reduced-motion: reduce){
-    *, *::before, *::after{animation: none!important; transition:none!important}
+    *, *::before, *::after{animation:none!important;transition:none!important}
   }
 }
