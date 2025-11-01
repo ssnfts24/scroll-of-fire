@@ -1,92 +1,49 @@
-/* ==========================================================================
-   Scroll of Fire — 13 Moons
-   - Moonbar, rings, calendars, numerology, practice prompts
-   - Includes subtle starfield + glints for “wizard” vibe
-   ========================================================================== */
-@layer remnant {
-  /* Starfield canvas sits behind the UI (inserted in HTML) */
-  body.stars {
-    background-attachment: fixed;
-    background-image:
-      radial-gradient(1200px 700px at 10% -20%, color-mix(in oklch, var(--accent) 10%, transparent), transparent 60%),
-      radial-gradient(1200px 700px at 90% 120%, color-mix(in oklch, var(--accent-2) 10%, transparent), transparent 60%),
-      var(--bg);
-  }
+@layer components{
+/* header badge */
+.moon-badge{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ring{width:clamp(88px,9vw,120px);position:relative}
+.ring .label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .ring-bg{stroke:#1b2231;stroke-width:10;fill:none}
+.ring .ring-fg{stroke:url(#rg), var(--accent);stroke-linecap:round;stroke-width:12;fill:none;stroke-dasharray:0 316;filter:drop-shadow(0 0 10px rgba(122,243,255,.35))}
 
-  /* Moonbar mini */
-  .moonbar[data-size="compact"] { gap: 12px }
-  .moonbar .moonbar-line { display: flex; gap: 8px; align-items: baseline }
-  .moonbar .moonbar-tags { display: flex; gap: 8px; align-items: center; color: var(--muted) }
-  .moonbar .yhwh-on .tag.yhwh { background: color-mix(in oklch, var(--accent) 14%, var(--bg-elev)) }
+/* week dots */
+.weekrow{display:flex;gap:8px;align-items:center;margin-top:10px}
+.weeklabel{opacity:.7}
+.week{display:grid;grid-template-columns:repeat(14,minmax(8px,1fr));gap:6px}
+.week .dot{height:8px;width:8px;border-radius:999px;background:#2a3242}
+.week .dot.on{background:color-mix(in oklab, var(--accent) 80%, transparent)}
+@media (min-width:720px){ .week{grid-template-columns:repeat(28,1fr)} }
 
-  /* Progress ring (header badge) */
-  .moon-badge { display: flex; align-items: center; gap: 10px; flex-wrap: wrap }
-  .pill .k { font-weight: 800 }
+/* compare calendars */
+.compare{display:grid;gap:12px;grid-template-columns:1fr}
+@media (min-width:960px){ .compare{grid-template-columns:1fr 1fr} }
+.panel{background:var(--bg-elev);border-radius:var(--radius);box-shadow:var(--rim)}
+.panel__head{display:flex;justify-content:space-between;align-items:end;gap:10px;padding:var(--pad)}
+.panel .calendar,.panel .gregorian{padding:var(--pad)}
+.legend{display:flex;flex-wrap:wrap;gap:10px;padding:0 var(--pad) var(--pad)}
 
-  /* Week dots */
-  #weekDots { margin-top: 6px }
-  #weekDots .dot.today {
-    outline: 2px solid color-mix(in oklch, var(--accent) 70%, #fff);
-    outline-offset: 2px;
-    opacity: 1;
-  }
+/* year map */
+.year-map{border-collapse:separate;border-spacing:0;min-width:720px;width:100%}
+.year-map thead th{position:sticky;top:0;background:var(--bg);z-index:1}
+.year-map tbody tr:nth-child(odd){background:color-mix(in oklab, var(--card) 85%, transparent)}
+.year-map td,.year-map th{padding:.5rem .6rem}
 
-  /* Year map table */
-  .year-map tbody tr:hover { background: color-mix(in oklch, var(--accent) 6%, var(--bg-elev)) }
-  .year-map td:nth-child(1) { width: 36px; text-align: right; font-family: var(--font-mono) }
-  .year-map td:nth-child(4),
-  .year-map td:nth-child(5) { font-family: var(--font-mono) }
+/* mini moonbar */
+.moonbar{display:flex;align-items:center;gap:12px;padding:.5rem .65rem;border-radius:999px;background:rgba(127,127,127,.08);border:1px solid var(--line);isolation:isolate}
+.moonbar svg{width:100%;height:auto;min-height:34px}
+.moonbar .mb-bg{stroke:#142233;stroke-width:8;opacity:.9}
+.moonbar .mb-fg{stroke:url(#mbGrad), var(--accent);stroke-width:8;stroke-linecap:round;filter:drop-shadow(0 0 8px color-mix(in oklch, var(--accent) 55%, transparent))}
+.moonbar-info{display:flex;flex-direction:column;gap:2px}
+.moonbar-line{display:flex;gap:8px;align-items:center}
+.moonbar-actions{margin-left:auto;display:flex;gap:6px;align-items:center}
+.moonbar .moonbar-share{padding:.35rem .6rem;border:1px solid var(--line);border-radius:10px;background:transparent}
+@media (min-width:880px){ .moonbar .mb-fg{stroke-width:10} }
 
-  /* Dual calendars */
-  .calendar, .gregorian { --cell: 40px }
-  .calendar .row,
-  .gregorian .row { display: grid; grid-template-columns: repeat(7, var(--cell)); gap: 6px; margin-bottom: 8px }
-  .calendar .head,
-  .gregorian .head { display: grid; grid-template-columns: repeat(7, var(--cell)); gap: 6px; margin-bottom: 6px }
-  .calendar .dow,
-  .gregorian .dow { text-align: center; color: var(--muted); font-size: 12px }
+/* inputs */
+#noteText{width:100%;min-height:120px;resize:vertical}
+}
 
-  .daycell {
-    height: var(--cell); display: grid; place-items: center;
-    border-radius: 10px; border: 1px solid var(--line); background: var(--bg-elev);
-    position: relative; overflow: hidden;
-  }
-  .daycell .n { font-family: var(--font-mono); font-size: 13px }
-  .daycell .evt { position: absolute; bottom: 4px; left: 6px; display: flex; gap: 4px }
-  .daycell .evt i { width: 6px; height: 6px; border-radius: 50% }
-  .daycell.is-today { box-shadow: var(--glow-a) }
-  .daycell.is-doot { background: color-mix(in oklch, var(--accent-2) 12%, var(--bg-elev)) }
-  .daycell.is-leap { background: color-mix(in oklch, #b8ffd1 18%, var(--bg-elev)) }
-
-  .remnant .daycell.is-filled { background: color-mix(in oklch, var(--accent) 10%, var(--bg-elev)) }
-  .gregorian .daycell.is-dim  { opacity: .5 }
-
-  /* Numerology and quotes */
-  .sim { display: grid; grid-template-columns: 280px 1fr; gap: 10px; align-items: center }
-  @media (max-width: 560px){ .sim { grid-template-columns: 1fr } }
-
-  /* Practice list */
-  .prompts { padding-left: 18px }
-  .prompts li { margin: 6px 0 }
-  #noteText { margin-top: 6px }
-
-  /* Share card button (mini moonbar) */
-  .moonbar-share::after {
-    content: "⤴"; font-weight: 900; padding-left: 6px;
-  }
-
-  /* Little sparkles on hover (subtle) */
-  .card.shine:hover { box-shadow: var(--shadow-3) }
-  .card.shine:hover::after {
-    content:""; position:absolute; inset:-2px; pointer-events:none;
-    background: radial-gradient(400px 120px at 20% -20%, color-mix(in oklch, var(--accent) 14%, transparent), transparent 60%),
-                radial-gradient(400px 120px at 120% 120%, color-mix(in oklch, var(--accent-2) 14%, transparent), transparent 60%);
-    border-radius: inherit; opacity: .65;
-  }
-
-  /* Mobile nudges (complement to core.css) */
-  @media (max-width: 880px){
-    .calendar, .gregorian { --cell: 42px }
-    .daycell .n { font-size: 12px }
-  }
+/* tiny extras from utilities layer */
+@layer utilities{
+.wrap{max-width:1100px;margin-inline:auto;padding-inline:clamp(12px,4vw,20px)}
 }
