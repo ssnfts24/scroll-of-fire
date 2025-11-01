@@ -1,8 +1,8 @@
 /* ============================================================
    Scroll of Fire — CORE LAYER
    Global Layout, Grids, Cards, Widgets
-   Wizard of YHWH · Astronomy Core v4.1
-   Depends on: tokens.css  (@layer tokens)
+   Wizard of YHWH · Astronomy Core v4.2 (2025-11-01)
+   Depends on: tokens.css (@layer tokens)
    ============================================================ */
 
 @layer base, components, astrology, utilities, remnant, legacy;
@@ -10,7 +10,7 @@
 /* ------------------------------ Base ------------------------------ */
 @layer base {
   *, *::before, *::after { box-sizing: border-box; }
-  html { 
+  html {
     min-height: 100%;
     background: var(--bg);
     color: var(--fg);
@@ -21,15 +21,16 @@
   }
   body {
     margin: 0;
-    background: radial-gradient(1200px 600px at 20% -10%, rgba(122,243,255,.06), transparent 55%),
-                radial-gradient(1000px 520px at 120% 0%, rgba(243,201,122,.05), transparent 50%),
-                var(--bg);
+    background:
+      radial-gradient(1200px 600px at 20% -10%, color-mix(in oklch, var(--accent) 6%, transparent), transparent 55%),
+      radial-gradient(1000px 520px at 120% 0%, color-mix(in oklch, var(--accent-2) 5%, transparent), transparent 50%),
+      var(--bg);
     line-height: 1.5;
   }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   img, svg, canvas, video { max-width: 100%; height: auto; }
   hr { border: 0; height: 1px; background: var(--line); }
-  code, kbd, samp { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .95em; }
+  code, kbd, samp { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Roboto Mono", monospace; font-size: .95em; }
   .sr-only {
     position: absolute !important; width: 1px; height: 1px;
     padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
@@ -44,17 +45,19 @@
     max-width: 1200px;
     margin-inline: auto;
     padding-inline: clamp(12px, 3vw, 20px);
+    padding-bottom: env(safe-area-inset-bottom, 0);
     /* Enable site-wide container queries (Bridge depends on this) */
     container-type: inline-size;
     container-name: wrap;
   }
+
   .page-head { padding-block: 1.2rem .6rem; }
   .title { margin: 0 0 .35rem; font-size: clamp(1.6rem, 2.2rem + .8vw, 2.6rem); line-height: 1.15; }
   .subtitle { margin: 0 0 .8rem; color: var(--muted); max-width: 65ch; }
   .crumbs { display: flex; flex-wrap: wrap; gap: .5rem; margin: .6rem 0 1rem; }
 
   /* Cards */
-  .card { 
+  .card {
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--r-md);
@@ -63,11 +66,10 @@
   }
   .card.shine { position: relative; overflow: hidden; }
   .card.shine::after{
-    content:"";
-    position:absolute; inset:0;
-    background: radial-gradient(600px 300px at 120% -10%, rgba(122,243,255,.08), transparent 60%),
-                radial-gradient(500px 260px at -20% -10%, rgba(243,201,122,.06), transparent 60%);
-    pointer-events:none;
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(600px 300px at 120% -10%, color-mix(in oklch, var(--accent) 8%, transparent), transparent 60%),
+      radial-gradient(500px 260px at -20% -10%, color-mix(in oklch, var(--accent-2) 6%, transparent), transparent 60%);
   }
 
   /* Grid (12-col at desktop → 6-col tablet → single column) */
@@ -80,19 +82,21 @@
     align-items: start;
   }
   .col-12 { grid-column: span 12; }
-  .col-8  { grid-column: span 8; }
-  .col-6  { grid-column: span 6; }
-  .col-4  { grid-column: span 4; }
-  .col-3  { grid-column: span 3; }
+  .col-10 { grid-column: span 10; }
+  .col-9  { grid-column: span 9;  }
+  .col-8  { grid-column: span 8;  }
+  .col-6  { grid-column: span 6;  }
+  .col-4  { grid-column: span 4;  }
+  .col-3  { grid-column: span 3;  }
 
   @media (max-width: 1200px) {
     .grid { --col: 6; }
-    .col-8 { grid-column: span 6; }
+    .col-8, .col-9, .col-10 { grid-column: span 6; }
     .col-4, .col-3 { grid-column: span 3; }
   }
   @media (max-width: 760px) {
     .grid { --col: 1; }
-    .col-8, .col-6, .col-4, .col-3, .col-12 { grid-column: 1 / -1; }
+    .col-12, .col-10, .col-9, .col-8, .col-6, .col-4, .col-3 { grid-column: 1 / -1; }
   }
 
   /* Rows & small layout helpers */
@@ -124,7 +128,8 @@
     background: #111927; color: #e7f3ff;
     border: 1px solid #2a3b52; border-radius: 10px;
     padding: 8px 10px; font: 600 13px/1.3 var(--font-sans);
-    box-shadow: var(--elev-2); opacity: 0; transition: opacity var(--t-med) var(--ease);
+    box-shadow: var(--elev-2);
+    opacity: 0; transition: opacity var(--t-med) var(--ease);
   }
 }
 
@@ -150,7 +155,7 @@
   }
   .moon-badge .ring { position: relative; width: 120px; aspect-ratio: 1; }
   .moon-badge .ring-bg { fill: none; stroke: #1b2231; stroke-width: 12; }
-  .moon-badge .ring-fg { 
+  .moon-badge .ring-fg {
     fill: none; stroke: url(#rg); stroke-width: 12; stroke-linecap: round;
     stroke-dasharray: 0 316;
     filter: drop-shadow(var(--gold-glow));
@@ -186,7 +191,7 @@
     box-shadow: var(--elev-1);
   }
 
-  .fancy-head { background: linear-gradient(180deg, rgba(122,243,255,.06), transparent 60%); border-radius: var(--r-lg); }
+  .fancy-head { background: linear-gradient(180deg, color-mix(in oklch, var(--accent) 6%, transparent), transparent 60%); border-radius: var(--r-lg); }
 
   .lab-btn.cta-link {
     text-decoration: none;
@@ -199,8 +204,8 @@
     border-radius: var(--r-lg);
     box-shadow: var(--elev-2);
     background:
-      linear-gradient(135deg, rgba(243,201,122,.08), transparent 55%),
-      linear-gradient(315deg, rgba(122,243,255,.08), transparent 55%),
+      linear-gradient(135deg, color-mix(in oklch, var(--accent-2) 8%, transparent), transparent 55%),
+      linear-gradient(315deg, color-mix(in oklch, var(--accent) 8%, transparent), transparent 55%),
       var(--surface);
   }
   .op-grid { display:grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: center; }
@@ -219,7 +224,7 @@
 
 /* ------------------------------ Calendars (shared scaffolding) ------------------------------ */
 @layer components {
-  .calendar, .gregorian { 
+  .calendar, .gregorian {
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--r-md);
@@ -269,7 +274,7 @@
   .pull {
     margin: .8rem 0; padding: .8rem 1rem;
     border-left: 3px solid var(--accent-2);
-    background: linear-gradient(90deg, rgba(243,201,122,.08), transparent);
+    background: linear-gradient(90deg, color-mix(in oklch, var(--accent-2) 8%, transparent), transparent);
   }
   .file {
     display:grid; gap:.35rem; background: var(--surface-2); border:1px solid var(--line);
@@ -284,13 +289,24 @@
 /* ------------------------------ Utilities & Motion ------------------------------ */
 @layer utilities {
   .meta { color: var(--muted); }
-  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Roboto Mono", monospace; }
   .pill, .tag { user-select: none; }
   .hint { opacity: .8; }
   .is-fbapp .wrap { padding-top: 6px; }
+
+  /* Coarse pointers: guarantee 44px targets */
+  @media (pointer: coarse) {
+    .lab-btn, .dl, button, [role="button"] { min-height: 44px; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     * { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; scroll-behavior: auto !important; }
     .moon-badge .ring-fg { filter: none; }
+  }
+
+  @media (prefers-contrast: more) {
+    :focus-visible { outline-width: 3px; }
+    .card, .calendar, .gregorian, .moonbar { border-color: color-mix(in oklch, var(--accent) 35%, var(--line)); }
   }
 }
 
@@ -298,8 +314,8 @@
 @layer remnant {
   body.remnant-yhwh {
     background:
-      var(--remnant-veil, radial-gradient(800px 420px at 100% 0%, rgba(243,201,122,.05), transparent 65%)),
-      radial-gradient(1100px 580px at 0% 0%, rgba(122,243,255,.05), transparent 60%),
+      var(--remnant-veil, radial-gradient(800px 420px at 100% 0%, color-mix(in oklch, var(--accent-2) 5%, transparent), transparent 65%)),
+      radial-gradient(1100px 580px at 0% 0%, color-mix(in oklch, var(--accent) 5%, transparent), transparent 60%),
       var(--bg);
   }
   .yhwh-on .tag.yhwh { box-shadow: inset 0 0 0 1px #274354, var(--air-glow); }
