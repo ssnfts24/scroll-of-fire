@@ -1,10 +1,17 @@
+/* ==========================================================================
+   Scroll of Fire — Moons UI (base + astro)
+   Layers: tokens → base → components → astrology → utilities
+   v2025.11.02-d “Clean Rim & Clear Sky”
+   ========================================================================== */
+
+/* ================================ BASE =================================== */
 @layer base{
   *{box-sizing:border-box}
   html,body{height:100%}
   html{color-scheme:dark light}
   body{
     margin:0;background:var(--bg);color:var(--ink);
-    font:400 16px/1.55 Inter, system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    font:400 16px/1.6 Inter, system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial;
     -webkit-text-size-adjust:100%; text-size-adjust:100%;
   }
 
@@ -15,12 +22,19 @@
 
   .wrap{max-width:1100px;margin-inline:auto;padding-inline:clamp(12px,4vw,20px)}
   .card{
-    background:var(--bg-elev);border-radius:var(--radius);box-shadow:var(--rim);padding:var(--pad);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.02), transparent 60%),
+      var(--bg-elev);
+    border-radius:var(--radius);
+    box-shadow:var(--rim);
+    padding:var(--pad);
     border:1px solid color-mix(in oklab, var(--line) 92%, transparent);
   }
-  .shine{background:
-    linear-gradient(180deg,rgba(255,255,255,.025),transparent),
-    var(--bg-elev)}
+  .shine{
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0) 55%),
+      var(--bg-elev);
+  }
   .divider{height:1px;background:var(--line);opacity:.65}
 
   .meta{color:var(--muted)}
@@ -33,6 +47,7 @@
     display:inline-flex;gap:.35rem;align-items:center;
     border:1px solid var(--line);border-radius:999px;padding:.15rem .55rem;
     background:color-mix(in oklab, var(--bg-elev) 96%, transparent);
+    white-space:nowrap;
   }
   .pill{
     display:inline-flex;gap:.35rem;align-items:center;border-radius:999px;
@@ -69,7 +84,7 @@
     .col-8,.col-6,.col-4{grid-column:1/-1}
   }
 
-  /* Head */
+  /* Header block */
   .fancy-head .title{margin:.2rem 0; font-size:clamp(1.25rem,4.3vw,1.75rem); line-height:1.1}
   .subtitle{margin:.2rem 0 1rem 0; max-width:70ch}
 
@@ -84,7 +99,7 @@
   .footer{max-width:1100px;margin:.8rem auto;padding:10px 16px}
   .sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
 
-  /* Panels (used by compare/astro blocks) */
+  /* Panels (compare, astro) */
   .panel{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--radius)}
   .panel__head{display:flex;justify-content:space-between;align-items:baseline;padding:var(--pad);border-bottom:1px solid var(--line)}
   .panel__title{margin:0}
@@ -94,18 +109,20 @@
   table{width:100%;border-collapse:separate;border-spacing:0}
   thead th{
     position:sticky;top:0;z-index:1;background:var(--bg-elev);
-    color:var(--muted);font-weight:600;text-align:left;border-bottom:1px solid var(--line);padding:.55rem .6rem
+    color:var(--muted);font-weight:600;text-align:left;border-bottom:1px solid var(--line);padding:.55rem .6rem;
+    box-shadow:0 6px 12px rgba(0,0,0,.06); /* subtle shadow under sticky head */
   }
   tbody td{padding:.55rem .6rem;border-bottom:1px solid color-mix(in oklab, var(--line) 80%, transparent)}
   tbody tr:hover{background:rgba(127,127,127,.06)}
+  tbody tr:nth-child(odd){background:color-mix(in oklab, var(--card) 88%, transparent)}
   tbody tr:last-child td{border-bottom:none}
 
   /* Dots (week & legend) */
   .dot{display:inline-block;width:.55rem;height:.55rem;border-radius:999px;background:rgba(127,127,127,.25)}
   .dot.on{background:var(--accent)}
   .legend{display:flex;flex-wrap:wrap;gap:8px}
-  
-  /* Hints/keys */
+
+  /* Hints / keys */
   .hint{color:var(--muted);font-size:.95rem}
   .keys .kbd{margin-left:.25rem}
 
@@ -118,13 +135,138 @@
   }
 }
 
-@layer utilities{
-  .badge{display:inline-flex;gap:.35rem;align-items:center;padding:.2rem .5rem;border:1px solid var(--line);border-radius:8px}
-  .pull{font-style:italic;border-left:3px solid var(--gold);padding-left:.8rem;opacity:.9}
-  .goldline{height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
-  .dl{
-    display:inline-flex;align-items:center;gap:.35rem;border:1px dashed var(--line);
-    padding:.45rem .75rem;border-radius:10px;background:transparent;color:inherit;text-decoration:none
+/* ============================== ASTROLOGY ================================ */
+@layer astrology{
+  /* Local tokens */
+  .astro{
+    --moon-accent: var(--accent);
+    --moon-accent-2: var(--gold);
+    --astro-bg: var(--bg-elev);
+    --astro-rim: var(--line);
+    --astro-muted: var(--muted);
+    --astro-halo-1: color-mix(in oklch, var(--moon-accent) 60%, transparent);
+    --astro-halo-2: color-mix(in oklch, var(--moon-accent-2) 60%, transparent);
+    --astro-radius: 14px;
+    --astro-pad: 14px;
   }
-  .dl:hover{border-color:color-mix(in oklab, var(--line) 70%, var(--accent) 30%)}
+
+  /* Header */
+  .astro-head{
+    display:flex;align-items:center;gap:12px;justify-content:space-between;margin-bottom:.6rem
+  }
+  .astro-head .seal{
+    display:inline-flex;gap:.45rem;align-items:center;
+    padding:.25rem .55rem;border-radius:999px;border:1px solid var(--astro-rim);
+    background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
+    white-space:nowrap;
+  }
+
+  /* Grid */
+  .astro-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
+  @media (max-width:1024px){ .astro-grid{grid-template-columns:1fr} }
+
+  /* Planet chips */
+  .astro-chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    border:1px solid var(--astro-rim);border-radius:999px;padding:.42rem .68rem;
+    background:linear-gradient(180deg,rgba(255,255,255,.035),transparent);
+    display:inline-flex;align-items:center;gap:.5rem;line-height:1;
+    transition:background-color .12s ease,border-color .12s ease,transform .06s ease,box-shadow .12s ease;
+    color:inherit;text-decoration:none;box-shadow:0 0 0 0 rgba(0,0,0,0);
+    white-space:nowrap;
+  }
+  .chip:hover{
+    background:rgba(127,127,127,.10);
+    border-color:color-mix(in oklch,var(--astro-rim) 60%, var(--moon-accent) 40%);
+    box-shadow:0 0 0 1px color-mix(in oklch, var(--moon-accent) 38%, transparent) inset;
+  }
+  .chip:active{transform:translateY(1px)}
+  .chip:focus-visible{outline:2px solid var(--moon-accent);outline-offset:2px}
+  .chip[aria-pressed="true"], .chip.active{
+    background:color-mix(in oklch,var(--moon-accent) 12%, transparent);
+    border-color:color-mix(in oklch,var(--moon-accent) 65%, var(--astro-rim));
+    box-shadow:0 0 0 2px color-mix(in oklch, var(--moon-accent) 30%, transparent) inset;
+  }
+  .chip .pos{opacity:.9}
+  .chip .dot{display:inline-block;width:.72em;height:.72em;border-radius:50%;box-shadow:0 0 0 2px rgba(0,0,0,.15) inset}
+
+  /* Element colors */
+  .el-fire{background:#ff8a73}
+  .el-water{background:#6fc6ff}
+  .el-air{background:#a2b1ff}
+  .el-earth{background:#a8e7b2}
+  .el-aether{background:#e7d1ff}
+
+  /* Wheel */
+  .astro-wheel{display:block;max-width:480px;margin-inline:auto}
+  .astro-wheel svg{width:100%;height:auto;display:block}
+  #signLabels text{
+    fill:#b7c2de;font-weight:600;letter-spacing:.02em;
+    paint-order:stroke;stroke:#0b0b0f;stroke-width:.9;
+  }
+  #houseLines{opacity:.9;stroke:#2a3242}
+  #planetDots .dot{
+    transition:transform .12s ease, r .12s ease, filter .12s ease;
+    filter:drop-shadow(0 0 .75px rgba(0,0,0,.7)) drop-shadow(0 0 6px var(--astro-halo-1));
+  }
+  #planetDots .dot:hover{
+    transform:scale(1.18);
+    filter:drop-shadow(0 0 1px rgba(0,0,0,.75)) drop-shadow(0 0 9px var(--astro-halo-2));
+  }
+  @media (prefers-reduced-motion: reduce){
+    #planetDots .dot{transition:none}
+  }
+
+  /* Caption under wheel */
+  .astro figcaption.meta{
+    display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;
+    margin-top:.5rem;color:var(--astro-muted)
+  }
+  .astro figcaption .sep{opacity:.35}
+
+  /* Aspects legend + badges */
+  .astro-aspects .legend{display:flex;flex-wrap:wrap;gap:10px;margin:.55rem 0}
+  .badge.asp{
+    background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);
+    border:1px solid var(--astro-rim);border-radius:10px;padding:.25rem .55rem;
+  }
+  .asp.conj{border-color:#b9b9b9}
+  .asp.sext{border-color:#7ccfff}
+  .asp.sqr{border-color:#ff9a7b}
+  .asp.tri{border-color:#8be39f}
+  .asp.opp{border-color:#c69bff}
+
+  /* Aspects table */
+  .asp-table{
+    display:block;max-width:100%;overflow:auto;border:1px solid var(--astro-rim);
+    border-radius:12px;background:var(--astro-bg);
+    box-shadow:0 10px 30px rgba(0,0,0,.22);
+  }
+  .asp-table table{min-width:560px;border-collapse:separate;border-spacing:0}
+  .asp-table thead th{
+    position:sticky;top:0;background:
+      linear-gradient(180deg, rgba(255,255,255,.02), transparent 60%),
+      var(--astro-bg);
+    color:var(--astro-muted);font-weight:700;text-align:left;
+    padding:.58rem .68rem;border-bottom:1px solid var(--astro-rim);
+    backdrop-filter:saturate(110%) blur(2px);
+    box-shadow:0 6px 12px rgba(0,0,0,.06);
+  }
+  .asp-table tbody td{
+    padding:.58rem .68rem;border-bottom:1px solid color-mix(in oklch,var(--astro-rim) 82%, transparent)
+  }
+  .asp-table tbody tr:nth-child(odd){background:color-mix(in oklch, var(--astro-bg) 88%, transparent)}
+  .asp-table tbody tr:hover{background:rgba(127,127,127,.07)}
+  .asp-table tbody tr:last-child td{border-bottom:none}
+  .asp-table td:nth-child(3){text-align:right;font-variant-numeric:tabular-nums}
+
+  /* High-contrast assist */
+  @media (prefers-contrast: more){
+    #signLabels text{stroke-width:1.1}
+    .chip{border-color:color-mix(in oklch,var(--astro-rim) 55%, white)}
+    .asp-table{box-shadow:0 0 0 1px color-mix(in oklch,var(--astro-rim) 60%, white) inset}
+  }
+
+  .astro .meta{color:var(--astro-muted)}
+  .astro .mono{font-variant-numeric:tabular-nums}
 }
