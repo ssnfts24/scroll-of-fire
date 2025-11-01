@@ -28,13 +28,13 @@
   <!-- Robots -->
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 
-  <!-- Open Graph / Twitter -->
+  <!-- Open Graph / Twitter (absolute og:image; scrapers ignore <base>) -->
   <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Scroll of Fire — Codex of Reality">
   <meta property="og:description" content="A living architecture of resonance — core equations 0–17 with dedicated Theory and Manifest.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/">
-  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1">
+  <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1">
   <meta name="twitter:card" content="summary_large_image">
 
   <!-- JSON-LD (valid) -->
@@ -80,10 +80,10 @@
   </script>
 
   <!-- CSS -->
-  <link rel="preload" href="assets/css/codex.css?v=3.1" as="style" importance="high">
+  <link rel="preload" href="assets/css/codex.css?v=3.1" as="style">
   <link rel="stylesheet" href="assets/css/codex.css?v=3.1">
-  <link rel="preload" href="assets/css/moons.css?v=2025-10-24" as="style" onload="this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="assets/css/moons.css?v=2025-10-24"></noscript>
+  <link rel="preload" href="assets/css/moons.css?v=2025-11-01" as="style" onload="this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="assets/css/moons.css?v=2025-11-01"></noscript>
 
   <!-- Fonts & CDN preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -181,12 +181,16 @@
   <!-- Global JS (defer) -->
   <script src="assets/js/codex.js?v=3.8" defer></script>
 
-  <!-- MathJax (on-demand; safe to include once) -->
+  <!-- MathJax (on-demand; corrected delimiters) -->
   <script>
   (function(){
     if (window.MathJax) return;
     window.MathJax = {
-      tex:{ inlineMath:[['\','\'],['$','$']], displayMath:[['$$','$$']], processEscapes:true },
+      tex: {
+        inlineMath: [['\\(','\\)'], ['$', '$']],
+        displayMath: [['$$','$$'], ['\\[','\\]']],
+        processEscapes: true
+      },
       svg:{ fontCache:'global' },
       startup:{ typeset:true }
     };
@@ -237,7 +241,7 @@
   </figure>
 
   <script>
-  // ---- Quick actions (no external deps) ----
+  // ---- Quick actions (single source of truth; no duplicate wiring) ----
   (function(){
     const body=document.body, html=document.documentElement;
 
@@ -268,6 +272,7 @@
       carriers.forEach(c=>html.classList.remove(c));
       html.classList.add(nxt);
       btnVibe.textContent = `Carrier ${nxt.split('-')[1]}`;
+      document.dispatchEvent(new Event('sof:carrier-change'));
     });
     if(btnVibe) btnVibe.textContent = `Carrier ${currentSkin().split('-')[1]}`;
 
@@ -819,51 +824,6 @@
 
       function update(){ dock.classList.toggle('show', heroOut && !reachedExplore && !reachedCanon); }
       ioHero.observe(hero); ioExplore.observe(explore); ioCanon.observe(canon);
-    })();
-
-    // Quick controls in header (Echo/HUD/Vibe/Affect/Lights)
-    (function(){
-      const body=document.body, html=document.documentElement;
-
-      // Echo (hide equations → simple summaries)
-      const btnEcho=document.getElementById('toggleSimple');
-      const echoChk=document.getElementById('simple');
-      function setEcho(on){ body.classList.toggle('simple-on', on); btnEcho?.setAttribute('aria-pressed', String(on)); if(echoChk) echoChk.checked=on; }
-      btnEcho?.addEventListener('click',()=> setEcho(!body.classList.contains('simple-on')));
-      echoChk?.addEventListener('change', e=> setEcho(e.target.checked));
-
-      // HUD grid
-      const btnHUD=document.getElementById('toggleGrid'), grid=document.querySelector('.laser-grid');
-      btnHUD?.addEventListener('click',()=>{
-        const show = !grid.classList.toggle('off');
-        btnHUD.setAttribute('aria-pressed', String(show));
-      });
-
-      // Carrier skins cycle
-      const btnCarrier=document.getElementById('cycleCarrier');
-      const skins=(html.getAttribute('data-carriers')||'432,528,369,144,963').split(',').map(s=>`carrier-${s.trim()}`);
-      const curSkin=()=> skins.find(s=>html.classList.contains(s)) || skins[0];
-      const nextSkin=c=> skins[(skins.indexOf(c)+1)%skins.length];
-      function label(){ if(btnCarrier) btnCarrier.textContent=`Carrier ${curSkin().split('-')[1]}`; }
-      btnCarrier?.addEventListener('click',()=>{
-        const cur=curSkin(), nxt=nextSkin(cur);
-        skins.forEach(s=>html.classList.remove(s)); html.classList.add(nxt); label();
-        document.dispatchEvent(new Event('sof:carrier-change'));
-      });
-      if(!curSkin()) html.classList.add(skins[0]); label();
-
-      // Affect (lively text)
-      const btnAffect=document.getElementById('toggleAffect');
-      function setAffect(on){ document.body.classList.toggle('affect-off', !on); btnAffect?.setAttribute('aria-pressed', String(on)); }
-      btnAffect?.addEventListener('click',()=> setAffect(document.body.classList.contains('affect-off')));
-      setAffect(true); // default on
-
-      // Lights (banner particles)
-      const lights=document.getElementById('heroLights');
-      const btnLights=document.getElementById('toggleLights');
-      function setLights(on){ if(lights){ lights.classList.toggle('off', !on); } btnLights?.setAttribute('aria-pressed', String(on)); }
-      btnLights?.addEventListener('click',()=> setLights(lights?.classList.contains('off')));
-      setLights(true); // default on
     })();
 
     // Page search (press "/" to focus) + suggestions
