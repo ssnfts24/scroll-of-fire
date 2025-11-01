@@ -12,7 +12,7 @@
   <meta name="color-scheme" content="dark light" />
   <meta name="theme-color" content="#05070d" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#f7fbff" media="(prefers-color-scheme: light)">
-  <meta name="description" content="Remnant 13-Moon Living Clock — wizard astronomy: lunar simulation, TZ-true 13×28 mapping, numerology, Kin, .ics export, and a sacred wheel." />
+  <meta name="description" content="Remnant 13-Moon Living Clock — lunar simulation, TZ-true 13×28 mapping, numerology, Kin, .ics export, sacred wheel." />
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
 
   <!-- Open Graph / Twitter -->
@@ -45,26 +45,38 @@
   <link rel="stylesheet" href="assets/css/tokens.css?v=2025-10-27">
   <link rel="stylesheet" href="assets/css/core.css?v=2025-10-27">
   <link rel="stylesheet" href="assets/css/astrology.css?v=2025-10-27">
-  <link rel="stylesheet" href="assets/css/moons.css?v=2025-10-27">
+  <link rel="stylesheet" href="assets/css/moons.css?v=2025-11-01">
   <link rel="stylesheet" href="assets/css/bridge.css?v=2025-10-27">
 
-  <!-- Critical overrides (mobile-safe top padding, canvas layer, timers) -->
+  <!-- Critical mobile overrides -->
   <style>
-    :root{--safe-top: env(safe-area-inset-top, 0px)}
-    /* push content below device notch/status bar */
-    .top-safe{height: calc(var(--safe-top) + 8px)}
-    /* keep sky behind everything, avoid intercepting taps */
-    #skyBg{position:fixed; inset:0; width:100vw; height:100vh; z-index:0; pointer-events:none; display:block}
-    /* ensure UI sits above background */
+    :root{ --safe-top: env(safe-area-inset-top, 0px) }
+    .top-safe{ height: calc(var(--safe-top) + 8px) }
+    #skyBg{ position:fixed; inset:0; width:100vw; height:100vh; z-index:0; pointer-events:none; display:block }
     body > .wrap, main.wrap, header.page-head, .moonbar, .compare, footer.footer { position:relative; z-index:1 }
-    /* avoid iOS zoom on form controls */
-    @supports (-webkit-touch-callout:none){
-      input,select,textarea,button{font-size:16px}
+    /* iOS form anti-zoom */
+    @supports (-webkit-touch-callout:none){ input,select,textarea,button{ font-size:16px } }
+    /* mini moonbar visibility hardening (matches CSS shipped) */
+    .moonbar{ isolation:isolate }
+    .moonbar svg{ width:100%; height:auto; min-height:38px }
+    .moonbar .mb-bg{ stroke:#142233; stroke-width:8; opacity:.9 }
+    .moonbar .mb-fg{ stroke:url(#mbGrad), var(--moon-accent); stroke-width:10; stroke-linecap:round;
+      filter: drop-shadow(0 0 8px color-mix(in oklch, var(--moon-accent) 55%, transparent)); }
+    /* small-screen layout nudges */
+    @media (max-width: 880px){
+      .page-head .crumbs{ gap:6px; overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none }
+      .page-head .crumbs::-webkit-scrollbar{ display:none }
+      .grid{ grid-template-columns: 1fr !important }
+      .col-8,.col-6,.col-4{ grid-column: 1 / -1 }
+      .astro-grid{ grid-template-columns: 1fr !important }
+      .year-map{ display:block; overflow:auto; -webkit-overflow-scrolling:touch }
+      .year-map thead th{ position:sticky; top:0 }
+      .ring{ width:96px }
     }
   </style>
 
   <!-- Preloads / Prefetch -->
-  <link rel="preload" href="assets/js/moons.js?v=4.1" as="script" crossorigin>
+  <link rel="preload" href="assets/js/moons.js?v=4.2" as="script" crossorigin>
   <link rel="prefetch" href="genesis-oracle.html" as="document">
 
   <!-- Structured data -->
@@ -74,7 +86,6 @@
 </head>
 
 <body class="stars remnant-yhwh">
-  <!-- Spacer for safe areas / status bar -->
   <div class="top-safe" aria-hidden="true"></div>
 
   <!-- Hidden SVG gradients for phase tinting -->
@@ -89,15 +100,15 @@
     </defs>
   </svg>
 
-  <!-- Ambient sky (now fixed behind UI) -->
+  <!-- Ambient sky (fixed behind UI) -->
   <canvas id="skyBg" width="1440" height="900" aria-hidden="true"></canvas>
 
   <!-- Mini Moonbar -->
   <section class="wrap" aria-label="Remnant Moonbar">
     <div class="moonbar yhwh-on" data-size="compact" role="group" aria-label="Current Moon mini widget">
-      <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
-        <circle cx="32" cy="32" r="26" class="mb-bg" stroke-width="6" fill="none"></circle>
-        <circle cx="32" cy="32" r="26" class="mb-fg" id="moonArcMini" pathLength="163" stroke-width="6" stroke-linecap="round" fill="none" stroke-dasharray="0 163"></circle>
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="26" class="mb-bg" fill="none"></circle>
+        <circle cx="32" cy="32" r="26" class="mb-fg" id="moonArcMini" pathLength="163" fill="none" stroke-dasharray="0 163"></circle>
       </svg>
       <div class="moonbar-info">
         <div class="moonbar-line">
@@ -253,12 +264,14 @@
       <article class="card col-12" aria-labelledby="map-head">
         <h2 id="map-head">Year Map — Gregorian spans of the 13 Moons</h2>
         <p class="hint">New Year = July 26 · Day Out of Time = July 25 · Leap Day (Feb 29) is skipped in the 13×28 count.</p>
-        <table class="year-map" id="yearMap">
-          <thead>
-            <tr><th>#</th><th>Moon Name</th><th>Essence</th><th>Start (TZ)</th><th>End (TZ)</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div style="overflow:auto; -webkit-overflow-scrolling:touch">
+          <table class="year-map" id="yearMap">
+            <thead>
+              <tr><th>#</th><th>Moon Name</th><th>Essence</th><th>Start (TZ)</th><th>End (TZ)</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
         <p class="meta" id="nextMoonInfo" style="margin-top:6px">—</p>
       </article>
 
@@ -451,8 +464,31 @@
 
   <noscript><p class="meta" style="text-align:center">This page needs JavaScript to calculate moon/day, phase, and year map.</p></noscript>
 
-  <!-- JS (ordered; accents first so phase events recolor immediately) -->
+  <!-- JS -->
+  <script>
+    /* ---- TZ sync across pages (one source of truth) ---- */
+    (function(){
+      const KEY="sofc.tz";
+      const url=new URL(location.href);
+      const param=url.searchParams.get("tz");
+      const cur=param || localStorage.getItem(KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone;
+      localStorage.setItem(KEY,cur);
+      document.documentElement.dataset.tz=cur;
+    })();
+
+    /* ---- Local-midnight helper to avoid off-by-one ---- */
+    window.__localMidnight = function(d){ d=d?new Date(d):new Date(); return new Date(d.getFullYear(),d.getMonth(),d.getDate()); };
+
+    /* ---- Patch mini moonbar visibility if CSS failed to load ---- */
+    (function(){
+      const fg=document.getElementById('moonArcMini');
+      if(fg && !fg.getAttribute('stroke-width')) fg.setAttribute('stroke-width','10');
+    })();
+  </script>
+
+  <!-- Accents first so phase events recolor immediately -->
   <script src="assets/js/accents.js?v=1.0" defer></script>
-  <script src="assets/js/moons.js?v=4.1" defer></script>
+  <!-- Main moons logic (reads dataset.tz + uses localMidnight) -->
+  <script src="assets/js/moons.js?v=4.2" defer></script>
 </body>
 </html>
