@@ -1,6 +1,12 @@
 <!doctype html>
 <html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963" data-alive="lively">
 <head>
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <script>
+    // Keep <base> only on live GitHub Pages; remove for repo preview/local dev
+    (function(){var live="ssnfts24.github.io";if(location.hostname!==live){var b=document.querySelector("base");if(b)b.remove();}})();
+  </script>
+
   <!-- 0) Prevent theme flash before CSS -->
   <script>(function(){try{let t=localStorage.getItem('theme');if(!t){t=(matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',t)}catch{}})();</script>
   <!-- 0.1) FB in-app browser guard -->
@@ -12,13 +18,13 @@
   <meta name="color-scheme" content="dark light" />
   <meta name="theme-color" content="#05070d" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#f7fbff" media="(prefers-color-scheme: light)">
-  <meta name="description" content="Remnant 13-Moon Living Clock — lunar simulation, TZ-true 13×28 mapping, numerology, Kin, .ics export, sacred wheel." />
+  <meta name="description" content="Remnant 13-Moon Living Clock — TZ-true 13×28 mapping with mini moonbar, week dots, year map, numerology, optional Kin, zodiac fallback, and .ics export." />
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
 
-  <!-- Open Graph / Twitter -->
+  <!-- OG / Twitter -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Remnant 13 Moons — Living Clock">
-  <meta property="og:description" content="Day ring • Week dots • Year map • Lunar sim • Numerology • Kin • .ics — with YHWH seal and phase-tinted accents.">
+  <meta property="og:description" content="Day ring • Week dots • Year map • Lunar sim • Numerology • Kin • .ics — YHWH seal.">
   <meta property="og:image" content="assets/share/moon-card.png">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
   <meta name="twitter:card" content="summary_large_image">
@@ -33,7 +39,7 @@
   <link rel="icon" type="image/png" sizes="512x512" href="assets/icons/icon-512.png">
   <link rel="mask-icon" href="assets/icons/safari-pinned.svg" color="#0e131a">
 
-  <!-- Network hints -->
+  <!-- Fonts preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -45,10 +51,10 @@
   <link rel="stylesheet" href="assets/css/tokens.css?v=2025-10-27">
   <link rel="stylesheet" href="assets/css/core.css?v=2025-10-27">
   <link rel="stylesheet" href="assets/css/astrology.css?v=2025-10-27">
-  <link rel="stylesheet" href="assets/css/moons.css?v=2025-11-01">
+  <link rel="stylesheet" href="assets/css/moons.css?v=2025-11-02">
   <link rel="stylesheet" href="assets/css/bridge.css?v=2025-10-27">
 
-  <!-- Critical mobile overrides -->
+  <!-- Critical mobile nudges -->
   <style>
     :root{ --safe-top: env(safe-area-inset-top, 0px) }
     .top-safe{ height: calc(var(--safe-top) + 8px) }
@@ -56,13 +62,13 @@
     body > .wrap, main.wrap, header.page-head, .moonbar, .compare, footer.footer { position:relative; z-index:1 }
     /* iOS form anti-zoom */
     @supports (-webkit-touch-callout:none){ input,select,textarea,button{ font-size:16px } }
-    /* mini moonbar visibility hardening (matches CSS shipped) */
+    /* mini moonbar hardening */
     .moonbar{ isolation:isolate }
     .moonbar svg{ width:100%; height:auto; min-height:38px }
     .moonbar .mb-bg{ stroke:#142233; stroke-width:8; opacity:.9 }
     .moonbar .mb-fg{ stroke:url(#mbGrad), var(--moon-accent); stroke-width:10; stroke-linecap:round;
       filter: drop-shadow(0 0 8px color-mix(in oklch, var(--moon-accent) 55%, transparent)); }
-    /* small-screen layout nudges */
+    /* small screens */
     @media (max-width: 880px){
       .page-head .crumbs{ gap:6px; overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none }
       .page-head .crumbs::-webkit-scrollbar{ display:none }
@@ -76,12 +82,12 @@
   </style>
 
   <!-- Preloads / Prefetch -->
-  <link rel="preload" href="assets/js/moons.js?v=4.2" as="script" crossorigin>
+  <link rel="preload" href="assets/js/moons.js?v=4.3" as="script" crossorigin>
   <link rel="prefetch" href="genesis-oracle.html" as="document">
 
   <!-- Structured data -->
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebApplication","name":"Remnant 13 Moons — Living Clock","url":"https://ssnfts24.github.io/scroll-of-fire/moons.html","applicationCategory":"EducationApplication","operatingSystem":"Any","description":"Interactive 13-Moon calendar with lunar phase canvas, sacred wheel, numerology, optional Kin, and ICS export — YHWH wizard astronomy theme.","creator":{"@type":"Person","name":"Aaron Paul Laird"}}
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Remnant 13 Moons — Living Clock","url":"https://ssnfts24.github.io/scroll-of-fire/moons.html","applicationCategory":"EducationApplication","operatingSystem":"Any","description":"Interactive 13-Moon calendar with lunar phase canvas, sacred wheel, numerology, optional Kin, and ICS export.","creator":{"@type":"Person","name":"Aaron Paul Laird"}}
   </script>
 </head>
 
@@ -100,7 +106,7 @@
     </defs>
   </svg>
 
-  <!-- Ambient sky (fixed behind UI) -->
+  <!-- Ambient sky -->
   <canvas id="skyBg" width="1440" height="900" aria-hidden="true"></canvas>
 
   <!-- Mini Moonbar -->
@@ -224,18 +230,10 @@
           <label class="tag" style="margin-left:auto">Go to:
             <select id="jumpMoon" class="lab-input" style="min-width:140px;margin-left:6px" aria-label="Jump to Moon">
               <option value="">—</option>
-              <option value="1">#1 Magnetic</option>
-              <option value="2">#2 Lunar</option>
-              <option value="3">#3 Electric</option>
-              <option value="4">#4 Self-Existing</option>
-              <option value="5">#5 Overtone</option>
-              <option value="6">#6 Rhythmic</option>
-              <option value="7">#7 Resonant</option>
-              <option value="8">#8 Galactic</option>
-              <option value="9">#9 Solar</option>
-              <option value="10">#10 Planetary</option>
-              <option value="11">#11 Spectral</option>
-              <option value="12">#12 Crystal</option>
+              <option value="1">#1 Magnetic</option><option value="2">#2 Lunar</option><option value="3">#3 Electric</option>
+              <option value="4">#4 Self-Existing</option><option value="5">#5 Overtone</option><option value="6">#6 Rhythmic</option>
+              <option value="7">#7 Resonant</option><option value="8">#8 Galactic</option><option value="9">#9 Solar</option>
+              <option value="10">#10 Planetary</option><option value="11">#11 Spectral</option><option value="12">#12 Crystal</option>
               <option value="13">#13 Cosmic</option>
             </select>
           </label>
@@ -311,7 +309,7 @@
         <header class="astro-head">
           <span class="seal" aria-hidden="true">⟡ <span lang="he">יהוה</span></span>
           <h2 id="astro-head">Astrology Now</h2>
-          <p class="meta">Current placements in a lightweight, Remnant panel. Filled by <code>window.__EPHEMERIS__</code> if present.</p>
+          <p class="meta">Filled by <code>window.__EPHEMERIS__</code> when available. If missing, panel shows a safe fallback.</p>
         </header>
 
         <section class="astro-grid" aria-label="Placements and wheel">
@@ -464,31 +462,269 @@
 
   <noscript><p class="meta" style="text-align:center">This page needs JavaScript to calculate moon/day, phase, and year map.</p></noscript>
 
-  <!-- JS -->
+  <!-- ===== Shared TZ core (keeps wall-time in sync with index/micro) ===== -->
   <script>
-    /* ---- TZ sync across pages (one source of truth) ---- */
-    (function(){
-      const KEY="sofc.tz";
-      const url=new URL(location.href);
-      const param=url.searchParams.get("tz");
-      const cur=param || localStorage.getItem(KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone;
-      localStorage.setItem(KEY,cur);
-      document.documentElement.dataset.tz=cur;
-    })();
-
-    /* ---- Local-midnight helper to avoid off-by-one ---- */
-    window.__localMidnight = function(d){ d=d?new Date(d):new Date(); return new Date(d.getFullYear(),d.getMonth(),d.getDate()); };
-
-    /* ---- Patch mini moonbar visibility if CSS failed to load ---- */
-    (function(){
-      const fg=document.getElementById('moonArcMini');
-      if(fg && !fg.getAttribute('stroke-width')) fg.setAttribute('stroke-width','10');
-    })();
+  window.MoonTZ = (function(){
+    "use strict";
+    const KEY = "sof_moons_tz";
+    function setTZ(z){ try{ new Intl.DateTimeFormat("en-US",{timeZone:z}).format(new Date()); localStorage.setItem(KEY,z); }catch{} }
+    function getTZ(){ return localStorage.getItem(KEY)
+      || (new URLSearchParams(location.search).get("tz"))
+      || (Intl.DateTimeFormat().resolvedOptions().timeZone||"UTC"); }
+    function wallParts(d, tz){
+      try{
+        const parts = new Intl.DateTimeFormat("en-CA",{timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"})
+          .formatToParts(d).reduce((m,p)=> (m[p.type]=p.value,m),{});
+        return new Date(Date.UTC(+parts.year, +parts.month-1, +parts.day, +parts.hour, +parts.minute, +parts.second));
+      }catch{ return new Date(d); }
+    }
+    function nowWall(){ return wallParts(new Date(), getTZ()); }
+    function isoDateWall(d){
+      const w=wallParts(d||new Date(), getTZ());
+      const y=w.getUTCFullYear(), m=String(w.getUTCMonth()+1).padStart(2,"0"), da=String(w.getUTCDate()).padStart(2,"0");
+      return `${y}-${m}-${da}`;
+    }
+    (function seed(){ const z=new URLSearchParams(location.search).get("tz"); if(z) setTZ(z); })();
+    return { getTZ, setTZ, wallParts, nowWall, isoDateWall };
+  })();
   </script>
 
-  <!-- Accents first so phase events recolor immediately -->
-  <script src="assets/js/accents.js?v=1.0" defer></script>
-  <!-- Main moons logic (reads dataset.tz + uses localMidnight) -->
-  <script src="assets/js/moons.js?v=4.2" defer></script>
+  <!-- ==== Minimal in-page fallback for core UI if moons.js fails ==== -->
+  <script>
+  (function(){
+    "use strict";
+    const $=(s,r=document)=>r.querySelector(s);
+    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+
+    // 13 Moon config (from your dataset)
+    window.__MOONS__ = window.__MOONS__ || [
+      {"idx":1,"name":"Magnetic","essence":"Unify Purpose","color":"#6FE7FF"},
+      {"idx":2,"name":"Lunar","essence":"Polarize Challenge","color":"#B1C7FF"},
+      {"idx":3,"name":"Electric","essence":"Activate Service","color":"#7AF3FF"},
+      {"idx":4,"name":"Self-Existing","essence":"Define Form","color":"#7BF3B8"},
+      {"idx":5,"name":"Overtone","essence":"Empower Radiance","color":"#FFD27A"},
+      {"idx":6,"name":"Rhythmic","essence":"Organize Equality","color":"#A7FFCF"},
+      {"idx":7,"name":"Resonant","essence":"Channel Inspiration","color":"#7AF3FF"},
+      {"idx":8,"name":"Galactic","essence":"Harmonize Integrity","color":"#9BD3FF"},
+      {"idx":9,"name":"Solar","essence":"Pulse Intention","color":"#FFBC6F"},
+      {"idx":10,"name":"Planetary","essence":"Perfect Manifestation","color":"#FFD9A6"},
+      {"idx":11,"name":"Spectral","essence":"Dissolve Release","color":"#B8C7FF"},
+      {"idx":12,"name":"Crystal","essence":"Dedicate Cooperation","color":"#CFEFFF"},
+      {"idx":13,"name":"Cosmic","essence":"Endure Presence","color":"#E7D1FF"}
+    ];
+
+    // Year anchor & DOOT handling
+    function remnantYearStart(y){ return new Date(Date.UTC(y,6,26)); } // July 26 UTC anchor (we'll shift by TZ)
+    function isLeap(y){ return (y%4===0 && y%100!==0) || (y%400===0); }
+
+    // Map wall-time to Remnant day index
+    function calcRemnant(wall){
+      // compute midnights in selected TZ by using MoonTZ.wallParts for start
+      const tz = MoonTZ.getTZ();
+      // Build wall anchor for current Remnant year
+      const yWall = wall.getUTCMonth() > 6 || (wall.getUTCMonth()===6 && wall.getUTCDate()>=26) ? wall.getUTCFullYear() : wall.getUTCFullYear()-1;
+      const startUTC = remnantYearStart(yWall);
+      const startWall = MoonTZ.wallParts(startUTC, tz); // anchor rendered in TZ
+
+      // DOOT is July 25 (day -1 relative to start)
+      const dootUTC = new Date(Date.UTC(yWall,6,25));
+      const dootWall = MoonTZ.wallParts(dootUTC, tz);
+
+      const ms = wall - startWall;
+      const day = Math.floor(ms/(24*3600*1000)); // 0..(364 or 365 with leap)
+      const inDOOT = (MoonTZ.isoDateWall(wall) === MoonTZ.isoDateWall(dootWall));
+
+      // Leap day skip rule: if Feb 29 exists in this Gregorian year, it's simply ignored in 13×28 count.
+      let leapAdj = 0;
+      const gy = wall.getUTCFullYear();
+      if (isLeap(gy)) {
+        const feb29Wall = MoonTZ.wallParts(new Date(Date.UTC(gy,1,29)), tz);
+        if (MoonTZ.isoDateWall(wall) >= MoonTZ.isoDateWall(feb29Wall)) leapAdj = -1;
+      }
+
+      let dayCount = inDOOT ? null : (day + 1 + leapAdj); // 1..364
+      let moonIdx=null, dayInMoon=null, week= null;
+      if (dayCount!==null){
+        moonIdx = Math.floor((dayCount-1)/28)+1; dayInMoon = ((dayCount-1)%28)+1; week=Math.floor((dayInMoon-1)/7)+1;
+      }
+      const yearSpan = `${yWall}/${yWall+1}`;
+      return { tz, year:yWall, yearSpan, inDOOT, dayCount, moonIdx, dayInMoon, week };
+    }
+
+    // Populate TZ select (short curated list + current)
+    (function tzList(){
+      const sel=$("#tzPick"); if(!sel) return;
+      const cur = MoonTZ.getTZ();
+      const common = ["UTC","America/Los_Angeles","America/Denver","America/Chicago","America/New_York","Europe/London","Europe/Berlin","Europe/Kyiv","Asia/Tokyo","Australia/Sydney"];
+      const set = new Set([cur].concat(common));
+      sel.innerHTML = Array.from(set).sort().map(z=>`<option value="${z}" ${z===cur?'selected':''}>${z}</option>`).join("");
+      sel.addEventListener("change",()=>{ MoonTZ.setTZ(sel.value); paint(); shareable(); });
+    })();
+
+    // Week dots
+    function drawWeekDots(n){
+      const box=$("#weekDots"); if(!box) return;
+      box.innerHTML = "";
+      for(let i=1;i<=28;i++){
+        const el=document.createElement("i");
+        el.className = "dot wk";
+        if (n && i<=n) el.classList.add("on");
+        box.appendChild(el);
+      }
+    }
+
+    // Practice list hookup
+    function injectPractices(idx){
+      const list=$("#practiceList"); if(!list) return;
+      const m = window.__MOONS__.find(x=>x.idx===idx);
+      const defaults = {
+        1:["Clarify your purpose in one sentence.","Choose one devotion you will repeat daily this moon."],
+        2:["Name the two poles in your current dilemma.","Pick one stabilizing constraint for the week."],
+        3:["List three ways to serve your purpose.","Take one helpful action for someone today."],
+        4:["Draw the form: inputs → alchemy → outputs.","Name constraints that set you free."],
+        5:["Identify one strength to amplify.","Share a small win publicly."],
+        6:["Design a daily cadence (AM/PM).","Balance effort with restoration."],
+        7:["Create a short ritual to open the channel.","Sit in silence for seven minutes."],
+        8:["Write your eight core values.","Align one habit with those values."],
+        9:["Set one clear intention for the week.","Take one bold visible step."],
+        10:["Ship a minimum complete slice.","Refine one delightful detail."],
+        11:["Drop one nonessential commitment.","Do a 10-minute clutter release daily."],
+        12:["Schedule one collaborative session.","Name how your work serves the whole."],
+        13:["Practice stillness for 13 breaths.","Close one loop with gratitude."]
+      };
+      const items = (defaults[idx]||[]).map(t=>`<li>${t}</li>`).join("");
+      list.innerHTML = items || "<li class='meta'>—</li>";
+    }
+
+    // Mini bar + header badge
+    function paint(){
+      const yEl=$("#yr"); if(yEl) yEl.textContent=String(new Date().getFullYear());
+      const wall = MoonTZ.nowWall();
+      const stamp = wall.toLocaleString([], {hour12:false});
+      $("#nowClock").textContent = stamp.split(", ").pop() || "—";
+      $("#nowDate").textContent  = MoonTZ.isoDateWall(wall);
+      $("#nowTZ").textContent    = MoonTZ.getTZ();
+
+      const r = calcRemnant(wall);
+      const m = window.__MOONS__.find(x=>x.idx===r.moonIdx) || {};
+      const name = m.name||"—", ess = m.essence||"—";
+      const color = m.color||"var(--accent)";
+
+      // mini bar
+      $("#mbName").textContent = name;
+      $("#mbEssence").textContent = ess;
+      $("#mbDay").textContent = r.dayInMoon? `${r.dayInMoon}/28` : "—/28";
+      $("#mbYear").textContent = r.yearSpan;
+      const arcMini = $("#moonArcMini");
+      if (arcMini && r.dayInMoon){ const pct = ((r.dayInMoon-1)/28)*163; arcMini.setAttribute("stroke-dasharray", `${pct} 163`); arcMini.style.stroke = color; }
+
+      // header badge
+      $("#dayInMoon").textContent = r.dayInMoon? String(r.dayInMoon) : "—";
+      $("#moonName").textContent = name;
+      $("#moonEssence").textContent = ess;
+      $("#yearSpan").textContent = r.yearSpan;
+      $("#moonLine").textContent = r.inDOOT ? "Day Out of Time" : `Moon ${r.moonIdx} • Day ${r.dayInMoon} • Week ${r.week}`;
+      $("#dootWarn").style.display = r.inDOOT ? "block" : "none";
+
+      const arc = $("#moonArc"); if(arc && r.dayInMoon){ const len=316; const pct=((r.dayInMoon-1)/28)*len; arc.style.strokeDasharray = `${pct} ${len}`; }
+
+      drawWeekDots(r.dayInMoon);
+
+      // practice set
+      injectPractices(r.moonIdx);
+
+      // simple year table
+      buildYearMap(r.year, r.yearSpan);
+
+      // update jump
+      const jm=$("#jumpMoon"); if(jm && r.moonIdx){ jm.value=String(r.moonIdx); }
+    }
+
+    function buildYearMap(yWall, span){
+      const tb=$("#yearMap tbody"); if(!tb) return;
+      tb.innerHTML="";
+      // For display: each Moon is a 28-day block from July 26; DOOT is Jul 25
+      const tz = MoonTZ.getTZ();
+      const start = MoonTZ.wallParts(new Date(Date.UTC(yWall,6,26)), tz);
+      for(let i=0;i<13;i++){
+        const m = window.__MOONS__[i];
+        const from = new Date(start.getTime() + i*28*86400000);
+        const to   = new Date(from.getTime() + 27*86400000);
+        const fmt = (d)=> d.toLocaleDateString([], {year:"numeric",month:"short",day:"2-digit"});
+        tb.insertAdjacentHTML("beforeend",
+          `<tr><td>${m.idx}</td><td>${m.name}</td><td>${m.essence}</td><td>${fmt(from)} (${tz})</td><td>${fmt(to)} (${tz})</td></tr>`);
+      }
+      $("#nextMoonInfo").textContent = `Year ${span} in ${tz}.`;
+    }
+
+    // Controls
+    $("#btnToday")?.addEventListener("click",()=>{ MoonTZ.setTZ($("#tzPick").value||MoonTZ.getTZ()); paint(); });
+    $("#prevDay")?.addEventListener("click",()=>{ stepDay(-1); });
+    $("#nextDay")?.addEventListener("click",()=>{ stepDay(1); });
+    $("#shareLink")?.addEventListener("click",shareable);
+    $("#jumpMoon")?.addEventListener("change",(e)=>{ jumpToMoon(parseInt(e.target.value||"0",10)); });
+
+    function stepDay(n){
+      const cur = MoonTZ.nowWall();
+      const newWall = new Date(cur.getTime() + n*86400000);
+      // emulate by temporarily shifting system wall via URL ?d=YYYY-MM-DD (for deep link)
+      location.href = "moons.html?tz="+encodeURIComponent(MoonTZ.getTZ())+"&d="+encodeURIComponent(MoonTZ.isoDateWall(newWall));
+    }
+
+    function jumpToMoon(idx){
+      if(!idx) return;
+      // Jump by setting date = start + (idx-1)*28
+      const tz=MoonTZ.getTZ();
+      const yWall = MoonTZ.nowWall().getUTCMonth()>6? MoonTZ.nowWall().getUTCFullYear(): MoonTZ.nowWall().getUTCFullYear()-1;
+      const anchor = MoonTZ.wallParts(new Date(Date.UTC(yWall,6,26)), tz);
+      const target = new Date(anchor.getTime() + (idx-1)*28*86400000);
+      location.href = "moons.html?tz="+encodeURIComponent(tz)+"&d="+encodeURIComponent(MoonTZ.isoDateWall(target));
+    }
+
+    function shareable(){
+      const url = new URL(location.href);
+      url.searchParams.set("tz", MoonTZ.getTZ());
+      navigator.clipboard?.writeText(url.toString()).then(()=>{ alert("Link copied with TZ."); });
+    }
+
+    // Hour scrub keys
+    addEventListener("keydown",(e)=>{
+      if(e.key==="ArrowUp"){ e.preventDefault(); stepDay(1); }
+      if(e.key==="ArrowDown"){ e.preventDefault(); stepDay(-1); }
+      if(e.key==="t"||e.key==="T"){ e.preventDefault(); location.href="moons.html?tz="+encodeURIComponent(MoonTZ.getTZ()); }
+    });
+
+    // Labels refresh every second
+    setInterval(()=>{ $("#nowClock").textContent = MoonTZ.nowWall().toLocaleTimeString([], {hour12:false}); }, 1000);
+
+    // Astrology fallback paint
+    function astroFallback(){
+      $("#astroStamp").textContent = MoonTZ.isoDateWall(MoonTZ.nowWall());
+      $("#astroTZ").textContent = MoonTZ.getTZ();
+      $("#astroSource").textContent = (window.__EPHEMERIS__?"Ephemeris":"Unavailable");
+      if(!window.__EPHEMERIS__){
+        $("#aspBody").innerHTML = `<tr><td colspan="3" class="meta">No ephemeris loaded. Provide <code>window.__EPHEMERIS__</code> to populate placements.</td></tr>`;
+      }
+    }
+
+    // Respect ?d=YYYY-MM-DD deep link
+    (function seedDate(){
+      const d = new URLSearchParams(location.search).get("d");
+      if(d){ $("#nowDate").textContent = d; }
+    })();
+
+    // initial paint
+    paint();
+    astroFallback();
+
+    // patch mini moonbar if CSS hasn’t set stroke-width
+    (function(){ const fg=$("#moonArcMini"); if(fg && !fg.getAttribute('stroke-width')) fg.setAttribute('stroke-width','10'); })();
+  })();
+  </script>
+
+  <!-- Site accents (phase tints etc) -->
+  <script src="assets/js/accents.js?v=1.1" defer></script>
+  <!-- Main moons logic (if present, it can override/augment the fallback) -->
+  <script src="assets/js/moons.js?v=4.3" defer></script>
 </body>
 </html>
