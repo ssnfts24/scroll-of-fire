@@ -54,14 +54,19 @@
   <style>
     :root{ --safe-top: env(safe-area-inset-top, 0px) }
     .top-safe{ height: calc(var(--safe-top) + 8px) }
+
     #skyBg{ position:fixed; inset:0; width:100vw; height:100vh; z-index:0; pointer-events:none; display:block }
     body > .wrap, main.wrap, header.page-head, .moonbar, .compare, footer.footer { position:relative; z-index:1 }
+
     @supports (-webkit-touch-callout:none){ input,select,textarea,button{ font-size:16px } }
+
+    /* mini-moonbar refinements */
     .moonbar{ isolation:isolate }
     .moonbar svg{ width:100%; height:auto; min-height:38px }
     .moonbar .mb-bg{ stroke:#142233; stroke-width:8; opacity:.9 }
     .moonbar .mb-fg{ stroke:url(#mbGrad), var(--moon-accent); stroke-width:10; stroke-linecap:round;
       filter: drop-shadow(0 0 8px color-mix(in oklch, var(--moon-accent) 55%, transparent)); }
+
     @media (max-width: 880px){
       .page-head .crumbs{ gap:6px; overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none }
       .page-head .crumbs::-webkit-scrollbar{ display:none }
@@ -585,11 +590,13 @@
     $("#jumpMoon")?.addEventListener("change",(e)=> jumpToMoon(parseInt(e.target.value||"0",10)));
 
     function syncDeepLink(opts){
-      const url=new URL(location.href); const sp=url.searchParams;
-      if(opts.tz!==undefined){sp.set("tz",opts.tz);}
-      if(opts.d===null){sp.delete("d");} else if(opts.d){sp.set("d",opts.d);}
-      if(opts.h===null){sp.delete("h");} else if(opts.h!==undefined){sp.set("h",String(opts.h));}
-      history.replaceState(null,"",url);
+      try{
+        const url=new URL(location.href); const sp=url.searchParams;
+        if(opts.tz!==undefined){sp.set("tz",opts.tz);}
+        if(opts.d===null){sp.delete("d");} else if(opts.d){sp.set("d",opts.d);}
+        if(opts.h===null){sp.delete("h");} else if(opts.h!==undefined){sp.set("h",String(opts.h));}
+        history.replaceState(null,"",url);
+      }catch{}
     }
     function shareable(){
       const u = location.href;
@@ -979,6 +986,10 @@
     (function sky(){
       const c=$("#skyBg"); if(!c) return;
       const ctx=c.getContext("2d",{alpha:true});
+
+      function size(){ c.width=innerWidth; c.height=innerHeight; }
+      size();
+
       let stars=Array.from({length:120},()=>({x:Math.random()*c.width,y:Math.random()*c.height,z:0.2+Math.random()*0.8,s:0.5+Math.random()*1.5}));
       const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
       function frame(){
@@ -991,7 +1002,7 @@
         if(!reduce) requestAnimationFrame(frame);
       }
       frame();
-      addEventListener("resize",()=>{c.width=innerWidth; c.height=innerHeight;});
+      addEventListener("resize",()=>{size(); stars=stars.map(s=>({x:Math.random()*c.width,y:Math.random()*c.height,z:s.z,s:s.s}))});
     })();
 
     // First paint + seal links + astro fallback
