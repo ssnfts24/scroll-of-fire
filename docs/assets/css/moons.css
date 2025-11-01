@@ -3,6 +3,7 @@
    File: assets/css/moons.css
    Layers: tokens, base, components, astrology, utilities, remnant, legacy
    Purpose: page-specific polish for moons.html (widgets, wheel, maps)
+   Version: v1.1 (2025-11-01)
    ====================================================================== */
 
 @layer tokens, base, components, astrology, utilities, remnant, legacy;
@@ -67,11 +68,13 @@
   }
   .lab-btn.big{ padding:.7rem 1rem; font-size:1.02rem; border-radius:14px }
   .lab-btn.ghost{ background: transparent }
+
   .lab-input{
     background:#101621; color:var(--moon-ink);
     border:1px solid var(--moon-line); border-radius:10px;
     padding:.45rem .55rem;
   }
+
   .tag, .pill{
     display:inline-flex; align-items:center; gap:.4ch;
     background: var(--pill-bg);
@@ -80,6 +83,9 @@
     border:1px solid color-mix(in oklch, var(--moon-accent) 20%, var(--moon-line));
     font-weight:600;
   }
+  /* FIX: element has classes "pill k" (not .k descendant) */
+  .pill.k{ font-weight:800 }
+
   .meta{ color: var(--moon-muted) }
   .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Roboto Mono", monospace; font-weight:600; letter-spacing:.02em }
   .divider{ height:1px; background:linear-gradient(90deg, transparent, var(--moon-line), transparent) }
@@ -92,6 +98,7 @@
     box-shadow: 0 12px 30px rgba(0,0,0,.45);
     opacity:0; transition:opacity .22s ease;
   }
+  .toast.show{ opacity:1 }
 }
 
 /* --------------------------- Header / Moon badge ------------------------ */
@@ -111,7 +118,6 @@
   .ring .ring-fg{ fill:none; stroke:url(#rg); stroke-width:10; stroke-linecap:round; stroke-dasharray:0 316; transition:stroke .2s ease }
   .ring .label{ position:absolute; inset:0; display:grid; place-items:center }
   .ring .big{ font-size:1.8rem; font-weight:800 }
-  .pill .k{ font-weight:800 }
 
   .weekrow{ display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:center; margin-top:.6rem }
   .weekrow .weeklabel{ color:var(--moon-muted); font-weight:700 }
@@ -120,7 +126,9 @@
     width:10px; height:10px; border-radius:50%;
     background:#101521; border:1px solid #243043; box-shadow:0 0 0 2px #0a0f18 inset;
   }
-  .week .dot.on{
+  /* FIX: JS emits "is-now" not "on" */
+  .week .dot.on,
+  .week .dot.is-now{
     background: radial-gradient(100% 100% at 30% 25%, color-mix(in oklch, var(--moon-accent) 55%, #fff), color-mix(in oklch, var(--moon-accent-2) 35%, #fff));
     border-color: color-mix(in oklch, var(--moon-accent) 60%, #122033);
     box-shadow: 0 0 16px color-mix(in oklch, var(--moon-accent) 45%, transparent);
@@ -197,7 +205,7 @@
   }
 }
 
-/* ---------------------------- Astro Panel (MOONS scoped) ------------------------------- */
+/* ---------------------------- Astro Panel (MOONS scoped) ---------------- */
 @layer astrology {
   .page-moons .astro{ overflow: clip }
   .page-moons .astro-head{ display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:center; margin-bottom:.35rem }
@@ -335,11 +343,25 @@
     border:1px solid #2a3242; background:#0f1520; color:#dfe9ff;
   }
 
+  /* Focus states for a11y */
+  :is(a, button, .lab-btn, .dl, .moonbar .moonbar-share, .calendar__tools .btn):focus-visible{
+    outline: 2px solid color-mix(in oklch, var(--moon-accent) 60%, #1a2a40);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--moon-accent) 25%, transparent);
+  }
+
   /* Print: keep the essentials */
   @media print{
     .compare, .codex-toc, .astro-aspects, .lab-row, .goldline { display:none !important; }
     body { background:#fff; color:#000; }
     .card, .calendar, .year-map { box-shadow:none; border-color:#888; background:#fff; }
+  }
+
+  /* Motion-safe: lighten heavy effects */
+  @media (prefers-reduced-motion: reduce){
+    .card, .moonbar, #simMoon { box-shadow: none }
+    .ring .ring-fg{ transition: none }
+    .toast{ transition: none }
   }
 
   /* High-contrast helper */
