@@ -48,6 +48,21 @@
   <link rel="stylesheet" href="assets/css/moons.css?v=2025-10-27">
   <link rel="stylesheet" href="assets/css/bridge.css?v=2025-10-27">
 
+  <!-- Critical overrides (mobile-safe top padding, canvas layer, timers) -->
+  <style>
+    :root{--safe-top: env(safe-area-inset-top, 0px)}
+    /* push content below device notch/status bar */
+    .top-safe{height: calc(var(--safe-top) + 8px)}
+    /* keep sky behind everything, avoid intercepting taps */
+    #skyBg{position:fixed; inset:0; width:100vw; height:100vh; z-index:0; pointer-events:none; display:block}
+    /* ensure UI sits above background */
+    body > .wrap, main.wrap, header.page-head, .moonbar, .compare, footer.footer { position:relative; z-index:1 }
+    /* avoid iOS zoom on form controls */
+    @supports (-webkit-touch-callout:none){
+      input,select,textarea,button{font-size:16px}
+    }
+  </style>
+
   <!-- Preloads / Prefetch -->
   <link rel="preload" href="assets/js/moons.js?v=4.1" as="script" crossorigin>
   <link rel="prefetch" href="genesis-oracle.html" as="document">
@@ -59,6 +74,9 @@
 </head>
 
 <body class="stars remnant-yhwh">
+  <!-- Spacer for safe areas / status bar -->
+  <div class="top-safe" aria-hidden="true"></div>
+
   <!-- Hidden SVG gradients for phase tinting -->
   <svg width="0" height="0" aria-hidden="true" focusable="false">
     <defs>
@@ -71,7 +89,7 @@
     </defs>
   </svg>
 
-  <!-- Ambient sky -->
+  <!-- Ambient sky (now fixed behind UI) -->
   <canvas id="skyBg" width="1440" height="900" aria-hidden="true"></canvas>
 
   <!-- Mini Moonbar -->
@@ -174,9 +192,9 @@
         <h2 id="today-head">Today</h2>
         <div class="lab-row" style="align-items:flex-end">
           <span class="pill"><b id="nowDate" aria-live="polite">—</b></span>
-          <span class="pill mono" id="nowClock" aria-live="polite">—:—:—</span>
-          <span class="pill" id="nowTZ">—</span>
-          <span class="pill" id="moonLine">—</span>
+          <span class="pill mono" id="nowClock" role="timer" aria-live="polite">—:—:—</span>
+          <span class="pill" id="nowTZ" aria-live="polite">—</span>
+          <span class="pill" id="moonLine" aria-live="polite">—</span>
         </div>
         <div class="lab-row" style="margin-top:8px">
           <label>Time Zone
@@ -410,7 +428,7 @@
         <blockquote class="pull">“Number the days; crown the weeks; keep the remnant bright.”</blockquote>
 
         <figure>
-          <img src="assets/media/codex-example.jpg" alt="Codex plate showing harmonics of the 13×28 count">
+          <img src="assets/media/codex-example.jpg" alt="Codex plate showing harmonics of the 13×28 count" loading="lazy" decoding="async" fetchpriority="low">
           <figcaption>Plate VII — Harmonics of the 13×28 count.</figcaption>
         </figure>
 
