@@ -1,143 +1,70 @@
-/* ======================================================================
+/* ==========================================================================
    Scroll of Fire — Design Tokens
-   Scope: global CSS variables (colors, spacing, radii, shadows, motion)
-   Theme: Wizard of YHWH • starfield • 13 Moons accents
-   Notes: All components/styles consume ONLY tokens from here.
-   ====================================================================== */
-
+   - Color system (OKLCH-first), spacing, radii, shadows, z-index
+   - Light/Dark surfaces + accent pair wired to JS (accents.js)
+   ========================================================================== */
 @layer tokens {
-  :root {
-    /* ---------- Color (OKLCH where supported; fallback HEX) ---------- */
-    /* Base surfaces */
-    --bg: #0b0b0f;                  /* deep cosmos */
-    --bg-elev: #0e0e12;             /* cards, panels */
-    --ink: #eae7df;                 /* primary text */
-    --muted: #b8b3a6;               /* secondary text */
-    --line: #2a2a33;                /* borders, dividers */
+  :root{
+    /* Base palette (will be nudged by accents.js) */
+    --accent: oklch(0.86 0.12 200);
+    --accent-2: oklch(0.86 0.14 95);
+    --moon-accent: var(--accent);
+    --moon-accent-2: var(--accent-2);
+    --season-a: oklch(0.25 0.06 182);
+    --season-b: oklch(0.18 0.04 32);
 
-    /* Brand accents (moon gradient endpoints) */
-    --gold: #f3c97a;
-    --aqua: #7af3ff;
-    --aqua-2: #9bd3ff;
-    --violet: #cbb6ff;
+    /* Light */
+    --bg: #f7fbff;
+    --bg-elev: #eef3f8;
+    --ink: #0c0f14;
+    --muted: #5c6474;
+    --line: #d7dde6;
+    --card: #ffffff;
+    --glow-a: 0 0 0 1px color-mix(in oklch, var(--accent) 14%, transparent),
+              0 0 30px color-mix(in oklch, var(--accent) 18%, transparent);
 
-    /* Functional */
-    --ok: #65d98a;
-    --warn: #ffd27a;
-    --danger: #ff7a7a;
-    --info: #7aa8ff;
-
-    /* Moon accent palette (per 13 moons) */
-    --moon-1: #6fe7ff;  /* Magnetic — Unify Purpose */
-    --moon-2: #b1c7ff;  /* Lunar — Polarize Challenge */
-    --moon-3: #7af3ff;  /* Electric — Activate Service */
-    --moon-4: #7bf3b8;  /* Self-Existing — Define Form */
-    --moon-5: #ffd27a;  /* Overtone — Empower Radiance */
-    --moon-6: #a7ffcf;  /* Rhythmic — Organize Equality */
-    --moon-7: #7af3ff;  /* Resonant — Channel Inspiration */
-    --moon-8: #9bd3ff;  /* Galactic — Harmonize Integrity */
-    --moon-9: #ffbc6f;  /* Solar — Pulse Intention */
-    --moon-10:#ffd9a6;  /* Planetary — Perfect Manifestation */
-    --moon-11:#b8c7ff;  /* Spectral — Dissolve Release */
-    --moon-12:#cfefff;  /* Crystal — Dedicate Cooperation */
-    --moon-13:#e7d1ff;  /* Cosmic — Endure Presence */
-
-    /* Dynamic accent used by JS to tint UI by phase/moon */
-    --moon-accent: var(--aqua);
-    --moon-accent-2: var(--gold);
-
-    /* ---------- Typography ---------- */
-    --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+    /* Typo */
+    --font-sans: Inter, ui-sans-serif, system-ui, Segoe UI, Roboto, Apple Color Emoji, Noto Color Emoji, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
     --font-serif: "Crimson Pro", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
-    /* Type scale */
-    --fs-2xs: 11px;
-    --fs-xs: 12px;
-    --fs-sm: 14px;
-    --fs-md: 16px;
-    --fs-lg: 18px;
-    --fs-xl: clamp(20px, 2.2vw, 24px);
-    --fs-2xl: clamp(24px, 3.2vw, 32px);
-    --fs-3xl: clamp(28px, 4.0vw, 40px);
-    --fs-4xl: clamp(34px, 5.2vw, 56px);
-
-    /* ---------- Spacing & layout ---------- */
-    --gap-2: 2px;
-    --gap-4: 4px;
-    --gap-6: 6px;
-    --gap-8: 8px;
-    --gap-10: 10px;
-    --gap-12: 12px;
-    --gap-16: 16px;
-    --gap-20: 20px;
-    --gap-24: 24px;
-    --gap-32: 32px;
-    --gap-40: 40px;
-
-    --container: 1200px;
-    --radius-sm: 10px;
-    --radius-md: 14px;
+    /* Scale */
+    --radius: 14px;
     --radius-lg: 20px;
-    --radius-xl: 24px;
-    --ring: 0 0 0 1px color-mix(in oklch, var(--aqua) 24%, transparent);
+    --radius-sm: 10px;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-10: 40px;
 
-    /* ---------- Shadows / glow ---------- */
-    --shadow-soft: 0 10px 30px rgba(0,0,0,.35);
-    --glow-aqua: 0 0 24px color-mix(in oklch, var(--aqua) 50%, transparent);
-    --glow-gold: 0 0 24px color-mix(in oklch, var(--gold) 50%, transparent);
-    --glow-violet: 0 0 24px color-mix(in oklch, var(--violet) 50%, transparent);
+    /* Shadows */
+    --shadow-1: 0 1px 1px rgba(0,0,0,.05), 0 2px 6px rgba(0,0,0,.06);
+    --shadow-2: 0 6px 20px rgba(0,0,0,.10);
+    --shadow-3: 0 10px 34px rgba(0,0,0,.14);
 
-    /* ---------- Motion (respect user prefs) ---------- */
-    --dur-fast: 120ms;
-    --dur: 220ms;
-    --dur-slow: 420ms;
-    --e-out: cubic-bezier(.22, 1, .36, 1);
-    --e-in: cubic-bezier(.65, 0, .35, 1);
-    --e-bounce: cubic-bezier(.34,1.56,.64,1);
-
-    /* ---------- Grid ---------- */
-    --grid-gap: 12px;
-    --grid-cols: 12;
-    --grid-max: var(--container);
-
-    /* ---------- Starfield (canvas + overlays) ---------- */
-    --stars-density: 0.9;    /* 0..1 tune sparsity */
-    --stars-twinkle: 0.4;    /* 0..1 twinkle intensity */
-    --stars-color: rgba(255,255,255,.9);
-    --nebula-a: rgba(122,243,255,.12);
-    --nebula-b: rgba(243,201,122,.10);
-
-    /* ---------- Rings / status badges ---------- */
-    --ring-bg: #121219;
-    --ring-fg: var(--aqua);
-
-    /* ---------- Z-index map ---------- */
-    --z-sky: 0;
-    --z-page: 1;
-    --z-header: 10;
-    --z-overlay: 20;
-    --z-modal: 30;
+    /* Z */
+    --z-header: 40;
+    --z-fx: 0;
   }
 
-  /* Light theme tweaks (auto by prefers-color-scheme or attribute) */
-  :root[data-theme="light"] {
-    --bg: #f7fbff;
-    --bg-elev: #ffffff;
-    --ink: #0b0b0f;
-    --muted: #3b3b44;
-    --line: #e9eef3;
-
-    --ring-bg: #edf4fb;
+  /* Dark theme surfaces */
+  html[data-theme="dark"]{
+    --bg: #0b0b0f;
+    --bg-elev: #0f1118;
+    --ink: #ece7dd;
+    --muted: #a7b1ca;
+    --line: #202636;
+    --card: #12141d;
+    --shadow-1: 0 1px 1px rgba(0,0,0,.2), 0 2px 10px rgba(0,0,0,.25);
+    --shadow-2: 0 8px 26px rgba(0,0,0,.35);
+    --shadow-3: 0 14px 44px rgba(0,0,0,.48);
   }
 
-  /* High-contrast mode */
-  @media (prefers-contrast: more) {
-    :root { --ring: 0 0 0 2px var(--aqua); }
-  }
-
-  /* Reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    :root { --dur: 1ms; --dur-fast: 1ms; --dur-slow: 1ms; }
+  @media (prefers-reduced-motion: reduce){
+    :root{ scroll-behavior: auto }
   }
 }
