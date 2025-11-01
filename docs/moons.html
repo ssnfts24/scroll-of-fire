@@ -2,15 +2,11 @@
 <html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963" data-alive="lively">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>
-    // Keep <base> only on live GitHub Pages; remove for repo preview/local dev
-    (function(){var live="ssnfts24.github.io";if(location.hostname!==live){var b=document.querySelector("base");if(b)b.remove();}})();
-  </script>
+  <script>(function(){var live="ssnfts24.github.io";if(location.hostname!==live){var b=document.querySelector("base");if(b)b.remove();}})();</script>
 
-  <!-- 0) Prevent theme flash before CSS -->
+  <!-- Flashless theme + FB in-app guard -->
   <script>(function(){try{let t=localStorage.getItem('theme');if(!t){t=(matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',t)}catch{}})();</script>
-  <!-- 0.1) FB in-app browser guard -->
-  <script>(function(){var ua=navigator.userAgent||''; if(/\bFBAN|FBAV|FB_IAB|FBAN\/Messenger\b/i.test(ua)){document.documentElement.classList.add('is-fbapp')}})();</script>
+  <script>(function(){var ua=navigator.userAgent||'';if(/\bFBAN|FBAV|FB_IAB|FBAN\/Messenger\b/i.test(ua)){document.documentElement.classList.add('is-fbapp')}})();</script>
 
   <meta charset="utf-8" />
   <title>Remnant 13 Moons — Living Clock · Scroll of Fire</title>
@@ -18,7 +14,7 @@
   <meta name="color-scheme" content="dark light" />
   <meta name="theme-color" content="#05070d" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#f7fbff" media="(prefers-color-scheme: light)">
-  <meta name="description" content="Remnant 13-Moon Living Clock — TZ-true 13×28 mapping with mini moonbar, week dots, year map, numerology, optional Kin, zodiac fallback, and .ics export." />
+  <meta name="description" content="Remnant 13-Moon Living Clock — TZ-true 13×28 mapping with mini moonbar, week dots, year map, numerology, optional Kin, zodiac fallback, lunar sim, and .ics export." />
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
 
   <!-- OG / Twitter -->
@@ -39,7 +35,7 @@
   <link rel="icon" type="image/png" sizes="512x512" href="assets/icons/icon-512.png">
   <link rel="mask-icon" href="assets/icons/safari-pinned.svg" color="#0e131a">
 
-  <!-- Fonts preconnect -->
+  <!-- Preconnects -->
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -60,15 +56,12 @@
     .top-safe{ height: calc(var(--safe-top) + 8px) }
     #skyBg{ position:fixed; inset:0; width:100vw; height:100vh; z-index:0; pointer-events:none; display:block }
     body > .wrap, main.wrap, header.page-head, .moonbar, .compare, footer.footer { position:relative; z-index:1 }
-    /* iOS form anti-zoom */
     @supports (-webkit-touch-callout:none){ input,select,textarea,button{ font-size:16px } }
-    /* mini moonbar hardening */
     .moonbar{ isolation:isolate }
     .moonbar svg{ width:100%; height:auto; min-height:38px }
     .moonbar .mb-bg{ stroke:#142233; stroke-width:8; opacity:.9 }
     .moonbar .mb-fg{ stroke:url(#mbGrad), var(--moon-accent); stroke-width:10; stroke-linecap:round;
       filter: drop-shadow(0 0 8px color-mix(in oklch, var(--moon-accent) 55%, transparent)); }
-    /* small screens */
     @media (max-width: 880px){
       .page-head .crumbs{ gap:6px; overflow:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none }
       .page-head .crumbs::-webkit-scrollbar{ display:none }
@@ -106,7 +99,7 @@
     </defs>
   </svg>
 
-  <!-- Ambient sky -->
+  <!-- Animated ambient sky -->
   <canvas id="skyBg" width="1440" height="900" aria-hidden="true"></canvas>
 
   <!-- Mini Moonbar -->
@@ -462,42 +455,30 @@
 
   <noscript><p class="meta" style="text-align:center">This page needs JavaScript to calculate moon/day, phase, and year map.</p></noscript>
 
-  <!-- ===== Shared TZ core (keeps wall-time in sync with index/micro) ===== -->
+  <!-- ===== TZ core (shared with index/micro) ===== -->
   <script>
-  window.MoonTZ = (function(){
-    "use strict";
-    const KEY = "sof_moons_tz";
-    function setTZ(z){ try{ new Intl.DateTimeFormat("en-US",{timeZone:z}).format(new Date()); localStorage.setItem(KEY,z); }catch{} }
-    function getTZ(){ return localStorage.getItem(KEY)
-      || (new URLSearchParams(location.search).get("tz"))
-      || (Intl.DateTimeFormat().resolvedOptions().timeZone||"UTC"); }
-    function wallParts(d, tz){
-      try{
-        const parts = new Intl.DateTimeFormat("en-CA",{timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"})
-          .formatToParts(d).reduce((m,p)=> (m[p.type]=p.value,m),{});
-        return new Date(Date.UTC(+parts.year, +parts.month-1, +parts.day, +parts.hour, +parts.minute, +parts.second));
-      }catch{ return new Date(d); }
-    }
-    function nowWall(){ return wallParts(new Date(), getTZ()); }
-    function isoDateWall(d){
-      const w=wallParts(d||new Date(), getTZ());
-      const y=w.getUTCFullYear(), m=String(w.getUTCMonth()+1).padStart(2,"0"), da=String(w.getUTCDate()).padStart(2,"0");
-      return `${y}-${m}-${da}`;
-    }
-    (function seed(){ const z=new URLSearchParams(location.search).get("tz"); if(z) setTZ(z); })();
-    return { getTZ, setTZ, wallParts, nowWall, isoDateWall };
+  window.MoonTZ=(function(){"use strict";const KEY="sof_moons_tz";
+    function setTZ(z){try{new Intl.DateTimeFormat("en-US",{timeZone:z}).format(new Date());localStorage.setItem(KEY,z);}catch{}}
+    function getTZ(){return localStorage.getItem(KEY)||(new URLSearchParams(location.search).get("tz"))||(Intl.DateTimeFormat().resolvedOptions().timeZone||"UTC");}
+    function wallParts(d,tz){try{const p=new Intl.DateTimeFormat("en-CA",{timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"}).formatToParts(d).reduce((m,x)=>(m[x.type]=x.value,m),{});return new Date(Date.UTC(+p.year,+p.month-1,+p.day,+p.hour,+p.minute,+p.second));}catch{return new Date(d);}}
+    function nowWall(){return wallParts(new Date(),getTZ());}
+    function isoDateWall(d){const w=wallParts(d||new Date(),getTZ());const y=w.getUTCFullYear(),m=String(w.getUTCMonth()+1).padStart(2,"0"),da=String(w.getUTCDate()).padStart(2,"0");return`${y}-${m}-${da}`;}
+    (function seed(){const z=new URLSearchParams(location.search).get("tz");if(z) setTZ(z);})();
+    return {getTZ,setTZ,wallParts,nowWall,isoDateWall};
   })();
   </script>
 
-  <!-- ==== Minimal in-page fallback for core UI if moons.js fails ==== -->
+  <!-- ===== Page logic (fallback + UI glue). moons.js v4.3 can augment/override ===== -->
   <script>
   (function(){
     "use strict";
     const $=(s,r=document)=>r.querySelector(s);
     const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    const MS_DAY=86400000;
 
-    // 13 Moon config (from your dataset)
-    window.__MOONS__ = window.__MOONS__ || [
+    // Moons dataset (minimal fields used here; you can swap in the long JSON if desired)
+    window.__MOONS__=window.__MOONS__||[
       {"idx":1,"name":"Magnetic","essence":"Unify Purpose","color":"#6FE7FF"},
       {"idx":2,"name":"Lunar","essence":"Polarize Challenge","color":"#B1C7FF"},
       {"idx":3,"name":"Electric","essence":"Activate Service","color":"#7AF3FF"},
@@ -513,191 +494,395 @@
       {"idx":13,"name":"Cosmic","essence":"Endure Presence","color":"#E7D1FF"}
     ];
 
-    // Year anchor & DOOT handling
-    function remnantYearStart(y){ return new Date(Date.UTC(y,6,26)); } // July 26 UTC anchor (we'll shift by TZ)
-    function isLeap(y){ return (y%4===0 && y%100!==0) || (y%400===0); }
+    /* ---------- Remnant mapping ---------- */
+    function remnantYearStartUTC(y){return new Date(Date.UTC(y,6,26));} // Jul 26
+    function isLeap(gy){return (gy%4===0&&gy%100!==0)||(gy%400===0);}
 
-    // Map wall-time to Remnant day index
     function calcRemnant(wall){
-      // compute midnights in selected TZ by using MoonTZ.wallParts for start
-      const tz = MoonTZ.getTZ();
-      // Build wall anchor for current Remnant year
-      const yWall = wall.getUTCMonth() > 6 || (wall.getUTCMonth()===6 && wall.getUTCDate()>=26) ? wall.getUTCFullYear() : wall.getUTCFullYear()-1;
-      const startUTC = remnantYearStart(yWall);
-      const startWall = MoonTZ.wallParts(startUTC, tz); // anchor rendered in TZ
+      const tz=MoonTZ.getTZ();
+      // Which Remnant year (wall perspective)
+      const afterJul26 = (wall.getUTCMonth()>6) || (wall.getUTCMonth()===6 && wall.getUTCDate()>=26);
+      const yWall = afterJul26 ? wall.getUTCFullYear() : wall.getUTCFullYear()-1;
 
-      // DOOT is July 25 (day -1 relative to start)
-      const dootUTC = new Date(Date.UTC(yWall,6,25));
-      const dootWall = MoonTZ.wallParts(dootUTC, tz);
+      const startUTC = remnantYearStartUTC(yWall);
+      const startWall = MoonTZ.wallParts(startUTC,tz);
 
-      const ms = wall - startWall;
-      const day = Math.floor(ms/(24*3600*1000)); // 0..(364 or 365 with leap)
-      const inDOOT = (MoonTZ.isoDateWall(wall) === MoonTZ.isoDateWall(dootWall));
+      // DOOT (Day Out Of Time) = Jul 25 in wall TZ
+      const dootWall = MoonTZ.wallParts(new Date(Date.UTC(yWall,6,25)),tz);
+      const isDOOT = (MoonTZ.isoDateWall(wall)===MoonTZ.isoDateWall(dootWall));
 
-      // Leap day skip rule: if Feb 29 exists in this Gregorian year, it's simply ignored in 13×28 count.
+      // Leap day skip rule (Feb 29 ignored in 13×28)
       let leapAdj = 0;
       const gy = wall.getUTCFullYear();
-      if (isLeap(gy)) {
-        const feb29Wall = MoonTZ.wallParts(new Date(Date.UTC(gy,1,29)), tz);
-        if (MoonTZ.isoDateWall(wall) >= MoonTZ.isoDateWall(feb29Wall)) leapAdj = -1;
+      if(isLeap(gy)){
+        const feb29Wall = MoonTZ.wallParts(new Date(Date.UTC(gy,1,29)),tz);
+        if(MoonTZ.isoDateWall(wall) >= MoonTZ.isoDateWall(feb29Wall)) leapAdj = -1;
       }
 
-      let dayCount = inDOOT ? null : (day + 1 + leapAdj); // 1..364
-      let moonIdx=null, dayInMoon=null, week= null;
-      if (dayCount!==null){
-        moonIdx = Math.floor((dayCount-1)/28)+1; dayInMoon = ((dayCount-1)%28)+1; week=Math.floor((dayInMoon-1)/7)+1;
+      const daysSinceStart = Math.floor((wall - startWall)/MS_DAY); // 0-based
+      const dayCount = isDOOT ? null : (daysSinceStart + 1 + leapAdj); // 1..364
+
+      let moonIdx=null, dayInMoon=null, week=null;
+      if(dayCount!==null){
+        moonIdx = Math.floor((dayCount-1)/28)+1;
+        dayInMoon = ((dayCount-1)%28)+1;
+        week = Math.floor((dayInMoon-1)/7)+1;
       }
-      const yearSpan = `${yWall}/${yWall+1}`;
-      return { tz, year:yWall, yearSpan, inDOOT, dayCount, moonIdx, dayInMoon, week };
+      return {tz,year:yWall,yearSpan:`${yWall}/${yWall+1}`,inDOOT:isDOOT,dayCount,moonIdx,dayInMoon,week};
     }
 
-    // Populate TZ select (short curated list + current)
+    /* ---------- UI: TZ list, date/hour controls ---------- */
     (function tzList(){
       const sel=$("#tzPick"); if(!sel) return;
-      const cur = MoonTZ.getTZ();
-      const common = ["UTC","America/Los_Angeles","America/Denver","America/Chicago","America/New_York","Europe/London","Europe/Berlin","Europe/Kyiv","Asia/Tokyo","Australia/Sydney"];
-      const set = new Set([cur].concat(common));
-      sel.innerHTML = Array.from(set).sort().map(z=>`<option value="${z}" ${z===cur?'selected':''}>${z}</option>`).join("");
-      sel.addEventListener("change",()=>{ MoonTZ.setTZ(sel.value); paint(); shareable(); });
+      const cur=MoonTZ.getTZ();
+      const common=["UTC","America/Los_Angeles","America/Denver","America/Chicago","America/New_York","Europe/London","Europe/Berlin","Europe/Kyiv","Asia/Tokyo","Australia/Sydney"];
+      const set=new Set([cur,...common]);
+      sel.innerHTML=[...set].sort().map(z=>`<option value="${z}" ${z===cur?'selected':''}>${z}</option>`).join("");
+      sel.addEventListener("change",()=>{MoonTZ.setTZ(sel.value); syncDeepLink({tz:sel.value}); paint();});
     })();
 
-    // Week dots
+    const datePick=$("#datePick"), hourScrub=$("#hourScrub");
+    (function seedFromQuery(){
+      const q=new URLSearchParams(location.search);
+      const d=q.get("d"); const h=q.get("h");
+      if(d && datePick) datePick.value=d;
+      if(h && hourScrub) hourScrub.value=clamp(+h,0,23);
+    })();
+
+    datePick?.addEventListener("change",()=>{ syncDeepLink({d:datePick.value}); paint(); });
+    hourScrub?.addEventListener("input",()=>{ syncDeepLink({h:hourScrub.value}); paint(); });
+
+    $("#btnToday")?.addEventListener("click",()=>{ syncDeepLink({d:null,h:null}); paint(); });
+    $("#prevDay")?.addEventListener("click",()=> stepDay(-1));
+    $("#nextDay")?.addEventListener("click",()=> stepDay(1));
+    $("#shareLink")?.addEventListener("click",shareable);
+    $("#jumpMoon")?.addEventListener("change",(e)=> jumpToMoon(parseInt(e.target.value||"0",10)));
+
+    function syncDeepLink(opts){
+      const url=new URL(location.href); const sp=url.searchParams;
+      if(opts.tz!==undefined){sp.set("tz",opts.tz);}
+      if(opts.d===null){sp.delete("d");} else if(opts.d){sp.set("d",opts.d);}
+      if(opts.h===null){sp.delete("h");} else if(opts.h!==undefined){sp.set("h",String(opts.h));}
+      history.replaceState(null,"",url);
+    }
+    function shareable(){
+      const u=location.href; navigator.clipboard?.writeText(u).then(()=>alert("Link copied with TZ/date/hour."));
+    }
+    function stepDay(n){
+      const base = getWallFromControls();
+      const nextWall = new Date(base.getTime()+n*MS_DAY);
+      if(datePick){datePick.value = MoonTZ.isoDateWall(nextWall);}
+      syncDeepLink({d:MoonTZ.isoDateWall(nextWall)});
+      paint();
+    }
+    function jumpToMoon(idx){
+      if(!idx) return;
+      const tz=MoonTZ.getTZ();
+      const ref = getWallFromControls();
+      const afterJul26=(ref.getUTCMonth()>6)||(ref.getUTCMonth()===6&&ref.getUTCDate()>=26);
+      const yWall= afterJul26? ref.getUTCFullYear() : ref.getUTCFullYear()-1;
+      const anchor = MoonTZ.wallParts(new Date(Date.UTC(yWall,6,26)),tz);
+      const target = new Date(anchor.getTime()+(idx-1)*28*MS_DAY);
+      if(datePick){datePick.value = MoonTZ.isoDateWall(target);}
+      syncDeepLink({d:MoonTZ.isoDateWall(target)});
+      paint();
+    }
+
+    function getWallFromControls(){
+      const tz=MoonTZ.getTZ();
+      const q=new URLSearchParams(location.search);
+      const d=(datePick&&datePick.value)? datePick.value : (q.get("d")||MoonTZ.isoDateWall(MoonTZ.nowWall()));
+      const h=(hourScrub&&hourScrub.value!=null)? +hourScrub.value : (q.get("h")? +q.get("h") : MoonTZ.nowWall().getUTCHours());
+      const base=MoonTZ.wallParts(new Date(d+"T00:00:00Z"),tz);
+      return new Date(base.getTime()+h*3600000);
+    }
+
+    /* ---------- Year map ---------- */
+    function buildYearMap(yWall){
+      const tb=$("#yearMap tbody"); if(!tb) return;
+      tb.innerHTML="";
+      const tz=MoonTZ.getTZ();
+      const start=MoonTZ.wallParts(new Date(Date.UTC(yWall,6,26)),tz);
+      for(let i=0;i<13;i++){
+        const m=__MOONS__[i];
+        const from=new Date(start.getTime()+i*28*MS_DAY);
+        const to=new Date(from.getTime()+27*MS_DAY);
+        const fmt=d=>d.toLocaleDateString([], {year:"numeric",month:"short",day:"2-digit"});
+        tb.insertAdjacentHTML("beforeend",
+          `<tr><td>${m.idx}</td><td>${m.name}</td><td>${m.essence}</td><td>${fmt(from)} (${tz})</td><td>${fmt(to)} (${tz})</td></tr>`);
+      }
+      $("#nextMoonInfo").textContent=`Year ${yWall}/${yWall+1} in ${tz}.`;
+    }
+
+    /* ---------- Practice prompts ---------- */
+    function injectPractices(idx){
+      const list=$("#practiceList"); if(!list) return;
+      const defs={1:["Clarify your purpose in one sentence.","Choose one devotion to repeat daily."],
+        2:["Name the two poles in a dilemma.","Pick one stabilizing constraint."],
+        3:["List three ways to serve.","Take one helpful action today."],
+        4:["Sketch inputs→alchemy→outputs.","Name constraints that set you free."],
+        5:["Identify one strength to amplify.","Share a small win."],
+        6:["Design a daily cadence (AM/PM).","Balance effort with restoration."],
+        7:["Create a short opening ritual.","Sit in silence for seven minutes."],
+        8:["Write eight core values.","Align one habit today."],
+        9:["Set one clear intention.","Take one bold visible step."],
+        10:["Ship a complete thin slice.","Refine one delightful detail."],
+        11:["Drop one non-essential.","Do a 10-minute release."],
+        12:["Schedule one collaboration.","Name how this serves the whole."],
+        13:["Thirteen breaths of stillness.","Close one loop with gratitude."]};
+      list.innerHTML=(defs[idx]||[]).map(t=>`<li>${t}</li>`).join("")||"<li class='meta'>—</li>";
+    }
+
+    /* ---------- Dual calendars ---------- */
+    function renderRemnantMonth(moonIdx, dayInMoon){
+      const host=$("#remCal"); if(!host) return;
+      host.innerHTML="";
+      const head=document.createElement("div"); head.className="head";
+      ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].forEach(d=>head.insertAdjacentHTML("beforeend",`<div class="dow">${d}</div>`));
+      host.appendChild(head);
+      const row=document.createElement("div"); row.className="row";
+      for(let i=1;i<=28;i++){
+        const cell=document.createElement("div"); cell.className="daycell remnant";
+        if(i===dayInMoon) cell.classList.add("is-today");
+        cell.innerHTML=`<span class="n">${i}</span>`;
+        row.appendChild(cell);
+      }
+      host.appendChild(row);
+      $("#remHdr").textContent = `Remnant Month — #${moonIdx||"—"} ${(__MOONS__.find(x=>x.idx===moonIdx)||{}).name||""}`;
+      $("#remMeta").textContent= "13 × 28 fixed";
+    }
+
+    function renderGregorianMonth(wall){
+      const host=$("#gregCal"); if(!host) return;
+      host.innerHTML="";
+      const tz=MoonTZ.getTZ();
+      const y=wall.getUTCFullYear(), m=wall.getUTCMonth();
+      const first=new Date(Date.UTC(y,m,1)), last=new Date(Date.UTC(y,m+1,0));
+      const firstDow=(first.getUTCDay()+6)%7; // Mon=0
+      const days=last.getUTCDate();
+
+      const head=document.createElement("div"); head.className="head";
+      ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].forEach(d=>head.insertAdjacentHTML("beforeend",`<div class="dow">${d}</div>`));
+      host.appendChild(head);
+
+      const row=document.createElement("div"); row.className="row";
+      // Leading blanks
+      for(let i=0;i<firstDow;i++){ row.appendChild(blankCell()); }
+      // Days
+      for(let d=1; d<=days; d++){
+        const cell=document.createElement("div"); cell.className="daycell gregorian";
+        const thisWall = MoonTZ.wallParts(new Date(Date.UTC(y,m,d)),tz);
+        const todayIso = MoonTZ.isoDateWall(MoonTZ.nowWall());
+        const cellIso  = MoonTZ.isoDateWall(thisWall);
+        if(cellIso===todayIso) cell.classList.add("is-today");
+        // DOOT marker (Jul 25)
+        if(m===6 && d===25) cell.classList.add("is-doot");
+        // Leap marker
+        if(m===1 && d===29) cell.classList.add("is-leap");
+        cell.innerHTML=`<span class="n">${d}</span><span class="evt"></span>`;
+        row.appendChild(cell);
+      }
+      // Trailing blanks to complete grid (optional)
+      host.appendChild(row);
+
+      const label = new Date(Date.UTC(y,m,1)).toLocaleDateString([], {year:"numeric",month:"long"});
+      $("#gregHdr").textContent = `Gregorian — ${label}`;
+      $("#gregMeta").textContent= "Variable weeks";
+    }
+    function blankCell(){ const c=document.createElement("div"); c.className="daycell gregorian is-dim"; c.innerHTML=`<span class="n"> </span>`; return c; }
+
+    /* ---------- Lunar phase sim ---------- */
+    function drawLuna(canvas, wall){
+      const ctx=canvas.getContext("2d"); const s=canvas.width; const r=s*0.42; const cx=s/2, cy=s/2;
+      ctx.clearRect(0,0,s,s);
+      // background ring
+      ctx.beginPath(); ctx.arc(cx,cy,r+10,0,Math.PI*2); ctx.strokeStyle="#1b2231"; ctx.lineWidth=8; ctx.stroke();
+
+      // phase calc (approx)
+      const syn=29.530588; // days
+      // reference new moon near 2000-01-06 18:14 UTC (JDN 2451550.1)
+      const ref=new Date(Date.UTC(2000,0,6,18,14,0));
+      const age=((wall - ref)/MS_DAY)%syn; const phase=(age+syn)%syn; // 0=new
+      const k = Math.cos(2*Math.PI*phase/syn); // illumination geometry
+
+      // lit shape (simple limb)
+      ctx.fillStyle="#111723"; ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill();
+      ctx.save();
+      ctx.translate(cx,cy);
+      ctx.beginPath();
+      for(let y=-r;y<=r;y++){
+        const x=Math.sqrt(r*r-y*y);
+        const xe = x*k;
+        if(k>=0){ ctx.moveTo(-x,y); ctx.lineTo(xe,y); }
+        else    { ctx.moveTo(xe,y); ctx.lineTo(x,y); }
+      }
+      ctx.clip();
+      const grad=ctx.createRadialGradient(0,0, r*0.2, 0,0,r);
+      grad.addColorStop(0,"#eae7df"); grad.addColorStop(1,"#a7b1ca");
+      ctx.fillStyle=grad; ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+
+      const pct=Math.round((1-Math.abs(k))*100);
+      const names=["New Moon","Waxing Crescent","First Quarter","Waxing Gibbous","Full Moon","Waning Gibbous","Last Quarter","Waning Crescent"];
+      const idx=Math.round((phase/syn)*8)%8;
+      $("#phaseLine").textContent = `${names[idx]} • ${pct}%`;
+      $("#phaseMeta").textContent = `Age ~ ${phase.toFixed(1)} d of ${syn.toFixed(2)} d`;
+    }
+
+    /* ---------- Numerology (simple, TZ-wall date sum) ---------- */
+    function numerology(wall){
+      const iso=MoonTZ.isoDateWall(wall).replace(/-/g,"");
+      let sum=0; for(const c of iso){ sum+=+c; } while(sum>9){ let t=0; for(const d of String(sum)) t+=+d; sum=t; }
+      $("#numLine").textContent = `Date sum: ${iso} → ${sum}`;
+      const lines={
+        1:"Initiate cleanly; choose one thing.",
+        2:"Hold two poles; keep the bridge.",
+        3:"Serve actively; circulate good.",
+        4:"Define the frame; honor limits.",
+        5:"Amplify strengths; radiate.",
+        6:"Balance cadence; restore.",
+        7:"Listen; receive inspiration.",
+        8:"Align values; keep integrity.",
+        9:"Intend clearly; offer it up."
+      };
+      $("#numMeta").textContent = lines[sum]||"—";
+      $("#energyQuote").textContent = "“Number the days; crown the weeks.”";
+    }
+
+    /* ---------- Mini share card (SVG→Canvas) ---------- */
+    $("#btnShareImage")?.addEventListener("click",()=>{
+      const wrap=document.querySelector(".moonbar");
+      const svg=wrap.querySelector("svg");
+      const clone=svg.cloneNode(true);
+      const ser=new XMLSerializer().serializeToString(clone);
+      const img=new Image(); img.onload=()=>{
+        const c=document.createElement("canvas"); c.width=640; c.height=360;
+        const ctx=c.getContext("2d");
+        // bg
+        ctx.fillStyle="#0b0b0f"; ctx.fillRect(0,0,c.width,c.height);
+        // glow band
+        const g=ctx.createLinearGradient(0,0,c.width,0);
+        g.addColorStop(0,"#7af3ff"); g.addColorStop(1,"#f3c97a");
+        ctx.fillStyle=g; ctx.fillRect(0,0,c.width,6);
+        // moon svg
+        ctx.drawImage(img, 40, 60, 160, 160);
+        // text
+        ctx.fillStyle="#eae7df"; ctx.font="700 28px Inter, system-ui";
+        ctx.fillText($("#mbName").textContent||"—", 220, 110);
+        ctx.font="400 18px Inter, system-ui";
+        ctx.fillText($("#mbEssence").textContent||"—", 220, 140);
+        ctx.font="600 16px Inter, system-ui";
+        ctx.fillText(`Day ${($("#mbDay").textContent||"—")}`, 220, 170);
+        ctx.fillText(`Year ${($("#mbYear").textContent||"—")}`, 220, 196);
+        // seal
+        ctx.font="900 20px Inter, system-ui"; ctx.fillText("⟡ יהוה", 40, 250);
+        const url=c.toDataURL("image/png");
+        const a=document.createElement("a"); a.href=url; a.download="remnant-moon-card.png"; a.click();
+      };
+      img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(ser);
+    });
+
+    /* ---------- ICS export ---------- */
+    function buildICS(yWall,tz){
+      const start=MoonTZ.wallParts(new Date(Date.UTC(yWall,6,26)),tz);
+      const lines=[
+        "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Scroll of Fire//Remnant 13 Moons//EN","CALSCALE:GREGORIAN"
+      ];
+      for(let i=0;i<13;i++){
+        const m=__MOONS__[i];
+        const from=new Date(start.getTime()+i*28*MS_DAY);
+        const to=new Date(from.getTime()+28*MS_DAY); // DTEND exclusive
+        const fmt = d => d.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");
+        lines.push(
+          "BEGIN:VEVENT",
+          `UID:remnant-${yWall}-${i+1}@scroll-of-fire`,
+          `DTSTAMP:${fmt(new Date())}`,
+          `DTSTART:${fmt(from)}`,
+          `DTEND:${fmt(to)}`,
+          `SUMMARY:${m.idx}. ${m.name} — ${m.essence}`,
+          "END:VEVENT"
+        );
+      }
+      lines.push("END:VCALENDAR");
+      return new Blob([lines.join("\r\n")],{type:"text/calendar"});
+    }
+    function refreshICS(yWall){
+      const tz=MoonTZ.getTZ();
+      const blob=buildICS(yWall,tz);
+      const url=URL.createObjectURL(blob);
+      const a=$("#dlICS"); if(a){ a.href=url; a.download=`remnant-${yWall}-${yWall+1}.ics`; }
+    }
+    $("#regenICS")?.addEventListener("click",()=>{ const r=calcRemnant(getWallFromControls()); refreshICS(r.year); });
+
+    /* ---------- Paint loop ---------- */
+    function paint(){
+      const yEl=$("#yr"); if(yEl) yEl.textContent=String(new Date().getFullYear());
+      const wall=getWallFromControls();
+
+      // header stamps
+      $("#nowDate").textContent=MoonTZ.isoDateWall(wall);
+      $("#nowTZ").textContent=MoonTZ.getTZ();
+      $("#nowClock").textContent=MoonTZ.nowWall().toLocaleTimeString([], {hour12:false});
+
+      const r=calcRemnant(wall);
+      const m=__MOONS__.find(x=>x.idx===r.moonIdx)||{};
+      const name=m.name||"—", ess=m.essence||"—", color=m.color||"var(--accent)";
+
+      // mini bar
+      $("#mbName").textContent=name;
+      $("#mbEssence").textContent=ess;
+      $("#mbDay").textContent=r.dayInMoon?`${r.dayInMoon}/28`:"—/28";
+      $("#mbYear").textContent=r.yearSpan;
+      const arcMini=$("#moonArcMini"); if(arcMini&&r.dayInMoon){const pct=((r.dayInMoon-1)/28)*163; arcMini.setAttribute("stroke-dasharray",`${pct} 163`); arcMini.style.stroke=color;}
+
+      // header badge
+      $("#dayInMoon").textContent=r.dayInMoon?String(r.dayInMoon):"—";
+      $("#moonName").textContent=name; $("#moonEssence").textContent=ess;
+      $("#yearSpan").textContent=r.yearSpan;
+      $("#moonLine").textContent=r.inDOOT ? "Day Out of Time" : `Moon ${r.moonIdx} • Day ${r.dayInMoon} • Week ${r.week}`;
+      $("#dootWarn").style.display = r.inDOOT ? "block" : "none";
+      const arc=$("#moonArc"); if(arc&&r.dayInMoon){const len=316; const pct=((r.dayInMoon-1)/28)*len; arc.style.strokeDasharray=`${pct} ${len}`;}
+      drawWeekDots(r.dayInMoon);
+
+      // numerology + lunar sim
+      drawLuna($("#simMoon"), wall);
+      numerology(wall);
+
+      // practice + calendars + year table + ICS
+      injectPractices(r.moonIdx);
+      renderRemnantMonth(r.moonIdx,r.dayInMoon||0);
+      renderGregorianMonth(wall);
+      buildYearMap(r.year);
+      refreshICS(r.year);
+
+      // jump select
+      const jm=$("#jumpMoon"); if(jm&&r.moonIdx) jm.value=String(r.moonIdx);
+    }
+
     function drawWeekDots(n){
       const box=$("#weekDots"); if(!box) return;
-      box.innerHTML = "";
+      box.innerHTML="";
       for(let i=1;i<=28;i++){
         const el=document.createElement("i");
-        el.className = "dot wk";
-        if (n && i<=n) el.classList.add("on");
+        el.className="dot wk";
+        if(n && i<=n) el.classList.add("on");
         box.appendChild(el);
       }
     }
 
-    // Practice list hookup
-    function injectPractices(idx){
-      const list=$("#practiceList"); if(!list) return;
-      const m = window.__MOONS__.find(x=>x.idx===idx);
-      const defaults = {
-        1:["Clarify your purpose in one sentence.","Choose one devotion you will repeat daily this moon."],
-        2:["Name the two poles in your current dilemma.","Pick one stabilizing constraint for the week."],
-        3:["List three ways to serve your purpose.","Take one helpful action for someone today."],
-        4:["Draw the form: inputs → alchemy → outputs.","Name constraints that set you free."],
-        5:["Identify one strength to amplify.","Share a small win publicly."],
-        6:["Design a daily cadence (AM/PM).","Balance effort with restoration."],
-        7:["Create a short ritual to open the channel.","Sit in silence for seven minutes."],
-        8:["Write your eight core values.","Align one habit with those values."],
-        9:["Set one clear intention for the week.","Take one bold visible step."],
-        10:["Ship a minimum complete slice.","Refine one delightful detail."],
-        11:["Drop one nonessential commitment.","Do a 10-minute clutter release daily."],
-        12:["Schedule one collaborative session.","Name how your work serves the whole."],
-        13:["Practice stillness for 13 breaths.","Close one loop with gratitude."]
-      };
-      const items = (defaults[idx]||[]).map(t=>`<li>${t}</li>`).join("");
-      list.innerHTML = items || "<li class='meta'>—</li>";
-    }
+    // tick clock
+    setInterval(()=>{ $("#nowClock").textContent = MoonTZ.nowWall().toLocaleTimeString([], {hour12:false}); },1000);
 
-    // Mini bar + header badge
-    function paint(){
-      const yEl=$("#yr"); if(yEl) yEl.textContent=String(new Date().getFullYear());
-      const wall = MoonTZ.nowWall();
-      const stamp = wall.toLocaleString([], {hour12:false});
-      $("#nowClock").textContent = stamp.split(", ").pop() || "—";
-      $("#nowDate").textContent  = MoonTZ.isoDateWall(wall);
-      $("#nowTZ").textContent    = MoonTZ.getTZ();
-
-      const r = calcRemnant(wall);
-      const m = window.__MOONS__.find(x=>x.idx===r.moonIdx) || {};
-      const name = m.name||"—", ess = m.essence||"—";
-      const color = m.color||"var(--accent)";
-
-      // mini bar
-      $("#mbName").textContent = name;
-      $("#mbEssence").textContent = ess;
-      $("#mbDay").textContent = r.dayInMoon? `${r.dayInMoon}/28` : "—/28";
-      $("#mbYear").textContent = r.yearSpan;
-      const arcMini = $("#moonArcMini");
-      if (arcMini && r.dayInMoon){ const pct = ((r.dayInMoon-1)/28)*163; arcMini.setAttribute("stroke-dasharray", `${pct} 163`); arcMini.style.stroke = color; }
-
-      // header badge
-      $("#dayInMoon").textContent = r.dayInMoon? String(r.dayInMoon) : "—";
-      $("#moonName").textContent = name;
-      $("#moonEssence").textContent = ess;
-      $("#yearSpan").textContent = r.yearSpan;
-      $("#moonLine").textContent = r.inDOOT ? "Day Out of Time" : `Moon ${r.moonIdx} • Day ${r.dayInMoon} • Week ${r.week}`;
-      $("#dootWarn").style.display = r.inDOOT ? "block" : "none";
-
-      const arc = $("#moonArc"); if(arc && r.dayInMoon){ const len=316; const pct=((r.dayInMoon-1)/28)*len; arc.style.strokeDasharray = `${pct} ${len}`; }
-
-      drawWeekDots(r.dayInMoon);
-
-      // practice set
-      injectPractices(r.moonIdx);
-
-      // simple year table
-      buildYearMap(r.year, r.yearSpan);
-
-      // update jump
-      const jm=$("#jumpMoon"); if(jm && r.moonIdx){ jm.value=String(r.moonIdx); }
-    }
-
-    function buildYearMap(yWall, span){
-      const tb=$("#yearMap tbody"); if(!tb) return;
-      tb.innerHTML="";
-      // For display: each Moon is a 28-day block from July 26; DOOT is Jul 25
-      const tz = MoonTZ.getTZ();
-      const start = MoonTZ.wallParts(new Date(Date.UTC(yWall,6,26)), tz);
-      for(let i=0;i<13;i++){
-        const m = window.__MOONS__[i];
-        const from = new Date(start.getTime() + i*28*86400000);
-        const to   = new Date(from.getTime() + 27*86400000);
-        const fmt = (d)=> d.toLocaleDateString([], {year:"numeric",month:"short",day:"2-digit"});
-        tb.insertAdjacentHTML("beforeend",
-          `<tr><td>${m.idx}</td><td>${m.name}</td><td>${m.essence}</td><td>${fmt(from)} (${tz})</td><td>${fmt(to)} (${tz})</td></tr>`);
-      }
-      $("#nextMoonInfo").textContent = `Year ${span} in ${tz}.`;
-    }
-
-    // Controls
-    $("#btnToday")?.addEventListener("click",()=>{ MoonTZ.setTZ($("#tzPick").value||MoonTZ.getTZ()); paint(); });
-    $("#prevDay")?.addEventListener("click",()=>{ stepDay(-1); });
-    $("#nextDay")?.addEventListener("click",()=>{ stepDay(1); });
-    $("#shareLink")?.addEventListener("click",shareable);
-    $("#jumpMoon")?.addEventListener("change",(e)=>{ jumpToMoon(parseInt(e.target.value||"0",10)); });
-
-    function stepDay(n){
-      const cur = MoonTZ.nowWall();
-      const newWall = new Date(cur.getTime() + n*86400000);
-      // emulate by temporarily shifting system wall via URL ?d=YYYY-MM-DD (for deep link)
-      location.href = "moons.html?tz="+encodeURIComponent(MoonTZ.getTZ())+"&d="+encodeURIComponent(MoonTZ.isoDateWall(newWall));
-    }
-
-    function jumpToMoon(idx){
-      if(!idx) return;
-      // Jump by setting date = start + (idx-1)*28
-      const tz=MoonTZ.getTZ();
-      const yWall = MoonTZ.nowWall().getUTCMonth()>6? MoonTZ.nowWall().getUTCFullYear(): MoonTZ.nowWall().getUTCFullYear()-1;
-      const anchor = MoonTZ.wallParts(new Date(Date.UTC(yWall,6,26)), tz);
-      const target = new Date(anchor.getTime() + (idx-1)*28*86400000);
-      location.href = "moons.html?tz="+encodeURIComponent(tz)+"&d="+encodeURIComponent(MoonTZ.isoDateWall(target));
-    }
-
-    function shareable(){
-      const url = new URL(location.href);
-      url.searchParams.set("tz", MoonTZ.getTZ());
-      navigator.clipboard?.writeText(url.toString()).then(()=>{ alert("Link copied with TZ."); });
-    }
-
-    // Hour scrub keys
+    // Keybindings
     addEventListener("keydown",(e)=>{
-      if(e.key==="ArrowUp"){ e.preventDefault(); stepDay(1); }
-      if(e.key==="ArrowDown"){ e.preventDefault(); stepDay(-1); }
-      if(e.key==="t"||e.key==="T"){ e.preventDefault(); location.href="moons.html?tz="+encodeURIComponent(MoonTZ.getTZ()); }
+      if(e.key==="ArrowUp"){e.preventDefault(); stepDay(1);}
+      if(e.key==="ArrowDown"){e.preventDefault(); stepDay(-1);}
+      if(e.key==="ArrowLeft"){e.preventDefault(); hourScrub.value=String(clamp(+hourScrub.value-1,0,23)); syncDeepLink({h:hourScrub.value}); paint();}
+      if(e.key==="ArrowRight"){e.preventDefault(); hourScrub.value=String(clamp(+hourScrub.value+1,0,23)); syncDeepLink({h:hourScrub.value}); paint();}
+      if(e.key==="t"||e.key==="T"){e.preventDefault(); syncDeepLink({d:null,h:null}); paint();}
     });
 
-    // Labels refresh every second
-    setInterval(()=>{ $("#nowClock").textContent = MoonTZ.nowWall().toLocaleTimeString([], {hour12:false}); }, 1000);
-
-    // Astrology fallback paint
+    // Astrology fallback labels
     function astroFallback(){
       $("#astroStamp").textContent = MoonTZ.isoDateWall(MoonTZ.nowWall());
       $("#astroTZ").textContent = MoonTZ.getTZ();
@@ -707,24 +892,37 @@
       }
     }
 
-    // Respect ?d=YYYY-MM-DD deep link
-    (function seedDate(){
-      const d = new URLSearchParams(location.search).get("d");
-      if(d){ $("#nowDate").textContent = d; }
+    // Animated starfield (prefers-reduced-motion respected)
+    (function sky(){
+      const c=$("#skyBg"); if(!c) return;
+      const ctx=c.getContext("2d",{alpha:true});
+      let stars=Array.from({length:120},()=>({x:Math.random()*c.width,y:Math.random()*c.height,z:0.2+Math.random()*0.8,s:0.5+Math.random()*1.5}));
+      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      function frame(){
+        ctx.clearRect(0,0,c.width,c.height);
+        for(const st of stars){
+          const alpha=0.3+0.7*Math.abs(Math.sin((performance.now()/1000)*st.z*0.8+st.x));
+          ctx.fillStyle=`rgba(122,243,255,${alpha*0.35})`;
+          ctx.beginPath(); ctx.arc(st.x,st.y,st.s,0,Math.PI*2); ctx.fill();
+        }
+        if(!reduce) requestAnimationFrame(frame);
+      }
+      frame();
+      addEventListener("resize",()=>{c.width=innerWidth; c.height=innerHeight;});
     })();
 
-    // initial paint
+    // Respect deep link date (already seeded above)
     paint();
-    astroFallback();
 
-    // patch mini moonbar if CSS hasn’t set stroke-width
+    // Mini moonbar patch if CSS didn't apply stroke-width
     (function(){ const fg=$("#moonArcMini"); if(fg && !fg.getAttribute('stroke-width')) fg.setAttribute('stroke-width','10'); })();
+
   })();
   </script>
 
-  <!-- Site accents (phase tints etc) -->
+  <!-- Accents (phase tints etc) -->
   <script src="assets/js/accents.js?v=1.1" defer></script>
-  <!-- Main moons logic (if present, it can override/augment the fallback) -->
+  <!-- Main moons logic: optional, enhances precision/ephemeris if present -->
   <script src="assets/js/moons.js?v=4.3" defer></script>
 </body>
 </html>
