@@ -1,31 +1,45 @@
 /* ==========================================================================
    Scroll of Fire — Fonts & Stacks
    - Local-first fallbacks + Google-hosted as a progressive enhancement
-   - Define CSS vars for consistent usage across layers
+   - Defines CSS vars for consistent usage across layers
    ========================================================================== */
+
+/* --------------------------- Tokens (stacks) --------------------------- */
 @layer tokens {
   :root{
-    --ui: "InterVar", Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    --ui: "InterVar", Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     --serif: "Crimson Pro", ui-serif, Georgia, Cambria, "Times New Roman", serif;
     --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 }
 
-/* Local variable font (if you drop Inter Variable locally as assets/fonts/Inter-Variable.woff2) */
+/* ----------------------- Local variable font (Inter) ------------------- */
+/* Place the file at: docs/assets/fonts/Inter-Variable.woff2 */
 @font-face{
   font-family:"InterVar";
-  src: url("../fonts/Inter-Variable.woff2") format("woff2");
+  src:
+    local("InterVariable"),
+    local("Inter var"),
+    url("../fonts/Inter-Variable.woff2") format("woff2-variations"),
+    url("../fonts/Inter-Variable.woff2") format("woff2");
   font-weight: 100 900;
   font-stretch: 75% 125%;
   font-style: normal;
   font-display: swap;
-  unicode-range: U+000-5FF, U+1E00-1EFF, U+2000-206F, U+20A0-20BF;
+  /* Basic Latin + Latin-1 + Latin Ext + Punct + Currency (incl. ₿) */
+  unicode-range:
+    U+0000-00FF,  /* Basic Latin + Latin-1 Supplement */
+    U+0100-024F,  /* Latin Extended-A/B */
+    U+1E00-1EFF,  /* Latin Extended Additional */
+    U+2000-206F,  /* General Punctuation */
+    U+20A0-20BF;  /* Currency Symbols */
 }
 
-/* Crimson Pro from Google (fallback to network if local absent) */
+/* --------------------- Google-served fallbacks (optional) -------------- */
+/* Kept as a light enhancement if local assets aren’t present */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap");
 
-/* Apply stacks */
+/* ----------------------------- Base Usage ------------------------------ */
 @layer base {
   html, body{
     font-family: var(--ui);
@@ -33,7 +47,18 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  h1, h2, h3, h4, h5{ font-family: var(--ui); font-weight: 800; letter-spacing: -0.01em; }
+
+  /* Prefer the variable font axes when supported */
+  @supports (font-variation-settings: normal){
+    html, body{ font-family: "InterVar", var(--ui); }
+  }
+
+  h1, h2, h3, h4, h5{
+    font-family: var(--ui);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
   .title, .fancy-head .title{ font-family: var(--ui); }
   .lede, .dropcap, .pull, .codex h1, .codex h2 { font-family: var(--serif); }
   .mono, code, kbd, samp { font-family: var(--mono); }
