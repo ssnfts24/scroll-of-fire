@@ -261,6 +261,7 @@
           <button class="lab-btn" id="prevDay" type="button">← Prev</button>
           <button class="lab-btn" id="nextDay" type="button">Next →</button>
           <button class="lab-btn ghost" id="shareLink" type="button">Copy Link</button>
+          <button class="lab-btn ghost" id="resetTZ" type="button">PNW (Seattle)</button>
           <label class="tag" style="margin-left:auto">Go to:
             <select id="jumpMoon" class="lab-input" aria-label="Jump to Moon">
               <option value="">—</option>
@@ -361,7 +362,6 @@
               <div role="listitem"><b>Uranus</b>  <span class="mono pos" data-pos="uranus">—</span>  <span class="sign" data-sign="uranus">—</span></div>
               <div role="listitem"><b>Neptune</b> <span class="mono pos" data-pos="neptune">—</span> <span class="sign" data-sign="neptune">—</span></div>
               <div role="listitem"><b>Pluto</b>   <span class="mono pos" data-pos="pluto">—</span>   <span class="sign" data-sign="pluto">—</span></div>
-              <div role="listitem"><b>Chiron</b>  <span class="mono pos" data-pos="chiron">—</span>  <span class="sign" data-sign="chiron">—</span></div>
               <div role="listitem"><b>Node ☊</b>  <span class="mono pos" data-pos="north_node">—</span> <span class="sign" data-sign="north_node">—</span></div>
             </div>
           </details>
@@ -453,20 +453,64 @@
 
   <noscript><p class="meta" style="text-align:center">This page needs JavaScript to calculate moon/day, phase, astrology, and year map.</p></noscript>
 
-  <!-- TZ helper -->
+  <!-- TZ helper (PNW-first + alias migration) -->
   <script>
-  window.MoonTZ=(function(){"use strict";const KEY="sof_moons_tz";
-    function setTZ(z){try{new Intl.DateTimeFormat("en-US",{timeZone:z}).format(new Date());localStorage.setItem(KEY,z);}catch{}}
-    function getTZ(){return localStorage.getItem(KEY)||(new URLSearchParams(location.search).get("tz"))||(Intl.DateTimeFormat().resolvedOptions().timeZone||"UTC");}
-    function wallParts(d,tz){try{const p=new Intl.DateTimeFormat("en-CA",{timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"}).formatToParts(d).reduce((m,x)=>(m[x.type]=x.value,m),{});return new Date(Date.UTC(+p.year,+p.month-1,+p.day,+p.hour,+p.minute,+p.second));}catch{return new Date(d);}}
-    function nowWall(){return wallParts(new Date(),getTZ());}
-    function isoDateWall(d){const w=wallParts(d||new Date(),getTZ());const y=w.getUTCFullYear(),m=String(w.getUTCMonth()+1).padStart(2,"0"),da=String(w.getUTCDate()).padStart(2,"0");return`${y}-${m}-${da}`;}
-    (function seed(){const z=new URLSearchParams(location.search).get("tz");if(z) setTZ(z);})();
-    return {getTZ,setTZ,wallParts,nowWall,isoDateWall};
+  window.MoonTZ=(function(){
+    "use strict";
+    const KEY = "sof_moons_tz";
+    const DEFAULT_TZ = "America/Los_Angeles";
+    const ALIASES = new Map([
+      ["US/Arizona","America/Los_Angeles"],
+      ["America/Phoenix","America/Los_Angeles"],
+      ["MST","America/Los_Angeles"],
+      ["Etc/GMT+7","America/Los_Angeles"]
+    ]);
+
+    function isValidTZ(z){ try{ new Intl.DateTimeFormat("en-US",{timeZone:z}).format(new Date()); return true; }catch{ return false; } }
+    function normalize(z){ if(!z) return DEFAULT_TZ; const a = ALIASES.get(z) || z; return isValidTZ(a) ? a : DEFAULT_TZ; }
+    function setTZ(z){ const nz = normalize(z); try{ localStorage.setItem(KEY, nz); }catch{} return nz; }
+    function getSystemTZ(){ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone || ""; }catch{ return ""; } }
+
+    function getTZ(){
+      const qp = new URLSearchParams(location.search);
+      const fromQuery = qp.get("tz");
+      if (fromQuery) return normalize(fromQuery);
+      let stored = null; try{ stored = localStorage.getItem(KEY); }catch{}
+      if (stored) return normalize(stored);
+      return normalize(getSystemTZ());
+    }
+
+    function wallParts(d, tz){
+      try{
+        const parts = new Intl.DateTimeFormat("en-CA", {
+          timeZone: tz, hour12:false,
+          year:"numeric", month:"2-digit", day:"2-digit",
+          hour:"2-digit", minute:"2-digit", second:"2-digit"
+        }).formatToParts(d).reduce((m,x)=>(m[x.type]=x.value,m),{});
+        return new Date(Date.UTC(+parts.year, +parts.month-1, +parts.day, +parts.hour, +parts.minute, +parts.second));
+      }catch{ return new Date(d); }
+    }
+
+    function nowWall(){ return wallParts(new Date(), getTZ()); }
+    function isoDateWall(d){ const w=wallParts(d||new Date(),getTZ()); const y=w.getUTCFullYear(), m=String(w.getUTCMonth()+1).padStart(2,"0"), da=String(w.getUTCDate()).padStart(2,"0"); return `${y}-${m}-${da}`; }
+
+    // One-time migration for Arizona-esque saved zones
+    (function migrate(){
+      let z=null; try{ z=localStorage.getItem(KEY);}catch{}
+      if (z && ALIASES.has(z)) { try{ localStorage.setItem(KEY, ALIASES.get(z)); }catch{} }
+    })();
+
+    // Seed from ?tz if provided
+    (function seedFromQuery(){
+      const z = new URLSearchParams(location.search).get("tz");
+      if (z) setTZ(z);
+    })();
+
+    return { getTZ, setTZ, wallParts, nowWall, isoDateWall };
   })();
   </script>
 
-  <!-- REMNANT ENGINE -->
+  <!-- REMNANT ENGINE (TZ-safe + PNW reset) -->
   <script>
 (function(){
   "use strict";
@@ -857,8 +901,7 @@
 
     const yspan=remYearSpanFor(dw); setText(els.yearSpan, yspan.label);
 
-    const pos2 = pos;
-    const sig = (!pos2.doot && window.REMNANT_MOONS?.[pos2.moon-1]?.sigil) || "";
+    const sig = (!pos.doot && window.REMNANT_MOONS?.[pos.moon-1]?.sigil) || "";
     const sigEl = $("#moonSigil");
     if(sigEl){ if(sig){ sigEl.src = sig; sigEl.hidden = false; } else { sigEl.hidden = true; } }
 
@@ -904,8 +947,30 @@
 
   /* ---------- Events ---------- */
   function bindEvents(){
-    els.tzPick.addEventListener('change',()=>{ state.tz=els.tzPick.value; MoonTZ.setTZ(state.tz); state.date=MoonTZ.wallParts(state.date,state.tz); // keep URL clean
-      const u=new URL(location.href); u.searchParams.set('tz',state.tz); u.searchParams.delete('date'); history.replaceState(null,'',u); hydrateAll(); });
+    els.tzPick.addEventListener('change',()=>{ 
+      state.tz=MoonTZ.setTZ(els.tzPick.value); 
+      state.date=MoonTZ.wallParts(state.date,state.tz);
+      const u=new URL(location.href); u.searchParams.set('tz',state.tz); u.searchParams.delete('date'); u.searchParams.delete('pin'); history.replaceState(null,'',u); 
+      hydrateAll(); 
+    });
+
+    // One-tap PNW reset
+    const resetBtn = document.getElementById("resetTZ");
+    if (resetBtn){
+      resetBtn.addEventListener("click", () => {
+        state.tz = MoonTZ.setTZ("America/Los_Angeles");
+        els.tzPick.value = state.tz;
+        const u = new URL(location.href);
+        u.searchParams.delete("tz");
+        u.searchParams.delete("date");
+        u.searchParams.delete("pin");
+        history.replaceState(null, "", u);
+        state.date = MoonTZ.nowWall();
+        state.hour = null;
+        hydrateAll();
+      });
+    }
+
     els.datePick.addEventListener('change',()=>{ const [y,m,da]=els.datePick.value.split('-').map(Number); state.date=atWall(y,m,da,state.date.getUTCHours(),state.date.getUTCMinutes()); const u=new URL(location.href); u.searchParams.set('date', els.datePick.value); u.searchParams.set('pin','1'); history.replaceState(null,'',u); hydrateAll(); });
     els.hourScrub.addEventListener('input',()=>{ state.hour=+els.hourScrub.value; state.date=atWall(state.date.getUTCFullYear(),state.date.getUTCMonth()+1,state.date.getUTCDate(),state.hour,state.date.getUTCMinutes()); hydrateAll(); });
     els.btnToday.addEventListener('click',()=>{ state.date=MoonTZ.nowWall(); state.hour=null; const u=new URL(location.href); u.searchParams.delete('date'); u.searchParams.delete('pin'); history.replaceState(null,'',u); hydrateAll(); });
@@ -913,6 +978,7 @@
     els.nextDay.addEventListener('click',()=>{ state.date=addDaysUTC(state.date, 1); hydrateAll(); });
     els.shareLink.addEventListener('click',async ()=>{ const url=new URL(location.href); url.searchParams.set('tz',state.tz); url.searchParams.set('date', MoonTZ.isoDateWall(state.date)); url.searchParams.set('pin','1'); try{ await navigator.clipboard.writeText(url.toString()); els.shareLink.textContent="Copied!"; setTimeout(()=>els.shareLink.textContent="Copy Link",1200);}catch{} });
     els.jumpMoon.addEventListener('change',()=>{ const m=+els.jumpMoon.value||null; if(!m) return; const start=remYearStart(state.date); state.date=MoonTZ.wallParts(wallDateForRemDay(start,(m-1)*28),state.tz); hydrateAll(); });
+
     addEventListener('keydown',e=>{
       if(e.key==='T'||e.key==='t'){ e.preventDefault(); state.date=MoonTZ.nowWall(); state.hour=null; const u=new URL(location.href); u.searchParams.delete('date'); u.searchParams.delete('pin'); history.replaceState(null,'',u); hydrateAll(); }
       if(e.key==='ArrowUp'){ e.preventDefault(); state.date=addDaysUTC(state.date,1); hydrateAll(); }
@@ -970,13 +1036,25 @@
 
   /* ---------- Init ---------- */
   function hydrateTZPicker(){
-    const common=["UTC","America/Los_Angeles","America/Denver","America/Chicago","America/New_York","Europe/London","Europe/Paris","Europe/Berlin","Europe/Moscow","Asia/Jerusalem","Asia/Tokyo","Asia/Seoul","Asia/Shanghai","Australia/Sydney","Pacific/Auckland"];
-    const local=MoonTZ.getTZ(); const all=[local,...common.filter(z=>z!==local)];
-    els.tzPick.innerHTML = all.map(z=>`<option value="${z}">${z}</option>`).join(''); els.tzPick.value = state.tz;
+    const preferred = ["America/Los_Angeles","UTC","America/Denver","America/Chicago","America/New_York","Europe/London","Europe/Paris","Europe/Berlin","Europe/Moscow","Asia/Jerusalem","Asia/Tokyo","Asia/Seoul","Asia/Shanghai","Australia/Sydney","Pacific/Auckland"];
+    const current = MoonTZ.getTZ();
+    const list = [current, ...preferred].filter((v,i,arr)=>arr.indexOf(v)===i);
+    els.tzPick.innerHTML = list.map(z=>`<option value="${z}">${z}</option>`).join('');
+    els.tzPick.value = current;
   }
+
   function init(){
     const yEl=$("#yr"); if(yEl) yEl.textContent=String(new Date().getFullYear());
     (function dateSupport(){ const el=$("#datePick"); if(!el) return; const t=document.createElement('input'); t.type='date'; if(t.type!=='date'){ el.type='text'; el.placeholder='YYYY-MM-DD'; el.setAttribute('inputmode','numeric'); }})();
+
+    // Force default to Seattle (PNW) if nothing stored yet
+    try{
+      if (!localStorage.getItem("sof_moons_tz")) {
+        MoonTZ.setTZ("America/Los_Angeles");
+      }
+    }catch{}
+
+    state.tz = MoonTZ.getTZ();
 
     // --- Default to TODAY, ignore stale ?date unless pin=1 ---
     const qp=new URLSearchParams(location.search);
@@ -999,7 +1077,7 @@
 
   /* ---------- Astrology filler (safe demo if no ephemeris) ---------- */
   (function astro(){
-    const tz=MoonTZ.getTZ(); const set=(id,val)=>{const el=$(id); if(el) el.textContent=val};
+    const tz=MoonTZ.getTZ(); const set=(sel,val)=>{const el=$(sel); if(el) el.textContent=val};
     set("#astroTZ", tz);
     const src = (window.__EPHEMERIS__ && typeof window.__EPHEMERIS__==="object") ? "Ephemeris" : "Demo";
     set("#astroSource", src);
@@ -1008,7 +1086,7 @@
     set("#astroStamp", stamp);
     ['sun','moon','mercury','venus','mars','jupiter','saturn'].forEach((name,i)=>{
       const d = (window.__EPHEMERIS__?.[name]) || {deg:(i+1)*33%360, sign: signs[(i*7)%12|0]};
-      const posEl = $(`[data-pos="${name}"]`); const signEl=$(`[data-sign="${name}"]`);
+      const posEl = document.querySelector(`[data-pos="${name}"]`); const signEl=document.querySelector(`[data-sign="${name}"]`);
       if(posEl) posEl.textContent = (d.deg||0).toFixed(1)+'°';
       if(signEl) signEl.textContent = d.sign||'—';
     });
