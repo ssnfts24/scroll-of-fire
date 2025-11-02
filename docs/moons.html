@@ -49,12 +49,12 @@
   <style>@layer tokens, base, components, astrology, utilities, remnant, legacy;</style>
 
   <!-- Your CSS packs -->
-  <link rel="stylesheet" href="assets/css/fonts.css?v=2025-11-02-aa3">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=2025-11-02-aa3">
-  <link rel="stylesheet" href="assets/css/core.css?v=2025-11-02-aa3">
-  <link rel="stylesheet" href="assets/css/astrology.css?v=2025-11-02-aa3">
-  <link rel="stylesheet" href="assets/css/moons.css?v=2025-11-02-aa3">
-  <link rel="stylesheet" href="assets/css/bridge.css?v=2025-11-02-aa3">
+  <link rel="stylesheet" href="assets/css/fonts.css?v=2025-11-02-aa4">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=2025-11-02-aa4">
+  <link rel="stylesheet" href="assets/css/core.css?v=2025-11-02-aa4">
+  <link rel="stylesheet" href="assets/css/astrology.css?v=2025-11-02-aa4">
+  <link rel="stylesheet" href="assets/css/moons.css?v=2025-11-02-aa4">
+  <link rel="stylesheet" href="assets/css/bridge.css?v=2025-11-02-aa4">
 
   <!-- Mobile-first fallbacks -->
   <style>
@@ -146,7 +146,7 @@
     #awGrad stop:last-child{ stop-color:var(--moon-accent-2) }
     .pill,.badge,.lab-btn.ghost{ box-shadow:0 0 0 1px color-mix(in lch, var(--moon-accent) 26%, transparent); }
 
-    /* DOOT + 13 Moons base palettes (Scroll-of-Fire vibe) */
+    /* DOOT + 13 Moons base palettes */
     body.theme-doot{ --moon-accent:#bfbfc9; --moon-accent-2:#8a8a98; --moon-bg-from:#0a0a0e; --moon-bg-to:#0f1018; --moon-aether:rgba(200,200,220,.08);}
     body.theme-moon-1 { --moon-accent:#9cf;  --moon-accent-2:#5ef;  --moon-bg-from:#08131c; --moon-bg-to:#0b1a26; --moon-aether:rgba(140,200,255,.12);}
     body.theme-moon-2 { --moon-accent:#ffb4a8; --moon-accent-2:#ff866b; --moon-bg-from:#201015; --moon-bg-to:#2b1218; --moon-aether:rgba(255,118,86,.12);}
@@ -349,7 +349,7 @@
           <button class="chip pl-sun" data-planet="sun" type="button"><i class="dot el-fire" aria-hidden="true"></i><b>Sun</b> <span class="mono pos" data-pos="sun">—</span> <span class="sign" data-sign="sun">—</span></button>
           <button class="chip pl-moon" data-planet="moon" type="button"><i class="dot el-water" aria-hidden="true"></i><b>Moon</b> <span class="mono pos" data-pos="moon">—</span> <span class="sign" data-sign="moon">—</span></button>
           <button class="chip pl-mercury" data-planet="mercury" type="button"><i class="dot el-air" aria-hidden="true"></i><b>Mercury</b> <span class="mono pos" data-pos="mercury">—</span> <span class="sign" data-sign="mercury">—</span></button>
-          <button class="chip pl-ve nus" data-planet="venus" type="button"><i class="dot el-earth" aria-hidden="true"></i><b>Venus</b> <span class="mono pos" data-pos="venus">—</span> <span class="sign" data-sign="venus">—</span></button>
+          <button class="chip pl-venus" data-planet="venus" type="button"><i class="dot el-earth" aria-hidden="true"></i><b>Venus</b> <span class="mono pos" data-pos="venus">—</span> <span class="sign" data-sign="venus">—</span></button>
           <button class="chip pl-mars" data-planet="mars" type="button"><i class="dot el-fire" aria-hidden="true"></i><b>Mars</b> <span class="mono pos" data-pos="mars">—</span> <span class="sign" data-sign="mars">—</span></button>
           <button class="chip pl-jupiter" data-planet="jupiter" type="button"><i class="dot el-air" aria-hidden="true"></i><b>Jupiter</b> <span class="mono pos" data-pos="jupiter">—</span> <span class="sign" data-sign="jupiter">—</span></button>
           <button class="chip pl-saturn" data-planet="saturn" type="button"><i class="dot el-earth" aria-hidden="true"></i><b>Saturn</b> <span class="mono pos" data-pos="saturn">—</span> <span class="sign" data-sign="saturn">—</span></button>
@@ -436,7 +436,7 @@
           <figure>
             <svg viewBox="0 0 600 120" width="100%" height="auto" role="img" aria-label="Scroll of Fire ribbon">
               <defs>
-                <linearGradient id="sofGrad" x1="0" y1="0" x2="1" y2="0">
+                <linearGradient id="sofGrad" x1="0" y="0" x2="1" y="0">
                   <stop offset="0" stop-color="var(--moon-accent)"/>
                   <stop offset="1" stop-color="var(--moon-accent-2)"/>
                 </linearGradient>
@@ -523,7 +523,7 @@
   })();
   </script>
 
-  <!-- REMNANT ENGINE (TZ-safe + leap-proof + daily/monthly changer + Scroll-of-Fire theming) -->
+  <!-- REMNANT ENGINE (anchors to *today* unless pin=1) -->
   <script>
 (function(){
   "use strict";
@@ -661,16 +661,13 @@
 
   function sofChanger(dw, pos){
     const day = pos.doot ? 0 : pos.day;
-    // Motto (day + moon variant)
     const moonLine = SOF_MONTH_MANTRAS[pos.doot ? 1 : pos.moon];
     const dayLine  = pos.doot ? "Reset the field; let all counts rest." : SOF_DAY_LINES[(day-1)%SOF_DAY_LINES.length];
     els.sofMotto.textContent = `Scroll of Fire — ${moonLine} • ${dayLine}`;
 
-    // Essence live text
     const ess = pos.doot ? "Pause · Reset" : MOON[pos.moon-1].ess;
     els.essenceLive.textContent = ess;
 
-    // Daily quotation in Codex blockquote (short poetic changer)
     const poetry = [
       "Every crown returns to Fire.",
       "A field brightens when a vow is kept.",
@@ -680,7 +677,7 @@
     ];
     els.sofDaily.textContent = poetry[(pos.idxYear + day) % poetry.length];
 
-    // Subtle palette drift per day
+    // palette drift
     const seed = Number(ymd(state.date).replaceAll("-","")) ^ ((pos.moon||0)<<8) ^ ((day||0)<<2);
     const r1 = ((seed*13)&0xffffffff)/0xffffffff;
     const r2 = ((seed*17)&0xffffffff)/0xffffffff;
@@ -690,14 +687,13 @@
     document.documentElement.style.setProperty('--twist', (baseTwist + drift).toFixed(2)+'deg');
     document.documentElement.style.setProperty('--pulse', (0.03 + r2*0.05).toFixed(3));
     document.documentElement.style.setProperty('--spark', (0.28 + (day%7)*0.012 + r3*0.05).toFixed(3));
-    // Respect optional color + sigil
     if(!pos.doot && MOON[pos.moon-1].color) document.documentElement.style.setProperty('--moon-accent', MOON[pos.moon-1].color);
     if(els.moonSigil){
       const s = (!pos.doot && MOON[pos.moon-1].sigil) ? MOON[pos.moon-1].sigil : "";
       if (s) { els.moonSigil.src = s; els.moonSigil.hidden = false; } else { els.moonSigil.hidden = true; }
     }
 
-    // Practices rotate with moon + week
+    // practices
     const base = [
       "Light the crown: three breaths, count 4-7-8.",
       "Name the tone; write one vow for the day.",
@@ -959,7 +955,6 @@
     }
     drawWeekDots(pos);
 
-    // Debug snap
     if (els.dbg) {
       const snap = `TZ: ${state.tz}
 Now: ${MoonTZ.isoDateWall(MoonTZ.nowWall())}
@@ -978,7 +973,7 @@ Moon/Day/Week: ${pos.doot?'—':`${pos.moon}/${pos.day}/${pos.week}`}`;
     els.jumpMoon.value = pos.doot? "" : String(pos.moon);
   }
   function hydrateAll(){
-    state.date = wallNoonFromDate(state.date); // local noon normalization
+    state.date = wallNoonFromDate(state.date);
     const pos = remnantPosition(state.date);
     setMoonTheme(pos);
     hydrateHeader(state.date,pos);
@@ -987,7 +982,7 @@ Moon/Day/Week: ${pos.doot?'—':`${pos.moon}/${pos.day}/${pos.week}`}`;
     setVerse(pos, pos.doot?1:pos.day);
     hydrateCalendars(state.date);
     hydrateControls(state.date,pos);
-    sofChanger(state.date,pos); // << Scroll of Fire changer (daily + monthly)
+    sofChanger(state.date,pos);
   }
 
   /* -------- Events / init -------- */
@@ -1084,6 +1079,7 @@ Moon/Day/Week: ${pos.doot?'—':`${pos.moon}/${pos.day}/${pos.week}`}`;
     try{ if(!localStorage.getItem("sof_moons_tz")) MoonTZ.setTZ("America/Los_Angeles"); }catch{}
     state.tz = MoonTZ.getTZ();
 
+    // SINGLE SOURCE OF TRUTH: today unless pin=1
     const qp=new URLSearchParams(location.search);
     const hasPinned = qp.get('pin') === '1';
     if (qp.get('date') && hasPinned){
@@ -1136,4 +1132,4 @@ Moon/Day/Week: ${pos.doot?'—':`${pos.moon}/${pos.day}/${pos.week}`}`;
 })();
   </script>
 </body>
-  </html>
+</html>
