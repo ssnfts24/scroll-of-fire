@@ -1,23 +1,101 @@
-@layer tokens{
-:root{
-  /* base palette */
-  --bg:#0b0b0f; --bg-elev:#0e0e12; --card:#121219; --ink:#eae7df; --muted:#b8b3a6; --line:#2a2a33;
-  --accent:#7af3ff; --accent-2:#7aa8ff; --gold:#f3c97a; --alert:#ff7864; --good:#6fe7a0;
+@layer tokens {
+  :root {
+    /* ================= Base palette ================= */
+    --bg:        #0b0b0f;
+    --bg-elev:   #0e0e12;
+    --card:      #121219;
+    --ink:       #eae7df;
+    --muted:     #b8b3a6;
+    --line:      #2a2a33;
 
-  /* moon hues */
-  --moon-1:#6FE7FF; --moon-2:#B1C7FF; --moon-3:#7AF3FF; --moon-4:#7BF3B8; --moon-5:#FFD27A;
-  --moon-6:#A7FFCF; --moon-7:#7AF3FF; --moon-8:#9BD3FF; --moon-9:#FFBC6F; --moon-10:#FFD9A6;
-  --moon-11:#B8C7FF; --moon-12:#CFEFFF; --moon-13:#E7D1FF;
+    /* Brand / accents */
+    --accent:    #7af3ff;
+    --accent-2:  #7aa8ff;
+    --gold:      #f3c97a;
+    --alert:     #ff7864;
+    --good:      #6fe7a0;
 
-  /* sizing */
-  --radius:16px; --radius-lg:22px; --pad:14px;
+    /* ================= Moon theme defaults (can be overridden by .theme-moon-* classes) ================= */
+    --moon-accent:   var(--accent);
+    --moon-accent-2: var(--accent-2);
+    --moon-bg-from:  #0b0b0f;
+    --moon-bg-to:    #0e0e12;
+    --moon-aether:   rgba(122,243,255,.12);
 
-  /* fx */
-  --rim:0 0 0 1px color-mix(in oklch, var(--ink) 6%, transparent), 0 10px 26px rgba(0,0,0,.35);
-  --shine:linear-gradient(180deg, rgba(255,255,255,.06), transparent);
-}
-:root[data-theme="light"]{
-  --bg:#f7fbff; --bg-elev:#ffffff; --card:#fff; --ink:#171a20; --muted:#57607a; --line:#dfe6ef;
-  --accent:#007e92; --accent-2:#3b6fff; --gold:#8c6a1e;
-}
+    /* Day variants (set by JS setProperty) */
+    --twist:   0deg;   /* hue-rotate for background wash */
+    --pulse:   .04;    /* animation intensity */
+    --spark:   .35;    /* star brightness */
+    --aurora:  .6;     /* aurora wash */
+
+    /* ================= Moon hues (static map) ================= */
+    --moon-1:  #6fe7ff;
+    --moon-2:  #b1c7ff;
+    --moon-3:  #7af3ff;
+    --moon-4:  #7bf3b8;
+    --moon-5:  #ffd27a;
+    --moon-6:  #a7ffcf;
+    --moon-7:  #7af3ff;
+    --moon-8:  #9bd3ff;
+    --moon-9:  #ffbc6f;
+    --moon-10: #ffd9a6;
+    --moon-11: #b8c7ff;
+    --moon-12: #cfefff;
+    --moon-13: #e7d1ff;
+
+    /* ================= Sizing & radii ================= */
+    --radius:    16px;
+    --radius-lg: 22px;
+    --pad:       14px;
+
+    /* ================= Effects ================= */
+    --rim:   0 0 0 1px color-mix(in oklch, var(--ink) 6%, transparent),
+             0 10px 26px rgba(0,0,0,.35);
+    --shine: linear-gradient(180deg, rgba(255,255,255,.06), transparent);
+
+    /* ================= Typography helpers ================= */
+    --font-ui:  Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+                Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
+                "Segoe UI Emoji", "Segoe UI Symbol";
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+                 "Liberation Mono", "Courier New", monospace;
+
+    /* ================= Z-index scale (optional) ================= */
+    --z-bg: 0;
+    --z-base: 1;
+    --z-fg: 10;
+    --z-overlay: 1000;
+
+    color-scheme: dark;
+  }
+
+  /* Light theme override (keeps contrast strong) */
+  :root[data-theme="light"] {
+    --bg:       #f7fbff;
+    --bg-elev:  #ffffff;
+    --card:     #ffffff;
+    --ink:      #171a20;
+    --muted:    #57607a;
+    --line:     #dfe6ef;
+
+    --accent:   #007e92;  /* teal-ink for light */
+    --accent-2: #3b6fff;
+    --gold:     #8c6a1e;
+
+    --moon-bg-from: #f5f9ff;
+    --moon-bg-to:   #ffffff;
+    --moon-aether:  rgba(0,126,146,.08);
+
+    color-scheme: light;
+  }
+
+  /* Optional high-contrast nudge */
+  @media (prefers-contrast: more) {
+    :root {
+      --line: color-mix(in oklch, var(--ink) 24%, transparent);
+    }
+    :root[data-theme="light"] {
+      --line: color-mix(in oklch, var(--ink) 18%, transparent);
+    }
+  }
 }
