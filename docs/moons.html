@@ -14,14 +14,14 @@
   <meta name="color-scheme" content="dark light" />
   <meta name="theme-color" content="#05070d" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#f7fbff" media="(prefers-color-scheme: light)">
-  <meta name="description" content="Remnant 13-Moon Living Clock — TZ-true 13×28 mapping with week dots, year map, optional Kin, zodiac fallback, lunar sim, and .ics export." />
+  <meta name="description" content="Remnant 13-Moon Living Clock — TZ-true 13×28 mapping with week dots, year map, lunar sim, Kin (optional), daily Remnant verses, and .ics export." />
   <meta name="format-detection" content="telephone=no">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
 
   <!-- OG / Twitter -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Remnant 13 Moons — Living Clock">
-  <meta property="og:description" content="Day ring • Week dots • Year map • Lunar sim • Kin • .ics — YHWH seal.">
+  <meta property="og:description" content="Day ring • Week dots • Year map • Lunar sim • Kin • Verses • .ics — YHWH seal.">
   <meta property="og:image" content="assets/share/moon-card.png">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
   <meta name="twitter:card" content="summary_large_image">
@@ -39,15 +39,15 @@
   <!-- Cascade layers -->
   <style>@layer tokens, base, components, astrology, utilities, remnant, legacy;</style>
 
-  <!-- CSS (mobile-first pack) -->
-  <link rel="stylesheet" href="assets/css/fonts.css?v=2025-11-02w">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=2025-11-02w">
-  <link rel="stylesheet" href="assets/css/core.css?v=2025-11-02w">
-  <link rel="stylesheet" href="assets/css/astrology.css?v=2025-11-02w">
-  <link rel="stylesheet" href="assets/css/moons.css?v=2025-11-02w">
-  <link rel="stylesheet" href="assets/css/bridge.css?v=2025-11-02w">
+  <!-- Your CSS packs -->
+  <link rel="stylesheet" href="assets/css/fonts.css?v=2025-11-02x">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=2025-11-02x">
+  <link rel="stylesheet" href="assets/css/core.css?v=2025-11-02x">
+  <link rel="stylesheet" href="assets/css/astrology.css?v=2025-11-02x">
+  <link rel="stylesheet" href="assets/css/moons.css?v=2025-11-02x">
+  <link rel="stylesheet" href="assets/css/bridge.css?v=2025-11-02x">
 
-  <!-- Minimal critical helpers to ensure single-column on small screens even if CSS fails to load -->
+  <!-- Mobile-first fallbacks so layout never collapses -->
   <style>
     :root{ --safe-top: env(safe-area-inset-top,0px) }
     .top-safe{ height: calc(var(--safe-top) + 8px) }
@@ -61,16 +61,53 @@
     .year-map thead th{ position:sticky; top:0; background:#0e0e12 }
     .weekrow{ display:flex; align-items:center; gap:.6rem; white-space:nowrap; overflow:auto; -webkit-overflow-scrolling:touch }
     :focus-visible{ outline:2px solid #7af3ff; outline-offset:2px }
-    /* Wizard of YHWH: subtle consecration line */
-    .fancy-head .subtitle::after{content:" · consecrated to יהוה"; opacity:.6}
+  </style>
+
+  <!-- Moon Theme System (13 + DOOT) -->
+  <style id="moon-themes">
+    :root{
+      --moon-accent:#7af3ff; --moon-accent-2:#7aa8ff;
+      --moon-bg-from:#0b0b0f; --moon-bg-to:#0e0e12;
+      --moon-aether:rgba(122,243,255,.12);
+      --twist:0deg; --grain:0.06; --spark:0.35;
+    }
+    body.remnant-yhwh::before{
+      content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+      background:
+        radial-gradient(1100px 520px at 50% -12%, var(--moon-aether), transparent 60%),
+        linear-gradient(180deg, var(--moon-bg-from), var(--moon-bg-to));
+      filter:hue-rotate(var(--twist));
+    }
+    /* UI accents tie into variables */
+    .ringcard .ring-fg{ stroke: var(--moon-accent); }
+    #awGrad stop:first-child{ stop-color:var(--moon-accent) }
+    #awGrad stop:last-child{ stop-color:var(--moon-accent-2) }
+    .pill,.badge,.lab-btn.ghost{ box-shadow:0 0 0 1px color-mix(in lch, var(--moon-accent) 26%, transparent); }
+
+    /* DOOT + 13 Moons */
+    body.theme-doot{ --moon-accent:#bfbfc9; --moon-accent-2:#8a8a98; --moon-bg-from:#0a0a0e; --moon-bg-to:#0f1018; --moon-aether:rgba(200,200,220,.08);}
+    body.theme-moon-1 { --moon-accent:#9cf; --moon-accent-2:#5ef; --moon-bg-from:#08131c; --moon-bg-to:#0b1a26; --moon-aether:rgba(140,200,255,.12);}
+    body.theme-moon-2 { --moon-accent:#ffb4a8; --moon-accent-2:#ff866b; --moon-bg-from:#201015; --moon-bg-to:#2b1218; --moon-aether:rgba(255,118,86,.12);}
+    body.theme-moon-3 { --moon-accent:#ffd37a; --moon-accent-2:#ffe6a8; --moon-bg-from:#1f1808; --moon-bg-to:#2a210c; --moon-aether:rgba(255,214,122,.10);}
+    body.theme-moon-4 { --moon-accent:#b6ffcc; --moon-accent-2:#6dff9e; --moon-bg-from:#0a1a12; --moon-bg-to:#0f2218; --moon-aether:rgba(120,255,180,.10);}
+    body.theme-moon-5 { --moon-accent:#ffe07a; --moon-accent-2:#ffc84d; --moon-bg-from:#211a07; --moon-bg-to:#2a2109; --moon-aether:rgba(255,200,90,.12);}
+    body.theme-moon-6 { --moon-accent:#9ef; --moon-accent-2:#6bf; --moon-bg-from:#07151a; --moon-bg-to:#0a1b22; --moon-aether:rgba(120,230,255,.10);}
+    body.theme-moon-7 { --moon-accent:#d5b6ff; --moon-accent-2:#b98cff; --moon-bg-from:#160d22; --moon-bg-to:#1c1030; --moon-aether:rgba(190,140,255,.12);}
+    body.theme-moon-8 { --moon-accent:#a8ffd9; --moon-accent-2:#7affc4; --moon-bg-from:#0a1713; --moon-bg-to:#0e1e18; --moon-aether:rgba(130,255,210,.10);}
+    body.theme-moon-9 { --moon-accent:#ff927a; --moon-accent-2:#ff6a55; --moon-bg-from:#1e0e0b; --moon-bg-to:#270f0c; --moon-aether:rgba(255,120,100,.12);}
+    body.theme-moon-10{ --moon-accent:#a2ffd1; --moon-accent-2:#73ffc0; --moon-bg-from:#0c1912; --moon-bg-to:#102219; --moon-aether:rgba(140,255,200,.10);}
+    body.theme-moon-11{ --moon-accent:#a8b8ff; --moon-accent-2:#7a8cff; --moon-bg-from:#0b0f22; --moon-bg-to:#0e1230; --moon-aether:rgba(120,140,255,.10);}
+    body.theme-moon-12{ --moon-accent:#ffd7a8; --moon-accent-2:#ffc57a; --moon-bg-from:#1e140a; --moon-bg-to:#24180c; --moon-aether:rgba(255,205,150,.10);}
+    body.theme-moon-13{ --moon-accent:#9df; --moon-accent-2:#7cf; --moon-bg-from:#0a1016; --moon-bg-to:#0c1218; --moon-aether:rgba(140,220,255,.12);}
   </style>
 
   <!-- Preloads -->
-  <link rel="prefetch" href="genesis-oracle.html" as="document">
+  <link rel="prefetch" href="index.html" as="document">
 </head>
 
 <body class="stars remnant-yhwh">
   <div class="top-safe" aria-hidden="true"></div>
+  <!-- Cosmic canvas: stars + aurora (behind content) -->
   <canvas id="skyBg" width="1440" height="900" aria-hidden="true" style="position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none"></canvas>
 
   <main class="wrap" id="main" role="main" style="position:relative;z-index:1">
@@ -80,7 +117,6 @@
       <nav class="crumbs" aria-label="Breadcrumb">
         <a class="lab-btn" href="index.html">← Codex</a>
         <a class="lab-btn" href="theory.html">📘 Theory</a>
-        <a id="openSealHeader" class="lab-btn" href="genesis-oracle.html" title="Open the Remnant Birth Seal">⟡ Birth Seal</a>
       </nav>
 
       <section class="card ringcard" aria-label="Current Moon">
@@ -92,7 +128,7 @@
             </svg>
             <div class="label" aria-live="polite"><div class="big" id="dayInMoon">—</div><div class="small">/28</div></div>
           </div>
-          <span class="pill" id="moonChip"><span class="k" id="moonName">—</span><span class="meta" id="moonEssence">—</span></span>
+          <span class="pill" id="moonChip"><span class="k" id="moonName">—</span> <span class="meta" id="moonEssence">—</span></span>
           <span class="pill mono"><span id="yearSpan">—</span></span>
         </div>
 
@@ -101,55 +137,11 @@
           <div class="week" id="weekDots" role="list"></div>
         </div>
 
-        <p class="meta" id="dootWarn" hidden><b>Day Out of Time:</b> outside the 13×28 moons.</p>
+        <p class="meta" id="dootWarn" hidden><b>Day Out of Time:</b> outside the 13×28 cadence.</p>
       </section>
     </header>
 
-    <section class="grid" aria-label="Remnant vs Gregorian">
-      <article class="card">
-        <header class="panel__head">
-          <h3 class="panel__title" id="remHdr">Remnant Month</h3>
-          <div class="panel__meta" id="remMeta">13 × 28 fixed</div>
-        </header>
-        <section id="remCal" class="calendar" aria-label="Remnant Month (live)"></section>
-      </article>
-
-      <article class="card">
-        <header class="panel__head">
-          <h3 class="panel__title" id="gregHdr">Gregorian Month</h3>
-          <div class="panel__meta" id="gregMeta">Variable weeks</div>
-        </header>
-        <section id="gregCal" class="gregorian" aria-label="Gregorian Month (live)"></section>
-        <footer id="calLegend" class="legend" aria-label="Legend">
-          <span class="key"><i class="k-dot k-evt1" aria-hidden="true"></i> Event</span>
-          <span class="key"><i class="k-dot k-evt2" aria-hidden="true"></i> Ceremony</span>
-          <span class="key"><i class="k-dot k-doot" aria-hidden="true"></i> DOOT</span>
-          <span class="key"><i class="k-dot k-leap" aria-hidden="true"></i> Leap Day</span>
-          <span class="key"><i class="k-dot k-today" aria-hidden="true"></i> Today</span>
-        </footer>
-      </article>
-    </section>
-
-    <section class="wrap-pad card remnant-frame" id="remnantOpener" aria-label="Open the Remnant Birth Seal">
-      <div class="op-grid">
-        <div class="op-left" aria-hidden="true">
-          <svg class="op-sigil" viewBox="0 0 64 64">
-            <defs><linearGradient id="opGrad" x1="0" x2="1"><stop offset="0" stop-color="var(--moon-accent)"/><stop offset="1" stop-color="var(--moon-accent-2)"/></linearGradient></defs>
-            <circle cx="32" cy="32" r="26" fill="none" stroke="#1b2231" stroke-width="6"/>
-            <circle cx="32" cy="32" r="26" fill="none" stroke="url(#opGrad)" stroke-linecap="round" stroke-width="6" stroke-dasharray="78 163"></circle>
-            <text x="32" y="32" text-anchor="middle" dominant-baseline="central" font-family="Inter,system-ui" font-size="16" font-weight="900" fill="currentColor">⟡</text>
-          </svg>
-        </div>
-        <div class="op-mid">
-          <h3 class="op-title">The Seal of Becoming</h3>
-          <p class="op-sub meta">Prefills your <b>Moon · Day · Week · Tone</b> using date/time/tz.</p>
-        </div>
-        <div class="op-right">
-          <a id="openSeal" class="lab-btn big cta-link" href="genesis-oracle.html">Open Birth Seal</a>
-        </div>
-      </div>
-    </section>
-
+    <!-- TODAY (moved above calendars) -->
     <section class="grid" aria-label="Controls and Simulation">
       <article class="card">
         <h2 id="today-head">Today</h2>
@@ -191,8 +183,15 @@
         <p class="hint keys">Keys: <span class="kbd">↑/↓</span> day • <span class="kbd">←/→</span> hour • <span class="kbd">T</span> today</p>
       </article>
 
-      <aside class="card" aria-labelledby="lunar-head">
-        <h2 id="lunar-head">Lunar Phase</h2>
+      <aside class="card" aria-labelledby="verse-head">
+        <h2 id="verse-head">Remnant Verse</h2>
+        <blockquote class="pull" id="verseBox">
+          <span class="he" id="vHeb" lang="he" dir="rtl">—</span>
+          <span class="en" id="vEn">—</span>
+          <cite class="meta" id="vRef">—</cite>
+        </blockquote>
+
+        <h2 id="lunar-head" style="margin-top:12px">Lunar Phase</h2>
         <div class="sim">
           <canvas id="simMoon" width="280" height="280" aria-label="Lunar phase"></canvas>
           <div>
@@ -210,6 +209,32 @@
       </aside>
     </section>
 
+    <!-- CALENDARS (side-by-side on desktop) -->
+    <section class="row-2" aria-label="Remnant vs Gregorian">
+      <article class="card">
+        <header class="panel__head">
+          <h3 class="panel__title" id="remHdr">Remnant Month</h3>
+          <div class="panel__meta" id="remMeta">13 × 28 fixed</div>
+        </header>
+        <section id="remCal" class="calendar" aria-label="Remnant Month (live)"></section>
+      </article>
+
+      <article class="card">
+        <header class="panel__head">
+          <h3 class="panel__title" id="gregHdr">Gregorian Month</h3>
+          <div class="panel__meta" id="gregMeta">Variable weeks</div>
+        </header>
+        <section id="gregCal" class="gregorian" aria-label="Gregorian Month (live)"></section>
+        <footer id="calLegend" class="legend" aria-label="Legend">
+          <span class="key"><i class="k-dot k-evt1" aria-hidden="true"></i> Event</span>
+          <span class="key"><i class="k-dot k-evt2" aria-hidden="true"></i> Ceremony</span>
+          <span class="key"><i class="k-dot k-doot" aria-hidden="true"></i> DOOT</span>
+          <span class="key"><i class="k-dot k-leap" aria-hidden="true"></i> Leap Day</span>
+          <span class="key"><i class="k-dot k-today" aria-hidden="true"></i> Today</span>
+        </footer>
+      </article>
+    </section>
+
     <article class="card" aria-labelledby="map-head">
       <h2 id="map-head">Year Map — Gregorian spans of the 13 Moons</h2>
       <p class="hint">New Year = July 26 · Day Out of Time = July 25 · Leap Day (Feb 29) is skipped in the 13×28 count.</p>
@@ -222,41 +247,11 @@
       <p class="meta" id="nextMoonInfo">—</p>
     </article>
 
-    <article class="card" aria-labelledby="kin-head">
-      <h2 id="kin-head">Kin of Today (optional)</h2>
-      <div class="kin">
-        <div class="kin-row" role="group" aria-label="Kin Options">
-          <label class="tag"><input type="checkbox" id="kinOn" /><span>Show Kin</span></label>
-          <label class="tag">Epoch:
-            <select id="kinEpoch" class="lab-input">
-              <option value="1987-07-26">1987-07-26 (Dreamspell common)</option>
-              <option value="1990-01-01">1990-01-01</option>
-            </select>
-          </label>
-          <label class="tag"><input type="checkbox" id="kinSkipLeap" checked /><span>Skip Leap Day</span></label>
-          <label class="tag"><input type="checkbox" id="kinSkipDOOT" checked /><span>Skip DOOT</span></label>
-        </div>
-        <div class="kin-row">
-          <span class="tag" id="kinBadge" aria-live="polite">Kin —</span>
-          <span class="meta" id="kinLine" aria-live="polite">—</span>
-        </div>
-        <small class="meta">Toggle options to match external calculators exactly.</small>
-      </div>
-
-      <div class="goldline" aria-hidden="true"></div>
-      <h3 class="tight">Export this 13-Moon Year</h3>
-      <p class="meta">Download an <code>.ics</code> calendar with the 13 Moon spans for the selected time-zone/year.</p>
-      <div class="btnrow">
-        <a id="dlICS" class="dl" href="#" download="13-moon-year.ics" role="button">⬇️ Download .ics</a>
-        <button class="lab-btn ghost" id="regenICS" type="button">Refresh</button>
-      </div>
-    </article>
-
     <article class="card shine astro" aria-labelledby="astro-head">
       <header class="astro-head">
         <span class="seal" aria-hidden="true">⟡ <span lang="he">יהוה</span></span>
         <h2 id="astro-head">Astrology Now</h2>
-        <p class="meta">Filled by <code>window.__EPHEMERIS__</code> when available; otherwise shows a safe demo.</p>
+        <p class="meta">Uses <code>window.__EPHEMERIS__</code> if present; otherwise a safe demo.</p>
       </header>
 
       <section class="astro-grid">
@@ -282,7 +277,7 @@
 
         <figure class="astro-wheel">
           <svg id="astroWheel" viewBox="0 0 360 360" role="img" aria-label="Zodiac wheel">
-            <defs><linearGradient id="awGrad" x1="0" y="0" x2="1" y2="1"><stop offset="0" stop-color="var(--moon-accent)"/><stop offset="1" stop-color="var(--moon-accent-2)"/></linearGradient></defs>
+            <defs><linearGradient id="awGrad" x1="0" y="0" x2="1" y2="1"><stop offset="0" /><stop offset="1" /></linearGradient></defs>
             <circle cx="180" cy="180" r="162" fill="none" stroke="#1b2231" stroke-width="2"/>
             <circle cx="180" cy="180" r="150" fill="none" stroke="url(#awGrad)" stroke-opacity=".45" stroke-width="2"/>
             <g id="houseLines" stroke="#2a3242" stroke-width=".8" opacity=".9"></g>
@@ -364,7 +359,7 @@
     <p class="meta">© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
   </footer>
 
-  <noscript><p class="meta" style="text-align:center">This page needs JavaScript to calculate moon/day, phase, and year map.</p></noscript>
+  <noscript><p class="meta" style="text-align:center">This page needs JavaScript to calculate moon/day, phase, astrology, and year map.</p></noscript>
 
   <!-- TZ helper -->
   <script>
@@ -379,41 +374,26 @@
   })();
   </script>
 
-  <!-- SELF-CONTAINED REMNANT ENGINE -->
+  <!-- REMNANT ENGINE -->
   <script>
 (function(){
   "use strict";
   const $=(s,r=document)=>r.querySelector(s);
   const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 
-  // --- Tiny error reporter (so silent failures never hide again)
-  window.onerror = function(msg, src, line, col, err){
-    try{
-      const box=document.createElement('div');
-      box.style.cssText='position:fixed;left:8px;bottom:8px;max-width:92vw;background:#2b1120;color:#ffd6e7;border:1px solid #80334f;border-radius:10px;padding:10px 12px;font:12px/1.4 system-ui,Segoe UI,Inter;z-index:99999';
-      box.innerHTML = `<b>Script error:</b> ${String(msg)}<br><small>${src||''}:${line||0}:${col||0}</small>`;
-      document.body.appendChild(box);
-      setTimeout(()=>box.remove(),10000);
-    }catch(_){}
-  };
+  /* ---------- Tiny error toast ---------- */
+  window.onerror=function(msg,src,line,col){try{const box=document.createElement('div');box.style.cssText='position:fixed;left:8px;bottom:8px;max-width:92vw;background:#23121c;color:#ffd6e7;border:1px solid #80334f;border-radius:10px;padding:10px 12px;font:12px/1.4 system-ui,Inter;z-index:99999';box.innerHTML=`<b>Script error:</b> ${String(msg)}<br><small>${src||''}:${line||0}:${col||0}</small>`;document.body.appendChild(box);setTimeout(()=>box.remove(),10000);}catch{}};
 
-  /* ---------------- Wizard Names & Essences ---------------- */
-  const MOON_NAMES=[
-    "Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"
-  ];
+  /* ---------- Names & Essences ---------- */
+  const MOON_NAMES=["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
   const MOON_ESSENCE=[
     "Unify · Purpose","Polarize · Challenge","Activate · Service","Define · Form",
     "Empower · Radiance","Organize · Equality","Channel · Attunement","Harmonize · Integrity",
     "Pulse · Intention","Perfect · Manifestation","Dissolve · Liberation","Dedicate · Cooperation","Endure · Presence"
   ];
 
-  /* ---------------- Time / DOM ---------------- */
-  const state={
-    tz: MoonTZ.getTZ(),
-    date: MoonTZ.nowWall(),
-    hour:null
-  };
-
+  /* ---------- State & DOM ---------- */
+  const state={ tz: MoonTZ.getTZ(), date: MoonTZ.nowWall(), hour:null, seed: 0 };
   const els={
     nowDate:$("#nowDate"), nowClock:$("#nowClock"), nowTZ:$("#nowTZ"), moonLine:$("#moonLine"),
     dayInMoon:$("#dayInMoon"), moonName:$("#moonName"), moonEssence:$("#moonEssence"),
@@ -425,186 +405,109 @@
     numLine:$("#numLine"), numMeta:$("#numMeta"), energyQuote:$("#energyQuote"),
     dlICS:$("#dlICS"), regenICS:$("#regenICS"),
     kinOn:$("#kinOn"), kinEpoch:$("#kinEpoch"), kinSkipLeap:$("#kinSkipLeap"), kinSkipDOOT:$("#kinSkipDOOT"),
-    kinBadge:$("#kinBadge"), kinLine:$("#kinLine")
+    kinBadge:$("#kinBadge"), kinLine:$("#kinLine"),
+    vHeb:$("#vHeb"), vEn:$("#vEn"), vRef:$("#vRef")
   };
 
-  /* ---------------- Utils ---------------- */
+  /* ---------- Utils ---------- */
   const pad=n=>String(n).padStart(2,"0");
   const ymd=d=>`${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())}`;
-  function atWall(y,m,d,h=0,mi=0,s=0){
-    return MoonTZ.wallParts(new Date(Date.UTC(y,m-1,d,h,mi,s)), state.tz);
-  }
+  const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+  function atWall(y,m,d,h=0,mi=0,s=0){ return MoonTZ.wallParts(new Date(Date.UTC(y,m-1,d,h,mi,s)), state.tz); }
   const isLeap=y=>(y%4===0 && (y%100!==0 || y%400===0));
   const addDaysUTC=(d,days)=>{const nd=new Date(d.getTime()); nd.setUTCDate(nd.getUTCDate()+days); return nd};
   const diffDaysUTC=(a,b)=>Math.floor((a.getTime()-b.getTime())/86400000);
-  const setText=(el,txt)=>{ if(el) el.textContent=txt };
+  const setText=(el,txt)=>{if(el) el.textContent=txt};
 
-  /* ---------------- Remnant Year Math ----------------
-     - Year starts July 26 (TZ-aware)
-     - DOOT = July 25
-     - Feb 29 skipped from 13×28 count
-  -----------------------------------------------------*/
-  function remYearStart(dateWall){
-    const y=dateWall.getUTCFullYear();
-    const startThis=atWall(y,7,26,0,0,0);
-    return (dateWall < startThis) ? atWall(y-1,7,26,0,0,0) : startThis;
-  }
-  function isDOOT(dateWall){
-    const y=dateWall.getUTCFullYear();
-    return ymd(dateWall)===ymd(atWall(y,7,25,0,0,0));
-  }
-  function countSinceStart(dateWall){
-    const start=remYearStart(dateWall);
-    let days=diffDaysUTC(dateWall,start); // 0-based
-    // If a leap Feb 29 occurs between start and dateWall inclusive end, remove it
-    // We need to check both the start year and (if spans) end year.
-    const yS=start.getUTCFullYear(), yE=dateWall.getUTCFullYear();
-    for(let y=yS; y<=yE; y++){
-      if(isLeap(y)){
-        const feb29=atWall(y,2,29,0,0,0);
-        if(feb29>=start && feb29<=dateWall) days -= 1;
-      }
-    }
+  /* ---------- Remnant Year ---------- */
+  function remYearStart(dw){const y=dw.getUTCFullYear(); const s=atWall(y,7,26); return (dw<s)?atWall(y-1,7,26):s;}
+  function isDOOT(dw){const y=dw.getUTCFullYear(); return ymd(dw)===ymd(atWall(y,7,25));}
+  function countSinceStart(dw){
+    const start=remYearStart(dw); let days=diffDaysUTC(dw,start);
+    const yS=start.getUTCFullYear(), yE=dw.getUTCFullYear();
+    for(let y=yS; y<=yE; y++){ if(isLeap(y)){ const feb29=atWall(y,2,29); if(feb29>=start && feb29<=dw) days-=1; } }
     return days;
   }
-  function remnantPosition(dateWall){
-    if(isDOOT(dateWall)) return {doot:true};
-    const since=countSinceStart(dateWall);
-    const clamped=Math.max(0,Math.min(363,since)); // 0..363 counted days
-    const moon=Math.floor(clamped/28)+1; // 1..13
-    const day=(clamped%28)+1;           // 1..28
-    const week=Math.floor((day-1)/7)+1; // 1..4
+  function remnantPosition(dw){
+    if(isDOOT(dw)) return {doot:true};
+    const since=countSinceStart(dw); const clamped=clamp(since,0,363);
+    const moon=Math.floor(clamped/28)+1; const day=(clamped%28)+1; const week=Math.floor((day-1)/7)+1;
     return {doot:false, moon, day, week};
   }
-  function remYearSpanFor(dateWall){
-    const start=remYearStart(dateWall);
-    // 364 counted days + the uncounted leap insertion in wall span + DOOT day in span
-    const end = addDaysUTC(start, 365 + (isLeap(start.getUTCFullYear())?1:0)); // end is exclusive-ish marker
-    const y1=start.getUTCFullYear(), y2=end.getUTCFullYear();
-    return {start, end, label: (y1===y2? `${y1}-${y2}`:`${y1}/${y2}`)};
-  }
-  function wallDateForRemDay(yearStart, idx0){
-    // idx0: 0..363 counted day index
-    // Compute wall date adding idx0, but add +1 after the leap day boundary in leap years
-    let d = addDaysUTC(yearStart, idx0);
-    const fy = yearStart.getUTCFullYear();
-    if(isLeap(fy)){
-      const feb29 = atWall(fy,2,29,0,0,0);
-      if(d >= feb29) d = addDaysUTC(d,1);
-    }
-    return d;
-  }
+  function remYearSpanFor(dw){const start=remYearStart(dw); const end=addDaysUTC(start,365+(isLeap(start.getUTCFullYear())?1:0)); const y1=start.getUTCFullYear(), y2=end.getUTCFullYear(); return {start,end,label:(y1===y2?`${y1}-${y2}`:`${y1}/${y2}`)};}
+  function wallDateForRemDay(yearStart, idx0){ let d=addDaysUTC(yearStart, idx0); const fy=yearStart.getUTCFullYear(); if(isLeap(fy)){ const feb29=atWall(fy,2,29); if(d>=feb29) d=addDaysUTC(d,1);} return d;}
 
-  /* ---------------- Calendars ---------------- */
-  function buildGregCal(dateWall){
-    const y=dateWall.getUTCFullYear(), m=dateWall.getUTCMonth();
-    const first=atWall(y,m+1,1,0,0,0);
-    const firstDow= first.getUTCDay(); // 0..6
-    const daysInMonth = new Date(Date.UTC(y,m+1,0)).getUTCDate();
-    const todayYMD= ymd(MoonTZ.nowWall());
-    const monthName = first.toLocaleString('en',{month:'long'});
-    let html=`<div class="g-head"><div class="g-month">${monthName} ${y}</div></div>`;
-    html+='<ol class="g-grid" role="grid" aria-label="Gregorian Month">';
-    const labels=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    for(const l of labels) html+=`<li class="g-lbl" role="columnheader">${l}</li>`;
+  /* ---------- Calendars ---------- */
+  function buildGregCal(dw){
+    const y=dw.getUTCFullYear(), m=dw.getUTCMonth();
+    const first=atWall(y,m+1,1); const firstDow=first.getUTCDay();
+    const daysIn=new Date(Date.UTC(y,m+1,0)).getUTCDate();
+    const todayYMD=ymd(MoonTZ.nowWall()); const monthName=first.toLocaleString('en',{month:'long'});
+    let html=`<div class="g-head"><div class="g-month">${monthName} ${y}</div></div><ol class="g-grid" role="grid" aria-label="Gregorian Month">`;
+    for(const l of ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']) html+=`<li class="g-lbl" role="columnheader">${l}</li>`;
     for(let i=0;i<firstDow;i++) html+='<li class="g-pad" aria-hidden="true"></li>';
-    for(let d=1; d<=daysInMonth; d++){
-      const dWall=atWall(y,m+1,d,0,0,0);
-      const isToday = ymd(dWall)===todayYMD;
+    for(let d=1; d<=daysIn; d++){
+      const dWall=atWall(y,m+1,d); const isToday=ymd(dWall)===todayYMD;
       html+=`<li class="g-day ${isToday?'is-today':''}" role="gridcell"><button type="button" data-g="${y}-${pad(m+1)}-${pad(d)}">${d}</button></li>`;
     }
-    html+='</ol>';
-    els.gregCal.innerHTML=html;
-    els.gregCal.addEventListener('click',e=>{
-      const b=e.target.closest('button[data-g]'); if(!b) return;
-      const [yy,mm,dd]=b.dataset.g.split('-').map(Number);
-      state.date = atWall(yy,mm,dd, state.hour??state.date.getUTCHours(), state.date.getUTCMinutes(), 0);
-      hydrateAll();
-    },{once:true});
+    html+='</ol>'; els.gregCal.innerHTML=html;
+    els.gregCal.addEventListener('click',e=>{const b=e.target.closest('button[data-g]'); if(!b) return; const [yy,mm,dd]=b.dataset.g.split('-').map(Number); state.date=atWall(yy,mm,dd,state.hour??state.date.getUTCHours(),state.date.getUTCMinutes()); hydrateAll();},{once:true});
   }
-
-  function buildRemCal(dateWall){
-    const pos=remnantPosition(dateWall);
-    const yStart=remYearStart(dateWall);
+  function buildRemCal(dw){
+    const pos=remnantPosition(dw); const yStart=remYearStart(dw);
     const hdr = pos.doot ? 'Remnant Month — DOOT' : `Remnant Month — ${MOON_NAMES[pos.moon-1]} (${pos.moon}/13)`;
     setText($("#remHdr"), hdr);
-
     let html='<ol class="r-grid" role="grid" aria-label="Remnant 13×28 Month">';
-    const labels=['D1','D2','D3','D4','D5','D6','D7'];
-    for(const l of labels) html+=`<li class="r-lbl" role="columnheader">${l}</li>`;
-    if(pos.doot){
-      html+='<li class="r-doot" style="grid-column:1 / -1">Day Out of Time</li>';
-    }else{
+    for(const l of ['D1','D2','D3','D4','D5','D6','D7']) html+=`<li class="r-lbl" role="columnheader">${l}</li>`;
+    if(pos.doot){ html+='<li class="r-doot" style="grid-column:1 / -1">Day Out of Time</li>'; }
+    else{
       const startIdx0=(pos.moon-1)*28;
       for(let i=0;i<28;i++){
-        const idx0=startIdx0+i;
-        const d = wallDateForRemDay(yStart, idx0);
-        const mark = (i+1===pos.day) ? 'is-today' : '';
+        const idx0=startIdx0+i; const d=wallDateForRemDay(yStart, idx0); const mark=(i+1===pos.day)?'is-today':'';
         html+=`<li class="r-day ${mark}" role="gridcell"><button type="button" data-r="${ymd(d)}">${i+1}</button></li>`;
       }
     }
-    html+='</ol>';
-    els.remCal.innerHTML=html;
-    els.remCal.addEventListener('click',e=>{
-      const b=e.target.closest('button[data-r]'); if(!b) return;
-      const [yy,mm,dd]=b.dataset.r.split('-').map(Number);
-      state.date = atWall(yy,mm,dd, state.hour??state.date.getUTCHours(), state.date.getUTCMinutes(), 0);
-      hydrateAll();
-    },{once:true});
+    html+='</ol>'; els.remCal.innerHTML=html;
+    els.remCal.addEventListener('click',e=>{const b=e.target.closest('button[data-r]'); if(!b) return; const [yy,mm,dd]=b.dataset.r.split('-').map(Number); state.date=atWall(yy,mm,dd,state.hour??state.date.getUTCHours(),state.date.getUTCMinutes()); hydrateAll();},{once:true});
   }
 
-  /* ---------------- Week Dots & Ring ---------------- */
+  /* ---------- Week dots & ring ---------- */
   function drawWeekDots(pos){
-    const wrap=els.weekDots; if(!wrap) return;
-    wrap.innerHTML='';
+    const wrap=els.weekDots; wrap.innerHTML='';
     for(let w=1; w<=4; w++){
       const group=document.createElement('div'); group.className='wdots';
-      for(let d=1; d<=7; d++){
-        const i=(w-1)*7+d;
-        const dot=document.createElement('i'); dot.className='wdot';
-        if(!pos.doot && i===pos.day) dot.classList.add('is-today');
-        group.appendChild(dot);
-      }
+      for(let d=1; d<=7; d++){ const i=(w-1)*7+d; const dot=document.createElement('i'); dot.className='wdot'; if(!pos.doot && i===pos.day) dot.classList.add('is-today'); group.appendChild(dot); }
       wrap.appendChild(group);
     }
   }
   function drawRing(day){
     const arc=$("#moonArc"); if(!arc) return;
-    const total=316; const frac=(day-1)/28; const len=Math.max(1, Math.floor(total*frac));
+    const total=316; const frac=clamp((day-1)/28,0,1); const len=Math.max(1, Math.floor(total*frac));
     arc.style.strokeDasharray = `${len} ${total-len}`;
   }
 
-  /* ---------------- Lunar Phase (approx) ---------------- */
-  function lunarPhase(dWall){
+  /* ---------- Lunar Phase ---------- */
+  function lunarPhase(dw){
     const syn=29.530588, ref=Date.UTC(2000,0,6,18,14,0);
-    const days=(dWall.getTime()-ref)/86400000;
-    const phase=((days % syn)+syn)%syn;
-    const pct=phase/syn;
+    const days=(dw.getTime()-ref)/86400000; const phase=((days % syn)+syn)%syn; const pct=phase/syn;
     const names=['New Moon','Waxing Crescent','First Quarter','Waxing Gibbous','Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'];
-    const idx=Math.floor(((pct*8)+0.5))%8;
-    return {phaseDays:phase, pct, name:names[idx]};
+    const idx=Math.floor(((pct*8)+0.5))%8; return {phaseDays:phase, pct, name:names[idx]};
   }
   function drawMoonCanvas(c,p){
-    const ctx=c.getContext('2d');
-    const w=c.width, h=c.height, r=Math.min(w,h)/2 - 10;
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.clearRect(0,0,w,h);
-    ctx.translate(w/2,h/2);
+    const ctx=c.getContext('2d'); const w=c.width, h=c.height, r=Math.min(w,h)/2 - 10;
+    ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,w,h); ctx.translate(w/2,h/2);
     ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.fillStyle="#0a0f18"; ctx.fill();
     const k=Math.cos(p.pct*2*Math.PI);
     ctx.save(); ctx.beginPath(); ctx.ellipse(0,0,r, Math.abs(k)*r, 0, 0, Math.PI*2); ctx.fillStyle="#b7d7ff"; ctx.globalAlpha=0.9; ctx.fill(); ctx.restore();
     ctx.setTransform(1,0,0,1,0,0);
   }
 
-  /* ---------------- Numerology ---------------- */
-  function numerologyFor(dateWall,pos){
-    const iso=MoonTZ.isoDateWall(dateWall);
-    const digits=iso.replace(/-/g,'').split('').map(n=>+n);
-    const sum=digits.reduce((a,b)=>a+b,0);
-    const reduce=(n)=>{ if([11,22].includes(n)) return n; while(n>9) n=String(n).split('').reduce((a,b)=>a+ +b,0); return n; };
-    const path=reduce(sum);
-    const tone = pos.doot?0: ((pos.moon-1)%13 + 1);
-    const quote = [
+  /* ---------- Numerology ---------- */
+  function numerologyFor(dw,pos){
+    const iso=MoonTZ.isoDateWall(dw); const digits=iso.replace(/-/g,'').split('').map(n=>+n);
+    const sum=digits.reduce((a,b)=>a+b,0); const reduce=n=>{ if([11,22].includes(n)) return n; while(n>9) n=String(n).split('').reduce((a,b)=>a+ +b,0); return n; };
+    const path=reduce(sum); const tone = pos.doot?0: ((pos.moon-1)%13 + 1);
+    const quote=[
       "Magnetic: unify the will.","Lunar: face the gate.","Electric: serve the flame.","Self-Existing: give the form.",
       "Overtone: radiate the crown.","Rhythmic: balance the field.","Resonant: attune the heart.","Galactic: harmonize the law.",
       "Solar: pulse intention.","Planetary: perfect the work.","Spectral: release the bind.","Crystal: dedicate the circle.","Cosmic: endure the vow."
@@ -612,225 +515,210 @@
     return {iso, path, tone, quote: tone?quote[tone-1]:"Day Out of Time: rest and reset."}
   }
 
-  /* ---------------- Kin (optional) ---------------- */
-  function kinFor(dateWall, opts){
-    let [Y,M,D]=opts.epoch.split('-').map(Number);
-    const start=new Date(Date.UTC(Y,M-1,D,0,0,0));
-    let d = diffDaysUTC(dateWall,start);
-    if(opts.skipLeap){
-      for(let y=start.getUTCFullYear(); y<=dateWall.getUTCFullYear(); y++){
-        if(isLeap(y)){
-          const feb29=Date.UTC(y,1,29);
-          if(dateWall.getTime()>=feb29) d-=1;
-        }
-      }
-    }
-    if(opts.skipDOOT){
-      for(let y=start.getUTCFullYear(); y<=dateWall.getUTCFullYear(); y++){
-        const doot=Date.UTC(y,6,25);
-        if(dateWall.getTime()>=doot) d-=1;
-      }
-    }
+  /* ---------- Daily Verses (Hebrew roots) ---------- */
+  const VERSES = {
+    common: [
+      {heb:"שְׁמַע יִשְׂרָאֵל יהוה אֱלֹהֵינוּ יהוה אֶחָד׃", en:"Hear, O Israel: YHWH our Elohim, YHWH is One.", ref:"Deut 6:4"},
+      {heb:"אוֹר זָרֻעַ לַצַּדִּיק", en:"Light is sown for the righteous.", ref:"Ps 97:11"},
+      {heb:"חִזְקוּ וְיַאֲמֵץ לְבַבְכֶם", en:"Be strong, let your heart be firm.", ref:"Ps 31:24"}
+    ],
+    1:[{heb:"קַבֵּץ לָנוּ לֵב אֶחָד", en:"Gather us into one heart.", ref:"Jer 32:39"}],
+    2:[{heb:"שְׁנַיִם יָקֻמוּ", en:"Two will arise to stand the test.", ref:"Eccl 4:12"}],
+    3:[{heb:"וְעֹשֵׂה חֶסֶד", en:"Do mercy — energize service.", ref:"Mic 6:8"}],
+    4:[{heb:"תֵּן מִשְׁפָּט לַמֶּלֶךְ", en:"Give right-judgment its form.", ref:"Ps 72:1"}],
+    5:[{heb:"בָּרוּךְ כְּבוֹד יהוה", en:"Blessed be the radiance of YHWH.", ref:"Ezek 3:12"}],
+    6:[{heb:"וְכָל־דְּרָכָיו מִשְׁפָּט", en:"All His ways are balanced justice.", ref:"Deut 32:4"}],
+    7:[{heb:"קוֹל דְּמָמָה דַקָּה", en:"The thin sound of quiet—attune.", ref:"1 Kings 19:12"}],
+    8:[{heb:"צֶדֶק צֶדֶק תִּרְדֹּף", en:"Justice, justice you shall pursue—harmonize.", ref:"Deut 16:20"}],
+    9:[{heb:"נֵר יהוה נִשְׁמַת אָדָם", en:"The lamp of YHWH is humanity’s breath—ignite.", ref:"Prov 20:27"}],
+    10:[{heb:"שָׁלוֹם רָב לְאֹהֲבֵי תוֹרָתֶךָ", en:"Great shalom to those who craft Your law.", ref:"Ps 119:165"}],
+    11:[{heb:"שַׁלַּח לַחְמְךָ עַל־פְּנֵי הַמָּיִם", en:"Cast off—send your bread upon the waters.", ref:"Eccl 11:1"}],
+    12:[{heb:"עֵדָה קְדוֹשָׁה", en:"Dedicate: a holy assembly.", ref:"Ps 149:1"}],
+    13:[{heb:"עוֹלָם וָעֶד", en:"Endure unto the ages.", ref:"Ex 15:18"}],
+    doot:[{heb:"הַשְׁקֵט וּבְטַח", en:"Be still and reset.", ref:"Isa 30:15"}]
+  };
+  function setVerse(pos, day){
+    const pool = pos.doot ? VERSES.doot : (VERSES[pos.moon]||[]); const all = [...VERSES.common, ...pool];
+    const pick = all[(day-1) % all.length] || all[0];
+    setText(els.vHeb, pick.heb); setText(els.vEn, pick.en); setText(els.vRef, pick.ref);
+  }
+
+  /* ---------- Kin (optional) ---------- */
+  function kinFor(dw,opts){
+    let [Y,M,D]=opts.epoch.split('-').map(Number); const start=new Date(Date.UTC(Y,M-1,D));
+    let d=diffDaysUTC(dw,start);
+    if(opts.skipLeap){ for(let y=start.getUTCFullYear(); y<=dw.getUTCFullYear(); y++){ if(isLeap(y)){ const feb29=Date.UTC(y,1,29); if(dw.getTime()>=feb29) d-=1; } } }
+    if(opts.skipDOOT){ for(let y=start.getUTCFullYear(); y<=dw.getUTCFullYear(); y++){ const doot=Date.UTC(y,6,25); if(dw.getTime()>=doot) d-=1; } }
     return ((d%260)+260)%260 + 1;
   }
 
-  /* ---------------- Year Map + ICS ---------------- */
-  function buildYearMap(dateWall){
-    const start=remYearStart(dateWall);
-    const rows=[];
-    for(let i=0;i<13;i++){
-      const dStart = wallDateForRemDay(start, i*28);
-      const dEnd   = addDaysUTC(dStart,27);
-      rows.push({i:i+1, s:dStart, e:dEnd, name:MOON_NAMES[i], ess:MOON_ESSENCE[i]});
-    }
-    els.yearMap.innerHTML = rows.map(r=>{
-      const fmt=(d)=> new Intl.DateTimeFormat('en-US',{timeZone:state.tz, year:'numeric', month:'short', day:'2-digit'}).format(d);
+  /* ---------- Year Map & ICS ---------- */
+  function buildYearMap(dw){
+    const start=remYearStart(dw); const rows=[];
+    for(let i=0;i<13;i++){ const s=wallDateForRemDay(start, i*28); const e=addDaysUTC(s,27); rows.push({i:i+1,s,e,name:MOON_NAMES[i],ess:MOON_ESSENCE[i]}); }
+    els.yearMap.innerHTML=rows.map(r=>{
+      const fmt=d=>new Intl.DateTimeFormat('en-US',{timeZone:state.tz,year:'numeric',month:'short',day:'2-digit'}).format(d);
       return `<tr><td>${r.i}</td><td>${r.name}</td><td>${r.ess}</td><td>${fmt(r.s)}</td><td>${fmt(r.e)}</td></tr>`;
     }).join('');
-    // Next moon info
-    const pos=remnantPosition(dateWall);
-    if(!pos.doot){
-      const nextStart = (pos.moon===13) ? addDaysUTC(wallDateForRemDay(start, 12*28), 28) : wallDateForRemDay(start, pos.moon*28);
-      const fmt=(d)=> new Intl.DateTimeFormat('en-US',{timeZone:state.tz, month:'short', day:'2-digit'}).format(d);
-      setText(els.nextMoonInfo, `Next: ${MOON_NAMES[pos.moon%13]} begins ${fmt(nextStart)} (${state.tz})`);
-    } else {
-      setText(els.nextMoonInfo, "This is the Day Out of Time — the count resumes tomorrow.");
-    }
+    const pos=remnantPosition(dw);
+    if(!pos.doot){ const start2=(pos.moon===13)?addDaysUTC(wallDateForRemDay(start,12*28),28):wallDateForRemDay(start,pos.moon*28);
+      const fmt=d=>new Intl.DateTimeFormat('en-US',{timeZone:state.tz,month:'short',day:'2-digit'}).format(d);
+      setText(els.nextMoonInfo, `Next: ${MOON_NAMES[pos.moon%13]} begins ${fmt(start2)} (${state.tz})`);
+    }else setText(els.nextMoonInfo,"This is the Day Out of Time — the count resumes tomorrow.");
   }
-  function buildICS(dateWall){
-    const start=remYearStart(dateWall);
+  function buildICS(dw){
+    const start=remYearStart(dw);
     let ics="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Scroll of Fire//13-Moon//EN\r\n";
     const stamp=()=>{const d=new Date();return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+"T"+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+"Z";}
-    const dt=(d)=> d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+"T000000Z";
-    for(let i=0;i<13;i++){
-      const s=wallDateForRemDay(start, i*28);
-      const e=addDaysUTC(s,28); // exclusive
-      ics+=`BEGIN:VEVENT\r\nUID:moon-${i+1}-${start.getUTCFullYear()}@sof\r\nDTSTAMP:${stamp()}\r\nDTSTART:${dt(s)}\r\nDTEND:${dt(e)}\r\nSUMMARY:${MOON_NAMES[i]} Moon\r\nDESCRIPTION:${MOON_ESSENCE[i]}\r\nEND:VEVENT\r\n`;
-    }
-    ics+="END:VCALENDAR\r\n";
-    const blob=new Blob([ics],{type:"text/calendar"});
-    els.dlICS.href=URL.createObjectURL(blob);
+    const dt=d=> d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+"T000000Z";
+    for(let i=0;i<13;i++){ const s=wallDateForRemDay(start,i*28); const e=addDaysUTC(s,28);
+      ics+=`BEGIN:VEVENT\r\nUID:moon-${i+1}-${start.getUTCFullYear()}@sof\r\nDTSTAMP:${stamp()}\r\nDTSTART:${dt(s)}\r\nDTEND:${dt(e)}\r\nSUMMARY:${MOON_NAMES[i]} Moon\r\nDESCRIPTION:${MOON_ESSENCE[i]}\r\nEND:VEVENT\r\n`; }
+    ics+="END:VCALENDAR\r\n"; const blob=new Blob([ics],{type:"text/calendar"}); const a=document.createElement('a'); a.id="dlICS"; a.download="13-moon-year.ics"; a.href=URL.createObjectURL(blob);
+    const exists=$("#dlICS"); if(exists) exists.replaceWith(a); else $("#kin-head")?.after(a);
   }
 
-  /* ---------------- Hydration ---------------- */
-  function hydrateHeader(dateWall,pos){
-    const fmtDate=new Intl.DateTimeFormat('en-US',{timeZone:state.tz, weekday:'short', year:'numeric', month:'short', day:'2-digit'}).format(dateWall);
-    setText(els.nowDate, fmtDate);
-    setText(els.nowTZ, state.tz);
+  /* ---------- Themes & Day Variants ---------- */
+  function setMoonTheme(pos){
+    const b=document.body;
+    b.classList.remove('theme-doot'); for(let i=1;i<=13;i++) b.classList.remove(`theme-moon-${i}`);
+    if(pos.doot) b.classList.add('theme-doot'); else b.classList.add(`theme-moon-${pos.moon}`);
+    // Day-variant tweaks: hue twist + spark intensity (gentle)
+    const twist = (pos.doot?0: (pos.day*2.3 + pos.moon*3.7)) % 18; // ±~18deg max
+    document.documentElement.style.setProperty('--twist', twist.toFixed(2)+'deg');
+    document.documentElement.style.setProperty('--spark', (0.28 + (pos.day%7)*0.012).toFixed(3));
+  }
+
+  /* ---------- Hydration ---------- */
+  function hydrateHeader(dw,pos){
+    const fmtDate=new Intl.DateTimeFormat('en-US',{timeZone:state.tz, weekday:'short', year:'numeric', month:'short', day:'2-digit'}).format(dw);
+    setText(els.nowDate, fmtDate); setText(els.nowTZ, state.tz);
     const tick=()=>{ const w=MoonTZ.wallParts(new Date(),state.tz); setText(els.nowClock, w.toTimeString().slice(0,8)); requestAnimationFrame(tick); }; tick();
-
-    const yspan=remYearSpanFor(dateWall);
-    setText(els.yearSpan, yspan.label);
-
-    if(pos.doot){
-      els.dootWarn.hidden=false;
-      setText(els.moonName, "Day Out of Time");
-      setText(els.moonEssence, "Pause · Reset");
-      setText(els.moonLine, "— outside the 13×28 cadence —");
-      setText(els.dayInMoon, "—");
-      drawRing(1);
-    }else{
-      els.dootWarn.hidden=true;
-      setText(els.moonName, MOON_NAMES[pos.moon-1]);
-      setText(els.moonEssence, MOON_ESSENCE[pos.moon-1]);
-      setText(els.moonLine, `Moon ${pos.moon} · Day ${pos.day} · Week ${pos.week}`);
-      setText(els.dayInMoon, String(pos.day));
-      drawRing(pos.day);
-    }
+    const yspan=remYearSpanFor(dw); setText(els.yearSpan, yspan.label);
+    if(pos.doot){ els.dootWarn.hidden=false; setText(els.moonName,"Day Out of Time"); setText(els.moonEssence,"Pause · Reset"); setText(els.moonLine,"DOOT — outside the 13×28 cadence"); setText(els.dayInMoon,"—"); drawRing(1); }
+    else{ els.dootWarn.hidden=true; setText(els.moonName,MOON_NAMES[pos.moon-1]); setText(els.moonEssence,MOON_ESSENCE[pos.moon-1]); setText(els.moonLine,`Moon ${pos.moon} · Day ${pos.day} · Week ${pos.week}`); setText(els.dayInMoon,String(pos.day)); drawRing(pos.day); }
     drawWeekDots(pos);
   }
-  function hydrateLunar(dateWall){
-    const ph=lunarPhase(dateWall);
-    drawMoonCanvas(els.simMoon,ph);
-    setText(els.phaseLine, `${ph.name}`);
-    setText(els.phaseMeta, `Phase: ${(ph.pct*100).toFixed(1)}% · Day ${ph.phaseDays.toFixed(1)} of cycle`);
+  function hydrateLunar(dw){ const ph=lunarPhase(dw); drawMoonCanvas(els.simMoon,ph); setText(els.phaseLine,`${ph.name}`); setText(els.phaseMeta,`Phase: ${(ph.pct*100).toFixed(1)}% · Day ${ph.phaseDays.toFixed(1)} of cycle`); }
+  function hydrateNumerology(dw,pos){ const n=numerologyFor(dw,pos); setText(els.numLine,`Path ${n.path} · Tone ${n.tone||'—'}`); setText(els.numMeta,`${n.iso} · ${pos.doot?'DOOT':'Moon '+pos.moon}`); setText(els.energyQuote,n.quote); }
+  function hydrateCalendars(dw){ buildRemCal(dw); buildGregCal(dw); buildYearMap(dw); buildICS(dw); }
+  function hydrateAll(){
+    state.date=MoonTZ.wallParts(state.date,state.tz);
+    const pos=remnantPosition(state.date);
+    setMoonTheme(pos);
+    hydrateHeader(state.date,pos);
+    hydrateLunar(state.date);
+    hydrateNumerology(state.date,pos);
+    setVerse(pos, pos.doot?1:pos.day);
+    hydrateCalendars(state.date);
+    hydrateControls(state.date,pos);
+    hydrateKin(state.date);
   }
-  function hydrateNumerology(dateWall,pos){
-    const n=numerologyFor(dateWall,pos);
-    setText(els.numLine, `Path ${n.path} · Tone ${n.tone||'—'}`);
-    setText(els.numMeta, `${n.iso} · ${pos.doot?'DOOT':'Moon '+pos.moon}`);
-    setText(els.energyQuote, n.quote);
-  }
-  function hydrateKin(dateWall){
-    if(!els.kinOn || !els.kinOn.checked){ setText(els.kinBadge,'Kin —'); setText(els.kinLine,'—'); return; }
-    const kin = kinFor(dateWall,{epoch:els.kinEpoch.value, skipLeap:els.kinSkipLeap.checked, skipDOOT:els.kinSkipDOOT.checked});
-    setText(els.kinBadge, `Kin ${kin}`);
-    setText(els.kinLine, `Counted from ${els.kinEpoch.value}${els.kinSkipLeap.checked?', skipping leap day':''}${els.kinSkipDOOT.checked?', skipping DOOT':''}.`);
-  }
-  function hydrateTZPicker(){
-    const common=["UTC","America/Los_Angeles","America/Denver","America/Chicago","America/New_York","Europe/London","Europe/Paris","Europe/Berlin","Europe/Moscow","Asia/Jerusalem","Asia/Tokyo","Asia/Seoul","Asia/Shanghai","Australia/Sydney","Pacific/Auckland"];
-    const local=MoonTZ.getTZ();
-    const all=[local,...common.filter(z=>z!==local)];
-    els.tzPick.innerHTML = all.map(z=>`<option value="${z}">${z}</option>`).join('');
-    els.tzPick.value = state.tz;
-  }
-  function hydrateControls(dateWall,pos){
-    els.datePick.value = MoonTZ.isoDateWall(dateWall);
-    const wall=MoonTZ.wallParts(dateWall,state.tz);
+
+  function hydrateControls(dw,pos){
+    els.datePick.value = MoonTZ.isoDateWall(dw);
+    const wall=MoonTZ.wallParts(dw,state.tz);
     els.hourScrub.value = wall.getUTCHours();
     els.jumpMoon.value = pos.doot? "" : String(pos.moon);
   }
-  function hydrateCalendars(dateWall){
-    buildRemCal(dateWall);
-    buildGregCal(dateWall);
-    buildYearMap(dateWall);
-    buildICS(dateWall);
-  }
-  function hydrateAll(){
-    state.date = MoonTZ.wallParts(state.date, state.tz);
-    const pos=remnantPosition(state.date);
-    hydrateHeader(state.date,pos);
-    hydrateControls(state.date,pos);
-    hydrateLunar(state.date);
-    hydrateNumerology(state.date,pos);
-    hydrateKin(state.date);
-    hydrateCalendars(state.date);
-  }
+  function hydrateKin(dw){ if(!els.kinOn || !els.kinOn.checked){ setText(els.kinBadge,'Kin —'); setText(els.kinLine,'—'); return; }
+    const kin=kinFor(dw,{epoch:els.kinEpoch.value,skipLeap:els.kinSkipLeap?.checked,skipDOOT:els.kinSkipDOOT?.checked}); setText(els.kinBadge,`Kin ${kin}`); setText(els.kinLine,`Counted from ${els.kinEpoch.value}.`); }
 
-  /* ---------------- Events ---------------- */
+  /* ---------- Events ---------- */
   function bindEvents(){
     els.tzPick.addEventListener('change',()=>{ state.tz=els.tzPick.value; MoonTZ.setTZ(state.tz); state.date=MoonTZ.wallParts(state.date,state.tz); hydrateAll(); });
-    els.datePick.addEventListener('change',()=>{ const [y,m,da]=els.datePick.value.split('-').map(Number); state.date=atWall(y,m,da,state.date.getUTCHours(),state.date.getUTCMinutes(),0); hydrateAll();});
-    els.hourScrub.addEventListener('input',()=>{ state.hour=+els.hourScrub.value; state.date=atWall(state.date.getUTCFullYear(), state.date.getUTCMonth()+1, state.date.getUTCDate(), state.hour, state.date.getUTCMinutes(), 0); hydrateAll(); });
+    els.datePick.addEventListener('change',()=>{ const [y,m,da]=els.datePick.value.split('-').map(Number); state.date=atWall(y,m,da,state.date.getUTCHours(),state.date.getUTCMinutes()); hydrateAll(); });
+    els.hourScrub.addEventListener('input',()=>{ state.hour=+els.hourScrub.value; state.date=atWall(state.date.getUTCFullYear(),state.date.getUTCMonth()+1,state.date.getUTCDate(),state.hour,state.date.getUTCMinutes()); hydrateAll(); });
     els.btnToday.addEventListener('click',()=>{ state.date=MoonTZ.nowWall(); state.hour=null; hydrateAll(); });
     els.prevDay.addEventListener('click',()=>{ state.date=addDaysUTC(state.date,-1); hydrateAll(); });
     els.nextDay.addEventListener('click',()=>{ state.date=addDaysUTC(state.date, 1); hydrateAll(); });
-    els.shareLink.addEventListener('click',async ()=>{
-      const url=new URL(location.href);
-      url.searchParams.set('tz',state.tz);
-      url.searchParams.set('date', MoonTZ.isoDateWall(state.date));
-      try{ await navigator.clipboard.writeText(url.toString()); els.shareLink.textContent="Copied!"; setTimeout(()=>els.shareLink.textContent="Copy Link",1200);}catch{}
-    });
-    els.jumpMoon.addEventListener('change',()=>{
-      const m=+els.jumpMoon.value||null; if(!m) return;
-      const start=remYearStart(state.date);
-      let target=wallDateForRemDay(start,(m-1)*28);
-      state.date=MoonTZ.wallParts(target,state.tz); hydrateAll();
-    });
-    ["input","change"].forEach(ev=>{
-      els.kinOn && els.kinOn.addEventListener(ev,()=>hydrateKin(state.date));
-      els.kinEpoch && els.kinEpoch.addEventListener(ev,()=>hydrateKin(state.date));
-      els.kinSkipLeap && els.kinSkipLeap.addEventListener(ev,()=>hydrateKin(state.date));
-      els.kinSkipDOOT && els.kinSkipDOOT.addEventListener(ev,()=>hydrateKin(state.date));
-    });
-    els.regenICS.addEventListener('click',()=>buildICS(state.date));
+    els.shareLink.addEventListener('click',async ()=>{ const url=new URL(location.href); url.searchParams.set('tz',state.tz); url.searchParams.set('date', MoonTZ.isoDateWall(state.date)); try{ await navigator.clipboard.writeText(url.toString()); els.shareLink.textContent="Copied!"; setTimeout(()=>els.shareLink.textContent="Copy Link",1200);}catch{} });
+    els.jumpMoon.addEventListener('change',()=>{ const m=+els.jumpMoon.value||null; if(!m) return; const start=remYearStart(state.date); state.date=MoonTZ.wallParts(wallDateForRemDay(start,(m-1)*28),state.tz); hydrateAll(); });
     addEventListener('keydown',e=>{
-      if(e.key==='T' || e.key==='t'){ e.preventDefault(); state.date=MoonTZ.nowWall(); state.hour=null; hydrateAll(); }
+      if(e.key==='T'||e.key==='t'){ e.preventDefault(); state.date=MoonTZ.nowWall(); state.hour=null; hydrateAll(); }
       if(e.key==='ArrowUp'){ e.preventDefault(); state.date=addDaysUTC(state.date,1); hydrateAll(); }
       if(e.key==='ArrowDown'){ e.preventDefault(); state.date=addDaysUTC(state.date,-1); hydrateAll(); }
-      if(e.key==='ArrowLeft'){ e.preventDefault(); state.date=atWall(state.date.getUTCFullYear(),state.date.getUTCMonth()+1,state.date.getUTCDate(), Math.max(0,(state.date.getUTCHours()-1)), state.date.getUTCMinutes(), 0); hydrateAll(); }
-      if(e.key==='ArrowRight'){ e.preventDefault(); state.date=atWall(state.date.getUTCFullYear(),state.date.getUTCMonth()+1,state.date.getUTCDate(), Math.min(23,(state.date.getUTCHours()+1)), state.date.getUTCMinutes(), 0); hydrateAll(); }
+      if(e.key==='ArrowLeft'){ e.preventDefault(); state.date=atWall(state.date.getUTCFullYear(),state.date.getUTCMonth()+1,state.date.getUTCDate(),Math.max(0,state.date.getUTCHours()-1),state.date.getUTCMinutes()); hydrateAll(); }
+      if(e.key==='ArrowRight'){ e.preventDefault(); state.date=atWall(state.date.getUTCFullYear(),state.date.getUTCMonth()+1,state.date.getUTCDate(),Math.min(23,state.date.getUTCHours()+1),state.date.getUTCMinutes()); hydrateAll(); }
     });
+    const kinToggles=[els.kinOn,els.kinEpoch,els.kinSkipLeap,els.kinSkipDOOT].filter(Boolean);
+    kinToggles.forEach(el=>["input","change"].forEach(ev=>el.addEventListener(ev,()=>hydrateKin(state.date))));
   }
 
-  /* ---------------- Ambient stars (unchanged) ---------------- */
+  /* ---------- Cosmic background (stars + aurora) ---------- */
   (function sky(){
-    const c=$("#skyBg"); if(!c) return;
-    const ctx=c.getContext("2d",{alpha:true});
-    function size(){ c.width=innerWidth; c.height=innerHeight; }
-    size();
-    let stars=Array.from({length:144},()=>({x:Math.random()*c.width,y:Math.random()*c.height,z:0.3+Math.random()*0.7,s:0.6+Math.random()*1.4}));
+    const c=$("#skyBg"); if(!c) return; const ctx=c.getContext("2d",{alpha:true});
+    function size(){ c.width=innerWidth; c.height=innerHeight; } size();
+    let stars=Array.from({length:160},(_,i)=>({x:Math.random()*c.width,y:Math.random()*c.height,z:0.3+Math.random()*0.7,s:0.6+Math.random()*1.4, p:i%5===0}));
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    function frame(){
+    function frame(t){
       ctx.clearRect(0,0,c.width,c.height);
+      // aurora veil using accent color
+      const grad=ctx.createRadialGradient(c.width*0.5, -c.height*0.2, 0, c.width*0.5, -c.height*0.2, c.height*0.9);
+      grad.addColorStop(0, getComputedStyle(document.documentElement).getPropertyValue('--moon-accent').trim()+"22");
+      grad.addColorStop(1,"transparent");
+      ctx.fillStyle=grad; ctx.fillRect(0,0,c.width,c.height);
+      // stars
       for(const st of stars){
-        const a=0.25+0.65*Math.abs(Math.sin((performance.now()/1000)*st.z*0.8+st.x));
-        ctx.fillStyle=`rgba(122,243,255,${a*0.35})`;
-        ctx.beginPath(); ctx.arc(st.x,st.y,st.s,0,Math.PI*2); ctx.fill();
+        const a=0.2+0.7*Math.abs(Math.sin((t/1000)*st.z*0.8+st.x));
+        ctx.globalAlpha=a*parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--spark'));// slight day variant
+        ctx.beginPath(); ctx.arc(st.x,st.y,st.s,0,Math.PI*2); ctx.fillStyle="#7af3ff"; ctx.fill();
+        if(st.p){ ctx.globalAlpha*=0.6; ctx.fillRect(st.x+1,st.y,1,1); }
       }
+      ctx.globalAlpha=1;
       if(!reduce) requestAnimationFrame(frame);
     }
-    frame();
-    addEventListener("resize",()=>{size(); stars=stars.map(s=>({x:Math.random()*c.width,y:Math.random()*c.height,z:s.z,s:s.s}))});
+    frame(0);
+    addEventListener("resize",()=>{size(); stars=stars.map(s=>({x:Math.random()*c.width,y:Math.random()*c.height,z:s.z,s:s.s,p:s.p}))});
   })();
 
-  /* ---------------- Init ---------------- */
+  /* ---------- Init ---------- */
+  function hydrateTZPicker(){
+    const common=["UTC","America/Los_Angeles","America/Denver","America/Chicago","America/New_York","Europe/London","Europe/Paris","Europe/Berlin","Europe/Moscow","Asia/Jerusalem","Asia/Tokyo","Asia/Seoul","Asia/Shanghai","Australia/Sydney","Pacific/Auckland"];
+    const local=MoonTZ.getTZ(); const all=[local,...common.filter(z=>z!==local)];
+    els.tzPick.innerHTML = all.map(z=>`<option value="${z}">${z}</option>`).join(''); els.tzPick.value = state.tz;
+  }
   function init(){
-    const yEl=document.getElementById("yr"); if(yEl) yEl.textContent=String(new Date().getFullYear());
-    (function dateSupport(){
-      const el = document.getElementById('datePick');
-      if(!el) return; const test=document.createElement('input');test.setAttribute('type','date');
-      if(test.type!=='date'){ el.type='text'; el.placeholder='YYYY-MM-DD'; el.setAttribute('inputmode','numeric'); }
-    })();
-    const qp=new URLSearchParams(location.search);
-    if(qp.get('date')){ const [y,m,d]=qp.get('date').split('-').map(Number); state.date=atWall(y,m,d,state.date.getUTCHours(),state.date.getUTCMinutes(),0); }
-    hydrateTZPicker();
-    bindEvents();
-    hydrateAll();
-    // prompts
-    const plist=$("#practiceList");
-    if(plist){plist.innerHTML=['Light the crown: three breaths, count 4-7-8.','Name the tone; write one vow for the day.','Mark the week: who do you serve today?','Seal the work: a small act of coherence.'].map(p=>`<li>${p}</li>`).join('')}
-    // numerology auto-hide if nothing
-    setTimeout(()=>{ const line=$("#numLine"); const box=$("#numerologyBox"); if(box && (!line || !line.textContent || line.textContent.trim()==="—")) box.hidden=true; }, 900);
-    // note save
-    const btn=$("#btnSaveNote"), area=$("#noteText");
-    if(btn && area){
-      btn.addEventListener('click',()=>{ try{ localStorage.setItem('sof_moon_note', area.value||""); btn.textContent="Saved"; setTimeout(()=>btn.textContent="Save note",1200);}catch{} });
-      const saved=localStorage.getItem('sof_moon_note'); if(saved) area.value=saved;
-    }
+    const yEl=$("#yr"); if(yEl) yEl.textContent=String(new Date().getFullYear());
+    (function dateSupport(){ const el=$("#datePick"); if(!el) return; const t=document.createElement('input'); t.type='date'; if(t.type!=='date'){ el.type='text'; el.placeholder='YYYY-MM-DD'; el.setAttribute('inputmode','numeric'); }})();
+    const qp=new URLSearchParams(location.search); if(qp.get('date')){ const [y,m,d]=qp.get('date').split('-').map(Number); state.date=atWall(y,m,d,state.date.getUTCHours(),state.date.getUTCMinutes()); }
+    hydrateTZPicker(); bindEvents(); hydrateAll();
+    // practices
+    const plist=$("#practiceList"); if(plist){ plist.innerHTML=['Light the crown: three breaths, count 4-7-8.','Name the tone; write one vow for the day.','Mark the week: who do you serve today?','Seal the work: a small act of coherence.'].map(p=>`<li>${p}</li>`).join(''); }
+    // notes
+    const btn=$("#btnSaveNote"), area=$("#noteText"); if(btn&&area){ btn.addEventListener('click',()=>{ try{ localStorage.setItem('sof_moon_note', area.value||""); btn.textContent="Saved"; setTimeout(()=>btn.textContent="Save note",1200);}catch{} }); const saved=localStorage.getItem('sof_moon_note'); if(saved) area.value=saved; }
   }
   addEventListener('load',init);
+
+  /* ---------- Astrology filler (safe demo if no ephemeris) ---------- */
+  (function astro(){
+    const tz=MoonTZ.getTZ(); setText($("#astroTZ"), tz);
+    const src = (window.__EPHEMERIS__ && typeof window.__EPHEMERIS__==="object") ? "Ephemeris" : "Demo";
+    setText($("#astroSource"), src);
+    const signs=["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+    const stamp=new Intl.DateTimeFormat('en-US',{timeZone:tz, dateStyle:'medium', timeStyle:'short'}).format(new Date());
+    setText($("#astroStamp"), stamp);
+    const chips=$$('#planetChips .chip .pos'); const signsEls=$$('#planetChips .chip .sign');
+    const demo = p=>({deg:(p*33)%360, sign: signs[(p*7)%12|0]});
+    ['sun','moon','mercury','venus','mars','jupiter','saturn'].forEach((name,i)=>{
+      const d = (window.__EPHEMERIS__?.[name]) || demo(i+1);
+      const posEl = $(`[data-pos="${name}"]`); const signEl=$(`[data-sign="${name}"]`);
+      if(posEl) posEl.textContent = (d.deg||0).toFixed(1)+'°';
+      if(signEl) signEl.textContent = d.sign||'—';
+    });
+    // labels
+    const g=$("#signLabels"), h=$("#houseLines"); if(g && h){
+      g.innerHTML=''; h.innerHTML='';
+      for(let i=0;i<12;i++){
+        const a=(i/12)*2*Math.PI, r=160, x=180+Math.cos(a)*r, y=180+Math.sin(a)*r;
+        g.insertAdjacentHTML('beforeend', `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}">${signs[i]}</text>`);
+        const a2=a+Math.PI/12; const x1=180+Math.cos(a2)*148, y1=180+Math.sin(a2)*148, x2=180+Math.cos(a2)*162, y2=180+Math.sin(a2)*162;
+        h.insertAdjacentHTML('beforeend', `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"/>`);
+      }
+    }
+    // aspects demo
+    const asp=$("#aspBody"); if(asp){ asp.innerHTML=['Sun △ Moon · 2.1°','Venus □ Mars · 1.0°','Mercury ☌ Jupiter · 0.3°'].map(x=>`<tr><td>—</td><td>${x.split('·')[0]}</td><td>${x.split('·')[1]}</td></tr>`).join(''); }
+  })();
 })();
- </script>
+  </script>
 </body>
 </html>
