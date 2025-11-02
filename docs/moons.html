@@ -180,31 +180,51 @@
   <!-- Animated ambient sky -->
   <canvas id="skyBg" width="1440" height="900" aria-hidden="true"></canvas>
 
-  <!-- Mini Moonbar (1) -->
-  <section class="wrap" aria-label="Remnant Moonbar">
-    <div class="moonbar yhwh-on" data-size="compact" role="group" aria-label="Current Moon mini widget">
-      <svg viewBox="0 0 64 64" aria-hidden="true">
-        <circle cx="32" cy="32" r="26" class="mb-bg" fill="none"></circle>
-        <circle cx="32" cy="32" r="26" class="mb-fg" id="moonArcMini" pathLength="163" fill="none" stroke-dasharray="0 163"></circle>
-      </svg>
-      <div class="moonbar-info">
-        <div class="moonbar-line">
-          <span class="tag yhwh" title="YHWH Seal">⟡ <span lang="he">יהוה</span></span>
-          <span id="mbName"><b>—</b></span>
-          <span class="sep" aria-hidden="true">·</span>
-          <span id="mbEssence" class="meta">—</span>
+
+<!-- Main header & controls (4) -->
+  <main class="wrap" id="main" role="main">
+    <header class="page-head fancy-head">
+      <h1 class="title">🌗 Remnant 13 Moons — <em>Living Clock</em></h1>
+      <p class="subtitle">Ancient-modern calendar in the cadence of 13×28. Phase-tinted, time-zone true, trimmed with the seal of <span lang="he" title="YHWH">יהוה</span>.</p>
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a class="lab-btn" href="index.html">← Back to Codex</a>
+        <a class="lab-btn" href="theory.html">📘 Theory</a>
+        <a id="openSealHeader" class="lab-btn" href="genesis-oracle.html" title="Open the Remnant Birth Seal">⟡ Birth Seal</a>
+      </nav>
+
+      <!-- Moon badge -->
+      <section class="card shine" aria-label="Current Moon">
+        <div class="moon-badge">
+          <div class="ring" aria-label="Day in Moon">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="50" class="ring-bg"/>
+              <circle cx="60" cy="60" r="50" class="ring-fg" id="moonArc" pathLength="316"/>
+            </svg>
+            <div class="label" aria-live="polite">
+              <div class="big" id="dayInMoon">—</div><div class="small">of 28</div>
+            </div>
+          </div>
+
+          <span class="pill" id="moonChip">
+            <span class="k" id="moonName">—</span>
+            <span class="meta" id="moonEssence">—</span>
+          </span>
+
+          <span class="pill mono"><span id="yearSpan">—</span></span>
+          <span class="pill" id="sourceChip" title="Source Seal">⟡ י־ה־ו־ה</span>
         </div>
-        <div class="moonbar-tags">
-          <span class="tag"><span id="mbDay">—/28</span></span>
-          <span class="tag">Year <span id="mbYear">—</span></span>
+
+        <div class="weekrow" aria-label="Week inside the 28-day moon">
+          <span class="weeklabel">Week</span>
+          <div class="week" id="weekDots" role="group" aria-label="Week dots (1–4 × 7)"></div>
         </div>
-      </div>
-      <div class="moonbar-actions">
-        <button id="btnShareImage" class="moonbar-share" type="button" title="Make share card">Share</button>
-        <label class="moonbar-tz" for="tzPick" title="Time Zone">TZ</label>
-      </div>
-    </div>
-  </section>
+
+        <p class="meta" id="dootWarn" style="display:none;margin-top:8px">
+          <b>Day Out of Time:</b> this day sits outside the 13×28 moons. Rest, reflect, reset.
+        </p>
+      </section>
+    </header>
+  
 
   <!-- Dual calendar (2) -->
   <section class="compare wrap" aria-label="Remnant vs Gregorian">
@@ -257,49 +277,7 @@
     </div>
   </section>
 
-  <!-- Main header & controls (4) -->
-  <main class="wrap" id="main" role="main">
-    <header class="page-head fancy-head">
-      <h1 class="title">🌗 Remnant 13 Moons — <em>Living Clock</em></h1>
-      <p class="subtitle">Ancient-modern calendar in the cadence of 13×28. Phase-tinted, time-zone true, trimmed with the seal of <span lang="he" title="YHWH">יהוה</span>.</p>
-      <nav class="crumbs" aria-label="Breadcrumb">
-        <a class="lab-btn" href="index.html">← Back to Codex</a>
-        <a class="lab-btn" href="theory.html">📘 Theory</a>
-        <a id="openSealHeader" class="lab-btn" href="genesis-oracle.html" title="Open the Remnant Birth Seal">⟡ Birth Seal</a>
-      </nav>
-
-      <!-- Moon badge -->
-      <section class="card shine" aria-label="Current Moon">
-        <div class="moon-badge">
-          <div class="ring" aria-label="Day in Moon">
-            <svg viewBox="0 0 120 120" aria-hidden="true">
-              <circle cx="60" cy="60" r="50" class="ring-bg"/>
-              <circle cx="60" cy="60" r="50" class="ring-fg" id="moonArc" pathLength="316"/>
-            </svg>
-            <div class="label" aria-live="polite">
-              <div class="big" id="dayInMoon">—</div><div class="small">of 28</div>
-            </div>
-          </div>
-
-          <span class="pill" id="moonChip">
-            <span class="k" id="moonName">—</span>
-            <span class="meta" id="moonEssence">—</span>
-          </span>
-
-          <span class="pill mono"><span id="yearSpan">—</span></span>
-          <span class="pill" id="sourceChip" title="Source Seal">⟡ י־ה־ו־ה</span>
-        </div>
-
-        <div class="weekrow" aria-label="Week inside the 28-day moon">
-          <span class="weeklabel">Week</span>
-          <div class="week" id="weekDots" role="group" aria-label="Week dots (1–4 × 7)"></div>
-        </div>
-
-        <p class="meta" id="dootWarn" style="display:none;margin-top:8px">
-          <b>Day Out of Time:</b> this day sits outside the 13×28 moons. Rest, reflect, reset.
-        </p>
-      </section>
-    </header>
+  
 
     <section class="grid" aria-label="Controls, Simulation, and Maps">
       <!-- Today + controls -->
