@@ -63,6 +63,71 @@
     :focus-visible{ outline:2px solid #7af3ff; outline-offset:2px }
   </style>
 
+  <!-- Calendar hardening (7 cols, square cells, sticky labels, micro scroll) -->
+  <style>
+  @layer components {
+    .calendar, .gregorian { --cell: clamp(36px, 7.5vw, 56px); --gap: 6px; }
+    .calendar .r-grid, .gregorian .g-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(var(--cell), 1fr));
+      gap: var(--gap);
+      align-items: stretch;
+      -webkit-user-select: none; user-select: none;
+    }
+    .g-lbl, .r-lbl {
+      position: sticky; top: 0; z-index: 1; text-align: center;
+      font: 600 12px/1.2 system-ui, Inter;
+      color: color-mix(in lch, var(--ink) 65%, transparent);
+      padding: 6px 0;
+      background: color-mix(in lch, var(--moon-bg-from) 70%, transparent);
+      border-radius: 8px;
+    }
+    .g-day > button, .r-day > button {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      display: grid; place-items: center;
+      border-radius: 12px;
+      border: 1px solid color-mix(in lch, var(--line) 80%, transparent);
+      background: linear-gradient(180deg,
+        color-mix(in lch, var(--card) 92%, transparent),
+        color-mix(in lch, var(--card) 80%, transparent)
+      );
+      color: var(--ink);
+      font: 600 clamp(12px, 2.6vw, 15px)/1 system-ui, Inter;
+      letter-spacing: .2px;
+    }
+    .g-day > button:focus-visible, .r-day > button:focus-visible {
+      outline: 2px solid var(--moon-accent); outline-offset: 2px;
+    }
+    .g-day.is-today > button, .r-day.is-today > button {
+      border-color: var(--moon-accent);
+      box-shadow: 0 0 0 2px color-mix(in lch, var(--moon-accent) 45%, transparent) inset;
+    }
+    .r-doot {
+      grid-column: 1 / -1; padding: 12px; border-radius: 12px; text-align: center;
+      border: 1px dashed color-mix(in lch, var(--moon-accent) 50%, var(--line));
+      color: color-mix(in lch, var(--ink) 80%, transparent);
+      background: linear-gradient(180deg, transparent, color-mix(in lch, var(--moon-aether) 25%, transparent));
+    }
+    .weeklabel { font-weight: 600; color: var(--muted) }
+    .wdots { display: grid; grid-auto-flow: column; gap: 8px }
+    .wdot { width: 8px; height: 8px; border-radius: 999px; background:#2c3648; }
+    .wdot.is-today { background: var(--moon-accent) }
+    .panel__head { display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin-bottom:8px }
+    .panel__title{ font-size:clamp(16px,3.6vw,18px); font-weight:700 }
+    .panel__meta { color: var(--muted) }
+    @media (min-width: 900px){
+      .calendar, .gregorian { --cell: clamp(42px, 5.5vw, 60px) }
+    }
+    @media (max-width: 360px){
+      .calendar .r-grid, .gregorian .g-grid {
+        grid-template-columns: repeat(7, var(--cell));
+        overflow-x: auto; padding-bottom: 4px;
+      }
+    }
+  }
+  </style>
+
   <!-- Moon Theme System (13 + DOOT) -->
   <style id="moon-themes">
     :root{
@@ -78,7 +143,6 @@
         linear-gradient(180deg, var(--moon-bg-from), var(--moon-bg-to));
       filter:hue-rotate(var(--twist));
     }
-    /* UI accents tie into variables */
     .ringcard .ring-fg{ stroke: var(--moon-accent); }
     #awGrad stop:first-child{ stop-color:var(--moon-accent) }
     #awGrad stop:last-child{ stop-color:var(--moon-accent-2) }
@@ -545,7 +609,8 @@
 
   /* ---------- Kin (optional) ---------- */
   function kinFor(dw,opts){
-    let [Y,M,D]=opts.epoch.split('-').map(Number); const start=new Date(Date.UTC(Y,M-1,D));
+    let [Y,M,D]=opts.epoch?.split('-').map(Number) || [2000,1,1];
+    const start=new Date(Date.UTC(Y,M-1,D));
     let d=diffDaysUTC(dw,start);
     if(opts.skipLeap){ for(let y=start.getUTCFullYear(); y<=dw.getUTCFullYear(); y++){ if(isLeap(y)){ const feb29=Date.UTC(y,1,29); if(dw.getTime()>=feb29) d-=1; } } }
     if(opts.skipDOOT){ for(let y=start.getUTCFullYear(); y<=dw.getUTCFullYear(); y++){ const doot=Date.UTC(y,6,25); if(dw.getTime()>=doot) d-=1; } }
@@ -582,8 +647,7 @@
     const b=document.body;
     b.classList.remove('theme-doot'); for(let i=1;i<=13;i++) b.classList.remove(`theme-moon-${i}`);
     if(pos.doot) b.classList.add('theme-doot'); else b.classList.add(`theme-moon-${pos.moon}`);
-    // Day-variant tweaks: hue twist + spark intensity (gentle)
-    const twist = (pos.doot?0: (pos.day*2.3 + pos.moon*3.7)) % 18; // ±~18deg max
+    const twist = (pos.doot?0: (pos.day*2.3 + pos.moon*3.7)) % 18; // subtle hue
     document.documentElement.style.setProperty('--twist', twist.toFixed(2)+'deg');
     document.documentElement.style.setProperty('--spark', (0.28 + (pos.day%7)*0.012).toFixed(3));
   }
@@ -592,7 +656,8 @@
   function hydrateHeader(dw,pos){
     const fmtDate=new Intl.DateTimeFormat('en-US',{timeZone:state.tz, weekday:'short', year:'numeric', month:'short', day:'2-digit'}).format(dw);
     setText(els.nowDate, fmtDate); setText(els.nowTZ, state.tz);
-    const tick=()=>{ const w=MoonTZ.wallParts(new Date(),state.tz); setText(els.nowClock, w.toTimeString().slice(0,8)); requestAnimationFrame(tick); }; tick();
+    const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const tick=()=>{ const w=MoonTZ.wallParts(new Date(),state.tz); setText(els.nowClock, w.toTimeString().slice(0,8)); if(!reduce) requestAnimationFrame(tick); }; tick();
     const yspan=remYearSpanFor(dw); setText(els.yearSpan, yspan.label);
     if(pos.doot){ els.dootWarn.hidden=false; setText(els.moonName,"Day Out of Time"); setText(els.moonEssence,"Pause · Reset"); setText(els.moonLine,"DOOT — outside the 13×28 cadence"); setText(els.dayInMoon,"—"); drawRing(1); }
     else{ els.dootWarn.hidden=true; setText(els.moonName,MOON_NAMES[pos.moon-1]); setText(els.moonEssence,MOON_ESSENCE[pos.moon-1]); setText(els.moonLine,`Moon ${pos.moon} · Day ${pos.day} · Week ${pos.week}`); setText(els.dayInMoon,String(pos.day)); drawRing(pos.day); }
@@ -652,15 +717,13 @@
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     function frame(t){
       ctx.clearRect(0,0,c.width,c.height);
-      // aurora veil using accent color
       const grad=ctx.createRadialGradient(c.width*0.5, -c.height*0.2, 0, c.width*0.5, -c.height*0.2, c.height*0.9);
       grad.addColorStop(0, getComputedStyle(document.documentElement).getPropertyValue('--moon-accent').trim()+"22");
       grad.addColorStop(1,"transparent");
       ctx.fillStyle=grad; ctx.fillRect(0,0,c.width,c.height);
-      // stars
       for(const st of stars){
         const a=0.2+0.7*Math.abs(Math.sin((t/1000)*st.z*0.8+st.x));
-        ctx.globalAlpha=a*parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--spark'));// slight day variant
+        ctx.globalAlpha=a*parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--spark'));
         ctx.beginPath(); ctx.arc(st.x,st.y,st.s,0,Math.PI*2); ctx.fillStyle="#7af3ff"; ctx.fill();
         if(st.p){ ctx.globalAlpha*=0.6; ctx.fillRect(st.x+1,st.y,1,1); }
       }
@@ -682,9 +745,7 @@
     (function dateSupport(){ const el=$("#datePick"); if(!el) return; const t=document.createElement('input'); t.type='date'; if(t.type!=='date'){ el.type='text'; el.placeholder='YYYY-MM-DD'; el.setAttribute('inputmode','numeric'); }})();
     const qp=new URLSearchParams(location.search); if(qp.get('date')){ const [y,m,d]=qp.get('date').split('-').map(Number); state.date=atWall(y,m,d,state.date.getUTCHours(),state.date.getUTCMinutes()); }
     hydrateTZPicker(); bindEvents(); hydrateAll();
-    // practices
     const plist=$("#practiceList"); if(plist){ plist.innerHTML=['Light the crown: three breaths, count 4-7-8.','Name the tone; write one vow for the day.','Mark the week: who do you serve today?','Seal the work: a small act of coherence.'].map(p=>`<li>${p}</li>`).join(''); }
-    // notes
     const btn=$("#btnSaveNote"), area=$("#noteText"); if(btn&&area){ btn.addEventListener('click',()=>{ try{ localStorage.setItem('sof_moon_note', area.value||""); btn.textContent="Saved"; setTimeout(()=>btn.textContent="Save note",1200);}catch{} }); const saved=localStorage.getItem('sof_moon_note'); if(saved) area.value=saved; }
   }
   addEventListener('load',init);
@@ -697,15 +758,12 @@
     const signs=["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
     const stamp=new Intl.DateTimeFormat('en-US',{timeZone:tz, dateStyle:'medium', timeStyle:'short'}).format(new Date());
     setText($("#astroStamp"), stamp);
-    const chips=$$('#planetChips .chip .pos'); const signsEls=$$('#planetChips .chip .sign');
-    const demo = p=>({deg:(p*33)%360, sign: signs[(p*7)%12|0]});
     ['sun','moon','mercury','venus','mars','jupiter','saturn'].forEach((name,i)=>{
-      const d = (window.__EPHEMERIS__?.[name]) || demo(i+1);
+      const d = (window.__EPHEMERIS__?.[name]) || {deg:(i+1)*33%360, sign: signs[(i*7)%12|0]};
       const posEl = $(`[data-pos="${name}"]`); const signEl=$(`[data-sign="${name}"]`);
       if(posEl) posEl.textContent = (d.deg||0).toFixed(1)+'°';
       if(signEl) signEl.textContent = d.sign||'—';
     });
-    // labels
     const g=$("#signLabels"), h=$("#houseLines"); if(g && h){
       g.innerHTML=''; h.innerHTML='';
       for(let i=0;i<12;i++){
@@ -715,7 +773,6 @@
         h.insertAdjacentHTML('beforeend', `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"/>`);
       }
     }
-    // aspects demo
     const asp=$("#aspBody"); if(asp){ asp.innerHTML=['Sun △ Moon · 2.1°','Venus □ Mars · 1.0°','Mercury ☌ Jupiter · 0.3°'].map(x=>`<tr><td>—</td><td>${x.split('·')[0]}</td><td>${x.split('·')[1]}</td></tr>`).join(''); }
   })();
 })();
