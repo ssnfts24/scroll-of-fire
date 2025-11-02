@@ -552,37 +552,106 @@
 
   /* ---------- Calendars ---------- */
   function buildGregCal(dw){
-    const y=dw.getUTCFullYear(), m=dw.getUTCMonth();
-    const first=atWall(y,m+1,1); const firstDow=first.getUTCDay();
-    const daysIn=new Date(Date.UTC(y,m+1,0)).getUTCDate();
-    const todayYMD=ymd(MoonTZ.nowWall()); const monthName=first.toLocaleString('en',{month:'long'});
-    let html=`<div class="g-head"><div class="g-month">${monthName} ${y}</div></div><ol class="g-grid" role="grid" aria-label="Gregorian Month">`;
-    for(const l of ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']) html+=`<li class="g-lbl" role="columnheader">${l}</li>`;
-    for(let i=0;i<firstDow;i++) html+='<li class="g-pad" aria-hidden="true"></li>';
-    for(let d=1; d<=daysIn; d++){
-      const dWall=atWall(y,m+1,d); const isToday=ymd(dWall)===todayYMD;
-      html+=`<li class="g-day ${isToday?'is-today':''}" role="gridcell"><button type="button" data-g="${y}-${pad(m+1)}-${pad(d)}">${d}</button></li>`;
-    }
-    html+='</ol>'; els.gregCal.innerHTML=html;
-    els.gregCal.addEventListener('click',e=>{const b=e.target.closest('button[data-g]'); if(!b) return; const [yy,mm,dd]=b.dataset.g.split('-').map(Number); state.date=atWall(yy,mm,dd,state.hour??state.date.getUTCHours(),state.date.getUTCMinutes()); hydrateAll();},{once:true});
+  // Anchor all calculations & labels to the selected timezone
+  const wall = MoonTZ.wallParts(dw, state.tz);
+  const y = wall.getUTCFullYear();
+  const m = wall.getUTCMonth(); // 0–11
+
+  const first = atWall(y, m + 1, 1);          // 1st of this month in TZ
+  const firstDow = first.getUTCDay();
+  const daysIn = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+
+  // Month label must use the selected timezone, not the browser default
+  const monthFmt = new Intl.DateTimeFormat("en-US", { timeZone: state.tz, month: "long" });
+  const monthName = monthFmt.format(first);
+
+  // Update the panel title so it can't drift
+  const hdr = document.getElementById("gregHdr");
+  if (hdr) hdr.textContent = `Gregorian Month — ${monthName} ${y}`;
+
+  const todayYMD = ymd(MoonTZ.nowWall());
+
+  let html = `<ol class="g-grid" role="grid" aria-label="Gregorian Month ${monthName} ${y}">`;
+  for (const l of ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]) {
+    html += `<li class="g-lbl" role="columnheader">${l}</li>`;
   }
+  for (let i = 0; i < firstDow; i++) html += `<li class="g-pad" aria-hidden="true"></li>`;
+
+  for (let d = 1; d <= daysIn; d++) {
+    const dWall = atWall(y, m + 1, d);
+    const isToday = ymd(dWall) === todayYMD;
+    html += `<li class="g-day ${isToday ? "is-today" : ""}" role="gridcell">
+               <button type="button" data-g="${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}">${d}</button>
+             </li>`;
+  }
+  html += `</ol>`;
+
+  els.gregCal.innerHTML = html;
+
+  // Click → jump to that wall date (once per rebuild)
+  els.gregCal.addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-g]"); if (!b) return;
+    const [yy, mm, dd] = b.dataset.g.split("-").map(Number);
+    state.date = atWall(yy, mm, dd, state.hour ?? state.date.getUTCHours(), state.date.getUTCMinutes());
+    hydrateAll();
+  }, { once: true });
+}
   function buildRemCal(dw){
-    const pos=remnantPosition(dw); const yStart=remYearStart(dw);
-    const hdr = pos.doot ? 'Remnant Month — DOOT' : `Remnant Month — ${MOON_NAMES[pos.moon-1]} (${pos.moon}/13)`;
-    setText($("#remHdr"), hdr);
-    let html='<ol class="r-grid" role="grid" aria-label="Remnant 13×28 Month">';
-    for(const l of ['D1','D2','D3','D4','D5','D6','D7']) html+=`<li class="r-lbl" role="columnheader">${l}</li>`;
-    if(pos.doot){ html+='<li class="r-doot" style="grid-column:1 / -1">Day Out of Time</li>'; }
-    else{
-      const startIdx0=(pos.moon-1)*28;
-      for(let i=0;i<28;i++){
-        const idx0=startIdx0+i; const d=wallDateForRemDay(yStart, idx0); const mark=(i+1===pos.day)?'is-today':'';
-        html+=`<li class="r-day ${mark}" role="gridcell"><button type="button" data-r="${ymd(d)}">${i+1}</button></li>`;
-      }
-    }
-    html+='</ol>'; els.remCal.innerHTML=html;
-    els.remCal.addEventListener('click',e=>{const b=e.target.closest('button[data-r]'); if(!b) return; const [yy,mm,dd]=b.dataset.r.split('-').map(Number); state.date=atWall(yy,mm,dd,state.hour??state.date.getUTCHours(),state.date.getUTCMinutes()); hydrateAll();},{once:true});
+  const pos = remnantPosition(dw);
+  const yStart = remYearStart(dw);
+
+  const hdrText = pos.doot
+    ? "Remnant Month — DOOT"
+    : `Remnant Month — ${MOON_NAMES[pos.moon-1]} (${pos.moon}/13)`;
+  setText($("#remHdr"), hdrText);
+
+  // Optional: show TZ in the small meta line if you have one
+  setText($("#remMeta"), `13 × 28 fixed — ${state.tz}`);
+
+  let html = '<ol class="r-grid" role="grid" aria-label="Remnant 13×28 Month">';
+  for (const l of ["D1","D2","D3","D4","D5","D6","D7"]) {
+    html += `<li class="r-lbl" role="columnheader">${l}</li>`;
   }
+
+  if (pos.doot) {
+    html += '<li class="r-doot" style="grid-column:1 / -1">Day Out of Time</li>';
+  } else {
+    const startIdx0 = (pos.moon - 1) * 28;
+    for (let i = 0; i < 28; i++) {
+      const idx0 = startIdx0 + i;
+      const dWall = wallDateForRemDay(yStart, idx0);   // already TZ-aware
+      const label = new Intl.DateTimeFormat("en-US", {
+        timeZone: state.tz, year: "numeric", month: "short", day: "2-digit"
+      }).format(dWall);
+      const isTodayInThisRemMonth = (i + 1 === pos.day);
+      html += `
+        <li class="r-day ${isTodayInThisRemMonth ? "is-today" : ""}" role="gridcell">
+          <button type="button"
+                  data-r="${ymd(dWall)}"
+                  data-moon="${pos.moon}"
+                  data-day="${i+1}"
+                  title="${label} (${state.tz})">
+            ${i + 1}
+          </button>
+        </li>`;
+    }
+  }
+
+  html += "</ol>";
+  els.remCal.innerHTML = html;
+
+  els.remCal.addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-r]");
+    if (!b) return;
+    const [yy, mm, dd] = b.dataset.r.split("-").map(Number);
+    state.date = atWall(
+      yy, mm, dd,
+      state.hour ?? state.date.getUTCHours(),
+      state.date.getUTCMinutes()
+    );
+    hydrateAll();
+  }, { once: true });
+}
 
   /* ---------- Week dots & ring ---------- */
   function drawWeekDots(pos){
