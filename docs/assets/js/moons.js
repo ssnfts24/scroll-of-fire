@@ -1,8 +1,9 @@
+<script>
 /* Remnant 13-Moon — main logic (TZ-true mapping, dual calendar, ICS export)
-   v2025.11.02-c “Crown to Coast”
+   v2025.11.02-d “Crown to Coast — Leap-true”
    - Anchors all wall-time math to MoonTZ.getTZ()
    - DOOT = Jul 25 (local tz), Year start = Jul 26 (local tz)
-   - Skips Feb 29 inside 13×28 cadence
+   - Skips Feb 29 inside 13×28 cadence (checks FY and FY+1 windows)
    - Honors ?date=YYYY-MM-DD only when pin=1; else “today”
    - Defensive: no-ops if elements are missing; won’t crash
 */
@@ -33,70 +34,63 @@
   ]);
 
   /* --------------------------- TZ + Wall helpers -------------------------- */
-  // Always read tz fresh so changes in the picker are reflected.
   const getTZ = () => MoonTZ.getTZ();
-
-  // Construct a Date that represents Y/M/D H:M:S in the selected wall tz.
   const atWall = (y, m, d, hh=0, mm=0, ss=0) =>
     MoonTZ.wallParts(new Date(Date.UTC(y, m-1, d, hh, mm, ss)), getTZ());
-
-  // Format to YYYY-MM-DD in the selected wall tz.
   const isoDateWall = (d) => MoonTZ.isoDateWall(d);
-
-  // “Now” in the selected wall tz.
   const nowWall = () => MoonTZ.nowWall();
-
-  // Add whole UTC days (safe for our day granularity)
   const addDaysUTC = (d, days) => { const nd = new Date(d.getTime()); nd.setUTCDate(nd.getUTCDate() + days); return nd; };
-
-  // Difference in whole days (A - B) in UTC
   const diffDaysUTC = (a, b) => Math.floor((a.getTime() - b.getTime()) / 86400000);
-
-  // Leap year in proleptic Gregorian
   const isLeap = (y) => (y%4===0 && (y%100!==0 || y%400===0));
 
   /* ----------------------- Query param date handling ---------------------- */
-  // Honor ?date= only if pin=1. Otherwise, default to "today" (wall tz).
   function initialWallDate() {
     const qp = new URLSearchParams(location.search);
     const pinned = qp.get("pin") === "1";
     const d = qp.get("date");
     if (pinned && d && /^\d{4}-\d{2}-\d{2}$/.test(d)) {
       const [Y,M,D] = d.split("-").map(Number);
-      return atWall(Y, M, D, 12, 0, 0); // midday to avoid DST edge jitter
+      return atWall(Y, M, D, 12, 0, 0); // noon avoids DST edges
     }
     return nowWall();
   }
 
   /* ----------------------- Remnant calendar math ------------------------- */
-  // Year start = Jul 26 in wall tz of the selected zone.
+  // Jul 26 (wall tz) starts the Remnant year containing dw
   function remYearStart(dw) {
     const y = dw.getUTCFullYear();
     const jul26 = atWall(y, 7, 26, 0, 0, 0);
     return (dw < jul26) ? atWall(y-1, 7, 26, 0, 0, 0) : jul26;
   }
 
-  // DOOT = Jul 25 in the year that contains the date’s Remnant year start
+  // Is the wall date DOOT (Jul 25 in this Remnant year’s base)?
   function isDOOT(dw) {
     const start = remYearStart(dw);
     const y = start.getUTCFullYear();
     return isoDateWall(dw) === isoDateWall(atWall(y, 7, 25));
   }
 
-  // For a given wall date, return remnant position or DOOT flag.
+  // Count how many Feb 29 wall-days occur in (start..=end)
+  function leapDaysBetween(start, end) {
+    // Feb 29 can only appear in start’s civil year or start+1
+    const y0 = start.getUTCFullYear();
+    let hits = 0;
+    for (let y of [y0, y0+1]) {
+      if (!isLeap(y)) continue;
+      const f = atWall(y, 2, 29);
+      if (f >= start && f <= end) hits++;
+    }
+    return hits;
+  }
+
+  // For a wall date, return Remnant position or DOOT
   function remnantPosition(dw) {
     if (isDOOT(dw)) return { doot: true };
-
     const start = remYearStart(dw);
-    // days since year start (0-based)
-    let days = diffDaysUTC(dw, start);
 
-    // Skip Feb 29 if it falls between start..dw inclusive (13×28 cadence)
-    const fy = start.getUTCFullYear();
-    if (isLeap(fy)) {
-      const feb29 = atWall(fy, 2, 29);
-      if (dw >= feb29) days -= 1;
-    }
+    let days = diffDaysUTC(dw, start);
+    // Skip each Feb 29 that falls within the cadence window
+    days -= leapDaysBetween(start, dw);
 
     const clamped = clamp(days, 0, 363);
     const moon = Math.floor(clamped / 28) + 1;
@@ -105,35 +99,35 @@
     return { doot:false, moon, day, week };
   }
 
-  // Wall date for the Nth day (idx0) of the Remnant year, skipping Feb 29
+  // Wall date for the Nth day (0-based idx) of the Remnant year, skipping Feb 29
   function wallDateForRemIdx(start, idx0) {
-    const fy = start.getUTCFullYear();
+    // March forward from the start by idx0 + number of Feb 29s encountered up to that date
     let d = addDaysUTC(start, idx0);
-    if (isLeap(fy)) {
-      const feb29 = atWall(fy, 2, 29);
-      if (d >= feb29) d = addDaysUTC(d, 1);
-    }
+    // If a Feb 29 exists between start..=d, add one day to skip it
+    const leaps = leapDaysBetween(start, d);
+    if (leaps > 0) d = addDaysUTC(d, leaps);
     return d;
   }
 
   /* ----------------------------- Painting -------------------------------- */
+  function yearLabelFor(dw) {
+    const yStart = remYearStart(dw).getUTCFullYear();
+    return `${yStart}/${yStart+1}`;
+  }
+
   function paint() {
-    const w = initialWallDate();
+    const w  = initialWallDate();
     const tz = getTZ();
     const pos = remnantPosition(w);
 
     // Header chips
-    $("#nowDate")  && ($("#nowDate").textContent  = new Intl.DateTimeFormat("en-US", { timeZone: tz, weekday:"short", year:"numeric", month:"short", day:"2-digit" }).format(w));
+    $("#nowDate")  && ($("#nowDate").textContent  =
+      new Intl.DateTimeFormat("en-US", { timeZone: tz, weekday:"short", year:"numeric", month:"short", day:"2-digit" }).format(w));
     $("#nowClock") && ($("#nowClock").textContent = MoonTZ.wallParts(new Date(), tz).toTimeString().slice(0,8));
     $("#nowTZ")    && ($("#nowTZ").textContent    = tz);
 
-    // Year span label
-    const yStart = remYearStart(w);
-    const yEnd   = addDaysUTC(yStart, 365 + (isLeap(yStart.getUTCFullYear()) ? 1 : 0));
-    const yLabel = (yStart.getUTCFullYear() === yEnd.getUTCFullYear())
-      ? `${yStart.getUTCFullYear()}-${yEnd.getUTCFullYear()}`
-      : `${yStart.getUTCFullYear()}/${yEnd.getUTCFullYear()}`;
-    $("#yearSpan") && ($("#yearSpan").textContent = yLabel);
+    // Year span label (always startYear/startYear+1)
+    $("#yearSpan") && ($("#yearSpan").textContent = yearLabelFor(w));
 
     // DOOT + header line
     if (pos.doot) {
@@ -161,7 +155,7 @@
       }
     }
 
-    // Week dots (28 with “today” highlight)
+    // Week dots
     const dotsWrap = $("#weekDots");
     if (dotsWrap) {
       dotsWrap.innerHTML = "";
@@ -178,13 +172,10 @@
       }
     }
 
-    // Year map
     buildYearMap(w);
-
-    // Dual calendars
     buildDualCalendars(w, pos);
 
-    // Update “Today” controls if present
+    // Controls (if present)
     $("#datePick")   && ($("#datePick").value   = isoDateWall(w));
     $("#hourScrub")  && ($("#hourScrub").value  = MoonTZ.wallParts(w, tz).getUTCHours());
     $("#jumpMoon")   && ($("#jumpMoon").value   = pos.doot ? "" : String(pos.moon));
@@ -207,12 +198,14 @@
     ).join("");
 
     const pos = remnantPosition(dw);
+    const info = $("#nextMoonInfo");
+    if (!info) return;
     if (!pos.doot) {
       const nextStart = wallDateForRemIdx(start, (pos.moon % 13) * 28);
       const label = new Intl.DateTimeFormat("en-US", { timeZone: tz, month:"short", day:"2-digit" }).format(nextStart);
-      $("#nextMoonInfo") && ($("#nextMoonInfo").textContent = `Next: ${MOONS[pos.moon % 13].name} begins ${label} (${tz})`);
+      info.textContent = `Next: ${MOONS[pos.moon % 13].name} begins ${label} (${tz})`;
     } else {
-      $("#nextMoonInfo") && ($("#nextMoonInfo").textContent = "This is the Day Out of Time — the count resumes tomorrow.");
+      info.textContent = "This is the Day Out of Time — the count resumes tomorrow.";
     }
   }
 
@@ -341,6 +334,7 @@
   function buildICSBlob(dw) {
     const tz = getTZ();
     const yStart = remYearStart(dw);
+    const labelYear = `${yStart.getUTCFullYear()}/${yStart.getUTCFullYear()+1}`;
     const stamp = (() => {
       const d = new Date();
       return d.getUTCFullYear() + pad(d.getUTCMonth()+1) + pad(d.getUTCDate()) +
@@ -358,7 +352,7 @@
              `DTSTAMP:${stamp}\r\n` +
              `DTSTART;VALUE=DATE:${fmtDate(s)}\r\n` +
              `DTEND;VALUE=DATE:${fmtDate(e)}\r\n` +
-             `SUMMARY:${i+1}. ${MOONS[i].name} Moon — ${yStart.getUTCFullYear()}/${yStart.getUTCFullYear()+1} (${tz})\r\n` +
+             `SUMMARY:${i+1}. ${MOONS[i].name} Moon — ${labelYear} (${tz})\r\n` +
              `DESCRIPTION:${MOONS[i].essence}\r\n` +
              "END:VEVENT\r\n";
     }
@@ -378,7 +372,6 @@
   $("#regenICS")?.addEventListener("click", () => { if (dl) dl.href = "#"; });
 
   /* ----------------------------- Live clock ------------------------------- */
-  // Keep the clock chip moving without repainting the whole page.
   setInterval(() => {
     const tz = getTZ();
     const el = $("#nowClock");
@@ -386,7 +379,7 @@
   }, 1000);
 
   /* ------------------------------ Kickoff --------------------------------- */
-  // Expose for other scripts, but safe if unused.
-  window.paint = paint;
+  window.paint = paint; // optional external access
   paint();
 })();
+</script>
