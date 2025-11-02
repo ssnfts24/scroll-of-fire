@@ -1,14 +1,9 @@
 <!doctype html>
+
 <html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963" data-alive="lively">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>(()=>{const LIVE="ssnfts24.github.io";if(location.hostname!==LIVE){const b=document.querySelector("base");b&&b.remove();}})();</script>
-
-  <!-- Flashless theme + FB in-app guard -->
-  <script>(()=>{try{let t=localStorage.getItem('theme');if(!t){t=(matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',t)}catch{}})();</script>
-  <script>(()=>{const ua=navigator.userAgent||'';if(/\bFBAN|FBAV|FB_IAB|FBAN\/Messenger\b/i.test(ua)){document.documentElement.classList.add('is-fbapp')}})();</script>
-
-  <meta charset="utf-8" />
+  <script>(()=>{const LIVE="ssnfts24.github.io";if(location.hostname!==LIVE){const b=document.querySelector("base");b&&b.remove();}})();</script>  <!-- Flashless theme + FB in-app guard -->  <script>(()=>{try{let t=localStorage.getItem('theme');if(!t){t=(matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',t)}catch{}})();</script>  <script>(()=>{const ua=navigator.userAgent||'';if(/\bFBAN|FBAV|FB_IAB|FBAN\/Messenger\b/i.test(ua)){document.documentElement.classList.add('is-fbapp')}})();</script>  <meta charset="utf-8" />
   <title>Remnant 13 Moons — Living Clock · Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
   <meta name="color-scheme" content="dark light" />
@@ -16,39 +11,25 @@
   <meta name="theme-color" content="#f7fbff" media="(prefers-color-scheme: light)">
   <meta name="description" content="Remnant 13-Moon Living Clock — TZ-true 13×28 mapping with week dots, year map, remnant lunar sim, Kin (optional), dynamic daily verses, and .ics export." />
   <meta name="format-detection" content="telephone=no">
-  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
-
-  <!-- OG / Twitter -->
-  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">  <!-- OG / Twitter -->  <meta property="og:type" content="website">
   <meta property="og:title" content="Remnant 13 Moons — Living Clock">
   <meta property="og:description" content="Day ring • Week dots • Year map • Remnant lunar sim • Kin • Verses • .ics — YHWH seal.">
   <meta property="og:image" content="assets/share/moon-card.png">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <!-- PWA -->
-  <link rel="manifest" href="assets/manifest.webmanifest">
+  <meta property="og:site_name" content="Scroll of Fire">
+  <meta name="twitter:card" content="summary_large_image">  <!-- PWA -->  <link rel="manifest" href="assets/manifest.webmanifest">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="13 Moons">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="assets/icons/icon-512.png">
-  <link rel="mask-icon" href="assets/icons/safari-pinned.svg" color="#0e131a">
-
-  <!-- Cascade layers -->
-  <style>@layer tokens, base, components, astrology, utilities, remnant, legacy;</style>
-
-  <!-- Your CSS packs -->
-  <link rel="stylesheet" href="assets/css/fonts.css?v=2025-11-02-aa1">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=2025-11-02-aa1">
-  <link rel="stylesheet" href="assets/css/core.css?v=2025-11-02-aa1">
-  <link rel="stylesheet" href="assets/css/astrology.css?v=2025-11-02-aa1">
-  <link rel="stylesheet" href="assets/css/moons.css?v=2025-11-02-aa1">
-  <link rel="stylesheet" href="assets/css/bridge.css?v=2025-11-02-aa1">
-
-  <!-- Mobile-first fallbacks -->
-  <style>
+  <link rel="mask-icon" href="assets/icons/safari-pinned.svg" color="#0e131a">  <!-- Cascade layers -->  <style>@layer tokens, base, components, astrology, utilities, remnant, legacy;</style>  <!-- Your CSS packs -->  <link rel="stylesheet" href="assets/css/fonts.css?v=2025-11-02-aa2">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=2025-11-02-aa2">
+  <link rel="stylesheet" href="assets/css/core.css?v=2025-11-02-aa2">
+  <link rel="stylesheet" href="assets/css/astrology.css?v=2025-11-02-aa2">
+  <link rel="stylesheet" href="assets/css/moons.css?v=2025-11-02-aa2">
+  <link rel="stylesheet" href="assets/css/bridge.css?v=2025-11-02-aa2">  <!-- Mobile-first fallbacks -->  <style>
     :root{ --safe-top: env(safe-area-inset-top,0px) }
     .top-safe{ height: calc(var(--safe-top) + 8px) }
     .grid{ display:grid; grid-template-columns:1fr; gap:12px }
@@ -61,10 +42,8 @@
     .year-map thead th{ position:sticky; top:0; background:#0e0e12 }
     .weekrow{ display:flex; align-items:center; gap:.6rem; white-space:nowrap; overflow:auto; -webkit-overflow-scrolling:touch }
     :focus-visible{ outline:2px solid #7af3ff; outline-offset:2px }
-  </style>
-
-  <!-- Calendar hardening -->
-  <style>
+    @media (prefers-contrast: more){ .card{border-color:#4a4a55} }
+  </style>  <!-- Calendar hardening -->  <style>
   @layer components {
     .calendar, .gregorian { --cell: clamp(36px, 8.5vw, 56px); --gap: 6px; }
     .calendar .r-grid, .gregorian .g-grid {
@@ -120,10 +99,7 @@
       }
     }
   }
-  </style>
-
-  <!-- Moon Theme System (13 + DOOT) -->
-  <style id="moon-themes">
+  </style>  <!-- Moon Theme System (13 + DOOT) -->  <style id="moon-themes">
     :root{
       --moon-accent:#7af3ff; --moon-accent-2:#7aa8ff;
       --moon-bg-from:#0b0b0f; --moon-bg-to:#0e0e12;
@@ -144,314 +120,287 @@
     .pill,.badge,.lab-btn.ghost{ box-shadow:0 0 0 1px color-mix(in lch, var(--moon-accent) 26%, transparent); }
 
     /* DOOT + 13 Moons (baseline; can be overridden by data colors) */
-    body.theme-doot{ --moon-accent:#bfbfc9; --moon-accent-2:#8a8a98; --moon-bg-from:#0a0a0e; --moon-bg-to:#0f1018; --moon-aether:rgba(200,200,220,.08);}
-    body.theme-moon-1 { --moon-accent:#9cf; --moon-accent-2:#5ef; --moon-bg-from:#08131c; --moon-bg-to:#0b1a26; --moon-aether:rgba(140,200,255,.12);}
-    body.theme-moon-2 { --moon-accent:#ffb4a8; --moon-accent-2:#ff866b; --moon-bg-from:#201015; --moon-bg-to:#2b1218; --moon-aether:rgba(255,118,86,.12);}
-    body.theme-moon-3 { --moon-accent:#ffd37a; --moon-accent-2:#ffe6a8; --moon-bg-from:#1f1808; --moon-bg-to:#2a210c; --moon-aether:rgba(255,214,122,.10);}
-    body.theme-moon-4 { --moon-accent:#b6ffcc; --moon-accent-2:#6dff9e; --moon-bg-from:#0a1a12; --moon-bg-to:#0f2218; --moon-aether:rgba(120,255,180,.10);}
-    body.theme-moon-5 { --moon-accent:#ffe07a; --moon-accent-2:#ffc84d; --moon-bg-from:#211a07; --moon-bg-to:#2a2109; --moon-aether:rgba(255,200,90,.12);}
-    body.theme-moon-6 { --moon-accent:#9ef; --moon-accent-2:#6bf; --moon-bg-from:#07151a; --moon-bg-to:#0a1b22; --moon-aether:rgba(120,230,255,.10);}
-    body.theme-moon-7 { --moon-accent:#d5b6ff; --moon-accent-2:#b98cff; --moon-bg-from:#160d22; --moon-bg-to:#1c1030; --moon-aether:rgba(190,140,255,.12);}
-    body.theme-moon-8 { --moon-accent:#a8ffd9; --moon-accent-2:#7affc4; --moon-bg-from:#0a1713; --moon-bg-to:#0e1e18; --moon-aether:rgba(130,255,210,.10);}
-    body.theme-moon-9 { --moon-accent:#ff927a; --moon-accent-2:#ff6a55; --moon-bg-from:#1e0e0b; --moon-bg-to:#270f0c; --moon-aether:rgba(255,120,100,.12);}
-    body.theme-moon-10{ --moon-accent:#a2ffd1; --moon-accent-2:#73ffc0; --moon-bg-from:#0c1912; --moon-bg-to:#102219; --moon-aether:rgba(140,255,200,.10);}
-    body.theme-moon-11{ --moon-accent:#a8b8ff; --moon-accent-2:#7a8cff; --moon-bg-from:#0b0f22; --moon-bg-to:#0e1230; --moon-aether:rgba(120,140,255,.10);}
-    body.theme-moon-12{ --moon-accent:#ffd7a8; --moon-accent-2:#ffc57a; --moon-bg-from:#1e140a; --moon-bg-to:#24180c; --moon-aether:rgba(255,205,150,.10);}
-    body.theme-moon-13{ --moon-accent:#9df; --moon-accent-2:#7cf; --moon-bg-from:#0a1016; --moon-bg-to:#0c1218; --moon-aether:rgba(140,220,255,.12);}
-  </style>
-
-  <!-- Micro-animations -->
-  <style id="moon-anim">
+    body.theme-doot{ --moon-accent:#bfbfc9; --moon-accent-2:#8a8a98; --moon-bg-from:#0a0a0e; --moon-bg-to:#0f1018; --moon-aether:rgba(200,200,220,.08);}    
+    body.theme-moon-1 { --moon-accent:#9cf; --moon-accent-2:#5ef; --moon-bg-from:#08131c; --moon-bg-to:#0b1a26; --moon-aether:rgba(140,200,255,.12);}    
+    body.theme-moon-2 { --moon-accent:#ffb4a8; --moon-accent-2:#ff866b; --moon-bg-from:#201015; --moon-bg-to:#2b1218; --moon-aether:rgba(255,118,86,.12);}  
+    body.theme-moon-3 { --moon-accent:#ffd37a; --moon-accent-2:#ffe6a8; --moon-bg-from:#1f1808; --moon-bg-to:#2a210c; --moon-aether:rgba(255,214,122,.10);}   
+    body.theme-moon-4 { --moon-accent:#b6ffcc; --moon-accent-2:#6dff9e; --moon-bg-from:#0a1a12; --moon-bg-to:#0f2218; --moon-aether:rgba(120,255,180,.10);}   
+    body.theme-moon-5 { --moon-accent:#ffe07a; --moon-accent-2:#ffc84d; --moon-bg-from:#211a07; --moon-bg-to:#2a2109; --moon-aether:rgba(255,200,90,.12);}     
+    body.theme-moon-6 { --moon-accent:#9ef; --moon-accent-2:#6bf; --moon-bg-from:#07151a; --moon-bg-to:#0a1b22; --moon-aether:rgba(120,230,255,.10);}       
+    body.theme-moon-7 { --moon-accent:#d5b6ff; --moon-accent-2:#b98cff; --moon-bg-from:#160d22; --moon-bg-to:#1c1030; --moon-aether:rgba(190,140,255,.12);}   
+    body.theme-moon-8 { --moon-accent:#a8ffd9; --moon-accent-2:#7affc4; --moon-bg-from:#0a1713; --moon-bg-to:#0e1e18; --moon-aether:rgba(130,255,210,.10);}   
+    body.theme-moon-9 { --moon-accent:#ff927a; --moon-accent-2:#ff6a55; --moon-bg-from:#1e0e0b; --moon-bg-to:#270f0c; --moon-aether:rgba(255,120,100,.12);}   
+    body.theme-moon-10{ --moon-accent:#a2ffd1; --moon-accent-2:#73ffc0; --moon-bg-from:#0c1912; --moon-bg-to:#102219; --moon-aether:rgba(140,255,200,.10);}  
+    body.theme-moon-11{ --moon-accent:#a8b8ff; --moon-accent-2:#7a8cff; --moon-bg-from:#0b0f22; --moon-bg-to:#0e1230; --moon-aether:rgba(120,140,255,.10);}  
+    body.theme-moon-12{ --moon-accent:#ffd7a8; --moon-accent-2:#ffc57a; --moon-bg-from:#1e140a; --moon-bg-to:#24180c; --moon-aether:rgba(255,205,150,.10);}  
+    body.theme-moon-13{ --moon-accent:#9df; --moon-accent-2:#7cf; --moon-bg-from:#0a1016; --moon-bg-to:#0c1218; --moon-aether:rgba(140,220,255,.12);}       
+  </style>  <!-- Micro-animations -->  <style id="moon-anim">
     @media (prefers-reduced-motion: no-preference){
-      .ring .ring-fg{
-        transform-origin: 60px 60px;
-        animation: ringPulse 6.5s ease-in-out infinite;
-      }
-      @keyframes ringPulse{
-        0%,100% { filter: drop-shadow(0 0 6px color-mix(in oklch, var(--moon-accent) 55%, transparent)); }
-        50%     { filter: drop-shadow(0 0 calc(6px + 10px*var(--pulse)) color-mix(in oklch, var(--moon-accent) 70%, transparent)); }
-      }
-      #simMoon{
-        animation: moonGlow 12s ease-in-out infinite;
-      }
-      @keyframes moonGlow{
-        0%,100% { filter: drop-shadow(0 0 0.5rem #0000); }
-        50%     { filter: drop-shadow(0 0 calc(0.5rem + 0.7rem*var(--pulse)) color-mix(in oklch, var(--moon-accent) 40%, transparent)); }
-      }
+      .ring .ring-fg{ transform-origin: 60px 60px; animation: ringPulse 6.5s ease-in-out infinite; }
+      @keyframes ringPulse{ 0%,100% { filter: drop-shadow(0 0 6px color-mix(in oklch, var(--moon-accent) 55%, transparent)); } 50% { filter: drop-shadow(0 0 calc(6px + 10px*var(--pulse)) color-mix(in oklch, var(--moon-accent) 70%, transparent)); } }
+      #simMoon{ animation: moonGlow 12s ease-in-out infinite; }
+      @keyframes moonGlow{ 0%,100% { filter: drop-shadow(0 0 0.5rem #0000); } 50% { filter: drop-shadow(0 0 calc(0.5rem + 0.7rem*var(--pulse)) color-mix(in oklch, var(--moon-accent) 40%, transparent)); } }
     }
-  </style>
-
-  <!-- Optional data module -->
-  <script src="assets/data/moons.data.js"></script>
-  <link rel="prefetch" href="index.html" as="document">
-</head>
-
-<body class="stars remnant-yhwh">
+  </style>  <!-- Optional data module -->  <script src="assets/data/moons.data.js" defer></script>  <link rel="prefetch" href="index.html" as="document">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Remnant 13 Moons — Living Clock","applicationCategory":"EducationApplication","operatingSystem":"Web","url":"https://ssnfts24.github.io/scroll-of-fire/moons.html","creator":{"@type":"Person","name":"Aaron Paul Laird"}}</script>
+</head><body class="stars remnant-yhwh">
   <div class="top-safe" aria-hidden="true"></div>
-  <canvas id="skyBg" width="1440" height="900" aria-hidden="true" style="position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none"></canvas>
-
-  <main class="wrap" id="main" role="main" style="position:relative;z-index:1">
+  <canvas id="skyBg" width="1440" height="900" aria-hidden="true" style="position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none"></canvas>  <main class="wrap" id="main" role="main" style="position:relative;z-index:1">
     <header class="page-head fancy-head">
       <h1 class="title">🌗 Remnant 13 Moons <span class="soft">— Living Clock</span></h1>
       <p class="subtitle">13×28 cadence · TZ-true · sealed <span lang="he" title="YHWH">יהוה</span>.</p>
       <nav class="crumbs" aria-label="Breadcrumb">
         <a class="lab-btn" href="index.html">← Codex</a>
         <a class="lab-btn" href="theory.html">📘 Theory</a>
-      </nav>
-
-      <section class="card ringcard" aria-label="Current Moon">
-        <div class="moon-badge">
-          <div class="ring" aria-label="Day in Moon">
-            <svg viewBox="0 0 120 120" role="img" aria-label="Progress ring for day within 28-day moon">
-              <defs>
-                <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="var(--moon-accent)"/>
-                  <stop offset="1" stop-color="var(--moon-accent-2)"/>
-                </linearGradient>
-              </defs>
-              <circle cx="60" cy="60" r="50" class="ring-bg"/>
-              <circle cx="60" cy="60" r="50" class="ring-fg" id="moonArc" pathLength="316"/>
-            </svg>
-            <div class="label" aria-live="polite">
-              <div class="big" id="dayInMoon">—</div><div class="small">/28</div>
-            </div>
-          </div>
-          <span class="pill" id="moonChip"><span class="k" id="moonName">—</span> <span class="meta" id="moonEssence">—</span></span>
-          <span class="pill mono"><span id="yearSpan">—</span></span>
-          <img id="moonSigil" class="sigil" alt="" decoding="async" loading="lazy" style="height:28px;opacity:.9;display:inline-block" hidden>
+      </nav><section class="card ringcard" aria-label="Current Moon">
+    <div class="moon-badge">
+      <div class="ring" aria-label="Day in Moon">
+        <svg viewBox="0 0 120 120" role="img" aria-label="Progress ring for day within 28-day moon">
+          <defs>
+            <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="var(--moon-accent)"/>
+              <stop offset="1" stop-color="var(--moon-accent-2)"/>
+            </linearGradient>
+          </defs>
+          <circle cx="60" cy="60" r="50" class="ring-bg"/>
+          <circle cx="60" cy="60" r="50" class="ring-fg" id="moonArc" pathLength="316"/>
+        </svg>
+        <div class="label" aria-live="polite">
+          <div class="big" id="dayInMoon">—</div><div class="small">/28</div>
         </div>
-
-        <div class="weekrow" role="group" aria-label="Week inside the 28-day moon">
-          <span class="weeklabel">Week</span>
-          <div class="week" id="weekDots" role="list"></div>
-        </div>
-
-        <p class="meta" id="dootWarn" hidden><b>Day Out of Time:</b> outside the 13×28 cadence.</p>
-      </section>
-    </header>
-
-    <!-- TODAY -->
-    <section class="grid" aria-label="Controls and Simulation">
-      <article class="card">
-        <h2 id="today-head">Today</h2>
-        <div class="chiprow" role="status" aria-live="polite">
-          <span class="pill"><b id="nowDate">—</b></span>
-          <span class="pill mono" id="nowClock" role="timer">—:—:—</span>
-          <span class="pill" id="nowTZ">—</span>
-          <span class="pill" id="moonLine">—</span>
-        </div>
-
-        <div class="formrow">
-          <label>Time Zone
-            <select id="tzPick" class="lab-input" aria-label="Time Zone"></select>
-          </label>
-          <label>Date
-            <input type="date" id="datePick" class="lab-input" aria-label="Pick a date" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}">
-          </label>
-          <label>Hour
-            <input type="range" id="hourScrub" min="0" max="23" value="12" class="lab-input" aria-label="Hour of day">
-          </label>
-        </div>
-
-        <div class="btnrow">
-          <button class="lab-btn" id="btnToday" type="button">Today</button>
-          <button class="lab-btn" id="prevDay" type="button">← Prev</button>
-          <button class="lab-btn" id="nextDay" type="button">Next →</button>
-          <button class="lab-btn ghost" id="shareLink" type="button">Copy Link</button>
-          <button class="lab-btn ghost" id="resetTZ" type="button">PNW (Seattle)</button>
-          <label class="tag" style="margin-left:auto">Go to:
-            <select id="jumpMoon" class="lab-input" aria-label="Jump to Moon">
-              <option value="">—</option>
-              <option value="1">#1 Magnetic</option><option value="2">#2 Lunar</option><option value="3">#3 Electric</option>
-              <option value="4">#4 Self-Existing</option><option value="5">#5 Overtone</option><option value="6">#6 Rhythmic</option>
-              <option value="7">#7 Resonant</option><option value="8">#8 Galactic</option><option value="9">#9 Solar</option>
-              <option value="10">#10 Planetary</option><option value="11">#11 Spectral</option><option value="12">#12 Crystal</option>
-              <option value="13">#13 Cosmic</option>
-            </select>
-          </label>
-        </div>
-        <p class="hint keys">Keys: <span class="kbd">↑/↓</span> day • <span class="kbd">←/→</span> hour • <span class="kbd">T</span> today</p>
-      </article>
-
-      <aside class="card" aria-labelledby="verse-head">
-        <h2 id="verse-head">Remnant Verse</h2>
-        <blockquote class="pull" id="verseBox">
-          <span class="he" id="vHeb" lang="he" dir="rtl">—</span>
-          <span class="en" id="vEn">—</span>
-          <cite class="meta" id="vRef">—</cite>
-        </blockquote>
-
-        <h2 id="lunar-head" style="margin-top:12px">Lunar Phase</h2>
-        <div class="sim" style="display:grid;grid-template-columns:1fr;gap:10px">
-          <canvas id="simMoon" width="280" height="280" aria-label="Lunar phase" style="width:100%;max-width:360px;justify-self:center"></canvas>
-          <div>
-            <p class="mono" id="phaseLine">—</p>
-            <p class="meta" id="phaseMeta">—</p>
-            <div class="divider" aria-hidden="true"></div>
-            <section id="numerologyBox" aria-live="polite">
-              <h3 class="tight">Numerology</h3>
-              <p class="mono" id="numLine">—</p>
-              <p class="meta" id="numMeta">—</p>
-              <p class="meta" id="energyQuote" style="margin-top:6px">—</p>
-            </section>
-          </div>
-        </div>
-      </aside>
-    </section>
-
-    <!-- CALENDARS -->
-    <section class="row-2" aria-label="Remnant vs Gregorian">
-      <article class="card">
-        <header class="panel__head">
-          <h3 class="panel__title" id="remHdr">Remnant Month</h3>
-          <div class="panel__meta" id="remMeta">13 × 28 fixed</div>
-        </header>
-        <section id="remCal" class="calendar" aria-label="Remnant 13×28 Month (live)"></section>
-      </article>
-
-      <article class="card">
-        <header class="panel__head">
-          <h3 class="panel__title" id="gregHdr">Gregorian Month</h3>
-          <div class="panel__meta" id="gregMeta">Variable weeks</div>
-        </header>
-        <section id="gregCal" class="gregorian" aria-label="Gregorian Month (live)"></section>
-        <footer id="calLegend" class="legend" aria-label="Legend">
-          <span class="key"><i class="k-dot k-evt1" aria-hidden="true"></i> Event</span>
-          <span class="key"><i class="k-dot k-evt2" aria-hidden="true"></i> Ceremony</span>
-          <span class="key"><i class="k-dot k-doot" aria-hidden="true"></i> DOOT</span>
-          <span class="key"><i class="k-dot k-leap" aria-hidden="true"></i> Leap Day</span>
-          <span class="key"><i class="k-dot k-today" aria-hidden="true"></i> Today</span>
-        </footer>
-      </article>
-    </section>
-
-    <article class="card" aria-labelledby="map-head">
-      <h2 id="map-head">Year Map — Gregorian spans of the 13 Moons</h2>
-      <p class="hint">New Year = July 26 · Day Out of Time = July 25 · Leap Day (Feb 29) is skipped in the 13×28 count.</p>
-      <div class="scroller" role="region" aria-label="13 Moons Year Map">
-        <table class="year-map" id="yearMap">
-          <thead><tr><th scope="col">#</th><th scope="col">Moon Name</th><th scope="col">Essence</th><th scope="col">Start (TZ)</th><th scope="col">End (TZ)</th></tr></thead>
-          <tbody></tbody>
-        </table>
       </div>
-      <p class="meta" id="nextMoonInfo">—</p>
+      <span class="pill" id="moonChip"><span class="k" id="moonName">—</span> <span class="meta" id="moonEssence">—</span></span>
+      <span class="pill mono"><span id="yearSpan">—</span></span>
+      <img id="moonSigil" class="sigil" alt="" decoding="async" loading="lazy" style="height:28px;opacity:.9;display:inline-block" hidden>
+    </div>
+
+    <div class="weekrow" role="group" aria-label="Week inside the 28-day moon">
+      <span class="weeklabel">Week</span>
+      <div class="week" id="weekDots" role="list"></div>
+    </div>
+
+    <p class="meta" id="dootWarn" hidden><b>Day Out of Time:</b> outside the 13×28 cadence.</p>
+  </section>
+</header>
+
+<!-- TODAY -->
+<section class="grid" aria-label="Controls and Simulation">
+  <article class="card">
+    <h2 id="today-head">Today</h2>
+    <div class="chiprow" role="status" aria-live="polite">
+      <span class="pill"><b id="nowDate">—</b></span>
+      <span class="pill mono" id="nowClock" role="timer">—:—:—</span>
+      <span class="pill" id="nowTZ">—</span>
+      <span class="pill" id="moonLine">—</span>
+    </div>
+
+    <div class="formrow">
+      <label>Time Zone
+        <select id="tzPick" class="lab-input" aria-label="Time Zone"></select>
+      </label>
+      <label>Date
+        <input type="date" id="datePick" class="lab-input" aria-label="Pick a date" inputmode="numeric" pattern="\d{4}-\d{2}-\d{2}">
+      </label>
+      <label>Hour
+        <input type="range" id="hourScrub" min="0" max="23" value="12" class="lab-input" aria-label="Hour of day">
+      </label>
+    </div>
+
+    <div class="btnrow">
+      <button class="lab-btn" id="btnToday" type="button">Today</button>
+      <button class="lab-btn" id="prevDay" type="button">← Prev</button>
+      <button class="lab-btn" id="nextDay" type="button">Next →</button>
+      <button class="lab-btn ghost" id="shareLink" type="button">Copy Link</button>
+      <button class="lab-btn ghost" id="resetTZ" type="button">PNW (Seattle)</button>
+      <label class="tag" style="margin-left:auto">Go to:
+        <select id="jumpMoon" class="lab-input" aria-label="Jump to Moon">
+          <option value="">—</option>
+          <option value="1">#1 Magnetic</option><option value="2">#2 Lunar</option><option value="3">#3 Electric</option>
+          <option value="4">#4 Self-Existing</option><option value="5">#5 Overtone</option><option value="6">#6 Rhythmic</option>
+          <option value="7">#7 Resonant</option><option value="8">#8 Galactic</option><option value="9">#9 Solar</option>
+          <option value="10">#10 Planetary</option><option value="11">#11 Spectral</option><option value="12">#12 Crystal</option>
+          <option value="13">#13 Cosmic</option>
+        </select>
+      </label>
+    </div>
+    <p class="hint keys">Keys: <span class="kbd">↑/↓</span> day • <span class="kbd">←/→</span> hour • <span class="kbd">T</span> today</p>
+  </article>
+
+  <aside class="card" aria-labelledby="verse-head">
+    <h2 id="verse-head">Remnant Verse</h2>
+    <blockquote class="pull" id="verseBox">
+      <span class="he" id="vHeb" lang="he" dir="rtl">—</span>
+      <span class="en" id="vEn">—</span>
+      <cite class="meta" id="vRef">—</cite>
+    </blockquote>
+
+    <h2 id="lunar-head" style="margin-top:12px">Lunar Phase</h2>
+    <div class="sim" style="display:grid;grid-template-columns:1fr;gap:10px">
+      <canvas id="simMoon" width="280" height="280" aria-label="Lunar phase" style="width:100%;max-width:360px;justify-self:center"></canvas>
+      <div>
+        <p class="mono" id="phaseLine">—</p>
+        <p class="meta" id="phaseMeta">—</p>
+        <div class="divider" aria-hidden="true"></div>
+        <section id="numerologyBox" aria-live="polite">
+          <h3 class="tight">Numerology</h3>
+          <p class="mono" id="numLine">—</p>
+          <p class="meta" id="numMeta">—</p>
+          <p class="meta" id="energyQuote" style="margin-top:6px">—</p>
+        </section>
+      </div>
+    </div>
+  </aside>
+</section>
+
+<!-- CALENDARS -->
+<section class="row-2" aria-label="Remnant vs Gregorian">
+  <article class="card">
+    <header class="panel__head">
+      <h3 class="panel__title" id="remHdr">Remnant Month</h3>
+      <div class="panel__meta" id="remMeta">13 × 28 fixed</div>
+    </header>
+    <section id="remCal" class="calendar" aria-label="Remnant 13×28 Month (live)"></section>
+  </article>
+
+  <article class="card">
+    <header class="panel__head">
+      <h3 class="panel__title" id="gregHdr">Gregorian Month</h3>
+      <div class="panel__meta" id="gregMeta">Variable weeks</div>
+    </header>
+    <section id="gregCal" class="gregorian" aria-label="Gregorian Month (live)"></section>
+    <footer id="calLegend" class="legend" aria-label="Legend">
+      <span class="key"><i class="k-dot k-evt1" aria-hidden="true"></i> Event</span>
+      <span class="key"><i class="k-dot k-evt2" aria-hidden="true"></i> Ceremony</span>
+      <span class="key"><i class="k-dot k-doot" aria-hidden="true"></i> DOOT</span>
+      <span class="key"><i class="k-dot k-leap" aria-hidden="true"></i> Leap Day</span>
+      <span class="key"><i class="k-dot k-today" aria-hidden="true"></i> Today</span>
+    </footer>
+  </article>
+</section>
+
+<article class="card" aria-labelledby="map-head">
+  <h2 id="map-head">Year Map — Gregorian spans of the 13 Moons</h2>
+  <p class="hint">New Year = July 26 · Day Out of Time = July 25 · Leap Day (Feb 29) is skipped in the 13×28 count.</p>
+  <div class="scroller" role="region" aria-label="13 Moons Year Map">
+    <table class="year-map" id="yearMap">
+      <thead><tr><th scope="col">#</th><th scope="col">Moon Name</th><th scope="col">Essence</th><th scope="col">Start (TZ)</th><th scope="col">End (TZ)</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <p class="meta" id="nextMoonInfo">—</p>
+</article>
+
+<article class="card shine astro" aria-labelledby="astro-head">
+  <header class="astro-head">
+    <span class="seal" aria-hidden="true">⟡ <span lang="he">יהוה</span></span>
+    <h2 id="astro-head">Astrology Now</h2>
+    <p class="meta">Uses <code>window.__EPHEMERIS__</code> if present; otherwise a safe demo.</p>
+  </header>
+
+  <section class="astro-grid">
+    <div class="astro-chips" id="planetChips" role="list">
+      <button class="chip pl-sun" data-planet="sun" type="button"><i class="dot el-fire" aria-hidden="true"></i><b>Sun</b> <span class="mono pos" data-pos="sun">—</span> <span class="sign" data-sign="sun">—</span></button>
+      <button class="chip pl-moon" data-planet="moon" type="button"><i class="dot el-water" aria-hidden="true"></i><b>Moon</b> <span class="mono pos" data-pos="moon">—</span> <span class="sign" data-sign="moon">—</span></button>
+      <button class="chip pl-mercury" data-planet="mercury" type="button"><i class="dot el-air" aria-hidden="true"></i><b>Mercury</b> <span class="mono pos" data-pos="mercury">—</span> <span class="sign" data-sign="mercury">—</span></button>
+      <button class="chip pl-venus" data-planet="venus" type="button"><i class="dot el-earth" aria-hidden="true"></i><b>Venus</b> <span class="mono pos" data-pos="venus">—</span> <span class="sign" data-sign="venus">—</span></button>
+      <button class="chip pl-mars" data-planet="mars" type="button"><i class="dot el-fire" aria-hidden="true"></i><b>Mars</b> <span class="mono pos" data-pos="mars">—</span> <span class="sign" data-sign="mars">—</span></button>
+      <button class="chip pl-jupiter" data-planet="jupiter" type="button"><i class="dot el-air" aria-hidden="true"></i><b>Jupiter</b> <span class="mono pos" data-pos="jupiter">—</span> <span class="sign" data-sign="jupiter">—</span></button>
+      <button class="chip pl-saturn" data-planet="saturn" type="button"><i class="dot el-earth" aria-hidden="true"></i><b>Saturn</b> <span class="mono pos" data-pos="saturn">—</span> <span class="sign" data-sign="saturn">—</span></button>
+      <details class="chip more">
+        <summary><i class="dot el-aether" aria-hidden="true"></i><b>Outer bodies</b></summary>
+        <div class="more-grid" role="list">
+          <div role="listitem"><b>Uranus</b>  <span class="mono pos" data-pos="uranus">—</span>  <span class="sign" data-sign="uranus">—</span></div>
+          <div role="listitem"><b>Neptune</b> <span class="mono pos" data-pos="neptune">—</span> <span class="sign" data-sign="neptune">—</span></div>
+          <div role="listitem"><b>Pluto</b>   <span class="mono pos" data-pos="pluto">—</span>   <span class="sign" data-sign="pluto">—</span></div>
+          <div role="listitem"><b>Node ☊</b>  <span class="mono pos" data-pos="north_node">—</span> <span class="sign" data-sign="north_node">—</span></div>
+        </div>
+      </details>
+    </div>
+
+    <figure class="astro-wheel">
+      <svg id="astroWheel" viewBox="0 0 360 360" role="img" aria-label="Zodiac wheel">
+        <defs><linearGradient id="awGrad" x1="0" y="0" x2="1" y="1"><stop offset="0" /><stop offset="1" /></linearGradient></defs>
+        <circle cx="180" cy="180" r="162" fill="none" stroke="#1b2231" stroke-width="2"/>
+        <circle cx="180" cy="180" r="150" fill="none" stroke="url(#awGrad)" stroke-opacity=".45" stroke-width="2"/>
+        <g id="houseLines" stroke="#2a3242" stroke-width=".8" opacity=".9"></g>
+        <g id="signLabels" fill="#a7b1ca" font-family="Inter,system-ui" font-size="10" text-anchor="middle"></g>
+        <g id="planetDots" aria-hidden="true">
+          <circle r="4.6" class="dot el-fire"   data-dot="sun"    cx="180" cy="30"/>
+          <circle r="4.6" class="dot el-water"  data-dot="moon"   cx="180" cy="330"/>
+          <circle r="4.6" class="dot el-air"    data-dot="mercury" cx="30"  cy="180"/>
+          <circle r="4.6" class="dot el-earth"  data-dot="venus"   cx="330" cy="180"/>
+          <circle r="4.6" class="dot el-fire"   data-dot="mars"    cx="60"  cy="60"/>
+          <circle r="4.6" class="dot el-air"    data-dot="jupiter" cx="300" cy="300"/>
+          <circle r="4.6" class="dot el-earth"  data-dot="saturn"  cx="60"  cy="300"/>
+        </g>
+      </svg>
+      <figcaption class="meta"><span id="astroStamp">—</span><span class="sep">·</span><span id="astroTZ">—</span><span class="sep">·</span>Source: <span id="astroSource">—</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="astro-aspects">
+    <h3 class="tight">Aspects</h3>
+    <div class="legend" role="list">
+      <span role="listitem" class="badge asp conj">☌ Conj</span>
+      <span role="listitem" class="badge asp sext">✶ Sext</span>
+      <span role="listitem" class="badge asp sqr">□ Sq</span>
+      <span role="listitem" class="badge asp tri">△ Tri</span>
+      <span role="listitem" class="badge asp opp">☍ Opp</span>
+    </div>
+    <div class="scroller" role="region" aria-label="Aspect Table">
+      <table class="asp-table">
+        <thead><tr><th scope="col">Pair</th><th scope="col">Aspect</th><th scope="col">Orb</th></tr></thead>
+        <tbody id="aspBody"></tbody>
+      </table>
+    </div>
+  </section>
+</article>
+
+<section class="row-2" id="practiceCodexRow" aria-label="Practice & Codex">
+  <article class="card" id="practiceCard">
+    <h2 id="prac-head">Practices & Prompts</h2>
+    <ol id="practiceList" class="prompts" role="list"></ol>
+    <label class="meta" for="noteText" style="display:block;margin-top:10px">Your note for this moon</label>
+    <textarea id="noteText" placeholder="What are you tracking, learning, releasing?" aria-label="Note for this moon"></textarea>
+    <div class="btnrow"><button class="lab-btn" id="btnSaveNote" type="button">Save note</button></div>
+  </article>
+
+  <section class="codex card shine" id="loreCodex" aria-label="Moon Codex">
+    <aside class="codex-toc" aria-label="Codex contents">
+      <h4>Codex</h4>
+      <ol>
+        <li><a href="#cx-intro">Introduction</a></li>
+        <li><a href="#cx-practice">Practices</a></li>
+        <li><a href="#cx-notes">Notes & Footnotes</a></li>
+      </ol>
+    </aside>
+
+    <article class="codex-content">
+      <h1 id="cx-intro">The Remnant Moon Codex</h1>
+      <p class="lede dropcap">A living scroll of patterns, pulses, and presence — meant to be read like a sky.</p>
+      <div class="callout info"><div class="head">Essence</div><div class="body">Channel inspiration. Harmonize integrity. Perfect manifestation.</div></div>
+      <blockquote class="pull">“Number the days; crown the weeks; keep the remnant bright.”</blockquote>
+      <figure>
+        <img src="assets/media/codex-example.jpg" alt="Codex plate showing harmonics of the 13×28 count" loading="lazy" decoding="async" fetchpriority="low">
+        <figcaption>Plate VII — Harmonics of the 13×28 count.</figcaption>
+      </figure>
+      <h2 id="cx-practice">Practice</h2>
+      <p>Mark the day’s tone in your journal. Tap <span class="kbd">T</span> for “today”; use <span class="kbd">↑/↓</span> to step days.</p>
+      <h3 id="cx-notes">Notes & Footnotes</h3>
+      <hr>
+      <ol class="footnotes">
+        <li id="fn1">On leap days and DOOT handling — see script options. <a href="#fnref1">↩</a></li>
+      </ol>
     </article>
+  </section>
+</section>
 
-    <article class="card shine astro" aria-labelledby="astro-head">
-      <header class="astro-head">
-        <span class="seal" aria-hidden="true">⟡ <span lang="he">יהוה</span></span>
-        <h2 id="astro-head">Astrology Now</h2>
-        <p class="meta">Uses <code>window.__EPHEMERIS__</code> if present; otherwise a safe demo.</p>
-      </header>
-
-      <section class="astro-grid">
-        <div class="astro-chips" id="planetChips" role="list">
-          <button class="chip pl-sun" data-planet="sun" type="button"><i class="dot el-fire" aria-hidden="true"></i><b>Sun</b> <span class="mono pos" data-pos="sun">—</span> <span class="sign" data-sign="sun">—</span></button>
-          <button class="chip pl-moon" data-planet="moon" type="button"><i class="dot el-water" aria-hidden="true"></i><b>Moon</b> <span class="mono pos" data-pos="moon">—</span> <span class="sign" data-sign="moon">—</span></button>
-          <button class="chip pl-mercury" data-planet="mercury" type="button"><i class="dot el-air" aria-hidden="true"></i><b>Mercury</b> <span class="mono pos" data-pos="mercury">—</span> <span class="sign" data-sign="mercury">—</span></button>
-          <button class="chip pl-venus" data-planet="venus" type="button"><i class="dot el-earth" aria-hidden="true"></i><b>Venus</b> <span class="mono pos" data-pos="venus">—</span> <span class="sign" data-sign="venus">—</span></button>
-          <button class="chip pl-mars" data-planet="mars" type="button"><i class="dot el-fire" aria-hidden="true"></i><b>Mars</b> <span class="mono pos" data-pos="mars">—</span> <span class="sign" data-sign="mars">—</span></button>
-          <button class="chip pl-jupiter" data-planet="jupiter" type="button"><i class="dot el-air" aria-hidden="true"></i><b>Jupiter</b> <span class="mono pos" data-pos="jupiter">—</span> <span class="sign" data-sign="jupiter">—</span></button>
-          <button class="chip pl-saturn" data-planet="saturn" type="button"><i class="dot el-earth" aria-hidden="true"></i><b>Saturn</b> <span class="mono pos" data-pos="saturn">—</span> <span class="sign" data-sign="saturn">—</span></button>
-          <details class="chip more">
-            <summary><i class="dot el-aether" aria-hidden="true"></i><b>Outer bodies</b></summary>
-            <div class="more-grid" role="list">
-              <div role="listitem"><b>Uranus</b>  <span class="mono pos" data-pos="uranus">—</span>  <span class="sign" data-sign="uranus">—</span></div>
-              <div role="listitem"><b>Neptune</b> <span class="mono pos" data-pos="neptune">—</span> <span class="sign" data-sign="neptune">—</span></div>
-              <div role="listitem"><b>Pluto</b>   <span class="mono pos" data-pos="pluto">—</span>   <span class="sign" data-sign="pluto">—</span></div>
-              <div role="listitem"><b>Node ☊</b>  <span class="mono pos" data-pos="north_node">—</span> <span class="sign" data-sign="north_node">—</span></div>
-            </div>
-          </details>
-        </div>
-
-        <figure class="astro-wheel">
-          <svg id="astroWheel" viewBox="0 0 360 360" role="img" aria-label="Zodiac wheel">
-            <defs><linearGradient id="awGrad" x1="0" y="0" x2="1" y="1"><stop offset="0" /><stop offset="1" /></linearGradient></defs>
-            <circle cx="180" cy="180" r="162" fill="none" stroke="#1b2231" stroke-width="2"/>
-            <circle cx="180" cy="180" r="150" fill="none" stroke="url(#awGrad)" stroke-opacity=".45" stroke-width="2"/>
-            <g id="houseLines" stroke="#2a3242" stroke-width=".8" opacity=".9"></g>
-            <g id="signLabels" fill="#a7b1ca" font-family="Inter,system-ui" font-size="10" text-anchor="middle"></g>
-            <g id="planetDots" aria-hidden="true">
-              <circle r="4.6" class="dot el-fire"   data-dot="sun"    cx="180" cy="30"/>
-              <circle r="4.6" class="dot el-water"  data-dot="moon"   cx="180" cy="330"/>
-              <circle r="4.6" class="dot el-air"    data-dot="mercury" cx="30"  cy="180"/>
-              <circle r="4.6" class="dot el-earth"  data-dot="venus"   cx="330" cy="180"/>
-              <circle r="4.6" class="dot el-fire"   data-dot="mars"    cx="60"  cy="60"/>
-              <circle r="4.6" class="dot el-air"    data-dot="jupiter" cx="300" cy="300"/>
-              <circle r="4.6" class="dot el-earth"  data-dot="saturn"  cx="60"  cy="300"/>
-            </g>
-          </svg>
-          <figcaption class="meta"><span id="astroStamp">—</span><span class="sep">·</span><span id="astroTZ">—</span><span class="sep">·</span>Source: <span id="astroSource">—</span></figcaption>
-        </figure>
-      </section>
-
-      <section class="astro-aspects">
-        <h3 class="tight">Aspects</h3>
-        <div class="legend" role="list">
-          <span role="listitem" class="badge asp conj">☌ Conj</span>
-          <span role="listitem" class="badge asp sext">✶ Sext</span>
-          <span role="listitem" class="badge asp sqr">□ Sq</span>
-          <span role="listitem" class="badge asp tri">△ Tri</span>
-          <span role="listitem" class="badge asp opp">☍ Opp</span>
-        </div>
-        <div class="scroller" role="region" aria-label="Aspect Table">
-          <table class="asp-table">
-            <thead><tr><th scope="col">Pair</th><th scope="col">Aspect</th><th scope="col">Orb</th></tr></thead>
-            <tbody id="aspBody"></tbody>
-          </table>
-        </div>
-      </section>
-    </article>
-
-    <section class="row-2" id="practiceCodexRow" aria-label="Practice & Codex">
-      <article class="card" id="practiceCard">
-        <h2 id="prac-head">Practices & Prompts</h2>
-        <ol id="practiceList" class="prompts" role="list"></ol>
-        <label class="meta" for="noteText" style="display:block;margin-top:10px">Your note for this moon</label>
-        <textarea id="noteText" placeholder="What are you tracking, learning, releasing?" aria-label="Note for this moon"></textarea>
-        <div class="btnrow"><button class="lab-btn" id="btnSaveNote" type="button">Save note</button></div>
-      </article>
-
-      <section class="codex card shine" id="loreCodex" aria-label="Moon Codex">
-        <aside class="codex-toc" aria-label="Codex contents">
-          <h4>Codex</h4>
-          <ol>
-            <li><a href="#cx-intro">Introduction</a></li>
-            <li><a href="#cx-practice">Practices</a></li>
-            <li><a href="#cx-notes">Notes & Footnotes</a></li>
-          </ol>
-        </aside>
-
-        <article class="codex-content">
-          <h1 id="cx-intro">The Remnant Moon Codex</h1>
-          <p class="lede dropcap">A living scroll of patterns, pulses, and presence — meant to be read like a sky.</p>
-          <div class="callout info"><div class="head">Essence</div><div class="body">Channel inspiration. Harmonize integrity. Perfect manifestation.</div></div>
-          <blockquote class="pull">“Number the days; crown the weeks; keep the remnant bright.”</blockquote>
-          <figure>
-            <img src="assets/media/codex-example.jpg" alt="Codex plate showing harmonics of the 13×28 count" loading="lazy" decoding="async" fetchpriority="low">
-            <figcaption>Plate VII — Harmonics of the 13×28 count.</figcaption>
-          </figure>
-          <h2 id="cx-practice">Practice</h2>
-          <p>Mark the day’s tone in your journal. Tap <span class="kbd">T</span> for “today”; use <span class="kbd">↑/↓</span> to step days.</p>
-          <h3 id="cx-notes">Notes & Footnotes</h3>
-          <hr>
-          <ol class="footnotes">
-            <li id="fn1">On leap days and DOOT handling — see script options. <a href="#fnref1">↩</a></li>
-          </ol>
-        </article>
-      </section>
-    </section>
-  </main>
-
-  <footer class="footer">
+  </main>  <footer class="footer">
     <div class="divider" aria-hidden="true"></div>
     <p class="meta">© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
-  </footer>
+  </footer><noscript><p class="meta" style="text-align:center">This page needs JavaScript to calculate moon/day, phase, astrology, and year map.</p></noscript>
 
-  <noscript><p class="meta" style="text-align:center">This page needs JavaScript to calculate moon/day, phase, astrology, and year map.</p></noscript>
-
-  <!-- TZ helper (PNW-first + alias migration) -->
-  <script>
+  <!-- TZ helper (PNW-first + alias migration) -->  <script>
   window.MoonTZ=(function(){
     "use strict";
     const KEY = "sof_moons_tz";
@@ -503,10 +452,7 @@
 
     return { getTZ, setTZ, wallParts, nowWall, isoDateWall };
   })();
-  </script>
-
-  <!-- REMNANT ENGINE (TZ-safe + leap-proof) -->
-  <script>
+  </script>  <!-- REMNANT ENGINE (TZ-safe + leap-proof) -->  <script>
 (function(){
   "use strict";
   const $=(s,r=document)=>r.querySelector(s);
@@ -558,7 +504,6 @@
 
   /* -------- Year anchor & DOOT (TZ-true) -------- */
   function remYearStart(dw){
-    // use wall parts to decide the wall-year bucket
     const w = MoonTZ.wallParts(dw, state.tz);
     const y = w.getUTCFullYear(), m=w.getUTCMonth()+1, d=w.getUTCDate();
     const yStart = (m>7 || (m===7 && d>=26)) ? y : y-1;
@@ -800,14 +745,15 @@
       els.nextMoonInfo.textContent = "This is the Day Out of Time — the count resumes tomorrow.";
     }
   }
+  function uid(){ if (crypto && 'randomUUID' in crypto) return crypto.randomUUID(); const s=()=>Math.random().toString(16).slice(2,6); return `${Date.now()}-${s()}-${s()}-${s()}`; }
   function buildICS(dw){
     const start=remYearStart(dw);
     let ics="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Scroll of Fire//13-Moon//EN\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\n";
-    const stamp=()=>{const d=new Date();return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+"T"+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+"Z";}
+    const stamp=()=>{const d=new Date();return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+"T"+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+"Z"}
     const dtDate=d=> d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate());
     for(let i=0;i<13;i++){
       const s=wallDateForRemDay(start,i*28); const e=addDaysUTC(s,28); // DTEND exclusive
-      ics+=`BEGIN:VEVENT\r\nUID:${crypto.randomUUID()}@sof\r\nDTSTAMP:${stamp()}\r\nDTSTART;VALUE=DATE:${dtDate(s)}\r\nDTEND;VALUE=DATE:${dtDate(e)}\r\nSUMMARY:${i+1}. ${MOON_NAMES[i]} Moon — ${state.tz}\r\nDESCRIPTION:${MOON_ESSENCE[i]}\r\nEND:VEVENT\r\n`;
+      ics+=`BEGIN:VEVENT\r\nUID:${uid()}@sof\r\nDTSTAMP:${stamp()}\r\nDTSTART;VALUE=DATE:${dtDate(s)}\r\nDTEND;VALUE=DATE:${dtDate(e)}\r\nSUMMARY:${i+1}. ${MOON_NAMES[i]} Moon — ${state.tz}\r\nDESCRIPTION:${MOON_ESSENCE[i]}\r\nEND:VEVENT\r\n`;
     }
     ics+="END:VCALENDAR\r\n";
     const blob=new Blob([ics],{type:"text/calendar"});
@@ -982,6 +928,11 @@
 
     const plist=$("#practiceList"); if(plist){ plist.innerHTML=['Light the crown: three breaths, count 4-7-8.','Name the tone; write one vow for the day.','Mark the week: who do you serve today?','Seal the work: a small act of coherence.'].map(p=>`<li>${p}</li>`).join(''); }
     const btn=$("#btnSaveNote"), area=$("#noteText"); if(btn&&area){ btn.addEventListener('click',()=>{ try{ localStorage.setItem('sof_moon_note', area.value||""); btn.textContent="Saved"; setTimeout(()=>btn.textContent="Save note",1200);}catch{} }); const saved=localStorage.getItem('sof_moon_note'); if(saved) area.value=saved; }
+
+    // Optional PWA SW registration
+    if ('serviceWorker' in navigator){
+      try{ navigator.serviceWorker.register('sw.js',{scope:'./'}); }catch{}
+    }
   }
 
   addEventListener('load', init);
@@ -1015,6 +966,5 @@
     const asp=document.getElementById("aspBody"); if(asp){ asp.innerHTML=['Sun △ Moon · 2.1°','Venus □ Mars · 1.0°','Mercury ☌ Jupiter · 0.3°'].map(x=>`<tr><td>—</td><td>${x.split('·')[0]}</td><td>${x.split('·')[1]}</td></tr>`).join(''); }
   })();
 })();
-</script>
-</body>
+  </script></body>
 </html>
