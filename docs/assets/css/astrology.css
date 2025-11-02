@@ -1,22 +1,153 @@
 @layer astrology {
-  .astro-head{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
-  .seal{ font-weight:800 }
-  .astro-grid{ display:grid; gap:12px }
-  @media (min-width:900px){ .astro-grid{ grid-template-columns:1fr 1fr } }
-
-  .astro-chips{ display:flex; flex-wrap:wrap; gap:8px }
-  .chip{
-    display:inline-flex; align-items:center; gap:.45rem; padding:.45rem .6rem;
-    border:1px solid var(--line); border-radius:999px; background:#0f1218; white-space:nowrap;
+  /* ==================== TOKENS (scoped) ==================== */
+  :root {
+    --astro-bg:        var(--card);
+    --astro-ink:       var(--ink);
+    --astro-muted:     color-mix(in oklch, var(--ink) 65%, transparent);
+    --astro-line:      var(--line);
+    --astro-rim:       var(--rim);
+    --astro-pill:      color-mix(in oklch, var(--moon-accent) 10%, transparent);
+    --astro-chip-bg:   color-mix(in oklch, var(--moon-bg-from) 85%, transparent);
+    --astro-chip-fg:   var(--ink);
+    --astro-chip-br:   color-mix(in oklch, var(--line) 85%, transparent);
+    --astro-chip-hl:   color-mix(in oklch, var(--moon-accent) 35%, transparent);
+    --astro-wheel-stk: #1b2231;
+    --astro-wheel-ring: color-mix(in oklch, var(--moon-accent) 45%, transparent);
+    --astro-sticky-bg: color-mix(in oklch, var(--card) 94%, transparent);
+    --astro-shadow:    0 8px 24px rgba(0,0,0,.28);
   }
-  .chip.more summary{ cursor:pointer; list-style:none }
-  .chip .dot{ width:.55rem; height:.55rem; border-radius:999px; display:inline-block }
-  .el-fire{ background:#ff9d66 } .el-water{ background:#7bbdff } .el-air{ background:#9dd1ff } .el-earth{ background:#a0e0c2 } .el-aether{ background:#d9b8ff }
+  :root[data-theme="light"] {
+    --astro-chip-bg:   color-mix(in oklch, var(--bg-elev) 92%, white 8%);
+    --astro-sticky-bg: color-mix(in oklch, var(--bg-elev) 98%, white 2%);
+    --astro-wheel-stk: #d9e3f2;
+  }
 
-  .astro-wheel{ display:block; margin:auto }
-  .asp-table{ width:100%; border-collapse:separate; border-spacing:0 }
-  .asp-table thead th{ position:sticky; top:0; background:#0e0e12 }
-  .badge.asp{ border:1px solid var(--line); border-radius:6px; padding:.1rem .35rem }
-  .asp.conj{ background:#1b1f2a } .asp.sext{ background:#13211a } .asp.sqr{ background:#24181a }
-  .asp.tri{ background:#12201f } .asp.opp{ background:#211a24 }
+  /* ==================== HEADER ==================== */
+  .astro-head{
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    padding: 6px 0 10px;
+  }
+  .astro-head .seal{
+    font-weight:800; letter-spacing:.02em;
+    padding:.25rem .5rem; border-radius:999px;
+    box-shadow: 0 0 0 1px var(--astro-chip-br);
+    background: var(--astro-pill);
+    color: var(--astro-ink);
+  }
+  .astro-head .meta{ color: var(--astro-muted) }
+
+  /* ==================== GRID LAYOUT ==================== */
+  .astro-grid{ display:grid; gap:14px }
+  @media (min-width: 900px){
+    .astro-grid{ grid-template-columns: 1fr 1fr }
+  }
+
+  /* ==================== CHIPS ==================== */
+  .astro-chips{ display:flex; flex-wrap:wrap; gap:.5rem }
+  .chip{
+    --pad-x: .65rem; --pad-y: .42rem;
+    display:inline-flex; align-items:center; gap:.5rem;
+    padding: var(--pad-y) var(--pad-x);
+    border-radius:999px; border:1px solid var(--astro-chip-br);
+    background: var(--astro-chip-bg); color: var(--astro-chip-fg);
+    white-space:nowrap; transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    box-shadow: 0 0 0 1px transparent;
+  }
+  .chip:focus-visible{ outline:2px solid var(--moon-accent); outline-offset: 2px }
+  .chip:hover{ border-color: var(--astro-chip-hl); box-shadow: 0 2px 10px rgba(0,0,0,.18) }
+  .chip:active{ transform: translateY(1px) }
+
+  .chip.more summary{ cursor:pointer; list-style:none; display:inline-flex; align-items:center; gap:.5rem }
+  .chip.more summary::-webkit-details-marker{ display:none }
+  .chip.more[open]{ box-shadow: 0 0 0 2px color-mix(in oklch, var(--moon-accent) 25%, transparent) }
+  .chip.more .more-grid{ display:grid; gap:.35rem .75rem; grid-template-columns: repeat(2, minmax(120px, 1fr)); padding:.5rem .25rem }
+
+  .chip .dot{ width:.62rem; height:.62rem; border-radius:999px; display:inline-block; }
+  .el-fire  { background:#ff9d66 }
+  .el-water { background:#7bbdff }
+  .el-air   { background:#9dd1ff }
+  .el-earth { background:#a0e0c2 }
+  .el-aether{ background:#d9b8ff }
+
+  /* ==================== WHEEL ==================== */
+  .astro-wheel{ display:block; margin:auto; max-width: 520px }
+  .astro-wheel svg{
+    width:100%; height:auto; display:block;
+    filter: drop-shadow(0 4px 14px rgba(0,0,0,.24));
+  }
+  .astro-wheel circle[stroke="#1b2231"]{ stroke: var(--astro-wheel-stk) }
+  .astro-wheel circle[stroke-opacity] { stroke: var(--astro-wheel-ring) }
+  .astro-wheel figcaption{
+    margin-top: .5rem; font-size: .92rem; color: var(--astro-muted);
+    display:flex; gap:.5rem; align-items:baseline; justify-content:center; flex-wrap:wrap;
+  }
+  .astro-wheel .sep::before{ content:"·"; opacity:.6; margin: 0 .35rem }
+
+  /* Improve label readability on small screens */
+  @media (max-width: 420px){
+    #signLabels { font-size: 9px }
+  }
+
+  /* ==================== ASPECT BADGES & TABLE ==================== */
+  .badge.asp{
+    border: 1px solid var(--astro-line);
+    border-radius: 6px; padding: .15rem .4rem;
+    font-weight: 600; font-size: .85rem;
+    background: color-mix(in oklch, var(--moon-accent) 10%, transparent);
+  }
+  .asp.conj { background: #1b1f2a; color:#c9d1ff; }   /* ☌ */
+  .asp.sext { background: #13211a; color:#a3ffc9; }   /* ✶ */
+  .asp.sqr  { background: #24181a; color:#ffb3ad; }   /* □ */
+  .asp.tri  { background: #12201f; color:#aef7ff; }   /* △ */
+  .asp.opp  { background: #211a24; color:#e6c3ff; }   /* ☍ */
+
+  .asp-table{
+    width:100%; border-collapse:separate; border-spacing:0;
+    background: var(--astro-bg); border-radius: var(--radius);
+    overflow: clip; box-shadow: var(--astro-rim);
+  }
+  .asp-table thead th{
+    position: sticky; top: 0; z-index: 1;
+    background: var(--astro-sticky-bg);
+    color: var(--astro-muted);
+    font-weight: 700; text-align: left; padding: .6rem .75rem;
+    box-shadow: 0 1px 0 var(--astro-line);
+    backdrop-filter: blur(2px);
+  }
+  .asp-table tbody td{
+    padding: .55rem .75rem; border-bottom: 1px solid color-mix(in oklch, var(--astro-line) 85%, transparent);
+    vertical-align: middle;
+  }
+  .asp-table tbody tr:nth-child(2n){
+    background: color-mix(in oklch, var(--astro-bg) 88%, transparent);
+  }
+  .asp-table tbody tr:hover{
+    background: color-mix(in oklch, var(--moon-accent) 6%, transparent);
+  }
+
+  .legend[role="list"]{ display:flex; flex-wrap:wrap; gap:.4rem .6rem; margin:.35rem 0 .75rem }
+  .legend .badge{ user-select:none }
+
+  /* ==================== UTILITY TWEAKS ==================== */
+  .astro .meta, .astro .pos { color: var(--astro-muted) }
+  .astro .mono { font-family: var(--font-mono) }
+
+  /* Scroll region for aspects on mobile */
+  .astro-aspects .scroller{
+    overflow:auto; -webkit-overflow-scrolling:touch;
+    max-height: min(48vh, 560px);
+    border-radius: var(--radius);
+    box-shadow: inset 0 0 0 1px var(--astro-line);
+  }
+
+  /* ==================== MOTION SAFETY ==================== */
+  @media (prefers-reduced-motion: reduce){
+    .chip, .astro-wheel svg{ transition: none !important; animation: none !important }
+  }
+
+  /* ==================== HIGH CONTRAST ==================== */
+  @media (prefers-contrast: more){
+    .chip{ border-color: var(--astro-line); box-shadow: none }
+    .asp-table tbody tr:hover{ background: color-mix(in oklch, var(--moon-accent) 12%, transparent) }
+  }
 }
