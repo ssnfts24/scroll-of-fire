@@ -132,6 +132,24 @@
     .panel__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
     .astro-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .astro-wheel{display:block}
+
+    /* --- Mobile hardening: make lone col-* cards full-width when not inside .grid --- */
+@media (max-width: 960px){
+  main.wrap > :is(.col-6, .col-8, .col-4){ /* immediate children of main */
+    width:100%;
+    display:block;
+  }
+}
+
+/* Optional: a dedicated two-up row that collapses to one on mobile */
+.row-2 {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+@media (max-width:960px){
+  .row-2 { grid-template-columns:1fr; }
+}
   </style>
 
   <!-- Preloads / Prefetch -->
@@ -459,54 +477,60 @@
       </article>
     </section>
 
-    <!-- Practices -->
-    <article class="card col-6" id="practiceCard" aria-labelledby="prac-head" style="margin-top:12px">
-      <h2 id="prac-head">Practices & Prompts</h2>
-      <ol id="practiceList" class="prompts"></ol>
-      <label class="meta" for="noteText" style="display:block;margin-top:10px">Your note for this moon</label>
-      <textarea id="noteText" placeholder="What are you tracking, learning, releasing?" aria-label="Note for this moon"></textarea>
-      <div class="lab-row" style="margin-top:8px">
-        <button class="lab-btn" id="btnSaveNote" type="button">Save note</button>
+<!-- Practices + Codex row -->
+<section class="wrap row-2" id="practiceCodexRow" aria-label="Practice & Codex">
+  <!-- Practices -->
+  <article class="card col-6" id="practiceCard" aria-labelledby="prac-head">
+    <h2 id="prac-head">Practices & Prompts</h2>
+    <ol id="practiceList" class="prompts"></ol>
+
+    <label class="meta" for="noteText" style="display:block;margin-top:10px">
+      Your note for this moon
+    </label>
+    <textarea id="noteText" placeholder="What are you tracking, learning, releasing?" aria-label="Note for this moon"></textarea>
+
+    <div class="lab-row" style="margin-top:8px">
+      <button class="lab-btn" id="btnSaveNote" type="button">Save note</button>
+    </div>
+  </article>
+
+  <!-- Codex block -->
+  <section class="codex card shine col-6" id="loreCodex" aria-label="Moon Codex">
+    <aside class="codex-toc" aria-label="Codex contents">
+      <h4>Codex</h4>
+      <ol>
+        <li><a href="#cx-intro">Introduction</a></li>
+        <li><a href="#cx-practice">Practices</a></li>
+        <li><a href="#cx-notes">Notes & Footnotes</a></li>
+      </ol>
+    </aside>
+
+    <article class="codex-content">
+      <h1 id="cx-intro">The Remnant Moon Codex</h1>
+      <p class="lede dropcap">A living scroll of patterns, pulses, and presence — meant to be read like a sky.</p>
+
+      <div class="callout info">
+        <div class="head">Essence</div>
+        <div class="body">Channel inspiration. Harmonize integrity. Perfect manifestation.</div>
       </div>
+
+      <blockquote class="pull">“Number the days; crown the weeks; keep the remnant bright.”</blockquote>
+
+      <figure>
+        <img src="assets/media/codex-example.jpg" alt="Codex plate showing harmonics of the 13×28 count" loading="lazy" decoding="async" fetchpriority="low">
+        <figcaption>Plate VII — Harmonics of the 13×28 count.</figcaption>
+      </figure>
+
+      <h2 id="cx-practice">Practice</h2>
+      <p>Mark the day’s tone in your journal. Tap the <span class="kbd">T</span> key to step hours; <span class="kbd">↑/↓</span> to step days.</p>
+
+      <h3 id="cx-notes">Notes & Footnotes</h3>
+      <hr>
+      <ol class="footnotes">
+        <li id="fn1">On leap days and DOOT handling — see script options. <a href="#fnref1">↩</a></li>
+      </ol>
     </article>
-
-    <!-- Codex block -->
-    <section class="codex card shine" id="loreCodex" aria-label="Moon Codex" style="margin-top:12px">
-      <aside class="codex-toc" aria-label="Codex contents">
-        <h4>Codex</h4>
-        <ol>
-          <li><a href="#cx-intro">Introduction</a></li>
-          <li><a href="#cx-practice">Practices</a></li>
-          <li><a href="#cx-notes">Notes & Footnotes</a></li>
-        </ol>
-      </aside>
-
-      <article class="codex-content">
-        <h1 id="cx-intro">The Remnant Moon Codex</h1>
-        <p class="lede dropcap">A living scroll of patterns, pulses, and presence — meant to be read like a sky.</p>
-
-        <div class="callout info">
-          <div class="head">Essence</div>
-          <div class="body">Channel inspiration. Harmonize integrity. Perfect manifestation.</div>
-        </div>
-
-        <blockquote class="pull">“Number the days; crown the weeks; keep the remnant bright.”</blockquote>
-
-        <figure>
-          <img src="assets/media/codex-example.jpg" alt="Codex plate showing harmonics of the 13×28 count" loading="lazy" decoding="async" fetchpriority="low">
-          <figcaption>Plate VII — Harmonics of the 13×28 count.</figcaption>
-        </figure>
-
-        <h2 id="cx-practice">Practice</h2>
-        <p>Mark the day’s tone in your journal. Tap the <span class="kbd">T</span> key to step hours; <span class="kbd">↑/↓</span> to step days.</p>
-
-        <h3 id="cx-notes">Notes & Footnotes</h3>
-        <hr>
-        <ol class="footnotes">
-          <li id="fn1">On leap days and DOOT handling — see script options. <a href="#fnref1">↩</a></li>
-        </ol>
-      </article>
-    </section>
+  </section>
   </main>
 
   <footer class="footer">
