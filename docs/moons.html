@@ -548,7 +548,13 @@
   const isLeap=y=>(y%4===0 && (y%100!==0 || y%400===0));
   const addDaysUTC=(d,days)=>{ const nd=new Date(d.getTime()); nd.setUTCDate(nd.getUTCDate()+days); return nd; };
   const ymd=d=>`${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())}`;
-  function atWall(y,m,d,h=0,mi=0,s=0){ return MoonTZ.wallParts(new Date(Date.UTC(y,m-1,d,h,mi,s)), state.tz); }
+
+  // ⬇️ DST-safe: anchor conversions at local noon by default
+  function atWall(y,m,d,h=12,mi=0,s=0){ return MoonTZ.wallParts(new Date(Date.UTC(y,m-1,d,h,mi,s)), state.tz); }
+  function wallNoonFromDate(d){
+    const w = MoonTZ.wallParts(d, state.tz);
+    return atWall(w.getUTCFullYear(), w.getUTCMonth()+1, w.getUTCDate(), 12, 0, 0);
+  }
 
   /* -------- Year anchor & DOOT (TZ-true) -------- */
   function remYearStart(dw){
@@ -627,7 +633,7 @@
     const monthName = new Intl.DateTimeFormat("en-US", { timeZone: state.tz, month: "long" }).format(first);
     if (els.gregHdr) els.gregHdr.textContent = `Gregorian Month — ${monthName} ${y}`;
 
-    const todayYMD = ymd(MoonTZ.nowWall());
+    const todayYMD = ymd(wallNoonFromDate(new Date()));
     let html = `<ol class="g-grid" role="grid" aria-label="Gregorian Month ${monthName} ${y}">`;
     ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(l=> html += `<li class="g-lbl" role="columnheader">${l}</li>`);
     for (let i=0; i<first.getUTCDay(); i++) html += `<li class="g-pad" aria-hidden="true"></li>`;
@@ -641,7 +647,8 @@
     els.gregCal.addEventListener("click", (e) => {
       const b = e.target.closest("button[data-g]"); if(!b) return;
       const [yy,mm,dd] = b.dataset.g.split("-").map(Number);
-      state.date = atWall(yy, mm, dd, state.hour ?? state.date.getUTCHours(), state.date.getUTCMinutes());
+      state.date = atWall(yy, mm, dd, 12, 0, 0);
+      state.hour = null;
       hydrateAll();
     }, { once:true });
   }
@@ -675,7 +682,8 @@
     els.remCal.addEventListener("click",(e)=>{
       const b=e.target.closest("button[data-r]"); if(!b) return;
       const [yy,mm,dd] = b.dataset.r.split("-").map(Number);
-      state.date = atWall(yy,mm,dd, state.hour ?? state.date.getUTCHours(), state.date.getUTCMinutes());
+      state.date = atWall(yy, mm, dd, 12, 0, 0);
+      state.hour = null;
       hydrateAll();
     }, { once:true });
   }
@@ -862,7 +870,7 @@
     els.jumpMoon.value = pos.doot? "" : String(pos.moon);
   }
   function hydrateAll(){
-    state.date = MoonTZ.wallParts(state.date, state.tz);
+    state.date = wallNoonFromDate(state.date); // normalize to local noon every pass
     const pos = remnantPosition(state.date);
     setMoonTheme(pos);
     hydrateHeader(state.date,pos);
@@ -877,7 +885,7 @@
   function bindEvents(){
     els.tzPick.addEventListener('change',()=>{ 
       state.tz=MoonTZ.setTZ(els.tzPick.value);
-      state.date=MoonTZ.wallParts(state.date,state.tz);
+      state.date=wallNoonFromDate(state.date);
       const u=new URL(location.href); u.searchParams.set('tz',state.tz); u.searchParams.delete('date'); u.searchParams.delete('pin'); history.replaceState(null,'',u);
       hydrateAll();
     });
@@ -885,18 +893,54 @@
       state.tz = MoonTZ.setTZ("America/Los_Angeles");
       els.tzPick.value = state.tz;
       const u=new URL(location.href); u.searchParams.delete('tz'); u.searchParams.delete('date'); u.searchParams.delete('pin'); history.replaceState(null,'',u);
-      state.date = MoonTZ.nowWall(); state.hour=null; hydrateAll();
+      state.date = wallNoonFromDate(new Date()); state.hour=null; hydrateAll();
     });
-    els.datePick.addEventListener('change',()=>{ const [y,m,da]=els.datePick.value.split('-').map(Number); state.date=atWall(y,m,da,state.date.getUTCHours(),state.date.getUTCMinutes()); const u=new URL(location.href); u.searchParams.set('date', els.datePick.value); u.searchParams.set('pin','1'); history.replaceState(null,'',u); hydrateAll(); });
-    els.hourScrub.addEventListener('input',()=>{ state.hour=+els.hourScrub.value; state.date=atWall(state.date.getUTCFullYear(),state.date.getUTCMonth()+1,state.date.getUTCDate(),state.hour,state.date.getUTCMinutes()); hydrateAll(); });
-    els.btnToday.addEventListener('click',()=>{ state.date=MoonTZ.nowWall(); state.hour=null; const u=new URL(location.href); u.searchParams.delete('date'); u.searchParams.delete('pin'); history.replaceState(null,'',u); hydrateAll(); });
+    els.datePick.addEventListener('change',()=>{ 
+      const [y,m,da]=els.datePick.value.split('-').map(Number);
+      state.date = atWall(y, m, da, 12, 0, 0);
+      state.hour = null;
+      const u=new URL(location.href); 
+      u.searchParams.set('date', els.datePick.value); 
+      u.searchParams.set('pin','1'); 
+      history.replaceState(null,'',u); 
+      hydrateAll(); 
+    });
+    els.hourScrub.addEventListener('input',()=>{ 
+      state.hour=+els.hourScrub.value; 
+      state.date=atWall(state.date.getUTCFullYear(),state.date.getUTCMonth()+1,state.date.getUTCDate(),state.hour,state.date.getUTCMinutes()); 
+      hydrateAll(); 
+    });
+    els.btnToday.addEventListener('click',()=>{ 
+      state.date=wallNoonFromDate(new Date()); 
+      state.hour=null; 
+      const u=new URL(location.href); u.searchParams.delete('date'); u.searchParams.delete('pin'); history.replaceState(null,'',u); 
+      hydrateAll(); 
+    });
     els.prevDay.addEventListener('click',()=>{ state.date=addDaysUTC(state.date,-1); hydrateAll(); });
     els.nextDay.addEventListener('click',()=>{ state.date=addDaysUTC(state.date, 1); hydrateAll(); });
-    els.shareLink.addEventListener('click',async ()=>{ const url=new URL(location.href); url.searchParams.set('tz',state.tz); url.searchParams.set('date', MoonTZ.isoDateWall(state.date)); url.searchParams.set('pin','1'); try{ await navigator.clipboard.writeText(url.toString()); els.shareLink.textContent="Copied!"; setTimeout(()=>els.shareLink.textContent="Copy Link",1200);}catch{} });
-    els.jumpMoon.addEventListener('change',()=>{ const m=+els.jumpMoon.value||null; if(!m) return; const start=remYearStart(state.date); state.date=MoonTZ.wallParts(wallDateForRemDay(start,(m-1)*28),state.tz); hydrateAll(); });
+    els.shareLink.addEventListener('click',async ()=>{ 
+      const url=new URL(location.href); 
+      url.searchParams.set('tz',state.tz); 
+      url.searchParams.set('date', MoonTZ.isoDateWall(state.date)); 
+      url.searchParams.set('pin','1'); 
+      try{ await navigator.clipboard.writeText(url.toString()); els.shareLink.textContent="Copied!"; setTimeout(()=>els.shareLink.textContent="Copy Link",1200);}catch{} 
+    });
+    els.jumpMoon.addEventListener('change',()=>{ 
+      const m=+els.jumpMoon.value||null; if(!m) return; 
+      const start=remYearStart(state.date); 
+      state.date=wallDateForRemDay(start,(m-1)*28); 
+      state.date=wallNoonFromDate(state.date);
+      hydrateAll(); 
+    });
 
     addEventListener('keydown',e=>{
-      if(e.key==='T'||e.key==='t'){ e.preventDefault(); state.date=MoonTZ.nowWall(); state.hour=null; const u=new URL(location.href); u.searchParams.delete('date'); u.searchParams.delete('pin'); history.replaceState(null,'',u); hydrateAll(); }
+      if(e.key==='T'||e.key==='t'){ 
+        e.preventDefault(); 
+        state.date=wallNoonFromDate(new Date()); 
+        state.hour=null; 
+        const u=new URL(location.href); u.searchParams.delete('date'); u.searchParams.delete('pin'); history.replaceState(null,'',u); 
+        hydrateAll(); 
+      }
       if(e.key==='ArrowUp'){ e.preventDefault(); state.date=addDaysUTC(state.date,1); hydrateAll(); }
       if(e.key==='ArrowDown'){ e.preventDefault(); state.date=addDaysUTC(state.date,-1); hydrateAll(); }
       if(e.key==='ArrowLeft'){ e.preventDefault(); state.date=atWall(state.date.getUTCFullYear(),state.date.getUTCMonth()+1,state.date.getUTCDate(),Math.max(0,state.date.getUTCHours()-1),state.date.getUTCMinutes()); hydrateAll(); }
@@ -926,9 +970,11 @@
     const hasPinned = qp.get('pin') === '1';
     if (qp.get('date') && hasPinned){
       const [y,m,d]=qp.get('date').split('-').map(Number);
-      state.date=atWall(y,m,d, state.date.getUTCHours(), state.date.getUTCMinutes());
+      state.date = atWall(y, m, d, 12, 0, 0);
+      state.hour = null;
     } else {
-      state.date = MoonTZ.nowWall();
+      state.date = wallNoonFromDate(new Date());
+      state.hour = null;
       if (qp.get('date')){ qp.delete('date'); qp.delete('pin'); history.replaceState(null,'',`${location.pathname}?${qp.toString()}`.replace(/\?$/,'')); }
     }
 
