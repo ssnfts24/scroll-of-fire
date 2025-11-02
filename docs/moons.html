@@ -43,12 +43,12 @@
   <style>@layer tokens, base, components, astrology, utilities, remnant, legacy;</style>
 
   <!-- CSS (ordered) -->
-  <link rel="stylesheet" href="assets/css/fonts.css?v=2025-10-27">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=2025-10-27">
-  <link rel="stylesheet" href="assets/css/core.css?v=2025-10-27">
-  <link rel="stylesheet" href="assets/css/astrology.css?v=2025-10-27">
+  <link rel="stylesheet" href="assets/css/fonts.css?v=2025-11-02">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=2025-11-02">
+  <link rel="stylesheet" href="assets/css/core.css?v=2025-11-02">
+  <link rel="stylesheet" href="assets/css/astrology.css?v=2025-11-02">
   <link rel="stylesheet" href="assets/css/moons.css?v=2025-11-02">
-  <link rel="stylesheet" href="assets/css/bridge.css?v=2025-10-27">
+  <link rel="stylesheet" href="assets/css/bridge.css?v=2025-11-02">
 
   <!-- Critical mobile nudges + calendar grid/states + resilient fallbacks -->
   <style>
@@ -869,7 +869,7 @@
       img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(ser);
     });
 
-    /* ---------- ICS export ---------- */
+    /* ---------- ICS export (fixed) ---------- */
     function buildICS(yWall,tz){
       const start=MoonTZ.wallParts(new Date(Date.UTC(yWall,6,26)),tz);
       const lines=[
@@ -899,7 +899,7 @@
       if(__icsURL){ URL.revokeObjectURL(__icsURL); __icsURL=null; }
       const blob=buildICS(yWall,tz);
       __icsURL = URL.createObjectURL(blob);
-      const a=$("#dlICS"); if(a){ a.href=__ICSURL; } // guard if missing
+      const a=$("#dlICS");
       if(a){ a.href=__icsURL; a.download=`remnant-${yWall}-${yWall+1}.ics`; }
     }
     $("#regenICS")?.addEventListener("click",()=>{ const r=calcRemnant(getWallFromControls()); refreshICS(r.year); });
