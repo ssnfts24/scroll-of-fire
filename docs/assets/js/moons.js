@@ -1,213 +1,392 @@
-/* Remnant 13-Moon — main logic (TZ-true mapping, dual calendar, ICS export) */
-(function(){
-"use strict";
-const $=(s,r=document)=>r.querySelector(s);
-const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+/* Remnant 13-Moon — main logic (TZ-true mapping, dual calendar, ICS export)
+   v2025.11.02-c “Crown to Coast”
+   - Anchors all wall-time math to MoonTZ.getTZ()
+   - DOOT = Jul 25 (local tz), Year start = Jul 26 (local tz)
+   - Skips Feb 29 inside 13×28 cadence
+   - Honors ?date=YYYY-MM-DD only when pin=1; else “today”
+   - Defensive: no-ops if elements are missing; won’t crash
+*/
+(function () {
+  "use strict";
 
-/* dataset */
-const MOONS = (window.__MOONS__||[
-  {"idx":1,"name":"Magnetic","essence":"Unify Purpose","color":"#6FE7FF"},
-  {"idx":2,"name":"Lunar","essence":"Polarize Challenge","color":"#B1C7FF"},
-  {"idx":3,"name":"Electric","essence":"Activate Service","color":"#7AF3FF"},
-  {"idx":4,"name":"Self-Existing","essence":"Define Form","color":"#7BF3B8"},
-  {"idx":5,"name":"Overtone","essence":"Empower Radiance","color":"#FFD27A"},
-  {"idx":6,"name":"Rhythmic","essence":"Organize Equality","color":"#A7FFCF"},
-  {"idx":7,"name":"Resonant","essence":"Channel Inspiration","color":"#7AF3FF"},
-  {"idx":8,"name":"Galactic","essence":"Harmonize Integrity","color":"#9BD3FF"},
-  {"idx":9,"name":"Solar","essence":"Pulse Intention","color":"#FFBC6F"},
-  {"idx":10,"name":"Planetary","essence":"Perfect Manifestation","color":"#FFD9A6"},
-  {"idx":11,"name":"Spectral","essence":"Dissolve Release","color":"#B8C7FF"},
-  {"idx":12,"name":"Crystal","essence":"Dedicate Cooperation","color":"#CFEFFF"},
-  {"idx":13,"name":"Cosmic","essence":"Endure Presence","color":"#E7D1FF"}
-]);
+  /* ----------------------------- Shortcuts -------------------------------- */
+  const $  = (sel, ctx=document) => ctx.querySelector(sel);
+  const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+  const pad = (n) => String(n).padStart(2,"0");
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
-const tz = MoonTZ.getTZ();
+  /* ------------------------------ Dataset --------------------------------- */
+  const MOONS = (window.__MOONS__ || [
+    {"idx":1,"name":"Magnetic","essence":"Unify · Purpose","color":"#6FE7FF"},
+    {"idx":2,"name":"Lunar","essence":"Polarize · Challenge","color":"#B1C7FF"},
+    {"idx":3,"name":"Electric","essence":"Activate · Service","color":"#7AF3FF"},
+    {"idx":4,"name":"Self-Existing","essence":"Define · Form","color":"#7BF3B8"},
+    {"idx":5,"name":"Overtone","essence":"Empower · Radiance","color":"#FFD27A"},
+    {"idx":6,"name":"Rhythmic","essence":"Organize · Equality","color":"#A7FFCF"},
+    {"idx":7,"name":"Resonant","essence":"Channel · Attunement","color":"#7AF3FF"},
+    {"idx":8,"name":"Galactic","essence":"Harmonize · Integrity","color":"#9BD3FF"},
+    {"idx":9,"name":"Solar","essence":"Pulse · Intention","color":"#FFBC6F"},
+    {"idx":10,"name":"Planetary","essence":"Perfect · Manifestation","color":"#FFD9A6"},
+    {"idx":11,"name":"Spectral","essence":"Dissolve · Liberation","color":"#B8C7FF"},
+    {"idx":12,"name":"Crystal","essence":"Dedicate · Cooperation","color":"#CFEFFF"},
+    {"idx":13,"name":"Cosmic","essence":"Endure · Presence","color":"#E7D1FF"}
+  ]);
 
-/* helpers */
-const isLeap = y => (y%4===0 && y%100!==0) || (y%400===0);
-const fmtISO = d => d.toISOString().slice(0,10);
-const wall = d => MoonTZ.wallParts(d, tz);
+  /* --------------------------- TZ + Wall helpers -------------------------- */
+  // Always read tz fresh so changes in the picker are reflected.
+  const getTZ = () => MoonTZ.getTZ();
 
-/* map wall-time to remnant day */
-function currentWall(){
-  const q = new URLSearchParams(location.search).get("d");
-  return q ? wall(new Date(q+"T12:00:00Z")) : MoonTZ.nowWall();
-}
-function remnantYearStart(y){ return new Date(Date.UTC(y,6,26)); } // Jul 26 UTC anchor
+  // Construct a Date that represents Y/M/D H:M:S in the selected wall tz.
+  const atWall = (y, m, d, hh=0, mm=0, ss=0) =>
+    MoonTZ.wallParts(new Date(Date.UTC(y, m-1, d, hh, mm, ss)), getTZ());
 
-function calc(w){
-  const yWall = (w.getUTCMonth()>6 || (w.getUTCMonth()===6 && w.getUTCDate()>=26)) ? w.getUTCFullYear() : w.getUTCFullYear()-1;
-  const startWall = wall(remnantYearStart(yWall));
-  const dootWall  = wall(new Date(Date.UTC(yWall,6,25)));
-  const inDOOT = MoonTZ.isoDateWall(w) === MoonTZ.isoDateWall(dootWall);
+  // Format to YYYY-MM-DD in the selected wall tz.
+  const isoDateWall = (d) => MoonTZ.isoDateWall(d);
 
-  let dayCount = null; // 1..364
-  if(!inDOOT){
-    let d = Math.floor((w - startWall)/(86400e3)) + 1;
-    if (isLeap(w.getUTCFullYear())){
-      const feb29 = wall(new Date(Date.UTC(w.getUTCFullYear(),1,29)));
-      if (MoonTZ.isoDateWall(w) >= MoonTZ.isoDateWall(feb29)) d -= 1;
+  // “Now” in the selected wall tz.
+  const nowWall = () => MoonTZ.nowWall();
+
+  // Add whole UTC days (safe for our day granularity)
+  const addDaysUTC = (d, days) => { const nd = new Date(d.getTime()); nd.setUTCDate(nd.getUTCDate() + days); return nd; };
+
+  // Difference in whole days (A - B) in UTC
+  const diffDaysUTC = (a, b) => Math.floor((a.getTime() - b.getTime()) / 86400000);
+
+  // Leap year in proleptic Gregorian
+  const isLeap = (y) => (y%4===0 && (y%100!==0 || y%400===0));
+
+  /* ----------------------- Query param date handling ---------------------- */
+  // Honor ?date= only if pin=1. Otherwise, default to "today" (wall tz).
+  function initialWallDate() {
+    const qp = new URLSearchParams(location.search);
+    const pinned = qp.get("pin") === "1";
+    const d = qp.get("date");
+    if (pinned && d && /^\d{4}-\d{2}-\d{2}$/.test(d)) {
+      const [Y,M,D] = d.split("-").map(Number);
+      return atWall(Y, M, D, 12, 0, 0); // midday to avoid DST edge jitter
     }
-    dayCount = d;
+    return nowWall();
   }
-  let moonIdx=null, dayInMoon=null, week=null;
-  if(dayCount){ moonIdx = Math.floor((dayCount-1)/28)+1; dayInMoon=((dayCount-1)%28)+1; week=Math.floor((dayInMoon-1)/7)+1; }
 
-  return { tz, year:yWall, yearSpan:`${yWall}/${yWall+1}`, inDOOT, dayCount, moonIdx, dayInMoon, week };
-}
-
-/* paint UI */
-function paint(){
-  const w = currentWall();
-  $("#nowDate").textContent = MoonTZ.isoDateWall(w);
-  $("#nowClock").textContent = w.toLocaleTimeString([], {hour12:false});
-  $("#nowTZ").textContent = tz;
-
-  const r = calc(w);
-  const m = MOONS.find(x=>x.idx===r.moonIdx) || {};
-  const color = m.color || getComputedStyle(document.documentElement).getPropertyValue('--accent');
-
-  // header ring + labels
-  $("#dayInMoon").textContent = r.dayInMoon || "—";
-  $("#moonName").textContent  = m.name || "—";
-  $("#moonEssence").textContent = m.essence || "—";
-  $("#yearSpan").textContent = r.yearSpan;
-  $("#moonLine").textContent = r.inDOOT ? "Day Out of Time" : `Moon ${r.moonIdx} • Day ${r.dayInMoon} • Week ${r.week}`;
-  $("#dootWarn").style.display = r.inDOOT ? "block" : "none";
-
-  // arcs
-  const full = 316, cur = r.dayInMoon? ((r.dayInMoon-1)/28)*full : 0;
-  const arc = $("#moonArc"); if(arc){ arc.style.strokeDasharray = `${cur} ${full}`; arc.style.stroke = color; }
-  const arcMini = $("#moonArcMini"); if(arcMini){ const L=163; const p=r.dayInMoon?((r.dayInMoon-1)/28)*L:0; arcMini.setAttribute('stroke-dasharray',`${p} ${L}`); arcMini.style.stroke=color; }
-
-  // week dots
-  const dots = $("#weekDots"); if(dots){ dots.innerHTML=""; for(let i=1;i<=28;i++){ const el=document.createElement("i"); el.className="dot wk"; if(r.dayInMoon && i<=r.dayInMoon) el.classList.add("on"); dots.appendChild(el);} }
-
-  // practices
-  injectPractices(r.moonIdx);
-
-  // calendars
-  buildYearMap(r.year);
-  buildDualCalendars(w, r);
-}
-
-function injectPractices(idx){
-  const map={
-    1:["Clarify your purpose in one sentence.","Choose one devotion to repeat daily."],
-    2:["Name the two poles in your dilemma.","Pick a stabilizing constraint for the week."],
-    7:["Create a short ritual to open the channel.","Sit in silence for seven minutes."]
-  };
-  $("#practiceList").innerHTML = (map[idx]||["—"]).map(x=>`<li>${x}</li>`).join("");
-}
-
-function buildYearMap(yWall){
-  const tb=$("#yearMap tbody"); if(!tb) return;
-  tb.innerHTML=""; const tz = MoonTZ.getTZ();
-  const start = wall(remnantYearStart(yWall));
-  const fmt = d=> d.toLocaleDateString([], {year:"numeric",month:"short",day:"2-digit"});
-  for(let i=0;i<13;i++){
-    const m = MOONS[i];
-    const from = new Date(start.getTime()+ i*28*86400e3);
-    const to   = new Date(from.getTime()+ 27*86400e3);
-    tb.insertAdjacentHTML("beforeend",
-      `<tr><td>${m.idx}</td><td>${m.name}</td><td class="meta">${m.essence}</td><td>${fmt(from)} <span class="tag mono">${tz}</span></td><td>${fmt(to)} <span class="tag mono">${tz}</span></td></tr>`);
+  /* ----------------------- Remnant calendar math ------------------------- */
+  // Year start = Jul 26 in wall tz of the selected zone.
+  function remYearStart(dw) {
+    const y = dw.getUTCFullYear();
+    const jul26 = atWall(y, 7, 26, 0, 0, 0);
+    return (dw < jul26) ? atWall(y-1, 7, 26, 0, 0, 0) : jul26;
   }
-  $("#nextMoonInfo").textContent = `Year ${yWall}/${yWall+1} in ${tz}.`;
-}
 
-/* Dual calendars */
-function buildDualCalendars(wallNow, r){
-  // Remnant month grid
-  const rem = $("#remCal"); if(rem){
-    rem.innerHTML="";
-    rem.appendChild(monthTable(28, r.dayInMoon, "rem"));
+  // DOOT = Jul 25 in the year that contains the date’s Remnant year start
+  function isDOOT(dw) {
+    const start = remYearStart(dw);
+    const y = start.getUTCFullYear();
+    return isoDateWall(dw) === isoDateWall(atWall(y, 7, 25));
   }
-  // Gregorian month grid
-  const g = $("#gregCal"); if(g){
-    g.innerHTML="";
-    const GY = wallNow.getUTCFullYear(), GM = wallNow.getUTCMonth();
-    const first = new Date(Date.UTC(GY, GM, 1));
-    const last  = new Date(Date.UTC(GY, GM+1, 0));
-    const days = last.getUTCDate();
-    g.appendChild(gregTable(first.getUTCDay(), days, wallNow.getUTCDate()));
-  }
-}
-function monthTable(days, today, cls){
-  const wrap = document.createElement("div");
-  const grid = document.createElement("div");
-  grid.style.display="grid";
-  grid.style.gridTemplateColumns="repeat(7,1fr)";
-  grid.style.gap="6px";
-  const wd = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-  wd.forEach(x=>{ const h=document.createElement("div"); h.className="meta mono"; h.textContent=x; grid.appendChild(h); });
-  for(let i=1;i<=days;i++){
-    const c=document.createElement("button");
-    c.className="lab-btn"; c.textContent=String(i);
-    if(today===i) c.style.outline="2px solid var(--accent)";
-    grid.appendChild(c);
-  }
-  wrap.appendChild(grid); return wrap;
-}
-function gregTable(firstDow, days, today){
-  const wrap = document.createElement("div");
-  const grid = document.createElement("div");
-  grid.style.display="grid"; grid.style.gridTemplateColumns="repeat(7,1fr)"; grid.style.gap="6px";
-  const wd = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  wd.forEach(x=>{ const h=document.createElement("div"); h.className="meta mono"; h.textContent=x; grid.appendChild(h); });
-  let offset = firstDow; // 0=Sun
-  for(let i=0;i<offset;i++){ const pad=document.createElement("div"); grid.appendChild(pad); }
-  for(let d=1; d<=days; d++){
-    const c=document.createElement("button"); c.className="lab-btn"; c.textContent=String(d);
-    if(today===d) c.style.outline="2px solid var(--accent)";
-    grid.appendChild(c);
-  }
-  wrap.appendChild(grid); return wrap;
-}
 
-/* ICS export (13 moons spans for the year) */
-function icsYear(){
-  const r = calc(currentWall());
-  const tz = MoonTZ.getTZ();
-  const start = wall(remnantYearStart(r.year));
-  const pad = n => String(n).padStart(2,"0");
-  function fmtDate(d){ return `${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}`; }
+  // For a given wall date, return remnant position or DOOT flag.
+  function remnantPosition(dw) {
+    if (isDOOT(dw)) return { doot: true };
 
-  let ics = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Scroll of Fire//13 Moon//EN
-CALSCALE:GREGORIAN
-METHOD:PUBLISH
-`;
-  for(let i=0;i<13;i++){
-    const m = MOONS[i];
-    const from = new Date(start.getTime()+ i*28*86400e3);
-    const to   = new Date(from.getTime()+ 28*86400e3); // DTEND exclusive
-    ics += `BEGIN:VEVENT
-UID:${crypto.randomUUID()}@scroll-of-fire
-DTSTAMP:${fmtDate(new Date())}T000000Z
-DTSTART;VALUE=DATE:${fmtDate(from)}
-DTEND;VALUE=DATE:${fmtDate(to)}
-SUMMARY:${m.idx}. ${m.name} Moon — ${r.year}/${r.year+1} (${tz})
-DESCRIPTION:${m.essence}
-END:VEVENT
-`;
+    const start = remYearStart(dw);
+    // days since year start (0-based)
+    let days = diffDaysUTC(dw, start);
+
+    // Skip Feb 29 if it falls between start..dw inclusive (13×28 cadence)
+    const fy = start.getUTCFullYear();
+    if (isLeap(fy)) {
+      const feb29 = atWall(fy, 2, 29);
+      if (dw >= feb29) days -= 1;
+    }
+
+    const clamped = clamp(days, 0, 363);
+    const moon = Math.floor(clamped / 28) + 1;
+    const day  = (clamped % 28) + 1;
+    const week = Math.floor((day - 1) / 7) + 1;
+    return { doot:false, moon, day, week };
   }
-  ics += `END:VCALENDAR`;
-  return new Blob([ics],{type:"text/calendar"});
-}
-$("#dlICS")?.addEventListener("click",(e)=>{
-  e.preventDefault();
-  const blob = icsYear();
-  const a = $("#dlICS");
-  a.href = URL.createObjectURL(blob);
-  a.download = "13-moon-year.ics";
-});
-$("#regenICS")?.addEventListener("click",()=>{ const a=$("#dlICS"); if(a){ a.href="#"; }});
 
-/* kick */
-paint();
-setInterval(()=>{ $("#nowClock").textContent = currentWall().toLocaleTimeString([], {hour12:false}); },1000);
+  // Wall date for the Nth day (idx0) of the Remnant year, skipping Feb 29
+  function wallDateForRemIdx(start, idx0) {
+    const fy = start.getUTCFullYear();
+    let d = addDaysUTC(start, idx0);
+    if (isLeap(fy)) {
+      const feb29 = atWall(fy, 2, 29);
+      if (d >= feb29) d = addDaysUTC(d, 1);
+    }
+    return d;
+  }
 
-/* expose for fallback a11y shim to re-wrap paint if needed */
-window.paint = paint;
+  /* ----------------------------- Painting -------------------------------- */
+  function paint() {
+    const w = initialWallDate();
+    const tz = getTZ();
+    const pos = remnantPosition(w);
+
+    // Header chips
+    $("#nowDate")  && ($("#nowDate").textContent  = new Intl.DateTimeFormat("en-US", { timeZone: tz, weekday:"short", year:"numeric", month:"short", day:"2-digit" }).format(w));
+    $("#nowClock") && ($("#nowClock").textContent = MoonTZ.wallParts(new Date(), tz).toTimeString().slice(0,8));
+    $("#nowTZ")    && ($("#nowTZ").textContent    = tz);
+
+    // Year span label
+    const yStart = remYearStart(w);
+    const yEnd   = addDaysUTC(yStart, 365 + (isLeap(yStart.getUTCFullYear()) ? 1 : 0));
+    const yLabel = (yStart.getUTCFullYear() === yEnd.getUTCFullYear())
+      ? `${yStart.getUTCFullYear()}-${yEnd.getUTCFullYear()}`
+      : `${yStart.getUTCFullYear()}/${yEnd.getUTCFullYear()}`;
+    $("#yearSpan") && ($("#yearSpan").textContent = yLabel);
+
+    // DOOT + header line
+    if (pos.doot) {
+      $("#dootWarn") && ($("#dootWarn").hidden = false);
+      $("#moonName") && ($("#moonName").textContent = "Day Out of Time");
+      $("#moonEssence") && ($("#moonEssence").textContent = "Pause · Reset");
+      $("#moonLine") && ($("#moonLine").textContent = "DOOT — outside the 13×28 cadence");
+      $("#dayInMoon") && ($("#dayInMoon").textContent = "—");
+      const arc = $("#moonArc"); if (arc) { const full = 316; arc.style.strokeDasharray = `1 ${full-1}`; }
+    } else {
+      $("#dootWarn") && ($("#dootWarn").hidden = true);
+      const moonData = MOONS[pos.moon - 1] || {};
+      $("#moonName")    && ($("#moonName").textContent    = moonData.name || `Moon ${pos.moon}`);
+      $("#moonEssence") && ($("#moonEssence").textContent = moonData.essence || "—");
+      $("#moonLine")    && ($("#moonLine").textContent    = `Moon ${pos.moon} · Day ${pos.day} · Week ${pos.week}`);
+      $("#dayInMoon")   && ($("#dayInMoon").textContent   = String(pos.day));
+
+      // Ring arc
+      const full = 316;
+      const cur  = Math.max(1, Math.floor(((pos.day - 1) / 28) * full));
+      const arc = $("#moonArc"); if (arc) {
+        arc.style.strokeDasharray = `${cur} ${full - cur}`;
+        const color = moonData.color || getComputedStyle(document.documentElement).getPropertyValue('--moon-accent').trim();
+        if (color) arc.style.stroke = color;
+      }
+    }
+
+    // Week dots (28 with “today” highlight)
+    const dotsWrap = $("#weekDots");
+    if (dotsWrap) {
+      dotsWrap.innerHTML = "";
+      for (let wk=1; wk<=4; wk++) {
+        const group = document.createElement("div"); group.className = "wdots";
+        for (let d=1; d<=7; d++) {
+          const i = (wk-1)*7 + d;
+          const dot = document.createElement("i");
+          dot.className = "wdot";
+          if (!pos.doot && i === pos.day) dot.classList.add("is-today");
+          group.appendChild(dot);
+        }
+        dotsWrap.appendChild(group);
+      }
+    }
+
+    // Year map
+    buildYearMap(w);
+
+    // Dual calendars
+    buildDualCalendars(w, pos);
+
+    // Update “Today” controls if present
+    $("#datePick")   && ($("#datePick").value   = isoDateWall(w));
+    $("#hourScrub")  && ($("#hourScrub").value  = MoonTZ.wallParts(w, tz).getUTCHours());
+    $("#jumpMoon")   && ($("#jumpMoon").value   = pos.doot ? "" : String(pos.moon));
+  }
+
+  /* -------------------------- Year map builder ---------------------------- */
+  function buildYearMap(dw) {
+    const tbody = $("#yearMap tbody"); if (!tbody) return;
+    const tz = getTZ();
+    const start = remYearStart(dw);
+    const rows = [];
+    for (let i=0; i<13; i++) {
+      const s = wallDateForRemIdx(start, i*28);
+      const e = addDaysUTC(s, 27);
+      rows.push({ i:i+1, s, e, name: MOONS[i].name, essence: MOONS[i].essence });
+    }
+    const fmt = (d) => new Intl.DateTimeFormat("en-US", { timeZone: tz, year:"numeric", month:"short", day:"2-digit" }).format(d);
+    tbody.innerHTML = rows.map(r =>
+      `<tr><td>${r.i}</td><td>${r.name}</td><td>${r.essence}</td><td>${fmt(r.s)} <span class="tag mono">${tz}</span></td><td>${fmt(r.e)} <span class="tag mono">${tz}</span></td></tr>`
+    ).join("");
+
+    const pos = remnantPosition(dw);
+    if (!pos.doot) {
+      const nextStart = wallDateForRemIdx(start, (pos.moon % 13) * 28);
+      const label = new Intl.DateTimeFormat("en-US", { timeZone: tz, month:"short", day:"2-digit" }).format(nextStart);
+      $("#nextMoonInfo") && ($("#nextMoonInfo").textContent = `Next: ${MOONS[pos.moon % 13].name} begins ${label} (${tz})`);
+    } else {
+      $("#nextMoonInfo") && ($("#nextMoonInfo").textContent = "This is the Day Out of Time — the count resumes tomorrow.");
+    }
+  }
+
+  /* ----------------------- Dual calendar builders ------------------------ */
+  function buildDualCalendars(wallNow, pos) {
+    buildRemnantMonth(wallNow, pos);
+    buildGregorianMonth(wallNow);
+  }
+
+  function buildRemnantMonth(wallNow, pos) {
+    const host = $("#remCal"); if (!host) return;
+    host.innerHTML = "";
+
+    const tz = getTZ();
+    const yStart = remYearStart(wallNow);
+
+    const hdr = $("#remHdr");
+    if (hdr) hdr.textContent = pos.doot ? "Remnant Month — DOOT" : `Remnant Month — ${MOONS[pos.moon-1].name} (${pos.moon}/13)`;
+    $("#remMeta") && ($("#remMeta").textContent = `13 × 28 fixed — ${tz}`);
+
+    const grid = document.createElement("ol");
+    grid.className = "r-grid"; grid.setAttribute("role","grid");
+    ["D1","D2","D3","D4","D5","D6","D7"].forEach(l => {
+      const th = document.createElement("li");
+      th.className = "r-lbl"; th.setAttribute("role","columnheader"); th.textContent = l;
+      grid.appendChild(th);
+    });
+
+    if (pos.doot) {
+      const li = document.createElement("li");
+      li.className = "r-doot";
+      li.textContent = "Day Out of Time";
+      grid.appendChild(li);
+    } else {
+      const startIdx0 = (pos.moon - 1) * 28;
+      for (let i=0; i<28; i++) {
+        const idx0 = startIdx0 + i;
+        const dWall = wallDateForRemIdx(yStart, idx0);
+        const label = new Intl.DateTimeFormat("en-US", { timeZone: tz, year:"numeric", month:"short", day:"2-digit" }).format(dWall);
+
+        const cell = document.createElement("li");
+        cell.className = "r-day" + ((i+1)===pos.day ? " is-today" : "");
+        cell.setAttribute("role","gridcell");
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.dataset.r = isoDateWall(dWall);
+        btn.dataset.moon = String(pos.moon);
+        btn.dataset.day = String(i+1);
+        btn.title = `${label} (${tz})`;
+        btn.textContent = String(i+1);
+        btn.addEventListener("click", () => {
+          const qp = new URLSearchParams(location.search);
+          qp.set("date", btn.dataset.r);
+          qp.set("pin", "1");
+          history.replaceState(null, "", `${location.pathname}?${qp.toString()}`);
+          paint();  // redraw to the selected date
+        });
+
+        cell.appendChild(btn);
+        grid.appendChild(cell);
+      }
+    }
+    host.appendChild(grid);
+  }
+
+  function buildGregorianMonth(wallNow) {
+    const host = $("#gregCal"); if (!host) return;
+    host.innerHTML = "";
+
+    const tz = getTZ();
+    const wall = MoonTZ.wallParts(wallNow, tz);
+    const y = wall.getUTCFullYear();
+    const m = wall.getUTCMonth(); // 0..11
+
+    const first = atWall(y, m+1, 1);
+    const nextFirst = (m===11) ? atWall(y+1, 1, 1) : atWall(y, m+2, 1);
+    const daysIn = Math.round((nextFirst - first) / 86400000);
+    const firstDow = first.getUTCDay();
+
+    $("#gregHdr")  && ($("#gregHdr").textContent = `Gregorian Month — ${new Intl.DateTimeFormat("en-US",{ timeZone: tz, month:"long"}).format(first)} ${y}`);
+    $("#gregMeta") && ($("#gregMeta").textContent = "Variable weeks");
+
+    const grid = document.createElement("ol");
+    grid.className = "g-grid"; grid.setAttribute("role","grid");
+    ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(l => {
+      const th = document.createElement("li");
+      th.className = "g-lbl"; th.setAttribute("role","columnheader"); th.textContent = l;
+      grid.appendChild(th);
+    });
+    for (let i=0; i<firstDow; i++) {
+      const padCell = document.createElement("li");
+      padCell.className = "g-pad"; padCell.setAttribute("aria-hidden","true");
+      grid.appendChild(padCell);
+    }
+
+    const todayYMD = isoDateWall(nowWall());
+    for (let d=1; d<=daysIn; d++) {
+      const dWall = atWall(y, m+1, d);
+      const isToday = (isoDateWall(dWall) === todayYMD);
+
+      const li = document.createElement("li");
+      li.className = "g-day" + (isToday ? " is-today" : "");
+      li.setAttribute("role","gridcell");
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.dataset.g = `${y}-${pad(m+1)}-${pad(d)}`;
+      btn.textContent = String(d);
+      btn.addEventListener("click", () => {
+        const qp = new URLSearchParams(location.search);
+        qp.set("date", btn.dataset.g);
+        qp.set("pin", "1");
+        history.replaceState(null, "", `${location.pathname}?${qp.toString()}`);
+        paint();
+      });
+
+      li.appendChild(btn);
+      grid.appendChild(li);
+    }
+
+    host.appendChild(grid);
+  }
+
+  /* ----------------------------- ICS export ------------------------------- */
+  function buildICSBlob(dw) {
+    const tz = getTZ();
+    const yStart = remYearStart(dw);
+    const stamp = (() => {
+      const d = new Date();
+      return d.getUTCFullYear() + pad(d.getUTCMonth()+1) + pad(d.getUTCDate()) +
+             "T" + pad(d.getUTCHours()) + pad(d.getUTCMinutes()) + pad(d.getUTCSeconds()) + "Z";
+    })();
+    const fmtDate = (d) => d.getUTCFullYear() + pad(d.getUTCMonth()+1) + pad(d.getUTCDate());
+    const uid = () => (crypto && crypto.randomUUID) ? crypto.randomUUID() : ("sof-" + Math.random().toString(36).slice(2));
+
+    let ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Scroll of Fire//13 Moon//EN\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\n";
+    for (let i=0; i<13; i++) {
+      const s = wallDateForRemIdx(yStart, i*28);
+      const e = addDaysUTC(s, 28); // exclusive DTEND
+      ics += "BEGIN:VEVENT\r\n" +
+             `UID:${uid()}@scroll-of-fire\r\n` +
+             `DTSTAMP:${stamp}\r\n` +
+             `DTSTART;VALUE=DATE:${fmtDate(s)}\r\n` +
+             `DTEND;VALUE=DATE:${fmtDate(e)}\r\n` +
+             `SUMMARY:${i+1}. ${MOONS[i].name} Moon — ${yStart.getUTCFullYear()}/${yStart.getUTCFullYear()+1} (${tz})\r\n` +
+             `DESCRIPTION:${MOONS[i].essence}\r\n` +
+             "END:VEVENT\r\n";
+    }
+    ics += "END:VCALENDAR\r\n";
+    return new Blob([ics], { type: "text/calendar" });
+  }
+
+  const dl = $("#dlICS");
+  if (dl) {
+    dl.addEventListener("click", (e) => {
+      e.preventDefault();
+      const blob = buildICSBlob(initialWallDate());
+      dl.href = URL.createObjectURL(blob);
+      dl.download = "13-moon-year.ics";
+    });
+  }
+  $("#regenICS")?.addEventListener("click", () => { if (dl) dl.href = "#"; });
+
+  /* ----------------------------- Live clock ------------------------------- */
+  // Keep the clock chip moving without repainting the whole page.
+  setInterval(() => {
+    const tz = getTZ();
+    const el = $("#nowClock");
+    if (el) el.textContent = MoonTZ.wallParts(new Date(), tz).toTimeString().slice(0,8);
+  }, 1000);
+
+  /* ------------------------------ Kickoff --------------------------------- */
+  // Expose for other scripts, but safe if unused.
+  window.paint = paint;
+  paint();
 })();
