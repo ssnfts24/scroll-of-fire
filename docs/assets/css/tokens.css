@@ -1,211 +1,230 @@
-/* ==========================================================================
+/* =======================================================================
    Scroll of Fire — Design Tokens
-   Single source of truth for colors, typography, radii, spacing, shadows
-   + Moon palettes, a11y variants, and system/environment tokens.
-   ========================================================================== */
+   File: assets/css/tokens.css
+   Layers: tokens
+   Purpose:
+     • Central source of truth for colors, typography, spacing, radii, depth
+     • Motion + data preference aware
+     • Semantic slots (ink, muted, line, card, accent, gold)
+     • Moon theme hooks (—moon-accent, —day-accent, aurora/glow params)
+   ======================================================================= */
 
 @layer tokens {
-
-  /* ---------------------------- Core Tokens ---------------------------- */
-  :root{
-    /* Base palette (dark-first) */
+  :root {
+    /* -------- Brand / Base Palette (Dark-first) -------- */
     --bg:            #0b0b0f;
     --bg-elev:       #0e0e12;
     --card:          #121219;
+    --panel:         #10131b;
     --ink:           #eae7df;
     --muted:         #b8b3a6;
     --line:          #2a2a33;
 
-    /* Accents */
-    --accent:        #7af3ff;  /* cyan electric */
-    --accent-2:      #7aa8ff;  /* blue-violet */
-    --gold:          #f3c97a;  /* warm gold for seals */
+    /* Accents (primary/secondary) */
+    --accent:        #7af3ff; /* cyan fire */
+    --accent-2:      #7aa8ff; /* indigo */
+    --accent-3:      #7bf3b8; /* mint */
+    --gold:          #f3c97a; /* covenant gold */
+    --rose:          #ff7aa3; /* warmth */
+    --amber:         #ffc46f; /* solar */
+    --emerald:       #74ffca; /* earth/verdant */
 
-    /* Radii / spacing */
-    --radius: 14px;
+    /* -------- Semantic Roles -------- */
+    --success:       #18c37e;
+    --warning:       #ffb62e;
+    --danger:        #ff5f5f;
+    --info:          #63b3ff;
+
+    /* Text weights (Inter / system UI) */
+    --w-regular:     400;
+    --w-medium:      500;
+    --w-semibold:    600;
+    --w-bold:        700;
+    --w-black:       900;
+
+    /* Type scale (fluid clamp for headlines, fixed for UI) */
+    --fs-2xs: clamp(11px, 0.75vw, 12px);
+    --fs-xs:  clamp(12px, 0.85vw, 13px);
+    --fs-sm:  14px;
+    --fs-md:  15px;   /* base UI */
+    --fs-lg:  clamp(16px, 1.15vw, 18px);
+    --fs-xl:  clamp(18px, 1.6vw, 22px);
+    --fs-2xl: clamp(22px, 2.4vw, 28px);
+    --fs-3xl: clamp(26px, 3.2vw, 36px);
+    --fs-4xl: clamp(32px, 4.5vw, 48px);
+
+    /* Hebrew display helpers (used in quotes/verses) */
+    --fs-he-sm: clamp(18px, 1.4vw, 22px);
+    --fs-he-lg: clamp(26px, 2.3vw, 34px);
+
+    /* Line-height presets */
+    --lh-tight: 1.15;
+    --lh-body:  1.55;
+    --lh-loose: 1.75;
+
+    /* Spacing scale */
+    --pad-2xs: 6px;
+    --pad-xs:  8px;
+    --pad-sm:  10px;
+    --pad:     12px;
+    --pad-md:  14px;
+    --pad-lg:  16px;
+    --pad-xl:  20px;
+    --gap-sm:  8px;
+    --gap:     12px;
+    --gap-lg:  16px;
+
+    /* Radii / Corners */
+    --radius-sm: 10px;
+    --radius:    14px;
     --radius-lg: 18px;
-    --pad: 12px;
-    --pad-lg: 16px;
+    --round:     999px;
 
-    /* Elevation */
-    --rim: 0 10px 30px rgba(0,0,0,.22);
-    --rim-soft: 0 6px 22px rgba(0,0,0,.18);
+    /* Depth / Shadows */
+    --rim:       0 10px 30px rgba(0,0,0,.22);
+    --rim-soft:  0 6px 18px rgba(0,0,0,.18);
+    --rim-hard:  0 14px 40px rgba(0,0,0,.28);
+    --inset-1:   inset 0 1px 0 rgba(255,255,255,.03);
+    --inset-2:   inset 0 1px 0 rgba(255,255,255,.06);
 
-    /* Typographic scale */
-    --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    /* Borders */
+    --bd-1:      1px solid var(--line);
+    --bd-2:      2px solid color-mix(in lch, var(--line) 85%, black);
 
-    --size-0: 12px;
-    --size-1: 13px;
-    --size-2: 15px;   /* base */
-    --size-3: 17px;
-    --size-4: 20px;
-    --size-5: clamp(1.1rem, 3.6vw, 1.4rem);
-    --size-6: clamp(1.3rem, 4.6vw, 2.0rem);
+    /* Motion / Timing */
+    --ease-std:  cubic-bezier(.22,.61,.36,1);
+    --ease-in:   cubic-bezier(.4,0,1,1);
+    --ease-out:  cubic-bezier(0,0,.2,1);
+    --t-fast:    120ms;
+    --t-med:     220ms;
+    --t-slow:    440ms;
 
-    /* Layout helpers */
-    --wrap-max: 1100px;
-    --grid-gap: 12px;
+    /* Z-Index Map */
+    --z-below:   -1;
+    --z-bg:       0;
+    --z-base:     1;
+    --z-ui:       10;
+    --z-overlay:  30;
+    --z-modal:    50;
 
-    /* Atmospheric params (aurora/starfield) */
-    --twist: 0deg;
-    --grain: .06;
-    --spark: .25;
-    --pulse: .03;
-    --aurora: .6;
+    /* Backdrop / FX (Aurora + stars; tuned in themes) */
+    --fx-aurora-alpha: .055;
+    --fx-aurora-size:  1200px 480px;
+    --fx-scan-alpha:   .05;
 
-    /* Safe areas */
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    /* Moon Theme Hooks (overridden per-moon/day in themes.moons.css) */
+    --moon-accent: var(--accent);        /* current moon primary */
+    --moon-accent-2: var(--accent-2);    /* current moon secondary */
+    --day-accent:  color-mix(in oklab, var(--moon-accent) 70%, #ffffff); /* daily sub-tone */
+    --sigil-tint:  color-mix(in oklab, var(--moon-accent) 60%, #bfc8ff);
 
-    /* Moon theme defaults (overridden per theme) */
-    --moon-accent: var(--accent);
-    --moon-accent-2: var(--accent-2);
-    --moon-bg-from: var(--bg);
-    --moon-bg-to:   var(--bg-elev);
-    --moon-aether:  rgba(122,243,255,.08);
+    /* Calendar sizing */
+    --cell-size: clamp(36px, 8.5vw, 56px);
+
+    /* Cards / Panels */
+    --card-bg:   var(--bg-elev);
+    --panel-bg:  linear-gradient(180deg, var(--panel), color-mix(in oklab, var(--panel) 85%, black));
   }
 
-  /* ----------------------- Light Mode Inversions ----------------------- */
-  @media (prefers-color-scheme: light){
-    :root{
+  /* ----------------- Light Scheme Defaults (auto when active) ---------------- */
+  @media (prefers-color-scheme: light) {
+    :root {
       --bg:        #f7fbff;
-      --bg-elev:   #eef3f9;
-      --card:      #ffffff;
-      --ink:       #10131a;
-      --muted:     #4a5366;
-      --line:      #cfd7e6;
+      --bg-elev:   #eef3f8;
+      --card:      #f1f5fa;
+      --panel:     #eaf0f7;
+      --ink:       #0d1220;
+      --muted:     #465168;
+      --line:      #c9d3e1;
 
-      --rim: 0 10px 30px rgba(0,0,0,.10);
+      --accent:    #0aa2b8;
+      --accent-2:  #3b63ff;
+      --accent-3:  #1fbf89;
+      --gold:      #b58523;
 
-      /* tilt accents slightly for light */
-      --accent:   #0ea5b9;
-      --accent-2: #4067ff;
-      --moon-aether: rgba(14,165,185,.10);
+      --rim:       0 8px 24px rgba(0,0,0,.08);
+      --rim-soft:  0 6px 18px rgba(0,0,0,.06);
+      --rim-hard:  0 14px 36px rgba(0,0,0,.1);
+
+      --panel-bg:  linear-gradient(180deg, var(--panel), #e7eef7);
     }
   }
 
-  /* ---------------------- High-Contrast Preference --------------------- */
-  @media (prefers-contrast: more){
-    :root{
-      --line: color-mix(in oklab, var(--ink) 24%, transparent);
-      --muted: color-mix(in oklab, var(--ink) 68%, transparent);
+  /* ----------------- High-Contrast Accessibility Tweak ----------------- */
+  @media (prefers-contrast: more) {
+    :root {
+      --line:     color-mix(in oklab, var(--line) 70%, #ffffff);
+      --accent:   color-mix(in oklab, var(--accent) 92%, #ffffff);
+      --accent-2: color-mix(in oklab, var(--accent-2) 92%, #ffffff);
     }
   }
 
-  /* ------------------ Facebook / Messenger in-app hint ----------------- */
-  .is-fbapp :root, :root.is-fbapp{
-    /* keep contrast a hair higher inside FB IAB */
-    --line: color-mix(in oklab, var(--ink) 20%, transparent);
+  /* ----------------- Reduced Motion: dial back FX, keep clarity -------- */
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --t-fast:  0ms;
+      --t-med:   0ms;
+      --t-slow:  0ms;
+      --fx-aurora-alpha: .03;
+      --fx-scan-alpha:   0;
+    }
   }
 
-  /* ----------------------------- Z-Indices ----------------------------- */
-  :root{
-    --z-sky: 0;
-    --z-ground: 1;
-    --z-floating: 2;
-    --z-overlay: 3;
-    --z-toast: 4;
-    --z-modal: 10;
+  /* ----------------- Low Data: soften big backdrops -------------------- */
+  @media (prefers-reduced-data: reduce) {
+    :root {
+      --fx-aurora-alpha: .025;
+    }
   }
 
-  /* ======================= 13-Moon Theme Palettes ====================== */
-  /* These apply via <body class="theme-moon-N"> to paint the page. */
-
-  body.theme-doot{
-    --moon-accent:   #bfbfc9;
-    --moon-accent-2: #8a8a98;
-    --moon-bg-from:  #0a0a0e;
-    --moon-bg-to:    #0f1018;
-    --moon-aether:   rgba(200,200,220,.05);
+  /* ----------------- Theme Scope Helpers ------------------------------- */
+  /* Body attribute used by moons to toggle scope-specific palettes */
+  body[data-theme-scope="wizard"] {
+    --accent:    #7af3ff;
+    --accent-2:  #7aa8ff;
+    --gold:      #f3c97a;
   }
 
-  body.theme-moon-1{   /* Magnetic — Unify · Purpose */
-    --moon-accent:#99ccff; --moon-accent-2:#5ee3ff;
-    --moon-bg-from:#08131c; --moon-bg-to:#0b1a26;
-    --moon-aether:rgba(140,200,255,.07);
-  }
-  body.theme-moon-2{   /* Lunar — Polarize · Challenge */
-    --moon-accent:#ffb4a8; --moon-accent-2:#ff866b;
-    --moon-bg-from:#201015; --moon-bg-to:#2b1218;
-    --moon-aether:rgba(255,118,86,.07);
-  }
-  body.theme-moon-3{   /* Electric — Activate · Service */
-    --moon-accent:#ffd37a; --moon-accent-2:#ffe6a8;
-    --moon-bg-from:#1f1808; --moon-bg-to:#2a210c;
-    --moon-aether:rgba(255,214,122,.06);
-  }
-  body.theme-moon-4{   /* Self-Existing — Define · Form */
-    --moon-accent:#b6ffcc; --moon-accent-2:#6dff9e;
-    --moon-bg-from:#0a1a12; --moon-bg-to:#0f2218;
-    --moon-aether:rgba(120,255,180,.06);
-  }
-  body.theme-moon-5{   /* Overtone — Empower · Radiance */
-    --moon-accent:#ffe07a; --moon-accent-2:#ffc84d;
-    --moon-bg-from:#211a07; --moon-bg-to:#2a2109;
-    --moon-aether:rgba(255,200,90,.07);
-  }
-  body.theme-moon-6{   /* Rhythmic — Organize · Equality */
-    --moon-accent:#99eeff; --moon-accent-2:#66bbff;
-    --moon-bg-from:#07151a; --moon-bg-to:#0a1b22;
-    --moon-aether:rgba(120,230,255,.06);
-  }
-  body.theme-moon-7{   /* Resonant — Channel · Attunement */
-    --moon-accent:#d5b6ff; --moon-accent-2:#b98cff;
-    --moon-bg-from:#160d22; --moon-bg-to:#1c1030;
-    --moon-aether:rgba(190,140,255,.06);
-  }
-  body.theme-moon-8{   /* Galactic — Harmonize · Integrity */
-    --moon-accent:#a8ffd9; --moon-accent-2:#7affc4;
-    --moon-bg-from:#0a1713; --moon-bg-to:#0e1e18;
-    --moon-aether:rgba(130,255,210,.06);
-  }
-  body.theme-moon-9{   /* Solar — Pulse · Intention */
-    --moon-accent:#ff927a; --moon-accent-2:#ff6a55;
-    --moon-bg-from:#1e0e0b; --moon-bg-to:#270f0c;
-    --moon-aether:rgba(255,120,100,.06);
-  }
-  body.theme-moon-10{  /* Planetary — Perfect · Manifestation */
-    --moon-accent:#a2ffd1; --moon-accent-2:#73ffc0;
-    --moon-bg-from:#0c1912; --moon-bg-to:#102219;
-    --moon-aether:rgba(140,255,200,.06);
-  }
-  body.theme-moon-11{  /* Spectral — Dissolve · Liberation */
-    --moon-accent:#a8b8ff; --moon-accent-2:#7a8cff;
-    --moon-bg-from:#0b0f22; --moon-bg-to:#0e1230;
-    --moon-aether:rgba(120,140,255,.06);
-  }
-  body.theme-moon-12{  /* Crystal — Dedicate · Cooperation */
-    --moon-accent:#ffd7a8; --moon-accent-2:#ffc57a;
-    --moon-bg-from:#1e140a; --moon-bg-to:#24180c;
-    --moon-aether:rgba(255,205,150,.06);
-  }
-  body.theme-moon-13{  /* Cosmic — Endure · Presence */
-    --moon-accent:#99ddff; --moon-accent-2:#77ccff;
-    --moon-bg-from:#0a1016; --moon-bg-to:#0c1218;
-    --moon-aether:rgba(140,220,255,.06);
+  /* ----------------- Component Slots (used by core/moons/astro CSS) ---- */
+  :root {
+    /* Ring component */
+    --ring-bg-stroke:   #142233;
+    --ring-fg-stroke:   var(--moon-accent);
+    --ring-width-bg:    10;
+    --ring-width-fg:    12;
+
+    /* Week dots */
+    --wdot-bg:          #1b2231;
+    --wdot-today:       color-mix(in oklab, var(--moon-accent) 70%, #1b2231);
+
+    /* Calendar grid */
+    --grid-gap:         6px;
+    --grid-border:      var(--bd-1);
+    --grid-bg:          var(--bg-elev);
+    --grid-radius:      10px;
+
+    /* Cards */
+    --card-border:      var(--bd-1);
+    --card-radius:      var(--radius);
+
+    /* Table */
+    --table-head-bg:    #0e0e12;
+    --table-row-border: #1a2130;
+
+    /* Astro wheel */
+    --astro-ring-1:     #1b2231;
+    --astro-ring-2:     #2a3242;
+    --astro-label:      #a7b1ca;
+
+    /* “Shine” panels */
+    --shine-radial:     radial-gradient(600px 240px at 80% -10%, color-mix(in oklab, var(--moon-accent) calc(var(--fx-aurora-alpha)*100%), transparent), transparent 70%);
+    --shine-linear:     linear-gradient(180deg, var(--bg-elev), color-mix(in oklab, var(--bg-elev) 80%, black));
   }
 
-  /* ----------------------- Day Out Of Time Accent ---------------------- */
-  /* Used by engine on July 25 (local) */
-  body.theme-doot .ring .ring-fg{
-    stroke: var(--moon-accent);
-  }
-
-  /* -------------------------- Semantic Bridges ------------------------- */
-  /* Some components reference generic tokens; bridge to moon set. */
-  :root{
-    --bridge-accent: var(--moon-accent);
-    --bridge-accent-2: var(--moon-accent-2);
-    --bridge-bg-from: var(--moon-bg-from);
-    --bridge-bg-to:   var(--moon-bg-to);
-  }
-
-  /* ----------------------- Motion/Data Preferences --------------------- */
-  @media (prefers-reduced-motion: reduce){
-    :root{ --pulse: 0; --spark:.12; }
-  }
-  @media (prefers-reduced-data: reduce){
-    :root{ --aurora: .35; }
+  /* Utility class tokens (used in core.css but safe here if core is missing) */
+  :root {
+    --kbd-bg:     #0f1218;
+    --kbd-bd:     var(--line);
+    --kbd-radius: 6px;
   }
 }
