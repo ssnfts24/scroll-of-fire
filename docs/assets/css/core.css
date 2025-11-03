@@ -1,66 +1,215 @@
 @layer base {
+  /* ============================================================
+     Scroll of Fire — Base Layer  v2025.11.03-b  “Clear Sky”
+     - Theme tokens + light-mode fallbacks
+     - Typographic rhythm & accessible color/contrast
+     - Container, grid, cards, buttons, inputs, ranges
+     - Links, code/kbd, tables, lists, selection
+     - Motion/data/contrast preferences
+     - Footer + small utilities
+     ============================================================ */
+
   :root{
+    /* Core palette (dark default) */
     --bg:#0b0b0f; --bg-elev:#0e0e12; --card:#121219;
     --ink:#eae7df; --muted:#b8b3a6; --line:#2a2a33;
+
+    /* Accents */
     --accent:#7af3ff; --accent-2:#7aa8ff; --gold:#f3c97a;
-    --radius:14px; --pad:12px; --pad-lg:16px;
-    --rim:0 10px 30px rgba(0,0,0,.22);
+    --moon-accent: var(--accent); /* used by components */
+
+    /* Radii / spacing */
+    --radius:14px; --radius-lg:18px;
+    --pad:12px; --pad-lg:16px;
+
+    /* Effects */
+    --rim: 0 10px 30px rgba(0,0,0,.22);
+    --shadow-1: 0 1px 2px rgba(0,0,0,.35);
+    --shadow-2: 0 4px 18px rgba(0,0,0,.25);
+
+    /* Typography scale */
+    --fs-0: 13px; --fs-1: 15px; --fs-2: 17px; --fs-3: 20px; --fs-4: 24px;
+
+    /* Max width */
+    --wrap: 1100px;
+
+    /* Focus ring */
+    --ring: 2px solid color-mix(in oklch, var(--accent) 85%, white);
+
+    /* Transitions */
+    --t: .2s ease;
   }
 
+  /* Light mode fallbacks */
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#faf9f6; --bg-elev:#ffffff; --card:#ffffff;
+      --ink:#131417; --muted:#4a4f59; --line:#dfe3ea;
+      --rim: 0 6px 24px rgba(0,0,0,.07);
+      --shadow-1: 0 1px 2px rgba(0,0,0,.08);
+      --shadow-2: 0 8px 28px rgba(0,0,0,.08);
+    }
+  }
+
+  /* ----------------------------- Base tags ----------------------------- */
   html,body{height:100%}
+  html{ color-scheme: dark light; }
   body{
-    margin:0; color:var(--ink); background:var(--bg);
-    font: 400 15px/1.55 Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    margin:0; background:var(--bg); color:var(--ink);
+    font: 400 var(--fs-1)/1.55 Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
   }
-  .wrap{ max-width:1100px; margin-inline:auto; padding: clamp(12px,5vw,20px) }
 
-  h1,h2,h3{ line-height:1.2; margin: 0 0 .4rem 0; }
-  h1{ font-weight:800; font-size: clamp(1.3rem,4.6vw,2rem) }
-  h2{ font-weight:700; font-size: clamp(1.1rem,4vw,1.4rem) }
-  h3{ font-weight:700; font-size: clamp(1rem,3.6vw,1.2rem) }
+  /* Selection */
+  ::selection{ background: color-mix(in oklch, var(--accent) 35%, transparent); color:var(--ink) }
+
+  /* Container */
+  .wrap{ max-width:var(--wrap); margin-inline:auto; padding: clamp(12px,5vw,24px) }
+
+  /* Headings */
+  h1,h2,h3{ line-height:1.2; margin: 0 0 .5rem 0 }
+  h1{ font-weight:800; font-size: clamp(1.35rem,4.8vw,2.05rem) }
+  h2{ font-weight:700; font-size: clamp(1.12rem,4vw,1.42rem) }
+  h3{ font-weight:700; font-size: clamp(1.02rem,3.6vw,1.22rem) }
   .tight{ margin-bottom:.25rem }
-
-  .subtitle{ color:var(--muted); margin:.3rem 0 .8rem 0; max-width:65ch }
+  .subtitle{ color:var(--muted); margin:.3rem 0 .9rem 0; max-width:65ch }
   .soft{ font-weight:600; opacity:.9 }
 
+  /* Links */
+  a{ color: color-mix(in oklch, var(--accent) 80%, var(--ink)); text-decoration:none; transition: color var(--t); }
+  a:hover{ color: color-mix(in oklch, var(--accent) 100%, var(--ink)); text-decoration: underline; text-underline-offset:2px }
+
+  /* ----------------------------- Layout helpers ------------------------- */
+  .grid{ display:grid; gap:var(--pad-lg) }
+  .grid.cols-2{ grid-template-columns: 1fr; }
+  @media (min-width: 820px){
+    .grid.cols-2{ grid-template-columns: 1fr 1fr; }
+  }
+  .row{ display:flex; flex-wrap:wrap; gap:var(--pad) }
+  .center{ display:grid; place-items:center }
+
+  /* ----------------------------- Cards ---------------------------------- */
   .card{
-    background:var(--bg-elev); border:1px solid var(--line);
-    box-shadow:var(--rim); border-radius:var(--radius);
+    background:var(--bg-elev);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--rim), var(--shadow-1);
     padding: var(--pad-lg); gap:8px;
   }
+  .card.raise{ box-shadow:var(--rim), var(--shadow-2) }
   .shine{ outline:1px solid color-mix(in oklab, var(--accent) 18%, transparent) }
 
+  /* ----------------------------- Buttons -------------------------------- */
   .lab-btn, .dl{
-    display:inline-flex; align-items:center; justify-content:center; gap:.4rem;
-    border:1px solid var(--line); background:#111723; color:var(--ink);
-    padding:.55rem .75rem; border-radius:12px; text-decoration:none; font-weight:600;
+    display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+    background:#111723; color:var(--ink); border:1px solid var(--line);
+    padding:.6rem .85rem; border-radius:12px; text-decoration:none; font-weight:700;
+    transition: filter var(--t), border-color var(--t), background var(--t);
   }
-  .lab-btn.big{ padding:.7rem 1rem; font-size:1rem; border-radius:14px }
+  .lab-btn:hover, .dl:hover{ filter:brightness(1.06) }
+  .lab-btn.big{ padding:.72rem 1rem; font-size:1rem; border-radius:14px }
   .lab-btn.ghost{ background:transparent }
-
-  .chiprow, .btnrow, .formrow{ display:flex; flex-wrap:wrap; gap:8px }
-  .formrow label{ display:flex; gap:.5rem; align-items:center }
-  .lab-input{ background:#0f1218; color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:.45rem .55rem }
-  input[type="range"].lab-input{ padding:0; width:180px }
-
-  .pill{
-    display:inline-flex; align-items:center; gap:.4rem;
-    background:#0f1218; border:1px solid var(--line); border-radius:999px;
-    padding:.3rem .6rem; white-space:nowrap;
+  .lab-btn.primary{
+    background: linear-gradient(180deg,
+      color-mix(in oklch, var(--accent) 20%, #0f1726), #0b111d);
+    border-color: color-mix(in oklch, var(--accent) 60%, #0b0f18);
   }
-  .kbd{ background:#0f1218; border:1px solid var(--line); border-radius:6px; padding:.1rem .35rem }
+  .btnrow{ display:flex; flex-wrap:wrap; gap:8px }
 
-  .divider{ height:1px; background:var(--line); margin:.6rem 0 }
-  .goldline{ height:1px; background: color-mix(in oklab, var(--gold) 60%, var(--line)); margin:.6rem 0 }
+  /* ----------------------------- Forms ---------------------------------- */
+  .formrow{ display:flex; flex-wrap:wrap; gap:10px; align-items:center }
+  .formrow label{ display:flex; gap:.5rem; align-items:center }
+  .lab-input{
+    background:#0f1218; color:var(--ink);
+    border:1px solid var(--line); border-radius:10px;
+    padding:.5rem .6rem; min-height:38px;
+  }
+  input[type="text"].lab-input,
+  input[type="date"].lab-input,
+  input[type="time"].lab-input,
+  input[type="number"].lab-input{ width: min(280px, 100%) }
 
+  /* Range */
+  input[type="range"].lab-input{
+    padding:0; width:220px; height:32px; background:transparent; border:none;
+  }
+  input[type="range"].lab-input::-webkit-slider-runnable-track{
+    height:6px; background:#1a2231; border-radius:999px;
+    outline:1px solid #223047;
+  }
+  input[type="range"].lab-input::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none; height:18px; width:18px; border-radius:50%;
+    background: color-mix(in oklch, var(--accent) 70%, #0e1626);
+    border:1px solid color-mix(in oklch, var(--accent) 65%, #0b0f18); margin-top:-6px;
+    box-shadow: 0 0 0 2px #0b0f18;
+  }
+  input[type="range"].lab-input:focus-visible{ outline: var(--ring); outline-offset: 3px }
+
+  /* Textarea */
   textarea{
     width:100%; min-height:120px; resize:vertical;
     background:#0f1218; color:var(--ink); border:1px solid var(--line);
     border-radius:12px; padding:.6rem .7rem;
   }
 
-  /* Footer */
+  /* Field chips / kbd */
+  .pill{
+    display:inline-flex; align-items:center; gap:.4rem; white-space:nowrap;
+    background:#0f1218; border:1px solid var(--line); border-radius:999px;
+    padding:.3rem .6rem; font-weight:600;
+  }
+  .kbd{
+    background:#0f1218; border:1px solid var(--line); border-radius:6px;
+    padding:.12rem .38rem; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  /* Dividers */
+  .divider{ height:1px; background:var(--line); margin:.7rem 0 }
+  .goldline{ height:1px; background: color-mix(in oklab, var(--gold) 60%, var(--line)); margin:.7rem 0 }
+
+  /* ----------------------------- Code & Tables --------------------------- */
+  code, pre{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    background:#0f1218; color:var(--ink); border:1px solid var(--line);
+  }
+  code{ padding:.08rem .35rem; border-radius:6px }
+  pre{ padding:.7rem .9rem; border-radius:12px; overflow:auto }
+
+  table{ width:100%; border-collapse:separate; border-spacing:0 }
+  th, td{ padding:.55rem .75rem; border-bottom:1px solid var(--line) }
+  thead th{
+    text-align:left; font-weight:700; background:linear-gradient(180deg, var(--bg-elev), color-mix(in lab, var(--accent) 6%, var(--bg-elev)));
+    position:sticky; top:0;
+  }
+  tbody tr:last-child td{ border-bottom:0 }
+
+  /* ----------------------------- Lists ---------------------------------- */
+  ul{ padding-left:1.2rem; margin:.3rem 0 .8rem }
+  li+li{ margin-top:.25rem }
+
+  /* ----------------------------- Accessibility --------------------------- */
+  :focus-visible{ outline: var(--ring); outline-offset: 2px }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important }
+  }
+  @media (prefers-reduced-data: reduce){
+    img[loading="lazy"]{ content-visibility:auto }
+    .shadow-heavy{ box-shadow:none !important }
+  }
+  @media (prefers-contrast: more){
+    :root{ --line: color-mix(in oklch, white 20%, var(--line)) }
+    a{ text-decoration: underline }
+  }
+
+  /* ----------------------------- Footer --------------------------------- */
   .footer{ padding:16px; text-align:center; color:var(--muted) }
   .footer .meta{ margin:0; font-size:.92rem }
+
+  /* ----------------------------- Small utilities ------------------------- */
+  .chiprow{ display:flex; flex-wrap:wrap; gap:8px }
+  .formrow{ display:flex; flex-wrap:wrap; gap:8px }
+  .btnrow{ display:flex; flex-wrap:wrap; gap:8px }
+  .hide{ display:none !important }
+  .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 }
 }
