@@ -236,3 +236,7 @@
     animation: fadeIn .9s var(--ease-out) both;
   }
 }
+
+.error-banner{position:sticky;top:0;z-index:1000;padding:.6rem .9rem;border:1px solid #7a2020;
+background:#140b0b;color:#ffd0d0;border-radius:10px;margin:8px 16px}
+.error-banner.show{display:block}
