@@ -1,8 +1,19 @@
 <!doctype html>
 <html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963" data-alive="lively">
 <head>
+  <!-- Resolve relative URLs from the project root on GitHub Pages -->
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>(function(){var LIVE="ssnfts24.github.io";if(location.hostname!==LIVE){var b=document.querySelector("base");if(b)b.remove();}})();</script>
+  <script>
+    // Keep <base> only on the live GitHub Pages site; remove on github.com or local
+    (function () {
+      var LIVE = "ssnfts24.github.io";
+      if (location.hostname !== LIVE) {
+        var b = document.querySelector("base"); if (b) b.remove();
+      }
+    })();
+  </script>
+
+  <!-- Theme, FB in-app browser hint -->
   <script>(()=>{try{let t=localStorage.getItem('theme');if(!t){t=(matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',t)}catch{}})();</script>
   <script>(()=>{const ua=navigator.userAgent||'';if(/\bFBAN|FBAV|FB_IAB|FBAN\/Messenger\b/i.test(ua)){document.documentElement.classList.add('is-fbapp')}})();</script>
 
@@ -14,11 +25,17 @@
   <meta name="theme-color" content="#f7fbff" media="(prefers-color-scheme: light)">
   <meta name="description" content="Remnant 13×28 Living Clock with animated starfield, lunar phase, zodiac wheel, dual calendars, daily themes, and .ics export — Wizard of YHWH theme." />
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
-  <meta property="og:type" content="website"><meta property="og:title" content="Remnant 13 Moons — Wizard of YHWH">
-  <meta property="og:description" content="A living moonscape: day ring, week dots, year map, lunar sim, zodiac wheel, daily themes, .ics — Scroll of Fire.">
-  <meta property="og:image" content="assets/share/moon-card.png"><meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
-  <meta property="og:site_name" content="Scroll of Fire"><meta name="twitter:card" content="summary_large_image">
 
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Remnant 13 Moons — Wizard of YHWH">
+  <meta property="og:description" content="A living moonscape: day ring, week dots, year map, lunar sim, zodiac wheel, daily themes, .ics — Scroll of Fire.">
+  <meta property="og:image" content="assets/share/moon-card.png">
+  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
+  <meta property="og:site_name" content="Scroll of Fire">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- PWA / Icons -->
   <link rel="manifest" href="assets/manifest.webmanifest">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="13 Moons">
@@ -28,40 +45,48 @@
   <link rel="icon" type="image/png" sizes="512x512" href="assets/icons/icon-512.png">
   <link rel="mask-icon" href="assets/icons/safari-pinned.svg" color="#0e131a">
 
+  <!-- Layer order + CSS -->
   <style>@layer tokens, base, components, astrology, remnant, themes, utilities, legacy;</style>
-  <link rel="stylesheet" href="assets/css/fonts.css?v=2025-11-03-w2">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=2025-11-03-w2">
-  <link rel="stylesheet" href="assets/css/core.css?v=2025-11-03-w2">
-  <link rel="stylesheet" href="assets/css/moons.css?v=2025-11-03-w2">
-  <link rel="stylesheet" href="assets/css/astrology.css?v=2025-11-03-w2">
-  <link rel="stylesheet" href="assets/css/themes.moons.css?v=2025-11-03-w2">
+  <link rel="stylesheet" href="assets/css/fonts.css?v=2025-11-03-w3">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=2025-11-03-w3">
+  <link rel="stylesheet" href="assets/css/core.css?v=2025-11-03-w3">
+  <link rel="stylesheet" href="assets/css/moons.css?v=2025-11-03-w3">
+  <link rel="stylesheet" href="assets/css/astrology.css?v=2025-11-03-w3">
+  <link rel="stylesheet" href="assets/css/themes.moons.css?v=2025-11-03-w3">
 
+  <!-- Minimal critical styles (safe) -->
   <style>
-    :root{ --bg:#0b0b0f; --bg-elev:#0e0e12; --card:#121219; --ink:#eae7df; --muted:#b8b3a6; --line:#2a2a33; --accent:#7af3ff; --accent-2:#7aa8ff; --gold:#f3c97a; --radius:14px; --pad:12px; --pad-lg:16px; --rim:0 10px 30px rgba(0,0,0,.22) }
-    html,body{height:100%} body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    :root{ --bg:#0b0b0f; --bg-elev:#0e0e12; --card:#121219; --ink:#eae7df; --muted:#b8b3a6;
+           --line:#2a2a33; --accent:#7af3ff; --accent-2:#7aa8ff; --gold:#f3c97a;
+           --radius:14px; --pad:12px; --pad-lg:16px; --rim:0 10px 30px rgba(0,0,0,.22) }
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
     .wrap{max-width:1100px;margin-inline:auto;padding:clamp(12px,5vw,20px);position:relative;z-index:1}
     .card{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--radius);padding:var(--pad-lg);box-shadow:var(--rim)}
-    h1,h2,h3{line-height:1.2;margin:0 0 .4rem} .subtitle{color:var(--muted);max-width:65ch}
+    h1,h2,h3{line-height:1.2;margin:0 0 .4rem}
+    .subtitle{color:var(--muted);max-width:65ch}
     .btnrow,.chiprow,.formrow{display:flex;flex-wrap:wrap;gap:8px}
     .lab-btn{display:inline-flex;align-items:center;gap:.45rem;border:1px solid var(--line);background:#111723;color:var(--ink);padding:.55rem .75rem;border-radius:12px;text-decoration:none;font-weight:700}
     .lab-btn.ghost{background:transparent}
     .lab-input{background:#0f1218;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:.45rem .55rem}
     input[type="range"].lab-input{padding:0;width:180px}
     .grid{display:grid;grid-template-columns:1fr;gap:12px}
-    .row-2{display:grid;grid-template-columns:1fr;gap:12px}@media(min-width:900px){.row-2{grid-template-columns:1fr 1fr}}
+    .row-2{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:900px){.row-2{grid-template-columns:1fr 1fr}}
     .legend{display:flex;flex-wrap:wrap;gap:8px}
     .weekrow{display:flex;align-items:center;gap:.6rem;white-space:nowrap;overflow:auto;-webkit-overflow-scrolling:touch}
     :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
     body::before,body::after{content:"";position:fixed;inset:-12%;z-index:0;pointer-events:none;background:
       radial-gradient(1200px 480px at 50% -15%, rgba(122,243,255,.05), transparent 60%),
       linear-gradient(180deg,#0b0b0f,#0e0e12)}
-    /* quick error banner */
+    /* error banner */
     #errorBanner{display:none;margin:8px 0;padding:10px;border-radius:12px;background:#2a1417;border:1px solid #5a2228;color:#ffd7d7}
     #errorBanner.show{display:block}
   </style>
 </head>
 
 <body class="stars remnant-yhwh" data-theme-scope="wizard">
+  <!-- Starfield target -->
   <canvas id="skyBg" width="1440" height="900" aria-hidden="true"
           style="position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none"></canvas>
 
@@ -75,7 +100,7 @@
         <a class="lab-btn ghost" href="genesis-oracle.html">🔮 Genesis Oracle</a>
       </nav>
 
-      <div id="errorBanner" role="alert">Engine couldn’t initialize. Check that <code>assets/js/moons.js</code> is loaded and not blocked by 404/CORS.</div>
+      <div id="errorBanner" role="alert">Engine couldn’t initialize. Check that <code>assets/js/moons.js</code> is present (no 404) and not blocked by CORS.</div>
 
       <section class="card ringcard" aria-label="Current Moon">
         <div class="moon-badge">
@@ -129,7 +154,10 @@
             </select>
           </label>
         </div>
-        <details class="card" style="margin-top:8px"><summary>Debug (safe to leave in)</summary><pre id="dbg" class="mono" style="white-space:pre-wrap"></pre></details>
+        <details class="card" style="margin-top:8px">
+          <summary>Debug (safe to leave in)</summary>
+          <pre id="dbg" class="mono" style="white-space:pre-wrap"></pre>
+        </details>
       </article>
 
       <aside class="card" aria-labelledby="verse-head">
@@ -152,11 +180,18 @@
 
     <section class="row-2" aria-label="Remnant vs Gregorian">
       <article class="card">
-        <header class="panel__head"><h3 class="panel__title" id="remHdr">Remnant Month</h3><div class="panel__meta" id="remMeta">13 × 28 fixed</div></header>
+        <header class="panel__head">
+          <h3 class="panel__title" id="remHdr">Remnant Month</h3>
+          <div class="panel__meta" id="remMeta">13 × 28 fixed</div>
+        </header>
         <section id="remCal" class="calendar" aria-label="Remnant 13×28 Month (live)"></section>
       </article>
+
       <article class="card">
-        <header class="panel__head"><h3 class="panel__title" id="gregHdr">Gregorian Month</h3><div class="panel__meta" id="gregMeta">Variable weeks</div></header>
+        <header class="panel__head">
+          <h3 class="panel__title" id="gregHdr">Gregorian Month</h3>
+          <div class="panel__meta" id="gregMeta">Variable weeks</div>
+        </header>
         <section id="gregCal" class="gregorian" aria-label="Gregorian Month (live)"></section>
         <footer id="calLegend" class="legend" aria-label="Legend">
           <span class="key"><i class="k-dot k-evt1"></i> Event</span>
@@ -172,14 +207,25 @@
       <h2 id="map-head">Year Map — Gregorian spans of the 13 Moons</h2>
       <p class="hint">New Year = July 26 · Day Out of Time = July 25 · Leap Day (Feb 29) is skipped in the 13×28 count.</p>
       <div class="scroller" role="region" aria-label="13 Moons Year Map">
-        <table class="year-map" id="yearMap"><thead><tr><th>#</th><th>Moon Name</th><th>Essence</th><th>Start (TZ)</th><th>End (TZ)</th></tr></thead><tbody></tbody></table>
+        <table class="year-map" id="yearMap">
+          <thead><tr><th>#</th><th>Moon Name</th><th>Essence</th><th>Start (TZ)</th><th>End (TZ)</th></tr></thead>
+          <tbody></tbody>
+        </table>
       </div>
       <p class="meta" id="nextMoonInfo">—</p>
-      <div class="btnrow"><a id="dlICS" class="lab-btn" href="#" download="13-moon-year.ics">Download .ics</a><button id="regenICS" class="lab-btn ghost" type="button">Regenerate</button></div>
+      <div class="btnrow">
+        <a id="dlICS" class="lab-btn" href="#" download="13-moon-year.ics">Download .ics</a>
+        <button id="regenICS" class="lab-btn ghost" type="button">Regenerate</button>
+      </div>
     </article>
 
     <article class="card shine astro" aria-labelledby="astro-head">
-      <header class="astro-head"><span class="seal" aria-hidden="true">⟡ <span lang="he">יהוה</span></span><h2 id="astro-head">Astrology Now</h2><p class="meta">Uses <code>window.__EPHEMERIS__</code> if present; otherwise a safe demo.</p></header>
+      <header class="astro-head">
+        <span class="seal" aria-hidden="true">⟡ <span lang="he">יהוה</span></span>
+        <h2 id="astro-head">Astrology Now</h2>
+        <p class="meta">Uses <code>window.__EPHEMERIS__</code> if present; otherwise a safe demo.</p>
+      </header>
+
       <section class="astro-grid">
         <div class="astro-chips" id="planetChips" role="list">
           <button class="chip pl-sun" data-planet="sun" type="button"><i class="dot el-fire"></i><b>Sun</b> <span class="mono pos" data-pos="sun">—</span> <span class="sign" data-sign="sun">—</span></button>
@@ -189,6 +235,7 @@
           <button class="chip pl-mars" data-planet="mars" type="button"><i class="dot el-fire"></i><b>Mars</b> <span class="mono pos" data-pos="mars">—</span> <span class="sign" data-sign="mars">—</span></button>
           <button class="chip pl-jupiter" data-planet="jupiter" type="button"><i class="dot el-air"></i><b>Jupiter</b> <span class="mono pos" data-pos="jupiter">—</span> <span class="sign" data-sign="jupiter">—</span></button>
           <button class="chip pl-saturn" data-planet="saturn" type="button"><i class="dot el-earth"></i><b>Saturn</b> <span class="mono pos" data-pos="saturn">—</span> <span class="sign" data-sign="saturn">—</span></button>
+          <!-- FIXED: correctly closed attribute on details -->
           <details class="chip more"><summary><i class="dot el-aether"></i><b>Outer bodies</b></summary>
             <div class="more-grid" role="list">
               <div role="listitem"><b>Uranus</b>  <span class="mono pos" data-pos="uranus">—</span>  <span class="sign" data-sign="uranus">—</span></div>
@@ -198,6 +245,7 @@
             </div>
           </details>
         </div>
+
         <figure class="astro-wheel">
           <svg id="astroWheel" viewBox="0 0 360 360" role="img" aria-label="Zodiac wheel">
             <circle cx="180" cy="180" r="162" fill="none" stroke="#1b2231" stroke-width="2"/>
@@ -206,13 +254,27 @@
             <g id="signLabels" fill="#a7b1ca" font-family="Inter,system-ui" font-size="10" text-anchor="middle"></g>
             <g id="planetDots" aria-hidden="true"></g>
           </svg>
-          <figcaption class="meta"><span id="astroStamp">—</span><span class="sep">·</span><span id="astroTZ">—</span><span class="sep">·</span>Source: <span id="astroSource">—</span></figcaption>
+          <figcaption class="meta">
+            <span id="astroStamp">—</span><span class="sep">·</span><span id="astroTZ">—</span><span class="sep">·</span>Source: <span id="astroSource">—</span>
+          </figcaption>
         </figure>
       </section>
+
       <section class="astro-aspects">
         <h3 class="tight">Aspects</h3>
-        <div class="legend" role="list"><span class="badge asp conj">☌ Conj</span><span class="badge asp sext">✶ Sext</span><span class="badge asp sqr">□ Sq</span><span class="badge asp tri">△ Tri</span><span class="badge asp opp">☍ Opp</span></div>
-        <div class="scroller" role="region" aria-label="Aspect Table"><table class="asp-table"><thead><tr><th>Pair</th><th>Aspect</th><th>Orb</th></tr></thead><tbody id="aspBody"></tbody></table></div>
+        <div class="legend" role="list">
+          <span class="badge asp conj">☌ Conj</span>
+          <span class="badge asp sext">✶ Sext</span>
+          <span class="badge asp sqr">□ Sq</span>
+          <span class="badge asp tri">△ Tri</span>
+          <span class="badge asp opp">☍ Opp</span>
+        </div>
+        <div class="scroller" role="region" aria-label="Aspect Table">
+          <table class="asp-table">
+            <thead><tr><th>Pair</th><th>Aspect</th><th>Orb</th></tr></thead>
+            <tbody id="aspBody"></tbody>
+          </table>
+        </div>
       </section>
     </article>
 
@@ -232,43 +294,101 @@
       <section class="codex card shine" id="loreCodex" aria-label="Moon Codex">
         <aside class="codex-toc" aria-label="Codex contents">
           <h4>Codex</h4>
-          <ol><li><a href="#cx-intro">Introduction</a></li><li><a href="#cx-practice">Practices</a></li><li><a href="#cx-notes">Notes & Footnotes</a></li></ol>
+          <ol>
+            <li><a href="#cx-intro">Introduction</a></li>
+            <li><a href="#cx-practice">Practices</a></li>
+            <li><a href="#cx-notes">Notes & Footnotes</a></li>
+          </ol>
         </aside>
         <article class="codex-content">
           <h1 id="cx-intro">The Remnant Moon Codex</h1>
           <p class="lede">A living scroll of patterns, pulses, and presence — meant to be read like a sky. Each moon carries a tone; each day bends the light a little.</p>
-          <div class="callout info"><div class="head">Current Essence</div><div class="body" id="essenceLive">—</div></div>
+          <div class="callout info">
+            <div class="head">Current Essence</div>
+            <div class="body" id="essenceLive">—</div>
+          </div>
           <blockquote class="pull" id="sofDaily">“Number the days; crown the weeks; keep the remnant bright.”</blockquote>
-          <h2 id="cx-practice">Practices</h2><p>Choose one thing to serve today, and serve it without remainder.</p>
-          <h2 id="cx-notes">Notes & Footnotes</h2><p>All cycles align to New Year (July 26); Leap Day is skipped in the cadence.</p>
+          <h2 id="cx-practice">Practices</h2>
+          <p>Choose one thing to serve today, and serve it without remainder.</p>
+          <h2 id="cx-notes">Notes & Footnotes</h2>
+          <p>All cycles align to New Year (July 26); Leap Day is skipped in the cadence.</p>
         </article>
       </section>
     </section>
   </main>
 
-  <footer class="footer"><div class="divider" aria-hidden="true"></div><p class="meta">© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p></footer>
+  <footer class="footer">
+    <div class="divider" aria-hidden="true"></div>
+    <p class="meta">© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+  </footer>
+
   <noscript><p class="meta" style="text-align:center">This page needs JavaScript to calculate moon/day, phase, astrology, and year map.</p></noscript>
 
   <!-- Fallback data: if moons.data.js is missing, define __MOONS__ so the page still renders -->
   <script>
-  window.__MOONS__ = window.__MOONS__ || [
-    {"idx":1,"name":"Magnetic","essence":"Unify · Purpose","color":"#6FE7FF"},
-    {"idx":2,"name":"Lunar","essence":"Polarize · Challenge","color":"#B1C7FF"},
-    {"idx":3,"name":"Electric","essence":"Activate · Service","color":"#7AF3FF"},
-    {"idx":4,"name":"Self-Existing","essence":"Define · Form","color":"#7BF3B8"},
-    {"idx":5,"name":"Overtone","essence":"Empower · Radiance","color":"#FFD27A"},
-    {"idx":6,"name":"Rhythmic","essence":"Organize · Equality","color":"#A7FFCF"},
-    {"idx":7,"name":"Resonant","essence":"Channel · Attunement","color":"#D5B6FF"},
-    {"idx":8,"name":"Galactic","essence":"Harmonize · Integrity","color":"#A8FFD9"},
-    {"idx":9,"name":"Solar","essence":"Pulse · Intention","color":"#FFBC6F"},
-    {"idx":10,"name":"Planetary","essence":"Perfect · Manifestation","color":"#A2FFD1"},
-    {"idx":11,"name":"Spectral","essence":"Dissolve · Liberation","color":"#A8B8FF"},
-    {"idx":12,"name":"Crystal","essence":"Dedicate · Cooperation","color":"#FFD7A8"},
-    {"idx":13,"name":"Cosmic","essence":"Endure · Presence","color":"#9DDAFF"}
-  ];
+    window.__MOONS__ = window.__MOONS__ || [
+      {"idx":1,"name":"Magnetic","essence":"Unify · Purpose","color":"#6FE7FF"},
+      {"idx":2,"name":"Lunar","essence":"Polarize · Challenge","color":"#B1C7FF"},
+      {"idx":3,"name":"Electric","essence":"Activate · Service","color":"#7AF3FF"},
+      {"idx":4,"name":"Self-Existing","essence":"Define · Form","color":"#7BF3B8"},
+      {"idx":5,"name":"Overtone","essence":"Empower · Radiance","color":"#FFD27A"},
+      {"idx":6,"name":"Rhythmic","essence":"Organize · Equality","color":"#A7FFCF"},
+      {"idx":7,"name":"Resonant","essence":"Channel · Attunement","color":"#D5B6FF"},
+      {"idx":8,"name":"Galactic","essence":"Harmonize · Integrity","color":"#A8FFD9"},
+      {"idx":9,"name":"Solar","essence":"Pulse · Intention","color":"#FFBC6F"},
+      {"idx":10,"name":"Planetary","essence":"Perfect · Manifestation","color":"#A2FFD1"},
+      {"idx":11,"name":"Spectral","essence":"Dissolve · Liberation","color":"#A8B8FF"},
+      {"idx":12,"name":"Crystal","essence":"Dedicate · Cooperation","color":"#FFD7A8"},
+      {"idx":13,"name":"Cosmic","essence":"Endure · Presence","color":"#9DDAFF"}
+    ];
   </script>
 
-  <!-- Load the engine (correct filename) -->
-  <script defer src="assets/js/moons.js?v=2025-11-03-w2"></script>
+  <!-- Load engine with onerror (surface 404/CORS immediately) -->
+  <script defer src="assets/js/moons.js?v=2025-11-03-w3"
+          onerror="(function(){var b=document.getElementById('errorBanner'); if(b){b.textContent='Failed to load assets/js/moons.js (404/CORS)'; b.classList.add('show');}})();"></script>
+
+  <!-- Small page helpers + engine paint probe -->
+  <script>
+    // Share current state (?date & tz) to clipboard
+    (function () {
+      function copyShare() {
+        try {
+          const url = new URL(location.href);
+          // ensure we capture selected tz/date/hour if engine already set them
+          const qp = new URLSearchParams(location.search);
+          if (!qp.get('date')) {
+            // try to pull from visible fields
+            const d = document.getElementById('datePick')?.value;
+            if (d) qp.set('date', d);
+          }
+          const tz = document.getElementById('tzPick')?.value;
+          if (tz) qp.set('tz', tz);
+          url.search = qp.toString();
+          navigator.clipboard.writeText(url.toString()).then(()=>{
+            document.getElementById('shareLink').textContent = 'Copied ✓';
+            setTimeout(()=>{document.getElementById('shareLink').textContent='Copy Link';}, 1200);
+          });
+        } catch (e) {
+          console.warn('Share copy failed', e);
+        }
+      }
+      window.addEventListener('DOMContentLoaded', function(){
+        var btn = document.getElementById('shareLink');
+        if (btn) btn.addEventListener('click', copyShare);
+      }, { once: true });
+    })();
+
+    // Paint probe: if engine loaded but didn’t populate, show banner
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        var ok = (document.getElementById('nowDate')?.textContent || '').trim() !== '—';
+        if (!ok) {
+          var b = document.getElementById('errorBanner');
+          if (b) { b.textContent = 'Engine loaded but did not paint (check console for JS errors or a broken tag earlier in the DOM).'; b.classList.add('show'); }
+          console.warn('[Moons probe] Engine didn’t paint. Common causes: an unclosed quote before this script, or a JS exception in moons.js.');
+        }
+      }, 650);
+    }, { once: true });
+  </script>
 </body>
 </html>
