@@ -1,320 +1,387 @@
 /* ==========================================================================
-   Scroll of Fire — Moons UI
-   Page styles for moons.html (ring, calendars, year map, astro, practice)
-   Uses token variables from tokens.css + base rules from core.css
-   v2025.11.03-r3
+   Scroll of Fire — Moons UI Styles
+   File: assets/css/moons.css
+   Version: v2025.11.03
+   Layers: tokens → base → components → astrology → remnant → utilities → legacy
+   Notes:
+   - Sets --moon-accent per moon and --daytone-h(ue) per day 1..28.
+   - Motion is guarded by prefers-reduced-motion.
+   - Minimal assumptions about global CSS; safe to drop-in.
    ========================================================================== */
 
-@layer components, astrology, remnant;
+@layer tokens, base, components, astrology, remnant, utilities, legacy;
 
-/* ------------------------------- Common --------------------------------- */
-@layer components {
-  .wrap { max-width: 1100px; }
+/* ------------------------------- Tokens ---------------------------------- */
+@layer tokens {
+  :root{
+    /* Core palette */
+    --bg:#0b0b0f; --bg-elev:#0e0e12; --card:#121219;
+    --ink:#eae7df; --muted:#b8b3a6; --line:#2a2a33;
 
-  .page-head.fancy-head .title { font-weight: 900; letter-spacing: .2px; }
-  .page-head .subtitle { opacity: .85 }
+    /* Accents */
+    --accent:#7af3ff; --accent-2:#7aa8ff; --gold:#f3c97a;
 
-  .pill{
-    display:inline-flex; align-items:center; gap:.4rem;
-    padding:.35rem .6rem; border:1px solid var(--line); border-radius:999px;
-    background:linear-gradient(180deg,#0f1218,#0c0f16); color:var(--ink);
-    font:600 .85rem/1.1 Inter, system-ui; box-shadow: inset 0 1px 0 rgba(255,255,255,.03)
+    /* Rims, radii */
+    --radius:14px; --pad:12px; --pad-lg:16px; --rim:0 10px 30px rgba(0,0,0,.22);
+
+    /* Moons (canonical hues) */
+    --moon1:#6FE7FF;    /* Magnetic — Unify · Purpose    */
+    --moon2:#B1C7FF;    /* Lunar — Polarize · Challenge   */
+    --moon3:#7AF3FF;    /* Electric — Activate · Service  */
+    --moon4:#7BF3B8;    /* Self-Existing — Define · Form  */
+    --moon5:#FFD27A;    /* Overtone — Empower · Radiance  */
+    --moon6:#A7FFCF;    /* Rhythmic — Organize · Equality */
+    --moon7:#D5B6FF;    /* Resonant — Channel · Attune    */
+    --moon8:#A8FFD9;    /* Galactic — Harmonize · Integrity */
+    --moon9:#FFBC6F;    /* Solar — Pulse · Intention      */
+    --moon10:#A2FFD1;   /* Planetary — Perfect · Manifest */
+    --moon11:#A8B8FF;   /* Spectral — Dissolve · Liberate */
+    --moon12:#FFD7A8;   /* Crystal — Dedicate · Cooperate */
+    --moon13:#9DDAFF;   /* Cosmic — Endure · Presence     */
+
+    /* Active (overridden by theme-moon-*) */
+    --moon-accent: var(--accent);
+
+    /* Daytone hue (0–359); set by .daytone-* */
+    --daytone-h: 200;
+
+    /* Subtle glows (derived) */
+    --halo: color-mix(in oklab, var(--moon-accent) 12%, transparent);
+    --halo-strong: color-mix(in oklab, var(--moon-accent) 22%, transparent);
   }
-  .pill.mono{ font-variant-numeric: tabular-nums; letter-spacing:.2px }
-
-  .badge{
-    display:inline-block; padding:.25rem .5rem; border-radius:8px;
-    background:#121928; border:1px solid var(--line); font-weight:700
-  }
-  .badge.asp{ font:700 .8rem/1 Inter,system-ui }
-  .badge.asp.conj{ background:#15202f }
-  .badge.asp.sext{ background:#13252a }
-  .badge.asp.sqr { background:#211823 }
-  .badge.asp.tri { background:#15221b }
-  .badge.asp.opp { background:#261a1a }
-
-  .card.shine{
-    position:relative; overflow:hidden;
-    background:
-      radial-gradient(600px 240px at 80% -10%, rgba(122,243,255,.06), transparent 70%),
-      linear-gradient(180deg, var(--bg-elev), color-mix(in oklab, var(--bg-elev) 80%, black))
-  }
-  .card .meta{ color:color-mix(in lch, var(--ink) 65%, transparent) }
-
-  .divider{ height:1px; background:var(--line); margin:.6rem 0 }
 }
 
-/* --------------------------- Ring + Week row ---------------------------- */
-@layer components {
-  .ringcard{
-    display:grid; gap:14px; align-items:center
+/* -------------------------------- Base ----------------------------------- */
+@layer base {
+  html,body{height:100%}
+  body{
+    margin:0; background: var(--bg); color: var(--ink);
+    font: 400 15px/1.6 Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
   }
-  .moon-badge{
-    display:flex; flex-wrap:wrap; align-items:center; gap:10px
+  .wrap{ max-width:1100px; margin-inline:auto; padding:clamp(12px,5vw,20px); position:relative; z-index:1 }
+  h1,h2,h3{ line-height:1.2; margin:0 0 .45rem }
+  .subtitle{ color: var(--muted); max-width:70ch }
+  .card{
+    background: var(--bg-elev); border:1px solid var(--line); border-radius: var(--radius);
+    padding: var(--pad-lg); box-shadow: var(--rim);
   }
-  .moon-badge .sigil{ filter:drop-shadow(0 2px 6px rgba(0,0,0,.35)) }
+  .grid{ display:grid; grid-template-columns:1fr; gap:12px }
+  .row-2{ display:grid; grid-template-columns:1fr; gap:12px }
+  @media (min-width:900px){ .row-2{ grid-template-columns:1fr 1fr } }
 
-  .weekrow{ display:flex; align-items:center; gap:.6rem; overflow:auto; -webkit-overflow-scrolling:touch }
-  .weeklabel{ font:700 .8rem/1 Inter,system-ui; color:var(--muted) }
+  /* Soft global lights */
+  body::before, body::after{
+    content:""; position:fixed; inset:-10%; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(900px 420px at 50% -12%, var(--halo), transparent 60%),
+      linear-gradient(180deg, #0b0b0f, #0e0e12);
+  }
+
+  /* Buttons/inputs */
+  .btnrow,.chiprow,.formrow{ display:flex; flex-wrap:wrap; gap:8px }
+  .lab-btn{
+    display:inline-flex; align-items:center; gap:.45rem; text-decoration:none; cursor:pointer;
+    background:#111723; color:var(--ink); border:1px solid var(--line); border-radius:12px; padding:.55rem .8rem; font-weight:800;
+  }
+  .lab-btn.ghost{ background: transparent }
+  .lab-input{
+    background:#0f1218; color:var(--ink); border:1px solid var(--line);
+    border-radius:10px; padding:.45rem .6rem;
+  }
+  input[type="range"].lab-input{ padding:0; width: 180px }
+  :focus-visible{ outline:2px solid var(--moon-accent); outline-offset:2px }
+}
+
+/* ------------------------------ Components ------------------------------- */
+@layer components {
+  /* Header ring */
+  .ring{ width:clamp(92px,26vw,120px); aspect-ratio:1; display:grid; place-items:center; position:relative }
+  .ring .ring-bg{ fill:none; stroke:#142233; stroke-width:10 }
+  .ring .ring-fg{ fill:none; stroke-linecap:round; stroke: var(--moon-accent); stroke-width:12;
+    filter: drop-shadow(0 0 12px color-mix(in oklab, var(--moon-accent) 35%, transparent));
+  }
+  .ring .label{ position:absolute; inset:0; display:grid; place-items:center; font-weight:900; text-shadow:0 1px 0 #0008 }
+  .ring .big{ font-size:clamp(1.15rem, 6vw, 1.65rem) }
+  .ring .small{ font-size:.85rem; opacity:.8 }
+
+  /* Week dots */
+  .weekrow{ display:flex; align-items:center; gap:.6rem; overflow:auto; -webkit-overflow-scrolling:touch; white-space:nowrap }
+  .weeklabel{ font:800 .82rem/1 Inter,system-ui; color: var(--muted) }
   .week{ display:flex; gap:.8rem }
   .wdots{ display:grid; grid-auto-flow:column; grid-auto-columns:min-content; gap:.35rem }
-  .wdot{ width:.55rem; height:.55rem; border-radius:50%; background:#1b2231; box-shadow:inset 0 1px 0 rgba(255,255,255,.04) }
-  .wdot.is-today{ background: color-mix(in oklab, var(--accent) 75%, #1b2231); box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 35%, transparent) }
-
-  /* Lively ring accent (motion-safe) */
-  .ring .ring-fg { filter: drop-shadow(0 0 6px color-mix(in oklab, var(--accent) 30%, transparent)); }
-  @media (prefers-reduced-motion: no-preference) {
-    .ring .ring-fg {
-      animation: sof-ring-glow 4.5s ease-in-out infinite;
-      transform-origin: 60px 60px;
-    }
+  .wdot{
+    width:.55rem; height:.55rem; border-radius:50%; background:#1b2231;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
   }
-  @keyframes sof-ring-glow {
-    0%,100% { filter: drop-shadow(0 0 4px rgba(122,243,255,.25)); }
-    50%     { filter: drop-shadow(0 0 10px rgba(122,243,255,.5)); }
-  }
-}
-
-/* ----------------------------- Control row ------------------------------ */
-@layer components {
-  .formrow label{ display:flex; flex-direction:column; gap:.35rem; font-weight:700; font-size:.9rem }
-  .lab-input{
-    background:#0f1218; color:var(--ink);
-    border:1px solid var(--line); border-radius:10px; padding:.45rem .55rem
-  }
-  input[type="date"].lab-input{ min-width: 14ch }
-  input[type="range"].lab-input{ width: 200px; height:28px }
-  @media (max-width: 520px){
-    input[type="range"].lab-input{ width: 140px }
+  .wdot.is-today{
+    background: color-mix(in oklab, var(--moon-accent) 70%, #1b2231);
+    box-shadow: 0 0 0 2px color-mix(in lch, var(--moon-accent) 35%, transparent);
   }
 
-  /* TZ select fit better on narrow screens */
-  @media (max-width: 420px){
-    #tzPick{ max-width: 100%; }
-  }
-}
-
-/* ---------------------------- Lunar Phase sim --------------------------- */
-@layer components {
-  #simMoon{
-    border-radius:14px; border:1px solid var(--line);
-    background:
-      radial-gradient(400px 220px at 50% 0%, rgba(122,243,255,.05), transparent 65%),
-      #0b0f16;
-    box-shadow:var(--rim)
-  }
-  #phaseLine{ font-weight:800 }
-  #phaseMeta{ color:var(--muted) }
-}
-
-/* ------------------------- Dual calendars block ------------------------- */
-@layer components {
+  /* Dual calendars */
   .panel__head{ display:flex; align-items:end; justify-content:space-between; gap:10px; margin-bottom:.6rem }
   .panel__title{ margin:0 }
-  .panel__meta{ color:var(--muted) }
+  .panel__meta{ color: var(--muted) }
 
-  .calendar, .gregorian{ --cell: clamp(36px, 8.5vw, 56px); --gap:6px }
-  .r-grid, .g-grid{ display:grid; grid-template-columns:repeat(7, minmax(var(--cell), 1fr)); gap:var(--gap) }
+  .calendar, .gregorian{ --cell: clamp(36px, 8.2vw, 56px); --gap: 6px }
+  .r-grid, .g-grid{ display:grid; grid-template-columns: repeat(7, minmax(var(--cell),1fr)); gap: var(--gap) }
 
   .r-lbl, .g-lbl{
-    display:grid; place-items:center; font:700 .75rem/1.2 Inter,system-ui;
-    color:color-mix(in lch, var(--ink) 65%, transparent)
+    display:grid; place-items:center; font:800 .74rem/1.2 Inter,system-ui;
+    color: color-mix(in lch, var(--ink) 65%, transparent)
   }
 
   .r-day, .g-day, .g-pad{
     min-height: var(--cell);
-    border:1px solid var(--line); border-radius:10px; background:var(--bg-elev);
-    display:flex; align-items:center; justify-content:center
+    border:1px solid var(--line); border-radius:10px; background:
+      linear-gradient(180deg, #0f1218, #0c0f16);
+    display:flex; align-items:center; justify-content:center;
   }
   .r-day>button, .g-day>button{
     all:unset; display:grid; place-items:center; inline-size:100%; block-size:100%;
-    border-radius:10px; cursor:pointer; font:700 .95rem/1 Inter,system-ui
+    border-radius:10px; cursor:pointer; font:800 .95rem/1 Inter,system-ui; color:var(--ink);
   }
-  .r-day.is-today, .g-day.is-today{ outline:2px solid var(--accent); outline-offset:1px }
+  .r-day.is-today, .g-day.is-today{ outline:2px solid var(--moon-accent); outline-offset:1px }
 
   .r-doot{
-    min-height:calc(var(--cell)*1.6); display:grid; place-items:center; text-align:center;
-    border-radius:12px; border:1px dashed color-mix(in lch, var(--accent) 45%, var(--line));
-    background:linear-gradient(180deg,#0e1219,#0b0f16)
+    min-height: calc(var(--cell)*1.6); display:grid; place-items:center; text-align:center;
+    border-radius:12px; border:1px dashed color-mix(in lch, var(--moon-accent) 50%, var(--line));
+    background: linear-gradient(180deg,#0e1219,#0b0f16);
+    font-weight:900; letter-spacing:.2px
   }
 
-  /* Legend keys under gregorian */
-  .legend .key{ display:inline-flex; align-items:center; gap:.45rem; font-weight:700 }
-  .legend .k-dot{
-    width:.65rem; height:.65rem; border-radius:50%;
-    display:inline-block; background:#1b2231; box-shadow:inset 0 1px 0 rgba(255,255,255,.05)
-  }
-  .legend .k-evt1{ background:#1c2d3f }
-  .legend .k-evt2{ background:#2a2441 }
-  .legend .k-doot{ background:#2a313f }
-  .legend .k-leap{ background:#243a32 }
-  .legend .k-today{ background: color-mix(in oklab, var(--accent) 75%, #1b2231) }
+  .legend .key{ display:inline-flex; align-items:center; gap:.45rem; font-weight:800 }
+  .legend .k-dot{ width:.65rem; height:.65rem; border-radius:50%; display:inline-block; background:#1b2231; box-shadow:inset 0 1px 0 rgba(255,255,255,.05) }
+  .legend .k-evt1{ background:#1c2d3f } .legend .k-evt2{ background:#2a2441 }
+  .legend .k-doot{ background:#2a313f } .legend .k-leap{ background:#243a32 }
+  .legend .k-today{ background: color-mix(in oklab, var(--moon-accent) 75%, #1b2231) }
 
-  /* Hover affordance */
-  .r-day>button:hover, .g-day>button:hover {
-    background: linear-gradient(180deg, #0f141f, #0c101a);
-  }
-}
-
-/* ------------------------------ Year map -------------------------------- */
-@layer components {
+  /* Year map table */
   .scroller{ overflow:auto; -webkit-overflow-scrolling:touch }
-  .year-map{
-    width:100%; border-collapse:separate; border-spacing:0; font-variant-numeric: tabular-nums
-  }
+  .year-map{ width:100%; border-collapse:separate; border-spacing:0; font-variant-numeric: tabular-nums }
   .year-map thead th{
-    position:sticky; top:0; z-index:1;
-    background:#0e0e12; border-bottom:1px solid var(--line); text-align:left; padding:.55rem .6rem
+    position:sticky; top:0; z-index:1; text-align:left;
+    background:#0e0e12; border-bottom:1px solid var(--line); padding:.55rem .6rem
   }
-  .year-map tbody td{
-    padding:.5rem .6rem; border-bottom:1px solid #1a2130
-  }
+  .year-map tbody td{ padding:.5rem .6rem; border-bottom:1px solid #1a2130 }
   .year-map tbody tr:hover td{
-    background:linear-gradient(90deg, rgba(122,243,255,.06), transparent 40%)
+    background: linear-gradient(90deg, var(--halo), transparent 40%)
   }
-  .year-map tbody td .tag{
+  .year-map .tag{
     display:inline-block; margin-left:.35rem; padding:.1rem .35rem; border-radius:6px;
-    border:1px solid var(--line); background:#0f1218; font:700 .7rem/1 Inter,system-ui
+    border:1px solid var(--line); background:#0f1218; font:800 .7rem/1 Inter,system-ui
   }
+
+  /* Pills/badges */
+  .pill{
+    display:inline-flex; align-items:center; gap:.4rem; font:800 .85rem/1.1 Inter, system-ui;
+    padding:.35rem .6rem; border:1px solid var(--line); border-radius:999px;
+    background:linear-gradient(180deg,#0f1218,#0c0f16); color:var(--ink);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  .pill.mono{ font-variant-numeric: tabular-nums; letter-spacing:.2px }
+  .badge{ display:inline-block; padding:.25rem .5rem; border-radius:8px; background:#121928; border:1px solid var(--line); font-weight:800 }
+  .badge.asp{ font:800 .8rem/1 Inter,system-ui }
+  .badge.asp.conj{ background:#15202f } .badge.asp.sext{ background:#13252a }
+  .badge.asp.sqr { background:#211823 } .badge.asp.tri { background:#15221b }
+  .badge.asp.opp { background:#261a1a }
+
+  /* Pull quotes / info callouts */
+  blockquote.pull{
+    margin:0; padding:.8rem .9rem; border:1px solid var(--line); border-radius:12px;
+    background: linear-gradient(180deg,#0f1118,#0d1016);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.03), 0 0 0 2px var(--halo);
+  }
+  .callout{
+    display:grid; gap:.35rem; border:1px solid var(--line); border-radius:12px;
+    background: linear-gradient(180deg,#0f1218,#0c0f16); box-shadow:var(--rim)
+  }
+  .callout .head{ padding:.5rem .6rem; font-weight:900; border-bottom:1px solid var(--line) }
+  .callout .body{ padding:.6rem .7rem; color: var(--ink) }
 }
 
-/* ----------------------------- Astro demo --------------------------------*/
+/* ------------------------------- Astrology ------------------------------- */
 @layer astrology {
-  .astro .astro-head{
-    display:flex; align-items:center; gap:10px; margin-bottom:.8rem
-  }
+  .astro .astro-head{ display:flex; align-items:center; gap:10px; margin-bottom:.8rem }
   .astro .seal{
-    display:inline-flex; align-items:center; gap:.4rem; padding:.25rem .55rem;
-    border-radius:10px; border:1px solid var(--line); background:#121827; font-weight:800
+    display:inline-flex; align-items:center; gap:.4rem; padding:.25rem .55rem; border-radius:10px;
+    border:1px solid var(--line); background:#121827; font-weight:900;
+    box-shadow:0 0 0 2px var(--halo);
   }
-
-  .astro-grid{
-    display:grid; gap:14px; grid-template-columns:1fr; align-items:start
-  }
-  @media (min-width: 900px){
-    .astro-grid{ grid-template-columns: 2fr 3fr }
-  }
+  .astro-grid{ display:grid; gap:14px; grid-template-columns:1fr; align-items:start }
+  @media (min-width:900px){ .astro-grid{ grid-template-columns: 2fr 3fr } }
 
   .astro-chips{ display:flex; flex-wrap:wrap; gap:.5rem }
   .chip{
     display:inline-flex; align-items:center; gap:.45rem; padding:.45rem .65rem;
-    border:1px solid var(--line); border-radius:999px; background:#101625; font-weight:800;
-    transition: transform .12s ease, background-color .15s ease, box-shadow .15s ease;
+    border:1px solid var(--line); border-radius:999px; background:#101625; font-weight:900
   }
   .chip .dot{ width:.6rem; height:.6rem; border-radius:50% }
   .el-fire{   background:#ff7a7a33; box-shadow:0 0 0 2px #ff7a7a22 inset }
   .el-water{  background:#7af3ff33; box-shadow:0 0 0 2px #7af3ff22 inset }
   .el-air{    background:#aebaff33; box-shadow:0 0 0 2px #aebaff22 inset }
   .el-earth{  background:#9affc933; box-shadow:0 0 0 2px #9affc922 inset }
-  .el-aether{ background:#d5b6ff33; box-shadow:0 0 0 2px #d5b6ff22 inset }
-
-  .chip:hover{
-    background:#0f1422; transform: translateY(-1px);
-    box-shadow: 0 4px 18px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
-  }
+  .el-aether{ background:#d7b6ff33; box-shadow:0 0 0 2px #d7b6ff22 inset }
 
   .astro-wheel{
-    border:1px solid var(--line); border-radius:12px; background:
-      radial-gradient(420px 280px at 50% -10%, rgba(122,243,255,.05), transparent 60%),
-      #0f141f;
-    padding:.6rem; position:relative;
+    border:1px solid var(--line); border-radius:12px; background:#0f141f; padding:.6rem;
+    box-shadow: 0 0 0 2px var(--halo);
   }
-
-  /* Hebrew sigil vibe around wheel */
-  .astro .seal::after{
-    content:"⟡"; opacity:.7; transform: translateY(-1px);
-  }
-
-  .astro-aspects .asp-table{
-    width:100%; border-collapse:separate; border-spacing:0; font-variant-numeric: tabular-nums
-  }
+  .asp-table{ width:100%; border-collapse:separate; border-spacing:0; font-variant-numeric: tabular-nums }
   .asp-table thead th{
     position:sticky; top:0; background:#0e0e12; text-align:left; padding:.55rem .6rem; border-bottom:1px solid var(--line)
   }
   .asp-table tbody td{ padding:.45rem .6rem; border-bottom:1px solid #1a2130 }
 }
 
-/* ------------------------- Practices & Codex ----------------------------- */
+/* -------------------------------- Remnant -------------------------------- */
 @layer remnant {
-  #practiceList{ display:grid; gap:.5rem; counter-reset: pr }
+  /* Notes & codex */
+  #practiceList{ display:grid; gap:.5rem; counter-reset:pr }
   #practiceList li{
     list-style:none; background:#101624; border:1px solid var(--line); border-radius:12px;
-    padding:.6rem .7rem; box-shadow:var(--rim)
+    padding:.6rem .7rem; box-shadow: var(--rim)
   }
   #noteText{
     width:100%; min-height:110px; resize:vertical; margin-top:.4rem;
     background:#0f1218; border:1px solid var(--line); color:var(--ink); border-radius:12px; padding:.6rem .7rem
   }
-
   .codex{ display:grid; grid-template-columns: 220px 1fr; gap:14px }
   .codex .codex-toc{
-    position:sticky; top:12px; align-self:start;
-    background:#0f1218; border:1px solid var(--line); border-radius:12px; padding:.6rem .7rem
+    position:sticky; top:12px; align-self:start; background:#0f1218; border:1px solid var(--line);
+    border-radius:12px; padding:.6rem .7rem
   }
   .codex .codex-toc h4{ margin:.2rem 0 .4rem }
-  .codex .codex-toc a{ text-decoration:none; font-weight:800 }
-  .codex .codex-content{ min-height: 320px }
+  .codex .codex-toc a{ text-decoration:none; font-weight:900 }
+  .codex .codex-content{ min-height:320px }
   .codex .lede{ font-size:1.05rem; opacity:.9 }
 
-  @media (max-width: 900px){
-    .codex{ grid-template-columns: 1fr }
+  @media (max-width:900px){
+    .codex{ grid-template-columns:1fr }
     .codex .codex-toc{ position:static }
   }
 
-  /* Ancient Hebrew verse pulse */
-  #verseBox .he{ font-weight:900; letter-spacing:.5px; text-shadow:0 0 8px rgba(122,243,255,.12) }
-  #verseBox .en{ opacity:.9 }
-  #verseBox .meta{ color:var(--muted) }
-  @media (prefers-reduced-motion: no-preference){
-    #verseBox .he{ animation: sof-verse-pulse 5.5s ease-in-out infinite; }
+  /* Lunar sim canvas */
+  #simMoon{
+    border-radius:14px; border:1px solid var(--line); background:#0b0f16;
+    box-shadow: var(--rim), 0 0 0 2px var(--halo);
   }
-  @keyframes sof-verse-pulse{
-    0%,100%{ text-shadow:0 0 6px rgba(122,243,255,.15); opacity:.95 }
-    50%    { text-shadow:0 0 14px rgba(122,243,255,.35); opacity:1 }
-  }
+
+  /* Hebrew vibe: gentle letter glow */
+  [lang="he"]{ font-weight:900; letter-spacing:.02em; text-shadow: 0 0 12px var(--halo) }
 }
 
-/* ----------------------------- Themes ----------------------------------- */
-@layer remnant {
-  body.theme-doot .ring .ring-fg{ stroke:#8aa8ff }
-  body.theme-moon-1 .ring .ring-fg{ stroke:#6FE7FF }
-  body.theme-moon-2 .ring .ring-fg{ stroke:#B1C7FF }
-  body.theme-moon-3 .ring .ring-fg{ stroke:#7AF3FF }
-  body.theme-moon-4 .ring .ring-fg{ stroke:#7BF3B8 }
-  body.theme-moon-5 .ring .ring-fg{ stroke:#FFD27A }
-  body.theme-moon-6 .ring .ring-fg{ stroke:#A7FFCF }
-  body.theme-moon-7 .ring .ring-fg{ stroke:#D5B6FF }
-  body.theme-moon-8 .ring .ring-fg{ stroke:#A8FFD9 }
-  body.theme-moon-9 .ring .ring-fg{ stroke:#FFBC6F }
-  body.theme-moon-10 .ring .ring-fg{ stroke:#A2FFD1 }
-  body.theme-moon-11 .ring .ring-fg{ stroke:#A8B8FF }
-  body.theme-moon-12 .ring .ring-fg{ stroke:#FFD7A8 }
-  body.theme-moon-13 .ring .ring-fg{ stroke:#9DDAFF }
+/* ------------------------------- Utilities ------------------------------- */
+@layer utilities {
+  .divider{ height:1px; background:var(--line); margin:.6rem 0 }
+  .tight{ margin-top:.2rem; margin-bottom:.2rem }
+  .meta{ color: color-mix(in lch, var(--ink) 65%, transparent) }
+  .mono{ font-variant-numeric: tabular-nums }
+  .soft{ opacity:.85 }
+  .sep::before{ content:" \00B7 "; opacity:.55; padding:0 .25rem }
 }
 
-/* ----------------------- Starfield polish (canvas) ---------------------- */
-/* The <canvas id="skyBg"> is driven by JS; this gives subtle blending. */
-@layer remnant {
-  #skyBg{
-    mix-blend-mode: screen;
-    opacity:.8;
-    /* keep pointer-events:none from inline style */
-  }
-  @media (prefers-contrast: more){
-    #skyBg{ opacity:.95 }
-  }
-}
-
-/* ------------------------------ Focus/A11y ------------------------------ */
+/* ------------------------ Animated Atmospherics -------------------------- */
 @layer components {
-  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px }
-  .kbd{ background:#0f1218; border:1px solid var(--line); border-radius:6px; padding:.1rem .35rem }
+  /* Animated shimmer for ring edge (motion-safe) */
+  @media (prefers-reduced-motion: no-preference){
+    .ring .ring-fg{
+      animation: rimPulse 3.6s ease-in-out infinite;
+    }
+    @keyframes rimPulse{
+      0%,100%{ filter: drop-shadow(0 0 10px var(--halo)) }
+      50%{    filter: drop-shadow(0 0 18px var(--halo-strong)) }
+    }
+
+    /* Calendar cell hover glow */
+    .r-day>button:hover, .g-day>button:hover{
+      box-shadow: 0 0 0 2px var(--halo); transition: box-shadow .2s ease
+    }
+
+    /* Rune flicker behind pull quotes (very subtle) */
+    blockquote.pull{
+      position:relative; overflow:hidden;
+    }
+    blockquote.pull::after{
+      content:""; position:absolute; inset:-20%; pointer-events:none; opacity:.22;
+      background:
+        radial-gradient(40% 12% at 70% 0%, var(--halo-strong), transparent 60%),
+        conic-gradient(from 0deg at 50% 50%, transparent 0 20%, var(--halo) 20% 22%, transparent 22% 100%);
+      filter: blur(18px);
+      animation: runeDrift 12s linear infinite;
+    }
+    @keyframes runeDrift{
+      0%{ transform: translate3d(0,0,0) rotate(0deg) }
+      100%{ transform: translate3d(2%, -2%, 0) rotate(360deg) }
+    }
+  }
 }
 
-/* -------------------------- Bridge accents (opt) ------------------------ */
-/* If bridge.css defines custom accents, this ties astro gradients to them. */
-@layer astrology {
-  /* Fallback if SVG gradient stops are present in DOM (set by JS) */
-  #awGrad stop:first-child { stop-color: var(--accent) }
-  #awGrad stop:last-child  { stop-color: var(--accent-2) }
+/* ------------------------------- Themes ---------------------------------- */
+/* Per-moon themes set --moon-accent and a subtle page glow */
+@layer remnant {
+  body.theme-doot{ --moon-accent:#7aa8ff; }
+  body.theme-moon-1  { --moon-accent: var(--moon1) }
+  body.theme-moon-2  { --moon-accent: var(--moon2) }
+  body.theme-moon-3  { --moon-accent: var(--moon3) }
+  body.theme-moon-4  { --moon-accent: var(--moon4) }
+  body.theme-moon-5  { --moon-accent: var(--moon5) }
+  body.theme-moon-6  { --moon-accent: var(--moon6) }
+  body.theme-moon-7  { --moon-accent: var(--moon7) }
+  body.theme-moon-8  { --moon-accent: var(--moon8) }
+  body.theme-moon-9  { --moon-accent: var(--moon9) }
+  body.theme-moon-10 { --moon-accent: var(--moon10) }
+  body.theme-moon-11 { --moon-accent: var(--moon11) }
+  body.theme-moon-12 { --moon-accent: var(--moon12) }
+  body.theme-moon-13 { --moon-accent: var(--moon13) }
+
+  /* Daytone hues — evenly spaced 28-step wheel */
+  body.daytone-1  { --daytone-h:   0 }
+  body.daytone-2  { --daytone-h:  13 }
+  body.daytone-3  { --daytone-h:  26 }
+  body.daytone-4  { --daytone-h:  39 }
+  body.daytone-5  { --daytone-h:  52 }
+  body.daytone-6  { --daytone-h:  65 }
+  body.daytone-7  { --daytone-h:  78 }
+  body.daytone-8  { --daytone-h:  91 }
+  body.daytone-9  { --daytone-h: 104 }
+  body.daytone-10 { --daytone-h: 117 }
+  body.daytone-11 { --daytone-h: 130 }
+  body.daytone-12 { --daytone-h: 143 }
+  body.daytone-13 { --daytone-h: 156 }
+  body.daytone-14 { --daytone-h: 169 }
+  body.daytone-15 { --daytone-h: 182 }
+  body.daytone-16 { --daytone-h: 195 }
+  body.daytone-17 { --daytone-h: 208 }
+  body.daytone-18 { --daytone-h: 221 }
+  body.daytone-19 { --daytone-h: 234 }
+  body.daytone-20 { --daytone-h: 247 }
+  body.daytone-21 { --daytone-h: 260 }
+  body.daytone-22 { --daytone-h: 273 }
+  body.daytone-23 { --daytone-h: 286 }
+  body.daytone-24 { --daytone-h: 299 }
+  body.daytone-25 { --daytone-h: 312 }
+  body.daytone-26 { --daytone-h: 325 }
+  body.daytone-27 { --daytone-h: 338 }
+  body.daytone-28 { --daytone-h: 351 }
+
+  /* Daytone background wash for header area */
+  .page-head.fancy-head{
+    position:relative; overflow:hidden; border-radius: var(--radius);
+    background:
+      linear-gradient(180deg, #0f1118, #0d1016);
+    padding: var(--pad-lg);
+  }
+  .page-head.fancy-head::before{
+    content:""; position:absolute; inset:-20%; pointer-events:none; opacity:.35;
+    background:
+      radial-gradient(40% 20% at 80% 0%, hsla(var(--daytone-h), 85%, 60%, .18), transparent 60%),
+      conic-gradient(from 0deg at 50% 50%, transparent 0 70%, hsla(var(--daytone-h), 95%, 60%, .12) 70% 72%, transparent 72% 100%);
+    filter: blur(28px);
+  }
+}
+
+/* -------------------------------- Legacy --------------------------------- */
+@layer legacy {
+  /* Keep room for any legacy selectors your older pages might rely on. */
 }
