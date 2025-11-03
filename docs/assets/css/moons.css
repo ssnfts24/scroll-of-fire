@@ -1,7 +1,8 @@
 /* ==========================================================================
    Scroll of Fire — Moons UI
    Page styles for moons.html (ring, calendars, year map, astro, practice)
-   Uses token variables from assets/css/tokens.css and base rules from core.css
+   Uses token variables from tokens.css + base rules from core.css
+   v2025.11.03-r3
    ========================================================================== */
 
 @layer components, astrology, remnant;
@@ -59,6 +60,19 @@
   .wdots{ display:grid; grid-auto-flow:column; grid-auto-columns:min-content; gap:.35rem }
   .wdot{ width:.55rem; height:.55rem; border-radius:50%; background:#1b2231; box-shadow:inset 0 1px 0 rgba(255,255,255,.04) }
   .wdot.is-today{ background: color-mix(in oklab, var(--accent) 75%, #1b2231); box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 35%, transparent) }
+
+  /* Lively ring accent (motion-safe) */
+  .ring .ring-fg { filter: drop-shadow(0 0 6px color-mix(in oklab, var(--accent) 30%, transparent)); }
+  @media (prefers-reduced-motion: no-preference) {
+    .ring .ring-fg {
+      animation: sof-ring-glow 4.5s ease-in-out infinite;
+      transform-origin: 60px 60px;
+    }
+  }
+  @keyframes sof-ring-glow {
+    0%,100% { filter: drop-shadow(0 0 4px rgba(122,243,255,.25)); }
+    50%     { filter: drop-shadow(0 0 10px rgba(122,243,255,.5)); }
+  }
 }
 
 /* ----------------------------- Control row ------------------------------ */
@@ -73,13 +87,21 @@
   @media (max-width: 520px){
     input[type="range"].lab-input{ width: 140px }
   }
+
+  /* TZ select fit better on narrow screens */
+  @media (max-width: 420px){
+    #tzPick{ max-width: 100%; }
+  }
 }
 
 /* ---------------------------- Lunar Phase sim --------------------------- */
 @layer components {
   #simMoon{
     border-radius:14px; border:1px solid var(--line);
-    background:#0b0f16; box-shadow:var(--rim)
+    background:
+      radial-gradient(400px 220px at 50% 0%, rgba(122,243,255,.05), transparent 65%),
+      #0b0f16;
+    box-shadow:var(--rim)
   }
   #phaseLine{ font-weight:800 }
   #phaseMeta{ color:var(--muted) }
@@ -127,6 +149,11 @@
   .legend .k-doot{ background:#2a313f }
   .legend .k-leap{ background:#243a32 }
   .legend .k-today{ background: color-mix(in oklab, var(--accent) 75%, #1b2231) }
+
+  /* Hover affordance */
+  .r-day>button:hover, .g-day>button:hover {
+    background: linear-gradient(180deg, #0f141f, #0c101a);
+  }
 }
 
 /* ------------------------------ Year map -------------------------------- */
@@ -171,18 +198,33 @@
   .astro-chips{ display:flex; flex-wrap:wrap; gap:.5rem }
   .chip{
     display:inline-flex; align-items:center; gap:.45rem; padding:.45rem .65rem;
-    border:1px solid var(--line); border-radius:999px; background:#101625; font-weight:800
+    border:1px solid var(--line); border-radius:999px; background:#101625; font-weight:800;
+    transition: transform .12s ease, background-color .15s ease, box-shadow .15s ease;
   }
   .chip .dot{ width:.6rem; height:.6rem; border-radius:50% }
   .el-fire{   background:#ff7a7a33; box-shadow:0 0 0 2px #ff7a7a22 inset }
   .el-water{  background:#7af3ff33; box-shadow:0 0 0 2px #7af3ff22 inset }
   .el-air{    background:#aebaff33; box-shadow:0 0 0 2px #aebaff22 inset }
   .el-earth{  background:#9affc933; box-shadow:0 0 0 2px #9affc922 inset }
-  .el-aether{ background:#d7b6ff33; box-shadow:0 0 0 2px #d7b6ff22 inset }
+  .el-aether{ background:#d5b6ff33; box-shadow:0 0 0 2px #d5b6ff22 inset }
+
+  .chip:hover{
+    background:#0f1422; transform: translateY(-1px);
+    box-shadow: 0 4px 18px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+  }
 
   .astro-wheel{
-    border:1px solid var(--line); border-radius:12px; background:#0f141f; padding:.6rem
+    border:1px solid var(--line); border-radius:12px; background:
+      radial-gradient(420px 280px at 50% -10%, rgba(122,243,255,.05), transparent 60%),
+      #0f141f;
+    padding:.6rem; position:relative;
   }
+
+  /* Hebrew sigil vibe around wheel */
+  .astro .seal::after{
+    content:"⟡"; opacity:.7; transform: translateY(-1px);
+  }
+
   .astro-aspects .asp-table{
     width:100%; border-collapse:separate; border-spacing:0; font-variant-numeric: tabular-nums
   }
@@ -218,6 +260,18 @@
     .codex{ grid-template-columns: 1fr }
     .codex .codex-toc{ position:static }
   }
+
+  /* Ancient Hebrew verse pulse */
+  #verseBox .he{ font-weight:900; letter-spacing:.5px; text-shadow:0 0 8px rgba(122,243,255,.12) }
+  #verseBox .en{ opacity:.9 }
+  #verseBox .meta{ color:var(--muted) }
+  @media (prefers-reduced-motion: no-preference){
+    #verseBox .he{ animation: sof-verse-pulse 5.5s ease-in-out infinite; }
+  }
+  @keyframes sof-verse-pulse{
+    0%,100%{ text-shadow:0 0 6px rgba(122,243,255,.15); opacity:.95 }
+    50%    { text-shadow:0 0 14px rgba(122,243,255,.35); opacity:1 }
+  }
 }
 
 /* ----------------------------- Themes ----------------------------------- */
@@ -236,4 +290,31 @@
   body.theme-moon-11 .ring .ring-fg{ stroke:#A8B8FF }
   body.theme-moon-12 .ring .ring-fg{ stroke:#FFD7A8 }
   body.theme-moon-13 .ring .ring-fg{ stroke:#9DDAFF }
+}
+
+/* ----------------------- Starfield polish (canvas) ---------------------- */
+/* The <canvas id="skyBg"> is driven by JS; this gives subtle blending. */
+@layer remnant {
+  #skyBg{
+    mix-blend-mode: screen;
+    opacity:.8;
+    /* keep pointer-events:none from inline style */
+  }
+  @media (prefers-contrast: more){
+    #skyBg{ opacity:.95 }
+  }
+}
+
+/* ------------------------------ Focus/A11y ------------------------------ */
+@layer components {
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px }
+  .kbd{ background:#0f1218; border:1px solid var(--line); border-radius:6px; padding:.1rem .35rem }
+}
+
+/* -------------------------- Bridge accents (opt) ------------------------ */
+/* If bridge.css defines custom accents, this ties astro gradients to them. */
+@layer astrology {
+  /* Fallback if SVG gradient stops are present in DOM (set by JS) */
+  #awGrad stop:first-child { stop-color: var(--accent) }
+  #awGrad stop:last-child  { stop-color: var(--accent-2) }
 }
