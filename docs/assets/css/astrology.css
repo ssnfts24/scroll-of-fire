@@ -1,199 +1,139 @@
-/* ==========================================================================
-   Scroll of Fire — Astrology UI
-   Chips • Zodiac Wheel • Aspects Table • Elemental Dots
-   Depends on tokens.css (variables) and core.css (base utilities).
-   ========================================================================== */
+/* =======================================================================
+   Scroll of Fire — Astrology Styles
+   File: assets/css/astrology.css
+   Layers: astrology
+   Depends on: tokens.css, core.css
+   Purpose: Animated zodiac wheel, planet chips, aspects table
+   ======================================================================= */
 
 @layer astrology {
-
-  /* ----------------------------- Wrapper -------------------------------- */
+  /* ---------- Container & header ---------- */
   .astro {
-    --chip-bg: color-mix(in lch, var(--card) 96%, transparent);
-    --chip-bd: color-mix(in lch, var(--line) 85%, transparent);
-    --chip-ink: var(--ink);
-    --chip-ink-dim: color-mix(in lch, var(--ink) 70%, transparent);
-    --seal-grad-from: var(--bridge-accent);
-    --seal-grad-to:   var(--bridge-accent-2);
-    --asp-row-bg: color-mix(in lch, var(--bridge-accent) 5%, var(--bg-elev));
-    --asp-row-hover: color-mix(in lch, var(--bridge-accent) 10%, var(--bg-elev));
+    position: relative;
+  }
+  .astro .astro-head {
+    display: flex; align-items: center; gap: 10px; margin-bottom: .8rem;
+  }
+  .astro .seal {
+    display: inline-flex; align-items: center; gap: .45rem;
+    padding: .25rem .55rem; border: var(--bd-1); border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--moon-accent) 8%, #121827);
+    font-weight: var(--w-extrabold);
+    letter-spacing: .2px;
   }
 
-  .astro .astro-head{
-    display:flex; align-items:center; gap:12px; margin-bottom:10px;
+  /* ---------- Responsive grid ---------- */
+  .astro-grid {
+    display: grid; gap: var(--gap); grid-template-columns: 1fr;
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .astro-grid { grid-template-columns: 2fr 3fr; }
   }
 
-  .astro .seal{
-    display:inline-grid; place-items:center;
-    font-weight:800; letter-spacing:.2px;
-    padding:.35rem .6rem; border-radius:999px;
-    background:
-      linear-gradient(180deg,
-        color-mix(in lch, var(--seal-grad-from) 18%, transparent),
-        transparent);
-    box-shadow: 0 0 0 1px color-mix(in lch, var(--seal-grad-from) 35%, transparent);
+  /* ---------- Planet chips ---------- */
+  .astro-chips { display: flex; flex-wrap: wrap; gap: var(--gap-sm); }
+  .chip {
+    display:inline-flex; align-items:center; gap:.5rem; padding:.5rem .7rem;
+    border: var(--bd-1); border-radius: 999px; background:#101625;
+    font-weight: var(--w-extrabold); letter-spacing:.2px; cursor: pointer;
+    transition: transform var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out);
+  }
+  .chip:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+  .chip .dot { width:.65rem; height:.65rem; border-radius:50%; box-shadow: inset 0 0 0 2px rgba(255,255,255,.06); }
+
+  /* Elemental tints */
+  .el-fire   { background:#ff7a7a33; box-shadow: inset 0 0 0 2px #ff7a7a22; }
+  .el-water  { background:#7af3ff33; box-shadow: inset 0 0 0 2px #7af3ff22; }
+  .el-air    { background:#aebaff33; box-shadow: inset 0 0 0 2px #aebaff22; }
+  .el-earth  { background:#9affc933; box-shadow: inset 0 0 0 2px #9affc922; }
+  .el-aether { background:#d7b6ff33; box-shadow: inset 0 0 0 2px #d7b6ff22; }
+
+  /* ---------- Wheel Card ---------- */
+  .astro-wheel {
+    border: var(--bd-1); border-radius: var(--radius); background:#0f141f;
+    padding: .6rem; position: relative; overflow: hidden;
+  }
+  .astro-wheel::after {
+    /* faint rotating glyph halo */
+    content: ""; position: absolute; inset: -40% -35% auto auto; aspect-ratio: 1;
+    background: radial-gradient(50% 50% at 50% 50%, color-mix(in oklab, var(--moon-accent) 10%, transparent), transparent 60%);
+    filter: blur(12px); opacity: .25; pointer-events: none;
+    animation: haloTurn 120s linear infinite;
+  }
+  @keyframes haloTurn { to { transform: rotate(360deg); } }
+
+  /* SVG layers */
+  #astroWheel { width: 100%; height: auto; display: block; }
+  #houseLines { stroke: #2a3242; stroke-width: .8; opacity: .9; }
+  #signLabels { fill: #a7b1ca; font-family: Inter, system-ui; font-size: 10px; }
+  #planetDots circle.dot {
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.4));
+    transform-origin: 180px 180px;
+    animation: orbitWobble 9s ease-in-out infinite;
+  }
+  /* give each planet a slightly different cadence */
+  [data-dot="sun"]     { animation-duration: 10s; }
+  [data-dot="moon"]    { animation-duration: 6s; }
+  [data-dot="mercury"] { animation-duration: 7.5s; }
+  [data-dot="venus"]   { animation-duration: 9.5s; }
+  [data-dot="mars"]    { animation-duration: 8s; }
+  [data-dot="jupiter"] { animation-duration: 12s; }
+  [data-dot="saturn"]  { animation-duration: 13.5s; }
+
+  @keyframes orbitWobble {
+    0%,100% { transform: translate(0,0) rotate(0deg) scale(1); opacity:.9; }
+    50%     { transform: translate(1.5px,-1.5px) rotate(1deg) scale(1.06); opacity:1; }
   }
 
-  .astro .meta { color: var(--muted); }
-
-  /* ------------------------------ Grid ---------------------------------- */
-  .astro-grid{
-    display:grid; gap:12px;
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 900px){
-    .astro-grid{ grid-template-columns: 1.1fr .9fr; align-items:start; }
+  /* Motion safety */
+  @media (prefers-reduced-motion: reduce) {
+    .astro-wheel::after { animation: none; }
+    #planetDots circle.dot { animation: none; }
   }
 
-  /* ------------------------------ Chips --------------------------------- */
-  .astro-chips{
-    display:flex; flex-wrap:wrap; gap:8px;
+  /* Wheel caption line */
+  .astro-wheel + .meta {
+    display: flex; gap: .4rem; align-items: baseline; color: var(--muted);
+  }
+  .astro-wheel + .meta .sep::before { content: "·"; margin: 0 .35rem; opacity: .5; }
+
+  /* ---------- Aspects Table ---------- */
+  .astro-aspects { margin-top: var(--gap); }
+  .astro-aspects .legend { display: flex; flex-wrap: wrap; gap: .45rem; margin: .4rem 0 .6rem; }
+  .badge.asp {
+    display:inline-block; padding:.25rem .5rem; border-radius:8px; font: var(--w-bold) .8rem/1 Inter,system-ui;
+    border: var(--bd-1);
+  }
+  .badge.asp.conj { background:#15202f; }
+  .badge.asp.sext { background:#13252a; }
+  .badge.asp.sqr  { background:#211823; }
+  .badge.asp.tri  { background:#15221b; }
+  .badge.asp.opp  { background:#261a1a; }
+
+  .asp-table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .asp-table thead th {
+    position: sticky; top: 0; z-index: 1;
+    background: #0e0e12; text-align: left; padding: .55rem .6rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .asp-table tbody td {
+    padding: .45rem .6rem; border-bottom: 1px solid #1a2130;
+  }
+  .asp-table tbody tr:hover td {
+    background: linear-gradient(90deg, color-mix(in oklab, var(--moon-accent) 10%, transparent), transparent 45%);
   }
 
-  .astro-chips .chip{
-    --bd: var(--chip-bd);
-    display:inline-flex; align-items:center; gap:.5rem;
-    padding:.45rem .65rem; border-radius:999px;
-    border:1px solid var(--bd); background:var(--chip-bg);
-    color:var(--chip-ink); font-weight:700;
-    cursor:pointer; user-select:none;
-    transition: border-color .2s ease, box-shadow .2s ease, transform .08s ease;
-  }
-  .astro-chips .chip .mono{ font-family: var(--font-mono); font-weight:600; color: var(--chip-ink-dim) }
-  .astro-chips .chip .sign{ color: var(--chip-ink-dim) }
-
-  .astro-chips .chip:hover{
-    --bd: color-mix(in lch, var(--bridge-accent) 40%, var(--chip-bd));
-    box-shadow: 0 0 0 2px color-mix(in lch, var(--bridge-accent) 25%, transparent);
-  }
-  .astro-chips .chip:active{ transform: translateY(1px) }
-
-  .astro-chips .chip:focus-visible{
-    outline:2px solid var(--bridge-accent); outline-offset:2px;
+  /* ---------- Micro badges / tags ---------- */
+  .tag {
+    display:inline-block; margin-left:.35rem; padding:.1rem .35rem; border-radius:6px;
+    border: var(--bd-1); background:#0f1218; font: var(--w-bold) .7rem/1 Inter,system-ui;
   }
 
-  /* Details “Outer bodies” inline cluster */
-  .astro-chips .chip.more{
-    padding:.2rem .4rem; border-radius:12px;
-  }
-  .astro-chips .chip.more > summary{
-    list-style:none; display:inline-flex; align-items:center; gap:.45rem; cursor:pointer;
-  }
-  .astro-chips .chip.more > summary::-webkit-details-marker{ display:none }
-  .astro-chips .more-grid{
-    display:grid; gap:.35rem; padding:.5rem .4rem .1rem;
-    color: var(--chip-ink-dim);
-  }
-
-  /* -------------------------- Elemental Dots ---------------------------- */
-  .dot{
-    inline-size:.7rem; block-size:.7rem; border-radius:50%;
-    display:inline-block; box-shadow:0 0 0 1px color-mix(in lch, var(--line) 70%, transparent) inset;
-  }
-  .el-fire  { background: color-mix(in lch, #ff7a55 70%, var(--gold)); }
-  .el-water { background: color-mix(in lch, #6bd0ff 70%, var(--bridge-accent)); }
-  .el-air   { background: color-mix(in lch, #9ac7ff 70%, var(--bridge-accent-2)); }
-  .el-earth { background: color-mix(in lch, #8ff0b0 70%, #2d7a58); }
-  .el-aether{ background: color-mix(in lch, var(--bridge-accent) 45%, var(--bridge-accent-2)); }
-
-  /* ----------------------------- Wheel ---------------------------------- */
-  .astro-wheel{
-    display:grid; place-items:center; padding:.4rem;
-    background: linear-gradient(180deg,
-      color-mix(in lch, var(--bridge-accent) 4%, transparent),
-      transparent);
-    border:1px solid var(--line); border-radius: var(--radius);
-  }
-
-  /* Ensure svg scales crisp on mobile and HDPI */
-  #astroWheel{
-    max-width: 520px; width: 100%; height: auto;
-    filter: drop-shadow(0 6px 22px rgba(0,0,0,.15));
-  }
-
-  /* Sign labels (drawn from JS into #signLabels) */
-  #signLabels { fill: color-mix(in lch, var(--ink) 75%, transparent); }
-
-  /* Planet dots are circles inside #planetDots — add glow and hover cue */
-  #planetDots .dot{
-    r: 4.6;
-    filter: drop-shadow(0 0 .35rem color-mix(in lch, var(--bridge-accent) 35%, transparent));
-    transition: transform .12s ease;
-  }
-  #planetDots .dot:hover{ transform: scale(1.08) }
-
-  /* House lines */
-  #houseLines{ stroke: color-mix(in lch, var(--line) 75%, transparent) }
-
-  /* Gradients for inner rim — set by JS; provide default here */
-  #astroWheel #awGrad stop:first-child{ stop-color: color-mix(in lch, var(--bridge-accent) 65%, #ffffff) }
-  #astroWheel #awGrad stop:last-child{  stop-color: color-mix(in lch, var(--bridge-accent-2) 55%, #000000) }
-
-  /* Timestamp line */
-  .astro-wheel .meta { color: var(--muted); margin-top:.35rem }
-  .astro-wheel .meta .sep{ margin: 0 .45rem; opacity:.55 }
-
-  /* ---------------------------- Aspects --------------------------------- */
-  .asp-table{
-    width:100%; border-collapse:separate; border-spacing:0;
-    background: var(--bg-elev);
-    border:1px solid var(--line); border-radius:12px; overflow:hidden;
-  }
-  .asp-table thead th{
-    text-align:left; padding:.55rem .75rem; font-weight:800;
-    background: linear-gradient(180deg, var(--bg-elev), color-mix(in lch, var(--bridge-accent) 6%, var(--bg-elev)));
-    border-bottom:1px solid var(--line);
-  }
-  .asp-table tbody td{
-    padding:.55rem .75rem; border-bottom:1px solid color-mix(in lch, var(--line) 90%, transparent);
-  }
-  .asp-table tbody tr:nth-child(odd) td{ background: var(--asp-row-bg); }
-  .asp-table tbody tr:hover td{ background: var(--asp-row-hover); }
-
-  /* Aspect badges */
-  .badge.asp{
-    display:inline-flex; align-items:center; gap:.35rem;
-    padding:.18rem .45rem; border-radius:999px; font-weight:700;
-    border:1px solid color-mix(in lch, var(--bridge-accent) 35%, var(--line));
-    background: color-mix(in lch, var(--bridge-accent) 14%, transparent);
-  }
-  .badge.asp.conj{ /* conjunction */ }
-  .badge.asp.sext{
-    border-color: color-mix(in lch, #59e3a7 45%, var(--line));
-    background: color-mix(in lch, #59e3a7 16%, transparent);
-  }
-  .badge.asp.sqr{
-    border-color: color-mix(in lch, #ff6a55 45%, var(--line));
-    background: color-mix(in lch, #ff6a55 16%, transparent);
-  }
-  .badge.asp.tri{
-    border-color: color-mix(in lch, #7aa8ff 45%, var(--line));
-    background: color-mix(in lch, #7aa8ff 16%, transparent);
-  }
-  .badge.asp.opp{
-    border-color: color-mix(in lch, #ffd27a 45%, var(--line));
-    background: color-mix(in lch, #ffd27a 16%, transparent);
-  }
-
-  /* ------------------------ Motion Preferences -------------------------- */
-  @media (prefers-reduced-motion: no-preference){
-    #astroWheel{
-      transition: filter .4s ease;
-    }
-    .astro-wheel:hover #astroWheel{
-      filter: drop-shadow(0 8px 26px rgba(0,0,0,.18));
-    }
-  }
-
-  /* ---------------------------- Small Screens --------------------------- */
-  @media (max-width: 380px){
-    .astro-chips .chip{ padding:.35rem .5rem; gap:.4rem }
-    .astro-chips .chip .mono{ display:none } /* hide degree column at tiny widths */
-  }
-
-  /* ----------------------------- Print ---------------------------------- */
-  @media print{
-    .astro-wheel{ box-shadow:none; background:#fff; border-color:#ddd }
-    #astroWheel{ filter:none }
-    .asp-table{ border-color:#ddd }
-  }
+  /* ---------- Utility hooks ---------- */
+  .meta { color: color-mix(in lch, var(--ink) 65%, transparent); }
+  .tight { margin-bottom: .25rem; }
 }
