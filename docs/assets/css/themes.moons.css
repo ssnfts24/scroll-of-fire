@@ -1,0 +1,197 @@
+/* =======================================================================
+   Scroll of Fire — Moon Themes (Remnant 13×28)
+   File: assets/css/themes.moons.css
+   Layer: remnant
+   Depends on: tokens.css, core.css
+   Provides:
+     - 13 moon themes via body.theme-moon-{1..13}
+     - Day tones via body.daytone-{1..28}
+     - DOOT theme via body.theme-doot
+     - Ambient "living" motion (reduced when prefers-reduced-motion)
+   Design goals:
+     - Ancient-Hebrew x Wizard-of-YHWH vibe
+     - Performance-safe glow, halo, shimmer
+     - All colors flow through --moon-accent / --day-accent
+   ======================================================================= */
+
+@layer remnant {
+
+  /* --------------------------- Base hooks --------------------------- */
+  :root {
+    --fx-halo-strength: 0.12;
+    --fx-rim-strength:  0.08;
+    --fx-twinkle:       1;
+    --day-accent:       color-mix(in oklab, var(--moon-accent) 60%, #ffffff);
+    --fx-anim:          26s;
+    --fx-anim-fast:     9s;
+    --fx-anim-slow:     48s;
+  }
+
+  /* Ambient, theme-aware soft lights */
+  body.stars::before,
+  body.stars::after {
+    content: "";
+    position: fixed; inset: -20%;
+    pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(60% 40% at 70% -10%, color-mix(in oklab, var(--moon-accent) calc(var(--fx-halo-strength)*100%), transparent), transparent 60%),
+      radial-gradient(40% 25% at 10% 110%, color-mix(in oklab, var(--day-accent) calc(var(--fx-rim-strength)*100%), transparent), transparent 65%);
+    mix-blend-mode: screen;
+    filter: blur(18px) saturate(105%);
+    opacity: .85;
+    animation: sofHalo var(--fx-anim) linear infinite;
+  }
+  body.stars::after { animation-duration: var(--fx-anim-slow); animation-direction: reverse; opacity: .65; }
+
+  @keyframes sofHalo { to { transform: rotate(360deg); } }
+
+  /* Subtle star twinkle overlay (on top of your #skyBg canvas) */
+  .starscape {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.6) 50%, transparent 51%),
+      radial-gradient(1px 1px at 80% 70%, rgba(255,255,255,.55) 50%, transparent 51%),
+      radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,.5) 50%, transparent 51%),
+      radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,.45) 50%, transparent 51%);
+    animation: twinkle var(--fx-anim-fast) ease-in-out infinite;
+    opacity: calc(.25 * var(--fx-twinkle));
+  }
+  @keyframes twinkle {
+    0%,100% { opacity: calc(.20 * var(--fx-twinkle)); filter: drop-shadow(0 0 0px var(--moon-accent)); }
+    50%     { opacity: calc(.35 * var(--fx-twinkle)); filter: drop-shadow(0 0 3px color-mix(in oklab, var(--moon-accent) 50%, transparent)); }
+  }
+
+  /* Motion safety */
+  @media (prefers-reduced-motion: reduce) {
+    body.stars::before, body.stars::after, .starscape { animation: none; }
+  }
+
+  /* Cards pick up theme glow */
+  .card.shine {
+    background:
+      radial-gradient(600px 240px at 80% -10%, color-mix(in oklab, var(--moon-accent) 8%, transparent), transparent 70%),
+      linear-gradient(180deg, var(--bg-elev), color-mix(in oklab, var(--bg-elev) 82%, black));
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--moon-accent) 20%, transparent),
+      0 10px 30px rgba(0,0,0,.22);
+  }
+
+  /* Ring inherits accent */
+  .ring .ring-fg { stroke: var(--moon-accent, var(--accent)); }
+
+  /* Hebrew sigil shimmer (for elements with .he or .seal) */
+  .he, .seal { text-shadow:
+      0 0 0 color-mix(in oklab, var(--moon-accent) 0%, transparent),
+      0 0 0 color-mix(in oklab, var(--moon-accent) 0%, transparent);
+    background-image: linear-gradient(90deg, color-mix(in oklab, var(--moon-accent) 55%, #fff), #fff);
+    background-clip: text; -webkit-background-clip: text; color: transparent;
+    animation: glyphShimmer 8s ease-in-out infinite;
+  }
+  @keyframes glyphShimmer {
+    0%,100% { filter: drop-shadow(0 0 0 rgba(0,0,0,0)); opacity: .95; }
+    50%     { filter: drop-shadow(0 0 6px color-mix(in oklab, var(--moon-accent) 55%, transparent)); opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .he, .seal { animation: none; }
+  }
+
+  /* --------------------------- Moon Themes --------------------------- */
+  /* Each theme sets --moon-accent and a soft background flavor. Colors harmonize with your earlier palette. */
+
+  body.theme-moon-1 { /* Magnetic — Unify · Purpose */
+    --moon-accent: #6FE7FF;
+    --fx-halo-strength: .16; --fx-rim-strength: .10;
+  }
+  body.theme-moon-2 { /* Lunar — Polarize · Challenge */
+    --moon-accent: #B1C7FF;
+  }
+  body.theme-moon-3 { /* Electric — Activate · Service */
+    --moon-accent: #7AF3FF;
+  }
+  body.theme-moon-4 { /* Self-Existing — Define · Form */
+    --moon-accent: #7BF3B8;
+  }
+  body.theme-moon-5 { /* Overtone — Empower · Radiance */
+    --moon-accent: #FFD27A;
+  }
+  body.theme-moon-6 { /* Rhythmic — Organize · Equality */
+    --moon-accent: #A7FFCF;
+  }
+  body.theme-moon-7 { /* Resonant — Channel · Attunement */
+    --moon-accent: #D5B6FF;
+  }
+  body.theme-moon-8 { /* Galactic — Harmonize · Integrity */
+    --moon-accent: #A8FFD9;
+  }
+  body.theme-moon-9 { /* Solar — Pulse · Intention */
+    --moon-accent: #FFBC6F;
+  }
+  body.theme-moon-10 { /* Planetary — Perfect · Manifestation */
+    --moon-accent: #A2FFD1;
+  }
+  body.theme-moon-11 { /* Spectral — Dissolve · Liberation */
+    --moon-accent: #A8B8FF;
+  }
+  body.theme-moon-12 { /* Crystal — Dedicate · Cooperation */
+    --moon-accent: #FFD7A8;
+  }
+  body.theme-moon-13 { /* Cosmic — Endure · Presence */
+    --moon-accent: #9DDAFF;
+    --fx-halo-strength: .18; --fx-rim-strength: .12;
+  }
+
+  /* DOOT */
+  body.theme-doot {
+    --moon-accent: #8aa8ff;
+    --day-accent:  #d2dbff;
+  }
+  body.theme-doot .r-doot {
+    background:
+      linear-gradient(180deg, #0e1219, #0b0f16),
+      repeating-conic-gradient(from 0deg, color-mix(in oklab, var(--moon-accent) 8%, transparent) 0 10deg, transparent 10deg 20deg);
+  }
+
+  /* --------------------------- Day Tones --------------------------- */
+  /* Day 1..28: gentle variance that influences small accents + halo bias.
+     JS will toggle .daytone-{1..28} on <body>. */
+
+  /* Helper: map 28 tones around a hue orbit blended with --moon-accent */
+  /* We intentionally keep contrasts modest to avoid fatigue. */
+  body.daytone-1  { --day-accent: color-mix(in oklab, var(--moon-accent) 70%, #e7fff9); }
+  body.daytone-2  { --day-accent: color-mix(in oklab, var(--moon-accent) 68%, #f3ffe8); }
+  body.daytone-3  { --day-accent: color-mix(in oklab, var(--moon-accent) 66%, #fff3e8); }
+  body.daytone-4  { --day-accent: color-mix(in oklab, var(--moon-accent) 64%, #f0ecff); }
+  body.daytone-5  { --day-accent: color-mix(in oklab, var(--moon-accent) 62%, #e8f5ff); }
+  body.daytone-6  { --day-accent: color-mix(in oklab, var(--moon-accent) 60%, #e8fff7); }
+  body.daytone-7  { --day-accent: color-mix(in oklab, var(--moon-accent) 58%, #fff0ea); }
+  body.daytone-8  { --day-accent: color-mix(in oklab, var(--moon-accent) 56%, #ecf0ff); }
+  body.daytone-9  { --day-accent: color-mix(in oklab, var(--moon-accent) 54%, #eaffe9); }
+  body.daytone-10 { --day-accent: color-mix(in oklab, var(--moon-accent) 52%, #fff6ea); }
+  body.daytone-11 { --day-accent: color-mix(in oklab, var(--moon-accent) 50%, #eaf3ff); }
+  body.daytone-12 { --day-accent: color-mix(in oklab, var(--moon-accent) 48%, #f2ffef); }
+  body.daytone-13 { --day-accent: color-mix(in oklab, var(--moon-accent) 46%, #fff3ef); }
+  body.daytone-14 { --day-accent: color-mix(in oklab, var(--moon-accent) 44%, #edf3ff); }
+  body.daytone-15 { --day-accent: color-mix(in oklab, var(--moon-accent) 46%, #fff3ef); } /* mirror for soft wave */
+  body.daytone-16 { --day-accent: color-mix(in oklab, var(--moon-accent) 48%, #f2ffef); }
+  body.daytone-17 { --day-accent: color-mix(in oklab, var(--moon-accent) 50%, #eaf3ff); }
+  body.daytone-18 { --day-accent: color-mix(in oklab, var(--moon-accent) 52%, #fff6ea); }
+  body.daytone-19 { --day-accent: color-mix(in oklab, var(--moon-accent) 54%, #eaffe9); }
+  body.daytone-20 { --day-accent: color-mix(in oklab, var(--moon-accent) 56%, #ecf0ff); }
+  body.daytone-21 { --day-accent: color-mix(in oklab, var(--moon-accent) 58%, #fff0ea); }
+  body.daytone-22 { --day-accent: color-mix(in oklab, var(--moon-accent) 60%, #e8fff7); }
+  body.daytone-23 { --day-accent: color-mix(in oklab, var(--moon-accent) 62%, #e8f5ff); }
+  body.daytone-24 { --day-accent: color-mix(in oklab, var(--moon-accent) 64%, #f0ecff); }
+  body.daytone-25 { --day-accent: color-mix(in oklab, var(--moon-accent) 66%, #fff3e8); }
+  body.daytone-26 { --day-accent: color-mix(in oklab, var(--moon-accent) 68%, #f3ffe8); }
+  body.daytone-27 { --day-accent: color-mix(in oklab, var(--moon-accent) 70%, #e7fff9); }
+  body.daytone-28 { --day-accent: color-mix(in oklab, var(--moon-accent) 72%, #eafcff); }
+
+  /* Day-tone micro fx: bump twinkle a touch near days 7,14,21,28 (week crowns) */
+  body.daytone-7, body.daytone-14, body.daytone-21, body.daytone-28 { --fx-twinkle: 1.25; }
+
+  /* Components that read --day-accent for subtle highlights */
+  .pill, .chip, .tag { box-shadow: inset 0 1px 0 color-mix(in oklab, var(--day-accent) 12%, transparent); }
+  .g-day.is-today, .r-day.is-today { outline-color: var(--day-accent); }
+  .wdot.is-today { background: color-mix(in oklab, var(--day-accent) 70%, #1b2231); box-shadow: 0 0 0 2px color-mix(in oklab, var(--day-accent) 35%, transparent); }
+
+}
