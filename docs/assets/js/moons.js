@@ -2,14 +2,28 @@
 /* ==========================================================================
    Scroll of Fire — Moons Engine (Living Clock)
    File: assets/js/moons.js
-   Version: v2025.11.03-w4 (hardened)
+   Version: v2025.11.03-w5 (hardened + banner fix)
    ========================================================================== */
 (function () {
   "use strict";
+
+  /* ------------------------------- Mini DOM ------------------------------- */
   const $  = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
   const pad = n => String(n).padStart(2, "0");
-  const showError = (msg) => { const b=$("#errorBanner"); if(!b) return; b.textContent = msg; b.classList.add("show"); };
+  const noop = () => {};
+  const showError = (msg) => {
+    const b = $("#errorBanner");
+    if (!b) return;
+    b.textContent = msg;
+    b.classList.add("show");
+  };
+  const hideError = () => {
+    const b = $("#errorBanner");
+    if (!b) return;
+    b.classList.remove("show");
+    b.textContent = "";
+  };
 
   /* ------------------------------ Config --------------------------------- */
   const MOONS = (window.__MOONS__ && Array.isArray(window.__MOONS__) && window.__MOONS__.length === 13)
@@ -50,23 +64,23 @@
       const partsArr = fmt.formatToParts(new Date(Date.UTC(y, m - 1, d, hh, mm, ss)));
       const parts = Object.create(null);
       for (const p of partsArr) parts[p.type] = p.value;
-      const Y = parts.year ?? String(y);
-      const M = parts.month ?? pad(m);
-      const D = parts.day ?? pad(d);
-      const H = parts.hour ?? pad(hh);
-      const Min = parts.minute ?? pad(mm);
+      const Y = parts.year   ?? String(y);
+      const M = parts.month  ?? pad(m);
+      const D = parts.day    ?? pad(d);
+      const H = parts.hour   ?? pad(hh);
+      const MIN = parts.minute?? pad(mm);
       const S = parts.second ?? pad(ss);
-      return new Date(`${Y}-${M}-${D}T${H}:${Min}:${S}Z`);
+      return new Date(`${Y}-${M}-${D}T${H}:${MIN}:${S}Z`);
     } catch {
-      // Absolute fallback (UTC); better to be slightly off than crash
+      // Absolute fallback (UTC); better to be slightly off than crash.
       return new Date(Date.UTC(y, m - 1, d, hh, mm, ss));
     }
   }
 
-  const isoDate = d => `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
-  const addDaysUTC = (d, days) => { const nd = new Date(d.getTime()); nd.setUTCDate(nd.getUTCDate() + days); return nd; };
+  const isoDate     = d => `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+  const addDaysUTC  = (d, days) => { const nd = new Date(d.getTime()); nd.setUTCDate(nd.getUTCDate() + days); return nd; };
   const diffDaysUTC = (a, b) => Math.floor((a - b) / 86400000);
-  const isLeap = y => (y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0));
+  const isLeap      = y => (y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0));
 
   /* ----------------------- 13×28 + DOOT + Leap skip ---------------------- */
   function remYearStart(dw) {
@@ -100,7 +114,7 @@
     let days = diffDaysUTC(dw, start) - leapDaysBetween(start, dw);
     const clamped = Math.max(0, Math.min(363, days));
     const moon = Math.floor(clamped / 28) + 1;
-    const day = (clamped % 28) + 1;
+    const day  = (clamped % 28) + 1;
     const week = Math.floor((day - 1) / 7) + 1;
     return { doot: false, moon, day, week, idxYear: clamped };
   }
@@ -132,46 +146,53 @@
     for (let i = 1; i <= 13; i++) b.classList.remove(`theme-moon-${i}`);
     for (let i = 1; i <= 28; i++) b.classList.remove(`daytone-${i}`);
     if (moon >= 1 && moon <= 13) b.classList.add(`theme-moon-${moon}`);
-    if (day >= 1 && day <= 28) b.classList.add(`daytone-${day}`);
+    if (day  >= 1 && day  <= 28) b.classList.add(`daytone-${day}`);
   }
 
   function paint() {
     try {
-      const tz = getTZ();
+      const tz     = getTZ();
       const anchor = getAnchor();
-      const pos = remPos(anchor);
-      const year = yearLabel(anchor);
+      const pos    = remPos(anchor);
+      const year   = yearLabel(anchor);
 
+      // top status chips
       const fmtDate = new Intl.DateTimeFormat("en-US",{timeZone:tz,weekday:"short",year:"numeric",month:"short",day:"2-digit"});
+      const fmtTime = new Intl.DateTimeFormat("en-GB",{timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
       $("#nowDate") && ($("#nowDate").textContent = fmtDate.format(anchor));
-      $("#nowClock") && ($("#nowClock").textContent =
-        new Intl.DateTimeFormat("en-GB",{timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(new Date()));
-      $("#nowTZ") && ($("#nowTZ").textContent = tz);
+      $("#nowClock") && ($("#nowClock").textContent = fmtTime.format(new Date()));
+      $("#nowTZ")    && ($("#nowTZ").textContent = tz);
       $("#yearSpan") && ($("#yearSpan").textContent = year);
 
       if (pos.doot) {
         $("#dootWarn")?.removeAttribute("hidden");
-        $("#moonName") && ($("#moonName").textContent = "Day Out of Time");
+        $("#moonName")    && ($("#moonName").textContent = "Day Out of Time");
         $("#moonEssence") && ($("#moonEssence").textContent = "Pause · Reset");
-        $("#moonLine") && ($("#moonLine").textContent = "DOOT — outside the 13×28 cadence");
-        $("#dayInMoon") && ($("#dayInMoon").textContent = "—");
-        const arc=$("#moonArc"); if(arc){const full=316; arc.style.strokeDasharray=`1 ${full-1}`; arc.style.stroke = getComputedStyle(document.documentElement).getPropertyValue('--accent') || "#7aa8ff";}
-        document.body.classList.add('theme-doot');
+        $("#moonLine")    && ($("#moonLine").textContent = "DOOT — outside the 13×28 cadence");
+        $("#dayInMoon")   && ($("#dayInMoon").textContent = "—");
+        const arc = $("#moonArc");
+        if (arc) {
+          const full = 316;
+          arc.style.strokeDasharray = `1 ${full-1}`;
+          arc.style.stroke = getComputedStyle(document.documentElement).getPropertyValue('--accent') || "#7aa8ff";
+        }
+        document.body.classList.add("theme-doot");
       } else {
         $("#dootWarn") && ($("#dootWarn").hidden = true);
         const md = MOONS[pos.moon - 1] || {};
-        $("#moonName") && ($("#moonName").textContent = md.name || `Moon ${pos.moon}`);
+        $("#moonName")    && ($("#moonName").textContent = md.name || `Moon ${pos.moon}`);
         $("#moonEssence") && ($("#moonEssence").textContent = md.essence || "—");
-        $("#moonLine") && ($("#moonLine").textContent = `Moon ${pos.moon} · Day ${pos.day} · Week ${pos.week}`);
-        $("#dayInMoon") && ($("#dayInMoon").textContent = String(pos.day));
-        const full=316, cur=Math.max(1, Math.floor(((pos.day - 1) / 28) * full));
-        const arc=$("#moonArc"); if(arc){arc.style.strokeDasharray = `${cur} ${full-cur}`; arc.style.stroke = md.color || "#7af3ff";}
-        document.body.classList.remove('theme-doot');
+        $("#moonLine")    && ($("#moonLine").textContent = `Moon ${pos.moon} · Day ${pos.day} · Week ${pos.week}`);
+        $("#dayInMoon")   && ($("#dayInMoon").textContent = String(pos.day));
+        const full = 316, cur = Math.max(1, Math.floor(((pos.day - 1) / 28) * full));
+        const arc = $("#moonArc");
+        if (arc) { arc.style.strokeDasharray = `${cur} ${full - cur}`; arc.style.stroke = md.color || "#7af3ff"; }
+        document.body.classList.remove("theme-doot");
         setBodyThemes(pos.moon, pos.day);
         $("#essenceLive") && ($("#essenceLive").textContent = `${md.name} — ${md.essence}`);
       }
 
-      // Week dots
+      // week dots
       const dotsWrap = $("#weekDots");
       if (dotsWrap) {
         dotsWrap.innerHTML = "";
@@ -190,15 +211,18 @@
       buildYearMap(anchor);
       buildDualCalendars(anchor, pos);
 
-      $("#datePick") && ($("#datePick").value = isoDate(anchor));
+      $("#datePick")  && ($("#datePick").value  = isoDate(anchor));
       $("#hourScrub") && ($("#hourScrub").value = String(anchor.getUTCHours()));
-      $("#jumpMoon") && ($("#jumpMoon").value = pos.doot ? "" : String(pos.moon));
+      $("#jumpMoon")  && ($("#jumpMoon").value  = pos.doot ? "" : String(pos.moon));
 
       $("#dbg") && ($("#dbg").textContent = JSON.stringify({ tz, anchor: isoDate(anchor), pos }, null, 2));
 
       drawLunarPhase(anchor);
       ensureSky();
       ensureAstrology(anchor, tz);
+
+      // success: ensure banner is hidden
+      hideError();
     } catch (err) {
       console.error("[Moons] paint failed:", err);
       showError("Paint error: " + (err?.message || String(err)));
@@ -218,19 +242,26 @@
     $("#remMeta") && ($("#remMeta").textContent = `13 × 28 fixed — ${tz}`);
 
     const grid = document.createElement("ol"); grid.className = "r-grid"; grid.setAttribute("role", "grid");
-    ["D1","D2","D3","D4","D5","D6","D7"].forEach(l => { const th=document.createElement("li"); th.className="r-lbl"; th.setAttribute("role","columnheader"); th.textContent=l; grid.appendChild(th); });
+    ["D1","D2","D3","D4","D5","D6","D7"].forEach(l => {
+      const th = document.createElement("li"); th.className = "r-lbl"; th.setAttribute("role","columnheader");
+      th.textContent = l; grid.appendChild(th);
+    });
 
     if (pos.doot) {
-      const li=document.createElement("li"); li.className="r-doot"; li.textContent="Day Out of Time"; grid.appendChild(li);
+      const li = document.createElement("li"); li.className = "r-doot"; li.textContent = "Day Out of Time"; grid.appendChild(li);
     } else {
       const startIdx0 = (pos.moon - 1) * 28;
       for (let i = 0; i < 28; i++) {
         const idx0 = startIdx0 + i, dWall = wallForIndex(yStart, idx0);
-        const cell = document.createElement("li"); cell.className="r-day"+(((i+1)===pos.day)?" is-today":""); cell.setAttribute("role","gridcell");
-        const btn=document.createElement("button"); btn.type="button"; btn.dataset.r=isoDate(dWall); btn.dataset.moon=String(pos.moon); btn.dataset.day=String(i+1);
-        btn.title=new Intl.DateTimeFormat("en-US",{timeZone:tz,year:"numeric",month:"short",day:"2-digit"}).format(dWall)+" ("+tz+")";
-        btn.textContent=String(i+1);
-        btn.addEventListener("click",()=>jumpTo(btn.dataset.r));
+        const cell = document.createElement("li"); cell.className = "r-day" + (((i+1)===pos.day) ? " is-today" : ""); cell.setAttribute("role","gridcell");
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.dataset.r = isoDate(dWall);
+        btn.dataset.moon = String(pos.moon);
+        btn.dataset.day  = String(i+1);
+        btn.title = new Intl.DateTimeFormat("en-US",{timeZone:tz,year:"numeric",month:"short",day:"2-digit"}).format(dWall) + " ("+tz+")";
+        btn.textContent = String(i+1);
+        btn.addEventListener("click", () => jumpTo(btn.dataset.r));
         cell.appendChild(btn); grid.appendChild(cell);
       }
     }
@@ -241,30 +272,34 @@
     const host = $("#gregCal"); if (!host) return;
     host.innerHTML = "";
 
-    const Y = anchor.getUTCFullYear();
+    const Y  = anchor.getUTCFullYear();
     const M0 = anchor.getUTCMonth();
     const tz = getTZ();
 
-    const first = atWall(Y, M0 + 1, 1, 12, 0, 0, tz);
+    const first     = atWall(Y, M0 + 1, 1, 12, 0, 0, tz);
     const nextFirst = (M0 === 11) ? atWall(Y + 1, 1, 1, 12, 0, 0, tz) : atWall(Y, M0 + 2, 1, 12, 0, 0, tz);
 
-    const daysIn = Math.round((nextFirst - first) / 86400000);
+    const daysIn  = Math.round((nextFirst - first) / 86400000);
     const firstDow = first.getUTCDay();
 
     $("#gregHdr") && ($("#gregHdr").textContent = `Gregorian Month — ${new Intl.DateTimeFormat("en-US",{timeZone:tz,month:"long"}).format(first)} ${Y}`);
     $("#gregMeta") && ($("#gregMeta").textContent = "Variable weeks");
 
     const grid = document.createElement("ol"); grid.className = "g-grid"; grid.setAttribute("role","grid");
-    ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(l => { const th=document.createElement("li"); th.className="g-lbl"; th.setAttribute("role","columnheader"); th.textContent=l; grid.appendChild(th); });
-    for (let i=0;i<firstDow;i++){const padc=document.createElement("li"); padc.className="g-pad"; padc.setAttribute("aria-hidden","true"); grid.appendChild(padc);}
+    ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(l => {
+      const th = document.createElement("li"); th.className = "g-lbl"; th.setAttribute("role","columnheader"); th.textContent = l; grid.appendChild(th);
+    });
+    for (let i=0;i<firstDow;i++){
+      const padc=document.createElement("li"); padc.className="g-pad"; padc.setAttribute("aria-hidden","true"); grid.appendChild(padc);
+    }
 
     const todayYMD = isoDate(atWall(new Date().getUTCFullYear(), new Date().getUTCMonth()+1, new Date().getUTCDate(), 12,0,0, tz));
     for (let d=1; d<=daysIn; d++){
-      const dWall = atWall(Y, M0+1, d, 12,0,0, tz);
+      const dWall   = atWall(Y, M0+1, d, 12,0,0, tz);
       const isToday = (isoDate(dWall) === todayYMD);
-      const li=document.createElement("li"); li.className="g-day"+(isToday?" is-today":""); li.setAttribute("role","gridcell");
-      const btn=document.createElement("button"); btn.type="button"; btn.dataset.g=`${Y}-${pad(M0+1)}-${pad(d)}`; btn.textContent=String(d);
-      btn.addEventListener("click",()=>jumpTo(btn.dataset.g));
+      const li = document.createElement("li"); li.className = "g-day" + (isToday ? " is-today" : ""); li.setAttribute("role","gridcell");
+      const btn = document.createElement("button"); btn.type = "button"; btn.dataset.g = `${Y}-${pad(M0+1)}-${pad(d)}`; btn.textContent = String(d);
+      btn.addEventListener("click", () => jumpTo(btn.dataset.g));
       li.appendChild(btn); grid.appendChild(li);
     }
     host.appendChild(grid);
@@ -291,13 +326,15 @@
       const nextStart = wallForIndex(yStart, (pos.moon % 13) * 28);
       const label = new Intl.DateTimeFormat("en-US",{timeZone:tz,month:"short",day:"2-digit"}).format(nextStart);
       info.textContent = `Next: ${MOONS[pos.moon % 13].name} begins ${label} (${tz})`;
-    } else info.textContent = "This is the Day Out of Time — the count resumes tomorrow.";
+    } else {
+      info.textContent = "This is the Day Out of Time — the count resumes tomorrow.";
+    }
   }
 
   /* ----------------------------- Lunar phase ----------------------------- */
   function drawLunarPhase(anchor) {
     const c = $("#simMoon"); if (!c) return;
-    const ctx = c.getContext("2d");
+    const ctx = c.getContext && c.getContext("2d"); if (!ctx) return;
     const W = c.width, H = c.height, R = Math.min(W, H) * 0.42;
     ctx.clearRect(0,0,W,H);
 
@@ -329,18 +366,26 @@
   function ensureSky(){
     if(skyOnce) return;
     const canvas=$("#skyBg"); if(!canvas) return;
-    const ctx=canvas.getContext("2d");
+    const ctx=canvas.getContext && canvas.getContext("2d"); if (!ctx) return;
     const DPR=Math.max(1, Math.min(2, window.devicePixelRatio||1));
     let W,H,stars=[]; const reduce=matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-    function resize(){ const r=canvas.getBoundingClientRect(); W=Math.floor(r.width*DPR); H=Math.floor(r.height*DPR); canvas.width=W; canvas.height=H;
+    function resize(){
+      const r=canvas.getBoundingClientRect(); W=Math.floor(r.width*DPR); H=Math.floor(r.height*DPR);
+      canvas.width=W; canvas.height=H;
       stars=new Array(Math.floor((W*H)/(12000*DPR))).fill(0).map(()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*(1.4*DPR)+0.3*DPR,s:Math.random()*0.8+0.2}));
     }
     resize(); addEventListener("resize",resize);
-    function tick(t){ ctx.clearRect(0,0,W,H);
-      const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,"#06080e"); g.addColorStop(1,"#0b0f16"); ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-      ctx.globalAlpha=0.18; ctx.fillStyle="rgba(122,243,255,.08)"; const R=Math.min(W,H)*0.35; ctx.beginPath(); ctx.arc(W*0.8,H*0.15,R,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
+    function tick(t){
+      ctx.clearRect(0,0,W,H);
+      const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,"#06080e"); g.addColorStop(1,"#0b0f16");
+      ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+      ctx.globalAlpha=0.18; ctx.fillStyle="rgba(122,243,255,.08)";
+      const R=Math.min(W,H)*0.35; ctx.beginPath(); ctx.arc(W*0.8,H*0.15,R,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
       ctx.fillStyle="#cfe6ff";
-      for(const s of stars){ const flick=reduce?1:(0.75+0.25*Math.sin((t/1000)*(0.5+s.s)+s.x)); ctx.globalAlpha=0.6*flick; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill(); }
+      for(const s of stars){
+        const flick=reduce?1:(0.75+0.25*Math.sin((t/1000)*(0.5+s.s)+s.x));
+        ctx.globalAlpha=0.6*flick; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
+      }
       ctx.globalAlpha=1; if(!reduce) requestAnimationFrame(tick);
     }
     if(!reduce) requestAnimationFrame(tick);
@@ -351,23 +396,36 @@
   function ensureAstrology(anchor, tz) {
     const wheel=$("#astroWheel"); if(!wheel) return;
     const labels=$("#signLabels"); const dots=$("#planetDots");
+
     if(labels && !labels.hasChildNodes()){
       const SIG=["♈︎","♉︎","♊︎","♋︎","♌︎","♍︎","♎︎","♏︎","♐︎","♑︎","♒︎","♓︎"];
-      for(let i=0;i<12;i++){ const ang=(i/12)*Math.PI*2 - Math.PI/2; const x=180+Math.cos(ang)*120; const y=180+Math.sin(ang)*120;
-        const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x",x.toFixed(1)); t.setAttribute("y",y.toFixed(1)); t.textContent=SIG[i]; labels.appendChild(t);
+      for(let i=0;i<12;i++){
+        const ang=(i/12)*Math.PI*2 - Math.PI/2; const x=180+Math.cos(ang)*120; const y=180+Math.sin(ang)*120;
+        const t=document.createElementNS("http://www.w3.org/2000/svg","text");
+        t.setAttribute("x",x.toFixed(1)); t.setAttribute("y",y.toFixed(1)); t.textContent=SIG[i]; labels.appendChild(t);
       }
     }
     if(dots && !dots.hasChildNodes()){
       const PLAN=["sun","moon","mercury","venus","mars","jupiter","saturn"];
       PLAN.forEach((p)=>{const c=document.createElementNS("http://www.w3.org/2000/svg","circle"); c.setAttribute("r","4.6"); c.classList.add("dot"); c.dataset.dot=p; dots.appendChild(c);});
     }
+
     const reduce=matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if(reduce){ $("#astroStamp") && ($("#astroStamp").textContent=new Date(anchor).toISOString().slice(0,19).replace("T"," ")); $("#astroTZ") && ($("#astroTZ").textContent=tz); $("#astroSource") && ($("#astroSource").textContent=window.__EPHEMERIS__?"Ephemeris":"Demo"); return; }
-    let rafId=0; function animate(t){ const nodes=$$("#planetDots .dot");
+    if(reduce){
+      $("#astroStamp") && ($("#astroStamp").textContent=new Date(anchor).toISOString().slice(0,19).replace("T"," "));
+      $("#astroTZ")    && ($("#astroTZ").textContent=tz);
+      $("#astroSource")&& ($("#astroSource").textContent=window.__EPHEMERIS__?"Ephemeris":"Demo");
+      return;
+    }
+
+    let rafId=0;
+    function animate(t){
+      const nodes=$$("#planetDots .dot");
       nodes.forEach((n,i)=>{ const speed=0.0002+i*0.00008; const radius=60+i*10; const ang=(t*speed)+i*0.7; const x=180+Math.cos(ang)*radius; const y=180+Math.sin(ang)*radius;
         n.setAttribute("cx",x.toFixed(1)); n.setAttribute("cy",y.toFixed(1)); });
       $("#astroStamp") && ($("#astroStamp").textContent=new Date(anchor).toISOString().slice(0,19).replace("T"," "));
-      $("#astroTZ") && ($("#astroTZ").textContent=tz); $("#astroSource") && ($("#astroSource").textContent=window.__EPHEMERIS__?"Ephemeris":"Demo");
+      $("#astroTZ")    && ($("#astroTZ").textContent=tz);
+      $("#astroSource")&& ($("#astroSource").textContent=window.__EPHEMERIS__?"Ephemeris":"Demo");
       rafId=requestAnimationFrame(animate);
     }
     if (rafId) cancelAnimationFrame(rafId);
@@ -378,7 +436,8 @@
   function jumpTo(ymd) {
     const qp = new URLSearchParams(location.search);
     qp.set("date", ymd); qp.set("pin", "1");
-    history.replaceState(null, "", `${location.pathname}?${qp.toString()}`); paint();
+    history.replaceState(null, "", `${location.pathname}?${qp.toString()}`);
+    paint();
   }
 
   /* -------------------------- Time-Zone Picker --------------------------- */
@@ -430,6 +489,9 @@
   /* ------------------------------ Wiring --------------------------------- */
   function wire() {
     try{
+      // On entry: ensure banner is hidden
+      hideError();
+
       $("#dlICS")?.addEventListener("click",(e)=>{e.preventDefault(); const blob=makeICS(getAnchor()); const a=e.currentTarget; a.href=URL.createObjectURL(blob); a.download="13-moon-year.ics";});
       $("#regenICS")?.addEventListener("click",()=>{ const a=$("#dlICS"); if(a) a.href="#"; });
       $("#btnToday")?.addEventListener("click",()=>{ const qp=new URLSearchParams(location.search); qp.delete("date"); qp.delete("pin"); history.replaceState(null,"",`${location.pathname}?${qp.toString()}`.replace(/\?$/,"")); paint();});
@@ -449,14 +511,14 @@
     }
   }
 
-  // >>> Critical fix: wire even if DOMContentLoaded already fired
+  // Wire regardless of readyState (covers cached-fast loads)
   if (document.readyState === "loading") {
     window.addEventListener("DOMContentLoaded", wire, { once: true });
   } else {
     wire();
   }
 
-  // Small debug hook
+  // small debug hook
   window.__moons_debug = { getTZ, getAnchor, remPos, atWall };
 })();
 </script>
