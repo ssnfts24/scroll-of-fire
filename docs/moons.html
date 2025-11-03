@@ -48,7 +48,7 @@
   <!-- Cascade layers (order matters) -->
   <style>@layer tokens, base, components, astrology, remnant, themes, utilities, legacy;</style>
 
-  <!-- CSS packs (delivered next) -->
+  <!-- CSS packs -->
   <link rel="stylesheet" href="assets/css/fonts.css?v=2025-11-03-w1">
   <link rel="stylesheet" href="assets/css/tokens.css?v=2025-11-03-w1">
   <link rel="stylesheet" href="assets/css/core.css?v=2025-11-03-w1">
@@ -56,7 +56,7 @@
   <link rel="stylesheet" href="assets/css/astrology.css?v=2025-11-03-w1">
   <link rel="stylesheet" href="assets/css/themes.moons.css?v=2025-11-03-w1"> <!-- 13×28 theme system -->
 
-  <!-- Minimal inline base (safe defaults so page isn't naked if CSS 404s) -->
+  <!-- Minimal inline base (safe defaults if CSS 404s) -->
   <style>
     :root{ --bg:#0b0b0f; --bg-elev:#0e0e12; --card:#121219; --ink:#eae7df; --muted:#b8b3a6; --line:#2a2a33; --accent:#7af3ff; --accent-2:#7aa8ff; --gold:#f3c97a; --radius:14px; --pad:12px; --pad-lg:16px; --rim:0 10px 30px rgba(0,0,0,.22) }
     html,body{height:100%} body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
@@ -91,7 +91,7 @@
 </head>
 
 <body class="stars remnant-yhwh" data-theme-scope="wizard">
-  <!-- Animated sky background (drawn by engine; honors prefers-reduced-motion) -->
+  <!-- Animated sky background -->
   <canvas id="skyBg" width="1440" height="900" aria-hidden="true"
           style="position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none"></canvas>
 
@@ -103,7 +103,8 @@
       <nav class="crumbs" aria-label="Breadcrumb">
         <a class="lab-btn" href="index.html">← Codex</a>
         <a class="lab-btn" href="theory.html">📘 Theory</a>
-        <a class="lab-btn ghost" href="manifest.html">🧪 Practice Lab</a>
+        <!-- changed from Practice Lab to Genesis Oracle -->
+        <a class="lab-btn ghost" href="genesis-oracle.html">🔮 Genesis Oracle</a>
       </nav>
 
       <!-- Moon ring + week dots -->
@@ -316,7 +317,7 @@
       </section>
     </article>
 
-    <!-- PRACTICE & CODEX -->
+    <!-- PRACTICES & CODEX -->
     <section class="row-2" id="practiceCodexRow" aria-label="Practice & Codex">
       <article class="card" id="practiceCard">
         <h2 id="prac-head">Practices & Prompts</h2>
@@ -327,6 +328,8 @@
         <div class="btnrow">
           <button class="lab-btn" id="btnSaveNote" type="button">Save note</button>
           <button class="lab-btn ghost" id="btnClearNote" type="button">Clear</button>
+          <!-- Quick access to Genesis Oracle from here too -->
+          <a class="lab-btn ghost" href="genesis-oracle.html">Open Genesis Oracle →</a>
         </div>
       </article>
 
@@ -364,7 +367,7 @@
   <!-- ========================== BOOT SHIM =========================== -->
   <script>
     /* Small safety shim so the page never feels broken while external JS loads.
-       The full engine (delivered next) replaces these with richer logic. */
+       The full engine replaces these with richer logic. */
     (function(){
       const banner = (m)=>console.info("%c[Moons Boot]","color:#7af3ff",m);
       function setText(id, txt){ var el=document.getElementById(id); if(el) el.textContent = txt; }
@@ -384,9 +387,9 @@
     })();
   </script>
 
-  <!-- Preferred external data + engine (delivered next) -->
-  <script defer src="assets/data/moons.data.js?v=2025-11-03-w1"></script>          <!-- names, essences, sigils, color keys -->
-  <script defer src="assets/js/themes.moons.js?v=2025-11-03-w1"></script>        <!-- 13×28 theme activations -->
-  <script defer src="assets/js/moons.engine.js?v=2025-11-03-w1"></script>        <!-- calendars, starfield, lunar, astro, .ics -->
+  <!-- Preferred external data + engine -->
+  <script defer src="assets/data/moons.data.js?v=2025-11-03-w1"></script>   <!-- names, essences, sigils, color keys -->
+  <script defer src="assets/js/themes.moons.js?v=2025-11-03-w1"></script>   <!-- 13×28 theme activations -->
+  <script defer src="assets/js/moons.engine.js?v=2025-11-03-w1"></script>   <!-- calendars, starfield, lunar, astro, .ics -->
 </body>
 </html>
