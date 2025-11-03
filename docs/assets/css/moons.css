@@ -1,42 +1,90 @@
 @layer components {
-  /* ========================= Ring badge ========================= */
+
+  /* ================================================================
+     Remnant Components — v2025.11.03-a  “Ring the Field, Keep it Bright”
+     - Ring badge with progress + pulse halo (motion-safe)
+     - Week dots with today highlight + hover hint
+     - Remnant (13×28) + Gregorian grids (kbd/a11y friendly)
+     - Legend keys, year-map, verse/pills/badges
+     - Extras: lunar chip, toolbar, buttons, tooltips, skeletons
+     - DOOT & Leap states, print tweaks
+     ================================================================ */
+
+  /* ------------------------- Global helpers ------------------------- */
+  .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace }
+  .muted{ color:var(--muted) }
+  .soft{ opacity:.86 }
+  .tag{ padding:.1rem .4rem; border-radius:.5rem; background:#1b2231; border:1px solid #2a3143 }
+  .grid-auto{ display:grid; gap:var(--pad) }
+
+  /* Aether shimmer (tie to theme). Apply to sections for subtle vibe. */
+  .aether{
+    position:relative; isolation:isolate;
+    background:
+      radial-gradient(1200px 600px at 20% -10%,
+        color-mix(in oklch, var(--moon-accent) 8%, transparent), transparent 60%),
+      radial-gradient(900px 600px at 120% 10%,
+        color-mix(in oklch, var(--moon-accent-2, var(--accent-2)) 7%, transparent), transparent 65%);
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .aether::after{
+      content:""; position:absolute; inset:-20%;
+      background: conic-gradient(from 0turn,
+        transparent, color-mix(in oklch, var(--moon-accent) 8%, transparent), transparent);
+      filter: blur(24px); opacity:.25; mix-blend-mode:screen; animation:aether-rot 18s linear infinite;
+      pointer-events:none; z-index:-1;
+    }
+    @keyframes aether-rot{ to{ transform:rotate(1turn) } }
+  }
+
+  /* -------------------------- Ring badge --------------------------- */
   .ringcard{ display:grid; gap:10px }
   .moon-badge{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
 
   .ring{
-    width:clamp(90px,26vw,120px); height:auto;
-    display:grid; place-items:center; position:relative;
-    isolation:isolate;
+    --halo: color-mix(in oklch, var(--moon-accent) 55%, transparent);
+    width:clamp(90px,26vw,120px); aspect-ratio:1;
+    display:grid; place-items:center; position:relative; isolation:isolate;
   }
   .ring .ring-bg{ fill:none; stroke:#142233; stroke-width:10 }
-  /* Use themed accent; subtle glow ties to --spark */
   .ring .ring-fg{
     fill:none; stroke-linecap:round; stroke: var(--moon-accent);
     stroke-width:12;
-    filter: drop-shadow(0 0 calc(6px + (var(--spark, .32) * 4px))
-      color-mix(in oklch, var(--moon-accent) 60%, transparent));
-    transition: stroke .25s ease;
+    filter: drop-shadow(0 0 calc(6px + (var(--spark, .32) * 4px)) var(--halo));
+    transition: stroke .25s ease, filter .25s ease, opacity .25s ease;
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .ring::before{
+      content:""; position:absolute; inset:-8%; border-radius:50%;
+      box-shadow:0 0 40px 12px var(--halo);
+      opacity:.22; animation:ring-halo 3.2s ease-in-out infinite alternate;
+    }
+    @keyframes ring-halo{ to{ opacity:.38; filter:hue-rotate(10deg) } }
   }
   .ring .label{
-    position:absolute; inset:0; display:grid; place-items:center; font-weight:800
+    position:absolute; inset:0; display:grid; place-items:center; text-align:center; font-weight:800
   }
   .ring .label .big{ font-size:clamp(1.1rem,6vw,1.6rem) }
   .ring .label .small{ font-size:.85rem; opacity:.75 }
 
-  /* ========================= Week dots row ====================== */
+  /* -------------------------- Week dots row ------------------------ */
   .weeklabel{ color:var(--muted) }
   .weekrow{ display:flex; align-items:center; gap:.6rem; overflow:auto; -webkit-overflow-scrolling:touch }
   .weekrow .wdots{ display:grid; grid-auto-flow:column; grid-auto-columns:min-content; gap:.35rem }
   .weekrow .wdot{
     width:.55rem; height:.55rem; border-radius:50%;
-    background:#1b2231; flex:0 0 auto;
+    background:#1b2231; flex:0 0 auto; position:relative;
   }
   .weekrow .wdot.is-today{
     background: color-mix(in oklab, var(--moon-accent) 70%, #1b2231);
     box-shadow:0 0 0 2px color-mix(in lch, var(--moon-accent) 35%, transparent);
   }
+  .weekrow .wdot:is(:hover,:focus-visible)::after{
+    content:""; position:absolute; inset:-4px; border-radius:50%;
+    box-shadow:0 0 0 1px color-mix(in lab, var(--moon-accent) 50%, transparent);
+  }
 
-  /* ========================= Remnant (13×28) ==================== */
+  /* -------------------- Remnant (13×28) calendar ------------------ */
   .r-grid{
     --cell: clamp(36px, 9.5vw, 48px);
     display:grid;
@@ -49,7 +97,8 @@
   .r-grid .r-day{
     min-height:var(--cell);
     border:1px solid var(--line); border-radius:10px;
-    background:var(--bg-elev); display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(180deg, var(--bg-elev), color-mix(in lab, var(--moon-accent) 4%, var(--bg-elev)));
+    display:flex; align-items:center; justify-content:center;
   }
   .r-grid .r-day > button{
     all:unset; display:grid; place-items:center; inline-size:100%; block-size:100%;
@@ -57,15 +106,19 @@
   }
   .r-grid .r-day.is-today{
     outline:2px solid var(--moon-accent); outline-offset:1px;
+    box-shadow:0 0 0 2px color-mix(in oklch, var(--moon-accent) 30%, transparent) inset;
   }
+  .r-grid .r-day > button:active{ background:rgba(255,255,255,.03) }
   .r-grid .r-doot{
     min-height:calc(var(--cell) * 1.6); display:grid; place-items:center; text-align:center;
     border-radius:12px; border:1px solid color-mix(in oklab, var(--gold) 60%, var(--line));
-    background:linear-gradient(180deg, color-mix(in lab, var(--gold) 10%, transparent), transparent);
+    background:
+      linear-gradient(180deg, color-mix(in lab, var(--gold) 10%, transparent), transparent),
+      repeating-linear-gradient(45deg, transparent 0 6px, color-mix(in oklab, var(--gold) 10%, transparent) 6px 12px);
     color:var(--ink);
   }
 
-  /* ========================= Gregorian month ==================== */
+  /* --------------------- Gregorian month calendar ----------------- */
   .g-grid{
     --cell: clamp(36px, 9.5vw, 48px);
     display:grid;
@@ -78,7 +131,8 @@
   .g-pad{ min-height:var(--cell) }
   .g-day{
     min-height:var(--cell);
-    border:1px solid var(--line); border-radius:10px; background:var(--bg-elev);
+    border:1px solid var(--line); border-radius:10px;
+    background:linear-gradient(180deg, var(--bg-elev), color-mix(in lab, var(--moon-accent-2, var(--accent-2)) 3%, var(--bg-elev)));
     display:flex; align-items:center; justify-content:center;
   }
   .g-day > button{
@@ -90,24 +144,26 @@
   }
   .g-month{ font-weight:700 }
 
-  /* ========================= Legend keys ======================== */
+  /* --------------------------- Legend keys ------------------------ */
   #calLegend .key{ display:inline-flex; align-items:center; gap:.35rem; margin-right:.6rem }
   #calLegend .k-dot{
     display:inline-block; width:.7em; height:.7em; border-radius:50%; vertical-align:middle;
+    box-shadow:0 0 0 1px #293248 inset;
   }
   #calLegend .k-evt1{ background: var(--moon-accent) }
-  #calLegend .k-evt2{ background: var(--moon-accent-2) }
+  #calLegend .k-evt2{ background: var(--moon-accent-2, var(--accent-2)) }
   #calLegend .k-doot{ background: var(--gold) }
-  #calLegend .k-leap{ background: var(--moon-accent-2) }
+  #calLegend .k-leap{ background: color-mix(in oklch, var(--moon-accent-2, var(--accent-2)) 70%, #162033) }
   #calLegend .k-today{ background: color-mix(in oklab, var(--moon-accent) 60%, var(--ink)) }
 
-  /* ========================= Year map table ===================== */
+  /* -------------------------- Year map table --------------------- */
   .year-map{
     width:100%; border-collapse:separate; border-spacing:0;
     background:var(--bg-elev); border:1px solid var(--line); border-radius:12px; overflow:hidden;
   }
   .year-map thead th{
-    position:sticky; top:0; background:linear-gradient(180deg, var(--bg-elev), color-mix(in lab, var(--moon-accent) 6%, var(--bg-elev)));
+    position:sticky; top:0;
+    background:linear-gradient(180deg, var(--bg-elev), color-mix(in lab, var(--moon-accent) 6%, var(--bg-elev)));
     text-align:left; padding:.6rem .75rem; font-weight:700; border-bottom:1px solid var(--line);
   }
   .year-map tbody td{ padding:.55rem .75rem; border-bottom:1px solid #1b2130 }
@@ -116,7 +172,7 @@
     background:linear-gradient(90deg, color-mix(in lab, var(--moon-accent) 6%, transparent), transparent);
   }
 
-  /* ========================= Verse / chips ====================== */
+  /* ------------------------- Verse / chips ----------------------- */
   blockquote.pull{
     border-left:3px solid var(--moon-accent); padding:.6rem .9rem; margin:0;
     background:linear-gradient(180deg, color-mix(in lab, var(--moon-accent) 6%, transparent), transparent);
@@ -128,15 +184,87 @@
     box-shadow:0 0 0 1px color-mix(in lch, var(--moon-accent) 26%, transparent);
     font-weight:600;
   }
-  .badge{ display:inline-flex; align-items:center; gap:.35rem; padding:.25rem .5rem; border-radius:999px; background:#151a25; border:1px solid #253048; font-weight:600 }
+  .badge{
+    display:inline-flex; align-items:center; gap:.35rem; padding:.25rem .5rem; border-radius:999px;
+    background:#151a25; border:1px solid #253048; font-weight:600
+  }
 
-  /* ========================= Scroll helpers ===================== */
+  /* --------------------------- Lunar chip ------------------------ */
+  .lunar{
+    display:inline-grid; grid-auto-flow:column; align-items:center; gap:.5rem;
+    padding:.35rem .6rem; border-radius:999px;
+    background:linear-gradient(180deg, #121826, #0f1522);
+    border:1px solid #233049; box-shadow:inset 0 0 0 1px #171e2a;
+  }
+  .lunar canvas{ width:26px; height:26px; border-radius:50%; display:block }
+
+  /* ------------------------- Toolbar & buttons ------------------- */
+  .toolbar{ display:flex; flex-wrap:wrap; gap:.5rem; align-items:center }
+  .btn{
+    --b: color-mix(in oklch, var(--moon-accent) 60%, #0b0f18);
+    display:inline-flex; align-items:center; gap:.45rem;
+    background:linear-gradient(180deg, color-mix(in oklch, var(--moon-accent) 14%, #0f1726), #0a111d);
+    color:var(--ink); border:1px solid var(--b); padding:.45rem .7rem; border-radius:10px;
+    cursor:pointer; text-decoration:none; font-weight:700;
+    box-shadow:0 0 0 1px #111a2a inset;
+  }
+  .btn:is(:hover,:focus-visible){ filter:brightness(1.08) }
+  .btn-ghost{
+    background:transparent; border-color:#253148; color:var(--ink);
+  }
+  .btn-gold{
+    --b: color-mix(in oklch, var(--gold) 65%, #0b0f18);
+    background:linear-gradient(180deg, color-mix(in oklch, var(--gold) 22%, #1a1410), #0a111d);
+    border-color:var(--b);
+  }
+
+  /* ----------------------------- Tooltips ------------------------ */
+  .tip{ position:relative }
+  .tip[data-tip]::after{
+    content:attr(data-tip); position:absolute; left:50%; bottom:calc(100% + 8px);
+    transform:translateX(-50%); white-space:nowrap; pointer-events:none;
+    background:#0b1220; color:#e8e6df; padding:.35rem .55rem; border-radius:8px; font-size:.85rem;
+    border:1px solid #223047; opacity:0; translate:0 6px; transition:opacity .15s, translate .15s;
+  }
+  .tip:hover::after, .tip:focus-within::after{ opacity:1; translate:0 0 }
+
+  /* ---------------------------- Skeletons ------------------------ */
+  .skeleton{
+    border-radius:10px; background:#121826; position:relative; overflow:hidden;
+    min-height:1.4rem;
+  }
+  .skeleton::after{
+    content:""; position:absolute; inset:0; background:
+      linear-gradient(90deg, transparent, color-mix(in oklch, var(--moon-accent) 12%, transparent), transparent);
+    animation: sk 1.35s linear infinite;
+    opacity:.5;
+  }
+  @keyframes sk{ to{ transform:translateX(100%) } }
+  @media (prefers-reduced-motion:reduce){ .skeleton::after{ animation:none } }
+
+  /* ----------------------- Scrollbar / scrollers ----------------- */
   .scroller{ overflow:auto; -webkit-overflow-scrolling:touch }
-  .scroller::-webkit-scrollbar{ height:10px }
+  .scroller::-webkit-scrollbar{ height:10px; width:10px }
   .scroller::-webkit-scrollbar-thumb{ background:#2a3242; border-radius:10px }
 
-  /* ========================= A11y / focus ======================= */
+  /* ----------------------------- Focus A11y ---------------------- */
   :focus-visible{ outline:2px solid var(--moon-accent); outline-offset:2px }
   .g-day > button:focus-visible,
   .r-grid .r-day > button:focus-visible{ outline:2px solid var(--moon-accent); outline-offset:2px }
+
+  /* ------------------------------ DOOT tag ----------------------- */
+  .doot-chip{
+    display:inline-flex; align-items:center; gap:.4rem; padding:.25rem .55rem; border-radius:999px;
+    background: color-mix(in oklch, var(--gold) 16%, #0c0b07);
+    border:1px solid color-mix(in oklch, var(--gold) 60%, #1e1a10);
+    color:var(--ink); font-weight:800;
+  }
+
+  /* ------------------------------ Print -------------------------- */
+  @media print{
+    .aether, .ring::before{ display:none !important }
+    .scroller{ overflow:visible }
+    .btn, .toolbar{ display:none !important }
+    .year-map thead th{ position:static }
+  }
 }
