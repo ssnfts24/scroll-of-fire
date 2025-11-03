@@ -2,7 +2,7 @@
 /* ==========================================================================
    Scroll of Fire — Moons Engine (Living Clock)
    File: assets/js/moons.js
-   Version: v2025.11.03-w2
+   Version: v2025.11.03-w4 (hardened)
    ========================================================================== */
 (function () {
   "use strict";
@@ -15,28 +15,29 @@
   const MOONS = (window.__MOONS__ && Array.isArray(window.__MOONS__) && window.__MOONS__.length === 13)
     ? window.__MOONS__
     : [
-        {"idx":1,"name":"Magnetic","essence":"Unify · Purpose","color":"#6FE7FF"},
-        {"idx":2,"name":"Lunar","essence":"Polarize · Challenge","color":"#B1C7FF"},
-        {"idx":3,"name":"Electric","essence":"Activate · Service","color":"#7AF3FF"},
-        {"idx":4,"name":"Self-Existing","essence":"Define · Form","color":"#7BF3B8"},
-        {"idx":5,"name":"Overtone","essence":"Empower · Radiance","color":"#FFD27A"},
-        {"idx":6,"name":"Rhythmic","essence":"Organize · Equality","color":"#A7FFCF"},
-        {"idx":7,"name":"Resonant","essence":"Channel · Attunement","color":"#D5B6FF"},
-        {"idx":8,"name":"Galactic","essence":"Harmonize · Integrity","color":"#A8FFD9"},
-        {"idx":9,"name":"Solar","essence":"Pulse · Intention","color":"#FFBC6F"},
-        {"idx":10,"name":"Planetary","essence":"Perfect · Manifestation","color":"#A2FFD1"},
-        {"idx":11,"name":"Spectral","essence":"Dissolve · Liberation","color":"#A8B8FF"},
-        {"idx":12,"name":"Crystal","essence":"Dedicate · Cooperation","color":"#FFD7A8"},
-        {"idx":13,"name":"Cosmic","essence":"Endure · Presence","color":"#9DDAFF"}
-      ];
+      {"idx":1,"name":"Magnetic","essence":"Unify · Purpose","color":"#6FE7FF"},
+      {"idx":2,"name":"Lunar","essence":"Polarize · Challenge","color":"#B1C7FF"},
+      {"idx":3,"name":"Electric","essence":"Activate · Service","color":"#7AF3FF"},
+      {"idx":4,"name":"Self-Existing","essence":"Define · Form","color":"#7BF3B8"},
+      {"idx":5,"name":"Overtone","essence":"Empower · Radiance","color":"#FFD27A"},
+      {"idx":6,"name":"Rhythmic","essence":"Organize · Equality","color":"#A7FFCF"},
+      {"idx":7,"name":"Resonant","essence":"Channel · Attunement","color":"#D5B6FF"},
+      {"idx":8,"name":"Galactic","essence":"Harmonize · Integrity","color":"#A8FFD9"},
+      {"idx":9,"name":"Solar","essence":"Pulse · Intention","color":"#FFBC6F"},
+      {"idx":10,"name":"Planetary","essence":"Perfect · Manifestation","color":"#A2FFD1"},
+      {"idx":11,"name":"Spectral","essence":"Dissolve · Liberation","color":"#A8B8FF"},
+      {"idx":12,"name":"Crystal","essence":"Dedicate · Cooperation","color":"#FFD7A8"},
+      {"idx":13,"name":"Cosmic","essence":"Endure · Presence","color":"#9DDAFF"}
+    ];
 
   /* --------------------------- Time helpers ------------------------------ */
   const getTZ = () => {
-    const qp = new URLSearchParams(location.search);
-    const forced = qp.get("tz");
-    if (forced) return forced;
-    try { return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; }
-    catch { return "UTC"; }
+    try {
+      const qp = new URLSearchParams(location.search);
+      const forced = qp.get("tz");
+      if (forced) return forced;
+      return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+    } catch { return "UTC"; }
   };
 
   // Build a Date whose *UTC fields* equal the local wall fields in tz.
@@ -46,12 +47,18 @@
         timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit",
         hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
       });
-      const parts = Object.fromEntries(
-        fmt.formatToParts(new Date(Date.UTC(y, m - 1, d, hh, mm, ss))).map(p => [p.type, p.value])
-      );
-      const iso = `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}:${parts.second}Z`;
-      return new Date(iso);
+      const partsArr = fmt.formatToParts(new Date(Date.UTC(y, m - 1, d, hh, mm, ss)));
+      const parts = Object.create(null);
+      for (const p of partsArr) parts[p.type] = p.value;
+      const Y = parts.year ?? String(y);
+      const M = parts.month ?? pad(m);
+      const D = parts.day ?? pad(d);
+      const H = parts.hour ?? pad(hh);
+      const Min = parts.minute ?? pad(mm);
+      const S = parts.second ?? pad(ss);
+      return new Date(`${Y}-${M}-${D}T${H}:${Min}:${S}Z`);
     } catch {
+      // Absolute fallback (UTC); better to be slightly off than crash
       return new Date(Date.UTC(y, m - 1, d, hh, mm, ss));
     }
   }
@@ -101,16 +108,22 @@
 
   /* ----------------------------- Anchor date ----------------------------- */
   function getAnchor() {
-    const qp = new URLSearchParams(location.search);
-    const tz = getTZ();
-    let d = qp.get("date"); if (!d) d = qp.get("d");
-    let hour = qp.get("t"); if (!hour) hour = "12";
-    if (d && /^\d{4}-\d{2}-\d{2}$/.test(d)) {
-      const [Y, M, D] = d.split("-").map(Number);
-      return atWall(Y, M, D, Number(hour), 0, 0, tz);
+    try {
+      const qp = new URLSearchParams(location.search);
+      const tz = getTZ();
+      let d = qp.get("date") || qp.get("d");
+      let hour = qp.get("t");
+      if (!hour || isNaN(+hour)) hour = "12";
+      if (d && /^\d{4}-\d{2}-\d{2}$/.test(d)) {
+        const [Y, M, D] = d.split("-").map(Number);
+        return atWall(Y, M, D, Number(hour), 0, 0, tz);
+      }
+      const now = new Date();
+      return atWall(now.getUTCFullYear(), now.getUTCMonth() + 1, now.getUTCDate(), Number(hour), 0, 0, tz);
+    } catch (e) {
+      console.warn("[Moons] getAnchor failed:", e);
+      return new Date();
     }
-    const now = new Date();
-    return atWall(now.getUTCFullYear(), now.getUTCMonth() + 1, now.getUTCDate(), Number(hour), 0, 0, tz);
   }
 
   /* ------------------------ UI render (main paint) ----------------------- */
@@ -123,68 +136,73 @@
   }
 
   function paint() {
-    const tz = getTZ();
-    const anchor = getAnchor();
-    const pos = remPos(anchor);
-    const year = yearLabel(anchor);
+    try {
+      const tz = getTZ();
+      const anchor = getAnchor();
+      const pos = remPos(anchor);
+      const year = yearLabel(anchor);
 
-    $("#nowDate") && ($("#nowDate").textContent =
-      new Intl.DateTimeFormat("en-US",{timeZone:tz,weekday:"short",year:"numeric",month:"short",day:"2-digit"}).format(anchor));
-    $("#nowClock") && ($("#nowClock").textContent =
-      new Intl.DateTimeFormat("en-GB",{timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(new Date()));
-    $("#nowTZ") && ($("#nowTZ").textContent = tz);
-    $("#yearSpan") && ($("#yearSpan").textContent = year);
+      const fmtDate = new Intl.DateTimeFormat("en-US",{timeZone:tz,weekday:"short",year:"numeric",month:"short",day:"2-digit"});
+      $("#nowDate") && ($("#nowDate").textContent = fmtDate.format(anchor));
+      $("#nowClock") && ($("#nowClock").textContent =
+        new Intl.DateTimeFormat("en-GB",{timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(new Date()));
+      $("#nowTZ") && ($("#nowTZ").textContent = tz);
+      $("#yearSpan") && ($("#yearSpan").textContent = year);
 
-    if (pos.doot) {
-      $("#dootWarn")?.removeAttribute("hidden");
-      $("#moonName") && ($("#moonName").textContent = "Day Out of Time");
-      $("#moonEssence") && ($("#moonEssence").textContent = "Pause · Reset");
-      $("#moonLine") && ($("#moonLine").textContent = "DOOT — outside the 13×28 cadence");
-      $("#dayInMoon") && ($("#dayInMoon").textContent = "—");
-      const arc=$("#moonArc"); if(arc){const full=316; arc.style.strokeDasharray=`1 ${full-1}`; arc.style.stroke = getComputedStyle(document.documentElement).getPropertyValue('--accent') || "#7aa8ff";}
-      document.body.classList.add('theme-doot');
-    } else {
-      $("#dootWarn") && ($("#dootWarn").hidden = true);
-      const md = MOONS[pos.moon - 1] || {};
-      $("#moonName") && ($("#moonName").textContent = md.name || `Moon ${pos.moon}`);
-      $("#moonEssence") && ($("#moonEssence").textContent = md.essence || "—");
-      $("#moonLine") && ($("#moonLine").textContent = `Moon ${pos.moon} · Day ${pos.day} · Week ${pos.week}`);
-      $("#dayInMoon") && ($("#dayInMoon").textContent = String(pos.day));
-      const full=316, cur=Math.max(1, Math.floor(((pos.day - 1) / 28) * full));
-      const arc=$("#moonArc"); if(arc){arc.style.strokeDasharray = `${cur} ${full-cur}`; arc.style.stroke = md.color || "#7af3ff";}
-      document.body.classList.remove('theme-doot');
-      setBodyThemes(pos.moon, pos.day);
-      $("#essenceLive") && ($("#essenceLive").textContent = `${md.name} — ${md.essence}`);
-    }
-
-    // Week dots
-    const dotsWrap = $("#weekDots");
-    if (dotsWrap) {
-      dotsWrap.innerHTML = "";
-      for (let wk = 1; wk <= 4; wk++) {
-        const g = document.createElement("div"); g.className = "wdots";
-        for (let d = 1; d <= 7; d++) {
-          const i = (wk - 1) * 7 + d;
-          const dot = document.createElement("i"); dot.className = "wdot";
-          if (!pos.doot && i === pos.day) dot.classList.add("is-today");
-          g.appendChild(dot);
-        }
-        dotsWrap.appendChild(g);
+      if (pos.doot) {
+        $("#dootWarn")?.removeAttribute("hidden");
+        $("#moonName") && ($("#moonName").textContent = "Day Out of Time");
+        $("#moonEssence") && ($("#moonEssence").textContent = "Pause · Reset");
+        $("#moonLine") && ($("#moonLine").textContent = "DOOT — outside the 13×28 cadence");
+        $("#dayInMoon") && ($("#dayInMoon").textContent = "—");
+        const arc=$("#moonArc"); if(arc){const full=316; arc.style.strokeDasharray=`1 ${full-1}`; arc.style.stroke = getComputedStyle(document.documentElement).getPropertyValue('--accent') || "#7aa8ff";}
+        document.body.classList.add('theme-doot');
+      } else {
+        $("#dootWarn") && ($("#dootWarn").hidden = true);
+        const md = MOONS[pos.moon - 1] || {};
+        $("#moonName") && ($("#moonName").textContent = md.name || `Moon ${pos.moon}`);
+        $("#moonEssence") && ($("#moonEssence").textContent = md.essence || "—");
+        $("#moonLine") && ($("#moonLine").textContent = `Moon ${pos.moon} · Day ${pos.day} · Week ${pos.week}`);
+        $("#dayInMoon") && ($("#dayInMoon").textContent = String(pos.day));
+        const full=316, cur=Math.max(1, Math.floor(((pos.day - 1) / 28) * full));
+        const arc=$("#moonArc"); if(arc){arc.style.strokeDasharray = `${cur} ${full-cur}`; arc.style.stroke = md.color || "#7af3ff";}
+        document.body.classList.remove('theme-doot');
+        setBodyThemes(pos.moon, pos.day);
+        $("#essenceLive") && ($("#essenceLive").textContent = `${md.name} — ${md.essence}`);
       }
+
+      // Week dots
+      const dotsWrap = $("#weekDots");
+      if (dotsWrap) {
+        dotsWrap.innerHTML = "";
+        for (let wk = 1; wk <= 4; wk++) {
+          const g = document.createElement("div"); g.className = "wdots";
+          for (let d = 1; d <= 7; d++) {
+            const i = (wk - 1) * 7 + d;
+            const dot = document.createElement("i"); dot.className = "wdot";
+            if (!pos.doot && i === pos.day) dot.classList.add("is-today");
+            g.appendChild(dot);
+          }
+          dotsWrap.appendChild(g);
+        }
+      }
+
+      buildYearMap(anchor);
+      buildDualCalendars(anchor, pos);
+
+      $("#datePick") && ($("#datePick").value = isoDate(anchor));
+      $("#hourScrub") && ($("#hourScrub").value = String(anchor.getUTCHours()));
+      $("#jumpMoon") && ($("#jumpMoon").value = pos.doot ? "" : String(pos.moon));
+
+      $("#dbg") && ($("#dbg").textContent = JSON.stringify({ tz, anchor: isoDate(anchor), pos }, null, 2));
+
+      drawLunarPhase(anchor);
+      ensureSky();
+      ensureAstrology(anchor, tz);
+    } catch (err) {
+      console.error("[Moons] paint failed:", err);
+      showError("Paint error: " + (err?.message || String(err)));
     }
-
-    buildYearMap(anchor);
-    buildDualCalendars(anchor, pos);
-
-    $("#datePick") && ($("#datePick").value = isoDate(anchor));
-    $("#hourScrub") && ($("#hourScrub").value = String(anchor.getUTCHours()));
-    $("#jumpMoon") && ($("#jumpMoon").value = pos.doot ? "" : String(pos.moon));
-
-    $("#dbg") && ($("#dbg").textContent = JSON.stringify({ tz, anchor: isoDate(anchor), pos }, null, 2));
-
-    drawLunarPhase(anchor);
-    ensureSky();
-    ensureAstrology(anchor, tz);
   }
 
   /* --------------------------- Calendars/Map ----------------------------- */
@@ -341,18 +359,19 @@
     }
     if(dots && !dots.hasChildNodes()){
       const PLAN=["sun","moon","mercury","venus","mars","jupiter","saturn"];
-      PLAN.forEach((p,i)=>{const c=document.createElementNS("http://www.w3.org/2000/svg","circle"); c.setAttribute("r","4.6"); c.classList.add("dot"); c.dataset.dot=p; dots.appendChild(c);});
+      PLAN.forEach((p)=>{const c=document.createElementNS("http://www.w3.org/2000/svg","circle"); c.setAttribute("r","4.6"); c.classList.add("dot"); c.dataset.dot=p; dots.appendChild(c);});
     }
     const reduce=matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
     if(reduce){ $("#astroStamp") && ($("#astroStamp").textContent=new Date(anchor).toISOString().slice(0,19).replace("T"," ")); $("#astroTZ") && ($("#astroTZ").textContent=tz); $("#astroSource") && ($("#astroSource").textContent=window.__EPHEMERIS__?"Ephemeris":"Demo"); return; }
-    let raf; function animate(t){ const nodes=$$("#planetDots .dot");
+    let rafId=0; function animate(t){ const nodes=$$("#planetDots .dot");
       nodes.forEach((n,i)=>{ const speed=0.0002+i*0.00008; const radius=60+i*10; const ang=(t*speed)+i*0.7; const x=180+Math.cos(ang)*radius; const y=180+Math.sin(ang)*radius;
         n.setAttribute("cx",x.toFixed(1)); n.setAttribute("cy",y.toFixed(1)); });
       $("#astroStamp") && ($("#astroStamp").textContent=new Date(anchor).toISOString().slice(0,19).replace("T"," "));
       $("#astroTZ") && ($("#astroTZ").textContent=tz); $("#astroSource") && ($("#astroSource").textContent=window.__EPHEMERIS__?"Ephemeris":"Demo");
-      raf=requestAnimationFrame(animate);
+      rafId=requestAnimationFrame(animate);
     }
-    cancelAnimationFrame(raf); raf=requestAnimationFrame(animate);
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId=requestAnimationFrame(animate);
   }
 
   /* ------------------------------- Actions -------------------------------- */
@@ -366,9 +385,7 @@
   function populateTZs() {
     const sel = $("#tzPick"); if (!sel) return;
     let zones = [];
-    if (Intl.supportedValuesOf) {
-      try { zones = Intl.supportedValuesOf("timeZone"); } catch {}
-    }
+    try { if (Intl.supportedValuesOf) zones = Intl.supportedValuesOf("timeZone"); } catch {}
     if (!zones || zones.length === 0) {
       zones = ["UTC","America/Los_Angeles","America/Denver","America/Chicago","America/New_York","Europe/London","Europe/Paris","Europe/Berlin","Europe/Athens","Asia/Jerusalem","Asia/Dubai","Asia/Kolkata","Asia/Tokyo","Australia/Sydney"];
     }
@@ -398,13 +415,13 @@
       return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+"T"+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+"Z";
     })();
     const fmtDate = d => d.getUTCFullYear() + pad(d.getUTCMonth()+1) + pad(d.getUTCDate());
-    const uid = () => (crypto && crypto.randomUUID) ? crypto.randomUUID() : ("sof-" + Math.random().toString(36).slice(2));
+    const uuid = (typeof crypto !== "undefined" && crypto.randomUUID) ? () => crypto.randomUUID() : () => ("sof-" + Math.random().toString(36).slice(2));
 
     let ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Scroll of Fire//13 Moon//EN\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\n";
     for (let i = 0; i < 13; i++) {
       const s = wallForIndex(yStart, i * 28);
       const e = new Date(s); e.setUTCDate(e.getUTCDate() + 28);
-      ics += "BEGIN:VEVENT\r\nUID:"+uid()+"@scroll-of-fire\r\nDTSTAMP:"+stamp+"\r\nDTSTART;VALUE=DATE:"+fmtDate(s)+"\r\nDTEND;VALUE=DATE:"+fmtDate(e)+"\r\nSUMMARY:"+(i+1)+". "+MOONS[i].name+" Moon — "+labelYear+" ("+tz+")\r\nDESCRIPTION:"+MOONS[i].essence+"\r\nEND:VEVENT\r\n";
+      ics += "BEGIN:VEVENT\r\nUID:"+uuid()+"@scroll-of-fire\r\nDTSTAMP:"+stamp+"\r\nDTSTART;VALUE=DATE:"+fmtDate(s)+"\r\nDTEND;VALUE=DATE:"+fmtDate(e)+"\r\nSUMMARY:"+(i+1)+". "+MOONS[i].name+" Moon — "+labelYear+" ("+tz+")\r\nDESCRIPTION:"+MOONS[i].essence+"\r\nEND:VEVENT\r\n";
     }
     ics += "END:VCALENDAR\r\n";
     return new Blob([ics], { type: "text/calendar" });
@@ -427,10 +444,19 @@
       populateTZs();
       paint();
     }catch(err){
-      console.error("[Moons] wire failed:",err); showError("Initialization error: " + (err && err.message ? err.message : String(err)));
+      console.error("[Moons] wire failed:",err);
+      showError("Initialization error: " + (err?.message || String(err)));
     }
   }
 
-  window.addEventListener("DOMContentLoaded", wire, { once: true });
+  // >>> Critical fix: wire even if DOMContentLoaded already fired
+  if (document.readyState === "loading") {
+    window.addEventListener("DOMContentLoaded", wire, { once: true });
+  } else {
+    wire();
+  }
+
+  // Small debug hook
+  window.__moons_debug = { getTZ, getAnchor, remPos, atWall };
 })();
 </script>
