@@ -13,7 +13,7 @@
     })();
   </script>
 
-  <!-- Theme, FB in-app browser hint -->
+  <!-- Theme + FB in-app browser hint -->
   <script>(()=>{try{let t=localStorage.getItem('theme');if(!t){t=(matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'}document.documentElement.setAttribute('data-theme',t)}catch{}})();</script>
   <script>(()=>{const ua=navigator.userAgent||'';if(/\bFBAN|FBAV|FB_IAB|FBAN\/Messenger\b/i.test(ua)){document.documentElement.classList.add('is-fbapp')}})();</script>
 
@@ -235,7 +235,6 @@
           <button class="chip pl-mars" data-planet="mars" type="button"><i class="dot el-fire"></i><b>Mars</b> <span class="mono pos" data-pos="mars">—</span> <span class="sign" data-sign="mars">—</span></button>
           <button class="chip pl-jupiter" data-planet="jupiter" type="button"><i class="dot el-air"></i><b>Jupiter</b> <span class="mono pos" data-pos="jupiter">—</span> <span class="sign" data-sign="jupiter">—</span></button>
           <button class="chip pl-saturn" data-planet="saturn" type="button"><i class="dot el-earth"></i><b>Saturn</b> <span class="mono pos" data-pos="saturn">—</span> <span class="sign" data-sign="saturn">—</span></button>
-          <!-- FIXED: correctly closed attribute on details -->
           <details class="chip more"><summary><i class="dot el-aether"></i><b>Outer bodies</b></summary>
             <div class="more-grid" role="list">
               <div role="listitem"><b>Uranus</b>  <span class="mono pos" data-pos="uranus">—</span>  <span class="sign" data-sign="uranus">—</span></div>
@@ -343,21 +342,37 @@
     ];
   </script>
 
-  <!-- Load engine with onerror (surface 404/CORS immediately) -->
-  <script defer src="assets/js/moons.js?v=2025-11-03-w3"
+  <!-- Moons engine (v2025.11.03-w5). onerror surfaces 404/CORS immediately -->
+  <script defer src="assets/js/moons.js?v=2025-11-03-w5"
           onerror="(function(){var b=document.getElementById('errorBanner'); if(b){b.textContent='Failed to load assets/js/moons.js (404/CORS)'; b.classList.add('show');}})();"></script>
 
   <!-- Small page helpers + engine paint probe -->
   <script>
+    // Hour scrubber → update URL ?t and repaint by re-setting ?date (engine listens on paint())
+    (function(){
+      function setHour(h){
+        try{
+          const qp = new URLSearchParams(location.search);
+          qp.set('t', String(h));
+          history.replaceState(null,'', `${location.pathname}?${qp.toString()}`);
+          // Nudge a repaint by toggling datePick to its current value (fires change)
+          const d = document.getElementById('datePick');
+          if (d && d.value){ d.dispatchEvent(new Event('change')); }
+        }catch(e){ /* no-op */ }
+      }
+      window.addEventListener('DOMContentLoaded', function(){
+        const s = document.getElementById('hourScrub');
+        if (s) s.addEventListener('input', e => setHour(e.target.value));
+      }, { once:true });
+    })();
+
     // Share current state (?date & tz) to clipboard
     (function () {
       function copyShare() {
         try {
           const url = new URL(location.href);
-          // ensure we capture selected tz/date/hour if engine already set them
           const qp = new URLSearchParams(location.search);
           if (!qp.get('date')) {
-            // try to pull from visible fields
             const d = document.getElementById('datePick')?.value;
             if (d) qp.set('date', d);
           }
@@ -368,9 +383,7 @@
             document.getElementById('shareLink').textContent = 'Copied ✓';
             setTimeout(()=>{document.getElementById('shareLink').textContent='Copy Link';}, 1200);
           });
-        } catch (e) {
-          console.warn('Share copy failed', e);
-        }
+        } catch (e) { console.warn('Share copy failed', e); }
       }
       window.addEventListener('DOMContentLoaded', function(){
         var btn = document.getElementById('shareLink');
