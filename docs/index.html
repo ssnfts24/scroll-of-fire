@@ -93,6 +93,35 @@
 
   <!-- Page styles (nav + hero + lights) -->
   <style>
+
+    /* Make the hero/banner ignore the dark panel layer */
+.fancy-head, .page-head.banner, .hero {
+  position: relative;
+  isolation: isolate;            /* keep its z-index stack clean */
+  --panel-bg: transparent;       /* kill the opaque gradient just here */
+  --shine-linear: transparent;   /* no linear shine over the photo */
+  --shine-radial: transparent;   /* no radial glow over the photo */
+}
+
+.fancy-head::before,
+.page-head.banner::before,
+.hero::before {
+  background: transparent !important;  /* belt & suspenders */
+}
+
+/* Ensure the actual image/content sits above any sitewide backdrops */
+.fancy-head .banner-img,
+.page-head.banner .banner-img,
+.hero .banner-img {
+  position: relative;
+  z-index: var(--z-base, 1);
+}
+
+/* If you use body backdrops via ::before/::after, keep them behind */
+body::before, body::after {
+  z-index: var(--z-bg, 0);
+  pointer-events: none;
+}
     :root{
       --safe-top:env(safe-area-inset-top);
       --accent:#7af3ff; --accent-2:#f3c97a; --line:#2a3242;
