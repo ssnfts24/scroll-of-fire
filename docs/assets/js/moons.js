@@ -110,22 +110,37 @@
 
   /* ----------------------------- Anchor date ----------------------------- */
   function getAnchor() {
-    try {
-      const qp = new URLSearchParams(location.search);
-      const tz = getTZ();
-      let d = qp.get("date") || qp.get("d");
-      let hour = qp.get("t");
-      if (!hour || isNaN(+hour)) hour = "12";
-      if (d && /^\d{4}-\d{2}-\d{2}$/.test(d)) {
-        const [Y, M, D] = d.split("-").map(Number);
-        return atWall(Y, M, D, Number(hour), 0, 0, tz);
-      }
-      const now = new Date();
-      return atWall(now.getUTCFullYear(), now.getUTCMonth() + 1, now.getUTCDate(), Number(hour), 0, 0, tz);
-    } catch (e) {
-      console.warn("[Moons] getAnchor failed:", e);
-      return new Date();
+  try {
+    const qp = new URLSearchParams(location.search);
+    const tz = getTZ();
+
+    // Only use a query date if it's explicitly pinned
+    const pinned = qp.get("pin") === "1";
+    let d = pinned ? (qp.get("date") || qp.get("d")) : null;
+
+    let hour = qp.get("t");
+    if (!hour || isNaN(+hour)) hour = "12";
+
+    if (d && /^\d{4}-\d{2}-\d{2}$/.test(d)) {
+      const [Y, M, D] = d.split("-").map(Number);
+      return atWall(Y, M, D, Number(hour), 0, 0, tz);
     }
+
+    // Default to "today" at the chosen hour in the active TZ
+    const now = new Date();
+    return atWall(
+      now.getUTCFullYear(),
+      now.getUTCMonth() + 1,
+      now.getUTCDate(),
+      Number(hour),
+      0,
+      0,
+      tz
+    );
+  } catch (e) {
+    console.warn("[Moons] getAnchor failed:", e);
+    return new Date();
+  }
   }
 
   /* ------------------------ UI render (main paint) ----------------------- */
@@ -478,6 +493,18 @@
   function wire() {
     try{
       hideError();
+       // If the URL has a stale ?date without an explicit pin, drop it so we default to today
+(function () {
+  const qp = new URLSearchParams(location.search);
+  if (qp.has("date") && qp.get("pin") !== "1") {
+    qp.delete("date");
+    history.replaceState(
+      null,
+      "",
+      `${location.pathname}?${qp.toString()}`.replace(/\?$/, "")
+    );
+  }
+})();
 
       // ICS actions
       $("#dlICS")?.addEventListener("click",(e)=>{e.preventDefault(); const blob=makeICS(getAnchor()); const a=e.currentTarget; a.href=URL.createObjectURL(blob); a.download="13-moon-year.ics";});
