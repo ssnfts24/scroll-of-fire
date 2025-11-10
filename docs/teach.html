@@ -3,11 +3,144 @@
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
-    // If running from github.com (file viewer), remove <base> so assets resolve.
-    if (location.hostname === "github.com") {
-      const b = document.querySelector("base"); if (b) b.remove();
+(function(){
+  "use strict";
+  const $ =(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
+
+  /* ---------- Tabs / rails / keys (shared) ---------- */
+  const rail=$("#pillRail"), prev=$("#tabsPrev"), next=$("#tabsNext");
+  // don't cache tabs; DOM adds later parts. query live each switch.
+  const tabBtns = $$("#.pill-rail .pill[data-tab]");
+
+  function getTabs(){ return $$(".tab"); }
+  function getBtn(id){ return tabBtns.find(b=>b.dataset.tab===id); }
+
+  function switchTo(id, {fromHash=false}={}){
+    if(!id) return;
+    const tabs = getTabs();
+    tabs.forEach(t=>t.classList.toggle("active", t.id==="tab-"+id));
+    tabBtns.forEach(b=>{
+      const onTab = b.dataset.tab===id;
+      b.classList.toggle("active", onTab);
+      b.setAttribute("aria-selected", onTab ? "true" : "false");
+      if(onTab){ b.setAttribute("tabindex","0"); } else { b.setAttribute("tabindex","-1"); }
+    });
+    const btn=getBtn(id);
+    if(btn){ btn.scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"}); if(!fromHash) btn.focus({preventScroll:true}); }
+    // persist + reflect in URL
+    try{ localStorage.setItem("sof_last_tab", id);}catch{}
+    const u=new URL(location.href); u.hash = "tab="+id; history.replaceState(null,"",u);
+  }
+  window.switchTo = switchTo; // expose for later engines
+
+  tabBtns.forEach(b=>on(b,"click",()=>switchTo(b.dataset.tab)));
+
+  function updateChev(){
+    if(!rail) return;
+    prev.disabled = rail.scrollLeft<=4;
+    next.disabled = (rail.scrollLeft + rail.clientWidth) >= (rail.scrollWidth-4);
+  }
+  on(prev,"click",()=>{ rail.scrollBy({left:-rail.clientWidth*0.7,behavior:"smooth"}); });
+  on(next,"click",()=>{ rail.scrollBy({left: rail.clientWidth*0.7,behavior:"smooth"}); });
+  on(rail,"scroll",updateChev,{passive:true}); updateChev();
+
+  on(rail,"keydown",(e)=>{
+    if(e.key==="ArrowRight"){ e.preventDefault(); const i=Math.max(0,tabBtns.findIndex(b=>b.classList.contains("active"))); const n=tabBtns[(i+1)%tabBtns.length]; n.click(); }
+    if(e.key==="ArrowLeft"){ e.preventDefault(); const i=Math.max(0,tabBtns.findIndex(b=>b.classList.contains("active"))); const n=tabBtns[(i-1+tabBtns.length)%tabBtns.length]; n.click(); }
+  });
+
+  on(window,"hashchange",()=>{
+    const m=location.hash.match(/tab=([a-z0-9_-]+)/i);
+    if(m){ switchTo(m[1], {fromHash:true}); }
+  });
+
+  on(document,"keydown",(e)=>{
+    if(e.target.matches("input,textarea")) return;
+    const map={1:"remnant",2:"observer",3:"voice",4:"phrase",5:"breath",6:"coherence",7:"drills",8:"timer",9:"deck",0:"ledger"};
+    if(map[e.key]){ e.preventDefault(); switchTo(map[e.key]); }
+    if((e.key==="P"||e.key==="p") && $("#trace")){ e.preventDefault(); $("#dlTrace").click(); }
+    if((e.key==="R"||e.key==="r")){ e.preventDefault(); $("#newSeed")?.click(); }
+    if((e.key==="S"||e.key==="s")){ e.preventDefault(); /* Observer wiring in Part 2 */ }
+  });
+
+  /* ---------- Hero reveal ---------- */
+  $("#yr") && ($("#yr").textContent = new Date().getFullYear());
+  if('IntersectionObserver' in window){
+    const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }), {threshold:.08});
+    $$(".card").forEach(c=>io.observe(c));
+  } else { $$(".card").forEach(c=>c.classList.add('visible')); }
+
+  /* ---------- Toast helper ---------- */
+  function toast(msg){
+    const el=document.createElement("div"); el.textContent=msg;
+    Object.assign(el.style,{position:"fixed",left:"50%",bottom:"22px",transform:"translateX(-50%)",
+      background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid #2a3242",borderRadius:"10px",
+      boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:9999,opacity:0,transition:"opacity .2s"});
+    document.body.appendChild(el); requestAnimationFrame(()=>{el.style.opacity=1});
+    setTimeout(()=>{el.style.opacity=0; setTimeout(()=>el.remove(),250);},1800);
+  }
+  const PREFERS_RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ===================== Remnant Super-Engine ===================== */
+  let AC=null, carrier="none";
+  function ensureAC(){ if(AC) return AC; try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch{} return AC; }
+  window.addEventListener("pointerdown",()=>{ if(AC && AC.state==="suspended"){ AC.resume(); } },{once:true,passive:true});
+
+  // carrier osc pair
+  let G=null, PAN_L=null, PAN_R=null, OSC_L=null, OSC_R=null;
+  function initAudio(){
+    if(!ensureAC()) return;
+    if(G) return;
+    G=AC.createGain(); G.gain.value=0.00006; G.connect(AC.destination);
+    PAN_L = AC.createStereoPanner ? AC.createStereoPanner() : null;
+    PAN_R = AC.createStereoPanner ? AC.createStereoPanner() : null;
+    if(PAN_L && PAN_R){ PAN_L.pan.value=-0.66; PAN_R.pan.value=0.66; PAN_L.connect(G); PAN_R.connect(G); }
+  }
+  function stopOsc(){ try{OSC_L?.stop();OSC_R?.stop();}catch(_){} OSC_L=null; OSC_R=null; }
+  function playCarrier(freq, dur=0.5, vol=0.06){
+    initAudio(); if(!AC||!freq) return;
+    stopOsc();
+    const binaural = $("#binaural")?.checked;
+    const fL = binaural ? freq-2 : freq, fR = binaural ? freq+2 : freq;
+    const oL=AC.createOscillator(), gL=AC.createGain(); oL.type="sine"; oL.frequency.value=fL; gL.gain.value=0.0001;
+    const oR=AC.createOscillator(), gR=AC.createGain(); oR.type="sine"; oR.frequency.value=fR; gR.gain.value=0.0001;
+    oL.connect(gL).connect(PAN_L||G); oR.connect(gR).connect(PAN_R||G);
+    const t=AC.currentTime; const gate=$("#carrierGate")?.checked ? dur*10 : dur;
+    gL.gain.linearRampToValueAtTime(vol,t+0.06); gL.gain.linearRampToValueAtTime(0.0001,t+gate);
+    gR.gain.linearRampToValueAtTime(vol,t+0.06); gR.gain.linearRampToValueAtTime(0.0001,t+gate);
+    oL.start(); oR.start(); oL.stop(t+gate+0.04); oR.stop(t+gate+0.04);
+    OSC_L=oL; OSC_R=oR;
+  }
+  $$(".lab-btn.tone").forEach(b=>on(b,"click",()=>{
+    const c=b.dataset.carrier||"none"; carrier=c; $("#hudCarrier").textContent="Πν: "+c;
+    if(c!=="none") playCarrier(+c,0.7,0.07);
+  }));
+
+  // Canvas fit + palettes (unchanged) … [keep your existing Remnant engine here]
+
+  /* … keep the rest of your Part 1 Remnant engine exactly as you have it … */
+
+  // —— Tab bootstrapping after engine is ready ——
+  // open hash or last tab; fallback to remnant
+  (function initTabOnLoad(){
+    let id = (location.hash.match(/tab=([a-z0-9_-]+)/i)||[])[1];
+    if(!id){
+      try{ id = localStorage.getItem("sof_last_tab")||""; }catch{}
     }
-  </script>
+    if(!id) id="remnant";
+    // ensure panels exist (later parts load) then switch
+    const tryInit = () => {
+      if(getTabs().length>1){ switchTo(id, {fromHash:true}); return; }
+      setTimeout(tryInit, 50);
+    };
+    tryInit();
+  })();
+
+})();
+</script>
+  
   <meta charset="utf-8" />
   <title>Manifest — Remnant Visual Exercise · Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -1014,7 +1147,30 @@
       </article>
     </section>
 <!-- ================= CONTENT END OF PART 2/3; ENGINE CONTINUES BELOW ================= -->
+<script>
+(function(){
+  "use strict";
+  /* … your existing Part 2 code … */
 
+  // Mirror carrier preset clicks to "toneNow" readout (if present)
+  document.addEventListener("click",(e)=>{
+    const b = e.target.closest(".lab-btn.tone");
+    if(!b) return;
+    const c=b.dataset.carrier||"none";
+    const el=document.getElementById("toneNow"); if(el) el.textContent="Πν: "+c;
+  });
+
+  // If user hits "S" from anywhere and Observer exists, start it
+  document.addEventListener("keydown",(e)=>{
+    if((e.key==="S"||e.key==="s") && document.getElementById("obsStart")){
+      e.preventDefault();
+      if(window.switchTo) window.switchTo("observer");
+      document.getElementById("obsStart").click();
+    }
+  });
+
+})();
+</script>
   <script>
   (function(){
     "use strict";
@@ -1722,7 +1878,13 @@
     });
 
   })();
+    // If someone lands directly with a hash (#tab=ledger etc.), ensure we’re on it.
+(function(){
+  const m=location.hash.match(/tab=([a-z0-9_-]+)/i);
+  if(m && window.switchTo) window.switchTo(m[1], {fromHash:true});
+})();
   </script>
+})();
 </body>
 </html>
 <!-- ================= END PART 3/3 ================= -->
