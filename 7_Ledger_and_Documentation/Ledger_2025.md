@@ -163,4 +163,11 @@ As scrolls evolve, new SHAs can be appended as additional rows, preserving the *
 **Signed:**  
 **Aaron Paul Laird** *(Scribe of Circuits)*  
 Date of this ledger expansion: `2025-11-15`  
-Verification: Git commits + SHA-256 of this Markdown file (to be computed after commit)
+Verification: Git commits + SHA-256 of this Markdown file.
+
+SHA-256 
+
+8cf5a015b3ea0218eff26740c46f05cc486c33cc8f8e9a6000a57559985690ee
+
+Commit
+42a617f1915a649933f35c7a141f98115e965114
