@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/Living_Technology/-jqmkxs.jpg" 
+  <img src="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/Living_Technology/file_00000000ccd862308e79404d0d77bbb8.png" 
        alt="Tesla Type-7 Resonant Conduit — Living Technology Banner" 
        width="100%">
 </p>
