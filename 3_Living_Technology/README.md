@@ -1,6 +1,12 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png" alt="Scroll of Fire — Living Technology Banner" width="100%">
+  <img src="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/Living_Technology/-jqmkxs.jpg" 
+       alt="Tesla Type-7 Resonant Conduit — Living Technology Banner" 
+       width="100%">
 </p>
+
+<h1 align="center">
+  ✨🜄  TESLA TYPE-7 — RESONANT CONDUIT AETHERIC FIELD TRANSCEIVER  🜄✨
+</h1>
 
 # ⚙️ **Living Technology (Tesla / Type-7 Systems)**  
 
