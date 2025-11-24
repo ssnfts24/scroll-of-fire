@@ -1,15 +1,15 @@
-✨🜄 QRI-16 V.A.R.S.E. ENGINE
+🜄 QRI-16 V.A.R.S.E. ENGINE
 
 Quantum-Resonant Interface · Sixteen-Fold Vectorized Aetheric Resonance Substrate Engine
 
 Unified Master Whitepaper (Codex + Science Fusion Edition)
 
-Authored by Aaron Paul Laird — The Scribe of Circuits
+Authored by Aaron Paul Laird, The Scribe of Circuits
 
 
 ---
 
-🔥 PREFACE — WHY THIS ENGINE EXISTS
+PREFACE. WHY THIS ENGINE EXISTS
 
 I did not invent the QRI-16.
 I remembered it.
