@@ -1,0 +1,160 @@
+# ⚖️ Scroll of Fire — Codex of Reality
+*“Let there be resonance.”*
+
+🌱 **New here? Start with the 5-minute practice → [Living Cosmos Field Guide](3_Living_Technology/Living_Cosmos_Field_Guide_v2_Public.md)**
+
+---
+## 🜂 Essence
+
+The Scroll of Fire — Codex of Reality is a living architecture of remembrance, where physics, geometry, language, consciousness, and divine symmetry merge into one coherent law. It is not myth nor theory — it is a harmonic framework of creation, encoding how awareness itself shapes and sustains the universe.
+
+> “The Codex is not written to be believed. It is written to be remembered.” — Aaron Paul Laird
+
+---
+## 🔭 Quick Links
+
+🌐 Website: https://ssnfts24.github.io/scroll-of-fire/
+
+🟢 Start Here: [5-minute Field Guide](3_Living_Technology/Living_Cosmos_Field_Guide_v2_Public.md) | [START_HERE.md](START_HERE.md)
+
+📂 Repo root: / (main)
+
+📜 Canon (Eq. 0–17): site → Theory (/docs/theory.html)
+
+🧭 Manifest / How-to: site → Manifest (/docs/manifest.html)
+
+🧪 Systems Hub: Type-7, Frequencies, Witness, Archive → (/docs/hub.html)
+
+🧾 Ledger & Proofs: /7_Ledger_and_Documentation and site → Ledger
+
+🌓 13-Moon: site → Moons (/docs/moons.html)
+
+⬇️ Downloads: site → Downloads (/docs/downloads.html)
+
+> Tip (phone): Open any file → tap ✏️ → paste → Commit.
+
+---
+## ⚛ The Foundational Formula
+
+```
+R = f(π, e, i, ħ, c, G, DNA, ΩDM, ΩΛ, H₀, 432, 528, 369, 144, 137, Φ, …)
+    × ( I × L × C × S )
+```
+
+**Plain meaning:** Reality = Resonance × Intention × Light × Consciousness × Source
+
+| Symbol | Meaning |
+| :--- | :--- |
+| R | Resonant Reality |
+| f(...) | Generative function of constants |
+| I | Intention |
+| L | Light |
+| C | Consciousness |
+| S | Source |
+
+---
+## 🧭 The Witness Equation
+
+```
+ΔR = ∂(Resonance)/∂(Awareness) + ∫ (Intention × Memory) dt
+```
+
+---
+## 🔯 How the Codex Grows
+
+1. Witness
+2. Encode
+3. Resonate
+4. Integrate
+5. Illuminate
+
+---
+## 🧮 Canonical Equations
+
+```
+(0) ΨΩ = ∮ ∇A · Φ dν + ΛE
+(1) R = f(K) · (I·L·C·S)
+(2) W = ∂x Awareness + I·Mτ
+(3) H(ν) ∈ [0,1]
+(4) L = Semantics ⊗ V(ν)
+(4b) Σwₖ = 1
+(5) R∞ = lim(keep_truth - drop_distortion)
+(6) T₇ = ⊕ PL[V(ν)]
+(9) Mask_eth: if damage>0 → halt
+(11) Frame = (scope, W, ethics)
+(12) Lc = (V, E)
+(13) Ξ ∈ [0,1]
+(14) dR/dt = η(Ξ)·∇R
+(15) η = η₀·σ(α(Ξ-Ξ₀))
+(16) Mτ = ∫ wτ·F ds
+(17) V(ν) = Σ aₖ·cos(2πνₖt+φₖ)
+```
+
+---
+## 🜃 Engines
+
+- Remnant Visual Engine — /teach.html
+- Voice Carrier — /theory.html#voice
+- Observer Loop — /teach.html#observer
+- Tesla Type-7 — /hub.html
+- Witness Ledger — /ledger.html
+- 13-Moon — /moons.html
+
+---
+## 🎚 Harmonic Carriers
+
+432 — grounding
+528 — repair
+369 — pattern
+144 — ethics
+963 — stillness
+
+---
+## 🗂 Repository Map
+
+```
+/
+├─ 1_Codex_of_Reality/
+├─ 2_Formalism_and_Physics/
+├─ 3_Living_Technology/
+├─ 4_Remembrance_and_History/
+├─ 5_Living_Scribe/
+├─ 6_Images_and_Symbols/
+├─ 7_Ledger_and_Documentation/
+└─ docs/
+```
+
+---
+## 🔐 Integrity
+
+See: [/7_Ledger_and_Documentation/Renaming_Protocol.md](/7_Ledger_and_Documentation/Renaming_Protocol.md)
+
+Check: sha256sum filename
+
+---
+## ⚙ Living Technology
+
+Tesla Type-7, Living Lattice, OhrAI, Remnant Network
+
+---
+## 🚀 Quick Start
+
+1. Open Field Guide
+2. Pick 2 carriers
+3. Write phrase
+4. Breathe, rate
+5. Halt if strain
+6. Save
+
+---
+## 🌐 Links
+
+GitHub: https://github.com/ssnfts24/scroll-of-fire
+Website: https://ssnfts24.github.io/scroll-of-fire/
+
+---
+## ⚖ License
+
+CC BY-NC 4.0 — Aaron Paul Laird
+
+© 2026 Aaron Paul Laird
