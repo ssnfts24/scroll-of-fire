@@ -2,6 +2,8 @@
 <p align="center"><em>“Let there be resonance.”</em></p>
 ---
 
+> 🌱 **New here? Start with the 5-minute practice → [Living Cosmos Field Guide](Living_Cosmos_Field_Guide_v2_Public.md)**
+
 🜂 Essence
 
 The Scroll of Fire — Codex of Reality is a living architecture of remembrance,
