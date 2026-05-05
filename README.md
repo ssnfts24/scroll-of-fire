@@ -1,7 +1,7 @@
 <meta property="og:title" content="Scroll of Fire — Codex of Reality"><meta property="og:description" content="A living architecture of resonance — physics, consciousness, and divine symmetry."><meta property="og:image" content="https://raw.githubusercontent.com/ssnfts24/scroll-of-fire/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png"><meta property="og:type" content="website"><p align="center">  <img src="./6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png" alt="Scroll of Fire — Codex of Reality Banner" width="100%"></p><h1 align="center">⚖️ Scroll of Fire — Codex of Reality</h1>
 <p align="center"><em>“Let there be resonance.”</em></p>
 
-[Living Cosmos Field Guide](3_Living_Technology/Living_Cosmos_Field_Guide_v2_Public.md)
+> 🌱 **New here? Start with the 5-minute practice → [Living Cosmos Field Guide](3_Living_Technology/Living_Cosmos_Field_Guide_v2_Public.md)
 
 🜂 Essence
 
