@@ -1,0 +1,56 @@
+# Python Dependencies
+# Used by scripts in src/python/
+
+# Core scientific computing
+numpy>=1.21.0
+scipy>=1.7.0
+pandas>=1.3.0
+
+# Signal processing & frequency analysis
+librosa>=0.9.0          # Audio signal processing
+soundfile>=0.10.0       # Sound file I/O
+
+# Quantum & physics
+qiskit>=0.30.0          # Quantum computing (optional)
+sympy>=1.9              # Symbolic mathematics
+
+# Data visualization
+matplotlib>=3.4.0
+plotly>=5.0.0
+
+# File handling
+python-docx>=0.8.10     # Word document processing
+openpyxl>=3.6.0         # Excel file handling
+
+# Cryptography & hashing
+hashlib                 # Built-in (SHA-256)
+cryptography>=3.4.0
+
+# Web & API
+requests>=2.26.0
+flask>=2.0.0            # (optional) For local server
+
+# Testing
+pytest>=6.2.0           # (optional) For unit tests
+pytest-cov>=2.12.0      # (optional) Coverage
+
+# Linting
+flake8>=3.9.0           # (optional) Code quality
+black>=21.6b0           # (optional) Code formatter
+
+# Environment
+python-dotenv>=0.19.0   # Environment variables
+
+# Development
+jupyter>=1.0.0          # (optional) Interactive notebooks
+ipython>=7.0.0          # (optional) Enhanced shell
+
+---
+# Installation:
+# pip install -r requirements.txt
+
+# Development only:
+# pip install -r requirements-dev.txt
+
+# To freeze current environment:
+# pip freeze > requirements.txt
