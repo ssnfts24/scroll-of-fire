@@ -1,5 +1,10 @@
-/* Scroll of Fire — 13 Moons JS
-   Fixed: counted 13×28 dates, leap-day skip, Day Out of Time, year-map spans
+/* Scroll of Fire — Remnant 13 Moons Engine
+   Fixed:
+   - Remnant 4x7 calendar alignment
+   - Gregorian calendar shows M# · D# differences
+   - Leap Day skipped from 13x28 count
+   - July 25 shown as Day Out of Time
+   - Year map uses counted Remnant days
 */
 
 (function () {
@@ -44,12 +49,13 @@
   }
 
   function startOfDay(d) {
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0);
   }
 
   function addDays(d, n) {
     const x = new Date(d);
     x.setDate(x.getDate() + n);
+    x.setHours(12, 0, 0, 0);
     return x;
   }
 
@@ -85,22 +91,29 @@
 
   function remnantYearStart(date) {
     const y = date.getFullYear();
-    const startThisYear = new Date(y, 6, 26, 12);
+    const startThisYear = new Date(y, 6, 26, 12, 0, 0);
     return date >= startThisYear
       ? startThisYear
-      : new Date(y - 1, 6, 26, 12);
+      : new Date(y - 1, 6, 26, 12, 0, 0);
   }
 
   function countedDaysSince(start, date) {
     let count = 0;
-    for (let d = startOfDay(start); d < startOfDay(date); d = addDays(d, 1)) {
+
+    for (
+      let d = startOfDay(start);
+      d < startOfDay(date);
+      d = addDays(d, 1)
+    ) {
       if (isCountedDay(d)) count++;
     }
+
     return count;
   }
 
   function dateForCountedDay(yearStart, countedIndex) {
     let count = 0;
+
     for (let d = startOfDay(yearStart); ; d = addDays(d, 1)) {
       if (isCountedDay(d)) {
         if (count === countedIndex) return d;
@@ -168,7 +181,11 @@
 
     for (let i = 1; i <= 28; i++) {
       const dot = document.createElement("span");
-      if (!info.special && i === info.dayInMoon) dot.className = "is-today";
+
+      if (!info.special && i === info.dayInMoon) {
+        dot.className = "is-today";
+      }
+
       dot.title = `Moon day ${i}`;
       box.appendChild(dot);
     }
@@ -179,37 +196,55 @@
     if (!box) return;
 
     if (info.special) {
-      box.innerHTML = `<div class="r-doot">${info.label}<br><span>${info.detail}</span></div>`;
+      box.innerHTML = `
+        <div class="r-doot">
+          ${info.label}
+          <br>
+          <span>${info.detail}</span>
+        </div>
+      `;
       return;
     }
 
     const grid = document.createElement("div");
     grid.className = "r-grid";
 
-    ["1", "2", "3", "4", "5", "6", "7"].forEach((x) => {
+    ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7"].forEach((x) => {
       const lbl = document.createElement("div");
       lbl.className = "r-lbl";
       lbl.textContent = x;
       grid.appendChild(lbl);
     });
 
-    for (let day = 1; day <= 28; day++) {
-      const cell = document.createElement("div");
-      cell.className = "r-day";
-      if (day === info.dayInMoon) cell.classList.add("is-today");
+    for (let week = 0; week < 4; week++) {
+      for (let day = 1; day <= 7; day++) {
+        const moonDay = week * 7 + day;
 
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = String(day);
+        const cell = document.createElement("div");
+        cell.className = "r-day";
 
-      const targetCountedIndex = (info.moonIndex - 1) * 28 + (day - 1);
-      btn.addEventListener("click", () => {
-        state.date = dateForCountedDay(info.yearStart, targetCountedIndex);
-        paint();
-      });
+        if (moonDay === info.dayInMoon) {
+          cell.classList.add("is-today");
+        }
 
-      cell.appendChild(btn);
-      grid.appendChild(cell);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.innerHTML = `
+          <b>${moonDay}</b>
+          <small>W${week + 1} · D${day}</small>
+        `;
+
+        const targetCountedIndex =
+          (info.moonIndex - 1) * 28 + (moonDay - 1);
+
+        btn.addEventListener("click", () => {
+          state.date = dateForCountedDay(info.yearStart, targetCountedIndex);
+          paint();
+        });
+
+        cell.appendChild(btn);
+        grid.appendChild(cell);
+      }
     }
 
     box.innerHTML = "";
@@ -222,8 +257,8 @@
 
     const y = date.getFullYear();
     const m = date.getMonth();
-    const first = new Date(y, m, 1, 12);
-    const last = new Date(y, m + 1, 0, 12);
+    const first = new Date(y, m, 1, 12, 0, 0);
+    const last = new Date(y, m + 1, 0, 12, 0, 0);
     const startPad = first.getDay();
 
     const grid = document.createElement("div");
@@ -243,7 +278,7 @@
     }
 
     for (let day = 1; day <= last.getDate(); day++) {
-      const d = new Date(y, m, day, 12);
+      const d = new Date(y, m, day, 12, 0, 0);
       const info = moonInfo(d);
 
       const cell = document.createElement("div");
@@ -257,10 +292,16 @@
       btn.type = "button";
 
       if (info.special) {
-        btn.innerHTML = `${day}<small>${info.special === "doot" ? "DOOT" : "LEAP"}</small>`;
+        btn.innerHTML = `
+          <b>${day}</b>
+          <small>${info.special === "doot" ? "DOOT" : "LEAP"}</small>
+        `;
         btn.title = info.detail;
       } else {
-        btn.innerHTML = `${day}<small>M${info.moonIndex}·D${info.dayInMoon}</small>`;
+        btn.innerHTML = `
+          <b>${day}</b>
+          <small>M${info.moonIndex} · D${info.dayInMoon}</small>
+        `;
         btn.title = `Moon ${info.moonIndex}, Day ${info.dayInMoon}`;
       }
 
@@ -303,6 +344,7 @@
         <td>${fmtDate(s)}</td>
         <td>${fmtDate(e)}</td>
       `;
+
       tbody.appendChild(row);
     });
   }
@@ -345,6 +387,13 @@
     ctx.fillStyle = "#05070d";
     ctx.fillRect(0, 0, w, h);
 
+    for (let i = 0; i < 80; i++) {
+      const x = (i * 73) % w;
+      const y = (i * 41) % h;
+      ctx.fillStyle = "rgba(255,255,255,.38)";
+      ctx.fillRect(x, y, 1.2, 1.2);
+    }
+
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.fillStyle = "#d8d6cc";
@@ -372,6 +421,7 @@
     ctx.stroke();
 
     setText("phaseMeta", `${name} · ${(illum * 100).toFixed(0)}% illuminated`);
+    setText("phaseLine", `${name} · age ${age.toFixed(1)} days`);
   }
 
   function paintSky() {
@@ -390,7 +440,7 @@
     resize();
     window.addEventListener("resize", resize);
 
-    const stars = Array.from({ length: 110 }, (_, i) => ({
+    const stars = Array.from({ length: 120 }, (_, i) => ({
       x: (i * 97) % innerWidth,
       y: (i * 53) % innerHeight,
       r: ((i % 3) + 1) * 0.45,
@@ -399,6 +449,7 @@
 
     function draw() {
       ctx.clearRect(0, 0, innerWidth, innerHeight);
+
       stars.forEach((s, i) => {
         ctx.globalAlpha = s.a + Math.sin(Date.now() / 900 + i) * 0.15;
         ctx.fillStyle = "#fff";
@@ -406,6 +457,7 @@
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
         ctx.fill();
       });
+
       ctx.globalAlpha = 1;
       requestAnimationFrame(draw);
     }
@@ -425,7 +477,10 @@
       "UTC"
     ];
 
-    select.innerHTML = zones.map((z) => `<option value="${z}">${z}</option>`).join("");
+    select.innerHTML = zones
+      .map((z) => `<option value="${z}">${z}</option>`)
+      .join("");
+
     select.value = state.tz;
   }
 
@@ -442,7 +497,10 @@
       setText("dayInMoon", info.special === "doot" ? "∞" : "↺");
       setText("yearSpan", `Year began ${fmtDate(info.yearStart)}`);
     } else {
-      setText("moonLine", `Moon ${info.moonIndex} · Day ${info.dayInMoon}/28 · ${info.moon.name}`);
+      setText(
+        "moonLine",
+        `Moon ${info.moonIndex} · Day ${info.dayInMoon}/28 · ${info.moon.name}`
+      );
       setText("moonName", `${info.moon.idx}. ${info.moon.name}`);
       setText("moonEssence", info.moon.essence);
       setText("dayInMoon", info.dayInMoon);
@@ -490,6 +548,12 @@
       paint();
     });
 
+    $("resetTZ")?.addEventListener("click", () => {
+      state.tz = TZ_DEFAULT;
+      if ($("tzPick")) $("tzPick").value = TZ_DEFAULT;
+      paint();
+    });
+
     $("shareLink")?.addEventListener("click", async () => {
       const url = new URL(location.href);
       url.searchParams.set("date", isoDate(state.date));
@@ -501,6 +565,7 @@
         setTimeout(() => ($("shareLink").textContent = "Copy Link"), 1200);
       } catch {
         $("shareLink").textContent = "Copy failed";
+        setTimeout(() => ($("shareLink").textContent = "Copy Link"), 1200);
       }
     });
 
