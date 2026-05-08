@@ -1,380 +1,95 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963" data-alive="lively">
-
+<html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
 <head>
-
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-
   <script>
     (function () {
-      var LIVE = "ssnfts24.github.io";
-      if (location.hostname !== LIVE) {
-        var b = document.querySelector("base");
+      if (location.hostname !== "ssnfts24.github.io") {
+        const b = document.querySelector("base");
         if (b) b.remove();
       }
     })();
   </script>
 
-  <script>
-    (() => {
-      try {
-        let t = localStorage.getItem('theme');
-
-        if (!t) {
-          t = (matchMedia &&
-            matchMedia('(prefers-color-scheme: light)').matches)
-            ? 'light'
-            : 'dark';
-        }
-
-        document.documentElement.setAttribute('data-theme', t);
-      } catch {}
-    })();
-  </script>
-
-  <meta charset="utf-8" />
-
-  <title>Remnant 13 Moons — Wizard of YHWH · Living Clock</title>
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
-  />
-
-  <meta name="color-scheme" content="dark light" />
-
-  <meta
-    name="description"
-    content="Remnant 13×28 Living Clock with animated starfield, lunar phase, zodiac wheel, dual calendars, daily themes, and .ics export."
-  />
-
+  <meta charset="utf-8">
+  <title>Remnant 13 Moons — Living Calendar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="A natural Remnant 13 Moons calendar anchored to the first New Moon after the Spring Equinox.">
   <meta name="theme-color" content="#05070d">
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
 
-  <!-- Canonical -->
-  <link
-    rel="canonical"
-    href="https://ssnfts24.github.io/scroll-of-fire/moons.html"
-  />
-
-  <!-- OpenGraph -->
   <meta property="og:type" content="website">
+  <meta property="og:title" content="Remnant 13 Moons — Living Calendar">
+  <meta property="og:description" content="13 fixed 28-day moons anchored to the first New Moon after Spring Equinox.">
+  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
+  <meta property="og:image" content="assets/file_00000000c408623087e8cb2bde025ea3.png">
 
-  <meta
-    property="og:title"
-    content="Remnant 13 Moons — Wizard of YHWH"
-  />
-
-  <meta
-    property="og:description"
-    content="A living moonscape: day ring, week dots, year map, lunar sim, zodiac wheel, daily themes, .ics — Scroll of Fire."
-  />
-
-  <meta
-    property="og:url"
-    content="https://ssnfts24.github.io/scroll-of-fire/moons.html"
-  />
-
-  <meta
-    property="og:image"
-    content="assets/file_00000000c408623087e8cb2bde025ea3.png"
-  />
-
-  <!-- Manifest -->
   <link rel="manifest" href="assets/js/manifest.webmanifest">
+  <link rel="icon" type="image/png" href="assets/file_00000000c408623087e8cb2bde025ea3.png">
 
-  <!-- Icons -->
-  <link
-    rel="icon"
-    type="image/png"
-    href="assets/file_00000000c408623087e8cb2bde025ea3.png"
-  />
-
-  <!-- CSS ORDER -->
-  <style>
-    @layer tokens, base, components, astrology, remnant, themes, utilities, legacy;
-  </style>
-
-  <link
-    rel="stylesheet"
-    href="assets/css/fonts.css?v=2026-05-08-moons1"
-  >
-
-  <link
-    rel="stylesheet"
-    href="assets/css/tokens.css?v=2026-05-08-moons1"
-  >
-
-  <link
-    rel="stylesheet"
-    href="assets/css/core.css?v=2026-05-08-moons1"
-  >
-
-  <link
-    rel="stylesheet"
-    href="assets/css/astrology.css?v=2026-05-08-moons1"
-  >
-
-  <link
-    rel="stylesheet"
-    href="assets/css/themes.moons.css?v=2026-05-08-moons1"
-  >
-
-  <!-- MUST LOAD LAST -->
-  <link
-    rel="stylesheet"
-    href="assets/css/moons.css?v=2026-05-08-moons2"
-  >
-
-  <!-- Critical fallback -->
-  <style>
-
-    :root{
-      --bg:#090b11;
-      --card:#10141d;
-      --line:#232938;
-      --ink:#f1efe9;
-      --muted:#a9b2c7;
-      --accent:#7af3ff;
-      --gold:#f3c97a;
-      --radius:18px;
-    }
-
-    html,
-    body{
-      min-height:100%;
-    }
-
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--ink);
-      font:400 16px/1.55 Inter,system-ui,sans-serif;
-      overflow-x:hidden;
-    }
-
-    .wrap{
-      width:min(100% - 28px, 1120px);
-      margin-inline:auto;
-      position:relative;
-      z-index:1;
-      padding:20px 0 48px;
-    }
-
-    .card{
-      background:rgba(16,20,29,.88);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      padding:20px;
-      box-shadow:0 10px 34px rgba(0,0,0,.28);
-      backdrop-filter:blur(10px);
-    }
-
-    h1,h2,h3{
-      line-height:1.1;
-      margin:0 0 .55rem;
-    }
-
-    .subtitle{
-      color:var(--muted);
-      max-width:68ch;
-    }
-
-    .btnrow,
-    .chiprow,
-    .formrow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-
-    .lab-btn{
-      display:inline-flex;
-      align-items:center;
-      gap:.45rem;
-      padding:.6rem .85rem;
-      border-radius:12px;
-      border:1px solid var(--line);
-      background:#121826;
-      color:var(--ink);
-      text-decoration:none;
-      font-weight:700;
-      cursor:pointer;
-    }
-
-    .lab-btn.ghost{
-      background:transparent;
-    }
-
-    .lab-input{
-      background:#0f1218;
-      color:var(--ink);
-      border:1px solid var(--line);
-      border-radius:10px;
-      padding:.5rem .6rem;
-    }
-
-    .grid,
-    .row-2{
-      display:grid;
-      gap:18px;
-    }
-
-    .grid{
-      grid-template-columns:1fr;
-    }
-
-    .row-2{
-      grid-template-columns:1fr;
-    }
-
-    @media(min-width:900px){
-      .row-2{
-        grid-template-columns:1fr 1fr;
-      }
-    }
-
-    .weekrow{
-      display:flex;
-      align-items:center;
-      gap:.7rem;
-      overflow:auto;
-      white-space:nowrap;
-    }
-
-    .week{
-      display:flex;
-      gap:7px;
-      flex-wrap:wrap;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:.35rem;
-      padding:.45rem .7rem;
-      border-radius:999px;
-      background:#151b28;
-      border:1px solid #293246;
-      color:#dfe7ff;
-    }
-
-    .meta{
-      color:var(--muted);
-    }
-
-    .scroller{
-      overflow-x:auto;
-      width:100%;
-    }
-
-    table{
-      width:100%;
-      border-collapse:collapse;
-    }
-
-    canvas,
-    svg,
-    img{
-      max-width:100%;
-      height:auto;
-    }
-
-    #errorBanner{
-      display:none;
-      margin:10px 0;
-      padding:12px;
-      border-radius:12px;
-      background:#33161a;
-      border:1px solid #6b262e;
-      color:#ffd7d7;
-    }
-
-    #errorBanner.show{
-      display:block;
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at top,
-          rgba(122,243,255,.08),
-          transparent 45%);
-      z-index:0;
-    }
-
-  </style>
-
+  <link rel="stylesheet" href="assets/css/fonts.css?v=2026-05-08-moons3">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=2026-05-08-moons3">
+  <link rel="stylesheet" href="assets/css/core.css?v=2026-05-08-moons3">
+  <link rel="stylesheet" href="assets/css/moons.css?v=2026-05-08-moons3">
 </head>
 
-<body class="stars remnant-yhwh" data-theme-scope="wizard">
-
-  <!-- Background -->
-  <canvas
-    id="skyBg"
-    width="1440"
-    height="900"
-    aria-hidden="true"
-    style="
-      position:fixed;
-      inset:0;
-      width:100vw;
-      height:100vh;
-      z-index:0;
-      pointer-events:none;
-    ">
-  </canvas>
+<body class="stars remnant-yhwh">
+  <canvas id="skyBg" aria-hidden="true"></canvas>
 
   <main class="wrap" id="main">
-
-    <header class="page-head fancy-head card">
-
-      <h1>
-        🜂 Remnant 13 Moons
-        <span class="soft">
-          — Wizard of
-          <span lang="he">יהוה</span>
-        </span>
-      </h1>
-
-      <p class="subtitle" id="sofMotto">
-        On this day, we crown the breath and brighten the field.
+    <header class="page-head card">
+      <h1>🜂 Remnant 13 Moons</h1>
+      <p class="subtitle">
+        A natural 13×28 calendar anchored to the first New Moon after the Spring Equinox.
       </p>
 
-      <nav class="crumbs btnrow">
+      <nav class="crumbs btnrow" aria-label="Navigation">
         <a class="lab-btn" href="index.html">← Codex</a>
         <a class="lab-btn" href="theory.html">📘 Theory</a>
-        <a class="lab-btn ghost" href="genesis-oracle.html">
-          🔮 Genesis Oracle
-        </a>
+        <a class="lab-btn ghost" href="genesis-oracle.html">🔮 Genesis Oracle</a>
       </nav>
 
-      <div id="errorBanner"></div>
-
+      <div id="errorBanner" role="alert"></div>
     </header>
 
-    <section class="grid">
+    <section class="card ringcard" aria-label="Current Remnant Moon">
+      <div class="moon-badge">
+        <div class="ring" aria-label="Day in Moon">
+          <svg viewBox="0 0 120 120" role="img">
+            <circle cx="60" cy="60" r="50" class="ring-bg"></circle>
+            <circle cx="60" cy="60" r="50" class="ring-fg" id="moonArc" pathLength="316"></circle>
+          </svg>
+          <div class="label">
+            <div class="big" id="dayInMoon">—</div>
+            <div class="small" id="moonLength">/28</div>
+          </div>
+        </div>
 
+        <div>
+          <h2 id="moonName">—</h2>
+          <p class="meta" id="moonEssence">—</p>
+          <p class="mono" id="yearSpan">—</p>
+          <p class="meta" id="moonLine">—</p>
+        </div>
+      </div>
+
+      <div class="weekrow" aria-label="28-day moon progress">
+        <span class="weeklabel">Moon Days</span>
+        <div class="week" id="weekDots"></div>
+      </div>
+    </section>
+
+    <section class="grid" aria-label="Controls and sky phase">
       <article class="card">
-
         <h2>Today</h2>
 
         <div class="chiprow">
-
-          <span class="pill">
-            <b id="nowDate">—</b>
-          </span>
-
-          <span class="pill" id="moonLine">—</span>
-
+          <span class="pill"><b id="nowDate">—</b></span>
+          <span class="pill mono" id="nowClock">—</span>
           <span class="pill" id="nowTZ">—</span>
-
         </div>
 
         <div class="formrow">
-
           <label>
             Time Zone
             <select id="tzPick" class="lab-input"></select>
@@ -382,100 +97,49 @@
 
           <label>
             Date
-            <input
-              type="date"
-              id="datePick"
-              class="lab-input"
-            >
+            <input type="date" id="datePick" class="lab-input">
           </label>
-
-          <label>
-            Hour
-            <input
-              type="range"
-              id="hourScrub"
-              min="0"
-              max="23"
-              value="12"
-              class="lab-input"
-            >
-          </label>
-
         </div>
 
         <div class="btnrow">
-
-          <button class="lab-btn" id="btnToday">
-            Today
-          </button>
-
-          <button class="lab-btn" id="prevDay">
-            ← Prev
-          </button>
-
-          <button class="lab-btn" id="nextDay">
-            Next →
-          </button>
-
-          <button class="lab-btn ghost" id="shareLink">
-            Copy Link
-          </button>
-
+          <button class="lab-btn" id="btnToday" type="button">Today</button>
+          <button class="lab-btn" id="prevDay" type="button">← Prev</button>
+          <button class="lab-btn" id="nextDay" type="button">Next →</button>
+          <button class="lab-btn ghost" id="shareLink" type="button">Copy Link</button>
         </div>
-
       </article>
 
       <article class="card">
-
-        <h2>Lunar Phase</h2>
-
-        <canvas
-          id="simMoon"
-          width="320"
-          height="320"
-          aria-label="Lunar phase">
-        </canvas>
-
+        <h2>Visible Moon Phase</h2>
+        <canvas id="simMoon" width="320" height="320" aria-label="Real lunar phase"></canvas>
+        <p class="mono" id="phaseLine">—</p>
         <p class="meta" id="phaseMeta">—</p>
-
       </article>
-
     </section>
 
-    <section class="row-2">
-
+    <section class="row-2" aria-label="Calendars">
       <article class="card">
-
-        <h2>Remnant Calendar</h2>
-
-        <section
-          id="remCal"
-          class="calendar">
-        </section>
-
+        <h2>Remnant Moon Calendar</h2>
+        <p class="meta">Fixed 4 weeks × 7 days. This does not float like Gregorian weeks.</p>
+        <section id="remCal" class="calendar"></section>
       </article>
 
       <article class="card">
-
         <h2>Gregorian Calendar</h2>
-
-        <section
-          id="gregCal"
-          class="gregorian">
-        </section>
-
+        <p class="meta">Shows how each Gregorian day maps into the Remnant moon count.</p>
+        <section id="gregCal" class="gregorian"></section>
       </article>
-
     </section>
 
     <article class="card">
-
       <h2>Year Map</h2>
+      <p class="hint">
+        Year begins at the first New Moon after Spring Equinox. Each Remnant Moon is 28 days.
+        Remaining days after Moon 13 are outside the counted cycle.
+      </p>
 
       <div class="scroller">
-
         <table class="year-map">
-
           <thead>
             <tr>
               <th>#</th>
@@ -485,136 +149,38 @@
               <th>End</th>
             </tr>
           </thead>
-
           <tbody id="yearMapBody"></tbody>
-
         </table>
-
       </div>
 
+      <p class="meta" id="outsideInfo">—</p>
     </article>
-
   </main>
 
-  <footer class="footer wrap">
-
-    <p class="meta">
-      © <span id="yr">2026</span>
-      Aaron Paul Laird — Scroll of Fire
-    </p>
-
+  <footer class="footer">
+    <p class="meta">© <span id="yr">2026</span> Aaron Paul Laird — Scroll of Fire</p>
   </footer>
 
-  <!-- Fallback moons -->
   <script>
-
     window.__MOONS__ = window.__MOONS__ || [
-
-      {
-        idx:1,
-        name:"Magnetic",
-        essence:"Unify · Purpose"
-      },
-
-      {
-        idx:2,
-        name:"Lunar",
-        essence:"Polarize · Challenge"
-      },
-
-      {
-        idx:3,
-        name:"Electric",
-        essence:"Activate · Service"
-      },
-
-      {
-        idx:4,
-        name:"Self-Existing",
-        essence:"Define · Form"
-      },
-
-      {
-        idx:5,
-        name:"Overtone",
-        essence:"Empower · Radiance"
-      },
-
-      {
-        idx:6,
-        name:"Rhythmic",
-        essence:"Organize · Equality"
-      },
-
-      {
-        idx:7,
-        name:"Resonant",
-        essence:"Channel · Attunement"
-      },
-
-      {
-        idx:8,
-        name:"Galactic",
-        essence:"Harmonize · Integrity"
-      },
-
-      {
-        idx:9,
-        name:"Solar",
-        essence:"Pulse · Intention"
-      },
-
-      {
-        idx:10,
-        name:"Planetary",
-        essence:"Perfect · Manifestation"
-      },
-
-      {
-        idx:11,
-        name:"Spectral",
-        essence:"Dissolve · Liberation"
-      },
-
-      {
-        idx:12,
-        name:"Crystal",
-        essence:"Dedicate · Cooperation"
-      },
-
-      {
-        idx:13,
-        name:"Cosmic",
-        essence:"Endure · Presence"
-      }
-
+      { idx: 1, name: "Magnetic", essence: "Unify · Purpose" },
+      { idx: 2, name: "Lunar", essence: "Polarize · Challenge" },
+      { idx: 3, name: "Electric", essence: "Activate · Service" },
+      { idx: 4, name: "Self-Existing", essence: "Define · Form" },
+      { idx: 5, name: "Overtone", essence: "Empower · Radiance" },
+      { idx: 6, name: "Rhythmic", essence: "Organize · Equality" },
+      { idx: 7, name: "Resonant", essence: "Channel · Attunement" },
+      { idx: 8, name: "Galactic", essence: "Harmonize · Integrity" },
+      { idx: 9, name: "Solar", essence: "Pulse · Intention" },
+      { idx: 10, name: "Planetary", essence: "Perfect · Manifestation" },
+      { idx: 11, name: "Spectral", essence: "Dissolve · Liberation" },
+      { idx: 12, name: "Crystal", essence: "Dedicate · Cooperation" },
+      { idx: 13, name: "Cosmic", essence: "Endure · Presence" }
     ];
-
   </script>
 
-  <!-- Main Engine -->
-  <script
-    defer
-    src="assets/js/moons.js?v=2026-05-08-moons2"
-    onerror="
-      (function(){
-        var b=document.getElementById('errorBanner');
-
-        if(b){
-          b.textContent='Failed to load assets/js/moons.js (404/CORS)';
-          b.classList.add('show');
-        }
-      })();
-    ">
+  <script defer src="assets/js/moons.js?v=2026-05-08-moons3"
+    onerror="(function(){var b=document.getElementById('errorBanner');if(b){b.textContent='Failed to load assets/js/moons.js';b.classList.add('show');}})();">
   </script>
-
-  <!-- Helpers -->
-  <script>
-
-    document.getElementById('yr').textContent =
-      new Date().getFullYear();
-
-  </script>
-
 </body>
 </html>
