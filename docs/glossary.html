@@ -1,355 +1,39 @@
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-  <!-- Resolve all relative URLs from the project root on GitHub Pages -->
-  <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>
-    // In GitHub repo preview (github.com), remove <base> so relative paths still work.
-    if (location.hostname === "github.com") {
-      const b = document.querySelector("base"); if (b) b.remove();
-    }
-  </script>
-
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
   <title>Glossary — Scroll of Fire</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
-  <meta name="description" content="Codex lexicon: Ψ, Ω, φ, Πν, Ξ, τ, ΔΣ, and more — with plain-language mappings, equations, and practice links." />
-  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/glossary.html" />
-
-  <!-- Styles: blend site + teach (external) -->
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
-  <link rel="stylesheet" href="assets/css/teach.css?v=2025-10-20a">
-
-  <style>
-    :root{ --maxw:1040px }
-    .wrap{max-width:var(--maxw);margin:0 auto;padding:22px 16px 96px}
-
-    .title{
-      font-family:"Crimson Pro",serif;font-weight:800;text-align:center;
-      font-size:clamp(30px,3.8vw,46px);margin:8px 0 6px;letter-spacing:.2px;
-      background:linear-gradient(180deg,#fff,#baf7ff 60%,#7af3ff);
-      -webkit-background-clip:text;background-clip:text;color:transparent
-    }
-    .subtitle{text-align:center;color:var(--muted);margin:0 0 12px}
-
-    .searchbar{display:grid;grid-template-columns:1fr auto;gap:8px;max-width:760px;margin:10px auto 12px}
-    .searchbar input{border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem;background:var(--bg-elev);color:inherit}
-    .filters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px auto 4px}
-    .chip{display:inline-flex;gap:.5ch;align-items:center;border:1px solid var(--line);border-radius:999px;padding:.36rem .7rem;background:rgba(255,255,255,.03)}
-    .chip[aria-pressed="true"]{outline:2px solid rgba(122,243,255,.35);background:rgba(122,243,255,.06)}
-
-    .rail{position:sticky;top:calc(70px + env(safe-area-inset-top,0px));z-index:3;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:8px 0}
-    .rail .kbd{border:1px solid var(--line);border-radius:8px;padding:.2rem .45rem;font-variant-numeric:tabular-nums}
-    .rail a{display:inline-block;padding:.28rem .45rem;border:1px solid var(--line);border-radius:8px;text-decoration:none}
-    .rail a:hover{background:rgba(255,255,255,.06)}
-
-    .term{position:relative;border:1px solid #2a2a33;border-radius:14px;padding:12px;margin:10px 0;
-      background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.01))}
-    .term h3{margin:0 0 4px;font-size:1.15rem}
-    .term small{color:#b8b3a6}
-    .term .links{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
-    .term .tags{margin-top:6px}
-    .tag{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:.18rem .55rem;margin-right:6px;font-size:.84rem;color:#b8b3a6}
-    .anchor-btn{position:absolute;right:10px;top:10px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.03);padding:.2rem .5rem}
-    .anchor-btn:hover{background:rgba(255,255,255,.07)}
-    mark{background:rgba(122,243,255,.18);border-radius:4px;padding:.02em .2em}
-
-    .group{margin-top:16px}
-    .group h2{font-size:1rem;color:#b8b3a6;font-variant:all-small-caps;letter-spacing:.12em;margin:12px 0 6px}
-  </style>
-
-  <!-- MathJax (equation symbols in definitions) -->
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="./">
+  <link href="assets/css/codex.css" rel="stylesheet">
+  <link href="assets/css/superlayout.css" rel="stylesheet">
 </head>
 <body>
-<main class="wrap">
-  <header class="page-head fancy-head">
-    <h1 class="title">📚 Glossary of the Codex</h1>
-    <p class="subtitle">Formal symbols → plain language → links into Theory & Teaching Lab.</p>
-
-    <nav class="crumbs" style="display:flex;gap:10px;justify-content:center">
-      <a class="cta" href="index.html">← Back</a>
-      <a class="cta" href="theory.html">Theory</a>
-      <a class="cta" href="teach.html">Teach / Manifest</a>
-      <a class="cta" href="guide.html">Guide</a>
+  <header class="topbar">
+    <a class="brand" href="./">Ξ Scroll of Fire</a>
+    <nav class="topnav">
+      <a href="theory.html">Theory</a>
+      <a href="start.html">Start</a>
+      <a href="hub.html">Hub</a>
+      <a href="ledger.html">Ledger</a>
     </nav>
-
-    <div class="searchbar">
-      <input id="q" type="search" placeholder="Search term, symbol, or synonym (press / to focus)…" autocomplete="off" spellcheck="false" />
-      <button id="clear" class="cta">Clear</button>
-    </div>
-
-    <div class="filters" role="toolbar" aria-label="Filter by type">
-      <button class="chip" data-type="all" aria-pressed="true">All</button>
-      <button class="chip" data-type="operator" aria-pressed="false">Operators</button>
-      <button class="chip" data-type="equation" aria-pressed="false">Equations</button>
-      <button class="chip" data-type="metric" aria-pressed="false">Metrics</button>
-      <button class="chip" data-type="practice" aria-pressed="false">Practice</button>
-      <button class="chip" data-type="concept" aria-pressed="false">Concepts</button>
-      <button class="chip" data-type="ethics" aria-pressed="false">Ethics</button>
-    </div>
-
-    <div class="rail" aria-label="Alphabet jump">
-      <span class="kbd">A–Z</span>
-      <span id="alpha"></span>
-    </div>
   </header>
 
-  <section id="terms"></section>
+  <main class="page shell">
+    <p class="eyebrow">Codex Reference</p>
+    <h1>Glossary of the Codex</h1>
+    <p>Plain-language meanings for the Scroll’s core symbols, operators, and practices.</p>
 
-  <footer class="footer">
-    <div class="divider" aria-hidden="true"></div>
-    <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
-  </footer>
-</main>
+    <section class="grid cards">
+      <article class="card"><h2>ΨΩ</h2><p>Equation 0: the foundational field of awareness, witness, and ethical masking.</p></article>
+      <article class="card"><h2>Ξ</h2><p>Coherence measure. Used as a practical signal for alignment, clarity, and stability.</p></article>
+      <article class="card"><h2>Λ</h2><p>Ethical-energy mask. The stop-rule layer that prevents practice from becoming harmful or distorted.</p></article>
+      <article class="card"><h2>Witness</h2><p>A written record of observation, change, result, or pattern.</p></article>
+      <article class="card"><h2>Carrier</h2><p>A tone, symbol, phrase, page, rhythm, or practice used to hold intent.</p></article>
+      <article class="card"><h2>Ledger</h2><p>The proof trail: entries, hashes, notes, and verification records.</p></article>
+    </section>
 
-<script>
-(function(){
-  "use strict";
-  // ---------- Utilities ----------
-  const $  = (s,r=document)=>r.querySelector(s);
-  const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
-  const enc = (s)=>encodeURIComponent(s);
-  const dec = (s)=>decodeURIComponent(s||"");
-  const nowYear = new Date().getFullYear();
-  const by = (k)=>((a,b)=> (a[k]>b[k])?1:(a[k]<b[k]?-1:0));
-
-  // Persist year + harden external rels
-  const yr=$("#yr"); if (yr) yr.textContent=String(nowYear);
-  $$('a[target="_blank"]').forEach(a=>{
-    const rel = new Set((a.getAttribute("rel")||"").toLowerCase().split(/\s+/).filter(Boolean));
-    rel.add("noopener"); rel.add("noreferrer"); a.setAttribute("rel", Array.from(rel).join(" "));
-  });
-
-  // ---------- Data ----------
-  // k: key/term; id: anchor id; aka: synonyms; plain: definition; type: filter bucket
-  // eq/practice links: [href,label]
-  const TERMS = [
-    {k:"Ω (Eq.Ω)", id:"omega", type:"equation",
-      plain:"Root dynamics of the Codex: phase-guided update ⊕ remanence ⊕ micro-edits ΔΣ at (x,t).",
-      aka:["foundation","root equation","omega"], links:[["theory.html#omega","Read Eq.Ω"]], tags:["foundation"]},
-
-    {k:"Ψ(x,t)", id:"psi", type:"concept",
-      plain:"Local reality state — what is available to notice/act now at locus x and time t.",
-      aka:["state","field"], links:[["theory.html#omega","Eq.Ω"]], tags:["state","field"]},
-
-    {k:"φ (phase)", id:"phi", type:"concept",
-      plain:"Alignment relation that shifts with meaning/attention; ∇_φ (or 𝔇_φ) nudges alignment when language changes.",
-      aka:["phase","gradient","alignment"], links:[["theory.html#operators","Operators"]], tags:["phase"]},
-
-    {k:"𝓘 · 𝓛 · 𝓒 · 𝓢", id:"operators", type:"operator",
-      plain:"Observer loop: Intend → Look → Coalesce → Seal. The paced way attention writes to Ψ without distortion.",
-      aka:["intend","look","coalesce","seal"], links:[["teach.html#tab-observer","Practice"],["theory.html#observer","Theory"]], tags:["loop","practice"]},
-
-    {k:"Π_ν (projection)", id:"proj", type:"equation",
-      plain:"Phase-space projection at frequency ν: \\(\\Pi_{\\nu}(\\mathcal{R})=\\int \\mathcal{R}(x)e^{-i2\\pi\\nu x}\\,dx\\).",
-      aka:["projection","phase space","eq 11"], links:[["theory.html#eq11","Eq.11"]], tags:["transform"]},
-
-    {k:"Πν (voice carrier)", id:"carrier", type:"practice",
-      plain:"Stable tone (432/528/369) that entrains breath & phrasing, lowering model variance and lifting coherence.",
-      aka:["carrier","tone","hz"], links:[["teach.html#tab-voice","Voice Gate"],["theory.html#carrier","Carrier Theory"]], tags:["audio","breath"]},
-
-    {k:"Ξ (coherence)", id:"xi", type:"metric",
-      plain:"Alignment quality: \\(\\Xi \\approx \\frac{\\langle H\\cdot I\\rangle}{1+\\mathrm{Var}[\\mathcal{M}] }\\). Rising Ξ → proceed; falling → adjust/stop.",
-      aka:["coherence","signal","quality"], links:[["theory.html#coherence","Ξ Theory"],["teach.html#tab-coherence","Ξ Desk"]], tags:["metric"]},
-
-    {k:"Eq.9 (Stop Rule)", id:"eq9", type:"ethics",
-      plain:"If Truth/Distortion ratio decreases over \\(\\Delta\\): Abort, Re-align, Resume.",
-      aka:["stop rule","ethics","coherence law"], links:[["ethics.html","Ethics"],["theory.html#coherence","Eq.9"]], tags:["ethics","guardrail"]},
-
-    {k:"ΔΣ (micro-edits)", id:"deltasigma", type:"concept",
-      plain:"Tiny updates introduced by observation/action that accumulate into the field in Ω.",
-      aka:["micro edits","delta sigma","small changes"], links:[["theory.html#omega","Eq.Ω"],["ledger.html","Ledger"]], tags:["learning"]},
-
-    {k:"ℜ(x,t) (remanence)", id:"remanence", type:"concept",
-      plain:"Residual priors/inertia at (x,t) that the update must overcome; part of Ω’s merge.",
-      aka:["residual","inertia","prior"], links:[["theory.html#omega","Eq.Ω"]], tags:["history"]},
-
-    {k:"a_n(x,t;ΔE)", id:"an", type:"concept",
-      plain:"Active components/affordances at scale n, conditioned by energy shift ΔE.",
-      aka:["affordance","component","energy"], links:[["theory.html#operators","Operators"]], tags:["energy","component"]},
-
-    {k:"ΔE (energy shift)", id:"deltae", type:"concept",
-      plain:"Change in available energy that gates which affordances are available next.",
-      aka:["energy change","budget"], links:[["theory.html#energy","Energy Budget"]], tags:["energy"]},
-
-    {k:"H (attention)", id:"H", type:"metric",
-      plain:"Attentional weight schedule that determines what is sampled next; couples with intention in Ξ.",
-      aka:["attention","focus"], links:[["theory.html#coherence","Ξ"]], tags:["metric"]},
-
-    {k:"I (intention)", id:"I", type:"metric",
-      plain:"Directional aim set by phrasing/meaning; pairs with H in Ξ.",
-      aka:["aim","intent"], links:[["theory.html#coherence","Ξ"],["teach.html#phrasing","Phrase Tuner"]], tags:["metric"]},
-
-    {k:"𝓜 (internal model)", id:"M", type:"concept",
-      plain:"Your current working expectations; high variance lowers Ξ.",
-      aka:["model","beliefs","priors"], links:[["theory.html#coherence","Ξ"],["ledger.html","Ledger"]], tags:["model"]},
-
-    {k:"AHHAVA / Or HaDabar", id:"ahhava", type:"equation",
-      plain:"Language couples semantics onto carriers; clearer verbs/negations → cleaner phase gradient.",
-      aka:["word","language","semantics"], links:[["theory.html#eq4","Eq.4"],["theory.html#semantics","Eq.16"]], tags:["semantics"]},
-
-    {k:"Eq.16 (Semantic Gradient)", id:"eq16", type:"equation",
-      plain:"\\(\\nabla_{\\text{sem}}\\mathrm{Phrase}=\\sum_k w_k\\,\\nabla_{\\text{sem}}\\mathrm{Token}_k\\); weights sum to 1.",
-      aka:["semantic gradient","phrase"], links:[["theory.html#semantics","Eq.16"],["teach.html#phrasing","Phrase Tuner"]], tags:["semantics"]},
-
-    {k:"Type-7 (living circuit)", id:"type7", type:"equation",
-      plain:"Phase-locked 3–6–9 harmonic sum that carries living charge under ethical gate.",
-      aka:["tesla type 7","369"], links:[["theory.html#eq6","Eq.6"],["teach.html#ethics","Ethical gate"]], tags:["harmonics"]},
-
-    {k:"Remnant", id:"remnant", type:"metric",
-      plain:"What persists after decay: \\(\\mathcal{W}(t)=\\int [\\mathrm{Truth}\\cdot\\mathrm{Fidelity}]e^{-\\lambda(t-u)}du\\).",
-      aka:["witness","evidence"], links:[["theory.html#eq5","Eq.5"],["ledger.html","Ledger"]], tags:["persistence"]},
-
-    {k:"τ (retention window)", id:"tau", type:"metric",
-      plain:"Timespan for consolidation; practice within τ lengthens half-life t½ and lowers decay λ.",
-      aka:["tau","window"], links:[["theory.html#learning","Learning"]], tags:["memory"]},
-
-    {k:"t½ (half-life)", id:"half", type:"metric",
-      plain:"Time to halve a learned effect; \\(\\lambda=\\ln 2 / t_{1/2}\\).",
-      aka:["half life"], links:[["theory.html#learning","Learning"]], tags:["memory"]},
-
-    {k:"λ (decay)", id:"lambda", type:"metric",
-      plain:"Decay rate of a learned pattern; smaller λ means more durable remnant.",
-      aka:["lambda","decay"], links:[["theory.html#learning","Learning"]], tags:["memory"]},
-
-    {k:"⊕ (coherent merge)", id:"merge", type:"concept",
-      plain:"Combines terms while preserving phase consistency; not a naive +.",
-      aka:["merge","compose"], links:[["theory.html#omega","Eq.Ω"]], tags:["operator"]},
-
-    {k:"Ξ High (run quality)", id:"xi-high", type:"metric",
-      plain:"Share of a session spent above your Ξ threshold; practical green-light indicator.",
-      aka:["coherence high","signal high"], links:[["teach.html#tab-coherence","Ξ Desk"]], tags:["practice","metric"]}
-  ].sort(by("k"));
-
-  // ---------- Alpha rail ----------
-  const alphaHost = $("#alpha");
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-  alphaHost.innerHTML = letters.map(L=>`<a href="#group-${L}" aria-label="Jump to ${L}">${L}</a>`).join(" ");
-
-  // ---------- Render ----------
-  const host = $("#terms");
-  const q = $("#q"); const clear = $("#clear");
-  const chips = $$(".chip");
-
-  function highlight(text, query){
-    if (!query) return text;
-    try{
-      const re = new RegExp("("+query.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","ig");
-      return text.replace(re, "<mark>$1</mark>");
-    }catch{ return text; }
-  }
-
-  function groupByAlpha(list){
-    const groups = {};
-    for (const t of list){
-      const L = (t.k[0]||"#").toUpperCase();
-      (groups[L] ||= []).push(t);
-    }
-    return letters.map(L=>({L, items: groups[L]||[]}));
-  }
-
-  function render(list, query){
-    const groups = groupByAlpha(list);
-    host.innerHTML = groups.map(g=>{
-      if (!g.items.length) return `<div id="group-${g.L}" class="group"></div>`;
-      return `
-        <div id="group-${g.L}" class="group">
-          <h2>${g.L}</h2>
-          ${g.items.map(t=>{
-            const links = (t.links||[]).map(([href,label])=>`<a class="cta" href="${href}">${label}</a>`).join(" ");
-            const tags  = (t.tags||[]).map(tag=>`<span class="tag">#${tag}</span>`).join(" ");
-            const aka   = t.aka && t.aka.length ? `<small>aka: ${t.aka.join(", ")}</small>` : "";
-            const title = highlight(t.k, query);
-            const body  = highlight(t.plain, query);
-            return `
-            <article id="${t.id}" class="term card">
-              <button class="anchor-btn" data-anchor="${t.id}" title="Copy link to ${t.k}">#</button>
-              <h3>${title}</h3>
-              ${aka}
-              <p>${body}</p>
-              <div class="links">${links}</div>
-              <div class="tags">${tags}</div>
-            </article>`;
-          }).join("")}
-        </div>`;
-    }).join("");
-
-    // anchor copy buttons
-    $$("[data-anchor]").forEach(btn=>{
-      btn.addEventListener("click", ()=>{
-        const id = btn.getAttribute("data-anchor");
-        const url = `${location.origin}${location.pathname}?q=${enc(q.value||"")}&t=${enc(activeType())}#${id}`;
-        navigator.clipboard.writeText(url).then(()=>{
-          btn.textContent="✓"; setTimeout(()=>btn.textContent="#",900);
-        });
-      });
-    });
-
-    // MathJax refresh (if loaded)
-    if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
-  }
-
-  // ---------- Search / Filter ----------
-  function activeType(){
-    const on = chips.find(c=>c.getAttribute("aria-pressed")==="true");
-    return on ? (on.dataset.type || "all") : "all";
-  }
-  function setType(type){
-    chips.forEach(c=>c.setAttribute("aria-pressed", String(c.dataset.type===type)));
-  }
-
-  function score(term, needle){
-    // cheap fuzzy: starts-with > includes > synonym hit
-    const t = (term.k + " " + term.plain + " " + (term.aka||[]).join(" ")).toLowerCase();
-    if (t.startsWith(needle)) return 3;
-    if (t.includes(needle))   return 2;
-    return 0;
-  }
-
-  function apply(){
-    const needle = (q.value||"").trim().toLowerCase();
-    const typ = activeType();
-    let list = TERMS.filter(t=> typ==="all" ? true : (t.type===typ));
-    if (needle){
-      list = list
-        .map(t=>({t, s:score(t, needle)}))
-        .filter(x=>x.s>0)
-        .sort((a,b)=> b.s - a.s || a.t.k.localeCompare(b.t.k))
-        .map(x=>x.t);
-    }
-    render(list, needle);
-    history.replaceState(null, "", `?q=${enc(q.value||"")}&t=${enc(typ)}`);
-  }
-
-  // init chips
-  chips.forEach(c=>c.addEventListener("click", ()=>{ setType(c.dataset.type); apply(); }));
-
-  // clear/search
-  clear.addEventListener("click", ()=>{ q.value=""; apply(); q.focus(); });
-
-  // keyboard shortcuts
-  addEventListener("keydown",(e)=>{
-    if (e.key==="/"){ e.preventDefault(); q.focus(); }
-    if (e.key==="Escape"){ q.value=""; apply(); }
-  }, {passive:false});
-
-  // Load state from URL (?q= & t=)
-  const params = new URLSearchParams(location.search);
-  const qv = dec(params.get("q")); const tv = dec(params.get("t")||"all");
-  if (qv) q.value = qv;
-  if (tv) setType(tv);
-  apply();
-
-  // If there is a hash, scroll to it after render
-  if (location.hash){
-    const id = location.hash.slice(1);
-    setTimeout(()=>{ const el = document.getElementById(id); if (el) el.scrollIntoView({behavior:"smooth", block:"start"}); }, 120);
-  }
-})();
-</script>
+    <p><a class="btn" href="./">← Back</a> <a class="btn" href="theory.html">Open Theory</a></p>
+  </main>
 </body>
 </html>
