@@ -874,74 +874,188 @@ a.dl{ border-color:#2b3344; background:linear-gradient(180deg, rgba(255,255,255,
 @media (prefers-reduced-data:reduce){ .heaven-cta{ display:none !important } }
 
 
+/* === SCROLL OF FIRE MOBILE POLISH FIX === */
 
-
-/* === MOBILE HOME FIX — prevents hero/content from disappearing === */
-main {
-  display: block;
-  position: relative;
-  z-index: 1;
-  padding: 24px 0 48px;
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
-.topbar {
+body {
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+a {
+  text-underline-offset: 3px;
+}
+
+.topbar,
+.site-header,
+nav {
+  max-width: 100%;
+}
+
+.topbar,
+.site-header {
+  padding: 18px 22px;
+}
+
+.topnav,
+.nav,
+.site-nav {
   display: flex;
+  flex-wrap: wrap;
+  gap: 14px 22px;
   align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.topnav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 16px;
+.topnav a,
+.nav a,
+.site-nav a {
+  font-size: clamp(1rem, 4vw, 1.25rem);
+  line-height: 1.2;
 }
 
-.hero.shell {
-  aspect-ratio: auto !important;
-  overflow: visible !important;
-  min-height: auto !important;
-  padding-top: clamp(34px, 8vw, 72px);
-  padding-bottom: clamp(34px, 8vw, 72px);
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-.hero.shell::after {
-  display: none !important;
-}
-
-.shell {
-  width: min(1120px, calc(100% - 32px));
+main,
+.shell,
+.container,
+.wrap {
+  width: min(100% - 32px, 1120px);
   margin-inline: auto;
 }
 
-.cards {
+.hero,
+.hero.shell {
+  width: 100%;
+  max-width: 100%;
+  min-height: auto !important;
+  aspect-ratio: auto !important;
+  overflow: visible !important;
+  padding: 30px 26px;
+  box-sizing: border-box;
+}
+
+.hero h1,
+h1 {
+  font-size: clamp(2.1rem, 10vw, 4.2rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  overflow-wrap: anywhere;
+}
+
+h2 {
+  font-size: clamp(1.75rem, 7vw, 2.6rem);
+  line-height: 1.12;
+}
+
+h3 {
+  font-size: clamp(1.35rem, 5.5vw, 1.8rem);
+}
+
+.card,
+.panel,
+.tile,
+.glass,
+.moon-card,
+.oracle-card {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 24px 26px;
+  border-radius: 22px;
+}
+
+.grid,
+.cards,
+.card-grid,
+.explore-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.card a,
+.panel a,
+.tile a {
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+/* === 13 MOONS PAGE FIX === */
+
+.moon-shell,
+.moons-shell,
+.calendar-shell,
+.clock-shell {
+  width: min(100% - 32px, 760px);
+  margin-inline: auto;
+}
+
+.moon-widget,
+.moon-clock,
+.calendar-card,
+.progress-card {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.progress,
+.progress-ring,
+.week-dots,
+.moon-dots {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.week-dots,
+.moon-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.pill,
+.badge,
+.tag {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 640px) {
-  .topbar {
-    align-items: flex-start;
-    padding: 20px 18px;
+  body {
+    font-size: 16px;
+  }
+
+  main {
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
+
+  .hero,
+  .hero.shell,
+  .card,
+  .panel,
+  .tile,
+  .glass,
+  .moon-card,
+  .oracle-card {
+    padding: 22px 24px;
+  }
+
+  .topbar,
+  .site-header {
+    justify-content: center;
   }
 
   .brand {
-    max-width: 120px;
-  }
-
-  .topnav {
-    flex: 1;
-    justify-content: flex-start;
-  }
-
-  .topnav a {
-    font-size: 1rem;
-  }
-
-  .hero.shell {
-    padding-top: 28px;
+    width: 100%;
+    text-align: center;
   }
 }
