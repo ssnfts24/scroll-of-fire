@@ -79,10 +79,6 @@ h2 {
   font-size: clamp(1.45rem, 5.8vw, 2.25rem);
 }
 
-h3 {
-  font-size: clamp(1.15rem, 4.8vw, 1.55rem);
-}
-
 p {
   margin: 0.45rem 0 1rem;
 }
@@ -106,7 +102,7 @@ canvas {
 }
 
 .card,
-.page-head.fancy-head {
+.page-head {
   width: 100%;
   max-width: 100%;
   overflow: hidden;
@@ -118,7 +114,7 @@ canvas {
   margin-top: 16px;
 }
 
-.page-head.fancy-head {
+.page-head {
   margin-top: 0;
 }
 
@@ -126,10 +122,6 @@ canvas {
 .meta,
 .hint {
   color: var(--muted);
-}
-
-.soft {
-  opacity: 0.86;
 }
 
 .grid,
@@ -149,8 +141,7 @@ canvas {
 .btnrow,
 .chiprow,
 .formrow,
-.crumbs,
-.legend {
+.crumbs {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -202,19 +193,6 @@ canvas {
   padding: 0.55rem 0.65rem;
 }
 
-input[type="range"].lab-input {
-  padding: 0;
-}
-
-.pill,
-.badge,
-.tag,
-.chip {
-  max-width: 100%;
-  white-space: normal;
-  overflow-wrap: anywhere;
-}
-
 .pill {
   display: inline-flex;
   align-items: center;
@@ -229,17 +207,16 @@ input[type="range"].lab-input {
 .moon-badge {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: 12px;
+  gap: 14px;
   align-items: center;
 }
 
 .ring {
-  width: clamp(98px, 28vw, 132px);
+  width: clamp(104px, 28vw, 140px);
   aspect-ratio: 1;
   display: grid;
   place-items: center;
   position: relative;
-  grid-row: span 3;
 }
 
 .ring svg {
@@ -290,6 +267,7 @@ input[type="range"].lab-input {
   white-space: nowrap;
   overflow-x: auto;
   padding-bottom: 6px;
+  margin-top: 16px;
 }
 
 .weeklabel {
@@ -317,8 +295,6 @@ input[type="range"].lab-input {
   box-shadow: 0 0 0 3px rgba(122, 243, 255, 0.22);
 }
 
-/* Remnant 4x7 Calendar */
-
 .calendar,
 .gregorian {
   --cell: min(11vw, 48px);
@@ -326,14 +302,16 @@ input[type="range"].lab-input {
   width: 100%;
 }
 
-.r-grid {
+.r-grid,
+.g-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: var(--gap);
   align-items: stretch;
 }
 
-.r-lbl {
+.r-lbl,
+.g-lbl {
   min-height: 30px;
   display: grid;
   place-items: center;
@@ -343,67 +321,7 @@ input[type="range"].lab-input {
   text-align: center;
 }
 
-.r-day {
-  aspect-ratio: 1 / 1;
-  min-width: 0;
-  min-height: 0;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: linear-gradient(180deg, #101520, #0b0f16);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.r-day button {
-  all: unset;
-  display: grid;
-  place-items: center;
-  gap: 2px;
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  text-align: center;
-  cursor: pointer;
-  font-weight: 900;
-}
-
-.r-day b {
-  font-size: clamp(0.86rem, 3.4vw, 1rem);
-}
-
-.r-day small {
-  display: block;
-  font-size: 0.56rem;
-  color: var(--muted);
-  font-weight: 800;
-  line-height: 1;
-}
-
-.r-day.is-today {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  box-shadow: 0 0 18px rgba(122, 243, 255, 0.22);
-}
-
-/* Gregorian Calendar */
-
-.g-grid {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: var(--gap);
-}
-
-.g-lbl {
-  min-height: 30px;
-  display: grid;
-  place-items: center;
-  font-size: 0.72rem;
-  font-weight: 900;
-  color: var(--muted);
-  text-align: center;
-}
-
+.r-day,
 .g-day,
 .g-pad {
   min-width: 0;
@@ -416,10 +334,16 @@ input[type="range"].lab-input {
   justify-content: center;
 }
 
+.r-day {
+  aspect-ratio: 1 / 1;
+  min-height: 0;
+}
+
 .g-pad {
   opacity: 0.35;
 }
 
+.r-day button,
 .g-day button {
   all: unset;
   display: grid;
@@ -428,38 +352,35 @@ input[type="range"].lab-input {
   width: 100%;
   height: 100%;
   border-radius: 10px;
-  cursor: pointer;
   text-align: center;
+  cursor: pointer;
   font-weight: 900;
 }
 
+.r-day b,
 .g-day b {
-  font-size: clamp(0.78rem, 3.2vw, 0.95rem);
+  font-size: clamp(0.78rem, 3.2vw, 1rem);
 }
 
+.r-day small,
 .g-day small {
   display: block;
-  margin-top: 2px;
-  font-size: 0.56rem;
+  font-size: 0.54rem;
   color: var(--muted);
   font-weight: 800;
   line-height: 1;
 }
 
+.r-day.is-today,
 .g-day.is-today {
   outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline-offset: 2px;
   box-shadow: 0 0 18px rgba(122, 243, 255, 0.22);
 }
 
-.g-day.is-doot {
+.g-day.is-outside {
   border-color: var(--gold);
   background: linear-gradient(180deg, rgba(243, 201, 122, 0.18), #11131a);
-}
-
-.g-day.is-leap {
-  border-color: #a8b8ff;
-  background: linear-gradient(180deg, rgba(168, 184, 255, 0.16), #11131a);
 }
 
 .r-doot {
@@ -537,17 +458,13 @@ input[type="range"].lab-input {
   }
 
   .card,
-  .page-head.fancy-head {
+  .page-head {
     padding: 18px;
     border-radius: 18px;
   }
 
   .moon-badge {
     grid-template-columns: 1fr;
-  }
-
-  .ring {
-    grid-row: auto;
   }
 
   .calendar,
@@ -563,7 +480,7 @@ input[type="range"].lab-input {
 
   .r-day small,
   .g-day small {
-    font-size: 0.5rem;
+    font-size: 0.48rem;
   }
 
   .year-map {
