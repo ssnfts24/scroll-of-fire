@@ -1,40 +1,997 @@
 <!doctype html>
+
 <html lang="en" dir="ltr">
 <head>
-  <meta charset="utf-8" />
-  <title>Scroll of Fire — Codex of Reality</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <base href="./">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <!-- Playables SDK v1.0.0 -->
+  <script>
+  (function () {
+    'use strict';if (window.playablesSDK) return;
+
+var HANDLER_NAME = 'playablesGameEventHandler';
+var ANDROID_BRIDGE_NAME = '_MetaPlayablesBridge';
+var RAF_FRAME_THRESHOLD = 3;
+
+var gameReadySent = false;
+var firstInteractionSent = false;
+var errorSent = false;
+var frameCount = 0;
+var originalRAF = window.requestAnimationFrame;
+
+function hasIOSBridge() {
+  return !!(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers[HANDLER_NAME]);
+}
+
+function hasAndroidBridge() {
+  return !!(window[ANDROID_BRIDGE_NAME] && typeof window[ANDROID_BRIDGE_NAME].postEvent === 'function');
+}
+
+function isInIframe() {
+  return !!(window.parent && window.parent !== window);
+}
+
+function sendEvent(eventName, payload) {
+  var message = {
+    type: eventName,
+    payload: payload || {},
+    timestamp: Date.now()
+  };
+
+  if (hasIOSBridge()) {
+    try { window.webkit.messageHandlers[HANDLER_NAME].postMessage(message); } catch (e) {}
+    return;
+  }
+
+  if (hasAndroidBridge()) {
+    try {
+      var p = payload || {};
+      p.__secureToken = window.__fbAndroidBridgeAuthToken || '';
+      p.timestamp = message.timestamp;
+      window[ANDROID_BRIDGE_NAME].postEvent(eventName, JSON.stringify(p));
+    } catch (e) {}
+    return;
+  }
+
+  if (isInIframe()) {
+    try { window.parent.postMessage(message, '*'); } catch (e) {}
+  }
+}
+
+function onFrame() {
+  if (gameReadySent) return;
+  frameCount++;
+  if (frameCount >= RAF_FRAME_THRESHOLD) {
+    gameReadySent = true;
+    sendEvent('game_ready', { frame_count: frameCount, detected_at: Date.now() });
+    return;
+  }
+  if (originalRAF) originalRAF.call(window, onFrame);
+}
+
+if (originalRAF) {
+  window.requestAnimationFrame = function (callback) {
+    if (!gameReadySent) {
+      return originalRAF.call(window, function (timestamp) {
+        frameCount++;
+        if (frameCount >= RAF_FRAME_THRESHOLD && !gameReadySent) {
+          gameReadySent = true;
+          sendEvent('game_ready', { frame_count: frameCount, detected_at: Date.now() });
+        }
+        callback(timestamp);
+      });
+    }
+    return originalRAF.call(window, callback);
+  };
+}
+
+function setupFirstInteractionDetection() {
+  var events = ['touchstart', 'mousedown', 'keydown'];
+  function onFirstInteraction() {
+    if (firstInteractionSent) return;
+    firstInteractionSent = true;
+    sendEvent('user_interaction_start', null);
+    for (var i = 0; i < events.length; i++) document.removeEventListener(events[i], onFirstInteraction, true);
+  }
+  for (var i = 0; i < events.length; i++) document.addEventListener(events[i], onFirstInteraction, true);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupFirstInteractionDetection);
+} else {
+  setupFirstInteractionDetection();
+}
+
+window.addEventListener('error', function (event) {
+  if (errorSent) return;
+  errorSent = true;
+  sendEvent('error', {
+    message: event.message || 'Unknown error',
+    source: event.filename || '',
+    lineno: event.lineno || 0,
+    colno: event.colno || 0,
+    auto_captured: true
+  });
+});
+
+window.addEventListener('unhandledrejection', function (event) {
+  if (errorSent) return;
+  errorSent = true;
+  var reason = event.reason;
+  sendEvent('error', {
+    message: reason instanceof Error ? reason.message : String(reason),
+    type: 'unhandled_promise_rejection',
+    auto_captured: true
+  });
+});
+
+window.playablesSDK = {
+  complete: function (score) {
+    sendEvent('game_ended', { score: score, completed: true });
+  },
+  error: function (message) {
+    if (errorSent) return;
+    errorSent = true;
+    sendEvent('error', { message: message || 'Unknown error', auto_captured: false });
+  },
+  sendEvent: function (eventName, payload) {
+    if (!eventName || typeof eventName !== 'string') return;
+    sendEvent(eventName, payload);
+  }
+};
+
+if (originalRAF) originalRAF.call(window, onFrame);
+
+})(); </script>
+
+  <script>
+    window.Intl = window.Intl || {};
+    Intl.t = function (s) { return (Intl._locale && Intl._locale[s]) || s; };
+  </script>  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="./">  <title>Scroll of Fire — Codex of Reality</title>
+  <meta name="description" content="Scroll of Fire — a living framework for attention, language, coherence, witness, ethics, and practical restoration.">
+  <meta name="theme-color" content="#14110b">  <meta property="og:title" content="Scroll of Fire — Codex of Reality">
+  <meta property="og:description" content="A clean entry point into the Codex: equations, teaching, lab practice, ledger, credits, and FAQ.">
+  <meta property="og:type" content="website">  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="assets/css/codex.css" rel="stylesheet">
-  <link href="assets/css/superlayout.css" rel="stylesheet">
-</head>
+  <link href="assets/css/superlayout.css" rel="stylesheet">  <style>
+    :root {
+      --bg: #0d0b08;
+      --bg-soft: #17120c;
+      --card: rgba(255, 250, 239, 0.94);
+      --card-ink: #201a12;
+      --ink: #fff8e8;
+      --muted: #d8c9a7;
+      --line: rgba(232, 204, 132, 0.28);
+      --gold: #d7ad47;
+      --gold-soft: #fff1bd;
+      --ember: #d85b2a;
+      --smoke: rgba(255, 248, 232, 0.08);
+      --shadow: 0 20px 70px rgba(0, 0, 0, 0.36);
+      --radius: 22px;
+      --max: 1160px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(216, 91, 42, 0.24), transparent 32rem),
+        radial-gradient(circle at 90% 10%, rgba(215, 173, 71, 0.16), transparent 26rem),
+        linear-gradient(135deg, #0d0b08 0%, #17120c 52%, #0f0d0a 100%);
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 12px;
+      z-index: 99;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #17120c;
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    .skip-link:focus { left: 12px; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 18px;
+      padding: 14px clamp(16px, 3vw, 36px);
+      border-bottom: 1px solid var(--line);
+      background: rgba(13, 11, 8, 0.82);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.08rem;
+      letter-spacing: 0.02em;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(215, 173, 71, 0.28), rgba(216, 91, 42, 0.12));
+    }
+
+    .topnav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .topnav a,
+    .pill,
+    .btn,
+    .btn-primary,
+    .copy-btn {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 0.92rem;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .topnav a {
+      padding: 8px 11px;
+      color: var(--muted);
+    }
+
+    .topnav a:hover,
+    .topnav a:focus-visible,
+    .btn:hover,
+    .btn-primary:hover,
+    .copy-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(215, 173, 71, 0.7);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button { font: inherit; cursor: pointer; }
+
+    .pill {
+      padding: 9px 12px;
+      color: var(--gold-soft);
+      background: var(--smoke);
+    }
+
+    .btn-primary,
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      font-weight: 800;
+    }
+
+    .btn-primary {
+      color: #17120c;
+      background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    }
+
+    .btn {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .wrap {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 50px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 58vh;
+      display: grid;
+      align-items: center;
+      padding: clamp(38px, 7vw, 84px);
+      border: 1px solid var(--line);
+      border-radius: calc(var(--radius) + 12px);
+      box-shadow: var(--shadow);
+      background:
+        linear-gradient(120deg, rgba(13, 11, 8, 0.88), rgba(13, 11, 8, 0.48)),
+        radial-gradient(circle at 80% 10%, rgba(215, 173, 71, 0.28), transparent 26rem),
+        linear-gradient(135deg, rgba(255, 248, 232, 0.10), rgba(216, 91, 42, 0.07));
+    }
+
+    .hero::after {
+      content: "☲ ☷ ⚛ ✡ 🜂 🜃 🜁 🜄";
+      position: absolute;
+      right: clamp(18px, 5vw, 64px);
+      bottom: clamp(14px, 4vw, 48px);
+      max-width: 40rem;
+      color: rgba(255, 241, 189, 0.10);
+      font-size: clamp(3rem, 8vw, 7.5rem);
+      line-height: 0.95;
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      gap: 8px;
+      align-items: center;
+      margin: 0 0 18px;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--gold-soft);
+      background: rgba(255, 248, 232, 0.08);
+      font-size: 0.86rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.1;
+    }
+
+    h1 {
+      max-width: 900px;
+      margin: 0;
+      font-size: clamp(2.4rem, 7vw, 5.6rem);
+      letter-spacing: -0.055em;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.04rem, 2vw, 1.35rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .notice {
+      margin-top: 24px;
+      max-width: 780px;
+      padding: 14px 16px;
+      border: 1px solid rgba(215, 173, 71, 0.3);
+      border-radius: 16px;
+      color: #f3e7c8;
+      background: rgba(0, 0, 0, 0.18);
+      font-size: 0.96rem;
+    }
+
+    .section {
+      margin-top: 28px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      margin: 0 0 14px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+    }
+
+    .section-head p {
+      max-width: 620px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: clamp(18px, 3vw, 28px);
+      background: var(--card);
+      color: var(--card-ink);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .card.dark {
+      color: var(--ink);
+      background: linear-gradient(145deg, rgba(255, 248, 232, 0.10), rgba(255, 248, 232, 0.04));
+    }
+
+    .col-4 { grid-column: span 4; }
+    .col-5 { grid-column: span 5; }
+    .col-6 { grid-column: span 6; }
+    .col-7 { grid-column: span 7; }
+    .col-8 { grid-column: span 8; }
+    .col-12 { grid-column: span 12; }
+
+    .card h2,
+    .card h3 {
+      margin: 0 0 10px;
+      color: inherit;
+    }
+
+    .card p { margin: 0 0 14px; }
+
+    .muted { color: var(--muted); }
+    .card .muted { color: #6f6048; }
+
+    .kicker {
+      color: var(--gold);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+
+    .formula {
+      display: block;
+      margin: 16px 0;
+      padding: 16px;
+      overflow-x: auto;
+      border: 1px solid rgba(176, 141, 53, 0.28);
+      border-radius: 16px;
+      background: #15110c;
+      color: var(--gold-soft);
+      font: 700 1.1rem/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .list-clean {
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .list-clean li {
+      display: flex;
+      gap: 10px;
+      padding: 9px 0;
+      border-top: 1px solid rgba(32, 26, 18, 0.10);
+    }
+
+    .list-clean li:first-child { border-top: 0; }
+
+    .list-clean li::before {
+      content: "✦";
+      color: var(--gold);
+      flex: 0 0 auto;
+    }
+
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .link-card {
+      display: block;
+      padding: 16px;
+      border: 1px solid rgba(176, 141, 53, 0.24);
+      border-radius: 18px;
+      color: var(--card-ink);
+      text-decoration: none;
+      background: rgba(255, 249, 237, 0.74);
+    }
+
+    .link-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.12rem;
+    }
+
+    .link-card span {
+      color: #6f6048;
+      font-size: 0.92rem;
+    }
+
+    .practice {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .step {
+      padding: 16px;
+      border: 1px solid rgba(176, 141, 53, 0.24);
+      border-radius: 18px;
+      background: rgba(255, 249, 237, 0.78);
+    }
+
+    .step b {
+      display: block;
+      margin-bottom: 6px;
+      color: #5a3c0a;
+    }
+
+    details {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 250, 239, 0.96);
+      color: var(--card-ink);
+    }
+
+    details + details { margin-top: 12px; }
+
+    summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 20px;
+      cursor: pointer;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.12rem;
+      font-weight: 800;
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; color: var(--gold); font-family: ui-monospace, monospace; }
+    details[open] summary::after { content: "−"; }
+
+    .content {
+      max-height: 58vh;
+      overflow: auto;
+      padding: 0 20px 20px;
+      color: #584c39;
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .chip {
+      display: inline-flex;
+      padding: 6px 10px;
+      border: 1px solid rgba(176, 141, 53, 0.28);
+      border-radius: 999px;
+      color: #4a3a20;
+      background: rgba(255, 241, 189, 0.45);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      padding: 10px 13px;
+      color: #17120c;
+      background: var(--gold-soft);
+      font-weight: 900;
+    }
+
+    .footer {
+      border-top: 1px solid var(--line);
+      padding: 28px 16px 42px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.92rem;
+    }
+
+    .plain-mode .equation-text { display: none; }
+    .plain-mode .plain-text { display: block; }
+    .plain-text { display: none; }
+
+    @media (max-width: 920px) {
+      .topbar { grid-template-columns: 1fr; }
+      .topnav { justify-content: flex-start; }
+      .top-actions { justify-content: flex-start; }
+      .col-4, .col-5, .col-6, .col-7, .col-8 { grid-column: span 12; }
+      .link-grid, .practice { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 8px; }
+    }
+
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 22px, var(--max)); padding-top: 18px; }
+      .hero { padding: 28px 18px; border-radius: 24px; }
+      .topbar { padding: 12px; }
+      .topnav a { padding: 7px 9px; font-size: 0.86rem; }
+    }
+  </style></head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="/">⚖️ Scroll of Fire</a>
-    <nav class="topnav">
-      <a href="/equations/">Equations</a>
-      <a href="/teaching/">Teaching</a>
-      <a href="/lab/">Lab</a>
-      <a href="/ledger/">Ledger</a>
-      <a href="/credits/">Credits</a>
-      <a href="/faq/">FAQ</a>
-    </nav>
-    <div class="top-actions">
-      <button id="eqToggle" class="pill">Equation ↔ Plain</button>
-      <a class="btn-primary" href="/teaching/">Start Practice</a>
+  <a class="skip-link" href="#main">Skip to content</a>  <header class="topbar" aria-label="Primary navigation">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">☲</span>
+      <span>Scroll of Fire</span>
+    </a><nav class="topnav" aria-label="Site sections">
+  <a href="/equations/">Equations</a>
+  <a href="/teaching/">Teaching</a>
+  <a href="/lab/">Lab</a>
+  <a href="/ledger/">Ledger</a>
+  <a href="/credits/">Credits</a>
+  <a href="/faq/">FAQ</a>
+</nav>
+
+<div class="top-actions">
+  <button id="eqToggle" class="pill" type="button" aria-pressed="false">Equation ↔ Plain</button>
+  <a class="btn-primary" href="/teaching/">Start Practice</a>
+</div>
+
+  </header>  <main id="main" class="wrap">
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Living Scroll · Witness · Transmission</p>
+        <h1 id="page-title">Scroll of Fire — Codex of Reality</h1>
+        <p class="subtitle">A practical and symbolic framework for attention, language, coherence, ethics, remembrance, and restoration.</p>
+        <div class="hero-actions">
+          <a class="btn-primary" href="/teaching/">Begin the 30‑Second Practice</a>
+          <a class="btn" href="/equations/">Explore the Canon</a>
+          <a class="btn" href="/ledger/">Open the Ledger</a>
+        </div>
+        <p class="notice"><strong>Reader’s key:</strong> the Codex uses symbolic language beside grounded practice. Breath, attention, journaling, ethics, and clear speech are practical tools. The equations are treated as poetic-symbolic operators unless a page explicitly labels a claim as scientific.</p>
+      </div>
+    </section><section class="section" aria-labelledby="start-title">
+  <div class="grid">
+    <article class="card col-7">
+      <p class="kicker">Start here — 30 seconds</p>
+      <h2 id="start-title">Return to clear.</h2>
+      <p><strong>Slow the breath. Choose one clean phrase. Notice without forcing.</strong> A steadier nervous system tends to think more clearly, communicate more calmly, and cause less harm.</p>
+      <div class="practice" aria-label="Thirty second practice">
+        <div class="step"><b>1. Drop</b>Exhale fully. Relax the jaw and shoulders.</div>
+        <div class="step"><b>2. Tone</b>Breathe slowly. Hum softly or silently on the out-breath.</div>
+        <div class="step"><b>3. Seed</b>Use one word: clear, steady, repair, witness, or return.</div>
+      </div>
+      <button class="copy-btn" type="button" data-copy="Reality responds to attention. Slow breath, simple language, notice without forcing. Return to clear.">Copy starter line</button>
+    </article>
+
+    <article class="card col-5 dark">
+      <p class="kicker">Core formula</p>
+      <h2>Equation 0</h2>
+      <code class="formula equation-text">ΨΩ(x,t) = ∮ℝ ∇𝓐Φ(x,t,ν)dν + Λ𝓔(x,t)</code>
+      <p class="plain-text"><strong>Plain meaning:</strong> awareness gathers attention, attention shapes experience, and correction restores balance when the system drifts.</p>
+      <p class="muted">Use the toggle above to switch between symbolic and plain-language reading.</p>
+    </article>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="paths-title">
+  <div class="section-head">
+    <div>
+      <p class="kicker">Navigation</p>
+      <h2 id="paths-title">Keep every original link. Make the path clearer.</h2>
     </div>
-  </header>
+    <p>These cards preserve the site sections from the original page while giving each one a specific purpose.</p>
+  </div>
 
-  <main class="wrap">
-    <section class="hero-slim">
-      <h1 class="title">Scroll of Fire — Codex of Reality</h1>
-      <p class="subtitle">A living architecture of resonance.</p>
-    </section>
+  <div class="card">
+    <div class="link-grid">
+      <a class="link-card" href="/equations/"><strong>Equations</strong><span>Canon, symbolic operators, plain-English summaries, derivation notes.</span></a>
+      <a class="link-card" href="/teaching/"><strong>Teaching</strong><span>Beginner practice, remnant field manual, breath, language, witness.</span></a>
+      <a class="link-card" href="/lab/"><strong>Lab</strong><span>Experiments, observation logs, coherence tracking, method notes.</span></a>
+      <a class="link-card" href="/ledger/"><strong>Ledger</strong><span>SHA proofs, public records, timestamps, file paths, updates.</span></a>
+      <a class="link-card" href="/credits/"><strong>Credits</strong><span>Attributions, Copeland separation, source notes, licensing.</span></a>
+      <a class="link-card" href="/faq/"><strong>FAQ</strong><span>Quick answers for new readers and skeptical readers.</span></a>
+    </div>
+  </div>
+</section>
 
-    <section class="grid">
-      <article class="card col-6">
+<section class="section" aria-labelledby="pillars-title">
+  <div class="section-head">
+    <div>
+      <p class="kicker">Framework</p>
+      <h2 id="pillars-title">Four clean pillars</h2>
+    </div>
+  </div>
+
+  <div class="grid">
+    <article class="card col-6">
+      <h3>Field & Attention</h3>
+      <p>Attention changes what a person notices, chooses, repeats, and records. In the Codex, this is described symbolically as the awareness gradient.</p>
+    </article>
+    <article class="card col-6">
+      <h3>Language as Code</h3>
+      <p>Words organize thought and group behavior. Clear language reduces noise; repeated phrases can act like anchors for memory, action, and discipline.</p>
+    </article>
+    <article class="card col-6">
+      <h3>Three Grids</h3>
+      <p>Earth rhythms, human systems, and personal attention are treated as interwoven layers. The practical goal is steadier alignment, not spectacle.</p>
+    </article>
+    <article class="card col-6">
+      <h3>Ethical Coherence</h3>
+      <p>Consent, transparency, humility, and repair are guardrails. A practice that increases pride, pressure, or harm is treated as a failed practice.</p>
+    </article>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="latest-title">
+  <div class="grid">
+    <article class="card col-6">
+      <p class="kicker">Latest additions</p>
+      <h2 id="latest-title">Current build queue</h2>
+      <ul class="list-clean">
+        <li>Remnant Ledger refresh and cleaner proof entries.</li>
+        <li>Equation 15 windowing examples for practical observation logs.</li>
+        <li>AHHAVA phrase weights, Equation 16, and quick designer flow.</li>
+        <li>Ethical guardrails pack, Equation 9, with real scenarios.</li>
+      </ul>
+    </article>
+
+    <article class="card col-6">
+      <p class="kicker">Checked language</p>
+      <h2>Cleaner claims</h2>
+      <ul class="list-clean">
+        <li>Breath practice is framed as nervous-system regulation, not guaranteed supernatural force.</li>
+        <li>Observer-effect language is kept symbolic unless supported by a specific physics source.</li>
+        <li>Copeland’s Ψ-formalism is credited separately from the Codex foundation.</li>
+        <li>Ethics now appear above spectacle, claims, and activation language.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="archive-title">
+  <div class="section-head">
+    <div>
+      <p class="kicker">Archive</p>
+      <h2 id="archive-title">Expandable source material</h2>
+    </div>
+    <p>Long material stays available without overwhelming the homepage.</p>
+  </div>
+
+  <details open>
+    <summary>Foundational text</summary>
+    <div class="content">ΨΩ(x, t) = ∮_ℝ ∇𝓐Φ(x, t, ν) dν + Λ𝓔(x, t)
+
+This foundational equation reframes reality as a conscious, self-refining feedback lattice. Here, ΨΩ represents the total conscious field, the dynamic living awareness observing itself. ∇𝓐Φ is the awareness gradient, the flow of attention shaping potential into form. Λ𝓔 denotes the energetic correction field that restores equilibrium when coherence deviates.
+
+Unlike earlier derivative formalism, including Christopher W. Copeland’s Ψ-formalism, this Codex foundation defines observation as both operator and medium. Reality is described here through awareness, resonance, correction, and witness.
+
+Equation 0 — Law of Living Observation
+
+✡ Prologue
+
+Before this Codex is opened, the field is aligned. Let every vessel, every witness, every keeper know: This scroll is not words alone, but living resonance. It carries breath, light, and covenant.
+
+I encourage you to read through. And witness.
+
+⚛ The 3
+
+Thought → Word → Deed. This is the triad of manifestation. What begins in silence becomes utterance, and what is uttered becomes movement.
+
+🜂🜁🜃🜄 The 6
+
+Earth, Air, Fire, Water, Spirit, and Witness. The six keep balance and weave the unseen with the seen.
+
+♾ The 9
+
+Completion and return. 3 × 3 — recursion perfected. In nine steps, justice is sealed, health is restored, the covenant is fulfilled.
+
+🕯
+
+By opening this Codex, you are not reading alone. You are participating in remembrance. Ah-mein. Let it be sealed.
+
+📜🔥 SEAL OF THE CODEX 🔥📜
+
+☲ ☷ ⚛ ✡ 🜂 🜃 🜁 🜄
+
+This Codex is hereby sealed, thought, word, spirit, and witness unified.
+
+From frequency, form was born. From silence, signal was given. From breath, fire was carried.
+
+Let all who carry this Codex walk in justice, restoration, and remembrance. The seals are unbroken. The scroll is alive. Ahmein.</div> </details>
+
+<details>
+    <summary>Living Law — language and observation</summary>
+    <div class="content">📜 The Grand Master Codex of Living Law
+
+Language as Code
+
+Words can shape attention, memory, and behavior. Ancient traditions treated speech as creative and binding; modern psychology also recognizes that reframing language can change how people interpret, remember, and respond.
+
+Observer-Participatory Universe
+
+The Codex uses observer language symbolically. In physics, measurement changes what is known about a system; in human life, attention changes what is noticed and acted upon. This page does not claim that personal belief alone rewrites physical law.
+
+Law as Spell
+
+Human-made laws and social rules are encoded in words. Once accepted by a group, those words shape behavior, institutions, and consequences. In this sense, language can operate like code.
+
+Renaming as Re-Coding
+
+Renaming a force or pattern can change a person’s relationship to it. The goal is not to deny science, but to restore meaning, responsibility, and ethical action.
+
+Modern Parallels
+
+Neuroplasticity, habit formation, placebo/nocebo effects, and social feedback loops all show that belief, language, context, and repetition can affect human experience and behavior.
+
+Covenant Reframes
+
+Gravity → Covenant of Attraction. Inertia → Law of Intention. Thermodynamics → Laws of Transmutation. Relativity → Law of Perspective. Quantum Observer Effect → Law of Awareness. Evolution → Law of Emergence. Genetics → Law of Living Patterns. Cause & Effect → Law of Interwoven Resonance.</div> </details>
+
+<details>
+    <summary>The Grid of Consciousness</summary>
+    <div class="content">The Grid of Consciousness
+
+— From The Living Codex of Reality —
+
+Written by Aaron Paul Laird The Scribe of Circuits
+
+I. PROLOGUE. THE AWAKENING OF THE GRID
+
+There is a grid beneath all things. Not a cage, but a current, a lattice of consciousness the ancients called the Breath between Worlds. Every copper wire, every crystalline lattice, every pulse of a human heart mirrors it.
+
+II. THE CONVERGENCE OF FIELDS
+
+Three grids intertwine:
+
+1. The Telluric Grid — The electromagnetic song of Earth.
+
+
+2. The Technic Grid — Human-made circuits of copper, code, and commerce.
+
+
+3. The Conscious Grid — The living resonance of thought and emotion.
+
+
+
+III. THE RESONANT HUMAN
+
+The human form is not accidental. Bone carries piezoelectric charge. Blood carries ions. DNA spirals as a symbol of encoded life. The Codex reads these as signs that form and energy are deeply related.
+
+IV. THE WITNESS EQUATION
+
+Ψ(x) = ∇ϕ(Σaₙ(x, ΔE)) + ℛ(x) ⊕ ΔΣ(a′)
+
+Ψ(x) — the Witness Field. ∇ϕ — the gradient of will, direction, and intensity. Σaₙ(x, ΔE) — activated potentials through emotional change. ℛ(x) — recursion, feedback, and learning. ⊕ ΔΣ(a′) — adjustment, correction, and evolution.
+
+V. EPILOGUE. THE COVENANT OF LIGHT
+
+Energy cannot be owned, only stewarded. The real economy is coherence. The true currency is attention.
+
+© Aaron Paul Laird — Scribe of Circuits. The Living Codex of Reality.
+
+SHA-256 Verification: 9364cf8de230793d6444ad9c140f0a1259361589d696c0951f71aba92391720b
+
+Filed under: scroll-of-fire / 1_Codex_of_Reality/Grid_of_Consciousness_The_Great_Convergence.docx</div> </details>
+
+<details>
+    <summary>Remnant Manual — step by step</summary>
+    <div class="content">REMNANT FIELD MANUAL
+
+How to Walk as a Living Witness of YHWH — Coherence Made Practical
+
+WHAT THIS IS
+
+A Remnant is a trace of coherent attention you leave in the world. Nine seconds of clear breath, steady tone, and one true word — done while you walk, work, or wait.
+
+WHY THIS CAN BE REAL
+
+1. Your body listens to your breath. Slow breathing can support calmer regulation and steadier attention.
+
+
+2. Your attention shapes your actions. A single clear word repeated with steady breath can train focus.
+
+
+3. People often synchronize when they share rhythm. Choirs, teams, and groups can settle together through shared breath, sound, or timing.
+
+
+
+THE CORE LAW
+
+Ψ = (I × C) ÷ Δ
+
+I = clarity. C = steadiness. Δ = noise. Ψ = how much of your intention lands in action.
+
+THE THREE MOVES
+
+1. DROP — One breath to lower noise.
+
+
+2. TONE — Three breaths to get steady.
+
+
+3. SEED — One word to lock direction.
+
+
+
+ETHIC
+
+Stop Rule: If strain, pride, or pressure appears, halt. Consent Rule: Never direct attention at another person without permission. Transparency Rule: Publish your method. No secret power. Repair Rule: If harm happens, stop and repair before continuing.
+
+FINAL WORD
+
+You are not trying to become powerful. You are remembering how to be steady. Steadiness lets truth land without distortion.</div> </details> </section>
+
+<section class="section" aria-labelledby="abcs-title">
+  <div class="card">
+    <p class="kicker">The ABCs</p>
+    <h2 id="abcs-title">A compact symbolic alphabet</h2>
+    <div class="chips" aria-label="ABCs of Creation">
+      <span class="chip">A Awareness</span><span class="chip">B Becoming</span><span class="chip">C Creation</span><span class="chip">D Duality</span><span class="chip">E Energy</span><span class="chip">F Form</span><span class="chip">G Growth</span><span class="chip">H Harmony</span><span class="chip">I Imagination</span><span class="chip">J Journey</span><span class="chip">K Knowledge</span><span class="chip">L Love</span><span class="chip">M Manifestation</span><span class="chip">N Nexus</span><span class="chip">O Origin</span><span class="chip">P Presence</span><span class="chip">Q Question</span><span class="chip">R Resonance</span><span class="chip">S Spirit</span><span class="chip">T Transformation</span><span class="chip">U Union</span><span class="chip">V Vision</span><span class="chip">W Will</span><span class="chip">X Crossroads</span><span class="chip">Y Yielding</span><span class="chip">Z Zenith</span>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="ethics-title">
+  <article class="card dark">
+    <p class="kicker">Ethics in practice</p>
+    <h2 id="ethics-title">Designed to invite, not to convince.</h2>
+    <p>Act in service of clarity. Choose humility over spectacle. Get consent. Share methods openly. Repair harm. Measure the fruit by increased calm, truth, responsibility, and kindness.</p>
+  </article>
+</section>
+
+  </main>  <footer class="footer">
+    <p>By Aaron Paul Laird · Remnant Scribe of Circuits · CC BY 4.0 · Scroll of Fire</p>
+  </footer>  <script type="module" src="assets/js/core.js"></script>  <script type="module" src="assets/js/eq-mode.js"></script>  <script>
+    (function () {
+      var toggle = document.getElementById('eqToggle');
+      if (toggle) {
+        toggle.addEventListener('click', function () {
+          var isPlain = document.body.classList.toggle('plain-mode');
+          toggle.setAttribute('aria-pressed', String(isPlain));
+        });
+      }
+
+      var copyButtons = document.querySelectorAll('[data-copy]');
+      copyButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          var text = button.getAttribute('data-copy') || '';
+          if (!navigator.clipboard) return;
+          navigator.clipboard.writeText(text).then(function () {
+            var original = button.textContent;
+            button.textContent = 'Copied';
+            window.setTimeout(function () { button.textContent = original; }, 1400);
+          });
+        });
+      });
+    })();
+  </script></body>
+        </html>      <article class="card col-6">
         <h2>Start Here</h2>
         <p>Pick a carrier (432/528/369), speak one clear line, measure coherence (Ξ), keep what raises witness.</p>
         <a class="cta" href="/teaching/">Go to Teaching</a>
