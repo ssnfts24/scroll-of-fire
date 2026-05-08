@@ -1,4 +1,4 @@
-/* === 13 MOONS MOBILE REPAIR PATCH === */
+/* Scroll of Fire — 13 Moons CSS */
 
 *,
 *::before,
@@ -6,69 +6,338 @@
   box-sizing: border-box;
 }
 
+:root {
+  --bg: #080a10;
+  --card: rgba(16, 20, 29, 0.9);
+  --card-2: rgba(12, 16, 24, 0.94);
+  --line: #283142;
+  --ink: #f1efe8;
+  --muted: #aeb7c8;
+  --accent: #7af3ff;
+  --gold: #f3c97a;
+  --danger: #ffd7d7;
+  --radius: 20px;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.34);
+}
+
 html,
 body {
   width: 100%;
+  min-height: 100%;
   max-width: 100%;
   overflow-x: hidden;
 }
 
-.wrap {
-  width: min(100% - 28px, 1100px);
-  margin-inline: auto;
-  padding: 18px 0 48px;
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(122, 243, 255, 0.09), transparent 38%),
+    linear-gradient(180deg, #070910, #0d1018 60%, #080a10);
+  color: var(--ink);
+  font: 400 16px/1.6 Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 }
 
-.page-head.fancy-head,
+#skyBg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.wrap,
+.footer {
+  width: min(100% - 28px, 1100px);
+  margin-inline: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.wrap {
+  padding: 22px 0 52px;
+}
+
+.footer {
+  padding: 0 0 34px;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.1;
+  margin: 0 0 0.6rem;
+  letter-spacing: -0.03em;
+}
+
+h1 {
+  font-size: clamp(2rem, 8.5vw, 4rem);
+}
+
+h2 {
+  font-size: clamp(1.45rem, 5.8vw, 2.25rem);
+}
+
+h3 {
+  font-size: clamp(1.15rem, 4.8vw, 1.55rem);
+}
+
+p {
+  margin: 0.45rem 0 1rem;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 4px;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+img,
+svg,
+canvas {
+  max-width: 100%;
+}
+
 .card,
-.callout,
-.astro-wheel,
-blockquote.pull {
+.page-head.fancy-head {
   width: 100%;
   max-width: 100%;
   overflow: hidden;
+  background: linear-gradient(180deg, var(--card), var(--card-2));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  padding: clamp(18px, 4vw, 26px);
+  margin-top: 16px;
 }
 
 .page-head.fancy-head {
-  padding: 24px;
+  margin-top: 0;
+}
+
+.subtitle,
+.meta,
+.hint {
+  color: var(--muted);
+}
+
+.soft {
+  opacity: 0.86;
+}
+
+.grid,
+.row-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 900px) {
+  .grid,
+  .row-2 {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
 }
 
 .btnrow,
 .chiprow,
-.formrow {
+.formrow,
+.crumbs,
+.legend {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
 }
 
-.lab-btn,
+.crumbs {
+  margin-top: 18px;
+}
+
+.formrow {
+  align-items: end;
+  margin: 18px 0;
+}
+
+.formrow label {
+  display: grid;
+  gap: 6px;
+  min-width: min(100%, 190px);
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.lab-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  text-decoration: none;
+  cursor: pointer;
+  background: linear-gradient(180deg, #131b2b, #101521);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.65rem 0.9rem;
+  font-weight: 850;
+}
+
+.lab-btn.ghost {
+  background: rgba(11, 14, 22, 0.5);
+}
+
+.lab-input {
+  width: 100%;
+  background: #0f121a;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.55rem 0.65rem;
+}
+
+input[type="range"].lab-input {
+  padding: 0;
+}
+
 .pill,
 .badge,
+.tag,
 .chip {
   max-width: 100%;
   white-space: normal;
   overflow-wrap: anywhere;
 }
 
-.weekrow {
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  font-weight: 850;
+  padding: 0.42rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #101620, #0c1018);
+}
+
+.moon-badge {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.ring {
+  width: clamp(98px, 28vw, 132px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  position: relative;
+  grid-row: span 3;
+}
+
+.ring svg {
   width: 100%;
-  max-width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring-bg {
+  fill: none;
+  stroke: #122238;
+  stroke-width: 10;
+}
+
+.ring-fg {
+  fill: none;
+  stroke-linecap: round;
+  stroke: var(--accent);
+  stroke-width: 12;
+  stroke-dasharray: 316;
+  stroke-dashoffset: 316;
+  filter: drop-shadow(0 0 14px rgba(122, 243, 255, 0.55));
+}
+
+.ring .label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-weight: 900;
+}
+
+.ring .big {
+  font-size: clamp(1.8rem, 8vw, 2.5rem);
+}
+
+.ring .small {
+  font-size: 1rem;
+  opacity: 0.75;
+  margin-top: -38px;
+}
+
+.weekrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  white-space: nowrap;
   overflow-x: auto;
   padding-bottom: 6px;
 }
 
-.wdots {
-  max-width: 100%;
+.weeklabel {
+  font-weight: 900;
+  color: var(--muted);
 }
 
-.r-grid,
-.g-grid {
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+.week {
+  display: flex;
+  gap: 7px;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+
+.week span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #1a2436;
+  display: inline-block;
+}
+
+.week span.is-today {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(122, 243, 255, 0.22);
 }
 
 .calendar,
 .gregorian {
   --cell: min(11vw, 48px);
+  --gap: 5px;
+  width: 100%;
+}
+
+.r-grid,
+.g-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+.r-lbl,
+.g-lbl {
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 0.75rem;
+  color: var(--muted);
 }
 
 .r-day,
@@ -76,63 +345,121 @@ blockquote.pull {
 .g-pad {
   min-width: 0;
   min-height: var(--cell);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: linear-gradient(180deg, #101520, #0b0f16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.r-day > button,
-.g-day > button {
-  font-size: clamp(.75rem, 3.2vw, .95rem);
+.r-day button,
+.g-day button {
+  all: unset;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 900;
+  font-size: clamp(0.75rem, 3.1vw, 0.95rem);
+}
+
+.r-day.is-today,
+.g-day.is-today {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.r-doot {
+  padding: 18px;
+  border: 1px dashed var(--accent);
+  border-radius: 14px;
+  text-align: center;
+  font-weight: 900;
+  background: #0e131e;
 }
 
 .scroller {
+  width: 100%;
   max-width: 100%;
   overflow-x: auto;
 }
 
-svg,
-canvas,
-img {
-  max-width: 100%;
-  height: auto;
+.year-map {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-@media (max-width: 640px) {
-  body {
-    font-size: 16px;
+.year-map th,
+.year-map td {
+  padding: 0.65rem 0.7rem;
+  border-bottom: 1px solid #1d2636;
+  text-align: left;
+}
+
+.year-map th {
+  background: #0d111a;
+}
+
+#simMoon {
+  width: 100%;
+  max-width: 360px;
+  display: block;
+  margin-inline: auto;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: #080c13;
+}
+
+#errorBanner {
+  display: none;
+  margin: 12px 0;
+  padding: 12px;
+  border-radius: 14px;
+  background: #2a1417;
+  border: 1px solid #5a2228;
+  color: var(--danger);
+}
+
+#errorBanner.show {
+  display: block;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@media (max-width: 700px) {
+  .wrap,
+  .footer {
+    width: min(100% - 22px, 1100px);
   }
 
-  h1 {
-    font-size: clamp(2rem, 8.5vw, 3rem);
-    line-height: 1.1;
-  }
-
-  h2 {
-    font-size: clamp(1.45rem, 6.5vw, 2rem);
-  }
-
-  .page-head.fancy-head,
-  .card {
-    padding: 20px;
+  .card,
+  .page-head.fancy-head {
+    padding: 18px;
     border-radius: 18px;
   }
 
-  .ring {
-    width: 112px;
+  .moon-badge {
+    grid-template-columns: 1fr;
   }
 
-  .row-2,
-  .grid,
-  .astro-grid,
-  .codex {
-    grid-template-columns: 1fr !important;
+  .ring {
+    grid-row: auto;
   }
 
   .calendar,
   .gregorian {
-    --cell: min(10.8vw, 42px);
+    --cell: min(10.7vw, 42px);
     --gap: 4px;
   }
 
-  input[type="range"].lab-input {
-    width: 100%;
+  .year-map {
+    min-width: 560px;
   }
-}
+  }
