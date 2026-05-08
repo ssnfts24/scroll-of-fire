@@ -7,12 +7,12 @@
     const bars = document.querySelectorAll("[data-moon-bar]");
     if (!bars.length) return;
 
-    const params = new URLSearchParams(location.search);
-    const tz = params.get("tz") || window.SOFCalendar.getTZ();
-    const date = params.get("date") || params.get("d") || window.SOFCalendar.todayISO(tz);
+    const q = new URLSearchParams(location.search);
+    const tz = q.get("tz") || window.SOFCalendar.getTZ();
+    const date = q.get("date") || q.get("d") || window.SOFCalendar.todayISO(tz);
     const pos = window.SOFCalendar.get13Moon(date, tz);
 
-    bars.forEach((bar) => {
+    bars.forEach(bar => {
       const day = bar.querySelector("[data-moon-day]");
       const moon = bar.querySelector("[data-moon-name]");
       const tone = bar.querySelector("[data-moon-tone]");
@@ -20,74 +20,25 @@
       const ring = bar.querySelector("[data-moon-ring]");
 
       if (day) day.textContent = pos.isDayOutOfTime ? "—" : `${pos.day}/28`;
-      if (moon) moon.textContent = pos.isDayOutOfTime ? "Day Out of Time" : pos.moonName;
-      if (tone) tone.textContent = pos.isDayOutOfTime ? "Pause" : `Tone ${pos.tone} · ${pos.toneName}`;
-
-      if (link) {
-        link.href = `moons.html?date=${encodeURIComponent(date)}&tz=${encodeURIComponent(tz)}`;
-      }
+      if (moon) moon.textContent = pos.isDayOutOfTime ? "Day Out of Time" : `${pos.moonName} Moon`;
+      if (tone) tone.textContent = pos.isDayOutOfTime ? "Pause · Threshold" : `Tone ${pos.tone} · ${pos.toneName}`;
+      if (link) link.href = `moons.html?date=${encodeURIComponent(date)}&tz=${encodeURIComponent(tz)}`;
 
       if (ring && !pos.isDayOutOfTime) {
-        const pct = Math.round((pos.day / 28) * 100);
-        ring.style.setProperty("--moon-progress", `${pct}%`);
-        ring.setAttribute("aria-label", `${pos.label}`);
+        ring.style.setProperty("--moon-progress", `${Math.round((pos.day / 28) * 100)}%`);
+        ring.setAttribute("aria-label", pos.label);
       }
     });
 
     window.dispatchEvent(new CustomEvent("sof:calendar-sync", { detail: pos }));
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", renderMoonBars);
-  } else {
-    renderMoonBars();
-  }
+  document.readyState === "loading"
+    ? document.addEventListener("DOMContentLoaded", renderMoonBars)
+    : renderMoonBars();
 
   window.SOFRenderMoonBars = renderMoonBars;
-})();  function dateInTZ(baseDate, tz, overrideHour){
-    try{
-      const opts={timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"};
-      const parts=new Intl.DateTimeFormat("en-CA",opts).formatToParts(baseDate);
-      const m=Object.fromEntries(parts.map(p=>[p.type,p.value]));
-      const h = (overrideHour==null? m.hour : pad(overrideHour));
-      return new Date(`${m.year}-${m.month}-${m.day}T${h}:${m.minute}:${m.second}Z`);
-    }catch{
-      const d=new Date(baseDate); if (overrideHour!=null) d.setUTCHours(overrideHour,0,0,0); return d;
-    }
-  }
-  const isLeapYear   = y=> (y%4===0 && y%100!==0) || (y%400===0);
-  const isLeapDayUTC = d=> d.getUTCMonth()===1 && d.getUTCDate()===29;
-  const isDOOT = (d, tz)=>{ const dt=dateInTZ(d,tz); return (dt.getUTCMonth()===6 && dt.getUTCDate()===25); };
-
-  function startOfYear13(d, tz){
-    const dt = dateInTZ(d, tz);
-    const y = dt.getUTCFullYear();
-    const anchorThis = new Date(Date.UTC(y,6,26));
-    const anchorPrev = new Date(Date.UTC(y-1,6,26));
-    return dt >= anchorThis ? anchorThis : anchorPrev;
-  }
-  function dayIndexSinceStart(d, tz){
-    const start = new Date(Date.UTC(startOfYear13(d, tz).getUTCFullYear(),6,26));
-    const dt = new Date(Date.UTC(dateInTZ(d, tz).getUTCFullYear(), dateInTZ(d, tz).getUTCMonth(), dateInTZ(d, tz).getUTCDate()));
-    let days = Math.floor((dt - start)/86400000);
-    const doot = new Date(Date.UTC(start.getUTCFullYear()+1,6,25));
-    if (dt >= doot) days -= 1;
-    for (let y=start.getUTCFullYear(); y<=dt.getUTCFullYear(); y++){
-      if(isLeapYear(y)){
-        const feb29 = new Date(Date.UTC(y,1,29));
-        if (dt >= feb29 && start <= feb29) days -= 1;
-      }
-    }
-    return days; // 0..363
-  }
-  function calc13Moon(d, tz){
-    if (isDOOT(d,tz)){
-      const s=startOfYear13(d,tz).getUTCFullYear();
-      return {special:"Day Out of Time", year:`${s}/${s+1}`};
-    }
-    if (isLeapDayUTC(dateInTZ(d,tz))){
-      const s=startOfYear13(d,tz).getUTCFullYear();
-      return {special:"Leap Day", year:`${s}/${s+1}`};
+})();      return {special:"Leap Day", year:`${s}/${s+1}`};
     }
     const idx = dayIndexSinceStart(d, tz);
     const moon = Math.floor(idx/28)+1;
