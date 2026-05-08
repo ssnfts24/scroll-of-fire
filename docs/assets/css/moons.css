@@ -1,4 +1,4 @@
-/* Scroll of Fire — 13 Moons CSS */
+/* Scroll of Fire — Remnant 13 Moons CSS */
 
 *,
 *::before,
@@ -317,6 +317,8 @@ input[type="range"].lab-input {
   box-shadow: 0 0 0 3px rgba(122, 243, 255, 0.22);
 }
 
+/* Remnant 4x7 Calendar */
+
 .calendar,
 .gregorian {
   --cell: min(11vw, 48px);
@@ -324,23 +326,84 @@ input[type="range"].lab-input {
   width: 100%;
 }
 
-.r-grid,
+.r-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--gap);
+  align-items: stretch;
+}
+
+.r-lbl {
+  min-height: 30px;
+  display: grid;
+  place-items: center;
+  font-size: 0.68rem;
+  font-weight: 900;
+  color: var(--muted);
+  text-align: center;
+}
+
+.r-day {
+  aspect-ratio: 1 / 1;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: linear-gradient(180deg, #101520, #0b0f16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.r-day button {
+  all: unset;
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.r-day b {
+  font-size: clamp(0.86rem, 3.4vw, 1rem);
+}
+
+.r-day small {
+  display: block;
+  font-size: 0.56rem;
+  color: var(--muted);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.r-day.is-today {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 18px rgba(122, 243, 255, 0.22);
+}
+
+/* Gregorian Calendar */
+
 .g-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: var(--gap);
 }
 
-.r-lbl,
 .g-lbl {
+  min-height: 30px;
   display: grid;
   place-items: center;
+  font-size: 0.72rem;
   font-weight: 900;
-  font-size: 0.75rem;
   color: var(--muted);
+  text-align: center;
 }
 
-.r-day,
 .g-day,
 .g-pad {
   min-width: 0;
@@ -353,32 +416,66 @@ input[type="range"].lab-input {
   justify-content: center;
 }
 
-.r-day button,
+.g-pad {
+  opacity: 0.35;
+}
+
 .g-day button {
   all: unset;
   display: grid;
   place-items: center;
+  gap: 2px;
   width: 100%;
   height: 100%;
   border-radius: 10px;
   cursor: pointer;
+  text-align: center;
   font-weight: 900;
-  font-size: clamp(0.75rem, 3.1vw, 0.95rem);
 }
 
-.r-day.is-today,
+.g-day b {
+  font-size: clamp(0.78rem, 3.2vw, 0.95rem);
+}
+
+.g-day small {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.56rem;
+  color: var(--muted);
+  font-weight: 800;
+  line-height: 1;
+}
+
 .g-day.is-today {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
+  box-shadow: 0 0 18px rgba(122, 243, 255, 0.22);
+}
+
+.g-day.is-doot {
+  border-color: var(--gold);
+  background: linear-gradient(180deg, rgba(243, 201, 122, 0.18), #11131a);
+}
+
+.g-day.is-leap {
+  border-color: #a8b8ff;
+  background: linear-gradient(180deg, rgba(168, 184, 255, 0.16), #11131a);
 }
 
 .r-doot {
-  padding: 18px;
+  padding: 22px;
   border: 1px dashed var(--accent);
   border-radius: 14px;
   text-align: center;
   font-weight: 900;
   background: #0e131e;
+}
+
+.r-doot span {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.95rem;
 }
 
 .scroller {
@@ -457,6 +554,16 @@ input[type="range"].lab-input {
   .gregorian {
     --cell: min(10.7vw, 42px);
     --gap: 4px;
+  }
+
+  .r-lbl,
+  .g-lbl {
+    font-size: 0.56rem;
+  }
+
+  .r-day small,
+  .g-day small {
+    font-size: 0.5rem;
   }
 
   .year-map {
