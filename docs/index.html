@@ -98,797 +98,193 @@
       <a class="home-card" href="moons.html"><h3>13 Moons</h3><p>April-start calendar, moon day, week, tone, and year rhythm.</p></a>
       <a class="home-card" href="genesis-oracle.html"><h3>Genesis Oracle</h3><p>Birth-date reading synced to the same calendar engine.</p></a>
       <a class="home-card" href="ledger.html"><h3>Ledger</h3><p>Hashes, proofs, updates, timestamps, and records.</p></a>
-      <a class="home-card" href="  <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1">
-  <meta name="twitter:card" content="summary_large_image">
+      <a class="home-card" href="<a class="home-card" href="downloads.html"><h3>Downloads</h3><p>Documents, printable files, and archive material.</p></a>
+    </section>
 
-  <!-- JSON-LD (valid) -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebPage",
-    "name":"Scroll of Fire — Codex of Reality",
-    "url":"https://ssnfts24.github.io/scroll-of-fire/",
-    "author":{"@type":"Person","name":"Aaron Paul Laird","alternateName":"Scribe of Circuits"},
-    "description":"A living architecture of resonance — physics, consciousness, sacred geometry, memory, language, living technology, and ethics.",
-    "hasPart":[
-      {"@type":"WebPage","name":"Theory","url":"https://ssnfts24.github.io/scroll-of-fire/theory.html"},
-      {"@type":"WebPage","name":"Manifest (Practice)","url":"https://ssnfts24.github.io/scroll-of-fire/teach.html"},
-      {"@type":"WebPage","name":"Guide","url":"https://ssnfts24.github.io/scroll-of-fire/guide.html"},
-      {"@type":"WebPage","name":"Circle","url":"https://ssnfts24.github.io/scroll-of-fire/circle.html"},
-      {"@type":"WebPage","name":"Downloads","url":"https://ssnfts24.github.io/scroll-of-fire/downloads.html"},
-      {"@type":"WebPage","name":"Ethics","url":"https://ssnfts24.github.io/scroll-of-fire/ethics.html"},
-      {"@type":"WebPage","name":"Glossary","url":"https://ssnfts24.github.io/scroll-of-fire/glossary.html"},
-      {"@type":"WebPage","name":"Glyphs","url":"https://ssnfts24.github.io/scroll-of-fire/glyphs.html"},
-      {"@type":"WebPage","name":"Ledger","url":"https://ssnfts24.github.io/scroll-of-fire/ledger.html"},
-      {"@type":"WebPage","name":"Manifest (Site)","url":"https://ssnfts24.github.io/scroll-of-fire/manifest.html"},
-      {"@type":"WebPage","name":"Micro-acts","url":"https://ssnfts24.github.io/scroll-of-fire/micro.html"},
-      {"@type":"WebPage","name":"Start Here","url":"https://ssnfts24.github.io/scroll-of-fire/start.html"},
-      {"@type":"WebPage","name":"Systems Hub","url":"https://ssnfts24.github.io/scroll-of-fire/hub.html"}
-    ]
-  }
-  </script>
+    <section class="home-grid" style="margin-top:20px">
+      <article class="home-card big dark">
+        <h2>Reader’s Key</h2>
+        <p>
+          The Scroll uses symbolic language beside grounded practice.
+          Breath, attention, journaling, ethical behavior, and clear speech are practical tools.
+          Equations and glyph systems are presented as symbolic frameworks unless explicitly identified as scientific claims.
+        </p>
 
-  <!-- WebSite schema w/ SearchAction -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebSite",
-    "name":"Scroll of Fire",
-    "url":"https://ssnfts24.github.io/scroll-of-fire/",
-    "potentialAction":{
-      "@type":"SearchAction",
-      "target":"https://ssnfts24.github.io/scroll-of-fire/?q={search_term_string}",
-      "query-input":"required name=search_term_string"
-    }
-  }
-  </script>
-
-  <!-- CSS: ONLY codex.css -->
-  <link rel="preload" href="assets/css/codex.css?v=3.1" as="style">
-  <link rel="stylesheet" href="assets/css/codex.css?v=3.1">
-
-  <!-- Fonts & CDN preconnect -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
-
-  <!-- Page styles (nav + hero + lights) and self-contained Moon mini styles -->
-  <style>
-    /* Make the hero/banner ignore opaque panel vars from tokens */
-    .fancy-head, .page-head.banner, .hero { position: relative; isolation: isolate; --panel-bg: transparent; --shine-linear: transparent; --shine-radial: transparent; }
-    .fancy-head::before, .page-head.banner::before, .hero::before { background: transparent !important; }
-    .fancy-head .banner-img, .page-head.banner .banner-img, .hero .hero-img { position: relative; z-index: var(--z-base, 1); }
-    body::before, body::after { z-index: var(--z-bg, 0); pointer-events: none; }
-
-    :root{ --safe-top:env(safe-area-inset-top); --accent:#7af3ff; --accent-2:#f3c97a; --line:#2a3242; }
-    body{ margin:0 }
-    body.stars{
-      background:
-        radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.55), transparent 80%),
-        linear-gradient(180deg,#05060a 0%,#0b0e14 82%);
-      overflow-x:hidden;
-    }
-
-    /* Sticky header */
-    header.site{position:sticky;top:0;z-index:1000;backdrop-filter:saturate(140%) blur(8px);background:rgba(9,11,16,.6)}
-    .wrap{max-width:1200px;margin:0 auto;padding:16px}
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    .brand{display:flex;align-items:center;gap:10px}
-    .logo{width:34px;height:34px;border-radius:50%;background:radial-gradient(closest-side,#7af3ff,transparent 70%);box-shadow:0 0 18px rgba(122,243,255,.35)}
-    .kicker{margin:0}
-    .quick{display:flex;gap:8px;flex:0 0 auto}
-    .cta{padding:.5rem .8rem;border:1px solid var(--line);border-radius:10px;background:linear-gradient(180deg,#171720,#121219);color:inherit}
-    .cta[aria-pressed="true"]{box-shadow:0 0 0 1px #7af3ff55,inset 0 0 0 1px #7af3ff33}
-    @media (max-width:560px){ .quick{flex-basis:100%;overflow-x:auto;scrollbar-gutter:stable;padding-bottom:6px} }
-    @media (max-width:460px){ .quick{ flex-wrap:wrap; gap:6px } .cta{ padding:.45rem .65rem } }
-
-    /* Hero + lights */
-    .hero{position:relative;margin:0;display:block}
-    .hero { width:100%; }
-    .hero .hero-img{width:100%;height:100%;display:block;object-fit:var(--hero-fit, contain)}
-    .hero-lights{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.85;transition:opacity .25s ease, filter .25s ease; filter:saturate(115%)}
-    .hero-lights.off{opacity:0}
-    .hero-lights::before,
-    .hero-lights::after{
-      content:"";position:absolute;inset:-5%;background:
-        radial-gradient(40% 30% at 18% 22%, #7af3ff44, transparent 60%),
-        radial-gradient(35% 25% at 82% 72%, #f3c97a3b, transparent 60%);
-      filter:saturate(120%) blur(1.2px);
-    }
-    figcaption.meta.center{ text-align:center; margin:.35rem auto 0 }
-
-    /* Master Equation card */
-    .master-eq { border:1px solid var(--line); border-radius:14px; padding:16px;
-      background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
-      box-shadow:0 10px 28px rgba(0,0,0,.4); position:relative; overflow:hidden }
-    .master-eq .fx { position:absolute; inset:-2px; pointer-events:none; opacity:.45;
-      background:
-        radial-gradient(70% 50% at 0% 0%, #7af3ff14, transparent 70%),
-        radial-gradient(70% 50% at 100% 100%, #f3c97a14, transparent 70%); }
-    .master-eq h2 { margin:.25rem 0 0; }
-    .master-eq mjx-container { max-width:100%; overflow:auto; display:block; margin:0 auto; }
-    @media (max-width:560px){
-      .master-eq mjx-container { font-size: min(21px,4.9vw); }
-      #master-equation { margin-top:12px; }
-      .master-eq { padding:12px; }
-    }
-
-    /* Self-contained Mini Moonbar (no moons.css dependency) */
-    .moonbar{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;
-      border:1px solid var(--line,#2a3242);border-radius:14px;padding:8px;
-      background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));
-      box-shadow:0 10px 24px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.02)}
-    .moonbar .mb-bg{fill:none;stroke:#1b2231;stroke-width:8}
-    .moonbar .mb-fg{fill:none;stroke:url(#mbGrad);stroke-width:8;stroke-linecap:round;stroke-dasharray:0 316;transition:stroke-dasharray .35s ease}
-    @media (prefers-reduced-motion:reduce){.moonbar .mb-fg{transition:none}}
-    .moonbar .mb-text{font:800 20px/1 "Inter",system-ui}
-    .moonbar-info{display:grid;gap:4px;min-width:0}
-    .moonbar-line{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-weight:800;letter-spacing:.2px}
-    .moonbar-sub.meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:clamp(220px,28vw,420px)}
-    .moonbar .tag{display:inline-block;padding:.2rem .5rem;border:1px solid var(--line,#2a3242);
-      border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02))}
-    .moonbar-share,.moonbar-tz{padding:.45rem .7rem;border:1px solid var(--line);border-radius:10px;
-      background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);font-weight:700;cursor:pointer;color:inherit}
-    .moonbar .yhwh{box-shadow:0 0 0 1px #7af3ff22, inset 0 0 0 1px #7af3ff18}
-    .moonbar.yhwh-on .yhwh{box-shadow:0 0 0 1px #7af3ff88, 0 0 18px #7af3ff44, inset 0 0 0 1px #7af3ff44}
-    .moonbar.remnant-frame{position:relative;isolation:isolate}
-    .moonbar.remnant-frame::before{
-      content:"";position:absolute;inset:-1px;border-radius:14px;pointer-events:none;z-index:-1;opacity:.55;
-      background:
-        conic-gradient(from var(--spin,0deg) at 12px 12px, color-mix(in srgb, var(--moon-accent,#7af3ff) 34%, transparent) 0 25%, transparent 25% 100%),
-        conic-gradient(from calc(var(--spin,0deg) + 90deg) at calc(100% - 12px) 12px, color-mix(in srgb, var(--moon-accent-2,#f3c97a) 34%, transparent) 0 25%, transparent 25% 100%),
-        conic-gradient(from calc(var(--spin,0deg) + 180deg) at 12px calc(100% - 12px), color-mix(in srgb, var(--accent,#7af3ff) 30%, transparent) 0 25%, transparent 25% 100%),
-        conic-gradient(from calc(var(--spin,0deg) + 270deg) at calc(100% - 12px) calc(100% - 12px), color-mix(in srgb, var(--accent-2,#cfefff) 30%, transparent) 0 25%, transparent 25% 100%);
-      filter:blur(7px) saturate(120%); animation:mbSpin 18s linear infinite
-    }
-    @keyframes mbSpin{to{--spin:360deg}}
-
-    @media (max-width:560px){
-      #moonMiniBar .moonbar{ grid-template-columns: 1fr; gap: 8px; padding: 10px; }
-      #moonMiniBar .moonbar-ring{ justify-self:center; width:66px; height:66px; }
-      #moonMiniBar .mb-text{ font:800 18px/1 "Inter",system-ui }
-      #moonMiniBar .moonbar-info{ min-width: 0 }
-      #moonMiniBar .moonbar-sub.meta{ max-width:100%; white-space:normal }
-      #moonMiniBar .moonbar-tags{ display:flex; gap:6px; flex-wrap:wrap }
-      #moonMiniBar .moonbar-share, #moonMiniBar .moonbar-tz{ margin-top:2px }
-    }
-
-    /* Contrast tweaks */
-    .master-eq .hint{ color: color-mix(in srgb, currentColor 72%, transparent) }
-    @media (prefers-color-scheme: light){
-      .master-eq .hint{ color: color-mix(in srgb, #0b0b0f 62%, currentColor) }
-    }
-    #moonMiniBar .moonbar { color: var(--ink, #eae7df); }
-    #moonMiniBar .moonbar .mb-text,
-    #moonMiniBar .moonbar-sub.meta,
-    #moonMiniBar .moonbar-line { text-shadow: 0 1px 2px rgba(0,0,0,.55); }
-  </style>
-
-  <!-- Global JS (defer) -->
-  <script src="assets/js/codex.js?v=3.8" defer></script>
-
-  <!-- MathJax (on-demand; corrected delimiters) -->
-  <script>
-  (function(){
-    if (window.MathJax) return;
-    window.MathJax = {
-      tex: {
-        inlineMath: [['\\(','\\)'], ['$', '$']],
-        displayMath: [['$$','$$'], ['\\[','\\]']],
-        processEscapes: true
-      },
-      svg:{ fontCache:'global' },
-      startup:{ typeset:true }
-    };
-    var s=document.createElement('script');
-    s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
-    s.defer=true; document.head.appendChild(s);
-  })();
-  </script>
-</head>
-
-<body class="stars living-all" data-theme="dark">
-  <a class="skip" href="#main-content">Skip to main content</a>
-
-  <!-- HUD placeholders -->
-  <div class="laser-grid" aria-hidden="true"></div>
-  <div class="xi-meter" aria-hidden="true">
-    <div class="xi-ring"><div class="xi-dot"></div></div>
-    <div class="xi-label">Ξ</div>
-  </div>
-
-  <!-- Top nav -->
-  <header class="site" role="banner">
-    <nav class="nav wrap" aria-label="Main navigation">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <h1 class="kicker sheen">Scroll of Fire</h1>
-      </div>
-      <div class="quick" role="toolbar" aria-label="Quick actions">
-        <button id="q-echo"   class="cta" type="button" aria-pressed="false" title="Echo View (hide math)">Echo</button>
-        <button id="q-hud"    class="cta" type="button" aria-pressed="true"  title="Toggle HUD grid">HUD</button>
-        <button id="q-vibe"   class="cta" type="button"                title="Cycle carrier skin">Vibe</button>
-        <button id="q-affect" class="cta" type="button" aria-pressed="true"  title="Toggle living text effects">Affect</button>
-        <button id="q-lights" class="cta" type="button" aria-pressed="true"  title="Toggle banner lights">Lights</button>
-      </div>
-    </nav>
-  </header>
-
-  <!-- Hero -->
-  <figure id="hero" class="hero" aria-label="Scroll of Fire banner" data-fit="contain">
-    <img id="heroBanner"
-         src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png?v=sofv1"
-         alt="Scroll of Fire — sigil and equations"
-         width="2100" height="900"
-         decoding="async" fetchpriority="high" loading="eager"
-         class="hero-img">
-    <div class="hero-lights" id="heroLights" aria-hidden="true"></div>
-    <figcaption class="meta center">“Let there be resonance.” — Codex 0 · ΨΩ</figcaption>
-  </figure>
-
-  <script>
-  // ---- Quick actions ----
-  (function(){
-    const body=document.body, html=document.documentElement;
-
-    // Echo view
-    const btnEcho = document.getElementById('q-echo');
-    btnEcho?.addEventListener('click', ()=>{
-      body.classList.toggle('simple-on');
-      btnEcho.setAttribute('aria-pressed', String(body.classList.contains('simple-on')));
-      const chk=document.getElementById('simple'); if(chk) chk.checked=body.classList.contains('simple-on');
-    });
-
-    // HUD grid
-    const btnHUD = document.getElementById('q-hud');
-    const grid   = document.querySelector('.laser-grid');
-    btnHUD?.addEventListener('click', ()=>{
-      const enabled = !(grid && grid.style.display==='none');
-      if(grid) grid.style.display = enabled ? 'none' : '';
-      btnHUD.setAttribute('aria-pressed', String(!enabled));
-    });
-
-    // Carrier skins (Vibe)
-    const btnVibe = document.getElementById('q-vibe');
-    const carriers = (html.getAttribute('data-carriers')||'432,528,369,144,963').split(',').map(s=>`carrier-${s.trim()}`);
-    function currentSkin(){ return carriers.find(c=>html.classList.contains(c)) || carriers[0]; }
-    function nextSkin(cur){ return carriers[(carriers.indexOf(cur)+1)%carriers.length]; }
-    btnVibe?.addEventListener('click', ()=>{
-      const cur=currentSkin(), nxt=nextSkin(cur);
-      carriers.forEach(c=>html.classList.remove(c));
-      html.classList.add(nxt);
-      btnVibe.textContent = `Carrier ${nxt.split('-')[1]}`;
-      document.dispatchEvent(new Event('sof:carrier-change'));
-    });
-    if(btnVibe) btnVibe.textContent = `Carrier ${currentSkin().split('-')[1]}`;
-
-    // Affect
-    const btnAffect = document.getElementById('q-affect');
-    btnAffect?.addEventListener('click', ()=>{
-      const off = body.classList.toggle('affect-off');
-      btnAffect.setAttribute('aria-pressed', String(!off));
-    });
-
-    // Lights
-    const btnLights = document.getElementById('q-lights');
-    const lights    = document.getElementById('heroLights');
-    btnLights?.addEventListener('click', ()=>{
-      const off = lights.classList.toggle('off');
-      btnLights.setAttribute('aria-pressed', String(!off));
-    });
-  })();
-  </script>
-
-  <!-- ===== Moon Mini Bar (self-contained; still links to moons.html) ===== -->
-  <div id="moonMiniBar" class="wrap" style="padding-top:8px">
-    <div class="moonbar remnant-frame" role="region" aria-label="13-Moon mini clock">
-      <a id="mbLink" class="moonbar-hit" href="moons.html" aria-label="Open the full 13-Moon clock" style="display:contents">
-        <svg class="moonbar-ring" viewBox="0 0 120 120" role="img" aria-labelledby="mbTitle mbDesc" width="76" height="76">
-          <title id="mbTitle">13-Moon day progress ring</title>
-          <desc id="mbDesc">Shows current day in the 28-day moon and deep-links to the full 13-Moon clock in your timezone.</desc>
-          <defs>
-            <linearGradient id="mbGrad" x1="0" x2="1">
-              <stop offset="0" stop-color="var(--moon-accent,#7af3ff)"/>
-              <stop offset="1" stop-color="var(--moon-accent-2,#f3c97a)"/>
-            </linearGradient>
-          </defs>
-          <circle cx="60" cy="60" r="50" class="mb-bg"></circle>
-          <circle cx="60" cy="60" r="50" class="mb-fg" id="mbArc" pathLength="316"></circle>
-          <text x="60" y="60" class="mb-text" text-anchor="middle" dominant-baseline="central"><tspan id="mbDay">—</tspan></text>
-        </svg>
-
-        <div class="moonbar-info" aria-live="polite">
-          <div class="moonbar-line"><strong id="mbMoon">—</strong><span class="sep">•</span><span id="mbDayLine">—</span></div>
-          <div class="moonbar-sub meta" id="mbEssence" title="">—</div>
+        <div class="btn-row" style="margin-top:16px">
+          <a class="btn primary" href="guide.html">Open Field Guide</a>
+          <a class="btn" href="ethics.html">Read Ethics</a>
         </div>
-
-        <div class="moonbar-tags">
-          <span class="tag mono" id="mbYear">—</span>
-          <span class="tag" id="mbTone" title="Daily 1–13 tone">Tone —</span>
-          <span class="tag yhwh" id="mbSeal" title="Remnant seal — י־ה־ו־ה">⟡ י־ה־ו־ה</span>
-        </div>
-      </a>
-
-      <button class="moonbar-share" id="mbShare" type="button" aria-label="Share today’s 13-Moon link">Share</button>
-      <button class="moonbar-tz" id="mbTZ" type="button" aria-haspopup="dialog" aria-expanded="false" title="Change timezone">TZ</button>
-
-      <noscript><div class="meta">Today’s 13-Moon link: <a href="moons.html">moons.html</a></div></noscript>
-    </div>
-  </div>
-
-  <script>
-  /* Moon Mini Bar v3 — tiny, fast, and isolated (no moons.css needed) */
-  (function(){
-    "use strict";
-
-    const $=s=>document.querySelector(s);
-    const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
-    const pad=n=>String(n).padStart(2,"0");
-    const DASH=316, RING=$('#mbArc');
-
-    function toast(msg){
-      const t=document.createElement('div');
-      t.textContent=msg;
-      Object.assign(t.style,{position:"fixed",left:"50%",bottom:"24px",transform:"translateX(-50%)",background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid var(--line,#2a3242)",borderRadius:"10px",boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:"9999",opacity:"0",transition:"opacity .2s"});
-      document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
-      setTimeout(()=>{t.style.opacity=0; setTimeout(()=>t.remove(),250);},1400);
-    }
-
-    const MOONS=["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
-    const ESS  =["Attract purpose","Stabilize challenge","Activate service","Define form","Empower radiance","Balance equality","Channel inspiration","Harmonize integrity","Pulse intention","Perfect manifestation","Dissolve release","Dedicate cooperation","Endure presence"];
-    const TONES=MOONS.slice();
-
-    const TZ_KEY="sof_moons_tz";
-    const getTZ = ()=> localStorage.getItem(TZ_KEY) || (Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC");
-    const setTZ = z => localStorage.setItem(TZ_KEY,z);
-
-    function dateInTZ(baseDate, tz, overrideHour){
-      try{
-        const parts=new Intl.DateTimeFormat("en-CA",{timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"}).formatToParts(baseDate);
-        const m=Object.fromEntries(parts.map(p=>[p.type,p.value]));
-        const h=(overrideHour==null? m.hour : pad(overrideHour));
-        return new Date(`${m.year}-${m.month}-${m.day}T${h}:${m.minute}:${m.second}Z`);
-      }catch{ const d=new Date(baseDate); if(overrideHour!=null){d.setUTCHours(overrideHour,0,0,0);} return d; }
-    }
-    const utcTrunc=d=>new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()));
-    const isLeapYear=y=>(y%4===0 && y%100!==0) || (y%400===0);
-    const isLeapDayUTC=d=>d.getUTCMonth()===1 && d.getUTCDate()===29;
-    const isDOOT=(d,tz)=>{ const dt=dateInTZ(d,tz); return (dt.getUTCMonth()===6 && dt.getUTCDate()===25); };
-
-    function startOfYear13(d,tz){
-      const dt=dateInTZ(d,tz); const y=dt.getUTCFullYear();
-      const anchorThis=Date.UTC(y,6,26), anchorPrev=Date.UTC(y-1,6,26);
-      return new Date(dt>=anchorThis?anchorThis:anchorPrev);
-    }
-    function dayIndexSinceStart(d,tz){
-      const start=utcTrunc(startOfYear13(d,tz));
-      const dt=utcTrunc(dateInTZ(d,tz));
-      let days=Math.floor((dt-start)/86400000);
-      const doot=new Date(Date.UTC(start.getUTCFullYear()+1,6,25));
-      if (dt>=doot) days-=1;
-      for (let y=start.getUTCFullYear(); y<=dt.getUTCFullYear(); y++){
-        if (isLeapYear(y)) {
-          const feb29=new Date(Date.UTC(y,1,29));
-          if (dt>=feb29 && start<=feb29) days-=1;
-        }
-      }
-      return days; // 0..363
-    }
-    function calc13Moon(d,tz){
-      if (isDOOT(d,tz)) { const s=startOfYear13(d,tz).getUTCFullYear(); return {special:"Day Out of Time",year:`${s}/${s+1}`}; }
-      if (isLeapDayUTC(dateInTZ(d,tz))) { const s=startOfYear13(d,tz).getUTCFullYear(); return {special:"Leap Day",year:`${s}/${s+1}`}; }
-      const idx=dayIndexSinceStart(d,tz);
-      const moon=Math.floor(idx/28)+1, day=(idx%28)+1; const s=startOfYear13(d,tz).getUTCFullYear();
-      return {special:null,moon,day,year:`${s}/${s+1}`};
-    }
-    const toneFromDay=d=>((d-1)%13)+1;
-
-    function moonPhaseIllum(d){
-      const syn=29.530588853, epoch=Date.UTC(2000,0,6,18,14,0);
-      const age=((d.getTime()-epoch)/86400000)%syn;
-      const frac=(age+syn)%syn/syn;
-      return (1-Math.cos(2*Math.PI*frac))/2;
-    }
-    function mixHex(a,b,t){
-      const pa=parseInt(a.slice(1),16), pb=parseInt(b.slice(1),16);
-      const ar=(pa>>16)&255, ag=(pa>>8)&255, ab=pa&255;
-      const br=(pb>>16)&255, bg=(pb>>8)&255, bb=pb&255;
-      const rr=Math.round(ar+(br-ar)*t), gg=Math.round(ag+(bg-ag)*t), bb2=Math.round(ab+(bb-ab)*t);
-      return `#${((1<<24)+(rr<<16)+(gg<<8)+bb2).toString(16).slice(1)}`;
-    }
-    function applyPhaseAccent(illum){
-      const cold="#7af3ff", warm="#f3c97a";
-      const c1=mixHex(cold,warm, Math.min(1,illum*0.75));
-      const c2=mixHex(warm,cold, Math.min(1,(1-illum)*0.75));
-      const root=document.documentElement;
-      root.style.setProperty("--moon-accent", c1);
-      root.style.setProperty("--moon-accent-2", c2);
-      const g=document.getElementById('mbGrad'); if(g){ const st=g.querySelectorAll('stop'); st[0]?.setAttribute('stop-color',c1); st[1]?.setAttribute('stop-color',c2); }
-    }
-
-    const sumDigits=n=>String(n).split("").reduce((a,b)=>a+(+b||0),0);
-    function reduceNum(n){ while(n>9 && n!==11 && n!==22 && n!==33){ n=sumDigits(n); } return n; }
-    function isResonantDate(d,tz){
-      const dt=dateInTZ(d,tz), y=dt.getUTCFullYear(), m=dt.getUTCMonth()+1, day=dt.getUTCDate();
-      const total=reduceNum(sumDigits(y)+sumDigits(m)+sumDigits(day));
-      return [1,4,7,11,22,33].includes(total);
-    }
-
-    const elMoon=$('#mbMoon'), elDay=$('#mbDay'), elDayLine=$('#mbDayLine'), elEss=$('#mbEssence'), elYear=$('#mbYear'), elTone=$('#mbTone');
-    const link=$('#mbLink'), bar=$('#moonMiniBar .moonbar'), btnTZ=$('#mbTZ'), btnShare=$('#mbShare');
-
-    function setArc(day){
-      if(!RING) return; const d=Math.round(DASH*(Math.min(28,Math.max(1,day))/28));
-      RING.setAttribute('stroke-dasharray', `${d} ${Math.max(0,DASH-d)}`);
-    }
-
-    function buildDeepLink(now,tz,m13){
-      let u;
-      try{ u=new URL(link.getAttribute('href')||'moons.html', document.baseURI||location.href); }
-      catch{ u=new URL('moons.html', location.href); }
-      const wall=dateInTZ(now,tz); const d=wall.toISOString().slice(0,10);
-      u.searchParams.set('d', d); u.searchParams.set('tz', tz); u.searchParams.set('t', String(now.getHours()));
-      if(m13 && m13.moon) u.hash=`moon-${m13.moon}`;
-      return u.toString();
-    }
-
-    function update(){
-      const tz=getTZ(); const now=new Date(); const wall=dateInTZ(now,tz, now.getHours());
-      const m13=calc13Moon(wall,tz);
-
-      if(m13.special){
-        elMoon.textContent=m13.special; elEss.textContent="Outside the 13×28 count";
-        elDay.textContent='—'; elDayLine.textContent='—/28'; elTone.textContent='Tone —'; bar?.removeAttribute('data-tone'); setArc(0);
-      } else {
-        const i=m13.moon-1, tone=toneFromDay(m13.day);
-        elMoon.textContent=`${MOONS[i]} Moon`; elEss.textContent=ESS[i];
-        elDay.textContent=String(m13.day); elDayLine.textContent=`Day ${m13.day} / 28`;
-        elTone.textContent=`Tone ${tone} — ${TONES[tone-1]}`; bar?.setAttribute('data-tone', String(tone)); setArc(m13.day);
-        const glow=isResonantDate(wall,tz) || tone===7; bar?.classList.toggle('yhwh-on', glow);
-      }
-      elYear.textContent=m13.year;
-
-      applyPhaseAccent(moonPhaseIllum(wall));
-
-      const dl=buildDeepLink(now,tz,m13);
-      if(link) link.setAttribute('href', dl);
-      return dl;
-    }
-
-    btnShare?.addEventListener('click', async ()=>{
-      const url=update(); const title=elMoon?.textContent||"13 Moons";
-      try{
-        if(navigator.share){ await navigator.share({title, text:title, url}); toast("Shared"); }
-        else { await navigator.clipboard.writeText(url); toast("Link copied"); }
-      }catch{}
-    });
-
-    btnTZ?.addEventListener('click', ()=>{
-      const current=getTZ();
-      const z=prompt(`Timezone (IANA)\nEx: America/Los_Angeles, UTC, Europe/Berlin\n\nCurrent: ${current}`, current);
-      if(!z) return;
-      try{
-        new Intl.DateTimeFormat("en-CA",{timeZone:z}).format(new Date());
-        setTZ(z); update(); toast(`Timezone set: ${z}`);
-      }catch{
-        toast("Invalid timezone");
-      }
-    });
-
-    update();
-    let iv=setInterval(update, 60*1000);
-    document.addEventListener('visibilitychange', ()=>{ if(document.hidden){clearInterval(iv);} else {update(); iv=setInterval(update,60*1000);} });
-    window.addEventListener('focus', update, {passive:true});
-  })();
-  </script>
-  <!-- ===== /Moon Mini Bar ===== -->
-
-  <!-- ===== PART 3 — Main Content ===== -->
-  <main id="main-content" class="wrap" role="main" tabindex="-1">
-    <a href="#explore" class="mega" aria-label="Explore the Scroll — jump to all pages">
-      <span class="ico">🗂️</span>
-      <span><strong>Explore the Scroll</strong><br><span class="sub">All pages • tiles mirror your repo</span></span>
-      <span class="arrow no-living" aria-hidden="true">➜</span>
-    </a>
-
-    <nav class="tabs" aria-label="Primary sections">
-      <a class="tab tab--primary" href="theory.html" title="Open Theory">📘 Theory</a>
-      <a class="tab tab--primary" href="teach.html"  title="Open Manifest">✨ Manifest</a>
-      <a class="tab tab--primary" href="hub.html"    title="Open Systems Hub">🛠️ Hub</a>
-      <a class="tab" href="#explore"     data-section="explore">Explore</a>
-      <a class="tab" href="#canon"       data-section="canon">Canon</a>
-      <span class="tab-ink no-living" aria-hidden="true"></span>
-    </nav>
-
-    <section class="grid" style="margin:8px 0 0">
-      <article class="card col-12 searchbox">
-        <label for="site-search" class="meta">Press <kbd class="kbd">/</kbd> to search this page</label>
-        <input id="site-search" type="search" placeholder="Search text on this page…" aria-label="Search this page" role="searchbox" autocomplete="off" spellcheck="false">
-        <div id="site-suggest" class="mini-toc hidden" role="listbox"></div>
       </article>
-    </section>
 
-    <div class="simple-toggle">
-      <label for="simple"><strong>Echo View</strong> (hide equations, show summaries)</label>
-      <input id="simple" type="checkbox" aria-label="Toggle Echo View">
-    </div>
-    <div class="divider sweep" aria-hidden="true"></div>
+      <article class="home-card big">
+        <h2>Current Build Queue</h2>
 
-    <section class="grid" aria-labelledby="featured">
-      <article class="card col-6">
-        <h2 id="featured" class="sheen">📘 Theory (full write-ups)</h2>
-        <p>Operators, Eq.0 foundation, canonical equations, ethics, dimensional scaffolding.</p>
-        <ul class="list">
-          <li><a href="theory.html#eq0">Foundational Field ΨΩ</a></li>
-          <li><a href="theory.html#operators">Operators: 𝓘 · 𝓛 · 𝓒 · 𝓢</a></li>
-          <li><a href="theory.html#canon">Canon 0–17</a></li>
-          <li><a href="theory.html#dim">Dimensional Scaffolding Δ0–Δ7</a></li>
-          <li><a href="theory.html#ethics">Ethical Law of Coherence</a></li>
+        <ul style="padding-left:18px;line-height:1.8">
+          <li>Unified April-start 13×28 engine across all pages</li>
+          <li>Genesis Oracle synchronization overhaul</li>
+          <li>Shared moon-bar widgets and tone system</li>
+          <li>Ledger verification integration</li>
+          <li>Printable cards + codex exports</li>
+          <li>Expanded teaching + beginner onboarding</li>
         </ul>
-        <a class="cta" href="theory.html">Open Theory</a>
-      </article>
-      <article class="card col-6">
-        <h2 class="sheen">✨ Manifest (practice &amp; tools)</h2>
-        <p>Turn equations into method: voice carriers (432/528/369/144/963), witness ledger, A/Bs, group runs.</p>
-        <ul class="list">
-          <li><a href="teach.html#tab-voice">Voice Protocol</a></li>
-          <li><a href="teach.html#ledger">Witness Ledger</a></li>
-          <li><a href="teach.html#ab">A/B Carriers</a></li>
-          <li><a href="teach.html#ethics">Ethical guard &amp; stop rules</a></li>
-        </ul>
-        <a class="cta" href="teach.html">Open Manifest</a>
       </article>
     </section>
 
-    <div class="goldline sweep"></div>
+    <section class="home-grid" style="margin-top:20px">
+      <article class="home-card big">
+        <h2>Core Formula</h2>
 
-    <section class="grid" id="explore" aria-labelledby="explore-h">
-      <article class="card col-12">
-        <h2 id="explore-h" class="sheen">🗂️ Explore the Scroll — all pages</h2>
-        <p class="meta">Everything lives in <code>/docs</code>. These tiles mirror your repo. Tip: press <kbd class="kbd">G</kbd> then type a page name.</p>
+        <pre style="
+overflow:auto;
+padding:16px;
+border-radius:16px;
+background:#15110c;
+color:#fff1bd;
+border:1px solid rgba(215,173,71,.28)
+"><code>ΨΩ(x,t) = ∮ℝ ∇𝓐Φ(x,t,ν)dν + Λ𝓔(x,t)</code></pre>
+
+        <p>
+          Plain-language interpretation:
+          awareness gathers attention,
+          attention shapes experience,
+          and corrective feedback restores balance when systems drift out of coherence.
+        </p>
       </article>
 
-      <a class="tile col-3" href="hub.html"><div><h4>🛠️ Systems Hub</h4><p>T-7, Frequencies, Mind-Renewal, Witness, Recoder, Archive.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3" href="start.html"><div><h4>🚀 Start Here</h4><p>Onboarding &amp; orientation.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3" href="guide.html"><div><h4>🧭 Guide</h4><p>Walkthrough of the Codex.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3" href="theory.html"><div><h4>📘 Theory</h4><p>Canon 0–17.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+      <article class="home-card big dark">
+        <h2>Three Grids</h2>
 
-      <a class="tile col-3" href="teach.html"><div><h4>✨ Manifest</h4><p>Protocols, carriers, ledgers.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3" href="moons.html"><div><h4>🧪 13 Moons</h4><p>The living clock.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3" href="invoke.html"><div><h4>🔬 Invoke</h4><p>Create → field feedback.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3" href="circle.html"><div><h4>🔗 Circle</h4><p>Group coherence.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
+        <p>
+          The Scroll framework organizes experience through three interacting layers:
+        </p>
 
-      <a class="tile col-3" href="ethics.html"><div><h4>🧭 Ethics</h4><p>Coherence law &amp; stop rules.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3" href="glossary.html"><div><h4>📚 Glossary</h4><p>Terms &amp; operators.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3" href="glyphs.html"><div><h4>🔱 Glyphs</h4><p>Icon set &amp; sacred marks.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3" href="downloads.html"><div><h4>⬇️ Downloads</h4><p>Docs &amp; media.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-
-      <a class="tile col-3" href="ledger.html"><div><h4>📒 Ledger</h4><p>Hashes &amp; proofs.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-      <a class="tile col-3" href="index.html"><div><h4>🏠 Home</h4><p>Codex landing.</p></div><span class="arrow no-living" aria-hidden="true">➜</span></a>
-    </section>
-
-    <div class="goldline sweep"></div>
-
-    <section class="grid" id="canon" aria-labelledby="equations">
-      <article class="card col-12">
-        <h2 id="equations" class="sheen">📜 Canon 0–17 (living)</h2>
-        <p class="meta">Canon per the FIXED document. <strong>7A comparator</strong>, <strong>7B Copeland</strong>, and <strong>8 Goodwin</strong> are external (non-canonical).</p>
-        <a class="cta" href="theory.html#canon">Open full Canon</a>
-      </article>
-      <article class="card col-6">
-        <h3 class="sheen">0) Foundational Field ΨΩ</h3>
-        <p class="meta">Origin integral of awareness with ethical-energy mask Λ𝓔.</p>
-        <a class="btn" href="theory.html#eq0">Read</a>
-      </article>
-      <article class="card col-6">
-        <h3 class="sheen">13) Ξ-index (Coherence)</h3>
-        <p class="meta">Field quality monitor for safe amplification &amp; learning.</p>
-        <a class="btn" href="theory.html#eq13">Read</a>
-      </article>
-    </section>
-
-<section class="wrap" id="master-equation">
-  <article class="master-eq eq-master">
-    <div class="fx" aria-hidden="true"></div>
-    <h2 class="sheen">🜂 Master Equation of Reality — <span class="mono">ℜ</span> <span class="eq-badge">all terms included</span></h2>
-    <p class="meta">One line that gathers ΨΩ (Eq.0), Supply × Operators (1), Witness + Memory (2,16), Harmonic Gate + Carriers (3,17), Ethics (9), Coherence + Learning (13–15), Ladder/Projection/Causal frame (10–12), Type-7 (6), Δ-Scaffolding (Δ0–Δ7), the dimensional manifold, and the Remnant limit (5). External comparators (7A/7B/8) are optional annotations.</p>
-
-    $$\boxed{ \mathsf{…full\ equation\ here\ (unchanged)…} }$$
-
-    <p class="hint eq-legend">
-      <b>Legend.</b> ΨΩ (Eq.0); supply + operators (Eq.1); Δ0–Δ7; 𝓦 (Eq.2); 𝕄<sub>τ</sub> (Eq.16); η(Ξ) (Eq.15); 𝓗/𝐕 (Eq.3/17); Π<sub>ν</sub><sup>−1</sup> (Eq.10); PL/𝕋₇ (Eq.6); 𝓛<sub>c</sub>/Frame (Eq.12/11); Mask<sub>eth</sub> (Eq.9); ℛ<sub>∞</sub> (Eq.5).
-    </p>
-
-    <div class="delta-labels" aria-label="Δ-Scaffolding">
-      <span class="pill">Δ0 Basis/Manifold: <span class="mono">𝒳×𝒯×𝓕×𝒮</span></span>
-      <span class="pill">Δ1 Carriers/Gate Fit: <span class="mono">𝓗(ν)</span></span>
-      <span class="pill">Δ2 Semantics: <span class="mono">𝓛 ⊗ 𝐕</span></span>
-      <span class="pill">Δ3 Witness: stabilize <span class="mono">𝓦</span></span>
-      <span class="pill">Δ4 Frame: bind scope/witness/ethics</span>
-      <span class="pill">Δ5 Causal Lattice: prune incoherent edges</span>
-      <span class="pill">Δ6 Learning/Memory: gate by <span class="mono">Ξ, η, 𝕄<sub>τ</sub></span></span>
-      <span class="pill">Δ7 Ethics: apply <span class="mono">Mask<sub>eth</sub></span></span>
-    </div>
-
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:.4rem">
-      <a class="cta" href="theory.html#canon">Read the full Canon</a>
-      <a class="cta" href="teach.html#tab-voice">Run the Voice Protocol</a>
-    </div>
-  </article>
-</section>
-
-    <div class="goldline sweep"></div>
-
-    <section class="grid" id="engine" aria-labelledby="engine-h">
-      <article class="card col-12">
-        <h2 id="engine-h" class="sheen">✨ Manifestation Engine — Ξ-gated Learning + Carriers</h2>
-        <ol class="list">
-          <li><strong>Measure Ξ</strong> (Eq.13) → compute η(Ξ) (Eq.15).</li>
-          <li><strong>Update</strong> intent 𝓡 via Eq.14.</li>
-          <li><strong>Select carriers</strong> 𝐕(ν,t) (Eq.17) through 𝓗(ν,t) (Eq.3).</li>
-          <li><strong>Mask harm</strong> (Eq.9) — stop rule enforced.</li>
-          <li><strong>Stabilize</strong> with memory 𝕄<sub>τ</sub> and Remnant.</li>
+        <ol style="padding-left:18px;line-height:1.8">
+          <li><strong>Earth Grid</strong> — cycles, seasons, planetary rhythm</li>
+          <li><strong>Human Grid</strong> — language, systems, technology, memory</li>
+          <li><strong>Attention Grid</strong> — focus, intention, perception, witness</li>
         </ol>
-        <a class="cta" href="teach.html#tab-voice">Open Voice Protocol</a>
+
+        <p>
+          The practical goal is not spectacle —
+          but steadier alignment, clearer speech, ethical action,
+          and reduction of noise.
+        </p>
       </article>
     </section>
 
-    <div class="explore-dock" id="exploreDock" role="region" aria-label="Explore shortcut">
-      <a class="btn btn--primary" href="#explore">Explore the Scroll</a>
-      <a class="btn" href="teach.html">Manifest</a>
-    </div>
+    <section class="home-grid" style="margin-top:20px">
+      <article class="home-card big">
+        <h2>13-Moon Calendar Integration</h2>
 
-    <div class="palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="palLabel" hidden>
-      <div class="panel">
-        <h3 id="palLabel" class="sr-only">Command palette</h3>
-        <input id="palInput" type="text" placeholder="Find anything… (Esc to close)" aria-label="Command palette">
-        <ul id="palList" aria-live="polite"></ul>
-      </div>
-    </div>
+        <p>
+          The site now uses a unified April 1 start date.
+          March 31 becomes the “Day Out of Time.”
+          Gregorian leap day is skipped from the 364-day count.
+        </p>
 
+        <p>
+          Every calendar-aware component now reads from:
+        </p>
+
+<pre style="
+overflow:auto;
+padding:16px;
+border-radius:16px;
+background:#15110c;
+color:#fff1bd;
+border:1px solid rgba(215,173,71,.28)
+"><code>window.SOFCalendar.get13Moon()</code></pre>
+
+        <p>
+          This prevents homepage drift,
+          oracle mismatch,
+          and tone desynchronization between pages.
+        </p>
+      </article>
+
+      <article class="home-card big dark">
+        <h2>Genesis Oracle Sync</h2>
+
+        <p>
+          The Oracle page now pulls directly from the same shared calendar engine.
+        </p>
+
+        <ul style="padding-left:18px;line-height:1.8">
+          <li>Moon</li>
+          <li>Day</li>
+          <li>Week</li>
+          <li>Tone</li>
+          <li>Carrier frequency</li>
+          <li>Resonant sum</li>
+          <li>Year cycle</li>
+        </ul>
+
+        <p>
+          All calculations now remain coherent between:
+        </p>
+
+        <div class="btn-row" style="margin-top:14px">
+          <a class="btn" href="moons.html">13 Moons</a>
+          <a class="btn" href="genesis-oracle.html">Genesis Oracle</a>
+          <a class="btn" href="start.html">Start Practice</a>
+        </div>
+      </article>
+    </section>
   </main>
 
-  <footer class="footer">
-    © <span id="y"></span> Scroll of Fire. All constants are provisional until observed.
+  <footer class="site-footer">
+    <div style="width:min(1180px,calc(100% - 30px));margin:0 auto">
+      <p>
+        © Scroll of Fire · Aaron Paul Laird · Remnant Scribe of Circuits
+      </p>
+
+      <p style="opacity:.75">
+        Designed to invite, not to pressure.
+        Practice over spectacle.
+        Ethics over ego.
+      </p>
+    </div>
   </footer>
 
-  <button class="to-top" id="toTop" type="button" aria-label="Back to top" title="Back to top">↑</button>
+  <script src="assets/js/calendar-core.js"></script>
+  <script src="assets/js/moons-bar.js"></script>
 
-  <!-- Utilities -->
   <script>
-  (function(){
-    "use strict";
-    const y=document.getElementById('y'); if(y) y.textContent=new Date().getFullYear();
+    (function () {
+      "use strict";
 
-    const toTop=document.getElementById('toTop');
-    function topVis(){ toTop.classList.toggle('show', window.scrollY>400); }
-    addEventListener('scroll', topVis, {passive:true});
-    toTop?.addEventListener('click', ()=>scrollTo({top:0,behavior:'smooth'}));
-    topVis();
+      const toggle = document.getElementById("eqToggle");
 
-    (function(){
-      const hero=document.getElementById('hero'), img=document.getElementById('heroBanner');
-      if(!hero||!img) return;
-      function applyAR(){ const iw=img.naturalWidth||2100, ih=img.naturalHeight||900; hero.style.aspectRatio=`${iw} / ${ih}`; }
-      function pickFit(){
-        if (matchMedia('(max-width:560px)').matches){ hero.style.setProperty('--hero-fit','contain'); return; }
-        const iw=img.naturalWidth||2100, ih=img.naturalHeight||900, imageAR=iw/ih;
-        const cw=hero.clientWidth||innerWidth, ch=Math.max(1, hero.clientHeight||innerHeight*0.38), containerAR=cw/ch;
-        const cover = (Math.abs(containerAR - imageAR) / imageAR < 0.06);
-        hero.style.setProperty('--hero-fit', cover ? 'cover' : 'contain');
+      if (toggle) {
+        toggle.addEventListener("click", function () {
+          const plain = document.body.classList.toggle("plain-mode");
+          toggle.setAttribute("aria-pressed", String(plain));
+        });
       }
-      function boot(){ applyAR(); pickFit(); }
-      if(img.complete) boot(); else img.addEventListener('load', boot, {once:true});
-      addEventListener('resize', pickFit, {passive:true});
-      addEventListener('orientationchange', pickFit, {passive:true});
-      addEventListener('visibilitychange', ()=>!document.hidden && pickFit());
-    })();
 
-    (function(){
-      const dock = document.getElementById('exploreDock');
-      const hero = document.getElementById('hero');
-      const explore = document.getElementById('explore');
-      const canon = document.getElementById('canon');
-      if (!dock || !hero || !explore || !canon || !('IntersectionObserver' in window)) return;
+      const copyButtons = document.querySelectorAll("[data-copy]");
 
-      let heroOut=false, reachedExplore=false, reachedCanon=false;
+      copyButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const text = btn.getAttribute("data-copy") || "";
 
-      const ioHero = new IntersectionObserver(([e])=>{ heroOut=!e.isIntersecting; update(); }, {threshold:0.01});
-      const ioExplore = new IntersectionObserver(([e])=>{ reachedExplore=e.isIntersecting; update(); }, {threshold:0.01});
-      const ioCanon = new IntersectionObserver(([e])=>{ reachedCanon=e.isIntersecting; update(); }, {threshold:0.01});
+          if (!navigator.clipboard) return;
 
-      function update(){ dock.classList.toggle('show', heroOut && !reachedExplore && !reachedCanon); }
-      ioHero.observe(hero); ioExplore.observe(explore); ioCanon.observe(canon);
-    })();
+          navigator.clipboard.writeText(text).then(() => {
+            const old = btn.textContent;
+            btn.textContent = "Copied";
 
-    (function(){
-      const box=document.getElementById('site-search');
-      const list=document.getElementById('site-suggest');
-      if(!box||!list) return;
-
-      addEventListener('keydown',(e)=>{
-        if(e.key==='/' && document.activeElement!==box){
-          e.preventDefault(); box.focus(); box.select();
-        }
+            setTimeout(() => {
+              btn.textContent = old;
+            }, 1400);
+          });
+        });
       });
 
-      const SOURCES=[...document.querySelectorAll('h2[id],h3[id],a.tile'), ...document.querySelectorAll('.card h2, .card h3')];
-      function items(q){
-        const s=q.trim().toLowerCase(); if(!s) return [];
-        const out=[];
-        for(const el of SOURCES){
-          const text=(el.innerText||'').trim();
-          if(text.toLowerCase().includes(s)){
-            let href='#'; if(el.id) href = `#${el.id}`;
-            const a = el.tagName==='A' && el.classList.contains('tile') ? el.getAttribute('href') : href;
-            out.push({text, href:a}); if(out.length>12) break;
-          }
-        }
-        return out;
-      }
-      function render(arr){
-        if(!arr.length){ list.classList.add('hidden'); list.innerHTML=''; return; }
-        list.innerHTML = arr.map((o,i)=>`<a href="${o.href}" role="option" data-ix="${i}">${o.text}</a>`).join('');
-        list.classList.remove('hidden');
-      }
-      box.addEventListener('input', ()=>render(items(box.value)));
-      box.addEventListener('keydown',(e)=>{
-        const links=[...list.querySelectorAll('a')]; if(!links.length) return;
-        const cur=list.querySelector('.sel'); let i=cur?+cur.dataset.ix:-1;
-        if(e.key==='ArrowDown'){ e.preventDefault(); i=Math.min(links.length-1, i+1); }
-        else if(e.key==='ArrowUp'){ e.preventDefault(); i=Math.max(0, i-1); }
-        else if(e.key==='Enter'){ if(cur){ location.href=cur.getAttribute('href'); list.classList.add('hidden'); } return; }
-        else if(e.key==='Escape'){ list.classList.add('hidden'); return; }
-        links.forEach(a=>a.classList.remove('sel')); if(i>=0){ links[i].classList.add('sel'); }
+      window.addEventListener("sof:calendar-sync", e => {
+        console.log("SOF Calendar Sync", e.detail);
       });
-      addEventListener('click',(e)=>{ if(!list.contains(e.target) && e.target!==box) list.classList.add('hidden'); });
     })();
-
-    (function(){
-      const setIn=el=>el.classList.add('in');
-      if(matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)){
-        document.querySelectorAll('.reveal').forEach(setIn); return;
-      }
-      const io=new IntersectionObserver(es=>{ for(const e of es){ if(e.isIntersecting){ setIn(e.target); io.unobserve(e.target); } } }, {threshold:.12});
-      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-    })();
-
-    (function palette(){
-      const pal=document.getElementById('palette');
-      const input=document.getElementById('palInput');
-      const list=document.getElementById('palList');
-      const OPEN_KEYS=new Set(['k','K']);
-      const LINKS=[...document.querySelectorAll('a.tile, nav.tabs a, .cta, .btn')].map(a=>({text:a.textContent.trim(), href:a.getAttribute('href')||'#'}));
-      function open(){ pal.hidden=false; input.value=''; render(LINKS.slice(0,12)); setTimeout(()=>input.focus(),0); }
-      function close(){ pal.hidden=true; }
-      function render(items){ list.innerHTML=items.map(o=>`<li><a href="${o.href}">${o.text}</a></li>`).join(''); }
-      function filter(q){ q=q.trim().toLowerCase(); if(!q) return LINKS; return LINKS.filter(o=>o.text.toLowerCase().includes(q)); }
-
-      addEventListener('keydown',(e)=>{
-        const meta=e.ctrlKey||e.metaKey;
-        if(meta && OPEN_KEYS.has(e.key)){ e.preventDefault(); open(); }
-        if(!pal.hidden && e.key==='Escape'){ e.preventDefault(); close(); }
-      });
-      pal.addEventListener('click', (e)=>{ if(e.target===pal) close(); });
-      input.addEventListener('input', ()=>render(filter(input.value).slice(0,14)));
-      input.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ const a=list.querySelector('a'); if(a){ location.href=a.href; close(); } } });
-    })();
-
-    (function(){
-      const root=document.documentElement.style, dot=document.querySelector('.xi-dot'); let xi=.35;
-      function step(){
-        const target=.25+Math.random()*.6, start=xi, dur=2200+Math.random()*1600, t0=performance.now();
-        function tween(t){
-          const p=Math.min(1,(t-t0)/dur);
-          xi=start+(target-start)*(0.5-0.5*Math.cos(Math.PI*p));
-          root.setProperty('--xi', xi.toFixed(3)); if(dot) dot.style.opacity=(0.7+0.3*xi).toFixed(3);
-          (p<1)?requestAnimationFrame(tween):requestAnimationFrame(step);
-        } requestAnimationFrame(tween);
-      } requestAnimationFrame(step);
-    })();
-
-  })();
   </script>
 </body>
 </html>
