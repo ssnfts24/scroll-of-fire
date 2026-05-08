@@ -1,4 +1,6 @@
-/* Scroll of Fire — 13 Moons JS */
+/* Scroll of Fire — 13 Moons JS
+   Fixed: counted 13×28 dates, leap-day skip, Day Out of Time, year-map spans
+*/
 
 (function () {
   "use strict";
@@ -20,7 +22,6 @@
   ];
 
   const $ = (id) => document.getElementById(id);
-
   const WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const TZ_DEFAULT = "America/Los_Angeles";
 
@@ -52,75 +53,8 @@
     return x;
   }
 
-  function daysBetween(a, b) {
-    const ms = startOfDay(b) - startOfDay(a);
-    return Math.round(ms / 86400000);
-  }
-
-  function remnantYearStart(date) {
-    const y = date.getFullYear();
-    const candidate = new Date(y, 6, 26);
-    return date >= candidate ? candidate : new Date(y - 1, 6, 26);
-  }
-
-  function isLeapDay(date) {
-    return date.getMonth() === 1 && date.getDate() === 29;
-  }
-
-  function isDayOutOfTime(date) {
-    return date.getMonth() === 6 && date.getDate() === 25;
-  }
-
-  function skippedLeapDaysBetween(start, date) {
-    let count = 0;
-    for (let d = new Date(start); d < startOfDay(date); d = addDays(d, 1)) {
-      if (isLeapDay(d)) count++;
-    }
-    return count;
-  }
-
-  function moonInfo(date) {
-    if (isDayOutOfTime(date)) {
-      return {
-        doot: true,
-        moon: null,
-        moonIndex: 0,
-        dayInMoon: 0,
-        dayOfYear: 365,
-        yearStart: remnantYearStart(date)
-      };
-    }
-
-    if (isLeapDay(date)) {
-      return {
-        leap: true,
-        moon: null,
-        moonIndex: 0,
-        dayInMoon: 0,
-        dayOfYear: null,
-        yearStart: remnantYearStart(date)
-      };
-    }
-
-    const start = remnantYearStart(date);
-    let day = daysBetween(start, date) - skippedLeapDaysBetween(start, date);
-
-    if (day < 0) day = 0;
-    if (day > 363) day = 363;
-
-    const moonIndex = Math.floor(day / 28) + 1;
-    const dayInMoon = (day % 28) + 1;
-    const moon = MOONS[moonIndex - 1];
-
-    return {
-      doot: false,
-      leap: false,
-      moon,
-      moonIndex,
-      dayInMoon,
-      dayOfYear: day + 1,
-      yearStart: start
-    };
+  function sameDate(a, b) {
+    return isoDate(a) === isoDate(b);
   }
 
   function fmtDate(date) {
@@ -137,19 +71,87 @@
     if (el) el.textContent = text;
   }
 
-  function clearThemeClasses() {
-    document.body.className = document.body.className
-      .split(" ")
-      .filter((c) => !/^theme-moon-/.test(c) && !/^daytone-/.test(c) && c !== "theme-doot")
-      .join(" ");
+  function isLeapDay(date) {
+    return date.getMonth() === 1 && date.getDate() === 29;
+  }
+
+  function isDayOutOfTime(date) {
+    return date.getMonth() === 6 && date.getDate() === 25;
+  }
+
+  function isCountedDay(date) {
+    return !isLeapDay(date) && !isDayOutOfTime(date);
+  }
+
+  function remnantYearStart(date) {
+    const y = date.getFullYear();
+    const startThisYear = new Date(y, 6, 26, 12);
+    return date >= startThisYear
+      ? startThisYear
+      : new Date(y - 1, 6, 26, 12);
+  }
+
+  function countedDaysSince(start, date) {
+    let count = 0;
+    for (let d = startOfDay(start); d < startOfDay(date); d = addDays(d, 1)) {
+      if (isCountedDay(d)) count++;
+    }
+    return count;
+  }
+
+  function dateForCountedDay(yearStart, countedIndex) {
+    let count = 0;
+    for (let d = startOfDay(yearStart); ; d = addDays(d, 1)) {
+      if (isCountedDay(d)) {
+        if (count === countedIndex) return d;
+        count++;
+      }
+    }
+  }
+
+  function moonInfo(date) {
+    const yearStart = remnantYearStart(date);
+
+    if (isDayOutOfTime(date)) {
+      return {
+        special: "doot",
+        label: "Day Out of Time",
+        detail: "July 25 · outside the 13×28 count",
+        yearStart
+      };
+    }
+
+    if (isLeapDay(date)) {
+      return {
+        special: "leap",
+        label: "Leap Day",
+        detail: "Feb 29 · skipped in the 13×28 count",
+        yearStart
+      };
+    }
+
+    const counted = countedDaysSince(yearStart, date);
+    const moonIndex = Math.floor(counted / 28) + 1;
+    const dayInMoon = (counted % 28) + 1;
+    const moon = MOONS[moonIndex - 1];
+
+    return {
+      special: null,
+      yearStart,
+      counted,
+      dayOfYear: counted + 1,
+      moonIndex,
+      dayInMoon,
+      moon
+    };
   }
 
   function paintRing(info) {
     const arc = $("moonArc");
     if (!arc) return;
 
-    if (info.doot || info.leap) {
-      arc.style.strokeDashoffset = 0;
+    if (info.special) {
+      arc.style.strokeDashoffset = "0";
       return;
     }
 
@@ -166,10 +168,8 @@
 
     for (let i = 1; i <= 28; i++) {
       const dot = document.createElement("span");
-      if (!info.doot && !info.leap && i === info.dayInMoon) {
-        dot.className = "is-today";
-      }
-      dot.title = `Day ${i}`;
+      if (!info.special && i === info.dayInMoon) dot.className = "is-today";
+      dot.title = `Moon day ${i}`;
       box.appendChild(dot);
     }
   }
@@ -178,13 +178,8 @@
     const box = $("remCal");
     if (!box) return;
 
-    if (info.doot) {
-      box.innerHTML = `<div class="r-doot">Day Out of Time · July 25</div>`;
-      return;
-    }
-
-    if (info.leap) {
-      box.innerHTML = `<div class="r-doot">Leap Day · outside the 13×28 count</div>`;
+    if (info.special) {
+      box.innerHTML = `<div class="r-doot">${info.label}<br><span>${info.detail}</span></div>`;
       return;
     }
 
@@ -207,6 +202,12 @@
       btn.type = "button";
       btn.textContent = String(day);
 
+      const targetCountedIndex = (info.moonIndex - 1) * 28 + (day - 1);
+      btn.addEventListener("click", () => {
+        state.date = dateForCountedDay(info.yearStart, targetCountedIndex);
+        paint();
+      });
+
       cell.appendChild(btn);
       grid.appendChild(cell);
     }
@@ -221,8 +222,8 @@
 
     const y = date.getFullYear();
     const m = date.getMonth();
-    const first = new Date(y, m, 1);
-    const last = new Date(y, m + 1, 0);
+    const first = new Date(y, m, 1, 12);
+    const last = new Date(y, m + 1, 0, 12);
     const startPad = first.getDay();
 
     const grid = document.createElement("div");
@@ -242,14 +243,27 @@
     }
 
     for (let day = 1; day <= last.getDate(); day++) {
-      const d = new Date(y, m, day);
+      const d = new Date(y, m, day, 12);
+      const info = moonInfo(d);
+
       const cell = document.createElement("div");
       cell.className = "g-day";
-      if (isoDate(d) === isoDate(date)) cell.classList.add("is-today");
+
+      if (sameDate(d, date)) cell.classList.add("is-today");
+      if (info.special === "doot") cell.classList.add("is-doot");
+      if (info.special === "leap") cell.classList.add("is-leap");
 
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.textContent = String(day);
+
+      if (info.special) {
+        btn.innerHTML = `${day}<small>${info.special === "doot" ? "DOOT" : "LEAP"}</small>`;
+        btn.title = info.detail;
+      } else {
+        btn.innerHTML = `${day}<small>M${info.moonIndex}·D${info.dayInMoon}</small>`;
+        btn.title = `Moon ${info.moonIndex}, Day ${info.dayInMoon}`;
+      }
+
       btn.addEventListener("click", () => {
         state.date = new Date(d);
         paint();
@@ -275,8 +289,11 @@
     tbody.innerHTML = "";
 
     MOONS.forEach((moon, i) => {
-      let s = addDays(start, i * 28);
-      let e = addDays(s, 27);
+      const startIndex = i * 28;
+      const endIndex = startIndex + 27;
+
+      const s = dateForCountedDay(start, startIndex);
+      const e = dateForCountedDay(start, endIndex);
 
       const row = document.createElement("tr");
       row.innerHTML = `
@@ -325,19 +342,8 @@
     const name = phaseName(age);
 
     ctx.clearRect(0, 0, w, h);
-
-    const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.7);
-    bg.addColorStop(0, "#111827");
-    bg.addColorStop(1, "#05070d");
-    ctx.fillStyle = bg;
+    ctx.fillStyle = "#05070d";
     ctx.fillRect(0, 0, w, h);
-
-    for (let i = 0; i < 70; i++) {
-      const x = (i * 73) % w;
-      const y = (i * 41) % h;
-      ctx.fillStyle = "rgba(255,255,255,.45)";
-      ctx.fillRect(x, y, 1.2, 1.2);
-    }
 
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -349,19 +355,15 @@
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.clip();
 
-    const shadowWidth = r * 2 * Math.abs(0.5 - illum);
-    const shadowX = age < 14.765 ? cx - shadowWidth / 2 : cx + shadowWidth / 2;
+    const phase = age / 29.530588853;
+    const offset = Math.cos(phase * Math.PI * 2) * r;
 
     ctx.fillStyle = "rgba(5,7,13,.78)";
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-
-    ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    ctx.ellipse(shadowX, cy, Math.max(5, shadowWidth), r, 0, 0, Math.PI * 2);
+    ctx.ellipse(cx + offset, cy, r, r, 0, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();
-    ctx.globalCompositeOperation = "source-over";
 
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -370,7 +372,6 @@
     ctx.stroke();
 
     setText("phaseMeta", `${name} · ${(illum * 100).toFixed(0)}% illuminated`);
-    setText("phaseLine", `${name} · age ${age.toFixed(1)} days`);
   }
 
   function paintSky() {
@@ -389,7 +390,7 @@
     resize();
     window.addEventListener("resize", resize);
 
-    const stars = Array.from({ length: 120 }, (_, i) => ({
+    const stars = Array.from({ length: 110 }, (_, i) => ({
       x: (i * 97) % innerWidth,
       y: (i * 53) % innerHeight,
       r: ((i % 3) + 1) * 0.45,
@@ -400,7 +401,7 @@
       ctx.clearRect(0, 0, innerWidth, innerHeight);
       stars.forEach((s, i) => {
         ctx.globalAlpha = s.a + Math.sin(Date.now() / 900 + i) * 0.15;
-        ctx.fillStyle = "#ffffff";
+        ctx.fillStyle = "#fff";
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
         ctx.fill();
@@ -424,52 +425,28 @@
       "UTC"
     ];
 
-    select.innerHTML = zones
-      .map((z) => `<option value="${z}">${z}</option>`)
-      .join("");
-
+    select.innerHTML = zones.map((z) => `<option value="${z}">${z}</option>`).join("");
     select.value = state.tz;
   }
 
   function paint() {
     const info = moonInfo(state.date);
 
-    clearThemeClasses();
-
-    if (info.doot) {
-      document.body.classList.add("theme-doot");
-    } else if (!info.leap) {
-      document.body.classList.add(`theme-moon-${info.moonIndex}`);
-      document.body.classList.add(`daytone-${info.dayInMoon}`);
-    }
-
     setText("nowDate", fmtDate(state.date));
     setText("nowTZ", state.tz);
-    setText("nowClock", new Intl.DateTimeFormat("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      timeZone: state.tz
-    }).format(new Date()));
 
-    if (info.doot) {
-      setText("moonLine", "Day Out of Time · July 25");
-      setText("moonName", "Day Out of Time");
-      setText("moonEssence", "Release · Reset · Prepare");
-      setText("dayInMoon", "∞");
-      setText("yearSpan", `Year began ${fmtDate(info.yearStart)}`);
-    } else if (info.leap) {
-      setText("moonLine", "Leap Day · outside the 13×28 count");
-      setText("moonName", "Leap Day");
-      setText("moonEssence", "Pause · Adjust");
-      setText("dayInMoon", "↺");
+    if (info.special) {
+      setText("moonLine", `${info.label} · ${info.detail}`);
+      setText("moonName", info.label);
+      setText("moonEssence", info.detail);
+      setText("dayInMoon", info.special === "doot" ? "∞" : "↺");
       setText("yearSpan", `Year began ${fmtDate(info.yearStart)}`);
     } else {
-      setText("moonLine", `Moon ${info.moonIndex} · Day ${info.dayInMoon}/28`);
+      setText("moonLine", `Moon ${info.moonIndex} · Day ${info.dayInMoon}/28 · ${info.moon.name}`);
       setText("moonName", `${info.moon.idx}. ${info.moon.name}`);
       setText("moonEssence", info.moon.essence);
       setText("dayInMoon", info.dayInMoon);
-      setText("yearSpan", `Day ${info.dayOfYear} · Year began ${fmtDate(info.yearStart)}`);
+      setText("yearSpan", `Day ${info.dayOfYear}/364 · Year began ${fmtDate(info.yearStart)}`);
     }
 
     const datePick = $("datePick");
@@ -486,86 +463,52 @@
   function bind() {
     populateTimezones();
 
-    const datePick = $("datePick");
-    if (datePick) {
-      datePick.addEventListener("change", () => {
-        if (datePick.value) {
-          state.date = fromISO(datePick.value);
-          paint();
-        }
-      });
-    }
-
-    const tzPick = $("tzPick");
-    if (tzPick) {
-      tzPick.addEventListener("change", () => {
-        state.tz = tzPick.value || TZ_DEFAULT;
+    $("datePick")?.addEventListener("change", (e) => {
+      if (e.target.value) {
+        state.date = fromISO(e.target.value);
         paint();
-      });
-    }
+      }
+    });
 
-    const today = $("btnToday");
-    if (today) {
-      today.addEventListener("click", () => {
-        state.date = new Date();
-        paint();
-      });
-    }
+    $("tzPick")?.addEventListener("change", (e) => {
+      state.tz = e.target.value || TZ_DEFAULT;
+      paint();
+    });
 
-    const prev = $("prevDay");
-    if (prev) {
-      prev.addEventListener("click", () => {
-        state.date = addDays(state.date, -1);
-        paint();
-      });
-    }
+    $("btnToday")?.addEventListener("click", () => {
+      state.date = new Date();
+      paint();
+    });
 
-    const next = $("nextDay");
-    if (next) {
-      next.addEventListener("click", () => {
-        state.date = addDays(state.date, 1);
-        paint();
-      });
-    }
+    $("prevDay")?.addEventListener("click", () => {
+      state.date = addDays(state.date, -1);
+      paint();
+    });
 
-    const reset = $("resetTZ");
-    if (reset) {
-      reset.addEventListener("click", () => {
-        state.tz = TZ_DEFAULT;
-        if ($("tzPick")) $("tzPick").value = TZ_DEFAULT;
-        paint();
-      });
-    }
+    $("nextDay")?.addEventListener("click", () => {
+      state.date = addDays(state.date, 1);
+      paint();
+    });
 
-    const share = $("shareLink");
-    if (share) {
-      share.addEventListener("click", async () => {
-        const url = new URL(location.href);
-        url.searchParams.set("date", isoDate(state.date));
-        url.searchParams.set("tz", state.tz);
+    $("shareLink")?.addEventListener("click", async () => {
+      const url = new URL(location.href);
+      url.searchParams.set("date", isoDate(state.date));
+      url.searchParams.set("tz", state.tz);
 
-        try {
-          await navigator.clipboard.writeText(url.toString());
-          share.textContent = "Copied ✓";
-          setTimeout(() => (share.textContent = "Copy Link"), 1200);
-        } catch {
-          share.textContent = "Copy failed";
-          setTimeout(() => (share.textContent = "Copy Link"), 1200);
-        }
-      });
-    }
+      try {
+        await navigator.clipboard.writeText(url.toString());
+        $("shareLink").textContent = "Copied ✓";
+        setTimeout(() => ($("shareLink").textContent = "Copy Link"), 1200);
+      } catch {
+        $("shareLink").textContent = "Copy failed";
+      }
+    });
 
     const params = new URLSearchParams(location.search);
-    if (params.get("date")) {
-      state.date = fromISO(params.get("date"));
-    }
-
-    if (params.get("tz")) {
-      state.tz = params.get("tz");
-    }
+    if (params.get("date")) state.date = fromISO(params.get("date"));
+    if (params.get("tz")) state.tz = params.get("tz");
 
     paint();
-    setInterval(paint, 1000);
   }
 
   document.addEventListener("DOMContentLoaded", () => {
