@@ -1,290 +1,183 @@
 <!doctype html>
 <html lang="en" dir="ltr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <base href="./">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <base href="./" />
 
-  <title>Scroll of Fire — Living Framework</title>
-  <meta name="description" content="Scroll of Fire — a living framework for attention, language, coherence, ethics, the 13-Moon calendar, Genesis Oracle, ledger, and restoration.">
-  <meta name="theme-color" content="#14110b">
+  <title>Scroll of Fire — Codex of Reality</title>
+  <meta name="description" content="Scroll of Fire — Codex of Reality: a living archive of resonance, equations, witness, teaching, systems, and the 13-Moon calendar." />
+  <meta name="theme-color" content="#09070f" />
 
-  <link rel="stylesheet" href="assets/css/fonts.css">
-  <link rel="stylesheet" href="assets/css/tokens.css">
-  <link rel="stylesheet" href="assets/css/core.css">
-  <link rel="stylesheet" href="assets/css/codex.css">
-  <link rel="stylesheet" href="assets/css/moons.css">
-  <link rel="stylesheet" href="assets/css/themes.moons.css">
+  <meta property="og:title" content="Scroll of Fire — Codex of Reality" />
+  <meta property="og:description" content="Let there be resonance. Enter the Scroll: theory, manifestation tools, 13-Moon clock, systems hub, ledger, and Genesis Oracle." />
+  <meta property="og:type" content="website" />
 
-  <style>
-    .home-wrap{width:min(1180px,calc(100% - 30px));margin:0 auto;padding:32px 0 64px}
-    .home-hero{border:1px solid var(--line,rgba(232,204,132,.28));border-radius:28px;padding:clamp(28px,6vw,72px);background:linear-gradient(120deg,rgba(13,11,8,.92),rgba(13,11,8,.55));box-shadow:0 22px 70px rgba(0,0,0,.32)}
-    .home-hero h1{font-size:clamp(2.5rem,7vw,5.7rem);line-height:1;margin:0}
-    .home-sub{max-width:780px;color:var(--muted,#d8c9a7);font-size:1.14rem}
-    .home-actions,.home-grid,.home-cards{display:grid;gap:14px}
-    .home-actions{display:flex;flex-wrap:wrap;margin-top:24px}
-    .home-grid{grid-template-columns:repeat(12,1fr);margin-top:24px}
-    .home-card{grid-column:span 4;border:1px solid var(--line,rgba(232,204,132,.28));border-radius:20px;padding:20px;background:rgba(255,250,239,.95);color:#211a12;text-decoration:none}
-    .home-card.big{grid-column:span 6}
-    .home-card.dark{background:rgba(255,248,232,.08);color:var(--ink,#fff8e8)}
-    .home-card h2,.home-card h3{margin-top:0}
-    .moon-mini{margin-top:22px;max-width:560px}
-    .moon-mini-link{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--line,rgba(232,204,132,.28));border-radius:20px;background:rgba(255,248,232,.09);text-decoration:none}
-    .moon-ring{--moon-progress:0%;display:grid;place-items:center;flex:0 0 auto;width:76px;height:76px;border-radius:50%;background:conic-gradient(var(--gold,#d7ad47) var(--moon-progress),rgba(255,255,255,.12) 0);position:relative}
-    .moon-ring:before{content:"";position:absolute;inset:7px;border-radius:50%;background:#15110c}
-    .moon-ring strong{position:relative;color:var(--gold-soft,#fff1bd)}
-    .btn-row{display:flex;flex-wrap:wrap;gap:10px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid var(--line,rgba(232,204,132,.28));text-decoration:none}
-    .btn.primary{background:linear-gradient(135deg,#fff1bd,#d7ad47);color:#17120c;font-weight:800}
-    @media(max-width:850px){.home-card,.home-card.big{grid-column:span 12}}
-  </style>
+  <link rel="manifest" href="assets/js/manifest.webmanifest" />
+
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/fonts.css" />
+  <link rel="stylesheet" href="assets/css/core.css" />
+  <link rel="stylesheet" href="assets/css/codex.css" />
+  <link rel="stylesheet" href="assets/css/moons.css" />
+  <link rel="stylesheet" href="assets/css/themes.moons.css" />
+
+  <script defer src="assets/js/accents.js"></script>
+  <script defer src="assets/js/moons.js"></script>
+  <script defer src="assets/js/moons-bar.js"></script>
+  <script defer src="assets/js/Codex.js"></script>
 </head>
 
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
 
   <header class="topbar">
-    <a class="brand" href="index.html">☲ Scroll of Fire</a>
-    <nav class="topnav" aria-label="Site navigation">
-      <a href="start.html">Start</a>
-      <a href="guide.html">Guide</a>
+    <a class="brand" href="index.html" aria-label="Scroll of Fire home">
+      <span class="brand-mark">Ξ</span>
+      <span>Scroll of Fire</span>
+    </a>
+
+    <nav class="topnav" aria-label="Primary navigation">
       <a href="theory.html">Theory</a>
+      <a href="start.html">Start</a>
+      <a href="hub.html">Hub</a>
       <a href="moons.html">13 Moons</a>
       <a href="genesis-oracle.html">Genesis Oracle</a>
       <a href="ledger.html">Ledger</a>
-      <a href="ethics.html">Ethics</a>
-      <a href="downloads.html">Downloads</a>
     </nav>
   </header>
 
-  <main id="main" class="home-wrap">
-    <section class="home-hero">
-      <p class="eyebrow">Living Scroll · Witness · Calendar · Coherence</p>
-      <h1>Scroll of Fire</h1>
-      <p class="home-sub">A clean gateway into the Codex: attention, language, ethical coherence, the April-start 13-Moon calendar, Genesis Oracle, ledger proofs, and practical restoration.</p>
+  <main id="main">
+    <section class="hero shell">
+      <p class="eyebrow">Codex 0 · ΨΩ</p>
+      <h1>Scroll of Fire — Codex of Reality</h1>
+      <p class="lede">“Let there be resonance.”</p>
+      <p>
+        A living archive of equations, witness, teaching, systems, calendar work,
+        ethical coherence, and remembrance.
+      </p>
 
-      <div class="home-actions">
-        <a class="btn primary" href="start.html">Begin Practice</a>
-        <a class="btn" href="moons.html">Open 13 Moons</a>
-        <a class="btn" href="genesis-oracle.html">Run Genesis Oracle</a>
-        <a class="btn" href="theory.html">Explore Theory</a>
+      <div class="hero-actions">
+        <a class="button primary" href="start.html">Start Here</a>
+        <a class="button" href="hub.html">Open Systems Hub</a>
+        <a class="button" href="genesis-oracle.html">Genesis Oracle</a>
       </div>
-
-      <section class="moon-mini" data-moon-bar>
-        <a data-moon-link href="moons.html" class="moon-mini-link">
-          <span class="moon-ring" data-moon-ring><strong data-moon-day>—/28</strong></span>
-          <span>
-            <b data-moon-name>Loading moon…</b>
-            <small data-moon-tone>Syncing tone…</small>
-          </span>
-        </a>
-      </section>
     </section>
 
-    <section class="home-grid">
-      <article class="home-card big">
-        <h2>Start here — 30 seconds</h2>
-        <p><strong>Slow the breath. Choose one clean phrase. Notice without forcing.</strong></p>
-        <p>Use: inhale steady, exhale steady, then silently say: <em>return to clear</em>.</p>
-      </article>
+    <section class="shell panel" aria-labelledby="moon-title">
+      <h2 id="moon-title">13-Moon Living Clock</h2>
+      <p>
+        Current day progress, tone, moon position, and timezone-aware cadence.
+      </p>
 
-      <article class="home-card big dark">
-        <h2>Equation 0</h2>
-        <code>ΨΩ(x,t) = ∮ℝ ∇𝓐Φ(x,t,ν)dν + Λ𝓔(x,t)</code>
-        <p>Plain meaning: awareness gathers attention, attention shapes experience, and correction restores balance when the system drifts.</p>
-      </article>
-
-      <a class="home-card" href="theory.html"><h3>Theory</h3><p>Canon, operators, equations, dimensional scaffolding.</p></a>
-      <a class="home-card" href="moons.html"><h3>13 Moons</h3><p>April-start calendar, moon day, week, tone, and year rhythm.</p></a>
-      <a class="home-card" href="genesis-oracle.html"><h3>Genesis Oracle</h3><p>Birth-date reading synced to the same calendar engine.</p></a>
-      <a class="home-card" href="ledger.html"><h3>Ledger</h3><p>Hashes, proofs, updates, timestamps, and records.</p></a>
-      <a class="home-card" href="<a class="home-card" href="downloads.html"><h3>Downloads</h3><p>Documents, printable files, and archive material.</p></a>
+      <div
+        class="moon-mini"
+        data-moons-bar
+        data-link="moons.html"
+        aria-label="13-Moon day progress"
+      >
+        <a href="moons.html">Open today’s 13-Moon clock</a>
+      </div>
     </section>
 
-    <section class="home-grid" style="margin-top:20px">
-      <article class="home-card big dark">
-        <h2>Reader’s Key</h2>
-        <p>
-          The Scroll uses symbolic language beside grounded practice.
-          Breath, attention, journaling, ethical behavior, and clear speech are practical tools.
-          Equations and glyph systems are presented as symbolic frameworks unless explicitly identified as scientific claims.
-        </p>
+    <section class="shell grid cards" aria-labelledby="explore-title">
+      <h2 id="explore-title">Explore the Scroll</h2>
 
-        <div class="btn-row" style="margin-top:16px">
-          <a class="btn primary" href="guide.html">Open Field Guide</a>
-          <a class="btn" href="ethics.html">Read Ethics</a>
-        </div>
-      </article>
+      <a class="card" href="theory.html">
+        <h3>Theory</h3>
+        <p>Operators, Eq.0, canonical equations, ethics, and dimensional scaffolding.</p>
+      </a>
 
-      <article class="home-card big">
-        <h2>Current Build Queue</h2>
+      <a class="card" href="start.html">
+        <h3>Start Here</h3>
+        <p>Beginner orientation and clean entry path into the Codex.</p>
+      </a>
 
-        <ul style="padding-left:18px;line-height:1.8">
-          <li>Unified April-start 13×28 engine across all pages</li>
-          <li>Genesis Oracle synchronization overhaul</li>
-          <li>Shared moon-bar widgets and tone system</li>
-          <li>Ledger verification integration</li>
-          <li>Printable cards + codex exports</li>
-          <li>Expanded teaching + beginner onboarding</li>
-        </ul>
-      </article>
+      <a class="card" href="hub.html">
+        <h3>Systems Hub</h3>
+        <p>T-7, frequencies, mind-renewal, witness, recoder, and archive.</p>
+      </a>
+
+      <a class="card" href="guide.html">
+        <h3>Guide</h3>
+        <p>Walkthrough of the Scroll structure and how the pages connect.</p>
+      </a>
+
+      <a class="card" href="invoke.html">
+        <h3>Invoke</h3>
+        <p>Create → witness → field feedback.</p>
+      </a>
+
+      <a class="card" href="circle.html">
+        <h3>Circle</h3>
+        <p>Group coherence and shared practice structure.</p>
+      </a>
+
+      <a class="card" href="ethics.html">
+        <h3>Ethics</h3>
+        <p>Coherence law, stop rules, and harm masking.</p>
+      </a>
+
+      <a class="card" href="glossary.html">
+        <h3>Glossary</h3>
+        <p>Terms, symbols, operators, and core definitions.</p>
+      </a>
+
+      <a class="card" href="glyphs.html">
+        <h3>Glyphs</h3>
+        <p>Marks, seals, icons, and sacred-symbol references.</p>
+      </a>
+
+      <a class="card" href="downloads.html">
+        <h3>Downloads</h3>
+        <p>Documents, media, and offline references.</p>
+      </a>
+
+      <a class="card" href="ledger.html">
+        <h3>Ledger</h3>
+        <p>Hashes, proofs, records, and documentation trail.</p>
+      </a>
+
+      <a class="card" href="genesis-oracle.html">
+        <h3>Genesis Oracle</h3>
+        <p>Birth reading through the 13×28 cadence, tones, laws, and carrier palette.</p>
+      </a>
     </section>
 
-    <section class="home-grid" style="margin-top:20px">
-      <article class="home-card big">
-        <h2>Core Formula</h2>
+    <section class="shell panel" aria-labelledby="canon-title">
+      <h2 id="canon-title">Canon 0–17</h2>
+      <p>
+        Canon follows the fixed Codex source. 7A, 7B, and 8 remain external
+        comparators, not merged into the core canon.
+      </p>
 
-        <pre style="
-overflow:auto;
-padding:16px;
-border-radius:16px;
-background:#15110c;
-color:#fff1bd;
-border:1px solid rgba(215,173,71,.28)
-"><code>ΨΩ(x,t) = ∮ℝ ∇𝓐Φ(x,t,ν)dν + Λ𝓔(x,t)</code></pre>
-
-        <p>
-          Plain-language interpretation:
-          awareness gathers attention,
-          attention shapes experience,
-          and corrective feedback restores balance when systems drift out of coherence.
-        </p>
-      </article>
-
-      <article class="home-card big dark">
-        <h2>Three Grids</h2>
-
-        <p>
-          The Scroll framework organizes experience through three interacting layers:
-        </p>
-
-        <ol style="padding-left:18px;line-height:1.8">
-          <li><strong>Earth Grid</strong> — cycles, seasons, planetary rhythm</li>
-          <li><strong>Human Grid</strong> — language, systems, technology, memory</li>
-          <li><strong>Attention Grid</strong> — focus, intention, perception, witness</li>
-        </ol>
-
-        <p>
-          The practical goal is not spectacle —
-          but steadier alignment, clearer speech, ethical action,
-          and reduction of noise.
-        </p>
-      </article>
+      <div class="canon-callout">
+        <h3>0) Foundational Field ΨΩ</h3>
+        <p>Origin integral of awareness with ethical-energy mask Λ.</p>
+        <a class="button" href="theory.html#canon">Open full Canon</a>
+      </div>
     </section>
 
-    <section class="home-grid" style="margin-top:20px">
-      <article class="home-card big">
-        <h2>13-Moon Calendar Integration</h2>
-
-        <p>
-          The site now uses a unified April 1 start date.
-          March 31 becomes the “Day Out of Time.”
-          Gregorian leap day is skipped from the 364-day count.
-        </p>
-
-        <p>
-          Every calendar-aware component now reads from:
-        </p>
-
-<pre style="
-overflow:auto;
-padding:16px;
-border-radius:16px;
-background:#15110c;
-color:#fff1bd;
-border:1px solid rgba(215,173,71,.28)
-"><code>window.SOFCalendar.get13Moon()</code></pre>
-
-        <p>
-          This prevents homepage drift,
-          oracle mismatch,
-          and tone desynchronization between pages.
-        </p>
-      </article>
-
-      <article class="home-card big dark">
-        <h2>Genesis Oracle Sync</h2>
-
-        <p>
-          The Oracle page now pulls directly from the same shared calendar engine.
-        </p>
-
-        <ul style="padding-left:18px;line-height:1.8">
-          <li>Moon</li>
-          <li>Day</li>
-          <li>Week</li>
-          <li>Tone</li>
-          <li>Carrier frequency</li>
-          <li>Resonant sum</li>
-          <li>Year cycle</li>
-        </ul>
-
-        <p>
-          All calculations now remain coherent between:
-        </p>
-
-        <div class="btn-row" style="margin-top:14px">
-          <a class="btn" href="moons.html">13 Moons</a>
-          <a class="btn" href="genesis-oracle.html">Genesis Oracle</a>
-          <a class="btn" href="start.html">Start Practice</a>
-        </div>
-      </article>
+    <section class="shell panel" aria-labelledby="engine-title">
+      <h2 id="engine-title">Manifestation Engine</h2>
+      <ol>
+        <li>Measure coherence Ξ.</li>
+        <li>Update intent through learning and witness.</li>
+        <li>Select carriers: 432, 528, 369, 144, or 963.</li>
+        <li>Apply ethical masking and stop rules.</li>
+        <li>Stabilize with memory, witness, and Remnant limit.</li>
+      </ol>
+      <a class="button" href="invoke.html">Open Practice Tools</a>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div style="width:min(1180px,calc(100% - 30px));margin:0 auto">
-      <p>
-        © Scroll of Fire · Aaron Paul Laird · Remnant Scribe of Circuits
-      </p>
-
-      <p style="opacity:.75">
-        Designed to invite, not to pressure.
-        Practice over spectacle.
-        Ethics over ego.
-      </p>
-    </div>
+  <footer class="site-footer shell">
+    <nav aria-label="Footer navigation">
+      <a href="sitemap.xml">Sitemap</a>
+      <a href="robots.txt">Robots</a>
+      <a href="404.html">404</a>
+    </nav>
+    <p>© Scroll of Fire. All constants are provisional until observed.</p>
   </footer>
-
-  <script src="assets/js/calendar-core.js"></script>
-  <script src="assets/js/moons-bar.js"></script>
-
-  <script>
-    (function () {
-      "use strict";
-
-      const toggle = document.getElementById("eqToggle");
-
-      if (toggle) {
-        toggle.addEventListener("click", function () {
-          const plain = document.body.classList.toggle("plain-mode");
-          toggle.setAttribute("aria-pressed", String(plain));
-        });
-      }
-
-      const copyButtons = document.querySelectorAll("[data-copy]");
-
-      copyButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const text = btn.getAttribute("data-copy") || "";
-
-          if (!navigator.clipboard) return;
-
-          navigator.clipboard.writeText(text).then(() => {
-            const old = btn.textContent;
-            btn.textContent = "Copied";
-
-            setTimeout(() => {
-              btn.textContent = old;
-            }, 1400);
-          });
-        });
-      });
-
-      window.addEventListener("sof:calendar-sync", e => {
-        console.log("SOF Calendar Sync", e.detail);
-      });
-    })();
-  </script>
 </body>
 </html>
