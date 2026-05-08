@@ -1,40 +1,50 @@
-/* 13 Moons — Mini Widget (v2.2)
-   - New IDs:  #mbName, #mbDay, #mbEssence, #mbYear, #moonArcMini, #btnShareImage, #btnJump
-   - Legacy:   #mbMoon, #mbDayLine, #mbEssence, #mbYear, #mbArc, #mbShare, #mbTZ
-   - Deep link: moons.html?d=YYYY-MM-DD&tz=Area/City&t=H#moon-N
-*/
-(function(){
+(function () {
   "use strict";
 
-  /* ---------- Tiny utils ---------- */
-  const $  =(s,r=document)=>r.querySelector(s);
-  const on =(t,e,f,o)=>t&&t.addEventListener(e,f,o);
-  const pad=n=>String(n).padStart(2,"0");
-  const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
-  const safe = fn => { try{ return fn(); } catch{ return void 0; } };
-  const toast = (msg)=>{
-    const t=document.createElement('div');
-    t.className='toast'; t.textContent=msg;
-    Object.assign(t.style,{
-      position:"fixed",left:"50%",bottom:"calc(22px + env(safe-area-inset-bottom))",
-      transform:"translateX(-50%)",background:"#0e131c",color:"#e6f9ff",
-      padding:"8px 12px",border:"1px solid var(--line,#2a3242)",borderRadius:"10px",
-      boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:"9999",opacity:"0",transition:"opacity .2s"
+  function renderMoonBars() {
+    if (!window.SOFCalendar) return;
+
+    const bars = document.querySelectorAll("[data-moon-bar]");
+    if (!bars.length) return;
+
+    const params = new URLSearchParams(location.search);
+    const tz = params.get("tz") || window.SOFCalendar.getTZ();
+    const date = params.get("date") || params.get("d") || window.SOFCalendar.todayISO(tz);
+    const pos = window.SOFCalendar.get13Moon(date, tz);
+
+    bars.forEach((bar) => {
+      const day = bar.querySelector("[data-moon-day]");
+      const moon = bar.querySelector("[data-moon-name]");
+      const tone = bar.querySelector("[data-moon-tone]");
+      const link = bar.querySelector("[data-moon-link]");
+      const ring = bar.querySelector("[data-moon-ring]");
+
+      if (day) day.textContent = pos.isDayOutOfTime ? "—" : `${pos.day}/28`;
+      if (moon) moon.textContent = pos.isDayOutOfTime ? "Day Out of Time" : pos.moonName;
+      if (tone) tone.textContent = pos.isDayOutOfTime ? "Pause" : `Tone ${pos.tone} · ${pos.toneName}`;
+
+      if (link) {
+        link.href = `moons.html?date=${encodeURIComponent(date)}&tz=${encodeURIComponent(tz)}`;
+      }
+
+      if (ring && !pos.isDayOutOfTime) {
+        const pct = Math.round((pos.day / 28) * 100);
+        ring.style.setProperty("--moon-progress", `${pct}%`);
+        ring.setAttribute("aria-label", `${pos.label}`);
+      }
     });
-    document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
-    setTimeout(()=>{t.style.opacity=0; setTimeout(()=>t.remove(),250);},1500);
-  };
 
-  /* ---------- Data ---------- */
-  const MOONS = ["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
-  const ESS   = ["Attract purpose","Stabilize challenge","Activate service","Define form","Empower radiance","Balance equality","Channel inspiration","Harmonize integrity","Pulse intention","Perfect manifestation","Dissolve release","Dedicate cooperation","Endure presence"];
+    window.dispatchEvent(new CustomEvent("sof:calendar-sync", { detail: pos }));
+  }
 
-  /* ---------- TZ + URL ---------- */
-  const TZ_KEY="sof_moons_tz";
-  const getTZ = ()=> safe(()=>localStorage.getItem(TZ_KEY)) || safe(()=>Intl.DateTimeFormat().resolvedOptions().timeZone) || "UTC";
-  const setTZ = z => safe(()=>localStorage.setItem(TZ_KEY,z));
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", renderMoonBars);
+  } else {
+    renderMoonBars();
+  }
 
-  function dateInTZ(baseDate, tz, overrideHour){
+  window.SOFRenderMoonBars = renderMoonBars;
+})();  function dateInTZ(baseDate, tz, overrideHour){
     try{
       const opts={timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"};
       const parts=new Intl.DateTimeFormat("en-CA",opts).formatToParts(baseDate);
