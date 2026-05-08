@@ -872,3 +872,76 @@ a.dl{ border-color:#2b3344; background:linear-gradient(180deg, rgba(255,255,255,
 @media (max-width:560px){ .heaven-cta{ right:10px } }
 @media (prefers-reduced-motion:reduce){ .heaven-cta{ display:none !important } }
 @media (prefers-reduced-data:reduce){ .heaven-cta{ display:none !important } }
+
+
+
+
+/* === MOBILE HOME FIX — prevents hero/content from disappearing === */
+main {
+  display: block;
+  position: relative;
+  z-index: 1;
+  padding: 24px 0 48px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.topnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+
+.hero.shell {
+  aspect-ratio: auto !important;
+  overflow: visible !important;
+  min-height: auto !important;
+  padding-top: clamp(34px, 8vw, 72px);
+  padding-bottom: clamp(34px, 8vw, 72px);
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.hero.shell::after {
+  display: none !important;
+}
+
+.shell {
+  width: min(1120px, calc(100% - 32px));
+  margin-inline: auto;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+@media (max-width: 640px) {
+  .topbar {
+    align-items: flex-start;
+    padding: 20px 18px;
+  }
+
+  .brand {
+    max-width: 120px;
+  }
+
+  .topnav {
+    flex: 1;
+    justify-content: flex-start;
+  }
+
+  .topnav a {
+    font-size: 1rem;
+  }
+
+  .hero.shell {
+    padding-top: 28px;
+  }
+}
