@@ -137,3 +137,54 @@
   .meta { color: color-mix(in lch, var(--ink) 65%, transparent); }
   .tight { margin-bottom: .25rem; }
 }
+
+
+/* ==============================
+   13-Moon Astrology Panel
+   Restored Bottom Section
+   ============================== */
+
+.astrology-panel {
+  margin-bottom: 4rem;
+}
+
+.astrology-panel .section-heading {
+  text-align: center;
+  max-width: 780px;
+  margin-inline: auto;
+}
+
+.astrology-grid {
+  margin-top: 1.5rem;
+}
+
+.astro-card {
+  min-height: 220px;
+}
+
+.astro-card h3 {
+  margin: 0.35rem 0 0.75rem;
+  font-size: clamp(1.6rem, 5vw, 2.5rem);
+  color: var(--gold);
+}
+
+.astro-card p {
+  color: var(--muted);
+}
+
+.astro-card::before,
+.astro-card::after,
+.astrology-panel::before,
+.astrology-panel::after {
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .astrology-panel {
+    margin-bottom: 2.5rem;
+  }
+
+  .astro-card {
+    min-height: auto;
+  }
+}
