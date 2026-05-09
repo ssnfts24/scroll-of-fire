@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  const STORAGE_KEY = "sofGenesisProfiles";
+
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
@@ -40,13 +42,48 @@
     [963, "Crown, prayer, stillness, high coherence."]
   ];
 
-  const PYTH = {A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8,I:9,J:1,K:2,L:3,M:4,N:5,O:6,P:7,Q:8,R:9,S:1,T:2,U:3,V:4,W:5,X:6,Y:7,Z:8};
+  const PYTH = { A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8,I:9,J:1,K:2,L:3,M:4,N:5,O:6,P:7,Q:8,R:9,S:1,T:2,U:3,V:4,W:5,X:6,Y:7,Z:8 };
   const A1Z26 = Object.fromEntries("ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((ch, i) => [ch, i + 1]));
+
   const HEB = {
     "א":1,"ב":2,"ג":3,"ד":4,"ה":5,"ו":6,"ז":7,"ח":8,"ט":9,
     "י":10,"כ":20,"ך":20,"ל":30,"מ":40,"ם":40,"נ":50,"ן":50,"ס":60,
     "ע":70,"פ":80,"ף":80,"צ":90,"ץ":90,"ק":100,"ר":200,"ש":300,"ת":400
   };
+
+  let lastReading = null;
+
+  function safeText(value) {
+    return String(value ?? "").replace(/[&<>"']/g, ch => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[ch]));
+  }
+
+  function setText(sel, value) {
+    const el = $(sel);
+    if (el) el.textContent = value ?? "—";
+  }
+
+  function setStatus(message) {
+    setText("#status", message);
+  }
+
+  function readSaved() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function writeSaved(rows) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(rows.slice(0, 40)));
+  }
 
   function reduceNum(n) {
     let x = Math.abs(Number(n) || 0);
@@ -62,14 +99,20 @@
   }
 
   function approxAnchor(year) {
-    // Stable civil approximation for first new moon after spring equinox.
-    // Keeps the page working offline without API calls.
     const anchors = {
-      2020: "2020-03-24", 2021: "2021-04-12", 2022: "2022-04-01",
-      2023: "2023-03-21", 2024: "2024-04-08", 2025: "2025-03-29",
-      2026: "2026-03-19", 2027: "2027-04-07", 2028: "2028-03-26",
-      2029: "2029-04-14", 2030: "2030-04-03"
+      2020: "2020-03-24",
+      2021: "2021-04-12",
+      2022: "2022-04-01",
+      2023: "2023-03-21",
+      2024: "2024-04-08",
+      2025: "2025-03-29",
+      2026: "2026-03-19",
+      2027: "2027-04-07",
+      2028: "2028-03-26",
+      2029: "2029-04-14",
+      2030: "2030-04-03"
     };
+
     return new Date((anchors[year] || `${year}-03-29`) + "T12:00:00Z");
   }
 
@@ -81,7 +124,7 @@
   function mapToRemnant(date) {
     const y = date.getFullYear();
     let anchor = approxAnchor(y);
-    let utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12));
+    const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12));
     let diff = Math.floor((utcDate - anchor) / 86400000);
 
     if (diff < 0) {
@@ -96,12 +139,14 @@
         year: anchor.getUTCFullYear(),
         moon: null,
         day: null,
+        week: null,
         index: diff + 1
       };
     }
 
     const moon = Math.floor(diff / 28) + 1;
     const day = (diff % 28) + 1;
+
     return {
       outside: false,
       year: anchor.getUTCFullYear(),
@@ -125,169 +170,324 @@
   }
 
   function carrierFor(num) {
-    const idx = Math.abs(num - 1) % CARRIERS.length;
+    const idx = Math.abs(Number(num || 1) - 1) % CARRIERS.length;
     return CARRIERS[idx];
   }
 
   function renderCarriers(activeHz) {
-    $("#carrierRow").innerHTML = CARRIERS.map(([hz, text]) => (
-      `<div class="carrier-chip ${hz === activeHz ? "active" : ""}"><strong>${hz} Hz</strong><br><span>${text}</span></div>`
-    )).join("");
+    const row = $("#carrierRow");
+    if (!row) return;
+
+    row.innerHTML = CARRIERS.map(([hz, text]) => `
+      <div class="carrier-chip ${hz === activeHz ? "active" : ""}">
+        <strong>${safeText(hz)} Hz</strong><br>
+        <span>${safeText(text)}</span>
+      </div>
+    `).join("");
   }
 
   function renderSaved() {
-    const saved = JSON.parse(localStorage.getItem("sofGenesisProfiles") || "[]");
-    $("#savedRows").innerHTML = saved.map(row => (
-      `<tr><td>${row.name}</td><td>${row.birth}</td><td>${row.moon}</td><td>${row.day}</td><td>${row.tone}</td><td>${row.carrier} Hz</td></tr>`
-    )).join("") || `<tr><td colspan="6">No saved profiles yet.</td></tr>`;
+    const table = $("#savedRows");
+    if (!table) return;
+
+    const saved = readSaved();
+
+    table.innerHTML = saved.map(row => `
+      <tr>
+        <td>${safeText(row.name)}</td>
+        <td>${safeText(row.birth)}</td>
+        <td>${safeText(row.moon)}</td>
+        <td>${safeText(row.day)}</td>
+        <td>${safeText(row.tone)}</td>
+        <td>${safeText(row.carrier)} Hz</td>
+      </tr>
+    `).join("") || `<tr><td colspan="6">No saved profiles yet.</td></tr>`;
   }
 
   function computeNameCodes() {
-    const source = $("#nameOverride").value.trim() || $("#inName").value.trim();
+    const source = ($("#nameOverride")?.value.trim() || $("#inName")?.value.trim() || "");
     const pyth = codeName(source, PYTH);
     const simple = codeName(source, A1Z26);
     const heb = codeHebrew(source);
-    $("#pythCode").textContent = source ? `${pyth.sum} → ${pyth.red}` : "—";
-    $("#simpleCode").textContent = source ? `${simple.sum} → ${simple.red}` : "—";
-    $("#hebrewCode").textContent = heb.sum ? `${heb.sum} → ${heb.red}` : "—";
-    $("#covenantSeal").textContent = source ? `Seal ${reduceNum(pyth.red + simple.red + (heb.red || 0))}` : "—";
+
+    setText("#pythCode", source ? `${pyth.sum} → ${pyth.red}` : "—");
+    setText("#simpleCode", source ? `${simple.sum} → ${simple.red}` : "—");
+    setText("#hebrewCode", heb.sum ? `${heb.sum} → ${heb.red}` : "—");
+    setText("#covenantSeal", source ? `Seal ${reduceNum(pyth.red + simple.red + (heb.red || 0))}` : "—");
   }
 
-  let lastReading = null;
-
   function runReading() {
-    const name = $("#inName").value.trim() || "Unnamed";
-    const dateStr = $("#inDate").value;
-    const timeStr = $("#inTime").value;
+    const name = $("#inName")?.value.trim() || "Unnamed";
+    const dateStr = $("#inDate")?.value || "";
+    const timeStr = $("#inTime")?.value || "";
 
     if (!dateStr) {
-      $("#status").textContent = "Choose a birth date first.";
+      setStatus("Choose a birth date first.");
       return null;
     }
 
     const birth = parseBirth(dateStr, timeStr);
+
+    if (Number.isNaN(birth.getTime())) {
+      setStatus("Birth date could not be read. Check the date field.");
+      return null;
+    }
+
     const mapped = mapToRemnant(birth);
     const dayNumber = dayOfYearUTC(new Date(Date.UTC(birth.getFullYear(), birth.getMonth(), birth.getDate(), 12)));
     const resonant = reduceNum(birth.getFullYear() + birth.getMonth() + 1 + birth.getDate());
     const tone = mapped.outside ? "Outside Count" : ((mapped.index - 1) % 13) + 1;
     const lawIndex = mapped.outside ? 12 : mapped.moon - 1;
-    const flameIndex = mapped.outside ? 12 : tone - 1;
+    const flameIndex = mapped.outside ? 12 : Number(tone) - 1;
     const [carrierHz, carrierText] = carrierFor(mapped.outside ? resonant : tone);
 
     const moonName = mapped.outside ? "Outside Day" : MOONS[mapped.moon - 1];
     const moonDay = mapped.outside ? `Outside ${mapped.outsideDay}` : mapped.day;
     const week = mapped.outside ? "Reset / Intercalary" : `Week ${mapped.week}`;
 
-    $("#outName").textContent = name;
-    $("#outBirth").textContent = `${dateStr}${timeStr ? " " + timeStr : ""}`;
-    $("#outDate").textContent = mapped.outside ? `Outside Count · Day ${mapped.outsideDay}` : `Moon ${mapped.moon} · Day ${mapped.day}`;
-    $("#outWeek").textContent = week;
-    $("#outTone").textContent = String(tone);
-    $("#outResonant").textContent = String(resonant);
+    setText("#outName", name);
+    setText("#outBirth", `${dateStr}${timeStr ? " " + timeStr : ""}`);
+    setText("#outDate", mapped.outside ? `Outside Count · Day ${mapped.outsideDay}` : `Moon ${mapped.moon} · Day ${mapped.day}`);
+    setText("#outWeek", week);
+    setText("#outTone", String(tone));
+    setText("#outResonant", String(resonant));
 
-    $("#moonName").textContent = moonName;
-    $("#moonDay").textContent = mapped.outside ? "Outside" : `${mapped.day} /28`;
-    $("#moonProgress").style.width = mapped.outside ? "100%" : `${Math.round((mapped.day / 28) * 100)}%`;
+    setText("#moonName", moonName);
+    setText("#moonDay", mapped.outside ? "Outside" : `${mapped.day} /28`);
 
-    $("#sigSymbol").textContent = mapped.outside ? "∞" : `☲ ${mapped.moon}:${mapped.day}`;
-    $("#sigText").textContent = mapped.outside
-      ? "This birth rests in the outside-count reset span."
-      : `${moonName}, Tone ${tone}, Carrier ${carrierHz} Hz.`;
+    const progress = $("#moonProgress");
+    if (progress) progress.style.width = mapped.outside ? "100%" : `${Math.round((mapped.day / 28) * 100)}%`;
+
+    setText("#sigSymbol", mapped.outside ? "∞" : `☲ ${mapped.moon}:${mapped.day}`);
+    setText(
+      "#sigText",
+      mapped.outside
+        ? "This birth rests in the outside-count reset span."
+        : `${moonName}, Tone ${tone}, Carrier ${carrierHz} Hz.`
+    );
 
     const [lawName, lawText] = LAWS[lawIndex];
-    $("#lawTitle").textContent = `Law ${lawIndex + 1} — ${lawName}`;
-    $("#lawText").textContent = lawText;
+    setText("#lawTitle", `Law ${lawIndex + 1} — ${lawName}`);
+    setText("#lawText", lawText);
 
-    $("#flameTitle").textContent = `Flame ${flameIndex + 1} — ${FLAMES[flameIndex]}`;
-    $("#flameText").textContent = mapped.outside ? "Rest, clear, and seal the prior cycle." : `Tone ${tone} turns the day toward ${FLAMES[flameIndex].toLowerCase()}.`;
-    $("#flamePractice").textContent = `Practice: write one line of witness, then one action that keeps coherence.`;
+    setText("#flameTitle", `Flame ${flameIndex + 1} — ${FLAMES[flameIndex]}`);
+    setText("#flameText", mapped.outside ? "Rest, clear, and seal the prior cycle." : `Tone ${tone} turns the day toward ${FLAMES[flameIndex].toLowerCase()}.`);
+    setText("#flamePractice", "Practice: write one line of witness, then one action that keeps coherence.");
 
-    $("#carrierHz").textContent = `${carrierHz} Hz`;
-    $("#carrierText").textContent = carrierText;
+    setText("#carrierHz", `${carrierHz} Hz`);
+    setText("#carrierText", carrierText);
+
     renderCarriers(carrierHz);
     computeNameCodes();
 
-    $("#allLaws").innerHTML = LAWS.map(([title, text], i) => (
-      `<div><strong>${i + 1}. ${title}</strong><br><span>${text}</span></div>`
-    )).join("");
+    const allLaws = $("#allLaws");
+    if (allLaws) {
+      allLaws.innerHTML = LAWS.map(([title, text], i) => `
+        <div>
+          <strong>${i + 1}. ${safeText(title)}</strong><br>
+          <span>${safeText(text)}</span>
+        </div>
+      `).join("");
+    }
 
-    $("#status").textContent = "Reading complete.";
+    setStatus("Reading complete.");
 
     lastReading = {
       name,
       birth: dateStr,
+      birthTime: timeStr || null,
       moon: mapped.outside ? "Outside" : mapped.moon,
+      moonName,
       day: moonDay,
+      week,
       tone,
       carrier: carrierHz,
+      carrierMeaning: carrierText,
       yearDay: dayNumber,
-      resonant
+      remnantYearDay: mapped.index,
+      resonant,
+      outsideCount: mapped.outside,
+      exportedLabel: `${name} · ${dateStr}`
     };
 
     return lastReading;
   }
 
-  $("#oracleForm").addEventListener("submit", (event) => {
-    event.preventDefault();
-    runReading();
-  });
+  function buildExportData() {
+    const profiles = readSaved();
 
-  $$(".tabs button").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const tab = btn.dataset.tab;
-      $$(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b === btn)));
-      $$(".tab-panel").forEach(panel => panel.classList.add("hidden"));
-      $(`#panel-${tab}`).classList.remove("hidden");
+    return {
+      title: "Genesis Oracle Profiles",
+      project: "Scroll of Fire — Remnant Calendar",
+      sourcePage: "Genesis Oracle",
+      exportedAt: new Date().toISOString(),
+      profileCount: profiles.length,
+      notes: [
+        "Generated locally in the browser.",
+        "Profiles are saved in localStorage on this device.",
+        "Remnant dates use the Genesis Oracle's offline spring-equinoctial new-moon anchor table."
+      ],
+      profiles: profiles.map((p, index) => ({
+        id: index + 1,
+        name: p.name || "Unnamed",
+        birthDate: p.birth || "",
+        birthTime: p.birthTime || null,
+        remnantCalendar: {
+          moon: p.moon,
+          moonName: p.moonName || null,
+          day: p.day,
+          week: p.week || null,
+          tone: p.tone,
+          carrierHz: p.carrier,
+          carrierMeaning: p.carrierMeaning || null,
+          gregorianYearDay: p.yearDay,
+          remnantYearDay: p.remnantYearDay || null,
+          resonantSeal: p.resonant,
+          outsideCount: Boolean(p.outsideCount)
+        }
+      }))
+    };
+  }
+
+  function exportJson() {
+    const data = buildExportData();
+    const prettyJSON = JSON.stringify(data, null, 2);
+    const stamp = new Date().toISOString().slice(0, 10);
+    downloadFile(`genesis-oracle-profiles-${stamp}.json`, prettyJSON, "application/json;charset=utf-8");
+    setStatus("Pretty JSON export downloaded.");
+  }
+
+  function exportText() {
+    const data = buildExportData();
+
+    const lines = [
+      "GENESIS ORACLE PROFILES",
+      "Scroll of Fire — Remnant Calendar",
+      `Exported: ${data.exportedAt}`,
+      `Profiles: ${data.profileCount}`,
+      "",
+      "----------------------------------------",
+      ""
+    ];
+
+    data.profiles.forEach(profile => {
+      lines.push(`Profile ${profile.id}: ${profile.name}`);
+      lines.push(`Birth Date: ${profile.birthDate}${profile.birthTime ? " " + profile.birthTime : ""}`);
+      lines.push(`Moon: ${profile.remnantCalendar.moonName || profile.remnantCalendar.moon}`);
+      lines.push(`Day: ${profile.remnantCalendar.day}`);
+      lines.push(`Week: ${profile.remnantCalendar.week || "—"}`);
+      lines.push(`Tone: ${profile.remnantCalendar.tone}`);
+      lines.push(`Carrier: ${profile.remnantCalendar.carrierHz} Hz`);
+      lines.push(`Carrier Meaning: ${profile.remnantCalendar.carrierMeaning || "—"}`);
+      lines.push(`Gregorian Year Day: ${profile.remnantCalendar.gregorianYearDay}`);
+      lines.push(`Remnant Year Day: ${profile.remnantCalendar.remnantYearDay || "—"}`);
+      lines.push(`Resonant Seal: ${profile.remnantCalendar.resonantSeal}`);
+      lines.push("");
+      lines.push("----------------------------------------");
+      lines.push("");
     });
-  });
 
-  $("#computeName").addEventListener("click", computeNameCodes);
+    const stamp = new Date().toISOString().slice(0, 10);
+    downloadFile(`genesis-oracle-profiles-${stamp}.txt`, lines.join("\n"), "text/plain;charset=utf-8");
+    setStatus("Readable text export downloaded.");
+  }
 
-  $("#saveProfile").addEventListener("click", () => {
-    const reading = lastReading || runReading();
-    if (!reading) return;
-    const saved = JSON.parse(localStorage.getItem("sofGenesisProfiles") || "[]");
-    saved.unshift(reading);
-    localStorage.setItem("sofGenesisProfiles", JSON.stringify(saved.slice(0, 40)));
-    renderSaved();
-    $("#status").textContent = "Profile saved locally.";
-  });
-
-  $("#shareLink").addEventListener("click", async () => {
-    const params = new URLSearchParams();
-    if ($("#inName").value) params.set("name", $("#inName").value);
-    if ($("#inDate").value) params.set("date", $("#inDate").value);
-    if ($("#inTime").value) params.set("time", $("#inTime").value);
-    const url = `${location.origin}${location.pathname}?${params.toString()}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      $("#status").textContent = "Share link copied.";
-    } catch {
-      $("#status").textContent = url;
-    }
-  });
-
-  $("#exportJson").addEventListener("click", () => {
-    const data = localStorage.getItem("sofGenesisProfiles") || "[]";
-    const blob = new Blob([data], { type: "application/json" });
+  function downloadFile(filename, content, type) {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "genesis-oracle-profiles.json";
+
+    a.href = url;
+    a.download = filename;
+    a.rel = "noopener";
+
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(a.href);
-  });
+    a.remove();
 
-  $("#clearSaved").addEventListener("click", () => {
-    localStorage.removeItem("sofGenesisProfiles");
+    window.setTimeout(() => URL.revokeObjectURL(url), 250);
+  }
+
+  function initTabs() {
+    $$(".tabs button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const tab = btn.dataset.tab;
+        $$(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b === btn)));
+        $$(".tab-panel").forEach(panel => panel.classList.add("hidden"));
+        $(`#panel-${tab}`)?.classList.remove("hidden");
+      });
+    });
+  }
+
+  function initEvents() {
+    $("#oracleForm")?.addEventListener("submit", event => {
+      event.preventDefault();
+      runReading();
+    });
+
+    $("#computeName")?.addEventListener("click", computeNameCodes);
+
+    $("#saveProfile")?.addEventListener("click", () => {
+      const reading = lastReading || runReading();
+      if (!reading) return;
+
+      const saved = readSaved();
+      saved.unshift(reading);
+      writeSaved(saved);
+      renderSaved();
+      setStatus("Profile saved locally.");
+    });
+
+    $("#shareLink")?.addEventListener("click", async () => {
+      const params = new URLSearchParams();
+      if ($("#inName")?.value) params.set("name", $("#inName").value);
+      if ($("#inDate")?.value) params.set("date", $("#inDate").value);
+      if ($("#inTime")?.value) params.set("time", $("#inTime").value);
+
+      const url = `${location.origin}${location.pathname}${params.toString() ? "?" + params.toString() : ""}`;
+
+      try {
+        await navigator.clipboard.writeText(url);
+        setStatus("Share link copied.");
+      } catch {
+        setStatus(url);
+      }
+    });
+
+    $("#exportJson")?.addEventListener("click", exportJson);
+    $("#exportText")?.addEventListener("click", exportText);
+
+    $("#clearSaved")?.addEventListener("click", () => {
+      const ok = window.confirm("Clear all saved Genesis Oracle profiles from this device?");
+      if (!ok) return;
+
+      localStorage.removeItem(STORAGE_KEY);
+      renderSaved();
+      setStatus("Saved profiles cleared.");
+    });
+  }
+
+  function initFromQueryString() {
+    const qs = new URLSearchParams(location.search);
+
+    if (qs.get("name") && $("#inName")) $("#inName").value = qs.get("name");
+    if (qs.get("date") && $("#inDate")) $("#inDate").value = qs.get("date");
+    if (qs.get("time") && $("#inTime")) $("#inTime").value = qs.get("time");
+
+    if (qs.get("date")) runReading();
+  }
+
+  function init() {
+    initTabs();
+    initEvents();
+    initFromQueryString();
+    renderCarriers(432);
     renderSaved();
-  });
+  }
 
-  const qs = new URLSearchParams(location.search);
-  if (qs.get("name")) $("#inName").value = qs.get("name");
-  if (qs.get("date")) $("#inDate").value = qs.get("date");
-  if (qs.get("time")) $("#inTime").value = qs.get("time");
-  if (qs.get("date")) runReading();
-
-  renderCarriers(432);
-  renderSaved();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 })();
