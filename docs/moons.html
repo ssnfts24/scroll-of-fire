@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
+<html lang="en" dir="ltr" class="sof carrier-432">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
@@ -14,204 +14,162 @@
   <meta charset="utf-8">
   <title>Remnant 13 Moons — Living Calendar</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="A natural Remnant 13 Moons calendar anchored to the first New Moon after the Spring Equinox.">
+  <meta name="description" content="A natural 13×28 Remnant calendar with astrology correspondence, lunar rhythm, and year map.">
   <meta name="theme-color" content="#05070d">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
 
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Remnant 13 Moons — Living Calendar">
-  <meta property="og:description" content="13 fixed 28-day moons anchored to the first New Moon after Spring Equinox.">
-  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
-  <meta property="og:image" content="assets/file_00000000c408623087e8cb2bde025ea3.png">
-
-  <link rel="manifest" href="assets/js/manifest.webmanifest">
-  <link rel="icon" type="image/png" href="assets/file_00000000c408623087e8cb2bde025ea3.png">
-
-  <link rel="stylesheet" href="assets/css/fonts.css?v=2026-05-08-moons3">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=2026-05-08-moons3">
-  <link rel="stylesheet" href="assets/css/core.css?v=2026-05-08-moons3">
-  <link rel="stylesheet" href="assets/css/moons.css?v=2026-05-08-moons3">
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/core.css">
+  <link rel="stylesheet" href="assets/css/codex.css">
+  <link rel="stylesheet" href="assets/css/moons.css">
+  <link rel="stylesheet" href="assets/css/themes.moons.css">
   <link rel="stylesheet" href="assets/css/astrology.css">
 </head>
 
-<body class="stars remnant-yhwh">
-  <canvas id="skyBg" aria-hidden="true"></canvas>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <main class="wrap" id="main">
-    <header class="page-head card">
-      <h1>🜂 Remnant 13 Moons</h1>
-      <p class="subtitle">
-        A natural 13×28 calendar anchored to the first New Moon after the Spring Equinox.
+  <header class="topbar">
+    <a class="brand" href="./">☲ Scroll of Fire</a>
+    <nav class="topnav" aria-label="Primary navigation">
+      <a href="./">Codex</a>
+      <a href="start.html">Start Here</a>
+      <a href="theory.html">Theory</a>
+      <a href="genesis-oracle.html">Genesis Oracle</a>
+      <a href="moons.html" aria-current="page">13 Moons</a>
+      <a href="ledger.html">Ledger</a>
+    </nav>
+  </header>
+
+  <main id="main" class="section-shell">
+    <section class="hero moon-hero">
+      <p class="eyebrow">Remnant Calendar · 13 × 28</p>
+      <h1>Remnant 13 Moons</h1>
+      <p class="hero-copy">
+        A natural 13×28 calendar anchored to the first New Moon after Spring Equinox,
+        with a symbolic astrology layer for solar gate, elemental tone, lunar mirror, and daily practice.
       </p>
-
-      <nav class="crumbs btnrow" aria-label="Navigation">
-        <a class="lab-btn" href="index.html">← Codex</a>
-        <a class="lab-btn" href="theory.html">📘 Theory</a>
-        <a class="lab-btn ghost" href="genesis-oracle.html">🔮 Genesis Oracle</a>
-      </nav>
-
-      <div id="errorBanner" role="alert"></div>
-    </header>
-
-    <section class="card ringcard" aria-label="Current Remnant Moon">
-      <div class="moon-badge">
-        <div class="ring" aria-label="Day in Moon">
-          <svg viewBox="0 0 120 120" role="img">
-            <circle cx="60" cy="60" r="50" class="ring-bg"></circle>
-            <circle cx="60" cy="60" r="50" class="ring-fg" id="moonArc" pathLength="316"></circle>
-          </svg>
-          <div class="label">
-            <div class="big" id="dayInMoon">—</div>
-            <div class="small" id="moonLength">/28</div>
-          </div>
-        </div>
-
-        <div>
-          <h2 id="moonName">—</h2>
-          <p class="meta" id="moonEssence">—</p>
-          <p class="mono" id="yearSpan">—</p>
-          <p class="meta" id="moonLine">—</p>
-        </div>
-      </div>
-
-      <div class="weekrow" aria-label="28-day moon progress">
-        <span class="weeklabel">Moon Days</span>
-        <div class="week" id="weekDots"></div>
+      <div class="hero-actions">
+        <button class="btn primary" type="button" data-today>Today</button>
+        <button class="btn" type="button" data-prev-day>← Prev</button>
+        <button class="btn" type="button" data-next-day>Next →</button>
+        <button class="btn" type="button" data-copy-link>Copy Link</button>
       </div>
     </section>
 
-    <section class="grid" aria-label="Controls and sky phase">
+    <section class="card moon-status" aria-live="polite">
+      <div>
+        <p class="eyebrow">Current Seal</p>
+        <h2 data-moon-title>Calculating…</h2>
+        <p data-moon-subtitle>Loading the living calendar.</p>
+      </div>
+      <div class="moon-ring" aria-label="Progress ring for day within 28-day moon">
+        <strong data-day-number>—</strong>
+        <span>/28</span>
+      </div>
+    </section>
+
+    <section class="grid two">
       <article class="card">
-        <h2>Today</h2>
+        <p class="eyebrow">Today</p>
+        <h2 data-gregorian-date>—</h2>
+        <p><strong>Time Zone:</strong> <span data-timezone>—</span></p>
+        <p><strong>Remnant Date:</strong> <span data-remnant-date>—</span></p>
+        <p><strong>Week:</strong> <span data-week-name>—</span></p>
 
-        <div class="chiprow">
-          <span class="pill"><b id="nowDate">—</b></span>
-          <span class="pill mono" id="nowClock">—</span>
-          <span class="pill" id="nowTZ">—</span>
-        </div>
-
-        <div class="formrow">
-          <label>
-            Time Zone
-            <select id="tzPick" class="lab-input"></select>
-          </label>
-
-          <label>
-            Date
-            <input type="date" id="datePick" class="lab-input">
-          </label>
-        </div>
-
-        <div class="btnrow">
-          <button class="lab-btn" id="btnToday" type="button">Today</button>
-          <button class="lab-btn" id="prevDay" type="button">← Prev</button>
-          <button class="lab-btn" id="nextDay" type="button">Next →</button>
-          <button class="lab-btn ghost" id="shareLink" type="button">Copy Link</button>
-        </div>
+        <label class="field">
+          <span>Date</span>
+          <input type="date" data-date-picker>
+        </label>
       </article>
 
       <article class="card">
-        <h2>Visible Moon Phase</h2>
-        <canvas id="simMoon" width="320" height="320" aria-label="Real lunar phase"></canvas>
-        <p class="mono" id="phaseLine">—</p>
-        <p class="meta" id="phaseMeta">—</p>
+        <p class="eyebrow">Visible Moon Phase</p>
+        <h2 data-phase-name>—</h2>
+        <p data-phase-copy>—</p>
+        <div class="phase-orb" data-phase-orb aria-hidden="true">◐</div>
       </article>
     </section>
 
-    <section class="row-2" aria-label="Calendars">
-      <article class="card">
-        <h2>Remnant Moon Calendar</h2>
-        <p class="meta">Fixed 4 weeks × 7 days. This does not float like Gregorian weeks.</p>
-        <section id="remCal" class="calendar"></section>
-      </article>
+    <section class="card">
+      <div class="section-heading">
+        <p class="eyebrow">Remnant Moon Calendar</p>
+        <h2>Fixed 4 Weeks × 7 Days</h2>
+        <p>This does not float like Gregorian weeks. Each moon holds 28 counted days.</p>
+      </div>
+      <div class="moon-grid" data-moon-grid></div>
+    </section>
 
-      <article class="card">
+    <section class="card">
+      <div class="section-heading">
+        <p class="eyebrow">Gregorian Mirror</p>
         <h2>Gregorian Calendar</h2>
-        <p class="meta">Shows how each Gregorian day maps into the Remnant moon count.</p>
-        <section id="gregCal" class="gregorian"></section>
-      </article>
+        <p>Shows how each Gregorian day maps into the Remnant moon count.</p>
+      </div>
+      <div class="gregorian-grid" data-gregorian-grid></div>
     </section>
 
-    <article class="card">
-      <h2>Year Map</h2>
-      <p class="hint">
-        Year begins at the first New Moon after Spring Equinox. Each Remnant Moon is 28 days.
-        Remaining days after Moon 13 are outside the counted cycle.
-      </p>
-
-      <div class="scroller">
+    <section class="card">
+      <div class="section-heading">
+        <p class="eyebrow">Year Map</p>
+        <h2>13 Moon Year Map</h2>
+        <p>Year begins at the first New Moon after Spring Equinox. Remaining days after Moon 13 sit outside the counted cycle.</p>
+      </div>
+      <div class="table-wrap">
         <table class="year-map">
           <thead>
             <tr>
-              <th>#</th>
               <th>Moon</th>
               <th>Essence</th>
               <th>Start</th>
               <th>End</th>
             </tr>
           </thead>
-          <tbody id="yearMapBody"></tbody>
+          <tbody data-year-map>
+            <tr><td colspan="4">Calculating…</td></tr>
+          </tbody>
         </table>
       </div>
+    </section>
 
-      <p class="meta" id="outsideInfo">—</p>
-    </article>
-    <section id="astrology" class="section-shell astrology-panel" aria-labelledby="astrology-title">
-  <div class="section-heading">
-    <p class="eyebrow">Sky Mirror · 13-Moon Astrology</p>
-    <h2 id="astrology-title">Astrology Correspondence</h2>
-    <p>
-      A symbolic layer connecting the Remnant 13×28 cadence with seasonal signs,
-      elemental tone, lunar rhythm, and daily reflection.
-    </p>
-  </div>
+    <section class="card astrology-panel" data-astrology-panel>
+      <div class="section-heading">
+        <p class="eyebrow">Sky Mirror · 13-Moon Astrology</p>
+        <h2>Astrology Correspondence</h2>
+        <p data-astro-status>
+          A symbolic layer connecting the Remnant 13×28 cadence with seasonal signs,
+          elemental tone, lunar rhythm, and daily reflection.
+        </p>
+      </div>
 
-  <div class="grid cards-grid astrology-grid">
-    <article class="card astro-card">
-      <p class="eyebrow">Solar Gate</p>
-      <h3 id="astroSign">Calculating…</h3>
-      <p id="astroRange">Seasonal correspondence will appear here.</p>
-    </article>
+      <div class="astrology-grid">
+        <article class="astro-card">
+          <p class="eyebrow">Solar Gate</p>
+          <h3 data-solar-gate>Calculating…</h3>
+          <p data-solar-copy>Seasonal correspondence will appear here.</p>
+        </article>
 
-    <article class="card astro-card">
-      <p class="eyebrow">Elemental Tone</p>
-      <h3 id="astroElement">—</h3>
-      <p id="astroElementText">Elemental reflection based on the current solar gate.</p>
-    </article>
+        <article class="astro-card">
+          <p class="eyebrow">Elemental Tone</p>
+          <h3 data-elemental-tone>—</h3>
+          <p data-elemental-copy>Elemental reflection based on the current solar gate.</p>
+        </article>
 
-    <article class="card astro-card">
-      <p class="eyebrow">Moon Reflection</p>
-      <h3 id="astroMoon">13-Moon Cadence</h3>
-      <p id="astroMoonText">Use today’s moon position as the practice mirror.</p>
-    </article>
-  </div>
+        <article class="astro-card">
+          <p class="eyebrow">Moon Reflection</p>
+          <h3 data-moon-reflection>13-Moon Cadence</h3>
+          <p data-moon-reflection-copy>Use today’s moon position as the practice mirror.</p>
+        </article>
+      </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <p class="meta">© <span id="yr">2026</span> Aaron Paul Laird — Scroll of Fire</p>
+  <footer class="site-footer">
+    <p>© 2026 Aaron Paul Laird — Scroll of Fire</p>
   </footer>
 
-  <script>
-    window.__MOONS__ = window.__MOONS__ || [
-      { idx: 1, name: "Magnetic", essence: "Unify · Purpose" },
-      { idx: 2, name: "Lunar", essence: "Polarize · Challenge" },
-      { idx: 3, name: "Electric", essence: "Activate · Service" },
-      { idx: 4, name: "Self-Existing", essence: "Define · Form" },
-      { idx: 5, name: "Overtone", essence: "Empower · Radiance" },
-      { idx: 6, name: "Rhythmic", essence: "Organize · Equality" },
-      { idx: 7, name: "Resonant", essence: "Channel · Attunement" },
-      { idx: 8, name: "Galactic", essence: "Harmonize · Integrity" },
-      { idx: 9, name: "Solar", essence: "Pulse · Intention" },
-      { idx: 10, name: "Planetary", essence: "Perfect · Manifestation" },
-      { idx: 11, name: "Spectral", essence: "Dissolve · Liberation" },
-      { idx: 12, name: "Crystal", essence: "Dedicate · Cooperation" },
-      { idx: 13, name: "Cosmic", essence: "Endure · Presence" }
-    ];
-  </script>
-
-  <script defer src="assets/js/moons.js?v=2026-05-08-moons3"
-    onerror="(function(){var b=document.getElementById('errorBanner');if(b){b.textContent='Failed to load assets/js/moons.js';b.classList.add('show');}})();">
-  </script>
+  <script src="assets/js/Codex.js" defer></script>
+  <script src="assets/js/astro-panel.js" defer></script>
+  <script src="assets/js/astrology.js" defer></script>
 </body>
 </html>
