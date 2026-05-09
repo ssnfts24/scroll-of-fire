@@ -1,23 +1,29 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <script>
+    (function () {
+      if (location.hostname !== "ssnfts24.github.io") {
+        const b = document.querySelector("base");
+        if (b) b.remove();
+      }
+    })();
+  </script>
   <meta charset="utf-8">
   <title>404 — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <base href="./">
-  <link href="assets/css/codex.css" rel="stylesheet">
-  <link href="assets/css/superlayout.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/codex.css">
 </head>
 <body>
-  <main class="page shell">
-    <p class="eyebrow">Scroll of Fire</p>
-    <h1>404 — Lost in the Stacks</h1>
-    <p>That page does not exist, or it moved during the rebuild.</p>
-    <p>
-      <a class="btn" href="./">← Back to Codex</a>
-      <a class="btn" href="start.html">Start Here</a>
-      <a class="btn" href="theory.html">Theory</a>
-    </p>
+  <main class="section-shell hero">
+    <p class="eyebrow">404 · Broken Gate</p>
+    <h1>Page not found</h1>
+    <p class="hero-copy">The path did not resolve, but the Scroll remains open.</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="./">Return Home</a>
+      <a class="btn" href="sitemap.xml">Open Sitemap</a>
+    </div>
   </main>
 </body>
 </html>
