@@ -1,147 +1,6 @@
-/* =======================================================================
-   Scroll of Fire — Astrology Styles
-   File: assets/css/astrology.css
-   Layers: astrology
-   Depends on: tokens.css, core.css
-   Purpose: Animated zodiac wheel, planet chips, aspects table
-   ======================================================================= */
-
-@layer astrology {
-  /* ---------- Container & header ---------- */
-  .astro {
-    position: relative;
-  }
-  .astro .astro-head {
-    display: flex; align-items: center; gap: 10px; margin-bottom: .8rem;
-  }
-  .astro .seal {
-    display: inline-flex; align-items: center; gap: .45rem;
-    padding: .25rem .55rem; border: var(--bd-1); border-radius: var(--radius-sm);
-    background: color-mix(in oklab, var(--moon-accent) 8%, #121827);
-    font-weight: var(--w-extrabold);
-    letter-spacing: .2px;
-  }
-
-  /* ---------- Responsive grid ---------- */
-  .astro-grid {
-    display: grid; gap: var(--gap); grid-template-columns: 1fr;
-    align-items: start;
-  }
-  @media (min-width: 900px) {
-    .astro-grid { grid-template-columns: 2fr 3fr; }
-  }
-
-  /* ---------- Planet chips ---------- */
-  .astro-chips { display: flex; flex-wrap: wrap; gap: var(--gap-sm); }
-  .chip {
-    display:inline-flex; align-items:center; gap:.5rem; padding:.5rem .7rem;
-    border: var(--bd-1); border-radius: 999px; background:#101625;
-    font-weight: var(--w-extrabold); letter-spacing:.2px; cursor: pointer;
-    transition: transform var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out);
-  }
-  .chip:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,.25); }
-  .chip .dot { width:.65rem; height:.65rem; border-radius:50%; box-shadow: inset 0 0 0 2px rgba(255,255,255,.06); }
-
-  /* Elemental tints */
-  .el-fire   { background:#ff7a7a33; box-shadow: inset 0 0 0 2px #ff7a7a22; }
-  .el-water  { background:#7af3ff33; box-shadow: inset 0 0 0 2px #7af3ff22; }
-  .el-air    { background:#aebaff33; box-shadow: inset 0 0 0 2px #aebaff22; }
-  .el-earth  { background:#9affc933; box-shadow: inset 0 0 0 2px #9affc922; }
-  .el-aether { background:#d7b6ff33; box-shadow: inset 0 0 0 2px #d7b6ff22; }
-
-  /* ---------- Wheel Card ---------- */
-  .astro-wheel {
-    border: var(--bd-1); border-radius: var(--radius); background:#0f141f;
-    padding: .6rem; position: relative; overflow: hidden;
-  }
-  .astro-wheel::after {
-    /* faint rotating glyph halo */
-    content: ""; position: absolute; inset: -40% -35% auto auto; aspect-ratio: 1;
-    background: radial-gradient(50% 50% at 50% 50%, color-mix(in oklab, var(--moon-accent) 10%, transparent), transparent 60%);
-    filter: blur(12px); opacity: .25; pointer-events: none;
-    animation: haloTurn 120s linear infinite;
-  }
-  @keyframes haloTurn { to { transform: rotate(360deg); } }
-
-  /* SVG layers */
-  #astroWheel { width: 100%; height: auto; display: block; }
-  #houseLines { stroke: #2a3242; stroke-width: .8; opacity: .9; }
-  #signLabels { fill: #a7b1ca; font-family: Inter, system-ui; font-size: 10px; }
-  #planetDots circle.dot {
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,.4));
-    transform-origin: 180px 180px;
-    animation: orbitWobble 9s ease-in-out infinite;
-  }
-  /* give each planet a slightly different cadence */
-  [data-dot="sun"]     { animation-duration: 10s; }
-  [data-dot="moon"]    { animation-duration: 6s; }
-  [data-dot="mercury"] { animation-duration: 7.5s; }
-  [data-dot="venus"]   { animation-duration: 9.5s; }
-  [data-dot="mars"]    { animation-duration: 8s; }
-  [data-dot="jupiter"] { animation-duration: 12s; }
-  [data-dot="saturn"]  { animation-duration: 13.5s; }
-
-  @keyframes orbitWobble {
-    0%,100% { transform: translate(0,0) rotate(0deg) scale(1); opacity:.9; }
-    50%     { transform: translate(1.5px,-1.5px) rotate(1deg) scale(1.06); opacity:1; }
-  }
-
-  /* Motion safety */
-  @media (prefers-reduced-motion: reduce) {
-    .astro-wheel::after { animation: none; }
-    #planetDots circle.dot { animation: none; }
-  }
-
-  /* Wheel caption line */
-  .astro-wheel + .meta {
-    display: flex; gap: .4rem; align-items: baseline; color: var(--muted);
-  }
-  .astro-wheel + .meta .sep::before { content: "·"; margin: 0 .35rem; opacity: .5; }
-
-  /* ---------- Aspects Table ---------- */
-  .astro-aspects { margin-top: var(--gap); }
-  .astro-aspects .legend { display: flex; flex-wrap: wrap; gap: .45rem; margin: .4rem 0 .6rem; }
-  .badge.asp {
-    display:inline-block; padding:.25rem .5rem; border-radius:8px; font: var(--w-bold) .8rem/1 Inter,system-ui;
-    border: var(--bd-1);
-  }
-  .badge.asp.conj { background:#15202f; }
-  .badge.asp.sext { background:#13252a; }
-  .badge.asp.sqr  { background:#211823; }
-  .badge.asp.tri  { background:#15221b; }
-  .badge.asp.opp  { background:#261a1a; }
-
-  .asp-table {
-    width: 100%; border-collapse: separate; border-spacing: 0;
-    font-variant-numeric: tabular-nums;
-  }
-  .asp-table thead th {
-    position: sticky; top: 0; z-index: 1;
-    background: #0e0e12; text-align: left; padding: .55rem .6rem;
-    border-bottom: 1px solid var(--line);
-  }
-  .asp-table tbody td {
-    padding: .45rem .6rem; border-bottom: 1px solid #1a2130;
-  }
-  .asp-table tbody tr:hover td {
-    background: linear-gradient(90deg, color-mix(in oklab, var(--moon-accent) 10%, transparent), transparent 45%);
-  }
-
-  /* ---------- Micro badges / tags ---------- */
-  .tag {
-    display:inline-block; margin-left:.35rem; padding:.1rem .35rem; border-radius:6px;
-    border: var(--bd-1); background:#0f1218; font: var(--w-bold) .7rem/1 Inter,system-ui;
-  }
-
-  /* ---------- Utility hooks ---------- */
-  .meta { color: color-mix(in lch, var(--ink) 65%, transparent); }
-  .tight { margin-bottom: .25rem; }
-}
-
-
 /* ==============================
-   13-Moon Astrology Panel
-   Restored Bottom Section
+   Scroll of Fire — Astrology Styles
+   13-Moon bottom correspondence panel
    ============================== */
 
 .astrology-panel {
@@ -155,21 +14,31 @@
 }
 
 .astrology-grid {
+  display: grid;
+  gap: 1rem;
   margin-top: 1.5rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .astro-card {
   min-height: 220px;
+  padding: 1.25rem;
+  border: 1px solid rgba(243, 201, 122, 0.22);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(243, 201, 122, 0.16), transparent 38%),
+    rgba(12, 15, 24, 0.88);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
 }
 
 .astro-card h3 {
   margin: 0.35rem 0 0.75rem;
   font-size: clamp(1.6rem, 5vw, 2.5rem);
-  color: var(--gold);
+  color: var(--gold, #f3c97a);
 }
 
 .astro-card p {
-  color: var(--muted);
+  color: var(--muted, #aeb7c8);
 }
 
 .astro-card::before,
@@ -177,6 +46,12 @@
 .astrology-panel::before,
 .astrology-panel::after {
   pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .astrology-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 720px) {
