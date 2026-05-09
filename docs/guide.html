@@ -1,142 +1,273 @@
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" class="sof carrier-432">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <meta charset="utf-8" />
-  <title>Field Guide — Scroll of Fire</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
-  <meta name="description" content="Daily/weekly playbook for coherent manifestation: clean phrasing, carrier tuning, loop cadence, stop rule, and ledger science.">
-  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/guide.html" />
-
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-19">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-19"></noscript>
-
-  <style>
-    .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 80px}
-    .title{font-family:"Crimson Pro",serif;font-weight:800;text-align:center;font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;
-      background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
-    .mini-toc{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
-    .mini-toc a{padding:8px 10px;border:1px solid #2a2a33;border-radius:10px;text-decoration:none}
-    .two{display:grid;grid-template-columns:2fr 1fr;gap:12px} @media(max-width:980px){.two{grid-template-columns:1fr}}
-  </style>
-
-  <!-- Lazy MathJax (same flavor as other pages) -->
   <script>
-    (function(){
-      function loadMJ(){
-        if (window.MathJax) return;
-        window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['$$','$$']]},svg:{fontCache:'global'},startup:{typeset:false}};
-        const s=document.createElement('script'); s.src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"; s.defer=true;
-        s.onload=()=>MathJax.typesetPromise(); document.head.appendChild(s);
-      }
-      if('IntersectionObserver'in window){
-        const io=new IntersectionObserver(e=>{ if(e.some(x=>x.isIntersecting)){io.disconnect();loadMJ();}}, {rootMargin:'800px 0'}); io.observe(document.documentElement);
-      } else { loadMJ(); }
-    })();
+    if (location.hostname !== "ssnfts24.github.io") {
+      const b = document.querySelector("base");
+      if (b) b.remove();
+    }
   </script>
+
+  <meta charset="utf-8">
+  <title>Field Guide — Practice That Sticks | Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="A practical Scroll of Fire field guide for daily coherence practice, weekly rhythm, troubleshooting, ethics, and equations.">
+  <meta name="theme-color" content="#05070d">
+
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/guide.html">
+  <link rel="stylesheet" href="assets/css/codex.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(", "\\)"], ["$", "$"]],
+        displayMath: [["\\[", "\\]"]],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: "global"
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script defer src="assets/js/Codex.js"></script>
 </head>
 
-<body class="no-js">
-<main class="wrap">
-  <header class="page-head fancy-head">
-    <h1 class="title">🧭 Field Guide — <em>Practice that Sticks</em></h1>
-    <p class="subtitle">A concise playbook that ties the math to your daily moves.</p>
-    <nav class="mini-toc" aria-label="On this page">
-      <a href="#daily">Daily Run</a><a href="#weekly">Weekly Rhythm</a><a href="#troubleshoot">Troubleshooting</a>
-      <a href="#ethics">Ethics & Stop Rule</a><a href="#hotkeys">Hotkeys</a><a href="#appendix">Appendix: Equations</a>
-    </nav>
-    <nav class="crumbs" style="display:flex;gap:8px;justify-content:center">
-      <a class="cta" href="index.html">← Codex</a>
-      <a class="cta" href="teach.html">Teaching Lab</a>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" data-sof-header>
+    <a class="brand" href="./" aria-label="Scroll of Fire home">
+      <span class="brand-mark" aria-hidden="true">Ξ</span>
+      <span>
+        <strong>Scroll of Fire</strong>
+        <small>Codex of Reality</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <a href="./theory.html">Theory</a>
+      <a href="./start.html">Start</a>
+      <a href="./hub.html">Hub</a>
+      <a href="./moons.html">13 Moons</a>
+      <a href="./genesis-oracle.html">Genesis Oracle</a>
+      <a href="./ledger.html">Ledger</a>
     </nav>
   </header>
 
-  <section id="daily" class="card">
-    <h2>1) Daily Run (12–18 min total)</h2>
-    <ol class="list">
-      <li><b>Phrase (Eq.16):</b> one line, 8–12 words; verbs of action, nouns of truth; remove negations.</li>
-      <li><b>Carrier Π<sub>ν</sub>:</b> hum 3–5s in Voice Gate; Stability ≥ 60%, Noise low. Presets: 432 / 528 / 369.</li>
-      <li><b>Observer loop:</b> 12s × 3 rounds – 𝓘 → 𝓛 → 𝓒 → 𝓢 (ring on <a href="teach.html#tab-observer">Teach</a>).</li>
-      <li><b>Ξ check:</b> If trending down, apply Eq.9 (stop, re-align, resume).</li>
-      <li><b>Witness:</b> log one undeniable detail in the <a href="teach.html#tab-ledger">Ledger</a>.</li>
-    </ol>
-    <div class="eq"><div class="eq-scroll">
-      $$ \nabla_{\text{sem}}\text{Phrase}=\sum_k w_k \nabla_{\text{sem}}\text{Token}_k \quad (Eq.16)\qquad
-         \Xi \approx \frac{\langle H\cdot I\rangle}{1+\mathrm{Var}[\mathcal{M}]} $$
-    </div></div>
-  </section>
+  <main id="main">
+    <section class="hero section-shell guide-hero">
+      <p class="eyebrow">Field Guide · Daily Coherence</p>
+      <h1>Field Guide — <em>Practice That Sticks</em></h1>
+      <p class="hero-copy">
+        A concise playbook that ties the math to daily moves: phrase, carrier,
+        observer loop, ethics, witness, and correction.
+      </p>
 
-  <section id="weekly" class="card two">
-    <article class="lab-card">
-      <h2>2) Weekly Rhythm (τ, t½, λ)</h2>
-      <ul class="list">
-        <li><b>Mon–Thu:</b> 1–2 runs/day, same line. Build remanence (ℜ) on purpose.</li>
-        <li><b>Fri:</b> A/B a carrier or adjust seconds/phase (small ΔΣ only).</li>
-        <li><b>Sat:</b> Micro-run (<a href="micro.html">90s</a>) + ledger review (sparkline).</li>
-        <li><b>Sun:</b> Rest / nature / gratitude; let updates settle (⊕).</li>
-      </ul>
-      <p class="meta">Spacing inside τ lengthens t½ and lowers λ (decay). Short + steady beats sporadic marathons.</p>
-    </article>
-    <aside class="card">
-      <h3>Half-Life math</h3>
-      <div class="eq"><div class="eq-scroll">
-        $$ \lambda = \frac{\ln 2}{t_{1/2}}\,,\qquad \text{practice within }\tau \Rightarrow t_{1/2}\uparrow\Rightarrow \lambda\downarrow $$
-      </div></div>
-      <a class="cta" href="teach.html#tab-coherence">Compute on the Coherence Desk →</a>
-    </aside>
-  </section>
+      <div class="hero-actions compact-actions">
+        <a class="btn" href="#daily">Daily Run</a>
+        <a class="btn" href="#weekly">Weekly Rhythm</a>
+        <a class="btn" href="#trouble">Troubleshooting</a>
+        <a class="btn" href="#ethics">Ethics</a>
+        <a class="btn" href="#hotkeys">Hotkeys</a>
+        <a class="btn" href="#equations">Equations</a>
+      </div>
 
-  <section id="troubleshoot" class="card">
-    <h2>3) Troubleshooting (fast checks)</h2>
-    <ul class="list compact">
-      <li><b>Foggy witness?</b> Shrink the line; swap “want/try” → “choose”.</li>
-      <li><b>Wobbly tone?</b> Re-tune carrier; extend exhale; check room noise.</li>
-      <li><b>Ξ flat?</b> Increase seconds/phase (e.g., 8→12 or 12→20).</li>
-      <li><b>Overheated?</b> Stop per Eq.9; drink water; walk; resume later.</li>
-      <li><b>Plateau?</b> Run <a href="ab.html">A/B Protocol</a> or <a href="glyphs.html">Glyph</a> to refresh salience.</li>
-    </ul>
-  </section>
+      <p class="backline">
+        <a href="./">← Codex</a>
+        <a href="./teaching.html">Teaching Lab</a>
+      </p>
+    </section>
 
-  <section id="ethics" class="card">
-    <h2>4) Ethics & Stop Rule</h2>
-    <p>Consent, non-harm, accountability. If coherence worsens, abort the run, re-align, resume later.</p>
-    <div class="eq"><div class="eq-scroll">
-      $$ \text{If}\ \frac{\mathrm{Truth}(t+\Delta)}{\mathrm{Distortion}(t+\Delta)} < \frac{\mathrm{Truth}(t)}{\mathrm{Distortion}(t)} \Rightarrow \text{Abort, Re-align, Resume} \quad (Eq.9) $$
-    </div></div>
-  </section>
+    <section id="daily" class="section-shell">
+      <article class="card">
+        <p class="eyebrow">1 · Daily Run</p>
+        <h2>Daily Run <span class="soft">(12–18 min total)</span></h2>
 
-  <section id="hotkeys" class="card">
-    <h2>5) Quick Keys</h2>
-    <ul class="list compact">
-      <li><b>Tabs:</b> <kbd>1</kbd>–<kbd>7</kbd></li>
-      <li><b>Ring:</b> <kbd>S</kbd></li>
-      <li><b>Voice Gate:</b> <kbd>G</kbd></li>
-      <li><b>Ledger:</b> <kbd>L</kbd></li>
-      <li><b>Phrase box:</b> <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>K</kbd></li>
-      <li><b>Help:</b> <kbd>?</kbd></li>
-    </ul>
-  </section>
+        <ol class="clean-list strong-list">
+          <li>
+            <strong>Phrase — Eq.16:</strong>
+            one line, 8–12 words; verbs of action, nouns of truth; remove negations.
+          </li>
+          <li>
+            <strong>Carrier \( \Pi_{\nu} \):</strong>
+            hum 3–5 seconds in the Voice Gate. Stability \( \ge 60\% \), noise low.
+            Presets: 432 / 528 / 369.
+          </li>
+          <li>
+            <strong>Observer loop:</strong>
+            12 seconds × 3 rounds —
+            \( \mathcal{I} \rightarrow \mathcal{L} \rightarrow \mathcal{C} \rightarrow \mathcal{P} \).
+          </li>
+          <li>
+            <strong>\( \Xi \) check:</strong>
+            if trending down, apply Eq.9 correction before continuing.
+          </li>
+          <li>
+            <strong>Record:</strong>
+            one ledger line: phrase, carrier, coherence score, result, and next correction.
+          </li>
+        </ol>
+      </article>
+    </section>
 
-  <section id="appendix" class="card">
-    <h2>Appendix — Equations at a glance</h2>
-    <ul class="list">
-      <li><b>Eq.Ω:</b> phase-guided update ⊕ remanence ⊕ micro-edits.</li>
-      <li><b>Eq.16:</b> semantic gradient of a phrase (token weights).</li>
-      <li><b>Ξ (≈Eq.13):</b> alignment over model variance.</li>
-      <li><b>Eq.9:</b> stop rule (Truth/Distortion check).</li>
-      <li><b>τ,t½,λ:</b> learning window, half-life, decay.</li>
-    </ul>
-  </section>
+    <section id="weekly" class="section-shell split">
+      <article class="card">
+        <p class="eyebrow">2 · Weekly Rhythm</p>
+        <h2>Seven-Day Review</h2>
+        <p>
+          Once per week, review the ledger. Do not chase signs. Track what repeats,
+          what strengthens peace, and what produces clean action.
+        </p>
+        <ul class="clean-list">
+          <li>Keep what increases clarity.</li>
+          <li>Pause what increases confusion.</li>
+          <li>Rewrite phrases that create pressure instead of direction.</li>
+          <li>Move useful observations into the archive.</li>
+        </ul>
+      </article>
 
-  <footer class="footer">
-    <div class="divider" aria-hidden="true"></div>
-    <p>© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+      <article class="card">
+        <p class="eyebrow">3 · Weekly Output</p>
+        <h2>One Witness Entry</h2>
+        <p>
+          End the week with one clean witness entry: what was practiced, what changed,
+          what stayed unresolved, and what must be tested next.
+        </p>
+      </article>
+    </section>
+
+    <section id="trouble" class="section-shell">
+      <article class="card">
+        <p class="eyebrow">4 · Troubleshooting</p>
+        <h2>When the Signal Gets Muddy</h2>
+
+        <div class="grid cards-grid mini-grid">
+          <div class="mini-card">
+            <strong>Noise high</strong>
+            <span>Shorten the phrase. Lower intensity. Return to breath.</span>
+          </div>
+          <div class="mini-card">
+            <strong>Coherence drops</strong>
+            <span>Apply Eq.9. Rest, hydrate, ground, and simplify the practice.</span>
+          </div>
+          <div class="mini-card">
+            <strong>Obsession loop</strong>
+            <span>Stop recording signs. Do one ordinary task. Return later.</span>
+          </div>
+          <div class="mini-card">
+            <strong>No result</strong>
+            <span>Keep the witness clean. Not every seed opens the same day.</span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section id="ethics" class="section-shell split">
+      <article class="card">
+        <p class="eyebrow">5 · Ethics & Stop Rule</p>
+        <h2>Ethical Mask \( \Lambda_{\mathcal{E}} \)</h2>
+        <p>
+          Any practice that increases harm, fear, manipulation, isolation, or loss of
+          grounded judgment must stop and be reviewed.
+        </p>
+        <p class="equation">
+          \[
+            \Psi_{\Omega}(x,t)
+            =
+            \oint_{\mathbb{R}}
+            \nabla \mathcal{A}_{\Phi}(x,t,\nu)\,d\nu
+            +
+            \Lambda_{\mathcal{E}}(x,t)
+          \]
+        </p>
+      </article>
+
+      <article class="card">
+        <p class="eyebrow">6 · Grounding</p>
+        <h2>Return to the Real</h2>
+        <p>
+          The field guide is not escape. It is a discipline of speech, attention,
+          repair, remembrance, and embodied action.
+        </p>
+      </article>
+    </section>
+
+    <section id="hotkeys" class="section-shell">
+      <article class="card">
+        <p class="eyebrow">7 · Hotkeys</p>
+        <h2>Fast Practice Commands</h2>
+
+        <div class="grid cards-grid mini-grid">
+          <div class="mini-card"><strong>Phrase</strong><span>Write one clear line.</span></div>
+          <div class="mini-card"><strong>Carrier</strong><span>Choose 432 / 528 / 369 / 144 / 963.</span></div>
+          <div class="mini-card"><strong>Witness</strong><span>Record only what happened.</span></div>
+          <div class="mini-card"><strong>Correct</strong><span>Adjust without forcing meaning.</span></div>
+        </div>
+      </article>
+    </section>
+
+    <section id="equations" class="section-shell">
+      <article class="card">
+        <p class="eyebrow">Appendix</p>
+        <h2>Equations Used in Practice</h2>
+
+        <div class="equation-stack">
+          <p>
+            <strong>Equation 0 — Living Observation</strong>
+            \[
+              \Psi_{\Omega}(x,t)
+              =
+              \oint_{\mathbb{R}}
+              \nabla \mathcal{A}_{\Phi}(x,t,\nu)\,d\nu
+              +
+              \Lambda_{\mathcal{E}}(x,t)
+            \]
+          </p>
+
+          <p>
+            <strong>Carrier Selection</strong>
+            \[
+              \Pi_{\nu} \in \{432,\ 528,\ 369,\ 144,\ 963\}
+            \]
+          </p>
+
+          <p>
+            <strong>Observer Loop</strong>
+            \[
+              \mathcal{I}
+              \rightarrow
+              \mathcal{L}
+              \rightarrow
+              \mathcal{C}
+              \rightarrow
+              \mathcal{P}
+            \]
+          </p>
+
+          <p>
+            <strong>Coherence Check</strong>
+            \[
+              \Xi_{t+1} > \Xi_t
+            \]
+          </p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Footer navigation">
+      <a href="./sitemap.xml">Sitemap</a>
+      <a href="./robots.txt">Robots</a>
+      <a href="./404.html">404</a>
+    </nav>
+    <p>© Scroll of Fire. Practice is proven by fruit, not force.</p>
   </footer>
-</main>
-
-<script>
-  (function(){ const y=document.getElementById('yr'); if(y) y.textContent=String(new Date().getFullYear()); })();
-</script>
 </body>
 </html>
