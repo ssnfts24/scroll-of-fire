@@ -1,7 +1,4 @@
-/* ==============================
-   Scroll of Fire — Astrology Styles
-   13-Moon bottom correspondence panel
-   ============================== */
+/* Scroll of Fire — Astrology Styles */
 
 .astrology-panel {
   margin-bottom: 4rem;
@@ -15,9 +12,9 @@
 
 .astrology-grid {
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
   margin-top: 1.5rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .astro-card {
@@ -41,11 +38,13 @@
   color: var(--muted, #aeb7c8);
 }
 
-.astro-card::before,
-.astro-card::after,
-.astrology-panel::before,
-.astrology-panel::after {
-  pointer-events: none;
+.eyebrow {
+  margin: 0 0 0.35rem;
+  color: var(--muted, #aeb7c8);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.76rem;
+  font-weight: 900;
 }
 
 @media (max-width: 900px) {
