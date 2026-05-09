@@ -370,3 +370,26 @@ h2 {
     justify-content: flex-start;
   }
 }
+
+
+.feature-link{
+  display:block;
+  position:relative;
+  text-decoration:none;
+  color:inherit;
+  cursor:pointer;
+  z-index:2;
+}
+
+.feature-link *{
+  pointer-events:none;
+}
+
+.feature-link:hover{
+  transform:translateY(-2px);
+}
+
+.feature-card{
+  position:relative;
+  overflow:hidden;
+}
