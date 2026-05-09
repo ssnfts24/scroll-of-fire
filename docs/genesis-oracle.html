@@ -20,1247 +20,173 @@
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="The Genesis Oracle — Seal of Becoming">
-  <meta property="og:description" content="Moon, day, week, tone, resonant sum, living law, flame path, and carrier reading.">
+  <meta property="og:description" content="Map a birth date into the Remnant 13×28 cadence, living laws, flame path, carrier palette, and name code.">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/genesis-oracle.html">
 
-  <link rel="stylesheet" href="assets/css/fonts.css?v=2026-05-08-oracle1">
-  <link rel="stylesheet" href="assets/css/tokens.css?v=2026-05-08-oracle1">
-  <link rel="stylesheet" href="assets/css/core.css?v=2026-05-08-oracle1">
-  <link rel="stylesheet" href="assets/css/genesis-oracle.css?v=2026-05-08-oracle1">
+  <link rel="stylesheet" href="assets/css/genesis-oracle.css">
+  <script defer src="assets/js/genesis-oracle.js"></script>
 </head>
 
 <body>
-  <main class="wrap">
-    <header class="hero card">
-      <p class="eyebrow">Scroll of Fire · Remnant Calendar</p>
-      <h1>⟡ The Genesis Oracle — Seal of Becoming</h1>
-      <p class="subtitle">
-        Read your birth through the natural Remnant system:
-        first New Moon after Spring Equinox, then 13 fixed moons of 28 days.
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="oracle-header">
+    <a class="brand" href="./">
+      <span class="brand-mark">י־ה־ו־ה</span>
+      <span>
+        <strong>Genesis Oracle</strong>
+        <small>Scroll of Fire · Remnant Calendar</small>
+      </span>
+    </a>
+
+    <nav aria-label="Oracle navigation">
+      <a href="./">Codex</a>
+      <a href="moons.html">13 Moons</a>
+      <a href="theory.html">Theory</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="oracle-hero">
+      <p class="eyebrow">Seal of Becoming</p>
+      <h1>The Genesis Oracle</h1>
+      <p>
+        Read your birth through the natural Remnant system: first New Moon after
+        Spring Equinox, then 13 fixed moons of 28 days.
       </p>
+    </section>
 
-      <nav class="btnrow" aria-label="Navigation">
-        <a class="btn" href="index.html">← Codex</a>
-        <a class="btn" href="moons.html">13 Moons</a>
-        <a class="btn ghost" href="theory.html">Theory</a>
-      </nav>
-    </header>
-
-    <section class="grid">
-      <article class="card">
+    <section class="oracle-grid">
+      <form class="panel input-panel" id="oracleForm">
         <h2>Enter Birth Details</h2>
-        <p class="meta">If birth time is unknown, leave it blank. The Oracle will use local noon for stable day mapping.</p>
-
-        <div class="formgrid">
-          <label>
-            Full Name
-            <input id="fullName" type="text" placeholder="Aaron Paul Laird">
-          </label>
-
-          <label>
-            Date of Birth
-            <input id="birthDate" type="date">
-          </label>
-
-          <label>
-            Time
-            <input id="birthTime" type="time">
-          </label>
-
-          <label>
-            Time Zone
-            <select id="birthTZ"></select>
-          </label>
-        </div>
-
-        <div class="btnrow">
-          <button class="btn" id="readBtn" type="button">Read Birth</button>
-          <button class="btn ghost" id="saveBtn" type="button">Save</button>
-          <button class="btn ghost" id="shareBtn" type="button">Share Link</button>
-        </div>
-
-        <p class="notice" id="notice">Ready.</p>
-      </article>
-
-      <article class="card oracle-card">
-        <h2>Current Signature</h2>
-        <div class="seal" id="seal">י־ה־ו־ה</div>
-        <p class="bigline" id="summaryLine">Enter details and press Read Birth.</p>
-        <p class="meta" id="anchorLine">—</p>
-
-        <div class="mini-ring">
-          <svg viewBox="0 0 120 120">
-            <circle cx="60" cy="60" r="50" class="ring-bg"></circle>
-            <circle cx="60" cy="60" r="50" class="ring-fg" id="dayArc" pathLength="316"></circle>
-          </svg>
-          <div>
-            <strong id="dayBig">—</strong>
-            <span id="daySmall">/28</span>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <section class="grid result-grid">
-      <article class="card">
-        <h2>Your Reading</h2>
-
-        <dl class="readout">
-          <div><dt>Name</dt><dd id="outName">—</dd></div>
-          <div><dt>Birth</dt><dd id="outBirth">—</dd></div>
-          <div><dt>13×28</dt><dd id="outMoon">—</dd></div>
-          <div><dt>Week</dt><dd id="outWeek">—</dd></div>
-          <div><dt>Tone</dt><dd id="outTone">—</dd></div>
-          <div><dt>Resonant Sum</dt><dd id="outSum">—</dd></div>
-        </dl>
-      </article>
-
-      <article class="card">
-        <h2>Birth Moon & Day</h2>
-        <p id="moonReading">—</p>
-        <div class="dots" id="dayDots"></div>
-
-        <h3>Special Handling</h3>
-        <p class="meta" id="specialReading">—</p>
-      </article>
-    </section>
-
-    <section class="grid">
-      <article class="card">
-        <h2>Living Law</h2>
-        <p class="bigline" id="lawTitle">—</p>
-        <p id="lawText">—</p>
-
-        <h3>All 13 Living Laws</h3>
-        <ol class="compact" id="lawList"></ol>
-      </article>
-
-      <article class="card">
-        <h2>Flame Path</h2>
-        <p class="bigline" id="flameTitle">—</p>
-        <p id="flameText">—</p>
-        <p class="meta" id="practiceText">—</p>
-      </article>
-    </section>
-
-    <section class="grid">
-      <article class="card">
-        <h2>Name & Letter Code</h2>
+        <p class="muted">If birth time is unknown, leave it blank. The Oracle will use local noon for stable day mapping.</p>
 
         <label>
-          Override Name
-          <input id="nameOverride" type="text" placeholder="Optional">
+          <span>Full Name</span>
+          <input id="inName" name="name" autocomplete="name" placeholder="Aaron Paul Laird">
         </label>
 
-        <div class="btnrow">
-          <button class="btn ghost" id="nameBtn" type="button">Compute Name Code</button>
+        <div class="field-row">
+          <label>
+            <span>Date of Birth</span>
+            <input id="inDate" name="date" type="date" required>
+          </label>
+          <label>
+            <span>Time</span>
+            <input id="inTime" name="time" type="time">
+          </label>
         </div>
 
-        <dl class="readout">
-          <div><dt>Latin-Pythagorean</dt><dd id="pythOut">—</dd></div>
-          <div><dt>Latin A1–Z26</dt><dd id="simpleOut">—</dd></div>
-          <div><dt>Hebrew</dt><dd id="hebrewOut">—</dd></div>
-          <div><dt>Covenant Seal</dt><dd id="covenantOut">—</dd></div>
-        </dl>
+        <label>
+          <span>Time Zone</span>
+          <input id="inTZ" name="tz" value="America/Los_Angeles" placeholder="America/Los_Angeles">
+        </label>
+
+        <div class="actions">
+          <button class="btn primary" type="submit">Read Birth</button>
+          <button class="btn" type="button" id="saveProfile">Save</button>
+          <button class="btn" type="button" id="shareLink">Share Link</button>
+        </div>
+
+        <p class="status" id="status" role="status">Ready.</p>
+      </form>
+
+      <aside class="panel signature-panel">
+        <p class="eyebrow">Current Signature</p>
+        <div class="sig-symbol" id="sigSymbol">י־ה־ו־ה</div>
+        <p id="sigText">Enter details and press Read Birth.</p>
+
+        <div class="meter">
+          <span id="moonName">—</span>
+          <strong id="moonDay">— /28</strong>
+          <div class="bar"><i id="moonProgress"></i></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="panel reading-panel">
+      <h2>Your Reading</h2>
+
+      <div class="result-grid">
+        <div><span>Name</span><strong id="outName">—</strong></div>
+        <div><span>Birth</span><strong id="outBirth">—</strong></div>
+        <div><span>13×28</span><strong id="outDate">—</strong></div>
+        <div><span>Week</span><strong id="outWeek">—</strong></div>
+        <div><span>Tone</span><strong id="outTone">—</strong></div>
+        <div><span>Resonant Sum</span><strong id="outResonant">—</strong></div>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Oracle sections">
+        <button role="tab" aria-selected="true" data-tab="laws">Living Law</button>
+        <button role="tab" aria-selected="false" data-tab="flame">Flame Path</button>
+        <button role="tab" aria-selected="false" data-tab="name">Name Code</button>
+        <button role="tab" aria-selected="false" data-tab="carriers">Carriers</button>
+      </div>
+
+      <article class="tab-panel" id="panel-laws">
+        <h3 id="lawTitle">Living Law</h3>
+        <p id="lawText">—</p>
+        <div class="mini-list" id="allLaws"></div>
       </article>
 
-      <article class="card">
-        <h2>Carrier Palette</h2>
-        <p class="bigline"><span id="carrierOut">—</span> Hz</p>
-        <p id="carrierText">—</p>
+      <article class="tab-panel hidden" id="panel-flame">
+        <h3 id="flameTitle">Flame Path</h3>
+        <p id="flameText">—</p>
+        <p id="flamePractice">—</p>
+      </article>
 
-        <div class="btnrow carrier-row">
-          <button class="btn ghost" data-carrier="432" type="button">432</button>
-          <button class="btn ghost" data-carrier="528" type="button">528</button>
-          <button class="btn ghost" data-carrier="369" type="button">369</button>
-          <button class="btn ghost" data-carrier="144" type="button">144</button>
-          <button class="btn ghost" data-carrier="963" type="button">963</button>
+      <article class="tab-panel hidden" id="panel-name">
+        <h3>Name & Letter Code</h3>
+        <label>
+          <span>Override Name</span>
+          <input id="nameOverride" placeholder="Optional name override">
+        </label>
+        <button class="btn" id="computeName" type="button">Compute Name Code</button>
+        <div class="result-grid compact">
+          <div><span>Latin-Pythagorean</span><strong id="pythCode">—</strong></div>
+          <div><span>Latin A1–Z26</span><strong id="simpleCode">—</strong></div>
+          <div><span>Hebrew</span><strong id="hebrewCode">—</strong></div>
+          <div><span>Covenant Seal</span><strong id="covenantSeal">—</strong></div>
         </div>
+      </article>
+
+      <article class="tab-panel hidden" id="panel-carriers">
+        <h3>Carrier Palette</h3>
+        <p><strong id="carrierHz">— Hz</strong></p>
+        <p id="carrierText">—</p>
+        <div class="carrier-row" id="carrierRow"></div>
       </article>
     </section>
 
-    <article class="card">
+    <section class="panel">
       <h2>How the Genesis Oracle reads your birth</h2>
-      <ol>
-        <li><strong>Anchor:</strong> the Remnant year begins at the first New Moon after Spring Equinox.</li>
-        <li><strong>Cadence:</strong> 13 fixed moons of 28 days create a 364-day counted year.</li>
-        <li><strong>Outside days:</strong> remaining days after Moon 13 sit outside the counted lattice as reset/intercalary days.</li>
-        <li><strong>Mapping:</strong> your birth date maps to Moon 1–13 and Day 1–28, or to an outside-count span.</li>
-        <li><strong>Tone:</strong> the counted index mod 13 gives the Tone of the Day.</li>
-        <li><strong>Resonant Sum:</strong> the digit reduction of YYYY+MM+DD lights the seal on 1, 4, 7, 11, 22, or 33.</li>
+      <ol class="clean-list">
+        <li>Anchor: the Remnant year begins at the first New Moon after Spring Equinox.</li>
+        <li>Cadence: 13 fixed moons of 28 days create a 364-day counted year.</li>
+        <li>Outside days: remaining days after Moon 13 sit outside the counted lattice as reset/intercalary days.</li>
+        <li>Mapping: your birth date maps to Moon 1–13 and Day 1–28, or to an outside-count span.</li>
+        <li>Tone: the counted index mod 13 gives the Tone of the Day.</li>
+        <li>Resonant Sum: the digit reduction of YYYY+MM+DD lights the seal on 1, 4, 7, 11, 22, or 33.</li>
       </ol>
-    </article>
+    </section>
 
-    <article class="card">
+    <section class="panel saved-panel">
       <h2>Saved Profiles</h2>
-      <div class="btnrow">
-        <button class="btn ghost" id="exportBtn" type="button">Export JSON</button>
-        <button class="btn ghost" id="clearBtn" type="button">Clear Saved</button>
+      <div class="actions">
+        <button class="btn" type="button" id="exportJson">Export JSON</button>
+        <button class="btn danger" type="button" id="clearSaved">Clear Saved</button>
       </div>
-      <div class="tablewrap">
+      <div class="table-wrap">
         <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Date</th>
-              <th>Moon</th>
-              <th>Day</th>
-              <th>Tone</th>
-              <th>Carrier</th>
-            </tr>
-          </thead>
-          <tbody id="savedBody"></tbody>
+          <thead><tr><th>Name</th><th>Date</th><th>Moon</th><th>Day</th><th>Tone</th><th>Carrier</th></tr></thead>
+          <tbody id="savedRows"></tbody>
         </table>
       </div>
-    </article>
+    </section>
   </main>
 
-  <footer class="footer">
-    <p>© <span id="yr">2026</span> Aaron Paul Laird — Scroll of Fire</p>
+  <footer class="oracle-footer">
+    <p>© 2026 Aaron Paul Laird — Scroll of Fire</p>
   </footer>
-
-  <script src="assets/js/genesis-oracle.js?v=2026-05-08-oracle1" defer></script>
 </body>
-</html>      return {sum, red, vals, letters};
-    }
-    function codeLatinSimple(s){
-      const letters = s.toUpperCase().replace(/[^A-Z]/g,"").split("");
-      const vals = letters.map(ch=>A2Z_SIMPLE[ch]||0);
-      const sum = vals.reduce((a,b)=>a+b,0);
-      const red = reduceNum(sum);
-      return {sum, red, vals, letters};
-    }
-    function codeHebrew(s){
-      const letters = s.replace(/[^\u0590-\u05FF]/g,"").split("");
-      const vals = letters.map(ch=>HEB[ch]||0);
-      const sum = vals.reduce((a,b)=>a+b,0);
-      // Hebrew reduction traditionally can keep 10s/100s; we still provide reduced for resonance view
-      const red = reduceNum(sum);
-      return {sum, red, vals, letters};
-    }
-
-    /* ---------- DOM targets (Tier II) ---------- */
-    const tabLaws  = $("#tab-laws");
-    const tabFlame = $("#tab-flame");
-    const tabName  = $("#tab-name");
-    const panLaws  = $("#panel-laws");
-    const panFlame = $("#panel-flame");
-    const panName  = $("#panel-name");
-
-    const t2Recalc = $("#t2Recalc");
-    const t2Share  = $("#t2Share");
-
-    // Living Laws outputs
-    const t2LawMoon  = $("#t2LawMoon");
-    const t2LawEss   = $("#t2LawEss");
-    const t2LawName  = $("#t2LawName");
-    const t2LawLine  = $("#t2LawLine");
-    const t2WeekFocus= $("#t2WeekFocus");
-    const t2WeekLine = $("#t2WeekLine");
-    const t2LawKeys  = $("#t2LawKeys");
-    const t2LawList  = $("#t2LawList");
-
-    // Flame outputs
-    const t2FlameTone      = $("#t2FlameTone");
-    const t2FlameToneLine  = $("#t2FlameToneLine");
-    const t2FlameName      = $("#t2FlameName");
-    const t2FlameLine      = $("#t2FlameLine");
-    const t2FlamePractice  = $("#t2FlamePractice");
-    const t2FlameSeal      = $("#t2FlameSeal");
-    const t2FlameList      = $("#t2FlameList");
-
-    // Name code outputs
-    const t2NameOverride   = $("#t2NameOverride");
-    const t2NameCalc       = $("#t2NameCalc");
-    const t2NamePyth       = $("#t2NamePyth");
-    const t2NamePythRed    = $("#t2NamePythRed");
-    const t2NameSimple     = $("#t2NameSimple");
-    const t2NameSimpleRed  = $("#t2NameSimpleRed");
-    const t2NameHeb        = $("#t2NameHeb");
-    const t2NameHebRed     = $("#t2NameHebRed");
-    const t2CovenantSeal   = $("#t2CovenantSeal");
-    const t2NameBreak      = $("#t2NameBreak");
-
-    // Inputs from Tier I (reuse)
-    const inName = $("#inName");
-    const inDate = $("#inDate");
-    const inTime = $("#inTime");
-    const inTZ   = $("#inTZ");
-    const optLeap= $("#optLeap");
-    const optDOOT= $("#optDOOT");
-
-    /* ---------- Tab logic ---------- */
-    function setTab(which){
-      const map = {
-        laws:[tabLaws, panLaws],
-        flame:[tabFlame, panFlame],
-        name:[tabName, panName],
-      };
-      Object.entries(map).forEach(([k,[tab,panel]])=>{
-        const active = (k===which);
-        tab.setAttribute("aria-selected", String(active));
-        panel.classList.toggle("hidden", !active);
-      });
-    }
-    on(tabLaws,  "click", ()=>setTab("laws"));
-    on(tabFlame, "click", ()=>setTab("flame"));
-    on(tabName,  "click", ()=>setTab("name"));
-
-    /* ---------- Render static lists ---------- */
-    function renderAllLaws(){
-      t2LawList.innerHTML = LAWS.map(L=>{
-        const ess = ESS[L.i-1];
-        return `<li><b>#${L.i} — ${L.name}</b> · <em>${ess}</em><br>${L.line}</li>`;
-      }).join("");
-    }
-    function renderAllFlames(){
-      t2FlameList.innerHTML = FLAMES.map(F=>{
-        const T = TONES.find(x=>x.n===F.n);
-        return `<li><b>#${F.n} — ${F.name}</b> · <em>${T.line}</em><br>${F.line} <span class="meta">(${F.practice})</span></li>`;
-      }).join("");
-    }
-    renderAllLaws();
-    renderAllFlames();
-
-    /* ---------- Core reading for Tier II ---------- */
-    function getReadingFromInputs(){
-      const name = (t2NameOverride.value.trim() || inName?.value?.trim() || "");
-      const date = inDate?.value || "";
-      const time = inTime?.value || "";
-      const tz   = inTZ?.value || getTZ();
-      const skipLeap = optLeap?.checked !== false;
-      const skipDOOT = optDOOT?.checked !== false;
-
-      if (!date) return null;
-
-      let base;
-      if (time){
-        const [hh,mm] = time.split(":").map(Number);
-        base = dateInTZ(new Date(date+"T00:00:00Z"), tz, {hour:pad(hh), minute:pad(mm), second:"00"});
-      }else{
-        base = dateInTZ(new Date(date+"T00:00:00Z"), tz, {hour:"00", minute:"00", second:"00"});
-      }
-
-      const m13 = calc13Moon(base, tz, {skipLeap,skipDOOT});
-      const tone = m13.special? null : toneFromDay(m13.day);
-      const week = m13.special? null : weekFromDay(m13.day);
-      const res  = resonantFromDate(base, tz);
-
-      return {name, date, time, tz, base, m13, tone, week, res};
-    }
-
-    function paintTierII(){
-      const R = getReadingFromInputs();
-      if (!R){ toast("Tier II: set a birth date first."); return; }
-
-      /* Living Laws */
-      if (R.m13.special){
-        t2LawMoon.textContent = R.m13.special;
-        t2LawEss.textContent  = "Outside the 13×28 lattice";
-        t2LawName.textContent = "—";
-        t2LawLine.textContent = "—";
-        t2WeekFocus.textContent = "—";
-        t2WeekLine.textContent  = "—";
-        t2LawKeys.textContent   = "—";
-      }else{
-        const i = R.m13.moon - 1;
-        const L = LAWS[i];
-        const W = WEEK_EMPHASIS[(R.week||1)-1];
-        t2LawMoon.textContent = `#${R.m13.moon} — ${MOONS[i]} Moon`;
-        t2LawEss.textContent  = ESS[i];
-        t2LawName.textContent = L.name;
-        t2LawLine.textContent = L.line;
-        t2WeekFocus.textContent = `Week ${R.week}`;
-        t2WeekLine.textContent  = W.line;
-        t2LawKeys.textContent   = L.keys.join(" · ");
-      }
-
-      /* Flame Paths */
-      if (!R.tone){
-        t2FlameTone.textContent = "—";
-        t2FlameToneLine.textContent = "—";
-        t2FlameName.textContent = "—";
-        t2FlameLine.textContent = "—";
-        t2FlamePractice.textContent = "—";
-        t2FlameSeal.textContent = "Inactive (liminal day)";
-      }else{
-        const F = FLAMES[(R.tone-1)];
-        const T = TONES[(R.tone-1)];
-        t2FlameTone.textContent = `#${R.tone} — ${T.name}`;
-        t2FlameToneLine.textContent = T.line;
-        t2FlameName.textContent = F.name;
-        t2FlameLine.textContent = F.line;
-        t2FlamePractice.textContent = F.practice;
-        t2FlameSeal.textContent = R.res.key ? "Resonant (seal lit)" : "Quiet (seal at rest)";
-      }
-
-      /* Name & Letter Code — lazy compute (auto if name present) */
-      computeNameCode(); // uses current override/name automatically
-    }
-
-    /* ---------- Name & Letter Code rendering ---------- */
-    function computeNameCode(){
-      const raw = (t2NameOverride.value.trim() || inName?.value?.trim() || "");
-      if (!raw){
-        t2NamePyth.textContent = "—";
-        t2NamePythRed.textContent = "—";
-        t2NameSimple.textContent = "—";
-        t2NameSimpleRed.textContent= "—";
-        t2NameHeb.textContent = "—";
-        t2NameHebRed.textContent = "—";
-        t2NameBreak.textContent = "No name provided.";
-        t2CovenantSeal.textContent = "—";
-        return;
-      }
-
-      const R = getReadingFromInputs();
-      const isHeb = isHebrew(raw);
-      let pyth = codeLatinPyth(raw);
-      let simp = codeLatinSimple(raw);
-      let heb  = isHeb ? codeHebrew(raw) : null;
-
-      t2NamePyth.textContent = String(pyth.sum);
-      t2NamePythRed.textContent = `→ ${pyth.red}`;
-      t2NameSimple.textContent  = String(simp.sum);
-      t2NameSimpleRed.textContent = `→ ${simp.red}`;
-      if (heb){
-        t2NameHeb.textContent = String(heb.sum);
-        t2NameHebRed.textContent = `→ ${heb.red}`;
-      }else{
-        t2NameHeb.textContent = "—";
-        t2NameHebRed.textContent = "—";
-      }
-
-      // Covenant Seal = Tone ∴ Name (pref: Hebrew > Pythagorean) ∴ Resonant
-      const toneKey = R?.tone || 0;
-      const nameKey = (heb?.red || pyth.red);
-      const resKey  = R?.res?.value || 0;
-      t2CovenantSeal.textContent = `${toneKey} ∴ ${nameKey} ∴ ${resKey}`;
-
-      // Breakdown text
-      const lines=[];
-      if (isHeb){
-        lines.push(`HEBREW (${raw})`);
-        lines.push(heb.letters.map((ch,i)=>`${ch}=${heb.vals[i]}`).join(" + ") + ` = ${heb.sum} → ${heb.red}`);
-        lines.push("");
-      }
-      lines.push(`LATIN (Pythagorean):`);
-      lines.push(pyth.letters.map((ch,i)=>`${ch}=${pyth.vals[i]}`).join(" + ") + ` = ${pyth.sum} → ${pyth.red}`);
-      lines.push("");
-      lines.push(`LATIN (Simple A1–Z26):`);
-      lines.push(simp.letters.map((ch,i)=>`${ch}=${simp.vals[i]}`).join(" + ") + ` = ${simp.sum} → ${simp.red}`);
-      lines.push("");
-      if (R){
-        lines.push(`Covenant Seal = Tone (${R.tone||"—"}) ∴ Name (${nameKey}) ∴ Resonant (${R.res?.value ?? "—"})`);
-      }
-      t2NameBreak.textContent = lines.join("\n");
-    }
-
-    /* ---------- Events ---------- */
-    on($("#btnRead"), "click", paintTierII);           // sync with Tier I button
-    on(t2Recalc,     "click", paintTierII);
-    on(t2NameCalc,   "click", computeNameCode);
-
-    // Quick share: push Tier II tab state + name override, keep Tier I params if present
-    on(t2Share, "click", ()=>{
-      const u = new URL(location.href);
-      // keep existing
-      const t2tab = (tabLaws.getAttribute("aria-selected")==="true") ? "laws"
-                  : (tabFlame.getAttribute("aria-selected")==="true") ? "flame"
-                  : "name";
-      u.searchParams.set("t2", t2tab);
-      const override = t2NameOverride.value.trim();
-      if (override) u.searchParams.set("name2", override); else u.searchParams.delete("name2");
-      const url = u.toString();
-      (async ()=>{
-        try{
-          if (navigator.share){
-            await navigator.share({title:"Genesis Oracle — Tier II", url});
-            toast("Shared");
-          }else{
-            await navigator.clipboard.writeText(url);
-            toast("Link copied");
-          }
-        }catch{}
-      })();
-    });
-
-    // Restore tab/name from URL (non-destructive)
-    (function bootTier2FromURL(){
-      const qp = new URLSearchParams(location.search);
-      const tab = qp.get("t2");
-      const name2 = qp.get("name2");
-      if (name2){ t2NameOverride.value = name2; }
-      if (tab==="flame") setTab("flame");
-      else if (tab==="name") setTab("name");
-      else setTab("laws");
-      // If Tier I was pre-populated, compute now
-      if ($("#inDate")?.value) { paintTierII(); }
-    })();
-
-  })();
-  </script>
-  <!-- ======================= END PART II ======================= -->
-
-
-
-
-
-
-
-
-
-
-  <!-- =========================================================
-       PART III / III — Tesla Resonances + Witness Ledger
-       Insert this block right BEFORE </body></html>
-       ========================================================= -->
-
-  <!-- ============ Tier III Panels ============ -->
-  <section id="tier3" class="wrap" aria-label="Genesis Oracle — Tier III">
-    <div class="divider" aria-hidden="true" style="margin:18px 0"></div>
-    <header style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px">
-      <h2 class="title" style="font-size:22px;margin:0">Tier III — Tesla Resonances · Carrier Palette · Witness Ledger</h2>
-      <div class="lab-row" role="toolbar" aria-label="Tier III actions">
-        <button id="t3Recalc" class="lab-btn" type="button" title="Recalculate Tier III from current inputs">Recalculate</button>
-        <button id="t3Share"  class="lab-btn ghost" type="button" title="Share Tier III state">Share</button>
-      </div>
-    </header>
-
-    <!-- Tabs -->
-    <nav class="card" role="tablist" aria-label="Tier III tabs" style="display:flex;gap:6px;flex-wrap:wrap">
-      <button class="lab-btn" role="tab" aria-selected="true"  id="tab-tesla"  aria-controls="panel-tesla">Tesla Resonances</button>
-      <button class="lab-btn" role="tab" aria-selected="false" id="tab-ledger" aria-controls="panel-ledger">Witness Ledger</button>
-      <button class="lab-btn" role="tab" aria-selected="false" id="tab-links"  aria-controls="panel-links">Links & Print</button>
-    </nav>
-
-    <!-- ========== Tesla Resonances Panel ========== -->
-    <section id="panel-tesla" role="tabpanel" aria-labelledby="tab-tesla" class="card" style="margin-top:10px">
-      <h3 class="result-title" style="margin-top:0">Tesla Resonances & Carrier Skin</h3>
-      <p class="meta">We map your Birth <b>Tone</b> + <b>Resonant Sum</b> to a preferred <b>Carrier</b> (432, 528, 369, 144, 963). This sets both your sound seed and the site’s accent palette. You can audition tones and switch carriers; your choice persists locally.</p>
-
-      <div class="summary" style="margin-top:10px">
-        <div class="pill">
-          <div class="k meta">Tone → Carrier</div>
-          <div id="t3CarrierName">—</div>
-          <small class="meta" id="t3CarrierWhy">—</small>
-        </div>
-        <div class="pill">
-          <div class="k meta">Resonant Sum</div>
-          <div id="t3ResSum">—</div>
-          <small class="meta" id="t3ResKey">—</small>
-        </div>
-        <div class="pill">
-          <div class="k meta">Seed Frequency</div>
-          <div id="t3SeedHz">— Hz</div>
-          <small class="meta" id="t3SeedLine">—</small>
-        </div>
-        <div class="pill">
-          <div class="k meta">Palette</div>
-          <div id="t3Palette">—</div>
-          <small class="meta">auto-applied to UI</small>
-        </div>
-      </div>
-
-      <div class="goldline" aria-hidden="true"></div>
-
-      <article>
-        <h4 class="result-title">Carrier Selector & Player</h4>
-        <div class="lab-row" style="align-items:flex-end">
-          <label>Carrier
-            <select id="t3CarrierPick" class="lab-input" style="min-width:180px">
-              <option value="auto">Auto (by Tone + Sum)</option>
-              <option value="432">432</option>
-              <option value="528">528</option>
-              <option value="369">369</option>
-              <option value="144">144</option>
-              <option value="963">963</option>
-            </select>
-          </label>
-          <label>Base Pitch (A)
-            <input id="t3Pitch" class="lab-input" type="number" step="0.5" min="400" max="480" value="432">
-          </label>
-          <label>Gain
-            <input id="t3Gain" class="lab-input" type="range" min="0" max="1" step="0.01" value="0.12">
-          </label>
-          <button id="t3Play" class="lab-btn" type="button">Play</button>
-          <button id="t3Stop" class="lab-btn ghost" type="button">Stop</button>
-          <button id="t3ApplySkin" class="lab-btn" type="button" title="Apply palette skin to site">Apply Skin</button>
-        </div>
-
-        <p class="meta" id="t3Note">Tip: change Base Pitch to taste (e.g., 432, 444). We modulate a gentle binaural shimmer using your Tone index.</p>
-
-        <div class="divider" aria-hidden="true"></div>
-        <h4 class="result-title">Mapping Logic</h4>
-        <ul class="meta" style="margin-left:1.2rem">
-          <li><b>432</b> — foundational breath (tones 1/4/7/10/13 preferred; sums 1/4/7/10/13 tilt)</li>
-          <li><b>528</b> — repair & mercy (tones 5/6/11/12 tilt; sums 5/6/11/12 tilt)</li>
-          <li><b>369</b> — pattern & signal (tones 3/7/9; sums divisible by 3 tilt)</li>
-          <li><b>144</b> — witness & order (tones 4/8/12; sums with master numbers lean)</li>
-          <li><b>963</b> — crown & return (tones 9/13; high sums lean)</li>
-        </ul>
-      </article>
-    </section>
-
-    <!-- ========== Witness Ledger Panel ========== -->
-    <section id="panel-ledger" role="tabpanel" aria-labelledby="tab-ledger" class="card hidden" style="margin-top:10px">
-      <h3 class="result-title" style="margin-top:0">Witness Ledger — Saved Birth Readings</h3>
-      <p class="meta">Store many profiles locally. Export/Import as <code>.json</code> or <code>.csv</code>. Click a row to re-load into the Oracle. Use this to keep your circle’s signatures.</p>
-
-      <div class="lab-row" style="align-items:flex-end">
-        <button id="lgExportJSON" class="lab-btn" type="button">Export JSON</button>
-        <button id="lgExportCSV"  class="lab-btn" type="button">Export CSV</button>
-        <label class="tag">Import
-          <input id="lgImport" class="lab-input" type="file" accept=".json,.csv" style="padding:.3rem .5rem">
-        </label>
-        <button id="lgClear" class="lab-btn ghost" type="button" title="Clear all saved profiles">Clear All</button>
-      </div>
-
-      <div class="divider" aria-hidden="true"></div>
-
-      <div class="ledger-wrap" style="overflow:auto; max-height:58vh; border:1px solid var(--line); border-radius:10px">
-        <table id="ledger" class="year-map" style="min-width:920px">
-          <thead>
-            <tr>
-              <th>#</th><th>Name</th><th>DOB</th><th>TZ</th><th>Moon</th><th>Day</th><th>Week</th><th>Tone</th><th>Res</th><th>Carrier</th><th>Stamp</th><th>⋯</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <small class="meta">Privacy: profiles never leave your device unless you export/share them.</small>
-    </section>
-
-    <!-- ========== Links & Print Panel ========== -->
-    <section id="panel-links" role="tabpanel" aria-labelledby="tab-links" class="card hidden" style="margin-top:10px">
-      <h3 class="result-title" style="margin-top:0">Links, Deep Integration & Print</h3>
-      <p class="meta">Deep links carry your inputs across pages, and print styling gives you a one-page reading. Use the script hook below to render the Genesis Oracle inside other pages.</p>
-
-      <div class="summary" style="margin-top:10px">
-        <div class="pill">
-          <div class="k meta">Deep Link</div>
-          <div id="t3DeepLink">—</div>
-          <small class="meta">Share or bookmark</small>
-        </div>
-        <div class="pill">
-          <div class="k meta">Moons Integration</div>
-          <div id="t3Hook">window.SOF.genesis.read({…})</div>
-          <small class="meta">API hook active</small>
-        </div>
-        <div class="pill">
-          <div class="k meta">Print</div>
-          <div>Use browser Print</div>
-          <small class="meta">auto-formats Oracle</small>
-        </div>
-      </div>
-
-      <div class="goldline" aria-hidden="true"></div>
-
-      <article>
-        <h4 class="result-title">Embed Hook (global)</h4>
-        <pre class="mono meta" style="white-space:pre-wrap"><code>window.SOF.genesis.read({
-  name: "Ada Lovelace",
-  date: "1815-12-10",
-  time: "09:00",
-  tz: "Europe/London",
-  options: { skipLeap:true, skipDOOT:true, carrier:"auto" }
-});</code></pre>
-        <p class="meta">This dispatches a synthetic read to the page, fills outputs, and updates the mini moon bar + carrier skin.</p>
-      </article>
-    </section>
-  </section>
-
-  <!-- ============ Tier III Scripts ============ -->
-<script>
-  (function(){
-    "use strict";
-
-    /* ---------- Tiny utils ---------- */
-    const $  =(s,r=document)=>r.querySelector(s);
-    const $$ =(s,r=document)=>Array.from(r.querySelectorAll(s));
-    const on =(t,e,f,o)=>t&&t.addEventListener(e,f,o);
-    const pad=n=>String(n).padStart(2,"0");
-    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-    const nowStamp = ()=> new Date().toISOString().replace('T',' ').replace(/\.\d+Z$/,'Z');
-
-    const toast = (msg)=>{
-      const t=document.createElement('div');
-      t.className='toast'; t.textContent=msg; document.body.appendChild(t);
-      requestAnimationFrame(()=>t.style.opacity=1);
-      setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),250); }, 1500);
-    };
-
-    /* ---------- From Tier I / II (mirrors) ---------- */
-    const MOONS = ["Magnetic","Lunar","Electric","Self-Existing","Overtone","Rhythmic","Resonant","Galactic","Solar","Planetary","Spectral","Crystal","Cosmic"];
-    const ESS   = ["Attract purpose","Stabilize challenge","Activate service","Define form","Empower radiance","Balance equality","Channel inspiration","Harmonize integrity","Pulse intention","Perfect manifestation","Dissolve release","Dedicate cooperation","Endure presence"];
-
-    const TONES = [
-      {n:1,name:"Magnetic",line:"Unify purpose."},{n:2,name:"Lunar",line:"Stabilize challenge."},{n:3,name:"Electric",line:"Activate service."},
-      {n:4,name:"Self-Existing",line:"Define form."},{n:5,name:"Overtone",line:"Empower radiance."},{n:6,name:"Rhythmic",line:"Balance equality."},
-      {n:7,name:"Resonant",line:"Channel inspiration."},{n:8,name:"Galactic",line:"Harmonize integrity."},{n:9,name:"Solar",line:"Pulse intention."},
-      {n:10,name:"Planetary",line:"Perfect manifestation."},{n:11,name:"Spectral",line:"Dissolve release."},{n:12,name:"Crystal",line:"Dedicate cooperation."},
-      {n:13,name:"Cosmic",line:"Endure presence."}
-    ];
-
-    const TZ_KEY="sof_moons_tz";
-    function getTZ(){
-      try{ return localStorage.getItem(TZ_KEY) || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; }
-      catch{ return "UTC"; }
-    }
-
-    /* ---------- Robust timezone helpers ---------- */
-
-    // 1) Get wall-date parts of a Date in a given IANA timezone
-    function partsInTZ(date, tz){
-      const fmt = new Intl.DateTimeFormat("en-CA",{timeZone:tz,year:"numeric",month:"2-digit",day:"2-digit"});
-      const obj = Object.fromEntries(fmt.formatToParts(date).map(p=>[p.type,p.value]));
-      return { year:+obj.year, month:+obj.month, day:+obj.day };
-    }
-
-    // 2) Convert a wall time (YYYY-MM-DD + HH:MM in tz) to the correct UTC instant
-    function wallInTZ(ymd, hm="00:00", tz="UTC"){
-      const [Y,M,D] = ymd.split("-").map(Number);
-      const [h,m]   = hm ? hm.split(":").map(Number) : [0,0];
-
-      // First guess: treat wall time as if it were UTC; then correct by real tz offset at that instant
-      const guessUTC = Date.UTC(Y, M-1, D, h, m, 0);
-
-      // Find timezone offset (“GMT±HH[:MM]”) at a timestamp
-      function offsetMinutesAt(ts){
-        const pickFmt = () => { try{ return new Intl.DateTimeFormat("en-US",{timeZone:tz,timeZoneName:"longOffset",hour12:false}); }
-                                catch{ return new Intl.DateTimeFormat("en-US",{timeZone:tz,timeZoneName:"shortOffset",hour12:false}); } };
-        const parts = pickFmt().formatToParts(ts);
-        const name  = parts.find(p=>p.type==="timeZoneName")?.value || "GMT+0";
-        const m = name.match(/GMT([+-])(\d{1,2})(?::?(\d{2}))?/i);
-        const sign = (m && m[1]==="-") ? -1 : 1;
-        const hh   = m ? +m[2] : 0;
-        const mm   = m && m[3] ? +m[3] : 0;
-        return sign * (hh*60 + mm);
-      }
-
-      const off1  = offsetMinutesAt(guessUTC);
-      let fixed   = guessUTC - off1*60_000;
-      const off2  = offsetMinutesAt(fixed);
-      if (off2 !== off1) fixed = guessUTC - off2*60_000; // stabilize around DST boundaries
-
-      return new Date(fixed);
-    }
-
-    // UTC midnight for a Date's wall day in tz
-    const utcTrunc = d => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
-
-    const isLeapYear   = y=> (y%4===0 && y%100!==0) || (y%400===0);
-
-    // Is the given instant occurring on Feb 29 in the provided tz?
-    function isLeapDayWall(d, tz){
-      const p = partsInTZ(d, tz);
-      return (p.month===2 && p.day===29);
-    }
-
-    // DOOT (July 25 in tz)
-    function isDOOT(d, tz){
-      const p = partsInTZ(d, tz);
-      return (p.month===7 && p.day===25);
-    }
-
-    // Start-of-year for the 13-Moon count in tz (wall midnight of July 26)
-    function startOfYear13(d, tz){
-      const {year:y} = partsInTZ(d, tz);
-      const anchorThis = wallInTZ(`${y}-07-26`, "00:00", tz);
-      const anchorPrev = wallInTZ(`${y-1}-07-26`, "00:00", tz);
-      // Compare using the same tz-aware wall-midnight instants
-      const dt = wallInTZ(`${partsInTZ(d,tz).year}-${pad(partsInTZ(d,tz).month)}-${pad(partsInTZ(d,tz).day)}`, "00:00", tz);
-      return (dt >= anchorThis) ? anchorThis : anchorPrev;
-    }
-
-    function dayIndexSinceStart(d, tz, {skipLeap=true, skipDOOT=true}={}){
-      const start = utcTrunc(startOfYear13(d, tz));
-      const todayWallMid = wallInTZ(`${partsInTZ(d,tz).year}-${pad(partsInTZ(d,tz).month)}-${pad(partsInTZ(d,tz).day)}`, "00:00", tz);
-      const dt = utcTrunc(todayWallMid);
-
-      let days = Math.floor((dt - start)/86400000);
-
-      if (skipDOOT){
-        // DOOT of the cycle occurs the day before next year's Jul 26 in tz: i.e., Jul 25
-        const doot = wallInTZ(`${partsInTZ(start,tz).year+1}-07-25`, "00:00", tz);
-        if (dt >= doot) days -= 1;
-      }
-
-      if (skipLeap){
-        // Subtract any Feb 29 (in tz) between start..dt inclusive
-        for (let y = partsInTZ(start,tz).year; y <= partsInTZ(dt,tz).year; y++){
-          if (isLeapYear(y)){
-            const feb29 = wallInTZ(`${y}-02-29`, "00:00", tz);
-            if (dt >= feb29 && start <= feb29) days -= 1;
-          }
-        }
-      }
-      return days; // 0..363
-    }
-
-    function calc13Moon(d, tz, opts){
-      if (isDOOT(d, tz)){
-        const s = partsInTZ(startOfYear13(d,tz), tz).year;
-        return {special:"Day Out of Time", year:`${s}/${s+1}`};
-      }
-      if (isLeapDayWall(d, tz)){
-        const s = partsInTZ(startOfYear13(d,tz), tz).year;
-        return {special:"Leap Day", year:`${s}/${s+1}`};
-      }
-      const idx  = dayIndexSinceStart(d, tz, opts);
-      const moon = Math.floor(idx/28)+1;
-      const day  = (idx%28)+1;
-      const s    = partsInTZ(startOfYear13(d,tz), tz).year;
-      return {special:null, moon, day, idx, year:`${s}/${s+1}`};
-    }
-
-    const toneFromDay = (day) => ((Number(day||0)-1) % 13) + 1;
-    const weekFromDay = (day) => Math.floor((day-1)/7)+1;
-
-    const sumDigits = n => String(n).split("").reduce((a,b)=>a+(+b||0),0);
-    function reduceNum(n){ while(n>9 && n!==11 && n!==22 && n!==33){ n=sumDigits(n); } return n; }
-
-    // Resonant sum computed from wall date (YYYY/MM/DD in tz)
-    function resonantFromDate(d, tz){
-      const p = partsInTZ(d, tz);
-      const total = reduceNum(sumDigits(p.year)+sumDigits(p.month)+sumDigits(p.day));
-      const isKey = [1,4,7,11,22,33].includes(total);
-      return {value: total, key: isKey};
-    }
-
-    /* ---------- DOM Tier III ---------- */
-    const tabTesla  = $("#tab-tesla");
-    const tabLedger = $("#tab-ledger");
-    const tabLinks  = $("#tab-links");
-    const panTesla  = $("#panel-tesla");
-    const panLedger = $("#panel-ledger");
-    const panLinks  = $("#panel-links");
-    const t3Recalc  = $("#t3Recalc");
-    const t3Share   = $("#t3Share");
-
-    // Tesla fields
-    const t3CarrierName = $("#t3CarrierName");
-    const t3CarrierWhy  = $("#t3CarrierWhy");
-    const t3ResSum      = $("#t3ResSum");
-    const t3ResKey      = $("#t3ResKey");
-    const t3SeedHz      = $("#t3SeedHz");
-    const t3SeedLine    = $("#t3SeedLine");
-    const t3Palette     = $("#t3Palette");
-    const t3CarrierPick = $("#t3CarrierPick");
-    const t3Pitch       = $("#t3Pitch");
-    const t3Gain        = $("#t3Gain");
-    const t3Play        = $("#t3Play");
-    const t3Stop        = $("#t3Stop");
-    const t3ApplySkin   = $("#t3ApplySkin");
-    const t3DeepLink    = $("#t3DeepLink");
-
-    // Ledger
-    const ledgerEl      = $("#ledger tbody");
-    const lgExportJSON  = $("#lgExportJSON");
-    const lgExportCSV   = $("#lgExportCSV");
-    const lgImport      = $("#lgImport");
-    const lgClear       = $("#lgClear");
-
-    // Inputs from earlier tiers
-    const inName = $("#inName");
-    const inDate = $("#inDate");
-    const inTime = $("#inTime");
-    const inTZ   = $("#inTZ");
-    const optLeap= $("#optLeap");
-    const optDOOT= $("#optDOOT");
-
-    /* ---------- Tabs ---------- */
-    function setTab3(which){
-      const map = {
-        tesla:[tabTesla, panTesla],
-        ledger:[tabLedger, panLedger],
-        links:[tabLinks, panLinks]
-      };
-      Object.entries(map).forEach(([k,[tab,panel]])=>{
-        const active = (k===which);
-        tab.setAttribute("aria-selected", String(active));
-        panel.classList.toggle("hidden", !active);
-      });
-      if (which==="links"){ buildDeepLink(); }
-    }
-    on(tabTesla,  "click", ()=>setTab3("tesla"));
-    on(tabLedger, "click", ()=>setTab3("ledger"));
-    on(tabLinks,  "click", ()=>setTab3("links"));
-
-    /* ---------- Carrier logic ---------- */
-    const CARRIERS = {
-      "432": {name:"432 — Breath",  seed:432,  skin:"carrier-432", accents:["#7af3ff","#f3c97a"]},
-      "528": {name:"528 — Repair",  seed:528,  skin:"carrier-528", accents:["#9ef7a3","#ffd27a"]},
-      "369": {name:"369 — Pattern", seed:369,  skin:"carrier-369", accents:["#a8a6ff","#7af3ff"]},
-      "144": {name:"144 — Witness", seed:144,  skin:"carrier-144", accents:["#7aa8ff","#e3b1ff"]},
-      "963": {name:"963 — Crown",   seed:963,  skin:"carrier-963", accents:["#d1b3ff","#fff0a6"]},
-    };
-
-    function chooseCarrier(tone, resValue){
-      if (!tone || !resValue) return "432";
-      if (tone===9 || tone===13 || resValue>=9) return "963";
-      if (tone%3===0 || (resValue%3===0)) return "369";
-      if ([5,6,11,12].includes(tone) || [5,6,11,12].includes(resValue)) return "528";
-      if ([4,8,12].includes(tone) || [11,22,33].includes(resValue)) return "144";
-      return "432";
-    }
-
-    function applySkin(id){
-      const root = document.documentElement;
-      root.classList.remove("carrier-432","carrier-528","carrier-369","carrier-144","carrier-963");
-      root.classList.add(CARRIERS[id]?.skin || "carrier-432");
-      const [c1,c2] = CARRIERS[id]?.accents || ["#7af3ff","#f3c97a"];
-      root.style.setProperty("--moon-accent",  c1);
-      root.style.setProperty("--moon-accent-2",c2);
-      document.dispatchEvent(new Event("sof:accent-change"));
-      try{ localStorage.setItem("sof_carrier_pref", id); }catch{}
-    }
-
-    function currentInputs(){
-      const name = (inName?.value||"").trim();
-      const date = inDate?.value || "";
-      const time = inTime?.value || "";
-      const tz   = inTZ?.value || getTZ();
-      const skipLeap = optLeap?.checked !== false;
-      const skipDOOT = optDOOT?.checked !== false;
-      if (!date) return null;
-
-      // Single, correct construction of the birth instant
-      const hm = time || "00:00";
-      const base = wallInTZ(date, hm, tz);
-
-      const m13  = calc13Moon(base, tz, {skipLeap,skipDOOT});
-      const tone = m13.special? null : toneFromDay(m13.day);
-      const week = m13.special? null : weekFromDay(m13.day);
-      const res  = resonantFromDate(base, tz);
-      return {name,date,time,tz,skipLeap,skipDOOT,base,m13,tone,week,res};
-    }
-
-    function paintTesla(){
-      const R = currentInputs();
-      if (!R){ t3CarrierName.textContent="—"; t3CarrierWhy.textContent="Set a date first."; return; }
-      const autoId = chooseCarrier(R.tone || 1, R.res?.value || 1);
-      const pick = (t3CarrierPick.value==="auto") ? autoId : t3CarrierPick.value;
-      const carr = CARRIERS[pick] || CARRIERS["432"];
-
-      t3CarrierName.textContent = carr.name + (t3CarrierPick.value==="auto" ? " (auto)" : " (manual)");
-      t3CarrierWhy.textContent  = `Tone ${R.tone||"—"} + Resonant ${R.res?.value ?? "—"} → ${(t3CarrierPick.value==="auto")?autoId:pick}`;
-      t3ResSum.textContent      = String(R.res?.value ?? "—");
-      t3ResKey.textContent      = (R.res?.key ? "Resonant Day (seal lights)" : "Ordinary Day");
-      t3SeedHz.textContent      = `${t3Pitch.value || carr.seed} Hz`;
-      t3SeedLine.textContent    = `Seed = base pitch; we modulate subtle ±${(R.tone||1)%5+1} Hz binaural flutter by Tone.`;
-      t3Palette.textContent     = CARRIERS[pick].accents.join(" → ");
-
-      if (t3CarrierPick.value!=="auto"){ applySkin(pick); }
-      try{ localStorage.setItem("sof_carrier_choice", t3CarrierPick.value); }catch{}
-    }
-
-    /* ---------- WebAudio Player ---------- */
-    let ctx, oscL, oscR, gain, pannerL, pannerR, rafId;
-    function startAudio(){
-      const R = currentInputs(); if (!R) { toast("Pick a date first."); return; }
-      const base = clamp(parseFloat(t3Pitch.value)||432, 100, 20000);
-      const tone = R.tone || 1;
-      const flutter = (tone % 5) + 1; // 1..5 Hz
-
-      if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
-      stopAudio(true);
-
-      // Dual oscillators for gentle binaural effect
-      oscL = ctx.createOscillator();
-      oscR = ctx.createOscillator();
-      gain = ctx.createGain();
-      pannerL = ctx.createStereoPanner();
-      pannerR = ctx.createStereoPanner();
-
-      oscL.type = "sine"; oscR.type = "sine";
-      oscL.frequency.value = base - flutter/2;
-      oscR.frequency.value = base + flutter/2;
-
-      gain.gain.value = clamp(parseFloat(t3Gain.value)||0.1, 0, 1);
-
-      pannerL.pan.value = -0.5;
-      pannerR.pan.value = 0.5;
-
-      oscL.connect(pannerL).connect(gain).connect(ctx.destination);
-      oscR.connect(pannerR).connect(gain).connect(ctx.destination);
-
-      oscL.start(); oscR.start();
-
-      // add a slow LFO to shimmer the flutter ±0.5 Hz
-      const lfo = ctx.createOscillator(); const lfoGain = ctx.createGain();
-      lfo.type="sine"; lfo.frequency.value=0.25;
-      lfoGain.gain.value=0.5;
-      lfo.connect(lfoGain);
-      lfoGain.connect(oscL.frequency);
-      lfoGain.connect(oscR.frequency);
-      lfo.start();
-
-      t3Play.setAttribute("aria-pressed","true");
-      t3Stop.removeAttribute("aria-pressed");
-    }
-    function stopAudio(silent){
-      try{ oscL?.stop(); oscR?.stop(); }catch{}
-      try{
-        oscL?.disconnect(); oscR?.disconnect(); pannerL?.disconnect(); pannerR?.disconnect(); gain?.disconnect();
-      }catch{}
-      oscL=oscR=gain=pannerL=pannerR=null;
-      if (!silent) { t3Play.removeAttribute("aria-pressed"); t3Stop.setAttribute("aria-pressed","true"); }
-    }
-    on(t3Play,"click", startAudio);
-    on(t3Stop,"click", ()=>stopAudio(false));
-    on(t3Pitch,"change",()=>{ if(oscL){ startAudio(); } });
-    on(t3Gain,"input", ()=>{ if(gain){ gain.gain.value = clamp(parseFloat(t3Gain.value)||0.1,0,1); } });
-
-    on(t3ApplySkin,"click", ()=>{
-      const id = (t3CarrierPick.value==="auto")
-        ? chooseCarrier((currentInputs()?.tone)||1, (currentInputs()?.res?.value)||1)
-        : t3CarrierPick.value;
-      applySkin(id);
-      toast(`Applied skin: ${CARRIERS[id].name}`);
-    });
-
-    /* ---------- Ledger persistence ---------- */
-    const LG_KEY = "sof_genesis_profiles_v1";
-
-    function readLedger(){
-      try{ return JSON.parse(localStorage.getItem(LG_KEY)||"[]"); }catch{ return []; }
-    }
-    function writeLedger(list){
-      try{ localStorage.setItem(LG_KEY, JSON.stringify(list)); }catch{}
-    }
-
-    function profileFromInputs(){
-      const R = currentInputs(); if (!R) return null;
-      const i = R.m13?.moon ? (R.m13.moon-1) : 0;
-      const carrierAuto = chooseCarrier(R.tone||1, R.res?.value||1);
-      const carrierPick = localStorage.getItem("sof_carrier_choice") || "auto";
-      const carrier = (carrierPick==="auto") ? carrierAuto : carrierPick;
-
-      return {
-        id: crypto?.randomUUID?.() || ("id"+Date.now()+Math.random().toString(16).slice(2)),
-        name: R.name || "(unnamed)",
-        date: R.date,
-        time: R.time || "",
-        tz: R.tz,
-        moon: R.m13?.moon || null,
-        day:  R.m13?.day  || null,
-        week: R.week || null,
-        tone: R.tone || null,
-        res:  R.res?.value || null,
-        carrier,
-        stamp: nowStamp(),
-        moonName: R.m13?.moon ? MOONS[i]+" Moon" : R.m13?.special || "—",
-        essence:  R.m13?.moon ? ESS[i] : "—"
-      };
-    }
-
-    // Hook existing Save button from Part I (if present)
-    on($("#btnSave"), "click", ()=>{
-      const p = profileFromInputs();
-      if (!p){ toast("Set a date first."); return; }
-      const list = readLedger(); list.push(p); writeLedger(list);
-      syncSavedProfilesDropdown(list); // if Part I dropdown exists
-      renderLedger(); toast("Saved to ledger");
-    });
-
-    function syncSavedProfilesDropdown(list){
-      const sel = $("#savedProfiles"); if (!sel) return;
-      const cur = sel.value;
-      sel.innerHTML = `<option value="">—</option>` + list.map(p=>`<option value="${p.id}">${p.name} — ${p.date}</option>`).join("");
-      if (cur) sel.value = cur;
-    }
-
-    function renderLedger(){
-      const list = readLedger();
-      syncSavedProfilesDropdown(list);
-      if (!ledgerEl) return;
-      ledgerEl.innerHTML = list.map((p,idx)=>{
-        const tone = p.tone ? `#${p.tone}` : "—";
-        const res  = p.res  ?? "—";
-        const car  = CARRIERS[p.carrier]?.name?.split("—")[0].trim() || p.carrier;
-        const week = p.week ?? "—";
-        const day  = p.day ?? "—";
-        const moon = p.moon ? `#${p.moon} ${p.moonName}` : p.moonName || "—";
-        return `<tr data-id="${p.id}" role="row" tabindex="0">
-          <td class="mono">${idx+1}</td>
-          <td>${escapeHTML(p.name)}</td>
-          <td class="mono">${p.date}${p.time?(" "+p.time):""}</td>
-          <td class="mono">${p.tz}</td>
-          <td>${moon}</td>
-          <td class="mono">${day}</td>
-          <td class="mono">${week}</td>
-          <td class="mono">${tone}</td>
-          <td class="mono">${res}</td>
-          <td class="mono">${car}</td>
-          <td class="mono">${p.stamp}</td>
-          <td>
-            <button class="lab-btn ghost lgLoad"   data-id="${p.id}" title="Load">Load</button>
-            <button class="lab-btn ghost lgDelete" data-id="${p.id}" title="Delete">✕</button>
-          </td>
-        </tr>`;
-      }).join("");
-
-      // Row interactions
-      $$(".lgLoad", ledgerEl).forEach(btn=>{
-        on(btn,"click", (e)=>{ e.stopPropagation(); loadProfile(btn.dataset.id); });
-      });
-      $$(".lgDelete", ledgerEl).forEach(btn=>{
-        on(btn,"click", (e)=>{ e.stopPropagation(); deleteProfile(btn.dataset.id); });
-      });
-      $$("tr[data-id]", ledgerEl).forEach(row=>{
-        on(row,"click", ()=> loadProfile(row.dataset.id));
-        on(row,"keydown", (ev)=>{ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); loadProfile(row.dataset.id);} });
-      });
-    }
-
-    function escapeHTML(s){ return String(s||"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
-
-    function loadProfile(id){
-      const list = readLedger();
-      const p = list.find(x=>x.id===id);
-      if (!p) return;
-      inName.value = p.name || "";
-      inDate.value = p.date;
-      inTime.value = p.time || "";
-      inTZ.value   = p.tz;
-      $("#btnRead")?.click(); // Tier I repaint
-      paintTesla();           // Tier III repaint
-      toast(`Loaded: ${p.name}`);
-    }
-    function deleteProfile(id){
-      const list = readLedger().filter(x=>x.id!==id);
-      writeLedger(list);
-      renderLedger();
-      toast("Deleted");
-    }
-    on(lgClear, "click", ()=>{
-      if (!confirm("Clear all saved profiles? This cannot be undone.")) return;
-      writeLedger([]); renderLedger(); syncSavedProfilesDropdown([]); toast("Cleared");
-    });
-
-    /* ---------- Export / Import ---------- */
-    function dlBlob(name, blob){ const a=document.createElement("a"); a.download=name; a.href=URL.createObjectURL(blob); document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500); }
-    on(lgExportJSON,"click", ()=>{
-      const list = readLedger();
-      const blob = new Blob([JSON.stringify(list,null,2)], {type:"application/json"});
-      dlBlob("genesis-ledger.json", blob);
-    });
-    on(lgExportCSV,"click", ()=>{
-      const list = readLedger();
-      const cols = ["id","name","date","time","tz","moon","day","week","tone","res","carrier","stamp","moonName","essence"];
-      const csv = [cols.join(",")].concat(list.map(o=>cols.map(k=>{
-        const v = (o[k]==null?"":String(o[k]).replace(/"/g,'""'));
-        return `"${v}"`;
-      }).join(","))).join("\n");
-      const blob = new Blob([csv],{type:"text/csv"});
-      dlBlob("genesis-ledger.csv", blob);
-    });
-    on(lgImport,"change", async (ev)=>{
-      const f = ev.target.files?.[0]; if (!f) return;
-      const text = await f.text();
-      let list = readLedger();
-      try{
-        if (f.name.endsWith(".json")){
-          const arr = JSON.parse(text); if (Array.isArray(arr)) list = list.concat(arr);
-        }else{
-          const lines = text.split(/\r?\n/).filter(Boolean);
-          const headers = lines.shift().split(",").map(s=>s.replace(/^"|"$/g,""));
-          lines.forEach(line=>{
-            const cells = line.match(/("([^"]|"")*"|[^,]+)/g)||[];
-            const obj={};
-            headers.forEach((h,i)=>{
-              let v = (cells[i]||"").replace(/^"|"$/g,"").replace(/""/g,'"');
-              if (["moon","day","week","tone","res"].includes(h)) v = v===""?null:Number(v);
-              obj[h]=v;
-            });
-            if(!obj.id) obj.id = crypto?.randomUUID?.() || ("id"+Date.now()+Math.random().toString(16).slice(2));
-            list.push(obj);
-          });
-        }
-        writeLedger(list); renderLedger(); syncSavedProfilesDropdown(list); toast("Imported");
-      }catch{ toast("Import failed"); }
-      ev.target.value="";
-    });
-
-    /* ---------- Deep link & share ---------- */
-    function buildDeepLink(){
-      const R = currentInputs(); if (!R){ t3DeepLink.textContent = "—"; return; }
-      const u = new URL(location.href);
-      u.searchParams.set("name", R.name || "");
-      u.searchParams.set("date", R.date);
-      if (R.time) u.searchParams.set("time", R.time); else u.searchParams.delete("time");
-      u.searchParams.set("tz", R.tz);
-      u.searchParams.set("leap", R.skipLeap? "1":"0");
-      u.searchParams.set("doot", R.skipDOOT? "1":"0");
-      const pick = localStorage.getItem("sof_carrier_choice") || "auto";
-      u.searchParams.set("carrier", pick);
-      t3DeepLink.textContent = u.toString();
-      return u.toString();
-    }
-    on(t3Share,"click", ()=>{
-      const url = buildDeepLink() || location.href;
-      (async ()=>{
-        try{
-          if (navigator.share){ await navigator.share({title:"Genesis Oracle", url}); toast("Shared"); }
-          else { await navigator.clipboard.writeText(url); toast("Link copied"); }
-        }catch{}
-      })();
-    });
-
-    /* ---------- Tier III Recalc ---------- */
-    on(t3Recalc,"click", paintTesla);
-
-    /* ---------- Restore from URL ---------- */
-    (function bootFromURL(){
-      const qp = new URLSearchParams(location.search);
-      const name = qp.get("name"); const date = qp.get("date"); const time = qp.get("time"); const tz = qp.get("tz");
-      const leap = qp.get("leap"); const doot = qp.get("doot");
-      const carrier = qp.get("carrier");
-
-      if (name){ inName.value = name; }
-      if (date){ inDate.value = date; }
-      if (time){ inTime.value = time; }
-      if (tz){   inTZ.value   = tz; }
-      if (leap!=null){ optLeap.checked = (leap!=="0"); }
-      if (doot!=null){ optDOOT.checked = (doot!=="0"); }
-      if (carrier){ localStorage.setItem("sof_carrier_choice", carrier); }
-
-      if (inDate.value){ $("#btnRead")?.click(); paintTesla(); }
-    })();
-
-    /* ---------- Global hook for other pages ---------- */
-    (function exposeAPI(){
-      const api = {
-        read(args){
-          try{
-            const {name,date,time,tz,options} = args||{};
-            if (name!=null) inName.value = name;
-            if (date!=null) inDate.value = date;
-            if (time!=null) inTime.value = time;
-            if (tz!=null)   inTZ.value   = tz;
-            if (options){
-              if ("skipLeap" in options) optLeap.checked = !!options.skipLeap;
-              if ("skipDOOT" in options) optDOOT.checked = !!options.skipDOOT;
-              if ("carrier" in options)  localStorage.setItem("sof_carrier_choice", options.carrier);
-            }
-            $("#btnRead")?.click();
-            paintTesla();
-            return currentInputs();
-          }catch(e){ console.warn("SOF.genesis.read failed", e); return null; }
-        }
-      };
-      window.SOF = window.SOF || {};
-      window.SOF.genesis = api;
-    })();
-
-    /* ---------- Boot ---------- */
-    (function initCarrierPick(){
-      const stored = localStorage.getItem("sof_carrier_choice") || "auto";
-      t3CarrierPick.value = stored;
-    })();
-    renderLedger();
-    paintTesla();
-
-  })();
-        </script>
+</html>
