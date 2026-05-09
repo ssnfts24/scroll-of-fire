@@ -14,15 +14,29 @@
   <meta charset="utf-8">
   <title>The Genesis Oracle — Seal of Becoming</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Birth reading through the Remnant 13×28 calendar anchored to the first New Moon after Spring Equinox.">
+  <meta name="description" content="Map a birth date into the Remnant 13×28 cadence, living laws, flame path, carrier palette, resonant seal, and name code.">
   <meta name="theme-color" content="#05070d">
+  <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/genesis-oracle.html">
 
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="The Genesis Oracle — Seal of Becoming">
-  <meta property="og:description" content="Map a birth date into the Remnant 13×28 cadence, living laws, flame path, carrier palette, and name code.">
+  <meta property="og:description" content="Birth reading through the Remnant 13×28 calendar, living laws, flame path, carriers, and name code.">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/genesis-oracle.html">
+  <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
 
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Genesis Oracle — Seal of Becoming">
+  <meta name="twitter:description" content="Map a birth date into the Remnant 13×28 calendar and symbolic reading system.">
+  <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
+
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/favicon.png">
+
+  <link rel="preload" href="assets/css/genesis-oracle.css" as="style">
   <link rel="stylesheet" href="assets/css/genesis-oracle.css">
   <script defer src="assets/js/genesis-oracle.js"></script>
 </head>
@@ -30,9 +44,15 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
+  <noscript>
+    <div class="noscript-warning">
+      The Genesis Oracle needs JavaScript enabled to calculate readings, save profiles, and export files.
+    </div>
+  </noscript>
+
   <header class="oracle-header">
-    <a class="brand" href="./">
-      <span class="brand-mark">י־ה־ו־ה</span>
+    <a class="brand" href="./" aria-label="Scroll of Fire home">
+      <span class="brand-mark" aria-hidden="true">י־ה־ו־ה</span>
       <span>
         <strong>Genesis Oracle</strong>
         <small>Scroll of Fire · Remnant Calendar</small>
@@ -51,33 +71,36 @@
       <p class="eyebrow">Seal of Becoming</p>
       <h1>The Genesis Oracle</h1>
       <p>
-        Read your birth through the natural Remnant system: first New Moon after
-        Spring Equinox, then 13 fixed moons of 28 days.
+        Read a birth date through the Remnant system: first New Moon after Spring Equinox,
+        then 13 fixed moons of 28 days, with tone, law, flame path, carrier, and name-code layers.
       </p>
     </section>
 
-    <section class="oracle-grid">
-      <form class="panel input-panel" id="oracleForm">
+    <section class="oracle-grid" aria-label="Genesis Oracle input and current signature">
+      <form class="panel input-panel" id="oracleForm" autocomplete="on">
         <h2>Enter Birth Details</h2>
-        <p class="muted">If birth time is unknown, leave it blank. The Oracle will use local noon for stable day mapping.</p>
+        <p class="muted">
+          If birth time is unknown, leave it blank. The Oracle uses local noon for stable day mapping.
+        </p>
 
-        <label>
+        <label for="inName">
           <span>Full Name</span>
           <input id="inName" name="name" autocomplete="name" placeholder="Aaron Paul Laird">
         </label>
 
         <div class="field-row">
-          <label>
+          <label for="inDate">
             <span>Date of Birth</span>
             <input id="inDate" name="date" type="date" required>
           </label>
-          <label>
+
+          <label for="inTime">
             <span>Time</span>
             <input id="inTime" name="time" type="time">
           </label>
         </div>
 
-        <label>
+        <label for="inTZ">
           <span>Time Zone</span>
           <input id="inTZ" name="tz" value="America/Los_Angeles" placeholder="America/Los_Angeles">
         </label>
@@ -88,24 +111,24 @@
           <button class="btn" type="button" id="shareLink">Share Link</button>
         </div>
 
-        <p class="status" id="status" role="status">Ready.</p>
+        <p class="status" id="status" role="status" aria-live="polite">Ready.</p>
       </form>
 
-      <aside class="panel signature-panel">
+      <aside class="panel signature-panel" aria-label="Current Oracle signature">
         <p class="eyebrow">Current Signature</p>
-        <div class="sig-symbol" id="sigSymbol">י־ה־ו־ה</div>
+        <div class="sig-symbol" id="sigSymbol" aria-live="polite">י־ה־ו־ה</div>
         <p id="sigText">Enter details and press Read Birth.</p>
 
         <div class="meter">
           <span id="moonName">—</span>
           <strong id="moonDay">— /28</strong>
-          <div class="bar"><i id="moonProgress"></i></div>
+          <div class="bar" aria-hidden="true"><i id="moonProgress"></i></div>
         </div>
       </aside>
     </section>
 
-    <section class="panel reading-panel">
-      <h2>Your Reading</h2>
+    <section class="panel reading-panel" aria-labelledby="reading-title">
+      <h2 id="reading-title">Your Reading</h2>
 
       <div class="result-grid">
         <div><span>Name</span><strong id="outName">—</strong></div>
@@ -117,10 +140,10 @@
       </div>
 
       <div class="tabs" role="tablist" aria-label="Oracle sections">
-        <button role="tab" aria-selected="true" data-tab="laws">Living Law</button>
-        <button role="tab" aria-selected="false" data-tab="flame">Flame Path</button>
-        <button role="tab" aria-selected="false" data-tab="name">Name Code</button>
-        <button role="tab" aria-selected="false" data-tab="carriers">Carriers</button>
+        <button role="tab" type="button" aria-selected="true" data-tab="laws">Living Law</button>
+        <button role="tab" type="button" aria-selected="false" data-tab="flame">Flame Path</button>
+        <button role="tab" type="button" aria-selected="false" data-tab="name">Name Code</button>
+        <button role="tab" type="button" aria-selected="false" data-tab="carriers">Carriers</button>
       </div>
 
       <article class="tab-panel" id="panel-laws">
@@ -137,11 +160,14 @@
 
       <article class="tab-panel hidden" id="panel-name">
         <h3>Name & Letter Code</h3>
-        <label>
+
+        <label for="nameOverride">
           <span>Override Name</span>
           <input id="nameOverride" placeholder="Optional name override">
         </label>
+
         <button class="btn" id="computeName" type="button">Compute Name Code</button>
+
         <div class="result-grid compact">
           <div><span>Latin-Pythagorean</span><strong id="pythCode">—</strong></div>
           <div><span>Latin A1–Z26</span><strong id="simpleCode">—</strong></div>
@@ -158,28 +184,45 @@
       </article>
     </section>
 
-    <section class="panel">
-      <h2>How the Genesis Oracle reads your birth</h2>
+    <section class="panel" aria-labelledby="method-title">
+      <h2 id="method-title">How the Genesis Oracle reads your birth</h2>
       <ol class="clean-list">
-        <li>Anchor: the Remnant year begins at the first New Moon after Spring Equinox.</li>
-        <li>Cadence: 13 fixed moons of 28 days create a 364-day counted year.</li>
-        <li>Outside days: remaining days after Moon 13 sit outside the counted lattice as reset/intercalary days.</li>
-        <li>Mapping: your birth date maps to Moon 1–13 and Day 1–28, or to an outside-count span.</li>
-        <li>Tone: the counted index mod 13 gives the Tone of the Day.</li>
-        <li>Resonant Sum: the digit reduction of YYYY+MM+DD lights the seal on 1, 4, 7, 11, 22, or 33.</li>
+        <li><strong>Anchor:</strong> the Remnant year begins at the first New Moon after Spring Equinox.</li>
+        <li><strong>Cadence:</strong> 13 fixed moons of 28 days create a 364-day counted year.</li>
+        <li><strong>Outside days:</strong> remaining days after Moon 13 sit outside the counted lattice as reset/intercalary days.</li>
+        <li><strong>Mapping:</strong> your birth date maps to Moon 1–13 and Day 1–28, or to an outside-count span.</li>
+        <li><strong>Tone:</strong> the counted index mod 13 gives the Tone of the Day.</li>
+        <li><strong>Resonant Sum:</strong> the digit reduction of YYYY+MM+DD lights the seal.</li>
       </ol>
     </section>
 
-    <section class="panel saved-panel">
-      <h2>Saved Profiles</h2>
+    <section class="panel saved-panel" aria-labelledby="saved-title">
+      <h2 id="saved-title">Saved Profiles</h2>
+      <p class="muted">
+        Profiles are saved locally on this device. Export JSON for structured data or Export Text for readable notes.
+      </p>
+
       <div class="actions">
         <button class="btn" type="button" id="exportJson">Export JSON</button>
+        <button class="btn" type="button" id="exportText">Export Text</button>
         <button class="btn danger" type="button" id="clearSaved">Clear Saved</button>
       </div>
-      <div class="table-wrap">
+
+      <div class="table-wrap" tabindex="0" aria-label="Saved Genesis Oracle profiles table">
         <table>
-          <thead><tr><th>Name</th><th>Date</th><th>Moon</th><th>Day</th><th>Tone</th><th>Carrier</th></tr></thead>
-          <tbody id="savedRows"></tbody>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Date</th>
+              <th>Moon</th>
+              <th>Day</th>
+              <th>Tone</th>
+              <th>Carrier</th>
+            </tr>
+          </thead>
+          <tbody id="savedRows">
+            <tr><td colspan="6">No saved profiles yet.</td></tr>
+          </tbody>
         </table>
       </div>
     </section>
@@ -189,4 +232,4 @@
     <p>© 2026 Aaron Paul Laird — Scroll of Fire</p>
   </footer>
 </body>
-</html>
+        </html>
