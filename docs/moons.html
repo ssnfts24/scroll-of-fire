@@ -37,9 +37,7 @@
 
       <p class="pill">☾ Remnant Calendar · 13 × 28</p>
       <h1>Remnant 13 Moons</h1>
-      <p class="subtitle">
-        A natural 13×28 calendar anchored to the first New Moon after the Spring Equinox.
-      </p>
+      <p class="subtitle">A natural 13×28 calendar anchored to the first New Moon after the Spring Equinox.</p>
       <div id="errorBanner"></div>
     </header>
 
@@ -49,15 +47,14 @@
           <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
           <circle id="moonArc" class="ring-fg" cx="60" cy="60" r="50"></circle>
         </svg>
-        <div class="label">
-          <div>
-            <div id="dayInMoon" class="big">—</div>
-            <div id="moonLength" class="small">/28</div>
-          </div>
+
+        <div class="label" aria-live="polite">
+          <span id="dayInMoon" class="big">—</span>
+          <span id="moonLength" class="small">/28</span>
         </div>
       </div>
 
-      <div>
+      <div class="moon-badge-copy">
         <h2 id="moonName">—</h2>
         <p id="moonEssence" class="subtitle">—</p>
         <p id="moonLine" class="pill">—</p>
@@ -109,17 +106,13 @@
 
     <section class="card">
       <h2>Remnant Moon Calendar</h2>
-      <p class="subtitle">
-        Fixed 4 weeks × 7 days. This does not float like Gregorian weeks.
-      </p>
+      <p class="subtitle">Fixed 4 weeks × 7 days. This does not float like Gregorian weeks.</p>
       <div id="remCal" class="calendar"></div>
     </section>
 
     <section class="card">
       <h2>Gregorian Calendar</h2>
-      <p class="subtitle">
-        Shows how each Gregorian day maps into the Remnant moon count.
-      </p>
+      <p class="subtitle">Shows how each Gregorian day maps into the Remnant moon count.</p>
       <div id="gregCal" class="gregorian"></div>
     </section>
 
@@ -153,9 +146,7 @@
       <div class="section-heading">
         <p class="pill">Sky Mirror · 13-Moon Astrology</p>
         <h2>Astrology Correspondence</h2>
-        <p data-astro-status class="subtitle">
-          Loading symbolic correspondence layer…
-        </p>
+        <p data-astro-status class="subtitle">Loading symbolic correspondence layer…</p>
       </div>
 
       <div class="astrology-grid">
@@ -201,6 +192,7 @@
       { idx: 13, name: "Completion Seal", essence: "Harvest, sealing, preparation for reset" }
     ];
   </script>
+
   <script src="assets/js/moons.js" defer></script>
   <script src="assets/js/astrology.js" defer></script>
 </body>
