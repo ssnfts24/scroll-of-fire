@@ -393,3 +393,105 @@ h2 {
   position:relative;
   overflow:hidden;
 }
+
+.guide-hero h1 {
+  max-width: 980px;
+}
+
+.compact-actions {
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.compact-actions .btn {
+  min-height: 44px;
+}
+
+.backline {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  font-size: 1rem;
+}
+
+.backline a {
+  color: var(--ink);
+  text-underline-offset: 0.22em;
+}
+
+.soft {
+  color: var(--muted);
+  font-size: 0.72em;
+}
+
+.strong-list li {
+  margin-bottom: 0.85rem;
+}
+
+.mini-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.mini-card {
+  border: 1px solid rgba(243, 201, 122, 0.18);
+  border-radius: 18px;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.mini-card strong,
+.mini-card span {
+  display: block;
+}
+
+.mini-card strong {
+  color: var(--gold);
+  margin-bottom: 0.4rem;
+}
+
+.mini-card span {
+  color: var(--muted);
+}
+
+.equation-stack {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.equation-stack p {
+  margin: 0;
+}
+
+mjx-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  padding: 0.35rem 0;
+}
+
+.card mjx-container[jax="SVG"] {
+  font-size: 108%;
+}
+
+@media (max-width: 620px) {
+  .guide-hero h1 {
+    font-size: clamp(2.35rem, 12vw, 4rem);
+    line-height: 0.95;
+  }
+
+  .hero-copy {
+    font-size: 1.1rem;
+  }
+
+  .backline {
+    flex-wrap: wrap;
+  }
+
+  .card .equation,
+  .equation-stack {
+    font-size: 0.95rem;
+  }
+}
+
+
