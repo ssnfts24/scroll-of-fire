@@ -611,3 +611,81 @@ canvas {
     height: 170px;
   }
 }
+.hero-sigil {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+  margin: 1.1rem auto;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  text-shadow: 0 0 18px rgba(243, 201, 122, 0.45);
+}
+
+.earth-hum-panel,
+.hum-card,
+.log-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.hum-grid,
+.log-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.log-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.hum-card,
+.log-card {
+  border: 1px solid rgba(243, 201, 122, 0.22);
+  border-radius: var(--radius);
+  padding: 1rem;
+  background: rgba(10, 14, 22, 0.72);
+  box-shadow: var(--shadow);
+}
+
+.hum-card h3,
+.log-card h3 {
+  margin: 0.25rem 0 0.5rem;
+  color: var(--gold);
+}
+
+.hum-practical {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  border-left: 3px solid var(--gold);
+  background: rgba(243, 201, 122, 0.08);
+  border-radius: 16px;
+}
+
+.copy-scroll {
+  margin-top: 1.25rem;
+  white-space: pre-wrap;
+  border: 1px solid rgba(243, 201, 122, 0.2);
+  border-radius: 18px;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--ink);
+}
+
+@media (max-width: 900px) {
+  .hum-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .log-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .hum-grid {
+    grid-template-columns: 1fr;
+  }
+}
