@@ -14,9 +14,14 @@
   <meta charset="utf-8">
   <title>Remnant 13 Moons — Living Calendar</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="A natural 13×28 Remnant calendar anchored to the first New Moon after Spring Equinox.">
+  <meta name="description" content="A living 13×28 Remnant calendar with moon phases, astrology correspondences, Earth Hum tracking, and daily coherence logging.">
   <meta name="theme-color" content="#05070d">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Remnant 13 Moons — Living Calendar">
+  <meta property="og:description" content="Moon count, sky mirror, Earth Hum layer, and practical daily field tracking.">
+  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
 
   <link rel="stylesheet" href="assets/css/moons.css">
   <link rel="stylesheet" href="assets/css/astrology.css">
@@ -35,9 +40,21 @@
         <a class="lab-btn ghost" href="ledger.html">Ledger</a>
       </nav>
 
-      <p class="pill">☾ Remnant Calendar · 13 × 28</p>
+      <p class="pill">☾ Remnant Calendar · 13 × 28 · Earth Hum Layer</p>
       <h1>Remnant 13 Moons</h1>
-      <p class="subtitle">A natural 13×28 calendar anchored to the first New Moon after the Spring Equinox.</p>
+      <p class="subtitle">
+        A living calendar for tracking time, moon phase, symbolic correspondence, body signal,
+        field pressure, and the quiet pattern beneath the noise.
+      </p>
+
+      <div class="hero-sigil" aria-hidden="true">
+        <span>☾</span><span>⊕</span><span>✦</span><span>7.83Hz</span><span>✦</span><span>⊕</span><span>☽</span>
+      </div>
+
+      <p class="meta">
+        Anchor: first New Moon after Spring Equinox · Count: 13 moons × 28 days · Use: observe, log, compare, refine.
+      </p>
+
       <div id="errorBanner"></div>
     </header>
 
@@ -55,6 +72,7 @@
       </div>
 
       <div class="moon-badge-copy">
+        <p class="eyebrow">Current Remnant Moon</p>
         <h2 id="moonName">—</h2>
         <p id="moonEssence" class="subtitle">—</p>
         <p id="moonLine" class="pill">—</p>
@@ -69,6 +87,7 @@
 
     <section class="grid">
       <article class="card">
+        <p class="eyebrow">Time Gate</p>
         <h2>Today</h2>
         <p>
           <strong id="nowDate">—</strong><br>
@@ -97,11 +116,100 @@
       </article>
 
       <article class="card">
+        <p class="eyebrow">Sky Body</p>
         <h2>Visible Moon Phase</h2>
         <canvas id="simMoon" width="420" height="320"></canvas>
         <p id="phaseLine" class="pill">—</p>
         <p id="phaseMeta" class="meta">—</p>
       </article>
+    </section>
+
+    <section class="card earth-hum-panel">
+      <div class="section-heading">
+        <p class="pill">⊕ Earth Hum · Schumann Field</p>
+        <h2>7.83 Hz Practical Signal Layer</h2>
+        <p class="subtitle">
+          Use this as a grounded observation overlay: check geomagnetic pressure, mark the day,
+          then compare it against sleep, dreams, focus, body signal, technology glitches, and emotional charge.
+        </p>
+      </div>
+
+      <div class="hum-grid">
+        <article class="hum-card">
+          <p class="eyebrow">Baseline Bell</p>
+          <h3>7.83 Hz</h3>
+          <p>Earth-ionosphere resonance. Treat as the background hum, not a command.</p>
+        </article>
+
+        <article class="hum-card">
+          <p class="eyebrow">Quiet Field</p>
+          <h3>Kp &lt; 5</h3>
+          <p>Normal log day. Record mood, sleep, dreams, focus, and moon correspondence.</p>
+        </article>
+
+        <article class="hum-card">
+          <p class="eyebrow">Charged Field</p>
+          <h3>Kp 5–6</h3>
+          <p>Mark the day as elevated. Watch sensitivity, restlessness, pressure, or unusual clarity.</p>
+        </article>
+
+        <article class="hum-card">
+          <p class="eyebrow">Storm Field</p>
+          <h3>Kp 7+</h3>
+          <p>Use grounding. Reduce overload. Log patterns for 2–4 days after the storm peak.</p>
+        </article>
+      </div>
+
+      <div class="hum-practical">
+        <h3>Daily Field Practice</h3>
+        <p>
+          Before reading the day, check the Kp forecast. If Kp is 5 or higher, tag the entry
+          <strong>Earth Hum Elevated</strong>. If Kp reaches 7 or higher, tag it
+          <strong>Storm Field</strong>. Then compare the next several days instead of judging one moment alone.
+        </p>
+        <p class="meta">
+          Practical rule: watch Kp more than local weather when tracking field pressure.
+          Local storms matter, but geomagnetic storms tune the larger cavity from above.
+        </p>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-heading">
+        <p class="pill">☲ Daily Witness</p>
+        <h2>Coherence Log</h2>
+        <p class="subtitle">
+          A simple field notebook for the day. Copy this into your ledger, notes app, or paper journal.
+        </p>
+      </div>
+
+      <div class="log-grid">
+        <article class="log-card">
+          <h3>Body</h3>
+          <p>Energy, sleep, pressure, hunger, tension, calm, clarity.</p>
+        </article>
+        <article class="log-card">
+          <h3>Mind</h3>
+          <p>Focus, dreams, memory, symbols, repeated words, unusual timing.</p>
+        </article>
+        <article class="log-card">
+          <h3>Field</h3>
+          <p>Kp level, moon phase, weather, tech glitches, animal behavior, synchronicity.</p>
+        </article>
+      </div>
+
+      <pre class="copy-scroll"><code>Date:
+Remnant Moon:
+Moon Day:
+Visible Moon Phase:
+Kp / Earth Hum Status:
+Sleep:
+Dreams:
+Body Signal:
+Emotional Weather:
+Repeated Signs:
+Action / Lesson:
+Witness:</code></pre>
     </section>
 
     <section class="card">
@@ -172,7 +280,7 @@
   </div>
 
   <footer class="footer">
-    <p>© <span id="yr">2026</span> Aaron Paul Laird — Scroll of Fire</p>
+    <p>© <span id="yr">2026</span> Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
   </footer>
 
   <script>
