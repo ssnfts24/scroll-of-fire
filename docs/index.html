@@ -14,7 +14,7 @@
   <meta charset="utf-8">
   <title>Scroll of Fire — Codex of Reality</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Scroll of Fire — a living codex for the 13 Moons calendar, Remnant practice, symbolic systems, coherence theory, restoration frameworks, ledger work, and interactive tools.">
+  <meta name="description" content="Scroll of Fire — a living codex for symbolic study, the 13 Moons calendar, Manifest Remnant practice, coherence tools, witness logging, and restoration frameworks.">
   <meta name="theme-color" content="#05070d">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/">
@@ -22,7 +22,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Scroll of Fire — Codex of Reality">
-  <meta property="og:description" content="Explore the 13 Moons calendar, Codex theory, Genesis Oracle, Remnant visualization, symbolic systems, ledger records, and living practice tools.">
+  <meta property="og:description" content="Explore the 13 Moons calendar, Manifest Remnant exercise, Codex theory, Genesis Oracle, symbolic systems, and witness tools.">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/">
   <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
   <meta property="og:image:width" content="1200">
@@ -31,15 +31,192 @@
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Scroll of Fire — Codex of Reality">
-  <meta name="twitter:description" content="A living codex featuring the Remnant 13 Moons calendar, symbolic systems, and coherence practice.">
+  <meta name="twitter:description" content="A living codex featuring the Remnant 13 Moons calendar, Manifest practice, symbolic systems, and coherence tools.">
   <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
 
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/favicon.png">
-
   <link rel="preload" href="assets/css/codex.css" as="style">
   <link rel="stylesheet" href="assets/css/codex.css">
   <script defer src="assets/js/Codex.js"></script>
+
+  <style>
+    .nav-dropdown {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .nav-drop-btn {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+      padding: 0.55rem 0.75rem;
+      border-radius: 999px;
+    }
+
+    .nav-drop-btn:hover,
+    .nav-drop-btn:focus-visible {
+      background: rgba(255,255,255,0.06);
+      outline: none;
+    }
+
+    .nav-drop-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 0.5rem);
+      min-width: 230px;
+      display: none;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.65rem;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 16px;
+      background: rgba(8, 12, 20, 0.97);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.45);
+      z-index: 50;
+    }
+
+    .nav-dropdown.open .nav-drop-menu {
+      display: flex;
+    }
+
+    .nav-drop-menu a {
+      padding: 0.6rem 0.7rem;
+      border-radius: 12px;
+      text-decoration: none;
+    }
+
+    .nav-drop-menu a:hover,
+    .nav-drop-menu a:focus-visible {
+      background: rgba(122,243,255,0.09);
+      outline: none;
+    }
+
+    .home-hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
+      gap: 1.25rem;
+      align-items: center;
+    }
+
+    .hero-copy-stack {
+      max-width: 740px;
+    }
+
+    .home-visual-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 360px;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background:
+        radial-gradient(circle at 50% 35%, rgba(122,243,255,0.18), transparent 48%),
+        radial-gradient(circle at 80% 70%, rgba(243,201,122,0.12), transparent 52%),
+        rgba(7, 11, 19, 0.82);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.36);
+    }
+
+    #homeExerciseCanvas {
+      width: 100%;
+      height: 260px;
+      display: block;
+    }
+
+    .visual-panel-copy {
+      padding: 0 1rem 1rem;
+    }
+
+    .visual-panel-copy h2 {
+      margin: 0.25rem 0 0.4rem;
+    }
+
+    .mini-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin: 0.75rem 0 1rem;
+    }
+
+    .mini-step {
+      padding: 0.7rem;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.035);
+      font-size: 0.88rem;
+    }
+
+    .mini-step strong {
+      display: block;
+      color: var(--gold, #f3c97a);
+      margin-bottom: 0.2rem;
+    }
+
+    .professional-band {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .metric-card {
+      padding: 1rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
+    }
+
+    .metric-card strong {
+      display: block;
+      font-size: 1.4rem;
+      color: var(--gold, #f3c97a);
+      margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 860px) {
+      .home-hero-grid,
+      .professional-band {
+        grid-template-columns: 1fr;
+      }
+
+      .home-visual-card {
+        min-height: 320px;
+      }
+
+      .mini-steps {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .site-nav {
+        display: none;
+      }
+
+      .site-nav.open {
+        display: flex;
+      }
+
+      .nav-dropdown {
+        width: 100%;
+        display: block;
+      }
+
+      .nav-drop-btn {
+        width: 100%;
+        text-align: left;
+      }
+
+      .nav-drop-menu {
+        position: static;
+        margin-top: 0.35rem;
+        width: 100%;
+        box-shadow: none;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -65,25 +242,76 @@
       <a href="./guide.html">Guide</a>
       <a href="./theory.html">Theory</a>
       <a href="./moons.html">13 Moons</a>
+      <a href="./teach.html">Manifest</a>
       <a href="./genesis-oracle.html">Oracle</a>
       <a href="./ledger.html">Ledger</a>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-haspopup="true" data-dropdown-toggle>
+          More ▾
+        </button>
+        <div class="nav-drop-menu" role="menu">
+          <a href="./hub.html">Systems Hub</a>
+          <a href="./invoke.html">Invoke</a>
+          <a href="./lab.html">Remnant Lab</a>
+          <a href="./circle.html">Circle</a>
+          <a href="./ethics.html">Ethics</a>
+          <a href="./glossary.html">Glossary</a>
+          <a href="./downloads.html">Downloads</a>
+        </div>
+      </div>
     </nav>
   </header>
 
   <main id="main">
     <section class="hero section-shell" aria-labelledby="home-title">
-      <p class="eyebrow">Codex 0 · ΨΩ · Living Framework</p>
-      <h1 id="home-title">Scroll of Fire — Codex of Reality</h1>
-      <p class="hero-line">“Let there be resonance.”</p>
-      <p class="hero-copy">
-        A living archive of equations, witness, teaching, calendar work, ethical coherence,
-        restoration language, symbolic systems, and Remnant practice.
-      </p>
+      <div class="home-hero-grid">
+        <div class="hero-copy-stack">
+          <p class="eyebrow">Codex 0 · ΨΩ · Living Framework</p>
+          <h1 id="home-title">Scroll of Fire — Codex of Reality</h1>
+          <p class="hero-line">“Let there be resonance.”</p>
+          <p class="hero-copy">
+            A structured symbolic system for studying awareness, pattern, memory, intention,
+            restoration, calendar rhythm, witness practice, and coherence.
+          </p>
 
-      <div class="hero-actions">
-        <a class="btn primary" href="./start.html">Start Here</a>
-        <a class="btn" href="./guide.html">Living Cosmos Field Guide</a>
-        <a class="btn" href="./moons.html">Open 13 Moons</a>
+          <div class="hero-actions">
+            <a class="btn primary" href="./start.html">Start Here</a>
+            <a class="btn" href="./teach.html">Open Manifest</a>
+            <a class="btn" href="./moons.html">Open 13 Moons</a>
+          </div>
+        </div>
+
+        <aside class="home-visual-card" aria-label="Mini Remnant visual exercise">
+          <canvas id="homeExerciseCanvas" width="720" height="360" aria-hidden="true"></canvas>
+          <div class="visual-panel-copy">
+            <p class="eyebrow">60-Second Entry</p>
+            <h2>Observe · Breathe · Return</h2>
+            <div class="mini-steps">
+              <div class="mini-step"><strong>1</strong> Notice one detail.</div>
+              <div class="mini-step"><strong>2</strong> Slow the breath.</div>
+              <div class="mini-step"><strong>3</strong> Return with clarity.</div>
+            </div>
+            <a class="text-link" href="./teach.html">Open the full Manifest exercise →</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section-shell" aria-label="Project summary">
+      <div class="professional-band">
+        <article class="metric-card">
+          <strong>13×28</strong>
+          <span>Symbolic calendar rhythm anchored to the first New Moon after Spring Equinox.</span>
+        </article>
+        <article class="metric-card">
+          <strong>Ξ</strong>
+          <span>Coherence tracking through witness, breath, intention, and repeated observation.</span>
+        </article>
+        <article class="metric-card">
+          <strong>Eq.9</strong>
+          <span>Ethics mask: clarity, consent, grounding, and stop rules before interpretation.</span>
+        </article>
       </div>
     </section>
 
@@ -92,12 +320,12 @@
         <p class="eyebrow">Essence</p>
         <h2>Living Architecture</h2>
         <p>
-          The Scroll of Fire — Codex of Reality explores physics, geometry, language,
-          consciousness, memory, intention, and divine symmetry as one coherent symbolic framework.
+          Scroll of Fire explores physics language, geometry, scripture, symbolism,
+          consciousness, memory, intention, and restoration as a coherent creative framework.
         </p>
         <p>
-          It is not presented as final proof or closed doctrine, but as a harmonic field guide
-          for studying awareness, pattern, remembrance, and flow.
+          It is not presented as final proof or closed doctrine. It is a field guide for
+          disciplined observation, meaning-making, and practical coherence.
         </p>
       </article>
 
@@ -120,17 +348,17 @@
         <span class="text-link">Open 13-Moon Clock →</span>
       </a>
 
-      <a class="card feature-link" href="./guide.html">
-        <p class="eyebrow">5-Minute Entry</p>
-        <h2>Living Cosmos Field Guide</h2>
-        <p>A simple path into breath, observation, coherence, and Remnant visualization without needing the whole theory first.</p>
-        <span class="text-link">Begin the Practice →</span>
+      <a class="card feature-link" href="./teach.html">
+        <p class="eyebrow">Practice Engine</p>
+        <h2>Manifest — Remnant Visual Exercise</h2>
+        <p>Intention, breath, carrier tuning, visual coherence, ethics mask, and private witness ledger.</p>
+        <span class="text-link">Open Manifest →</span>
       </a>
     </section>
 
     <section class="section-shell" aria-labelledby="unique-title">
       <article class="card glow">
-        <p class="eyebrow">Unique Feature</p>
+        <p class="eyebrow">Method</p>
         <h2 id="unique-title">The Remnant Signal Path</h2>
         <ol class="clean-list">
           <li><strong>Observe:</strong> notice the field without forcing it.</li>
@@ -139,7 +367,11 @@
           <li><strong>Record:</strong> place the witness into the ledger or journal.</li>
           <li><strong>Return:</strong> come back to ordinary life with more coherence than before.</li>
         </ol>
-        <a class="text-link" href="./invoke.html">Open Practice Tools →</a>
+        <div class="hero-actions">
+          <a class="btn primary" href="./teach.html">Open Manifest</a>
+          <a class="btn" href="./lab.html">Open Remnant Lab</a>
+          <a class="btn" href="./invoke.html">Open Practice Tools</a>
+        </div>
       </article>
     </section>
 
@@ -152,6 +384,8 @@
       <div class="grid cards-grid">
         <a class="card nav-card" href="./start.html"><strong>Start Here</strong><span>Clean beginner path into the Codex.</span></a>
         <a class="card nav-card" href="./guide.html"><strong>Guide</strong><span>The 5-minute practice and living field guide.</span></a>
+        <a class="card nav-card" href="./teach.html"><strong>Manifest</strong><span>Remnant visual exercise, breath, carrier, coherence, and private ledger.</span></a>
+        <a class="card nav-card" href="./lab.html"><strong>Remnant Lab</strong><span>Experimental practice space and field testing tools.</span></a>
         <a class="card nav-card" href="./theory.html"><strong>Theory</strong><span>Equation 0, operators, canon, ethics, and coherence law.</span></a>
         <a class="card nav-card" href="./hub.html"><strong>Systems Hub</strong><span>T-7, carriers, witness tools, recoder, and archive links.</span></a>
         <a class="card nav-card" href="./moons.html"><strong>13 Moons</strong><span>Living 13×28 calendar, phase mirror, and year map.</span></a>
@@ -184,6 +418,7 @@
           <li>Apply ethical masking and stop rules.</li>
           <li>Stabilize with memory, witness, and Remnant limit.</li>
         </ol>
+        <a class="text-link" href="./teach.html">Open Manifest Practice →</a>
       </article>
     </section>
 
@@ -197,7 +432,8 @@
           or improvement ideas.
         </p>
         <div class="hero-actions">
-          <a class="btn primary" href="./moons.html">Test Calendar</a>
+          <a class="btn primary" href="./teach.html">Test Manifest</a>
+          <a class="btn" href="./moons.html">Test Calendar</a>
           <a class="btn" href="./genesis-oracle.html">Test Oracle</a>
           <a class="btn" href="./ledger.html">Review Ledger</a>
         </div>
@@ -210,8 +446,124 @@
       <a href="./sitemap.xml">Sitemap</a>
       <a href="./robots.txt">Robots</a>
       <a href="./404.html">404</a>
+      <a href="./teach.html">Manifest</a>
     </nav>
     <p>© Scroll of Fire. All constants are provisional until observed.</p>
   </footer>
+
+  <script>
+    (function () {
+      const navToggle = document.querySelector("[data-nav-toggle]");
+      const nav = document.querySelector("[data-site-nav]");
+      const dropdown = document.querySelector("[data-dropdown]");
+      const dropdownToggle = document.querySelector("[data-dropdown-toggle]");
+
+      if (navToggle && nav) {
+        navToggle.addEventListener("click", function () {
+          const isOpen = nav.classList.toggle("open");
+          navToggle.setAttribute("aria-expanded", String(isOpen));
+          navToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
+        });
+      }
+
+      if (dropdown && dropdownToggle) {
+        dropdownToggle.addEventListener("click", function (event) {
+          event.stopPropagation();
+          const isOpen = dropdown.classList.toggle("open");
+          dropdownToggle.setAttribute("aria-expanded", String(isOpen));
+        });
+
+        document.addEventListener("click", function (event) {
+          if (!dropdown.contains(event.target)) {
+            dropdown.classList.remove("open");
+            dropdownToggle.setAttribute("aria-expanded", "false");
+          }
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            dropdown.classList.remove("open");
+            dropdownToggle.setAttribute("aria-expanded", "false");
+          }
+        });
+      }
+
+      const canvas = document.getElementById("homeExerciseCanvas");
+      const ctx = canvas && canvas.getContext("2d");
+      const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (ctx) {
+        let t = 0;
+
+        function resizeCanvas() {
+          const rect = canvas.getBoundingClientRect();
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = Math.max(320, Math.floor(rect.width * dpr));
+          canvas.height = Math.floor(260 * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function drawExercise() {
+          const w = canvas.clientWidth || 360;
+          const h = 260;
+          const cx = w / 2;
+          const cy = h / 2;
+          const breath = 0.5 + 0.5 * Math.sin(t * 0.018);
+          const radius = 46 + breath * 34;
+
+          ctx.clearRect(0, 0, w, h);
+
+          const grad = ctx.createRadialGradient(cx, cy, 12, cx, cy, radius * 2.8);
+          grad.addColorStop(0, "rgba(122,243,255,0.32)");
+          grad.addColorStop(0.45, "rgba(243,201,122,0.12)");
+          grad.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius * 2.8, 0, Math.PI * 2);
+          ctx.fill();
+
+          for (let i = 0; i < 90; i++) {
+            const a = i * 0.399 + t * 0.006;
+            const r = radius + (i % 18) * 5.8 + Math.sin(t * 0.015 + i) * 8;
+            const x = cx + Math.cos(a) * r;
+            const y = cy + Math.sin(a * 1.13) * r * 0.56;
+            const alpha = 0.18 + (i % 12) / 24;
+
+            ctx.fillStyle = i % 3 === 0
+              ? "rgba(243,201,122," + alpha + ")"
+              : "rgba(122,243,255," + alpha + ")";
+
+            ctx.beginPath();
+            ctx.arc(x, y, 1.4 + (i % 4) * 0.3, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.strokeStyle = "rgba(122,243,255,0.45)";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.strokeStyle = "rgba(243,201,122,0.38)";
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius * 1.42, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.fillStyle = "rgba(244,241,232,0.92)";
+          ctx.font = "700 14px system-ui, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(breath > 0.5 ? "Breathe in" : "Breathe out", cx, cy + 5);
+
+          t += 1;
+
+          if (!reduceMotion) requestAnimationFrame(drawExercise);
+        }
+
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas, { passive: true });
+        drawExercise();
+      }
+    })();
+  </script>
 </body>
-      </html>
+  </html>
