@@ -27,7 +27,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="assets/css/codex.css?v=2026-06-04">
 
   <style>
@@ -45,9 +44,7 @@
       --radius: 16px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
@@ -62,8 +59,21 @@
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    a {
-      color: inherit;
+    a { color: inherit; }
+
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 8px;
+      z-index: 99999;
+      padding: .6rem .85rem;
+      border-radius: 999px;
+      background: #111824;
+      border: 1px solid var(--line);
+    }
+
+    .skip-link:focus {
+      left: 8px;
     }
 
     .wrap {
@@ -82,9 +92,7 @@
       box-shadow: 0 20px 80px rgba(0, 0, 0, 0.38);
     }
 
-    .hero-frame {
-      position: relative;
-    }
+    .hero-frame { position: relative; }
 
     .hero-img {
       display: block;
@@ -119,9 +127,7 @@
       50% { opacity: .58; transform: scale(1.045); filter: blur(2px); }
     }
 
-    .page-head {
-      text-align: center;
-    }
+    .page-head { text-align: center; }
 
     .title {
       font-family: "Crimson Pro", serif;
@@ -176,9 +182,7 @@
     }
 
     .card h2,
-    .card h3 {
-      margin-top: 0;
-    }
+    .card h3 { margin-top: 0; }
 
     .meta,
     .hint {
@@ -186,9 +190,7 @@
       line-height: 1.55;
     }
 
-    .hint {
-      font-size: .94rem;
-    }
+    .hint { font-size: .94rem; }
 
     .divider {
       height: 1px;
@@ -201,9 +203,7 @@
       padding-left: 1.2rem;
     }
 
-    .compact {
-      font-size: .94rem;
-    }
+    .compact { font-size: .94rem; }
 
     .lab-row {
       display: flex;
@@ -241,9 +241,7 @@
       box-shadow: 0 8px 28px rgba(122,243,255,.12);
     }
 
-    .lab-btn.danger {
-      border-color: rgba(255,127,145,.45);
-    }
+    .lab-btn.danger { border-color: rgba(255,127,145,.45); }
 
     .lab-btn[disabled] {
       opacity: .48;
@@ -261,9 +259,7 @@
       font: inherit;
     }
 
-    textarea.lab-input {
-      resize: vertical;
-    }
+    textarea.lab-input { resize: vertical; }
 
     label {
       color: var(--muted);
@@ -271,13 +267,9 @@
     }
 
     label > input,
-    label > select {
-      margin-top: 5px;
-    }
+    label > select { margin-top: 5px; }
 
-    input[type="range"].lab-input {
-      padding: .35rem;
-    }
+    input[type="range"].lab-input { padding: .35rem; }
 
     .control-grid {
       display: grid;
@@ -294,9 +286,7 @@
     .span-8 { grid-column: span 8; }
     .span-12 { grid-column: span 12; }
 
-    .tabs-wrap {
-      position: relative;
-    }
+    .tabs-wrap { position: relative; }
 
     .pill-rail {
       display: flex;
@@ -310,9 +300,7 @@
       -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
     }
 
-    .pill-rail::-webkit-scrollbar {
-      display: none;
-    }
+    .pill-rail::-webkit-scrollbar { display: none; }
 
     .pill {
       flex: 0 0 auto;
@@ -339,9 +327,7 @@
       margin-top: 12px;
     }
 
-    .tab.active {
-      display: block;
-    }
+    .tab.active { display: block; }
 
     .chev {
       position: absolute;
@@ -374,7 +360,7 @@
     #trace {
       display: block;
       width: 100%;
-      height: 440px;
+      height: 460px;
       background:
         radial-gradient(circle at 50% 50%, #0a0e15 0%, #06080d 80%),
         repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.022) 0 2px, transparent 2px 5px);
@@ -412,9 +398,7 @@
       pointer-events: auto;
     }
 
-    button.chip {
-      cursor: pointer;
-    }
+    button.chip { cursor: pointer; }
 
     .freq-panel {
       border: 1px solid rgba(122,243,255,.16);
@@ -448,6 +432,29 @@
     .tone.active {
       border-color: rgba(243,201,122,.75);
       background: rgba(243,201,122,.09);
+    }
+
+    .volume-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: end;
+      margin-top: 10px;
+    }
+
+    .volume-value {
+      min-width: 76px;
+      text-align: right;
+      color: var(--gold);
+      font-weight: 800;
+      padding-bottom: .65rem;
+    }
+
+    .visual-intensity-note {
+      margin: .55rem 0 0;
+      font-size: .84rem;
+      color: var(--muted);
+      line-height: 1.45;
     }
 
     .ring-bg {
@@ -551,10 +558,7 @@
       .col-7,
       .col-8,
       .col-9,
-      .col-12 {
-        grid-column: span 12;
-      }
-
+      .col-12,
       .span-3,
       .span-4,
       .span-6,
@@ -563,13 +567,9 @@
         grid-column: span 12;
       }
 
-      #trace {
-        height: 360px;
-      }
+      #trace { height: 380px; }
 
-      .freq-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .freq-grid { grid-template-columns: repeat(2, 1fr); }
 
       .hud {
         position: static;
@@ -580,41 +580,38 @@
     }
 
     @media (max-width: 520px) {
-      .wrap {
-        padding-inline: 12px;
-      }
+      .wrap { padding-inline: 12px; }
 
-      .freq-grid {
-        grid-template-columns: 1fr;
-      }
+      .freq-grid { grid-template-columns: 1fr; }
 
       .lab-btn,
-      .lab-input {
-        width: 100%;
+      .lab-input { width: 100%; }
+
+      .lab-row { align-items: stretch; }
+
+      .pill-rail { padding-inline: 34px; }
+
+      .volume-row {
+        grid-template-columns: 1fr;
+        gap: 2px;
       }
 
-      .lab-row {
-        align-items: stretch;
-      }
-
-      .pill-rail {
-        padding-inline: 34px;
+      .volume-value {
+        text-align: left;
+        padding-bottom: 0;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .hero-glow {
-        animation: none;
-      }
-
-      * {
-        scroll-behavior: auto !important;
-      }
+      .hero-glow { animation: none; }
+      * { scroll-behavior: auto !important; }
     }
   </style>
 </head>
 
 <body class="stars">
+  <a class="skip-link" href="#main">Skip to content</a>
+
   <figure class="hero" aria-label="Scroll of Fire banner">
     <div class="hero-frame">
       <img
@@ -699,19 +696,21 @@
                 <option value="4">Vortex</option>
                 <option value="5">Aurora</option>
                 <option value="6">Phi Weave</option>
+                <option value="7">Star Gate</option>
+                <option value="8">Chladni Field</option>
               </select>
             </label>
 
             <label class="span-3">Density
-              <input id="visDensity" type="range" min="60" max="1200" value="280" class="lab-input">
+              <input id="visDensity" type="range" min="60" max="1600" value="340" class="lab-input">
             </label>
 
             <label class="span-3">Speed
-              <input id="visSpeed" type="range" min="0" max="240" value="90" class="lab-input">
+              <input id="visSpeed" type="range" min="0" max="260" value="96" class="lab-input">
             </label>
 
             <label class="span-3">Afterglow
-              <input id="visFade" type="range" min="3" max="44" value="14" class="lab-input">
+              <input id="visFade" type="range" min="3" max="44" value="12" class="lab-input">
             </label>
 
             <label class="span-3">Colorway
@@ -725,11 +724,11 @@
             </label>
 
             <label class="span-3">Stroke
-              <input id="stroke" type="range" min="1" max="6" value="2" class="lab-input">
+              <input id="stroke" type="range" min="1" max="7" value="2" class="lab-input">
             </label>
 
             <label class="span-3">Pulse lock
-              <input id="pulseLock" type="range" min="0" max="100" value="64" class="lab-input">
+              <input id="pulseLock" type="range" min="0" max="100" value="72" class="lab-input">
             </label>
 
             <div class="span-3 lab-row">
@@ -761,6 +760,24 @@
             <label>Frequency
               <input id="freqSlider" class="lab-input" type="range" min="80" max="1200" step="1" value="432">
             </label>
+
+            <div class="volume-row">
+              <label>Volume
+                <input id="volumeSlider" class="lab-input" type="range" min="0" max="100" step="1" value="28">
+              </label>
+              <span class="volume-value" id="volumeValue">28%</span>
+            </div>
+
+            <div class="volume-row">
+              <label>Visual Intensity
+                <input id="visualIntensity" class="lab-input" type="range" min="20" max="200" step="1" value="112">
+              </label>
+              <span class="volume-value" id="visualIntensityValue">112%</span>
+            </div>
+
+            <p class="visual-intensity-note">
+              Volume controls the tone. Visual Intensity controls how strongly the field responds.
+            </p>
 
             <div class="lab-row">
               <input id="freqInput" class="lab-input" type="number" min="80" max="1200" step="1" value="432" style="max-width:130px">
@@ -805,8 +822,7 @@
         <div class="card col-7">
           <h2>🎧 Carrier — Frequency Experience</h2>
           <p class="meta">
-            This is the clean frequency station. Pick a preset, move the slider, or type a custom value.
-            The visual field responds to the active frequency.
+            Pick a preset, move the slider, or type a custom value. The same carrier drives the visual field.
           </p>
 
           <div class="freq-panel">
@@ -819,6 +835,20 @@
             <label>Fine tune
               <input id="freqSliderMirror" class="lab-input" type="range" min="80" max="1200" step="1" value="432">
             </label>
+
+            <div class="volume-row">
+              <label>Volume
+                <input id="volumeSliderMirror" class="lab-input" type="range" min="0" max="100" step="1" value="28">
+              </label>
+              <span class="volume-value" id="volumeValueMirror">28%</span>
+            </div>
+
+            <div class="volume-row">
+              <label>Visual Intensity
+                <input id="visualIntensityMirror" class="lab-input" type="range" min="20" max="200" step="1" value="112">
+              </label>
+              <span class="volume-value" id="visualIntensityValueMirror">112%</span>
+            </div>
 
             <div class="lab-row">
               <input id="freqInputMirror" class="lab-input" type="number" min="80" max="1200" step="1" value="432" style="max-width:140px">
@@ -1266,9 +1296,7 @@
           }
         },
         set(k, v) {
-          try {
-            localStorage.setItem(k, JSON.stringify(v));
-          } catch {}
+          try { localStorage.setItem(k, JSON.stringify(v)); } catch {}
         }
       };
 
@@ -1301,13 +1329,8 @@
       $("#yr") && ($("#yr").textContent = new Date().getFullYear());
 
       /* Tabs */
-      function tabs() {
-        return $$(".tab");
-      }
-
-      function pills() {
-        return $$(".pill-rail .pill[data-tab]");
-      }
+      const tabs = () => $$(".tab");
+      const pills = () => $$(".pill-rail .pill[data-tab]");
 
       function switchTo(id, opts = {}) {
         const panel = $("#tab-" + id);
@@ -1316,9 +1339,7 @@
           return;
         }
 
-        tabs().forEach(t => {
-          t.classList.toggle("active", t.id === "tab-" + id);
-        });
+        tabs().forEach(t => t.classList.toggle("active", t.id === "tab-" + id));
 
         pills().forEach(p => {
           const active = p.dataset.tab === id;
@@ -1335,9 +1356,7 @@
 
         store.set("sof_last_tab", id);
 
-        if (!opts.noHash) {
-          history.replaceState(null, "", "#tab=" + id);
-        }
+        if (!opts.noHash) history.replaceState(null, "", "#tab=" + id);
       }
 
       window.switchTo = switchTo;
@@ -1395,6 +1414,8 @@
           e.preventDefault();
           $("#newSeed").click();
         }
+
+        if (e.key === "Escape") stopTone();
       });
 
       /* Audio / Frequency */
@@ -1404,24 +1425,33 @@
       let rightOsc = null;
       let activeFreq = 432;
       let playing = false;
+      let activeVolume = 0.28;
+      let visualPower = 1.12;
+
+      function volumeToGain(percent) {
+        const p = Math.max(0, Math.min(100, Number(percent) || 0)) / 100;
+        return Math.pow(p, 2) * 0.42;
+      }
+
+      function getAudio() {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          master = audioCtx.createGain();
+          master.gain.value = volumeToGain(activeVolume * 100);
+          master.connect(audioCtx.destination);
+        }
+        return audioCtx;
+      }
 
       function syncFreqUI(freq = activeFreq) {
         activeFreq = Math.max(80, Math.min(1200, Math.round(Number(freq) || 432)));
 
-        [
-          "#freqValue",
-          "#freqValueMirror"
-        ].forEach(id => {
+        ["#freqValue", "#freqValueMirror"].forEach(id => {
           const el = $(id);
           if (el) el.textContent = String(activeFreq);
         });
 
-        [
-          "#freqSlider",
-          "#freqInput",
-          "#freqSliderMirror",
-          "#freqInputMirror"
-        ].forEach(id => {
+        ["#freqSlider", "#freqInput", "#freqSliderMirror", "#freqInputMirror"].forEach(id => {
           const el = $(id);
           if (el) el.value = activeFreq;
         });
@@ -1435,19 +1465,48 @@
         });
       }
 
-      function getAudio() {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          master = audioCtx.createGain();
-          master.gain.value = 0.032;
-          master.connect(audioCtx.destination);
+      function syncVolumeUI(percent = activeVolume * 100) {
+        const v = Math.max(0, Math.min(100, Math.round(Number(percent) || 0)));
+        activeVolume = v / 100;
+
+        ["#volumeSlider", "#volumeSliderMirror"].forEach(id => {
+          const el = $(id);
+          if (el) el.value = v;
+        });
+
+        ["#volumeValue", "#volumeValueMirror"].forEach(id => {
+          const el = $(id);
+          if (el) el.textContent = v + "%";
+        });
+
+        if (master && audioCtx) {
+          master.gain.setTargetAtTime(volumeToGain(v), audioCtx.currentTime, 0.035);
         }
-        return audioCtx;
+
+        store.set("sof_carrier_volume_v2", v);
+      }
+
+      function syncVisualPowerUI(percent = visualPower * 100) {
+        const v = Math.max(20, Math.min(200, Math.round(Number(percent) || 112)));
+        visualPower = v / 100;
+
+        ["#visualIntensity", "#visualIntensityMirror"].forEach(id => {
+          const el = $(id);
+          if (el) el.value = v;
+        });
+
+        ["#visualIntensityValue", "#visualIntensityValueMirror"].forEach(id => {
+          const el = $(id);
+          if (el) el.textContent = v + "%";
+        });
+
+        store.set("sof_visual_power_v2", v);
       }
 
       function stopTone() {
         try { leftOsc && leftOsc.stop(); } catch {}
         try { rightOsc && rightOsc.stop(); } catch {}
+
         leftOsc = null;
         rightOsc = null;
         playing = false;
@@ -1476,16 +1535,19 @@
 
         leftOsc.type = "sine";
         rightOsc.type = "sine";
-        leftOsc.frequency.value = activeFreq - detune;
-        rightOsc.frequency.value = activeFreq + detune;
+
+        leftOsc.frequency.setValueAtTime(activeFreq - detune, ac.currentTime);
+        rightOsc.frequency.setValueAtTime(activeFreq + detune, ac.currentTime);
 
         const now = ac.currentTime;
-        gainL.gain.value = soft ? 0.0001 : 0.025;
-        gainR.gain.value = soft ? 0.0001 : 0.025;
+        const targetGain = 0.5;
+
+        gainL.gain.value = soft ? 0.0001 : targetGain;
+        gainR.gain.value = soft ? 0.0001 : targetGain;
 
         if (soft) {
-          gainL.gain.linearRampToValueAtTime(0.025, now + 0.12);
-          gainR.gain.linearRampToValueAtTime(0.025, now + 0.12);
+          gainL.gain.exponentialRampToValueAtTime(targetGain, now + 0.18);
+          gainR.gain.exponentialRampToValueAtTime(targetGain, now + 0.18);
         }
 
         if (panL && panR) {
@@ -1500,9 +1562,11 @@
 
         leftOsc.start();
         rightOsc.start();
+
         playing = true;
         syncFreqUI(activeFreq);
-        toast(activeFreq + " Hz");
+        syncVolumeUI(activeVolume * 100);
+        toast(activeFreq + " Hz · " + Math.round(activeVolume * 100) + "%");
       }
 
       window.addEventListener("pointerdown", () => {
@@ -1515,12 +1579,17 @@
         else syncFreqUI(activeFreq);
       }
 
-      [
-        "#freqSlider",
-        "#freqInput",
-        "#freqSliderMirror",
-        "#freqInputMirror"
-      ].forEach(id => on($(id), "input", e => setFrequencyOnly(e.target.value)));
+      ["#freqSlider", "#freqInput", "#freqSliderMirror", "#freqInputMirror"].forEach(id => {
+        on($(id), "input", e => setFrequencyOnly(e.target.value));
+      });
+
+      ["#volumeSlider", "#volumeSliderMirror"].forEach(id => {
+        on($(id), "input", e => syncVolumeUI(e.target.value));
+      });
+
+      ["#visualIntensity", "#visualIntensityMirror"].forEach(id => {
+        on($(id), "input", e => syncVisualPowerUI(e.target.value));
+      });
 
       on($("#playFreq"), "click", () => playTone(activeFreq));
       on($("#playFreqMirror"), "click", () => playTone(activeFreq));
@@ -1532,14 +1601,15 @@
         if (!btn) return;
 
         const val = btn.dataset.carrier;
-        if (val === "none") {
-          stopTone();
-        } else {
+        if (val === "none") stopTone();
+        else {
           setFrequencyOnly(Number(val));
           playTone(Number(val));
         }
       });
 
+      syncVolumeUI(store.get("sof_carrier_volume_v2", 28));
+      syncVisualPowerUI(store.get("sof_visual_power_v2", 112));
       syncFreqUI(432);
 
       /* Visual */
@@ -1573,11 +1643,11 @@
       }
 
       function count() {
-        return Math.max(60, Number($("#visDensity")?.value || 280));
+        return Math.round(Math.max(60, Number($("#visDensity")?.value || 340)) * visualPower);
       }
 
       function speed() {
-        return Number($("#visSpeed")?.value || 90) / 90;
+        return Number($("#visSpeed")?.value || 96) / 90;
       }
 
       function st() {
@@ -1585,7 +1655,11 @@
       }
 
       function fade() {
-        return Number($("#visFade")?.value || 14) / 180;
+        return Number($("#visFade")?.value || 12) / 190;
+      }
+
+      function noiseVal(x) {
+        return Math.sin(seed + x * 12.9898) * 0.5 + 0.5;
       }
 
       function draw() {
@@ -1599,20 +1673,22 @@
         const s = speed();
         const mode = Number($("#visMode")?.value || 0);
         const freqRatio = (activeFreq % 1000) / 1000;
-        const pulseLock = Number($("#pulseLock")?.value || 64) / 100;
+        const pulseLock = Number($("#pulseLock")?.value || 72) / 100;
+        const soundPush = playing ? Math.max(.16, activeVolume * visualPower) : 0.20 * visualPower;
         const breathPulse = 0.5 + 0.5 * Math.sin(phi * 0.025 * s + freqRatio * Math.PI * 2);
-        const baseR = Math.min(w, h) * (0.16 + 0.10 * pulseLock + 0.06 * breathPulse);
+        const baseR = Math.min(w, h) * (0.14 + 0.12 * pulseLock + 0.13 * breathPulse * soundPush);
 
         ctx.fillStyle = `rgba(6,8,13,${fade()})`;
         ctx.fillRect(0, 0, w, h);
 
-        const glow = ctx.createRadialGradient(cx, cy, 8, cx, cy, Math.min(w, h) * 0.62);
-        glow.addColorStop(0, "rgba(122,243,255,.22)");
-        glow.addColorStop(.42, "rgba(243,201,122,.09)");
+        const glowRadius = Math.min(w, h) * (0.48 + 0.18 * soundPush);
+        const glow = ctx.createRadialGradient(cx, cy, 8, cx, cy, glowRadius);
+        glow.addColorStop(0, `rgba(122,243,255,${0.18 + 0.18 * soundPush})`);
+        glow.addColorStop(.42, `rgba(243,201,122,${0.07 + 0.10 * soundPush})`);
         glow.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = glow;
         ctx.beginPath();
-        ctx.arc(cx, cy, Math.min(w, h) * 0.62, 0, Math.PI * 2);
+        ctx.arc(cx, cy, glowRadius, 0, Math.PI * 2);
         ctx.fill();
 
         if (mode === 1) {
@@ -1625,7 +1701,7 @@
               i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
             }
             ctx.lineWidth = st();
-            ctx.strokeStyle = pal(k / 5, .46);
+            ctx.strokeStyle = pal(k / 5, .42 + .20 * soundPush);
             ctx.stroke();
           }
         } else if (mode === 2) {
@@ -1639,7 +1715,7 @@
               const y = (R + r * Math.cos(v)) * Math.sin(u) * .58;
               const z = r * Math.sin(v);
               const d = 500 / (620 + z);
-              ctx.fillStyle = pal((z + r) / (2 * r), .7);
+              ctx.fillStyle = pal((z + r) / (2 * r), .62 + .18 * soundPush);
               ctx.fillRect(cx + x * d, cy + y * d, st(), st());
             }
           }
@@ -1647,22 +1723,22 @@
           ctx.beginPath();
           for (let i = 0; i <= n; i++) {
             const t = i / n * Math.PI * 8;
-            const k = 3 + Math.round(freqRatio * 6);
-            const r = baseR * 1.5 * Math.cos(k * t + phi * .012 * s);
+            const k = 3 + Math.round(freqRatio * 7);
+            const r = baseR * 1.55 * Math.cos(k * t + phi * .012 * s);
             const x = cx + r * Math.cos(t);
             const y = cy + r * Math.sin(t);
             i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
           }
-          ctx.strokeStyle = pal(.78, .72);
+          ctx.strokeStyle = pal(.78, .70 + .18 * soundPush);
           ctx.lineWidth = st();
           ctx.stroke();
         } else if (mode === 4) {
           for (let i = 0; i < n; i++) {
             const a = i * .618 + phi * .012 * s;
-            const r = baseR + Math.sin(i * .055 + phi * .014) * baseR * .58;
+            const r = baseR + Math.sin(i * .055 + phi * .014) * baseR * .62;
             const x = cx + Math.cos(a) * r * (1 + .35 * Math.sin(a * 3));
             const y = cy + Math.sin(a) * r * .62;
-            ctx.fillStyle = pal((i % 100) / 100, .72);
+            ctx.fillStyle = pal((i % 100) / 100, .65 + .20 * soundPush);
             ctx.fillRect(x, y, st(), st());
             if ($("#sym")?.checked) ctx.fillRect(w - x, y, st(), st());
           }
@@ -1670,12 +1746,12 @@
           for (let b = 0; b < 7; b++) {
             ctx.beginPath();
             for (let x = 0; x <= w; x += 2) {
-              const y = cy + Math.sin(x * .012 + b * .65 + phi * .012 * s) * h * .12 +
+              const y = cy + Math.sin(x * .012 + b * .65 + phi * .012 * s) * h * (.11 + .05 * soundPush) +
                 ($("#noise")?.checked ? Math.sin(seed + x * .03 + b) * 8 : 0);
               x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
             }
             ctx.lineWidth = st();
-            ctx.strokeStyle = pal(b / 7, .45);
+            ctx.strokeStyle = pal(b / 7, .40 + .22 * soundPush);
             ctx.stroke();
           }
         } else if (mode === 6) {
@@ -1683,23 +1759,56 @@
           const PHI = (1 + Math.sqrt(5)) / 2;
           for (let i = 0; i <= n; i++) {
             const t = i / n * Math.PI * 2;
-            const r = baseR * 1.75 * (0.5 + 0.5 * Math.sin(PHI * t + phi * .012 * s));
+            const r = baseR * 1.85 * (0.5 + 0.5 * Math.sin(PHI * t + phi * .012 * s));
             const x = cx + r * Math.cos(t);
             const y = cy + r * Math.sin(PHI * t);
             i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
           }
-          ctx.strokeStyle = pal(.68, .7);
+          ctx.strokeStyle = pal(.68, .66 + .22 * soundPush);
           ctx.lineWidth = st();
           ctx.stroke();
+        } else if (mode === 7) {
+          const rays = 12 + Math.round(freqRatio * 12);
+          for (let i = 0; i < rays; i++) {
+            const a = i / rays * Math.PI * 2 + phi * .004 * s;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            const r = baseR * (1.6 + 0.45 * Math.sin(phi * .02 + i));
+            ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+            ctx.strokeStyle = pal(i / rays, .28 + .26 * soundPush);
+            ctx.lineWidth = Math.max(1, st() * .65);
+            ctx.stroke();
+          }
+          for (let i = 0; i < n; i++) {
+            const a = i / n * Math.PI * 2 + phi * .009 * s;
+            const r = baseR * (0.6 + 1.1 * noiseVal(i));
+            const x = cx + Math.cos(a) * r;
+            const y = cy + Math.sin(a) * r;
+            ctx.fillStyle = pal((i % 100) / 100, .66);
+            ctx.fillRect(x, y, st(), st());
+          }
+        } else if (mode === 8) {
+          const cells = Math.max(7, Math.round(11 + visualPower * 4));
+          const size = Math.max(12, Math.min(w, h) / cells);
+          for (let y = 0; y < h; y += size) {
+            for (let x = 0; x < w; x += size) {
+              const v = Math.sin((x / w) * Math.PI * (3 + freqRatio * 5) + phi * .02 * s) *
+                        Math.sin((y / h) * Math.PI * (2 + freqRatio * 7) - phi * .017 * s);
+              if (Math.abs(v) < 0.12 + 0.08 * soundPush) {
+                ctx.fillStyle = pal((v + 1) / 2, .42 + .20 * soundPush);
+                ctx.fillRect(x, y, Math.max(1, st()), Math.max(1, st()));
+              }
+            }
+          }
         } else {
           for (let i = 0; i < n; i++) {
             const a = i / n * Math.PI * 2 + phi * .006 * s;
             const wobble = Math.sin(i * .05 + phi * .018 * s + freqRatio * 8);
-            const r = baseR * (0.85 + 0.45 * wobble);
-            const jitter = $("#noise")?.checked ? Math.sin(seed + i * 12.989) * 4 : 0;
+            const r = baseR * (0.85 + 0.48 * wobble);
+            const jitter = $("#noise")?.checked ? Math.sin(seed + i * 12.989) * 5 : 0;
             const x = cx + Math.cos(a) * (r + jitter);
             const y = cy + Math.sin(a * 1.08) * (r * .68 + jitter);
-            ctx.fillStyle = pal((i % 100) / 100, .74);
+            ctx.fillStyle = pal((i % 100) / 100, .65 + .22 * soundPush);
             ctx.beginPath();
             ctx.arc(x, y, st() * .78, 0, Math.PI * 2);
             ctx.fill();
@@ -1715,7 +1824,7 @@
         ctx.fillStyle = "rgba(244,241,232,.92)";
         ctx.font = "700 13px Inter, system-ui, sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText(playing ? activeFreq + " Hz ACTIVE" : "VISUAL FIELD", cx, 25);
+        ctx.fillText(playing ? activeFreq + " Hz · " + Math.round(activeVolume * 100) + "% ACTIVE" : "VISUAL FIELD", cx, 25);
 
         phi += s;
         if (!reduceMotion) requestAnimationFrame(draw);
@@ -1723,19 +1832,9 @@
 
       draw();
 
-      on($("#clearBtn"), "click", () => {
-        ctx && ctx.clearRect(0, 0, canvas.width, canvas.height);
-      });
-
-      on($("#seedBtn"), "click", () => {
-        seed = Math.random() * 10000;
-        toast("Seeded");
-      });
-
-      on($("#newSeed"), "click", () => {
-        seed = Math.random() * 10000;
-        toast("New seed");
-      });
+      on($("#clearBtn"), "click", () => ctx && ctx.clearRect(0, 0, canvas.width, canvas.height));
+      on($("#seedBtn"), "click", () => { seed = Math.random() * 10000; toast("Seeded"); });
+      on($("#newSeed"), "click", () => { seed = Math.random() * 10000; toast("New seed"); });
 
       on($("#dlTrace"), "click", () => {
         if (!canvas) return;
@@ -1746,7 +1845,7 @@
       });
 
       on($("#savePreset"), "click", () => {
-        store.set("sof_remnant_preset_clean_v1", {
+        store.set("sof_remnant_preset_clean_v2", {
           mode: $("#visMode")?.value,
           density: $("#visDensity")?.value,
           speed: $("#visSpeed")?.value,
@@ -1756,13 +1855,15 @@
           pulse: $("#pulseLock")?.value,
           sym: $("#sym")?.checked,
           noise: $("#noise")?.checked,
-          freq: activeFreq
+          freq: activeFreq,
+          volume: Math.round(activeVolume * 100),
+          visualPower: Math.round(visualPower * 100)
         });
         toast("Preset saved");
       });
 
       on($("#loadPreset"), "click", () => {
-        const p = store.get("sof_remnant_preset_clean_v1", null);
+        const p = store.get("sof_remnant_preset_clean_v2", null);
         if (!p) return toast("No preset");
 
         $("#visMode") && ($("#visMode").value = p.mode);
@@ -1775,6 +1876,8 @@
         $("#sym") && ($("#sym").checked = !!p.sym);
         $("#noise") && ($("#noise").checked = !!p.noise);
         setFrequencyOnly(p.freq || 432);
+        syncVolumeUI(p.volume || 28);
+        syncVisualPowerUI(p.visualPower || 112);
         toast("Preset loaded");
       });
 
@@ -1929,6 +2032,7 @@
       let obsTimer = null;
 
       on($("#obsStart"), "click", () => {
+        if (obsTimer) return;
         const sec = Math.max(3, Number($("#obsSec")?.value || 10));
         const rounds = Math.max(1, Number($("#obsRounds")?.value || 3));
         const phases = ["𝓘", "𝓛", "𝓒", "𝓢"];
@@ -2004,6 +2108,7 @@
       let breathTimer = null;
 
       on($("#breathStart"), "click", () => {
+        if (breathTimer) return;
         const pat = ($("#breathPat")?.value || "4-4-4-4").split("-").map(n => Number(n) || 0);
         const names = ["In", "Hold", "Out", "Hold"];
         const total = pat.reduce((a, b) => a + b, 0) * 1000;
@@ -2048,7 +2153,7 @@
         const xctx = c?.getContext?.("2d");
         if (!xctx) return;
 
-        const hist = store.get("sof_xi_hist_clean_v1", []);
+        const hist = store.get("sof_xi_hist_clean_v2", []);
         const W = c.width;
         const H = c.height;
 
@@ -2081,9 +2186,9 @@
         $("#hudXi").textContent = "Ξ: " + xi.toFixed(2);
         $("#xiMeter").style.width = Math.round(xi * 100) + "%";
 
-        const hist = store.get("sof_xi_hist_clean_v1", []);
+        const hist = store.get("sof_xi_hist_clean_v2", []);
         hist.unshift(xi);
-        store.set("sof_xi_hist_clean_v1", hist.slice(0, 80));
+        store.set("sof_xi_hist_clean_v2", hist.slice(0, 80));
         drawXiSpark();
       });
 
@@ -2124,6 +2229,7 @@
       }
 
       on($("#tmStart"), "click", () => {
+        if (focusTimer) return;
         focusMin = Math.max(1, Number($("#tmFocus")?.value || 25));
         breakMin = Math.max(1, Number($("#tmBreak")?.value || 5));
         timerPlan = Math.max(1, Number($("#tmCycles")?.value || 2));
@@ -2147,18 +2253,16 @@
       });
 
       /* Streak */
-      function epochDay() {
-        return Math.floor(Date.now() / 86400000);
-      }
+      function epochDay() { return Math.floor(Date.now() / 86400000); }
 
       function renderStreak() {
-        const s = store.get("sof_streak_clean_v1", { last: -1, count: 0 });
+        const s = store.get("sof_streak_clean_v2", { last: -1, count: 0 });
         $("#streakOut").textContent = "streak: " + s.count;
       }
 
       on($("#streakMark"), "click", () => {
         const today = epochDay();
-        const s = store.get("sof_streak_clean_v1", { last: -1, count: 0 });
+        const s = store.get("sof_streak_clean_v2", { last: -1, count: 0 });
 
         if (s.last === today) {
           toast("Already marked today");
@@ -2167,7 +2271,7 @@
 
         s.count = s.last === today - 1 ? s.count + 1 : 1;
         s.last = today;
-        store.set("sof_streak_clean_v1", s);
+        store.set("sof_streak_clean_v2", s);
         renderStreak();
         toast("Marked");
       });
@@ -2222,7 +2326,7 @@
       }));
 
       /* Ledger */
-      const LEDGER_KEY = "sof_ledger_clean_v1";
+      const LEDGER_KEY = "sof_ledger_clean_v2";
 
       function esc(s) {
         return String(s || "").replace(/[&<>"']/g, m => ({
@@ -2234,13 +2338,8 @@
         }[m]));
       }
 
-      function ledger() {
-        return store.get(LEDGER_KEY, []);
-      }
-
-      function saveLedger(v) {
-        store.set(LEDGER_KEY, v);
-      }
+      function ledger() { return store.get(LEDGER_KEY, []); }
+      function saveLedger(v) { store.set(LEDGER_KEY, v); }
 
       function renderLedger() {
         const rows = $("#lgRows");
@@ -2358,12 +2457,12 @@
         if (v === "yellow") el.textContent = "Yellow: shorten cycles, lighten aims, re-check breath.";
         if (v === "red") el.textContent = "Red: halt. Switch to breath-only. Restore dignity and consent. Return later.";
 
-        store.set("sof_ethics_clean_v1", v);
+        store.set("sof_ethics_clean_v2", v);
       }
 
       $$('input[name="eth"]').forEach(r => on(r, "change", updateEthics));
 
-      const savedEth = store.get("sof_ethics_clean_v1", "green");
+      const savedEth = store.get("sof_ethics_clean_v2", "green");
       const savedEthRadio = $(`input[name="eth"][value="${savedEth}"]`);
       if (savedEthRadio) savedEthRadio.checked = true;
       updateEthics();
@@ -2389,7 +2488,7 @@
       });
 
       on($("#anchorSave"), "click", () => {
-        store.set("sof_anchors_clean_v1", {
+        store.set("sof_anchors_clean_v2", {
           see: $("#anchSee")?.value || "",
           hear: $("#anchHear")?.value || "",
           feel: $("#anchFeel")?.value || "",
@@ -2399,7 +2498,7 @@
       });
 
       on($("#anchorLoad"), "click", () => {
-        const a = store.get("sof_anchors_clean_v1", {});
+        const a = store.get("sof_anchors_clean_v2", {});
         $("#anchSee").value = a.see || "";
         $("#anchHear").value = a.hear || "";
         $("#anchFeel").value = a.feel || "";
@@ -2411,17 +2510,15 @@
         const grid = [];
         for (let r = 0; r < 3; r++) {
           const row = [];
-          for (let c = 0; c < 3; c++) {
-            row.push($("#m" + r + c)?.value || "");
-          }
+          for (let c = 0; c < 3; c++) row.push($("#m" + r + c)?.value || "");
           grid.push(row);
         }
-        store.set("sof_memory_grid_clean_v1", grid);
+        store.set("sof_memory_grid_clean_v2", grid);
         toast("Grid saved");
       });
 
       on($("#memLoad"), "click", () => {
-        const grid = store.get("sof_memory_grid_clean_v1", null);
+        const grid = store.get("sof_memory_grid_clean_v2", null);
         if (!grid) return toast("No grid saved");
 
         for (let r = 0; r < 3; r++) {
@@ -2451,4 +2548,4 @@
     })();
   </script>
 </body>
-  </html>
+</html>
