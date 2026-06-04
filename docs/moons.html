@@ -14,14 +14,25 @@
   <meta charset="utf-8">
   <title>Remnant 13 Moons — Living Calendar</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="A living 13×28 Remnant calendar with moon phases, astrology correspondences, Earth Hum tracking, and daily coherence logging.">
+  <meta name="description" content="A living 13×28 Remnant calendar with moon phases, Earth Hum tracking, symbolic correspondence, daily witness logging, and coherence practice.">
   <meta name="theme-color" content="#05070d">
+  <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
 
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Remnant 13 Moons — Living Calendar">
-  <meta property="og:description" content="Moon count, sky mirror, Earth Hum layer, and practical daily field tracking.">
+  <meta property="og:description" content="A symbolic 13×28 living calendar with moon phase, Earth Hum layer, sky mirror, and daily coherence log.">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
+  <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Remnant 13 Moons — Living Calendar">
+  <meta name="twitter:description" content="Track moon day, visible phase, field pressure, body signal, and daily witness.">
+  <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
+
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/favicon.png">
 
   <link rel="stylesheet" href="assets/css/moons.css">
   <link rel="stylesheet" href="assets/css/astrology.css">
@@ -34,17 +45,19 @@
     <header class="page-head">
       <nav class="crumbs" aria-label="Primary navigation">
         <a class="lab-btn ghost" href="./">← Codex</a>
-        <a class="lab-btn ghost" href="start.html">Start Here</a>
-        <a class="lab-btn ghost" href="theory.html">Theory</a>
-        <a class="lab-btn ghost" href="genesis-oracle.html">Genesis Oracle</a>
-        <a class="lab-btn ghost" href="ledger.html">Ledger</a>
+        <a class="lab-btn ghost" href="./start.html">Start</a>
+        <a class="lab-btn ghost" href="./guide.html">Guide</a>
+        <a class="lab-btn ghost" href="./theory.html">Theory</a>
+        <a class="lab-btn ghost" href="./genesis-oracle.html">Oracle</a>
+        <a class="lab-btn ghost" href="./ledger.html">Ledger</a>
       </nav>
 
       <p class="pill">☾ Remnant Calendar · 13 × 28 · Earth Hum Layer</p>
       <h1>Remnant 13 Moons</h1>
+
       <p class="subtitle">
-        A living calendar for tracking time, moon phase, symbolic correspondence, body signal,
-        field pressure, and the quiet pattern beneath the noise.
+        A living calendar for tracking time, moon phase, symbolic correspondence,
+        body signal, field pressure, dreams, memory, and the quiet pattern beneath the noise.
       </p>
 
       <div class="hero-sigil" aria-hidden="true">
@@ -53,6 +66,10 @@
 
       <p class="meta">
         Anchor: first New Moon after Spring Equinox · Count: 13 moons × 28 days · Use: observe, log, compare, refine.
+      </p>
+
+      <p class="meta">
+        Accuracy note: Remnant moon count is symbolic and calendar-based. Visible lunar phase depends on the JavaScript lunar calculation and should be treated as a close field reference, not official astronomical data.
       </p>
 
       <div id="errorBanner"></div>
@@ -118,10 +135,36 @@
       <article class="card">
         <p class="eyebrow">Sky Body</p>
         <h2>Visible Moon Phase</h2>
-        <canvas id="simMoon" width="420" height="320"></canvas>
+        <canvas id="simMoon" width="420" height="320" aria-label="Simulated moon phase"></canvas>
         <p id="phaseLine" class="pill">—</p>
         <p id="phaseMeta" class="meta">—</p>
       </article>
+    </section>
+
+    <section class="card">
+      <div class="section-heading">
+        <p class="pill">✦ Today’s Field Card</p>
+        <h2>Observe Before You Interpret</h2>
+        <p class="subtitle">
+          This is the daily rule: notice the body, check the sky, mark the field,
+          then wait for patterns across multiple days before drawing conclusions.
+        </p>
+      </div>
+
+      <div class="log-grid">
+        <article class="log-card">
+          <h3>1 · Body</h3>
+          <p>Sleep, pressure, hunger, calm, tension, energy, clarity.</p>
+        </article>
+        <article class="log-card">
+          <h3>2 · Mind</h3>
+          <p>Dreams, memory, repeated words, focus, emotional weather.</p>
+        </article>
+        <article class="log-card">
+          <h3>3 · Field</h3>
+          <p>Moon phase, Kp status, weather, tech glitches, animal behavior, timing.</p>
+        </article>
+      </div>
     </section>
 
     <section class="card earth-hum-panel">
@@ -129,8 +172,9 @@
         <p class="pill">⊕ Earth Hum · Schumann Field</p>
         <h2>7.83 Hz Practical Signal Layer</h2>
         <p class="subtitle">
-          Use this as a grounded observation overlay: check geomagnetic pressure, mark the day,
-          then compare it against sleep, dreams, focus, body signal, technology glitches, and emotional charge.
+          Use this as a grounded observation overlay. Check geomagnetic pressure,
+          mark the day, then compare it against sleep, dreams, focus, body signal,
+          technology glitches, and emotional charge.
         </p>
       </div>
 
@@ -138,7 +182,7 @@
         <article class="hum-card">
           <p class="eyebrow">Baseline Bell</p>
           <h3>7.83 Hz</h3>
-          <p>Earth-ionosphere resonance. Treat as the background hum, not a command.</p>
+          <p>Earth-ionosphere resonance. Treat as background context, not a command.</p>
         </article>
 
         <article class="hum-card">
@@ -168,8 +212,7 @@
           <strong>Storm Field</strong>. Then compare the next several days instead of judging one moment alone.
         </p>
         <p class="meta">
-          Practical rule: watch Kp more than local weather when tracking field pressure.
-          Local storms matter, but geomagnetic storms tune the larger cavity from above.
+          Practical rule: record first, interpret later. Patterns become clearer when the witness has distance.
         </p>
       </div>
     </section>
@@ -179,23 +222,8 @@
         <p class="pill">☲ Daily Witness</p>
         <h2>Coherence Log</h2>
         <p class="subtitle">
-          A simple field notebook for the day. Copy this into your ledger, notes app, or paper journal.
+          Copy this into your ledger, notes app, or paper journal.
         </p>
-      </div>
-
-      <div class="log-grid">
-        <article class="log-card">
-          <h3>Body</h3>
-          <p>Energy, sleep, pressure, hunger, tension, calm, clarity.</p>
-        </article>
-        <article class="log-card">
-          <h3>Mind</h3>
-          <p>Focus, dreams, memory, symbols, repeated words, unusual timing.</p>
-        </article>
-        <article class="log-card">
-          <h3>Field</h3>
-          <p>Kp level, moon phase, weather, tech glitches, animal behavior, synchronicity.</p>
-        </article>
       </div>
 
       <pre class="copy-scroll"><code>Date:
@@ -208,6 +236,7 @@ Dreams:
 Body Signal:
 Emotional Weather:
 Repeated Signs:
+Technology / Animal / Weather Notes:
 Action / Lesson:
 Witness:</code></pre>
     </section>
@@ -277,6 +306,32 @@ Witness:</code></pre>
         </article>
       </div>
     </section>
+
+    <section class="card">
+      <div class="section-heading">
+        <p class="pill">Accuracy + Use</p>
+        <h2>How to Read This Calendar</h2>
+        <p class="subtitle">
+          This calendar is best used as a symbolic tracking system, not as an official civil,
+          religious, medical, or astronomical authority.
+        </p>
+      </div>
+
+      <div class="log-grid">
+        <article class="log-card">
+          <h3>Calendar Accuracy</h3>
+          <p>The 13×28 count is exact inside its own system once the yearly anchor is chosen.</p>
+        </article>
+        <article class="log-card">
+          <h3>Moon Accuracy</h3>
+          <p>Visible phase depends on the lunar algorithm in moons.js and should be treated as approximate unless upgraded with verified ephemeris data.</p>
+        </article>
+        <article class="log-card">
+          <h3>Best Use</h3>
+          <p>Track repeated patterns over time: sleep, dreams, emotions, body signal, and witness notes.</p>
+        </article>
+      </div>
+    </section>
   </div>
 
   <footer class="footer">
@@ -304,4 +359,4 @@ Witness:</code></pre>
   <script src="assets/js/moons.js" defer></script>
   <script src="assets/js/astrology.js" defer></script>
 </body>
-</html>
+        </html>
