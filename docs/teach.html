@@ -3,152 +3,24 @@
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
-(function(){
-  "use strict";
-  const $ =(s,r=document)=>r.querySelector(s);
-  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
+    (function () {
+      if (location.hostname !== "ssnfts24.github.io") {
+        const b = document.querySelector("base");
+        if (b) b.remove();
+      }
+    })();
+  </script>
 
-  /* ---------- Tabs / rails / keys (shared) ---------- */
-  const rail=$("#pillRail"), prev=$("#tabsPrev"), next=$("#tabsNext");
-  // don't cache tabs; DOM adds later parts. query live each switch.
-  const tabBtns = $$("#.pill-rail .pill[data-tab]");
-
-  function getTabs(){ return $$(".tab"); }
-  function getBtn(id){ return tabBtns.find(b=>b.dataset.tab===id); }
-
-  function switchTo(id, {fromHash=false}={}){
-    if(!id) return;
-    const tabs = getTabs();
-    tabs.forEach(t=>t.classList.toggle("active", t.id==="tab-"+id));
-    tabBtns.forEach(b=>{
-      const onTab = b.dataset.tab===id;
-      b.classList.toggle("active", onTab);
-      b.setAttribute("aria-selected", onTab ? "true" : "false");
-      if(onTab){ b.setAttribute("tabindex","0"); } else { b.setAttribute("tabindex","-1"); }
-    });
-    const btn=getBtn(id);
-    if(btn){ btn.scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"}); if(!fromHash) btn.focus({preventScroll:true}); }
-    // persist + reflect in URL
-    try{ localStorage.setItem("sof_last_tab", id);}catch{}
-    const u=new URL(location.href); u.hash = "tab="+id; history.replaceState(null,"",u);
-  }
-  window.switchTo = switchTo; // expose for later engines
-
-  tabBtns.forEach(b=>on(b,"click",()=>switchTo(b.dataset.tab)));
-
-  function updateChev(){
-    if(!rail) return;
-    prev.disabled = rail.scrollLeft<=4;
-    next.disabled = (rail.scrollLeft + rail.clientWidth) >= (rail.scrollWidth-4);
-  }
-  on(prev,"click",()=>{ rail.scrollBy({left:-rail.clientWidth*0.7,behavior:"smooth"}); });
-  on(next,"click",()=>{ rail.scrollBy({left: rail.clientWidth*0.7,behavior:"smooth"}); });
-  on(rail,"scroll",updateChev,{passive:true}); updateChev();
-
-  on(rail,"keydown",(e)=>{
-    if(e.key==="ArrowRight"){ e.preventDefault(); const i=Math.max(0,tabBtns.findIndex(b=>b.classList.contains("active"))); const n=tabBtns[(i+1)%tabBtns.length]; n.click(); }
-    if(e.key==="ArrowLeft"){ e.preventDefault(); const i=Math.max(0,tabBtns.findIndex(b=>b.classList.contains("active"))); const n=tabBtns[(i-1+tabBtns.length)%tabBtns.length]; n.click(); }
-  });
-
-  on(window,"hashchange",()=>{
-    const m=location.hash.match(/tab=([a-z0-9_-]+)/i);
-    if(m){ switchTo(m[1], {fromHash:true}); }
-  });
-
-  on(document,"keydown",(e)=>{
-    if(e.target.matches("input,textarea")) return;
-    const map={1:"remnant",2:"observer",3:"voice",4:"phrase",5:"breath",6:"coherence",7:"drills",8:"timer",9:"deck",0:"ledger"};
-    if(map[e.key]){ e.preventDefault(); switchTo(map[e.key]); }
-    if((e.key==="P"||e.key==="p") && $("#trace")){ e.preventDefault(); $("#dlTrace").click(); }
-    if((e.key==="R"||e.key==="r")){ e.preventDefault(); $("#newSeed")?.click(); }
-    if((e.key==="S"||e.key==="s")){ e.preventDefault(); /* Observer wiring in Part 2 */ }
-  });
-
-  /* ---------- Hero reveal ---------- */
-  $("#yr") && ($("#yr").textContent = new Date().getFullYear());
-  if('IntersectionObserver' in window){
-    const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }), {threshold:.08});
-    $$(".card").forEach(c=>io.observe(c));
-  } else { $$(".card").forEach(c=>c.classList.add('visible')); }
-
-  /* ---------- Toast helper ---------- */
-  function toast(msg){
-    const el=document.createElement("div"); el.textContent=msg;
-    Object.assign(el.style,{position:"fixed",left:"50%",bottom:"22px",transform:"translateX(-50%)",
-      background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid #2a3242",borderRadius:"10px",
-      boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:9999,opacity:0,transition:"opacity .2s"});
-    document.body.appendChild(el); requestAnimationFrame(()=>{el.style.opacity=1});
-    setTimeout(()=>{el.style.opacity=0; setTimeout(()=>el.remove(),250);},1800);
-  }
-  const PREFERS_RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* ===================== Remnant Super-Engine ===================== */
-  let AC=null, carrier="none";
-  function ensureAC(){ if(AC) return AC; try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch{} return AC; }
-  window.addEventListener("pointerdown",()=>{ if(AC && AC.state==="suspended"){ AC.resume(); } },{once:true,passive:true});
-
-  // carrier osc pair
-  let G=null, PAN_L=null, PAN_R=null, OSC_L=null, OSC_R=null;
-  function initAudio(){
-    if(!ensureAC()) return;
-    if(G) return;
-    G=AC.createGain(); G.gain.value=0.00006; G.connect(AC.destination);
-    PAN_L = AC.createStereoPanner ? AC.createStereoPanner() : null;
-    PAN_R = AC.createStereoPanner ? AC.createStereoPanner() : null;
-    if(PAN_L && PAN_R){ PAN_L.pan.value=-0.66; PAN_R.pan.value=0.66; PAN_L.connect(G); PAN_R.connect(G); }
-  }
-  function stopOsc(){ try{OSC_L?.stop();OSC_R?.stop();}catch(_){} OSC_L=null; OSC_R=null; }
-  function playCarrier(freq, dur=0.5, vol=0.06){
-    initAudio(); if(!AC||!freq) return;
-    stopOsc();
-    const binaural = $("#binaural")?.checked;
-    const fL = binaural ? freq-2 : freq, fR = binaural ? freq+2 : freq;
-    const oL=AC.createOscillator(), gL=AC.createGain(); oL.type="sine"; oL.frequency.value=fL; gL.gain.value=0.0001;
-    const oR=AC.createOscillator(), gR=AC.createGain(); oR.type="sine"; oR.frequency.value=fR; gR.gain.value=0.0001;
-    oL.connect(gL).connect(PAN_L||G); oR.connect(gR).connect(PAN_R||G);
-    const t=AC.currentTime; const gate=$("#carrierGate")?.checked ? dur*10 : dur;
-    gL.gain.linearRampToValueAtTime(vol,t+0.06); gL.gain.linearRampToValueAtTime(0.0001,t+gate);
-    gR.gain.linearRampToValueAtTime(vol,t+0.06); gR.gain.linearRampToValueAtTime(0.0001,t+gate);
-    oL.start(); oR.start(); oL.stop(t+gate+0.04); oR.stop(t+gate+0.04);
-    OSC_L=oL; OSC_R=oR;
-  }
-  $$(".lab-btn.tone").forEach(b=>on(b,"click",()=>{
-    const c=b.dataset.carrier||"none"; carrier=c; $("#hudCarrier").textContent="Πν: "+c;
-    if(c!=="none") playCarrier(+c,0.7,0.07);
-  }));
-
-  // Canvas fit + palettes (unchanged) … [keep your existing Remnant engine here]
-
-  /* … keep the rest of your Part 1 Remnant engine exactly as you have it … */
-
-  // —— Tab bootstrapping after engine is ready ——
-  // open hash or last tab; fallback to remnant
-  (function initTabOnLoad(){
-    let id = (location.hash.match(/tab=([a-z0-9_-]+)/i)||[])[1];
-    if(!id){
-      try{ id = localStorage.getItem("sof_last_tab")||""; }catch{}
-    }
-    if(!id) id="remnant";
-    // ensure panels exist (later parts load) then switch
-    const tryInit = () => {
-      if(getTabs().length>1){ switchTo(id, {fromHash:true}); return; }
-      setTimeout(tryInit, 50);
-    };
-    tryInit();
-  })();
-
-})();
-</script>
-  
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
   <title>Manifest — Remnant Visual Exercise · Scroll of Fire</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
-  <meta name="description" content="RVE: compose intention (𝓘), align a carrier Πν, run 𝓘→𝓛→𝓒→𝓢, breathe, compute Ξ, drill focus, consult Ethics (Eq.9), and seal to a private Witness Ledger." />
-  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/teach.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b0f">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Manifest Remnant Visual Exercise: intention, carrier frequency, breath, observer loop, coherence tracking, drills, ethics, and witness ledger.">
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/teach.html">
+
   <meta property="og:title" content="Manifest — Remnant Visual Exercise · Scroll of Fire">
-  <meta property="og:description" content="Create. Witness. Seal. Carrier tuning, observer pacing, breath ring, Ξ meter, drills, neuro maps, and private ledger — with Eq.9 safety mask.">
+  <meta property="og:description" content="Create. Witness. Seal. Frequency tuning, visual coherence, breath ring, observer pacing, drills, ethics, and private ledger.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
 
@@ -156,115 +28,600 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
 
-  <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-26">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-26" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-26"></noscript>
-
-  <link rel="preload" as="image" href="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" imagesizes="100vw">
+  <link rel="stylesheet" href="assets/css/codex.css?v=2026-06-04">
 
   <style>
-    :root{--maxw:1180px}
-    body{margin:0}
-    .wrap{max-width:var(--maxw);margin:0 auto;padding:20px 16px 120px}
-    .title{
-      font-family:"Crimson Pro",serif;font-weight:800;text-align:center;
-      font-size:clamp(28px,3.6vw,44px);margin:8px 0 4px;letter-spacing:.2px;
-      background:linear-gradient(180deg,#fff,#cfefff 60%,#a7f6ff);
-      -webkit-background-clip:text;background-clip:text;color:transparent
+    :root {
+      --maxw: 1180px;
+      --bg: #05060a;
+      --panel: rgba(255, 255, 255, 0.035);
+      --panel2: rgba(255, 255, 255, 0.06);
+      --line: rgba(255, 255, 255, 0.14);
+      --ink: #f4f1e8;
+      --muted: #9aa4be;
+      --accent: #7af3ff;
+      --gold: #f3c97a;
+      --danger: #ff7f91;
+      --radius: 16px;
     }
-    .subtitle{text-align:center;color:var(--muted);margin:0 0 12px}
 
-    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
-    .col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-6{grid-column:span 6}.col-7{grid-column:span 7}.col-8{grid-column:span 8}.col-9{grid-column:span 9}.col-12{grid-column:span 12}
-    @media (max-width:980px){.col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-9,.col-12{grid-column:span 12}}
-
-    .card{border:1px solid var(--line);border-radius:12px;padding:12px;background:rgba(255,255,255,.02)}
-    .lab-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .lab-btn{padding:.6rem .85rem;border-radius:10px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);font-weight:700;cursor:pointer}
-    .lab-btn[disabled]{opacity:.5;cursor:not-allowed}
-    .lab-btn.primary{box-shadow:0 8px 24px rgba(122,243,255,.12)}
-    .lab-input{width:100%;padding:.6rem;border-radius:10px;border:1px solid var(--line);background:#0f1116;color:inherit}
-    .hint,.meta{color:#9aa4be}
-    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-
-    .tabs-wrap{position:relative}
-    .pill-rail{
-      display:flex; gap:6px; align-items:center; overflow:auto; scroll-snap-type:x mandatory;
-      padding:0 40px;
-      mask-image:linear-gradient(90deg,transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
-      -webkit-mask-image:linear-gradient(90deg,transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
+    * {
+      box-sizing: border-box;
     }
-    .pill{flex:0 0 auto; scroll-snap-align:start; padding:.5rem .8rem;border-radius:999px;border:1px solid var(--line);cursor:pointer;white-space:nowrap}
-    .pill.active{border-color:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent)}
-    .tab{display:none}.tab.active{display:block}
-    .chev{
-      position:absolute; top:50%; transform:translateY(-50%);
-      width:32px; height:32px; border-radius:999px; border:1px solid var(--line);
-      background:rgba(255,255,255,.04); display:grid; place-items:center; cursor:pointer;
-    }
-    .chev.left{left:4px} .chev.right{right:4px}
-    .chev[disabled]{opacity:.4;cursor:not-allowed}
 
-    /* REMNANT */
-    .stage{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#0a0e15}
-    #trace{display:block;width:100%;height:420px;background:radial-gradient(240px 180px at 50% 50%, #0e1420, #080b12)}
-    .hud{position:absolute;inset:auto 10px 10px 10px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
-    .chip{font-size:.82rem;padding:.25rem .55rem;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);pointer-events:auto}
-
-    .control-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
-    .control-grid > * {grid-column:span 12}
-    @media (min-width:760px){ .control-grid .span-3{grid-column:span 3} .control-grid .span-4{grid-column:span 4} .control-grid .span-6{grid-column:span 6} .control-grid .span-8{grid-column:span 8}}
-
-    .ring-bg{fill:none;stroke:#1f1f28;stroke-width:6}
-    .ring-fg{fill:none;stroke:url(#gradRing);stroke-width:6;stroke-linecap:round;stroke-dasharray:0 283}
-    .ring-num{font:800 18px/1 Inter;fill:#eae7df}
-    .ring-sub{font:600 10px/1 Inter;fill:#b8b3a6}
-
-    .hero{margin:8px auto 0; max-width:1280px; border-radius:16px; overflow:hidden; background:#0b0f14}
-    .hero-frame{position:relative}
-    .hero-img{display:block; width:100%; height:auto; object-fit:contain; aspect-ratio:21/9}
-    .hero-overlay{position:absolute; inset:0; background:radial-gradient(ellipse at 50% 70%, rgba(10,16,22,.35), transparent 70%); pointer-events:none}
-    .hero-glow{position:absolute; inset:0; background:radial-gradient(circle at 50% 50%, rgba(122,243,255,.15), rgba(243,201,122,.06) 70%, transparent 100%); mix-blend-mode:screen; opacity:.45; animation:heroPulse 12s ease-in-out infinite; pointer-events:none}
-    @keyframes heroPulse{0%,100%{opacity:.35;transform:scale(1);filter:blur(0)}50%{opacity:.6;transform:scale(1.05);filter:blur(2px)}}
-    @media (prefers-reduced-motion: reduce){ .hero-glow{animation:none;opacity:.28} }
-
-    .thumb{height:40px;width:auto;border:1px solid var(--line);border-radius:6px;vertical-align:middle;cursor:pointer}
-    .lightbox{position:fixed; inset:0; background:rgba(0,0,0,.7); display:none; align-items:center; justify-content:center; z-index:9999}
-    .lightbox.open{display:flex}
-    .lightbox img{max-width:min(92vw,1200px); max-height:88vh; border-radius:12px; border:1px solid #2a3242; box-shadow:0 16px 48px rgba(0,0,0,.6)}
-
-    .visible{opacity:1;transform:none}
-    .card{opacity:.96;transform:translateY(6px);transition:opacity .25s ease-out, transform .25s ease-out}
-
-    body.stars {
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      color: var(--ink);
       background:
-        radial-gradient(800px 600px at 50% 30%, rgba(15,25,40,.6), transparent 80%),
-        linear-gradient(180deg, #05060a 0%, #0b0e14 80%);
-      overflow-x:hidden;
+        radial-gradient(900px 620px at 50% 8%, rgba(122, 243, 255, 0.10), transparent 72%),
+        radial-gradient(760px 520px at 85% 28%, rgba(243, 201, 122, 0.08), transparent 70%),
+        linear-gradient(180deg, #05060a 0%, #0b0e14 88%);
+      overflow-x: hidden;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
-    canvas#trace {
+
+    a {
+      color: inherit;
+    }
+
+    .wrap {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 20px 16px 96px;
+    }
+
+    .hero {
+      max-width: 1280px;
+      margin: 8px auto 0;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #0b0f14;
+      border: 1px solid var(--line);
+      box-shadow: 0 20px 80px rgba(0, 0, 0, 0.38);
+    }
+
+    .hero-frame {
+      position: relative;
+    }
+
+    .hero-img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      aspect-ratio: 21 / 9;
+    }
+
+    .hero-overlay,
+    .hero-glow {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .hero-overlay {
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.32)),
+        radial-gradient(ellipse at 50% 70%, rgba(10,16,22,.22), transparent 72%);
+    }
+
+    .hero-glow {
+      background: radial-gradient(circle at 50% 50%, rgba(122,243,255,.16), rgba(243,201,122,.08) 58%, transparent 100%);
+      mix-blend-mode: screen;
+      opacity: .45;
+      animation: heroPulse 12s ease-in-out infinite;
+    }
+
+    @keyframes heroPulse {
+      0%, 100% { opacity: .34; transform: scale(1); filter: blur(0); }
+      50% { opacity: .58; transform: scale(1.045); filter: blur(2px); }
+    }
+
+    .page-head {
+      text-align: center;
+    }
+
+    .title {
+      font-family: "Crimson Pro", serif;
+      font-weight: 800;
+      font-size: clamp(30px, 4vw, 50px);
+      margin: 14px 0 4px;
+      letter-spacing: .2px;
+      background: linear-gradient(180deg, #fff, #d8f9ff 58%, #a7f6ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      max-width: 880px;
+      margin: 0 auto 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .crumbs {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 10px 0 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+    }
+
+    .col-3 { grid-column: span 3; }
+    .col-4 { grid-column: span 4; }
+    .col-5 { grid-column: span 5; }
+    .col-6 { grid-column: span 6; }
+    .col-7 { grid-column: span 7; }
+    .col-8 { grid-column: span 8; }
+    .col-9 { grid-column: span 9; }
+    .col-12 { grid-column: span 12; }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.018)),
+        rgba(255,255,255,.02);
+      box-shadow: 0 14px 45px rgba(0,0,0,.18);
+    }
+
+    .card h2,
+    .card h3 {
+      margin-top: 0;
+    }
+
+    .meta,
+    .hint {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .hint {
+      font-size: .94rem;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 12px 0;
+    }
+
+    .list {
+      line-height: 1.65;
+      padding-left: 1.2rem;
+    }
+
+    .compact {
+      font-size: .94rem;
+    }
+
+    .lab-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: 8px 0;
+    }
+
+    .lab-btn {
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.018));
+      color: var(--ink);
+      padding: .62rem .88rem;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+
+    .lab-btn:hover,
+    .lab-btn:focus-visible {
+      border-color: rgba(122,243,255,.5);
+      background: rgba(122,243,255,.08);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .lab-btn.primary {
+      border-color: rgba(122,243,255,.48);
+      box-shadow: 0 8px 28px rgba(122,243,255,.12);
+    }
+
+    .lab-btn.danger {
+      border-color: rgba(255,127,145,.45);
+    }
+
+    .lab-btn[disabled] {
+      opacity: .48;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .lab-input {
+      width: 100%;
+      padding: .66rem .74rem;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(7, 10, 16, .78);
+      color: var(--ink);
+      font: inherit;
+    }
+
+    textarea.lab-input {
+      resize: vertical;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: .94rem;
+    }
+
+    label > input,
+    label > select {
+      margin-top: 5px;
+    }
+
+    input[type="range"].lab-input {
+      padding: .35rem;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .control-grid > * { grid-column: span 12; }
+
+    .span-3 { grid-column: span 3; }
+    .span-4 { grid-column: span 4; }
+    .span-6 { grid-column: span 6; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    .tabs-wrap {
+      position: relative;
+    }
+
+    .pill-rail {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 0 40px;
+      scrollbar-width: none;
+      mask-image: linear-gradient(90deg, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
+    }
+
+    .pill-rail::-webkit-scrollbar {
+      display: none;
+    }
+
+    .pill {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+      padding: .55rem .82rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: rgba(255,255,255,.025);
+      cursor: pointer;
+      white-space: nowrap;
+      font: inherit;
+      font-weight: 700;
+    }
+
+    .pill.active {
+      border-color: rgba(122,243,255,.72);
+      background: rgba(122,243,255,.09);
+      box-shadow: 0 0 0 1px rgba(122,243,255,.18);
+    }
+
+    .tab {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .tab.active {
+      display: block;
+    }
+
+    .chev {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: rgba(255,255,255,.05);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .chev.left { left: 4px; }
+    .chev.right { right: 4px; }
+    .chev[disabled] { opacity: .38; cursor: not-allowed; }
+
+    .stage {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #070a10;
+    }
+
+    #trace {
+      display: block;
+      width: 100%;
+      height: 440px;
       background:
         radial-gradient(circle at 50% 50%, #0a0e15 0%, #06080d 80%),
-        repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.02) 0 2px, transparent 2px 4px);
-      box-shadow: inset 0 0 40px rgba(122,243,255,.12), 0 0 120px rgba(122,243,255,.08);
+        repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.022) 0 2px, transparent 2px 5px);
+      box-shadow: inset 0 0 44px rgba(122,243,255,.11), 0 0 120px rgba(122,243,255,.08);
     }
+
     .stage::after {
-      content:""; position:absolute; inset:0;
-      background:radial-gradient(ellipse at 50% 60%, rgba(122,243,255,.08), transparent 70%);
-      pointer-events:none;
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 62%, rgba(122,243,255,.08), transparent 72%);
+      pointer-events: none;
     }
-    .table-wrap{overflow:auto}
+
+    .hud {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .chip {
+      font-size: .82rem;
+      padding: .29rem .58rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: rgba(8, 12, 18, .78);
+      backdrop-filter: blur(10px);
+      pointer-events: auto;
+    }
+
+    button.chip {
+      cursor: pointer;
+    }
+
+    .freq-panel {
+      border: 1px solid rgba(122,243,255,.16);
+      border-radius: 16px;
+      padding: 12px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(122,243,255,.10), transparent 68%),
+        rgba(255,255,255,.025);
+    }
+
+    .freq-readout {
+      display: flex;
+      align-items: baseline;
+      gap: .45rem;
+      flex-wrap: wrap;
+    }
+
+    .freq-readout strong {
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      color: var(--gold);
+      letter-spacing: -.04em;
+    }
+
+    .freq-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .tone.active {
+      border-color: rgba(243,201,122,.75);
+      background: rgba(243,201,122,.09);
+    }
+
+    .ring-bg {
+      fill: none;
+      stroke: rgba(255,255,255,.12);
+      stroke-width: 6;
+    }
+
+    .ring-fg {
+      fill: none;
+      stroke: url(#gradRing);
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 0 283;
+    }
+
+    .ring-num {
+      font: 800 18px/1 Inter, system-ui, sans-serif;
+      fill: #eae7df;
+    }
+
+    .ring-sub {
+      font: 600 10px/1 Inter, system-ui, sans-serif;
+      fill: #b8b3a6;
+    }
+
+    .meter {
+      height: 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      overflow: hidden;
+    }
+
+    .meter > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      border-radius: inherit;
+      transition: width .25s ease;
+    }
+
+    canvas.small-canvas {
+      width: 100%;
+      max-width: 100%;
+      background: rgba(0,0,0,.18);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      margin-top: 8px;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 860px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      padding: .65rem;
+      font-size: .9rem;
+    }
+
+    th {
+      color: var(--gold);
+      background: rgba(255,255,255,.035);
+    }
+
+    .status-green { color: #9effc1; }
+    .status-yellow { color: #ffe28a; }
+    .status-red { color: #ff9aaa; }
+
+    .footer {
+      margin-top: 18px;
+      text-align: center;
+    }
+
+    @media (min-width: 760px) {
+      .control-grid .span-3 { grid-column: span 3; }
+      .control-grid .span-4 { grid-column: span 4; }
+      .control-grid .span-6 { grid-column: span 6; }
+      .control-grid .span-8 { grid-column: span 8; }
+      .control-grid .span-12 { grid-column: span 12; }
+    }
+
+    @media (max-width: 980px) {
+      .col-3,
+      .col-4,
+      .col-5,
+      .col-6,
+      .col-7,
+      .col-8,
+      .col-9,
+      .col-12 {
+        grid-column: span 12;
+      }
+
+      .span-3,
+      .span-4,
+      .span-6,
+      .span-8,
+      .span-12 {
+        grid-column: span 12;
+      }
+
+      #trace {
+        height: 360px;
+      }
+
+      .freq-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hud {
+        position: static;
+        padding: 8px;
+        background: rgba(8, 12, 18, .88);
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .wrap {
+        padding-inline: 12px;
+      }
+
+      .freq-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .lab-btn,
+      .lab-input {
+        width: 100%;
+      }
+
+      .lab-row {
+        align-items: stretch;
+      }
+
+      .pill-rail {
+        padding-inline: 34px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-glow {
+        animation: none;
+      }
+
+      * {
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 
 <body class="stars">
-  <!-- Banner -->
   <figure class="hero" aria-label="Scroll of Fire banner">
     <div class="hero-frame">
       <img
         src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png"
         alt="Scroll of Fire — sigil banner"
-        width="2100" height="900"
+        width="2100"
+        height="900"
         decoding="async"
         loading="eager"
         fetchpriority="high"
@@ -277,44 +634,45 @@
   <main class="wrap" id="main" role="main">
     <header class="page-head fancy-head">
       <h1 class="title">✨ Manifest — <em>Remnant Visual Exercise</em></h1>
-      <p class="subtitle">Compose a line (𝓘), tune Π<sub>ν</sub>, run 𝓘→𝓛→𝓒→𝓢, breathe, track Ξ, drill focus, consult Ethics (Eq.9), and <b>seal</b> the remnant to witness.</p>
+      <p class="subtitle">
+        Compose one clear line, tune a carrier frequency, breathe with the field,
+        observe without forcing, track coherence, and seal the witness privately.
+      </p>
 
-      <nav class="crumbs" aria-label="Breadcrumb" style="display:flex;gap:8px;justify-content:center;margin-top:10px;margin-bottom:14px">
+      <nav class="crumbs" aria-label="Breadcrumb">
         <a class="lab-btn" href="index.html">← Back to Codex</a>
         <a class="lab-btn" href="theory.html">📘 Theory</a>
       </nav>
 
-      <section class="card" style="margin-top:10px">
+      <section class="card" aria-label="Manifest tabs">
         <div class="tabs-wrap" role="navigation" aria-label="Manifest tabs">
           <button class="chev left" id="tabsPrev" aria-label="Scroll tabs left" type="button">‹</button>
+
           <div class="pill-rail" id="pillRail" role="tablist" tabindex="0" aria-label="Sections">
-            <button class="pill active" data-tab="remnant"  role="tab" aria-selected="true"  type="button">🜚 Remnant</button>
-            <button class="pill"        data-tab="observer" role="tab" aria-selected="false" type="button">⏱ Observer</button>
-            <button class="pill"        data-tab="voice"    role="tab" aria-selected="false" type="button">🎙 Carrier</button>
-            <button class="pill"        data-tab="phrase"   role="tab" aria-selected="false" type="button">🔡 Phrase</button>
-            <button class="pill"        data-tab="breath"   role="tab" aria-selected="false" type="button">🌬 Breath</button>
-            <button class="pill"        data-tab="coherence"role="tab" aria-selected="false" type="button">📈 Ξ</button>
-            <button class="pill"        data-tab="drills"   role="tab" aria-selected="false" type="button">🧭 Drills</button>
-            <button class="pill"        data-tab="timer"    role="tab" aria-selected="false" type="button">⏳ Timer</button>
-            <button class="pill"        data-tab="deck"     role="tab" aria-selected="false" type="button">🎴 Deck</button>
-            <button class="pill"        data-tab="ledger"   role="tab" aria-selected="false" type="button">📒 Ledger</button>
-            <button class="pill"        data-tab="ethics"   role="tab" aria-selected="false" type="button">🛡 Ethics</button>
-            <button class="pill"        data-tab="maps"     role="tab" aria-selected="false" type="button">🧠 Maps</button>
+            <button class="pill active" data-tab="remnant" role="tab" aria-selected="true" type="button">🜚 Remnant</button>
+            <button class="pill" data-tab="carrier" role="tab" aria-selected="false" type="button">🎧 Carrier</button>
+            <button class="pill" data-tab="observer" role="tab" aria-selected="false" type="button">⏱ Observer</button>
+            <button class="pill" data-tab="phrase" role="tab" aria-selected="false" type="button">🔡 Phrase</button>
+            <button class="pill" data-tab="breath" role="tab" aria-selected="false" type="button">🌬 Breath</button>
+            <button class="pill" data-tab="coherence" role="tab" aria-selected="false" type="button">📈 Ξ</button>
+            <button class="pill" data-tab="drills" role="tab" aria-selected="false" type="button">🧭 Drills</button>
+            <button class="pill" data-tab="timer" role="tab" aria-selected="false" type="button">⏳ Timer</button>
+            <button class="pill" data-tab="deck" role="tab" aria-selected="false" type="button">🎴 Deck</button>
+            <button class="pill" data-tab="ledger" role="tab" aria-selected="false" type="button">📒 Ledger</button>
+            <button class="pill" data-tab="ethics" role="tab" aria-selected="false" type="button">🛡 Ethics</button>
+            <button class="pill" data-tab="maps" role="tab" aria-selected="false" type="button">🧠 Maps</button>
           </div>
+
           <button class="chev right" id="tabsNext" aria-label="Scroll tabs right" type="button">›</button>
         </div>
       </section>
     </header>
 
-    <!-- ========================================================= -->
-    <!-- =================== REMNANT (EXPANDED) ================== -->
-    <!-- ========================================================= -->
-    <section id="tab-remnant" class="tab active" role="tabpanel" aria-labelledby="remnant-tab">
+    <section id="tab-remnant" class="tab active" role="tabpanel">
       <article class="grid">
-        <div class="card col-9">
-          <h2>🜚 Remnant — Visual Exercise, Autopilot, & Seal</h2>
+        <div class="card col-8">
+          <h2>🜚 Remnant — Visual Field</h2>
 
-          <!-- Stage -->
           <div class="stage">
             <canvas id="trace" aria-label="Remnant trace"></canvas>
             <div class="hud">
@@ -331,753 +689,258 @@
             </div>
           </div>
 
-          <!-- Controls -->
-          <div class="control-grid" style="margin-top:10px">
-            <label class="span-3">Mode
-              <select id="visMode" class="lab-input" aria-label="Visual mode">
-                <option value="0">Flow (particle bloom)</option>
-                <option value="1">Lattice (Lissajous net)</option>
-                <option value="2">Torus (donut points)</option>
-                <option value="3">Poly (icosahedron)</option>
-                <option value="4">Rose (k-petaled)</option>
-                <option value="5">Spiro (trochoid)</option>
-                <option value="6">Lissajous Grid (multi-phase)</option>
-                <option value="7">Vortex (toroidal flow)</option>
-                <option value="8">Orbitals (Bohr-ish)</option>
-                <option value="9">Phi Weave (golden lattice)</option>
-                <option value="10">Aurora (noise ribbons)</option>
-                <option value="11">Chladni (modal nodes)</option>
-                <option value="12">Gyre (double-spiral)</option>
-                <option value="13">Bloomfield (diffusive)</option>
+          <div class="control-grid">
+            <label class="span-3">Visual mode
+              <select id="visMode" class="lab-input">
+                <option value="0">Flow</option>
+                <option value="1">Lattice</option>
+                <option value="2">Torus</option>
+                <option value="3">Rose</option>
+                <option value="4">Vortex</option>
+                <option value="5">Aurora</option>
+                <option value="6">Phi Weave</option>
               </select>
             </label>
 
-            <label class="span-3">Density <input id="visDensity" type="range" min="40" max="1200" value="220" class="lab-input" aria-label="Density"></label>
-            <label class="span-3">Speed <input id="visSpeed" type="range" min="0" max="240" value="90" class="lab-input" aria-label="Speed"></label>
-            <label class="span-3">Afterglow <input id="visFade" type="range" min="2" max="40" value="14" class="lab-input" aria-label="Motion blur/decay"></label>
+            <label class="span-3">Density
+              <input id="visDensity" type="range" min="60" max="1200" value="280" class="lab-input">
+            </label>
 
-            <div class="span-6">
-              <div class="lab-row" role="radiogroup" aria-label="Carrier">
-                <button class="lab-btn tone" data-carrier="432" type="button">432</button>
-                <button class="lab-btn tone" data-carrier="528" type="button">528</button>
-                <button class="lab-btn tone" data-carrier="369" type="button">369</button>
-                <button class="lab-btn tone" data-carrier="144" type="button">144</button>
-                <button class="lab-btn tone" data-carrier="963" type="button">963</button>
-                <button class="lab-btn tone" data-carrier="none" type="button">None</button>
-              </div>
-              <div class="lab-row">
-                <label><input type="checkbox" id="binaural"> Binaural ±4 Hz</label>
-                <label><input type="checkbox" id="carrierGate"> Keep carrier on</label>
-                <label><input type="checkbox" id="sym" checked> Mirror symmetry</label>
-                <label><input type="checkbox" id="noise" checked> Subtle noise</label>
-              </div>
+            <label class="span-3">Speed
+              <input id="visSpeed" type="range" min="0" max="240" value="90" class="lab-input">
+            </label>
+
+            <label class="span-3">Afterglow
+              <input id="visFade" type="range" min="3" max="44" value="14" class="lab-input">
+            </label>
+
+            <label class="span-3">Colorway
+              <select id="palette" class="lab-input">
+                <option value="aqua-gold">Aqua → Gold</option>
+                <option value="rose-ember">Rose → Ember</option>
+                <option value="violet-ice">Violet → Ice</option>
+                <option value="forest-sun">Forest → Sun</option>
+                <option value="mono">Mono</option>
+              </select>
+            </label>
+
+            <label class="span-3">Stroke
+              <input id="stroke" type="range" min="1" max="6" value="2" class="lab-input">
+            </label>
+
+            <label class="span-3">Pulse lock
+              <input id="pulseLock" type="range" min="0" max="100" value="64" class="lab-input">
+            </label>
+
+            <div class="span-3 lab-row">
+              <label><input type="checkbox" id="sym" checked> Mirror</label>
+              <label><input type="checkbox" id="noise" checked> Noise</label>
             </div>
 
-            <div class="span-6">
-              <div class="lab-row">
-                <label>Colorway
-                  <select id="palette" class="lab-input" style="width:auto">
-                    <option value="aqua-gold">Aqua → Gold (default)</option>
-                    <option value="rose-ember">Rose → Ember</option>
-                    <option value="violet-ice">Violet → Ice</option>
-                    <option value="forest-sun">Forest → Sun</option>
-                    <option value="mono">Mono (elegant)</option>
-                  </select>
-                </label>
-                <label>Stroke <input id="stroke" type="range" min="1" max="5" value="2" class="lab-input" style="width:120px"></label>
-                <button id="savePreset" class="lab-btn" type="button">Save Preset</button>
-                <button id="loadPreset" class="lab-btn" type="button">Load</button>
-              </div>
-              <div class="lab-row">
-                <button id="autoRun" class="lab-btn primary" type="button">Auto-Pilot (𝓘→𝓛→𝓒→𝓢, 48s)</button>
-                <button id="rmnSeal" class="lab-btn" type="button">Seal → Ledger</button>
-                <button id="newSeed" class="lab-btn" type="button">New Seed</button>
-                <label><input type="checkbox" id="lockSeed"> Lock seed</label>
-              </div>
+            <input id="rmnLine" class="lab-input span-12" placeholder="Your intention line (𝓘)…">
+
+            <div class="span-12 lab-row">
+              <button id="autoRun" class="lab-btn primary" type="button">Auto-Pilot 𝓘→𝓛→𝓒→𝓢</button>
+              <button id="rmnSeal" class="lab-btn" type="button">Seal → Ledger</button>
+              <button id="newSeed" class="lab-btn" type="button">New Seed</button>
+              <button id="savePreset" class="lab-btn" type="button">Save Preset</button>
+              <button id="loadPreset" class="lab-btn" type="button">Load Preset</button>
             </div>
-
-            <input id="rmnLine" class="lab-input span-12" placeholder="Your intention line (𝓘)…" aria-label="Intention line">
-
-            <div class="span-12">
-              <details class="card">
-                <summary><strong>Advanced</strong> (carrier mix, phase, vortex bias, orbital count)</summary>
-                <div class="grid" style="margin-top:8px">
-                  <label class="lab-input col-6">Carrier Mix (0–1) <input id="cMix" type="range" min="0" max="1" step="0.01" value="0.65"></label>
-                  <label class="lab-input col-6">Phase Bias (−1..1) <input id="cPhase" type="range" min="-1" max="1" step="0.01" value="0.00"></label>
-                  <label class="lab-input col-6">Vortex Bias (0–1) <input id="vBias" type="range" min="0" max="1" step="0.01" value="0.42"></label>
-                  <label class="lab-input col-6">Orbitals (3–24) <input id="orbitals" type="range" min="3" max="24" step="1" value="8"></label>
-                </div>
-              </details>
-            </div>
-
-            <p class="hint span-12">
-              Guidance: Torus/Poly with 4-7-8 for calm; Rose/Spiro during Focus; Vortex/Aurora for energy reset; Chladni for tone-locking with mic.
-            </p>
           </div>
         </div>
 
-        <aside class="card col-3">
-          <h3>Operator map</h3>
+        <aside class="card col-4">
+          <h3>🎧 Carrier Control</h3>
+          <div class="freq-panel">
+            <div class="freq-readout">
+              <strong id="freqValue">432</strong>
+              <span>Hz</span>
+              <span class="meta" id="toneNow">stopped</span>
+            </div>
+
+            <label>Frequency
+              <input id="freqSlider" class="lab-input" type="range" min="80" max="1200" step="1" value="432">
+            </label>
+
+            <div class="lab-row">
+              <input id="freqInput" class="lab-input" type="number" min="80" max="1200" step="1" value="432" style="max-width:130px">
+              <button id="playFreq" class="lab-btn primary" type="button">Play</button>
+              <button id="stopFreq" class="lab-btn danger" type="button">Stop</button>
+            </div>
+
+            <div class="freq-grid">
+              <button class="lab-btn tone" data-carrier="144" type="button">144</button>
+              <button class="lab-btn tone" data-carrier="369" type="button">369</button>
+              <button class="lab-btn tone active" data-carrier="432" type="button">432</button>
+              <button class="lab-btn tone" data-carrier="528" type="button">528</button>
+              <button class="lab-btn tone" data-carrier="963" type="button">963</button>
+              <button class="lab-btn tone" data-carrier="none" type="button">None</button>
+            </div>
+
+            <div class="lab-row">
+              <label><input type="checkbox" id="binaural"> Binaural ±4 Hz</label>
+              <label><input type="checkbox" id="softGate" checked> Soft fade</label>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <h3>Operator Map</h3>
           <ol class="list compact">
-            <li>𝓘 <b>Intend</b> — one clear line on Π<sub>ν</sub>.</li>
-            <li>𝓛 <b>Light/Language</b> — speak it once, steady.</li>
-            <li>𝓒 <b>Conscious Witness</b> — one undeniable detail.</li>
-            <li>𝓢 <b>Source/Seal</b> — seal, rest, update later.</li>
+            <li><b>𝓘 Intend:</b> one line.</li>
+            <li><b>𝓛 Language:</b> speak simply.</li>
+            <li><b>𝓒 Witness:</b> notice one detail.</li>
+            <li><b>𝓢 Seal:</b> record and return.</li>
           </ol>
-          <div class="divider"></div>
-          <h3>Export</h3>
-          <p class="meta">PNG embeds metadata: mode, seed, carrier, Ξ, and your 𝓘 (as tEXt). Private to this device.</p>
-          <div class="lab-row"><button id="dlTraceMeta" class="lab-btn" type="button">PNG + meta</button></div>
-          <div class="divider"></div>
-          <p class="meta">Hotkeys: 1–9 tabs • S start/stop observer • P save PNG • R randomize.</p>
+
+          <p class="hint">
+            This tool is symbolic and reflective. Use it for grounding, focus, journaling, and creative coherence.
+          </p>
         </aside>
       </article>
     </section>
 
-    <!-- ========= PART 1/3 will continue with the rest of tabs in Part 2/3 ========= -->
-
-    <script>
-  (function(){
-    "use strict";
-    const $ =(s,r=document)=>r.querySelector(s);
-    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-    const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
-
-    /* ---------- Tabs / rails / keys (shared) ---------- */
-    const tabBtns=$$(".pill"), tabs=$$(".tab");
-    const rail=$("#pillRail"), prev=$("#tabsPrev"), next=$("#tabsNext");
-    function switchTo(id){
-      if(!id) return;
-      tabs.forEach(t=>t.classList.toggle("active", t.id==="tab-"+id));
-      tabBtns.forEach(b=>{
-        const onTab = b.dataset.tab===id;
-        b.classList.toggle("active", onTab);
-        b.setAttribute("aria-selected", onTab ? "true" : "false");
-      });
-      const btn=tabBtns.find(b=>b.dataset.tab===id);
-      if(btn){ btn.scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"}); btn.focus({preventScroll:true}); }
-    }
-    tabBtns.forEach(b=>on(b,"click",()=>switchTo(b.dataset.tab)));
-    function updateChev(){
-      if(!rail) return;
-      prev.disabled = rail.scrollLeft<=4;
-      next.disabled = (rail.scrollLeft + rail.clientWidth) >= (rail.scrollWidth-4);
-    }
-    on(prev,"click",()=>{ rail.scrollBy({left:-rail.clientWidth*0.7,behavior:"smooth"}); });
-    on(next,"click",()=>{ rail.scrollBy({left: rail.clientWidth*0.7,behavior:"smooth"}); });
-    on(rail,"scroll",updateChev,{passive:true}); updateChev();
-    on(rail,"keydown",(e)=>{
-      if(e.key==="ArrowRight"){ e.preventDefault(); const i=Math.max(0,tabBtns.findIndex(b=>b.classList.contains("active"))); const n=tabBtns[(i+1)%tabBtns.length]; n.click(); }
-      if(e.key==="ArrowLeft"){ e.preventDefault(); const i=Math.max(0,tabBtns.findIndex(b=>b.classList.contains("active"))); const n=tabBtns[(i-1+tabBtns.length)%tabBtns.length]; n.click(); }
-    });
-    on(document,"keydown",(e)=>{ if(e.target.matches("input,textarea")) return;
-      const map={1:"remnant",2:"observer",3:"voice",4:"phrase",5:"breath",6:"coherence",7:"drills",8:"timer",9:"deck",0:"ledger"};
-      if(map[e.key]){ e.preventDefault(); switchTo(map[e.key]); }
-      if((e.key==="P"||e.key==="p") && $("#trace")){ e.preventDefault(); $("#dlTrace").click(); }
-      if((e.key==="R"||e.key==="r")){ e.preventDefault(); $("#newSeed")?.click(); }
-      if((e.key==="S"||e.key==="s")){ e.preventDefault(); /* Observer wiring comes in Part 2 */ }
-    });
-
-    /* ---------- Hero reveal ---------- */
-    $("#yr") && ($("#yr").textContent = new Date().getFullYear());
-    if('IntersectionObserver' in window){
-      const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } }), {threshold:.08});
-      $$(".card").forEach(c=>io.observe(c));
-    } else { $$(".card").forEach(c=>c.classList.add('visible')); }
-
-    /* ---------- Local helpers ---------- */
-    function toast(msg){
-      const el=document.createElement("div"); el.textContent=msg;
-      Object.assign(el.style,{position:"fixed",left:"50%",bottom:"22px",transform:"translateX(-50%)",
-        background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid #2a3242",borderRadius:"10px",
-        boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:9999,opacity:0,transition:"opacity .2s"});
-      document.body.appendChild(el); requestAnimationFrame(()=>{el.style.opacity=1});
-      setTimeout(()=>{el.style.opacity=0; setTimeout(()=>el.remove(),250);},1800);
-    }
-    const PREFERS_RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    /* ===================== Remnant Super-Engine ===================== */
-    let AC=null, carrier="none";
-    function ensureAC(){ if(AC) return AC; try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch{} return AC; }
-    window.addEventListener("pointerdown",()=>{ if(AC && AC.state==="suspended"){ AC.resume(); } },{once:true,passive:true});
-
-    // carrier osc pair
-    let G=null, PAN_L=null, PAN_R=null, OSC_L=null, OSC_R=null;
-    function initAudio(){
-      if(!ensureAC()) return;
-      if(G) return;
-      G=AC.createGain(); G.gain.value=0.00006; G.connect(AC.destination);
-      PAN_L = AC.createStereoPanner ? AC.createStereoPanner() : null;
-      PAN_R = AC.createStereoPanner ? AC.createStereoPanner() : null;
-      if(PAN_L && PAN_R){ PAN_L.pan.value=-0.66; PAN_R.pan.value=0.66; PAN_L.connect(G); PAN_R.connect(G); }
-    }
-    function stopOsc(){ try{OSC_L?.stop();OSC_R?.stop();}catch(_){} OSC_L=null; OSC_R=null; }
-    function playCarrier(freq, dur=0.5, vol=0.06){
-      initAudio(); if(!AC||!freq) return;
-      stopOsc();
-      const binaural = $("#binaural")?.checked;
-      const fL = binaural ? freq-2 : freq, fR = binaural ? freq+2 : freq;
-      const oL=AC.createOscillator(), gL=AC.createGain(); oL.type="sine"; oL.frequency.value=fL; gL.gain.value=0.0001;
-      const oR=AC.createOscillator(), gR=AC.createGain(); oR.type="sine"; oR.frequency.value=fR; gR.gain.value=0.0001;
-      oL.connect(gL).connect(PAN_L||G); oR.connect(gR).connect(PAN_R||G);
-      const t=AC.currentTime; const gate=$("#carrierGate")?.checked ? dur*10 : dur;
-      gL.gain.linearRampToValueAtTime(vol,t+0.06); gL.gain.linearRampToValueAtTime(0.0001,t+gate);
-      gR.gain.linearRampToValueAtTime(vol,t+0.06); gR.gain.linearRampToValueAtTime(0.0001,t+gate);
-      oL.start(); oR.start(); oL.stop(t+gate+0.04); oR.stop(t+gate+0.04);
-      OSC_L=oL; OSC_R=oR;
-    }
-    $$(".tone").forEach(b=>on(b,"click",()=>{
-      const c=b.dataset.carrier||"none"; carrier=c; $("#hudCarrier").textContent="Πν: "+c;
-      if(c!=="none") playCarrier(+c,0.7,0.07);
-    }));
-
-    // Canvas
-    const canvas=$("#trace"), ctx=canvas?.getContext?.("2d");
-    function fit(){
-      if(!canvas||!ctx) return;
-      const r=canvas.getBoundingClientRect();
-      canvas.width=r.width;
-      canvas.height=Math.max(360, Math.min(560, Math.round(r.width*0.40)));
-    }
-    fit(); addEventListener("resize", fit, {passive:true});
-    if('ResizeObserver' in window){ new ResizeObserver(()=>fit()).observe(canvas.parentElement); }
-
-    // Palettes
-    const pals={
-      "aqua-gold": t=>t<.5?`rgba(122,243,255,${0.18+0.7*t})`:`rgba(243,201,122,${0.18+0.7*(t-.5)})`,
-      "rose-ember": t=>t<.5?`rgba(255,98,150,${0.18+0.7*t})`:`rgba(255,176,94,${0.18+0.7*(t-.5)})`,
-      "violet-ice": t=>t<.5?`rgba(170,120,255,${0.18+0.7*t})`:`rgba(170,235,255,${0.18+0.7*(t-.5)})`,
-      "forest-sun": t=>t<.5?`rgba(96,201,140,${0.18+0.7*t})`:`rgba(244,212,92,${0.18+0.7*(t-.5)})`,
-      "mono":      t=>`rgba(230,230,230,${0.15+0.75*t})`,
-    };
-    function pal(t){ return pals[$("#palette")?.value||"aqua-gold"](Math.max(0,Math.min(1,t))); }
-
-    // Controls
-    const visMode=$("#visMode"), visDensity=$("#visDensity"), visSpeed=$("#visSpeed"), visFade=$("#visFade");
-    const sym=$("#sym"), noise=$("#noise"), stroke=$("#stroke"), orbitals=$("#orbitals");
-    const cMix=$("#cMix"), cPhase=$("#cPhase"), vBias=$("#vBias");
-    let phi=0, seed=Math.random()*1000, mode=+visMode.value|0;
-    if(!Number.isFinite(mode) || mode<0) mode = 0;
-
-    // Noise helpers
-    function rng(){ const x=Math.sin(seed++)*43758.5453; return x-Math.floor(x); }
-    function n2d(x,y){ const s=Math.sin(x*12.9898+y*78.233)*43758.5453; return s-Math.floor(s); }
-
-    function speed(){ return (+visSpeed.value/90); }
-    function count(def){ const d=+visDensity.value; return Math.max(20, Math.floor(d*(def/220))); }
-
-    function clearFrame(){
-      const f=+visFade.value; ctx.fillStyle=`rgba(10,14,21,${f/200})`; ctx.fillRect(0,0,canvas.width,canvas.height);
-    }
-
-    /* -------------------- Visual Modes (14) -------------------- */
-    function drawFlow(){
-      const W=canvas.width,H=canvas.height; clearFrame();
-      const base = carrier==="none"? 0.7 : ((parseFloat(carrier)%1000)/1000);
-      const n=count(220), r0=Math.min(W,H)*0.24, st=+stroke.value;
-      for(let i=0;i<n;i++){
-        const a=i/n*Math.PI*2 + phi*0.0007*speed();
-        const b=Math.sin(i*0.17 + seed*0.07 + phi*0.001);
-        const r=r0*(0.72 + 0.3*Math.sin(phi*0.0018*speed() + i*0.05 + base*6));
-        const x=W/2+Math.cos(a)*r*(1+0.08*b);
-        const y=H/2+Math.sin(a*(1.0+0.02*Math.cos(phi*0.0026*speed())) )*r*(1-0.05*b);
-        ctx.fillStyle=pal((i%100)/100);
-        const rad=st*(0.6+0.9*(0.5+0.5*b));
-        if(sym.checked){
-          ctx.beginPath(); ctx.arc(x,y,rad,0,Math.PI*2); ctx.fill();
-          ctx.beginPath(); ctx.arc(W-x,y,rad,0,Math.PI*2); ctx.fill();
-        }else{ ctx.beginPath(); ctx.arc(x,y,rad,0,Math.PI*2); ctx.fill(); }
-      }
-      phi+=(["In","—","Out","—"].includes($("#hudBreath").textContent.split(": ")[1])?1.6:1.1)*speed();
-    }
-
-    function drawLattice(){
-      const W=canvas.width,H=canvas.height; clearFrame();
-      const base= carrier==="none"?0.5:((+carrier%360)/360);
-      const a=1+Math.round(base*5), b=2+Math.round(base*7);
-      const R=Math.min(W,H)*0.36, steps=count(640);
-      ctx.beginPath();
-      for(let i=0;i<steps;i++){
-        const th=i/steps*Math.PI*2;
-        const x=W/2+R*Math.sin(a*th + phi*0.0012*speed());
-        const y=H/2+R*Math.sin(b*th + phi*0.0016*speed());
-        (i?ctx.lineTo(x,y):ctx.moveTo(x,y));
-      }
-      ctx.lineWidth=+stroke.value; ctx.strokeStyle=pal(.8); ctx.stroke();
-      if(sym.checked){ ctx.save(); ctx.translate(W,0); ctx.scale(-1,1); ctx.stroke(); ctx.restore(); }
-      phi+=1.5*speed();
-    }
-
-    function drawTorus(){
-      const W=canvas.width,H=canvas.height; clearFrame();
-      const R=Math.min(W,H)*0.26, r=R*0.36, n=count(180), st=+stroke.value;
-      const a=phi*0.002*speed(), b=phi*0.0013*speed();
-      const cb=Math.cos(b), sb=Math.sin(b), ca=Math.cos(a), sa=Math.sin(a);
-      for(let i=0;i<n;i++){
-        const u=i/n*Math.PI*2, ny=28;
-        for(let j=0;j<ny;j++){
-          const v=j/ny*Math.PI*2;
-          let x=(R + r*Math.cos(v))*Math.cos(u);
-          let y=(R + r*Math.cos(v))*Math.sin(u);
-          let z=r*Math.sin(v);
-          let X =  x*cb + z*sb; let Z = -x*sb + z*cb;
-          let Y =  y*ca - Z*sa; Z =  y*sa + Z*ca;
-          const d=500/(600+Z);
-          const px=W/2+X*d, py=H/2+Y*d;
-          const t=(Z+R)/(2*R + r);
-          ctx.fillStyle = pal(t);
-          ctx.fillRect(px,py,st,st);
-          if(sym.checked) ctx.fillRect(W-px,py,st,st);
-        }
-      }
-      phi += 1.35*speed();
-    }
-
-    function drawPoly(){
-      const W=canvas.width,H=canvas.height; clearFrame();
-      const PHI=(1+Math.sqrt(5))/2, s=Math.min(W,H)*0.22, st=+stroke.value;
-      const vtx=[[-1,PHI,0],[1,PHI,0],[-1,-PHI,0],[1,-PHI,0],[0,-1,PHI],[0,1,PHI],[0,-1,-PHI],[0,1,-PHI],[PHI,0,-1],[PHI,0,1],[-PHI,0,-1],[-PHI,0,1]].map(v=>v.map(n=>n*s/PHI));
-      const edges=[[0,1],[0,7],[0,11],[1,7],[1,9],[2,3],[2,6],[2,11],[3,6],[3,9],[4,5],[4,9],[4,11],[5,9],[5,11],[6,7],[6,8],[7,8],[8,9],[8,10],[10,11],[10,7],[10,6],[11,0]];
-      const ax=phi*0.0018*speed(), ay=phi*0.0011*speed(), az=phi*0.0015*speed();
-      const cx=Math.cos(ax), sx=Math.sin(ax), cy=Math.cos(ay), sy=Math.sin(ay), cz=Math.cos(az), sz=Math.sin(az);
-      function rot([x,y,z]){ let Y1= y*cx - z*sx, Z1= y*sx + z*cx; let X2= x*cy + Z1*sy, Z2= -x*sy + Z1*cy, Y2=Y1; let X3= X2*cz - Y2*sz, Y3= X2*sz + Y2*cz, Z3=Z2; return [X3,Y3,Z3]; }
-      const pv=vtx.map(v=>rot(v)).map(([x,y,z])=>{ const d=500/(600+z); return [W/2+x*d, H/2+y*d, z]; });
-      ctx.lineWidth=st;
-      edges.forEach(([i,j])=>{
-        const zi=pv[i][2], zj=pv[j][2], t=((zi+zj)/2 + s)/(2*s);
-        ctx.strokeStyle=pal(Math.max(0,Math.min(1,t)));
-        ctx.beginPath(); ctx.moveTo(pv[i][0],pv[i][1]); ctx.lineTo(pv[j][0],pv[j][1]); ctx.stroke();
-        if(sym.checked){ ctx.beginPath(); ctx.moveTo(W-pv[i][0],pv[i][1]); ctx.lineTo(W-pv[j][0],pv[j][1]); ctx.stroke(); }
-      });
-      phi += 1.15*speed();
-    }
-
-    function drawRose(){
-      const W=canvas.width,H=canvas.height; clearFrame();
-      const base = carrier==="none"? 3 : (Math.max(2, Math.round((+carrier%1000)/120)));
-      const k = base + ((seed|0)%3);
-      const R = Math.min(W,H)*0.38, n = count(820), st=+stroke.value;
-      ctx.beginPath();
-      for(let i=0;i<=n;i++){
-        const th = i/n*Math.PI*2*2;
-        const r = R * Math.cos(k*th + phi*0.0012*speed());
-        const x = W/2 + r*Math.cos(th), y= H/2 + r*Math.sin(th);
-        (i?ctx.lineTo(x,y):ctx.moveTo(x,y));
-      }
-      ctx.lineWidth=st; ctx.strokeStyle=pal(.75); ctx.stroke();
-      if(sym.checked){ ctx.save(); ctx.translate(W,0); ctx.scale(-1,1); ctx.stroke(); ctx.restore(); }
-      phi += 1.25*speed();
-    }
-
-    function drawSpiro(){
-      const W=canvas.width,H=canvas.height; clearFrame();
-      const R = Math.min(W,H)*0.34;
-      const r = R * (0.25 + 0.15*Math.sin(seed*0.01));
-      const d = r * (0.8 + 0.3*Math.cos(seed*0.013));
-      const ext = 2*Math.PI*(r? (R/r): 8);
-      const steps = count(1200), st=+stroke.value;
-      ctx.beginPath();
-      for(let i=0;i<=steps;i++){
-        const t = i/steps*ext + phi*0.001*speed() + cPhase.value*0.6;
-        const x = (R-r)*Math.cos(t) + d*Math.cos(((R-r)/r)*t);
-        const y = (R-r)*Math.sin(t) - d*Math.sin(((R-r)/r)*t);
-        (i?ctx.lineTo(W/2+x,H/2+y):ctx.moveTo(W/2+x,H/2+y));
-      }
-      ctx.lineWidth=st; ctx.strokeStyle=pal(.6); ctx.stroke();
-      phi += 1.1*speed();
-    }
-
-    function drawLissaGrid(){
-      const W=canvas.width,H=canvas.height; clearFrame();
-      const cols=6, rows=4, pad=14, st=+stroke.value;
-      const cw=(W - pad*(cols+1))/cols, ch=(H - pad*(rows+1))/rows;
-      const a=2 + ((seed|0)%5), b=3 + ((seed>>2)%5);
-      for(let r=0;r<rows;r++){
-        for(let c=0;c<cols;c++){
-          ctx.beginPath();
-          const x0=pad + c*(cw+pad), y0=pad + r*(ch+pad), n=160;
-          for(let i=0;i<=n;i++){
-            const t=i/n*Math.PI*2;
-            const x = x0 + cw/2 + cw*0.42*Math.sin(a*t + 0.6*c + phi*0.0016*speed());
-            const y = y0 + ch/2 + ch*0.42*Math.sin(b*t + 0.4*r + phi*0.0012*speed());
-            (i?ctx.lineTo(x,y):ctx.moveTo(x,y));
-          }
-          ctx.lineWidth=st; ctx.strokeStyle = pal((c/cols*0.5 + r/rows*0.5)); ctx.stroke();
-        }
-      }
-      phi += 1.25*speed();
-    }
-
-    const vortexP=[];
-    function drawVortex(){
-      const W=canvas.width,H=canvas.height; clearFrame();
-      const N = count(360), st=+stroke.value, vb=+vBias.value;
-      while(vortexP.length<N){ vortexP.push({a: Math.random()*Math.PI*2, r: 0.1+Math.random()*0.9, z: (Math.random()-0.5)*2, s: 0.5+Math.random()*1.4}); }
-      for(let i=0;i<N;i++){
-        const p=vortexP[i];
-        p.a += 0.008 * p.s * speed() * (0.5+vb);
-        p.z += 0.006 * Math.sin(seed*0.01+i) * speed() * (0.5+vb*0.5);
-        if(p.z>1.2) p.z=-1.2;
-        const R = Math.min(W,H)*0.32;
-        const r0 = R*(0.35 + 0.25*Math.sin(p.a*3 + phi*0.002));
-        const x = (R + r0*Math.cos(p.a)) * Math.cos(p.a*0.6);
-        const y = (R + r0*Math.cos(p.a)) * Math.sin(p.a*0.6);
-        const z = r0*Math.sin(p.a) + p.z*R*0.25;
-        const d=500/(600+z);
-        const px=W/2 + x*d, py=H/2 + y*d;
-        const t=(z+R)/(2*R);
-        ctx.fillStyle=pal(Math.max(0,Math.min(1,t)));
-        ctx.fillRect(px,py,st,st);
-        if(sym.checked) ctx.fillRect(W-px,py,st,st);
-      }
-      phi += 1.45*speed();
-    }
-
-    function drawOrbitals(){
-      const W=canvas.width,H=canvas.height; clearFrame();
-      const k=+orbitals.value, R=Math.min(W,H)*0.36, st=+stroke.value, mix=+cMix.value;
-      for(let i=0;i<k;i++){
-        const a=i/k*Math.PI*2 + phi*0.0009*speed();
-        const r=R*(0.45+0.35*Math.sin(a*mix + seed*0.02));
-        const x=W/2 + r*Math.cos(a), y=H/2 + r*Math.sin(a + cPhase.value);
-        ctx.fillStyle=pal((i%k)/k); ctx.fillRect(x,y,st,st);
-        if(sym.checked) ctx.fillRect(W-x,y,st,st);
-      }
-      phi += 1.05*speed();
-    }
-
-    function drawPhiWeave(){
-      const W=canvas.width,H=canvas.height; clearFrame();
-      const PHI=(1+Math.sqrt(5))/2, st=+stroke.value;
-      const loops=count(260);
-      ctx.beginPath();
-      for(let i=0;i<loops;i++){
-        const t=i/loops*Math.PI*2;
-        const r = Math.min(W,H)*0.38 * (0.5+0.5*Math.sin(PHI*t + phi*0.0014*speed()));
-        const x=W/2 + r*Math.cos(t), y=H/2 + r*Math.sin(PHI*t);
-        (i?ctx.lineTo(x,y):ctx.moveTo(x,y));
-      }
-      ctx.lineWidth=st; ctx.strokeStyle=pal(.7); ctx.stroke();
-      phi += 1.2*speed();
-    }
-
-    function drawAurora(){
-      const W=canvas.width,H=canvas.height; clearFrame();
-      const bands=6, st=+stroke.value;
-      for(let b=0;b<bands;b++){
-        ctx.beginPath();
-        for(let x=0;x<=W;x+=2){
-          const y = H*0.5 + Math.sin((x*0.01)+(b*0.7)+phi*0.008*speed())*H*0.12 + (noise.checked? (n2d(x*0.02,b+seed*0.01)-0.5)*14 : 0);
-          (x?ctx.lineTo(x,y):ctx.moveTo(x,y));
-        }
-        ctx.lineWidth=st; ctx.strokeStyle=pal(b/bands); ctx.stroke();
-      }
-      phi += 1.3*speed();
-    }
-
-    function drawChladni(){
-      const W=canvas.width,H=canvas.height; clearFrame();
-      const m=3+((seed|0)%5), n=2+((seed>>3)%5), st=+stroke.value;
-      const S=12;
-      for(let y=0;y<H;y+=S){
-        for(let x=0;x<W;x+=S){
-          const v = Math.sin(m*Math.PI*x/W + phi*0.002*speed()) * Math.sin(n*Math.PI*y/H + cPhase.value);
-          const t=(v+1)/2; ctx.fillStyle=pal(t);
-          if(Math.abs(v)<0.02) { ctx.fillRect(x,y,st,st); if(sym.checked) ctx.fillRect(W-x,y,st,st); }
-        }
-      }
-      phi += 1.15*speed();
-    }
-
-    function drawGyre(){
-      const W=canvas.width,H=canvas.height; clearFrame();
-      const n=count(900), st=+stroke.value;
-      for(let i=0;i<n;i++){
-        const t=i/n*Math.PI*8 + phi*0.0018*speed();
-        const r=Math.min(W,H)*0.02 + i/n*Math.min(W,H)*0.38;
-        const x=W/2 + r*Math.cos(t), y=H/2 + r*Math.sin(t);
-        ctx.fillStyle=pal(i/n); ctx.fillRect(x,y,st,st);
-        if(sym.checked) ctx.fillRect(W-x,y,st,st);
-      }
-      phi += 1.35*speed();
-    }
-
-    function drawBloomfield(){
-      const W=canvas.width,H=canvas.height; clearFrame();
-      const n=count(640), st=+stroke.value;
-      for(let i=0;i<n;i++){
-        const a = i/n*Math.PI*2, r = (i/n)**0.5 * Math.min(W,H)*0.42;
-        const jitter = noise.checked ? (rng()-0.5)*6 : 0;
-        const x=W/2 + (r+jitter)*Math.cos(a+phi*0.0008*speed());
-        const y=H/2 + (r+jitter)*Math.sin(a+phi*0.0011*speed());
-        ctx.fillStyle=pal(i/n); ctx.fillRect(x,y,st,st);
-        if(sym.checked) ctx.fillRect(W-x,y,st,st);
-      }
-      phi += 1.1*speed();
-    }
-
-    const modes=[
-      drawFlow, drawLattice, drawTorus, drawPoly, drawRose, drawSpiro, drawLissaGrid, drawVortex,
-      drawOrbitals, drawPhiWeave, drawAurora, drawChladni, drawGyre, drawBloomfield
-    ];
-
-    // Animation / rendering
-    let anim=!PREFERS_RM, frameId=0;
-    function drawOnce(){ const fn = modes[mode] || modes[0]; fn(); }
-    function render(){
-      if(!ctx) return;
-      const fn = modes[mode] || modes[0];
-      fn();
-      if(anim) frameId=requestAnimationFrame(render);
-    }
-    function seedTrace(frames=40){
-      const fn = modes[mode] || modes[0];
-      for(let k=0;k<frames;k++){ fn(); }
-    }
-
-    // UI wiring + instant repaint when not animating
-    function repaint(){ if(anim) return; drawOnce(); }
-
-    on($("#visMode"),"change",()=>{ mode=+visMode.value|0; if(!Number.isFinite(mode)||mode<0||mode>=modes.length) mode=0; repaint(); });
-    ["input","change"].forEach(evt=>{
-      on($("#visDensity"),evt,repaint);
-      on($("#visSpeed"),evt,repaint);
-      on($("#visFade"),evt,repaint);
-      on($("#stroke"),evt,repaint);
-      on($("#palette"),evt,repaint);
-      on($("#sym"),evt,repaint);
-      on($("#noise"),evt,repaint);
-      on($("#orbitals"),evt,repaint);
-      on($("#cMix"),evt,repaint);
-      on($("#cPhase"),evt,repaint);
-      on($("#vBias"),evt,repaint);
-    });
-
-    on($("#clearBtn"),"click",()=>{ if(ctx){ ctx.clearRect(0,0,canvas.width,canvas.height); repaint(); } });
-    on($("#seedBtn"),"click",()=>{ seed = (Math.random()*1000)|0; toast("Seeded"); repaint(); });
-    on($("#newSeed"),"click",()=>{ if(!$("#lockSeed").checked){ seed = (Math.random()*10000)|0; toast("New seed"); repaint(); }});
-    on($("#dlTrace"),"click",()=>downloadPNG(false));
-    on($("#dlTraceMeta"),"click",()=>downloadPNG(true));
-
-    function dataURLToBlob(dataURL){
-      const parts = dataURL.split(','), mime = parts[0].match(/:(.*?);/)[1], bstr = atob(parts[1]); let n=bstr.length; const u8=new Uint8Array(n);
-      while(n--) u8[n]=bstr.charCodeAt(n); return new Blob([u8],{type:mime});
-    }
-    async function downloadPNG(withMeta){
-      try{
-        const url=canvas.toDataURL("image/png");
-        const meta = {
-          when: new Date().toISOString(),
-          mode: visMode.options[visMode.selectedIndex].text,
-          modeId: mode,
-          seed, carrier: carrier==="none"?"":carrier,
-          palette: $("#palette").value,
-          Xi: ($("#hudXi").textContent||"").replace(/.*?([\d.]+)$/,"$1"),
-          I: ($("#rmnLine").value||"").trim()
-        };
-        const a=document.createElement("a");
-        a.href=url;
-        a.download = withMeta ? `remnant-${meta.modeId}-${seed}-${(meta.I||"line").slice(0,24).replace(/\W+/g,'_')}.png` : `remnant-trace.png`;
-        a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),800);
-        if(withMeta){ console.log("Remnant meta", meta); }
-      }catch(_){ toast("Download failed"); }
-    }
-
-    // Start up (respect reduced motion)
-    if(anim){ render(); } else { drawOnce(); }
-
-    // Presets
-    const PRESET_KEY="sof_remnant_preset_v1";
-    function savePreset(){
-      const P = {
-        mode:+visMode.value, density:+visDensity.value, speed:+visSpeed.value, fade:+visFade.value,
-        sym:sym.checked, noise:noise.checked, stroke:+stroke.value, palette:$("#palette").value,
-        orbitals:+orbitals.value, cMix:+cMix.value, cPhase:+cPhase.value, vBias:+vBias.value
-      };
-      localStorage.setItem(PRESET_KEY, JSON.stringify(P)); toast("Preset saved");
-    }
-    function loadPreset(){
-      try{
-        const P=JSON.parse(localStorage.getItem(PRESET_KEY)||"{}"); if(!P||!("mode" in P)) return toast("No preset");
-        visMode.value=P.mode; visDensity.value=P.density; visSpeed.value=P.speed; visFade.value=P.fade;
-        sym.checked=P.sym; noise.checked=P.noise; stroke.value=P.stroke; $("#palette").value=P.palette;
-        orbitals.value=P.orbitals; cMix.value=P.cMix; cPhase.value=P.cPhase; vBias.value=P.vBias;
-        mode=P.mode; if(!Number.isFinite(mode)||mode<0||mode>=modes.length) mode=0;
-        toast("Preset loaded"); repaint();
-      }catch{ toast("Load failed"); }
-    }
-    on($("#savePreset"),"click",savePreset);
-    on($("#loadPreset"),"click",loadPreset);
-
-    // Auto-Pilot: runs 𝓘→𝓛→𝓒→𝓢 (12s each ×4)
-    on($("#autoRun"),"click",()=>{
-      const line=($("#rmnLine").value||"").trim(); if(!line) return toast("Write an intention line");
-      seedTrace(35);
-      if(carrier!=="none") playCarrier(+carrier,0.8,0.07);
-      let phase=0;
-      const t0=Date.now();
-      const iv=setInterval(()=>{
-        phase=(phase+1)%4;
-        $("#hudBreath").textContent="Breath: " + (["In","—","Out","—"][phase]);
-        if(phase===0){ visMode.value="4"; mode=4; }
-        if(phase===1){ visMode.value="1"; mode=1; }
-        if(phase===2){ visMode.value="0"; mode=0; }
-        if(phase===3){ visMode.value="7"; mode=7; }
-        if(!anim) drawOnce();
-        if(Date.now()-t0>48000){ clearInterval(iv); $("#hudBreath").textContent="Breath: —"; toast("Auto-Pilot done"); }
-      }, 12000);
-    });
-
-    // Expose switchTo for later tabs (Ethics/Deck hooks)
-    window.switchTo = switchTo;
-
-  })();
-  </script>
-<!-- ================= END PART 1/3 ================= -->
-
-    <!-- ================= START PART 2/3 ================= -->
-
-    <!-- =================== OBSERVER =================== -->
-    <section id="tab-observer" class="tab" role="tabpanel" aria-labelledby="observer-tab">
+    <section id="tab-carrier" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
-          <h2>⏱ Observer — Paced 4-Phase Loop</h2>
+          <h2>🎧 Carrier — Frequency Experience</h2>
+          <p class="meta">
+            This is the clean frequency station. Pick a preset, move the slider, or type a custom value.
+            The visual field responds to the active frequency.
+          </p>
 
+          <div class="freq-panel">
+            <div class="freq-readout">
+              <strong id="freqValueMirror">432</strong>
+              <span>Hz</span>
+              <span class="meta" id="carrierState">stopped</span>
+            </div>
+
+            <label>Fine tune
+              <input id="freqSliderMirror" class="lab-input" type="range" min="80" max="1200" step="1" value="432">
+            </label>
+
+            <div class="lab-row">
+              <input id="freqInputMirror" class="lab-input" type="number" min="80" max="1200" step="1" value="432" style="max-width:140px">
+              <button id="playFreqMirror" class="lab-btn primary" type="button">Play</button>
+              <button id="stopFreqMirror" class="lab-btn danger" type="button">Stop</button>
+            </div>
+
+            <div class="freq-grid">
+              <button class="lab-btn tone" data-carrier="144" type="button">144</button>
+              <button class="lab-btn tone" data-carrier="369" type="button">369</button>
+              <button class="lab-btn tone" data-carrier="432" type="button">432</button>
+              <button class="lab-btn tone" data-carrier="528" type="button">528</button>
+              <button class="lab-btn tone" data-carrier="963" type="button">963</button>
+              <button class="lab-btn tone" data-carrier="none" type="button">None</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="card col-5">
+          <h3>Mic Tone Reader</h3>
+          <p class="meta">Optional local mic analyzer. Nothing uploads.</p>
+          <div class="lab-row">
+            <button id="micOn" class="lab-btn" type="button">Enable Mic</button>
+            <button id="micOff" class="lab-btn" disabled type="button">Stop Mic</button>
+            <button id="useTone" class="lab-btn" disabled type="button">Use Detected</button>
+          </div>
+          <p class="meta" id="freqRead">—</p>
+          <canvas id="wave" class="small-canvas" width="720" height="130"></canvas>
+          <canvas id="fft" class="small-canvas" width="720" height="130"></canvas>
+        </aside>
+      </article>
+    </section>
+
+    <section id="tab-observer" class="tab" role="tabpanel">
+      <article class="grid">
+        <div class="card col-7">
+          <h2>⏱ Observer — 4-Phase Loop</h2>
           <ol class="list">
-            <li><b>𝓘 Intend:</b> speak your 𝓘 once on tone.</li>
-            <li><b>𝓛 Look:</b> find one undeniable detail in perception.</li>
-            <li><b>𝓒 Coalesce:</b> soften jaw/shoulders; allow the exhale to quiet.</li>
-            <li><b>𝓢 Seal:</b> whisper “thank you”, rest a beat, no grasping.</li>
+            <li><b>𝓘 Intend:</b> speak your line once.</li>
+            <li><b>𝓛 Look:</b> find one undeniable detail.</li>
+            <li><b>𝓒 Coalesce:</b> soften jaw, shoulders, and breath.</li>
+            <li><b>𝓢 Seal:</b> thank, record, and return.</li>
           </ol>
 
           <div class="lab-row">
-            <div style="width:140px;height:140px;display:grid;place-items:center">
+            <div style="width:150px;height:150px;display:grid;place-items:center">
               <svg viewBox="0 0 100 100" aria-label="Observer ring">
                 <defs>
                   <linearGradient id="gradRing" x1="0" x2="1">
-                    <stop offset="0" stop-color="#7af3ff"/>
-                    <stop offset="1" stop-color="#f3c97a"/>
+                    <stop offset="0" stop-color="#7af3ff"></stop>
+                    <stop offset="1" stop-color="#f3c97a"></stop>
                   </linearGradient>
                 </defs>
-                <circle cx="50" cy="50" r="45" class="ring-bg"/>
-                <circle cx="50" cy="50" r="45" class="ring-fg" id="obsArc" pathLength="283"/>
+                <circle cx="50" cy="50" r="45" class="ring-bg"></circle>
+                <circle cx="50" cy="50" r="45" class="ring-fg" id="obsArc" pathLength="283"></circle>
                 <text x="50" y="48" text-anchor="middle" class="ring-num" id="obsPhase">Ready</text>
                 <text x="50" y="64" text-anchor="middle" class="ring-sub" id="obsCount">—</text>
               </svg>
             </div>
 
-            <div style="flex:1">
+            <div style="flex:1;min-width:260px">
               <div class="lab-row">
                 <button id="obsStart" class="lab-btn primary" type="button">Start</button>
                 <button id="obsStop" class="lab-btn" disabled type="button">Stop</button>
-                <button id="obsMark" class="lab-btn" type="button">Mark detail</button>
+                <button id="obsMark" class="lab-btn" type="button">Mark Detail</button>
               </div>
 
               <div class="lab-row">
-                <label>Seconds/phase
-                  <input id="obsSec" type="number" value="10" min="3" max="300" class="lab-input" style="width:110px">
+                <label>Seconds / phase
+                  <input id="obsSec" type="number" value="10" min="3" max="300" class="lab-input" style="width:120px">
                 </label>
                 <label>Rounds
-                  <input id="obsRounds" type="number" value="3" min="1" max="60" class="lab-input" style="width:90px">
+                  <input id="obsRounds" type="number" value="3" min="1" max="60" class="lab-input" style="width:100px">
                 </label>
-                <label><input id="obsTone" type="checkbox"> Click at phase change</label>
               </div>
 
-              <textarea id="obsNotes" rows="3" class="lab-input" placeholder="Witness note (undeniable detail)…"></textarea>
+              <textarea id="obsNotes" rows="4" class="lab-input" placeholder="Witness note…"></textarea>
+
               <div class="lab-row">
                 <button id="obsToLedger" class="lab-btn" type="button">Send to Ledger</button>
               </div>
-
-              <p class="hint" id="coachObs">Coach: inhale on 𝓘, see on 𝓛, soften on 𝓒, exhale/thank on 𝓢.</p>
             </div>
           </div>
         </div>
 
         <aside class="card col-5">
-          <h3>Carrier now</h3>
-          <p id="toneNow" class="meta">Πν: none</p>
-          <div class="divider"></div>
-          <h3>Modes that pair well</h3>
-          <p class="meta">𝓘→ Rose · 𝓛→ Lattice · 𝓒→ Flow · 𝓢→ Vortex</p>
-          <p class="meta">If clarity drops (Eq.9), stop and re-center.</p>
+          <h3>Suggested Pairing</h3>
+          <p class="meta">𝓘 → Rose · 𝓛 → Lattice · 𝓒 → Flow · 𝓢 → Vortex</p>
+          <p class="hint">If clarity drops or tension rises, stop and switch to breath only.</p>
         </aside>
       </article>
     </section>
 
-    <!-- ===================== CARRIER ===================== -->
-    <section id="tab-voice" class="tab" role="tabpanel" aria-labelledby="voice-tab">
+    <section id="tab-phrase" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
-          <h2>🎙 Carrier — Tone, Wave, Spectrum</h2>
+          <h2>🔡 Phrase — Tune Meaning</h2>
+          <textarea id="phraseIn" rows="4" class="lab-input" placeholder="Type your line…"></textarea>
 
           <div class="lab-row">
-            <button id="micOn" class="lab-btn" type="button">Enable Mic</button>
-            <button id="micOff" class="lab-btn" disabled type="button">Stop</button>
-            <span id="freqRead" class="meta" aria-live="polite">—</span>
-            <button id="useTone" class="lab-btn" disabled type="button">Use this tone</button>
-          </div>
-
-          <canvas id="wave" width="880" height="140" aria-label="Waveform"></canvas>
-          <canvas id="fft"  width="880" height="140" aria-label="Spectrum"></canvas>
-
-          <p class="hint">Tip: hum ~3s; when the dominant peak holds steady, “Use this tone.” Check “Binaural ±4 Hz” in Remnant if desired.</p>
-        </div>
-
-        <aside class="card col-5">
-          <h3>Presets</h3>
-          <div class="lab-row">
-            <button class="lab-btn tone" data-carrier="432" type="button">432</button>
-            <button class="lab-btn tone" data-carrier="528" type="button">528</button>
-            <button class="lab-btn tone" data-carrier="369" type="button">369</button>
-            <button class="lab-btn tone" data-carrier="144" type="button">144</button>
-            <button class="lab-btn tone" data-carrier="963" type="button">963</button>
-            <button class="lab-btn tone" data-carrier="none" type="button">None</button>
-          </div>
-          <p class="meta">Mic stays local in your browser (no upload).</p>
-        </aside>
-      </article>
-    </section>
-
-    <!-- ====================== PHRASE ====================== -->
-    <section id="tab-phrase" class="tab" role="tabpanel" aria-labelledby="phrase-tab">
-      <article class="grid">
-        <div class="card col-7">
-          <h2>🔡 Phrase — Tune Meaning (Eq.4 / 4b)</h2>
-
-          <textarea id="phraseIn" rows="3" class="lab-input" placeholder="Type your line…"></textarea>
-
-          <div class="lab-row">
-            <button id="phraseTune" class="lab-btn" type="button">Tune</button>
+            <button id="phraseTune" class="lab-btn primary" type="button">Tune</button>
             <button id="phraseClear" class="lab-btn" type="button">Clear</button>
             <button id="phraseToI" class="lab-btn" type="button">Use as 𝓘</button>
           </div>
 
           <p><b>Suggestion:</b> <span id="phraseOut" class="meta">—</span></p>
-
-          <details class="card" style="margin-top:8px">
-            <summary><strong>Heuristics</strong></summary>
-            <ul class="list">
-              <li>Prefer present-tense, affirmative verbs.</li>
-              <li>Constrain nouns to concrete, observable elements.</li>
-              <li>Delete hedges (try, maybe, hopefully, sort of).</li>
-              <li>Replace negations with direct aims.</li>
-            </ul>
-          </details>
-
-          <p class="hint" id="coachPhrase">Coach: fewer negations → cleaner gradient; strong verbs + concrete nouns.</p>
         </div>
 
         <aside class="card col-5">
-          <h3>Micro-templates</h3>
-          <p>I speak simply and act kindly.</p>
-          <p>We finish one helpful thing today.</p>
-          <p>Light reveals; love restores.</p>
+          <h3>Cleaner Line Rules</h3>
+          <ul class="list">
+            <li>Present tense.</li>
+            <li>Concrete nouns.</li>
+            <li>One action.</li>
+            <li>Less hedging.</li>
+            <li>No forcing.</li>
+          </ul>
         </aside>
       </article>
     </section>
 
-    <!-- ======================= BREATH ======================= -->
-    <section id="tab-breath" class="tab" role="tabpanel" aria-labelledby="breath-tab">
+    <section id="tab-breath" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
           <h2>🌬 Breath — Pacing Ring</h2>
@@ -1088,335 +951,106 @@
                 <option value="4-4-4-4">Box 4-4-4-4</option>
                 <option value="4-7-8">4-7-8</option>
                 <option value="5-5-5-5">5-5-5-5</option>
-                <option value="6-0-6-0">6-0-6-0 (smooth)</option>
+                <option value="6-0-6-0">Smooth 6-0-6-0</option>
               </select>
             </label>
-            <button id="breathStart" class="lab-btn" type="button">Start</button>
+
+            <button id="breathStart" class="lab-btn primary" type="button">Start</button>
             <button id="breathStop" class="lab-btn" disabled type="button">Stop</button>
           </div>
 
-          <div style="width:140px;height:140px;display:grid;place-items:center;margin-top:6px">
+          <div style="width:150px;height:150px;display:grid;place-items:center;margin-top:6px">
             <svg viewBox="0 0 100 100" aria-label="Breath ring">
-              <circle cx="50" cy="50" r="45" class="ring-bg"/>
-              <circle cx="50" cy="50" r="45" class="ring-fg" id="breathArc" pathLength="283"/>
+              <circle cx="50" cy="50" r="45" class="ring-bg"></circle>
+              <circle cx="50" cy="50" r="45" class="ring-fg" id="breathArc" pathLength="283"></circle>
               <text x="50" y="56" text-anchor="middle" class="ring-num" id="breathPhase">Ready</text>
             </svg>
           </div>
 
-          <p class="hint">Longer, quieter exhales tend to smooth the field. If dizzy, stop and switch to gentle nose-breathing.</p>
+          <p class="hint">If you feel dizzy, stop and return to gentle normal breathing.</p>
         </div>
 
         <aside class="card col-5">
-          <h3>Use with Observer</h3>
-          <p>Inhale — 𝓘 · See — 𝓛 · Soften — 𝓒 · Exhale/Seal — 𝓢</p>
-          <p class="meta">You can keep the carrier humming quietly during longer cycles.</p>
+          <h3>Breath Translation</h3>
+          <p class="meta">Inhale: gather. Hold: notice. Exhale: release. Hold: return.</p>
         </aside>
       </article>
     </section>
 
-    <!-- ===================== COHERENCE ===================== -->
-    <section id="tab-coherence" class="tab" role="tabpanel" aria-labelledby="coherence-tab">
+    <section id="tab-coherence" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
-          <h2>📈 Coherence (Ξ) — Quick Estimate</h2>
+          <h2>📈 Coherence Ξ — Quick Estimate</h2>
 
           <div class="lab-row">
-            <label>⟨H·I⟩ <input id="hi" type="number" min="0" max="1" step="0.01" value="0.62" class="lab-input" style="width:110px"></label>
-            <label>Var[𝓜] <input id="varM" type="number" min="0" max="2" step="0.01" value="0.30" class="lab-input" style="width:110px"></label>
-            <button id="xiCalc" class="lab-btn" type="button">Compute Ξ</button>
-            <output id="xiOut" class="meta" aria-live="polite">Ξ = —</output>
+            <label>Habit × Intention
+              <input id="hi" type="number" min="0" max="1" step="0.01" value="0.62" class="lab-input" style="width:130px">
+            </label>
+
+            <label>Mental Variance
+              <input id="varM" type="number" min="0" max="2" step="0.01" value="0.30" class="lab-input" style="width:130px">
+            </label>
+
+            <button id="xiCalc" class="lab-btn primary" type="button">Compute Ξ</button>
+            <output id="xiOut" class="meta">Ξ = —</output>
           </div>
 
-          <canvas id="xiSpark" width="520" height="72" aria-label="Ξ history"></canvas>
+          <div class="meter" aria-label="Coherence meter">
+            <span id="xiMeter"></span>
+          </div>
 
-          <details class="card" style="margin-top:8px">
-            <summary><strong>Notes</strong></summary>
-            <ul class="list">
-              <li>⟨H·I⟩ is a proxy for how aligned your Habit × Intention are (0..1).</li>
-              <li>Var[𝓜] is a proxy for mental variance (lower is steadier).</li>
-              <li>We use Ξ ≈ ⟨H·I⟩ / (1 + Var[𝓜]) clamped to [0..1] for practical tracking.</li>
-            </ul>
-          </details>
+          <canvas id="xiSpark" class="small-canvas" width="720" height="90"></canvas>
         </div>
 
         <aside class="card col-5">
-          <h3>Stop Rule (Eq.9)</h3>
-          <p>If clarity falls or tension rises, <b>halt</b>. Re-center (carriers/breath/phrase), then resume.</p>
-          <p class="meta">Your Ξ samples are stored locally and render as a sparkline.</p>
+          <h3>Stop Rule</h3>
+          <p class="meta">
+            If clarity falls, tension rises, or breath gets tight: halt, breathe, simplify, and return later.
+          </p>
         </aside>
       </article>
     </section>
-<!-- ================= CONTENT END OF PART 2/3; ENGINE CONTINUES BELOW ================= -->
-<script>
-(function(){
-  "use strict";
-  /* … your existing Part 2 code … */
 
-  // Mirror carrier preset clicks to "toneNow" readout (if present)
-  document.addEventListener("click",(e)=>{
-    const b = e.target.closest(".lab-btn.tone");
-    if(!b) return;
-    const c=b.dataset.carrier||"none";
-    const el=document.getElementById("toneNow"); if(el) el.textContent="Πν: "+c;
-  });
-
-  // If user hits "S" from anywhere and Observer exists, start it
-  document.addEventListener("keydown",(e)=>{
-    if((e.key==="S"||e.key==="s") && document.getElementById("obsStart")){
-      e.preventDefault();
-      if(window.switchTo) window.switchTo("observer");
-      document.getElementById("obsStart").click();
-    }
-  });
-
-})();
-</script>
-  <script>
-  (function(){
-    "use strict";
-    const $ =(s,r=document)=>r.querySelector(s);
-    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-    const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
-    function toast(msg){
-      const el=document.createElement("div"); el.textContent=msg;
-      Object.assign(el.style,{position:"fixed",left:"50%",bottom:"22px",transform:"translateX(-50%)",
-        background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid #2a3242",borderRadius:"10px",
-        boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:9999,opacity:0,transition:"opacity .2s"});
-      document.body.appendChild(el); requestAnimationFrame(()=>{el.style.opacity=1});
-      setTimeout(()=>{el.style.opacity=0; setTimeout(()=>el.remove(),250);},1800);
-    }
-
-    /* ===================== OBSERVER ENGINE ===================== */
-    const obsArc=$("#obsArc"), obsPhase=$("#obsPhase"), obsCount=$("#obsCount");
-    const obsStart=$("#obsStart"), obsStop=$("#obsStop"), obsMark=$("#obsMark");
-    const obsSec=$("#obsSec"), obsRounds=$("#obsRounds"), obsNotes=$("#obsNotes");
-    let obsTimer=null, obsIdx=0, obsRound=0, obsRem=0, obsPhases=["𝓘","𝓛","𝓒","𝓢"], obsTotal=0, obsTick=0;
-
-    function beep(vol=0.01, freq=880, len=0.08){
-      try{
-        const AC = window.AudioContext? new AudioContext(): null; if(!AC) return;
-        const o=AC.createOscillator(), g=AC.createGain();
-        o.type="square"; o.frequency.value=freq; g.gain.value=0.0001; o.connect(g).connect(AC.destination);
-        const t=AC.currentTime; o.start(t); g.gain.linearRampToValueAtTime(vol,t+0.005); g.gain.linearRampToValueAtTime(0.0001,t+len); o.stop(t+len+0.02);
-        setTimeout(()=>AC.close(), 200);
-      }catch(_){}
-    }
-    function obsReset(){
-      obsArc?.setAttribute("stroke-dasharray","0 283");
-      if(obsPhase) obsPhase.textContent="Ready";
-      if(obsCount) obsCount.textContent="—";
-      obsIdx=0; obsRound=0; obsRem=0; obsTick=0;
-      $("#hudBreath") && ($("#hudBreath").textContent="Breath: —");
-    }
-    function obsRun(){
-      const p=Math.max(3,Math.min(300,+obsSec.value||10));
-      const r=Math.max(1,Math.min(60,+obsRounds.value||3));
-      obsTotal = p*4*r; obsIdx=0; obsRound=1; obsRem=p; obsTick=0;
-      if(obsPhase) obsPhase.textContent=obsPhases[0];
-      if(obsCount) obsCount.textContent=`Round 1/${r}`;
-      obsStart.disabled=true; obsStop.disabled=false;
-
-      if($("#obsTone")?.checked) beep(0.02,660,0.1);
-
-      obsTimer=setInterval(()=>{
-        obsTick++; obsRem--;
-        const frac=obsTick/obsTotal, dash=283*frac; obsArc?.setAttribute("stroke-dasharray",`${dash} ${283-dash}`);
-        const breathMap=["In","—","Out","—"]; const b=breathMap[obsIdx]; $("#hudBreath") && ($("#hudBreath").textContent="Breath: "+b);
-
-        if(obsRem<=0){
-          obsIdx++;
-          if($("#obsTone")?.checked) beep(0.02, 660 + (obsIdx===0?0:obsIdx*40), 0.09);
-          if(obsIdx>=4){ obsIdx=0; obsRound++;
-            if(obsRound>r){
-              clearInterval(obsTimer); obsStart.disabled=false; obsStop.disabled=true;
-              if(obsPhase) obsPhase.textContent="Done";
-              if(obsCount) obsCount.textContent=`${r}/${r}`;
-              $("#hudBreath") && ($("#hudBreath").textContent="Breath: —");
-              return;
-            }
-            if(obsCount) obsCount.textContent=`Round ${obsRound}/${r}`;
-          }
-          obsRem=p; if(obsPhase) obsPhase.textContent=obsPhases[obsIdx];
-        }
-      },1000);
-    }
-    on(obsStart,"click",obsRun);
-    on(obsStop,"click",()=>{ clearInterval(obsTimer); obsStart.disabled=false; obsStop.disabled=true; obsReset(); });
-    on(obsMark,"click",()=>{
-      const prev = obsNotes.value.trim();
-      const stamp = new Date().toLocaleTimeString();
-      obsNotes.value = (prev? prev+"\n":"") + `[${stamp}] One undeniable detail observed.`;
-    });
-    on($("#obsToLedger"),"click",()=>{
-      const phrase=($("#rmnLine")?.value||$("#lgLine")?.value||"").trim();
-      const note=(obsNotes?.value||"").trim();
-      if(!phrase){ toast("Write 𝓘 first"); return; }
-      const entry={
-        when:new Date().toISOString(),
-        carrier:($("#hudCarrier")?.textContent||"").replace(/^Πν:\s*/,""),
-        phrase, coherence:($("#xiOut")?.textContent||"").replace(/.*?([\d.]+)$/,"$1"),
-        tags:["observer"], note
-      };
-      try{
-        const data=JSON.parse(localStorage.getItem("sof_ledger_entries_v5")||"[]");
-        data.unshift(entry); localStorage.setItem("sof_ledger_entries_v5", JSON.stringify(data));
-        toast("Observer note → Ledger");
-        if(window.switchTo) window.switchTo("ledger");
-      }catch(_){ toast("Couldn’t write ledger"); }
-    });
-
-    /* ====================== CARRIER ENGINE ====================== */
-    let micStream=null, analyser=null, wave=$("#wave"), fft=$("#fft");
-    on($("#micOn"),"click", async ()=>{
-      try{
-        const AC = new (window.AudioContext||window.webkitAudioContext)();
-        const stream = await navigator.mediaDevices.getUserMedia({
-          audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}, video:false
-        });
-        micStream=stream;
-        const src = AC.createMediaStreamSource(stream);
-        analyser = AC.createAnalyser(); analyser.fftSize=2048; analyser.smoothingTimeConstant=0.85;
-        src.connect(analyser);
-        $("#micOff").disabled=false; $("#useTone").disabled=false;
-        drawAudio(AC);
-        toast("Mic on");
-      }catch(err){ toast("Mic failed"); }
-    });
-    on($("#micOff"),"click",()=>{
-      try{ micStream?.getTracks().forEach(t=>t.stop()); }catch(_){}
-      analyser=null; $("#micOff").disabled=true; $("#useTone").disabled=true; toast("Mic off");
-    });
-    on($("#useTone"),"click",()=>{
-      const fr = $("#freqRead")?.textContent.match(/~(\d+)\s*Hz/);
-      const f = fr? +fr[1] : 432;
-      // mirror to Remnant’s carrier buttons by setting text and pinging a tone button if present
-      const btn = Array.from(document.querySelectorAll(".lab-btn.tone")).find(b=>b.dataset.carrier===String(f));
-      if(btn) btn.click(); // plays via Part 1 engine
-      $("#toneNow") && ($("#toneNow").textContent="Πν: "+f);
-      toast("Carrier set to "+f+" Hz");
-    });
-    function drawAudio(AC){
-      const wctx=wave.getContext("2d"), fctx=fft.getContext("2d");
-      const wf=new Uint8Array(analyser.fftSize), ff=new Uint8Array(analyser.frequencyBinCount);
-      (function loop(){
-        if(!analyser) return;
-        analyser.getByteTimeDomainData(wf); analyser.getByteFrequencyData(ff);
-        const W=wave.width,H=wave.height; wctx.clearRect(0,0,W,H);
-        wctx.fillStyle="#0b1016"; wctx.fillRect(0,0,W,H); wctx.beginPath(); wctx.moveTo(0,H/2);
-        for(let x=0;x<W;x++){ const i=Math.floor(x/W*wf.length); const v=(wf[i]-128)/128; wctx.lineTo(x,H/2+v*H*0.4); }
-        wctx.strokeStyle="#7af3ff"; wctx.lineWidth=2; wctx.stroke();
-        const WF=fft.width, HF=fft.height; fctx.clearRect(0,0,WF,HF);
-        let maxi=0,maxv=0; for(let i=4;i<ff.length;i++){ if(ff[i]>maxv){ maxv=ff[i]; maxi=i; } }
-        const freq = maxi * (AC.sampleRate / analyser.fftSize);
-        for(let i=0;i<ff.length;i++){
-          const v=ff[i]/255; const x=i/ff.length*WF; const y=HF*(1-v);
-          fctx.fillStyle=v>.8?"#f3c97a":v>.5?"#a7f6ff":"#6aa0ff33"; fctx.fillRect(x,y,WF/ff.length,HF-y);
-        }
-        $("#freqRead") && ($("#freqRead").textContent = isFinite(freq) ? `~${Math.round(freq)} Hz (peak)` : "—");
-        requestAnimationFrame(loop);
-      })();
-    }
-
-    /* ======================== PHRASE ======================== */
-    on($("#phraseTune"),"click",()=>{
-      const s = ($("#phraseIn")?.value||"").trim();
-      if(!s) return toast("Type a line first");
-      const simpler = s
-        .replace(/\b(don't|do not|can't|cannot|won't|will not)\b/gi,"")
-        .replace(/\b(try|maybe|sort of|kinda|hopefully|attempt to)\b/gi,"")
-        .replace(/\s{2,}/g," ")
-        .trim();
-      $("#phraseOut").textContent = simpler || s;
-    });
-    on($("#phraseClear"),"click",()=>{ if($("#phraseIn")) $("#phraseIn").value=""; if($("#phraseOut")) $("#phraseOut").textContent="—"; });
-    on($("#phraseToI"),"click",()=>{
-      const t=$("#phraseOut")?.textContent?.trim()||$("#phraseIn")?.value?.trim();
-      if(!t) return toast("Nothing tuned yet");
-      $("#rmnLine") && ($("#rmnLine").value=t);
-      $("#lgLine") && ($("#lgLine").value=t);
-      toast("Phrase → 𝓘");
-    });
-
-    /* ========================= BREATH ========================= */
-    const breathArc=$("#breathArc"), breathPhaseEl=$("#breathPhase");
-    let bTimer=null, bT0=0, bPat=[4,4,4,4];
-    on($("#breathPat"),"change",e=>{ bPat=e.target.value.split("-").map(n=>+n||0); });
-    on($("#breathStart"),"click",()=>{
-      if(bTimer) return;
-      bT0=performance.now(); $("#breathStop").disabled=false; $("#breathStart").disabled=true;
-      const total=bPat.reduce((a,b)=>a+b,0)*1000 || 1;
-      bTimer=setInterval(()=>{
-        const t=(performance.now()-bT0)%total;
-        let acc=0, idx=0;
-        for(let i=0;i<4;i++){ acc+=bPat[i]*1000; if(t<acc){ idx=i; break; } }
-        const prev=acc-bPat[idx]*1000;
-        const dash=283*((prev+(t-prev))/total); breathArc?.setAttribute("stroke-dasharray",`${dash} ${283-dash}`);
-        const ph=["In","Hold","Out","Hold"][idx]; if(breathPhaseEl) breathPhaseEl.textContent=ph;
-        $("#hudBreath") && ($("#hudBreath").textContent="Breath: "+ph);
-      },1000/30);
-    });
-    on($("#breathStop"),"click",()=>{
-      clearInterval(bTimer); bTimer=null; $("#breathStart").disabled=false; $("#breathStop").disabled=true;
-      if(breathPhaseEl) breathPhaseEl.textContent="Ready"; $("#hudBreath") && ($("#hudBreath").textContent="Breath: —");
-    });
-
-    /* ======================== COHERENCE ======================== */
-    const xiOut=$("#xiOut"), xiSparkCtx=$("#xiSpark")?.getContext("2d"); let xiHist=load("sof_xi_hist_v1",[]);
-    function load(k,fb){ try{ const raw=localStorage.getItem(k); return raw? JSON.parse(raw): fb; }catch(_){return fb;} }
-    function save(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(_){} }
-
-    function drawXi(){
-      if(!xiSparkCtx) return;
-      const W=xiSparkCtx.canvas.width, H=xiSparkCtx.canvas.height;
-      xiSparkCtx.clearRect(0,0,W,H);
-      xiSparkCtx.strokeStyle="rgba(122,243,255,.25)";
-      xiSparkCtx.beginPath();
-      xiSparkCtx.moveTo(0,H*0.25); xiSparkCtx.lineTo(W,H*0.25);
-      xiSparkCtx.moveTo(0,H*0.5); xiSparkCtx.lineTo(W,H*0.5);
-      xiSparkCtx.moveTo(0,H*0.75); xiSparkCtx.lineTo(W,H*0.75);
-      xiSparkCtx.stroke();
-      if(!xiHist.length) return;
-      const n=xiHist.length, xs=W/(n-1);
-      xiSparkCtx.beginPath();
-      for(let i=0;i<n;i++){
-        const y=H*(1-(xiHist[i].x*0.9+0.05)); const x=W-i*xs;
-        (i?xiSparkCtx.lineTo(x,y):xiSparkCtx.moveTo(x,y));
-      }
-      xiSparkCtx.strokeStyle="rgba(243,201,122,.9)"; xiSparkCtx.lineWidth=2; xiSparkCtx.stroke();
-    }
-    drawXi();
-
-    on($("#xiCalc"),"click",()=>{
-      const hi=Math.max(0,Math.min(1,+($("#hi")?.value||0)));
-      const v =Math.max(0,Math.min(2,+($("#varM")?.value||0.0001)));
-      const Xi = Math.max(0, Math.min(1, hi/(1+v)));
-      if(xiOut) xiOut.textContent = "Ξ = " + Xi.toFixed(2);
-      $("#hudXi") && ($("#hudXi").textContent ="Ξ: " + Xi.toFixed(2));
-      xiHist.unshift({t:Date.now(), x:Xi}); xiHist=xiHist.slice(0,80); save("sof_xi_hist_v1",xiHist); drawXi();
-    });
-
-  })();
-  </script>
-
-<!-- ================= END PART 2/3 ================= -->
-
-    <!-- ================= START PART 3/3 ================= -->
-
-    <!-- ======================== TIMER ======================== -->
-    <section id="tab-timer" class="tab" role="tabpanel" aria-labelledby="timer-tab">
+    <section id="tab-drills" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
-          <h2>⏳ Focus Timer — 25/5 cycles</h2>
+          <h2>🧭 Drills — Simple Practice Paths</h2>
 
           <div class="lab-row">
-            <label>Focus (min)
-              <input id="tmFocus" type="number" value="25" min="5" max="120" class="lab-input" style="width:100px">
+            <button class="lab-btn primary" data-go="breath" type="button">Breath Drill</button>
+            <button class="lab-btn" data-go="observer" type="button">Observer Drill</button>
+            <button class="lab-btn" data-go="phrase" type="button">Phrase Drill</button>
+            <button class="lab-btn" data-go="ledger" type="button">Seal Drill</button>
+          </div>
+
+          <ol class="list">
+            <li><b>60 seconds:</b> breathe and notice one real detail.</li>
+            <li><b>3 minutes:</b> hold one intention line.</li>
+            <li><b>5 minutes:</b> observe, name, breathe, record.</li>
+          </ol>
+        </div>
+
+        <aside class="card col-5">
+          <h3>Rule</h3>
+          <p class="meta">One line. One breath. One witness note. No forcing.</p>
+        </aside>
+      </article>
+    </section>
+
+    <section id="tab-timer" class="tab" role="tabpanel">
+      <article class="grid">
+        <div class="card col-7">
+          <h2>⏳ Focus Timer</h2>
+
+          <div class="lab-row">
+            <label>Focus minutes
+              <input id="tmFocus" type="number" value="25" min="1" max="180" class="lab-input" style="width:120px">
             </label>
-            <label>Break (min)
-              <input id="tmBreak" type="number" value="5" min="3" max="60" class="lab-input" style="width:100px">
+            <label>Break minutes
+              <input id="tmBreak" type="number" value="5" min="1" max="60" class="lab-input" style="width:120px">
             </label>
             <label>Cycles
-              <input id="tmCycles" type="number" value="2" min="1" max="16" class="lab-input" style="width:90px">
+              <input id="tmCycles" type="number" value="2" min="1" max="16" class="lab-input" style="width:100px">
             </label>
           </div>
 
@@ -1425,36 +1059,28 @@
             <button id="tmStop" class="lab-btn" disabled type="button">Stop</button>
             <output id="tmOut" class="meta">—</output>
           </div>
-
-          <p class="hint">Tip: check “Keep carrier on” in Remnant to let Π<sub>ν</sub> hum during Focus blocks.</p>
         </div>
 
         <aside class="card col-5">
-          <h3>Streak</h3>
-          <p class="meta">Daily check-in:
+          <h3>Daily Mark</h3>
+          <div class="lab-row">
             <button id="streakMark" class="lab-btn" type="button">Mark Today</button>
-            <span id="streakOut" class="meta">—</span>
-          </p>
-          <p class="hint">Streaks are local to this device.</p>
+            <span id="streakOut" class="meta">streak: 0</span>
+          </div>
         </aside>
       </article>
     </section>
 
-    <!-- ========================= DECK ========================= -->
-    <section id="tab-deck" class="tab" role="tabpanel" aria-labelledby="deck-tab">
+    <section id="tab-deck" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
           <h2>🎴 Intention Deck</h2>
+
           <div class="lab-row">
             <button id="drawCard" class="lab-btn primary" type="button">Draw</button>
             <span id="cardText" class="meta">—</span>
             <button id="useCard" class="lab-btn" type="button">Use as 𝓘</button>
           </div>
-
-          <details class="card" style="margin-top:8px">
-            <summary><strong>About</strong></summary>
-            <p class="meta">Draw → Prime → Focus → Seal → Ledger. Use Deck to get moving when 𝓘 won’t come.</p>
-          </details>
         </div>
 
         <aside class="card col-5">
@@ -1464,39 +1090,50 @@
             <button class="lab-btn" data-ex="focus15" type="button">Focus 15</button>
             <button class="lab-btn" data-ex="seal60" type="button">Seal 60</button>
           </div>
-          <p class="hint">You can customize the deck in code (CARDS array).</p>
         </aside>
       </article>
     </section>
 
-    <!-- ========================= LEDGER ========================= -->
-    <section id="tab-ledger" class="tab" role="tabpanel" aria-labelledby="ledger-tab">
+    <section id="tab-ledger" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-12">
           <h2>📒 Witness Ledger <small class="meta">(private on this device)</small></h2>
 
           <div class="lab-row">
             <input id="lgLine" class="lab-input" placeholder="Intention (𝓘)…">
-            <input id="lgCarrier" class="lab-input" placeholder="Carrier (432/528/369/144/963)">
+            <input id="lgCarrier" class="lab-input" placeholder="Carrier">
             <select id="lgQ" class="lab-input" style="width:auto">
-              <option value="">Ξ quality…</option><option>Low</option><option>Medium</option><option>High</option>
+              <option value="">Ξ quality…</option>
+              <option>Low</option>
+              <option>Medium</option>
+              <option>High</option>
             </select>
-            <input id="lgTags" class="lab-input" placeholder="tags (comma)">
+            <input id="lgTags" class="lab-input" placeholder="tags, comma separated">
           </div>
 
-          <textarea id="lgWit" rows="3" class="lab-input" placeholder="Witness (what changed, what lingered)…"></textarea>
+          <textarea id="lgWit" rows="3" class="lab-input" placeholder="Witness note…"></textarea>
 
           <div class="lab-row">
             <button id="lgAdd" class="lab-btn primary" type="button">Add</button>
             <button id="lgExport" class="lab-btn" type="button">Export .json</button>
             <input type="file" id="lgImportFile" accept="application/json" hidden>
             <button id="lgImport" class="lab-btn" type="button">Import .json</button>
-            <input id="lgFilter" class="lab-input" placeholder="Filter…" style="margin-left:auto;max-width:240px">
+            <input id="lgFilter" class="lab-input" placeholder="Filter…" style="max-width:240px">
           </div>
 
-          <div class="table-wrap" style="margin-top:8px">
+          <div class="table-wrap">
             <table id="lgTable">
-              <thead><tr><th>Date</th><th>Intention</th><th>Carrier</th><th>Ξ</th><th>Tags</th><th>Witness</th><th>Remnant</th><th></th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Intention</th>
+                  <th>Carrier</th>
+                  <th>Ξ</th>
+                  <th>Tags</th>
+                  <th>Witness</th>
+                  <th></th>
+                </tr>
+              </thead>
               <tbody id="lgRows"></tbody>
             </table>
           </div>
@@ -1504,84 +1141,77 @@
       </article>
     </section>
 
-    <!-- ========================= ETHICS ========================= -->
-    <section id="tab-ethics" class="tab" role="tabpanel" aria-labelledby="ethics-tab">
+    <section id="tab-ethics" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
           <h2>🛡 Ethics — Eq.9 Safety Mask</h2>
 
-          <p class="meta">The mask is a triage. If any “Red” triggers, <b>halt</b>, re-center, and only continue after resolving the cause.</p>
+          <p class="meta">
+            This page keeps the practice grounded. If any red condition is present, stop and return to breath-only.
+          </p>
 
-          <div class="grid">
-            <div class="card col-12">
-              <h3>Self-check (choose one)</h3>
-              <div class="lab-row">
-                <label><input type="radio" name="eth" value="green" checked> Green — clear, kind, consent in place</label>
-                <label><input type="radio" name="eth" value="yellow"> Yellow — unclear, pressured, tired</label>
-                <label><input type="radio" name="eth" value="red"> Red — harm, deception, compulsion</label>
-              </div>
-              <p id="ethCoach" class="hint">Green: proceed with normal cycles.</p>
+          <div class="card">
+            <h3>Self-check</h3>
+            <div class="lab-row">
+              <label><input type="radio" name="eth" value="green" checked> Green — clear, kind, consent in place</label>
+              <label><input type="radio" name="eth" value="yellow"> Yellow — unclear, pressured, tired</label>
+              <label><input type="radio" name="eth" value="red"> Red — harm, deception, compulsion</label>
             </div>
+            <p id="ethCoach" class="hint status-green">Green: proceed with normal cycles.</p>
+          </div>
 
-            <div class="card col-12">
-              <h3>Stop rules</h3>
-              <ul class="list">
-                <li>Clarity falling, tension rising, breath becoming shallow → stop.</li>
-                <li>Any move that reduces another’s dignity or consent → stop.</li>
-                <li>Grandiosity, magical guarantees, or compulsive checking → stop.</li>
-              </ul>
-              <p class="meta">Return to breath (4-7-8 or 6-0-6-0), pick “None” or 432 Hz, shorten 𝓘.</p>
-            </div>
+          <div class="card">
+            <h3>Stop Rules</h3>
+            <ul class="list">
+              <li>Clarity falling, tension rising, breath tightening → stop.</li>
+              <li>Any move that reduces another person’s dignity or consent → stop.</li>
+              <li>Grandiosity, guarantees, or compulsive checking → stop.</li>
+            </ul>
           </div>
         </div>
 
         <aside class="card col-5">
           <h3>Mask to Ledger</h3>
-          <p class="meta">You can mark the mask state alongside a Ledger entry.</p>
-          <div class="lab-row">
-            <button id="ethMark" class="lab-btn" type="button">Append mask → Ledger note</button>
-          </div>
-          <p class="hint">This stays on your device only.</p>
+          <button id="ethMark" class="lab-btn" type="button">Append Mask → Ledger Note</button>
         </aside>
       </article>
     </section>
 
-    <!-- ========================== MAPS ========================== -->
-    <section id="tab-maps" class="tab" role="tabpanel" aria-labelledby="maps-tab">
+    <section id="tab-maps" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
-          <h2>🧠 Maps — Bias Interrupt, Anchors, Memory Grid</h2>
+          <h2>🧠 Maps — Anchors & Memory</h2>
 
-          <details class="card">
-            <summary><strong>Bias Interrupt</strong> (3-step)</summary>
+          <details class="card" open>
+            <summary><strong>Bias Interrupt</strong></summary>
             <ol class="list">
-              <li>Name the pull (e.g., catastrophizing, mind-reading, confirmation bias).</li>
-              <li>Counter with a neutral micro-fact in reach (something observable).</li>
-              <li>Return to the one-line 𝓘; continue on breath.</li>
+              <li>Name the pull.</li>
+              <li>Counter with one neutral observable fact.</li>
+              <li>Return to one line and one breath.</li>
             </ol>
             <div class="lab-row">
               <input id="biasName" class="lab-input" placeholder="Bias label…">
-              <input id="biasFact" class="lab-input" placeholder="Neutral micro-fact…">
+              <input id="biasFact" class="lab-input" placeholder="Neutral fact…">
               <button id="biasStamp" class="lab-btn" type="button">Stamp to Ledger</button>
             </div>
           </details>
 
           <details class="card">
-            <summary><strong>Anchor Matrix</strong> (Senses × Phrases)</summary>
+            <summary><strong>Anchor Matrix</strong></summary>
             <div class="grid">
-              <textarea id="anchSee"  class="lab-input col-6" rows="2" placeholder="SEE anchor (e.g., a specific doorway or tree)"></textarea>
-              <textarea id="anchHear" class="lab-input col-6" rows="2" placeholder="HEAR anchor (e.g., fan hum, birds)"></textarea>
-              <textarea id="anchFeel" class="lab-input col-6" rows="2" placeholder="FEEL anchor (e.g., ring on finger)"></textarea>
-              <textarea id="anchSay"  class="lab-input col-6" rows="2" placeholder="SAY anchor (e.g., ‘Here we are. One thing.’)"></textarea>
+              <textarea id="anchSee" class="lab-input col-6" rows="2" placeholder="SEE anchor"></textarea>
+              <textarea id="anchHear" class="lab-input col-6" rows="2" placeholder="HEAR anchor"></textarea>
+              <textarea id="anchFeel" class="lab-input col-6" rows="2" placeholder="FEEL anchor"></textarea>
+              <textarea id="anchSay" class="lab-input col-6" rows="2" placeholder="SAY anchor"></textarea>
             </div>
-            <div class="lab-row" style="margin-top:6px">
+            <div class="lab-row">
               <button id="anchorSave" class="lab-btn" type="button">Save Anchors</button>
-              <button id="anchorLoad" class="lab-btn" type="button">Load</button>
+              <button id="anchorLoad" class="lab-btn" type="button">Load Anchors</button>
             </div>
           </details>
 
           <details class="card">
-            <summary><strong>Memory Grid</strong> (3×3 palace)</summary>
+            <summary><strong>Memory Grid</strong></summary>
             <div class="grid">
               <textarea class="lab-input col-4" rows="2" id="m00" placeholder="0,0"></textarea>
               <textarea class="lab-input col-4" rows="2" id="m01" placeholder="0,1"></textarea>
@@ -1593,9 +1223,9 @@
               <textarea class="lab-input col-4" rows="2" id="m21" placeholder="2,1"></textarea>
               <textarea class="lab-input col-4" rows="2" id="m22" placeholder="2,2"></textarea>
             </div>
-            <div class="lab-row" style="margin-top:6px">
+            <div class="lab-row">
               <button id="memSave" class="lab-btn" type="button">Save Grid</button>
-              <button id="memLoad" class="lab-btn" type="button">Load</button>
+              <button id="memLoad" class="lab-btn" type="button">Load Grid</button>
               <button id="memClear" class="lab-btn" type="button">Clear</button>
             </div>
           </details>
@@ -1604,9 +1234,9 @@
         <aside class="card col-5">
           <h3>Use</h3>
           <ul class="list">
-            <li>Interrupt → Anchor → 1-Line → Exhale.</li>
-            <li>Place key 𝓘 nouns in the 3×3 and rehearse clockwise.</li>
-            <li>Pair an anchor with a soft exhale: “let the exhale do the work”.</li>
+            <li>Interrupt → Anchor → Line → Exhale.</li>
+            <li>Place key words in the 3×3 grid.</li>
+            <li>Rehearse clockwise with a soft exhale.</li>
           </ul>
         </aside>
       </article>
@@ -1614,277 +1244,1211 @@
 
     <footer class="footer">
       <div class="divider" aria-hidden="true"></div>
-      <p class="meta">© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire • BY-NC 4.0</p>
+      <p class="meta">© <span id="yr">2026</span> Aaron Paul Laird — Scroll of Fire</p>
     </footer>
   </main>
 
-  <!-- ======================= GLOBAL ENGINE ======================= -->
   <script>
-  (function(){
-    "use strict";
-    const $ =(s,r=document)=>r.querySelector(s);
-    const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-    const on=(t,e,f,o)=>t&&t.addEventListener(e,f,o);
+    (() => {
+      "use strict";
 
-    function toast(msg){
-      const el=document.createElement("div"); el.textContent=msg;
-      Object.assign(el.style,{position:"fixed",left:"50%",bottom:"22px",transform:"translateX(-50%)",
-        background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid #2a3242",borderRadius:"10px",
-        boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:9999,opacity:0,transition:"opacity .2s"});
-      document.body.appendChild(el); requestAnimationFrame(()=>{el.style.opacity=1});
-      setTimeout(()=>{el.style.opacity=0; setTimeout(()=>el.remove(),250);},1800);
-    }
-    function load(k,fb){ try{ const raw=localStorage.getItem(k); return raw? JSON.parse(raw): fb; }catch(_){return fb;} }
-    function save(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(_){} }
+      const $ = (s, r = document) => r.querySelector(s);
+      const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+      const on = (el, ev, fn, opt) => el && el.addEventListener(ev, fn, opt);
 
-    /* ======================== TIMER ENGINE ======================== */
-    const tmStart=$("#tmStart"), tmStop=$("#tmStop"), tmOut=$("#tmOut");
-    let tmInt=null, tmPhase="idle", tmEnd=0, tmCycle=0, tmPlan=0, tmF=25, tmB=5;
+      const store = {
+        get(k, fb) {
+          try {
+            const raw = localStorage.getItem(k);
+            return raw ? JSON.parse(raw) : fb;
+          } catch {
+            return fb;
+          }
+        },
+        set(k, v) {
+          try {
+            localStorage.setItem(k, JSON.stringify(v));
+          } catch {}
+        }
+      };
 
-    function tmTick(){
-      const rem=tmEnd-Date.now();
-      if(rem<=0){
-        if(tmPhase==="focus"){
-          tmPhase="break"; tmEnd=Date.now()+tmB*60*1000; toast("Break");
-        }else if(tmPhase==="break"){
-          tmCycle++;
-          if(tmCycle>=tmPlan){ tmStop.click(); toast("Done"); return; }
-          tmPhase="focus"; tmEnd=Date.now()+tmF*60*1000; toast("Focus");
+      function toast(msg) {
+        const el = document.createElement("div");
+        el.textContent = msg;
+        Object.assign(el.style, {
+          position: "fixed",
+          left: "50%",
+          bottom: "22px",
+          transform: "translateX(-50%)",
+          background: "#0e131c",
+          color: "#e6f9ff",
+          padding: "9px 13px",
+          border: "1px solid #2a3242",
+          borderRadius: "12px",
+          boxShadow: "0 10px 28px rgba(0,0,0,.35)",
+          zIndex: 99999,
+          opacity: 0,
+          transition: "opacity .2s"
+        });
+        document.body.appendChild(el);
+        requestAnimationFrame(() => { el.style.opacity = 1; });
+        setTimeout(() => {
+          el.style.opacity = 0;
+          setTimeout(() => el.remove(), 250);
+        }, 1700);
+      }
+
+      $("#yr") && ($("#yr").textContent = new Date().getFullYear());
+
+      /* Tabs */
+      function tabs() {
+        return $$(".tab");
+      }
+
+      function pills() {
+        return $$(".pill-rail .pill[data-tab]");
+      }
+
+      function switchTo(id, opts = {}) {
+        const panel = $("#tab-" + id);
+        if (!panel) {
+          toast("Missing section: " + id);
+          return;
+        }
+
+        tabs().forEach(t => {
+          t.classList.toggle("active", t.id === "tab-" + id);
+        });
+
+        pills().forEach(p => {
+          const active = p.dataset.tab === id;
+          p.classList.toggle("active", active);
+          p.setAttribute("aria-selected", active ? "true" : "false");
+          p.setAttribute("tabindex", active ? "0" : "-1");
+        });
+
+        const pill = pills().find(p => p.dataset.tab === id);
+        if (pill) {
+          pill.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+          if (!opts.fromHash) pill.focus({ preventScroll: true });
+        }
+
+        store.set("sof_last_tab", id);
+
+        if (!opts.noHash) {
+          history.replaceState(null, "", "#tab=" + id);
         }
       }
-      const s=Math.max(0,Math.ceil((tmEnd-Date.now())/1000));
-      tmOut.value = `${tmPhase} — ${Math.floor(s/60)}:${String(s%60).padStart(2,"0")} · ${tmCycle+1}/${tmPlan}`;
-    }
-    on(tmStart,"click",()=>{
-      tmF=Math.max(5,Math.min(120,+($("#tmFocus")?.value||25)));
-      tmB=Math.max(3,Math.min(60,+($("#tmBreak")?.value||5)));
-      tmPlan=Math.max(1,Math.min(16,+($("#tmCycles")?.value||2)));
-      tmCycle=0; tmPhase="focus"; tmEnd=Date.now()+tmF*60*1000;
-      tmStart.disabled=true; tmStop.disabled=false;
-      tmInt=setInterval(tmTick, 500); toast("Focus");
-    });
-    on(tmStop,"click",()=>{ clearInterval(tmInt); tmInt=null; tmStart.disabled=false; tmStop.disabled=true; tmPhase="idle"; tmOut.value="—"; });
 
-    // Streak
-    const STREAK_KEY="sof_streak_v1";
-    function daysSinceEpoch(date=new Date()){ return Math.floor(date.getTime()/86400000); }
-    function readStreak(){ return load(STREAK_KEY,{last:-1,count:0}); }
-    function writeStreak(v){ save(STREAK_KEY,v); }
-    function showStreak(){ const s=readStreak(); $("#streakOut") && ($("#streakOut").textContent = `streak: ${s.count}`); }
-    on($("#streakMark"),"click",()=>{
-      const d=daysSinceEpoch(), s=readStreak();
-      if(s.last===d) return toast("Already marked today");
-      if(s.last===d-1) s.count++; else s.count=1;
-      s.last=d; writeStreak(s); showStreak(); toast("Marked");
-    });
-    showStreak();
+      window.switchTo = switchTo;
 
-    /* ========================= DECK ENGINE ========================= */
-    const CARDS=[
-      "One helpful thing, done calmly.",
-      "Speak simply. Act kindly.",
-      "Small moves. True aim.",
-      "Steady breath, steady hand.",
-      "See one undeniable detail.",
-      "Return to the line.",
-      "Let the exhale do the work.",
-      "Clarity before speed.",
-      "Finish clean, thank gently.",
-      "I place my attention where it helps.",
-      "One page. One call. One commit.",
-      "I keep the promise I can keep today."
-    ];
-    on($("#drawCard"),"click",()=>{
-      const i=Math.floor(Math.random()*CARDS.length);
-      $("#cardText") && ($("#cardText").textContent=CARDS[i]);
-    });
-    on($("#useCard"),"click",()=>{
-      const t=$("#cardText")?.textContent?.trim(); if(!t) return;
-      $("#rmnLine") && ($("#rmnLine").value=t);
-      $("#lgLine") && ($("#lgLine").value=t);
-      toast("Card → 𝓘");
-    });
-    $$("#tab-deck [data-ex]").forEach(b=>on(b,"click",()=>{
-      const k=b.getAttribute("data-ex");
-      if(k==="prime60") toast("Prime 60: 10 slow breaths; speak 𝓘 once per breath.");
-      if(k==="focus15") { $("#tmFocus").value=15; $("#tmBreak").value=5; $("#tmCycles").value=1; $("#tmStart").click(); }
-      if(k==="seal60") toast("Seal 60: name one undeniable change; whisper thanks; add to Ledger.");
-    }));
+      pills().forEach(p => on(p, "click", () => switchTo(p.dataset.tab)));
+      $$("[data-go]").forEach(b => on(b, "click", () => switchTo(b.dataset.go)));
 
-    /* ======================== LEDGER ENGINE ======================== */
-    const LGKEY="sof_ledger_entries_v5";
-    function esc(s){ return String(s||"").replace(/[&<>"']/g,m=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m])); }
-    function readLedger(){ return load(LGKEY,[]); }
-    function writeLedger(arr){ save(LGKEY,arr); }
+      const rail = $("#pillRail");
+      const prev = $("#tabsPrev");
+      const next = $("#tabsNext");
 
-    // Lightbox
-    const lb=document.createElement("div"); lb.className="lightbox"; lb.innerHTML='<img alt="Remnant">'; document.body.appendChild(lb);
-    lb.addEventListener("click",()=>lb.classList.remove("open"));
+      function updateChevrons() {
+        if (!rail || !prev || !next) return;
+        prev.disabled = rail.scrollLeft <= 4;
+        next.disabled = rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 4;
+      }
 
-    function renderLedger(){
-      const rows=$("#lgRows"), q=($("#lgFilter")?.value||"").toLowerCase();
-      const all=readLedger();
-      const list = q ? all.filter(x=>JSON.stringify(x).toLowerCase().includes(q)) : all;
-      if(!rows) return;
-      rows.innerHTML = list.map((e,i)=>`<tr>
-        <td>${new Date(e.when).toLocaleString()}</td>
-        <td>${esc(e.phrase)}</td><td>${esc(e.carrier||"—")}</td><td>${esc(e.coherence||"—")}</td>
-        <td>${esc((e.tags||[]).join(", "))}</td>
-        <td>${esc(e.note||"")}</td>
-        <td>${e._traceDataUri ? `<img src="${e._traceDataUri}" class="thumb" alt="Remnant" data-idx="${i}">` : "—"}</td>
-        <td><button class="lab-btn" data-del="${i}">✕</button></td>
-      </tr>`).join("");
-      $$("#lgRows [data-del]").forEach(b=>on(b,"click",()=>{ const all=readLedger(); all.splice(+b.dataset.del,1); writeLedger(all); renderLedger(); }));
-      $$("#lgRows img.thumb").forEach(img=>on(img,"click",()=>{
-        const all=readLedger(); const i=+img.dataset.idx; const src=all[i]._traceDataUri; if(src){ lb.querySelector("img").src=src; lb.classList.add("open"); }
-      }));
-    }
-    function addLedger(entry, png){
-      const all=readLedger();
-      if(png){ entry._traceDataUri = png; }
-      all.unshift(entry); writeLedger(all); renderLedger();
-      $("#lgLine") && ($("#lgLine").value = entry.phrase || $("#lgLine").value);
-      $("#lgCarrier") && ($("#lgCarrier").value = entry.carrier || $("#lgCarrier").value);
-      $("#lgWit") && ($("#lgWit").value = (entry.note||""));
-    }
-    on($("#lgAdd"),"click",()=>{
-      const phrase=($("#lgLine")?.value||"").trim(); if(!phrase) return toast("Write an intention line");
-      const entry={
-        when:new Date().toISOString(),
-        carrier:($("#lgCarrier")?.value||"").trim(),
-        phrase,
-        coherence:$("#lgQ")?.value||"",
-        tags:($("#lgTags")?.value||"").split(",").map(s=>s.trim()).filter(Boolean),
-        note:($("#lgWit")?.value||"").trim()
-      };
-      addLedger(entry);
-      if($("#lgWit")) $("#lgWit").value="";
-      toast("Added to Ledger");
-    });
-    on($("#lgExport"),"click",()=>{
-      const blob=new Blob([JSON.stringify(readLedger(),null,2)],{type:"application/json"});
-      const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="scroll-of-fire-ledger.json"; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),800);
-    });
-    on($("#lgImport"),"click",()=>$("#lgImportFile")?.click());
-    on($("#lgImportFile"),"change",async e=>{
-      const f=e.target.files?.[0]; if(!f) return;
-      try{
-        const txt=await f.text(); const data=JSON.parse(txt);
-        if(Array.isArray(data)){ writeLedger(data.concat(readLedger())); renderLedger(); toast("Imported"); }
-      }catch(_){ toast("Import failed"); }
-      e.target.value="";
-    });
-    on($("#lgFilter"),"input",renderLedger);
-    renderLedger();
+      on(prev, "click", () => rail.scrollBy({ left: -rail.clientWidth * .75, behavior: "smooth" }));
+      on(next, "click", () => rail.scrollBy({ left: rail.clientWidth * .75, behavior: "smooth" }));
+      on(rail, "scroll", updateChevrons, { passive: true });
+      updateChevrons();
 
-    // Expose a small helper to capture the current Remnant as PNG into Ledger
-    window._sealRemnantToLedger = function(){
-      try{
-        const canvas=document.getElementById("trace");
-        const url=canvas.toDataURL("image/png");
-        addLedger({
-          when:new Date().toISOString(),
-          carrier:($("#hudCarrier")?.textContent||"").replace(/^Πν:\s*/,""),
-          phrase:($("#rmnLine")?.value||"").trim(),
-          coherence:($("#xiOut")?.textContent||"").replace(/.*?([\d.]+)$/,"$1"),
-          tags:["seal","remnant"],
-          note: ""
-        }, url);
-        toast("Sealed to Ledger");
-        if(window.switchTo) window.switchTo("ledger");
-      }catch(_){ toast("Seal failed"); }
-    };
-
-    /* Hook up Remnant’s “Seal → Ledger” button from Part 1 if present */
-    on($("#rmnSeal"),"click",()=>window._sealRemnantToLedger && window._sealRemnantToLedger());
-
-    /* ======================== ETHICS ENGINE ======================== */
-    const ETH_KEY="sof_eth_mask_state_v1";
-    function currentMask(){
-      const val = (document.querySelector('input[name="eth"]:checked')||{}).value||"green";
-      return val;
-    }
-    function updateCoach(){
-      const v=currentMask(), el=$("#ethCoach");
-      if(!el) return;
-      if(v==="green") el.textContent="Green: proceed with normal cycles.";
-      if(v==="yellow") el.textContent="Yellow: shorten cycles, lighten aims, re-check breath.";
-      if(v==="red") el.textContent="Red: halt. Switch to breath-only. Restore dignity/consent. Return later.";
-      save(ETH_KEY,{v,ts:Date.now()});
-    }
-    $$('input[name="eth"]').forEach(r=>on(r,"change",updateCoach));
-    const ethSaved = load(ETH_KEY,null);
-    if(ethSaved && ethSaved.v){
-      const r=document.querySelector(`input[name="eth"][value="${ethSaved.v}"]`); if(r){ r.checked=true; updateCoach(); }
-    } else { updateCoach(); }
-    on($("#ethMark"),"click",()=>{
-      const v=currentMask();
-      const note = `Ethics mask: ${v.toUpperCase()} @ ${new Date().toLocaleString()}`;
-      const e = readLedger()[0];
-      if(!e){ $("#lgWit") && ($("#lgWit").value = note); toast("No entries yet — appended to Witness field."); return; }
-      e.note = (e.note? e.note+"\n":"") + note; const all=readLedger(); all[0]=e; writeLedger(all); renderLedger(); toast("Mask appended to latest Ledger entry");
-    });
-
-    /* ========================== MAPS ENGINE ========================== */
-    const ANCH_KEY="sof_anchor_matrix_v1";
-    const MEM_KEY ="sof_memory_grid_v1";
-
-    on($("#biasStamp"),"click",()=>{
-      const bias=($("#biasName")?.value||"").trim();
-      const fact=($("#biasFact")?.value||"").trim();
-      const phrase=($("#rmnLine")?.value||"").trim();
-      if(!bias && !fact) return toast("Add a bias + micro-fact first");
-      addLedger({
-        when:new Date().toISOString(),
-        carrier:($("#hudCarrier")?.textContent||"").replace(/^Πν:\s*/,""),
-        phrase: phrase || "—",
-        coherence:($("#xiOut")?.textContent||"").replace(/.*?([\d.]+)$/,"$1"),
-        tags:["maps","bias"],
-        note:`Bias: ${bias||"—"} | Fact: ${fact||"—"}`
+      on(window, "hashchange", () => {
+        const m = location.hash.match(/tab=([a-z0-9_-]+)/i);
+        if (m) switchTo(m[1], { fromHash: true, noHash: true });
       });
-      toast("Bias interrupt → Ledger");
-      if(window.switchTo) window.switchTo("ledger");
-    });
 
-    on($("#anchorSave"),"click",()=>{
-      const data={
-        see: $("#anchSee")?.value||"", hear: $("#anchHear")?.value||"",
-        feel: $("#anchFeel")?.value||"", say: $("#anchSay")?.value||""
-      };
-      save(ANCH_KEY,data); toast("Anchors saved");
-    });
-    on($("#anchorLoad"),"click",()=>{
-      const d=load(ANCH_KEY,null);
-      if(!d) return toast("No anchors saved");
-      $("#anchSee") && ($("#anchSee").value=d.see||"");
-      $("#anchHear")&& ($("#anchHear").value=d.hear||"");
-      $("#anchFeel")&& ($("#anchFeel").value=d.feel||"");
-      $("#anchSay") && ($("#anchSay").value=d.say||"");
-      toast("Anchors loaded");
-    });
+      on(document, "keydown", e => {
+        if (e.target.matches("input,textarea,select,button")) return;
 
-    on($("#memSave"),"click",()=>{
-      const grid=[]; for(let r=0;r<3;r++){ const row=[]; for(let c=0;c<3;c++){ row.push(($("#m"+r+""+c)?.value||"")); } grid.push(row); }
-      save(MEM_KEY,grid); toast("Grid saved");
-    });
-    on($("#memLoad"),"click",()=>{
-      const grid=load(MEM_KEY,null); if(!grid) return toast("No grid saved");
-      for(let r=0;r<3;r++) for(let c=0;c<3;c++){ const id="#m"+r+""+c; if($(id)) $(id).value = grid?.[r]?.[c]||""; }
-      toast("Grid loaded");
-    });
-    on($("#memClear"),"click",()=>{
-      for(let r=0;r<3;r++) for(let c=0;c<3;c++){ const id="#m"+r+""+c; if($(id)) $(id).value = ""; }
-      toast("Grid cleared");
-    });
+        const map = {
+          "1": "remnant",
+          "2": "carrier",
+          "3": "observer",
+          "4": "phrase",
+          "5": "breath",
+          "6": "coherence",
+          "7": "drills",
+          "8": "timer",
+          "9": "deck",
+          "0": "ledger"
+        };
 
-  })();
-    // If someone lands directly with a hash (#tab=ledger etc.), ensure we’re on it.
-(function(){
-  const m=location.hash.match(/tab=([a-z0-9_-]+)/i);
-  if(m && window.switchTo) window.switchTo(m[1], {fromHash:true});
-})();
+        if (map[e.key]) {
+          e.preventDefault();
+          switchTo(map[e.key]);
+        }
+
+        if ((e.key === "p" || e.key === "P") && $("#dlTrace")) {
+          e.preventDefault();
+          $("#dlTrace").click();
+        }
+
+        if ((e.key === "r" || e.key === "R") && $("#newSeed")) {
+          e.preventDefault();
+          $("#newSeed").click();
+        }
+      });
+
+      /* Audio / Frequency */
+      let audioCtx = null;
+      let master = null;
+      let leftOsc = null;
+      let rightOsc = null;
+      let activeFreq = 432;
+      let playing = false;
+
+      function syncFreqUI(freq = activeFreq) {
+        activeFreq = Math.max(80, Math.min(1200, Math.round(Number(freq) || 432)));
+
+        [
+          "#freqValue",
+          "#freqValueMirror"
+        ].forEach(id => {
+          const el = $(id);
+          if (el) el.textContent = String(activeFreq);
+        });
+
+        [
+          "#freqSlider",
+          "#freqInput",
+          "#freqSliderMirror",
+          "#freqInputMirror"
+        ].forEach(id => {
+          const el = $(id);
+          if (el) el.value = activeFreq;
+        });
+
+        $("#hudCarrier") && ($("#hudCarrier").textContent = playing ? "Πν: " + activeFreq + " Hz" : "Πν: —");
+        $("#toneNow") && ($("#toneNow").textContent = playing ? activeFreq + " Hz active" : "stopped");
+        $("#carrierState") && ($("#carrierState").textContent = playing ? "active" : "stopped");
+
+        $$(".tone[data-carrier]").forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.carrier === String(activeFreq));
+        });
+      }
+
+      function getAudio() {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          master = audioCtx.createGain();
+          master.gain.value = 0.032;
+          master.connect(audioCtx.destination);
+        }
+        return audioCtx;
+      }
+
+      function stopTone() {
+        try { leftOsc && leftOsc.stop(); } catch {}
+        try { rightOsc && rightOsc.stop(); } catch {}
+        leftOsc = null;
+        rightOsc = null;
+        playing = false;
+        syncFreqUI(activeFreq);
+      }
+
+      function playTone(freq = activeFreq) {
+        const ac = getAudio();
+        if (ac.state === "suspended") ac.resume();
+
+        stopTone();
+
+        activeFreq = Math.max(80, Math.min(1200, Math.round(Number(freq) || 432)));
+
+        const binaural = $("#binaural")?.checked;
+        const detune = binaural ? 4 : 0;
+        const soft = $("#softGate")?.checked;
+
+        const gainL = ac.createGain();
+        const gainR = ac.createGain();
+        const panL = ac.createStereoPanner ? ac.createStereoPanner() : null;
+        const panR = ac.createStereoPanner ? ac.createStereoPanner() : null;
+
+        leftOsc = ac.createOscillator();
+        rightOsc = ac.createOscillator();
+
+        leftOsc.type = "sine";
+        rightOsc.type = "sine";
+        leftOsc.frequency.value = activeFreq - detune;
+        rightOsc.frequency.value = activeFreq + detune;
+
+        const now = ac.currentTime;
+        gainL.gain.value = soft ? 0.0001 : 0.025;
+        gainR.gain.value = soft ? 0.0001 : 0.025;
+
+        if (soft) {
+          gainL.gain.linearRampToValueAtTime(0.025, now + 0.12);
+          gainR.gain.linearRampToValueAtTime(0.025, now + 0.12);
+        }
+
+        if (panL && panR) {
+          panL.pan.value = -0.65;
+          panR.pan.value = 0.65;
+          leftOsc.connect(gainL).connect(panL).connect(master);
+          rightOsc.connect(gainR).connect(panR).connect(master);
+        } else {
+          leftOsc.connect(gainL).connect(master);
+          rightOsc.connect(gainR).connect(master);
+        }
+
+        leftOsc.start();
+        rightOsc.start();
+        playing = true;
+        syncFreqUI(activeFreq);
+        toast(activeFreq + " Hz");
+      }
+
+      window.addEventListener("pointerdown", () => {
+        if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+      }, { once: true, passive: true });
+
+      function setFrequencyOnly(freq) {
+        activeFreq = Math.max(80, Math.min(1200, Math.round(Number(freq) || 432)));
+        if (playing) playTone(activeFreq);
+        else syncFreqUI(activeFreq);
+      }
+
+      [
+        "#freqSlider",
+        "#freqInput",
+        "#freqSliderMirror",
+        "#freqInputMirror"
+      ].forEach(id => on($(id), "input", e => setFrequencyOnly(e.target.value)));
+
+      on($("#playFreq"), "click", () => playTone(activeFreq));
+      on($("#playFreqMirror"), "click", () => playTone(activeFreq));
+      on($("#stopFreq"), "click", stopTone);
+      on($("#stopFreqMirror"), "click", stopTone);
+
+      document.addEventListener("click", e => {
+        const btn = e.target.closest(".tone[data-carrier]");
+        if (!btn) return;
+
+        const val = btn.dataset.carrier;
+        if (val === "none") {
+          stopTone();
+        } else {
+          setFrequencyOnly(Number(val));
+          playTone(Number(val));
+        }
+      });
+
+      syncFreqUI(432);
+
+      /* Visual */
+      const canvas = $("#trace");
+      const ctx = canvas?.getContext?.("2d");
+      const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      let seed = Math.random() * 10000;
+      let phi = 0;
+
+      function fitCanvas() {
+        if (!canvas || !ctx) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.max(320, Math.floor(rect.width * dpr));
+        canvas.height = Math.max(320, Math.floor(rect.height * dpr));
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      fitCanvas();
+      on(window, "resize", fitCanvas, { passive: true });
+
+      function pal(t, a = .78) {
+        const p = $("#palette")?.value || "aqua-gold";
+        if (p === "rose-ember") return t < .5 ? `rgba(255,98,150,${a})` : `rgba(255,176,94,${a})`;
+        if (p === "violet-ice") return t < .5 ? `rgba(170,120,255,${a})` : `rgba(170,235,255,${a})`;
+        if (p === "forest-sun") return t < .5 ? `rgba(96,201,140,${a})` : `rgba(244,212,92,${a})`;
+        if (p === "mono") return `rgba(235,235,235,${a})`;
+        return t < .5 ? `rgba(122,243,255,${a})` : `rgba(243,201,122,${a})`;
+      }
+
+      function count() {
+        return Math.max(60, Number($("#visDensity")?.value || 280));
+      }
+
+      function speed() {
+        return Number($("#visSpeed")?.value || 90) / 90;
+      }
+
+      function st() {
+        return Number($("#stroke")?.value || 2);
+      }
+
+      function fade() {
+        return Number($("#visFade")?.value || 14) / 180;
+      }
+
+      function draw() {
+        if (!ctx || !canvas) return;
+
+        const w = canvas.clientWidth || 600;
+        const h = canvas.clientHeight || 420;
+        const cx = w / 2;
+        const cy = h / 2;
+        const n = count();
+        const s = speed();
+        const mode = Number($("#visMode")?.value || 0);
+        const freqRatio = (activeFreq % 1000) / 1000;
+        const pulseLock = Number($("#pulseLock")?.value || 64) / 100;
+        const breathPulse = 0.5 + 0.5 * Math.sin(phi * 0.025 * s + freqRatio * Math.PI * 2);
+        const baseR = Math.min(w, h) * (0.16 + 0.10 * pulseLock + 0.06 * breathPulse);
+
+        ctx.fillStyle = `rgba(6,8,13,${fade()})`;
+        ctx.fillRect(0, 0, w, h);
+
+        const glow = ctx.createRadialGradient(cx, cy, 8, cx, cy, Math.min(w, h) * 0.62);
+        glow.addColorStop(0, "rgba(122,243,255,.22)");
+        glow.addColorStop(.42, "rgba(243,201,122,.09)");
+        glow.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(cx, cy, Math.min(w, h) * 0.62, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (mode === 1) {
+          for (let k = 0; k < 5; k++) {
+            ctx.beginPath();
+            for (let i = 0; i <= n; i++) {
+              const t = i / n * Math.PI * 2;
+              const x = cx + Math.sin((2 + k) * t + phi * .012 * s) * w * .33;
+              const y = cy + Math.sin((3 + k + freqRatio * 6) * t + phi * .010 * s) * h * .27;
+              i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+            }
+            ctx.lineWidth = st();
+            ctx.strokeStyle = pal(k / 5, .46);
+            ctx.stroke();
+          }
+        } else if (mode === 2) {
+          for (let i = 0; i < n; i++) {
+            const u = i / n * Math.PI * 2 + phi * .006 * s;
+            for (let j = 0; j < 10; j++) {
+              const v = j / 10 * Math.PI * 2;
+              const R = baseR * 1.28;
+              const r = baseR * .38;
+              const x = (R + r * Math.cos(v)) * Math.cos(u);
+              const y = (R + r * Math.cos(v)) * Math.sin(u) * .58;
+              const z = r * Math.sin(v);
+              const d = 500 / (620 + z);
+              ctx.fillStyle = pal((z + r) / (2 * r), .7);
+              ctx.fillRect(cx + x * d, cy + y * d, st(), st());
+            }
+          }
+        } else if (mode === 3) {
+          ctx.beginPath();
+          for (let i = 0; i <= n; i++) {
+            const t = i / n * Math.PI * 8;
+            const k = 3 + Math.round(freqRatio * 6);
+            const r = baseR * 1.5 * Math.cos(k * t + phi * .012 * s);
+            const x = cx + r * Math.cos(t);
+            const y = cy + r * Math.sin(t);
+            i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+          }
+          ctx.strokeStyle = pal(.78, .72);
+          ctx.lineWidth = st();
+          ctx.stroke();
+        } else if (mode === 4) {
+          for (let i = 0; i < n; i++) {
+            const a = i * .618 + phi * .012 * s;
+            const r = baseR + Math.sin(i * .055 + phi * .014) * baseR * .58;
+            const x = cx + Math.cos(a) * r * (1 + .35 * Math.sin(a * 3));
+            const y = cy + Math.sin(a) * r * .62;
+            ctx.fillStyle = pal((i % 100) / 100, .72);
+            ctx.fillRect(x, y, st(), st());
+            if ($("#sym")?.checked) ctx.fillRect(w - x, y, st(), st());
+          }
+        } else if (mode === 5) {
+          for (let b = 0; b < 7; b++) {
+            ctx.beginPath();
+            for (let x = 0; x <= w; x += 2) {
+              const y = cy + Math.sin(x * .012 + b * .65 + phi * .012 * s) * h * .12 +
+                ($("#noise")?.checked ? Math.sin(seed + x * .03 + b) * 8 : 0);
+              x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+            }
+            ctx.lineWidth = st();
+            ctx.strokeStyle = pal(b / 7, .45);
+            ctx.stroke();
+          }
+        } else if (mode === 6) {
+          ctx.beginPath();
+          const PHI = (1 + Math.sqrt(5)) / 2;
+          for (let i = 0; i <= n; i++) {
+            const t = i / n * Math.PI * 2;
+            const r = baseR * 1.75 * (0.5 + 0.5 * Math.sin(PHI * t + phi * .012 * s));
+            const x = cx + r * Math.cos(t);
+            const y = cy + r * Math.sin(PHI * t);
+            i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+          }
+          ctx.strokeStyle = pal(.68, .7);
+          ctx.lineWidth = st();
+          ctx.stroke();
+        } else {
+          for (let i = 0; i < n; i++) {
+            const a = i / n * Math.PI * 2 + phi * .006 * s;
+            const wobble = Math.sin(i * .05 + phi * .018 * s + freqRatio * 8);
+            const r = baseR * (0.85 + 0.45 * wobble);
+            const jitter = $("#noise")?.checked ? Math.sin(seed + i * 12.989) * 4 : 0;
+            const x = cx + Math.cos(a) * (r + jitter);
+            const y = cy + Math.sin(a * 1.08) * (r * .68 + jitter);
+            ctx.fillStyle = pal((i % 100) / 100, .74);
+            ctx.beginPath();
+            ctx.arc(x, y, st() * .78, 0, Math.PI * 2);
+            ctx.fill();
+
+            if ($("#sym")?.checked) {
+              ctx.beginPath();
+              ctx.arc(w - x, y, st() * .78, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+        }
+
+        ctx.fillStyle = "rgba(244,241,232,.92)";
+        ctx.font = "700 13px Inter, system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(playing ? activeFreq + " Hz ACTIVE" : "VISUAL FIELD", cx, 25);
+
+        phi += s;
+        if (!reduceMotion) requestAnimationFrame(draw);
+      }
+
+      draw();
+
+      on($("#clearBtn"), "click", () => {
+        ctx && ctx.clearRect(0, 0, canvas.width, canvas.height);
+      });
+
+      on($("#seedBtn"), "click", () => {
+        seed = Math.random() * 10000;
+        toast("Seeded");
+      });
+
+      on($("#newSeed"), "click", () => {
+        seed = Math.random() * 10000;
+        toast("New seed");
+      });
+
+      on($("#dlTrace"), "click", () => {
+        if (!canvas) return;
+        const a = document.createElement("a");
+        a.href = canvas.toDataURL("image/png");
+        a.download = "remnant-trace.png";
+        a.click();
+      });
+
+      on($("#savePreset"), "click", () => {
+        store.set("sof_remnant_preset_clean_v1", {
+          mode: $("#visMode")?.value,
+          density: $("#visDensity")?.value,
+          speed: $("#visSpeed")?.value,
+          fade: $("#visFade")?.value,
+          palette: $("#palette")?.value,
+          stroke: $("#stroke")?.value,
+          pulse: $("#pulseLock")?.value,
+          sym: $("#sym")?.checked,
+          noise: $("#noise")?.checked,
+          freq: activeFreq
+        });
+        toast("Preset saved");
+      });
+
+      on($("#loadPreset"), "click", () => {
+        const p = store.get("sof_remnant_preset_clean_v1", null);
+        if (!p) return toast("No preset");
+
+        $("#visMode") && ($("#visMode").value = p.mode);
+        $("#visDensity") && ($("#visDensity").value = p.density);
+        $("#visSpeed") && ($("#visSpeed").value = p.speed);
+        $("#visFade") && ($("#visFade").value = p.fade);
+        $("#palette") && ($("#palette").value = p.palette);
+        $("#stroke") && ($("#stroke").value = p.stroke);
+        $("#pulseLock") && ($("#pulseLock").value = p.pulse);
+        $("#sym") && ($("#sym").checked = !!p.sym);
+        $("#noise") && ($("#noise").checked = !!p.noise);
+        setFrequencyOnly(p.freq || 432);
+        toast("Preset loaded");
+      });
+
+      on($("#autoRun"), "click", () => {
+        const line = ($("#rmnLine")?.value || "").trim();
+        if (!line) return toast("Write an intention line first");
+
+        const sequence = [
+          { label: "𝓘 Intend", mode: 3, breath: "In" },
+          { label: "𝓛 Look", mode: 1, breath: "Hold" },
+          { label: "𝓒 Coalesce", mode: 0, breath: "Out" },
+          { label: "𝓢 Seal", mode: 4, breath: "Seal" }
+        ];
+
+        let i = 0;
+        toast("Auto-pilot started");
+
+        const run = setInterval(() => {
+          const step = sequence[i];
+          $("#visMode") && ($("#visMode").value = step.mode);
+          $("#hudBreath") && ($("#hudBreath").textContent = "Breath: " + step.breath);
+          toast(step.label);
+          i++;
+
+          if (i >= sequence.length) {
+            clearInterval(run);
+            setTimeout(() => {
+              $("#hudBreath") && ($("#hudBreath").textContent = "Breath: —");
+              toast("Auto-pilot complete");
+            }, 1200);
+          }
+        }, 12000);
+      });
+
+      /* Mic Analyzer */
+      let micStream = null;
+      let analyser = null;
+
+      on($("#micOn"), "click", async () => {
+        try {
+          const ac = getAudio();
+          const stream = await navigator.mediaDevices.getUserMedia({
+            audio: {
+              echoCancellation: false,
+              noiseSuppression: false,
+              autoGainControl: false
+            },
+            video: false
+          });
+
+          micStream = stream;
+          const src = ac.createMediaStreamSource(stream);
+          analyser = ac.createAnalyser();
+          analyser.fftSize = 2048;
+          analyser.smoothingTimeConstant = .85;
+          src.connect(analyser);
+
+          $("#micOff").disabled = false;
+          $("#useTone").disabled = false;
+          toast("Mic on");
+          drawAudio(ac);
+        } catch {
+          toast("Mic failed");
+        }
+      });
+
+      on($("#micOff"), "click", () => {
+        try { micStream?.getTracks().forEach(t => t.stop()); } catch {}
+        analyser = null;
+        $("#micOff").disabled = true;
+        $("#useTone").disabled = true;
+        $("#freqRead").textContent = "—";
+        toast("Mic off");
+      });
+
+      on($("#useTone"), "click", () => {
+        const f = Number(($("#freqRead")?.textContent || "").match(/~(\d+)/)?.[1] || 432);
+        setFrequencyOnly(f);
+        playTone(f);
+      });
+
+      function drawAudio(ac) {
+        const wave = $("#wave");
+        const fft = $("#fft");
+        const wctx = wave?.getContext?.("2d");
+        const fctx = fft?.getContext?.("2d");
+        if (!wave || !fft || !wctx || !fctx || !analyser) return;
+
+        const wf = new Uint8Array(analyser.fftSize);
+        const ff = new Uint8Array(analyser.frequencyBinCount);
+
+        function loop() {
+          if (!analyser) return;
+
+          analyser.getByteTimeDomainData(wf);
+          analyser.getByteFrequencyData(ff);
+
+          const W = wave.width;
+          const H = wave.height;
+
+          wctx.clearRect(0, 0, W, H);
+          wctx.fillStyle = "#0b1016";
+          wctx.fillRect(0, 0, W, H);
+          wctx.beginPath();
+
+          for (let x = 0; x < W; x++) {
+            const i = Math.floor(x / W * wf.length);
+            const v = (wf[i] - 128) / 128;
+            const y = H / 2 + v * H * .38;
+            x ? wctx.lineTo(x, y) : wctx.moveTo(x, y);
+          }
+
+          wctx.strokeStyle = "#7af3ff";
+          wctx.lineWidth = 2;
+          wctx.stroke();
+
+          const FW = fft.width;
+          const FH = fft.height;
+
+          fctx.clearRect(0, 0, FW, FH);
+          fctx.fillStyle = "#0b1016";
+          fctx.fillRect(0, 0, FW, FH);
+
+          let maxI = 0;
+          let maxV = 0;
+
+          for (let i = 4; i < ff.length; i++) {
+            if (ff[i] > maxV) {
+              maxV = ff[i];
+              maxI = i;
+            }
+          }
+
+          const freq = maxI * (ac.sampleRate / analyser.fftSize);
+
+          for (let i = 0; i < ff.length; i++) {
+            const v = ff[i] / 255;
+            const x = i / ff.length * FW;
+            const y = FH * (1 - v);
+            fctx.fillStyle = v > .78 ? "#f3c97a" : v > .48 ? "#a7f6ff" : "rgba(106,160,255,.22)";
+            fctx.fillRect(x, y, FW / ff.length, FH - y);
+          }
+
+          $("#freqRead").textContent = isFinite(freq) ? "~" + Math.round(freq) + " Hz peak" : "—";
+          requestAnimationFrame(loop);
+        }
+
+        loop();
+      }
+
+      /* Observer */
+      let obsTimer = null;
+
+      on($("#obsStart"), "click", () => {
+        const sec = Math.max(3, Number($("#obsSec")?.value || 10));
+        const rounds = Math.max(1, Number($("#obsRounds")?.value || 3));
+        const phases = ["𝓘", "𝓛", "𝓒", "𝓢"];
+        const breath = ["In", "Look", "Out", "Seal"];
+        const total = sec * rounds * 4;
+        let tick = 0;
+
+        $("#obsStart").disabled = true;
+        $("#obsStop").disabled = false;
+
+        obsTimer = setInterval(() => {
+          tick++;
+          const phase = Math.floor((tick - 1) / sec) % 4;
+          const round = Math.floor((tick - 1) / (sec * 4)) + 1;
+          const progress = Math.min(1, tick / total);
+          const dash = 283 * progress;
+
+          $("#obsPhase").textContent = phases[phase];
+          $("#obsCount").textContent = Math.min(round, rounds) + "/" + rounds;
+          $("#hudBreath").textContent = "Breath: " + breath[phase];
+          $("#obsArc").setAttribute("stroke-dasharray", dash + " " + (283 - dash));
+
+          if (tick >= total) $("#obsStop").click();
+        }, 1000);
+      });
+
+      on($("#obsStop"), "click", () => {
+        clearInterval(obsTimer);
+        obsTimer = null;
+        $("#obsStart").disabled = false;
+        $("#obsStop").disabled = true;
+        $("#obsPhase").textContent = "Ready";
+        $("#obsCount").textContent = "—";
+        $("#obsArc").setAttribute("stroke-dasharray", "0 283");
+        $("#hudBreath").textContent = "Breath: —";
+      });
+
+      on($("#obsMark"), "click", () => {
+        const box = $("#obsNotes");
+        if (!box) return;
+        box.value += (box.value ? "\n" : "") + "[" + new Date().toLocaleTimeString() + "] One undeniable detail observed.";
+      });
+
+      /* Phrase */
+      on($("#phraseTune"), "click", () => {
+        const raw = ($("#phraseIn")?.value || "").trim();
+        if (!raw) return toast("Type a line first");
+
+        const tuned = raw
+          .replace(/\b(try|maybe|hopefully|sort of|kinda|attempt to)\b/gi, "")
+          .replace(/\b(don't|do not|can't|cannot|won't|will not)\b/gi, "")
+          .replace(/\s+/g, " ")
+          .trim();
+
+        $("#phraseOut").textContent = tuned || raw;
+      });
+
+      on($("#phraseClear"), "click", () => {
+        $("#phraseIn").value = "";
+        $("#phraseOut").textContent = "—";
+      });
+
+      on($("#phraseToI"), "click", () => {
+        const txt = ($("#phraseOut")?.textContent || $("#phraseIn")?.value || "").trim();
+        if (!txt || txt === "—") return toast("Nothing tuned yet");
+        $("#rmnLine").value = txt;
+        $("#lgLine").value = txt;
+        switchTo("remnant");
+        toast("Phrase → 𝓘");
+      });
+
+      /* Breath */
+      let breathTimer = null;
+
+      on($("#breathStart"), "click", () => {
+        const pat = ($("#breathPat")?.value || "4-4-4-4").split("-").map(n => Number(n) || 0);
+        const names = ["In", "Hold", "Out", "Hold"];
+        const total = pat.reduce((a, b) => a + b, 0) * 1000;
+        const start = performance.now();
+
+        $("#breathStart").disabled = true;
+        $("#breathStop").disabled = false;
+
+        breathTimer = setInterval(() => {
+          const t = (performance.now() - start) % total;
+          let acc = 0;
+          let idx = 0;
+
+          for (let i = 0; i < 4; i++) {
+            acc += pat[i] * 1000;
+            if (t <= acc) {
+              idx = i;
+              break;
+            }
+          }
+
+          const dash = 283 * (t / total);
+          $("#breathPhase").textContent = names[idx];
+          $("#hudBreath").textContent = "Breath: " + names[idx];
+          $("#breathArc").setAttribute("stroke-dasharray", dash + " " + (283 - dash));
+        }, 1000 / 30);
+      });
+
+      on($("#breathStop"), "click", () => {
+        clearInterval(breathTimer);
+        breathTimer = null;
+        $("#breathStart").disabled = false;
+        $("#breathStop").disabled = true;
+        $("#breathPhase").textContent = "Ready";
+        $("#hudBreath").textContent = "Breath: —";
+        $("#breathArc").setAttribute("stroke-dasharray", "0 283");
+      });
+
+      /* Coherence */
+      function drawXiSpark() {
+        const c = $("#xiSpark");
+        const xctx = c?.getContext?.("2d");
+        if (!xctx) return;
+
+        const hist = store.get("sof_xi_hist_clean_v1", []);
+        const W = c.width;
+        const H = c.height;
+
+        xctx.clearRect(0, 0, W, H);
+        xctx.strokeStyle = "rgba(122,243,255,.22)";
+        xctx.beginPath();
+        xctx.moveTo(0, H * .5);
+        xctx.lineTo(W, H * .5);
+        xctx.stroke();
+
+        if (!hist.length) return;
+
+        xctx.beginPath();
+        hist.forEach((v, i) => {
+          const x = W - i * (W / Math.max(1, hist.length - 1));
+          const y = H - v * H;
+          i ? xctx.lineTo(x, y) : xctx.moveTo(x, y);
+        });
+        xctx.strokeStyle = "rgba(243,201,122,.9)";
+        xctx.lineWidth = 2;
+        xctx.stroke();
+      }
+
+      on($("#xiCalc"), "click", () => {
+        const hi = Math.max(0, Math.min(1, Number($("#hi")?.value || 0)));
+        const variance = Math.max(0, Math.min(2, Number($("#varM")?.value || 0)));
+        const xi = Math.max(0, Math.min(1, hi / (1 + variance)));
+
+        $("#xiOut").textContent = "Ξ = " + xi.toFixed(2);
+        $("#hudXi").textContent = "Ξ: " + xi.toFixed(2);
+        $("#xiMeter").style.width = Math.round(xi * 100) + "%";
+
+        const hist = store.get("sof_xi_hist_clean_v1", []);
+        hist.unshift(xi);
+        store.set("sof_xi_hist_clean_v1", hist.slice(0, 80));
+        drawXiSpark();
+      });
+
+      drawXiSpark();
+
+      /* Timer */
+      let focusTimer = null;
+      let timerPhase = "idle";
+      let timerCycle = 0;
+      let timerPlan = 0;
+      let focusMin = 25;
+      let breakMin = 5;
+      let timerEnd = 0;
+
+      function timerTick() {
+        const remaining = timerEnd - Date.now();
+
+        if (remaining <= 0) {
+          if (timerPhase === "focus") {
+            timerPhase = "break";
+            timerEnd = Date.now() + breakMin * 60000;
+            toast("Break");
+          } else if (timerPhase === "break") {
+            timerCycle++;
+            if (timerCycle >= timerPlan) {
+              $("#tmStop").click();
+              toast("Timer complete");
+              return;
+            }
+            timerPhase = "focus";
+            timerEnd = Date.now() + focusMin * 60000;
+            toast("Focus");
+          }
+        }
+
+        const s = Math.max(0, Math.ceil((timerEnd - Date.now()) / 1000));
+        $("#tmOut").value = timerPhase + " — " + Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0") + " · " + (timerCycle + 1) + "/" + timerPlan;
+      }
+
+      on($("#tmStart"), "click", () => {
+        focusMin = Math.max(1, Number($("#tmFocus")?.value || 25));
+        breakMin = Math.max(1, Number($("#tmBreak")?.value || 5));
+        timerPlan = Math.max(1, Number($("#tmCycles")?.value || 2));
+        timerCycle = 0;
+        timerPhase = "focus";
+        timerEnd = Date.now() + focusMin * 60000;
+
+        $("#tmStart").disabled = true;
+        $("#tmStop").disabled = false;
+        focusTimer = setInterval(timerTick, 500);
+        toast("Focus");
+      });
+
+      on($("#tmStop"), "click", () => {
+        clearInterval(focusTimer);
+        focusTimer = null;
+        timerPhase = "idle";
+        $("#tmStart").disabled = false;
+        $("#tmStop").disabled = true;
+        $("#tmOut").value = "—";
+      });
+
+      /* Streak */
+      function epochDay() {
+        return Math.floor(Date.now() / 86400000);
+      }
+
+      function renderStreak() {
+        const s = store.get("sof_streak_clean_v1", { last: -1, count: 0 });
+        $("#streakOut").textContent = "streak: " + s.count;
+      }
+
+      on($("#streakMark"), "click", () => {
+        const today = epochDay();
+        const s = store.get("sof_streak_clean_v1", { last: -1, count: 0 });
+
+        if (s.last === today) {
+          toast("Already marked today");
+          return;
+        }
+
+        s.count = s.last === today - 1 ? s.count + 1 : 1;
+        s.last = today;
+        store.set("sof_streak_clean_v1", s);
+        renderStreak();
+        toast("Marked");
+      });
+
+      renderStreak();
+
+      /* Deck */
+      const CARDS = [
+        "One helpful thing, done calmly.",
+        "Speak simply. Act kindly.",
+        "Small moves. True aim.",
+        "Steady breath, steady hand.",
+        "See one undeniable detail.",
+        "Return to the line.",
+        "Let the exhale do the work.",
+        "Clarity before speed.",
+        "Finish clean, thank gently.",
+        "I place my attention where it helps.",
+        "One page. One call. One commit.",
+        "I keep the promise I can keep today."
+      ];
+
+      on($("#drawCard"), "click", () => {
+        $("#cardText").textContent = CARDS[Math.floor(Math.random() * CARDS.length)];
+      });
+
+      on($("#useCard"), "click", () => {
+        const t = $("#cardText")?.textContent;
+        if (!t || t === "—") return;
+        $("#rmnLine").value = t;
+        $("#lgLine").value = t;
+        switchTo("remnant");
+        toast("Card → 𝓘");
+      });
+
+      $$("[data-ex]").forEach(b => on(b, "click", () => {
+        const ex = b.dataset.ex;
+        if (ex === "prime60") {
+          switchTo("breath");
+          toast("Prime 60: breathe and speak 𝓘 softly.");
+        }
+        if (ex === "focus15") {
+          $("#tmFocus").value = 15;
+          $("#tmBreak").value = 5;
+          $("#tmCycles").value = 1;
+          switchTo("timer");
+        }
+        if (ex === "seal60") {
+          switchTo("ledger");
+          toast("Seal 60: record one witness note.");
+        }
+      }));
+
+      /* Ledger */
+      const LEDGER_KEY = "sof_ledger_clean_v1";
+
+      function esc(s) {
+        return String(s || "").replace(/[&<>"']/g, m => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          "\"": "&quot;",
+          "'": "&#39;"
+        }[m]));
+      }
+
+      function ledger() {
+        return store.get(LEDGER_KEY, []);
+      }
+
+      function saveLedger(v) {
+        store.set(LEDGER_KEY, v);
+      }
+
+      function renderLedger() {
+        const rows = $("#lgRows");
+        if (!rows) return;
+
+        const q = ($("#lgFilter")?.value || "").toLowerCase();
+        const list = ledger().filter(e => !q || JSON.stringify(e).toLowerCase().includes(q));
+
+        rows.innerHTML = list.map((e, i) => `
+          <tr>
+            <td>${esc(new Date(e.when).toLocaleString())}</td>
+            <td>${esc(e.phrase)}</td>
+            <td>${esc(e.carrier)}</td>
+            <td>${esc(e.coherence)}</td>
+            <td>${esc((e.tags || []).join(", "))}</td>
+            <td>${esc(e.note)}</td>
+            <td><button class="lab-btn" data-del-ledger="${i}" type="button">✕</button></td>
+          </tr>
+        `).join("");
+
+        $$("[data-del-ledger]").forEach(btn => on(btn, "click", () => {
+          const all = ledger();
+          all.splice(Number(btn.dataset.delLedger), 1);
+          saveLedger(all);
+          renderLedger();
+        }));
+      }
+
+      function addLedgerEntry(entry) {
+        const all = ledger();
+        all.unshift(entry);
+        saveLedger(all);
+        renderLedger();
+      }
+
+      on($("#lgAdd"), "click", () => {
+        const phrase = ($("#lgLine")?.value || $("#rmnLine")?.value || "").trim();
+        if (!phrase) return toast("Write an intention line");
+
+        addLedgerEntry({
+          when: new Date().toISOString(),
+          phrase,
+          carrier: ($("#lgCarrier")?.value || (playing ? activeFreq + " Hz" : "—")).trim(),
+          coherence: $("#lgQ")?.value || ($("#hudXi")?.textContent || "").replace("Ξ:", "").trim(),
+          tags: ($("#lgTags")?.value || "").split(",").map(s => s.trim()).filter(Boolean),
+          note: ($("#lgWit")?.value || "").trim()
+        });
+
+        toast("Added to Ledger");
+      });
+
+      on($("#rmnSeal"), "click", () => {
+        const phrase = ($("#rmnLine")?.value || "").trim();
+        if (!phrase) return toast("Write an intention line first");
+
+        $("#lgLine").value = phrase;
+        $("#lgCarrier").value = playing ? activeFreq + " Hz" : "—";
+        $("#lgTags").value = "seal, remnant";
+        $("#lgAdd").click();
+        switchTo("ledger");
+      });
+
+      on($("#obsToLedger"), "click", () => {
+        const phrase = ($("#rmnLine")?.value || "").trim();
+        if (!phrase) return toast("Write 𝓘 first");
+
+        $("#lgLine").value = phrase;
+        $("#lgCarrier").value = playing ? activeFreq + " Hz" : "—";
+        $("#lgTags").value = "observer";
+        $("#lgWit").value = $("#obsNotes")?.value || "";
+        $("#lgAdd").click();
+        switchTo("ledger");
+      });
+
+      on($("#lgExport"), "click", () => {
+        const blob = new Blob([JSON.stringify(ledger(), null, 2)], { type: "application/json" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "scroll-of-fire-ledger.json";
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 800);
+      });
+
+      on($("#lgImport"), "click", () => $("#lgImportFile")?.click());
+
+      on($("#lgImportFile"), "change", async e => {
+        const f = e.target.files?.[0];
+        if (!f) return;
+
+        try {
+          const data = JSON.parse(await f.text());
+          if (!Array.isArray(data)) throw new Error("Not an array");
+          saveLedger(data.concat(ledger()));
+          renderLedger();
+          toast("Imported");
+        } catch {
+          toast("Import failed");
+        }
+
+        e.target.value = "";
+      });
+
+      on($("#lgFilter"), "input", renderLedger);
+      renderLedger();
+
+      /* Ethics */
+      function updateEthics() {
+        const v = $('input[name="eth"]:checked')?.value || "green";
+        const el = $("#ethCoach");
+        if (!el) return;
+
+        el.className = "hint status-" + v;
+
+        if (v === "green") el.textContent = "Green: proceed with normal cycles.";
+        if (v === "yellow") el.textContent = "Yellow: shorten cycles, lighten aims, re-check breath.";
+        if (v === "red") el.textContent = "Red: halt. Switch to breath-only. Restore dignity and consent. Return later.";
+
+        store.set("sof_ethics_clean_v1", v);
+      }
+
+      $$('input[name="eth"]').forEach(r => on(r, "change", updateEthics));
+
+      const savedEth = store.get("sof_ethics_clean_v1", "green");
+      const savedEthRadio = $(`input[name="eth"][value="${savedEth}"]`);
+      if (savedEthRadio) savedEthRadio.checked = true;
+      updateEthics();
+
+      on($("#ethMark"), "click", () => {
+        const v = $('input[name="eth"]:checked')?.value || "green";
+        $("#lgWit").value = ($("#lgWit").value ? $("#lgWit").value + "\n" : "") + "Ethics mask: " + v.toUpperCase();
+        switchTo("ledger");
+        toast("Ethics note added");
+      });
+
+      /* Maps */
+      on($("#biasStamp"), "click", () => {
+        const bias = ($("#biasName")?.value || "").trim();
+        const fact = ($("#biasFact")?.value || "").trim();
+
+        $("#lgLine").value = $("#rmnLine")?.value || "Bias interrupt";
+        $("#lgCarrier").value = playing ? activeFreq + " Hz" : "—";
+        $("#lgTags").value = "maps, bias";
+        $("#lgWit").value = "Bias: " + (bias || "—") + " | Fact: " + (fact || "—");
+        $("#lgAdd").click();
+        switchTo("ledger");
+      });
+
+      on($("#anchorSave"), "click", () => {
+        store.set("sof_anchors_clean_v1", {
+          see: $("#anchSee")?.value || "",
+          hear: $("#anchHear")?.value || "",
+          feel: $("#anchFeel")?.value || "",
+          say: $("#anchSay")?.value || ""
+        });
+        toast("Anchors saved");
+      });
+
+      on($("#anchorLoad"), "click", () => {
+        const a = store.get("sof_anchors_clean_v1", {});
+        $("#anchSee").value = a.see || "";
+        $("#anchHear").value = a.hear || "";
+        $("#anchFeel").value = a.feel || "";
+        $("#anchSay").value = a.say || "";
+        toast("Anchors loaded");
+      });
+
+      on($("#memSave"), "click", () => {
+        const grid = [];
+        for (let r = 0; r < 3; r++) {
+          const row = [];
+          for (let c = 0; c < 3; c++) {
+            row.push($("#m" + r + c)?.value || "");
+          }
+          grid.push(row);
+        }
+        store.set("sof_memory_grid_clean_v1", grid);
+        toast("Grid saved");
+      });
+
+      on($("#memLoad"), "click", () => {
+        const grid = store.get("sof_memory_grid_clean_v1", null);
+        if (!grid) return toast("No grid saved");
+
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 3; c++) {
+            const el = $("#m" + r + c);
+            if (el) el.value = grid?.[r]?.[c] || "";
+          }
+        }
+
+        toast("Grid loaded");
+      });
+
+      on($("#memClear"), "click", () => {
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 3; c++) {
+            const el = $("#m" + r + c);
+            if (el) el.value = "";
+          }
+        }
+        toast("Grid cleared");
+      });
+
+      /* Boot */
+      const hashTab = (location.hash.match(/tab=([a-z0-9_-]+)/i) || [])[1];
+      const savedTab = store.get("sof_last_tab", "");
+      switchTo(hashTab || savedTab || "remnant", { fromHash: true, noHash: true });
+    })();
   </script>
-})();
 </body>
-</html>
-<!-- ================= END PART 3/3 ================= -->
+  </html>
