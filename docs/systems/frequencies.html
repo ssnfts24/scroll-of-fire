@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="sof">
+<html lang="en" dir="ltr" class="sof carrier-432">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
@@ -12,88 +12,148 @@
   <meta charset="utf-8">
   <title>Frequency Governance — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="View, tune, layer, sequence, and preview Codex carrier tones from 40–1800 Hz.">
-  <meta name="theme-color" content="#07090f">
+  <meta name="description" content="Tune, layer, sequence, and preview Scroll of Fire carrier tones for focus, meditation, restoration, and creative fieldwork.">
+  <meta name="theme-color" content="#05070d">
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/frequency-governance.html">
   <link rel="stylesheet" href="assets/css/codex.css">
 
   <style>
     :root{
       --bg:#05070d;
-      --card:rgba(255,255,255,.045);
-      --card2:rgba(255,255,255,.075);
-      --line:rgba(255,255,255,.14);
+      --card:rgba(255,255,255,.052);
+      --card2:rgba(255,255,255,.082);
+      --line:rgba(255,255,255,.145);
       --ink:#f4f1e8;
-      --muted:#9aa4be;
+      --muted:#a6aec4;
       --accent:#7af3ff;
       --gold:#f3c97a;
+      --violet:#c4a3ff;
+      --green:#9ff7c8;
       --danger:#ff7f91;
+      --shadow:0 22px 70px rgba(0,0,0,.34);
+      --radius:20px;
     }
 
     *{box-sizing:border-box}
 
-    body{
+    html,body{
       margin:0;
+      min-height:100%;
+      overflow-x:hidden;
+    }
+
+    body{
       color:var(--ink);
       background:
-        radial-gradient(900px 580px at 50% 0%,rgba(122,243,255,.11),transparent 70%),
-        radial-gradient(700px 520px at 85% 22%,rgba(243,201,122,.09),transparent 72%),
-        linear-gradient(180deg,#05070d,#090d14 78%);
+        radial-gradient(900px 580px at 50% -5%,rgba(122,243,255,.13),transparent 70%),
+        radial-gradient(780px 560px at 88% 18%,rgba(243,201,122,.10),transparent 72%),
+        radial-gradient(720px 540px at 10% 35%,rgba(196,163,255,.08),transparent 72%),
+        linear-gradient(180deg,#05070d,#090d14 78%,#05070d);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      overflow-x:hidden;
     }
 
     a{color:inherit}
 
-    header,main{
-      max-width:1120px;
+    .shell{
+      max-width:1180px;
       margin:auto;
       padding:clamp(16px,4vw,40px);
     }
 
-    .crumbs{color:var(--muted);margin-bottom:10px}
-    .crumbs a{text-decoration:none;color:var(--accent)}
+    .crumbs{
+      color:var(--muted);
+      margin-bottom:10px;
+      font-size:.95rem;
+    }
+
+    .crumbs a{
+      color:var(--accent);
+      text-decoration:none;
+    }
+
+    .hero{
+      position:relative;
+      padding-top:clamp(22px,5vw,58px);
+    }
+
+    .eyebrow{
+      margin:0 0 10px;
+      color:var(--gold);
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      font-size:.76rem;
+      font-weight:900;
+    }
 
     h1{
-      font-size:clamp(32px,5vw,58px);
-      margin:.2rem 0;
-      line-height:1;
-      background:linear-gradient(180deg,#fff,#d8f9ff 55%,#f3c97a);
+      font-size:clamp(34px,7vw,76px);
+      margin:.15rem 0;
+      line-height:.95;
+      letter-spacing:-.06em;
+      background:linear-gradient(180deg,#fff,#d8f9ff 54%,#f3c97a);
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
     }
 
-    .meta,.hint{color:var(--muted);line-height:1.55}
-    .hint{font-size:.92rem}
+    h2{
+      margin:0 0 10px;
+      font-size:clamp(1.25rem,3vw,1.8rem);
+      letter-spacing:-.03em;
+    }
+
+    h3{
+      margin:16px 0 8px;
+      color:var(--gold);
+    }
+
+    .meta,.hint,.fine{
+      color:var(--muted);
+      line-height:1.58;
+    }
+
+    .meta{
+      max-width:820px;
+      font-size:1.02rem;
+    }
+
+    .fine{
+      font-size:.88rem;
+    }
 
     .notice{
-      max-width:1120px;
-      margin:0 auto;
-      padding:12px 16px;
-      border:1px solid rgba(243,201,122,.28);
-      border-radius:14px;
-      background:rgba(243,201,122,.075);
-      color:#ffe4a6;
+      border:1px solid rgba(243,201,122,.30);
+      border-radius:18px;
+      background:
+        linear-gradient(180deg,rgba(243,201,122,.10),rgba(243,201,122,.035));
+      color:#ffe7ad;
+      padding:14px 16px;
+      margin-top:18px;
+      box-shadow:var(--shadow);
     }
 
     .grid{
       display:grid;
       grid-template-columns:repeat(12,1fr);
       gap:14px;
+      align-items:start;
     }
 
     .col-4{grid-column:span 4}
     .col-5{grid-column:span 5}
+    .col-6{grid-column:span 6}
     .col-7{grid-column:span 7}
     .col-8{grid-column:span 8}
     .col-12{grid-column:span 12}
 
-    .card,.tone{
-      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.022));
+    .card,.tone,.mini{
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.068),rgba(255,255,255,.026));
       border:1px solid var(--line);
-      border-radius:18px;
+      border-radius:var(--radius);
       padding:16px;
-      box-shadow:0 18px 50px rgba(0,0,0,.22);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
     }
 
     .tone{
@@ -105,42 +165,80 @@
     }
 
     .tone strong{color:var(--gold)}
-    .tone small{display:block;color:var(--muted);margin-top:3px}
+    .tone small{
+      display:block;
+      color:var(--muted);
+      margin-top:3px;
+      line-height:1.35;
+    }
+
+    .pillrow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin:14px 0 0;
+    }
+
+    .pill{
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:.38rem .65rem;
+      color:var(--muted);
+      background:rgba(255,255,255,.035);
+      font-size:.85rem;
+    }
 
     .btn{
       border:1px solid var(--line);
-      border-radius:12px;
-      padding:.62rem .9rem;
-      background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.02));
+      border-radius:13px;
+      padding:.66rem .92rem;
+      background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.026));
       color:var(--ink);
       font:inherit;
-      font-weight:800;
+      font-weight:850;
       cursor:pointer;
       text-decoration:none;
+      transition:.18s ease;
     }
 
     .btn:hover,.btn:focus-visible{
-      border-color:rgba(122,243,255,.55);
-      background:rgba(122,243,255,.08);
+      border-color:rgba(122,243,255,.58);
+      background:rgba(122,243,255,.09);
       outline:none;
+      transform:translateY(-1px);
     }
 
-    .btn.primary{border-color:rgba(122,243,255,.55)}
-    .btn.danger{border-color:rgba(255,127,145,.55)}
-    .btn.active{border-color:rgba(243,201,122,.8);background:rgba(243,201,122,.1)}
-    .btn:disabled{opacity:.48;cursor:not-allowed}
+    .btn.primary{border-color:rgba(122,243,255,.65)}
+    .btn.gold{border-color:rgba(243,201,122,.70)}
+    .btn.danger{border-color:rgba(255,127,145,.62)}
+    .btn.active{
+      border-color:rgba(243,201,122,.88);
+      background:rgba(243,201,122,.12);
+      color:#ffe3a3;
+    }
 
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin:12px 0;
+    }
 
-    label{display:block;color:var(--muted);font-size:.92rem}
+    label{
+      display:block;
+      color:var(--muted);
+      font-size:.92rem;
+      font-weight:700;
+    }
 
-    input,select{
+    input,select,textarea{
       width:100%;
-      margin-top:5px;
+      margin-top:6px;
       border:1px solid var(--line);
-      border-radius:12px;
-      padding:.65rem .75rem;
-      background:rgba(5,8,14,.82);
+      border-radius:13px;
+      padding:.70rem .78rem;
+      background:rgba(5,8,14,.84);
       color:var(--ink);
       font:inherit;
     }
@@ -152,16 +250,20 @@
       align-items:baseline;
       gap:.45rem;
       flex-wrap:wrap;
-      margin-bottom:8px;
+      margin-bottom:10px;
     }
 
     .readout strong{
-      font-size:clamp(2rem,5vw,3.4rem);
+      font-size:clamp(2.4rem,6vw,4.45rem);
       color:var(--gold);
-      letter-spacing:-.05em;
+      letter-spacing:-.065em;
+      line-height:.9;
     }
 
-    .state{color:var(--muted)}
+    .state{
+      color:var(--muted);
+      font-weight:800;
+    }
 
     .controls{
       display:grid;
@@ -169,21 +271,27 @@
       gap:10px;
     }
 
-    .preset-grid,.seq-grid{
+    .preset-grid,.seq-grid,.library-grid{
       display:grid;
       grid-template-columns:repeat(3,1fr);
       gap:8px;
       margin-top:10px;
     }
 
+    .library-grid{
+      grid-template-columns:repeat(4,1fr);
+    }
+
     canvas{
       width:100%;
-      height:360px;
+      height:370px;
       display:block;
-      border-radius:18px;
+      border-radius:20px;
       border:1px solid var(--line);
       background:#060913;
-      box-shadow:inset 0 0 60px rgba(122,243,255,.08);
+      box-shadow:
+        inset 0 0 70px rgba(122,243,255,.09),
+        0 18px 60px rgba(0,0,0,.22);
     }
 
     .bar{
@@ -202,36 +310,63 @@
       background:linear-gradient(90deg,var(--accent),var(--gold));
     }
 
-    @media(max-width:900px){
-      .col-4,.col-5,.col-7,.col-8,.col-12{grid-column:span 12}
-      .controls,.preset-grid,.seq-grid{grid-template-columns:1fr 1fr}
+    .log{
+      min-height:110px;
+      max-height:180px;
+      overflow:auto;
+      white-space:pre-wrap;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.86rem;
+      color:#cbd5ea;
     }
 
-    @media(max-width:520px){
-      header,main{padding:16px 12px}
+    .tag{
+      color:var(--green);
+      font-weight:900;
+    }
+
+    @media(max-width:930px){
+      .col-4,.col-5,.col-6,.col-7,.col-8,.col-12{grid-column:span 12}
+      .controls,.preset-grid,.seq-grid,.library-grid{grid-template-columns:1fr 1fr}
+    }
+
+    @media(max-width:560px){
+      .shell{padding:16px 12px}
       .tone{align-items:stretch;flex-direction:column}
       .btn,input,select{width:100%}
-      .preset-grid,.seq-grid{grid-template-columns:1fr}
-      canvas{height:300px}
+      .controls,.preset-grid,.seq-grid,.library-grid{grid-template-columns:1fr}
+      canvas{height:310px}
+      h1{font-size:clamp(38px,14vw,62px)}
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <div class="crumbs"><a href="hub.html">Hub</a> / Frequencies</div>
+  <header class="shell hero">
+    <div class="crumbs"><a href="hub.html">Hub</a> / <a href="index.html">Scroll of Fire</a> / Frequencies</div>
+    <p class="eyebrow">Codex Audio Console</p>
     <h1>Frequency Governance</h1>
     <p class="meta">
-      Tune, layer, sequence, and preview Codex carrier tones. Use low volume first.
-      This is a creative focus tool, not a medical treatment.
+      Tune, layer, sequence, and preview carrier tones for focus, meditation, prayer, creativity,
+      rest, symbolic observation, and Scroll fieldwork. Use low volume first. This is a creative
+      wellness tool, not medical treatment.
     </p>
+
+    <div class="notice">
+      <strong>🔥 Living Console:</strong>
+      presets, harmonic stacks, binaural-style offsets, alternating paths, session timer,
+      field visualizer, local saving, and safety language are active.
+    </div>
+
+    <div class="pillrow">
+      <span class="pill">40–1800 Hz carrier range</span>
+      <span class="pill">Alpha / Theta / Gamma style offsets</span>
+      <span class="pill">Solfeggio-inspired presets</span>
+      <span class="pill">Scroll sequences</span>
+    </div>
   </header>
 
-  <aside class="notice">
-    <strong>🔥 Refined Mode:</strong> carrier volume, harmonic stacking, alternating sequences, and visual response are now active.
-  </aside>
-
-  <main>
+  <main class="shell">
     <section class="grid">
       <div class="card col-7">
         <h2>Carrier Console</h2>
@@ -254,11 +389,11 @@
           </label>
 
           <label>Volume
-            <input id="volume" type="range" min="0" max="100" step="1" value="28">
+            <input id="volume" type="range" min="0" max="100" step="1" value="24">
           </label>
 
           <label>Visual Power
-            <input id="visualPower" type="range" min="20" max="220" step="1" value="115">
+            <input id="visualPower" type="range" min="20" max="240" step="1" value="120">
           </label>
 
           <label>Harmonic Layer
@@ -267,6 +402,7 @@
               <option value="octave">Octave: 1x + 2x</option>
               <option value="fifth">Fifth: 1x + 1.5x</option>
               <option value="triad">Major Stack: 1x + 1.25x + 1.5x</option>
+              <option value="minor">Minor Stack: 1x + 1.2x + 1.5x</option>
               <option value="deep">Deep Field: .5x + 1x + 2x</option>
               <option value="crown">Crown Stack: 1x + 2x + 3x</option>
               <option value="field">Full Field: .5x + 1x + 1.5x + 2x</option>
@@ -281,60 +417,64 @@
               <option value="sawtooth">Saw — bright</option>
             </select>
           </label>
+
+          <label>Beat / Offset Mode
+            <select id="beatMode">
+              <option value="none">None</option>
+              <option value="alpha">Alpha 10 Hz — relaxed focus</option>
+              <option value="theta">Theta 6 Hz — meditation</option>
+              <option value="delta">Delta 3 Hz — sleep entry</option>
+              <option value="gamma">Gamma 40 Hz — sharp focus</option>
+              <option value="schumann">7.83 Hz — Earth-style pulse</option>
+            </select>
+          </label>
+
+          <label>Session Minutes
+            <input id="sessionMinutes" type="number" min="1" max="120" step="1" value="12">
+          </label>
         </div>
 
         <div class="row">
           <button class="btn primary" id="playBtn" type="button">Play</button>
           <button class="btn danger" id="stopBtn" type="button">Stop</button>
-          <button class="btn" id="saveBtn" type="button">Save Setting</button>
+          <button class="btn gold" id="timerBtn" type="button">Start Session</button>
+          <button class="btn" id="saveBtn" type="button">Save</button>
           <button class="btn" id="loadBtn" type="button">Load</button>
         </div>
 
         <div class="bar" aria-label="volume meter"><span id="meter"></span></div>
-        <p class="hint" id="settingText">432 Hz · 28% volume · Single Tone</p>
+        <p class="hint" id="settingText">432 Hz · 24% volume · Single Tone</p>
       </div>
 
       <aside class="card col-5">
         <h2>Carrier Presets</h2>
 
-        <div class="tone">
-          <span><strong>144 Hz</strong><small>Root expansion / low carrier</small></span>
-          <button class="btn toneBtn" data-f="144" type="button">Play</button>
-        </div>
+        <div id="toneList"></div>
 
-        <div class="tone">
-          <span><strong>369 Hz</strong><small>Creative pulse / motion field</small></span>
-          <button class="btn toneBtn" data-f="369" type="button">Play</button>
-        </div>
-
-        <div class="tone">
-          <span><strong>432 Hz</strong><small>Foundation / stable center</small></span>
-          <button class="btn toneBtn active" data-f="432" type="button">Play</button>
-        </div>
-
-        <div class="tone">
-          <span><strong>528 Hz</strong><small>Restoration / bright field</small></span>
-          <button class="btn toneBtn" data-f="528" type="button">Play</button>
-        </div>
-
-        <div class="tone">
-          <span><strong>741 Hz</strong><small>Clarity / higher signal</small></span>
-          <button class="btn toneBtn" data-f="741" type="button">Play</button>
-        </div>
-
-        <div class="tone">
-          <span><strong>963 Hz</strong><small>Crown / upper carrier</small></span>
-          <button class="btn toneBtn" data-f="963" type="button">Play</button>
-        </div>
+        <p class="fine">
+          Preset meanings are symbolic/experiential labels. They are not claims of guaranteed medical or supernatural effects.
+        </p>
       </aside>
 
       <section class="card col-12">
+        <h2>Frequency Library</h2>
+        <p class="meta">
+          Use these like “song keys.” Pick a carrier, then choose a harmonic layer or beat mode.
+        </p>
+
+        <div class="library-grid" id="libraryGrid"></div>
+      </section>
+
+      <section class="card col-8">
         <h2>Alternating Frequency Paths</h2>
-        <p class="meta">These alternate tones every few seconds. They are for creative focus and visual experience.</p>
+        <p class="meta">
+          These alternate tones every few seconds. They are for creative focus, visual atmosphere, meditation,
+          and structured Scroll sessions.
+        </p>
 
         <div class="controls">
           <label>Seconds per step
-            <input id="seqSeconds" type="number" min="2" max="60" step="1" value="8">
+            <input id="seqSeconds" type="number" min="2" max="90" step="1" value="8">
           </label>
 
           <label>Sequence status
@@ -343,17 +483,61 @@
         </div>
 
         <div class="seq-grid">
+          <button class="btn seqBtn" data-seq="headache" type="button">Headache Calm</button>
           <button class="btn seqBtn" data-seq="calm" type="button">Calm Path</button>
           <button class="btn seqBtn" data-seq="focus" type="button">Focus Path</button>
           <button class="btn seqBtn" data-seq="clarity" type="button">Clarity Path</button>
           <button class="btn seqBtn" data-seq="restore" type="button">Restore Path</button>
+          <button class="btn seqBtn" data-seq="dream" type="button">Dream Gate</button>
           <button class="btn seqBtn" data-seq="ascent" type="button">Ascent Path</button>
           <button class="btn seqBtn" data-seq="remnant" type="button">Remnant Path</button>
+          <button class="btn seqBtn" data-seq="t7" type="button">T-7 Field</button>
         </div>
 
         <div class="row">
           <button class="btn danger" id="stopSeq" type="button">Stop Sequence</button>
         </div>
+      </section>
+
+      <aside class="card col-4">
+        <h2>Session Log</h2>
+        <div class="log" id="log">Console initialized.
+Use headphones only at safe volume.
+Press Escape to stop.</div>
+      </aside>
+
+      <section class="card col-12">
+        <h2>Use Guide</h2>
+
+        <div class="grid">
+          <div class="mini col-4">
+            <h3>Headache / Overload</h3>
+            <p class="fine">
+              Start with low volume, sine wave, single tone, 174 Hz or 432 Hz. Avoid square/saw waves.
+              Stop if discomfort increases.
+            </p>
+          </div>
+
+          <div class="mini col-4">
+            <h3>Focus / Coding / Study</h3>
+            <p class="fine">
+              Use 432 Hz, 528 Hz, or 741 Hz with Alpha 10 Hz offset. Keep volume low enough to ignore.
+            </p>
+          </div>
+
+          <div class="mini col-4">
+            <h3>Vision / Symbol Work</h3>
+            <p class="fine">
+              Try 432 Hz with 7.83 Hz pulse, or the Remnant Path. Journal impressions after the session.
+            </p>
+          </div>
+        </div>
+
+        <p class="fine">
+          Safety: do not use while driving, operating tools, or doing anything requiring full attention.
+          If you experience sudden severe headache, vision changes, weakness, confusion, seizure symptoms,
+          or headache after injury, seek medical help.
+        </p>
       </section>
     </section>
   </main>
@@ -366,13 +550,35 @@
       const $$ = s => Array.from(document.querySelectorAll(s));
       const on = (el, ev, fn) => el && el.addEventListener(ev, fn);
 
+      const PRESETS = [
+        [40, "Gamma Spark", "sharp focus / bright cognition"],
+        [111, "Body Ground", "low field / temple resonance"],
+        [144, "Root Expansion", "low carrier / foundation"],
+        [174, "Soft Release", "headache calm / gentle body"],
+        [285, "Repair Field", "restoration symbolism"],
+        [369, "Creative Pulse", "motion / pattern / emergence"],
+        [396, "Unburden", "release / grounding"],
+        [417, "Shift Gate", "change / movement"],
+        [432, "Foundation", "stable center / Scroll carrier"],
+        [528, "Restoration", "bright field / coherence"],
+        [639, "Heart Link", "connection / harmony"],
+        [741, "Clarity", "clean signal / expression"],
+        [852, "Vision", "intuition / inner attention"],
+        [963, "Crown", "upper carrier / awe"],
+        [1111, "Mirror Field", "symbolic observation"],
+        [1728, "Cube Harmonic", "12³ / structure field"]
+      ];
+
       const FREQS = {
+        headache: [174, 285, 432, 174],
         calm: [432, 396, 417, 432],
         focus: [144, 369, 432, 528],
         clarity: [432, 528, 741, 963],
-        restore: [396, 432, 528, 639],
-        ascent: [144, 288, 432, 528, 963],
-        remnant: [144, 369, 432, 528, 963, 432]
+        restore: [285, 396, 432, 528, 639],
+        dream: [432, 285, 174, 111],
+        ascent: [144, 288, 432, 528, 741, 963],
+        remnant: [144, 369, 432, 528, 963, 432],
+        t7: [111, 144, 369, 432, 528, 741, 963, 1728]
       };
 
       const HARMONICS = {
@@ -380,9 +586,19 @@
         octave: [1, 2],
         fifth: [1, 1.5],
         triad: [1, 1.25, 1.5],
+        minor: [1, 1.2, 1.5],
         deep: [0.5, 1, 2],
         crown: [1, 2, 3],
         field: [0.5, 1, 1.5, 2]
+      };
+
+      const BEATS = {
+        none: 0,
+        alpha: 10,
+        theta: 6,
+        delta: 3,
+        gamma: 40,
+        schumann: 7.83
       };
 
       let ac = null;
@@ -391,15 +607,24 @@
       let activeFreq = 432;
       let playing = false;
       let seqTimer = null;
+      let sessionTimer = null;
+      let sessionEnd = 0;
       let phase = 0;
 
       function clamp(v, min, max) {
         return Math.max(min, Math.min(max, Number(v) || min));
       }
 
+      function log(msg) {
+        const el = $("#log");
+        const stamp = new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+        el.textContent += `\n[${stamp}] ${msg}`;
+        el.scrollTop = el.scrollHeight;
+      }
+
       function gainFromVolume(v) {
         const p = clamp(v, 0, 100) / 100;
-        return Math.pow(p, 2) * 0.45;
+        return Math.pow(p, 2) * 0.42;
       }
 
       function getAudio() {
@@ -412,6 +637,10 @@
         return ac;
       }
 
+      function beatOffset() {
+        return BEATS[$("#beatMode").value] || 0;
+      }
+
       function syncUI() {
         activeFreq = clamp(activeFreq, 40, 1800);
 
@@ -422,24 +651,51 @@
         $("#meter").style.width = $("#volume").value + "%";
 
         const h = $("#harmonic").selectedOptions[0]?.textContent || "Single Tone";
-        $("#settingText").textContent = `${Math.round(activeFreq)} Hz · ${$("#volume").value}% volume · ${h}`;
+        const b = $("#beatMode").selectedOptions[0]?.textContent || "None";
+        $("#settingText").textContent = `${Math.round(activeFreq)} Hz · ${$("#volume").value}% volume · ${h} · ${b}`;
 
-        $$(".toneBtn").forEach(b => {
-          b.classList.toggle("active", Number(b.dataset.f) === Math.round(activeFreq));
+        $$(".toneBtn,.libBtn").forEach(btn => {
+          btn.classList.toggle("active", Number(btn.dataset.f) === Math.round(activeFreq));
         });
 
         if (master && ac) {
-          master.gain.setTargetAtTime(gainFromVolume($("#volume").value), ac.currentTime, 0.04);
+          master.gain.setTargetAtTime(gainFromVolume($("#volume").value), ac.currentTime, 0.045);
         }
       }
 
       function stopTone() {
-        oscs.forEach(o => {
-          try { o.stop(); } catch {}
+        oscs.forEach(node => {
+          try {
+            if (node.gain) node.gain.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + 0.08);
+            if (node.osc) node.osc.stop(ac.currentTime + 0.12);
+          } catch {}
         });
         oscs = [];
         playing = false;
         syncUI();
+      }
+
+      function makeOsc(ctx, freq, panValue, gainValue) {
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+
+        osc.type = $("#waveType").value || "sine";
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(Math.max(0.0002, gainValue), now + 0.16);
+
+        if (pan) {
+          pan.pan.value = panValue;
+          osc.connect(gain).connect(pan).connect(master);
+        } else {
+          osc.connect(gain).connect(master);
+        }
+
+        osc.start(now);
+        oscs.push({ osc, gain });
       }
 
       function playTone(freq = activeFreq) {
@@ -447,36 +703,24 @@
         if (ctx.state === "suspended") ctx.resume();
 
         stopTone();
-        activeFreq = clamp(freq, 40, 1800);
 
+        activeFreq = clamp(freq, 40, 1800);
         const ratios = HARMONICS[$("#harmonic").value] || [1];
-        const wave = $("#waveType").value || "sine";
-        const now = ctx.currentTime;
-        const perOscGain = 0.55 / Math.max(1, ratios.length);
+        const offset = beatOffset();
+        const channels = offset ? 2 : 1;
+        const perOscGain = 0.52 / Math.max(1, ratios.length * channels);
 
         ratios.forEach((r, i) => {
-          const f = activeFreq * r;
-          if (f < 20 || f > 2200) return;
+          const base = activeFreq * r;
+          if (base < 20 || base > 2200) return;
 
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
-
-          osc.type = wave;
-          osc.frequency.setValueAtTime(f, now);
-
-          gain.gain.setValueAtTime(0.0001, now);
-          gain.gain.exponentialRampToValueAtTime(perOscGain, now + 0.16);
-
-          if (pan) {
-            pan.pan.value = ratios.length === 1 ? 0 : -0.55 + (1.1 * i / Math.max(1, ratios.length - 1));
-            osc.connect(gain).connect(pan).connect(master);
+          if (offset) {
+            makeOsc(ctx, Math.max(20, base - offset / 2), -0.72, perOscGain);
+            makeOsc(ctx, Math.min(2200, base + offset / 2), 0.72, perOscGain);
           } else {
-            osc.connect(gain).connect(master);
+            const pan = ratios.length === 1 ? 0 : -0.55 + (1.1 * i / Math.max(1, ratios.length - 1));
+            makeOsc(ctx, base, pan, perOscGain);
           }
-
-          osc.start();
-          oscs.push(osc);
         });
 
         playing = true;
@@ -491,7 +735,7 @@
 
       function runSequence(name) {
         const seq = FREQS[name] || FREQS.remnant;
-        const seconds = clamp($("#seqSeconds").value, 2, 60);
+        const seconds = clamp($("#seqSeconds").value, 2, 90);
         let i = 0;
 
         stopSequence();
@@ -499,12 +743,71 @@
         function step() {
           activeFreq = seq[i % seq.length];
           playTone(activeFreq);
-          $("#seqStatus").value = `${name} · ${activeFreq} Hz`;
+          $("#seqStatus").value = `${name} · ${activeFreq} Hz · step ${(i % seq.length) + 1}/${seq.length}`;
           i++;
         }
 
         step();
         seqTimer = setInterval(step, seconds * 1000);
+        log(`Sequence started: ${name}`);
+      }
+
+      function stopSession() {
+        clearInterval(sessionTimer);
+        sessionTimer = null;
+        sessionEnd = 0;
+        $("#timerBtn").textContent = "Start Session";
+      }
+
+      function startSession() {
+        const mins = clamp($("#sessionMinutes").value, 1, 120);
+        sessionEnd = Date.now() + mins * 60 * 1000;
+        playTone(activeFreq);
+
+        clearInterval(sessionTimer);
+        sessionTimer = setInterval(() => {
+          const left = Math.max(0, sessionEnd - Date.now());
+          const m = Math.floor(left / 60000);
+          const s = Math.floor((left % 60000) / 1000);
+          $("#timerBtn").textContent = `${m}:${String(s).padStart(2,"0")} left`;
+
+          if (left <= 0) {
+            stopSession();
+            stopSequence();
+            stopTone();
+            log("Session complete.");
+          }
+        }, 500);
+
+        log(`Session started: ${mins} minute(s).`);
+      }
+
+      function renderPresets() {
+        const top = [144, 369, 432, 528, 741, 963];
+        $("#toneList").innerHTML = PRESETS
+          .filter(p => top.includes(p[0]))
+          .map(([f, name, desc]) => `
+            <div class="tone">
+              <span><strong>${f} Hz</strong><small>${name} / ${desc}</small></span>
+              <button class="btn toneBtn${f === 432 ? " active" : ""}" data-f="${f}" type="button">Play</button>
+            </div>
+          `).join("");
+
+        $("#libraryGrid").innerHTML = PRESETS.map(([f, name, desc]) => `
+          <button class="btn libBtn${f === 432 ? " active" : ""}" data-f="${f}" type="button">
+            ${f} Hz<br><small>${name}</small>
+          </button>
+        `).join("");
+
+        $$(".toneBtn,.libBtn").forEach(btn => {
+          on(btn, "click", () => {
+            stopSequence();
+            activeFreq = Number(btn.dataset.f);
+            playTone(activeFreq);
+            const preset = PRESETS.find(p => p[0] === activeFreq);
+            log(`Carrier selected: ${activeFreq} Hz${preset ? " · " + preset[1] : ""}`);
+          });
+        });
       }
 
       on($("#freqSlider"), "input", e => {
@@ -520,19 +823,37 @@
       });
 
       on($("#volume"), "input", syncUI);
+      on($("#visualPower"), "input", syncUI);
       on($("#harmonic"), "change", () => playing ? playTone(activeFreq) : syncUI());
       on($("#waveType"), "change", () => playing ? playTone(activeFreq) : syncUI());
+      on($("#beatMode"), "change", () => playing ? playTone(activeFreq) : syncUI());
 
-      on($("#playBtn"), "click", () => playTone(activeFreq));
-      on($("#stopBtn"), "click", () => { stopSequence(); stopTone(); });
-      on($("#stopSeq"), "click", () => { stopSequence(); stopTone(); });
+      on($("#playBtn"), "click", () => {
+        playTone(activeFreq);
+        log(`Playing ${Math.round(activeFreq)} Hz.`);
+      });
 
-      $$(".toneBtn").forEach(btn => {
-        on(btn, "click", () => {
-          stopSequence();
-          activeFreq = Number(btn.dataset.f);
-          playTone(activeFreq);
-        });
+      on($("#stopBtn"), "click", () => {
+        stopSession();
+        stopSequence();
+        stopTone();
+        log("Stopped.");
+      });
+
+      on($("#stopSeq"), "click", () => {
+        stopSequence();
+        stopTone();
+        log("Sequence stopped.");
+      });
+
+      on($("#timerBtn"), "click", () => {
+        if (sessionTimer) {
+          stopSession();
+          stopTone();
+          log("Session stopped.");
+        } else {
+          startSession();
+        }
       });
 
       $$(".seqBtn").forEach(btn => {
@@ -540,41 +861,56 @@
       });
 
       on($("#saveBtn"), "click", () => {
-        localStorage.setItem("sof_frequency_governance_v1", JSON.stringify({
+        localStorage.setItem("sof_frequency_governance_v2", JSON.stringify({
           freq: activeFreq,
           volume: $("#volume").value,
           harmonic: $("#harmonic").value,
           wave: $("#waveType").value,
-          visual: $("#visualPower").value
+          visual: $("#visualPower").value,
+          beat: $("#beatMode").value,
+          minutes: $("#sessionMinutes").value,
+          seconds: $("#seqSeconds").value
         }));
         $("#seqStatus").value = "saved";
+        log("Settings saved locally.");
       });
 
       on($("#loadBtn"), "click", () => {
         try {
-          const data = JSON.parse(localStorage.getItem("sof_frequency_governance_v1") || "{}");
-          if (!data.freq) return;
+          const data = JSON.parse(localStorage.getItem("sof_frequency_governance_v2") || "{}");
+          if (!data.freq) {
+            log("No saved setting found.");
+            return;
+          }
+
           activeFreq = data.freq;
-          $("#volume").value = data.volume || 28;
+          $("#volume").value = data.volume || 24;
           $("#harmonic").value = data.harmonic || "single";
           $("#waveType").value = data.wave || "sine";
-          $("#visualPower").value = data.visual || 115;
+          $("#visualPower").value = data.visual || 120;
+          $("#beatMode").value = data.beat || "none";
+          $("#sessionMinutes").value = data.minutes || 12;
+          $("#seqSeconds").value = data.seconds || 8;
+
           syncUI();
           $("#seqStatus").value = "loaded";
-        } catch {}
+          log("Settings loaded.");
+        } catch {
+          log("Load failed.");
+        }
       });
 
       document.addEventListener("keydown", e => {
         if (e.key === "Escape") {
+          stopSession();
           stopSequence();
           stopTone();
+          log("Emergency stop.");
         }
       });
 
-      /* Visualizer */
       const canvas = $("#field");
       const ctx = canvas.getContext("2d");
-      let seed = Math.random() * 9999;
 
       function fit() {
         const rect = canvas.getBoundingClientRect();
@@ -593,24 +929,33 @@
         const cx = w / 2;
         const cy = h / 2;
 
-        const visual = clamp($("#visualPower").value, 20, 220) / 100;
+        const visual = clamp($("#visualPower").value, 20, 240) / 100;
         const vol = clamp($("#volume").value, 0, 100) / 100;
-        const push = playing ? Math.max(.2, vol * visual) : .22 * visual;
+        const push = playing ? Math.max(.22, vol * visual) : .24 * visual;
         const n = Math.round(260 * visual);
         const fr = (activeFreq % 1000) / 1000;
-        const baseR = Math.min(w, h) * (.18 + .12 * Math.sin(phase * .025 + fr * 6.28) * push + .18);
+        const baseR = Math.min(w, h) * (.19 + .12 * Math.sin(phase * .025 + fr * 6.28) * push + .18);
 
-        ctx.fillStyle = "rgba(5,7,13,.075)";
+        ctx.fillStyle = "rgba(5,7,13,.08)";
         ctx.fillRect(0, 0, w, h);
 
-        const glow = ctx.createRadialGradient(cx, cy, 4, cx, cy, Math.min(w, h) * (.48 + push * .22));
+        const glow = ctx.createRadialGradient(cx, cy, 4, cx, cy, Math.min(w, h) * (.48 + push * .23));
         glow.addColorStop(0, `rgba(122,243,255,${.17 + push * .15})`);
-        glow.addColorStop(.45, `rgba(243,201,122,${.08 + push * .10})`);
+        glow.addColorStop(.38, `rgba(196,163,255,${.06 + push * .08})`);
+        glow.addColorStop(.58, `rgba(243,201,122,${.08 + push * .10})`);
         glow.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = glow;
         ctx.beginPath();
-        ctx.arc(cx, cy, Math.min(w, h) * .62, 0, Math.PI * 2);
+        ctx.arc(cx, cy, Math.min(w, h) * .64, 0, Math.PI * 2);
         ctx.fill();
+
+        for (let ring = 0; ring < 3; ring++) {
+          ctx.strokeStyle = `rgba(122,243,255,${.10 + ring * .035 + push * .04})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(cx, cy, baseR * (.64 + ring * .34), 0, Math.PI * 2);
+          ctx.stroke();
+        }
 
         for (let i = 0; i < n; i++) {
           const a = i / n * Math.PI * 2 + phase * .008;
@@ -620,31 +965,38 @@
           const y = cy + Math.sin(a * 1.08) * r * .68;
 
           const t = (i % 100) / 100;
-          ctx.fillStyle = t < .5
-            ? `rgba(122,243,255,${.45 + push * .32})`
-            : `rgba(243,201,122,${.42 + push * .32})`;
+          ctx.fillStyle = t < .34
+            ? `rgba(122,243,255,${.43 + push * .33})`
+            : t < .67
+              ? `rgba(196,163,255,${.34 + push * .26})`
+              : `rgba(243,201,122,${.42 + push * .32})`;
 
           ctx.beginPath();
-          ctx.arc(x, y, 1.2 + push * 2.2, 0, Math.PI * 2);
+          ctx.arc(x, y, 1.1 + push * 2.25, 0, Math.PI * 2);
           ctx.fill();
 
           ctx.beginPath();
-          ctx.arc(w - x, y, 1.2 + push * 2.2, 0, Math.PI * 2);
+          ctx.arc(w - x, y, 1.1 + push * 2.25, 0, Math.PI * 2);
           ctx.fill();
         }
 
         ctx.fillStyle = "rgba(244,241,232,.92)";
-        ctx.font = "700 13px Inter, system-ui, sans-serif";
+        ctx.font = "800 13px Inter, system-ui, sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText(playing ? `${Math.round(activeFreq)} Hz ACTIVE` : "FREQUENCY FIELD", cx, 24);
+        ctx.fillText(playing ? `${Math.round(activeFreq)} Hz ACTIVE` : "FREQUENCY FIELD", cx, 25);
+
+        ctx.fillStyle = "rgba(166,174,196,.88)";
+        ctx.font = "700 11px Inter, system-ui, sans-serif";
+        ctx.fillText($("#beatMode").selectedOptions[0]?.textContent || "No beat", cx, h - 18);
 
         phase += .9;
         requestAnimationFrame(draw);
       }
 
+      renderPresets();
       syncUI();
       draw();
     })();
   </script>
 </body>
-            </html>
+</html>
