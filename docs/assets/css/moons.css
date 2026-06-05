@@ -732,3 +732,167 @@ td {
     height: 170px;
   }
 }
+
+
+/* ==============================
+   Moons Calendar — Mobile + Motion Patch
+   Add to bottom of moons.css
+   ============================== */
+
+/* Better mobile calendar layout */
+@media (max-width: 720px) {
+  .calendar,
+  .gregorian {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(34px, 1fr));
+    gap: 5px;
+  }
+
+  .weekday {
+    font-size: 0.58rem;
+    letter-spacing: 0.03em;
+  }
+
+  .calDay,
+  .gregDay,
+  .g-pad {
+    min-height: 54px;
+    padding: 6px 4px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    text-align: center;
+  }
+
+  .calDay strong,
+  .gregDay strong {
+    font-size: 0.86rem;
+    margin-bottom: 1px;
+  }
+
+  .calDay small,
+  .gregDay small,
+  .calDay .meta,
+  .gregDay .meta {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .calendar,
+  .gregorian {
+    gap: 4px;
+  }
+
+  .calDay,
+  .gregDay,
+  .g-pad {
+    min-height: 46px;
+    padding: 5px 2px;
+    font-size: 0.66rem;
+  }
+
+  .calDay strong,
+  .gregDay strong {
+    font-size: 0.78rem;
+  }
+}
+
+/* Keep year table usable on phones */
+.scroller {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.year-map,
+table {
+  min-width: 720px;
+}
+
+/* Gentle living-field animation */
+.card,
+.page-head,
+.notice {
+  animation: moonFadeUp 0.55s ease both;
+}
+
+@keyframes moonFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.moon-badge {
+  position: relative;
+}
+
+.moon-badge::before {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(122, 243, 255, 0.10), transparent 38%),
+    radial-gradient(circle at 70% 60%, rgba(243, 201, 122, 0.09), transparent 42%);
+  opacity: 0.65;
+  filter: blur(18px);
+  animation: moonAura 9s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes moonAura {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.48;
+  }
+  50% {
+    transform: scale(1.07) rotate(3deg);
+    opacity: 0.82;
+  }
+}
+
+/* Ring glow pulse */
+.ring-fg {
+  animation: ringPulse 5.5s ease-in-out infinite;
+}
+
+@keyframes ringPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(243, 201, 122, 0.42));
+  }
+  50% {
+    filter: drop-shadow(0 0 22px rgba(122, 243, 255, 0.72));
+  }
+}
+
+/* Today cells feel alive */
+.calDay.today,
+.gregDay.today {
+  animation: todayGlow 3.8s ease-in-out infinite;
+}
+
+@keyframes todayGlow {
+  0%, 100% {
+    box-shadow: 0 0 14px rgba(243, 201, 122, 0.18);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(122, 243, 255, 0.26);
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .page-head,
+  .notice,
+  .moon-badge::before,
+  .ring-fg,
+  .calDay.today,
+  .gregDay.today {
+    animation: none !important;
+  }
+    }
