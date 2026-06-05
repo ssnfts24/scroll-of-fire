@@ -3,39 +3,478 @@
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
-    (function () {
-      if (location.hostname !== "ssnfts24.github.io") {
-        const b = document.querySelector("base");
-        if (b) b.remove();
-      }
-    })();
+    if (location.hostname !== "ssnfts24.github.io") {
+      const b = document.querySelector("base");
+      if (b) b.remove();
+    }
   </script>
 
   <meta charset="utf-8">
   <title>Remnant 13 Moons — Living Calendar</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="A living 13×28 Remnant calendar with moon phases, Earth Hum tracking, symbolic correspondence, daily witness logging, and coherence practice.">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="A living 13×28 Remnant calendar with visible moon phase, daily witness logging, Earth Hum field tags, symbolic correspondence, and coherence practice.">
   <meta name="theme-color" content="#05070d">
-  <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
+  <link rel="stylesheet" href="assets/css/codex.css">
 
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Scroll of Fire">
-  <meta property="og:title" content="Remnant 13 Moons — Living Calendar">
-  <meta property="og:description" content="A symbolic 13×28 living calendar with moon phase, Earth Hum layer, sky mirror, and daily coherence log.">
-  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
-  <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
+  <style>
+    :root{
+      --bg:#05070d;
+      --card:rgba(255,255,255,.058);
+      --card2:rgba(255,255,255,.085);
+      --line:rgba(255,255,255,.145);
+      --ink:#f4f1e8;
+      --muted:#a6aec4;
+      --accent:#7af3ff;
+      --gold:#f3c97a;
+      --violet:#c4a3ff;
+      --green:#9ff7c8;
+      --danger:#ff7f91;
+      --shadow:0 24px 80px rgba(0,0,0,.38);
+      --radius:22px;
+    }
 
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Remnant 13 Moons — Living Calendar">
-  <meta name="twitter:description" content="Track moon day, visible phase, field pressure, body signal, and daily witness.">
-  <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
+    *{box-sizing:border-box}
 
-  <link rel="icon" type="image/png" href="assets/img/favicon.png">
-  <link rel="apple-touch-icon" href="assets/img/favicon.png">
+    html,body{
+      margin:0;
+      min-height:100%;
+      overflow-x:hidden;
+    }
 
-  <link rel="stylesheet" href="assets/css/moons.css">
-  <link rel="stylesheet" href="assets/css/astrology.css">
+    body{
+      color:var(--ink);
+      background:
+        radial-gradient(1000px 620px at 50% -10%,rgba(122,243,255,.13),transparent 70%),
+        radial-gradient(860px 620px at 92% 16%,rgba(243,201,122,.10),transparent 72%),
+        radial-gradient(780px 560px at 8% 45%,rgba(196,163,255,.08),transparent 72%),
+        linear-gradient(180deg,#05070d,#090d14 74%,#05070d);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+
+    a{color:inherit}
+
+    #skyBg{
+      position:fixed;
+      inset:0;
+      z-index:-1;
+      opacity:.55;
+    }
+
+    .wrap{
+      max-width:1280px;
+      margin:auto;
+      padding:clamp(16px,4vw,40px);
+    }
+
+    .page-head{
+      padding-top:clamp(20px,5vw,56px);
+    }
+
+    .crumbs,.btnrow,.tabs,.pillrow,.row{
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .crumbs{margin-bottom:18px}
+
+    .lab-btn,.tab{
+      border:1px solid var(--line);
+      border-radius:13px;
+      padding:.66rem .92rem;
+      background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.026));
+      color:var(--ink);
+      font:inherit;
+      font-weight:850;
+      cursor:pointer;
+      text-decoration:none;
+      transition:.18s ease;
+    }
+
+    .lab-btn:hover,.lab-btn:focus-visible,.tab:hover,.tab:focus-visible{
+      border-color:rgba(122,243,255,.58);
+      background:rgba(122,243,255,.09);
+      outline:none;
+      transform:translateY(-1px);
+    }
+
+    .ghost{background:rgba(255,255,255,.025)}
+    .active,.tab.active{
+      border-color:rgba(243,201,122,.88);
+      background:rgba(243,201,122,.12);
+      color:#ffe3a3;
+    }
+
+    .danger{border-color:rgba(255,127,145,.55)}
+    .green{border-color:rgba(159,247,200,.55)}
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:.38rem .68rem;
+      color:var(--muted);
+      background:rgba(255,255,255,.035);
+      font-size:.86rem;
+    }
+
+    .eyebrow{
+      margin:0 0 10px;
+      color:var(--gold);
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      font-size:.76rem;
+      font-weight:900;
+    }
+
+    h1{
+      font-size:clamp(38px,7.6vw,86px);
+      margin:.15rem 0;
+      line-height:.92;
+      letter-spacing:-.07em;
+      background:linear-gradient(180deg,#fff,#d8f9ff 52%,#f3c97a);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    h2{
+      margin:0 0 10px;
+      font-size:clamp(1.25rem,3vw,1.9rem);
+      letter-spacing:-.035em;
+    }
+
+    h3{
+      margin:14px 0 8px;
+      color:var(--gold);
+      font-size:1.04rem;
+    }
+
+    .subtitle,.meta,.fine{
+      color:var(--muted);
+      line-height:1.58;
+    }
+
+    .subtitle{
+      max-width:930px;
+      font-size:1.03rem;
+    }
+
+    .meta{font-size:.92rem}
+    .fine{font-size:.9rem}
+
+    .hero-sigil{
+      margin:18px 0;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      color:var(--gold);
+      font-weight:900;
+      letter-spacing:.08em;
+    }
+
+    .notice{
+      position:relative;
+      overflow:hidden;
+      margin-top:18px;
+      border:1px solid rgba(243,201,122,.30);
+      border-radius:18px;
+      background:linear-gradient(180deg,rgba(243,201,122,.10),rgba(243,201,122,.035));
+      color:#ffe7ad;
+      padding:14px 16px;
+      box-shadow:var(--shadow);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(12,1fr);
+      gap:14px;
+      align-items:start;
+      margin-top:14px;
+    }
+
+    .col-3{grid-column:span 3}
+    .col-4{grid-column:span 4}
+    .col-5{grid-column:span 5}
+    .col-6{grid-column:span 6}
+    .col-7{grid-column:span 7}
+    .col-8{grid-column:span 8}
+    .col-9{grid-column:span 9}
+    .col-12{grid-column:span 12}
+
+    .card,.mini,.log-card,.hum-card,.day-card{
+      background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.026));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+
+    .moon-badge{
+      display:grid;
+      grid-template-columns:220px 1fr;
+      gap:18px;
+      align-items:center;
+      margin-top:26px;
+    }
+
+    .ring{
+      position:relative;
+      width:210px;
+      height:210px;
+      display:grid;
+      place-items:center;
+      margin:auto;
+    }
+
+    .ring svg{
+      width:100%;
+      height:100%;
+      transform:rotate(-90deg);
+    }
+
+    .ring-bg,.ring-fg{
+      fill:none;
+      stroke-width:10;
+    }
+
+    .ring-bg{stroke:rgba(255,255,255,.09)}
+    .ring-fg{
+      stroke:var(--gold);
+      stroke-linecap:round;
+      stroke-dasharray:314;
+      stroke-dashoffset:314;
+      filter:drop-shadow(0 0 12px rgba(243,201,122,.45));
+    }
+
+    .label{
+      position:absolute;
+      text-align:center;
+    }
+
+    .label .big{
+      display:block;
+      font-size:3.4rem;
+      color:var(--gold);
+      font-weight:950;
+      line-height:1;
+      letter-spacing:-.07em;
+    }
+
+    .label .small{
+      color:var(--muted);
+      font-weight:800;
+    }
+
+    .weekrow{margin-top:14px}
+
+    .week{
+      display:grid;
+      grid-template-columns:repeat(28,1fr);
+      gap:4px;
+      margin-top:8px;
+      max-width:560px;
+    }
+
+    .dot{
+      aspect-ratio:1;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+    }
+
+    .dot.done{background:rgba(122,243,255,.18);border-color:rgba(122,243,255,.38)}
+    .dot.today{background:var(--gold);box-shadow:0 0 16px rgba(243,201,122,.7)}
+
+    label{
+      display:block;
+      color:var(--muted);
+      font-size:.9rem;
+      font-weight:750;
+    }
+
+    .lab-input,input,select,textarea{
+      width:100%;
+      margin-top:6px;
+      border:1px solid var(--line);
+      border-radius:13px;
+      padding:.72rem .8rem;
+      background:rgba(5,8,14,.84);
+      color:var(--ink);
+      font:inherit;
+    }
+
+    textarea{
+      min-height:130px;
+      resize:vertical;
+      line-height:1.55;
+    }
+
+    .formrow,.log-grid,.hum-grid,.practice-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .log-grid,.hum-grid,.practice-grid{
+      grid-template-columns:repeat(4,1fr);
+    }
+
+    canvas#simMoon{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:#05070d;
+    }
+
+    .tabs{margin:18px 0}
+    .tabPanel{display:none}
+    .tabPanel.active{display:block}
+
+    .calendar{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:8px;
+    }
+
+    .calDay,.gregDay{
+      min-height:88px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:9px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .calDay strong,.gregDay strong{
+      color:var(--gold);
+      display:block;
+      margin-bottom:4px;
+    }
+
+    .calDay.today,.gregDay.today{
+      border-color:rgba(243,201,122,.8);
+      background:rgba(243,201,122,.10);
+      box-shadow:0 0 22px rgba(243,201,122,.12);
+    }
+
+    .gregorian{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:8px;
+    }
+
+    .weekday{
+      color:var(--muted);
+      text-align:center;
+      font-weight:900;
+      font-size:.78rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .scroller{
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(5,8,14,.58);
+    }
+
+    table{
+      width:100%;
+      min-width:860px;
+      border-collapse:collapse;
+    }
+
+    th,td{
+      border-bottom:1px solid var(--line);
+      padding:.72rem .78rem;
+      text-align:left;
+      vertical-align:top;
+    }
+
+    th{
+      background:#0b1019;
+      color:var(--gold);
+      position:sticky;
+      top:0;
+      z-index:1;
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    td{color:#dfe6f5}
+
+    .copy-scroll,.output{
+      white-space:pre-wrap;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      background:rgba(5,8,14,.68);
+      color:#e8f5ff;
+      line-height:1.55;
+      overflow:auto;
+    }
+
+    .tag{
+      display:inline-flex;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:.2rem .48rem;
+      color:var(--gold);
+      background:rgba(243,201,122,.07);
+      font-size:.75rem;
+      margin:2px;
+    }
+
+    .savedList{
+      display:grid;
+      gap:10px;
+      max-height:420px;
+      overflow:auto;
+      padding-right:4px;
+    }
+
+    .savedEntry{
+      border:1px solid var(--line);
+      border-radius:15px;
+      padding:12px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .footer{
+      max-width:1280px;
+      margin:auto;
+      padding:0 clamp(16px,4vw,40px) 36px;
+      color:var(--muted);
+    }
+
+    @media(max-width:980px){
+      .col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-9,.col-12{grid-column:span 12}
+      .moon-badge{grid-template-columns:1fr}
+      .log-grid,.hum-grid,.practice-grid{grid-template-columns:1fr 1fr}
+      .calendar,.gregorian{grid-template-columns:repeat(4,1fr)}
+    }
+
+    @media(max-width:640px){
+      .wrap{padding:16px 12px}
+      h1{font-size:clamp(40px,14vw,64px)}
+      .formrow,.log-grid,.hum-grid,.practice-grid{grid-template-columns:1fr}
+      .calendar,.gregorian{grid-template-columns:1fr}
+      .week{grid-template-columns:repeat(14,1fr)}
+      .ring{width:180px;height:180px}
+      .lab-btn,.tab,input,select,textarea{width:100%}
+    }
+  </style>
 </head>
 
 <body>
@@ -52,286 +491,296 @@
         <a class="lab-btn ghost" href="./ledger.html">Ledger</a>
       </nav>
 
-      <p class="pill">☾ Remnant Calendar · 13 × 28 · Earth Hum Layer</p>
+      <p class="eyebrow">Remnant Calendar Engine</p>
       <h1>Remnant 13 Moons</h1>
 
       <p class="subtitle">
-        A living calendar for tracking time, moon phase, symbolic correspondence,
-        body signal, field pressure, dreams, memory, and the quiet pattern beneath the noise.
+        A living 13×28 symbolic calendar for tracking time, visible moon phase, Earth Hum field tags,
+        body signal, dreams, weather, technology glitches, memory, signs, and daily witness.
       </p>
 
       <div class="hero-sigil" aria-hidden="true">
         <span>☾</span><span>⊕</span><span>✦</span><span>7.83Hz</span><span>✦</span><span>⊕</span><span>☽</span>
       </div>
 
-      <p class="meta">
-        Anchor: first New Moon after Spring Equinox · Count: 13 moons × 28 days · Use: observe, log, compare, refine.
-      </p>
+      <aside class="notice">
+        <strong>🔥 Living Calendar Mode:</strong>
+        built-in calendar engine, moon phase visual, daily witness builder, local saved logs, year map,
+        Gregorian overlay, symbolic sky mirror, and expansion-ready moon data are active.
+      </aside>
 
       <p class="meta">
-        Accuracy note: Remnant moon count is symbolic and calendar-based. Visible lunar phase depends on the JavaScript lunar calculation and should be treated as a close field reference, not official astronomical data.
+        Accuracy note: the 13×28 Remnant count is symbolic and calendar-based. Visible lunar phase is approximate unless upgraded with official ephemeris data.
       </p>
 
-      <div id="errorBanner"></div>
+      <div class="tabs" aria-label="Calendar tools">
+        <button class="tab active" data-tab="todayPanel" type="button">Today</button>
+        <button class="tab" data-tab="witnessPanel" type="button">Daily Witness</button>
+        <button class="tab" data-tab="calendarPanel" type="button">Calendars</button>
+        <button class="tab" data-tab="yearPanel" type="button">Year Map</button>
+        <button class="tab" data-tab="fieldPanel" type="button">Field Layers</button>
+        <button class="tab" data-tab="savedPanel" type="button">Saved Logs</button>
+      </div>
     </header>
 
-    <section class="card moon-badge">
-      <div class="ring" aria-label="Progress ring for day within 28-day moon">
-        <svg viewBox="0 0 120 120" role="img" aria-hidden="true">
-          <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
-          <circle id="moonArc" class="ring-fg" cx="60" cy="60" r="50"></circle>
-        </svg>
+    <main>
+      <section id="todayPanel" class="tabPanel active">
+        <section class="card moon-badge">
+          <div class="ring" aria-label="Progress ring for day within 28-day moon">
+            <svg viewBox="0 0 120 120" role="img" aria-hidden="true">
+              <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
+              <circle id="moonArc" class="ring-fg" cx="60" cy="60" r="50"></circle>
+            </svg>
+            <div class="label" aria-live="polite">
+              <span id="dayInMoon" class="big">—</span>
+              <span id="moonLength" class="small">/28</span>
+            </div>
+          </div>
 
-        <div class="label" aria-live="polite">
-          <span id="dayInMoon" class="big">—</span>
-          <span id="moonLength" class="small">/28</span>
-        </div>
-      </div>
+          <div>
+            <p class="eyebrow">Current Remnant Moon</p>
+            <h2 id="moonName">—</h2>
+            <p id="moonEssence" class="subtitle">—</p>
+            <p id="moonLine" class="pill">—</p>
+            <p id="yearSpan" class="meta">—</p>
+            <p id="moonPractice" class="meta">—</p>
 
-      <div class="moon-badge-copy">
-        <p class="eyebrow">Current Remnant Moon</p>
-        <h2 id="moonName">—</h2>
-        <p id="moonEssence" class="subtitle">—</p>
-        <p id="moonLine" class="pill">—</p>
-        <p id="yearSpan" class="meta">—</p>
+            <div class="weekrow">
+              <span class="pill">Moon Days</span>
+              <div id="weekDots" class="week" aria-label="28 moon-day dots"></div>
+            </div>
+          </div>
+        </section>
 
-        <div class="weekrow">
-          <span class="weeklabel">Moon Days</span>
-          <div id="weekDots" class="week" aria-label="28 moon-day dots"></div>
-        </div>
-      </div>
-    </section>
+        <section class="grid">
+          <article class="card col-6">
+            <p class="eyebrow">Time Gate</p>
+            <h2>Selected Day</h2>
+            <p>
+              <strong id="nowDate">—</strong><br>
+              <span id="nowClock" class="meta">—</span><br>
+              <span id="nowTZ" class="meta">—</span>
+            </p>
 
-    <section class="grid">
-      <article class="card">
-        <p class="eyebrow">Time Gate</p>
-        <h2>Today</h2>
-        <p>
-          <strong id="nowDate">—</strong><br>
-          <span id="nowClock" class="meta">—</span><br>
-          <span id="nowTZ" class="meta">—</span>
-        </p>
+            <div class="formrow">
+              <label>Time Zone
+                <select id="tzPick" class="lab-input"></select>
+              </label>
 
-        <div class="formrow">
-          <label>
-            Time Zone
-            <select id="tzPick" class="lab-input"></select>
-          </label>
+              <label>Date
+                <input id="datePick" class="lab-input" type="date">
+              </label>
+            </div>
 
-          <label>
-            Date
-            <input id="datePick" class="lab-input" type="date">
-          </label>
-        </div>
+            <div class="btnrow" style="margin-top:12px">
+              <button id="btnToday" class="lab-btn active" type="button">Today</button>
+              <button id="prevDay" class="lab-btn ghost" type="button">← Prev</button>
+              <button id="nextDay" class="lab-btn ghost" type="button">Next →</button>
+              <button id="shareLink" class="lab-btn ghost" type="button">Copy Link</button>
+            </div>
+          </article>
 
-        <div class="btnrow">
-          <button id="btnToday" class="lab-btn" type="button">Today</button>
-          <button id="prevDay" class="lab-btn ghost" type="button">← Prev</button>
-          <button id="nextDay" class="lab-btn ghost" type="button">Next →</button>
-          <button id="shareLink" class="lab-btn ghost" type="button">Copy Link</button>
-        </div>
-      </article>
+          <article class="card col-6">
+            <p class="eyebrow">Sky Body</p>
+            <h2>Visible Moon Phase</h2>
+            <canvas id="simMoon" width="520" height="340" aria-label="Simulated moon phase"></canvas>
+            <p id="phaseLine" class="pill">—</p>
+            <p id="phaseMeta" class="meta">—</p>
+          </article>
+        </section>
 
-      <article class="card">
-        <p class="eyebrow">Sky Body</p>
-        <h2>Visible Moon Phase</h2>
-        <canvas id="simMoon" width="420" height="320" aria-label="Simulated moon phase"></canvas>
-        <p id="phaseLine" class="pill">—</p>
-        <p id="phaseMeta" class="meta">—</p>
-      </article>
-    </section>
+        <section class="grid">
+          <article class="card col-4">
+            <p class="eyebrow">Day Archetype</p>
+            <h2 id="dayArchetype">—</h2>
+            <p id="dayArchetypeCopy" class="fine">—</p>
+          </article>
 
-    <section class="card">
-      <div class="section-heading">
-        <p class="pill">✦ Today’s Field Card</p>
-        <h2>Observe Before You Interpret</h2>
-        <p class="subtitle">
-          This is the daily rule: notice the body, check the sky, mark the field,
-          then wait for patterns across multiple days before drawing conclusions.
-        </p>
-      </div>
+          <article class="card col-4">
+            <p class="eyebrow">Week Gate</p>
+            <h2 id="weekGate">—</h2>
+            <p id="weekGateCopy" class="fine">—</p>
+          </article>
 
-      <div class="log-grid">
-        <article class="log-card">
-          <h3>1 · Body</h3>
-          <p>Sleep, pressure, hunger, calm, tension, energy, clarity.</p>
-        </article>
-        <article class="log-card">
-          <h3>2 · Mind</h3>
-          <p>Dreams, memory, repeated words, focus, emotional weather.</p>
-        </article>
-        <article class="log-card">
-          <h3>3 · Field</h3>
-          <p>Moon phase, Kp status, weather, tech glitches, animal behavior, timing.</p>
-        </article>
-      </div>
-    </section>
+          <article class="card col-4">
+            <p class="eyebrow">Sky Mirror</p>
+            <h2 id="solarGate">—</h2>
+            <p id="skyMirrorCopy" class="fine">—</p>
+          </article>
+        </section>
+      </section>
 
-    <section class="card earth-hum-panel">
-      <div class="section-heading">
-        <p class="pill">⊕ Earth Hum · Schumann Field</p>
-        <h2>7.83 Hz Practical Signal Layer</h2>
-        <p class="subtitle">
-          Use this as a grounded observation overlay. Check geomagnetic pressure,
-          mark the day, then compare it against sleep, dreams, focus, body signal,
-          technology glitches, and emotional charge.
-        </p>
-      </div>
+      <section id="witnessPanel" class="tabPanel">
+        <section class="grid">
+          <article class="card col-7">
+            <div class="section-heading">
+              <p class="pill">☲ Daily Witness</p>
+              <h2>Coherence Log Builder</h2>
+              <p class="subtitle">Fill it out, generate the witness, then copy or save locally.</p>
+            </div>
 
-      <div class="hum-grid">
-        <article class="hum-card">
-          <p class="eyebrow">Baseline Bell</p>
-          <h3>7.83 Hz</h3>
-          <p>Earth-ionosphere resonance. Treat as background context, not a command.</p>
-        </article>
+            <div class="formrow">
+              <label>Sleep
+                <input id="sleepInput" placeholder="Example: 6.5 hours, restless, vivid dreams">
+              </label>
+              <label>Body Signal
+                <input id="bodyInput" placeholder="Pressure, calm, hunger, clarity, pain, energy...">
+              </label>
+              <label>Dreams
+                <input id="dreamInput" placeholder="Symbols, people, places, repeated themes...">
+              </label>
+              <label>Emotional Weather
+                <input id="emotionInput" placeholder="Calm, charged, grief, joy, tension...">
+              </label>
+              <label>Repeated Signs
+                <input id="signsInput" placeholder="Numbers, words, animals, timing, songs...">
+              </label>
+              <label>Earth Hum / Kp Status
+                <select id="kpInput">
+                  <option>Unknown / not checked</option>
+                  <option>Quiet Field · Kp under 5</option>
+                  <option>Earth Hum Elevated · Kp 5–6</option>
+                  <option>Storm Field · Kp 7+</option>
+                </select>
+              </label>
+            </div>
 
-        <article class="hum-card">
-          <p class="eyebrow">Quiet Field</p>
-          <h3>Kp &lt; 5</h3>
-          <p>Normal log day. Record mood, sleep, dreams, focus, and moon correspondence.</p>
-        </article>
+            <label style="margin-top:10px">Technology / Animal / Weather Notes
+              <textarea id="fieldInput" placeholder="Tech glitches, animal behavior, weather shifts, strange timing, body-field reactions..."></textarea>
+            </label>
 
-        <article class="hum-card">
-          <p class="eyebrow">Charged Field</p>
-          <h3>Kp 5–6</h3>
-          <p>Mark the day as elevated. Watch sensitivity, restlessness, pressure, or unusual clarity.</p>
-        </article>
+            <label style="margin-top:10px">Action / Lesson / Witness
+              <textarea id="lessonInput" placeholder="What did the day teach? What needs repair? What pattern repeated?"></textarea>
+            </label>
 
-        <article class="hum-card">
-          <p class="eyebrow">Storm Field</p>
-          <h3>Kp 7+</h3>
-          <p>Use grounding. Reduce overload. Log patterns for 2–4 days after the storm peak.</p>
-        </article>
-      </div>
+            <div class="btnrow" style="margin-top:12px">
+              <button id="buildWitness" class="lab-btn active" type="button">Build Witness</button>
+              <button id="copyWitness" class="lab-btn ghost" type="button">Copy</button>
+              <button id="saveWitness" class="lab-btn green" type="button">Save Local</button>
+              <button id="clearWitness" class="lab-btn danger" type="button">Clear</button>
+            </div>
+          </article>
 
-      <div class="hum-practical">
-        <h3>Daily Field Practice</h3>
-        <p>
-          Before reading the day, check the Kp forecast. If Kp is 5 or higher, tag the entry
-          <strong>Earth Hum Elevated</strong>. If Kp reaches 7 or higher, tag it
-          <strong>Storm Field</strong>. Then compare the next several days instead of judging one moment alone.
-        </p>
-        <p class="meta">
-          Practical rule: record first, interpret later. Patterns become clearer when the witness has distance.
-        </p>
-      </div>
-    </section>
+          <article class="card col-5">
+            <h2>Generated Witness</h2>
+            <pre id="witnessOutput" class="output">Your daily witness will appear here.</pre>
+          </article>
+        </section>
+      </section>
 
-    <section class="card">
-      <div class="section-heading">
-        <p class="pill">☲ Daily Witness</p>
-        <h2>Coherence Log</h2>
-        <p class="subtitle">
-          Copy this into your ledger, notes app, or paper journal.
-        </p>
-      </div>
+      <section id="calendarPanel" class="tabPanel">
+        <section class="grid">
+          <section class="card col-12">
+            <h2>Remnant Moon Calendar</h2>
+            <p class="subtitle">Fixed 4 weeks × 7 days. This does not float like Gregorian weeks.</p>
+            <div id="remCal" class="calendar"></div>
+          </section>
 
-      <pre class="copy-scroll"><code>Date:
-Remnant Moon:
-Moon Day:
-Visible Moon Phase:
-Kp / Earth Hum Status:
-Sleep:
-Dreams:
-Body Signal:
-Emotional Weather:
-Repeated Signs:
-Technology / Animal / Weather Notes:
-Action / Lesson:
-Witness:</code></pre>
-    </section>
+          <section class="card col-12">
+            <h2>Gregorian Calendar Overlay</h2>
+            <p class="subtitle">Shows how each Gregorian day maps into the Remnant moon count.</p>
+            <div id="gregCal" class="gregorian"></div>
+          </section>
+        </section>
+      </section>
 
-    <section class="card">
-      <h2>Remnant Moon Calendar</h2>
-      <p class="subtitle">Fixed 4 weeks × 7 days. This does not float like Gregorian weeks.</p>
-      <div id="remCal" class="calendar"></div>
-    </section>
+      <section id="yearPanel" class="tabPanel">
+        <section class="card">
+          <h2>Year Map</h2>
+          <p class="subtitle">
+            Year begins at the first calculated New Moon after Spring Equinox. Each Remnant Moon is 28 days.
+            Remaining days after Moon 13 are outside the counted cycle.
+          </p>
+          <p id="outsideInfo" class="pill">—</p>
 
-    <section class="card">
-      <h2>Gregorian Calendar</h2>
-      <p class="subtitle">Shows how each Gregorian day maps into the Remnant moon count.</p>
-      <div id="gregCal" class="gregorian"></div>
-    </section>
+          <div class="scroller">
+            <table class="year-map">
+              <thead>
+                <tr>
+                  <th>Moon</th>
+                  <th>Name</th>
+                  <th>Essence</th>
+                  <th>Start</th>
+                  <th>End</th>
+                  <th>Practice</th>
+                </tr>
+              </thead>
+              <tbody id="yearMapBody">
+                <tr><td colspan="6">Calculating…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
 
-    <section class="card">
-      <h2>Year Map</h2>
-      <p class="subtitle">
-        Year begins at the first New Moon after Spring Equinox. Each Remnant Moon is 28 days.
-        Remaining days after Moon 13 are outside the counted cycle.
-      </p>
-      <p id="outsideInfo" class="pill">—</p>
+      <section id="fieldPanel" class="tabPanel">
+        <section class="grid">
+          <section class="card col-12">
+            <div class="section-heading">
+              <p class="pill">✦ Today’s Field Card</p>
+              <h2>Observe Before You Interpret</h2>
+              <p class="subtitle">
+                Notice the body, check the sky, mark the field, then wait for repeated patterns across multiple days.
+              </p>
+            </div>
 
-      <div class="scroller">
-        <table class="year-map">
-          <thead>
-            <tr>
-              <th>Moon</th>
-              <th>Name</th>
-              <th>Essence</th>
-              <th>Start</th>
-              <th>End</th>
-            </tr>
-          </thead>
-          <tbody id="yearMapBody">
-            <tr><td colspan="5">Calculating…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+            <div class="log-grid">
+              <article class="log-card"><h3>1 · Body</h3><p>Sleep, pressure, hunger, calm, tension, energy, clarity.</p></article>
+              <article class="log-card"><h3>2 · Mind</h3><p>Dreams, memory, repeated words, focus, emotional weather.</p></article>
+              <article class="log-card"><h3>3 · Field</h3><p>Moon phase, Kp status, weather, tech glitches, animal behavior, timing.</p></article>
+              <article class="log-card"><h3>4 · Witness</h3><p>Record first. Interpret after multiple days show the same pattern.</p></article>
+            </div>
+          </section>
 
-    <section class="card astrology-panel" data-astrology-panel>
-      <div class="section-heading">
-        <p class="pill">Sky Mirror · 13-Moon Astrology</p>
-        <h2>Astrology Correspondence</h2>
-        <p data-astro-status class="subtitle">Loading symbolic correspondence layer…</p>
-      </div>
+          <section class="card col-12">
+            <div class="section-heading">
+              <p class="pill">⊕ Earth Hum · Schumann Field</p>
+              <h2>7.83 Hz Practical Signal Layer</h2>
+              <p class="subtitle">
+                Use this as a grounded observation overlay. This page does not fetch live Kp data.
+                Check an outside source, tag the day manually, then compare against your own logs.
+              </p>
+            </div>
 
-      <div class="astrology-grid">
-        <article class="astro-card">
-          <p class="eyebrow">Solar Gate</p>
-          <h3 data-solar-gate>—</h3>
-          <p data-solar-copy>—</p>
-        </article>
+            <div class="hum-grid">
+              <article class="hum-card"><p class="eyebrow">Baseline Bell</p><h3>7.83 Hz</h3><p>Earth-ionosphere resonance. Treat as context, not command.</p></article>
+              <article class="hum-card"><p class="eyebrow">Quiet Field</p><h3>Kp &lt; 5</h3><p>Normal log day. Record mood, sleep, dreams, focus, and moon correspondence.</p></article>
+              <article class="hum-card"><p class="eyebrow">Charged Field</p><h3>Kp 5–6</h3><p>Mark the day elevated. Watch sensitivity, restlessness, pressure, or unusual clarity.</p></article>
+              <article class="hum-card"><p class="eyebrow">Storm Field</p><h3>Kp 7+</h3><p>Use grounding. Reduce overload. Log patterns for 2–4 days after the peak.</p></article>
+            </div>
+          </section>
 
-        <article class="astro-card">
-          <p class="eyebrow">Elemental Tone</p>
-          <h3 data-elemental-tone>—</h3>
-          <p data-elemental-copy>—</p>
-        </article>
+          <section class="card col-12">
+            <h2>Coherence Practice</h2>
+            <div class="practice-grid">
+              <article class="day-card"><h3>Ground</h3><p class="fine">Name the date, location, body state, and breath. Do not interpret yet.</p></article>
+              <article class="day-card"><h3>Observe</h3><p class="fine">Mark moon day, visible phase, weather, body signal, and repeated signs.</p></article>
+              <article class="day-card"><h3>Compare</h3><p class="fine">Look for repeated patterns across 3, 7, 14, and 28 days.</p></article>
+              <article class="day-card"><h3>Act</h3><p class="fine">Choose one repair, one gratitude, and one next step.</p></article>
+            </div>
+          </section>
+        </section>
+      </section>
 
-        <article class="astro-card">
-          <p class="eyebrow">Moon Reflection</p>
-          <h3 data-moon-reflection>—</h3>
-          <p data-moon-reflection-copy>—</p>
-        </article>
-      </div>
-    </section>
+      <section id="savedPanel" class="tabPanel">
+        <section class="grid">
+          <article class="card col-8">
+            <h2>Saved Local Witness Logs</h2>
+            <p class="subtitle">Saved in this browser only using localStorage.</p>
+            <div id="savedList" class="savedList"></div>
+          </article>
 
-    <section class="card">
-      <div class="section-heading">
-        <p class="pill">Accuracy + Use</p>
-        <h2>How to Read This Calendar</h2>
-        <p class="subtitle">
-          This calendar is best used as a symbolic tracking system, not as an official civil,
-          religious, medical, or astronomical authority.
-        </p>
-      </div>
-
-      <div class="log-grid">
-        <article class="log-card">
-          <h3>Calendar Accuracy</h3>
-          <p>The 13×28 count is exact inside its own system once the yearly anchor is chosen.</p>
-        </article>
-        <article class="log-card">
-          <h3>Moon Accuracy</h3>
-          <p>Visible phase depends on the lunar algorithm in moons.js and should be treated as approximate unless upgraded with verified ephemeris data.</p>
-        </article>
-        <article class="log-card">
-          <h3>Best Use</h3>
-          <p>Track repeated patterns over time: sleep, dreams, emotions, body signal, and witness notes.</p>
-        </article>
-      </div>
-    </section>
+          <article class="card col-4">
+            <h2>Log Tools</h2>
+            <p class="fine">Copy all saved logs or clear the local archive.</p>
+            <div class="btnrow">
+              <button id="copyAllLogs" class="lab-btn ghost" type="button">Copy All</button>
+              <button id="clearAllLogs" class="lab-btn danger" type="button">Clear All</button>
+            </div>
+          </article>
+        </section>
+      </section>
+    </main>
   </div>
 
   <footer class="footer">
@@ -339,24 +788,536 @@ Witness:</code></pre>
   </footer>
 
   <script>
-    window.__MOONS__ = [
-      { idx: 1, name: "Seed Flame", essence: "Beginning, ignition, first witness" },
-      { idx: 2, name: "Root Waters", essence: "Memory, cleansing, emotional ground" },
-      { idx: 3, name: "Breath Gate", essence: "Word, air, signal, exchange" },
-      { idx: 4, name: "Stone Witness", essence: "Body, structure, faithful record" },
-      { idx: 5, name: "Living Word", essence: "Speech, vow, creative command" },
-      { idx: 6, name: "Fire Trial", essence: "Testing, courage, purification" },
-      { idx: 7, name: "Crown Balance", essence: "Completion, justice, centered rule" },
-      { idx: 8, name: "Deep Mirror", essence: "Reflection, hidden pattern, inner waters" },
-      { idx: 9, name: "Return Path", essence: "Restoration, repentance, spiral home" },
-      { idx: 10, name: "Builder’s Hand", essence: "Craft, repair, stewardship" },
-      { idx: 11, name: "Star Remembrance", essence: "Inheritance, names, celestial memory" },
-      { idx: 12, name: "River of Signs", essence: "Movement, omens, living flow" },
-      { idx: 13, name: "Completion Seal", essence: "Harvest, sealing, preparation for reset" }
-    ];
-  </script>
+    (() => {
+      "use strict";
 
-  <script src="assets/js/moons.js" defer></script>
-  <script src="assets/js/astrology.js" defer></script>
+      const $ = s => document.querySelector(s);
+      const $$ = s => Array.from(document.querySelectorAll(s));
+
+      const MOONS = [
+        { idx: 1, name: "Seed Flame", essence: "Beginning, ignition, first witness", practice: "Start clean. Speak the first word. Mark the seed." },
+        { idx: 2, name: "Root Waters", essence: "Memory, cleansing, emotional ground", practice: "Cleanse memory. Listen to dreams. Watch emotional weather." },
+        { idx: 3, name: "Breath Gate", essence: "Word, air, signal, exchange", practice: "Guard speech. Track repeated words. Breathe before response." },
+        { idx: 4, name: "Stone Witness", essence: "Body, structure, faithful record", practice: "Build structure. Repair the physical. Record what happened." },
+        { idx: 5, name: "Living Word", essence: "Speech, vow, creative command", practice: "Speak with care. Make no empty vows. Create through ordered language." },
+        { idx: 6, name: "Fire Trial", essence: "Testing, courage, purification", practice: "Let false things burn. Choose courage without rushing." },
+        { idx: 7, name: "Crown Balance", essence: "Completion, justice, centered rule", practice: "Weigh the pattern. Balance mercy, truth, and consequence." },
+        { idx: 8, name: "Deep Mirror", essence: "Reflection, hidden pattern, inner waters", practice: "Look beneath the surface. Journal before judging." },
+        { idx: 9, name: "Return Path", essence: "Restoration, repentance, spiral home", practice: "Correct course. Repair one broken loop." },
+        { idx: 10, name: "Builder’s Hand", essence: "Craft, repair, stewardship", practice: "Build, fix, organize, and make the invisible useful." },
+        { idx: 11, name: "Star Remembrance", essence: "Inheritance, names, celestial memory", practice: "Remember names, lineage, signs, and the long story." },
+        { idx: 12, name: "River of Signs", essence: "Movement, omens, living flow", practice: "Track timing. Move with wisdom. Do not force the river." },
+        { idx: 13, name: "Completion Seal", essence: "Harvest, sealing, preparation for reset", practice: "Close the loop. Harvest the lesson. Prepare the reset." }
+      ];
+
+      const DAY_ARCHETYPES = [
+        ["Spark","First ignition. Start, name, begin."],
+        ["Witness","Record what is actually there."],
+        ["Breath","Speak, listen, exchange."],
+        ["Root","Ground the body and home."],
+        ["Water","Feel, cleanse, remember."],
+        ["Stone","Build structure and boundary."],
+        ["Fire","Test, purify, choose courage."],
+        ["Gate","Make a decision or cross a threshold."],
+        ["Mirror","Reflect before reacting."],
+        ["Hand","Repair, craft, serve."],
+        ["Voice","Say the true thing cleanly."],
+        ["River","Move, adapt, follow flow."],
+        ["Star","Remember inheritance and direction."],
+        ["Balance","Weigh, measure, judge fairly."],
+        ["Seed","Plant the next pattern."],
+        ["Trial","Face resistance without panic."],
+        ["Mercy","Release what can be released."],
+        ["Sword","Cut the false attachment."],
+        ["Oil","Consecrate the ordinary."],
+        ["Bread","Receive provision and share it."],
+        ["Watch","Stay awake to timing."],
+        ["Return","Correct course."],
+        ["Crown","Govern the self first."],
+        ["Lamp","Bring light to one dark corner."],
+        ["Name","Recover identity and purpose."],
+        ["Field","Observe relationships."],
+        ["Seal","Close what is complete."],
+        ["Rest","Prepare the reset."]
+      ];
+
+      const WEEK_GATES = [
+        ["Week 1 · Ignition", "Begin, gather signal, establish the first witness."],
+        ["Week 2 · Formation", "Shape the pattern through body, speech, and daily structure."],
+        ["Week 3 · Testing", "Watch pressure, resistance, correction, and refinement."],
+        ["Week 4 · Sealing", "Harvest the lesson, close loops, and prepare the next moon."]
+      ];
+
+      const TZONES = [
+        Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Los_Angeles",
+        "America/Los_Angeles",
+        "America/Denver",
+        "America/Chicago",
+        "America/New_York",
+        "UTC"
+      ].filter((v,i,a) => v && a.indexOf(v) === i);
+
+      let selectedDate = fromISO(new URLSearchParams(location.search).get("date")) || new Date();
+      let selectedTZ = localStorage.getItem("sof_moons_tz") || TZONES[0];
+
+      $("#yr").textContent = new Date().getFullYear();
+
+      function pad(n){ return String(n).padStart(2,"0"); }
+      function toISO(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+      function fromISO(s){
+        if (!s || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return null;
+        const [y,m,d] = s.split("-").map(Number);
+        return new Date(y,m-1,d);
+      }
+      function addDays(d,n){ const x = new Date(d); x.setDate(x.getDate()+n); return x; }
+      function dayDiff(a,b){
+        const A = Date.UTC(a.getFullYear(),a.getMonth(),a.getDate());
+        const B = Date.UTC(b.getFullYear(),b.getMonth(),b.getDate());
+        return Math.floor((A-B)/86400000);
+      }
+      function fmtDate(d, opts = {}){
+        return new Intl.DateTimeFormat("en-US", { timeZone:selectedTZ, weekday:"long", year:"numeric", month:"long", day:"numeric", ...opts }).format(d);
+      }
+      function fmtShort(d){
+        return new Intl.DateTimeFormat("en-US", { timeZone:selectedTZ, month:"short", day:"numeric", year:"numeric" }).format(d);
+      }
+
+      function moonAge(date){
+        const synodic = 29.530588853;
+        const knownNewMoon = Date.UTC(2000,0,6,18,14,0);
+        const t = Date.UTC(date.getFullYear(),date.getMonth(),date.getDate(),12,0,0);
+        const days = (t - knownNewMoon) / 86400000;
+        return ((days % synodic) + synodic) % synodic;
+      }
+
+      function nearestNewMoonAfter(date){
+        let d = new Date(date);
+        for (let i=0;i<40;i++){
+          const age = moonAge(d);
+          const nextAge = moonAge(addDays(d,1));
+          if (age > 28.5 || nextAge < age) return addDays(d,1);
+          d = addDays(d,1);
+        }
+        return d;
+      }
+
+      function yearAnchorFor(date){
+        const y = date.getFullYear();
+        const candidate = nearestNewMoonAfter(new Date(y,2,20));
+        if (date < candidate) return nearestNewMoonAfter(new Date(y-1,2,20));
+        return candidate;
+      }
+
+      function remnantInfo(date){
+        const anchor = yearAnchorFor(date);
+        const nextAnchor = yearAnchorFor(addDays(anchor, 370));
+        const diff = dayDiff(date, anchor);
+        const cycleDays = 13 * 28;
+
+        if (diff < 0) return remnantInfo(addDays(date,-1));
+
+        const inside = diff < cycleDays;
+        const moonIndex = inside ? Math.floor(diff / 28) : 12;
+        const dayInMoon = inside ? (diff % 28) + 1 : null;
+        const moon = MOONS[moonIndex];
+
+        return {
+          anchor,
+          nextAnchor,
+          diff,
+          inside,
+          moon,
+          moonIndex,
+          dayInMoon,
+          dayOfYear: diff + 1,
+          outsideDay: inside ? 0 : diff - cycleDays + 1,
+          yearEnd: addDays(anchor, cycleDays - 1)
+        };
+      }
+
+      function phaseName(age){
+        if (age < 1.2 || age > 28.3) return "New Moon";
+        if (age < 6.4) return "Waxing Crescent";
+        if (age < 8.4) return "First Quarter";
+        if (age < 13.8) return "Waxing Gibbous";
+        if (age < 16.2) return "Full Moon";
+        if (age < 21.6) return "Waning Gibbous";
+        if (age < 23.6) return "Last Quarter";
+        return "Waning Crescent";
+      }
+
+      function illumination(age){
+        return (1 - Math.cos((age / 29.530588853) * Math.PI * 2)) / 2;
+      }
+
+      function solarGate(date){
+        const m = date.getMonth()+1, d = date.getDate();
+        const gates = [
+          ["Capricorn","Earth","Structure, duty, mountain path"],
+          ["Aquarius","Air","Signal, systems, future current"],
+          ["Pisces","Water","Dream, compassion, unseen waters"],
+          ["Aries","Fire","Spark, courage, first motion"],
+          ["Taurus","Earth","Body, garden, provision"],
+          ["Gemini","Air","Word, exchange, twin signal"],
+          ["Cancer","Water","Home, memory, protection"],
+          ["Leo","Fire","Heart, courage, solar witness"],
+          ["Virgo","Earth","Order, craft, refinement"],
+          ["Libra","Air","Balance, justice, relation"],
+          ["Scorpio","Water","Depth, shadow, transformation"],
+          ["Sagittarius","Fire","Arrow, journey, higher aim"]
+        ];
+        const cut = [20,19,20,20,21,21,22,22,22,23,22,21];
+        const idx = (d < cut[m-1] ? (m+10)%12 : (m+11)%12);
+        return gates[idx];
+      }
+
+      function drawMoon(age){
+        const canvas = $("#simMoon");
+        const ctx = canvas.getContext("2d");
+        const w = canvas.width, h = canvas.height;
+        const cx = w/2, cy = h/2;
+        const r = Math.min(w,h) * .34;
+        const illum = illumination(age);
+        const waxing = age < 14.765;
+
+        ctx.clearRect(0,0,w,h);
+        ctx.fillStyle = "#05070d";
+        ctx.fillRect(0,0,w,h);
+
+        const g = ctx.createRadialGradient(cx,cy,5,cx,cy,r*2.2);
+        g.addColorStop(0,"rgba(122,243,255,.20)");
+        g.addColorStop(.5,"rgba(243,201,122,.09)");
+        g.addColorStop(1,"rgba(0,0,0,0)");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(cx,cy,r*2.1,0,Math.PI*2);
+        ctx.fill();
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx,cy,r,0,Math.PI*2);
+        ctx.clip();
+
+        ctx.fillStyle = "#121722";
+        ctx.fillRect(cx-r,cy-r,r*2,r*2);
+
+        ctx.fillStyle = "#f4f1e8";
+        ctx.beginPath();
+        ctx.arc(cx,cy,r,0,Math.PI*2);
+        ctx.fill();
+
+        const shadowWidth = r * 2 * Math.abs(1 - illum * 2);
+        ctx.fillStyle = "#121722";
+        ctx.beginPath();
+
+        if (illum < .5) {
+          if (waxing) {
+            ctx.rect(cx-r,cy-r,r*2,r*2);
+            ctx.ellipse(cx+r,cy,r-shadowWidth/2,r,0,Math.PI/2,Math.PI*1.5,true);
+          } else {
+            ctx.rect(cx-r,cy-r,r*2,r*2);
+            ctx.ellipse(cx-r,cy,r-shadowWidth/2,r,0,-Math.PI/2,Math.PI/2,true);
+          }
+        } else {
+          if (waxing) {
+            ctx.ellipse(cx-r,cy,shadowWidth/2,r,0,-Math.PI/2,Math.PI/2,true);
+          } else {
+            ctx.ellipse(cx+r,cy,shadowWidth/2,r,0,Math.PI/2,Math.PI*1.5,true);
+          }
+        }
+
+        if (illum < .5) ctx.fill("evenodd");
+        else ctx.fill();
+
+        ctx.restore();
+
+        ctx.strokeStyle = "rgba(243,201,122,.55)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(cx,cy,r,0,Math.PI*2);
+        ctx.stroke();
+
+        ctx.fillStyle = "rgba(244,241,232,.92)";
+        ctx.font = "800 15px Inter, system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(`${phaseName(age)} · ${Math.round(illum*100)}%`, cx, 28);
+      }
+
+      function render(){
+        const info = remnantInfo(selectedDate);
+        const age = moonAge(selectedDate);
+        const illum = illumination(age);
+        const phase = phaseName(age);
+        const solar = solarGate(selectedDate);
+        const dayArch = info.inside ? DAY_ARCHETYPES[info.dayInMoon - 1] : ["Outside Count","Reset, reflection, year threshold."];
+        const week = info.inside ? WEEK_GATES[Math.floor((info.dayInMoon-1)/7)] : ["Outside Gate","Days beyond the 364-counted cycle."];
+
+        $("#datePick").value = toISO(selectedDate);
+        $("#nowDate").textContent = fmtDate(selectedDate);
+        $("#nowClock").textContent = new Intl.DateTimeFormat("en-US", { timeZone:selectedTZ, hour:"numeric", minute:"2-digit", second:"2-digit" }).format(new Date());
+        $("#nowTZ").textContent = selectedTZ;
+
+        $("#moonName").textContent = info.moon.name;
+        $("#moonEssence").textContent = info.moon.essence;
+        $("#moonLine").textContent = info.inside
+          ? `Moon ${info.moon.idx} · Day ${info.dayInMoon}/28 · Day ${info.dayOfYear}/364`
+          : `Outside Count · Day ${info.outsideDay} after Completion Seal`;
+        $("#yearSpan").textContent = `Anchor: ${fmtShort(info.anchor)} · Counted year ends: ${fmtShort(info.yearEnd)}`;
+        $("#moonPractice").textContent = info.inside ? info.moon.practice : "Outside-count practice: review, repair, clear the ledger, and prepare the next anchor.";
+
+        $("#dayInMoon").textContent = info.inside ? info.dayInMoon : "⊙";
+        $("#moonLength").textContent = info.inside ? "/28" : "reset";
+        const progress = info.inside ? info.dayInMoon/28 : 1;
+        $("#moonArc").style.strokeDashoffset = String(314 - 314 * progress);
+
+        $("#weekDots").innerHTML = Array.from({length:28},(_,i) => {
+          const n = i+1;
+          const cls = !info.inside ? "" : n < info.dayInMoon ? "done" : n === info.dayInMoon ? "today" : "";
+          return `<span class="dot ${cls}" title="Day ${n}"></span>`;
+        }).join("");
+
+        $("#phaseLine").textContent = `${phase} · ${Math.round(illum*100)}% illuminated`;
+        $("#phaseMeta").textContent = `Approx lunar age: ${age.toFixed(2)} days · Symbolic phase reference only.`;
+        drawMoon(age);
+
+        $("#dayArchetype").textContent = dayArch[0];
+        $("#dayArchetypeCopy").textContent = dayArch[1];
+        $("#weekGate").textContent = week[0];
+        $("#weekGateCopy").textContent = week[1];
+        $("#solarGate").textContent = `${solar[0]} · ${solar[1]}`;
+        $("#skyMirrorCopy").textContent = solar[2];
+
+        renderRemnantCalendar(info);
+        renderGregorian(info);
+        renderYearMap(info);
+        buildWitness();
+      }
+
+      function renderRemnantCalendar(info){
+        $("#remCal").innerHTML = Array.from({length:28},(_,i) => {
+          const n = i+1;
+          const cls = info.inside && n === info.dayInMoon ? "today" : "";
+          const arch = DAY_ARCHETYPES[i];
+          return `<div class="calDay ${cls}"><strong>${n}</strong><span>${arch[0]}</span><br><small class="meta">${arch[1]}</small></div>`;
+        }).join("");
+      }
+
+      function renderGregorian(info){
+        const y = selectedDate.getFullYear();
+        const m = selectedDate.getMonth();
+        const first = new Date(y,m,1);
+        const last = new Date(y,m+1,0);
+        const names = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+        let html = names.map(n => `<div class="weekday">${n}</div>`).join("");
+
+        for (let i=0;i<first.getDay();i++) html += `<div></div>`;
+
+        for (let d=1; d<=last.getDate(); d++){
+          const cur = new Date(y,m,d);
+          const ri = remnantInfo(cur);
+          const cls = toISO(cur) === toISO(selectedDate) ? "today" : "";
+          html += `<div class="gregDay ${cls}"><strong>${d}</strong><span>${ri.inside ? `M${ri.moon.idx} · D${ri.dayInMoon}` : "Outside"}</span><br><small class="meta">${ri.moon.name}</small></div>`;
+        }
+
+        $("#gregCal").innerHTML = html;
+      }
+
+      function renderYearMap(info){
+        $("#outsideInfo").textContent = `Counted cycle: ${fmtShort(info.anchor)} through ${fmtShort(info.yearEnd)} · Outside days begin ${fmtShort(addDays(info.yearEnd,1))}`;
+        $("#yearMapBody").innerHTML = MOONS.map((m,i) => {
+          const start = addDays(info.anchor, i*28);
+          const end = addDays(start, 27);
+          return `<tr>
+            <td>Moon ${m.idx}</td>
+            <td>${m.name}</td>
+            <td>${m.essence}</td>
+            <td>${fmtShort(start)}</td>
+            <td>${fmtShort(end)}</td>
+            <td>${m.practice}</td>
+          </tr>`;
+        }).join("");
+      }
+
+      function buildWitness(){
+        const info = remnantInfo(selectedDate);
+        const age = moonAge(selectedDate);
+        const solar = solarGate(selectedDate);
+        const dayArch = info.inside ? DAY_ARCHETYPES[info.dayInMoon - 1] : ["Outside Count","Reset, reflection, year threshold."];
+
+        const text =
+`Date: ${fmtDate(selectedDate)}
+Remnant Moon: ${info.moon.name}
+Moon Day: ${info.inside ? `${info.dayInMoon}/28` : `Outside Count · Day ${info.outsideDay}`}
+Year Day: ${info.inside ? `${info.dayOfYear}/364` : "Outside counted cycle"}
+Visible Moon Phase: ${phaseName(age)} · ${Math.round(illumination(age)*100)}%
+Solar Gate: ${solar[0]} · ${solar[1]}
+Day Archetype: ${dayArch[0]}
+Earth Hum / Kp Status: ${$("#kpInput")?.value || "Unknown / not checked"}
+
+Sleep: ${$("#sleepInput")?.value || ""}
+Dreams: ${$("#dreamInput")?.value || ""}
+Body Signal: ${$("#bodyInput")?.value || ""}
+Emotional Weather: ${$("#emotionInput")?.value || ""}
+Repeated Signs: ${$("#signsInput")?.value || ""}
+Technology / Animal / Weather Notes: ${$("#fieldInput")?.value || ""}
+
+Action / Lesson:
+${$("#lessonInput")?.value || ""}
+
+Witness:
+Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
+
+        $("#witnessOutput").textContent = text;
+        return text;
+      }
+
+      function saveLog(){
+        const logs = JSON.parse(localStorage.getItem("sof_moon_logs_v1") || "[]");
+        logs.unshift({ date: toISO(selectedDate), text: buildWitness(), saved: new Date().toISOString() });
+        localStorage.setItem("sof_moon_logs_v1", JSON.stringify(logs.slice(0,100)));
+        renderSaved();
+      }
+
+      function renderSaved(){
+        const logs = JSON.parse(localStorage.getItem("sof_moon_logs_v1") || "[]");
+        $("#savedList").innerHTML = logs.length ? logs.map((l,i) => `
+          <article class="savedEntry">
+            <strong>${l.date}</strong>
+            <p class="meta">Saved ${new Date(l.saved).toLocaleString()}</p>
+            <pre class="fine" style="white-space:pre-wrap">${l.text}</pre>
+            <button class="lab-btn ghost copySaved" data-i="${i}" type="button">Copy</button>
+          </article>
+        `).join("") : `<p class="meta">No saved logs yet.</p>`;
+
+        $$(".copySaved").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const item = logs[Number(btn.dataset.i)];
+            navigator.clipboard.writeText(item.text);
+            btn.textContent = "Copied";
+            setTimeout(() => btn.textContent = "Copy", 900);
+          });
+        });
+      }
+
+      function setup(){
+        $("#tzPick").innerHTML = TZONES.map(tz => `<option value="${tz}">${tz}</option>`).join("");
+        $("#tzPick").value = selectedTZ;
+        $("#datePick").value = toISO(selectedDate);
+
+        $$(".tab").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const id = btn.dataset.tab;
+            $$(".tab").forEach(b => b.classList.toggle("active", b === btn));
+            $$(".tabPanel").forEach(p => p.classList.toggle("active", p.id === id));
+          });
+        });
+
+        $("#tzPick").addEventListener("change", e => {
+          selectedTZ = e.target.value;
+          localStorage.setItem("sof_moons_tz", selectedTZ);
+          render();
+        });
+
+        $("#datePick").addEventListener("change", e => {
+          selectedDate = fromISO(e.target.value) || new Date();
+          render();
+        });
+
+        $("#btnToday").addEventListener("click", () => {
+          selectedDate = new Date();
+          render();
+        });
+
+        $("#prevDay").addEventListener("click", () => {
+          selectedDate = addDays(selectedDate,-1);
+          render();
+        });
+
+        $("#nextDay").addEventListener("click", () => {
+          selectedDate = addDays(selectedDate,1);
+          render();
+        });
+
+        $("#shareLink").addEventListener("click", () => {
+          const url = `${location.origin}${location.pathname}?date=${toISO(selectedDate)}`;
+          navigator.clipboard.writeText(url);
+          $("#shareLink").textContent = "Copied";
+          setTimeout(() => $("#shareLink").textContent = "Copy Link", 900);
+        });
+
+        ["sleepInput","bodyInput","dreamInput","emotionInput","signsInput","kpInput","fieldInput","lessonInput"].forEach(id => {
+          $("#" + id).addEventListener("input", buildWitness);
+          $("#" + id).addEventListener("change", buildWitness);
+        });
+
+        $("#buildWitness").addEventListener("click", buildWitness);
+        $("#copyWitness").addEventListener("click", () => {
+          navigator.clipboard.writeText(buildWitness());
+          $("#copyWitness").textContent = "Copied";
+          setTimeout(() => $("#copyWitness").textContent = "Copy", 900);
+        });
+        $("#saveWitness").addEventListener("click", saveLog);
+        $("#clearWitness").addEventListener("click", () => {
+          ["sleepInput","bodyInput","dreamInput","emotionInput","signsInput","fieldInput","lessonInput"].forEach(id => $("#" + id).value = "");
+          $("#kpInput").selectedIndex = 0;
+          buildWitness();
+        });
+
+        $("#copyAllLogs").addEventListener("click", () => {
+          const logs = JSON.parse(localStorage.getItem("sof_moon_logs_v1") || "[]");
+          navigator.clipboard.writeText(logs.map(l => l.text).join("\n\n---\n\n"));
+        });
+
+        $("#clearAllLogs").addEventListener("click", () => {
+          localStorage.removeItem("sof_moon_logs_v1");
+          renderSaved();
+        });
+
+        renderSaved();
+        render();
+        setInterval(renderClockOnly, 1000);
+        drawSky();
+      }
+
+      function renderClockOnly(){
+        $("#nowClock").textContent = new Intl.DateTimeFormat("en-US", { timeZone:selectedTZ, hour:"numeric", minute:"2-digit", second:"2-digit" }).format(new Date());
+      }
+
+      function drawSky(){
+        const c = $("#skyBg");
+        const ctx = c.getContext("2d");
+        let stars = [];
+
+        function fit(){
+          c.width = innerWidth * Math.min(devicePixelRatio || 1, 2);
+          c.height = innerHeight * Math.min(devicePixelRatio || 1, 2);
+          stars = Array.from({length:150}, () => ({
+            x: Math.random()*c.width,
+            y: Math.random()*c.height,
+            r: Math.random()*1.5 + .3,
+            a: Math.random()
+          }));
+        }
+
+        function loop(){
+          ctx.clearRect(0,0,c.width,c.height);
+          stars.forEach(s => {
+            s.a += .015;
+            ctx.fillStyle = `rgba(244,241,232,${.18 + Math.sin(s.a)*.12})`;
+            ctx.beginPath();
+            ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+            ctx.fill();
+          });
+          requestAnimationFrame(loop);
+        }
+
+        fit();
+        addEventListener("resize", fit, { passive:true });
+        loop();
+      }
+
+      setup();
+    })();
+  </script>
 </body>
-</html>
+  </html>
