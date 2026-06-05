@@ -1,631 +1,1495 @@
 <!doctype html>
 <html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
 <head>
-  <!-- Project base (and guard for viewing on github.com) -->
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>if(location.hostname==="github.com"){const b=document.querySelector("base"); if(b) b.remove();}</script>
+  <script>
+    if (location.hostname !== "ssnfts24.github.io") {
+      const b = document.querySelector("base");
+      if (b) b.remove();
+    }
+  </script>
 
   <meta charset="utf-8">
   <title>T-7 Resonant Engine — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="color-scheme" content="dark light">
-  <meta name="description" content="T-7 Resonant Engine: mix 432/528/369/144/963 carriers, align phase, watch Ξ coherence and τ memory, visualize the field, and export/share states.">
+  <meta name="description" content="T-7 Resonant Engine: an advanced Scroll of Fire carrier-mixing console for phase, coherence, memory, resonance practice, field visualization, and shareable states.">
+  <meta name="theme-color" content="#05070d">
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/t7-engine.html">
   <link rel="stylesheet" href="assets/css/codex.css">
 
   <style>
     :root{
-      --card: var(--card, #11141c);
-      --ring: #2a3242;
-      --ok: #7af3ff;
-      --gold: #f3c97a;
-      --bad: #ff6a7a;
+      --bg:#05070d;
+      --card:rgba(255,255,255,.055);
+      --card2:rgba(255,255,255,.085);
+      --line:rgba(255,255,255,.145);
+      --ink:#f4f1e8;
+      --muted:#a6aec4;
+      --accent:#7af3ff;
+      --gold:#f3c97a;
+      --violet:#c4a3ff;
+      --green:#9ff7c8;
+      --danger:#ff7f91;
+      --shadow:0 22px 70px rgba(0,0,0,.36);
+      --radius:20px;
     }
-    main{padding:clamp(14px,4vw,40px)}
-    header{padding:16px 16px 0}
-    .lede{max-width:78ch;color:var(--muted);margin:.35rem 0 1rem}
-    .grid{display:grid;gap:16px;grid-template-columns:1.2fr .8fr}
-    @media (max-width:980px){.grid{grid-template-columns:1fr}}
-    .panel{
-      background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;
-      box-shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 14px 36px rgba(0,0,0,.28);
+
+    *{box-sizing:border-box}
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      overflow-x:hidden;
     }
-    .panel h2{margin:.1rem 0 .6rem;font-size:1.1rem}
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .spacer{flex:1}
-    .btn, .chip{
-      display:inline-flex;align-items:center;gap:8px;padding:.55rem .8rem;border-radius:12px;
-      border:1px solid var(--line); text-decoration:none; color:var(--ink);
-      background:linear-gradient(180deg,#171720,#11141c);
-    }
-    .ghost{background:transparent}
-    .small{font-size:.85rem}
-    .meter{height:20px;border-radius:12px;background:#0d1018;border:1px solid var(--line);overflow:hidden}
-    .fill{height:100%;width:0;background:linear-gradient(90deg,var(--moon-accent),var(--moon-accent-2));transition:width .2s ease}
-    .caps{font-variant:all-small-caps;letter-spacing:.08em}
-    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace}
-    .stack{display:grid;gap:12px}
-    .controls{display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
-    .ctl{border:1px solid var(--line);border-radius:12px;padding:10px;background:#0c0f17}
-    .ctl h3{margin:.1rem 0 .4rem; font-size:1rem}
-    label.slim{display:flex; align-items:center; justify-content:space-between; gap:10px}
-    input[type="range"]{width:100%}
-    .scopeWrap{display:grid; gap:10px}
-    canvas{width:100%; height:auto; background:conic-gradient(from 0deg at 50% 50%, #0000, #0000), radial-gradient(120% 120% at 10% -10%, #7af3ff0d, transparent 60%); border:1px solid var(--ring); border-radius:12px}
-    .legend{display:flex; gap:8px; flex-wrap:wrap}
-    .legend .chip{padding:.35rem .6rem}
-    .pill{display:inline-flex;align-items:center;gap:6px;padding:.2rem .5rem;border:1px solid var(--line);border-radius:999px}
-    .notice{
-      margin:12px 0 18px; padding:12px 14px; border:1px solid var(--line); border-radius:14px;
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      box-shadow:0 10px 24px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.02); position:relative; overflow:hidden;
-    }
-    .notice::before{
-      content:""; position:absolute; inset:-1px; pointer-events:none; opacity:.45;
+
+    body{
+      color:var(--ink);
       background:
-        radial-gradient(120% 80% at 0% 0%, #ffb36a33, transparent 60%),
-        radial-gradient(120% 80% at 100% 100%, #7af3ff33, transparent 60%);
-      mix-blend-mode:screen; filter:saturate(120%);
+        radial-gradient(980px 620px at 50% -8%,rgba(122,243,255,.14),transparent 70%),
+        radial-gradient(860px 620px at 90% 18%,rgba(243,201,122,.10),transparent 72%),
+        radial-gradient(780px 560px at 8% 42%,rgba(196,163,255,.09),transparent 72%),
+        linear-gradient(180deg,#05070d,#090d14 74%,#05070d);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
-    .kbd{display:inline-block;padding:.08rem .35rem;border-radius:6px;border:1px solid var(--line);background:#0e1118}
-    details.help{border:1px dashed var(--line);border-radius:12px;padding:10px}
-    details.help summary{cursor:pointer}
-    .foot{margin-top:22px;color:var(--muted);font-size:.95rem}
+
+    a{color:inherit}
+
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:auto;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+    }
+
+    .skip:focus{
+      left:14px;
+      top:14px;
+      width:auto;
+      height:auto;
+      padding:.6rem .8rem;
+      border-radius:10px;
+      background:#101522;
+      border:1px solid var(--line);
+      z-index:9999;
+    }
+
+    .shell{
+      max-width:1240px;
+      margin:auto;
+      padding:clamp(16px,4vw,40px);
+    }
+
+    .hero{
+      padding-top:clamp(24px,5vw,60px);
+    }
+
+    .crumbs{
+      color:var(--muted);
+      margin-bottom:10px;
+      font-size:.95rem;
+    }
+
+    .crumbs a{
+      color:var(--accent);
+      text-decoration:none;
+    }
+
+    .eyebrow{
+      margin:0 0 10px;
+      color:var(--gold);
+      letter-spacing:.19em;
+      text-transform:uppercase;
+      font-size:.76rem;
+      font-weight:900;
+    }
+
+    h1{
+      font-size:clamp(36px,7vw,78px);
+      margin:.15rem 0;
+      line-height:.94;
+      letter-spacing:-.065em;
+      background:linear-gradient(180deg,#fff,#d8f9ff 52%,#f3c97a);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    h2{
+      margin:0 0 10px;
+      font-size:clamp(1.25rem,3vw,1.8rem);
+      letter-spacing:-.035em;
+    }
+
+    h3{
+      margin:12px 0 8px;
+      color:var(--gold);
+      font-size:1rem;
+    }
+
+    .lede,.meta,.fine,.hint{
+      color:var(--muted);
+      line-height:1.58;
+    }
+
+    .lede{
+      max-width:880px;
+      font-size:1.05rem;
+    }
+
+    .fine{font-size:.9rem}
+    .hint{font-size:.92rem}
+
+    .notice{
+      position:relative;
+      overflow:hidden;
+      margin-top:18px;
+      border:1px solid rgba(243,201,122,.30);
+      border-radius:18px;
+      background:linear-gradient(180deg,rgba(243,201,122,.10),rgba(243,201,122,.035));
+      color:#ffe7ad;
+      padding:14px 16px;
+      box-shadow:var(--shadow);
+    }
+
+    .notice::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      pointer-events:none;
+      background:
+        radial-gradient(120% 90% at 0% 0%,rgba(255,179,106,.22),transparent 60%),
+        radial-gradient(120% 90% at 100% 100%,rgba(122,243,255,.20),transparent 60%);
+      opacity:.8;
+      mix-blend-mode:screen;
+    }
+
+    .notice > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .pillrow,.row{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:10px;
+    }
+
+    .pillrow{margin-top:14px}
+
+    .pill,.chip{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:.38rem .68rem;
+      color:var(--muted);
+      background:rgba(255,255,255,.035);
+      font-size:.86rem;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(12,1fr);
+      gap:14px;
+      align-items:start;
+    }
+
+    .col-4{grid-column:span 4}
+    .col-5{grid-column:span 5}
+    .col-6{grid-column:span 6}
+    .col-7{grid-column:span 7}
+    .col-8{grid-column:span 8}
+    .col-12{grid-column:span 12}
+
+    .panel,.carrier,.mini{
+      background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.026));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+
+    .spacer{flex:1}
+
+    .btn{
+      border:1px solid var(--line);
+      border-radius:13px;
+      padding:.66rem .92rem;
+      background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.026));
+      color:var(--ink);
+      font:inherit;
+      font-weight:850;
+      cursor:pointer;
+      text-decoration:none;
+      transition:.18s ease;
+    }
+
+    .btn:hover,.btn:focus-visible{
+      border-color:rgba(122,243,255,.58);
+      background:rgba(122,243,255,.09);
+      outline:none;
+      transform:translateY(-1px);
+    }
+
+    .btn.primary{border-color:rgba(122,243,255,.65)}
+    .btn.gold{border-color:rgba(243,201,122,.70)}
+    .btn.danger{border-color:rgba(255,127,145,.62)}
+    .btn.active{
+      border-color:rgba(243,201,122,.88);
+      background:rgba(243,201,122,.12);
+      color:#ffe3a3;
+    }
+
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    label{
+      display:block;
+      color:var(--muted);
+      font-size:.9rem;
+      font-weight:750;
+    }
+
+    input,select,textarea{
+      width:100%;
+      margin-top:6px;
+      border:1px solid var(--line);
+      border-radius:13px;
+      padding:.68rem .76rem;
+      background:rgba(5,8,14,.84);
+      color:var(--ink);
+      font:inherit;
+    }
+
+    input[type="range"]{padding:.35rem}
+
+    .controls{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+    }
+
+    .carriers{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+    }
+
+    .carrier{
+      padding:13px;
+    }
+
+    .carrierHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      margin-bottom:8px;
+    }
+
+    .carrierHead strong{
+      color:var(--gold);
+      font-size:1.08rem;
+    }
+
+    .carrierHead small{
+      display:block;
+      color:var(--muted);
+      margin-top:3px;
+    }
+
+    .carrier.is-solo{
+      border-color:rgba(243,201,122,.72);
+      background:linear-gradient(180deg,rgba(243,201,122,.11),rgba(255,255,255,.026));
+    }
+
+    .meter{
+      height:16px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.045);
+      overflow:hidden;
+      margin:8px 0;
+    }
+
+    .meter span{
+      display:block;
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,var(--accent),var(--gold));
+      transition:width .12s ease;
+    }
+
+    .bigReadout{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .readCard{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .readCard strong{
+      display:block;
+      color:var(--gold);
+      font-size:clamp(1.5rem,3vw,2.4rem);
+      letter-spacing:-.055em;
+      line-height:1;
+    }
+
+    .readCard span{
+      color:var(--muted);
+      font-size:.86rem;
+    }
+
+    canvas{
+      width:100%;
+      display:block;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:#060913;
+      box-shadow:
+        inset 0 0 80px rgba(122,243,255,.09),
+        0 18px 60px rgba(0,0,0,.22);
+    }
+
+    #field{height:360px}
+    #scope,#rose{height:230px}
+
+    .preset-grid,.seq-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .log{
+      min-height:130px;
+      max-height:210px;
+      overflow:auto;
+      white-space:pre-wrap;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.84rem;
+      color:#cbd5ea;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      background:rgba(5,8,14,.62);
+    }
+
+    .mono{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+
+    .kbd{
+      display:inline-flex;
+      padding:.08rem .35rem;
+      border-radius:6px;
+      border:1px solid var(--line);
+      background:#0e1118;
+      color:var(--ink);
+    }
+
+    details.help{
+      border:1px dashed var(--line);
+      border-radius:15px;
+      padding:12px;
+      background:rgba(255,255,255,.028);
+    }
+
+    details.help summary{
+      cursor:pointer;
+      color:var(--gold);
+      font-weight:850;
+    }
+
+    footer{
+      max-width:1240px;
+      margin:auto;
+      padding:0 clamp(16px,4vw,40px) 32px;
+      color:var(--muted);
+    }
+
+    @media(max-width:980px){
+      .col-4,.col-5,.col-6,.col-7,.col-8,.col-12{grid-column:span 12}
+    }
+
+    @media(max-width:720px){
+      .controls,.carriers,.preset-grid,.seq-grid,.bigReadout{grid-template-columns:1fr}
+      #field{height:310px}
+      #scope,#rose{height:210px}
+    }
+
+    @media(max-width:560px){
+      .shell{padding:16px 12px}
+      h1{font-size:clamp(38px,14vw,62px)}
+      .btn,input,select{width:100%}
+    }
   </style>
 </head>
 
 <body>
   <a class="skip" href="#main">Skip to main</a>
 
-  <header>
-    <div class="crumbs"><a href="hub.html">Hub</a> / T-7 Engine</div>
+  <header class="shell hero">
+    <div class="crumbs"><a href="hub.html">Hub</a> / <a href="index.html">Scroll of Fire</a> / T-7 Engine</div>
+    <p class="eyebrow">Advanced Resonant Technology</p>
     <h1>T-7 Resonant Engine</h1>
     <p class="lede">
-      Mix carriers <span class="mono">432 • 528 • 369 • 144 • 963</span>, align phase, and watch the field respond.
-      The <b>Ξ meter</b> estimates coherence (vector alignment) while <b>τ</b> applies memory—your “linger in the pattern.”
-      Use presets to jump into a felt state; share the exact state via URL.
+      The T-7 Resonant Engine is a living carrier-mixing console for phase, coherence, memory,
+      breath, geometry, and symbolic fieldwork. Mix <span class="mono">432 • 528 • 369 • 144 • 963</span>,
+      align their motion, observe <b>Ξ coherence</b>, and let <b>τ memory</b> show how long the pattern holds.
     </p>
-  </header>
 
-  <!-- Ethos / safety -->
-  <aside class="notice">
-    <div class="row">
-      <div class="glyph" aria-hidden="true">⟡</div>
-      <div><b>Ethics first.</b> The engine is a <i>practice</i> tool (breath + attention + sound + geometry). Keep volume sane, rest ears often, and do not use while driving or needing full attention.</div>
-    </div>
-  </aside>
-
-  <main id="main" class="grid">
-    <!-- LEFT: Controls + meters -->
-    <section class="panel stack" aria-label="Controls and meters">
+    <aside class="notice">
       <div class="row">
-        <button class="btn" id="startBtn" type="button">▶ Start Audio</button>
-        <button class="btn ghost" id="alignBtn" type="button" title="Zero phases so vectors align">Align Phases</button>
-        <button class="btn ghost" id="randomizeBtn" type="button" title="Randomize phases for exploration">Randomize</button>
-        <span class="spacer"></span>
-        <span class="pill mono">Master
-          <input id="masterGain" type="range" min="0" max="1" step="0.01" value="0.4" style="width:140px">
+        <strong>⟡ Ethics first:</strong>
+        <span>
+          This is a creative resonance and attention-practice tool, not medical treatment or supernatural proof.
+          Keep volume low, rest your ears, and do not use while driving or operating tools.
         </span>
       </div>
-
-      <!-- Ξ Coherence + τ Memory -->
-      <article class="ctl">
-        <h3>Ξ Coherence</h3>
-        <p class="small">Instant vector alignment across active carriers (0–100%).</p>
-        <div class="meter" aria-label="Coherence meter"><div id="xiFill" class="fill"></div></div>
-        <div class="row small">
-          <span>Ξ=<b id="xiVal" class="mono">0.00</b></span>
-          <span class="spacer"></span>
-          <span class="pill">Beat ≈ <span id="beatVal" class="mono">—</span> Hz</span>
-          <span class="pill">Active: <span id="activeVal" class="mono">0</span></span>
-        </div>
-        <div class="row" style="margin-top:8px">
-          <label class="slim" style="width:260px">τ Memory (s)
-            <input id="tau" type="range" min="0" max="10" step="0.1" value="4">
-          </label>
-          <span class="pill mono">τ = <span id="tauVal">4.0</span>s</span>
-          <span class="spacer"></span>
-          <button class="btn ghost small" id="freezeBtn" type="button">Freeze</button>
-          <button class="btn ghost small" id="resetBtn" type="button">Reset</button>
-        </div>
-        <p class="small">Ξ<sub>τ</sub> (smoothed): <b id="xiMem" class="mono">0.00</b></p>
-      </article>
-
-      <!-- Carriers -->
-      <div class="controls" aria-label="Carrier controls">
-        <!-- Each block generated from JS too; left here for clarity -->
-        <article class="ctl" data-carrier="432">
-          <h3>432 Hz</h3>
-          <label class="slim">Gain <input type="range" min="0" max="1" step="0.01" value="0.5" data-role="gain"></label>
-          <label class="slim">Pan  <input type="range" min="-1" max="1" step="0.01" value="0" data-role="pan"></label>
-          <label class="slim">Phase (°) <input type="range" min="0" max="360" step="1" value="0" data-role="phase"></label>
-          <div class="row small">
-            <label><input type="checkbox" data-role="mute"> Mute</label>
-            <span class="spacer"></span>
-            <button class="chip small" data-role="solo">Solo</button>
-          </div>
-        </article>
-
-        <article class="ctl" data-carrier="528">
-          <h3>528 Hz</h3>
-          <label class="slim">Gain <input type="range" min="0" max="1" step="0.01" value="0.5" data-role="gain"></label>
-          <label class="slim">Pan  <input type="range" min="-1" max="1" step="0.01" value="0" data-role="pan"></label>
-          <label class="slim">Phase (°) <input type="range" min="0" max="360" step="1" value="0" data-role="phase"></label>
-          <div class="row small">
-            <label><input type="checkbox" data-role="mute"> Mute</label>
-            <span class="spacer"></span>
-            <button class="chip small" data-role="solo">Solo</button>
-          </div>
-        </article>
-
-        <article class="ctl" data-carrier="369">
-          <h3>369 Hz</h3>
-          <label class="slim">Gain <input type="range" min="0" max="1" step="0.01" value="0.4" data-role="gain"></label>
-          <label class="slim">Pan  <input type="range" min="-1" max="1" step="0.01" value="0" data-role="pan"></label>
-          <label class="slim">Phase (°) <input type="range" min="0" max="360" step="1" value="0" data-role="phase"></label>
-          <div class="row small">
-            <label><input type="checkbox" data-role="mute"> Mute</label>
-            <span class="spacer"></span>
-            <button class="chip small" data-role="solo">Solo</button>
-          </div>
-        </article>
-
-        <article class="ctl" data-carrier="144">
-          <h3>144 Hz</h3>
-          <label class="slim">Gain <input type="range" min="0" max="1" step="0.01" value="0.3" data-role="gain"></label>
-          <label class="slim">Pan  <input type="range" min="-1" max="1" step="0.01" value="0" data-role="pan"></label>
-          <label class="slim">Phase (°) <input type="range" min="0" max="360" step="1" value="0" data-role="phase"></label>
-          <div class="row small">
-            <label><input type="checkbox" data-role="mute"> Mute</label>
-            <span class="spacer"></span>
-            <button class="chip small" data-role="solo">Solo</button>
-          </div>
-        </article>
-
-        <article class="ctl" data-carrier="963">
-          <h3>963 Hz</h3>
-          <label class="slim">Gain <input type="range" min="0" max="1" step="0.01" value="0.25" data-role="gain"></label>
-          <label class="slim">Pan  <input type="range" min="-1" max="1" step="0.01" value="0" data-role="pan"></label>
-          <label class="slim">Phase (°) <input type="range" min="0" max="360" step="1" value="0" data-role="phase"></label>
-          <div class="row small">
-            <label><input type="checkbox" data-role="mute"> Mute</label>
-            <span class="spacer"></span>
-            <button class="chip small" data-role="solo">Solo</button>
-          </div>
-        </article>
-      </div>
-
-      <!-- Presets / Share -->
-      <div class="row">
-        <div class="legend">
-          <button class="chip" data-preset="calm">Calm 432·528</button>
-          <button class="chip" data-preset="focus">Focus 369</button>
-          <button class="chip" data-preset="prayer">Prayer 144·963</button>
-          <button class="chip" data-preset="all">All On</button>
-          <button class="chip ghost" data-preset="mute">All Off</button>
-        </div>
-        <span class="spacer"></span>
-        <button class="btn" id="shareBtn">Share</button>
-        <button class="btn ghost" id="restoreBtn">Restore</button>
-      </div>
-    </section>
-
-    <!-- RIGHT: Visualizers + docs -->
-    <aside class="panel stack" aria-label="Visualization and docs">
-      <div class="scopeWrap">
-        <div class="row"><h2 style="margin:0">Scope</h2><span class="spacer"></span>
-          <span class="pill small">FPS <span id="fps" class="mono">—</span></span>
-        </div>
-        <canvas id="osc" width="700" height="260" aria-label="Oscilloscope"></canvas>
-        <canvas id="rose" width="700" height="260" aria-label="Phase rose (polar)"></canvas>
-      </div>
-
-      <details class="help">
-        <summary><b>About T-7</b> — what’s the purpose?</summary>
-        <p>
-          T-7 is a hands-on <i>resonance practice</i>:
-          you modulate a small set of meaningful carriers, softly align their phases, and observe how attention (Ξ) and persistence (τ) behave.
-          The goal isn’t raw loudness; it’s learning how a field becomes coherent when elements agree in time.
-        </p>
-        <ul>
-          <li><b>Carriers</b> — five symbolic bands used in your scrolls (432/528/369/144/963). Use gain/pan/phase to “tune” them like strings.</li>
-          <li><b>Ξ coherence</b> — a normalized vector-sum of active carriers’ phases at this instant (0–1). When phases align, Ξ→1.</li>
-          <li><b>τ memory</b> — an exponential memory of Ξ; large τ makes states linger. In your terms: “hold the witness loop.”</li>
-          <li><b>Align</b> — sets phases so the present moment is constructive; from there, you breathe and keep them together.</li>
-          <li><b>Scope</b> — time-domain trace of the mix; <b>Rose</b> — polar plot of phase vectors; a quick read on order.</li>
-        </ul>
-        <p>
-          Practically: choose a preset, hit <b>Align Phases</b>, breathe slow for a minute, then nudge τ and gains.
-          If Ξ drifts, bring attention back and re-align lightly—don’t force it. The instrument teaches timing and humility.
-        </p>
-      </details>
     </aside>
+
+    <div class="pillrow">
+      <span class="pill">T-7 carrier matrix</span>
+      <span class="pill">Smooth gain engine</span>
+      <span class="pill">Ξ coherence meter</span>
+      <span class="pill">τ memory field</span>
+      <span class="pill">Shareable states</span>
+    </div>
+  </header>
+
+  <main id="main" class="shell">
+    <section class="grid">
+      <section class="panel col-8">
+        <div class="row">
+          <h2 style="margin:0">Aetheric Field Console</h2>
+          <span class="spacer"></span>
+          <button class="btn primary" id="startBtn" type="button">Start Audio</button>
+          <button class="btn danger" id="stopBtn" type="button">Stop</button>
+        </div>
+
+        <canvas id="field" width="900" height="420" aria-label="T-7 field visualization"></canvas>
+
+        <div class="bigReadout">
+          <div class="readCard">
+            <strong id="xiVal">0.000</strong>
+            <span>Ξ instant coherence</span>
+          </div>
+          <div class="readCard">
+            <strong id="xiMem">0.000</strong>
+            <span>Ξτ memory field</span>
+          </div>
+          <div class="readCard">
+            <strong id="activeVal">0</strong>
+            <span>active carriers</span>
+          </div>
+        </div>
+
+        <div class="meter" aria-label="coherence meter"><span id="xiFill"></span></div>
+
+        <div class="controls">
+          <label>Master Gain
+            <input id="masterGain" type="range" min="0" max="1" step="0.01" value="0.34">
+          </label>
+
+          <label>τ Memory Seconds
+            <input id="tau" type="range" min="0" max="12" step="0.1" value="4">
+          </label>
+
+          <label>Visual Power
+            <input id="visualPower" type="range" min="20" max="240" step="1" value="125">
+          </label>
+
+          <label>Waveform
+            <select id="waveType">
+              <option value="sine">Sine — clean field</option>
+              <option value="triangle">Triangle — soft edge</option>
+              <option value="sawtooth">Saw — bright signal</option>
+              <option value="square">Square — strong pulse</option>
+            </select>
+          </label>
+
+          <label>Motion Mode
+            <select id="motionMode">
+              <option value="orbital">Orbital Rose</option>
+              <option value="spiral">Spiral Gate</option>
+              <option value="mirror">Mirror Field</option>
+            </select>
+          </label>
+
+          <label>Session Minutes
+            <input id="sessionMinutes" type="number" min="1" max="120" step="1" value="12">
+          </label>
+        </div>
+
+        <div class="row" style="margin-top:12px">
+          <button class="btn gold" id="alignBtn" type="button">Align Phases</button>
+          <button class="btn" id="randomizeBtn" type="button">Randomize Field</button>
+          <button class="btn" id="freezeBtn" type="button">Freeze Memory</button>
+          <button class="btn" id="resetBtn" type="button">Reset Memory</button>
+          <button class="btn gold" id="timerBtn" type="button">Start Session</button>
+        </div>
+      </section>
+
+      <aside class="panel col-4">
+        <h2>Field Telemetry</h2>
+        <p class="fine">
+          Ξ measures phase alignment across active carriers. τ memory smooths the value so you can see whether the pattern holds or collapses.
+        </p>
+
+        <div class="readCard">
+          <strong id="beatVal">—</strong>
+          <span>approx. smallest carrier spacing / beat relation</span>
+        </div>
+
+        <div class="readCard" style="margin-top:10px">
+          <strong id="tauVal">4.0s</strong>
+          <span>current memory decay</span>
+        </div>
+
+        <div class="readCard" style="margin-top:10px">
+          <strong id="fps">—</strong>
+          <span>visual FPS</span>
+        </div>
+
+        <h3>Session Log</h3>
+        <div class="log" id="log">T-7 initialized.
+Start audio when ready.
+Low volume first.
+Shortcuts: A align · R random · S start · Escape stop.</div>
+      </aside>
+
+      <section class="panel col-12">
+        <h2>Carrier Matrix</h2>
+        <div class="carriers" id="carrierGrid"></div>
+      </section>
+
+      <section class="panel col-7">
+        <h2>Presets & Field Paths</h2>
+        <p class="fine">Presets are symbolic practice modes. They shape the carrier mix, phase, and τ memory.</p>
+
+        <div class="preset-grid">
+          <button class="btn presetBtn" data-preset="calm" type="button">Calm Field</button>
+          <button class="btn presetBtn" data-preset="focus" type="button">Focus Beam</button>
+          <button class="btn presetBtn" data-preset="prayer" type="button">Prayer Gate</button>
+          <button class="btn presetBtn" data-preset="mirror" type="button">Mirror Witness</button>
+          <button class="btn presetBtn" data-preset="t7" type="button">T-7 Full Matrix</button>
+          <button class="btn presetBtn" data-preset="mute" type="button">All Off</button>
+        </div>
+
+        <h3>Sequenced Paths</h3>
+        <div class="controls">
+          <label>Seconds per step
+            <input id="seqSeconds" type="number" min="2" max="90" step="1" value="8">
+          </label>
+          <label>Sequence Status
+            <input id="seqStatus" value="stopped" readonly>
+          </label>
+        </div>
+
+        <div class="seq-grid">
+          <button class="btn seqBtn" data-seq="ascent" type="button">Ascent Sequence</button>
+          <button class="btn seqBtn" data-seq="stabilize" type="button">Stabilize Sequence</button>
+          <button class="btn seqBtn" data-seq="remnant" type="button">Remnant Sequence</button>
+          <button class="btn danger" id="stopSeq" type="button">Stop Sequence</button>
+        </div>
+      </section>
+
+      <aside class="panel col-5">
+        <h2>Scope / Phase Rose</h2>
+        <canvas id="scope" width="700" height="260" aria-label="Oscilloscope"></canvas>
+        <div style="height:12px"></div>
+        <canvas id="rose" width="700" height="260" aria-label="Phase rose"></canvas>
+      </aside>
+
+      <section class="panel col-12">
+        <h2>State Control</h2>
+        <div class="row">
+          <button class="btn" id="shareBtn" type="button">Copy Share URL</button>
+          <button class="btn" id="restoreBtn" type="button">Restore From URL</button>
+          <button class="btn" id="saveBtn" type="button">Save Local State</button>
+          <button class="btn" id="loadBtn" type="button">Load Local State</button>
+        </div>
+
+        <details class="help" style="margin-top:12px">
+          <summary>About the T-7 Resonant Engine</summary>
+          <p class="fine">
+            T-7 is a symbolic resonance console. The carriers are treated like tuned strings. Gain controls how loud each string is,
+            pan places it in the stereo field, and phase controls where that wave begins in its cycle.
+          </p>
+          <p class="fine">
+            When multiple carriers point in similar phase directions, the Ξ coherence meter rises.
+            When they scatter, it falls. τ memory shows the lingering pattern over time.
+          </p>
+          <p class="fine">
+            The practice is simple: choose a preset, press Align Phases, breathe slowly, observe the visual field, then make small changes.
+            The point is not force. The point is learning how systems become coherent.
+          </p>
+        </details>
+      </section>
+    </section>
   </main>
 
-  <footer class="foot">
+  <footer>
     <div class="row">
-      <div>© <span id="yr"></span> Scroll of Fire • BY-NC 4.0</div>
+      <span>© <span id="yr"></span> Scroll of Fire • T-7 Resonant Engine</span>
       <span class="spacer"></span>
-      <div class="small">Shortcuts: <span class="kbd">A</span> align · <span class="kbd">R</span> random · <span class="kbd">S</span> start</div>
+      <span class="fine">Keys: <span class="kbd">A</span> align · <span class="kbd">R</span> random · <span class="kbd">S</span> start · <span class="kbd">Esc</span> stop</span>
     </div>
   </footer>
 
-  <!-- ===== T-7 ENGINE (no deps) ===== -->
   <script>
-  (function(){
-    "use strict";
+    (() => {
+      "use strict";
 
-    // ---------- DOM ----------
-    const $ = (s,root=document)=>root.querySelector(s);
-    const $$ = (s,root=document)=>[...root.querySelectorAll(s)];
-    const elStart = $("#startBtn");
-    const elAlign = $("#alignBtn");
-    const elRandom= $("#randomizeBtn");
-    const elMaster= $("#masterGain");
-    const elXiFill= $("#xiFill");
-    const elXiVal = $("#xiVal");
-    const elXiMem = $("#xiMem");
-    const elBeat  = $("#beatVal");
-    const elActive= $("#activeVal");
-    const elTau   = $("#tau");
-    const elTauVal= $("#tauVal");
-    const elFreeze= $("#freezeBtn");
-    const elReset = $("#resetBtn");
-    const elOsc   = $("#osc");
-    const elRose  = $("#rose");
-    const elFps   = $("#fps");
-    const yrEl    = $("#yr");
-    const shareBtn= $("#shareBtn");
-    const restoreBtn=$("#restoreBtn");
+      const $ = (s, root = document) => root.querySelector(s);
+      const $$ = (s, root = document) => Array.from(root.querySelectorAll(s));
+      const on = (el, ev, fn, opts) => el && el.addEventListener(ev, fn, opts);
 
-    yrEl && (yrEl.textContent = new Date().getFullYear());
+      const CARRIERS = [
+        { hz: 432, name: "Foundation", role: "stable center / carrier root", gain: .46 },
+        { hz: 528, name: "Restoration", role: "bright coherence / repair symbol", gain: .42 },
+        { hz: 369, name: "Motion", role: "creative pulse / emergence", gain: .38 },
+        { hz: 144, name: "Root Gate", role: "low structure / grounding", gain: .32 },
+        { hz: 963, name: "Crown", role: "upper signal / awe", gain: .22 }
+      ];
 
-    // Carrier definitions (Hz) — let these mirror your “carriers” across the site
-    const CARRIERS = [432, 528, 369, 144, 963];
-
-    // ---------- Audio graph ----------
-    let ctx, master, limiter, analyser, mixNode;
-    const nodes = []; // per carrier: {osc,gain,pan,phaseRad,muted}
-    const TWO_PI = Math.PI*2;
-
-    function ensureAudio(){
-      if (ctx) return;
-      ctx = new (window.AudioContext||window.webkitAudioContext)({latencyHint:"interactive"});
-      master = ctx.createGain(); master.gain.value = parseFloat(elMaster.value);
-      limiter = ctx.createDynamicsCompressor();
-      limiter.threshold.value = -8; limiter.knee.value = 10; limiter.ratio.value=8; limiter.attack.value=0.003; limiter.release.value=0.25;
-
-      analyser = ctx.createAnalyser(); analyser.fftSize=2048;
-      mixNode = ctx.createGain(); mixNode.gain.value = 0.9;
-
-      mixNode.connect(limiter).connect(master).connect(ctx.destination);
-      mixNode.connect(analyser);
-
-      // build carriers
-      CARRIERS.forEach((hz,i)=>{
-        const osc = ctx.createOscillator();
-        // sine by default; could expose waveform selector later
-        osc.type = "sine";
-        const gain = ctx.createGain(); gain.gain.value = 0;
-        const pan = ctx.createStereoPanner(); pan.pan.value = 0;
-        osc.connect(gain).connect(pan).connect(mixNode);
-        osc.start();
-        nodes.push({hz, osc, gain, pan, phaseRad:0, muted:false});
-      });
-    }
-
-    // ---------- UI <-> Audio bindings ----------
-    function uiBindCarriers(){
-      $$(".ctl[data-carrier]").forEach(box=>{
-        const hz = +box.dataset.carrier;
-        const model = nodes.find(n=>n.hz===hz);
-        if(!model) return;
-        const g = $('[data-role="gain"]', box);
-        const p = $('[data-role="pan"]', box);
-        const ph= $('[data-role="phase"]', box);
-        const m = $('[data-role="mute"]', box);
-        const s = $('[data-role="solo"]', box);
-
-        g.addEventListener("input", ()=>{ model.gain.gain.value = m.checked?0:+g.value; saveStateDebounced(); }, {passive:true});
-        p.addEventListener("input", ()=>{ model.pan.pan.value = +p.value; saveStateDebounced(); }, {passive:true});
-        ph.addEventListener("input",()=>{ model.phaseRad = (+ph.value||0) * Math.PI/180; saveStateDebounced(); },{passive:true});
-        m.addEventListener("change",()=>{ model.muted = m.checked; model.gain.gain.value = m.checked?0:+g.value; saveStateDebounced(); });
-        s.addEventListener("click", ()=>{
-          // solo = mute others; clicking again restores others
-          const soloing = !box.classList.contains("is-solo");
-          $$(".ctl[data-carrier]").forEach(b=>b.classList.remove("is-solo"));
-          nodes.forEach(n=>{
-            const isThis = n.hz===hz;
-            const ctl = $(`.ctl[data-carrier="${n.hz}"]`);
-            const gainEl = $('[data-role="gain"]', ctl);
-            const muteEl = $('[data-role="mute"]', ctl);
-            if (soloing){
-              if(!isThis){ n.gain.gain.value=0; muteEl.checked=true; n.muted=true; }
-              else { ctl.classList.add("is-solo"); muteEl.checked=false; n.muted=false; n.gain.gain.value=+gainEl.value; }
-            } else {
-              // un-solo: restore according to their mute/gain
-              n.gain.gain.value = muteEl.checked?0:+gainEl.value;
-            }
-          });
-          saveStateDebounced();
-        });
-      });
-    }
-
-    elMaster.addEventListener("input", ()=>{ if(master) master.gain.value = +elMaster.value; saveStateDebounced(); }, {passive:true});
-
-    // ---------- Presets ----------
-    const presets = {
-      calm(){
-        setAll({gain:0, mute:true});
-        setOne(432,{gain:.55, mute:false});
-        setOne(528,{gain:.55, mute:false});
-        elTau.value = 6; elTau.dispatchEvent(new Event("input"));
-      },
-      focus(){
-        setAll({gain:0, mute:true});
-        setOne(369,{gain:.65, mute:false});
-        elTau.value = 3; elTau.dispatchEvent(new Event("input"));
-      },
-      prayer(){
-        setAll({gain:0, mute:true});
-        setOne(144,{gain:.60, mute:false});
-        setOne(963,{gain:.40, mute:false});
-        elTau.value = 8; elTau.dispatchEvent(new Event("input"));
-      },
-      all(){
-        setAll({gain:.45, mute:false});
-        elTau.value = 4; elTau.dispatchEvent(new Event("input"));
-      },
-      mute(){
-        setAll({gain:0, mute:true});
-      }
-    };
-    document.addEventListener("click",(e)=>{
-      const b = e.target.closest("[data-preset]"); if(!b) return;
-      const k = b.dataset.preset; (presets[k]||(()=>{}))(); saveStateDebounced();
-    },{passive:true});
-
-    function setAll({gain, mute}){
-      nodes.forEach(n=>{
-        const box=$(`.ctl[data-carrier="${n.hz}"]`);
-        $('[data-role="gain"]',box).value = gain;
-        $('[data-role="mute"]',box).checked = !!mute;
-        n.muted=!!mute; n.gain.gain.value = mute?0:gain;
-      });
-    }
-    function setOne(hz,{gain, mute}){
-      const n=nodes.find(x=>x.hz===hz); if(!n) return;
-      const box=$(`.ctl[data-carrier="${n.hz}"]`);
-      if(gain!=null){ $('[data-role="gain"]',box).value = gain; if(!n.muted) n.gain.gain.value=gain; }
-      if(mute!=null){ $('[data-role="mute"]',box).checked=!!mute; n.muted=!!mute; n.gain.gain.value = mute?0:+$('[data-role="gain"]',box).value; }
-    }
-
-    // ---------- Phase utilities ----------
-    function alignPhases(){
-      // zero all manual phase offsets so vectors agree at t=now
-      nodes.forEach(n=>{
-        const ctl = $(`.ctl[data-carrier="${n.hz}"]`);
-        const ph = $('[data-role="phase"]', ctl);
-        ph.value = 0; n.phaseRad = 0;
-      });
-      saveStateDebounced();
-    }
-    function randomizePhases(){
-      nodes.forEach(n=>{
-        const ctl = $(`.ctl[data-carrier="${n.hz}"]`);
-        const ph = $('[data-role="phase"]', ctl);
-        const v = Math.floor(Math.random()*360);
-        ph.value = v; n.phaseRad = v*Math.PI/180;
-      });
-      saveStateDebounced();
-    }
-    elAlign.addEventListener("click", alignPhases);
-    elRandom.addEventListener("click", randomizePhases);
-
-    // ---------- Coherence / memory ----------
-    let freeze=false;
-    let xiMem=0, lastT=0;
-    const tmpVec = {re:0, im:0};
-    function instantXi(t){
-      // Vector-sum of active carriers at time t; weights = gains
-      let sumRe=0, sumIm=0, W=0, active=0;
-      nodes.forEach(n=>{
-        const g=n.gain.gain.value||0; if(g<=0) return;
-        active++;
-        const phase = TWO_PI*n.hz*t + n.phaseRad;
-        sumRe += g * Math.cos(phase);
-        sumIm += g * Math.sin(phase);
-        W     += g;
-      });
-      const mag = Math.sqrt(sumRe*sumRe + sumIm*sumIm);
-      const xi = W>0 ? (mag/W) : 0;
-      return {xi, active, sumRe, sumIm, W};
-    }
-
-    // heuristic “beat” ≈ min spacing of active neighboring carriers
-    function approxBeat(){
-      const act = nodes.filter(n=>n.gain.gain.value>0).map(n=>n.hz).sort((a,b)=>a-b);
-      if(act.length<2) return "—";
-      let min=Infinity;
-      for(let i=1;i<act.length;i++){ min=Math.min(min, act[i]-act[i-1]); }
-      return min.toFixed(2);
-    }
-
-    elTau.addEventListener("input",()=>{ elTauVal.textContent = (+elTau.value).toFixed(1); saveStateDebounced(); }, {passive:true});
-    elFreeze.addEventListener("click", ()=>freeze=!freeze);
-    elReset.addEventListener("click", ()=>{ xiMem=0; });
-
-    // ---------- Visualizers ----------
-    const kOsc = elOsc.getContext("2d");
-    const kRose= elRose.getContext("2d");
-    function drawOsc(buffer){
-      const W=elOsc.width, H=elOsc.height;
-      kOsc.clearRect(0,0,W,H);
-      // Grid
-      kOsc.strokeStyle = "#2a3242"; kOsc.lineWidth=1;
-      kOsc.beginPath(); kOsc.moveTo(0,H/2); kOsc.lineTo(W,H/2); kOsc.stroke();
-      // Wave
-      kOsc.strokeStyle="url(#rg)"; // won’t render; set solid
-      kOsc.strokeStyle="#a7b1ca";
-      kOsc.beginPath();
-      const n=buffer.length;
-      for(let i=0;i<n;i++){
-        const x=i/n*W, y=H/2 - buffer[i]*H*0.38;
-        if(i===0) kOsc.moveTo(x,y); else kOsc.lineTo(x,y);
-      }
-      kOsc.stroke();
-    }
-    function drawRose(vec){
-      const W=elRose.width, H=elRose.height, cx=W/2, cy=H/2, R=Math.min(W,H)/2 - 12;
-      kRose.clearRect(0,0,W,H);
-      // ring
-      kRose.strokeStyle="#2a3242"; kRose.lineWidth=1.2; kRose.beginPath(); kRose.arc(cx,cy,R,0,TWO_PI); kRose.stroke();
-      // vector
-      const mag = vec.W>0? Math.sqrt(vec.sumRe*vec.sumRe+vec.sumIm*vec.sumIm)/vec.W : 0;
-      const ang = Math.atan2(vec.sumIm, vec.sumRe);
-      const x = cx + Math.cos(ang)*R*mag, y = cy + Math.sin(ang)*R*mag;
-      kRose.strokeStyle="#7af3ff"; kRose.lineWidth=2.2;
-      kRose.beginPath(); kRose.moveTo(cx,cy); kRose.lineTo(x,y); kRose.stroke();
-      // tick
-      kRose.fillStyle="#7af3ff"; kRose.beginPath(); kRose.arc(x,y,3,0,TWO_PI); kRose.fill();
-      // label
-      kRose.fillStyle="#a7b1ca";
-      kRose.fillText("Ξ="+mag.toFixed(2), 10, 18);
-    }
-
-    // ---------- Render loop ----------
-    let rafId=0, lastFpsT=performance.now(), frameCount=0;
-    const oscBufLen=1024; // visual only
-    const oscBuf=new Float32Array(oscBufLen);
-
-    function loop(){
-      rafId = requestAnimationFrame(loop);
-      if(!ctx){ elXiFill.style.width="0%"; return; }
-      const t = ctx.currentTime;
-
-      // 1) Coherence
-      const v = instantXi(t);
-      const xi = v.xi;
-      if(!freeze){
-        const tau = +elTau.value;
-        const dt = Math.max(0.001, t-(lastT||t));
-        const alpha = tau>0 ? 1 - Math.exp(-dt/tau) : 1; // EMA from RC time
-        xiMem += alpha*(xi - xiMem);
-        lastT  = t;
-      }
-      elActive.textContent = String(v.active);
-      elBeat.textContent   = approxBeat();
-      elXiVal.textContent  = xi.toFixed(3);
-      elXiMem.textContent  = xiMem.toFixed(3);
-      elXiFill.style.width = (xi*100).toFixed(1)+"%";
-
-      // 2) Oscilloscope buffer = sum of active sines with current phases
-      for(let i=0;i<oscBufLen;i++){
-        const tt = t + i/ctx.sampleRate*256; // stretch visible period
-        let s=0, W=0;
-        nodes.forEach(n=>{
-          const g=n.gain.gain.value; if(g<=0) return;
-          s += g * Math.sin(TWO_PI*n.hz*tt + n.phaseRad); W += g;
-        });
-        oscBuf[i] = W>0 ? s/W : 0;
-      }
-      drawOsc(oscBuf);
-      drawRose(v);
-
-      // 3) FPS
-      frameCount++; const now=performance.now();
-      if(now - lastFpsT > 500){
-        const fps = (frameCount*1000/(now-lastFpsT))|0;
-        elFps.textContent = String(fps);
-        frameCount=0; lastFpsT=now;
-      }
-    }
-
-    // ---------- Start / Restore / Share ----------
-    elStart.addEventListener("click", async ()=>{
-      ensureAudio();
-      try{ await ctx.resume(); }catch(_){}
-      if(!rafId) loop();
-    });
-
-    // keyboard shortcuts
-    document.addEventListener("keydown",(e)=>{
-      if(/input|select|textarea/i.test(e.target.tagName)) return;
-      const k=e.key.toLowerCase();
-      if(k==="s"){ elStart.click(); }
-      if(k==="a"){ elAlign.click(); }
-      if(k==="r"){ elRandom.click(); }
-    });
-
-    // state encode/decode → URL
-    function encodeState(){
-      const st = {
-        m:+elMaster.value,
-        t:+elTau.value,
-        c:nodes.map(n=>{
-          const box=$(`.ctl[data-carrier="${n.hz}"]`);
-          return {
-            hz:n.hz,
-            g:+$('[data-role="gain"]',box).value,
-            p:+$('[data-role="pan"]',box).value,
-            ph:+$('[data-role="phase"]',box).value,
-            m:$('[data-role="mute"]',box).checked?1:0
-          };
-        })
+      const SEQUENCES = {
+        ascent: [
+          { 144: .55, 369: .15, 432: .25, 528: 0, 963: 0 },
+          { 144: .35, 369: .45, 432: .35, 528: 0, 963: 0 },
+          { 144: .20, 369: .35, 432: .45, 528: .35, 963: 0 },
+          { 144: .10, 369: .20, 432: .35, 528: .45, 963: .25 },
+          { 144: .05, 369: .10, 432: .28, 528: .40, 963: .42 }
+        ],
+        stabilize: [
+          { 144: .35, 369: 0, 432: .55, 528: .30, 963: 0 },
+          { 144: .30, 369: 0, 432: .60, 528: .34, 963: 0 },
+          { 144: .32, 369: 0, 432: .55, 528: .28, 963: 0 }
+        ],
+        remnant: [
+          { 144: .40, 369: .20, 432: .50, 528: .20, 963: 0 },
+          { 144: .30, 369: .38, 432: .44, 528: .28, 963: .10 },
+          { 144: .22, 369: .28, 432: .50, 528: .42, 963: .22 },
+          { 144: .18, 369: .18, 432: .42, 528: .36, 963: .36 },
+          { 144: .28, 369: .25, 432: .55, 528: .30, 963: .18 }
+        ]
       };
-      return btoa(unescape(encodeURIComponent(JSON.stringify(st))));
-    }
-    function decodeState(s){
-      try{
-        const st = JSON.parse(decodeURIComponent(escape(atob(s))));
-        if(st.m!=null){ elMaster.value=st.m; master && (master.gain.value=st.m); }
-        if(st.t!=null){ elTau.value=st.t; elTau.dispatchEvent(new Event("input")); }
-        if(Array.isArray(st.c)){
-          st.c.forEach(c=>{
-            const n=nodes.find(x=>x.hz===c.hz); if(!n) return;
-            const box=$(`.ctl[data-carrier="${n.hz}"]`);
-            $('[data-role="gain"]',box).value = c.g; if(!$('[data-role="mute"]',box).checked) n.gain.gain.value=c.g;
-            $('[data-role="pan"]',box).value  = c.p; n.pan.pan.value=c.p;
-            $('[data-role="phase"]',box).value= c.ph; n.phaseRad=c.ph*Math.PI/180;
-            const mu = !!c.m; $('[data-role="mute"]',box).checked = mu; n.muted=mu; n.gain.gain.value = mu?0:c.g;
+
+      const TWO_PI = Math.PI * 2;
+
+      let ac = null;
+      let master = null;
+      let limiter = null;
+      let mix = null;
+      let nodes = [];
+      let running = false;
+      let freeze = false;
+      let xiMem = 0;
+      let lastAudioT = 0;
+      let seqTimer = null;
+      let sessionTimer = null;
+      let sessionEnd = 0;
+      let phase = 0;
+      let rafStarted = false;
+      let lastFpsT = performance.now();
+      let frameCount = 0;
+
+      $("#yr").textContent = new Date().getFullYear();
+
+      function clamp(v, min, max) {
+        return Math.max(min, Math.min(max, Number(v) || min));
+      }
+
+      function log(msg) {
+        const el = $("#log");
+        const stamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        el.textContent += `\n[${stamp}] ${msg}`;
+        el.scrollTop = el.scrollHeight;
+      }
+
+      function toast(msg) {
+        const t = document.createElement("div");
+        t.textContent = msg;
+        Object.assign(t.style, {
+          position: "fixed",
+          left: "50%",
+          bottom: "22px",
+          transform: "translateX(-50%)",
+          zIndex: 9999,
+          padding: "9px 13px",
+          borderRadius: "12px",
+          border: "1px solid rgba(255,255,255,.16)",
+          background: "#0d121d",
+          color: "#e6f9ff",
+          boxShadow: "0 14px 40px rgba(0,0,0,.4)",
+          opacity: 0,
+          transition: "opacity .16s ease"
+        });
+        document.body.appendChild(t);
+        requestAnimationFrame(() => t.style.opacity = 1);
+        setTimeout(() => {
+          t.style.opacity = 0;
+          setTimeout(() => t.remove(), 220);
+        }, 1300);
+      }
+
+      function renderCarriers() {
+        $("#carrierGrid").innerHTML = CARRIERS.map(c => `
+          <article class="carrier" data-carrier="${c.hz}">
+            <div class="carrierHead">
+              <div>
+                <strong>${c.hz} Hz</strong>
+                <small>${c.name} · ${c.role}</small>
+              </div>
+              <button class="btn soloBtn" type="button">Solo</button>
+            </div>
+
+            <label>Gain
+              <input type="range" min="0" max="1" step="0.01" value="${c.gain}" data-role="gain">
+            </label>
+
+            <label>Pan
+              <input type="range" min="-1" max="1" step="0.01" value="0" data-role="pan">
+            </label>
+
+            <label>Phase
+              <input type="range" min="0" max="360" step="1" value="0" data-role="phase">
+            </label>
+
+            <div class="row" style="margin-top:8px">
+              <label style="display:inline-flex;align-items:center;gap:7px">
+                <input type="checkbox" data-role="mute"> Mute
+              </label>
+              <span class="spacer"></span>
+              <span class="pill mono" data-role="read">${c.gain.toFixed(2)}</span>
+            </div>
+          </article>
+        `).join("");
+      }
+
+      function ensureAudio() {
+        if (ac) return;
+
+        ac = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: "interactive" });
+
+        master = ac.createGain();
+        master.gain.value = clamp($("#masterGain").value, 0, 1);
+
+        limiter = ac.createDynamicsCompressor();
+        limiter.threshold.value = -10;
+        limiter.knee.value = 12;
+        limiter.ratio.value = 8;
+        limiter.attack.value = .004;
+        limiter.release.value = .22;
+
+        mix = ac.createGain();
+        mix.gain.value = .82;
+
+        mix.connect(limiter).connect(master).connect(ac.destination);
+
+        nodes = CARRIERS.map(c => {
+          const osc = ac.createOscillator();
+          const gain = ac.createGain();
+          const pan = ac.createStereoPanner ? ac.createStereoPanner() : null;
+          const box = $(`.carrier[data-carrier="${c.hz}"]`);
+
+          osc.type = $("#waveType").value;
+          osc.frequency.value = c.hz;
+          gain.gain.value = Number($('[data-role="gain"]', box).value);
+
+          if (pan) {
+            pan.pan.value = 0;
+            osc.connect(gain).connect(pan).connect(mix);
+          } else {
+            osc.connect(gain).connect(mix);
+          }
+
+          osc.start();
+
+          return {
+            hz: c.hz,
+            name: c.name,
+            osc,
+            gain,
+            pan,
+            phaseRad: 0,
+            muted: false
+          };
+        });
+
+        bindCarrierAudioControls();
+      }
+
+      function bindCarrierAudioControls() {
+        $$(".carrier").forEach(box => {
+          const hz = Number(box.dataset.carrier);
+          const n = nodes.find(x => x.hz === hz);
+          const gainEl = $('[data-role="gain"]', box);
+          const panEl = $('[data-role="pan"]', box);
+          const phaseEl = $('[data-role="phase"]', box);
+          const muteEl = $('[data-role="mute"]', box);
+          const readEl = $('[data-role="read"]', box);
+          const soloBtn = $(".soloBtn", box);
+
+          on(gainEl, "input", () => {
+            const val = Number(gainEl.value);
+            readEl.textContent = val.toFixed(2);
+            if (!muteEl.checked && n) smoothGain(n, val);
+            saveStateDebounced();
+          }, { passive: true });
+
+          on(panEl, "input", () => {
+            if (n && n.pan) n.pan.pan.setTargetAtTime(Number(panEl.value), ac.currentTime, .04);
+            saveStateDebounced();
+          }, { passive: true });
+
+          on(phaseEl, "input", () => {
+            if (n) n.phaseRad = Number(phaseEl.value) * Math.PI / 180;
+            saveStateDebounced();
+          }, { passive: true });
+
+          on(muteEl, "change", () => {
+            if (!n) return;
+            n.muted = muteEl.checked;
+            smoothGain(n, muteEl.checked ? 0 : Number(gainEl.value));
+            saveStateDebounced();
           });
+
+          on(soloBtn, "click", () => soloCarrier(hz));
+        });
+      }
+
+      function smoothGain(node, value, speed = .08) {
+        if (!ac || !node) return;
+        const now = ac.currentTime;
+        node.gain.gain.cancelScheduledValues(now);
+        node.gain.gain.setTargetAtTime(clamp(value, 0, 1), now, speed);
+      }
+
+      function setCarrierGain(hz, value) {
+        const box = $(`.carrier[data-carrier="${hz}"]`);
+        const n = nodes.find(x => x.hz === hz);
+        if (!box || !n) return;
+        $('[data-role="gain"]', box).value = value;
+        $('[data-role="read"]', box).textContent = Number(value).toFixed(2);
+        $('[data-role="mute"]', box).checked = value <= 0;
+        n.muted = value <= 0;
+        smoothGain(n, value);
+      }
+
+      function soloCarrier(hz) {
+        const activeBox = $(`.carrier[data-carrier="${hz}"]`);
+        const alreadySolo = activeBox.classList.contains("is-solo");
+
+        $$(".carrier").forEach(b => b.classList.remove("is-solo"));
+
+        if (alreadySolo) {
+          CARRIERS.forEach(c => {
+            const box = $(`.carrier[data-carrier="${c.hz}"]`);
+            const gain = Number($('[data-role="gain"]', box).value);
+            const mute = $('[data-role="mute"]', box).checked;
+            const n = nodes.find(x => x.hz === c.hz);
+            smoothGain(n, mute ? 0 : gain);
+          });
+          log("Solo cleared.");
+          return;
         }
-      }catch(err){ console.warn("Bad state:", err); }
-    }
-    function setHashFromState(){ history.replaceState(null,"", location.pathname+"#"+encodeState()); }
-    function getStateFromHash(){ return location.hash.length>1 ? location.hash.slice(1) : ""; }
-    const saveStateDebounced = debounce(setHashFromState, 250);
 
-    shareBtn.addEventListener("click", ()=>{
-      setHashFromState();
-      const url = location.href;
-      navigator.clipboard?.writeText(url).catch(()=>{});
-      toast("State URL copied");
-    });
-    restoreBtn.addEventListener("click", ()=>{
-      const s = getStateFromHash(); if(!s){ toast("No state in URL"); return; }
-      decodeState(s); toast("State restored");
-    });
+        activeBox.classList.add("is-solo");
+        nodes.forEach(n => {
+          const box = $(`.carrier[data-carrier="${n.hz}"]`);
+          const gain = Number($('[data-role="gain"]', box).value);
+          smoothGain(n, n.hz === hz ? gain : 0);
+        });
+        log(`Solo carrier: ${hz} Hz.`);
+      }
 
-    function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
-    function toast(msg){
-      const t=document.createElement("div");
-      t.className="toast";
-      Object.assign(t.style,{position:"fixed",left:"50%",bottom:"20px",transform:"translateX(-50%)",
-        background:"#0e131c",color:"#e6f9ff",padding:"8px 12px",border:"1px solid var(--line)",borderRadius:"10px",
-        boxShadow:"0 10px 28px rgba(0,0,0,.35)",zIndex:"9999",opacity:"0",transition:"opacity .15s"});
-      t.textContent=msg; document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1);
-      setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),250); }, 1300);
-    }
+      function startAudio() {
+        ensureAudio();
+        ac.resume();
+        running = true;
+        $("#startBtn").textContent = "Audio Active";
+        $("#startBtn").disabled = true;
+        if (!rafStarted) loop();
+        log("Audio started.");
+      }
 
-    // ---------- Boot ----------
-    ensureAudio(); uiBindCarriers();
-    // Restore from URL if present (before user starts audio, just sets knobs)
-    const hs = getStateFromHash(); if(hs) decodeState(hs);
-    // Start loop visually even if audio not started (shows meters at 0)
-    loop();
+      function stopAudio() {
+        if (!ac) return;
+        nodes.forEach(n => smoothGain(n, 0, .05));
+        running = false;
+        $("#startBtn").textContent = "Start Audio";
+        $("#startBtn").disabled = false;
+        stopSequence();
+        stopSession();
+        log("Audio stopped.");
+      }
 
-  })();
+      function alignPhases() {
+        nodes.forEach(n => {
+          n.phaseRad = 0;
+          const box = $(`.carrier[data-carrier="${n.hz}"]`);
+          if (box) $('[data-role="phase"]', box).value = 0;
+        });
+        log("Phases aligned.");
+        saveStateDebounced();
+      }
+
+      function randomizePhases() {
+        nodes.forEach(n => {
+          const deg = Math.floor(Math.random() * 360);
+          n.phaseRad = deg * Math.PI / 180;
+          const box = $(`.carrier[data-carrier="${n.hz}"]`);
+          if (box) $('[data-role="phase"]', box).value = deg;
+        });
+        log("Field randomized.");
+        saveStateDebounced();
+      }
+
+      function applyPreset(name) {
+        ensureAudio();
+
+        const maps = {
+          calm: { tau: 6, motion: "orbital", gains: { 432: .55, 528: .42, 369: 0, 144: .20, 963: 0 } },
+          focus: { tau: 3, motion: "mirror", gains: { 432: .25, 528: .18, 369: .65, 144: .15, 963: 0 } },
+          prayer: { tau: 8, motion: "spiral", gains: { 432: .35, 528: .20, 369: 0, 144: .55, 963: .38 } },
+          mirror: { tau: 5, motion: "mirror", gains: { 432: .48, 528: .30, 369: .30, 144: .24, 963: .24 } },
+          t7: { tau: 4, motion: "spiral", gains: { 432: .46, 528: .42, 369: .38, 144: .32, 963: .22 } },
+          mute: { tau: 4, motion: "orbital", gains: { 432: 0, 528: 0, 369: 0, 144: 0, 963: 0 } }
+        };
+
+        const p = maps[name] || maps.t7;
+        $("#tau").value = p.tau;
+        $("#tauVal").textContent = Number(p.tau).toFixed(1) + "s";
+        $("#motionMode").value = p.motion;
+
+        Object.entries(p.gains).forEach(([hz, gain]) => setCarrierGain(Number(hz), gain));
+
+        $$(".presetBtn").forEach(b => b.classList.toggle("active", b.dataset.preset === name));
+        log(`Preset loaded: ${name}.`);
+        saveStateDebounced();
+      }
+
+      function instantXi(t) {
+        if (!nodes.length) return { xi: 0, active: 0, sumRe: 0, sumIm: 0, W: 0 };
+
+        let sumRe = 0;
+        let sumIm = 0;
+        let W = 0;
+        let active = 0;
+
+        nodes.forEach(n => {
+          const g = n.gain.gain.value || 0;
+          if (g <= .001) return;
+
+          active++;
+          const ph = TWO_PI * n.hz * t + n.phaseRad;
+          sumRe += g * Math.cos(ph);
+          sumIm += g * Math.sin(ph);
+          W += g;
+        });
+
+        const mag = Math.sqrt(sumRe * sumRe + sumIm * sumIm);
+        const xi = W > 0 ? mag / W : 0;
+
+        return { xi, active, sumRe, sumIm, W };
+      }
+
+      function approxBeat() {
+        if (!nodes.length) return "—";
+        const active = nodes
+          .filter(n => n.gain.gain.value > .01)
+          .map(n => n.hz)
+          .sort((a,b) => a - b);
+
+        if (active.length < 2) return "—";
+
+        let min = Infinity;
+        for (let i = 1; i < active.length; i++) min = Math.min(min, active[i] - active[i - 1]);
+        return min.toFixed(2);
+      }
+
+      function stopSequence() {
+        clearInterval(seqTimer);
+        seqTimer = null;
+        $("#seqStatus").value = "stopped";
+      }
+
+      function runSequence(name) {
+        ensureAudio();
+        startAudio();
+
+        const seq = SEQUENCES[name] || SEQUENCES.remnant;
+        const seconds = clamp($("#seqSeconds").value, 2, 90);
+        let i = 0;
+
+        stopSequence();
+
+        function step() {
+          const map = seq[i % seq.length];
+          Object.entries(map).forEach(([hz, gain]) => setCarrierGain(Number(hz), gain));
+          $("#seqStatus").value = `${name} · step ${(i % seq.length) + 1}/${seq.length}`;
+          i++;
+        }
+
+        step();
+        seqTimer = setInterval(step, seconds * 1000);
+        log(`Sequence started: ${name}.`);
+      }
+
+      function stopSession() {
+        clearInterval(sessionTimer);
+        sessionTimer = null;
+        sessionEnd = 0;
+        $("#timerBtn").textContent = "Start Session";
+      }
+
+      function startSession() {
+        startAudio();
+
+        const mins = clamp($("#sessionMinutes").value, 1, 120);
+        sessionEnd = Date.now() + mins * 60 * 1000;
+
+        clearInterval(sessionTimer);
+        sessionTimer = setInterval(() => {
+          const left = Math.max(0, sessionEnd - Date.now());
+          const m = Math.floor(left / 60000);
+          const s = Math.floor((left % 60000) / 1000);
+          $("#timerBtn").textContent = `${m}:${String(s).padStart(2, "0")} left`;
+
+          if (left <= 0) {
+            stopSession();
+            stopAudio();
+            log("Session complete.");
+          }
+        }, 500);
+
+        log(`Session started: ${mins} minute(s).`);
+      }
+
+      function syncUI(v) {
+        $("#xiVal").textContent = v.xi.toFixed(3);
+        $("#xiMem").textContent = xiMem.toFixed(3);
+        $("#activeVal").textContent = String(v.active);
+        $("#xiFill").style.width = (v.xi * 100).toFixed(1) + "%";
+        $("#beatVal").textContent = approxBeat();
+        $("#tauVal").textContent = Number($("#tau").value).toFixed(1) + "s";
+      }
+
+      function drawField(v) {
+        const canvas = $("#field");
+        const ctx = canvas.getContext("2d");
+        const w = canvas.width;
+        const h = canvas.height;
+        const cx = w / 2;
+        const cy = h / 2;
+        const visual = clamp($("#visualPower").value, 20, 240) / 100;
+        const mode = $("#motionMode").value;
+        const push = Math.max(.2, v.xi * visual);
+        const n = Math.round(300 * visual);
+        const baseR = Math.min(w, h) * (.18 + .18 * xiMem);
+
+        ctx.fillStyle = "rgba(5,7,13,.085)";
+        ctx.fillRect(0, 0, w, h);
+
+        const glow = ctx.createRadialGradient(cx, cy, 3, cx, cy, Math.min(w,h) * (.55 + push * .18));
+        glow.addColorStop(0, `rgba(122,243,255,${.15 + v.xi * .22})`);
+        glow.addColorStop(.38, `rgba(196,163,255,${.08 + xiMem * .18})`);
+        glow.addColorStop(.65, `rgba(243,201,122,${.06 + v.xi * .12})`);
+        glow.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(cx, cy, Math.min(w,h) * .68, 0, TWO_PI);
+        ctx.fill();
+
+        for (let ring = 0; ring < 4; ring++) {
+          ctx.strokeStyle = `rgba(122,243,255,${.08 + ring * .025 + xiMem * .05})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(cx, cy, baseR * (.7 + ring * .34), 0, TWO_PI);
+          ctx.stroke();
+        }
+
+        for (let i = 0; i < n; i++) {
+          const t = i / n;
+          let a = t * TWO_PI + phase * .007;
+          let r = baseR * (1 + .45 * Math.sin(i * .06 + phase * .02 + v.xi * 8));
+
+          if (mode === "spiral") {
+            r *= .55 + t * 1.35;
+            a += t * 5.6;
+          }
+
+          let x = cx + Math.cos(a) * r;
+          let y = cy + Math.sin(a * (mode === "mirror" ? 1.18 : 1)) * r * .72;
+
+          if (mode === "mirror") {
+            x += Math.sin(phase * .014 + i * .04) * 12 * push;
+          }
+
+          const shade = i % 3;
+          ctx.fillStyle = shade === 0
+            ? `rgba(122,243,255,${.38 + push * .28})`
+            : shade === 1
+              ? `rgba(196,163,255,${.28 + push * .24})`
+              : `rgba(243,201,122,${.34 + push * .25})`;
+
+          ctx.beginPath();
+          ctx.arc(x, y, 1.15 + push * 2.2, 0, TWO_PI);
+          ctx.fill();
+
+          if (mode === "mirror") {
+            ctx.beginPath();
+            ctx.arc(w - x, y, 1.15 + push * 2.2, 0, TWO_PI);
+            ctx.fill();
+          }
+        }
+
+        ctx.fillStyle = "rgba(244,241,232,.92)";
+        ctx.font = "800 14px Inter, system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(running ? "T-7 FIELD ACTIVE" : "T-7 FIELD STANDBY", cx, 26);
+
+        phase += .9;
+      }
+
+      function drawScope() {
+        const canvas = $("#scope");
+        const ctx = canvas.getContext("2d");
+        const w = canvas.width;
+        const h = canvas.height;
+
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = "rgba(5,7,13,.92)";
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.strokeStyle = "rgba(255,255,255,.12)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, h / 2);
+        ctx.lineTo(w, h / 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = "rgba(122,243,255,.82)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+
+        const t0 = ac ? ac.currentTime : performance.now() / 1000;
+        for (let i = 0; i < w; i++) {
+          const t = t0 + i / w * .02;
+          let s = 0;
+          let W = 0;
+
+          nodes.forEach(n => {
+            const g = n.gain?.gain?.value || 0;
+            if (g <= .001) return;
+            s += g * Math.sin(TWO_PI * n.hz * t + n.phaseRad);
+            W += g;
+          });
+
+          const y = h / 2 - (W > 0 ? s / W : 0) * h * .38;
+          if (i === 0) ctx.moveTo(i, y);
+          else ctx.lineTo(i, y);
+        }
+
+        ctx.stroke();
+      }
+
+      function drawRose(v) {
+        const canvas = $("#rose");
+        const ctx = canvas.getContext("2d");
+        const w = canvas.width;
+        const h = canvas.height;
+        const cx = w / 2;
+        const cy = h / 2;
+        const R = Math.min(w,h) * .38;
+
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = "rgba(5,7,13,.92)";
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.strokeStyle = "rgba(255,255,255,.16)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, 0, TWO_PI);
+        ctx.stroke();
+
+        nodes.forEach(n => {
+          const g = n.gain?.gain?.value || 0;
+          if (g <= .001) return;
+
+          const t = ac ? ac.currentTime : performance.now() / 1000;
+          const a = TWO_PI * n.hz * t + n.phaseRad;
+          const rr = R * clamp(g, 0, 1);
+          const x = cx + Math.cos(a) * rr;
+          const y = cy + Math.sin(a) * rr;
+
+          ctx.strokeStyle = "rgba(243,201,122,.55)";
+          ctx.beginPath();
+          ctx.moveTo(cx, cy);
+          ctx.lineTo(x, y);
+          ctx.stroke();
+
+          ctx.fillStyle = "rgba(122,243,255,.95)";
+          ctx.beginPath();
+          ctx.arc(x, y, 3, 0, TWO_PI);
+          ctx.fill();
+        });
+
+        const mag = v.W > 0 ? Math.sqrt(v.sumRe * v.sumRe + v.sumIm * v.sumIm) / v.W : 0;
+        const a = Math.atan2(v.sumIm, v.sumRe);
+        const x = cx + Math.cos(a) * R * mag;
+        const y = cy + Math.sin(a) * R * mag;
+
+        ctx.strokeStyle = "rgba(122,243,255,.95)";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+
+        ctx.fillStyle = "rgba(244,241,232,.92)";
+        ctx.font = "800 13px Inter, system-ui, sans-serif";
+        ctx.fillText("Phase Rose / Ξ Vector", 14, 22);
+      }
+
+      function loop() {
+        rafStarted = true;
+        requestAnimationFrame(loop);
+
+        const t = ac ? ac.currentTime : performance.now() / 1000;
+        const v = ac ? instantXi(t) : { xi: 0, active: 0, sumRe: 0, sumIm: 0, W: 0 };
+
+        if (!freeze) {
+          const tau = clamp($("#tau").value, 0, 12);
+          const dt = Math.max(.001, t - (lastAudioT || t));
+          const alpha = tau > 0 ? 1 - Math.exp(-dt / tau) : 1;
+          xiMem += alpha * (v.xi - xiMem);
+          lastAudioT = t;
+        }
+
+        syncUI(v);
+        drawField(v);
+        drawScope();
+        drawRose(v);
+
+        frameCount++;
+        const now = performance.now();
+        if (now - lastFpsT > 600) {
+          $("#fps").textContent = String(Math.round(frameCount * 1000 / (now - lastFpsT)));
+          frameCount = 0;
+          lastFpsT = now;
+        }
+      }
+
+      function encodeState() {
+        const st = {
+          master: $("#masterGain").value,
+          tau: $("#tau").value,
+          visual: $("#visualPower").value,
+          wave: $("#waveType").value,
+          motion: $("#motionMode").value,
+          carriers: CARRIERS.map(c => {
+            const box = $(`.carrier[data-carrier="${c.hz}"]`);
+            return {
+              hz: c.hz,
+              gain: $('[data-role="gain"]', box).value,
+              pan: $('[data-role="pan"]', box).value,
+              phase: $('[data-role="phase"]', box).value,
+              mute: $('[data-role="mute"]', box).checked
+            };
+          })
+        };
+        return btoa(unescape(encodeURIComponent(JSON.stringify(st))));
+      }
+
+      function decodeState(s) {
+        try {
+          const st = JSON.parse(decodeURIComponent(escape(atob(s))));
+
+          $("#masterGain").value = st.master ?? .34;
+          $("#tau").value = st.tau ?? 4;
+          $("#visualPower").value = st.visual ?? 125;
+          $("#waveType").value = st.wave ?? "sine";
+          $("#motionMode").value = st.motion ?? "orbital";
+
+          if (master) master.gain.value = Number($("#masterGain").value);
+          if (nodes.length) nodes.forEach(n => n.osc.type = $("#waveType").value);
+
+          if (Array.isArray(st.carriers)) {
+            st.carriers.forEach(c => {
+              const box = $(`.carrier[data-carrier="${c.hz}"]`);
+              const n = nodes.find(x => x.hz === c.hz);
+              if (!box) return;
+
+              $('[data-role="gain"]', box).value = c.gain;
+              $('[data-role="read"]', box).textContent = Number(c.gain).toFixed(2);
+              $('[data-role="pan"]', box).value = c.pan;
+              $('[data-role="phase"]', box).value = c.phase;
+              $('[data-role="mute"]', box).checked = !!c.mute;
+
+              if (n) {
+                n.phaseRad = Number(c.phase) * Math.PI / 180;
+                n.muted = !!c.mute;
+                smoothGain(n, c.mute ? 0 : Number(c.gain));
+                if (n.pan) n.pan.pan.value = Number(c.pan);
+              }
+            });
+          }
+
+          log("State restored.");
+        } catch {
+          log("State restore failed.");
+        }
+      }
+
+      const saveStateDebounced = debounce(() => {
+        try {
+          localStorage.setItem("sof_t7_engine_state_v1", encodeState());
+        } catch {}
+      }, 220);
+
+      function debounce(fn, ms) {
+        let t;
+        return (...args) => {
+          clearTimeout(t);
+          t = setTimeout(() => fn(...args), ms);
+        };
+      }
+
+      on($("#startBtn"), "click", startAudio);
+      on($("#stopBtn"), "click", stopAudio);
+      on($("#alignBtn"), "click", alignPhases);
+      on($("#randomizeBtn"), "click", randomizePhases);
+
+      on($("#freezeBtn"), "click", () => {
+        freeze = !freeze;
+        $("#freezeBtn").classList.toggle("active", freeze);
+        log(freeze ? "Memory frozen." : "Memory resumed.");
+      });
+
+      on($("#resetBtn"), "click", () => {
+        xiMem = 0;
+        log("Memory reset.");
+      });
+
+      on($("#masterGain"), "input", () => {
+        if (master && ac) master.gain.setTargetAtTime(Number($("#masterGain").value), ac.currentTime, .05);
+        saveStateDebounced();
+      });
+
+      on($("#tau"), "input", () => {
+        $("#tauVal").textContent = Number($("#tau").value).toFixed(1) + "s";
+        saveStateDebounced();
+      });
+
+      on($("#visualPower"), "input", saveStateDebounced);
+
+      on($("#waveType"), "change", () => {
+        if (nodes.length) nodes.forEach(n => n.osc.type = $("#waveType").value);
+        saveStateDebounced();
+      });
+
+      on($("#motionMode"), "change", saveStateDebounced);
+
+      on($("#timerBtn"), "click", () => {
+        if (sessionTimer) {
+          stopSession();
+          log("Session stopped.");
+        } else {
+          startSession();
+        }
+      });
+
+      $$(".presetBtn").forEach(btn => {
+        on(btn, "click", () => applyPreset(btn.dataset.preset));
+      });
+
+      $$(".seqBtn").forEach(btn => {
+        on(btn, "click", () => runSequence(btn.dataset.seq));
+      });
+
+      on($("#stopSeq"), "click", () => {
+        stopSequence();
+        log("Sequence stopped.");
+      });
+
+      on($("#shareBtn"), "click", async () => {
+        const hash = encodeState();
+        const url = location.origin + location.pathname + "#" + hash;
+        history.replaceState(null, "", location.pathname + "#" + hash);
+        try {
+          await navigator.clipboard.writeText(url);
+          toast("State URL copied");
+        } catch {
+          toast("URL updated");
+        }
+      });
+
+      on($("#restoreBtn"), "click", () => {
+        const hash = location.hash.slice(1);
+        if (!hash) {
+          toast("No state in URL");
+          return;
+        }
+        ensureAudio();
+        decodeState(hash);
+      });
+
+      on($("#saveBtn"), "click", () => {
+        localStorage.setItem("sof_t7_engine_state_v1", encodeState());
+        toast("Local state saved");
+        log("Local state saved.");
+      });
+
+      on($("#loadBtn"), "click", () => {
+        const saved = localStorage.getItem("sof_t7_engine_state_v1");
+        if (!saved) {
+          toast("No saved state");
+          return;
+        }
+        ensureAudio();
+        decodeState(saved);
+        toast("Local state loaded");
+      });
+
+      document.addEventListener("keydown", e => {
+        if (/input|select|textarea/i.test(e.target.tagName)) return;
+
+        const key = e.key.toLowerCase();
+
+        if (key === "s") startAudio();
+        if (key === "a") alignPhases();
+        if (key === "r") randomizePhases();
+        if (e.key === "Escape") stopAudio();
+      });
+
+      renderCarriers();
+
+      const hash = location.hash.slice(1);
+      if (hash) {
+        ensureAudio();
+        decodeState(hash);
+      }
+
+      loop();
+    })();
   </script>
 </body>
-</html>
+  </html>
