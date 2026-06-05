@@ -1,4 +1,6 @@
-/* Scroll of Fire — Remnant 13 Moons CSS */
+/* Scroll of Fire — Remnant 13 Moons CSS
+   Mobile-fixed calendar grid + subtle living animations
+*/
 
 *,
 *::before,
@@ -8,9 +10,9 @@
 
 :root {
   --bg: #05070d;
-  --card: rgba(16, 20, 29, 0.88);
-  --card-2: rgba(10, 14, 22, 0.94);
-  --line: rgba(255, 255, 255, 0.145);
+  --card: rgba(14, 18, 28, 0.86);
+  --card2: rgba(9, 13, 21, 0.94);
+  --line: rgba(255,255,255,.14);
   --ink: #f4f1e8;
   --muted: #aeb7c8;
   --accent: #7af3ff;
@@ -19,7 +21,7 @@
   --green: #9ff7c8;
   --danger: #ff9aaa;
   --radius: 20px;
-  --shadow: 0 18px 50px rgba(0, 0, 0, 0.34);
+  --shadow: 0 18px 55px rgba(0,0,0,.34);
 }
 
 html,
@@ -33,29 +35,10 @@ body {
 body {
   color: var(--ink);
   background:
-    radial-gradient(1000px 620px at 50% -10%, rgba(122, 243, 255, 0.13), transparent 70%),
-    radial-gradient(860px 620px at 92% 16%, rgba(243, 201, 122, 0.10), transparent 72%),
-    radial-gradient(780px 560px at 8% 45%, rgba(196, 163, 255, 0.08), transparent 72%),
-    linear-gradient(180deg, #05070d, #090d14 74%, #05070d);
-  font: 400 16px/1.6 Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: inherit;
-  text-underline-offset: 4px;
-}
-
-button,
-input,
-select,
-textarea {
-  font: inherit;
-}
-
-img,
-svg,
-canvas {
-  max-width: 100%;
+    radial-gradient(900px 620px at 50% -8%, rgba(122,243,255,.12), transparent 70%),
+    radial-gradient(760px 560px at 90% 18%, rgba(243,201,122,.09), transparent 72%),
+    linear-gradient(180deg, #05070d, #090d14 75%, #05070d);
+  font: 400 16px/1.6 Inter, system-ui, -apple-system, Segoe UI, sans-serif;
 }
 
 #skyBg {
@@ -65,7 +48,7 @@ canvas {
   height: 100vh;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.68;
+  opacity: .6;
 }
 
 .wrap,
@@ -77,7 +60,7 @@ canvas {
 }
 
 .wrap {
-  padding: clamp(16px, 4vw, 40px) 0 56px;
+  padding: 22px 0 56px;
 }
 
 .footer {
@@ -85,17 +68,62 @@ canvas {
   color: var(--muted);
 }
 
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 .65rem;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+}
+
+h1 {
+  font-size: clamp(2.4rem, 9vw, 5.4rem);
+  background: linear-gradient(180deg, #fff, #d8f9ff 52%, var(--gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+h2 {
+  font-size: clamp(1.45rem, 5.8vw, 2.35rem);
+}
+
+h3 {
+  color: var(--gold);
+}
+
+p {
+  margin: .45rem 0 1rem;
+}
+
+img,
+svg,
+canvas {
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
 .page-head,
 .card,
-.mini,
-.log-card,
+.notice,
+.savedEntry,
 .hum-card,
-.day-card,
-.savedEntry {
-  background: linear-gradient(180deg, var(--card), var(--card-2));
+.log-card,
+.day-card {
+  background: linear-gradient(180deg, var(--card), var(--card2));
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.04);
   padding: clamp(18px, 4vw, 26px);
   overflow: hidden;
 }
@@ -105,69 +133,111 @@ canvas {
 }
 
 .card,
-.mini,
-.log-card,
-.hum-card,
-.day-card,
-.savedEntry {
+.notice {
   margin-top: 16px;
 }
 
-h1,
-h2,
-h3 {
-  line-height: 1.08;
-  margin: 0 0 0.65rem;
-  letter-spacing: -0.035em;
+.subtitle,
+.meta,
+.fine,
+.hint {
+  color: var(--muted);
 }
 
-h1 {
-  font-size: clamp(2.4rem, 9vw, 5.4rem);
-  background: linear-gradient(180deg, #fff, #d8f9ff 52%, #f3c97a);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-h2 {
-  font-size: clamp(1.45rem, 5.8vw, 2.25rem);
-}
-
-h3 {
-  color: var(--gold);
-}
-
-p {
-  margin: 0.45rem 0 1rem;
+.subtitle {
+  max-width: 930px;
 }
 
 .eyebrow {
   margin: 0 0 10px;
   color: var(--gold);
-  letter-spacing: 0.18em;
+  letter-spacing: .18em;
   text-transform: uppercase;
-  font-size: 0.76rem;
+  font-size: .76rem;
   font-weight: 900;
 }
 
-.subtitle,
-.meta,
-.hint,
-.fine {
-  color: var(--muted);
+.crumbs,
+.btnrow,
+.tabs,
+.row,
+.formrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
 }
 
-.meta,
-.hint,
-.fine {
-  font-size: 0.92rem;
+.crumbs {
+  margin-bottom: 18px;
+}
+
+.lab-btn,
+.tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: .68rem .95rem;
+  color: var(--ink);
+  background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.026));
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 850;
+  transition: .18s ease;
+}
+
+.lab-btn:hover,
+.lab-btn:focus-visible,
+.tab:hover,
+.tab:focus-visible {
+  border-color: rgba(122,243,255,.58);
+  background: rgba(122,243,255,.09);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.lab-btn.ghost {
+  background: rgba(255,255,255,.025);
+}
+
+.lab-btn.danger {
+  border-color: rgba(255,127,145,.55);
+}
+
+.lab-btn.green {
+  border-color: rgba(159,247,200,.55);
+}
+
+.tab.active,
+.lab-btn.active,
+.active {
+  border-color: rgba(243,201,122,.88);
+  background: rgba(243,201,122,.12);
+  color: #ffe3a3;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .42rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .42rem .7rem;
+  color: var(--muted);
+  background: rgba(255,255,255,.04);
+  font-size: .86rem;
+  font-weight: 850;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 16px;
+  gap: 14px;
   align-items: start;
+  margin-top: 14px;
 }
 
 .col-3 { grid-column: span 3; }
@@ -179,118 +249,24 @@ p {
 .col-9 { grid-column: span 9; }
 .col-12 { grid-column: span 12; }
 
-.crumbs,
-.btnrow,
-.chiprow,
-.formrow,
-.tabs,
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-
-.crumbs {
-  margin-bottom: 18px;
-}
-
-.hero-sigil {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.55rem;
-  margin: 1.1rem auto;
-  color: var(--gold);
-  letter-spacing: 0.12em;
-  font-weight: 900;
-  text-shadow: 0 0 18px rgba(243, 201, 122, 0.45);
-}
-
-.notice {
-  margin-top: 18px;
-  border: 1px solid rgba(243, 201, 122, 0.30);
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(243, 201, 122, 0.10), rgba(243, 201, 122, 0.035));
-  color: #ffe7ad;
-  padding: 14px 16px;
-}
-
-.lab-btn,
-.tab {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  text-decoration: none;
-  cursor: pointer;
-  background: linear-gradient(180deg, #131b2b, #101521);
-  color: var(--ink);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 0.66rem 0.92rem;
-  font-weight: 850;
-  transition: 0.18s ease;
-}
-
-.lab-btn:hover,
-.lab-btn:focus-visible,
-.tab:hover,
-.tab:focus-visible {
-  border-color: rgba(122, 243, 255, 0.58);
-  background: rgba(122, 243, 255, 0.09);
-  outline: none;
-  transform: translateY(-1px);
-}
-
-.lab-btn.ghost {
-  background: rgba(11, 14, 22, 0.5);
-}
-
-.lab-btn.green {
-  border-color: rgba(159, 247, 200, 0.55);
-}
-
-.lab-btn.danger {
-  border-color: rgba(255, 127, 145, 0.55);
-}
-
-.active,
-.tab.active {
-  border-color: rgba(243, 201, 122, 0.88);
-  background: rgba(243, 201, 122, 0.12);
-  color: #ffe3a3;
-}
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.42rem;
-  font-weight: 850;
-  padding: 0.42rem 0.7rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: linear-gradient(180deg, #101620, #0c1018);
-  color: var(--muted);
-}
-
 label {
   display: block;
   color: var(--muted);
+  font-size: .92rem;
   font-weight: 750;
 }
 
-.lab-input,
 input,
 select,
-textarea {
+textarea,
+.lab-input {
   width: 100%;
   margin-top: 6px;
-  background: rgba(5, 8, 14, 0.84);
-  color: var(--ink);
   border: 1px solid var(--line);
   border-radius: 13px;
-  padding: 0.72rem 0.8rem;
+  padding: .72rem .8rem;
+  background: rgba(5,8,14,.86);
+  color: var(--ink);
 }
 
 textarea {
@@ -304,7 +280,7 @@ textarea {
 .hum-grid,
 .practice-grid {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   margin-top: 12px;
 }
 
@@ -330,29 +306,50 @@ textarea {
   display: block;
 }
 
-/* Moon badge */
+/* Moon hero */
+.hero-sigil {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .55rem;
+  margin: 1.1rem auto;
+  color: var(--gold);
+  letter-spacing: .12em;
+  text-shadow: 0 0 18px rgba(243,201,122,.45);
+}
+
+.notice {
+  border-color: rgba(243,201,122,.3);
+  background: linear-gradient(180deg, rgba(243,201,122,.1), rgba(243,201,122,.035));
+  color: #ffe7ad;
+}
 
 .moon-badge {
+  position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
   gap: clamp(1rem, 4vw, 2rem);
+  align-items: center;
 }
 
-.moon-badge-copy {
-  min-width: 0;
-}
-
-#moonName,
-.moon-badge-copy h2 {
-  overflow-wrap: anywhere;
+.moon-badge::before {
+  content: "";
+  position: absolute;
+  inset: -28%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(122,243,255,.10), transparent 38%),
+    radial-gradient(circle at 70% 60%, rgba(243,201,122,.09), transparent 42%);
+  opacity: .65;
+  filter: blur(18px);
+  animation: moonAura 9s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .ring {
   position: relative;
-  width: clamp(150px, 38vw, 210px);
-  height: clamp(150px, 38vw, 210px);
-  flex: 0 0 auto;
+  width: clamp(155px, 32vw, 220px);
+  height: clamp(155px, 32vw, 220px);
   display: grid;
   place-items: center;
   overflow: visible;
@@ -367,27 +364,29 @@ textarea {
 
 .ring-bg {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.09);
+  stroke: rgba(255,255,255,.10);
   stroke-width: 10;
 }
 
 .ring-fg {
   fill: none;
-  stroke-linecap: round;
   stroke: var(--gold);
   stroke-width: 10;
+  stroke-linecap: round;
   stroke-dasharray: 314;
   stroke-dashoffset: 314;
-  filter: drop-shadow(0 0 14px rgba(243, 201, 122, 0.55));
+  filter: drop-shadow(0 0 14px rgba(243,201,122,.5));
+  animation: ringPulse 5.5s ease-in-out infinite;
 }
 
-.ring .label {
+.ring .label,
+.label {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.18em;
+  gap: .18em;
   line-height: 1;
   text-align: center;
   pointer-events: none;
@@ -395,61 +394,59 @@ textarea {
   z-index: 2;
 }
 
-.ring .label .big,
+.label .big,
 #dayInMoon.big {
-  display: inline-block;
-  font-size: clamp(2.25rem, 9vw, 4.1rem);
+  font-size: clamp(2.5rem, 9vw, 4.2rem);
   font-weight: 950;
-  letter-spacing: -0.06em;
-  line-height: 1;
   color: var(--gold);
+  letter-spacing: -0.07em;
 }
 
-.ring .label .small,
+.label .small,
 #moonLength.small {
-  display: inline-block;
-  margin-top: 0.42em;
-  font-size: clamp(0.9rem, 3.3vw, 1.35rem);
+  margin-top: .42em;
+  font-size: clamp(.95rem, 3vw, 1.35rem);
   font-weight: 850;
   color: var(--muted);
-  line-height: 1;
 }
 
 .weekrow {
   margin-top: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
 }
 
 .week {
   display: grid;
-  grid-template-columns: repeat(28, 1fr);
+  grid-template-columns: repeat(28, minmax(8px, 1fr));
   gap: 5px;
-  max-width: 600px;
+  max-width: 620px;
   margin-top: 8px;
 }
 
-.dot {
+.dot,
+.week span {
   aspect-ratio: 1;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255,255,255,.06);
 }
 
 .dot.done {
-  background: rgba(122, 243, 255, 0.18);
-  border-color: rgba(122, 243, 255, 0.38);
+  background: rgba(122,243,255,.18);
+  border-color: rgba(122,243,255,.38);
 }
 
 .dot.today {
   background: var(--gold);
-  box-shadow: 0 0 16px rgba(243, 201, 122, 0.7);
+  box-shadow: 0 0 16px rgba(243,201,122,.7);
 }
 
-/* Moon canvas */
-
+/* Moon phase canvas */
 #simMoon {
   display: block;
   width: 100%;
-  max-width: 420px;
+  max-width: 430px;
   height: auto;
   margin-inline: auto;
   border-radius: 18px;
@@ -457,74 +454,90 @@ textarea {
   background: #05070d;
 }
 
-/* Calendars */
-
+/* FIXED CALENDARS */
 .calendar,
 .gregorian {
-  display: grid;
+  display: grid !important;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 8px;
   width: 100%;
 }
 
 .weekday {
+  min-height: 30px;
+  display: grid;
+  place-items: center;
   color: var(--muted);
-  text-align: center;
   font-weight: 900;
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
+  font-size: .72rem;
+  letter-spacing: .08em;
   text-transform: uppercase;
 }
 
 .calDay,
 .gregDay,
-.g-pad {
+.g-pad,
+.gregorian > div:empty {
+  min-width: 0;
   min-height: 88px;
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 9px;
-  background: rgba(255, 255, 255, 0.035);
+  background: rgba(255,255,255,.04);
+  overflow: hidden;
 }
 
 .calDay strong,
 .gregDay strong {
-  color: var(--gold);
   display: block;
-  margin-bottom: 4px;
+  color: var(--gold);
+  margin-bottom: 3px;
+  font-size: .98rem;
+}
+
+.calDay span,
+.gregDay span {
+  font-weight: 800;
+}
+
+.calDay small,
+.gregDay small,
+.calDay .meta,
+.gregDay .meta {
+  display: block;
+  margin-top: 3px;
+  font-size: .74rem;
+  line-height: 1.28;
 }
 
 .calDay.today,
 .gregDay.today {
-  border-color: rgba(243, 201, 122, 0.8);
-  background: rgba(243, 201, 122, 0.10);
-  box-shadow: 0 0 22px rgba(243, 201, 122, 0.12);
+  border-color: rgba(243,201,122,.85);
+  background: rgba(243,201,122,.12);
+  box-shadow: 0 0 22px rgba(243,201,122,.14);
+  animation: todayGlow 3.8s ease-in-out infinite;
 }
 
-.g-pad {
-  opacity: 0.28;
-}
-
-/* Tables and output */
-
+/* Tables */
 .scroller {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border: 1px solid var(--line);
   border-radius: 18px;
-  background: rgba(5, 8, 14, 0.58);
 }
 
-table {
+table,
+.year-map {
   width: 100%;
-  min-width: 860px;
+  min-width: 760px;
   border-collapse: collapse;
 }
 
 th,
 td {
   border-bottom: 1px solid var(--line);
-  padding: 0.72rem 0.78rem;
+  padding: .72rem .78rem;
   text-align: left;
   vertical-align: top;
 }
@@ -535,23 +548,19 @@ th {
   position: sticky;
   top: 0;
   z-index: 1;
-  font-size: 0.82rem;
+  font-size: .82rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: .06em;
 }
 
-td {
-  color: #dfe6f5;
-}
-
-.output,
-.copy-scroll {
+.copy-scroll,
+.output {
   white-space: pre-wrap;
-  border: 1px solid rgba(243, 201, 122, 0.2);
-  border-radius: 18px;
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.28);
-  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px;
+  background: rgba(5,8,14,.7);
+  color: #e8f5ff;
   line-height: 1.55;
   overflow: auto;
 }
@@ -565,72 +574,57 @@ td {
 }
 
 .savedEntry {
-  margin-top: 0;
-  padding: 14px;
-}
-
-/* Field panels */
-
-.earth-hum-panel,
-.hum-card,
-.log-card {
-  position: relative;
-  overflow: hidden;
-}
-
-.hum-card,
-.log-card,
-.day-card {
-  border: 1px solid rgba(243, 201, 122, 0.22);
-  background: rgba(10, 14, 22, 0.72);
-}
-
-.hum-card h3,
-.log-card h3,
-.day-card h3 {
-  margin: 0.25rem 0 0.5rem;
-  color: var(--gold);
-}
-
-.hum-practical {
-  margin-top: 1.25rem;
-  padding: 1rem;
-  border-left: 3px solid var(--gold);
-  background: rgba(243, 201, 122, 0.08);
-  border-radius: 16px;
-}
-
-.tag {
-  display: inline-flex;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 0.2rem 0.48rem;
-  color: var(--gold);
-  background: rgba(243, 201, 122, 0.07);
-  font-size: 0.75rem;
-  margin: 2px;
-}
-
-#errorBanner {
-  display: none;
-  margin: 12px 0;
   padding: 12px;
-  border-radius: 14px;
-  background: #2a1417;
-  border: 1px solid #5a2228;
-  color: var(--danger);
 }
 
-#errorBanner.show {
-  display: block;
+/* Animations */
+.card,
+.page-head,
+.notice {
+  animation: moonFadeUp .55s ease both;
 }
 
-.mono {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+@keyframes moonFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Responsive */
+@keyframes moonAura {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: .48;
+  }
+  50% {
+    transform: scale(1.07) rotate(3deg);
+    opacity: .82;
+  }
+}
 
+@keyframes ringPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(243,201,122,.42));
+  }
+  50% {
+    filter: drop-shadow(0 0 24px rgba(122,243,255,.72));
+  }
+}
+
+@keyframes todayGlow {
+  0%, 100% {
+    box-shadow: 0 0 14px rgba(243,201,122,.18);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(122,243,255,.26);
+  }
+}
+
+/* Tablet */
 @media (max-width: 980px) {
   .col-3,
   .col-4,
@@ -647,42 +641,15 @@ td {
     grid-template-columns: 1fr;
   }
 
-  .formrow,
   .log-grid,
   .hum-grid,
   .practice-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .calendar,
-  .gregorian {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
 }
 
+/* Phone calendar fix */
 @media (max-width: 720px) {
-  .ring {
-    width: min(54vw, 190px);
-    height: min(54vw, 190px);
-    justify-self: start;
-  }
-
-  .ring .label .big,
-  #dayInMoon.big {
-    font-size: clamp(2.25rem, 13vw, 3.4rem);
-  }
-
-  .ring .label .small,
-  #moonLength.small {
-    font-size: clamp(0.9rem, 4.4vw, 1.15rem);
-  }
-
-  .week {
-    grid-template-columns: repeat(14, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
   .wrap,
   .footer {
     width: min(100% - 22px, 1280px);
@@ -690,11 +657,7 @@ td {
 
   .page-head,
   .card,
-  .mini,
-  .log-card,
-  .hum-card,
-  .day-card,
-  .savedEntry {
+  .notice {
     padding: 18px;
     border-radius: 18px;
   }
@@ -702,10 +665,14 @@ td {
   .formrow,
   .log-grid,
   .hum-grid,
-  .practice-grid,
-  .calendar,
-  .gregorian {
+  .practice-grid {
     grid-template-columns: 1fr;
+  }
+
+  .tabs,
+  .crumbs,
+  .btnrow {
+    align-items: stretch;
   }
 
   .lab-btn,
@@ -716,57 +683,45 @@ td {
     width: 100%;
   }
 
-  h1 {
-    font-size: clamp(40px, 14vw, 64px);
-  }
-
-  .year-map,
-  table {
-    min-width: 620px;
-  }
-}
-
-@media (max-width: 420px) {
   .ring {
-    width: 170px;
-    height: 170px;
+    width: min(54vw, 190px);
+    height: min(54vw, 190px);
+    justify-self: start;
   }
-}
 
-
-/* ==============================
-   Moons Calendar — Mobile + Motion Patch
-   Add to bottom of moons.css
-   ============================== */
-
-/* Better mobile calendar layout */
-@media (max-width: 720px) {
   .calendar,
   .gregorian {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(34px, 1fr));
+    grid-template-columns: repeat(7, minmax(34px, 1fr)) !important;
     gap: 5px;
   }
 
   .weekday {
-    font-size: 0.58rem;
-    letter-spacing: 0.03em;
+    min-height: 22px;
+    font-size: .56rem;
+    letter-spacing: .03em;
   }
 
   .calDay,
   .gregDay,
-  .g-pad {
-    min-height: 54px;
-    padding: 6px 4px;
+  .g-pad,
+  .gregorian > div:empty {
+    min-height: 52px;
+    padding: 5px 3px;
     border-radius: 10px;
-    font-size: 0.72rem;
     text-align: center;
+    font-size: .7rem;
   }
 
   .calDay strong,
   .gregDay strong {
-    font-size: 0.86rem;
+    font-size: .82rem;
     margin-bottom: 1px;
+  }
+
+  .calDay span,
+  .gregDay span {
+    font-size: .66rem;
+    line-height: 1.1;
   }
 
   .calDay small,
@@ -775,9 +730,24 @@ td {
   .gregDay .meta {
     display: none;
   }
+
+  .week {
+    grid-template-columns: repeat(14, minmax(10px, 1fr));
+    max-width: 100%;
+  }
+
+  table,
+  .year-map {
+    min-width: 720px;
+  }
 }
 
+/* Small phone */
 @media (max-width: 420px) {
+  h1 {
+    font-size: clamp(2.3rem, 14vw, 4rem);
+  }
+
   .calendar,
   .gregorian {
     gap: 4px;
@@ -785,114 +755,35 @@ td {
 
   .calDay,
   .gregDay,
-  .g-pad {
-    min-height: 46px;
-    padding: 5px 2px;
-    font-size: 0.66rem;
+  .g-pad,
+  .gregorian > div:empty {
+    min-height: 45px;
+    padding: 4px 2px;
+    font-size: .64rem;
   }
 
   .calDay strong,
   .gregDay strong {
-    font-size: 0.78rem;
+    font-size: .76rem;
+  }
+
+  .calDay span,
+  .gregDay span {
+    font-size: .6rem;
+  }
+
+  .ring {
+    width: 170px;
+    height: 170px;
   }
 }
 
-/* Keep year table usable on phones */
-.scroller {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.year-map,
-table {
-  min-width: 720px;
-}
-
-/* Gentle living-field animation */
-.card,
-.page-head,
-.notice {
-  animation: moonFadeUp 0.55s ease both;
-}
-
-@keyframes moonFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.moon-badge {
-  position: relative;
-}
-
-.moon-badge::before {
-  content: "";
-  position: absolute;
-  inset: -30%;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(122, 243, 255, 0.10), transparent 38%),
-    radial-gradient(circle at 70% 60%, rgba(243, 201, 122, 0.09), transparent 42%);
-  opacity: 0.65;
-  filter: blur(18px);
-  animation: moonAura 9s ease-in-out infinite;
-  pointer-events: none;
-  z-index: -1;
-}
-
-@keyframes moonAura {
-  0%, 100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 0.48;
-  }
-  50% {
-    transform: scale(1.07) rotate(3deg);
-    opacity: 0.82;
-  }
-}
-
-/* Ring glow pulse */
-.ring-fg {
-  animation: ringPulse 5.5s ease-in-out infinite;
-}
-
-@keyframes ringPulse {
-  0%, 100% {
-    filter: drop-shadow(0 0 10px rgba(243, 201, 122, 0.42));
-  }
-  50% {
-    filter: drop-shadow(0 0 22px rgba(122, 243, 255, 0.72));
-  }
-}
-
-/* Today cells feel alive */
-.calDay.today,
-.gregDay.today {
-  animation: todayGlow 3.8s ease-in-out infinite;
-}
-
-@keyframes todayGlow {
-  0%, 100% {
-    box-shadow: 0 0 14px rgba(243, 201, 122, 0.18);
-  }
-  50% {
-    box-shadow: 0 0 28px rgba(122, 243, 255, 0.26);
-  }
-}
-
-/* Respect reduced motion */
+/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
-  .card,
-  .page-head,
-  .notice,
-  .moon-badge::before,
-  .ring-fg,
-  .calDay.today,
-  .gregDay.today {
+  *,
+  *::before,
+  *::after {
     animation: none !important;
+    scroll-behavior: auto !important;
   }
     }
