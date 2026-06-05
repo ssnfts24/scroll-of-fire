@@ -1,365 +1,272 @@
-/* Scroll of Fire — Remnant 13 Moons Engine
-   System:
-   - Year begins at first New Moon after Spring Equinox
-   - 13 fixed moons of 28 days each
-   - Remaining days after Moon 13 are outside the counted cycle
-   - Visible lunar phase is shown separately
-*/
-
-(function () {
+(() => {
   "use strict";
 
-  const MOONS = window.__MOONS__ || [];
-  const $ = (id) => document.getElementById(id);
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
 
-  const TZ_DEFAULT = "America/Los_Angeles";
-  const SYNODIC_MONTH = 29.530588853;
-  const DAY_MS = 86400000;
-  const YEAR_COUNTED_DAYS = 13 * 28;
-  const KNOWN_NEW_MOON = Date.UTC(2000, 0, 6, 18, 14);
+  const LOG_KEY = "sof_moon_logs_v2";
+  const TZ_KEY = "sof_moons_tz_v2";
 
-  const WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const MOONS = [
+    { idx: 1, name: "Seed Flame", element: "Fire", freq: "144 Hz", essence: "Beginning, ignition, first witness", practice: "Start clean. Speak the first word. Mark the seed." },
+    { idx: 2, name: "Root Waters", element: "Water", freq: "432 Hz", essence: "Memory, cleansing, emotional ground", practice: "Cleanse memory. Listen to dreams. Watch emotional weather." },
+    { idx: 3, name: "Breath Gate", element: "Air", freq: "369 Hz", essence: "Word, air, signal, exchange", practice: "Guard speech. Track repeated words. Breathe before response." },
+    { idx: 4, name: "Stone Witness", element: "Earth", freq: "174 Hz", essence: "Body, structure, faithful record", practice: "Build structure. Repair the physical. Record what happened." },
+    { idx: 5, name: "Living Word", element: "Aether", freq: "528 Hz", essence: "Speech, vow, creative command", practice: "Speak with care. Create through ordered language." },
+    { idx: 6, name: "Fire Trial", element: "Fire", freq: "417 Hz", essence: "Testing, courage, purification", practice: "Let false things burn. Choose courage without rushing." },
+    { idx: 7, name: "Crown Balance", element: "Aether", freq: "963 Hz", essence: "Completion, justice, centered rule", practice: "Weigh the pattern. Balance mercy, truth, and consequence." },
+    { idx: 8, name: "Deep Mirror", element: "Water", freq: "396 Hz", essence: "Reflection, hidden pattern, inner waters", practice: "Look beneath the surface. Journal before judging." },
+    { idx: 9, name: "Return Path", element: "Earth", freq: "285 Hz", essence: "Restoration, repentance, spiral home", practice: "Correct course. Repair one broken loop." },
+    { idx: 10, name: "Builder’s Hand", element: "Earth", freq: "741 Hz", essence: "Craft, repair, stewardship", practice: "Build, fix, organize, and make the invisible useful." },
+    { idx: 11, name: "Star Remembrance", element: "Air", freq: "852 Hz", essence: "Inheritance, names, celestial memory", practice: "Remember names, lineage, signs, and the long story." },
+    { idx: 12, name: "River of Signs", element: "Water", freq: "639 Hz", essence: "Movement, omens, living flow", practice: "Track timing. Move with wisdom. Do not force the river." },
+    { idx: 13, name: "Completion Seal", element: "Aether", freq: "111 Hz", essence: "Harvest, sealing, preparation for reset", practice: "Close the loop. Harvest the lesson. Prepare the reset." }
+  ];
 
-  let state = {
-    date: new Date(),
-    tz: TZ_DEFAULT
-  };
+  const DAY_ARCHETYPES = [
+    ["Spark", "First ignition. Start, name, begin."],
+    ["Witness", "Record what is actually there."],
+    ["Breath", "Speak, listen, exchange."],
+    ["Root", "Ground the body and home."],
+    ["Water", "Feel, cleanse, remember."],
+    ["Stone", "Build structure and boundary."],
+    ["Fire", "Test, purify, choose courage."],
+    ["Gate", "Make a decision or cross a threshold."],
+    ["Mirror", "Reflect before reacting."],
+    ["Hand", "Repair, craft, serve."],
+    ["Voice", "Say the true thing cleanly."],
+    ["River", "Move, adapt, follow flow."],
+    ["Star", "Remember inheritance and direction."],
+    ["Balance", "Weigh, measure, judge fairly."],
+    ["Seed", "Plant the next pattern."],
+    ["Trial", "Face resistance without panic."],
+    ["Mercy", "Release what can be released."],
+    ["Sword", "Cut the false attachment."],
+    ["Oil", "Consecrate the ordinary."],
+    ["Bread", "Receive provision and share it."],
+    ["Watch", "Stay awake to timing."],
+    ["Return", "Correct course."],
+    ["Crown", "Govern the self first."],
+    ["Lamp", "Bring light to one dark corner."],
+    ["Name", "Recover identity and purpose."],
+    ["Field", "Observe relationships."],
+    ["Seal", "Close what is complete."],
+    ["Rest", "Prepare the reset."]
+  ];
+
+  const WEEK_GATES = [
+    ["Week 1 · Ignition", "Begin, gather signal, establish the first witness."],
+    ["Week 2 · Formation", "Shape the pattern through body, speech, and daily structure."],
+    ["Week 3 · Testing", "Watch pressure, resistance, correction, and refinement."],
+    ["Week 4 · Sealing", "Harvest the lesson, close loops, and prepare the next moon."]
+  ];
+
+  const TZONES = [
+    Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Los_Angeles",
+    "America/Los_Angeles",
+    "America/Denver",
+    "America/Chicago",
+    "America/New_York",
+    "UTC"
+  ].filter((v, i, a) => v && a.indexOf(v) === i);
+
+  let selectedTZ = localStorage.getItem(TZ_KEY) || TZONES[0];
+  let selectedDate = fromISO(new URLSearchParams(location.search).get("date")) || new Date();
 
   function pad(n) {
     return String(n).padStart(2, "0");
   }
 
-  function localNoon(date) {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
-  }
-
-  function isoDate(date) {
-    const d = localNoon(date);
+  function toISO(d) {
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
   }
 
   function fromISO(s) {
+    if (!s || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return null;
     const [y, m, d] = s.split("-").map(Number);
-    return new Date(y, m - 1, d, 12, 0, 0);
+    return new Date(y, m - 1, d);
   }
 
-  function addDays(date, n) {
-    const d = localNoon(date);
-    d.setDate(d.getDate() + n);
-    return localNoon(d);
+  function addDays(d, n) {
+    const x = new Date(d);
+    x.setDate(x.getDate() + n);
+    return x;
   }
 
-  function daysBetween(a, b) {
-    return Math.floor((localNoon(b) - localNoon(a)) / DAY_MS);
+  function dayDiff(a, b) {
+    const A = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    const B = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+    return Math.floor((A - B) / 86400000);
   }
 
-  function sameDate(a, b) {
-    return isoDate(a) === isoDate(b);
-  }
-
-  function setText(id, text) {
-    const el = $(id);
-    if (el) el.textContent = text;
-  }
-
-  function fmtDate(date) {
+  function fmtDate(d, opts = {}) {
     return new Intl.DateTimeFormat("en-US", {
-      weekday: "short",
+      timeZone: selectedTZ,
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      ...opts
+    }).format(d);
+  }
+
+  function fmtShort(d) {
+    return new Intl.DateTimeFormat("en-US", {
+      timeZone: selectedTZ,
       month: "short",
       day: "numeric",
       year: "numeric"
-    }).format(date);
+    }).format(d);
   }
 
-  function springEquinoxDate(year) {
-    return new Date(year, 2, 20, 12, 0, 0);
+  function toast(msg) {
+    const el = document.createElement("div");
+    el.textContent = msg;
+    Object.assign(el.style, {
+      position: "fixed",
+      left: "50%",
+      bottom: "22px",
+      transform: "translateX(-50%)",
+      background: "#0e131c",
+      color: "#e6f9ff",
+      padding: "9px 13px",
+      border: "1px solid #2a3242",
+      borderRadius: "12px",
+      boxShadow: "0 10px 28px rgba(0,0,0,.35)",
+      zIndex: 99999,
+      opacity: 0,
+      transition: "opacity .2s"
+    });
+    document.body.appendChild(el);
+    requestAnimationFrame(() => { el.style.opacity = 1; });
+    setTimeout(() => {
+      el.style.opacity = 0;
+      setTimeout(() => el.remove(), 250);
+    }, 1300);
   }
 
-  function approximateNewMoonAfter(date) {
-    const target = localNoon(date).getTime();
-    const synodicMs = SYNODIC_MONTH * DAY_MS;
-    const cycles = Math.ceil((target - KNOWN_NEW_MOON) / synodicMs);
-    return localNoon(new Date(KNOWN_NEW_MOON + cycles * synodicMs));
+  function moonAge(date) {
+    const synodic = 29.530588853;
+    const knownNewMoon = Date.UTC(2000, 0, 6, 18, 14, 0);
+    const t = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
+    const days = (t - knownNewMoon) / 86400000;
+    return ((days % synodic) + synodic) % synodic;
   }
 
-  function remnantYearStart(date) {
+  function nearestNewMoonAfter(date) {
+    let d = new Date(date);
+    for (let i = 0; i < 40; i++) {
+      const age = moonAge(d);
+      const nextAge = moonAge(addDays(d, 1));
+      if (age > 28.5 || nextAge < age) return addDays(d, 1);
+      d = addDays(d, 1);
+    }
+    return d;
+  }
+
+  function yearAnchorFor(date) {
     const y = date.getFullYear();
-    const startThisYear = approximateNewMoonAfter(springEquinoxDate(y));
-    return localNoon(date) >= startThisYear
-      ? startThisYear
-      : approximateNewMoonAfter(springEquinoxDate(y - 1));
-  }
-
-  function nextRemnantYearStart(date) {
-    const start = remnantYearStart(date);
-    return approximateNewMoonAfter(springEquinoxDate(start.getFullYear() + 1));
+    const candidate = nearestNewMoonAfter(new Date(y, 2, 20));
+    if (date < candidate) return nearestNewMoonAfter(new Date(y - 1, 2, 20));
+    return candidate;
   }
 
   function remnantInfo(date) {
-    const yearStart = remnantYearStart(date);
-    const nextYearStart = nextRemnantYearStart(date);
-    const counted = daysBetween(yearStart, date);
-    const remainingYearDays = daysBetween(yearStart, nextYearStart) - YEAR_COUNTED_DAYS;
+    const anchor = yearAnchorFor(date);
+    const diff = dayDiff(date, anchor);
+    const cycleDays = 13 * 28;
 
-    if (counted < 0) {
-      return {
-        special: "before",
-        label: "Before Remnant Year",
-        detail: "This date falls before the year anchor.",
-        yearStart,
-        nextYearStart
-      };
-    }
-
-    if (counted >= YEAR_COUNTED_DAYS) {
-      return {
-        special: "outside",
-        label: "Outside Count",
-        detail: `Intercalary / reset span after Moon 13. Extra days this year: ${Math.max(0, remainingYearDays)}.`,
-        yearStart,
-        nextYearStart,
-        counted,
-        dayOfYear: counted + 1
-      };
-    }
-
-    const moonIndex = Math.floor(counted / 28) + 1;
-    const dayInMoon = (counted % 28) + 1;
-    const moon = MOONS[moonIndex - 1];
+    const inside = diff >= 0 && diff < cycleDays;
+    const moonIndex = inside ? Math.floor(diff / 28) : 12;
+    const dayInMoon = inside ? (diff % 28) + 1 : null;
+    const moon = MOONS[moonIndex];
 
     return {
-      special: null,
-      yearStart,
-      nextYearStart,
-      counted,
-      dayOfYear: counted + 1,
+      anchor,
+      diff,
+      inside,
+      moon,
       moonIndex,
       dayInMoon,
-      moon,
-      moonStart: addDays(yearStart, (moonIndex - 1) * 28),
-      moonEnd: addDays(yearStart, moonIndex * 28 - 1),
-      extraDays: Math.max(0, remainingYearDays)
+      dayOfYear: diff + 1,
+      outsideDay: inside ? 0 : Math.max(1, diff - cycleDays + 1),
+      yearEnd: addDays(anchor, cycleDays - 1)
     };
   }
 
-  function dateForMoonDay(yearStart, moonIndex, dayInMoon) {
-    return addDays(yearStart, (moonIndex - 1) * 28 + (dayInMoon - 1));
-  }
-
-  function paintRing(info) {
-    const arc = $("moonArc");
-    if (!arc) return;
-
-    const circumference = 316;
-
-    if (info.special) {
-      arc.style.strokeDashoffset = "0";
-      return;
-    }
-
-    const progress = info.dayInMoon / 28;
-    arc.style.strokeDashoffset = String(circumference * (1 - progress));
-  }
-
-  function paintWeekDots(info) {
-    const box = $("weekDots");
-    if (!box) return;
-
-    box.innerHTML = "";
-
-    for (let i = 1; i <= 28; i++) {
-      const dot = document.createElement("span");
-      if (!info.special && i === info.dayInMoon) dot.className = "is-today";
-      dot.title = `Moon day ${i}`;
-      box.appendChild(dot);
-    }
-  }
-
-  function paintRemnantCalendar(info) {
-    const box = $("remCal");
-    if (!box) return;
-
-    if (info.special) {
-      box.innerHTML = `
-        <div class="r-doot">
-          ${info.label}
-          <span>${info.detail}</span>
-        </div>
-      `;
-      return;
-    }
-
-    const grid = document.createElement("div");
-    grid.className = "r-grid";
-
-    ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7"].forEach((x) => {
-      const lbl = document.createElement("div");
-      lbl.className = "r-lbl";
-      lbl.textContent = x;
-      grid.appendChild(lbl);
-    });
-
-    for (let week = 0; week < 4; week++) {
-      for (let day = 1; day <= 7; day++) {
-        const moonDay = week * 7 + day;
-
-        const cell = document.createElement("div");
-        cell.className = "r-day";
-        if (moonDay === info.dayInMoon) cell.classList.add("is-today");
-
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.innerHTML = `<b>${moonDay}</b><small>W${week + 1} · D${day}</small>`;
-
-        btn.addEventListener("click", () => {
-          state.date = dateForMoonDay(info.yearStart, info.moonIndex, moonDay);
-          paint();
-        });
-
-        cell.appendChild(btn);
-        grid.appendChild(cell);
-      }
-    }
-
-    box.innerHTML = "";
-    box.appendChild(grid);
-  }
-
-  function paintGregorianCalendar(date) {
-    const box = $("gregCal");
-    if (!box) return;
-
-    const y = date.getFullYear();
-    const m = date.getMonth();
-    const first = new Date(y, m, 1, 12, 0, 0);
-    const last = new Date(y, m + 1, 0, 12, 0, 0);
-
-    const grid = document.createElement("div");
-    grid.className = "g-grid";
-
-    WEEK.forEach((x) => {
-      const lbl = document.createElement("div");
-      lbl.className = "g-lbl";
-      lbl.textContent = x;
-      grid.appendChild(lbl);
-    });
-
-    for (let i = 0; i < first.getDay(); i++) {
-      const pad = document.createElement("div");
-      pad.className = "g-pad";
-      grid.appendChild(pad);
-    }
-
-    for (let day = 1; day <= last.getDate(); day++) {
-      const d = new Date(y, m, day, 12, 0, 0);
-      const info = remnantInfo(d);
-
-      const cell = document.createElement("div");
-      cell.className = "g-day";
-
-      if (sameDate(d, date)) cell.classList.add("is-today");
-      if (info.special === "outside") cell.classList.add("is-outside");
-
-      const btn = document.createElement("button");
-      btn.type = "button";
-
-      if (info.special) {
-        btn.innerHTML = `<b>${day}</b><small>OUT</small>`;
-        btn.title = info.detail;
-      } else {
-        btn.innerHTML = `<b>${day}</b><small>M${info.moonIndex} · D${info.dayInMoon}</small>`;
-        btn.title = `Moon ${info.moonIndex}, Day ${info.dayInMoon}`;
-      }
-
-      btn.addEventListener("click", () => {
-        state.date = d;
-        paint();
-      });
-
-      cell.appendChild(btn);
-      grid.appendChild(cell);
-    }
-
-    box.innerHTML = "";
-    box.appendChild(grid);
-  }
-
-  function paintYearMap(date) {
-    const tbody = $("yearMapBody");
-    if (!tbody) return;
-
-    const start = remnantYearStart(date);
-    const next = nextRemnantYearStart(date);
-    const yearLength = daysBetween(start, next);
-    const extraDays = Math.max(0, yearLength - YEAR_COUNTED_DAYS);
-
-    tbody.innerHTML = "";
-
-    MOONS.forEach((moon, i) => {
-      const s = addDays(start, i * 28);
-      const e = addDays(start, i * 28 + 27);
-
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${moon.idx}</td>
-        <td>${moon.name}</td>
-        <td>${moon.essence}</td>
-        <td>${fmtDate(s)}</td>
-        <td>${fmtDate(e)}</td>
-      `;
-      tbody.appendChild(row);
-    });
-
-    setText(
-      "outsideInfo",
-      `Year anchor: ${fmtDate(start)} · Next anchor: ${fmtDate(next)} · Outside-count days after Moon 13: ${extraDays}`
-    );
-  }
-
-  function moonPhaseAge(date) {
-    const days = (localNoon(date).getTime() - KNOWN_NEW_MOON) / DAY_MS;
-    return ((days % SYNODIC_MONTH) + SYNODIC_MONTH) % SYNODIC_MONTH;
-  }
-
   function phaseName(age) {
-    if (age < 1.85) return "New Moon";
-    if (age < 5.54) return "Waxing Crescent";
-    if (age < 9.23) return "First Quarter";
-    if (age < 12.92) return "Waxing Gibbous";
-    if (age < 16.61) return "Full Moon";
-    if (age < 20.3) return "Waning Gibbous";
-    if (age < 23.99) return "Last Quarter";
-    if (age < 27.68) return "Waning Crescent";
-    return "New Moon";
+    if (age < 1.2 || age > 28.3) return "New Moon";
+    if (age < 6.4) return "Waxing Crescent";
+    if (age < 8.4) return "First Quarter";
+    if (age < 13.8) return "Waxing Gibbous";
+    if (age < 16.2) return "Full Moon";
+    if (age < 21.6) return "Waning Gibbous";
+    if (age < 23.6) return "Last Quarter";
+    return "Waning Crescent";
   }
 
-  function paintMoonCanvas(date) {
-    const c = $("simMoon");
-    if (!c) return;
+  function illumination(age) {
+    return (1 - Math.cos((age / 29.530588853) * Math.PI * 2)) / 2;
+  }
 
-    const ctx = c.getContext("2d");
-    const w = c.width;
-    const h = c.height;
+  function solarGate(date) {
+    const m = date.getMonth() + 1;
+    const d = date.getDate();
+    const gates = [
+      ["Capricorn", "Earth", "Structure, duty, mountain path"],
+      ["Aquarius", "Air", "Signal, systems, future current"],
+      ["Pisces", "Water", "Dream, compassion, unseen waters"],
+      ["Aries", "Fire", "Spark, courage, first motion"],
+      ["Taurus", "Earth", "Body, garden, provision"],
+      ["Gemini", "Air", "Word, exchange, twin signal"],
+      ["Cancer", "Water", "Home, memory, protection"],
+      ["Leo", "Fire", "Heart, courage, solar witness"],
+      ["Virgo", "Earth", "Order, craft, refinement"],
+      ["Libra", "Air", "Balance, justice, relation"],
+      ["Scorpio", "Water", "Depth, shadow, transformation"],
+      ["Sagittarius", "Fire", "Arrow, journey, higher aim"]
+    ];
+    const cut = [20, 19, 20, 20, 21, 21, 22, 22, 22, 23, 22, 21];
+    const idx = d < cut[m - 1] ? (m + 10) % 12 : (m + 11) % 12;
+    return gates[idx];
+  }
+
+  function logs() {
+    try {
+      return JSON.parse(localStorage.getItem(LOG_KEY) || "[]");
+    } catch {
+      return [];
+    }
+  }
+
+  function saveLogs(list) {
+    localStorage.setItem(LOG_KEY, JSON.stringify(list.slice(0, 300)));
+  }
+
+  function drawMoon(age) {
+    const canvas = $("#simMoon");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width;
+    const h = canvas.height;
     const cx = w / 2;
     const cy = h / 2;
-    const r = Math.min(w, h) * 0.35;
-
-    const age = moonPhaseAge(date);
-    const illum = 0.5 * (1 - Math.cos((2 * Math.PI * age) / SYNODIC_MONTH));
-    const name = phaseName(age);
+    const r = Math.min(w, h) * 0.34;
+    const illum = illumination(age);
+    const waxing = age < 14.765;
 
     ctx.clearRect(0, 0, w, h);
     ctx.fillStyle = "#05070d";
     ctx.fillRect(0, 0, w, h);
 
-    for (let i = 0; i < 80; i++) {
-      ctx.fillStyle = "rgba(255,255,255,.35)";
-      ctx.fillRect((i * 73) % w, (i * 41) % h, 1.2, 1.2);
-    }
-
+    const g = ctx.createRadialGradient(cx, cy, 5, cx, cy, r * 2.3);
+    g.addColorStop(0, "rgba(122,243,255,.22)");
+    g.addColorStop(.5, "rgba(243,201,122,.10)");
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g;
     ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fillStyle = "#d8d6cc";
+    ctx.arc(cx, cy, r * 2.2, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.save();
@@ -367,185 +274,518 @@
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.clip();
 
-    const offset = Math.cos((age / SYNODIC_MONTH) * Math.PI * 2) * r;
-    ctx.fillStyle = "rgba(5,7,13,.78)";
+    ctx.fillStyle = "#121722";
+    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+
+    ctx.fillStyle = "#f4f1e8";
     ctx.beginPath();
-    ctx.ellipse(cx + offset, cy, r, r, 0, 0, Math.PI * 2);
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.fill();
+
+    const shadowWidth = r * 2 * Math.abs(1 - illum * 2);
+    ctx.fillStyle = "#121722";
+    ctx.beginPath();
+
+    if (illum < .5) {
+      ctx.rect(cx - r, cy - r, r * 2, r * 2);
+      if (waxing) ctx.ellipse(cx + r, cy, r - shadowWidth / 2, r, 0, Math.PI / 2, Math.PI * 1.5, true);
+      else ctx.ellipse(cx - r, cy, r - shadowWidth / 2, r, 0, -Math.PI / 2, Math.PI / 2, true);
+      ctx.fill("evenodd");
+    } else {
+      if (waxing) ctx.ellipse(cx - r, cy, shadowWidth / 2, r, 0, -Math.PI / 2, Math.PI / 2, true);
+      else ctx.ellipse(cx + r, cy, shadowWidth / 2, r, 0, Math.PI / 2, Math.PI * 1.5, true);
+      ctx.fill();
+    }
 
     ctx.restore();
 
-    ctx.strokeStyle = "rgba(122,243,255,.75)";
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = "rgba(243,201,122,.55)";
+    ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.stroke();
 
-    setText("phaseLine", `${name} · age ${age.toFixed(1)} days`);
-    setText("phaseMeta", `${(illum * 100).toFixed(0)}% illuminated`);
+    ctx.fillStyle = "rgba(244,241,232,.92)";
+    ctx.font = "800 15px Inter, system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(`${phaseName(age)} · ${Math.round(illum * 100)}%`, cx, 28);
   }
 
-  function paintSky() {
-    const c = $("skyBg");
-    if (!c) return;
+  function buildSeal(info, age, solar, dayArch, week) {
+    const phase = phaseName(age);
+    const illum = Math.round(illumination(age) * 100);
 
-    const ctx = c.getContext("2d");
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const title = info.inside
+      ? `Moon ${info.moon.idx} · Day ${info.dayInMoon} — ${info.moon.name}`
+      : `Outside Count — ${info.moon.name}`;
 
-    function resize() {
-      c.width = innerWidth * dpr;
-      c.height = innerHeight * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const body =
+`☲ REMNANT DAILY SEAL ☲
+
+${fmtDate(selectedDate)}
+${title}
+
+Moon Essence:
+${info.moon.essence}
+
+Practice:
+${info.moon.practice}
+
+Day Archetype:
+${dayArch[0]} — ${dayArch[1]}
+
+Week Gate:
+${week[0]} — ${week[1]}
+
+Visible Moon:
+${phase} · ${illum}% illuminated
+
+Solar Gate:
+${solar[0]} · ${solar[1]}
+${solar[2]}
+
+Carrier Tone:
+${info.moon.freq} · ${info.moon.element}
+
+Seal:
+Observe first.
+Record clearly.
+Interpret slowly.
+Repair one thing.
+Carry the witness forward.`;
+
+    $("#sealTitle").textContent = title;
+    $("#sealBody").textContent = body;
+
+    $("#promptBody").textContent =
+`1. What did my body reveal before my mind explained it?
+
+2. What repeated today: number, word, mood, place, person, animal, weather, or timing?
+
+3. What needs repair, not reaction?
+
+4. What is the one clean action I can take?
+
+5. What should be sealed and released before the next day?`;
+
+    return body;
+  }
+
+  function buildWitness() {
+    const info = remnantInfo(selectedDate);
+    const age = moonAge(selectedDate);
+    const solar = solarGate(selectedDate);
+    const dayArch = info.inside ? DAY_ARCHETYPES[info.dayInMoon - 1] : ["Outside Count", "Reset, reflection, year threshold."];
+
+    const text =
+`Date: ${fmtDate(selectedDate)}
+Remnant Moon: ${info.moon.name}
+Moon Day: ${info.inside ? `${info.dayInMoon}/28` : `Outside Count · Day ${info.outsideDay}`}
+Year Day: ${info.inside ? `${info.dayOfYear}/364` : "Outside counted cycle"}
+Visible Moon Phase: ${phaseName(age)} · ${Math.round(illumination(age) * 100)}%
+Solar Gate: ${solar[0]} · ${solar[1]}
+Day Archetype: ${dayArch[0]}
+Carrier Tone: ${info.moon.freq}
+Element: ${info.moon.element}
+Earth Hum / Kp Status: ${$("#kpInput")?.value || "Unknown / not checked"}
+
+Sleep: ${$("#sleepInput")?.value || ""}
+Dreams: ${$("#dreamInput")?.value || ""}
+Body Signal: ${$("#bodyInput")?.value || ""}
+Emotional Weather: ${$("#emotionInput")?.value || ""}
+Repeated Signs: ${$("#signsInput")?.value || ""}
+Technology / Animal / Weather Notes: ${$("#fieldInput")?.value || ""}
+
+Action / Lesson:
+${$("#lessonInput")?.value || ""}
+
+Witness:
+Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
+
+    $("#witnessOutput").textContent = text;
+    return text;
+  }
+
+  function render() {
+    const info = remnantInfo(selectedDate);
+    const age = moonAge(selectedDate);
+    const illum = illumination(age);
+    const phase = phaseName(age);
+    const solar = solarGate(selectedDate);
+    const dayArch = info.inside ? DAY_ARCHETYPES[info.dayInMoon - 1] : ["Outside Count", "Reset, reflection, year threshold."];
+    const week = info.inside ? WEEK_GATES[Math.floor((info.dayInMoon - 1) / 7)] : ["Outside Gate", "Days beyond the 364-counted cycle."];
+
+    $("#datePick").value = toISO(selectedDate);
+    $("#nowDate").textContent = fmtDate(selectedDate);
+    $("#nowTZ").textContent = selectedTZ;
+
+    $("#moonName").textContent = info.moon.name;
+    $("#moonEssence").textContent = info.moon.essence;
+    $("#moonLine").textContent = info.inside
+      ? `Moon ${info.moon.idx} · Day ${info.dayInMoon}/28 · Day ${info.dayOfYear}/364`
+      : `Outside Count · Day ${info.outsideDay} after Completion Seal`;
+    $("#yearSpan").textContent = `Anchor: ${fmtShort(info.anchor)} · Counted year ends: ${fmtShort(info.yearEnd)}`;
+    $("#moonPractice").textContent = info.inside ? info.moon.practice : "Review, repair, clear the ledger, and prepare the next anchor.";
+
+    $("#commandMoon").textContent = info.moon.name;
+    $("#commandLine").textContent = info.inside
+      ? `Moon ${info.moon.idx} · Day ${info.dayInMoon}/28 · ${info.moon.element} · ${info.moon.freq}`
+      : `Outside Count · ${info.moon.name}`;
+    $("#statMoonDay").textContent = info.inside ? `${info.dayInMoon}/28` : "Outside";
+    $("#statPhase").textContent = phase;
+    $("#statSolar").textContent = solar[0];
+    $("#statField").textContent = ($("#kpInput")?.value || "Unknown").split("·")[0].trim();
+    $("#statLogs").textContent = logs().length;
+    $("#statPatterns").textContent = detectPatterns(logs()).count;
+
+    $("#dayInMoon").textContent = info.inside ? info.dayInMoon : "⊙";
+    $("#moonLength").textContent = info.inside ? "/28" : "reset";
+
+    const progress = info.inside ? info.dayInMoon / 28 : 1;
+    $("#moonArc").style.strokeDashoffset = String(314 - 314 * progress);
+
+    $("#weekDots").innerHTML = Array.from({ length: 28 }, (_, i) => {
+      const n = i + 1;
+      const cls = !info.inside ? "" : n < info.dayInMoon ? "done" : n === info.dayInMoon ? "today" : "";
+      return `<span class="dot ${cls}" title="Day ${n}"></span>`;
+    }).join("");
+
+    $("#phaseLine").textContent = `${phase} · ${Math.round(illum * 100)}% illuminated`;
+    $("#phaseMeta").textContent = `Approx lunar age: ${age.toFixed(2)} days.`;
+    drawMoon(age);
+
+    $("#dayArchetype").textContent = dayArch[0];
+    $("#dayArchetypeCopy").textContent = dayArch[1];
+    $("#weekGate").textContent = week[0];
+    $("#weekGateCopy").textContent = week[1];
+    $("#solarGate").textContent = `${solar[0]} · ${solar[1]}`;
+    $("#skyMirrorCopy").textContent = solar[2];
+
+    renderClockOnly();
+    renderRemnantCalendar(info);
+    renderGregorian();
+    renderYearMap(info);
+    buildSeal(info, age, solar, dayArch, week);
+    buildWitness();
+    renderSaved();
+    renderTimeline();
+  }
+
+  function renderRemnantCalendar(info) {
+    $("#remCal").innerHTML = Array.from({ length: 28 }, (_, i) => {
+      const n = i + 1;
+      const cls = info.inside && n === info.dayInMoon ? "today" : "";
+      const arch = DAY_ARCHETYPES[i];
+      return `<div class="calDay ${cls}">
+        <strong>${n}</strong>
+        <span>${arch[0]}</span><br>
+        <small class="meta">${arch[1]}</small>
+      </div>`;
+    }).join("");
+  }
+
+  function renderGregorian() {
+    const y = selectedDate.getFullYear();
+    const m = selectedDate.getMonth();
+    const first = new Date(y, m, 1);
+    const last = new Date(y, m + 1, 0);
+    const names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    let html = names.map(n => `<div class="weekday">${n}</div>`).join("");
+    for (let i = 0; i < first.getDay(); i++) html += `<div></div>`;
+
+    for (let d = 1; d <= last.getDate(); d++) {
+      const cur = new Date(y, m, d);
+      const ri = remnantInfo(cur);
+      const cls = toISO(cur) === toISO(selectedDate) ? "today" : "";
+      html += `<div class="gregDay ${cls}">
+        <strong>${d}</strong>
+        <span>${ri.inside ? `M${ri.moon.idx} · D${ri.dayInMoon}` : "Outside"}</span><br>
+        <small class="meta">${ri.moon.name}</small>
+      </div>`;
     }
 
-    resize();
-    window.addEventListener("resize", resize);
+    $("#gregCal").innerHTML = html;
+  }
 
-    const stars = Array.from({ length: 120 }, (_, i) => ({
-      x: (i * 97) % innerWidth,
-      y: (i * 53) % innerHeight,
-      r: ((i % 3) + 1) * 0.45,
-      a: 0.25 + (i % 7) / 12
-    }));
+  function renderYearMap(info) {
+    $("#outsideInfo").textContent =
+      `Counted cycle: ${fmtShort(info.anchor)} through ${fmtShort(info.yearEnd)} · Outside days begin ${fmtShort(addDays(info.yearEnd, 1))}`;
 
-    function draw() {
-      ctx.clearRect(0, 0, innerWidth, innerHeight);
+    $("#yearMapBody").innerHTML = MOONS.map((m, i) => {
+      const start = addDays(info.anchor, i * 28);
+      const end = addDays(start, 27);
+      return `<tr>
+        <td>Moon ${m.idx}</td>
+        <td>${m.name}</td>
+        <td>${m.essence}</td>
+        <td>${m.element}</td>
+        <td>${m.freq}</td>
+        <td>${fmtShort(start)}</td>
+        <td>${fmtShort(end)}</td>
+        <td>${m.practice}</td>
+      </tr>`;
+    }).join("");
+  }
 
-      stars.forEach((s, i) => {
-        ctx.globalAlpha = s.a + Math.sin(Date.now() / 900 + i) * 0.15;
-        ctx.fillStyle = "#fff";
+  function saveLog() {
+    const list = logs();
+    list.unshift({
+      date: toISO(selectedDate),
+      moon: remnantInfo(selectedDate).moon.name,
+      text: buildWitness(),
+      saved: new Date().toISOString(),
+      kp: $("#kpInput")?.value || "",
+      signs: $("#signsInput")?.value || "",
+      body: $("#bodyInput")?.value || "",
+      dreams: $("#dreamInput")?.value || "",
+      emotion: $("#emotionInput")?.value || ""
+    });
+    saveLogs(list);
+    renderSaved();
+    renderTimeline();
+    toast("Witness saved");
+  }
+
+  function renderSaved() {
+    const list = logs();
+    $("#statLogs") && ($("#statLogs").textContent = list.length);
+
+    $("#savedList").innerHTML = list.length ? list.map((l, i) => `
+      <article class="savedEntry">
+        <strong>${l.date} · ${l.moon || "Remnant Log"}</strong>
+        <p class="meta">Saved ${new Date(l.saved).toLocaleString()}</p>
+        <pre class="fine">${escapeHTML(l.text)}</pre>
+        <button class="lab-btn ghost copySaved" data-i="${i}" type="button">Copy</button>
+      </article>
+    `).join("") : `<p class="meta">No saved logs yet.</p>`;
+
+    $$(".copySaved").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const item = list[Number(btn.dataset.i)];
+        navigator.clipboard.writeText(item.text);
+        toast("Copied");
+      });
+    });
+  }
+
+  function detectPatterns(list) {
+    const joined = list.slice(0, 28).map(l => [
+      l.signs,
+      l.body,
+      l.dreams,
+      l.emotion,
+      l.kp
+    ].join(" ")).join(" ").toLowerCase();
+
+    const terms = joined.match(/\b[0-9]{2,4}\b|\b[a-z]{4,}\b/g) || [];
+    const skip = new Set(["unknown", "checked", "field", "moon", "body", "dreams", "sleep", "weather", "signal"]);
+    const counts = {};
+
+    terms.forEach(t => {
+      if (skip.has(t)) return;
+      counts[t] = (counts[t] || 0) + 1;
+    });
+
+    const top = Object.entries(counts)
+      .filter(([, n]) => n >= 2)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8);
+
+    return { count: top.length, top };
+  }
+
+  function renderTimeline() {
+    const list = logs();
+    const patterns = detectPatterns(list);
+
+    $("#statPatterns") && ($("#statPatterns").textContent = patterns.count);
+
+    $("#patternAlerts").innerHTML = patterns.top.length ? patterns.top.map(([term, n]) => `
+      <article class="mini">
+        <h3>${escapeHTML(term)}</h3>
+        <p class="meta">Repeated ${n} times in recent logs.</p>
+      </article>
+    `).join("") : `<p class="meta">No repeated patterns detected yet. Save more daily logs.</p>`;
+
+    $("#timelineList").innerHTML = list.length ? list.slice(0, 28).map(l => `
+      <article class="savedEntry">
+        <strong>${l.date} · ${escapeHTML(l.moon || "Log")}</strong>
+        <p class="meta">${escapeHTML([l.kp, l.signs, l.body].filter(Boolean).join(" · "))}</p>
+      </article>
+    `).join("") : `<p class="meta">No timeline yet.</p>`;
+  }
+
+  function escapeHTML(s) {
+    return String(s || "").replace(/[&<>"']/g, m => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "\"": "&quot;",
+      "'": "&#39;"
+    }[m]));
+  }
+
+  function renderClockOnly() {
+    $("#nowClock").textContent = new Intl.DateTimeFormat("en-US", {
+      timeZone: selectedTZ,
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit"
+    }).format(new Date());
+  }
+
+  function drawSky() {
+    const c = $("#skyBg");
+    if (!c) return;
+    const ctx = c.getContext("2d");
+    let stars = [];
+
+    function fit() {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      c.width = innerWidth * dpr;
+      c.height = innerHeight * dpr;
+      stars = Array.from({ length: 160 }, () => ({
+        x: Math.random() * c.width,
+        y: Math.random() * c.height,
+        r: Math.random() * 1.6 + .25,
+        a: Math.random() * Math.PI * 2
+      }));
+    }
+
+    function loop() {
+      ctx.clearRect(0, 0, c.width, c.height);
+      stars.forEach(s => {
+        s.a += .012;
+        ctx.fillStyle = `rgba(244,241,232,${.16 + Math.sin(s.a) * .12})`;
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
         ctx.fill();
       });
-
-      ctx.globalAlpha = 1;
-      requestAnimationFrame(draw);
+      requestAnimationFrame(loop);
     }
 
-    draw();
+    fit();
+    addEventListener("resize", fit, { passive: true });
+    loop();
   }
 
-  function populateTimezones() {
-    const select = $("tzPick");
-    if (!select) return;
+  function setup() {
+    $("#yr").textContent = new Date().getFullYear();
 
-    const zones = [
-      "America/Los_Angeles",
-      "America/Denver",
-      "America/Chicago",
-      "America/New_York",
-      "UTC"
-    ];
+    $("#tzPick").innerHTML = TZONES.map(tz => `<option value="${tz}">${tz}</option>`).join("");
+    $("#tzPick").value = selectedTZ;
+    $("#datePick").value = toISO(selectedDate);
 
-    select.innerHTML = zones.map((z) => `<option value="${z}">${z}</option>`).join("");
-    select.value = state.tz;
-  }
-
-  function paint() {
-    const info = remnantInfo(state.date);
-
-    setText("nowDate", fmtDate(state.date));
-    setText("nowTZ", state.tz);
-    setText("nowClock", new Intl.DateTimeFormat("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      timeZone: state.tz
-    }).format(new Date()));
-
-    if (info.special) {
-      setText("moonName", info.label);
-      setText("moonEssence", info.detail);
-      setText("moonLine", info.detail);
-      setText("dayInMoon", "∞");
-      setText("moonLength", "/OUT");
-      setText("yearSpan", `Year anchor: ${fmtDate(info.yearStart)}`);
-    } else {
-      setText("moonName", `${info.moon.idx}. ${info.moon.name}`);
-      setText("moonEssence", info.moon.essence);
-      setText("moonLine", `Moon ${info.moonIndex} · Day ${info.dayInMoon}/28`);
-      setText("dayInMoon", info.dayInMoon);
-      setText("moonLength", "/28");
-      setText("yearSpan", `Day ${info.dayOfYear}/364 · Anchor: ${fmtDate(info.yearStart)}`);
-    }
-
-    const datePick = $("datePick");
-    if (datePick) datePick.value = isoDate(state.date);
-
-    paintRing(info);
-    paintWeekDots(info);
-    paintRemnantCalendar(info);
-    paintGregorianCalendar(state.date);
-    paintYearMap(state.date);
-    paintMoonCanvas(state.date);
-  }
-
-  function bind() {
-    populateTimezones();
-
-    $("datePick")?.addEventListener("change", (e) => {
-      if (e.target.value) {
-        state.date = fromISO(e.target.value);
-        paint();
-      }
+    $$(".tab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.tab;
+        $$(".tab").forEach(b => b.classList.toggle("active", b === btn));
+        $$(".tabPanel").forEach(p => p.classList.toggle("active", p.id === id));
+      });
     });
 
-    $("tzPick")?.addEventListener("change", (e) => {
-      state.tz = e.target.value || TZ_DEFAULT;
-      paint();
+    $("#tzPick").addEventListener("change", e => {
+      selectedTZ = e.target.value;
+      localStorage.setItem(TZ_KEY, selectedTZ);
+      render();
     });
 
-    $("btnToday")?.addEventListener("click", () => {
-      state.date = new Date();
-      paint();
+    $("#datePick").addEventListener("change", e => {
+      selectedDate = fromISO(e.target.value) || new Date();
+      render();
     });
 
-    $("prevDay")?.addEventListener("click", () => {
-      state.date = addDays(state.date, -1);
-      paint();
+    $("#btnToday").addEventListener("click", () => {
+      selectedDate = new Date();
+      render();
     });
 
-    $("nextDay")?.addEventListener("click", () => {
-      state.date = addDays(state.date, 1);
-      paint();
+    $("#prevDay").addEventListener("click", () => {
+      selectedDate = addDays(selectedDate, -1);
+      render();
     });
 
-    $("shareLink")?.addEventListener("click", async () => {
-      const url = new URL(location.href);
-      url.searchParams.set("date", isoDate(state.date));
-      url.searchParams.set("tz", state.tz);
+    $("#nextDay").addEventListener("click", () => {
+      selectedDate = addDays(selectedDate, 1);
+      render();
+    });
 
+    $("#shareLink").addEventListener("click", () => {
+      const url = `${location.origin}${location.pathname}?date=${toISO(selectedDate)}`;
+      navigator.clipboard.writeText(url);
+      toast("Link copied");
+    });
+
+    ["sleepInput", "bodyInput", "dreamInput", "emotionInput", "signsInput", "kpInput", "fieldInput", "lessonInput"].forEach(id => {
+      const el = $("#" + id);
+      el.addEventListener("input", buildWitness);
+      el.addEventListener("change", () => {
+        buildWitness();
+        render();
+      });
+    });
+
+    $("#buildWitness").addEventListener("click", buildWitness);
+    $("#copyWitness").addEventListener("click", () => {
+      navigator.clipboard.writeText(buildWitness());
+      toast("Witness copied");
+    });
+    $("#saveWitness").addEventListener("click", saveLog);
+    $("#clearWitness").addEventListener("click", () => {
+      ["sleepInput", "bodyInput", "dreamInput", "emotionInput", "signsInput", "fieldInput", "lessonInput"].forEach(id => $("#" + id).value = "");
+      $("#kpInput").selectedIndex = 0;
+      buildWitness();
+      toast("Cleared");
+    });
+
+    $("#copySeal").addEventListener("click", () => {
+      navigator.clipboard.writeText($("#sealBody").textContent);
+      toast("Seal copied");
+    });
+
+    $("#copyAllLogs").addEventListener("click", () => {
+      navigator.clipboard.writeText(logs().map(l => l.text).join("\n\n---\n\n"));
+      toast("All logs copied");
+    });
+
+    $("#exportLogs").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(logs(), null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "remnant-moon-logs.json";
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 800);
+    });
+
+    $("#importLogs").addEventListener("click", () => $("#importLogsFile").click());
+
+    $("#importLogsFile").addEventListener("change", async e => {
+      const file = e.target.files?.[0];
+      if (!file) return;
       try {
-        await navigator.clipboard.writeText(url.toString());
-        $("shareLink").textContent = "Copied ✓";
-        setTimeout(() => ($("shareLink").textContent = "Copy Link"), 1200);
+        const data = JSON.parse(await file.text());
+        if (!Array.isArray(data)) throw new Error("Invalid log file");
+        saveLogs(data.concat(logs()));
+        render();
+        toast("Logs imported");
       } catch {
-        $("shareLink").textContent = "Copy failed";
-        setTimeout(() => ($("shareLink").textContent = "Copy Link"), 1200);
+        toast("Import failed");
       }
+      e.target.value = "";
     });
 
-    const params = new URLSearchParams(location.search);
-    if (params.get("date")) state.date = fromISO(params.get("date"));
-    if (params.get("tz")) state.tz = params.get("tz");
+    $("#clearAllLogs").addEventListener("click", () => {
+      if (!confirm("Clear all saved moon logs from this browser?")) return;
+      localStorage.removeItem(LOG_KEY);
+      render();
+      toast("Logs cleared");
+    });
 
-    paint();
-    setInterval(paint, 1000);
+    render();
+    setInterval(renderClockOnly, 1000);
+    drawSky();
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    try {
-      setText("yr", new Date().getFullYear());
-      paintSky();
-      bind();
-    } catch (err) {
-      const b = $("errorBanner");
-      if (b) {
-        b.textContent = `Engine error: ${err.message}`;
-        b.classList.add("show");
-      }
-      console.error(err);
-    }
-  });
+  setup();
 })();
