@@ -12,15 +12,15 @@
   </script>
 
   <meta charset="utf-8">
-  <title>Manifest — Remnant Visual Exercise · Scroll of Fire C.O.R</title>
+  <title>Manifest — Remnant Visual Exercise · Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0b0b0f">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="Manifest Remnant Visual Exercise: intention, carrier frequency, breath, observer loop, coherence tracking, drills, ethics, and witness ledger.">
+  <meta name="description" content="Manifest Remnant Visual Exercise: visual field, carrier frequency engine, harmonic sequences, breath, observer loop, coherence, drills, ethics, and witness ledger.">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/teach.html">
 
   <meta property="og:title" content="Manifest — Remnant Visual Exercise · Scroll of Fire">
-  <meta property="og:description" content="Create. Witness. Seal. Frequency tuning, visual coherence, breath ring, observer pacing, drills, ethics, and private ledger.">
+  <meta property="og:description" content="Create. Witness. Seal. Frequency tuning, harmonic sequencing, visual coherence, breath ring, observer pacing, drills, ethics, and private ledger.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
 
@@ -40,7 +40,10 @@
       --muted: #9aa4be;
       --accent: #7af3ff;
       --gold: #f3c97a;
+      --violet: #c4a3ff;
       --danger: #ff7f91;
+      --good: #9effc1;
+      --warn: #ffe28a;
       --radius: 16px;
     }
 
@@ -54,6 +57,7 @@
       background:
         radial-gradient(900px 620px at 50% 8%, rgba(122, 243, 255, 0.10), transparent 72%),
         radial-gradient(760px 520px at 85% 28%, rgba(243, 201, 122, 0.08), transparent 70%),
+        radial-gradient(700px 520px at 12% 58%, rgba(196, 163, 255, 0.07), transparent 72%),
         linear-gradient(180deg, #05060a 0%, #0b0e14 88%);
       overflow-x: hidden;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -72,9 +76,7 @@
       border: 1px solid var(--line);
     }
 
-    .skip-link:focus {
-      left: 8px;
-    }
+    .skip-link:focus { left: 8px; }
 
     .wrap {
       max-width: var(--maxw);
@@ -142,7 +144,7 @@
     }
 
     .subtitle {
-      max-width: 880px;
+      max-width: 920px;
       margin: 0 auto 14px;
       color: var(--muted);
       line-height: 1.6;
@@ -170,6 +172,12 @@
     .col-8 { grid-column: span 8; }
     .col-9 { grid-column: span 9; }
     .col-12 { grid-column: span 12; }
+
+    .span-3 { grid-column: span 3; }
+    .span-4 { grid-column: span 4; }
+    .span-6 { grid-column: span 6; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
 
     .card {
       border: 1px solid var(--line);
@@ -279,12 +287,6 @@
     }
 
     .control-grid > * { grid-column: span 12; }
-
-    .span-3 { grid-column: span 3; }
-    .span-4 { grid-column: span 4; }
-    .span-6 { grid-column: span 6; }
-    .span-8 { grid-column: span 8; }
-    .span-12 { grid-column: span 12; }
 
     .tabs-wrap { position: relative; }
 
@@ -429,7 +431,8 @@
       margin-top: 10px;
     }
 
-    .tone.active {
+    .tone.active,
+    .seq-btn.active {
       border-color: rgba(243,201,122,.75);
       background: rgba(243,201,122,.09);
     }
@@ -533,9 +536,15 @@
       background: rgba(255,255,255,.035);
     }
 
-    .status-green { color: #9effc1; }
-    .status-yellow { color: #ffe28a; }
+    .status-green { color: var(--good); }
+    .status-yellow { color: var(--warn); }
     .status-red { color: #ff9aaa; }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
 
     .footer {
       margin-top: 18px;
@@ -569,7 +578,8 @@
 
       #trace { height: 380px; }
 
-      .freq-grid { grid-template-columns: repeat(2, 1fr); }
+      .freq-grid,
+      .mini-grid { grid-template-columns: repeat(2, 1fr); }
 
       .hud {
         position: static;
@@ -582,7 +592,8 @@
     @media (max-width: 520px) {
       .wrap { padding-inline: 12px; }
 
-      .freq-grid { grid-template-columns: 1fr; }
+      .freq-grid,
+      .mini-grid { grid-template-columns: 1fr; }
 
       .lab-btn,
       .lab-input { width: 100%; }
@@ -632,7 +643,7 @@
     <header class="page-head fancy-head">
       <h1 class="title">✨ Manifest — <em>Remnant Visual Exercise</em></h1>
       <p class="subtitle">
-        Compose one clear line, tune a carrier frequency, breathe with the field,
+        Compose one clear line, tune a carrier frequency, layer harmonics, breathe with the field,
         observe without forcing, track coherence, and seal the witness privately.
       </p>
 
@@ -698,15 +709,16 @@
                 <option value="6">Phi Weave</option>
                 <option value="7">Star Gate</option>
                 <option value="8">Chladni Field</option>
+                <option value="9">Solar Mesh</option>
               </select>
             </label>
 
             <label class="span-3">Density
-              <input id="visDensity" type="range" min="60" max="1600" value="340" class="lab-input">
+              <input id="visDensity" type="range" min="60" max="1800" value="360" class="lab-input">
             </label>
 
             <label class="span-3">Speed
-              <input id="visSpeed" type="range" min="0" max="260" value="96" class="lab-input">
+              <input id="visSpeed" type="range" min="0" max="280" value="96" class="lab-input">
             </label>
 
             <label class="span-3">Afterglow
@@ -758,29 +770,25 @@
             </div>
 
             <label>Frequency
-              <input id="freqSlider" class="lab-input" type="range" min="80" max="1200" step="1" value="432">
+              <input id="freqSlider" class="lab-input" type="range" min="40" max="1600" step="1" value="432">
             </label>
 
             <div class="volume-row">
               <label>Volume
-                <input id="volumeSlider" class="lab-input" type="range" min="0" max="100" step="1" value="28">
+                <input id="volumeSlider" class="lab-input" type="range" min="0" max="100" step="1" value="30">
               </label>
-              <span class="volume-value" id="volumeValue">28%</span>
+              <span class="volume-value" id="volumeValue">30%</span>
             </div>
 
             <div class="volume-row">
               <label>Visual Intensity
-                <input id="visualIntensity" class="lab-input" type="range" min="20" max="200" step="1" value="112">
+                <input id="visualIntensity" class="lab-input" type="range" min="20" max="220" step="1" value="118">
               </label>
-              <span class="volume-value" id="visualIntensityValue">112%</span>
+              <span class="volume-value" id="visualIntensityValue">118%</span>
             </div>
 
-            <p class="visual-intensity-note">
-              Volume controls the tone. Visual Intensity controls how strongly the field responds.
-            </p>
-
             <div class="lab-row">
-              <input id="freqInput" class="lab-input" type="number" min="80" max="1200" step="1" value="432" style="max-width:130px">
+              <input id="freqInput" class="lab-input" type="number" min="40" max="1600" step="1" value="432" style="max-width:130px">
               <button id="playFreq" class="lab-btn primary" type="button">Play</button>
               <button id="stopFreq" class="lab-btn danger" type="button">Stop</button>
             </div>
@@ -790,39 +798,29 @@
               <button class="lab-btn tone" data-carrier="369" type="button">369</button>
               <button class="lab-btn tone active" data-carrier="432" type="button">432</button>
               <button class="lab-btn tone" data-carrier="528" type="button">528</button>
+              <button class="lab-btn tone" data-carrier="741" type="button">741</button>
               <button class="lab-btn tone" data-carrier="963" type="button">963</button>
-              <button class="lab-btn tone" data-carrier="none" type="button">None</button>
             </div>
 
             <div class="lab-row">
               <label><input type="checkbox" id="binaural"> Binaural ±4 Hz</label>
               <label><input type="checkbox" id="softGate" checked> Soft fade</label>
+              <label><input type="checkbox" id="harmonicLayer"> Harmonic layer</label>
             </div>
+
+            <p class="visual-intensity-note">
+              Volume controls tone loudness. Visual Intensity controls how strongly the field reacts. Use lower volume with headphones.
+            </p>
           </div>
-
-          <div class="divider"></div>
-
-          <h3>Operator Map</h3>
-          <ol class="list compact">
-            <li><b>𝓘 Intend:</b> one line.</li>
-            <li><b>𝓛 Language:</b> speak simply.</li>
-            <li><b>𝓒 Witness:</b> notice one detail.</li>
-            <li><b>𝓢 Seal:</b> record and return.</li>
-          </ol>
-
-          <p class="hint">
-            This tool is symbolic and reflective. Use it for grounding, focus, journaling, and creative coherence.
-          </p>
         </aside>
       </article>
-    </section>
-
-    <section id="tab-carrier" class="tab" role="tabpanel">
+            </section>
+            <section id="tab-carrier" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
-          <h2>🎧 Carrier — Frequency Experience</h2>
+          <h2>🎧 Carrier — Harmonic Sequencer</h2>
           <p class="meta">
-            Pick a preset, move the slider, or type a custom value. The same carrier drives the visual field.
+            Use single tones, harmonic layers, or alternating sequences. The visual field responds to the active carrier and sequence movement.
           </p>
 
           <div class="freq-panel">
@@ -833,25 +831,25 @@
             </div>
 
             <label>Fine tune
-              <input id="freqSliderMirror" class="lab-input" type="range" min="80" max="1200" step="1" value="432">
+              <input id="freqSliderMirror" class="lab-input" type="range" min="40" max="1600" step="1" value="432">
             </label>
 
             <div class="volume-row">
               <label>Volume
-                <input id="volumeSliderMirror" class="lab-input" type="range" min="0" max="100" step="1" value="28">
+                <input id="volumeSliderMirror" class="lab-input" type="range" min="0" max="100" step="1" value="30">
               </label>
-              <span class="volume-value" id="volumeValueMirror">28%</span>
+              <span class="volume-value" id="volumeValueMirror">30%</span>
             </div>
 
             <div class="volume-row">
               <label>Visual Intensity
-                <input id="visualIntensityMirror" class="lab-input" type="range" min="20" max="200" step="1" value="112">
+                <input id="visualIntensityMirror" class="lab-input" type="range" min="20" max="220" step="1" value="118">
               </label>
-              <span class="volume-value" id="visualIntensityValueMirror">112%</span>
+              <span class="volume-value" id="visualIntensityValueMirror">118%</span>
             </div>
 
             <div class="lab-row">
-              <input id="freqInputMirror" class="lab-input" type="number" min="80" max="1200" step="1" value="432" style="max-width:140px">
+              <input id="freqInputMirror" class="lab-input" type="number" min="40" max="1600" step="1" value="432" style="max-width:140px">
               <button id="playFreqMirror" class="lab-btn primary" type="button">Play</button>
               <button id="stopFreqMirror" class="lab-btn danger" type="button">Stop</button>
             </div>
@@ -861,23 +859,64 @@
               <button class="lab-btn tone" data-carrier="369" type="button">369</button>
               <button class="lab-btn tone" data-carrier="432" type="button">432</button>
               <button class="lab-btn tone" data-carrier="528" type="button">528</button>
+              <button class="lab-btn tone" data-carrier="741" type="button">741</button>
               <button class="lab-btn tone" data-carrier="963" type="button">963</button>
-              <button class="lab-btn tone" data-carrier="none" type="button">None</button>
             </div>
+
+            <div class="divider"></div>
+
+            <h3>Alternating Paths</h3>
+            <p class="hint">
+              These are creative sound paths, not medical claims. Stop if it feels uncomfortable.
+            </p>
+
+            <div class="mini-grid">
+              <button class="lab-btn seq-btn" data-seq="ground" type="button">Ground 144 → 432</button>
+              <button class="lab-btn seq-btn" data-seq="heart" type="button">Heart 432 → 528</button>
+              <button class="lab-btn seq-btn" data-seq="clear" type="button">Clear 369 → 741</button>
+              <button class="lab-btn seq-btn" data-seq="ascend" type="button">Ascend 432 → 528 → 741 → 963</button>
+              <button class="lab-btn seq-btn" data-seq="trinity" type="button">Trinity 369 → 432 → 963</button>
+              <button class="lab-btn seq-btn" data-seq="solar" type="button">Solar 144 → 369 → 528</button>
+            </div>
+
+            <div class="lab-row">
+              <label>Step seconds
+                <input id="seqStep" class="lab-input" type="number" min="2" max="60" step="1" value="8" style="max-width:120px">
+              </label>
+              <label>Loops
+                <input id="seqLoops" class="lab-input" type="number" min="1" max="20" step="1" value="3" style="max-width:100px">
+              </label>
+              <button id="stopSeq" class="lab-btn danger" type="button">Stop Sequence</button>
+            </div>
+
+            <p class="meta" id="seqReadout">Sequence: —</p>
           </div>
         </div>
 
         <aside class="card col-5">
           <h3>Mic Tone Reader</h3>
           <p class="meta">Optional local mic analyzer. Nothing uploads.</p>
+
           <div class="lab-row">
             <button id="micOn" class="lab-btn" type="button">Enable Mic</button>
             <button id="micOff" class="lab-btn" disabled type="button">Stop Mic</button>
             <button id="useTone" class="lab-btn" disabled type="button">Use Detected</button>
           </div>
+
           <p class="meta" id="freqRead">—</p>
           <canvas id="wave" class="small-canvas" width="720" height="130"></canvas>
           <canvas id="fft" class="small-canvas" width="720" height="130"></canvas>
+
+          <div class="divider"></div>
+
+          <h3>Clean Use</h3>
+          <ul class="list compact">
+            <li>Start low volume.</li>
+            <li>Use headphones carefully.</li>
+            <li>For calm: try 144 → 432.</li>
+            <li>For creative lift: try 432 → 528.</li>
+            <li>For bright/alert: try 741 or 963 briefly.</li>
+          </ul>
         </aside>
       </article>
     </section>
@@ -886,6 +925,7 @@
       <article class="grid">
         <div class="card col-7">
           <h2>⏱ Observer — 4-Phase Loop</h2>
+
           <ol class="list">
             <li><b>𝓘 Intend:</b> speak your line once.</li>
             <li><b>𝓛 Look:</b> find one undeniable detail.</li>
@@ -946,6 +986,7 @@
       <article class="grid">
         <div class="card col-7">
           <h2>🔡 Phrase — Tune Meaning</h2>
+
           <textarea id="phraseIn" rows="4" class="lab-input" placeholder="Type your line…"></textarea>
 
           <div class="lab-row">
@@ -968,9 +1009,8 @@
           </ul>
         </aside>
       </article>
-    </section>
-
-    <section id="tab-breath" class="tab" role="tabpanel">
+                </section>
+                <section id="tab-breath" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
           <h2>🌬 Breath — Pacing Ring</h2>
@@ -1100,7 +1140,6 @@
         </aside>
       </article>
     </section>
-
     <section id="tab-deck" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
@@ -1111,15 +1150,44 @@
             <span id="cardText" class="meta">—</span>
             <button id="useCard" class="lab-btn" type="button">Use as 𝓘</button>
           </div>
+
+          <div class="divider"></div>
+
+          <h3>Advanced Draw Categories</h3>
+
+          <div class="mini-grid">
+            <button class="lab-btn deck-type" data-deck="focus" type="button">Focus</button>
+            <button class="lab-btn deck-type" data-deck="clarity" type="button">Clarity</button>
+            <button class="lab-btn deck-type" data-deck="creation" type="button">Creation</button>
+            <button class="lab-btn deck-type" data-deck="discipline" type="button">Discipline</button>
+            <button class="lab-btn deck-type" data-deck="witness" type="button">Witness</button>
+            <button class="lab-btn deck-type" data-deck="remnant" type="button">Remnant</button>
+          </div>
+
+          <p class="hint">
+            Draws are prompts for reflection and action. They are not predictions.
+          </p>
         </div>
 
         <aside class="card col-5">
           <h3>Exercise Picker</h3>
+
           <div class="lab-row">
             <button class="lab-btn" data-ex="prime60" type="button">Prime 60</button>
             <button class="lab-btn" data-ex="focus15" type="button">Focus 15</button>
             <button class="lab-btn" data-ex="seal60" type="button">Seal 60</button>
           </div>
+
+          <div class="divider"></div>
+
+          <h3>Recommended Sequence</h3>
+
+          <ol class="list compact">
+            <li>Draw card.</li>
+            <li>Convert to one intention line.</li>
+            <li>Run observer loop.</li>
+            <li>Seal into ledger.</li>
+          </ol>
         </aside>
       </article>
     </section>
@@ -1174,35 +1242,52 @@
     <section id="tab-ethics" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
-          <h2>🛡 Ethics — Eq.9 Safety Mask</h2>
+          <h2>🛡 Ethics — Grounding Layer</h2>
 
           <p class="meta">
-            This page keeps the practice grounded. If any red condition is present, stop and return to breath-only.
+            This page is designed for reflection, focus, journaling, and creative coherence.
           </p>
 
           <div class="card">
-            <h3>Self-check</h3>
+            <h3>Self Check</h3>
+
             <div class="lab-row">
-              <label><input type="radio" name="eth" value="green" checked> Green — clear, kind, consent in place</label>
-              <label><input type="radio" name="eth" value="yellow"> Yellow — unclear, pressured, tired</label>
-              <label><input type="radio" name="eth" value="red"> Red — harm, deception, compulsion</label>
+              <label><input type="radio" name="eth" value="green" checked> Green — clear and grounded</label>
+              <label><input type="radio" name="eth" value="yellow"> Yellow — tired or distracted</label>
+              <label><input type="radio" name="eth" value="red"> Red — overwhelmed or agitated</label>
             </div>
-            <p id="ethCoach" class="hint status-green">Green: proceed with normal cycles.</p>
+
+            <p id="ethCoach" class="hint status-green">
+              Green: proceed with normal cycles.
+            </p>
           </div>
 
           <div class="card">
             <h3>Stop Rules</h3>
+
             <ul class="list">
               <li>Clarity falling, tension rising, breath tightening → stop.</li>
-              <li>Any move that reduces another person’s dignity or consent → stop.</li>
-              <li>Grandiosity, guarantees, or compulsive checking → stop.</li>
+              <li>Take breaks regularly.</li>
+              <li>Return to observation over assumption.</li>
+              <li>Use the ledger as a witness, not proof.</li>
             </ul>
           </div>
         </div>
 
         <aside class="card col-5">
           <h3>Mask to Ledger</h3>
-          <button id="ethMark" class="lab-btn" type="button">Append Mask → Ledger Note</button>
+
+          <button id="ethMark" class="lab-btn" type="button">
+            Append Mask → Ledger Note
+          </button>
+
+          <div class="divider"></div>
+
+          <h3>Reminder</h3>
+
+          <p class="meta">
+            Reflection becomes stronger when paired with observable reality and consistent action.
+          </p>
         </aside>
       </article>
     </section>
@@ -1210,15 +1295,18 @@
     <section id="tab-maps" class="tab" role="tabpanel">
       <article class="grid">
         <div class="card col-7">
+
           <h2>🧠 Maps — Anchors & Memory</h2>
 
           <details class="card" open>
             <summary><strong>Bias Interrupt</strong></summary>
+
             <ol class="list">
               <li>Name the pull.</li>
               <li>Counter with one neutral observable fact.</li>
               <li>Return to one line and one breath.</li>
             </ol>
+
             <div class="lab-row">
               <input id="biasName" class="lab-input" placeholder="Bias label…">
               <input id="biasFact" class="lab-input" placeholder="Neutral fact…">
@@ -1228,12 +1316,14 @@
 
           <details class="card">
             <summary><strong>Anchor Matrix</strong></summary>
+
             <div class="grid">
               <textarea id="anchSee" class="lab-input col-6" rows="2" placeholder="SEE anchor"></textarea>
               <textarea id="anchHear" class="lab-input col-6" rows="2" placeholder="HEAR anchor"></textarea>
               <textarea id="anchFeel" class="lab-input col-6" rows="2" placeholder="FEEL anchor"></textarea>
               <textarea id="anchSay" class="lab-input col-6" rows="2" placeholder="SAY anchor"></textarea>
             </div>
+
             <div class="lab-row">
               <button id="anchorSave" class="lab-btn" type="button">Save Anchors</button>
               <button id="anchorLoad" class="lab-btn" type="button">Load Anchors</button>
@@ -1242,40 +1332,58 @@
 
           <details class="card">
             <summary><strong>Memory Grid</strong></summary>
+
             <div class="grid">
-              <textarea class="lab-input col-4" rows="2" id="m00" placeholder="0,0"></textarea>
-              <textarea class="lab-input col-4" rows="2" id="m01" placeholder="0,1"></textarea>
-              <textarea class="lab-input col-4" rows="2" id="m02" placeholder="0,2"></textarea>
-              <textarea class="lab-input col-4" rows="2" id="m10" placeholder="1,0"></textarea>
-              <textarea class="lab-input col-4" rows="2" id="m11" placeholder="1,1"></textarea>
-              <textarea class="lab-input col-4" rows="2" id="m12" placeholder="1,2"></textarea>
-              <textarea class="lab-input col-4" rows="2" id="m20" placeholder="2,0"></textarea>
-              <textarea class="lab-input col-4" rows="2" id="m21" placeholder="2,1"></textarea>
-              <textarea class="lab-input col-4" rows="2" id="m22" placeholder="2,2"></textarea>
+              <textarea class="lab-input col-4" rows="2" id="m00"></textarea>
+              <textarea class="lab-input col-4" rows="2" id="m01"></textarea>
+              <textarea class="lab-input col-4" rows="2" id="m02"></textarea>
+
+              <textarea class="lab-input col-4" rows="2" id="m10"></textarea>
+              <textarea class="lab-input col-4" rows="2" id="m11"></textarea>
+              <textarea class="lab-input col-4" rows="2" id="m12"></textarea>
+
+              <textarea class="lab-input col-4" rows="2" id="m20"></textarea>
+              <textarea class="lab-input col-4" rows="2" id="m21"></textarea>
+              <textarea class="lab-input col-4" rows="2" id="m22"></textarea>
             </div>
+
             <div class="lab-row">
               <button id="memSave" class="lab-btn" type="button">Save Grid</button>
               <button id="memLoad" class="lab-btn" type="button">Load Grid</button>
               <button id="memClear" class="lab-btn" type="button">Clear</button>
             </div>
           </details>
+
         </div>
 
         <aside class="card col-5">
           <h3>Use</h3>
+
           <ul class="list">
             <li>Interrupt → Anchor → Line → Exhale.</li>
-            <li>Place key words in the 3×3 grid.</li>
-            <li>Rehearse clockwise with a soft exhale.</li>
+            <li>Place key words into the grid.</li>
+            <li>Rehearse clockwise.</li>
+            <li>Seal meaningful observations.</li>
           </ul>
+
+          <div class="divider"></div>
+
+          <h3>Reality Anchor</h3>
+
+          <p class="meta">
+            Observation → Reflection → Action → Record.
+          </p>
         </aside>
       </article>
     </section>
 
     <footer class="footer">
-      <div class="divider" aria-hidden="true"></div>
-      <p class="meta">© <span id="yr">2025</span> Aaron Paul Laird — Scroll of Fire C.O.R</p>
+      <div class="divider"></div>
+      <p class="meta">
+        © <span id="yr">2026</span> Aaron Paul Laird — Scroll of Fire
+      </p>
     </footer>
+
   </main>
 
   <script>
@@ -1334,10 +1442,7 @@
 
       function switchTo(id, opts = {}) {
         const panel = $("#tab-" + id);
-        if (!panel) {
-          toast("Missing section: " + id);
-          return;
-        }
+        if (!panel) return toast("Missing section: " + id);
 
         tabs().forEach(t => t.classList.toggle("active", t.id === "tab-" + id));
 
@@ -1355,7 +1460,6 @@
         }
 
         store.set("sof_last_tab", id);
-
         if (!opts.noHash) history.replaceState(null, "", "#tab=" + id);
       }
 
@@ -1384,49 +1488,38 @@
         if (m) switchTo(m[1], { fromHash: true, noHash: true });
       });
 
-      on(document, "keydown", e => {
-        if (e.target.matches("input,textarea,select,button")) return;
-
-        const map = {
-          "1": "remnant",
-          "2": "carrier",
-          "3": "observer",
-          "4": "phrase",
-          "5": "breath",
-          "6": "coherence",
-          "7": "drills",
-          "8": "timer",
-          "9": "deck",
-          "0": "ledger"
-        };
-
-        if (map[e.key]) {
-          e.preventDefault();
-          switchTo(map[e.key]);
-        }
-
-        if ((e.key === "p" || e.key === "P") && $("#dlTrace")) {
-          e.preventDefault();
-          $("#dlTrace").click();
-        }
-
-        if ((e.key === "r" || e.key === "R") && $("#newSeed")) {
-          e.preventDefault();
-          $("#newSeed").click();
-        }
-
-        if (e.key === "Escape") stopTone();
-      });
-
-      /* Audio / Frequency */
+      /* Audio Engine */
       let audioCtx = null;
       let master = null;
       let leftOsc = null;
       let rightOsc = null;
+      let layerOscs = [];
+      let seqTimer = null;
+
       let activeFreq = 432;
+      let activeVolume = store.get("sof_carrier_volume_v3", 28) / 100;
+      let visualPower = store.get("sof_visual_power_v3", 115) / 100;
       let playing = false;
-      let activeVolume = 0.28;
-      let visualPower = 1.12;
+      let sequenceRunning = false;
+
+      const HARMONIC_PRESETS = {
+        single: [1],
+        octave: [1, 2],
+        fifth: [1, 1.5],
+        triad: [1, 1.25, 1.5],
+        deep: [0.5, 1, 2],
+        crown: [1, 2, 3],
+        field: [0.5, 1, 1.5, 2]
+      };
+
+      const SEQUENCES = {
+        calm: [432, 396, 417, 432],
+        focus: [144, 369, 432, 528],
+        clarity: [432, 528, 741, 963],
+        restore: [396, 432, 528, 639],
+        ascent: [144, 288, 432, 528, 963],
+        remnant: [144, 369, 432, 528, 963, 432]
+      };
 
       function volumeToGain(percent) {
         const p = Math.max(0, Math.min(100, Number(percent) || 0)) / 100;
@@ -1443,8 +1536,92 @@
         return audioCtx;
       }
 
+      function stopTone() {
+        try { leftOsc && leftOsc.stop(); } catch {}
+        try { rightOsc && rightOsc.stop(); } catch {}
+
+        layerOscs.forEach(o => {
+          try { o.stop(); } catch {}
+        });
+
+        leftOsc = null;
+        rightOsc = null;
+        layerOscs = [];
+        playing = false;
+        syncFreqUI();
+      }
+
+      function stopSequence() {
+        clearInterval(seqTimer);
+        seqTimer = null;
+        sequenceRunning = false;
+        $("#seqState") && ($("#seqState").textContent = "sequence stopped");
+      }
+
+      function playTone(freq = activeFreq) {
+        const ac = getAudio();
+        if (ac.state === "suspended") ac.resume();
+
+        stopTone();
+
+        activeFreq = clampFreq(freq);
+
+        const binaural = $("#binaural")?.checked;
+        const detune = binaural ? 4 : 0;
+        const soft = $("#softGate")?.checked;
+        const harmonicMode = $("#harmonicMode")?.value || "single";
+        const ratios = HARMONIC_PRESETS[harmonicMode] || [1];
+
+        const now = ac.currentTime;
+        const baseGain = 0.48 / Math.max(1, ratios.length);
+
+        function makeOsc(freqValue, pan = 0) {
+          const osc = ac.createOscillator();
+          const gain = ac.createGain();
+          const panner = ac.createStereoPanner ? ac.createStereoPanner() : null;
+
+          osc.type = $("#waveType")?.value || "sine";
+          osc.frequency.setValueAtTime(freqValue, now);
+
+          gain.gain.value = soft ? 0.0001 : baseGain;
+          if (soft) gain.gain.exponentialRampToValueAtTime(baseGain, now + 0.18);
+
+          if (panner) {
+            panner.pan.value = pan;
+            osc.connect(gain).connect(panner).connect(master);
+          } else {
+            osc.connect(gain).connect(master);
+          }
+
+          osc.start();
+          return osc;
+        }
+
+        ratios.forEach((ratio, index) => {
+          const f = activeFreq * ratio;
+          if (f >= 40 && f <= 1800) {
+            const pan = ratios.length === 1 ? 0 : -0.55 + (1.1 * index / Math.max(1, ratios.length - 1));
+            layerOscs.push(makeOsc(f, pan));
+          }
+        });
+
+        if (binaural) {
+          leftOsc = makeOsc(activeFreq - detune, -0.85);
+          rightOsc = makeOsc(activeFreq + detune, 0.85);
+        }
+
+        playing = true;
+        syncFreqUI();
+        syncVolumeUI(activeVolume * 100);
+        toast(activeFreq + " Hz · " + Math.round(activeVolume * 100) + "%");
+      }
+
+      function clampFreq(freq) {
+        return Math.max(40, Math.min(1800, Math.round(Number(freq) || 432)));
+      }
+
       function syncFreqUI(freq = activeFreq) {
-        activeFreq = Math.max(80, Math.min(1200, Math.round(Number(freq) || 432)));
+        activeFreq = clampFreq(freq);
 
         ["#freqValue", "#freqValueMirror"].forEach(id => {
           const el = $(id);
@@ -1483,11 +1660,11 @@
           master.gain.setTargetAtTime(volumeToGain(v), audioCtx.currentTime, 0.035);
         }
 
-        store.set("sof_carrier_volume_v2", v);
+        store.set("sof_carrier_volume_v3", v);
       }
 
       function syncVisualPowerUI(percent = visualPower * 100) {
-        const v = Math.max(20, Math.min(200, Math.round(Number(percent) || 112)));
+        const v = Math.max(20, Math.min(220, Math.round(Number(percent) || 115)));
         visualPower = v / 100;
 
         ["#visualIntensity", "#visualIntensityMirror"].forEach(id => {
@@ -1500,81 +1677,11 @@
           if (el) el.textContent = v + "%";
         });
 
-        store.set("sof_visual_power_v2", v);
+        store.set("sof_visual_power_v3", v);
       }
-
-      function stopTone() {
-        try { leftOsc && leftOsc.stop(); } catch {}
-        try { rightOsc && rightOsc.stop(); } catch {}
-
-        leftOsc = null;
-        rightOsc = null;
-        playing = false;
-        syncFreqUI(activeFreq);
-      }
-
-      function playTone(freq = activeFreq) {
-        const ac = getAudio();
-        if (ac.state === "suspended") ac.resume();
-
-        stopTone();
-
-        activeFreq = Math.max(80, Math.min(1200, Math.round(Number(freq) || 432)));
-
-        const binaural = $("#binaural")?.checked;
-        const detune = binaural ? 4 : 0;
-        const soft = $("#softGate")?.checked;
-
-        const gainL = ac.createGain();
-        const gainR = ac.createGain();
-        const panL = ac.createStereoPanner ? ac.createStereoPanner() : null;
-        const panR = ac.createStereoPanner ? ac.createStereoPanner() : null;
-
-        leftOsc = ac.createOscillator();
-        rightOsc = ac.createOscillator();
-
-        leftOsc.type = "sine";
-        rightOsc.type = "sine";
-
-        leftOsc.frequency.setValueAtTime(activeFreq - detune, ac.currentTime);
-        rightOsc.frequency.setValueAtTime(activeFreq + detune, ac.currentTime);
-
-        const now = ac.currentTime;
-        const targetGain = 0.5;
-
-        gainL.gain.value = soft ? 0.0001 : targetGain;
-        gainR.gain.value = soft ? 0.0001 : targetGain;
-
-        if (soft) {
-          gainL.gain.exponentialRampToValueAtTime(targetGain, now + 0.18);
-          gainR.gain.exponentialRampToValueAtTime(targetGain, now + 0.18);
-        }
-
-        if (panL && panR) {
-          panL.pan.value = -0.65;
-          panR.pan.value = 0.65;
-          leftOsc.connect(gainL).connect(panL).connect(master);
-          rightOsc.connect(gainR).connect(panR).connect(master);
-        } else {
-          leftOsc.connect(gainL).connect(master);
-          rightOsc.connect(gainR).connect(master);
-        }
-
-        leftOsc.start();
-        rightOsc.start();
-
-        playing = true;
-        syncFreqUI(activeFreq);
-        syncVolumeUI(activeVolume * 100);
-        toast(activeFreq + " Hz · " + Math.round(activeVolume * 100) + "%");
-      }
-
-      window.addEventListener("pointerdown", () => {
-        if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
-      }, { once: true, passive: true });
 
       function setFrequencyOnly(freq) {
-        activeFreq = Math.max(80, Math.min(1200, Math.round(Number(freq) || 432)));
+        activeFreq = clampFreq(freq);
         if (playing) playTone(activeFreq);
         else syncFreqUI(activeFreq);
       }
@@ -1593,26 +1700,62 @@
 
       on($("#playFreq"), "click", () => playTone(activeFreq));
       on($("#playFreqMirror"), "click", () => playTone(activeFreq));
-      on($("#stopFreq"), "click", stopTone);
-      on($("#stopFreqMirror"), "click", stopTone);
+      on($("#stopFreq"), "click", () => { stopSequence(); stopTone(); });
+      on($("#stopFreqMirror"), "click", () => { stopSequence(); stopTone(); });
 
       document.addEventListener("click", e => {
         const btn = e.target.closest(".tone[data-carrier]");
         if (!btn) return;
 
         const val = btn.dataset.carrier;
-        if (val === "none") stopTone();
-        else {
+        if (val === "none") {
+          stopSequence();
+          stopTone();
+        } else {
+          stopSequence();
           setFrequencyOnly(Number(val));
           playTone(Number(val));
         }
       });
 
-      syncVolumeUI(store.get("sof_carrier_volume_v2", 28));
-      syncVisualPowerUI(store.get("sof_visual_power_v2", 112));
+      function runSequence(name) {
+        const seq = SEQUENCES[name] || SEQUENCES.remnant;
+        let i = 0;
+        stopSequence();
+        sequenceRunning = true;
+
+        const stepSeconds = Math.max(2, Math.min(60, Number($("#seqSeconds")?.value || 8)));
+
+        function step() {
+          const f = seq[i % seq.length];
+          setFrequencyOnly(f);
+          playTone(f);
+          $("#seqState") && ($("#seqState").textContent = name + " · " + f + " Hz");
+          i++;
+        }
+
+        step();
+        seqTimer = setInterval(step, stepSeconds * 1000);
+      }
+
+      $$("[data-seq]").forEach(btn => {
+        on(btn, "click", () => runSequence(btn.dataset.seq));
+      });
+
+      on($("#seqStop"), "click", () => {
+        stopSequence();
+        stopTone();
+      });
+
+      window.addEventListener("pointerdown", () => {
+        if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+      }, { once: true, passive: true });
+
+      syncVolumeUI(activeVolume * 100);
+      syncVisualPowerUI(visualPower * 100);
       syncFreqUI(432);
 
-      /* Visual */
+      /* Visual Engine */
       const canvas = $("#trace");
       const ctx = canvas?.getContext?.("2d");
       const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1622,7 +1765,6 @@
 
       function fitCanvas() {
         if (!canvas || !ctx) return;
-
         const rect = canvas.getBoundingClientRect();
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
         canvas.width = Math.max(320, Math.floor(rect.width * dpr));
@@ -1691,143 +1833,178 @@
         ctx.arc(cx, cy, glowRadius, 0, Math.PI * 2);
         ctx.fill();
 
-        if (mode === 1) {
-          for (let k = 0; k < 5; k++) {
-            ctx.beginPath();
-            for (let i = 0; i <= n; i++) {
-              const t = i / n * Math.PI * 2;
-              const x = cx + Math.sin((2 + k) * t + phi * .012 * s) * w * .33;
-              const y = cy + Math.sin((3 + k + freqRatio * 6) * t + phi * .010 * s) * h * .27;
-              i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-            }
-            ctx.lineWidth = st();
-            ctx.strokeStyle = pal(k / 5, .42 + .20 * soundPush);
-            ctx.stroke();
-          }
-        } else if (mode === 2) {
-          for (let i = 0; i < n; i++) {
-            const u = i / n * Math.PI * 2 + phi * .006 * s;
-            for (let j = 0; j < 10; j++) {
-              const v = j / 10 * Math.PI * 2;
-              const R = baseR * 1.28;
-              const r = baseR * .38;
-              const x = (R + r * Math.cos(v)) * Math.cos(u);
-              const y = (R + r * Math.cos(v)) * Math.sin(u) * .58;
-              const z = r * Math.sin(v);
-              const d = 500 / (620 + z);
-              ctx.fillStyle = pal((z + r) / (2 * r), .62 + .18 * soundPush);
-              ctx.fillRect(cx + x * d, cy + y * d, st(), st());
-            }
-          }
-        } else if (mode === 3) {
-          ctx.beginPath();
-          for (let i = 0; i <= n; i++) {
-            const t = i / n * Math.PI * 8;
-            const k = 3 + Math.round(freqRatio * 7);
-            const r = baseR * 1.55 * Math.cos(k * t + phi * .012 * s);
-            const x = cx + r * Math.cos(t);
-            const y = cy + r * Math.sin(t);
-            i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-          }
-          ctx.strokeStyle = pal(.78, .70 + .18 * soundPush);
-          ctx.lineWidth = st();
-          ctx.stroke();
-        } else if (mode === 4) {
-          for (let i = 0; i < n; i++) {
-            const a = i * .618 + phi * .012 * s;
-            const r = baseR + Math.sin(i * .055 + phi * .014) * baseR * .62;
-            const x = cx + Math.cos(a) * r * (1 + .35 * Math.sin(a * 3));
-            const y = cy + Math.sin(a) * r * .62;
-            ctx.fillStyle = pal((i % 100) / 100, .65 + .20 * soundPush);
-            ctx.fillRect(x, y, st(), st());
-            if ($("#sym")?.checked) ctx.fillRect(w - x, y, st(), st());
-          }
-        } else if (mode === 5) {
-          for (let b = 0; b < 7; b++) {
-            ctx.beginPath();
-            for (let x = 0; x <= w; x += 2) {
-              const y = cy + Math.sin(x * .012 + b * .65 + phi * .012 * s) * h * (.11 + .05 * soundPush) +
-                ($("#noise")?.checked ? Math.sin(seed + x * .03 + b) * 8 : 0);
-              x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-            }
-            ctx.lineWidth = st();
-            ctx.strokeStyle = pal(b / 7, .40 + .22 * soundPush);
-            ctx.stroke();
-          }
-        } else if (mode === 6) {
-          ctx.beginPath();
-          const PHI = (1 + Math.sqrt(5)) / 2;
-          for (let i = 0; i <= n; i++) {
-            const t = i / n * Math.PI * 2;
-            const r = baseR * 1.85 * (0.5 + 0.5 * Math.sin(PHI * t + phi * .012 * s));
-            const x = cx + r * Math.cos(t);
-            const y = cy + r * Math.sin(PHI * t);
-            i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-          }
-          ctx.strokeStyle = pal(.68, .66 + .22 * soundPush);
-          ctx.lineWidth = st();
-          ctx.stroke();
-        } else if (mode === 7) {
-          const rays = 12 + Math.round(freqRatio * 12);
-          for (let i = 0; i < rays; i++) {
-            const a = i / rays * Math.PI * 2 + phi * .004 * s;
-            ctx.beginPath();
-            ctx.moveTo(cx, cy);
-            const r = baseR * (1.6 + 0.45 * Math.sin(phi * .02 + i));
-            ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
-            ctx.strokeStyle = pal(i / rays, .28 + .26 * soundPush);
-            ctx.lineWidth = Math.max(1, st() * .65);
-            ctx.stroke();
-          }
-          for (let i = 0; i < n; i++) {
-            const a = i / n * Math.PI * 2 + phi * .009 * s;
-            const r = baseR * (0.6 + 1.1 * noiseVal(i));
-            const x = cx + Math.cos(a) * r;
-            const y = cy + Math.sin(a) * r;
-            ctx.fillStyle = pal((i % 100) / 100, .66);
-            ctx.fillRect(x, y, st(), st());
-          }
-        } else if (mode === 8) {
-          const cells = Math.max(7, Math.round(11 + visualPower * 4));
-          const size = Math.max(12, Math.min(w, h) / cells);
-          for (let y = 0; y < h; y += size) {
-            for (let x = 0; x < w; x += size) {
-              const v = Math.sin((x / w) * Math.PI * (3 + freqRatio * 5) + phi * .02 * s) *
-                        Math.sin((y / h) * Math.PI * (2 + freqRatio * 7) - phi * .017 * s);
-              if (Math.abs(v) < 0.12 + 0.08 * soundPush) {
-                ctx.fillStyle = pal((v + 1) / 2, .42 + .20 * soundPush);
-                ctx.fillRect(x, y, Math.max(1, st()), Math.max(1, st()));
-              }
-            }
-          }
-        } else {
-          for (let i = 0; i < n; i++) {
-            const a = i / n * Math.PI * 2 + phi * .006 * s;
-            const wobble = Math.sin(i * .05 + phi * .018 * s + freqRatio * 8);
-            const r = baseR * (0.85 + 0.48 * wobble);
-            const jitter = $("#noise")?.checked ? Math.sin(seed + i * 12.989) * 5 : 0;
-            const x = cx + Math.cos(a) * (r + jitter);
-            const y = cy + Math.sin(a * 1.08) * (r * .68 + jitter);
-            ctx.fillStyle = pal((i % 100) / 100, .65 + .22 * soundPush);
-            ctx.beginPath();
-            ctx.arc(x, y, st() * .78, 0, Math.PI * 2);
-            ctx.fill();
-
-            if ($("#sym")?.checked) {
-              ctx.beginPath();
-              ctx.arc(w - x, y, st() * .78, 0, Math.PI * 2);
-              ctx.fill();
-            }
-          }
-        }
+        if (mode === 1) drawLattice(w, h, cx, cy, n, s, freqRatio);
+        else if (mode === 2) drawTorus(w, h, cx, cy, n, s, baseR, soundPush);
+        else if (mode === 3) drawRose(w, h, cx, cy, n, s, baseR, freqRatio, soundPush);
+        else if (mode === 4) drawVortex(w, h, cx, cy, n, s, baseR, soundPush);
+        else if (mode === 5) drawAurora(w, h, cx, cy, s, soundPush);
+        else if (mode === 6) drawPhi(w, h, cx, cy, n, s, baseR, soundPush);
+        else if (mode === 7) drawStarGate(w, h, cx, cy, n, s, baseR, freqRatio, soundPush);
+        else if (mode === 8) drawChladni(w, h, s, freqRatio, soundPush);
+        else drawFlow(w, h, cx, cy, n, s, baseR, freqRatio, soundPush);
 
         ctx.fillStyle = "rgba(244,241,232,.92)";
         ctx.font = "700 13px Inter, system-ui, sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText(playing ? activeFreq + " Hz · " + Math.round(activeVolume * 100) + "% ACTIVE" : "VISUAL FIELD", cx, 25);
+        ctx.fillText(
+          playing ? activeFreq + " Hz · " + Math.round(activeVolume * 100) + "% ACTIVE" : "VISUAL FIELD",
+          cx,
+          25
+        );
 
         phi += s;
         if (!reduceMotion) requestAnimationFrame(draw);
+      }
+
+      function drawFlow(w, h, cx, cy, n, s, baseR, freqRatio, soundPush) {
+        for (let i = 0; i < n; i++) {
+          const a = i / n * Math.PI * 2 + phi * .006 * s;
+          const wobble = Math.sin(i * .05 + phi * .018 * s + freqRatio * 8);
+          const r = baseR * (0.85 + 0.48 * wobble);
+          const jitter = $("#noise")?.checked ? Math.sin(seed + i * 12.989) * 5 : 0;
+          const x = cx + Math.cos(a) * (r + jitter);
+          const y = cy + Math.sin(a * 1.08) * (r * .68 + jitter);
+
+          ctx.fillStyle = pal((i % 100) / 100, .65 + .22 * soundPush);
+          ctx.beginPath();
+          ctx.arc(x, y, st() * .78, 0, Math.PI * 2);
+          ctx.fill();
+
+          if ($("#sym")?.checked) {
+            ctx.beginPath();
+            ctx.arc(w - x, y, st() * .78, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+
+      function drawLattice(w, h, cx, cy, n, s, freqRatio) {
+        for (let k = 0; k < 5; k++) {
+          ctx.beginPath();
+          for (let i = 0; i <= n; i++) {
+            const t = i / n * Math.PI * 2;
+            const x = cx + Math.sin((2 + k) * t + phi * .012 * s) * w * .33;
+            const y = cy + Math.sin((3 + k + freqRatio * 6) * t + phi * .010 * s) * h * .27;
+            i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+          }
+          ctx.lineWidth = st();
+          ctx.strokeStyle = pal(k / 5, .52);
+          ctx.stroke();
+        }
+      }
+
+      function drawTorus(w, h, cx, cy, n, s, baseR, soundPush) {
+        for (let i = 0; i < n; i++) {
+          const u = i / n * Math.PI * 2 + phi * .006 * s;
+          for (let j = 0; j < 10; j++) {
+            const v = j / 10 * Math.PI * 2;
+            const R = baseR * 1.28;
+            const r = baseR * .38;
+            const x = (R + r * Math.cos(v)) * Math.cos(u);
+            const y = (R + r * Math.cos(v)) * Math.sin(u) * .58;
+            const z = r * Math.sin(v);
+            const d = 500 / (620 + z);
+            ctx.fillStyle = pal((z + r) / (2 * r), .62 + .18 * soundPush);
+            ctx.fillRect(cx + x * d, cy + y * d, st(), st());
+          }
+        }
+      }
+
+      function drawRose(w, h, cx, cy, n, s, baseR, freqRatio, soundPush) {
+        ctx.beginPath();
+        for (let i = 0; i <= n; i++) {
+          const t = i / n * Math.PI * 8;
+          const k = 3 + Math.round(freqRatio * 7);
+          const r = baseR * 1.55 * Math.cos(k * t + phi * .012 * s);
+          const x = cx + r * Math.cos(t);
+          const y = cy + r * Math.sin(t);
+          i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+        }
+        ctx.strokeStyle = pal(.78, .70 + .18 * soundPush);
+        ctx.lineWidth = st();
+        ctx.stroke();
+      }
+
+      function drawVortex(w, h, cx, cy, n, s, baseR, soundPush) {
+        for (let i = 0; i < n; i++) {
+          const a = i * .618 + phi * .012 * s;
+          const r = baseR + Math.sin(i * .055 + phi * .014) * baseR * .62;
+          const x = cx + Math.cos(a) * r * (1 + .35 * Math.sin(a * 3));
+          const y = cy + Math.sin(a) * r * .62;
+          ctx.fillStyle = pal((i % 100) / 100, .65 + .20 * soundPush);
+          ctx.fillRect(x, y, st(), st());
+          if ($("#sym")?.checked) ctx.fillRect(w - x, y, st(), st());
+        }
+      }
+
+      function drawAurora(w, h, cx, cy, s, soundPush) {
+        for (let b = 0; b < 7; b++) {
+          ctx.beginPath();
+          for (let x = 0; x <= w; x += 2) {
+            const y = cy + Math.sin(x * .012 + b * .65 + phi * .012 * s) * h * (.11 + .05 * soundPush) +
+              ($("#noise")?.checked ? Math.sin(seed + x * .03 + b) * 8 : 0);
+            x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+          }
+          ctx.lineWidth = st();
+          ctx.strokeStyle = pal(b / 7, .40 + .22 * soundPush);
+          ctx.stroke();
+        }
+      }
+
+      function drawPhi(w, h, cx, cy, n, s, baseR, soundPush) {
+        ctx.beginPath();
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        for (let i = 0; i <= n; i++) {
+          const t = i / n * Math.PI * 2;
+          const r = baseR * 1.85 * (0.5 + 0.5 * Math.sin(PHI * t + phi * .012 * s));
+          const x = cx + r * Math.cos(t);
+          const y = cy + r * Math.sin(PHI * t);
+          i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+        }
+        ctx.strokeStyle = pal(.68, .66 + .22 * soundPush);
+        ctx.lineWidth = st();
+        ctx.stroke();
+      }
+
+      function drawStarGate(w, h, cx, cy, n, s, baseR, freqRatio, soundPush) {
+        const rays = 12 + Math.round(freqRatio * 12);
+        for (let i = 0; i < rays; i++) {
+          const a = i / rays * Math.PI * 2 + phi * .004 * s;
+          ctx.beginPath();
+          ctx.moveTo(cx, cy);
+          const r = baseR * (1.6 + 0.45 * Math.sin(phi * .02 + i));
+          ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+          ctx.strokeStyle = pal(i / rays, .28 + .26 * soundPush);
+          ctx.lineWidth = Math.max(1, st() * .65);
+          ctx.stroke();
+        }
+
+        for (let i = 0; i < n; i++) {
+          const a = i / n * Math.PI * 2 + phi * .009 * s;
+          const r = baseR * (0.6 + 1.1 * noiseVal(i));
+          const x = cx + Math.cos(a) * r;
+          const y = cy + Math.sin(a) * r;
+          ctx.fillStyle = pal((i % 100) / 100, .66);
+          ctx.fillRect(x, y, st(), st());
+        }
+      }
+
+      function drawChladni(w, h, s, freqRatio, soundPush) {
+        const cells = Math.max(7, Math.round(11 + visualPower * 4));
+        const size = Math.max(12, Math.min(w, h) / cells);
+
+        for (let y = 0; y < h; y += size) {
+          for (let x = 0; x < w; x += size) {
+            const v =
+              Math.sin((x / w) * Math.PI * (3 + freqRatio * 5) + phi * .02 * s) *
+              Math.sin((y / h) * Math.PI * (2 + freqRatio * 7) - phi * .017 * s);
+
+            if (Math.abs(v) < 0.12 + 0.08 * soundPush) {
+              ctx.fillStyle = pal((v + 1) / 2, .42 + .20 * soundPush);
+              ctx.fillRect(x, y, Math.max(1, st()), Math.max(1, st()));
+            }
+          }
+        }
       }
 
       draw();
@@ -1845,7 +2022,7 @@
       });
 
       on($("#savePreset"), "click", () => {
-        store.set("sof_remnant_preset_clean_v2", {
+        store.set("sof_remnant_preset_v3", {
           mode: $("#visMode")?.value,
           density: $("#visDensity")?.value,
           speed: $("#visSpeed")?.value,
@@ -1857,13 +2034,15 @@
           noise: $("#noise")?.checked,
           freq: activeFreq,
           volume: Math.round(activeVolume * 100),
-          visualPower: Math.round(visualPower * 100)
+          visualPower: Math.round(visualPower * 100),
+          harmonic: $("#harmonicMode")?.value,
+          wave: $("#waveType")?.value
         });
         toast("Preset saved");
       });
 
       on($("#loadPreset"), "click", () => {
-        const p = store.get("sof_remnant_preset_clean_v2", null);
+        const p = store.get("sof_remnant_preset_v3", null);
         if (!p) return toast("No preset");
 
         $("#visMode") && ($("#visMode").value = p.mode);
@@ -1875,9 +2054,12 @@
         $("#pulseLock") && ($("#pulseLock").value = p.pulse);
         $("#sym") && ($("#sym").checked = !!p.sym);
         $("#noise") && ($("#noise").checked = !!p.noise);
+        $("#harmonicMode") && ($("#harmonicMode").value = p.harmonic || "single");
+        $("#waveType") && ($("#waveType").value = p.wave || "sine");
+
         setFrequencyOnly(p.freq || 432);
         syncVolumeUI(p.volume || 28);
-        syncVisualPowerUI(p.visualPower || 112);
+        syncVisualPowerUI(p.visualPower || 115);
         toast("Preset loaded");
       });
 
@@ -1886,10 +2068,10 @@
         if (!line) return toast("Write an intention line first");
 
         const sequence = [
-          { label: "𝓘 Intend", mode: 3, breath: "In" },
-          { label: "𝓛 Look", mode: 1, breath: "Hold" },
-          { label: "𝓒 Coalesce", mode: 0, breath: "Out" },
-          { label: "𝓢 Seal", mode: 4, breath: "Seal" }
+          { label: "𝓘 Intend", mode: 3, breath: "In", freq: 432 },
+          { label: "𝓛 Look", mode: 1, breath: "Hold", freq: 528 },
+          { label: "𝓒 Coalesce", mode: 0, breath: "Out", freq: 369 },
+          { label: "𝓢 Seal", mode: 4, breath: "Seal", freq: 432 }
         ];
 
         let i = 0;
@@ -1899,6 +2081,8 @@
           const step = sequence[i];
           $("#visMode") && ($("#visMode").value = step.mode);
           $("#hudBreath") && ($("#hudBreath").textContent = "Breath: " + step.breath);
+          setFrequencyOnly(step.freq);
+          if (playing) playTone(step.freq);
           toast(step.label);
           i++;
 
@@ -1920,11 +2104,7 @@
         try {
           const ac = getAudio();
           const stream = await navigator.mediaDevices.getUserMedia({
-            audio: {
-              echoCancellation: false,
-              noiseSuppression: false,
-              autoGainControl: false
-            },
+            audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
             video: false
           });
 
@@ -2033,6 +2213,7 @@
 
       on($("#obsStart"), "click", () => {
         if (obsTimer) return;
+
         const sec = Math.max(3, Number($("#obsSec")?.value || 10));
         const rounds = Math.max(1, Number($("#obsRounds")?.value || 3));
         const phases = ["𝓘", "𝓛", "𝓒", "𝓢"];
@@ -2098,6 +2279,7 @@
       on($("#phraseToI"), "click", () => {
         const txt = ($("#phraseOut")?.textContent || $("#phraseIn")?.value || "").trim();
         if (!txt || txt === "—") return toast("Nothing tuned yet");
+
         $("#rmnLine").value = txt;
         $("#lgLine").value = txt;
         switchTo("remnant");
@@ -2109,6 +2291,7 @@
 
       on($("#breathStart"), "click", () => {
         if (breathTimer) return;
+
         const pat = ($("#breathPat")?.value || "4-4-4-4").split("-").map(n => Number(n) || 0);
         const names = ["In", "Hold", "Out", "Hold"];
         const total = pat.reduce((a, b) => a + b, 0) * 1000;
@@ -2153,7 +2336,7 @@
         const xctx = c?.getContext?.("2d");
         if (!xctx) return;
 
-        const hist = store.get("sof_xi_hist_clean_v2", []);
+        const hist = store.get("sof_xi_hist_v3", []);
         const W = c.width;
         const H = c.height;
 
@@ -2186,9 +2369,9 @@
         $("#hudXi").textContent = "Ξ: " + xi.toFixed(2);
         $("#xiMeter").style.width = Math.round(xi * 100) + "%";
 
-        const hist = store.get("sof_xi_hist_clean_v2", []);
+        const hist = store.get("sof_xi_hist_v3", []);
         hist.unshift(xi);
-        store.set("sof_xi_hist_clean_v2", hist.slice(0, 80));
+        store.set("sof_xi_hist_v3", hist.slice(0, 80));
         drawXiSpark();
       });
 
@@ -2225,11 +2408,16 @@
         }
 
         const s = Math.max(0, Math.ceil((timerEnd - Date.now()) / 1000));
-        $("#tmOut").value = timerPhase + " — " + Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0") + " · " + (timerCycle + 1) + "/" + timerPlan;
+        $("#tmOut").value =
+          timerPhase + " — " +
+          Math.floor(s / 60) + ":" +
+          String(s % 60).padStart(2, "0") +
+          " · " + (timerCycle + 1) + "/" + timerPlan;
       }
 
       on($("#tmStart"), "click", () => {
         if (focusTimer) return;
+
         focusMin = Math.max(1, Number($("#tmFocus")?.value || 25));
         breakMin = Math.max(1, Number($("#tmBreak")?.value || 5));
         timerPlan = Math.max(1, Number($("#tmCycles")?.value || 2));
@@ -2252,55 +2440,52 @@
         $("#tmOut").value = "—";
       });
 
-      /* Streak */
-      function epochDay() { return Math.floor(Date.now() / 86400000); }
+      /* Deck */
+      const DECKS = {
+        focus: [
+          "One helpful thing, done calmly.",
+          "Clarity before speed.",
+          "Return to the line."
+        ],
+        clarity: [
+          "Name what is real.",
+          "Observe before interpreting.",
+          "Find one undeniable detail."
+        ],
+        creation: [
+          "Build one visible piece.",
+          "Shape the field through action.",
+          "Make the next version cleaner."
+        ],
+        discipline: [
+          "Small moves. True aim.",
+          "Keep the promise you can keep today.",
+          "Finish clean."
+        ],
+        witness: [
+          "Record what changed.",
+          "Notice without forcing.",
+          "Let the ledger hold the pattern."
+        ],
+        remnant: [
+          "Light reveals; love restores.",
+          "The line becomes visible through practice.",
+          "One breath. One witness. One seal."
+        ]
+      };
 
-      function renderStreak() {
-        const s = store.get("sof_streak_clean_v2", { last: -1, count: 0 });
-        $("#streakOut").textContent = "streak: " + s.count;
+      function drawCard(deck = "focus") {
+        const cards = DECKS[deck] || Object.values(DECKS).flat();
+        $("#cardText").textContent = cards[Math.floor(Math.random() * cards.length)];
       }
 
-      on($("#streakMark"), "click", () => {
-        const today = epochDay();
-        const s = store.get("sof_streak_clean_v2", { last: -1, count: 0 });
-
-        if (s.last === today) {
-          toast("Already marked today");
-          return;
-        }
-
-        s.count = s.last === today - 1 ? s.count + 1 : 1;
-        s.last = today;
-        store.set("sof_streak_clean_v2", s);
-        renderStreak();
-        toast("Marked");
-      });
-
-      renderStreak();
-
-      /* Deck */
-      const CARDS = [
-        "One helpful thing, done calmly.",
-        "Speak simply. Act kindly.",
-        "Small moves. True aim.",
-        "Steady breath, steady hand.",
-        "See one undeniable detail.",
-        "Return to the line.",
-        "Let the exhale do the work.",
-        "Clarity before speed.",
-        "Finish clean, thank gently.",
-        "I place my attention where it helps.",
-        "One page. One call. One commit.",
-        "I keep the promise I can keep today."
-      ];
-
-      on($("#drawCard"), "click", () => {
-        $("#cardText").textContent = CARDS[Math.floor(Math.random() * CARDS.length)];
-      });
+      on($("#drawCard"), "click", () => drawCard("focus"));
+      $$(".deck-type").forEach(btn => on(btn, "click", () => drawCard(btn.dataset.deck)));
 
       on($("#useCard"), "click", () => {
         const t = $("#cardText")?.textContent;
         if (!t || t === "—") return;
+
         $("#rmnLine").value = t;
         $("#lgLine").value = t;
         switchTo("remnant");
@@ -2326,7 +2511,7 @@
       }));
 
       /* Ledger */
-      const LEDGER_KEY = "sof_ledger_clean_v2";
+      const LEDGER_KEY = "sof_ledger_v3";
 
       function esc(s) {
         return String(s || "").replace(/[&<>"']/g, m => ({
@@ -2455,14 +2640,14 @@
 
         if (v === "green") el.textContent = "Green: proceed with normal cycles.";
         if (v === "yellow") el.textContent = "Yellow: shorten cycles, lighten aims, re-check breath.";
-        if (v === "red") el.textContent = "Red: halt. Switch to breath-only. Restore dignity and consent. Return later.";
+        if (v === "red") el.textContent = "Red: halt. Switch to breath-only. Return when grounded.";
 
-        store.set("sof_ethics_clean_v2", v);
+        store.set("sof_ethics_v3", v);
       }
 
       $$('input[name="eth"]').forEach(r => on(r, "change", updateEthics));
 
-      const savedEth = store.get("sof_ethics_clean_v2", "green");
+      const savedEth = store.get("sof_ethics_v3", "green");
       const savedEthRadio = $(`input[name="eth"][value="${savedEth}"]`);
       if (savedEthRadio) savedEthRadio.checked = true;
       updateEthics();
@@ -2488,7 +2673,7 @@
       });
 
       on($("#anchorSave"), "click", () => {
-        store.set("sof_anchors_clean_v2", {
+        store.set("sof_anchors_v3", {
           see: $("#anchSee")?.value || "",
           hear: $("#anchHear")?.value || "",
           feel: $("#anchFeel")?.value || "",
@@ -2498,7 +2683,7 @@
       });
 
       on($("#anchorLoad"), "click", () => {
-        const a = store.get("sof_anchors_clean_v2", {});
+        const a = store.get("sof_anchors_v3", {});
         $("#anchSee").value = a.see || "";
         $("#anchHear").value = a.hear || "";
         $("#anchFeel").value = a.feel || "";
@@ -2513,12 +2698,12 @@
           for (let c = 0; c < 3; c++) row.push($("#m" + r + c)?.value || "");
           grid.push(row);
         }
-        store.set("sof_memory_grid_clean_v2", grid);
+        store.set("sof_memory_grid_v3", grid);
         toast("Grid saved");
       });
 
       on($("#memLoad"), "click", () => {
-        const grid = store.get("sof_memory_grid_clean_v2", null);
+        const grid = store.get("sof_memory_grid_v3", null);
         if (!grid) return toast("No grid saved");
 
         for (let r = 0; r < 3; r++) {
@@ -2541,7 +2726,43 @@
         toast("Grid cleared");
       });
 
-      /* Boot */
+      on(document, "keydown", e => {
+        if (e.target.matches("input,textarea,select,button")) return;
+
+        const map = {
+          "1": "remnant",
+          "2": "carrier",
+          "3": "observer",
+          "4": "phrase",
+          "5": "breath",
+          "6": "coherence",
+          "7": "drills",
+          "8": "timer",
+          "9": "deck",
+          "0": "ledger"
+        };
+
+        if (map[e.key]) {
+          e.preventDefault();
+          switchTo(map[e.key]);
+        }
+
+        if ((e.key === "p" || e.key === "P") && $("#dlTrace")) {
+          e.preventDefault();
+          $("#dlTrace").click();
+        }
+
+        if ((e.key === "r" || e.key === "R") && $("#newSeed")) {
+          e.preventDefault();
+          $("#newSeed").click();
+        }
+
+        if (e.key === "Escape") {
+          stopSequence();
+          stopTone();
+        }
+      });
+
       const hashTab = (location.hash.match(/tab=([a-z0-9_-]+)/i) || [])[1];
       const savedTab = store.get("sof_last_tab", "");
       switchTo(hashTab || savedTab || "remnant", { fromHash: true, noHash: true });
