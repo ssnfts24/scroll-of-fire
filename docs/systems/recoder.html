@@ -111,7 +111,7 @@
     }
 
     .lede{
-      max-width:910px;
+      max-width:930px;
       font-size:1.05rem;
     }
 
@@ -214,6 +214,10 @@
       color:#ffe3a3;
     }
 
+    .btn.gold{
+      border-color:rgba(243,201,122,.72);
+    }
+
     label{
       display:block;
       color:var(--muted);
@@ -289,7 +293,7 @@
     table{
       width:100%;
       border-collapse:collapse;
-      min-width:880px;
+      min-width:980px;
     }
 
     th,td{
@@ -368,6 +372,66 @@
       font-weight:850;
     }
 
+    .expandZone{
+      border:1px solid rgba(243,201,122,.42);
+      background:
+        radial-gradient(700px 260px at 15% 0%,rgba(243,201,122,.10),transparent 70%),
+        linear-gradient(180deg,rgba(243,201,122,.075),rgba(255,255,255,.024));
+    }
+
+    .expandTag{
+      display:inline-flex;
+      margin-bottom:8px;
+      padding:.28rem .6rem;
+      border-radius:999px;
+      border:1px solid rgba(243,201,122,.45);
+      color:var(--gold);
+      background:rgba(243,201,122,.08);
+      font-size:.78rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .addGrid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+    }
+
+    .addGrid textarea{
+      min-height:90px;
+    }
+
+    .codeHint{
+      border:1px dashed rgba(122,243,255,.35);
+      border-radius:14px;
+      padding:12px;
+      background:rgba(122,243,255,.045);
+      color:#dffbff;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.82rem;
+      overflow:auto;
+      white-space:pre-wrap;
+    }
+
+    .expandList{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+    }
+
+    .expandCard{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:13px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .expandCard h3{
+      margin-top:0;
+    }
+
     footer{
       max-width:1240px;
       margin:auto;
@@ -377,13 +441,17 @@
 
     @media(max-width:980px){
       .col-4,.col-5,.col-6,.col-7,.col-8,.col-12{grid-column:span 12}
-      .controls,.stats{grid-template-columns:1fr 1fr}
+      .controls,.stats,.expandList{grid-template-columns:1fr 1fr}
+    }
+
+    @media(max-width:720px){
+      .addGrid{grid-template-columns:1fr}
     }
 
     @media(max-width:620px){
       .shell{padding:16px 12px}
       h1{font-size:clamp(38px,14vw,62px)}
-      .controls,.stats{grid-template-columns:1fr}
+      .controls,.stats,.expandList{grid-template-columns:1fr}
       .btn,input,select,textarea{width:100%}
     }
   </style>
@@ -405,8 +473,8 @@
       <div class="row">
         <strong>🔥 Recoder Mode:</strong>
         <span>
-          Search the table, filter by category, rewrite text live, copy the recoded result, and expand the language library.
-          This is a symbolic/philosophical tool for intentional speech.
+          Search the table, filter by category, rewrite text live, copy the recoded result, build new dictionary entries,
+          and clearly see where the language system can expand next.
         </span>
       </div>
     </aside>
@@ -416,6 +484,7 @@
       <span class="pill">Coherence language</span>
       <span class="pill">Old-world term decoding</span>
       <span class="pill">Live text recoder</span>
+      <span class="pill">Expansion builder</span>
       <span class="pill">Pattern-based vocabulary</span>
     </div>
   </header>
@@ -467,6 +536,46 @@
         </div>
       </section>
 
+      <section class="panel col-12 expandZone">
+        <span class="expandTag">Visible Expansion Zone</span>
+        <h2>Dictionary Expansion Builder</h2>
+        <p class="fine">
+          Use this to create new recoder entries. It adds the term to the live page instantly and generates the exact
+          <span class="mono">TERMS</span> array line you can paste permanently into the script.
+        </p>
+
+        <div class="addGrid">
+          <label>Category
+            <input id="newCategory" placeholder="Example: Warfare, Food, Money, Education">
+          </label>
+
+          <label>Old Term
+            <input id="newOldTerm" placeholder="Example: Stress">
+          </label>
+
+          <label>New Name
+            <input id="newName" placeholder="Example: Pressure Signal">
+          </label>
+
+          <label>Meaning
+            <textarea id="newMeaning" placeholder="What does the term really point to?"></textarea>
+          </label>
+
+          <label style="grid-column:1/-1">Use It Like This
+            <textarea id="newUse" placeholder="Example sentence using the recoded term."></textarea>
+          </label>
+        </div>
+
+        <div class="row" style="margin-top:12px">
+          <button class="btn active" id="addTermBtn" type="button">Add Term Live</button>
+          <button class="btn" id="copyArrayBtn" type="button">Copy Array Line</button>
+          <button class="btn" id="copyAllBtn" type="button">Copy Full Dictionary JSON</button>
+        </div>
+
+        <h3>Generated Dictionary Line</h3>
+        <div class="codeHint" id="arrayLine">Fill out the fields above to generate a TERMS array line.</div>
+      </section>
+
       <section class="panel col-6">
         <h2>Live Rewriter</h2>
         <p class="fine">
@@ -511,6 +620,53 @@
             </thead>
             <tbody id="termBody"></tbody>
           </table>
+        </div>
+      </section>
+
+      <section class="panel col-12 expandZone">
+        <span class="expandTag">Expansion Map</span>
+        <h2>Areas Still Worth Expanding</h2>
+        <p class="fine">
+          These are marked intentionally so you can keep growing the language system. Add these categories into the dictionary over time.
+        </p>
+
+        <div class="expandList">
+          <div class="expandCard">
+            <h3>Everyday Life</h3>
+            <p class="fine">Food, chores, home, bills, parenting, marriage, work, fatigue, routine, discipline.</p>
+          </div>
+          <div class="expandCard">
+            <h3>Spiritual Terms</h3>
+            <p class="fine">Temple, altar, priest, prophet, covenant, remnant, fire, oil, bread, water, sacrifice.</p>
+          </div>
+          <div class="expandCard">
+            <h3>System Words</h3>
+            <p class="fine">Empire, policy, economy, institution, contract, ownership, labor, debt, court, authority.</p>
+          </div>
+          <div class="expandCard">
+            <h3>Digital World</h3>
+            <p class="fine">AI, algorithm, avatar, game, simulation, code, portal, signal, network, archive, feed.</p>
+          </div>
+          <div class="expandCard">
+            <h3>Inner World</h3>
+            <p class="fine">Fear, shame, pride, anger, memory, trauma, clarity, focus, imagination, intuition.</p>
+          </div>
+          <div class="expandCard">
+            <h3>Creation Language</h3>
+            <p class="fine">Light, sound, frequency, breath, field, pattern, form, matter, motion, witness.</p>
+          </div>
+          <div class="expandCard">
+            <h3>Conflict / Warfare</h3>
+            <p class="fine">Attack, defense, weapon, shield, strategy, enemy, ally, battle, victory, surrender.</p>
+          </div>
+          <div class="expandCard">
+            <h3>Legal / Covenant</h3>
+            <p class="fine">Claim, notice, right, duty, trust, title, estate, witness, evidence, judgment.</p>
+          </div>
+          <div class="expandCard">
+            <h3>Body / Health</h3>
+            <p class="fine">Pain, illness, rest, breath, blood, nerve, digestion, sleep, strength, recovery.</p>
+          </div>
         </div>
       </section>
 
@@ -627,7 +783,6 @@
         ["Mind","Imagination","Forming Chamber","The inner faculty that previews, shapes, and recombines possible worlds.","Imagination is the Forming Chamber."],
         ["Mind","Intuition","Subtle Pattern Read","Fast perception of patterns before full conscious explanation.","Intuition is Subtle Pattern Read."],
         ["Mind","Creativity","New Pattern Birth","The bringing forth of fresh form, language, solution, or beauty.","Creativity is New Pattern Birth."],
-        ["Mind","Memory Loss","Pattern Fog","Reduced access to stored signals, names, events, or meaning.","Memory loss is Pattern Fog."],
         ["Mind","Clarity","Clean Signal","A state where perception, thought, and meaning are less distorted.","Clarity is Clean Signal."],
 
         ["Speech","Word","Carrier Signal","A spoken or written unit that carries meaning, power, memory, and direction.","A word is a Carrier Signal."],
@@ -643,29 +798,19 @@
         ["Speech","Apology","Repair Address","Speech that admits harm and opens the path toward restoration.","An apology is Repair Address."],
         ["Speech","Promise","Future Bond","A word that binds present intention to future action.","A promise is Future Bond."],
         ["Speech","Vow","Sealed Promise","A serious promise made before witness, conscience, or Source.","A vow is a Sealed Promise."],
-        ["Speech","Insult","Diminishing Signal","Speech aimed at shrinking another person's dignity or identity.","An insult is Diminishing Signal."],
         ["Speech","Teaching","Pattern Transfer","The act of transmitting understanding from one witness to another.","Teaching is Pattern Transfer."],
 
         ["Society","Government","Order Administration","The structure tasked with stewarding law, protection, justice, and public order.","Government is Order Administration."],
         ["Society","Law","Boundary Code","A formal structure that defines permitted, protected, and forbidden action.","Law is Boundary Code."],
         ["Society","Justice","Restored Balance","The right ordering of truth, consequence, repair, and protection.","Justice is Restored Balance."],
-        ["Society","Crime","Boundary Violation","An action that breaks lawful or moral boundary and harms order or life.","Crime is Boundary Violation."],
-        ["Society","Punishment","Consequence Weight","A response to violation meant to restrain, correct, or account for harm.","Punishment is Consequence Weight."],
-        ["Society","Prison","Containment System","A structure for restricting movement after violation or accusation.","Prison is Containment System."],
         ["Society","Money","Exchange Token","A symbolic medium used to store, measure, and move value.","Money is Exchange Token."],
         ["Society","Debt","Future Claim","A claim placed on future labor, resource, or payment.","Debt is Future Claim."],
         ["Society","Work","Value Labor","Directed effort that produces, maintains, repairs, or serves value.","Work is Value Labor."],
-        ["Society","Job","Assigned Labor Role","A formal position where labor is exchanged for compensation.","A job is an Assigned Labor Role."],
-        ["Society","Career","Long Path of Labor","A long-form identity path built around skill, role, and contribution.","Career is a Long Path of Labor."],
-        ["Society","School","Formation House","A structure meant to shape learning, behavior, memory, and social function.","School is Formation House."],
         ["Society","Media","Narrative Engine","The system that distributes images, stories, priorities, fear, and public meaning.","Media is the Narrative Engine."],
         ["Society","Propaganda","Directed Perception Code","Information shaped to steer belief, loyalty, fear, or behavior.","Propaganda is Directed Perception Code."],
         ["Society","Advertising","Desire Engineering","Messaging designed to shape want, identity, and purchase behavior.","Advertising is Desire Engineering."],
         ["Society","Consumer","Extraction Identity","A person reduced to buying, using, and feeding systems of demand.","Consumer is Extraction Identity."],
-        ["Society","Citizen","Civic Witness","A person with responsibility inside a shared public order.","Citizen is Civic Witness."],
         ["Society","Community","Shared Stewardship Field","A relational field of people carrying mutual responsibility, memory, and support.","Community is Shared Stewardship Field."],
-        ["Society","Family","Blood-and-Covenant House","The closest formation field of origin, care, duty, memory, and inheritance.","Family is Blood-and-Covenant House."],
-        ["Society","Culture","Inherited Meaning Field","The shared practices, stories, values, and assumptions passed through people.","Culture is Inherited Meaning Field."],
 
         ["Technology","Technology","Extended Human Instrument","Tools that extend human perception, memory, action, creation, and communication.","Technology is Extended Human Instrument."],
         ["Technology","AI","Reflective Intelligence Tool","A pattern-processing tool that reflects human language, data, intention, and use.","AI is a Reflective Intelligence Tool."],
@@ -675,41 +820,28 @@
         ["Technology","Screen","Light Window","A visual interface through which signals, images, and narratives enter attention.","A screen is a Light Window."],
         ["Technology","Code","Instruction Language","Structured commands that cause digital systems to act.","Code is Instruction Language."],
         ["Technology","Data","Captured Pattern Record","Stored information about action, identity, behavior, or state.","Data is Captured Pattern Record."],
-        ["Technology","Surveillance","Uninvited Watching System","Observation without healthy consent, trust, or transparency.","Surveillance is an Uninvited Watching System."],
-        ["Technology","Automation","Delegated Action Loop","A process where repeated actions are handed to a system.","Automation is Delegated Action Loop."],
-        ["Technology","Robot","Embodied Tool-Mind","A machine given physical action through instruction, sensing, or automation.","A robot is an Embodied Tool-Mind."],
-        ["Technology","Machine","Mechanical Servant","A constructed tool that converts force, code, or energy into action.","A machine is a Mechanical Servant."],
-        ["Technology","Circuit","Path of Signal","A guided route through which electrical instruction or energy moves.","A circuit is a Path of Signal."],
         ["Technology","Frequency","Repeated Motion Signature","A measurable rate of repeated vibration, wave, or cycle.","Frequency is Repeated Motion Signature."],
         ["Technology","Resonance","Shared Vibration Agreement","When one pattern responds strongly to another through aligned motion.","Resonance is Shared Vibration Agreement."],
         ["Technology","Signal","Meaningful Transmission","A carried pattern that can be received, interpreted, or acted upon.","Signal is Meaningful Transmission."],
-        ["Technology","Noise","Unordered Interference","Signal disruption that reduces clarity or coherence.","Noise is Unordered Interference."],
 
         ["Body","Body","Living Vessel","The embodied form through which life, action, sensation, and witness move.","The body is a Living Vessel."],
         ["Body","Brain","Pattern Organ","The biological organ that coordinates perception, memory, motion, and regulation.","The brain is a Pattern Organ."],
         ["Body","Heart","Covenant Drum","The physical and symbolic center of life rhythm, affection, courage, and devotion.","The heart is the Covenant Drum."],
         ["Body","Breath","Life Current","The rhythmic exchange that sustains life and regulates presence.","Breath is Life Current."],
         ["Body","Blood","Life River","The flowing carrier of oxygen, nutrients, heat, defense, and life memory.","Blood is Life River."],
-        ["Body","Nervous System","Signal Tree","The body-wide network of sensation, regulation, reaction, and communication.","The nervous system is the Signal Tree."],
         ["Body","Pain","Boundary Alarm","A signal that something needs attention, protection, or repair.","Pain is Boundary Alarm."],
-        ["Body","Illness","System Disturbance","A disruption in bodily order, function, defense, or balance.","Illness is System Disturbance."],
         ["Body","Health","Living Balance","A state of functional harmony, repair capacity, energy, and resilience.","Health is Living Balance."],
         ["Body","Sleep","Restoration Descent","The daily return into repair, memory processing, and nervous system reset.","Sleep is Restoration Descent."],
         ["Body","Food","Body Fuel / Earth Gift","Material nourishment taken from creation to sustain the living vessel.","Food is Body Fuel and Earth Gift."],
         ["Body","Water","Life Medium","The primary fluid medium of cleansing, movement, body chemistry, and life support.","Water is Life Medium."],
-        ["Body","Exercise","Strength Motion","Intentional movement that trains capacity, circulation, resilience, and discipline.","Exercise is Strength Motion."],
 
         ["Time & Cycles","Day","Light Cycle","One visible turn of waking, work, witness, and rest.","A day is a Light Cycle."],
         ["Time & Cycles","Night","Shadow Rest","The dark portion of the cycle given to quiet, repair, and hidden work.","Night is Shadow Rest."],
         ["Time & Cycles","Week","Sevenfold Labor Ring","A repeated seven-part cycle of work, order, rest, and return.","A week is a Sevenfold Labor Ring."],
         ["Time & Cycles","Month","Moon Gate","A cycle of lunar motion, reflection, renewal, and visible change.","A month is a Moon Gate."],
         ["Time & Cycles","Year","Solar Circuit","One full cycle of seasons, growth, decline, memory, and return.","A year is a Solar Circuit."],
-        ["Time & Cycles","Season","Earth Phase","A major environmental phase of growth, heat, harvest, decline, or rest.","A season is an Earth Phase."],
-        ["Time & Cycles","Birthday","Origin Marker","A yearly witness point marking arrival into the living field.","A birthday is an Origin Marker."],
-        ["Time & Cycles","Anniversary","Covenant Marker","A yearly witness point marking a promise, beginning, union, or event.","An anniversary is a Covenant Marker."],
         ["Time & Cycles","History","Memory River","The recorded and inherited stream of past human action, meaning, and consequence.","History is Memory River."],
         ["Time & Cycles","Future","Unformed Field","The not-yet-manifest region of possibility, consequence, and preparation.","The future is the Unformed Field."],
-        ["Time & Cycles","Past","Stored Field","The already-lived field of memory, consequence, record, and inheritance.","The past is the Stored Field."],
         ["Time & Cycles","Present","Decision Gate","The living point where witness, choice, and action enter reality.","The present is the Decision Gate."],
 
         ["Character","Identity","Name Pattern","The living structure of who a person understands themselves to be.","Identity is Name Pattern."],
@@ -720,12 +852,7 @@
         ["Character","Pride","Inflated Self-Signal","A distorted elevation of self that resists correction or truth.","Pride is Inflated Self-Signal."],
         ["Character","Courage","Forward Faith Under Pressure","The choice to move rightly even while fear is present.","Courage is Forward Faith Under Pressure."],
         ["Character","Patience","Time Trust","The ability to remain steady while process unfolds.","Patience is Time Trust."],
-        ["Character","Laziness","Dormant Stewardship","Capacity left unused through avoidance, dullness, or refusal of motion.","Laziness is Dormant Stewardship."],
-        ["Character","Greed","Hoarding Hunger","Desire that consumes beyond right measure and ignores stewardship.","Greed is Hoarding Hunger."],
-        ["Character","Envy","Misread Desire","Pain over another's portion that forgets one's own path and stewardship.","Envy is Misread Desire."],
         ["Character","Anger","Boundary Fire","Heat that rises when a boundary, value, or expectation feels violated.","Anger is Boundary Fire."],
-        ["Character","Forgiveness","Debt Release Toward Freedom","The release of vengeance-right while still allowing truth and boundaries.","Forgiveness is Debt Release Toward Freedom."],
-        ["Character","Accountability","Witness Accounting","Owning the effect of one's choices before truth and others.","Accountability is Witness Accounting."],
         ["Character","Responsibility","Response Ability","The capacity and duty to answer rightly to what is entrusted.","Responsibility is Response Ability."],
 
         ["Restoration","Problem","Misaligned Pattern","A condition where structure, action, or outcome does not match life-giving order.","A problem is a Misaligned Pattern."],
@@ -733,13 +860,9 @@
         ["Restoration","Failure","Feedback Gate","A broken attempt that reveals where pattern, skill, or timing needs correction.","Failure is Feedback Gate."],
         ["Restoration","Mistake","Learning Fracture","A wrong move that can become instruction when witnessed honestly.","A mistake is Learning Fracture."],
         ["Restoration","Success","Fruitful Alignment","A result where effort, timing, skill, and order produce good fruit.","Success is Fruitful Alignment."],
-        ["Restoration","Goal","Chosen Marker","A defined point of arrival used to guide action.","A goal is a Chosen Marker."],
-        ["Restoration","Plan","Path Design","A structured route from intention to action.","A plan is Path Design."],
         ["Restoration","Progress","Visible Alignment Gain","Movement toward a chosen marker or restored order.","Progress is Visible Alignment Gain."],
-        ["Restoration","Delay","Timing Resistance","A slowed process that may reveal obstruction, protection, preparation, or disorder.","Delay is Timing Resistance."],
         ["Restoration","Rest","Sacred Reset","A pause that restores body, mind, spirit, and order.","Rest is Sacred Reset."],
         ["Restoration","Peace","Settled Order","A state where conflict, fear, or fragmentation has been brought under calm alignment.","Peace is Settled Order."],
-        ["Restoration","Joy","Living Overflow","A bright inner current produced by gratitude, meaning, love, or restored order.","Joy is Living Overflow."],
 
         ["Power","Control","Forced Direction","An attempt to direct outcomes or people through pressure rather than rightful stewardship.","Control is Forced Direction."],
         ["Power","Authority","Entrusted Order","Rightful power given for service, protection, judgment, or stewardship.","Authority is Entrusted Order."],
@@ -747,12 +870,7 @@
         ["Power","Influence","Subtle Direction","The ability to shape perception, desire, choice, or behavior without direct force.","Influence is Subtle Direction."],
         ["Power","Manipulation","Hidden Steering","Influence that hides its aim and uses another person's weakness or ignorance.","Manipulation is Hidden Steering."],
         ["Power","Freedom","Rightly Ordered Motion","The ability to move, choose, and act within truth and responsibility.","Freedom is Rightly Ordered Motion."],
-        ["Power","Slavery","Stolen Agency","A condition where another captures a person's labor, body, will, or movement.","Slavery is Stolen Agency."],
-        ["Power","Obedience","Aligned Response","Right action under rightful authority, truth, or covenant.","Obedience is Aligned Response."],
-        ["Power","Rebellion","Order Rejection","Resistance against authority, sometimes righteous against corruption, sometimes destructive against truth.","Rebellion is Order Rejection and must be discerned."],
-        ["Power","Tyranny","Corrupted Rule","Power used to dominate rather than steward.","Tyranny is Corrupted Rule."],
         ["Power","Leadership","Directional Stewardship","Guiding others through responsibility, vision, service, and example.","Leadership is Directional Stewardship."],
-        ["Power","Service","Strength Given for Life","Using capacity to support, repair, protect, or bless others.","Service is Strength Given for Life."],
 
         ["Scroll System","Codex","Living Pattern Archive","A gathered body of maps, terms, tools, observations, and frameworks.","The Codex is a Living Pattern Archive."],
         ["Scroll System","Scroll","Witness Record","A written or symbolic record of pattern, revelation, observation, or teaching.","A scroll is a Witness Record."],
@@ -769,6 +887,56 @@
         ["Scroll System","Air","Moving Word","A symbol of breath, spirit, speech, thought, and transmission.","Air is Moving Word."]
       ];
 
+      /* ==========================================================
+         EXPANSION ZONE
+         Add new permanent dictionary terms here.
+
+         Format:
+         ["Category","Old Term","New Name","Meaning","Use it like this"],
+
+         The builder above can generate these lines for you.
+         ========================================================== */
+
+      const EXPANSION_TERMS = [
+        ["Everyday Life","Stress","Pressure Signal","A load or tension asking to be witnessed, ordered, reduced, or carried differently.","Stress becomes Pressure Signal when we stop ignoring what the body is reporting."],
+        ["Everyday Life","Busy","Scattered Labor Field","A state of many competing demands pulling attention in different directions.","Busy becomes Scattered Labor Field when action has no clear order."],
+        ["Everyday Life","Tired","Energy Low Signal","A body and mind signal asking for rest, nourishment, pacing, or repair.","Tired is Energy Low Signal, not always laziness."],
+        ["Everyday Life","Routine","Repeated Order Track","A recurring structure of action that can either preserve life or become unconscious repetition.","Routine is a Repeated Order Track."],
+        ["Everyday Life","Chore","House Stewardship Task","A necessary action that preserves the order, cleanliness, and function of the home field.","A chore is House Stewardship Task."],
+
+        ["Digital World","Game","Simulated Training Field","A constructed world where rules, rewards, risk, and identity are practiced symbolically.","A game is a Simulated Training Field."],
+        ["Digital World","Avatar","Projected Self-Form","A chosen digital body, identity, or representation inside a constructed field.","An avatar is a Projected Self-Form."],
+        ["Digital World","Feed","Attention River","A continuous stream of selected signals designed to hold or redirect attention.","The feed is an Attention River."],
+        ["Digital World","Notification","Attention Hook","A signal designed to pull awareness back into a system.","A notification is an Attention Hook."],
+        ["Digital World","Viral","Rapid Echo Spread","A signal that multiplies quickly across the social field.","Viral means Rapid Echo Spread."],
+
+        ["System Words","Empire","Dominion Machine","A power structure that expands control through law, force, money, narrative, and inheritance.","Empire is a Dominion Machine."],
+        ["System Words","Contract","Binding Word-Structure","A written agreement that creates obligation, boundary, permission, or debt.","A contract is a Binding Word-Structure."],
+        ["System Words","Policy","Behavior Code","A rule structure that directs how people or institutions act.","Policy is Behavior Code."],
+        ["System Words","Institution","Preserved Order House","A formal structure that carries authority, memory, habit, and procedure across time.","An institution is a Preserved Order House."],
+        ["System Words","Ownership","Claimed Stewardship","A declared right to possess, govern, use, or transfer something.","Ownership is Claimed Stewardship."],
+
+        ["Creation Language","Light","Revealed Signal","That which makes form visible, truth perceivable, and direction possible.","Light is Revealed Signal."],
+        ["Creation Language","Sound","Moving Pattern","Vibration carried through a medium as pressure, rhythm, voice, or signal.","Sound is Moving Pattern."],
+        ["Creation Language","Breath","Living Exchange","The rhythm of receiving and releasing life current.","Breath is Living Exchange."],
+        ["Creation Language","Field","Relational Space","The invisible or visible space where forces, meanings, bodies, or signals interact.","A field is Relational Space."],
+        ["Creation Language","Form","Held Pattern","A pattern stabilized into visible or usable shape.","Form is Held Pattern."],
+
+        ["Conflict / Warfare","Attack","Hostile Projection","A directed act meant to damage, disrupt, dominate, or weaken.","Attack is Hostile Projection."],
+        ["Conflict / Warfare","Defense","Boundary Protection","An action taken to protect life, order, truth, or rightful space.","Defense is Boundary Protection."],
+        ["Conflict / Warfare","Weapon","Force Instrument","A tool or tactic used to project power, harm, threat, or defense.","A weapon is a Force Instrument."],
+        ["Conflict / Warfare","Shield","Protection Field","A barrier, strategy, or discipline that absorbs or deflects harm.","A shield is a Protection Field."],
+        ["Conflict / Warfare","Victory","Order Secured","The outcome where a struggle results in protected order or completed aim.","Victory is Order Secured."],
+
+        ["Legal / Covenant","Claim","Declared Right","A formal or spoken assertion of right, harm, title, interest, or demand.","A claim is a Declared Right."],
+        ["Legal / Covenant","Notice","Formal Witness Signal","A written or spoken communication that creates record and accountability.","A notice is a Formal Witness Signal."],
+        ["Legal / Covenant","Evidence","Proof Fragment","A piece of record, testimony, image, or fact used to establish what happened.","Evidence is Proof Fragment."],
+        ["Legal / Covenant","Right","Protected Boundary","A recognized protection, liberty, claim, or authority.","A right is a Protected Boundary."],
+        ["Legal / Covenant","Duty","Required Stewardship","An obligation to act, protect, answer, or refrain.","Duty is Required Stewardship."]
+      ];
+
+      TERMS.push(...EXPANSION_TERMS);
+
       const categoryOrder = [...new Set(TERMS.map(t => t[0]))];
 
       const state = {
@@ -784,6 +952,13 @@
 
       function normalize(str) {
         return String(str || "").toLowerCase();
+      }
+
+      function jsonSafe(str) {
+        return String(str || "")
+          .replace(/\\/g, "\\\\")
+          .replace(/"/g, '\\"')
+          .replace(/\n/g, " ");
       }
 
       function renderFilters() {
@@ -811,7 +986,7 @@
         const q = normalize(state.query).trim();
 
         let list = TERMS.filter(t => {
-          const [cat, oldTerm, newName, meaning, use] = t;
+          const [cat] = t;
           const categoryOk = state.category === "all" || cat === state.category;
           const queryOk = !q || normalize(t.join(" ")).includes(q);
           return categoryOk && queryOk;
@@ -879,7 +1054,7 @@
 
         sorted.forEach(([cat, oldTerm, newName]) => {
           const re = new RegExp(`\\b${escapeRegExp(oldTerm)}\\b`, "gi");
-          text = text.replace(re, match => {
+          text = text.replace(re, () => {
             count++;
             return newName;
           });
@@ -888,6 +1063,70 @@
         $("#replacementCount").textContent = count;
         $("#outputText").textContent = text;
       }
+
+      function buildArrayLine() {
+        const cat = $("#newCategory").value.trim() || "Expansion";
+        const oldTerm = $("#newOldTerm").value.trim() || "Old Term";
+        const newName = $("#newName").value.trim() || "New Name";
+        const meaning = $("#newMeaning").value.trim() || "Meaning goes here.";
+        const use = $("#newUse").value.trim() || "Use sentence goes here.";
+
+        const line = `["${jsonSafe(cat)}","${jsonSafe(oldTerm)}","${jsonSafe(newName)}","${jsonSafe(meaning)}","${jsonSafe(use)}"],`;
+
+        $("#arrayLine").textContent = line;
+        return [cat, oldTerm, newName, meaning, use, line];
+      }
+
+      ["newCategory","newOldTerm","newName","newMeaning","newUse"].forEach(id => {
+        $("#" + id).addEventListener("input", buildArrayLine);
+      });
+
+      $("#addTermBtn").addEventListener("click", () => {
+        const [cat, oldTerm, newName, meaning, use] = buildArrayLine();
+
+        TERMS.push([cat, oldTerm, newName, meaning, use]);
+
+        const currentCats = [...new Set(TERMS.map(t => t[0]))];
+        categoryOrder.splice(0, categoryOrder.length, ...currentCats);
+
+        renderFilters();
+
+        $("#categoryFilter").value = cat;
+        $("#search").value = oldTerm;
+
+        render();
+
+        $("#addTermBtn").textContent = "Added";
+        setTimeout(() => $("#addTermBtn").textContent = "Add Term Live", 900);
+      });
+
+      $("#copyArrayBtn").addEventListener("click", async () => {
+        const line = buildArrayLine()[5];
+
+        try {
+          await navigator.clipboard.writeText(line);
+          $("#copyArrayBtn").textContent = "Copied";
+        } catch {
+          $("#copyArrayBtn").textContent = "Copy Failed";
+        }
+
+        setTimeout(() => $("#copyArrayBtn").textContent = "Copy Array Line", 900);
+      });
+
+      $("#copyAllBtn").addEventListener("click", async () => {
+        const all = TERMS.map(t =>
+          `["${jsonSafe(t[0])}","${jsonSafe(t[1])}","${jsonSafe(t[2])}","${jsonSafe(t[3])}","${jsonSafe(t[4])}"],`
+        ).join("\n");
+
+        try {
+          await navigator.clipboard.writeText(all);
+          $("#copyAllBtn").textContent = "Copied Full Dictionary";
+        } catch {
+          $("#copyAllBtn").textContent = "Copy Failed";
+        }
+
+        setTimeout(() => $("#copyAllBtn").textContent = "Copy Full Dictionary JSON", 1200);
+      });
 
       $("#search").addEventListener("input", render);
       $("#categoryFilter").addEventListener("change", render);
@@ -915,7 +1154,8 @@
 
       renderFilters();
       render();
+      buildArrayLine();
     })();
   </script>
 </body>
-  </html>
+</html>
