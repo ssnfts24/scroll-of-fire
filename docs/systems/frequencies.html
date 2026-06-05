@@ -12,166 +12,149 @@
   <meta charset="utf-8">
   <title>Frequency Governance — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Tune, layer, sequence, and preview Scroll of Fire carrier tones for focus, meditation, restoration, and creative fieldwork.">
+  <meta name="description" content="A living frequency console for carrier tones, harmonic sequencing, T7 field practice, sacred geometry visualization, session logs, and Codex pattern tracking.">
   <meta name="theme-color" content="#05070d">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/frequency-governance.html">
-  <link rel="stylesheet" href="assets/css/codex.css">
 
-  <style>
-    :root{
-      --bg:#05070d;--card:rgba(255,255,255,.052);--card2:rgba(255,255,255,.082);
-      --line:rgba(255,255,255,.145);--ink:#f4f1e8;--muted:#a6aec4;
-      --accent:#7af3ff;--gold:#f3c97a;--violet:#c4a3ff;--green:#9ff7c8;
-      --danger:#ff7f91;--shadow:0 22px 70px rgba(0,0,0,.34);--radius:20px;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;overflow-x:hidden}
-    body{
-      color:var(--ink);
-      background:
-        radial-gradient(900px 580px at 50% -5%,rgba(122,243,255,.13),transparent 70%),
-        radial-gradient(780px 560px at 88% 18%,rgba(243,201,122,.10),transparent 72%),
-        radial-gradient(720px 540px at 10% 35%,rgba(196,163,255,.08),transparent 72%),
-        linear-gradient(180deg,#05070d,#090d14 78%,#05070d);
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    }
-    a{color:inherit}
-    .shell{max-width:1180px;margin:auto;padding:clamp(16px,4vw,40px)}
-    .crumbs{color:var(--muted);margin-bottom:10px;font-size:.95rem}
-    .crumbs a{color:var(--accent);text-decoration:none}
-    .hero{position:relative;padding-top:clamp(22px,5vw,58px)}
-    .eyebrow{margin:0 0 10px;color:var(--gold);letter-spacing:.18em;text-transform:uppercase;font-size:.76rem;font-weight:900}
-    h1{
-      font-size:clamp(34px,7vw,76px);margin:.15rem 0;line-height:.95;letter-spacing:-.06em;
-      background:linear-gradient(180deg,#fff,#d8f9ff 54%,#f3c97a);
-      -webkit-background-clip:text;background-clip:text;color:transparent;
-    }
-    h2{margin:0 0 10px;font-size:clamp(1.25rem,3vw,1.8rem);letter-spacing:-.03em}
-    h3{margin:16px 0 8px;color:var(--gold)}
-    .meta,.hint,.fine{color:var(--muted);line-height:1.58}
-    .meta{max-width:820px;font-size:1.02rem}
-    .fine{font-size:.88rem}
-    .notice{
-      border:1px solid rgba(243,201,122,.30);border-radius:18px;
-      background:linear-gradient(180deg,rgba(243,201,122,.10),rgba(243,201,122,.035));
-      color:#ffe7ad;padding:14px 16px;margin-top:18px;box-shadow:var(--shadow);
-    }
-    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;align-items:start}
-    .col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-6{grid-column:span 6}
-    .col-7{grid-column:span 7}.col-8{grid-column:span 8}.col-12{grid-column:span 12}
-    .card,.tone,.mini{
-      background:linear-gradient(180deg,rgba(255,255,255,.068),rgba(255,255,255,.026));
-      border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
-    }
-    .tone{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
-    .tone strong{color:var(--gold)}
-    .tone small{display:block;color:var(--muted);margin-top:3px;line-height:1.35}
-    .pillrow{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
-    .pill{border:1px solid var(--line);border-radius:999px;padding:.38rem .65rem;color:var(--muted);background:rgba(255,255,255,.035);font-size:.85rem}
-    .btn{
-      border:1px solid var(--line);border-radius:13px;padding:.66rem .92rem;
-      background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.026));
-      color:var(--ink);font:inherit;font-weight:850;cursor:pointer;text-decoration:none;transition:.18s ease;
-    }
-    .btn:hover,.btn:focus-visible{border-color:rgba(122,243,255,.58);background:rgba(122,243,255,.09);outline:none;transform:translateY(-1px)}
-    .btn.primary{border-color:rgba(122,243,255,.65)}.btn.gold{border-color:rgba(243,201,122,.70)}
-    .btn.danger{border-color:rgba(255,127,145,.62)}
-    .btn.active{border-color:rgba(243,201,122,.88);background:rgba(243,201,122,.12);color:#ffe3a3}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0}
-    label{display:block;color:var(--muted);font-size:.92rem;font-weight:700}
-    input,select,textarea{
-      width:100%;margin-top:6px;border:1px solid var(--line);border-radius:13px;
-      padding:.70rem .78rem;background:rgba(5,8,14,.84);color:var(--ink);font:inherit;
-    }
-    input[type="range"]{padding:.35rem}
-    .readout{display:flex;align-items:baseline;gap:.45rem;flex-wrap:wrap;margin-bottom:10px}
-    .readout strong{font-size:clamp(2.4rem,6vw,4.45rem);color:var(--gold);letter-spacing:-.065em;line-height:.9}
-    .state{color:var(--muted);font-weight:800}
-    .controls{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-    .preset-grid,.seq-grid,.library-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
-    .library-grid{grid-template-columns:repeat(4,1fr)}
-    canvas{
-      width:100%;height:370px;display:block;border-radius:20px;border:1px solid var(--line);background:#060913;
-      box-shadow:inset 0 0 70px rgba(122,243,255,.09),0 18px 60px rgba(0,0,0,.22);
-    }
-    .bar{height:12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.045);overflow:hidden;margin-top:8px}
-    .bar span{display:block;width:0%;height:100%;background:linear-gradient(90deg,var(--accent),var(--gold))}
-    .log{
-      min-height:110px;max-height:180px;overflow:auto;white-space:pre-wrap;
-      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86rem;color:#cbd5ea;
-    }
-    @media(max-width:930px){
-      .col-4,.col-5,.col-6,.col-7,.col-8,.col-12{grid-column:span 12}
-      .controls,.preset-grid,.seq-grid,.library-grid{grid-template-columns:1fr 1fr}
-    }
-    @media(max-width:560px){
-      .shell{padding:16px 12px}.tone{align-items:stretch;flex-direction:column}
-      .btn,input,select{width:100%}.controls,.preset-grid,.seq-grid,.library-grid{grid-template-columns:1fr}
-      canvas{height:310px}h1{font-size:clamp(38px,14vw,62px)}
-    }
-  </style>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Frequency Governance — Scroll of Fire">
+  <meta property="og:description" content="Tune, layer, sequence, visualize, and log carrier frequencies through the Scroll of Fire Codex.">
+  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
+
+  <link rel="stylesheet" href="assets/css/codex.css">
+  <link rel="stylesheet" href="assets/css/frequency-governance.css">
 </head>
 
 <body>
-  <header class="shell hero">
-    <div class="crumbs"><a href="hub.html">Hub</a> / <a href="index.html">Scroll of Fire</a> / Frequencies</div>
+  <canvas id="starField" aria-hidden="true"></canvas>
+
+  <header class="fg-hero">
+    <nav class="fg-crumbs" aria-label="Primary navigation">
+      <a href="./hub.html">Hub</a>
+      <span>/</span>
+      <a href="./">Scroll of Fire</a>
+      <span>/</span>
+      <span>Frequencies</span>
+    </nav>
+
     <p class="eyebrow">Codex Audio Console</p>
     <h1>Frequency Governance</h1>
-    <p class="meta">
-      Tune, layer, sequence, and preview carrier tones for focus, meditation, prayer, creativity,
-      rest, symbolic observation, and Scroll fieldwork. Use low volume first. This is a creative
-      wellness tool, not medical treatment.
+
+    <p class="hero-copy">
+      A living frequency station for carrier tones, harmonic layers, alternating paths,
+      sacred geometry visuals, T7 field practice, and private session witnessing.
     </p>
-    <div class="notice">
-      <strong>🔥 Smooth Field Mode:</strong>
-      frequency transitions now crossfade and glide instead of snapping suddenly. Fade timing can be adjusted below.
-    </div>
-    <div class="pillrow">
-      <span class="pill">Smooth crossfade engine</span>
-      <span class="pill">40–1800 Hz carrier range</span>
-      <span class="pill">Alpha / Theta / Gamma style offsets</span>
-      <span class="pill">Scroll sequences</span>
+
+    <aside class="notice">
+      <strong>🔥 Observatory Mode:</strong>
+      smooth crossfades, adjustable volume, visual intensity, harmonic stacking,
+      beat offsets, session logging, and Codex correspondence are wired into one field.
+    </aside>
+
+    <div class="hero-pills" aria-label="Feature summary">
+      <span>40–1800 Hz Range</span>
+      <span>Crossfade Engine</span>
+      <span>Harmonic Layers</span>
+      <span>Beat Offsets</span>
+      <span>T7 Field Mode</span>
+      <span>Private Logs</span>
     </div>
   </header>
 
-  <main class="shell">
+  <main class="fg-shell">
+    <section class="fg-command card">
+      <div>
+        <p class="eyebrow">Live Field</p>
+        <h2 id="commandTitle">432 Hz · Foundation</h2>
+        <p id="commandSubtitle" class="meta">
+          Select a carrier, shape the waveform, choose a harmonic layer, then watch the field respond.
+        </p>
+      </div>
+
+      <div class="command-stats">
+        <div class="stat">
+          <span>Carrier</span>
+          <strong id="statCarrier">432 Hz</strong>
+        </div>
+        <div class="stat">
+          <span>Layer</span>
+          <strong id="statLayer">Single</strong>
+        </div>
+        <div class="stat">
+          <span>Beat</span>
+          <strong id="statBeat">None</strong>
+        </div>
+        <div class="stat">
+          <span>State</span>
+          <strong id="statState">Stopped</strong>
+        </div>
+      </div>
+    </section>
+
     <section class="grid">
-      <div class="card col-7">
-        <h2>Carrier Console</h2>
-        <div class="readout">
-          <strong id="freqValue">432</strong><span>Hz</span><span class="state" id="stateText">stopped</span>
+      <article class="card col-8">
+        <div class="section-head">
+          <p class="eyebrow">Visualizer</p>
+          <h2>Frequency Observatory</h2>
         </div>
 
-        <canvas id="field" aria-label="frequency visualizer"></canvas>
+        <canvas id="fieldCanvas" aria-label="Frequency visualizer"></canvas>
 
-        <div class="controls">
-          <label>Frequency <input id="freqSlider" type="range" min="40" max="1800" step="1" value="432"></label>
-          <label>Custom Hz <input id="freqInput" type="number" min="40" max="1800" step="1" value="432"></label>
-          <label>Volume <input id="volume" type="range" min="0" max="100" step="1" value="24"></label>
-          <label>Visual Power <input id="visualPower" type="range" min="20" max="240" step="1" value="120"></label>
+        <div class="canvas-tools">
+          <button id="clearField" class="fg-btn ghost" type="button">Clear Field</button>
+          <button id="saveFieldPng" class="fg-btn ghost" type="button">Save PNG</button>
+          <button id="randomSeed" class="fg-btn ghost" type="button">New Seed</button>
+        </div>
+      </article>
 
-          <label>Transition Smoothness
-            <input id="fadeTime" type="range" min="0.15" max="5" step="0.05" value="1.25">
-          </label>
+      <aside class="card col-4">
+        <p class="eyebrow">Carrier Console</p>
 
-          <label>Session Minutes
-            <input id="sessionMinutes" type="number" min="1" max="120" step="1" value="12">
-          </label>
+        <div class="readout">
+          <strong id="freqValue">432</strong>
+          <span>Hz</span>
+          <em id="stateText">stopped</em>
+        </div>
 
-          <label>Harmonic Layer
-            <select id="harmonic">
-              <option value="single">Single Tone</option>
-              <option value="octave">Octave: 1x + 2x</option>
-              <option value="fifth">Fifth: 1x + 1.5x</option>
-              <option value="triad">Major Stack: 1x + 1.25x + 1.5x</option>
-              <option value="minor">Minor Stack: 1x + 1.2x + 1.5x</option>
-              <option value="deep">Deep Field: .5x + 1x + 2x</option>
-              <option value="crown">Crown Stack: 1x + 2x + 3x</option>
-              <option value="field">Full Field: .5x + 1x + 1.5x + 2x</option>
-            </select>
-          </label>
+        <label>Frequency
+          <input id="freqSlider" type="range" min="40" max="1800" step="1" value="432">
+        </label>
 
+        <label>Custom Hz
+          <input id="freqInput" type="number" min="40" max="1800" step="1" value="432">
+        </label>
+
+        <label>Volume
+          <input id="volume" type="range" min="0" max="100" step="1" value="22">
+        </label>
+
+        <label>Visual Intensity
+          <input id="visualPower" type="range" min="20" max="240" step="1" value="125">
+        </label>
+
+        <label>Transition Smoothness
+          <input id="fadeTime" type="range" min="0.15" max="5" step="0.05" value="1.25">
+        </label>
+
+        <div class="button-row">
+          <button id="playBtn" class="fg-btn primary" type="button">Play</button>
+          <button id="stopBtn" class="fg-btn danger" type="button">Stop</button>
+        </div>
+
+        <div class="meter">
+          <span id="meter"></span>
+        </div>
+
+        <p id="settingText" class="fine">432 Hz · 22% volume · Single Tone</p>
+      </aside>
+    </section>
+
+    <section class="grid">
+      <article class="card col-6">
+        <p class="eyebrow">Sound Shape</p>
+        <h2>Harmonic Architecture</h2>
+
+        <div class="control-grid">
           <label>Waveform
             <select id="waveType">
               <option value="sine">Sine — clean</option>
@@ -181,15 +164,50 @@
             </select>
           </label>
 
+          <label>Harmonic Layer
+            <select id="harmonic">
+              <option value="single">Single Tone</option>
+              <option value="octave">Octave · 1x + 2x</option>
+              <option value="fifth">Fifth · 1x + 1.5x</option>
+              <option value="triad">Major Stack · 1x + 1.25x + 1.5x</option>
+              <option value="minor">Minor Stack · 1x + 1.2x + 1.5x</option>
+              <option value="deep">Deep Field · .5x + 1x + 2x</option>
+              <option value="crown">Crown Stack · 1x + 2x + 3x</option>
+              <option value="field">Full Field · .5x + 1x + 1.5x + 2x</option>
+            </select>
+          </label>
+
           <label>Beat / Offset Mode
             <select id="beatMode">
               <option value="none">None</option>
-              <option value="alpha">Alpha 10 Hz — relaxed focus</option>
-              <option value="theta">Theta 6 Hz — meditation</option>
-              <option value="delta">Delta 3 Hz — sleep entry</option>
-              <option value="gamma">Gamma 40 Hz — sharp focus</option>
-              <option value="schumann">7.83 Hz — Earth-style pulse</option>
+              <option value="alpha">Alpha 10 Hz · relaxed focus</option>
+              <option value="theta">Theta 6 Hz · meditation</option>
+              <option value="delta">Delta 3 Hz · rest entry</option>
+              <option value="gamma">Gamma 40 Hz · sharp focus</option>
+              <option value="schumann">7.83 Hz · Earth-style pulse</option>
             </select>
+          </label>
+
+          <label>Visual Mode
+            <select id="visualMode">
+              <option value="torus">Torus Field</option>
+              <option value="lattice">Lattice Net</option>
+              <option value="rose">Rose Seal</option>
+              <option value="chladni">Chladni Field</option>
+              <option value="orbit">Orbital Shell</option>
+              <option value="constellation">Constellation</option>
+            </select>
+          </label>
+        </div>
+      </article>
+
+      <article class="card col-6">
+        <p class="eyebrow">Session</p>
+        <h2>Timer + Preset Memory</h2>
+
+        <div class="control-grid">
+          <label>Session Minutes
+            <input id="sessionMinutes" type="number" min="1" max="120" step="1" value="12">
           </label>
 
           <label>Auto Glide While Dragging
@@ -200,450 +218,164 @@
           </label>
         </div>
 
-        <div class="row">
-          <button class="btn primary" id="playBtn" type="button">Play</button>
-          <button class="btn danger" id="stopBtn" type="button">Stop</button>
-          <button class="btn gold" id="timerBtn" type="button">Start Session</button>
-          <button class="btn" id="saveBtn" type="button">Save</button>
-          <button class="btn" id="loadBtn" type="button">Load</button>
+        <div class="button-row">
+          <button id="timerBtn" class="fg-btn gold" type="button">Start Session</button>
+          <button id="saveBtn" class="fg-btn ghost" type="button">Save Preset</button>
+          <button id="loadBtn" class="fg-btn ghost" type="button">Load Preset</button>
         </div>
 
-        <div class="bar" aria-label="volume meter"><span id="meter"></span></div>
-        <p class="hint" id="settingText">432 Hz · 24% volume · Single Tone</p>
-      </div>
+        <p class="fine">
+          Your settings save locally in this browser. Press Escape anytime to stop audio.
+        </p>
+      </article>
+    </section>
 
-      <aside class="card col-5">
-        <h2>Carrier Presets</h2>
-        <div id="toneList"></div>
-        <p class="fine">Preset meanings are symbolic/experiential labels, not guaranteed medical or supernatural effects.</p>
-      </aside>
+    <section class="card">
+      <p class="eyebrow">Carrier Presets</p>
+      <h2>Frequency Library</h2>
+      <p class="meta">Use these as symbolic keys. Meanings are experiential labels, not medical claims.</p>
 
-      <section class="card col-12">
-        <h2>Frequency Library</h2>
-        <p class="meta">Use these like “song keys.” Pick a carrier, then choose a harmonic layer or beat mode.</p>
-        <div class="library-grid" id="libraryGrid"></div>
-      </section>
+      <div id="libraryGrid" class="library-grid"></div>
+    </section>
 
-      <section class="card col-8">
-        <h2>Alternating Frequency Paths</h2>
-        <p class="meta">Sequences now fade between tones for smoother movement.</p>
+    <section class="grid">
+      <article class="card col-8">
+        <p class="eyebrow">Alternating Paths</p>
+        <h2>Harmonic Sequencer</h2>
 
-        <div class="controls">
-          <label>Seconds per step <input id="seqSeconds" type="number" min="2" max="90" step="1" value="8"></label>
-          <label>Sequence status <input id="seqStatus" value="stopped" readonly></label>
+        <div class="control-grid">
+          <label>Seconds per step
+            <input id="seqSeconds" type="number" min="2" max="90" step="1" value="8">
+          </label>
+
+          <label>Sequence Status
+            <input id="seqStatus" value="stopped" readonly>
+          </label>
         </div>
 
         <div class="seq-grid">
-          <button class="btn seqBtn" data-seq="headache" type="button">Headache Calm</button>
-          <button class="btn seqBtn" data-seq="calm" type="button">Calm Path</button>
-          <button class="btn seqBtn" data-seq="focus" type="button">Focus Path</button>
-          <button class="btn seqBtn" data-seq="clarity" type="button">Clarity Path</button>
-          <button class="btn seqBtn" data-seq="restore" type="button">Restore Path</button>
-          <button class="btn seqBtn" data-seq="dream" type="button">Dream Gate</button>
-          <button class="btn seqBtn" data-seq="ascent" type="button">Ascent Path</button>
-          <button class="btn seqBtn" data-seq="remnant" type="button">Remnant Path</button>
-          <button class="btn seqBtn" data-seq="t7" type="button">T-7 Field</button>
+          <button class="fg-btn seqBtn" data-seq="headache" type="button">Headache Calm</button>
+          <button class="fg-btn seqBtn" data-seq="calm" type="button">Calm Path</button>
+          <button class="fg-btn seqBtn" data-seq="focus" type="button">Focus Path</button>
+          <button class="fg-btn seqBtn" data-seq="clarity" type="button">Clarity Path</button>
+          <button class="fg-btn seqBtn" data-seq="restore" type="button">Restore Path</button>
+          <button class="fg-btn seqBtn" data-seq="dream" type="button">Dream Gate</button>
+          <button class="fg-btn seqBtn" data-seq="ascent" type="button">Ascent Path</button>
+          <button class="fg-btn seqBtn" data-seq="remnant" type="button">Remnant Path</button>
+          <button class="fg-btn seqBtn" data-seq="t7" type="button">T7 Field</button>
         </div>
 
-        <div class="row"><button class="btn danger" id="stopSeq" type="button">Stop Sequence</button></div>
-      </section>
+        <div class="button-row">
+          <button id="stopSeq" class="fg-btn danger" type="button">Stop Sequence</button>
+        </div>
+      </article>
 
       <aside class="card col-4">
-        <h2>Session Log</h2>
-        <div class="log" id="log">Console initialized.
-Use headphones only at safe volume.
-Press Escape to stop.</div>
+        <p class="eyebrow">Live Log</p>
+        <h2>Session Console</h2>
+        <pre id="log" class="log">Console initialized.
+Use low volume first.
+Press Escape to stop.</pre>
       </aside>
+    </section>
 
-      <section class="card col-12">
-        <h2>Use Guide</h2>
-        <div class="grid">
-          <div class="mini col-4"><h3>Headache / Overload</h3><p class="fine">Use low volume, sine wave, single tone, 174 Hz or 432 Hz. Avoid harsh waves. Stop if discomfort increases.</p></div>
-          <div class="mini col-4"><h3>Focus / Coding / Study</h3><p class="fine">Use 432 Hz, 528 Hz, or 741 Hz with Alpha 10 Hz offset. Keep volume low enough to ignore.</p></div>
-          <div class="mini col-4"><h3>Vision / Symbol Work</h3><p class="fine">Try 432 Hz with 7.83 Hz pulse, or the Remnant Path. Journal impressions after the session.</p></div>
+    <section class="card t7-card">
+      <p class="eyebrow">T7 Resonant Conduit</p>
+      <h2>T7 Field Practice</h2>
+
+      <p class="meta">
+        Suggested start: 432 Hz, sine, single tone, 7.83 Hz pulse, low volume.
+        Use this as a focus and visualization practice.
+      </p>
+
+      <div class="grid">
+        <div class="mini col-4">
+          <h3>1 · Ground</h3>
+          <p>Feel a slow pulse beneath the body. Let the breath settle first.</p>
         </div>
-        <p class="fine">Safety: do not use while driving, operating tools, or doing anything requiring full attention. Sudden severe headache, vision changes, weakness, confusion, seizure symptoms, or headache after injury should be medically evaluated.</p>
-      </section>
+        <div class="mini col-4">
+          <h3>2 · Axis</h3>
+          <p>Picture the spine as the central line of the field.</p>
+        </div>
+        <div class="mini col-4">
+          <h3>3 · Torus</h3>
+          <p>Watch the field move outward, around, and back through center.</p>
+        </div>
+        <div class="mini col-4">
+          <h3>4 · Phase</h3>
+          <p>Let breath and sound align without forcing.</p>
+        </div>
+        <div class="mini col-4">
+          <h3>5 · Witness</h3>
+          <p>Notice one real body signal, one thought pattern, one shift.</p>
+        </div>
+        <div class="mini col-4">
+          <h3>6 · Seal</h3>
+          <p>Stop cleanly, breathe normal, and log the witness.</p>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button id="liftPresetBtn" class="fg-btn primary" type="button">Start T7 Field</button>
+        <button id="liftStopBtn" class="fg-btn danger" type="button">End Practice</button>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card col-7">
+        <p class="eyebrow">Witness</p>
+        <h2>Session Journal</h2>
+
+        <div class="control-grid">
+          <label>Intention
+            <input id="journalIntention" placeholder="Example: calm focus, prayer, study, recovery, creative work">
+          </label>
+
+          <label>Body Signal
+            <input id="journalBody" placeholder="Example: calm, pressure, clarity, tension, warmth">
+          </label>
+        </div>
+
+        <label>Witness Note
+          <textarea id="journalNote" placeholder="What changed? What did you notice? What frequency, sequence, or layer felt best?"></textarea>
+        </label>
+
+        <div class="button-row">
+          <button id="saveJournal" class="fg-btn primary" type="button">Save Witness</button>
+          <button id="copyJournal" class="fg-btn ghost" type="button">Copy Witness</button>
+          <button id="clearJournal" class="fg-btn danger" type="button">Clear</button>
+        </div>
+      </article>
+
+      <aside class="card col-5">
+        <p class="eyebrow">Saved</p>
+        <h2>Recent Witnesses</h2>
+        <div id="journalList" class="journal-list"></div>
+
+        <div class="button-row">
+          <button id="exportJournal" class="fg-btn ghost" type="button">Export JSON</button>
+          <input id="importJournalFile" type="file" accept="application/json" hidden>
+          <button id="importJournal" class="fg-btn ghost" type="button">Import JSON</button>
+          <button id="clearJournalArchive" class="fg-btn danger" type="button">Clear Archive</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="card">
+      <p class="eyebrow">Safety</p>
+      <h2>Ground Rules</h2>
+      <p class="fine">
+        Keep volume low. Do not use while driving, operating tools, or doing anything that needs full attention.
+        Stop if discomfort increases. Sudden severe headache, vision changes, weakness, confusion, seizure symptoms,
+        or headache after injury should be medically evaluated.
+      </p>
     </section>
   </main>
 
-  <script>
-    (() => {
-      "use strict";
+  <footer class="fg-footer">
+    <p>© <span id="yr">2026</span> Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
+  </footer>
 
-      const $ = s => document.querySelector(s);
-      const $$ = s => Array.from(document.querySelectorAll(s));
-      const on = (el, ev, fn) => el && el.addEventListener(ev, fn);
-
-      const PRESETS = [
-        [40,"Gamma Spark","sharp focus / bright cognition"],[111,"Body Ground","low field / temple resonance"],
-        [144,"Root Expansion","low carrier / foundation"],[174,"Soft Release","headache calm / gentle body"],
-        [285,"Repair Field","restoration symbolism"],[369,"Creative Pulse","motion / pattern / emergence"],
-        [396,"Unburden","release / grounding"],[417,"Shift Gate","change / movement"],
-        [432,"Foundation","stable center / Scroll carrier"],[528,"Restoration","bright field / coherence"],
-        [639,"Heart Link","connection / harmony"],[741,"Clarity","clean signal / expression"],
-        [852,"Vision","intuition / inner attention"],[963,"Crown","upper carrier / awe"],
-        [1111,"Mirror Field","symbolic observation"],[1728,"Cube Harmonic","12³ / structure field"]
-      ];
-
-      const FREQS = {
-        headache:[174,285,432,174],calm:[432,396,417,432],focus:[144,369,432,528],
-        clarity:[432,528,741,963],restore:[285,396,432,528,639],dream:[432,285,174,111],
-        ascent:[144,288,432,528,741,963],remnant:[144,369,432,528,963,432],
-        t7:[111,144,369,432,528,741,963,1728]
-      };
-
-      const HARMONICS = {
-        single:[1],octave:[1,2],fifth:[1,1.5],triad:[1,1.25,1.5],
-        minor:[1,1.2,1.5],deep:[.5,1,2],crown:[1,2,3],field:[.5,1,1.5,2]
-      };
-
-      const BEATS = {none:0,alpha:10,theta:6,delta:3,gamma:40,schumann:7.83};
-
-      let ac=null, master=null, oscs=[], activeFreq=432, visualFreq=432;
-      let playing=false, seqTimer=null, sessionTimer=null, sessionEnd=0, phase=0;
-      let sliderDebounce=null;
-
-      function clamp(v,min,max){return Math.max(min,Math.min(max,Number(v)||min))}
-      function transitionTime(){return clamp($("#fadeTime").value,.15,5)}
-      function beatOffset(){return BEATS[$("#beatMode").value]||0}
-      function gainFromVolume(v){const p=clamp(v,0,100)/100;return Math.pow(p,2)*.42}
-
-      function log(msg){
-        const el=$("#log");
-        const stamp=new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
-        el.textContent+=`\n[${stamp}] ${msg}`;
-        el.scrollTop=el.scrollHeight;
-      }
-
-      function getAudio(){
-        if(!ac){
-          ac=new (window.AudioContext||window.webkitAudioContext)();
-          master=ac.createGain();
-          master.gain.value=gainFromVolume($("#volume").value);
-          master.connect(ac.destination);
-        }
-        return ac;
-      }
-
-      function syncUI(){
-        activeFreq=clamp(activeFreq,40,1800);
-        $("#freqValue").textContent=Math.round(activeFreq);
-        $("#freqSlider").value=Math.round(activeFreq);
-        $("#freqInput").value=Math.round(activeFreq);
-        $("#stateText").textContent=playing?"active":"stopped";
-        $("#meter").style.width=$("#volume").value+"%";
-
-        const h=$("#harmonic").selectedOptions[0]?.textContent||"Single Tone";
-        const b=$("#beatMode").selectedOptions[0]?.textContent||"None";
-        $("#settingText").textContent=`${Math.round(activeFreq)} Hz · ${$("#volume").value}% volume · ${h} · ${b} · ${transitionTime().toFixed(2)}s fade`;
-
-        $$(".toneBtn,.libBtn").forEach(btn=>{
-          btn.classList.toggle("active",Number(btn.dataset.f)===Math.round(activeFreq));
-        });
-
-        if(master&&ac){
-          const now=ac.currentTime;
-          master.gain.cancelScheduledValues(now);
-          master.gain.setTargetAtTime(gainFromVolume($("#volume").value),now,.06);
-        }
-      }
-
-      function fadeOutNodes(nodes, fade=transitionTime()){
-        if(!ac) return;
-        const now=ac.currentTime;
-        nodes.forEach(node=>{
-          try{
-            if(node.gain){
-              node.gain.gain.cancelScheduledValues(now);
-              node.gain.gain.setValueAtTime(Math.max(node.gain.gain.value,.0001),now);
-              node.gain.gain.exponentialRampToValueAtTime(.0001,now+fade);
-            }
-            if(node.osc) node.osc.stop(now+fade+.05);
-          }catch{}
-        });
-      }
-
-      function stopTone(fade=transitionTime()){
-        fadeOutNodes(oscs,fade);
-        oscs=[];
-        playing=false;
-        syncUI();
-      }
-
-      function makeOsc(ctx,freq,panValue,gainValue,fade){
-        const now=ctx.currentTime;
-        const osc=ctx.createOscillator();
-        const gain=ctx.createGain();
-        const pan=ctx.createStereoPanner?ctx.createStereoPanner():null;
-
-        osc.type=$("#waveType").value||"sine";
-        osc.frequency.setValueAtTime(freq,now);
-
-        gain.gain.setValueAtTime(.0001,now);
-        gain.gain.exponentialRampToValueAtTime(Math.max(.0002,gainValue),now+fade);
-
-        if(pan){pan.pan.value=panValue;osc.connect(gain).connect(pan).connect(master)}
-        else{osc.connect(gain).connect(master)}
-
-        osc.start(now);
-        return {osc,gain};
-      }
-
-      function playTone(freq=activeFreq, opts={}){
-        const ctx=getAudio();
-        if(ctx.state==="suspended") ctx.resume();
-
-        const fade=opts.fade ?? transitionTime();
-        const oldNodes=oscs.slice();
-        oscs=[];
-
-        activeFreq=clamp(freq,40,1800);
-        const ratios=HARMONICS[$("#harmonic").value]||[1];
-        const offset=beatOffset();
-        const channels=offset?2:1;
-        const perOscGain=.52/Math.max(1,ratios.length*channels);
-
-        ratios.forEach((r,i)=>{
-          const base=activeFreq*r;
-          if(base<20||base>2200)return;
-
-          if(offset){
-            oscs.push(makeOsc(ctx,Math.max(20,base-offset/2),-.72,perOscGain,fade));
-            oscs.push(makeOsc(ctx,Math.min(2200,base+offset/2), .72,perOscGain,fade));
-          }else{
-            const pan=ratios.length===1?0:-.55+(1.1*i/Math.max(1,ratios.length-1));
-            oscs.push(makeOsc(ctx,base,pan,perOscGain,fade));
-          }
-        });
-
-        fadeOutNodes(oldNodes,fade);
-        playing=true;
-        syncUI();
-      }
-
-      function smoothChange(freq){
-        activeFreq=clamp(freq,40,1800);
-        if(playing) playTone(activeFreq,{fade:transitionTime()});
-        else syncUI();
-      }
-
-      function stopSequence(){
-        clearInterval(seqTimer);
-        seqTimer=null;
-        $("#seqStatus").value="stopped";
-      }
-
-      function runSequence(name){
-        const seq=FREQS[name]||FREQS.remnant;
-        const seconds=clamp($("#seqSeconds").value,2,90);
-        let i=0;
-
-        stopSequence();
-
-        function step(){
-          const next=seq[i%seq.length];
-          smoothChange(next);
-          $("#seqStatus").value=`${name} · ${next} Hz · step ${(i%seq.length)+1}/${seq.length}`;
-          i++;
-        }
-
-        step();
-        seqTimer=setInterval(step,seconds*1000);
-        log(`Sequence started: ${name}`);
-      }
-
-      function stopSession(){
-        clearInterval(sessionTimer);
-        sessionTimer=null;
-        sessionEnd=0;
-        $("#timerBtn").textContent="Start Session";
-      }
-
-      function startSession(){
-        const mins=clamp($("#sessionMinutes").value,1,120);
-        sessionEnd=Date.now()+mins*60*1000;
-        playTone(activeFreq);
-
-        clearInterval(sessionTimer);
-        sessionTimer=setInterval(()=>{
-          const left=Math.max(0,sessionEnd-Date.now());
-          const m=Math.floor(left/60000);
-          const s=Math.floor((left%60000)/1000);
-          $("#timerBtn").textContent=`${m}:${String(s).padStart(2,"0")} left`;
-          if(left<=0){
-            stopSession();stopSequence();stopTone();
-            log("Session complete.");
-          }
-        },500);
-
-        log(`Session started: ${mins} minute(s).`);
-      }
-
-      function renderPresets(){
-        const top=[144,369,432,528,741,963];
-        $("#toneList").innerHTML=PRESETS.filter(p=>top.includes(p[0])).map(([f,name,desc])=>`
-          <div class="tone">
-            <span><strong>${f} Hz</strong><small>${name} / ${desc}</small></span>
-            <button class="btn toneBtn${f===432?" active":""}" data-f="${f}" type="button">Play</button>
-          </div>`).join("");
-
-        $("#libraryGrid").innerHTML=PRESETS.map(([f,name])=>`
-          <button class="btn libBtn${f===432?" active":""}" data-f="${f}" type="button">
-            ${f} Hz<br><small>${name}</small>
-          </button>`).join("");
-
-        $$(".toneBtn,.libBtn").forEach(btn=>{
-          on(btn,"click",()=>{
-            stopSequence();
-            smoothChange(Number(btn.dataset.f));
-            const preset=PRESETS.find(p=>p[0]===activeFreq);
-            log(`Carrier selected: ${activeFreq} Hz${preset?" · "+preset[1]:""}`);
-          });
-        });
-      }
-
-      on($("#freqSlider"),"input",e=>{
-        activeFreq=clamp(e.target.value,40,1800);
-        syncUI();
-
-        clearTimeout(sliderDebounce);
-        if($("#dragMode").value==="glide"){
-          sliderDebounce=setTimeout(()=>smoothChange(activeFreq),90);
-        }
-      });
-
-      on($("#freqSlider"),"change",e=>smoothChange(e.target.value));
-      on($("#freqInput"),"change",e=>smoothChange(e.target.value));
-
-      on($("#volume"),"input",syncUI);
-      on($("#visualPower"),"input",syncUI);
-      on($("#fadeTime"),"input",syncUI);
-      on($("#harmonic"),"change",()=>playing?playTone(activeFreq):syncUI());
-      on($("#waveType"),"change",()=>playing?playTone(activeFreq):syncUI());
-      on($("#beatMode"),"change",()=>playing?playTone(activeFreq):syncUI());
-
-      on($("#playBtn"),"click",()=>{playTone(activeFreq);log(`Playing ${Math.round(activeFreq)} Hz.`)});
-      on($("#stopBtn"),"click",()=>{stopSession();stopSequence();stopTone();log("Stopped.")});
-      on($("#stopSeq"),"click",()=>{stopSequence();stopTone();log("Sequence stopped.")});
-      on($("#timerBtn"),"click",()=>sessionTimer?(stopSession(),stopTone(),log("Session stopped.")):startSession());
-
-      $$(".seqBtn").forEach(btn=>on(btn,"click",()=>runSequence(btn.dataset.seq)));
-
-      on($("#saveBtn"),"click",()=>{
-        localStorage.setItem("sof_frequency_governance_v3",JSON.stringify({
-          freq:activeFreq,volume:$("#volume").value,harmonic:$("#harmonic").value,wave:$("#waveType").value,
-          visual:$("#visualPower").value,beat:$("#beatMode").value,minutes:$("#sessionMinutes").value,
-          seconds:$("#seqSeconds").value,fade:$("#fadeTime").value,drag:$("#dragMode").value
-        }));
-        $("#seqStatus").value="saved";
-        log("Settings saved locally.");
-      });
-
-      on($("#loadBtn"),"click",()=>{
-        try{
-          const data=JSON.parse(localStorage.getItem("sof_frequency_governance_v3")||"{}");
-          if(!data.freq){log("No saved setting found.");return}
-          activeFreq=data.freq;
-          $("#volume").value=data.volume||24;
-          $("#harmonic").value=data.harmonic||"single";
-          $("#waveType").value=data.wave||"sine";
-          $("#visualPower").value=data.visual||120;
-          $("#beatMode").value=data.beat||"none";
-          $("#sessionMinutes").value=data.minutes||12;
-          $("#seqSeconds").value=data.seconds||8;
-          $("#fadeTime").value=data.fade||1.25;
-          $("#dragMode").value=data.drag||"glide";
-          syncUI();
-          $("#seqStatus").value="loaded";
-          log("Settings loaded.");
-        }catch{log("Load failed.")}
-      });
-
-      document.addEventListener("keydown",e=>{
-        if(e.key==="Escape"){
-          stopSession();stopSequence();stopTone(.25);
-          log("Emergency stop.");
-        }
-      });
-
-      const canvas=$("#field");
-      const ctx=canvas.getContext("2d");
-
-      function fit(){
-        const rect=canvas.getBoundingClientRect();
-        const dpr=Math.min(devicePixelRatio||1,2);
-        canvas.width=Math.max(320,rect.width*dpr);
-        canvas.height=Math.max(260,rect.height*dpr);
-        ctx.setTransform(dpr,0,0,dpr,0,0);
-      }
-
-      fit();
-      window.addEventListener("resize",fit,{passive:true});
-
-      function draw(){
-        const w=canvas.clientWidth,h=canvas.clientHeight,cx=w/2,cy=h/2;
-        visualFreq+=(activeFreq-visualFreq)*.035;
-
-        const visual=clamp($("#visualPower").value,20,240)/100;
-        const vol=clamp($("#volume").value,0,100)/100;
-        const push=playing?Math.max(.22,vol*visual):.24*visual;
-        const n=Math.round(260*visual);
-        const fr=(visualFreq%1000)/1000;
-        const baseR=Math.min(w,h)*(.19+.12*Math.sin(phase*.025+fr*6.28)*push+.18);
-
-        ctx.fillStyle="rgba(5,7,13,.08)";
-        ctx.fillRect(0,0,w,h);
-
-        const glow=ctx.createRadialGradient(cx,cy,4,cx,cy,Math.min(w,h)*(.48+push*.23));
-        glow.addColorStop(0,`rgba(122,243,255,${.17+push*.15})`);
-        glow.addColorStop(.38,`rgba(196,163,255,${.06+push*.08})`);
-        glow.addColorStop(.58,`rgba(243,201,122,${.08+push*.10})`);
-        glow.addColorStop(1,"rgba(0,0,0,0)");
-        ctx.fillStyle=glow;
-        ctx.beginPath();ctx.arc(cx,cy,Math.min(w,h)*.64,0,Math.PI*2);ctx.fill();
-
-        for(let ring=0;ring<3;ring++){
-          ctx.strokeStyle=`rgba(122,243,255,${.10+ring*.035+push*.04})`;
-          ctx.lineWidth=1;
-          ctx.beginPath();ctx.arc(cx,cy,baseR*(.64+ring*.34),0,Math.PI*2);ctx.stroke();
-        }
-
-        for(let i=0;i<n;i++){
-          const a=i/n*Math.PI*2+phase*.008;
-          const wobble=Math.sin(i*.055+phase*.018+fr*9);
-          const r=baseR*(.78+.48*wobble);
-          const x=cx+Math.cos(a)*r;
-          const y=cy+Math.sin(a*1.08)*r*.68;
-          const t=(i%100)/100;
-
-          ctx.fillStyle=t<.34
-            ?`rgba(122,243,255,${.43+push*.33})`
-            :t<.67
-              ?`rgba(196,163,255,${.34+push*.26})`
-              :`rgba(243,201,122,${.42+push*.32})`;
-
-          ctx.beginPath();ctx.arc(x,y,1.1+push*2.25,0,Math.PI*2);ctx.fill();
-          ctx.beginPath();ctx.arc(w-x,y,1.1+push*2.25,0,Math.PI*2);ctx.fill();
-        }
-
-        ctx.fillStyle="rgba(244,241,232,.92)";
-        ctx.font="800 13px Inter, system-ui, sans-serif";
-        ctx.textAlign="center";
-        ctx.fillText(playing?`${Math.round(activeFreq)} Hz ACTIVE`:"FREQUENCY FIELD",cx,25);
-
-        ctx.fillStyle="rgba(166,174,196,.88)";
-        ctx.font="700 11px Inter, system-ui, sans-serif";
-        ctx.fillText($("#beatMode").selectedOptions[0]?.textContent||"No beat",cx,h-18);
-
-        phase+=.9;
-        requestAnimationFrame(draw);
-      }
-
-      renderPresets();
-      syncUI();
-      draw();
-    })();
-  </script>
+  <script src="assets/js/frequency-governance.js"></script>
 </body>
-  </html>
+</html>
