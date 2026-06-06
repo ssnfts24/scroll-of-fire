@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <title>Frequency Governance — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="A living frequency console for carrier tones, harmonic sequencing, T7 field practice, sacred geometry visualization, session logs, and Codex pattern tracking.">
+  <meta name="description" content="A living frequency console for carrier tones, harmonic sequencing, T7 field practice, physical lift training, sacred geometry visualization, session logs, and Codex pattern tracking.">
   <meta name="theme-color" content="#05070d">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/frequency-governance.html">
 
@@ -42,13 +42,14 @@
 
     <p class="hero-copy">
       A living frequency station for carrier tones, harmonic layers, alternating paths,
-      sacred geometry visuals, T7 field practice, and private session witnessing.
+      sacred geometry visuals, T7 field practice, physical lift training, and private session witnessing.
     </p>
 
     <aside class="notice">
       <strong>🔥 Observatory Mode:</strong>
       smooth crossfades, adjustable volume, visual intensity, harmonic stacking,
-      beat offsets, session logging, and Codex correspondence are wired into one field.
+      beat offsets, T7 field mode, seven-step lift practice, session logging,
+      and Codex correspondence are wired into one field.
     </aside>
 
     <div class="hero-pills" aria-label="Feature summary">
@@ -57,6 +58,7 @@
       <span>Harmonic Layers</span>
       <span>Beat Offsets</span>
       <span>T7 Field Mode</span>
+      <span>7-Step Lift Loop</span>
       <span>Private Logs</span>
     </div>
   </header>
@@ -72,22 +74,10 @@
       </div>
 
       <div class="command-stats">
-        <div class="stat">
-          <span>Carrier</span>
-          <strong id="statCarrier">432 Hz</strong>
-        </div>
-        <div class="stat">
-          <span>Layer</span>
-          <strong id="statLayer">Single</strong>
-        </div>
-        <div class="stat">
-          <span>Beat</span>
-          <strong id="statBeat">None</strong>
-        </div>
-        <div class="stat">
-          <span>State</span>
-          <strong id="statState">Stopped</strong>
-        </div>
+        <div class="stat"><span>Carrier</span><strong id="statCarrier">432 Hz</strong></div>
+        <div class="stat"><span>Layer</span><strong id="statLayer">Single</strong></div>
+        <div class="stat"><span>Beat</span><strong id="statBeat">None</strong></div>
+        <div class="stat"><span>State</span><strong id="statState">Stopped</strong></div>
       </div>
     </section>
 
@@ -141,10 +131,7 @@
           <button id="stopBtn" class="fg-btn danger" type="button">Stop</button>
         </div>
 
-        <div class="meter">
-          <span id="meter"></span>
-        </div>
-
+        <div class="meter"><span id="meter"></span></div>
         <p id="settingText" class="fine">432 Hz · 22% volume · Single Tone</p>
       </aside>
     </section>
@@ -181,7 +168,7 @@
             <select id="beatMode">
               <option value="none">None</option>
               <option value="alpha">Alpha 10 Hz · relaxed focus</option>
-              <option value="theta">Theta 6 Hz · meditation</option>
+              <option value="theta">Theta 6 Hz · quiet attention</option>
               <option value="delta">Delta 3 Hz · rest entry</option>
               <option value="gamma">Gamma 40 Hz · sharp focus</option>
               <option value="schumann">7.83 Hz · Earth-style pulse</option>
@@ -196,6 +183,7 @@
               <option value="chladni">Chladni Field</option>
               <option value="orbit">Orbital Shell</option>
               <option value="constellation">Constellation</option>
+              <option value="lift">Lift Column</option>
             </select>
           </label>
         </div>
@@ -224,9 +212,7 @@
           <button id="loadBtn" class="fg-btn ghost" type="button">Load Preset</button>
         </div>
 
-        <p class="fine">
-          Your settings save locally in this browser. Press Escape anytime to stop audio.
-        </p>
+        <p class="fine">Your settings save locally in this browser. Press Escape anytime to stop audio.</p>
       </article>
     </section>
 
@@ -234,7 +220,6 @@
       <p class="eyebrow">Carrier Presets</p>
       <h2>Frequency Library</h2>
       <p class="meta">Use these as symbolic keys. Meanings are experiential labels, not medical claims.</p>
-
       <div id="libraryGrid" class="library-grid"></div>
     </section>
 
@@ -263,6 +248,7 @@
           <button class="fg-btn seqBtn" data-seq="ascent" type="button">Ascent Path</button>
           <button class="fg-btn seqBtn" data-seq="remnant" type="button">Remnant Path</button>
           <button class="fg-btn seqBtn" data-seq="t7" type="button">T7 Field</button>
+          <button class="fg-btn seqBtn" data-seq="lift" type="button">Lift Loop</button>
         </div>
 
         <div class="button-row">
@@ -280,44 +266,91 @@ Press Escape to stop.</pre>
     </section>
 
     <section class="card t7-card">
-      <p class="eyebrow">T7 Resonant Conduit</p>
+      <p class="eyebrow">Tesla Type-7 Resonant Conduit</p>
       <h2>T7 Field Practice</h2>
 
       <p class="meta">
         Suggested start: 432 Hz, sine, single tone, 7.83 Hz pulse, low volume.
-        Use this as a focus and visualization practice.
+        Use this as a physical alignment, breath, balance, and field-awareness practice.
       </p>
 
       <div class="grid">
-        <div class="mini col-4">
-          <h3>1 · Ground</h3>
-          <p>Feel a slow pulse beneath the body. Let the breath settle first.</p>
-        </div>
-        <div class="mini col-4">
-          <h3>2 · Axis</h3>
-          <p>Picture the spine as the central line of the field.</p>
-        </div>
-        <div class="mini col-4">
-          <h3>3 · Torus</h3>
-          <p>Watch the field move outward, around, and back through center.</p>
-        </div>
-        <div class="mini col-4">
-          <h3>4 · Phase</h3>
-          <p>Let breath and sound align without forcing.</p>
-        </div>
-        <div class="mini col-4">
-          <h3>5 · Witness</h3>
-          <p>Notice one real body signal, one thought pattern, one shift.</p>
-        </div>
-        <div class="mini col-4">
-          <h3>6 · Seal</h3>
-          <p>Stop cleanly, breathe normal, and log the witness.</p>
-        </div>
+        <div class="mini col-4"><h3>1 · Ground</h3><p>Feel a slow pulse beneath the body. Let the breath settle first.</p></div>
+        <div class="mini col-4"><h3>2 · Axis</h3><p>Picture the spine as the central line of the field.</p></div>
+        <div class="mini col-4"><h3>3 · Torus</h3><p>Watch the field move outward, around, and back through center.</p></div>
+        <div class="mini col-4"><h3>4 · Phase</h3><p>Let breath and sound align without forcing.</p></div>
+        <div class="mini col-4"><h3>5 · Witness</h3><p>Notice one real body signal, one thought pattern, one shift.</p></div>
+        <div class="mini col-4"><h3>6 · Seal</h3><p>Stop cleanly, breathe normal, and log the witness.</p></div>
       </div>
 
       <div class="button-row">
         <button id="liftPresetBtn" class="fg-btn primary" type="button">Start T7 Field</button>
         <button id="liftStopBtn" class="fg-btn danger" type="button">End Practice</button>
+      </div>
+    </section>
+
+    <section class="card lift-card">
+      <p class="eyebrow">Physical Lift Training</p>
+      <h2>7-Step Lift Loop</h2>
+
+      <p class="meta">
+        This is a physical alignment practice for posture, breath, balance, nervous-system steadiness,
+        and felt lightness. It trains the body to organize itself with less drag.
+      </p>
+
+      <div class="lift-progress" aria-label="Lift loop progress">
+        <span id="liftStep1" class="lift-dot active">1</span>
+        <span id="liftStep2" class="lift-dot">2</span>
+        <span id="liftStep3" class="lift-dot">3</span>
+        <span id="liftStep4" class="lift-dot">4</span>
+        <span id="liftStep5" class="lift-dot">5</span>
+        <span id="liftStep6" class="lift-dot">6</span>
+        <span id="liftStep7" class="lift-dot">7</span>
+      </div>
+
+      <div class="grid">
+        <div class="mini col-4">
+          <h3>1 · Grounding Resonance</h3>
+          <p>Stand or sit with feet planted. Feel a slow pulse beneath the feet and spine. Let the body settle into support.</p>
+        </div>
+
+        <div class="mini col-4">
+          <h3>2 · Flow Medium</h3>
+          <p>Picture the air as layered currents around the body. Notice space, pressure, warmth, and subtle movement.</p>
+        </div>
+
+        <div class="mini col-4">
+          <h3>3 · Body as Resonator</h3>
+          <p>Use the spine as the central axis. Inhale up the axis. Exhale down the axis. Smooth the jaw, shoulders, and ribs.</p>
+        </div>
+
+        <div class="mini col-4">
+          <h3>4 · Phase Lock</h3>
+          <p>Watch breath rhythm and body rhythm line up. Look for the moment where posture feels lighter and steadier.</p>
+        </div>
+
+        <div class="mini col-4">
+          <h3>5 · Drift Feedback</h3>
+          <p>If tension returns, treat it as data. Notice whether drift began in breath, thought, posture, or effort.</p>
+        </div>
+
+        <div class="mini col-4">
+          <h3>6 · Lift Command</h3>
+          <p>Use a simple cue: “brighten the center.” Let the body lengthen upward without strain or pushing.</p>
+        </div>
+
+        <div class="mini col-12">
+          <h3>7 · Witness & Integration</h3>
+          <p>
+            Pause before repeating. Record breath, balance, posture, body sensation, emotion, and clarity.
+            The witness completes the loop and turns the exercise into memory.
+          </p>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button id="liftLoopBtn" class="fg-btn primary" type="button">Start Lift Loop</button>
+        <button id="liftLoopStopBtn" class="fg-btn danger" type="button">Stop Lift Loop</button>
       </div>
     </section>
 
@@ -361,7 +394,7 @@ Press Escape to stop.</pre>
       </aside>
     </section>
 
-    <section class="card">
+    <section class="card safety-card">
       <p class="eyebrow">Safety</p>
       <h2>Ground Rules</h2>
       <p class="fine">
@@ -372,10 +405,17 @@ Press Escape to stop.</pre>
     </section>
   </main>
 
+  <div class="mobile-dock" aria-label="Mobile controls">
+    <button id="dockPlay" type="button">Play</button>
+    <button id="dockStop" type="button">Stop</button>
+    <button id="dockLift" type="button">Lift</button>
+    <button id="dockLog" type="button">Log</button>
+  </div>
+
   <footer class="fg-footer">
     <p>© <span id="yr">2026</span> Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
   </footer>
 
   <script src="assets/js/frequency-governance.js"></script>
 </body>
-</html>
+  </html>
