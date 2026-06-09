@@ -12,13 +12,13 @@
   <meta charset="utf-8">
   <title>Frequency Governance — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="A living frequency console for carrier tones, harmonic sequencing, T7 field practice, physical lift training, sacred geometry visualization, session logs, and Codex pattern tracking.">
+  <meta name="description" content="A DJ-style frequency workstation for carrier tones, harmonic mixing, sequencing, T7 field practice, physical lift training, sacred geometry visuals, track recording, playback, and private witnessing.">
   <meta name="theme-color" content="#05070d">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/frequency-governance.html">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="Frequency Governance — Scroll of Fire">
-  <meta property="og:description" content="Tune, layer, sequence, visualize, and log carrier frequencies through the Scroll of Fire Codex.">
+  <meta property="og:description" content="Mix, layer, sequence, visualize, record, and replay carrier frequency sessions through the Scroll of Fire Codex.">
   <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
 
   <link rel="stylesheet" href="assets/css/codex.css">
@@ -34,31 +34,33 @@
       <span>/</span>
       <a href="./">Scroll of Fire</a>
       <span>/</span>
-      <span>Frequencies</span>
+      <span>Frequency Governance</span>
     </nav>
 
-    <p class="eyebrow">Codex Audio Console</p>
+    <p class="eyebrow">Codex Audio Workstation</p>
     <h1>Frequency Governance</h1>
 
     <p class="hero-copy">
-      A living frequency station for carrier tones, harmonic layers, alternating paths,
-      sacred geometry visuals, T7 field practice, physical lift training, and private session witnessing.
+      A DJ-style frequency workstation for carrier tones, harmonic layers, deck mixing,
+      live sequencing, visual field response, T7 practice, lift-loop training, track recording,
+      playback, and private witnessing.
     </p>
 
     <aside class="notice">
-      <strong>🔥 Observatory Mode:</strong>
-      smooth crossfades, adjustable volume, visual intensity, harmonic stacking,
-      beat offsets, T7 field mode, seven-step lift practice, session logging,
-      and Codex correspondence are wired into one field.
+      <strong>🔥 DJ Observatory Mode:</strong>
+      four live decks, crossfader, mute/solo, harmonic stacks, beat offsets, track recorder,
+      loop builder, timeline playback, sacred geometry visuals, T7 mode, and 7-step lift loop.
     </aside>
 
     <div class="hero-pills" aria-label="Feature summary">
-      <span>40–1800 Hz Range</span>
-      <span>Crossfade Engine</span>
+      <span>4 Deck Mixer</span>
+      <span>Track Recorder</span>
+      <span>Playback Timeline</span>
+      <span>Crossfade</span>
       <span>Harmonic Layers</span>
       <span>Beat Offsets</span>
-      <span>T7 Field Mode</span>
-      <span>7-Step Lift Loop</span>
+      <span>T7 Field</span>
+      <span>Lift Loop</span>
       <span>Private Logs</span>
     </div>
   </header>
@@ -67,16 +69,16 @@
     <section class="fg-command card">
       <div>
         <p class="eyebrow">Live Field</p>
-        <h2 id="commandTitle">432 Hz · Foundation</h2>
+        <h2 id="commandTitle">432 Hz · Foundation Mix</h2>
         <p id="commandSubtitle" class="meta">
-          Select a carrier, shape the waveform, choose a harmonic layer, then watch the field respond.
+          Build a frequency mix like a DJ set. Add carriers, blend decks, record changes, replay the session, and watch the field respond.
         </p>
       </div>
 
       <div class="command-stats">
-        <div class="stat"><span>Carrier</span><strong id="statCarrier">432 Hz</strong></div>
-        <div class="stat"><span>Layer</span><strong id="statLayer">Single</strong></div>
-        <div class="stat"><span>Beat</span><strong id="statBeat">None</strong></div>
+        <div class="stat"><span>Lead</span><strong id="statCarrier">432 Hz</strong></div>
+        <div class="stat"><span>Decks</span><strong id="statDecks">1</strong></div>
+        <div class="stat"><span>Track</span><strong id="statTrack">Idle</strong></div>
         <div class="stat"><span>State</span><strong id="statState">Stopped</strong></div>
       </div>
     </section>
@@ -98,135 +100,302 @@
       </article>
 
       <aside class="card col-4">
-        <p class="eyebrow">Carrier Console</p>
+        <p class="eyebrow">Master Console</p>
 
         <div class="readout">
-          <strong id="freqValue">432</strong>
+          <strong id="masterValue">432</strong>
           <span>Hz</span>
           <em id="stateText">stopped</em>
         </div>
 
-        <label>Frequency
-          <input id="freqSlider" type="range" min="40" max="1800" step="1" value="432">
-        </label>
-
-        <label>Custom Hz
-          <input id="freqInput" type="number" min="40" max="1800" step="1" value="432">
-        </label>
-
-        <label>Volume
-          <input id="volume" type="range" min="0" max="100" step="1" value="22">
+        <label>Master Volume
+          <input id="masterVolume" type="range" min="0" max="100" step="1" value="22">
         </label>
 
         <label>Visual Intensity
-          <input id="visualPower" type="range" min="20" max="240" step="1" value="125">
+          <input id="visualPower" type="range" min="20" max="260" step="1" value="130">
         </label>
 
         <label>Transition Smoothness
-          <input id="fadeTime" type="range" min="0.15" max="5" step="0.05" value="1.25">
+          <input id="fadeTime" type="range" min="0.15" max="6" step="0.05" value="1.25">
+        </label>
+
+        <label>Visual Mode
+          <select id="visualMode">
+            <option value="torus">Torus Field</option>
+            <option value="lattice">Lattice Net</option>
+            <option value="rose">Rose Seal</option>
+            <option value="chladni">Chladni Field</option>
+            <option value="orbit">Orbital Shell</option>
+            <option value="constellation">Constellation</option>
+            <option value="lift">Lift Column</option>
+            <option value="waveform">Waveform Scope</option>
+            <option value="dj">DJ Spectrum</option>
+          </select>
         </label>
 
         <div class="button-row">
-          <button id="playBtn" class="fg-btn primary" type="button">Play</button>
+          <button id="playBtn" class="fg-btn primary" type="button">Play Mix</button>
           <button id="stopBtn" class="fg-btn danger" type="button">Stop</button>
         </div>
 
         <div class="meter"><span id="meter"></span></div>
-        <p id="settingText" class="fine">432 Hz · 22% volume · Single Tone</p>
+        <p id="settingText" class="fine">432 Hz · 22% master · Torus Field</p>
       </aside>
     </section>
 
-    <section class="grid">
-      <article class="card col-6">
-        <p class="eyebrow">Sound Shape</p>
-        <h2>Harmonic Architecture</h2>
+    <section class="card">
+      <p class="eyebrow">DJ Mixer</p>
+      <h2>Four Frequency Decks</h2>
+      <p class="meta">
+        Each deck has its own carrier, volume, waveform, harmonic layer, beat offset, pan, mute, solo, cue, and loop capture.
+      </p>
 
-        <div class="control-grid">
+      <div class="dj-grid" id="deckGrid">
+        <article class="deck-card" data-deck="0">
+          <h3>Deck A <span class="deck-status">Lead</span></h3>
+          <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="432"></label>
+          <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="80"></label>
+          <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="-15"></label>
           <label>Waveform
-            <select id="waveType">
-              <option value="sine">Sine — clean</option>
-              <option value="triangle">Triangle — soft edge</option>
-              <option value="square">Square — strong</option>
-              <option value="sawtooth">Saw — bright</option>
+            <select class="deck-wave">
+              <option value="sine">Sine</option>
+              <option value="triangle">Triangle</option>
+              <option value="square">Square</option>
+              <option value="sawtooth">Saw</option>
             </select>
           </label>
-
-          <label>Harmonic Layer
-            <select id="harmonic">
-              <option value="single">Single Tone</option>
-              <option value="octave">Octave · 1x + 2x</option>
-              <option value="fifth">Fifth · 1x + 1.5x</option>
-              <option value="triad">Major Stack · 1x + 1.25x + 1.5x</option>
-              <option value="minor">Minor Stack · 1x + 1.2x + 1.5x</option>
-              <option value="deep">Deep Field · .5x + 1x + 2x</option>
-              <option value="crown">Crown Stack · 1x + 2x + 3x</option>
-              <option value="field">Full Field · .5x + 1x + 1.5x + 2x</option>
+          <label>Layer
+            <select class="deck-harmonic">
+              <option value="single">Single</option>
+              <option value="octave">Octave</option>
+              <option value="fifth">Fifth</option>
+              <option value="triad">Major Stack</option>
+              <option value="minor">Minor Stack</option>
+              <option value="deep">Deep Field</option>
+              <option value="crown">Crown Stack</option>
+              <option value="field">Full Field</option>
             </select>
           </label>
-
-          <label>Beat / Offset Mode
-            <select id="beatMode">
+          <label>Beat
+            <select class="deck-beat">
               <option value="none">None</option>
-              <option value="alpha">Alpha 10 Hz · relaxed focus</option>
-              <option value="theta">Theta 6 Hz · quiet attention</option>
-              <option value="delta">Delta 3 Hz · rest entry</option>
-              <option value="gamma">Gamma 40 Hz · sharp focus</option>
-              <option value="schumann">7.83 Hz · Earth-style pulse</option>
+              <option value="alpha">Alpha 10</option>
+              <option value="theta">Theta 6</option>
+              <option value="delta">Delta 3</option>
+              <option value="gamma">Gamma 40</option>
+              <option value="schumann">7.83</option>
             </select>
           </label>
+          <div class="button-row">
+            <button class="fg-btn ghost deck-cue" type="button">Cue</button>
+            <button class="fg-btn ghost deck-mute" type="button">Mute</button>
+            <button class="fg-btn ghost deck-solo" type="button">Solo</button>
+            <button class="fg-btn gold deck-add-loop" type="button">Add Loop</button>
+          </div>
+        </article>
 
-          <label>Visual Mode
-            <select id="visualMode">
-              <option value="torus">Torus Field</option>
-              <option value="lattice">Lattice Net</option>
-              <option value="rose">Rose Seal</option>
-              <option value="chladni">Chladni Field</option>
-              <option value="orbit">Orbital Shell</option>
-              <option value="constellation">Constellation</option>
-              <option value="lift">Lift Column</option>
+        <article class="deck-card" data-deck="1">
+          <h3>Deck B <span class="deck-status">Blend</span></h3>
+          <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="528"></label>
+          <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="0"></label>
+          <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="15"></label>
+          <label>Waveform
+            <select class="deck-wave">
+              <option value="sine">Sine</option>
+              <option value="triangle">Triangle</option>
+              <option value="square">Square</option>
+              <option value="sawtooth">Saw</option>
             </select>
           </label>
+          <label>Layer
+            <select class="deck-harmonic">
+              <option value="single">Single</option>
+              <option value="octave">Octave</option>
+              <option value="fifth">Fifth</option>
+              <option value="triad">Major Stack</option>
+              <option value="minor">Minor Stack</option>
+              <option value="deep">Deep Field</option>
+              <option value="crown">Crown Stack</option>
+              <option value="field">Full Field</option>
+            </select>
+          </label>
+          <label>Beat
+            <select class="deck-beat">
+              <option value="none">None</option>
+              <option value="alpha">Alpha 10</option>
+              <option value="theta">Theta 6</option>
+              <option value="delta">Delta 3</option>
+              <option value="gamma">Gamma 40</option>
+              <option value="schumann">7.83</option>
+            </select>
+          </label>
+          <div class="button-row">
+            <button class="fg-btn ghost deck-cue" type="button">Cue</button>
+            <button class="fg-btn ghost deck-mute" type="button">Mute</button>
+            <button class="fg-btn ghost deck-solo" type="button">Solo</button>
+            <button class="fg-btn gold deck-add-loop" type="button">Add Loop</button>
+          </div>
+        </article>
+
+        <article class="deck-card" data-deck="2">
+          <h3>Deck C <span class="deck-status">Pulse</span></h3>
+          <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="369"></label>
+          <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="0"></label>
+          <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="-35"></label>
+          <label>Waveform
+            <select class="deck-wave">
+              <option value="sine">Sine</option>
+              <option value="triangle">Triangle</option>
+              <option value="square">Square</option>
+              <option value="sawtooth">Saw</option>
+            </select>
+          </label>
+          <label>Layer
+            <select class="deck-harmonic">
+              <option value="single">Single</option>
+              <option value="octave">Octave</option>
+              <option value="fifth">Fifth</option>
+              <option value="triad">Major Stack</option>
+              <option value="minor">Minor Stack</option>
+              <option value="deep">Deep Field</option>
+              <option value="crown">Crown Stack</option>
+              <option value="field">Full Field</option>
+            </select>
+          </label>
+          <label>Beat
+            <select class="deck-beat">
+              <option value="none">None</option>
+              <option value="alpha">Alpha 10</option>
+              <option value="theta">Theta 6</option>
+              <option value="delta">Delta 3</option>
+              <option value="gamma">Gamma 40</option>
+              <option value="schumann">7.83</option>
+            </select>
+          </label>
+          <div class="button-row">
+            <button class="fg-btn ghost deck-cue" type="button">Cue</button>
+            <button class="fg-btn ghost deck-mute" type="button">Mute</button>
+            <button class="fg-btn ghost deck-solo" type="button">Solo</button>
+            <button class="fg-btn gold deck-add-loop" type="button">Add Loop</button>
+          </div>
+        </article>
+
+        <article class="deck-card" data-deck="3">
+          <h3>Deck D <span class="deck-status">Crown</span></h3>
+          <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="963"></label>
+          <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="0"></label>
+          <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="35"></label>
+          <label>Waveform
+            <select class="deck-wave">
+              <option value="sine">Sine</option>
+              <option value="triangle">Triangle</option>
+              <option value="square">Square</option>
+              <option value="sawtooth">Saw</option>
+            </select>
+          </label>
+          <label>Layer
+            <select class="deck-harmonic">
+              <option value="single">Single</option>
+              <option value="octave">Octave</option>
+              <option value="fifth">Fifth</option>
+              <option value="triad">Major Stack</option>
+              <option value="minor">Minor Stack</option>
+              <option value="deep">Deep Field</option>
+              <option value="crown">Crown Stack</option>
+              <option value="field">Full Field</option>
+            </select>
+          </label>
+          <label>Beat
+            <select class="deck-beat">
+              <option value="none">None</option>
+              <option value="alpha">Alpha 10</option>
+              <option value="theta">Theta 6</option>
+              <option value="delta">Delta 3</option>
+              <option value="gamma">Gamma 40</option>
+              <option value="schumann">7.83</option>
+            </select>
+          </label>
+          <div class="button-row">
+            <button class="fg-btn ghost deck-cue" type="button">Cue</button>
+            <button class="fg-btn ghost deck-mute" type="button">Mute</button>
+            <button class="fg-btn ghost deck-solo" type="button">Solo</button>
+            <button class="fg-btn gold deck-add-loop" type="button">Add Loop</button>
+          </div>
+        </article>
+      </div>
+
+      <div class="crossfade-panel">
+        <label>Crossfader A/B
+          <input id="crossfader" type="range" min="0" max="100" value="0">
+        </label>
+        <p class="fine">0 = Deck A stronger · 50 = balanced · 100 = Deck B stronger. Deck C/D stay manual.</p>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card col-7">
+        <p class="eyebrow">Track Recorder</p>
+        <h2>Record + Replay a Frequency Set</h2>
+        <p class="meta">
+          Record deck changes, preset taps, loop steps, and sequence movement. Then replay it as a structured frequency track.
+        </p>
+
+        <div class="transport-grid">
+          <button id="recordTrack" class="fg-btn danger" type="button">Record</button>
+          <button id="stopRecord" class="fg-btn ghost" type="button">Stop Record</button>
+          <button id="playTrack" class="fg-btn primary" type="button">Play Track</button>
+          <button id="stopTrack" class="fg-btn ghost" type="button">Stop Track</button>
+          <button id="saveTrack" class="fg-btn gold" type="button">Save Track</button>
+          <button id="loadTrack" class="fg-btn ghost" type="button">Load Track</button>
+          <button id="exportTrack" class="fg-btn ghost" type="button">Export Track</button>
+          <button id="clearTrack" class="fg-btn danger" type="button">Clear Track</button>
+        </div>
+
+        <div class="track-readout">
+          <span>Track Time:</span>
+          <strong id="trackClock">00:00</strong>
+          <span>Events:</span>
+          <strong id="trackEvents">0</strong>
+        </div>
+
+        <div id="trackTimeline" class="track-timeline">
+          <span class="fine">No recorded events yet.</span>
         </div>
       </article>
 
-      <article class="card col-6">
-        <p class="eyebrow">Session</p>
-        <h2>Timer + Preset Memory</h2>
-
-        <div class="control-grid">
-          <label>Session Minutes
-            <input id="sessionMinutes" type="number" min="1" max="120" step="1" value="12">
-          </label>
-
-          <label>Auto Glide While Dragging
-            <select id="dragMode">
-              <option value="glide">Glide smoothly</option>
-              <option value="release">Change on release</option>
-            </select>
-          </label>
-        </div>
+      <aside class="card col-5">
+        <p class="eyebrow">Mixer Presets</p>
+        <h2>Save the Current Console</h2>
+        <p class="fine">This stores deck values, visual mode, crossfader, loop timeline, and master settings in this browser.</p>
 
         <div class="button-row">
-          <button id="timerBtn" class="fg-btn gold" type="button">Start Session</button>
-          <button id="saveBtn" class="fg-btn ghost" type="button">Save Preset</button>
-          <button id="loadBtn" class="fg-btn ghost" type="button">Load Preset</button>
+          <button id="savePreset" class="fg-btn gold" type="button">Save Mixer Preset</button>
+          <button id="loadPreset" class="fg-btn ghost" type="button">Load Mixer Preset</button>
+          <button id="resetMixer" class="fg-btn danger" type="button">Reset Mixer</button>
         </div>
-
-        <p class="fine">Your settings save locally in this browser. Press Escape anytime to stop audio.</p>
-      </article>
+      </aside>
     </section>
 
     <section class="card">
       <p class="eyebrow">Carrier Presets</p>
       <h2>Frequency Library</h2>
-      <p class="meta">Use these as symbolic keys. Meanings are experiential labels, not medical claims.</p>
+      <p class="meta">Tap a preset to load it into the selected deck. Meanings are symbolic/experiential labels, not medical claims.</p>
+
+      <div class="button-row deck-targets">
+        <button class="fg-btn active deck-target" data-target="0" type="button">Target A</button>
+        <button class="fg-btn deck-target" data-target="1" type="button">Target B</button>
+        <button class="fg-btn deck-target" data-target="2" type="button">Target C</button>
+        <button class="fg-btn deck-target" data-target="3" type="button">Target D</button>
+      </div>
+
       <div id="libraryGrid" class="library-grid"></div>
     </section>
 
     <section class="grid">
       <article class="card col-8">
-        <p class="eyebrow">Alternating Paths</p>
-        <h2>Harmonic Sequencer</h2>
+        <p class="eyebrow">Live Loop</p>
+        <h2>DJ Sequencer</h2>
 
         <div class="control-grid">
           <label>Seconds per step
@@ -251,7 +420,11 @@
           <button class="fg-btn seqBtn" data-seq="lift" type="button">Lift Loop</button>
         </div>
 
+        <div id="loopTimeline" class="loop-timeline"></div>
+
         <div class="button-row">
+          <button id="playLoop" class="fg-btn primary" type="button">Play Custom Loop</button>
+          <button id="clearLoop" class="fg-btn ghost" type="button">Clear Loop</button>
           <button id="stopSeq" class="fg-btn danger" type="button">Stop Sequence</button>
         </div>
       </article>
@@ -284,8 +457,8 @@ Press Escape to stop.</pre>
       </div>
 
       <div class="button-row">
-        <button id="liftPresetBtn" class="fg-btn primary" type="button">Start T7 Field</button>
-        <button id="liftStopBtn" class="fg-btn danger" type="button">End Practice</button>
+        <button id="startT7" class="fg-btn primary" type="button">Start T7 Field</button>
+        <button id="stopT7" class="fg-btn danger" type="button">End Practice</button>
       </div>
     </section>
 
@@ -294,11 +467,11 @@ Press Escape to stop.</pre>
       <h2>7-Step Lift Loop</h2>
 
       <p class="meta">
-        This is a physical alignment practice for posture, breath, balance, nervous-system steadiness,
-        and felt lightness. It trains the body to organize itself with less drag.
+        Physical alignment practice for posture, breath, balance, nervous-system steadiness, and felt lightness.
+        It trains the body to organize itself with less drag.
       </p>
 
-      <div class="lift-progress" aria-label="Lift loop progress">
+      <div class="lift-progress">
         <span id="liftStep1" class="lift-dot active">1</span>
         <span id="liftStep2" class="lift-dot">2</span>
         <span id="liftStep3" class="lift-dot">3</span>
@@ -309,48 +482,18 @@ Press Escape to stop.</pre>
       </div>
 
       <div class="grid">
-        <div class="mini col-4">
-          <h3>1 · Grounding Resonance</h3>
-          <p>Stand or sit with feet planted. Feel a slow pulse beneath the feet and spine. Let the body settle into support.</p>
-        </div>
-
-        <div class="mini col-4">
-          <h3>2 · Flow Medium</h3>
-          <p>Picture the air as layered currents around the body. Notice space, pressure, warmth, and subtle movement.</p>
-        </div>
-
-        <div class="mini col-4">
-          <h3>3 · Body as Resonator</h3>
-          <p>Use the spine as the central axis. Inhale up the axis. Exhale down the axis. Smooth the jaw, shoulders, and ribs.</p>
-        </div>
-
-        <div class="mini col-4">
-          <h3>4 · Phase Lock</h3>
-          <p>Watch breath rhythm and body rhythm line up. Look for the moment where posture feels lighter and steadier.</p>
-        </div>
-
-        <div class="mini col-4">
-          <h3>5 · Drift Feedback</h3>
-          <p>If tension returns, treat it as data. Notice whether drift began in breath, thought, posture, or effort.</p>
-        </div>
-
-        <div class="mini col-4">
-          <h3>6 · Lift Command</h3>
-          <p>Use a simple cue: “brighten the center.” Let the body lengthen upward without strain or pushing.</p>
-        </div>
-
-        <div class="mini col-12">
-          <h3>7 · Witness & Integration</h3>
-          <p>
-            Pause before repeating. Record breath, balance, posture, body sensation, emotion, and clarity.
-            The witness completes the loop and turns the exercise into memory.
-          </p>
-        </div>
+        <div class="mini col-4"><h3>1 · Grounding Resonance</h3><p>Feet planted. Slow pulse beneath feet and spine. Settle into support.</p></div>
+        <div class="mini col-4"><h3>2 · Flow Medium</h3><p>Picture air as layered currents. Notice pressure, warmth, and space.</p></div>
+        <div class="mini col-4"><h3>3 · Body as Resonator</h3><p>Spine as axis. Inhale up. Exhale down. Smooth jaw, shoulders, ribs.</p></div>
+        <div class="mini col-4"><h3>4 · Phase Lock</h3><p>Watch breath and posture line up. Notice lighter, steadier balance.</p></div>
+        <div class="mini col-4"><h3>5 · Drift Feedback</h3><p>Tension is data. Find whether drift began in breath, posture, thought, or effort.</p></div>
+        <div class="mini col-4"><h3>6 · Lift Command</h3><p>Use the cue: “brighten the center.” Let the body lengthen upward without strain.</p></div>
+        <div class="mini col-12"><h3>7 · Witness & Integration</h3><p>Pause, breathe normal, record balance, posture, body sensation, emotion, and clarity.</p></div>
       </div>
 
       <div class="button-row">
-        <button id="liftLoopBtn" class="fg-btn primary" type="button">Start Lift Loop</button>
-        <button id="liftLoopStopBtn" class="fg-btn danger" type="button">Stop Lift Loop</button>
+        <button id="startLiftLoop" class="fg-btn primary" type="button">Start Lift Loop</button>
+        <button id="stopLiftLoop" class="fg-btn danger" type="button">Stop Lift Loop</button>
       </div>
     </section>
 
@@ -370,7 +513,7 @@ Press Escape to stop.</pre>
         </div>
 
         <label>Witness Note
-          <textarea id="journalNote" placeholder="What changed? What did you notice? What frequency, sequence, or layer felt best?"></textarea>
+          <textarea id="journalNote" placeholder="What changed? What did you notice? What frequency, sequence, layer, or mix felt best?"></textarea>
         </label>
 
         <div class="button-row">
@@ -405,9 +548,10 @@ Press Escape to stop.</pre>
     </section>
   </main>
 
-  <div class="mobile-dock" aria-label="Mobile controls">
+  <div class="mobile-dock">
     <button id="dockPlay" type="button">Play</button>
     <button id="dockStop" type="button">Stop</button>
+    <button id="dockRecord" type="button">Record</button>
     <button id="dockLift" type="button">Lift</button>
     <button id="dockLog" type="button">Log</button>
   </div>
