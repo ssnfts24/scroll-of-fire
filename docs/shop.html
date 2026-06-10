@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="sof carrier-432">
+<head>
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <script>
+    if (location.hostname !== "ssnfts24.github.io") {
+      const b = document.querySelector("base");
+      if (b) b.remove();
+    }
+  </script>
+
+  <meta charset="utf-8">
+  <title>Artifact Shop — Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="One-of-one Scroll of Fire artifacts, living technology pieces, reclaimed copper work, sea glass, symbolic objects, and Codex collection items.">
+  <meta name="theme-color" content="#05070d">
+  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/shop.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Artifact Shop — Scroll of Fire">
+  <meta property="og:description" content="One-of-one Scroll of Fire artifacts by Aaron Paul Laird — Scribe of Circuits.">
+  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
+
+  <link rel="stylesheet" href="assets/css/codex.css">
+
+  <style>
+    .shop-hero { min-height: 56vh; }
+
+    .shop-note {
+      max-width: 840px;
+      margin: 1.25rem auto 0;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+    }
+
+    .artifact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+
+    .artifact-card img,
+    .artifact-placeholder {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 1px solid rgba(243,201,122,0.18);
+      background:
+        radial-gradient(circle at 30% 20%, rgba(243,201,122,0.18), transparent 35%),
+        radial-gradient(circle at 70% 80%, rgba(120,220,255,0.12), transparent 38%),
+        rgba(255,255,255,0.04);
+    }
+
+    .artifact-placeholder {
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-align: center;
+      text-transform: uppercase;
+      padding: 1rem;
+    }
+
+    .artifact-card h3 {
+      margin-top: 1rem;
+      color: var(--gold);
+    }
+
+    .artifact-price {
+      margin: 1rem 0 0;
+      font-size: 1.5rem;
+      color: var(--cyan);
+      font-weight: 900;
+    }
+
+    .artifact-status {
+      display: inline-flex;
+      margin-top: 0.75rem;
+      padding: 0.35rem 0.7rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--gold);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .artifact-list {
+      color: var(--muted);
+      padding-left: 1.15rem;
+    }
+
+    .artifact-list li { margin-bottom: 0.35rem; }
+
+    .registry-card {
+      max-width: 920px;
+      margin-inline: auto;
+    }
+
+    @media (max-width: 900px) {
+      .artifact-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="./">
+      <span class="brand-mark">☲</span>
+      <span>
+        <strong>Scroll of Fire</strong>
+        <small>Codex of Reality</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-label="Open navigation" onclick="document.querySelector('.site-nav').classList.toggle('is-open')">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="site-nav">
+      <a href="./">Home</a>
+      <a href="start.html">Start</a>
+      <a href="hub.html">Hub</a>
+      <a href="ledger.html">Ledger</a>
+      <a href="shop.html">Shop</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="section-shell hero shop-hero">
+      <p class="eyebrow">Scroll of Fire · Artifact Shop</p>
+      <h1>Living Technology Artifacts</h1>
+      <p class="hero-line">Reclaimed · Remembered · Carried Forward</p>
+
+      <p class="hero-copy">
+        One-of-one handmade pieces from the Scroll of Fire collection: reclaimed copper,
+        sea glass, symbolic field objects, wearable artifacts, and Codex-linked works by
+        Aaron Paul Laird — Scribe of Circuits.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn primary" href="#available">View Available Artifact</a>
+        <a class="btn" href="#coming-soon">Coming Soon</a>
+        <a class="btn" href="#archive">Collection Archive</a>
+      </div>
+
+      <div class="shop-note">
+        <strong>⚒ Active Forge:</strong>
+        New artifacts are added as materials are found, reclaimed, shaped, documented, and completed.
+        Each piece is part of the growing Scroll of Fire creative archive.
+      </div>
+
+      <div class="shop-note">
+        These are symbolic art objects and personal collection pieces, not medical, scientific, or therapeutic devices.
+      </div>
+    </section>
+
+    <section id="available" class="section-shell">
+      <div class="section-heading">
+        <p class="eyebrow">Available</p>
+        <h2>Current Artifact</h2>
+      </div>
+
+      <div class="artifact-grid">
+        <article class="card artifact-card glow">
+          <img src="assets/time-shard-ring-001.jpg" alt="Time Shard Ring #001 handmade reclaimed copper and sea glass ring">
+          <span class="artifact-status">Available · One of One</span>
+          <h3>Time Shard Ring #001</h3>
+
+          <p>
+            Hand-formed from reclaimed copper and reclaimed Pacific Northwest sea glass.
+            A small artifact of pressure, passage, water, and memory.
+          </p>
+
+          <ul class="artifact-list">
+            <li>Material: reclaimed copper</li>
+            <li>Stone: reclaimed sea glass</li>
+            <li>Origin: Pacific Northwest shore</li>
+            <li>Collection: Living Technology Array</li>
+            <li>Designation: Hand Node</li>
+            <li>Completion: returned once to the sea</li>
+          </ul>
+
+          <p class="artifact-price">$555</p>
+
+          <div class="card-actions">
+            <a class="btn primary" href="YOUR_PAYMENT_LINK_HERE">Acquire Artifact</a>
+            <a class="btn" href="mailto:l.aaronpaul24@gmail.com?subject=Time%20Shard%20Ring%20%23001">Ask About This Piece</a>
+          </div>
+        </article>
+
+        <article class="card artifact-card">
+          <img src="assets/ember-node-7.jpg" alt="Ember Node 7 pendant Scroll of Fire artifact">
+          <span class="artifact-status">Personal Collection</span>
+          <h3>Ember Node 7</h3>
+          <p>
+            Heart-worn node of the Living Technology Array. The ember principle:
+            continuity, inner flame, remembrance, and carried resonance.
+          </p>
+          <p class="artifact-price">Not for sale</p>
+        </article>
+
+        <article class="card artifact-card">
+          <img src="assets/t7-resonant-conduit.jpg" alt="T-7 Resonant Conduit Scroll of Fire artifact">
+          <span class="artifact-status">Master Artifact</span>
+          <h3>T-7 Resonant Conduit</h3>
+          <p>
+            Primary conduit of the Scroll of Fire Living Technology Array.
+            Built as a symbolic instrument for focus, witness, breath, and field practice.
+          </p>
+          <p class="artifact-price">Not for sale</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="coming-soon" class="section-shell">
+      <div class="section-heading">
+        <p class="eyebrow">In Development</p>
+        <h2>Coming Soon</h2>
+        <p>
+          Artifacts currently being forged, tested, documented, or awaiting discovery.
+        </p>
+      </div>
+
+      <div class="artifact-grid">
+        <article class="card artifact-card">
+          <div class="artifact-placeholder">Coming Soon</div>
+          <span class="artifact-status">In Development</span>
+          <h3>Tenser Band</h3>
+          <p>
+            Wrist Node of the Living Technology Array.
+            A reclaimed copper structure focused on tension, coherence, grounding,
+            containment, and movement.
+          </p>
+          <p class="artifact-price">Coming Soon</p>
+        </article>
+
+        <article class="card artifact-card">
+          <div class="artifact-placeholder">Prototype Series</div>
+          <span class="artifact-status">Prototype</span>
+          <h3>Ember Node Series</h3>
+          <p>
+            Future Ember Nodes exploring reclaimed copper, stone, crystal,
+            symbolic field design, and wearable remembrance.
+          </p>
+          <p class="artifact-price">Coming Soon</p>
+        </article>
+
+        <article class="card artifact-card">
+          <div class="artifact-placeholder">Awaiting Discovery</div>
+          <span class="artifact-status">Concept Stage</span>
+          <h3>Time Shard Ring #002</h3>
+          <p>
+            The next evolution of the Time Shard series.
+            Materials, shore origin, shape, and final form are still awaiting discovery.
+          </p>
+          <p class="artifact-price">Awaiting Discovery</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="archive" class="section-shell">
+      <div class="section-heading">
+        <p class="eyebrow">Archive</p>
+        <h2>The Living Technology Array</h2>
+      </div>
+
+      <div class="cards-grid grid">
+        <article class="card">
+          <p class="eyebrow">Primary Conduit</p>
+          <h3>T-7 Resonant Conduit</h3>
+          <p>Transmission, focus, field awareness, breath alignment, and symbolic practice.</p>
+        </article>
+
+        <article class="card">
+          <p class="eyebrow">Heart Node</p>
+          <h3>Ember Node 7</h3>
+          <p>The pendant. Ember, continuity, inner flame, and remembrance.</p>
+        </article>
+
+        <article class="card">
+          <p class="eyebrow">Wrist Node</p>
+          <h3>Tenser Band</h3>
+          <p>Structure, tension, grounding, containment, and coherence through movement.</p>
+        </article>
+
+        <article class="card">
+          <p class="eyebrow">Hand Node</p>
+          <h3>Time Shard Ring</h3>
+          <p>Reclaimed sea glass and copper. Memory shaped by time, water, pressure, and passage.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-shell">
+      <div class="card registry-card glow">
+        <p class="eyebrow">Artifact Registry</p>
+        <h2>Future Designations Reserved</h2>
+
+        <ul class="artifact-list">
+          <li>Time Shard Ring #002 — Reserved</li>
+          <li>Time Shard Ring #003 — Reserved</li>
+          <li>Ember Node 8 — Reserved</li>
+          <li>Tenser Band Prototype II — Reserved</li>
+          <li>Undisclosed Artifact — Awaiting Discovery</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section-shell">
+      <div class="card">
+        <p class="eyebrow">Provenance</p>
+        <h2>Artifact Record</h2>
+        <p>
+          Every completed piece may receive a public artifact number, material notes,
+          completion date, origin story, status, and collection placement.
+        </p>
+        <p class="equation">Conduit · Ember · Band · Shard</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <nav>
+      <a href="./">Home</a>
+      <a href="hub.html">Hub</a>
+      <a href="ledger.html">Ledger</a>
+      <a href="ethics.html">Ethics</a>
+      <a href="sitemap.xml">Sitemap</a>
+    </nav>
+    <p>© 2026 Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
+  </footer>
+</body>
+  </html>
