@@ -1,4 +1,32 @@
+# ==========================================
+# Scroll of Fire — Codex of Reality
+# Search Engine Directives
+# ==========================================
+
 User-agent: *
 Allow: /
 
+# Core sitemap
 Sitemap: https://ssnfts24.github.io/scroll-of-fire/sitemap.xml
+
+# Optional future sitemaps
+# Sitemap: https://ssnfts24.github.io/scroll-of-fire/sitemap-images.xml
+# Sitemap: https://ssnfts24.github.io/scroll-of-fire/sitemap-artifacts.xml
+
+# Crawl-delay is ignored by Google but honored by some bots
+Crawl-delay: 2
+
+# ==========================================
+# Protected / Internal Paths
+# (Uncomment if these folders ever exist)
+# ==========================================
+
+# Disallow: /private/
+# Disallow: /drafts/
+# Disallow: /archive/internal/
+# Disallow: /testing/
+
+# ==========================================
+# Scroll of Fire
+# https://ssnfts24.github.io/scroll-of-fire/
+# ==========================================
