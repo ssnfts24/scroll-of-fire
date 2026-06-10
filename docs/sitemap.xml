@@ -1,20 +1,146 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/start.html</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/guide.html</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/theory.html</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/genesis-oracle.html</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/moons.html</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/ledger.html</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/glossary.html</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/ethics.html</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/downloads.html</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/hub.html</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/glyphs.html</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/invoke.html</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/micro.html</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/circle.html</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/teach.html</loc></url>
-  <url><loc>https://ssnfts24.github.io/scroll-of-fire/ab.html</loc></url>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.00</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/start.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/shop.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.92</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/hub.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/moons.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/frequency-governance.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.88</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/genesis-oracle.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.86</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/teach.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.84</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/theory.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.82</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/guide.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/ledger.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.78</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/lab.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.76</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/invoke.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.74</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/circle.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.72</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/glyphs.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/glossary.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.68</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/downloads.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.66</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/ethics.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.64</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/micro.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.60</priority>
+  </url>
+
+  <url>
+    <loc>https://ssnfts24.github.io/scroll-of-fire/ab.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.50</priority>
+  </url>
+
 </urlset>
