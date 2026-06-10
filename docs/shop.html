@@ -12,16 +12,71 @@
   <meta charset="utf-8">
   <title>Artifact Shop — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="One-of-one Scroll of Fire artifacts, living technology pieces, reclaimed copper work, sea glass, symbolic objects, and Codex collection items.">
+  <meta name="description" content="One-of-one Scroll of Fire artifacts, living technology pieces, reclaimed copper work, sea glass, symbolic objects, and Codex collection items by Aaron Paul Laird.">
+  <meta name="author" content="Aaron Paul Laird">
+  <meta name="creator" content="Aaron Paul Laird">
+  <meta name="publisher" content="Scroll of Fire">
+  <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#05070d">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/shop.html">
 
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Artifact Shop — Scroll of Fire">
   <meta property="og:description" content="One-of-one Scroll of Fire artifacts by Aaron Paul Laird — Scribe of Circuits.">
-  <meta property="og:image" content="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png">
+  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/shop.html">
+  <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/time-shard-ring-001.jpg">
+  <meta property="og:image:alt" content="Time Shard Ring #001 — reclaimed copper and sea glass artifact">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Artifact Shop — Scroll of Fire">
+  <meta name="twitter:description" content="One-of-one Scroll of Fire artifacts, reclaimed copper work, sea glass, and living technology collection pieces.">
+  <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/time-shard-ring-001.jpg">
 
   <link rel="stylesheet" href="assets/css/codex.css">
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"CollectionPage",
+    "name":"Artifact Shop — Scroll of Fire",
+    "url":"https://ssnfts24.github.io/scroll-of-fire/shop.html",
+    "description":"One-of-one Scroll of Fire artifacts, living technology pieces, reclaimed copper work, sea glass, symbolic objects, and Codex collection items.",
+    "creator":{
+      "@type":"Person",
+      "name":"Aaron Paul Laird"
+    },
+    "publisher":{
+      "@type":"Organization",
+      "name":"Scroll of Fire",
+      "url":"https://ssnfts24.github.io/scroll-of-fire/"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Product",
+    "name":"Time Shard Ring #001",
+    "image":"https://ssnfts24.github.io/scroll-of-fire/assets/time-shard-ring-001.jpg",
+    "description":"Hand-formed reclaimed copper and reclaimed Pacific Northwest sea glass artifact from the Scroll of Fire Living Technology Array.",
+    "brand":{
+      "@type":"Brand",
+      "name":"Scroll of Fire"
+    },
+    "material":"Reclaimed copper and reclaimed sea glass",
+    "category":"Wearable art artifact",
+    "offers":{
+      "@type":"Offer",
+      "url":"https://ssnfts24.github.io/scroll-of-fire/shop.html#available",
+      "price":"555",
+      "priceCurrency":"USD",
+      "availability":"https://schema.org/InStock",
+      "itemCondition":"https://schema.org/NewCondition"
+    }
+  }
+  </script>
 
   <style>
     .shop-hero { min-height: 56vh; }
@@ -104,6 +159,13 @@
       margin-inline: auto;
     }
 
+    .shop-nav-note {
+      text-align: center;
+      margin-top: 1rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
     @media (max-width: 900px) {
       .artifact-grid { grid-template-columns: 1fr; }
     }
@@ -114,7 +176,7 @@
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header">
-    <a class="brand" href="./">
+    <a class="brand" href="./" aria-label="Scroll of Fire home">
       <span class="brand-mark">☲</span>
       <span>
         <strong>Scroll of Fire</strong>
@@ -122,16 +184,18 @@
       </span>
     </a>
 
-    <button class="nav-toggle" type="button" aria-label="Open navigation" onclick="document.querySelector('.site-nav').classList.toggle('is-open')">
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation" onclick="document.querySelector('.site-nav').classList.toggle('open')">
       <span></span><span></span><span></span>
     </button>
 
-    <nav class="site-nav">
+    <nav class="site-nav" aria-label="Primary navigation">
       <a href="./">Home</a>
       <a href="start.html">Start</a>
+      <a href="moons.html">13 Moons</a>
+      <a href="frequency-governance.html">Frequency</a>
       <a href="hub.html">Hub</a>
       <a href="ledger.html">Ledger</a>
-      <a href="shop.html">Shop</a>
+      <a href="shop.html" aria-current="page">Shop</a>
     </nav>
   </header>
 
@@ -171,12 +235,12 @@
       </div>
 
       <div class="artifact-grid">
-        <article class="card artifact-card glow">
-          <img src="assets/time-shard-ring-001.jpg" alt="Time Shard Ring #001 handmade reclaimed copper and sea glass ring">
+        <article class="card artifact-card glow" itemscope itemtype="https://schema.org/Product">
+          <img src="assets/time-shard-ring-001.jpg" alt="Time Shard Ring #001 handmade reclaimed copper and sea glass ring" itemprop="image">
           <span class="artifact-status">Available · One of One</span>
-          <h3>Time Shard Ring #001</h3>
+          <h3 itemprop="name">Time Shard Ring #001</h3>
 
-          <p>
+          <p itemprop="description">
             Hand-formed from reclaimed copper and reclaimed Pacific Northwest sea glass.
             A small artifact of pressure, passage, water, and memory.
           </p>
@@ -190,7 +254,12 @@
             <li>Completion: returned once to the sea</li>
           </ul>
 
-          <p class="artifact-price">$555</p>
+          <p class="artifact-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+            <meta itemprop="priceCurrency" content="USD">
+            <meta itemprop="price" content="555">
+            <link itemprop="availability" href="https://schema.org/InStock">
+            $555
+          </p>
 
           <div class="card-actions">
             <a class="btn primary" href="YOUR_PAYMENT_LINK_HERE">Acquire Artifact</a>
@@ -220,15 +289,17 @@
           <p class="artifact-price">Not for sale</p>
         </article>
       </div>
+
+      <p class="shop-nav-note">
+        Artifact images should be uploaded to <code>docs/assets/</code> using the filenames shown in this page.
+      </p>
     </section>
 
     <section id="coming-soon" class="section-shell">
       <div class="section-heading">
         <p class="eyebrow">In Development</p>
         <h2>Coming Soon</h2>
-        <p>
-          Artifacts currently being forged, tested, documented, or awaiting discovery.
-        </p>
+        <p>Artifacts currently being forged, tested, documented, or awaiting discovery.</p>
       </div>
 
       <div class="artifact-grid">
@@ -330,7 +401,7 @@
   </main>
 
   <footer class="site-footer">
-    <nav>
+    <nav aria-label="Footer navigation">
       <a href="./">Home</a>
       <a href="hub.html">Hub</a>
       <a href="ledger.html">Ledger</a>
@@ -340,4 +411,4 @@
     <p>© 2026 Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
   </footer>
 </body>
-  </html>
+</html>
