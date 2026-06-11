@@ -10,28 +10,150 @@
   </script>
 
   <meta charset="utf-8">
-  <title>Remnant 13 Moons — Living Calendar</title>
+  <title>Remnant 13 Moons — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="A living 13×28 Remnant calendar with moon phase, witness logs, field layers, pattern tracking, and Codex daily seals.">
+  <meta name="description" content="A living 13×28 Remnant calendar with moon phase, daily witness logs, field layers, pattern tracking, Codex seals, and Scroll of Fire coherence tools.">
+  <meta name="author" content="Aaron Paul Laird">
+  <meta name="creator" content="Aaron Paul Laird">
+  <meta name="publisher" content="Scroll of Fire">
+  <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#05070d">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
 
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Scroll of Fire">
+  <meta property="og:title" content="Remnant 13 Moons — Living Calendar">
+  <meta property="og:description" content="Track the Remnant 13×28 calendar, visible moon phase, daily witness, field layers, Codex day seals, and symbolic pattern logs.">
+  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
+  <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Remnant 13 Moons — Scroll of Fire">
+  <meta name="twitter:description" content="A living 13×28 Remnant calendar with moon phase, daily witness logs, field layers, pattern tracking, and Codex seals.">
+  <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
+
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/favicon.png">
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/moons.css">
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Remnant 13 Moons — Living Calendar",
+    "url":"https://ssnfts24.github.io/scroll-of-fire/moons.html",
+    "applicationCategory":"LifestyleApplication",
+    "operatingSystem":"Any",
+    "creator":{"@type":"Person","name":"Aaron Paul Laird"},
+    "publisher":{"@type":"Organization","name":"Scroll of Fire","url":"https://ssnfts24.github.io/scroll-of-fire/"},
+    "description":"A symbolic 13×28 calendar and witness logging interface for moon phase, daily pattern tracking, field layers, and Codex seals."
+  }
+  </script>
+
+  <style>
+    body{min-height:100vh;overflow-x:hidden}
+    #skyBg{position:fixed;inset:0;width:100%;height:100%;z-index:-2;background:radial-gradient(circle at 20% 18%,rgba(122,243,255,.16),transparent 32%),radial-gradient(circle at 78% 8%,rgba(243,201,122,.14),transparent 30%),radial-gradient(circle at 50% 100%,rgba(255,255,255,.05),transparent 44%),#05070d}
+    .wrap{width:min(1180px,calc(100% - 28px));margin:0 auto}
+    .sof-topbar{position:sticky;top:0;z-index:80;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 0;backdrop-filter:blur(18px)}
+    .sof-brand{display:inline-flex;align-items:center;gap:.72rem;text-decoration:none}
+    .sof-brand .mark{width:42px;height:42px;display:grid;place-items:center;border-radius:16px;color:var(--gold,#f3c97a);border:1px solid rgba(243,201,122,.28);background:rgba(255,255,255,.04);box-shadow:0 0 35px rgba(243,201,122,.08);font-size:1.25rem;font-weight:900}
+    .sof-brand strong{display:block;color:var(--text,#f4f1e8);line-height:1.05}
+    .sof-brand small{display:block;color:var(--muted,#aeb7c8);font-size:.78rem}
+    .sof-nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.45rem}
+    .sof-nav a{text-decoration:none;padding:.55rem .75rem;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035);color:inherit;font-size:.92rem}
+    .sof-nav a:hover,.sof-nav a:focus-visible,.sof-nav a[aria-current="page"]{background:rgba(122,243,255,.09);border-color:rgba(122,243,255,.22);outline:none}
+    .page-head{position:relative;overflow:hidden;margin:1rem 0 1.2rem;padding:clamp(1.2rem,4vw,2.2rem);border-radius:34px;border:1px solid rgba(255,255,255,.14);background:radial-gradient(circle at 18% 18%,rgba(122,243,255,.18),transparent 34%),radial-gradient(circle at 78% 18%,rgba(243,201,122,.16),transparent 32%),linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.018));box-shadow:0 28px 100px rgba(0,0,0,.38)}
+    .page-head::after{content:"";position:absolute;inset:auto 2rem 0 2rem;height:1px;background:linear-gradient(90deg,transparent,rgba(243,201,122,.55),rgba(122,243,255,.45),transparent)}
+    .crumbs{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.15rem}
+    .page-head h1{font-size:clamp(2.6rem,8vw,5.8rem);line-height:.9;margin:.25rem 0 .8rem;letter-spacing:-.06em}
+    .subtitle{max-width:900px}
+    .hero-sigil{display:flex;flex-wrap:wrap;justify-content:center;gap:.7rem;margin:1.35rem auto;color:var(--gold,#f3c97a);font-weight:900;letter-spacing:.08em}
+    .notice{margin-top:1rem;padding:1rem;border-radius:22px;border:1px solid rgba(243,201,122,.22);background:rgba(243,201,122,.06);color:var(--muted,#aeb7c8)}
+    .tabs{position:sticky;top:66px;z-index:60;display:flex;gap:.55rem;overflow-x:auto;padding:.75rem 0 .15rem;margin-top:1rem;scrollbar-width:thin;backdrop-filter:blur(16px)}
+    .tab{flex:0 0 auto;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.045);color:inherit;border-radius:999px;padding:.7rem .9rem;font-weight:800;cursor:pointer;white-space:nowrap}
+    .tab:hover,.tab:focus-visible,.tab.active{background:rgba(122,243,255,.10);border-color:rgba(122,243,255,.26);outline:none}
+    .tabPanel{display:none;margin:1rem 0}.tabPanel.active{display:block}
+    .command{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);gap:1rem;align-items:center}
+    .command-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem}
+    .stat{padding:.85rem;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035)}
+    .stat span{display:block;color:var(--muted,#aeb7c8);font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.25rem}
+    .stat strong{display:block;color:var(--gold,#f3c97a);font-size:1.05rem}
+    .moon-badge{display:grid;grid-template-columns:180px minmax(0,1fr);gap:1.3rem;align-items:center;margin-top:1rem}
+    .ring{position:relative;width:160px;height:160px;display:grid;place-items:center;margin:auto}
+    .ring svg{width:160px;height:160px;transform:rotate(-90deg)}
+    .ring-bg,.ring-fg{fill:none;stroke-width:10}.ring-bg{stroke:rgba(255,255,255,.1)}
+    .ring-fg{stroke:var(--gold,#f3c97a);stroke-linecap:round;stroke-dasharray:314;stroke-dashoffset:314;filter:drop-shadow(0 0 10px rgba(243,201,122,.26))}
+    .ring .label{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+    .ring .big{display:block;color:var(--text,#f4f1e8);font-size:3rem;font-weight:950;line-height:.9}
+    .ring .small{display:block;color:var(--muted,#aeb7c8);font-weight:800}
+    .weekrow{display:grid;gap:.65rem;margin-top:1rem}
+    .week{display:grid;grid-template-columns:repeat(14,1fr);gap:.28rem;max-width:520px}
+    .week span{width:100%;aspect-ratio:1;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08)}
+    .week span.active{background:var(--gold,#f3c97a);box-shadow:0 0 14px rgba(243,201,122,.32)}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1rem;margin-top:1rem}
+    .col-12{grid-column:span 12}.col-8{grid-column:span 8}.col-7{grid-column:span 7}.col-6{grid-column:span 6}.col-5{grid-column:span 5}.col-4{grid-column:span 4}
+    .card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.12);border-radius:26px;background:radial-gradient(circle at 12% 0%,rgba(243,201,122,.08),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));box-shadow:0 18px 70px rgba(0,0,0,.26)}
+    .card::before{content:"";position:absolute;inset:-1px;pointer-events:none;background:radial-gradient(circle at 100% 100%,rgba(122,243,255,.09),transparent 34%);opacity:.72}
+    .card>*{position:relative;z-index:1}
+    .formrow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;margin-top:.8rem}
+    label{display:grid;gap:.35rem;color:var(--muted,#aeb7c8);font-weight:750}
+    input,select,textarea,.lab-input{width:100%;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(0,0,0,.18);color:inherit;padding:.78rem .85rem;font:inherit}
+    textarea{min-height:130px;resize:vertical}
+    .btnrow{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1rem}
+    .lab-btn{border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.045);color:inherit;text-decoration:none;border-radius:999px;padding:.72rem .95rem;font-weight:900;cursor:pointer}
+    .lab-btn:hover,.lab-btn:focus-visible,.lab-btn.active{background:rgba(122,243,255,.10);border-color:rgba(122,243,255,.26);outline:none}
+    .lab-btn.green{background:rgba(70,220,150,.10);border-color:rgba(70,220,150,.25)}
+    .lab-btn.danger{background:rgba(255,90,90,.10);border-color:rgba(255,90,90,.25)}
+    .pill{display:inline-flex;align-items:center;width:fit-content;gap:.35rem;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.045);border-radius:999px;padding:.45rem .7rem;color:var(--gold,#f3c97a);font-weight:850}
+    .meta,.fine{color:var(--muted,#aeb7c8)}
+    .output,pre.output{min-height:360px;white-space:pre-wrap;word-break:break-word;border-radius:20px;padding:1rem;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.10);color:var(--text,#f4f1e8);overflow:auto}
+    #simMoon{width:100%;height:auto;max-height:340px;border-radius:22px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.10)}
+    .scroller{overflow-x:auto;border-radius:20px;border:1px solid rgba(255,255,255,.08)}
+    table{width:100%;border-collapse:collapse;min-width:760px}
+    th,td{padding:.8rem;border-bottom:1px solid rgba(255,255,255,.08);text-align:left}
+    th{color:var(--gold,#f3c97a);background:rgba(255,255,255,.035)}
+    .calendar,.gregorian,.savedList,.pattern-grid,.copy-scroll,.loop-timeline{border-radius:22px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.16);padding:1rem;overflow:auto}
+    .log-grid,.hum-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem;margin-top:1rem}
+    .log-card,.hum-card{padding:1rem;border-radius:20px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035)}
+    .footer{width:min(1180px,calc(100% - 28px));margin:2rem auto 1rem;padding:1rem;text-align:center;color:var(--muted,#aeb7c8)}
+    .mobile-dock{position:sticky;bottom:.75rem;z-index:70;display:none;width:min(680px,calc(100% - 28px));margin:1rem auto;padding:.45rem;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(8,12,20,.86);backdrop-filter:blur(18px);box-shadow:0 18px 60px rgba(0,0,0,.38)}
+    .mobile-dock a{flex:1;text-align:center;text-decoration:none;padding:.65rem .45rem;border-radius:999px;color:inherit;font-weight:850;font-size:.8rem}.mobile-dock a:hover{background:rgba(122,243,255,.10)}
+    @media(max-width:1000px){.command,.moon-badge{grid-template-columns:1fr}.command-grid{grid-template-columns:repeat(2,1fr)}.col-8,.col-7,.col-6,.col-5,.col-4{grid-column:span 12}.log-grid,.hum-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:760px){.sof-topbar{position:relative;align-items:flex-start;flex-direction:column}.sof-nav{justify-content:flex-start}.page-head{border-radius:26px;padding:1rem}.tabs{top:0}.formrow,.command-grid,.log-grid,.hum-grid{grid-template-columns:1fr}.week{grid-template-columns:repeat(7,1fr)}.btnrow .lab-btn{flex:1 1 auto}.mobile-dock{display:flex}}
+  </style>
 </head>
 
 <body>
   <canvas id="skyBg" aria-hidden="true"></canvas>
 
   <div class="wrap">
+    <header class="sof-topbar">
+      <a class="sof-brand" href="./" aria-label="Scroll of Fire home">
+        <span class="mark">☾</span>
+        <span>
+          <strong>Scroll of Fire</strong>
+          <small>Remnant 13 Moons</small>
+        </span>
+      </a>
+
+      <nav class="sof-nav" aria-label="Primary navigation">
+        <a href="./">Home</a>
+        <a href="./start.html">Start</a>
+        <a href="./shop.html">Shop</a>
+        <a href="./frequency-governance.html">Frequency</a>
+        <a href="./hub.html">Hub</a>
+        <a href="./ledger.html">Ledger</a>
+      </nav>
+    </header>
+
     <header class="page-head">
-      <nav class="crumbs" aria-label="Primary navigation">
+      <nav class="crumbs" aria-label="Secondary navigation">
         <a class="lab-btn ghost" href="./">← Codex</a>
-        <a class="lab-btn ghost" href="./start.html">Start</a>
         <a class="lab-btn ghost" href="./guide.html">Guide</a>
         <a class="lab-btn ghost" href="./theory.html">Theory</a>
         <a class="lab-btn ghost" href="./genesis-oracle.html">Oracle</a>
-        <a class="lab-btn ghost" href="./ledger.html">Ledger</a>
+        <a class="lab-btn ghost" href="./ethics.html">Ethics</a>
       </nav>
 
       <p class="eyebrow">Remnant Calendar Engine</p>
@@ -371,6 +493,14 @@
       </section>
     </main>
   </div>
+
+  <nav class="mobile-dock" aria-label="Mobile quick navigation">
+    <a href="#todayPanel">Today</a>
+    <a href="#witnessPanel">Witness</a>
+    <a href="#calendarPanel">Calendar</a>
+    <a href="#fieldPanel">Field</a>
+    <a href="#savedPanel">Logs</a>
+  </nav>
 
   <footer class="footer">
     <p>© <span id="yr">2026</span> Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
