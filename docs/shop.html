@@ -10,9 +10,9 @@
   </script>
 
   <meta charset="utf-8">
-  <title>Artifact Shop — Scroll of Fire</title>
+  <title>Artifact Shop Coming Soon — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="One-of-one Scroll of Fire artifacts, living technology pieces, reclaimed copper work, sea glass, symbolic objects, and Codex collection items (Coming Soon) by Aaron Paul Laird.">
+  <meta name="description" content="The Scroll of Fire Artifact Shop is coming soon. Preview one-of-one living technology artifacts, reclaimed copper work, sea glass, symbolic objects, wearable pieces, and Codex collection items by Aaron Paul Laird.">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="creator" content="Aaron Paul Laird">
   <meta name="publisher" content="Scroll of Fire">
@@ -22,15 +22,15 @@
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Scroll of Fire">
-  <meta property="og:title" content="Artifact Shop — Scroll of Fire">
-  <meta property="og:description" content="One-of-one Scroll of Fire artifacts by Aaron Paul Laird — Scribe of Circuits.">
+  <meta property="og:title" content="Artifact Shop Coming Soon — Scroll of Fire">
+  <meta property="og:description" content="Preview the upcoming Scroll of Fire Artifact Shop: one-of-one handmade artifacts, reclaimed copper work, sea glass, and living technology collection pieces.">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/shop.html">
   <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/time-shard-ring-001.jpg">
-  <meta property="og:image:alt" content="Time Shard Ring #001 — reclaimed copper and sea glass artifact">
+  <meta property="og:image:alt" content="Scroll of Fire artifact preview with reclaimed copper and stone">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Artifact Shop — Scroll of Fire">
-  <meta name="twitter:description" content="One-of-one Scroll of Fire artifacts, reclaimed copper work, sea glass, and living technology collection pieces.">
+  <meta name="twitter:title" content="Artifact Shop Coming Soon — Scroll of Fire">
+  <meta name="twitter:description" content="Upcoming one-of-one Scroll of Fire artifacts, reclaimed copper work, sea glass, symbolic objects, and living technology pieces.">
   <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/time-shard-ring-001.jpg">
 
   <link rel="stylesheet" href="assets/css/codex.css">
@@ -39,9 +39,9 @@
   {
     "@context":"https://schema.org",
     "@type":"CollectionPage",
-    "name":"Artifact Shop — Scroll of Fire",
+    "name":"Artifact Shop Coming Soon — Scroll of Fire",
     "url":"https://ssnfts24.github.io/scroll-of-fire/shop.html",
-    "description":"One-of-one Scroll of Fire artifacts, living technology pieces, reclaimed copper work, sea glass, symbolic objects, and Codex collection items.",
+    "description":"Preview page for the upcoming Scroll of Fire Artifact Shop featuring one-of-one handmade artifacts, reclaimed copper work, sea glass, symbolic objects, and Codex collection items.",
     "creator":{
       "@type":"Person",
       "name":"Aaron Paul Laird"
@@ -50,45 +50,104 @@
       "@type":"Organization",
       "name":"Scroll of Fire",
       "url":"https://ssnfts24.github.io/scroll-of-fire/"
-    }
-  }
-  </script>
-
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Product",
-    "name":"Time Shard Ring #001",
-    "image":"https://ssnfts24.github.io/scroll-of-fire/assets/time-shard-ring-001.jpg",
-    "description":"Hand-formed reclaimed copper and reclaimed Pacific Northwest sea glass artifact from the Scroll of Fire Living Technology Array.",
-    "brand":{
-      "@type":"Brand",
-      "name":"Scroll of Fire"
     },
-    "material":"Reclaimed copper and reclaimed sea glass",
-    "category":"Wearable art artifact",
-    "offers":{
-      "@type":"Offer",
-      "url":"https://ssnfts24.github.io/scroll-of-fire/shop.html#available",
-      "price":"Coming Soon",
-      "priceCurrency":"USD",
-      "availability":"https://schema.org/ComingSoon",
-      "itemCondition":"https://schema.org/NewCondition"
+    "mainEntity":{
+      "@type":"ItemList",
+      "name":"Scroll of Fire Artifact Preview Registry",
+      "itemListElement":[
+        {
+          "@type":"CreativeWork",
+          "name":"Time Shard Ring #001",
+          "description":"Reclaimed copper and reclaimed Pacific Northwest sea glass artifact currently in completion."
+        },
+        {
+          "@type":"CreativeWork",
+          "name":"Tiger Node Ring #001",
+          "description":"Adjustable reclaimed copper ring with tiger stone, currently in inventory preparation."
+        },
+        {
+          "@type":"CreativeWork",
+          "name":"Tenser Band",
+          "description":"Wrist Node of the Living Technology Array, currently in development."
+        }
+      ]
     }
   }
   </script>
 
   <style>
-    .shop-hero { min-height: 56vh; }
+    .shop-hero {
+      min-height: 62vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shop-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(122,243,255,0.16), transparent 34%),
+        radial-gradient(circle at 78% 26%, rgba(243,201,122,0.16), transparent 36%),
+        radial-gradient(circle at 50% 92%, rgba(255,255,255,0.06), transparent 40%);
+      opacity: 0.85;
+    }
+
+    .shop-hero > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .launch-ribbon {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin: 0 auto 1rem;
+      padding: 0.5rem 0.95rem;
+      border: 1px solid rgba(243,201,122,0.32);
+      border-radius: 999px;
+      color: var(--gold);
+      background: rgba(243,201,122,0.08);
+      font-weight: 900;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      box-shadow: 0 0 30px rgba(243,201,122,0.08);
+    }
 
     .shop-note {
-      max-width: 840px;
+      max-width: 900px;
       margin: 1.25rem auto 0;
       padding: 1rem;
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: rgba(255,255,255,0.04);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
       color: var(--muted);
+    }
+
+    .inventory-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin: 1.25rem auto 0;
+      max-width: 980px;
+    }
+
+    .inventory-stat {
+      padding: 0.9rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.035);
+      text-align: center;
+    }
+
+    .inventory-stat strong {
+      display: block;
+      color: var(--gold);
+      font-size: 1.35rem;
+      margin-bottom: 0.2rem;
     }
 
     .artifact-grid {
@@ -96,6 +155,27 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 1rem;
       margin-top: 1.25rem;
+    }
+
+    .artifact-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .artifact-card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(243,201,122,0.12), transparent 36%),
+        radial-gradient(circle at 92% 100%, rgba(122,243,255,0.10), transparent 38%);
+      opacity: 0.65;
+    }
+
+    .artifact-card > * {
+      position: relative;
+      z-index: 1;
     }
 
     .artifact-card img,
@@ -129,7 +209,7 @@
 
     .artifact-price {
       margin: 1rem 0 0;
-      font-size: 1.5rem;
+      font-size: 1.35rem;
       color: var(--cyan);
       font-weight: 900;
     }
@@ -141,21 +221,26 @@
       border: 1px solid var(--line);
       border-radius: 999px;
       color: var(--gold);
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.08em;
+      background: rgba(0,0,0,0.14);
     }
 
-    .artifact-list {
+    .artifact-list,
+    .forge-list {
       color: var(--muted);
       padding-left: 1.15rem;
     }
 
-    .artifact-list li { margin-bottom: 0.35rem; }
+    .artifact-list li,
+    .forge-list li {
+      margin-bottom: 0.35rem;
+    }
 
     .registry-card {
-      max-width: 920px;
+      max-width: 980px;
       margin-inline: auto;
     }
 
@@ -166,8 +251,48 @@
       font-size: 0.95rem;
     }
 
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin-top: 1.25rem;
+    }
+
+    .process-step {
+      padding: 1rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.035);
+    }
+
+    .process-step strong {
+      display: block;
+      color: var(--gold);
+      margin-bottom: 0.35rem;
+    }
+
+    .notify-box {
+      text-align: center;
+      max-width: 900px;
+      margin-inline: auto;
+    }
+
+    @media (max-width: 1100px) {
+      .inventory-strip,
+      .process-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
     @media (max-width: 900px) {
       .artifact-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .inventory-strip,
+      .process-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -201,26 +326,35 @@
 
   <main id="main">
     <section class="section-shell hero shop-hero">
-      <p class="eyebrow">Scroll of Fire · Artifact Shop</p>
+      <p class="launch-ribbon">⚒ Shop Coming Soon</p>
+      <p class="eyebrow">Scroll of Fire · Artifact Forge</p>
       <h1>Living Technology Artifacts</h1>
       <p class="hero-line">Reclaimed · Remembered · Carried Forward</p>
 
       <p class="hero-copy">
-        One-of-one handmade pieces from the Scroll of Fire collection: reclaimed copper,
-        sea glass, symbolic field objects, wearable artifacts, and Codex-linked works by
-        Aaron Paul Laird — Scribe of Circuits.
+        The Scroll of Fire Artifact Shop is being built now. Inventory is in progress:
+        reclaimed copper rings, stone nodes, sea glass pieces, symbolic field objects,
+        wearable artifacts, and Codex-linked collection pieces by Aaron Paul Laird —
+        Scribe of Circuits.
       </p>
 
       <div class="hero-actions">
-        <a class="btn primary" href="#available">View Available Artifact</a>
-        <a class="btn" href="#coming-soon">Coming Soon</a>
-        <a class="btn" href="#archive">Collection Archive</a>
+        <a class="btn primary" href="#preview">Preview Inventory</a>
+        <a class="btn" href="#forge-process">Forge Process</a>
+        <a class="btn" href="#registry">Artifact Registry</a>
+      </div>
+
+      <div class="inventory-strip" aria-label="Shop progress summary">
+        <div class="inventory-stat"><strong>0</strong><span>Released</span></div>
+        <div class="inventory-stat"><strong>2+</strong><span>In Progress</span></div>
+        <div class="inventory-stat"><strong>4</strong><span>Array Classes</span></div>
+        <div class="inventory-stat"><strong>1</strong><span>Shop Opening Soon</span></div>
       </div>
 
       <div class="shop-note">
         <strong>⚒ Active Forge:</strong>
-        New artifacts are added as materials are found, reclaimed, shaped, documented, and completed.
-        Each piece is part of the growing Scroll of Fire creative archive.
+        Nothing is available for purchase yet. Artifacts will be released only after they are completed,
+        photographed, documented, and entered into the registry.
       </div>
 
       <div class="shop-note">
@@ -228,78 +362,84 @@
       </div>
     </section>
 
-    <section id="available" class="section-shell">
+    <section id="preview" class="section-shell">
       <div class="section-heading">
-        <p class="eyebrow">Available</p>
-        <h2>Current Artifact</h2>
+        <p class="eyebrow">Inventory Preview</p>
+        <h2>Pieces Being Prepared</h2>
+        <p>
+          Early pieces are being completed, photographed, named, and organized before the shop opens.
+        </p>
       </div>
 
       <div class="artifact-grid">
-        <article class="card artifact-card glow" itemscope itemtype="https://schema.org/Product">
-          <img src="assets/time-shard-ring-001.jpg" alt="Time Shard Ring #001 handmade reclaimed copper and sea glass ring" itemprop="image">
-          <span class="artifact-status">Available · One of One</span>
-          <h3 itemprop="name">Time Shard Ring #001</h3>
+        <article class="card artifact-card glow">
+          <img src="assets/time-shard-ring-001.jpg" alt="Time Shard Ring #001 handmade reclaimed copper and sea glass ring preview">
+          <span class="artifact-status">In Completion · Not Yet Available</span>
+          <h3>Time Shard Ring #001</h3>
 
-          <p itemprop="description">
+          <p>
+            The first Time Shard artifact is currently in completion.
             Hand-formed from reclaimed copper and reclaimed Pacific Northwest sea glass.
-            A small artifact of pressure, passage, water, and memory.
           </p>
 
           <ul class="artifact-list">
             <li>Material: reclaimed copper</li>
             <li>Stone: reclaimed sea glass</li>
-            <li>Origin: Pacific Northwest shore</li>
             <li>Collection: Living Technology Array</li>
             <li>Designation: Hand Node</li>
-            <li>Completion: returned once to the sea</li>
+            <li>Completion rite: return to the sea pending</li>
           </ul>
 
-          <p class="artifact-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-            <meta itemprop="priceCurrency" content="USD">
-            <meta itemprop="price" content="555">
-            <link itemprop="availability" href="https://schema.org/InStock">
-            $555
+          <p class="artifact-price">Preview Only</p>
+        </article>
+
+        <article class="card artifact-card glow">
+          <img src="assets/tiger-node-ring-001.jpg" alt="Tiger Node Ring #001 adjustable reclaimed copper and tiger stone ring preview">
+          <span class="artifact-status">Inventory Build · Not Yet Available</span>
+          <h3>Tiger Node Ring #001</h3>
+
+          <p>
+            Adjustable reclaimed copper ring with tiger stone.
+            Built as a focus node within the Scroll of Fire wearable artifact series.
           </p>
 
-          <div class="card-actions">
-            <a class="btn primary" href="YOUR_PAYMENT_LINK_HERE">Acquire Artifact</a>
-            <a class="btn" href="mailto:l.aaronpaul24@gmail.com?subject=Time%20Shard%20Ring%20%23001">Ask About This Piece</a>
-          </div>
+          <ul class="artifact-list">
+            <li>Material: reclaimed copper</li>
+            <li>Stone: tiger stone</li>
+            <li>Design: adjustable spiral coil</li>
+            <li>Collection: Living Technology Array</li>
+            <li>Status: inventory preparation</li>
+          </ul>
+
+          <p class="artifact-price">Preview Only</p>
         </article>
 
         <article class="card artifact-card">
           <img src="assets/ember-node-7.jpg" alt="Ember Node 7 pendant Scroll of Fire artifact">
-          <span class="artifact-status">Personal Collection</span>
+          <span class="artifact-status">Archive Piece</span>
           <h3>Ember Node 7</h3>
           <p>
             Heart-worn node of the Living Technology Array. The ember principle:
             continuity, inner flame, remembrance, and carried resonance.
           </p>
-          <p class="artifact-price">Not for sale</p>
-        </article>
-
-        <article class="card artifact-card">
-          <img src="assets/t7-resonant-conduit.jpg" alt="T-7 Resonant Conduit Scroll of Fire artifact">
-          <span class="artifact-status">Master Artifact</span>
-          <h3>T-7 Resonant Conduit</h3>
-          <p>
-            Primary conduit of the Scroll of Fire Living Technology Array.
-            Built as a symbolic instrument for focus, witness, breath, and field practice.
-          </p>
-          <p class="artifact-price">Not for sale</p>
+          <p class="artifact-price">Personal Collection</p>
         </article>
       </div>
 
       <p class="shop-nav-note">
-        Artifact images should be uploaded to <code>docs/assets/</code> using the filenames shown in this page.
+        Upload images to <code>docs/assets/</code> as:
+        <code>time-shard-ring-001.jpg</code>,
+        <code>tiger-node-ring-001.jpg</code>,
+        <code>ember-node-7.jpg</code>, and
+        <code>t7-resonant-conduit.jpg</code>.
       </p>
     </section>
 
     <section id="coming-soon" class="section-shell">
       <div class="section-heading">
-        <p class="eyebrow">In Development</p>
-        <h2>Coming Soon</h2>
-        <p>Artifacts currently being forged, tested, documented, or awaiting discovery.</p>
+        <p class="eyebrow">Coming Soon Vault</p>
+        <h2>Future Inventory</h2>
+        <p>Artifacts currently planned, reserved, or awaiting discovery.</p>
       </div>
 
       <div class="artifact-grid">
@@ -372,18 +512,50 @@
       </div>
     </section>
 
-    <section class="section-shell">
+    <section id="forge-process" class="section-shell">
+      <div class="section-heading">
+        <p class="eyebrow">Process</p>
+        <h2>How Artifacts Enter the Shop</h2>
+        <p>Each item moves through a simple registry path before release.</p>
+      </div>
+
+      <div class="process-grid">
+        <div class="process-step"><strong>1 · Reclaim</strong><span>Materials are found, salvaged, gathered, or repurposed.</span></div>
+        <div class="process-step"><strong>2 · Form</strong><span>Copper, stone, glass, and structure are shaped by hand.</span></div>
+        <div class="process-step"><strong>3 · Name</strong><span>The piece receives a title, number, and collection role.</span></div>
+        <div class="process-step"><strong>4 · Document</strong><span>Photos, notes, materials, and story are entered into the record.</span></div>
+        <div class="process-step"><strong>5 · Release</strong><span>The piece becomes available only when complete.</span></div>
+      </div>
+    </section>
+
+    <section id="registry" class="section-shell">
       <div class="card registry-card glow">
         <p class="eyebrow">Artifact Registry</p>
-        <h2>Future Designations Reserved</h2>
+        <h2>Designations Reserved</h2>
 
         <ul class="artifact-list">
+          <li>Time Shard Ring #001 — In Completion</li>
+          <li>Tiger Node Ring #001 — Inventory Build</li>
           <li>Time Shard Ring #002 — Reserved</li>
-          <li>Time Shard Ring #003 — Reserved</li>
+          <li>Tiger Node Ring #002 — Reserved</li>
           <li>Ember Node 8 — Reserved</li>
           <li>Tenser Band Prototype II — Reserved</li>
           <li>Undisclosed Artifact — Awaiting Discovery</li>
         </ul>
+      </div>
+    </section>
+
+    <section class="section-shell">
+      <div class="card notify-box">
+        <p class="eyebrow">Notification</p>
+        <h2>Want to Know When the Shop Opens?</h2>
+        <p>
+          The first release will be announced after the initial inventory is complete and documented.
+        </p>
+        <div class="hero-actions">
+          <a class="btn primary" href="mailto:l.aaronpaul24@gmail.com?subject=Scroll%20of%20Fire%20Artifact%20Shop%20Notification">Request Notification</a>
+          <a class="btn" href="./hub.html">Return to Hub</a>
+        </div>
       </div>
     </section>
 
@@ -393,7 +565,8 @@
         <h2>Artifact Record</h2>
         <p>
           Every completed piece may receive a public artifact number, material notes,
-          completion date, origin story, status, and collection placement.
+          completion date, origin story, status, collection placement, release state,
+          and registry entry.
         </p>
         <p class="equation">Conduit · Ember · Band · Shard</p>
       </div>
@@ -411,4 +584,4 @@
     <p>© 2026 Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
   </footer>
 </body>
-</html>
+      </html>
