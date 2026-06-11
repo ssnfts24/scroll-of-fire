@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <title>Frequency Governance — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Scroll of Fire Frequency Governance — a low-volume frequency observatory with quick presets, harmonic paths, T-7 field practice, lift loop training, sacred geometry visuals, recording, and private witnessing.">
+  <meta name="description" content="Frequency Governance is a Scroll of Fire sound observatory for quick intent paths, harmonic fields, Paleo-Hebrew Name presets, T-7 practice, Lift Loop training, sacred geometry visuals, session recording, and private witness logs.">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="creator" content="Aaron Paul Laird">
   <meta name="publisher" content="Scroll of Fire">
@@ -23,13 +23,13 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Frequency Governance — Scroll of Fire">
-  <meta property="og:description" content="Quick frequency presets, harmonic paths, T-7 field practice, lift loop training, sacred geometry visuals, recording, and private witnessing.">
+  <meta property="og:description" content="A living sound observatory for intent paths, harmonic presets, T-7 field practice, Lift Loop training, geometry visuals, and witness logs.">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/frequency-governance.html">
   <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Frequency Governance — Scroll of Fire">
-  <meta name="twitter:description" content="A Scroll of Fire sound observatory for presets, harmonic paths, T-7 field practice, lift loop training, visuals, and witness logs.">
+  <meta name="twitter:description" content="Quick sound paths, sacred geometry visuals, T-7 field practice, Lift Loop training, and private witness logs.">
   <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
 
   <link rel="stylesheet" href="assets/css/codex.css">
@@ -37,9 +37,10 @@
 
   <style>
     .fg-hero {
-      min-height: 66vh;
+      min-height: 72vh;
       position: relative;
       overflow: hidden;
+      padding-bottom: 2rem;
     }
 
     .fg-hero::before {
@@ -48,9 +49,9 @@
       inset: 0;
       pointer-events: none;
       background:
-        radial-gradient(circle at 18% 18%, rgba(122,243,255,0.18), transparent 34%),
-        radial-gradient(circle at 80% 24%, rgba(243,201,122,0.18), transparent 34%),
-        radial-gradient(circle at 50% 95%, rgba(255,255,255,0.06), transparent 44%);
+        radial-gradient(circle at 16% 18%, rgba(122,243,255,0.20), transparent 34%),
+        radial-gradient(circle at 82% 18%, rgba(243,201,122,0.18), transparent 34%),
+        radial-gradient(circle at 50% 92%, rgba(255,255,255,0.07), transparent 44%);
     }
 
     .fg-hero > * {
@@ -86,34 +87,42 @@
     .launch-panel {
       margin-top: 1.3rem;
       display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+      grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
       gap: 1rem;
       align-items: stretch;
     }
 
-    .quick-card {
+    .quick-card,
+    .sacred-name,
+    .intent-card,
+    .sound-card {
       position: relative;
       overflow: hidden;
       padding: 1rem;
-      border-radius: 26px;
+      border-radius: 28px;
       border: 1px solid rgba(255,255,255,0.12);
       background:
         radial-gradient(circle at 10% 0%, rgba(243,201,122,0.10), transparent 36%),
         linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
     }
 
-    .quick-grid {
+    .quick-grid,
+    .intent-grid,
+    .name-grid,
+    .geometry-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.7rem;
+      gap: 0.75rem;
       margin-top: 1rem;
     }
 
-    .quick-preset {
+    .quick-preset,
+    .intent-btn,
+    .geometry-btn {
       min-height: 112px;
       text-align: left;
-      border-radius: 20px;
-      padding: 0.9rem;
+      border-radius: 22px;
+      padding: 0.95rem;
       border: 1px solid rgba(255,255,255,0.12);
       background: rgba(255,255,255,0.04);
       color: inherit;
@@ -121,14 +130,18 @@
       font: inherit;
     }
 
-    .quick-preset strong {
+    .quick-preset strong,
+    .intent-btn strong,
+    .geometry-btn strong {
       display: block;
       color: var(--gold, #f3c97a);
       margin-bottom: 0.25rem;
       font-size: 1rem;
     }
 
-    .quick-preset span {
+    .quick-preset span,
+    .intent-btn span,
+    .geometry-btn span {
       display: block;
       color: var(--muted);
       font-size: 0.88rem;
@@ -136,7 +149,11 @@
     }
 
     .quick-preset:hover,
-    .quick-preset:focus-visible {
+    .quick-preset:focus-visible,
+    .intent-btn:hover,
+    .intent-btn:focus-visible,
+    .geometry-btn:hover,
+    .geometry-btn:focus-visible {
       border-color: rgba(122,243,255,0.28);
       background: rgba(122,243,255,0.08);
       outline: none;
@@ -147,31 +164,24 @@
       place-items: center;
       min-height: 100%;
       text-align: center;
-      border-radius: 26px;
-      border: 1px solid rgba(243,201,122,0.22);
+      border-color: rgba(243,201,122,0.24);
       background:
-        radial-gradient(circle at 50% 25%, rgba(243,201,122,0.16), transparent 40%),
-        radial-gradient(circle at 50% 90%, rgba(122,243,255,0.10), transparent 45%),
+        radial-gradient(circle at 50% 24%, rgba(243,201,122,0.18), transparent 40%),
+        radial-gradient(circle at 50% 90%, rgba(122,243,255,0.12), transparent 45%),
         rgba(255,255,255,0.035);
-      padding: 1.2rem;
     }
 
     .sacred-name .paleo {
       font-size: clamp(3rem, 10vw, 7rem);
       line-height: 1;
       color: var(--gold, #f3c97a);
-      text-shadow: 0 0 30px rgba(243,201,122,0.18);
+      text-shadow: 0 0 30px rgba(243,201,122,0.2);
       letter-spacing: 0.05em;
-    }
-
-    .sacred-name p {
-      max-width: 520px;
-      margin-inline: auto;
     }
 
     .mode-row {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 0.75rem;
       margin-top: 1rem;
     }
@@ -183,18 +193,31 @@
       background: rgba(255,255,255,0.035);
     }
 
-    .preset-bank {
+    .field-status-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.7rem;
+      gap: 0.75rem;
       margin-top: 1rem;
     }
 
-    .preset-bank .seqBtn {
-      min-height: 76px;
+    .field-status {
+      padding: 0.85rem;
       border-radius: 18px;
-      white-space: normal;
-      line-height: 1.2;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.035);
+    }
+
+    .field-status span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .field-status strong {
+      color: var(--gold, #f3c97a);
+      font-size: 1.08rem;
     }
 
     .advanced-lab {
@@ -220,23 +243,24 @@
       padding: 1rem;
     }
 
-    .mini-path-grid {
+    .journey-strip {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.8rem;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.75rem;
       margin-top: 1rem;
     }
 
-    .mini-path {
+    .journey-step {
       padding: 0.9rem;
       border-radius: 20px;
       border: 1px solid rgba(255,255,255,0.10);
       background: rgba(255,255,255,0.035);
     }
 
-    .mini-path h3 {
-      margin-top: 0;
+    .journey-step strong {
+      display: block;
       color: var(--gold, #f3c97a);
+      margin-bottom: 0.25rem;
     }
 
     .safety-card {
@@ -244,26 +268,38 @@
     }
 
     @media (max-width: 1100px) {
+      .launch-panel {
+        grid-template-columns: 1fr;
+      }
+
       .quick-grid,
-      .preset-bank,
-      .mini-path-grid {
+      .intent-grid,
+      .name-grid,
+      .geometry-grid,
+      .field-status-grid,
+      .journey-strip {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .launch-panel {
-        grid-template-columns: 1fr;
+      .mode-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
     @media (max-width: 760px) {
       .quick-grid,
-      .preset-bank,
-      .mini-path-grid,
+      .intent-grid,
+      .name-grid,
+      .geometry-grid,
+      .field-status-grid,
+      .journey-strip,
       .mode-row {
         grid-template-columns: 1fr;
       }
 
-      .quick-preset {
+      .quick-preset,
+      .intent-btn,
+      .geometry-btn {
         min-height: auto;
       }
     }
@@ -286,32 +322,34 @@
     <h1>Frequency Governance</h1>
 
     <p class="hero-copy">
-      A low-volume sound field for quick harmonic presets, breath pacing, T-7 field practice,
-      lift-loop training, sacred geometry visuals, session recording, and private witnessing.
+      Choose an intention, open a sound path, watch the field respond, and record the witness.
+      Frequency becomes structure. Breath becomes timing. Observation becomes the record.
     </p>
 
     <aside class="notice">
-      <strong>🔥 Preset First Mode:</strong>
-      choose a path, press play, adjust gently, and witness the shift. Advanced deck mixing is still available,
-      but the main experience now begins with quick fields and guided sound paths.
+      <strong>🔥 Living Sound Observatory:</strong>
+      quick intent paths, harmonic textures, Paleo-Hebrew Name presets, T-7 field practice,
+      Lift Loop training, sacred geometry visuals, recording, and private witness logs.
     </aside>
 
     <div class="hero-pills" aria-label="Feature summary">
-      <span>Quick Presets</span>
-      <span>YHWH Path</span>
+      <span>Intent Paths</span>
+      <span>𐤉𐤄𐤅𐤄 Name Path</span>
       <span>Lift Loop</span>
       <span>T7 Field</span>
       <span>Breath Modes</span>
-      <span>Harmonic Layers</span>
-      <span>Visual Field</span>
+      <span>Sound Textures</span>
+      <span>Geometry Field</span>
       <span>Witness Logs</span>
-      <span>Advanced Mixer</span>
+      <span>Advanced Lab</span>
     </div>
 
     <nav class="fg-top-nav" aria-label="Page shortcuts">
       <a href="#quickStart">Quick Start</a>
       <a href="#observatory">Observatory</a>
-      <a href="#presetForge">Preset Forge</a>
+      <a href="#intentPaths">Intent Paths</a>
+      <a href="#namePath">Name Path</a>
+      <a href="#geometry">Geometry</a>
       <a href="#t7Practice">T7</a>
       <a href="#liftLoop">Lift</a>
       <a href="#witness">Witness</a>
@@ -322,49 +360,21 @@
     <section id="quickStart" class="launch-panel">
       <article class="quick-card">
         <p class="eyebrow">Start Here</p>
-        <h2>Quick Frequency Paths</h2>
+        <h2>Quick Sound Paths</h2>
         <p class="meta">
-          These are fast-start paths. They use low volume, smooth transitions, symbolic intention,
-          and simple sound movement before any advanced controls.
+          Press one path to begin. The system keeps the volume low and moves through the sound field gently.
         </p>
 
         <div class="quick-grid">
-          <button class="quick-preset seqBtn" data-seq="calm" type="button">
-            <strong>Calm Path</strong>
-            <span>Slow field, low pressure, breath-first entry.</span>
-          </button>
-          <button class="quick-preset seqBtn" data-seq="focus" type="button">
-            <strong>Focus Path</strong>
-            <span>Clean center, study mode, task alignment.</span>
-          </button>
-          <button class="quick-preset seqBtn" data-seq="clarity" type="button">
-            <strong>Clarity Path</strong>
-            <span>Bright tone path for organizing thought.</span>
-          </button>
-          <button class="quick-preset seqBtn" data-seq="restore" type="button">
-            <strong>Restore Path</strong>
-            <span>Gentle reset after noise, tension, or overload.</span>
-          </button>
-          <button class="quick-preset seqBtn" data-seq="dream" type="button">
-            <strong>Dream Gate</strong>
-            <span>Soft descent, symbolic memory, night witness.</span>
-          </button>
-          <button class="quick-preset seqBtn" data-seq="lift" type="button">
-            <strong>Lift Loop</strong>
-            <span>Posture, breath, balance, upward organization.</span>
-          </button>
-          <button class="quick-preset seqBtn" data-seq="t7" type="button">
-            <strong>T7 Field</strong>
-            <span>Conduit practice, breath, torus, witness.</span>
-          </button>
-          <button class="quick-preset seqBtn" data-seq="remnant" type="button">
-            <strong>Remnant Path</strong>
-            <span>Observe, breathe, align, return.</span>
-          </button>
-          <button class="quick-preset seqBtn" data-seq="ascent" type="button">
-            <strong>Ascent Path</strong>
-            <span>Layered rise, crown field, expanded attention.</span>
-          </button>
+          <button class="quick-preset seqBtn" data-seq="calm" type="button"><strong>Calm Path</strong><span>Slow field, low pressure, breath-first entry.</span></button>
+          <button class="quick-preset seqBtn" data-seq="focus" type="button"><strong>Focus Path</strong><span>Clean center, study mode, task alignment.</span></button>
+          <button class="quick-preset seqBtn" data-seq="clarity" type="button"><strong>Clarity Path</strong><span>Bright tone path for organizing thought.</span></button>
+          <button class="quick-preset seqBtn" data-seq="restore" type="button"><strong>Restore Path</strong><span>Gentle reset after noise, tension, or overload.</span></button>
+          <button class="quick-preset seqBtn" data-seq="create" type="button"><strong>Create Path</strong><span>Imagination, movement, build state, flow.</span></button>
+          <button class="quick-preset seqBtn" data-seq="dream" type="button"><strong>Dream Gate</strong><span>Soft descent, symbolic memory, night witness.</span></button>
+          <button class="quick-preset seqBtn" data-seq="t7" type="button"><strong>T7 Field</strong><span>Conduit practice, breath, torus, witness.</span></button>
+          <button class="quick-preset seqBtn" data-seq="lift" type="button"><strong>Lift Loop</strong><span>Posture, breath, balance, upward organization.</span></button>
+          <button class="quick-preset seqBtn" data-seq="remnant" type="button"><strong>Remnant Path</strong><span>Observe, breathe, align, return.</span></button>
         </div>
 
         <div class="button-row">
@@ -373,19 +383,22 @@
         </div>
       </article>
 
-      <aside class="sacred-name">
+      <aside id="namePath" class="sacred-name">
         <div>
           <p class="eyebrow">Paleo-Hebrew Name Path</p>
           <div class="paleo" aria-label="Paleo-Hebrew tetragrammaton">𐤉𐤄𐤅𐤄</div>
-          <h2>YHWH Frequency Presets</h2>
+          <h2>YHWH Preset Family</h2>
           <p class="meta">
-            A dedicated preset family for breath, reverence, alignment, remembrance, and creative word.
-            Built as symbolic sound practice, not as a claim of medical or scientific effect.
+            A dedicated preset family for breath, reverence, alignment, remembrance, creative word, and return.
           </p>
-          <div class="button-row">
-            <button class="fg-btn gold seqBtn" data-seq="remnant" type="button">Name Path</button>
-            <button class="fg-btn ghost seqBtn" data-seq="calm" type="button">Breath of Life</button>
-            <button class="fg-btn ghost seqBtn" data-seq="ascent" type="button">Or HaDabar</button>
+
+          <div class="name-grid">
+            <button class="quick-preset seqBtn" data-seq="yod" type="button"><strong>𐤉 · Breath</strong><span>Entry, first spark, attention.</span></button>
+            <button class="quick-preset seqBtn" data-seq="heh1" type="button"><strong>𐤄 · Expansion</strong><span>Awareness, spaciousness, observation.</span></button>
+            <button class="quick-preset seqBtn" data-seq="waw" type="button"><strong>𐤅 · Connection</strong><span>Bridge, flow, relationship, resonance.</span></button>
+            <button class="quick-preset seqBtn" data-seq="heh2" type="button"><strong>𐤄 · Return</strong><span>Stillness, integration, seal.</span></button>
+            <button class="quick-preset seqBtn" data-seq="yhwh" type="button"><strong>Full Name Path</strong><span>𐤉 → 𐤄 → 𐤅 → 𐤄</span></button>
+            <button class="quick-preset seqBtn" data-seq="orhadabar" type="button"><strong>Or HaDabar</strong><span>Light, word, creative signal.</span></button>
           </div>
         </div>
       </aside>
@@ -394,15 +407,15 @@
     <section class="fg-command card">
       <div>
         <p class="eyebrow">Live Field</p>
-        <h2 id="commandTitle">432 Hz · Foundation Mix</h2>
+        <h2 id="commandTitle">432 Hz · Foundation Field</h2>
         <p id="commandSubtitle" class="meta">
-          Choose a preset, adjust the sound texture, then witness what changes in breath, posture, attention, and inner signal.
+          Choose a path, adjust texture and intensity, then witness breath, posture, attention, and body signal.
         </p>
       </div>
 
       <div class="command-stats">
         <div class="stat"><span>Lead</span><strong id="statCarrier">432 Hz</strong></div>
-        <div class="stat"><span>Decks</span><strong id="statDecks">1</strong></div>
+        <div class="stat"><span>Path</span><strong id="statPath">Foundation</strong></div>
         <div class="stat"><span>Track</span><strong id="statTrack">Idle</strong></div>
         <div class="stat"><span>State</span><strong id="statState">Stopped</strong></div>
       </div>
@@ -455,6 +468,9 @@
             <option value="constellation">Constellation</option>
             <option value="lift">Lift Column</option>
             <option value="waveform">Waveform Scope</option>
+            <option value="flower">Flower Field</option>
+            <option value="metatron">Metatron Field</option>
+            <option value="tree">Tree Field</option>
             <option value="dj">Spectrum Field</option>
           </select>
         </label>
@@ -464,12 +480,26 @@
       </aside>
     </section>
 
-    <section id="presetForge" class="card">
+    <section id="intentPaths" class="intent-card">
+      <p class="eyebrow">Intent → Path → Field</p>
+      <h2>Choose What You Are Entering For</h2>
+      <p class="meta">
+        Frequency is the structure underneath. The path is what the visitor understands first.
+      </p>
+
+      <div class="intent-grid">
+        <button class="intent-btn seqBtn" data-seq="study" type="button"><strong>Study</strong><span>Clear mind, steady focus, less scattered attention.</span></button>
+        <button class="intent-btn seqBtn" data-seq="build" type="button"><strong>Build</strong><span>Creative work, problem solving, active making.</span></button>
+        <button class="intent-btn seqBtn" data-seq="prayer" type="button"><strong>Prayer</strong><span>Reverence, breath, stillness, remembrance.</span></button>
+        <button class="intent-btn seqBtn" data-seq="ground" type="button"><strong>Ground</strong><span>Feet, body, slow field, return to center.</span></button>
+        <button class="intent-btn seqBtn" data-seq="release" type="button"><strong>Release</strong><span>Unburden, unclench, soften the field.</span></button>
+        <button class="intent-btn seqBtn" data-seq="witness" type="button"><strong>Witness</strong><span>Observe, record, and return with clarity.</span></button>
+      </div>
+    </section>
+
+    <section id="presetForge" class="sound-card">
       <p class="eyebrow">Preset Forge</p>
       <h2>Shape the Sound Path</h2>
-      <p class="meta">
-        Start with a preset, then shape its texture. These controls prepare the UI for deeper sound design in the JavaScript layer.
-      </p>
 
       <div class="mode-row">
         <label>Intensity
@@ -489,6 +519,9 @@
             <option value="bell">Bell Layer</option>
             <option value="choir">Choir Pad</option>
             <option value="crystal">Crystal Edge</option>
+            <option value="temple">Temple Space</option>
+            <option value="earth">Earth Drone</option>
+            <option value="solar">Solar Rise</option>
           </select>
         </label>
 
@@ -500,30 +533,44 @@
             <option value="777">7 · 7 · 7</option>
           </select>
         </label>
+
+        <label>Session Length
+          <select id="sessionLength">
+            <option value="3">3 Minutes</option>
+            <option value="7" selected>7 Minutes</option>
+            <option value="13">13 Minutes</option>
+            <option value="28">28 Minutes</option>
+          </select>
+        </label>
       </div>
 
-      <div class="preset-bank">
-        <button class="fg-btn seqBtn" data-seq="calm" type="button">Calm Path</button>
-        <button class="fg-btn seqBtn" data-seq="focus" type="button">Focus Path</button>
-        <button class="fg-btn seqBtn" data-seq="clarity" type="button">Clarity Path</button>
-        <button class="fg-btn seqBtn" data-seq="restore" type="button">Restore Path</button>
-        <button class="fg-btn seqBtn" data-seq="dream" type="button">Dream Gate</button>
-        <button class="fg-btn seqBtn" data-seq="ascent" type="button">Ascent Path</button>
-        <button class="fg-btn seqBtn" data-seq="remnant" type="button">Remnant Path</button>
-        <button class="fg-btn seqBtn" data-seq="t7" type="button">T7 Field</button>
-        <button class="fg-btn seqBtn" data-seq="lift" type="button">Lift Loop</button>
-        <button class="fg-btn seqBtn" data-seq="headache" type="button">Pressure Ease</button>
+      <div class="field-status-grid">
+        <div class="field-status"><span>Texture</span><strong id="statTexture">Warm Harmonic</strong></div>
+        <div class="field-status"><span>Breath</span><strong id="statBreath">4 · 2 · 6</strong></div>
+        <div class="field-status"><span>Intensity</span><strong id="statIntensity">Balanced</strong></div>
+        <div class="field-status"><span>Session</span><strong id="statSession">7 min</strong></div>
       </div>
+    </section>
 
-      <p class="fine">
-        Meanings are symbolic and experiential. Keep volume low. Use these as sound-and-witness practices, not medical treatment.
-      </p>
+    <section id="geometry" class="card">
+      <p class="eyebrow">Geometry Field</p>
+      <h2>Choose the Visual Seal</h2>
+      <p class="meta">The visualizer can shift with the sound path, breath mode, and intention.</p>
+
+      <div class="geometry-grid">
+        <button class="geometry-btn" data-visual="torus" type="button"><strong>Torus</strong><span>Return, flow, field circulation.</span></button>
+        <button class="geometry-btn" data-visual="flower" type="button"><strong>Flower</strong><span>Pattern, growth, living structure.</span></button>
+        <button class="geometry-btn" data-visual="metatron" type="button"><strong>Metatron</strong><span>Architecture, relation, ordered field.</span></button>
+        <button class="geometry-btn" data-visual="rose" type="button"><strong>Rose</strong><span>Resonant symmetry, harmonic bloom.</span></button>
+        <button class="geometry-btn" data-visual="tree" type="button"><strong>Tree</strong><span>Root, axis, branch, return.</span></button>
+        <button class="geometry-btn" data-visual="lift" type="button"><strong>Lift</strong><span>Column, posture, upward alignment.</span></button>
+      </div>
     </section>
 
     <section class="card">
-      <p class="eyebrow">Carrier Presets</p>
-      <h2>Frequency Library</h2>
-      <p class="meta">Tap a preset to load it into the selected deck. Meanings are symbolic/experiential labels, not medical claims.</p>
+      <p class="eyebrow">Carrier Library</p>
+      <h2>Frequency Ingredients</h2>
+      <p class="meta">Tap a carrier to load it into the selected deck. The path remains the main experience.</p>
 
       <div class="button-row deck-targets">
         <button class="fg-btn active deck-target" data-target="0" type="button">Target A</button>
@@ -537,8 +584,8 @@
 
     <section class="grid">
       <article class="card col-8">
-        <p class="eyebrow">Live Loop</p>
-        <h2>Sequencer Paths</h2>
+        <p class="eyebrow">Live Journey</p>
+        <h2>Sequencer Path</h2>
 
         <div class="control-grid">
           <label>Seconds per step
@@ -548,6 +595,14 @@
           <label>Sequence Status
             <input id="seqStatus" value="stopped" readonly>
           </label>
+        </div>
+
+        <div class="journey-strip">
+          <div class="journey-step"><strong>1 · Enter</strong><span>Begin low and steady.</span></div>
+          <div class="journey-step"><strong>2 · Shape</strong><span>Texture and breath align.</span></div>
+          <div class="journey-step"><strong>3 · Rise</strong><span>Field opens gradually.</span></div>
+          <div class="journey-step"><strong>4 · Witness</strong><span>Notice the body signal.</span></div>
+          <div class="journey-step"><strong>5 · Return</strong><span>Seal and record.</span></div>
         </div>
 
         <div id="loopTimeline" class="loop-timeline"></div>
@@ -571,9 +626,9 @@ Press Escape to stop.</pre>
     <section class="grid">
       <article class="card col-7">
         <p class="eyebrow">Track Recorder</p>
-        <h2>Record + Replay a Frequency Set</h2>
+        <h2>Record + Replay a Sound Journey</h2>
         <p class="meta">
-          Record preset taps, loop steps, and sequence movement. Then replay it as a structured frequency track.
+          Record preset taps, path changes, visual modes, and sequence movement.
         </p>
 
         <div class="transport-grid">
@@ -600,13 +655,13 @@ Press Escape to stop.</pre>
       </article>
 
       <aside class="card col-5">
-        <p class="eyebrow">Saved Console</p>
-        <h2>Save the Current Field</h2>
-        <p class="fine">This stores deck values, visual mode, crossfader, loop timeline, and master settings in this browser.</p>
+        <p class="eyebrow">Saved Field</p>
+        <h2>Save the Current Configuration</h2>
+        <p class="fine">Stores deck values, path, texture, visual mode, crossfader, loop timeline, and master settings in this browser.</p>
 
         <div class="button-row">
-          <button id="savePreset" class="fg-btn gold" type="button">Save Preset</button>
-          <button id="loadPreset" class="fg-btn ghost" type="button">Load Preset</button>
+          <button id="savePreset" class="fg-btn gold" type="button">Save Field</button>
+          <button id="loadPreset" class="fg-btn ghost" type="button">Load Field</button>
           <button id="resetMixer" class="fg-btn danger" type="button">Reset</button>
         </div>
       </aside>
@@ -617,8 +672,7 @@ Press Escape to stop.</pre>
       <h2>T7 Field Practice</h2>
 
       <p class="meta">
-        Suggested start: 432 Hz, sine, single tone, 7.83 Hz pulse, low volume.
-        Use this as a physical alignment, breath, balance, and field-awareness practice.
+        Start low. Let breath, posture, attention, and witness move together.
       </p>
 
       <div class="grid">
@@ -642,7 +696,6 @@ Press Escape to stop.</pre>
 
       <p class="meta">
         Physical alignment practice for posture, breath, balance, nervous-system steadiness, and felt lightness.
-        It trains the body to organize itself with less drag.
       </p>
 
       <div class="lift-progress">
@@ -673,11 +726,10 @@ Press Escape to stop.</pre>
 
     <section class="card">
       <details class="advanced-lab">
-        <summary>Advanced Deck Lab — open only when you want full manual control</summary>
+        <summary>Advanced Deck Lab — manual four-deck field design</summary>
         <div class="advanced-inner">
           <p class="meta">
-            The mixer is now secondary. Use this when you want to manually design a field with four decks,
-            crossfade, pan, waveform, harmonic layer, beat offset, mute, solo, cue, and loop capture.
+            The mixer is now secondary. Use this only when you want full manual sound design.
           </p>
 
           <div class="dj-grid" id="deckGrid">
@@ -880,7 +932,7 @@ Press Escape to stop.</pre>
         </div>
 
         <label>Witness Note
-          <textarea id="journalNote" placeholder="What changed? What did you notice? What frequency, sequence, layer, or mix felt best?"></textarea>
+          <textarea id="journalNote" placeholder="What changed? What did you notice? What path, texture, visual, breath pace, or frequency felt best?"></textarea>
         </label>
 
         <div class="button-row">
@@ -929,4 +981,4 @@ Press Escape to stop.</pre>
 
   <script src="assets/js/frequency-governance.js"></script>
 </body>
-</html>
+              </html>
