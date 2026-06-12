@@ -1,129 +1,926 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" class="sof carrier-432">
+
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Scroll of Fire — Frequency Governance</title>
-<meta name="description" content="Living Sound Observatory for frequency exploration, journaling, visualization, breathwork, and symbolic resonance mapping.">
-<link rel="stylesheet" href="assets/css/frequency-governance.css">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<title>
+Scroll of Fire — Frequency Governance
+</title>
+
+<meta name="description"
+      content="Frequency Governance — Living Sound Observatory for harmonic exploration, symbolic contemplation, breath pacing, frequency journaling, resonance mapping, and coherent practice.">
+
+<meta name="theme-color"
+      content="#05070d">
+
+<meta name="robots"
+      content="index,follow">
+
+<link rel="canonical"
+      href="https://ssnfts24.github.io/scroll-of-fire/frequency-governance.html">
+
+<meta property="og:type"
+      content="website">
+
+<meta property="og:title"
+      content="Scroll of Fire — Frequency Governance">
+
+<meta property="og:description"
+      content="Living Sound Observatory for sound exploration, symbolic contemplation, breath pacing, journaling, and resonance mapping.">
+
+<meta property="og:url"
+      content="https://ssnfts24.github.io/scroll-of-fire/frequency-governance.html">
+
+<meta property="og:image"
+      content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-frequency-governance.jpg">
+
+<meta name="twitter:card"
+      content="summary_large_image">
+
+<meta name="twitter:title"
+      content="Frequency Governance">
+
+<meta name="twitter:description"
+      content="Living Sound Observatory">
+
+<link rel="stylesheet"
+      href="assets/css/frequency-governance.css">
+
 </head>
+
 <body>
 
 <canvas id="starField"></canvas>
 
 <header class="fg-hero">
-  <p class="eyebrow">SCROLL OF FIRE • CODEX OF REALITY</p>
-  <h1>Frequency Governance</h1>
+
+  <div class="fg-crumbs">
+
+    <a href="index.html">
+      Home
+    </a>
+
+    <span>•</span>
+
+    <a href="hub.html">
+      Codex
+    </a>
+
+    <span>•</span>
+
+    <span>
+      Frequency Governance
+    </span>
+
+  </div>
+
+  <p class="eyebrow">
+    ☲ SCROLL OF FIRE • CODEX OF REALITY ☲
+  </p>
+
+  <h1>
+    Frequency Governance
+  </h1>
+
   <p class="hero-copy">
-    A Living Sound Observatory for coherent audio generation, breath pacing,
-    symbolic contemplation, journaling, visualization, and intentional practice.
+
+    A Living Sound Observatory designed for
+    intentional listening,
+    harmonic exploration,
+    symbolic contemplation,
+    breath pacing,
+    witness journaling,
+    resonance mapping,
+    and coherent practice.
+
+    Observe.
+    Breathe.
+    Listen.
+    Witness.
+    Return.
+
   </p>
 
   <div class="hero-pills">
+
     <span>Living Observatory</span>
-    <span>Frequency Mixer</span>
-    <span>Witness Journal</span>
+    <span>Frequency Library</span>
     <span>T7 Chamber</span>
     <span>YHWH Chamber</span>
+    <span>Witness Journal</span>
+    <span>Lift Loop</span>
+
   </div>
+
+  <div class="notice">
+
+    This observatory is intended for
+    reflection,
+    creativity,
+    meditation,
+    relaxation,
+    symbolic exploration,
+    and educational experimentation.
+
+    It is not medical advice and is not intended
+    to diagnose,
+    treat,
+    cure,
+    or prevent any condition.
+
+  </div>
+
 </header>
 
 <main class="fg-shell">
 
+<!-- ===================================================== -->
+<!-- COMMAND DECK -->
+<!-- ===================================================== -->
+
 <section class="card">
-  <h2>Command Center</h2>
+
+  <div class="section-head">
+
+    <p class="eyebrow">
+      Command Deck
+    </p>
+
+    <h2 id="commandTitle">
+      432 Hz · Foundation
+    </h2>
+
+  </div>
 
   <div class="readout">
-    <strong id="masterValue">432</strong>
+
+    <strong id="masterValue">
+      432
+    </strong>
+
     <span>Hz</span>
-    <em id="stateText">stopped</em>
+
+    <em id="stateText">
+      stopped
+    </em>
+
+  </div>
+
+  <div class="command-stats">
+
+    <div class="stat">
+      <span>Carrier</span>
+      <strong id="statCarrier">
+        432 Hz
+      </strong>
+    </div>
+
+    <div class="stat">
+      <span>Path</span>
+      <strong id="statPath">
+        Foundation
+      </strong>
+    </div>
+
+    <div class="stat">
+      <span>Decks</span>
+      <strong id="statDecks">
+        0
+      </strong>
+    </div>
+
+    <div class="stat">
+      <span>Status</span>
+      <strong id="statState">
+        Stopped
+      </strong>
+    </div>
+
+    <div class="stat">
+      <span>Texture</span>
+      <strong id="statTexture">
+        Warm
+      </strong>
+    </div>
+
+    <div class="stat">
+      <span>Breath</span>
+      <strong id="statBreath">
+        4·2·6
+      </strong>
+    </div>
+
+    <div class="stat">
+      <span>Intensity</span>
+      <strong id="statIntensity">
+        Balanced
+      </strong>
+    </div>
+
+    <div class="stat">
+      <span>Session</span>
+      <strong id="statSession">
+        7 min
+      </strong>
+    </div>
+
   </div>
 
   <div class="button-row">
-    <button id="playBtn" class="fg-btn primary">Start Field</button>
-    <button id="stopBtn" class="fg-btn danger">Stop Field</button>
-    <button id="savePreset" class="fg-btn">Save Field</button>
-    <button id="loadPreset" class="fg-btn">Load Field</button>
+
+    <button id="playBtn"
+            class="fg-btn primary"
+            type="button">
+
+      ▶ Start Field
+
+    </button>
+
+    <button id="stopBtn"
+            class="fg-btn danger"
+            type="button">
+
+      ■ Stop Field
+
+    </button>
+
+    <button id="savePreset"
+            class="fg-btn"
+            type="button">
+
+      Save Field
+
+    </button>
+
+    <button id="loadPreset"
+            class="fg-btn"
+            type="button">
+
+      Load Field
+
+    </button>
+
   </div>
 
   <div class="meter">
     <span id="meter"></span>
   </div>
+
 </section>
 
-<section class="card">
-  <h2>Field Visualizer</h2>
+<!-- ===================================================== -->
+<!-- LIVING OBSERVATORY -->
+<!-- ===================================================== -->
+
+<section class="card observatory-card">
+
+  <div class="section-head">
+
+    <p class="eyebrow">
+      Living Observatory
+    </p>
+
+    <h2>
+      Field Visualization
+    </h2>
+
+    <p class="fine">
+
+      Observe abstract visual representations
+      of active harmonic structures,
+      symbolic geometries,
+      waveform motion,
+      lattice formations,
+      and field dynamics.
+
+    </p>
+
+  </div>
+
   <canvas id="fieldCanvas"></canvas>
 
   <div class="canvas-tools">
-    <button id="saveFieldPng" class="fg-btn">Export PNG</button>
-    <button id="randomSeed" class="fg-btn">New Seed</button>
-    <button id="clearField" class="fg-btn">Clear</button>
+
+    <button id="saveFieldPng"
+            class="fg-btn"
+            type="button">
+
+      Export PNG
+
+    </button>
+
+    <button id="randomSeed"
+            class="fg-btn"
+            type="button">
+
+      New Seed
+
+    </button>
+
+    <button id="clearField"
+            class="fg-btn"
+            type="button">
+
+      Clear Canvas
+
+    </button>
+
   </div>
+
 </section>
 
+<!-- ===================================================== -->
+<!-- VISUAL MODES -->
+<!-- ===================================================== -->
+
 <section class="card">
-  <h2>Frequency Paths</h2>
 
-  <div class="library-grid">
+  <div class="section-head">
 
-    <button class="seqBtn fg-btn" data-seq="calm">Calm</button>
-    <button class="seqBtn fg-btn" data-seq="focus">Focus</button>
-    <button class="seqBtn fg-btn" data-seq="clarity">Clarity</button>
-    <button class="seqBtn fg-btn" data-seq="restore">Restore</button>
+    <p class="eyebrow">
+      Geometry Modes
+    </p>
 
-    <button class="seqBtn fg-btn" data-seq="create">Create</button>
-    <button class="seqBtn fg-btn" data-seq="dream">Dream</button>
-    <button class="seqBtn fg-btn" data-seq="ascent">Ascent</button>
-    <button class="seqBtn fg-btn" data-seq="remnant">Remnant</button>
+    <h2>
+      Visualization Library
+    </h2>
+
+  </div>
+
+  <div class="geometry-grid">
+
+    <button class="geometry-btn"
+            data-visual="torus">
+      <strong>Torus</strong>
+      <span>Flow field</span>
+    </button>
+
+    <button class="geometry-btn"
+            data-visual="rose">
+      <strong>Rose</strong>
+      <span>Harmonic bloom</span>
+    </button>
+
+    <button class="geometry-btn"
+            data-visual="flower">
+      <strong>Flower</strong>
+      <span>Radial symmetry</span>
+    </button>
+
+    <button class="geometry-btn"
+            data-visual="metatron">
+      <strong>Metatron</strong>
+      <span>Geometric network</span>
+    </button>
+
+    <button class="geometry-btn"
+            data-visual="tree">
+      <strong>Tree</strong>
+      <span>Path structure</span>
+    </button>
+
+    <button class="geometry-btn"
+            data-visual="lattice">
+      <strong>Lattice</strong>
+      <span>Grid resonance</span>
+    </button>
+
+    <button class="geometry-btn"
+            data-visual="orbit">
+      <strong>Orbit</strong>
+      <span>Nested cycles</span>
+    </button>
+
+    <button class="geometry-btn"
+            data-visual="constellation">
+      <strong>Constellation</strong>
+      <span>Star mapping</span>
+    </button>
+
+    <button class="geometry-btn"
+            data-visual="chladni">
+      <strong>Chladni</strong>
+      <span>Wave patterns</span>
+    </button>
+
+    <button class="geometry-btn"
+            data-visual="waveform">
+      <strong>Waveform</strong>
+      <span>Signal scope</span>
+    </button>
+
+  </div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- FREQUENCY LIBRARY -->
+<!-- ===================================================== -->
+
+<section class="card">
+
+  <div class="section-head">
+
+    <p class="eyebrow">
+      Frequency Library
+    </p>
+
+    <h2>
+      Carrier Presets
+    </h2>
+
+    <p class="fine">
+
+      A collection of frequencies commonly used
+      for listening, meditation,
+      composition, symbolic reflection,
+      and personal experimentation.
+
+    </p>
+
+  </div>
+
+  <div id="libraryGrid"
+       class="library-grid">
+
+  </div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- SACRED NAME CHAMBER -->
+<!-- ===================================================== -->
+
+<section class="card sacred-name">
+
+  <div class="section-head">
+
+    <p class="eyebrow">
+      Sacred Name Chamber
+    </p>
+
+    <h2>
+      𐤉𐤄𐤅𐤄
+    </h2>
+
+  </div>
+
+  <div class="name-grid">
+
+    <button class="intent-btn"
+            data-seq="yod">
+
+      <strong>𐤉</strong>
+
+      <span>
+        Breath • Beginning
+      </span>
+
+    </button>
+
+    <button class="intent-btn"
+            data-seq="heh1">
+
+      <strong>𐤄</strong>
+
+      <span>
+        Expansion • Expression
+      </span>
+
+    </button>
+
+    <button class="intent-btn"
+            data-seq="waw">
+
+      <strong>𐤅</strong>
+
+      <span>
+        Connection • Bridge
+      </span>
+
+    </button>
+
+    <button class="intent-btn"
+            data-seq="heh2">
+
+      <strong>𐤄</strong>
+
+      <span>
+        Return • Completion
+      </span>
+
+    </button>
+
+    <button class="intent-btn gold"
+            data-seq="yhwh">
+
+      <strong>
+        𐤉𐤄𐤅𐤄
+      </strong>
+
+      <span>
+        Full Name Path
+      </span>
+
+    </button>
+
+    <button class="intent-btn"
+            data-seq="orhadabar">
+
+      <strong>
+        Or HaDabar
+      </strong>
+
+      <span>
+        Word • Light
+      </span>
+
+    </button>
+
+  </div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- T7 CHAMBER -->
+<!-- ===================================================== -->
+
+<section class="card t7-card">
+
+  <div class="section-head">
+
+    <p class="eyebrow">
+      T7 Resonant Conduit
+    </p>
+
+    <h2>
+      Living Technology Chamber
+    </h2>
+
+    <p class="fine">
+
+      Symbolic field architecture inspired by
+      the Tesla Type-7 Resonant Conduit,
+      Or HaDabar,
+      and Living Technology research.
+
+    </p>
+
+  </div>
+
+  <div class="field-status-grid">
+
+    <div class="field-status">
+      <strong>Foundation</strong>
+      <span>432 Hz</span>
+    </div>
+
+    <div class="field-status">
+      <strong>Connection</strong>
+      <span>528 Hz</span>
+    </div>
+
+    <div class="field-status">
+      <strong>Clarity</strong>
+      <span>741 Hz</span>
+    </div>
+
+    <div class="field-status">
+      <strong>Illumination</strong>
+      <span>963 Hz</span>
+    </div>
+
+  </div>
+
+  <div class="button-row">
+
+    <button id="startT7"
+            class="fg-btn gold"
+            type="button">
+
+      Start T7
+
+    </button>
+
+    <button id="stopT7"
+            class="fg-btn"
+            type="button">
+
+      Stop T7
+
+    </button>
+
+  </div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- FOUR DECK HARMONIC MIXER -->
+<!-- ===================================================== -->
+
+<section class="card">
+
+  <div class="section-head">
+
+    <p class="eyebrow">
+      Harmonic Mixer
+    </p>
+
+    <h2>
+      Four Deck Field Engine
+    </h2>
+
+    <p class="fine">
+      Blend multiple carriers, intervals, harmonic structures,
+      and binaural layers into a unified listening field.
+    </p>
+
+  </div>
+
+  <div class="deck-targets">
+
+    <button class="fg-btn deck-target active"
+            data-target="0">
+      Deck A
+    </button>
+
+    <button class="fg-btn deck-target"
+            data-target="1">
+      Deck B
+    </button>
+
+    <button class="fg-btn deck-target"
+            data-target="2">
+      Deck C
+    </button>
+
+    <button class="fg-btn deck-target"
+            data-target="3">
+      Deck D
+    </button>
+
+  </div>
+
+  <div class="grid">
+
+    <!-- Deck A -->
+
+    <article class="deck-card col-6">
+
+      <h3>
+        Deck A
+        <span>Primary Carrier</span>
+      </h3>
+
+      <label>
+        Frequency
+        <input class="deck-freq"
+               type="number"
+               value="432">
+      </label>
+
+      <label>
+        Volume
+        <input class="deck-vol"
+               type="range"
+               min="0"
+               max="100"
+               value="80">
+      </label>
+
+      <label>
+        Pan
+        <input class="deck-pan"
+               type="range"
+               min="-100"
+               max="100"
+               value="0">
+      </label>
+
+      <label>
+        Waveform
+        <select class="deck-wave">
+          <option>sine</option>
+          <option>triangle</option>
+          <option>sawtooth</option>
+          <option>square</option>
+        </select>
+      </label>
+
+      <label>
+        Harmonic
+        <select class="deck-harmonic">
+          <option value="single">Single</option>
+          <option value="octave">Octave</option>
+          <option value="fifth">Fifth</option>
+          <option value="triad">Triad</option>
+        </select>
+      </label>
+
+      <label>
+        Beat Layer
+        <select class="deck-beat">
+          <option value="none">None</option>
+          <option value="alpha">Alpha</option>
+          <option value="theta">Theta</option>
+          <option value="delta">Delta</option>
+        </select>
+      </label>
+
+      <div class="button-row">
+        <button class="deck-cue fg-btn">Cue</button>
+        <button class="deck-solo fg-btn">Solo</button>
+        <button class="deck-mute fg-btn">Mute</button>
+      </div>
+
+    </article>
+
+    <!-- Deck B -->
+
+    <article class="deck-card col-6">
+
+      <h3>
+        Deck B
+        <span>Support Layer</span>
+      </h3>
+
+      <label>
+        Frequency
+        <input class="deck-freq"
+               type="number"
+               value="528">
+      </label>
+
+      <label>
+        Volume
+        <input class="deck-vol"
+               type="range"
+               min="0"
+               max="100"
+               value="0">
+      </label>
+
+      <label>
+        Pan
+        <input class="deck-pan"
+               type="range"
+               min="-100"
+               max="100"
+               value="0">
+      </label>
+
+      <label>
+        Waveform
+        <select class="deck-wave">
+          <option>sine</option>
+          <option>triangle</option>
+          <option>sawtooth</option>
+          <option>square</option>
+        </select>
+      </label>
+
+      <label>
+        Harmonic
+        <select class="deck-harmonic">
+          <option value="single">Single</option>
+          <option value="octave">Octave</option>
+          <option value="fifth">Fifth</option>
+          <option value="triad">Triad</option>
+        </select>
+      </label>
+
+      <label>
+        Beat Layer
+        <select class="deck-beat">
+          <option value="none">None</option>
+          <option value="alpha">Alpha</option>
+          <option value="theta">Theta</option>
+          <option value="delta">Delta</option>
+        </select>
+      </label>
+
+      <div class="button-row">
+        <button class="deck-cue fg-btn">Cue</button>
+        <button class="deck-solo fg-btn">Solo</button>
+        <button class="deck-mute fg-btn">Mute</button>
+      </div>
+
+    </article>
+
+  </div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- SEQUENCE FORGE -->
+<!-- ===================================================== -->
+
+<section class="card">
+
+  <div class="section-head">
+
+    <p class="eyebrow">
+      Sequence Forge
+    </p>
+
+    <h2>
+      Guided Frequency Paths
+    </h2>
+
+  </div>
+
+  <div class="seq-grid">
+
+    <button class="seqBtn fg-btn"
+            data-seq="calm">
+      Calm
+    </button>
+
+    <button class="seqBtn fg-btn"
+            data-seq="focus">
+      Focus
+    </button>
+
+    <button class="seqBtn fg-btn"
+            data-seq="clarity">
+      Clarity
+    </button>
+
+    <button class="seqBtn fg-btn"
+            data-seq="restore">
+      Restore
+    </button>
+
+    <button class="seqBtn fg-btn"
+            data-seq="create">
+      Create
+    </button>
+
+    <button class="seqBtn fg-btn"
+            data-seq="dream">
+      Dream
+    </button>
+
+    <button class="seqBtn fg-btn"
+            data-seq="ascent">
+      Ascent
+    </button>
+
+    <button class="seqBtn fg-btn"
+            data-seq="remnant">
+      Remnant
+    </button>
 
   </div>
 
   <label>
-    Step Duration
-    <input id="seqSeconds" type="number" value="8">
+    Step Length (seconds)
+    <input id="seqSeconds"
+           type="number"
+           value="8"
+           min="2"
+           max="90">
   </label>
 
   <div class="button-row">
-    <button id="stopSeq" class="fg-btn">Stop Sequence</button>
-  </div>
 
-  <input id="seqStatus" readonly value="stopped">
-</section>
-
-<section class="card t7-card">
-  <h2>T7 Resonant Conduit Chamber</h2>
-
-  <p class="fine">
-    Symbolic field built around the T7 architecture and Living Technology framework.
-  </p>
-
-  <div class="button-row">
-    <button id="startT7" class="fg-btn gold">Start T7</button>
-    <button id="stopT7" class="fg-btn">Stop T7</button>
-  </div>
-</section>
-
-<section class="card">
-  <h2>YHWH Chamber</h2>
-
-  <div class="quick-grid">
-
-    <button class="seqBtn fg-btn" data-seq="yod">𐤉 Yod</button>
-    <button class="seqBtn fg-btn" data-seq="heh1">𐤄 Heh</button>
-    <button class="seqBtn fg-btn" data-seq="waw">𐤅 Waw</button>
-    <button class="seqBtn fg-btn" data-seq="heh2">𐤄 Return</button>
-
-    <button class="seqBtn fg-btn gold" data-seq="yhwh">𐤉𐤄𐤅𐤄 Full Path</button>
-    <button class="seqBtn fg-btn" data-seq="orhadabar">Or HaDabar</button>
+    <button id="stopSeq"
+            class="fg-btn">
+      Stop Sequence
+    </button>
 
   </div>
+
+  <input id="seqStatus"
+         readonly
+         value="stopped">
+
 </section>
+
+<!-- ===================================================== -->
+<!-- LIFT LOOP -->
+<!-- ===================================================== -->
 
 <section class="card lift-card">
-  <h2>Lift Loop</h2>
+
+  <div class="section-head">
+
+    <p class="eyebrow">
+      Lift Loop
+    </p>
+
+    <h2>
+      Seven Stage Progression
+    </h2>
+
+  </div>
 
   <div class="lift-progress">
+
     <div id="liftStep1" class="lift-dot">1</div>
     <div id="liftStep2" class="lift-dot">2</div>
     <div id="liftStep3" class="lift-dot">3</div>
@@ -131,119 +928,281 @@
     <div id="liftStep5" class="lift-dot">5</div>
     <div id="liftStep6" class="lift-dot">6</div>
     <div id="liftStep7" class="lift-dot">7</div>
+
   </div>
 
   <div class="button-row">
-    <button id="startLiftLoop" class="fg-btn gold">Start Lift</button>
-    <button id="stopLiftLoop" class="fg-btn">Stop Lift</button>
+
+    <button id="startLiftLoop"
+            class="fg-btn gold">
+      Start Lift
+    </button>
+
+    <button id="stopLiftLoop"
+            class="fg-btn">
+      Stop Lift
+    </button>
+
   </div>
+
 </section>
 
+<!-- ===================================================== -->
+<!-- BREATH OBSERVATORY -->
+<!-- ===================================================== -->
+
 <section class="card">
-  <h2>Mixer</h2>
 
-  <label>Master Volume
-    <input id="masterVolume" type="range" min="0" max="85" value="24">
-  </label>
+  <div class="section-head">
+    <p class="eyebrow">Breath Observatory</p>
+    <h2>Breath Pacing</h2>
+  </div>
 
-  <label>Crossfader
-    <input id="crossfader" type="range" min="0" max="100" value="0">
-  </label>
+  <label>
+    Pattern
 
-  <label>Fade Time
-    <input id="fadeTime" type="range" min="0.15" max="8" step="0.05" value="1.75">
-  </label>
+    <select id="breathPace">
 
-  <label>Texture
-    <select id="presetTexture">
-      <option value="warm">Warm</option>
-      <option value="pure">Pure</option>
-      <option value="crystal">Crystal</option>
-      <option value="temple">Temple</option>
-      <option value="earth">Earth</option>
+      <option value="426">
+        4 • 2 • 6
+      </option>
+
+      <option value="444">
+        4 • 4 • 4
+      </option>
+
+      <option value="478">
+        4 • 7 • 8
+      </option>
+
+      <option value="555">
+        5 • 5
+      </option>
+
     </select>
+
   </label>
 
-  <label>Intensity
-    <select id="presetIntensity">
-      <option value="soft">Soft</option>
-      <option value="balanced" selected>Balanced</option>
-      <option value="deep">Deep</option>
-      <option value="monumental">Monumental</option>
-    </select>
-  </label>
-
-  <label>Visual Mode
-    <select id="visualMode">
-      <option value="torus">Torus</option>
-      <option value="rose">Rose</option>
-      <option value="lattice">Lattice</option>
-      <option value="metatron">Metatron</option>
-      <option value="tree">Tree</option>
-      <option value="constellation">Constellation</option>
-    </select>
-  </label>
-
-  <input id="visualPower" type="hidden" value="130">
 </section>
 
-<section class="card">
-  <h2>Witness Journal</h2>
+<!-- ===================================================== -->
+<!-- WITNESS JOURNAL -->
+<!-- ===================================================== -->
 
-  <label>Intention
+<section class="card">
+
+  <div class="section-head">
+    <p class="eyebrow">Witness Journal</p>
+    <h2>Session Reflection</h2>
+  </div>
+
+  <label>
+    Intention
     <textarea id="journalIntention"></textarea>
   </label>
 
-  <label>Body Signal
+  <label>
+    Body Signal
     <textarea id="journalBody"></textarea>
   </label>
 
-  <label>Witness Note
+  <label>
+    Witness Note
     <textarea id="journalNote"></textarea>
   </label>
 
   <div class="button-row">
-    <button id="saveJournal" class="fg-btn gold">Save Witness</button>
-    <button id="copyJournal" class="fg-btn">Copy</button>
-    <button id="clearJournal" class="fg-btn">Clear</button>
+
+    <button id="saveJournal"
+            class="fg-btn gold">
+      Save Witness
+    </button>
+
+    <button id="copyJournal"
+            class="fg-btn">
+      Copy
+    </button>
+
+    <button id="clearJournal"
+            class="fg-btn">
+      Clear
+    </button>
+
   </div>
 
-  <div id="journalList" class="journal-list"></div>
+  <div id="journalList"
+       class="journal-list">
+  </div>
+
 </section>
 
+<!-- ===================================================== -->
+<!-- SESSION RECORDER -->
+<!-- ===================================================== -->
+
 <section class="card">
-  <h2>Track Recorder</h2>
+
+  <div class="section-head">
+    <p class="eyebrow">Session Recorder</p>
+    <h2>Track Recorder</h2>
+  </div>
 
   <div class="button-row">
-    <button id="recordTrack" class="fg-btn">Record</button>
-    <button id="stopRecord" class="fg-btn">Stop</button>
-    <button id="playTrack" class="fg-btn">Play</button>
-    <button id="saveTrack" class="fg-btn">Save</button>
+
+    <button id="recordTrack"
+            class="fg-btn">
+      Record
+    </button>
+
+    <button id="stopRecord"
+            class="fg-btn">
+      Stop
+    </button>
+
+    <button id="playTrack"
+            class="fg-btn">
+      Playback
+    </button>
+
+    <button id="saveTrack"
+            class="fg-btn">
+      Save
+    </button>
+
+    <button id="exportTrack"
+            class="fg-btn">
+      Export
+    </button>
+
   </div>
 
-  <div id="trackTimeline" class="track-timeline"></div>
+  <div class="track-readout">
+
+    <span>
+      Events:
+      <strong id="trackEvents">0</strong>
+    </span>
+
+    <span>
+      Length:
+      <strong id="trackClock">00:00</strong>
+    </span>
+
+  </div>
+
+  <div id="trackTimeline"
+       class="track-timeline">
+  </div>
+
 </section>
 
+<!-- ===================================================== -->
+<!-- LIVING CODEX NOTES -->
+<!-- ===================================================== -->
+
 <section class="card">
-  <h2>System Log</h2>
-  <div id="log" class="log"></div>
+
+  <div class="section-head">
+    <p class="eyebrow">Living Codex</p>
+    <h2>Observatory Notes</h2>
+  </div>
+
+  <p class="fine">
+    Frequency Governance explores sound,
+    rhythm,
+    harmonic relationships,
+    breath pacing,
+    journaling,
+    observation,
+    symbolism,
+    geometry,
+    and coherent attention.
+  </p>
+
+  <p class="fine">
+    The symbolic frequency paths within the
+    Scroll of Fire framework are intended
+    as contemplative structures and creative tools,
+    not scientific or medical claims.
+  </p>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- SYSTEM LOG -->
+<!-- ===================================================== -->
+
+<section class="card">
+
+  <div class="section-head">
+    <p class="eyebrow">System Log</p>
+    <h2>Event Console</h2>
+  </div>
+
+  <div id="log"
+       class="log"></div>
+
 </section>
 
 </main>
 
+<!-- ===================================================== -->
+<!-- MOBILE DOCK -->
+<!-- ===================================================== -->
+
 <div class="mobile-dock">
-  <button id="dockPlay">Play</button>
-  <button id="dockStop">Stop</button>
-  <button id="dockRecord">Record</button>
-  <button id="dockLift">Lift</button>
-  <button id="dockLog">Journal</button>
+
+  <button id="dockPlay">
+    Play
+  </button>
+
+  <button id="dockStop">
+    Stop
+  </button>
+
+  <button id="dockRecord">
+    Record
+  </button>
+
+  <button id="dockLift">
+    Lift
+  </button>
+
+  <button id="dockLog">
+    Journal
+  </button>
+
 </div>
 
+<!-- ===================================================== -->
+<!-- FOOTER -->
+<!-- ===================================================== -->
+
 <footer class="fg-footer">
-  <p>Scroll of Fire • Codex of Reality • Living Sound Observatory</p>
-  <p>&copy; <span id="yr"></span></p>
+
+  <p>
+    ☲ Scroll of Fire
+  </p>
+
+  <p>
+    Codex of Reality
+  </p>
+
+  <p>
+    Living Sound Observatory
+  </p>
+
+  <p>
+    Version 3.0
+  </p>
+
+  <p>
+    © <span id="yr"></span>
+  </p>
+
 </footer>
 
 <script src="assets/js/frequency-governance.js"></script>
+
 </body>
 </html>
