@@ -14,12 +14,14 @@
   <meta charset="utf-8">
   <title>Frequencies — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Scroll of Fire Frequencies — a mobile-ready frequency workstation with carrier tones, harmonic deck mixing, nature sound beds, sequencing, T7 field practice, lift training, sacred geometry visuals, track recording, playback, and private witnessing.">
+  <meta name="description" content="Scroll of Fire Frequencies — a mobile-ready Living Technology frequency observatory with carrier tones, harmonic deck mixing, nature sound beds, sequencing, T7 field practice, lift training, sacred geometry visuals, track recording, playback, and private witnessing.">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="creator" content="Aaron Paul Laird">
   <meta name="publisher" content="Scroll of Fire">
   <meta name="theme-color" content="#05070d">
   <meta name="robots" content="index, follow">
+  <meta name="keywords" content="Scroll of Fire, Codex of Reality, frequencies, harmonic resonance, frequency workstation, Living Technology, witness logging, T7 resonant conduit, sacred geometry, frequency generator, nature sound beds, 13 Moons, Genesis Oracle">
+  <meta property="article:author" content="Aaron Paul Laird">
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/systems/frequencies.html">
 
   <meta property="og:type" content="website">
@@ -51,7 +53,7 @@
     "url":"https://ssnfts24.github.io/scroll-of-fire/systems/frequencies.html",
     "creator":{"@type":"Person","name":"Aaron Paul Laird"},
     "publisher":{"@type":"Organization","name":"Scroll of Fire"},
-    "description":"A browser-based frequency workstation for symbolic carrier-tone practice, generated nature beds, visual fields, sequencing, track recording, playback, and private witness logging."
+    "description":"A browser-based Living Technology frequency observatory for symbolic carrier-tone practice, generated nature beds, visual fields, sequencing, track recording, playback, and private witness logging."
   }
   </script>
 
@@ -273,6 +275,20 @@
       margin:.4rem 0 0;
     }
 
+    .command-center-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:var(--fg-card-gap);
+      margin-top:var(--fg-card-gap);
+    }
+
+    .codex-category-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:var(--fg-card-gap);
+      margin-top:var(--fg-card-gap);
+    }
+
     .nature-grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
@@ -382,6 +398,7 @@
     @media (max-width:1100px){
       .nature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       .nature-mix-row{grid-template-columns:1fr}
+      .command-center-grid,.codex-category-grid{grid-template-columns:1fr}
     }
 
     @media (max-width:980px){
@@ -592,16 +609,17 @@
   </header>
 
   <nav class="fg-mobile-jump" aria-label="Frequency quick navigation">
-    <a href="#console">Console</a>
-    <a href="#nature">Nature</a>
-    <a href="#decks">Decks</a>
-    <a href="#recorder">Record</a>
-    <a href="#library">Library</a>
-    <a href="#sequencer">Loop</a>
-    <a href="#t7">T7</a>
-    <a href="#lift">Lift</a>
-    <a href="#journal">Journal</a>
-    <a href="#safety">Safety</a>
+    <a href="./systems/frequencies.html#console" data-jump="console">Console</a>
+    <a href="./systems/frequencies.html#nature" data-jump="nature">Nature</a>
+    <a href="./systems/frequencies.html#decks" data-jump="decks">Decks</a>
+    <a href="./systems/frequencies.html#recorder" data-jump="recorder">Record</a>
+    <a href="./systems/frequencies.html#library" data-jump="library">Library</a>
+    <a href="./systems/frequencies.html#sequencer" data-jump="sequencer">Loop</a>
+    <a href="./systems/frequencies.html#geometry" data-jump="geometry">Geometry</a>
+    <a href="./systems/frequencies.html#t7" data-jump="t7">T7</a>
+    <a href="./systems/frequencies.html#lift" data-jump="lift">Lift</a>
+    <a href="./systems/frequencies.html#journal" data-jump="journal">Journal</a>
+    <a href="./systems/frequencies.html#safety" data-jump="safety">Safety</a>
   </nav>
 
   <header class="fg-hero">
@@ -613,19 +631,19 @@
       <span>Frequencies</span>
     </nav>
 
-    <p class="eyebrow">Codex Audio Workstation</p>
+    <p class="eyebrow">Living Technology Frequency Observatory</p>
     <h1>Frequencies</h1>
 
     <p class="hero-copy">
-      A mobile-ready workstation for carrier tones, harmonic layers, generated nature beds, deck mixing,
-      live sequencing, visual field response, T7 practice, lift-loop training, track recording, playback,
-      and private witnessing.
+      A living resonance workstation for carrier tones, harmonic layers, generated nature beds, deck mixing,
+      live sequencing, sacred geometry visuals, T7 practice, lift-loop training, track recording, playback,
+      symbolic correspondence, and private witnessing.
     </p>
 
     <div class="hero-actions">
-      <a class="fg-btn primary" href="#console">Open Console</a>
-      <a class="fg-btn ghost" href="#nature">Nature Beds</a>
-      <a class="fg-btn gold" href="#journal">Log Witness</a>
+      <a class="fg-btn primary" href="./systems/frequencies.html#console" data-jump="console">Open Console</a>
+      <a class="fg-btn ghost" href="./systems/frequencies.html#nature" data-jump="nature">Nature Beds</a>
+      <a class="fg-btn gold" href="./systems/frequencies.html#journal" data-jump="journal">Log Witness</a>
     </div>
 
     <div class="freq-safety-strip">
@@ -661,6 +679,66 @@
       <span>Private Logs</span>
     </div>
   </header>
+
+  <section class="fg-shell" aria-label="Frequency command center">
+    <article class="card glow">
+      <p class="eyebrow">☲ Frequency Observatory</p>
+      <h2>Command Center</h2>
+      <div class="command-stats" aria-label="System status">
+        <div class="stat"><span>Audio Engine</span><strong>Ready</strong></div>
+        <div class="stat"><span>Nature Engine</span><strong>Ready</strong></div>
+        <div class="stat"><span>Recorder</span><strong>Ready</strong></div>
+        <div class="stat"><span>Witness Archive</span><strong>Local</strong></div>
+      </div>
+      <p class="fine">
+        Observe. Breathe. Align. Return. Use the console as a reflective tool for practice, study,
+        creative focus, breath regulation, symbolic exploration, and witness logging.
+      </p>
+    </article>
+
+    <section class="command-center-grid" aria-label="Quick practice presets">
+      <article class="card">
+        <p class="eyebrow">Quick Path</p>
+        <h3>Deep Focus</h3>
+        <p class="fine">Suggested stack: 144 → 369 → 432 → 528. Best for study, design, coding, and clean attention.</p>
+        <a class="fg-btn primary" href="./systems/frequencies.html#sequencer" data-jump="sequencer">Open Focus Path</a>
+      </article>
+
+      <article class="card">
+        <p class="eyebrow">Quick Path</p>
+        <h3>Prayer / Stillness</h3>
+        <p class="fine">Suggested stack: 432 with low rain, forest, or bowl. Best used quietly with breath and journaling.</p>
+        <a class="fg-btn gold" href="./systems/frequencies.html#nature" data-jump="nature">Open Nature Beds</a>
+      </article>
+
+      <article class="card">
+        <p class="eyebrow">Quick Path</p>
+        <h3>T7 Alignment</h3>
+        <p class="fine">Suggested stack: 432 + 7.83 pulse, low volume, torus visual, then witness what changed.</p>
+        <a class="fg-btn ghost" href="./systems/frequencies.html#t7" data-jump="t7">Open T7 Practice</a>
+      </article>
+    </section>
+
+    <section class="codex-category-grid" aria-label="Frequency categories">
+      <article class="card">
+        <p class="eyebrow">Foundation</p>
+        <h3>Grounding Carriers</h3>
+        <p class="fine"><strong>174 · 285 · 396</strong><br>Use for settling, quieting, symbolic release, and returning to the body.</p>
+      </article>
+
+      <article class="card">
+        <p class="eyebrow">Harmonic</p>
+        <h3>Coherence Carriers</h3>
+        <p class="fine"><strong>432 · 528 · 639</strong><br>Use for focus, restoration symbolism, connection, and clean creative flow.</p>
+      </article>
+
+      <article class="card">
+        <p class="eyebrow">Resonance</p>
+        <h3>Upper Carriers</h3>
+        <p class="fine"><strong>741 · 852 · 963 · 1111</strong><br>Use for clarity, inner attention, symbolic witness, and pattern observation.</p>
+      </article>
+    </section>
+  </section>
 
   <main class="fg-shell">
     <section id="console" class="fg-command card section-anchor">
@@ -1121,6 +1199,29 @@ Press Escape to stop.</pre>
         </div>
       </details>
 
+      <details id="geometry" class="fg-panel section-anchor">
+        <summary>Sacred Geometry Reference</summary>
+        <div class="fg-panel-body">
+          <section class="card">
+            <p class="eyebrow">Visual Correspondence</p>
+            <h2>Geometry Modes</h2>
+            <p class="meta">
+              These references name the symbolic visual families used by the observatory.
+              They are creative correspondences, not scientific proof claims.
+            </p>
+
+            <div class="safety-grid">
+              <article class="safety-mini"><h3>Torus</h3><p>Return path, breath field, center-out-center motion.</p></article>
+              <article class="safety-mini"><h3>Lattice</h3><p>Network, structure, grid, relation, correspondence.</p></article>
+              <article class="safety-mini"><h3>Rose Seal</h3><p>Petal rhythm, harmonic unfolding, cyclic attention.</p></article>
+              <article class="safety-mini"><h3>Chladni</h3><p>Pattern emergence, vibration imagery, visible structure.</p></article>
+              <article class="safety-mini"><h3>Orbit</h3><p>Cycles, moons, return, motion around a center.</p></article>
+              <article class="safety-mini"><h3>Constellation</h3><p>Witness points, memory map, symbolic navigation.</p></article>
+            </div>
+          </section>
+        </div>
+      </details>
+
       <details id="t7" class="fg-panel section-anchor">
         <summary>T7 Field Practice</summary>
         <div class="fg-panel-body">
@@ -1284,6 +1385,7 @@ Press Escape to stop.</pre>
       <a href="./ethics.html">Ethics</a>
       <a href="./shop.html">Shop</a>
     </nav>
+    <p class="fine"><strong>Observe. Breathe. Align. Return.</strong><br>Part of the Scroll of Fire · Codex of Reality · Living Technology Collection.</p>
     <p>© <span id="yr">2026</span> Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
   </footer>
 
@@ -1316,14 +1418,36 @@ Press Escape to stop.</pre>
         });
       }
 
-      document.querySelectorAll(".fg-mobile-jump a[href^='#']").forEach(function (link) {
-        link.addEventListener("click", function () {
-          const panel = document.getElementById(link.getAttribute("href").slice(1));
-          if (panel && panel.tagName.toLowerCase() === "details") {
-            panel.open = true;
-          }
+      function openPanelAndScroll(id) {
+        const target = document.getElementById(id);
+        if (!target) return;
+
+        if (target.tagName && target.tagName.toLowerCase() === "details") {
+          target.open = true;
+        }
+
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        try {
+          history.replaceState(null, "", "./systems/frequencies.html#" + id);
+        } catch (error) {}
+      }
+
+      document.querySelectorAll("[data-jump]").forEach(function (link) {
+        link.addEventListener("click", function (event) {
+          const id = link.getAttribute("data-jump");
+          if (!id) return;
+          event.preventDefault();
+          openPanelAndScroll(id);
         });
       });
+
+      if (location.hash) {
+        window.addEventListener("load", function () {
+          const id = decodeURIComponent(location.hash.replace("#", ""));
+          if (id) openPanelAndScroll(id);
+        });
+      }
 
       const tabs = document.querySelectorAll(".deck-tab");
       const decks = document.querySelectorAll(".deck-card[data-deck]");
@@ -1362,4 +1486,4 @@ Press Escape to stop.</pre>
   <script src="assets/js/frequency-governance.js"></script>
   <script src="assets/js/frequency-nature.js"></script>
 </body>
-</html>
+  </html>
