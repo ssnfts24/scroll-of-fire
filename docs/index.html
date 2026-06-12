@@ -25,7 +25,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Scroll of Fire — Codex of Reality">
-  <meta property="og:description" content="Explore the 13 Moons calendar, Frequency Governance, Genesis Oracle, symbolic systems, living technology artifacts, and witness tools.">
+  <meta property="og:description" content="Explore the 13 Moons calendar, frequency tools, Genesis Oracle, symbolic systems, living technology artifacts, and witness tools.">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/">
   <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
   <meta property="og:image:alt" content="Scroll of Fire — Codex of Reality">
@@ -47,20 +47,9 @@
     "name":"Scroll of Fire",
     "alternateName":"Codex of Reality",
     "url":"https://ssnfts24.github.io/scroll-of-fire/",
-    "creator":{
-      "@type":"Person",
-      "name":"Aaron Paul Laird"
-    },
-    "publisher":{
-      "@type":"Organization",
-      "name":"Scroll of Fire"
-    },
-    "description":"A living codex for symbolic systems, the 13 Moons calendar, witness practice, frequency tools, living technology artifacts, and the Codex of Reality.",
-    "potentialAction":{
-      "@type":"SearchAction",
-      "target":"https://ssnfts24.github.io/scroll-of-fire/?q={search_term_string}",
-      "query-input":"required name=search_term_string"
-    }
+    "creator":{"@type":"Person","name":"Aaron Paul Laird"},
+    "publisher":{"@type":"Organization","name":"Scroll of Fire"},
+    "description":"A living codex for symbolic systems, the 13 Moons calendar, witness practice, frequency tools, living technology artifacts, and the Codex of Reality."
   }
   </script>
 
@@ -68,15 +57,17 @@
   {
     "@context":"https://schema.org",
     "@type":"ItemList",
-    "name":"Scroll of Fire Main Pages",
+    "name":"Scroll of Fire Main Navigation",
     "itemListElement":[
       {"@type":"SiteNavigationElement","position":1,"name":"Start","url":"https://ssnfts24.github.io/scroll-of-fire/start.html"},
       {"@type":"SiteNavigationElement","position":2,"name":"13 Moons","url":"https://ssnfts24.github.io/scroll-of-fire/moons.html"},
       {"@type":"SiteNavigationElement","position":3,"name":"Manifest","url":"https://ssnfts24.github.io/scroll-of-fire/teach.html"},
       {"@type":"SiteNavigationElement","position":4,"name":"Shop","url":"https://ssnfts24.github.io/scroll-of-fire/shop.html"},
       {"@type":"SiteNavigationElement","position":5,"name":"Systems Hub","url":"https://ssnfts24.github.io/scroll-of-fire/hub.html"},
-      {"@type":"SiteNavigationElement","position":6,"name":"Frequency Governance","url":"https://ssnfts24.github.io/scroll-of-fire/systems/frequency-governance.html"},
-      {"@type":"SiteNavigationElement","position":7,"name":"Theory","url":"https://ssnfts24.github.io/scroll-of-fire/theory.html"}
+      {"@type":"SiteNavigationElement","position":6,"name":"Frequencies","url":"https://ssnfts24.github.io/scroll-of-fire/systems/frequencies.html"},
+      {"@type":"SiteNavigationElement","position":7,"name":"Theory / Canon","url":"https://ssnfts24.github.io/scroll-of-fire/theory.html"},
+      {"@type":"SiteNavigationElement","position":8,"name":"Witness System","url":"https://ssnfts24.github.io/scroll-of-fire/systems/witness.html"},
+      {"@type":"SiteNavigationElement","position":9,"name":"T-7 Conduit","url":"https://ssnfts24.github.io/scroll-of-fire/systems/t-7.html"}
     ]
   }
   </script>
@@ -85,7 +76,7 @@
     .nav-dropdown{position:relative;display:inline-flex;align-items:center}
     .nav-drop-btn{appearance:none;border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;padding:.55rem .75rem;border-radius:999px}
     .nav-drop-btn:hover,.nav-drop-btn:focus-visible{background:rgba(255,255,255,.06);outline:none}
-    .nav-drop-menu{position:absolute;right:0;top:calc(100% + .5rem);min-width:290px;display:none;flex-direction:column;gap:.25rem;padding:.65rem;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(8,12,20,.97);box-shadow:0 18px 60px rgba(0,0,0,.45);z-index:50}
+    .nav-drop-menu{position:absolute;right:0;top:calc(100% + .5rem);min-width:300px;display:none;flex-direction:column;gap:.25rem;padding:.65rem;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(8,12,20,.97);box-shadow:0 18px 60px rgba(0,0,0,.45);z-index:50}
     .nav-dropdown.open .nav-drop-menu{display:flex}
     .nav-drop-menu a{padding:.62rem .72rem;border-radius:12px;text-decoration:none}
     .nav-drop-menu a:hover,.nav-drop-menu a:focus-visible{background:rgba(122,243,255,.09);outline:none}
@@ -178,9 +169,12 @@
         <div class="nav-drop-menu" role="menu">
           <a href="./genesis-oracle.html" role="menuitem">Genesis Oracle</a>
           <a href="./theory.html" role="menuitem">Theory / Canon</a>
-          <a href="./systems/frequency-governance.html" role="menuitem">Frequency Governance</a>
+          <a href="./systems/frequencies.html" role="menuitem">Frequencies</a>
           <a href="./systems/t-7.html" role="menuitem">T-7 Conduit</a>
           <a href="./systems/witness.html" role="menuitem">Witness System</a>
+          <a href="./systems/recoder.html" role="menuitem">Reality Recoder</a>
+          <a href="./systems/mind-renewal.html" role="menuitem">Mind Renewal</a>
+          <a href="./systems/archive.html" role="menuitem">Systems Archive</a>
           <a href="./guide.html" role="menuitem">Guide</a>
           <a href="./lab.html" role="menuitem">Remnant Lab</a>
           <a href="./invoke.html" role="menuitem">Invoke</a>
@@ -215,7 +209,7 @@
           <div class="hero-actions">
             <a class="btn primary" href="./start.html">Enter the Codex</a>
             <a class="btn" href="./shop.html">Artifact Shop Preview</a>
-            <a class="btn" href="./systems/frequency-governance.html">Open Frequency Console</a>
+            <a class="btn" href="./systems/frequencies.html">Open Frequencies</a>
           </div>
 
           <div class="notice-band">
@@ -256,7 +250,7 @@
         <p class="eyebrow">Core Systems</p>
         <h2 id="core-title">What the Scroll Holds</h2>
         <p>
-          The homepage gives new visitors a clear first path into the Codex, the tools, the systems folder, and the artifact archive.
+          The homepage gives new visitors a clear first path into the Codex, the root pages, the systems folder, and the artifact archive.
         </p>
       </div>
 
@@ -268,9 +262,9 @@
         </article>
 
         <article class="feature-card">
-          <h3>Frequency Governance</h3>
-          <p>A DJ-style audio workstation for carrier tones, sequencing, visualization, journaling, and practice logging.</p>
-          <a class="text-link" href="./systems/frequency-governance.html">Open Console →</a>
+          <h3>Frequencies</h3>
+          <p>The systems frequency page gathers carrier tones, practice structure, visualization, and witness-based use.</p>
+          <a class="text-link" href="./systems/frequencies.html">Open Frequencies →</a>
         </article>
 
         <article class="feature-card">
@@ -373,13 +367,15 @@
 
         <article class="collection-card">
           <h3>Systems</h3>
-          <p>Calendars, theory, frequency, and symbolic engines.</p>
+          <p>Calendars, theory, frequency, renewal, recoding, and witness tools.</p>
           <div class="link-stack">
             <a href="./moons.html"><strong>13 Moons</strong><br><span>Living 13×28 calendar.</span></a>
             <a href="./genesis-oracle.html"><strong>Genesis Oracle</strong><br><span>Birth cadence, tones, laws, and carriers.</span></a>
             <a href="./theory.html"><strong>Theory / Canon</strong><br><span>Equation 0, operators, and coherence law.</span></a>
-            <a href="./systems/frequency-governance.html"><strong>Frequency Governance</strong><br><span>Audio workstation and witness practice.</span></a>
+            <a href="./systems/frequencies.html"><strong>Frequencies</strong><br><span>Carrier tones and practice structure.</span></a>
             <a href="./systems/witness.html"><strong>Witness System</strong><br><span>Daily field logging and reflection.</span></a>
+            <a href="./systems/mind-renewal.html"><strong>Mind Renewal</strong><br><span>Pattern reset and attention practice.</span></a>
+            <a href="./systems/recoder.html"><strong>Reality Recoder</strong><br><span>Symbolic reframing and coherence tools.</span></a>
           </div>
         </article>
 
@@ -399,6 +395,7 @@
           <p>Documentation, definitions, ledger, and safety pages.</p>
           <div class="link-stack">
             <a href="./hub.html"><strong>Systems Hub</strong><br><span>Central index for tools and archive links.</span></a>
+            <a href="./systems/archive.html"><strong>Systems Archive</strong><br><span>Systems folder index and stored pages.</span></a>
             <a href="./ledger.html"><strong>Ledger</strong><br><span>Hashes, proofs, screenshots, and trail.</span></a>
             <a href="./lab.html"><strong>Remnant Lab</strong><br><span>Experimental practice and field testing.</span></a>
             <a href="./circle.html"><strong>Circle</strong><br><span>Shared coherence and group structure.</span></a>
@@ -447,7 +444,7 @@
           <a class="btn primary" href="./shop.html">Test Shop Preview</a>
           <a class="btn" href="./moons.html">Test Calendar</a>
           <a class="btn" href="./genesis-oracle.html">Test Oracle</a>
-          <a class="btn" href="./systems/frequency-governance.html">Test Frequency Console</a>
+          <a class="btn" href="./systems/frequencies.html">Test Frequencies</a>
           <a class="btn" href="./ledger.html">Review Ledger</a>
         </div>
       </article>
@@ -459,7 +456,8 @@
       <a href="./start.html">Start</a>
       <a href="./shop.html">Shop</a>
       <a href="./hub.html">Hub</a>
-      <a href="./systems/frequency-governance.html">Frequency</a>
+      <a href="./systems/frequencies.html">Frequencies</a>
+      <a href="./systems/archive.html">Systems</a>
       <a href="./ledger.html">Ledger</a>
       <a href="./ethics.html">Ethics</a>
       <a href="./sitemap.xml">Sitemap</a>
