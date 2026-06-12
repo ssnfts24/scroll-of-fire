@@ -1,1333 +1,1916 @@
 /* =====================================================
-   Scroll of Fire — Frequency Governance
-   Living Sound Observatory Build
-   File: assets/js/frequency-governance.js
+   Scroll of Fire
+   Frequency Governance v3
+   Living Sound Observatory
+
+   PART 1
+   Core Foundation
 ===================================================== */
 
 (() => {
-  "use strict";
 
-  const $ = (s, r = document) => r.querySelector(s);
-  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
-  const on = (el, ev, fn, opt) => el && el.addEventListener(ev, fn, opt);
+"use strict";
 
-  const STORE_JOURNAL = "sof_frequency_governance_journal_v2";
-  const STORE_FIELD = "sof_frequency_governance_field_v2";
-  const STORE_TRACK = "sof_frequency_governance_track_v2";
+/* =====================================================
+   HELPERS
+===================================================== */
 
-  const PRESETS = [
-    [40, "Gamma Spark", "bright focus"],
-    [72, "Breath Gate", "entry pulse"],
-    [108, "Temple Door", "sacred measure"],
-    [111, "Body Ground", "low field"],
-    [144, "Root Expansion", "foundation"],
-    [174, "Soft Release", "gentle calm"],
-    [222, "Witness Pair", "balance mirror"],
-    [285, "Repair Field", "restoration symbol"],
-    [333, "Spark Mirror", "creative signal"],
-    [369, "Creative Pulse", "pattern motion"],
-    [396, "Unburden", "grounding"],
-    [417, "Shift Gate", "movement"],
-    [432, "Foundation", "Scroll carrier"],
-    [528, "Restoration", "bright coherence"],
-    [555, "Change Gate", "movement marker"],
-    [639, "Heart Link", "connection"],
-    [741, "Clarity", "clear signal"],
-    [777, "Sevenfold Gate", "completion path"],
-    [852, "Vision", "inner attention"],
-    [963, "Crown", "upper carrier"],
-    [1111, "Mirror Field", "symbolic observation"],
-    [1728, "Cube Harmonic", "structure field"]
-  ];
+const $ = (s, r = document) =>
+  r.querySelector(s);
 
-  const HARMONICS = {
-    single: [1],
-    octave: [1, 2],
-    fifth: [1, 1.5],
-    triad: [1, 1.25, 1.5],
-    minor: [1, 1.2, 1.5],
-    deep: [0.5, 1, 2],
-    crown: [1, 2, 3],
-    field: [0.5, 1, 1.5, 2]
-  };
+const $$ = (s, r = document) =>
+  [...r.querySelectorAll(s)];
 
-  const BEATS = {
-    none: 0,
-    alpha: 10,
-    theta: 6,
-    delta: 3,
-    gamma: 40,
-    schumann: 7.83
-  };
+const clamp = (v, min, max) =>
+  Math.max(min, Math.min(max, Number(v) || min));
 
-  const PATHS = {
-    calm: {
-      label: "Calm Path",
-      visual: "torus",
-      texture: "warm",
-      decks: [
-        { freq: 432, volume: 48, pan: -0.08, wave: "sine", harmonic: "single", beat: "schumann" },
-        { freq: 396, volume: 22, pan: 0.18, wave: "sine", harmonic: "deep", beat: "none" }
-      ],
-      seq: [432, 396, 417, 432]
-    },
-    focus: {
-      label: "Focus Path",
-      visual: "lattice",
-      texture: "crystal",
-      decks: [
-        { freq: 144, volume: 40, pan: -0.16, wave: "sine", harmonic: "octave", beat: "alpha" },
-        { freq: 369, volume: 30, pan: 0.16, wave: "triangle", harmonic: "fifth", beat: "none" },
-        { freq: 741, volume: 18, pan: 0, wave: "sine", harmonic: "single", beat: "none" }
-      ],
-      seq: [144, 369, 432, 528, 741]
-    },
-    clarity: {
-      label: "Clarity Path",
-      visual: "rose",
-      texture: "bell",
-      decks: [
-        { freq: 432, volume: 36, pan: -0.12, wave: "sine", harmonic: "single", beat: "none" },
-        { freq: 528, volume: 34, pan: 0.12, wave: "triangle", harmonic: "fifth", beat: "none" },
-        { freq: 741, volume: 24, pan: 0, wave: "sine", harmonic: "octave", beat: "alpha" }
-      ],
-      seq: [432, 528, 741, 963]
-    },
-    restore: {
-      label: "Restore Path",
-      visual: "flower",
-      texture: "warm",
-      decks: [
-        { freq: 285, volume: 36, pan: -0.18, wave: "sine", harmonic: "deep", beat: "theta" },
-        { freq: 432, volume: 34, pan: 0.12, wave: "sine", harmonic: "single", beat: "schumann" },
-        { freq: 528, volume: 24, pan: 0.25, wave: "triangle", harmonic: "fifth", beat: "none" }
-      ],
-      seq: [285, 396, 432, 528, 639]
-    },
-    create: {
-      label: "Create Path",
-      visual: "orbit",
-      texture: "solar",
-      decks: [
-        { freq: 333, volume: 34, pan: -0.24, wave: "triangle", harmonic: "triad", beat: "none" },
-        { freq: 369, volume: 38, pan: 0.16, wave: "sine", harmonic: "fifth", beat: "alpha" },
-        { freq: 528, volume: 22, pan: 0.35, wave: "sine", harmonic: "octave", beat: "none" }
-      ],
-      seq: [333, 369, 432, 528, 555]
-    },
-    dream: {
-      label: "Dream Gate",
-      visual: "constellation",
-      texture: "choir",
-      decks: [
-        { freq: 432, volume: 30, pan: -0.18, wave: "sine", harmonic: "deep", beat: "theta" },
-        { freq: 285, volume: 25, pan: 0.18, wave: "sine", harmonic: "single", beat: "delta" },
-        { freq: 174, volume: 18, pan: 0, wave: "sine", harmonic: "single", beat: "none" }
-      ],
-      seq: [432, 285, 174, 111]
-    },
-    ascent: {
-      label: "Ascent Path",
-      visual: "metatron",
-      texture: "crystal",
-      decks: [
-        { freq: 144, volume: 28, pan: -0.32, wave: "sine", harmonic: "octave", beat: "none" },
-        { freq: 432, volume: 32, pan: 0, wave: "sine", harmonic: "fifth", beat: "schumann" },
-        { freq: 741, volume: 24, pan: 0.26, wave: "triangle", harmonic: "single", beat: "alpha" },
-        { freq: 963, volume: 16, pan: 0.4, wave: "sine", harmonic: "octave", beat: "none" }
-      ],
-      seq: [144, 288, 432, 528, 741, 963]
-    },
-    t7: {
-      label: "T7 Field",
-      visual: "torus",
-      texture: "temple",
-      decks: [
-        { freq: 111, volume: 20, pan: -0.35, wave: "sine", harmonic: "deep", beat: "none" },
-        { freq: 432, volume: 46, pan: 0, wave: "sine", harmonic: "single", beat: "schumann" },
-        { freq: 528, volume: 24, pan: 0.18, wave: "sine", harmonic: "fifth", beat: "none" },
-        { freq: 963, volume: 14, pan: 0.36, wave: "sine", harmonic: "octave", beat: "none" }
-      ],
-      seq: [111, 144, 369, 432, 528, 741, 963]
-    },
-    lift: {
-      label: "Lift Loop",
-      visual: "lift",
-      texture: "breath",
-      decks: [
-        { freq: 432, volume: 46, pan: 0, wave: "sine", harmonic: "single", beat: "schumann" },
-        { freq: 528, volume: 22, pan: 0.2, wave: "sine", harmonic: "fifth", beat: "none" },
-        { freq: 963, volume: 14, pan: 0.34, wave: "sine", harmonic: "octave", beat: "none" }
-      ],
-      seq: [432, 432, 528, 369, 432, 963, 432]
-    },
-    remnant: {
-      label: "Remnant Path",
-      visual: "tree",
-      texture: "earth",
-      decks: [
-        { freq: 432, volume: 42, pan: 0, wave: "sine", harmonic: "single", beat: "schumann" },
-        { freq: 144, volume: 22, pan: -0.22, wave: "sine", harmonic: "octave", beat: "none" },
-        { freq: 741, volume: 18, pan: 0.22, wave: "triangle", harmonic: "single", beat: "none" }
-      ],
-      seq: [144, 432, 528, 741, 432]
-    },
-    study: { alias: "focus" },
-    build: { alias: "create" },
-    prayer: { alias: "yhwh" },
-    ground: { alias: "calm" },
-    release: { alias: "restore" },
-    witness: { alias: "remnant" },
-    yod: {
-      label: "𐤉 · Breath",
-      visual: "torus",
-      texture: "breath",
-      decks: [
-        { freq: 72, volume: 30, pan: -0.12, wave: "sine", harmonic: "octave", beat: "theta" },
-        { freq: 432, volume: 38, pan: 0.12, wave: "sine", harmonic: "single", beat: "schumann" }
-      ],
-      seq: [72, 144, 432]
-    },
-    heh1: {
-      label: "𐤄 · Expansion",
-      visual: "flower",
-      texture: "choir",
-      decks: [
-        { freq: 144, volume: 28, pan: -0.2, wave: "sine", harmonic: "field", beat: "none" },
-        { freq: 528, volume: 34, pan: 0.18, wave: "triangle", harmonic: "fifth", beat: "alpha" }
-      ],
-      seq: [144, 288, 432, 528]
-    },
-    waw: {
-      label: "𐤅 · Connection",
-      visual: "metatron",
-      texture: "warm",
-      decks: [
-        { freq: 222, volume: 28, pan: -0.22, wave: "sine", harmonic: "octave", beat: "none" },
-        { freq: 639, volume: 34, pan: 0.22, wave: "sine", harmonic: "fifth", beat: "theta" }
-      ],
-      seq: [222, 432, 639]
-    },
-    heh2: {
-      label: "𐤄 · Return",
-      visual: "tree",
-      texture: "earth",
-      decks: [
-        { freq: 432, volume: 38, pan: 0, wave: "sine", harmonic: "single", beat: "schumann" },
-        { freq: 174, volume: 18, pan: 0.2, wave: "sine", harmonic: "deep", beat: "none" }
-      ],
-      seq: [639, 432, 174, 111]
-    },
-    yhwh: {
-      label: "𐤉𐤄𐤅𐤄 · Full Name Path",
-      visual: "metatron",
-      texture: "temple",
-      decks: [
-        { freq: 72, volume: 20, pan: -0.36, wave: "sine", harmonic: "octave", beat: "theta" },
-        { freq: 144, volume: 24, pan: -0.12, wave: "sine", harmonic: "field", beat: "none" },
-        { freq: 432, volume: 36, pan: 0.12, wave: "sine", harmonic: "single", beat: "schumann" },
-        { freq: 639, volume: 22, pan: 0.34, wave: "triangle", harmonic: "fifth", beat: "none" }
-      ],
-      seq: [72, 144, 432, 639, 432, 174, 111]
-    },
-    orhadabar: {
-      label: "Or HaDabar",
-      visual: "rose",
-      texture: "solar",
-      decks: [
-        { freq: 333, volume: 26, pan: -0.3, wave: "triangle", harmonic: "triad", beat: "none" },
-        { freq: 528, volume: 34, pan: 0, wave: "sine", harmonic: "fifth", beat: "alpha" },
-        { freq: 741, volume: 24, pan: 0.28, wave: "sine", harmonic: "octave", beat: "none" }
-      ],
-      seq: [333, 432, 528, 741, 963]
-    }
-  };
+const lerp = (a, b, t) =>
+  a + (b - a) * t;
 
-  const TEXTURE_GAIN = {
-    pure: 1,
-    warm: 0.92,
-    breath: 0.82,
-    bell: 0.74,
-    choir: 0.68,
-    crystal: 0.72,
-    temple: 0.78,
-    earth: 0.82,
-    solar: 0.76
-  };
+const nowStamp = () =>
+  new Date().toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
 
-  const INTENSITY_MULT = {
-    soft: 0.62,
-    balanced: 0.86,
-    deep: 1,
-    monumental: 1.08
-  };
+function setText(el, value) {
+  if (el) el.textContent = value;
+}
 
-  let audioCtx = null;
-  let masterGain = null;
-  let deckNodes = [];
-  let isPlaying = false;
-  let selectedDeck = 0;
-  let sequenceTimer = null;
-  let liftTimer = null;
-  let liftStep = 0;
-  let activePath = "Foundation";
-  let currentSeq = null;
-  let recording = false;
-  let trackStart = 0;
-  let trackEvents = [];
-  let trackTimer = null;
-  let visualSeed = Math.random() * 9999;
-  let phase = 0;
-  let visualFreq = 432;
-  let pointer = { x: 0.5, y: 0.5, active: false };
+/* =====================================================
+   STORAGE
+===================================================== */
 
-  const fieldCanvas = $("#fieldCanvas");
-  const fieldCtx = fieldCanvas?.getContext?.("2d");
-  const starCanvas = $("#starField");
-  const starCtx = starCanvas?.getContext?.("2d");
-  let stars = [];
+const STORE = {
 
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, Number(value) || min));
+  field:
+    "sof_fg_field_v3",
+
+  journal:
+    "sof_fg_journal_v3",
+
+  track:
+    "sof_fg_track_v3"
+
+};
+
+function saveStore(key, value) {
+
+  try {
+
+    localStorage.setItem(
+      key,
+      JSON.stringify(value)
+    );
+
+  } catch (err) {
+
+    console.warn(err);
+
   }
 
-  function nowStamp() {
-    return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+function loadStore(key, fallback) {
+
+  try {
+
+    const data =
+      localStorage.getItem(key);
+
+    return data
+      ? JSON.parse(data)
+      : fallback;
+
+  } catch {
+
+    return fallback;
+
   }
 
-  function text(el, value) {
-    if (el) el.textContent = value;
+}
+
+/* =====================================================
+   APPLICATION STATE
+===================================================== */
+
+const STATE = {
+
+  running: false,
+
+  activePath: "Foundation",
+
+  selectedDeck: 0,
+
+  visualMode: "torus",
+
+  visualPower: 130,
+
+  masterVolume: 0.24,
+
+  sequence: null,
+
+  recording: false,
+
+  trackEvents: [],
+
+  sessionStart: 0,
+
+  visualSeed:
+    Math.random() * 9999,
+
+  pointer: {
+
+    x: 0.5,
+    y: 0.5,
+    active: false
+
   }
 
-  function log(message) {
-    const el = $("#log");
-    if (!el) return;
-    el.textContent += `\n[${nowStamp()}] ${message}`;
-    el.scrollTop = el.scrollHeight;
+};
+
+/* =====================================================
+   FREQUENCY LIBRARY
+===================================================== */
+
+const LIBRARY = [
+
+  {
+    freq: 111,
+    name: "Body Ground",
+    category: "Grounding"
+  },
+
+  {
+    freq: 174,
+    name: "Soft Release",
+    category: "Grounding"
+  },
+
+  {
+    freq: 285,
+    name: "Restore",
+    category: "Grounding"
+  },
+
+  {
+    freq: 396,
+    name: "Unburden",
+    category: "Grounding"
+  },
+
+  {
+    freq: 432,
+    name: "Foundation",
+    category: "Core"
+  },
+
+  {
+    freq: 528,
+    name: "Connection",
+    category: "Core"
+  },
+
+  {
+    freq: 639,
+    name: "Bridge",
+    category: "Core"
+  },
+
+  {
+    freq: 741,
+    name: "Clarity",
+    category: "Core"
+  },
+
+  {
+    freq: 963,
+    name: "Ascent",
+    category: "Symbolic"
+  },
+
+  {
+    freq: 1111,
+    name: "Mirror",
+    category: "Symbolic"
+  },
+
+  {
+    freq: 1728,
+    name: "Cube Harmonic",
+    category: "Symbolic"
   }
 
-  function safeText(value) {
-    return String(value || "").replace(/[<>&]/g, c => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]));
-  }
+];
 
-  function selectValue(id, fallback = "") {
-    return $("#" + id)?.value || fallback;
-  }
+/* =====================================================
+   PATHS
+===================================================== */
 
-  function getCards() {
-    return $$(".deck-card");
-  }
+const PATHS = {
 
-  function getCard(index) {
-    return getCards()[index];
-  }
+  calm: {
 
-  function getDeck(index) {
-    const card = getCard(index);
-    if (!card) return null;
+    label:
+      "Calm Path",
 
-    return {
-      index,
-      freq: clamp($(".deck-freq", card)?.value, 40, 1800),
-      volume: clamp($(".deck-vol", card)?.value, 0, 100),
-      pan: clamp($(".deck-pan", card)?.value || 0, -100, 100) / 100,
-      wave: $(".deck-wave", card)?.value || "sine",
-      harmonic: $(".deck-harmonic", card)?.value || "single",
-      beat: $(".deck-beat", card)?.value || "none",
-      muted: card.classList.contains("is-muted"),
-      solo: card.classList.contains("is-solo")
-    };
-  }
+    visual:
+      "torus",
 
-  function getDecks() {
-    return getCards().map((_, i) => getDeck(i)).filter(Boolean);
-  }
+    decks: [
 
-  function hasSolo() {
-    return getDecks().some(d => d.solo);
-  }
+      {
+        freq: 432,
+        volume: 80
+      },
 
-  function deckAudible(deck) {
-    if (!deck || deck.muted) return false;
-    if (hasSolo() && !deck.solo) return false;
-    return deck.volume > 0;
-  }
-
-  function leadDeck() {
-    return getDecks().find(deckAudible) || getDeck(0) || { freq: 432, volume: 0 };
-  }
-
-  function masterVolume() {
-    return clamp($("#masterVolume")?.value || 24, 0, 85) / 100;
-  }
-
-  function fadeTime() {
-    return clamp($("#fadeTime")?.value || 1.75, 0.15, 8);
-  }
-
-  function gainCurve(percent) {
-    const p = clamp(percent, 0, 100) / 100;
-    const intensity = INTENSITY_MULT[selectValue("presetIntensity", "balanced")] || 0.86;
-    const texture = TEXTURE_GAIN[selectValue("presetTexture", "warm")] || 0.9;
-    return Math.pow(p, 2) * 0.5 * intensity * texture;
-  }
-
-  function crossGain(index) {
-    const cross = clamp($("#crossfader")?.value || 0, 0, 100) / 100;
-    if (index === 0) return 1 - cross;
-    if (index === 1) return cross;
-    return 1;
-  }
-
-  function getAudio() {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      masterGain = audioCtx.createGain();
-      masterGain.gain.setTargetAtTime(Math.pow(masterVolume(), 2) * 0.42, audioCtx.currentTime, 0.06);
-      masterGain.connect(audioCtx.destination);
-    }
-    return audioCtx;
-  }
-
-  function stopNodeGroup(group, fade = fadeTime()) {
-    if (!audioCtx || !group) return;
-    const now = audioCtx.currentTime;
-
-    group.forEach(node => {
-      try {
-        node.gain.gain.cancelScheduledValues(now);
-        node.gain.gain.setValueAtTime(Math.max(node.gain.gain.value, 0.0001), now);
-        node.gain.gain.exponentialRampToValueAtTime(0.0001, now + fade);
-        node.osc.stop(now + fade + 0.05);
-      } catch {}
-    });
-  }
-
-  function createOsc(freq, wave, panValue, gainValue, fade) {
-    const ac = getAudio();
-    const now = ac.currentTime;
-    const osc = ac.createOscillator();
-    const gain = ac.createGain();
-    const pan = ac.createStereoPanner ? ac.createStereoPanner() : null;
-
-    osc.type = wave;
-    osc.frequency.setValueAtTime(clamp(freq, 20, 2200), now);
-
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(Math.max(0.0002, gainValue), now + fade);
-
-    if (pan) osc.connect(gain).connect(pan).connect(masterGain);
-    else osc.connect(gain).connect(masterGain);
-
-    osc.start(now);
-    return { osc, gain };
-  }
-
-  function textureRatios(baseRatios) {
-    const texture = selectValue("presetTexture", "warm");
-    if (texture === "bell") return [...baseRatios, 2.41, 3.03];
-    if (texture === "choir") return [...baseRatios, 0.5, 1.01, 1.5, 2.01];
-    if (texture === "crystal") return [...baseRatios, 2, 3, 4];
-    if (texture === "temple") return [...baseRatios, 0.5, 1, 1.5, 2, 3];
-    if (texture === "earth") return [...baseRatios, 0.5, 0.75, 1];
-    if (texture === "solar") return [...baseRatios, 1.25, 1.5, 2, 3];
-    return baseRatios;
-  }
-
-  function playDeck(index) {
-    const deck = getDeck(index);
-    if (!deck) return;
-
-    const ac = getAudio();
-    if (ac.state === "suspended") ac.resume();
-
-    const oldGroup = deckNodes[index] || [];
-    const fade = fadeTime();
-    const ratios = textureRatios(HARMONICS[deck.harmonic] || [1]);
-    const beat = BEATS[deck.beat] || 0;
-    const baseGain = deckAudible(deck) ? gainCurve(deck.volume) * crossGain(index) : 0.0001;
-    const oscCount = beat ? ratios.length * 2 : ratios.length;
-    const perGain = baseGain / Math.max(1, oscCount);
-    const group = [];
-
-    ratios.forEach((ratio, i) => {
-      const base = deck.freq * ratio;
-      if (base < 20 || base > 2200) return;
-
-      if (beat) {
-        group.push(createOsc(base - beat / 2, deck.wave, Math.max(-1, deck.pan - 0.25), perGain, fade));
-        group.push(createOsc(base + beat / 2, deck.wave, Math.min(1, deck.pan + 0.25), perGain, fade));
-      } else {
-        const spread = ratios.length === 1 ? 0 : -0.28 + (0.56 * i) / Math.max(1, ratios.length - 1);
-        group.push(createOsc(base, deck.wave, Math.max(-1, Math.min(1, deck.pan + spread)), perGain, fade));
+      {
+        freq: 396,
+        volume: 35
       }
-    });
 
-    deckNodes[index] = group;
-    stopNodeGroup(oldGroup, fade);
-    isPlaying = true;
-    updateUI();
+    ]
+
+  },
+
+  focus: {
+
+    label:
+      "Focus Path",
+
+    visual:
+      "lattice",
+
+    decks: [
+
+      {
+        freq: 144,
+        volume: 70
+      },
+
+      {
+        freq: 369,
+        volume: 45
+      }
+
+    ]
+
+  },
+
+  clarity: {
+
+    label:
+      "Clarity Path",
+
+    visual:
+      "rose",
+
+    decks: [
+
+      {
+        freq: 432,
+        volume: 60
+      },
+
+      {
+        freq: 741,
+        volume: 55
+      }
+
+    ]
+
+  },
+
+  remnant: {
+
+    label:
+      "Remnant Path",
+
+    visual:
+      "tree",
+
+    decks: [
+
+      {
+        freq: 144,
+        volume: 55
+      },
+
+      {
+        freq: 432,
+        volume: 70
+      }
+
+    ]
+
   }
 
-  function playMix() {
-    getDecks().forEach(deck => {
-      if (deck.index === 0 || deck.volume > 0) playDeck(deck.index);
-    });
-    isPlaying = true;
-    updateUI();
-    recordEvent("play", { path: activePath });
-    log("Field started.");
+};
+
+/* =====================================================
+   AUDIO ENGINE
+===================================================== */
+
+const AUDIO = {
+
+  ctx: null,
+
+  master: null,
+
+  decks: []
+
+};
+
+function createAudio() {
+
+  if (AUDIO.ctx)
+    return AUDIO.ctx;
+
+  AUDIO.ctx =
+    new (
+      window.AudioContext ||
+      window.webkitAudioContext
+    )();
+
+  AUDIO.master =
+    AUDIO.ctx.createGain();
+
+  AUDIO.master.gain.value =
+    0.18;
+
+  AUDIO.master.connect(
+    AUDIO.ctx.destination
+  );
+
+  return AUDIO.ctx;
+
+}
+
+/* =====================================================
+   DECK ENGINE
+===================================================== */
+
+function buildDeck() {
+
+  const ctx =
+    createAudio();
+
+  const osc =
+    ctx.createOscillator();
+
+  const gain =
+    ctx.createGain();
+
+  const pan =
+    ctx.createStereoPanner();
+
+  osc.type =
+    "sine";
+
+  gain.gain.value =
+    0;
+
+  osc.connect(gain);
+  gain.connect(pan);
+  pan.connect(AUDIO.master);
+
+  osc.start();
+
+  return {
+
+    osc,
+    gain,
+    pan
+
+  };
+
+}
+
+function ensureDecks() {
+
+  while (
+    AUDIO.decks.length < 4
+  ) {
+
+    AUDIO.decks.push(
+      buildDeck()
+    );
+
   }
 
-  function refreshDecks() {
-    if (!isPlaying) {
-      updateUI();
-      return;
-    }
-    getDecks().forEach(deck => playDeck(deck.index));
-  }
+}
 
-  function stopAll(fade = fadeTime()) {
-    deckNodes.forEach(group => stopNodeGroup(group, fade));
-    deckNodes = [];
-    isPlaying = false;
-    stopSequence(false);
-    stopLiftLoop(false);
-    updateUI();
-  }
+/* =====================================================
+   LOGGING
+===================================================== */
 
-  function applyDeck(index, data = {}) {
-    const card = getCard(index);
-    if (!card) return;
+function log(msg) {
 
-    $(".deck-freq", card).value = data.freq ?? 432;
-    $(".deck-vol", card).value = data.volume ?? 0;
-    $(".deck-pan", card).value = Math.round((data.pan ?? 0) * 100);
-    $(".deck-wave", card).value = data.wave || "sine";
-    $(".deck-harmonic", card).value = data.harmonic || "single";
-    $(".deck-beat", card).value = data.beat || "none";
-    card.classList.toggle("is-muted", !!data.muted);
-    card.classList.toggle("is-solo", !!data.solo);
+  const el =
+    $("#log");
 
-    if (isPlaying) playDeck(index);
-  }
+  if (!el)
+    return;
 
-  function clearDecks() {
-    getCards().forEach((card, i) => applyDeck(i, { freq: [432, 528, 369, 963][i] || 432, volume: 0 }));
-  }
+  el.textContent +=
+    `\n[${nowStamp()}] ${msg}`;
 
-  function resolvePath(name) {
-    const path = PATHS[name] || PATHS.calm;
-    return path.alias ? resolvePath(path.alias) : path;
-  }
+  el.scrollTop =
+    el.scrollHeight;
 
-  function loadPath(name, autoPlay = true) {
-    const path = resolvePath(name);
-    activePath = path.label;
-    currentSeq = path.seq || [432];
+}
 
-    stopSequence(false);
-    stopLiftLoop(false);
+/* =====================================================
+   UI UPDATE
+===================================================== */
 
-    if ($("#visualMode")) $("#visualMode").value = path.visual || "torus";
-    if ($("#presetTexture")) $("#presetTexture").value = path.texture || selectValue("presetTexture", "warm");
+function updateStatus() {
 
-    clearDecks();
-    (path.decks || []).forEach((deck, i) => applyDeck(i, deck));
+  setText(
+    $("#statPath"),
+    STATE.activePath
+  );
 
-    if (autoPlay) playMix();
-    updateForgeStats();
-    updateUI();
-    recordEvent("path", { name, label: path.label });
-    log(`Path loaded: ${path.label}.`);
-  }
+  setText(
+    $("#statState"),
+    STATE.running
+      ? "Active"
+      : "Stopped"
+  );
 
-  function setDeckFreq(index, freq, volume = 48) {
-    const card = getCard(index);
-    if (!card) return;
-    $(".deck-freq", card).value = Math.round(clamp(freq, 40, 1800));
-    $(".deck-vol", card).value = clamp(volume, 0, 100);
-    playDeck(index);
-  }
+  setText(
+    $("#stateText"),
+    STATE.running
+      ? "active"
+      : "stopped"
+  );
 
-  function cueDeck(index) {
-    selectedDeck = index;
-    updateDeckTargets();
-    const card = getCard(index);
-    const vol = $(".deck-vol", card);
-    if (vol && Number(vol.value) === 0) vol.value = 45;
-    playDeck(index);
-    log(`Deck ${String.fromCharCode(65 + index)} cued.`);
-  }
+}
 
-  function updateForgeStats() {
-    const tex = $("#presetTexture")?.selectedOptions?.[0]?.textContent || "Warm Harmonic";
-    const breath = $("#breathPace")?.selectedOptions?.[0]?.textContent || "4 · 2 · 6";
-    const intensity = $("#presetIntensity")?.selectedOptions?.[0]?.textContent || "Balanced Field";
-    const session = $("#sessionLength")?.selectedOptions?.[0]?.textContent || "7 Minutes";
+/* =====================================================
+   FREQUENCY LIBRARY UI
+===================================================== */
 
-    text($("#statTexture"), tex);
-    text($("#statBreath"), breath);
-    text($("#statIntensity"), intensity.replace(" Field", ""));
-    text($("#statSession"), session.replace(" Minutes", " min"));
-  }
+function renderLibrary() {
 
-  function updateUI() {
-    const lead = leadDeck();
-    const visualName = $("#visualMode")?.selectedOptions?.[0]?.textContent || "Torus Field";
-    const preset = PRESETS.find(p => p[0] === Math.round(lead.freq));
+  const grid =
+    $("#libraryGrid");
 
-    if (masterGain && audioCtx) {
-      masterGain.gain.setTargetAtTime(Math.pow(masterVolume(), 2) * 0.34, audioCtx.currentTime, 0.06);
-    }
+  if (!grid)
+    return;
 
-    text($("#masterValue"), Math.round(lead.freq));
-    text($("#statCarrier"), `${Math.round(lead.freq)} Hz`);
-    text($("#statPath"), activePath);
-    text($("#statDecks"), String(getDecks().filter(deckAudible).length));
-    text($("#statState"), isPlaying ? "Active" : "Stopped");
-    text($("#commandTitle"), `${Math.round(lead.freq)} Hz · ${activePath || (preset ? preset[1] : "Custom Field")}`);
-    text($("#stateText"), isPlaying ? "active" : "stopped");
+  grid.innerHTML =
+    LIBRARY.map(item => `
 
-    $("#stateText")?.classList.toggle("active", isPlaying);
-    if ($("#meter")) $("#meter").style.width = `${Math.round(masterVolume() * 100)}%`;
-    text($("#settingText"), `${Math.round(lead.freq)} Hz · ${Math.round(masterVolume() * 100)}% master · ${visualName}`);
+      <button
+        class="fg-btn lib-btn"
+        data-freq="${item.freq}">
 
-    getCards().forEach((card, i) => {
-      const deck = getDeck(i);
-      card.classList.toggle("is-active", isPlaying && deckAudible(deck));
-      card.classList.toggle("is-muted", deck.muted);
-      card.classList.toggle("is-solo", deck.solo);
-    });
+        <strong>
+          ${item.freq} Hz
+        </strong>
 
-    updateForgeStats();
-  }
+        <small>
+          ${item.name}
+        </small>
 
-  function updateDeckTargets() {
-    $$(".deck-target").forEach(btn => btn.classList.toggle("active", Number(btn.dataset.target) === selectedDeck));
-  }
-
-  function renderLibrary() {
-    const grid = $("#libraryGrid");
-    if (!grid) return;
-
-    grid.innerHTML = PRESETS.map(([freq, name, desc]) => `
-      <button class="fg-btn lib-btn" data-freq="${freq}" type="button">
-        <strong>${freq} Hz</strong>
-        <small>${name} · ${desc}</small>
       </button>
+
     `).join("");
 
-    $$(".lib-btn").forEach(btn => {
-      on(btn, "click", () => {
-        const freq = Number(btn.dataset.freq);
-        setDeckFreq(selectedDeck, freq, 44);
-        recordEvent("carrier", { freq });
-        log(`${freq} Hz loaded into Deck ${String.fromCharCode(65 + selectedDeck)}.`);
-      });
-    });
+}
+
+/* =====================================================
+   BOOT
+===================================================== */
+
+function boot() {
+
+  renderLibrary();
+
+  updateStatus();
+
+  setText(
+    $("#yr"),
+    new Date().getFullYear()
+  );
+
+  log(
+    "Frequency Governance initialized."
+  );
+
+}
+
+document.addEventListener(
+  "DOMContentLoaded",
+  boot
+);
+
+})();
+
+
+
+
+
+/* =====================================================
+   PART 2
+   MIXER + PATH ENGINE
+===================================================== */
+
+const HARMONICS = {
+
+  single:[1],
+
+  octave:[1,2],
+
+  fifth:[1,1.5],
+
+  triad:[1,1.25,1.5],
+
+  field:[0.5,1,1.5,2]
+
+};
+
+const DECK_STATE = [
+
+  {
+    freq:432,
+    volume:80,
+    pan:0,
+    wave:"sine",
+    harmonic:"single",
+    mute:false,
+    solo:false
+  },
+
+  {
+    freq:528,
+    volume:40,
+    pan:0,
+    wave:"sine",
+    harmonic:"single",
+    mute:false,
+    solo:false
+  },
+
+  {
+    freq:741,
+    volume:0,
+    pan:0,
+    wave:"sine",
+    harmonic:"single",
+    mute:false,
+    solo:false
+  },
+
+  {
+    freq:963,
+    volume:0,
+    pan:0,
+    wave:"sine",
+    harmonic:"single",
+    mute:false,
+    solo:false
   }
 
-  function stopSequence(update = true) {
-    clearInterval(sequenceTimer);
-    sequenceTimer = null;
-    if ($("#seqStatus")) $("#seqStatus").value = "stopped";
-    $$(".seqBtn").forEach(btn => btn.classList.remove("is-active"));
-    if (update) updateUI();
-  }
+];
 
-  function runSequence(name) {
-    loadPath(name, true);
+/* =====================================================
+   DECK UPDATES
+===================================================== */
 
-    const path = resolvePath(name);
-    const seq = path.seq || currentSeq || [432];
-    const seconds = clamp($("#seqSeconds")?.value || 8, 2, 90);
-    let i = 0;
+function updateMasterGain() {
 
-    stopSequence(false);
+  if (!AUDIO.master)
+    return;
 
-    function step() {
-      const freq = seq[i % seq.length];
-      setDeckFreq(0, freq, getDeck(0)?.volume || 44);
-      if ($("#seqStatus")) $("#seqStatus").value = `${path.label} · ${freq} Hz · ${(i % seq.length) + 1}/${seq.length}`;
-      $$(".seqBtn").forEach(btn => btn.classList.toggle("is-active", btn.dataset.seq === name));
-      i++;
+  AUDIO.master.gain.value =
+    Math.pow(
+      STATE.masterVolume,
+      2
+    ) * 0.45;
+
+}
+
+function updateDeck(index) {
+
+  ensureDecks();
+
+  const deck =
+    DECK_STATE[index];
+
+  const node =
+    AUDIO.decks[index];
+
+  if (!deck || !node)
+    return;
+
+  node.osc.type =
+    deck.wave;
+
+  node.osc.frequency.value =
+    deck.freq;
+
+  node.pan.pan.value =
+    deck.pan;
+
+  let gain =
+    deck.volume / 100;
+
+  gain =
+    Math.pow(gain,2);
+
+  if (deck.mute)
+    gain = 0;
+
+  node.gain.gain.setTargetAtTime(
+
+    gain * 0.35,
+
+    AUDIO.ctx.currentTime,
+
+    0.05
+
+  );
+
+}
+
+function refreshMixer() {
+
+  DECK_STATE.forEach(
+    (_,i)=>updateDeck(i)
+  );
+
+  updateMasterGain();
+
+}
+
+/* =====================================================
+   START / STOP
+===================================================== */
+
+function startField() {
+
+  createAudio();
+
+  ensureDecks();
+
+  refreshMixer();
+
+  STATE.running = true;
+
+  updateStatus();
+
+  log(
+    "Field activated."
+  );
+
+}
+
+function stopField() {
+
+  ensureDecks();
+
+  AUDIO.decks.forEach(deck=>{
+
+    deck.gain.gain.setTargetAtTime(
+
+      0,
+
+      AUDIO.ctx.currentTime,
+
+      0.15
+
+    );
+
+  });
+
+  STATE.running = false;
+
+  updateStatus();
+
+  log(
+    "Field stopped."
+  );
+
+}
+
+/* =====================================================
+   PATH LOADING
+===================================================== */
+
+function loadPath(name) {
+
+  const path =
+    PATHS[name];
+
+  if (!path)
+    return;
+
+  STATE.activePath =
+    path.label;
+
+  STATE.visualMode =
+    path.visual;
+
+  path.decks.forEach(
+    (d,index)=>{
+
+      if (!DECK_STATE[index])
+        return;
+
+      Object.assign(
+        DECK_STATE[index],
+        d
+      );
+
     }
+  );
 
-    step();
-    sequenceTimer = setInterval(step, seconds * 1000);
-    recordEvent("sequence", { name, label: path.label });
+  refreshMixer();
+
+  updateStatus();
+
+  log(
+    `Path loaded: ${path.label}`
+  );
+
+}
+
+/* =====================================================
+   T7 CHAMBER
+===================================================== */
+
+function loadT7Field() {
+
+  DECK_STATE[0] = {
+
+    freq:111,
+    volume:35,
+    pan:-0.25,
+    wave:"sine",
+    harmonic:"single"
+
+  };
+
+  DECK_STATE[1] = {
+
+    freq:432,
+    volume:80,
+    pan:0,
+    wave:"sine",
+    harmonic:"single"
+
+  };
+
+  DECK_STATE[2] = {
+
+    freq:528,
+    volume:42,
+    pan:0.20,
+    wave:"sine",
+    harmonic:"fifth"
+
+  };
+
+  DECK_STATE[3] = {
+
+    freq:963,
+    volume:20,
+    pan:0.35,
+    wave:"sine",
+    harmonic:"octave"
+
+  };
+
+  STATE.activePath =
+    "T7 Field";
+
+  refreshMixer();
+
+  log(
+    "T7 Resonant Field loaded."
+  );
+
+}
+
+/* =====================================================
+   YHWH CHAMBER
+===================================================== */
+
+function loadYHWHField() {
+
+  DECK_STATE[0] = {
+
+    freq:72,
+    volume:35,
+    pan:-0.35
+
+  };
+
+  DECK_STATE[1] = {
+
+    freq:144,
+    volume:40,
+    pan:-0.15
+
+  };
+
+  DECK_STATE[2] = {
+
+    freq:432,
+    volume:75,
+    pan:0.15
+
+  };
+
+  DECK_STATE[3] = {
+
+    freq:639,
+    volume:35,
+    pan:0.35
+
+  };
+
+  STATE.activePath =
+    "𐤉𐤄𐤅𐤄";
+
+  refreshMixer();
+
+  log(
+    "YHWH chamber loaded."
+  );
+
+}
+
+/* =====================================================
+   SEQUENCE ENGINE
+===================================================== */
+
+let sequenceTimer = null;
+
+function stopSequence() {
+
+  clearInterval(
+    sequenceTimer
+  );
+
+  sequenceTimer = null;
+
+  log(
+    "Sequence stopped."
+  );
+
+}
+
+function runSequence(list,seconds=8) {
+
+  stopSequence();
+
+  let step = 0;
+
+  function advance() {
+
+    const freq =
+      list[
+        step % list.length
+      ];
+
+    DECK_STATE[0].freq =
+      freq;
+
+    updateDeck(0);
+
+    log(
+      `Sequence: ${freq} Hz`
+    );
+
+    step++;
+
   }
 
-  function startT7() {
-    loadPath("t7", true);
-    log("T7 Field started.");
-  }
+  advance();
 
-  function setLiftDot(step) {
-    for (let i = 1; i <= 7; i++) $(`#liftStep${i}`)?.classList.toggle("active", i === step);
-  }
+  sequenceTimer =
+    setInterval(
 
-  function startLiftLoop() {
-    loadPath("lift", true);
-    liftStep = 0;
+      advance,
 
-    function step() {
-      const dot = (liftStep % 7) + 1;
-      setLiftDot(dot);
-      const seq = PATHS.lift.seq;
-      setDeckFreq(0, seq[liftStep % seq.length], 46);
-      log(`Lift Loop step ${dot}/7.`);
-      liftStep++;
-    }
+      seconds * 1000
 
-    clearInterval(liftTimer);
-    step();
-    liftTimer = setInterval(step, 30000);
-  }
+    );
 
-  function stopLiftLoop(update = true) {
-    clearInterval(liftTimer);
-    liftTimer = null;
-    setLiftDot(1);
-    if (update) log("Lift Loop stopped.");
-  }
+}
 
-  function buildJournalText() {
-    const lead = leadDeck();
-    return `Frequency Governance Witness
-Date: ${new Date().toLocaleString()}
-Path: ${activePath}
-Lead Carrier: ${Math.round(lead.freq)} Hz
-Texture: ${$("#presetTexture")?.selectedOptions?.[0]?.textContent || ""}
-Intensity: ${$("#presetIntensity")?.selectedOptions?.[0]?.textContent || ""}
-Breath Pace: ${$("#breathPace")?.selectedOptions?.[0]?.textContent || ""}
-Visual Mode: ${$("#visualMode")?.selectedOptions?.[0]?.textContent || "Torus Field"}
-Active Decks: ${getDecks().filter(deckAudible).length}
+/* =====================================================
+   PRESET SEQUENCES
+===================================================== */
 
-Intention:
-${$("#journalIntention")?.value || ""}
+const SEQUENCES = {
 
-Body Signal:
-${$("#journalBody")?.value || ""}
+  calm:[
+    432,
+    396,
+    417,
+    432
+  ],
 
-Witness Note:
-${$("#journalNote")?.value || ""}`;
-  }
+  focus:[
+    144,
+    369,
+    432,
+    528,
+    741
+  ],
 
-  function getJournal() {
-    try { return JSON.parse(localStorage.getItem(STORE_JOURNAL) || "[]"); }
-    catch { return []; }
-  }
+  restore:[
+    285,
+    396,
+    432,
+    528,
+    639
+  ],
 
-  function setJournal(items) {
-    localStorage.setItem(STORE_JOURNAL, JSON.stringify(items));
-  }
+  ascent:[
+    144,
+    288,
+    432,
+    528,
+    741,
+    963
+  ],
 
-  function renderJournal() {
-    const list = $("#journalList");
-    if (!list) return;
+  remnant:[
+    144,
+    432,
+    528,
+    741,
+    432
+  ]
 
-    const items = getJournal();
-    list.innerHTML = items.length
-      ? items.map((item, i) => `
-        <article class="journal-entry">
-          <strong>${safeText(item.when)}</strong>
-          <p class="fine">${safeText(item.text).slice(0, 460)}</p>
-          <button class="fg-btn ghost copy-entry" data-i="${i}" type="button">Copy</button>
-        </article>
-      `).join("")
-      : `<p class="fine">No saved witnesses yet.</p>`;
+};
 
-    $$(".copy-entry").forEach(btn => {
-      on(btn, "click", async () => {
-        const item = items[Number(btn.dataset.i)];
-        await navigator.clipboard.writeText(item.text);
-        btn.textContent = "Copied";
-        setTimeout(() => (btn.textContent = "Copy"), 900);
-      });
-    });
-  }
+/* =====================================================
+   LIFT LOOP
+===================================================== */
 
-  function saveJournal() {
-    const items = getJournal();
-    items.unshift({ when: new Date().toLocaleString(), path: activePath, text: buildJournalText() });
-    setJournal(items.slice(0, 120));
-    renderJournal();
-    log("Witness saved.");
-  }
+let liftTimer = null;
 
-  function exportJournal() {
-    const blob = new Blob([JSON.stringify(getJournal(), null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "frequency-governance-journal.json";
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 600);
-  }
+function startLiftLoop() {
 
-  async function importJournal(file) {
-    try {
-      const data = JSON.parse(await file.text());
-      if (!Array.isArray(data)) throw new Error("Invalid JSON");
-      setJournal(data.concat(getJournal()).slice(0, 160));
-      renderJournal();
-      log("Journal imported.");
-    } catch {
-      log("Journal import failed.");
-    }
-  }
+  stopLiftLoop();
 
-  function fieldSnapshot() {
-    return {
-      path: activePath,
-      selectedDeck,
-      visualMode: selectValue("visualMode", "torus"),
-      presetTexture: selectValue("presetTexture", "warm"),
-      presetIntensity: selectValue("presetIntensity", "balanced"),
-      breathPace: selectValue("breathPace", "426"),
-      sessionLength: selectValue("sessionLength", "7"),
-      masterVolume: $("#masterVolume")?.value,
-      visualPower: $("#visualPower")?.value,
-      fadeTime: $("#fadeTime")?.value,
-      crossfader: $("#crossfader")?.value,
-      decks: getDecks()
-    };
-  }
+  const sequence = [
 
-  function saveField() {
-    localStorage.setItem(STORE_FIELD, JSON.stringify(fieldSnapshot()));
-    log("Field saved.");
-  }
+    111,
+    144,
+    222,
+    333,
+    432,
+    528,
+    741
 
-  function loadField() {
-    try {
-      const saved = JSON.parse(localStorage.getItem(STORE_FIELD) || "{}");
-      if (!saved.decks) throw new Error("No saved field");
+  ];
 
-      ["visualMode", "presetTexture", "presetIntensity", "breathPace", "sessionLength", "masterVolume", "visualPower", "fadeTime", "crossfader"].forEach(id => {
-        if ($("#" + id) && saved[id] != null) $("#" + id).value = saved[id];
-      });
+  let position = 0;
 
-      activePath = saved.path || "Saved Field";
-      selectedDeck = saved.selectedDeck || 0;
-      saved.decks.forEach((deck, i) => applyDeck(i, deck));
-      updateDeckTargets();
-      updateUI();
-      if (isPlaying) refreshDecks();
-      log("Field loaded.");
-    } catch {
-      log("No saved field found.");
-    }
-  }
+  function step() {
 
-  function resetField() {
-    stopAll(0.35);
-    activePath = "Foundation";
-    selectedDeck = 0;
-    if ($("#visualMode")) $("#visualMode").value = "torus";
-    if ($("#presetTexture")) $("#presetTexture").value = "warm";
-    if ($("#presetIntensity")) $("#presetIntensity").value = "balanced";
-    if ($("#breathPace")) $("#breathPace").value = "426";
-    if ($("#sessionLength")) $("#sessionLength").value = "7";
-    clearDecks();
-    applyDeck(0, { freq: 432, volume: 80, pan: -0.15, wave: "sine", harmonic: "single", beat: "none" });
-    updateUI();
-    log("Field reset.");
-  }
+    DECK_STATE[0].freq =
+      sequence[position];
 
-  function recordEvent(type, data = {}) {
-    if (!recording) return;
-    trackEvents.push({ t: Math.round(performance.now() - trackStart), type, data });
-    updateTrackUI();
-  }
+    updateDeck(0);
 
-  function startRecord() {
-    recording = true;
-    trackEvents = [];
-    trackStart = performance.now();
-    clearInterval(trackTimer);
-    trackTimer = setInterval(updateTrackUI, 500);
-    text($("#statTrack"), "Recording");
-    log("Track recording started.");
-  }
+    const dot =
+      position + 1;
 
-  function stopRecord() {
-    recording = false;
-    clearInterval(trackTimer);
-    text($("#statTrack"), "Idle");
-    updateTrackUI();
-    log("Track recording stopped.");
-  }
+    for(
+      let i=1;
+      i<=7;
+      i++
+    ){
 
-  function updateTrackUI() {
-    text($("#trackEvents"), String(trackEvents.length));
-    if ($("#trackClock")) {
-      const ms = recording ? performance.now() - trackStart : (trackEvents.at(-1)?.t || 0);
-      const s = Math.floor(ms / 1000);
-      $("#trackClock").textContent = `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
-    }
+      const el =
+        document.getElementById(
+          `liftStep${i}`
+        );
 
-    const timeline = $("#trackTimeline");
-    if (timeline) {
-      timeline.innerHTML = trackEvents.length
-        ? trackEvents.slice(-20).map(e => `<span class="fine">+${(e.t / 1000).toFixed(1)}s · ${safeText(e.type)} · ${safeText(e.data.label || e.data.name || e.data.freq || "")}</span>`).join("<br>")
-        : `<span class="fine">No recorded events yet.</span>`;
-    }
-  }
+      if(el){
 
-  function saveTrack() {
-    localStorage.setItem(STORE_TRACK, JSON.stringify(trackEvents));
-    log("Track saved.");
-  }
+        el.classList.toggle(
+          "active",
+          i===dot
+        );
 
-  function loadTrack() {
-    try {
-      trackEvents = JSON.parse(localStorage.getItem(STORE_TRACK) || "[]");
-      updateTrackUI();
-      log("Track loaded.");
-    } catch {
-      log("No track found.");
-    }
-  }
-
-  function exportTrack() {
-    const blob = new Blob([JSON.stringify(trackEvents, null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "frequency-governance-track.json";
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 600);
-  }
-
-  function clearTrack() {
-    trackEvents = [];
-    updateTrackUI();
-    log("Track cleared.");
-  }
-
-  function playTrack() {
-    if (!trackEvents.length) {
-      log("No track events to play.");
-      return;
-    }
-
-    stopAll(0.25);
-    text($("#statTrack"), "Playing");
-
-    trackEvents.forEach(e => {
-      setTimeout(() => {
-        if (e.type === "path" || e.type === "sequence") loadPath(e.data.name, true);
-        if (e.type === "carrier") setDeckFreq(selectedDeck, e.data.freq, 44);
-      }, e.t);
-    });
-
-    setTimeout(() => {
-      text($("#statTrack"), "Idle");
-      log("Track playback complete.");
-    }, (trackEvents.at(-1)?.t || 0) + 700);
-  }
-
-  function fitFieldCanvas() {
-    if (!fieldCanvas || !fieldCtx) return;
-    const rect = fieldCanvas.getBoundingClientRect();
-    const dpr = Math.min(devicePixelRatio || 1, 2);
-    fieldCanvas.width = Math.max(320, Math.floor(rect.width * dpr));
-    fieldCanvas.height = Math.max(260, Math.floor(rect.height * dpr));
-    fieldCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-
-  function fitStars() {
-    if (!starCanvas || !starCtx) return;
-    const dpr = Math.min(devicePixelRatio || 1, 2);
-    starCanvas.width = Math.floor(innerWidth * dpr);
-    starCanvas.height = Math.floor(innerHeight * dpr);
-    stars = Array.from({ length: 180 }, () => ({
-      x: Math.random() * starCanvas.width,
-      y: Math.random() * starCanvas.height,
-      r: Math.random() * 1.35 + 0.25,
-      a: Math.random() * Math.PI * 2
-    }));
-  }
-
-  function drawStars() {
-    if (!starCtx || !starCanvas) return;
-    starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
-    stars.forEach(star => {
-      star.a += 0.012;
-      starCtx.fillStyle = `rgba(244,241,232,${0.17 + Math.sin(star.a) * 0.14})`;
-      starCtx.beginPath();
-      starCtx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
-      starCtx.fill();
-    });
-    requestAnimationFrame(drawStars);
-  }
-
-  function color(t, a) {
-    if (t < 0.34) return `rgba(122,243,255,${a})`;
-    if (t < 0.67) return `rgba(196,163,255,${a})`;
-    return `rgba(243,201,122,${a})`;
-  }
-
-  function drawVisualizer() {
-    if (!fieldCtx || !fieldCanvas) return;
-
-    const w = fieldCanvas.clientWidth || 800;
-    const h = fieldCanvas.clientHeight || 430;
-    const cx = w / 2;
-    const cy = h / 2;
-    const lead = leadDeck();
-    const visual = clamp($("#visualPower")?.value || 130, 20, 260) / 100;
-    const mode = selectValue("visualMode", "torus");
-    const push = isPlaying ? Math.max(0.2, masterVolume() * visual) : 0.18 * visual;
-
-    visualFreq += (lead.freq - visualFreq) * 0.035;
-    const fr = (visualFreq % 1000) / 1000;
-    const baseR = Math.min(w, h) * (0.18 + 0.16 * visual + 0.05 * Math.sin(phase * 0.02 + fr * Math.PI * 2));
-
-    fieldCtx.fillStyle = "rgba(5,7,13,0.12)";
-    fieldCtx.fillRect(0, 0, w, h);
-
-    const glow = fieldCtx.createRadialGradient(cx, cy, 4, cx, cy, Math.min(w, h) * (0.54 + push * 0.25));
-    glow.addColorStop(0, `rgba(122,243,255,${0.16 + push * 0.15})`);
-    glow.addColorStop(0.42, `rgba(196,163,255,${0.06 + push * 0.08})`);
-    glow.addColorStop(0.64, `rgba(243,201,122,${0.07 + push * 0.10})`);
-    glow.addColorStop(1, "rgba(0,0,0,0)");
-    fieldCtx.fillStyle = glow;
-    fieldCtx.beginPath();
-    fieldCtx.arc(cx, cy, Math.min(w, h) * 0.68, 0, Math.PI * 2);
-    fieldCtx.fill();
-
-    if (mode === "lattice") drawLattice(w, h, cx, cy, fr, push, visual);
-    else if (mode === "rose") drawRose(w, h, cx, cy, baseR, fr, push, visual);
-    else if (mode === "chladni") drawChladni(w, h, fr, push, visual);
-    else if (mode === "orbit") drawOrbit(w, h, cx, cy, baseR, fr, push);
-    else if (mode === "lift") drawLift(w, h, cx, cy, push);
-    else if (mode === "waveform") drawScope(w, h, cx, cy, fr, push);
-    else if (mode === "flower") drawFlower(w, h, cx, cy, baseR, push);
-    else if (mode === "metatron") drawMetatron(w, h, cx, cy, baseR, push);
-    else if (mode === "tree") drawTree(w, h, cx, cy, baseR, push);
-    else if (mode === "constellation") drawConstellation(w, h, cx, cy, baseR, push);
-    else drawTorus(w, h, cx, cy, baseR, fr, push, visual);
-
-    fieldCtx.fillStyle = "rgba(244,241,232,0.92)";
-    fieldCtx.font = "800 13px Inter, system-ui, sans-serif";
-    fieldCtx.textAlign = "center";
-    fieldCtx.fillText(isPlaying ? `${activePath} · ${Math.round(lead.freq)} Hz` : "FREQUENCY FIELD", cx, 25);
-
-    phase += 0.9;
-    requestAnimationFrame(drawVisualizer);
-  }
-
-  function drawTorus(w, h, cx, cy, baseR, fr, push, visual) {
-    const n = Math.round(260 * visual);
-    for (let ring = 0; ring < 4; ring++) {
-      fieldCtx.strokeStyle = `rgba(122,243,255,${0.08 + ring * 0.03 + push * 0.04})`;
-      fieldCtx.beginPath();
-      fieldCtx.arc(cx, cy, baseR * (0.58 + ring * 0.28), 0, Math.PI * 2);
-      fieldCtx.stroke();
-    }
-    for (let i = 0; i < n; i++) {
-      const a = (i / n) * Math.PI * 2 + phase * 0.008;
-      const wobble = Math.sin(i * 0.055 + phase * 0.018 + fr * 9 + visualSeed);
-      const r = baseR * (0.78 + 0.48 * wobble);
-      const x = cx + Math.cos(a) * r;
-      const y = cy + Math.sin(a * 1.08) * r * 0.68;
-      fieldCtx.fillStyle = color((i % 100) / 100, 0.42 + push * 0.32);
-      fieldCtx.beginPath();
-      fieldCtx.arc(x, y, 1.2 + push * 2.3, 0, Math.PI * 2);
-      fieldCtx.fill();
-      fieldCtx.beginPath();
-      fieldCtx.arc(w - x, y, 1.2 + push * 2.3, 0, Math.PI * 2);
-      fieldCtx.fill();
-    }
-  }
-
-  function drawLattice(w, h, cx, cy, fr, push, visual) {
-    const lines = Math.round(9 + visual * 8);
-    for (let i = 0; i < lines; i++) {
-      fieldCtx.beginPath();
-      for (let x = 0; x <= w; x += 8) {
-        const y = cy + Math.sin(x * 0.014 + i * 0.75 + phase * 0.014 + fr * 8) * h * 0.16;
-        x ? fieldCtx.lineTo(x, y + (i - lines / 2) * 12) : fieldCtx.moveTo(x, y);
       }
-      fieldCtx.strokeStyle = color(i / lines, 0.26 + push * 0.22);
-      fieldCtx.lineWidth = 1.5;
-      fieldCtx.stroke();
+
     }
+
+    position++;
+
+    if(
+      position >= sequence.length
+    ){
+
+      position = 0;
+
+    }
+
   }
 
-  function drawRose(w, h, cx, cy, baseR, fr, push, visual) {
-    const n = Math.round(520 * visual);
-    const k = 3 + Math.round(fr * 8);
-    fieldCtx.beginPath();
-    for (let i = 0; i <= n; i++) {
-      const t = (i / n) * Math.PI * 10;
-      const r = baseR * 1.15 * Math.cos(k * t + phase * 0.01);
-      const x = cx + r * Math.cos(t);
-      const y = cy + r * Math.sin(t);
-      i ? fieldCtx.lineTo(x, y) : fieldCtx.moveTo(x, y);
-    }
-    fieldCtx.strokeStyle = `rgba(243,201,122,${0.58 + push * 0.20})`;
-    fieldCtx.lineWidth = 2;
-    fieldCtx.stroke();
+  step();
+
+  liftTimer =
+    setInterval(
+      step,
+      30000
+    );
+
+  log(
+    "Lift Loop started."
+  );
+
+}
+
+function stopLiftLoop() {
+
+  clearInterval(
+    liftTimer
+  );
+
+  liftTimer = null;
+
+}
+
+/* =====================================================
+   TRACK RECORDER
+===================================================== */
+
+function trackEvent(type,data={}) {
+
+  if(
+    !STATE.recording
+  ) return;
+
+  STATE.trackEvents.push({
+
+    t:
+      Math.round(
+        performance.now() -
+        STATE.sessionStart
+      ),
+
+    type,
+
+    data
+
+  });
+
+}
+
+function startRecording() {
+
+  STATE.trackEvents = [];
+
+  STATE.recording = true;
+
+  STATE.sessionStart =
+    performance.now();
+
+  log(
+    "Recording started."
+  );
+
+}
+
+function stopRecording() {
+
+  STATE.recording = false;
+
+  log(
+    "Recording stopped."
+  );
+
+}
+
+/* =====================================================
+   TRACK SAVE / LOAD
+===================================================== */
+
+function saveTrack() {
+
+  saveStore(
+
+    STORE.track,
+
+    STATE.trackEvents
+
+  );
+
+  log(
+    "Track saved."
+  );
+
+}
+
+function loadTrack() {
+
+  STATE.trackEvents =
+
+    loadStore(
+      STORE.track,
+      []
+    );
+
+  log(
+    "Track loaded."
+  );
+
+}
+
+/* =====================================================
+   EVENT WIRING
+===================================================== */
+
+function bindMixerEvents() {
+
+  $("#playBtn")
+    ?.addEventListener(
+      "click",
+      startField
+    );
+
+  $("#stopBtn")
+    ?.addEventListener(
+      "click",
+      stopField
+    );
+
+  $("#startT7")
+    ?.addEventListener(
+      "click",
+      loadT7Field
+    );
+
+  $("#startYHWH")
+    ?.addEventListener(
+      "click",
+      loadYHWHField
+    );
+
+  $("#recordTrack")
+    ?.addEventListener(
+      "click",
+      startRecording
+    );
+
+  $("#stopRecord")
+    ?.addEventListener(
+      "click",
+      stopRecording
+    );
+
+}
+
+
+
+
+
+/* =====================================================
+   PART 3
+   VISUAL FIELD ENGINE
+===================================================== */
+
+const CANVAS =
+  document.getElementById(
+    "fieldCanvas"
+  );
+
+const CTX =
+  CANVAS?.getContext("2d");
+
+let visualPhase = 0;
+
+function fitCanvas() {
+
+  if(!CANVAS)
+    return;
+
+  const rect =
+    CANVAS.getBoundingClientRect();
+
+  const dpr =
+    Math.min(
+      window.devicePixelRatio || 1,
+      2
+    );
+
+  CANVAS.width =
+    rect.width * dpr;
+
+  CANVAS.height =
+    rect.height * dpr;
+
+  CTX.setTransform(
+    dpr,0,0,dpr,0,0
+  );
+
+}
+
+function leadFrequency() {
+
+  return (
+    DECK_STATE[0]?.freq ||
+    432
+  );
+
+}
+
+function glowColor() {
+
+  const freq =
+    leadFrequency();
+
+  if(freq < 300)
+    return "#7af3ff";
+
+  if(freq < 700)
+    return "#f3c97a";
+
+  return "#c4a3ff";
+
+}
+
+/* =====================================================
+   TORUS FIELD
+===================================================== */
+
+function drawTorus() {
+
+  const w =
+    CANVAS.clientWidth;
+
+  const h =
+    CANVAS.clientHeight;
+
+  const cx = w/2;
+  const cy = h/2;
+
+  const freq =
+    leadFrequency();
+
+  const radius =
+    Math.min(w,h) *
+    (
+      0.22 +
+      ((freq % 1000)/1000)*0.12
+    );
+
+  for(
+    let i=0;
+    i<260;
+    i++
+  ){
+
+    const a =
+      (i/260) *
+      Math.PI*2 +
+      visualPhase;
+
+    const r =
+      radius *
+      (
+        1 +
+        0.35 *
+        Math.sin(
+          a*3 +
+          visualPhase
+        )
+      );
+
+    const x =
+      cx +
+      Math.cos(a)*r;
+
+    const y =
+      cy +
+      Math.sin(a)*r*0.65;
+
+    CTX.fillStyle =
+      glowColor();
+
+    CTX.globalAlpha =
+      0.45;
+
+    CTX.beginPath();
+
+    CTX.arc(
+      x,
+      y,
+      2,
+      0,
+      Math.PI*2
+    );
+
+    CTX.fill();
+
   }
 
-  function drawChladni(w, h, fr, push, visual) {
-    const step = Math.max(7, 16 - visual * 3);
-    for (let y = 0; y < h; y += step) {
-      for (let x = 0; x < w; x += step) {
-        const v = Math.sin((x / w) * Math.PI * (3 + fr * 8) + phase * 0.018) * Math.sin((y / h) * Math.PI * (2 + fr * 9) - phase * 0.015);
-        if (Math.abs(v) < 0.10 + push * 0.10) {
-          fieldCtx.fillStyle = color((v + 1) / 2, 0.30 + push * 0.22);
-          fieldCtx.fillRect(x, y, 2.2, 2.2);
-        }
+}
+
+/* =====================================================
+   ROSE FIELD
+===================================================== */
+
+function drawRose() {
+
+  const w =
+    CANVAS.clientWidth;
+
+  const h =
+    CANVAS.clientHeight;
+
+  const cx=w/2;
+  const cy=h/2;
+
+  const radius =
+    Math.min(w,h)*0.3;
+
+  CTX.beginPath();
+
+  for(
+    let i=0;
+    i<1000;
+    i++
+  ){
+
+    const t =
+      i/100 *
+      Math.PI;
+
+    const r =
+      radius *
+      Math.cos(4*t);
+
+    const x =
+      cx +
+      r*Math.cos(t);
+
+    const y =
+      cy +
+      r*Math.sin(t);
+
+    if(i===0)
+      CTX.moveTo(x,y);
+    else
+      CTX.lineTo(x,y);
+
+  }
+
+  CTX.strokeStyle =
+    glowColor();
+
+  CTX.lineWidth = 2;
+
+  CTX.stroke();
+
+}
+
+/* =====================================================
+   METATRON FIELD
+===================================================== */
+
+function drawMetatron() {
+
+  const w =
+    CANVAS.clientWidth;
+
+  const h =
+    CANVAS.clientHeight;
+
+  const cx=w/2;
+  const cy=h/2;
+
+  const r =
+    Math.min(w,h)*0.18;
+
+  const points=[];
+
+  for(
+    let i=0;
+    i<12;
+    i++
+  ){
+
+    const a =
+      (i/12)*
+      Math.PI*2;
+
+    points.push({
+
+      x:
+        cx+
+        Math.cos(a)*r*2,
+
+      y:
+        cy+
+        Math.sin(a)*r*2
+
+    });
+
+  }
+
+  points.push({
+    x:cx,
+    y:cy
+  });
+
+  CTX.strokeStyle =
+    glowColor();
+
+  CTX.globalAlpha = 0.28;
+
+  points.forEach(p1=>{
+
+    points.forEach(p2=>{
+
+      CTX.beginPath();
+
+      CTX.moveTo(
+        p1.x,
+        p1.y
+      );
+
+      CTX.lineTo(
+        p2.x,
+        p2.y
+      );
+
+      CTX.stroke();
+
+    });
+
+  });
+
+}
+
+/* =====================================================
+   TREE OF LIFE
+===================================================== */
+
+function drawTree() {
+
+  const w =
+    CANVAS.clientWidth;
+
+  const h =
+    CANVAS.clientHeight;
+
+  const cx=w/2;
+  const cy=h/2;
+
+  const nodes = [
+
+    [0,-220],
+    [0,-140],
+    [-90,-60],
+    [90,-60],
+    [0,0],
+    [-90,90],
+    [90,90],
+    [0,170],
+    [0,260]
+
+  ];
+
+  CTX.strokeStyle =
+    glowColor();
+
+  CTX.lineWidth = 2;
+
+  nodes.forEach(
+    ([x,y])=>{
+
+      CTX.beginPath();
+
+      CTX.arc(
+        cx+x,
+        cy+y,
+        18,
+        0,
+        Math.PI*2
+      );
+
+      CTX.stroke();
+
+    }
+  );
+
+}
+
+/* =====================================================
+   CYMATICS FIELD
+===================================================== */
+
+function drawCymatics() {
+
+  const w =
+    CANVAS.clientWidth;
+
+  const h =
+    CANVAS.clientHeight;
+
+  const freq =
+    leadFrequency();
+
+  const step =
+    Math.max(
+      6,
+      18 -
+      (freq/100)
+    );
+
+  for(
+    let y=0;
+    y<h;
+    y+=step
+  ){
+
+    for(
+      let x=0;
+      x<w;
+      x+=step
+    ){
+
+      const value =
+
+        Math.sin(
+          x*0.02
+        ) *
+
+        Math.sin(
+          y*0.02
+        );
+
+      if(
+        Math.abs(value)
+        < 0.15
+      ){
+
+        CTX.fillStyle =
+          glowColor();
+
+        CTX.fillRect(
+          x,
+          y,
+          2,
+          2
+        );
+
       }
+
     }
+
   }
 
-  function drawOrbit(w, h, cx, cy, baseR, fr, push) {
-    for (let i = 0; i < 10; i++) {
-      const a = (i / 10) * Math.PI * 2 + phase * 0.008 * (i % 2 ? -1 : 1);
-      const r = baseR * (0.7 + (i % 4) * 0.22);
-      const x = cx + Math.cos(a) * r;
-      const y = cy + Math.sin(a) * r * 0.72;
-      fieldCtx.strokeStyle = color(i / 10, 0.16 + push * 0.12);
-      fieldCtx.beginPath();
-      fieldCtx.arc(cx, cy, r, 0, Math.PI * 2);
-      fieldCtx.stroke();
-      fieldCtx.fillStyle = color(i / 10, 0.70);
-      fieldCtx.beginPath();
-      fieldCtx.arc(x, y, 3 + push * 3, 0, Math.PI * 2);
-      fieldCtx.fill();
-    }
+}
+
+/* =====================================================
+   VISUAL ROUTER
+===================================================== */
+
+function drawField() {
+
+  if(
+    !CANVAS ||
+    !CTX
+  ) return;
+
+  CTX.clearRect(
+
+    0,
+    0,
+    CANVAS.width,
+    CANVAS.height
+
+  );
+
+  const mode =
+    STATE.visualMode;
+
+  switch(mode){
+
+    case "rose":
+      drawRose();
+      break;
+
+    case "metatron":
+      drawMetatron();
+      break;
+
+    case "tree":
+      drawTree();
+      break;
+
+    case "cymatics":
+      drawCymatics();
+      break;
+
+    default:
+      drawTorus();
+
   }
 
-  function drawLift(w, h, cx, cy, push) {
-    const columnW = Math.min(w, h) * 0.22;
-    for (let i = 0; i < 9; i++) {
-      const y = h - ((phase * 2 + i * h / 9) % h);
-      const radius = columnW * (0.45 + 0.28 * Math.sin(phase * 0.03 + i));
-      fieldCtx.strokeStyle = `rgba(159,247,200,${0.18 + push * 0.22})`;
-      fieldCtx.lineWidth = 2;
-      fieldCtx.beginPath();
-      fieldCtx.ellipse(cx, y, radius, radius * 0.24, 0, 0, Math.PI * 2);
-      fieldCtx.stroke();
-    }
-  }
+  visualPhase += 0.01;
 
-  function drawScope(w, h, cx, cy, fr, push) {
-    fieldCtx.beginPath();
-    for (let x = 0; x <= w; x += 3) {
-      const y = cy + Math.sin((x / w) * Math.PI * 2 * (2 + fr * 8) + phase * 0.035) * h * (0.14 + push * 0.08);
-      x ? fieldCtx.lineTo(x, y) : fieldCtx.moveTo(x, y);
-    }
-    fieldCtx.strokeStyle = `rgba(122,243,255,${0.55 + push * 0.20})`;
-    fieldCtx.lineWidth = 2;
-    fieldCtx.stroke();
-  }
+  requestAnimationFrame(
+    drawField
+  );
 
-  function drawFlower(w, h, cx, cy, baseR, push) {
-    for (let ring = 0; ring < 3; ring++) {
-      for (let i = 0; i < 12; i++) {
-        const a = (i / 12) * Math.PI * 2 + ring * 0.22 + phase * 0.003;
-        const x = cx + Math.cos(a) * baseR * ring * 0.33;
-        const y = cy + Math.sin(a) * baseR * ring * 0.33;
-        fieldCtx.strokeStyle = `rgba(243,201,122,${0.16 + push * 0.18})`;
-        fieldCtx.beginPath();
-        fieldCtx.arc(x, y, baseR * 0.36, 0, Math.PI * 2);
-        fieldCtx.stroke();
+}
+
+/* =====================================================
+   JOURNAL SYSTEM
+===================================================== */
+
+function saveJournal() {
+
+  const archive =
+    loadStore(
+      STORE.journal,
+      []
+    );
+
+  archive.unshift({
+
+    date:
+      new Date()
+      .toLocaleString(),
+
+    path:
+      STATE.activePath,
+
+    intention:
+      $("#journalIntention")
+      ?.value || "",
+
+    body:
+      $("#journalBody")
+      ?.value || "",
+
+    note:
+      $("#journalNote")
+      ?.value || ""
+
+  });
+
+  saveStore(
+    STORE.journal,
+    archive
+  );
+
+  renderJournal();
+
+  log(
+    "Witness saved."
+  );
+
+}
+
+function renderJournal() {
+
+  const container =
+    $("#journalList");
+
+  if(!container)
+    return;
+
+  const archive =
+    loadStore(
+      STORE.journal,
+      []
+    );
+
+  container.innerHTML =
+    archive.map(item=>`
+
+      <article class="journal-entry">
+
+        <strong>
+          ${item.date}
+        </strong>
+
+        <p>
+          ${item.path}
+        </p>
+
+      </article>
+
+    `).join("");
+
+}
+
+/* =====================================================
+   FIELD SAVE / LOAD
+===================================================== */
+
+function saveField() {
+
+  saveStore(
+
+    STORE.field,
+
+    {
+
+      decks:
+        DECK_STATE,
+
+      path:
+        STATE.activePath,
+
+      visual:
+        STATE.visualMode
+
+    }
+
+  );
+
+  log(
+    "Field saved."
+  );
+
+}
+
+function loadField() {
+
+  const data =
+    loadStore(
+      STORE.field,
+      null
+    );
+
+  if(!data)
+    return;
+
+  data.decks.forEach(
+    (deck,index)=>{
+
+      Object.assign(
+
+        DECK_STATE[index],
+
+        deck
+
+      );
+
+    }
+  );
+
+  STATE.activePath =
+    data.path;
+
+  STATE.visualMode =
+    data.visual;
+
+  refreshMixer();
+
+  log(
+    "Field loaded."
+  );
+
+}
+
+/* =====================================================
+   EXPORT PNG
+===================================================== */
+
+function savePNG() {
+
+  const a =
+    document.createElement("a");
+
+  a.href =
+    CANVAS.toDataURL(
+      "image/png"
+    );
+
+  a.download =
+    "frequency-field.png";
+
+  a.click();
+
+}
+
+/* =====================================================
+   MOBILE DOCK
+===================================================== */
+
+function bindMobileDock() {
+
+  $("#dockPlay")
+    ?.addEventListener(
+      "click",
+      startField
+    );
+
+  $("#dockStop")
+    ?.addEventListener(
+      "click",
+      stopField
+    );
+
+  $("#dockRecord")
+    ?.addEventListener(
+      "click",
+      ()=>{
+
+        STATE.recording
+          ? stopRecording()
+          : startRecording();
+
       }
-    }
-  }
+    );
 
-  function drawMetatron(w, h, cx, cy, baseR, push) {
-    const pts = [];
-    for (let i = 0; i < 12; i++) {
-      const a = (i / 12) * Math.PI * 2 + phase * 0.004;
-      pts.push([cx + Math.cos(a) * baseR, cy + Math.sin(a) * baseR]);
-    }
-    pts.push([cx, cy]);
-    fieldCtx.strokeStyle = `rgba(122,243,255,${0.18 + push * 0.18})`;
-    for (let i = 0; i < pts.length; i++) {
-      for (let j = i + 1; j < pts.length; j += 2) {
-        fieldCtx.beginPath();
-        fieldCtx.moveTo(pts[i][0], pts[i][1]);
-        fieldCtx.lineTo(pts[j][0], pts[j][1]);
-        fieldCtx.stroke();
-      }
-    }
-    pts.forEach(([x, y]) => {
-      fieldCtx.fillStyle = `rgba(243,201,122,${0.55 + push * 0.2})`;
-      fieldCtx.beginPath();
-      fieldCtx.arc(x, y, 3 + push * 2, 0, Math.PI * 2);
-      fieldCtx.fill();
-    });
-  }
+  $("#dockLift")
+    ?.addEventListener(
+      "click",
+      startLiftLoop
+    );
 
-  function drawTree(w, h, cx, cy, baseR, push) {
-    fieldCtx.strokeStyle = `rgba(159,247,200,${0.28 + push * 0.20})`;
-    fieldCtx.lineWidth = 2;
-    fieldCtx.beginPath();
-    fieldCtx.moveTo(cx, cy + baseR);
-    fieldCtx.lineTo(cx, cy - baseR);
-    fieldCtx.stroke();
-    for (let i = 0; i < 7; i++) {
-      const y = cy + baseR * 0.7 - i * (baseR * 0.24);
-      const spread = baseR * (0.18 + i * 0.055);
-      fieldCtx.beginPath();
-      fieldCtx.moveTo(cx, y);
-      fieldCtx.lineTo(cx - spread, y - baseR * 0.14);
-      fieldCtx.moveTo(cx, y);
-      fieldCtx.lineTo(cx + spread, y - baseR * 0.14);
-      fieldCtx.stroke();
-    }
-  }
+}
 
-  function drawConstellation(w, h, cx, cy, baseR, push) {
-    const pts = Array.from({ length: 22 }, (_, i) => {
-      const a = i * 2.399 + visualSeed;
-      const r = baseR * (0.35 + ((i * 37) % 100) / 100);
-      return [cx + Math.cos(a + phase * 0.002) * r, cy + Math.sin(a * 1.1 + phase * 0.002) * r * 0.75];
-    });
-    fieldCtx.strokeStyle = `rgba(122,243,255,${0.16 + push * 0.16})`;
-    fieldCtx.beginPath();
-    pts.forEach(([x, y], i) => i ? fieldCtx.lineTo(x, y) : fieldCtx.moveTo(x, y));
-    fieldCtx.stroke();
-    pts.forEach(([x, y], i) => {
-      fieldCtx.fillStyle = color((i % 10) / 10, 0.58 + push * 0.16);
-      fieldCtx.beginPath();
-      fieldCtx.arc(x, y, 2 + push * 2, 0, Math.PI * 2);
-      fieldCtx.fill();
-    });
-  }
+/* =====================================================
+   FINAL BINDINGS
+===================================================== */
 
-  function bind() {
-    on($("#playBtn"), "click", playMix);
-    on($("#stopBtn"), "click", () => { stopAll(); recordEvent("stop"); log("Stopped."); });
+function bindPart3() {
 
-    on($("#dockPlay"), "click", playMix);
-    on($("#dockStop"), "click", () => stopAll(0.25));
-    on($("#dockRecord"), "click", () => recording ? stopRecord() : startRecord());
-    on($("#dockLift"), "click", startLiftLoop);
-    on($("#dockLog"), "click", () => $("#journalIntention")?.scrollIntoView({ behavior: "smooth", block: "center" }));
+  $("#saveJournal")
+    ?.addEventListener(
+      "click",
+      saveJournal
+    );
 
-    ["masterVolume", "visualPower", "fadeTime", "visualMode", "crossfader", "presetTexture", "presetIntensity", "breathPace", "sessionLength"].forEach(id => {
-      on($("#" + id), "input", refreshDecks);
-      on($("#" + id), "change", () => { updateUI(); recordEvent("setting", { id, value: $("#" + id)?.value }); });
-    });
+  $("#savePreset")
+    ?.addEventListener(
+      "click",
+      saveField
+    );
 
-    $$(".seqBtn").forEach(btn => on(btn, "click", () => runSequence(btn.dataset.seq)));
+  $("#loadPreset")
+    ?.addEventListener(
+      "click",
+      loadField
+    );
 
-    $$(".geometry-btn").forEach(btn => {
-      on(btn, "click", () => {
-        if ($("#visualMode")) $("#visualMode").value = btn.dataset.visual;
-        updateUI();
-        recordEvent("visual", { visual: btn.dataset.visual });
-        log(`Visual seal: ${btn.dataset.visual}.`);
-      });
-    });
+  $("#saveFieldPng")
+    ?.addEventListener(
+      "click",
+      savePNG
+    );
 
-    getCards().forEach((card, index) => {
-      $$(".deck-freq, .deck-vol, .deck-pan, .deck-wave, .deck-harmonic, .deck-beat", card).forEach(control => {
-        on(control, "input", () => playDeck(index));
-        on(control, "change", () => playDeck(index));
-      });
-      on($(".deck-cue", card), "click", () => cueDeck(index));
-      on($(".deck-mute", card), "click", () => { card.classList.toggle("is-muted"); refreshDecks(); });
-      on($(".deck-solo", card), "click", () => { card.classList.toggle("is-solo"); refreshDecks(); });
-    });
+}
 
-    $$(".deck-target").forEach(btn => on(btn, "click", () => {
-      selectedDeck = Number(btn.dataset.target);
-      updateDeckTargets();
-    }));
+/* =====================================================
+   BOOT
+===================================================== */
 
-    on($("#stopSeq"), "click", () => { stopSequence(); log("Sequence stopped."); });
-    on($("#startT7"), "click", startT7);
-    on($("#stopT7"), "click", () => { stopAll(); log("T7 Field ended."); });
-    on($("#startLiftLoop"), "click", startLiftLoop);
-    on($("#stopLiftLoop"), "click", () => stopLiftLoop());
+function bootFrequencyGovernance() {
 
-    on($("#savePreset"), "click", saveField);
-    on($("#loadPreset"), "click", loadField);
-    on($("#resetMixer"), "click", resetField);
+  fitCanvas();
 
-    on($("#recordTrack"), "click", startRecord);
-    on($("#stopRecord"), "click", stopRecord);
-    on($("#playTrack"), "click", playTrack);
-    on($("#stopTrack"), "click", () => stopAll(0.25));
-    on($("#saveTrack"), "click", saveTrack);
-    on($("#loadTrack"), "click", loadTrack);
-    on($("#exportTrack"), "click", exportTrack);
-    on($("#clearTrack"), "click", clearTrack);
+  bindMixerEvents();
 
-    on($("#saveJournal"), "click", saveJournal);
-    on($("#copyJournal"), "click", async () => { await navigator.clipboard.writeText(buildJournalText()); log("Witness copied."); });
-    on($("#clearJournal"), "click", () => {
-      $("#journalIntention").value = "";
-      $("#journalBody").value = "";
-      $("#journalNote").value = "";
-      log("Journal fields cleared.");
-    });
+  bindPart3();
 
-    on($("#exportJournal"), "click", exportJournal);
-    on($("#importJournal"), "click", () => $("#importJournalFile")?.click());
-    on($("#importJournalFile"), "change", e => {
-      const file = e.target.files?.[0];
-      if (file) importJournal(file);
-      e.target.value = "";
-    });
-    on($("#clearJournalArchive"), "click", () => {
-      localStorage.removeItem(STORE_JOURNAL);
-      renderJournal();
-      log("Journal archive cleared.");
-    });
+  bindMobileDock();
 
-    on($("#clearField"), "click", () => fieldCtx?.clearRect(0, 0, fieldCanvas.width, fieldCanvas.height));
-    on($("#saveFieldPng"), "click", () => {
-      if (!fieldCanvas) return;
-      const a = document.createElement("a");
-      a.href = fieldCanvas.toDataURL("image/png");
-      a.download = "frequency-governance-field.png";
-      a.click();
-    });
-    on($("#randomSeed"), "click", () => { visualSeed = Math.random() * 9999; log("New visual seed."); });
+  renderJournal();
 
-    on(fieldCanvas, "pointermove", e => {
-      const r = fieldCanvas.getBoundingClientRect();
-      pointer.x = (e.clientX - r.left) / r.width;
-      pointer.y = (e.clientY - r.top) / r.height;
-      pointer.active = true;
-    });
+  updateStatus();
 
-    document.addEventListener("keydown", e => {
-      if (e.key === "Escape") {
-        stopAll(0.25);
-        log("Emergency stop.");
-      }
-    });
+  drawField();
 
-    window.addEventListener("resize", () => { fitFieldCanvas(); fitStars(); }, { passive: true });
-    window.addEventListener("pointerdown", () => {
-      if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
-    }, { once: true, passive: true });
-  }
+  log(
+    "Frequency Governance initialized."
+  );
 
-  function boot() {
-    text($("#yr"), new Date().getFullYear());
-    fitFieldCanvas();
-    fitStars();
-    renderLibrary();
-    renderJournal();
-    bind();
-    updateDeckTargets();
-    resetField();
-    updateTrackUI();
-    drawStars();
-    drawVisualizer();
-    log("Living Sound Observatory loaded.");
-  }
+}
 
-  boot();
+window.addEventListener(
+
+  "resize",
+
+  fitCanvas,
+
+  {passive:true}
+
+);
+
+bootFrequencyGovernance();
+
+/* =====================================================
+   END OF FILE
+===================================================== */
+
 })();
