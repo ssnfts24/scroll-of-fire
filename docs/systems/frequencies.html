@@ -95,7 +95,8 @@
     .quick-card,
     .sacred-name,
     .intent-card,
-    .sound-card {
+    .sound-card,
+    .audio-card {
       position: relative;
       overflow: hidden;
       padding: 1rem;
@@ -220,6 +221,26 @@
       font-size: 1.08rem;
     }
 
+    .journey-strip {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .journey-step {
+      padding: 0.9rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.035);
+    }
+
+    .journey-step strong {
+      display: block;
+      color: var(--gold, #f3c97a);
+      margin-bottom: 0.25rem;
+    }
+
     .advanced-lab {
       border-radius: 28px;
       border: 1px solid rgba(255,255,255,0.12);
@@ -243,24 +264,11 @@
       padding: 1rem;
     }
 
-    .journey-strip {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-
-    .journey-step {
-      padding: 0.9rem;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.035);
-    }
-
-    .journey-step strong {
-      display: block;
-      color: var(--gold, #f3c97a);
-      margin-bottom: 0.25rem;
+    .audio-card {
+      border-color: rgba(122,243,255,0.22);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(122,243,255,0.12), transparent 36%),
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
     }
 
     .safety-card {
@@ -335,6 +343,7 @@
     <div class="hero-pills" aria-label="Feature summary">
       <span>Intent Paths</span>
       <span>𐤉𐤄𐤅𐤄 Name Path</span>
+      <span>Sound Check</span>
       <span>Lift Loop</span>
       <span>T7 Field</span>
       <span>Breath Modes</span>
@@ -362,7 +371,7 @@
         <p class="eyebrow">Start Here</p>
         <h2>Quick Sound Paths</h2>
         <p class="meta">
-          Press one path to begin. The system keeps the volume low and moves through the sound field gently.
+          Press one path to begin. For first-time testing, press Sound Check and raise your device volume.
         </p>
 
         <div class="quick-grid">
@@ -378,6 +387,7 @@
         </div>
 
         <div class="button-row">
+          <button id="soundCheckBtn" class="fg-btn gold" type="button">Sound Check</button>
           <button id="playBtn" class="fg-btn primary" type="button">Play Current Field</button>
           <button id="stopBtn" class="fg-btn danger" type="button">Stop</button>
         </div>
@@ -402,6 +412,15 @@
           </div>
         </div>
       </aside>
+    </section>
+
+    <section class="audio-card">
+      <p class="eyebrow">Audio Test</p>
+      <h2>Can’t Hear It?</h2>
+      <p class="meta">
+        Press <strong>Sound Check</strong>, make sure your phone is not muted, turn media volume up,
+        and try headphones or a speaker. Browser audio starts only after a tap.
+      </p>
     </section>
 
     <section class="fg-command card">
@@ -447,8 +466,9 @@
         </div>
 
         <label>Master Volume
-          <input id="masterVolume" type="range" min="0" max="85" step="1" value="24">
+          <input id="masterVolume" type="range" min="0" max="100" step="1" value="42">
         </label>
+
         <label>Visual Intensity
           <input id="visualPower" type="range" min="20" max="260" step="1" value="130">
         </label>
@@ -475,7 +495,7 @@
         </label>
 
         <div class="meter"><span id="meter"></span></div>
-        <p id="settingText" class="fine">432 Hz · 18% master · Torus Field</p>
+        <p id="settingText" class="fine">432 Hz · 42% master · Torus Field</p>
       </aside>
     </section>
 
@@ -617,7 +637,7 @@
         <p class="eyebrow">Live Log</p>
         <h2>Session Console</h2>
         <pre id="log" class="log">Console initialized.
-Use low volume first.
+Press Sound Check first.
 Press Escape to stop.</pre>
       </aside>
     </section>
@@ -626,9 +646,7 @@ Press Escape to stop.</pre>
       <article class="card col-7">
         <p class="eyebrow">Track Recorder</p>
         <h2>Record + Replay a Sound Journey</h2>
-        <p class="meta">
-          Record preset taps, path changes, visual modes, and sequence movement.
-        </p>
+        <p class="meta">Record preset taps, path changes, visual modes, and sequence movement.</p>
 
         <div class="transport-grid">
           <button id="recordTrack" class="fg-btn danger" type="button">Record</button>
@@ -669,10 +687,7 @@ Press Escape to stop.</pre>
     <section id="t7Practice" class="card t7-card">
       <p class="eyebrow">Tesla Type-7 Resonant Conduit</p>
       <h2>T7 Field Practice</h2>
-
-      <p class="meta">
-        Start low. Let breath, posture, attention, and witness move together.
-      </p>
+      <p class="meta">Start low. Let breath, posture, attention, and witness move together.</p>
 
       <div class="grid">
         <div class="mini col-4"><h3>1 · Ground</h3><p>Feel a slow pulse beneath the body. Let the breath settle first.</p></div>
@@ -692,10 +707,7 @@ Press Escape to stop.</pre>
     <section id="liftLoop" class="card lift-card">
       <p class="eyebrow">Physical Lift Training</p>
       <h2>7-Step Lift Loop</h2>
-
-      <p class="meta">
-        Physical alignment practice for posture, breath, balance, nervous-system steadiness, and felt lightness.
-      </p>
+      <p class="meta">Physical alignment practice for posture, breath, balance, nervous-system steadiness, and felt lightness.</p>
 
       <div class="lift-progress">
         <span id="liftStep1" class="lift-dot active">1</span>
@@ -727,16 +739,14 @@ Press Escape to stop.</pre>
       <details class="advanced-lab">
         <summary>Advanced Deck Lab — manual four-deck field design</summary>
         <div class="advanced-inner">
-          <p class="meta">
-            The mixer is now secondary. Use this only when you want full manual sound design.
-          </p>
+          <p class="meta">The mixer is secondary. Use this only when you want full manual sound design.</p>
 
           <div class="dj-grid" id="deckGrid">
             <article class="deck-card" data-deck="0">
               <h3>Deck A <span class="deck-status">Lead</span></h3>
               <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="432"></label>
-              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="80"></label>
-              <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="-15"></label>
+              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="90"></label>
+              <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="0"></label>
               <label>Waveform
                 <select class="deck-wave">
                   <option value="sine">Sine</option>
@@ -959,9 +969,9 @@ Press Escape to stop.</pre>
       <p class="eyebrow">Safety</p>
       <h2>Ground Rules</h2>
       <p class="fine">
-        Keep volume low. Do not use while driving, operating tools, or doing anything that needs full attention.
-        Stop if discomfort increases. Sudden severe headache, vision changes, weakness, confusion, seizure symptoms,
-        or headache after injury should be medically evaluated.
+        Keep volume reasonable. Start low, then raise slowly. Do not use while driving, operating tools,
+        or doing anything that needs full attention. Stop if discomfort increases. Sudden severe headache,
+        vision changes, weakness, confusion, seizure symptoms, or headache after injury should be medically evaluated.
       </p>
     </section>
   </main>
@@ -980,4 +990,4 @@ Press Escape to stop.</pre>
 
   <script src="assets/js/frequency-governance.js"></script>
 </body>
-              </html>
+                                                                                     </html>
