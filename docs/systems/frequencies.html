@@ -1,4 +1,4 @@
-<!doctype html>
+<!!doctype html>
 <html lang="en" dir="ltr" class="sof carrier-432">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
@@ -14,7 +14,7 @@
   <meta charset="utf-8">
   <title>Frequencies — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Scroll of Fire Frequencies — a mobile-ready frequency workstation for carrier tones, harmonic mixing, sequencing, T7 field practice, lift training, sacred geometry visuals, track recording, playback, and private witnessing.">
+  <meta name="description" content="Scroll of Fire Frequencies — a mobile-ready frequency workstation with carrier tones, harmonic deck mixing, nature sound beds, sequencing, T7 field practice, lift training, sacred geometry visuals, track recording, playback, and private witnessing.">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="creator" content="Aaron Paul Laird">
   <meta name="publisher" content="Scroll of Fire">
@@ -25,14 +25,14 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Frequencies — Scroll of Fire">
-  <meta property="og:description" content="Mix, layer, sequence, visualize, record, and replay symbolic carrier frequency sessions through the Scroll of Fire Codex.">
+  <meta property="og:description" content="Mix carrier tones, harmonic decks, nature sound beds, sequencing, visuals, and private witness logs through the Scroll of Fire Codex.">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/systems/frequencies.html">
   <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
   <meta property="og:image:alt" content="Scroll of Fire Frequencies Console">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Frequencies — Scroll of Fire">
-  <meta name="twitter:description" content="A carrier-tone workstation for symbolic frequency practice, visual fields, sequencing, and witness logging.">
+  <meta name="twitter:description" content="A carrier-tone workstation with nature beds, visual fields, sequencing, and witness logging.">
   <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
 
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
@@ -41,572 +41,127 @@
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/frequency-governance.css">
 
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebApplication",
-    "name":"Scroll of Fire Frequencies",
-    "applicationCategory":"MultimediaApplication",
-    "operatingSystem":"Any modern browser",
-    "url":"https://ssnfts24.github.io/scroll-of-fire/systems/frequencies.html",
-    "creator":{"@type":"Person","name":"Aaron Paul Laird"},
-    "publisher":{"@type":"Organization","name":"Scroll of Fire"},
-    "description":"A browser-based frequency workstation for symbolic carrier-tone practice, visual fields, sequencing, track recording, playback, and private witness logging."
-  }
-  </script>
-
   <style>
-    :root{
-      --fg-sticky-offset:0px;
-      --fg-card-gap:clamp(.75rem,2vw,1rem);
-      --fg-mobile-pad:clamp(.85rem,4vw,1.1rem);
-    }
+    :root{--fg-card-gap:clamp(.75rem,2vw,1rem);--fg-mobile-pad:clamp(.85rem,4vw,1.1rem)}
+    html{scroll-behavior:smooth}
+    body{overflow-x:hidden}
+    button,input,select,textarea{font:inherit}
+    input,select,textarea{max-width:100%}
 
-    html{
-      scroll-behavior:smooth;
-    }
+    .fg-topbar{position:sticky;top:0;z-index:80;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem clamp(.9rem,4vw,1.5rem);border-bottom:1px solid rgba(255,255,255,.1);background:rgba(5,7,13,.92);backdrop-filter:blur(18px)}
+    .fg-brand{display:inline-flex;align-items:center;gap:.65rem;min-width:0;color:inherit;text-decoration:none}
+    .fg-brand-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:14px;border:1px solid rgba(243,201,122,.22);background:radial-gradient(circle at 40% 20%,rgba(243,201,122,.18),transparent 62%),rgba(255,255,255,.035);color:var(--gold,#f3c97a);font-size:1.2rem;flex:0 0 auto}
+    .fg-brand strong,.fg-brand small{display:block;line-height:1.1}
+    .fg-brand small{color:var(--muted,#aeb6c8);font-size:.76rem;margin-top:.16rem}
+    .fg-menu-toggle{display:none;appearance:none;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.045);color:inherit;border-radius:14px;padding:.65rem .78rem;cursor:pointer}
+    .fg-site-nav{display:flex;align-items:center;gap:.35rem}
+    .fg-site-nav a{color:inherit;text-decoration:none;padding:.58rem .72rem;border-radius:999px;font-size:.94rem}
+    .fg-site-nav a:hover,.fg-site-nav a:focus-visible{background:rgba(122,243,255,.08);outline:none}
 
-    body{
-      overflow-x:hidden;
-    }
+    .fg-mobile-jump{display:none;position:sticky;top:64px;z-index:70;gap:.45rem;overflow:auto;padding:.55rem .75rem;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(5,7,13,.88);backdrop-filter:blur(14px);scrollbar-width:none}
+    .fg-mobile-jump::-webkit-scrollbar{display:none}
+    .fg-mobile-jump a{flex:0 0 auto;text-decoration:none;padding:.5rem .68rem;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.035);color:inherit;font-size:.84rem;white-space:nowrap}
 
-    button,
-    input,
-    select,
-    textarea{
-      font:inherit;
-    }
+    .fg-hero{padding-top:clamp(2rem,7vw,5rem)}
+    .fg-crumbs{display:flex;flex-wrap:wrap;gap:.45rem;align-items:center}
+    .fg-crumbs a{color:inherit}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1rem}
 
-    input,
-    select,
-    textarea{
-      max-width:100%;
-    }
+    .freq-safety-strip{display:grid;grid-template-columns:1.1fr .9fr;gap:var(--fg-card-gap);align-items:stretch;margin-top:1rem}
+    .freq-safety-strip .notice{margin:0}
+    .quick-practice{display:grid;gap:.55rem;padding:1rem;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018))}
+    .quick-practice strong{color:var(--gold,#f3c97a)}
+    .quick-practice ol{margin:.2rem 0 0;padding-left:1.15rem;color:var(--muted,#aeb6c8)}
 
-    .fg-topbar{
-      position:sticky;
-      top:0;
-      z-index:80;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:1rem;
-      padding:.75rem clamp(.9rem,4vw,1.5rem);
-      border-bottom:1px solid rgba(255,255,255,.1);
-      background:rgba(5,7,13,.92);
-      backdrop-filter:blur(18px);
-    }
+    .fg-accordion{display:grid;gap:var(--fg-card-gap);margin-top:var(--fg-card-gap)}
+    details.fg-panel{border:1px solid rgba(255,255,255,.12);border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.16)}
+    details.fg-panel[open]{border-color:rgba(122,243,255,.18)}
+    details.fg-panel>summary{list-style:none;cursor:pointer;padding:1rem 1.05rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;color:var(--gold,#f3c97a);font-weight:850;letter-spacing:.01em}
+    details.fg-panel>summary::-webkit-details-marker{display:none}
+    details.fg-panel>summary::after{content:"＋";color:rgba(122,243,255,.9);font-weight:900;flex:0 0 auto}
+    details.fg-panel[open]>summary::after{content:"–"}
+    .fg-panel-body{padding:0 1rem 1rem}
+    .section-anchor{scroll-margin-top:130px}
 
-    .fg-brand{
-      display:inline-flex;
-      align-items:center;
-      gap:.65rem;
-      min-width:0;
-      color:inherit;
-      text-decoration:none;
-    }
+    .deck-card{min-width:0}
+    .deck-card label,.card label{display:grid;gap:.35rem}
+    .deck-card input[type=number]{width:100%}
+    .button-row{flex-wrap:wrap}
+    .fg-btn{touch-action:manipulation}
+    .fine strong{color:var(--gold,#f3c97a)}
+    .mobile-hint{display:none;color:var(--muted,#aeb6c8);font-size:.88rem;margin:.4rem 0 0}
 
-    .fg-brand-mark{
-      display:grid;
-      place-items:center;
-      width:38px;
-      height:38px;
-      border-radius:14px;
-      border:1px solid rgba(243,201,122,.22);
-      background:radial-gradient(circle at 40% 20%,rgba(243,201,122,.18),transparent 62%),rgba(255,255,255,.035);
-      color:var(--gold,#f3c97a);
-      font-size:1.2rem;
-      flex:0 0 auto;
-    }
+    .nature-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem;margin-top:1rem}
+    .nature-card{padding:1rem;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:radial-gradient(circle at 20% 0%,rgba(122,243,255,.08),transparent 38%),rgba(255,255,255,.03)}
+    .nature-card h3{margin:.2rem 0 .35rem;color:var(--gold,#f3c97a)}
+    .nature-card p{margin:.15rem 0 .8rem;color:var(--muted,#aeb6c8);font-size:.9rem;line-height:1.45}
+    .nature-card label{font-size:.9rem;color:var(--muted,#aeb6c8)}
+    .nature-card input[type=range]{width:100%}
+    .nature-toolbar{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1rem}
+    .nature-mix-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;margin-top:1rem}
+    .nature-pill{padding:.85rem;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.026);color:var(--muted,#aeb6c8)}
+    .nature-pill strong{display:block;color:var(--gold,#f3c97a);margin-bottom:.2rem}
 
-    .fg-brand strong,
-    .fg-brand small{
-      display:block;
-      line-height:1.1;
-    }
+    .deck-mobile-tabs{display:none;gap:.45rem;overflow:auto;padding:.1rem 0 .8rem;scrollbar-width:none}
+    .deck-mobile-tabs::-webkit-scrollbar{display:none}
+    .deck-tab{flex:0 0 auto;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.035);color:inherit;border-radius:999px;padding:.55rem .75rem}
+    .deck-tab.active{background:rgba(122,243,255,.12);border-color:rgba(122,243,255,.24)}
+    .deck-card.mobile-hidden{display:none}
 
-    .fg-brand small{
-      color:var(--muted,#aeb6c8);
-      font-size:.76rem;
-      margin-top:.16rem;
-    }
+    .safety-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--fg-card-gap);margin-top:1rem}
+    .safety-mini{padding:1rem;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03)}
+    .safety-mini h3{margin-top:0;color:var(--gold,#f3c97a)}
+    .safety-mini p{margin-bottom:0;color:var(--muted,#aeb6c8)}
 
-    .fg-menu-toggle{
-      display:none;
-      appearance:none;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.045);
-      color:inherit;
-      border-radius:14px;
-      padding:.65rem .78rem;
-      cursor:pointer;
+    @media (max-width:1100px){
+      .nature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .nature-mix-row{grid-template-columns:1fr}
     }
-
-    .fg-site-nav{
-      display:flex;
-      align-items:center;
-      gap:.35rem;
-    }
-
-    .fg-site-nav a{
-      color:inherit;
-      text-decoration:none;
-      padding:.58rem .72rem;
-      border-radius:999px;
-      font-size:.94rem;
-    }
-
-    .fg-site-nav a:hover,
-    .fg-site-nav a:focus-visible{
-      background:rgba(122,243,255,.08);
-      outline:none;
-    }
-
-    .fg-mobile-jump{
-      display:none;
-      position:sticky;
-      top:64px;
-      z-index:70;
-      gap:.45rem;
-      overflow:auto;
-      padding:.55rem .75rem;
-      border-bottom:1px solid rgba(255,255,255,.08);
-      background:rgba(5,7,13,.88);
-      backdrop-filter:blur(14px);
-      scrollbar-width:none;
-    }
-
-    .fg-mobile-jump::-webkit-scrollbar{
-      display:none;
-    }
-
-    .fg-mobile-jump a{
-      flex:0 0 auto;
-      text-decoration:none;
-      padding:.5rem .68rem;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.1);
-      background:rgba(255,255,255,.035);
-      color:inherit;
-      font-size:.84rem;
-      white-space:nowrap;
-    }
-
-    .fg-hero{
-      padding-top:clamp(2rem,7vw,5rem);
-    }
-
-    .fg-crumbs{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.45rem;
-      align-items:center;
-    }
-
-    .fg-crumbs a{
-      color:inherit;
-    }
-
-    .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.65rem;
-      margin-top:1rem;
-    }
-
-    .freq-safety-strip{
-      display:grid;
-      grid-template-columns:1.1fr .9fr;
-      gap:var(--fg-card-gap);
-      align-items:stretch;
-      margin-top:1rem;
-    }
-
-    .freq-safety-strip .notice{
-      margin:0;
-    }
-
-    .quick-practice{
-      display:grid;
-      gap:.55rem;
-      padding:1rem;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.12);
-      background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
-    }
-
-    .quick-practice strong{
-      color:var(--gold,#f3c97a);
-    }
-
-    .quick-practice ol{
-      margin:.2rem 0 0;
-      padding-left:1.15rem;
-      color:var(--muted,#aeb6c8);
-    }
-
-    .fg-accordion{
-      display:grid;
-      gap:var(--fg-card-gap);
-      margin-top:var(--fg-card-gap);
-    }
-
-    details.fg-panel{
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:26px;
-      background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
-      overflow:hidden;
-      box-shadow:0 18px 50px rgba(0,0,0,.16);
-    }
-
-    details.fg-panel[open]{
-      border-color:rgba(122,243,255,.18);
-    }
-
-    details.fg-panel > summary{
-      list-style:none;
-      cursor:pointer;
-      padding:1rem 1.05rem;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:1rem;
-      color:var(--gold,#f3c97a);
-      font-weight:850;
-      letter-spacing:.01em;
-    }
-
-    details.fg-panel > summary::-webkit-details-marker{
-      display:none;
-    }
-
-    details.fg-panel > summary::after{
-      content:"＋";
-      color:rgba(122,243,255,.9);
-      font-weight:900;
-      flex:0 0 auto;
-    }
-
-    details.fg-panel[open] > summary::after{
-      content:"–";
-    }
-
-    .fg-panel-body{
-      padding:0 1rem 1rem;
-    }
-
-    .section-anchor{
-      scroll-margin-top:130px;
-    }
-
-    .mobile-hint{
-      display:none;
-      color:var(--muted,#aeb6c8);
-      font-size:.88rem;
-      margin:.4rem 0 0;
-    }
-
-    .deck-card{
-      min-width:0;
-    }
-
-    .deck-card label,
-    .card label{
-      display:grid;
-      gap:.35rem;
-    }
-
-    .deck-card input[type="number"]{
-      width:100%;
-    }
-
-    .button-row{
-      flex-wrap:wrap;
-    }
-
-    .fg-btn{
-      touch-action:manipulation;
-    }
-
-    .fine strong{
-      color:var(--gold,#f3c97a);
-    }
-
-    .safety-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:var(--fg-card-gap);
-      margin-top:1rem;
-    }
-
-    .safety-mini{
-      padding:1rem;
-      border-radius:20px;
-      border:1px solid rgba(255,255,255,.1);
-      background:rgba(255,255,255,.03);
-    }
-
-    .safety-mini h3{
-      margin-top:0;
-      color:var(--gold,#f3c97a);
-    }
-
-    .safety-mini p{
-      margin-bottom:0;
-      color:var(--muted,#aeb6c8);
-    }
-
     @media (max-width:980px){
-      .fg-site-nav{
-        position:absolute;
-        top:calc(100% + .5rem);
-        left:.75rem;
-        right:.75rem;
-        display:none;
-        flex-direction:column;
-        align-items:stretch;
-        padding:.75rem;
-        border:1px solid rgba(255,255,255,.12);
-        border-radius:18px;
-        background:rgba(8,12,20,.98);
-        box-shadow:0 18px 60px rgba(0,0,0,.48);
-        max-height:78vh;
-        overflow:auto;
-      }
-
-      .fg-site-nav.open{
-        display:flex;
-      }
-
-      .fg-site-nav a{
-        border-radius:14px;
-        padding:.78rem .85rem;
-        background:rgba(255,255,255,.026);
-      }
-
-      .fg-menu-toggle{
-        display:inline-flex;
-      }
-
-      .fg-mobile-jump{
-        display:flex;
-      }
-
-      .freq-safety-strip,
-      .safety-grid{
-        grid-template-columns:1fr;
-      }
+      .fg-site-nav{position:absolute;top:calc(100% + .5rem);left:.75rem;right:.75rem;display:none;flex-direction:column;align-items:stretch;padding:.75rem;border:1px solid rgba(255,255,255,.12);border-radius:18px;background:rgba(8,12,20,.98);box-shadow:0 18px 60px rgba(0,0,0,.48);max-height:78vh;overflow:auto}
+      .fg-site-nav.open{display:flex}
+      .fg-site-nav a{border-radius:14px;padding:.78rem .85rem;background:rgba(255,255,255,.026)}
+      .fg-menu-toggle{display:inline-flex}
+      .fg-mobile-jump{display:flex}
+      .freq-safety-strip,.safety-grid{grid-template-columns:1fr}
     }
-
     @media (max-width:760px){
-      .fg-topbar{
-        padding:.65rem .8rem;
-      }
-
-      .fg-brand strong{
-        font-size:.94rem;
-      }
-
-      .fg-brand small{
-        font-size:.72rem;
-      }
-
-      .fg-brand-mark{
-        width:34px;
-        height:34px;
-        border-radius:12px;
-      }
-
-      .fg-hero{
-        padding:1.35rem var(--fg-mobile-pad) 1rem;
-      }
-
-      .fg-shell{
-        padding-left:var(--fg-mobile-pad);
-        padding-right:var(--fg-mobile-pad);
-        padding-bottom:6.3rem;
-      }
-
-      .fg-crumbs{
-        font-size:.85rem;
-      }
-
-      .fg-hero h1{
-        font-size:clamp(2.05rem,11vw,3.15rem);
-        line-height:.96;
-      }
-
-      .hero-copy{
-        font-size:1rem;
-      }
-
-      .hero-pills{
-        display:flex;
-        overflow:auto;
-        gap:.45rem;
-        padding-bottom:.25rem;
-        scrollbar-width:none;
-      }
-
-      .hero-pills::-webkit-scrollbar{
-        display:none;
-      }
-
-      .hero-pills span{
-        flex:0 0 auto;
-        white-space:nowrap;
-        font-size:.82rem;
-      }
-
-      .hero-actions{
-        display:grid;
-        grid-template-columns:1fr;
-      }
-
-      .hero-actions .fg-btn,
-      .hero-actions a{
-        justify-content:center;
-        width:100%;
-        text-align:center;
-      }
-
-      .fg-command{
-        gap:1rem;
-      }
-
-      .command-stats{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-
-      .grid{
-        display:block;
-      }
-
-      .grid > * + *{
-        margin-top:var(--fg-card-gap);
-      }
-
-      .card{
-        border-radius:22px;
-        padding:1rem;
-      }
-
-      .section-head{
-        gap:.35rem;
-      }
-
-      #fieldCanvas{
-        min-height:260px;
-        max-height:56vh;
-      }
-
-      .canvas-tools,
-      .transport-grid,
-      .seq-grid,
-      .control-grid,
-      .button-row,
-      .deck-targets{
-        display:grid;
-        grid-template-columns:1fr;
-        gap:.6rem;
-      }
-
-      .fg-btn,
-      .mobile-dock button{
-        min-height:44px;
-      }
-
-      .readout{
-        text-align:center;
-      }
-
-      .dj-grid{
-        display:grid;
-        grid-template-columns:1fr;
-        gap:.85rem;
-      }
-
-      .deck-card{
-        padding:.95rem;
-        border-radius:20px;
-      }
-
-      .deck-card h3{
-        display:flex;
-        justify-content:space-between;
-        gap:.5rem;
-        align-items:center;
-      }
-
-      .crossfade-panel{
-        margin-top:1rem;
-      }
-
-      .track-readout{
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        gap:.5rem;
-      }
-
-      .track-timeline,
-      .loop-timeline,
-      .journal-list,
-      .log{
-        max-width:100%;
-        overflow:auto;
-      }
-
-      .mini{
-        margin-top:.75rem;
-      }
-
-      .lift-progress{
-        overflow:auto;
-        justify-content:flex-start;
-        padding-bottom:.2rem;
-      }
-
-      .lift-dot{
-        flex:0 0 auto;
-      }
-
-      .mobile-hint{
-        display:block;
-      }
-
-      .mobile-dock{
-        position:fixed;
-        left:.65rem;
-        right:.65rem;
-        bottom:.65rem;
-        z-index:90;
-        display:grid;
-        grid-template-columns:repeat(5,1fr);
-        gap:.35rem;
-        padding:.45rem;
-        border:1px solid rgba(255,255,255,.14);
-        border-radius:18px;
-        background:rgba(8,12,20,.92);
-        backdrop-filter:blur(18px);
-        box-shadow:0 18px 50px rgba(0,0,0,.48);
-      }
-
-      .mobile-dock button{
-        border-radius:13px;
-        padding:.5rem .25rem;
-        font-size:.78rem;
-      }
-
-      .fg-footer{
-        padding-bottom:5.8rem;
-      }
+      .fg-topbar{padding:.65rem .8rem}
+      .fg-brand strong{font-size:.94rem}
+      .fg-brand small{font-size:.72rem}
+      .fg-brand-mark{width:34px;height:34px;border-radius:12px}
+      .fg-hero{padding:1.35rem var(--fg-mobile-pad) 1rem}
+      .fg-shell{padding-left:var(--fg-mobile-pad);padding-right:var(--fg-mobile-pad);padding-bottom:6.6rem}
+      .fg-hero h1{font-size:clamp(2.05rem,11vw,3.15rem);line-height:.96}
+      .hero-copy{font-size:1rem}
+      .hero-pills{display:flex;overflow:auto;gap:.45rem;padding-bottom:.25rem;scrollbar-width:none}
+      .hero-pills::-webkit-scrollbar{display:none}
+      .hero-pills span{flex:0 0 auto;white-space:nowrap;font-size:.82rem}
+      .hero-actions,.canvas-tools,.transport-grid,.seq-grid,.control-grid,.button-row,.deck-targets,.nature-toolbar{display:grid;grid-template-columns:1fr;gap:.6rem}
+      .fg-command{gap:1rem}
+      .command-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid{display:block}
+      .grid>*+*{margin-top:var(--fg-card-gap)}
+      .card{border-radius:22px;padding:1rem}
+      #fieldCanvas{min-height:250px;max-height:56vh}
+      .dj-grid{display:grid;grid-template-columns:1fr;gap:.85rem}
+      .deck-mobile-tabs{display:flex}
+      .deck-card{padding:.95rem;border-radius:20px}
+      .deck-card h3{display:flex;justify-content:space-between;gap:.5rem;align-items:center}
+      .crossfade-panel{margin-top:1rem}
+      .nature-grid{grid-template-columns:1fr}
+      .track-readout{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+      .track-timeline,.loop-timeline,.journal-list,.log{max-width:100%;overflow:auto}
+      .mini{margin-top:.75rem}
+      .lift-progress{overflow:auto;justify-content:flex-start;padding-bottom:.2rem}
+      .lift-dot{flex:0 0 auto}
+      .mobile-hint{display:block}
+      .mobile-dock{position:fixed;left:.65rem;right:.65rem;bottom:.65rem;z-index:90;display:grid;grid-template-columns:repeat(5,1fr);gap:.35rem;padding:.45rem;border:1px solid rgba(255,255,255,.14);border-radius:18px;background:rgba(8,12,20,.92);backdrop-filter:blur(18px);box-shadow:0 18px 50px rgba(0,0,0,.48)}
+      .mobile-dock button{border-radius:13px;padding:.5rem .25rem;font-size:.78rem;min-height:44px}
+      .fg-btn{min-height:44px}
+      .fg-footer{padding-bottom:5.8rem}
     }
-
-    @media (min-width:761px){
-      .mobile-dock{
-        display:none;
-      }
-    }
+    @media (min-width:761px){.mobile-dock{display:none}}
   </style>
 </head>
 
@@ -616,14 +171,9 @@
   <header class="fg-topbar" data-fg-topbar>
     <a class="fg-brand" href="./" aria-label="Scroll of Fire home">
       <span class="fg-brand-mark" aria-hidden="true">☲</span>
-      <span>
-        <strong>Scroll of Fire</strong>
-        <small>Codex of Reality</small>
-      </span>
+      <span><strong>Scroll of Fire</strong><small>Codex of Reality</small></span>
     </a>
-
     <button class="fg-menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="fgSiteNav" data-fg-menu-toggle>Menu</button>
-
     <nav id="fgSiteNav" class="fg-site-nav" aria-label="Primary navigation" data-fg-site-nav>
       <a href="./">Home</a>
       <a href="./hub.html">Hub</a>
@@ -637,71 +187,20 @@
   </header>
 
   <nav class="fg-mobile-jump" aria-label="Frequency quick navigation">
-    <a href="#console">Console</a>
-    <a href="#decks">Decks</a>
-    <a href="#recorder">Record</a>
-    <a href="#library">Library</a>
-    <a href="#sequencer">Loop</a>
-    <a href="#t7">T7</a>
-    <a href="#lift">Lift</a>
-    <a href="#journal">Journal</a>
-    <a href="#safety">Safety</a>
+    <a href="#console">Console</a><a href="#nature">Nature</a><a href="#decks">Decks</a><a href="#recorder">Record</a><a href="#library">Library</a><a href="#sequencer">Loop</a><a href="#t7">T7</a><a href="#lift">Lift</a><a href="#journal">Journal</a><a href="#safety">Safety</a>
   </nav>
 
   <header class="fg-hero">
-    <nav class="fg-crumbs" aria-label="Breadcrumb">
-      <a href="./hub.html">Hub</a>
-      <span>/</span>
-      <a href="./systems/archive.html">Systems</a>
-      <span>/</span>
-      <span>Frequencies</span>
-    </nav>
-
+    <nav class="fg-crumbs" aria-label="Breadcrumb"><a href="./hub.html">Hub</a><span>/</span><a href="./systems/archive.html">Systems</a><span>/</span><span>Frequencies</span></nav>
     <p class="eyebrow">Codex Audio Workstation</p>
     <h1>Frequencies</h1>
-
-    <p class="hero-copy">
-      A mobile-ready frequency workstation for carrier tones, harmonic layers, deck mixing,
-      live sequencing, visual field response, T7 practice, lift-loop training, track recording,
-      playback, and private witnessing.
-    </p>
-
-    <div class="hero-actions">
-      <a class="fg-btn primary" href="#console">Open Console</a>
-      <a class="fg-btn ghost" href="#decks">Mix Decks</a>
-      <a class="fg-btn gold" href="#journal">Log Witness</a>
-    </div>
-
+    <p class="hero-copy">A mobile-ready workstation for carrier tones, harmonic layers, nature beds, deck mixing, live sequencing, visual field response, T7 practice, lift-loop training, track recording, playback, and private witnessing.</p>
+    <div class="hero-actions"><a class="fg-btn primary" href="#console">Open Console</a><a class="fg-btn ghost" href="#nature">Nature Beds</a><a class="fg-btn gold" href="#journal">Log Witness</a></div>
     <div class="freq-safety-strip">
-      <aside class="notice">
-        <strong>🔥 DJ Observatory Mode:</strong>
-        four live decks, crossfader, mute/solo, harmonic stacks, beat offsets, track recorder,
-        loop builder, timeline playback, sacred geometry visuals, T7 mode, and 7-step lift loop.
-      </aside>
-
-      <aside class="quick-practice">
-        <strong>Simple practice path</strong>
-        <ol>
-          <li>Start low volume.</li>
-          <li>Choose one carrier.</li>
-          <li>Breathe before interpreting.</li>
-          <li>Record what you actually notice.</li>
-          <li>Stop if anything feels wrong.</li>
-        </ol>
-      </aside>
+      <aside class="notice"><strong>🔥 DJ Observatory Mode:</strong> four live decks, crossfader, mute/solo, harmonic stacks, generated nature beds, track recorder, loop builder, sacred geometry visuals, T7 mode, and 7-step lift loop.</aside>
+      <aside class="quick-practice"><strong>Simple practice path</strong><ol><li>Start low volume.</li><li>Choose one carrier or nature bed.</li><li>Breathe before interpreting.</li><li>Record what you actually notice.</li><li>Stop if anything feels wrong.</li></ol></aside>
     </div>
-
-    <div class="hero-pills" aria-label="Feature summary">
-      <span>4 Deck Mixer</span>
-      <span>Track Recorder</span>
-      <span>Playback Timeline</span>
-      <span>Crossfade</span>
-      <span>Harmonic Layers</span>
-      <span>Beat Offsets</span>
-      <span>T7 Field</span>
-      <span>Lift Loop</span>
-      <span>Private Logs</span>
-    </div>
+    <div class="hero-pills" aria-label="Feature summary"><span>4 Deck Mixer</span><span>Nature Beds</span><span>Track Recorder</span><span>Playback Timeline</span><span>Crossfade</span><span>Harmonic Layers</span><span>T7 Field</span><span>Lift Loop</span><span>Private Logs</span></div>
   </header>
 
   <main class="fg-shell">
@@ -709,11 +208,8 @@
       <div>
         <p class="eyebrow">Live Field</p>
         <h2 id="commandTitle">432 Hz · Foundation Mix</h2>
-        <p id="commandSubtitle" class="meta">
-          Build a frequency mix like a DJ set. Add carriers, blend decks, record changes, replay the session, and watch the field respond.
-        </p>
+        <p id="commandSubtitle" class="meta">Build a frequency mix like a DJ set. Add carriers, blend decks, layer nature beds, record changes, replay the session, and watch the field respond.</p>
       </div>
-
       <div class="command-stats">
         <div class="stat"><span>Lead</span><strong id="statCarrier">432 Hz</strong></div>
         <div class="stat"><span>Decks</span><strong id="statDecks">1</strong></div>
@@ -724,544 +220,107 @@
 
     <section class="grid section-anchor" id="visualizer">
       <article class="card col-8">
-        <div class="section-head">
-          <p class="eyebrow">Visualizer</p>
-          <h2>Frequency Observatory</h2>
-        </div>
-
+        <div class="section-head"><p class="eyebrow">Visualizer</p><h2>Frequency Observatory</h2></div>
         <canvas id="fieldCanvas" aria-label="Frequency visualizer"></canvas>
-
-        <div class="canvas-tools">
-          <button id="clearField" class="fg-btn ghost" type="button">Clear Field</button>
-          <button id="saveFieldPng" class="fg-btn ghost" type="button">Save PNG</button>
-          <button id="randomSeed" class="fg-btn ghost" type="button">New Seed</button>
-        </div>
+        <div class="canvas-tools"><button id="clearField" class="fg-btn ghost" type="button">Clear Field</button><button id="saveFieldPng" class="fg-btn ghost" type="button">Save PNG</button><button id="randomSeed" class="fg-btn ghost" type="button">New Seed</button></div>
       </article>
-
       <aside class="card col-4">
         <p class="eyebrow">Master Console</p>
-
-        <div class="readout">
-          <strong id="masterValue">432</strong>
-          <span>Hz</span>
-          <em id="stateText">stopped</em>
-        </div>
-
-        <label>Master Volume
-          <input id="masterVolume" type="range" min="0" max="100" step="1" value="18">
-        </label>
-
-        <label>Visual Intensity
-          <input id="visualPower" type="range" min="20" max="260" step="1" value="120">
-        </label>
-
-        <label>Transition Smoothness
-          <input id="fadeTime" type="range" min="0.15" max="6" step="0.05" value="1.25">
-        </label>
-
+        <div class="readout"><strong id="masterValue">432</strong><span>Hz</span><em id="stateText">stopped</em></div>
+        <label>Master Volume <input id="masterVolume" type="range" min="0" max="100" step="1" value="18"></label>
+        <label>Nature Volume <input id="natureMasterVolume" type="range" min="0" max="100" step="1" value="20"></label>
+        <label>Visual Intensity <input id="visualPower" type="range" min="20" max="260" step="1" value="120"></label>
+        <label>Transition Smoothness <input id="fadeTime" type="range" min="0.15" max="6" step="0.05" value="1.25"></label>
         <label>Visual Mode
-          <select id="visualMode">
-            <option value="torus">Torus Field</option>
-            <option value="lattice">Lattice Net</option>
-            <option value="rose">Rose Seal</option>
-            <option value="chladni">Chladni Field</option>
-            <option value="orbit">Orbital Shell</option>
-            <option value="constellation">Constellation</option>
-            <option value="lift">Lift Column</option>
-            <option value="waveform">Waveform Scope</option>
-            <option value="dj">DJ Spectrum</option>
-          </select>
+          <select id="visualMode"><option value="torus">Torus Field</option><option value="lattice">Lattice Net</option><option value="rose">Rose Seal</option><option value="chladni">Chladni Field</option><option value="orbit">Orbital Shell</option><option value="constellation">Constellation</option><option value="lift">Lift Column</option><option value="waveform">Waveform Scope</option><option value="dj">DJ Spectrum</option></select>
         </label>
-
-        <div class="button-row">
-          <button id="playBtn" class="fg-btn primary" type="button">Play Mix</button>
-          <button id="stopBtn" class="fg-btn danger" type="button">Stop</button>
-        </div>
-
+        <div class="button-row"><button id="playBtn" class="fg-btn primary" type="button">Play Mix</button><button id="stopBtn" class="fg-btn danger" type="button">Stop</button></div>
         <div class="meter"><span id="meter"></span></div>
         <p id="settingText" class="fine">432 Hz · 18% master · Torus Field</p>
       </aside>
     </section>
 
     <div class="fg-accordion">
+      <details id="nature" class="fg-panel section-anchor" open>
+        <summary>Nature Sound Beds · Generated in Browser</summary>
+        <div class="fg-panel-body">
+          <section class="card">
+            <p class="eyebrow">Nature Mixer</p>
+            <h2>Layer Natural Sound Beds</h2>
+            <p class="meta">These are generated with browser audio synthesis, so they do not require MP3 files. Use them as soft background textures under the frequency decks.</p>
+            <div class="nature-grid">
+              <article class="nature-card"><h3>Rain</h3><p>Soft filtered noise for steady rainfall.</p><label>Rain Level <input class="nature-level" data-nature="rain" type="range" min="0" max="100" value="0"></label></article>
+              <article class="nature-card"><h3>Ocean</h3><p>Slow wave swell using moving noise filters.</p><label>Ocean Level <input class="nature-level" data-nature="ocean" type="range" min="0" max="100" value="0"></label></article>
+              <article class="nature-card"><h3>Wind</h3><p>Air movement and spacious high-pass texture.</p><label>Wind Level <input class="nature-level" data-nature="wind" type="range" min="0" max="100" value="0"></label></article>
+              <article class="nature-card"><h3>Fire</h3><p>Crackle pulses with warm ember noise.</p><label>Fire Level <input class="nature-level" data-nature="fire" type="range" min="0" max="100" value="0"></label></article>
+              <article class="nature-card"><h3>Stream</h3><p>Bright flowing water texture.</p><label>Stream Level <input class="nature-level" data-nature="stream" type="range" min="0" max="100" value="0"></label></article>
+              <article class="nature-card"><h3>Forest</h3><p>Low forest bed with soft moving air.</p><label>Forest Level <input class="nature-level" data-nature="forest" type="range" min="0" max="100" value="0"></label></article>
+              <article class="nature-card"><h3>Night</h3><p>Quiet night field with cricket-like chirps.</p><label>Night Level <input class="nature-level" data-nature="night" type="range" min="0" max="100" value="0"></label></article>
+              <article class="nature-card"><h3>Thunder</h3><p>Occasional low rumble atmosphere.</p><label>Thunder Level <input class="nature-level" data-nature="thunder" type="range" min="0" max="100" value="0"></label></article>
+            </div>
+            <div class="nature-toolbar">
+              <button class="fg-btn primary nature-preset" data-preset="forestRain" type="button">Forest Rain</button>
+              <button class="fg-btn ghost nature-preset" data-preset="oceanWind" type="button">Ocean Wind</button>
+              <button class="fg-btn ghost nature-preset" data-preset="fireNight" type="button">Fire Night</button>
+              <button class="fg-btn gold nature-preset" data-preset="clear" type="button">Clear Nature</button>
+            </div>
+            <div class="nature-mix-row">
+              <div class="nature-pill"><strong>Best start</strong> Rain 18 + 432 Hz low volume.</div>
+              <div class="nature-pill"><strong>Deep work</strong> Ocean 15 + 369 Hz + slow visual.</div>
+              <div class="nature-pill"><strong>Night mode</strong> Fire 12 + Night 10 + 963 Hz very low.</div>
+            </div>
+          </section>
+        </div>
+      </details>
+
       <details id="decks" class="fg-panel section-anchor" open>
         <summary>DJ Mixer · Four Frequency Decks</summary>
         <div class="fg-panel-body">
           <section class="card">
             <p class="eyebrow">DJ Mixer</p>
             <h2>Four Frequency Decks</h2>
-            <p class="meta">
-              Each deck has its own carrier, volume, waveform, harmonic layer, beat offset, pan, mute, solo, cue, and loop capture.
-            </p>
-            <p class="mobile-hint">Mobile tip: open one deck at a time, make small volume changes, then use the bottom dock for play/stop/record.</p>
-
+            <p class="meta">Each deck has its own carrier, volume, waveform, harmonic layer, beat offset, pan, mute, solo, cue, and loop capture.</p>
+            <p class="mobile-hint">Mobile tip: use the deck tabs to focus on one deck at a time.</p>
+            <div class="deck-mobile-tabs" aria-label="Mobile deck selector">
+              <button class="deck-tab active" data-show-deck="0" type="button">Deck A</button>
+              <button class="deck-tab" data-show-deck="1" type="button">Deck B</button>
+              <button class="deck-tab" data-show-deck="2" type="button">Deck C</button>
+              <button class="deck-tab" data-show-deck="3" type="button">Deck D</button>
+            </div>
             <div class="dj-grid" id="deckGrid">
-              <article class="deck-card" data-deck="0">
-                <h3>Deck A <span class="deck-status">Lead</span></h3>
-                <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="432"></label>
-                <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="80"></label>
-                <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="-15"></label>
-                <label>Waveform
-                  <select class="deck-wave">
-                    <option value="sine">Sine</option>
-                    <option value="triangle">Triangle</option>
-                    <option value="square">Square</option>
-                    <option value="sawtooth">Saw</option>
-                  </select>
-                </label>
-                <label>Layer
-                  <select class="deck-harmonic">
-                    <option value="single">Single</option>
-                    <option value="octave">Octave</option>
-                    <option value="fifth">Fifth</option>
-                    <option value="triad">Major Stack</option>
-                    <option value="minor">Minor Stack</option>
-                    <option value="deep">Deep Field</option>
-                    <option value="crown">Crown Stack</option>
-                    <option value="field">Full Field</option>
-                  </select>
-                </label>
-                <label>Beat
-                  <select class="deck-beat">
-                    <option value="none">None</option>
-                    <option value="alpha">Alpha 10</option>
-                    <option value="theta">Theta 6</option>
-                    <option value="delta">Delta 3</option>
-                    <option value="gamma">Gamma 40</option>
-                    <option value="schumann">7.83</option>
-                  </select>
-                </label>
-                <div class="button-row">
-                  <button class="fg-btn ghost deck-cue" type="button">Cue</button>
-                  <button class="fg-btn ghost deck-mute" type="button">Mute</button>
-                  <button class="fg-btn ghost deck-solo" type="button">Solo</button>
-                  <button class="fg-btn gold deck-add-loop" type="button">Add Loop</button>
-                </div>
-              </article>
-
-              <article class="deck-card" data-deck="1">
-                <h3>Deck B <span class="deck-status">Blend</span></h3>
-                <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="528"></label>
-                <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="0"></label>
-                <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="15"></label>
-                <label>Waveform
-                  <select class="deck-wave">
-                    <option value="sine">Sine</option>
-                    <option value="triangle">Triangle</option>
-                    <option value="square">Square</option>
-                    <option value="sawtooth">Saw</option>
-                  </select>
-                </label>
-                <label>Layer
-                  <select class="deck-harmonic">
-                    <option value="single">Single</option>
-                    <option value="octave">Octave</option>
-                    <option value="fifth">Fifth</option>
-                    <option value="triad">Major Stack</option>
-                    <option value="minor">Minor Stack</option>
-                    <option value="deep">Deep Field</option>
-                    <option value="crown">Crown Stack</option>
-                    <option value="field">Full Field</option>
-                  </select>
-                </label>
-                <label>Beat
-                  <select class="deck-beat">
-                    <option value="none">None</option>
-                    <option value="alpha">Alpha 10</option>
-                    <option value="theta">Theta 6</option>
-                    <option value="delta">Delta 3</option>
-                    <option value="gamma">Gamma 40</option>
-                    <option value="schumann">7.83</option>
-                  </select>
-                </label>
-                <div class="button-row">
-                  <button class="fg-btn ghost deck-cue" type="button">Cue</button>
-                  <button class="fg-btn ghost deck-mute" type="button">Mute</button>
-                  <button class="fg-btn ghost deck-solo" type="button">Solo</button>
-                  <button class="fg-btn gold deck-add-loop" type="button">Add Loop</button>
-                </div>
-              </article>
-
-              <article class="deck-card" data-deck="2">
-                <h3>Deck C <span class="deck-status">Pulse</span></h3>
-                <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="369"></label>
-                <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="0"></label>
-                <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="-35"></label>
-                <label>Waveform
-                  <select class="deck-wave">
-                    <option value="sine">Sine</option>
-                    <option value="triangle">Triangle</option>
-                    <option value="square">Square</option>
-                    <option value="sawtooth">Saw</option>
-                  </select>
-                </label>
-                <label>Layer
-                  <select class="deck-harmonic">
-                    <option value="single">Single</option>
-                    <option value="octave">Octave</option>
-                    <option value="fifth">Fifth</option>
-                    <option value="triad">Major Stack</option>
-                    <option value="minor">Minor Stack</option>
-                    <option value="deep">Deep Field</option>
-                    <option value="crown">Crown Stack</option>
-                    <option value="field">Full Field</option>
-                  </select>
-                </label>
-                <label>Beat
-                  <select class="deck-beat">
-                    <option value="none">None</option>
-                    <option value="alpha">Alpha 10</option>
-                    <option value="theta">Theta 6</option>
-                    <option value="delta">Delta 3</option>
-                    <option value="gamma">Gamma 40</option>
-                    <option value="schumann">7.83</option>
-                  </select>
-                </label>
-                <div class="button-row">
-                  <button class="fg-btn ghost deck-cue" type="button">Cue</button>
-                  <button class="fg-btn ghost deck-mute" type="button">Mute</button>
-                  <button class="fg-btn ghost deck-solo" type="button">Solo</button>
-                  <button class="fg-btn gold deck-add-loop" type="button">Add Loop</button>
-                </div>
-              </article>
-
-              <article class="deck-card" data-deck="3">
-                <h3>Deck D <span class="deck-status">Crown</span></h3>
-                <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="963"></label>
-                <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="0"></label>
-                <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="35"></label>
-                <label>Waveform
-                  <select class="deck-wave">
-                    <option value="sine">Sine</option>
-                    <option value="triangle">Triangle</option>
-                    <option value="square">Square</option>
-                    <option value="sawtooth">Saw</option>
-                  </select>
-                </label>
-                <label>Layer
-                  <select class="deck-harmonic">
-                    <option value="single">Single</option>
-                    <option value="octave">Octave</option>
-                    <option value="fifth">Fifth</option>
-                    <option value="triad">Major Stack</option>
-                    <option value="minor">Minor Stack</option>
-                    <option value="deep">Deep Field</option>
-                    <option value="crown">Crown Stack</option>
-                    <option value="field">Full Field</option>
-                  </select>
-                </label>
-                <label>Beat
-                  <select class="deck-beat">
-                    <option value="none">None</option>
-                    <option value="alpha">Alpha 10</option>
-                    <option value="theta">Theta 6</option>
-                    <option value="delta">Delta 3</option>
-                    <option value="gamma">Gamma 40</option>
-                    <option value="schumann">7.83</option>
-                  </select>
-                </label>
-                <div class="button-row">
-                  <button class="fg-btn ghost deck-cue" type="button">Cue</button>
-                  <button class="fg-btn ghost deck-mute" type="button">Mute</button>
-                  <button class="fg-btn ghost deck-solo" type="button">Solo</button>
-                  <button class="fg-btn gold deck-add-loop" type="button">Add Loop</button>
-                </div>
-              </article>
+              <article class="deck-card" data-deck="0"><h3>Deck A <span class="deck-status">Lead</span></h3><label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="432"></label><label>Volume <input class="deck-vol" type="range" min="0" max="100" value="80"></label><label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="-15"></label><label>Waveform <select class="deck-wave"><option value="sine">Sine</option><option value="triangle">Triangle</option><option value="square">Square</option><option value="sawtooth">Saw</option></select></label><label>Layer <select class="deck-harmonic"><option value="single">Single</option><option value="octave">Octave</option><option value="fifth">Fifth</option><option value="triad">Major Stack</option><option value="minor">Minor Stack</option><option value="deep">Deep Field</option><option value="crown">Crown Stack</option><option value="field">Full Field</option></select></label><label>Beat <select class="deck-beat"><option value="none">None</option><option value="alpha">Alpha 10</option><option value="theta">Theta 6</option><option value="delta">Delta 3</option><option value="gamma">Gamma 40</option><option value="schumann">7.83</option></select></label><div class="button-row"><button class="fg-btn ghost deck-cue" type="button">Cue</button><button class="fg-btn ghost deck-mute" type="button">Mute</button><button class="fg-btn ghost deck-solo" type="button">Solo</button><button class="fg-btn gold deck-add-loop" type="button">Add Loop</button></div></article>
+              <article class="deck-card" data-deck="1"><h3>Deck B <span class="deck-status">Blend</span></h3><label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="528"></label><label>Volume <input class="deck-vol" type="range" min="0" max="100" value="0"></label><label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="15"></label><label>Waveform <select class="deck-wave"><option value="sine">Sine</option><option value="triangle">Triangle</option><option value="square">Square</option><option value="sawtooth">Saw</option></select></label><label>Layer <select class="deck-harmonic"><option value="single">Single</option><option value="octave">Octave</option><option value="fifth">Fifth</option><option value="triad">Major Stack</option><option value="minor">Minor Stack</option><option value="deep">Deep Field</option><option value="crown">Crown Stack</option><option value="field">Full Field</option></select></label><label>Beat <select class="deck-beat"><option value="none">None</option><option value="alpha">Alpha 10</option><option value="theta">Theta 6</option><option value="delta">Delta 3</option><option value="gamma">Gamma 40</option><option value="schumann">7.83</option></select></label><div class="button-row"><button class="fg-btn ghost deck-cue" type="button">Cue</button><button class="fg-btn ghost deck-mute" type="button">Mute</button><button class="fg-btn ghost deck-solo" type="button">Solo</button><button class="fg-btn gold deck-add-loop" type="button">Add Loop</button></div></article>
+              <article class="deck-card" data-deck="2"><h3>Deck C <span class="deck-status">Pulse</span></h3><label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="369"></label><label>Volume <input class="deck-vol" type="range" min="0" max="100" value="0"></label><label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="-35"></label><label>Waveform <select class="deck-wave"><option value="sine">Sine</option><option value="triangle">Triangle</option><option value="square">Square</option><option value="sawtooth">Saw</option></select></label><label>Layer <select class="deck-harmonic"><option value="single">Single</option><option value="octave">Octave</option><option value="fifth">Fifth</option><option value="triad">Major Stack</option><option value="minor">Minor Stack</option><option value="deep">Deep Field</option><option value="crown">Crown Stack</option><option value="field">Full Field</option></select></label><label>Beat <select class="deck-beat"><option value="none">None</option><option value="alpha">Alpha 10</option><option value="theta">Theta 6</option><option value="delta">Delta 3</option><option value="gamma">Gamma 40</option><option value="schumann">7.83</option></select></label><div class="button-row"><button class="fg-btn ghost deck-cue" type="button">Cue</button><button class="fg-btn ghost deck-mute" type="button">Mute</button><button class="fg-btn ghost deck-solo" type="button">Solo</button><button class="fg-btn gold deck-add-loop" type="button">Add Loop</button></div></article>
+              <article class="deck-card" data-deck="3"><h3>Deck D <span class="deck-status">Crown</span></h3><label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="963"></label><label>Volume <input class="deck-vol" type="range" min="0" max="100" value="0"></label><label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="35"></label><label>Waveform <select class="deck-wave"><option value="sine">Sine</option><option value="triangle">Triangle</option><option value="square">Square</option><option value="sawtooth">Saw</option></select></label><label>Layer <select class="deck-harmonic"><option value="single">Single</option><option value="octave">Octave</option><option value="fifth">Fifth</option><option value="triad">Major Stack</option><option value="minor">Minor Stack</option><option value="deep">Deep Field</option><option value="crown">Crown Stack</option><option value="field">Full Field</option></select></label><label>Beat <select class="deck-beat"><option value="none">None</option><option value="alpha">Alpha 10</option><option value="theta">Theta 6</option><option value="delta">Delta 3</option><option value="gamma">Gamma 40</option><option value="schumann">7.83</option></select></label><div class="button-row"><button class="fg-btn ghost deck-cue" type="button">Cue</button><button class="fg-btn ghost deck-mute" type="button">Mute</button><button class="fg-btn ghost deck-solo" type="button">Solo</button><button class="fg-btn gold deck-add-loop" type="button">Add Loop</button></div></article>
             </div>
-
-            <div class="crossfade-panel">
-              <label>Crossfader A/B
-                <input id="crossfader" type="range" min="0" max="100" value="0">
-              </label>
-              <p class="fine">0 = Deck A stronger · 50 = balanced · 100 = Deck B stronger. Deck C/D stay manual.</p>
-            </div>
+            <div class="crossfade-panel"><label>Crossfader A/B <input id="crossfader" type="range" min="0" max="100" value="0"></label><p class="fine">0 = Deck A stronger · 50 = balanced · 100 = Deck B stronger. Deck C/D stay manual.</p></div>
           </section>
         </div>
       </details>
 
-      <details id="recorder" class="fg-panel section-anchor">
-        <summary>Track Recorder · Presets · Timeline</summary>
-        <div class="fg-panel-body">
-          <section class="grid">
-            <article class="card col-7">
-              <p class="eyebrow">Track Recorder</p>
-              <h2>Record + Replay a Frequency Set</h2>
-              <p class="meta">
-                Record deck changes, preset taps, loop steps, and sequence movement. Then replay it as a structured frequency track.
-              </p>
+      <!-- Remaining sections kept structurally compatible with the original JS -->
+      <details id="recorder" class="fg-panel section-anchor"><summary>Track Recorder · Presets · Timeline</summary><div class="fg-panel-body"><section class="grid"><article class="card col-7"><p class="eyebrow">Track Recorder</p><h2>Record + Replay a Frequency Set</h2><p class="meta">Record deck changes, preset taps, loop steps, nature changes, and sequence movement.</p><div class="transport-grid"><button id="recordTrack" class="fg-btn danger" type="button">Record</button><button id="stopRecord" class="fg-btn ghost" type="button">Stop Record</button><button id="playTrack" class="fg-btn primary" type="button">Play Track</button><button id="stopTrack" class="fg-btn ghost" type="button">Stop Track</button><button id="saveTrack" class="fg-btn gold" type="button">Save Track</button><button id="loadTrack" class="fg-btn ghost" type="button">Load Track</button><button id="exportTrack" class="fg-btn ghost" type="button">Export Track</button><button id="clearTrack" class="fg-btn danger" type="button">Clear Track</button></div><div class="track-readout"><span>Track Time:</span><strong id="trackClock">00:00</strong><span>Events:</span><strong id="trackEvents">0</strong></div><div id="trackTimeline" class="track-timeline"><span class="fine">No recorded events yet.</span></div></article><aside class="card col-5"><p class="eyebrow">Mixer Presets</p><h2>Save the Current Console</h2><p class="fine">This stores deck values, visual mode, crossfader, loop timeline, nature bed levels, and master settings in this browser.</p><div class="button-row"><button id="savePreset" class="fg-btn gold" type="button">Save Mixer Preset</button><button id="loadPreset" class="fg-btn ghost" type="button">Load Mixer Preset</button><button id="resetMixer" class="fg-btn danger" type="button">Reset Mixer</button></div></aside></section></div></details>
 
-              <div class="transport-grid">
-                <button id="recordTrack" class="fg-btn danger" type="button">Record</button>
-                <button id="stopRecord" class="fg-btn ghost" type="button">Stop Record</button>
-                <button id="playTrack" class="fg-btn primary" type="button">Play Track</button>
-                <button id="stopTrack" class="fg-btn ghost" type="button">Stop Track</button>
-                <button id="saveTrack" class="fg-btn gold" type="button">Save Track</button>
-                <button id="loadTrack" class="fg-btn ghost" type="button">Load Track</button>
-                <button id="exportTrack" class="fg-btn ghost" type="button">Export Track</button>
-                <button id="clearTrack" class="fg-btn danger" type="button">Clear Track</button>
-              </div>
+      <details id="library" class="fg-panel section-anchor"><summary>Carrier Presets · Frequency Library</summary><div class="fg-panel-body"><section class="card"><p class="eyebrow">Carrier Presets</p><h2>Frequency Library</h2><p class="meta">Tap a preset to load it into the selected deck. Meanings are symbolic/experiential labels, not medical claims.</p><div class="button-row deck-targets"><button class="fg-btn active deck-target" data-target="0" type="button">Target A</button><button class="fg-btn deck-target" data-target="1" type="button">Target B</button><button class="fg-btn deck-target" data-target="2" type="button">Target C</button><button class="fg-btn deck-target" data-target="3" type="button">Target D</button></div><div id="libraryGrid" class="library-grid"></div></section></div></details>
 
-              <div class="track-readout">
-                <span>Track Time:</span>
-                <strong id="trackClock">00:00</strong>
-                <span>Events:</span>
-                <strong id="trackEvents">0</strong>
-              </div>
-
-              <div id="trackTimeline" class="track-timeline">
-                <span class="fine">No recorded events yet.</span>
-              </div>
-            </article>
-
-            <aside class="card col-5">
-              <p class="eyebrow">Mixer Presets</p>
-              <h2>Save the Current Console</h2>
-              <p class="fine">This stores deck values, visual mode, crossfader, loop timeline, and master settings in this browser.</p>
-
-              <div class="button-row">
-                <button id="savePreset" class="fg-btn gold" type="button">Save Mixer Preset</button>
-                <button id="loadPreset" class="fg-btn ghost" type="button">Load Mixer Preset</button>
-                <button id="resetMixer" class="fg-btn danger" type="button">Reset Mixer</button>
-              </div>
-            </aside>
-          </section>
-        </div>
-      </details>
-
-      <details id="library" class="fg-panel section-anchor">
-        <summary>Carrier Presets · Frequency Library</summary>
-        <div class="fg-panel-body">
-          <section class="card">
-            <p class="eyebrow">Carrier Presets</p>
-            <h2>Frequency Library</h2>
-            <p class="meta">Tap a preset to load it into the selected deck. Meanings are symbolic/experiential labels, not medical claims.</p>
-
-            <div class="button-row deck-targets">
-              <button class="fg-btn active deck-target" data-target="0" type="button">Target A</button>
-              <button class="fg-btn deck-target" data-target="1" type="button">Target B</button>
-              <button class="fg-btn deck-target" data-target="2" type="button">Target C</button>
-              <button class="fg-btn deck-target" data-target="3" type="button">Target D</button>
-            </div>
-
-            <div id="libraryGrid" class="library-grid"></div>
-          </section>
-        </div>
-      </details>
-
-      <details id="sequencer" class="fg-panel section-anchor">
-        <summary>DJ Sequencer · Live Loop</summary>
-        <div class="fg-panel-body">
-          <section class="grid">
-            <article class="card col-8">
-              <p class="eyebrow">Live Loop</p>
-              <h2>DJ Sequencer</h2>
-
-              <div class="control-grid">
-                <label>Seconds per step
-                  <input id="seqSeconds" type="number" min="2" max="90" step="1" value="8">
-                </label>
-
-                <label>Sequence Status
-                  <input id="seqStatus" value="stopped" readonly>
-                </label>
-              </div>
-
-              <div class="seq-grid">
-                <button class="fg-btn seqBtn" data-seq="headache" type="button">Headache Calm</button>
-                <button class="fg-btn seqBtn" data-seq="calm" type="button">Calm Path</button>
-                <button class="fg-btn seqBtn" data-seq="focus" type="button">Focus Path</button>
-                <button class="fg-btn seqBtn" data-seq="clarity" type="button">Clarity Path</button>
-                <button class="fg-btn seqBtn" data-seq="restore" type="button">Restore Path</button>
-                <button class="fg-btn seqBtn" data-seq="dream" type="button">Dream Gate</button>
-                <button class="fg-btn seqBtn" data-seq="ascent" type="button">Ascent Path</button>
-                <button class="fg-btn seqBtn" data-seq="remnant" type="button">Remnant Path</button>
-                <button class="fg-btn seqBtn" data-seq="t7" type="button">T7 Field</button>
-                <button class="fg-btn seqBtn" data-seq="lift" type="button">Lift Loop</button>
-              </div>
-
-              <div id="loopTimeline" class="loop-timeline"></div>
-
-              <div class="button-row">
-                <button id="playLoop" class="fg-btn primary" type="button">Play Custom Loop</button>
-                <button id="clearLoop" class="fg-btn ghost" type="button">Clear Loop</button>
-                <button id="stopSeq" class="fg-btn danger" type="button">Stop Sequence</button>
-              </div>
-            </article>
-
-            <aside class="card col-4">
-              <p class="eyebrow">Live Log</p>
-              <h2>Session Console</h2>
-              <pre id="log" class="log">Console initialized.
+      <details id="sequencer" class="fg-panel section-anchor"><summary>DJ Sequencer · Live Loop</summary><div class="fg-panel-body"><section class="grid"><article class="card col-8"><p class="eyebrow">Live Loop</p><h2>DJ Sequencer</h2><div class="control-grid"><label>Seconds per step <input id="seqSeconds" type="number" min="2" max="90" step="1" value="8"></label><label>Sequence Status <input id="seqStatus" value="stopped" readonly></label></div><div class="seq-grid"><button class="fg-btn seqBtn" data-seq="headache" type="button">Headache Calm</button><button class="fg-btn seqBtn" data-seq="calm" type="button">Calm Path</button><button class="fg-btn seqBtn" data-seq="focus" type="button">Focus Path</button><button class="fg-btn seqBtn" data-seq="clarity" type="button">Clarity Path</button><button class="fg-btn seqBtn" data-seq="restore" type="button">Restore Path</button><button class="fg-btn seqBtn" data-seq="dream" type="button">Dream Gate</button><button class="fg-btn seqBtn" data-seq="ascent" type="button">Ascent Path</button><button class="fg-btn seqBtn" data-seq="remnant" type="button">Remnant Path</button><button class="fg-btn seqBtn" data-seq="t7" type="button">T7 Field</button><button class="fg-btn seqBtn" data-seq="lift" type="button">Lift Loop</button></div><div id="loopTimeline" class="loop-timeline"></div><div class="button-row"><button id="playLoop" class="fg-btn primary" type="button">Play Custom Loop</button><button id="clearLoop" class="fg-btn ghost" type="button">Clear Loop</button><button id="stopSeq" class="fg-btn danger" type="button">Stop Sequence</button></div></article><aside class="card col-4"><p class="eyebrow">Live Log</p><h2>Session Console</h2><pre id="log" class="log">Console initialized.
 Use low volume first.
-Press Escape to stop.</pre>
-            </aside>
-          </section>
-        </div>
-      </details>
+Press Escape to stop.</pre></aside></section></div></details>
 
-      <details id="t7" class="fg-panel section-anchor">
-        <summary>T7 Field Practice</summary>
-        <div class="fg-panel-body">
-          <section class="card t7-card">
-            <p class="eyebrow">Tesla Type-7 Resonant Conduit</p>
-            <h2>T7 Field Practice</h2>
+      <details id="t7" class="fg-panel section-anchor"><summary>T7 Field Practice</summary><div class="fg-panel-body"><section class="card t7-card"><p class="eyebrow">Tesla Type-7 Resonant Conduit</p><h2>T7 Field Practice</h2><p class="meta">Suggested start: 432 Hz, sine, single tone, 7.83 Hz pulse, low volume. Use this as physical alignment, breath, balance, and field-awareness practice.</p><div class="grid"><div class="mini col-4"><h3>1 · Ground</h3><p>Feel a slow pulse beneath the body. Let the breath settle first.</p></div><div class="mini col-4"><h3>2 · Axis</h3><p>Picture the spine as the central line of the field.</p></div><div class="mini col-4"><h3>3 · Torus</h3><p>Watch the field move outward, around, and back through center.</p></div><div class="mini col-4"><h3>4 · Phase</h3><p>Let breath and sound align without forcing.</p></div><div class="mini col-4"><h3>5 · Witness</h3><p>Notice one real body signal, one thought pattern, one shift.</p></div><div class="mini col-4"><h3>6 · Seal</h3><p>Stop cleanly, breathe normal, and log the witness.</p></div></div><div class="button-row"><button id="startT7" class="fg-btn primary" type="button">Start T7 Field</button><button id="stopT7" class="fg-btn danger" type="button">End Practice</button></div></section></div></details>
 
-            <p class="meta">
-              Suggested start: 432 Hz, sine, single tone, 7.83 Hz pulse, low volume.
-              Use this as a physical alignment, breath, balance, and field-awareness practice.
-            </p>
+      <details id="lift" class="fg-panel section-anchor"><summary>Physical Lift Training · 7-Step Loop</summary><div class="fg-panel-body"><section class="card lift-card"><p class="eyebrow">Physical Lift Training</p><h2>7-Step Lift Loop</h2><p class="meta">Physical alignment practice for posture, breath, balance, nervous-system steadiness, and felt lightness.</p><div class="lift-progress"><span id="liftStep1" class="lift-dot active">1</span><span id="liftStep2" class="lift-dot">2</span><span id="liftStep3" class="lift-dot">3</span><span id="liftStep4" class="lift-dot">4</span><span id="liftStep5" class="lift-dot">5</span><span id="liftStep6" class="lift-dot">6</span><span id="liftStep7" class="lift-dot">7</span></div><div class="grid"><div class="mini col-4"><h3>1 · Grounding Resonance</h3><p>Feet planted. Slow pulse beneath feet and spine. Settle into support.</p></div><div class="mini col-4"><h3>2 · Flow Medium</h3><p>Picture air as layered currents. Notice pressure, warmth, and space.</p></div><div class="mini col-4"><h3>3 · Body as Resonator</h3><p>Spine as axis. Inhale up. Exhale down. Smooth jaw, shoulders, ribs.</p></div><div class="mini col-4"><h3>4 · Phase Lock</h3><p>Watch breath and posture line up. Notice lighter, steadier balance.</p></div><div class="mini col-4"><h3>5 · Drift Feedback</h3><p>Tension is data. Find whether drift began in breath, posture, thought, or effort.</p></div><div class="mini col-4"><h3>6 · Lift Command</h3><p>Use the cue: “brighten the center.” Let the body lengthen upward without strain.</p></div><div class="mini col-12"><h3>7 · Witness & Integration</h3><p>Pause, breathe normal, record balance, posture, body sensation, emotion, and clarity.</p></div></div><div class="button-row"><button id="startLiftLoop" class="fg-btn primary" type="button">Start Lift Loop</button><button id="stopLiftLoop" class="fg-btn danger" type="button">Stop Lift Loop</button></div></section></div></details>
 
-            <div class="grid">
-              <div class="mini col-4"><h3>1 · Ground</h3><p>Feel a slow pulse beneath the body. Let the breath settle first.</p></div>
-              <div class="mini col-4"><h3>2 · Axis</h3><p>Picture the spine as the central line of the field.</p></div>
-              <div class="mini col-4"><h3>3 · Torus</h3><p>Watch the field move outward, around, and back through center.</p></div>
-              <div class="mini col-4"><h3>4 · Phase</h3><p>Let breath and sound align without forcing.</p></div>
-              <div class="mini col-4"><h3>5 · Witness</h3><p>Notice one real body signal, one thought pattern, one shift.</p></div>
-              <div class="mini col-4"><h3>6 · Seal</h3><p>Stop cleanly, breathe normal, and log the witness.</p></div>
-            </div>
+      <details id="journal" class="fg-panel section-anchor"><summary>Witness Journal · Private Logs</summary><div class="fg-panel-body"><section class="grid"><article class="card col-7"><p class="eyebrow">Witness</p><h2>Session Journal</h2><div class="control-grid"><label>Intention <input id="journalIntention" placeholder="Example: calm focus, prayer, study, recovery, creative work"></label><label>Body Signal <input id="journalBody" placeholder="Example: calm, pressure, clarity, tension, warmth"></label></div><label>Witness Note <textarea id="journalNote" placeholder="What changed? What did you notice? What frequency, sequence, layer, nature bed, or mix felt best?"></textarea></label><div class="button-row"><button id="saveJournal" class="fg-btn primary" type="button">Save Witness</button><button id="copyJournal" class="fg-btn ghost" type="button">Copy Witness</button><button id="clearJournal" class="fg-btn danger" type="button">Clear</button></div></article><aside class="card col-5"><p class="eyebrow">Saved</p><h2>Recent Witnesses</h2><div id="journalList" class="journal-list"></div><div class="button-row"><button id="exportJournal" class="fg-btn ghost" type="button">Export JSON</button><input id="importJournalFile" type="file" accept="application/json" hidden><button id="importJournal" class="fg-btn ghost" type="button">Import JSON</button><button id="clearJournalArchive" class="fg-btn danger" type="button">Clear Archive</button></div></aside></section></div></details>
 
-            <div class="button-row">
-              <button id="startT7" class="fg-btn primary" type="button">Start T7 Field</button>
-              <button id="stopT7" class="fg-btn danger" type="button">End Practice</button>
-            </div>
-          </section>
-        </div>
-      </details>
-
-      <details id="lift" class="fg-panel section-anchor">
-        <summary>Physical Lift Training · 7-Step Loop</summary>
-        <div class="fg-panel-body">
-          <section class="card lift-card">
-            <p class="eyebrow">Physical Lift Training</p>
-            <h2>7-Step Lift Loop</h2>
-
-            <p class="meta">
-              Physical alignment practice for posture, breath, balance, nervous-system steadiness, and felt lightness.
-              It trains the body to organize itself with less drag.
-            </p>
-
-            <div class="lift-progress">
-              <span id="liftStep1" class="lift-dot active">1</span>
-              <span id="liftStep2" class="lift-dot">2</span>
-              <span id="liftStep3" class="lift-dot">3</span>
-              <span id="liftStep4" class="lift-dot">4</span>
-              <span id="liftStep5" class="lift-dot">5</span>
-              <span id="liftStep6" class="lift-dot">6</span>
-              <span id="liftStep7" class="lift-dot">7</span>
-            </div>
-
-            <div class="grid">
-              <div class="mini col-4"><h3>1 · Grounding Resonance</h3><p>Feet planted. Slow pulse beneath feet and spine. Settle into support.</p></div>
-              <div class="mini col-4"><h3>2 · Flow Medium</h3><p>Picture air as layered currents. Notice pressure, warmth, and space.</p></div>
-              <div class="mini col-4"><h3>3 · Body as Resonator</h3><p>Spine as axis. Inhale up. Exhale down. Smooth jaw, shoulders, ribs.</p></div>
-              <div class="mini col-4"><h3>4 · Phase Lock</h3><p>Watch breath and posture line up. Notice lighter, steadier balance.</p></div>
-              <div class="mini col-4"><h3>5 · Drift Feedback</h3><p>Tension is data. Find whether drift began in breath, posture, thought, or effort.</p></div>
-              <div class="mini col-4"><h3>6 · Lift Command</h3><p>Use the cue: “brighten the center.” Let the body lengthen upward without strain.</p></div>
-              <div class="mini col-12"><h3>7 · Witness & Integration</h3><p>Pause, breathe normal, record balance, posture, body sensation, emotion, and clarity.</p></div>
-            </div>
-
-            <div class="button-row">
-              <button id="startLiftLoop" class="fg-btn primary" type="button">Start Lift Loop</button>
-              <button id="stopLiftLoop" class="fg-btn danger" type="button">Stop Lift Loop</button>
-            </div>
-          </section>
-        </div>
-      </details>
-
-      <details id="journal" class="fg-panel section-anchor">
-        <summary>Witness Journal · Private Logs</summary>
-        <div class="fg-panel-body">
-          <section class="grid">
-            <article class="card col-7">
-              <p class="eyebrow">Witness</p>
-              <h2>Session Journal</h2>
-
-              <div class="control-grid">
-                <label>Intention
-                  <input id="journalIntention" placeholder="Example: calm focus, prayer, study, recovery, creative work">
-                </label>
-
-                <label>Body Signal
-                  <input id="journalBody" placeholder="Example: calm, pressure, clarity, tension, warmth">
-                </label>
-              </div>
-
-              <label>Witness Note
-                <textarea id="journalNote" placeholder="What changed? What did you notice? What frequency, sequence, layer, or mix felt best?"></textarea>
-              </label>
-
-              <div class="button-row">
-                <button id="saveJournal" class="fg-btn primary" type="button">Save Witness</button>
-                <button id="copyJournal" class="fg-btn ghost" type="button">Copy Witness</button>
-                <button id="clearJournal" class="fg-btn danger" type="button">Clear</button>
-              </div>
-            </article>
-
-            <aside class="card col-5">
-              <p class="eyebrow">Saved</p>
-              <h2>Recent Witnesses</h2>
-              <div id="journalList" class="journal-list"></div>
-
-              <div class="button-row">
-                <button id="exportJournal" class="fg-btn ghost" type="button">Export JSON</button>
-                <input id="importJournalFile" type="file" accept="application/json" hidden>
-                <button id="importJournal" class="fg-btn ghost" type="button">Import JSON</button>
-                <button id="clearJournalArchive" class="fg-btn danger" type="button">Clear Archive</button>
-              </div>
-            </aside>
-          </section>
-        </div>
-      </details>
-
-      <details id="safety" class="fg-panel section-anchor" open>
-        <summary>Safety · Ground Rules</summary>
-        <div class="fg-panel-body">
-          <section class="card safety-card">
-            <p class="eyebrow">Safety</p>
-            <h2>Ground Rules</h2>
-            <p class="fine">
-              Keep volume low. Do not use while driving, operating tools, or doing anything that needs full attention.
-              Stop if discomfort increases. Sudden severe headache, vision changes, weakness, confusion, seizure symptoms,
-              or headache after injury should be medically evaluated.
-            </p>
-
-            <div class="safety-grid">
-              <article class="safety-mini">
-                <h3>Volume Rule</h3>
-                <p>Start low. Avoid blasting tones, especially with headphones.</p>
-              </article>
-              <article class="safety-mini">
-                <h3>Attention Rule</h3>
-                <p>Use only when seated, safe, and free from tasks that need full awareness.</p>
-              </article>
-              <article class="safety-mini">
-                <h3>Stop Rule</h3>
-                <p>Pause immediately if you feel worse, dizzy, panicked, or disoriented.</p>
-              </article>
-            </div>
-          </section>
-        </div>
-      </details>
+      <details id="safety" class="fg-panel section-anchor" open><summary>Safety · Ground Rules</summary><div class="fg-panel-body"><section class="card safety-card"><p class="eyebrow">Safety</p><h2>Ground Rules</h2><p class="fine">Keep volume low. Do not use while driving, operating tools, or doing anything that needs full attention. Stop if discomfort increases. Sudden severe headache, vision changes, weakness, confusion, seizure symptoms, or headache after injury should be medically evaluated.</p><div class="safety-grid"><article class="safety-mini"><h3>Volume Rule</h3><p>Start low. Avoid blasting tones, especially with headphones.</p></article><article class="safety-mini"><h3>Attention Rule</h3><p>Use only when seated, safe, and free from tasks that need full awareness.</p></article><article class="safety-mini"><h3>Stop Rule</h3><p>Pause immediately if you feel worse, dizzy, panicked, or disoriented.</p></article></div></section></div></details>
     </div>
   </main>
 
-  <div class="mobile-dock" aria-label="Mobile transport controls">
-    <button id="dockPlay" type="button">Play</button>
-    <button id="dockStop" type="button">Stop</button>
-    <button id="dockRecord" type="button">Record</button>
-    <button id="dockLift" type="button">Lift</button>
-    <button id="dockLog" type="button">Log</button>
-  </div>
+  <div class="mobile-dock" aria-label="Mobile transport controls"><button id="dockPlay" type="button">Play</button><button id="dockStop" type="button">Stop</button><button id="dockRecord" type="button">Record</button><button id="dockLift" type="button">Lift</button><button id="dockLog" type="button">Log</button></div>
 
   <footer class="fg-footer">
-    <nav aria-label="Footer navigation">
-      <a href="./">Home</a>
-      <a href="./hub.html">Hub</a>
-      <a href="./systems/archive.html">Systems</a>
-      <a href="./systems/witness.html">Witness</a>
-      <a href="./ethics.html">Ethics</a>
-      <a href="./shop.html">Shop</a>
-    </nav>
+    <nav aria-label="Footer navigation"><a href="./">Home</a><a href="./hub.html">Hub</a><a href="./systems/archive.html">Systems</a><a href="./systems/witness.html">Witness</a><a href="./ethics.html">Ethics</a><a href="./shop.html">Shop</a></nav>
     <p>© <span id="yr">2026</span> Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
   </footer>
 
@@ -1269,14 +328,12 @@ Press Escape to stop.</pre>
     (function () {
       const toggle = document.querySelector("[data-fg-menu-toggle]");
       const nav = document.querySelector("[data-fg-site-nav]");
-
       if (toggle && nav) {
         toggle.addEventListener("click", function () {
           const open = nav.classList.toggle("open");
           toggle.setAttribute("aria-expanded", String(open));
           toggle.textContent = open ? "Close" : "Menu";
         });
-
         nav.addEventListener("click", function (event) {
           if (event.target && event.target.tagName === "A") {
             nav.classList.remove("open");
@@ -1284,7 +341,6 @@ Press Escape to stop.</pre>
             toggle.textContent = "Menu";
           }
         });
-
         document.addEventListener("keydown", function (event) {
           if (event.key === "Escape") {
             nav.classList.remove("open");
@@ -1294,18 +350,38 @@ Press Escape to stop.</pre>
         });
       }
 
-      const jumpLinks = document.querySelectorAll(".fg-mobile-jump a[href^='#']");
-      jumpLinks.forEach(function (link) {
+      document.querySelectorAll(".fg-mobile-jump a[href^='#']").forEach(function (link) {
         link.addEventListener("click", function () {
-          const id = link.getAttribute("href").slice(1);
-          const panel = document.getElementById(id);
-          if (panel && panel.tagName.toLowerCase() === "details") {
-            panel.open = true;
-          }
+          const panel = document.getElementById(link.getAttribute("href").slice(1));
+          if (panel && panel.tagName.toLowerCase() === "details") panel.open = true;
         });
       });
+
+      const tabs = document.querySelectorAll(".deck-tab");
+      const decks = document.querySelectorAll(".deck-card[data-deck]");
+      function showDeck(deckIndex) {
+        tabs.forEach(function (tab) {
+          tab.classList.toggle("active", tab.dataset.showDeck === String(deckIndex));
+        });
+        if (window.matchMedia("(max-width: 760px)").matches) {
+          decks.forEach(function (deck) {
+            deck.classList.toggle("mobile-hidden", deck.dataset.deck !== String(deckIndex));
+          });
+        } else {
+          decks.forEach(function (deck) { deck.classList.remove("mobile-hidden"); });
+        }
+      }
+      tabs.forEach(function (tab) {
+        tab.addEventListener("click", function () { showDeck(tab.dataset.showDeck); });
+      });
+      window.addEventListener("resize", function () {
+        const active = document.querySelector(".deck-tab.active");
+        showDeck(active ? active.dataset.showDeck : 0);
+      }, { passive:true });
+      showDeck(0);
     })();
   </script>
   <script src="assets/js/frequency-governance.js"></script>
+  <script src="assets/js/frequency-nature.js"></script>
 </body>
 </html>
