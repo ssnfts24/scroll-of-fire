@@ -358,7 +358,7 @@
   }
 
   function masterVolume() {
-    return clamp($("#masterVolume")?.value || 18, 0, 65) / 100;
+    return clamp($("#masterVolume")?.value || 24, 0, 85) / 100;
   }
 
   function fadeTime() {
@@ -383,7 +383,7 @@
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       masterGain = audioCtx.createGain();
-      masterGain.gain.value = Math.pow(masterVolume(), 2) * 0.34;
+      masterGain.gain.setTargetAtTime(Math.pow(masterVolume(), 2) * 0.42, audioCtx.currentTime, 0.06);
       masterGain.connect(audioCtx.destination);
     }
     return audioCtx;
