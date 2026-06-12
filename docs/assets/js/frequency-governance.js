@@ -1,6 +1,5 @@
 /* =====================================================
-   Scroll of Fire — Frequency Governance
-   Stable DJ Observatory Build
+   Scroll of Fire — Frequencies / DJ Observatory
    File: assets/js/frequency-governance.js
 ===================================================== */
 
@@ -35,7 +34,9 @@
     octave: [1, 2],
     fifth: [1, 1.5],
     triad: [1, 1.25, 1.5],
+    minor: [1, 1.2, 1.5],
     deep: [0.5, 1, 2],
+    crown: [1, 2, 3],
     field: [0.5, 1, 1.5, 2]
   };
 
@@ -49,26 +50,37 @@
   };
 
   const SEQUENCES = {
+    headache: [174, 285, 396, 432],
     calm: [432, 396, 417, 432],
     focus: [144, 369, 432, 528],
     clarity: [432, 528, 741, 963],
     restore: [285, 396, 432, 528, 639],
     dream: [432, 285, 174, 111],
     ascent: [144, 288, 432, 528, 741, 963],
+    remnant: [144, 369, 432, 528, 741, 963, 1111],
     t7: [111, 144, 369, 432, 528, 741, 963],
     lift: [432, 432, 528, 369, 432, 963, 432]
   };
 
   const STORE_JOURNAL = "sof_frequency_governance_journal_v1";
+  const STORE_MIXER = "sof_frequency_governance_mixer_v2";
+  const STORE_TRACK = "sof_frequency_governance_track_v1";
 
   let audioCtx = null;
   let masterGain = null;
   let deckNodes = [];
   let isPlaying = false;
   let selectedDeck = 0;
+
   let sequenceTimer = null;
   let liftTimer = null;
   let liftStep = 0;
+
+  let isRecording = false;
+  let recordStart = 0;
+  let trackEvents = [];
+  let trackTimer = null;
+  let trackPlaybackTimer = null;
 
   let visualSeed = Math.random() * 9999;
   let phase = 0;
@@ -85,7 +97,10 @@
   }
 
   function nowStamp() {
-    return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    return new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
   }
 
   function log(message) {
@@ -96,7 +111,11 @@
   }
 
   function safeText(text) {
-    return String(text || "").replace(/[<>&]/g, c => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]));
+    return String(text || "").replace(/[<>&]/g, (c) => ({
+      "<": "&lt;",
+      ">": "&gt;",
+      "&": "&amp;"
+    }[c]));
   }
 
   function getCards() {
@@ -129,7 +148,7 @@
   }
 
   function hasSolo() {
-    return getDecks().some(d => d.solo);
+    return getDecks().some((d) => d.solo);
   }
 
   function deckAudible(deck) {
@@ -143,11 +162,11 @@
   }
 
   function masterVolume() {
-    return clamp($("#masterVolume")?.value || 22, 0, 100) / 100;
+    return clamp($("#masterVolume")?.value || 18, 0, 100) / 100;
   }
 
   function fadeTime() {
-    return clamp($("#fadeTime")?.value || 1.2, 0.15, 5);
+    return clamp($("#fadeTime")?.value || 1.25, 0.15, 6);
   }
 
   function gainCurve(percent) {
@@ -172,11 +191,17 @@
     return audioCtx;
   }
 
+  function resumeAudio() {
+    const ac = getAudio();
+    if (ac.state === "suspended") ac.resume();
+    return ac;
+  }
+
   function stopNodeGroup(group, fade = fadeTime()) {
     if (!audioCtx || !group) return;
     const now = audioCtx.currentTime;
 
-    group.forEach(node => {
+    group.forEach((node) => {
       try {
         node.gain.gain.cancelScheduledValues(now);
         node.gain.gain.setValueAtTime(Math.max(node.gain.gain.value, 0.0001), now);
@@ -187,7 +212,7 @@
   }
 
   function createOsc(freq, wave, panValue, gainValue, fade) {
-    const ac = getAudio();
+    const ac = resumeAudio();
     const now = ac.currentTime;
     const osc = ac.createOscillator();
     const gain = ac.createGain();
@@ -213,9 +238,6 @@
   function playDeck(index) {
     const deck = getDeck(index);
     if (!deck) return;
-
-    const ac = getAudio();
-    if (ac.state === "suspended") ac.resume();
 
     const oldGroup = deckNodes[index] || [];
     const fade = fadeTime();
@@ -247,12 +269,14 @@
   }
 
   function playMix() {
-    getDecks().forEach(deck => {
+    getDecks().forEach((deck) => {
       if (deck.index === 0 || deck.volume > 0) playDeck(deck.index);
     });
+
     isPlaying = true;
     updateUI();
     log("Mix started.");
+    recordEvent("playMix", mixerState());
   }
 
   function refreshDecks() {
@@ -260,16 +284,24 @@
       updateUI();
       return;
     }
-    getDecks().forEach(deck => playDeck(deck.index));
+
+    getDecks().forEach((deck) => playDeck(deck.index));
+    recordEvent("mixerChange", mixerState());
   }
 
   function stopAll(fade = fadeTime()) {
-    deckNodes.forEach(group => stopNodeGroup(group, fade));
+    deckNodes.forEach((group) => stopNodeGroup(group, fade));
     deckNodes = [];
     isPlaying = false;
     stopSequence(false);
     stopLiftLoop(false);
     updateUI();
+
+    if (window.ScrollOfFireNature?.clearNature) {
+      window.ScrollOfFireNature.clearNature();
+    }
+
+    recordEvent("stop", {});
   }
 
   function cueDeck(index) {
@@ -282,6 +314,7 @@
 
     playDeck(index);
     log(`Deck ${String.fromCharCode(65 + index)} cued.`);
+    recordEvent("cueDeck", { index });
   }
 
   function setDeckFreq(index, freq, volume = 60) {
@@ -292,6 +325,7 @@
     $(".deck-vol", card).value = clamp(volume, 0, 100);
 
     playDeck(index);
+    recordEvent("setDeckFreq", { index, freq, volume });
   }
 
   function applyDeck(index, data) {
@@ -306,31 +340,125 @@
     $(".deck-beat", card).value = data.beat || "none";
     card.classList.toggle("is-muted", !!data.muted);
     card.classList.toggle("is-solo", !!data.solo);
+
     playDeck(index);
+  }
+
+  function mixerState() {
+    return {
+      decks: getDecks(),
+      selectedDeck,
+      masterVolume: $("#masterVolume")?.value || 18,
+      natureMasterVolume: $("#natureMasterVolume")?.value || 20,
+      visualPower: $("#visualPower")?.value || 120,
+      fadeTime: $("#fadeTime")?.value || 1.25,
+      visualMode: $("#visualMode")?.value || "torus",
+      crossfader: $("#crossfader")?.value || 0,
+      nature: $$(".nature-level").reduce((acc, slider) => {
+        acc[slider.dataset.nature] = slider.value;
+        return acc;
+      }, {})
+    };
+  }
+
+  function applyMixerState(state) {
+    if (!state) return;
+
+    if ($("#masterVolume")) $("#masterVolume").value = state.masterVolume ?? 18;
+    if ($("#natureMasterVolume")) $("#natureMasterVolume").value = state.natureMasterVolume ?? 20;
+    if ($("#visualPower")) $("#visualPower").value = state.visualPower ?? 120;
+    if ($("#fadeTime")) $("#fadeTime").value = state.fadeTime ?? 1.25;
+    if ($("#visualMode")) $("#visualMode").value = state.visualMode ?? "torus";
+    if ($("#crossfader")) $("#crossfader").value = state.crossfader ?? 0;
+
+    if (Array.isArray(state.decks)) {
+      state.decks.forEach((deck, i) => applyDeck(i, deck));
+    }
+
+    if (state.nature) {
+      $$(".nature-level").forEach((slider) => {
+        const value = state.nature[slider.dataset.nature] ?? 0;
+        slider.value = value;
+        if (window.ScrollOfFireNature?.setLevel) {
+          window.ScrollOfFireNature.setLevel(slider.dataset.nature, value);
+        }
+      });
+    }
+
+    selectedDeck = Number(state.selectedDeck || 0);
+    updateDeckTargets();
+    updateUI();
+  }
+
+  function saveMixerPreset() {
+    localStorage.setItem(STORE_MIXER, JSON.stringify(mixerState()));
+    log("Mixer preset saved.");
+  }
+
+  function loadMixerPreset() {
+    try {
+      const state = JSON.parse(localStorage.getItem(STORE_MIXER) || "null");
+      if (!state) {
+        log("No mixer preset found.");
+        return;
+      }
+      applyMixerState(state);
+      log("Mixer preset loaded.");
+    } catch {
+      log("Mixer preset load failed.");
+    }
+  }
+
+  function resetMixer() {
+    stopAll(0.2);
+
+    applyDeck(0, { freq: 432, volume: 80, pan: -0.15, wave: "sine", harmonic: "single", beat: "none" });
+    applyDeck(1, { freq: 528, volume: 0, pan: 0.15, wave: "sine", harmonic: "single", beat: "none" });
+    applyDeck(2, { freq: 369, volume: 0, pan: -0.35, wave: "sine", harmonic: "single", beat: "none" });
+    applyDeck(3, { freq: 963, volume: 0, pan: 0.35, wave: "sine", harmonic: "single", beat: "none" });
+
+    if ($("#crossfader")) $("#crossfader").value = 0;
+    if ($("#masterVolume")) $("#masterVolume").value = 18;
+    if ($("#visualPower")) $("#visualPower").value = 120;
+    if ($("#fadeTime")) $("#fadeTime").value = 1.25;
+    if ($("#visualMode")) $("#visualMode").value = "torus";
+
+    if (window.ScrollOfFireNature?.clearNature) {
+      window.ScrollOfFireNature.clearNature();
+    }
+
+    updateUI();
+    log("Mixer reset.");
   }
 
   function updateUI() {
     const lead = leadDeck();
     const activeDecks = getDecks().filter(deckAudible).length;
     const visualName = $("#visualMode")?.selectedOptions?.[0]?.textContent || "Torus Field";
-    const preset = PRESETS.find(p => p[0] === Math.round(lead.freq));
+    const preset = PRESETS.find((p) => p[0] === Math.round(lead.freq));
 
     if (masterGain && audioCtx) {
-      masterGain.gain.setTargetAtTime(Math.pow(masterVolume(), 2) * 0.42, audioCtx.currentTime, 0.06);
+      masterGain.gain.setTargetAtTime(
+        Math.pow(masterVolume(), 2) * 0.42,
+        audioCtx.currentTime,
+        0.06
+      );
     }
 
-    $("#masterValue") && ($("#masterValue").textContent = Math.round(lead.freq));
-    $("#statCarrier") && ($("#statCarrier").textContent = `${Math.round(lead.freq)} Hz`);
-    $("#statDecks") && ($("#statDecks").textContent = String(activeDecks));
-    $("#statVisual") && ($("#statVisual").textContent = visualName.split(" ")[0]);
-    $("#statState") && ($("#statState").textContent = isPlaying ? "Active" : "Stopped");
-    $("#commandTitle") && ($("#commandTitle").textContent = `${Math.round(lead.freq)} Hz · ${preset ? preset[1] : "Custom Mix"}`);
+    if ($("#masterValue")) $("#masterValue").textContent = Math.round(lead.freq);
+    if ($("#statCarrier")) $("#statCarrier").textContent = `${Math.round(lead.freq)} Hz`;
+    if ($("#statDecks")) $("#statDecks").textContent = String(activeDecks);
+    if ($("#statTrack")) $("#statTrack").textContent = isRecording ? "Recording" : trackEvents.length ? `${trackEvents.length} events` : "Idle";
+    if ($("#statState")) $("#statState").textContent = isPlaying ? "Active" : "Stopped";
+    if ($("#commandTitle")) $("#commandTitle").textContent = `${Math.round(lead.freq)} Hz · ${preset ? preset[1] : "Custom Mix"}`;
 
-    $("#stateText") && ($("#stateText").textContent = isPlaying ? "active" : "stopped");
-    $("#stateText")?.classList.toggle("active", isPlaying);
+    if ($("#stateText")) {
+      $("#stateText").textContent = isPlaying ? "active" : "stopped";
+      $("#stateText").classList.toggle("active", isPlaying);
+    }
 
-    $("#meter") && ($("#meter").style.width = `${Math.round(masterVolume() * 100)}%`);
-    $("#settingText") && ($("#settingText").textContent = `${Math.round(lead.freq)} Hz · ${Math.round(masterVolume() * 100)}% master · ${visualName}`);
+    if ($("#meter")) $("#meter").style.width = `${Math.round(masterVolume() * 100)}%`;
+    if ($("#settingText")) $("#settingText").textContent = `${Math.round(lead.freq)} Hz · ${Math.round(masterVolume() * 100)}% master · ${visualName}`;
 
     getCards().forEach((card, i) => {
       const deck = getDeck(i);
@@ -338,10 +466,12 @@
       card.classList.toggle("is-muted", deck.muted);
       card.classList.toggle("is-solo", deck.solo);
     });
+
+    renderTrackTimeline();
   }
 
   function updateDeckTargets() {
-    $$(".deck-target").forEach(btn => {
+    $$(".deck-target").forEach((btn) => {
       btn.classList.toggle("active", Number(btn.dataset.target) === selectedDeck);
     });
   }
@@ -357,7 +487,7 @@
       </button>
     `).join("");
 
-    $$(".lib-btn").forEach(btn => {
+    $$(".lib-btn").forEach((btn) => {
       on(btn, "click", () => {
         const freq = Number(btn.dataset.freq);
         setDeckFreq(selectedDeck, freq, 55);
@@ -369,8 +499,8 @@
   function stopSequence(update = true) {
     clearInterval(sequenceTimer);
     sequenceTimer = null;
-    $("#seqStatus") && ($("#seqStatus").value = "stopped");
-    $$(".seqBtn").forEach(btn => btn.classList.remove("is-active"));
+    if ($("#seqStatus")) $("#seqStatus").value = "stopped";
+    $$(".seqBtn").forEach((btn) => btn.classList.remove("is-active"));
     if (update) updateUI();
   }
 
@@ -384,18 +514,19 @@
     function step() {
       const freq = seq[i % seq.length];
       setDeckFreq(selectedDeck, freq, 60);
-      $("#seqStatus") && ($("#seqStatus").value = `${name} · ${freq} Hz · ${(i % seq.length) + 1}/${seq.length}`);
-      $$(".seqBtn").forEach(btn => btn.classList.toggle("is-active", btn.dataset.seq === name));
+      if ($("#seqStatus")) $("#seqStatus").value = `${name} · ${freq} Hz · ${(i % seq.length) + 1}/${seq.length}`;
+      $$(".seqBtn").forEach((btn) => btn.classList.toggle("is-active", btn.dataset.seq === name));
       i++;
     }
 
     step();
     sequenceTimer = setInterval(step, seconds * 1000);
     log(`Sequence started: ${name}.`);
+    recordEvent("sequence", { name });
   }
 
   function startT7() {
-    $("#visualMode") && ($("#visualMode").value = "torus");
+    if ($("#visualMode")) $("#visualMode").value = "torus";
 
     applyDeck(0, { freq: 432, volume: 64, pan: -0.12, wave: "sine", harmonic: "single", beat: "schumann" });
     applyDeck(1, { freq: 528, volume: 32, pan: 0.16, wave: "sine", harmonic: "fifth", beat: "none" });
@@ -404,6 +535,7 @@
 
     playMix();
     log("T7 Field started.");
+    recordEvent("t7", mixerState());
   }
 
   function setLiftDot(step) {
@@ -416,7 +548,7 @@
     stopLiftLoop(false);
     stopSequence(false);
 
-    $("#visualMode") && ($("#visualMode").value = "lift");
+    if ($("#visualMode")) $("#visualMode").value = "lift";
 
     const seq = SEQUENCES.lift;
     liftStep = 0;
@@ -435,6 +567,7 @@
     step();
     liftTimer = setInterval(step, 30000);
     log("Lift Loop started.");
+    recordEvent("lift", mixerState());
   }
 
   function stopLiftLoop(update = true) {
@@ -444,9 +577,151 @@
     if (update) log("Lift Loop stopped.");
   }
 
+  function startRecording() {
+    isRecording = true;
+    recordStart = performance.now();
+    trackEvents = [];
+    if ($("#trackClock")) $("#trackClock").textContent = "00:00";
+    log("Track recording started.");
+
+    clearInterval(trackTimer);
+    trackTimer = setInterval(updateTrackClock, 500);
+
+    updateUI();
+  }
+
+  function stopRecording() {
+    isRecording = false;
+    clearInterval(trackTimer);
+    localStorage.setItem(STORE_TRACK, JSON.stringify(trackEvents));
+    log("Track recording stopped.");
+    updateUI();
+  }
+
+  function recordEvent(type, payload) {
+    if (!isRecording) return;
+
+    trackEvents.push({
+      t: Math.round(performance.now() - recordStart),
+      type,
+      payload
+    });
+
+    if ($("#trackEvents")) $("#trackEvents").textContent = String(trackEvents.length);
+    renderTrackTimeline();
+  }
+
+  function updateTrackClock() {
+    if (!isRecording) return;
+
+    const elapsed = Math.floor((performance.now() - recordStart) / 1000);
+    const mm = String(Math.floor(elapsed / 60)).padStart(2, "0");
+    const ss = String(elapsed % 60).padStart(2, "0");
+    if ($("#trackClock")) $("#trackClock").textContent = `${mm}:${ss}`;
+  }
+
+  function renderTrackTimeline() {
+    const timeline = $("#trackTimeline");
+    if (!timeline) return;
+
+    if (!trackEvents.length) {
+      timeline.innerHTML = `<span class="fine">No recorded events yet.</span>`;
+      if ($("#trackEvents")) $("#trackEvents").textContent = "0";
+      return;
+    }
+
+    if ($("#trackEvents")) $("#trackEvents").textContent = String(trackEvents.length);
+
+    timeline.innerHTML = trackEvents.slice(-40).map((event) => {
+      const sec = Math.round(event.t / 1000);
+      return `<span class="fine">+${sec}s · ${safeText(event.type)}</span>`;
+    }).join("");
+  }
+
+  function playRecordedTrack() {
+    if (!trackEvents.length) {
+      loadTrack();
+    }
+
+    if (!trackEvents.length) {
+      log("No track events to play.");
+      return;
+    }
+
+    stopTrackPlayback();
+    log("Track playback started.");
+
+    trackEvents.forEach((event) => {
+      const timer = setTimeout(() => applyTrackEvent(event), event.t);
+      trackPlaybackTimer = timer;
+    });
+  }
+
+  function applyTrackEvent(event) {
+    if (!event) return;
+
+    if (event.type === "mixerChange" || event.type === "playMix" || event.type === "t7" || event.type === "lift") {
+      applyMixerState(event.payload);
+      if (event.type === "playMix") playMix();
+    }
+
+    if (event.type === "setDeckFreq") {
+      setDeckFreq(event.payload.index, event.payload.freq, event.payload.volume);
+    }
+
+    if (event.type === "cueDeck") {
+      cueDeck(event.payload.index);
+    }
+
+    if (event.type === "stop") {
+      stopAll(0.25);
+    }
+  }
+
+  function stopTrackPlayback() {
+    clearTimeout(trackPlaybackTimer);
+    trackPlaybackTimer = null;
+  }
+
+  function saveTrack() {
+    localStorage.setItem(STORE_TRACK, JSON.stringify(trackEvents));
+    log("Track saved.");
+  }
+
+  function loadTrack() {
+    try {
+      trackEvents = JSON.parse(localStorage.getItem(STORE_TRACK) || "[]");
+      renderTrackTimeline();
+      log("Track loaded.");
+    } catch {
+      log("Track load failed.");
+    }
+  }
+
+  function exportTrack() {
+    const blob = new Blob([JSON.stringify(trackEvents, null, 2)], {
+      type: "application/json"
+    });
+
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "scroll-of-fire-frequency-track.json";
+    a.click();
+
+    setTimeout(() => URL.revokeObjectURL(a.href), 600);
+  }
+
+  function clearTrack() {
+    trackEvents = [];
+    localStorage.removeItem(STORE_TRACK);
+    renderTrackTimeline();
+    log("Track cleared.");
+  }
+
   function buildJournalText() {
     const lead = leadDeck();
-    return `Frequency Governance Witness
+
+    return `Frequency Witness
 Date: ${new Date().toLocaleString()}
 Lead Carrier: ${Math.round(lead.freq)} Hz
 Visual Mode: ${$("#visualMode")?.selectedOptions?.[0]?.textContent || "Torus Field"}
@@ -490,7 +765,7 @@ ${$("#journalNote")?.value || ""}`;
       `).join("")
       : `<p class="fine">No saved witnesses yet.</p>`;
 
-    $$(".copy-entry").forEach(btn => {
+    $$(".copy-entry").forEach((btn) => {
       on(btn, "click", async () => {
         const item = items[Number(btn.dataset.i)];
         await navigator.clipboard.writeText(item.text);
@@ -502,18 +777,26 @@ ${$("#journalNote")?.value || ""}`;
 
   function saveJournal() {
     const items = getJournal();
-    items.unshift({ when: new Date().toLocaleString(), text: buildJournalText() });
+    items.unshift({
+      when: new Date().toLocaleString(),
+      text: buildJournalText()
+    });
+
     setJournal(items.slice(0, 80));
     renderJournal();
     log("Witness saved.");
   }
 
   function exportJournal() {
-    const blob = new Blob([JSON.stringify(getJournal(), null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify(getJournal(), null, 2)], {
+      type: "application/json"
+    });
+
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "frequency-governance-journal.json";
+    a.download = "frequency-witness-journal.json";
     a.click();
+
     setTimeout(() => URL.revokeObjectURL(a.href), 600);
   }
 
@@ -521,6 +804,7 @@ ${$("#journalNote")?.value || ""}`;
     try {
       const data = JSON.parse(await file.text());
       if (!Array.isArray(data)) throw new Error("Invalid JSON");
+
       setJournal(data.concat(getJournal()).slice(0, 120));
       renderJournal();
       log("Journal imported.");
@@ -531,8 +815,10 @@ ${$("#journalNote")?.value || ""}`;
 
   function fitFieldCanvas() {
     if (!fieldCanvas || !fieldCtx) return;
+
     const rect = fieldCanvas.getBoundingClientRect();
     const dpr = Math.min(devicePixelRatio || 1, 2);
+
     fieldCanvas.width = Math.max(320, Math.floor(rect.width * dpr));
     fieldCanvas.height = Math.max(260, Math.floor(rect.height * dpr));
     fieldCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -540,9 +826,11 @@ ${$("#journalNote")?.value || ""}`;
 
   function fitStars() {
     if (!starCanvas || !starCtx) return;
+
     const dpr = Math.min(devicePixelRatio || 1, 2);
     starCanvas.width = Math.floor(innerWidth * dpr);
     starCanvas.height = Math.floor(innerHeight * dpr);
+
     stars = Array.from({ length: 170 }, () => ({
       x: Math.random() * starCanvas.width,
       y: Math.random() * starCanvas.height,
@@ -556,7 +844,7 @@ ${$("#journalNote")?.value || ""}`;
 
     starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
 
-    stars.forEach(star => {
+    stars.forEach((star) => {
       star.a += 0.012;
       starCtx.fillStyle = `rgba(244,241,232,${0.17 + Math.sin(star.a) * 0.14})`;
       starCtx.beginPath();
@@ -581,11 +869,12 @@ ${$("#journalNote")?.value || ""}`;
     const cx = w / 2;
     const cy = h / 2;
     const lead = leadDeck();
-    const visual = clamp($("#visualPower")?.value || 120, 20, 240) / 100;
+    const visual = clamp($("#visualPower")?.value || 120, 20, 260) / 100;
     const mode = $("#visualMode")?.value || "torus";
     const push = isPlaying ? Math.max(0.2, masterVolume() * visual) : 0.18 * visual;
 
     visualFreq += (lead.freq - visualFreq) * 0.035;
+
     const fr = (visualFreq % 1000) / 1000;
     const baseR = Math.min(w, h) * (0.18 + 0.16 * visual + 0.05 * Math.sin(phase * 0.02 + fr * Math.PI * 2));
 
@@ -597,6 +886,7 @@ ${$("#journalNote")?.value || ""}`;
     glow.addColorStop(0.42, `rgba(196,163,255,${0.06 + push * 0.08})`);
     glow.addColorStop(0.64, `rgba(243,201,122,${0.07 + push * 0.10})`);
     glow.addColorStop(1, "rgba(0,0,0,0)");
+
     fieldCtx.fillStyle = glow;
     fieldCtx.beginPath();
     fieldCtx.arc(cx, cy, Math.min(w, h) * 0.68, 0, Math.PI * 2);
@@ -607,7 +897,9 @@ ${$("#journalNote")?.value || ""}`;
     else if (mode === "chladni") drawChladni(w, h, fr, push, visual);
     else if (mode === "orbit") drawOrbit(w, h, cx, cy, baseR, fr, push);
     else if (mode === "lift") drawLift(w, h, cx, cy, push);
-    else if (mode === "scope") drawScope(w, h, cx, cy, fr, push);
+    else if (mode === "waveform" || mode === "scope") drawScope(w, h, cx, cy, fr, push);
+    else if (mode === "dj") drawDjSpectrum(w, h, cx, cy, fr, push);
+    else if (mode === "constellation") drawConstellation(w, h, cx, cy, fr, push);
     else drawTorus(w, h, cx, cy, baseR, fr, push, visual);
 
     fieldCtx.fillStyle = "rgba(244,241,232,0.92)";
@@ -652,10 +944,12 @@ ${$("#journalNote")?.value || ""}`;
 
     for (let i = 0; i < lines; i++) {
       fieldCtx.beginPath();
+
       for (let x = 0; x <= w; x += 8) {
         const y = cy + Math.sin(x * 0.014 + i * 0.75 + phase * 0.014 + fr * 8) * h * 0.16;
         x ? fieldCtx.lineTo(x, y + (i - lines / 2) * 12) : fieldCtx.moveTo(x, y);
       }
+
       fieldCtx.strokeStyle = color(i / lines, 0.26 + push * 0.22);
       fieldCtx.lineWidth = 1.5;
       fieldCtx.stroke();
@@ -667,6 +961,7 @@ ${$("#journalNote")?.value || ""}`;
     const k = 3 + Math.round(fr * 8);
 
     fieldCtx.beginPath();
+
     for (let i = 0; i <= n; i++) {
       const t = (i / n) * Math.PI * 10;
       const r = baseR * 1.15 * Math.cos(k * t + phase * 0.01);
@@ -724,6 +1019,7 @@ ${$("#journalNote")?.value || ""}`;
     for (let i = 0; i < 9; i++) {
       const y = h - ((phase * 2 + i * h / 9) % h);
       const radius = columnW * (0.45 + 0.28 * Math.sin(phase * 0.03 + i));
+
       fieldCtx.strokeStyle = `rgba(159,247,200,${0.18 + push * 0.22})`;
       fieldCtx.lineWidth = 2;
       fieldCtx.beginPath();
@@ -735,6 +1031,7 @@ ${$("#journalNote")?.value || ""}`;
     grad.addColorStop(0, "rgba(159,247,200,0)");
     grad.addColorStop(0.45, `rgba(159,247,200,${0.10 + push * 0.12})`);
     grad.addColorStop(1, "rgba(122,243,255,0)");
+
     fieldCtx.fillStyle = grad;
     fieldCtx.fillRect(cx - columnW / 2, 0, columnW, h);
   }
@@ -752,6 +1049,53 @@ ${$("#journalNote")?.value || ""}`;
     fieldCtx.stroke();
   }
 
+  function drawDjSpectrum(w, h, cx, cy, fr, push) {
+    const bars = 48;
+    const gap = 3;
+    const barW = w / bars - gap;
+
+    for (let i = 0; i < bars; i++) {
+      const t = i / bars;
+      const height = h * (0.08 + Math.abs(Math.sin(t * Math.PI * 6 + phase * 0.04 + fr * 6)) * (0.2 + push * 0.25));
+      const x = i * (barW + gap);
+      const y = h - height - 18;
+
+      fieldCtx.fillStyle = color(t, 0.35 + push * 0.35);
+      fieldCtx.fillRect(x, y, barW, height);
+    }
+  }
+
+  function drawConstellation(w, h, cx, cy, fr, push) {
+    const count = 72;
+    const pts = [];
+
+    for (let i = 0; i < count; i++) {
+      const a = i * 2.399 + phase * 0.004;
+      const r = Math.sqrt(i / count) * Math.min(w, h) * 0.42;
+      const x = cx + Math.cos(a + fr) * r;
+      const y = cy + Math.sin(a * 1.2) * r * 0.78;
+      pts.push({ x, y });
+    }
+
+    fieldCtx.strokeStyle = `rgba(122,243,255,${0.12 + push * 0.16})`;
+
+    for (let i = 0; i < pts.length - 1; i++) {
+      if (i % 3 === 0) {
+        fieldCtx.beginPath();
+        fieldCtx.moveTo(pts[i].x, pts[i].y);
+        fieldCtx.lineTo(pts[i + 1].x, pts[i + 1].y);
+        fieldCtx.stroke();
+      }
+    }
+
+    pts.forEach((p, i) => {
+      fieldCtx.fillStyle = color((i % 100) / 100, 0.46 + push * 0.25);
+      fieldCtx.beginPath();
+      fieldCtx.arc(p.x, p.y, 1.5 + push * 1.7, 0, Math.PI * 2);
+      fieldCtx.fill();
+    });
+  }
+
   function bind() {
     on($("#playBtn"), "click", playMix);
     on($("#stopBtn"), "click", () => {
@@ -761,17 +1105,23 @@ ${$("#journalNote")?.value || ""}`;
 
     on($("#dockPlay"), "click", playMix);
     on($("#dockStop"), "click", () => stopAll(0.25));
-    on($("#dockT7"), "click", startT7);
+    on($("#dockRecord"), "click", () => {
+      isRecording ? stopRecording() : startRecording();
+    });
     on($("#dockLift"), "click", startLiftLoop);
-    on($("#dockLog"), "click", () => $("#journalIntention")?.scrollIntoView({ behavior: "smooth", block: "center" }));
+    on($("#dockLog"), "click", () => {
+      $("#journalIntention")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      const journal = $("#journal");
+      if (journal && journal.tagName.toLowerCase() === "details") journal.open = true;
+    });
 
-    ["masterVolume", "visualPower", "fadeTime", "visualMode", "crossfader"].forEach(id => {
+    ["masterVolume", "visualPower", "fadeTime", "visualMode", "crossfader"].forEach((id) => {
       on($("#" + id), "input", refreshDecks);
       on($("#" + id), "change", updateUI);
     });
 
     getCards().forEach((card, index) => {
-      $$(".deck-freq, .deck-vol, .deck-pan, .deck-wave, .deck-harmonic, .deck-beat", card).forEach(control => {
+      $$(".deck-freq, .deck-vol, .deck-pan, .deck-wave, .deck-harmonic, .deck-beat", card).forEach((control) => {
         on(control, "input", () => playDeck(index));
         on(control, "change", () => playDeck(index));
       });
@@ -787,16 +1137,36 @@ ${$("#journalNote")?.value || ""}`;
         card.classList.toggle("is-solo");
         refreshDecks();
       });
+
+      on($(".deck-add-loop", card), "click", () => {
+        const deck = getDeck(index);
+        if (!deck) return;
+        const el = $("#loopTimeline");
+        if (el) {
+          const chip = document.createElement("span");
+          chip.className = "fine";
+          chip.textContent = `Deck ${String.fromCharCode(65 + index)} · ${Math.round(deck.freq)} Hz`;
+          el.appendChild(chip);
+        }
+        log(`Loop marker added from Deck ${String.fromCharCode(65 + index)}.`);
+      });
     });
 
-    $$(".deck-target").forEach(btn => {
+    $$(".deck-target").forEach((btn) => {
       on(btn, "click", () => {
         selectedDeck = Number(btn.dataset.target);
         updateDeckTargets();
       });
     });
 
-    $$(".seqBtn").forEach(btn => on(btn, "click", () => runSequence(btn.dataset.seq)));
+    $$(".seqBtn").forEach((btn) => on(btn, "click", () => runSequence(btn.dataset.seq)));
+
+    on($("#playLoop"), "click", () => runSequence("calm"));
+    on($("#clearLoop"), "click", () => {
+      if ($("#loopTimeline")) $("#loopTimeline").innerHTML = "";
+      log("Custom loop cleared.");
+    });
+
     on($("#stopSeq"), "click", () => {
       stopSequence();
       log("Sequence stopped.");
@@ -811,6 +1181,19 @@ ${$("#journalNote")?.value || ""}`;
     on($("#startLiftLoop"), "click", startLiftLoop);
     on($("#stopLiftLoop"), "click", () => stopLiftLoop());
 
+    on($("#recordTrack"), "click", startRecording);
+    on($("#stopRecord"), "click", stopRecording);
+    on($("#playTrack"), "click", playRecordedTrack);
+    on($("#stopTrack"), "click", stopTrackPlayback);
+    on($("#saveTrack"), "click", saveTrack);
+    on($("#loadTrack"), "click", loadTrack);
+    on($("#exportTrack"), "click", exportTrack);
+    on($("#clearTrack"), "click", clearTrack);
+
+    on($("#savePreset"), "click", saveMixerPreset);
+    on($("#loadPreset"), "click", loadMixerPreset);
+    on($("#resetMixer"), "click", resetMixer);
+
     on($("#saveJournal"), "click", saveJournal);
 
     on($("#copyJournal"), "click", async () => {
@@ -819,16 +1202,16 @@ ${$("#journalNote")?.value || ""}`;
     });
 
     on($("#clearJournal"), "click", () => {
-      $("#journalIntention").value = "";
-      $("#journalBody").value = "";
-      $("#journalNote").value = "";
+      if ($("#journalIntention")) $("#journalIntention").value = "";
+      if ($("#journalBody")) $("#journalBody").value = "";
+      if ($("#journalNote")) $("#journalNote").value = "";
       log("Journal fields cleared.");
     });
 
     on($("#exportJournal"), "click", exportJournal);
     on($("#importJournal"), "click", () => $("#importJournalFile")?.click());
 
-    on($("#importJournalFile"), "change", e => {
+    on($("#importJournalFile"), "change", (e) => {
       const file = e.target.files?.[0];
       if (file) importJournal(file);
       e.target.value = "";
@@ -849,7 +1232,7 @@ ${$("#journalNote")?.value || ""}`;
       if (!fieldCanvas) return;
       const a = document.createElement("a");
       a.href = fieldCanvas.toDataURL("image/png");
-      a.download = "frequency-governance-field.png";
+      a.download = "frequency-field.png";
       a.click();
     });
 
@@ -858,7 +1241,7 @@ ${$("#journalNote")?.value || ""}`;
       log("New visual seed.");
     });
 
-    document.addEventListener("keydown", e => {
+    document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         stopAll(0.25);
         log("Emergency stop.");
@@ -876,17 +1259,20 @@ ${$("#journalNote")?.value || ""}`;
   }
 
   function boot() {
-    $("#yr") && ($("#yr").textContent = new Date().getFullYear());
+    if ($("#yr")) $("#yr").textContent = new Date().getFullYear();
+
     fitFieldCanvas();
     fitStars();
     renderLibrary();
     renderJournal();
+    loadTrack();
     bind();
     updateDeckTargets();
     updateUI();
     drawStars();
     drawVisualizer();
-    log("Stable DJ Observatory loaded.");
+
+    log("DJ Observatory loaded.");
   }
 
   boot();
