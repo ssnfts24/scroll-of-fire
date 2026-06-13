@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <title>Remnant 13 Moons — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="A living 13×28 Remnant calendar with moon phase, daily witness logs, field layers, pattern tracking, Codex seals, and Scroll of Fire coherence tools.">
+  <meta name="description" content="A living 13×28 Remnant calendar with moon phase, astrology correspondences, daily witness logs, field layers, pattern tracking, Codex seals, and Scroll of Fire coherence tools.">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="creator" content="Aaron Paul Laird">
   <meta name="publisher" content="Scroll of Fire">
@@ -23,19 +23,21 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Remnant 13 Moons — Living Calendar">
-  <meta property="og:description" content="Track the Remnant 13×28 calendar, visible moon phase, daily witness, field layers, Codex day seals, and symbolic pattern logs.">
+  <meta property="og:description" content="Track the Remnant 13×28 calendar, visible moon phase, astrology correspondences, daily witness, field layers, Codex day seals, and symbolic pattern logs.">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
   <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Remnant 13 Moons — Scroll of Fire">
-  <meta name="twitter:description" content="A living 13×28 Remnant calendar with moon phase, daily witness logs, field layers, pattern tracking, and Codex seals.">
+  <meta name="twitter:description" content="A living 13×28 Remnant calendar with moon phase, astrology correspondences, daily witness logs, field layers, pattern tracking, and Codex seals.">
   <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
 
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/favicon.png">
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/moons.css">
+  <link rel="stylesheet" href="assets/css/themes.moons.css">
+  <link rel="stylesheet" href="assets/css/astrology.css">
 
   <script type="application/ld+json">
   {
@@ -47,7 +49,7 @@
     "operatingSystem":"Any",
     "creator":{"@type":"Person","name":"Aaron Paul Laird"},
     "publisher":{"@type":"Organization","name":"Scroll of Fire","url":"https://ssnfts24.github.io/scroll-of-fire/"},
-    "description":"A symbolic 13×28 calendar and witness logging interface for moon phase, daily pattern tracking, field layers, and Codex seals."
+    "description":"A symbolic 13×28 calendar and witness logging interface for moon phase, astrology correspondence, daily pattern tracking, field layers, and Codex seals."
   }
   </script>
 
@@ -93,7 +95,7 @@
     .week span.active{background:var(--gold,#f3c97a);box-shadow:0 0 14px rgba(243,201,122,.32)}
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1rem;margin-top:1rem}
     .col-12{grid-column:span 12}.col-8{grid-column:span 8}.col-7{grid-column:span 7}.col-6{grid-column:span 6}.col-5{grid-column:span 5}.col-4{grid-column:span 4}
-    .card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.12);border-radius:26px;background:radial-gradient(circle at 12% 0%,rgba(243,201,122,.08),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));box-shadow:0 18px 70px rgba(0,0,0,.26)}
+    .card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.12);border-radius:26px;background:radial-gradient(circle at 12% 0%,rgba(243,201,122,.08),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));box-shadow:0 18px 70px rgba(0,0,0,.26);padding:1rem}
     .card::before{content:"";position:absolute;inset:-1px;pointer-events:none;background:radial-gradient(circle at 100% 100%,rgba(122,243,255,.09),transparent 34%);opacity:.72}
     .card>*{position:relative;z-index:1}
     .formrow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;margin-top:.8rem}
@@ -114,13 +116,19 @@
     th,td{padding:.8rem;border-bottom:1px solid rgba(255,255,255,.08);text-align:left}
     th{color:var(--gold,#f3c97a);background:rgba(255,255,255,.035)}
     .calendar,.gregorian,.savedList,.pattern-grid,.copy-scroll,.loop-timeline{border-radius:22px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.16);padding:1rem;overflow:auto}
-    .log-grid,.hum-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem;margin-top:1rem}
-    .log-card,.hum-card{padding:1rem;border-radius:20px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035)}
+    .log-grid,.hum-grid,.astro-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem;margin-top:1rem}
+    .log-card,.hum-card,.astro-card{padding:1rem;border-radius:20px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035)}
+    .astro-card h3{margin:.2rem 0 .35rem;color:var(--gold,#f3c97a)}
+    .astro-wheel{min-height:280px;display:grid;place-items:center;text-align:center;border-radius:24px;border:1px solid rgba(255,255,255,.10);background:radial-gradient(circle at center,rgba(122,243,255,.10),transparent 62%),rgba(0,0,0,.18)}
+    .astro-wheel .zodiac{font-size:clamp(3rem,12vw,6rem);line-height:1}
+    .astro-wheel strong{display:block;color:var(--gold,#f3c97a);font-size:1.3rem;margin-top:.5rem}
+    .astro-aspects{display:grid;gap:.55rem;margin-top:1rem}
+    .astro-aspect{padding:.8rem;border-radius:16px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035)}
     .footer{width:min(1180px,calc(100% - 28px));margin:2rem auto 1rem;padding:1rem;text-align:center;color:var(--muted,#aeb7c8)}
     .mobile-dock{position:sticky;bottom:.75rem;z-index:70;display:none;width:min(680px,calc(100% - 28px));margin:1rem auto;padding:.45rem;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(8,12,20,.86);backdrop-filter:blur(18px);box-shadow:0 18px 60px rgba(0,0,0,.38)}
     .mobile-dock a{flex:1;text-align:center;text-decoration:none;padding:.65rem .45rem;border-radius:999px;color:inherit;font-weight:850;font-size:.8rem}.mobile-dock a:hover{background:rgba(122,243,255,.10)}
-    @media(max-width:1000px){.command,.moon-badge{grid-template-columns:1fr}.command-grid{grid-template-columns:repeat(2,1fr)}.col-8,.col-7,.col-6,.col-5,.col-4{grid-column:span 12}.log-grid,.hum-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:760px){.sof-topbar{position:relative;align-items:flex-start;flex-direction:column}.sof-nav{justify-content:flex-start}.page-head{border-radius:26px;padding:1rem}.tabs{top:0}.formrow,.command-grid,.log-grid,.hum-grid{grid-template-columns:1fr}.week{grid-template-columns:repeat(7,1fr)}.btnrow .lab-btn{flex:1 1 auto}.mobile-dock{display:flex}}
+    @media(max-width:1000px){.command,.moon-badge{grid-template-columns:1fr}.command-grid{grid-template-columns:repeat(2,1fr)}.col-8,.col-7,.col-6,.col-5,.col-4{grid-column:span 12}.log-grid,.hum-grid,.astro-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:760px){.sof-topbar{position:relative;align-items:flex-start;flex-direction:column}.sof-nav{justify-content:flex-start}.page-head{border-radius:26px;padding:1rem}.tabs{top:0}.formrow,.command-grid,.log-grid,.hum-grid,.astro-grid{grid-template-columns:1fr}.week{grid-template-columns:repeat(7,1fr)}.btnrow .lab-btn{flex:1 1 auto}.mobile-dock{display:flex}}
   </style>
 </head>
 
@@ -141,7 +149,7 @@
         <a href="./">Home</a>
         <a href="./start.html">Start</a>
         <a href="./shop.html">Shop</a>
-        <a href="./frequency-governance.html">Frequency</a>
+        <a href="./systems/frequencies.html">Frequencies</a>
         <a href="./hub.html">Hub</a>
         <a href="./ledger.html">Ledger</a>
       </nav>
@@ -160,30 +168,31 @@
       <h1>Remnant 13 Moons</h1>
 
       <p class="subtitle">
-        A living 13×28 symbolic calendar for moon phase, daily witness, Earth Hum tags,
-        pattern detection, Codex seals, solar gates, body signal, dreams, weather, memory,
-        and coherence practice.
+        A living 13×28 symbolic calendar for moon phase, astrology correspondence, daily witness,
+        Earth Hum tags, pattern detection, Codex seals, solar gates, body signal, dreams, weather,
+        memory, and coherence practice.
       </p>
 
       <div class="hero-sigil" aria-hidden="true">
-        <span>☾</span><span>⊕</span><span>✦</span><span>7.83Hz</span><span>✦</span><span>⊕</span><span>☽</span>
+        <span>☾</span><span>⊕</span><span>♈︎</span><span>✦</span><span>7.83Hz</span><span>✦</span><span>♓︎</span><span>⊕</span><span>☽</span>
       </div>
 
       <aside class="notice">
         <strong>🔥 Living Calendar Mode:</strong>
-        daily moon engine, visible phase, witness builder, local logs, pattern alerts,
+        daily moon engine, visible phase, astrology panel, witness builder, local logs, pattern alerts,
         Gregorian overlay, Codex day seal, and field-layer dashboard are active.
       </aside>
 
       <p class="meta">
         Accuracy note: the Remnant 13×28 count is symbolic and calendar-based.
-        Visible lunar phase is an astronomical approximation.
+        Visible lunar phase and astrology correspondences are approximations for reflection and pattern tracking.
       </p>
 
       <div class="tabs" aria-label="Calendar tools">
         <button class="tab active" data-tab="todayPanel" type="button">Today</button>
         <button class="tab" data-tab="witnessPanel" type="button">Daily Witness</button>
         <button class="tab" data-tab="calendarPanel" type="button">Calendars</button>
+        <button class="tab" data-tab="astrologyPanel" type="button">Astrology</button>
         <button class="tab" data-tab="yearPanel" type="button">Year Map</button>
         <button class="tab" data-tab="codexPanel" type="button">Codex Seal</button>
         <button class="tab" data-tab="timelinePanel" type="button">Timeline</button>
@@ -205,9 +214,9 @@
             <div class="stat"><span>Moon Day</span><strong id="statMoonDay">—</strong></div>
             <div class="stat"><span>Visible Moon</span><strong id="statPhase">—</strong></div>
             <div class="stat"><span>Solar Gate</span><strong id="statSolar">—</strong></div>
+            <div class="stat"><span>Astro Mirror</span><strong id="statAstro">—</strong></div>
             <div class="stat"><span>Field</span><strong id="statField">—</strong></div>
             <div class="stat"><span>Logs</span><strong id="statLogs">0</strong></div>
-            <div class="stat"><span>Patterns</span><strong id="statPatterns">0</strong></div>
           </div>
         </section>
 
@@ -368,6 +377,68 @@
         </section>
       </section>
 
+      <section id="astrologyPanel" class="tabPanel">
+        <section class="grid">
+          <article class="card col-5">
+            <p class="eyebrow">Astrology Mirror</p>
+            <h2 id="astroTitle">Sky Correspondence</h2>
+            <div class="astro-wheel" id="astroWheel">
+              <div>
+                <div id="astroGlyph" class="zodiac">☉</div>
+                <strong id="astroSign">Calculating…</strong>
+                <p id="astroElement" class="meta">Solar sign and seasonal correspondence.</p>
+              </div>
+            </div>
+            <p id="astroSummary" class="fine">
+              Astrology is restored as a reflective layer beside the working calendar engine.
+            </p>
+          </article>
+
+          <article class="card col-7">
+            <p class="eyebrow">Correspondence Panel</p>
+            <h2>Solar · Lunar · Elemental</h2>
+
+            <div class="astro-grid">
+              <article class="astro-card">
+                <h3>Solar Sign</h3>
+                <p id="astroSolar">—</p>
+              </article>
+              <article class="astro-card">
+                <h3>Element</h3>
+                <p id="astroElementCard">—</p>
+              </article>
+              <article class="astro-card">
+                <h3>Modality</h3>
+                <p id="astroModality">—</p>
+              </article>
+              <article class="astro-card">
+                <h3>Moon Mirror</h3>
+                <p id="astroMoonMirror">—</p>
+              </article>
+            </div>
+
+            <div class="astro-aspects" id="astroAspects">
+              <div class="astro-aspect">
+                <strong>Use:</strong>
+                <span class="meta">Compare the selected day, visible moon phase, solar gate, and witness log before drawing meaning.</span>
+              </div>
+              <div class="astro-aspect">
+                <strong>Rule:</strong>
+                <span class="meta">Observe first. Interpret after repetition. Stop if the pattern makes you feel overloaded.</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card col-12">
+            <p class="eyebrow">Astrology Witness Prompt</p>
+            <h2>Pattern Questions</h2>
+            <div id="astroPrompt" class="copy-scroll">
+              What does the sky mirror today? What did the body report? What repeated from earlier days?
+            </div>
+          </article>
+        </section>
+      </section>
+
       <section id="yearPanel" class="tabPanel">
         <section class="card">
           <h2>Year Map</h2>
@@ -447,7 +518,7 @@
             <div class="log-grid">
               <article class="log-card"><h3>1 · Body</h3><p>Sleep, pressure, hunger, calm, tension, energy, clarity.</p></article>
               <article class="log-card"><h3>2 · Mind</h3><p>Dreams, memory, repeated words, focus, emotional weather.</p></article>
-              <article class="log-card"><h3>3 · Field</h3><p>Moon phase, Kp status, weather, tech glitches, animal behavior, timing.</p></article>
+              <article class="log-card"><h3>3 · Field</h3><p>Moon phase, astrology mirror, Kp status, weather, tech glitches, animal behavior, timing.</p></article>
               <article class="log-card"><h3>4 · Witness</h3><p>Record first. Interpret after multiple days show the same pattern.</p></article>
             </div>
           </section>
@@ -498,7 +569,7 @@
     <a href="#todayPanel">Today</a>
     <a href="#witnessPanel">Witness</a>
     <a href="#calendarPanel">Calendar</a>
-    <a href="#fieldPanel">Field</a>
+    <a href="#astrologyPanel">Astro</a>
     <a href="#savedPanel">Logs</a>
   </nav>
 
@@ -507,5 +578,100 @@
   </footer>
 
   <script src="assets/js/moons.js"></script>
+  <script src="assets/js/calendar-cor.js"></script>
+  <script src="assets/js/astrology.js"></script>
+  <script src="assets/js/astro-panel.js"></script>
+  <script src="assets/js/moons-bar.js"></script>
+
+  <script>
+    (function () {
+      const signs = [
+        { name:"Aries", glyph:"♈︎", element:"Fire", modality:"Cardinal", start:[3,21], end:[4,19], prompt:"Where is the day asking for courage, motion, and clean initiation?" },
+        { name:"Taurus", glyph:"♉︎", element:"Earth", modality:"Fixed", start:[4,20], end:[5,20], prompt:"What needs patience, embodiment, stewardship, and grounded value?" },
+        { name:"Gemini", glyph:"♊︎", element:"Air", modality:"Mutable", start:[5,21], end:[6,20], prompt:"What message, pattern, word, or connection is repeating?" },
+        { name:"Cancer", glyph:"♋︎", element:"Water", modality:"Cardinal", start:[6,21], end:[7,22], prompt:"What is the body asking to protect, nurture, or remember?" },
+        { name:"Leo", glyph:"♌︎", element:"Fire", modality:"Fixed", start:[7,23], end:[8,22], prompt:"Where does the day ask for honest expression and heart-led courage?" },
+        { name:"Virgo", glyph:"♍︎", element:"Earth", modality:"Mutable", start:[8,23], end:[9,22], prompt:"What small repair, habit, detail, or service restores coherence?" },
+        { name:"Libra", glyph:"♎︎", element:"Air", modality:"Cardinal", start:[9,23], end:[10,22], prompt:"What relationship, balance, agreement, or boundary needs attention?" },
+        { name:"Scorpio", glyph:"♏︎", element:"Water", modality:"Fixed", start:[10,23], end:[11,21], prompt:"What hidden emotion, attachment, fear, or truth is surfacing?" },
+        { name:"Sagittarius", glyph:"♐︎", element:"Fire", modality:"Mutable", start:[11,22], end:[12,21], prompt:"What larger meaning, teaching, journey, or belief is being tested?" },
+        { name:"Capricorn", glyph:"♑︎", element:"Earth", modality:"Cardinal", start:[12,22], end:[1,19], prompt:"What structure, duty, work, or long path needs disciplined action?" },
+        { name:"Aquarius", glyph:"♒︎", element:"Air", modality:"Fixed", start:[1,20], end:[2,18], prompt:"What system, network, signal, or future pattern is becoming visible?" },
+        { name:"Pisces", glyph:"♓︎", element:"Water", modality:"Mutable", start:[2,19], end:[3,20], prompt:"What dream, compassion, release, or spiritual signal needs gentle witness?" }
+      ];
+
+      function getDateFromPicker() {
+        const input = document.getElementById("datePick");
+        if (input && input.value) {
+          const parts = input.value.split("-").map(Number);
+          return new Date(parts[0], parts[1] - 1, parts[2]);
+        }
+        return new Date();
+      }
+
+      function isInSign(date, sign) {
+        const y = date.getFullYear();
+        const start = new Date(y, sign.start[0] - 1, sign.start[1]);
+        const end = new Date(y, sign.end[0] - 1, sign.end[1], 23, 59, 59);
+        if (sign.name === "Capricorn") {
+          return date >= start || date <= end;
+        }
+        return date >= start && date <= end;
+      }
+
+      function getSolarSign(date) {
+        return signs.find(sign => isInSign(date, sign)) || signs[0];
+      }
+
+      function updateAstrologyFallback() {
+        const date = getDateFromPicker();
+        const sign = getSolarSign(date);
+        const phaseLine = document.getElementById("phaseLine")?.textContent || "Moon phase loading";
+        const moonName = document.getElementById("moonName")?.textContent || "Current Moon";
+
+        const pairs = {
+          astroGlyph: sign.glyph,
+          astroSign: sign.name,
+          astroElement: sign.element + " · " + sign.modality,
+          astroSolar: sign.glyph + " " + sign.name,
+          astroElementCard: sign.element,
+          astroModality: sign.modality,
+          astroMoonMirror: phaseLine,
+          astroSummary: sign.name + " mirrors the selected day through " + sign.element.toLowerCase() + " correspondence and " + sign.modality.toLowerCase() + " motion.",
+          astroPrompt: sign.prompt + "\\n\\nMoon Mirror: " + moonName + "\\nVisible Phase: " + phaseLine + "\\n\\nWitness rule: record the body signal first, then compare across repeated days.",
+          statAstro: sign.name
+        };
+
+        Object.entries(pairs).forEach(([id, value]) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = value;
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        updateAstrologyFallback();
+
+        const datePick = document.getElementById("datePick");
+        if (datePick) datePick.addEventListener("change", updateAstrologyFallback);
+
+        ["btnToday", "prevDay", "nextDay"].forEach(id => {
+          const btn = document.getElementById(id);
+          if (btn) btn.addEventListener("click", () => setTimeout(updateAstrologyFallback, 80));
+        });
+
+        document.querySelectorAll(".mobile-dock a[href^='#']").forEach(link => {
+          link.addEventListener("click", function (event) {
+            const id = this.getAttribute("href").slice(1);
+            const tab = document.querySelector('.tab[data-tab="' + id + '"]');
+            if (tab) {
+              event.preventDefault();
+              tab.click();
+              document.getElementById(id)?.scrollIntoView({ behavior:"smooth", block:"start" });
+            }
+          });
+        });
+      });
+    })();
+  </script>
 </body>
-  </html>
+                </html>
