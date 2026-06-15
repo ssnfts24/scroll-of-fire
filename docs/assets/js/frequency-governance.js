@@ -2,6 +2,8 @@
    Scroll of Fire — Frequency Governance
    Living Sound Observatory Build
    File: assets/js/frequency-governance.js
+   Upgrade: louder gain chain, audio boost, limiter,
+   mobile controls, sound check, better navigation hooks.
 ===================================================== */
 
 (() => {
@@ -60,14 +62,33 @@
     schumann: 7.83
   };
 
+  const TEXTURE_GAIN = {
+    pure: 1.1,
+    warm: 1,
+    breath: 0.92,
+    bell: 0.88,
+    choir: 0.84,
+    crystal: 0.88,
+    temple: 0.94,
+    earth: 0.98,
+    solar: 0.92
+  };
+
+  const INTENSITY_MULT = {
+    soft: 0.72,
+    balanced: 1,
+    deep: 1.18,
+    monumental: 1.34
+  };
+
   const PATHS = {
     calm: {
       label: "Calm Path",
       visual: "torus",
       texture: "warm",
       decks: [
-        { freq: 432, volume: 48, pan: -0.08, wave: "sine", harmonic: "single", beat: "schumann" },
-        { freq: 396, volume: 22, pan: 0.18, wave: "sine", harmonic: "deep", beat: "none" }
+        { freq: 432, volume: 74, pan: -0.08, wave: "sine", harmonic: "single", beat: "schumann" },
+        { freq: 396, volume: 42, pan: 0.18, wave: "sine", harmonic: "deep", beat: "none" }
       ],
       seq: [432, 396, 417, 432]
     },
@@ -76,9 +97,9 @@
       visual: "lattice",
       texture: "crystal",
       decks: [
-        { freq: 144, volume: 40, pan: -0.16, wave: "sine", harmonic: "octave", beat: "alpha" },
-        { freq: 369, volume: 30, pan: 0.16, wave: "triangle", harmonic: "fifth", beat: "none" },
-        { freq: 741, volume: 18, pan: 0, wave: "sine", harmonic: "single", beat: "none" }
+        { freq: 144, volume: 72, pan: -0.16, wave: "sine", harmonic: "octave", beat: "alpha" },
+        { freq: 369, volume: 48, pan: 0.16, wave: "triangle", harmonic: "fifth", beat: "none" },
+        { freq: 741, volume: 32, pan: 0, wave: "sine", harmonic: "single", beat: "none" }
       ],
       seq: [144, 369, 432, 528, 741]
     },
@@ -87,9 +108,9 @@
       visual: "rose",
       texture: "bell",
       decks: [
-        { freq: 432, volume: 36, pan: -0.12, wave: "sine", harmonic: "single", beat: "none" },
-        { freq: 528, volume: 34, pan: 0.12, wave: "triangle", harmonic: "fifth", beat: "none" },
-        { freq: 741, volume: 24, pan: 0, wave: "sine", harmonic: "octave", beat: "alpha" }
+        { freq: 432, volume: 64, pan: -0.12, wave: "sine", harmonic: "single", beat: "none" },
+        { freq: 528, volume: 52, pan: 0.12, wave: "triangle", harmonic: "fifth", beat: "none" },
+        { freq: 741, volume: 36, pan: 0, wave: "sine", harmonic: "octave", beat: "alpha" }
       ],
       seq: [432, 528, 741, 963]
     },
@@ -98,9 +119,9 @@
       visual: "flower",
       texture: "warm",
       decks: [
-        { freq: 285, volume: 36, pan: -0.18, wave: "sine", harmonic: "deep", beat: "theta" },
-        { freq: 432, volume: 34, pan: 0.12, wave: "sine", harmonic: "single", beat: "schumann" },
-        { freq: 528, volume: 24, pan: 0.25, wave: "triangle", harmonic: "fifth", beat: "none" }
+        { freq: 285, volume: 60, pan: -0.18, wave: "sine", harmonic: "deep", beat: "theta" },
+        { freq: 432, volume: 58, pan: 0.12, wave: "sine", harmonic: "single", beat: "schumann" },
+        { freq: 528, volume: 38, pan: 0.25, wave: "triangle", harmonic: "fifth", beat: "none" }
       ],
       seq: [285, 396, 432, 528, 639]
     },
@@ -109,9 +130,9 @@
       visual: "orbit",
       texture: "solar",
       decks: [
-        { freq: 333, volume: 34, pan: -0.24, wave: "triangle", harmonic: "triad", beat: "none" },
-        { freq: 369, volume: 38, pan: 0.16, wave: "sine", harmonic: "fifth", beat: "alpha" },
-        { freq: 528, volume: 22, pan: 0.35, wave: "sine", harmonic: "octave", beat: "none" }
+        { freq: 333, volume: 58, pan: -0.24, wave: "triangle", harmonic: "triad", beat: "none" },
+        { freq: 369, volume: 64, pan: 0.16, wave: "sine", harmonic: "fifth", beat: "alpha" },
+        { freq: 528, volume: 38, pan: 0.35, wave: "sine", harmonic: "octave", beat: "none" }
       ],
       seq: [333, 369, 432, 528, 555]
     },
@@ -120,33 +141,21 @@
       visual: "constellation",
       texture: "choir",
       decks: [
-        { freq: 432, volume: 30, pan: -0.18, wave: "sine", harmonic: "deep", beat: "theta" },
-        { freq: 285, volume: 25, pan: 0.18, wave: "sine", harmonic: "single", beat: "delta" },
-        { freq: 174, volume: 18, pan: 0, wave: "sine", harmonic: "single", beat: "none" }
+        { freq: 432, volume: 56, pan: -0.18, wave: "sine", harmonic: "deep", beat: "theta" },
+        { freq: 285, volume: 40, pan: 0.18, wave: "sine", harmonic: "single", beat: "delta" },
+        { freq: 174, volume: 30, pan: 0, wave: "sine", harmonic: "single", beat: "none" }
       ],
       seq: [432, 285, 174, 111]
-    },
-    ascent: {
-      label: "Ascent Path",
-      visual: "metatron",
-      texture: "crystal",
-      decks: [
-        { freq: 144, volume: 28, pan: -0.32, wave: "sine", harmonic: "octave", beat: "none" },
-        { freq: 432, volume: 32, pan: 0, wave: "sine", harmonic: "fifth", beat: "schumann" },
-        { freq: 741, volume: 24, pan: 0.26, wave: "triangle", harmonic: "single", beat: "alpha" },
-        { freq: 963, volume: 16, pan: 0.4, wave: "sine", harmonic: "octave", beat: "none" }
-      ],
-      seq: [144, 288, 432, 528, 741, 963]
     },
     t7: {
       label: "T7 Field",
       visual: "torus",
       texture: "temple",
       decks: [
-        { freq: 111, volume: 20, pan: -0.35, wave: "sine", harmonic: "deep", beat: "none" },
-        { freq: 432, volume: 46, pan: 0, wave: "sine", harmonic: "single", beat: "schumann" },
-        { freq: 528, volume: 24, pan: 0.18, wave: "sine", harmonic: "fifth", beat: "none" },
-        { freq: 963, volume: 14, pan: 0.36, wave: "sine", harmonic: "octave", beat: "none" }
+        { freq: 111, volume: 42, pan: -0.35, wave: "sine", harmonic: "deep", beat: "none" },
+        { freq: 432, volume: 78, pan: 0, wave: "sine", harmonic: "single", beat: "schumann" },
+        { freq: 528, volume: 44, pan: 0.18, wave: "sine", harmonic: "fifth", beat: "none" },
+        { freq: 963, volume: 28, pan: 0.36, wave: "sine", harmonic: "octave", beat: "none" }
       ],
       seq: [111, 144, 369, 432, 528, 741, 963]
     },
@@ -155,9 +164,9 @@
       visual: "lift",
       texture: "breath",
       decks: [
-        { freq: 432, volume: 46, pan: 0, wave: "sine", harmonic: "single", beat: "schumann" },
-        { freq: 528, volume: 22, pan: 0.2, wave: "sine", harmonic: "fifth", beat: "none" },
-        { freq: 963, volume: 14, pan: 0.34, wave: "sine", harmonic: "octave", beat: "none" }
+        { freq: 432, volume: 78, pan: 0, wave: "sine", harmonic: "single", beat: "schumann" },
+        { freq: 528, volume: 42, pan: 0.2, wave: "sine", harmonic: "fifth", beat: "none" },
+        { freq: 963, volume: 28, pan: 0.34, wave: "sine", harmonic: "octave", beat: "none" }
       ],
       seq: [432, 432, 528, 369, 432, 963, 432]
     },
@@ -166,9 +175,9 @@
       visual: "tree",
       texture: "earth",
       decks: [
-        { freq: 432, volume: 42, pan: 0, wave: "sine", harmonic: "single", beat: "schumann" },
-        { freq: 144, volume: 22, pan: -0.22, wave: "sine", harmonic: "octave", beat: "none" },
-        { freq: 741, volume: 18, pan: 0.22, wave: "triangle", harmonic: "single", beat: "none" }
+        { freq: 432, volume: 72, pan: 0, wave: "sine", harmonic: "single", beat: "schumann" },
+        { freq: 144, volume: 42, pan: -0.22, wave: "sine", harmonic: "octave", beat: "none" },
+        { freq: 741, volume: 34, pan: 0.22, wave: "triangle", harmonic: "single", beat: "none" }
       ],
       seq: [144, 432, 528, 741, 432]
     },
@@ -183,8 +192,8 @@
       visual: "torus",
       texture: "breath",
       decks: [
-        { freq: 72, volume: 30, pan: -0.12, wave: "sine", harmonic: "octave", beat: "theta" },
-        { freq: 432, volume: 38, pan: 0.12, wave: "sine", harmonic: "single", beat: "schumann" }
+        { freq: 72, volume: 52, pan: -0.12, wave: "sine", harmonic: "octave", beat: "theta" },
+        { freq: 432, volume: 70, pan: 0.12, wave: "sine", harmonic: "single", beat: "schumann" }
       ],
       seq: [72, 144, 432]
     },
@@ -193,8 +202,8 @@
       visual: "flower",
       texture: "choir",
       decks: [
-        { freq: 144, volume: 28, pan: -0.2, wave: "sine", harmonic: "field", beat: "none" },
-        { freq: 528, volume: 34, pan: 0.18, wave: "triangle", harmonic: "fifth", beat: "alpha" }
+        { freq: 144, volume: 54, pan: -0.2, wave: "sine", harmonic: "field", beat: "none" },
+        { freq: 528, volume: 62, pan: 0.18, wave: "triangle", harmonic: "fifth", beat: "alpha" }
       ],
       seq: [144, 288, 432, 528]
     },
@@ -203,8 +212,8 @@
       visual: "metatron",
       texture: "warm",
       decks: [
-        { freq: 222, volume: 28, pan: -0.22, wave: "sine", harmonic: "octave", beat: "none" },
-        { freq: 639, volume: 34, pan: 0.22, wave: "sine", harmonic: "fifth", beat: "theta" }
+        { freq: 222, volume: 52, pan: -0.22, wave: "sine", harmonic: "octave", beat: "none" },
+        { freq: 639, volume: 62, pan: 0.22, wave: "sine", harmonic: "fifth", beat: "theta" }
       ],
       seq: [222, 432, 639]
     },
@@ -213,8 +222,8 @@
       visual: "tree",
       texture: "earth",
       decks: [
-        { freq: 432, volume: 38, pan: 0, wave: "sine", harmonic: "single", beat: "schumann" },
-        { freq: 174, volume: 18, pan: 0.2, wave: "sine", harmonic: "deep", beat: "none" }
+        { freq: 432, volume: 70, pan: 0, wave: "sine", harmonic: "single", beat: "schumann" },
+        { freq: 174, volume: 34, pan: 0.2, wave: "sine", harmonic: "deep", beat: "none" }
       ],
       seq: [639, 432, 174, 111]
     },
@@ -223,10 +232,10 @@
       visual: "metatron",
       texture: "temple",
       decks: [
-        { freq: 72, volume: 20, pan: -0.36, wave: "sine", harmonic: "octave", beat: "theta" },
-        { freq: 144, volume: 24, pan: -0.12, wave: "sine", harmonic: "field", beat: "none" },
-        { freq: 432, volume: 36, pan: 0.12, wave: "sine", harmonic: "single", beat: "schumann" },
-        { freq: 639, volume: 22, pan: 0.34, wave: "triangle", harmonic: "fifth", beat: "none" }
+        { freq: 72, volume: 40, pan: -0.36, wave: "sine", harmonic: "octave", beat: "theta" },
+        { freq: 144, volume: 46, pan: -0.12, wave: "sine", harmonic: "field", beat: "none" },
+        { freq: 432, volume: 72, pan: 0.12, wave: "sine", harmonic: "single", beat: "schumann" },
+        { freq: 639, volume: 42, pan: 0.34, wave: "triangle", harmonic: "fifth", beat: "none" }
       ],
       seq: [72, 144, 432, 639, 432, 174, 111]
     },
@@ -235,35 +244,19 @@
       visual: "rose",
       texture: "solar",
       decks: [
-        { freq: 333, volume: 26, pan: -0.3, wave: "triangle", harmonic: "triad", beat: "none" },
-        { freq: 528, volume: 34, pan: 0, wave: "sine", harmonic: "fifth", beat: "alpha" },
-        { freq: 741, volume: 24, pan: 0.28, wave: "sine", harmonic: "octave", beat: "none" }
+        { freq: 333, volume: 48, pan: -0.3, wave: "triangle", harmonic: "triad", beat: "none" },
+        { freq: 528, volume: 62, pan: 0, wave: "sine", harmonic: "fifth", beat: "alpha" },
+        { freq: 741, volume: 42, pan: 0.28, wave: "sine", harmonic: "octave", beat: "none" }
       ],
       seq: [333, 432, 528, 741, 963]
     }
   };
 
-  const TEXTURE_GAIN = {
-    pure: 1,
-    warm: 0.92,
-    breath: 0.82,
-    bell: 0.74,
-    choir: 0.68,
-    crystal: 0.72,
-    temple: 0.78,
-    earth: 0.82,
-    solar: 0.76
-  };
-
-  const INTENSITY_MULT = {
-    soft: 0.62,
-    balanced: 0.86,
-    deep: 1,
-    monumental: 1.08
-  };
-
   let audioCtx = null;
   let masterGain = null;
+  let boostGain = null;
+  let compressor = null;
+  let limiter = null;
   let deckNodes = [];
   let isPlaying = false;
   let selectedDeck = 0;
@@ -279,7 +272,6 @@
   let visualSeed = Math.random() * 9999;
   let phase = 0;
   let visualFreq = 432;
-  let pointer = { x: 0.5, y: 0.5, active: false };
 
   const fieldCanvas = $("#fieldCanvas");
   const fieldCtx = fieldCanvas?.getContext?.("2d");
@@ -291,12 +283,12 @@
     return Math.max(min, Math.min(max, Number(value) || min));
   }
 
-  function nowStamp() {
-    return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  }
-
   function text(el, value) {
     if (el) el.textContent = value;
+  }
+
+  function nowStamp() {
+    return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   }
 
   function log(message) {
@@ -358,7 +350,18 @@
   }
 
   function masterVolume() {
-    return clamp($("#masterVolume")?.value || 24, 0, 85) / 100;
+    return clamp($("#masterVolume")?.value || 72, 0, 100) / 100;
+  }
+
+  function audioBoost() {
+    return clamp($("#audioBoost")?.value || 1.5, 1, 2.6);
+  }
+
+  function outputModeMultiplier() {
+    const mode = selectValue("outputMode", "headphones");
+    if (mode === "phone") return 1.28;
+    if (mode === "speaker") return 1.14;
+    return 1;
   }
 
   function fadeTime() {
@@ -367,26 +370,66 @@
 
   function gainCurve(percent) {
     const p = clamp(percent, 0, 100) / 100;
-    const intensity = INTENSITY_MULT[selectValue("presetIntensity", "balanced")] || 0.86;
-    const texture = TEXTURE_GAIN[selectValue("presetTexture", "warm")] || 0.9;
-    return Math.pow(p, 2) * 0.5 * intensity * texture;
+    const intensity = INTENSITY_MULT[selectValue("presetIntensity", "balanced")] || 1;
+    const texture = TEXTURE_GAIN[selectValue("presetTexture", "warm")] || 1;
+    return Math.pow(p, 1.35) * 0.34 * intensity * texture;
   }
 
   function crossGain(index) {
     const cross = clamp($("#crossfader")?.value || 0, 0, 100) / 100;
-    if (index === 0) return 1 - cross;
-    if (index === 1) return cross;
+    if (index === 0) return 1 - cross * 0.75;
+    if (index === 1) return 0.25 + cross * 0.75;
     return 1;
+  }
+
+  function unlockAudio() {
+    const ac = getAudio();
+    if (ac.state === "suspended") ac.resume();
+    updateOutputGain();
+    return ac;
   }
 
   function getAudio() {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
       masterGain = audioCtx.createGain();
-      masterGain.gain.setTargetAtTime(Math.pow(masterVolume(), 2) * 0.42, audioCtx.currentTime, 0.06);
-      masterGain.connect(audioCtx.destination);
+      boostGain = audioCtx.createGain();
+      compressor = audioCtx.createDynamicsCompressor();
+      limiter = audioCtx.createDynamicsCompressor();
+
+      compressor.threshold.value = -22;
+      compressor.knee.value = 24;
+      compressor.ratio.value = 3;
+      compressor.attack.value = 0.012;
+      compressor.release.value = 0.18;
+
+      limiter.threshold.value = -6;
+      limiter.knee.value = 0;
+      limiter.ratio.value = 18;
+      limiter.attack.value = 0.003;
+      limiter.release.value = 0.12;
+
+      masterGain.connect(boostGain);
+      boostGain.connect(compressor);
+      compressor.connect(limiter);
+      limiter.connect(audioCtx.destination);
+
+      updateOutputGain();
     }
+
     return audioCtx;
+  }
+
+  function updateOutputGain() {
+    if (!audioCtx || !masterGain || !boostGain) return;
+
+    const now = audioCtx.currentTime;
+    const mv = Math.pow(masterVolume(), 1.15);
+    const boost = audioBoost() * outputModeMultiplier();
+
+    masterGain.gain.setTargetAtTime(mv, now, 0.04);
+    boostGain.gain.setTargetAtTime(boost, now, 0.04);
   }
 
   function stopNodeGroup(group, fade = fadeTime()) {
@@ -404,7 +447,7 @@
   }
 
   function createOsc(freq, wave, panValue, gainValue, fade) {
-    const ac = getAudio();
+    const ac = unlockAudio();
     const now = ac.currentTime;
     const osc = ac.createOscillator();
     const gain = ac.createGain();
@@ -416,11 +459,15 @@
     gain.gain.setValueAtTime(0.0001, now);
     gain.gain.exponentialRampToValueAtTime(Math.max(0.0002, gainValue), now + fade);
 
-    if (pan) osc.connect(gain).connect(pan).connect(masterGain);
-    else osc.connect(gain).connect(masterGain);
+    if (pan) {
+      pan.pan.setValueAtTime(clamp(panValue, -1, 1), now);
+      osc.connect(gain).connect(pan).connect(masterGain);
+    } else {
+      osc.connect(gain).connect(masterGain);
+    }
 
     osc.start(now);
-    return { osc, gain };
+    return { osc, gain, pan };
   }
 
   function textureRatios(baseRatios) {
@@ -438,16 +485,13 @@
     const deck = getDeck(index);
     if (!deck) return;
 
-    const ac = getAudio();
-    if (ac.state === "suspended") ac.resume();
-
     const oldGroup = deckNodes[index] || [];
     const fade = fadeTime();
     const ratios = textureRatios(HARMONICS[deck.harmonic] || [1]);
     const beat = BEATS[deck.beat] || 0;
     const baseGain = deckAudible(deck) ? gainCurve(deck.volume) * crossGain(index) : 0.0001;
     const oscCount = beat ? ratios.length * 2 : ratios.length;
-    const perGain = baseGain / Math.max(1, oscCount);
+    const perGain = baseGain / Math.max(1, Math.sqrt(oscCount) * 1.65);
     const group = [];
 
     ratios.forEach((ratio, i) => {
@@ -455,11 +499,11 @@
       if (base < 20 || base > 2200) return;
 
       if (beat) {
-        group.push(createOsc(base - beat / 2, deck.wave, Math.max(-1, deck.pan - 0.25), perGain, fade));
-        group.push(createOsc(base + beat / 2, deck.wave, Math.min(1, deck.pan + 0.25), perGain, fade));
+        group.push(createOsc(base - beat / 2, deck.wave, deck.pan - 0.22, perGain, fade));
+        group.push(createOsc(base + beat / 2, deck.wave, deck.pan + 0.22, perGain, fade));
       } else {
-        const spread = ratios.length === 1 ? 0 : -0.28 + (0.56 * i) / Math.max(1, ratios.length - 1);
-        group.push(createOsc(base, deck.wave, Math.max(-1, Math.min(1, deck.pan + spread)), perGain, fade));
+        const spread = ratios.length === 1 ? 0 : -0.22 + (0.44 * i) / Math.max(1, ratios.length - 1);
+        group.push(createOsc(base, deck.wave, deck.pan + spread, perGain, fade));
       }
     });
 
@@ -470,8 +514,10 @@
   }
 
   function playMix() {
+    unlockAudio();
+    updateOutputGain();
     getDecks().forEach(deck => {
-      if (deck.index === 0 || deck.volume > 0) playDeck(deck.index);
+      if (deck.volume > 0 || deck.index === 0) playDeck(deck.index);
     });
     isPlaying = true;
     updateUI();
@@ -480,11 +526,55 @@
   }
 
   function refreshDecks() {
+    updateOutputGain();
     if (!isPlaying) {
       updateUI();
       return;
     }
     getDecks().forEach(deck => playDeck(deck.index));
+  }
+
+  function soundCheck() {
+    unlockAudio();
+
+    const ac = audioCtx;
+    const now = ac.currentTime;
+    const gain = ac.createGain();
+    const osc1 = ac.createOscillator();
+    const osc2 = ac.createOscillator();
+
+    osc1.type = "sine";
+    osc2.type = "triangle";
+    osc1.frequency.setValueAtTime(432, now);
+    osc2.frequency.setValueAtTime(528, now);
+
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.38, now + 0.08);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+
+    osc1.connect(gain);
+    osc2.connect(gain);
+    gain.connect(masterGain);
+
+    osc1.start(now);
+    osc2.start(now);
+    osc1.stop(now + 1.5);
+    osc2.stop(now + 1.5);
+
+    updateUI();
+    log("Sound Check played. Raise media volume if needed.");
+  }
+
+  function cycleBoost() {
+    const boost = $("#audioBoost");
+    if (!boost) return;
+
+    const order = ["1", "1.5", "2", "2.6"];
+    const next = order[(order.indexOf(boost.value) + 1) % order.length];
+    boost.value = next;
+    updateOutputGain();
+    updateUI();
+    log(`Audio Boost set to ${boost.selectedOptions?.[0]?.textContent || next}.`);
   }
 
   function stopAll(fade = fadeTime()) {
@@ -506,6 +596,7 @@
     $(".deck-wave", card).value = data.wave || "sine";
     $(".deck-harmonic", card).value = data.harmonic || "single";
     $(".deck-beat", card).value = data.beat || "none";
+
     card.classList.toggle("is-muted", !!data.muted);
     card.classList.toggle("is-solo", !!data.solo);
 
@@ -536,13 +627,14 @@
     (path.decks || []).forEach((deck, i) => applyDeck(i, deck));
 
     if (autoPlay) playMix();
+
     updateForgeStats();
     updateUI();
     recordEvent("path", { name, label: path.label });
     log(`Path loaded: ${path.label}.`);
   }
 
-  function setDeckFreq(index, freq, volume = 48) {
+  function setDeckFreq(index, freq, volume = 64) {
     const card = getCard(index);
     if (!card) return;
     $(".deck-freq", card).value = Math.round(clamp(freq, 40, 1800));
@@ -553,45 +645,44 @@
   function cueDeck(index) {
     selectedDeck = index;
     updateDeckTargets();
+
     const card = getCard(index);
     const vol = $(".deck-vol", card);
-    if (vol && Number(vol.value) === 0) vol.value = 45;
+    if (vol && Number(vol.value) === 0) vol.value = 58;
+
     playDeck(index);
     log(`Deck ${String.fromCharCode(65 + index)} cued.`);
   }
 
   function updateForgeStats() {
-    const tex = $("#presetTexture")?.selectedOptions?.[0]?.textContent || "Warm Harmonic";
-    const breath = $("#breathPace")?.selectedOptions?.[0]?.textContent || "4 · 2 · 6";
-    const intensity = $("#presetIntensity")?.selectedOptions?.[0]?.textContent || "Balanced Field";
-    const session = $("#sessionLength")?.selectedOptions?.[0]?.textContent || "7 Minutes";
-
-    text($("#statTexture"), tex);
-    text($("#statBreath"), breath);
-    text($("#statIntensity"), intensity.replace(" Field", ""));
-    text($("#statSession"), session.replace(" Minutes", " min"));
+    text($("#statTexture"), $("#presetTexture")?.selectedOptions?.[0]?.textContent || "Warm Harmonic");
+    text($("#statBreath"), $("#breathPace")?.selectedOptions?.[0]?.textContent || "4 · 2 · 6");
+    text($("#statIntensity"), ($("#presetIntensity")?.selectedOptions?.[0]?.textContent || "Balanced Field").replace(" Field", ""));
+    text($("#statSession"), ($("#sessionLength")?.selectedOptions?.[0]?.textContent || "7 Minutes").replace(" Minutes", " min"));
   }
 
   function updateUI() {
     const lead = leadDeck();
     const visualName = $("#visualMode")?.selectedOptions?.[0]?.textContent || "Torus Field";
-    const preset = PRESETS.find(p => p[0] === Math.round(lead.freq));
+    const boostName = $("#audioBoost")?.selectedOptions?.[0]?.textContent || "Boosted";
 
-    if (masterGain && audioCtx) {
-      masterGain.gain.setTargetAtTime(Math.pow(masterVolume(), 2) * 0.34, audioCtx.currentTime, 0.06);
-    }
+    updateOutputGain();
 
     text($("#masterValue"), Math.round(lead.freq));
     text($("#statCarrier"), `${Math.round(lead.freq)} Hz`);
     text($("#statPath"), activePath);
-    text($("#statDecks"), String(getDecks().filter(deckAudible).length));
     text($("#statState"), isPlaying ? "Active" : "Stopped");
-    text($("#commandTitle"), `${Math.round(lead.freq)} Hz · ${activePath || (preset ? preset[1] : "Custom Field")}`);
+    text($("#commandTitle"), `${Math.round(lead.freq)} Hz · ${activePath}`);
     text($("#stateText"), isPlaying ? "active" : "stopped");
 
     $("#stateText")?.classList.toggle("active", isPlaying);
+
     if ($("#meter")) $("#meter").style.width = `${Math.round(masterVolume() * 100)}%`;
-    text($("#settingText"), `${Math.round(lead.freq)} Hz · ${Math.round(masterVolume() * 100)}% master · ${visualName}`);
+
+    text(
+      $("#settingText"),
+      `${Math.round(lead.freq)} Hz · ${Math.round(masterVolume() * 100)}% master · ${boostName} · ${visualName}`
+    );
 
     getCards().forEach((card, i) => {
       const deck = getDeck(i);
@@ -621,7 +712,7 @@
     $$(".lib-btn").forEach(btn => {
       on(btn, "click", () => {
         const freq = Number(btn.dataset.freq);
-        setDeckFreq(selectedDeck, freq, 44);
+        setDeckFreq(selectedDeck, freq, 64);
         recordEvent("carrier", { freq });
         log(`${freq} Hz loaded into Deck ${String.fromCharCode(65 + selectedDeck)}.`);
       });
@@ -648,7 +739,7 @@
 
     function step() {
       const freq = seq[i % seq.length];
-      setDeckFreq(0, freq, getDeck(0)?.volume || 44);
+      setDeckFreq(0, freq, getDeck(0)?.volume || 70);
       if ($("#seqStatus")) $("#seqStatus").value = `${path.label} · ${freq} Hz · ${(i % seq.length) + 1}/${seq.length}`;
       $$(".seqBtn").forEach(btn => btn.classList.toggle("is-active", btn.dataset.seq === name));
       i++;
@@ -676,7 +767,7 @@
       const dot = (liftStep % 7) + 1;
       setLiftDot(dot);
       const seq = PATHS.lift.seq;
-      setDeckFreq(0, seq[liftStep % seq.length], 46);
+      setDeckFreq(0, seq[liftStep % seq.length], 78);
       log(`Lift Loop step ${dot}/7.`);
       liftStep++;
     }
@@ -695,10 +786,14 @@
 
   function buildJournalText() {
     const lead = leadDeck();
+
     return `Frequency Governance Witness
 Date: ${new Date().toLocaleString()}
 Path: ${activePath}
 Lead Carrier: ${Math.round(lead.freq)} Hz
+Master Volume: ${Math.round(masterVolume() * 100)}%
+Audio Boost: ${$("#audioBoost")?.selectedOptions?.[0]?.textContent || ""}
+Output Mode: ${$("#outputMode")?.selectedOptions?.[0]?.textContent || ""}
 Texture: ${$("#presetTexture")?.selectedOptions?.[0]?.textContent || ""}
 Intensity: ${$("#presetIntensity")?.selectedOptions?.[0]?.textContent || ""}
 Breath Pace: ${$("#breathPace")?.selectedOptions?.[0]?.textContent || ""}
@@ -788,6 +883,8 @@ ${$("#journalNote")?.value || ""}`;
       breathPace: selectValue("breathPace", "426"),
       sessionLength: selectValue("sessionLength", "7"),
       masterVolume: $("#masterVolume")?.value,
+      audioBoost: $("#audioBoost")?.value,
+      outputMode: $("#outputMode")?.value,
       visualPower: $("#visualPower")?.value,
       fadeTime: $("#fadeTime")?.value,
       crossfader: $("#crossfader")?.value,
@@ -805,7 +902,19 @@ ${$("#journalNote")?.value || ""}`;
       const saved = JSON.parse(localStorage.getItem(STORE_FIELD) || "{}");
       if (!saved.decks) throw new Error("No saved field");
 
-      ["visualMode", "presetTexture", "presetIntensity", "breathPace", "sessionLength", "masterVolume", "visualPower", "fadeTime", "crossfader"].forEach(id => {
+      [
+        "visualMode",
+        "presetTexture",
+        "presetIntensity",
+        "breathPace",
+        "sessionLength",
+        "masterVolume",
+        "audioBoost",
+        "outputMode",
+        "visualPower",
+        "fadeTime",
+        "crossfader"
+      ].forEach(id => {
         if ($("#" + id) && saved[id] != null) $("#" + id).value = saved[id];
       });
 
@@ -825,13 +934,22 @@ ${$("#journalNote")?.value || ""}`;
     stopAll(0.35);
     activePath = "Foundation";
     selectedDeck = 0;
+
     if ($("#visualMode")) $("#visualMode").value = "torus";
     if ($("#presetTexture")) $("#presetTexture").value = "warm";
     if ($("#presetIntensity")) $("#presetIntensity").value = "balanced";
     if ($("#breathPace")) $("#breathPace").value = "426";
     if ($("#sessionLength")) $("#sessionLength").value = "7";
+    if ($("#masterVolume")) $("#masterVolume").value = 72;
+    if ($("#audioBoost")) $("#audioBoost").value = "1.5";
+    if ($("#outputMode")) $("#outputMode").value = "headphones";
+
     clearDecks();
-    applyDeck(0, { freq: 432, volume: 80, pan: -0.15, wave: "sine", harmonic: "single", beat: "none" });
+    applyDeck(0, { freq: 432, volume: 100, pan: 0, wave: "sine", harmonic: "single", beat: "schumann" });
+    applyDeck(1, { freq: 528, volume: 28, pan: 0.15, wave: "sine", harmonic: "fifth", beat: "none" });
+    applyDeck(2, { freq: 369, volume: 18, pan: -0.35, wave: "triangle", harmonic: "single", beat: "none" });
+    applyDeck(3, { freq: 963, volume: 16, pan: 0.35, wave: "sine", harmonic: "octave", beat: "none" });
+
     updateUI();
     log("Field reset.");
   }
@@ -862,6 +980,7 @@ ${$("#journalNote")?.value || ""}`;
 
   function updateTrackUI() {
     text($("#trackEvents"), String(trackEvents.length));
+
     if ($("#trackClock")) {
       const ms = recording ? performance.now() - trackStart : (trackEvents.at(-1)?.t || 0);
       const s = Math.floor(ms / 1000);
@@ -918,7 +1037,7 @@ ${$("#journalNote")?.value || ""}`;
     trackEvents.forEach(e => {
       setTimeout(() => {
         if (e.type === "path" || e.type === "sequence") loadPath(e.data.name, true);
-        if (e.type === "carrier") setDeckFreq(selectedDeck, e.data.freq, 44);
+        if (e.type === "carrier") setDeckFreq(selectedDeck, e.data.freq, 64);
       }, e.t);
     });
 
@@ -1148,6 +1267,7 @@ ${$("#journalNote")?.value || ""}`;
       pts.push([cx + Math.cos(a) * baseR, cy + Math.sin(a) * baseR]);
     }
     pts.push([cx, cy]);
+
     fieldCtx.strokeStyle = `rgba(122,243,255,${0.18 + push * 0.18})`;
     for (let i = 0; i < pts.length; i++) {
       for (let j = i + 1; j < pts.length; j += 2) {
@@ -1157,6 +1277,7 @@ ${$("#journalNote")?.value || ""}`;
         fieldCtx.stroke();
       }
     }
+
     pts.forEach(([x, y]) => {
       fieldCtx.fillStyle = `rgba(243,201,122,${0.55 + push * 0.2})`;
       fieldCtx.beginPath();
@@ -1172,6 +1293,7 @@ ${$("#journalNote")?.value || ""}`;
     fieldCtx.moveTo(cx, cy + baseR);
     fieldCtx.lineTo(cx, cy - baseR);
     fieldCtx.stroke();
+
     for (let i = 0; i < 7; i++) {
       const y = cy + baseR * 0.7 - i * (baseR * 0.24);
       const spread = baseR * (0.18 + i * 0.055);
@@ -1190,10 +1312,12 @@ ${$("#journalNote")?.value || ""}`;
       const r = baseR * (0.35 + ((i * 37) % 100) / 100);
       return [cx + Math.cos(a + phase * 0.002) * r, cy + Math.sin(a * 1.1 + phase * 0.002) * r * 0.75];
     });
+
     fieldCtx.strokeStyle = `rgba(122,243,255,${0.16 + push * 0.16})`;
     fieldCtx.beginPath();
     pts.forEach(([x, y], i) => i ? fieldCtx.lineTo(x, y) : fieldCtx.moveTo(x, y));
     fieldCtx.stroke();
+
     pts.forEach(([x, y], i) => {
       fieldCtx.fillStyle = color((i % 10) / 10, 0.58 + push * 0.16);
       fieldCtx.beginPath();
@@ -1203,18 +1327,37 @@ ${$("#journalNote")?.value || ""}`;
   }
 
   function bind() {
+    on($("#soundCheckBtn"), "click", soundCheck);
     on($("#playBtn"), "click", playMix);
     on($("#stopBtn"), "click", () => { stopAll(); recordEvent("stop"); log("Stopped."); });
 
     on($("#dockPlay"), "click", playMix);
+    on($("#dockSoundCheck"), "click", soundCheck);
+    on($("#dockBoost"), "click", cycleBoost);
     on($("#dockStop"), "click", () => stopAll(0.25));
     on($("#dockRecord"), "click", () => recording ? stopRecord() : startRecord());
     on($("#dockLift"), "click", startLiftLoop);
     on($("#dockLog"), "click", () => $("#journalIntention")?.scrollIntoView({ behavior: "smooth", block: "center" }));
 
-    ["masterVolume", "visualPower", "fadeTime", "visualMode", "crossfader", "presetTexture", "presetIntensity", "breathPace", "sessionLength"].forEach(id => {
+    [
+      "masterVolume",
+      "audioBoost",
+      "outputMode",
+      "visualPower",
+      "fadeTime",
+      "visualMode",
+      "crossfader",
+      "presetTexture",
+      "presetIntensity",
+      "breathPace",
+      "sessionLength"
+    ].forEach(id => {
       on($("#" + id), "input", refreshDecks);
-      on($("#" + id), "change", () => { updateUI(); recordEvent("setting", { id, value: $("#" + id)?.value }); });
+      on($("#" + id), "change", () => {
+        refreshDecks();
+        updateUI();
+        recordEvent("setting", { id, value: $("#" + id)?.value });
+      });
     });
 
     $$(".seqBtn").forEach(btn => on(btn, "click", () => runSequence(btn.dataset.seq)));
@@ -1233,9 +1376,13 @@ ${$("#journalNote")?.value || ""}`;
         on(control, "input", () => playDeck(index));
         on(control, "change", () => playDeck(index));
       });
+
       on($(".deck-cue", card), "click", () => cueDeck(index));
       on($(".deck-mute", card), "click", () => { card.classList.toggle("is-muted"); refreshDecks(); });
       on($(".deck-solo", card), "click", () => { card.classList.toggle("is-solo"); refreshDecks(); });
+      on($(".deck-add-loop", card), "click", () => {
+        log(`Deck ${String.fromCharCode(65 + index)} added to loop memory.`);
+      });
     });
 
     $$(".deck-target").forEach(btn => on(btn, "click", () => {
@@ -1243,7 +1390,16 @@ ${$("#journalNote")?.value || ""}`;
       updateDeckTargets();
     }));
 
-    on($("#stopSeq"), "click", () => { stopSequence(); log("Sequence stopped."); });
+    on($("#playLoop"), "click", () => runSequence("remnant"));
+    on($("#clearLoop"), "click", () => {
+      stopSequence();
+      log("Custom loop cleared.");
+    });
+    on($("#stopSeq"), "click", () => {
+      stopSequence();
+      log("Sequence stopped.");
+    });
+
     on($("#startT7"), "click", startT7);
     on($("#stopT7"), "click", () => { stopAll(); log("T7 Field ended."); });
     on($("#startLiftLoop"), "click", startLiftLoop);
@@ -1263,7 +1419,11 @@ ${$("#journalNote")?.value || ""}`;
     on($("#clearTrack"), "click", clearTrack);
 
     on($("#saveJournal"), "click", saveJournal);
-    on($("#copyJournal"), "click", async () => { await navigator.clipboard.writeText(buildJournalText()); log("Witness copied."); });
+    on($("#copyJournal"), "click", async () => {
+      await navigator.clipboard.writeText(buildJournalText());
+      log("Witness copied.");
+    });
+
     on($("#clearJournal"), "click", () => {
       $("#journalIntention").value = "";
       $("#journalBody").value = "";
@@ -1278,6 +1438,7 @@ ${$("#journalNote")?.value || ""}`;
       if (file) importJournal(file);
       e.target.value = "";
     });
+
     on($("#clearJournalArchive"), "click", () => {
       localStorage.removeItem(STORE_JOURNAL);
       renderJournal();
@@ -1285,6 +1446,7 @@ ${$("#journalNote")?.value || ""}`;
     });
 
     on($("#clearField"), "click", () => fieldCtx?.clearRect(0, 0, fieldCanvas.width, fieldCanvas.height));
+
     on($("#saveFieldPng"), "click", () => {
       if (!fieldCanvas) return;
       const a = document.createElement("a");
@@ -1292,13 +1454,10 @@ ${$("#journalNote")?.value || ""}`;
       a.download = "frequency-governance-field.png";
       a.click();
     });
-    on($("#randomSeed"), "click", () => { visualSeed = Math.random() * 9999; log("New visual seed."); });
 
-    on(fieldCanvas, "pointermove", e => {
-      const r = fieldCanvas.getBoundingClientRect();
-      pointer.x = (e.clientX - r.left) / r.width;
-      pointer.y = (e.clientY - r.top) / r.height;
-      pointer.active = true;
+    on($("#randomSeed"), "click", () => {
+      visualSeed = Math.random() * 9999;
+      log("New visual seed.");
     });
 
     document.addEventListener("keydown", e => {
@@ -1308,10 +1467,14 @@ ${$("#journalNote")?.value || ""}`;
       }
     });
 
-    window.addEventListener("resize", () => { fitFieldCanvas(); fitStars(); }, { passive: true });
+    window.addEventListener("resize", () => {
+      fitFieldCanvas();
+      fitStars();
+    }, { passive: true });
+
     window.addEventListener("pointerdown", () => {
       if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
-    }, { once: true, passive: true });
+    }, { passive: true });
   }
 
   function boot() {
@@ -1326,7 +1489,7 @@ ${$("#journalNote")?.value || ""}`;
     updateTrackUI();
     drawStars();
     drawVisualizer();
-    log("Living Sound Observatory loaded.");
+    log("Living Sound Observatory loaded. Press Sound Check first.");
   }
 
   boot();
