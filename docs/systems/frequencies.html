@@ -2,7 +2,12 @@
 <html lang="en" dir="ltr" class="sof carrier-432">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>if(location.hostname!=="ssnfts24.github.io"){var _b=document.querySelector("base");if(_b)_b.setAttribute("href","/");}</script>
+  <script>
+    if (location.hostname !== "ssnfts24.github.io") {
+      var _b = document.querySelector("base");
+      if (_b) _b.setAttribute("href", "/");
+    }
+  </script>
 
   <meta charset="utf-8">
   <title>Frequency Governance — Scroll of Fire</title>
@@ -77,6 +82,31 @@
     .fg-top-nav a:focus-visible {
       background: rgba(122,243,255,0.09);
       outline: none;
+    }
+
+    .use-order {
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .audio-first-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .audio-first-step {
+      padding: 0.8rem;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.035);
+    }
+
+    .audio-first-step strong {
+      display: block;
+      color: var(--gold, #f3c97a);
+      margin-bottom: 0.22rem;
     }
 
     .launch-panel {
@@ -266,6 +296,20 @@
         linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
     }
 
+    .audio-control-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .audio-control-grid label {
+      padding: 0.8rem;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.035);
+    }
+
     .safety-card {
       border-color: rgba(243,201,122,0.18);
     }
@@ -280,7 +324,8 @@
       .name-grid,
       .geometry-grid,
       .field-status-grid,
-      .journey-strip {
+      .journey-strip,
+      .audio-first-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -296,7 +341,9 @@
       .geometry-grid,
       .field-status-grid,
       .journey-strip,
-      .mode-row {
+      .mode-row,
+      .audio-first-grid,
+      .audio-control-grid {
         grid-template-columns: 1fr;
       }
 
@@ -339,6 +386,7 @@
       <span>Intent Paths</span>
       <span>𐤉𐤄𐤅𐤄 Name Path</span>
       <span>Sound Check</span>
+      <span>Audio Boost</span>
       <span>Lift Loop</span>
       <span>T7 Field</span>
       <span>Breath Modes</span>
@@ -358,6 +406,15 @@
       <a href="#liftLoop">Lift</a>
       <a href="#witness">Witness</a>
     </nav>
+
+    <aside class="notice use-order">
+      <strong>Use Order:</strong>
+      1. Sound Check →
+      2. Choose Path →
+      3. Adjust Master Volume / Boost →
+      4. Pick Visual →
+      5. Record Witness.
+    </aside>
   </header>
 
   <main class="fg-shell">
@@ -366,8 +423,15 @@
         <p class="eyebrow">Start Here</p>
         <h2>Quick Sound Paths</h2>
         <p class="meta">
-          Press one path to begin. For first-time testing, press Sound Check and raise your device volume.
+          Press one path to begin. For first-time testing, press Sound Check and raise your media volume.
         </p>
+
+        <div class="audio-first-grid" aria-label="Recommended use order">
+          <div class="audio-first-step"><strong>1 · Check</strong><span>Unlock browser audio with a tap.</span></div>
+          <div class="audio-first-step"><strong>2 · Path</strong><span>Choose calm, focus, lift, T7, or Name path.</span></div>
+          <div class="audio-first-step"><strong>3 · Boost</strong><span>Raise master and audio boost if needed.</span></div>
+          <div class="audio-first-step"><strong>4 · Witness</strong><span>Notice the body signal and log it.</span></div>
+        </div>
 
         <div class="quick-grid">
           <button class="quick-preset seqBtn" data-seq="calm" type="button"><strong>Calm Path</strong><span>Slow field, low pressure, breath-first entry.</span></button>
@@ -410,11 +474,12 @@
     </section>
 
     <section class="audio-card">
-      <p class="eyebrow">Audio Test</p>
-      <h2>Can’t Hear It?</h2>
+      <p class="eyebrow">Audio Start</p>
+      <h2>Start Here If Sound Is Low</h2>
       <p class="meta">
-        Press <strong>Sound Check</strong>, make sure your phone is not muted, turn media volume up,
-        and try headphones or a speaker. Browser audio starts only after a tap.
+        Press <strong>Sound Check</strong> first. Then raise <strong>Master Volume</strong>,
+        set <strong>Audio Boost</strong> to Boosted or Strong, and use headphones or an external speaker
+        for the deepest field. Phone speakers may not reproduce low frequencies well.
       </p>
     </section>
 
@@ -461,8 +526,27 @@
         </div>
 
         <label>Master Volume
-          <input id="masterVolume" type="range" min="0" max="100" step="1" value="42">
+          <input id="masterVolume" type="range" min="0" max="100" step="1" value="72">
         </label>
+
+        <div class="audio-control-grid">
+          <label>Audio Boost
+            <select id="audioBoost">
+              <option value="1">Normal</option>
+              <option value="1.5" selected>Boosted</option>
+              <option value="2">Strong</option>
+              <option value="2.6">Monumental</option>
+            </select>
+          </label>
+
+          <label>Output Mode
+            <select id="outputMode">
+              <option value="phone">Phone Speaker</option>
+              <option value="headphones" selected>Headphones</option>
+              <option value="speaker">External Speaker</option>
+            </select>
+          </label>
+        </div>
 
         <label>Visual Intensity
           <input id="visualPower" type="range" min="20" max="260" step="1" value="130">
@@ -490,7 +574,7 @@
         </label>
 
         <div class="meter"><span id="meter"></span></div>
-        <p id="settingText" class="fine">432 Hz · 42% master · Torus Field</p>
+        <p id="settingText" class="fine">432 Hz · 72% master · Boosted · Torus Field</p>
       </aside>
     </section>
 
@@ -740,7 +824,7 @@ Press Escape to stop.</pre>
             <article class="deck-card" data-deck="0">
               <h3>Deck A <span class="deck-status">Lead</span></h3>
               <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="432"></label>
-              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="90"></label>
+              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="100"></label>
               <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="0"></label>
               <label>Waveform
                 <select class="deck-wave">
@@ -783,7 +867,7 @@ Press Escape to stop.</pre>
             <article class="deck-card" data-deck="1">
               <h3>Deck B <span class="deck-status">Blend</span></h3>
               <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="528"></label>
-              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="0"></label>
+              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="28"></label>
               <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="15"></label>
               <label>Waveform
                 <select class="deck-wave">
@@ -826,7 +910,7 @@ Press Escape to stop.</pre>
             <article class="deck-card" data-deck="2">
               <h3>Deck C <span class="deck-status">Pulse</span></h3>
               <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="369"></label>
-              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="0"></label>
+              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="18"></label>
               <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="-35"></label>
               <label>Waveform
                 <select class="deck-wave">
@@ -869,7 +953,7 @@ Press Escape to stop.</pre>
             <article class="deck-card" data-deck="3">
               <h3>Deck D <span class="deck-status">Crown</span></h3>
               <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="963"></label>
-              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="0"></label>
+              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="16"></label>
               <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="35"></label>
               <label>Waveform
                 <select class="deck-wave">
@@ -973,6 +1057,8 @@ Press Escape to stop.</pre>
 
   <div class="mobile-dock">
     <button id="dockPlay" type="button">Play</button>
+    <button id="dockSoundCheck" type="button">Check</button>
+    <button id="dockBoost" type="button">Boost</button>
     <button id="dockStop" type="button">Stop</button>
     <button id="dockRecord" type="button">Record</button>
     <button id="dockLift" type="button">Lift</button>
