@@ -2,12 +2,17 @@
 <html lang="en" dir="ltr" class="sof carrier-432">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>if(location.hostname!=="ssnfts24.github.io"){var _b=document.querySelector("base");if(_b)_b.setAttribute("href","/");}</script>
+  <script>
+    if (location.hostname !== "ssnfts24.github.io") {
+      var _b = document.querySelector("base");
+      if (_b) _b.setAttribute("href", "/");
+    }
+  </script>
 
   <meta charset="utf-8">
   <title>Remnant 13 Moons — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="A living 13×28 Remnant calendar with moon phase, daily witness logs, field layers, pattern tracking, Codex seals, and Scroll of Fire coherence tools.">
+  <meta name="description" content="A living 13×28 Remnant calendar with moon phase, daily witness logs, field layers, astrology mirror, pattern tracking, Codex seals, and Scroll of Fire coherence tools.">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="creator" content="Aaron Paul Laird">
   <meta name="publisher" content="Scroll of Fire">
@@ -18,19 +23,20 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Remnant 13 Moons — Living Calendar">
-  <meta property="og:description" content="Track the Remnant 13×28 calendar, visible moon phase, daily witness, field layers, Codex day seals, and symbolic pattern logs.">
+  <meta property="og:description" content="Track the Remnant 13×28 calendar, visible moon phase, daily witness, astrology mirror, field layers, Codex day seals, and symbolic pattern logs.">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
   <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Remnant 13 Moons — Scroll of Fire">
-  <meta name="twitter:description" content="A living 13×28 Remnant calendar with moon phase, daily witness logs, field layers, pattern tracking, and Codex seals.">
+  <meta name="twitter:description" content="A living 13×28 Remnant calendar with moon phase, daily witness logs, astrology mirror, field layers, pattern tracking, and Codex seals.">
   <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
 
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/favicon.png">
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/moons.css">
+  <link rel="stylesheet" href="assets/css/astrology.css">
 
   <script type="application/ld+json">
   {
@@ -42,7 +48,7 @@
     "operatingSystem":"Any",
     "creator":{"@type":"Person","name":"Aaron Paul Laird"},
     "publisher":{"@type":"Organization","name":"Scroll of Fire","url":"https://ssnfts24.github.io/scroll-of-fire/"},
-    "description":"A symbolic 13×28 calendar and witness logging interface for moon phase, daily pattern tracking, field layers, and Codex seals."
+    "description":"A symbolic 13×28 calendar and witness logging interface for moon phase, astrology mirror, daily pattern tracking, field layers, and Codex seals."
   }
   </script>
 
@@ -109,13 +115,21 @@
     th,td{padding:.8rem;border-bottom:1px solid rgba(255,255,255,.08);text-align:left}
     th{color:var(--gold,#f3c97a);background:rgba(255,255,255,.035)}
     .calendar,.gregorian,.savedList,.pattern-grid,.copy-scroll,.loop-timeline{border-radius:22px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.16);padding:1rem;overflow:auto}
-    .log-grid,.hum-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem;margin-top:1rem}
-    .log-card,.hum-card{padding:1rem;border-radius:20px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035)}
+    .log-grid,.hum-grid,.mirror-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem;margin-top:1rem}
+    .log-card,.hum-card,.mirror-card{padding:1rem;border-radius:20px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035)}
+    .mirror-card h3{margin:.25rem 0 .5rem;color:var(--gold,#f3c97a)}
+    .reading-focus{display:grid;grid-template-columns:minmax(240px,.55fr) minmax(0,1fr);gap:1rem;align-items:end;margin-top:1rem}
+    .section-heading{text-align:center;max-width:860px;margin-inline:auto}
+    .astrology-panel{margin-bottom:1rem}
+    .astrology-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.5rem}
+    .astro-card{min-height:220px;padding:1.25rem;border:1px solid rgba(243,201,122,.22);border-radius:22px;background:radial-gradient(circle at 20% 0%,rgba(243,201,122,.16),transparent 38%),rgba(12,15,24,.88);box-shadow:0 18px 45px rgba(0,0,0,.28)}
+    .astro-card h3{margin:.35rem 0 .75rem;font-size:clamp(1.6rem,5vw,2.5rem);color:var(--gold,#f3c97a)}
+    .astro-card p{color:var(--muted,#aeb7c8)}
     .footer{width:min(1180px,calc(100% - 28px));margin:2rem auto 1rem;padding:1rem;text-align:center;color:var(--muted,#aeb7c8)}
-    .mobile-dock{position:sticky;bottom:.75rem;z-index:70;display:none;width:min(680px,calc(100% - 28px));margin:1rem auto;padding:.45rem;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(8,12,20,.86);backdrop-filter:blur(18px);box-shadow:0 18px 60px rgba(0,0,0,.38)}
-    .mobile-dock a{flex:1;text-align:center;text-decoration:none;padding:.65rem .45rem;border-radius:999px;color:inherit;font-weight:850;font-size:.8rem}.mobile-dock a:hover{background:rgba(122,243,255,.10)}
-    @media(max-width:1000px){.command,.moon-badge{grid-template-columns:1fr}.command-grid{grid-template-columns:repeat(2,1fr)}.col-8,.col-7,.col-6,.col-5,.col-4{grid-column:span 12}.log-grid,.hum-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:760px){.sof-topbar{position:relative;align-items:flex-start;flex-direction:column}.sof-nav{justify-content:flex-start}.page-head{border-radius:26px;padding:1rem}.tabs{top:0}.formrow,.command-grid,.log-grid,.hum-grid{grid-template-columns:1fr}.week{grid-template-columns:repeat(7,1fr)}.btnrow .lab-btn{flex:1 1 auto}.mobile-dock{display:flex}}
+    .mobile-dock{position:sticky;bottom:.75rem;z-index:70;display:none;width:min(760px,calc(100% - 28px));margin:1rem auto;padding:.45rem;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(8,12,20,.86);backdrop-filter:blur(18px);box-shadow:0 18px 60px rgba(0,0,0,.38)}
+    .mobile-dock a{flex:1;text-align:center;text-decoration:none;padding:.65rem .35rem;border-radius:999px;color:inherit;font-weight:850;font-size:.76rem}.mobile-dock a:hover{background:rgba(122,243,255,.10)}
+    @media(max-width:1000px){.command,.moon-badge,.reading-focus{grid-template-columns:1fr}.command-grid{grid-template-columns:repeat(2,1fr)}.col-8,.col-7,.col-6,.col-5,.col-4{grid-column:span 12}.log-grid,.hum-grid,.mirror-grid{grid-template-columns:repeat(2,1fr)}.astrology-grid{grid-template-columns:1fr}}
+    @media(max-width:760px){.sof-topbar{position:relative;align-items:flex-start;flex-direction:column}.sof-nav{justify-content:flex-start}.page-head{border-radius:26px;padding:1rem}.tabs{top:0}.formrow,.command-grid,.log-grid,.hum-grid,.mirror-grid{grid-template-columns:1fr}.week{grid-template-columns:repeat(7,1fr)}.btnrow .lab-btn{flex:1 1 auto}.mobile-dock{display:flex}.mobile-dock a{font-size:.7rem}.astro-card{min-height:auto}}
   </style>
 </head>
 
@@ -155,9 +169,9 @@
       <h1>Remnant 13 Moons</h1>
 
       <p class="subtitle">
-        A living 13×28 symbolic calendar for moon phase, daily witness, Earth Hum tags,
-        pattern detection, Codex seals, solar gates, body signal, dreams, weather, memory,
-        and coherence practice.
+        A living 13×28 symbolic calendar for moon phase, astrology mirror, daily witness,
+        Earth Hum tags, pattern detection, Codex seals, solar gates, body signal,
+        dreams, weather, memory, and coherence practice.
       </p>
 
       <div class="hero-sigil" aria-hidden="true">
@@ -166,18 +180,21 @@
 
       <aside class="notice">
         <strong>🔥 Living Calendar Mode:</strong>
-        daily moon engine, visible phase, witness builder, local logs, pattern alerts,
-        Gregorian overlay, Codex day seal, and field-layer dashboard are active.
+        daily moon engine, visible phase, mirror reading, astrology layer, witness builder,
+        local logs, pattern alerts, Gregorian overlay, Codex day seal, and field-layer dashboard are active.
       </aside>
 
       <p class="meta">
         Accuracy note: the Remnant 13×28 count is symbolic and calendar-based.
-        Visible lunar phase is an astronomical approximation.
+        Visible lunar phase is an astronomical approximation. The mirror reading reflects recorded patterns;
+        it does not predict, command, diagnose, or replace grounded judgment.
       </p>
 
       <div class="tabs" aria-label="Calendar tools">
         <button class="tab active" data-tab="todayPanel" type="button">Today</button>
+        <button class="tab" data-tab="mirrorPanel" type="button">Mirror Reading</button>
         <button class="tab" data-tab="witnessPanel" type="button">Daily Witness</button>
+        <button class="tab" data-tab="astrologyPanel" type="button">Astrology</button>
         <button class="tab" data-tab="calendarPanel" type="button">Calendars</button>
         <button class="tab" data-tab="yearPanel" type="button">Year Map</button>
         <button class="tab" data-tab="codexPanel" type="button">Codex Seal</button>
@@ -291,6 +308,62 @@
         </section>
       </section>
 
+      <section id="mirrorPanel" class="tabPanel">
+        <section class="grid">
+          <article class="card col-12">
+            <p class="pill">☲ Mirror Reading Engine</p>
+            <h2>Read the Day as a Witness</h2>
+            <p class="subtitle">
+              This layer turns the calendar into a reflective reading. It does not tell the future.
+              It gathers the day’s moon, solar gate, visible phase, archetype, field state, and saved patterns
+              into a clear mirror for grounded action.
+            </p>
+
+            <div class="reading-focus">
+              <label>Reading Focus
+                <select id="readingFocus">
+                  <option value="general">General Mirror</option>
+                  <option value="family">Family / Custody / Children</option>
+                  <option value="work">Work / Money / Provision</option>
+                  <option value="body">Body / Health / Rest</option>
+                  <option value="spiritual">Spiritual / Prayer / Scripture</option>
+                  <option value="creative">Creative / Codex / Building</option>
+                </select>
+              </label>
+
+              <div class="btnrow">
+                <button id="buildMirror" class="lab-btn active" type="button">Build Mirror Reading</button>
+                <button id="copyMirror" class="lab-btn ghost" type="button">Copy Reading</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="card col-8">
+            <p class="eyebrow">Today’s Mirror</p>
+            <h2 id="mirrorTitle">—</h2>
+            <pre id="mirrorOutput" class="output">Choose a focus and build the mirror reading.</pre>
+          </article>
+
+          <article class="card col-4">
+            <p class="eyebrow">Pattern Compass</p>
+            <div class="mirror-grid" style="grid-template-columns:1fr">
+              <article class="mirror-card">
+                <h3>Signal</h3>
+                <p id="mirrorSignal">The clearest repeated theme of the day.</p>
+              </article>
+              <article class="mirror-card">
+                <h3>Shadow</h3>
+                <p id="mirrorShadow">Where reaction, confusion, fear, or over-reading may enter.</p>
+              </article>
+              <article class="mirror-card">
+                <h3>Wise Action</h3>
+                <p id="mirrorAction">The grounded step that protects peace and builds order.</p>
+              </article>
+            </div>
+          </article>
+        </section>
+      </section>
+
       <section id="witnessPanel" class="tabPanel">
         <section class="grid">
           <article class="card col-7">
@@ -343,6 +416,59 @@
           <article class="card col-5">
             <h2>Generated Witness</h2>
             <pre id="witnessOutput" class="output">Your daily witness will appear here.</pre>
+          </article>
+        </section>
+      </section>
+
+      <section id="astrologyPanel" class="tabPanel">
+        <section class="astrology-panel card">
+          <div class="section-heading">
+            <p class="eyebrow">☉ Sky Mirror</p>
+            <h2>Astrology Mirror</h2>
+            <p class="subtitle">
+              A symbolic mirror for season, element, body, emotion, speech, timing, and witness.
+              This does not command the day. It reflects the pattern you are walking through.
+            </p>
+          </div>
+
+          <div class="astrology-grid">
+            <article class="astro-card">
+              <p class="eyebrow">Solar Gate</p>
+              <h3 id="astroSolarGate">—</h3>
+              <p id="astroSolarCopy">Body, provision, land, stability, and what must be made real.</p>
+            </article>
+
+            <article class="astro-card">
+              <p class="eyebrow">Moon Mirror</p>
+              <h3 id="astroMoonMirror">—</h3>
+              <p id="astroMoonCopy">Emotion, memory, dreams, family signal, and inner weather.</p>
+            </article>
+
+            <article class="astro-card">
+              <p class="eyebrow">Daily Counsel</p>
+              <h3 id="astroCounsel">Witness</h3>
+              <p id="astroCounselCopy">Observe first. Interpret after the pattern repeats.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="grid">
+          <article class="card col-4">
+            <p class="eyebrow">Element Mirror</p>
+            <h2 id="astroElement">—</h2>
+            <p id="astroElementCopy" class="fine">Elemental reading appears here.</p>
+          </article>
+
+          <article class="card col-4">
+            <p class="eyebrow">Body House</p>
+            <h2 id="astroBodyHouse">—</h2>
+            <p id="astroBodyCopy" class="fine">Body and practical focus appears here.</p>
+          </article>
+
+          <article class="card col-4">
+            <p class="eyebrow">Integration</p>
+            <h2 id="astroIntegration">Ground</h2>
+            <p id="astroIntegrationCopy" class="fine">Let the sky become a mirror, then let the body choose the grounded step.</p>
           </article>
         </section>
       </section>
@@ -490,11 +616,11 @@
   </div>
 
   <nav class="mobile-dock" aria-label="Mobile quick navigation">
-    <a href="#todayPanel">Today</a>
-    <a href="#witnessPanel">Witness</a>
-    <a href="#calendarPanel">Calendar</a>
-    <a href="#fieldPanel">Field</a>
-    <a href="#savedPanel">Logs</a>
+    <a href="#todayPanel" data-mobile-tab="todayPanel">Today</a>
+    <a href="#mirrorPanel" data-mobile-tab="mirrorPanel">Mirror</a>
+    <a href="#witnessPanel" data-mobile-tab="witnessPanel">Witness</a>
+    <a href="#astrologyPanel" data-mobile-tab="astrologyPanel">Astro</a>
+    <a href="#savedPanel" data-mobile-tab="savedPanel">Logs</a>
   </nav>
 
   <footer class="footer">
@@ -502,5 +628,167 @@
   </footer>
 
   <script src="assets/js/moons.js"></script>
+  <script>
+    (function () {
+      function showTab(id) {
+        document.querySelectorAll(".tabPanel").forEach(function (panel) {
+          panel.classList.toggle("active", panel.id === id);
+        });
+        document.querySelectorAll(".tab").forEach(function (tab) {
+          tab.classList.toggle("active", tab.dataset.tab === id);
+        });
+        var panel = document.getElementById(id);
+        if (panel) panel.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      document.querySelectorAll("[data-mobile-tab]").forEach(function (link) {
+        link.addEventListener("click", function (event) {
+          event.preventDefault();
+          showTab(link.dataset.mobileTab);
+        });
+      });
+
+      var focusCopy = {
+        general: {
+          signal: "Look for the repeated word, mood, number, delay, opening, or conversation that keeps returning.",
+          shadow: "The shadow is over-reading a single moment before it has repeated enough to become a pattern.",
+          action: "Record the day clearly. Let repeated witness become the teacher."
+        },
+        family: {
+          signal: "Family readings focus on safety, stability, speech, custody, children, home, and emotional weather.",
+          shadow: "The shadow is reacting from pain instead of organizing facts, patterns, and protection.",
+          action: "Keep the child centered. Document calmly. Choose the step that builds stability."
+        },
+        work: {
+          signal: "Provision readings focus on money, tools, repairs, labor, shelter, food, and what must be made real.",
+          shadow: "The shadow is panic, scarcity, or scattering energy across too many unfinished tasks.",
+          action: "Pick the next practical repair. Build order in the material world."
+        },
+        body: {
+          signal: "Body readings focus on sleep, pressure, hunger, fatigue, calm, pain, clarity, and regulation.",
+          shadow: "The shadow is ignoring the body while trying to force meaning through exhaustion.",
+          action: "Eat, hydrate, breathe, rest, and reduce overload before interpretation."
+        },
+        spiritual: {
+          signal: "Spiritual readings focus on prayer, scripture, humility, conscience, mercy, timing, and alignment.",
+          shadow: "The shadow is confusing intensity with instruction.",
+          action: "Return to prayer, patience, witness, and grounded fruit."
+        },
+        creative: {
+          signal: "Creative readings focus on the Codex, building, language, symbols, design, timing, and transmission.",
+          shadow: "The shadow is trying to finish the whole scroll in one day.",
+          action: "Complete one clean piece. Let the work become coherent layer by layer."
+        }
+      };
+
+      function text(id) {
+        var node = document.getElementById(id);
+        return node ? (node.textContent || "—").trim() : "—";
+      }
+
+      function buildMirror() {
+        var focus = document.getElementById("readingFocus");
+        var key = focus ? focus.value : "general";
+        var copy = focusCopy[key] || focusCopy.general;
+
+        var moon = text("moonName");
+        var moonLine = text("moonLine");
+        var phase = text("phaseLine");
+        var archetype = text("dayArchetype");
+        var week = text("weekGate");
+        var solar = text("solarGate");
+        var field = text("statField");
+
+        var title = moon + " · " + archetype + " Mirror";
+        var reading =
+`☲ REMNANT MIRROR READING ☲
+
+Today’s Frame
+${moon}
+${moonLine}
+
+Visible Moon
+${phase}
+
+Day Archetype
+${archetype}
+
+Week Gate
+${week}
+
+Solar Gate
+${solar}
+
+Field Layer
+${field}
+
+Signal
+${copy.signal}
+
+Shadow Pattern
+${copy.shadow}
+
+Wise Action
+${copy.action}
+
+Witness Questions
+1. What repeated today?
+2. What did my body know before my mind explained it?
+3. What is asking for structure instead of reaction?
+4. What evidence belongs in the record?
+5. What one grounded action protects peace, provision, and coherence?
+
+Closing Line
+The calendar does not decide the day. It reflects the day back to the witness. Record first. Interpret after the pattern repeats. Move with wisdom.`;
+
+        var titleNode = document.getElementById("mirrorTitle");
+        var output = document.getElementById("mirrorOutput");
+        var sig = document.getElementById("mirrorSignal");
+        var shad = document.getElementById("mirrorShadow");
+        var act = document.getElementById("mirrorAction");
+
+        if (titleNode) titleNode.textContent = title;
+        if (output) output.textContent = reading;
+        if (sig) sig.textContent = copy.signal;
+        if (shad) shad.textContent = copy.shadow;
+        if (act) act.textContent = copy.action;
+      }
+
+      var buildBtn = document.getElementById("buildMirror");
+      if (buildBtn) buildBtn.addEventListener("click", buildMirror);
+
+      var copyBtn = document.getElementById("copyMirror");
+      if (copyBtn) {
+        copyBtn.addEventListener("click", function () {
+          var out = document.getElementById("mirrorOutput");
+          if (out && navigator.clipboard) navigator.clipboard.writeText(out.textContent || "");
+        });
+      }
+
+      function hydrateAstrologyMirror() {
+        var solar = text("solarGate");
+        var phase = text("phaseLine");
+        var archetype = text("dayArchetype");
+
+        var astroSolarGate = document.getElementById("astroSolarGate");
+        var astroMoonMirror = document.getElementById("astroMoonMirror");
+        var astroElement = document.getElementById("astroElement");
+
+        if (astroSolarGate) astroSolarGate.textContent = solar;
+        if (astroMoonMirror) astroMoonMirror.textContent = phase;
+        if (astroElement) astroElement.textContent = archetype;
+
+        var bodyHouse = document.getElementById("astroBodyHouse");
+        if (bodyHouse) bodyHouse.textContent = solar.indexOf("Taurus") >= 0 ? "Body / Provision" : "Grounded Practice";
+      }
+
+      window.addEventListener("load", function () {
+        setTimeout(function () {
+          buildMirror();
+          hydrateAstrologyMirror();
+        }, 450);
+      });
+    })();
+  </script>
 </body>
-              </html>
+                                                                                </html>
