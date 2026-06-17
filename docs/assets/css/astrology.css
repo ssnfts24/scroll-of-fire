@@ -296,36 +296,3 @@
     animation: none !important;
   }
 }
-'''
-
-path = Path("/mnt/data/astrology.css")
-path.write_text(css, encoding="utf-8")
-print(f"Created {path} ({path.stat().st_size:,} bytes)")
-.astro-card p {
-  color: var(--muted, #aeb7c8);
-}
-
-.eyebrow {
-  margin: 0 0 0.35rem;
-  color: var(--muted, #aeb7c8);
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: 0.76rem;
-  font-weight: 900;
-}
-
-@media (max-width: 900px) {
-  .astrology-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 720px) {
-  .astrology-panel {
-    margin-bottom: 2.5rem;
-  }
-
-  .astro-card {
-    min-height: auto;
-  }
-}
