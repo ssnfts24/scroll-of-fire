@@ -1,4 +1,6 @@
-(() => {
+from pathlib import Path
+
+js = r'''(() => {
   "use strict";
 
   const $ = s => document.querySelector(s);
@@ -73,6 +75,26 @@
   let selectedTZ = localStorage.getItem(TZ_KEY) || TZONES[0];
   let selectedDate = fromISO(new URLSearchParams(location.search).get("date")) || new Date();
 
+  function text(id, value) {
+    const node = $("#" + id);
+    if (node) node.textContent = value;
+  }
+
+  function val(id) {
+    const node = $("#" + id);
+    return node ? node.value || "" : "";
+  }
+
+  function setValue(id, value) {
+    const node = $("#" + id);
+    if (node) node.value = value;
+  }
+
+  function on(id, event, handler) {
+    const node = $("#" + id);
+    if (node) node.addEventListener(event, handler);
+  }
+
   function pad(n) {
     return String(n).padStart(2, "0");
   }
@@ -120,6 +142,15 @@
   }
 
   function toast(msg) {
+    const builtIn = $("#sofToast");
+    if (builtIn) {
+      builtIn.textContent = msg;
+      builtIn.classList.add("show");
+      clearTimeout(window.__sofToastTimer);
+      window.__sofToastTimer = setTimeout(() => builtIn.classList.remove("show"), 1500);
+      return;
+    }
+
     const el = document.createElement("div");
     el.textContent = msg;
     Object.assign(el.style, {
@@ -175,7 +206,6 @@
     const anchor = yearAnchorFor(date);
     const diff = dayDiff(date, anchor);
     const cycleDays = 13 * 28;
-
     const inside = diff >= 0 && diff < cycleDays;
     const moonIndex = inside ? Math.floor(diff / 28) : 12;
     const dayInMoon = inside ? (diff % 28) + 1 : null;
@@ -354,10 +384,10 @@ Interpret slowly.
 Repair one thing.
 Carry the witness forward.`;
 
-    $("#sealTitle").textContent = title;
-    $("#sealBody").textContent = body;
+    text("sealTitle", title);
+    text("sealBody", body);
 
-    $("#promptBody").textContent =
+    text("promptBody",
 `1. What did my body reveal before my mind explained it?
 
 2. What repeated today: number, word, mood, place, person, animal, weather, or timing?
@@ -366,7 +396,7 @@ Carry the witness forward.`;
 
 4. What is the one clean action I can take?
 
-5. What should be sealed and released before the next day?`;
+5. What should be sealed and released before the next day?`);
 
     return body;
   }
@@ -377,7 +407,7 @@ Carry the witness forward.`;
     const solar = solarGate(selectedDate);
     const dayArch = info.inside ? DAY_ARCHETYPES[info.dayInMoon - 1] : ["Outside Count", "Reset, reflection, year threshold."];
 
-    const text =
+    const out =
 `Date: ${fmtDate(selectedDate)}
 Remnant Moon: ${info.moon.name}
 Moon Day: ${info.inside ? `${info.dayInMoon}/28` : `Outside Count · Day ${info.outsideDay}`}
@@ -387,23 +417,23 @@ Solar Gate: ${solar[0]} · ${solar[1]}
 Day Archetype: ${dayArch[0]}
 Carrier Tone: ${info.moon.freq}
 Element: ${info.moon.element}
-Earth Hum / Kp Status: ${$("#kpInput")?.value || "Unknown / not checked"}
+Earth Hum / Kp Status: ${val("kpInput") || "Unknown / not checked"}
 
-Sleep: ${$("#sleepInput")?.value || ""}
-Dreams: ${$("#dreamInput")?.value || ""}
-Body Signal: ${$("#bodyInput")?.value || ""}
-Emotional Weather: ${$("#emotionInput")?.value || ""}
-Repeated Signs: ${$("#signsInput")?.value || ""}
-Technology / Animal / Weather Notes: ${$("#fieldInput")?.value || ""}
+Sleep: ${val("sleepInput")}
+Dreams: ${val("dreamInput")}
+Body Signal: ${val("bodyInput")}
+Emotional Weather: ${val("emotionInput")}
+Repeated Signs: ${val("signsInput")}
+Technology / Animal / Weather Notes: ${val("fieldInput")}
 
 Action / Lesson:
-${$("#lessonInput")?.value || ""}
+${val("lessonInput")}
 
 Witness:
 Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
 
-    $("#witnessOutput").textContent = text;
-    return text;
+    text("witnessOutput", out);
+    return out;
   }
 
   function render() {
@@ -415,51 +445,55 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     const dayArch = info.inside ? DAY_ARCHETYPES[info.dayInMoon - 1] : ["Outside Count", "Reset, reflection, year threshold."];
     const week = info.inside ? WEEK_GATES[Math.floor((info.dayInMoon - 1) / 7)] : ["Outside Gate", "Days beyond the 364-counted cycle."];
 
-    $("#datePick").value = toISO(selectedDate);
-    $("#nowDate").textContent = fmtDate(selectedDate);
-    $("#nowTZ").textContent = selectedTZ;
+    setValue("datePick", toISO(selectedDate));
+    text("nowDate", fmtDate(selectedDate));
+    text("nowTZ", selectedTZ);
 
-    $("#moonName").textContent = info.moon.name;
-    $("#moonEssence").textContent = info.moon.essence;
-    $("#moonLine").textContent = info.inside
+    text("moonName", info.moon.name);
+    text("moonEssence", info.moon.essence);
+    text("moonLine", info.inside
       ? `Moon ${info.moon.idx} · Day ${info.dayInMoon}/28 · Day ${info.dayOfYear}/364`
-      : `Outside Count · Day ${info.outsideDay} after Completion Seal`;
-    $("#yearSpan").textContent = `Anchor: ${fmtShort(info.anchor)} · Counted year ends: ${fmtShort(info.yearEnd)}`;
-    $("#moonPractice").textContent = info.inside ? info.moon.practice : "Review, repair, clear the ledger, and prepare the next anchor.";
+      : `Outside Count · Day ${info.outsideDay} after Completion Seal`);
+    text("yearSpan", `Anchor: ${fmtShort(info.anchor)} · Counted year ends: ${fmtShort(info.yearEnd)}`);
+    text("moonPractice", info.inside ? info.moon.practice : "Review, repair, clear the ledger, and prepare the next anchor.");
 
-    $("#commandMoon").textContent = info.moon.name;
-    $("#commandLine").textContent = info.inside
+    text("commandMoon", info.moon.name);
+    text("commandLine", info.inside
       ? `Moon ${info.moon.idx} · Day ${info.dayInMoon}/28 · ${info.moon.element} · ${info.moon.freq}`
-      : `Outside Count · ${info.moon.name}`;
-    $("#statMoonDay").textContent = info.inside ? `${info.dayInMoon}/28` : "Outside";
-    $("#statPhase").textContent = phase;
-    $("#statSolar").textContent = solar[0];
-    $("#statField").textContent = ($("#kpInput")?.value || "Unknown").split("·")[0].trim();
-    $("#statLogs").textContent = logs().length;
-    $("#statPatterns").textContent = detectPatterns(logs()).count;
+      : `Outside Count · ${info.moon.name}`);
+    text("statMoonDay", info.inside ? `${info.dayInMoon}/28` : "Outside");
+    text("statPhase", phase);
+    text("statSolar", solar[0]);
+    text("statField", (val("kpInput") || "Unknown").split("·")[0].trim());
+    text("statLogs", logs().length);
+    text("statPatterns", detectPatterns(logs()).count);
 
-    $("#dayInMoon").textContent = info.inside ? info.dayInMoon : "⊙";
-    $("#moonLength").textContent = info.inside ? "/28" : "reset";
+    text("dayInMoon", info.inside ? info.dayInMoon : "⊙");
+    text("moonLength", info.inside ? "/28" : "reset");
 
     const progress = info.inside ? info.dayInMoon / 28 : 1;
-    $("#moonArc").style.strokeDashoffset = String(314 - 314 * progress);
+    const arc = $("#moonArc");
+    if (arc) arc.style.strokeDashoffset = String(314 - 314 * progress);
 
-    $("#weekDots").innerHTML = Array.from({ length: 28 }, (_, i) => {
-      const n = i + 1;
-      const cls = !info.inside ? "" : n < info.dayInMoon ? "done" : n === info.dayInMoon ? "today" : "";
-      return `<span class="dot ${cls}" title="Day ${n}"></span>`;
-    }).join("");
+    const weekDots = $("#weekDots");
+    if (weekDots) {
+      weekDots.innerHTML = Array.from({ length: 28 }, (_, i) => {
+        const n = i + 1;
+        const cls = !info.inside ? "" : n < info.dayInMoon ? "done" : n === info.dayInMoon ? "today" : "";
+        return `<span class="dot ${cls}" title="Day ${n}"></span>`;
+      }).join("");
+    }
 
-    $("#phaseLine").textContent = `${phase} · ${Math.round(illum * 100)}% illuminated`;
-    $("#phaseMeta").textContent = `Approx lunar age: ${age.toFixed(2)} days.`;
+    text("phaseLine", `${phase} · ${Math.round(illum * 100)}% illuminated`);
+    text("phaseMeta", `Approx lunar age: ${age.toFixed(2)} days.`);
     drawMoon(age);
 
-    $("#dayArchetype").textContent = dayArch[0];
-    $("#dayArchetypeCopy").textContent = dayArch[1];
-    $("#weekGate").textContent = week[0];
-    $("#weekGateCopy").textContent = week[1];
-    $("#solarGate").textContent = `${solar[0]} · ${solar[1]}`;
-    $("#skyMirrorCopy").textContent = solar[2];
+    text("dayArchetype", dayArch[0]);
+    text("dayArchetypeCopy", dayArch[1]);
+    text("weekGate", week[0]);
+    text("weekGateCopy", week[1]);
+    text("solarGate", `${solar[0]} · ${solar[1]}`);
+    text("skyMirrorCopy", solar[2]);
 
     renderClockOnly();
     renderRemnantCalendar(info);
@@ -469,10 +503,30 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     buildWitness();
     renderSaved();
     renderTimeline();
+
+    document.dispatchEvent(new CustomEvent("sof:moon-render", {
+      detail: {
+        date: selectedDate,
+        iso: toISO(selectedDate),
+        timezone: selectedTZ,
+        info,
+        moonAge: age,
+        phase,
+        illumination: illum,
+        solar,
+        dayArch,
+        week,
+        logs: logs(),
+        patterns: detectPatterns(logs())
+      }
+    }));
   }
 
   function renderRemnantCalendar(info) {
-    $("#remCal").innerHTML = Array.from({ length: 28 }, (_, i) => {
+    const remCal = $("#remCal");
+    if (!remCal) return;
+
+    remCal.innerHTML = Array.from({ length: 28 }, (_, i) => {
       const n = i + 1;
       const cls = info.inside && n === info.dayInMoon ? "today" : "";
       const arch = DAY_ARCHETYPES[i];
@@ -485,6 +539,9 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
   }
 
   function renderGregorian() {
+    const gregCal = $("#gregCal");
+    if (!gregCal) return;
+
     const y = selectedDate.getFullYear();
     const m = selectedDate.getMonth();
     const first = new Date(y, m, 1);
@@ -492,7 +549,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     const names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
     let html = names.map(n => `<div class="weekday">${n}</div>`).join("");
-    for (let i = 0; i < first.getDay(); i++) html += `<div></div>`;
+    for (let i = 0; i < first.getDay(); i++) html += `<div class="g-pad"></div>`;
 
     for (let d = 1; d <= last.getDate(); d++) {
       const cur = new Date(y, m, d);
@@ -505,14 +562,16 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       </div>`;
     }
 
-    $("#gregCal").innerHTML = html;
+    gregCal.innerHTML = html;
   }
 
   function renderYearMap(info) {
-    $("#outsideInfo").textContent =
-      `Counted cycle: ${fmtShort(info.anchor)} through ${fmtShort(info.yearEnd)} · Outside days begin ${fmtShort(addDays(info.yearEnd, 1))}`;
+    text("outsideInfo", `Counted cycle: ${fmtShort(info.anchor)} through ${fmtShort(info.yearEnd)} · Outside days begin ${fmtShort(addDays(info.yearEnd, 1))}`);
 
-    $("#yearMapBody").innerHTML = MOONS.map((m, i) => {
+    const body = $("#yearMapBody");
+    if (!body) return;
+
+    body.innerHTML = MOONS.map((m, i) => {
       const start = addDays(info.anchor, i * 28);
       const end = addDays(start, 27);
       return `<tr>
@@ -530,30 +589,35 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
 
   function saveLog() {
     const list = logs();
+    const info = remnantInfo(selectedDate);
     list.unshift({
       date: toISO(selectedDate),
-      moon: remnantInfo(selectedDate).moon.name,
+      moon: info.moon.name,
       text: buildWitness(),
       saved: new Date().toISOString(),
-      kp: $("#kpInput")?.value || "",
-      signs: $("#signsInput")?.value || "",
-      body: $("#bodyInput")?.value || "",
-      dreams: $("#dreamInput")?.value || "",
-      emotion: $("#emotionInput")?.value || ""
+      kp: val("kpInput"),
+      signs: val("signsInput"),
+      body: val("bodyInput"),
+      dreams: val("dreamInput"),
+      emotion: val("emotionInput")
     });
     saveLogs(list);
     renderSaved();
     renderTimeline();
     toast("Witness saved");
+    document.dispatchEvent(new CustomEvent("sof:witness-saved", { detail: { logs: logs() } }));
   }
 
   function renderSaved() {
     const list = logs();
-    $("#statLogs") && ($("#statLogs").textContent = list.length);
+    text("statLogs", list.length);
 
-    $("#savedList").innerHTML = list.length ? list.map((l, i) => `
+    const savedList = $("#savedList");
+    if (!savedList) return;
+
+    savedList.innerHTML = list.length ? list.map((l, i) => `
       <article class="savedEntry">
-        <strong>${l.date} · ${l.moon || "Remnant Log"}</strong>
+        <strong>${escapeHTML(l.date)} · ${escapeHTML(l.moon || "Remnant Log")}</strong>
         <p class="meta">Saved ${new Date(l.saved).toLocaleString()}</p>
         <pre class="fine">${escapeHTML(l.text)}</pre>
         <button class="lab-btn ghost copySaved" data-i="${i}" type="button">Copy</button>
@@ -563,7 +627,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     $$(".copySaved").forEach(btn => {
       btn.addEventListener("click", () => {
         const item = list[Number(btn.dataset.i)];
-        navigator.clipboard.writeText(item.text);
+        if (navigator.clipboard) navigator.clipboard.writeText(item.text);
         toast("Copied");
       });
     });
@@ -579,7 +643,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     ].join(" ")).join(" ").toLowerCase();
 
     const terms = joined.match(/\b[0-9]{2,4}\b|\b[a-z]{4,}\b/g) || [];
-    const skip = new Set(["unknown", "checked", "field", "moon", "body", "dreams", "sleep", "weather", "signal"]);
+    const skip = new Set(["unknown", "checked", "field", "moon", "body", "dreams", "sleep", "weather", "signal", "with", "from", "this", "that", "have"]);
     const counts = {};
 
     terms.forEach(t => {
@@ -598,22 +662,27 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
   function renderTimeline() {
     const list = logs();
     const patterns = detectPatterns(list);
+    text("statPatterns", patterns.count);
 
-    $("#statPatterns") && ($("#statPatterns").textContent = patterns.count);
+    const alerts = $("#patternAlerts");
+    if (alerts) {
+      alerts.innerHTML = patterns.top.length ? patterns.top.map(([term, n]) => `
+        <article class="mini pattern-memory-card">
+          <h3>${escapeHTML(term)}</h3>
+          <p class="meta">Repeated ${n} times in recent logs.</p>
+        </article>
+      `).join("") : `<p class="meta">No repeated patterns detected yet. Save more daily logs.</p>`;
+    }
 
-    $("#patternAlerts").innerHTML = patterns.top.length ? patterns.top.map(([term, n]) => `
-      <article class="mini">
-        <h3>${escapeHTML(term)}</h3>
-        <p class="meta">Repeated ${n} times in recent logs.</p>
-      </article>
-    `).join("") : `<p class="meta">No repeated patterns detected yet. Save more daily logs.</p>`;
-
-    $("#timelineList").innerHTML = list.length ? list.slice(0, 28).map(l => `
-      <article class="savedEntry">
-        <strong>${l.date} · ${escapeHTML(l.moon || "Log")}</strong>
-        <p class="meta">${escapeHTML([l.kp, l.signs, l.body].filter(Boolean).join(" · "))}</p>
-      </article>
-    `).join("") : `<p class="meta">No timeline yet.</p>`;
+    const timeline = $("#timelineList");
+    if (timeline) {
+      timeline.innerHTML = list.length ? list.slice(0, 28).map(l => `
+        <article class="savedEntry">
+          <strong>${escapeHTML(l.date)} · ${escapeHTML(l.moon || "Log")}</strong>
+          <p class="meta">${escapeHTML([l.kp, l.signs, l.body].filter(Boolean).join(" · "))}</p>
+        </article>
+      `).join("") : `<p class="meta">No timeline yet.</p>`;
+    }
   }
 
   function escapeHTML(s) {
@@ -627,19 +696,21 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
   }
 
   function renderClockOnly() {
-    $("#nowClock").textContent = new Intl.DateTimeFormat("en-US", {
+    text("nowClock", new Intl.DateTimeFormat("en-US", {
       timeZone: selectedTZ,
       hour: "numeric",
       minute: "2-digit",
       second: "2-digit"
-    }).format(new Date());
+    }).format(new Date()));
   }
 
   function drawSky() {
     const c = $("#skyBg");
     if (!c) return;
+
     const ctx = c.getContext("2d");
     let stars = [];
+    let raf = null;
 
     function fit() {
       const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -662,94 +733,120 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
         ctx.fill();
       });
-      requestAnimationFrame(loop);
+      raf = requestAnimationFrame(loop);
     }
 
     fit();
     addEventListener("resize", fit, { passive: true });
-    loop();
+
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    if (!reduced.matches) loop();
+    else {
+      ctx.clearRect(0, 0, c.width, c.height);
+      stars.forEach(s => {
+        ctx.fillStyle = "rgba(244,241,232,.18)";
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    addEventListener("beforeunload", () => {
+      if (raf) cancelAnimationFrame(raf);
+    });
   }
 
-  function setup() {
-    $("#yr").textContent = new Date().getFullYear();
-
-    $("#tzPick").innerHTML = TZONES.map(tz => `<option value="${tz}">${tz}</option>`).join("");
-    $("#tzPick").value = selectedTZ;
-    $("#datePick").value = toISO(selectedDate);
-
+  function setupTabs() {
     $$(".tab").forEach(btn => {
       btn.addEventListener("click", () => {
         const id = btn.dataset.tab;
+        if (!id) return;
         $$(".tab").forEach(b => b.classList.toggle("active", b === btn));
         $$(".tabPanel").forEach(p => p.classList.toggle("active", p.id === id));
       });
     });
+  }
 
-    $("#tzPick").addEventListener("change", e => {
+  function setup() {
+    text("yr", new Date().getFullYear());
+
+    const tzPick = $("#tzPick");
+    if (tzPick) {
+      tzPick.innerHTML = TZONES.map(tz => `<option value="${tz}">${tz}</option>`).join("");
+      tzPick.value = selectedTZ;
+    }
+
+    setValue("datePick", toISO(selectedDate));
+
+    setupTabs();
+
+    on("tzPick", "change", e => {
       selectedTZ = e.target.value;
       localStorage.setItem(TZ_KEY, selectedTZ);
       render();
     });
 
-    $("#datePick").addEventListener("change", e => {
+    on("datePick", "change", e => {
       selectedDate = fromISO(e.target.value) || new Date();
       render();
     });
 
-    $("#btnToday").addEventListener("click", () => {
+    on("btnToday", "click", () => {
       selectedDate = new Date();
       render();
     });
 
-    $("#prevDay").addEventListener("click", () => {
+    on("prevDay", "click", () => {
       selectedDate = addDays(selectedDate, -1);
       render();
     });
 
-    $("#nextDay").addEventListener("click", () => {
+    on("nextDay", "click", () => {
       selectedDate = addDays(selectedDate, 1);
       render();
     });
 
-    $("#shareLink").addEventListener("click", () => {
+    on("shareLink", "click", () => {
       const url = `${location.origin}${location.pathname}?date=${toISO(selectedDate)}`;
-      navigator.clipboard.writeText(url);
+      if (navigator.clipboard) navigator.clipboard.writeText(url);
       toast("Link copied");
     });
 
-    ["sleepInput", "bodyInput", "dreamInput", "emotionInput", "signsInput", "kpInput", "fieldInput", "lessonInput"].forEach(id => {
-      const el = $("#" + id);
-      el.addEventListener("input", buildWitness);
-      el.addEventListener("change", () => {
-        buildWitness();
-        render();
-      });
+    ["sleepInput", "bodyInput", "dreamInput", "emotionInput", "signsInput", "fieldInput", "lessonInput"].forEach(id => {
+      on(id, "input", buildWitness);
     });
 
-    $("#buildWitness").addEventListener("click", buildWitness);
-    $("#copyWitness").addEventListener("click", () => {
-      navigator.clipboard.writeText(buildWitness());
+    on("kpInput", "change", () => {
+      buildWitness();
+      render();
+    });
+
+    on("buildWitness", "click", buildWitness);
+    on("copyWitness", "click", () => {
+      if (navigator.clipboard) navigator.clipboard.writeText(buildWitness());
       toast("Witness copied");
     });
-    $("#saveWitness").addEventListener("click", saveLog);
-    $("#clearWitness").addEventListener("click", () => {
-      ["sleepInput", "bodyInput", "dreamInput", "emotionInput", "signsInput", "fieldInput", "lessonInput"].forEach(id => $("#" + id).value = "");
-      $("#kpInput").selectedIndex = 0;
+    on("saveWitness", "click", saveLog);
+    on("clearWitness", "click", () => {
+      ["sleepInput", "bodyInput", "dreamInput", "emotionInput", "signsInput", "fieldInput", "lessonInput"].forEach(id => setValue(id, ""));
+      const kp = $("#kpInput");
+      if (kp) kp.selectedIndex = 0;
       buildWitness();
       toast("Cleared");
     });
 
-    $("#copySeal").addEventListener("click", () => {
-      navigator.clipboard.writeText($("#sealBody").textContent);
+    on("copySeal", "click", () => {
+      const seal = $("#sealBody");
+      if (seal && navigator.clipboard) navigator.clipboard.writeText(seal.textContent);
       toast("Seal copied");
     });
 
-    $("#copyAllLogs").addEventListener("click", () => {
-      navigator.clipboard.writeText(logs().map(l => l.text).join("\n\n---\n\n"));
+    on("copyAllLogs", "click", () => {
+      if (navigator.clipboard) navigator.clipboard.writeText(logs().map(l => l.text).join("\n\n---\n\n"));
       toast("All logs copied");
     });
 
-    $("#exportLogs").addEventListener("click", () => {
+    on("exportLogs", "click", () => {
       const blob = new Blob([JSON.stringify(logs(), null, 2)], { type: "application/json" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
@@ -758,9 +855,12 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       setTimeout(() => URL.revokeObjectURL(a.href), 800);
     });
 
-    $("#importLogs").addEventListener("click", () => $("#importLogsFile").click());
+    on("importLogs", "click", () => {
+      const fileInput = $("#importLogsFile");
+      if (fileInput) fileInput.click();
+    });
 
-    $("#importLogsFile").addEventListener("change", async e => {
+    on("importLogsFile", "change", async e => {
       const file = e.target.files?.[0];
       if (!file) return;
       try {
@@ -775,7 +875,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       e.target.value = "";
     });
 
-    $("#clearAllLogs").addEventListener("click", () => {
+    on("clearAllLogs", "click", () => {
       if (!confirm("Clear all saved moon logs from this browser?")) return;
       localStorage.removeItem(LOG_KEY);
       render();
@@ -785,7 +885,25 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     render();
     setInterval(renderClockOnly, 1000);
     drawSky();
+
+    window.ScrollOfFireMoons = {
+      render,
+      logs,
+      remnantInfo: () => remnantInfo(selectedDate),
+      selectedDate: () => new Date(selectedDate),
+      selectedTimezone: () => selectedTZ,
+      detectPatterns
+    };
   }
 
-  setup();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setup);
+  } else {
+    setup();
+  }
 })();
+'''
+
+path = Path("/mnt/data/moons.js")
+path.write_text(js, encoding="utf-8")
+print(f"Created {path} ({path.stat().st_size:,} bytes)")
