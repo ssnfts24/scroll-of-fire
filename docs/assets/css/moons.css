@@ -1,5 +1,5 @@
 /* Scroll of Fire — Remnant 13 Moons CSS
-   Mobile-fixed calendar grid + subtle living animations
+   Integrated UI system: 13 Moons + Daily Flow + Mirror Reading + Astrology + Planetarium
 */
 
 *,
@@ -66,6 +66,7 @@ body {
 .footer {
   padding: 0 0 34px;
   color: var(--muted);
+  text-align: center;
 }
 
 a {
@@ -113,13 +114,20 @@ textarea {
   font: inherit;
 }
 
+/* Main cards */
 .page-head,
 .card,
 .notice,
 .savedEntry,
 .hum-card,
 .log-card,
-.day-card {
+.day-card,
+.mirror-card,
+.meter-card,
+.pattern-memory-card,
+.astro-card,
+.planet-card,
+.aspect-card {
   background: linear-gradient(180deg, var(--card), var(--card2));
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -160,8 +168,7 @@ textarea {
 .crumbs,
 .btnrow,
 .tabs,
-.row,
-.formrow {
+.row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -186,7 +193,7 @@ textarea {
   text-decoration: none;
   cursor: pointer;
   font-weight: 850;
-  transition: .18s ease;
+  transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
 }
 
 .lab-btn:hover,
@@ -195,6 +202,7 @@ textarea {
 .tab:focus-visible {
   border-color: rgba(122,243,255,.58);
   background: rgba(122,243,255,.09);
+  box-shadow: 0 0 20px rgba(122,243,255,.10);
   outline: none;
   transform: translateY(-1px);
 }
@@ -212,8 +220,7 @@ textarea {
 }
 
 .tab.active,
-.lab-btn.active,
-.active {
+.lab-btn.active {
   border-color: rgba(243,201,122,.88);
   background: rgba(243,201,122,.12);
   color: #ffe3a3;
@@ -222,11 +229,12 @@ textarea {
 .pill {
   display: inline-flex;
   align-items: center;
+  width: fit-content;
   gap: .42rem;
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: .42rem .7rem;
-  color: var(--muted);
+  color: var(--gold);
   background: rgba(255,255,255,.04);
   font-size: .86rem;
   font-weight: 850;
@@ -278,7 +286,13 @@ textarea {
 .formrow,
 .log-grid,
 .hum-grid,
-.practice-grid {
+.practice-grid,
+.mirror-grid,
+.meter-grid,
+.pattern-memory-grid,
+.astrology-grid,
+.planet-grid,
+.aspect-grid {
   display: grid;
   gap: 10px;
   margin-top: 12px;
@@ -290,12 +304,24 @@ textarea {
 
 .log-grid,
 .hum-grid,
-.practice-grid {
+.practice-grid,
+.mirror-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.mirror-grid.single {
+  grid-template-columns: 1fr;
+}
+
 .tabs {
+  position: sticky;
+  top: 66px;
+  z-index: 60;
   margin: 18px 0;
+  overflow-x: auto;
+  padding: .75rem 0 .15rem;
+  scrollbar-width: thin;
+  backdrop-filter: blur(16px);
 }
 
 .tabPanel {
@@ -306,7 +332,106 @@ textarea {
   display: block;
 }
 
-/* Moon hero */
+/* Topbar */
+.sof-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .8rem 0;
+  backdrop-filter: blur(18px);
+}
+
+.sof-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .72rem;
+  text-decoration: none;
+}
+
+.sof-brand .mark {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  color: var(--gold);
+  border: 1px solid rgba(243,201,122,.28);
+  background: rgba(255,255,255,.04);
+  box-shadow: 0 0 35px rgba(243,201,122,.08);
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.sof-brand strong {
+  display: block;
+  color: var(--ink);
+  line-height: 1.05;
+}
+
+.sof-brand small {
+  display: block;
+  color: var(--muted);
+  font-size: .78rem;
+}
+
+.sof-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: .45rem;
+}
+
+.sof-nav a {
+  text-decoration: none;
+  padding: .55rem .75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.035);
+  color: inherit;
+  font-size: .92rem;
+}
+
+.sof-nav a:hover,
+.sof-nav a:focus-visible,
+.sof-nav a[aria-current="page"] {
+  background: rgba(122,243,255,.09);
+  border-color: rgba(122,243,255,.22);
+  outline: none;
+}
+
+/* Hero */
+.page-head {
+  position: relative;
+  overflow: hidden;
+  margin: 1rem 0 1.2rem;
+  padding: clamp(1.2rem,4vw,2.2rem);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(122,243,255,.18), transparent 34%),
+    radial-gradient(circle at 78% 18%, rgba(243,201,122,.16), transparent 32%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.018));
+  box-shadow: 0 28px 100px rgba(0,0,0,.38);
+}
+
+.page-head::after {
+  content: "";
+  position: absolute;
+  inset: auto 2rem 0 2rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(243,201,122,.55), rgba(122,243,255,.45), transparent);
+}
+
+.page-head h1 {
+  font-size: clamp(2.6rem,8vw,5.8rem);
+  line-height: .9;
+  margin: .25rem 0 .8rem;
+  letter-spacing: -.06em;
+}
+
 .hero-sigil {
   display: flex;
   flex-wrap: wrap;
@@ -316,12 +441,49 @@ textarea {
   color: var(--gold);
   letter-spacing: .12em;
   text-shadow: 0 0 18px rgba(243,201,122,.45);
+  animation: sigilBreath 6s ease-in-out infinite;
 }
 
 .notice {
   border-color: rgba(243,201,122,.3);
   background: linear-gradient(180deg, rgba(243,201,122,.1), rgba(243,201,122,.035));
   color: #ffe7ad;
+}
+
+/* Today command */
+.command {
+  display: grid;
+  grid-template-columns: minmax(0,1.1fr) minmax(320px,.9fr);
+  gap: 1rem;
+  align-items: center;
+}
+
+.command-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: .7rem;
+}
+
+.stat {
+  padding: .85rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.035);
+}
+
+.stat span {
+  display: block;
+  color: var(--muted);
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: .25rem;
+}
+
+.stat strong {
+  display: block;
+  color: var(--gold);
+  font-size: 1.05rem;
 }
 
 .moon-badge {
@@ -437,9 +599,215 @@ textarea {
   border-color: rgba(122,243,255,.38);
 }
 
-.dot.today {
+.dot.today,
+.week span.active {
   background: var(--gold);
   box-shadow: 0 0 16px rgba(243,201,122,.7);
+}
+
+/* Daily flow */
+.ritual-hero {
+  position: relative;
+  overflow: hidden;
+  margin: 1rem 0;
+  padding: clamp(1.1rem,4vw,2rem);
+  border-radius: 30px;
+  border: 1px solid rgba(243,201,122,.22);
+  background:
+    radial-gradient(circle at 12% 16%,rgba(243,201,122,.18),transparent 34%),
+    radial-gradient(circle at 82% 10%,rgba(122,243,255,.16),transparent 34%),
+    linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.018));
+  box-shadow: 0 28px 90px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.ritual-hero::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(from 0deg, transparent, rgba(243,201,122,.12), transparent, rgba(122,243,255,.10), transparent);
+  animation: sofOrbit 18s linear infinite;
+  opacity: .7;
+  pointer-events: none;
+}
+
+.ritual-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.ritual-layout {
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.ritual-title {
+  font-size: clamp(2rem,6vw,4.4rem);
+  line-height: .92;
+  margin: .2rem 0 .8rem;
+  letter-spacing: -.06em;
+}
+
+.ritual-line {
+  font-size: clamp(1rem,2.5vw,1.25rem);
+  color: var(--muted);
+  max-width: 820px;
+}
+
+.daily-sigil {
+  display: grid;
+  place-items: center;
+  min-height: 250px;
+  border-radius: 26px;
+  border: 1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at center,rgba(243,201,122,.18),transparent 42%),
+    rgba(0,0,0,.18);
+  box-shadow: inset 0 0 80px rgba(122,243,255,.08);
+}
+
+.daily-sigil .moon-core {
+  width: min(46vw,190px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(243,201,122,.35);
+  background:
+    radial-gradient(circle at 38% 34%,#fff7d8 0 11%,#f3c97a 12% 28%,rgba(243,201,122,.25) 29% 44%,rgba(255,255,255,.04) 45% 100%);
+  box-shadow: 0 0 34px rgba(243,201,122,.35), 0 0 78px rgba(122,243,255,.18);
+  animation: moonFloat 5.5s ease-in-out infinite;
+  color: #05070d;
+  font-weight: 950;
+  font-size: clamp(2.8rem,9vw,4.8rem);
+}
+
+.flow-steps {
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
+  gap: .6rem;
+  margin: 1rem 0;
+}
+
+.flow-step {
+  padding: .75rem;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 18px;
+  background: rgba(255,255,255,.035);
+  text-align: center;
+  color: var(--muted);
+  font-weight: 850;
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
+}
+
+.flow-step strong {
+  display: block;
+  color: var(--gold);
+}
+
+.flow-step:hover {
+  transform: translateY(-2px);
+  border-color: rgba(122,243,255,.35);
+  background: rgba(122,243,255,.06);
+}
+
+.meter-grid {
+  grid-template-columns: repeat(5,1fr);
+  gap: .85rem;
+}
+
+.meter-card {
+  padding: .9rem;
+  border-radius: 20px;
+  background: rgba(255,255,255,.035);
+}
+
+.meter-card span {
+  display: block;
+  color: var(--muted);
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-weight: 900;
+}
+
+.meter-bar {
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  overflow: hidden;
+  margin: .6rem 0;
+}
+
+.meter-fill {
+  height: 100%;
+  width: 42%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--gold), var(--accent));
+  box-shadow: 0 0 16px rgba(122,243,255,.28);
+  animation: meterBreath 4s ease-in-out infinite;
+}
+
+.meter-card strong {
+  color: var(--gold);
+}
+
+.practice-card {
+  border-color: rgba(159,247,200,.22);
+  background:
+    radial-gradient(circle at 8% 0%,rgba(159,247,200,.12),transparent 34%),
+    linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+}
+
+.practice-list {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: .75rem;
+  margin-top: 1rem;
+}
+
+.practice-list div {
+  padding: .9rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.16);
+}
+
+.pattern-memory-grid {
+  grid-template-columns: repeat(3,1fr);
+  gap: .85rem;
+}
+
+.pattern-memory-card {
+  padding: 1rem;
+  border-radius: 20px;
+  background: rgba(0,0,0,.16);
+}
+
+.pattern-memory-card h3 {
+  margin: 0 0 .35rem;
+  color: var(--gold);
+}
+
+/* Mirror reading */
+.reading-focus {
+  display: grid;
+  grid-template-columns: minmax(240px,.55fr) minmax(0,1fr);
+  gap: 1rem;
+  align-items: end;
+  margin-top: 1rem;
+}
+
+.mirror-card {
+  padding: 1rem;
+  border-radius: 20px;
+  background: rgba(255,255,255,.035);
+}
+
+.mirror-card h3 {
+  margin: .25rem 0 .5rem;
+  color: var(--gold);
 }
 
 /* Moon phase canvas */
@@ -454,7 +822,7 @@ textarea {
   background: #05070d;
 }
 
-/* FIXED CALENDARS */
+/* Calendars */
 .calendar,
 .gregorian {
   display: grid !important;
@@ -518,7 +886,185 @@ textarea {
   animation: todayGlow 3.8s ease-in-out infinite;
 }
 
-/* Tables */
+/* Astrology + planetarium */
+.section-heading {
+  text-align: center;
+  max-width: 860px;
+  margin-inline: auto;
+}
+
+.astrology-panel {
+  margin-bottom: 1rem;
+}
+
+.astrology-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.astro-card {
+  min-height: 220px;
+  padding: 1.25rem;
+  border: 1px solid rgba(243, 201, 122, 0.22);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(243, 201, 122, 0.16), transparent 38%),
+    rgba(12, 15, 24, 0.88);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+}
+
+.astro-card h3 {
+  margin: .35rem 0 .75rem;
+  font-size: clamp(1.6rem, 5vw, 2.5rem);
+  color: var(--gold);
+}
+
+.astro-card p {
+  color: var(--muted);
+}
+
+.planetarium {
+  position: relative;
+  min-height: 520px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid rgba(243,201,122,.18);
+  background:
+    radial-gradient(circle at center, rgba(243,201,122,.10), transparent 16%),
+    radial-gradient(circle at 50% 50%, rgba(122,243,255,.08), transparent 42%),
+    rgba(0,0,0,.18);
+}
+
+.planetarium::before,
+.planetarium::after {
+  content: "";
+  position: absolute;
+  inset: 9%;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 999px;
+  animation: slowSpin 80s linear infinite;
+}
+
+.planetarium::after {
+  inset: 21%;
+  border-color: rgba(243,201,122,.10);
+  animation-duration: 55s;
+  animation-direction: reverse;
+}
+
+.zodiac-wheel {
+  position: absolute;
+  inset: 4%;
+  border-radius: 999px;
+  border: 1px dashed rgba(255,255,255,.13);
+  animation: slowSpin 120s linear infinite;
+}
+
+.zodiac-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+  transform: rotate(var(--a)) translateY(-235px) rotate(calc(-1 * var(--a)));
+  transform-origin: center;
+}
+
+.sun-core {
+  position: relative;
+  z-index: 2;
+  width: 96px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 30%, #fff7d8, var(--gold) 36%, #a46a20 72%);
+  box-shadow: 0 0 38px rgba(243,201,122,.55), 0 0 100px rgba(243,201,122,.22);
+  color: #05070d;
+  font-weight: 950;
+  animation: solarPulse 5s ease-in-out infinite;
+}
+
+.planet-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--orbit, 220px);
+  height: var(--orbit, 220px);
+  margin-left: calc(var(--orbit, 220px) / -2);
+  margin-top: calc(var(--orbit, 220px) / -2);
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.075);
+  transform: rotate(var(--angle, 0deg));
+}
+
+.planet-dot {
+  position: absolute;
+  left: 50%;
+  top: -6px;
+  width: var(--size, 13px);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: var(--planet-color, var(--accent));
+  box-shadow: 0 0 16px var(--planet-color, var(--accent));
+  transform: translateX(-50%);
+}
+
+.planet-dot::after {
+  content: attr(data-symbol);
+  position: absolute;
+  left: 50%;
+  top: -1.65rem;
+  transform: translateX(-50%);
+  color: var(--ink);
+  font-weight: 950;
+  text-shadow: 0 0 12px rgba(0,0,0,.8);
+}
+
+.planet-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.planet-card {
+  padding: .9rem;
+  border-radius: 18px;
+  background: rgba(255,255,255,.035);
+}
+
+.planet-card strong {
+  display: flex;
+  justify-content: space-between;
+  gap: .7rem;
+  color: var(--gold);
+}
+
+.planet-card span,
+.planet-card small {
+  display: block;
+  color: var(--muted);
+}
+
+.aspect-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.aspect-card {
+  padding: .9rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.16);
+}
+
+.aspect-card strong {
+  color: var(--gold);
+}
+
+/* Tables and output */
 .scroller {
   width: 100%;
   overflow-x: auto;
@@ -577,6 +1123,60 @@ th {
   padding: 12px;
 }
 
+/* Mobile dock / toast */
+.mobile-dock {
+  position: sticky;
+  bottom: .75rem;
+  z-index: 70;
+  display: none;
+  width: min(820px, calc(100% - 28px));
+  margin: 1rem auto;
+  padding: .45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(8,12,20,.86);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 18px 60px rgba(0,0,0,.38);
+}
+
+.mobile-dock a {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  padding: .65rem .35rem;
+  border-radius: 999px;
+  color: inherit;
+  font-weight: 850;
+  font-size: .72rem;
+}
+
+.mobile-dock a:hover {
+  background: rgba(122,243,255,.10);
+}
+
+.toast {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 999;
+  max-width: 310px;
+  padding: .9rem 1rem;
+  border-radius: 18px;
+  border: 1px solid rgba(243,201,122,.28);
+  background: rgba(8,12,20,.94);
+  color: var(--ink);
+  box-shadow: 0 18px 60px rgba(0,0,0,.45);
+  transform: translateY(20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: .25s ease;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
 /* Animations */
 .card,
 .page-head,
@@ -584,43 +1184,67 @@ th {
   animation: moonFadeUp .55s ease both;
 }
 
+.pulse-save {
+  animation: witnessSeal .75s ease both;
+}
+
 @keyframes moonFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes moonAura {
-  0%, 100% {
-    transform: scale(1) rotate(0deg);
-    opacity: .48;
-  }
-  50% {
-    transform: scale(1.07) rotate(3deg);
-    opacity: .82;
-  }
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: .48; }
+  50% { transform: scale(1.07) rotate(3deg); opacity: .82; }
 }
 
 @keyframes ringPulse {
-  0%, 100% {
-    filter: drop-shadow(0 0 10px rgba(243,201,122,.42));
-  }
-  50% {
-    filter: drop-shadow(0 0 24px rgba(122,243,255,.72));
-  }
+  0%, 100% { filter: drop-shadow(0 0 10px rgba(243,201,122,.42)); }
+  50% { filter: drop-shadow(0 0 24px rgba(122,243,255,.72)); }
 }
 
 @keyframes todayGlow {
+  0%, 100% { box-shadow: 0 0 14px rgba(243,201,122,.18); }
+  50% { box-shadow: 0 0 28px rgba(122,243,255,.26); }
+}
+
+@keyframes sigilBreath {
+  0%, 100% { opacity: .76; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.025); }
+}
+
+@keyframes sofOrbit {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes moonFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.025); }
+}
+
+@keyframes meterBreath {
+  0%, 100% { filter: saturate(1); opacity: .78; }
+  50% { filter: saturate(1.5); opacity: 1; }
+}
+
+@keyframes witnessSeal {
+  0% { box-shadow: 0 0 0 rgba(159,247,200,0); }
+  50% { box-shadow: 0 0 34px rgba(159,247,200,.28); }
+  100% { box-shadow: 0 0 0 rgba(159,247,200,0); }
+}
+
+@keyframes slowSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes solarPulse {
   0%, 100% {
-    box-shadow: 0 0 14px rgba(243,201,122,.18);
+    transform: scale(1);
+    box-shadow: 0 0 38px rgba(243,201,122,.55), 0 0 100px rgba(243,201,122,.22);
   }
   50% {
-    box-shadow: 0 0 28px rgba(122,243,255,.26);
+    transform: scale(1.04);
+    box-shadow: 0 0 52px rgba(243,201,122,.72), 0 0 130px rgba(122,243,255,.22);
   }
 }
 
@@ -637,18 +1261,37 @@ th {
     grid-column: span 12;
   }
 
-  .moon-badge {
+  .command,
+  .moon-badge,
+  .ritual-layout,
+  .reading-focus {
     grid-template-columns: 1fr;
   }
 
+  .command-grid,
   .log-grid,
   .hum-grid,
-  .practice-grid {
+  .practice-grid,
+  .mirror-grid,
+  .meter-grid,
+  .practice-list,
+  .pattern-memory-grid,
+  .astrology-grid,
+  .planet-grid,
+  .aspect-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .planetarium {
+    min-height: 430px;
+  }
+
+  .zodiac-label {
+    transform: rotate(var(--a)) translateY(-190px) rotate(calc(-1 * var(--a)));
   }
 }
 
-/* Phone calendar fix */
+/* Phone */
 @media (max-width: 720px) {
   .wrap,
   .footer {
@@ -662,10 +1305,32 @@ th {
     border-radius: 18px;
   }
 
+  .sof-topbar {
+    position: relative;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .sof-nav {
+    justify-content: flex-start;
+  }
+
+  .tabs {
+    top: 0;
+  }
+
   .formrow,
+  .command-grid,
   .log-grid,
   .hum-grid,
-  .practice-grid {
+  .practice-grid,
+  .mirror-grid,
+  .meter-grid,
+  .practice-list,
+  .pattern-memory-grid,
+  .astrology-grid,
+  .planet-grid,
+  .aspect-grid {
     grid-template-columns: 1fr;
   }
 
@@ -740,6 +1405,27 @@ th {
   .year-map {
     min-width: 720px;
   }
+
+  .mobile-dock {
+    display: flex;
+  }
+
+  .mobile-dock a {
+    font-size: .64rem;
+  }
+
+  .planetarium {
+    min-height: 360px;
+  }
+
+  .zodiac-label {
+    font-size: .58rem;
+    transform: rotate(var(--a)) translateY(-158px) rotate(calc(-1 * var(--a)));
+  }
+
+  .sun-core {
+    width: 72px;
+  }
 }
 
 /* Small phone */
@@ -776,6 +1462,19 @@ th {
     width: 170px;
     height: 170px;
   }
+
+  .planetarium {
+    min-height: 320px;
+  }
+
+  .zodiac-label {
+    display: none;
+  }
+
+  .toast {
+    left: 1rem;
+    right: 1rem;
+  }
 }
 
 /* Accessibility */
@@ -786,4 +1485,4 @@ th {
     animation: none !important;
     scroll-behavior: auto !important;
   }
-    }
+   }
