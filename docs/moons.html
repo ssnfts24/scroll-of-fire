@@ -72,7 +72,7 @@
     .hero-sigil{display:flex;flex-wrap:wrap;justify-content:center;gap:.7rem;margin:1.35rem auto;color:var(--gold,#f3c97a);font-weight:900;letter-spacing:.08em}
     .notice{margin-top:1rem;padding:1rem;border-radius:22px;border:1px solid rgba(243,201,122,.22);background:rgba(243,201,122,.06);color:var(--muted,#aeb7c8)}
     .tabs{position:sticky;top:66px;z-index:60;display:flex;gap:.55rem;overflow-x:auto;padding:.75rem 0 .15rem;margin-top:1rem;scrollbar-width:thin;backdrop-filter:blur(16px)}
-    .tab{flex:0 0 auto;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.045);color:inherit;border-radius:999px;padding:.7rem .9rem;font-weight:800;cursor:pointer;white-space:nowrap;transition:all .18s ease}
+    .tab{flex:0 0 auto;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.045);color:inherit;border-radius:999px;padding:.7rem .9rem;font-weight:800;cursor:pointer;white-space:nowrap}
     .tab:hover,.tab:focus-visible,.tab.active{background:rgba(122,243,255,.10);border-color:rgba(122,243,255,.26);outline:none}
     .tabPanel{display:none;margin:1rem 0}.tabPanel.active{display:block}
     .command{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);gap:1rem;align-items:center}
@@ -84,13 +84,13 @@
     .ring{position:relative;width:160px;height:160px;display:grid;place-items:center;margin:auto}
     .ring svg{width:160px;height:160px;transform:rotate(-90deg)}
     .ring-bg,.ring-fg{fill:none;stroke-width:10}.ring-bg{stroke:rgba(255,255,255,.1)}
-    .ring-fg{stroke:var(--gold,#f3c97a);stroke-linecap:round;stroke-dasharray:314;stroke-dashoffset:314;filter:drop-shadow(0 0 10px rgba(243,201,122,.26));transition:stroke-dashoffset .3s ease}
+    .ring-fg{stroke:var(--gold,#f3c97a);stroke-linecap:round;stroke-dasharray:314;stroke-dashoffset:314;filter:drop-shadow(0 0 10px rgba(243,201,122,.26))}
     .ring .label{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
     .ring .big{display:block;color:var(--text,#f4f1e8);font-size:3rem;font-weight:950;line-height:.9}
     .ring .small{display:block;color:var(--muted,#aeb7c8);font-weight:800}
     .weekrow{display:grid;gap:.65rem;margin-top:1rem}
     .week{display:grid;grid-template-columns:repeat(14,1fr);gap:.28rem;max-width:520px}
-    .week span{width:100%;aspect-ratio:1;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);transition:all .2s ease}
+    .week span{width:100%;aspect-ratio:1;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08)}
     .week span.active{background:var(--gold,#f3c97a);box-shadow:0 0 14px rgba(243,201,122,.32)}
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1rem;margin-top:1rem}
     .col-12{grid-column:span 12}.col-8{grid-column:span 8}.col-7{grid-column:span 7}.col-6{grid-column:span 6}.col-5{grid-column:span 5}.col-4{grid-column:span 4}
@@ -99,22 +99,21 @@
     .card>*{position:relative;z-index:1}
     .formrow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;margin-top:.8rem}
     label{display:grid;gap:.35rem;color:var(--muted,#aeb7c8);font-weight:750}
-    input,select,textarea,.lab-input{width:100%;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(0,0,0,.18);color:inherit;padding:.78rem .85rem;font:inherit;transition:border-color .2s ease}
-    input:focus,select:focus,textarea:focus,.lab-input:focus{border-color:rgba(243,201,122,.35);outline:none}
+    input,select,textarea,.lab-input{width:100%;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(0,0,0,.18);color:inherit;padding:.78rem .85rem;font:inherit}
     textarea{min-height:130px;resize:vertical}
     .btnrow{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1rem}
-    .lab-btn{border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.045);color:inherit;text-decoration:none;border-radius:999px;padding:.72rem .95rem;font-weight:900;cursor:pointer;transition:all .18s ease}
+    .lab-btn{border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.045);color:inherit;text-decoration:none;border-radius:999px;padding:.72rem .95rem;font-weight:900;cursor:pointer}
     .lab-btn:hover,.lab-btn:focus-visible,.lab-btn.active{background:rgba(122,243,255,.10);border-color:rgba(122,243,255,.26);outline:none}
     .lab-btn.green{background:rgba(70,220,150,.10);border-color:rgba(70,220,150,.25)}
     .lab-btn.danger{background:rgba(255,90,90,.10);border-color:rgba(255,90,90,.25)}
-    .pill{display:inline-flex;align-items:center;width:fit-content;gap:.35rem;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.045);border-radius:999px;padding:.45rem .7rem;color:var(--muted,#aeb7c8);font-size:.82rem;font-weight:850}
+    .pill{display:inline-flex;align-items:center;width:fit-content;gap:.35rem;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.045);border-radius:999px;padding:.45rem .7rem;color:var(--muted,#aeb7c8)}
     .meta,.fine{color:var(--muted,#aeb7c8)}
-    .output,pre.output{min-height:360px;white-space:pre-wrap;word-break:break-word;border-radius:20px;padding:1rem;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.10);color:var(--text,#f4f1e8);font-size:.85rem;font-family:Courier, monospace}
+    .output,pre.output{min-height:360px;white-space:pre-wrap;word-break:break-word;border-radius:20px;padding:1rem;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.10);color:var(--text,#f4f1e8)}
     #simMoon{width:100%;height:auto;max-height:340px;border-radius:22px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.10)}
     .scroller{overflow-x:auto;border-radius:20px;border:1px solid rgba(255,255,255,.08)}
     table{width:100%;border-collapse:collapse;min-width:760px}
     th,td{padding:.8rem;border-bottom:1px solid rgba(255,255,255,.08);text-align:left}
-    th{color:var(--gold,#f3c97a);background:rgba(255,255,255,.035);font-weight:900}
+    th{color:var(--gold,#f3c97a);background:rgba(255,255,255,.035)}
     .calendar,.gregorian,.savedList,.pattern-grid,.copy-scroll,.loop-timeline{border-radius:22px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.16);padding:1rem;overflow:auto}
     .log-grid,.hum-grid,.mirror-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem;margin-top:1rem}
     .log-card,.hum-card,.mirror-card{padding:1rem;border-radius:20px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035)}
@@ -126,14 +125,12 @@
     .astro-card{min-height:220px;padding:1.25rem;border:1px solid rgba(243,201,122,.22);border-radius:22px;background:radial-gradient(circle at 20% 0%,rgba(243,201,122,.16),transparent 38%),rgba(12,15,24,.88);box-shadow:0 18px 45px rgba(0,0,0,.28)}
     .astro-card h3{margin:.35rem 0 .75rem;font-size:clamp(1.6rem,5vw,2.5rem);color:var(--gold,#f3c97a)}
     .astro-card p{color:var(--muted,#aeb7c8)}
-    .eyebrow{margin:0 0 .35rem;color:var(--muted,#aeb7c8);text-transform:uppercase;letter-spacing:.16em;font-size:.76rem;font-weight:900}
     .footer{width:min(1180px,calc(100% - 28px));margin:2rem auto 1rem;padding:1rem;text-align:center;color:var(--muted,#aeb7c8)}
     .mobile-dock{position:sticky;bottom:.75rem;z-index:70;display:none;width:min(760px,calc(100% - 28px));margin:1rem auto;padding:.45rem;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.8);backdrop-filter:blur(18px);box-shadow:0 18px 60px rgba(0,0,0,.45)}
     .mobile-dock a{flex:1;text-align:center;text-decoration:none;padding:.65rem .35rem;border-radius:999px;color:inherit;font-weight:850;font-size:.76rem}.mobile-dock a:hover{background:rgba(122,243,255,.12)}
     @media(max-width:1000px){.command,.moon-badge,.reading-focus{grid-template-columns:1fr}.command-grid{grid-template-columns:repeat(2,1fr)}.col-8,.col-7,.col-6,.col-5,.col-4{grid-column:span 12}.log-grid,.hum-grid,.mirror-grid,.astrology-grid,.planet-grid,.aspect-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:760px){.sof-topbar{position:relative;align-items:flex-start;flex-direction:column}.sof-nav{justify-content:flex-start}.page-head{border-radius:26px;padding:1rem}.tabs{top:0}.formrow{grid-template-columns:1fr}.log-grid,.hum-grid,.mirror-grid,.astrology-grid,.planet-grid,.aspect-grid{grid-template-columns:1fr}.planetarium{min-height:360px}}
-
-    /* Planetarium styles */
+    @media(max-width:760px){.sof-topbar{position:relative;align-items:flex-start;flex-direction:column}.sof-nav{justify-content:flex-start}.page-head{border-radius:26px;padding:1rem}.tabs{top:0}.formrow{grid-template-columns:1fr}.log-grid,.hum-grid,.mirror-grid,.astrology-grid,.planet-grid,.aspect-grid{grid-template-columns:1fr}}
+    .eyebrow{margin:0 0 .35rem;color:var(--muted,#aeb7c8);text-transform:uppercase;letter-spacing:.16em;font-size:.76rem;font-weight:900}
     .planetarium{position:relative;min-height:520px;display:grid;place-items:center;overflow:hidden;border-radius:28px;border:1px solid rgba(243,201,122,.18);background:radial-gradient(circle at center,rgba(243,201,122,.10),transparent 16%),radial-gradient(circle at 50% 50%,rgba(122,243,255,.08),transparent 42%),rgba(0,0,0,.18)}
     .planetarium::before,.planetarium::after{content:"";position:absolute;inset:9%;border:1px solid rgba(255,255,255,.08);border-radius:999px;animation:astroSlowSpin 80s linear infinite}
     .planetarium::after{inset:21%;border-color:rgba(243,201,122,.10);animation-duration:55s;animation-direction:reverse}
@@ -155,8 +152,6 @@
     [data-astrology-panel].is-loaded{opacity:1}
     @keyframes astroSlowSpin{to{transform:rotate(360deg)}}
     @keyframes astroSolarPulse{0%,100%{transform:scale(1);box-shadow:0 0 38px rgba(243,201,122,.55),0 0 100px rgba(243,201,122,.22)}50%{transform:scale(1.04);box-shadow:0 0 52px rgba(243,201,122,.72),0 0 130px rgba(122,243,255,.22)}}
-    
-    /* Ritual dashboard */
     .ritual-hero{position:relative;overflow:hidden;margin:1rem 0;padding:clamp(1.1rem,4vw,2rem);border-radius:30px;border:1px solid rgba(243,201,122,.22);background:radial-gradient(circle at 12% 16%,rgba(243,201,122,.18),transparent 34%),radial-gradient(circle at 82% 10%,rgba(122,243,255,.16),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.018));box-shadow:0 28px 90px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.06)}
     .ritual-hero::before{content:"";position:absolute;inset:-50%;background:conic-gradient(from 0deg,transparent,rgba(243,201,122,.12),transparent,rgba(122,243,255,.10),transparent);animation:sofOrbit 18s linear infinite;opacity:.7;pointer-events:none}
     .ritual-hero>*{position:relative;z-index:1}
@@ -270,81 +265,6 @@
 
     <main>
 
-      <section id="astrologyPanel" class="tabPanel" data-astrology-panel>
-        <section class="astrology-panel card">
-          <div class="section-heading">
-            <p class="eyebrow">☉ Sky Mirror</p>
-            <h2>Astrology Mirror</h2>
-            <p class="subtitle">
-              A symbolic mirror for season, element, body, emotion, speech, timing, planetary alignments, and witness.
-              This does not command the day. It reflects the pattern you are walking through.
-            </p>
-          </div>
-
-          <div class="astrology-grid">
-            <article class="astro-card">
-              <p class="eyebrow">Solar Gate</p>
-              <h3 id="astroSolarGate" data-solar-gate>—</h3>
-              <p id="astroSolarCopy" data-solar-copy>Body, provision, land, stability, and what must be made real.</p>
-            </article>
-
-            <article class="astro-card">
-              <p class="eyebrow">Moon Mirror</p>
-              <h3 id="astroMoonMirror" data-moon-reflection>—</h3>
-              <p id="astroMoonCopy" data-moon-reflection-copy>Emotion, memory, dreams, family signal, and inner weather.</p>
-            </article>
-
-            <article class="astro-card">
-              <p class="eyebrow">Daily Counsel</p>
-              <h3 id="astroCounsel">Witness</h3>
-              <p id="astroCounselCopy">Observe first. Interpret after the pattern repeats.</p>
-            </article>
-          </div>
-
-          <p class="meta" data-astro-status>Astrology correspondence loads from the selected Gregorian date.</p>
-        </section>
-
-        <section class="grid">
-          <article class="card col-12">
-            <p class="eyebrow">Planetary Placement</p>
-            <h2>The Sky Wheel</h2>
-            <p class="subtitle">Symbolic planetary positions for the selected date. This is a reflection, not a prediction.</p>
-            <div id="planetarium" class="planetarium">
-              <div class="sun-core" aria-label="Sun">☉</div>
-            </div>
-          </article>
-
-          <article class="card col-12">
-            <p class="eyebrow">Planetary Positions</p>
-            <h2>Daily Placements</h2>
-            <div id="planetGrid" class="planet-grid">
-              <article class="planet-card"><strong>Loading placements...</strong></article>
-            </div>
-          </article>
-
-          <article class="card col-12">
-            <p class="eyebrow">Symbolic Aspects</p>
-            <h2>Planetary Mirrors</h2>
-            <p class="subtitle">Aspects show where planetary energies meet. Each represents a symbolic mirror.</p>
-            <div id="aspectGrid" class="aspect-grid">
-              <article class="aspect-card"><strong>Loading aspects...</strong></article>
-            </div>
-          </article>
-
-          <article class="card col-6">
-            <p class="eyebrow">Elemental Counsel</p>
-            <h3 id="astroElement">—</h3>
-            <p id="astroElementCopy">—</p>
-          </article>
-
-          <article class="card col-6">
-            <p class="eyebrow">Body House</p>
-            <h3 id="astroBodyHouse">—</h3>
-            <p id="astroBodyCopy">—</p>
-          </article>
-        </section>
-      </section>
-
       <section id="todayPanel" class="tabPanel active">
         <section class="command card">
           <div>
@@ -423,7 +343,6 @@
             <h2>Visible Moon Phase</h2>
             <canvas id="simMoon" width="520" height="340" aria-label="Simulated moon phase"></canvas>
             <p id="phaseLine" class="pill">—</p>
-            <p id="phaseMeta" class="meta">—</p>
           </article>
         </section>
 
@@ -438,6 +357,105 @@
             <p class="eyebrow">Gregorian Month Overlay</p>
             <h2>Calendar Mirror</h2>
             <div id="gregCal" class="gregorian"></div>
+          </article>
+        </section>
+      </section>
+
+      <section id="flowPanel" class="tabPanel">
+        <section class="ritual-hero">
+          <div class="ritual-layout">
+            <div>
+              <p class="eyebrow">☲ Daily Ritual Dashboard ☲</p>
+              <h2 class="ritual-title" id="ritualTitle">Read · Witness · Ground</h2>
+              <p class="ritual-line" id="ritualLine">
+                Begin with the day. Notice the signal. Record the witness. Let repeated patterns become the mirror.
+              </p>
+
+              <div class="flow-steps" aria-label="Daily flow">
+                <div class="flow-step"><strong>1</strong><br>Read</div>
+                <div class="flow-step"><strong>2</strong><br>Witness</div>
+                <div class="flow-step"><strong>3</strong><br>Log</div>
+                <div class="flow-step"><strong>4</strong><br>Pattern</div>
+                <div class="flow-step"><strong>5</strong><br>Reflect</div>
+              </div>
+
+              <div class="btnrow">
+                <button class="lab-btn active" data-tab-jump="mirrorPanel" type="button">Open Mirror</button>
+                <button class="lab-btn ghost" data-tab-jump="witnessPanel" type="button">Write Witness</button>
+                <button class="lab-btn ghost" data-tab-jump="timelinePanel" type="button">Check Patterns</button>
+              </div>
+            </div>
+
+            <div class="daily-sigil" aria-hidden="true">
+              <div class="moon-core" id="ritualMoonCore">☾</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid">
+          <article class="card col-12">
+            <p class="pill">✦ Field Meters</p>
+            <h2>Today's Signal Dashboard</h2>
+            <p class="subtitle">These meters are reflective. They respond to the day layer and your logs, not prophecy.</p>
+
+            <div class="meter-grid">
+              <article class="meter-card">
+                <span>Coherence</span>
+                <div class="meter-bar"><div id="meterCoherence" class="meter-fill"></div></div>
+                <strong id="meterCoherenceText">Gathering</strong>
+              </article>
+              <article class="meter-card">
+                <span>Body Load</span>
+                <div class="meter-bar"><div id="meterBody" class="meter-fill"></div></div>
+                <strong id="meterBodyText">Check body</strong>
+              </article>
+              <article class="meter-card">
+                <span>Signal Repeat</span>
+                <div class="meter-bar"><div id="meterSignal" class="meter-fill"></div></div>
+                <strong id="meterSignalText">Listening</strong>
+              </article>
+              <article class="meter-card">
+                <span>Field Intensity</span>
+                <div class="meter-bar"><div id="meterField" class="meter-fill"></div></div>
+                <strong id="meterFieldText">Unknown</strong>
+              </article>
+              <article class="meter-card">
+                <span>Grounding</span>
+                <div class="meter-bar"><div id="meterGround" class="meter-fill"></div></div>
+                <strong id="meterGroundText">Recommended</strong>
+              </article>
+            </div>
+          </article>
+
+          <article class="card practice-card col-12">
+            <p class="eyebrow">Daily Practice</p>
+            <h2>Simple Grounding Sequence</h2>
+            <div class="practice-list">
+              <div><strong>Breath</strong><br>Take 7 slow breaths before interpretation.</div>
+              <div><strong>Word</strong><br>Write the repeated word or theme.</div>
+              <div><strong>Body</strong><br>Eat, hydrate, rest, or step outside.</div>
+              <div><strong>Action</strong><br>Choose one grounded move that builds order.</div>
+            </div>
+          </article>
+
+          <article class="card col-12">
+            <p class="eyebrow">Pattern Memory</p>
+            <h2>What Has Been Repeating?</h2>
+            <p class="subtitle">Saved logs can be read across 3, 7, 14, and 28 day windows.</p>
+            <div class="pattern-memory-grid">
+              <article class="pattern-memory-card">
+                <h3 id="memoryWords">Repeated Words</h3>
+                <p id="memoryWordsCopy">Save witness logs to reveal repeated words and themes.</p>
+              </article>
+              <article class="pattern-memory-card">
+                <h3 id="memoryBody">Body Signals</h3>
+                <p id="memoryBodyCopy">Track sleep, pressure, clarity, tension, hunger, and energy.</p>
+              </article>
+              <article class="pattern-memory-card">
+                <h3 id="memoryField">Field Notes</h3>
+                <p id="memoryFieldCopy">Watch weather, tech, animals, numbers, and timing across days.</p>
+              </article>
+            </div>
           </article>
         </section>
       </section>
@@ -556,101 +574,77 @@
         </section>
       </section>
 
-      <section id="flowPanel" class="tabPanel">
-        <section class="ritual-hero">
-          <div class="ritual-layout">
-            <div>
-              <p class="eyebrow">☲ Daily Ritual Dashboard ☲</p>
-              <h2 class="ritual-title" id="ritualTitle">Read · Witness · Ground</h2>
-              <p class="ritual-line" id="ritualLine">
-                Begin with the day. Notice the signal. Record the witness. Let repeated patterns become the mirror.
-              </p>
-
-              <div class="flow-steps" aria-label="Daily flow">
-                <div class="flow-step"><strong>1</strong><br>Read</div>
-                <div class="flow-step"><strong>2</strong><br>Witness</div>
-                <div class="flow-step"><strong>3</strong><br>Log</div>
-                <div class="flow-step"><strong>4</strong><br>Pattern</div>
-                <div class="flow-step"><strong>5</strong><br>Reflect</div>
-              </div>
-
-              <div class="btnrow">
-                <button class="lab-btn active" data-tab-jump="mirrorPanel" type="button">Open Mirror</button>
-                <button class="lab-btn ghost" data-tab-jump="witnessPanel" type="button">Write Witness</button>
-                <button class="lab-btn ghost" data-tab-jump="timelinePanel" type="button">Check Patterns</button>
-              </div>
-            </div>
-
-            <div class="daily-sigil" aria-hidden="true">
-              <div class="moon-core" id="ritualMoonCore">☾</div>
-            </div>
+      <section id="astrologyPanel" class="tabPanel" data-astrology-panel>
+        <section class="astrology-panel card">
+          <div class="section-heading">
+            <p class="eyebrow">☉ Sky Mirror</p>
+            <h2>Astrology Mirror</h2>
+            <p class="subtitle">
+              A symbolic mirror for season, element, body, emotion, speech, timing, planetary alignments, and witness.
+              This does not command the day. It reflects the pattern you are walking through.
+            </p>
           </div>
+
+          <div class="astrology-grid">
+            <article class="astro-card">
+              <p class="eyebrow">Solar Gate</p>
+              <h3 id="astroSolarGate" data-solar-gate>—</h3>
+              <p id="astroSolarCopy" data-solar-copy>Body, provision, land, stability, and what must be made real.</p>
+            </article>
+
+            <article class="astro-card">
+              <p class="eyebrow">Moon Mirror</p>
+              <h3 id="astroMoonMirror" data-moon-reflection>—</h3>
+              <p id="astroMoonCopy" data-moon-reflection-copy>Emotion, memory, dreams, family signal, and inner weather.</p>
+            </article>
+
+            <article class="astro-card">
+              <p class="eyebrow">Daily Counsel</p>
+              <h3 id="astroCounsel">Witness</h3>
+              <p id="astroCounselCopy">Observe first. Interpret after the pattern repeats.</p>
+            </article>
+          </div>
+
+          <p class="meta" data-astro-status>Astrology correspondence loads from the selected Gregorian date.</p>
         </section>
 
         <section class="grid">
           <article class="card col-12">
-            <p class="pill">✦ Field Meters</p>
-            <h2>Today's Signal Dashboard</h2>
-            <p class="subtitle">These meters are reflective. They respond to the day layer and your logs, not prophecy.</p>
-
-            <div class="meter-grid">
-              <article class="meter-card">
-                <span>Coherence</span>
-                <div class="meter-bar"><div id="meterCoherence" class="meter-fill"></div></div>
-                <strong id="meterCoherenceText">Gathering</strong>
-              </article>
-              <article class="meter-card">
-                <span>Body Load</span>
-                <div class="meter-bar"><div id="meterBody" class="meter-fill"></div></div>
-                <strong id="meterBodyText">Check body</strong>
-              </article>
-              <article class="meter-card">
-                <span>Signal Repeat</span>
-                <div class="meter-bar"><div id="meterSignal" class="meter-fill"></div></div>
-                <strong id="meterSignalText">Listening</strong>
-              </article>
-              <article class="meter-card">
-                <span>Field Intensity</span>
-                <div class="meter-bar"><div id="meterField" class="meter-fill"></div></div>
-                <strong id="meterFieldText">Unknown</strong>
-              </article>
-              <article class="meter-card">
-                <span>Grounding</span>
-                <div class="meter-bar"><div id="meterGround" class="meter-fill"></div></div>
-                <strong id="meterGroundText">Recommended</strong>
-              </article>
-            </div>
-          </article>
-
-          <article class="card practice-card col-12">
-            <p class="eyebrow">Daily Practice</p>
-            <h2>Simple Grounding Sequence</h2>
-            <div class="practice-list">
-              <div><strong>Breath</strong><br>Take 7 slow breaths before interpretation.</div>
-              <div><strong>Word</strong><br>Write the repeated word or theme.</div>
-              <div><strong>Body</strong><br>Eat, hydrate, rest, or step outside.</div>
-              <div><strong>Action</strong><br>Choose one grounded move that builds order.</div>
+            <p class="eyebrow">Planetary Placement</p>
+            <h2>The Sky Wheel</h2>
+            <p class="subtitle">Symbolic planetary positions for the selected date. This is a reflection, not a prediction.</p>
+            <div id="planetarium" class="planetarium">
+              <div class="sun-core" aria-label="Sun">☉</div>
             </div>
           </article>
 
           <article class="card col-12">
-            <p class="eyebrow">Pattern Memory</p>
-            <h2>What Has Been Repeating?</h2>
-            <p class="subtitle">Saved logs can be read across 3, 7, 14, and 28 day windows.</p>
-            <div class="pattern-memory-grid">
-              <article class="pattern-memory-card">
-                <h3 id="memoryWords">Repeated Words</h3>
-                <p id="memoryWordsCopy">Save witness logs to reveal repeated words and themes.</p>
-              </article>
-              <article class="pattern-memory-card">
-                <h3 id="memoryBody">Body Signals</h3>
-                <p id="memoryBodyCopy">Track sleep, pressure, clarity, tension, hunger, and energy.</p>
-              </article>
-              <article class="pattern-memory-card">
-                <h3 id="memoryField">Field Notes</h3>
-                <p id="memoryFieldCopy">Watch weather, tech, animals, numbers, and timing across days.</p>
-              </article>
+            <p class="eyebrow">Planetary Positions</p>
+            <h2>Daily Placements</h2>
+            <div id="planetGrid" class="planet-grid">
+              <article class="planet-card"><strong>Loading placements...</strong></article>
             </div>
+          </article>
+
+          <article class="card col-12">
+            <p class="eyebrow">Symbolic Aspects</p>
+            <h2>Planetary Mirrors</h2>
+            <p class="subtitle">Aspects show where planetary energies meet. Each represents a symbolic mirror.</p>
+            <div id="aspectGrid" class="aspect-grid">
+              <article class="aspect-card"><strong>Loading aspects...</strong></article>
+            </div>
+          </article>
+
+          <article class="card col-6">
+            <p class="eyebrow">Elemental Counsel</p>
+            <h3 id="astroElement">—</h3>
+            <p id="astroElementCopy">—</p>
+          </article>
+
+          <article class="card col-6">
+            <p class="eyebrow">Body House</p>
+            <h3 id="astroBodyHouse">—</h3>
+            <p id="astroBodyCopy">—</p>
           </article>
         </section>
       </section>
