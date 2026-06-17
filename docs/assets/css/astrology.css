@@ -1,6 +1,4 @@
-from pathlib import Path
-
-css = r'''/* Scroll of Fire — Astrology Styles
+/* Scroll of Fire — Astrology Styles
    Companion layer for Remnant 13 Moons.
    Keep this file focused on astrology-specific UI only.
 */
