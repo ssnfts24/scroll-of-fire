@@ -130,6 +130,120 @@
     .mobile-dock a{flex:1;text-align:center;text-decoration:none;padding:.65rem .35rem;border-radius:999px;color:inherit;font-weight:850;font-size:.76rem}.mobile-dock a:hover{background:rgba(122,243,255,.10)}
     @media(max-width:1000px){.command,.moon-badge,.reading-focus{grid-template-columns:1fr}.command-grid{grid-template-columns:repeat(2,1fr)}.col-8,.col-7,.col-6,.col-5,.col-4{grid-column:span 12}.log-grid,.hum-grid,.mirror-grid{grid-template-columns:repeat(2,1fr)}.astrology-grid{grid-template-columns:1fr}}
     @media(max-width:760px){.sof-topbar{position:relative;align-items:flex-start;flex-direction:column}.sof-nav{justify-content:flex-start}.page-head{border-radius:26px;padding:1rem}.tabs{top:0}.formrow,.command-grid,.log-grid,.hum-grid,.mirror-grid{grid-template-columns:1fr}.week{grid-template-columns:repeat(7,1fr)}.btnrow .lab-btn{flex:1 1 auto}.mobile-dock{display:flex}.mobile-dock a{font-size:.7rem}.astro-card{min-height:auto}}
+
+    /* === Scroll of Fire UI Upgrade: Ritual Dashboard Layer === */
+    .ritual-hero{
+      position:relative;
+      overflow:hidden;
+      margin:1rem 0;
+      padding:clamp(1.1rem,4vw,2rem);
+      border-radius:30px;
+      border:1px solid rgba(243,201,122,.22);
+      background:
+        radial-gradient(circle at 12% 16%,rgba(243,201,122,.18),transparent 34%),
+        radial-gradient(circle at 82% 10%,rgba(122,243,255,.16),transparent 34%),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.018));
+      box-shadow:0 28px 90px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    .ritual-hero::before{
+      content:"";
+      position:absolute;
+      inset:-50%;
+      background:conic-gradient(from 0deg,transparent,rgba(243,201,122,.12),transparent,rgba(122,243,255,.10),transparent);
+      animation:sofOrbit 18s linear infinite;
+      opacity:.7;
+      pointer-events:none;
+    }
+    .ritual-hero>*{position:relative;z-index:1}
+    .ritual-layout{display:grid;grid-template-columns:1.15fr .85fr;gap:1rem;align-items:stretch}
+    .ritual-title{font-size:clamp(2rem,6vw,4.4rem);line-height:.92;margin:.2rem 0 .8rem;letter-spacing:-.06em}
+    .ritual-line{font-size:clamp(1rem,2.5vw,1.25rem);color:var(--muted,#aeb7c8);max-width:820px}
+    .daily-sigil{
+      display:grid;
+      place-items:center;
+      min-height:250px;
+      border-radius:26px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(circle at center,rgba(243,201,122,.18),transparent 42%),
+        rgba(0,0,0,.18);
+      box-shadow:inset 0 0 80px rgba(122,243,255,.08);
+    }
+    .daily-sigil .moon-core{
+      width:min(46vw,190px);
+      aspect-ratio:1;
+      display:grid;
+      place-items:center;
+      border-radius:999px;
+      border:1px solid rgba(243,201,122,.35);
+      background:
+        radial-gradient(circle at 38% 34%,#fff7d8 0 11%,#f3c97a 12% 28%,rgba(243,201,122,.25) 29% 44%,rgba(255,255,255,.04) 45% 100%);
+      box-shadow:0 0 34px rgba(243,201,122,.35),0 0 78px rgba(122,243,255,.18);
+      animation:moonFloat 5.5s ease-in-out infinite;
+      color:#05070d;
+      font-weight:950;
+      font-size:clamp(2.8rem,9vw,4.8rem);
+    }
+    .flow-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;margin:1rem 0}
+    .flow-step{
+      padding:.75rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      background:rgba(255,255,255,.035);
+      text-align:center;
+      color:var(--muted,#aeb7c8);
+      font-weight:850;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+    .flow-step strong{display:block;color:var(--gold,#f3c97a)}
+    .flow-step:hover{transform:translateY(-2px);border-color:rgba(122,243,255,.35);background:rgba(122,243,255,.06)}
+    .meter-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.85rem;margin-top:1rem}
+    .meter-card{padding:.9rem;border-radius:20px;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.035)}
+    .meter-card span{display:block;color:var(--muted,#aeb7c8);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+    .meter-bar{height:9px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin:.6rem 0}
+    .meter-fill{height:100%;width:42%;border-radius:999px;background:linear-gradient(90deg,var(--gold,#f3c97a),var(--accent,#7af3ff));box-shadow:0 0 16px rgba(122,243,255,.28);animation:meterBreath 4s ease-in-out infinite}
+    .meter-card strong{color:var(--gold,#f3c97a)}
+    .practice-card{
+      border-color:rgba(159,247,200,.22);
+      background:radial-gradient(circle at 8% 0%,rgba(159,247,200,.12),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+    }
+    .practice-list{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:1rem}
+    .practice-list div{padding:.9rem;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.16)}
+    .pattern-memory-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;margin-top:1rem}
+    .pattern-memory-card{padding:1rem;border-radius:20px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.16)}
+    .pattern-memory-card h3{margin:0 0 .35rem;color:var(--gold,#f3c97a)}
+    .toast{
+      position:fixed;
+      right:1rem;
+      bottom:1rem;
+      z-index:999;
+      max-width:310px;
+      padding:.9rem 1rem;
+      border-radius:18px;
+      border:1px solid rgba(243,201,122,.28);
+      background:rgba(8,12,20,.94);
+      color:var(--ink,#f4f1e8);
+      box-shadow:0 18px 60px rgba(0,0,0,.45);
+      transform:translateY(20px);
+      opacity:0;
+      pointer-events:none;
+      transition:.25s ease;
+    }
+    .toast.show{transform:translateY(0);opacity:1}
+    .pulse-save{animation:witnessSeal .75s ease both}
+    @keyframes sofOrbit{to{transform:rotate(360deg)}}
+    @keyframes moonFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.025)}}
+    @keyframes meterBreath{0%,100%{filter:saturate(1);opacity:.78}50%{filter:saturate(1.5);opacity:1}}
+    @keyframes witnessSeal{0%{box-shadow:0 0 0 rgba(159,247,200,0)}50%{box-shadow:0 0 34px rgba(159,247,200,.28)}100%{box-shadow:0 0 0 rgba(159,247,200,0)}}
+    @media(max-width:1000px){
+      .ritual-layout,.meter-grid,.practice-list,.pattern-memory-grid{grid-template-columns:1fr}
+      .flow-steps{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:520px){
+      .flow-steps{grid-template-columns:1fr}
+      .toast{left:1rem;right:1rem}
+    }
+
   </style>
 </head>
 
@@ -192,6 +306,7 @@
 
       <div class="tabs" aria-label="Calendar tools">
         <button class="tab active" data-tab="todayPanel" type="button">Today</button>
+        <button class="tab" data-tab="flowPanel" type="button">Daily Flow</button>
         <button class="tab" data-tab="mirrorPanel" type="button">Mirror Reading</button>
         <button class="tab" data-tab="witnessPanel" type="button">Daily Witness</button>
         <button class="tab" data-tab="astrologyPanel" type="button">Astrology</button>
@@ -205,6 +320,106 @@
     </header>
 
     <main>
+
+      <section id="flowPanel" class="tabPanel">
+        <section class="ritual-hero">
+          <div class="ritual-layout">
+            <div>
+              <p class="eyebrow">☲ Daily Ritual Dashboard ☲</p>
+              <h2 class="ritual-title" id="ritualTitle">Read · Witness · Ground</h2>
+              <p class="ritual-line" id="ritualLine">
+                Begin with the day. Notice the signal. Record the witness. Let repeated patterns become the mirror.
+              </p>
+
+              <div class="flow-steps" aria-label="Daily flow">
+                <div class="flow-step"><strong>1</strong>Read</div>
+                <div class="flow-step"><strong>2</strong>Witness</div>
+                <div class="flow-step"><strong>3</strong>Log</div>
+                <div class="flow-step"><strong>4</strong>Pattern</div>
+                <div class="flow-step"><strong>5</strong>Reflect</div>
+              </div>
+
+              <div class="btnrow">
+                <button class="lab-btn active" data-tab-jump="mirrorPanel" type="button">Open Mirror</button>
+                <button class="lab-btn ghost" data-tab-jump="witnessPanel" type="button">Write Witness</button>
+                <button class="lab-btn ghost" data-tab-jump="timelinePanel" type="button">Check Patterns</button>
+              </div>
+            </div>
+
+            <div class="daily-sigil" aria-hidden="true">
+              <div class="moon-core" id="ritualMoonCore">☾</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid">
+          <article class="card col-12">
+            <p class="pill">✦ Field Meters</p>
+            <h2>Today’s Signal Dashboard</h2>
+            <p class="subtitle">These meters are reflective. They respond to the day layer and your logs, not prophecy.</p>
+
+            <div class="meter-grid">
+              <article class="meter-card">
+                <span>Coherence</span>
+                <div class="meter-bar"><div id="meterCoherence" class="meter-fill"></div></div>
+                <strong id="meterCoherenceText">Gathering</strong>
+              </article>
+              <article class="meter-card">
+                <span>Body Load</span>
+                <div class="meter-bar"><div id="meterBody" class="meter-fill"></div></div>
+                <strong id="meterBodyText">Check body</strong>
+              </article>
+              <article class="meter-card">
+                <span>Signal Repeat</span>
+                <div class="meter-bar"><div id="meterSignal" class="meter-fill"></div></div>
+                <strong id="meterSignalText">Listening</strong>
+              </article>
+              <article class="meter-card">
+                <span>Field Intensity</span>
+                <div class="meter-bar"><div id="meterField" class="meter-fill"></div></div>
+                <strong id="meterFieldText">Unknown</strong>
+              </article>
+              <article class="meter-card">
+                <span>Grounding</span>
+                <div class="meter-bar"><div id="meterGround" class="meter-fill"></div></div>
+                <strong id="meterGroundText">Recommended</strong>
+              </article>
+            </div>
+          </article>
+
+          <article class="card practice-card col-12">
+            <p class="eyebrow">Daily Practice</p>
+            <h2>Simple Grounding Sequence</h2>
+            <div class="practice-list">
+              <div><strong>Breath</strong><br>Take 7 slow breaths before interpretation.</div>
+              <div><strong>Word</strong><br>Write the repeated word or theme.</div>
+              <div><strong>Body</strong><br>Eat, hydrate, rest, or step outside.</div>
+              <div><strong>Action</strong><br>Choose one grounded move that builds order.</div>
+            </div>
+          </article>
+
+          <article class="card col-12">
+            <p class="eyebrow">Pattern Memory</p>
+            <h2>What Has Been Repeating?</h2>
+            <p class="subtitle">Saved logs can be read across 3, 7, 14, and 28 day windows.</p>
+            <div class="pattern-memory-grid">
+              <article class="pattern-memory-card">
+                <h3 id="memoryWords">Repeated Words</h3>
+                <p id="memoryWordsCopy">Save witness logs to reveal repeated words and themes.</p>
+              </article>
+              <article class="pattern-memory-card">
+                <h3 id="memoryBody">Body Signals</h3>
+                <p id="memoryBodyCopy">Track sleep, pressure, clarity, tension, hunger, and energy.</p>
+              </article>
+              <article class="pattern-memory-card">
+                <h3 id="memoryField">Field Notes</h3>
+                <p id="memoryFieldCopy">Watch weather, tech, animals, numbers, and timing across days.</p>
+              </article>
+            </div>
+          </article>
+        </section>
+      </section>
+
       <section id="todayPanel" class="tabPanel active">
         <section class="command card">
           <div>
@@ -420,13 +635,13 @@
         </section>
       </section>
 
-      <section id="astrologyPanel" class="tabPanel">
+      <section id="astrologyPanel" class="tabPanel" data-astrology-panel>
         <section class="astrology-panel card">
           <div class="section-heading">
             <p class="eyebrow">☉ Sky Mirror</p>
             <h2>Astrology Mirror</h2>
             <p class="subtitle">
-              A symbolic mirror for season, element, body, emotion, speech, timing, and witness.
+              A symbolic mirror for season, element, body, emotion, speech, timing, planetary alignments, and witness.
               This does not command the day. It reflects the pattern you are walking through.
             </p>
           </div>
@@ -434,14 +649,14 @@
           <div class="astrology-grid">
             <article class="astro-card">
               <p class="eyebrow">Solar Gate</p>
-              <h3 id="astroSolarGate">—</h3>
-              <p id="astroSolarCopy">Body, provision, land, stability, and what must be made real.</p>
+              <h3 id="astroSolarGate" data-solar-gate>—</h3>
+              <p id="astroSolarCopy" data-solar-copy>Body, provision, land, stability, and what must be made real.</p>
             </article>
 
             <article class="astro-card">
               <p class="eyebrow">Moon Mirror</p>
-              <h3 id="astroMoonMirror">—</h3>
-              <p id="astroMoonCopy">Emotion, memory, dreams, family signal, and inner weather.</p>
+              <h3 id="astroMoonMirror" data-moon-reflection>—</h3>
+              <p id="astroMoonCopy" data-moon-reflection-copy>Emotion, memory, dreams, family signal, and inner weather.</p>
             </article>
 
             <article class="astro-card">
@@ -450,13 +665,15 @@
               <p id="astroCounselCopy">Observe first. Interpret after the pattern repeats.</p>
             </article>
           </div>
+
+          <p class="meta" data-astro-status>Astrology correspondence loads from the selected Gregorian date.</p>
         </section>
 
         <section class="grid">
           <article class="card col-4">
             <p class="eyebrow">Element Mirror</p>
-            <h2 id="astroElement">—</h2>
-            <p id="astroElementCopy" class="fine">Elemental reading appears here.</p>
+            <h2 id="astroElement" data-elemental-tone>—</h2>
+            <p id="astroElementCopy" class="fine" data-elemental-copy>Elemental reading appears here.</p>
           </article>
 
           <article class="card col-4">
@@ -469,6 +686,31 @@
             <p class="eyebrow">Integration</p>
             <h2 id="astroIntegration">Ground</h2>
             <p id="astroIntegrationCopy" class="fine">Let the sky become a mirror, then let the body choose the grounded step.</p>
+          </article>
+        </section>
+
+
+        <section class="grid">
+          <article class="card col-12">
+            <p class="eyebrow">✦ Planetary Alignment Mirror</p>
+            <h2>Planetarium</h2>
+            <p class="subtitle">
+              A symbolic planetary wheel for the selected date. Approximate by default; a real ephemeris can override it later.
+            </p>
+            <div id="planetarium" class="planetarium" aria-label="Planetary alignment wheel">
+              <div class="zodiac-wheel" aria-hidden="true"></div>
+              <div class="sun-core" aria-hidden="true">☉</div>
+            </div>
+          </article>
+
+          <article class="card col-12">
+            <p class="eyebrow">Planetary Placements</p>
+            <div id="planetGrid" class="planet-grid"></div>
+          </article>
+
+          <article class="card col-12">
+            <p class="eyebrow">Aspect Mirror</p>
+            <div id="aspectGrid" class="aspect-grid"></div>
           </article>
         </section>
       </section>
@@ -617,6 +859,7 @@
 
   <nav class="mobile-dock" aria-label="Mobile quick navigation">
     <a href="#todayPanel" data-mobile-tab="todayPanel">Today</a>
+    <a href="#flowPanel" data-mobile-tab="flowPanel">Flow</a>
     <a href="#mirrorPanel" data-mobile-tab="mirrorPanel">Mirror</a>
     <a href="#witnessPanel" data-mobile-tab="witnessPanel">Witness</a>
     <a href="#astrologyPanel" data-mobile-tab="astrologyPanel">Astro</a>
@@ -628,6 +871,7 @@
   </footer>
 
   <script src="assets/js/moons.js"></script>
+  <script src="assets/js/astrology.js"></script>
   <script>
     (function () {
       function showTab(id) {
@@ -790,5 +1034,125 @@ The calendar does not decide the day. It reflects the day back to the witness. R
       });
     })();
   </script>
+
+  <div id="sofToast" class="toast" role="status" aria-live="polite">Witness sealed.</div>
+
+  <script>
+    (function () {
+      function $(id){ return document.getElementById(id); }
+      function text(id){ var n=$(id); return n ? (n.textContent || "").trim() : ""; }
+
+      function showToast(message){
+        var t=$("sofToast");
+        if(!t) return;
+        t.textContent = message;
+        t.classList.add("show");
+        clearTimeout(window.__sofToastTimer);
+        window.__sofToastTimer = setTimeout(function(){ t.classList.remove("show"); }, 1800);
+      }
+
+      function showTab(id){
+        document.querySelectorAll(".tabPanel").forEach(function(panel){
+          panel.classList.toggle("active", panel.id === id);
+        });
+        document.querySelectorAll(".tab").forEach(function(tab){
+          tab.classList.toggle("active", tab.dataset.tab === id);
+        });
+        var panel=$(id);
+        if(panel) panel.scrollIntoView({behavior:"smooth",block:"start"});
+      }
+
+      document.querySelectorAll("[data-tab-jump]").forEach(function(btn){
+        btn.addEventListener("click", function(){ showTab(btn.dataset.tabJump); });
+      });
+
+      function width(id, value){
+        var n=$(id);
+        if(n) n.style.width = Math.max(8, Math.min(100, value)) + "%";
+      }
+
+      function hydrateRitualUI(){
+        var moon = text("moonName") || "Remnant Moon";
+        var line = text("moonLine") || "Read the signal. Record the witness. Ground the body.";
+        var phase = text("phaseLine") || "Visible moon";
+        var day = text("dayInMoon") || "☾";
+        var field = text("statField") || "Unknown";
+
+        if($("ritualTitle")) $("ritualTitle").textContent = moon;
+        if($("ritualLine")) $("ritualLine").textContent = line + " · " + phase;
+        if($("ritualMoonCore")) $("ritualMoonCore").textContent = day;
+
+        var logs = parseInt(text("statLogs") || "0", 10) || 0;
+        var patterns = parseInt(text("statPatterns") || "0", 10) || 0;
+        var fieldBoost = /storm|elevated|charged/i.test(field) ? 80 : /quiet/i.test(field) ? 35 : 52;
+
+        width("meterCoherence", 38 + Math.min(34, logs * 8));
+        width("meterBody", 48);
+        width("meterSignal", 28 + Math.min(52, patterns * 18));
+        width("meterField", fieldBoost);
+        width("meterGround", fieldBoost > 65 ? 86 : 58);
+
+        if($("meterCoherenceText")) $("meterCoherenceText").textContent = logs ? "Witness active" : "Gathering";
+        if($("meterSignalText")) $("meterSignalText").textContent = patterns ? "Pattern seen" : "Listening";
+        if($("meterFieldText")) $("meterFieldText").textContent = field;
+        if($("meterGroundText")) $("meterGroundText").textContent = fieldBoost > 65 ? "High priority" : "Recommended";
+      }
+
+      function scanLocalLogs(){
+        var raw = [];
+        try {
+          Object.keys(localStorage).forEach(function(k){
+            if(/moon|witness|scroll|remnant/i.test(k)){
+              var v = localStorage.getItem(k);
+              if(v) raw.push(v);
+            }
+          });
+        } catch(e){}
+
+        var blob = raw.join(" ").toLowerCase();
+        var themes = [
+          "speech","court","custody","child","money","housing","dream","water","body","repair",
+          "work","family","signal","fire","moon","sleep","pressure","clarity","fear","peace"
+        ];
+
+        var counts = themes.map(function(t){
+          var m = blob.match(new RegExp("\\b"+t+"\\b","g"));
+          return {theme:t, count:m ? m.length : 0};
+        }).filter(function(x){ return x.count > 0; }).sort(function(a,b){ return b.count-a.count; }).slice(0,5);
+
+        if(counts.length){
+          if($("memoryWordsCopy")) $("memoryWordsCopy").textContent = counts.map(function(x){return x.theme+" ×"+x.count;}).join(" · ");
+          if($("memoryBodyCopy")) $("memoryBodyCopy").textContent = "Use the witness form daily so body signals can separate from emotional weather.";
+          if($("memoryFieldCopy")) $("memoryFieldCopy").textContent = "Pattern memory is active in this browser. Export logs before clearing storage.";
+        }
+      }
+
+      ["saveWitness","copyWitness","copyMirror","copySeal","copyAllLogs","exportLogs"].forEach(function(id){
+        var btn=$(id);
+        if(btn){
+          btn.addEventListener("click", function(){
+            btn.classList.add("pulse-save");
+            setTimeout(function(){btn.classList.remove("pulse-save");}, 800);
+            showToast(id.indexOf("save") >= 0 ? "Witness sealed." : "Copied to Scroll.");
+            setTimeout(function(){ hydrateRitualUI(); scanLocalLogs(); }, 200);
+          });
+        }
+      });
+
+      window.addEventListener("load", function(){
+        setTimeout(function(){
+          hydrateRitualUI();
+          scanLocalLogs();
+        }, 700);
+      });
+
+      document.addEventListener("change", function(e){
+        if(e.target && /Input|readingFocus|datePick|tzPick/.test(e.target.id || "")){
+          setTimeout(hydrateRitualUI, 120);
+        }
+      });
+    })();
+  </script>
+
 </body>
-  </html>
+                </html>
