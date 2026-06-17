@@ -1,6 +1,4 @@
-from pathlib import Path
-
-js = r'''(() => {
+(() => {
   "use strict";
 
   const $ = s => document.querySelector(s);
@@ -902,8 +900,3 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     setup();
   }
 })();
-'''
-
-path = Path("/mnt/data/moons.js")
-path.write_text(js, encoding="utf-8")
-print(f"Created {path} ({path.stat().st_size:,} bytes)")
