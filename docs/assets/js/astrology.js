@@ -1,6 +1,4 @@
-from pathlib import Path
-
-js = r'''/* Scroll of Fire — Astrology + Planetary Mirror Layer
+/* Scroll of Fire — Astrology + Planetary Mirror Layer
    Reads the selected Gregorian date only.
    Does NOT overwrite the 13-Moon calendar engine.
 
@@ -369,8 +367,3 @@ js = r'''/* Scroll of Fire — Astrology + Planetary Mirror Layer
     if (el) el.textContent = value;
   }
 })();
-'''
-
-path = Path("/mnt/data/astrology.js")
-path.write_text(js, encoding="utf-8")
-print(f"Created {path} ({path.stat().st_size:,} bytes)")
