@@ -4,15 +4,15 @@
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
     if (location.hostname !== "ssnfts24.github.io") {
-      var _b = document.querySelector("base");
-      if (_b) _b.setAttribute("href", "/");
+      const b = document.querySelector("base");
+      if (b) b.setAttribute("href", "/");
     }
   </script>
 
   <meta charset="utf-8">
   <title>Artifact Registry — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Scroll of Fire Artifact Registry by Aaron Paul Laird: personal instruments, living artifacts, gifted pieces, reclaimed copper work, sea glass, stone, and Codex-linked collection items.">
+  <meta name="description" content="The Scroll of Fire Artifact Registry by Aaron Paul Laird: living technology, reclaimed copper, stone, sea glass, moonstone, tourmaline, personal instruments, gifted relics, and Codex-linked collection pieces.">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="creator" content="Aaron Paul Laird">
   <meta name="publisher" content="Scroll of Fire">
@@ -23,10 +23,10 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Artifact Registry — Scroll of Fire">
-  <meta property="og:description" content="Personal instruments, living artifacts, gifted pieces, reclaimed copper work, sea glass, stone, and Codex-linked collection items by Aaron Paul Laird.">
+  <meta property="og:description" content="Living technology artifacts, personal instruments, gifted pieces, reclaimed copper work, sea glass, stone, and Codex-linked collection items by Aaron Paul Laird.">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/shop.html">
   <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/HaLevanah.png">
-  <meta property="og:image:alt" content="Scroll of Fire artifact registry preview">
+  <meta property="og:image:alt" content="HaLevanah Scroll of Fire artifact registry preview">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Artifact Registry — Scroll of Fire">
@@ -41,56 +41,542 @@
     "@type":"CollectionPage",
     "name":"Artifact Registry — Scroll of Fire",
     "url":"https://ssnfts24.github.io/scroll-of-fire/shop.html",
-    "description":"Scroll of Fire Artifact Registry featuring personal instruments, living artifacts, gifted pieces, reclaimed copper work, sea glass, stone, and Codex collection items.",
+    "description":"Scroll of Fire Artifact Registry featuring living technology, personal instruments, gifted artifacts, reclaimed copper work, sea glass, stone, and Codex collection pieces.",
     "creator":{"@type":"Person","name":"Aaron Paul Laird"},
     "publisher":{"@type":"Organization","name":"Scroll of Fire","url":"https://ssnfts24.github.io/scroll-of-fire/"},
     "mainEntity":{
       "@type":"ItemList",
       "name":"Scroll of Fire Artifact Registry",
       "itemListElement":[
-        {"@type":"CreativeWork","name":"T7-000 · Ahhava Or HaDabar","description":"Tesla Type-7 Resonant Conduit Aetheric Field Transceiver. Personal instrument. Not for sale."},
-        {"@type":"CreativeWork","name":"EN-007 · Ember Node 7","description":"Heart node of the Living Technology Array. Personal instrument. Not for sale."},
-        {"@type":"CreativeWork","name":"HL-001 · HaLevanah","description":"The Moon That Returns. Hand braided copper with moonstone and tourmaline. Available by inquiry."},
-        {"@type":"CreativeWork","name":"TN-001 · Tiger Node Ring","description":"Gifted copper and tiger eye artifact. Not for sale."},
-        {"@type":"CreativeWork","name":"TS-001 · Time Shard Ring","description":"Copper and green shard ring. Coming soon."}
+        {"@type":"CreativeWork","position":1,"name":"T7-000 · Ahhava Or HaDabar","description":"Tesla Type-7 Resonant Conduit. Personal instrument. Not for sale."},
+        {"@type":"CreativeWork","position":2,"name":"EN-007 · Ember Node 7","description":"Heart node of the Living Technology Array. Personal instrument. Not for sale."},
+        {"@type":"CreativeWork","position":3,"name":"HL-001 · HaLevanah","description":"The Moon That Returns. Hand braided copper with moonstone and tourmaline. Available by inquiry."},
+        {"@type":"CreativeWork","position":4,"name":"TN-001 · Tiger Node Ring","description":"Gifted copper and tiger eye artifact. Archive only."},
+        {"@type":"CreativeWork","position":5,"name":"TS-001 · Time Shard Ring","description":"Copper and green shard ring. Coming soon."},
+        {"@type":"CreativeWork","position":6,"name":"TB-001 · Tenser Band I","description":"Reserved wrist node of the Living Technology Array."},
+        {"@type":"CreativeWork","position":7,"name":"SD-001 · Sand Dollar Witness","description":"Unreleased relic of returning tides."}
       ]
     }
   }
   </script>
 
   <style>
-    .shop-hero{min-height:62vh;position:relative;overflow:hidden}
-    .shop-hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 18% 18%,rgba(122,243,255,.16),transparent 34%),radial-gradient(circle at 78% 26%,rgba(243,201,122,.16),transparent 36%),radial-gradient(circle at 50% 92%,rgba(255,255,255,.06),transparent 40%);opacity:.85}
-    .shop-hero>*{position:relative;z-index:1}
+    :root{
+      --shop-gold:#f3c97a;
+      --shop-cyan:#7af3ff;
+      --shop-ember:#ff9a5f;
+      --shop-violet:#c7a7ff;
+      --shop-bg:#05070d;
+      --shop-ink:#f7efe0;
+      --shop-muted:rgba(247,239,224,.72);
+      --shop-line:rgba(243,201,122,.22);
+      --shop-glass:rgba(255,255,255,.045);
+      --shop-radius:24px;
+    }
 
-    .launch-ribbon{display:inline-flex;align-items:center;gap:.45rem;margin:0 auto 1rem;padding:.5rem .95rem;border:1px solid rgba(243,201,122,.32);border-radius:999px;color:var(--gold);background:rgba(243,201,122,.08);font-weight:900;letter-spacing:.09em;text-transform:uppercase;font-size:.78rem;box-shadow:0 0 30px rgba(243,201,122,.08)}
-    .shop-note{max-width:900px;margin:1.25rem auto 0;padding:1rem;border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));color:var(--muted)}
-    .inventory-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.9rem;margin:1.25rem auto 0;max-width:980px}
-    .inventory-stat{padding:.9rem;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.035);text-align:center}
-    .inventory-stat strong{display:block;color:var(--gold);font-size:1.35rem;margin-bottom:.2rem}
+    body{
+      background:
+        radial-gradient(circle at 12% 0%,rgba(122,243,255,.09),transparent 32rem),
+        radial-gradient(circle at 82% 8%,rgba(243,201,122,.10),transparent 34rem),
+        radial-gradient(circle at 50% 100%,rgba(255,154,95,.075),transparent 36rem),
+        var(--shop-bg);
+    }
 
-    .artifact-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.25rem}
-    .artifact-card{position:relative;overflow:hidden}
-    .artifact-card::before{content:"";position:absolute;inset:-1px;pointer-events:none;background:radial-gradient(circle at 18% 0%,rgba(243,201,122,.12),transparent 36%),radial-gradient(circle at 92% 100%,rgba(122,243,255,.10),transparent 38%);opacity:.65}
-    .artifact-card>*{position:relative;z-index:1}
-    .artifact-card img,.artifact-placeholder{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:18px;border:1px solid rgba(243,201,122,.18);background:radial-gradient(circle at 30% 20%,rgba(243,201,122,.18),transparent 35%),radial-gradient(circle at 70% 80%,rgba(120,220,255,.12),transparent 38%),rgba(255,255,255,.04)}
-    .artifact-placeholder{display:grid;place-items:center;color:var(--gold);font-weight:900;letter-spacing:.14em;text-align:center;text-transform:uppercase;padding:1rem}
-    .artifact-card h3{margin-top:1rem;color:var(--gold)}
-    .artifact-price{margin:1rem 0 0;font-size:1.25rem;color:var(--cyan);font-weight:900}
-    .artifact-status{display:inline-flex;margin-top:.75rem;padding:.35rem .7rem;border:1px solid var(--line);border-radius:999px;color:var(--gold);font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;background:rgba(0,0,0,.14)}
-    .artifact-list,.forge-list{color:var(--muted);padding-left:1.15rem}
-    .artifact-list li,.forge-list li{margin-bottom:.35rem}
+    .skip-link{
+      position:absolute;
+      left:-999px;
+      top:auto;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+    }
 
-    .registry-card{max-width:980px;margin-inline:auto}
-    .shop-nav-note{text-align:center;margin-top:1rem;color:var(--muted);font-size:.95rem}
-    .process-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.9rem;margin-top:1.25rem}
-    .process-step{padding:1rem;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.035)}
-    .process-step strong{display:block;color:var(--gold);margin-bottom:.35rem}
-    .notify-box{text-align:center;max-width:900px;margin-inline:auto}
+    .skip-link:focus{
+      left:1rem;
+      top:1rem;
+      width:auto;
+      height:auto;
+      padding:.75rem 1rem;
+      z-index:9999;
+      border-radius:999px;
+      background:#fff;
+      color:#000;
+    }
 
-    @media(max-width:1100px){.inventory-strip,.process-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media(max-width:900px){.artifact-grid{grid-template-columns:1fr}}
-    @media(max-width:620px){.inventory-strip,.process-grid{grid-template-columns:1fr}}
+    .shop-hero{
+      position:relative;
+      min-height:72vh;
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    .shop-hero::before,
+    .shop-hero::after{
+      content:"";
+      position:absolute;
+      inset:-20%;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .shop-hero::before{
+      background:
+        radial-gradient(circle at 18% 18%,rgba(122,243,255,.18),transparent 24rem),
+        radial-gradient(circle at 78% 26%,rgba(243,201,122,.18),transparent 26rem),
+        radial-gradient(circle at 50% 92%,rgba(255,255,255,.08),transparent 30rem);
+      animation:artifactAura 14s ease-in-out infinite alternate;
+    }
+
+    .shop-hero::after{
+      background-image:
+        linear-gradient(rgba(243,201,122,.12) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(122,243,255,.07) 1px,transparent 1px);
+      background-size:72px 72px;
+      mask-image:radial-gradient(circle at center,black,transparent 68%);
+      opacity:.22;
+      animation:gridDrift 28s linear infinite;
+    }
+
+    .shop-hero > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .living-sigil{
+      display:grid;
+      place-items:center;
+      width:7rem;
+      height:7rem;
+      margin:0 auto 1.25rem;
+      border:1px solid rgba(243,201,122,.34);
+      border-radius:50%;
+      color:var(--shop-gold);
+      font-size:2.35rem;
+      background:
+        radial-gradient(circle,rgba(243,201,122,.16),transparent 58%),
+        rgba(255,255,255,.035);
+      box-shadow:
+        0 0 50px rgba(243,201,122,.12),
+        inset 0 0 30px rgba(122,243,255,.06);
+      animation:sigilPulse 5s ease-in-out infinite;
+    }
+
+    .launch-ribbon{
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      margin:0 auto 1rem;
+      padding:.55rem 1rem;
+      border:1px solid rgba(243,201,122,.35);
+      border-radius:999px;
+      color:var(--shop-gold);
+      background:rgba(243,201,122,.08);
+      font-weight:900;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      font-size:.78rem;
+      box-shadow:0 0 34px rgba(243,201,122,.08);
+    }
+
+    .hero-copy strong{
+      color:var(--shop-gold);
+    }
+
+    .shop-note{
+      max-width:980px;
+      margin:1.25rem auto 0;
+      padding:1rem 1.1rem;
+      border:1px solid var(--shop-line);
+      border-radius:var(--shop-radius);
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.018));
+      color:var(--shop-muted);
+      backdrop-filter:blur(14px);
+    }
+
+    .inventory-strip{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.9rem;
+      max-width:980px;
+      margin:1.35rem auto 0;
+    }
+
+    .inventory-stat{
+      position:relative;
+      overflow:hidden;
+      padding:1rem;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      text-align:center;
+    }
+
+    .inventory-stat::after{
+      content:"";
+      position:absolute;
+      inset:auto -20% -70% -20%;
+      height:100%;
+      background:radial-gradient(circle,rgba(243,201,122,.18),transparent 65%);
+      opacity:.7;
+    }
+
+    .inventory-stat strong{
+      display:block;
+      color:var(--shop-gold);
+      font-size:1.45rem;
+      margin-bottom:.2rem;
+    }
+
+    .shop-orbit{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:.6rem;
+      margin:1.25rem auto 0;
+      color:var(--shop-muted);
+      font-size:.9rem;
+    }
+
+    .shop-orbit span{
+      padding:.45rem .75rem;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .artifact-tools{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:.55rem;
+      margin:1.3rem 0 0;
+    }
+
+    .filter-btn{
+      appearance:none;
+      border:1px solid rgba(243,201,122,.28);
+      border-radius:999px;
+      padding:.6rem .9rem;
+      color:var(--shop-ink);
+      background:rgba(255,255,255,.04);
+      cursor:pointer;
+      font:inherit;
+      font-size:.9rem;
+      transition:transform .2s ease,border-color .2s ease,background .2s ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active{
+      transform:translateY(-2px);
+      border-color:rgba(243,201,122,.58);
+      background:rgba(243,201,122,.1);
+    }
+
+    .artifact-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:1rem;
+      margin-top:1.35rem;
+    }
+
+    .artifact-card{
+      position:relative;
+      overflow:hidden;
+      transform:translateY(18px);
+      opacity:0;
+      transition:
+        transform .8s cubic-bezier(.2,.8,.2,1),
+        opacity .8s ease,
+        border-color .25s ease;
+    }
+
+    .artifact-card.revealed{
+      transform:translateY(0);
+      opacity:1;
+    }
+
+    .artifact-card.hidden{
+      display:none;
+    }
+
+    .artifact-card::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 18% 0%,rgba(243,201,122,.14),transparent 34%),
+        radial-gradient(circle at 92% 100%,rgba(122,243,255,.12),transparent 38%);
+      opacity:.75;
+    }
+
+    .artifact-card > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .artifact-card:hover{
+      border-color:rgba(243,201,122,.38);
+    }
+
+    .artifact-media{
+      position:relative;
+      overflow:hidden;
+      border-radius:20px;
+      border:1px solid rgba(243,201,122,.2);
+      background:
+        radial-gradient(circle at 30% 20%,rgba(243,201,122,.18),transparent 35%),
+        radial-gradient(circle at 70% 80%,rgba(120,220,255,.12),transparent 38%),
+        rgba(255,255,255,.04);
+    }
+
+    .artifact-card img,
+    .artifact-placeholder{
+      width:100%;
+      aspect-ratio:1/1;
+      object-fit:cover;
+      display:block;
+      border-radius:20px;
+      transition:transform 1.2s ease,filter .4s ease;
+    }
+
+    .artifact-card:hover img{
+      transform:scale(1.045);
+      filter:saturate(1.08) contrast(1.04);
+    }
+
+    .artifact-media::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,.13) 42%,transparent 64%);
+      transform:translateX(-120%);
+      animation:shinePass 7s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    .artifact-placeholder{
+      display:grid;
+      place-items:center;
+      color:var(--shop-gold);
+      font-weight:900;
+      letter-spacing:.16em;
+      text-align:center;
+      text-transform:uppercase;
+      padding:1rem;
+    }
+
+    .artifact-card h3{
+      margin-top:1rem;
+      color:var(--shop-gold);
+    }
+
+    .artifact-status{
+      display:inline-flex;
+      margin-top:.85rem;
+      padding:.38rem .72rem;
+      border:1px solid rgba(243,201,122,.28);
+      border-radius:999px;
+      color:var(--shop-gold);
+      font-size:.76rem;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      background:rgba(0,0,0,.18);
+    }
+
+    .artifact-list,
+    .forge-list{
+      color:var(--shop-muted);
+      padding-left:1.15rem;
+    }
+
+    .artifact-list li,
+    .forge-list li{
+      margin-bottom:.38rem;
+    }
+
+    .artifact-price{
+      margin:1rem 0 0;
+      font-size:1.18rem;
+      color:var(--shop-cyan);
+      font-weight:900;
+    }
+
+    .artifact-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.65rem;
+      margin-top:1rem;
+    }
+
+    .registry-card{
+      max-width:980px;
+      margin-inline:auto;
+    }
+
+    .process-grid{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:.9rem;
+      margin-top:1.25rem;
+    }
+
+    .process-step{
+      position:relative;
+      overflow:hidden;
+      padding:1rem;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+    }
+
+    .process-step strong{
+      display:block;
+      color:var(--shop-gold);
+      margin-bottom:.35rem;
+    }
+
+    .timeline{
+      display:grid;
+      gap:.85rem;
+      max-width:980px;
+      margin:1.25rem auto 0;
+    }
+
+    .timeline-row{
+      display:grid;
+      grid-template-columns:140px 1fr;
+      gap:1rem;
+      align-items:start;
+      padding:1rem;
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:20px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .timeline-row strong{
+      color:var(--shop-gold);
+    }
+
+    .notify-box{
+      text-align:center;
+      max-width:900px;
+      margin-inline:auto;
+    }
+
+    .living-reading{
+      max-width:980px;
+      margin:1.25rem auto 0;
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:1rem;
+    }
+
+    .reading-panel{
+      padding:1.15rem;
+      border-radius:24px;
+      border:1px solid rgba(243,201,122,.22);
+      background:
+        radial-gradient(circle at 20% 10%,rgba(243,201,122,.1),transparent 42%),
+        rgba(255,255,255,.04);
+    }
+
+    .reading-panel h3{
+      color:var(--shop-gold);
+      margin-top:0;
+    }
+
+    .registry-table{
+      width:100%;
+      border-collapse:collapse;
+      overflow:hidden;
+      border-radius:20px;
+      font-size:.95rem;
+    }
+
+    .registry-table th,
+    .registry-table td{
+      padding:.8rem;
+      border-bottom:1px solid rgba(255,255,255,.09);
+      text-align:left;
+      vertical-align:top;
+    }
+
+    .registry-table th{
+      color:var(--shop-gold);
+      background:rgba(255,255,255,.045);
+    }
+
+    .registry-table td{
+      color:var(--shop-muted);
+    }
+
+    @keyframes artifactAura{
+      from{transform:translate3d(-1%,0,0) scale(1)}
+      to{transform:translate3d(1.5%,1%,0) scale(1.04)}
+    }
+
+    @keyframes gridDrift{
+      from{transform:translate3d(0,0,0)}
+      to{transform:translate3d(72px,72px,0)}
+    }
+
+    @keyframes sigilPulse{
+      0%,100%{transform:scale(1);box-shadow:0 0 48px rgba(243,201,122,.12),inset 0 0 30px rgba(122,243,255,.06)}
+      50%{transform:scale(1.045);box-shadow:0 0 75px rgba(243,201,122,.2),inset 0 0 42px rgba(122,243,255,.1)}
+    }
+
+    @keyframes shinePass{
+      0%,50%{transform:translateX(-130%)}
+      68%,100%{transform:translateX(130%)}
+    }
+
+    @media(max-width:1100px){
+      .inventory-strip,
+      .process-grid,
+      .living-reading{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .artifact-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media(max-width:820px){
+      .artifact-grid,
+      .inventory-strip,
+      .process-grid,
+      .living-reading,
+      .timeline-row{
+        grid-template-columns:1fr;
+      }
+
+      .artifact-actions,
+      .hero-actions{
+        justify-content:center;
+      }
+
+      .registry-table{
+        font-size:.86rem;
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        animation:none!important;
+        transition:none!important;
+        scroll-behavior:auto!important;
+      }
+
+      .artifact-card{
+        opacity:1;
+        transform:none;
+      }
+    }
   </style>
 </head>
 
@@ -106,7 +592,7 @@
       </span>
     </a>
 
-    <button class="nav-toggle" type="button" aria-label="Toggle navigation" onclick="document.querySelector('.site-nav').classList.toggle('open')">
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
 
@@ -123,15 +609,16 @@
 
   <main id="main">
     <section class="section-shell hero shop-hero">
-      <p class="launch-ribbon">☲ Artifact Registry Active</p>
+      <div class="living-sigil" aria-hidden="true">☲</div>
+      <p class="launch-ribbon">Artifact Registry Active</p>
       <p class="eyebrow">Scroll of Fire · Codex of Reality</p>
       <h1>Living Technology Artifacts</h1>
       <p class="hero-line">Reclaimed · Remembered · Carried Forward</p>
 
       <p class="hero-copy">
-        A registry of hand-forged copper, stone, glass, and found-object artifacts by Aaron Paul Laird.
-        Some remain personal instruments. Some are gifted. Some become available when completed,
-        photographed, named, and entered into the record.
+        A living registry of hand-forged copper, stone, glass, and found-object artifacts by
+        <strong>Aaron Paul Laird</strong>. Some remain personal instruments. Some are gifted.
+        Some become available when completed, photographed, named, and entered into the record.
       </p>
 
       <div class="hero-actions">
@@ -141,20 +628,30 @@
       </div>
 
       <div class="inventory-strip" aria-label="Artifact registry summary">
-        <div class="inventory-stat"><strong>5</strong><span>Registered</span></div>
+        <div class="inventory-stat"><strong>7</strong><span>Registered</span></div>
         <div class="inventory-stat"><strong>1</strong><span>Available</span></div>
         <div class="inventory-stat"><strong>2</strong><span>Personal</span></div>
-        <div class="inventory-stat"><strong>1</strong><span>Gifted</span></div>
+        <div class="inventory-stat"><strong>2</strong><span>Unreleased</span></div>
+      </div>
+
+      <div class="shop-orbit" aria-label="Registry words">
+        <span>Conduit</span>
+        <span>Ember</span>
+        <span>Moon</span>
+        <span>Shard</span>
+        <span>Witness</span>
+        <span>Return</span>
       </div>
 
       <div class="shop-note">
         <strong>Artifact Registry:</strong>
-        Each piece receives a designation, photographic record, material notes, story, status,
+        each piece receives a designation, photographic record, material notes, story, status,
         and collection placement. No two pieces will ever be exactly alike.
       </div>
 
       <div class="shop-note">
-        These are handmade symbolic art objects and personal collection pieces.
+        These are handmade symbolic art objects, personal instruments, collection pieces, and
+        witnessed artifacts. They are offered as art, story, memory, and craft.
       </div>
     </section>
 
@@ -162,16 +659,25 @@
       <div class="section-heading">
         <p class="eyebrow">Artifact Registry</p>
         <h2>Current Collection</h2>
-        <p>Personal instruments, living artifacts, gifted pieces, and future releases.</p>
+        <p>Personal instruments, living artifacts, gifted pieces, available work, and future releases.</p>
+      </div>
+
+      <div class="artifact-tools" aria-label="Artifact filters">
+        <button class="filter-btn active" type="button" data-filter="all">All</button>
+        <button class="filter-btn" type="button" data-filter="available">Available</button>
+        <button class="filter-btn" type="button" data-filter="personal">Personal</button>
+        <button class="filter-btn" type="button" data-filter="gifted">Gifted</button>
+        <button class="filter-btn" type="button" data-filter="future">Future</button>
       </div>
 
       <div class="artifact-grid">
-
-        <article class="card artifact-card glow">
-          <img src="assets/img/T7.png" alt="T7-000 Ahhava Or HaDabar Tesla Type-7 Resonant Conduit Aetheric Field Transceiver" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
-          <span class="artifact-status">Personal· Not For Sale</span>
+        <article class="card artifact-card glow" data-kind="personal">
+          <div class="artifact-media">
+            <img src="assets/img/T7.png" alt="T7-000 Ahhava Or HaDabar Tesla Type-7 Resonant Conduit" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
+          </div>
+          <span class="artifact-status">Personal · Not For Sale</span>
           <h3>T7-000 · Ahhava Or HaDabar</h3>
-          <p><em>Tesla Type-7 Resonant Conduit · Aetheric Field Transceiver</em></p>
+          <p><em>Tesla Type-7 Resonant Conduit</em></p>
           <p>Primary personal conduit of the Scroll of Fire living technology archive.</p>
           <ul class="artifact-list">
             <li>Class: Personal Instrument</li>
@@ -181,9 +687,11 @@
           <p class="artifact-price">Not For Sale</p>
         </article>
 
-        <article class="card artifact-card glow">
-          <img src="assets/img/EmberNode7.png" alt="EN-007 Ember Node 7 personal instrument Scroll of Fire artifact" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
-          <span class="artifact-status">Personal Instrument · Not For Sale</span>
+        <article class="card artifact-card glow" data-kind="personal">
+          <div class="artifact-media">
+            <img src="assets/img/EmberNode7.png" alt="EN-007 Ember Node 7 Scroll of Fire artifact" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
+          </div>
+          <span class="artifact-status">Personal · Not For Sale</span>
           <h3>EN-007 · Ember Node 7</h3>
           <p><em>Heart Node of the Living Technology Array</em></p>
           <p>The ember principle: continuity, inner flame, remembrance, and carried resonance.</p>
@@ -195,9 +703,11 @@
           <p class="artifact-price">Not For Sale</p>
         </article>
 
-        <article id="available" class="card artifact-card glow">
-          <img src="assets/img/HaLevanah.png" alt="HL-001 HaLevanah bracelet Scroll of Fire artifact" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
-          <span class="artifact-status">Registry Valuation • 222 USD</span>
+        <article id="available" class="card artifact-card glow" data-kind="available">
+          <div class="artifact-media">
+            <img src="assets/img/HaLevanah.png" alt="HL-001 HaLevanah bracelet Scroll of Fire artifact" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
+          </div>
+          <span class="artifact-status">Available · Registry Valuation 222 USD</span>
           <h3>HL-001 · HaLevanah</h3>
           <p><em>The Moon That Returns</em></p>
           <p>Hand braided copper with moonstone and tourmaline. A one-of-one living artifact witnessed by sea and sky.</p>
@@ -207,28 +717,32 @@
             <li>Status: available by inquiry</li>
           </ul>
           <p class="artifact-price">Contact To Purchase</p>
-          <div class="hero-actions">
+          <div class="artifact-actions">
             <a class="btn primary" href="mailto:l.aaronpaul24@gmail.com?subject=HL-001%20HaLevanah%20Purchase%20Inquiry">Email for Availability</a>
             <a class="btn" href="https://www.facebook.com/share/1aU4JE7CE7/" target="_blank" rel="noopener">Message on Facebook</a>
           </div>
         </article>
 
-        <article class="card artifact-card glow">
-          <img src="assets/img/TigerNodeRing.png" alt="TN-001 Tiger Node Ring gifted artifact" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
-          <span class="artifact-status">Gifted Artifact · Not For Sale</span>
+        <article class="card artifact-card glow" data-kind="gifted">
+          <div class="artifact-media">
+            <img src="assets/img/TigerNodeRing.png" alt="TN-001 Tiger Node Ring gifted artifact" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
+          </div>
+          <span class="artifact-status">Gifted · Archive Only</span>
           <h3>TN-001 · Tiger Node Ring</h3>
           <p><em>Узел Тигра · Knot of the Tiger</em></p>
-          <p>Copper and tiger’s eye. A gifted artifact, witnessed and given. more to be developed</p>
+          <p>Copper and tiger’s eye. A gifted artifact, witnessed, named, and entered into the record.</p>
           <ul class="artifact-list">
             <li>Material: copper</li>
-            <li>Stone: tiger stone</li>
+            <li>Stone: tiger eye</li>
             <li>Status: gifted</li>
           </ul>
           <p class="artifact-price">Archive Only</p>
         </article>
 
-        <article class="card artifact-card glow">
-          <img src="assets/img/TimeShardRing.jpg" alt="TS-001 Time Shard Ring coming soon Scroll of Fire artifact" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
+        <article class="card artifact-card glow" data-kind="future">
+          <div class="artifact-media">
+            <img src="assets/img/TimeShardRing.jpg" alt="TS-001 Time Shard Ring coming soon Scroll of Fire artifact" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
+          </div>
           <span class="artifact-status">Coming Soon</span>
           <h3>TS-001 · Time Shard Ring</h3>
           <p><em>Future Release</em></p>
@@ -241,32 +755,66 @@
           <p class="artifact-price">Coming Soon</p>
         </article>
 
-      </div>
-
-    <section id="coming-soon" class="section-shell">
-      <div class="section-heading">
-        <p class="eyebrow">Future Registry (Undisclosed)</p>
-        <h2>Reserved & Unreleased</h2>
-        <p>Living artifacts planned, reserved, unfinished, or awaiting discovery.</p>
-      </div>
-
-      <div class="artifact-grid">
-        <article class="card artifact-card">
-          <div class="artifact-placeholder">Reserved</div>
+        <article class="card artifact-card glow" data-kind="future">
+          <div class="artifact-media">
+            <div class="artifact-placeholder">Reserved</div>
+          </div>
           <span class="artifact-status">In Development</span>
           <h3>TB-001 · Tenser Band I</h3>
-          <p>Wrist Node of the Living Technology Array. A future copper structure focused on tension, coherence, grounding, containment, and movement.</p>
+          <p><em>Wrist Node of the Living Technology Array</em></p>
+          <p>A future copper structure focused on tension, coherence, grounding, containment, and movement.</p>
+          <ul class="artifact-list">
+            <li>Class: Wrist Node</li>
+            <li>Status: reserved</li>
+            <li>Role: containment and movement</li>
+          </ul>
           <p class="artifact-price">Reserved</p>
         </article>
 
-        <article class="card artifact-card">
-          <div class="artifact-placeholder">Unreleased</div>
+        <article class="card artifact-card glow" data-kind="future">
+          <div class="artifact-media">
+            <div class="artifact-placeholder">Unreleased</div>
+          </div>
           <span class="artifact-status">In Creation</span>
           <h3>SD-001 · Sand Dollar Witness</h3>
-          <p>The Relic of Returning Tides. Currently held back until the final form is ready.</p>
+          <p><em>The Relic of Returning Tides</em></p>
+          <p>An unfinished sea witness, held back until the final form, story, and record are complete.</p>
+          <ul class="artifact-list">
+            <li>Class: Sea Witness</li>
+            <li>Status: unreleased</li>
+            <li>Role: returning tides</li>
+          </ul>
           <p class="artifact-price">Unreleased</p>
         </article>
+      </div>
+    </section>
 
+    <section id="mirror" class="section-shell">
+      <div class="section-heading">
+        <p class="eyebrow">Living Registry Mode</p>
+        <h2>The Artifact Mirror</h2>
+        <p>A small daily reflection for visitors entering the registry.</p>
+      </div>
+
+      <div class="living-reading">
+        <article class="reading-panel">
+          <h3>Today’s Witness</h3>
+          <p id="dailyWitness">
+            The forge remembers what the hands carry forward. Choose one object, one material,
+            and one intention. Let the day reveal what wants to be shaped.
+          </p>
+          <button class="btn primary" type="button" id="newWitness">Reveal Another Witness</button>
+        </article>
+
+        <article class="reading-panel">
+          <h3>Registry Breath</h3>
+          <p><strong>Inhale:</strong> reclaim what still holds value.</p>
+          <p><strong>Hold:</strong> name what is taking form.</p>
+          <p><strong>Exhale:</strong> release what is ready to be carried forward.</p>
+          <p class="equation">Copper · Stone · Glass · Breath · Memory</p>
+        </article>
+      </div>
+    </section>
 
     <section id="archive" class="section-shell">
       <div class="section-heading">
@@ -312,7 +860,7 @@
         <div class="process-step"><strong>1 · Reclaim</strong><span>Materials are found, salvaged, gathered, or repurposed.</span></div>
         <div class="process-step"><strong>2 · Form</strong><span>Copper, stone, glass, and structure are shaped by hand.</span></div>
         <div class="process-step"><strong>3 · Name</strong><span>The piece receives a title, number, and collection role.</span></div>
-        <div class="process-step"><strong>4 · Document</strong><span>Photos, notes, materials, and story are entered into the record.</span></div>
+        <div class="process-step"><strong>4 · Document</strong><span>Photos, notes, materials, and story enter the record.</span></div>
         <div class="process-step"><strong>5 · Release</strong><span>The piece becomes available, gifted, archived, or kept personal.</span></div>
       </div>
     </section>
@@ -322,20 +870,29 @@
         <p class="eyebrow">Registry Index</p>
         <h2>Designations</h2>
 
-        <ul class="artifact-list">
-          <li>T7-000 · Ahhava Or HaDabar — Personal Instrument · Not For Sale</li>
-          <li>EN-007 · Ember Node 7 — Personal Instrument · Not For Sale</li>
-          <li>HL-001 · HaLevanah — Available · Contact To Purchase</li>
-          <li>TN-001 · Tiger Node Ring — Gifted Artifact · Not For Sale</li>
-          <li>TS-001 · Time Shard Ring — Coming Soon</li>
-          <li>SD-001 · Sand Dollar Witness — Unreleased · In Creation</li>
-          <li>TB-001 · Tenser Band I — Reserved</li>
-        </ul>
+        <table class="registry-table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Artifact</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>T7-000</td><td>Ahhava Or HaDabar</td><td>Personal Instrument · Not For Sale</td></tr>
+            <tr><td>EN-007</td><td>Ember Node 7</td><td>Personal Instrument · Not For Sale</td></tr>
+            <tr><td>HL-001</td><td>HaLevanah</td><td>Available · Contact To Purchase</td></tr>
+            <tr><td>TN-001</td><td>Tiger Node Ring</td><td>Gifted Artifact · Archive Only</td></tr>
+            <tr><td>TS-001</td><td>Time Shard Ring</td><td>Coming Soon</td></tr>
+            <tr><td>TB-001</td><td>Tenser Band I</td><td>Reserved</td></tr>
+            <tr><td>SD-001</td><td>Sand Dollar Witness</td><td>Unreleased · In Creation</td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
     <section class="section-shell">
-      <div class="card notify-box">
+      <div class="card notify-box glow">
         <p class="eyebrow">Purchase & Updates</p>
         <h2>Contact the Forge</h2>
         <p>
@@ -356,7 +913,7 @@
         <h2>Artifact Record</h2>
         <p>
           Every completed piece may receive a public artifact number, material notes,
-          completion date, origin story, status, collection placement, release state, etc.
+          completion date, origin story, status, collection placement, and release state.
         </p>
         <p class="equation">Conduit · Ember · Moon · Shard · Witness</p>
       </div>
@@ -373,5 +930,69 @@
     </nav>
     <p>© 2026 Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
   </footer>
+
+  <script>
+    const navToggle = document.querySelector(".nav-toggle");
+    const siteNav = document.querySelector(".site-nav");
+
+    if (navToggle && siteNav) {
+      navToggle.addEventListener("click", () => {
+        const open = siteNav.classList.toggle("open");
+        navToggle.setAttribute("aria-expanded", String(open));
+      });
+    }
+
+    const cards = Array.from(document.querySelectorAll(".artifact-card"));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add("revealed");
+      });
+    }, { threshold: 0.14 });
+
+    cards.forEach((card, index) => {
+      card.style.transitionDelay = `${Math.min(index * 70, 420)}ms`;
+      observer.observe(card);
+    });
+
+    const filterButtons = Array.from(document.querySelectorAll(".filter-btn"));
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const filter = button.dataset.filter;
+
+        filterButtons.forEach((b) => b.classList.remove("active"));
+        button.classList.add("active");
+
+        cards.forEach((card) => {
+          const match = filter === "all" || card.dataset.kind === filter;
+          card.classList.toggle("hidden", !match);
+          if (match) {
+            requestAnimationFrame(() => card.classList.add("revealed"));
+          }
+        });
+      });
+    });
+
+    const witnesses = [
+      "The forge remembers what the hands carry forward. Choose one object, one material, and one intention. Let the day reveal what wants to be shaped.",
+      "Copper teaches movement. Stone teaches memory. Glass teaches passage. Ask what part of your life is ready to be reclaimed.",
+      "A living artifact begins before the hand touches the wire. It begins when attention returns to what others overlooked.",
+      "Today’s registry asks one question: what have you been carrying that is ready to become useful, beautiful, or named?",
+      "The artifact is not only the object. It is the witness, the making, the story, the hand, and the moment it enters the record.",
+      "Return to the simple materials: breath, light, memory, water, pressure, patience. This is where the work becomes living."
+    ];
+
+    const witnessText = document.getElementById("dailyWitness");
+    const witnessButton = document.getElementById("newWitness");
+
+    if (witnessText && witnessButton) {
+      witnessButton.addEventListener("click", () => {
+        const current = witnessText.textContent.trim();
+        let next = witnesses[Math.floor(Math.random() * witnesses.length)];
+        if (next === current) next = witnesses[(witnesses.indexOf(next) + 1) % witnesses.length];
+        witnessText.textContent = next;
+      });
+    }
+  </script>
 </body>
-              </html>
+  </html>
