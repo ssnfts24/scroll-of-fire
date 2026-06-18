@@ -91,22 +91,6 @@
         "primaryImageOfPage":"https://codexofreality.org/assets/img/T7.png",
         "thumbnailUrl":"https://codexofreality.org/assets/img/T7.png",
         "inLanguage":"en-US"
-      },
-      {
-        "@type":"ItemList",
-        "@id":"https://codexofreality.org/#main-navigation",
-        "name":"Codex of Reality Main Navigation",
-        "itemListElement":[
-          {"@type":"SiteNavigationElement","position":1,"name":"Start","url":"https://codexofreality.org/start.html"},
-          {"@type":"SiteNavigationElement","position":2,"name":"13 Moons Calendar","url":"https://codexofreality.org/moons.html"},
-          {"@type":"SiteNavigationElement","position":3,"name":"Manifest","url":"https://codexofreality.org/teach.html"},
-          {"@type":"SiteNavigationElement","position":4,"name":"Artifact Registry","url":"https://codexofreality.org/shop.html"},
-          {"@type":"SiteNavigationElement","position":5,"name":"Systems Hub","url":"https://codexofreality.org/hub.html"},
-          {"@type":"SiteNavigationElement","position":6,"name":"Frequency Governance","url":"https://codexofreality.org/systems/frequencies.html"},
-          {"@type":"SiteNavigationElement","position":7,"name":"Theory / Canon","url":"https://codexofreality.org/theory.html"},
-          {"@type":"SiteNavigationElement","position":8,"name":"Genesis Oracle","url":"https://codexofreality.org/genesis-oracle.html"},
-          {"@type":"SiteNavigationElement","position":9,"name":"Ledger","url":"https://codexofreality.org/ledger.html"}
-        ]
       }
     ]
   }
@@ -116,7 +100,6 @@
     :root{
       --bg:#05070d;
       --panel:rgba(9,14,25,.78);
-      --panel2:rgba(255,255,255,.045);
       --line:rgba(255,255,255,.13);
       --line-gold:rgba(243,201,122,.28);
       --gold:#f3c97a;
@@ -141,10 +124,30 @@
       color:var(--text);
       font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       line-height:1.6;
+      overflow-x:hidden;
     }
 
     a{color:inherit}
     img{max-width:100%}
+
+    .living-aura{
+      position:fixed;
+      inset:-20%;
+      pointer-events:none;
+      z-index:0;
+      background:
+        radial-gradient(circle at 20% 25%,rgba(122,243,255,.10),transparent 28%),
+        radial-gradient(circle at 80% 20%,rgba(243,201,122,.12),transparent 30%),
+        radial-gradient(circle at 50% 85%,rgba(217,149,69,.10),transparent 34%);
+      filter:blur(8px);
+      animation:fieldDrift 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes fieldDrift{
+      from{transform:translate3d(-1.5%,0,0) scale(1)}
+      to{transform:translate3d(1.5%,-1%,0) scale(1.04)}
+    }
+
     .skip-link{position:absolute;left:-999px;top:auto}
     .skip-link:focus{left:1rem;top:1rem;z-index:999;background:#000;color:#fff;padding:.75rem 1rem;border-radius:12px}
 
@@ -169,6 +172,7 @@
       text-decoration:none;
       min-width:max-content;
     }
+
     .brand-mark{
       display:grid;
       place-items:center;
@@ -181,6 +185,7 @@
       box-shadow:0 0 28px rgba(243,201,122,.08);
       font-size:1.4rem;
     }
+
     .brand strong{display:block;line-height:1.05}
     .brand small{display:block;color:var(--muted);font-size:.78rem;margin-top:.12rem}
 
@@ -191,8 +196,8 @@
       gap:.2rem;
       flex-wrap:wrap;
     }
-    .site-nav a,
-    .nav-drop-btn{
+
+    .site-nav a,.nav-drop-btn{
       color:var(--text);
       text-decoration:none;
       padding:.55rem .72rem;
@@ -203,13 +208,12 @@
       cursor:pointer;
       font:inherit;
     }
-    .site-nav a:hover,
-    .site-nav a:focus-visible,
-    .nav-drop-btn:hover,
-    .nav-drop-btn:focus-visible{
+
+    .site-nav a:hover,.site-nav a:focus-visible,.nav-drop-btn:hover,.nav-drop-btn:focus-visible{
       outline:none;
       background:rgba(255,255,255,.07);
     }
+
     .site-nav a.is-featured{
       color:#061016;
       background:linear-gradient(135deg,var(--gold),var(--cyan));
@@ -224,6 +228,7 @@
       border:1px solid var(--line);
       background:rgba(255,255,255,.04);
     }
+
     .nav-toggle span{
       display:block;
       width:22px;
@@ -233,6 +238,7 @@
     }
 
     .nav-dropdown{position:relative;display:inline-flex;align-items:center}
+
     .nav-drop-menu{
       position:absolute;
       right:0;
@@ -248,41 +254,23 @@
       box-shadow:0 18px 60px rgba(0,0,0,.45);
       z-index:100;
     }
+
     .nav-dropdown.open .nav-drop-menu{display:flex}
-    .nav-drop-menu a{
-      border-radius:12px;
-      padding:.62rem .72rem;
-    }
+    .nav-drop-menu a{border-radius:12px;padding:.62rem .72rem}
 
     .section-shell{
+      position:relative;
+      z-index:1;
       width:min(1180px,calc(100% - 2rem));
       margin-inline:auto;
       padding:clamp(3rem,6vw,5.25rem) 0;
     }
 
-    .hero{
-      padding-top:clamp(2.5rem,6vw,5.5rem);
-    }
-
     .home-hero{
-      position:relative;
-      overflow:hidden;
       min-height:calc(100vh - 72px);
       display:grid;
       align-items:center;
     }
-    .home-hero::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 16% 22%,rgba(122,243,255,.20),transparent 34%),
-        radial-gradient(circle at 78% 18%,rgba(243,201,122,.20),transparent 32%),
-        radial-gradient(circle at 50% 92%,rgba(255,255,255,.06),transparent 42%);
-      opacity:.96;
-    }
-    .home-hero>*{position:relative;z-index:1}
 
     .home-hero-grid{
       display:grid;
@@ -300,35 +288,23 @@
       font-weight:900;
       font-size:.78rem;
     }
+
     h1,h2,h3{line-height:1.05}
-    h1{
-      margin:.1rem 0 .85rem;
-      font-size:clamp(2.7rem,7vw,6.8rem);
-      letter-spacing:-.055em;
-    }
-    h2{
-      margin:.15rem 0 .85rem;
-      font-size:clamp(2rem,5vw,4rem);
-      letter-spacing:-.035em;
-    }
-    h3{
-      margin:.2rem 0 .7rem;
-      font-size:clamp(1.25rem,2.7vw,1.75rem);
-      color:var(--gold);
-    }
+    h1{margin:.1rem 0 .85rem;font-size:clamp(2.7rem,7vw,6.8rem);letter-spacing:-.055em}
+    h2{margin:.15rem 0 .85rem;font-size:clamp(2rem,5vw,4rem);letter-spacing:-.035em}
+    h3{margin:.2rem 0 .7rem;font-size:clamp(1.25rem,2.7vw,1.75rem);color:var(--gold)}
+
     .hero-line{
       margin:.25rem 0 1rem;
       font-size:clamp(1.2rem,3vw,2rem);
       color:var(--gold);
       font-weight:800;
     }
-    .hero-copy{
-      max-width:740px;
-      color:var(--muted);
-      font-size:1.08rem;
-    }
+
+    .hero-copy{max-width:740px;color:var(--muted);font-size:1.08rem}
 
     .hero-seal-row{display:flex;flex-wrap:wrap;gap:.55rem;margin:1.15rem 0 0}
+
     .hero-seal{
       padding:.48rem .72rem;
       border-radius:999px;
@@ -337,14 +313,11 @@
       color:var(--muted);
       font-size:.88rem;
     }
+
     .hero-seal strong{color:var(--gold)}
 
-    .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.75rem;
-      margin-top:1.25rem;
-    }
+    .hero-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.25rem}
+
     .btn{
       display:inline-flex;
       align-items:center;
@@ -359,13 +332,9 @@
       color:var(--text);
       font-weight:800;
     }
+
     .btn:hover,.btn:focus-visible{outline:none;background:rgba(255,255,255,.08)}
-    .btn.primary{
-      color:#061016;
-      border-color:transparent;
-      background:linear-gradient(135deg,var(--gold),var(--cyan));
-      box-shadow:0 0 36px rgba(122,243,255,.14);
-    }
+    .btn.primary{color:#061016;border-color:transparent;background:linear-gradient(135deg,var(--gold),var(--cyan));box-shadow:0 0 36px rgba(122,243,255,.14)}
 
     .notice-band{
       margin-top:1rem;
@@ -384,6 +353,7 @@
       box-shadow:var(--shadow);
       position:relative;
     }
+
     .hero-image-card::before{
       content:"";
       position:absolute;
@@ -392,13 +362,18 @@
       background:linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.45));
       z-index:1;
     }
+
     .hero-image-card img{
       width:100%;
       display:block;
       aspect-ratio:1/1;
       object-fit:cover;
       transform:scale(1.01);
+      transition:transform 1.1s ease,filter 1.1s ease;
     }
+
+    .hero-image-card:hover img{transform:scale(1.045);filter:saturate(1.08) contrast(1.05)}
+
     .hero-image-caption{
       position:absolute;
       left:1rem;
@@ -412,21 +387,29 @@
       backdrop-filter:blur(10px);
       color:var(--muted);
     }
+
     .hero-image-caption strong{color:var(--gold)}
 
-    .section-heading{
-      max-width:850px;
-      margin:0 auto 1.25rem;
-      text-align:center;
-    }
+    .section-heading{max-width:850px;margin:0 auto 1.25rem;text-align:center}
     .section-heading p{color:var(--muted)}
 
-    .spotlight-grid{
-      display:grid;
-      grid-template-columns:1.05fr .95fr;
-      gap:1rem;
-      align-items:stretch;
+    .signal-strip,.feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+    .feature-grid{grid-template-columns:repeat(3,1fr)}
+
+    .signal-card,.feature-card,.artifact-card-mini,.codex-seal,.moon-panel{
+      position:relative;
+      overflow:hidden;
+      padding:1rem;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.12);
+      background:radial-gradient(circle at 20% 0%,rgba(243,201,122,.09),transparent 35%),linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
     }
+
+    .signal-card strong{display:block;font-size:1.42rem;color:var(--gold);margin-bottom:.25rem}
+    .signal-card span,.feature-card p,.artifact-card-mini div{color:var(--muted)}
+
+    .spotlight-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:1rem;align-items:stretch}
+
     .spotlight-img{
       width:100%;
       height:100%;
@@ -436,7 +419,10 @@
       border:1px solid rgba(243,201,122,.22);
       box-shadow:var(--shadow);
       background:rgba(255,255,255,.035);
+      transition:transform 1.1s ease,filter 1.1s ease;
     }
+
+    .spotlight-img:hover{transform:scale(1.025);filter:saturate(1.08) contrast(1.05)}
 
     .moon-panel{
       display:flex;
@@ -444,109 +430,39 @@
       justify-content:center;
       padding:1.35rem;
       border:1px solid rgba(122,243,255,.24);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(122,243,255,.16),transparent 55%),
-        radial-gradient(circle at 100% 100%,rgba(243,201,122,.09),transparent 42%),
-        rgba(255,255,255,.035);
-      border-radius:30px;
+      background:radial-gradient(circle at 50% 0%,rgba(122,243,255,.16),transparent 55%),radial-gradient(circle at 100% 100%,rgba(243,201,122,.09),transparent 42%),rgba(255,255,255,.035);
       box-shadow:var(--shadow);
     }
-    .moon-panel .moon-mark{
+
+    .moon-mark{
       font-size:clamp(3rem,8vw,6rem);
       color:var(--gold);
       line-height:1;
-      text-shadow:0 0 44px rgba(243,201,122,.18);
+      animation:moonPulse 5.5s ease-in-out infinite;
     }
 
-    .signal-strip{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:1rem;
-    }
-    .signal-card,
-    .feature-card,
-    .artifact-card-mini,
-    .collection-card{
-      position:relative;
-      overflow:hidden;
-      padding:1rem;
-      border-radius:24px;
-      border:1px solid rgba(255,255,255,.12);
-      background:
-        radial-gradient(circle at 20% 0%,rgba(243,201,122,.09),transparent 35%),
-        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
-    }
-    .signal-card strong{
-      display:block;
-      font-size:1.42rem;
-      color:var(--gold);
-      margin-bottom:.25rem;
-    }
-    .signal-card span,
-    .feature-card p,
-    .artifact-card-mini div,
-    .collection-card p{
-      color:var(--muted);
+    @keyframes moonPulse{
+      0%,100%{text-shadow:0 0 24px rgba(243,201,122,.15);transform:scale(1)}
+      50%{text-shadow:0 0 48px rgba(243,201,122,.36);transform:scale(1.035)}
     }
 
-    .artifact-strip{
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:1rem;
-      margin-top:1.2rem;
-    }
-    .artifact-card-mini{
-      padding:0;
-    }
-    .artifact-card-mini img{
-      width:100%;
-      aspect-ratio:1/1;
-      object-fit:cover;
-      display:block;
-      background:rgba(255,255,255,.03);
-    }
-    .artifact-card-mini div{
-      padding:.9rem;
-      min-height:96px;
-    }
-    .artifact-card-mini strong{
-      display:block;
-      color:var(--gold);
-      margin-bottom:.2rem;
-    }
-    .artifact-card-mini em{
-      display:block;
-      font-style:normal;
-      color:var(--cyan);
-      font-weight:800;
-      margin-top:.2rem;
-    }
-
-    .feature-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:1rem;
-      margin-top:1.1rem;
-    }
-
-    .text-link{
-      display:inline-flex;
-      margin-top:.4rem;
-      color:var(--gold);
-      font-weight:900;
-      text-decoration:none;
-    }
-    .text-link:hover,.text-link:focus-visible{text-decoration:underline;outline:none}
+    .artifact-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-top:1.2rem}
+    .artifact-card-mini{padding:0;transition:transform .35s ease,border-color .35s ease,box-shadow .35s ease}
+    .artifact-card-mini:hover{transform:translateY(-6px);border-color:rgba(243,201,122,.38);box-shadow:0 18px 60px rgba(0,0,0,.34)}
+    .artifact-card-mini img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:rgba(255,255,255,.03);transition:transform 1.1s ease,filter 1.1s ease}
+    .artifact-card-mini:hover img{transform:scale(1.045);filter:saturate(1.08) contrast(1.05)}
+    .artifact-card-mini div{padding:.9rem;min-height:96px}
+    .artifact-card-mini strong{display:block;color:var(--gold);margin-bottom:.2rem}
+    .artifact-card-mini em{display:block;font-style:normal;color:var(--cyan);font-weight:800;margin-top:.2rem}
 
     .codex-seal{
       text-align:center;
       padding:1.35rem;
       border-radius:30px;
       border:1px solid rgba(243,201,122,.22);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(243,201,122,.14),transparent 55%),
-        rgba(255,255,255,.03);
+      background:radial-gradient(circle at 50% 0%,rgba(243,201,122,.14),transparent 55%),rgba(255,255,255,.03);
     }
+
     .codex-seal .equation{
       font-size:clamp(1rem,2.4vw,1.55rem);
       color:var(--gold);
@@ -554,40 +470,32 @@
       letter-spacing:.02em;
     }
 
+    .text-link{display:inline-flex;margin-top:.4rem;color:var(--gold);font-weight:900;text-decoration:none}
+    .text-link:hover,.text-link:focus-visible{text-decoration:underline;outline:none}
+
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}
+    .reveal.in{opacity:1;transform:translateY(0)}
+
     .site-footer{
+      position:relative;
+      z-index:1;
       padding:2rem 1rem;
       border-top:1px solid rgba(255,255,255,.10);
       text-align:center;
       color:var(--muted);
     }
-    .site-footer nav{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:.7rem;
-      margin-bottom:1rem;
-    }
-    .site-footer a{
-      text-decoration:none;
-      color:var(--muted);
-    }
+
+    .site-footer nav{display:flex;flex-wrap:wrap;justify-content:center;gap:.7rem;margin-bottom:1rem}
+    .site-footer a{text-decoration:none;color:var(--muted)}
     .site-footer a:hover{color:var(--gold)}
 
     @media(max-width:1100px){
-      .artifact-strip,
-      .signal-strip{
-        grid-template-columns:repeat(2,1fr);
-      }
-      .feature-grid,
-      .spotlight-grid{
-        grid-template-columns:1fr;
-      }
+      .artifact-strip,.signal-strip{grid-template-columns:repeat(2,1fr)}
+      .feature-grid,.spotlight-grid{grid-template-columns:1fr}
     }
 
     @media(max-width:960px){
-      .home-hero-grid{
-        grid-template-columns:1fr;
-      }
+      .home-hero-grid{grid-template-columns:1fr}
       .home-hero{min-height:auto}
     }
 
@@ -608,32 +516,20 @@
         align-items:stretch;
       }
       .site-nav.open{display:flex}
-      .site-nav a,
-      .nav-drop-btn{
-        width:100%;
-        text-align:left;
-      }
-      .nav-dropdown{
-        width:100%;
-        display:block;
-      }
-      .nav-drop-menu{
-        position:static;
-        margin-top:.35rem;
-        width:100%;
-        min-width:0;
-        box-shadow:none;
-      }
-      .artifact-strip,
-      .signal-strip,
-      .feature-grid{
-        grid-template-columns:1fr;
-      }
+      .site-nav a,.nav-drop-btn{width:100%;text-align:left}
+      .nav-dropdown{width:100%;display:block}
+      .nav-drop-menu{position:static;margin-top:.35rem;width:100%;min-width:0;box-shadow:none}
+      .artifact-strip,.signal-strip,.feature-grid{grid-template-columns:1fr}
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
     }
   </style>
 </head>
 
 <body>
+  <div class="living-aura" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header" data-sof-header>
@@ -682,7 +578,7 @@
   </header>
 
   <main id="main">
-    <section class="hero section-shell home-hero" aria-labelledby="home-title">
+    <section class="section-shell home-hero" aria-labelledby="home-title">
       <div class="home-hero-grid">
         <div class="hero-copy-stack">
           <p class="eyebrow">Codex 0 · ΨΩ · Living Framework</p>
@@ -715,10 +611,7 @@
         </div>
 
         <aside class="hero-image-card" aria-label="Featured Living Technology artifact">
-          <img
-            src="assets/img/T7.png"
-            alt="T7-000 Ahhava Or HaDabar Tesla Type-7 Resonant Conduit"
-            data-fallbacks="assets/T7.png,assets/img/og-cover.jpg,assets/img/artifact-placeholder.jpg">
+          <img src="assets/img/T7.png" alt="T7-000 Ahhava Or HaDabar Tesla Type-7 Resonant Conduit" data-fallbacks="assets/T7.png,assets/img/og-cover.jpg,assets/img/artifact-placeholder.jpg">
           <div class="hero-image-caption">
             <strong>T7-000 · Ahhava Or HaDabar</strong><br>
             Tesla Type-7 Resonant Conduit · Personal Instrument
@@ -729,22 +622,10 @@
 
     <section class="section-shell" aria-label="Signal summary">
       <div class="signal-strip">
-        <article class="signal-card">
-          <strong>13×28</strong>
-          <span>Calendar rhythm, moon tracking, daily witness, and seasonal alignment.</span>
-        </article>
-        <article class="signal-card">
-          <strong>ΨΩ</strong>
-          <span>Codex field language for awareness, memory, intention, flow, and coherence.</span>
-        </article>
-        <article class="signal-card">
-          <strong>T-7</strong>
-          <span>Living Technology Array: conduit, ember, band, shard, node, and archive.</span>
-        </article>
-        <article class="signal-card">
-          <strong>Ξ</strong>
-          <span>Witness path: observe, name, breathe, record, and return grounded.</span>
-        </article>
+        <article class="signal-card"><strong>13×28</strong><span>Calendar rhythm, moon tracking, daily witness, and seasonal alignment.</span></article>
+        <article class="signal-card"><strong>ΨΩ</strong><span>Codex field language for awareness, memory, intention, flow, and coherence.</span></article>
+        <article class="signal-card"><strong>T-7</strong><span>Living Technology Array: conduit, ember, band, shard, node, and archive.</span></article>
+        <article class="signal-card"><strong>Ξ</strong><span>Witness path: observe, name, breathe, record, and return grounded.</span></article>
       </div>
     </section>
 
@@ -758,9 +639,7 @@
             The 13 Moons page is the living calendar of the Codex: moon phase,
             symbolic day reading, witness practice, seasonal rhythm, and daily alignment.
           </p>
-          <p>
-            This is the strongest entry point for people who want to use the site every day.
-          </p>
+          <p>This is the strongest daily entry point for the whole site.</p>
           <div class="hero-actions">
             <a class="btn primary" href="./moons.html">Open the Living Calendar</a>
             <a class="btn" href="./ledger.html">Daily Witness Ledger</a>
@@ -768,11 +647,7 @@
           </div>
         </article>
 
-        <img
-          class="spotlight-img"
-          src="assets/img/og-cover.jpg"
-          alt="Scroll of Fire Codex of Reality resonance seal"
-          data-fallbacks="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png,assets/img/T7.png">
+        <img class="spotlight-img" src="assets/img/og-cover.jpg" alt="Scroll of Fire Codex of Reality resonance seal" data-fallbacks="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png,assets/img/T7.png">
       </div>
     </section>
 
@@ -788,42 +663,27 @@
 
       <div class="artifact-strip">
         <article class="artifact-card-mini">
-          <img
-            src="assets/img/HaLevanah.png"
-            alt="HL-001 HaLevanah bracelet"
-            data-fallbacks="assets/HaLevanah.png,assets/img/artifact-placeholder.jpg">
+          <img src="assets/img/HaLevanah.png" alt="HL-001 HaLevanah bracelet" data-fallbacks="assets/HaLevanah.png,assets/img/artifact-placeholder.jpg">
           <div><strong>HL-001</strong>HaLevanah<em>Registry Valuation · $222</em></div>
         </article>
 
         <article class="artifact-card-mini">
-          <img
-            src="assets/img/TimeShardRing.jpg"
-            alt="TS-001 Time Shard Ring"
-            data-fallbacks="assets/TimeShardRing.jpg,assets/img/artifact-placeholder.jpg">
+          <img src="assets/img/TimeShardRing.jpg" alt="TS-001 Time Shard Ring" data-fallbacks="assets/TimeShardRing.jpg,assets/img/artifact-placeholder.jpg">
           <div><strong>TS-001</strong>Time Shard Ring<em>Registry Valuation · $369</em></div>
         </article>
 
         <article class="artifact-card-mini">
-          <img
-            src="assets/img/EmberNode7.png"
-            alt="EN-007 Ember Node 7"
-            data-fallbacks="assets/EmberNode7.png,assets/img/artifact-placeholder.jpg">
+          <img src="assets/img/EmberNode7.png" alt="EN-007 Ember Node 7" data-fallbacks="assets/EmberNode7.png,assets/img/artifact-placeholder.jpg">
           <div><strong>EN-007</strong>Ember Node 7<em>Personal Instrument</em></div>
         </article>
 
         <article class="artifact-card-mini">
-          <img
-            src="assets/img/TigerNodeRing.png"
-            alt="TN-001 Tiger Node Ring"
-            data-fallbacks="assets/TigerNodeRing.png,assets/img/artifact-placeholder.jpg">
+          <img src="assets/img/TigerNodeRing.png" alt="TN-001 Tiger Node Ring" data-fallbacks="assets/TigerNodeRing.png,assets/img/artifact-placeholder.jpg">
           <div><strong>TN-001</strong>Tiger Node Ring<em>Gifted Artifact</em></div>
         </article>
 
         <article class="artifact-card-mini">
-          <img
-            src="assets/img/ring-chain-advertisement.png"
-            alt="Handcrafted copper chain bracelet advertisement"
-            data-fallbacks="assets/img/ring chain advertisement.png,assets/img/ring-chain-advertisement.jpg,assets/img/ring-chain-advertisement.jpeg,assets/file_0000000052c871fd82ff283c68f6ea16.png,assets/img/artifact-placeholder.jpg">
+          <img src="assets/img/ring-chain-advertisement.png" alt="Handcrafted copper chain bracelet advertisement" data-fallbacks="assets/img/ring-chain-advertisement.jpg,assets/img/ring-chain-advertisement.jpeg,assets/img/artifact-placeholder.jpg">
           <div><strong>New Work</strong>Handcrafted Copper<em>In Development</em></div>
         </article>
       </div>
@@ -838,12 +698,10 @@
       <div class="codex-seal">
         <p class="eyebrow">Codex Equation</p>
         <h2 id="codex-title">The Living Framework</h2>
-        <p class="equation">
-          Reality = (Energy × Information × Intention × Memory × Flow)<sup>Consciousness</sup>
-        </p>
+        <p class="equation">Reality = (Energy × Information × Intention × Memory × Flow)<sup>Consciousness</sup></p>
         <p>
-          The Codex is not only a website. It is a framework for tracking pattern,
-          breath, memory, symbolic language, daily witness, and embodied practice.
+          The Codex is a framework for tracking pattern, breath, memory, symbolic language,
+          daily witness, and embodied practice.
         </p>
         <div class="hero-actions" style="justify-content:center">
           <a class="btn primary" href="./theory.html">Read Theory / Canon</a>
@@ -860,41 +718,12 @@
       </div>
 
       <div class="feature-grid">
-        <article class="feature-card">
-          <h3>Start</h3>
-          <p>A clean first doorway for visitors who need orientation before entering the larger Codex.</p>
-          <a class="text-link" href="./start.html">Begin →</a>
-        </article>
-
-        <article class="feature-card">
-          <h3>13 Moons</h3>
-          <p>The daily rhythm engine: moon, element, witness, calendar, symbolic reading, and return.</p>
-          <a class="text-link" href="./moons.html">Open 13 Moons →</a>
-        </article>
-
-        <article class="feature-card">
-          <h3>Frequency Governance</h3>
-          <p>Carrier tones, resonance tools, visual practice, and structured listening.</p>
-          <a class="text-link" href="./systems/frequencies.html">Open Frequencies →</a>
-        </article>
-
-        <article class="feature-card">
-          <h3>Genesis Oracle</h3>
-          <p>A symbolic mirror for language, pattern, reflection, and daily witness.</p>
-          <a class="text-link" href="./genesis-oracle.html">Open Oracle →</a>
-        </article>
-
-        <article class="feature-card">
-          <h3>Ledger</h3>
-          <p>The witness record: what happened, what was observed, and what returned.</p>
-          <a class="text-link" href="./ledger.html">Open Ledger →</a>
-        </article>
-
-        <article class="feature-card">
-          <h3>Artifact Registry</h3>
-          <p>Physical works: copper, stone, glass, named artifacts, valuations, gifts, and archive pieces.</p>
-          <a class="text-link" href="./shop.html">View Artifacts →</a>
-        </article>
+        <article class="feature-card"><h3>Start</h3><p>A clean first doorway for visitors who need orientation before entering the larger Codex.</p><a class="text-link" href="./start.html">Begin →</a></article>
+        <article class="feature-card"><h3>13 Moons</h3><p>The daily rhythm engine: moon, element, witness, calendar, symbolic reading, and return.</p><a class="text-link" href="./moons.html">Open 13 Moons →</a></article>
+        <article class="feature-card"><h3>Frequency Governance</h3><p>Carrier tones, resonance tools, visual practice, and structured listening.</p><a class="text-link" href="./systems/frequencies.html">Open Frequencies →</a></article>
+        <article class="feature-card"><h3>Genesis Oracle</h3><p>A symbolic mirror for language, pattern, reflection, and daily witness.</p><a class="text-link" href="./genesis-oracle.html">Open Oracle →</a></article>
+        <article class="feature-card"><h3>Ledger</h3><p>The witness record: what happened, what was observed, and what returned.</p><a class="text-link" href="./ledger.html">Open Ledger →</a></article>
+        <article class="feature-card"><h3>Artifact Registry</h3><p>Physical works: copper, stone, glass, named artifacts, valuations, gifts, and archive pieces.</p><a class="text-link" href="./shop.html">View Artifacts →</a></article>
       </div>
     </section>
   </main>
@@ -966,7 +795,30 @@
           img.setAttribute("data-fallbacks", fallbacks.join(","));
         });
       });
+
+      document.querySelectorAll(".section-shell,.signal-card,.feature-card,.artifact-card-mini,.moon-panel,.codex-seal").forEach(function(el){
+        el.classList.add("reveal");
+      });
+
+      if ("IntersectionObserver" in window) {
+        const revealObserver = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(entry.isIntersecting){
+              entry.target.classList.add("in");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },{threshold:.14});
+
+        document.querySelectorAll(".reveal").forEach(function(el){
+          revealObserver.observe(el);
+        });
+      } else {
+        document.querySelectorAll(".reveal").forEach(function(el){
+          el.classList.add("in");
+        });
+      }
     })();
   </script>
 </body>
-</html>
+  </html>
