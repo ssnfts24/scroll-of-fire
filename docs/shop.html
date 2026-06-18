@@ -2,12 +2,17 @@
 <html lang="en" dir="ltr" class="sof carrier-432">
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>if(location.hostname!=="ssnfts24.github.io"){var _b=document.querySelector("base");if(_b)_b.setAttribute("href","/");}</script>
+  <script>
+    if (location.hostname !== "ssnfts24.github.io") {
+      var _b = document.querySelector("base");
+      if (_b) _b.setAttribute("href", "/");
+    }
+  </script>
 
   <meta charset="utf-8">
-  <title>Artifact Shop Coming Soon — Scroll of Fire</title>
+  <title>Artifact Registry — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="The Scroll of Fire Artifact Shop is coming soon. Preview one-of-one living technology artifacts, reclaimed copper work, sea glass, symbolic objects, wearable pieces, and Codex collection items by Aaron Paul Laird.">
+  <meta name="description" content="Scroll of Fire Artifact Registry by Aaron Paul Laird: personal instruments, living artifacts, gifted pieces, reclaimed copper work, sea glass, stone, and Codex-linked collection items.">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="creator" content="Aaron Paul Laird">
   <meta name="publisher" content="Scroll of Fire">
@@ -17,16 +22,16 @@
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Scroll of Fire">
-  <meta property="og:title" content="Artifact Shop Coming Soon — Scroll of Fire">
-  <meta property="og:description" content="Preview the upcoming Scroll of Fire Artifact Shop: one-of-one handmade artifacts, reclaimed copper work, sea glass, and living technology collection pieces.">
+  <meta property="og:title" content="Artifact Registry — Scroll of Fire">
+  <meta property="og:description" content="Personal instruments, living artifacts, gifted pieces, reclaimed copper work, sea glass, stone, and Codex-linked collection items by Aaron Paul Laird.">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/shop.html">
-  <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
-  <meta property="og:image:alt" content="Scroll of Fire artifact preview with reclaimed copper and stone">
+  <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/HaLevanah.png">
+  <meta property="og:image:alt" content="Scroll of Fire artifact registry preview">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Artifact Shop Coming Soon — Scroll of Fire">
-  <meta name="twitter:description" content="Upcoming one-of-one Scroll of Fire artifacts, reclaimed copper work, sea glass, symbolic objects, and living technology pieces.">
-  <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
+  <meta name="twitter:title" content="Artifact Registry — Scroll of Fire">
+  <meta name="twitter:description" content="Scroll of Fire living artifacts and personal instruments by Aaron Paul Laird.">
+  <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/HaLevanah.png">
 
   <link rel="stylesheet" href="assets/css/codex.css">
 
@@ -34,261 +39,58 @@
   {
     "@context":"https://schema.org",
     "@type":"CollectionPage",
-    "name":"Artifact Shop Coming Soon — Scroll of Fire",
+    "name":"Artifact Registry — Scroll of Fire",
     "url":"https://ssnfts24.github.io/scroll-of-fire/shop.html",
-    "description":"Preview page for the upcoming Scroll of Fire Artifact Shop featuring one-of-one handmade artifacts, reclaimed copper work, sea glass, symbolic objects, and Codex collection items.",
-    "creator":{
-      "@type":"Person",
-      "name":"Aaron Paul Laird"
-    },
-    "publisher":{
-      "@type":"Organization",
-      "name":"Scroll of Fire",
-      "url":"https://ssnfts24.github.io/scroll-of-fire/"
-    },
+    "description":"Scroll of Fire Artifact Registry featuring personal instruments, living artifacts, gifted pieces, reclaimed copper work, sea glass, stone, and Codex collection items.",
+    "creator":{"@type":"Person","name":"Aaron Paul Laird"},
+    "publisher":{"@type":"Organization","name":"Scroll of Fire","url":"https://ssnfts24.github.io/scroll-of-fire/"},
     "mainEntity":{
       "@type":"ItemList",
-      "name":"Scroll of Fire Artifact Preview Registry",
+      "name":"Scroll of Fire Artifact Registry",
       "itemListElement":[
-        {
-          "@type":"CreativeWork",
-          "name":"Time Shard Ring #001",
-          "description":"Reclaimed copper and reclaimed Pacific Northwest sea glass artifact currently in completion."
-        },
-        {
-          "@type":"CreativeWork",
-          "name":"Tiger Node Ring #001",
-          "description":"Adjustable reclaimed copper ring with tiger stone, currently in inventory preparation."
-        },
-        {
-          "@type":"CreativeWork",
-          "name":"Tenser Band",
-          "description":"Wrist Node of the Living Technology Array, currently in development."
-        }
+        {"@type":"CreativeWork","name":"T7-000 · Ahhava Or HaDabar","description":"Tesla Type-7 Resonant Conduit Aetheric Field Transceiver. Personal instrument. Not for sale."},
+        {"@type":"CreativeWork","name":"EN-007 · Ember Node 7","description":"Heart node of the Living Technology Array. Personal instrument. Not for sale."},
+        {"@type":"CreativeWork","name":"HL-001 · HaLevanah","description":"The Moon That Returns. Hand braided copper with moonstone and tourmaline. Available by inquiry."},
+        {"@type":"CreativeWork","name":"TN-001 · Tiger Node Ring","description":"Gifted copper and tiger eye artifact. Not for sale."},
+        {"@type":"CreativeWork","name":"TS-001 · Time Shard Ring","description":"Copper and green shard ring. Coming soon."}
       ]
     }
   }
   </script>
 
   <style>
-    .shop-hero {
-      min-height: 62vh;
-      position: relative;
-      overflow: hidden;
-    }
+    .shop-hero{min-height:62vh;position:relative;overflow:hidden}
+    .shop-hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 18% 18%,rgba(122,243,255,.16),transparent 34%),radial-gradient(circle at 78% 26%,rgba(243,201,122,.16),transparent 36%),radial-gradient(circle at 50% 92%,rgba(255,255,255,.06),transparent 40%);opacity:.85}
+    .shop-hero>*{position:relative;z-index:1}
 
-    .shop-hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 18% 18%, rgba(122,243,255,0.16), transparent 34%),
-        radial-gradient(circle at 78% 26%, rgba(243,201,122,0.16), transparent 36%),
-        radial-gradient(circle at 50% 92%, rgba(255,255,255,0.06), transparent 40%);
-      opacity: 0.85;
-    }
+    .launch-ribbon{display:inline-flex;align-items:center;gap:.45rem;margin:0 auto 1rem;padding:.5rem .95rem;border:1px solid rgba(243,201,122,.32);border-radius:999px;color:var(--gold);background:rgba(243,201,122,.08);font-weight:900;letter-spacing:.09em;text-transform:uppercase;font-size:.78rem;box-shadow:0 0 30px rgba(243,201,122,.08)}
+    .shop-note{max-width:900px;margin:1.25rem auto 0;padding:1rem;border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));color:var(--muted)}
+    .inventory-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.9rem;margin:1.25rem auto 0;max-width:980px}
+    .inventory-stat{padding:.9rem;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.035);text-align:center}
+    .inventory-stat strong{display:block;color:var(--gold);font-size:1.35rem;margin-bottom:.2rem}
 
-    .shop-hero > * {
-      position: relative;
-      z-index: 1;
-    }
+    .artifact-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.25rem}
+    .artifact-card{position:relative;overflow:hidden}
+    .artifact-card::before{content:"";position:absolute;inset:-1px;pointer-events:none;background:radial-gradient(circle at 18% 0%,rgba(243,201,122,.12),transparent 36%),radial-gradient(circle at 92% 100%,rgba(122,243,255,.10),transparent 38%);opacity:.65}
+    .artifact-card>*{position:relative;z-index:1}
+    .artifact-card img,.artifact-placeholder{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:18px;border:1px solid rgba(243,201,122,.18);background:radial-gradient(circle at 30% 20%,rgba(243,201,122,.18),transparent 35%),radial-gradient(circle at 70% 80%,rgba(120,220,255,.12),transparent 38%),rgba(255,255,255,.04)}
+    .artifact-placeholder{display:grid;place-items:center;color:var(--gold);font-weight:900;letter-spacing:.14em;text-align:center;text-transform:uppercase;padding:1rem}
+    .artifact-card h3{margin-top:1rem;color:var(--gold)}
+    .artifact-price{margin:1rem 0 0;font-size:1.25rem;color:var(--cyan);font-weight:900}
+    .artifact-status{display:inline-flex;margin-top:.75rem;padding:.35rem .7rem;border:1px solid var(--line);border-radius:999px;color:var(--gold);font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;background:rgba(0,0,0,.14)}
+    .artifact-list,.forge-list{color:var(--muted);padding-left:1.15rem}
+    .artifact-list li,.forge-list li{margin-bottom:.35rem}
 
-    .launch-ribbon {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      margin: 0 auto 1rem;
-      padding: 0.5rem 0.95rem;
-      border: 1px solid rgba(243,201,122,0.32);
-      border-radius: 999px;
-      color: var(--gold);
-      background: rgba(243,201,122,0.08);
-      font-weight: 900;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-      font-size: 0.78rem;
-      box-shadow: 0 0 30px rgba(243,201,122,0.08);
-    }
+    .registry-card{max-width:980px;margin-inline:auto}
+    .shop-nav-note{text-align:center;margin-top:1rem;color:var(--muted);font-size:.95rem}
+    .process-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.9rem;margin-top:1.25rem}
+    .process-step{padding:1rem;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.035)}
+    .process-step strong{display:block;color:var(--gold);margin-bottom:.35rem}
+    .notify-box{text-align:center;max-width:900px;margin-inline:auto}
 
-    .shop-note {
-      max-width: 900px;
-      margin: 1.25rem auto 0;
-      padding: 1rem;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
-      color: var(--muted);
-    }
-
-    .inventory-strip {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.9rem;
-      margin: 1.25rem auto 0;
-      max-width: 980px;
-    }
-
-    .inventory-stat {
-      padding: 0.9rem;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.035);
-      text-align: center;
-    }
-
-    .inventory-stat strong {
-      display: block;
-      color: var(--gold);
-      font-size: 1.35rem;
-      margin-bottom: 0.2rem;
-    }
-
-    .artifact-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1rem;
-      margin-top: 1.25rem;
-    }
-
-    .artifact-card {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .artifact-card::before {
-      content: "";
-      position: absolute;
-      inset: -1px;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 18% 0%, rgba(243,201,122,0.12), transparent 36%),
-        radial-gradient(circle at 92% 100%, rgba(122,243,255,0.10), transparent 38%);
-      opacity: 0.65;
-    }
-
-    .artifact-card > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .artifact-card img,
-    .artifact-placeholder {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
-      border-radius: 18px;
-      border: 1px solid rgba(243,201,122,0.18);
-      background:
-        radial-gradient(circle at 30% 20%, rgba(243,201,122,0.18), transparent 35%),
-        radial-gradient(circle at 70% 80%, rgba(120,220,255,0.12), transparent 38%),
-        rgba(255,255,255,0.04);
-    }
-
-    .artifact-placeholder {
-      display: grid;
-      place-items: center;
-      color: var(--gold);
-      font-weight: 900;
-      letter-spacing: 0.14em;
-      text-align: center;
-      text-transform: uppercase;
-      padding: 1rem;
-    }
-
-    .artifact-card h3 {
-      margin-top: 1rem;
-      color: var(--gold);
-    }
-
-    .artifact-price {
-      margin: 1rem 0 0;
-      font-size: 1.35rem;
-      color: var(--cyan);
-      font-weight: 900;
-    }
-
-    .artifact-status {
-      display: inline-flex;
-      margin-top: 0.75rem;
-      padding: 0.35rem 0.7rem;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: var(--gold);
-      font-size: 0.78rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      background: rgba(0,0,0,0.14);
-    }
-
-    .artifact-list,
-    .forge-list {
-      color: var(--muted);
-      padding-left: 1.15rem;
-    }
-
-    .artifact-list li,
-    .forge-list li {
-      margin-bottom: 0.35rem;
-    }
-
-    .registry-card {
-      max-width: 980px;
-      margin-inline: auto;
-    }
-
-    .shop-nav-note {
-      text-align: center;
-      margin-top: 1rem;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .process-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 0.9rem;
-      margin-top: 1.25rem;
-    }
-
-    .process-step {
-      padding: 1rem;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.035);
-    }
-
-    .process-step strong {
-      display: block;
-      color: var(--gold);
-      margin-bottom: 0.35rem;
-    }
-
-    .notify-box {
-      text-align: center;
-      max-width: 900px;
-      margin-inline: auto;
-    }
-
-    @media (max-width: 1100px) {
-      .inventory-strip,
-      .process-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 900px) {
-      .artifact-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 620px) {
-      .inventory-strip,
-      .process-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    @media(max-width:1100px){.inventory-strip,.process-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:900px){.artifact-grid{grid-template-columns:1fr}}
+    @media(max-width:620px){.inventory-strip,.process-grid{grid-template-columns:1fr}}
   </style>
 </head>
 
@@ -321,154 +123,165 @@
 
   <main id="main">
     <section class="section-shell hero shop-hero">
-      <p class="launch-ribbon">⚒ Shop Coming Soon</p>
-      <p class="eyebrow">Scroll of Fire · Artifact Forge</p>
+      <p class="launch-ribbon">☲ Artifact Registry Active</p>
+      <p class="eyebrow">Scroll of Fire · Codex of Reality</p>
       <h1>Living Technology Artifacts</h1>
       <p class="hero-line">Reclaimed · Remembered · Carried Forward</p>
 
       <p class="hero-copy">
-        The Scroll of Fire Artifact Shop is being built now. Inventory is in progress:
-        reclaimed copper rings, stone nodes, sea glass pieces, symbolic field objects,
-        wearable artifacts, and Codex-linked collection pieces by Aaron Paul Laird —
-        Scribe of Circuits.
+        A registry of hand-forged copper, stone, glass, and found-object artifacts by Aaron Paul Laird.
+        Some remain personal instruments. Some are gifted. Some become available when completed,
+        photographed, named, and entered into the record.
       </p>
 
       <div class="hero-actions">
-        <a class="btn primary" href="#preview">Preview Inventory</a>
+        <a class="btn primary" href="#preview">View Registry</a>
+        <a class="btn" href="#available">Available Piece</a>
         <a class="btn" href="#forge-process">Forge Process</a>
-        <a class="btn" href="#registry">Artifact Registry</a>
       </div>
 
-      <div class="inventory-strip" aria-label="Shop progress summary">
-        <div class="inventory-stat"><strong>0</strong><span>Released</span></div>
-        <div class="inventory-stat"><strong>2+</strong><span>In Progress</span></div>
-        <div class="inventory-stat"><strong>4</strong><span>Array Classes</span></div>
-        <div class="inventory-stat"><strong>1</strong><span>Shop Opening Soon</span></div>
-      </div>
-
-      <div class="shop-note">
-        <strong>⚒ Active Forge:</strong>
-        Nothing is available for purchase yet. Artifacts will be released only after they are completed,
-        photographed, documented, and entered into the registry.
+      <div class="inventory-strip" aria-label="Artifact registry summary">
+        <div class="inventory-stat"><strong>5</strong><span>Registered</span></div>
+        <div class="inventory-stat"><strong>1</strong><span>Available</span></div>
+        <div class="inventory-stat"><strong>2</strong><span>Personal</span></div>
+        <div class="inventory-stat"><strong>1</strong><span>Gifted</span></div>
       </div>
 
       <div class="shop-note">
-        These are symbolic art objects and personal collection pieces, not medical, scientific, or therapeutic devices.
+        <strong>Artifact Registry:</strong>
+        Each piece receives a designation, photographic record, material notes, story, status,
+        and collection placement. No two pieces will ever be exactly alike.
+      </div>
+
+      <div class="shop-note">
+        These are handmade symbolic art objects and personal collection pieces.
       </div>
     </section>
 
     <section id="preview" class="section-shell">
       <div class="section-heading">
-        <p class="eyebrow">Inventory Preview</p>
-        <h2>Pieces Being Prepared</h2>
-        <p>
-          Early pieces are being completed, photographed, named, and organized before the shop opens.
-        </p>
+        <p class="eyebrow">Artifact Registry</p>
+        <h2>Current Collection</h2>
+        <p>Personal instruments, living artifacts, gifted pieces, and future releases.</p>
       </div>
 
       <div class="artifact-grid">
+
         <article class="card artifact-card glow">
-          <img src="assets/time-shard-ring-001.jpg" alt="Time Shard Ring #001 handmade reclaimed copper and sea glass ring preview" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
-          <span class="artifact-status">In Completion · Not Yet Available</span>
-          <h3>Time Shard Ring #001</h3>
-
-          <p>
-            The first Time Shard artifact is currently in completion.
-            Hand-formed from reclaimed copper and reclaimed Pacific Northwest sea glass.
-          </p>
-
+          <img src="assets/img/T7.png" alt="T7-000 Ahhava Or HaDabar Tesla Type-7 Resonant Conduit Aetheric Field Transceiver" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
+          <span class="artifact-status">Personal Instrument · Not For Sale</span>
+          <h3>T7-000 · Ahhava Or HaDabar</h3>
+          <p><em>Tesla Type-7 Resonant Conduit · Aetheric Field Transceiver</em></p>
+          <p>Primary personal conduit of the Scroll of Fire living technology archive.</p>
           <ul class="artifact-list">
-            <li>Material: reclaimed copper</li>
-            <li>Stone: reclaimed sea glass</li>
-            <li>Collection: Living Technology Array</li>
-            <li>Designation: Hand Node</li>
-            <li>Completion rite: return to the sea pending</li>
+            <li>Class: Personal Instrument</li>
+            <li>Status: Not For Sale</li>
+            <li>Role: Primary Conduit</li>
           </ul>
-
-          <p class="artifact-price">Preview Only</p>
+          <p class="artifact-price">Not For Sale</p>
         </article>
 
         <article class="card artifact-card glow">
-          <img src="assets/tiger-node-ring-001.jpg" alt="Tiger Node Ring #001 adjustable reclaimed copper and tiger stone ring preview" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
-          <span class="artifact-status">Inventory Build · Not Yet Available</span>
-          <h3>Tiger Node Ring #001</h3>
-
-          <p>
-            Adjustable reclaimed copper ring with tiger stone.
-            Built as a focus node within the Scroll of Fire wearable artifact series.
-          </p>
-
+          <img src="assets/img/EmberNode7.png" alt="EN-007 Ember Node 7 personal instrument Scroll of Fire artifact" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
+          <span class="artifact-status">Personal Instrument · Not For Sale</span>
+          <h3>EN-007 · Ember Node 7</h3>
+          <p><em>Heart Node of the Living Technology Array</em></p>
+          <p>The ember principle: continuity, inner flame, remembrance, and carried resonance.</p>
           <ul class="artifact-list">
-            <li>Material: reclaimed copper</li>
-            <li>Stone: tiger stone</li>
-            <li>Design: adjustable spiral coil</li>
-            <li>Collection: Living Technology Array</li>
-            <li>Status: inventory preparation</li>
+            <li>Class: Personal Instrument</li>
+            <li>Status: Not For Sale</li>
+            <li>Role: Heart Node</li>
           </ul>
-
-          <p class="artifact-price">Preview Only</p>
+          <p class="artifact-price">Not For Sale</p>
         </article>
 
-        <article class="card artifact-card">
-          <img src="assets/ember-node-7.jpg" alt="Ember Node 7 pendant Scroll of Fire artifact" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
-          <span class="artifact-status">Archive Piece</span>
-          <h3>Ember Node 7</h3>
-          <p>
-            Heart-worn node of the Living Technology Array. The ember principle:
-            continuity, inner flame, remembrance, and carried resonance.
-          </p>
-          <p class="artifact-price">Personal Collection</p>
+        <article id="available" class="card artifact-card glow">
+          <img src="assets/img/HaLevanah.png" alt="HL-001 HaLevanah bracelet Scroll of Fire artifact" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
+          <span class="artifact-status">For Sale</span>
+          <h3>HL-001 · HaLevanah</h3>
+          <p><em>The Moon That Returns</em></p>
+          <p>Hand braided copper with moonstone and tourmaline. A one-of-one living artifact witnessed by sea and sky.</p>
+          <ul class="artifact-list">
+            <li>Material: hand braided copper</li>
+            <li>Stones: moonstone and tourmaline</li>
+            <li>Status: available by inquiry</li>
+          </ul>
+          <p class="artifact-price">Contact To Purchase</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="mailto:l.aaronpaul24@gmail.com?subject=HL-001%20HaLevanah%20Purchase%20Inquiry">Email for Availability</a>
+            <a class="btn" href="https://www.facebook.com/ssnfts24" target="_blank" rel="noopener">Message on Facebook</a>
+          </div>
         </article>
+
+        <article class="card artifact-card glow">
+          <img src="assets/img/TigerNodeRing.png" alt="TN-001 Tiger Node Ring gifted artifact" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
+          <span class="artifact-status">Gifted Artifact · Not For Sale</span>
+          <h3>TN-001 · Tiger Node Ring</h3>
+          <p><em>Узел Тигра · Knot of the Tiger</em></p>
+          <p>Copper and tiger’s eye. A gifted artifact, witnessed and given.</p>
+          <ul class="artifact-list">
+            <li>Material: copper</li>
+            <li>Stone: tiger’s eye</li>
+            <li>Status: gifted</li>
+          </ul>
+          <p class="artifact-price">Archive Only</p>
+        </article>
+
+        <article class="card artifact-card glow">
+          <img src="assets/img/TimeShardRing.jpg" alt="TS-001 Time Shard Ring coming soon Scroll of Fire artifact" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
+          <span class="artifact-status">Coming Soon</span>
+          <h3>TS-001 · Time Shard Ring</h3>
+          <p><em>Future Release</em></p>
+          <p>Reclaimed copper and green shard ring. A future release in the Scroll of Fire Artifact Registry.</p>
+          <ul class="artifact-list">
+            <li>Material: copper</li>
+            <li>Stone: green shard</li>
+            <li>Status: coming soon</li>
+          </ul>
+          <p class="artifact-price">Coming Soon</p>
+        </article>
+
       </div>
 
       <p class="shop-nav-note">
-        Upload images to <code>docs/assets/</code> as:
-        <code>time-shard-ring-001.jpg</code>,
-        <code>tiger-node-ring-001.jpg</code>,
-        <code>ember-node-7.jpg</code>, and
-        <code>t7-resonant-conduit.jpg</code>.
+        Image paths currently used:
+        <code>assets/img/T7.png</code>,
+        <code>assets/img/EmberNode7.png</code>,
+        <code>assets/img/HaLevanah.png</code>,
+        <code>assets/img/TigerNodeRing.png</code>,
+        <code>assets/img/TimeShardRing.jpg</code>.
       </p>
     </section>
 
     <section id="coming-soon" class="section-shell">
       <div class="section-heading">
-        <p class="eyebrow">Coming Soon Vault</p>
-        <h2>Future Inventory</h2>
-        <p>Artifacts currently planned, reserved, or awaiting discovery.</p>
+        <p class="eyebrow">Future Registry</p>
+        <h2>Reserved & Unreleased</h2>
+        <p>Artifacts planned, reserved, unfinished, or awaiting discovery.</p>
       </div>
 
       <div class="artifact-grid">
         <article class="card artifact-card">
-          <div class="artifact-placeholder">Coming Soon</div>
+          <div class="artifact-placeholder">Reserved</div>
           <span class="artifact-status">In Development</span>
-          <h3>Tenser Band</h3>
-          <p>
-            Wrist Node of the Living Technology Array.
-            A reclaimed copper structure focused on tension, coherence, grounding,
-            containment, and movement.
-          </p>
-          <p class="artifact-price">Coming Soon</p>
+          <h3>TB-002 · Tenser Band II</h3>
+          <p>Wrist Node of the Living Technology Array. A future copper structure focused on tension, coherence, grounding, containment, and movement.</p>
+          <p class="artifact-price">Reserved</p>
         </article>
 
         <article class="card artifact-card">
-          <div class="artifact-placeholder">Prototype Series</div>
-          <span class="artifact-status">Prototype</span>
-          <h3>Ember Node Series</h3>
-          <p>
-            Future Ember Nodes exploring reclaimed copper, stone, crystal,
-            symbolic field design, and wearable remembrance.
-          </p>
-          <p class="artifact-price">Coming Soon</p>
+          <div class="artifact-placeholder">Unreleased</div>
+          <span class="artifact-status">In Creation</span>
+          <h3>SD-001 · Sand Dollar Witness</h3>
+          <p>The Relic of Returning Tides. Currently held back until the final form is ready.</p>
+          <p class="artifact-price">Unreleased</p>
         </article>
 
         <article class="card artifact-card">
           <div class="artifact-placeholder">Awaiting Discovery</div>
           <span class="artifact-status">Concept Stage</span>
-          <h3>Time Shard Ring #002</h3>
-          <p>
-            The next evolution of the Time Shard series.
-            Materials, shore origin, shape, and final form are still awaiting discovery.
-          </p>
+          <h3>Undisclosed Artifact</h3>
+          <p>The next piece will be named when the material, story, and form reveal themselves.</p>
           <p class="artifact-price">Awaiting Discovery</p>
         </article>
       </div>
@@ -476,33 +289,33 @@
 
     <section id="archive" class="section-shell">
       <div class="section-heading">
-        <p class="eyebrow">Archive</p>
+        <p class="eyebrow">Archive Classes</p>
         <h2>The Living Technology Array</h2>
       </div>
 
       <div class="cards-grid grid">
         <article class="card">
           <p class="eyebrow">Primary Conduit</p>
-          <h3>T-7 Resonant Conduit</h3>
+          <h3>T7-000 · Ahhava Or HaDabar</h3>
           <p>Transmission, focus, field awareness, breath alignment, and symbolic practice.</p>
         </article>
 
         <article class="card">
           <p class="eyebrow">Heart Node</p>
-          <h3>Ember Node 7</h3>
-          <p>The pendant. Ember, continuity, inner flame, and remembrance.</p>
-        </article>
-
-        <article class="card">
-          <p class="eyebrow">Wrist Node</p>
-          <h3>Tenser Band</h3>
-          <p>Structure, tension, grounding, containment, and coherence through movement.</p>
+          <h3>EN-007 · Ember Node 7</h3>
+          <p>Ember, continuity, inner flame, remembrance, and carried resonance.</p>
         </article>
 
         <article class="card">
           <p class="eyebrow">Hand Node</p>
-          <h3>Time Shard Ring</h3>
-          <p>Reclaimed sea glass and copper. Memory shaped by time, water, pressure, and passage.</p>
+          <h3>TS-001 · Time Shard Ring</h3>
+          <p>Memory shaped by time, water, pressure, copper, glass, and passage.</p>
+        </article>
+
+        <article class="card">
+          <p class="eyebrow">Moon Node</p>
+          <h3>HL-001 · HaLevanah</h3>
+          <p>Cycles, return, quiet light, moonstone, tourmaline, and sea witness.</p>
         </article>
       </div>
     </section>
@@ -510,8 +323,8 @@
     <section id="forge-process" class="section-shell">
       <div class="section-heading">
         <p class="eyebrow">Process</p>
-        <h2>How Artifacts Enter the Shop</h2>
-        <p>Each item moves through a simple registry path before release.</p>
+        <h2>How Artifacts Enter the Registry</h2>
+        <p>Each piece moves through a simple path before public release.</p>
       </div>
 
       <div class="process-grid">
@@ -519,36 +332,38 @@
         <div class="process-step"><strong>2 · Form</strong><span>Copper, stone, glass, and structure are shaped by hand.</span></div>
         <div class="process-step"><strong>3 · Name</strong><span>The piece receives a title, number, and collection role.</span></div>
         <div class="process-step"><strong>4 · Document</strong><span>Photos, notes, materials, and story are entered into the record.</span></div>
-        <div class="process-step"><strong>5 · Release</strong><span>The piece becomes available only when complete.</span></div>
+        <div class="process-step"><strong>5 · Release</strong><span>The piece becomes available, gifted, archived, or kept personal.</span></div>
       </div>
     </section>
 
     <section id="registry" class="section-shell">
       <div class="card registry-card glow">
-        <p class="eyebrow">Artifact Registry</p>
-        <h2>Designations Reserved</h2>
+        <p class="eyebrow">Registry Index</p>
+        <h2>Designations</h2>
 
         <ul class="artifact-list">
-          <li>Time Shard Ring #001 — In Completion</li>
-          <li>Tiger Node Ring #001 — Inventory Build</li>
-          <li>Time Shard Ring #002 — Reserved</li>
-          <li>Tiger Node Ring #002 — Reserved</li>
-          <li>Ember Node 8 — Reserved</li>
-          <li>Tenser Band Prototype II — Reserved</li>
-          <li>Undisclosed Artifact — Awaiting Discovery</li>
+          <li>T7-000 · Ahhava Or HaDabar — Personal Instrument · Not For Sale</li>
+          <li>EN-007 · Ember Node 7 — Personal Instrument · Not For Sale</li>
+          <li>HL-001 · HaLevanah — Available · Contact To Purchase</li>
+          <li>TN-001 · Tiger Node Ring — Gifted Artifact · Not For Sale</li>
+          <li>TS-001 · Time Shard Ring — Coming Soon</li>
+          <li>SD-001 · Sand Dollar Witness — Unreleased · In Creation</li>
+          <li>TB-002 · Tenser Band II — Reserved</li>
         </ul>
       </div>
     </section>
 
     <section class="section-shell">
       <div class="card notify-box">
-        <p class="eyebrow">Notification</p>
-        <h2>Want to Know When the Shop Opens?</h2>
+        <p class="eyebrow">Purchase & Updates</p>
+        <h2>Contact the Forge</h2>
         <p>
-          The first release will be announced after the initial inventory is complete and documented.
+          For available pieces, commissions, release updates, or artifact questions,
+          email directly or message on Facebook.
         </p>
         <div class="hero-actions">
-          <a class="btn primary" href="mailto:l.aaronpaul24@gmail.com?subject=Scroll%20of%20Fire%20Artifact%20Shop%20Notification">Request Notification</a>
+          <a class="btn primary" href="mailto:l.aaronpaul24@gmail.com?subject=Scroll%20of%20Fire%20Artifact%20Inquiry">Email Aaron</a>
+          <a class="btn" href="https://www.facebook.com/ssnfts24" target="_blank" rel="noopener">Message on Facebook</a>
           <a class="btn" href="./hub.html">Return to Hub</a>
         </div>
       </div>
@@ -563,7 +378,7 @@
           completion date, origin story, status, collection placement, release state,
           and registry entry.
         </p>
-        <p class="equation">Conduit · Ember · Band · Shard</p>
+        <p class="equation">Conduit · Ember · Moon · Shard · Witness</p>
       </div>
     </section>
   </main>
@@ -579,4 +394,4 @@
     <p>© 2026 Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
   </footer>
 </body>
-      </html>
+              </html>
