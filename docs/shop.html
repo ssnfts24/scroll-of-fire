@@ -10,9 +10,9 @@
   </script>
 
   <meta charset="utf-8">
-  <title>Artifact Registry & Shop — Scroll of Fire</title>
+  <title>Artifact Registry & Shop — Scroll of Fire | Codex of Reality</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Scroll of Fire Artifact Registry and Shop by Aaron Paul Laird: hand-forged copper Tensor Bands, Covenant 67, HaLevanah, living technology archive pieces, and Codex of Reality artifacts.">
+  <meta name="description" content="Scroll of Fire Artifact Registry and Shop by Aaron Paul Laird: hand-forged copper Tensor Bands, Covenant 67, Covenant Band Green Tide, HaLevanah, living technology archive pieces, and Codex of Reality artifacts.">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="creator" content="Aaron Paul Laird">
   <meta name="publisher" content="Scroll of Fire">
@@ -23,7 +23,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Codex of Reality">
   <meta property="og:title" content="Artifact Registry & Shop — Scroll of Fire">
-  <meta property="og:description" content="Hand-forged copper artifacts, Tensor Bands, Covenant 67, HaLevanah, and Scroll of Fire registry pieces by Aaron Paul Laird.">
+  <meta property="og:description" content="Hand-forged copper artifacts, Tensor Bands, Covenant 67, Covenant Band Green Tide, HaLevanah, and Scroll of Fire registry pieces by Aaron Paul Laird.">
   <meta property="og:url" content="https://codexofreality.org/shop.html">
   <meta property="og:image" content="https://codexofreality.org/Tensorband01.png">
   <meta property="og:image:alt" content="Open-end Tensor Band copper wrist artifact by Aaron Paul Laird">
@@ -41,7 +41,7 @@
     "@type":"CollectionPage",
     "name":"Artifact Registry & Shop — Scroll of Fire",
     "url":"https://codexofreality.org/shop.html",
-    "description":"Hand-forged copper artifacts, Tensor Bands, Covenant 67, HaLevanah, and Scroll of Fire registry pieces by Aaron Paul Laird.",
+    "description":"Hand-forged copper artifacts, Tensor Bands, Covenant 67, Covenant Band Green Tide, HaLevanah, and Scroll of Fire registry pieces by Aaron Paul Laird.",
     "creator":{"@type":"Person","name":"Aaron Paul Laird"},
     "publisher":{"@type":"Organization","name":"Scroll of Fire","url":"https://codexofreality.org/"},
     "mainEntity":{
@@ -51,11 +51,12 @@
         {"@type":"CreativeWork","position":1,"name":"TB-001 · Open-End Tensor Band","description":"Hand-forged reclaimed copper open-end Tensor Band. Available by email inquiry."},
         {"@type":"CreativeWork","position":2,"name":"TB-002 · Matched Tensor Pair","description":"Left and right open-end copper Tensor Band pair. Available by email inquiry."},
         {"@type":"CreativeWork","position":3,"name":"CV-067 · Covenant 67","description":"Hand-shaped copper pendant with quartz detail. Available by email inquiry."},
-        {"@type":"CreativeWork","position":4,"name":"HL-001 · HaLevanah","description":"The Moon That Returns. Hand braided copper with moonstone and tourmaline. Available by email inquiry."},
-        {"@type":"CreativeWork","position":5,"name":"T7-000 · Ahhava Or HaDabar","description":"Tesla Type-7 Resonant Conduit. Personal archive piece. Not for sale."},
-        {"@type":"CreativeWork","position":6,"name":"EN-007 · Ember Node 7","description":"Heart Node of the Living Technology Array. Personal archive piece. Not for sale."},
-        {"@type":"CreativeWork","position":7,"name":"TN-001 · Tiger Node Ring","description":"Gifted copper and tiger eye artifact. Archive only."},
-        {"@type":"CreativeWork","position":8,"name":"TS-001 · Time Shard Ring","description":"Copper and green shard ring. Future release."}
+        {"@type":"CreativeWork","position":4,"name":"CB-002 · Covenant Band: Green Tide","description":"Copper Covenant Band with green sea glass. In progress; email for availability."},
+        {"@type":"CreativeWork","position":5,"name":"HL-001 · HaLevanah","description":"The Moon That Returns. Hand braided copper with moonstone and tourmaline. Available by email inquiry."},
+        {"@type":"CreativeWork","position":6,"name":"T7-000 · Ahhava Or HaDabar","description":"Tesla Type-7 Resonant Conduit. Personal archive piece. Not for sale."},
+        {"@type":"CreativeWork","position":7,"name":"EN-007 · Ember Node 7","description":"Heart Node of the Living Technology Array. Personal archive piece. Not for sale."},
+        {"@type":"CreativeWork","position":8,"name":"TN-001 · Tiger Node Ring","description":"Gifted copper and tiger eye artifact. Archive only."},
+        {"@type":"CreativeWork","position":9,"name":"TS-001 · Time Shard Ring","description":"Copper and green shard ring. Future release."}
       ]
     }
   }
@@ -71,10 +72,7 @@
       --shop-muted:rgba(247,239,224,.74);
       --shop-soft:rgba(247,239,224,.58);
       --shop-line:rgba(243,201,122,.22);
-      --shop-line-strong:rgba(243,201,122,.42);
-      --shop-glass:rgba(255,255,255,.045);
       --shop-radius:26px;
-      --shop-shadow:0 28px 90px rgba(0,0,0,.45);
     }
 
     html{scroll-behavior:smooth}
@@ -106,22 +104,8 @@
 
     .site-header,.section-shell,.site-footer{position:relative;z-index:1}
 
-    .shop-hero{
-      position:relative;
-      min-height:78vh;
-      overflow:hidden;
-      isolation:isolate;
-    }
-
-    .shop-hero::before,
-    .shop-hero::after{
-      content:"";
-      position:absolute;
-      inset:-20%;
-      pointer-events:none;
-      z-index:0;
-    }
-
+    .shop-hero{position:relative;min-height:78vh;overflow:hidden;isolation:isolate}
+    .shop-hero::before,.shop-hero::after{content:"";position:absolute;inset:-20%;pointer-events:none;z-index:0}
     .shop-hero::before{
       background:
         radial-gradient(circle at 18% 18%,rgba(122,243,255,.18),transparent 24rem),
@@ -129,7 +113,6 @@
         radial-gradient(circle at 50% 92%,rgba(255,255,255,.08),transparent 30rem);
       animation:artifactAura 15s ease-in-out infinite alternate;
     }
-
     .shop-hero::after{
       background-image:
         linear-gradient(rgba(243,201,122,.12) 1px,transparent 1px),
@@ -139,375 +122,122 @@
       opacity:.22;
       animation:gridDrift 32s linear infinite;
     }
-
     .shop-hero > *{position:relative;z-index:1}
 
     .living-sigil{
-      display:grid;
-      place-items:center;
-      width:7rem;
-      height:7rem;
-      margin:0 auto 1.25rem;
-      border:1px solid rgba(243,201,122,.34);
-      border-radius:50%;
-      color:var(--shop-gold);
-      font-size:2.35rem;
-      background:radial-gradient(circle,rgba(243,201,122,.16),transparent 58%),rgba(255,255,255,.035);
+      display:grid;place-items:center;width:7rem;height:7rem;margin:0 auto 1.25rem;
+      border:1px solid rgba(243,201,122,.34);border-radius:50%;color:var(--shop-gold);
+      font-size:2.35rem;background:radial-gradient(circle,rgba(243,201,122,.16),transparent 58%),rgba(255,255,255,.035);
       box-shadow:0 0 50px rgba(243,201,122,.12),inset 0 0 30px rgba(122,243,255,.06);
       animation:sigilPulse 5.5s ease-in-out infinite;
     }
 
     .launch-ribbon{
-      display:inline-flex;
-      align-items:center;
-      gap:.45rem;
-      margin:0 auto 1rem;
-      padding:.58rem 1rem;
-      border:1px solid rgba(243,201,122,.35);
-      border-radius:999px;
-      color:var(--shop-gold);
-      background:rgba(243,201,122,.08);
-      font-weight:900;
-      letter-spacing:.1em;
-      text-transform:uppercase;
-      font-size:.78rem;
+      display:inline-flex;align-items:center;gap:.45rem;margin:0 auto 1rem;padding:.58rem 1rem;
+      border:1px solid rgba(243,201,122,.35);border-radius:999px;color:var(--shop-gold);
+      background:rgba(243,201,122,.08);font-weight:900;letter-spacing:.1em;text-transform:uppercase;font-size:.78rem;
       box-shadow:0 0 34px rgba(243,201,122,.08);
     }
 
-    .hero-copy strong{color:var(--shop-gold)}
-
-    .hero-actions .btn[href^="mailto:"]{
-      border-color:rgba(122,243,255,.35);
-    }
-
     .shop-note,.origin-callout,.truth-band{
-      max-width:980px;
-      margin:1.25rem auto 0;
-      padding:1rem 1.1rem;
-      border:1px solid var(--shop-line);
-      border-radius:var(--shop-radius);
-      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.018));
-      color:var(--shop-muted);
-      backdrop-filter:blur(14px);
+      max-width:980px;margin:1.25rem auto 0;padding:1rem 1.1rem;border:1px solid var(--shop-line);
+      border-radius:var(--shop-radius);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.018));
+      color:var(--shop-muted);backdrop-filter:blur(14px);
     }
 
     .origin-callout{
       border-color:rgba(243,201,122,.38);
-      background:
-        radial-gradient(circle at 14% 0%,rgba(243,201,122,.12),transparent 30rem),
-        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+      background:radial-gradient(circle at 14% 0%,rgba(243,201,122,.12),transparent 30rem),linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
     }
 
     .truth-band{
       border-color:rgba(122,243,255,.25);
-      background:
-        radial-gradient(circle at 90% 20%,rgba(122,243,255,.09),transparent 26rem),
-        rgba(255,255,255,.035);
+      background:radial-gradient(circle at 90% 20%,rgba(122,243,255,.09),transparent 26rem),rgba(255,255,255,.035);
     }
 
-    .inventory-strip{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.9rem;
-      max-width:980px;
-      margin:1.35rem auto 0;
-    }
+    .inventory-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.9rem;max-width:980px;margin:1.35rem auto 0}
+    .inventory-stat{padding:1rem;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);text-align:center}
+    .inventory-stat strong{display:block;color:var(--shop-gold);font-size:1.45rem;margin-bottom:.2rem}
 
-    .inventory-stat{
-      position:relative;
-      overflow:hidden;
-      padding:1rem;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.04);
-      text-align:center;
-    }
+    .shop-orbit{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin:1.25rem auto 0;color:var(--shop-muted);font-size:.9rem}
+    .shop-orbit span{padding:.45rem .75rem;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.035)}
 
-    .inventory-stat strong{
-      display:block;
-      color:var(--shop-gold);
-      font-size:1.45rem;
-      margin-bottom:.2rem;
-    }
-
-    .shop-orbit{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:.6rem;
-      margin:1.25rem auto 0;
-      color:var(--shop-muted);
-      font-size:.9rem;
-    }
-
-    .shop-orbit span{
-      padding:.45rem .75rem;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:999px;
-      background:rgba(255,255,255,.035);
-    }
-
-    .artifact-tools{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:.55rem;
-      margin:1.3rem 0 0;
-    }
-
+    .artifact-tools{display:flex;flex-wrap:wrap;justify-content:center;gap:.55rem;margin:1.3rem 0 0}
     .filter-btn{
-      appearance:none;
-      border:1px solid rgba(243,201,122,.28);
-      border-radius:999px;
-      padding:.6rem .9rem;
-      color:var(--shop-ink);
-      background:rgba(255,255,255,.04);
-      cursor:pointer;
-      font:inherit;
-      font-size:.9rem;
+      appearance:none;border:1px solid rgba(243,201,122,.28);border-radius:999px;padding:.6rem .9rem;
+      color:var(--shop-ink);background:rgba(255,255,255,.04);cursor:pointer;font:inherit;font-size:.9rem;
       transition:transform .2s ease,border-color .2s ease,background .2s ease;
     }
+    .filter-btn:hover,.filter-btn.active{transform:translateY(-2px);border-color:rgba(243,201,122,.58);background:rgba(243,201,122,.1)}
 
-    .filter-btn:hover,.filter-btn.active{
-      transform:translateY(-2px);
-      border-color:rgba(243,201,122,.58);
-      background:rgba(243,201,122,.1);
-    }
-
-    .artifact-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:1rem;
-      margin-top:1.35rem;
-    }
-
-    .artifact-card{
-      position:relative;
-      overflow:hidden;
-      transform:translateY(18px);
-      opacity:0;
-      transition:
-        transform .8s cubic-bezier(.2,.8,.2,1),
-        opacity .8s ease,
-        border-color .25s ease,
-        box-shadow .25s ease;
-    }
-
+    .artifact-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.35rem}
+    .artifact-card{position:relative;overflow:hidden;transform:translateY(18px);opacity:0;transition:transform .8s cubic-bezier(.2,.8,.2,1),opacity .8s ease,border-color .25s ease,box-shadow .25s ease}
     .artifact-card.revealed{transform:translateY(0);opacity:1}
     .artifact-card.hidden{display:none}
-
     .artifact-card::before{
-      content:"";
-      position:absolute;
-      inset:-1px;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 18% 0%,rgba(243,201,122,.14),transparent 34%),
-        radial-gradient(circle at 92% 100%,rgba(122,243,255,.12),transparent 38%);
+      content:"";position:absolute;inset:-1px;pointer-events:none;
+      background:radial-gradient(circle at 18% 0%,rgba(243,201,122,.14),transparent 34%),radial-gradient(circle at 92% 100%,rgba(122,243,255,.12),transparent 38%);
       opacity:.75;
     }
-
     .artifact-card > *{position:relative;z-index:1}
-
-    .artifact-card:hover{
-      border-color:rgba(243,201,122,.38);
-      box-shadow:0 22px 70px rgba(0,0,0,.32);
-    }
+    .artifact-card:hover{border-color:rgba(243,201,122,.38);box-shadow:0 22px 70px rgba(0,0,0,.32)}
 
     .artifact-media{
-      position:relative;
-      overflow:hidden;
-      border-radius:20px;
-      border:1px solid rgba(243,201,122,.2);
-      background:
-        radial-gradient(circle at 30% 20%,rgba(243,201,122,.18),transparent 35%),
-        radial-gradient(circle at 70% 80%,rgba(120,220,255,.12),transparent 38%),
-        rgba(255,255,255,.04);
+      position:relative;overflow:hidden;border-radius:20px;border:1px solid rgba(243,201,122,.2);
+      background:radial-gradient(circle at 30% 20%,rgba(243,201,122,.18),transparent 35%),radial-gradient(circle at 70% 80%,rgba(120,220,255,.12),transparent 38%),rgba(255,255,255,.04);
     }
 
-    .artifact-card img,.artifact-placeholder{
-      width:100%;
-      aspect-ratio:1/1;
-      object-fit:cover;
-      display:block;
-      border-radius:20px;
-      transition:transform 1.2s ease,filter .4s ease;
-    }
-
-    .artifact-card:hover img{
-      transform:scale(1.045);
-      filter:saturate(1.08) contrast(1.04);
-    }
-
+    .artifact-card img,.artifact-placeholder{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;border-radius:20px;transition:transform 1.2s ease,filter .4s ease}
+    .artifact-card:hover img{transform:scale(1.045);filter:saturate(1.08) contrast(1.04)}
     .artifact-media::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,.13) 42%,transparent 64%);
-      transform:translateX(-120%);
-      animation:shinePass 8s ease-in-out infinite;
-      pointer-events:none;
+      content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,.13) 42%,transparent 64%);
+      transform:translateX(-120%);animation:shinePass 8s ease-in-out infinite;pointer-events:none;
     }
 
     .artifact-placeholder{
-      display:grid;
-      place-items:center;
-      color:var(--shop-gold);
-      font-weight:900;
-      letter-spacing:.16em;
-      text-align:center;
-      text-transform:uppercase;
-      padding:1rem;
+      display:grid;place-items:center;color:var(--shop-gold);font-weight:900;letter-spacing:.16em;text-align:center;text-transform:uppercase;padding:1rem;
     }
 
-    .artifact-card h3{
-      margin-top:1rem;
-      color:var(--shop-gold);
-    }
-
+    .artifact-card h3{margin-top:1rem;color:var(--shop-gold)}
     .artifact-status{
-      display:inline-flex;
-      margin-top:.85rem;
-      padding:.38rem .72rem;
-      border:1px solid rgba(243,201,122,.28);
-      border-radius:999px;
-      color:var(--shop-gold);
-      font-size:.76rem;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      background:rgba(0,0,0,.18);
+      display:inline-flex;margin-top:.85rem;padding:.38rem .72rem;border:1px solid rgba(243,201,122,.28);
+      border-radius:999px;color:var(--shop-gold);font-size:.76rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;background:rgba(0,0,0,.18);
     }
 
-    .artifact-list{
-      color:var(--shop-muted);
-      padding-left:1.15rem;
-    }
-
+    .artifact-list{color:var(--shop-muted);padding-left:1.15rem}
     .artifact-list li{margin-bottom:.38rem}
-
-    .artifact-price{
-      margin:1rem 0 0;
-      font-size:1.18rem;
-      color:var(--shop-cyan);
-      font-weight:900;
-    }
-
-    .artifact-value-label{
-      display:block;
-      color:var(--shop-soft);
-      font-size:.78rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      margin-bottom:.12rem;
-    }
-
-    .artifact-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.65rem;
-      margin-top:1rem;
-    }
+    .artifact-price{margin:1rem 0 0;font-size:1.18rem;color:var(--shop-cyan);font-weight:900}
+    .artifact-value-label{display:block;color:var(--shop-soft);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.12rem}
+    .artifact-actions{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1rem}
 
     .inquiry-btn{
-      color:#061016!important;
-      border-color:transparent!important;
-      background:linear-gradient(135deg,var(--shop-gold),var(--shop-cyan))!important;
-      font-weight:900;
+      color:#061016!important;border-color:transparent!important;
+      background:linear-gradient(135deg,var(--shop-gold),var(--shop-cyan))!important;font-weight:900;
     }
 
-    .series-grid,.process-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:1rem;
-      margin-top:1.25rem;
-    }
-
+    .series-grid,.process-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.25rem}
     .process-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
-
-    .process-step,.series-card{
-      position:relative;
-      overflow:hidden;
-      padding:1rem;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.04);
-    }
-
-    .process-step strong,.series-card strong{
-      display:block;
-      color:var(--shop-gold);
-      margin-bottom:.35rem;
-    }
+    .process-step,.series-card{padding:1rem;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)}
+    .process-step strong,.series-card strong{display:block;color:var(--shop-gold);margin-bottom:.35rem}
 
     .registry-card{max-width:1080px;margin-inline:auto}
-
-    .registry-table{
-      width:100%;
-      border-collapse:collapse;
-      overflow:hidden;
-      border-radius:20px;
-      font-size:.95rem;
-    }
-
-    .registry-table th,.registry-table td{
-      padding:.8rem;
-      border-bottom:1px solid rgba(255,255,255,.09);
-      text-align:left;
-      vertical-align:top;
-    }
-
-    .registry-table th{
-      color:var(--shop-gold);
-      background:rgba(255,255,255,.045);
-    }
-
+    .registry-table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:20px;font-size:.95rem}
+    .registry-table th,.registry-table td{padding:.8rem;border-bottom:1px solid rgba(255,255,255,.09);text-align:left;vertical-align:top}
+    .registry-table th{color:var(--shop-gold);background:rgba(255,255,255,.045)}
     .registry-table td{color:var(--shop-muted)}
 
-    .notify-box{
-      text-align:center;
-      max-width:900px;
-      margin-inline:auto;
-    }
-
+    .notify-box{text-align:center;max-width:900px;margin-inline:auto}
     .email-pill{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:.7rem 1rem;
-      border-radius:999px;
-      border:1px solid rgba(122,243,255,.35);
-      color:var(--shop-cyan);
-      background:rgba(122,243,255,.06);
-      font-weight:900;
-      text-decoration:none;
-      word-break:break-word;
+      display:inline-flex;align-items:center;justify-content:center;padding:.7rem 1rem;border-radius:999px;
+      border:1px solid rgba(122,243,255,.35);color:var(--shop-cyan);background:rgba(122,243,255,.06);
+      font-weight:900;text-decoration:none;word-break:break-word;
     }
 
-    @keyframes fieldDrift{
-      from{transform:translate3d(-1.5%,0,0) scale(1)}
-      to{transform:translate3d(1.5%,-1%,0) scale(1.04)}
-    }
-
-    @keyframes artifactAura{
-      from{transform:translate3d(-1%,0,0) scale(1)}
-      to{transform:translate3d(1.5%,1%,0) scale(1.04)}
-    }
-
-    @keyframes gridDrift{
-      from{transform:translate3d(0,0,0)}
-      to{transform:translate3d(72px,72px,0)}
-    }
-
-    @keyframes sigilPulse{
-      0%,100%{transform:scale(1);box-shadow:0 0 48px rgba(243,201,122,.12),inset 0 0 30px rgba(122,243,255,.06)}
-      50%{transform:scale(1.045);box-shadow:0 0 75px rgba(243,201,122,.2),inset 0 0 42px rgba(122,243,255,.1)}
-    }
-
-    @keyframes shinePass{
-      0%,52%{transform:translateX(-130%)}
-      70%,100%{transform:translateX(130%)}
-    }
+    @keyframes fieldDrift{from{transform:translate3d(-1.5%,0,0) scale(1)}to{transform:translate3d(1.5%,-1%,0) scale(1.04)}}
+    @keyframes artifactAura{from{transform:translate3d(-1%,0,0) scale(1)}to{transform:translate3d(1.5%,1%,0) scale(1.04)}}
+    @keyframes gridDrift{from{transform:translate3d(0,0,0)}to{transform:translate3d(72px,72px,0)}}
+    @keyframes sigilPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+    @keyframes shinePass{0%,52%{transform:translateX(-130%)}70%,100%{transform:translateX(130%)}}
 
     @media(max-width:1100px){
       .inventory-strip,.process-grid,.series-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -521,11 +251,7 @@
     }
 
     @media(prefers-reduced-motion:reduce){
-      *,*::before,*::after{
-        animation:none!important;
-        transition:none!important;
-        scroll-behavior:auto!important;
-      }
+      *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
       .artifact-card{opacity:1;transform:none}
     }
   </style>
@@ -563,7 +289,7 @@
     <section class="section-shell hero shop-hero">
       <div class="living-sigil" aria-hidden="true">☲</div>
 
-      <p class="launch-ribbon">Artifact Registry · Purchase Inquiry Open</p>
+      <p class="launch-ribbon">Artifact Registry · Inquiry Only</p>
       <p class="eyebrow">Scroll of Fire · Codex of Reality · Hand-Forged Works</p>
 
       <h1>Hand-Forged Artifacts</h1>
@@ -571,28 +297,29 @@
 
       <p class="hero-copy">
         A living registry and shop for hand-forged copper, stone, glass, and found-object artifacts by
-        <strong>Aaron Paul Laird</strong>. Each piece is individually shaped, photographed, documented,
-        and entered into the Scroll of Fire Artifact Registry before release.
+        <strong>Aaron Paul Laird</strong>. Each piece is shaped, photographed, named, and entered into
+        the Scroll of Fire Artifact Registry before release.
       </p>
 
       <div class="hero-actions">
         <a class="btn primary" href="#available">View Available Work</a>
+        <a class="btn" href="#in-progress">In Progress</a>
         <a class="btn" href="#registry">Registry Index</a>
         <a class="btn" href="#contact">Contact the Forge</a>
       </div>
 
       <div class="inventory-strip" aria-label="Shop values">
         <div class="inventory-stat"><strong>$44.44</strong><span>Tensor Band</span></div>
-        <div class="inventory-stat"><strong>$88.88</strong><span>Matched Pair</span></div>
+        <div class="inventory-stat"><strong>$88.88</strong><span>Tensor Pair</span></div>
         <div class="inventory-stat"><strong>$67.67</strong><span>Covenant 67</span></div>
-        <div class="inventory-stat"><strong>$222</strong><span>HaLevanah</span></div>
+        <div class="inventory-stat"><strong>Email</strong><span>Green Tide</span></div>
       </div>
 
       <div class="shop-orbit" aria-label="Registry words">
         <span>Tensor</span>
         <span>Covenant</span>
+        <span>Green Tide</span>
         <span>Moon</span>
-        <span>Shard</span>
         <span>Witness</span>
         <span>Forge</span>
       </div>
@@ -611,7 +338,7 @@
       </div>
 
       <div class="shop-note">
-        These are handmade symbolic art objects and collection pieces. No medical, electrical, or wellness claims are made.
+        Handmade symbolic art objects and collection pieces. No medical, electrical, or wellness claims are made.
         The value is craft, story, provenance, and design.
       </div>
     </section>
@@ -620,16 +347,13 @@
       <div class="section-heading">
         <p class="eyebrow">Available by Email Inquiry</p>
         <h2>Current Release</h2>
-        <p>
-          Every purchase begins with a conversation. Use the inquiry button on the artifact you want,
-          and include any sizing, finish, or custom notes.
-        </p>
+        <p>Every purchase begins with a direct email inquiry. Include the artifact code, sizing, finish, and custom notes.</p>
       </div>
 
       <div class="artifact-grid">
         <article class="card artifact-card glow" data-kind="available">
           <div class="artifact-media">
-            <img src="Tensorband01.png" alt="TB-001 Open-End Tensor Band front view by Aaron Paul Laird" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
+            <img src="Tensorband01.png" alt="TB-001 Open-End Tensor Band by Aaron Paul Laird" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
           </div>
           <span class="artifact-status">Available · Left / Right Option</span>
           <h3>TB-001 · Open-End Tensor Band</h3>
@@ -649,7 +373,7 @@
 
         <article class="card artifact-card glow" data-kind="available">
           <div class="artifact-media">
-            <img src="Tensorband01.png" alt="TB-002 Matched Tensor Pair copper wrist artifacts by Aaron Paul Laird" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
+            <img src="Tensorband01.png" alt="TB-002 Matched Tensor Pair copper wrist artifacts" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
           </div>
           <span class="artifact-status">Available · Matched Pair</span>
           <h3>TB-002 · Matched Tensor Pair</h3>
@@ -669,7 +393,7 @@
 
         <article class="card artifact-card glow" data-kind="available">
           <div class="artifact-media">
-            <img src="Covenant67.png" alt="CV-067 Covenant 67 copper pendant artifact" loading="lazy" onerror="this.onerror=null;this.src='assets/img/artifact-placeholder.jpg'">
+            <img src="Covenant67.png" alt="CV-067 Covenant 67 copper pendant artifact" loading="lazy" onerror="this.onerror=null;this.src='Covenant67NoPrice.png';this.onerror=function(){this.src='assets/img/artifact-placeholder.jpg'}">
           </div>
           <span class="artifact-status">Available · Covenant Collection</span>
           <h3>CV-067 · Covenant 67</h3>
@@ -709,13 +433,41 @@
       </div>
     </section>
 
+    <section id="in-progress" class="section-shell">
+      <div class="section-heading">
+        <p class="eyebrow">In Progress · Email for Availability</p>
+        <h2>Covenant Band Series</h2>
+        <p>These pieces are still being shaped, finished, photographed, and entered into the registry.</p>
+      </div>
+
+      <div class="artifact-grid">
+        <article class="card artifact-card glow" data-kind="available">
+          <div class="artifact-media">
+            <img src="CovenantBandGreenTide.png" alt="CB-002 Covenant Band Green Tide copper band with green sea glass" loading="lazy" onerror="this.onerror=null;this.src='GreenTideBand.png';this.onerror=function(){this.src='assets/img/artifact-placeholder.jpg'}">
+          </div>
+          <span class="artifact-status">In Progress · Email About Availability</span>
+          <h3>CB-002 · Covenant Band: Green Tide</h3>
+          <p><em>Copper shaped around green sea glass, carrying the shoreline into the Covenant Band series.</em></p>
+          <ul class="artifact-list">
+            <li>Material: hand-shaped copper</li>
+            <li>Core: green sea glass</li>
+            <li>Series: Covenant Band</li>
+            <li>Status: not ready for purchase yet</li>
+          </ul>
+          <p class="artifact-price"><span class="artifact-value-label">Status</span>Email for availability</p>
+          <div class="artifact-actions">
+            <a class="btn inquiry-btn" href="mailto:codexofrealityshop@gmail.com?subject=CB-002%20Covenant%20Band%20Green%20Tide%20Availability">Email About Green Tide</a>
+            <a class="btn" href="#registry">View Registry</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
     <section id="process" class="section-shell">
       <div class="section-heading">
         <p class="eyebrow">Forge Process</p>
         <h2>How an Artifact Enters the Registry</h2>
-        <p>
-          The registry is not only a shop. It is a record of origin, material, handwork, witness, and release.
-        </p>
+        <p>The registry is not only a shop. It is a record of origin, material, handwork, witness, and release.</p>
       </div>
 
       <div class="process-grid">
@@ -735,9 +487,7 @@
       <div class="section-heading">
         <p class="eyebrow">Archive & Future Pieces</p>
         <h2>Living Technology Archive</h2>
-        <p>
-          Not every artifact is for sale. Some are personal instruments, gifted pieces, future releases, or archive records.
-        </p>
+        <p>Not every artifact is for sale. Some are personal instruments, gifted pieces, future releases, or archive records.</p>
       </div>
 
       <div class="artifact-tools" aria-label="Artifact filters">
@@ -822,6 +572,7 @@
             <tr><td>TB-001</td><td>Open-End Tensor Band</td><td>Available by Inquiry</td><td>Left / Right wrist option</td><td>$44.44</td></tr>
             <tr><td>TB-002</td><td>Matched Tensor Pair</td><td>Available by Inquiry</td><td>Left + Right set</td><td>$88.88</td></tr>
             <tr><td>CV-067</td><td>Covenant 67</td><td>Available by Inquiry</td><td>Covenant Collection</td><td>$67.67</td></tr>
+            <tr><td>CB-002</td><td>Covenant Band: Green Tide</td><td>In Progress · Email Only</td><td>Covenant Band Series</td><td>TBD</td></tr>
             <tr><td>HL-001</td><td>HaLevanah</td><td>Available by Inquiry</td><td>Moon Node / One-of-one</td><td>$222</td></tr>
             <tr><td>TS-001</td><td>Time Shard Ring</td><td>Coming Soon</td><td>Future Release</td><td>$369 planned</td></tr>
             <tr><td>T7-000</td><td>Ahhava Or HaDabar</td><td>Personal Archive</td><td>Primary Conduit</td><td>Not For Sale</td></tr>
@@ -911,4 +662,4 @@
     });
   </script>
 </body>
-  </html>
+        </html>
