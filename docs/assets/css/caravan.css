@@ -1,0 +1,527 @@
+/* Scroll of Fire — Covenant Caravan Page */
+
+:root {
+  --caravan-bg: #080604;
+  --caravan-panel: rgba(18, 13, 9, 0.86);
+  --caravan-panel-soft: rgba(35, 24, 15, 0.72);
+  --caravan-gold: #d7a552;
+  --caravan-copper: #b66a3c;
+  --caravan-cream: #f4e7cf;
+  --caravan-muted: #bca98b;
+  --caravan-line: rgba(215, 165, 82, 0.35);
+  --caravan-shadow: 0 18px 60px rgba(0, 0, 0, 0.48);
+}
+
+body.caravan-page,
+.caravan-page body {
+  background:
+    radial-gradient(circle at top, rgba(120, 67, 30, 0.18), transparent 42rem),
+    linear-gradient(180deg, #120c07 0%, var(--caravan-bg) 45%, #050403 100%);
+  color: var(--caravan-cream);
+}
+
+.caravan-page a {
+  color: var(--caravan-gold);
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: #fff;
+  color: #000;
+  padding: 0.75rem 1rem;
+  z-index: 9999;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+}
+
+.caravan-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(7, 5, 3, 0.82);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--caravan-line);
+}
+
+.site-nav {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0.85rem 1.1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand {
+  text-decoration: none;
+  color: var(--caravan-cream);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.brand-mark {
+  color: var(--caravan-copper);
+  font-size: 1.25rem;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: var(--caravan-muted);
+  font-size: 0.9rem;
+}
+
+.nav-menu a:hover,
+.nav-menu a[aria-current="page"] {
+  color: var(--caravan-cream);
+}
+
+.nav-toggle {
+  display: none;
+  border: 1px solid var(--caravan-line);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--caravan-cream);
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+}
+
+.caravan-hero {
+  position: relative;
+  min-height: 84vh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.45), rgba(5, 3, 2, 0.9)),
+    url("../img/caravan/covenant-caravan-hero.jpg") center/cover no-repeat;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(215, 165, 82, 0.16), transparent 22rem),
+    linear-gradient(90deg, rgba(0,0,0,.72), transparent 40%, rgba(0,0,0,.72));
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  width: min(920px, calc(100% - 2rem));
+  padding: 4rem 1rem;
+}
+
+.eyebrow {
+  color: var(--caravan-gold);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 0.85rem;
+}
+
+.caravan-hero h1 {
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  line-height: 0.9;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.035em;
+  color: var(--caravan-cream);
+  text-shadow: 0 8px 35px rgba(0, 0, 0, 0.75);
+}
+
+.hero-subtitle {
+  max-width: 780px;
+  margin: 1.4rem auto 0;
+  color: var(--caravan-muted);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+}
+
+.hero-quote {
+  max-width: 760px;
+  margin: 2rem auto 0;
+  padding: 1.3rem;
+  border-top: 1px solid var(--caravan-line);
+  border-bottom: 1px solid var(--caravan-line);
+  color: var(--caravan-cream);
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+.hero-actions,
+.closing-section .btn {
+  margin-top: 2rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.8rem 1.1rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin: 0.35rem;
+  border: 1px solid var(--caravan-line);
+}
+
+.btn.primary {
+  color: #170d05;
+  background: linear-gradient(135deg, var(--caravan-gold), #f0d28a);
+}
+
+.btn.secondary {
+  color: var(--caravan-cream);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.signal-strip {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1rem, 5vw, 4rem);
+  padding: 1rem;
+  border-top: 1px solid var(--caravan-line);
+  border-bottom: 1px solid var(--caravan-line);
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--caravan-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.78rem;
+}
+
+.section-inner {
+  width: min(1180px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: clamp(3rem, 7vw, 6rem) 0;
+}
+
+.two-column {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.75fr);
+  gap: 2rem;
+  align-items: center;
+}
+
+h2 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1;
+  margin: 0 0 1rem;
+  color: var(--caravan-cream);
+}
+
+h3 {
+  font-size: clamp(1.45rem, 3vw, 2.4rem);
+  margin: 0 0 1rem;
+}
+
+h4 {
+  margin: 0 0 0.5rem;
+  color: var(--caravan-gold);
+}
+
+p {
+  color: var(--caravan-muted);
+  line-height: 1.75;
+}
+
+.wide-text {
+  max-width: 870px;
+  font-size: 1.08rem;
+}
+
+.quote-card,
+.risk-card,
+.principle-grid article,
+.economy-cards article,
+.archive-grid a {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.045), transparent),
+    var(--caravan-panel);
+  border: 1px solid var(--caravan-line);
+  box-shadow: var(--caravan-shadow);
+  border-radius: 18px;
+}
+
+.quote-card,
+.risk-card {
+  padding: 1.5rem;
+}
+
+.quote-card h3,
+.risk-card h3 {
+  color: var(--caravan-gold);
+}
+
+.principle-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.principle-grid article {
+  padding: 1.25rem;
+}
+
+.icon {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(215, 165, 82, 0.1);
+  border: 1px solid var(--caravan-line);
+  margin-bottom: 1rem;
+}
+
+.phases-section {
+  background:
+    radial-gradient(circle at 20% 10%, rgba(182, 106, 60, 0.14), transparent 22rem),
+    rgba(0, 0, 0, 0.18);
+}
+
+.phase-timeline {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 2rem 0;
+}
+
+.phase-tab {
+  border: 1px solid var(--caravan-line);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--caravan-muted);
+  padding: 0.85rem 0.7rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.phase-tab.active,
+.phase-tab:hover {
+  background: rgba(215, 165, 82, 0.16);
+  color: var(--caravan-cream);
+}
+
+.phase-panel {
+  display: none;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 2rem;
+  padding: 2rem;
+  background: var(--caravan-panel);
+  border: 1px solid var(--caravan-line);
+  border-radius: 24px;
+  box-shadow: var(--caravan-shadow);
+}
+
+.phase-panel.active {
+  display: grid;
+}
+
+.skill-list,
+.route-list {
+  columns: 2;
+  margin: 0;
+  padding-left: 1.2rem;
+  color: var(--caravan-cream);
+}
+
+.skill-list li,
+.route-list li {
+  margin: 0 0 0.6rem;
+  break-inside: avoid;
+}
+
+.rig-grid,
+.learning-wheel,
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.rig-grid span,
+.learning-wheel span,
+.role-grid span {
+  padding: 0.8rem;
+  border: 1px solid var(--caravan-line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--caravan-cream);
+}
+
+.economy-cards,
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.economy-cards article,
+.archive-grid a {
+  padding: 1.2rem;
+}
+
+.archive-grid a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.risk-section {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.35), transparent),
+    radial-gradient(circle at right, rgba(215,165,82,.08), transparent 22rem);
+}
+
+.living-caravan {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.25));
+}
+
+.archive-section {
+  background: rgba(0,0,0,.25);
+}
+
+.closing-section {
+  text-align: center;
+}
+
+.closing-section h2 {
+  max-width: 900px;
+  margin-inline: auto;
+}
+
+.closing-section p {
+  max-width: 700px;
+  margin-inline: auto;
+}
+
+.closing-mantra {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+
+.closing-mantra span {
+  color: var(--caravan-gold);
+  border: 1px solid var(--caravan-line);
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.78rem;
+}
+
+.caravan-footer {
+  text-align: center;
+  border-top: 1px solid var(--caravan-line);
+  padding: 2rem 1rem;
+  background: #050403;
+}
+
+.caravan-footer p {
+  margin: 0.4rem 0;
+}
+
+@media (max-width: 920px) {
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .nav-menu {
+    display: none;
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    top: 64px;
+    flex-direction: column;
+    align-items: stretch;
+    background: rgba(8, 6, 4, 0.96);
+    border: 1px solid var(--caravan-line);
+    border-radius: 16px;
+    padding: 1rem;
+  }
+
+  .nav-menu.open {
+    display: flex;
+  }
+
+  .nav-menu a {
+    padding: 0.75rem;
+  }
+
+  .two-column,
+  .phase-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .principle-grid,
+  .economy-cards,
+  .archive-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .phase-timeline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rig-grid,
+  .learning-wheel,
+  .role-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .signal-strip {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 560px) {
+  .caravan-hero {
+    min-height: 76vh;
+  }
+
+  .hero-content {
+    padding: 3rem 0.5rem;
+  }
+
+  .principle-grid,
+  .economy-cards,
+  .archive-grid,
+  .phase-timeline,
+  .rig-grid,
+  .learning-wheel,
+  .role-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-list,
+  .route-list {
+    columns: 1;
+  }
+
+  .phase-panel {
+    padding: 1.2rem;
+    border-radius: 18px;
+  }
+  }
