@@ -32,3 +32,12 @@
     });
   }
 })();
+
+
+"sameAs":[
+  "https://www.facebook.com/YOUR-FACEBOOK-LINK",
+  "https://github.com/ssnfts24/scroll-of-fire",
+  "https://medium.com/@l.aaronpaul24",
+  "https://www.youtube.com/@aaronlaird1036",
+  "https://linktr.ee/AaronPaulLairdScrollOfFire"
+]
