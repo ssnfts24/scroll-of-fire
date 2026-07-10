@@ -368,13 +368,31 @@
 @media (max-width:760px){
 
   .hero-image-card{
-    max-width:360px;
+    width:100%;
+    max-width:340px;
+    height:240px;
     margin:0 auto;
   }
 
   .hero-image-card img{
-    max-height:280px;
-    object-fit:cover;
+    width:100%;
+    height:100%;
+    aspect-ratio:auto;
+    object-fit:contain;
+    object-position:center;
+    transform:none;
+  }
+
+  .hero-image-card::before{
+    display:none;
+  }
+
+  .hero-image-caption{
+    left:.75rem;
+    right:.75rem;
+    bottom:.75rem;
+    padding:.75rem;
+    font-size:.85rem;
   }
 
 }
