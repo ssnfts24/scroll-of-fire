@@ -5,7 +5,9 @@
   margin-top:1.25rem;
 }
 
-.hero-actions.center{justify-content:center}
+.hero-actions.center{
+  justify-content:center;
+}
 
 .btn{
   display:inline-flex;
@@ -21,7 +23,10 @@
   font-weight:800;
   text-decoration:none;
   cursor:pointer;
-  transition:transform .25s ease,background .25s ease,border-color .25s ease;
+  transition:
+    transform .25s ease,
+    background .25s ease,
+    border-color .25s ease;
 }
 
 .btn:hover{
@@ -33,14 +38,22 @@
 .btn.primary{
   border-color:transparent;
   color:#061016;
-  background:linear-gradient(135deg,var(--gold),var(--cyan));
+  background:linear-gradient(
+    135deg,
+    var(--gold),
+    var(--cyan)
+  );
   box-shadow:0 0 36px rgba(122,243,255,.14);
 }
 
 .btn.ember{
   border-color:transparent;
   color:#120803;
-  background:linear-gradient(135deg,var(--gold),var(--ember));
+  background:linear-gradient(
+    135deg,
+    var(--gold),
+    var(--ember)
+  );
   box-shadow:0 0 36px rgba(255,122,61,.12);
 }
 
@@ -59,7 +72,9 @@
   text-align:center;
 }
 
-.section-heading p{color:var(--muted)}
+.section-heading p{
+  color:var(--muted);
+}
 
 .hero-image-card,
 .exercise-card,
@@ -73,8 +88,16 @@
 .witness-card{
   border:1px solid rgba(255,255,255,.12);
   background:
-    radial-gradient(circle at 20% 0%,rgba(243,201,122,.09),transparent 35%),
-    linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+    radial-gradient(
+      circle at 20% 0%,
+      rgba(243,201,122,.09),
+      transparent 35%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.055),
+      rgba(255,255,255,.018)
+    );
   box-shadow:var(--shadow);
 }
 
@@ -131,7 +154,11 @@
   border-color:rgba(243,201,122,.22);
   text-align:center;
   background:
-    radial-gradient(circle at 50% 0%,rgba(243,201,122,.14),transparent 55%),
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(243,201,122,.14),
+      transparent 55%
+    ),
     rgba(255,255,255,.03);
 }
 
