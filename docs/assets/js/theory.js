@@ -1,4 +1,13 @@
-/* Scroll of Fire — Theory Interactive Codex */
+/* Scroll of Fire — Theory Interactive Codex
+   Shared behavior for:
+   - docs/theory.html
+   - docs/theory/*.html
+   - docs/theory/equations/eq00.html through eq17.html
+
+   Requires the shared selectors used across the Theory / Canon pages:
+   [data-nav-toggle], [data-site-nav], [data-mode], .equation-display,
+   .equation-chapter, [data-focus-term], [data-term], and #canon.
+*/
 
 (function () {
   "use strict";
@@ -6,153 +15,438 @@
   const body = document.body;
   const root = document.documentElement;
 
-  const $ = (s, scope = document) => scope.querySelector(s);
-  const $$ = (s, scope = document) => Array.from(scope.querySelectorAll(s));
-
-  const STORE = "sof.theory.settings.v2";
+  const $ = (selector, scope = document) => scope.querySelector(selector);
+  const $$ = (selector, scope = document) =>
+    Array.from(scope.querySelectorAll(selector));
+  const STORAGE_KEY = "sof.theory.settings.v2";
+  const MOBILE_NAV_QUERY = "(max-width: 900px)";
+  const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
   const settings = {
-    mode: "explorer",
+    mode: body?.dataset.readingMode || "explorer",
     carrier: "432"
   };
 
+  /* ------------------------------------------------------------------
+     Utilities
+  ------------------------------------------------------------------ */
+
   function loadSettings() {
     try {
-      Object.assign(settings, JSON.parse(localStorage.getItem(STORE) || "{}"));
-    } catch (_) {}
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+
+      if (stored && typeof stored === "object") {
+        Object.assign(settings, stored);
+      }
+    } catch (_) {
+      // Keep defaults if storage is unavailable or malformed.
+    }
   }
 
   function saveSettings() {
     try {
-      localStorage.setItem(STORE, JSON.stringify(settings));
-    } catch (_) {}
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+    } catch (_) {
+      // Storage may be unavailable in private or restricted contexts.
+    }
   }
 
-  function copyText(text) {
-    return navigator.clipboard?.writeText(text).catch(() => false);
+  function prefersReducedMotion() {
+    return window.matchMedia?.(REDUCED_MOTION_QUERY).matches === true;
   }
 
   function setYear() {
     const year = $("#year");
-    if (year) year.textContent = new Date().getFullYear();
+    if (year) year.textContent = String(new Date().getFullYear());
   }
+  function flash(button, text, duration = 900) {
+    if (!(button instanceof HTMLElement)) return;
+
+    const original = button.textContent;
+    button.textContent = text;
+
+    window.setTimeout(() => {
+      button.textContent = original;
+    }, duration);
+  }
+
+  async function copyText(value) {
+    const text = String(value || "");
+    if (!text) return false;
+
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch (_) {
+      // Use the fallback below.
+    }
+
+    const field = document.createElement("textarea");
+    field.value = text;
+    field.setAttribute("readonly", "");
+    field.style.position = "fixed";
+    field.style.top = "0";
+    field.style.left = "-9999px";
+    field.style.opacity = "0";
+
+    document.body.appendChild(field);
+    field.focus();
+    field.select();
+    field.setSelectionRange(0, field.value.length);
+
+    let copied = false;
+
+    try {
+      copied = document.execCommand("copy");
+    } catch (_) {
+      copied = false;
+    }
+
+    field.remove();
+    return copied;
+  }
+
+  function getFocusable(container) {
+    if (!container) return [];
+
+    return $$(
+      [
+        'a[href]:not([tabindex="-1"])',
+        'button:not([disabled]):not([tabindex="-1"])',
+        'input:not([disabled]):not([tabindex="-1"])',
+        'select:not([disabled]):not([tabindex="-1"])',
+        'textarea:not([disabled]):not([tabindex="-1"])',
+        '[tabindex]:not([tabindex="-1"])'
+      ].join(","),
+      container
+    ).filter(element => !element.hidden && element.offsetParent !== null);
+  }
+
+  /* ------------------------------------------------------------------
+     Mobile navigation
+  ------------------------------------------------------------------ */
 
   function mobileNav() {
-    const btn = $("[data-nav-toggle]");
+    const button = $("[data-nav-toggle]");
     const nav = $("[data-site-nav]");
-    if (!btn || !nav) return;
 
-    btn.addEventListener("click", () => {
-      const open = nav.classList.toggle("open");
-      btn.setAttribute("aria-expanded", String(open));
+    if (!button || !nav) return;
+
+    const media = window.matchMedia(MOBILE_NAV_QUERY);
+    const OPEN_CLASS = "open";
+    const BODY_CLASS = "nav-open";
+
+    let returnFocus = null;
+
+    function isOpen() {
+      return nav.classList.contains(OPEN_CLASS);
+    }
+
+    function updateState(open) {
+      nav.classList.toggle(OPEN_CLASS, open);
+      button.classList.toggle("active", open);
+      body.classList.toggle(BODY_CLASS, open && media.matches);
+
+      button.setAttribute("aria-expanded", String(open));
+      button.setAttribute(
+        "aria-label",
+        open ? "Close navigation" : "Open navigation"
+      );
+
+      nav.setAttribute("aria-hidden", String(media.matches && !open));
+
+      root.style.overflow = open && media.matches ? "hidden" : "";
+    }
+
+    function openNav() {
+      if (!media.matches || isOpen()) return;
+
+      returnFocus = document.activeElement;
+      updateState(true);
+
+      const firstItem = getFocusable(nav)[0];
+
+      if (firstItem) {
+        requestAnimationFrame(() => {
+          firstItem.focus({ preventScroll: true });
+        });
+      }
+    }
+
+    function closeNav({ restoreFocus = false } = {}) {
+      const wasOpen = isOpen();
+      updateState(false);
+
+      if (wasOpen && restoreFocus) {
+        const target =
+          returnFocus instanceof HTMLElement ? returnFocus : button;
+
+        requestAnimationFrame(() => {
+          target.focus({ preventScroll: true });
+        });
+      }
+
+      returnFocus = null;
+    }
+
+    function toggleNav() {
+      if (isOpen()) {
+        closeNav({ restoreFocus: true });
+      } else {
+        openNav();
+      }
+    }
+
+    function trapFocus(event) {
+      if (
+        event.key !== "Tab" ||
+        !media.matches ||
+        !isOpen()
+      ) {
+        return;
+      }
+
+      const focusable = getFocusable(nav);
+
+      if (!focusable.length) {
+        event.preventDefault();
+        button.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    button.addEventListener("click", toggleNav);
+
+    nav.addEventListener("click", event => {
+      if (event.target.closest("a") && media.matches) {
+        closeNav();
+      }
     });
+
+    document.addEventListener("click", event => {
+      if (!media.matches || !isOpen()) return;
+      if (button.contains(event.target) || nav.contains(event.target)) return;
+
+      closeNav();
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && isOpen()) {
+        event.preventDefault();
+        closeNav({ restoreFocus: true });
+        return;
+      }
+
+      trapFocus(event);
+    });
+
+    function handleViewportChange() {
+      if (!media.matches) {
+        closeNav();
+        nav.removeAttribute("aria-hidden");
+      } else {
+        updateState(false);
+      }
+    }
+
+    if (typeof media.addEventListener === "function") {
+      media.addEventListener("change", handleViewportChange);
+    } else if (typeof media.addListener === "function") {
+      media.addListener(handleViewportChange);
+    }
+    if (media.matches) {
+      updateState(false);
+    } else {
+      nav.removeAttribute("aria-hidden");
+      button.setAttribute("aria-expanded", "false");
+      button.setAttribute("aria-label", "Open navigation");
+    }
   }
+
+  /* ------------------------------------------------------------------
+     Reading modes
+  ------------------------------------------------------------------ */
 
   function readingModes() {
     const buttons = $$("[data-mode]");
     if (!buttons.length) return;
 
     function apply(mode) {
-      settings.mode = mode;
-      body.dataset.readingMode = mode;
+      const nextMode = mode || "explorer";
 
-      buttons.forEach(btn => {
-        const active = btn.dataset.mode === mode;
-        btn.classList.toggle("active", active);
-        btn.setAttribute("aria-pressed", String(active));
+      settings.mode = nextMode;
+      body.dataset.readingMode = nextMode;
+
+      buttons.forEach(button => {
+        const active = button.dataset.mode === nextMode;
+
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
       });
 
       saveSettings();
     }
 
-    buttons.forEach(btn => {
-      btn.addEventListener("click", () => apply(btn.dataset.mode));
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        apply(button.dataset.mode);
+      });
     });
 
-    apply(settings.mode || "explorer");
+    apply(settings.mode);
   }
+  /* ------------------------------------------------------------------
+     Equation tools
+  ------------------------------------------------------------------ */
 
   function equationTools() {
-    $$(".equation-display").forEach((eq, i) => {
-      if (eq.dataset.ready) return;
-      eq.dataset.ready = "true";
+    $$(".equation-display").forEach((equation, index) => {
+      if (equation.dataset.ready === "true") return;
 
-      if (!eq.id) eq.id = `equation-${i + 1}`;
+      equation.dataset.ready = "true";
+
+      if (!equation.id) {
+        equation.id = `equation-${index + 1}`;
+      }
 
       const tools = document.createElement("div");
       tools.className = "equation-tools";
+      tools.setAttribute("aria-label", "Equation tools");
       tools.innerHTML = `
         <button type="button" class="chip" data-copy>Copy</button>
-        <button type="button" class="chip" data-collapse>Collapse</button>
+        <button
+          type="button"
+          class="chip"
+          data-collapse
+          aria-expanded="true"
+          aria-controls="${equation.id}"
+        >Collapse</button>
         <button type="button" class="chip" data-link>Link</button>
       `;
 
-      eq.after(tools);
+      equation.after(tools);
 
-      tools.querySelector("[data-copy]").addEventListener("click", e => {
-        copyText(eq.innerText.trim());
-        flash(e.target, "Copied");
+      const copyButton = $("[data-copy]", tools);
+      const collapseButton = $("[data-collapse]", tools);
+      const linkButton = $("[data-link]", tools);
+
+      copyButton?.addEventListener("click", async event => {
+        const copied = await copyText(equation.innerText.trim());
+        flash(event.currentTarget, copied ? "Copied" : "Copy failed");
       });
 
-      tools.querySelector("[data-collapse]").addEventListener("click", e => {
-        const collapsed = eq.classList.toggle("collapsed");
-        e.target.textContent = collapsed ? "Expand" : "Collapse";
+      collapseButton?.addEventListener("click", event => {
+        const collapsed = equation.classList.toggle("collapsed");
+
+        event.currentTarget.textContent =
+          collapsed ? "Expand" : "Collapse";
+
+        event.currentTarget.setAttribute(
+          "aria-expanded",
+          String(!collapsed)
+        );
       });
 
-      tools.querySelector("[data-link]").addEventListener("click", e => {
-        const url = `${location.origin}${location.pathname}#${eq.id}`;
-        copyText(url);
-        history.replaceState(null, "", `#${eq.id}`);
-        flash(e.target, "Copied");
+      linkButton?.addEventListener("click", async event => {
+        const url = new URL(window.location.href);
+        url.hash = equation.id;
+
+        const copied = await copyText(url.toString());
+
+        history.replaceState(null, "", `#${equation.id}`);
+        flash(event.currentTarget, copied ? "Copied" : "Linked");
       });
     });
   }
 
+  /* ------------------------------------------------------------------
+     Canon chapter focus
+  ------------------------------------------------------------------ */
+
   function canonChapters() {
     $$(".equation-chapter").forEach(card => {
-      if (card.dataset.chapterReady) return;
+      if (card.dataset.chapterReady === "true") return;
+
       card.dataset.chapterReady = "true";
 
       const equation = $(".equation-display", card);
       if (!equation) return;
 
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "chip chapter-toggle";
-      btn.textContent = "Focus";
-      btn.setAttribute("aria-expanded", "true");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "chip chapter-toggle";
+      button.textContent = "Focus";
+      button.setAttribute("aria-pressed", "false");
 
-      card.appendChild(btn);
+      card.appendChild(button);
 
-      btn.addEventListener("click", () => {
-        card.classList.toggle("chapter-focused");
-        const focused = card.classList.contains("chapter-focused");
-        btn.textContent = focused ? "Unfocus" : "Focus";
+      button.addEventListener("click", () => {
+        const focused = card.classList.toggle("chapter-focused");
+
+        button.textContent = focused ? "Unfocus" : "Focus";
+        button.setAttribute("aria-pressed", String(focused));
+
+        if (focused) {
+          card.scrollIntoView({
+            block: "start",
+            behavior: prefersReducedMotion() ? "auto" : "smooth"
+          });
+        }
       });
     });
   }
 
+  /* ------------------------------------------------------------------
+     Master Equation term focus
+  ------------------------------------------------------------------ */
   function masterEquationFocus() {
     const buttons = $$("[data-focus-term]");
     const cards = $$("[data-term]");
+
     if (!buttons.length || !cards.length) return;
 
-    buttons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        const term = btn.dataset.focusTerm;
-        const active = btn.classList.toggle("active");
+    function clearFocus() {
+      buttons.forEach(button => {
+        button.classList.remove("active");
+        button.setAttribute("aria-pressed", "false");
+      });
 
-        buttons.forEach(b => {
-          if (b !== btn) b.classList.remove("active");
-        });
+      cards.forEach(card => {
+        card.classList.remove("term-active", "term-dim");
+      });
+    }
+
+    buttons.forEach(button => {
+      button.setAttribute("aria-pressed", "false");
+
+      button.addEventListener("click", () => {
+        const term = button.dataset.focusTerm;
+        const wasActive = button.classList.contains("active");
+
+        clearFocus();
+
+        if (wasActive) return;
+
+        button.classList.add("active");
+        button.setAttribute("aria-pressed", "true");
 
         cards.forEach(card => {
-          if (!active) {
-            card.classList.remove("term-active", "term-dim");
-            return;
-          }
-
           const match = card.dataset.term === term;
+
           card.classList.toggle("term-active", match);
           card.classList.toggle("term-dim", !match);
         });
@@ -160,184 +454,67 @@
     });
   }
 
+  /* ------------------------------------------------------------------
+     Canon search
+  ------------------------------------------------------------------ */
+
   function searchCanon() {
     const canon = $("#canon");
-    if (!canon) return;
+
+    if (
+      !canon ||
+      canon.dataset.searchReady === "true"
+    ) {
+      return;
+    }
+
+    const chapters = $$(".equation-chapter", canon);
+    if (!chapters.length) return;
+
+    canon.dataset.searchReady = "true";
 
     const search = document.createElement("div");
     search.className = "canon-search";
     search.innerHTML = `
       <label for="canon-search-input">Search Canon 0–17</label>
-      <input id="canon-search-input" type="search" placeholder="Search equation, witness, memory, ethics, carrier...">
+      <input
+        id="canon-search-input"
+        type="search"
+        inputmode="search"
+        autocomplete="off"
+        placeholder="Search equation, witness, memory, ethics, carrier..."
+      >
+      <p
+        class="canon-search-status"
+        role="status"
+        aria-live="polite"
+      ></p>
     `;
 
     canon.querySelector(".section-heading")?.after(search);
 
-    const input = $("#canon-search-input");
-    const chapters = $$(".equation-chapter");
+    const input = $("#canon-search-input", search);
+    const status = $(".canon-search-status", search);
 
-    input.addEventListener("input", () => {
-      const q = input.value.trim().toLowerCase();
+    function filterCanon() {
+      const query = input.value.trim().toLowerCase();
+      let visible = 0;
 
       chapters.forEach(chapter => {
-        const hit = chapter.innerText.toLowerCase().includes(q);
-        chapter.hidden = q && !hit;
+        const match =
+          !query ||
+          chapter.innerText.toLowerCase().includes(query);
+
+        chapter.hidden = !match;
+
+        if (match) visible += 1;
       });
-    });
-  }
 
-  function commandPalette() {
-    const palette = document.createElement("div");
-    palette.className = "command-palette";
-    palette.hidden = true;
-    palette.innerHTML = `
-      <div class="command-panel">
-        <input type="search" placeholder="Search Codex..." aria-label="Command search">
-        <div class="command-results"></div>
-      </div>
-    `;
-    document.body.appendChild(palette);
-
-    const input = $("input", palette);
-    const results = $(".command-results", palette);
-
-    const commands = [
-      ["Home", "./"],
-      ["Start", "start.html"],
-      ["Theory", "theory.html"],
-      ["Master Equation", "#master-equation"],
-      ["Full Master Form", "#full-master-equation"],
-      ["Canon 0–17", "#canon"],
-      ["13 Moons", "moons.html"],
-      ["Frequency", "systems/frequencies.html"],
-      ["Artifacts", "shop.html"],
-      ["Ledger", "ledger.html"],
-      ["Caravan", "caravan.html"]
-    ];
-
-    function render(q = "") {
-      const filtered = commands.filter(([label]) =>
-        label.toLowerCase().includes(q.toLowerCase())
-      );
-
-      results.innerHTML = filtered
-        .slice(0, 10)
-        .map(([label, href]) => `<a href="${href}">${label}</a>`)
-        .join("");
-    }
-
-    function open() {
-      palette.hidden = false;
-      input.value = "";
-      render();
-      setTimeout(() => input.focus(), 0);
-    }
-
-    function close() {
-      palette.hidden = true;
-    }
-
-    document.addEventListener("keydown", e => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        open();
+      if (status) {
+        status.textContent = query
+          ? `${visible} Canon entr${visible === 1 ? "y" : "ies"} shown.`
+          : "";
       }
-
-      if (e.key === "Escape") close();
-
-      if (e.key === "/" && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) {
-        e.preventDefault();
-        open();
-      }
-    });
-
-    input.addEventListener("input", () => render(input.value));
-    palette.addEventListener("click", e => {
-      if (e.target === palette) close();
-    });
-    results.addEventListener("click", close);
-  }
-
-  function revealOnScroll() {
-    const items = $$(".section-shell, .card, .canon-card, .moon-card, .graph-card");
-
-    if (!("IntersectionObserver" in window)) {
-      items.forEach(el => el.classList.add("active"));
-      return;
     }
 
-    items.forEach(el => el.classList.add("reveal"));
-
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("active");
-        obs.unobserve(entry.target);
-      });
-    }, { threshold: 0.12 });
-
-    items.forEach(el => obs.observe(el));
-  }
-
-  function smoothAnchors() {
-    document.addEventListener("click", e => {
-      const a = e.target.closest("a[href^='#']");
-      if (!a) return;
-
-      const target = $(a.getAttribute("href"));
-      if (!target) return;
-
-      e.preventDefault();
-
-      const offset = $(".site-header")?.offsetHeight || 72;
-      const top = target.getBoundingClientRect().top + scrollY - offset - 12;
-
-      scrollTo({ top, behavior: "smooth" });
-      history.replaceState(null, "", a.getAttribute("href"));
-    });
-  }
-
-  function backToTop() {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "to-top btn";
-    btn.textContent = "↑";
-    btn.setAttribute("aria-label", "Back to top");
-    document.body.appendChild(btn);
-
-    btn.addEventListener("click", () => scrollTo({ top: 0, behavior: "smooth" }));
-
-    addEventListener("scroll", () => {
-      btn.classList.toggle("show", scrollY > 900);
-    }, { passive: true });
-  }
-
-  function flash(btn, text) {
-    const old = btn.textContent;
-    btn.textContent = text;
-    setTimeout(() => (btn.textContent = old), 900);
-  }
-
-  function boot() {
-    loadSettings();
-    setYear();
-    mobileNav();
-    readingModes();
-    equationTools();
-    canonChapters();
-    masterEquationFocus();
-    searchCanon();
-    commandPalette();
-    revealOnScroll();
-    smoothAnchors();
-    backToTop();
-
-    console.info("Scroll of Fire — Theory active");
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
-  } else {
-    boot();
-  }
-})();
+    input.addEventListener("input", filterCanon);
