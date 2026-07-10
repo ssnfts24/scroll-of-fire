@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap");
+
 :root{
   --bg:#05070d;
   --bg-soft:#08101a;
@@ -65,7 +67,7 @@ h3{margin:.2rem 0 .7rem;color:var(--gold);font-size:clamp(1.25rem,2.7vw,1.75rem)
   z-index:1;
   width:min(var(--max),calc(100% - 2rem));
   margin-inline:auto;
-  padding:clamp(3rem,6vw,5.25rem) 0;
+  padding:clamp(2rem,5vw,5.25rem) 0;
   scroll-margin-top:calc(var(--header-h) + 1rem);
 }
 
@@ -105,5 +107,236 @@ h3{margin:.2rem 0 .7rem;color:var(--gold);font-size:clamp(1.25rem,2.7vw,1.75rem)
   margin-bottom:1rem;
 }
 
+.compact-actions {
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.compact-actions .btn {
+  min-height: 44px;
+}
+
+.backline {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  font-size: 1rem;
+}
+
+.backline a {
+  color: var(--muted);
+  text-underline-offset: 0.22em;
+}
+
+.soft {
+  color: var(--muted);
+  font-size: 0.72em;
+}
+
+.strong-list li {
+  margin-bottom: 0.85rem;
+}
+
+.mini-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.mini-card {
+  border: 1px solid rgba(243, 201, 122, 0.18);
+  border-radius: 18px;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.mini-card strong,
+.mini-card span {
+  display: block;
+}
+
+.mini-card strong {
+  color: var(--gold);
+  margin-bottom: 0.4rem;
+}
+
+.mini-card span {
+  color: var(--muted);
+}
+
+.equation-stack {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.equation-stack p {
+  margin: 0;
+}
+
+mjx-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  padding: 0.35rem 0;
+}
+
+.card mjx-container[jax="SVG"] {
+  font-size: 108%;
+}
+
+@media (max-width: 620px) {
+  .guide-hero h1 {
+    font-size: clamp(2.35rem, 12vw, 4rem);
+    line-height: 0.95;
+  }
+
+  .hero-copy {
+    font-size: 1.1rem;
+  }
+
+  .backline {
+    flex-wrap: wrap;
+  }
+
+  .card .equation,
+  .equation-stack {
+    font-size: 0.95rem;
+  }
+}
+
 .site-footer a{color:var(--muted);text-decoration:none}
 .site-footer a:hover{color:var(--gold)}
+
+/* =====================================================================
+   UI Refresh — Typography, Motion, Interactive Depth
+   ===================================================================== */
+
+:root {
+  --display: "Cinzel", Georgia, "Times New Roman", serif;
+}
+
+/* ---- Text selection ---- */
+::selection {
+  background: rgba(243, 201, 122, 0.2);
+  color: #f7f0de;
+}
+
+/* ---- Custom scrollbar ---- */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #04060e;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(243, 201, 122, 0.26);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(243, 201, 122, 0.5);
+}
+
+/* ---- Display typeface on major headings ---- */
+h1,
+h2 {
+  font-family: var(--display);
+  letter-spacing: 0.025em;
+  font-weight: 700;
+  line-height: 1.06;
+}
+
+h3 {
+  letter-spacing: -0.01em;
+}
+
+/* Hero subline also gets the display serif for cohesion */
+.hero-line {
+  font-family: var(--display);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+
+/* ---- Eyebrow label refinement ---- */
+.eyebrow {
+  letter-spacing: 0.22em;
+  font-size: 0.72rem;
+}
+
+/* ---- Brand mark hover glow ---- */
+.brand {
+  transition: opacity 140ms ease;
+}
+.brand-mark {
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.brand:hover .brand-mark {
+  border-color: rgba(243, 201, 122, 0.44);
+  box-shadow: 0 0 28px rgba(243, 201, 122, 0.22);
+}
+
+/* ---- Nav & footer link transitions ---- */
+.site-nav a,
+.site-footer a {
+  transition: color 140ms ease, background 140ms ease;
+}
+
+/* ---- Button tactility ---- */
+.btn {
+  transition:
+    transform 160ms cubic-bezier(.22, .61, .36, 1),
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 220ms ease;
+}
+.btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.26);
+  background: rgba(255, 255, 255, 0.09);
+}
+.btn.primary:hover {
+  box-shadow: 0 18px 48px rgba(243, 201, 122, 0.34);
+}
+.btn:active {
+  transform: translateY(0);
+  transition-duration: 60ms;
+}
+
+/* ---- Card depth & hover lift ---- */
+.card {
+  transition:
+    transform 200ms cubic-bezier(.22, .61, .36, 1),
+    border-color 200ms ease,
+    box-shadow 260ms ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.46);
+}
+
+/* ---- Text-link underline swipe ---- */
+.text-link {
+  position: relative;
+  transition: color 160ms ease;
+}
+.text-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--gold);
+  transition: width 260ms cubic-bezier(.22, .61, .36, 1);
+}
+.text-link:hover::after {
+  width: 100%;
+}
+
+/* ---- Nav-card hover ---- */
+.nav-card {
+  transition:
+    transform 200ms cubic-bezier(.22, .61, .36, 1),
+    border-color 200ms ease,
+    box-shadow 240ms ease;
+}

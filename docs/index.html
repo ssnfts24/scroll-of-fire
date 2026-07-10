@@ -4,8 +4,8 @@
   <base href="/">
   <script>
     if (location.hostname === "ssnfts24.github.io") {
-      const base = document.querySelector("base");
-      if (base) base.setAttribute("href", "/scroll-of-fire/");
+      var _b = document.querySelector("base");
+      if (_b) _b.setAttribute("href", "/scroll-of-fire/");
     }
   </script>
 
@@ -45,6 +45,8 @@
   <meta name="twitter:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
   <meta name="twitter:image:alt" content="Scroll of Fire — Codex of Reality">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/favicon.png">
   <link rel="preload" href="assets/css/codex.css?v=20260710-6" as="style">
@@ -243,6 +245,33 @@
         </aside>
       </div>
     </section>
+
+    <!-- Moon Bar: live 13-Moons position strip -->
+    <div id="sofMoonBar" class="section-shell moon-bar-strip" hidden aria-label="Today's moon position">
+      <a id="moonMiniLink" class="moon-bar-inner" href="./moons.html">
+        <span class="moon-bar-ring" aria-hidden="true">
+          <svg viewBox="0 0 40 40" width="40" height="40" fill="none">
+            <circle cx="20" cy="20" r="18" stroke="rgba(255,255,255,.10)" stroke-width="3"/>
+            <circle id="mbArcMini" cx="20" cy="20" r="18"
+              stroke="url(#mbGrad)" stroke-width="3"
+              stroke-linecap="round" stroke-dasharray="0 113"
+              transform="rotate(-90 20 20)"/>
+            <defs>
+              <linearGradient id="mbGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#7af3ff"/>
+                <stop offset="100%" stop-color="#f3c97a"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
+        <span class="moon-bar-text">
+          <strong id="mbName">—</strong>
+          <span id="mbDay">—</span>
+        </span>
+        <span class="moon-bar-ess" id="mbEssence">Loading…</span>
+        <span class="moon-bar-arrow" aria-hidden="true">Open 13 Moons →</span>
+      </a>
+    </div>
 
     <section class="section-shell" aria-labelledby="what-title">
       <div class="section-heading">
@@ -491,6 +520,7 @@
   </footer>
 
   <script defer src="assets/js/site.js?v=20260710-7"></script>
+  <script defer src="assets/js/moons-bar.js?v=20260710-1"></script>
   <script>
     (function () {
       "use strict";
