@@ -27,6 +27,7 @@
   --theory-max: 78rem;
   --theory-reading: 52rem;
   --theory-transition: 180ms ease;
+  --theory-transition-slow: 520ms cubic-bezier(.22,.61,.36,1);
   --theory-font-display: "Cormorant Garamond", "Times New Roman", serif;
   --theory-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color-scheme: dark;
@@ -1022,13 +1023,42 @@ body[data-reading-mode] ::selection {
   opacity: 0;
   transform: translateY(18px);
   transition:
-    opacity 520ms ease,
-    transform 520ms ease;
+    opacity var(--theory-transition-slow),
+    transform var(--theory-transition-slow);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal[data-reveal-style="scale"] {
+  transform: translateY(14px) scale(0.985);
+}
+
+.reveal[data-reveal-style="lift"] {
+  transform: translateY(28px);
 }
 
 .reveal.active {
   opacity: 1;
   transform: translateY(0);
+}
+
+.motion-rich {
+  position: relative;
+  isolation: isolate;
+}
+
+.motion-rich::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  z-index: -1;
+  background: radial-gradient(70% 95% at 50% 0%, rgba(226, 184, 91, 0.2), transparent 60%);
+  animation: theoryPulse 6.5s ease-in-out infinite;
+}
+
+@keyframes theoryPulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50% { opacity: 0.68; transform: scale(1.018); }
 }
 
 /* Back to top */
