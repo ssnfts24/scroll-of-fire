@@ -95,6 +95,7 @@
       href.startsWith("tel:") ||
       href.startsWith("sms:") ||
       href.startsWith("javascript:") ||
+      href.startsWith("vbscript:") ||
       href.startsWith("data:")
     );
   }
