@@ -1,4 +1,5 @@
-.skip-link{
+.skip-link,
+.skip{
   position:fixed;
   left:1rem;
   top:-6rem;
@@ -11,7 +12,8 @@
   transition:top .2s ease;
 }
 
-.skip-link:focus{
+.skip-link:focus,
+.skip:focus{
   top:1rem;
 }
 
