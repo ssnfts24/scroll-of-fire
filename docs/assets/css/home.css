@@ -1,7 +1,7 @@
 .home-hero{
-  min-height:calc(100vh - var(--header-h));
+  padding:clamp(3.5rem,8vh,6.5rem) 0 clamp(2.5rem,5vh,4.5rem);
   display:grid;
-  align-items:center;
+  align-items:start;
 }
 
 .home-hero-grid{
@@ -318,7 +318,6 @@
 
 @media(max-width:960px){
   .home-hero-grid{grid-template-columns:1fr}
-  .home-hero{min-height:auto}
 }
 
 @media(max-width:760px){
@@ -328,7 +327,7 @@
 
   /* Tighter vertical rhythm on small screens */
   .home-hero{
-    padding-top:1.5rem;
+    padding-top:2rem;
     padding-bottom:1.5rem;
   }
 
