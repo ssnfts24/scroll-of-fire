@@ -21,7 +21,7 @@ The Scroll of Fire — Codex of Reality is a living architecture of remembrance,
 
 📜 Canon (Eq. 0–17): site → Theory (/docs/theory.html)
 
-🧭 Manifest / How-to: site → Manifest (/docs/manifest.html)
+🧭 Manifest / How-to: site → Manifest (/docs/teach.html)
 
 🧪 Systems Hub: Type-7, Frequencies, Witness, Archive → (/docs/hub.html)
 
