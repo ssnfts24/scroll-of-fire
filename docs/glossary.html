@@ -1,17 +1,33 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr" class="sof">
 <head>
+  <base href="/">
+  <script>
+    if (location.hostname === "ssnfts24.github.io") {
+      const b = document.querySelector("base");
+      if (b) b.setAttribute("href", "/scroll-of-fire/");
+    }
+  </script>
+
   <meta charset="utf-8">
-  <title>Glossary — Scroll of Fire</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <base href="./">
-  <link href="assets/css/codex.css" rel="stylesheet">
-  <link href="assets/css/superlayout.css" rel="stylesheet">
+  <title>Glossary — Scroll of Fire | Codex of Reality</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Plain-language meanings for the core symbols, operators, equations, and practices of Scroll of Fire and the Codex of Reality.">
+  <meta name="author" content="Aaron Paul Laird">
+  <meta name="creator" content="Aaron Paul Laird">
+  <meta name="publisher" content="Scroll of Fire">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="https://codexofreality.org/glossary.html">
+  <link rel="stylesheet" href="assets/css/codex.css">
+  <link rel="stylesheet" href="assets/css/superlayout.css">
 </head>
+
 <body>
   <header class="topbar">
-    <a class="brand" href="./">Ξ Scroll of Fire</a>
-    <nav class="topnav">
+    <a class="brand" href="./" aria-label="Scroll of Fire home">Ξ Scroll of Fire</a>
+
+    <nav class="topnav" aria-label="Primary navigation">
       <a href="theory.html">Theory</a>
       <a href="start.html">Start</a>
       <a href="hub.html">Hub</a>
@@ -19,21 +35,47 @@
     </nav>
   </header>
 
-  <main class="page shell">
+  <main class="page shell" id="main">
     <p class="eyebrow">Codex Reference</p>
     <h1>Glossary of the Codex</h1>
     <p>Plain-language meanings for the Scroll’s core symbols, operators, and practices.</p>
 
-    <section class="grid cards">
-      <article class="card"><h2>ΨΩ</h2><p>Equation 0: the foundational field of awareness, witness, and ethical masking.</p></article>
-      <article class="card"><h2>Ξ</h2><p>Coherence measure. Used as a practical signal for alignment, clarity, and stability.</p></article>
-      <article class="card"><h2>Λ</h2><p>Ethical-energy mask. The stop-rule layer that prevents practice from becoming harmful or distorted.</p></article>
-      <article class="card"><h2>Witness</h2><p>A written record of observation, change, result, or pattern.</p></article>
-      <article class="card"><h2>Carrier</h2><p>A tone, symbol, phrase, page, rhythm, or practice used to hold intent.</p></article>
-      <article class="card"><h2>Ledger</h2><p>The proof trail: entries, hashes, notes, and verification records.</p></article>
+    <section class="grid cards" aria-label="Glossary entries">
+      <article class="card">
+        <h2>ΨΩ</h2>
+        <p>Equation 0: the foundational field of awareness, witness, and ethical masking.</p>
+      </article>
+
+      <article class="card">
+        <h2>Ξ</h2>
+        <p>Coherence measure. Used as a practical signal for alignment, clarity, and stability.</p>
+      </article>
+
+      <article class="card">
+        <h2>Λ</h2>
+        <p>Ethical-energy mask. The stop-rule layer that prevents practice from becoming harmful or distorted.</p>
+      </article>
+
+      <article class="card">
+        <h2>Witness</h2>
+        <p>A written record of observation, change, result, or pattern.</p>
+      </article>
+
+      <article class="card">
+        <h2>Carrier</h2>
+        <p>A tone, symbol, phrase, page, rhythm, or practice used to hold intent.</p>
+      </article>
+
+      <article class="card">
+        <h2>Ledger</h2>
+        <p>The proof trail: entries, hashes, notes, and verification records.</p>
+      </article>
     </section>
 
-    <p><a class="btn" href="./">← Back</a> <a class="btn" href="theory.html">Open Theory</a></p>
+    <p>
+      <a class="btn" href="./">← Back Home</a>
+      <a class="btn" href="theory.html">Open Theory</a>
+    </p>
   </main>
 </body>
 </html>
