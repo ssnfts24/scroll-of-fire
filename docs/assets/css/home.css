@@ -363,3 +363,22 @@
   .spotlight-img{min-height:260px}
   #codexExerciseCanvas{height:300px}
 }
+
+
+/* Mobile hero image fix */
+@media (max-width:760px){
+
+  .hero-image-card{
+    max-width:420px;
+    margin:0 auto;
+  }
+
+  .hero-image-card img{
+    aspect-ratio:4 / 3;
+    max-height:320px;
+    object-fit:contain;
+    padding:1rem;
+    background:#05070d;
+  }
+
+}
