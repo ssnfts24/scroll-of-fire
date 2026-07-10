@@ -7,6 +7,14 @@
    Requires the shared selectors used across the Theory / Canon pages:
    [data-nav-toggle], [data-site-nav], [data-mode], .equation-display,
    .equation-chapter, [data-focus-term], [data-term], and #canon.
+
+   Global navigation state classes:
+   - .is-site-nav-open
+   - .is-dropdown-open
+   - body.site-menu-open
+
+   These names are intentionally isolated from page-level Theory drawers,
+   overlays, chapter navigation, and other components that may use "open".
 */
 
 (function () {
@@ -18,9 +26,15 @@
   const $ = (selector, scope = document) => scope.querySelector(selector);
   const $$ = (selector, scope = document) =>
     Array.from(scope.querySelectorAll(selector));
-  const STORAGE_KEY = "sof.theory.settings.v2";
+
+  const STORAGE_KEY = "sof.theory.settings.v3";
   const MOBILE_NAV_QUERY = "(max-width: 900px)";
   const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+
+  const SITE_NAV_OPEN_CLASS = "is-site-nav-open";
+  const SITE_MENU_BODY_CLASS = "site-menu-open";
+  const DROPDOWN_OPEN_CLASS = "is-dropdown-open";
+  const COMMAND_BODY_CLASS = "command-open";
 
   const settings = {
     mode: body?.dataset.readingMode || "explorer",
@@ -57,8 +71,12 @@
 
   function setYear() {
     const year = $("#year");
-    if (year) year.textContent = String(new Date().getFullYear());
+
+    if (year) {
+      year.textContent = String(new Date().getFullYear());
+    }
   }
+
   function flash(button, text, duration = 900) {
     if (!(button instanceof HTMLElement)) return;
 
@@ -72,6 +90,7 @@
 
   async function copyText(value) {
     const text = String(value || "");
+
     if (!text) return false;
 
     try {
@@ -84,6 +103,7 @@
     }
 
     const field = document.createElement("textarea");
+
     field.value = text;
     field.setAttribute("readonly", "");
     field.style.position = "fixed";
@@ -92,6 +112,7 @@
     field.style.opacity = "0";
 
     document.body.appendChild(field);
+
     field.focus();
     field.select();
     field.setSelectionRange(0, field.value.length);
@@ -105,6 +126,7 @@
     }
 
     field.remove();
+
     return copied;
   }
 
@@ -121,43 +143,108 @@
         '[tabindex]:not([tabindex="-1"])'
       ].join(","),
       container
-    ).filter(element => !element.hidden && element.offsetParent !== null);
+    ).filter(element => {
+      return (
+        !element.hidden &&
+        element.getAttribute("aria-hidden") !== "true" &&
+        element.offsetParent !== null
+      );
+    });
+  }
+
+  function updateRootScrollLock() {
+    const shouldLock =
+      body.classList.contains(SITE_MENU_BODY_CLASS) ||
+      body.classList.contains(COMMAND_BODY_CLASS);
+
+    root.style.overflow = shouldLock ? "hidden" : "";
+  }
+
+  function getPageBasePath() {
+    const path = window.location.pathname;
+
+    if (path.includes("/theory/")) {
+      return "../";
+    }
+
+    return "./";
+  }
+
+  function resolveCodexPath(path) {
+    if (
+      !path ||
+      path.startsWith("http://") ||
+      path.startsWith("https://") ||
+      path.startsWith("mailto:") ||
+      path.startsWith("tel:") ||
+      path.startsWith("#") ||
+      path.startsWith("/")
+    ) {
+      return path;
+    }
+
+    return `${getPageBasePath()}${path}`;
   }
 
   /* ------------------------------------------------------------------
-     Mobile navigation
+     Global mobile navigation
   ------------------------------------------------------------------ */
 
   function mobileNav() {
     const button = $("[data-nav-toggle]");
     const nav = $("[data-site-nav]");
+    const dropdown = $("[data-dropdown]");
+    const dropdownButton = $("[data-dropdown-toggle]");
 
     if (!button || !nav) return;
 
     const media = window.matchMedia(MOBILE_NAV_QUERY);
-    const OPEN_CLASS = "open";
-    const BODY_CLASS = "nav-open";
 
     let returnFocus = null;
 
     function isOpen() {
-      return nav.classList.contains(OPEN_CLASS);
+      return nav.classList.contains(SITE_NAV_OPEN_CLASS);
+    }
+
+    function isDropdownOpen() {
+      return dropdown?.classList.contains(DROPDOWN_OPEN_CLASS) === true;
+    }
+
+    function updateDropdownState(open) {
+      if (!dropdown || !dropdownButton) return;
+
+      dropdown.classList.toggle(DROPDOWN_OPEN_CLASS, open);
+      dropdownButton.setAttribute("aria-expanded", String(open));
+    }
+
+    function closeDropdown() {
+      updateDropdownState(false);
     }
 
     function updateState(open) {
-      nav.classList.toggle(OPEN_CLASS, open);
-      button.classList.toggle("active", open);
-      body.classList.toggle(BODY_CLASS, open && media.matches);
+      const mobileOpen = open && media.matches;
 
-      button.setAttribute("aria-expanded", String(open));
+      nav.classList.toggle(SITE_NAV_OPEN_CLASS, mobileOpen);
+      button.classList.toggle("active", mobileOpen);
+      body.classList.toggle(SITE_MENU_BODY_CLASS, mobileOpen);
+
+      button.setAttribute("aria-expanded", String(mobileOpen));
       button.setAttribute(
         "aria-label",
-        open ? "Close navigation" : "Open navigation"
+        mobileOpen ? "Close navigation" : "Open navigation"
       );
 
-      nav.setAttribute("aria-hidden", String(media.matches && !open));
+      if (media.matches) {
+        nav.setAttribute("aria-hidden", String(!mobileOpen));
+      } else {
+        nav.removeAttribute("aria-hidden");
+      }
 
-      root.style.overflow = open && media.matches ? "hidden" : "";
+      if (!mobileOpen) {
+        closeDropdown();
+      }
+
+      updateRootScrollLock();
     }
 
     function openNav() {
@@ -177,6 +264,7 @@
 
     function closeNav({ restoreFocus = false } = {}) {
       const wasOpen = isOpen();
+
       updateState(false);
 
       if (wasOpen && restoreFocus) {
@@ -197,6 +285,14 @@
       } else {
         openNav();
       }
+    }
+
+    function toggleDropdown(event) {
+      if (!dropdown || !dropdownButton) return;
+
+      event.stopPropagation();
+
+      updateDropdownState(!isDropdownOpen());
     }
 
     function trapFocus(event) {
@@ -231,24 +327,52 @@
 
     button.addEventListener("click", toggleNav);
 
+    dropdownButton?.addEventListener("click", toggleDropdown);
+
     nav.addEventListener("click", event => {
-      if (event.target.closest("a") && media.matches) {
+      const link = event.target.closest("a");
+
+      if (link && media.matches) {
+        closeDropdown();
         closeNav();
       }
     });
 
     document.addEventListener("click", event => {
+      if (
+        dropdown &&
+        isDropdownOpen() &&
+        !dropdown.contains(event.target)
+      ) {
+        closeDropdown();
+      }
+
       if (!media.matches || !isOpen()) return;
-      if (button.contains(event.target) || nav.contains(event.target)) return;
+
+      if (
+        button.contains(event.target) ||
+        nav.contains(event.target)
+      ) {
+        return;
+      }
 
       closeNav();
     });
 
     document.addEventListener("keydown", event => {
-      if (event.key === "Escape" && isOpen()) {
-        event.preventDefault();
-        closeNav({ restoreFocus: true });
-        return;
+      if (event.key === "Escape") {
+        if (isDropdownOpen()) {
+          event.preventDefault();
+          closeDropdown();
+          dropdownButton?.focus({ preventScroll: true });
+          return;
+        }
+
+        if (isOpen()) {
+          event.preventDefault();
+          closeNav({ restoreFocus: true });
+          return;
+        }
       }
 
       trapFocus(event);
@@ -268,6 +392,7 @@
     } else if (typeof media.addListener === "function") {
       media.addListener(handleViewportChange);
     }
+
     if (media.matches) {
       updateState(false);
     } else {
@@ -283,6 +408,7 @@
 
   function readingModes() {
     const buttons = $$("[data-mode]");
+
     if (!buttons.length) return;
 
     function apply(mode) {
@@ -309,6 +435,7 @@
 
     apply(settings.mode);
   }
+
   /* ------------------------------------------------------------------
      Equation tools
   ------------------------------------------------------------------ */
@@ -324,6 +451,7 @@
       }
 
       const tools = document.createElement("div");
+
       tools.className = "equation-tools";
       tools.setAttribute("aria-label", "Equation tools");
       tools.innerHTML = `
@@ -346,7 +474,11 @@
 
       copyButton?.addEventListener("click", async event => {
         const copied = await copyText(equation.innerText.trim());
-        flash(event.currentTarget, copied ? "Copied" : "Copy failed");
+
+        flash(
+          event.currentTarget,
+          copied ? "Copied" : "Copy failed"
+        );
       });
 
       collapseButton?.addEventListener("click", event => {
@@ -363,12 +495,17 @@
 
       linkButton?.addEventListener("click", async event => {
         const url = new URL(window.location.href);
+
         url.hash = equation.id;
 
         const copied = await copyText(url.toString());
 
         history.replaceState(null, "", `#${equation.id}`);
-        flash(event.currentTarget, copied ? "Copied" : "Linked");
+
+        flash(
+          event.currentTarget,
+          copied ? "Copied" : "Linked"
+        );
       });
     });
   }
@@ -384,9 +521,11 @@
       card.dataset.chapterReady = "true";
 
       const equation = $(".equation-display", card);
+
       if (!equation) return;
 
       const button = document.createElement("button");
+
       button.type = "button";
       button.className = "chip chapter-toggle";
       button.textContent = "Focus";
@@ -413,6 +552,7 @@
   /* ------------------------------------------------------------------
      Master Equation term focus
   ------------------------------------------------------------------ */
+
   function masterEquationFocus() {
     const buttons = $$("[data-focus-term]");
     const cards = $$("[data-term]");
@@ -469,11 +609,13 @@
     }
 
     const chapters = $$(".equation-chapter", canon);
+
     if (!chapters.length) return;
 
     canon.dataset.searchReady = "true";
 
     const search = document.createElement("div");
+
     search.className = "canon-search";
     search.innerHTML = `
       <label for="canon-search-input">Search Canon 0–17</label>
@@ -491,10 +633,18 @@
       ></p>
     `;
 
-    canon.querySelector(".section-heading")?.after(search);
+    const sectionHeading = canon.querySelector(".section-heading");
+
+    if (sectionHeading) {
+      sectionHeading.after(search);
+    } else {
+      canon.prepend(search);
+    }
 
     const input = $("#canon-search-input", search);
     const status = $(".canon-search-status", search);
+
+    if (!input) return;
 
     function filterCanon() {
       const query = input.value.trim().toLowerCase();
@@ -529,6 +679,7 @@
     if ($(".command-palette")) return;
 
     const palette = document.createElement("div");
+
     palette.className = "command-palette";
     palette.hidden = true;
     palette.setAttribute("role", "dialog");
@@ -551,10 +702,12 @@
     const input = $("input", palette);
     const results = $(".command-results", palette);
 
+    if (!input || !results) return;
+
     let returnFocus = null;
 
     const commands = [
-      ["Home", "./"],
+      ["Home", ""],
       ["Start", "start.html"],
       ["Theory Hub", "theory.html"],
       ["Canon 0–17", "theory/canon.html#canon"],
@@ -595,15 +748,15 @@
       ["Frequency Console", "systems/frequencies.html"],
       ["Artifact Registry", "shop.html"],
       ["Ledger", "ledger.html"],
-      ["Caravan", "caravan.html"]
+      ["Covenant Caravan", "covenant-caravan.html"]
     ];
 
     function render(query = "") {
       const normalized = query.trim().toLowerCase();
 
-      const filtered = commands.filter(([label]) =>
-        label.toLowerCase().includes(normalized)
-      );
+      const filtered = commands.filter(([label]) => {
+        return label.toLowerCase().includes(normalized);
+      });
 
       if (!filtered.length) {
         results.innerHTML =
@@ -613,7 +766,13 @@
 
       results.innerHTML = filtered
         .slice(0, 12)
-        .map(([label, href]) => `<a href="${href}">${label}</a>`)
+        .map(([label, href]) => {
+          const resolvedHref = href
+            ? resolveCodexPath(href)
+            : resolveCodexPath("./");
+
+          return `<a href="${resolvedHref}">${label}</a>`;
+        })
         .join("");
     }
 
@@ -621,24 +780,25 @@
       returnFocus = document.activeElement;
 
       palette.hidden = false;
-      body.classList.add("command-open");
-      root.style.overflow = "hidden";
+      body.classList.add(COMMAND_BODY_CLASS);
+
+      updateRootScrollLock();
 
       input.value = "";
       render();
 
-      requestAnimationFrame(() => input.focus());
+      requestAnimationFrame(() => {
+        input.focus({ preventScroll: true });
+      });
     }
 
     function closePalette({ restoreFocus = true } = {}) {
       if (palette.hidden) return;
 
       palette.hidden = true;
-      body.classList.remove("command-open");
+      body.classList.remove(COMMAND_BODY_CLASS);
 
-      if (!body.classList.contains("nav-open")) {
-        root.style.overflow = "";
-      }
+      updateRootScrollLock();
 
       if (
         restoreFocus &&
@@ -656,7 +816,12 @@
       if (event.key !== "Tab" || palette.hidden) return;
 
       const focusable = getFocusable(palette);
-      if (!focusable.length) return;
+
+      if (!focusable.length) {
+        event.preventDefault();
+        input.focus();
+        return;
+      }
 
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
@@ -672,10 +837,12 @@
     }
 
     document.addEventListener("keydown", event => {
-      const activeTag = document.activeElement?.tagName || "";
+      const activeElement = document.activeElement;
+      const activeTag = activeElement?.tagName || "";
+
       const isTyping =
         ["INPUT", "TEXTAREA", "SELECT"].includes(activeTag) ||
-        document.activeElement?.isContentEditable === true;
+        activeElement?.isContentEditable === true;
 
       if (
         (event.ctrlKey || event.metaKey) &&
@@ -713,7 +880,9 @@
       trapPaletteFocus(event);
     });
 
-    input.addEventListener("input", () => render(input.value));
+    input.addEventListener("input", () => {
+      render(input.value);
+    });
 
     palette.addEventListener("click", event => {
       if (event.target === palette) {
@@ -727,6 +896,7 @@
       }
     });
   }
+
   /* ------------------------------------------------------------------
      Reveal on scroll
   ------------------------------------------------------------------ */
@@ -742,11 +912,17 @@
       prefersReducedMotion() ||
       !("IntersectionObserver" in window)
     ) {
-      items.forEach(element => element.classList.add("active"));
+      items.forEach(element => {
+        element.classList.add("active");
+      });
+
       return;
     }
 
-    items.forEach(element => element.classList.add("reveal"));
+    items.forEach(element => {
+      element.classList.add("reveal");
+    });
+
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
@@ -762,7 +938,9 @@
       }
     );
 
-    items.forEach(element => observer.observe(element));
+    items.forEach(element => {
+      observer.observe(element);
+    });
   }
 
   /* ------------------------------------------------------------------
@@ -772,9 +950,11 @@
   function smoothAnchors() {
     document.addEventListener("click", event => {
       const anchor = event.target.closest("a[href^='#']");
+
       if (!anchor) return;
 
       const href = anchor.getAttribute("href");
+
       if (!href || href === "#") return;
 
       let target;
@@ -788,7 +968,9 @@
       if (!target) return;
 
       event.preventDefault();
+
       const offset = $(".site-header")?.offsetHeight || 72;
+
       const top =
         target.getBoundingClientRect().top +
         window.scrollY -
@@ -814,7 +996,9 @@
         if (!hadTabindex) {
           target.addEventListener(
             "blur",
-            () => target.removeAttribute("tabindex"),
+            () => {
+              target.removeAttribute("tabindex");
+            },
             { once: true }
           );
         }
@@ -830,6 +1014,7 @@
     if ($(".to-top")) return;
 
     const button = document.createElement("button");
+
     button.type = "button";
     button.className = "to-top btn";
     button.textContent = "↑";
@@ -856,6 +1041,45 @@
   }
 
   /* ------------------------------------------------------------------
+     Hash target recovery
+  ------------------------------------------------------------------ */
+
+  function revealHashTarget() {
+    if (!window.location.hash) return;
+
+    let target;
+
+    try {
+      target = document.querySelector(window.location.hash);
+    } catch (_) {
+      return;
+    }
+
+    if (!target) return;
+
+    const hiddenChapter = target.closest(".equation-chapter[hidden]");
+
+    if (hiddenChapter) {
+      hiddenChapter.hidden = false;
+    }
+
+    requestAnimationFrame(() => {
+      const offset = $(".site-header")?.offsetHeight || 72;
+
+      const top =
+        target.getBoundingClientRect().top +
+        window.scrollY -
+        offset -
+        12;
+
+      window.scrollTo({
+        top: Math.max(0, top),
+        behavior: "auto"
+      });
+    });
+  }
+
+  /* ------------------------------------------------------------------
      Boot
   ------------------------------------------------------------------ */
 
@@ -872,8 +1096,9 @@
     revealOnScroll();
     smoothAnchors();
     backToTop();
+    revealHashTarget();
 
-    console.info("Scroll of Fire — Theory active");
+    console.info("Scroll of Fire — Theory Interactive Codex active");
   }
 
   if (document.readyState === "loading") {
