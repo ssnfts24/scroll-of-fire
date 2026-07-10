@@ -518,3 +518,369 @@
     }
 
     input.addEventListener("input", filterCanon);
+    input.addEventListener("search", filterCanon);
+  }
+
+  /* ------------------------------------------------------------------
+     Command palette
+  ------------------------------------------------------------------ */
+
+  function commandPalette() {
+    if ($(".command-palette")) return;
+
+    const palette = document.createElement("div");
+    palette.className = "command-palette";
+    palette.hidden = true;
+    palette.setAttribute("role", "dialog");
+    palette.setAttribute("aria-modal", "true");
+    palette.setAttribute("aria-label", "Search the Codex");
+    palette.innerHTML = `
+      <div class="command-panel">
+        <input
+          type="search"
+          autocomplete="off"
+          placeholder="Search Codex..."
+          aria-label="Command search"
+        >
+        <div class="command-results"></div>
+      </div>
+    `;
+
+    document.body.appendChild(palette);
+
+    const input = $("input", palette);
+    const results = $(".command-results", palette);
+
+    let returnFocus = null;
+
+    const commands = [
+      ["Home", "./"],
+      ["Start", "start.html"],
+      ["Theory Hub", "theory.html"],
+      ["Canon 0–17", "theory/canon.html#canon"],
+      ["Master Equation", "theory/master-equation.html"],
+      ["Unified Field", "theory/unified-field.html"],
+      ["Delta Framework", "theory/delta-framework.html"],
+      ["Living Operators", "theory/operators.html"],
+      ["Witness Theory", "theory/witness.html"],
+      ["Memory Theory", "theory/memory.html"],
+      ["Ethics", "theory/ethics.html"],
+      ["13 Moons Theory", "theory/thirteen-moons.html"],
+      ["Frequency Governance", "theory/frequency-governance.html"],
+      ["Living Technology", "theory/living-technology.html"],
+      ["Artifact Theory", "theory/artifact-theory.html"],
+      ["Glossary", "theory/glossary.html"],
+      ["Notation", "theory/notation.html"],
+      ["Bibliography", "theory/bibliography.html"],
+      ["Equation 0 — Foundational Field", "theory/equations/eq00.html"],
+      ["Equation 1 — Source and Operators", "theory/equations/eq01.html"],
+      ["Equation 2 — Witness", "theory/equations/eq02.html"],
+      ["Equation 3 — Harmonic Gate", "theory/equations/eq03.html"],
+      ["Equation 4 — Language", "theory/equations/eq04.html"],
+      ["Equation 4b — Semantic Gradient", "theory/equations/eq04b.html"],
+      ["Equation 5 — Remnant", "theory/equations/eq05.html"],
+      ["Equation 6 — Type-7 Field", "theory/equations/eq06.html"],
+      ["Equation 7 — Copeland Comparator", "theory/equations/eq07.html"],
+      ["Equation 8 — Goodwin Comparator", "theory/equations/eq08.html"],
+      ["Equation 9 — Ethical Law", "theory/equations/eq09.html"],
+      ["Equation 10 — Inverse Resonance Ladder", "theory/equations/eq10.html"],
+      ["Equation 11 — Projection Frame", "theory/equations/eq11.html"],
+      ["Equation 12 — Causal Lattice", "theory/equations/eq12.html"],
+      ["Equation 13 — Coherence", "theory/equations/eq13.html"],
+      ["Equation 14 — Update Rule", "theory/equations/eq14.html"],
+      ["Equation 15 — Learning Kernel", "theory/equations/eq15.html"],
+      ["Equation 16 — Memory Window", "theory/equations/eq16.html"],
+      ["Equation 17 — Voice Carriers", "theory/equations/eq17.html"],
+      ["13 Moons", "moons.html"],
+      ["Frequency Console", "systems/frequencies.html"],
+      ["Artifact Registry", "shop.html"],
+      ["Ledger", "ledger.html"],
+      ["Caravan", "caravan.html"]
+    ];
+
+    function render(query = "") {
+      const normalized = query.trim().toLowerCase();
+
+      const filtered = commands.filter(([label]) =>
+        label.toLowerCase().includes(normalized)
+      );
+
+      if (!filtered.length) {
+        results.innerHTML =
+          '<p class="command-empty">No matching Codex entry.</p>';
+        return;
+      }
+
+      results.innerHTML = filtered
+        .slice(0, 12)
+        .map(([label, href]) => `<a href="${href}">${label}</a>`)
+        .join("");
+    }
+
+    function openPalette() {
+      returnFocus = document.activeElement;
+
+      palette.hidden = false;
+      body.classList.add("command-open");
+      root.style.overflow = "hidden";
+
+      input.value = "";
+      render();
+
+      requestAnimationFrame(() => input.focus());
+    }
+
+    function closePalette({ restoreFocus = true } = {}) {
+      if (palette.hidden) return;
+
+      palette.hidden = true;
+      body.classList.remove("command-open");
+
+      if (!body.classList.contains("nav-open")) {
+        root.style.overflow = "";
+      }
+
+      if (
+        restoreFocus &&
+        returnFocus instanceof HTMLElement
+      ) {
+        requestAnimationFrame(() => {
+          returnFocus.focus({ preventScroll: true });
+        });
+      }
+
+      returnFocus = null;
+    }
+
+    function trapPaletteFocus(event) {
+      if (event.key !== "Tab" || palette.hidden) return;
+
+      const focusable = getFocusable(palette);
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", event => {
+      const activeTag = document.activeElement?.tagName || "";
+      const isTyping =
+        ["INPUT", "TEXTAREA", "SELECT"].includes(activeTag) ||
+        document.activeElement?.isContentEditable === true;
+
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        event.key.toLowerCase() === "k"
+      ) {
+        event.preventDefault();
+
+        if (palette.hidden) {
+          openPalette();
+        } else {
+          closePalette();
+        }
+
+        return;
+      }
+
+      if (event.key === "Escape" && !palette.hidden) {
+        event.preventDefault();
+        closePalette();
+        return;
+      }
+
+      if (
+        event.key === "/" &&
+        !isTyping &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.altKey
+      ) {
+        event.preventDefault();
+        openPalette();
+        return;
+      }
+
+      trapPaletteFocus(event);
+    });
+
+    input.addEventListener("input", () => render(input.value));
+
+    palette.addEventListener("click", event => {
+      if (event.target === palette) {
+        closePalette();
+      }
+    });
+
+    results.addEventListener("click", event => {
+      if (event.target.closest("a")) {
+        closePalette({ restoreFocus: false });
+      }
+    });
+  }
+  /* ------------------------------------------------------------------
+     Reveal on scroll
+  ------------------------------------------------------------------ */
+
+  function revealOnScroll() {
+    const items = $$(
+      ".section-shell, .card, .canon-card, .moon-card, .graph-card"
+    );
+
+    if (!items.length) return;
+
+    if (
+      prefersReducedMotion() ||
+      !("IntersectionObserver" in window)
+    ) {
+      items.forEach(element => element.classList.add("active"));
+      return;
+    }
+
+    items.forEach(element => element.classList.add("reveal"));
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add("active");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        rootMargin: "0px 0px -8% 0px",
+        threshold: 0.08
+      }
+    );
+
+    items.forEach(element => observer.observe(element));
+  }
+
+  /* ------------------------------------------------------------------
+     Smooth same-page anchors
+  ------------------------------------------------------------------ */
+
+  function smoothAnchors() {
+    document.addEventListener("click", event => {
+      const anchor = event.target.closest("a[href^='#']");
+      if (!anchor) return;
+
+      const href = anchor.getAttribute("href");
+      if (!href || href === "#") return;
+
+      let target;
+
+      try {
+        target = document.querySelector(href);
+      } catch (_) {
+        return;
+      }
+
+      if (!target) return;
+
+      event.preventDefault();
+      const offset = $(".site-header")?.offsetHeight || 72;
+      const top =
+        target.getBoundingClientRect().top +
+        window.scrollY -
+        offset -
+        12;
+
+      window.scrollTo({
+        top: Math.max(0, top),
+        behavior: prefersReducedMotion() ? "auto" : "smooth"
+      });
+
+      history.replaceState(null, "", href);
+
+      const hadTabindex = target.hasAttribute("tabindex");
+
+      if (!hadTabindex) {
+        target.setAttribute("tabindex", "-1");
+      }
+
+      requestAnimationFrame(() => {
+        target.focus({ preventScroll: true });
+
+        if (!hadTabindex) {
+          target.addEventListener(
+            "blur",
+            () => target.removeAttribute("tabindex"),
+            { once: true }
+          );
+        }
+      });
+    });
+  }
+
+  /* ------------------------------------------------------------------
+     Back to top
+  ------------------------------------------------------------------ */
+
+  function backToTop() {
+    if ($(".to-top")) return;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "to-top btn";
+    button.textContent = "↑";
+    button.setAttribute("aria-label", "Back to top");
+
+    document.body.appendChild(button);
+
+    button.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: prefersReducedMotion() ? "auto" : "smooth"
+      });
+    });
+
+    function updateVisibility() {
+      button.classList.toggle("show", window.scrollY > 900);
+    }
+
+    window.addEventListener("scroll", updateVisibility, {
+      passive: true
+    });
+
+    updateVisibility();
+  }
+
+  /* ------------------------------------------------------------------
+     Boot
+  ------------------------------------------------------------------ */
+
+  function boot() {
+    loadSettings();
+    setYear();
+    mobileNav();
+    readingModes();
+    equationTools();
+    canonChapters();
+    masterEquationFocus();
+    searchCanon();
+    commandPalette();
+    revealOnScroll();
+    smoothAnchors();
+    backToTop();
+
+    console.info("Scroll of Fire — Theory active");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot, {
+      once: true
+    });
+  } else {
+    boot();
+  }
+})();
