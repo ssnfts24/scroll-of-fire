@@ -10,7 +10,6 @@
   const SITE_ROOT = "/";
   const GITHUB_ROOT = "/scroll-of-fire/";
   const MOBILE_NAV_QUERY = "(max-width: 900px)";
-  const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
   const LEGACY_PATHS = {
     "caravan.html": "covenant-caravan.html",
@@ -32,14 +31,9 @@
     normalizeInternalLinks();
     markActiveNavigation();
     initGlobalNavigation();
-    initMotionSystem();
     enableCopyButtons();
     enableImageFallbacks();
     secureExternalLinks();
-  }
-
-  function prefersReducedMotion() {
-    return window.matchMedia?.(REDUCED_MOTION_QUERY).matches === true;
   }
 
   function getDeploymentRoot() {
@@ -391,62 +385,5 @@
     if (year) {
       year.textContent = String(new Date().getFullYear());
     }
-  }
-
-  function initMotionSystem() {
-    const revealTargets = document.querySelectorAll(
-      [
-        ".section-shell",
-        ".card",
-        ".feature-card",
-        ".nav-card",
-        ".lab-card",
-        ".signal-card",
-        ".what-card",
-        ".caravan-card",
-        ".witness-card"
-      ].join(",")
-    );
-
-    revealTargets.forEach(function (element, index) {
-      if (element.dataset.revealReady === "true") return;
-      element.dataset.revealReady = "true";
-      element.classList.add("reveal");
-      element.style.setProperty("--reveal-delay", `${Math.min(index % 6, 4) * 45}ms`);
-
-      if (element.matches(".home-hero, .theory-hero, .hero, .guide-hero")) {
-        element.dataset.revealStyle = "lift";
-        element.classList.add("motion-rich");
-      } else if (element.matches(".feature-card, .card.glow")) {
-        element.dataset.revealStyle = "scale";
-      }
-    });
-
-    if (!revealTargets.length) return;
-
-    if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
-      revealTargets.forEach(function (element) {
-        element.classList.add("in");
-      });
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add("in");
-          observer.unobserve(entry.target);
-        });
-      },
-      {
-        rootMargin: "0px 0px -10% 0px",
-        threshold: 0.1
-      }
-    );
-
-    revealTargets.forEach(function (element) {
-      observer.observe(element);
-    });
   }
 })();
