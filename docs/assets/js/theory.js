@@ -35,27 +35,6 @@
   const SITE_MENU_BODY_CLASS = "site-menu-open";
   const DROPDOWN_OPEN_CLASS = "is-dropdown-open";
   const COMMAND_BODY_CLASS = "command-open";
-  const ROOT_PAGES = new Set([
-    "index.html",
-    "start.html",
-    "guide.html",
-    "hub.html",
-    "theory.html",
-    "ledger.html",
-    "shop.html",
-    "moons.html",
-    "teach.html",
-    "genesis-oracle.html",
-    "glossary.html",
-    "downloads.html",
-    "ethics.html",
-    "invoke.html",
-    "lab.html",
-    "circle.html",
-    "micro.html",
-    "ab.html",
-    "covenant-caravan.html"
-  ]);
 
   const settings = {
     mode: body?.dataset.readingMode || "explorer",
@@ -205,80 +184,6 @@
     }
 
     return `${getPageBasePath()}${path}`;
-  }
-
-  function isIgnoredHref(href) {
-    return (
-      !href ||
-      href.startsWith("#") ||
-      href.startsWith("mailto:") ||
-      href.startsWith("tel:") ||
-      href.startsWith("sms:") ||
-      href.startsWith("javascript:") ||
-      href.startsWith("vbscript:") ||
-      href.startsWith("data:")
-    );
-  }
-
-  function normalizeTheoryPath(path) {
-    const value = String(path || "").replace(/^\.\//, "");
-    if (!value) return "";
-    if (value === "frequencies.html") return "systems/frequencies.html";
-    if (value === "dpcs/shop.html") return "shop.html";
-    if (value.startsWith("docs/")) return value.slice(5);
-    if (
-      value.startsWith("../") ||
-      value.startsWith("/") ||
-      value.startsWith("assets/") ||
-      value.startsWith("systems/") ||
-      value.startsWith("theory/")
-    ) {
-      return value;
-    }
-
-    if (value.startsWith("equations/")) {
-      return `theory/${value}`;
-    }
-
-    if (/^eq(\d{2}|04b)\.html$/i.test(value)) {
-      const match = value.match(/^eq(\d{2}|04b)\.html$/i);
-      return match ? `theory/equations/eq${match[1].toLowerCase()}.html` : value;
-    }
-
-    if (ROOT_PAGES.has(value.toLowerCase())) {
-      return value;
-    }
-
-    if (/^[a-z0-9-]+\.html$/i.test(value)) {
-      return `theory/${value}`;
-    }
-
-    return value;
-  }
-
-  function normalizeInternalLinks() {
-    $$("a[href]").forEach(anchor => {
-      const original = anchor.getAttribute("href");
-      if (!original || isIgnoredHref(original)) return;
-
-      let parsed;
-      try {
-        parsed = new URL(original, window.location.href);
-      } catch (_) {
-        return;
-      }
-
-      if (parsed.origin !== window.location.origin) return;
-
-      const hash = original.includes("#") ? `#${original.split("#").slice(1).join("#")}` : "";
-      const queryPart = original.split("#")[0];
-      const query = queryPart.includes("?") ? `?${queryPart.split("?").slice(1).join("?")}` : "";
-      const pathOnly = queryPart.split("?")[0];
-      const normalized = normalizeTheoryPath(pathOnly);
-      if (!normalized || normalized === pathOnly) return;
-
-      anchor.setAttribute("href", `${normalized}${query}${hash}`);
-    });
   }
 
   /* ------------------------------------------------------------------
@@ -1014,16 +919,8 @@
       return;
     }
 
-    items.forEach((element, index) => {
+    items.forEach(element => {
       element.classList.add("reveal");
-      element.style.setProperty("--reveal-delay", `${Math.min(index % 6, 4) * 42}ms`);
-
-      if (element.matches(".theory-hero, .equation-display")) {
-        element.dataset.revealStyle = "lift";
-        element.classList.add("motion-rich");
-      } else if (element.matches(".card, .canon-card, .graph-card")) {
-        element.dataset.revealStyle = "scale";
-      }
     });
 
     const observer = new IntersectionObserver(
@@ -1188,7 +1085,6 @@
 
   function boot() {
     loadSettings();
-    normalizeInternalLinks();
     setYear();
     mobileNav();
     readingModes();
