@@ -1,40 +1,2373 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="sof">
+<html lang="en" dir="ltr" class="sof carrier-432">
 <head>
   <base href="/">
   <script>
     if (location.hostname === "ssnfts24.github.io") {
-      const b = document.querySelector("base");
-      if (b) b.setAttribute("href", "/scroll-of-fire/");
+      const base = document.querySelector("base");
+      if (base) base.setAttribute("href", "/scroll-of-fire/");
     }
   </script>
 
   <meta charset="utf-8">
-  <title>Glossary — Scroll of Fire | Codex of Reality</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Plain-language meanings for the core symbols, operators, equations, and practices of Scroll of Fire and the Codex of Reality.">
+  <title>Glossary of the Codex — Symbols, Equations & Living Technology | Codex of Reality</title>
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
+
+  <meta
+    name="description"
+    content="Explore the Scroll of Fire glossary: plain-language definitions for Codex of Reality symbols, equations, Living Technology, Frequency Governance, the 13 Moons calendar, witness practices, artifacts, and core terminology."
+  >
+  <meta
+    name="keywords"
+    content="Codex of Reality glossary, Scroll of Fire glossary, Living Technology, Living Equation, Equation Zero, Frequency Governance, 13 Moons calendar, witness ledger, resonance, symbols, artifacts"
+  >
+
   <meta name="author" content="Aaron Paul Laird">
   <meta name="creator" content="Aaron Paul Laird">
   <meta name="publisher" content="Scroll of Fire">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#080b10">
 
   <link rel="canonical" href="https://codexofreality.org/glossary.html">
+
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Glossary of the Codex">
+  <meta
+    property="og:description"
+    content="A living reference for the symbols, equations, practices, artifacts, and terminology of Scroll of Fire and the Codex of Reality."
+  >
+  <meta property="og:url" content="https://codexofreality.org/glossary.html">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Glossary of the Codex">
+  <meta
+    name="twitter:description"
+    content="Explore the symbols, equations, Living Technology, practices, and terminology of the Codex of Reality."
+  >
+
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/superlayout.css">
+
+  <style>
+    .glossary-page {
+      --glossary-border: color-mix(
+        in srgb,
+        currentColor 18%,
+        transparent
+      );
+      --glossary-soft: color-mix(
+        in srgb,
+        currentColor 7%,
+        transparent
+      );
+      --glossary-glow: rgba(226, 184, 88, 0.16);
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 0.75rem;
+      left: 0.75rem;
+      z-index: 9999;
+      padding: 0.7rem 1rem;
+      border-radius: 0.65rem;
+      background: #ffffff;
+      color: #05070a;
+      font-weight: 800;
+      transform: translateY(-180%);
+      transition: transform 160ms ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding:
+        max(0.85rem, env(safe-area-inset-top))
+        max(1rem, env(safe-area-inset-right))
+        0.85rem
+        max(1rem, env(safe-area-inset-left));
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+      background: color-mix(in srgb, #080b10 88%, transparent);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      color: inherit;
+      font-weight: 850;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      font-size: 1.2em;
+      color: #e2b858;
+    }
+
+    .topnav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    .topnav > a,
+    .nav-menu > summary {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.5rem;
+      padding: 0.55rem 0.75rem;
+      border-radius: 0.7rem;
+      color: inherit;
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .topnav > a:hover,
+    .topnav > a:focus-visible,
+    .nav-menu > summary:hover,
+    .nav-menu > summary:focus-visible {
+      background: rgba(255, 255, 255, 0.08);
+      outline: none;
+    }
+
+    .topnav a[aria-current="page"] {
+      color: #f0ca75;
+      background: rgba(226, 184, 88, 0.12);
+    }
+
+    .nav-menu {
+      position: relative;
+    }
+
+    .nav-menu > summary {
+      list-style: none;
+    }
+
+    .nav-menu > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .nav-menu > summary::after {
+      content: "▾";
+      margin-left: 0.35rem;
+      font-size: 0.75rem;
+      opacity: 0.72;
+    }
+
+    .nav-menu[open] > summary::after {
+      transform: rotate(180deg);
+    }
+
+    .nav-panel {
+      position: absolute;
+      top: calc(100% + 0.55rem);
+      right: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(10rem, 1fr));
+      gap: 0.3rem;
+      width: min(27rem, calc(100vw - 2rem));
+      padding: 0.65rem;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 1rem;
+      background: #0d1118;
+      box-shadow: 0 1.2rem 3rem rgba(0, 0, 0, 0.42);
+    }
+
+    .nav-panel a {
+      padding: 0.75rem;
+      border-radius: 0.7rem;
+      color: inherit;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .nav-panel a:hover,
+    .nav-panel a:focus-visible {
+      background: rgba(255, 255, 255, 0.08);
+      outline: none;
+    }
+
+    .page.shell {
+      width: min(1180px, calc(100% - 2rem));
+      margin-inline: auto;
+      padding-top: clamp(2.2rem, 6vw, 5.5rem);
+      padding-bottom: clamp(4rem, 8vw, 7rem);
+    }
+
+    .breadcrumbs {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin: 0 0 1.2rem;
+      font-size: 0.88rem;
+      opacity: 0.76;
+    }
+
+    .breadcrumbs a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .breadcrumbs a:hover,
+    .breadcrumbs a:focus-visible {
+      text-decoration: underline;
+      outline: none;
+    }
+
+    .breadcrumbs span[aria-hidden="true"] {
+      opacity: 0.52;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(1.5rem, 4vw, 3.5rem);
+      border: 1px solid var(--glossary-border);
+      border-radius: clamp(1.25rem, 3vw, 2rem);
+      background:
+        radial-gradient(
+          circle at 85% 10%,
+          var(--glossary-glow),
+          transparent 34%
+        ),
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.055),
+          rgba(255, 255, 255, 0.015)
+        );
+    }
+
+    .hero::after {
+      content: "Ξ";
+      position: absolute;
+      right: clamp(1rem, 6vw, 5rem);
+      bottom: clamp(-2.5rem, -4vw, -1rem);
+      font-size: clamp(8rem, 23vw, 18rem);
+      line-height: 1;
+      opacity: 0.035;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .eyebrow {
+      margin: 0 0 0.8rem;
+      color: #e2b858;
+      font-size: 0.77rem;
+      font-weight: 850;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      max-width: 15ch;
+      margin: 0;
+      font-size: clamp(2.5rem, 8vw, 5.8rem);
+      line-height: 0.95;
+      letter-spacing: -0.045em;
+    }
+
+    .hero-copy {
+      max-width: 67ch;
+      margin: 1.15rem 0 0;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      line-height: 1.72;
+      opacity: 0.84;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-top: 1.5rem;
+    }
+
+    .hero-seal {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      min-height: 2.7rem;
+      padding: 0.65rem 0.9rem;
+      border: 1px solid var(--glossary-border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+      font-size: 0.85rem;
+      font-weight: 750;
+    }
+
+    .reference-tools {
+      display: grid;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding: 1.15rem;
+      border: 1px solid var(--glossary-border);
+      border-radius: 1.25rem;
+      background: var(--glossary-soft);
+    }
+
+    .search-wrap {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .search-wrap label {
+      font-size: 0.82rem;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.78;
+    }
+
+    .search-field {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      min-height: 3.25rem;
+      padding: 0.2rem 0.95rem;
+      border: 1px solid var(--glossary-border);
+      border-radius: 0.9rem;
+      background: rgba(0, 0, 0, 0.16);
+    }
+
+    .search-field:focus-within {
+      border-color: rgba(226, 184, 88, 0.7);
+      box-shadow: 0 0 0 3px rgba(226, 184, 88, 0.11);
+    }
+
+    .search-icon {
+      flex: 0 0 auto;
+      opacity: 0.68;
+    }
+
+    .search-field input {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+    }
+
+    .search-field input::placeholder {
+      color: currentColor;
+      opacity: 0.48;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-button {
+      min-height: 2.4rem;
+      padding: 0.52rem 0.8rem;
+      border: 1px solid var(--glossary-border);
+      border-radius: 999px;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 760;
+      cursor: pointer;
+    }
+
+    .filter-button:hover,
+    .filter-button:focus-visible {
+      background: rgba(255, 255, 255, 0.07);
+      outline: none;
+    }
+
+    .filter-button[aria-pressed="true"] {
+      border-color: rgba(226, 184, 88, 0.52);
+      background: rgba(226, 184, 88, 0.13);
+      color: #f2cc78;
+    }
+
+    .results-line {
+      min-height: 1.4em;
+      margin: 0;
+      font-size: 0.88rem;
+      opacity: 0.7;
+    }
+
+    .glossary-section {
+      margin-top: clamp(2.5rem, 7vw, 5rem);
+      scroll-margin-top: 6.5rem;
+    }
+
+    .section-heading {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: end;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: clamp(1.65rem, 4vw, 2.7rem);
+      line-height: 1;
+    }
+
+    .section-heading::after {
+      content: "";
+      height: 1px;
+      margin-bottom: 0.25rem;
+      background: linear-gradient(
+        90deg,
+        var(--glossary-border),
+        transparent
+      );
+    }
+
+    .section-intro {
+      max-width: 66ch;
+      margin: -0.4rem 0 1.4rem;
+      line-height: 1.7;
+      opacity: 0.75;
+    }
+
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .term-card {
+      position: relative;
+      min-width: 0;
+      padding: 1.2rem;
+      border: 1px solid var(--glossary-border);
+      border-radius: 1.05rem;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.045),
+          rgba(255, 255, 255, 0.012)
+        );
+      transition:
+        transform 160ms ease,
+        border-color 160ms ease,
+        background 160ms ease;
+    }
+
+    .term-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(226, 184, 88, 0.35);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(226, 184, 88, 0.07),
+          rgba(255, 255, 255, 0.012)
+        );
+    }
+
+    .term-card[hidden] {
+      display: none;
+    }
+
+    .term-category {
+      display: inline-flex;
+      margin-bottom: 0.7rem;
+      color: #d4ad58;
+      font-size: 0.69rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .term-card h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      line-height: 1.2;
+    }
+
+    .term-card h3 .symbol {
+      display: inline-block;
+      margin-right: 0.35rem;
+      color: #f0c66b;
+      font-size: 1.08em;
+    }
+
+    .term-card p {
+      margin: 0.72rem 0 0;
+      line-height: 1.66;
+      opacity: 0.82;
+    }
+
+    .term-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.9rem;
+    }
+
+    .term-links a {
+      display: inline-flex;
+      padding: 0.3rem 0.52rem;
+      border: 1px solid var(--glossary-border);
+      border-radius: 999px;
+      color: inherit;
+      text-decoration: none;
+      font-size: 0.73rem;
+      font-weight: 740;
+      opacity: 0.78;
+    }
+
+    .term-links a:hover,
+    .term-links a:focus-visible {
+      opacity: 1;
+      border-color: rgba(226, 184, 88, 0.45);
+      outline: none;
+    }
+
+    .empty-state {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 2rem;
+      border: 1px dashed var(--glossary-border);
+      border-radius: 1rem;
+      text-align: center;
+      opacity: 0.78;
+    }
+
+    .empty-state.is-visible {
+      display: block;
+    }
+
+    .reference-path {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: clamp(3rem, 8vw, 6rem);
+    }
+
+    .reference-path article {
+      padding: 1.3rem;
+      border: 1px solid var(--glossary-border);
+      border-radius: 1rem;
+      background: var(--glossary-soft);
+    }
+
+    .reference-path h2 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .reference-path p {
+      margin: 0.65rem 0 1rem;
+      line-height: 1.65;
+      opacity: 0.76;
+    }
+
+    .reference-path a {
+      font-weight: 800;
+    }
+
+    .site-footer {
+      padding:
+        2.5rem
+        max(1rem, env(safe-area-inset-right))
+        max(2.5rem, env(safe-area-inset-bottom))
+        max(1rem, env(safe-area-inset-left));
+      border-top: 1px solid rgba(255, 255, 255, 0.09);
+      background: rgba(0, 0, 0, 0.12);
+    }
+
+    .footer-inner {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 2rem;
+      width: min(1180px, 100%);
+      margin-inline: auto;
+    }
+
+    .footer-mark {
+      margin: 0;
+      color: #e2b858;
+      font-weight: 850;
+      letter-spacing: 0.06em;
+    }
+
+    .footer-title {
+      margin: 0.45rem 0;
+      font-size: 1.2rem;
+      font-weight: 850;
+    }
+
+    .footer-copy {
+      max-width: 50ch;
+      margin: 0;
+      line-height: 1.65;
+      opacity: 0.7;
+    }
+
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-content: start;
+      gap: 0.6rem 1rem;
+    }
+
+    .footer-links a {
+      color: inherit;
+      text-decoration: none;
+      font-weight: 700;
+      opacity: 0.76;
+    }
+
+    .footer-links a:hover,
+    .footer-links a:focus-visible {
+      opacity: 1;
+      text-decoration: underline;
+      outline: none;
+    }
+
+    .footer-seal {
+      width: min(1180px, 100%);
+      margin: 2rem auto 0;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      font-size: 0.82rem;
+      opacity: 0.55;
+    }
+
+    @media (max-width: 980px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .topnav {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .nav-panel {
+        right: auto;
+        left: 0;
+      }
+
+      .glossary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page.shell {
+        width: min(100% - 1.2rem, 1180px);
+      }
+
+      .topnav > a,
+      .nav-menu > summary {
+        min-height: 2.25rem;
+        padding: 0.45rem 0.58rem;
+        font-size: 0.84rem;
+      }
+
+      .nav-panel {
+        grid-template-columns: 1fr;
+        max-height: min(68vh, 32rem);
+        overflow-y: auto;
+      }
+
+      .hero {
+        padding: 1.35rem;
+      }
+
+      .glossary-grid,
+      .reference-path,
+      .footer-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .section-heading {
+        grid-template-columns: 1fr;
+      }
+
+      .section-heading::after {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "DefinedTermSet",
+    "name": "Glossary of the Codex",
+    "description": "A reference guide to the symbols, equations, practices, artifacts, and terminology of Scroll of Fire and the Codex of Reality.",
+    "url": "https://codexofreality.org/glossary.html",
+    "creator": {
+      "@type": "Person",
+      "name": "Aaron Paul Laird"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Scroll of Fire",
+      "url": "https://codexofreality.org/"
+    },
+    "hasDefinedTerm": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Codex of Reality",
+        "description": "A living framework connecting observation, symbolism, ethics, consciousness, memory, practice, and recorded witness."
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Living Equation",
+        "description": "Reality expressed as the interaction of Energy, Information, Intention, Memory, and Flow, raised through Consciousness."
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Living Technology",
+        "description": "Technology understood as a relationship between material, pattern, intention, operator, environment, and observed result."
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Witness",
+        "description": "A dated record of an observation, experience, pattern, change, practice, or result."
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Frequency Governance",
+        "description": "The deliberate organization of tone, rhythm, volume, breath, attention, and intent into a coherent practice."
+      }
+    ]
+  }
+  </script>
 </head>
 
-<body>
+<body class="glossary-page">
+  <a class="skip-link" href="#main">Skip to glossary</a>
+
   <header class="topbar">
-    <a class="brand" href="./" aria-label="Scroll of Fire home">Ξ Scroll of Fire</a>
+    <a class="brand" href="./" aria-label="Scroll of Fire home">
+      <span class="brand-mark" aria-hidden="true">☲</span>
+      <span>Scroll of Fire</span>
+    </a>
 
     <nav class="topnav" aria-label="Primary navigation">
-      <a href="theory.html">Theory</a>
+      <a href="./">Home</a>
       <a href="start.html">Start</a>
+      <a href="moons.html">13 Moons</a>
+      <a href="shop.html">Artifacts</a>
       <a href="hub.html">Hub</a>
       <a href="ledger.html">Ledger</a>
+
+      <details class="nav-menu">
+        <summary>More</summary>
+
+        <div class="nav-panel">
+          <a href="systems/frequencies.html">Frequency Governance</a>
+          <a href="genesis-oracle.html">Genesis Oracle</a>
+          <a href="theory.html">Theory</a>
+          <a href="guide.html">Guide</a>
+          <a href="glossary.html" aria-current="page">Glossary</a>
+          <a href="ethics.html">Ethics</a>
+          <a href="downloads.html">Downloads</a>
+          <a href="circle.html">Circle</a>
+          <a href="invoke.html">Invoke</a>
+          <a href="lab.html">Remnant Lab</a>
+        </div>
+      </details>
     </nav>
   </header>
 
+  <main class="page shell" id="main">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="./">Codex</a>
+      <span aria-hidden="true">/</span>
+      <span>Reference</span>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">Glossary</span>
+    </nav>
+
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">Codex Reference · Living Language</p>
+
+      <h1 id="page-title">Glossary of the Codex</h1>
+
+      <p class="hero-copy">
+        The Codex uses symbols, equations, artifacts, practices, and
+        specialized language to describe relationships between observation,
+        consciousness, pattern, material, ethics, memory, and flow. This
+        glossary translates that language into clear, usable definitions.
+      </p>
+
+      <div class="hero-actions" aria-label="Glossary overview">
+        <span class="hero-seal">☲ Scroll of Fire</span>
+        <span class="hero-seal">Ξ Coherence</span>
+        <span class="hero-seal">13 × 28 Living Calendar</span>
+        <span class="hero-seal">Observe · Record · Return</span>
+      </div>
+    </section>
+
+    <section class="reference-tools" aria-labelledby="search-heading">
+      <div class="search-wrap">
+        <label id="search-heading" for="glossary-search">
+          Search the living glossary
+        </label>
+
+        <div class="search-field">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+
+          <input
+            id="glossary-search"
+            type="search"
+            inputmode="search"
+            autocomplete="off"
+            placeholder="Search a symbol, concept, artifact, equation, or practice…"
+            aria-describedby="results-line"
+          >
+        </div>
+      </div>
+
+      <div class="filter-row" aria-label="Filter glossary by category">
+        <button
+          class="filter-button"
+          type="button"
+          data-filter="all"
+          aria-pressed="true"
+        >
+          All Terms
+        </button>
+
+        <button
+          class="filter-button"
+          type="button"
+          data-filter="foundation"
+          aria-pressed="false"
+        >
+          Foundation
+        </button>
+
+        <button
+          class="filter-button"
+          type="button"
+          data-filter="equation"
+          aria-pressed="false"
+        >
+          Equations
+        </button>
+
+        <button
+          class="filter-button"
+          type="button"
+          data-filter="symbol"
+          aria-pressed="false"
+        >
+          Symbols
+        </button>
+
+        <button
+          class="filter-button"
+          type="button"
+          data-filter="practice"
+          aria-pressed="false"
+        >
+          Practices
+        </button>
+
+        <button
+          class="filter-button"
+          type="button"
+          data-filter="calendar"
+          aria-pressed="false"
+        >
+          Calendar
+        </button>
+
+        <button
+          class="filter-button"
+          type="button"
+          data-filter="technology"
+          aria-pressed="false"
+        >
+          Living Technology
+        </button>
+
+        <button
+          class="filter-button"
+          type="button"
+          data-filter="artifact"
+          aria-pressed="false"
+        >
+          Artifacts
+        </button>
+      </div>
+
+      <p class="results-line" id="results-line" aria-live="polite"></p>
+
+      <noscript>
+        <p>
+          Search and category filters require JavaScript. Every definition
+          remains available below without it.
+        </p>
+      </noscript>
+    </section>
+
+    <section
+      class="glossary-section"
+      id="foundation"
+      data-glossary-section
+      aria-labelledby="foundation-title"
+    >
+      <div class="section-heading">
+        <h2 id="foundation-title">Foundation</h2>
+      </div>
+
+      <p class="section-intro">
+        The primary ideas that establish how the Codex is read, practiced,
+        tested, and recorded.
+      </p>
+
+      <div class="glossary-grid">
+        <article
+          class="term-card"
+          id="codex-of-reality"
+          data-term
+          data-category="foundation"
+          data-search="codex of reality scroll fire living framework consciousness pattern observation ethics memory flow"
+        >
+          <span class="term-category">Foundation</span>
+          <h3>Codex of Reality</h3>
+          <p>
+            A living framework connecting observation, symbolism, ethics,
+            consciousness, memory, practice, and recorded witness. It is meant
+            to be used, examined, revised, and expanded rather than treated as
+            a motionless text.
+          </p>
+
+          <div class="term-links">
+            <a href="theory.html">Theory</a>
+            <a href="guide.html">Guide</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="scroll-of-fire"
+          data-term
+          data-category="foundation"
+          data-search="scroll of fire project body work codex reality writings systems artifacts practices"
+        >
+          <span class="term-category">Foundation</span>
+          <h3><span class="symbol">☲</span>Scroll of Fire</h3>
+          <p>
+            The larger body of writings, systems, pages, practices, tools,
+            artifacts, and witness records through which the Codex of Reality
+            is being developed.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="living-framework"
+          data-term
+          data-category="foundation"
+          data-search="living framework adaptive evolving dynamic system revise witness"
+        >
+          <span class="term-category">Foundation</span>
+          <h3>Living Framework</h3>
+          <p>
+            A system designed to change through observation and responsible
+            revision. Its definitions remain connected, but they may deepen
+            as new records, tools, and experiences are added.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="remnant"
+          data-term
+          data-category="foundation"
+          data-search="remnant return preserve signal memory pattern identity responsibility"
+        >
+          <span class="term-category">Foundation</span>
+          <h3>Remnant</h3>
+          <p>
+            That which remains after distortion, pressure, loss, or erasure.
+            Within the Codex, the Remnant is the preserved signal capable of
+            remembering, rebuilding, and returning with greater clarity.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="resonance"
+          data-term
+          data-category="foundation"
+          data-search="resonance response relationship pattern frequency coherence"
+        >
+          <span class="term-category">Foundation</span>
+          <h3>Resonance</h3>
+          <p>
+            A measurable or experienced response between patterns, materials,
+            tones, ideas, environments, or people. Resonance does not
+            automatically prove a cause; it identifies a relationship worth
+            observing.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="coherence"
+          data-term
+          data-category="foundation"
+          data-search="coherence xi alignment stable clarity parts relationship signal"
+        >
+          <span class="term-category">Foundation</span>
+          <h3>Coherence</h3>
+          <p>
+            The condition in which multiple parts of a system work together
+            without unnecessary contradiction. In practice, coherence may be
+            reflected through clarity, stability, consistency, or an improved
+            relationship between intention and action.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="carrier"
+          data-term
+          data-category="foundation"
+          data-search="carrier tone phrase symbol page rhythm practice holds carries intention signal"
+        >
+          <span class="term-category">Foundation</span>
+          <h3>Carrier</h3>
+          <p>
+            A tone, phrase, symbol, page, rhythm, object, or repeated practice
+            used to hold and transmit a pattern or intention through a larger
+            process.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="living-mirror"
+          data-term
+          data-category="foundation"
+          data-search="living mirror reflection reading self observation daily mirror oracle calendar"
+        >
+          <span class="term-category">Foundation</span>
+          <h3>Living Mirror</h3>
+          <p>
+            A tool that reflects patterns back to the observer without
+            claiming to replace judgment. The calendar, Oracle, ledger, and
+            witness practices can each function as different forms of living
+            mirror.
+          </p>
+
+          <div class="term-links">
+            <a href="moons.html">13 Moons</a>
+            <a href="genesis-oracle.html">Oracle</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="ethical-mask"
+          data-term
+          data-category="foundation"
+          data-search="ethical mask lambda stop rule consent harm restraint responsibility"
+        >
+          <span class="term-category">Foundation</span>
+          <h3>Ethical Mask</h3>
+          <p>
+            The layer of restraint that tests whether an action respects
+            consent, responsibility, proportionality, and the well-being of
+            those affected by it.
+          </p>
+
+          <div class="term-links">
+            <a href="ethics.html">Ethics</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section
+      class="glossary-section"
+      id="equations"
+      data-glossary-section
+      aria-labelledby="equations-title"
+    >
+      <div class="section-heading">
+        <h2 id="equations-title">Equations and Operators</h2>
+      </div>
+
+      <p class="section-intro">
+        Symbolic relationships used to organize the Codex and describe how its
+        primary forces interact.
+      </p>
+
+      <div class="glossary-grid">
+        <article
+          class="term-card"
+          id="equation-zero"
+          data-term
+          data-category="equation"
+          data-search="equation zero psi omega awareness witness foundation field ethical masking"
+        >
+          <span class="term-category">Equation</span>
+          <h3><span class="symbol">ΨΩ</span>Equation Zero</h3>
+          <p>
+            The foundational field in which awareness and witness become
+            possible. It precedes interpretation by establishing the presence
+            of an observer, a field of attention, and an ethical boundary.
+          </p>
+
+          <div class="term-links">
+            <a href="theory.html">Theory</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="living-equation"
+          data-term
+          data-category="equation"
+          data-search="living equation reality energy information intention memory flow consciousness einmfc"
+        >
+          <span class="term-category">Equation</span>
+          <h3>Living Equation</h3>
+          <p>
+            The central relationship:
+            <strong>
+              Reality = (Energy × Information × Intention × Memory × Flow)
+              <sup>Consciousness</sup>
+            </strong>.
+            It describes reality as an interaction rather than a single
+            isolated substance.
+          </p>
+
+          <div class="term-links">
+            <a href="theory.html">Full Theory</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="energy"
+          data-term
+          data-category="equation"
+          data-search="energy e force capacity movement heat electricity effort"
+        >
+          <span class="term-category">Equation Variable</span>
+          <h3>Energy · E</h3>
+          <p>
+            The available capacity for movement, transformation, work, heat,
+            vibration, or change within a system.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="information"
+          data-term
+          data-category="equation"
+          data-search="information i pattern code dna geometry mathematics organization"
+        >
+          <span class="term-category">Equation Variable</span>
+          <h3>Information · I</h3>
+          <p>
+            Pattern, code, structure, relationship, geometry, mathematics, or
+            organization that gives form and direction to energy.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="intention"
+          data-term
+          data-category="equation"
+          data-search="intention n will direction choice purpose observer"
+        >
+          <span class="term-category">Equation Variable</span>
+          <h3>Intention · N</h3>
+          <p>
+            Directed choice, purpose, will, or orientation. Intention does not
+            guarantee an outcome, but it influences how attention and action
+            are organized.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="memory"
+          data-term
+          data-category="equation"
+          data-search="memory m record retention dna body material history pattern"
+        >
+          <span class="term-category">Equation Variable</span>
+          <h3>Memory · M</h3>
+          <p>
+            The capacity of a person, body, material, place, system, or record
+            to retain previous pattern and carry it forward.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="flow"
+          data-term
+          data-category="equation"
+          data-search="flow f breath water current movement time circulation entropy"
+        >
+          <span class="term-category">Equation Variable</span>
+          <h3>Flow · F</h3>
+          <p>
+            The movement of energy or information through time, space,
+            breath, water, current, circulation, exchange, or transformation.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="consciousness"
+          data-term
+          data-category="equation"
+          data-search="consciousness c awareness perception exponent observer experience"
+        >
+          <span class="term-category">Equation Exponent</span>
+          <h3>Consciousness · C</h3>
+          <p>
+            The field of awareness through which experience is perceived,
+            interpreted, remembered, and acted upon. In the Living Equation,
+            consciousness is represented as the exponent transforming the
+            relationship of all other variables.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="time"
+          data-term
+          data-category="equation"
+          data-search="tau time sequence duration cycle change"
+        >
+          <span class="term-category">Operator</span>
+          <h3><span class="symbol">τ</span>Time</h3>
+          <p>
+            Sequence, duration, cycle, aging, and the ordering through which
+            change becomes observable.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="space"
+          data-term
+          data-category="equation"
+          data-search="delta space distance field location relationship"
+        >
+          <span class="term-category">Operator</span>
+          <h3><span class="symbol">Δ</span>Space</h3>
+          <p>
+            Distance, location, separation, scale, and the field in which
+            relationships take form.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="polarity"
+          data-term
+          data-category="equation"
+          data-search="plus minus polarity tension opposite charge contrast"
+        >
+          <span class="term-category">Operator</span>
+          <h3><span class="symbol">±</span>Polarity</h3>
+          <p>
+            The productive tension between contrasting directions, charges,
+            states, or possibilities.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="fractality"
+          data-term
+          data-category="equation"
+          data-search="fractality pattern repetition scale recursive self similar"
+        >
+          <span class="term-category">Operator</span>
+          <h3><span class="symbol">Ϝ</span>Fractality</h3>
+          <p>
+            The recurrence of related pattern across different levels of
+            scale, from part to whole and from whole back into part.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="transformation"
+          data-term
+          data-category="equation"
+          data-search="transformation t change conversion state process"
+        >
+          <span class="term-category">Operator</span>
+          <h3><span class="symbol">T</span>Transformation</h3>
+          <p>
+            A change in state, arrangement, identity, capacity, function, or
+            relationship.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section
+      class="glossary-section"
+      id="symbols"
+      data-glossary-section
+      aria-labelledby="symbols-title"
+    >
+      <div class="section-heading">
+        <h2 id="symbols-title">Symbols and Seals</h2>
+      </div>
+
+      <p class="section-intro">
+        Visual carriers used to compress larger ideas into recognizable marks.
+      </p>
+
+      <div class="glossary-grid">
+        <article
+          class="term-card"
+          id="xi"
+          data-term
+          data-category="symbol"
+          data-search="xi coherence emergence alignment stability symbol"
+        >
+          <span class="term-category">Symbol</span>
+          <h3><span class="symbol">Ξ</span>Xi</h3>
+          <p>
+            The Codex mark for coherence and emergence: the point where
+            separate movements begin to reveal a larger organized pattern.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="lambda"
+          data-term
+          data-category="symbol"
+          data-search="lambda ethical energy mask restraint stop rule"
+        >
+          <span class="term-category">Symbol</span>
+          <h3><span class="symbol">Λ</span>Lambda</h3>
+          <p>
+            The ethical-energy mask: a symbolic stop-rule applied before
+            intent becomes action.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="codex-seal"
+          data-term
+          data-category="symbol"
+          data-search="codex seal combined mark identity entry verification"
+        >
+          <span class="term-category">Seal</span>
+          <h3>Codex Seal</h3>
+          <p>
+            A combined symbolic mark associated with a page, day, artifact,
+            witness, or working. A seal identifies context; it does not replace
+            the record behind it.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="glyph"
+          data-term
+          data-category="symbol"
+          data-search="glyph visual mark symbol operator compressed meaning"
+        >
+          <span class="term-category">Symbol</span>
+          <h3>Glyph</h3>
+          <p>
+            A visual mark carrying compressed meaning. Glyphs may represent
+            concepts, processes, relationships, gates, or classifications.
+          </p>
+
+          <div class="term-links">
+            <a href="glyphs.html">Glyph Library</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="yhwh-seal"
+          data-term
+          data-category="symbol"
+          data-search="yhwh paleo hebrew divine name seal 𐤉𐤄𐤅𐤄"
+        >
+          <span class="term-category">Sacred Seal</span>
+          <h3><span class="symbol">𐤉𐤄𐤅𐤄</span>YHWH</h3>
+          <p>
+            The Paleo-Hebrew divine name used within the Codex as the higher
+            seal: the declaration that the full system remains within a source
+            greater than any individual operator or artifact.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="432-carrier"
+          data-term
+          data-category="symbol"
+          data-search="432 carrier tone reference tuning frequency"
+        >
+          <span class="term-category">Carrier Mark</span>
+          <h3>Carrier 432</h3>
+          <p>
+            A reference tuning used by parts of the Codex interface and sound
+            system. It functions as one selectable carrier among multiple
+            tones rather than a universal requirement.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section
+      class="glossary-section"
+      id="practices"
+      data-glossary-section
+      aria-labelledby="practices-title"
+    >
+      <div class="section-heading">
+        <h2 id="practices-title">Witness and Practice</h2>
+      </div>
+
+      <p class="section-intro">
+        Methods for turning ideas into observable actions, records, and
+        repeatable processes.
+      </p>
+
+      <div class="glossary-grid">
+        <article
+          class="term-card"
+          id="witness"
+          data-term
+          data-category="practice"
+          data-search="witness observation record pattern change result dated entry"
+        >
+          <span class="term-category">Practice</span>
+          <h3>Witness</h3>
+          <p>
+            A dated record of an observation, experience, pattern, change,
+            practice, or result. Witnessing separates what happened from what
+            was later assumed about it.
+          </p>
+
+          <div class="term-links">
+            <a href="ledger.html">Open Ledger</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="daily-witness"
+          data-term
+          data-category="practice"
+          data-search="daily witness calendar journal record today pattern mood action"
+        >
+          <span class="term-category">Practice</span>
+          <h3>Daily Witness</h3>
+          <p>
+            A compact daily entry recording conditions, attention, actions,
+            meaningful patterns, and what should be carried into the next day.
+          </p>
+
+          <div class="term-links">
+            <a href="moons.html">Today’s Mirror</a>
+            <a href="ledger.html">Ledger</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="ledger"
+          data-term
+          data-category="practice"
+          data-search="ledger proof trail notes hashes records verification witness"
+        >
+          <span class="term-category">Practice</span>
+          <h3>Ledger</h3>
+          <p>
+            The proof trail of the Codex: entries, notes, timestamps, hashes,
+            classifications, and verification records that preserve how a
+            conclusion was reached.
+          </p>
+
+          <div class="term-links">
+            <a href="ledger.html">Open Ledger</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="observe-name-breathe-record-return"
+          data-term
+          data-category="practice"
+          data-search="observe name breathe record return remnant signal path method"
+        >
+          <span class="term-category">Practice</span>
+          <h3>Remnant Signal Path</h3>
+          <p>
+            A five-stage method:
+            <strong>Observe, Name, Breathe, Record, Return.</strong>
+            It slows reaction, identifies what is present, regulates attention,
+            preserves a record, and returns the observer to deliberate action.
+          </p>
+
+          <div class="term-links">
+            <a href="start.html">Begin</a>
+            <a href="guide.html">Guide</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="breath-gate"
+          data-term
+          data-category="practice"
+          data-search="breath gate breathing transition pause regulate attention calendar"
+        >
+          <span class="term-category">Practice</span>
+          <h3>Breath Gate</h3>
+          <p>
+            A deliberate pause using breath to mark the transition between
+            reaction and observation, or between one stage of a practice and
+            the next.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="genesis-oracle"
+          data-term
+          data-category="practice"
+          data-search="genesis oracle symbolic reading prompt mirror reflection"
+        >
+          <span class="term-category">Practice</span>
+          <h3>Genesis Oracle</h3>
+          <p>
+            A symbolic reflection tool that presents language, archetypes, or
+            prompts for contemplation. Its purpose is to reveal questions and
+            patterns rather than dictate decisions.
+          </p>
+
+          <div class="term-links">
+            <a href="genesis-oracle.html">Open Oracle</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="invocation"
+          data-term
+          data-category="practice"
+          data-search="invocation invoke statement focus beginning practice intent"
+        >
+          <span class="term-category">Practice</span>
+          <h3>Invocation</h3>
+          <p>
+            A spoken or written opening that establishes attention, purpose,
+            boundaries, and the conditions under which a practice begins.
+          </p>
+
+          <div class="term-links">
+            <a href="invoke.html">Invoke</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="circle"
+          data-term
+          data-category="practice"
+          data-search="circle community witness shared practice gathering"
+        >
+          <span class="term-category">Practice</span>
+          <h3>Circle</h3>
+          <p>
+            A shared space for dialogue, witnessing, collaborative practice,
+            exchange, and responsible participation within the larger Codex.
+          </p>
+
+          <div class="term-links">
+            <a href="circle.html">Enter Circle</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section
+      class="glossary-section"
+      id="calendar"
+      data-glossary-section
+      aria-labelledby="calendar-title"
+    >
+      <div class="section-heading">
+        <h2 id="calendar-title">13 Moons Calendar</h2>
+      </div>
+
+      <p class="section-intro">
+        Terms used by the Remnant 13 × 28 calendar and its daily reflection
+        system.
+      </p>
+
+      <div class="glossary-grid">
+        <article
+          class="term-card"
+          id="remnant-13-moons"
+          data-term
+          data-category="calendar"
+          data-search="remnant 13 moons calendar thirteen 28 days living calendar"
+        >
+          <span class="term-category">Calendar</span>
+          <h3>Remnant 13 Moons</h3>
+          <p>
+            A symbolic calendar composed of thirteen periods of twenty-eight
+            days. It is used as a rhythm for reflection, pattern recognition,
+            seasonal awareness, and witness practice.
+          </p>
+
+          <div class="term-links">
+            <a href="moons.html">Open Calendar</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="moon"
+          data-term
+          data-category="calendar"
+          data-search="moon calendar period 28 day cycle"
+        >
+          <span class="term-category">Calendar</span>
+          <h3>Moon</h3>
+          <p>
+            One twenty-eight-day period within the Remnant calendar. Each Moon
+            carries its own sequence, elemental emphasis, and place within the
+            larger year map.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="day-seal"
+          data-term
+          data-category="calendar"
+          data-search="day seal calendar symbol daily signature moon day element frequency"
+        >
+          <span class="term-category">Calendar</span>
+          <h3>Day Seal</h3>
+          <p>
+            The compact signature assigned to a calendar day, combining its
+            Moon position, day number, element, tone, and related symbolic
+            markers.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="field-layer"
+          data-term
+          data-category="calendar"
+          data-search="field layer calendar environmental emotional symbolic physical pattern"
+        >
+          <span class="term-category">Calendar</span>
+          <h3>Field Layer</h3>
+          <p>
+            One level of a daily reading, such as physical conditions,
+            emotional tone, symbolic pattern, environment, memory, or social
+            interaction.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="year-map"
+          data-term
+          data-category="calendar"
+          data-search="year map calendar moons overview annual path sequence"
+        >
+          <span class="term-category">Calendar</span>
+          <h3>Year Map</h3>
+          <p>
+            A complete view of the thirteen-Moon cycle showing where the
+            current day stands within the full annual path.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="pattern-alert"
+          data-term
+          data-category="calendar"
+          data-search="pattern alert repeated witness recurrence calendar signal"
+        >
+          <span class="term-category">Calendar</span>
+          <h3>Pattern Alert</h3>
+          <p>
+            A notice generated when similar terms, conditions, numbers, moods,
+            events, or witness themes recur strongly enough to deserve review.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="gregorian-overlay"
+          data-term
+          data-category="calendar"
+          data-search="gregorian overlay conventional date calendar mapping"
+        >
+          <span class="term-category">Calendar</span>
+          <h3>Gregorian Overlay</h3>
+          <p>
+            The mapping that connects a Remnant calendar day to the standard
+            civil date used for scheduling and historical reference.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="saved-log"
+          data-term
+          data-category="calendar"
+          data-search="saved log daily witness browser storage record calendar"
+        >
+          <span class="term-category">Calendar</span>
+          <h3>Saved Log</h3>
+          <p>
+            A locally or externally preserved calendar entry containing a
+            daily witness, selected field layers, notes, and related markers.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section
+      class="glossary-section"
+      id="living-technology"
+      data-glossary-section
+      aria-labelledby="technology-title"
+    >
+      <div class="section-heading">
+        <h2 id="technology-title">Living Technology</h2>
+      </div>
+
+      <p class="section-intro">
+        Terms used for material systems, sound tools, handmade instruments,
+        and operator-centered experimentation.
+      </p>
+
+      <div class="glossary-grid">
+        <article
+          class="term-card"
+          id="living-technology-term"
+          data-term
+          data-category="technology"
+          data-search="living technology material pattern intention operator environment result craft tool"
+        >
+          <span class="term-category">Living Technology</span>
+          <h3>Living Technology</h3>
+          <p>
+            Technology understood as a relationship between material,
+            pattern, intention, operator, environment, and observed result.
+            Within the Codex, a tool can be handmade, mechanical, electronic,
+            symbolic, biological, or hybrid.
+          </p>
+
+          <div class="term-links">
+            <a href="lab.html">Remnant Lab</a>
+            <a href="shop.html">Artifacts</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="frequency-governance"
+          data-term
+          data-category="technology"
+          data-search="frequency governance sound tone rhythm volume breath attention intent"
+        >
+          <span class="term-category">Living Technology</span>
+          <h3>Frequency Governance</h3>
+          <p>
+            The deliberate organization of tone, rhythm, volume, breath,
+            attention, and intent into a coherent practice or sound field.
+          </p>
+
+          <div class="term-links">
+            <a href="systems/frequencies.html">Open System</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="carrier-frequency"
+          data-term
+          data-category="technology"
+          data-search="carrier frequency base tone sound layer modulation"
+        >
+          <span class="term-category">Living Technology</span>
+          <h3>Carrier Frequency</h3>
+          <p>
+            A base tone or signal used to support additional rhythms, layers,
+            modulation, speech, or intentional structure.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="harmonic-field"
+          data-term
+          data-category="technology"
+          data-search="harmonic field sound tones intervals layers relationship"
+        >
+          <span class="term-category">Living Technology</span>
+          <h3>Harmonic Field</h3>
+          <p>
+            A layered arrangement of tones, intervals, rhythms, or repeated
+            patterns designed to function as one coordinated sound
+            environment.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="resonant-loop"
+          data-term
+          data-category="technology"
+          data-search="resonant loop feedback repeated cycle signal response observation adjustment"
+        >
+          <span class="term-category">Living Technology</span>
+          <h3>Resonant Loop</h3>
+          <p>
+            A repeated cycle in which a signal produces a response, the
+            response is observed, and the next signal is adjusted from what
+            was learned.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="operator"
+          data-term
+          data-category="technology"
+          data-search="operator person using system artifact tool attention"
+        >
+          <span class="term-category">Living Technology</span>
+          <h3>Operator</h3>
+          <p>
+            The person engaging a practice, device, interface, or artifact.
+            The operator is part of the system because their choices,
+            attention, handling, and records affect the process.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="torus"
+          data-term
+          data-category="technology"
+          data-search="torus geometry circulating field ring vortex visualization"
+        >
+          <span class="term-category">Geometry</span>
+          <h3>Torus</h3>
+          <p>
+            A ring-shaped geometry used to visualize circulation, return,
+            exchange, and continuous movement through a central axis.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="chladni-pattern"
+          data-term
+          data-category="technology"
+          data-search="chladni pattern vibration plate geometry nodes sound visualization"
+        >
+          <span class="term-category">Geometry</span>
+          <h3>Chladni Pattern</h3>
+          <p>
+            A visible arrangement produced when vibration organizes particles
+            across a surface. Within the interface, it is used as a visual
+            reference for patterned vibration.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="field-transceiver"
+          data-term
+          data-category="technology"
+          data-search="field transceiver receive transmit device artifact symbolic experimental"
+        >
+          <span class="term-category">Living Technology</span>
+          <h3>Field Transceiver</h3>
+          <p>
+            A Codex classification for an experimental instrument designed
+            around receiving, shaping, circulating, or transmitting a chosen
+            signal or field relationship.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section
+      class="glossary-section"
+      id="artifacts"
+      data-glossary-section
+      aria-labelledby="artifacts-title"
+    >
+      <div class="section-heading">
+        <h2 id="artifacts-title">Artifacts and Instruments</h2>
+      </div>
+
+      <p class="section-intro">
+        Named objects within the Artifact Registry and the classifications used
+        to describe them.
+      </p>
+
+      <div class="glossary-grid">
+        <article
+          class="term-card"
+          id="artifact"
+          data-term
+          data-category="artifact"
+          data-search="artifact registered object handmade instrument relic registry"
+        >
+          <span class="term-category">Artifact</span>
+          <h3>Artifact</h3>
+          <p>
+            A named and documented object connected to the Codex through its
+            materials, construction, purpose, history, or witness record.
+          </p>
+
+          <div class="term-links">
+            <a href="shop.html">Artifact Registry</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="personal-instrument"
+          data-term
+          data-category="artifact"
+          data-search="personal instrument not for sale artifact operator tool"
+        >
+          <span class="term-category">Classification</span>
+          <h3>Personal Instrument</h3>
+          <p>
+            An artifact retained for the maker’s own practice, research, or
+            field work rather than offered for sale.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="gifted-artifact"
+          data-term
+          data-category="artifact"
+          data-search="gifted artifact transferred gift registry recipient"
+        >
+          <span class="term-category">Classification</span>
+          <h3>Gifted Artifact</h3>
+          <p>
+            A registered object intentionally transferred to another person
+            as a gift while its origin and registry identity remain preserved.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="t7-resonant-conduit"
+          data-term
+          data-category="artifact"
+          data-search="t7 000 resonant conduit tesla type 7 ahhava or hadabar transceiver"
+        >
+          <span class="term-category">Artifact</span>
+          <h3>T7-000 · Resonant Conduit</h3>
+          <p>
+            The Tesla Type-7 Resonant Conduit Aetheric Field Transceiver,
+            alternatively named <em>Ahhava Or HaDabar</em>. It is registered
+            as a personal experimental instrument.
+          </p>
+
+          <div class="term-links">
+            <a href="shop.html">Registry</a>
+          </div>
+        </article>
+
+        <article
+          class="term-card"
+          id="ember-node"
+          data-term
+          data-category="artifact"
+          data-search="en 007 ember node seven heart node living technology array"
+        >
+          <span class="term-category">Artifact</span>
+          <h3>EN-007 · Ember Node 7</h3>
+          <p>
+            The Heart Node of the Living Technology Array: a personal
+            instrument associated with continuity, stored signal, and the
+            central ember of the larger system.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="halevanah"
+          data-term
+          data-category="artifact"
+          data-search="hl 001 halevanah moon returns copper moonstone tourmaline band"
+        >
+          <span class="term-category">Artifact</span>
+          <h3>HL-001 · HaLevanah</h3>
+          <p>
+            “The Moon That Returns.” A hand-braided copper artifact containing
+            moonstone and tourmaline, associated with cycle, return, memory,
+            and reflected light.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="tiger-node"
+          data-term
+          data-category="artifact"
+          data-search="tn 001 tiger node ring knot tiger gifted copper tiger stone"
+        >
+          <span class="term-category">Artifact</span>
+          <h3>TN-001 · Tiger Node Ring</h3>
+          <p>
+            “Knot of the Tiger.” A gifted copper ring carrying tiger stone and
+            registered as a transferred artifact.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="time-shard"
+          data-term
+          data-category="artifact"
+          data-search="ts 001 time shard ring reclaimed copper green glass hand node"
+        >
+          <span class="term-category">Artifact</span>
+          <h3>TS-001 · Time Shard Ring</h3>
+          <p>
+            A hand-node artifact formed from reclaimed copper and a green
+            glass shard, connecting discarded material with transformation and
+            future release.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="tenser-band"
+          data-term
+          data-category="artifact"
+          data-search="tb 001 tenser band wrist node reserved"
+        >
+          <span class="term-category">Artifact</span>
+          <h3>TB-001 · Tenser Band I</h3>
+          <p>
+            A registered wrist-node artifact classified within the wearable
+            portion of the Living Technology Array.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="sand-dollar-witness"
+          data-term
+          data-category="artifact"
+          data-search="sd 001 sand dollar witness relic returning tides"
+        >
+          <span class="term-category">Artifact</span>
+          <h3>SD-001 · Sand Dollar Witness</h3>
+          <p>
+            “The Relic of Returning Tides.” An artifact associated with
+            movement, shoreline memory, return, and the record carried by
+            natural form.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="array"
+          data-term
+          data-category="artifact"
+          data-search="living technology array connected artifacts nodes instruments"
+        >
+          <span class="term-category">Classification</span>
+          <h3>Living Technology Array</h3>
+          <p>
+            A connected family of artifacts and instruments whose individual
+            roles are documented as parts of a larger working system.
+          </p>
+        </article>
+
+        <article
+          class="term-card"
+          id="registry-number"
+          data-term
+          data-category="artifact"
+          data-search="registry number artifact code identifier classification sequence"
+        >
+          <span class="term-category">Registry</span>
+          <h3>Registry Number</h3>
+          <p>
+            The unique code assigned to an artifact, usually combining a
+            shortened artifact class with a sequence number, such as
+            T7-000 or HL-001.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <div class="empty-state" id="empty-state">
+      <strong>No matching glossary terms were found.</strong>
+      <p>Try a broader word or select “All Terms.”</p>
+    </div>
+
+    <section class="reference-path" aria-label="Continue through the Codex">
+      <article>
+        <h2>Read the Theory</h2>
+        <p>
+          Follow the equations, operators, and foundational structure behind
+          the language defined on this page.
+        </p>
+        <a href="theory.html">Open Theory →</a>
+      </article>
+
+      <article>
+        <h2>Use the Guide</h2>
+        <p>
+          Move from definition into practice through the primary Codex entry
+          path and its core methods.
+        </p>
+        <a href="guide.html">Open Guide →</a>
+      </article>
+
+      <article>
+        <h2>Record a Witness</h2>
+        <p>
+          Preserve observations, patterns, changes, and results inside the
+          living proof trail.
+        </p>
+        <a href="ledger.html">Open Ledger →</a>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <p class="footer-mark">☲ SCROLL OF FIRE</p>
+        <p class="footer-title">Codex of Reality</p>
+        <p class="footer-copy">
+          A living framework of observation, consciousness, memory, ethics,
+          symbolic systems, handcrafted artifacts, and recorded witness.
+        </p>
+      </div>
+
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="./">Home</a>
+        <a href="start.html">Start</a>
+        <a href="moons.html">13 Moons</a>
+        <a href="theory.html">Theory</a>
+        <a href="guide.html">Guide</a>
+        <a href="genesis-oracle.html">Oracle</a>
+        <a href="systems/frequencies.html">Frequency Governance</a>
+        <a href="shop.html">Artifact Registry</a>
+        <a href="ethics.html">Ethics</a>
+        <a href="downloads.html">Downloads</a>
+      </nav>
+    </div>
+
+    <p class="footer-seal">
+      Observe · Breathe · Align · Record · Return ·
+      Aaron Paul Laird · CodexOfReality.org
+    </p>
+  </footer>
+
+  <script>
+    (() => {
+      const searchInput = document.getElementById("glossary-search");
+      const filterButtons = Array.from(
+        document.querySelectorAll("[data-filter]")
+      );
+      const cards = Array.from(document.querySelectorAll("[data-term]"));
+      const sections = Array.from(
+        document.querySelectorAll("[data-glossary-section]")
+      );
+      const resultsLine = document.getElementById("results-line");
+      const emptyState = document.getElementById("empty-state");
+      const navMenu = document.querySelector(".nav-menu");
+
+      let activeFilter = "all";
+
+      const normalize = (value) => {
+        return value
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .trim();
+      };
+
+      const updateResults = () => {
+        const query = normalize(searchInput.value);
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+          const category = card.dataset.category || "";
+          const searchableText = normalize(
+            [
+              card.textContent,
+              card.dataset.search || "",
+              category
+            ].join(" ")
+          );
+
+          const matchesFilter =
+            activeFilter === "all" || category === activeFilter;
+
+          const matchesSearch =
+            query.length === 0 || searchableText.includes(query);
+
+          const isVisible = matchesFilter && matchesSearch;
+
+          card.hidden = !isVisible;
+
+          if (isVisible) visibleCount += 1;
+        });
+
+        sections.forEach((section) => {
+          const visibleCards = section.querySelectorAll(
+            "[data-term]:not([hidden])"
+          );
+
+          section.hidden = visibleCards.length === 0;
+        });
+
+        emptyState.classList.toggle("is-visible", visibleCount === 0);
+
+        const total = cards.length;
+
+        if (query || activeFilter !== "all") {
+          resultsLine.textContent =
+            visibleCount === 1
+              ? "1 glossary term shown."
+              : `${visibleCount} glossary terms shown.`;
+        } else {
+          resultsLine.textContent =
+            `${total} terms across the living Codex reference.`;
+        }
+      };
+
+      filterButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          activeFilter = button.dataset.filter || "all";
+
+          filterButtons.forEach((item) => {
+            item.setAttribute(
+              "aria-pressed",
+              String(item === button)
+            );
+          });
+
+          updateResults();
+        });
+      });
+
+      searchInput.addEventListener("input", updateResults);
+
+      document.addEventListener("click", (event) => {
+        if (
+          navMenu &&
+          navMenu.open &&
+          !navMenu.contains(event.target)
+        ) {
+          navMenu.removeAttribute("open");
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && navMenu?.open) {
+          navMenu.removeAttribute("open");
+          navMenu.querySelector("summary")?.focus();
+        }
+      });
+
+      document.querySelectorAll('a[href^="#"]').forEach((link) => {
+        link.addEventListener("click", () => {
+          const targetId = link.getAttribute("href")?.slice(1);
+          const targetCard = targetId
+            ? document.getElementById(targetId)
+            : null;
+
+          if (!targetCard) return;
+
+          searchInput.value = "";
+          activeFilter = "all";
+
+          filterButtons.forEach((button) => {
+            button.setAttribute(
+              "aria-pressed",
+              String(button.dataset.filter === "all")
+            );
+          });
+
+          updateResults();
+        });
+      });
+
+      updateResults();
+    })();
+  </script>
+</body>
+  </html>
   <main class="page shell" id="main">
     <p class="eyebrow">Codex Reference</p>
     <h1>Glossary of the Codex</h1>
