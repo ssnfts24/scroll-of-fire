@@ -1,0 +1,66 @@
+/*
+  Scroll of Fire — Mobile Artifact Image Fix
+  Load this stylesheet LAST on index.html and shop.html.
+*/
+
+@media(max-width:760px){
+  .artifact-strip,
+  .artifact-grid,
+  .registry-grid,
+  .shop-grid,
+  [data-artifact-grid]{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:.7rem !important;
+  }
+
+  .artifact-card-mini,
+  .artifact-card,
+  .registry-card,
+  .shop-card,
+  [data-artifact-card]{
+    min-width:0 !important;
+    overflow:hidden !important;
+  }
+
+  /*
+    Hard cap prevents tall portrait graphics from filling the phone screen.
+    contain preserves text such as COMING SOON and registry numbers.
+  */
+  .artifact-card-mini img,
+  .artifact-card img,
+  .registry-card img,
+  .shop-card img,
+  [data-artifact-card] img,
+  img[data-artifact-image]{
+    display:block !important;
+    width:100% !important;
+    height:190px !important;
+    min-height:0 !important;
+    max-height:190px !important;
+    aspect-ratio:auto !important;
+    object-fit:contain !important;
+    object-position:center !important;
+    padding:.35rem !important;
+    background:#05070d !important;
+  }
+}
+
+@media(max-width:430px){
+  .artifact-strip,
+  .artifact-grid,
+  .registry-grid,
+  .shop-grid,
+  [data-artifact-grid]{
+    gap:.6rem !important;
+  }
+
+  .artifact-card-mini img,
+  .artifact-card img,
+  .registry-card img,
+  .shop-card img,
+  [data-artifact-card] img,
+  img[data-artifact-image]{
+    height:170px !important;
+    max-height:170px !important;
+  }
+}

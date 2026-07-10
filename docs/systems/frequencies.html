@@ -3,150 +3,421 @@
 <head>
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
+<<<<<<< HEAD
     if (location.hostname === "github.com") {
       const b = document.querySelector("base");
       if (b) b.remove();
+=======
+    if (location.hostname !== "ssnfts24.github.io") {
+      var _b = document.querySelector("base");
+      if (_b) _b.setAttribute("href", "/");
+>>>>>>> origin/main
     }
   </script>
 
   <meta charset="utf-8">
-  <title>Frequency Governance — Scroll of Fire</title>
+  <title>Frequency Governance — Scroll of Fire | Codex Sound Observatory</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Frequency Governance is a Scroll of Fire sound observatory for quick intent paths, harmonic fields, Paleo-Hebrew Name presets, T-7 practice, Lift Loop training, sacred geometry visuals, session recording, and private witness logs.">
+  <meta name="description" content="Frequency Governance is the Scroll of Fire sound observatory by Aaron Paul Laird: intent paths, harmonic fields, Paleo-Hebrew Name presets, T-7 practice, Lift Loop training, sacred geometry visuals, audio boost, session recording, and private witness logs.">
+  <meta name="keywords" content="Frequency Governance, Scroll of Fire, Codex of Reality, Aaron Paul Laird, sound observatory, frequency tools, 432 Hz, 528 Hz, 369 Hz, 963 Hz, Schumann resonance, T-7 Resonant Conduit, Lift Loop, Paleo Hebrew Name Path, sacred geometry, witness journal">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="creator" content="Aaron Paul Laird">
   <meta name="publisher" content="Scroll of Fire">
-  <meta name="robots" content="index, follow">
+  <meta name="application-name" content="Frequency Governance">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
   <meta name="theme-color" content="#05070d">
-  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/frequency-governance.html">
+  <link rel="canonical" href="https://codexofreality.org/systems/frequencies.html">
 
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Scroll of Fire">
+  <meta property="og:site_name" content="Codex of Reality">
   <meta property="og:title" content="Frequency Governance — Scroll of Fire">
   <meta property="og:description" content="A living sound observatory for intent paths, harmonic presets, T-7 field practice, Lift Loop training, geometry visuals, and witness logs.">
-  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/frequency-governance.html">
-  <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
+  <meta property="og:url" content="https://codexofreality.org/systems/frequencies.html">
+  <meta property="og:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
+  <meta property="og:image:alt" content="Scroll of Fire Frequency Governance sound observatory">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Frequency Governance — Scroll of Fire">
   <meta name="twitter:description" content="Quick sound paths, sacred geometry visuals, T-7 field practice, Lift Loop training, and private witness logs.">
-  <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
+  <meta name="twitter:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
 
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/frequency-governance.css">
 
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@graph":[
+      {
+        "@type":"WebPage",
+        "@id":"https://codexofreality.org/systems/frequencies.html#webpage",
+        "url":"https://codexofreality.org/systems/frequencies.html",
+        "name":"Frequency Governance — Scroll of Fire",
+        "headline":"Frequency Governance — Codex Sound Observatory",
+        "description":"A Scroll of Fire sound observatory for intent paths, harmonic presets, T-7 field practice, Lift Loop training, sacred geometry visuals, session recording, and private witness logs.",
+        "creator":{"@type":"Person","name":"Aaron Paul Laird","alternateName":"Scribe of Circuits"},
+        "publisher":{"@type":"Organization","name":"Scroll of Fire","alternateName":"Codex of Reality","url":"https://codexofreality.org/"},
+        "inLanguage":"en-US"
+      },
+      {
+        "@type":"SoftwareApplication",
+        "name":"Frequency Governance",
+        "applicationCategory":"MultimediaApplication",
+        "operatingSystem":"Web Browser",
+        "description":"A browser-based sound and visual observatory for structured listening, symbolic reflection, and private witness journaling.",
+        "creator":{"@type":"Person","name":"Aaron Paul Laird"}
+      }
+    ]
+  }
+  </script>
+
   <style>
-    .fg-hero {
-      min-height: 72vh;
-      position: relative;
-      overflow: hidden;
-      padding-bottom: 2rem;
+    :root{
+      --fg-bg:#05070d;
+      --fg-panel:rgba(8,13,24,.78);
+      --fg-panel-2:rgba(255,255,255,.045);
+      --fg-ink:#f7efe0;
+      --fg-muted:rgba(247,239,224,.72);
+      --fg-soft:rgba(247,239,224,.55);
+      --fg-gold:#f3c97a;
+      --fg-cyan:#7af3ff;
+      --fg-ember:#ff9a5f;
+      --fg-red:#ff6d6d;
+      --fg-line:rgba(255,255,255,.12);
+      --fg-line-gold:rgba(243,201,122,.28);
+      --fg-radius:28px;
+      --fg-shadow:0 30px 90px rgba(0,0,0,.48);
     }
 
-    .fg-hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
+    html{scroll-behavior:smooth}
+
+    body{
       background:
-        radial-gradient(circle at 16% 18%, rgba(122,243,255,0.20), transparent 34%),
-        radial-gradient(circle at 82% 18%, rgba(243,201,122,0.18), transparent 34%),
-        radial-gradient(circle at 50% 92%, rgba(255,255,255,0.07), transparent 44%);
+        radial-gradient(circle at 12% 0%,rgba(122,243,255,.09),transparent 30rem),
+        radial-gradient(circle at 86% 12%,rgba(243,201,122,.12),transparent 34rem),
+        radial-gradient(circle at 50% 105%,rgba(255,154,95,.07),transparent 38rem),
+        var(--fg-bg);
+      color:var(--fg-ink);
+      overflow-x:hidden;
     }
 
-    .fg-hero > * {
-      position: relative;
-      z-index: 1;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-20%;
+      pointer-events:none;
+      z-index:0;
+      background:
+        radial-gradient(circle at 20% 25%,rgba(122,243,255,.08),transparent 28rem),
+        radial-gradient(circle at 80% 20%,rgba(243,201,122,.11),transparent 30rem),
+        radial-gradient(circle at 50% 85%,rgba(255,154,95,.08),transparent 34rem);
+      filter:blur(10px);
+      animation:fgFieldDrift 24s ease-in-out infinite alternate;
     }
 
-    .fg-top-nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      justify-content: center;
-      margin-top: 1rem;
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+      background-image:
+        linear-gradient(rgba(243,201,122,.055) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(122,243,255,.04) 1px,transparent 1px);
+      background-size:86px 86px;
+      mask-image:radial-gradient(circle at center,black,transparent 72%);
+      opacity:.28;
     }
 
-    .fg-top-nav a {
-      text-decoration: none;
-      padding: 0.58rem 0.8rem;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.04);
-      color: inherit;
-      font-weight: 800;
-      font-size: 0.92rem;
+    .fg-hero,
+    .fg-shell,
+    .mobile-dock,
+    .fg-footer{position:relative;z-index:1}
+
+    .fg-hero{
+      min-height:78vh;
+      position:relative;
+      overflow:hidden;
+      padding:1rem clamp(1rem,4vw,2rem) 2.8rem;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      isolation:isolate;
+    }
+
+    .fg-hero::before,
+    .fg-hero::after{
+      content:"";
+      position:absolute;
+      inset:-20%;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .fg-hero::before{
+      background:
+        radial-gradient(circle at 16% 18%, rgba(122,243,255,0.22), transparent 28rem),
+        radial-gradient(circle at 82% 18%, rgba(243,201,122,0.20), transparent 30rem),
+        radial-gradient(circle at 50% 92%, rgba(255,255,255,0.07), transparent 34rem);
+      animation:fgAura 16s ease-in-out infinite alternate;
+    }
+
+    .fg-hero::after{
+      background:
+        conic-gradient(from 180deg at 50% 50%,transparent,rgba(122,243,255,.08),transparent,rgba(243,201,122,.09),transparent);
+      opacity:.4;
+      filter:blur(18px);
+      animation:fgRotate 30s linear infinite;
+    }
+
+    .fg-hero > *{position:relative;z-index:1}
+
+    .fg-crumbs{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:.45rem;
+      align-items:center;
+      margin:0 auto 1rem;
+      color:var(--fg-muted);
+      font-size:.92rem;
+    }
+
+    .fg-crumbs a{
+      color:var(--fg-gold);
+      text-decoration:none;
+      font-weight:800;
+    }
+
+    .fg-crumbs a:hover,
+    .fg-crumbs a:focus-visible{text-decoration:underline;outline:none}
+
+    .fg-hero h1{
+      margin:.25rem 0 .8rem;
+      font-size:clamp(3rem,8vw,7.4rem);
+      line-height:.95;
+      letter-spacing:-.06em;
+      text-shadow:0 0 52px rgba(122,243,255,.12);
+    }
+
+    .fg-hero .hero-copy{
+      width:min(980px,100%);
+      margin:0 auto;
+      color:var(--fg-muted);
+      font-size:clamp(1.05rem,2vw,1.28rem);
+    }
+
+    .notice{
+      width:min(1050px,100%);
+      margin:1.2rem auto 0;
+      padding:1rem 1.1rem;
+      border:1px solid rgba(243,201,122,.25);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 12% 0%,rgba(243,201,122,.1),transparent 25rem),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+      color:var(--fg-muted);
+      box-shadow:0 18px 60px rgba(0,0,0,.22);
+      backdrop-filter:blur(14px);
+    }
+
+    .notice strong{color:var(--fg-gold)}
+
+    .hero-pills{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.55rem;
+      justify-content:center;
+      width:min(1100px,100%);
+      margin:1.25rem auto 0;
+    }
+
+    .hero-pills span{
+      padding:.48rem .72rem;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      color:var(--fg-muted);
+      font-weight:800;
+      font-size:.86rem;
+    }
+
+    .fg-top-nav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.5rem;
+      justify-content:center;
+      margin-top:1rem;
+    }
+
+    .fg-top-nav a{
+      text-decoration:none;
+      padding:.62rem .86rem;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      color:inherit;
+      font-weight:900;
+      font-size:.92rem;
+      transition:transform .18s ease,background .18s ease,border-color .18s ease;
     }
 
     .fg-top-nav a:hover,
-    .fg-top-nav a:focus-visible {
-      background: rgba(122,243,255,0.09);
-      outline: none;
+    .fg-top-nav a:focus-visible{
+      transform:translateY(-2px);
+      background:rgba(122,243,255,.09);
+      border-color:rgba(122,243,255,.28);
+      outline:none;
     }
 
-    .launch-panel {
-      margin-top: 1.3rem;
-      display: grid;
-      grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
-      gap: 1rem;
-      align-items: stretch;
+    .use-order{text-align:center}
+
+    .fg-shell{
+      width:min(1220px,calc(100% - 2rem));
+      margin-inline:auto;
+    }
+
+    .fg-shell section{
+      margin-block:1rem;
     }
 
     .quick-card,
     .sacred-name,
     .intent-card,
     .sound-card,
-    .audio-card {
-      position: relative;
-      overflow: hidden;
-      padding: 1rem;
-      border-radius: 28px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background:
-        radial-gradient(circle at 10% 0%, rgba(243,201,122,0.10), transparent 36%),
-        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
+    .audio-card,
+    .card{
+      box-shadow:var(--fg-shadow);
     }
 
+    .launch-panel{
+      display:grid;
+      grid-template-columns:minmax(0,1.12fr) minmax(320px,.88fr);
+      gap:1rem;
+      align-items:stretch;
+      margin-top:1.3rem;
+    }
+
+    .quick-card,
+    .sacred-name,
+    .intent-card,
+    .sound-card,
+    .audio-card,
+    .codex-map,
+    .ritual-card{
+      position:relative;
+      overflow:hidden;
+      padding:1rem;
+      border-radius:var(--fg-radius);
+      border:1px solid var(--fg-line);
+      background:
+        radial-gradient(circle at 10% 0%,rgba(243,201,122,.1),transparent 36%),
+        radial-gradient(circle at 90% 100%,rgba(122,243,255,.075),transparent 38%),
+        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.018));
+    }
+
+    .quick-card::before,
+    .sacred-name::before,
+    .intent-card::before,
+    .sound-card::before,
+    .audio-card::before,
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 10% 0%,rgba(243,201,122,.1),transparent 32%),
+        radial-gradient(circle at 100% 100%,rgba(122,243,255,.08),transparent 36%);
+      opacity:.75;
+    }
+
+    .quick-card > *,
+    .sacred-name > *,
+    .intent-card > *,
+    .sound-card > *,
+    .audio-card > *,
+    .card > *{position:relative;z-index:1}
+
+    .audio-first-grid,
     .quick-grid,
     .intent-grid,
     .name-grid,
-    .geometry-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.75rem;
-      margin-top: 1rem;
+    .geometry-grid,
+    .field-status-grid,
+    .journey-strip,
+    .codex-map-grid{
+      display:grid;
+      gap:.75rem;
+      margin-top:1rem;
+    }
+
+    .audio-first-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .quick-grid,.intent-grid,.name-grid,.geometry-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .field-status-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .journey-strip{grid-template-columns:repeat(5,minmax(0,1fr))}
+    .codex-map-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+    .audio-first-step,
+    .field-status,
+    .journey-step,
+    .map-step{
+      padding:.86rem;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.035);
+    }
+
+    .audio-first-step strong,
+    .field-status strong,
+    .journey-step strong,
+    .map-step strong{
+      display:block;
+      color:var(--fg-gold);
+      margin-bottom:.25rem;
+    }
+
+    .field-status span{
+      display:block;
+      color:var(--fg-soft);
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
     }
 
     .quick-preset,
     .intent-btn,
-    .geometry-btn {
-      min-height: 112px;
-      text-align: left;
-      border-radius: 22px;
-      padding: 0.95rem;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.04);
-      color: inherit;
-      cursor: pointer;
-      font: inherit;
+    .geometry-btn{
+      min-height:118px;
+      text-align:left;
+      border-radius:22px;
+      padding:.95rem;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      color:inherit;
+      cursor:pointer;
+      font:inherit;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;
     }
 
     .quick-preset strong,
     .intent-btn strong,
-    .geometry-btn strong {
-      display: block;
-      color: var(--gold, #f3c97a);
-      margin-bottom: 0.25rem;
-      font-size: 1rem;
+    .geometry-btn strong{
+      display:block;
+      color:var(--fg-gold);
+      margin-bottom:.25rem;
+      font-size:1rem;
     }
 
     .quick-preset span,
     .intent-btn span,
-    .geometry-btn span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.35;
+    .geometry-btn span{
+      display:block;
+      color:var(--fg-muted);
+      font-size:.88rem;
+      line-height:1.35;
     }
 
     .quick-preset:hover,
@@ -154,161 +425,200 @@
     .intent-btn:hover,
     .intent-btn:focus-visible,
     .geometry-btn:hover,
-    .geometry-btn:focus-visible {
-      border-color: rgba(122,243,255,0.28);
-      background: rgba(122,243,255,0.08);
-      outline: none;
+    .geometry-btn:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(122,243,255,.32);
+      background:rgba(122,243,255,.08);
+      box-shadow:0 12px 40px rgba(0,0,0,.2);
+      outline:none;
     }
 
-    .sacred-name {
-      display: grid;
-      place-items: center;
-      min-height: 100%;
-      text-align: center;
-      border-color: rgba(243,201,122,0.24);
+    .sacred-name{
+      display:grid;
+      place-items:center;
+      min-height:100%;
+      text-align:center;
+      border-color:rgba(243,201,122,.26);
       background:
-        radial-gradient(circle at 50% 24%, rgba(243,201,122,0.18), transparent 40%),
-        radial-gradient(circle at 50% 90%, rgba(122,243,255,0.12), transparent 45%),
-        rgba(255,255,255,0.035);
+        radial-gradient(circle at 50% 24%,rgba(243,201,122,.2),transparent 40%),
+        radial-gradient(circle at 50% 90%,rgba(122,243,255,.12),transparent 45%),
+        rgba(255,255,255,.035);
     }
 
-    .sacred-name .paleo {
-      font-size: clamp(3rem, 10vw, 7rem);
-      line-height: 1;
-      color: var(--gold, #f3c97a);
-      text-shadow: 0 0 30px rgba(243,201,122,0.2);
-      letter-spacing: 0.05em;
+    .sacred-name .paleo{
+      font-size:clamp(3.5rem,10vw,7.4rem);
+      line-height:1;
+      color:var(--fg-gold);
+      text-shadow:0 0 34px rgba(243,201,122,.24);
+      letter-spacing:.05em;
     }
 
-    .mode-row {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-
-    .mode-row label {
-      padding: 0.8rem;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.035);
-    }
-
-    .field-status-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-
-    .field-status {
-      padding: 0.85rem;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.035);
-    }
-
-    .field-status span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .field-status strong {
-      color: var(--gold, #f3c97a);
-      font-size: 1.08rem;
-    }
-
-    .journey-strip {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-
-    .journey-step {
-      padding: 0.9rem;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.035);
-    }
-
-    .journey-step strong {
-      display: block;
-      color: var(--gold, #f3c97a);
-      margin-bottom: 0.25rem;
-    }
-
-    .advanced-lab {
-      border-radius: 28px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.025);
-      overflow: hidden;
-    }
-
-    .advanced-lab summary {
-      cursor: pointer;
-      padding: 1rem;
-      font-weight: 900;
-      color: var(--gold, #f3c97a);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .advanced-lab[open] summary {
-      background: rgba(243,201,122,0.055);
-    }
-
-    .advanced-inner {
-      padding: 1rem;
-    }
-
-    .audio-card {
-      border-color: rgba(122,243,255,0.22);
+    .audio-card{
+      border-color:rgba(122,243,255,.24);
       background:
-        radial-gradient(circle at 10% 10%, rgba(122,243,255,0.12), transparent 36%),
-        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
+        radial-gradient(circle at 10% 10%,rgba(122,243,255,.12),transparent 36%),
+        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
     }
 
-    .safety-card {
-      border-color: rgba(243,201,122,0.18);
+    .audio-card .fine-print{
+      margin-top:.75rem;
+      color:var(--fg-soft);
+      font-size:.88rem;
     }
 
-    @media (max-width: 1100px) {
-      .launch-panel {
-        grid-template-columns: 1fr;
-      }
-
-      .quick-grid,
-      .intent-grid,
-      .name-grid,
-      .geometry-grid,
-      .field-status-grid,
-      .journey-strip {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .mode-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+    .fg-command{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(320px,.72fr);
+      gap:1rem;
+      align-items:center;
     }
 
-    @media (max-width: 760px) {
+    .command-stats{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.65rem;
+    }
+
+    .command-stats .stat{
+      padding:.8rem;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.1);
+    }
+
+    .command-stats .stat span{
+      display:block;
+      color:var(--fg-soft);
+      font-size:.75rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .command-stats .stat strong{
+      color:var(--fg-gold);
+      font-size:1rem;
+    }
+
+    .audio-control-grid,
+    .mode-row{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.75rem;
+      margin-top:.75rem;
+    }
+
+    .mode-row{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+    .audio-control-grid label,
+    .mode-row label{
+      padding:.8rem;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.035);
+    }
+
+    .advanced-lab{
+      border-radius:28px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.025);
+      overflow:hidden;
+    }
+
+    .advanced-lab summary{
+      cursor:pointer;
+      padding:1rem;
+      font-weight:900;
+      color:var(--fg-gold);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .advanced-lab[open] summary{background:rgba(243,201,122,.055)}
+    .advanced-inner{padding:1rem}
+
+    .safety-card{
+      border-color:rgba(243,201,122,.14);
+      opacity:.86;
+    }
+
+    .safety-card h2{
+      font-size:1.25rem;
+    }
+
+    .safety-card .fine{
+      font-size:.88rem;
+      color:var(--fg-soft);
+    }
+
+    .mobile-dock{
+      backdrop-filter:blur(18px);
+      border-top:1px solid rgba(255,255,255,.12);
+      background:rgba(5,7,13,.82);
+    }
+
+    @keyframes fgFieldDrift{
+      from{transform:translate3d(-1.5%,0,0) scale(1)}
+      to{transform:translate3d(1.5%,-1%,0) scale(1.04)}
+    }
+
+    @keyframes fgAura{
+      from{transform:translate3d(-1%,0,0) scale(1)}
+      to{transform:translate3d(1.5%,1%,0) scale(1.04)}
+    }
+
+    @keyframes fgRotate{
+      from{transform:rotate(0deg) scale(1)}
+      to{transform:rotate(360deg) scale(1.04)}
+    }
+
+    @media(max-width:1100px){
+      .launch-panel,
+      .fg-command{grid-template-columns:1fr}
+
       .quick-grid,
       .intent-grid,
       .name-grid,
       .geometry-grid,
       .field-status-grid,
       .journey-strip,
-      .mode-row {
-        grid-template-columns: 1fr;
+      .audio-first-grid,
+      .codex-map-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .mode-row,
+      .command-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
+    @media(max-width:760px){
+      .fg-hero{
+        min-height:auto;
+        padding-top:1.2rem;
+      }
+
+      .quick-grid,
+      .intent-grid,
+      .name-grid,
+      .geometry-grid,
+      .field-status-grid,
+      .journey-strip,
+      .mode-row,
+      .audio-first-grid,
+      .audio-control-grid,
+      .command-stats,
+      .codex-map-grid{
+        grid-template-columns:1fr;
       }
 
       .quick-preset,
       .intent-btn,
-      .geometry-btn {
-        min-height: auto;
+      .geometry-btn{min-height:auto}
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{
+        animation:none!important;
+        transition:none!important;
+        scroll-behavior:auto!important;
       }
     }
   </style>
@@ -326,7 +636,7 @@
       <span>Frequency Governance</span>
     </nav>
 
-    <p class="eyebrow">Codex Sound Observatory</p>
+    <p class="eyebrow">Codex Sound Observatory · 432 Carrier · 7.83 Witness Field</p>
     <h1>Frequency Governance</h1>
 
     <p class="hero-copy">
@@ -337,13 +647,14 @@
     <aside class="notice">
       <strong>🔥 Living Sound Observatory:</strong>
       quick intent paths, harmonic textures, Paleo-Hebrew Name presets, T-7 field practice,
-      Lift Loop training, sacred geometry visuals, recording, and private witness logs.
+      Lift Loop training, sacred geometry visuals, recording, saved fields, and private witness logs.
     </aside>
 
     <div class="hero-pills" aria-label="Feature summary">
       <span>Intent Paths</span>
       <span>𐤉𐤄𐤅𐤄 Name Path</span>
       <span>Sound Check</span>
+      <span>Audio Boost</span>
       <span>Lift Loop</span>
       <span>T7 Field</span>
       <span>Breath Modes</span>
@@ -363,6 +674,15 @@
       <a href="#liftLoop">Lift</a>
       <a href="#witness">Witness</a>
     </nav>
+
+    <aside class="notice use-order">
+      <strong>Use Order:</strong>
+      1. Sound Check →
+      2. Choose Path →
+      3. Adjust Master Volume / Boost →
+      4. Pick Visual →
+      5. Record Witness.
+    </aside>
   </header>
 
   <main class="fg-shell">
@@ -371,8 +691,16 @@
         <p class="eyebrow">Start Here</p>
         <h2>Quick Sound Paths</h2>
         <p class="meta">
-          Press one path to begin. For first-time testing, press Sound Check and raise your device volume.
+          Press one path to begin. For first-time testing, press <strong>Sound Check</strong>,
+          raise your media volume, then choose the path that matches the state you are entering.
         </p>
+
+        <div class="audio-first-grid" aria-label="Recommended use order">
+          <div class="audio-first-step"><strong>1 · Check</strong><span>Unlock browser audio with one tap.</span></div>
+          <div class="audio-first-step"><strong>2 · Path</strong><span>Choose calm, focus, lift, T7, or Name path.</span></div>
+          <div class="audio-first-step"><strong>3 · Shape</strong><span>Adjust master, boost, texture, and visual mode.</span></div>
+          <div class="audio-first-step"><strong>4 · Witness</strong><span>Notice the body signal and record it.</span></div>
+        </div>
 
         <div class="quick-grid">
           <button class="quick-preset seqBtn" data-seq="calm" type="button"><strong>Calm Path</strong><span>Slow field, low pressure, breath-first entry.</span></button>
@@ -399,7 +727,8 @@
           <div class="paleo" aria-label="Paleo-Hebrew tetragrammaton">𐤉𐤄𐤅𐤄</div>
           <h2>YHWH Preset Family</h2>
           <p class="meta">
-            A dedicated preset family for breath, reverence, alignment, remembrance, creative word, and return.
+            A dedicated preset family for breath, reverence, alignment, remembrance,
+            creative word, and return.
           </p>
 
           <div class="name-grid">
@@ -415,12 +744,32 @@
     </section>
 
     <section class="audio-card">
-      <p class="eyebrow">Audio Test</p>
-      <h2>Can’t Hear It?</h2>
+      <p class="eyebrow">Audio Start</p>
+      <h2>Start Here If Sound Is Low</h2>
       <p class="meta">
-        Press <strong>Sound Check</strong>, make sure your phone is not muted, turn media volume up,
-        and try headphones or a speaker. Browser audio starts only after a tap.
+        Press <strong>Sound Check</strong> first. Then raise <strong>Master Volume</strong>,
+        set <strong>Audio Boost</strong> to Boosted, Strong, or Monumental, and use headphones
+        or an external speaker for the deepest field.
       </p>
+      <p class="fine-print">
+        Phone speakers may not reproduce low frequencies well. The visual field can still be used as a silent mirror.
+      </p>
+    </section>
+
+    <section class="codex-map">
+      <p class="eyebrow">Codex Flow</p>
+      <h2>From Signal to Witness</h2>
+      <p class="meta">
+        This page is built as a working circuit: intention enters, frequency shapes the field,
+        breath organizes the body, geometry gives the mind a mirror, and the witness log preserves what changed.
+      </p>
+
+      <div class="codex-map-grid">
+        <div class="map-step"><strong>Intent</strong><span>Name why you entered.</span></div>
+        <div class="map-step"><strong>Carrier</strong><span>Load the sound field.</span></div>
+        <div class="map-step"><strong>Breath</strong><span>Let timing become structure.</span></div>
+        <div class="map-step"><strong>Witness</strong><span>Record what actually shifted.</span></div>
+      </div>
     </section>
 
     <section class="fg-command card">
@@ -466,8 +815,27 @@
         </div>
 
         <label>Master Volume
-          <input id="masterVolume" type="range" min="0" max="100" step="1" value="42">
+          <input id="masterVolume" type="range" min="0" max="100" step="1" value="72">
         </label>
+
+        <div class="audio-control-grid">
+          <label>Audio Boost
+            <select id="audioBoost">
+              <option value="1">Normal</option>
+              <option value="1.5" selected>Boosted</option>
+              <option value="2">Strong</option>
+              <option value="2.6">Monumental</option>
+            </select>
+          </label>
+
+          <label>Output Mode
+            <select id="outputMode">
+              <option value="phone">Phone Speaker</option>
+              <option value="headphones" selected>Headphones</option>
+              <option value="speaker">External Speaker</option>
+            </select>
+          </label>
+        </div>
 
         <label>Visual Intensity
           <input id="visualPower" type="range" min="20" max="260" step="1" value="130">
@@ -495,7 +863,7 @@
         </label>
 
         <div class="meter"><span id="meter"></span></div>
-        <p id="settingText" class="fine">432 Hz · 42% master · Torus Field</p>
+        <p id="settingText" class="fine">432 Hz · 72% master · Boosted · Torus Field</p>
       </aside>
     </section>
 
@@ -745,7 +1113,7 @@ Press Escape to stop.</pre>
             <article class="deck-card" data-deck="0">
               <h3>Deck A <span class="deck-status">Lead</span></h3>
               <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="432"></label>
-              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="90"></label>
+              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="100"></label>
               <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="0"></label>
               <label>Waveform
                 <select class="deck-wave">
@@ -788,7 +1156,7 @@ Press Escape to stop.</pre>
             <article class="deck-card" data-deck="1">
               <h3>Deck B <span class="deck-status">Blend</span></h3>
               <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="528"></label>
-              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="0"></label>
+              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="28"></label>
               <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="15"></label>
               <label>Waveform
                 <select class="deck-wave">
@@ -831,7 +1199,7 @@ Press Escape to stop.</pre>
             <article class="deck-card" data-deck="2">
               <h3>Deck C <span class="deck-status">Pulse</span></h3>
               <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="369"></label>
-              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="0"></label>
+              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="18"></label>
               <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="-35"></label>
               <label>Waveform
                 <select class="deck-wave">
@@ -874,7 +1242,7 @@ Press Escape to stop.</pre>
             <article class="deck-card" data-deck="3">
               <h3>Deck D <span class="deck-status">Crown</span></h3>
               <label>Frequency <input class="deck-freq" type="number" min="40" max="1800" value="963"></label>
-              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="0"></label>
+              <label>Volume <input class="deck-vol" type="range" min="0" max="100" value="16"></label>
               <label>Pan <input class="deck-pan" type="range" min="-100" max="100" value="35"></label>
               <label>Waveform
                 <select class="deck-wave">
@@ -966,18 +1334,19 @@ Press Escape to stop.</pre>
     </section>
 
     <section class="card safety-card">
-      <p class="eyebrow">Safety</p>
-      <h2>Ground Rules</h2>
+      <p class="eyebrow">Ground Rules</p>
+      <h2>Use With Attention</h2>
       <p class="fine">
         Keep volume reasonable. Start low, then raise slowly. Do not use while driving, operating tools,
-        or doing anything that needs full attention. Stop if discomfort increases. Sudden severe headache,
-        vision changes, weakness, confusion, seizure symptoms, or headache after injury should be medically evaluated.
+        or doing anything that needs full attention. Stop if discomfort increases.
       </p>
     </section>
   </main>
 
   <div class="mobile-dock">
     <button id="dockPlay" type="button">Play</button>
+    <button id="dockSoundCheck" type="button">Check</button>
+    <button id="dockBoost" type="button">Boost</button>
     <button id="dockStop" type="button">Stop</button>
     <button id="dockRecord" type="button">Record</button>
     <button id="dockLift" type="button">Lift</button>

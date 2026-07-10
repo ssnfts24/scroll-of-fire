@@ -4,15 +4,15 @@
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>
     if (location.hostname !== "ssnfts24.github.io") {
-      const b = document.querySelector("base");
-      if (b) b.remove();
+      const base = document.querySelector("base");
+      if (base) base.setAttribute("href", "/");
     }
   </script>
 
   <meta charset="utf-8">
   <title>Remnant 13 Moons — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="A living 13×28 Remnant calendar with moon phase, daily witness logs, field layers, pattern tracking, Codex seals, and Scroll of Fire coherence tools.">
+  <meta name="description" content="A living 13×28 Remnant calendar with moon phase, prophetic mirror readings, daily witness logs, astrology mirror, planetary alignments, field layers, pattern tracking, Codex seals, and Scroll of Fire coherence tools.">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="creator" content="Aaron Paul Laird">
   <meta name="publisher" content="Scroll of Fire">
@@ -23,19 +23,20 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Scroll of Fire">
   <meta property="og:title" content="Remnant 13 Moons — Living Calendar">
-  <meta property="og:description" content="Track the Remnant 13×28 calendar, visible moon phase, daily witness, field layers, Codex day seals, and symbolic pattern logs.">
+  <meta property="og:description" content="Track the Remnant 13×28 calendar, visible moon phase, prophetic mirror readings, astrology, planetary alignments, daily witness, field layers, Codex day seals, and symbolic pattern logs.">
   <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
   <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Remnant 13 Moons — Scroll of Fire">
-  <meta name="twitter:description" content="A living 13×28 Remnant calendar with moon phase, daily witness logs, field layers, pattern tracking, and Codex seals.">
+  <meta name="twitter:description" content="A living 13×28 Remnant calendar with moon phase, prophetic mirror readings, astrology, planetary alignments, field layers, pattern tracking, and Codex seals.">
   <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
 
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/favicon.png">
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/moons.css">
+  <link rel="stylesheet" href="assets/css/astrology.css">
 
   <script type="application/ld+json">
   {
@@ -47,81 +48,9 @@
     "operatingSystem":"Any",
     "creator":{"@type":"Person","name":"Aaron Paul Laird"},
     "publisher":{"@type":"Organization","name":"Scroll of Fire","url":"https://ssnfts24.github.io/scroll-of-fire/"},
-    "description":"A symbolic 13×28 calendar and witness logging interface for moon phase, daily pattern tracking, field layers, and Codex seals."
+    "description":"A symbolic 13×28 calendar and witness logging interface for moon phase, prophetic mirror readings, astrology, planetary alignments, field layers, and Codex seals."
   }
   </script>
-
-  <style>
-    body{min-height:100vh;overflow-x:hidden}
-    #skyBg{position:fixed;inset:0;width:100%;height:100%;z-index:-2;background:radial-gradient(circle at 20% 18%,rgba(122,243,255,.16),transparent 32%),radial-gradient(circle at 78% 8%,rgba(243,201,122,.14),transparent 30%),radial-gradient(circle at 50% 100%,rgba(255,255,255,.05),transparent 44%),#05070d}
-    .wrap{width:min(1180px,calc(100% - 28px));margin:0 auto}
-    .sof-topbar{position:sticky;top:0;z-index:80;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 0;backdrop-filter:blur(18px)}
-    .sof-brand{display:inline-flex;align-items:center;gap:.72rem;text-decoration:none}
-    .sof-brand .mark{width:42px;height:42px;display:grid;place-items:center;border-radius:16px;color:var(--gold,#f3c97a);border:1px solid rgba(243,201,122,.28);background:rgba(255,255,255,.04);box-shadow:0 0 35px rgba(243,201,122,.08);font-size:1.25rem;font-weight:900}
-    .sof-brand strong{display:block;color:var(--text,#f4f1e8);line-height:1.05}
-    .sof-brand small{display:block;color:var(--muted,#aeb7c8);font-size:.78rem}
-    .sof-nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.45rem}
-    .sof-nav a{text-decoration:none;padding:.55rem .75rem;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035);color:inherit;font-size:.92rem}
-    .sof-nav a:hover,.sof-nav a:focus-visible,.sof-nav a[aria-current="page"]{background:rgba(122,243,255,.09);border-color:rgba(122,243,255,.22);outline:none}
-    .page-head{position:relative;overflow:hidden;margin:1rem 0 1.2rem;padding:clamp(1.2rem,4vw,2.2rem);border-radius:34px;border:1px solid rgba(255,255,255,.14);background:radial-gradient(circle at 18% 18%,rgba(122,243,255,.18),transparent 34%),radial-gradient(circle at 78% 18%,rgba(243,201,122,.16),transparent 32%),linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.018));box-shadow:0 28px 100px rgba(0,0,0,.38)}
-    .page-head::after{content:"";position:absolute;inset:auto 2rem 0 2rem;height:1px;background:linear-gradient(90deg,transparent,rgba(243,201,122,.55),rgba(122,243,255,.45),transparent)}
-    .crumbs{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.15rem}
-    .page-head h1{font-size:clamp(2.6rem,8vw,5.8rem);line-height:.9;margin:.25rem 0 .8rem;letter-spacing:-.06em}
-    .subtitle{max-width:900px}
-    .hero-sigil{display:flex;flex-wrap:wrap;justify-content:center;gap:.7rem;margin:1.35rem auto;color:var(--gold,#f3c97a);font-weight:900;letter-spacing:.08em}
-    .notice{margin-top:1rem;padding:1rem;border-radius:22px;border:1px solid rgba(243,201,122,.22);background:rgba(243,201,122,.06);color:var(--muted,#aeb7c8)}
-    .tabs{position:sticky;top:66px;z-index:60;display:flex;gap:.55rem;overflow-x:auto;padding:.75rem 0 .15rem;margin-top:1rem;scrollbar-width:thin;backdrop-filter:blur(16px)}
-    .tab{flex:0 0 auto;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.045);color:inherit;border-radius:999px;padding:.7rem .9rem;font-weight:800;cursor:pointer;white-space:nowrap}
-    .tab:hover,.tab:focus-visible,.tab.active{background:rgba(122,243,255,.10);border-color:rgba(122,243,255,.26);outline:none}
-    .tabPanel{display:none;margin:1rem 0}.tabPanel.active{display:block}
-    .command{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);gap:1rem;align-items:center}
-    .command-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem}
-    .stat{padding:.85rem;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035)}
-    .stat span{display:block;color:var(--muted,#aeb7c8);font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.25rem}
-    .stat strong{display:block;color:var(--gold,#f3c97a);font-size:1.05rem}
-    .moon-badge{display:grid;grid-template-columns:180px minmax(0,1fr);gap:1.3rem;align-items:center;margin-top:1rem}
-    .ring{position:relative;width:160px;height:160px;display:grid;place-items:center;margin:auto}
-    .ring svg{width:160px;height:160px;transform:rotate(-90deg)}
-    .ring-bg,.ring-fg{fill:none;stroke-width:10}.ring-bg{stroke:rgba(255,255,255,.1)}
-    .ring-fg{stroke:var(--gold,#f3c97a);stroke-linecap:round;stroke-dasharray:314;stroke-dashoffset:314;filter:drop-shadow(0 0 10px rgba(243,201,122,.26))}
-    .ring .label{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
-    .ring .big{display:block;color:var(--text,#f4f1e8);font-size:3rem;font-weight:950;line-height:.9}
-    .ring .small{display:block;color:var(--muted,#aeb7c8);font-weight:800}
-    .weekrow{display:grid;gap:.65rem;margin-top:1rem}
-    .week{display:grid;grid-template-columns:repeat(14,1fr);gap:.28rem;max-width:520px}
-    .week span{width:100%;aspect-ratio:1;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08)}
-    .week span.active{background:var(--gold,#f3c97a);box-shadow:0 0 14px rgba(243,201,122,.32)}
-    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1rem;margin-top:1rem}
-    .col-12{grid-column:span 12}.col-8{grid-column:span 8}.col-7{grid-column:span 7}.col-6{grid-column:span 6}.col-5{grid-column:span 5}.col-4{grid-column:span 4}
-    .card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.12);border-radius:26px;background:radial-gradient(circle at 12% 0%,rgba(243,201,122,.08),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));box-shadow:0 18px 70px rgba(0,0,0,.26)}
-    .card::before{content:"";position:absolute;inset:-1px;pointer-events:none;background:radial-gradient(circle at 100% 100%,rgba(122,243,255,.09),transparent 34%);opacity:.72}
-    .card>*{position:relative;z-index:1}
-    .formrow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;margin-top:.8rem}
-    label{display:grid;gap:.35rem;color:var(--muted,#aeb7c8);font-weight:750}
-    input,select,textarea,.lab-input{width:100%;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(0,0,0,.18);color:inherit;padding:.78rem .85rem;font:inherit}
-    textarea{min-height:130px;resize:vertical}
-    .btnrow{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1rem}
-    .lab-btn{border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.045);color:inherit;text-decoration:none;border-radius:999px;padding:.72rem .95rem;font-weight:900;cursor:pointer}
-    .lab-btn:hover,.lab-btn:focus-visible,.lab-btn.active{background:rgba(122,243,255,.10);border-color:rgba(122,243,255,.26);outline:none}
-    .lab-btn.green{background:rgba(70,220,150,.10);border-color:rgba(70,220,150,.25)}
-    .lab-btn.danger{background:rgba(255,90,90,.10);border-color:rgba(255,90,90,.25)}
-    .pill{display:inline-flex;align-items:center;width:fit-content;gap:.35rem;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.045);border-radius:999px;padding:.45rem .7rem;color:var(--gold,#f3c97a);font-weight:850}
-    .meta,.fine{color:var(--muted,#aeb7c8)}
-    .output,pre.output{min-height:360px;white-space:pre-wrap;word-break:break-word;border-radius:20px;padding:1rem;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.10);color:var(--text,#f4f1e8);overflow:auto}
-    #simMoon{width:100%;height:auto;max-height:340px;border-radius:22px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.10)}
-    .scroller{overflow-x:auto;border-radius:20px;border:1px solid rgba(255,255,255,.08)}
-    table{width:100%;border-collapse:collapse;min-width:760px}
-    th,td{padding:.8rem;border-bottom:1px solid rgba(255,255,255,.08);text-align:left}
-    th{color:var(--gold,#f3c97a);background:rgba(255,255,255,.035)}
-    .calendar,.gregorian,.savedList,.pattern-grid,.copy-scroll,.loop-timeline{border-radius:22px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.16);padding:1rem;overflow:auto}
-    .log-grid,.hum-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem;margin-top:1rem}
-    .log-card,.hum-card{padding:1rem;border-radius:20px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035)}
-    .footer{width:min(1180px,calc(100% - 28px));margin:2rem auto 1rem;padding:1rem;text-align:center;color:var(--muted,#aeb7c8)}
-    .mobile-dock{position:sticky;bottom:.75rem;z-index:70;display:none;width:min(680px,calc(100% - 28px));margin:1rem auto;padding:.45rem;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(8,12,20,.86);backdrop-filter:blur(18px);box-shadow:0 18px 60px rgba(0,0,0,.38)}
-    .mobile-dock a{flex:1;text-align:center;text-decoration:none;padding:.65rem .45rem;border-radius:999px;color:inherit;font-weight:850;font-size:.8rem}.mobile-dock a:hover{background:rgba(122,243,255,.10)}
-    @media(max-width:1000px){.command,.moon-badge{grid-template-columns:1fr}.command-grid{grid-template-columns:repeat(2,1fr)}.col-8,.col-7,.col-6,.col-5,.col-4{grid-column:span 12}.log-grid,.hum-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:760px){.sof-topbar{position:relative;align-items:flex-start;flex-direction:column}.sof-nav{justify-content:flex-start}.page-head{border-radius:26px;padding:1rem}.tabs{top:0}.formrow,.command-grid,.log-grid,.hum-grid{grid-template-columns:1fr}.week{grid-template-columns:repeat(7,1fr)}.btnrow .lab-btn{flex:1 1 auto}.mobile-dock{display:flex}}
-  </style>
 </head>
 
 <body>
@@ -141,7 +70,7 @@
         <a href="./">Home</a>
         <a href="./start.html">Start</a>
         <a href="./shop.html">Shop</a>
-        <a href="./frequency-governance.html">Frequency</a>
+        <a href="./systems/frequencies.html">Frequency</a>
         <a href="./hub.html">Hub</a>
         <a href="./ledger.html">Ledger</a>
       </nav>
@@ -160,9 +89,9 @@
       <h1>Remnant 13 Moons</h1>
 
       <p class="subtitle">
-        A living 13×28 symbolic calendar for moon phase, daily witness, Earth Hum tags,
-        pattern detection, Codex seals, solar gates, body signal, dreams, weather, memory,
-        and coherence practice.
+        A living 13×28 symbolic calendar for moon phase, prophetic mirror reading, astrology,
+        planetary alignments, daily witness, Earth Hum tags, pattern detection, Codex seals,
+        solar gates, body signal, dreams, weather, memory, and coherence practice.
       </p>
 
       <div class="hero-sigil" aria-hidden="true">
@@ -171,18 +100,16 @@
 
       <aside class="notice">
         <strong>🔥 Living Calendar Mode:</strong>
-        daily moon engine, visible phase, witness builder, local logs, pattern alerts,
-        Gregorian overlay, Codex day seal, and field-layer dashboard are active.
+        daily moon engine, visible phase, prophetic mirror, astrology layer, planetary alignment wheel,
+        witness builder, local logs, pattern alerts, Gregorian overlay, Codex day seal, and field-layer dashboard are active.
       </aside>
-
-      <p class="meta">
-        Accuracy note: the Remnant 13×28 count is symbolic and calendar-based.
-        Visible lunar phase is an astronomical approximation.
-      </p>
 
       <div class="tabs" aria-label="Calendar tools">
         <button class="tab active" data-tab="todayPanel" type="button">Today</button>
+        <button class="tab" data-tab="flowPanel" type="button">Daily Flow</button>
+        <button class="tab" data-tab="mirrorPanel" type="button">Mirror Reading</button>
         <button class="tab" data-tab="witnessPanel" type="button">Daily Witness</button>
+        <button class="tab" data-tab="astrologyPanel" type="button">Astrology</button>
         <button class="tab" data-tab="calendarPanel" type="button">Calendars</button>
         <button class="tab" data-tab="yearPanel" type="button">Year Map</button>
         <button class="tab" data-tab="codexPanel" type="button">Codex Seal</button>
@@ -296,6 +223,159 @@
         </section>
       </section>
 
+      <section id="flowPanel" class="tabPanel">
+        <section class="ritual-hero">
+          <div class="ritual-layout">
+            <div>
+              <p class="eyebrow">☲ Daily Ritual Dashboard ☲</p>
+              <h2 class="ritual-title" id="ritualTitle">Read · Witness · Ground</h2>
+              <p class="ritual-line" id="ritualLine">
+                Begin with the day. Notice the signal. Record the witness. Let repeated patterns become the mirror.
+              </p>
+
+              <div class="flow-steps" aria-label="Daily flow">
+                <div class="flow-step"><strong>1</strong>Read</div>
+                <div class="flow-step"><strong>2</strong>Witness</div>
+                <div class="flow-step"><strong>3</strong>Log</div>
+                <div class="flow-step"><strong>4</strong>Pattern</div>
+                <div class="flow-step"><strong>5</strong>Seal</div>
+              </div>
+
+              <div class="btnrow">
+                <button class="lab-btn active" data-tab-jump="mirrorPanel" type="button">Open Mirror</button>
+                <button class="lab-btn ghost" data-tab-jump="witnessPanel" type="button">Write Witness</button>
+                <button class="lab-btn ghost" data-tab-jump="timelinePanel" type="button">Check Patterns</button>
+              </div>
+            </div>
+
+            <div class="daily-sigil" aria-hidden="true">
+              <div class="moon-core" id="ritualMoonCore">☾</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid">
+          <article class="card col-12">
+            <p class="pill">✦ Field Meters</p>
+            <h2>Today’s Signal Dashboard</h2>
+            <p class="subtitle">The flow gathers the day into five gates: coherence, body, signal, field, and grounding.</p>
+
+            <div class="meter-grid">
+              <article class="meter-card">
+                <span>Coherence</span>
+                <div class="meter-bar"><div id="meterCoherence" class="meter-fill"></div></div>
+                <strong id="meterCoherenceText">Gathering</strong>
+              </article>
+              <article class="meter-card">
+                <span>Body Load</span>
+                <div class="meter-bar"><div id="meterBody" class="meter-fill"></div></div>
+                <strong id="meterBodyText">Check body</strong>
+              </article>
+              <article class="meter-card">
+                <span>Signal Repeat</span>
+                <div class="meter-bar"><div id="meterSignal" class="meter-fill"></div></div>
+                <strong id="meterSignalText">Listening</strong>
+              </article>
+              <article class="meter-card">
+                <span>Field Intensity</span>
+                <div class="meter-bar"><div id="meterField" class="meter-fill"></div></div>
+                <strong id="meterFieldText">Unknown</strong>
+              </article>
+              <article class="meter-card">
+                <span>Grounding</span>
+                <div class="meter-bar"><div id="meterGround" class="meter-fill"></div></div>
+                <strong id="meterGroundText">Recommended</strong>
+              </article>
+            </div>
+          </article>
+
+          <article class="card practice-card col-12">
+            <p class="eyebrow">Daily Practice</p>
+            <h2>Seal the Day in Order</h2>
+            <div class="practice-list">
+              <div><strong>Breath</strong><br>Take 7 slow breaths before response.</div>
+              <div><strong>Word</strong><br>Write the repeated word or theme.</div>
+              <div><strong>Body</strong><br>Eat, hydrate, rest, or step outside.</div>
+              <div><strong>Action</strong><br>Choose one move that builds order.</div>
+            </div>
+          </article>
+
+          <article class="card col-12">
+            <p class="eyebrow">Pattern Memory</p>
+            <h2>What Has Been Repeating?</h2>
+            <p class="subtitle">Saved logs can be read across 3, 7, 14, and 28 day windows.</p>
+            <div class="pattern-memory-grid">
+              <article class="pattern-memory-card">
+                <h3 id="memoryWords">Repeated Words</h3>
+                <p id="memoryWordsCopy">Save witness logs to reveal repeated words and themes.</p>
+              </article>
+              <article class="pattern-memory-card">
+                <h3 id="memoryBody">Body Signals</h3>
+                <p id="memoryBodyCopy">Track sleep, pressure, clarity, tension, hunger, and energy.</p>
+              </article>
+              <article class="pattern-memory-card">
+                <h3 id="memoryField">Field Notes</h3>
+                <p id="memoryFieldCopy">Watch weather, tech, animals, numbers, and timing across days.</p>
+              </article>
+            </div>
+          </article>
+        </section>
+      </section>
+
+      <section id="mirrorPanel" class="tabPanel">
+        <section class="grid">
+          <article class="card col-12">
+            <p class="pill">☲ Prophetic Mirror Engine</p>
+            <h2>Read the Day as a Scroll</h2>
+            <p class="subtitle">
+              The mirror gathers moon, day, solar gate, visible phase, field, and witness into one spoken reading.
+            </p>
+
+            <div class="reading-focus">
+              <label>Reading Focus
+                <select id="readingFocus">
+                  <option value="general">General Scroll</option>
+                  <option value="family">Family / Custody / Children</option>
+                  <option value="work">Work / Money / Provision</option>
+                  <option value="body">Body / Health / Rest</option>
+                  <option value="spiritual">Spiritual / Prayer / Scripture</option>
+                  <option value="creative">Creative / Codex / Building</option>
+                </select>
+              </label>
+
+              <div class="btnrow">
+                <button id="buildMirror" class="lab-btn active" type="button">Build Reading</button>
+                <button id="copyMirror" class="lab-btn ghost" type="button">Copy Reading</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="card col-8">
+            <p class="eyebrow">Today’s Reading</p>
+            <h2 id="mirrorTitle">—</h2>
+            <pre id="mirrorOutput" class="output">Choose a focus and build the mirror reading.</pre>
+          </article>
+
+          <article class="card col-4">
+            <p class="eyebrow">Threefold Counsel</p>
+            <div class="mirror-grid single">
+              <article class="mirror-card">
+                <h3>Signal</h3>
+                <p id="mirrorSignal">The day’s first witness appears here.</p>
+              </article>
+              <article class="mirror-card">
+                <h3>Crossing</h3>
+                <p id="mirrorShadow">The pressure gate appears here.</p>
+              </article>
+              <article class="mirror-card">
+                <h3>Command</h3>
+                <p id="mirrorAction">The clean action appears here.</p>
+              </article>
+            </div>
+          </article>
+        </section>
+      </section>
+
       <section id="witnessPanel" class="tabPanel">
         <section class="grid">
           <article class="card col-7">
@@ -348,6 +428,84 @@
           <article class="card col-5">
             <h2>Generated Witness</h2>
             <pre id="witnessOutput" class="output">Your daily witness will appear here.</pre>
+          </article>
+        </section>
+      </section>
+
+      <section id="astrologyPanel" class="tabPanel" data-astrology-panel>
+        <section class="astrology-panel card">
+          <div class="section-heading">
+            <p class="eyebrow">☉ Sky Mirror</p>
+            <h2>Astrology Mirror</h2>
+            <p class="subtitle">
+              A symbolic mirror for season, element, body, emotion, speech, timing, planetary alignments, and witness.
+            </p>
+          </div>
+
+          <div class="astrology-grid">
+            <article class="astro-card">
+              <p class="eyebrow">Solar Gate</p>
+              <h3 id="astroSolarGate" data-solar-gate>—</h3>
+              <p id="astroSolarCopy" data-solar-copy>Body, provision, land, stability, and what must be made real.</p>
+            </article>
+
+            <article class="astro-card">
+              <p class="eyebrow">Moon Mirror</p>
+              <h3 id="astroMoonMirror" data-moon-reflection>—</h3>
+              <p id="astroMoonCopy" data-moon-reflection-copy>Emotion, memory, dreams, family signal, and inner weather.</p>
+            </article>
+
+            <article class="astro-card">
+              <p class="eyebrow">Daily Counsel</p>
+              <h3 id="astroCounsel">Witness</h3>
+              <p id="astroCounselCopy">Observe first. Interpret after the pattern repeats.</p>
+            </article>
+          </div>
+
+          <p class="meta" data-astro-status>Astrology correspondence loads from the selected Gregorian date.</p>
+        </section>
+
+        <section class="grid">
+          <article class="card col-4">
+            <p class="eyebrow">Element Mirror</p>
+            <h2 id="astroElement" data-elemental-tone>—</h2>
+            <p id="astroElementCopy" class="fine" data-elemental-copy>Elemental reading appears here.</p>
+          </article>
+
+          <article class="card col-4">
+            <p class="eyebrow">Body House</p>
+            <h2 id="astroBodyHouse">—</h2>
+            <p id="astroBodyCopy" class="fine">Body and practical focus appears here.</p>
+          </article>
+
+          <article class="card col-4">
+            <p class="eyebrow">Integration</p>
+            <h2 id="astroIntegration">Ground</h2>
+            <p id="astroIntegrationCopy" class="fine">Let the sky become a mirror, then let the body choose the grounded step.</p>
+          </article>
+        </section>
+
+        <section class="grid">
+          <article class="card col-12">
+            <p class="eyebrow">✦ Planetary Alignment Mirror</p>
+            <h2>Planetarium</h2>
+            <p class="subtitle">
+              A planetary wheel for the selected date, ready for a real ephemeris override when connected.
+            </p>
+            <div id="planetarium" class="planetarium" aria-label="Planetary alignment wheel">
+              <div class="zodiac-wheel" aria-hidden="true"></div>
+              <div class="sun-core" aria-hidden="true">☉</div>
+            </div>
+          </article>
+
+          <article class="card col-12">
+            <p class="eyebrow">Planetary Placements</p>
+            <div id="planetGrid" class="planet-grid"></div>
+          </article>
+
+          <article class="card col-12">
+            <p class="eyebrow">Aspect Mirror</p>
+            <div id="aspectGrid" class="aspect-grid"></div>
           </article>
         </section>
       </section>
@@ -422,9 +580,7 @@
         <section class="grid">
           <article class="card col-12">
             <h2>Pattern Timeline</h2>
-            <p class="subtitle">
-              Compares saved logs across 3, 7, 14, and 28 day windows.
-            </p>
+            <p class="subtitle">Compares saved logs across 3, 7, 14, and 28 day windows.</p>
             <div id="patternAlerts" class="pattern-grid"></div>
           </article>
 
@@ -495,17 +651,302 @@
   </div>
 
   <nav class="mobile-dock" aria-label="Mobile quick navigation">
-    <a href="#todayPanel">Today</a>
-    <a href="#witnessPanel">Witness</a>
-    <a href="#calendarPanel">Calendar</a>
-    <a href="#fieldPanel">Field</a>
-    <a href="#savedPanel">Logs</a>
+    <a href="#todayPanel" data-mobile-tab="todayPanel">Today</a>
+    <a href="#flowPanel" data-mobile-tab="flowPanel">Flow</a>
+    <a href="#mirrorPanel" data-mobile-tab="mirrorPanel">Mirror</a>
+    <a href="#witnessPanel" data-mobile-tab="witnessPanel">Witness</a>
+    <a href="#astrologyPanel" data-mobile-tab="astrologyPanel">Astro</a>
+    <a href="#savedPanel" data-mobile-tab="savedPanel">Logs</a>
   </nav>
+
+  <div id="sofToast" class="toast" role="status" aria-live="polite">Witness sealed.</div>
 
   <footer class="footer">
     <p>© <span id="yr">2026</span> Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
   </footer>
 
   <script src="assets/js/moons.js"></script>
+  <script src="assets/js/astrology.js"></script>
+
+  <script>
+    (function () {
+      "use strict";
+
+      function $(id) { return document.getElementById(id); }
+      function text(id) {
+        var node = $(id);
+        return node ? (node.textContent || "").trim() : "";
+      }
+
+      function showTab(id) {
+        document.querySelectorAll(".tabPanel").forEach(function (panel) {
+          panel.classList.toggle("active", panel.id === id);
+        });
+        document.querySelectorAll(".tab").forEach(function (tab) {
+          tab.classList.toggle("active", tab.dataset.tab === id);
+        });
+        var panel = $(id);
+        if (panel) panel.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function showToast(message) {
+        var toast = $("sofToast");
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(window.__sofToastTimer);
+        window.__sofToastTimer = setTimeout(function () { toast.classList.remove("show"); }, 1800);
+      }
+
+      function width(id, value) {
+        var node = $(id);
+        if (node) node.style.width = Math.max(8, Math.min(100, value)) + "%";
+      }
+
+      var focusCopy = {
+        general: {
+          title: "General Scroll",
+          opening: "The day opens like a scroll unsealed: the outer world speaks in timing, and the inner witness is called to stand upright.",
+          signal: "Watch the repeated word, the delayed door, the sudden message, the return of an old pattern, and the thing that asks to be written before it is explained.",
+          crossing: "The crossing is haste. The false gate is reaction. The clean path is witness before movement.",
+          command: "Write the signal. Name the pressure. Move only one true step. Let the day prove itself by repetition."
+        },
+        family: {
+          title: "Family / Custody / Children",
+          opening: "The house-line is before the altar today: child, shelter, order, testimony, and the burden of protection.",
+          signal: "The child is the center of the reading. The noise around the child must bow to stability, pattern, record, and peace.",
+          crossing: "The crossing is emotional fire. Do not let another person’s disorder become the language of your next move.",
+          command: "Hold the center. Keep the record clean. Let every action answer one question: does this build safety, order, and a faithful future for the child?"
+        },
+        work: {
+          title: "Work / Money / Provision",
+          opening: "Provision stands at the gate: tool, hand, labor, repair, debt, shelter, food, and the ground beneath the feet.",
+          signal: "The material world is speaking through what breaks, what costs, what must be fixed, and what must finally be organized.",
+          crossing: "The crossing is scatter. Ten fires call for your hand, but only one can be sealed first.",
+          command: "Choose the repair that unlocks the next door. Build the ledger. Steward the tool. Turn pressure into order."
+        },
+        body: {
+          title: "Body / Health / Rest",
+          opening: "The body becomes the first prophet today: breath, hunger, sleep, pressure, pain, calm, and the hidden weather beneath thought.",
+          signal: "The body is not background. It is the instrument through which the day is being read.",
+          crossing: "The crossing is forcing meaning through exhaustion. A weary vessel distorts the signal.",
+          command: "Return to water, food, breath, sunlight, and rest. Let the body settle before the scroll is interpreted."
+        },
+        spiritual: {
+          title: "Spiritual / Prayer / Scripture",
+          opening: "The day stands beneath the lamp: prayer, word, conscience, mercy, judgment, and the quiet fire of alignment.",
+          signal: "The holy signal arrives as fruit: patience, truth, humility, courage, mercy, and clean action.",
+          crossing: "The crossing is mistaking intensity for instruction. Fire must be governed before it becomes light.",
+          command: "Pray, wait, write, test the fruit, and walk only the step that carries peace with strength."
+        },
+        creative: {
+          title: "Creative / Codex / Building",
+          opening: "The Codex gate opens through language, symbol, design, memory, and the hand that turns vision into form.",
+          signal: "The work is alive when it becomes coherent: one page, one function, one image, one clean bridge at a time.",
+          crossing: "The crossing is trying to carry the whole mountain in one breath.",
+          command: "Build one finished piece. Seal one clean layer. Let the larger scroll assemble by faithful parts."
+        }
+      };
+
+      function buildMirror() {
+        var focus = $("readingFocus");
+        var key = focus ? focus.value : "general";
+        var copy = focusCopy[key] || focusCopy.general;
+
+        var moon = text("moonName") || "Remnant Moon";
+        var moonLine = text("moonLine") || "Moon cadence loading";
+        var phase = text("phaseLine") || "Visible moon loading";
+        var archetype = text("dayArchetype") || "Witness";
+        var archetypeCopy = text("dayArchetypeCopy") || "Record what is actually there.";
+        var week = text("weekGate") || "Week Gate";
+        var weekCopy = text("weekGateCopy") || "The week gate is opening.";
+        var solar = text("solarGate") || "Solar Gate";
+        var solarCopy = text("skyMirrorCopy") || "The sky mirror is forming.";
+        var field = text("statField") || "Unknown";
+
+        var title = moon + " · " + archetype + " Reading";
+        var reading =
+`☲ DAILY MIRROR READING ☲
+
+${copy.title}
+${moon}
+${moonLine}
+
+The Opening
+${copy.opening}
+
+Moon Gate
+The moon stands in ${moon}. Its tone is carried through the line:
+${moonLine}
+
+Visible Sign
+${phase}
+
+Day Seal
+${archetype} — ${archetypeCopy}
+
+Week Gate
+${week}
+${weekCopy}
+
+Solar Gate
+${solar}
+${solarCopy}
+
+Field Layer
+${field}
+
+The Signal
+${copy.signal}
+
+The Crossing
+${copy.crossing}
+
+The Command
+${copy.command}
+
+Witness Questions
+1. What repeated before I tried to explain it?
+2. What word, message, delay, body signal, or timing is asking to be recorded?
+3. What must be guarded: speech, child, body, money, home, tool, or vow?
+4. What is the cleanest action that brings order without surrendering truth?
+5. What must be sealed tonight so tomorrow can open clean?
+
+Closing Seal
+Let the scattered pieces come under order.
+Let the witness stand without panic.
+Let the false door close.
+Let the true gate open.
+Let the record be clean.
+Let the next step be firm.`;
+
+        if ($("mirrorTitle")) $("mirrorTitle").textContent = title;
+        if ($("mirrorOutput")) $("mirrorOutput").textContent = reading;
+        if ($("mirrorSignal")) $("mirrorSignal").textContent = copy.signal;
+        if ($("mirrorShadow")) $("mirrorShadow").textContent = copy.crossing;
+        if ($("mirrorAction")) $("mirrorAction").textContent = copy.command;
+        return reading;
+      }
+
+      function hydrateRitualUI() {
+        var moon = text("moonName") || "Remnant Moon";
+        var line = text("moonLine") || "Read the signal. Record the witness. Ground the body.";
+        var phase = text("phaseLine") || "Visible moon";
+        var day = text("dayInMoon") || "☾";
+        var field = text("statField") || "Unknown";
+
+        if ($("ritualTitle")) $("ritualTitle").textContent = moon;
+        if ($("ritualLine")) $("ritualLine").textContent = line + " · " + phase;
+        if ($("ritualMoonCore")) $("ritualMoonCore").textContent = day;
+
+        var logs = parseInt(text("statLogs") || "0", 10) || 0;
+        var patterns = parseInt(text("statPatterns") || "0", 10) || 0;
+        var fieldBoost = /storm|elevated|charged/i.test(field) ? 80 : /quiet/i.test(field) ? 35 : 52;
+
+        width("meterCoherence", 38 + Math.min(34, logs * 8));
+        width("meterBody", 48);
+        width("meterSignal", 28 + Math.min(52, patterns * 18));
+        width("meterField", fieldBoost);
+        width("meterGround", fieldBoost > 65 ? 86 : 58);
+
+        if ($("meterCoherenceText")) $("meterCoherenceText").textContent = logs ? "Witness active" : "Gathering";
+        if ($("meterSignalText")) $("meterSignalText").textContent = patterns ? "Pattern seen" : "Listening";
+        if ($("meterFieldText")) $("meterFieldText").textContent = field;
+        if ($("meterGroundText")) $("meterGroundText").textContent = fieldBoost > 65 ? "High priority" : "Recommended";
+      }
+
+      function scanLocalLogs() {
+        var raw = [];
+        try {
+          Object.keys(localStorage).forEach(function (k) {
+            if (/moon|witness|scroll|remnant/i.test(k)) {
+              var v = localStorage.getItem(k);
+              if (v) raw.push(v);
+            }
+          });
+        } catch (e) {}
+
+        var blob = raw.join(" ").toLowerCase();
+        var themes = [
+          "speech","court","custody","child","money","housing","dream","water","body","repair",
+          "work","family","signal","fire","moon","sleep","pressure","clarity","peace","record"
+        ];
+
+        var counts = themes.map(function (t) {
+          var m = blob.match(new RegExp("\\b" + t + "\\b", "g"));
+          return { theme: t, count: m ? m.length : 0 };
+        }).filter(function (x) {
+          return x.count > 0;
+        }).sort(function (a, b) {
+          return b.count - a.count;
+        }).slice(0, 5);
+
+        if (counts.length) {
+          if ($("memoryWordsCopy")) $("memoryWordsCopy").textContent = counts.map(function (x) {
+            return x.theme + " ×" + x.count;
+          }).join(" · ");
+          if ($("memoryBodyCopy")) $("memoryBodyCopy").textContent = "The body becomes clearer when the witness is repeated daily.";
+          if ($("memoryFieldCopy")) $("memoryFieldCopy").textContent = "Pattern memory is active in this browser. Export logs before clearing storage.";
+        }
+      }
+
+      document.querySelectorAll("[data-mobile-tab]").forEach(function (link) {
+        link.addEventListener("click", function (event) {
+          event.preventDefault();
+          showTab(link.dataset.mobileTab);
+        });
+      });
+
+      document.querySelectorAll("[data-tab-jump]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          showTab(btn.dataset.tabJump);
+        });
+      });
+
+      if ($("buildMirror")) $("buildMirror").addEventListener("click", buildMirror);
+      if ($("copyMirror")) {
+        $("copyMirror").addEventListener("click", function () {
+          var reading = buildMirror();
+          if (navigator.clipboard) navigator.clipboard.writeText(reading);
+          showToast("Reading copied.");
+        });
+      }
+
+      ["saveWitness","copyWitness","copySeal","copyAllLogs","exportLogs"].forEach(function (id) {
+        var btn = $(id);
+        if (btn) {
+          btn.addEventListener("click", function () {
+            btn.classList.add("pulse-save");
+            setTimeout(function () { btn.classList.remove("pulse-save"); }, 800);
+            showToast(id.indexOf("save") >= 0 ? "Witness sealed." : "Copied to Scroll.");
+            setTimeout(function () { hydrateRitualUI(); scanLocalLogs(); }, 200);
+          });
+        }
+      });
+
+      document.addEventListener("sof:moon-render", function () {
+        buildMirror();
+        hydrateRitualUI();
+        scanLocalLogs();
+      });
+
+      window.addEventListener("load", function () {
+        setTimeout(function () {
+          buildMirror();
+          hydrateRitualUI();
+          scanLocalLogs();
+        }, 550);
+      });
+
+      document.addEventListener("change", function (event) {
+        if (event.target && /Input|readingFocus|datePick|tzPick/.test(event.target.id || "")) {
+          setTimeout(function () {
+            buildMirror();
+            hydrateRitualUI();
+          }, 120);
+        }
+      });
+    })();
+  </script>
 </body>
-              </html>
+</html>

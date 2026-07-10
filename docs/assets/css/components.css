@@ -1,0 +1,142 @@
+.hero-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.75rem;
+  margin-top:1.25rem;
+}
+
+.hero-actions.center{justify-content:center}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.4rem;
+  min-height:44px;
+  padding:.75rem 1rem;
+  border:1px solid var(--line);
+  border-radius:999px;
+  color:var(--text);
+  background:rgba(255,255,255,.04);
+  font-weight:800;
+  text-decoration:none;
+  cursor:pointer;
+  transition:transform .25s ease,background .25s ease,border-color .25s ease;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+  border-color:var(--line-strong);
+  background:rgba(255,255,255,.08);
+}
+
+.btn.primary{
+  border-color:transparent;
+  color:#061016;
+  background:linear-gradient(135deg,var(--gold),var(--cyan));
+  box-shadow:0 0 36px rgba(122,243,255,.14);
+}
+
+.btn.ember{
+  border-color:transparent;
+  color:#120803;
+  background:linear-gradient(135deg,var(--gold),var(--ember));
+  box-shadow:0 0 36px rgba(255,122,61,.12);
+}
+
+.notice-band{
+  margin-top:1rem;
+  padding:1rem;
+  border:1px solid rgba(122,243,255,.18);
+  border-radius:22px;
+  color:var(--muted);
+  background:rgba(122,243,255,.045);
+}
+
+.section-heading{
+  max-width:850px;
+  margin:0 auto 1.25rem;
+  text-align:center;
+}
+
+.section-heading p{color:var(--muted)}
+
+.hero-image-card,
+.exercise-card,
+.artifact-card-mini,
+.signal-card,
+.feature-card,
+.codex-seal,
+.moon-panel,
+.what-card,
+.caravan-card,
+.witness-card{
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 20% 0%,rgba(243,201,122,.09),transparent 35%),
+    linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  box-shadow:var(--shadow);
+}
+
+.signal-card,
+.feature-card,
+.moon-panel,
+.codex-seal,
+.exercise-card,
+.what-card,
+.caravan-card,
+.witness-card{
+  position:relative;
+  overflow:hidden;
+  padding:1rem;
+  border-radius:var(--radius-md);
+}
+
+.signal-card strong{
+  display:block;
+  margin-bottom:.25rem;
+  color:var(--gold);
+  font-size:1.42rem;
+}
+
+.signal-card span,
+.feature-card p,
+.artifact-card-mini div,
+.what-card p,
+.caravan-card p,
+.witness-card p{
+  color:var(--muted);
+}
+
+.what-card strong{
+  display:block;
+  margin-bottom:.35rem;
+  color:var(--gold);
+  font-size:1.15rem;
+}
+
+.witness-card{border-color:rgba(122,243,255,.20)}
+
+.witness-card strong{
+  display:block;
+  margin-bottom:.35rem;
+  color:var(--cyan);
+}
+
+.codex-seal{
+  padding:1.35rem;
+  border-radius:30px;
+  border-color:rgba(243,201,122,.22);
+  text-align:center;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(243,201,122,.14),transparent 55%),
+    rgba(255,255,255,.03);
+}
+
+.codex-seal .equation{
+  color:var(--gold);
+  font-size:clamp(1rem,2.4vw,1.55rem);
+  font-weight:900;
+  letter-spacing:.02em;
+  overflow-wrap:anywhere;
+}
