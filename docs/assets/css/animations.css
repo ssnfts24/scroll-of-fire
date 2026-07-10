@@ -4,16 +4,33 @@
   z-index:0;
   pointer-events:none;
   background:
-    radial-gradient(circle at 20% 25%,rgba(122,243,255,.10),transparent 28%),
-    radial-gradient(circle at 80% 20%,rgba(243,201,122,.12),transparent 30%),
-    radial-gradient(circle at 50% 85%,rgba(217,149,69,.10),transparent 34%);
+    radial-gradient(
+      circle at 20% 25%,
+      rgba(122,243,255,.10),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(243,201,122,.12),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 50% 85%,
+      rgba(217,149,69,.10),
+      transparent 34%
+    );
   filter:blur(8px);
   animation:fieldDrift 18s ease-in-out infinite alternate;
 }
 
 @keyframes fieldDrift{
-  from{transform:translate3d(-1.5%,0,0) scale(1)}
-  to{transform:translate3d(1.5%,-1%,0) scale(1.04)}
+  from{
+    transform:translate3d(-1.5%,0,0) scale(1);
+  }
+
+  to{
+    transform:translate3d(1.5%,-1%,0) scale(1.04);
+  }
 }
 
 .moon-mark{
@@ -21,7 +38,8 @@
 }
 
 @keyframes moonPulse{
-  0%,100%{
+  0%,
+  100%{
     text-shadow:0 0 24px rgba(243,201,122,.15);
     transform:scale(1);
   }
@@ -35,7 +53,9 @@
 .reveal{
   opacity:0;
   transform:translateY(22px);
-  transition:opacity .8s ease,transform .8s ease;
+  transition:
+    opacity .8s ease,
+    transform .8s ease;
 }
 
 .reveal.in{
