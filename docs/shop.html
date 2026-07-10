@@ -695,18 +695,18 @@
       </span>
     </a>
 
-    <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
       <span></span><span></span><span></span>
     </button>
 
-    <nav class="site-nav" aria-label="Primary navigation">
+    <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
       <a href="./">Home</a>
       <a href="start.html">Start</a>
       <a href="moons.html">13 Moons</a>
       <a href="systems/frequencies.html">Frequency</a>
       <a href="hub.html">Hub</a>
       <a href="ledger.html">Ledger</a>
-      <a href="shop.html" aria-current="page">Shop</a>
+      <a href="shop.html" aria-current="page">Artifacts</a>
     </nav>
   </header>
 
@@ -1106,17 +1106,8 @@
     <p>© 2026 Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
   </footer>
 
+  <script defer src="assets/js/site.js"></script>
   <script>
-    const navToggle = document.querySelector(".nav-toggle");
-    const siteNav = document.querySelector(".site-nav");
-
-    if (navToggle && siteNav) {
-      navToggle.addEventListener("click", () => {
-        const open = siteNav.classList.toggle("open");
-        navToggle.setAttribute("aria-expanded", String(open));
-      });
-    }
-
     const cards = Array.from(document.querySelectorAll(".artifact-card"));
     const observer = "IntersectionObserver" in window
       ? new IntersectionObserver((entries) => {

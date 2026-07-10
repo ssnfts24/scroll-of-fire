@@ -7,6 +7,8 @@ User-agent: *
 Allow: /
 
 # Core sitemap
+Sitemap: https://codexofreality.org/sitemap.xml
+# Fallback sitemap (GitHub Pages project URL)
 Sitemap: https://ssnfts24.github.io/scroll-of-fire/sitemap.xml
 
 # Optional future sitemaps

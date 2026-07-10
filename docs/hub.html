@@ -4,15 +4,28 @@
   <base href="https://ssnfts24.github.io/scroll-of-fire/">
   <script>if(location.hostname!=="ssnfts24.github.io"){var _b=document.querySelector("base");if(_b)_b.setAttribute("href","/");}</script>
   <meta charset="utf-8">
-  <title>Systems Hub — Scroll of Fire</title>
+  <title>Systems Hub — Codex of Reality | Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
   <meta name="description" content="Hub for Codex systems: Resonant Physics Engine (T-7), Frequency Governance, Mind-Renewal, Remnant Network, Linguistic Recoder, Interactive Archive.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <link rel="canonical" href="https://codexofreality.org/hub.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:title" content="Systems Hub — Scroll of Fire">
+  <meta property="og:description" content="Open the Codex systems: T-7, Frequency Governance, Witness, Recoder, Mind Renewal, and the Interactive Archive.">
+  <meta property="og:url" content="https://codexofreality.org/hub.html">
+  <meta property="og:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Systems Hub — Scroll of Fire">
+  <meta name="twitter:description" content="The operational systems map for Scroll of Fire and Codex of Reality.">
+  <meta name="twitter:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
   <link rel="stylesheet" href="assets/css/codex.css">
+  <link rel="stylesheet" href="assets/css/navigation.css">
   <style>
     /* Layout */
     main{padding:clamp(16px,4vw,40px)}
-    header{padding:16px 16px 0}
+    .hub-header-intro{padding:16px 16px 0}
     .lede{max-width:72ch;color:var(--muted);margin:0 0 1rem}
 
     /* Ancient Fire notice */
@@ -76,7 +89,7 @@
   </script>
 </head>
 <body>
-  <a class="skip" href="#main">Skip to main</a>
+  <a class="skip-link" href="#main">Skip to content</a>
 
   <!-- 🔥 Ancient Fire notice -->
   <aside class="notice fire" role="status" aria-live="polite">
@@ -90,7 +103,32 @@
     </div>
   </aside>
 
-  <header>
+  <header class="site-header" data-sof-header>
+    <a class="brand" href="./" aria-label="Scroll of Fire home">
+      <span class="brand-mark" aria-hidden="true">☲</span>
+      <span>
+        <strong>Scroll of Fire</strong>
+        <small>Codex of Reality</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <a href="./">Home</a>
+      <a href="start.html">Start</a>
+      <a href="moons.html">13 Moons</a>
+      <a href="systems/frequencies.html">Frequency</a>
+      <a href="teach.html">Manifest</a>
+      <a href="shop.html">Artifacts</a>
+      <a href="ledger.html">Ledger</a>
+      <a href="hub.html" aria-current="page">Hub</a>
+    </nav>
+  </header>
+
+  <header class="hub-header-intro">
     <div class="crumbs"><a href="index.html">Home</a> / Systems Hub</div>
     <h1>Systems Hub</h1>
     <p class="lede">Pick a module. Each maps a practice to your Canon: carriers, Ξ-ethics, memory τ, witness sealing, covenant renaming, and the archive.</p>
@@ -183,6 +221,14 @@
         <div class="spacer"></div>
         <div class="row"><a class="btn" href="ledger.html">Open</a></div>
       </article>
+
+      <article class="card">
+        <div class="row"><span class="badge">Ops</span><span class="spacer"></span></div>
+        <h3>Pre-Publish QA Checklist</h3>
+        <p class="meta">Run stabilization, accessibility, SEO, and release checks before each publish.</p>
+        <div class="spacer"></div>
+        <div class="row"><a class="btn" href="qa-checklist.html">Open</a></div>
+      </article>
     </section>
   </main>
 
@@ -190,6 +236,7 @@
     <p class="meta">Provenance: Originals per Canon; Copeland 7A/7B/8 noted as external comparators. Ethics gate enforced where applicable.</p>
   </footer>
 
+  <script defer src="assets/js/site.js"></script>
   <script>
     // Dismissible banner (remembers for this session)
     (function(){

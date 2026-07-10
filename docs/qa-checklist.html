@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="sof qa-page">
+<head>
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <script>
+    if (location.hostname !== "ssnfts24.github.io") {
+      const b = document.querySelector("base");
+      if (b) b.setAttribute("href", "/");
+    }
+  </script>
+  <meta charset="utf-8">
+  <title>Pre-Publish QA Checklist — Codex of Reality</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Repeatable pre-publish checklist for Scroll of Fire site updates: stabilization, UX flow, accessibility, SEO, and release tracking.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://codexofreality.org/qa-checklist.html">
+  <link rel="stylesheet" href="assets/css/codex.css">
+  <link rel="stylesheet" href="assets/css/navigation.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" data-sof-header>
+    <a class="brand" href="./" aria-label="Scroll of Fire home">
+      <span class="brand-mark" aria-hidden="true">☲</span>
+      <span>
+        <strong>Scroll of Fire</strong>
+        <small>Codex of Reality</small>
+      </span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
+    <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <a href="./">Home</a>
+      <a href="start.html">Start</a>
+      <a href="hub.html">Hub</a>
+      <a href="theory.html">Theory</a>
+      <a href="shop.html">Artifacts</a>
+      <a href="ledger.html">Ledger</a>
+      <a href="qa-checklist.html" aria-current="page">QA Checklist</a>
+    </nav>
+  </header>
+
+  <main id="main" class="section-shell">
+    <p class="eyebrow">Operations · Release Hygiene</p>
+    <h1>Pre-Publish QA Checklist</h1>
+    <p>Use this checklist for every site update before publishing.</p>
+
+    <h2>Phase 1 — Critical stability</h2>
+    <ul>
+      <li>Confirm no broken core links on Home, Theory, Hub, Shop, and Ledger.</li>
+      <li>Verify navigation opens/closes on mobile and keyboard.</li>
+      <li>Confirm page sections load without console errors.</li>
+    </ul>
+
+    <h2>Phase 2 — Accessibility and quality</h2>
+    <ul>
+      <li>Validate skip link, heading order, focus visibility, and button labels.</li>
+      <li>Check contrast and readability on desktop and mobile.</li>
+      <li>Ensure forms and controls work without a mouse.</li>
+    </ul>
+
+    <h2>Phase 3 — SEO and discoverability</h2>
+    <ul>
+      <li>Check title, description, canonical, and Open Graph tags on updated pages.</li>
+      <li>Update sitemap entries and robots sitemap location when pages change.</li>
+      <li>Verify internal links and redirects still resolve correctly.</li>
+    </ul>
+
+    <h2>Release notes and tracking</h2>
+    <ul>
+      <li>Ship in order: critical fixes → performance/accessibility → content/design.</li>
+      <li>Track: page speed (LCP/CLS), broken link count, and engagement on key pages.</li>
+      <li>Record what changed and what to monitor in the next cycle.</li>
+    </ul>
+  </main>
+
+  <script defer src="assets/js/site.js"></script>
+</body>
+</html>

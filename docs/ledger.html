@@ -1,54 +1,145 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr" class="sof ledger-page">
 <head>
+  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <script>
+    if (location.hostname !== "ssnfts24.github.io") {
+      const b = document.querySelector("base");
+      if (b) b.setAttribute("href", "/");
+    }
+  </script>
+
   <meta charset="utf-8">
-  <title>Witness Ledger — Scroll of Fire</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <base href="./">
-  <link href="assets/css/codex.css" rel="stylesheet">
-  <link href="assets/css/superlayout.css" rel="stylesheet">
+  <title>Witness Ledger — Codex of Reality | Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Witness Ledger for Scroll of Fire: record observations, notes, tags, and SHA-256 witness hashes in your local browser and export as JSON.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta name="theme-color" content="#05070d">
+  <link rel="canonical" href="https://codexofreality.org/ledger.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:title" content="Witness Ledger — Scroll of Fire">
+  <meta property="og:description" content="Track witness entries, attach tags, generate SHA-256 hashes, and export your ledger.">
+  <meta property="og:url" content="https://codexofreality.org/ledger.html">
+  <meta property="og:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Witness Ledger — Scroll of Fire">
+  <meta name="twitter:description" content="A local witness ledger with export and import controls.">
+  <meta name="twitter:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
+
+  <link rel="stylesheet" href="assets/css/codex.css">
+  <link rel="stylesheet" href="assets/css/navigation.css">
+  <link rel="stylesheet" href="assets/css/superlayout.css">
+  <style>
+    .ledger-shell{
+      max-width:980px;
+      margin:0 auto;
+      padding:clamp(1rem,3vw,2rem);
+      display:grid;
+      gap:1rem;
+    }
+    .ledger-actions{display:flex;flex-wrap:wrap;gap:.6rem}
+    .ledger-actions button{min-height:42px}
+    label{display:block;font-weight:700;margin:.65rem 0 .35rem}
+    input,textarea{
+      width:100%;
+      border:1px solid var(--line);
+      background:rgba(6,10,18,.75);
+      color:var(--text);
+      border-radius:12px;
+      padding:.75rem;
+      font:inherit;
+    }
+    #entries{display:grid;gap:.8rem}
+    .entry-card{padding:1rem;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.02)}
+    .entry-card code{display:block;word-break:break-all;font-size:.82rem}
+    .entry-meta{color:var(--muted);font-size:.92rem;margin:.3rem 0 .6rem}
+    .status{min-height:1.4rem;color:var(--muted);font-size:.9rem}
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="./">Ξ Scroll of Fire</a>
-    <nav class="topnav">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" data-sof-header>
+    <a class="brand" href="./" aria-label="Scroll of Fire home">
+      <span class="brand-mark" aria-hidden="true">☲</span>
+      <span>
+        <strong>Scroll of Fire</strong>
+        <small>Codex of Reality</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <a href="./">Home</a>
       <a href="start.html">Start</a>
-      <a href="invoke.html">Invoke</a>
       <a href="theory.html">Theory</a>
+      <a href="moons.html">13 Moons</a>
+      <a href="systems/frequencies.html">Frequency</a>
+      <a href="shop.html">Artifacts</a>
+      <a href="hub.html">Hub</a>
+      <a href="ledger.html" aria-current="page">Ledger</a>
     </nav>
   </header>
 
-  <main class="page shell">
-    <p class="eyebrow">Proof • Witness • Hash</p>
-    <h1>Witness Ledger</h1>
-    <p>Local browser ledger for observations, page changes, commit notes, hashes, and witness entries.</p>
-
-    <section class="card">
-      <label>Witness note</label>
-      <textarea id="note" rows="5" placeholder="Write the witness entry..."></textarea>
-
-      <label>Tags</label>
-      <input id="tags" placeholder="index, sitemap, hash, canon">
-
-      <button id="add">Add Entry</button>
-      <button id="export">Export JSON</button>
-      <input id="importFile" type="file" accept="application/json" hidden>
-      <button id="import">Import JSON</button>
+  <main id="main" class="ledger-shell">
+    <section class="section-shell">
+      <p class="eyebrow">Proof · Witness · Hash</p>
+      <h1>Witness Ledger</h1>
+      <p>Record observations, page updates, and commit notes. Entries are stored in your browser and can be exported or imported as JSON.</p>
     </section>
 
-    <section class="card">
-      <h2>Entries</h2>
+    <section class="section-shell" aria-labelledby="entry-form-title">
+      <h2 id="entry-form-title">Add witness entry</h2>
+
+      <label for="note">Witness note</label>
+      <textarea id="note" rows="5" placeholder="Write the witness entry..." required></textarea>
+
+      <label for="tags">Tags</label>
+      <input id="tags" placeholder="index, sitemap, hash, canon">
+
+      <div class="ledger-actions">
+        <button id="add" type="button">Add Entry</button>
+        <button id="export" type="button">Export JSON</button>
+        <input id="importFile" type="file" accept="application/json" hidden>
+        <button id="import" type="button">Import JSON</button>
+      </div>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="section-shell" aria-labelledby="entries-title">
+      <h2 id="entries-title">Entries</h2>
       <div id="entries"></div>
     </section>
   </main>
 
+  <script defer src="assets/js/site.js"></script>
   <script>
-    const KEY = "scroll_of_fire_witness_ledger_v3";
-    const $ = id => document.getElementById(id);
+    const KEY = "scroll_of_fire_witness_ledger_v4";
+    const LEGACY_KEY = "scroll_of_fire_witness_ledger_v3";
+    const $ = (id) => document.getElementById(id);
+
+    function setStatus(message) {
+      $("status").textContent = message || "";
+    }
 
     function read() {
-      try { return JSON.parse(localStorage.getItem(KEY)) || []; }
-      catch { return []; }
+      try {
+        const current = JSON.parse(localStorage.getItem(KEY));
+        if (Array.isArray(current)) return current;
+        const legacy = JSON.parse(localStorage.getItem(LEGACY_KEY));
+        if (Array.isArray(legacy)) {
+          localStorage.setItem(KEY, JSON.stringify(legacy, null, 2));
+          return legacy;
+        }
+        return [];
+      } catch {
+        return [];
+      }
     }
 
     function write(data) {
@@ -58,13 +149,37 @@
     async function sha256(text) {
       const bytes = new TextEncoder().encode(text);
       const hash = await crypto.subtle.digest("SHA-256", bytes);
-      return [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2, "0")).join("");
+      return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+      }[m]));
+    }
+
+    function render() {
+      const data = read();
+      $("entries").innerHTML = data.length
+        ? data.map((e) => `
+          <article class="entry-card">
+            <p><strong>${new Date(e.date).toLocaleString()}</strong></p>
+            <p class="entry-meta">${escapeHtml(e.tags || "untagged")}</p>
+            <p>${escapeHtml(e.note)}</p>
+            <code>${e.hash}</code>
+          </article>
+        `).join("")
+        : "<p>No entries yet.</p>";
     }
 
     async function addEntry() {
       const note = $("note").value.trim();
       const tags = $("tags").value.trim();
-      if (!note) return alert("Add a witness note first.");
+      if (!note) {
+        setStatus("Add a witness note first.");
+        $("note").focus();
+        return;
+      }
 
       const entry = {
         date: new Date().toISOString(),
@@ -73,29 +188,11 @@
         hash: await sha256(JSON.stringify({ note, tags }))
       };
 
-      const data = [entry, ...read()];
-      write(data);
+      write([entry, ...read()]);
       $("note").value = "";
       $("tags").value = "";
+      setStatus("Entry added.");
       render();
-    }
-
-    function render() {
-      const data = read();
-      $("entries").innerHTML = data.length ? data.map(e => `
-        <article class="card">
-          <p><strong>${new Date(e.date).toLocaleString()}</strong></p>
-          <p>${escapeHtml(e.note)}</p>
-          <p><small>${escapeHtml(e.tags || "untagged")}</small></p>
-          <code>${e.hash}</code>
-        </article>
-      `).join("") : "<p>No entries yet.</p>";
-    }
-
-    function escapeHtml(str) {
-      return String(str).replace(/[&<>"']/g, m => ({
-        "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
-      }[m]));
     }
 
     $("add").addEventListener("click", addEntry);
@@ -107,17 +204,23 @@
       a.download = "scroll-of-fire-ledger.json";
       a.click();
       URL.revokeObjectURL(a.href);
+      setStatus("Ledger exported.");
     });
 
     $("import").addEventListener("click", () => $("importFile").click());
 
-    $("importFile").addEventListener("change", async e => {
-      const file = e.target.files[0];
+    $("importFile").addEventListener("change", async (event) => {
+      const file = event.target.files[0];
       if (!file) return;
-      const incoming = JSON.parse(await file.text());
-      if (!Array.isArray(incoming)) return alert("Invalid ledger JSON.");
-      write([...incoming, ...read()]);
-      render();
+      try {
+        const incoming = JSON.parse(await file.text());
+        if (!Array.isArray(incoming)) throw new Error("invalid");
+        write([...incoming, ...read()]);
+        render();
+        setStatus("Ledger imported.");
+      } catch {
+        setStatus("Invalid ledger JSON.");
+      }
     });
 
     render();
