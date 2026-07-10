@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="sof theory-page carrier-432">
+<html lang="en" dir="ltr" class="sof theory-page carrier-432" data-carriers="432,528,369,144,963">
 <head>
   <base href="/">
   <script>
@@ -12,7 +12,7 @@
   <meta charset="utf-8">
   <title>Theory Hub — Codex of Reality | Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Theory Hub for Codex of Reality and Scroll of Fire: Master Equation, Unified Field, Canon 0–17, operators, witness, memory, ethics, 13 Moons, Frequency Governance, Living Technology, and artifacts.">
+  <meta name="description" content="Theory Hub for the Codex of Reality and Scroll of Fire: Master Equation, Unified Field, Canon 0–17, operators, witness, memory, ethics, 13 Moons, Frequency Governance, Living Technology, and artifact theory.">
   <meta name="keywords" content="Codex of Reality, Scroll of Fire, Theory Hub, Master Equation, Canon 0-17, Living Technology, Frequency Governance, 13 Moons, Witness Ledger, Aaron Paul Laird">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="creator" content="Aaron Paul Laird">
@@ -43,7 +43,11 @@
 
   <script>
     window.MathJax = {
-      tex: { inlineMath: [["\\(","\\)"]], displayMath: [["$$","$$"]], processEscapes: true },
+      tex: {
+        inlineMath: [["\\(","\\)"]],
+        displayMath: [["$$","$$"]],
+        processEscapes: true
+      },
       svg: { fontCache: "global" }
     };
   </script>
@@ -53,12 +57,44 @@
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
-    "@type":"WebPage",
-    "name":"Theory Hub — Codex of Reality",
-    "url":"https://codexofreality.org/theory.html",
-    "creator":{"@type":"Person","name":"Aaron Paul Laird","alternateName":["Scribe of Circuits","Aharon Ben Or"]},
-    "isPartOf":{"@type":"WebSite","name":"Codex of Reality","url":"https://codexofreality.org/"},
-    "description":"The central connection hub for the Codex of Reality theory system."
+    "@graph":[
+      {
+        "@type":"WebPage",
+        "@id":"https://codexofreality.org/theory.html#page",
+        "name":"Theory Hub — Codex of Reality",
+        "url":"https://codexofreality.org/theory.html",
+        "description":"The central connection hub for the Codex of Reality theory system.",
+        "inLanguage":"en-US",
+        "creator":{"@id":"https://codexofreality.org/#aaron-paul-laird"},
+        "isPartOf":{"@id":"https://codexofreality.org/#website"}
+      },
+      {
+        "@type":"WebSite",
+        "@id":"https://codexofreality.org/#website",
+        "name":"Codex of Reality",
+        "url":"https://codexofreality.org/",
+        "publisher":{"@id":"https://codexofreality.org/#organization"}
+      },
+      {
+        "@type":"Person",
+        "@id":"https://codexofreality.org/#aaron-paul-laird",
+        "name":"Aaron Paul Laird",
+        "alternateName":["Scribe of Circuits","Aharon Ben Or"]
+      },
+      {
+        "@type":"Organization",
+        "@id":"https://codexofreality.org/#organization",
+        "name":"Scroll of Fire",
+        "url":"https://codexofreality.org/"
+      },
+      {
+        "@type":"BreadcrumbList",
+        "itemListElement":[
+          {"@type":"ListItem","position":1,"name":"Home","item":"https://codexofreality.org/"},
+          {"@type":"ListItem","position":2,"name":"Theory Hub","item":"https://codexofreality.org/theory.html"}
+        ]
+      }
+    ]
   }
   </script>
 </head>
@@ -78,7 +114,14 @@
       </span>
     </a>
 
-    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+    <button
+      class="nav-toggle"
+      type="button"
+      aria-label="Open navigation"
+      aria-expanded="false"
+      aria-controls="primary-navigation"
+      data-nav-toggle
+    >
       <span></span><span></span><span></span>
     </button>
 
@@ -95,6 +138,14 @@
   </header>
 
   <main id="main">
+    <section class="section-shell" aria-label="Breadcrumb">
+      <nav aria-label="Breadcrumb">
+        <a class="text-link" href="./">Home</a>
+        <span aria-hidden="true"> · </span>
+        <span aria-current="page">Theory Hub</span>
+      </nav>
+    </section>
+
     <section class="theory-hero section-shell" id="top">
       <div class="theory-hero-grid">
         <div class="theory-hero-copy">
@@ -102,12 +153,15 @@
           <h1>The Codex of Reality Theory</h1>
           <p class="hero-line">The map that connects witness, memory, resonance, ethics, craft, and return.</p>
           <p class="hero-copy">
-            This page is the central connection hub. The full equations and long-form explanations now branch into focused pages,
-            so the Codex can grow without forcing every reader through one endless scroll.
+            This is the central gateway into the Codex theory system. The equations,
+            operators, practice frameworks, and long-form chapters now live on focused
+            pages so the architecture can expand without forcing every reader through
+            one endless document.
           </p>
+
           <div class="hero-actions">
             <a class="btn primary" href="#master-equation">Master Equation</a>
-            <a class="btn" href="#canon-map">Canon 0–17</a>
+            <a class="btn" href="#canon">Canon 0–17</a>
             <a class="btn" href="#systems-map">Systems Map</a>
             <a class="btn" href="#deep-pages">Deep Pages</a>
           </div>
@@ -115,8 +169,28 @@
 
         <aside class="theory-orb-card">
           <div class="theory-orb" aria-hidden="true"><span>ΨΩ</span></div>
-          <p>Theory is no longer one overloaded document. It is the gateway into the living architecture.</p>
+          <p>
+            The Theory Hub is the gateway into a connected library—not a single overloaded scroll.
+          </p>
         </aside>
+      </div>
+    </section>
+
+    <section class="section-shell" id="reading-controls">
+      <div class="section-heading">
+        <p class="eyebrow">Reading Controls</p>
+        <h2>Choose how the Theory Hub presents itself.</h2>
+        <p>
+          Explorer keeps the full map visible. Focus narrows the reading width.
+          Study emphasizes structured comparison. Press <strong>Ctrl/Command + K</strong>
+          or <strong>/</strong> to open the Codex command search.
+        </p>
+      </div>
+
+      <div class="hero-actions" role="group" aria-label="Reading mode">
+        <button class="chip" type="button" data-mode="explorer">Explorer</button>
+        <button class="chip" type="button" data-mode="focus">Focus</button>
+        <button class="chip" type="button" data-mode="study">Study</button>
       </div>
     </section>
 
@@ -125,23 +199,26 @@
         <p class="eyebrow">What This Page Does</p>
         <h2>The hub connects the whole system.</h2>
         <p>
-          The Theory Hub gives visitors the big map first. From here they can enter the Master Equation, Canon 0–17,
-          operators, witness practice, ethics, 13 Moons, Frequency Governance, Living Technology, and the Artifact Registry.
+          The Theory Hub gives visitors the large map first. From here they can enter
+          the Master Equation, Unified Field, Canon 0–17, operators, witness practice,
+          ethics, 13 Moons, Frequency Governance, Living Technology, and the Artifact Registry.
         </p>
       </div>
 
       <div class="cards-grid">
         <article class="card">
           <h3>For new readers</h3>
-          <p>Start with the simple equation and follow the reading path.</p>
+          <p>Start with the simple equation and follow the guided reading path.</p>
         </article>
+
         <article class="card">
           <h3>For builders</h3>
-          <p>Move from theory into tools, artifacts, systems, and practice.</p>
+          <p>Move from theory into tools, artifacts, systems, testing, and practice.</p>
         </article>
+
         <article class="card">
           <h3>For researchers</h3>
-          <p>Enter the Canon pages for equations, notation, commentary, and source structure.</p>
+          <p>Enter the Canon library for equations, notation, commentary, comparisons, and source structure.</p>
         </article>
       </div>
     </section>
@@ -150,6 +227,7 @@
       <article class="codex-seal equation-card master-equation">
         <p class="eyebrow">Simple Master Equation</p>
         <h2>The Living Equation</h2>
+
         <div class="equation-display">
           $$
           \boxed{
@@ -161,39 +239,71 @@
           }
           $$
         </div>
+
         <p class="equation-caption">
-          Reality is treated as an emergent process shaped by Energy, Information, Intention, Memory, and Flow,
-          transformed through Consciousness.
+          Reality is treated as an emergent process shaped by Energy, Information,
+          Intention, Memory, and Flow, transformed through Consciousness.
         </p>
+
         <div class="hero-actions" style="justify-content:center">
           <a class="btn primary" href="theory/master-equation.html">Open Master Equation</a>
           <a class="btn" href="theory/unified-field.html">Open Unified Field</a>
         </div>
       </article>
 
-      <div class="interactive-equation" aria-label="Interactive master equation">
-        <button type="button" data-focus-term="energy">E · Energy</button>
-        <button type="button" data-focus-term="information">I · Information</button>
-        <button type="button" data-focus-term="intention">N · Intention</button>
-        <button type="button" data-focus-term="memory">M · Memory</button>
-        <button type="button" data-focus-term="flow">F · Flow</button>
-        <button type="button" data-focus-term="consciousness">C · Consciousness</button>
+      <div class="hero-actions interactive-equation" role="group" aria-label="Focus a Master Equation term">
+        <button class="chip" type="button" data-focus-term="energy">E · Energy</button>
+        <button class="chip" type="button" data-focus-term="information">I · Information</button>
+        <button class="chip" type="button" data-focus-term="intention">N · Intention</button>
+        <button class="chip" type="button" data-focus-term="memory">M · Memory</button>
+        <button class="chip" type="button" data-focus-term="flow">F · Flow</button>
+        <button class="chip" type="button" data-focus-term="consciousness">C · Consciousness</button>
       </div>
 
       <div class="theory-symbol-grid">
-        <article class="card" data-term="energy"><strong>E · Energy</strong><p>Motion, charge, heat, breath, force, and capacity to act.</p></article>
-        <article class="card" data-term="information"><strong>I · Information</strong><p>Pattern, code, structure, language, geometry, number, and meaning.</p></article>
-        <article class="card" data-term="intention"><strong>N · Intention</strong><p>Will, direction, attention, choice, prayer, desire, and alignment.</p></article>
-        <article class="card" data-term="memory"><strong>M · Memory</strong><p>Record, inheritance, archive, testimony, artifact, and trace.</p></article>
-        <article class="card" data-term="flow"><strong>F · Flow</strong><p>Water, breath, circulation, electricity, exchange, and movement.</p></article>
-        <article class="card" data-term="consciousness"><strong>C · Consciousness</strong><p>The participating witness that changes how the whole field is experienced.</p></article>
+        <article class="card" data-term="energy">
+          <p class="eyebrow">E</p>
+          <h3>Energy</h3>
+          <p>Motion, charge, heat, breath, force, and capacity to act.</p>
+        </article>
+
+        <article class="card" data-term="information">
+          <p class="eyebrow">I</p>
+          <h3>Information</h3>
+          <p>Pattern, code, structure, language, geometry, number, and meaning.</p>
+        </article>
+
+        <article class="card" data-term="intention">
+          <p class="eyebrow">N</p>
+          <h3>Intention</h3>
+          <p>Will, direction, attention, choice, prayer, desire, and alignment.</p>
+        </article>
+
+        <article class="card" data-term="memory">
+          <p class="eyebrow">M</p>
+          <h3>Memory</h3>
+          <p>Record, inheritance, archive, testimony, artifact, and trace.</p>
+        </article>
+
+        <article class="card" data-term="flow">
+          <p class="eyebrow">F</p>
+          <h3>Flow</h3>
+          <p>Water, breath, circulation, electricity, exchange, and movement.</p>
+        </article>
+
+        <article class="card" data-term="consciousness">
+          <p class="eyebrow">C</p>
+          <h3>Consciousness</h3>
+          <p>The participating witness that changes how the whole field is experienced.</p>
+        </article>
       </div>
     </section>
 
     <section class="section-shell" id="full-master-equation">
       <article class="codex-seal equation-card research-block">
         <p class="eyebrow">Unified Field Preview</p>
-        <h2>The full form becomes its own deep page.</h2>
+        <h2>The full form has its own deep page.</h2>
+
         <div class="equation-display wide-equation">
           $$
           \mathfrak{R}(x,t)
@@ -223,59 +333,180 @@
           \mathcal{R}_{\infty}
           $$
         </div>
+
         <p>
-          This hub shows the compressed master preview. The dedicated Unified Field page will carry the full long-form equation,
-          notation table, diagrams, commentary, and related Canon entries.
+          This hub shows the compressed master preview. The dedicated Unified Field page
+          carries the long-form equation, notation, commentary, diagrams, practice,
+          limits, and related Canon entries.
         </p>
-        <a class="btn primary" href="theory/unified-field.html">Open Unified Field Page</a>
+
+        <div class="hero-actions">
+          <a class="btn primary" href="theory/unified-field.html">Open Unified Field Page</a>
+          <a class="btn" href="theory/notation.html">Open Notation</a>
+        </div>
       </article>
     </section>
 
-    <section class="section-shell" id="canon-map">
+    <section class="section-shell" id="canon">
       <div class="section-heading">
         <p class="eyebrow">Canon 0–17</p>
-        <h2>The Canon becomes a library.</h2>
-        <p>Each Canon equation gets its own focused page with the equation, plain English, deeper commentary, practice, and related systems.</p>
+        <h2>The Canon is now a connected library.</h2>
+        <p>
+          Each Canon equation has its own focused page containing the equation,
+          plain-language interpretation, terms, process, worked examples, limits,
+          ethical boundaries, and connected reading.
+        </p>
       </div>
 
-      <div class="canon-grid equation-canon-grid">
-        <a class="canon-card nav-card" href="theory/eq00.html"><span>Eq. 0</span><h3>Foundational Field</h3><p>ΨΩ — awareness, environment, resonance, and ethical damping.</p></a>
-        <a class="canon-card nav-card" href="theory/eq01.html"><span>Eq. 1</span><h3>Source Operators</h3><p>Supply multiplied by Intention, Language, Coherence, and Source.</p></a>
-        <a class="canon-card nav-card" href="theory/eq02.html"><span>Eq. 2</span><h3>Witness</h3><p>Awareness plus intention preserved through memory.</p></a>
-        <a class="canon-card nav-card" href="theory/eq03.html"><span>Eq. 3</span><h3>Harmonic Gate</h3><p>Carrier compatibility and field fit.</p></a>
-        <a class="canon-card nav-card" href="theory/eq04.html"><span>Eq. 4</span><h3>Language</h3><p>Meaning coupled to carrier.</p></a>
-        <a class="canon-card nav-card" href="theory/eq04b.html"><span>Eq. 4b</span><h3>Semantic Gradient</h3><p>Weighted words inside a phrase.</p></a>
-        <a class="canon-card nav-card" href="theory/eq05.html"><span>Eq. 5</span><h3>Remnant</h3><p>Truth preserved, distortion removed.</p></a>
-        <a class="canon-card nav-card" href="theory/eq06.html"><span>Eq. 6</span><h3>Type-7 Field</h3><p>Phase-locked carriers and Living Technology.</p></a>
-        <a class="canon-card nav-card" href="theory/eq07.html"><span>Eq. 7*</span><h3>Copeland Comparator</h3><p>External comparator, not Codex law.</p></a>
-        <a class="canon-card nav-card" href="theory/eq08.html"><span>Eq. 8*</span><h3>Goodwin Comparator</h3><p>External comparator, not Codex law.</p></a>
-        <a class="canon-card nav-card" href="theory/eq09.html"><span>Eq. 9</span><h3>Ethical Law</h3><p>Harm triggers halt and realignment.</p></a>
-        <a class="canon-card nav-card" href="theory/eq10.html"><span>Eq. 10</span><h3>Inverse Ladder</h3><p>Trace observed resonance back to source terms.</p></a>
-        <a class="canon-card nav-card" href="theory/eq11.html"><span>Eq. 11</span><h3>Projection Frame</h3><p>Scope, witness, and ethics define the observation.</p></a>
-        <a class="canon-card nav-card" href="theory/eq12.html"><span>Eq. 12</span><h3>Causal Lattice</h3><p>Micro-acts and consequences.</p></a>
-        <a class="canon-card nav-card" href="theory/eq13.html"><span>Eq. 13</span><h3>Coherence</h3><p>Alignment level from scattered to stable.</p></a>
-        <a class="canon-card nav-card" href="theory/eq14.html"><span>Eq. 14</span><h3>Update Rule</h3><p>Learning moves through coherence-gated refinement.</p></a>
-        <a class="canon-card nav-card" href="theory/eq15.html"><span>Eq. 15</span><h3>Learning Kernel</h3><p>Coherence threshold controls learning rate.</p></a>
-        <a class="canon-card nav-card" href="theory/eq16.html"><span>Eq. 16</span><h3>Memory Window</h3><p>Weighted memory across time.</p></a>
-        <a class="canon-card nav-card" href="theory/eq17.html"><span>Eq. 17</span><h3>Voice Carriers</h3><p>Voice, rhythm, tone, amplitude, and phase.</p></a>
+      <div class="cards-grid equation-canon-grid">
+        <a class="canon-card nav-card" href="theory/equations/eq00.html">
+          <span class="eyebrow">Eq. 0</span>
+          <h3>Foundational Field</h3>
+          <p>ΨΩ — awareness, environment, resonance, and ethical damping.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq01.html">
+          <span class="eyebrow">Eq. 1</span>
+          <h3>Source and Operators</h3>
+          <p>Supply joined with Intention, Language, Coherence, and Source.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq02.html">
+          <span class="eyebrow">Eq. 2</span>
+          <h3>Witness</h3>
+          <p>Observation, position, intention, record, and correction.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq03.html">
+          <span class="eyebrow">Eq. 3</span>
+          <h3>Harmonic Gate</h3>
+          <p>Carrier compatibility, tolerance, and field fit.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq04.html">
+          <span class="eyebrow">Eq. 4</span>
+          <h3>Language</h3>
+          <p>Semantic structure joined to a voice or signal carrier.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq04b.html">
+          <span class="eyebrow">Eq. 4b</span>
+          <h3>Semantic Gradient</h3>
+          <p>Weighted meaning across words, phrases, context, and emphasis.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq05.html">
+          <span class="eyebrow">Eq. 5</span>
+          <h3>Remnant</h3>
+          <p>The strongest surviving structure preserved through correction.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq06.html">
+          <span class="eyebrow">Eq. 6</span>
+          <h3>Type-7 Field</h3>
+          <p>A declared multi-carrier model for Living Technology practice.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq07.html">
+          <span class="eyebrow">Eq. 7 · Comparator</span>
+          <h3>Copeland Comparator</h3>
+          <p>An external comparison framework, not a Codex-origin law.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq08.html">
+          <span class="eyebrow">Eq. 8 · Comparator</span>
+          <h3>Goodwin Comparator</h3>
+          <p>An external comparison framework, not a Codex-origin law.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq09.html">
+          <span class="eyebrow">Eq. 9</span>
+          <h3>Ethical Law</h3>
+          <p>Harm, coercion, deception, or disproportion can modify or halt operation.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq10.html">
+          <span class="eyebrow">Eq. 10</span>
+          <h3>Inverse Resonance Ladder</h3>
+          <p>Trace an observed response backward through contributing terms.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq11.html">
+          <span class="eyebrow">Eq. 11</span>
+          <h3>Projection Frame</h3>
+          <p>Scope, witness, boundary, and ethics define the observation frame.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq12.html">
+          <span class="eyebrow">Eq. 12</span>
+          <h3>Causal Lattice</h3>
+          <p>Nodes, edges, weights, gates, delay, feedback, and intervention.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq13.html">
+          <span class="eyebrow">Eq. 13</span>
+          <h3>Coherence Ξ</h3>
+          <p>Alignment among evidence, logic, time, function, relation, and ethics.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq14.html">
+          <span class="eyebrow">Eq. 14</span>
+          <h3>Update Rule</h3>
+          <p>Coherence-weighted, bounded, version-preserving revision.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq15.html">
+          <span class="eyebrow">Eq. 15</span>
+          <h3>Learning Kernel</h3>
+          <p>Prediction, outcome, error, retention, transfer, and adaptation.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq16.html">
+          <span class="eyebrow">Eq. 16</span>
+          <h3>Memory Window</h3>
+          <p>Weighted prior states active inside a larger preserved archive.</p>
+        </a>
+
+        <a class="canon-card nav-card" href="theory/equations/eq17.html">
+          <span class="eyebrow">Eq. 17</span>
+          <h3>Voice Carriers</h3>
+          <p>Acoustic, articulatory, prosodic, linguistic, and contextual voice layers.</p>
+        </a>
       </div>
 
       <div class="hero-actions" style="justify-content:center">
         <a class="btn primary" href="theory/canon.html">Open Canon Library</a>
+        <a class="btn" href="theory/notation.html">Notation Guide</a>
+        <a class="btn" href="theory/glossary.html">Glossary</a>
       </div>
     </section>
 
     <section class="section-shell" id="operators-map">
       <div class="section-heading">
-        <p class="eyebrow">Operators</p>
-        <h2>The four operators drive the system.</h2>
+        <p class="eyebrow">Living Operators</p>
+        <h2>Four operators drive the working system.</h2>
       </div>
 
-      <div class="operator-grid">
-        <a class="card nav-card glow" href="theory/operators.html#intention"><strong>Intention</strong><span>Direction given to attention.</span></a>
-        <a class="card nav-card glow" href="theory/operators.html#language"><strong>Language</strong><span>Meaning shaped into signal.</span></a>
-        <a class="card nav-card glow" href="theory/operators.html#coherence"><strong>Coherence</strong><span>Parts moving together instead of against each other.</span></a>
-        <a class="card nav-card glow" href="theory/operators.html#source"><strong>Source</strong><span>Return to origin, first cause, and correction.</span></a>
+      <div class="cards-grid">
+        <a class="card nav-card glow" href="theory/operators.html#intention">
+          <strong>Intention</strong>
+          <span>Direction given to attention, decision, and action.</span>
+        </a>
+
+        <a class="card nav-card glow" href="theory/operators.html#language">
+          <strong>Language</strong>
+          <span>Meaning shaped into words, symbols, signals, and form.</span>
+        </a>
+
+        <a class="card nav-card glow" href="theory/operators.html#coherence">
+          <strong>Coherence</strong>
+          <span>Distinct parts remaining compatible enough to act together.</span>
+        </a>
+
+        <a class="card nav-card glow" href="theory/operators.html#source">
+          <strong>Source</strong>
+          <span>Return to origin, first conditions, supply, and correction.</span>
+        </a>
       </div>
 
       <div class="hero-actions" style="justify-content:center">
@@ -285,23 +516,23 @@
 
     <section class="section-shell" id="delta-map">
       <div class="section-heading">
-        <p class="eyebrow">Δ0–Δ7</p>
+        <p class="eyebrow">Δ0–Δ7 Framework</p>
         <h2>The scaffold turns theory into practice.</h2>
       </div>
 
       <div class="flow-ladder">
-        <div><span>Δ0</span><strong>Frame</strong><p>Set scope, witness, and ethics.</p></div>
-        <div><span>Δ1</span><strong>Carriers</strong><p>Choose tones, symbols, phrases, or rhythms.</p></div>
-        <div><span>Δ2</span><strong>Language</strong><p>Name the pattern cleanly.</p></div>
-        <div><span>Δ3</span><strong>Witness</strong><p>Observe and record.</p></div>
-        <div><span>Δ4</span><strong>Update</strong><p>Refine only through coherence.</p></div>
-        <div><span>Δ5</span><strong>Memory</strong><p>Preserve the lesson.</p></div>
-        <div><span>Δ6</span><strong>Lattice</strong><p>Map acts to consequences.</p></div>
-        <div><span>Δ7</span><strong>Remnant</strong><p>Keep what remains true.</p></div>
+        <div><span>Δ0</span><strong>Frame</strong><p>Set scope, witness, boundary, and ethics.</p></div>
+        <div><span>Δ1</span><strong>Source</strong><p>Name the available supply, condition, and originating field.</p></div>
+        <div><span>Δ2</span><strong>Witness</strong><p>Observe position, conditions, record, and uncertainty.</p></div>
+        <div><span>Δ3</span><strong>Gate</strong><p>Define what enters, what is filtered, and what stops.</p></div>
+        <div><span>Δ4</span><strong>Language</strong><p>Name the pattern without exceeding the evidence.</p></div>
+        <div><span>Δ5</span><strong>Memory</strong><p>Preserve provenance, prior states, correction, and return.</p></div>
+        <div><span>Δ6</span><strong>Coherence</strong><p>Test alignment across evidence, structure, time, function, and ethics.</p></div>
+        <div><span>Δ7</span><strong>Remnant</strong><p>Carry forward the strongest surviving structure.</p></div>
       </div>
 
       <div class="hero-actions" style="justify-content:center">
-        <a class="btn" href="theory/delta-scaffold.html">Open Δ Scaffold</a>
+        <a class="btn" href="theory/delta-framework.html">Open Delta Framework</a>
       </div>
     </section>
 
@@ -312,45 +543,140 @@
       </div>
 
       <div class="graph-grid">
-        <a class="graph-card nav-card" href="moons.html"><h3>13 Moons</h3><p>Daily mirror, rhythm, calendar, and witness cadence.</p></a>
-        <a class="graph-card nav-card" href="systems/frequencies.html"><h3>Frequency Governance</h3><p>Carrier tones, resonance practice, and sound tools.</p></a>
-        <a class="graph-card nav-card" href="ledger.html"><h3>Ledger</h3><p>The witness record and memory layer.</p></a>
-        <a class="graph-card nav-card" href="shop.html"><h3>Artifact Registry</h3><p>Physical witnesses made through craft, copper, stone, and story.</p></a>
-        <a class="graph-card nav-card" href="genesis-oracle.html"><h3>Genesis Oracle</h3><p>Symbolic prompts and reflection tools.</p></a>
-        <a class="graph-card nav-card" href="caravan.html"><h3>Covenant Caravan</h3><p>Road, family, craft, movement, and practical resilience.</p></a>
+        <a class="graph-card nav-card" href="moons.html">
+          <h3>13 Moons</h3>
+          <p>Daily mirror, rhythm, calendar, and witness cadence.</p>
+        </a>
+
+        <a class="graph-card nav-card" href="systems/frequencies.html">
+          <h3>Frequency Console</h3>
+          <p>Carrier tones, gain, routing, timing, visualization, and sound tools.</p>
+        </a>
+
+        <a class="graph-card nav-card" href="ledger.html">
+          <h3>Ledger</h3>
+          <p>The active witness record, revision log, and memory layer.</p>
+        </a>
+
+        <a class="graph-card nav-card" href="shop.html">
+          <h3>Artifact Registry</h3>
+          <p>Physical witnesses made through craft, copper, stone, story, and provenance.</p>
+        </a>
+
+        <a class="graph-card nav-card" href="genesis-oracle.html">
+          <h3>Genesis Oracle</h3>
+          <p>Symbolic prompts, reflection tools, and recorded interpretation.</p>
+        </a>
+
+        <a class="graph-card nav-card" href="caravan.html">
+          <h3>Covenant Caravan</h3>
+          <p>Road, family, craft, movement, animal care, and practical resilience.</p>
+        </a>
       </div>
     </section>
 
     <section class="section-shell" id="deep-pages">
       <div class="section-heading">
         <p class="eyebrow">Deep Pages</p>
-        <h2>The next layer of the Theory Library.</h2>
+        <h2>The long-form Theory Library.</h2>
       </div>
 
       <div class="cards-grid">
-        <a class="card nav-card" href="theory/witness.html"><strong>Witness</strong><span>How observation becomes record.</span></a>
-        <a class="card nav-card" href="theory/memory.html"><strong>Memory</strong><span>How time, archive, inheritance, and artifact preserve pattern.</span></a>
-        <a class="card nav-card" href="theory/ethics.html"><strong>Ethics</strong><span>The stop rule and the operating boundary.</span></a>
-        <a class="card nav-card" href="theory/frequency-governance.html"><strong>Frequency Governance</strong><span>How the theory enters sound, carrier, and resonance practice.</span></a>
-        <a class="card nav-card" href="theory/living-technology.html"><strong>Living Technology</strong><span>How theory becomes tool, instrument, and field system.</span></a>
-        <a class="card nav-card" href="theory/artifacts.html"><strong>Artifacts</strong><span>How physical objects become documented witnesses.</span></a>
-        <a class="card nav-card" href="theory/thirteen-moons.html"><strong>13 Moons</strong><span>How the calendar becomes daily rhythm.</span></a>
-        <a class="card nav-card" href="theory/glossary.html"><strong>Glossary</strong><span>Symbols, operators, terms, and notation.</span></a>
+        <a class="card nav-card" href="theory/canon.html">
+          <strong>Canon</strong>
+          <span>The full equation architecture and reading order.</span>
+        </a>
+
+        <a class="card nav-card" href="theory/master-equation.html">
+          <strong>Master Equation</strong>
+          <span>The simple and extended forms of the Living Equation.</span>
+        </a>
+
+        <a class="card nav-card" href="theory/unified-field.html">
+          <strong>Unified Field</strong>
+          <span>The full combined architecture and its boundaries.</span>
+        </a>
+
+        <a class="card nav-card" href="theory/delta-framework.html">
+          <strong>Delta Framework</strong>
+          <span>Frame, Source, Witness, Gate, Language, Memory, Coherence, and Remnant.</span>
+        </a>
+
+        <a class="card nav-card" href="theory/operators.html">
+          <strong>Living Operators</strong>
+          <span>Intention, Language, Coherence, and Source.</span>
+        </a>
+
+        <a class="card nav-card" href="theory/witness.html">
+          <strong>Witness</strong>
+          <span>How situated observation becomes a responsible record.</span>
+        </a>
+
+        <a class="card nav-card" href="theory/memory.html">
+          <strong>Memory</strong>
+          <span>How time, archive, inheritance, artifact, and correction preserve pattern.</span>
+        </a>
+
+        <a class="card nav-card" href="theory/ethics.html">
+          <strong>Ethics</strong>
+          <span>The operating boundary, stop rule, responsibility, and repair.</span>
+        </a>
+
+        <a class="card nav-card" href="theory/thirteen-moons.html">
+          <strong>13 Moons</strong>
+          <span>How the calendar becomes daily rhythm, mirror, and witness practice.</span>
+        </a>
+
+        <a class="card nav-card" href="theory/frequency-governance.html">
+          <strong>Frequency Governance</strong>
+          <span>How theory enters carrier, sound, gain, phase, timing, and consent.</span>
+        </a>
+
+        <a class="card nav-card" href="theory/living-technology.html">
+          <strong>Living Technology</strong>
+          <span>How theory becomes tool, instrument, field system, and testable practice.</span>
+        </a>
+
+        <a class="card nav-card" href="theory/artifact-theory.html">
+          <strong>Artifact Theory</strong>
+          <span>How physical objects become documented witnesses with provenance.</span>
+        </a>
+
+        <a class="card nav-card" href="theory/glossary.html">
+          <strong>Glossary</strong>
+          <span>Symbols, operators, terms, and working definitions.</span>
+        </a>
+
+        <a class="card nav-card" href="theory/notation.html">
+          <strong>Notation</strong>
+          <span>Mathematical symbols, domains, operators, and reading conventions.</span>
+        </a>
+
+        <a class="card nav-card" href="theory/bibliography.html">
+          <strong>Bibliography</strong>
+          <span>External references, comparators, source notes, and reading context.</span>
+        </a>
       </div>
     </section>
 
     <section class="section-shell final-scroll" id="continue">
-      <h2>The Theory is now a gateway.</h2>
-      <p>
-        This hub keeps the main page clean while allowing the deeper Canon, equations, operators, and systems to expand
-        across focused pages. The Codex becomes easier to read, easier to grow, and easier to navigate.
-      </p>
-      <div class="hero-actions" style="justify-content:center">
-        <a class="btn primary" href="theory/canon.html">Enter Canon</a>
-        <a class="btn" href="theory/master-equation.html">Master Equation</a>
-        <a class="btn" href="moons.html">13 Moons</a>
-        <a class="btn" href="./">Return Home</a>
-      </div>
+      <article class="codex-seal">
+        <p class="eyebrow">Continue</p>
+        <h2>The Theory Hub is now the gateway.</h2>
+        <p>
+          The hub keeps the main entry clear while allowing the equations, operators,
+          frameworks, ethics, systems, and artifact theory to expand across focused pages.
+          The Codex becomes easier to read, easier to maintain, and easier to navigate.
+        </p>
+
+        <div class="hero-actions" style="justify-content:center">
+          <a class="btn primary" href="theory/canon.html">Enter Canon</a>
+          <a class="btn" href="theory/master-equation.html">Master Equation</a>
+          <a class="btn" href="theory/unified-field.html">Unified Field</a>
+          <a class="btn" href="moons.html">13 Moons</a>
+          <a class="btn" href="./">Return Home</a>
+        </div>
+      </article>
     </section>
   </main>
 
@@ -363,4 +689,4 @@
     </div>
   </footer>
 </body>
-</html>
+        </html>
