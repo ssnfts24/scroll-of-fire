@@ -282,6 +282,8 @@ body.site-menu-open{
     width:44px;
     height:44px;
     flex-basis:44px;
+    border-radius:50%;
+    font-size:1.25rem;
   }
 
   .brand strong{

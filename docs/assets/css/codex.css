@@ -67,7 +67,7 @@ h3{margin:.2rem 0 .7rem;color:var(--gold);font-size:clamp(1.25rem,2.7vw,1.75rem)
   z-index:1;
   width:min(var(--max),calc(100% - 2rem));
   margin-inline:auto;
-  padding:clamp(3rem,6vw,5.25rem) 0;
+  padding:clamp(2rem,5vw,5.25rem) 0;
   scroll-margin-top:calc(var(--header-h) + 1rem);
 }
 

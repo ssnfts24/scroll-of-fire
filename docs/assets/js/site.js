@@ -9,7 +9,7 @@
 
   const SITE_ROOT = "/";
   const GITHUB_ROOT = "/scroll-of-fire/";
-  const MOBILE_NAV_QUERY = "(max-width: 900px)";
+  const MOBILE_NAV_QUERY = "(max-width: 760px)";
 
   const LEGACY_PATHS = {
     "caravan.html": "covenant-caravan.html",
