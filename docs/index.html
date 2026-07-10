@@ -88,6 +88,12 @@
           "daily witness logging",
           "artifact registry",
           "handcrafted copper artifacts"
+        ],
+        "sameAs":[
+          "https://github.com/ssnfts24/scroll-of-fire",
+          "https://medium.com/@l.aaronpaul24",
+          "https://www.youtube.com/@aaronlaird1036",
+          "https://linktr.ee/AaronPaulLairdScrollOfFire"
         ]
       },
       {
@@ -221,16 +227,15 @@
         </div>
 
         <aside class="hero-image-card" aria-label="Codex gateway">
-          <div class="hero-orbit" aria-hidden="true">
-            <span class="orbit-ring orbit-ring-one"></span>
-            <span class="orbit-ring orbit-ring-two"></span>
-            <span class="orbit-ring orbit-ring-three"></span>
-            <span class="orbit-node node-one">☾</span>
-            <span class="orbit-node node-two">Ξ</span>
-            <span class="orbit-node node-three">☷</span>
-            <span class="orbit-core">☲</span>
-          </div>
-          <div class="hero-image-copy">
+          <img
+            src="Covenant67.png"
+            alt="Scroll of Fire banner featuring the Covenant Caravan signal"
+            width="1200"
+            height="1200"
+            loading="eager"
+            decoding="async"
+            data-fallbacks="CB02GreenTide.png,Tensorband01.png,TigerNodeRing.png,T7.png,HaLevanah.png,67AdvertisingImage.png,TimeShardRing.jpg">
+          <div class="hero-image-caption">
             <p class="eyebrow">Living Signal Path</p>
             <strong>Observe → Name → Breathe → Record → Return</strong>
             <p>The homepage is the central map. Each gate leads into a complete working system.</p>
@@ -485,104 +490,10 @@
     <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
   </footer>
 
+  <script defer src="assets/js/site.js?v=20260710-7"></script>
   <script>
     (function () {
       "use strict";
-
-      const body = document.body;
-      const navToggle = document.querySelector("[data-nav-toggle]");
-      const nav = document.querySelector("[data-site-nav]");
-      const dropdown = document.querySelector("[data-dropdown]");
-      const dropdownToggle = document.querySelector("[data-dropdown-toggle]");
-      const mobileQuery = window.matchMedia("(max-width: 760px)");
-
-      const year = document.getElementById("year");
-      if (year) year.textContent = String(new Date().getFullYear());
-
-      function closeMobileNav() {
-        if (!nav || !navToggle) return;
-        nav.classList.remove("open");
-        navToggle.setAttribute("aria-expanded", "false");
-        navToggle.setAttribute("aria-label", "Open navigation");
-        body.classList.remove("nav-open");
-      }
-
-      function closeDropdown() {
-        if (!dropdown || !dropdownToggle) return;
-        dropdown.classList.remove("open");
-        dropdownToggle.setAttribute("aria-expanded", "false");
-      }
-
-      if (navToggle && nav) {
-        navToggle.addEventListener("click", function () {
-          const isOpen = nav.classList.toggle("open");
-          navToggle.setAttribute("aria-expanded", String(isOpen));
-          navToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
-          body.classList.toggle("nav-open", isOpen);
-          if (!isOpen) closeDropdown();
-        });
-
-        nav.querySelectorAll("a").forEach(function (link) {
-          link.addEventListener("click", function () {
-            closeDropdown();
-            closeMobileNav();
-          });
-        });
-      }
-
-      if (dropdown && dropdownToggle) {
-        dropdownToggle.addEventListener("click", function (event) {
-          event.stopPropagation();
-          const isOpen = dropdown.classList.toggle("open");
-          dropdownToggle.setAttribute("aria-expanded", String(isOpen));
-        });
-
-        document.addEventListener("click", function (event) {
-          if (!dropdown.contains(event.target)) closeDropdown();
-        });
-      }
-
-      document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-          closeDropdown();
-          closeMobileNav();
-        }
-      });
-
-      function handleBreakpoint(event) {
-        if (!event.matches) {
-          closeMobileNav();
-          closeDropdown();
-        }
-      }
-
-      if (typeof mobileQuery.addEventListener === "function") {
-        mobileQuery.addEventListener("change", handleBreakpoint);
-      } else if (typeof mobileQuery.addListener === "function") {
-        mobileQuery.addListener(handleBreakpoint);
-      }
-
-      document.querySelectorAll("img[data-fallbacks]").forEach(function (img) {
-        const fallbacks = img.dataset.fallbacks
-          .split(",")
-          .map(function (item) { return item.trim(); })
-          .filter(Boolean);
-
-        function handleImageError() {
-          const next = fallbacks.shift();
-
-          if (next) {
-            img.src = next;
-            img.dataset.fallbacks = fallbacks.join(",");
-            return;
-          }
-
-          img.removeEventListener("error", handleImageError);
-          img.hidden = true;
-        }
-
-        img.addEventListener("error", handleImageError);
-      });
 
       const revealTargets = document.querySelectorAll(
         ".section-heading,.signal-card,.feature-card,.artifact-card-mini," +
