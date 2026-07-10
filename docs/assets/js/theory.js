@@ -30,6 +30,25 @@
   const STORAGE_KEY = "sof.theory.settings.v3";
   const MOBILE_NAV_QUERY = "(max-width: 900px)";
   const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+  const THEORY_SECTION_FILES = new Set([
+    "artifact-theory.html",
+    "bibliography.html",
+    "canon.html",
+    "delta-framework.html",
+    "ethics.html",
+    "frequency-governance.html",
+    "glossary.html",
+    "living-technology.html",
+    "master-equation.html",
+    "memory.html",
+    "notation.html",
+    "operators.html",
+    "theory.html",
+    "thirteen-moons.html",
+    "unified-field.html",
+    "witness.html"
+  ]);
+  const EQUATION_FILE_PATTERN = /^eq(?:\d{2}|04b)\.html$/i;
 
   const SITE_NAV_OPEN_CLASS = "is-site-nav-open";
   const SITE_MENU_BODY_CLASS = "site-menu-open";
@@ -184,6 +203,81 @@
     }
 
     return `${getPageBasePath()}${path}`;
+  }
+
+  function isIgnoredHref(href) {
+    return (
+      !href ||
+      href.startsWith("#") ||
+      href.startsWith("mailto:") ||
+      href.startsWith("tel:") ||
+      href.startsWith("sms:") ||
+      href.startsWith("javascript:") ||
+      href.startsWith("vbscript:") ||
+      href.startsWith("data:")
+    );
+  }
+
+  function normalizeTheoryLink(path) {
+    let clean = String(path || "").trim();
+
+    if (!clean) return clean;
+
+    clean = clean.replace(/^\.?\//, "").replace(/^docs\//i, "");
+    const lowerClean = clean.toLowerCase();
+
+    if (clean.startsWith("theory/") || clean.startsWith("assets/")) {
+      return clean;
+    }
+
+    if (lowerClean === "theory.html") {
+      return "theory.html";
+    }
+
+    if (lowerClean === "frequencies.html") {
+      return "systems/frequencies.html";
+    }
+
+    if (lowerClean === "dpcs/shop.html") {
+      return "shop.html";
+    }
+
+    if (clean.startsWith("equations/")) {
+      return `theory/${clean}`;
+    }
+
+    if (EQUATION_FILE_PATTERN.test(clean)) {
+      return `theory/equations/${clean.toLowerCase()}`;
+    }
+
+    if (THEORY_SECTION_FILES.has(lowerClean)) {
+      return `theory/${lowerClean}`;
+    }
+
+    return clean;
+  }
+
+  function normalizeTheoryLinks() {
+    const path = window.location.pathname.toLowerCase();
+    const isTheoryPage = path.includes("/theory/") || path.endsWith("/theory.html");
+
+    if (!isTheoryPage) return;
+
+    $$("a[href]").forEach(anchor => {
+      const href = anchor.getAttribute("href");
+      if (isIgnoredHref(href) || href.startsWith("http://") || href.startsWith("https://") || href.startsWith("//") || href.startsWith("/")) {
+        return;
+      }
+
+      const parts = String(href).match(/^([^?#]*)(.*)$/);
+      const originalPath = parts?.[1] || "";
+      const suffix = parts?.[2] || "";
+      const normalizedPath = normalizeTheoryLink(originalPath);
+
+      if (!normalizedPath || normalizedPath === originalPath) return;
+
+      anchor.setAttribute("href", `${normalizedPath}${suffix}`);
+    });
   }
 
   /* ------------------------------------------------------------------
@@ -1085,6 +1179,7 @@
 
   function boot() {
     loadSettings();
+    normalizeTheoryLinks();
     setYear();
     mobileNav();
     readingModes();
