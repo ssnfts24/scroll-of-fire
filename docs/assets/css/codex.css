@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap");
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-=======
 :root{
   --bg:#05070d;
   --bg-soft:#08101a;
@@ -30,7 +24,6 @@
   --shadow-soft:0 18px 56px rgba(0,0,0,.34);
   --max:1180px;
   --header-h:72px;
->>>>>>> origin/main
 }
 
 *,*::before,*::after{box-sizing:border-box}
@@ -114,7 +107,6 @@ h3{margin:.2rem 0 .7rem;color:var(--gold);font-size:clamp(1.25rem,2.7vw,1.75rem)
   margin-bottom:1rem;
 }
 
-<<<<<<< HEAD
 .compact-actions {
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -133,7 +125,7 @@ h3{margin:.2rem 0 .7rem;color:var(--gold);font-size:clamp(1.25rem,2.7vw,1.75rem)
 }
 
 .backline a {
-  color: var(--ink);
+  color: var(--muted);
   text-underline-offset: 0.22em;
 }
 
@@ -211,6 +203,8 @@ mjx-container {
   }
 }
 
+.site-footer a{color:var(--muted);text-decoration:none}
+.site-footer a:hover{color:var(--gold)}
 
 /* =====================================================================
    UI Refresh — Typography, Motion, Interactive Depth
@@ -346,7 +340,3 @@ h3 {
     border-color 200ms ease,
     box-shadow 240ms ease;
 }
-=======
-.site-footer a{color:var(--muted);text-decoration:none}
-.site-footer a:hover{color:var(--gold)}
->>>>>>> origin/main
