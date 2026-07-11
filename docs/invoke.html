@@ -17,7 +17,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
   <link rel="preload" as="style" href="assets/css/codex.css?v=2.8.1">
-  <link rel="stylesheet" href="assets/css/codex.css?v=2.8.1" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/css/navigation.css">
+<link rel="stylesheet" href="assets/css/codex.css?v=2.8.1" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2.8.1"></noscript>
   <style>
     :root{
@@ -106,23 +107,56 @@ header .nav{display:flex;align-items:center;justify-content:space-between;gap:10
 }
 
   </style>
-  <script defer src="assets/js/Codex.js?v=3.7"></script>
+    <script defer src="assets/js/site.js"></script>
 </head>
 <body class="stars living-all carrier-432" data-theme="dark">
   <a class="skip" href="#main">Skip to content</a>
   <!-- Header (kept minimal; site-level header can replace this if included globally) -->
-  <header class="site enhanced" role="banner">
-    <div class="nav">
-      <div class="brand">
-        <a class="logo no-living" href="./" aria-label="Home"></a>
-        <a class="brand-link" href="./"><h1 class="kicker sheen">Scroll of Fire</h1></a>
+    <header class="site-header" data-sof-header>
+    <a class="brand" href="./" aria-label="Scroll of Fire home">
+      <span class="brand-mark" aria-hidden="true">☲</span>
+      <span>
+        <strong>Scroll of Fire</strong>
+        <small>Codex of Reality</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <a href="./start.html">Start</a>
+      <a class="is-featured" href="./moons.html">13 Moons</a>
+      <a href="./covenant-caravan.html">Caravan</a>
+      <a href="./teach.html">Manifest</a>
+      <a href="./shop.html">Artifacts</a>
+      <a href="./hub.html">Hub</a>
+      <a href="./ledger.html">Ledger</a>
+      <a href="./systems/frequencies.html">Frequency</a>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="more-navigation" data-dropdown-toggle>
+          More <span aria-hidden="true">▾</span>
+        </button>
+        <div id="more-navigation" class="nav-drop-menu">
+          <a href="./genesis-oracle.html">Genesis Oracle</a>
+          <a href="./theory.html">Theory / Canon</a>
+          <a href="./systems/t-7.html">T-7 Conduit</a>
+          <a href="./systems/witness.html">Witness System</a>
+          <a href="./systems/recoder.html">Reality Recoder</a>
+          <a href="./systems/mind-renewal.html">Mind Renewal</a>
+          <a href="./systems/archive.html">Systems Archive</a>
+          <a href="./guide.html">Guide</a>
+          <a href="./lab.html">Remnant Lab</a>
+          <a href="./invoke.html">Invoke</a>
+          <a href="./circle.html">Circle</a>
+          <a href="./ethics.html">Ethics</a>
+          <a href="./glossary.html">Glossary</a>
+          <a href="./downloads.html">Downloads</a>
+        </div>
       </div>
-      <div class="quick" role="toolbar" aria-label="Quick actions">
-        <a class="cta" href="theory.html">Theory</a>
-        <a class="cta" href="teach.html">Manifest</a>
-        <button id="cycleCarrier" class="cta" type="button" title="Cycle carrier skin">Carrier</button>
-      </div>
-    </div>
+    </nav>
   </header>  <!-- Hero banner with aura -->  <figure class="lab-hero" aria-label="Scroll of Fire — Invocation Lab banner">
     <img src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" alt="Scroll of Fire — sigil banner" width="2100" height="900" decoding="async" loading="eager">
     <div class="field" aria-hidden="true"></div>

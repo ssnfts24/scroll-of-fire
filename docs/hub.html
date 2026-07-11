@@ -9,7 +9,8 @@
   <meta name="color-scheme" content="dark light">
   <meta name="description" content="Hub for Codex systems: Resonant Physics Engine (T-7), Frequency Governance, Mind-Renewal, Remnant Network, Linguistic Recoder, Interactive Archive.">
   <link rel="stylesheet" href="assets/css/codex.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="assets/css/navigation.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <style>
     /* Layout */
@@ -76,6 +77,7 @@
       }
     })();
   </script>
+  <script defer src="assets/js/site.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to main</a>
@@ -92,10 +94,51 @@
     </div>
   </aside>
 
-  <header>
-    <div class="crumbs"><a href="index.html">Home</a> / Systems Hub</div>
-    <h1>Systems Hub</h1>
-    <p class="lede">Pick a module. Each maps a practice to your Canon: carriers, Ξ-ethics, memory τ, witness sealing, covenant renaming, and the archive.</p>
+    <header class="site-header" data-sof-header>
+    <a class="brand" href="./" aria-label="Scroll of Fire home">
+      <span class="brand-mark" aria-hidden="true">☲</span>
+      <span>
+        <strong>Scroll of Fire</strong>
+        <small>Codex of Reality</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <a href="./start.html">Start</a>
+      <a class="is-featured" href="./moons.html">13 Moons</a>
+      <a href="./covenant-caravan.html">Caravan</a>
+      <a href="./teach.html">Manifest</a>
+      <a href="./shop.html">Artifacts</a>
+      <a href="./hub.html">Hub</a>
+      <a href="./ledger.html">Ledger</a>
+      <a href="./systems/frequencies.html">Frequency</a>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="more-navigation" data-dropdown-toggle>
+          More <span aria-hidden="true">▾</span>
+        </button>
+        <div id="more-navigation" class="nav-drop-menu">
+          <a href="./genesis-oracle.html">Genesis Oracle</a>
+          <a href="./theory.html">Theory / Canon</a>
+          <a href="./systems/t-7.html">T-7 Conduit</a>
+          <a href="./systems/witness.html">Witness System</a>
+          <a href="./systems/recoder.html">Reality Recoder</a>
+          <a href="./systems/mind-renewal.html">Mind Renewal</a>
+          <a href="./systems/archive.html">Systems Archive</a>
+          <a href="./guide.html">Guide</a>
+          <a href="./lab.html">Remnant Lab</a>
+          <a href="./invoke.html">Invoke</a>
+          <a href="./circle.html">Circle</a>
+          <a href="./ethics.html">Ethics</a>
+          <a href="./glossary.html">Glossary</a>
+          <a href="./downloads.html">Downloads</a>
+        </div>
+      </div>
+    </nav>
   </header>
 
   <main id="main">

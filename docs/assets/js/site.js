@@ -1,15 +1,15 @@
-/* Scroll of Fire — Shared Front-End Helpers
-   Use across all standard Codex pages.
-*/
+/* Scroll of Fire — Unified Site Navigation + Shared Helpers */
 (function () {
   "use strict";
 
   const root = document.documentElement;
   const body = document.body;
+  const siteApi = window.ScrollOfFire || {};
 
   const SITE_ROOT = "/";
   const GITHUB_ROOT = "/scroll-of-fire/";
   const MOBILE_NAV_QUERY = "(max-width: 760px)";
+  const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
   const LEGACY_PATHS = {
     "caravan.html": "covenant-caravan.html",
@@ -34,6 +34,24 @@
     enableCopyButtons();
     enableImageFallbacks();
     secureExternalLinks();
+    syncDocumentLock();
+    exposeSiteApi();
+  }
+
+  function exposeSiteApi() {
+    window.ScrollOfFire = Object.assign(siteApi, {
+      cleanPath,
+      copyText,
+      flashButton,
+      getFocusable,
+      prefersReducedMotion,
+      resolveFromCodexRoot,
+      syncDocumentLock
+    });
+  }
+
+  function prefersReducedMotion() {
+    return window.matchMedia?.(REDUCED_MOTION_QUERY).matches === true;
   }
 
   function getDeploymentRoot() {
@@ -53,7 +71,7 @@
   }
 
   function normalizeEquationPath(path) {
-    return path.replace(/^theory\/eq(\d{2}|04b)\.html$/i, "theory/equations/eq$1.html");
+    return path.replace(/^theory\/(?:eq)(\d{2}|04b)\.html$/i, "theory/equations/eq$1.html");
   }
 
   function cleanPath(value) {
@@ -174,6 +192,34 @@
     return "";
   }
 
+  function getFocusable(container) {
+    if (!container) return [];
+
+    return Array.from(
+      container.querySelectorAll(
+        [
+          'a[href]:not([tabindex="-1"])',
+          'button:not([disabled]):not([tabindex="-1"])',
+          'input:not([disabled]):not([tabindex="-1"])',
+          'select:not([disabled]):not([tabindex="-1"])',
+          'textarea:not([disabled]):not([tabindex="-1"])',
+          '[tabindex]:not([tabindex="-1"])'
+        ].join(',')
+      )
+    ).filter(function (element) {
+      return !element.hidden && element.getAttribute("aria-hidden") !== "true" && element.offsetParent !== null;
+    });
+  }
+
+  function syncDocumentLock() {
+    const shouldLock =
+      body?.classList.contains("site-menu-open") ||
+      body?.classList.contains("command-open") ||
+      document.querySelector("[data-theory-nav].is-theory-nav-open") !== null;
+
+    root.style.overflow = shouldLock ? "hidden" : "";
+  }
+
   function initGlobalNavigation() {
     const button = document.querySelector("[data-nav-toggle]");
     const nav = document.querySelector("[data-site-nav]");
@@ -183,65 +229,168 @@
     if (!button || !nav) return;
 
     const media = window.matchMedia(MOBILE_NAV_QUERY);
+    let returnFocus = null;
 
-    function closeDropdown() {
-      if (!dropdown || !dropdownButton) return;
-      dropdown.classList.remove("open", "is-dropdown-open");
-      dropdownButton.setAttribute("aria-expanded", "false");
+    function isNavOpen() {
+      return nav.classList.contains("is-site-nav-open");
     }
 
-    function setOpenState(open) {
+    function isDropdownOpen() {
+      return dropdown?.classList.contains("is-dropdown-open") === true;
+    }
+
+    function setDropdownState(open) {
+      if (!dropdown || !dropdownButton) return;
+      dropdown.classList.toggle("is-dropdown-open", open);
+      dropdownButton.setAttribute("aria-expanded", String(open));
+    }
+
+    function closeDropdown(options = {}) {
+      const { restoreFocus = false } = options;
+      const wasOpen = isDropdownOpen();
+
+      setDropdownState(false);
+
+      if (wasOpen && restoreFocus) {
+        requestAnimationFrame(function () {
+          dropdownButton?.focus({ preventScroll: true });
+        });
+      }
+    }
+
+    function setNavState(open) {
       const mobileOpen = open && media.matches;
 
-      nav.classList.toggle("open", mobileOpen);
       nav.classList.toggle("is-site-nav-open", mobileOpen);
-      body?.classList.toggle("nav-open", mobileOpen);
       body?.classList.toggle("site-menu-open", mobileOpen);
 
       button.setAttribute("aria-expanded", String(mobileOpen));
       button.setAttribute("aria-label", mobileOpen ? "Close navigation" : "Open navigation");
 
-      if (!mobileOpen) closeDropdown();
+      if (media.matches) {
+        nav.setAttribute("aria-hidden", String(!mobileOpen));
+      } else {
+        nav.removeAttribute("aria-hidden");
+      }
+
+      if (!mobileOpen) {
+        closeDropdown();
+      }
+
+      syncDocumentLock();
+    }
+
+    function openNav() {
+      if (!media.matches || isNavOpen()) return;
+
+      returnFocus = document.activeElement;
+      setNavState(true);
+
+      const firstItem = getFocusable(nav)[0];
+      if (firstItem) {
+        requestAnimationFrame(function () {
+          firstItem.focus({ preventScroll: true });
+        });
+      }
+    }
+
+    function closeNav(options = {}) {
+      const { restoreFocus = false } = options;
+      const wasOpen = isNavOpen();
+
+      setNavState(false);
+
+      if (wasOpen && restoreFocus) {
+        const focusTarget = returnFocus instanceof HTMLElement ? returnFocus : button;
+        requestAnimationFrame(function () {
+          focusTarget.focus({ preventScroll: true });
+        });
+      }
+
+      returnFocus = null;
+    }
+
+    function trapFocus(event) {
+      if (event.key !== "Tab" || !media.matches || !isNavOpen()) return;
+
+      const focusable = getFocusable(nav);
+      if (!focusable.length) {
+        event.preventDefault();
+        button.focus({ preventScroll: true });
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus({ preventScroll: true });
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus({ preventScroll: true });
+      }
     }
 
     button.addEventListener("click", function () {
-      const willOpen = !nav.classList.contains("open") && !nav.classList.contains("is-site-nav-open");
-      setOpenState(willOpen);
-    });
-
-    nav.querySelectorAll("a").forEach(function (link) {
-      link.addEventListener("click", function () {
-        closeDropdown();
-        setOpenState(false);
-      });
-    });
-
-    if (dropdown && dropdownButton) {
-      dropdownButton.addEventListener("click", function (event) {
-        event.stopPropagation();
-        const open = !dropdown.classList.contains("open") && !dropdown.classList.contains("is-dropdown-open");
-        dropdown.classList.toggle("open", open);
-        dropdown.classList.toggle("is-dropdown-open", open);
-        dropdownButton.setAttribute("aria-expanded", String(open));
-      });
-
-      document.addEventListener("click", function (event) {
-        if (!dropdown.contains(event.target)) {
-          closeDropdown();
-        }
-      });
-    }
-
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") {
-        closeDropdown();
-        setOpenState(false);
+      if (isNavOpen()) {
+        closeNav({ restoreFocus: true });
+      } else {
+        openNav();
       }
     });
 
-    function handleViewportChange(event) {
-      if (!event.matches) {
-        setOpenState(false);
+    dropdownButton?.addEventListener("click", function (event) {
+      event.stopPropagation();
+      setDropdownState(!isDropdownOpen());
+    });
+
+    nav.addEventListener("click", function (event) {
+      const link = event.target.closest("a[href]");
+      if (!link) return;
+
+      closeDropdown();
+      if (media.matches) {
+        closeNav();
+      }
+    });
+
+    document.addEventListener("click", function (event) {
+      if (dropdown && isDropdownOpen() && !dropdown.contains(event.target)) {
+        closeDropdown();
+      }
+
+      if (!media.matches || !isNavOpen()) return;
+      if (button.contains(event.target) || nav.contains(event.target)) return;
+
+      closeNav();
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        if (isDropdownOpen()) {
+          event.preventDefault();
+          closeDropdown({ restoreFocus: true });
+          return;
+        }
+
+        if (isNavOpen()) {
+          event.preventDefault();
+          closeNav({ restoreFocus: true });
+          return;
+        }
+      }
+
+      trapFocus(event);
+    });
+
+    function handleViewportChange() {
+      if (!media.matches) {
+        closeNav();
+        nav.removeAttribute("aria-hidden");
+      } else {
+        setNavState(false);
       }
     }
 
@@ -249,6 +398,15 @@
       media.addEventListener("change", handleViewportChange);
     } else if (typeof media.addListener === "function") {
       media.addListener(handleViewportChange);
+    }
+
+    if (media.matches) {
+      setNavState(false);
+    } else {
+      nav.removeAttribute("aria-hidden");
+      button.setAttribute("aria-expanded", "false");
+      button.setAttribute("aria-label", "Open navigation");
+      syncDocumentLock();
     }
   }
 
@@ -322,7 +480,6 @@
     }
 
     field.remove();
-
     return copied;
   }
 
