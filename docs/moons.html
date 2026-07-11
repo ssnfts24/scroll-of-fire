@@ -1,127 +1,187 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="sof carrier-432">
+<html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963" data-day-boundary="sunset">
 <head>
-  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <base href="/">
   <script>
-    if (location.hostname !== "ssnfts24.github.io") {
+    if (location.hostname === "ssnfts24.github.io") {
       const base = document.querySelector("base");
-      if (base) base.setAttribute("href", "/");
+      if (base) base.setAttribute("href", "/scroll-of-fire/");
     }
   </script>
 
   <meta charset="utf-8">
-  <title>Remnant 13 Moons — Scroll of Fire</title>
+  <title>Remnant 13 Moons — Living Calendar | Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="A living 13×28 Remnant calendar with moon phase, prophetic mirror readings, daily witness logs, astrology mirror, planetary alignments, field layers, pattern tracking, Codex seals, and Scroll of Fire coherence tools.">
+  <meta name="description" content="A living 13×28 Remnant calendar with sunset day boundaries, Shabbat alignment, moon phase, prophetic mirror readings, daily witness logs, astrology mirror, planetary alignments, field layers, pattern tracking, Codex seals, and Scroll of Fire coherence tools.">
+  <meta name="keywords" content="Remnant 13 Moons, 13×28 calendar, Shabbat calendar, sunset day boundary, Scroll of Fire, Codex of Reality, moon phase, witness ledger, Aaron Paul Laird">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="creator" content="Aaron Paul Laird">
   <meta name="publisher" content="Scroll of Fire">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
   <meta name="theme-color" content="#05070d">
-  <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/moons.html">
+
+  <link rel="canonical" href="https://codexofreality.org/moons.html">
 
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Scroll of Fire">
+  <meta property="og:site_name" content="Codex of Reality">
   <meta property="og:title" content="Remnant 13 Moons — Living Calendar">
-  <meta property="og:description" content="Track the Remnant 13×28 calendar, visible moon phase, prophetic mirror readings, astrology, planetary alignments, daily witness, field layers, Codex day seals, and symbolic pattern logs.">
-  <meta property="og:url" content="https://ssnfts24.github.io/scroll-of-fire/moons.html">
-  <meta property="og:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
+  <meta property="og:description" content="A 13×28 living calendar with sunset day boundaries, Shabbat alignment, visible moon phase, daily mirror readings, witness logs, astrology, field layers, and Codex seals.">
+  <meta property="og:url" content="https://codexofreality.org/moons.html">
+  <meta property="og:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
+  <meta property="og:image:alt" content="Remnant 13 Moons — Scroll of Fire living calendar">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Remnant 13 Moons — Scroll of Fire">
-  <meta name="twitter:description" content="A living 13×28 Remnant calendar with moon phase, prophetic mirror readings, astrology, planetary alignments, field layers, pattern tracking, and Codex seals.">
-  <meta name="twitter:image" content="https://ssnfts24.github.io/scroll-of-fire/assets/img/og-cover.jpg">
+  <meta name="twitter:description" content="A 13×28 living calendar with sunset day boundaries, Shabbat alignment, moon phase, mirror readings, astrology, and witness tools.">
+  <meta name="twitter:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
 
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/favicon.png">
+
   <link rel="stylesheet" href="assets/css/codex.css">
-    <link rel="stylesheet" href="assets/css/navigation.css">
-<link rel="stylesheet" href="assets/css/moons.css">
+  <link rel="stylesheet" href="assets/css/navigation.css">
+  <link rel="stylesheet" href="assets/css/moons.css">
   <link rel="stylesheet" href="assets/css/astrology.css">
+
+  <script>
+    window.SOF_MOONS_CONFIG = Object.freeze({
+      dayBoundary: "sunset",
+      fallbackSunset: "18:00",
+      shabbat: {
+        enabled: true,
+        begins: "Friday sunset",
+        ends: "Saturday nightfall",
+        moonDays: [2, 9, 16, 23],
+        preparationDay: 1,
+        returnDay: 3,
+        preserveContinuousWeekThroughYearGate: true
+      }
+    });
+  </script>
 
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
-    "@type":"WebApplication",
-    "name":"Remnant 13 Moons — Living Calendar",
-    "url":"https://ssnfts24.github.io/scroll-of-fire/moons.html",
-    "applicationCategory":"LifestyleApplication",
-    "operatingSystem":"Any",
-    "creator":{"@type":"Person","name":"Aaron Paul Laird"},
-    "publisher":{"@type":"Organization","name":"Scroll of Fire","url":"https://ssnfts24.github.io/scroll-of-fire/"},
-    "description":"A symbolic 13×28 calendar and witness logging interface for moon phase, prophetic mirror readings, astrology, planetary alignments, field layers, and Codex seals."
+    "@graph":[
+      {
+        "@type":"WebApplication",
+        "@id":"https://codexofreality.org/moons.html#app",
+        "name":"Remnant 13 Moons — Living Calendar",
+        "url":"https://codexofreality.org/moons.html",
+        "applicationCategory":"LifestyleApplication",
+        "operatingSystem":"Any",
+        "inLanguage":"en-US",
+        "creator":{"@id":"https://codexofreality.org/#aaron-paul-laird"},
+        "publisher":{"@id":"https://codexofreality.org/#organization"},
+        "description":"A symbolic 13×28 calendar and witness interface with sunset day boundaries, Shabbat alignment, moon phase, mirror readings, astrology, field layers, and Codex seals."
+      },
+      {
+        "@type":"Person",
+        "@id":"https://codexofreality.org/#aaron-paul-laird",
+        "name":"Aaron Paul Laird",
+        "alternateName":["Scribe of Circuits","Aharon Ben Or"]
+      },
+      {
+        "@type":"Organization",
+        "@id":"https://codexofreality.org/#organization",
+        "name":"Scroll of Fire",
+        "url":"https://codexofreality.org/"
+      },
+      {
+        "@type":"BreadcrumbList",
+        "itemListElement":[
+          {"@type":"ListItem","position":1,"name":"Home","item":"https://codexofreality.org/"},
+          {"@type":"ListItem","position":2,"name":"Remnant 13 Moons","item":"https://codexofreality.org/moons.html"}
+        ]
+      }
+    ]
   }
   </script>
+
   <script defer src="assets/js/site.js"></script>
 </head>
 
-<body>
+<body data-remnant-boundary="sunset">
   <canvas id="skyBg" aria-hidden="true"></canvas>
 
   <div class="wrap">
-      <header class="site-header" data-sof-header>
-    <a class="brand" href="./" aria-label="Scroll of Fire home">
-      <span class="brand-mark" aria-hidden="true">☲</span>
-      <span>
-        <strong>Scroll of Fire</strong>
-        <small>Codex of Reality</small>
-      </span>
-    </a>
+    <header class="site-header" data-sof-header>
+      <a class="brand" href="./" aria-label="Scroll of Fire home">
+        <span class="brand-mark" aria-hidden="true">☲</span>
+        <span>
+          <strong>Scroll of Fire</strong>
+          <small>Codex of Reality</small>
+        </span>
+      </a>
 
-    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
-      <span></span><span></span><span></span>
-    </button>
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+        aria-controls="primary-navigation"
+        data-nav-toggle
+      >
+        <span></span><span></span><span></span>
+      </button>
 
-    <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
-      <a href="./start.html">Start</a>
-      <a class="is-featured" href="./moons.html">13 Moons</a>
-      <a href="./covenant-caravan.html">Caravan</a>
-      <a href="./teach.html">Manifest</a>
-      <a href="./shop.html">Artifacts</a>
-      <a href="./hub.html">Hub</a>
-      <a href="./ledger.html">Ledger</a>
-      <a href="./systems/frequencies.html">Frequency</a>
+      <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+        <a href="start.html">Start</a>
+        <a class="is-featured" href="moons.html" aria-current="page">13 Moons</a>
+        <a href="caravan.html">Caravan</a>
+        <a href="teach.html">Manifest</a>
+        <a href="shop.html">Artifacts</a>
+        <a href="hub.html">Hub</a>
+        <a href="ledger.html">Ledger</a>
+        <a href="systems/frequencies.html">Frequency</a>
 
-      <div class="nav-dropdown" data-dropdown>
-        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="more-navigation" data-dropdown-toggle>
-          More <span aria-hidden="true">▾</span>
-        </button>
-        <div id="more-navigation" class="nav-drop-menu">
-          <a href="./genesis-oracle.html">Genesis Oracle</a>
-          <a href="./theory.html">Theory / Canon</a>
-          <a href="./systems/t-7.html">T-7 Conduit</a>
-          <a href="./systems/witness.html">Witness System</a>
-          <a href="./systems/recoder.html">Reality Recoder</a>
-          <a href="./systems/mind-renewal.html">Mind Renewal</a>
-          <a href="./systems/archive.html">Systems Archive</a>
-          <a href="./guide.html">Guide</a>
-          <a href="./lab.html">Remnant Lab</a>
-          <a href="./invoke.html">Invoke</a>
-          <a href="./circle.html">Circle</a>
-          <a href="./ethics.html">Ethics</a>
-          <a href="./glossary.html">Glossary</a>
-          <a href="./downloads.html">Downloads</a>
+        <div class="nav-dropdown" data-dropdown>
+          <button
+            class="nav-drop-btn"
+            type="button"
+            aria-expanded="false"
+            aria-controls="more-navigation"
+            data-dropdown-toggle
+          >
+            More <span aria-hidden="true">▾</span>
+          </button>
+
+          <div id="more-navigation" class="nav-drop-menu">
+            <a href="genesis-oracle.html">Genesis Oracle</a>
+            <a href="theory.html">Theory / Canon</a>
+            <a href="systems/t-7.html">T-7 Conduit</a>
+            <a href="systems/witness.html">Witness System</a>
+            <a href="systems/recoder.html">Reality Recoder</a>
+            <a href="systems/mind-renewal.html">Mind Renewal</a>
+            <a href="systems/archive.html">Systems Archive</a>
+            <a href="guide.html">Guide</a>
+            <a href="lab.html">Remnant Lab</a>
+            <a href="invoke.html">Invoke</a>
+            <a href="circle.html">Circle</a>
+            <a href="ethics.html">Ethics</a>
+            <a href="glossary.html">Glossary</a>
+            <a href="downloads.html">Downloads</a>
+          </div>
         </div>
-      </div>
-    </nav>
-  </header>
+      </nav>
+    </header>
 
     <header class="page-head">
       <nav class="crumbs" aria-label="Secondary navigation">
         <a class="lab-btn ghost" href="./">← Codex</a>
-        <a class="lab-btn ghost" href="./guide.html">Guide</a>
-        <a class="lab-btn ghost" href="./theory.html">Theory</a>
-        <a class="lab-btn ghost" href="./genesis-oracle.html">Oracle</a>
-        <a class="lab-btn ghost" href="./ethics.html">Ethics</a>
+        <a class="lab-btn ghost" href="guide.html">Guide</a>
+        <a class="lab-btn ghost" href="theory.html">Theory</a>
+        <a class="lab-btn ghost" href="genesis-oracle.html">Oracle</a>
+        <a class="lab-btn ghost" href="ethics.html">Ethics</a>
       </nav>
 
       <p class="eyebrow">Remnant Calendar Engine</p>
       <h1>Remnant 13 Moons</h1>
 
       <p class="subtitle">
-        A living 13×28 symbolic calendar for moon phase, prophetic mirror reading, astrology,
-        planetary alignments, daily witness, Earth Hum tags, pattern detection, Codex seals,
-        solar gates, body signal, dreams, weather, memory, and coherence practice.
+        A living 13×28 symbolic calendar for moon phase, Shabbat rhythm, prophetic mirror reading,
+        astrology, planetary alignments, daily witness, Earth Hum tags, pattern detection,
+        Codex seals, solar gates, body signal, dreams, weather, memory, and coherence practice.
       </p>
 
       <div class="hero-sigil" aria-hidden="true">
@@ -130,12 +190,13 @@
 
       <aside class="notice">
         <strong>🔥 Living Calendar Mode:</strong>
-        daily moon engine, visible phase, prophetic mirror, astrology layer, planetary alignment wheel,
-        witness builder, local logs, pattern alerts, Gregorian overlay, Codex day seal, and field-layer dashboard are active.
+        day turnover is configured for local sunset, Shabbat is mapped to Moon Days 2, 9, 16, and 23,
+        and the continuous seven-day week remains unbroken through the Year Gate.
       </aside>
 
       <div class="tabs" aria-label="Calendar tools">
         <button class="tab active" data-tab="todayPanel" type="button">Today</button>
+        <button class="tab" data-tab="shabbatPanel" type="button">Shabbat</button>
         <button class="tab" data-tab="flowPanel" type="button">Daily Flow</button>
         <button class="tab" data-tab="mirrorPanel" type="button">Mirror Reading</button>
         <button class="tab" data-tab="witnessPanel" type="button">Daily Witness</button>
@@ -149,7 +210,7 @@
       </div>
     </header>
 
-    <main>
+    <main id="main">
       <section id="todayPanel" class="tabPanel active">
         <section class="command card">
           <div>
@@ -163,6 +224,8 @@
             <div class="stat"><span>Visible Moon</span><strong id="statPhase">—</strong></div>
             <div class="stat"><span>Solar Gate</span><strong id="statSolar">—</strong></div>
             <div class="stat"><span>Field</span><strong id="statField">—</strong></div>
+            <div class="stat"><span>Boundary</span><strong id="statBoundary">Sunset</strong></div>
+            <div class="stat"><span>Shabbat</span><strong id="statShabbat">Checking…</strong></div>
             <div class="stat"><span>Logs</span><strong id="statLogs">0</strong></div>
             <div class="stat"><span>Patterns</span><strong id="statPatterns">0</strong></div>
           </div>
@@ -199,6 +262,7 @@
           <article class="card col-6">
             <p class="eyebrow">Time Gate</p>
             <h2>Selected Day</h2>
+
             <p>
               <strong id="nowDate">—</strong><br>
               <span id="nowClock" class="meta">—</span><br>
@@ -213,14 +277,31 @@
               <label>Date
                 <input id="datePick" class="lab-input" type="date">
               </label>
+
+              <label>Day Boundary
+                <select id="boundaryMode" class="lab-input">
+                  <option value="sunset" selected>Local Sunset</option>
+                  <option value="manual">Manual Sunset Time</option>
+                  <option value="midnight">Midnight</option>
+                </select>
+              </label>
+
+              <label>Fallback / Manual Sunset
+                <input id="sunsetInput" class="lab-input" type="time" value="18:00">
+              </label>
             </div>
 
             <div class="btnrow">
               <button id="btnToday" class="lab-btn active" type="button">Today</button>
               <button id="prevDay" class="lab-btn ghost" type="button">← Prev</button>
               <button id="nextDay" class="lab-btn ghost" type="button">Next →</button>
+              <button id="useLocalSunset" class="lab-btn ghost" type="button">Use My Sunset</button>
               <button id="shareLink" class="lab-btn ghost" type="button">Copy Link</button>
             </div>
+
+            <p id="boundaryStatus" class="meta" role="status" aria-live="polite">
+              Calendar day changes at local sunset. When location is unavailable, 6:00 PM is used.
+            </p>
           </article>
 
           <article class="card col-6">
@@ -249,6 +330,120 @@
             <p class="eyebrow">Sky Mirror</p>
             <h2 id="solarGate">—</h2>
             <p id="skyMirrorCopy" class="fine">—</p>
+          </article>
+        </section>
+
+        <section class="card shabbat-summary" aria-labelledby="shabbat-summary-title">
+          <div>
+            <p class="eyebrow">שבת · Ceasing · Rest · Restoration</p>
+            <h2 id="shabbat-summary-title">Shabbat Gate</h2>
+            <p id="shabbatMeaning" class="subtitle">
+              Shabbat means ceasing from ordinary labor so time can be set apart for rest,
+              worship, family, meals, reflection, restoration, and peace.
+            </p>
+          </div>
+
+          <div class="command-grid">
+            <div class="stat"><span>Current State</span><strong id="shabbatState">Checking…</strong></div>
+            <div class="stat"><span>Window</span><strong id="shabbatWindow">Friday sunset → Saturday nightfall</strong></div>
+            <div class="stat"><span>Moon Position</span><strong id="shabbatMoonPosition">Days 2 · 9 · 16 · 23</strong></div>
+            <div class="stat"><span>Seal</span><strong id="shabbatSeal">Cease · Witness · Restore</strong></div>
+          </div>
+
+          <p id="shabbatInstruction" class="pill">
+            Stop forcing. Guard the household. Review the witness. Let scattered things return to order.
+          </p>
+
+          <div class="btnrow">
+            <button class="lab-btn active" data-tab-jump="shabbatPanel" type="button">Open Shabbat Reading</button>
+            <button class="lab-btn ghost" data-tab-jump="mirrorPanel" type="button">Build Today’s Mirror</button>
+          </div>
+        </section>
+      </section>
+
+      <section id="shabbatPanel" class="tabPanel">
+        <section class="ritual-hero shabbat-hero">
+          <div class="ritual-layout">
+            <div>
+              <p class="eyebrow">שבת שלום · Shabbat Shalom</p>
+              <h2 class="ritual-title">Peace Within the Time of Ceasing</h2>
+              <p class="ritual-line">
+                Shabbat is not merely a Saturday label. It is the deliberate stopping of ordinary labor
+                so the household, body, memory, worship, relationship, and witness can return to order.
+              </p>
+
+              <div class="flow-steps" aria-label="Shabbat flow">
+                <div class="flow-step"><strong>1</strong>Prepare</div>
+                <div class="flow-step"><strong>2</strong>Cease</div>
+                <div class="flow-step"><strong>3</strong>Rest</div>
+                <div class="flow-step"><strong>4</strong>Witness</div>
+                <div class="flow-step"><strong>5</strong>Return</div>
+              </div>
+            </div>
+
+            <div class="daily-sigil" aria-hidden="true">
+              <div class="moon-core">שבת</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid">
+          <article class="card col-4">
+            <p class="eyebrow">Preparation Gate</p>
+            <h2>Moon Day 1</h2>
+            <p>
+              Friday before sunset: finish necessary work, settle responsibilities,
+              prepare food and space, and decide what should not be carried into the rest period.
+            </p>
+          </article>
+
+          <article class="card col-4">
+            <p class="eyebrow">Shabbat Gate</p>
+            <h2>Moon Days 2 · 9 · 16 · 23</h2>
+            <p>
+              Friday sunset through Saturday nightfall: cease ordinary production,
+              protect the household, share food, pray, rest, review, and record without forcing an outcome.
+            </p>
+          </article>
+
+          <article class="card col-4">
+            <p class="eyebrow">Return Gate</p>
+            <h2>Following Day</h2>
+            <p>
+              Saturday nightfall: separate rest from the returning work cycle,
+              preserve the lesson, and re-enter action with one deliberate next step.
+            </p>
+          </article>
+
+          <article class="card col-12">
+            <p class="eyebrow">Why It Fits the 13 Moons</p>
+            <h2>Four complete weeks inside every 28-day moon</h2>
+            <p>
+              Each Remnant Moon contains exactly four seven-day weeks. When Moon Day 1 begins on Friday,
+              Shabbat occupies Moon Days 2, 9, 16, and 23 every moon. The date positions remain stable
+              because 28 divides evenly into four weeks.
+            </p>
+          </article>
+
+          <article class="card col-12">
+            <p class="eyebrow">Year Gate Rule</p>
+            <h2>Do not reset the seven-day week</h2>
+            <p>
+              The 364 counted days equal exactly 52 weeks. Any outside or intercalary Year Gate must keep
+              the continuous weekly count moving. The new 13-Moon year should not artificially restart
+              the weekday cycle, or the Shabbat alignment will eventually break.
+            </p>
+          </article>
+
+          <article class="card col-12">
+            <p class="eyebrow">Codex Stop Rule</p>
+            <h2>Shabbat as Ethical Governance</h2>
+            <div class="practice-list">
+              <div><strong>Stop producing</strong><br>Not every problem must be solved today.</div>
+              <div><strong>Stop forcing</strong><br>Pressure is not proof of direction.</div>
+              <div><strong>Guard the vessel</strong><br>Protect body, child, household, speech, money, and vow.</div>
+              <div><strong>Review the witness</strong><br>Separate what happened from what was inferred.</div>
+            </div>
           </article>
         </section>
       </section>
@@ -296,21 +491,25 @@
                 <div class="meter-bar"><div id="meterCoherence" class="meter-fill"></div></div>
                 <strong id="meterCoherenceText">Gathering</strong>
               </article>
+
               <article class="meter-card">
                 <span>Body Load</span>
                 <div class="meter-bar"><div id="meterBody" class="meter-fill"></div></div>
                 <strong id="meterBodyText">Check body</strong>
               </article>
+
               <article class="meter-card">
                 <span>Signal Repeat</span>
                 <div class="meter-bar"><div id="meterSignal" class="meter-fill"></div></div>
                 <strong id="meterSignalText">Listening</strong>
               </article>
+
               <article class="meter-card">
                 <span>Field Intensity</span>
                 <div class="meter-bar"><div id="meterField" class="meter-fill"></div></div>
                 <strong id="meterFieldText">Unknown</strong>
               </article>
+
               <article class="meter-card">
                 <span>Grounding</span>
                 <div class="meter-bar"><div id="meterGround" class="meter-fill"></div></div>
@@ -322,6 +521,7 @@
           <article class="card practice-card col-12">
             <p class="eyebrow">Daily Practice</p>
             <h2>Seal the Day in Order</h2>
+
             <div class="practice-list">
               <div><strong>Breath</strong><br>Take 7 slow breaths before response.</div>
               <div><strong>Word</strong><br>Write the repeated word or theme.</div>
@@ -334,15 +534,18 @@
             <p class="eyebrow">Pattern Memory</p>
             <h2>What Has Been Repeating?</h2>
             <p class="subtitle">Saved logs can be read across 3, 7, 14, and 28 day windows.</p>
+
             <div class="pattern-memory-grid">
               <article class="pattern-memory-card">
                 <h3 id="memoryWords">Repeated Words</h3>
                 <p id="memoryWordsCopy">Save witness logs to reveal repeated words and themes.</p>
               </article>
+
               <article class="pattern-memory-card">
                 <h3 id="memoryBody">Body Signals</h3>
                 <p id="memoryBodyCopy">Track sleep, pressure, clarity, tension, hunger, and energy.</p>
               </article>
+
               <article class="pattern-memory-card">
                 <h3 id="memoryField">Field Notes</h3>
                 <p id="memoryFieldCopy">Watch weather, tech, animals, numbers, and timing across days.</p>
@@ -358,7 +561,7 @@
             <p class="pill">☲ Prophetic Mirror Engine</p>
             <h2>Read the Day as a Scroll</h2>
             <p class="subtitle">
-              The mirror gathers moon, day, solar gate, visible phase, field, and witness into one spoken reading.
+              The mirror gathers moon, day, Shabbat state, solar gate, visible phase, field, and witness into one reading.
             </p>
 
             <div class="reading-focus">
@@ -388,15 +591,18 @@
 
           <article class="card col-4">
             <p class="eyebrow">Threefold Counsel</p>
+
             <div class="mirror-grid single">
               <article class="mirror-card">
                 <h3>Signal</h3>
                 <p id="mirrorSignal">The day’s first witness appears here.</p>
               </article>
+
               <article class="mirror-card">
                 <h3>Crossing</h3>
                 <p id="mirrorShadow">The pressure gate appears here.</p>
               </article>
+
               <article class="mirror-card">
                 <h3>Command</h3>
                 <p id="mirrorAction">The clean action appears here.</p>
@@ -417,18 +623,32 @@
               <label>Sleep
                 <input id="sleepInput" placeholder="Example: 6.5 hours, restless, vivid dreams">
               </label>
+
               <label>Body Signal
                 <input id="bodyInput" placeholder="Pressure, calm, hunger, clarity, pain, energy...">
               </label>
+
               <label>Dreams
                 <input id="dreamInput" placeholder="Symbols, people, places, repeated themes...">
               </label>
+
               <label>Emotional Weather
                 <input id="emotionInput" placeholder="Calm, charged, grief, joy, tension...">
               </label>
+
               <label>Repeated Signs
                 <input id="signsInput" placeholder="Numbers, words, animals, timing, songs...">
               </label>
+
+              <label>Shabbat State
+                <select id="shabbatInput">
+                  <option>Not marked</option>
+                  <option>Preparation Gate</option>
+                  <option>Shabbat · Ceasing and Rest</option>
+                  <option>Return Gate</option>
+                </select>
+              </label>
+
               <label>Earth Hum / Kp Status
                 <select id="kpInput">
                   <option>Unknown / not checked</option>
@@ -492,7 +712,7 @@
             </article>
           </div>
 
-          <p class="meta" data-astro-status>Astrology correspondence loads from the selected Gregorian date.</p>
+          <p class="meta" data-astro-status>Astrology correspondence loads from the selected effective calendar date.</p>
         </section>
 
         <section class="grid">
@@ -520,8 +740,9 @@
             <p class="eyebrow">✦ Planetary Alignment Mirror</p>
             <h2>Planetarium</h2>
             <p class="subtitle">
-              A planetary wheel for the selected date, ready for a real ephemeris override when connected.
+              A planetary wheel for the selected effective date, ready for a real ephemeris override when connected.
             </p>
+
             <div id="planetarium" class="planetarium" aria-label="Planetary alignment wheel">
               <div class="zodiac-wheel" aria-hidden="true"></div>
               <div class="sun-core" aria-hidden="true">☉</div>
@@ -544,13 +765,17 @@
         <section class="grid">
           <section class="card col-12">
             <h2>Remnant Moon Calendar</h2>
-            <p class="subtitle">Fixed 4 weeks × 7 days. This does not float like Gregorian weeks.</p>
+            <p class="subtitle">
+              Fixed 4 weeks × 7 days. With Sunset Boundary active, each Remnant day begins at sunset rather than midnight.
+            </p>
             <div id="remCal" class="calendar"></div>
           </section>
 
           <section class="card col-12">
             <h2>Gregorian Calendar Overlay</h2>
-            <p class="subtitle">Shows how each Gregorian day maps into the Remnant moon count.</p>
+            <p class="subtitle">
+              Shows how each civil date maps into the Remnant count. After sunset, the effective Remnant date advances.
+            </p>
             <div id="gregCal" class="gregorian"></div>
           </section>
         </section>
@@ -560,9 +785,10 @@
         <section class="card">
           <h2>Year Map</h2>
           <p class="subtitle">
-            Year begins at the first calculated New Moon after Spring Equinox.
-            Each Remnant Moon is 28 days. Remaining days after Moon 13 are outside the counted cycle.
+            The counted year contains 13 Moons × 28 days = 364 days = 52 complete weeks.
+            The anchor and any outside Year Gate must preserve the continuous seven-day cycle.
           </p>
+
           <p id="outsideInfo" class="pill">—</p>
 
           <div class="scroller">
@@ -599,6 +825,7 @@
             <p class="eyebrow">Witness Prompt</p>
             <h2>Questions for Today</h2>
             <div id="promptBody" class="copy-scroll">—</div>
+
             <div class="btnrow">
               <button id="copySeal" class="lab-btn ghost" type="button">Copy Seal</button>
             </div>
@@ -643,7 +870,7 @@
             <h2>7.83 Hz Practical Signal Layer</h2>
             <p class="subtitle">
               This page does not fetch live Kp data. Check an outside source, tag the day manually,
-              then compare it against your saved witness logs.
+              then compare it against saved witness logs.
             </p>
 
             <div class="hum-grid">
@@ -667,6 +894,7 @@
           <article class="card col-4">
             <h2>Log Tools</h2>
             <p class="fine">Copy all saved logs, export JSON, import JSON, or clear the local archive.</p>
+
             <div class="btnrow">
               <button id="copyAllLogs" class="lab-btn ghost" type="button">Copy All</button>
               <button id="exportLogs" class="lab-btn ghost" type="button">Export JSON</button>
@@ -682,6 +910,7 @@
 
   <nav class="mobile-dock" aria-label="Mobile quick navigation">
     <a href="#todayPanel" data-mobile-tab="todayPanel">Today</a>
+    <a href="#shabbatPanel" data-mobile-tab="shabbatPanel">Shabbat</a>
     <a href="#flowPanel" data-mobile-tab="flowPanel">Flow</a>
     <a href="#mirrorPanel" data-mobile-tab="mirrorPanel">Mirror</a>
     <a href="#witnessPanel" data-mobile-tab="witnessPanel">Witness</a>
@@ -702,38 +931,199 @@
     (function () {
       "use strict";
 
-      function $(id) { return document.getElementById(id); }
+      const BOUNDARY_KEY = "sof_moons_boundary_v1";
+      const SUNSET_KEY = "sof_moons_sunset_v1";
+
+      function $(id) {
+        return document.getElementById(id);
+      }
+
       function text(id) {
-        var node = $(id);
+        const node = $(id);
         return node ? (node.textContent || "").trim() : "";
+      }
+
+      function setText(id, value) {
+        const node = $(id);
+        if (node) node.textContent = value;
       }
 
       function showTab(id) {
         document.querySelectorAll(".tabPanel").forEach(function (panel) {
           panel.classList.toggle("active", panel.id === id);
         });
+
         document.querySelectorAll(".tab").forEach(function (tab) {
           tab.classList.toggle("active", tab.dataset.tab === id);
         });
-        var panel = $(id);
+
+        const panel = $(id);
         if (panel) panel.scrollIntoView({ behavior: "smooth", block: "start" });
       }
 
       function showToast(message) {
-        var toast = $("sofToast");
+        const toast = $("sofToast");
         if (!toast) return;
+
         toast.textContent = message;
         toast.classList.add("show");
+
         clearTimeout(window.__sofToastTimer);
-        window.__sofToastTimer = setTimeout(function () { toast.classList.remove("show"); }, 1800);
+        window.__sofToastTimer = setTimeout(function () {
+          toast.classList.remove("show");
+        }, 1800);
       }
 
       function width(id, value) {
-        var node = $(id);
+        const node = $(id);
         if (node) node.style.width = Math.max(8, Math.min(100, value)) + "%";
       }
 
-      var focusCopy = {
+      function parseClock(value) {
+        const match = /^(\d{2}):(\d{2})$/.exec(value || "");
+        if (!match) return { hour: 18, minute: 0 };
+
+        return {
+          hour: Number(match[1]),
+          minute: Number(match[2])
+        };
+      }
+
+      function selectedCivilDate() {
+        const input = $("datePick");
+        if (!input || !input.value) return new Date();
+
+        const parts = input.value.split("-").map(Number);
+        return new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
+      }
+
+      function boundarySnapshot() {
+        const mode = $("boundaryMode") ? $("boundaryMode").value : "sunset";
+        const clock = parseClock($("sunsetInput") ? $("sunsetInput").value : "18:00");
+        const now = new Date();
+        const date = selectedCivilDate();
+
+        const isToday =
+          date.getFullYear() === now.getFullYear() &&
+          date.getMonth() === now.getMonth() &&
+          date.getDate() === now.getDate();
+
+        const boundary = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          mode === "midnight" ? 24 : clock.hour,
+          mode === "midnight" ? 0 : clock.minute,
+          0,
+          0
+        );
+
+        const afterBoundary = isToday && now >= boundary;
+
+        return {
+          mode,
+          clock,
+          civilDate: date,
+          afterBoundary,
+          label:
+            mode === "midnight"
+              ? "Midnight"
+              : mode === "manual"
+                ? "Manual Sunset"
+                : "Local Sunset"
+        };
+      }
+
+      function shabbatSnapshot() {
+        const boundary = boundarySnapshot();
+        const now = new Date();
+        const effective = new Date(boundary.civilDate);
+
+        if (boundary.mode !== "midnight" && boundary.afterBoundary) {
+          effective.setDate(effective.getDate() + 1);
+        }
+
+        const weekday = effective.getDay();
+        const moonDay = Number(text("dayInMoon")) || null;
+        const shabbatMoonDays = new Set([2, 9, 16, 23]);
+
+        let state = "Ordinary Week Gate";
+        let instruction = "Work with measure. Prepare for the next appointed stop.";
+
+        if (weekday === 5 && !boundary.afterBoundary) {
+          state = "Preparation Gate";
+          instruction = "Finish what is necessary. Prepare the household. Do not carry avoidable disorder into rest.";
+        } else if (
+          weekday === 6 ||
+          (boundary.mode !== "midnight" && now.getDay() === 5 && boundary.afterBoundary)
+        ) {
+          state = "Shabbat · Ceasing and Rest";
+          instruction = "Stop forcing. Guard the household. Share food. Rest, pray, review, and restore.";
+        } else if (
+          weekday === 0 &&
+          boundary.mode !== "midnight" &&
+          now.getDay() === 6 &&
+          boundary.afterBoundary
+        ) {
+          state = "Return Gate";
+          instruction = "Preserve the lesson and return to work through one deliberate next step.";
+        }
+
+        const position =
+          moonDay && shabbatMoonDays.has(moonDay)
+            ? "Aligned · Moon Day " + moonDay
+            : moonDay
+              ? "Moon Day " + moonDay
+              : "Waiting for moon engine";
+
+        return {
+          state,
+          instruction,
+          position,
+          effective
+        };
+      }
+
+      function updateBoundaryUI() {
+        const boundary = boundarySnapshot();
+        const shabbat = shabbatSnapshot();
+        const sunsetInput = $("sunsetInput");
+
+        document.body.dataset.remnantBoundary = boundary.mode;
+        document.documentElement.dataset.dayBoundary = boundary.mode;
+
+        setText("statBoundary", boundary.label);
+        setText("statShabbat", shabbat.state);
+        setText("shabbatState", shabbat.state);
+        setText("shabbatMoonPosition", shabbat.position);
+        setText("shabbatInstruction", shabbat.instruction);
+
+        if ($("shabbatInput") && $("shabbatInput").value === "Not marked") {
+          if (/Preparation/.test(shabbat.state)) $("shabbatInput").value = "Preparation Gate";
+          if (/Shabbat/.test(shabbat.state)) $("shabbatInput").value = "Shabbat · Ceasing and Rest";
+          if (/Return/.test(shabbat.state)) $("shabbatInput").value = "Return Gate";
+        }
+
+        if ($("boundaryStatus")) {
+          const time = sunsetInput ? sunsetInput.value : "18:00";
+          $("boundaryStatus").textContent =
+            boundary.mode === "midnight"
+              ? "Midnight mode is active. Shabbat still begins Friday sunset, so this mode does not fully align the calendar day with Shabbat."
+              : boundary.label + " is active at " + time + ". After the boundary, the effective Remnant day advances.";
+        }
+
+        document.dispatchEvent(
+          new CustomEvent("sof:boundary-change", {
+            detail: {
+              ...boundary,
+              shabbat,
+              sunset: sunsetInput ? sunsetInput.value : "18:00"
+            }
+          })
+        );
+      }
+
+      const focusCopy = {
         general: {
           title: "General Scroll",
           opening: "The day opens like a scroll unsealed: the outer world speaks in timing, and the inner witness is called to stand upright.",
@@ -779,23 +1169,25 @@
       };
 
       function buildMirror() {
-        var focus = $("readingFocus");
-        var key = focus ? focus.value : "general";
-        var copy = focusCopy[key] || focusCopy.general;
+        const focus = $("readingFocus");
+        const key = focus ? focus.value : "general";
+        const copy = focusCopy[key] || focusCopy.general;
 
-        var moon = text("moonName") || "Remnant Moon";
-        var moonLine = text("moonLine") || "Moon cadence loading";
-        var phase = text("phaseLine") || "Visible moon loading";
-        var archetype = text("dayArchetype") || "Witness";
-        var archetypeCopy = text("dayArchetypeCopy") || "Record what is actually there.";
-        var week = text("weekGate") || "Week Gate";
-        var weekCopy = text("weekGateCopy") || "The week gate is opening.";
-        var solar = text("solarGate") || "Solar Gate";
-        var solarCopy = text("skyMirrorCopy") || "The sky mirror is forming.";
-        var field = text("statField") || "Unknown";
+        const moon = text("moonName") || "Remnant Moon";
+        const moonLine = text("moonLine") || "Moon cadence loading";
+        const phase = text("phaseLine") || "Visible moon loading";
+        const archetype = text("dayArchetype") || "Witness";
+        const archetypeCopy = text("dayArchetypeCopy") || "Record what is actually there.";
+        const week = text("weekGate") || "Week Gate";
+        const weekCopy = text("weekGateCopy") || "The week gate is opening.";
+        const solar = text("solarGate") || "Solar Gate";
+        const solarCopy = text("skyMirrorCopy") || "The sky mirror is forming.";
+        const field = text("statField") || "Unknown";
+        const shabbat = shabbatSnapshot();
 
-        var title = moon + " · " + archetype + " Reading";
-        var reading =
+        const title = moon + " · " + archetype + " Reading";
+
+        const reading =
 `☲ DAILY MIRROR READING ☲
 
 ${copy.title}
@@ -818,6 +1210,10 @@ ${archetype} — ${archetypeCopy}
 Week Gate
 ${week}
 ${weekCopy}
+
+Shabbat Gate
+${shabbat.state}
+${shabbat.instruction}
 
 Solar Gate
 ${solar}
@@ -850,28 +1246,29 @@ Let the true gate open.
 Let the record be clean.
 Let the next step be firm.`;
 
-        if ($("mirrorTitle")) $("mirrorTitle").textContent = title;
+        setText("mirrorTitle", title);
         if ($("mirrorOutput")) $("mirrorOutput").textContent = reading;
-        if ($("mirrorSignal")) $("mirrorSignal").textContent = copy.signal;
-        if ($("mirrorShadow")) $("mirrorShadow").textContent = copy.crossing;
-        if ($("mirrorAction")) $("mirrorAction").textContent = copy.command;
+        setText("mirrorSignal", copy.signal);
+        setText("mirrorShadow", copy.crossing);
+        setText("mirrorAction", copy.command);
+
         return reading;
       }
 
       function hydrateRitualUI() {
-        var moon = text("moonName") || "Remnant Moon";
-        var line = text("moonLine") || "Read the signal. Record the witness. Ground the body.";
-        var phase = text("phaseLine") || "Visible moon";
-        var day = text("dayInMoon") || "☾";
-        var field = text("statField") || "Unknown";
+        const moon = text("moonName") || "Remnant Moon";
+        const line = text("moonLine") || "Read the signal. Record the witness. Ground the body.";
+        const phase = text("phaseLine") || "Visible moon";
+        const day = text("dayInMoon") || "☾";
+        const field = text("statField") || "Unknown";
 
-        if ($("ritualTitle")) $("ritualTitle").textContent = moon;
-        if ($("ritualLine")) $("ritualLine").textContent = line + " · " + phase;
-        if ($("ritualMoonCore")) $("ritualMoonCore").textContent = day;
+        setText("ritualTitle", moon);
+        setText("ritualLine", line + " · " + phase);
+        setText("ritualMoonCore", day);
 
-        var logs = parseInt(text("statLogs") || "0", 10) || 0;
-        var patterns = parseInt(text("statPatterns") || "0", 10) || 0;
-        var fieldBoost = /storm|elevated|charged/i.test(field) ? 80 : /quiet/i.test(field) ? 35 : 52;
+        const logs = parseInt(text("statLogs") || "0", 10) || 0;
+        const patterns = parseInt(text("statPatterns") || "0", 10) || 0;
+        const fieldBoost = /storm|elevated|charged/i.test(field) ? 80 : /quiet/i.test(field) ? 35 : 52;
 
         width("meterCoherence", 38 + Math.min(34, logs * 8));
         width("meterBody", 48);
@@ -879,45 +1276,61 @@ Let the next step be firm.`;
         width("meterField", fieldBoost);
         width("meterGround", fieldBoost > 65 ? 86 : 58);
 
-        if ($("meterCoherenceText")) $("meterCoherenceText").textContent = logs ? "Witness active" : "Gathering";
-        if ($("meterSignalText")) $("meterSignalText").textContent = patterns ? "Pattern seen" : "Listening";
-        if ($("meterFieldText")) $("meterFieldText").textContent = field;
-        if ($("meterGroundText")) $("meterGroundText").textContent = fieldBoost > 65 ? "High priority" : "Recommended";
+        setText("meterCoherenceText", logs ? "Witness active" : "Gathering");
+        setText("meterSignalText", patterns ? "Pattern seen" : "Listening");
+        setText("meterFieldText", field);
+        setText("meterGroundText", fieldBoost > 65 ? "High priority" : "Recommended");
       }
 
       function scanLocalLogs() {
-        var raw = [];
+        const raw = [];
+
         try {
-          Object.keys(localStorage).forEach(function (k) {
-            if (/moon|witness|scroll|remnant/i.test(k)) {
-              var v = localStorage.getItem(k);
-              if (v) raw.push(v);
+          Object.keys(localStorage).forEach(function (key) {
+            if (/moon|witness|scroll|remnant/i.test(key)) {
+              const value = localStorage.getItem(key);
+              if (value) raw.push(value);
             }
           });
-        } catch (e) {}
+        } catch (_) {}
 
-        var blob = raw.join(" ").toLowerCase();
-        var themes = [
+        const blob = raw.join(" ").toLowerCase();
+        const themes = [
           "speech","court","custody","child","money","housing","dream","water","body","repair",
           "work","family","signal","fire","moon","sleep","pressure","clarity","peace","record"
         ];
 
-        var counts = themes.map(function (t) {
-          var m = blob.match(new RegExp("\\b" + t + "\\b", "g"));
-          return { theme: t, count: m ? m.length : 0 };
-        }).filter(function (x) {
-          return x.count > 0;
-        }).sort(function (a, b) {
-          return b.count - a.count;
-        }).slice(0, 5);
+        const counts = themes
+          .map(function (theme) {
+            const match = blob.match(new RegExp("\\b" + theme + "\\b", "g"));
+            return { theme, count: match ? match.length : 0 };
+          })
+          .filter(function (item) {
+            return item.count > 0;
+          })
+          .sort(function (a, b) {
+            return b.count - a.count;
+          })
+          .slice(0, 5);
 
-        if (counts.length) {
-          if ($("memoryWordsCopy")) $("memoryWordsCopy").textContent = counts.map(function (x) {
-            return x.theme + " ×" + x.count;
-          }).join(" · ");
-          if ($("memoryBodyCopy")) $("memoryBodyCopy").textContent = "The body becomes clearer when the witness is repeated daily.";
-          if ($("memoryFieldCopy")) $("memoryFieldCopy").textContent = "Pattern memory is active in this browser. Export logs before clearing storage.";
-        }
+        if (!counts.length) return;
+
+        setText(
+          "memoryWordsCopy",
+          counts.map(function (item) {
+            return item.theme + " ×" + item.count;
+          }).join(" · ")
+        );
+
+        setText(
+          "memoryBodyCopy",
+          "The body becomes clearer when the witness is repeated daily."
+        );
+
+        setText(
+          "memoryFieldCopy",
+          "Pattern memory is active in this browser. Export logs before clearing storage."
+        );
       }
 
       document.querySelectorAll("[data-mobile-tab]").forEach(function (link) {
@@ -927,34 +1340,121 @@ Let the next step be firm.`;
         });
       });
 
-      document.querySelectorAll("[data-tab-jump]").forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          showTab(btn.dataset.tabJump);
+      document.querySelectorAll("[data-tab-jump]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          showTab(button.dataset.tabJump);
         });
       });
 
-      if ($("buildMirror")) $("buildMirror").addEventListener("click", buildMirror);
+      if ($("buildMirror")) {
+        $("buildMirror").addEventListener("click", buildMirror);
+      }
+
       if ($("copyMirror")) {
-        $("copyMirror").addEventListener("click", function () {
-          var reading = buildMirror();
-          if (navigator.clipboard) navigator.clipboard.writeText(reading);
+        $("copyMirror").addEventListener("click", async function () {
+          const reading = buildMirror();
+
+          if (navigator.clipboard) {
+            await navigator.clipboard.writeText(reading);
+          }
+
           showToast("Reading copied.");
         });
       }
 
-      ["saveWitness","copyWitness","copySeal","copyAllLogs","exportLogs"].forEach(function (id) {
-        var btn = $(id);
-        if (btn) {
-          btn.addEventListener("click", function () {
-            btn.classList.add("pulse-save");
-            setTimeout(function () { btn.classList.remove("pulse-save"); }, 800);
-            showToast(id.indexOf("save") >= 0 ? "Witness sealed." : "Copied to Scroll.");
-            setTimeout(function () { hydrateRitualUI(); scanLocalLogs(); }, 200);
-          });
-        }
+      if ($("boundaryMode")) {
+        const savedBoundary = localStorage.getItem(BOUNDARY_KEY) || "sunset";
+        $("boundaryMode").value = savedBoundary;
+
+        $("boundaryMode").addEventListener("change", function () {
+          localStorage.setItem(BOUNDARY_KEY, $("boundaryMode").value);
+          updateBoundaryUI();
+          buildMirror();
+        });
+      }
+
+      if ($("sunsetInput")) {
+        $("sunsetInput").value = localStorage.getItem(SUNSET_KEY) || "18:00";
+
+        $("sunsetInput").addEventListener("change", function () {
+          localStorage.setItem(SUNSET_KEY, $("sunsetInput").value);
+          updateBoundaryUI();
+          buildMirror();
+        });
+      }
+
+      if ($("useLocalSunset")) {
+        $("useLocalSunset").addEventListener("click", function () {
+          if (!navigator.geolocation) {
+            showToast("Location is unavailable. Using the saved sunset time.");
+            return;
+          }
+
+          navigator.geolocation.getCurrentPosition(
+            function (position) {
+              document.dispatchEvent(
+                new CustomEvent("sof:request-sunset", {
+                  detail: {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    date: selectedCivilDate()
+                  }
+                })
+              );
+
+              showToast("Location received. The moon engine will calculate local sunset.");
+            },
+            function () {
+              showToast("Location was not available. Using the saved sunset time.");
+            },
+            {
+              enableHighAccuracy: false,
+              timeout: 9000,
+              maximumAge: 3600000
+            }
+          );
+        });
+      }
+
+      [
+        "saveWitness",
+        "copyWitness",
+        "copySeal",
+        "copyAllLogs",
+        "exportLogs"
+      ].forEach(function (id) {
+        const button = $(id);
+        if (!button) return;
+
+        button.addEventListener("click", function () {
+          button.classList.add("pulse-save");
+
+          setTimeout(function () {
+            button.classList.remove("pulse-save");
+          }, 800);
+
+          showToast(id.indexOf("save") >= 0 ? "Witness sealed." : "Copied to Scroll.");
+
+          setTimeout(function () {
+            hydrateRitualUI();
+            scanLocalLogs();
+          }, 200);
+        });
+      });
+
+      document.addEventListener("sof:sunset-calculated", function (event) {
+        const value = event.detail && event.detail.time;
+        if (!value || !$("sunsetInput")) return;
+
+        $("sunsetInput").value = value;
+        localStorage.setItem(SUNSET_KEY, value);
+        updateBoundaryUI();
+        buildMirror();
+        showToast("Local sunset updated.");
       });
 
       document.addEventListener("sof:moon-render", function () {
+        updateBoundaryUI();
         buildMirror();
         hydrateRitualUI();
         scanLocalLogs();
@@ -962,6 +1462,7 @@ Let the next step be firm.`;
 
       window.addEventListener("load", function () {
         setTimeout(function () {
+          updateBoundaryUI();
           buildMirror();
           hydrateRitualUI();
           scanLocalLogs();
@@ -969,14 +1470,20 @@ Let the next step be firm.`;
       });
 
       document.addEventListener("change", function (event) {
-        if (event.target && /Input|readingFocus|datePick|tzPick/.test(event.target.id || "")) {
+        if (
+          event.target &&
+          /Input|readingFocus|datePick|tzPick/.test(event.target.id || "")
+        ) {
           setTimeout(function () {
+            updateBoundaryUI();
             buildMirror();
             hydrateRitualUI();
           }, 120);
         }
       });
+
+      setInterval(updateBoundaryUI, 30000);
     })();
   </script>
 </body>
-</html>
+  </html>
