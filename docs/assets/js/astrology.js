@@ -1,6 +1,6 @@
 /* Scroll of Fire — Astrology + Planetary Mirror Layer
-   Reads the selected Gregorian date only.
-   Does NOT overwrite the 13-Moon calendar engine.
+   Uses the effective Remnant date supplied by assets/js/moons.js.
+   When Sunset Boundary advances the calendar after sunset, this layer advances too.
 
    Modes:
    1) Built-in symbolic planetary painter using simple cyclic approximations.
@@ -36,25 +36,56 @@
     { id: "saturn",  name: "Saturn",  glyph: "♄", orbit: 295, size: 13, color: "#c4a3ff", period: 10759.22, seed: 320 }
   ];
 
-  document.addEventListener("DOMContentLoaded", init);
-  document.addEventListener("sof:moon-render", function () {
-    render();
+  let activeEffectiveDate = null;
+  let activeEffectiveISO = "";
+  let activeBoundary = null;
+  let activeShabbat = null;
+  let initialized = false;
+
+  document.addEventListener("sof:moon-render", function (event) {
+    const detail = event.detail || {};
+
+    activeEffectiveDate =
+      parseISODate(detail.effectiveISO) ||
+      parseDateObject(detail.effectiveDate) ||
+      parseISODate(detail.iso) ||
+      parseDateObject(detail.date) ||
+      null;
+
+    activeEffectiveISO = detail.effectiveISO || "";
+    activeBoundary = detail.boundary || null;
+    activeShabbat = detail.shabbat || null;
+
+    if (initialized) render();
   });
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 
   function init() {
     const panel = document.querySelector("[data-astrology-panel]");
     if (!panel) return;
 
+    initialized = true;
     render();
 
     const datePick = document.getElementById("datePick");
-    if (datePick) datePick.addEventListener("change", render);
+    if (datePick) {
+      datePick.addEventListener("change", function () {
+        if (!activeEffectiveDate) render();
+      });
+    }
 
     ["btnToday", "prevDay", "nextDay"].forEach(function (id) {
-      const btn = document.getElementById(id);
-      if (btn) btn.addEventListener("click", function () {
-        setTimeout(render, 80);
-      });
+      const button = document.getElementById(id);
+      if (button) {
+        button.addEventListener("click", function () {
+          setTimeout(render, 100);
+        });
+      }
     });
 
     panel.classList.add("is-loaded");
@@ -68,27 +99,40 @@
     const solar = solarSign(date);
     const moonLine = document.getElementById("moonLine");
     const moonText = moonLine ? moonLine.textContent.trim() : "13-Moon Cadence";
+    const boundaryText = activeBoundary
+      ? `${activeBoundary.label || activeBoundary.mode || "Calendar boundary"} · ${activeBoundary.sunset || ""}`.trim()
+      : "Civil date fallback";
+    const shabbatText = activeShabbat?.state || "Weekly gate loading";
 
     set("[data-solar-gate]", solar.name + " · " + solar.element);
     set("[data-solar-copy]", solar.copy);
     set("[data-elemental-tone]", solar.element);
     set("[data-elemental-copy]", elementalCopy(solar.element));
     set("[data-moon-reflection]", moonText || "13-Moon Cadence");
-    set("[data-moon-reflection-copy]", "Reflection follows the active Remnant Moon date from the main calendar engine.");
-    set("[data-astro-status]", "Astrology and planetary correspondence loaded without changing the 13-Moon date engine.");
+    set(
+      "[data-moon-reflection-copy]",
+      "Reflection follows the effective Remnant date from the main calendar engine, including sunset turnover."
+    );
+    set(
+      "[data-astro-status]",
+      `Astrology mirror loaded for ${formatDate(date)}${activeEffectiveISO ? ` · effective ${activeEffectiveISO}` : ""} · ${boundaryText} · ${shabbatText}.`
+    );
 
     setById("astroSolarGate", solar.name + " · " + solar.element);
     setById("astroSolarCopy", solar.copy);
     setById("astroElement", solar.element);
     setById("astroElementCopy", elementalCopy(solar.element));
     setById("astroMoonMirror", moonText || "13-Moon Cadence");
-    setById("astroMoonCopy", "Reflection follows the active Remnant Moon date from the main calendar engine.");
+    setById(
+      "astroMoonCopy",
+      `Reflection follows the active Remnant date. ${shabbatText}.`
+    );
     setById("astroCounsel", counselTitle(solar.element));
     setById("astroCounselCopy", counselCopy(solar.element));
     setById("astroBodyHouse", bodyHouse(solar.name));
     setById("astroBodyCopy", bodyCopy(solar.name));
-    setById("astroIntegration", "Ground the Signal");
-    setById("astroIntegrationCopy", "Let the sky become a mirror, then let the body choose the grounded step.");
+    setById("astroIntegration", integrationTitle(activeShabbat));
+    setById("astroIntegrationCopy", integrationCopy(activeShabbat));
 
     const placements = buildPlacements(date);
     paintPlanetarium(placements);
@@ -96,90 +140,167 @@
     paintAspectCards(placements);
   }
 
+  function parseISODate(value) {
+    if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+
+    const parts = value.split("-").map(Number);
+    const date = new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0, 0);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  function parseDateObject(value) {
+    if (!value) return null;
+
+    const date = value instanceof Date ? new Date(value) : new Date(value);
+    if (Number.isNaN(date.getTime())) return null;
+
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      12,
+      0,
+      0,
+      0
+    );
+  }
+
   function getCurrentDate() {
+    if (activeEffectiveDate) return new Date(activeEffectiveDate);
+
+    const moons = window.ScrollOfFireMoons;
+    if (moons && typeof moons.effectiveDate === "function") {
+      const date = moons.effectiveDate();
+      if (date instanceof Date && !Number.isNaN(date.getTime())) {
+        return new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          12,
+          0,
+          0,
+          0
+        );
+      }
+    }
+
     const input = document.getElementById("datePick");
     if (input && input.value) {
-      const parts = input.value.split("-").map(Number);
-      return new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
+      return parseISODate(input.value) || new Date();
     }
+
     return new Date();
   }
 
-  function solarSign(date) {
-    const m = date.getMonth() + 1;
-    const d = date.getDate();
+  function formatDate(date) {
+    return new Intl.DateTimeFormat("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    }).format(date);
+  }
 
-    if ((m === 3 && d >= 21) || (m === 4 && d <= 19)) return signByName("Aries");
-    if ((m === 4 && d >= 20) || (m === 5 && d <= 20)) return signByName("Taurus");
-    if ((m === 5 && d >= 21) || (m === 6 && d <= 20)) return signByName("Gemini");
-    if ((m === 6 && d >= 21) || (m === 7 && d <= 22)) return signByName("Cancer");
-    if ((m === 7 && d >= 23) || (m === 8 && d <= 22)) return signByName("Leo");
-    if ((m === 8 && d >= 23) || (m === 9 && d <= 22)) return signByName("Virgo");
-    if ((m === 9 && d >= 23) || (m === 10 && d <= 22)) return signByName("Libra");
-    if ((m === 10 && d >= 23) || (m === 11 && d <= 21)) return signByName("Scorpio");
-    if ((m === 11 && d >= 22) || (m === 12 && d <= 21)) return signByName("Sagittarius");
-    if ((m === 12 && d >= 22) || (m === 1 && d <= 19)) return signByName("Capricorn");
-    if ((m === 1 && d >= 20) || (m === 2 && d <= 18)) return signByName("Aquarius");
+  function solarSign(date) {
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return signByName("Aries");
+    if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return signByName("Taurus");
+    if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return signByName("Gemini");
+    if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return signByName("Cancer");
+    if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return signByName("Leo");
+    if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return signByName("Virgo");
+    if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return signByName("Libra");
+    if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return signByName("Scorpio");
+    if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return signByName("Sagittarius");
+    if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return signByName("Capricorn");
+    if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return signByName("Aquarius");
     return signByName("Pisces");
   }
 
   function signByName(name) {
-    return SIGNS.find(function (s) { return s.name === name; }) || SIGNS[0];
+    return SIGNS.find(function (sign) {
+      return sign.name === name;
+    }) || SIGNS[0];
   }
 
-  function signFromDegree(deg) {
-    const normalized = normDeg(deg);
+  function signFromDegree(degree) {
+    const normalized = normDeg(degree);
     const index = Math.floor(normalized / 30);
     return SIGNS[index] || SIGNS[0];
   }
 
   function normDeg(value) {
     if (!Number.isFinite(value)) return 0;
-    let d = value % 360;
-    if (d < 0) d += 360;
-    return d;
+
+    let degree = value % 360;
+    if (degree < 0) degree += 360;
+    return degree;
   }
 
   function daysSinceEpoch(date) {
     const epoch = Date.UTC(2000, 0, 1, 12, 0, 0);
-    return (date.getTime() - epoch) / 86400000;
+    const current = Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      12,
+      0,
+      0
+    );
+
+    return (current - epoch) / 86400000;
   }
 
   function buildPlacements(date) {
     if (window.__EPHEMERIS__ && window.__EPHEMERIS__.placements) {
-      const fromEph = {};
-      PLANETS.forEach(function (p) {
-        const raw = window.__EPHEMERIS__.placements[p.id];
-        const deg = Number.isFinite(raw) ? normDeg(raw) : approximateDegree(date, p);
-        fromEph[p.id] = makePlacement(p, deg);
+      const ephemerisPlacements = {};
+
+      PLANETS.forEach(function (planet) {
+        const raw = window.__EPHEMERIS__.placements[planet.id];
+        const degree = Number.isFinite(raw)
+          ? normDeg(raw)
+          : approximateDegree(date, planet);
+
+        ephemerisPlacements[planet.id] = makePlacement(planet, degree);
       });
-      return fromEph;
+
+      return ephemerisPlacements;
     }
 
     const placements = {};
-    PLANETS.forEach(function (p) {
-      placements[p.id] = makePlacement(p, approximateDegree(date, p));
+
+    PLANETS.forEach(function (planet) {
+      placements[planet.id] = makePlacement(
+        planet,
+        approximateDegree(date, planet)
+      );
     });
+
     return placements;
   }
 
   function approximateDegree(date, planet) {
     const days = daysSinceEpoch(date);
+
     if (planet.id === "sun") {
       const start = new Date(date.getFullYear(), 2, 20, 12, 0, 0);
       const dayOfSolarYear = (date - start) / 86400000;
       return normDeg(dayOfSolarYear * 360 / 365.2422);
     }
+
     return normDeg(planet.seed + days * 360 / planet.period);
   }
 
-  function makePlacement(planet, deg) {
-    const sign = signFromDegree(deg);
+  function makePlacement(planet, degree) {
+    const sign = signFromDegree(degree);
+
     return {
       id: planet.id,
       name: planet.name,
       glyph: planet.glyph,
-      degree: deg,
+      degree,
       sign: sign.name,
       signGlyph: sign.glyph,
       element: sign.element,
@@ -194,32 +315,32 @@
     const host = document.getElementById("planetarium");
     if (!host) return;
 
-    host.querySelectorAll(".planet-orbit,.zodiac-label").forEach(function (n) {
-      n.remove();
+    host.querySelectorAll(".planet-orbit,.zodiac-label").forEach(function (node) {
+      node.remove();
     });
 
-    SIGNS.forEach(function (s, i) {
+    SIGNS.forEach(function (sign, index) {
       const label = document.createElement("span");
       label.className = "zodiac-label";
-      label.style.setProperty("--a", (i * 30) + "deg");
-      label.textContent = s.glyph + " " + s.name;
+      label.style.setProperty("--a", (index * 30) + "deg");
+      label.textContent = sign.glyph + " " + sign.name;
       host.appendChild(label);
     });
 
-    Object.values(placements).forEach(function (p) {
-      if (p.id === "sun") return;
+    Object.values(placements).forEach(function (placement) {
+      if (placement.id === "sun") return;
 
       const orbit = document.createElement("div");
       orbit.className = "planet-orbit";
-      orbit.style.setProperty("--orbit", p.orbit + "px");
-      orbit.style.setProperty("--angle", p.degree + "deg");
+      orbit.style.setProperty("--orbit", placement.orbit + "px");
+      orbit.style.setProperty("--angle", placement.degree + "deg");
 
       const dot = document.createElement("span");
       dot.className = "planet-dot";
-      dot.style.setProperty("--size", p.size + "px");
-      dot.style.setProperty("--planet-color", p.color);
-      dot.setAttribute("data-symbol", p.glyph);
-      dot.title = `${p.name} · ${Math.round(p.degree * 10) / 10}° · ${p.sign}`;
+      dot.style.setProperty("--size", placement.size + "px");
+      dot.style.setProperty("--planet-color", placement.color);
+      dot.setAttribute("data-symbol", placement.glyph);
+      dot.title = `${placement.name} · ${Math.round(placement.degree * 10) / 10}° · ${placement.sign}`;
 
       orbit.appendChild(dot);
       host.appendChild(orbit);
@@ -230,13 +351,14 @@
     const grid = document.getElementById("planetGrid");
     if (!grid) return;
 
-    grid.innerHTML = Object.values(placements).map(function (p) {
-      const deg = Math.round(p.degree * 10) / 10;
+    grid.innerHTML = Object.values(placements).map(function (placement) {
+      const degree = Math.round(placement.degree * 10) / 10;
+
       return `
         <article class="planet-card">
-          <strong><span>${p.glyph} ${p.name}</span><span>${deg}°</span></strong>
-          <span>${p.signGlyph} ${p.sign} · ${p.element}</span>
-          <small>${p.copy}</small>
+          <strong><span>${placement.glyph} ${placement.name}</span><span>${degree}°</span></strong>
+          <span>${placement.signGlyph} ${placement.sign} · ${placement.element}</span>
+          <small>${placement.copy}</small>
         </article>
       `;
     }).join("");
@@ -249,38 +371,44 @@
     const values = Object.values(placements);
     const aspects = [];
     const targets = [
-      { name: "Conjunction", deg: 0, orb: 8 },
-      { name: "Sextile", deg: 60, orb: 5 },
-      { name: "Square", deg: 90, orb: 6 },
-      { name: "Trine", deg: 120, orb: 6 },
-      { name: "Opposition", deg: 180, orb: 8 }
+      { name: "Conjunction", degree: 0, orb: 8 },
+      { name: "Sextile", degree: 60, orb: 5 },
+      { name: "Square", degree: 90, orb: 6 },
+      { name: "Trine", degree: 120, orb: 6 },
+      { name: "Opposition", degree: 180, orb: 8 }
     ];
 
-    for (let i = 0; i < values.length; i++) {
-      for (let j = i + 1; j < values.length; j++) {
-        const a = values[i];
-        const b = values[j];
-        let diff = Math.abs(a.degree - b.degree);
-        diff = diff > 180 ? 360 - diff : diff;
+    for (let first = 0; first < values.length; first++) {
+      for (let second = first + 1; second < values.length; second++) {
+        const a = values[first];
+        const b = values[second];
+
+        let difference = Math.abs(a.degree - b.degree);
+        difference = difference > 180 ? 360 - difference : difference;
 
         targets.forEach(function (target) {
-          if (Math.abs(diff - target.deg) <= target.orb) {
-            aspects.push({ a, b, target, diff });
+          if (Math.abs(difference - target.degree) <= target.orb) {
+            aspects.push({ a, b, target, difference });
           }
         });
       }
     }
 
     if (!aspects.length) {
-      grid.innerHTML = `<article class="aspect-card"><strong>Quiet Aspect Field</strong><p>No major symbolic aspects within the current mirror orb.</p></article>`;
+      grid.innerHTML = `
+        <article class="aspect-card">
+          <strong>Quiet Aspect Field</strong>
+          <p>No major symbolic aspects within the current mirror orb.</p>
+        </article>
+      `;
       return;
     }
 
-    grid.innerHTML = aspects.slice(0, 9).map(function (x) {
+    grid.innerHTML = aspects.slice(0, 9).map(function (aspect) {
       return `
         <article class="aspect-card">
-          <strong>${x.a.glyph} ${x.a.name} ${x.target.name} ${x.b.glyph} ${x.b.name}</strong>
-          <p>${Math.round(x.diff * 10) / 10}° separation · ${aspectCopy(x.target.name)}</p>
+          <strong>${aspect.a.glyph} ${aspect.a.name} ${aspect.target.name} ${aspect.b.glyph} ${aspect.b.name}</strong>
+          <p>${Math.round(aspect.difference * 10) / 10}° separation · ${aspectCopy(aspect.target.name)}</p>
         </article>
       `;
     }).join("");
@@ -323,6 +451,34 @@
     }[element] || "Observe first. Interpret after the pattern repeats.";
   }
 
+  function integrationTitle(shabbat) {
+    if (!shabbat) return "Ground the Signal";
+    if (shabbat.code === "active") return "Cease and Restore";
+    if (shabbat.code === "preparation") return "Prepare the Vessel";
+    if (shabbat.code === "return") return "Return with Order";
+    return "Ground the Signal";
+  }
+
+  function integrationCopy(shabbat) {
+    if (!shabbat) {
+      return "Let the sky become a mirror, then let the body choose the grounded step.";
+    }
+
+    if (shabbat.code === "active") {
+      return "Let the symbolic mirror support rest, prayer, family, food, reflection, and restoration rather than more forced production.";
+    }
+
+    if (shabbat.code === "preparation") {
+      return "Finish what is necessary, settle the household, and prepare to stop without carrying avoidable disorder into rest.";
+    }
+
+    if (shabbat.code === "return") {
+      return "Carry the lesson forward through one deliberate action rather than rushing back into scattered labor.";
+    }
+
+    return "Let the sky become a mirror, then let the body choose the grounded step.";
+  }
+
   function bodyHouse(sign) {
     return {
       Aries: "Head / Initiation",
@@ -358,12 +514,12 @@
   }
 
   function set(selector, value) {
-    const el = document.querySelector(selector);
-    if (el) el.textContent = value;
+    const element = document.querySelector(selector);
+    if (element) element.textContent = value;
   }
 
   function setById(id, value) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = value;
+    const element = document.getElementById(id);
+    if (element) element.textContent = value;
   }
 })();
