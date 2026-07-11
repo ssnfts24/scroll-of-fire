@@ -1,11 +1,46 @@
 (() => {
   "use strict";
 
-  const $ = s => document.querySelector(s);
-  const $$ = s => Array.from(document.querySelectorAll(s));
+  const $ = selector => document.querySelector(selector);
+  const $$ = selector => Array.from(document.querySelectorAll(selector));
 
-  const LOG_KEY = "sof_moon_logs_v2";
+  const LOG_KEY = "sof_moon_logs_v3";
+  const LEGACY_LOG_KEY = "sof_moon_logs_v2";
   const TZ_KEY = "sof_moons_tz_v2";
+  const BOUNDARY_KEY = "sof_moons_boundary_v1";
+  const SUNSET_KEY = "sof_moons_sunset_v1";
+  const LOCATION_KEY = "sof_moons_location_v1";
+
+  const DEFAULT_CONFIG = {
+    dayBoundary: "sunset",
+    fallbackSunset: "18:00",
+    anchorOverrides: {
+      2026: "2026-04-17"
+    },
+    shabbat: {
+      enabled: true,
+      begins: "Friday sunset",
+      ends: "Saturday sunset / nightfall",
+      moonDays: [2, 9, 16, 23],
+      preparationDay: 1,
+      returnDay: 3,
+      preserveContinuousWeekThroughYearGate: true
+    }
+  };
+
+  const suppliedConfig = window.SOF_MOONS_CONFIG || {};
+  const CONFIG = {
+    ...DEFAULT_CONFIG,
+    ...suppliedConfig,
+    anchorOverrides: {
+      ...DEFAULT_CONFIG.anchorOverrides,
+      ...(suppliedConfig.anchorOverrides || {})
+    },
+    shabbat: {
+      ...DEFAULT_CONFIG.shabbat,
+      ...(suppliedConfig.shabbat || {})
+    }
+  };
 
   const MOONS = [
     { idx: 1, name: "Seed Flame", element: "Fire", freq: "144 Hz", essence: "Beginning, ignition, first witness", practice: "Start clean. Speak the first word. Mark the seed." },
@@ -68,10 +103,35 @@
     "America/Chicago",
     "America/New_York",
     "UTC"
-  ].filter((v, i, a) => v && a.indexOf(v) === i);
+  ].filter((value, index, all) => value && all.indexOf(value) === index);
 
-  let selectedTZ = localStorage.getItem(TZ_KEY) || TZONES[0];
-  let selectedDate = fromISO(new URLSearchParams(location.search).get("date")) || new Date();
+  const params = new URLSearchParams(location.search);
+  let selectedTZ = params.get("tz") || safeGet(TZ_KEY) || TZONES[0];
+  let selectedDate = fromISO(params.get("date")) || todayInTimeZone(selectedTZ);
+  let lastContext = null;
+
+  function safeGet(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  }
+
+  function safeSet(key, value) {
+    try {
+      localStorage.setItem(key, value);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function safeRemove(key) {
+    try {
+      localStorage.removeItem(key);
+    } catch {}
+  }
 
   function text(id, value) {
     const node = $("#" + id);
@@ -93,24 +153,26 @@
     if (node) node.addEventListener(event, handler);
   }
 
-  function pad(n) {
-    return String(n).padStart(2, "0");
+  function pad(number) {
+    return String(number).padStart(2, "0");
   }
 
-  function toISO(d) {
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  function toISO(date) {
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
   }
 
-  function fromISO(s) {
-    if (!s || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return null;
-    const [y, m, d] = s.split("-").map(Number);
-    return new Date(y, m - 1, d);
+  function fromISO(value) {
+    if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+    const [year, month, day] = value.split("-").map(Number);
+    const date = new Date(year, month - 1, day, 12, 0, 0, 0);
+    return Number.isNaN(date.getTime()) ? null : date;
   }
 
-  function addDays(d, n) {
-    const x = new Date(d);
-    x.setDate(x.getDate() + n);
-    return x;
+  function addDays(date, amount) {
+    const next = new Date(date);
+    next.setDate(next.getDate() + amount);
+    next.setHours(12, 0, 0, 0);
+    return next;
   }
 
   function dayDiff(a, b) {
@@ -119,85 +181,150 @@
     return Math.floor((A - B) / 86400000);
   }
 
-  function fmtDate(d, opts = {}) {
+  function datePartsInTimeZone(date, timeZone) {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h23"
+    }).formatToParts(date);
+
+    const result = {};
+    parts.forEach(part => {
+      if (part.type !== "literal") result[part.type] = Number(part.value);
+    });
+    return result;
+  }
+
+  function todayInTimeZone(timeZone) {
+    const parts = datePartsInTimeZone(new Date(), timeZone);
+    return new Date(parts.year, parts.month - 1, parts.day, 12, 0, 0, 0);
+  }
+
+  function formatDateOnly(date, options = {}) {
+    const safeDate = new Date(Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      12,
+      0,
+      0
+    ));
+
     return new Intl.DateTimeFormat("en-US", {
-      timeZone: selectedTZ,
+      timeZone: "UTC",
       weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
-      ...opts
-    }).format(d);
+      ...options
+    }).format(safeDate);
   }
 
-  function fmtShort(d) {
-    return new Intl.DateTimeFormat("en-US", {
-      timeZone: selectedTZ,
+  function fmtShort(date) {
+    return formatDateOnly(date, {
+      weekday: undefined,
       month: "short",
       day: "numeric",
       year: "numeric"
-    }).format(d);
+    });
   }
 
-  function toast(msg) {
-    const builtIn = $("#sofToast");
-    if (builtIn) {
-      builtIn.textContent = msg;
-      builtIn.classList.add("show");
-      clearTimeout(window.__sofToastTimer);
-      window.__sofToastTimer = setTimeout(() => builtIn.classList.remove("show"), 1500);
-      return;
-    }
+  function parseClock(value) {
+    const match = /^(\d{2}):(\d{2})$/.exec(value || "");
+    if (!match) return { hour: 18, minute: 0, minutes: 1080 };
 
-    const el = document.createElement("div");
-    el.textContent = msg;
-    Object.assign(el.style, {
-      position: "fixed",
-      left: "50%",
-      bottom: "22px",
-      transform: "translateX(-50%)",
-      background: "#0e131c",
-      color: "#e6f9ff",
-      padding: "9px 13px",
-      border: "1px solid #2a3242",
-      borderRadius: "12px",
-      boxShadow: "0 10px 28px rgba(0,0,0,.35)",
-      zIndex: 99999,
-      opacity: 0,
-      transition: "opacity .2s"
-    });
-    document.body.appendChild(el);
-    requestAnimationFrame(() => { el.style.opacity = 1; });
-    setTimeout(() => {
-      el.style.opacity = 0;
-      setTimeout(() => el.remove(), 250);
-    }, 1300);
+    const hour = Math.max(0, Math.min(23, Number(match[1])));
+    const minute = Math.max(0, Math.min(59, Number(match[2])));
+    return { hour, minute, minutes: hour * 60 + minute };
+  }
+
+  function boundaryMode() {
+    const control = $("#boundaryMode");
+    return control?.value || params.get("boundary") || safeGet(BOUNDARY_KEY) || CONFIG.dayBoundary;
+  }
+
+  function sunsetValue() {
+    const control = $("#sunsetInput");
+    return control?.value || params.get("sunset") || safeGet(SUNSET_KEY) || CONFIG.fallbackSunset;
+  }
+
+  function effectiveContext() {
+    const mode = boundaryMode();
+    const sunset = sunsetValue();
+    const sunsetClock = parseClock(sunset);
+    const now = new Date();
+    const zoneNow = datePartsInTimeZone(now, selectedTZ);
+    const currentZoneISO = `${zoneNow.year}-${pad(zoneNow.month)}-${pad(zoneNow.day)}`;
+    const selectedISO = toISO(selectedDate);
+    const isToday = selectedISO === currentZoneISO;
+    const nowMinutes = zoneNow.hour * 60 + zoneNow.minute;
+
+    const afterBoundary =
+      mode !== "midnight" &&
+      isToday &&
+      nowMinutes >= sunsetClock.minutes;
+
+    const effectiveDate = afterBoundary ? addDays(selectedDate, 1) : new Date(selectedDate);
+    const info = remnantInfo(effectiveDate);
+    const shabbat = shabbatInfo(effectiveDate, info);
+
+    return {
+      civilDate: new Date(selectedDate),
+      civilISO: selectedISO,
+      effectiveDate,
+      effectiveISO: toISO(effectiveDate),
+      mode,
+      modeLabel:
+        mode === "midnight"
+          ? "Midnight"
+          : mode === "manual"
+            ? "Manual Sunset"
+            : "Local Sunset",
+      sunset,
+      afterBoundary,
+      isToday,
+      nowMinutes,
+      info,
+      shabbat
+    };
   }
 
   function moonAge(date) {
     const synodic = 29.530588853;
     const knownNewMoon = Date.UTC(2000, 0, 6, 18, 14, 0);
-    const t = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
-    const days = (t - knownNewMoon) / 86400000;
+    const time = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
+    const days = (time - knownNewMoon) / 86400000;
     return ((days % synodic) + synodic) % synodic;
   }
 
   function nearestNewMoonAfter(date) {
-    let d = new Date(date);
+    let cursor = new Date(date);
+
     for (let i = 0; i < 40; i++) {
-      const age = moonAge(d);
-      const nextAge = moonAge(addDays(d, 1));
-      if (age > 28.5 || nextAge < age) return addDays(d, 1);
-      d = addDays(d, 1);
+      const age = moonAge(cursor);
+      const nextAge = moonAge(addDays(cursor, 1));
+
+      if (age > 28.5 || nextAge < age) return addDays(cursor, 1);
+      cursor = addDays(cursor, 1);
     }
-    return d;
+
+    return cursor;
+  }
+
+  function anchorForYear(year) {
+    const override = fromISO(CONFIG.anchorOverrides[year]);
+    return override || nearestNewMoonAfter(new Date(year, 2, 20, 12, 0, 0));
   }
 
   function yearAnchorFor(date) {
-    const y = date.getFullYear();
-    const candidate = nearestNewMoonAfter(new Date(y, 2, 20));
-    if (date < candidate) return nearestNewMoonAfter(new Date(y - 1, 2, 20));
-    return candidate;
+    const year = date.getFullYear();
+    const candidate = anchorForYear(year);
+    return date < candidate ? anchorForYear(year - 1) : candidate;
   }
 
   function remnantInfo(date) {
@@ -218,7 +345,49 @@
       dayInMoon,
       dayOfYear: diff + 1,
       outsideDay: inside ? 0 : Math.max(1, diff - cycleDays + 1),
-      yearEnd: addDays(anchor, cycleDays - 1)
+      yearEnd: addDays(anchor, cycleDays - 1),
+      countedWeeks: 52,
+      continuousWeekIndex: Math.floor(diff / 7) + 1
+    };
+  }
+
+  function shabbatInfo(effectiveDate, info = remnantInfo(effectiveDate)) {
+    const weekday = effectiveDate.getDay();
+    const moonDays = new Set(CONFIG.shabbat.moonDays || [2, 9, 16, 23]);
+    const alignedMoonDay = Boolean(info.inside && moonDays.has(info.dayInMoon));
+
+    let state = "Ordinary Week Gate";
+    let code = "ordinary";
+    let instruction = "Work with measure. Prepare for the next appointed stop.";
+
+    if (weekday === 5) {
+      state = "Preparation Gate";
+      code = "preparation";
+      instruction = "Finish what is necessary. Prepare the household. Do not carry avoidable disorder into rest.";
+    } else if (weekday === 6) {
+      state = "Shabbat · Ceasing and Rest";
+      code = "active";
+      instruction = "Stop forcing. Guard the household. Share food. Rest, pray, review, and restore.";
+    } else if (weekday === 0) {
+      state = "Return Gate";
+      code = "return";
+      instruction = "Preserve the lesson and return to work through one deliberate next step.";
+    }
+
+    return {
+      enabled: CONFIG.shabbat.enabled,
+      state,
+      code,
+      instruction,
+      alignedMoonDay,
+      moonPosition: info.inside
+        ? alignedMoonDay
+          ? `Aligned · Moon Day ${info.dayInMoon}`
+          : `Moon Day ${info.dayInMoon}`
+        : "Outside counted cycle",
+      window: `${CONFIG.shabbat.begins} → ${CONFIG.shabbat.ends}`,
+      moonDays: [...moonDays],
+      weekday
     };
   }
 
@@ -238,8 +407,9 @@
   }
 
   function solarGate(date) {
-    const m = date.getMonth() + 1;
-    const d = date.getDate();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
     const gates = [
       ["Capricorn", "Earth", "Structure, duty, mountain path"],
       ["Aquarius", "Air", "Signal, systems, future current"],
@@ -254,104 +424,133 @@
       ["Scorpio", "Water", "Depth, shadow, transformation"],
       ["Sagittarius", "Fire", "Arrow, journey, higher aim"]
     ];
+
     const cut = [20, 19, 20, 20, 21, 21, 22, 22, 22, 23, 22, 21];
-    const idx = d < cut[m - 1] ? (m + 10) % 12 : (m + 11) % 12;
-    return gates[idx];
+    const index = day < cut[month - 1] ? (month + 10) % 12 : (month + 11) % 12;
+    return gates[index];
   }
 
   function logs() {
     try {
-      return JSON.parse(localStorage.getItem(LOG_KEY) || "[]");
-    } catch {
-      return [];
-    }
+      const current = JSON.parse(safeGet(LOG_KEY) || "null");
+      if (Array.isArray(current)) return current;
+
+      const legacy = JSON.parse(safeGet(LEGACY_LOG_KEY) || "[]");
+      if (Array.isArray(legacy)) {
+        saveLogs(legacy);
+        return legacy;
+      }
+    } catch {}
+
+    return [];
   }
 
   function saveLogs(list) {
-    localStorage.setItem(LOG_KEY, JSON.stringify(list.slice(0, 300)));
+    safeSet(LOG_KEY, JSON.stringify(list.slice(0, 300)));
   }
 
   function drawMoon(age) {
     const canvas = $("#simMoon");
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
-    const w = canvas.width;
-    const h = canvas.height;
-    const cx = w / 2;
-    const cy = h / 2;
-    const r = Math.min(w, h) * 0.34;
-    const illum = illumination(age);
+    const context = canvas.getContext("2d");
+    const width = canvas.width;
+    const height = canvas.height;
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const radius = Math.min(width, height) * 0.34;
+    const lit = illumination(age);
     const waxing = age < 14.765;
 
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = "#05070d";
-    ctx.fillRect(0, 0, w, h);
+    context.clearRect(0, 0, width, height);
+    context.fillStyle = "#05070d";
+    context.fillRect(0, 0, width, height);
 
-    const g = ctx.createRadialGradient(cx, cy, 5, cx, cy, r * 2.3);
-    g.addColorStop(0, "rgba(122,243,255,.22)");
-    g.addColorStop(.5, "rgba(243,201,122,.10)");
-    g.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r * 2.2, 0, Math.PI * 2);
-    ctx.fill();
+    const glow = context.createRadialGradient(centerX, centerY, 5, centerX, centerY, radius * 2.3);
+    glow.addColorStop(0, "rgba(122,243,255,.22)");
+    glow.addColorStop(.5, "rgba(243,201,122,.10)");
+    glow.addColorStop(1, "rgba(0,0,0,0)");
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.clip();
+    context.fillStyle = glow;
+    context.beginPath();
+    context.arc(centerX, centerY, radius * 2.2, 0, Math.PI * 2);
+    context.fill();
 
-    ctx.fillStyle = "#121722";
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+    context.save();
+    context.beginPath();
+    context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    context.clip();
 
-    ctx.fillStyle = "#f4f1e8";
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fill();
+    context.fillStyle = "#121722";
+    context.fillRect(centerX - radius, centerY - radius, radius * 2, radius * 2);
 
-    const shadowWidth = r * 2 * Math.abs(1 - illum * 2);
-    ctx.fillStyle = "#121722";
-    ctx.beginPath();
+    context.fillStyle = "#f4f1e8";
+    context.beginPath();
+    context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    context.fill();
 
-    if (illum < .5) {
-      ctx.rect(cx - r, cy - r, r * 2, r * 2);
-      if (waxing) ctx.ellipse(cx + r, cy, r - shadowWidth / 2, r, 0, Math.PI / 2, Math.PI * 1.5, true);
-      else ctx.ellipse(cx - r, cy, r - shadowWidth / 2, r, 0, -Math.PI / 2, Math.PI / 2, true);
-      ctx.fill("evenodd");
+    const shadowWidth = radius * 2 * Math.abs(1 - lit * 2);
+    context.fillStyle = "#121722";
+    context.beginPath();
+
+    if (lit < .5) {
+      context.rect(centerX - radius, centerY - radius, radius * 2, radius * 2);
+
+      if (waxing) {
+        context.ellipse(centerX + radius, centerY, radius - shadowWidth / 2, radius, 0, Math.PI / 2, Math.PI * 1.5, true);
+      } else {
+        context.ellipse(centerX - radius, centerY, radius - shadowWidth / 2, radius, 0, -Math.PI / 2, Math.PI / 2, true);
+      }
+
+      context.fill("evenodd");
     } else {
-      if (waxing) ctx.ellipse(cx - r, cy, shadowWidth / 2, r, 0, -Math.PI / 2, Math.PI / 2, true);
-      else ctx.ellipse(cx + r, cy, shadowWidth / 2, r, 0, Math.PI / 2, Math.PI * 1.5, true);
-      ctx.fill();
+      if (waxing) {
+        context.ellipse(centerX - radius, centerY, shadowWidth / 2, radius, 0, -Math.PI / 2, Math.PI / 2, true);
+      } else {
+        context.ellipse(centerX + radius, centerY, shadowWidth / 2, radius, 0, Math.PI / 2, Math.PI * 1.5, true);
+      }
+
+      context.fill();
     }
 
-    ctx.restore();
+    context.restore();
 
-    ctx.strokeStyle = "rgba(243,201,122,.55)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.stroke();
+    context.strokeStyle = "rgba(243,201,122,.55)";
+    context.lineWidth = 2;
+    context.beginPath();
+    context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    context.stroke();
 
-    ctx.fillStyle = "rgba(244,241,232,.92)";
-    ctx.font = "800 15px Inter, system-ui, sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText(`${phaseName(age)} · ${Math.round(illum * 100)}%`, cx, 28);
+    context.fillStyle = "rgba(244,241,232,.92)";
+    context.font = "800 15px Inter, system-ui, sans-serif";
+    context.textAlign = "center";
+    context.fillText(`${phaseName(age)} · ${Math.round(lit * 100)}%`, centerX, 28);
   }
 
-  function buildSeal(info, age, solar, dayArch, week) {
+  function buildSeal(context, age, solar, dayArch, week) {
+    const info = context.info;
     const phase = phaseName(age);
-    const illum = Math.round(illumination(age) * 100);
-
+    const lit = Math.round(illumination(age) * 100);
     const title = info.inside
       ? `Moon ${info.moon.idx} · Day ${info.dayInMoon} — ${info.moon.name}`
       : `Outside Count — ${info.moon.name}`;
 
+    const civilLine = context.civilISO === context.effectiveISO
+      ? formatDateOnly(context.effectiveDate)
+      : `${formatDateOnly(context.civilDate)} · after ${context.sunset}, effective ${formatDateOnly(context.effectiveDate)}`;
+
     const body =
 `☲ REMNANT DAILY SEAL ☲
 
-${fmtDate(selectedDate)}
+${civilLine}
 ${title}
+
+Day Boundary:
+${context.modeLabel} · ${context.sunset}
+
+Shabbat Gate:
+${context.shabbat.state}
+${context.shabbat.instruction}
 
 Moon Essence:
 ${info.moon.essence}
@@ -366,7 +565,7 @@ Week Gate:
 ${week[0]} — ${week[1]}
 
 Visible Moon:
-${phase} · ${illum}% illuminated
+${phase} · ${lit}% illuminated
 
 Solar Gate:
 ${solar[0]} · ${solar[1]}
@@ -400,13 +599,25 @@ Carry the witness forward.`;
   }
 
   function buildWitness() {
-    const info = remnantInfo(selectedDate);
-    const age = moonAge(selectedDate);
-    const solar = solarGate(selectedDate);
-    const dayArch = info.inside ? DAY_ARCHETYPES[info.dayInMoon - 1] : ["Outside Count", "Reset, reflection, year threshold."];
+    const context = lastContext || effectiveContext();
+    const info = context.info;
+    const age = moonAge(context.effectiveDate);
+    const solar = solarGate(context.effectiveDate);
+    const dayArch = info.inside
+      ? DAY_ARCHETYPES[info.dayInMoon - 1]
+      : ["Outside Count", "Reset, reflection, year threshold."];
 
-    const out =
-`Date: ${fmtDate(selectedDate)}
+    const markedShabbat = val("shabbatInput");
+    const shabbatLine = markedShabbat && markedShabbat !== "Not marked"
+      ? markedShabbat
+      : context.shabbat.state;
+
+    const output =
+`Civil Date: ${formatDateOnly(context.civilDate)}
+Effective Remnant Date: ${formatDateOnly(context.effectiveDate)}
+Day Boundary: ${context.modeLabel} · ${context.sunset}
+Shabbat State: ${shabbatLine}
+Shabbat Alignment: ${context.shabbat.moonPosition}
 Remnant Moon: ${info.moon.name}
 Moon Day: ${info.inside ? `${info.dayInMoon}/28` : `Outside Count · Day ${info.outsideDay}`}
 Year Day: ${info.inside ? `${info.dayOfYear}/364` : "Outside counted cycle"}
@@ -430,35 +641,85 @@ ${val("lessonInput")}
 Witness:
 Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
 
-    text("witnessOutput", out);
-    return out;
+    text("witnessOutput", output);
+    return output;
+  }
+
+  function updateBoundaryPresentation(context) {
+    document.documentElement.dataset.dayBoundary = context.mode;
+    document.body.dataset.remnantBoundary = context.mode;
+    document.body.dataset.shabbatState = context.shabbat.code;
+
+    text("statBoundary", context.modeLabel);
+    text("statShabbat", context.shabbat.state);
+    text("shabbatState", context.shabbat.state);
+    text("shabbatWindow", context.shabbat.window);
+    text("shabbatMoonPosition", context.shabbat.moonPosition);
+    text("shabbatInstruction", context.shabbat.instruction);
+
+    const shabbatInput = $("#shabbatInput");
+    if (shabbatInput && shabbatInput.value === "Not marked") {
+      if (context.shabbat.code === "preparation") shabbatInput.value = "Preparation Gate";
+      if (context.shabbat.code === "active") shabbatInput.value = "Shabbat · Ceasing and Rest";
+      if (context.shabbat.code === "return") shabbatInput.value = "Return Gate";
+    }
+
+    const boundaryStatus = $("#boundaryStatus");
+    if (boundaryStatus) {
+      if (context.mode === "midnight") {
+        boundaryStatus.textContent = "Midnight mode is active. Shabbat still begins at Friday sunset, so this mode does not fully align the calendar day with Shabbat.";
+      } else if (context.afterBoundary) {
+        boundaryStatus.textContent = `${context.modeLabel} passed at ${context.sunset}. The effective Remnant date is now ${context.effectiveISO}.`;
+      } else {
+        boundaryStatus.textContent = `${context.modeLabel} is set for ${context.sunset}. The Remnant day advances when that boundary is reached.`;
+      }
+    }
   }
 
   function render() {
-    const info = remnantInfo(selectedDate);
-    const age = moonAge(selectedDate);
-    const illum = illumination(age);
+    const context = effectiveContext();
+    lastContext = context;
+
+    const info = context.info;
+    const age = moonAge(context.effectiveDate);
+    const lit = illumination(age);
     const phase = phaseName(age);
-    const solar = solarGate(selectedDate);
-    const dayArch = info.inside ? DAY_ARCHETYPES[info.dayInMoon - 1] : ["Outside Count", "Reset, reflection, year threshold."];
-    const week = info.inside ? WEEK_GATES[Math.floor((info.dayInMoon - 1) / 7)] : ["Outside Gate", "Days beyond the 364-counted cycle."];
+    const solar = solarGate(context.effectiveDate);
+    const dayArch = info.inside
+      ? DAY_ARCHETYPES[info.dayInMoon - 1]
+      : ["Outside Count", "Reset, reflection, year threshold."];
+    const week = info.inside
+      ? WEEK_GATES[Math.floor((info.dayInMoon - 1) / 7)]
+      : ["Outside Gate", "Days beyond the 364-counted cycle."];
 
     setValue("datePick", toISO(selectedDate));
-    text("nowDate", fmtDate(selectedDate));
-    text("nowTZ", selectedTZ);
+    text("nowDate", formatDateOnly(context.civilDate));
+    text("nowTZ", `${selectedTZ} · ${context.modeLabel}`);
+    updateBoundaryPresentation(context);
 
     text("moonName", info.moon.name);
     text("moonEssence", info.moon.essence);
-    text("moonLine", info.inside
-      ? `Moon ${info.moon.idx} · Day ${info.dayInMoon}/28 · Day ${info.dayOfYear}/364`
-      : `Outside Count · Day ${info.outsideDay} after Completion Seal`);
+    text(
+      "moonLine",
+      info.inside
+        ? `Moon ${info.moon.idx} · Day ${info.dayInMoon}/28 · Day ${info.dayOfYear}/364`
+        : `Outside Count · Day ${info.outsideDay} after Completion Seal`
+    );
     text("yearSpan", `Anchor: ${fmtShort(info.anchor)} · Counted year ends: ${fmtShort(info.yearEnd)}`);
-    text("moonPractice", info.inside ? info.moon.practice : "Review, repair, clear the ledger, and prepare the next anchor.");
+    text(
+      "moonPractice",
+      info.inside
+        ? info.moon.practice
+        : "Review, repair, clear the ledger, preserve the weekly count, and prepare the next anchor."
+    );
 
     text("commandMoon", info.moon.name);
-    text("commandLine", info.inside
-      ? `Moon ${info.moon.idx} · Day ${info.dayInMoon}/28 · ${info.moon.element} · ${info.moon.freq}`
-      : `Outside Count · ${info.moon.name}`);
+    text(
+      "commandLine",
+      info.inside
+        ? `Moon ${info.moon.idx} · Day ${info.dayInMoon}/28 · ${info.moon.element} · ${info.moon.freq}`
+        : `Outside Count · ${info.moon.name}`
+    );
     text("statMoonDay", info.inside ? `${info.dayInMoon}/28` : "Outside");
     text("statPhase", phase);
     text("statSolar", solar[0]);
@@ -475,15 +736,27 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
 
     const weekDots = $("#weekDots");
     if (weekDots) {
-      weekDots.innerHTML = Array.from({ length: 28 }, (_, i) => {
-        const n = i + 1;
-        const cls = !info.inside ? "" : n < info.dayInMoon ? "done" : n === info.dayInMoon ? "today" : "";
-        return `<span class="dot ${cls}" title="Day ${n}"></span>`;
+      const shabbatDays = new Set(CONFIG.shabbat.moonDays);
+
+      weekDots.innerHTML = Array.from({ length: 28 }, (_, index) => {
+        const number = index + 1;
+        const classes = ["dot"];
+
+        if (info.inside && number < info.dayInMoon) classes.push("done");
+        if (info.inside && number === info.dayInMoon) classes.push("today");
+        if (shabbatDays.has(number)) classes.push("shabbat");
+        if ([1, 8, 15, 22].includes(number)) classes.push("preparation");
+
+        const label = shabbatDays.has(number)
+          ? `Day ${number} · Shabbat`
+          : `Day ${number}`;
+
+        return `<span class="${classes.join(" ")}" title="${label}" aria-label="${label}"></span>`;
       }).join("");
     }
 
-    text("phaseLine", `${phase} · ${Math.round(illum * 100)}% illuminated`);
-    text("phaseMeta", `Approx lunar age: ${age.toFixed(2)} days.`);
+    text("phaseLine", `${phase} · ${Math.round(lit * 100)}% illuminated`);
+    text("phaseMeta", `Approximate lunar age: ${age.toFixed(2)} days.`);
     drawMoon(age);
 
     text("dayArchetype", dayArch[0]);
@@ -494,23 +767,33 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     text("skyMirrorCopy", solar[2]);
 
     renderClockOnly();
-    renderRemnantCalendar(info);
-    renderGregorian();
+    renderRemnantCalendar(context);
+    renderGregorian(context);
     renderYearMap(info);
-    buildSeal(info, age, solar, dayArch, week);
+    buildSeal(context, age, solar, dayArch, week);
     buildWitness();
     renderSaved();
     renderTimeline();
 
     document.dispatchEvent(new CustomEvent("sof:moon-render", {
       detail: {
-        date: selectedDate,
-        iso: toISO(selectedDate),
+        date: new Date(context.civilDate),
+        civilDate: new Date(context.civilDate),
+        civilISO: context.civilISO,
+        effectiveDate: new Date(context.effectiveDate),
+        effectiveISO: context.effectiveISO,
         timezone: selectedTZ,
+        boundary: {
+          mode: context.mode,
+          label: context.modeLabel,
+          sunset: context.sunset,
+          afterBoundary: context.afterBoundary
+        },
+        shabbat: context.shabbat,
         info,
         moonAge: age,
         phase,
-        illumination: illum,
+        illumination: lit,
         solar,
         dayArch,
         week,
@@ -520,43 +803,64 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     }));
   }
 
-  function renderRemnantCalendar(info) {
+  function renderRemnantCalendar(context) {
     const remCal = $("#remCal");
     if (!remCal) return;
 
-    remCal.innerHTML = Array.from({ length: 28 }, (_, i) => {
-      const n = i + 1;
-      const cls = info.inside && n === info.dayInMoon ? "today" : "";
-      const arch = DAY_ARCHETYPES[i];
-      return `<div class="calDay ${cls}">
-        <strong>${n}</strong>
-        <span>${arch[0]}</span><br>
-        <small class="meta">${arch[1]}</small>
+    const info = context.info;
+    const shabbatDays = new Set(CONFIG.shabbat.moonDays);
+
+    remCal.innerHTML = Array.from({ length: 28 }, (_, index) => {
+      const number = index + 1;
+      const classes = ["calDay"];
+      const archetype = DAY_ARCHETYPES[index];
+
+      if (info.inside && number === info.dayInMoon) classes.push("today");
+      if (shabbatDays.has(number)) classes.push("shabbat");
+      if ([1, 8, 15, 22].includes(number)) classes.push("preparation");
+
+      return `<div class="${classes.join(" ")}">
+        <strong>${number}</strong>
+        <span>${archetype[0]}</span>
+        ${shabbatDays.has(number) ? `<span class="shabbat-mark">שבת</span>` : ""}
+        <br>
+        <small class="meta">${archetype[1]}</small>
       </div>`;
     }).join("");
   }
 
-  function renderGregorian() {
+  function renderGregorian(context) {
     const gregCal = $("#gregCal");
     if (!gregCal) return;
 
-    const y = selectedDate.getFullYear();
-    const m = selectedDate.getMonth();
-    const first = new Date(y, m, 1);
-    const last = new Date(y, m + 1, 0);
+    const year = selectedDate.getFullYear();
+    const month = selectedDate.getMonth();
+    const first = new Date(year, month, 1, 12, 0, 0);
+    const last = new Date(year, month + 1, 0, 12, 0, 0);
     const names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-    let html = names.map(n => `<div class="weekday">${n}</div>`).join("");
-    for (let i = 0; i < first.getDay(); i++) html += `<div class="g-pad"></div>`;
+    let html = names.map(name => `<div class="weekday">${name}</div>`).join("");
 
-    for (let d = 1; d <= last.getDate(); d++) {
-      const cur = new Date(y, m, d);
-      const ri = remnantInfo(cur);
-      const cls = toISO(cur) === toISO(selectedDate) ? "today" : "";
-      html += `<div class="gregDay ${cls}">
-        <strong>${d}</strong>
-        <span>${ri.inside ? `M${ri.moon.idx} · D${ri.dayInMoon}` : "Outside"}</span><br>
-        <small class="meta">${ri.moon.name}</small>
+    for (let index = 0; index < first.getDay(); index++) {
+      html += `<div class="g-pad"></div>`;
+    }
+
+    for (let day = 1; day <= last.getDate(); day++) {
+      const current = new Date(year, month, day, 12, 0, 0);
+      const info = remnantInfo(current);
+      const classes = ["gregDay"];
+
+      if (toISO(current) === context.civilISO) classes.push("today");
+      if (toISO(current) === context.effectiveISO && context.afterBoundary) classes.push("effective");
+      if (current.getDay() === 6) classes.push("shabbat");
+      if (current.getDay() === 5) classes.push("preparation");
+
+      html += `<div class="${classes.join(" ")}">
+        <strong>${day}</strong>
+        <span>${info.inside ? `M${info.moon.idx} · D${info.dayInMoon}` : "Outside"}</span>
+        ${current.getDay() === 6 ? `<span class="shabbat-mark">שבת</span>` : ""}
+        <br>
+        <small class="meta">${info.moon.name}</small>
       </div>`;
     }
 
@@ -564,46 +868,61 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
   }
 
   function renderYearMap(info) {
-    text("outsideInfo", `Counted cycle: ${fmtShort(info.anchor)} through ${fmtShort(info.yearEnd)} · Outside days begin ${fmtShort(addDays(info.yearEnd, 1))}`);
+    text(
+      "outsideInfo",
+      `Counted cycle: ${fmtShort(info.anchor)} through ${fmtShort(info.yearEnd)} · 364 days · 52 complete weeks · outside days begin ${fmtShort(addDays(info.yearEnd, 1))}`
+    );
 
     const body = $("#yearMapBody");
     if (!body) return;
 
-    body.innerHTML = MOONS.map((m, i) => {
-      const start = addDays(info.anchor, i * 28);
+    body.innerHTML = MOONS.map((moon, index) => {
+      const start = addDays(info.anchor, index * 28);
       const end = addDays(start, 27);
+
       return `<tr>
-        <td>Moon ${m.idx}</td>
-        <td>${m.name}</td>
-        <td>${m.essence}</td>
-        <td>${m.element}</td>
-        <td>${m.freq}</td>
+        <td>Moon ${moon.idx}</td>
+        <td>${moon.name}</td>
+        <td>${moon.essence}</td>
+        <td>${moon.element}</td>
+        <td>${moon.freq}</td>
         <td>${fmtShort(start)}</td>
         <td>${fmtShort(end)}</td>
-        <td>${m.practice}</td>
+        <td>${moon.practice}</td>
       </tr>`;
     }).join("");
   }
 
   function saveLog() {
+    const context = lastContext || effectiveContext();
     const list = logs();
-    const info = remnantInfo(selectedDate);
+
     list.unshift({
-      date: toISO(selectedDate),
-      moon: info.moon.name,
+      date: context.civilISO,
+      effectiveDate: context.effectiveISO,
+      moon: context.info.moon.name,
+      moonDay: context.info.dayInMoon,
       text: buildWitness(),
       saved: new Date().toISOString(),
+      timezone: selectedTZ,
+      boundary: context.mode,
+      sunset: context.sunset,
+      shabbat: context.shabbat.state,
       kp: val("kpInput"),
       signs: val("signsInput"),
       body: val("bodyInput"),
       dreams: val("dreamInput"),
       emotion: val("emotionInput")
     });
+
     saveLogs(list);
     renderSaved();
     renderTimeline();
     toast("Witness saved");
-    document.dispatchEvent(new CustomEvent("sof:witness-saved", { detail: { logs: logs() } }));
+
+    document.dispatchEvent(new CustomEvent("sof:witness-saved", {
+      detail: { logs: logs(), context }
+    }));
   }
 
   function renderSaved() {
@@ -613,18 +932,20 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     const savedList = $("#savedList");
     if (!savedList) return;
 
-    savedList.innerHTML = list.length ? list.map((l, i) => `
-      <article class="savedEntry">
-        <strong>${escapeHTML(l.date)} · ${escapeHTML(l.moon || "Remnant Log")}</strong>
-        <p class="meta">Saved ${new Date(l.saved).toLocaleString()}</p>
-        <pre class="fine">${escapeHTML(l.text)}</pre>
-        <button class="lab-btn ghost copySaved" data-i="${i}" type="button">Copy</button>
-      </article>
-    `).join("") : `<p class="meta">No saved logs yet.</p>`;
+    savedList.innerHTML = list.length
+      ? list.map((entry, index) => `
+        <article class="savedEntry">
+          <strong>${escapeHTML(entry.effectiveDate || entry.date)} · ${escapeHTML(entry.moon || "Remnant Log")}</strong>
+          <p class="meta">${escapeHTML(entry.shabbat || "")}${entry.shabbat ? " · " : ""}Saved ${new Date(entry.saved).toLocaleString()}</p>
+          <pre class="fine">${escapeHTML(entry.text)}</pre>
+          <button class="lab-btn ghost copySaved" data-i="${index}" type="button">Copy</button>
+        </article>
+      `).join("")
+      : `<p class="meta">No saved logs yet.</p>`;
 
-    $$(".copySaved").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const item = list[Number(btn.dataset.i)];
+    $$(".copySaved").forEach(button => {
+      button.addEventListener("click", () => {
+        const item = list[Number(button.dataset.i)];
         if (navigator.clipboard) navigator.clipboard.writeText(item.text);
         toast("Copied");
       });
@@ -632,25 +953,33 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
   }
 
   function detectPatterns(list) {
-    const joined = list.slice(0, 28).map(l => [
-      l.signs,
-      l.body,
-      l.dreams,
-      l.emotion,
-      l.kp
-    ].join(" ")).join(" ").toLowerCase();
+    const joined = list
+      .slice(0, 28)
+      .map(entry => [
+        entry.signs,
+        entry.body,
+        entry.dreams,
+        entry.emotion,
+        entry.kp,
+        entry.shabbat
+      ].join(" "))
+      .join(" ")
+      .toLowerCase();
 
     const terms = joined.match(/\b[0-9]{2,4}\b|\b[a-z]{4,}\b/g) || [];
-    const skip = new Set(["unknown", "checked", "field", "moon", "body", "dreams", "sleep", "weather", "signal", "with", "from", "this", "that", "have"]);
+    const skip = new Set([
+      "unknown", "checked", "field", "moon", "body", "dreams", "sleep",
+      "weather", "signal", "with", "from", "this", "that", "have"
+    ]);
     const counts = {};
 
-    terms.forEach(t => {
-      if (skip.has(t)) return;
-      counts[t] = (counts[t] || 0) + 1;
+    terms.forEach(term => {
+      if (skip.has(term)) return;
+      counts[term] = (counts[term] || 0) + 1;
     });
 
     const top = Object.entries(counts)
-      .filter(([, n]) => n >= 2)
+      .filter(([, count]) => count >= 2)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 8);
 
@@ -664,33 +993,42 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
 
     const alerts = $("#patternAlerts");
     if (alerts) {
-      alerts.innerHTML = patterns.top.length ? patterns.top.map(([term, n]) => `
-        <article class="mini pattern-memory-card">
-          <h3>${escapeHTML(term)}</h3>
-          <p class="meta">Repeated ${n} times in recent logs.</p>
-        </article>
-      `).join("") : `<p class="meta">No repeated patterns detected yet. Save more daily logs.</p>`;
+      alerts.innerHTML = patterns.top.length
+        ? patterns.top.map(([term, count]) => `
+          <article class="mini pattern-memory-card">
+            <h3>${escapeHTML(term)}</h3>
+            <p class="meta">Repeated ${count} times in recent logs.</p>
+          </article>
+        `).join("")
+        : `<p class="meta">No repeated patterns detected yet. Save more daily logs.</p>`;
     }
 
     const timeline = $("#timelineList");
     if (timeline) {
-      timeline.innerHTML = list.length ? list.slice(0, 28).map(l => `
-        <article class="savedEntry">
-          <strong>${escapeHTML(l.date)} · ${escapeHTML(l.moon || "Log")}</strong>
-          <p class="meta">${escapeHTML([l.kp, l.signs, l.body].filter(Boolean).join(" · "))}</p>
-        </article>
-      `).join("") : `<p class="meta">No timeline yet.</p>`;
+      timeline.innerHTML = list.length
+        ? list.slice(0, 28).map(entry => `
+          <article class="savedEntry">
+            <strong>${escapeHTML(entry.effectiveDate || entry.date)} · ${escapeHTML(entry.moon || "Log")}</strong>
+            <p class="meta">${escapeHTML([
+              entry.shabbat,
+              entry.kp,
+              entry.signs,
+              entry.body
+            ].filter(Boolean).join(" · "))}</p>
+          </article>
+        `).join("")
+        : `<p class="meta">No timeline yet.</p>`;
     }
   }
 
-  function escapeHTML(s) {
-    return String(s || "").replace(/[&<>"']/g, m => ({
+  function escapeHTML(value) {
+    return String(value || "").replace(/[&<>"']/g, character => ({
       "&": "&amp;",
       "<": "&lt;",
       ">": "&gt;",
       "\"": "&quot;",
       "'": "&#39;"
-    }[m]));
+    }[character]));
   }
 
   function renderClockOnly() {
@@ -702,117 +1040,347 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     }).format(new Date()));
   }
 
-  function drawSky() {
-    const c = $("#skyBg");
-    if (!c) return;
+  function normalizeDegrees(value) {
+    let result = value % 360;
+    if (result < 0) result += 360;
+    return result;
+  }
 
-    const ctx = c.getContext("2d");
+  function dayOfYear(date) {
+    return Math.floor(
+      (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) -
+       Date.UTC(date.getFullYear(), 0, 0)) / 86400000
+    );
+  }
+
+  function calculateSunsetUTC(date, latitude, longitude) {
+    const zenith = 90.833;
+    const N = dayOfYear(date);
+    const lngHour = longitude / 15;
+    const t = N + ((18 - lngHour) / 24);
+    const M = (0.9856 * t) - 3.289;
+
+    let L = M +
+      (1.916 * Math.sin(M * Math.PI / 180)) +
+      (0.020 * Math.sin(2 * M * Math.PI / 180)) +
+      282.634;
+    L = normalizeDegrees(L);
+
+    let RA = Math.atan(0.91764 * Math.tan(L * Math.PI / 180)) * 180 / Math.PI;
+    RA = normalizeDegrees(RA);
+
+    const Lquadrant = Math.floor(L / 90) * 90;
+    const RAquadrant = Math.floor(RA / 90) * 90;
+    RA = (RA + (Lquadrant - RAquadrant)) / 15;
+
+    const sinDec = 0.39782 * Math.sin(L * Math.PI / 180);
+    const cosDec = Math.cos(Math.asin(sinDec));
+    const cosH =
+      (Math.cos(zenith * Math.PI / 180) -
+       (sinDec * Math.sin(latitude * Math.PI / 180))) /
+      (cosDec * Math.cos(latitude * Math.PI / 180));
+
+    if (cosH > 1 || cosH < -1) return null;
+
+    let H = Math.acos(cosH) * 180 / Math.PI;
+    H /= 15;
+
+    const T = H + RA - (0.06571 * t) - 6.622;
+    const rawUT = T - lngHour;
+    const dayOffset = Math.floor(rawUT / 24);
+    const UT = rawUT - (dayOffset * 24);
+
+    const wholeHour = Math.floor(UT);
+    const wholeMinute = Math.floor((UT - wholeHour) * 60);
+    const seconds = Math.round((((UT - wholeHour) * 60) - wholeMinute) * 60);
+
+    return new Date(Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate() + dayOffset,
+      wholeHour,
+      wholeMinute,
+      seconds
+    ));
+  }
+
+  function calculateSunset(date, latitude, longitude, timeZone = selectedTZ) {
+    const utc = calculateSunsetUTC(date, latitude, longitude);
+    if (!utc) return null;
+
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23"
+    }).formatToParts(utc);
+
+    const values = {};
+    parts.forEach(part => {
+      if (part.type !== "literal") values[part.type] = part.value;
+    });
+
+    return {
+      date: utc,
+      time: `${values.hour}:${values.minute}`,
+      latitude,
+      longitude,
+      timeZone
+    };
+  }
+
+  function savedLocation() {
+    try {
+      const parsed = JSON.parse(safeGet(LOCATION_KEY) || "null");
+      if (
+        parsed &&
+        Number.isFinite(parsed.latitude) &&
+        Number.isFinite(parsed.longitude)
+      ) {
+        return parsed;
+      }
+    } catch {}
+
+    return null;
+  }
+
+  function refreshCalculatedSunset({ emit = false } = {}) {
+    const location = savedLocation();
+    if (!location || boundaryMode() === "midnight") return null;
+
+    const result = calculateSunset(
+      selectedDate,
+      location.latitude,
+      location.longitude,
+      selectedTZ
+    );
+
+    if (!result) return null;
+
+    setValue("sunsetInput", result.time);
+    safeSet(SUNSET_KEY, result.time);
+
+    if (emit) {
+      document.dispatchEvent(new CustomEvent("sof:sunset-calculated", {
+        detail: {
+          ...result,
+          civilISO: toISO(selectedDate)
+        }
+      }));
+    }
+
+    return result;
+  }
+
+  function drawSky() {
+    const canvas = $("#skyBg");
+    if (!canvas) return;
+
+    const context = canvas.getContext("2d");
     let stars = [];
-    let raf = null;
+    let frame = null;
 
     function fit() {
       const dpr = Math.min(devicePixelRatio || 1, 2);
-      c.width = innerWidth * dpr;
-      c.height = innerHeight * dpr;
+      canvas.width = innerWidth * dpr;
+      canvas.height = innerHeight * dpr;
+
       stars = Array.from({ length: 160 }, () => ({
-        x: Math.random() * c.width,
-        y: Math.random() * c.height,
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
         r: Math.random() * 1.6 + .25,
         a: Math.random() * Math.PI * 2
       }));
     }
 
-    function loop() {
-      ctx.clearRect(0, 0, c.width, c.height);
-      stars.forEach(s => {
-        s.a += .012;
-        ctx.fillStyle = `rgba(244,241,232,${.16 + Math.sin(s.a) * .12})`;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fill();
+    function paintStatic() {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      stars.forEach(star => {
+        context.fillStyle = "rgba(244,241,232,.18)";
+        context.beginPath();
+        context.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        context.fill();
       });
-      raf = requestAnimationFrame(loop);
+    }
+
+    function loop() {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      stars.forEach(star => {
+        star.a += .012;
+        context.fillStyle = `rgba(244,241,232,${.16 + Math.sin(star.a) * .12})`;
+        context.beginPath();
+        context.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        context.fill();
+      });
+
+      frame = requestAnimationFrame(loop);
     }
 
     fit();
     addEventListener("resize", fit, { passive: true });
 
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
-    if (!reduced.matches) loop();
-    else {
-      ctx.clearRect(0, 0, c.width, c.height);
-      stars.forEach(s => {
-        ctx.fillStyle = "rgba(244,241,232,.18)";
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fill();
-      });
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      paintStatic();
+    } else {
+      loop();
     }
 
     addEventListener("beforeunload", () => {
-      if (raf) cancelAnimationFrame(raf);
+      if (frame) cancelAnimationFrame(frame);
     });
   }
 
   function setupTabs() {
-    $$(".tab").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const id = btn.dataset.tab;
+    $$(".tab").forEach(button => {
+      button.addEventListener("click", () => {
+        const id = button.dataset.tab;
         if (!id) return;
-        $$(".tab").forEach(b => b.classList.toggle("active", b === btn));
-        $$(".tabPanel").forEach(p => p.classList.toggle("active", p.id === id));
+
+        $$(".tab").forEach(tab => {
+          tab.classList.toggle("active", tab === button);
+        });
+
+        $$(".tabPanel").forEach(panel => {
+          panel.classList.toggle("active", panel.id === id);
+        });
       });
+    });
+  }
+
+  function setupBoundaryControls() {
+    const boundary = params.get("boundary") || safeGet(BOUNDARY_KEY) || CONFIG.dayBoundary;
+    const sunset = params.get("sunset") || safeGet(SUNSET_KEY) || CONFIG.fallbackSunset;
+
+    setValue("boundaryMode", boundary);
+    setValue("sunsetInput", sunset);
+
+    on("boundaryMode", "change", event => {
+      safeSet(BOUNDARY_KEY, event.target.value);
+
+      if (event.target.value === "sunset") {
+        refreshCalculatedSunset();
+      }
+
+      render();
+    });
+
+    on("sunsetInput", "change", event => {
+      safeSet(SUNSET_KEY, event.target.value || CONFIG.fallbackSunset);
+      render();
+    });
+
+    document.addEventListener("sof:request-sunset", event => {
+      const latitude = Number(event.detail?.latitude);
+      const longitude = Number(event.detail?.longitude);
+
+      if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+        toast("Location could not be read.");
+        return;
+      }
+
+      safeSet(LOCATION_KEY, JSON.stringify({
+        latitude,
+        longitude,
+        savedAt: new Date().toISOString()
+      }));
+
+      const result = calculateSunset(selectedDate, latitude, longitude, selectedTZ);
+
+      if (!result) {
+        toast("Sunset is unavailable for this place and date.");
+        return;
+      }
+
+      setValue("sunsetInput", result.time);
+      safeSet(SUNSET_KEY, result.time);
+      safeSet(BOUNDARY_KEY, "sunset");
+      setValue("boundaryMode", "sunset");
+
+      document.dispatchEvent(new CustomEvent("sof:sunset-calculated", {
+        detail: {
+          ...result,
+          civilISO: toISO(selectedDate)
+        }
+      }));
+
+      render();
     });
   }
 
   function setup() {
     text("yr", new Date().getFullYear());
 
-    const tzPick = $("#tzPick");
-    if (tzPick) {
-      tzPick.innerHTML = TZONES.map(tz => `<option value="${tz}">${tz}</option>`).join("");
-      tzPick.value = selectedTZ;
+    const timezonePick = $("#tzPick");
+    if (timezonePick) {
+      timezonePick.innerHTML = TZONES
+        .map(timezone => `<option value="${timezone}">${timezone}</option>`)
+        .join("");
+      timezonePick.value = selectedTZ;
     }
+
+    setupTabs();
+    setupBoundaryControls();
+    refreshCalculatedSunset();
 
     setValue("datePick", toISO(selectedDate));
 
-    setupTabs();
-
-    on("tzPick", "change", e => {
-      selectedTZ = e.target.value;
-      localStorage.setItem(TZ_KEY, selectedTZ);
+    on("tzPick", "change", event => {
+      selectedTZ = event.target.value;
+      safeSet(TZ_KEY, selectedTZ);
+      refreshCalculatedSunset();
       render();
     });
 
-    on("datePick", "change", e => {
-      selectedDate = fromISO(e.target.value) || new Date();
+    on("datePick", "change", event => {
+      selectedDate = fromISO(event.target.value) || todayInTimeZone(selectedTZ);
+      refreshCalculatedSunset();
       render();
     });
 
     on("btnToday", "click", () => {
-      selectedDate = new Date();
+      selectedDate = todayInTimeZone(selectedTZ);
+      refreshCalculatedSunset();
       render();
     });
 
     on("prevDay", "click", () => {
       selectedDate = addDays(selectedDate, -1);
+      refreshCalculatedSunset();
       render();
     });
 
     on("nextDay", "click", () => {
       selectedDate = addDays(selectedDate, 1);
+      refreshCalculatedSunset();
       render();
     });
 
     on("shareLink", "click", () => {
-      const url = `${location.origin}${location.pathname}?date=${toISO(selectedDate)}`;
-      if (navigator.clipboard) navigator.clipboard.writeText(url);
+      const url = new URL(location.href);
+      url.searchParams.set("date", toISO(selectedDate));
+      url.searchParams.set("tz", selectedTZ);
+      url.searchParams.set("boundary", boundaryMode());
+      url.searchParams.set("sunset", sunsetValue());
+
+      if (navigator.clipboard) navigator.clipboard.writeText(url.toString());
       toast("Link copied");
     });
 
-    ["sleepInput", "bodyInput", "dreamInput", "emotionInput", "signsInput", "fieldInput", "lessonInput"].forEach(id => {
+    [
+      "sleepInput",
+      "bodyInput",
+      "dreamInput",
+      "emotionInput",
+      "signsInput",
+      "fieldInput",
+      "lessonInput"
+    ].forEach(id => {
       on(id, "input", buildWitness);
     });
+
+    on("shabbatInput", "change", buildWitness);
 
     on("kpInput", "change", () => {
       buildWitness();
@@ -820,15 +1388,31 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     });
 
     on("buildWitness", "click", buildWitness);
+
     on("copyWitness", "click", () => {
       if (navigator.clipboard) navigator.clipboard.writeText(buildWitness());
       toast("Witness copied");
     });
+
     on("saveWitness", "click", saveLog);
+
     on("clearWitness", "click", () => {
-      ["sleepInput", "bodyInput", "dreamInput", "emotionInput", "signsInput", "fieldInput", "lessonInput"].forEach(id => setValue(id, ""));
+      [
+        "sleepInput",
+        "bodyInput",
+        "dreamInput",
+        "emotionInput",
+        "signsInput",
+        "fieldInput",
+        "lessonInput"
+      ].forEach(id => setValue(id, ""));
+
       const kp = $("#kpInput");
       if (kp) kp.selectedIndex = 0;
+
+      const shabbat = $("#shabbatInput");
+      if (shabbat) shabbat.selectedIndex = 0;
+
       buildWitness();
       toast("Cleared");
     });
@@ -840,56 +1424,79 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     });
 
     on("copyAllLogs", "click", () => {
-      if (navigator.clipboard) navigator.clipboard.writeText(logs().map(l => l.text).join("\n\n---\n\n"));
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(
+          logs().map(entry => entry.text).join("\n\n---\n\n")
+        );
+      }
+
       toast("All logs copied");
     });
 
     on("exportLogs", "click", () => {
-      const blob = new Blob([JSON.stringify(logs(), null, 2)], { type: "application/json" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "remnant-moon-logs.json";
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(a.href), 800);
+      const blob = new Blob(
+        [JSON.stringify(logs(), null, 2)],
+        { type: "application/json" }
+      );
+
+      const anchor = document.createElement("a");
+      anchor.href = URL.createObjectURL(blob);
+      anchor.download = "remnant-moon-logs.json";
+      anchor.click();
+
+      setTimeout(() => URL.revokeObjectURL(anchor.href), 800);
     });
 
     on("importLogs", "click", () => {
-      const fileInput = $("#importLogsFile");
-      if (fileInput) fileInput.click();
+      const input = $("#importLogsFile");
+      if (input) input.click();
     });
 
-    on("importLogsFile", "change", async e => {
-      const file = e.target.files?.[0];
+    on("importLogsFile", "change", async event => {
+      const file = event.target.files?.[0];
       if (!file) return;
+
       try {
         const data = JSON.parse(await file.text());
         if (!Array.isArray(data)) throw new Error("Invalid log file");
+
         saveLogs(data.concat(logs()));
         render();
         toast("Logs imported");
       } catch {
         toast("Import failed");
       }
-      e.target.value = "";
+
+      event.target.value = "";
     });
 
     on("clearAllLogs", "click", () => {
       if (!confirm("Clear all saved moon logs from this browser?")) return;
-      localStorage.removeItem(LOG_KEY);
+      safeRemove(LOG_KEY);
+      safeRemove(LEGACY_LOG_KEY);
       render();
       toast("Logs cleared");
     });
 
     render();
     setInterval(renderClockOnly, 1000);
+    setInterval(() => {
+      if (toISO(selectedDate) === toISO(todayInTimeZone(selectedTZ))) render();
+    }, 30000);
+
     drawSky();
 
     window.ScrollOfFireMoons = {
       render,
       logs,
-      remnantInfo: () => remnantInfo(selectedDate),
+      remnantInfo: date => remnantInfo(date || effectiveContext().effectiveDate),
+      shabbatInfo: date => shabbatInfo(date || effectiveContext().effectiveDate),
       selectedDate: () => new Date(selectedDate),
+      selectedCivilDate: () => new Date(selectedDate),
+      effectiveDate: () => new Date((lastContext || effectiveContext()).effectiveDate),
       selectedTimezone: () => selectedTZ,
+      effectiveContext: () => ({ ...(lastContext || effectiveContext()) }),
+      calculateSunset,
       detectPatterns
     };
   }
