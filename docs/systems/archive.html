@@ -9,7 +9,8 @@
   <meta name="color-scheme" content="dark light">
   <meta name="description" content="Filter and open every Scroll: Start, Guide, Theory, Manifest, Ethics, Ledger, Moons, Oracle, Systems, and more.">
   <link rel="stylesheet" href="assets/css/codex.css">
-  <style>
+    <link rel="stylesheet" href="assets/css/navigation.css">
+<style>
     main{padding:clamp(16px,4vw,40px)}
     header{padding:16px 16px 0}
     .lede{max-width:72ch;color:var(--muted)}
@@ -33,14 +34,56 @@
     .links a{display:inline-flex;align-items:center;gap:.6ch;text-decoration:none}
     .links a .dot{width:.6rem;height:.6rem;border-radius:50%;background:var(--line)}
   </style>
+  <script defer src="assets/js/site.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to main</a>
 
-  <header>
-    <div class="crumbs"><a href="hub.html">Hub</a> / Archive</div>
-    <h1>Interactive Archive</h1>
-    <p class="lede">Filter and open every Scroll: core texts, tools, and systems. <span class="meta">Quick keys: <span class="kbd">/</span> focus search, <span class="kbd">↑/↓</span> move, <span class="kbd">⏎</span> open.</span></p>
+    <header class="site-header" data-sof-header>
+    <a class="brand" href="./" aria-label="Scroll of Fire home">
+      <span class="brand-mark" aria-hidden="true">☲</span>
+      <span>
+        <strong>Scroll of Fire</strong>
+        <small>Codex of Reality</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <a href="./start.html">Start</a>
+      <a class="is-featured" href="./moons.html">13 Moons</a>
+      <a href="./covenant-caravan.html">Caravan</a>
+      <a href="./teach.html">Manifest</a>
+      <a href="./shop.html">Artifacts</a>
+      <a href="./hub.html">Hub</a>
+      <a href="./ledger.html">Ledger</a>
+      <a href="./systems/frequencies.html">Frequency</a>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="more-navigation" data-dropdown-toggle>
+          More <span aria-hidden="true">▾</span>
+        </button>
+        <div id="more-navigation" class="nav-drop-menu">
+          <a href="./genesis-oracle.html">Genesis Oracle</a>
+          <a href="./theory.html">Theory / Canon</a>
+          <a href="./systems/t-7.html">T-7 Conduit</a>
+          <a href="./systems/witness.html">Witness System</a>
+          <a href="./systems/recoder.html">Reality Recoder</a>
+          <a href="./systems/mind-renewal.html">Mind Renewal</a>
+          <a href="./systems/archive.html">Systems Archive</a>
+          <a href="./guide.html">Guide</a>
+          <a href="./lab.html">Remnant Lab</a>
+          <a href="./invoke.html">Invoke</a>
+          <a href="./circle.html">Circle</a>
+          <a href="./ethics.html">Ethics</a>
+          <a href="./glossary.html">Glossary</a>
+          <a href="./downloads.html">Downloads</a>
+        </div>
+      </div>
+    </nav>
   </header>
 
   <aside class="notice"><strong>🔥 Forge Note:</strong> Index pulls from a local manifest (no network). Additions auto-appear once you edit the manifest list in this file.</aside>

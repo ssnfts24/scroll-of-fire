@@ -391,6 +391,120 @@ body.site-menu-open{
   }
 }
 
+
+
+/* =========================================================
+   THEORY SECONDARY NAVIGATION
+   Uses the isolated state class:
+   .is-theory-nav-open
+   ========================================================= */
+
+.theory-subnav-shell{
+  position:sticky;
+  top:var(--header-h,72px);
+  z-index:790;
+  padding:0 clamp(1rem,3vw,2rem);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background:rgba(5,7,13,.88);
+  -webkit-backdrop-filter:blur(18px);
+  backdrop-filter:blur(18px);
+}
+
+.theory-subnav{
+  width:min(1200px,100%);
+  margin:0 auto;
+  padding:.75rem 0;
+}
+
+.theory-nav-toggle,
+.theory-nav-links a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:42px;
+  padding:.58rem .82rem;
+  border:1px solid transparent;
+  border-radius:999px;
+  color:var(--text);
+  background:rgba(255,255,255,.03);
+  text-decoration:none;
+  font:inherit;
+  font-size:.92rem;
+  line-height:1.2;
+  cursor:pointer;
+  transition:
+    color .18s ease,
+    background .18s ease,
+    border-color .18s ease,
+    transform .18s ease;
+}
+
+.theory-nav-toggle{
+  display:none;
+  width:100%;
+  justify-content:space-between;
+  color:var(--text);
+}
+
+.theory-nav-toggle:hover,
+.theory-nav-toggle:focus-visible,
+.theory-nav-links a:hover,
+.theory-nav-links a:focus-visible{
+  border-color:rgba(255,255,255,.10);
+  background:rgba(255,255,255,.06);
+}
+
+.theory-nav-toggle:focus-visible,
+.theory-nav-links a:focus-visible{
+  outline:2px solid var(--gold);
+  outline-offset:3px;
+}
+
+.theory-nav-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.45rem;
+}
+
+.theory-nav-links a[aria-current="page"],
+.theory-nav-links a.is-current,
+.theory-nav-links a.is-current-section{
+  color:var(--gold);
+  background:rgba(243,201,122,.09);
+}
+
+@media(max-width:900px){
+  .theory-subnav-shell{
+    top:var(--header-h,72px);
+    padding:0 1rem;
+  }
+
+  .theory-subnav{
+    padding:.7rem 0;
+  }
+
+  .theory-nav-toggle{
+    display:inline-flex;
+  }
+
+  .theory-nav-links{
+    display:none;
+    flex-direction:column;
+    margin-top:.65rem;
+  }
+
+  .theory-subnav.is-theory-nav-open .theory-nav-links{
+    display:flex;
+  }
+
+  .theory-nav-links a{
+    width:100%;
+    justify-content:flex-start;
+    border-radius:14px;
+    text-align:left;
+  }
+}
+
 @media(prefers-reduced-motion:reduce){
   .skip-link,
   .site-nav,

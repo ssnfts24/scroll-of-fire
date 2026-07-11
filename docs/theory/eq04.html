@@ -38,7 +38,8 @@
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/favicon.png">
   <link rel="stylesheet" href="assets/css/codex.css">
-  <link rel="stylesheet" href="assets/css/theory.css">
+    <link rel="stylesheet" href="assets/css/navigation.css">
+<link rel="stylesheet" href="assets/css/theory.css">
 
   <script>
     window.MathJax = {
@@ -51,6 +52,7 @@
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/theory.js"></script>
 
   <script type="application/ld+json">
@@ -100,12 +102,12 @@
   <div class="theory-stars" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site-header theory-header" data-sof-header>
+    <header class="site-header theory-header" data-sof-header>
     <a class="brand" href="./" aria-label="Scroll of Fire home">
       <span class="brand-mark" aria-hidden="true">☲</span>
       <span>
         <strong>Scroll of Fire</strong>
-        <small>Canon Equation Library</small>
+        <small>Codex of Reality</small>
       </span>
     </a>
 
@@ -114,18 +116,57 @@
     </button>
 
     <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
-      <a href="./">Home</a>
-      <a href="theory.html">Theory Hub</a>
-      <a class="is-featured" href="theory/canon.html">Canon</a>
-      <a href="theory/equations/eq03.html">Eq. 3</a>
-      <a href="theory/equations/eq04.html" aria-current="page">Eq. 4</a>
-      <a href="theory/equations/eq04b.html">Eq. 4b</a>
-      <a href="theory/equations/eq05.html">Eq. 5</a>
-      <a href="theory/notation.html">Notation</a>
+      <a href="./start.html">Start</a>
+      <a class="is-featured" href="./moons.html">13 Moons</a>
+      <a href="./covenant-caravan.html">Caravan</a>
+      <a href="./teach.html">Manifest</a>
+      <a href="./shop.html">Artifacts</a>
+      <a href="./hub.html">Hub</a>
+      <a href="./ledger.html">Ledger</a>
+      <a href="./systems/frequencies.html">Frequency</a>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="more-navigation" data-dropdown-toggle>
+          More <span aria-hidden="true">▾</span>
+        </button>
+        <div id="more-navigation" class="nav-drop-menu">
+          <a href="./genesis-oracle.html">Genesis Oracle</a>
+          <a href="./theory.html">Theory / Canon</a>
+          <a href="./systems/t-7.html">T-7 Conduit</a>
+          <a href="./systems/witness.html">Witness System</a>
+          <a href="./systems/recoder.html">Reality Recoder</a>
+          <a href="./systems/mind-renewal.html">Mind Renewal</a>
+          <a href="./systems/archive.html">Systems Archive</a>
+          <a href="./guide.html">Guide</a>
+          <a href="./lab.html">Remnant Lab</a>
+          <a href="./invoke.html">Invoke</a>
+          <a href="./circle.html">Circle</a>
+          <a href="./ethics.html">Ethics</a>
+          <a href="./glossary.html">Glossary</a>
+          <a href="./downloads.html">Downloads</a>
+        </div>
+      </div>
     </nav>
   </header>
 
   <main id="main">
+    <section class="theory-subnav-shell" aria-label="Theory navigation">
+      <div class="theory-subnav" data-theory-nav>
+        <button class="theory-nav-toggle" type="button" aria-expanded="false" aria-controls="theory-secondary-navigation" aria-label="Open Theory navigation" data-theory-nav-toggle>
+          Theory navigation <span aria-hidden="true">▾</span>
+        </button>
+        <nav id="theory-secondary-navigation" class="theory-nav-links" aria-label="Theory secondary navigation" data-theory-nav-panel>
+          <a data-section-link href="theory.html">Theory Hub</a>
+          <a data-section-link href="theory/canon.html">Canon</a>
+          <a data-section-link href="theory/master-equation.html">Master Equation</a>
+          <a data-section-link href="theory/unified-field.html">Unified Field</a>
+          <a data-section-link href="theory/operators.html">Operators</a>
+          <a data-section-link href="theory/notation.html">Notation</a>
+          <a data-section-link href="theory/glossary.html">Glossary</a>
+          <a data-section-link href="theory/bibliography.html">Bibliography</a>
+        </nav>
+      </div>
+    </section>
     <section class="section-shell" aria-label="Breadcrumb">
       <nav aria-label="Breadcrumb">
         <a class="text-link" href="./">Home</a>

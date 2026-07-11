@@ -22,7 +22,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Crimson+Pro:wght@400;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/codex.css?v=2026-06-04">
 
-  <style>
+    <link rel="stylesheet" href="assets/css/navigation.css">
+<style>
     :root {
       --maxw: 1180px;
       --bg: #05060a;
@@ -611,6 +612,7 @@
       * { scroll-behavior: auto !important; }
     }
   </style>
+  <script defer src="assets/js/site.js"></script>
 </head>
 
 <body class="stars">
@@ -633,41 +635,52 @@
   </figure>
 
   <main class="wrap" id="main" role="main">
-    <header class="page-head fancy-head">
-      <h1 class="title">✨ Manifest — <em>Remnant Visual Exercise</em></h1>
-      <p class="subtitle">
-        Compose one clear line, tune a carrier frequency, layer harmonics, breathe with the field,
-        observe without forcing, track coherence, and seal the witness privately.
-      </p>
+      <header class="site-header" data-sof-header>
+    <a class="brand" href="./" aria-label="Scroll of Fire home">
+      <span class="brand-mark" aria-hidden="true">☲</span>
+      <span>
+        <strong>Scroll of Fire</strong>
+        <small>Codex of Reality</small>
+      </span>
+    </a>
 
-      <nav class="crumbs" aria-label="Breadcrumb">
-        <a class="lab-btn" href="index.html">← Back to Codex</a>
-        <a class="lab-btn" href="theory.html">📘 Theory</a>
-      </nav>
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
 
-      <section class="card" aria-label="Manifest tabs">
-        <div class="tabs-wrap" role="navigation" aria-label="Manifest tabs">
-          <button class="chev left" id="tabsPrev" aria-label="Scroll tabs left" type="button">‹</button>
+    <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <a href="./start.html">Start</a>
+      <a class="is-featured" href="./moons.html">13 Moons</a>
+      <a href="./covenant-caravan.html">Caravan</a>
+      <a href="./teach.html">Manifest</a>
+      <a href="./shop.html">Artifacts</a>
+      <a href="./hub.html">Hub</a>
+      <a href="./ledger.html">Ledger</a>
+      <a href="./systems/frequencies.html">Frequency</a>
 
-          <div class="pill-rail" id="pillRail" role="tablist" tabindex="0" aria-label="Sections">
-            <button class="pill active" data-tab="remnant" role="tab" aria-selected="true" type="button">🜚 Remnant</button>
-            <button class="pill" data-tab="carrier" role="tab" aria-selected="false" type="button">🎧 Carrier</button>
-            <button class="pill" data-tab="observer" role="tab" aria-selected="false" type="button">⏱ Observer</button>
-            <button class="pill" data-tab="phrase" role="tab" aria-selected="false" type="button">🔡 Phrase</button>
-            <button class="pill" data-tab="breath" role="tab" aria-selected="false" type="button">🌬 Breath</button>
-            <button class="pill" data-tab="coherence" role="tab" aria-selected="false" type="button">📈 Ξ</button>
-            <button class="pill" data-tab="drills" role="tab" aria-selected="false" type="button">🧭 Drills</button>
-            <button class="pill" data-tab="timer" role="tab" aria-selected="false" type="button">⏳ Timer</button>
-            <button class="pill" data-tab="deck" role="tab" aria-selected="false" type="button">🎴 Deck</button>
-            <button class="pill" data-tab="ledger" role="tab" aria-selected="false" type="button">📒 Ledger</button>
-            <button class="pill" data-tab="ethics" role="tab" aria-selected="false" type="button">🛡 Ethics</button>
-            <button class="pill" data-tab="maps" role="tab" aria-selected="false" type="button">🧠 Maps</button>
-          </div>
-
-          <button class="chev right" id="tabsNext" aria-label="Scroll tabs right" type="button">›</button>
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="more-navigation" data-dropdown-toggle>
+          More <span aria-hidden="true">▾</span>
+        </button>
+        <div id="more-navigation" class="nav-drop-menu">
+          <a href="./genesis-oracle.html">Genesis Oracle</a>
+          <a href="./theory.html">Theory / Canon</a>
+          <a href="./systems/t-7.html">T-7 Conduit</a>
+          <a href="./systems/witness.html">Witness System</a>
+          <a href="./systems/recoder.html">Reality Recoder</a>
+          <a href="./systems/mind-renewal.html">Mind Renewal</a>
+          <a href="./systems/archive.html">Systems Archive</a>
+          <a href="./guide.html">Guide</a>
+          <a href="./lab.html">Remnant Lab</a>
+          <a href="./invoke.html">Invoke</a>
+          <a href="./circle.html">Circle</a>
+          <a href="./ethics.html">Ethics</a>
+          <a href="./glossary.html">Glossary</a>
+          <a href="./downloads.html">Downloads</a>
         </div>
-      </section>
-    </header>
+      </div>
+    </nav>
+  </header>
 
     <section id="tab-remnant" class="tab active" role="tabpanel">
       <article class="grid">

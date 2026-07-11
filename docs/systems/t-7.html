@@ -13,7 +13,8 @@
   <link rel="canonical" href="https://ssnfts24.github.io/scroll-of-fire/t7-engine.html">
   <link rel="stylesheet" href="assets/css/codex.css">
 
-  <style>
+    <link rel="stylesheet" href="assets/css/navigation.css">
+<style>
     :root{
       --bg:#05070d;
       --card:rgba(255,255,255,.055);
@@ -435,38 +436,57 @@
       .btn,input,select{width:100%}
     }
   </style>
+  <script defer src="assets/js/site.js"></script>
 </head>
 
 <body>
   <a class="skip" href="#main">Skip to main</a>
 
-  <header class="shell hero">
-    <div class="crumbs"><a href="hub.html">Hub</a> / <a href="index.html">Scroll of Fire</a> / T-7 Engine</div>
-    <p class="eyebrow">Advanced Resonant Technology</p>
-    <h1>T-7 Resonant Engine</h1>
-    <p class="lede">
-      The T-7 Resonant Engine is a living carrier-mixing console for phase, coherence, memory,
-      breath, geometry, and symbolic fieldwork. Mix <span class="mono">432 • 528 • 369 • 144 • 963</span>,
-      align their motion, observe <b>Ξ coherence</b>, and let <b>τ memory</b> show how long the pattern holds.
-    </p>
+    <header class="site-header" data-sof-header>
+    <a class="brand" href="./" aria-label="Scroll of Fire home">
+      <span class="brand-mark" aria-hidden="true">☲</span>
+      <span>
+        <strong>Scroll of Fire</strong>
+        <small>Codex of Reality</small>
+      </span>
+    </a>
 
-    <aside class="notice">
-      <div class="row">
-        <strong>⟡ Ethics first:</strong>
-        <span>
-          This is a creative resonance and attention-practice tool, not medical treatment or supernatural proof.
-          Keep volume low, rest your ears, and do not use while driving or operating tools.
-        </span>
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <a href="./start.html">Start</a>
+      <a class="is-featured" href="./moons.html">13 Moons</a>
+      <a href="./covenant-caravan.html">Caravan</a>
+      <a href="./teach.html">Manifest</a>
+      <a href="./shop.html">Artifacts</a>
+      <a href="./hub.html">Hub</a>
+      <a href="./ledger.html">Ledger</a>
+      <a href="./systems/frequencies.html">Frequency</a>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="more-navigation" data-dropdown-toggle>
+          More <span aria-hidden="true">▾</span>
+        </button>
+        <div id="more-navigation" class="nav-drop-menu">
+          <a href="./genesis-oracle.html">Genesis Oracle</a>
+          <a href="./theory.html">Theory / Canon</a>
+          <a href="./systems/t-7.html">T-7 Conduit</a>
+          <a href="./systems/witness.html">Witness System</a>
+          <a href="./systems/recoder.html">Reality Recoder</a>
+          <a href="./systems/mind-renewal.html">Mind Renewal</a>
+          <a href="./systems/archive.html">Systems Archive</a>
+          <a href="./guide.html">Guide</a>
+          <a href="./lab.html">Remnant Lab</a>
+          <a href="./invoke.html">Invoke</a>
+          <a href="./circle.html">Circle</a>
+          <a href="./ethics.html">Ethics</a>
+          <a href="./glossary.html">Glossary</a>
+          <a href="./downloads.html">Downloads</a>
+        </div>
       </div>
-    </aside>
-
-    <div class="pillrow">
-      <span class="pill">T-7 carrier matrix</span>
-      <span class="pill">Smooth gain engine</span>
-      <span class="pill">Ξ coherence meter</span>
-      <span class="pill">τ memory field</span>
-      <span class="pill">Shareable states</span>
-    </div>
+    </nav>
   </header>
 
   <main id="main" class="shell">

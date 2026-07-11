@@ -36,7 +36,8 @@
   <meta name="twitter:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
 
   <link rel="stylesheet" href="assets/css/codex.css">
-  <link rel="stylesheet" href="assets/css/frequency-governance.css">
+    <link rel="stylesheet" href="assets/css/navigation.css">
+<link rel="stylesheet" href="assets/css/frequency-governance.css">
 
   <script type="application/ld+json">
   {
@@ -616,67 +617,57 @@
       }
     }
   </style>
+  <script defer src="assets/js/site.js"></script>
 </head>
 
 <body>
   <canvas id="starField" aria-hidden="true"></canvas>
 
-  <header class="fg-hero">
-    <nav class="fg-crumbs" aria-label="Primary navigation">
-      <a href="./">Scroll of Fire</a>
-      <span>/</span>
+    <header class="site-header" data-sof-header>
+    <a class="brand" href="./" aria-label="Scroll of Fire home">
+      <span class="brand-mark" aria-hidden="true">☲</span>
+      <span>
+        <strong>Scroll of Fire</strong>
+        <small>Codex of Reality</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <a href="./start.html">Start</a>
+      <a class="is-featured" href="./moons.html">13 Moons</a>
+      <a href="./covenant-caravan.html">Caravan</a>
+      <a href="./teach.html">Manifest</a>
+      <a href="./shop.html">Artifacts</a>
       <a href="./hub.html">Hub</a>
-      <span>/</span>
-      <span>Frequency Governance</span>
+      <a href="./ledger.html">Ledger</a>
+      <a href="./systems/frequencies.html">Frequency</a>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="more-navigation" data-dropdown-toggle>
+          More <span aria-hidden="true">▾</span>
+        </button>
+        <div id="more-navigation" class="nav-drop-menu">
+          <a href="./genesis-oracle.html">Genesis Oracle</a>
+          <a href="./theory.html">Theory / Canon</a>
+          <a href="./systems/t-7.html">T-7 Conduit</a>
+          <a href="./systems/witness.html">Witness System</a>
+          <a href="./systems/recoder.html">Reality Recoder</a>
+          <a href="./systems/mind-renewal.html">Mind Renewal</a>
+          <a href="./systems/archive.html">Systems Archive</a>
+          <a href="./guide.html">Guide</a>
+          <a href="./lab.html">Remnant Lab</a>
+          <a href="./invoke.html">Invoke</a>
+          <a href="./circle.html">Circle</a>
+          <a href="./ethics.html">Ethics</a>
+          <a href="./glossary.html">Glossary</a>
+          <a href="./downloads.html">Downloads</a>
+        </div>
+      </div>
     </nav>
-
-    <p class="eyebrow">Codex Sound Observatory · 432 Carrier · 7.83 Witness Field</p>
-    <h1>Frequency Governance</h1>
-
-    <p class="hero-copy">
-      Choose an intention, open a sound path, watch the field respond, and record the witness.
-      Frequency becomes structure. Breath becomes timing. Observation becomes the record.
-    </p>
-
-    <aside class="notice">
-      <strong>🔥 Living Sound Observatory:</strong>
-      quick intent paths, harmonic textures, Paleo-Hebrew Name presets, T-7 field practice,
-      Lift Loop training, sacred geometry visuals, recording, saved fields, and private witness logs.
-    </aside>
-
-    <div class="hero-pills" aria-label="Feature summary">
-      <span>Intent Paths</span>
-      <span>𐤉𐤄𐤅𐤄 Name Path</span>
-      <span>Sound Check</span>
-      <span>Audio Boost</span>
-      <span>Lift Loop</span>
-      <span>T7 Field</span>
-      <span>Breath Modes</span>
-      <span>Sound Textures</span>
-      <span>Geometry Field</span>
-      <span>Witness Logs</span>
-      <span>Advanced Lab</span>
-    </div>
-
-    <nav class="fg-top-nav" aria-label="Page shortcuts">
-      <a href="#quickStart">Quick Start</a>
-      <a href="#observatory">Observatory</a>
-      <a href="#intentPaths">Intent Paths</a>
-      <a href="#namePath">Name Path</a>
-      <a href="#geometry">Geometry</a>
-      <a href="#t7Practice">T7</a>
-      <a href="#liftLoop">Lift</a>
-      <a href="#witness">Witness</a>
-    </nav>
-
-    <aside class="notice use-order">
-      <strong>Use Order:</strong>
-      1. Sound Check →
-      2. Choose Path →
-      3. Adjust Master Volume / Boost →
-      4. Pick Visual →
-      5. Record Witness.
-    </aside>
   </header>
 
   <main class="fg-shell">

@@ -22,7 +22,8 @@
 
   <!-- CSS -->
   <link rel="preload" as="style" href="assets/css/codex.css?v=ab1">
-  <link rel="stylesheet" href="assets/css/codex.css?v=ab1">
+    <link rel="stylesheet" href="assets/css/navigation.css">
+<link rel="stylesheet" href="assets/css/codex.css?v=ab1">
   <noscript><link rel="stylesheet" href="assets/css/codex.css?v=ab1"></noscript>
 
   <!-- Optional banner preload -->
@@ -84,6 +85,7 @@
     .crumbs .cta{margin-inline:0}
     .subtitle{text-align:center;color:var(--muted);margin:0 0 10px}
   </style>
+  <script defer src="assets/js/site.js"></script>
 </head>
 <body>
 <main class="wrap">
@@ -105,12 +107,50 @@
     <a class="tab" href="ledger.html">🧾 Ledger</a>
   </nav>
 
-  <header class="page-head fancy-head">
-    <h1 class="title">🧪 A/B Carrier Protocol</h1>
-    <p class="subtitle">Blind test 432 / 528 / 369. Randomize, run the loop, compute Ξ (Eq.13), apply the stop rule (Eq.9), then reveal and log.</p>
-    <nav class="crumbs" style="display:flex;gap:8px;justify-content:center">
-      <a class="cta" href="start.html">← Start Here</a>
-      <a class="cta" href="teach.html#ab">Teaching Lab</a>
+    <header class="site-header" data-sof-header>
+    <a class="brand" href="./" aria-label="Scroll of Fire home">
+      <span class="brand-mark" aria-hidden="true">☲</span>
+      <span>
+        <strong>Scroll of Fire</strong>
+        <small>Codex of Reality</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <a href="./start.html">Start</a>
+      <a class="is-featured" href="./moons.html">13 Moons</a>
+      <a href="./covenant-caravan.html">Caravan</a>
+      <a href="./teach.html">Manifest</a>
+      <a href="./shop.html">Artifacts</a>
+      <a href="./hub.html">Hub</a>
+      <a href="./ledger.html">Ledger</a>
+      <a href="./systems/frequencies.html">Frequency</a>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="more-navigation" data-dropdown-toggle>
+          More <span aria-hidden="true">▾</span>
+        </button>
+        <div id="more-navigation" class="nav-drop-menu">
+          <a href="./genesis-oracle.html">Genesis Oracle</a>
+          <a href="./theory.html">Theory / Canon</a>
+          <a href="./systems/t-7.html">T-7 Conduit</a>
+          <a href="./systems/witness.html">Witness System</a>
+          <a href="./systems/recoder.html">Reality Recoder</a>
+          <a href="./systems/mind-renewal.html">Mind Renewal</a>
+          <a href="./systems/archive.html">Systems Archive</a>
+          <a href="./guide.html">Guide</a>
+          <a href="./lab.html">Remnant Lab</a>
+          <a href="./invoke.html">Invoke</a>
+          <a href="./circle.html">Circle</a>
+          <a href="./ethics.html">Ethics</a>
+          <a href="./glossary.html">Glossary</a>
+          <a href="./downloads.html">Downloads</a>
+        </div>
+      </div>
     </nav>
   </header>
 

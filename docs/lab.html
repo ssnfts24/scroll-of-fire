@@ -23,17 +23,10 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="apple-touch-icon" href="assets/favicon.svg">
   <link rel="preload" href="assets/css/codex.css" as="style">
-  <link rel="stylesheet" href="assets/css/codex.css">
+    <link rel="stylesheet" href="assets/css/navigation.css">
+<link rel="stylesheet" href="assets/css/codex.css">
 
   <style>
-    .nav-dropdown{position:relative;display:inline-flex;align-items:center}
-    .nav-drop-btn{appearance:none;border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;padding:.55rem .75rem;border-radius:999px}
-    .nav-drop-btn:hover,.nav-drop-btn:focus-visible{background:rgba(255,255,255,.06);outline:none}
-    .nav-drop-menu{position:absolute;right:0;top:calc(100% + .5rem);min-width:300px;display:none;flex-direction:column;gap:.25rem;padding:.65rem;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(8,12,20,.97);box-shadow:0 18px 60px rgba(0,0,0,.45);z-index:50}
-    .nav-dropdown.open .nav-drop-menu{display:flex}
-    .nav-drop-menu a{padding:.62rem .72rem;border-radius:12px;text-decoration:none}
-    .nav-drop-menu a:hover,.nav-drop-menu a:focus-visible{background:rgba(122,243,255,.09);outline:none}
-
     .lab-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.1rem}
     .lab-card{position:relative;overflow:hidden;padding:1.1rem;border-radius:24px;border:1px solid rgba(255,255,255,.12);background:radial-gradient(circle at 20% 0%,rgba(243,201,122,.08),transparent 35%),linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));display:flex;flex-direction:column;gap:.5rem}
     .lab-card .sigil{font-size:1.9rem;line-height:1}
@@ -43,53 +36,57 @@
     .lab-tag{align-self:flex-start;font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(122,243,255,.25);color:var(--cyan,#7af3ff)}
     @media (max-width:1000px){.lab-grid{grid-template-columns:repeat(2,1fr)}}
     @media (max-width:760px){
-      .site-nav{display:none}.site-nav.open{display:flex}
-      .nav-dropdown{width:100%;display:block}.nav-drop-btn{width:100%;text-align:left}
-      .nav-drop-menu{position:static;margin-top:.35rem;width:100%;box-shadow:none}
       .lab-grid{grid-template-columns:1fr}
     }
   </style>
+  <script defer src="assets/js/site.js"></script>
 </head>
 
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site-header" data-sof-header>
+    <header class="site-header" data-sof-header>
     <a class="brand" href="./" aria-label="Scroll of Fire home">
       <span class="brand-mark" aria-hidden="true">☲</span>
-      <span><strong>Scroll of Fire</strong><small>Codex of Reality</small></span>
+      <span>
+        <strong>Scroll of Fire</strong>
+        <small>Codex of Reality</small>
+      </span>
     </a>
 
-    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" data-nav-toggle>
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
       <span></span><span></span><span></span>
     </button>
 
     <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
       <a href="./start.html">Start</a>
-      <a href="./moons.html">13 Moons</a>
+      <a class="is-featured" href="./moons.html">13 Moons</a>
+      <a href="./covenant-caravan.html">Caravan</a>
       <a href="./teach.html">Manifest</a>
-      <a href="./shop.html">Shop</a>
+      <a href="./shop.html">Artifacts</a>
       <a href="./hub.html">Hub</a>
       <a href="./ledger.html">Ledger</a>
+      <a href="./systems/frequencies.html">Frequency</a>
 
       <div class="nav-dropdown" data-dropdown>
-        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-haspopup="true" data-dropdown-toggle>More ▾</button>
-        <div class="nav-drop-menu" role="menu">
-          <a href="./genesis-oracle.html" role="menuitem">Genesis Oracle</a>
-          <a href="./theory.html" role="menuitem">Theory / Canon</a>
-          <a href="./systems/frequencies.html" role="menuitem">Frequencies</a>
-          <a href="./systems/t-7.html" role="menuitem">T-7 Conduit</a>
-          <a href="./systems/witness.html" role="menuitem">Witness System</a>
-          <a href="./systems/recoder.html" role="menuitem">Reality Recoder</a>
-          <a href="./systems/mind-renewal.html" role="menuitem">Mind Renewal</a>
-          <a href="./systems/archive.html" role="menuitem">Systems Archive</a>
-          <a href="./guide.html" role="menuitem">Guide</a>
-          <a href="./lab.html" role="menuitem" aria-current="page">Remnant Lab</a>
-          <a href="./invoke.html" role="menuitem">Invoke</a>
-          <a href="./circle.html" role="menuitem">Circle</a>
-          <a href="./ethics.html" role="menuitem">Ethics</a>
-          <a href="./glossary.html" role="menuitem">Glossary</a>
-          <a href="./downloads.html" role="menuitem">Downloads</a>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="more-navigation" data-dropdown-toggle>
+          More <span aria-hidden="true">▾</span>
+        </button>
+        <div id="more-navigation" class="nav-drop-menu">
+          <a href="./genesis-oracle.html">Genesis Oracle</a>
+          <a href="./theory.html">Theory / Canon</a>
+          <a href="./systems/t-7.html">T-7 Conduit</a>
+          <a href="./systems/witness.html">Witness System</a>
+          <a href="./systems/recoder.html">Reality Recoder</a>
+          <a href="./systems/mind-renewal.html">Mind Renewal</a>
+          <a href="./systems/archive.html">Systems Archive</a>
+          <a href="./guide.html">Guide</a>
+          <a href="./lab.html">Remnant Lab</a>
+          <a href="./invoke.html">Invoke</a>
+          <a href="./circle.html">Circle</a>
+          <a href="./ethics.html">Ethics</a>
+          <a href="./glossary.html">Glossary</a>
+          <a href="./downloads.html">Downloads</a>
         </div>
       </div>
     </nav>
@@ -194,44 +191,7 @@
       <a href="./ethics.html">Ethics</a>
       <a href="./sitemap.xml">Sitemap</a>
     </nav>
-    <p>© 2026 Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
+    <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
   </footer>
-
-  <script>
-    (function () {
-      const navToggle = document.querySelector("[data-nav-toggle]");
-      const nav = document.querySelector("[data-site-nav]");
-      const dropdown = document.querySelector("[data-dropdown]");
-      const dropdownToggle = document.querySelector("[data-dropdown-toggle]");
-
-      if (navToggle && nav) {
-        navToggle.addEventListener("click", function () {
-          const isOpen = nav.classList.toggle("open");
-          navToggle.setAttribute("aria-expanded", String(isOpen));
-          navToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
-        });
-      }
-
-      if (dropdown && dropdownToggle) {
-        dropdownToggle.addEventListener("click", function (event) {
-          event.stopPropagation();
-          const isOpen = dropdown.classList.toggle("open");
-          dropdownToggle.setAttribute("aria-expanded", String(isOpen));
-        });
-        document.addEventListener("click", function (event) {
-          if (!dropdown.contains(event.target)) {
-            dropdown.classList.remove("open");
-            dropdownToggle.setAttribute("aria-expanded", "false");
-          }
-        });
-        document.addEventListener("keydown", function (event) {
-          if (event.key === "Escape") {
-            dropdown.classList.remove("open");
-            dropdownToggle.setAttribute("aria-expanded", "false");
-          }
-        });
-      }
-    })();
-  </script>
 </body>
 </html>
