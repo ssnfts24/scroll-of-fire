@@ -4,8 +4,8 @@
   <base href="/">
   <script>
     if (location.hostname === "ssnfts24.github.io") {
-      var _b = document.querySelector("base");
-      if (_b) _b.setAttribute("href", "/scroll-of-fire/");
+      const base = document.querySelector("base");
+      if (base) base.setAttribute("href", "/scroll-of-fire/");
     }
   </script>
 
@@ -31,8 +31,8 @@
   <meta property="og:title" content="Codex of Reality — Scroll of Fire">
   <meta property="og:description" content="Enter the Remnant 13 Moons calendar, Covenant Caravan, Frequency Governance, Genesis Oracle, Living Technology archive, Artifact Registry, and daily witness practice.">
   <meta property="og:url" content="https://codexofreality.org/">
-  <meta property="og:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
-  <meta property="og:image:secure_url" content="https://codexofreality.org/assets/img/og-cover.jpg">
+  <meta property="og:image" content="https://codexofreality.org/assets/img/codex-social-cover.jpg">
+  <meta property="og:image:secure_url" content="https://codexofreality.org/assets/img/codex-social-cover.jpg">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -42,20 +42,18 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Codex of Reality — Scroll of Fire">
   <meta name="twitter:description" content="A living codex of calendar, witness, symbolic systems, road craft, Frequency Governance, and handcrafted artifacts.">
-  <meta name="twitter:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
+  <meta name="twitter:image" content="https://codexofreality.org/assets/img/codex-social-cover.jpg">
   <meta name="twitter:image:alt" content="Scroll of Fire — Codex of Reality">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/favicon.png">
-  <link rel="preload" href="assets/css/codex.css?v=20260710-6" as="style">
-  <link rel="stylesheet" href="assets/css/codex.css?v=20260710-6">
-  <link rel="stylesheet" href="assets/css/navigation.css?v=20260710-6">
-  <link rel="stylesheet" href="assets/css/components.css?v=20260710-6">
-  <link rel="stylesheet" href="assets/css/animations.css?v=20260710-6">
-  <link rel="stylesheet" href="assets/css/home.css?v=20260710-6">
-  <link rel="stylesheet" href="assets/css/artifact-mobile.css?v=20260710-6">
+  <link rel="preload" href="assets/css/codex.css?v=20260710-9" as="style">
+  <link rel="stylesheet" href="assets/css/codex.css?v=20260710-9">
+  <link rel="stylesheet" href="assets/css/navigation.css?v=20260710-9">
+  <link rel="stylesheet" href="assets/css/components.css?v=20260710-9">
+  <link rel="stylesheet" href="assets/css/animations.css?v=20260710-9">
+  <link rel="stylesheet" href="assets/css/home.css?v=20260710-9">
+  <link rel="stylesheet" href="assets/css/artifact-mobile.css?v=20260710-9">
 
   <script type="application/ld+json">
   {
@@ -69,7 +67,7 @@
         "url":"https://codexofreality.org/",
         "description":"A living digital codex for the Remnant 13 Moons calendar, Frequency Governance, witness practice, Genesis Oracle, Covenant Caravan, Living Technology, and the Artifact Registry.",
         "inLanguage":"en-US",
-        "image":"https://codexofreality.org/assets/img/og-cover.jpg",
+        "image":"https://codexofreality.org/assets/img/codex-social-cover.jpg",
         "creator":{"@id":"https://codexofreality.org/#aaron-paul-laird"},
         "publisher":{"@id":"https://codexofreality.org/#organization"}
       },
@@ -90,12 +88,6 @@
           "daily witness logging",
           "artifact registry",
           "handcrafted copper artifacts"
-        ],
-        "sameAs":[
-          "https://github.com/ssnfts24/scroll-of-fire",
-          "https://medium.com/@l.aaronpaul24",
-          "https://www.youtube.com/@aaronlaird1036",
-          "https://linktr.ee/AaronPaulLairdScrollOfFire"
         ]
       },
       {
@@ -117,7 +109,7 @@
         "isPartOf":{"@id":"https://codexofreality.org/#website"},
         "creator":{"@id":"https://codexofreality.org/#aaron-paul-laird"},
         "publisher":{"@id":"https://codexofreality.org/#organization"},
-        "primaryImageOfPage":{"@type":"ImageObject","url":"https://codexofreality.org/assets/img/og-cover.jpg","width":1200,"height":630},
+        "primaryImageOfPage":{"@type":"ImageObject","url":"https://codexofreality.org/assets/img/codex-social-cover.jpg","width":1200,"height":630},
         "inLanguage":"en-US"
       },
       {
@@ -228,50 +220,30 @@
           </div>
         </div>
 
-        <aside class="hero-image-card" aria-label="Codex gateway">
-          <img
-            src"T7.png"
-            alt="Scroll of Fire banner featuring the Covenant Caravan signal"
-            width="1200"
-            height="1200"
-            loading="eager"
-            decoding="async"
-            data-fallbacks="CB02GreenTide.png,Tensorband01.png,TigerNodeRing.png,T7.png,HaLevanah.png,67AdvertisingImage.png,TimeShardRing.jpg">
+        <aside class="hero-image-card" aria-label="T7-000 Ahhava Or HaDabar artifact">
+          <div class="hero-image-frame">
+            <img
+              src="T7.png"
+              alt="T7-000 Ahhava Or HaDabar Tesla Type-7 Resonant Conduit artifact registry image"
+              width="1000"
+              height="1000"
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+              data-fallbacks="assets/img/T7.png,assets/T7.png,assets/img/artifact-placeholder.jpg">
+          </div>
+
           <div class="hero-image-caption">
             <p class="eyebrow">Living Signal Path</p>
             <strong>Observe → Name → Breathe → Record → Return</strong>
-            <p>The homepage is the central map. Each gate leads into a complete working system.</p>
+            <p>
+              The homepage is the central map. Each gate leads into a complete
+              working system.
+            </p>
           </div>
         </aside>
       </div>
     </section>
-
-    <!-- Moon Bar: live 13-Moons position strip -->
-    <div id="sofMoonBar" class="section-shell moon-bar-strip" hidden aria-label="Today's moon position">
-      <a id="moonMiniLink" class="moon-bar-inner" href="./moons.html">
-        <span class="moon-bar-ring" aria-hidden="true">
-          <svg viewBox="0 0 40 40" width="40" height="40" fill="none">
-            <circle cx="20" cy="20" r="18" stroke="rgba(255,255,255,.10)" stroke-width="3"/>
-            <circle id="mbArcMini" cx="20" cy="20" r="18"
-              stroke="url(#mbGrad)" stroke-width="3"
-              stroke-linecap="round" stroke-dasharray="0 113"
-              transform="rotate(-90 20 20)"/>
-            <defs>
-              <linearGradient id="mbGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#7af3ff"/>
-                <stop offset="100%" stop-color="#f3c97a"/>
-              </linearGradient>
-            </defs>
-          </svg>
-        </span>
-        <span class="moon-bar-text">
-          <strong id="mbName">—</strong>
-          <span id="mbDay">—</span>
-        </span>
-        <span class="moon-bar-ess" id="mbEssence">Loading…</span>
-        <span class="moon-bar-arrow" aria-hidden="true">Open 13 Moons →</span>
-      </a>
-    </div>
 
     <section class="section-shell" aria-labelledby="what-title">
       <div class="section-heading">
@@ -387,7 +359,7 @@
 
         <img
           class="spotlight-img"
-          src="assets/img/og-cover.jpg"
+          src="assets/img/codex-social-cover.jpg"
           alt="Scroll of Fire — Codex of Reality resonance seal"
           width="1200"
           height="900"
@@ -406,33 +378,28 @@
 
       <div class="artifact-strip">
         <article class="artifact-card-mini">
-          <img src="assets/img/HaLevanah.png" alt="HL-001 HaLevanah hand-braided copper bracelet with moonstone and tourmaline" width="800" height="800" loading="lazy" decoding="async" data-fallbacks="HaLevanah.png,assets/img/HaLevanah.png,assets/HaLevanah.png,assets/img/artifact-placeholder.jpg">
+          <img src="assets/img/halevanah.png" alt="HL-001 HaLevanah hand-braided copper bracelet with moonstone and tourmaline" width="800" height="800" loading="lazy" decoding="async" data-fallbacks="HaLevanah.png,assets/img/HaLevanah.png,assets/HaLevanah.png,assets/img/artifact-placeholder.jpg">
           <div><strong>HL-001</strong><span>HaLevanah</span><em>Registry valuation · $222</em></div>
         </article>
 
         <article class="artifact-card-mini">
-          <img src="assets/img/TimeShardRing.jpg" alt="TS-001 Time Shard Ring made from reclaimed copper and green glass" width="800" height="800" loading="lazy" decoding="async" data-fallbacks="TimeShardRing.jpg,assets/img/TimeShardRing.jpg,assets/TimeShardRing.jpg,assets/img/artifact-placeholder.jpg">
+          <img src="assets/img/time-shard-ring-001.jpg" alt="TS-001 Time Shard Ring made from reclaimed copper and green glass" width="800" height="800" loading="lazy" decoding="async" data-fallbacks="TimeShardRing.jpg,assets/img/TimeShardRing.jpg,assets/TimeShardRing.jpg,assets/img/artifact-placeholder.jpg">
           <div><strong>TS-001</strong><span>Time Shard Ring</span><em>Registry valuation · $369</em></div>
         </article>
 
         <article class="artifact-card-mini">
-          <img src="assets/img/EmberNode7.png" alt="EN-007 Ember Node 7 Living Technology personal instrument" width="800" height="800" loading="lazy" decoding="async" data-fallbacks="EmberNode7.png,assets/img/EmberNode7.png,assets/EmberNode7.png,assets/img/artifact-placeholder.jpg">
+          <img src="assets/img/ember-node-7.png" alt="EN-007 Ember Node 7 Living Technology personal instrument" width="800" height="800" loading="lazy" decoding="async" data-fallbacks="EmberNode7.png,assets/img/EmberNode7.png,assets/EmberNode7.png,assets/img/artifact-placeholder.jpg">
           <div><strong>EN-007</strong><span>Ember Node 7</span><em>Personal instrument</em></div>
         </article>
 
         <article class="artifact-card-mini">
-          <img src="assets/img/TigerNodeRing.png" alt="TN-001 Tiger Node Ring handcrafted copper artifact" width="800" height="800" loading="lazy" decoding="async" data-fallbacks="TigerNodeRing.png,assets/img/TigerNodeRing.png,assets/TigerNodeRing.png,assets/img/artifact-placeholder.jpg">
+          <img src="assets/img/tiger-node-ring-001.png" alt="TN-001 Tiger Node Ring handcrafted copper artifact" width="800" height="800" loading="lazy" decoding="async" data-fallbacks="TigerNodeRing.png,assets/img/TigerNodeRing.png,assets/TigerNodeRing.png,assets/img/artifact-placeholder.jpg">
           <div><strong>TN-001</strong><span>Tiger Node Ring</span><em>Gifted artifact</em></div>
         </article>
 
         <article class="artifact-card-mini">
-          <img src="Covenant67.png" alt="CV-067 Covenant 67 handcrafted copper pendant artifact" width="800" height="800" loading="lazy" decoding="async" data-fallbacks="Covenant67.png,assets/img/Covenant67.png,assets/Covenant67.png,assets/img/artifact-placeholder.jpg">
+          <img src="assets/img/covenant-67.png" alt="CV-067 Covenant 67 handcrafted copper pendant artifact" width="800" height="800" loading="lazy" decoding="async" data-fallbacks="Covenant67.png,assets/img/Covenant67.png,assets/Covenant67.png,assets/img/artifact-placeholder.jpg">
           <div><strong>CV-067</strong><span>Covenant 67</span><em>Artifact value · $67.67</em></div>
-        </article>
-        
-        <article class="artifact-card-mini">
-          <img src="T7.png" alt="Tesla Type-7 Resonant Conduit Aetheric Field Transceiver" width="800" height="800" loading="lazy" decoding="async" data-fallbacks="Covenant67.png,assets/img/Covenant67.png,assets/Covenant67.png,assets/img/artifact-placeholder.jpg">
-          <div><strong>T7</strong><span>Type-7</span><em>Artifact value · $Personal Artifact thats not for sale</em></div>
         </article>
       </div>
 
@@ -524,11 +491,104 @@
     <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
   </footer>
 
-  <script defer src="assets/js/site.js?v=20260710-7"></script>
-  <script defer src="assets/js/moons-bar.js?v=20260710-1"></script>
   <script>
     (function () {
       "use strict";
+
+      const body = document.body;
+      const navToggle = document.querySelector("[data-nav-toggle]");
+      const nav = document.querySelector("[data-site-nav]");
+      const dropdown = document.querySelector("[data-dropdown]");
+      const dropdownToggle = document.querySelector("[data-dropdown-toggle]");
+      const mobileQuery = window.matchMedia("(max-width: 760px)");
+
+      const year = document.getElementById("year");
+      if (year) year.textContent = String(new Date().getFullYear());
+
+      function closeMobileNav() {
+        if (!nav || !navToggle) return;
+        nav.classList.remove("open");
+        navToggle.setAttribute("aria-expanded", "false");
+        navToggle.setAttribute("aria-label", "Open navigation");
+        body.classList.remove("nav-open");
+      }
+
+      function closeDropdown() {
+        if (!dropdown || !dropdownToggle) return;
+        dropdown.classList.remove("open");
+        dropdownToggle.setAttribute("aria-expanded", "false");
+      }
+
+      if (navToggle && nav) {
+        navToggle.addEventListener("click", function () {
+          const isOpen = nav.classList.toggle("open");
+          navToggle.setAttribute("aria-expanded", String(isOpen));
+          navToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
+          body.classList.toggle("nav-open", isOpen);
+          if (!isOpen) closeDropdown();
+        });
+
+        nav.querySelectorAll("a").forEach(function (link) {
+          link.addEventListener("click", function () {
+            closeDropdown();
+            closeMobileNav();
+          });
+        });
+      }
+
+      if (dropdown && dropdownToggle) {
+        dropdownToggle.addEventListener("click", function (event) {
+          event.stopPropagation();
+          const isOpen = dropdown.classList.toggle("open");
+          dropdownToggle.setAttribute("aria-expanded", String(isOpen));
+        });
+
+        document.addEventListener("click", function (event) {
+          if (!dropdown.contains(event.target)) closeDropdown();
+        });
+      }
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          closeDropdown();
+          closeMobileNav();
+        }
+      });
+
+      function handleBreakpoint(event) {
+        if (!event.matches) {
+          closeMobileNav();
+          closeDropdown();
+        }
+      }
+
+      if (typeof mobileQuery.addEventListener === "function") {
+        mobileQuery.addEventListener("change", handleBreakpoint);
+      } else if (typeof mobileQuery.addListener === "function") {
+        mobileQuery.addListener(handleBreakpoint);
+      }
+
+      document.querySelectorAll("img[data-fallbacks]").forEach(function (img) {
+        const fallbacks = img.dataset.fallbacks
+          .split(",")
+          .map(function (item) { return item.trim(); })
+          .filter(Boolean);
+
+        function handleImageError() {
+          const next = fallbacks.shift();
+
+          if (next) {
+            img.src = next;
+            img.dataset.fallbacks = fallbacks.join(",");
+            return;
+          }
+
+          img.removeEventListener("error", handleImageError);
+          img.hidden = true;
+        }
+
+        img.addEventListener("error", handleImageError);
+      });
 
       const revealTargets = document.querySelectorAll(
         ".section-heading,.signal-card,.feature-card,.artifact-card-mini," +
