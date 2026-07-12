@@ -1129,19 +1129,33 @@ body[data-shabbat-state="active"] .hero-sigil {
     gap: 8px;
   }
 
+  .crumbs .lab-btn {
+    width: auto;
+    min-height: 40px;
+    flex: 0 1 auto;
+    padding-inline: 0.8rem;
+  }
+
   .tabs {
     top: 72px;
     margin: 14px 0;
     padding-top: 0.35rem;
   }
 
-  .tab,
-  .lab-btn {
-    width: 100%;
-    min-height: 48px;
+  .tabs .tab {
+    width: auto;
+    min-height: 40px;
+    flex: 0 0 auto;
+    padding: 0.62rem 0.85rem;
+    font-size: 0.92rem;
   }
 
-  .btnrow > * {
+  .btnrow .lab-btn,
+  .btnrow button,
+  .btnrow input,
+  .btnrow select {
+    width: 100%;
+    min-height: 48px;
     flex: 1 1 100%;
   }
 
@@ -1185,20 +1199,28 @@ body[data-shabbat-state="active"] .hero-sigil {
   }
 
   .flow-step {
-    min-height: 92px;
+    min-height: 76px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 0.7rem 0.85rem;
+  }
+
+  .flow-step strong {
+    margin-bottom: 0.2rem;
+    font-size: 1.9rem;
+    line-height: 1;
   }
 
   .daily-sigil {
-    min-height: 220px;
+    min-height: 200px;
+    border-radius: 22px;
   }
 
   .daily-sigil .moon-core {
-    width: min(64vw, 220px);
-    font-size: clamp(2.6rem, 14vw, 4rem);
+    width: min(56vw, 190px);
+    font-size: clamp(2.4rem, 12vw, 3.6rem);
   }
 
   .shabbat-summary::after {
@@ -1258,16 +1280,26 @@ body[data-shabbat-state="active"] .hero-sigil {
   }
 
   .flow-step {
-    min-height: 84px;
-    padding: 0.7rem;
+    min-height: 72px;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .flow-step strong {
+    font-size: 1.75rem;
   }
 
   .daily-sigil {
-    min-height: 200px;
+    min-height: 184px;
   }
 
   .daily-sigil .moon-core {
-    width: min(72vw, 210px);
+    width: min(54vw, 170px);
+    font-size: clamp(2.1rem, 11vw, 3.1rem);
+  }
+
+  .mobile-dock a {
+    font-size: 0.68rem;
+    padding-inline: 0.2rem;
   }
 }
 
