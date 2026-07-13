@@ -9,6 +9,7 @@
 2. **Run daily mirror:** [docs/moons.html](docs/moons.html)
 3. **Record one note:** [docs/ledger.html](docs/ledger.html)
 4. **Read the model:** [docs/theory.html](docs/theory.html)
+5. Open the [5-minute Field Guide](3_Living_Technology/Living_Cosmos_Field_Guide_v2_Public.md), pick 2 carriers, write a phrase, breathe and rate, halt if strain, save.
 
 If you only have 3 minutes, do steps 1–3.
 
@@ -24,7 +25,7 @@ The Scroll of Fire — Codex of Reality is a living architecture of remembrance,
 
 🌐 Website: https://ssnfts24.github.io/scroll-of-fire/
 
-🟢 Start Here: [5-minute Field Guide](3_Living_Technology/Living_Cosmos_Field_Guide_v2_Public.md) | [START_HERE.md](START_HERE.md)
+🟢 Start Here: [5-minute Field Guide](3_Living_Technology/Living_Cosmos_Field_Guide_v2_Public.md)
 
 📂 Repo root: / (main)
 
@@ -124,9 +125,9 @@ R = f(π, e, i, ħ, c, G, DNA, ΩDM, ΩΛ, H₀, 432, 528, 369, 144, 137, Φ, �
 ```
 /
 ├─ 1_Codex_of_Reality/
-├─ 2_Formalism_and_Physics/
+├─ 2_Witness_Scrolls/
 ├─ 3_Living_Technology/
-├─ 4_Remembrance_and_History/
+├─ 4_Formalism_and_Physics/
 ├─ 5_Living_Scribe/
 ├─ 6_Images_and_Symbols/
 ├─ 7_Ledger_and_Documentation/
@@ -144,16 +145,6 @@ Check: sha256sum filename
 ## ⚙ Living Technology
 
 Tesla Type-7, Living Lattice, OhrAI, Remnant Network
-
----
-## 🚀 Quick Start
-
-1. Open Field Guide
-2. Pick 2 carriers
-3. Write phrase
-4. Breathe, rate
-5. Halt if strain
-6. Save
 
 ---
 ## 🌐 Links
