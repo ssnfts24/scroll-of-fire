@@ -521,7 +521,7 @@
   .shop-hero-card img{
     height:auto;
     aspect-ratio:auto;
-    object-fit:initial;
+    object-fit:contain;
   }
 }
 
@@ -530,6 +530,33 @@
   .artifact-status,
   .archive-grid span{
     font-size:.76rem;
+  }
+
+  /* Fix mobile artifact image sizing and override artifact-mobile.css hard caps */
+  .artifact-grid,
+  [data-artifact-grid]{
+    grid-template-columns:1fr !important;
+    gap:.9rem !important;
+  }
+
+  .artifact-card .artifact-media,
+  [data-artifact-card] .artifact-media{
+    aspect-ratio:4 / 5;
+  }
+
+  .artifact-card .artifact-media img,
+  [data-artifact-card] .artifact-media img,
+  .artifact-card img[data-artifact-image],
+  [data-artifact-card] img[data-artifact-image]{
+    width:100% !important;
+    height:100% !important;
+    max-height:none !important;
+    min-height:0 !important;
+    object-fit:contain !important;
+    object-position:center !important;
+    aspect-ratio:auto !important;
+    padding:0 !important;
+    background:transparent !important;
   }
 
   .artifact-actions .btn,
