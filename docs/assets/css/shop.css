@@ -145,7 +145,7 @@
   width:100%;
   height:100%;
   display:block;
-  object-fit:cover;
+  object-fit:contain;
   object-position:center;
 }
 
@@ -251,12 +251,12 @@
 }
 
 .tensor-media{
-  aspect-ratio:1 / 1;
+  aspect-ratio:4 / 5;
   border:1px solid rgba(122,243,255,.16);
 }
 
 .artifact-media{
-  aspect-ratio:1 / 1;
+  aspect-ratio:4 / 5;
   border:1px solid rgba(255,255,255,.08);
 }
 
@@ -370,7 +370,7 @@
 }
 
 .archive-grid img{
-  aspect-ratio:1 / 1;
+  aspect-ratio:4 / 5;
   border-radius:calc(var(--radius-md) - 8px);
   background:rgba(4,8,14,.88);
 }
