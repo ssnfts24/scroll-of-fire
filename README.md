@@ -1,7 +1,16 @@
 # ⚖️ Scroll of Fire — Codex of Reality
 *“Let there be resonance.”*
 
-🌱 **New here? Start with the 5-minute practice → [Living Cosmos Field Guide](3_Living_Technology/Living_Cosmos_Field_Guide_v2_Public.md)**
+🌱 **New here? Start here first → [Site Start Page](docs/start.html)**
+
+## Quick Start (First Visit)
+
+1. **Open Start:** [docs/start.html](docs/start.html)
+2. **Run daily mirror:** [docs/moons.html](docs/moons.html)
+3. **Record one note:** [docs/ledger.html](docs/ledger.html)
+4. **Read the model:** [docs/theory.html](docs/theory.html)
+
+If you only have 3 minutes, do steps 1–3.
 
 ---
 ## 🜂 Essence
