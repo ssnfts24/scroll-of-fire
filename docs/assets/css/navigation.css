@@ -245,11 +245,13 @@
   top: calc(100% + 0.5rem);
   z-index: 850;
   min-width: 320px;
+  max-width: min(360px, calc(100vw - 2rem));
   max-height: min(70vh, 620px);
-  display: none;
+  display: flex;
   flex-direction: column;
   gap: 0.25rem;
   overflow: auto;
+  overflow-x: hidden;
   padding: 0.65rem;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 18px;
@@ -258,10 +260,21 @@
   -webkit-backdrop-filter: blur(18px);
   backdrop-filter: blur(18px);
   overscroll-behavior: contain;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    visibility 0.18s ease;
 }
 
 .nav-dropdown.is-dropdown-open .nav-drop-menu {
-  display: flex;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 .nav-drop-menu a {
@@ -498,14 +511,40 @@ body.site-menu-open {
     position: static;
     width: 100%;
     min-width: 0;
-    max-height: none;
-    margin-top: 0.35rem;
-    padding: 0.45rem;
+    max-width: 100%;
+    max-height: 0;
+    margin-top: 0;
+    padding: 0;
+    border-width: 0;
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.025);
     box-shadow: none;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+    overflow: hidden;
+    overflow-x: hidden;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition:
+      max-height 0.2s ease,
+      margin-top 0.2s ease,
+      padding 0.2s ease,
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      visibility 0.2s ease;
+  }
+
+  .nav-dropdown.is-dropdown-open .nav-drop-menu {
+    max-height: 70vh;
+    margin-top: 0.35rem;
+    padding: 0.45rem;
+    border-width: 1px;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
   }
 
   .nav-drop-menu a {

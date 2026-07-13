@@ -45,7 +45,26 @@ body{
 
 body.nav-open{overflow:hidden}
 a{color:inherit}
-img{max-width:100%}
+img{max-width:100%;height:auto;display:block}
+
+/* Prevent images from causing layout overflow */
+img, video, svg, canvas, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Image wrapper for preserved aspect ratios */
+.img-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+}
+.img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
 button,input,select,textarea{font:inherit}
 
 a:focus-visible,
@@ -65,10 +84,21 @@ h3{margin:.2rem 0 .7rem;color:var(--gold);font-size:clamp(1.25rem,2.7vw,1.75rem)
 .section-shell{
   position:relative;
   z-index:1;
-  width:min(var(--max),calc(100% - 2rem));
+  width:min(var(--max),calc(100% - clamp(1rem,6vw,2rem)));
+  max-width:100%;
   margin-inline:auto;
   padding:clamp(2rem,5vw,5.25rem) 0;
   scroll-margin-top:calc(var(--header-h) + 1rem);
+}
+
+@media (max-width: 480px) {
+  .section-shell{
+    width:min(var(--max),calc(100% - 1rem));
+    padding:clamp(1.75rem,8vw,2.65rem) 0;
+  }
+
+  h1{font-size:clamp(2.2rem,13vw,3.8rem)}
+  h2{font-size:clamp(1.8rem,9vw,2.65rem)}
 }
 
 .eyebrow{
@@ -99,12 +129,25 @@ h3{margin:.2rem 0 .7rem;color:var(--gold);font-size:clamp(1.25rem,2.7vw,1.75rem)
   text-align:center;
 }
 
-.site-footer nav{
+.site-footer nav,
+.footer nav{
   display:flex;
   flex-wrap:wrap;
   justify-content:center;
   gap:.7rem;
   margin-bottom:1rem;
+}
+
+.site-footer nav a,
+.footer nav a{
+  color:var(--muted);
+  text-decoration:none;
+  font-size:.88rem;
+}
+
+.site-footer nav a:hover,
+.footer nav a:hover{
+  color:var(--gold);
 }
 
 .compact-actions {
