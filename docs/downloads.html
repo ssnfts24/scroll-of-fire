@@ -1,18 +1,42 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr" class="sof carrier-432">
 <head>
+  <base href="/">
+  <script>
+    if (location.hostname === "ssnfts24.github.io") {
+      const base = document.querySelector("base");
+      if (base) base.setAttribute("href", "/scroll-of-fire/");
+    }
+  </script>
 
-
-  
   <meta charset="utf-8">
-  <title>Downloads & Integrity — Scroll of Fire</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <base href="./">
-  <link href="assets/css/codex.css" rel="stylesheet">
+  <title>Downloads & Integrity — Scroll of Fire | Codex of Reality</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Scroll of Fire verified scrolls, local mirrors, GitHub source links, and SHA-256 proof placeholders for the Codex of Reality.">
+  <meta name="author" content="Aaron Paul Laird">
+  <meta name="theme-color" content="#05070d">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="https://codexofreality.org/downloads.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:title" content="Downloads & Integrity — Scroll of Fire">
+  <meta property="og:description" content="Verified scrolls, source links, and SHA-256 proof placeholders for the Codex of Reality.">
+  <meta property="og:url" content="https://codexofreality.org/downloads.html">
+
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/favicon.png">
+  <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
+  <link rel="stylesheet" href="assets/css/superlayout.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
   <script defer src="assets/js/site.js"></script>
 </head>
 <body>
+  <div class="living-aura" aria-hidden="true"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header" data-sof-header>
     <a class="brand" href="./" aria-label="Scroll of Fire home">
       <span class="brand-mark" aria-hidden="true">☲</span>
@@ -60,8 +84,8 @@
     </nav>
   </header>
 
-  <main class="page shell">
-    <p class="eyebrow">Downloads • Integrity • Verification</p>
+  <main id="main" class="page shell">
+    <p class="eyebrow">Downloads · Integrity · Verification</p>
     <h1>Downloads & Integrity Chain</h1>
     <p>Verified scrolls, local mirrors, GitHub source links, and SHA-256 proof placeholders.</p>
 
@@ -81,10 +105,25 @@
       </article>
     </section>
 
-    <section class="card">
+    <section class="card" style="margin-top:1rem">
       <h2>Integrity Rule</h2>
       <p>Every major replacement file should be committed, then logged with path, commit link, and SHA-256 hash.</p>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Footer navigation">
+      <a href="./start.html">Start</a>
+      <a href="./moons.html">13 Moons</a>
+      <a href="./covenant-caravan.html">Caravan</a>
+      <a href="./shop.html">Artifacts</a>
+      <a href="./hub.html">Hub</a>
+      <a href="./ledger.html">Ledger</a>
+      <a href="./theory.html">Theory</a>
+      <a href="./ethics.html">Ethics</a>
+    </nav>
+    <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality</p>
+  </footer>
 </body>
 </html>
+

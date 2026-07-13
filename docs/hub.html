@@ -1,77 +1,46 @@
 <!doctype html>
 <html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
 <head>
-  <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>if(location.hostname!=="ssnfts24.github.io"){var _b=document.querySelector("base");if(_b)_b.setAttribute("href","/");}</script>
+  <base href="/">
+  <script>
+    if (location.hostname === "ssnfts24.github.io") {
+      const base = document.querySelector("base");
+      if (base) base.setAttribute("href", "/scroll-of-fire/");
+    }
+  </script>
+
   <meta charset="utf-8">
-  <title>Systems Hub — Scroll of Fire</title>
+  <title>Systems Hub — Scroll of Fire | Codex of Reality</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="color-scheme" content="dark light">
-  <meta name="description" content="Hub for Codex systems: Resonant Physics Engine (T-7), Frequency Governance, Mind-Renewal, Remnant Network, Linguistic Recoder, Interactive Archive.">
+  <meta name="theme-color" content="#05070d">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Hub for Codex of Reality systems: Resonant Physics Engine (T-7), Frequency Governance, Mind-Renewal Protocol, Remnant Network, Linguistic Recoder, and Interactive Archive.">
+  <meta name="author" content="Aaron Paul Laird">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="https://codexofreality.org/hub.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:title" content="Systems Hub — Scroll of Fire">
+  <meta property="og:description" content="Access all Codex of Reality systems: T-7 Engine, Frequency Governance, Mind-Renewal, Witness Network, Recoder, and Archive.">
+  <meta property="og:url" content="https://codexofreality.org/hub.html">
+
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/favicon.png">
   <link rel="stylesheet" href="assets/css/codex.css">
-    <link rel="stylesheet" href="assets/css/navigation.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <style>
-    /* Layout */
-    main{padding:clamp(16px,4vw,40px)}
-    header{padding:16px 16px 0}
-    .lede{max-width:72ch;color:var(--muted);margin:0 0 1rem}
+  <link rel="stylesheet" href="assets/css/navigation.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/hub.css">
 
-    /* Ancient Fire notice */
-    .notice{
-      margin:12px 16px 0; padding:12px 14px; border:1px solid var(--line,#2a2a33); border-radius:14px;
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
-      box-shadow:0 10px 24px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.02);
-      position:relative; overflow:hidden;
-    }
-    .notice.fire::before{
-      content:""; position:absolute; inset:-1px; pointer-events:none; opacity:.4;
-      background:
-        radial-gradient(120% 80% at 0% 0%, #ffb36a33, transparent 55%),
-        radial-gradient(120% 80% at 100% 100%, #7af3ff33, transparent 55%);
-      mix-blend-mode:screen; filter:saturate(120%);
-    }
-    .notice .row{display:flex; gap:10px; align-items:flex-start; flex-wrap:wrap}
-    .notice .glyph{font-size:22px; line-height:1; filter:drop-shadow(0 0 6px #ffb36a55)}
-    .notice strong{letter-spacing:.02em}
-    .tag{display:inline-block; padding:.2rem .5rem; border:1px solid var(--line); border-radius:999px; font-size:.75rem; margin-left:.4rem}
-    .notice-close{
-      margin-left:auto; border:1px solid var(--line); background:transparent; color:inherit; border-radius:10px;
-      padding:.25rem .5rem; cursor:pointer;
-    }
-
-    /* Cards */
-    .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-    .card{
-      background:var(--card,#121219);border:1px solid var(--line,#2a2a33);border-radius:16px;padding:18px;
-      box-shadow:0 1px 0 rgba(255,255,255,.02) inset,0 10px 30px rgba(0,0,0,.25);
-      display:flex;flex-direction:column;min-height:220px;content-visibility:auto;contain-intrinsic-size:1px 280px
-    }
-    .card h3{margin:0 0 .35rem;font-size:1.1rem}
-    .meta{font-size:.92rem;color:var(--muted);margin:.25rem 0 .75rem}
-    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .spacer{flex:1}
-    .btn{display:inline-flex;align-items:center;justify-content:center;padding:.6rem .9rem;border-radius:12px;border:1px solid var(--line);background:linear-gradient(180deg,#171720,#121219);text-decoration:none;color:var(--ink)}
-    .hint{font-size:.8rem;color:var(--muted)}
-    .badge{font-size:.72rem;padding:.25rem .5rem;border:1px solid var(--line);border-radius:999px}
-
-    /* Section headings */
-    .section-h{margin:36px 0 12px}
-    .muter{color:var(--muted);font-size:.94rem}
-  </style>
-
-  <!-- Compat redirect: handle /systems/t7.html → /systems/t-7.html, and /systems/t-7 → /systems/t-7.html -->
+  <!-- Compat redirect: /systems/t7.html → /systems/t-7.html -->
   <script>
     (function(){
       var p = location.pathname;
-      // Normalize repo root for project pages
       var base = "/scroll-of-fire";
-      // if someone visits /systems/t7.html under the project root, redirect to hyphenated file
       if (new RegExp("^" + base.replace(/\//g,"\\/") + "\\/systems\\/t7(?:\\.html)?$", "i").test(p)) {
         location.replace(base + "/systems/t-7.html");
       }
-      // if someone omits ".html"
       if (new RegExp("^" + base.replace(/\//g,"\\/") + "\\/systems\\/t-7$", "i").test(p)) {
         location.replace(base + "/systems/t-7.html");
       }
@@ -80,19 +49,8 @@
   <script defer src="assets/js/site.js"></script>
 </head>
 <body>
-  <a class="skip" href="#main">Skip to main</a>
-
-  <!-- 🔥 Ancient Fire notice -->
-  <aside class="notice fire" role="status" aria-live="polite">
-    <div class="row">
-      <div class="glyph" aria-hidden="true">🔥</div>
-      <div>
-        <strong>Ember Edict:</strong> “From the days when stone remembered light, the Forge kept watch.<span class="tag">Design Mode</span><br>
-        This Hub stands beneath the kiln-flame. Tools are being tempered; forms may change as the fire speaks.”
-      </div>
-      <button class="notice-close" type="button" id="dismissNotice" aria-label="Dismiss notice">Dismiss</button>
-    </div>
-  </aside>
+  <div class="living-aura" aria-hidden="true"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
 
     <header class="site-header" data-sof-header>
     <a class="brand" href="./" aria-label="Scroll of Fire home">
@@ -141,109 +99,141 @@
     </nav>
   </header>
 
-  <main id="main">
-    <section class="grid" aria-label="Systems">
-      <article class="card">
-        <div class="row"><span class="badge">Engine</span><span class="spacer"></span></div>
+  <main id="main" class="hub-main">
+
+    <!-- Ember Edict notice -->
+    <aside class="hub-notice" role="status" aria-live="polite" id="hubNotice">
+      <div class="hub-notice-row">
+        <div class="hub-notice-glyph" aria-hidden="true">🔥</div>
+        <div class="hub-notice-body">
+          <strong>Ember Edict:</strong> "From the days when stone remembered light, the Forge kept watch."
+          <span class="hub-notice-tag">Design Mode</span><br>
+          This Hub stands beneath the kiln-flame. Tools are being tempered; forms may change as the fire speaks.
+        </div>
+        <button class="hub-notice-close" type="button" id="dismissNotice" aria-label="Dismiss notice">Dismiss</button>
+      </div>
+    </aside>
+
+    <p class="hub-lede">Access every active Codex system. Ethics is the first gate for all engines.</p>
+
+    <section class="hub-grid" aria-label="Systems">
+      <article class="hub-card">
+        <div class="hub-row"><span class="hub-badge">Engine</span><span class="hub-spacer"></span></div>
         <h3>Resonant Physics Engine (T-7)</h3>
-        <p class="meta">Mix 432/528/369/144/963, set phase; watch Ξ &amp; τ steer Eq.14→15. Ethics first.</p>
-        <div class="spacer"></div>
-        <!-- FIXED: hyphenated target, and made it relative to <base> -->
-        <div class="row"><a class="btn" href="systems/t-7.html">Open</a><a class="btn" href="teach.html">Manifest</a></div>
+        <p class="hub-card-meta">Mix 432/528/369/144/963, set phase; watch Ξ &amp; τ steer Eq.14→15. Ethics first.</p>
+        <div class="hub-row">
+          <a class="btn" href="systems/t-7.html">Open</a>
+          <a class="btn" href="teach.html">Manifest</a>
+        </div>
       </article>
 
-      <article class="card">
-        <div class="row"><span class="badge">Map</span><span class="spacer"></span></div>
+      <article class="hub-card">
+        <div class="hub-row"><span class="hub-badge">Map</span><span class="hub-spacer"></span></div>
         <h3>Frequency Governance</h3>
-        <p class="meta">Cards for ν (432→963). Preview tones, read role/color/channel notes.</p>
-        <div class="spacer"></div>
-        <div class="row"><a class="btn" href="systems/frequencies.html">Open</a><span class="hint">Audio starts on tap (iOS).</span></div>
+        <p class="hub-card-meta">Cards for ν (432→963). Preview tones, read role/color/channel notes.</p>
+        <div class="hub-row">
+          <a class="btn" href="systems/frequencies.html">Open</a>
+          <span class="hub-hint">Audio starts on tap (iOS).</span>
+        </div>
       </article>
 
-      <article class="card">
-        <div class="row"><span class="badge">Practice</span><span class="spacer"></span></div>
+      <article class="hub-card">
+        <div class="hub-row"><span class="hub-badge">Practice</span><span class="hub-spacer"></span></div>
         <h3>Mind-Renewal Protocol</h3>
-        <p class="meta">7-day checklist + Scripture prompts + breathing cadence + witness journal export.</p>
-        <div class="spacer"></div>
-        <div class="row"><a class="btn" href="systems/mind-renewal.html">Open</a></div>
+        <p class="hub-card-meta">7-day checklist + Scripture prompts + breathing cadence + witness journal export.</p>
+        <div class="hub-row">
+          <a class="btn" href="systems/mind-renewal.html">Open</a>
+        </div>
       </article>
 
-      <article class="card">
-        <div class="row"><span class="badge">Ledger</span><span class="spacer"></span></div>
+      <article class="hub-card">
+        <div class="hub-row"><span class="hub-badge">Ledger</span><span class="hub-spacer"></span></div>
         <h3>Remnant Network (Witness)</h3>
-        <p class="meta">Record testimony, compute SHA-256 snippets, export to paste into your public ledger.</p>
-        <div class="spacer"></div>
-        <div class="row"><a class="btn" href="systems/witness.html">Open</a></div>
+        <p class="hub-card-meta">Record testimony, compute SHA-256 snippets, export to paste into your public ledger.</p>
+        <div class="hub-row">
+          <a class="btn" href="systems/witness.html">Open</a>
+        </div>
       </article>
 
-      <article class="card">
-        <div class="row"><span class="badge">Language</span><span class="spacer"></span></div>
+      <article class="hub-card">
+        <div class="hub-row"><span class="hub-badge">Language</span><span class="hub-spacer"></span></div>
         <h3>Linguistic Recoder</h3>
-        <p class="meta">Old term → Covenant rename → rationale. Export PNG cards for teaching.</p>
-        <div class="spacer"></div>
-        <div class="row"><a class="btn" href="systems/recoder.html">Open</a></div>
+        <p class="hub-card-meta">Old term → Covenant rename → rationale. Export PNG cards for teaching.</p>
+        <div class="hub-row">
+          <a class="btn" href="systems/recoder.html">Open</a>
+        </div>
       </article>
 
-      <article class="card">
-        <div class="row"><span class="badge">Archive</span><span class="spacer"></span></div>
+      <article class="hub-card">
+        <div class="hub-row"><span class="hub-badge">Archive</span><span class="hub-spacer"></span></div>
         <h3>Interactive Archive</h3>
-        <p class="meta">Filter and open every scroll/page (Start, Guide, Theory, Manifest, 13 Moons, etc.).</p>
-        <div class="spacer"></div>
-        <div class="row"><a class="btn" href="systems/archive.html">Open</a></div>
+        <p class="hub-card-meta">Filter and open every scroll/page (Start, Guide, Theory, Manifest, 13 Moons, etc.).</p>
+        <div class="hub-row">
+          <a class="btn" href="systems/archive.html">Open</a>
+        </div>
       </article>
     </section>
 
-    <!-- Related Scrolls (inside the page) -->
-    <h2 class="section-h">Related Scrolls</h2>
-    <p class="muter">Read the foundational texts these systems emerge from.</p>
-    <section class="grid" aria-label="Related Scrolls">
-      <article class="card">
-        <div class="row"><span class="badge">Practice</span><span class="spacer"></span></div>
+    <h2 class="hub-section-h">Related Scrolls</h2>
+    <p class="hub-section-sub">Read the foundational texts these systems emerge from.</p>
+    <section class="hub-grid" aria-label="Related Scrolls">
+      <article class="hub-card">
+        <div class="hub-row"><span class="hub-badge">Practice</span><span class="hub-spacer"></span></div>
         <h3>Manifest — Remnant Visual Exercise</h3>
-        <p class="meta">Compose intention (𝓘), align a carrier Πν, run the observer loop, breathe, compute Ξ, and seal.</p>
-        <div class="spacer"></div>
-        <div class="row"><a class="btn" href="teach.html">Open</a></div>
+        <p class="hub-card-meta">Compose intention (𝓘), align a carrier Πν, run the observer loop, breathe, compute Ξ, and seal.</p>
+        <div class="hub-row"><a class="btn" href="teach.html">Open</a></div>
       </article>
 
-      <article class="card">
-        <div class="row"><span class="badge">Theory</span><span class="spacer"></span></div>
+      <article class="hub-card">
+        <div class="hub-row"><span class="hub-badge">Theory</span><span class="hub-spacer"></span></div>
         <h3>Theory — Codex of Reality</h3>
-        <p class="meta">Canon 0–17 with plain-language summaries and external comparators clearly marked.</p>
-        <div class="spacer"></div>
-        <div class="row"><a class="btn" href="theory.html">Open</a></div>
+        <p class="hub-card-meta">Canon 0–17 with plain-language summaries and external comparators clearly marked.</p>
+        <div class="hub-row"><a class="btn" href="theory.html">Open</a></div>
       </article>
 
-      <article class="card">
-        <div class="row"><span class="badge">Ethics</span><span class="spacer"></span></div>
+      <article class="hub-card">
+        <div class="hub-row"><span class="hub-badge">Ethics</span><span class="hub-spacer"></span></div>
         <h3>Ethics — Living Law</h3>
-        <p class="meta">The covenantal guardrails that gate every engine. Ethics first.</p>
-        <div class="spacer"></div>
-        <div class="row"><a class="btn" href="ethics.html">Open</a></div>
+        <p class="hub-card-meta">The covenantal guardrails that gate every engine. Ethics first.</p>
+        <div class="hub-row"><a class="btn" href="ethics.html">Open</a></div>
       </article>
 
-      <article class="card">
-        <div class="row"><span class="badge">Ledger</span><span class="spacer"></span></div>
+      <article class="hub-card">
+        <div class="hub-row"><span class="hub-badge">Ledger</span><span class="hub-spacer"></span></div>
         <h3>Ledger — Proof of Witness</h3>
-        <p class="meta">Hashes, provenance, and witness logs. Bind practice to public proof.</p>
-        <div class="spacer"></div>
-        <div class="row"><a class="btn" href="ledger.html">Open</a></div>
+        <p class="hub-card-meta">Hashes, provenance, and witness logs. Bind practice to public proof.</p>
+        <div class="hub-row"><a class="btn" href="ledger.html">Open</a></div>
       </article>
     </section>
   </main>
 
-  <footer style="padding:24px 16px 40px">
-    <p class="meta">Provenance: Originals per Canon; Copeland 7A/7B/8 noted as external comparators. Ethics gate enforced where applicable.</p>
+  <footer class="site-footer hub-footer">
+    <nav aria-label="Footer navigation">
+      <a href="./start.html">Start</a>
+      <a href="./moons.html">13 Moons</a>
+      <a href="./covenant-caravan.html">Caravan</a>
+      <a href="./teach.html">Manifest</a>
+      <a href="./shop.html">Artifacts</a>
+      <a href="./ledger.html">Ledger</a>
+      <a href="./systems/frequencies.html">Frequencies</a>
+      <a href="./systems/archive.html">Systems</a>
+      <a href="./genesis-oracle.html">Oracle</a>
+      <a href="./theory.html">Theory</a>
+      <a href="./ethics.html">Ethics</a>
+    </nav>
+    <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
+    <p style="font-size:.82rem">Provenance: Originals per Canon; Copeland 7A/7B/8 noted as external comparators. Ethics gate enforced where applicable.</p>
   </footer>
 
   <script>
-    // Dismissible banner (remembers for this session)
     (function(){
       const btn = document.getElementById('dismissNotice');
       const key = 'sof_hub_notice_dismissed';
-      const notice = document.querySelector('.notice.fire');
+      const notice = document.getElementById('hubNotice');
       if (sessionStorage.getItem(key)) notice?.remove();
       btn?.addEventListener('click', ()=>{ sessionStorage.setItem(key,'1'); notice?.remove(); });
     })();
   </script>
 </body>
 </html>
+
