@@ -1,45 +1,232 @@
-.living-aura{
-  position:fixed;
-  inset:-20%;
-  z-index:0;
-  pointer-events:none;
+/* =======================================================================
+   Scroll of Fire — Shared Motion System
+   File: assets/css/animations.css
+   Purpose:
+     Canonical animation and transition definitions.
+     All keyframes, motion classes, and ambient effects live here.
+     Do not scatter animation code in page-specific CSS.
+   ======================================================================= */
+
+/* -----------------------------------------------------------------------
+   1. AMBIENT FIELD (living-aura)
+   ----------------------------------------------------------------------- */
+
+.living-aura {
+  position: fixed;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
   background:
-    radial-gradient(circle at 20% 25%,rgba(122,243,255,.10),transparent 28%),
-    radial-gradient(circle at 80% 20%,rgba(243,201,122,.12),transparent 30%),
-    radial-gradient(circle at 50% 85%,rgba(217,149,69,.10),transparent 34%);
-  filter:blur(8px);
-  animation:fieldDrift 18s ease-in-out infinite alternate;
+    radial-gradient(circle at 20% 25%, rgba(122,243,255,.10), transparent 28%),
+    radial-gradient(circle at 80% 20%, rgba(243,201,122,.12), transparent 30%),
+    radial-gradient(circle at 50% 85%, rgba(217,149,69,.10), transparent 34%);
+  filter: blur(8px);
+  animation: fieldDrift var(--motion-field, 18s) ease-in-out infinite alternate;
 }
 
-@keyframes fieldDrift{
-  from{transform:translate3d(-1.5%,0,0) scale(1)}
-  to{transform:translate3d(1.5%,-1%,0) scale(1.04)}
+@keyframes fieldDrift {
+  from { transform: translate3d(-1.5%, 0, 0) scale(1); }
+  to   { transform: translate3d(1.5%, -1%, 0) scale(1.04); }
 }
 
-.moon-mark{animation:moonPulse 5.5s ease-in-out infinite}
+/* Daypart-aware ambient brightness */
+[data-codex-daypart="dawn"]  .living-aura { filter: blur(7px) brightness(1.10); }
+[data-codex-daypart="day"]   .living-aura { filter: blur(6px) brightness(1.15); }
+[data-codex-daypart="dusk"]  .living-aura { filter: blur(9px) brightness(0.92); animation-duration: 22s; }
+[data-codex-daypart="night"] .living-aura { filter: blur(12px) brightness(0.78); animation-duration: 26s; }
 
-@keyframes moonPulse{
-  0%,100%{text-shadow:0 0 24px rgba(243,201,122,.15);transform:scale(1)}
-  50%{text-shadow:0 0 48px rgba(243,201,122,.36);transform:scale(1.035)}
+/* -----------------------------------------------------------------------
+   2. SIGNAL PULSE
+   Purpose: slow, quiet indicator for active states.
+   Apply .pulse-active to: current moon mark, today marker,
+   active gate indicator, current signal item.
+   ----------------------------------------------------------------------- */
+
+.moon-mark,
+.pulse-active {
+  animation: signalPulse var(--motion-pulse, 4.5s) var(--ease-breath, ease-in-out) infinite;
 }
 
-.reveal{
-  opacity:0;
-  transform:translateY(22px);
-  transition:opacity .8s ease,transform .8s ease;
+@keyframes signalPulse {
+  0%,  100% { opacity: 1;    transform: scale(1);     }
+  50%        { opacity: 0.72; transform: scale(1.028); }
 }
 
-.reveal.in{opacity:1;transform:translateY(0)}
+/* Legacy moon-mark keyframe alias */
+@keyframes moonPulse {
+  0%,100% { text-shadow: 0 0 24px rgba(243,201,122,.15); transform: scale(1); }
+  50%     { text-shadow: 0 0 48px rgba(243,201,122,.36); transform: scale(1.035); }
+}
 
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{
-    animation:none!important;
-    transition:none!important;
-    scroll-behavior:auto!important;
+/* -----------------------------------------------------------------------
+   3. SEAL SLOW ROTATION
+   Apply .seal-spin to major Codex seals / medallion glyphs.
+   Counter-rotation: add .seal-spin-rev.
+   Do not rotate text.
+   ----------------------------------------------------------------------- */
+
+.seal-spin {
+  animation: sealRotate var(--motion-seal, 28s) linear infinite;
+  will-change: transform;
+  display: inline-block;
+}
+
+.seal-spin-rev {
+  animation: sealRotateRev calc(var(--motion-seal, 28s) * 1.4) linear infinite;
+  will-change: transform;
+  display: inline-block;
+}
+
+@keyframes sealRotate    { to { transform: rotate(360deg); } }
+@keyframes sealRotateRev { to { transform: rotate(-360deg); } }
+
+/* -----------------------------------------------------------------------
+   4. SECTION REVEAL
+   Sections start invisible and transition in when entering the viewport.
+   The .in class is added by motion.js (IntersectionObserver).
+   Content is visible without JS (opacity:1 as default; JS adds .reveal).
+   ----------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity  var(--motion-slow, 600ms)  var(--ease-out, ease),
+    transform var(--motion-slow, 600ms) var(--ease-out, ease);
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered group: children of .reveal-group receive increasing delays */
+.reveal-group > *:nth-child(1) { transition-delay: 0ms;   }
+.reveal-group > *:nth-child(2) { transition-delay: 60ms;  }
+.reveal-group > *:nth-child(3) { transition-delay: 120ms; }
+.reveal-group > *:nth-child(4) { transition-delay: 180ms; }
+.reveal-group > *:nth-child(5) { transition-delay: 240ms; }
+.reveal-group > *:nth-child(6) { transition-delay: 300ms; }
+
+/* -----------------------------------------------------------------------
+   5. GATE REVEAL (page-to-page transition feel)
+   ----------------------------------------------------------------------- */
+
+@keyframes gateReveal {
+  from { opacity: 0; transform: translateY(14px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+.gate-enter {
+  animation: gateReveal var(--motion-medium, 320ms) var(--ease-out, ease) both;
+}
+
+/* -----------------------------------------------------------------------
+   6. VIEW TRANSITIONS (progressive enhancement, Chrome 111+)
+   Normal page navigation is unchanged in unsupported browsers.
+   ----------------------------------------------------------------------- */
+
+@view-transition {
+  navigation: auto;
+}
+
+/* Shared element names assigned in HTML via style="view-transition-name:X"
+   or via motion.js for dynamic targets.
+   Keep the default cross-fade for most pages; only enhance named elements. */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+  animation-timing-function: var(--ease-out, ease);
+}
+
+::view-transition-old(codex-header) { animation: 160ms var(--ease-in, ease)  both fade-out; }
+::view-transition-new(codex-header) { animation: 200ms var(--ease-out, ease) both fade-in;  }
+
+@keyframes fade-out { to   { opacity: 0; } }
+@keyframes fade-in  { from { opacity: 0; } }
+
+/* -----------------------------------------------------------------------
+   7. CONNECTION FLOW (hub cards — subtle directional shimmer)
+   ----------------------------------------------------------------------- */
+
+@keyframes connectionFlow {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.hub-connection-line {
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(122,243,255,.18) 40%,
+    rgba(243,201,122,.22) 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: connectionFlow 6s linear infinite;
+}
+
+/* -----------------------------------------------------------------------
+   8. BREATH CANVAS PLACEHOLDER
+   When canvas renders a breath ring, the noscript fallback and
+   the wrap remain centered and styled consistently.
+   ----------------------------------------------------------------------- */
+
+.exercise-canvas-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.exercise-canvas-wrap canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* -----------------------------------------------------------------------
+   9. REDUCED-MOTION — genuine stillness
+   Do not merely slow things down; provide a truly still experience.
+   ----------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 
-  .reveal{
-    opacity:1!important;
-    transform:none!important;
+  /* Ensure reveals are immediately visible without JS-driven animation */
+  .reveal,
+  .reveal.in {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Remove stagger delays */
+  .reveal-group > * {
+    transition-delay: 0ms !important;
+  }
+
+  /* Keep active-state distinction without animation */
+  .pulse-active,
+  .moon-mark {
+    opacity: 0.85;
+    transform: none;
+  }
+
+  /* Stop connection flow */
+  .hub-connection-line {
+    background: rgba(122,243,255,.10);
+  }
+
+  /* Flatten view transitions */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0ms !important;
   }
 }

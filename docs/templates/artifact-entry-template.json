@@ -1,0 +1,15 @@
+[
+  {
+    "id": "artifact-001",
+    "name": "Full artifact name — include series designation if applicable.",
+    "type": "copper",
+    "dateAdded": "YYYY-MM-DD",
+    "price": "0.00",
+    "currency": "USD",
+    "status": "available",
+    "description": "One to three sentences describing the piece: material, construction, symbolic meaning.",
+    "images": ["assets/img/artifact-001.jpg"],
+    "tags": ["copper", "T-7", "ring"],
+    "buildLog": []
+  }
+]

@@ -1125,3 +1125,16 @@
     animation: none;
   }
 }
+
+/* Privacy note on Continue Your Path panel */
+.codex-privacy-note {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--muted, #b9c1c7);
+  line-height: 1.5;
+}
+
+/* First-visit orientation: highlight the Start Here action when this is truly the first browser visit */
+[data-codex-first-visit="true"] .hero-actions [data-home-action] {
+  box-shadow: 0 0 0 2px rgba(122, 243, 255, 0.4);
+}

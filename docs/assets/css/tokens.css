@@ -92,12 +92,22 @@
     --bd-2:      2px solid color-mix(in lch, var(--line) 85%, black);
 
     /* Motion / Timing */
-    --ease-std:  cubic-bezier(.22,.61,.36,1);
-    --ease-in:   cubic-bezier(.4,0,1,1);
-    --ease-out:  cubic-bezier(0,0,.2,1);
-    --t-fast:    120ms;
-    --t-med:     220ms;
-    --t-slow:    440ms;
+    --ease-std:     cubic-bezier(.22,.61,.36,1);
+    --ease-in:      cubic-bezier(.4,0,1,1);
+    --ease-out:     cubic-bezier(0,0,.2,1);
+    --ease-signal:  cubic-bezier(.22,.61,.36,1);
+    --ease-breath:  cubic-bezier(.45,0,.55,1);
+    --t-fast:       120ms;
+    --t-med:        220ms;
+    --t-slow:       440ms;
+
+    /* Motion system tokens */
+    --motion-fast:   120ms;
+    --motion-medium: 320ms;
+    --motion-slow:   600ms;
+    --motion-field:  18s;
+    --motion-pulse:  4.5s;
+    --motion-seal:   28s;
 
     /* Z-Index Map */
     --z-below:   -1;
