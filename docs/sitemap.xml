@@ -1,146 +1,380 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- =====================================================
+       PRIMARY SITE
+       ===================================================== -->
 
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/</loc>
-    <lastmod>2026-06-10</lastmod>
+    <loc>https://codexofreality.org/</loc>
     <changefreq>weekly</changefreq>
-    <priority>1.00</priority>
+    <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/start.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <loc>https://codexofreality.org/start.html</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.95</priority>
+    <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/shop.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <loc>https://codexofreality.org/moons.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/ledger.html</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.92</priority>
+    <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/hub.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <loc>https://codexofreality.org/shop.html</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
+    <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/moons.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <loc>https://codexofreality.org/hub.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/teach.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/genesis-oracle.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/covenant-caravan.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/caravan.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/guide.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/glossary.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/glyphs.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/ethics.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/downloads.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/lab.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/invoke.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/circle.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/micro.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- =====================================================
+       SYSTEMS
+       ===================================================== -->
+
+  <url>
+    <loc>https://codexofreality.org/systems/frequencies.html</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
+    <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/systems/frequencies.html</loc>
-    <lastmod>2026-06-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.88</priority>
-  </url>
-
-  <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/genesis-oracle.html</loc>
-    <lastmod>2026-06-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.86</priority>
-  </url>
-
-  <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/teach.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <loc>https://codexofreality.org/systems/t-7.html</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.84</priority>
+    <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/theory.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <loc>https://codexofreality.org/systems/witness.html</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.82</priority>
+    <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/guide.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <loc>https://codexofreality.org/systems/recoder.html</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
+    <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/ledger.html</loc>
-    <lastmod>2026-06-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.78</priority>
-  </url>
-
-  <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/lab.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <loc>https://codexofreality.org/systems/mind-renewal.html</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.76</priority>
+    <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/invoke.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <loc>https://codexofreality.org/systems/archive.html</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.74</priority>
+    <priority>0.7</priority>
   </url>
 
+  <!-- =====================================================
+       THEORY HUB AND REFERENCE PAGES
+       ===================================================== -->
+
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/circle.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <loc>https://codexofreality.org/theory/canon.html</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.72</priority>
+    <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/glyphs.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <loc>https://codexofreality.org/theory/master-equation.html</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.70</priority>
+    <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/glossary.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <loc>https://codexofreality.org/theory/artifact-theory.html</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.68</priority>
+    <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/downloads.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <loc>https://codexofreality.org/theory/bibliography.html</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.66</priority>
+    <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/ethics.html</loc>
-    <lastmod>2026-06-10</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.64</priority>
-  </url>
-
-  <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/micro.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <loc>https://codexofreality.org/theory/delta-framework.html</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.60</priority>
+    <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://ssnfts24.github.io/scroll-of-fire/ab.html</loc>
-    <lastmod>2026-06-10</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.50</priority>
+    <loc>https://codexofreality.org/theory/ethics.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/frequency-governance.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/glossary.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/living-technology.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/memory.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/notation.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/operators.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/thirteen-moons.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/unified-field.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/witness.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- =====================================================
+       THEORY EQUATION CHAPTERS
+       ===================================================== -->
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq00.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq01.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq02.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq03.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq04.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq04b.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq05.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq06.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq07.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq08.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq09.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq10.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq11.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq12.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq13.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq14.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq15.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq16.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/theory/eq17.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 
 </urlset>
