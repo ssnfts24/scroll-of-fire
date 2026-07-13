@@ -14,7 +14,6 @@
   <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
     <link rel="stylesheet" href="assets/css/navigation.css">
 <link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="assets/css/codex.css?v=2025-10-20"></noscript>
 
   <!-- Page polish -->
   <style>
@@ -95,8 +94,14 @@
     .tip b{color:#eae7df}
   </style>
   <script defer src="assets/js/site.js"></script>
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/favicon.png">
+  <link rel="stylesheet" href="assets/css/animations.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="living-aura" aria-hidden="true"></div>
 <main class="wrap">
     <header class="site-header" data-sof-header>
     <a class="brand" href="./" aria-label="Scroll of Fire home">
@@ -411,5 +416,22 @@
 
 <!-- MathJax for equations (optional but nice) -->
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <footer class="site-footer">
+    <nav aria-label="Footer navigation">
+      <a href="./start.html">Start</a>
+      <a href="./moons.html">13 Moons</a>
+      <a href="./covenant-caravan.html">Caravan</a>
+      <a href="./teach.html">Manifest</a>
+      <a href="./shop.html">Artifacts</a>
+      <a href="./hub.html">Hub</a>
+      <a href="./ledger.html">Ledger</a>
+      <a href="./systems/frequencies.html">Frequency</a>
+      <a href="./genesis-oracle.html">Oracle</a>
+      <a href="./theory.html">Theory</a>
+      <a href="./ethics.html">Ethics</a>
+      <a href="./sitemap.xml">Sitemap</a>
+    </nav>
+    <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
+  </footer>
 </body>
 </html>
