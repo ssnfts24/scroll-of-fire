@@ -1,0 +1,22 @@
+name: Validate Codex Data
+
+on:
+  push:
+    paths:
+      - 'docs/assets/data/**'
+      - 'scripts/validate-codex-data.js'
+  pull_request:
+    paths:
+      - 'docs/assets/data/**'
+      - 'scripts/validate-codex-data.js'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Run Codex data validator
+        run: node scripts/validate-codex-data.js
