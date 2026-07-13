@@ -512,6 +512,17 @@
     max-width:680px;
     margin-inline:auto;
   }
+
+  .tensor-media{
+    aspect-ratio:auto;
+  }
+
+  .tensor-media img,
+  .shop-hero-card img{
+    height:auto;
+    aspect-ratio:auto;
+    object-fit:initial;
+  }
 }
 
 @media (max-width: 760px){
