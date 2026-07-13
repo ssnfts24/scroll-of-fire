@@ -428,12 +428,15 @@
 
     root.setAttribute("data-codex-daypart", state.daypart.toLowerCase());
     root.setAttribute("data-codex-motion", state.motionAllowed ? "on" : "off");
+    if (!state.lastVisit) {
+      root.setAttribute("data-codex-first-visit", "true");
+    }
 
     const daypartCopy = getHomeAction(state.daypart);
     setText("[data-home-eyebrow]", daypartCopy.eyebrow);
     setText("[data-home-guidance]", daypartCopy.guidance);
     setText("[data-home-signal]", state.signalLabel + " · " + state.systemConnection);
-    setText("[data-home-notice]", state.lastVisit ? "Last visit: " + formatRelativeDate(state.lastVisit) + "." : "First return in this browser.");
+    setText("[data-home-notice]", state.lastVisit ? "Last visit: " + formatRelativeDate(state.lastVisit) + "." : "First return in this browser. Begin with Start Here or open Today.");
 
     const heroAction = document.querySelector("[data-home-action]");
     if (heroAction) {

@@ -135,6 +135,7 @@
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
+  <script defer src="assets/js/motion.js"></script>
 </head>
 
 <body>
@@ -259,7 +260,7 @@
     <section class="section-shell codex-live-grid" aria-label="Living Codex panels">
       <article class="card today-codex-panel">
         <p class="eyebrow">Today in the Codex</p>
-        <h2 data-codex-today-title>Today in the Codex</h2>
+        <h2 class="pulse-active" data-codex-today-title>Today in the Codex</h2>
         <p class="today-codex-meta" data-codex-today-layer>Open today’s moon, breathe once, and record what changed.</p>
         <div class="today-codex-stack">
           <p><strong>Moon phase:</strong> <span data-codex-today-phase>Visible in the 13 Moons gate.</span></p>
@@ -282,6 +283,7 @@
           <a class="btn" href="./ledger.html">Continue into the Witness Ledger</a>
           <button class="btn" type="button" data-codex-clear-path>Clear path</button>
         </div>
+        <p class="codex-privacy-note">Your last gate is stored only in this browser. No account is required. Clearing browser storage removes this path.</p>
       </article>
 
       <noscript>
