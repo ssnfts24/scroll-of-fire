@@ -1,0 +1,202 @@
+/* Scroll of Fire — Systems Hub
+   File: docs/assets/css/hub.css
+   Scoped styles for hub.html (Systems grid, badges, section headings)
+*/
+
+/* ---- Layout ---- */
+.hub-main {
+  position: relative;
+  z-index: 1;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.hub-lede {
+  max-width: 72ch;
+  color: var(--muted, #b9c1c7);
+  margin: 0 0 1.25rem;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+/* ---- Systems grid ---- */
+.hub-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* ---- Hub card ---- */
+.hub-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  padding: 1.1rem;
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.13));
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(122, 243, 255, 0.07), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  transition: transform 200ms cubic-bezier(.22, .61, .36, 1), border-color 200ms ease, box-shadow 260ms ease;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 260px;
+}
+
+.hub-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(122, 243, 255, 0.3);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.36);
+}
+
+.hub-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.1rem;
+  color: var(--gold, #f3c97a);
+}
+
+.hub-card-meta {
+  font-size: 0.92rem;
+  color: var(--muted, #b9c1c7);
+  margin: 0.25rem 0 0.75rem;
+  line-height: 1.55;
+  flex: 1;
+}
+
+/* ---- Badge ---- */
+.hub-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 0.22rem 0.52rem;
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.13));
+  border-radius: 999px;
+  color: var(--muted, #b9c1c7);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ---- Row + spacer for card bottom ---- */
+.hub-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.hub-spacer {
+  flex: 1;
+}
+
+.hub-hint {
+  font-size: 0.8rem;
+  color: var(--muted, #b9c1c7);
+}
+
+/* ---- Hub section heading ---- */
+.hub-section-h {
+  margin: 2.2rem 0 0.85rem;
+  font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+  color: var(--text, #f4f1e8);
+}
+
+.hub-section-sub {
+  color: var(--muted, #b9c1c7);
+  font-size: 0.95rem;
+  margin: -0.55rem 0 1rem;
+}
+
+/* ---- Ember notice ---- */
+.hub-notice {
+  margin: 0 0 1.35rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.13));
+  border-radius: 16px;
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgba(255, 179, 106, 0.18), transparent 55%),
+    radial-gradient(120% 80% at 100% 100%, rgba(122, 243, 255, 0.12), transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.hub-notice-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.hub-notice-glyph {
+  font-size: 1.4rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(255, 179, 106, 0.55));
+  flex-shrink: 0;
+}
+
+.hub-notice-body {
+  flex: 1;
+  min-width: 0;
+  color: var(--muted, #b9c1c7);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.hub-notice-body strong {
+  color: var(--text, #f4f1e8);
+}
+
+.hub-notice-tag {
+  display: inline-block;
+  padding: 0.12rem 0.4rem;
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.13));
+  border-radius: 999px;
+  font-size: 0.75rem;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+
+.hub-notice-close {
+  margin-left: auto;
+  flex-shrink: 0;
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.13));
+  background: transparent;
+  color: var(--muted, #b9c1c7);
+  border-radius: 10px;
+  padding: 0.28rem 0.6rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.hub-notice-close:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text, #f4f1e8);
+}
+
+/* ---- Hub footer ---- */
+.hub-footer {
+  margin-top: 2.5rem;
+  padding: 1.25rem 0 2.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--muted, #b9c1c7);
+  font-size: 0.88rem;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 600px) {
+  .hub-main {
+    padding: 1rem;
+  }
+
+  .hub-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .hub-card {
+    transition: none;
+  }
+}

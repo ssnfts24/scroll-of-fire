@@ -27,7 +27,7 @@
 }
 
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;color-scheme:dark}
+html{scroll-behavior:smooth;color-scheme:dark;overflow-x:hidden}
 
 body{
   margin:0;
@@ -302,8 +302,15 @@ h3 {
   transition-duration: 60ms;
 }
 
-/* ---- Card depth & hover lift ---- */
+/* ---- Card base visual + depth & hover lift ---- */
 .card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md, 24px);
+  padding: clamp(1.1rem, 3vw, 1.6rem);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(122, 243, 255, 0.07), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
+  box-shadow: var(--shadow-soft, 0 18px 56px rgba(0, 0, 0, 0.34));
   transition:
     transform 200ms cubic-bezier(.22, .61, .36, 1),
     border-color 200ms ease,
@@ -312,6 +319,121 @@ h3 {
 .card:hover {
   transform: translateY(-2px);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.46);
+}
+
+/* Gold-accent card variant */
+.card.glow {
+  border-color: rgba(243, 201, 122, 0.28);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(243, 201, 122, 0.11), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+}
+
+/* ---- Grid layout utilities ---- */
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.cards-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin-top: 1rem;
+}
+
+.split {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Nav-card (clickable card link) ---- */
+a.nav-card, .nav-card[href] {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform 200ms cubic-bezier(.22, .61, .36, 1),
+    border-color 200ms ease,
+    box-shadow 240ms ease;
+}
+
+a.nav-card:hover,
+a.nav-card:focus-visible,
+.nav-card[href]:hover,
+.nav-card[href]:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(122, 243, 255, 0.38);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.46);
+  outline: none;
+}
+
+.nav-card strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--gold);
+}
+
+.nav-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+/* ---- Clean numbered list ---- */
+.clean-list {
+  margin: 1rem 0;
+  padding-left: 0;
+  list-style: none;
+  counter-reset: clean-counter;
+}
+
+.clean-list li {
+  position: relative;
+  counter-increment: clean-counter;
+  padding: 0.65rem 0.75rem 0.65rem 2.8rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.clean-list li::before {
+  content: counter(clean-counter);
+  position: absolute;
+  left: 0.7rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--gold, #f3c97a);
+  color: #0a0a10;
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.clean-list li strong {
+  color: var(--text, #f4f1e8);
+}
+
+/* ---- Page wrapper (simple pages — ledger, downloads, etc.) ---- */
+.page {
+  position: relative;
+  z-index: 1;
 }
 
 /* ---- Text-link underline swipe ---- */
@@ -331,12 +453,4 @@ h3 {
 }
 .text-link:hover::after {
   width: 100%;
-}
-
-/* ---- Nav-card hover ---- */
-.nav-card {
-  transition:
-    transform 200ms cubic-bezier(.22, .61, .36, 1),
-    border-color 200ms ease,
-    box-shadow 240ms ease;
 }

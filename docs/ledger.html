@@ -1,16 +1,45 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr" class="sof carrier-432">
 <head>
+  <base href="/">
+  <script>
+    if (location.hostname === "ssnfts24.github.io") {
+      const base = document.querySelector("base");
+      if (base) base.setAttribute("href", "/scroll-of-fire/");
+    }
+  </script>
+
   <meta charset="utf-8">
-  <title>Witness Ledger — Scroll of Fire</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <base href="./">
-  <link href="assets/css/codex.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/navigation.css">
-<link href="assets/css/superlayout.css" rel="stylesheet">
+  <title>Witness Ledger — Scroll of Fire | Codex of Reality</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Scroll of Fire Witness Ledger: local browser proof-of-witness tool for observations, SHA-256 hashes, ledger entries, and daily record keeping.">
+  <meta name="author" content="Aaron Paul Laird">
+  <meta name="creator" content="Aaron Paul Laird">
+  <meta name="publisher" content="Scroll of Fire">
+  <meta name="theme-color" content="#05070d">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex, follow">
+
+  <link rel="canonical" href="https://codexofreality.org/ledger.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:title" content="Witness Ledger — Scroll of Fire">
+  <meta property="og:description" content="Local browser proof-of-witness: record observations, SHA-256 hashes, and daily witness entries.">
+  <meta property="og:url" content="https://codexofreality.org/ledger.html">
+
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/favicon.png">
+  <link rel="stylesheet" href="assets/css/codex.css">
+  <link rel="stylesheet" href="assets/css/navigation.css">
+  <link rel="stylesheet" href="assets/css/superlayout.css">
+  <link rel="stylesheet" href="assets/css/animations.css">
   <script defer src="assets/js/site.js"></script>
 </head>
 <body>
+  <div class="living-aura" aria-hidden="true"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+
     <header class="site-header" data-sof-header>
     <a class="brand" href="./" aria-label="Scroll of Fire home">
       <span class="brand-mark" aria-hidden="true">☲</span>
@@ -58,29 +87,47 @@
     </nav>
   </header>
 
-  <main class="page shell">
-    <p class="eyebrow">Proof • Witness • Hash</p>
+  <main id="main" class="page shell">
+    <p class="eyebrow">Proof · Witness · Hash</p>
     <h1>Witness Ledger</h1>
-    <p>Local browser ledger for observations, page changes, commit notes, hashes, and witness entries.</p>
+    <p>Local browser ledger for observations, page changes, commit notes, hashes, and witness entries. All data stays in your browser — nothing is sent externally.</p>
 
     <section class="card">
-      <label>Witness note</label>
+      <label for="note">Witness note</label>
       <textarea id="note" rows="5" placeholder="Write the witness entry..."></textarea>
 
-      <label>Tags</label>
+      <label for="tags">Tags</label>
       <input id="tags" placeholder="index, sitemap, hash, canon">
 
-      <button id="add">Add Entry</button>
-      <button id="export">Export JSON</button>
-      <input id="importFile" type="file" accept="application/json" hidden>
-      <button id="import">Import JSON</button>
+      <div style="margin-top:.5rem;display:flex;flex-wrap:wrap;gap:.5rem">
+        <button id="add">Add Entry</button>
+        <button id="export">Export JSON</button>
+        <input id="importFile" type="file" accept="application/json" hidden>
+        <button id="import">Import JSON</button>
+      </div>
     </section>
 
-    <section class="card">
+    <section class="card" style="margin-top:1rem">
       <h2>Entries</h2>
       <div id="entries"></div>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Footer navigation">
+      <a href="./start.html">Start</a>
+      <a href="./moons.html">13 Moons</a>
+      <a href="./covenant-caravan.html">Caravan</a>
+      <a href="./teach.html">Manifest</a>
+      <a href="./shop.html">Artifacts</a>
+      <a href="./hub.html">Hub</a>
+      <a href="./systems/frequencies.html">Frequencies</a>
+      <a href="./genesis-oracle.html">Oracle</a>
+      <a href="./theory.html">Theory</a>
+      <a href="./ethics.html">Ethics</a>
+    </nav>
+    <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
+  </footer>
 
   <script>
     const KEY = "scroll_of_fire_witness_ledger_v3";
@@ -123,13 +170,13 @@
     function render() {
       const data = read();
       $("entries").innerHTML = data.length ? data.map(e => `
-        <article class="card">
-          <p><strong>${new Date(e.date).toLocaleString()}</strong></p>
-          <p>${escapeHtml(e.note)}</p>
-          <p><small>${escapeHtml(e.tags || "untagged")}</small></p>
-          <code>${e.hash}</code>
+        <article class="card" style="margin-top:.75rem">
+          <p style="margin:0 0 .35rem"><strong>${new Date(e.date).toLocaleString()}</strong></p>
+          <p style="margin:0 0 .35rem;color:var(--muted)">${escapeHtml(e.note)}</p>
+          <p style="margin:0 0 .5rem;font-size:.85rem;color:var(--muted)">${escapeHtml(e.tags || "untagged")}</p>
+          <code style="display:block;font-size:.74rem;word-break:break-all;color:var(--cyan,#7af3ff);opacity:.8">${e.hash}</code>
         </article>
-      `).join("") : "<p>No entries yet.</p>";
+      `).join("") : "<p style='color:var(--muted)'>No entries yet.</p>";
     }
 
     function escapeHtml(str) {
@@ -164,3 +211,4 @@
   </script>
 </body>
 </html>
+
