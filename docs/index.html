@@ -133,6 +133,8 @@
   }
   </script>
   <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/calendar-cor.js"></script>
+  <script defer src="assets/js/living-codex.js"></script>
 </head>
 
 <body>
@@ -185,14 +187,22 @@
       </div>
     </nav>
   </header>
+  <section class="living-signal-shell" aria-label="Living signal">
+    <ul class="living-signal-bar" data-living-signal-root>
+      <li class="living-signal-item">Living signal updates with your local time, saved witness records, and recent Codex changes when JavaScript is available.</li>
+      <li class="living-signal-item"><a class="living-signal-link" href="./moons.html">Open 13 Moons</a></li>
+      <li class="living-signal-item"><a class="living-signal-link" href="./ledger.html">Record Witness</a></li>
+    </ul>
+  </section>
+
 
   <main id="main">
     <section class="section-shell home-hero" aria-labelledby="home-title">
       <div class="home-hero-grid">
         <div class="hero-copy-stack">
-          <p class="eyebrow">New here? Start in 3 minutes.</p>
+          <p class="eyebrow" data-home-eyebrow>New here? Start in 3 minutes.</p>
           <h1 id="home-title">Scroll of Fire is a daily practice and living archive.</h1>
-          <p class="hero-line">Understand the system fast, then choose your next step.</p>
+          <p class="hero-line" data-home-guidance>Understand the system fast, then choose your next step.</p>
           <p class="hero-copy">
             Use this site to run a short daily reflection, track what you notice, and
             explore the deeper theory, tools, and handcrafted artifacts behind the work.
@@ -207,7 +217,7 @@
           </div>
 
           <div class="hero-actions">
-            <a class="btn primary" href="./start.html">Start Here</a>
+            <a class="btn primary" href="./start.html" data-home-action>Start Here</a>
             <a class="btn" href="./moons.html">Open 13 Moons</a>
             <a class="btn" href="./ledger.html">Open Ledger</a>
             <a class="btn ember" href="./covenant-caravan.html">Enter Caravan</a>
@@ -216,8 +226,8 @@
           </div>
 
           <div class="notice-band">
-            <strong>Quick path:</strong>
-            Start Here → 13 Moons → Ledger → Theory.
+            <strong data-home-signal>Quick path</strong>
+            <span data-home-notice>Start Here → 13 Moons → Ledger → Theory.</span>
           </div>
         </div>
 
@@ -244,6 +254,54 @@
           </div>
         </aside>
       </div>
+    </section>
+
+    <section class="section-shell codex-live-grid" aria-label="Living Codex panels">
+      <article class="card today-codex-panel">
+        <p class="eyebrow">Today in the Codex</p>
+        <h2 data-codex-today-title>Today in the Codex</h2>
+        <p class="today-codex-meta" data-codex-today-layer>Open today’s moon, breathe once, and record what changed.</p>
+        <div class="today-codex-stack">
+          <p><strong>Moon phase:</strong> <span data-codex-today-phase>Visible in the 13 Moons gate.</span></p>
+          <p><strong>Witness prompt:</strong> <span data-codex-today-prompt>Notice what is moving that you have not yet named.</span></p>
+          <p><strong>Breathing pattern:</strong> <span data-codex-today-breath>Inhale 4 · Hold 2 · Exhale 6 · Return</span></p>
+          <p><strong>Direct action:</strong> <span data-codex-today-action>Open today’s cycle and preserve the witness.</span></p>
+        </div>
+        <div class="hero-actions">
+          <a class="btn primary" href="./moons.html" data-codex-open-today>Open Today</a>
+          <a class="btn" href="./ledger.html" data-codex-record-witness>Record Witness</a>
+        </div>
+      </article>
+
+      <article class="card continue-path-panel" data-codex-continue-panel hidden>
+        <p class="eyebrow">Continue Your Path</p>
+        <h2 data-codex-last-gate-title>You last entered the Codex.</h2>
+        <p class="today-codex-meta" data-codex-last-gate-time>Stored locally in this browser.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="./hub.html" data-codex-return-link>Return</a>
+          <a class="btn" href="./ledger.html">Continue into the Witness Ledger</a>
+          <button class="btn" type="button" data-codex-clear-path>Clear path</button>
+        </div>
+      </article>
+
+      <noscript>
+        <article class="card continue-path-panel continue-path-panel--fallback">
+          <p class="eyebrow">Continue Your Path</p>
+          <p>This return path appears after you open a Codex gate in this browser with JavaScript enabled.</p>
+        </article>
+      </noscript>
+
+      <article class="card codex-activity-panel">
+        <div class="section-heading section-heading--split codex-activity-heading">
+          <div>
+            <p class="eyebrow">Recent Codex Activity</p>
+            <h2>Visible growth in the archive</h2>
+            <p>Recent updates are authored manually in the local Codex feed.</p>
+          </div>
+        </div>
+        <ul class="codex-activity-list" data-codex-activity-list></ul>
+        <p class="codex-activity-empty" data-codex-activity-empty>Codex updates load from the local activity feed when entries are available.</p>
+      </article>
     </section>
 
     <section class="section-shell" aria-labelledby="what-title">

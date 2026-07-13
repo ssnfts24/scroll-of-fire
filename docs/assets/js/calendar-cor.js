@@ -2,6 +2,8 @@
   "use strict";
 
   const DAY = 86400000;
+  const SYNODIC_MONTH = 29.530588853;
+  const KNOWN_NEW_MOON = Date.UTC(2000, 0, 6, 18, 14, 0);
 
   const CONFIG = {
     yearStartMonth: 4,
@@ -28,149 +30,70 @@
     ["Cosmic", "Endure · Presence"]
   ];
 
-  const TONES = MOONS.map(m => m[0]);
+  const TONES = MOONS.map(function (moon) {
+    return moon[0];
+  });
 
-  function getTZ() {
-    const q = new URLSearchParams(location.search);
-    return q.get("tz") || Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Los_Angeles";
+  function pad(value) {
+    return String(value).padStart(2, "0");
   }
 
-  function todayISO(tz = getTZ()) {
-    const p = new Intl.DateTimeFormat("en-CA", {
-      timeZone: tz,
+  function getTZ() {
+    const params = new URLSearchParams(window.location.search);
+    return (
+      params.get("tz") ||
+      Intl.DateTimeFormat().resolvedOptions().timeZone ||
+      "America/Los_Angeles"
+    );
+  }
+
+  function formatParts(date, timeZone, options) {
+    return new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      ...options
+    })
+      .formatToParts(date)
+      .reduce(function (result, part) {
+        if (part.type !== "literal") {
+          result[part.type] = part.value;
+        }
+        return result;
+      }, {});
+  }
+
+  function todayISO(tz) {
+    const parts = formatParts(new Date(), tz || getTZ(), {
       year: "numeric",
       month: "2-digit",
       day: "2-digit"
-    }).formatToParts(new Date()).reduce((a, x) => (a[x.type] = x.value, a), {});
-    return `${p.year}-${p.month}-${p.day}`;
+    });
+
+    return [parts.year, parts.month, parts.day].join("-");
   }
 
   function wallDate(iso) {
-    const [y, m, d] = iso.split("-").map(Number);
-    return new Date(Date.UTC(y, m - 1, d, 12));
+    const values = String(iso || "").split("-").map(Number);
+    if (values.length !== 3 || values.some(Number.isNaN)) return null;
+    return new Date(Date.UTC(values[0], values[1] - 1, values[2], 12, 0, 0));
   }
 
-  function leap(y) {
-    return y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0);
-  }
-
-  function yearStartFor(date) {
-    const y = date.getUTCFullYear();
-    const start = new Date(Date.UTC(y, CONFIG.yearStartMonth - 1, CONFIG.yearStartDay, 12));
-    return date < start ? new Date(Date.UTC(y - 1, 3, 1, 12)) : start;
-  }
-
-  function isDOOT(date) {
-    return date.getUTCMonth() + 1 === CONFIG.dayOutOfTimeMonth &&
-           date.getUTCDate() === CONFIG.dayOutOfTimeDay;
-  }
-
-  function skipped(start, date) {
-    let n = 0;
-    for (let y = start.getUTCFullYear(); y <= date.getUTCFullYear(); y++) {
-      const feb29 = new Date(Date.UTC(y, 1, 29, 12));
-      const doot = new Date(Date.UTC(y, 2, 31, 12));
-      if (CONFIG.skipLeapDay && leap(y) && feb29 >= start && feb29 <= date) n++;
-      if (CONFIG.skipDayOutOfTime && doot >= start && doot <= date) n++;
-    }
-    return n;
-  }
-
-  function get13Moon(inputISO, tz = getTZ()) {
-    const iso = inputISO || todayISO(tz);
-    const date = wallDate(iso);
-    const start = yearStartFor(date);
-
-    if (isDOOT(date)) {
-      return {
-        iso, tz, isDayOutOfTime: true,
-        label: "Day Out of Time",
-        moon: null, day: null, week: null,
-        tone: null, toneName: "Pause",
-        year: `${start.getUTCFullYear()}/${start.getUTCFullYear() + 1}`
-      };
-    }
-
-    let idx = Math.floor((date - start) / DAY) - skipped(start, date);
-    idx = Math.max(0, Math.min(363, idx));
-
-    const moon = Math.floor(idx / 28) + 1;
-    const day = (idx % 28) + 1;
-    const week = Math.floor((day - 1) / 7) + 1;
-    const tone = (idx % 13) + 1;
-
-    return {
-      iso, tz,
-      isDayOutOfTime: false,
-      moon,
-      moonName: MOONS[moon - 1][0],
-      moonEssence: MOONS[moon - 1][1],
-      day,
-      week,
-      tone,
-      toneName: TONES[tone - 1],
-      dayIndex: idx,
-      year: `${start.getUTCFullYear()}/${start.getUTCFullYear() + 1}`,
-      label: `${MOONS[moon - 1][0]} Moon · Day ${day} · Tone ${tone}`
-    };
-  }
-
-  window.SOFCalendar = { CONFIG, MOONS, TONES, getTZ, todayISO, get13Moon };
-})();  function pad(n) {
-    return String(n).padStart(2, "0");
-  }
-
-  function getTZ() {
-    const q = new URLSearchParams(location.search);
-    return q.get("tz") || Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Los_Angeles";
-  }
-
-  function wallDateFromISO(iso) {
-    const [y, m, d] = iso.split("-").map(Number);
-    return new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
-  }
-
-  function todayISO(tz = getTZ()) {
-    const parts = new Intl.DateTimeFormat("en-CA", {
-      timeZone: tz,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    }).formatToParts(new Date()).reduce((a, p) => {
-      a[p.type] = p.value;
-      return a;
-    }, {});
-    return `${parts.year}-${parts.month}-${parts.day}`;
-  }
-
-  function isLeapYear(y) {
-    return y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0);
+  function leap(year) {
+    return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
   }
 
   function yearStartFor(date) {
-    const y = date.getUTCFullYear();
-    const start = new Date(Date.UTC(y, CONFIG.yearStartMonth - 1, CONFIG.yearStartDay, 12));
-    return date < start
-      ? new Date(Date.UTC(y - 1, CONFIG.yearStartMonth - 1, CONFIG.yearStartDay, 12))
-      : start;
-  }
+    const year = date.getUTCFullYear();
+    const start = new Date(
+      Date.UTC(year, CONFIG.yearStartMonth - 1, CONFIG.yearStartDay, 12, 0, 0)
+    );
 
-  function countSkippedDays(start, date) {
-    let skipped = 0;
-
-    for (let y = start.getUTCFullYear(); y <= date.getUTCFullYear(); y++) {
-      if (CONFIG.skipLeapDay && isLeapYear(y)) {
-        const leap = new Date(Date.UTC(y, 1, 29, 12));
-        if (leap >= start && leap <= date) skipped++;
-      }
-
-      if (CONFIG.skipDayOutOfTime) {
-        const doot = new Date(Date.UTC(y, CONFIG.dayOutOfTimeMonth - 1, CONFIG.dayOutOfTimeDay, 12));
-        if (doot >= start && doot <= date) skipped++;
-      }
+    if (date < start) {
+      return new Date(
+        Date.UTC(year - 1, CONFIG.yearStartMonth - 1, CONFIG.yearStartDay, 12, 0, 0)
+      );
     }
 
-    return skipped;
+    return start;
   }
 
   function isDayOutOfTime(date) {
@@ -180,7 +103,160 @@
     );
   }
 
-  function get13Moon(inputISO, tz = getTZ()) {
-    const iso = inputISO || todayISO(tz);
-    const date = wallDateFromISO(iso);
-    const start = yearStart
+  function skippedDays(start, date) {
+    let count = 0;
+
+    for (let year = start.getUTCFullYear(); year <= date.getUTCFullYear(); year += 1) {
+      if (CONFIG.skipLeapDay && leap(year)) {
+        const leapDay = new Date(Date.UTC(year, 1, 29, 12, 0, 0));
+        if (leapDay >= start && leapDay <= date) count += 1;
+      }
+
+      if (CONFIG.skipDayOutOfTime) {
+        const doot = new Date(
+          Date.UTC(year, CONFIG.dayOutOfTimeMonth - 1, CONFIG.dayOutOfTimeDay, 12, 0, 0)
+        );
+        if (doot >= start && doot <= date) count += 1;
+      }
+    }
+
+    return count;
+  }
+
+  function get13Moon(inputISO, tz) {
+    const zone = tz || getTZ();
+    const iso = inputISO || todayISO(zone);
+    const date = wallDate(iso);
+
+    if (!date) return null;
+
+    const start = yearStartFor(date);
+
+    if (isDayOutOfTime(date)) {
+      return {
+        iso: iso,
+        tz: zone,
+        isDayOutOfTime: true,
+        label: "Day Out of Time",
+        moon: null,
+        moonName: "Day Out of Time",
+        moonEssence: "Pause · Witness · Reset",
+        day: null,
+        week: null,
+        tone: null,
+        toneName: "Pause",
+        dayIndex: null,
+        year: start.getUTCFullYear() + "/" + (start.getUTCFullYear() + 1)
+      };
+    }
+
+    let index = Math.floor((date - start) / DAY) - skippedDays(start, date);
+    index = Math.max(0, Math.min(363, index));
+
+    const moon = Math.floor(index / 28) + 1;
+    const day = (index % 28) + 1;
+    const week = Math.floor((day - 1) / 7) + 1;
+    const tone = (index % 13) + 1;
+
+    return {
+      iso: iso,
+      tz: zone,
+      isDayOutOfTime: false,
+      moon: moon,
+      moonName: MOONS[moon - 1][0],
+      moonEssence: MOONS[moon - 1][1],
+      day: day,
+      week: week,
+      tone: tone,
+      toneName: TONES[tone - 1],
+      dayIndex: index,
+      year: start.getUTCFullYear() + "/" + (start.getUTCFullYear() + 1),
+      label: MOONS[moon - 1][0] + " Moon · Day " + day + " · Tone " + tone
+    };
+  }
+
+  function moonAge(input) {
+    const date = input instanceof Date ? input : wallDate(input || todayISO(getTZ()));
+    if (!date) return 0;
+    const time = Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate(),
+      12,
+      0,
+      0
+    );
+    const days = (time - KNOWN_NEW_MOON) / DAY;
+    return ((days % SYNODIC_MONTH) + SYNODIC_MONTH) % SYNODIC_MONTH;
+  }
+
+  function illumination(age) {
+    const safeAge = typeof age === "number" ? age : moonAge(age);
+    return (1 - Math.cos((safeAge / SYNODIC_MONTH) * Math.PI * 2)) / 2;
+  }
+
+  function phaseName(age) {
+    const safeAge = typeof age === "number" ? age : moonAge(age);
+
+    if (safeAge < 1.2 || safeAge > 28.3) return "New Moon";
+    if (safeAge < 6.4) return "Waxing Crescent";
+    if (safeAge < 8.4) return "First Quarter";
+    if (safeAge < 13.8) return "Waxing Gibbous";
+    if (safeAge < 16.2) return "Full Moon";
+    if (safeAge < 21.6) return "Waning Gibbous";
+    if (safeAge < 23.6) return "Last Quarter";
+    return "Waning Crescent";
+  }
+
+  function getMoonPhase(input) {
+    const age = moonAge(input);
+    return {
+      age: age,
+      name: phaseName(age),
+      illumination: illumination(age)
+    };
+  }
+
+  function formatLocalTime(date) {
+    return new Intl.DateTimeFormat([], {
+      hour: "numeric",
+      minute: "2-digit"
+    }).format(date || new Date());
+  }
+
+  function formatLocalDate(date) {
+    return new Intl.DateTimeFormat([], {
+      weekday: "long",
+      month: "long",
+      day: "numeric"
+    }).format(date || new Date());
+  }
+
+  function daypart(date) {
+    const current = date || new Date();
+    const hour = current.getHours();
+
+    if (hour >= 5 && hour < 10) return "Dawn";
+    if (hour >= 10 && hour < 17) return "Day";
+    if (hour >= 17 && hour < 21) return "Dusk";
+    return "Night";
+  }
+
+  window.SOFCalendar = {
+    CONFIG: CONFIG,
+    MOONS: MOONS,
+    TONES: TONES,
+    getTZ: getTZ,
+    todayISO: todayISO,
+    get13Moon: get13Moon,
+    moonAge: moonAge,
+    illumination: illumination,
+    phaseName: phaseName,
+    getMoonPhase: getMoonPhase,
+    formatLocalTime: formatLocalTime,
+    formatLocalDate: formatLocalDate,
+    daypart: daypart,
+    wallDate: wallDate,
+    pad: pad
+  };
+})();

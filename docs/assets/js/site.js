@@ -446,4 +446,16 @@
       }, wait);
     };
   }
+
+  function prefersReducedMotion() {
+    return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true;
+  }
+
+  window.ScrollOfFire = Object.assign(window.ScrollOfFire || {}, {
+    normalizePath,
+    getAnchorPath,
+    debounce,
+    copyText,
+    prefersReducedMotion
+  });
 })();

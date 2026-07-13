@@ -1,0 +1,34 @@
+[
+  {
+    "date": "2026-07-13",
+    "type": "system",
+    "title": "Living Codex layer activated across the main gates",
+    "summary": "The homepage and shared gateways now surface local time, saved witness records, return paths, and recent Codex updates.",
+    "url": "./index.html",
+    "symbol": "☲"
+  },
+  {
+    "date": "2026-07-13",
+    "type": "calendar",
+    "title": "Today in the Codex now opens the current moon directly",
+    "summary": "The daily panel now links the present day into 13 Moons and the Witness Ledger without fabricating readings.",
+    "url": "./moons.html",
+    "symbol": "☾"
+  },
+  {
+    "date": "2026-07-13",
+    "type": "artifact",
+    "title": "Artifact Registry mobile card layout normalized",
+    "summary": "Shop page mobile rendering was tuned so registry cards and media frames hold their portrait layout more cleanly.",
+    "url": "./shop.html",
+    "symbol": "☲"
+  },
+  {
+    "date": "2026-07-13",
+    "type": "build log",
+    "title": "Portrait image fill restored for key shop media panels",
+    "summary": "The Tensor media and hero portrait surfaces were adjusted to preserve consistent image fill on small screens.",
+    "url": "./shop.html",
+    "symbol": "▲"
+  }
+]
