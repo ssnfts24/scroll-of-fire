@@ -5,29 +5,38 @@
   const SYNODIC_MONTH = 29.530588853;
   const KNOWN_NEW_MOON = Date.UTC(2000, 0, 6, 18, 14, 0);
 
+  const DEFAULT_CONFIG = {
+    dayBoundary: "sunset",
+    fallbackSunset: "18:00",
+    anchorOverrides: {
+      2026: "2026-04-17"
+    }
+  };
+
+  const suppliedConfig = window.SOF_MOONS_CONFIG || {};
   const CONFIG = {
-    yearStartMonth: 4,
-    yearStartDay: 1,
-    dayOutOfTimeMonth: 3,
-    dayOutOfTimeDay: 31,
-    skipLeapDay: true,
-    skipDayOutOfTime: true
+    ...DEFAULT_CONFIG,
+    ...suppliedConfig,
+    anchorOverrides: {
+      ...DEFAULT_CONFIG.anchorOverrides,
+      ...(suppliedConfig.anchorOverrides || {})
+    }
   };
 
   const MOONS = [
-    ["Magnetic", "Unify · Purpose"],
-    ["Lunar", "Polarize · Challenge"],
-    ["Electric", "Activate · Service"],
-    ["Self-Existing", "Define · Form"],
-    ["Overtone", "Empower · Radiance"],
-    ["Rhythmic", "Organize · Equality"],
-    ["Resonant", "Channel · Attunement"],
-    ["Galactic", "Harmonize · Integrity"],
-    ["Solar", "Pulse · Intention"],
-    ["Planetary", "Perfect · Manifestation"],
-    ["Spectral", "Dissolve · Liberation"],
-    ["Crystal", "Dedicate · Cooperation"],
-    ["Cosmic", "Endure · Presence"]
+    ["Seed Flame", "Beginning, ignition, first witness"],
+    ["Root Waters", "Memory, cleansing, emotional ground"],
+    ["Breath Gate", "Word, air, signal, exchange"],
+    ["Stone Witness", "Body, structure, faithful record"],
+    ["Living Word", "Speech, vow, creative command"],
+    ["Fire Trial", "Testing, courage, purification"],
+    ["Crown Balance", "Completion, justice, centered rule"],
+    ["Deep Mirror", "Reflection, hidden pattern, inner waters"],
+    ["Return Path", "Restoration, repentance, spiral home"],
+    ["Builder’s Hand", "Craft, repair, stewardship"],
+    ["Star Remembrance", "Inheritance, names, celestial memory"],
+    ["River of Signs", "Movement, omens, living flow"],
+    ["Completion Seal", "Harvest, sealing, preparation for reset"]
   ];
 
   const TONES = MOONS.map(function (moon) {
@@ -62,13 +71,36 @@
   }
 
   function todayISO(tz) {
-    const parts = formatParts(new Date(), tz || getTZ(), {
+    const zone = tz || getTZ();
+    const parts = formatParts(new Date(), zone, {
       year: "numeric",
       month: "2-digit",
-      day: "2-digit"
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23"
     });
 
-    return [parts.year, parts.month, parts.day].join("-");
+    const iso = [parts.year, parts.month, parts.day].join("-");
+    const boundary = CONFIG.dayBoundary || "midnight";
+
+    if (boundary === "midnight") {
+      return iso;
+    }
+
+    const sunset = parseClock(CONFIG.fallbackSunset);
+    const minutes = Number(parts.hour) * 60 + Number(parts.minute);
+
+    if (minutes < sunset.minutes) {
+      return iso;
+    }
+
+    const effective = addDays(wallDate(iso), 1);
+    return [
+      effective.getUTCFullYear(),
+      pad(effective.getUTCMonth() + 1),
+      pad(effective.getUTCDate())
+    ].join("-");
   }
 
   function wallDate(iso) {
@@ -77,50 +109,49 @@
     return new Date(Date.UTC(values[0], values[1] - 1, values[2], 12, 0, 0));
   }
 
-  function leap(year) {
-    return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  function addDays(date, amount) {
+    return new Date(date.getTime() + amount * DAY);
   }
 
-  function yearStartFor(date) {
+  function parseClock(value) {
+    const match = /^(\d{2}):(\d{2})$/.exec(String(value || ""));
+    if (!match) return { hour: 18, minute: 0, minutes: 18 * 60 };
+
+    const hour = Math.max(0, Math.min(23, Number(match[1])));
+    const minute = Math.max(0, Math.min(59, Number(match[2])));
+    return { hour: hour, minute: minute, minutes: hour * 60 + minute };
+  }
+
+  function dayDiff(a, b) {
+    return Math.floor((a.getTime() - b.getTime()) / DAY);
+  }
+
+  function nearestNewMoonAfter(date) {
+    let cursor = new Date(date);
+
+    for (let index = 0; index < 40; index += 1) {
+      const age = moonAge(cursor);
+      const nextAge = moonAge(addDays(cursor, 1));
+
+      if (age > 28.5 || nextAge < age) {
+        return addDays(cursor, 1);
+      }
+
+      cursor = addDays(cursor, 1);
+    }
+
+    return cursor;
+  }
+
+  function anchorForYear(year) {
+    const override = wallDate(CONFIG.anchorOverrides[year]);
+    return override || nearestNewMoonAfter(new Date(Date.UTC(year, 2, 20, 12, 0, 0)));
+  }
+
+  function yearAnchorFor(date) {
     const year = date.getUTCFullYear();
-    const start = new Date(
-      Date.UTC(year, CONFIG.yearStartMonth - 1, CONFIG.yearStartDay, 12, 0, 0)
-    );
-
-    if (date < start) {
-      return new Date(
-        Date.UTC(year - 1, CONFIG.yearStartMonth - 1, CONFIG.yearStartDay, 12, 0, 0)
-      );
-    }
-
-    return start;
-  }
-
-  function isDayOutOfTime(date) {
-    return (
-      date.getUTCMonth() + 1 === CONFIG.dayOutOfTimeMonth &&
-      date.getUTCDate() === CONFIG.dayOutOfTimeDay
-    );
-  }
-
-  function skippedDays(start, date) {
-    let count = 0;
-
-    for (let year = start.getUTCFullYear(); year <= date.getUTCFullYear(); year += 1) {
-      if (CONFIG.skipLeapDay && leap(year)) {
-        const leapDay = new Date(Date.UTC(year, 1, 29, 12, 0, 0));
-        if (leapDay >= start && leapDay <= date) count += 1;
-      }
-
-      if (CONFIG.skipDayOutOfTime) {
-        const doot = new Date(
-          Date.UTC(year, CONFIG.dayOutOfTimeMonth - 1, CONFIG.dayOutOfTimeDay, 12, 0, 0)
-        );
-        if (doot >= start && doot <= date) count += 1;
-      }
-    }
-
-    return count;
+    const candidate = anchorForYear(year);
+    return date < candidate ? anchorForYear(year - 1) : candidate;
   }
 
   function get13Moon(inputISO, tz) {
@@ -130,33 +161,32 @@
 
     if (!date) return null;
 
-    const start = yearStartFor(date);
+    const anchor = yearAnchorFor(date);
+    const dayIndex = dayDiff(date, anchor);
+    const inside = dayIndex >= 0 && dayIndex < 13 * 28;
 
-    if (isDayOutOfTime(date)) {
+    if (!inside) {
       return {
         iso: iso,
         tz: zone,
         isDayOutOfTime: true,
-        label: "Day Out of Time",
+        label: "Outside Count",
         moon: null,
-        moonName: "Day Out of Time",
-        moonEssence: "Pause · Witness · Reset",
+        moonName: "Outside Count",
+        moonEssence: "Outside the counted 13-moon cycle",
         day: null,
         week: null,
         tone: null,
-        toneName: "Pause",
-        dayIndex: null,
-        year: start.getUTCFullYear() + "/" + (start.getUTCFullYear() + 1)
+        toneName: "Outside Count",
+        dayIndex: dayIndex,
+        year: anchor.getUTCFullYear() + "/" + (anchor.getUTCFullYear() + 1)
       };
     }
 
-    let index = Math.floor((date - start) / DAY) - skippedDays(start, date);
-    index = Math.max(0, Math.min(363, index));
-
-    const moon = Math.floor(index / 28) + 1;
-    const day = (index % 28) + 1;
+    const moon = Math.floor(dayIndex / 28) + 1;
+    const day = (dayIndex % 28) + 1;
     const week = Math.floor((day - 1) / 7) + 1;
-    const tone = (index % 13) + 1;
+    const tone = (dayIndex % 13) + 1;
 
     return {
       iso: iso,
@@ -169,8 +199,8 @@
       week: week,
       tone: tone,
       toneName: TONES[tone - 1],
-      dayIndex: index,
-      year: start.getUTCFullYear() + "/" + (start.getUTCFullYear() + 1),
+      dayIndex: dayIndex,
+      year: anchor.getUTCFullYear() + "/" + (anchor.getUTCFullYear() + 1),
       label: MOONS[moon - 1][0] + " Moon · Day " + day + " · Tone " + tone
     };
   }
