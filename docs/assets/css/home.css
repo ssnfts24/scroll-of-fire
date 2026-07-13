@@ -775,6 +775,123 @@
 }
 
 /* =========================================================
+   WHAT YOU CAN DO GRID
+   ========================================================= */
+
+.what-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+/* =========================================================
+   SIGNAL STRIP
+   ========================================================= */
+
+.signal-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+/* =========================================================
+   EXERCISE / BREATH SECTION
+   ========================================================= */
+
+.exercise-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+  gap: clamp(1.25rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.exercise-canvas-wrap {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: rgba(5, 7, 13, 0.7);
+}
+
+.exercise-canvas-wrap canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  aspect-ratio: 900 / 520;
+  border-radius: inherit;
+}
+
+.breath-sequence {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+}
+
+.breath-step {
+  padding: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.breath-step strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--gold);
+  font-size: 0.9rem;
+}
+
+.breath-step span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+/* =========================================================
+   SPOTLIGHT / MOONS SECTION
+   ========================================================= */
+
+.spotlight-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  gap: clamp(1.25rem, 4vw, 2.5rem);
+  align-items: center;
+}
+
+.spotlight-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.35);
+}
+
+/* =========================================================
+   WITNESS GRID
+   ========================================================= */
+
+.witness-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+/* =========================================================
+   FEATURE GRID (Core Gates)
+   ========================================================= */
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+/* =========================================================
    RESPONSIVE
    ========================================================= */
 
@@ -792,14 +909,16 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .moons-explainer {
+  .moons-explainer,
+  .spotlight-grid {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 960px) {
   .home-hero-grid,
-  .caravan-grid {
+  .caravan-grid,
+  .exercise-grid {
     grid-template-columns: 1fr;
   }
 
@@ -820,7 +939,7 @@
 
 @media (max-width: 760px) {
   .home-page .section-shell {
-    width: min(100% - 1rem, 1180px);
+    width: min(calc(100% - 2rem), 1180px);
     padding-block: 2.7rem;
   }
 
@@ -879,8 +998,15 @@
   .door-grid,
   .world-grid,
   .theory-entry-grid,
-  .living-path {
+  .living-path,
+  .what-grid,
+  .witness-grid {
     grid-template-columns: 1fr;
+  }
+
+  .signal-strip,
+  .feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .mini-stat-grid {
@@ -923,7 +1049,7 @@
 
 @media (max-width: 430px) {
   .home-page .section-shell {
-    width: min(100% - 0.75rem, 1180px);
+    width: min(calc(100% - 1.5rem), 1180px);
   }
 
   .hero-copy-stack h1 {
@@ -934,7 +1060,9 @@
     flex-basis: 100%;
   }
 
-  .mini-stat-grid {
+  .mini-stat-grid,
+  .signal-strip,
+  .feature-grid {
     grid-template-columns: 1fr;
   }
 
