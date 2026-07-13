@@ -1,546 +1,449 @@
-/* Scroll of Fire — Unified Site Navigation + Shared Helpers */
+/* Scroll of Fire — Shared front-end helpers
+   File: docs/assets/js/site.js
+*/
+
 (function () {
   "use strict";
 
-  const root = document.documentElement;
-  const body = document.body;
-  const siteApi = window.ScrollOfFire || {};
+  const MOBILE_BREAKPOINT = 760;
 
-  const SITE_ROOT = "/";
-  const GITHUB_ROOT = "/scroll-of-fire/";
-  const MOBILE_NAV_QUERY = "(max-width: 760px)";
-  const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+  document.documentElement.classList.add("js-ready");
 
-  const LEGACY_PATHS = {
-    "caravan.html": "covenant-caravan.html",
-    "theory/artifacts.html": "theory/artifact-theory.html",
-    "theory/delta-scaffold.html": "theory/delta-framework.html",
-    "theory/theory/operators.html": "theory/operators.html"
-  };
-
-  root.classList.add("js-ready");
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
-  } else {
-    boot();
-  }
-
-  function boot() {
-    setYear();
-    normalizeInternalLinks();
-    markActiveNavigation();
-    initGlobalNavigation();
+  document.addEventListener("DOMContentLoaded", function () {
+    setHeaderHeight();
+    markActiveNav();
+    setupSiteNavigation();
+    setupTheoryNavigation();
     enableCopyButtons();
     enableImageFallbacks();
-    secureExternalLinks();
-    syncDocumentLock();
-    exposeSiteApi();
-  }
+    updateCopyrightYear();
+  });
 
-  function exposeSiteApi() {
-    window.ScrollOfFire = Object.assign(siteApi, {
-      cleanPath,
-      copyText,
-      flashButton,
-      getFocusable,
-      prefersReducedMotion,
-      resolveFromCodexRoot,
-      syncDocumentLock
-    });
-  }
+  window.addEventListener(
+    "resize",
+    debounce(function () {
+      setHeaderHeight();
 
-  function prefersReducedMotion() {
-    return window.matchMedia?.(REDUCED_MOTION_QUERY).matches === true;
-  }
+      if (window.innerWidth > MOBILE_BREAKPOINT) {
+        closeSiteMenu();
+      }
+    }, 120)
+  );
 
-  function getDeploymentRoot() {
-    return location.hostname === "ssnfts24.github.io" ? GITHUB_ROOT : SITE_ROOT;
-  }
+  function setHeaderHeight() {
+    const header = document.querySelector("[data-sof-header]");
 
-  function removeDeploymentRoot(pathname) {
-    let path = pathname || "/";
+    if (!header) return;
 
-    if (path.startsWith(GITHUB_ROOT)) {
-      path = path.slice(GITHUB_ROOT.length);
-    } else {
-      path = path.replace(/^\/+/, "");
-    }
-
-    return path || "index.html";
-  }
-
-  function normalizeEquationPath(path) {
-    return path.replace(/^theory\/(?:eq)(\d{2}|04b)\.html$/i, "theory/equations/eq$1.html");
-  }
-
-  function cleanPath(value) {
-    if (!value) return "";
-
-    let path = String(value).split("#")[0].split("?")[0].trim();
-
-    try {
-      path = decodeURIComponent(path);
-    } catch (_) {}
-
-    path = path
-      .replace(/^https?:\/\/(?:www\.)?codexofreality\.org\//i, "")
-      .replace(/^https?:\/\/ssnfts24\.github\.io\/scroll-of-fire\//i, "")
-      .replace(/^\/scroll-of-fire\//, "")
-      .replace(/^\/+/, "")
-      .replace(/^\.\//, "");
-
-    if (!path || path.endsWith("/")) {
-      path += "index.html";
-    }
-
-    path = normalizeEquationPath(path);
-
-    return LEGACY_PATHS[path] || path;
-  }
-
-  function resolveFromCodexRoot(path) {
-    const clean = cleanPath(path);
-    const rootPath = getDeploymentRoot();
-    return `${rootPath}${clean === "index.html" ? "" : clean}`;
-  }
-
-  function isIgnoredHref(href) {
-    return (
-      !href ||
-      href.startsWith("#") ||
-      href.startsWith("mailto:") ||
-      href.startsWith("tel:") ||
-      href.startsWith("sms:") ||
-      href.startsWith("javascript:") ||
-      href.startsWith("vbscript:") ||
-      href.startsWith("data:")
+    document.documentElement.style.setProperty(
+      "--header-h",
+      header.offsetHeight + "px"
     );
   }
 
-  function isExternalHref(href) {
+  function normalizePath(path) {
+    let normalized = String(path || "")
+      .split("#")[0]
+      .split("?")[0]
+      .replace(/\/+/g, "/")
+      .replace(/\/$/, "");
+
+    if (normalized.startsWith("/scroll-of-fire")) {
+      normalized = normalized.replace(/^\/scroll-of-fire/, "");
+    }
+
+    if (!normalized) {
+      normalized = "/";
+    }
+
+    return normalized;
+  }
+
+  function getAnchorPath(anchor) {
     try {
-      const url = new URL(href, location.href);
-      return url.origin !== location.origin;
-    } catch (_) {
-      return false;
+      const url = new URL(anchor.getAttribute("href"), window.location.href);
+      return normalizePath(url.pathname);
+    } catch (error) {
+      return "";
     }
   }
 
-  function normalizeInternalLinks() {
-    document.querySelectorAll("a[href]").forEach(function (anchor) {
-      const original = anchor.getAttribute("href");
-
-      if (isIgnoredHref(original) || isExternalHref(original)) {
-        return;
-      }
-
-      const hash = original.includes("#") ? `#${original.split("#").slice(1).join("#")}` : "";
-      const queryPart = original.split("#")[0];
-      const query = queryPart.includes("?") ? `?${queryPart.split("?").slice(1).join("?")}` : "";
-      const pathOnly = queryPart.split("?")[0];
-
-      if (!pathOnly) return;
-
-      const canonical = cleanPath(pathOnly);
-      if (!canonical) return;
-
-      anchor.href = `${resolveFromCodexRoot(canonical)}${query}${hash}`;
-    });
-  }
-
-  function markActiveNavigation() {
-    const current = cleanPath(removeDeploymentRoot(location.pathname));
+  function markActiveNav() {
+    const currentPath = normalizePath(window.location.pathname);
 
     document
-      .querySelectorAll(".site-nav a[href], .site-footer a[href], [data-section-link][href]")
+      .querySelectorAll(".site-nav a[href], .theory-nav-links a[href]")
       .forEach(function (anchor) {
-        anchor.removeAttribute("aria-current");
-        anchor.classList.remove("is-current", "is-current-section");
+        const targetPath = getAnchorPath(anchor);
 
-        const href = anchor.getAttribute("href");
-        if (!href || isIgnoredHref(href)) return;
+        const isHome =
+          currentPath === "/" &&
+          (targetPath === "/" || targetPath === "/index.html");
 
-        const target = cleanPath(href);
-        if (!target) return;
+        const isExact =
+          currentPath !== "/" &&
+          targetPath !== "/" &&
+          targetPath === currentPath;
 
-        if (target === current) {
+        const isTheorySection =
+          currentPath.startsWith("/theory/") &&
+          targetPath === "/theory.html";
+
+        const isSystemsSection =
+          currentPath.startsWith("/systems/") &&
+          targetPath === "/hub.html";
+
+        const isActive =
+          isHome || isExact || isTheorySection || isSystemsSection;
+
+        if (isActive) {
           anchor.setAttribute("aria-current", "page");
-          anchor.classList.add("is-current");
-          return;
+        } else {
+          anchor.removeAttribute("aria-current");
         }
 
-        if (isSameSection(current, target)) {
-          anchor.setAttribute("aria-current", "location");
-          anchor.classList.add("is-current-section");
-        }
+        anchor.classList.toggle(
+          "is-current-section",
+          isTheorySection || isSystemsSection
+        );
       });
   }
 
-  function isSameSection(current, target) {
-    const currentSection = getSection(current);
-    const targetSection = getSection(target);
-    return !!currentSection && currentSection === targetSection;
-  }
-
-  function getSection(path) {
-    if (path === "theory.html" || path.startsWith("theory/")) return "theory";
-    if (path === "hub.html" || path.startsWith("systems/")) return "systems";
-    if (path === "shop.html" || path.startsWith("artifacts/")) return "artifacts";
-    if (path === "moons.html" || path.startsWith("moons/")) return "moons";
-    if (path === "covenant-caravan.html" || path.startsWith("caravan/")) return "caravan";
-    return "";
-  }
-
-  function getFocusable(container) {
-    if (!container) return [];
-
-    return Array.from(
-      container.querySelectorAll(
-        [
-          'a[href]:not([tabindex="-1"])',
-          'button:not([disabled]):not([tabindex="-1"])',
-          'input:not([disabled]):not([tabindex="-1"])',
-          'select:not([disabled]):not([tabindex="-1"])',
-          'textarea:not([disabled]):not([tabindex="-1"])',
-          '[tabindex]:not([tabindex="-1"])'
-        ].join(',')
-      )
-    ).filter(function (element) {
-      return !element.hidden && element.getAttribute("aria-hidden") !== "true" && element.offsetParent !== null;
-    });
-  }
-
-  function syncDocumentLock() {
-    const shouldLock =
-      body?.classList.contains("site-menu-open") ||
-      body?.classList.contains("command-open") ||
-      document.querySelector("[data-theory-nav].is-theory-nav-open") !== null;
-
-    root.style.overflow = shouldLock ? "hidden" : "";
-  }
-
-  function initGlobalNavigation() {
-    const button = document.querySelector("[data-nav-toggle]");
+  function setupSiteNavigation() {
+    const toggle = document.querySelector("[data-nav-toggle]");
     const nav = document.querySelector("[data-site-nav]");
-    const dropdown = document.querySelector("[data-dropdown]");
-    const dropdownButton = document.querySelector("[data-dropdown-toggle]");
 
-    if (!button || !nav) return;
+    if (!toggle || !nav) return;
 
-    const media = window.matchMedia(MOBILE_NAV_QUERY);
-    let returnFocus = null;
+    toggle.addEventListener("click", function () {
+      const isOpen = nav.classList.contains("is-site-nav-open");
 
-    function isNavOpen() {
-      return nav.classList.contains("is-site-nav-open");
-    }
-
-    function isDropdownOpen() {
-      return dropdown?.classList.contains("is-dropdown-open") === true;
-    }
-
-    function setDropdownState(open) {
-      if (!dropdown || !dropdownButton) return;
-      dropdown.classList.toggle("is-dropdown-open", open);
-      dropdownButton.setAttribute("aria-expanded", String(open));
-    }
-
-    function closeDropdown(options = {}) {
-      const { restoreFocus = false } = options;
-      const wasOpen = isDropdownOpen();
-
-      setDropdownState(false);
-
-      if (wasOpen && restoreFocus) {
-        requestAnimationFrame(function () {
-          dropdownButton?.focus({ preventScroll: true });
-        });
-      }
-    }
-
-    function setNavState(open) {
-      const mobileOpen = open && media.matches;
-
-      nav.classList.toggle("is-site-nav-open", mobileOpen);
-      body?.classList.toggle("site-menu-open", mobileOpen);
-
-      button.setAttribute("aria-expanded", String(mobileOpen));
-      button.setAttribute("aria-label", mobileOpen ? "Close navigation" : "Open navigation");
-
-      if (media.matches) {
-        nav.setAttribute("aria-hidden", String(!mobileOpen));
+      if (isOpen) {
+        closeSiteMenu();
       } else {
-        nav.removeAttribute("aria-hidden");
+        openSiteMenu(toggle, nav);
       }
-
-      if (!mobileOpen) {
-        closeDropdown();
-      }
-
-      syncDocumentLock();
-    }
-
-    function openNav() {
-      if (!media.matches || isNavOpen()) return;
-
-      returnFocus = document.activeElement;
-      setNavState(true);
-
-      const firstItem = getFocusable(nav)[0];
-      if (firstItem) {
-        requestAnimationFrame(function () {
-          firstItem.focus({ preventScroll: true });
-        });
-      }
-    }
-
-    function closeNav(options = {}) {
-      const { restoreFocus = false } = options;
-      const wasOpen = isNavOpen();
-
-      setNavState(false);
-
-      if (wasOpen && restoreFocus) {
-        const focusTarget = returnFocus instanceof HTMLElement ? returnFocus : button;
-        requestAnimationFrame(function () {
-          focusTarget.focus({ preventScroll: true });
-        });
-      }
-
-      returnFocus = null;
-    }
-
-    function trapFocus(event) {
-      if (event.key !== "Tab" || !media.matches || !isNavOpen()) return;
-
-      const focusable = getFocusable(nav);
-      if (!focusable.length) {
-        event.preventDefault();
-        button.focus({ preventScroll: true });
-        return;
-      }
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      const active = document.activeElement;
-
-      if (event.shiftKey && active === first) {
-        event.preventDefault();
-        last.focus({ preventScroll: true });
-      } else if (!event.shiftKey && active === last) {
-        event.preventDefault();
-        first.focus({ preventScroll: true });
-      }
-    }
-
-    button.addEventListener("click", function () {
-      if (isNavOpen()) {
-        closeNav({ restoreFocus: true });
-      } else {
-        openNav();
-      }
-    });
-
-    dropdownButton?.addEventListener("click", function (event) {
-      event.stopPropagation();
-      setDropdownState(!isDropdownOpen());
     });
 
     nav.addEventListener("click", function (event) {
       const link = event.target.closest("a[href]");
-      if (!link) return;
 
-      closeDropdown();
-      if (media.matches) {
-        closeNav();
+      if (link && window.innerWidth <= MOBILE_BREAKPOINT) {
+        closeSiteMenu();
       }
     });
 
     document.addEventListener("click", function (event) {
-      if (dropdown && isDropdownOpen() && !dropdown.contains(event.target)) {
-        closeDropdown();
+      const clickedInsideDropdown = event.target.closest("[data-dropdown]");
+      const clickedToggle = event.target.closest("[data-nav-toggle]");
+      const clickedNav = event.target.closest("[data-site-nav]");
+
+      if (
+        !clickedInsideDropdown &&
+        !clickedToggle &&
+        !clickedNav
+      ) {
+        closeAllDropdowns();
       }
-
-      if (!media.matches || !isNavOpen()) return;
-      if (button.contains(event.target) || nav.contains(event.target)) return;
-
-      closeNav();
     });
 
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape") {
-        if (isDropdownOpen()) {
-          event.preventDefault();
-          closeDropdown({ restoreFocus: true });
-          return;
-        }
+        closeAllDropdowns();
 
-        if (isNavOpen()) {
-          event.preventDefault();
-          closeNav({ restoreFocus: true });
-          return;
+        if (document.body.classList.contains("site-menu-open")) {
+          closeSiteMenu();
+          toggle.focus();
         }
       }
 
-      trapFocus(event);
+      if (
+        event.key === "Tab" &&
+        document.body.classList.contains("site-menu-open") &&
+        window.innerWidth <= MOBILE_BREAKPOINT
+      ) {
+        trapFocus(event, nav, toggle);
+      }
     });
 
-    function handleViewportChange() {
-      if (!media.matches) {
-        closeNav();
-        nav.removeAttribute("aria-hidden");
-      } else {
-        setNavState(false);
-      }
+    document
+      .querySelectorAll("[data-dropdown-toggle]")
+      .forEach(function (button) {
+        button.addEventListener("click", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          const dropdown = button.closest("[data-dropdown]");
+
+          if (!dropdown) return;
+
+          const willOpen =
+            !dropdown.classList.contains("is-dropdown-open");
+
+          closeAllDropdowns();
+
+          dropdown.classList.toggle(
+            "is-dropdown-open",
+            willOpen
+          );
+
+          button.setAttribute(
+            "aria-expanded",
+            String(willOpen)
+          );
+        });
+      });
+  }
+
+  function openSiteMenu(toggle, nav) {
+    nav.classList.add("is-site-nav-open");
+    document.body.classList.add("site-menu-open");
+
+    toggle.setAttribute("aria-expanded", "true");
+    toggle.setAttribute("aria-label", "Close navigation");
+  }
+
+  function closeSiteMenu() {
+    const toggle = document.querySelector("[data-nav-toggle]");
+    const nav = document.querySelector("[data-site-nav]");
+
+    if (nav) {
+      nav.classList.remove("is-site-nav-open");
     }
 
-    if (typeof media.addEventListener === "function") {
-      media.addEventListener("change", handleViewportChange);
-    } else if (typeof media.addListener === "function") {
-      media.addListener(handleViewportChange);
-    }
+    document.body.classList.remove("site-menu-open");
+    closeAllDropdowns();
 
-    if (media.matches) {
-      setNavState(false);
-    } else {
-      nav.removeAttribute("aria-hidden");
-      button.setAttribute("aria-expanded", "false");
-      button.setAttribute("aria-label", "Open navigation");
-      syncDocumentLock();
+    if (toggle) {
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "Open navigation");
     }
+  }
+
+  function closeAllDropdowns() {
+    document
+      .querySelectorAll("[data-dropdown]")
+      .forEach(function (dropdown) {
+        dropdown.classList.remove("is-dropdown-open");
+
+        const button = dropdown.querySelector(
+          "[data-dropdown-toggle]"
+        );
+
+        if (button) {
+          button.setAttribute("aria-expanded", "false");
+        }
+      });
+  }
+
+  function setupTheoryNavigation() {
+    document
+      .querySelectorAll("[data-theory-nav-toggle]")
+      .forEach(function (button) {
+        const shell = button.closest(".theory-subnav");
+
+        if (!shell) return;
+
+        button.addEventListener("click", function () {
+          const willOpen =
+            !shell.classList.contains("is-theory-nav-open");
+
+          shell.classList.toggle(
+            "is-theory-nav-open",
+            willOpen
+          );
+
+          button.setAttribute(
+            "aria-expanded",
+            String(willOpen)
+          );
+        });
+
+        shell
+          .querySelectorAll("a[href]")
+          .forEach(function (link) {
+            link.addEventListener("click", function () {
+              shell.classList.remove("is-theory-nav-open");
+              button.setAttribute("aria-expanded", "false");
+            });
+          });
+      });
   }
 
   function enableCopyButtons() {
-    document.querySelectorAll("[data-copy]").forEach(function (button) {
-      if (button.dataset.copyReady === "true") return;
-      button.dataset.copyReady = "true";
+    document
+      .querySelectorAll("[data-copy-target]")
+      .forEach(function (button) {
+        button.addEventListener("click", async function () {
+          const selector = button.getAttribute("data-copy-target");
 
-      button.addEventListener("click", async function () {
-        const value = getCopyValue(button);
-        if (!value) {
-          flashButton(button, "Nothing to copy");
-          return;
-        }
+          if (!selector) return;
 
-        const copied = await copyText(value);
-        flashButton(button, copied ? "Copied" : "Copy failed");
+          const target = document.querySelector(selector);
+
+          if (!target) return;
+
+          const value =
+            target.value ||
+            target.textContent ||
+            "";
+
+          const originalText = button.textContent;
+
+          try {
+            await copyText(value.trim());
+
+            button.textContent =
+              button.getAttribute("data-copy-success") ||
+              "Copied";
+          } catch (error) {
+            button.textContent = "Copy failed";
+          }
+
+          window.setTimeout(function () {
+            button.textContent = originalText;
+          }, 1400);
+        });
       });
-    });
-  }
-
-  function getCopyValue(button) {
-    const directive = button.getAttribute("data-copy");
-
-    if (!directive) {
-      return button.dataset.copyText || "";
-    }
-
-    if (directive.startsWith("#") || directive.startsWith(".") || directive.startsWith("[")) {
-      try {
-        const target = document.querySelector(directive);
-        return target ? target.innerText.trim() : "";
-      } catch (_) {
-        return "";
-      }
-    }
-
-    return directive.trim();
   }
 
   async function copyText(value) {
-    const text = String(value || "").trim();
-    if (!text) return false;
-
-    try {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(text);
-        return true;
-      }
-    } catch (_) {}
-
-    const field = document.createElement("textarea");
-    field.value = text;
-    field.setAttribute("readonly", "");
-    field.style.position = "fixed";
-    field.style.left = "-9999px";
-    field.style.top = "0";
-    field.style.opacity = "0";
-
-    body?.appendChild(field);
-    field.focus();
-    field.select();
-    field.setSelectionRange(0, field.value.length);
-
-    let copied = false;
-
-    try {
-      copied = document.execCommand("copy");
-    } catch (_) {
-      copied = false;
+    if (
+      navigator.clipboard &&
+      window.isSecureContext
+    ) {
+      await navigator.clipboard.writeText(value);
+      return;
     }
 
-    field.remove();
-    return copied;
-  }
+    const textarea = document.createElement("textarea");
 
-  function flashButton(button, text, duration = 1000) {
-    if (!(button instanceof HTMLElement)) return;
+    textarea.value = value;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+    textarea.style.top = "0";
+    textarea.style.opacity = "0";
 
-    const original = button.dataset.originalText || button.textContent;
-    button.dataset.originalText = original;
-    button.textContent = text;
+    document.body.appendChild(textarea);
 
-    window.clearTimeout(button._sofFlashTimer);
-    button._sofFlashTimer = window.setTimeout(function () {
-      button.textContent = original;
-    }, duration);
+    textarea.focus();
+    textarea.select();
+
+    const successful = document.execCommand("copy");
+
+    textarea.remove();
+
+    if (!successful) {
+      throw new Error("Copy command failed");
+    }
   }
 
   function enableImageFallbacks() {
-    document.querySelectorAll("img[data-fallbacks]").forEach(function (img) {
-      const list = img.dataset.fallbacks
-        .split(",")
-        .map(function (item) {
-          return item.trim();
-        })
-        .filter(Boolean);
+    document
+      .querySelectorAll("img[data-fallbacks]")
+      .forEach(function (image) {
+        const fallbackString =
+          image.getAttribute("data-fallbacks") || "";
 
-      function handleImageError() {
-        const next = list.shift();
+        const fallbacks = fallbackString
+          .split(",")
+          .map(function (item) {
+            return item.trim();
+          })
+          .filter(Boolean);
 
-        if (next) {
-          img.src = next;
-          img.dataset.fallbacks = list.join(",");
-          return;
+        let fallbackIndex = 0;
+
+        function tryNextFallback() {
+          if (fallbackIndex >= fallbacks.length) {
+            image.removeEventListener(
+              "error",
+              tryNextFallback
+            );
+
+            image.classList.add("image-fallback-failed");
+            image.hidden = true;
+            return;
+          }
+
+          const nextSource = fallbacks[fallbackIndex];
+          fallbackIndex += 1;
+
+          image.src = nextSource;
         }
 
-        img.removeEventListener("error", handleImageError);
-        img.hidden = true;
-      }
-
-      img.addEventListener("error", handleImageError);
-    });
+        image.addEventListener("error", tryNextFallback);
+      });
   }
 
-  function secureExternalLinks() {
-    document.querySelectorAll("a[href]").forEach(function (anchor) {
-      const href = anchor.getAttribute("href");
+  function updateCopyrightYear() {
+    const year = String(new Date().getFullYear());
 
-      if (!href || !isExternalHref(href)) return;
-
-      if (anchor.target === "_blank") {
-        const rel = new Set((anchor.getAttribute("rel") || "").split(/\s+/).filter(Boolean));
-        rel.add("noopener");
-        rel.add("noreferrer");
-        anchor.setAttribute("rel", Array.from(rel).join(" "));
-      }
-    });
+    document
+      .querySelectorAll(
+        "#year, #yr, [data-current-year]"
+      )
+      .forEach(function (node) {
+        node.textContent = year;
+      });
   }
 
-  function setYear() {
-    const year = document.getElementById("year");
-    if (year) {
-      year.textContent = String(new Date().getFullYear());
+  function trapFocus(event, container, fallback) {
+    const focusable = Array.from(
+      container.querySelectorAll(
+        [
+          "a[href]",
+          "button:not([disabled])",
+          "input:not([disabled])",
+          "select:not([disabled])",
+          "textarea:not([disabled])",
+          '[tabindex]:not([tabindex="-1"])'
+        ].join(",")
+      )
+    ).filter(function (node) {
+      return (
+        !node.hasAttribute("hidden") &&
+        node.offsetParent !== null
+      );
+    });
+
+    if (!focusable.length) {
+      event.preventDefault();
+      fallback.focus();
+      return;
     }
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (
+      event.shiftKey &&
+      document.activeElement === first
+    ) {
+      event.preventDefault();
+      last.focus();
+    } else if (
+      !event.shiftKey &&
+      document.activeElement === last
+    ) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
+  function debounce(callback, wait) {
+    let timer;
+
+    return function () {
+      const context = this;
+      const args = arguments;
+
+      window.clearTimeout(timer);
+
+      timer = window.setTimeout(function () {
+        callback.apply(context, args);
+      }, wait);
+    };
   }
 })();
