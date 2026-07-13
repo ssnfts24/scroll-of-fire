@@ -167,3 +167,8 @@ Website: https://ssnfts24.github.io/scroll-of-fire/
 CC BY-NC 4.0 — Aaron Paul Laird
 
 © 2026 Aaron Paul Laird
+
+## Codex updates feed
+
+The Recent Codex Activity panel reads from `/docs/assets/data/codex-updates.json`.
+Add new entries manually with a real `date`, `type`, `title`, `summary`, `url`, and `symbol`, and keep the list truthful and ordered by actual update date.

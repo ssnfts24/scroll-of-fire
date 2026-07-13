@@ -618,6 +618,8 @@
     }
   </style>
   <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/calendar-cor.js"></script>
+  <script defer src="assets/js/living-codex.js"></script>
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <link rel="apple-touch-icon" href="../assets/img/favicon.png">
 </head>
@@ -673,8 +675,16 @@
       </div>
     </nav>
   </header>
+  <section class="living-signal-shell" aria-label="Living signal">
+    <ul class="living-signal-bar" data-living-signal-root>
+      <li class="living-signal-item">Living signal updates with your local time, saved witness records, and recent Codex changes when JavaScript is available.</li>
+      <li class="living-signal-item"><a class="living-signal-link" href="./moons.html">Open 13 Moons</a></li>
+      <li class="living-signal-item"><a class="living-signal-link" href="./ledger.html">Record Witness</a></li>
+    </ul>
+  </section>
 
-  <main class="fg-shell">
+
+  <main id="main" class="fg-shell">
     <section id="quickStart" class="launch-panel">
       <article class="quick-card">
         <p class="eyebrow">Start Here</p>

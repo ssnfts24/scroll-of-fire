@@ -568,3 +568,59 @@ body.site-menu-open {
     transition: none;
   }
 }
+
+/* =========================================================
+   LIVING CODEX SIGNAL BAR
+   ========================================================= */
+
+.living-signal-shell {
+  position: sticky;
+  top: var(--header-h, 72px);
+  z-index: 720;
+  padding: 0.35rem clamp(0.75rem, 3vw, 1.4rem) 0.55rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(5, 7, 13, 0.82);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.living-signal-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: thin;
+}
+
+.living-signal-item {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  color: var(--muted, #b9c1c7);
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 0.82rem;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.living-signal-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.living-signal-link:hover,
+.living-signal-link:focus-visible {
+  color: var(--text, #f4f1e8);
+}
+
+@media (max-width: 760px) {
+  .living-signal-shell {
+    padding-inline: 0.8rem;
+  }
+}
