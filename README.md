@@ -23,7 +23,7 @@ The Scroll of Fire — Codex of Reality is a living architecture of remembrance,
 ---
 ## 🔭 Quick Links
 
-🌐 Website: https://ssnfts24.github.io/scroll-of-fire/
+🌐 Website: https://www.codexofreality.org
 
 🟢 Start Here: [5-minute Field Guide](3_Living_Technology/Living_Cosmos_Field_Guide_v2_Public.md)
 
