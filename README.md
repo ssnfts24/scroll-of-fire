@@ -1,15 +1,14 @@
 # ⚖️ Scroll of Fire — Codex of Reality
 *“Let there be resonance.”*
 
-🌱 **New here? Start here first → [Site Start Page](https://codexofreality.org/start)**
+🌱 **New here? Start here first → [Site Start Page](https://codexofreality.org)**
 
 ## Quick Start (First Visit)
 
-1. **Open Start:** [docs/start.html](docs/start.html)
-2. **Run daily mirror:** [docs/moons.html](docs/moons.html)
-3. **Record one note:** [docs/ledger.html](docs/ledger.html)
-4. **Read the model:** [docs/theory.html](docs/theory.html)
-5. Open the [5-minute Field Guide](3_Living_Technology/Living_Cosmos_Field_Guide_v2_Public.md), pick 2 carriers, write a phrase, breathe and rate, halt if strain, save.
+1. **Open Start:** [docs/start.html](https://codexofreality.org/start.html)
+2. **Run daily mirror:** [docs/moons.html](https://codexofreality.org/moons.html)
+3. **Record one note:** [docs/ledger.html](https://codexofreality.org/ledger.html)
+4. **Read the model:** [docs/theory.html](https://codexofreality.org/theory.html)
 
 If you only have 3 minutes, do steps 1–3.
 
