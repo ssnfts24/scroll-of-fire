@@ -1,5 +1,6 @@
-/* Scroll of Fire — Remnant 13 Moons
+/* Scroll of Fire â€” Remnant 13 Moons
    Sunset boundary + Shabbat alignment + Daily Mirror + Astrology layer
+   Complete UI refresh with restored calendars and richer interaction
  */
 
 *,
@@ -13,25 +14,31 @@
   --bg-soft: #090d14;
   --card: rgba(14, 18, 28, 0.88);
   --card-strong: rgba(9, 13, 21, 0.96);
+  --card-hover: rgba(18, 24, 38, 0.94);
   --line: rgba(255, 255, 255, 0.14);
   --line-strong: rgba(255, 255, 255, 0.22);
   --ink: #f4f1e8;
   --muted: #aeb7c8;
   --accent: #7af3ff;
+  --accent-soft: rgba(122, 243, 255, 0.12);
   --gold: #f3c97a;
+  --gold-soft: rgba(243, 201, 122, 0.12);
   --violet: #c4a3ff;
   --green: #9ff7c8;
   --danger: #ff9aaa;
   --shabbat: #c7b6ff;
   --shabbat-deep: #7d67d8;
+  --radius-sm: 14px;
   --radius: 20px;
   --radius-lg: 30px;
   --shadow: 0 18px 55px rgba(0, 0, 0, 0.34);
   --shadow-soft: 0 12px 34px rgba(0, 0, 0, 0.24);
+  --shadow-glow: 0 0 0 1px rgba(122, 243, 255, 0.08), 0 16px 40px rgba(0, 0, 0, 0.3);
 }
 
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 html,
@@ -47,8 +54,22 @@ body {
   background:
     radial-gradient(900px 620px at 50% -8%, rgba(122, 243, 255, 0.12), transparent 70%),
     radial-gradient(760px 560px at 90% 18%, rgba(243, 201, 122, 0.09), transparent 72%),
+    radial-gradient(720px 520px at 8% 52%, rgba(196, 163, 255, 0.07), transparent 74%),
     linear-gradient(180deg, var(--bg), var(--bg-soft) 75%, var(--bg));
   font: 400 16px/1.6 Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), transparent 78%);
 }
 
 body[data-shabbat-state="active"] {
@@ -61,6 +82,16 @@ body[data-shabbat-state="active"] {
 body[data-remnant-boundary="sunset"] #statBoundary,
 body[data-remnant-boundary="manual"] #statBoundary {
   color: var(--gold);
+}
+
+::selection {
+  color: #05070d;
+  background: var(--gold);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 #skyBg {
@@ -138,6 +169,10 @@ textarea {
   font: inherit;
 }
 
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* Shared surfaces */
 
 .page-head,
@@ -158,6 +193,39 @@ textarea {
   box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.04);
   padding: clamp(18px, 4vw, 26px);
   overflow: hidden;
+}
+
+.card,
+.savedEntry,
+.hum-card,
+.log-card,
+.mirror-card,
+.meter-card,
+.pattern-memory-card,
+.astro-card,
+.planet-card,
+.aspect-card {
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease;
+}
+
+.card:hover,
+.savedEntry:hover,
+.hum-card:hover,
+.log-card:hover,
+.mirror-card:hover,
+.meter-card:hover,
+.pattern-memory-card:hover,
+.astro-card:hover,
+.planet-card:hover,
+.aspect-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(122, 243, 255, 0.22);
+  background: linear-gradient(180deg, var(--card-hover), var(--card-strong));
+  box-shadow: var(--shadow-glow);
 }
 
 .page-head {
@@ -235,6 +303,11 @@ textarea {
   transform: translateY(-1px);
 }
 
+.lab-btn:active,
+.tab:active {
+  transform: translateY(1px) scale(0.99);
+}
+
 .lab-btn.ghost {
   background: rgba(255, 255, 255, 0.025);
 }
@@ -252,6 +325,7 @@ textarea {
   border-color: rgba(243, 201, 122, 0.88);
   background: rgba(243, 201, 122, 0.12);
   color: #ffe3a3;
+  box-shadow: 0 0 18px rgba(243, 201, 122, 0.10);
 }
 
 .pill {
@@ -305,6 +379,15 @@ textarea,
   padding: 0.72rem 0.8rem;
   background: rgba(5, 8, 14, 0.86);
   color: var(--ink);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+input:hover,
+select:hover,
+textarea:hover,
+.lab-input:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(7, 11, 18, 0.95);
 }
 
 input:focus,
@@ -369,10 +452,13 @@ textarea {
 
 .tabPanel {
   display: none;
+  opacity: 0;
+  transform: translateY(8px);
 }
 
 .tabPanel.active {
   display: block;
+  animation: panelIn 0.28s ease forwards;
 }
 
 /* Header compatibility */
@@ -412,6 +498,13 @@ textarea {
   box-shadow: 0 0 35px rgba(243, 201, 122, 0.08);
   font-size: 1.25rem;
   font-weight: 900;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sof-brand:hover .mark,
+.brand:hover .brand-mark {
+  transform: rotate(-4deg) scale(1.04);
+  box-shadow: 0 0 42px rgba(243, 201, 122, 0.18);
 }
 
 .sof-brand strong,
@@ -445,6 +538,7 @@ textarea {
   background: rgba(255, 255, 255, 0.035);
   color: inherit;
   font-size: 0.92rem;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
 }
 
 .sof-nav a:hover,
@@ -456,6 +550,7 @@ textarea {
   background: rgba(122, 243, 255, 0.09);
   border-color: rgba(122, 243, 255, 0.22);
   outline: none;
+  transform: translateY(-1px);
 }
 
 .nav-toggle {
@@ -477,18 +572,26 @@ textarea {
   box-shadow: 0 28px 100px rgba(0, 0, 0, 0.38);
 }
 
+.page-head::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: conic-gradient(from 180deg, transparent, rgba(122, 243, 255, 0.08), transparent, rgba(243, 201, 122, 0.08), transparent);
+  animation: sofOrbit 28s linear infinite;
+  pointer-events: none;
+}
+
+.page-head > * {
+  position: relative;
+  z-index: 1;
+}
+
 .page-head::after {
   content: "";
   position: absolute;
   inset: auto 2rem 0 2rem;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(243, 201, 122, 0.55),
-    rgba(122, 243, 255, 0.45),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(243, 201, 122, 0.55), rgba(122, 243, 255, 0.45), transparent);
 }
 
 .page-head h1 {
@@ -537,6 +640,13 @@ textarea {
   border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.10);
   background: rgba(255, 255, 255, 0.035);
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.stat:hover {
+  transform: translateY(-2px);
+  border-color: rgba(122, 243, 255, 0.24);
+  background: rgba(122, 243, 255, 0.05);
 }
 
 .stat span {
@@ -666,6 +776,12 @@ textarea {
   border-radius: 999px;
   border: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.dot:hover,
+.week span:hover {
+  transform: scale(1.18);
 }
 
 .dot.done {
@@ -723,7 +839,7 @@ textarea {
 }
 
 .shabbat-summary::after {
-  content: "שבת";
+  content: "×©×‘×ª";
   position: absolute;
   right: 1.2rem;
   top: 0.35rem;
@@ -812,14 +928,7 @@ body[data-shabbat-state="active"] .hero-sigil {
   content: "";
   position: absolute;
   inset: -50%;
-  background: conic-gradient(
-    from 0deg,
-    transparent,
-    rgba(243, 201, 122, 0.12),
-    transparent,
-    rgba(122, 243, 255, 0.10),
-    transparent
-  );
+  background: conic-gradient(from 0deg, transparent, rgba(243, 201, 122, 0.12), transparent, rgba(122, 243, 255, 0.10), transparent);
   animation: sofOrbit 18s linear infinite;
   opacity: 0.7;
   pointer-events: none;
@@ -969,6 +1078,12 @@ body[data-shabbat-state="active"] .hero-sigil {
   border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.10);
   background: rgba(0, 0, 0, 0.16);
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+
+.practice-list div:hover {
+  transform: translateY(-2px);
+  border-color: rgba(159, 247, 200, 0.28);
 }
 
 .pattern-memory-grid {
@@ -985,6 +1100,213 @@ body[data-shabbat-state="active"] .hero-sigil {
 .pattern-memory-card h3 {
   margin: 0 0 0.35rem;
   color: var(--gold);
+}
+
+/* Calendars */
+
+.calendar,
+.gregorian {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 7px;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.calDay,
+.gregDay,
+.gregHead,
+.gregPad {
+  min-width: 0;
+}
+
+.calDay,
+.gregDay {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  cursor: pointer;
+  isolation: isolate;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.calDay::before,
+.gregDay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle at 50% 0%, rgba(122, 243, 255, 0.12), transparent 58%);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.calDay:hover::before,
+.gregDay:hover::before,
+.calDay:focus-visible::before,
+.gregDay:focus-visible::before {
+  opacity: 1;
+}
+
+.calDay {
+  min-height: 118px;
+  padding: 0.78rem;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+}
+
+.calDay:hover,
+.calDay:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(122, 243, 255, 0.46);
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28), 0 0 18px rgba(122, 243, 255, 0.08);
+  outline: none;
+}
+
+.calDay strong,
+.gregDay strong {
+  display: block;
+  color: var(--ink);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.calDay strong {
+  font-size: 0.92rem;
+}
+
+.calDay small,
+.gregDay small {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--muted);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.calDay small {
+  font-size: 0.72rem;
+}
+
+.calDay.today,
+.gregDay.today {
+  border-color: rgba(243, 201, 122, 0.86);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(243, 201, 122, 0.19), transparent 60%),
+    linear-gradient(180deg, rgba(243, 201, 122, 0.10), rgba(255, 255, 255, 0.025));
+  box-shadow: 0 0 0 1px rgba(243, 201, 122, 0.10), 0 0 26px rgba(243, 201, 122, 0.14);
+}
+
+.calDay.today::after,
+.gregDay.today::after {
+  content: "TODAY";
+  position: absolute;
+  right: 0.45rem;
+  top: 0.4rem;
+  color: var(--gold);
+  font-size: 0.52rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+.calDay.shabbat,
+.gregDay.shabbat {
+  border-color: rgba(196, 163, 255, 0.5);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(196, 163, 255, 0.16), transparent 60%),
+    rgba(196, 163, 255, 0.045);
+}
+
+.calDay.shabbat::after,
+.gregDay.shabbat::after {
+  content: "×©×‘×ª";
+  position: absolute;
+  right: 0.45rem;
+  bottom: 0.35rem;
+  color: rgba(199, 182, 255, 0.75);
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+.calDay.preparation,
+.gregDay.preparation {
+  box-shadow: inset 0 0 0 1px rgba(243, 201, 122, 0.18);
+}
+
+.calDay.today.shabbat,
+.gregDay.today.shabbat {
+  border-color: rgba(223, 197, 255, 0.9);
+  box-shadow: 0 0 0 1px rgba(243, 201, 122, 0.16), 0 0 28px rgba(196, 163, 255, 0.22);
+}
+
+.gregHead {
+  padding: 0.45rem 0.2rem;
+  color: var(--gold);
+  text-align: center;
+  font-size: 0.73rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gregDay {
+  min-height: 98px;
+  padding: 0.68rem;
+  border-radius: 15px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.018));
+}
+
+.gregDay:hover,
+.gregDay:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(122, 243, 255, 0.42);
+  background: rgba(122, 243, 255, 0.055);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+  outline: none;
+}
+
+.gregDay strong {
+  font-size: 0.96rem;
+}
+
+.gregDay small {
+  font-size: 0.68rem;
+}
+
+.gregDay.effective,
+.calDay.effective,
+.calDay.selected,
+.gregDay.selected,
+.calDay[aria-selected="true"],
+.gregDay[aria-selected="true"] {
+  border-color: rgba(122, 243, 255, 0.72);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(122, 243, 255, 0.16), transparent 64%),
+    rgba(122, 243, 255, 0.045);
+  box-shadow: inset 0 0 0 1px rgba(122, 243, 255, 0.12), 0 0 22px rgba(122, 243, 255, 0.10);
+}
+
+.gregPad {
+  min-height: 98px;
+  border-radius: 15px;
+  border: 1px dashed rgba(255, 255, 255, 0.045);
+  background: rgba(255, 255, 255, 0.012);
+}
+
+.calendar-card,
+.calendar-wrap {
+  overflow-x: hidden;
+}
+
+#yearMapBody td,
+#yearMapBody th {
+  overflow-wrap: anywhere;
 }
 
 /* Mirror */
@@ -1229,6 +1551,53 @@ body[data-shabbat-state="active"] .hero-sigil {
     top: 0.5rem;
   }
 
+  .calendar,
+  .gregorian {
+    gap: 4px;
+  }
+
+  .calDay {
+    min-height: 84px;
+    padding: 0.48rem 0.38rem;
+    border-radius: 12px;
+  }
+
+  .calDay strong {
+    font-size: 0.75rem;
+  }
+
+  .calDay small {
+    font-size: 0.6rem;
+    line-height: 1.22;
+  }
+
+  .gregHead {
+    padding-inline: 0;
+    font-size: 0.62rem;
+    letter-spacing: 0.02em;
+  }
+
+  .gregDay,
+  .gregPad {
+    min-height: 72px;
+    padding: 0.42rem 0.28rem;
+    border-radius: 11px;
+  }
+
+  .gregDay strong {
+    font-size: 0.78rem;
+  }
+
+  .gregDay small {
+    font-size: 0.56rem;
+    line-height: 1.2;
+  }
+
+  .calDay.today::after,
+  .gregDay.today::after {
+    display: none;
+  }
+
   .mobile-dock {
     position: fixed;
     left: 0;
@@ -1256,6 +1625,18 @@ body[data-shabbat-state="active"] .hero-sigil {
     font-size: 0.72rem;
     font-weight: 800;
     line-height: 1.2;
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+  }
+
+  .mobile-dock a:active {
+    transform: translateY(1px) scale(0.98);
+  }
+
+  .mobile-dock a[aria-current="page"],
+  .mobile-dock a.active {
+    border-color: rgba(243, 201, 122, 0.38);
+    background: rgba(243, 201, 122, 0.10);
+    color: #ffe3a3;
   }
 
   .toast {
@@ -1295,6 +1676,55 @@ body[data-shabbat-state="active"] .hero-sigil {
   .daily-sigil .moon-core {
     width: min(54vw, 170px);
     font-size: clamp(2.1rem, 11vw, 3.1rem);
+  }
+
+  .calendar,
+  .gregorian {
+    gap: 3px;
+  }
+
+  .calDay {
+    min-height: 68px;
+    padding: 0.38rem 0.25rem;
+    border-radius: 9px;
+  }
+
+  .calDay strong {
+    font-size: 0.68rem;
+  }
+
+  .calDay small {
+    font-size: 0.52rem;
+    max-height: 2.5em;
+    overflow: hidden;
+  }
+
+  .gregHead {
+    font-size: 0.56rem;
+  }
+
+  .gregDay,
+  .gregPad {
+    min-height: 58px;
+    padding: 0.32rem 0.2rem;
+    border-radius: 9px;
+  }
+
+  .gregDay strong {
+    font-size: 0.72rem;
+  }
+
+  .gregDay small {
+    font-size: 0.5rem;
+    max-height: 2.4em;
+    overflow: hidden;
+  }
+
+  .calDay.shabbat::after,
+  .gregDay.shabbat::after {
+    font-size: 0.5rem;
+    right: 0.22rem;
+    bottom: 0.18rem;
   }
 
   .mobile-dock a {
@@ -1363,6 +1793,17 @@ body[data-shabbat-state="active"] .hero-sigil {
   }
 }
 
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1374,4 +1815,4 @@ body[data-shabbat-state="active"] .hero-sigil {
     animation: none !important;
     transition: none !important;
   }
-}
+     }
