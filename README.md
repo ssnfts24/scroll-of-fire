@@ -1,7 +1,7 @@
 # ⚖️ Scroll of Fire — Codex of Reality
 *“Let there be resonance.”*
 
-🌱 **New here? Start here first → [Site Start Page](https://codexofreality/start)**
+🌱 **New here? Start here first → [Site Start Page](https://codexofreality.org/start)**
 
 ## Quick Start (First Visit)
 
