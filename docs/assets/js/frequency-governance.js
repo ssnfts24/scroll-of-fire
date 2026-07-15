@@ -272,6 +272,11 @@
   let visualSeed = Math.random() * 9999;
   let phase = 0;
   let visualFreq = 432;
+  let audioState = "not-enabled";
+  let audioEnabled = false;
+  let pausedByVisibility = false;
+  let visualRaf = null;
+  let starRaf = null;
 
   const fieldCanvas = $("#fieldCanvas");
   const fieldCtx = fieldCanvas?.getContext?.("2d");
@@ -296,6 +301,54 @@
     if (!el) return;
     el.textContent += `\n[${nowStamp()}] ${message}`;
     el.scrollTop = el.scrollHeight;
+  }
+
+  function setAudioState(state, hint) {
+    audioState = state;
+    const stateMap = {
+      "not-enabled": "Not enabled",
+      ready: "Ready",
+      playing: "Playing",
+      paused: "Paused",
+      stopped: "Stopped",
+      blocked: "Blocked by browser",
+      error: "Audio failed"
+    };
+    text($("#audioState"), stateMap[state] || "Unknown");
+    if (hint) text($("#audioHint"), hint);
+  }
+
+  function getStored(key, fallbackValue) {
+    try {
+      if (!("localStorage" in window)) throw new Error("Local storage unavailable");
+      const raw = window.localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallbackValue;
+    } catch {
+      log("Local storage unavailable or invalid in this browser.");
+      return fallbackValue;
+    }
+  }
+
+  function setStored(key, value) {
+    try {
+      if (!("localStorage" in window)) throw new Error("Local storage unavailable");
+      window.localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch {
+      log("Unable to save local data in this browser.");
+      return false;
+    }
+  }
+
+  function removeStored(key) {
+    try {
+      if (!("localStorage" in window)) throw new Error("Local storage unavailable");
+      window.localStorage.removeItem(key);
+      return true;
+    } catch {
+      log("Unable to clear local data in this browser.");
+      return false;
+    }
   }
 
   function safeText(value) {
@@ -382,9 +435,11 @@
     return 1;
   }
 
-  function unlockAudio() {
+  async function unlockAudio() {
     const ac = getAudio();
-    if (ac.state === "suspended") ac.resume();
+    if (ac.state === "suspended") {
+      await ac.resume();
+    }
     updateOutputGain();
     return ac;
   }
@@ -416,9 +471,48 @@
       limiter.connect(audioCtx.destination);
 
       updateOutputGain();
+      audioEnabled = true;
+      setAudioState("ready", "Audio enabled. Run Sound Check to confirm output.");
     }
 
     return audioCtx;
+  }
+
+  async function enableAudio({ runProbe = false } = {}) {
+    try {
+      await unlockAudio();
+      if (runProbe) await runAudioProbe();
+      setAudioState("ready", "Audio is ready. Choose a path and press Play.");
+      return true;
+    } catch (error) {
+      console.error("Audio initialization failed:", error);
+      const isBlocked = /notallowed|interrupted|suspend|permission/i.test(String(error?.name || error?.message || ""));
+      setAudioState(
+        isBlocked ? "blocked" : "error",
+        isBlocked
+          ? "Browser blocked audio. Tap Enable Audio and make sure silent mode is off."
+          : "Audio initialization failed. Try again or switch browser output mode."
+      );
+      log(isBlocked ? "Audio blocked by browser policy." : "Audio initialization failed.");
+      return false;
+    }
+  }
+
+  function runAudioProbe() {
+    if (!audioCtx || !masterGain) return Promise.resolve();
+    const ac = audioCtx;
+    const now = ac.currentTime;
+    const gain = ac.createGain();
+    const osc = ac.createOscillator();
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.12, now + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+    osc.frequency.setValueAtTime(440, now);
+    osc.type = "sine";
+    osc.connect(gain).connect(masterGain);
+    osc.start(now);
+    osc.stop(now + 0.22);
+    return new Promise(resolve => setTimeout(resolve, 240));
   }
 
   function updateOutputGain() {
@@ -447,7 +541,8 @@
   }
 
   function createOsc(freq, wave, panValue, gainValue, fade) {
-    const ac = unlockAudio();
+    const ac = audioCtx;
+    if (!ac || !masterGain) return null;
     const now = ac.currentTime;
     const osc = ac.createOscillator();
     const gain = ac.createGain();
@@ -484,6 +579,7 @@
   function playDeck(index) {
     const deck = getDeck(index);
     if (!deck) return;
+    if (!audioCtx || !masterGain) return;
 
     const oldGroup = deckNodes[index] || [];
     const fade = fadeTime();
@@ -499,11 +595,14 @@
       if (base < 20 || base > 2200) return;
 
       if (beat) {
-        group.push(createOsc(base - beat / 2, deck.wave, deck.pan - 0.22, perGain, fade));
-        group.push(createOsc(base + beat / 2, deck.wave, deck.pan + 0.22, perGain, fade));
+        const leftOsc = createOsc(base - beat / 2, deck.wave, deck.pan - 0.22, perGain, fade);
+        const rightOsc = createOsc(base + beat / 2, deck.wave, deck.pan + 0.22, perGain, fade);
+        if (leftOsc) group.push(leftOsc);
+        if (rightOsc) group.push(rightOsc);
       } else {
         const spread = ratios.length === 1 ? 0 : -0.22 + (0.44 * i) / Math.max(1, ratios.length - 1);
-        group.push(createOsc(base, deck.wave, deck.pan + spread, perGain, fade));
+        const oscNode = createOsc(base, deck.wave, deck.pan + spread, perGain, fade);
+        if (oscNode) group.push(oscNode);
       }
     });
 
@@ -513,13 +612,15 @@
     updateUI();
   }
 
-  function playMix() {
-    unlockAudio();
+  async function playMix() {
+    const ok = await enableAudio();
+    if (!ok) return;
     updateOutputGain();
     getDecks().forEach(deck => {
       if (deck.volume > 0 || deck.index === 0) playDeck(deck.index);
     });
     isPlaying = true;
+    setAudioState("playing", "Session active. Press Stop when complete.");
     updateUI();
     recordEvent("play", { path: activePath });
     log("Field started.");
@@ -534,8 +635,9 @@
     getDecks().forEach(deck => playDeck(deck.index));
   }
 
-  function soundCheck() {
-    unlockAudio();
+  async function soundCheck() {
+    const ok = await enableAudio({ runProbe: true });
+    if (!ok) return;
 
     const ac = audioCtx;
     const now = ac.currentTime;
@@ -561,6 +663,7 @@
     osc1.stop(now + 1.5);
     osc2.stop(now + 1.5);
 
+    setAudioState("ready", "Sound Check complete. If silent, increase volume or output mode.");
     updateUI();
     log("Sound Check played. Raise media volume if needed.");
   }
@@ -581,6 +684,7 @@
     deckNodes.forEach(group => stopNodeGroup(group, fade));
     deckNodes = [];
     isPlaying = false;
+    setAudioState(audioEnabled ? "stopped" : "not-enabled", audioEnabled ? "Session stopped. Choose another path or run Sound Check." : "Tap Enable Audio to begin.");
     stopSequence(false);
     stopLiftLoop(false);
     updateUI();
@@ -671,9 +775,9 @@
     text($("#masterValue"), Math.round(lead.freq));
     text($("#statCarrier"), `${Math.round(lead.freq)} Hz`);
     text($("#statPath"), activePath);
-    text($("#statState"), isPlaying ? "Active" : "Stopped");
+    text($("#statState"), isPlaying ? "Active" : (audioEnabled ? "Ready" : "Not enabled"));
     text($("#commandTitle"), `${Math.round(lead.freq)} Hz · ${activePath}`);
-    text($("#stateText"), isPlaying ? "active" : "stopped");
+    text($("#stateText"), isPlaying ? "active" : (audioEnabled ? "ready" : "not enabled"));
 
     $("#stateText")?.classList.toggle("active", isPlaying);
 
@@ -811,12 +915,11 @@ ${$("#journalNote")?.value || ""}`;
   }
 
   function getJournal() {
-    try { return JSON.parse(localStorage.getItem(STORE_JOURNAL) || "[]"); }
-    catch { return []; }
+    return getStored(STORE_JOURNAL, []);
   }
 
   function setJournal(items) {
-    localStorage.setItem(STORE_JOURNAL, JSON.stringify(items));
+    setStored(STORE_JOURNAL, items);
   }
 
   function renderJournal() {
@@ -837,8 +940,13 @@ ${$("#journalNote")?.value || ""}`;
     $$(".copy-entry").forEach(btn => {
       on(btn, "click", async () => {
         const item = items[Number(btn.dataset.i)];
-        await navigator.clipboard.writeText(item.text);
-        btn.textContent = "Copied";
+        try {
+          await navigator.clipboard.writeText(item.text);
+          btn.textContent = "Copied";
+        } catch {
+          btn.textContent = "Copy failed";
+          log("Clipboard copy blocked in this browser.");
+        }
         setTimeout(() => (btn.textContent = "Copy"), 900);
       });
     });
@@ -893,13 +1001,14 @@ ${$("#journalNote")?.value || ""}`;
   }
 
   function saveField() {
-    localStorage.setItem(STORE_FIELD, JSON.stringify(fieldSnapshot()));
-    log("Field saved.");
+    if (setStored(STORE_FIELD, fieldSnapshot())) {
+      log("Field saved.");
+    }
   }
 
   function loadField() {
     try {
-      const saved = JSON.parse(localStorage.getItem(STORE_FIELD) || "{}");
+      const saved = getStored(STORE_FIELD, {});
       if (!saved.decks) throw new Error("No saved field");
 
       [
@@ -996,13 +1105,14 @@ ${$("#journalNote")?.value || ""}`;
   }
 
   function saveTrack() {
-    localStorage.setItem(STORE_TRACK, JSON.stringify(trackEvents));
-    log("Track saved.");
+    if (setStored(STORE_TRACK, trackEvents)) {
+      log("Track saved.");
+    }
   }
 
   function loadTrack() {
     try {
-      trackEvents = JSON.parse(localStorage.getItem(STORE_TRACK) || "[]");
+      trackEvents = getStored(STORE_TRACK, []);
       updateTrackUI();
       log("Track loaded.");
     } catch {
@@ -1071,6 +1181,7 @@ ${$("#journalNote")?.value || ""}`;
 
   function drawStars() {
     if (!starCtx || !starCanvas) return;
+    if (document.hidden) return;
     starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
     stars.forEach(star => {
       star.a += 0.012;
@@ -1079,7 +1190,7 @@ ${$("#journalNote")?.value || ""}`;
       starCtx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
       starCtx.fill();
     });
-    requestAnimationFrame(drawStars);
+    starRaf = requestAnimationFrame(drawStars);
   }
 
   function color(t, a) {
@@ -1090,6 +1201,7 @@ ${$("#journalNote")?.value || ""}`;
 
   function drawVisualizer() {
     if (!fieldCtx || !fieldCanvas) return;
+    if (document.hidden) return;
 
     const w = fieldCanvas.clientWidth || 800;
     const h = fieldCanvas.clientHeight || 430;
@@ -1135,7 +1247,23 @@ ${$("#journalNote")?.value || ""}`;
     fieldCtx.fillText(isPlaying ? `${activePath} · ${Math.round(lead.freq)} Hz` : "FREQUENCY FIELD", cx, 25);
 
     phase += 0.9;
-    requestAnimationFrame(drawVisualizer);
+    visualRaf = requestAnimationFrame(drawVisualizer);
+  }
+
+  function stopRenderLoops() {
+    if (starRaf) {
+      cancelAnimationFrame(starRaf);
+      starRaf = null;
+    }
+    if (visualRaf) {
+      cancelAnimationFrame(visualRaf);
+      visualRaf = null;
+    }
+  }
+
+  function startRenderLoops() {
+    if (!starRaf) drawStars();
+    if (!visualRaf) drawVisualizer();
   }
 
   function drawTorus(w, h, cx, cy, baseR, fr, push, visual) {
@@ -1327,6 +1455,13 @@ ${$("#journalNote")?.value || ""}`;
   }
 
   function bind() {
+    on($("#enableAudioBtn"), "click", async () => {
+      const ok = await enableAudio({ runProbe: true });
+      if (ok) {
+        log("Audio enabled.");
+      }
+    });
+
     on($("#soundCheckBtn"), "click", soundCheck);
     on($("#playBtn"), "click", playMix);
     on($("#stopBtn"), "click", () => { stopAll(); recordEvent("stop"); log("Stopped."); });
@@ -1420,8 +1555,12 @@ ${$("#journalNote")?.value || ""}`;
 
     on($("#saveJournal"), "click", saveJournal);
     on($("#copyJournal"), "click", async () => {
-      await navigator.clipboard.writeText(buildJournalText());
-      log("Witness copied.");
+      try {
+        await navigator.clipboard.writeText(buildJournalText());
+        log("Witness copied.");
+      } catch {
+        log("Clipboard unavailable. Copy failed.");
+      }
     });
 
     on($("#clearJournal"), "click", () => {
@@ -1440,9 +1579,10 @@ ${$("#journalNote")?.value || ""}`;
     });
 
     on($("#clearJournalArchive"), "click", () => {
-      localStorage.removeItem(STORE_JOURNAL);
-      renderJournal();
-      log("Journal archive cleared.");
+      if (removeStored(STORE_JOURNAL)) {
+        renderJournal();
+        log("Journal archive cleared.");
+      }
     });
 
     on($("#clearField"), "click", () => fieldCtx?.clearRect(0, 0, fieldCanvas.width, fieldCanvas.height));
@@ -1473,8 +1613,34 @@ ${$("#journalNote")?.value || ""}`;
     }, { passive: true });
 
     window.addEventListener("pointerdown", () => {
-      if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume().catch(() => {});
+      }
     }, { passive: true });
+
+    document.addEventListener("visibilitychange", async () => {
+      if (document.hidden) {
+        stopRenderLoops();
+        if (isPlaying) {
+          pausedByVisibility = true;
+          stopAll(0.2);
+          setAudioState("paused", "Session paused after tab change. Return and press Play to continue.");
+          log("Session paused while page was hidden.");
+        }
+        return;
+      }
+
+      startRenderLoops();
+      if (audioCtx && audioCtx.state === "suspended") {
+        await audioCtx.resume().catch(() => {});
+      }
+
+      if (audioEnabled) {
+        setAudioState("ready", pausedByVisibility ? "Returned from background. Press Play to resume." : "Audio ready.");
+      }
+      pausedByVisibility = false;
+      updateUI();
+    });
   }
 
   function boot() {
@@ -1487,8 +1653,8 @@ ${$("#journalNote")?.value || ""}`;
     updateDeckTargets();
     resetField();
     updateTrackUI();
-    drawStars();
-    drawVisualizer();
+    setAudioState("not-enabled", "Tap Enable Audio before Sound Check or Play.");
+    startRenderLoops();
     log("Living Sound Observatory loaded. Press Sound Check first.");
   }
 
