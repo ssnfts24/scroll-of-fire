@@ -1,24 +1,15 @@
 # home/hero/
 
 **Public path:** `assets/img/home/hero/`
-**Purpose:** Homepage-specific hero images.
+**Purpose:** Homepage hero artwork staged for a future homepage layout update.
 
-## Current assets
+## Planned assets
 
-| File | Purpose |
-|------|---------|
-| `home-codex-living-system-EXACT-13-FINAL.webp` | Primary hero image — Codex living system artwork (748 KB). Not yet wired to homepage HTML. |
+### `home-codex-living-system-exact-13-final.webp`
+Status: Planned
 
-## Planned Integration
-
-`home-codex-living-system-EXACT-13-FINAL.webp` is the intended hero for the homepage. Add it to `docs/index.html` in the `.home-hero-grid` section once layout and design are confirmed.
-
-<!--
-PLANNED IMAGE INTEGRATION:
-Path: assets/img/home/hero/home-codex-living-system-EXACT-13-FINAL.webp
-Purpose: Homepage hero artwork — full living system diagram
-Recommended placement: .home-hero-grid > .hero-image-card figure
-Width: varies by viewport
-Alt text: The Codex of Reality — a living system of 13 moons, frequency, artifact, caravan, and witness.
-Enable only after visual review and layout confirmation.
--->
+Purpose: Alternative homepage hero artwork showing the full Codex living-system diagram.  
+Dimensions: Verify from the file before enabling in live HTML.  
+Used by: `docs/index.html` hero section (disabled insertion point).  
+Alt text: The Codex of Reality — a living system of 13 moons, frequency, artifact, caravan, and witness.  
+Integration: Keep the insertion block in `docs/index.html` commented out until the layout is approved.

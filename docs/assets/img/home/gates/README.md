@@ -1,17 +1,17 @@
 # home/gates/
 
 **Public path:** `assets/img/home/gates/`
-**Purpose:** Homepage-specific gateway artwork — unique crops or compositions made for the homepage gates section.
+**Purpose:** Homepage gateway artwork staged for future homepage card integrations, plus one live social image.
 
 ## Current assets
 
-| File | Gate | Used by |
-|------|------|---------|
-| `home-gate-13-moons.webp` | Remnant 13 Moons | Homepage (planned active use) |
-| `home-gate-artifact-registry.webp` | Artifact Registry | Homepage |
-| `home-gate-covenant-caravan.webp` | Covenant Caravan | Homepage; also used as OG image for `covenant-caravan.html` |
-| `home-gate-frequency-governance.webp` | Frequency Governance | Homepage |
-| `home-gate-witness-ledger.webp` | Witness Ledger | Homepage |
+| File | Gate | Status | Used by |
+|------|------|--------|---------|
+| `home-gate-covenant-caravan.webp` | Covenant Caravan | Active | `docs/covenant-caravan.html` OG/Twitter image |
+| `home-gate-13-moons.webp` | Remnant 13 Moons | Planned | Homepage gateway card (not yet enabled) |
+| `home-gate-artifact-registry.webp` | Artifact Registry | Planned | Homepage gateway card (not yet enabled) |
+| `home-gate-frequency-governance.webp` | Frequency Governance | Planned | Homepage gateway card (not yet enabled) |
+| `home-gate-witness-ledger.webp` | Witness Ledger | Planned | Homepage gateway card (not yet enabled) |
 
 ## Planned Assets
 

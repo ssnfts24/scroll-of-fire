@@ -1,20 +1,18 @@
 # moons/app/
 
 **Public path:** `assets/img/moons/app/`
-**Purpose:** PWA and app-shell assets for the Remnant 13 Moons calendar.
+**Purpose:** Live PWA and app-shell artwork for the Remnant 13 Moons calendar.
 
 ## Current assets
 
-| File | Purpose |
-|------|---------|
-| `splash-2732.webp` | iOS splash screen (2732px) |
-| `icon-1024.png` | App icon 1024×1024 |
-| `icon-512.webp` | App icon 512×512 (WebP) |
-| `og-image-1200x630.webp` | OG image for moons.html |
-| `app-bg-dark.webp` | Dark background for the app shell |
-| `nav-gold-ring.webp` | Navigation gold ring decoration |
-| `empty-state.webp` | Empty state illustration |
+| File | Purpose | Used by |
+|------|---------|---------|
+| `splash-2732.webp` | App hero splash artwork | `docs/assets/js/moons-images.js` |
+| `icon-512.webp` | WebP favicon/icon for `moons.html` | `docs/moons.html` |
+| `og-image-1200x630.webp` | Open Graph and schema image | `docs/moons.html` |
+| `app-bg-dark.webp` | App shell background | `docs/assets/css/moons.css` |
+| `empty-state.webp` | Saved-log empty state illustration | `docs/assets/js/moons-images.js` |
 
-## References
+## Canonical icon note
 
-All `moons/app/` assets are referenced directly from `docs/moons.html` head meta and from `docs/assets/js/moons-images.js`.
+`docs/moons.html` now uses `assets/img/shared/branding/icon-1024.png` as the canonical Apple touch icon, so the duplicate `moons/app/icon-1024.png` was archived.

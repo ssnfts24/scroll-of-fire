@@ -1,10 +1,12 @@
 # home/posters/
 
 **Public path:** `assets/img/home/posters/`
-**Purpose:** Full-bleed poster or background images for homepage sections.
+**Purpose:** Homepage poster artwork staged for future section treatments.
 
-## Current assets
+## Planned assets
 
-| File | Purpose |
-|------|---------|
-| `home-breath-field-poster.webp` | Breath Field section background poster |
+| File | Purpose | Intended usage |
+|------|---------|----------------|
+| `home-breath-field-poster.webp` | Breath Field section background poster | `docs/index.html` future poster / background treatment |
+
+This file remains disabled in live code until a verified insertion point is approved.
