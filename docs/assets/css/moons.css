@@ -46,6 +46,7 @@ body {
   margin: 0;
   width: 100%;
   min-height: 100%;
+  min-height: 100svh;
   overflow-x: hidden;
 }
 
@@ -113,7 +114,7 @@ body[data-remnant-boundary="manual"] #statBoundary {
 }
 
 .wrap {
-  padding: 22px 0 56px;
+  padding: 22px max(0px, env(safe-area-inset-right)) 56px max(0px, env(safe-area-inset-left));
 }
 
 .footer {
@@ -259,10 +260,16 @@ button {
 
 .crumbs,
 .btnrow,
-.tabs,
 .row {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 10px;
 }
@@ -441,9 +448,13 @@ textarea {
   z-index: 60;
   margin: 18px 0;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 0.75rem 0 0.15rem;
   scrollbar-width: thin;
   backdrop-filter: blur(16px);
+  /* Fade edges hint that more tabs exist off-screen */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 12px, black calc(100% - 12px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, black 12px, black calc(100% - 12px), transparent 100%);
 }
 
 .tab {
@@ -1416,7 +1427,7 @@ body[data-shabbat-state="active"] .hero-sigil {
   }
 
   .wrap {
-    padding: 14px 0 88px;
+    padding: 14px max(8px, env(safe-area-inset-right)) 88px max(8px, env(safe-area-inset-left));
   }
 
   .page-head,
@@ -1445,7 +1456,6 @@ body[data-shabbat-state="active"] .hero-sigil {
   }
 
   .crumbs,
-  .tabs,
   .btnrow,
   .row {
     gap: 8px;
@@ -1462,14 +1472,15 @@ body[data-shabbat-state="active"] .hero-sigil {
     top: 72px;
     margin: 14px 0;
     padding-top: 0.35rem;
+    gap: 7px;
   }
 
   .tabs .tab {
     width: auto;
-    min-height: 40px;
+    min-height: 44px;
     flex: 0 0 auto;
     padding: 0.62rem 0.85rem;
-    font-size: 0.92rem;
+    font-size: 0.9rem;
   }
 
   .btnrow .lab-btn,
@@ -1604,18 +1615,26 @@ body[data-shabbat-state="active"] .hero-sigil {
     right: 0;
     bottom: 0;
     z-index: 100;
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 0.35rem;
-    padding: 0.55rem 0.55rem calc(0.55rem + env(safe-area-inset-bottom));
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.3rem;
+    padding: 0.5rem max(0.55rem, env(safe-area-inset-right)) calc(0.5rem + env(safe-area-inset-bottom)) max(0.55rem, env(safe-area-inset-left));
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(5, 7, 13, 0.96);
     backdrop-filter: blur(18px);
+    scrollbar-width: none;
+  }
+
+  .mobile-dock::-webkit-scrollbar {
+    display: none;
   }
 
   .mobile-dock a {
-    min-width: 0;
-    padding: 0.55rem 0.3rem;
+    flex: 0 0 auto;
+    min-width: 52px;
+    padding: 0.52rem 0.6rem;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     background: rgba(255, 255, 255, 0.04);
@@ -1729,7 +1748,14 @@ body[data-shabbat-state="active"] .hero-sigil {
 
   .mobile-dock a {
     font-size: 0.68rem;
-    padding-inline: 0.2rem;
+    padding-inline: 0.5rem;
+  }
+
+  /* Prevent iOS auto-zoom on input focus */
+  input,
+  select,
+  textarea {
+    font-size: max(16px, 1em);
   }
 }
 
@@ -1825,9 +1851,11 @@ body[data-remnant-boundary]{background:linear-gradient(rgba(5,7,13,.82),rgba(5,7
 .moons-app-hero{position:relative;width:min(100%,980px);margin:1.6rem auto 1.3rem;overflow:hidden;border:1px solid rgba(243,201,122,.28);border-radius:28px;background:rgba(5,7,13,.76);box-shadow:0 30px 80px rgba(0,0,0,.48),0 0 44px rgba(122,243,255,.08)}
 .moons-app-hero::after,.panel-banner::after{content:"";position:absolute;inset:0;pointer-events:none}
 .moons-app-hero::after{background:linear-gradient(to bottom,transparent 60%,rgba(5,7,13,.78)),radial-gradient(circle at 50% 42%,transparent 34%,rgba(5,7,13,.22))}
-.moons-app-hero img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+.moons-app-hero img{display:block;width:100%;aspect-ratio:1;object-fit:cover;object-position:center top}
 .current-moon-art{align-self:stretch;overflow:hidden;border:1px solid rgba(243,201,122,.25);border-radius:22px;background:rgba(3,7,13,.72);box-shadow:0 18px 44px rgba(0,0,0,.32)}
-.current-moon-art img{display:block;width:100%;height:100%;min-height:280px;aspect-ratio:1;object-fit:cover}
+.current-moon-art img{display:block;width:100%;height:100%;min-height:280px;aspect-ratio:1;object-fit:cover;object-position:center}
+/* Utility class for all moon medallion images */
+.codex-moon-image{width:100%;aspect-ratio:1;object-fit:cover;object-position:center}
 .moon-badge.has-moon-art{grid-template-columns:minmax(220px,.78fr) auto minmax(280px,1.22fr)}
 .panel-banner{position:relative;width:100%;max-height:460px;margin:0 0 1.5rem;overflow:hidden;border:1px solid rgba(243,201,122,.2);border-radius:24px;background:rgba(5,7,13,.82);box-shadow:0 22px 58px rgba(0,0,0,.34)}
 .panel-banner::after{background:linear-gradient(to bottom,rgba(5,7,13,.01),rgba(5,7,13,.12) 56%,rgba(5,7,13,.86))}
@@ -1840,4 +1868,4 @@ body[data-remnant-boundary]{background:linear-gradient(rgba(5,7,13,.82),rgba(5,7
 .saved-empty-state{padding:1.4rem;text-align:center;border:1px dashed rgba(243,201,122,.24);border-radius:22px;background:rgba(255,255,255,.025)}
 .saved-empty-state img{display:block;width:min(100%,420px);margin:0 auto 1rem;border-radius:18px;opacity:.9}
 @media(max-width:980px){.moon-badge.has-moon-art{grid-template-columns:1fr}.current-moon-art img{min-height:0}}
-@media(max-width:760px){body[data-remnant-boundary]{background:linear-gradient(rgba(5,7,13,.84),rgba(5,7,13,.96)),url("../img/moons/app/app-bg-dark.webp") center top/auto 100vh fixed,var(--bg)}.moons-app-hero{margin-top:1rem;border-radius:18px}.panel-banner,.gate-art-card,.current-moon-art{border-radius:18px}.gate-gallery{grid-template-columns:1fr}.panel-banner img{height:auto;aspect-ratio:1}}
+@media(max-width:760px){body[data-remnant-boundary]{background:linear-gradient(rgba(5,7,13,.84),rgba(5,7,13,.96)),url("../img/moons/app/app-bg-dark.webp") center top/auto 100dvh fixed,var(--bg)}.moons-app-hero{margin-top:1rem;border-radius:18px}.panel-banner,.gate-art-card,.current-moon-art{border-radius:18px}.gate-gallery{grid-template-columns:1fr}.panel-banner img{height:auto;aspect-ratio:1}}

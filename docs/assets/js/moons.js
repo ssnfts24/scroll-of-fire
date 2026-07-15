@@ -920,6 +920,16 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     renderTimeline();
     toast("Witness saved");
 
+    /* GA4 event — no private content sent */
+    try {
+      if (typeof gtag === "function") {
+        gtag("event", "save_witness", {
+          moon_number: context.info?.moon?.idx,
+          moon_day: context.info?.dayInMoon
+        });
+      }
+    } catch (_) {}
+
     document.dispatchEvent(new CustomEvent("sof:witness-saved", {
       detail: { logs: logs(), context }
     }));
@@ -1227,26 +1237,104 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       loop();
     }
 
+    /* Pause animation when tab is hidden to save battery */
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        if (frame) {
+          cancelAnimationFrame(frame);
+          frame = null;
+        }
+      } else if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        loop();
+      }
+    });
+
     addEventListener("beforeunload", () => {
       if (frame) cancelAnimationFrame(frame);
     });
   }
 
   function setupTabs() {
+    const LAST_TAB_KEY = "sof_moons_last_tab_v1";
+
+    function activateTab(id) {
+      if (!id) return;
+
+      $$(".tab").forEach(tab => {
+        const isActive = tab === document.querySelector(`[data-tab="${id}"]`);
+        tab.classList.toggle("active", isActive);
+        tab.setAttribute("aria-selected", isActive ? "true" : "false");
+        tab.setAttribute("tabindex", isActive ? "0" : "-1");
+      });
+
+      $$(".tabPanel").forEach(panel => {
+        panel.classList.toggle("active", panel.id === id);
+      });
+
+      /* Sync mobile dock */
+      $$("[data-mobile-tab]").forEach(link => {
+        const active = link.dataset.mobileTab === id;
+        link.classList.toggle("active", active);
+        if (active) {
+          link.setAttribute("aria-current", "page");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+
+      try { localStorage.setItem(LAST_TAB_KEY, id); } catch (_) {}
+
+      /* GA4 analytics — tab view (non-private) */
+      try {
+        if (typeof gtag === "function") {
+          gtag("event", "change_moon_view", { view_name: id });
+        }
+      } catch (_) {}
+    }
+
     $$(".tab").forEach(button => {
       button.addEventListener("click", () => {
-        const id = button.dataset.tab;
-        if (!id) return;
+        activateTab(button.dataset.tab);
+      });
 
-        $$(".tab").forEach(tab => {
-          tab.classList.toggle("active", tab === button);
-        });
+      /* Arrow-key navigation within the tab rail */
+      button.addEventListener("keydown", event => {
+        const tabs = $$(".tab");
+        const index = tabs.indexOf(button);
+        let next = -1;
 
-        $$(".tabPanel").forEach(panel => {
-          panel.classList.toggle("active", panel.id === id);
-        });
+        if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+          next = (index + 1) % tabs.length;
+        } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+          next = (index - 1 + tabs.length) % tabs.length;
+        } else if (event.key === "Home") {
+          next = 0;
+        } else if (event.key === "End") {
+          next = tabs.length - 1;
+        }
+
+        if (next >= 0) {
+          event.preventDefault();
+          tabs[next].focus();
+          activateTab(tabs[next].dataset.tab);
+        }
       });
     });
+
+    /* Restore last-viewed tab on page load */
+    let restoredTab = null;
+    try { restoredTab = localStorage.getItem(LAST_TAB_KEY); } catch (_) {}
+
+    /* Also respect URL hash */
+    const hashTarget = location.hash.replace("#", "");
+    const validIds = $$(".tabPanel").map(p => p.id);
+    const startTab = (hashTarget && validIds.includes(hashTarget))
+      ? hashTarget
+      : (restoredTab && validIds.includes(restoredTab) ? restoredTab : null);
+
+    if (startTab && startTab !== "todayPanel") {
+      activateTab(startTab);
+    }
   }
 
   function setupBoundaryControls() {
@@ -1311,6 +1399,13 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
 
   function setup() {
     text("yr", new Date().getFullYear());
+
+    /* GA4: log that the app was opened */
+    try {
+      if (typeof gtag === "function") {
+        gtag("event", "open_moons_app");
+      }
+    } catch (_) {}
 
     const timezonePick = $("#tzPick");
     if (timezonePick) {
