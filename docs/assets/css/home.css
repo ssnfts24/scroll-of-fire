@@ -1096,7 +1096,8 @@
 
 .today-codex-panel,
 .continue-path-panel,
-.codex-activity-panel {
+.codex-activity-panel,
+.your-codex-panel {
   display: grid;
   gap: 1rem;
 }

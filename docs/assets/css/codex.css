@@ -497,3 +497,54 @@ a.nav-card:focus-visible,
 .text-link:hover::after {
   width: 100%;
 }
+
+/* =========================================================
+   FOOTER DIRECTORY (Phase 3 — categorized site directory)
+   ========================================================= */
+
+.footer-directory {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center !important;
+  gap: 2rem 3rem;
+  margin-bottom: 1.5rem !important;
+  text-align: left;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 130px;
+}
+
+.footer-col strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--gold, #f3c97a);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.footer-col a {
+  color: var(--muted, #b9c1c7) !important;
+  font-size: 0.84rem !important;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footer-col a:hover,
+.footer-col a:focus-visible {
+  color: var(--gold, #f3c97a) !important;
+}
+
+@media (max-width: 600px) {
+  .footer-directory {
+    gap: 1.5rem 2rem;
+  }
+  .footer-col {
+    min-width: 110px;
+  }
+}

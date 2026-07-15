@@ -226,7 +226,7 @@
 }
 
 /* =========================================================
-   MORE DROPDOWN
+   CATEGORY DROPDOWNS (5-category nav)
    ========================================================= */
 
 .nav-dropdown {
@@ -239,20 +239,26 @@
   gap: 0.35rem;
 }
 
+/* Highlight a category button when a child link is active */
+.nav-dropdown.has-active-child .nav-drop-btn {
+  color: var(--gold, #f3c97a);
+  background: rgba(243, 201, 122, 0.08);
+}
+
 .nav-drop-menu {
   position: absolute;
-  right: 0;
+  left: 0;
   top: calc(100% + 0.5rem);
   z-index: 850;
-  min-width: 320px;
-  max-width: min(360px, calc(100vw - 2rem));
+  min-width: 200px;
+  max-width: min(260px, calc(100vw - 2rem));
   max-height: min(70vh, 620px);
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.2rem;
   overflow: auto;
   overflow-x: hidden;
-  padding: 0.65rem;
+  padding: 0.55rem;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 18px;
   background: rgba(8, 12, 20, 0.99);
@@ -270,6 +276,12 @@
     visibility 0.18s ease;
 }
 
+/* Last dropdown aligns to right to avoid overflow */
+.nav-dropdown:last-child .nav-drop-menu {
+  left: auto;
+  right: 0;
+}
+
 .nav-dropdown.is-dropdown-open .nav-drop-menu {
   opacity: 1;
   visibility: visible;
@@ -280,9 +292,14 @@
 .nav-drop-menu a {
   justify-content: flex-start;
   width: 100%;
-  padding: 0.68rem 0.78rem;
+  padding: 0.62rem 0.75rem;
   border-radius: 12px;
   text-align: left;
+}
+
+.nav-drop-menu a[aria-current="page"] {
+  color: var(--gold, #f3c97a);
+  background: rgba(243, 201, 122, 0.08);
 }
 
 body.site-menu-open {
