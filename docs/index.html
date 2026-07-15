@@ -57,13 +57,13 @@
 
   <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
-  <link rel="preload" href="assets/css/codex.css?v=20260710-9" as="style">
-  <link rel="stylesheet" href="assets/css/codex.css?v=20260710-9">
-  <link rel="stylesheet" href="assets/css/navigation.css?v=20260710-9">
-  <link rel="stylesheet" href="assets/css/components.css?v=20260710-9">
-  <link rel="stylesheet" href="assets/css/animations.css?v=20260710-9">
-  <link rel="stylesheet" href="assets/css/home.css?v=20260710-9">
-  <link rel="stylesheet" href="assets/css/artifact-mobile.css?v=20260710-9">
+  <link rel="preload" href="assets/css/codex.css?v=20260715-10" as="style">
+  <link rel="stylesheet" href="assets/css/codex.css?v=20260715-10">
+  <link rel="stylesheet" href="assets/css/navigation.css?v=20260715-10">
+  <link rel="stylesheet" href="assets/css/components.css?v=20260715-10">
+  <link rel="stylesheet" href="assets/css/animations.css?v=20260715-10">
+  <link rel="stylesheet" href="assets/css/home.css?v=20260715-10">
+  <link rel="stylesheet" href="assets/css/artifact-mobile.css?v=20260715-10">
 
   <script type="application/ld+json">
   {
@@ -127,16 +127,16 @@
         "@id":"https://codexofreality.org/#navigation",
         "name":"Codex of Reality Main Navigation",
         "itemListElement":[
-          {"@type":"SiteNavigationElement","position":1,"name":"Start","url":"https://codexofreality.org/start.html"},
-          {"@type":"SiteNavigationElement","position":2,"name":"Remnant 13 Moons Calendar","url":"https://codexofreality.org/moons.html"},
-          {"@type":"SiteNavigationElement","position":3,"name":"Covenant Caravan","url":"https://codexofreality.org/covenant-caravan.html"},
-          {"@type":"SiteNavigationElement","position":4,"name":"Manifest","url":"https://codexofreality.org/teach.html"},
-          {"@type":"SiteNavigationElement","position":5,"name":"Artifact Registry","url":"https://codexofreality.org/shop.html"},
-          {"@type":"SiteNavigationElement","position":6,"name":"Systems Hub","url":"https://codexofreality.org/hub.html"},
-          {"@type":"SiteNavigationElement","position":7,"name":"Frequency Governance","url":"https://codexofreality.org/systems/frequencies.html"},
-          {"@type":"SiteNavigationElement","position":8,"name":"Genesis Oracle","url":"https://codexofreality.org/genesis-oracle.html"},
-          {"@type":"SiteNavigationElement","position":9,"name":"Theory and Canon","url":"https://codexofreality.org/theory.html"},
-          {"@type":"SiteNavigationElement","position":10,"name":"Witness Ledger","url":"https://codexofreality.org/ledger.html"}
+          {"@type":"SiteNavigationElement","position":1,"name":"Today — 13 Moons","url":"https://codexofreality.org/moons.html"},
+          {"@type":"SiteNavigationElement","position":2,"name":"Today — Witness Ledger","url":"https://codexofreality.org/ledger.html"},
+          {"@type":"SiteNavigationElement","position":3,"name":"Explore — Theory","url":"https://codexofreality.org/theory.html"},
+          {"@type":"SiteNavigationElement","position":4,"name":"Explore — Genesis Oracle","url":"https://codexofreality.org/genesis-oracle.html"},
+          {"@type":"SiteNavigationElement","position":5,"name":"Explore — Glossary","url":"https://codexofreality.org/glossary.html"},
+          {"@type":"SiteNavigationElement","position":6,"name":"Build — Frequency Governance","url":"https://codexofreality.org/systems/frequencies.html"},
+          {"@type":"SiteNavigationElement","position":7,"name":"Build — T-7 Conduit","url":"https://codexofreality.org/systems/t-7.html"},
+          {"@type":"SiteNavigationElement","position":8,"name":"Artifacts — Artifact Registry","url":"https://codexofreality.org/shop.html"},
+          {"@type":"SiteNavigationElement","position":9,"name":"About — Start Here","url":"https://codexofreality.org/start.html"},
+          {"@type":"SiteNavigationElement","position":10,"name":"About — Covenant Caravan","url":"https://codexofreality.org/covenant-caravan.html"}
         ]
       }
     ]
@@ -145,6 +145,7 @@
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
+  <script defer src="assets/js/codex-witness.js"></script>
   <script defer src="assets/js/motion.js"></script>
 </head>
 
@@ -347,6 +348,24 @@
         </div>
         <ul class="codex-activity-list" data-codex-activity-list></ul>
         <p class="codex-activity-empty" data-codex-activity-empty>Codex updates load from the local activity feed when entries are available.</p>
+      </article>
+
+      <article class="card your-codex-panel" data-your-codex-panel>
+        <p class="eyebrow">Your Codex</p>
+        <h2 data-your-codex-heading>Local Witness Record</h2>
+        <p class="today-codex-meta" data-your-codex-summary>Your saved witness records, readings, and notes live only in this browser.</p>
+        <div class="today-codex-stack" data-your-codex-stats>
+          <p><strong>Witness entries:</strong> <span data-your-codex-count>0</span></p>
+          <p><strong>Last entered:</strong> <span data-your-codex-last>No entries yet.</span></p>
+          <p><strong>Moon logs:</strong> <span data-your-codex-moonlogs>0</span></p>
+          <p><strong>Frequency sessions:</strong> <span data-your-codex-freq>0</span></p>
+        </div>
+        <div class="hero-actions">
+          <a class="btn primary" href="./ledger.html">Open Ledger</a>
+          <button class="btn" type="button" data-your-codex-export title="Download all local Codex data as JSON">Export</button>
+          <button class="btn" type="button" data-your-codex-clear title="Clear all local Codex data from this browser">Clear</button>
+        </div>
+        <p class="codex-privacy-note">All Codex data stays in this browser. No account required. Clearing browser storage removes all saved data.</p>
       </article>
     </section>
 
@@ -622,20 +641,46 @@
   </main>
 
   <footer class="site-footer">
-    <nav aria-label="Footer navigation">
-      <a href="./start.html">Start</a>
-      <a href="./moons.html">13 Moons</a>
-      <a href="./covenant-caravan.html">Caravan</a>
-      <a href="./teach.html">Manifest</a>
-      <a href="./shop.html">Artifacts</a>
-      <a href="./hub.html">Hub</a>
-      <a href="./systems/frequencies.html">Frequencies</a>
-      <a href="./systems/archive.html">Systems</a>
-      <a href="./genesis-oracle.html">Oracle</a>
-      <a href="./theory.html">Theory</a>
-      <a href="./ledger.html">Ledger</a>
-      <a href="./ethics.html">Ethics</a>
-      <a href="./sitemap.xml">Sitemap</a>
+    <nav aria-label="Footer site directory" class="footer-directory">
+      <div class="footer-col">
+        <strong>Today</strong>
+        <a href="./moons.html">13 Moons</a>
+        <a href="./ledger.html">Witness Ledger</a>
+        <a href="./hub.html">Year Map</a>
+      </div>
+      <div class="footer-col">
+        <strong>Explore</strong>
+        <a href="./theory.html">Theory</a>
+        <a href="./theory/canon.html">Canon</a>
+        <a href="./genesis-oracle.html">Genesis Oracle</a>
+        <a href="./glossary.html">Glossary</a>
+        <a href="./systems/archive.html">Systems Archive</a>
+      </div>
+      <div class="footer-col">
+        <strong>Build</strong>
+        <a href="./systems/frequencies.html">Frequency Governance</a>
+        <a href="./systems/t-7.html">T-7 Conduit</a>
+        <a href="./systems/recoder.html">Reality Recoder</a>
+        <a href="./systems/mind-renewal.html">Mind Renewal</a>
+        <a href="./lab.html">Remnant Lab</a>
+        <a href="./invoke.html">Invoke</a>
+        <a href="./systems/witness.html">Witness System</a>
+      </div>
+      <div class="footer-col">
+        <strong>Artifacts</strong>
+        <a href="./shop.html">Artifact Registry</a>
+        <a href="./circle.html">Covenant Circle</a>
+      </div>
+      <div class="footer-col">
+        <strong>About</strong>
+        <a href="./start.html">Start Here</a>
+        <a href="./covenant-caravan.html">Covenant Caravan</a>
+        <a href="./teach.html">Manifest</a>
+        <a href="./ethics.html">Ethics</a>
+        <a href="./downloads.html">Downloads</a>
+        <a href="./guide.html">About Aaron</a>
+        <a href="./sitemap.xml">Sitemap</a>
+      </div>
     </nav>
     <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
   </footer>

@@ -1016,3 +1016,29 @@ input[type="range"]::-moz-range-thumb {
     transform: none;
   }
    }
+
+/* =========================================================
+   SAFETY NOTICE — Phase 9 beginner guidance
+   ========================================================= */
+
+.fg-safety-notice {
+  margin: 1rem 0 1.25rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(243, 201, 122, 0.22);
+  border-left: 3px solid var(--gold, #f3c97a);
+  border-radius: 12px;
+  background: rgba(243, 201, 122, 0.05);
+}
+
+.fg-safety-notice ul {
+  margin: 0;
+  padding: 0 0 0 1.2rem;
+  list-style: disc;
+}
+
+.fg-safety-notice li {
+  margin: 0.3rem 0;
+  color: var(--muted, #b9c1c7);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}

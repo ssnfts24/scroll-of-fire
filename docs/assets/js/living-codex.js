@@ -480,6 +480,87 @@
     }
 
     renderActivityFeed(state.recentUpdates);
+    renderYourCodexPanel(state);
+  }
+
+  function renderYourCodexPanel(state) {
+    const panel = document.querySelector("[data-your-codex-panel]");
+    if (!panel) return;
+
+    const witness = state.witnessBreakdown || {};
+    const total = state.witnessCount || 0;
+
+    setText("[data-your-codex-count]", String(total));
+    setText("[data-your-codex-moonlogs]", String(witness.moonLogs || 0));
+    setText("[data-your-codex-freq]", String(witness.frequencyJournal || 0));
+
+    // Last entry time from ledger
+    try {
+      const ledger = JSON.parse(localStorage.getItem(STORAGE.ledger) || "[]");
+      if (Array.isArray(ledger) && ledger.length) {
+        const latest = ledger[0];
+        if (latest && latest.date) {
+          const d = new Date(latest.date);
+          setText("[data-your-codex-last]", formatRelativeDate(d) || d.toLocaleDateString());
+        } else {
+          setText("[data-your-codex-last]", "Entries exist.");
+        }
+      } else {
+        setText("[data-your-codex-last]", "No entries yet.");
+      }
+    } catch (_) {
+      setText("[data-your-codex-last]", "No entries yet.");
+    }
+
+    if (total > 0) {
+      setText("[data-your-codex-heading]", total + (total === 1 ? " Witness Recorded" : " Witnesses Recorded"));
+      setText("[data-your-codex-summary]", "Your local Codex is active. Open the Ledger to review or add entries.");
+    }
+
+    // Export all Codex data
+    const exportBtn = panel.querySelector("[data-your-codex-export]");
+    if (exportBtn && !exportBtn._sofExportBound) {
+      exportBtn._sofExportBound = true;
+      exportBtn.addEventListener("click", function () {
+        const allData = {};
+        try {
+          Object.entries(STORAGE).forEach(function (pair) {
+            const key = pair[0], storageKey = pair[1];
+            try {
+              const val = localStorage.getItem(storageKey);
+              if (val !== null) allData[key] = JSON.parse(val);
+            } catch (_) {
+              try { allData[key] = localStorage.getItem(storageKey); } catch (_) {}
+            }
+          });
+        } catch (_) {}
+
+        const blob = new Blob([JSON.stringify(allData, null, 2)], { type: "application/json" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "scroll-of-fire-codex-" + todayISO() + ".json";
+        a.click();
+        URL.revokeObjectURL(a.href);
+      });
+    }
+
+    // Clear all Codex data
+    const clearBtn = panel.querySelector("[data-your-codex-clear]");
+    if (clearBtn && !clearBtn._sofClearBound) {
+      clearBtn._sofClearBound = true;
+      clearBtn.addEventListener("click", function () {
+        const confirmed = window.confirm(
+          "Clear all local Codex data from this browser?\n\nThis removes your witness entries, moon logs, frequency sessions, and saved paths. This cannot be undone unless you have an export."
+        );
+        if (!confirmed) return;
+        try {
+          Object.values(STORAGE).forEach(function (key) {
+            localStorage.removeItem(key);
+          });
+        } catch (_) {}
+        refresh();
+      });
+    }
   }
 
   function renderActivityFeed(updates) {
