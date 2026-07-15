@@ -775,6 +775,80 @@
 }
 
 /* =========================================================
+   SPOTLIGHT GRID — Remnant 13 Moons feature section
+   ========================================================= */
+
+.spotlight-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(1rem, 3vw, 2rem);
+  align-items: center;
+}
+
+.spotlight-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 12px 50px rgba(0, 0, 0, 0.4);
+}
+
+/* =========================================================
+   FEATURE GRID — Core Gates
+   ========================================================= */
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.feature-card {
+  padding: clamp(1.1rem, 2.5vw, 1.5rem);
+  border-radius: var(--radius-md, 22px);
+}
+
+.feature-card h3 {
+  margin: 0 0 0.5rem;
+  color: var(--gold, #f3c97a);
+}
+
+.feature-card .text-link {
+  display: inline-block;
+  margin-top: 0.75rem;
+  color: var(--cyan, #7af3ff);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.feature-card .text-link:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   WITNESS GRID — Daily Return
+   ========================================================= */
+
+.witness-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+/* =========================================================
+   WHAT GRID — What You Can Do Here
+   ========================================================= */
+
+.what-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+/* =========================================================
    RESPONSIVE
    ========================================================= */
 
@@ -879,7 +953,9 @@
   .door-grid,
   .world-grid,
   .theory-entry-grid,
-  .living-path {
+  .living-path,
+  .spotlight-grid,
+  .witness-grid {
     grid-template-columns: 1fr;
   }
 
