@@ -1,4 +1,4 @@
-/* Scroll of Fire â€” Remnant 13 Moons
+/* Scroll of Fire — Remnant 13 Moons
    Sunset boundary + Shabbat alignment + Daily Mirror + Astrology layer
    Complete UI refresh with restored calendars and richer interaction
  */
@@ -839,7 +839,7 @@ textarea {
 }
 
 .shabbat-summary::after {
-  content: "×©×‘×ª";
+  content: "שבת";
   position: absolute;
   right: 1.2rem;
   top: 0.35rem;
@@ -1225,7 +1225,7 @@ body[data-shabbat-state="active"] .hero-sigil {
 
 .calDay.shabbat::after,
 .gregDay.shabbat::after {
-  content: "×©×‘×ª";
+  content: "שבת";
   position: absolute;
   right: 0.45rem;
   bottom: 0.35rem;
@@ -1816,3 +1816,28 @@ body[data-shabbat-state="active"] .hero-sigil {
     transition: none !important;
   }
      }
+
+/* =========================================================
+   REMNANT 13 MOONS — IMAGE INTEGRATION
+   ========================================================= */
+body[data-remnant-boundary]{background:linear-gradient(rgba(5,7,13,.82),rgba(5,7,13,.95)),url("../img/moons/app/app-bg-dark.webp") center top/cover fixed,var(--bg)}
+.moons-app-hero,.panel-banner,.current-moon-art,.gate-art-card,.saved-empty-state{margin:0}
+.moons-app-hero{position:relative;width:min(100%,980px);margin:1.6rem auto 1.3rem;overflow:hidden;border:1px solid rgba(243,201,122,.28);border-radius:28px;background:rgba(5,7,13,.76);box-shadow:0 30px 80px rgba(0,0,0,.48),0 0 44px rgba(122,243,255,.08)}
+.moons-app-hero::after,.panel-banner::after{content:"";position:absolute;inset:0;pointer-events:none}
+.moons-app-hero::after{background:linear-gradient(to bottom,transparent 60%,rgba(5,7,13,.78)),radial-gradient(circle at 50% 42%,transparent 34%,rgba(5,7,13,.22))}
+.moons-app-hero img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+.current-moon-art{align-self:stretch;overflow:hidden;border:1px solid rgba(243,201,122,.25);border-radius:22px;background:rgba(3,7,13,.72);box-shadow:0 18px 44px rgba(0,0,0,.32)}
+.current-moon-art img{display:block;width:100%;height:100%;min-height:280px;aspect-ratio:1;object-fit:cover}
+.moon-badge.has-moon-art{grid-template-columns:minmax(220px,.78fr) auto minmax(280px,1.22fr)}
+.panel-banner{position:relative;width:100%;max-height:460px;margin:0 0 1.5rem;overflow:hidden;border:1px solid rgba(243,201,122,.2);border-radius:24px;background:rgba(5,7,13,.82);box-shadow:0 22px 58px rgba(0,0,0,.34)}
+.panel-banner::after{background:linear-gradient(to bottom,rgba(5,7,13,.01),rgba(5,7,13,.12) 56%,rgba(5,7,13,.86))}
+.panel-banner img{display:block;width:100%;height:clamp(260px,44vw,460px);object-fit:cover;object-position:center}
+.gate-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:1.5rem 0}
+.gate-art-card{position:relative;overflow:hidden;border:1px solid rgba(243,201,122,.22);border-radius:22px;background:rgba(5,7,13,.82);box-shadow:0 18px 42px rgba(0,0,0,.3)}
+.gate-art-card img{display:block;width:100%;aspect-ratio:1;object-fit:cover;transition:transform .4s ease}
+.gate-art-card:hover img{transform:scale(1.025)}
+.gate-art-card figcaption{position:absolute;right:0;bottom:0;left:0;padding:1rem;color:var(--gold);font-family:"Cinzel",serif;text-align:center;letter-spacing:.06em;background:linear-gradient(transparent,rgba(5,7,13,.97))}
+.saved-empty-state{padding:1.4rem;text-align:center;border:1px dashed rgba(243,201,122,.24);border-radius:22px;background:rgba(255,255,255,.025)}
+.saved-empty-state img{display:block;width:min(100%,420px);margin:0 auto 1rem;border-radius:18px;opacity:.9}
+@media(max-width:980px){.moon-badge.has-moon-art{grid-template-columns:1fr}.current-moon-art img{min-height:0}}
+@media(max-width:760px){body[data-remnant-boundary]{background:linear-gradient(rgba(5,7,13,.84),rgba(5,7,13,.96)),url("../img/moons/app/app-bg-dark.webp") center top/auto 100vh fixed,var(--bg)}.moons-app-hero{margin-top:1rem;border-radius:18px}.panel-banner,.gate-art-card,.current-moon-art{border-radius:18px}.gate-gallery{grid-template-columns:1fr}.panel-banner img{height:auto;aspect-ratio:1}}
