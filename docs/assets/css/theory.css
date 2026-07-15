@@ -529,6 +529,26 @@ body[data-reading-mode] ::selection {
   color: var(--theory-muted);
 }
 
+/* ---- Theory hero visual (living system diagram) ---- */
+
+.theory-hero-visual {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--theory-line);
+  border-radius: calc(var(--theory-radius) + 0.35rem);
+  box-shadow: var(--theory-shadow);
+  min-height: 24rem;
+}
+
+.theory-hero-visual img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 24rem;
+  object-fit: cover;
+  object-position: center;
+}
+
 /* Buttons and chips */
 
 .btn,
@@ -1212,6 +1232,10 @@ body[data-reading-mode="study"] .graph-card {
 
   .theory-orb-card {
     min-height: 20rem;
+  }
+
+  .theory-hero-visual {
+    min-height: 18rem;
   }
 
   .flow-ladder > div {

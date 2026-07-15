@@ -203,3 +203,51 @@
     border-radius:var(--radius-md);
   }
 }
+
+/* =========================================================
+   SECTION VISUAL — full-width responsive image figure
+   ========================================================= */
+
+.section-visual {
+  margin: 0 0 clamp(1.5rem, 4vw, 2.5rem);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+}
+
+.section-visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* =========================================================
+   PAGE HERO FIGURE — constrained gateway image
+   ========================================================= */
+
+.page-hero-figure {
+  margin: 0 auto clamp(1.5rem, 4vw, 2.5rem);
+  max-width: 1180px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 50px rgba(0, 0, 0, 0.4);
+}
+
+.page-hero-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 480px;
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (max-width: 760px) {
+  .section-visual,
+  .page-hero-figure {
+    border-radius: 14px;
+  }
+}
