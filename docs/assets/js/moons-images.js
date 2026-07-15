@@ -1,11 +1,11 @@
 /* Scroll of Fire — Remnant 13 Moons Image Integration
-   Uses the exact descriptive filenames currently stored in the repository.
+   Uses the exact current repository filenames.
 
    Load after:
-   - assets/js/moons.js
-   - assets/js/astrology.js
+   1. assets/js/moons.js
+   2. assets/js/astrology.js
 
-   The unfinished day artwork is intentionally not connected.
+   Day images remain disconnected until all 28 are complete.
 */
 
 (() => {
@@ -68,18 +68,14 @@
     }
   ];
 
-  /*
-   * These filenames match what your GitHub screenshots show.
-   * GitHub Pages is case-sensitive.
-   */
   const PANEL_IMAGES = {
     todayPanel: {
-      file: "sections/Today.webp",
+      file: "sections/today.webp",
       alt: "Today in the Remnant 13 Moons calendar"
     },
 
     flowPanel: {
-      file: "sections/Transmission.webp",
+      file: "sections/transmission.webp",
       alt: "Daily transmission and ritual flow"
     },
 
@@ -99,7 +95,7 @@
     },
 
     calendarPanel: {
-      file: "sections/calenders.webp",
+      file: "sections/calendars.webp",
       alt: "Remnant and Gregorian calendar overlays"
     },
 
@@ -235,24 +231,52 @@
     moonBadge.insertBefore(figure, moonBadge.firstChild);
   }
 
-  function updateCurrentMoonArtwork(detail) {
-    const image = document.getElementById("currentMoonImage");
+  function getCurrentMoonNumber(detail = {}) {
+    const eventMoon = Number(
+      detail?.info?.moon?.idx
+    );
+
+    if (Number.isFinite(eventMoon) && eventMoon >= 1) {
+      return eventMoon;
+    }
+
+    const engine = window.ScrollOfFireMoons;
+
+    if (
+      engine &&
+      typeof engine.remnantInfo === "function"
+    ) {
+      const currentInfo = engine.remnantInfo();
+      const engineMoon = Number(currentInfo?.moon?.idx);
+
+      if (
+        Number.isFinite(engineMoon) &&
+        engineMoon >= 1
+      ) {
+        return engineMoon;
+      }
+    }
+
+    return 1;
+  }
+
+  function updateCurrentMoonArtwork(detail = {}) {
+    const image = document.getElementById(
+      "currentMoonImage"
+    );
 
     if (!image) {
       return;
     }
 
-    const moonNumber = Number(
-      detail?.info?.moon?.idx ||
-      window.ScrollOfFireMoons
-        ?.remnantInfo?.()
-        ?.moon?.idx ||
-      1
-    );
+    const moonNumber = getCurrentMoonNumber(detail);
 
     const index = Math.max(
       0,
-      Math.min(MOON_IMAGES.length - 1, moonNumber - 1)
+      Math.min(
+        MOON_IMAGES.length - 1,
+        moonNumber - 1
+      )
     );
 
     const moon = MOON_IMAGES[index];
@@ -290,14 +314,18 @@
           className: "panel-banner"
         });
 
-        panel.insertBefore(banner, panel.firstChild);
+        panel.insertBefore(
+          banner,
+          panel.firstChild
+        );
       }
     );
   }
 
   function installGateArtwork() {
-    const shabbatPanel =
-      document.getElementById("shabbatPanel");
+    const shabbatPanel = document.getElementById(
+      "shabbatPanel"
+    );
 
     if (!shabbatPanel) {
       console.warn(
@@ -314,6 +342,7 @@
     const gallery = document.createElement("section");
 
     gallery.className = "gate-gallery";
+
     gallery.setAttribute(
       "aria-label",
       "Shabbat cycle gates"
@@ -326,15 +355,19 @@
         className: "gate-art-card"
       });
 
-      const caption = document.createElement("figcaption");
+      const caption = document.createElement(
+        "figcaption"
+      );
+
       caption.textContent = gate.label;
 
       figure.appendChild(caption);
       gallery.appendChild(figure);
     });
 
-    const ritualHero =
-      shabbatPanel.querySelector(".ritual-hero");
+    const ritualHero = shabbatPanel.querySelector(
+      ".ritual-hero"
+    );
 
     if (ritualHero) {
       ritualHero.insertAdjacentElement(
@@ -350,7 +383,9 @@
   }
 
   function installSavedLogEmptyState() {
-    const savedList = document.getElementById("savedList");
+    const savedList = document.getElementById(
+      "savedList"
+    );
 
     if (!savedList) {
       return;
@@ -394,7 +429,10 @@
         link.classList.toggle("active", active);
 
         if (active) {
-          link.setAttribute("aria-current", "page");
+          link.setAttribute(
+            "aria-current",
+            "page"
+          );
         } else {
           link.removeAttribute("aria-current");
         }
@@ -403,15 +441,20 @@
 
   function installTabTracking() {
     document.querySelectorAll(".tab").forEach(button => {
-      if (button.dataset.imageTrackingInstalled === "true") {
+      if (
+        button.dataset.imageTrackingInstalled ===
+        "true"
+      ) {
         return;
       }
 
       button.dataset.imageTrackingInstalled = "true";
 
       button.addEventListener("click", () => {
-        if (button.dataset.tab) {
-          markMobileTab(button.dataset.tab);
+        const panelId = button.dataset.tab;
+
+        if (panelId) {
+          markMobileTab(panelId);
         }
       });
     });
@@ -436,19 +479,7 @@
     );
 
     installAllArtwork();
-
-    /*
-     * This updates the Moon artwork even if moons.js rendered
-     * before this integration file finished loading.
-     */
-    const currentInfo =
-      window.ScrollOfFireMoons?.remnantInfo?.();
-
-    if (currentInfo) {
-      updateCurrentMoonArtwork({
-        info: currentInfo
-      });
-    }
+    updateCurrentMoonArtwork();
   }
 
   document.addEventListener(
@@ -481,7 +512,10 @@
 
   window.addEventListener(
     "load",
-    installAllArtwork,
+    () => {
+      installAllArtwork();
+      updateCurrentMoonArtwork();
+    },
     { once: true }
   );
 })();
