@@ -109,7 +109,7 @@ body.caravan-page,
   overflow: hidden;
   background:
     linear-gradient(rgba(0, 0, 0, 0.45), rgba(5, 3, 2, 0.9)),
-    url("../img/caravan/covenant-caravan-hero.jpg") center/cover no-repeat;
+    url("../img/home/gates/home-gate-covenant-caravan.webp") center/cover no-repeat;
 }
 
 .hero-overlay {
