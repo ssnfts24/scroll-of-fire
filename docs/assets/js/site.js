@@ -85,16 +85,23 @@
           targetPath !== "/" &&
           targetPath === currentPath;
 
+        // Mark "Theory" link active when inside theory/ sub-pages
         const isTheorySection =
           currentPath.startsWith("/theory/") &&
           targetPath === "/theory.html";
 
+        // Mark relevant Explore links active when in a theory/ equation page
+        const isEquationsSection =
+          currentPath.startsWith("/theory/equations/") &&
+          targetPath.startsWith("/theory/");
+
+        // Mark "Systems Archive" active for systems/ pages
         const isSystemsSection =
           currentPath.startsWith("/systems/") &&
-          targetPath === "/hub.html";
+          targetPath === "/systems/archive.html";
 
         const isActive =
-          isHome || isExact || isTheorySection || isSystemsSection;
+          isHome || isExact || isTheorySection || isEquationsSection || isSystemsSection;
 
         if (isActive) {
           anchor.setAttribute("aria-current", "page");
@@ -110,7 +117,7 @@
 
         anchor.classList.toggle(
           "is-current-section",
-          isTheorySection || isSystemsSection
+          isTheorySection || isEquationsSection || isSystemsSection
         );
       });
   }
