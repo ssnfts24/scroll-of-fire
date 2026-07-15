@@ -30,13 +30,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 1.25rem;
   min-height: var(--header-h, 72px);
-  padding: 0.8rem clamp(1rem, 3vw, 2rem);
+  padding-block: 0.72rem;
+  padding-inline: max(var(--shell-pad, 1rem), calc((100vw - var(--content-wide, 1440px)) / 2 + var(--shell-pad, 1rem)));
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(5, 7, 13, 0.92);
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   isolation: isolate;
 }
 
@@ -45,6 +46,7 @@
   align-items: center;
   gap: 0.75rem;
   min-width: 0;
+  flex: 0 1 18rem;
   color: var(--text, #f4f1e8);
   text-decoration: none;
 }
@@ -93,8 +95,10 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.2rem;
-  flex-wrap: wrap;
+  gap: 0.32rem;
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  min-width: 0;
 }
 
 .site-nav a,
@@ -103,14 +107,15 @@
   align-items: center;
   justify-content: center;
   min-height: 40px;
-  padding: 0.55rem 0.72rem;
+  padding: 0.58rem 0.86rem;
   border: 0;
   border-radius: 999px;
   color: var(--text, #f4f1e8);
   background: transparent;
   text-decoration: none;
   font: inherit;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
+  font-weight: 700;
   line-height: 1.2;
   cursor: pointer;
   transition:
@@ -136,7 +141,7 @@
 
 .site-nav a[aria-current="page"] {
   color: var(--gold, #f3c97a);
-  background: rgba(243, 201, 122, 0.08);
+  background: rgba(243, 201, 122, 0.1);
 }
 
 .site-nav a.is-current-section {
@@ -250,21 +255,21 @@
   left: 0;
   top: calc(100% + 0.5rem);
   z-index: 850;
-  min-width: 200px;
-  max-width: min(260px, calc(100vw - 2rem));
+  min-width: 230px;
+  max-width: min(290px, calc(100vw - 2rem));
   max-height: min(70vh, 620px);
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.24rem;
   overflow: auto;
   overflow-x: hidden;
-  padding: 0.55rem;
+  padding: 0.7rem;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 18px;
-  background: rgba(8, 12, 20, 0.99);
+  border-radius: 20px;
+  background: rgba(8, 12, 20, 0.98);
   box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   overscroll-behavior: contain;
   opacity: 0;
   visibility: hidden;
@@ -282,6 +287,11 @@
   right: 0;
 }
 
+.nav-dropdown[data-drop-align="end"] .nav-drop-menu {
+  left: auto;
+  right: 0;
+}
+
 .nav-dropdown.is-dropdown-open .nav-drop-menu {
   opacity: 1;
   visibility: visible;
@@ -292,8 +302,9 @@
 .nav-drop-menu a {
   justify-content: flex-start;
   width: 100%;
-  padding: 0.62rem 0.75rem;
-  border-radius: 12px;
+  min-height: 42px;
+  padding: 0.72rem 0.8rem;
+  border-radius: 14px;
   text-align: left;
 }
 
@@ -314,11 +325,11 @@ body.site-menu-open {
   position: sticky;
   top: var(--header-h, 72px);
   z-index: 790;
-  padding: 0 clamp(1rem, 3vw, 2rem);
+  padding-inline: max(var(--shell-pad, 1rem), calc((100vw - var(--content-wide, 1440px)) / 2 + var(--shell-pad, 1rem)));
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(5, 7, 13, 0.88);
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 
 .theory-subnav {
@@ -385,8 +396,8 @@ body.site-menu-open {
 
   .site-nav a,
   .nav-drop-btn {
-    padding: 0.5rem 0.58rem;
-    font-size: 0.86rem;
+    padding: 0.5rem 0.68rem;
+    font-size: 0.82rem;
   }
 }
 
@@ -594,11 +605,11 @@ body.site-menu-open {
   position: sticky;
   top: var(--header-h, 72px);
   z-index: 720;
-  padding: 0.35rem clamp(0.75rem, 3vw, 1.4rem) 0.55rem;
+  padding: 0.3rem max(0.75rem, calc((100vw - var(--content-wide, 1440px)) / 2 + 0.75rem)) 0.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(5, 7, 13, 0.82);
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 .living-signal-bar {

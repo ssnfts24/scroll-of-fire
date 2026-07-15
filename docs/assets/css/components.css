@@ -1,7 +1,7 @@
 .hero-actions{
   display:flex;
   flex-wrap:wrap;
-  gap:.75rem;
+  gap:.85rem;
   margin-top:1.25rem;
 }
 
@@ -13,7 +13,7 @@
   justify-content:center;
   gap:.4rem;
   min-height:44px;
-  padding:.75rem 1rem;
+  padding:.8rem 1.08rem;
   border:1px solid var(--line);
   border-radius:999px;
   color:var(--text);
@@ -54,8 +54,8 @@
 }
 
 .section-heading{
-  max-width:850px;
-  margin:0 auto 1.25rem;
+  max-width:min(100%,var(--content-reading));
+  margin:0 auto clamp(1.35rem,3vw,2.35rem);
   text-align:center;
 }
 
@@ -90,6 +90,8 @@
   overflow:hidden;
   padding:1rem;
   border-radius:var(--radius-md);
+  content-visibility:auto;
+  contain-intrinsic-size:1px 320px;
 }
 
 .signal-card strong{
@@ -150,13 +152,15 @@
 
 .card{
   min-width:0;
-  padding:clamp(1rem,2.5vw,1.4rem);
+  padding:clamp(1.05rem,2.2vw,1.55rem);
   border:1px solid rgba(255,255,255,.12);
   border-radius:var(--radius-md);
   background:
     radial-gradient(circle at 18% 0%,rgba(243,201,122,.08),transparent 36%),
     linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
   box-shadow:var(--shadow-soft,0 18px 56px rgba(0,0,0,.34));
+  content-visibility:auto;
+  contain-intrinsic-size:1px 320px;
 }
 
 .card > :first-child{margin-top:0}
@@ -230,8 +234,8 @@
 
 .page-hero-figure {
   margin: 0 auto clamp(1.5rem, 4vw, 2.5rem);
-  max-width: 1180px;
-  border-radius: 20px;
+  max-width: min(100%, var(--content-main));
+  border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 12px 50px rgba(0, 0, 0, 0.4);
 }
@@ -240,9 +244,9 @@
   display: block;
   width: 100%;
   height: auto;
-  max-height: 480px;
+  max-height: clamp(320px, 38vw, 560px);
   object-fit: cover;
-  object-position: center;
+  object-position: center 32%;
 }
 
 @media (max-width: 760px) {

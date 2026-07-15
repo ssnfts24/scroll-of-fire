@@ -3,7 +3,7 @@
    design tokens (--bg, --card, --line, --gold, --cyan, --muted, --ink, --radius). */
 
 :root {
-  --sl-maxw: 960px;
+  --sl-maxw: 760px;
 }
 
 /* ---- Top bar / nav -------------------------------------------------------- */
@@ -50,9 +50,9 @@
 .page {
   position: relative;
   z-index: 1;
-  max-width: var(--sl-maxw);
+  width: min(calc(100% - clamp(1rem, 4vw, 1.6rem)), var(--sl-maxw));
   margin: 0 auto;
-  padding: clamp(1.4rem, 4vw, 2.6rem) clamp(1rem, 4vw, 1.6rem) 4rem;
+  padding: clamp(1.6rem, 4vw, 2.8rem) 0 4rem;
 }
 .page.shell > h1 {
   margin: .2rem 0 .4rem;
