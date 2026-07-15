@@ -1,11 +1,11 @@
 /* Scroll of Fire — Remnant 13 Moons Image Integration
-   Uses the filenames currently stored in the repository.
+   Uses the exact descriptive filenames currently stored in the repository.
 
-   Load this file after:
-   1. moons.js
-   2. astrology.js
+   Load after:
+   - assets/js/moons.js
+   - assets/js/astrology.js
 
-   Day images remain disabled until all 28 are complete.
+   The unfinished day artwork is intentionally not connected.
 */
 
 (() => {
@@ -13,131 +13,172 @@
 
   const ROOT = "assets/img/moons";
 
-  /*
-   * The Moon files use the simple naming system:
-   * moon1.webp through moon13.webp
-   */
   const MOON_IMAGES = [
-    ["moon1.webp", "Moon 1 — Seed Flame"],
-    ["moon2.webp", "Moon 2 — Root Waters"],
-    ["moon3.webp", "Moon 3 — Breath Gate"],
-    ["moon4.webp", "Moon 4 — Stone Witness"],
-    ["moon5.webp", "Moon 5 — Living Word"],
-    ["moon6.webp", "Moon 6 — Fire Trial"],
-    ["moon7.webp", "Moon 7 — Crown Balance"],
-    ["moon8.webp", "Moon 8 — Deep Mirror"],
-    ["moon9.webp", "Moon 9 — Return Path"],
-    ["moon10.webp", "Moon 10 — Builder’s Hand"],
-    ["moon11.webp", "Moon 11 — Star Remembrance"],
-    ["moon12.webp", "Moon 12 — River of Signs"],
-    ["moon13.webp", "Moon 13 — Completion Seal"]
+    {
+      file: "moon-01-seed-flame.webp",
+      alt: "Moon 1 — Seed Flame"
+    },
+    {
+      file: "moon-02-root-waters.webp",
+      alt: "Moon 2 — Root Waters"
+    },
+    {
+      file: "moon-03-breath-gate.webp",
+      alt: "Moon 3 — Breath Gate"
+    },
+    {
+      file: "moon-04-stone-witness.webp",
+      alt: "Moon 4 — Stone Witness"
+    },
+    {
+      file: "moon-05-living-word.webp",
+      alt: "Moon 5 — Living Word"
+    },
+    {
+      file: "moon-06-fire-trial.webp",
+      alt: "Moon 6 — Fire Trial"
+    },
+    {
+      file: "moon-07-crown-balance.webp",
+      alt: "Moon 7 — Crown Balance"
+    },
+    {
+      file: "moon-08-deep-mirror.webp",
+      alt: "Moon 8 — Deep Mirror"
+    },
+    {
+      file: "moon-09-return-path.webp",
+      alt: "Moon 9 — Return Path"
+    },
+    {
+      file: "moon-10-builders-hand.webp",
+      alt: "Moon 10 — Builder’s Hand"
+    },
+    {
+      file: "moon-11-star-remembrance.webp",
+      alt: "Moon 11 — Star Remembrance"
+    },
+    {
+      file: "moon-12-river-of-signs.webp",
+      alt: "Moon 12 — River of Signs"
+    },
+    {
+      file: "moon-13-completion-seal.webp",
+      alt: "Moon 13 — Completion Seal"
+    }
   ];
 
   /*
-   * These paths match the filenames visible in your repository.
-   *
-   * GitHub Pages is case-sensitive:
-   * Today.webp is not the same as today.webp.
-   * Transmission.webp is not the same as transmission.webp.
-   * calenders.webp is intentionally spelled as it currently exists.
+   * These filenames match what your GitHub screenshots show.
+   * GitHub Pages is case-sensitive.
    */
   const PANEL_IMAGES = {
-    todayPanel: [
-      "sections/Today.webp",
-      "Today in the Remnant 13 Moons calendar"
-    ],
+    todayPanel: {
+      file: "sections/Today.webp",
+      alt: "Today in the Remnant 13 Moons calendar"
+    },
 
-    flowPanel: [
-      "sections/Transmission.webp",
-      "Daily transmission and ritual flow"
-    ],
+    flowPanel: {
+      file: "sections/Transmission.webp",
+      alt: "Daily transmission and ritual flow"
+    },
 
-    mirrorPanel: [
-      "sections/memory.webp",
-      "Mirror reading and pattern memory"
-    ],
+    mirrorPanel: {
+      file: "sections/memory.webp",
+      alt: "Mirror reading and pattern memory"
+    },
 
-    witnessPanel: [
-      "sections/witness.webp",
-      "Daily witness and coherence log"
-    ],
+    witnessPanel: {
+      file: "sections/witness.webp",
+      alt: "Daily witness and coherence log"
+    },
 
-    astrologyPanel: [
-      "sections/astrology.webp",
-      "Astrology and planetary alignment mirror"
-    ],
+    astrologyPanel: {
+      file: "sections/astrology.webp",
+      alt: "Astrology and planetary alignment mirror"
+    },
 
-    calendarPanel: [
-      "sections/calenders.webp",
-      "Remnant and Gregorian calendar overlays"
-    ],
+    calendarPanel: {
+      file: "sections/calenders.webp",
+      alt: "Remnant and Gregorian calendar overlays"
+    },
 
-    codexPanel: [
-      "sections/builder.webp",
-      "Codex seal and builder’s pattern"
-    ],
+    codexPanel: {
+      file: "sections/builder.webp",
+      alt: "Codex seal and builder pattern"
+    },
 
-    fieldPanel: [
-      "sections/frequency.webp",
-      "Frequency and field observation layer"
-    ]
+    fieldPanel: {
+      file: "sections/frequency.webp",
+      alt: "Frequency and field observation layer"
+    }
   };
 
   const GATE_IMAGES = [
-    [
-      "gates/gate-01-preparation.webp",
-      "Preparation Gate"
-    ],
-
-    [
-      "gates/gate-06-alignment.webp",
-      "Shabbat Alignment"
-    ],
-
-    [
-      "gates/gate-08-return.webp",
-      "Return Gate"
-    ]
+    {
+      file: "gates/gate-01-preparation.webp",
+      label: "Preparation Gate"
+    },
+    {
+      file: "gates/gate-06-alignment.webp",
+      label: "Alignment Gate"
+    },
+    {
+      file: "gates/gate-08-return.webp",
+      label: "Return Gate"
+    }
   ];
 
-  function createFigure(path, alt, className) {
+  function assetPath(relativePath) {
+    return `${ROOT}/${relativePath}`;
+  }
+
+  function createImageFigure({
+    file,
+    alt,
+    className,
+    eager = false
+  }) {
     const figure = document.createElement("figure");
     figure.className = className;
 
-    const img = document.createElement("img");
+    const image = document.createElement("img");
 
-    img.src = `${ROOT}/${path}`;
-    img.alt = alt;
-    img.decoding = "async";
+    image.src = assetPath(file);
+    image.alt = alt;
+    image.decoding = "async";
+    image.loading = eager ? "eager" : "lazy";
 
-    if (className === "moons-app-hero") {
-      img.loading = "eager";
-      img.fetchPriority = "high";
-    } else {
-      img.loading = "lazy";
+    if (eager) {
+      image.fetchPriority = "high";
     }
 
-    /*
-     * Makes missing paths easier to detect without breaking the page.
-     */
-    img.addEventListener("error", () => {
+    image.addEventListener("load", () => {
+      figure.classList.add("image-loaded");
+    });
+
+    image.addEventListener("error", () => {
       figure.classList.add("image-load-failed");
 
-      console.warn(
-        "[Remnant 13 Moons] Image could not be loaded:",
-        img.src
+      console.error(
+        "[Remnant 13 Moons] Image failed to load:",
+        image.src
       );
     });
 
-    figure.appendChild(img);
+    figure.appendChild(image);
 
     return figure;
   }
 
-  function installHero() {
+  function installMainHero() {
     const pageHead = document.querySelector(".page-head");
 
     if (!pageHead) {
+      console.warn(
+        "[Remnant 13 Moons] Could not find .page-head."
+      );
+
       return;
     }
 
@@ -145,13 +186,14 @@
       return;
     }
 
-    const subtitle = pageHead.querySelector(".subtitle");
+    const hero = createImageFigure({
+      file: "app/splash-2732.webp",
+      alt: "Remnant 13 Moons living calendar",
+      className: "moons-app-hero",
+      eager: true
+    });
 
-    const hero = createFigure(
-      "app/splash-2732.webp",
-      "Remnant 13 Moons living calendar",
-      "moons-app-hero"
-    );
+    const subtitle = pageHead.querySelector(".subtitle");
 
     if (subtitle) {
       subtitle.insertAdjacentElement("afterend", hero);
@@ -160,102 +202,112 @@
     }
   }
 
-  function installCurrentMoonImage() {
-    const badge = document.querySelector(".moon-badge");
+  function installCurrentMoonArtwork() {
+    const moonBadge = document.querySelector(".moon-badge");
 
-    if (!badge) {
+    if (!moonBadge) {
+      console.warn(
+        "[Remnant 13 Moons] Could not find .moon-badge."
+      );
+
       return;
     }
 
-    if (badge.querySelector(".current-moon-art")) {
+    if (moonBadge.querySelector(".current-moon-art")) {
       return;
     }
 
-    const figure = createFigure(
-      "moons/moon1.webp",
-      "Moon 1 — Seed Flame",
-      "current-moon-art"
-    );
+    const firstMoon = MOON_IMAGES[0];
 
-    const img = figure.querySelector("img");
+    const figure = createImageFigure({
+      file: `moons/${firstMoon.file}`,
+      alt: firstMoon.alt,
+      className: "current-moon-art"
+    });
 
-    if (img) {
-      img.id = "currentMoonImage";
+    const image = figure.querySelector("img");
+
+    if (image) {
+      image.id = "currentMoonImage";
     }
 
-    badge.classList.add("has-moon-art");
-    badge.insertBefore(figure, badge.firstChild);
+    moonBadge.classList.add("has-moon-art");
+    moonBadge.insertBefore(figure, moonBadge.firstChild);
   }
 
-  function updateCurrentMoonImage(detail) {
-    const img = document.getElementById("currentMoonImage");
+  function updateCurrentMoonArtwork(detail) {
+    const image = document.getElementById("currentMoonImage");
 
-    if (!img) {
+    if (!image) {
       return;
     }
 
     const moonNumber = Number(
-      detail &&
-      detail.info &&
-      detail.info.moon &&
-      detail.info.moon.idx
-        ? detail.info.moon.idx
-        : 1
+      detail?.info?.moon?.idx ||
+      window.ScrollOfFireMoons
+        ?.remnantInfo?.()
+        ?.moon?.idx ||
+      1
     );
 
     const index = Math.max(
       0,
-      Math.min(12, moonNumber - 1)
+      Math.min(MOON_IMAGES.length - 1, moonNumber - 1)
     );
 
-    const currentMoon = MOON_IMAGES[index];
+    const moon = MOON_IMAGES[index];
 
-    img.src = `${ROOT}/moons/${currentMoon[0]}`;
-    img.alt = currentMoon[1];
+    image.src = assetPath(`moons/${moon.file}`);
+    image.alt = moon.alt;
   }
 
-  function installPanelBanners() {
+  function installPanelArtwork() {
     Object.entries(PANEL_IMAGES).forEach(
-      ([panelId, imageConfig]) => {
+      ([panelId, artwork]) => {
         const panel = document.getElementById(panelId);
 
         if (!panel) {
+          console.warn(
+            `[Remnant 13 Moons] Could not find #${panelId}.`
+          );
+
           return;
         }
 
-        const existingBanner = Array.from(panel.children).find(
-          child => child.classList.contains("panel-banner")
+        const existingBanner = Array.from(
+          panel.children
+        ).find(child =>
+          child.classList.contains("panel-banner")
         );
 
         if (existingBanner) {
           return;
         }
 
-        const path = imageConfig[0];
-        const alt = imageConfig[1];
+        const banner = createImageFigure({
+          file: artwork.file,
+          alt: artwork.alt,
+          className: "panel-banner"
+        });
 
-        const banner = createFigure(
-          path,
-          alt,
-          "panel-banner"
-        );
-
-        panel.insertBefore(
-          banner,
-          panel.firstChild
-        );
+        panel.insertBefore(banner, panel.firstChild);
       }
     );
   }
 
-  function installGateGallery() {
-    const panel = document.getElementById("shabbatPanel");
+  function installGateArtwork() {
+    const shabbatPanel =
+      document.getElementById("shabbatPanel");
 
-    if (!panel) {
+    if (!shabbatPanel) {
+      console.warn(
+        "[Remnant 13 Moons] Could not find #shabbatPanel."
+      );
+
       return;
     }
 
-    if (panel.querySelector(".gate-gallery")) {
+    if (shabbatPanel.querySelector(".gate-gallery")) {
       return;
     }
 
@@ -267,50 +319,57 @@
       "Shabbat cycle gates"
     );
 
-    GATE_IMAGES.forEach(([path, label]) => {
-      const card = createFigure(
-        path,
-        label,
-        "gate-art-card"
-      );
+    GATE_IMAGES.forEach(gate => {
+      const figure = createImageFigure({
+        file: gate.file,
+        alt: gate.label,
+        className: "gate-art-card"
+      });
 
       const caption = document.createElement("figcaption");
-      caption.textContent = label;
+      caption.textContent = gate.label;
 
-      card.appendChild(caption);
-      gallery.appendChild(card);
+      figure.appendChild(caption);
+      gallery.appendChild(figure);
     });
 
-    const hero = panel.querySelector(".ritual-hero");
+    const ritualHero =
+      shabbatPanel.querySelector(".ritual-hero");
 
-    if (hero) {
-      hero.insertAdjacentElement("afterend", gallery);
+    if (ritualHero) {
+      ritualHero.insertAdjacentElement(
+        "afterend",
+        gallery
+      );
     } else {
-      panel.insertBefore(gallery, panel.firstChild);
+      shabbatPanel.insertBefore(
+        gallery,
+        shabbatPanel.firstChild
+      );
     }
   }
 
-  function showSavedLogsEmptyState() {
-    const host = document.getElementById("savedList");
+  function installSavedLogEmptyState() {
+    const savedList = document.getElementById("savedList");
 
-    if (!host) {
+    if (!savedList) {
       return;
     }
 
-    const currentText = host.textContent.trim();
+    const currentText = savedList.textContent.trim();
 
-    const isEmpty =
+    const empty =
       currentText === "" ||
       /^No saved logs yet\.?$/i.test(currentText);
 
-    if (!isEmpty) {
+    if (!empty) {
       return;
     }
 
-    host.innerHTML = `
+    savedList.innerHTML = `
       <div class="saved-empty-state">
         <img
-          src="${ROOT}/app/empty-state.webp"
+          src="${assetPath("app/empty-state.webp")}"
           alt=""
           loading="lazy"
           decoding="async"
@@ -325,7 +384,7 @@
     `;
   }
 
-  function markActiveMobileTab(panelId) {
+  function markMobileTab(panelId) {
     document
       .querySelectorAll("[data-mobile-tab]")
       .forEach(link => {
@@ -342,64 +401,69 @@
       });
   }
 
-  function installMobileTabTracking() {
-    document
-      .querySelectorAll(".tab")
-      .forEach(button => {
-        if (button.dataset.imageTabTracking === "true") {
-          return;
+  function installTabTracking() {
+    document.querySelectorAll(".tab").forEach(button => {
+      if (button.dataset.imageTrackingInstalled === "true") {
+        return;
+      }
+
+      button.dataset.imageTrackingInstalled = "true";
+
+      button.addEventListener("click", () => {
+        if (button.dataset.tab) {
+          markMobileTab(button.dataset.tab);
         }
-
-        button.dataset.imageTabTracking = "true";
-
-        button.addEventListener("click", () => {
-          const panelId = button.dataset.tab;
-
-          if (panelId) {
-            markActiveMobileTab(panelId);
-          }
-        });
       });
+    });
   }
 
-  function installAllImages() {
-    installHero();
-    installCurrentMoonImage();
-    installPanelBanners();
-    installGateGallery();
-    installMobileTabTracking();
+  function installAllArtwork() {
+    installMainHero();
+    installCurrentMoonArtwork();
+    installPanelArtwork();
+    installGateArtwork();
+    installTabTracking();
 
     window.setTimeout(
-      showSavedLogsEmptyState,
+      installSavedLogEmptyState,
       0
     );
   }
 
-  /*
-   * The main Moon engine sends this event whenever the selected
-   * calendar date or Moon changes.
-   */
+  function initialize() {
+    console.info(
+      "[Remnant 13 Moons] moons-images.js loaded."
+    );
+
+    installAllArtwork();
+
+    /*
+     * This updates the Moon artwork even if moons.js rendered
+     * before this integration file finished loading.
+     */
+    const currentInfo =
+      window.ScrollOfFireMoons?.remnantInfo?.();
+
+    if (currentInfo) {
+      updateCurrentMoonArtwork({
+        info: currentInfo
+      });
+    }
+  }
+
   document.addEventListener(
     "sof:moon-render",
     event => {
-      installAllImages();
-      updateCurrentMoonImage(event.detail || {});
-
-      window.setTimeout(
-        showSavedLogsEmptyState,
-        0
-      );
+      installAllArtwork();
+      updateCurrentMoonArtwork(event.detail || {});
     }
   );
 
-  /*
-   * Refresh the Saved Logs area after a witness is saved.
-   */
   document.addEventListener(
     "sof:witness-saved",
     () => {
       window.setTimeout(
-        showSavedLogsEmptyState,
+        installSavedLogEmptyState,
         0
       );
     }
@@ -408,14 +472,16 @@
   if (document.readyState === "loading") {
     document.addEventListener(
       "DOMContentLoaded",
-      installAllImages
+      initialize,
+      { once: true }
     );
   } else {
-    installAllImages();
+    initialize();
   }
 
   window.addEventListener(
     "load",
-    installAllImages
+    installAllArtwork,
+    { once: true }
   );
 })();
