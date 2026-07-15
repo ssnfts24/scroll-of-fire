@@ -251,3 +251,187 @@
     border-radius: 14px;
   }
 }
+
+/* =========================================================
+   STATUS BADGES (Phase 10)
+   Labels: live, growing, experimental, in-development,
+   archived, reference, personal-practice
+   ========================================================= */
+
+.codex-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.7rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.codex-status::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: 0 0 6px;
+  background: currentColor;
+}
+
+.codex-status[data-status="live"] {
+  color: #6ef4a0;
+  background: rgba(110, 244, 160, 0.1);
+  border-color: rgba(110, 244, 160, 0.25);
+}
+
+.codex-status[data-status="live"]::before {
+  animation: codex-pulse 2s ease-in-out infinite;
+}
+
+.codex-status[data-status="growing"] {
+  color: var(--cyan, #7af3ff);
+  background: rgba(122, 243, 255, 0.08);
+  border-color: rgba(122, 243, 255, 0.22);
+}
+
+.codex-status[data-status="experimental"] {
+  color: var(--gold, #f3c97a);
+  background: rgba(243, 201, 122, 0.08);
+  border-color: rgba(243, 201, 122, 0.22);
+}
+
+.codex-status[data-status="in-development"] {
+  color: var(--ember, #ff7a3d);
+  background: rgba(255, 122, 61, 0.08);
+  border-color: rgba(255, 122, 61, 0.22);
+}
+
+.codex-status[data-status="archived"] {
+  color: var(--muted, #b9c1c7);
+  background: rgba(185, 193, 199, 0.06);
+  border-color: rgba(185, 193, 199, 0.15);
+}
+
+.codex-status[data-status="reference"] {
+  color: #9b8fcc;
+  background: rgba(155, 143, 204, 0.08);
+  border-color: rgba(155, 143, 204, 0.22);
+}
+
+.codex-status[data-status="personal-practice"] {
+  color: #c8a87a;
+  background: rgba(200, 168, 122, 0.08);
+  border-color: rgba(200, 168, 122, 0.2);
+}
+
+@keyframes codex-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .codex-status[data-status="live"]::before {
+    animation: none;
+  }
+}
+
+/* =========================================================
+   IMAGE SYSTEM (Phase 15)
+   Shared responsive image classes
+   ========================================================= */
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.codex-hero-image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center;
+}
+
+.codex-square-image {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  object-position: center;
+}
+
+.codex-portrait-image {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.codex-img-lazy {
+  content-visibility: auto;
+}
+
+/* =========================================================
+   RECORD WITNESS SHARED ACTION (Phase 8)
+   ========================================================= */
+
+.record-witness-band {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  margin: 2rem 0;
+  border: 1px solid rgba(122, 243, 255, 0.18);
+  border-radius: 16px;
+  background: rgba(122, 243, 255, 0.04);
+}
+
+.record-witness-band .record-witness-icon {
+  flex: 0 0 40px;
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.record-witness-band .record-witness-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.record-witness-band .record-witness-text strong {
+  display: block;
+  color: var(--cyan, #7af3ff);
+  font-size: 0.9rem;
+}
+
+.record-witness-band .record-witness-text span {
+  color: var(--muted, #b9c1c7);
+  font-size: 0.82rem;
+}
+
+.record-witness-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0.55rem 1rem;
+  border: 1px solid rgba(122, 243, 255, 0.3);
+  border-radius: 999px;
+  color: var(--cyan, #7af3ff);
+  background: rgba(122, 243, 255, 0.06);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.record-witness-link:hover,
+.record-witness-link:focus-visible {
+  background: rgba(122, 243, 255, 0.12);
+  border-color: rgba(122, 243, 255, 0.5);
+}

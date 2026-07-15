@@ -392,31 +392,35 @@
     document.querySelectorAll("[data-living-signal-root]").forEach(function (root) {
       const items = [];
 
+      // Primary moon indicator: Moon name · Day/28 · Phase
       if (state.moon && state.moon.moon && state.moon.day) {
-        items.push("☾ Moon " + state.moon.moon + " · Day " + state.moon.day + " of 28");
+        let moonLabel = "☾ Moon " + state.moon.moon;
+        if (state.moon.moonName) moonLabel += " · " + state.moon.moonName;
+        moonLabel += " · Day " + state.moon.day + "/28";
+        if (state.moon.phase) moonLabel += " · " + state.moon.phase;
+        items.push({ text: moonLabel, href: "./moons.html" });
       }
 
-      items.push(state.daypart + " Field · Local time " + state.localTime);
-
-      if (state.currentGate && state.currentGate.title) {
-        items.push("Current gate: " + state.currentGate.title);
-      }
+      items.push({ text: state.daypart + " Field · " + state.localTime });
 
       if (state.witnessCount) {
-        items.push("Ξ " + state.witnessCount + " local witness records");
+        items.push({ text: "Ξ " + state.witnessCount + " witness records", href: "./ledger.html" });
       }
 
       if (state.lastGate && state.lastGate.title) {
-        items.push("Last gate: " + state.lastGate.title);
+        items.push({ text: "Last: " + state.lastGate.title, href: state.lastGate.href });
       }
 
       if (state.recentUpdates.length) {
-        items.push("▲ " + state.recentUpdates.length + " recent Codex updates");
+        items.push({ text: "▲ " + state.recentUpdates.length + " recent updates" });
       }
 
       root.innerHTML = items
         .map(function (item) {
-          return '<li class="living-signal-item">' + escapeHTML(item) + "</li>";
+          if (item.href) {
+            return '<li class="living-signal-item"><a class="living-signal-link" href="' + escapeAttribute(item.href) + '">' + escapeHTML(item.text) + "</a></li>";
+          }
+          return '<li class="living-signal-item">' + escapeHTML(item.text) + "</li>";
         })
         .join("");
     });

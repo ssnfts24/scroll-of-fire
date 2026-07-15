@@ -98,6 +98,12 @@
 
         if (isActive) {
           anchor.setAttribute("aria-current", "page");
+
+          // Mark parent dropdown as having an active child
+          const parentDropdown = anchor.closest("[data-dropdown]");
+          if (parentDropdown) {
+            parentDropdown.classList.add("has-active-child");
+          }
         } else {
           anchor.removeAttribute("aria-current");
         }

@@ -54,6 +54,8 @@
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/animations.css">
   <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/calendar-cor.js"></script>
+  <script defer src="assets/js/living-codex.js"></script>
   <script defer src="assets/js/motion.js"></script>
 </head>
 
@@ -75,44 +77,86 @@
     </button>
 
     <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
-      <a href="./start.html">Start</a>
-      <a class="is-featured" href="./moons.html">13 Moons</a>
-      <a href="./covenant-caravan.html">Caravan</a>
-      <a href="./teach.html">Manifest</a>
-      <a href="./shop.html">Artifacts</a>
-      <a href="./hub.html">Hub</a>
-      <a href="./ledger.html">Ledger</a>
-      <a href="./systems/frequencies.html">Frequency</a>
 
       <div class="nav-dropdown" data-dropdown>
-        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="more-navigation" data-dropdown-toggle>
-          More <span aria-hidden="true">▾</span>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-today" data-dropdown-toggle>
+          Today <span aria-hidden="true">▾</span>
         </button>
-        <div id="more-navigation" class="nav-drop-menu">
-          <a href="./genesis-oracle.html">Genesis Oracle</a>
-          <a href="./theory.html">Theory / Canon</a>
-          <a href="./systems/t-7.html">T-7 Conduit</a>
-          <a href="./systems/witness.html">Witness System</a>
-          <a href="./systems/recoder.html">Reality Recoder</a>
-          <a href="./systems/mind-renewal.html">Mind Renewal</a>
-          <a href="./systems/archive.html">Systems Archive</a>
-          <a href="./guide.html">Guide</a>
-          <a href="./lab.html">Remnant Lab</a>
-          <a href="./invoke.html">Invoke</a>
-          <a href="./circle.html">Circle</a>
-          <a href="./ethics.html">Ethics</a>
-          <a href="./glossary.html">Glossary</a>
-          <a href="./downloads.html">Downloads</a>
+        <div id="nav-today" class="nav-drop-menu">
+          <a href="./moons.html">13 Moons</a>
+          <a href="./ledger.html">Witness Ledger</a>
+          <a href="./hub.html">Year Map</a>
         </div>
       </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-explore" data-dropdown-toggle>
+          Explore <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-explore" class="nav-drop-menu">
+          <a href="./theory.html">Theory</a>
+          <a href="./theory/canon.html">Canon</a>
+          <a href="./genesis-oracle.html">Genesis Oracle</a>
+          <a href="./glossary.html">Glossary</a>
+          <a href="./systems/archive.html">Systems Archive</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-build" data-dropdown-toggle>
+          Build <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-build" class="nav-drop-menu">
+          <a href="./systems/frequencies.html">Frequency Governance</a>
+          <a href="./systems/t-7.html">T-7 Conduit</a>
+          <a href="./systems/recoder.html">Reality Recoder</a>
+          <a href="./systems/mind-renewal.html">Mind Renewal</a>
+          <a href="./lab.html">Remnant Lab</a>
+          <a href="./invoke.html">Invoke</a>
+          <a href="./systems/witness.html">Witness System</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-artifacts" data-dropdown-toggle>
+          Artifacts <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-artifacts" class="nav-drop-menu">
+          <a href="./shop.html">Artifact Registry</a>
+          <a href="./circle.html">Covenant Circle</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-about" data-dropdown-toggle>
+          About <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-about" class="nav-drop-menu">
+          <a href="./start.html">Start Here</a>
+          <a href="./covenant-caravan.html">Covenant Caravan</a>
+          <a href="./teach.html">Manifest</a>
+          <a href="./ethics.html">Ethics</a>
+          <a href="./downloads.html">Downloads</a>
+          <a href="./guide.html">About Aaron</a>
+        </div>
+      </div>
+
     </nav>
   </header>
+  <section class="living-signal-shell" aria-label="Living signal">
+    <ul class="living-signal-bar" data-living-signal-root>
+      <li class="living-signal-item">Daily signal loads with your local time and Codex data when JavaScript is available.</li>
+      <li class="living-signal-item"><a class="living-signal-link" href="./moons.html">Open 13 Moons</a></li>
+      <li class="living-signal-item"><a class="living-signal-link" href="./ledger.html">Record Witness</a></li>
+    </ul>
+  </section>
 
   <main id="main">
 
     <section class="hero section-shell">
       <p class="eyebrow">First visit? Begin here.</p>
       <h1>Start the Codex in under 3 minutes.</h1>
+    <span class="codex-status" data-status="live">Live</span>
       <p class="hero-line">Know what this is, run one practice, then choose your next gate.</p>
       <p class="hero-copy">
         This page is the quickest onboarding flow for Scroll of Fire and Codex of Reality.
