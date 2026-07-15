@@ -21,6 +21,7 @@
   </script>
 
   <base href="/">
+
   <script>
     if (location.hostname === "ssnfts24.github.io") {
       const base = document.querySelector("base");
@@ -130,12 +131,12 @@
 
   <link
     rel="stylesheet"
-    href="assets/css/moons.css?v=20260714-5"
+    href="assets/css/moons.css?v=20260714-10"
   >
 
   <link
     rel="stylesheet"
-    href="assets/css/astrology.css?v=20260714-5"
+    href="assets/css/astrology.css?v=20260714-10"
   >
 
   <link rel="stylesheet" href="assets/css/animations.css">
@@ -620,6 +621,7 @@
             <div class="formrow">
               <label>
                 Time Zone
+
                 <select
                   id="tzPick"
                   class="lab-input"
@@ -628,6 +630,7 @@
 
               <label>
                 Date
+
                 <input
                   id="datePick"
                   class="lab-input"
@@ -637,6 +640,7 @@
 
               <label>
                 Day Boundary
+
                 <select
                   id="boundaryMode"
                   class="lab-input"
@@ -657,6 +661,7 @@
 
               <label>
                 Fallback / Manual Sunset
+
                 <input
                   id="sunsetInput"
                   class="lab-input"
@@ -786,6 +791,7 @@
 
             <div class="stat">
               <span>Window</span>
+
               <strong id="shabbatWindow">
                 Friday sunset → Saturday nightfall
               </strong>
@@ -793,6 +799,7 @@
 
             <div class="stat">
               <span>Moon Position</span>
+
               <strong id="shabbatMoonPosition">
                 Days 2 · 9 · 16 · 23
               </strong>
@@ -800,6 +807,7 @@
 
             <div class="stat">
               <span>Seal</span>
+
               <strong id="shabbatSeal">
                 Cease · Witness · Restore
               </strong>
@@ -829,7 +837,7 @@
             </button>
           </div>
         </section>
-      </section>
+              </section>
 
       <!-- SHABBAT -->
       <section
@@ -2113,9 +2121,13 @@
   </footer>
 
   <!-- Main calendar engine -->
-  <script src="assets/js/moons.js?v=20260714-6"></script>
-  <script src="assets/js/astrology.js?v=20260714-6"></script>
-  <script src="assets/js/moons-images.js?v=20260714-3"></script>
+  <script src="assets/js/moons.js?v=20260714-10"></script>
+
+  <!-- Astrology and planetary mirror -->
+  <script src="assets/js/astrology.js?v=20260714-10"></script>
+
+  <!-- Remnant artwork integration -->
+  <script src="assets/js/moons-images.js?v=20260714-10"></script>
 
   <!-- Page-specific interaction layer -->
   <script>
@@ -3056,4 +3068,4 @@ Let the next step be firm.`;
     })();
   </script>
 </body>
-                </html>
+</html>
