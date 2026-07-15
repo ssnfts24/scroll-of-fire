@@ -1,0 +1,434 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-07-15",
+  "assets": [
+    {
+      "id": "favicon-png",
+      "path": "assets/img/shared/branding/favicon.png",
+      "category": "shared",
+      "purpose": "branding",
+      "format": "png",
+      "alt": "Codex of Reality favicon.",
+      "usedBy": [
+        "all HTML pages"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "favicon-svg",
+      "path": "assets/img/shared/branding/favicon.svg",
+      "category": "shared",
+      "purpose": "branding",
+      "format": "svg",
+      "alt": "Codex of Reality favicon (SVG).",
+      "usedBy": [
+        "lab.html"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "icon-1024",
+      "path": "assets/img/shared/branding/icon-1024.png",
+      "category": "shared",
+      "purpose": "branding",
+      "format": "png",
+      "width": 1024,
+      "height": 1024,
+      "alt": "Codex of Reality app icon.",
+      "usedBy": [
+        "moons.html"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "codex-sigil-banner",
+      "path": "assets/img/shared/branding/codex-sigil-banner.png",
+      "category": "shared",
+      "purpose": "branding",
+      "format": "png",
+      "width": 2100,
+      "height": 900,
+      "alt": "Scroll of Fire — sigil banner.",
+      "usedBy": [
+        "circle.html",
+        "teach.html",
+        "invoke.html",
+        "ab.html"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "codex-default-og-cover",
+      "path": "assets/img/shared/social/codex-og-cover.jpg",
+      "category": "shared",
+      "purpose": "social",
+      "format": "jpg",
+      "width": 1200,
+      "height": 630,
+      "alt": "Scroll of Fire — Codex of Reality.",
+      "usedBy": [
+        "index.html",
+        "lab.html",
+        "genesis-oracle.html",
+        "systems/frequencies.html"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "artifact-placeholder",
+      "path": "assets/img/shared/placeholders/artifact-placeholder.jpg",
+      "category": "shared",
+      "purpose": "placeholder",
+      "format": "jpg",
+      "alt": "",
+      "usedBy": [
+        "index.html",
+        "shop.html"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "icon-192",
+      "path": "assets/icons/icon-192.png",
+      "category": "shared",
+      "purpose": "pwa-icon",
+      "format": "png",
+      "width": 192,
+      "height": 192,
+      "alt": "Codex of Reality app icon.",
+      "note": "Planned. 192×192 PWA icon. Add to manifest.webmanifest icons array when created.",
+      "usedBy": [],
+      "status": "planned",
+      "enabled": false
+    },
+    {
+      "id": "moon-card-screenshot",
+      "path": "assets/share/moon-card.png",
+      "category": "moons",
+      "purpose": "pwa-screenshot",
+      "format": "png",
+      "width": 1200,
+      "height": 630,
+      "alt": "Moon status share card.",
+      "note": "Planned. PWA manifest screenshot. Add to manifest.webmanifest screenshots array when created.",
+      "usedBy": [],
+      "status": "planned",
+      "enabled": false
+    },
+    {
+      "id": "home-gate-13-moons",
+      "path": "assets/img/home/gates/home-gate-13-moons.webp",
+      "category": "home",
+      "purpose": "gate",
+      "format": "webp",
+      "alt": "Enter the Remnant 13 Moons calendar.",
+      "usedBy": [],
+      "status": "active"
+    },
+    {
+      "id": "home-gate-artifact-registry",
+      "path": "assets/img/home/gates/home-gate-artifact-registry.webp",
+      "category": "home",
+      "purpose": "gate",
+      "format": "webp",
+      "alt": "Enter the Artifact Registry.",
+      "usedBy": [],
+      "status": "active"
+    },
+    {
+      "id": "home-gate-covenant-caravan",
+      "path": "assets/img/home/gates/home-gate-covenant-caravan.webp",
+      "category": "home",
+      "purpose": "gate",
+      "format": "webp",
+      "alt": "Enter the Covenant Caravan.",
+      "usedBy": [
+        "covenant-caravan.html (og:image)"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "home-gate-frequency-governance",
+      "path": "assets/img/home/gates/home-gate-frequency-governance.webp",
+      "category": "home",
+      "purpose": "gate",
+      "format": "webp",
+      "alt": "Enter Frequency Governance.",
+      "usedBy": [],
+      "status": "active"
+    },
+    {
+      "id": "home-gate-witness-ledger",
+      "path": "assets/img/home/gates/home-gate-witness-ledger.webp",
+      "category": "home",
+      "purpose": "gate",
+      "format": "webp",
+      "alt": "Enter the Witness Ledger.",
+      "usedBy": [],
+      "status": "active"
+    },
+    {
+      "id": "home-gate-genesis-oracle",
+      "path": "assets/img/home/gates/home-gate-genesis-oracle.webp",
+      "category": "home",
+      "purpose": "gate",
+      "format": "webp",
+      "width": 1200,
+      "height": 1200,
+      "alt": "Enter the Genesis Oracle.",
+      "note": "Planned. Homepage gateway for Genesis Oracle. Visual: illuminated scroll, symbolic language, ancient geometry.",
+      "usedBy": [],
+      "status": "planned",
+      "enabled": false
+    },
+    {
+      "id": "home-hero-living-system",
+      "path": "assets/img/home/hero/home-codex-living-system-EXACT-13-FINAL.webp",
+      "category": "home",
+      "purpose": "hero",
+      "format": "webp",
+      "alt": "The Codex of Reality — a living system of 13 moons, frequency, artifact, caravan, and witness.",
+      "note": "File exists. Integration into index.html pending design confirmation. Insertion point commented in home/hero/README.md.",
+      "usedBy": [],
+      "status": "active"
+    },
+    {
+      "id": "home-core-gates",
+      "path": "assets/img/home/sections/home-core-gates.webp",
+      "category": "home",
+      "purpose": "section",
+      "format": "webp",
+      "alt": "Codex core gates overview.",
+      "usedBy": [],
+      "status": "active"
+    },
+    {
+      "id": "home-daily-return",
+      "path": "assets/img/home/sections/home-daily-return.webp",
+      "category": "home",
+      "purpose": "section",
+      "format": "webp",
+      "alt": "Daily return to the Codex.",
+      "usedBy": [],
+      "status": "active"
+    },
+    {
+      "id": "home-breath-field-poster",
+      "path": "assets/img/home/posters/home-breath-field-poster.webp",
+      "category": "home",
+      "purpose": "poster",
+      "format": "webp",
+      "alt": "Breath field — living field of the Codex.",
+      "usedBy": [],
+      "status": "active"
+    },
+    {
+      "id": "home-og-cover",
+      "path": "assets/img/home/social/home-og-cover.webp",
+      "category": "home",
+      "purpose": "social",
+      "format": "webp",
+      "width": 1200,
+      "height": 630,
+      "alt": "Scroll of Fire — Codex of Reality home.",
+      "note": "Planned. Homepage-specific OG image. Replace index.html shared og cover when ready.",
+      "usedBy": [],
+      "status": "planned",
+      "enabled": false
+    },
+    {
+      "id": "home-bg-witness-field",
+      "path": "assets/img/home/backgrounds/home-bg-witness-field.webp",
+      "category": "home",
+      "purpose": "background",
+      "format": "webp",
+      "note": "Planned. CSS background for homepage witness section. Rule commented in home/backgrounds/README.md.",
+      "usedBy": [],
+      "status": "planned",
+      "enabled": false
+    },
+    {
+      "id": "t7-resonant-conduit",
+      "path": "assets/img/artifacts/registry/t7-resonant-conduit.png",
+      "category": "artifacts",
+      "purpose": "registry",
+      "format": "png",
+      "alt": "T7-000 Ahhava Or HaDabar resonant conduit.",
+      "usedBy": [
+        "index.html",
+        "shop.html"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "en-007-ember-node-7",
+      "path": "assets/img/artifacts/registry/en-007-ember-node-7.png",
+      "category": "artifacts",
+      "purpose": "registry",
+      "format": "png",
+      "alt": "EN-007 Ember Node 7 handcrafted copper Living Technology instrument.",
+      "usedBy": [
+        "index.html",
+        "shop.html"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "hl-001-ha-levanah",
+      "path": "assets/img/artifacts/registry/hl-001-ha-levanah.png",
+      "category": "artifacts",
+      "purpose": "registry",
+      "format": "png",
+      "alt": "HL-001 HaLevanah hand-braided copper bracelet with moonstone and tourmaline.",
+      "usedBy": [
+        "index.html",
+        "shop.html"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "tn-001-tiger-node-ring",
+      "path": "assets/img/artifacts/registry/tn-001-tiger-node-ring.png",
+      "category": "artifacts",
+      "purpose": "registry",
+      "format": "png",
+      "alt": "TN-001 Tiger Node Ring handcrafted copper artifact.",
+      "usedBy": [
+        "index.html",
+        "shop.html"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "ts-001-time-shard-ring",
+      "path": "assets/img/artifacts/registry/ts-001-time-shard-ring.jpg",
+      "category": "artifacts",
+      "purpose": "registry",
+      "format": "jpg",
+      "alt": "TS-001 Time Shard Ring made from reclaimed copper and green glass.",
+      "usedBy": [
+        "index.html",
+        "shop.html"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "cb-02-green-tide",
+      "path": "assets/img/artifacts/registry/cb-02-green-tide.png",
+      "category": "artifacts",
+      "purpose": "registry",
+      "format": "png",
+      "alt": "CB-02 Covenant Band Green Tide handcrafted copper wrist band.",
+      "usedBy": [
+        "index.html",
+        "shop.html"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "cv-067-covenant-67",
+      "path": "assets/img/artifacts/registry/cv-067-covenant-67.png",
+      "category": "artifacts",
+      "purpose": "registry",
+      "format": "png",
+      "alt": "CV-067 Covenant 67 handcrafted copper pendant.",
+      "usedBy": [
+        "shop.html"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "tb-01-tensor-band",
+      "path": "assets/img/artifacts/registry/tb-01-tensor-band.png",
+      "category": "artifacts",
+      "purpose": "registry",
+      "format": "png",
+      "alt": "TB-01 Tensor Band handcrafted copper tensor ring.",
+      "usedBy": [
+        "shop.html"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "moon-stone-ring",
+      "path": "assets/img/artifacts/registry/moon-stone-ring.png",
+      "category": "artifacts",
+      "purpose": "registry",
+      "format": "png",
+      "alt": "Moon Stone Ring handcrafted copper artifact.",
+      "usedBy": [],
+      "status": "active",
+      "note": "Unused — not yet assigned a registry ID or HTML reference. Needs classification."
+    },
+    {
+      "id": "artifact-photo-20260617",
+      "path": "assets/img/artifacts/registry/artifact-photo-20260617.jpg",
+      "category": "artifacts",
+      "purpose": "registry",
+      "format": "jpg",
+      "alt": "",
+      "usedBy": [],
+      "status": "active",
+      "note": "Unused — unidentified artifact photograph from 2026-06-17. Needs visual review and registry assignment."
+    },
+    {
+      "id": "cb-01",
+      "path": "assets/img/artifacts/registry/cb-01.png",
+      "category": "artifacts",
+      "purpose": "registry",
+      "format": "png",
+      "alt": "CB-01 Covenant Band handcrafted copper wrist band.",
+      "usedBy": [],
+      "status": "active",
+      "note": "Unused — not yet integrated into shop.html or index.html."
+    },
+    {
+      "id": "cb-02-green-tide-v1",
+      "path": "assets/img/artifacts/registry/cb-02-green-tide-v1.png",
+      "category": "artifacts",
+      "purpose": "registry",
+      "format": "png",
+      "alt": "CB-02 Covenant Band Green Tide (earlier photograph).",
+      "usedBy": [],
+      "status": "active",
+      "note": "Earlier photo variant of CB-02. Not referenced. Keep for archival comparison."
+    },
+    {
+      "id": "67-advertising-image",
+      "path": "assets/img/artifacts/social/67-advertising-image.png",
+      "category": "artifacts",
+      "purpose": "social",
+      "format": "png",
+      "alt": "Covenant 67 — handcrafted copper pendant advertisement.",
+      "usedBy": [
+        "shop.html"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "hand-ring-chain-advertisement",
+      "path": "assets/img/artifacts/social/hand-ring-chain-advertisement.png",
+      "category": "artifacts",
+      "purpose": "social",
+      "format": "png",
+      "alt": "Hand holding ring on chain — Codex artifact promotional photograph.",
+      "usedBy": [],
+      "status": "active",
+      "note": "Unused — not yet referenced from any live page."
+    },
+    {
+      "id": "pwa-icon-512",
+      "path": "assets/icons/icon-512.png",
+      "category": "shared",
+      "purpose": "pwa-icon",
+      "format": "png",
+      "width": 512,
+      "height": 512,
+      "alt": "Codex of Reality app icon.",
+      "usedBy": [
+        "manifest.webmanifest"
+      ],
+      "status": "active"
+    }
+  ]
+}
