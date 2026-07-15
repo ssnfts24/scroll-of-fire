@@ -211,10 +211,17 @@
         </aside>
 
         <div class="audio-first-grid" aria-label="Recommended use order">
-          <div class="audio-first-step"><strong>1 · Check</strong><span>Unlock browser audio with one tap.</span></div>
-          <div class="audio-first-step"><strong>2 · Path</strong><span>Choose calm, focus, lift, T7, or Name path.</span></div>
-          <div class="audio-first-step"><strong>3 · Shape</strong><span>Adjust master, boost, texture, and visual mode.</span></div>
-          <div class="audio-first-step"><strong>4 · Witness</strong><span>Notice the body signal and record it.</span></div>
+          <div class="audio-first-step"><strong>1 · Enable Audio</strong><span>Required on iPhone and most mobile browsers.</span></div>
+          <div class="audio-first-step"><strong>2 · Choose Purpose</strong><span>Select calm, focus, lift, T7, or Name path.</span></div>
+          <div class="audio-first-step"><strong>3 · Test Sound</strong><span>Play Sound Check and confirm output.</span></div>
+          <div class="audio-first-step"><strong>4 · Start Session</strong><span>Play current field and shape the mix.</span></div>
+          <div class="audio-first-step"><strong>5 · Stop Session</strong><span>End cleanly when your cycle is complete.</span></div>
+          <div class="audio-first-step"><strong>6 · Record Witness</strong><span>Save what changed in the witness tools below.</span></div>
+        </div>
+
+        <div class="audio-status-card" role="status" aria-live="polite" aria-atomic="true">
+          <p><strong>Audio State:</strong> <span id="audioState">Not enabled</span></p>
+          <p id="audioHint">Tap Enable Audio before Sound Check or Play.</p>
         </div>
 
         <div class="quick-grid">
@@ -230,6 +237,7 @@
         </div>
 
         <div class="button-row">
+          <button id="enableAudioBtn" class="fg-btn gold" type="button">Enable Audio</button>
           <button id="soundCheckBtn" class="fg-btn gold" type="button">Sound Check</button>
           <button id="playBtn" class="fg-btn primary" type="button">Play Current Field</button>
           <button id="stopBtn" class="fg-btn danger" type="button">Stop</button>
