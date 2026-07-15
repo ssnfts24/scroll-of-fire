@@ -296,3 +296,7 @@
     animation: none !important;
   }
 }
+
+/* Remnant 13 Moons astrology artwork integration */
+#astrologyPanel .panel-banner{box-shadow:0 24px 70px rgba(0,0,0,.35),0 0 36px rgba(122,243,255,.08)}
+#astrologyPanel .panel-banner img{object-position:center 42%}
