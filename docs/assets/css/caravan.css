@@ -48,7 +48,7 @@ body.caravan-page,
   border-bottom: 1px solid var(--caravan-line);
 }
 
-.site-nav {
+.caravan-header .site-nav {
   max-width: 1180px;
   margin: 0 auto;
   padding: 0.85rem 1.1rem;
@@ -58,7 +58,7 @@ body.caravan-page,
   gap: 1rem;
 }
 
-.brand {
+.caravan-header .brand {
   text-decoration: none;
   color: var(--caravan-cream);
   display: inline-flex;
@@ -69,29 +69,29 @@ body.caravan-page,
   font-weight: 700;
 }
 
-.brand-mark {
+.caravan-header .brand-mark {
   color: var(--caravan-copper);
   font-size: 1.25rem;
 }
 
-.nav-menu {
+.caravan-header .nav-menu {
   display: flex;
   gap: 0.9rem;
   align-items: center;
 }
 
-.nav-menu a {
+.caravan-header .nav-menu a {
   text-decoration: none;
   color: var(--caravan-muted);
   font-size: 0.9rem;
 }
 
-.nav-menu a:hover,
-.nav-menu a[aria-current="page"] {
+.caravan-header .nav-menu a:hover,
+.caravan-header .nav-menu a[aria-current="page"] {
   color: var(--caravan-cream);
 }
 
-.nav-toggle {
+.caravan-header .nav-toggle {
   display: none;
   border: 1px solid var(--caravan-line);
   background: rgba(255, 255, 255, 0.04);
@@ -102,10 +102,10 @@ body.caravan-page,
 
 .caravan-hero {
   position: relative;
-  min-height: 84vh;
+  min-height: 72vh;
   display: grid;
   place-items: center;
-  text-align: center;
+  text-align: left;
   overflow: hidden;
   background:
     linear-gradient(rgba(0, 0, 0, 0.45), rgba(5, 3, 2, 0.9)),
@@ -123,8 +123,9 @@ body.caravan-page,
 
 .hero-content {
   position: relative;
-  width: min(920px, calc(100% - 2rem));
-  padding: 4rem 1rem;
+  width: min(640px, calc(100% - 3rem));
+  margin: 0 auto 0 max(clamp(1.5rem, 8vw, 5rem), calc((100vw - var(--content-wide, 1440px)) / 2 + 1.5rem));
+  padding: clamp(5rem, 10vw, 8rem) 0;
 }
 
 .eyebrow {
@@ -147,15 +148,16 @@ body.caravan-page,
 }
 
 .hero-subtitle {
-  max-width: 780px;
-  margin: 1.4rem auto 0;
+  max-width: 36rem;
+  margin: 1.4rem 0 0;
   color: var(--caravan-muted);
   font-size: clamp(1.05rem, 2vw, 1.3rem);
+  line-height: 1.72;
 }
 
 .hero-quote {
-  max-width: 760px;
-  margin: 2rem auto 0;
+  max-width: 34rem;
+  margin: 2rem 0 0;
   padding: 1.3rem;
   border-top: 1px solid var(--caravan-line);
   border-bottom: 1px solid var(--caravan-line);
@@ -167,6 +169,10 @@ body.caravan-page,
 .hero-actions,
 .closing-section .btn {
   margin-top: 2rem;
+}
+
+.hero-actions{
+  justify-content:flex-start;
 }
 
 .btn {
@@ -208,7 +214,7 @@ body.caravan-page,
 }
 
 .section-inner {
-  width: min(1180px, calc(100% - 2rem));
+  width: min(var(--content-main, 1180px), calc(100% - clamp(2rem, 4vw, 3rem)));
   margin: 0 auto;
   padding: clamp(3rem, 7vw, 6rem) 0;
 }
@@ -300,7 +306,7 @@ p {
 
 .phase-timeline {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.55rem;
   margin: 2rem 0;
 }
@@ -444,11 +450,31 @@ p {
 }
 
 @media (max-width: 920px) {
-  .nav-toggle {
+  .hero-content {
+    width: min(640px, calc(100% - 2rem));
+    margin: 0 auto;
+    padding: 4rem 0 3rem;
+  }
+
+  .caravan-hero {
+    text-align: center;
+  }
+
+  .hero-subtitle,
+  .hero-quote {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .caravan-header .nav-toggle {
     display: inline-flex;
   }
 
-  .nav-menu {
+  .caravan-header .nav-menu {
     display: none;
     position: absolute;
     left: 1rem;
@@ -462,11 +488,11 @@ p {
     padding: 1rem;
   }
 
-  .nav-menu.open {
+  .caravan-header .nav-menu.open {
     display: flex;
   }
 
-  .nav-menu a {
+  .caravan-header .nav-menu a {
     padding: 0.75rem;
   }
 

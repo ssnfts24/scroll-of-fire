@@ -7,22 +7,24 @@
 .hub-main {
   position: relative;
   z-index: 1;
-  padding: clamp(1rem, 3vw, 2rem);
+  width: min(calc(100% - clamp(2rem, 4vw, 3rem)), var(--content-main, 1180px));
+  margin-inline: auto;
+  padding: clamp(1rem, 3vw, 2.25rem) 0 clamp(3rem, 5vw, 4rem);
 }
 
 .hub-lede {
-  max-width: 72ch;
+  max-width: 58ch;
   color: var(--muted, #b9c1c7);
   margin: 0 0 1.25rem;
-  font-size: 1rem;
-  line-height: 1.65;
+  font-size: 1.04rem;
+  line-height: 1.75;
 }
 
 /* ---- Systems grid ---- */
 .hub-grid {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: clamp(1rem, 2vw, 1.35rem);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 /* ---- Hub card ---- */
@@ -189,6 +191,12 @@
     padding: 1rem;
   }
 
+  .hub-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
   .hub-grid {
     grid-template-columns: 1fr;
   }

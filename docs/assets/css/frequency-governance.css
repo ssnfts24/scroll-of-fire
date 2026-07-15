@@ -48,7 +48,6 @@ body {
     radial-gradient(900px 650px at 90% 12%, rgba(243, 201, 122, 0.12), transparent 70%),
     radial-gradient(780px 540px at 10% 42%, rgba(196, 163, 255, 0.10), transparent 72%),
     linear-gradient(180deg, var(--bg), var(--bg2) 58%, var(--bg));
-  background-attachment: fixed;
   padding-bottom: 92px;
 }
 
@@ -82,7 +81,7 @@ a {
 .fg-hero,
 .fg-shell,
 .fg-footer {
-  width: min(calc(100% - 28px), 1380px);
+  width: min(calc(100% - clamp(2rem, 4vw, 3rem)), var(--content-wide, 1440px));
   margin-inline: auto;
 }
 
@@ -93,6 +92,10 @@ a {
 
 .fg-shell {
   padding-bottom: 74px;
+}
+
+.fg-shell section {
+  margin-block: clamp(1rem, 2vw, 1.5rem);
 }
 
 .fg-footer {
@@ -299,13 +302,15 @@ h3 {
 .launch-panel {
   display: grid;
   grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
-  gap: 18px;
+  gap: clamp(1rem, 2vw, 1.5rem);
   align-items: stretch;
   margin-top: 18px;
 }
 
 .quick-card,
 .sacred-name,
+.audio-card,
+.codex-map,
 .intent-card,
 .sound-card {
   padding: 20px;
@@ -324,6 +329,54 @@ h3 {
   color: var(--gold);
   text-shadow: 0 0 34px rgba(243, 201, 122, 0.22);
   letter-spacing: 0.05em;
+}
+
+.audio-card,
+.codex-map {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(243, 201, 122, 0.08), transparent 34%),
+    radial-gradient(circle at 100% 100%, rgba(122, 243, 255, 0.08), transparent 34%),
+    linear-gradient(180deg, var(--card), var(--card2));
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.audio-card {
+  border-color: rgba(122, 243, 255, 0.24);
+}
+
+.audio-first-grid,
+.codex-map-grid {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.audio-first-step,
+.map-step {
+  padding: 0.9rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.audio-first-step strong,
+.map-step strong {
+  display: block;
+  color: var(--gold);
+  margin-bottom: 0.25rem;
+}
+
+.fine-print {
+  margin-top: 0.75rem;
+  color: rgba(244, 241, 232, 0.66);
+  font-size: 0.88rem;
+  line-height: 1.65;
 }
 
 .quick-grid,
@@ -510,6 +563,13 @@ h3 {
 
 .readout em.active {
   color: var(--green);
+}
+
+.audio-control-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
 }
 
 label {
@@ -883,6 +943,8 @@ input[type="range"]::-moz-range-thumb {
   }
 
   .command-stats,
+  .audio-first-grid,
+  .audio-control-grid,
   .quick-grid,
   .intent-grid,
   .name-grid,
@@ -947,6 +1009,8 @@ input[type="range"]::-moz-range-thumb {
   }
 
   .command-stats,
+  .audio-first-grid,
+  .audio-control-grid,
   .control-grid,
   .dj-grid,
   .library-grid,

@@ -14,14 +14,14 @@
 
 .home-page .section-shell {
   position: relative;
-  width: min(1180px, calc(100% - 2rem));
+  width: min(var(--content-main, 1180px), calc(100% - clamp(2rem, 4vw, 3rem)));
   margin-inline: auto;
-  padding-block: clamp(2.8rem, 7vw, 6rem);
+  padding-block: clamp(3.1rem, 6vw, 6.25rem);
 }
 
 .home-page .section-heading {
-  width: min(840px, 100%);
-  margin: 0 auto clamp(1.5rem, 4vw, 2.5rem);
+  width: min(var(--content-reading, 760px), 100%);
+  margin: 0 auto clamp(1.6rem, 4vw, 2.8rem);
   text-align: center;
 }
 
@@ -109,10 +109,10 @@
 .home-hero-grid {
   display: grid;
   grid-template-columns:
-    minmax(0, 1.12fr)
-    minmax(340px, 0.88fr);
-  gap: clamp(1.25rem, 4vw, 3rem);
-  align-items: start;
+    minmax(0, 1.05fr)
+    minmax(360px, 0.95fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: center;
 }
 
 .hero-copy-stack {
@@ -121,9 +121,9 @@
 }
 
 .hero-copy-stack h1 {
-  max-width: 13ch;
+  max-width: 11ch;
   margin: 0.5rem 0 0.8rem;
-  font-size: clamp(2.5rem, 6.5vw, 5.8rem);
+  font-size: clamp(2.8rem, 6vw, 5.9rem);
   line-height: 0.94;
   letter-spacing: -0.045em;
 }
@@ -141,10 +141,10 @@
 }
 
 .hero-copy {
-  max-width: 69ch;
+  max-width: 60ch;
   margin: 0;
   color: var(--muted, #b9c1c7);
-  font-size: clamp(1rem, 1.8vw, 1.16rem);
+  font-size: clamp(1rem, 1.3vw, 1.14rem);
   line-height: 1.75;
 }
 
@@ -210,6 +210,8 @@
   box-shadow:
     0 28px 90px rgba(0, 0, 0, 0.42),
     0 0 0 1px rgba(255, 255, 255, 0.025) inset;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 720px;
 }
 
 .hero-image-card::before {
@@ -302,7 +304,7 @@
 }
 
 .today-grid {
-  grid-template-columns: 1.2fr 1fr 1fr;
+  grid-template-columns: 1.28fr 1fr 1fr;
 }
 
 .today-card,
@@ -329,6 +331,7 @@
 }
 
 .today-card--primary {
+  grid-row: span 2;
   border-color: rgba(243, 201, 122, 0.3);
   background:
     radial-gradient(
@@ -596,6 +599,8 @@
 
 .artifact-card-mini {
   min-width: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
@@ -742,8 +747,8 @@
 .action-list a {
   display: grid;
   grid-template-columns:
-    minmax(220px, 0.75fr)
-    minmax(0, 1.25fr);
+    minmax(200px, 0.65fr)
+    minmax(0, 1.35fr);
   gap: 1rem;
   align-items: center;
   padding: 1rem 1.15rem;
@@ -853,12 +858,17 @@
    ========================================================= */
 
 @media (max-width: 1100px) {
+  .today-card--primary {
+    grid-row: auto;
+  }
+
   .artifact-strip {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .today-grid,
-  .world-grid {
+  .world-grid,
+  .codex-live-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -955,7 +965,8 @@
   .theory-entry-grid,
   .living-path,
   .spotlight-grid,
-  .witness-grid {
+  .witness-grid,
+  .codex-live-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1090,8 +1101,8 @@
 
 .codex-live-grid {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 2vw, 1.35rem);
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
 }
 
 .today-codex-panel,
