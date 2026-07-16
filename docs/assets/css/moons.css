@@ -500,6 +500,7 @@ textarea {
   z-index: 60;
   margin: 18px 0;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 0.75rem 0 0.15rem;
   scrollbar-width: thin;
   backdrop-filter: blur(16px);
@@ -1521,6 +1522,9 @@ body[data-shabbat-state="active"] .hero-sigil {
     top: 72px;
     margin: 14px 0;
     padding-top: 0.35rem;
+    flex-wrap: nowrap;
+    scroll-snap-type: x proximity;
+    overscroll-behavior-x: contain;
   }
 
   .tabs .tab {
@@ -1529,6 +1533,7 @@ body[data-shabbat-state="active"] .hero-sigil {
     flex: 0 0 auto;
     padding: 0.62rem 0.85rem;
     font-size: 0.92rem;
+    scroll-snap-align: center;
   }
 
   .btnrow .lab-btn,
@@ -1667,17 +1672,22 @@ body[data-shabbat-state="active"] .hero-sigil {
     right: 0;
     bottom: 0;
     z-index: 100;
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    display: flex;
     gap: 0.35rem;
     padding: 0.55rem 0.55rem calc(0.55rem + env(safe-area-inset-bottom));
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(5, 7, 13, 0.96);
     backdrop-filter: blur(18px);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
   }
 
   .mobile-dock a {
-    min-width: 0;
+    flex: 0 0 auto;
+    min-width: 74px;
     padding: 0.55rem 0.3rem;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1689,6 +1699,7 @@ body[data-shabbat-state="active"] .hero-sigil {
     font-weight: 800;
     line-height: 1.2;
     transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+    scroll-snap-align: center;
   }
 
   .mobile-dock a:active {

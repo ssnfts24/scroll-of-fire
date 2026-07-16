@@ -1235,6 +1235,19 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
   function setupTabs() {
     const panels = new Set($$(".tabPanel").map(panel => panel.id));
 
+    function keepActiveNavInView(id, behavior) {
+      const activeTab = $$(".tab").find(tab => tab.dataset.tab === id);
+      const activeMobileTab = $$("[data-mobile-tab]").find(link => link.dataset.mobileTab === id);
+      const options = {
+        behavior,
+        block: "nearest",
+        inline: "center"
+      };
+
+      activeTab?.scrollIntoView(options);
+      activeMobileTab?.scrollIntoView(options);
+    }
+
     function requestedTab() {
       const queryTab = new URLSearchParams(location.search).get("tab");
       const hashTab = location.hash.replace(/^#/, "");
@@ -1266,6 +1279,8 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
         if (active) link.setAttribute("aria-current", "page");
         else link.removeAttribute("aria-current");
       });
+
+      keepActiveNavInView(id, updateHistory || scroll ? "smooth" : "auto");
 
       safeSet("sof_moons_last_tab_v1", id);
       if (updateHistory) {
