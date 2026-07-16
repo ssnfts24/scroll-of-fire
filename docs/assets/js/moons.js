@@ -1685,6 +1685,8 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
   }
 
   function setup() {
+    console.info("[13 Moons] initialized");
+
     text("yr", new Date().getFullYear());
 
     /* GA4: log that the app was opened */

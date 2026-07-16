@@ -1,4 +1,4 @@
-const CACHE_VERSION = "remnant-13-moons-v20260716-03";
+const CACHE_VERSION = "remnant-13-moons-v20260716-04";
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const ROOT = self.registration.scope;
@@ -128,6 +128,12 @@ self.addEventListener("fetch", event => {
   if (url.origin !== self.location.origin) return;
 
   if (event.request.mode === "navigate") {
+    event.respondWith(networkFirst(event.request));
+    return;
+  }
+
+  // Use network-first for HTML and JavaScript to avoid serving stale runtime
+  if (url.pathname.endsWith(".html") || url.pathname.endsWith(".js")) {
     event.respondWith(networkFirst(event.request));
     return;
   }
