@@ -57,6 +57,7 @@
     function buildState() {
       const state = engine.calculateRemnantDate(selectedDate, { sunset:currentSunset, referenceDate:now, ...boundaryOptions() });
       state.logs = savedLogs;
+      state.logsCount = savedLogs.length;
       state.timeZone = timeZone;
       state.boundaryMode = boundaryMode;
       state.daypart = engine.getDaypart(now);
@@ -68,6 +69,7 @@
       state.astrology = engine.buildAstrologyMirror(state);
       state.seal = engine.buildCodexSeal(state);
       state.patterns = engine.detectPatterns(savedLogs);
+      state.patternCount = state.patterns.count || 0;
       state.witnessTemplate = engine.buildWitnessTemplate(state, ui.readWitnessFields());
       state.yearMap = engine.buildYearMap(selectedDate, { sunset:currentSunset, today:now });
       state.cycle = {
@@ -98,9 +100,11 @@
         sunset: state.sunset,
         archetype: state.daySeal?.title || state.yearGate.title,
         element: state.moonArchetype?.element || state.solarGate?.element || 'Threshold',
-        frequency: state.moonArchetype?.frequency || '—',
-        solarGate: `${state.solarGate?.sign || '—'} · ${state.solarGate?.element || ''}`.trim(),
-        field: `${state.moonArchetype?.element || 'Threshold'} · ${state.shabbat.label}`
+        frequency: state.moonArchetype?.frequency || 'Unavailable from selected moon',
+        solarGate: `${state.solarGate?.sign || 'Unavailable'} · ${state.solarGate?.element || 'Threshold'}`.trim(),
+        field: `${state.moonArchetype?.element || 'Threshold'} · ${state.shabbat.label}`,
+        logsCount: state.logsCount,
+        patternCount: state.patternCount
       };
       ui.renderCalendarState(state);
       ui.renderLogs(savedLogs, storageAvailable);
@@ -206,10 +210,10 @@
       onExport: () => { const blob = new Blob([storage.exportLogs()], { type:'application/json' }); const url = URL.createObjectURL(blob); const anchor = document.createElement('a'); anchor.href = url; anchor.download = `scroll-of-fire-witness-${selectedDate}.json`; anchor.click(); URL.revokeObjectURL(url); }
     });
 
-    document.querySelector('[data-year-map]')?.addEventListener('click', event => {
-      const button = event.target.closest('[data-year-map-date]');
+    document.addEventListener('click', event => {
+      const button = event.target.closest('[data-year-map-date], [data-calendar-date]');
       if (!button) return;
-      selectedDate = button.getAttribute('data-year-map-date');
+      selectedDate = button.getAttribute('data-year-map-date') || button.getAttribute('data-calendar-date') || selectedDate;
       render();
     });
 

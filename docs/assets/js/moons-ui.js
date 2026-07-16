@@ -32,15 +32,46 @@
       moonPractice: q('[data-moons-practice]'),
       moonElement: q('[data-moons-element]'),
       moonFrequency: q('[data-moons-frequency]'),
+      moonSolarGate: q('[data-moons-solar-gate]'),
+      moonField: q('[data-moons-field]'),
+      moonArchetype: q('[data-moons-archetype]'),
+      moonLogsCount: q('[data-moons-logs-count]'),
+      moonPatternCount: q('[data-moons-pattern-count]'),
       moonArtwork: q('[data-moon-art]'),
+      symbolicFallback: q('[data-symbolic-fallback]'),
       selectedDateLabel: q('[data-selected-date]'),
       selectedModeLabel: q('[data-boundary-state]'),
+      todaySolarGate: q('[data-today-solar-gate]'),
+      todayField: q('[data-today-field]'),
+      todayArchetype: q('[data-today-archetype]'),
+      todayElement: q('[data-today-element]'),
+      todayFrequency: q('[data-today-frequency]'),
+      todayLogsCount: q('[data-today-logs-count]'),
+      todayPatternCount: q('[data-today-pattern-count]'),
+      todayEffectiveBoundary: q('[data-today-effective-boundary]'),
+      todayGateStatus: q('[data-today-gate-status]'),
+      todayBoundaryMode: q('[data-today-boundary-mode]'),
       shabbatDetail: q('[data-shabbat-detail]'),
       shabbatWindow: q('[data-shabbat-window]'),
+      shabbatPreparation: q('[data-shabbat-preparation]'),
+      shabbatActive: q('[data-shabbat-active]'),
+      shabbatReturn: q('[data-shabbat-return]'),
+      shabbatCurrentState: q('[data-shabbat-current-state]'),
+      shabbatCurrentWindow: q('[data-shabbat-current-window]'),
+      shabbatMoonPosition: q('[data-shabbat-moon-position]'),
+      shabbatSeal: q('[data-shabbat-seal]'),
+      shabbatHousehold: q('[data-shabbat-household]'),
+      shabbatBody: q('[data-shabbat-body]'),
+      shabbatWitness: q('[data-shabbat-witness]'),
+      shabbatStopRule: q('[data-shabbat-stop-rule]'),
+      shabbatReading: q('[data-shabbat-reading]'),
       flowPrimary: q('[data-flow-primary]'),
       flowSecondary: q('[data-flow-secondary]'),
       flowTertiary: q('[data-flow-tertiary]'),
       flowSequence: q('[data-flow-sequence]'),
+      flowSequenceMain: q('[data-flow-sequence-main]'),
+      flowMeters: q('[data-flow-meters]'),
+      flowPatternWindows: q('[data-flow-pattern-windows]'),
       mirrorText: q('[data-mirror-text]'),
       mirrorSignal: q('[data-mirror-signal]'),
       mirrorCrossing: q('[data-mirror-crossing]'),
@@ -69,26 +100,43 @@
       astrologyNote: q('[data-astrology-note]'),
       astrologySolar: q('[data-astrology-solar]'),
       astrologyMoon: q('[data-astrology-moon]'),
+      astrologyCounsel: q('[data-astrology-counsel]'),
+      astrologyElementMirror: q('[data-astrology-element-mirror]'),
+      astrologyBodyHouse: q('[data-astrology-body-house]'),
       astrologyIntegration: q('[data-astrology-integration]'),
+      astrologyAspect: q('[data-astrology-aspect]'),
       astrologyPlanets: q('[data-astrology-planets]'),
       calendarsText: q('[data-calendars-text]'),
       calendarCycleText: q('[data-calendar-cycle]'),
       calendarsGregorian: q('[data-calendars-gregorian]'),
+      calendarsRemnantGrid: q('[data-calendars-remnant-grid]'),
+      calendarsGregorianGrid: q('[data-calendars-gregorian-grid]'),
       codexText: q('[data-codex-text]'),
       codexTitle: q('[data-codex-title]'),
       codexPrompts: q('[data-codex-prompts]'),
       codexSeal: q('[data-codex-seal]'),
       codexCopy: q('[data-copy-seal]'),
+      codexCopyStatus: q('[data-codex-copy-status]'),
       timelineText: q('[data-timeline-text]'),
       timelineWindows: q('[data-timeline-windows]'),
       timelineSummary: q('[data-timeline-summary]'),
+      timelineLogList: q('[data-timeline-log-list]'),
+      timelineLogDetail: q('[data-timeline-log-detail]'),
       fieldText: q('[data-field-text]'),
       fieldLayers: q('[data-field-layers]'),
+      fieldTags: q('[data-field-tags]'),
       fieldSummary: q('[data-field-summary]')
     };
 
+    let selectedTimelineLogId = null;
+
     const setText = (node, value) => { if (node) node.textContent = value; };
     const showStatus = (message, visible = true) => { if (dom.statusPanel) dom.statusPanel.dataset.statusVisible = visible ? 'true' : 'false'; setText(dom.statusMessage, message); };
+    const fallback = value => {
+      const raw = typeof value === 'string' ? value.trim() : value;
+      return (raw === null || raw === undefined || raw === '' || raw === '—') ? 'Unavailable for selected date' : String(raw);
+    };
+    const patternList = list => list.length ? list.map(([term, count]) => `${term}(${count})`).join(', ') : 'Not enough records yet.';
 
     function validate() {
       const missing = REQUIRED_OUTPUTS.filter(name => !outputs[name]);
@@ -135,7 +183,10 @@
       dom.mirrorFocus?.addEventListener('change', event => handlers.onFocus(event.target.value));
       dom.mirrorCopy?.addEventListener('click', () => handlers.onCopyMirror());
       dom.mirrorBuild?.addEventListener('click', () => handlers.onFocus(dom.mirrorFocus?.value || 'general'));
-      dom.codexCopy?.addEventListener('click', () => handlers.onCopySeal());
+      dom.codexCopy?.addEventListener('click', () => {
+        handlers.onCopySeal();
+        setText(dom.codexCopyStatus, 'Seal copy requested.');
+      });
       dom.witnessBuild?.addEventListener('click', () => handlers.onWitnessInput(readWitnessFields()));
       dom.witnessClear?.addEventListener('click', () => {
         dom.logForm?.reset();
@@ -155,6 +206,15 @@
         const copy = event.target.closest('[data-copy-log]');
         if (copy) return handlers.onCopyLog(copy.getAttribute('data-copy-log'));
       }));
+      dom.timelineLogList?.addEventListener('click', event => {
+        const button = event.target.closest('[data-timeline-log-id]');
+        if (!button) return;
+        selectedTimelineLogId = button.getAttribute('data-timeline-log-id');
+        Array.from(dom.timelineLogList.querySelectorAll('[data-timeline-log-id]')).forEach(node => {
+          node.dataset.selected = String(node.getAttribute('data-timeline-log-id') === selectedTimelineLogId);
+        });
+        if (dom.timelineLogDetail) dom.timelineLogDetail.textContent = button.getAttribute('data-timeline-log-detail') || 'No detail available.';
+      });
     }
 
     function renderMoonArtwork(state) {
@@ -166,7 +226,16 @@
         image.alt = `${state.moonName} artwork`;
         image.loading = 'lazy';
         image.decoding = 'async';
+        image.addEventListener('load', () => { if (dom.symbolicFallback) dom.symbolicFallback.hidden = true; });
+        image.addEventListener('error', () => {
+          if (dom.symbolicFallback) {
+            dom.symbolicFallback.hidden = false;
+            dom.symbolicFallback.innerHTML = `<strong>Symbolic fallback</strong><p>${state.moonName} artwork is unavailable. Use ${state.daySeal?.title || state.yearGate.title}, ${state.moonArchetype?.element || 'Threshold'}, and ${state.moonArchetype?.frequency || 'Unavailable'} as the mirror.</p>`;
+          }
+        });
         dom.moonArtwork.appendChild(image);
+      } else if (dom.symbolicFallback) {
+        dom.symbolicFallback.hidden = false;
       }
     }
 
@@ -187,12 +256,17 @@
     function renderYearMap(map) {
       if (!dom.yearMap || !map) return;
       dom.yearMap.innerHTML = '';
-      setText(dom.yearMapMeta, `${map.yearLabel} · Anchor ${map.anchorISO}`);
+      setText(dom.yearMapMeta, `${map.yearLabel} · Anchor ${map.anchorISO} · Year Gate ${map.yearGate.iso}`);
       map.moons.forEach(moon => {
         const section = document.createElement('section');
         section.className = 'moons-year-moon';
+        const first = moon.days[0];
+        const last = moon.days[moon.days.length - 1];
         const heading = document.createElement('h3');
         heading.textContent = `${moon.moonNumber}. ${moon.moonName}`;
+        const meta = document.createElement('p');
+        meta.className = 'meta';
+        meta.textContent = `${first.iso} → ${last.iso} · ${moon.moonArchetype.essence} · ${moon.moonArchetype.element} · ${moon.moonArchetype.frequency} · ${moon.moonArchetype.practice}`;
         const days = document.createElement('div');
         days.className = 'moons-year-moon-days';
         moon.days.forEach(day => {
@@ -201,17 +275,22 @@
           cell.className = 'moons-year-cell';
           cell.dataset.selected = String(day.selected);
           cell.dataset.today = String(day.today);
-          cell.setAttribute('aria-label', day.label);
+          cell.setAttribute('aria-label', `${day.label} · ${day.iso}`);
           cell.setAttribute('data-year-map-date', day.iso);
-          cell.innerHTML = `<strong>${day.dayInMoon}</strong><small>${day.seal}</small>`;
+          cell.innerHTML = `<strong>${day.dayInMoon}</strong><small>${day.iso}</small>`;
           days.appendChild(cell);
         });
         section.appendChild(heading);
+        section.appendChild(meta);
         section.appendChild(days);
         dom.yearMap.appendChild(section);
       });
-      const gate = document.createElement('div');
+      const gate = document.createElement('button');
+      gate.type = 'button';
       gate.className = 'moons-year-gate';
+      gate.dataset.selected = String(map.yearGate.selected);
+      gate.dataset.today = String(map.yearGate.today);
+      gate.setAttribute('data-year-map-date', map.yearGate.iso);
       gate.innerHTML = `<strong>${map.yearGate.title}</strong><small>${map.yearGate.iso}</small>`;
       dom.yearMap.appendChild(gate);
     }
@@ -221,14 +300,18 @@
       if (!astro) return;
       setText(dom.astrologyNote, `${astro.note} Body house: ${astro.bodyHouse}.`);
       setText(dom.astrologySolar, `${astro.solar.label} — ${astro.solar.meaning}`);
-      setText(dom.astrologyMoon, `${astro.moonMirror.label} · ${astro.bodyHouse}`);
-      setText(dom.astrologyIntegration, `${astro.integration.counsel} Aspect mirror: ${astro.aspectMirror.join(' · ')}`);
+      setText(dom.astrologyMoon, `${astro.moonMirror.label} · ${astro.moonMirror.essence}`);
+      setText(dom.astrologyCounsel, astro.dailyCounsel || astro.integration.counsel);
+      setText(dom.astrologyElementMirror, astro.elementMirror || `Element ${astro.integration.element}`);
+      setText(dom.astrologyBodyHouse, astro.bodyHouse);
+      setText(dom.astrologyIntegration, `${astro.integration.counsel}`);
+      setText(dom.astrologyAspect, Array.isArray(astro.aspectMirror) ? astro.aspectMirror.join(' · ') : 'Aspect mirror unavailable.');
       if (dom.astrologyPlanets) {
         dom.astrologyPlanets.innerHTML = '';
         astro.planets.forEach(planet => {
           const cell = document.createElement('div');
           cell.className = 'moons-planet-cell';
-          cell.innerHTML = `<strong>${planet.glyph || ''} ${planet.name}</strong><span>${planet.theme}</span>`;
+          cell.innerHTML = `<strong>${planet.glyph || ''} ${planet.name}</strong><span>${planet.theme}</span><small>${planet.placement || 'Symbolic placement unavailable.'}</small>`;
           dom.astrologyPlanets.appendChild(cell);
         });
       }
@@ -238,7 +321,9 @@
       const seal = state.seal;
       if (!seal) return;
       setText(dom.codexTitle, seal.title);
+      setText(dom.codexText, `${seal.details.daySeal} · ${seal.details.solarGate} · ${seal.details.field}`);
       setText(dom.codexSeal, seal.text);
+      setText(dom.codexCopyStatus, `Selected date ${seal.details.date}. ${seal.witnessPrompt}`);
       if (dom.codexPrompts) {
         dom.codexPrompts.innerHTML = '';
         seal.prompts.forEach(prompt => {
@@ -246,45 +331,117 @@
           item.textContent = prompt;
           dom.codexPrompts.appendChild(item);
         });
+        const closing = document.createElement('li');
+        closing.textContent = seal.closingLine;
+        dom.codexPrompts.appendChild(closing);
+      }
+    }
+
+    function renderPatternWindows(container, patterns, includeCategories = false) {
+      if (!container || !patterns) return;
+      container.innerHTML = '';
+      [3, 7, 14, 28].forEach(windowSize => {
+        const top = patterns.windows[windowSize] || [];
+        const cell = document.createElement('div');
+        cell.className = 'moons-timeline-window';
+        const chips = top.length ? top.map(([term, count]) => `<span class="moons-chip">${term} ·${count}</span>`).join('') : '<span class="moons-inline-note">Not enough records yet.</span>';
+        cell.innerHTML = `<strong>${windowSize}-day window</strong><div class="moons-chip-row">${chips}</div>`;
+        container.appendChild(cell);
+      });
+      if (includeCategories && patterns.categories) {
+        const categories = document.createElement('div');
+        categories.className = 'moons-timeline-window';
+        categories.innerHTML = `<p><strong>Repeated words</strong> ${patternList(patterns.categories.words || [])}</p><p><strong>Body signals</strong> ${patternList(patterns.categories.body || [])}</p><p><strong>Emotional states</strong> ${patternList(patterns.categories.emotion || [])}</p><p><strong>Field signs</strong> ${patternList(patterns.categories.field || [])}</p><p><strong>Actions</strong> ${patternList(patterns.categories.action || [])}</p><p><strong>Lessons</strong> ${patternList(patterns.categories.lesson || [])}</p>`;
+        container.appendChild(categories);
       }
     }
 
     function renderTimeline(state) {
       const patterns = state.patterns;
       if (!patterns) return;
-      setText(dom.timelineSummary, patterns.count ? `${patterns.count} recurring signal${patterns.count === 1 ? '' : 's'} across the last 28 witness logs. Words:${patterns.categories.words.length || 0} · Body:${patterns.categories.body.length || 0} · Emotion:${patterns.categories.emotion.length || 0} · Field:${patterns.categories.field.length || 0}` : 'Not enough witness logs yet to surface repeating signals. Record across 3, 7, 14, and 28 days.');
-      if (dom.timelineWindows) {
-        dom.timelineWindows.innerHTML = '';
-        [3, 7, 14, 28].forEach(windowSize => {
-          const top = patterns.windows[windowSize] || [];
-          const cell = document.createElement('div');
-          cell.className = 'moons-timeline-window';
-          const chips = top.length ? top.map(([term, count]) => `<span class="moons-chip">${term} ·${count}</span>`).join('') : '<span class="moons-inline-note">No repeats yet.</span>';
-          cell.innerHTML = `<strong>${windowSize}-day window</strong><div class="moons-chip-row">${chips}</div>`;
-          dom.timelineWindows.appendChild(cell);
+      setText(dom.timelineSummary, patterns.count ? `${patterns.count} recurring signal${patterns.count === 1 ? '' : 's'} across the last 28 witness logs.` : 'Not enough witness logs yet to surface repeating signals. Record across 3, 7, 14, and 28 days.');
+      renderPatternWindows(dom.timelineWindows, patterns, true);
+      if (dom.timelineLogList) {
+        dom.timelineLogList.innerHTML = '';
+        if (!state.logs.length) {
+          dom.timelineLogList.innerHTML = '<p class="moons-inline-note">No timeline yet. Save witness logs to build chronology.</p>';
+          if (dom.timelineLogDetail) dom.timelineLogDetail.textContent = 'No selected log yet.';
+          return;
+        }
+        state.logs.forEach(log => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'moons-year-cell';
+          button.setAttribute('data-timeline-log-id', log.id);
+          button.dataset.selected = String(log.id === selectedTimelineLogId || (!selectedTimelineLogId && state.logs[0].id === log.id));
+          const detail = [
+            `${log.date}${log.effectiveISO && log.effectiveISO !== log.date ? ` → effective ${log.effectiveISO}` : ''}`,
+            `${log.moonName || 'Witness log'} · Moon Day ${log.moonDay || '—'} · Year Day ${log.yearDay || '—'}`,
+            `${log.shabbat || 'Ordinary day'}`,
+            `Body: ${log.notes?.body || '—'}`,
+            `Emotion: ${log.notes?.emotion || '—'}`,
+            `Signs: ${log.notes?.signs || '—'}`,
+            `Action: ${log.notes?.action || '—'}`,
+            `Lesson: ${log.notes?.lesson || '—'}`,
+            `3/7/14/28 markers: ${(state.patterns.windows[3] || []).length}/${(state.patterns.windows[7] || []).length}/${(state.patterns.windows[14] || []).length}/${(state.patterns.windows[28] || []).length}`,
+            '',
+            log.text || '—'
+          ].join('\n');
+          button.setAttribute('data-timeline-log-detail', detail);
+          button.textContent = `${log.date} · ${log.moonName || 'Witness'} · ${log.shabbat || 'Ordinary day'}`;
+          dom.timelineLogList.appendChild(button);
         });
-        if (patterns.categories) {
-          const categories = document.createElement('div');
-          categories.className = 'moons-timeline-window';
-          const group = (label, list) => `<p><strong>${label}</strong> ${list.length ? list.map(([term, count]) => `${term}(${count})`).join(', ') : 'No repeats yet.'}</p>`;
-          categories.innerHTML = `${group('Repeated words', patterns.categories.words || [])}${group('Body signals', patterns.categories.body || [])}${group('Emotional states', patterns.categories.emotion || [])}${group('Field signs', patterns.categories.field || [])}`;
-          dom.timelineWindows.appendChild(categories);
+        const active = state.logs.find(log => log.id === selectedTimelineLogId) || state.logs[0];
+        selectedTimelineLogId = active?.id || null;
+        if (dom.timelineLogDetail) {
+          const node = dom.timelineLogList.querySelector(`[data-timeline-log-id="${selectedTimelineLogId}"]`);
+          dom.timelineLogDetail.textContent = node?.getAttribute('data-timeline-log-detail') || 'No detail available.';
         }
       }
     }
 
+    function deriveFieldIntensity(state) {
+      const fieldText = String(state.logs?.[0]?.notes?.field || '').toLowerCase();
+      const match = fieldText.match(/kp\s*([0-9]+)/i);
+      const kp = match ? Number(match[1]) : NaN;
+      if (Number.isFinite(kp) && kp >= 7) return { label:'storm', source:'manual' };
+      if (Number.isFinite(kp) && kp >= 5) return { label:'charged', source:'manual' };
+      if (Number.isFinite(kp)) return { label:'quiet', source:'manual' };
+      return { label:'quiet', source:'symbolic' };
+    }
+
     function renderField(state) {
       const layers = state.fieldLayers;
+      const intensity = deriveFieldIntensity(state);
       if (dom.fieldSummary) setText(dom.fieldSummary, `${state.moonArchetype?.element || 'Threshold'} · ${state.moonArchetype?.frequency || state.sunset} · ${state.shabbat.label}`);
+      if (dom.fieldTags) {
+        const labels = window.RemnantCalendarData?.environmentLabels || {};
+        dom.fieldTags.innerHTML = '';
+        const tags = [
+          ['Earth Hum context', state.logs?.[0]?.notes?.field || 'Unavailable — not fabricated'],
+          ['Kp field tag', `Field is ${intensity.label}`],
+          ['Source', labels[intensity.source] || intensity.source],
+          ['Selected-date relation', `${state.selectedISO} → ${state.effectiveISO}`],
+          ['Pattern context', state.patternCount ? `${state.patternCount} repeating signal(s)` : 'No repeats yet']
+        ];
+        tags.forEach(([title, value]) => {
+          const cell = document.createElement('article');
+          cell.className = 'moons-field-layer';
+          cell.innerHTML = `<p class="eyebrow">${title}</p><p>${value}</p>`;
+          dom.fieldTags.appendChild(cell);
+        });
+      }
       if (dom.fieldLayers && Array.isArray(layers)) {
         dom.fieldLayers.innerHTML = '';
         layers.forEach(layer => {
           const cell = document.createElement('article');
           cell.className = 'moons-field-layer';
-          cell.innerHTML = `<p class="eyebrow">${layer.title}</p><p>${layer.guidance}</p>`;
+          const source = layer.key === 'body' && state.logs?.[0]?.notes?.body ? 'Manually entered' : (layer.key === 'field' ? 'Calculated locally' : 'Symbolic reading');
+          cell.innerHTML = `<p class="eyebrow">${layer.title}</p><p>${layer.guidance}</p><p class="meta">Source: ${source}</p>`;
           dom.fieldLayers.appendChild(cell);
         });
       }
+      setText(dom.fieldText, `${state.moonArchetype?.element || 'Threshold'} · ${state.moonArchetype?.frequency || state.sunset} · ${state.shabbat.label} · ${intensity.label} field`);
     }
 
     function renderWitnessPreview(text) {
@@ -309,6 +466,35 @@
       if (dom.storageNote) dom.storageNote.textContent = storageAvailable ? 'Saved witness logs stay on this device unless you export them.' : 'Local storage is unavailable in this browser, so witness logs cannot be saved here.';
     }
 
+    function renderCalendars(state) {
+      const map = state.yearMap;
+      if (!map) return;
+      if (dom.calendarsRemnantGrid) {
+        dom.calendarsRemnantGrid.innerHTML = '';
+        map.moons.forEach(moon => {
+          const card = document.createElement('article');
+          card.className = 'moons-timeline-window';
+          const weeks = [0, 1, 2, 3].map(week => {
+            const weekDays = moon.days.slice(week * 7, week * 7 + 7).map(day => `<button type="button" class="moons-year-cell" data-calendar-date="${day.iso}" data-selected="${day.selected}" data-today="${day.today}"><strong>${day.dayInMoon}</strong><small>${day.iso}</small></button>`).join('');
+            return `<div class="moons-year-moon-days">${weekDays}</div>`;
+          }).join('');
+          card.innerHTML = `<strong>${moon.moonNumber}. ${moon.moonName}</strong><p>${moon.days[0].iso} → ${moon.days[27].iso} · ${moon.moonArchetype.element} · ${moon.moonArchetype.frequency}</p>${weeks}`;
+          dom.calendarsRemnantGrid.appendChild(card);
+        });
+      }
+      if (dom.calendarsGregorianGrid) {
+        const allDays = map.moons.flatMap(moon => moon.days);
+        const selected = allDays.find(day => day.iso === state.selectedISO) || allDays[0];
+        const start = allDays.indexOf(selected);
+        const block = allDays.slice(Math.max(0, start - (start % 7)), Math.max(0, start - (start % 7)) + 28);
+        dom.calendarsGregorianGrid.innerHTML = '';
+        const card = document.createElement('article');
+        card.className = 'moons-timeline-window';
+        card.innerHTML = `<strong>Gregorian overlay</strong><div class="moons-year-moon-days">${block.map(day => `<button type="button" class="moons-year-cell" data-calendar-date="${day.iso}" data-selected="${day.selected}" data-today="${day.today}"><strong>${day.iso.slice(8)}</strong><small>${day.iso}</small></button>`).join('')}</div>`;
+        dom.calendarsGregorianGrid.appendChild(card);
+      }
+    }
+
     function renderCalendarState(state) {
       setText(outputs['moon-name'], state.moonName || state.yearGate.title);
       setText(outputs['moon-day'], state.dayInMoon ? String(state.dayInMoon) : 'Year Gate');
@@ -324,13 +510,42 @@
       setText(dom.timezoneLabel, state.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone);
       setText(dom.moonEssence, state.moonArchetype?.essence || state.yearGate.guidance);
       setText(dom.moonPractice, state.moonArchetype?.practice || state.yearGate.guidance);
-      setText(dom.moonElement, state.moonArchetype?.element || 'Threshold');
-      setText(dom.moonFrequency, state.moonArchetype?.frequency || '—');
-      setText(dom.shabbatDetail, `Current State: ${state.shabbat.label}. Window: ${state.shabbat.window}. Moon Position: ${state.insideYear ? `Day ${state.dayInMoon} / 28` : 'Year Gate'}. Seal: ${state.daySeal?.title || state.yearGate.title}. Full reading: Prepare before sunset Friday; Cease + Rest Friday sunset through Saturday nightfall; Witness + Return after the gate.`);
-      setText(dom.shabbatWindow, `${state.shabbat.moonDays && state.shabbat.moonDays.length ? `Moon Days ${state.shabbat.moonDays.join(', ')} remain visible markers.` : 'Shabbat aligns with the weekly sunset boundary.'} Household guidance: reduce unfinished pressure. Body guidance: sleep, prayer, food, quiet. Witness guidance: record and carry one deliberate return action. Codex Stop Rule: do not turn rest into performance.`);
-      setText(dom.flowPrimary, `Read: ${state.daySeal?.guidance || state.yearGate.guidance} Breath/Word anchor.`);
-      setText(dom.flowSecondary, `Witness: ${state.weekGate.guidance} Body + grounding + coherence.`);
-      setText(dom.flowTertiary, `Log/Pattern/Seal: ${state.moonArchetype?.practice || state.yearGate.guidance} Action + field intensity + signal repeat.`);
+      setText(dom.moonElement, fallback(state.moonArchetype?.element || state.solarGate?.element));
+      setText(dom.moonFrequency, fallback(state.moonArchetype?.frequency));
+      setText(dom.moonSolarGate, fallback(`${state.solarGate?.sign || ''} · ${state.solarGate?.element || ''}`.trim()));
+      setText(dom.moonField, fallback(`${state.moonArchetype?.element || 'Threshold'} · ${state.shabbat.label}`));
+      setText(dom.moonArchetype, fallback(state.daySeal?.title || state.yearGate.title));
+      setText(dom.moonLogsCount, String(state.logsCount || 0));
+      setText(dom.moonPatternCount, String(state.patternCount || 0));
+      setText(dom.todaySolarGate, fallback(`${state.solarGate?.sign || ''} · ${state.solarGate?.element || ''}`.trim()));
+      setText(dom.todayField, fallback(`${state.moonArchetype?.element || 'Threshold'} · ${state.shabbat.label}`));
+      setText(dom.todayArchetype, fallback(state.daySeal?.title || state.yearGate.title));
+      setText(dom.todayElement, fallback(state.moonArchetype?.element || state.solarGate?.element));
+      setText(dom.todayFrequency, fallback(state.moonArchetype?.frequency));
+      setText(dom.todayLogsCount, String(state.logsCount || 0));
+      setText(dom.todayPatternCount, String(state.patternCount || 0));
+      setText(dom.todayEffectiveBoundary, `Selected ${state.selectedISO} · Effective boundary date ${state.effectiveISO}`);
+      setText(dom.todayGateStatus, state.isYearGate ? 'Year Gate / Day Out of Time' : `Regular day in Moon ${state.moonNumber}`);
+      setText(dom.todayBoundaryMode, `Boundary mode: ${state.boundaryMode || 'auto'}`);
+      setText(dom.shabbatDetail, `Current State: ${state.shabbat.label}. Window: ${state.shabbat.window}. Moon Position: ${state.insideYear ? `Day ${state.dayInMoon} / 28` : 'Year Gate'}. Seal: ${state.daySeal?.title || state.yearGate.title}.`);
+      setText(dom.shabbatWindow, `${state.shabbat.moonDays && state.shabbat.moonDays.length ? `Moon Days ${state.shabbat.moonDays.join(', ')} remain visible markers.` : 'Shabbat aligns with the weekly sunset boundary.'} Continuous week: ${state.continuousWeekIndex}.`);
+      setText(dom.shabbatCurrentState, state.shabbat.label);
+      setText(dom.shabbatCurrentWindow, state.shabbat.window);
+      setText(dom.shabbatMoonPosition, state.insideYear ? `Moon ${state.moonNumber} · Day ${state.dayInMoon}` : 'Year Gate');
+      setText(dom.shabbatSeal, state.daySeal?.title || state.yearGate.title);
+      setText(dom.shabbatPreparation, 'Preparation Gate: Friday before sunset.');
+      setText(dom.shabbatActive, 'Shabbat Gate: Friday after sunset through Saturday nightfall.');
+      setText(dom.shabbatReturn, 'Return Gate: post-Shabbat return on Sunday.');
+      setText(dom.shabbatHousehold, 'Reduce unfinished pressure. Prepare food, order, and peace before sunset.');
+      setText(dom.shabbatBody, 'Cease forcing. Sleep, breath, prayer, and restoration first.');
+      setText(dom.shabbatWitness, 'Witness what changed during rest, then carry one deliberate return action.');
+      setText(dom.shabbatStopRule, 'Do not turn rest into performance.');
+      setText(dom.shabbatReading, `Prepare · Cease · Rest · Witness · Return. Relationship markers: Moon Days ${(state.shabbat.moonDays || []).join(', ')} and continuous week through the Year Gate.`);
+      setText(dom.flowPrimary, `Read: ${state.daySeal?.guidance || state.yearGate.guidance}`);
+      setText(dom.flowSecondary, `Witness: ${state.weekGate.guidance}`);
+      setText(dom.flowTertiary, `Log/Pattern/Seal: ${state.moonArchetype?.practice || state.yearGate.guidance}`);
+      setText(dom.flowSequenceMain, 'Read · Witness · Log · Pattern · Seal · Breath · Word · Body · Action');
+      setText(dom.flowMeters, 'grounding · coherence · body load · signal repeat · field intensity');
       setText(dom.flowSequence, state.daypart ? `Day-part: ${state.daypart}. ${Array.isArray(state.breathSequence) ? state.breathSequence.map(step => step.step || step).join(' · ') : ''}` : '');
       setText(dom.mirrorSignal, state.mirror.signal);
       setText(dom.mirrorCrossing, state.mirror.crossing);
@@ -342,7 +557,6 @@
       if (state.gregorian) setText(dom.calendarsGregorian, `Gregorian ${state.gregorian.long} (${state.gregorian.weekday}) maps to ${state.insideYear ? `Moon ${state.moonNumber} · Day ${state.dayInMoon} of 28` : state.yearGate.title}. Solar gate ${state.solarGate?.sign || '—'} · ${state.solarGate?.element || ''}.`);
       setText(dom.codexText, `${state.daySeal?.title || state.yearGate.title} seals ${state.moonName}. ${state.moonArchetype?.essence || state.yearGate.guidance}`);
       setText(dom.timelineText, `Selected civil date ${state.selectedISO}. Effective Remnant date ${state.effectiveISO}. Continuous week ${state.continuousWeekIndex}.`);
-      setText(dom.fieldText, `${state.moonArchetype?.element || 'Threshold'} · ${state.moonArchetype?.frequency || state.sunset} · ${state.shabbat.label}`);
       if (dom.ringValue) dom.ringValue.textContent = state.dayInMoon ? String(state.dayInMoon) : 'YG';
       if (dom.ringMeta) dom.ringMeta.textContent = state.dayInMoon ? '/ 28' : 'Year Gate';
       if (dom.ringProgress) {
@@ -359,8 +573,10 @@
       renderYearMap(state.yearMap);
       renderAstrology(state);
       renderCodex(state);
+      renderPatternWindows(dom.flowPatternWindows, state.patterns, true);
       renderTimeline(state);
       renderField(state);
+      renderCalendars(state);
       if (state.witnessTemplate) renderWitnessPreview(state.witnessTemplate);
       showStatus('', false);
     }

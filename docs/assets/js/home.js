@@ -26,6 +26,12 @@
     night: { label: 'Night Signal', guidance: 'Quiet field. Return, breathe, and preserve the lesson.' }
   };
 
+  const fallbackValue = (value, message) => {
+    const raw = typeof value === 'string' ? value.trim() : value;
+    if (raw === null || raw === undefined || raw === '' || raw === '—') return message;
+    return String(raw);
+  };
+
   function stateFromEngine() {
     const engine = window.RemnantCalendar;
     if (!engine) return null;
@@ -50,7 +56,7 @@
       sunset: state.sunset,
       archetype: state.daySeal?.title || state.yearGate.title,
       element: state.moonArchetype?.element || solar.element,
-      frequency: state.moonArchetype?.frequency || '—',
+      frequency: state.moonArchetype?.frequency || 'Unavailable from selected moon',
       solarGate: `${solar.sign} · ${solar.element}`,
       field: `${state.moonArchetype?.element || 'Threshold'} · ${state.shabbat.label}`,
       logsCount: logs.length,
@@ -66,6 +72,18 @@
     text('[data-home-today-phase]', fallback.phase);
     text('[data-home-today-gate]', fallback.gate);
     text('[data-home-today-summary]', fallback.summary);
+    text('[data-home-today-archetype]', 'Archetype unavailable. Open 13 Moons to calculate.');
+    text('[data-home-today-solar]', 'Solar Gate unavailable. Open 13 Moons to calculate.');
+    text('[data-home-today-field]', 'Field unavailable. Open 13 Moons to calculate.');
+    text('[data-home-today-element]', 'Element unavailable. Open 13 Moons to calculate.');
+    text('[data-home-today-frequency]', 'Frequency unavailable. Open 13 Moons to calculate.');
+    text('[data-home-your-codex-logs]', '0');
+    text('[data-home-your-codex-patterns]', '0');
+    text('[data-home-your-codex-solar]', 'Unavailable');
+    text('[data-home-your-codex-field]', 'Unavailable');
+    text('[data-home-your-codex-archetype]', 'Unavailable');
+    text('[data-home-your-codex-element]', 'Unavailable');
+    text('[data-home-your-codex-frequency]', 'Unavailable');
   }
 
   function renderLiveSignal(state) {
@@ -83,8 +101,11 @@
     text('[data-home-continue-route]', `${state.week} · ${state.shabbat}`);
     text('[data-home-your-codex-logs]', String(state.logsCount));
     text('[data-home-your-codex-patterns]', String(state.patternCount));
-    text('[data-home-your-codex-solar]', state.solarGate);
-    text('[data-home-your-codex-field]', state.field);
+    text('[data-home-your-codex-solar]', fallbackValue(state.solarGate, 'Solar Gate unavailable'));
+    text('[data-home-your-codex-field]', fallbackValue(state.field, 'Field unavailable'));
+    text('[data-home-your-codex-archetype]', fallbackValue(state.archetype, 'Archetype unavailable'));
+    text('[data-home-your-codex-element]', fallbackValue(state.element, 'Element unavailable'));
+    text('[data-home-your-codex-frequency]', fallbackValue(state.frequency, 'Frequency unavailable'));
     active('[data-home-your-codex-panel]', state.logsCount > 0);
   }
 
@@ -100,7 +121,11 @@
       text('[data-home-today-date]', `${state.selectedDate} selected · ${state.effectiveDate} effective`);
       text('[data-home-today-sunset]', state.sunset);
       text('[data-home-today-shabbat]', state.shabbat);
-      text('[data-home-today-frequency]', `${state.frequency} · ${state.element}`);
+      text('[data-home-today-solar]', fallbackValue(state.solarGate, 'Solar Gate unavailable'));
+      text('[data-home-today-field]', fallbackValue(state.field, 'Field unavailable'));
+      text('[data-home-today-archetype]', fallbackValue(state.archetype, 'Archetype unavailable'));
+      text('[data-home-today-element]', fallbackValue(state.element, 'Element unavailable'));
+      text('[data-home-today-frequency]', fallbackValue(state.frequency, 'Frequency unavailable'));
       window.CodexState = { ...(window.CodexState || {}), ...state };
       renderLiveSignal(state);
       renderContinuity(state);
