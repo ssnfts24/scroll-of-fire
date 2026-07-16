@@ -229,5 +229,123 @@
     return { time:`${parts.hour}:${parts.minute}`, latitude, longitude, timeZone, iso:formatISODate(selectedDate) };
   }
 
-  return { data, defaults:DEFAULTS, normalizeLocalDate, formatISODate, addDays, dayDiff, parseClock, calculateRemnantDate, calculateMoonNumber, calculateDayInMoon, calculateYearDay, calculateWeekGate, calculateShabbatState, calculateVisibleMoonPhase, calculateIllumination, calculateSunsetBoundary, buildYearMap, buildMirrorReading, calculateLocalizedSunset, anchorForYear, yearAnchorFor };
+  function getDaypart(date) {
+    const hour = (date instanceof Date ? date : new Date()).getHours();
+    if (hour >= 5 && hour < 10) return 'dawn';
+    if (hour >= 10 && hour < 17) return 'day';
+    if (hour >= 17 && hour < 21) return 'dusk';
+    return 'night';
+  }
+
+  const MONTH_GATES = [
+    ['Capricorn', 'Aquarius', 20],
+    ['Aquarius', 'Pisces', 19],
+    ['Pisces', 'Aries', 21],
+    ['Aries', 'Taurus', 20],
+    ['Taurus', 'Gemini', 21],
+    ['Gemini', 'Cancer', 21],
+    ['Cancer', 'Leo', 23],
+    ['Leo', 'Virgo', 23],
+    ['Virgo', 'Libra', 23],
+    ['Libra', 'Scorpio', 23],
+    ['Scorpio', 'Sagittarius', 22],
+    ['Sagittarius', 'Capricorn', 22]
+  ];
+  const GATE_BY_SIGN = (data.solarGates || []).reduce((acc, gate) => { acc[gate.sign] = gate; return acc; }, {});
+
+  function calculateSolarGate(date) {
+    const value = normalizeLocalDate(date);
+    const month = value.getMonth() + 1;
+    const day = value.getDate();
+    const entry = MONTH_GATES[month - 1];
+    const sign = day < entry[2] ? entry[0] : entry[1];
+    return GATE_BY_SIGN[sign] || { sign, element:'Threshold', meaning:'' };
+  }
+
+  function buildAstrologyMirror(state) {
+    const effective = state.effectiveDate || normalizeLocalDate(state.effectiveISO || new Date());
+    const solar = calculateSolarGate(effective);
+    const phase = state.phase || calculateVisibleMoonPhase(effective);
+    const illumination = typeof state.illumination === 'number' ? state.illumination : calculateIllumination(effective);
+    const carrier = state.moonArchetype?.frequency || '—';
+    const element = state.moonArchetype?.element || solar.element;
+    return {
+      note: data.astrologyNote,
+      solar: { sign:solar.sign, element:solar.element, meaning:solar.meaning, label:`${solar.sign} · ${solar.element}` },
+      moonMirror: { phase, illumination, label:`${phase} · ${illumination.toFixed(1)}% illuminated`, essence:state.moonArchetype?.essence || data.yearGate.guidance },
+      planets: data.planetWheel.map(planet => ({ ...planet })),
+      integration: { element, carrier, counsel:`Ground ${element.toLowerCase()} through ${carrier}. Witness before you interpret.` }
+    };
+  }
+
+  function buildCodexSeal(state) {
+    const title = state.insideYear
+      ? `Moon ${state.moonNumber} · Day ${state.dayInMoon} — ${state.moonName}`
+      : `${data.yearGate.title}`;
+    const solar = calculateSolarGate(state.effectiveDate || state.effectiveISO || new Date());
+    const lines = [
+      '☲ REMNANT DAILY SEAL ☲',
+      '',
+      `${state.selectedISO}${state.selectedISO === state.effectiveISO ? '' : ` · after ${state.sunset}, effective ${state.effectiveISO}`}`,
+      title,
+      '',
+      `Day boundary: ${state.afterBoundary ? 'sunset passed' : 'before sunset'} · ${state.sunset}`,
+      `Shabbat gate: ${state.shabbat.label} — ${state.shabbat.detail}`,
+      `Moon essence: ${state.moonArchetype?.essence || data.yearGate.guidance}`,
+      `Practice: ${state.moonArchetype?.practice || data.yearGate.guidance}`,
+      `Day seal: ${state.daySeal?.title || data.yearGate.title} — ${state.daySeal?.guidance || data.yearGate.guidance}`,
+      `Week gate: ${state.weekGate.title} — ${state.weekGate.guidance}`,
+      `Visible moon: ${state.phase} · ${state.illumination.toFixed(1)}% illuminated`,
+      `Solar gate: ${solar.sign} · ${solar.element} — ${solar.meaning}`,
+      `Carrier tone: ${state.moonArchetype?.frequency || '—'} · ${state.moonArchetype?.element || 'Threshold'}`,
+      '',
+      'Seal: Observe first. Record clearly. Interpret slowly. Repair one thing. Carry the witness forward.'
+    ];
+    return { title, prompts:data.sealPrompts.slice(), text:lines.join('\n') };
+  }
+
+  function buildWitnessTemplate(state, fields = {}) {
+    const value = key => String(fields[key] || '').trim() || '—';
+    const solar = calculateSolarGate(state.effectiveDate || state.effectiveISO || new Date());
+    const lines = [
+      `Civil date: ${state.selectedISO}`,
+      `Effective Remnant date: ${state.effectiveISO}`,
+      `Day boundary: ${state.afterBoundary ? 'sunset passed' : 'before sunset'} · ${state.sunset}`,
+      `Shabbat state: ${state.shabbat.label}`,
+      `Remnant moon: ${state.moonName}`,
+      `Moon day: ${state.insideYear ? `${state.dayInMoon}/28` : 'Year Gate'}`,
+      `Year day: ${state.insideYear ? `${state.yearDay}/364` : 'Year Gate'}`,
+      `Visible moon phase: ${state.phase} · ${state.illumination.toFixed(1)}%`,
+      `Solar gate: ${solar.sign} · ${solar.element}`,
+      `Day seal: ${state.daySeal?.title || data.yearGate.title}`,
+      `Carrier tone: ${state.moonArchetype?.frequency || '—'} · ${state.moonArchetype?.element || 'Threshold'}`,
+      ''
+    ];
+    data.witnessFields.forEach(field => { lines.push(`${field.label}: ${value(field.key)}`); });
+    lines.push('', 'Witness: Record first. Interpret later. Compare across 3, 7, 14, and 28 days.');
+    return lines.join('\n');
+  }
+
+  const PATTERN_SKIP = new Set(['unknown','checked','field','moon','body','dreams','sleep','weather','signal','with','from','this','that','have','would','there','their','about','because','through','ordinary','witness','remnant']);
+
+  function detectPatterns(logs) {
+    const list = Array.isArray(logs) ? logs : [];
+    const windows = [3, 7, 14, 28];
+    const result = { count:0, top:[], windows:{} };
+    windows.forEach(windowSize => {
+      const joined = list.slice(0, windowSize).map(entry => {
+        const notes = entry.notes && typeof entry.notes === 'object' ? entry.notes : {};
+        return [entry.text, entry.tags && entry.tags.join ? entry.tags.join(' ') : '', notes.signs, notes.body, notes.dreams, notes.emotion, notes.action, notes.lesson, notes.witness, entry.shabbat].filter(Boolean).join(' ');
+      }).join(' ').toLowerCase();
+      const terms = joined.match(/\b[0-9]{2,4}\b|\b[a-z]{4,}\b/g) || [];
+      const counts = {};
+      terms.forEach(term => { if (PATTERN_SKIP.has(term)) return; counts[term] = (counts[term] || 0) + 1; });
+      const top = Object.entries(counts).filter(([, count]) => count >= 2).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      result.windows[windowSize] = top;
+      if (windowSize === 28) { result.count = top.length; result.top = top; }
+    });
+    return result;
+  }
+
+  return { data, defaults:DEFAULTS, normalizeLocalDate, formatISODate, addDays, dayDiff, parseClock, calculateRemnantDate, calculateMoonNumber, calculateDayInMoon, calculateYearDay, calculateWeekGate, calculateShabbatState, calculateVisibleMoonPhase, calculateIllumination, calculateSunsetBoundary, buildYearMap, buildMirrorReading, calculateLocalizedSunset, anchorForYear, yearAnchorFor, getDaypart, calculateSolarGate, buildAstrologyMirror, buildCodexSeal, buildWitnessTemplate, detectPatterns };
 });

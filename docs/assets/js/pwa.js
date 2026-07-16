@@ -3,9 +3,9 @@
 
   if (window.ScrollOfFirePWA) return;
 
-  const CACHE_NAME = 'scroll-of-fire-v20260716-r1';
-  const MIGRATION_FLAG = 'sof-sw-reset-20260716-r1';
-  const RELOAD_FLAG = 'sof-sw-reset-20260716-r1-reloaded';
+  const CACHE_NAME = 'scroll-of-fire-v20260716-r3';
+  const MIGRATION_FLAG = 'sof-sw-reset-20260716-r3';
+  const RELOAD_FLAG = 'sof-sw-reset-20260716-r3-reloaded';
   let initPromise = null;
 
   async function migrateOldWorkers() {
