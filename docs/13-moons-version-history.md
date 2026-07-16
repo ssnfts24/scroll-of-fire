@@ -5,6 +5,8 @@
 - Split mandatory app-shell and optional artwork precaching.
 - Guarded Refresh App Files while offline and added a network preflight.
 - Preserved recovery caches until a versioned service-worker readiness and startup check completes.
+- Verified current-core promotion and removed stale version caches during normal activation.
+- Made asset lookup prefer the current version's named caches.
 - Made Merge imports preserve settings, deduplicate arrays, and report conflicts.
 
 ## Working baseline

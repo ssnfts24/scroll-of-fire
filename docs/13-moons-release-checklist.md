@@ -32,6 +32,8 @@
 - [x] Refresh App Files retires only 13 Moons recovery caches after verified startup
 - [x] Refresh App Files is disabled offline and verifies network access before cleanup
 - [x] Mandatory precache failure, stale readiness, and lifecycle timeout preserve recovery
+- [x] Normal activation verifies the current core before retiring prior version caches
+- [x] Core, runtime, and image lookups use the current version's named caches
 - [x] Export/import validates records and creates a rollback backup
 - [x] Merge imports deduplicate arrays, preserve settings, and report conflicts
 - [x] Destructive erase requires a checkbox and two confirmations
