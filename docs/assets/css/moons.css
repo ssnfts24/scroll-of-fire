@@ -45,9 +45,7 @@ html,
 body {
   margin: 0;
   width: 100%;
-  max-width: 100%;
   min-height: 100%;
-  min-height: 100svh;
   overflow-x: hidden;
 }
 
@@ -79,10 +77,6 @@ body[data-shabbat-state="active"] {
     radial-gradient(950px 650px at 50% -10%, rgba(196, 163, 255, 0.18), transparent 70%),
     radial-gradient(760px 560px at 90% 18%, rgba(243, 201, 122, 0.10), transparent 72%),
     linear-gradient(180deg, #05070d, #0b0c16 75%, #05070d);
-}
-
-body.is-moons-menu-open {
-  overflow: hidden;
 }
 
 body[data-remnant-boundary="sunset"] #statBoundary,
@@ -119,7 +113,7 @@ body[data-remnant-boundary="manual"] #statBoundary {
 }
 
 .wrap {
-  padding: 22px max(0px, env(safe-area-inset-right)) 56px max(0px, env(safe-area-inset-left));
+  padding: 22px 0 56px;
 }
 
 .footer {
@@ -164,63 +158,8 @@ p {
 
 img,
 svg,
-video,
 canvas {
-  display: block;
   max-width: 100%;
-}
-
-img,
-video {
-  height: auto;
-}
-
-/* Scrollable table container — used by Year Map */
-.scroller {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border-radius: 14px;
-  margin: 0.8rem 0;
-}
-
-.scroller table,
-table.year-map {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.92rem;
-  white-space: nowrap;
-}
-
-.scroller th,
-.scroller td,
-table.year-map th,
-table.year-map td {
-  padding: 0.55rem 0.8rem;
-  border-bottom: 1px solid var(--line);
-  text-align: left;
-  vertical-align: top;
-}
-
-.scroller th,
-table.year-map th {
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--gold);
-  background: rgba(5, 7, 13, 0.72);
-  position: sticky;
-  top: 0;
-}
-
-.scroller tr:last-child td,
-table.year-map tr:last-child td {
-  border-bottom: none;
-}
-
-.scroller tr:hover td,
-table.year-map tr:hover td {
-  background: rgba(122, 243, 255, 0.04);
 }
 
 button,
@@ -291,8 +230,6 @@ button {
 
 .page-head {
   margin-top: 0;
-  /* Override the shared overflow:hidden so crumbs buttons aren't clipped by border-radius */
-  overflow: visible;
 }
 
 .card,
@@ -322,21 +259,12 @@ button {
 
 .crumbs,
 .btnrow,
+.tabs,
 .row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
-  min-width: 0;
-}
-
-.tabs {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  min-width: 0;
 }
 
 .crumbs {
@@ -348,14 +276,12 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 0;
   gap: 0.45rem;
-  border: 1px solid rgba(255, 214, 138, 0.35);
+  border: 1px solid var(--line);
   border-radius: 14px;
   padding: 0.68rem 0.95rem;
-  color: #f3e6c2;
-  background: rgba(12, 18, 34, 0.88);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+  color: var(--ink);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.026));
   text-decoration: none;
   cursor: pointer;
   font-weight: 850;
@@ -370,8 +296,8 @@ button {
 .lab-btn:focus-visible,
 .tab:hover,
 .tab:focus-visible {
-  border-color: rgba(255, 214, 138, 0.6);
-  background: rgba(22, 30, 52, 0.95);
+  border-color: rgba(122, 243, 255, 0.58);
+  background: rgba(122, 243, 255, 0.09);
   box-shadow: 0 0 20px rgba(122, 243, 255, 0.10);
   outline: none;
   transform: translateY(-1px);
@@ -383,10 +309,7 @@ button {
 }
 
 .lab-btn.ghost {
-  background: rgba(12, 18, 34, 0.88);
-  border: 1px solid rgba(255, 214, 138, 0.35);
-  color: #f3e6c2;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+  background: rgba(255, 255, 255, 0.025);
 }
 
 .lab-btn.danger {
@@ -397,15 +320,12 @@ button {
   border-color: rgba(159, 247, 200, 0.55);
 }
 
-.tab.is-moons-tab-active,
-.tab[aria-selected="true"],
+.tab.active,
 .lab-btn.active {
-  border: 1px solid rgba(255, 214, 138, 0.9);
-  background: linear-gradient(180deg, rgba(67, 52, 22, 0.96), rgba(38, 28, 12, 0.96));
-  color: #ffd98a;
-  box-shadow:
-    0 0 0 1px rgba(255, 214, 138, 0.25) inset,
-    0 6px 18px rgba(0, 0, 0, 0.5);
+  border-color: rgba(243, 201, 122, 0.88);
+  background: rgba(243, 201, 122, 0.12);
+  color: #ffe3a3;
+  box-shadow: 0 0 18px rgba(243, 201, 122, 0.10);
 }
 
 .pill {
@@ -443,7 +363,6 @@ button {
 
 label {
   display: block;
-  min-width: 0;
   color: var(--muted);
   font-size: 0.92rem;
   font-weight: 750;
@@ -505,48 +424,6 @@ textarea {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.time-gate-form,
-.witness-form-grid {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
-}
-
-.time-gate-actions,
-.mirror-actions,
-.witness-actions,
-.saved-actions {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
-  gap: 0.65rem;
-  width: 100%;
-}
-
-.time-gate-actions > *,
-.mirror-actions > *,
-.witness-actions > *,
-.saved-actions > * {
-  min-width: 0;
-  max-width: 100%;
-}
-
-.app-install-help,
-.reflective-note {
-  max-width: 72ch;
-}
-
-.reading-focus,
-.savedEntry,
-.savedList,
-.card,
-.notice {
-  min-width: 0;
-  max-width: 100%;
-}
-
-.reading-focus .btnrow,
-.savedEntry .btnrow {
-  width: 100%;
-}
-
 .log-grid,
 .hum-grid,
 .practice-grid,
@@ -564,427 +441,945 @@ textarea {
   z-index: 60;
   margin: 18px 0;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
   padding: 0.75rem 0 0.15rem;
   scrollbar-width: thin;
-  scroll-snap-type: x proximity;
   backdrop-filter: blur(16px);
-  /* Fade edges hint that more tabs exist off-screen */
-  -webkit-mask-image: linear-gradient(to right, transparent 0, black 12px, black calc(100% - 12px), transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0, black 12px, black calc(100% - 12px), transparent 100%);
 }
 
 .tab {
   flex: 0 0 auto;
-  scroll-snap-align: center;
 }
 
 .tabPanel {
   display: none;
   opacity: 0;
   transform: translateY(8px);
-  min-width: 0;
 }
 
-.tabPanel.is-moons-panel-visible {
+.tabPanel.active {
   display: block;
   animation: panelIn 0.28s ease forwards;
 }
 
-.command,
-.moon-badge {
+/* Header compatibility */
+
+.sof-topbar,
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  backdrop-filter: blur(18px);
+}
+
+.sof-brand,
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.72rem;
+  text-decoration: none;
+}
+
+.sof-brand .mark,
+.brand-mark {
+  width: 42px;
+  height: 42px;
   display: grid;
-  gap: 14px;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
-  align-items: start;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 16px;
+  color: var(--gold);
+  border: 1px solid rgba(243, 201, 122, 0.28);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 35px rgba(243, 201, 122, 0.08);
+  font-size: 1.25rem;
+  font-weight: 900;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sof-brand:hover .mark,
+.brand:hover .brand-mark {
+  transform: rotate(-4deg) scale(1.04);
+  box-shadow: 0 0 42px rgba(243, 201, 122, 0.18);
+}
+
+.sof-brand strong,
+.brand strong {
+  display: block;
+  color: var(--ink);
+  line-height: 1.05;
+}
+
+.sof-brand small,
+.brand small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.sof-nav,
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.sof-nav a,
+.site-nav > a {
+  text-decoration: none;
+  padding: 0.55rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.035);
+  color: inherit;
+  font-size: 0.92rem;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.sof-nav a:hover,
+.sof-nav a:focus-visible,
+.sof-nav a[aria-current="page"],
+.site-nav > a:hover,
+.site-nav > a:focus-visible,
+.site-nav > a[aria-current="page"] {
+  background: rgba(122, 243, 255, 0.09);
+  border-color: rgba(122, 243, 255, 0.22);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.nav-toggle {
+  display: none;
+}
+
+/* Hero */
+
+.page-head {
+  position: relative;
+  overflow: hidden;
+  margin: 1rem 0 1.2rem;
+  padding: clamp(1.2rem, 4vw, 2.2rem);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(122, 243, 255, 0.18), transparent 34%),
+    radial-gradient(circle at 78% 18%, rgba(243, 201, 122, 0.16), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.018));
+  box-shadow: 0 28px 100px rgba(0, 0, 0, 0.38);
+}
+
+.page-head::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: conic-gradient(from 180deg, transparent, rgba(122, 243, 255, 0.08), transparent, rgba(243, 201, 122, 0.08), transparent);
+  animation: sofOrbit 28s linear infinite;
+  pointer-events: none;
+}
+
+.page-head > * {
+  position: relative;
+  z-index: 1;
+}
+
+.page-head::after {
+  content: "";
+  position: absolute;
+  inset: auto 2rem 0 2rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(243, 201, 122, 0.55), rgba(122, 243, 255, 0.45), transparent);
+}
+
+.page-head h1 {
+  font-size: clamp(2.6rem, 8vw, 5.8rem);
+  line-height: 0.9;
+  margin: 0.25rem 0 0.8rem;
+  letter-spacing: -0.06em;
+}
+
+.hero-sigil {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+  margin: 1.1rem auto;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  text-shadow: 0 0 18px rgba(243, 201, 122, 0.45);
+  animation: sigilBreath 6s ease-in-out infinite;
+}
+
+.notice {
+  border-color: rgba(243, 201, 122, 0.3);
+  background: linear-gradient(180deg, rgba(243, 201, 122, 0.1), rgba(243, 201, 122, 0.035));
+  color: #ffe7ad;
+}
+
+/* Command center */
+
+.command {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(420px, 0.95fr);
+  gap: 1rem;
+  align-items: center;
 }
 
 .command-grid {
   display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
 }
 
 .stat {
-  padding: 0.78rem 0.82rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 12px;
-  background: rgba(3, 8, 16, 0.52);
+  min-width: 0;
+  padding: 0.85rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.035);
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.stat:hover {
+  transform: translateY(-2px);
+  border-color: rgba(122, 243, 255, 0.24);
+  background: rgba(122, 243, 255, 0.05);
 }
 
 .stat span {
   display: block;
-  margin-bottom: 0.28rem;
-  font-size: 0.73rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.25rem;
 }
 
 .stat strong {
   display: block;
-  font-size: 1rem;
-  line-height: 1.3;
-  color: var(--ink);
+  color: var(--gold);
+  font-size: 0.98rem;
+  overflow-wrap: anywhere;
+}
+
+#statShabbat {
+  color: var(--shabbat);
+}
+
+.moon-badge {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(1rem, 4vw, 2rem);
+  align-items: center;
+}
+
+.moon-badge::before {
+  content: "";
+  position: absolute;
+  inset: -28%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(122, 243, 255, 0.10), transparent 38%),
+    radial-gradient(circle at 70% 60%, rgba(243, 201, 122, 0.09), transparent 42%);
+  opacity: 0.65;
+  filter: blur(18px);
+  animation: moonAura 9s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .ring {
-  inline-size: min(100%, 220px);
-  margin-inline: auto;
+  position: relative;
+  width: clamp(155px, 32vw, 220px);
+  height: clamp(155px, 32vw, 220px);
   display: grid;
   place-items: center;
-  position: relative;
+  overflow: visible;
 }
 
 .ring svg {
   width: 100%;
-  height: auto;
+  height: 100%;
+  display: block;
+  transform: rotate(-90deg);
 }
 
 .ring-bg {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.14);
-  stroke-width: 8;
+  stroke: rgba(255, 255, 255, 0.10);
+  stroke-width: 10;
 }
 
 .ring-fg {
   fill: none;
-  stroke: var(--accent);
-  stroke-width: 8;
+  stroke: var(--gold);
+  stroke-width: 10;
   stroke-linecap: round;
-  transform: rotate(-90deg);
-  transform-origin: center;
   stroke-dasharray: 314;
   stroke-dashoffset: 314;
-  transition: stroke-dashoffset 0.35s ease;
+  filter: drop-shadow(0 0 14px rgba(243, 201, 122, 0.5));
+  animation: ringPulse 5.5s ease-in-out infinite;
 }
 
-.ring .label {
+.ring .label,
+.label {
   position: absolute;
-  display: grid;
-  justify-items: center;
-  gap: 0.1rem;
-  text-align: center;
-}
-
-.ring .label .big {
-  font-size: clamp(1.7rem, 6vw, 2.35rem);
-  font-weight: 900;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.18em;
   line-height: 1;
+  text-align: center;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 2;
 }
 
-.ring .label .small {
-  font-size: 0.82rem;
+.label .big,
+#dayInMoon.big {
+  font-size: clamp(2.5rem, 9vw, 4.2rem);
+  font-weight: 950;
+  color: var(--gold);
+  letter-spacing: -0.07em;
+}
+
+.label .small,
+#moonLength.small {
+  margin-top: 0.42em;
+  font-size: clamp(0.95rem, 3vw, 1.35rem);
+  font-weight: 850;
   color: var(--muted);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 
 .weekrow {
-  display: grid;
-  gap: 0.7rem;
-  margin-top: 0.85rem;
+  margin-top: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
 }
 
 .week {
   display: grid;
-  grid-template-columns: repeat(14, minmax(0, 1fr));
-  gap: 0.38rem;
+  grid-template-columns: repeat(28, minmax(8px, 1fr));
+  gap: 5px;
+  max-width: 620px;
+  margin-top: 8px;
 }
 
-.dot {
-  width: 100%;
+.dot,
+.week span {
+  position: relative;
   aspect-ratio: 1;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.26);
-  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.dot:hover,
+.week span:hover {
+  transform: scale(1.18);
 }
 
 .dot.done {
-  background: rgba(122, 243, 255, 0.24);
-  border-color: rgba(122, 243, 255, 0.54);
-}
-
-.dot.today {
-  background: rgba(243, 201, 122, 0.28);
-  border-color: rgba(243, 201, 122, 0.8);
-  box-shadow: 0 0 0 2px rgba(243, 201, 122, 0.2);
-}
-
-.dot.shabbat {
-  border-color: rgba(199, 182, 255, 0.8);
+  background: rgba(122, 243, 255, 0.18);
+  border-color: rgba(122, 243, 255, 0.38);
 }
 
 .dot.preparation {
-  box-shadow: inset 0 0 0 1px rgba(159, 247, 200, 0.7);
+  box-shadow: inset 0 0 0 2px rgba(243, 201, 122, 0.28);
 }
 
-.install-guide-steps {
+.dot.shabbat {
+  border-color: rgba(196, 163, 255, 0.72);
+  background: rgba(196, 163, 255, 0.18);
+  box-shadow: 0 0 10px rgba(196, 163, 255, 0.24);
+}
+
+.dot.today,
+.week span.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  box-shadow: 0 0 16px rgba(243, 201, 122, 0.7);
+}
+
+.dot.today.shabbat {
+  background: linear-gradient(135deg, var(--gold), var(--shabbat));
+  box-shadow: 0 0 22px rgba(196, 163, 255, 0.52);
+}
+
+/* Boundary controls */
+
+#boundaryMode,
+#sunsetInput {
+  border-color: rgba(243, 201, 122, 0.26);
+}
+
+#boundaryStatus {
+  margin: 0.85rem 0 0;
+  padding: 0.72rem 0.82rem;
+  border-radius: 14px;
+  border: 1px solid rgba(243, 201, 122, 0.18);
+  background: rgba(243, 201, 122, 0.05);
+}
+
+/* Shabbat layer */
+
+.shabbat-summary {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(196, 163, 255, 0.34);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(196, 163, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 94% 20%, rgba(243, 201, 122, 0.10), transparent 34%),
+    linear-gradient(180deg, rgba(20, 18, 36, 0.94), rgba(10, 11, 22, 0.94));
+}
+
+.shabbat-summary::after {
+  content: "שבת";
+  position: absolute;
+  right: 1.2rem;
+  top: 0.35rem;
+  font-size: clamp(3rem, 10vw, 7rem);
+  line-height: 1;
+  color: rgba(196, 163, 255, 0.06);
+  font-weight: 950;
+  pointer-events: none;
+}
+
+.shabbat-summary .command-grid {
+  margin: 1rem 0;
+}
+
+.shabbat-summary .stat {
+  border-color: rgba(196, 163, 255, 0.18);
+  background: rgba(196, 163, 255, 0.04);
+}
+
+.shabbat-summary .stat strong {
+  color: var(--shabbat);
+}
+
+.shabbat-summary .pill {
+  color: #ece5ff;
+  border-color: rgba(196, 163, 255, 0.26);
+  background: rgba(196, 163, 255, 0.07);
+}
+
+.shabbat-hero {
+  border-color: rgba(196, 163, 255, 0.30);
+  background:
+    radial-gradient(circle at 12% 16%, rgba(196, 163, 255, 0.22), transparent 34%),
+    radial-gradient(circle at 82% 10%, rgba(243, 201, 122, 0.13), transparent 34%),
+    linear-gradient(180deg, rgba(18, 16, 34, 0.92), rgba(8, 10, 18, 0.94));
+}
+
+.shabbat-hero .moon-core {
+  background:
+    radial-gradient(circle at 38% 34%, #fff 0 9%, #e9dcff 10% 28%, rgba(196, 163, 255, 0.28) 29% 44%, rgba(255, 255, 255, 0.04) 45% 100%);
+  color: #120d23;
+  border-color: rgba(196, 163, 255, 0.48);
+  box-shadow: 0 0 34px rgba(196, 163, 255, 0.42), 0 0 84px rgba(243, 201, 122, 0.16);
+}
+
+#shabbatPanel .card {
+  border-color: rgba(196, 163, 255, 0.20);
+}
+
+#shabbatPanel .card h2,
+#shabbatPanel .card h3 {
+  color: var(--shabbat);
+}
+
+body[data-shabbat-state="active"] .site-header,
+body[data-shabbat-state="active"] .sof-topbar {
+  box-shadow: 0 10px 40px rgba(196, 163, 255, 0.08);
+}
+
+body[data-shabbat-state="active"] .page-head {
+  border-color: rgba(196, 163, 255, 0.22);
+}
+
+body[data-shabbat-state="active"] .hero-sigil {
+  color: var(--shabbat);
+  text-shadow: 0 0 18px rgba(196, 163, 255, 0.46);
+}
+
+/* Daily flow */
+
+.ritual-hero {
+  position: relative;
+  overflow: hidden;
+  margin: 1rem 0;
+  padding: clamp(1.1rem, 4vw, 2rem);
+  border-radius: 30px;
+  border: 1px solid rgba(243, 201, 122, 0.22);
+  background:
+    radial-gradient(circle at 12% 16%, rgba(243, 201, 122, 0.18), transparent 34%),
+    radial-gradient(circle at 82% 10%, rgba(122, 243, 255, 0.16), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.018));
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.ritual-hero::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(from 0deg, transparent, rgba(243, 201, 122, 0.12), transparent, rgba(122, 243, 255, 0.10), transparent);
+  animation: sofOrbit 18s linear infinite;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.ritual-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.ritual-layout {
   display: grid;
-  gap: 10px;
-  margin-top: 0.6rem;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 1rem;
+  align-items: stretch;
 }
 
-.install-guide-step {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 0.78rem 0.84rem;
-  background: rgba(8, 12, 20, 0.72);
+.ritual-title {
+  font-size: clamp(2rem, 6vw, 4.4rem);
+  line-height: 0.92;
+  margin: 0.2rem 0 0.8rem;
+  letter-spacing: -0.06em;
 }
 
-.savedList {
+.ritual-line {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  color: var(--muted);
+  max-width: 820px;
+}
+
+.daily-sigil {
   display: grid;
-  gap: 12px;
+  place-items: center;
+  min-height: 250px;
+  border-radius: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    radial-gradient(circle at center, rgba(243, 201, 122, 0.18), transparent 42%),
+    rgba(0, 0, 0, 0.18);
+  box-shadow: inset 0 0 80px rgba(122, 243, 255, 0.08);
 }
 
-.pattern-grid {
+.daily-sigil .moon-core {
+  width: min(46vw, 190px);
+  aspect-ratio: 1;
   display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12.5rem), 1fr));
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(243, 201, 122, 0.35);
+  background:
+    radial-gradient(circle at 38% 34%, #fff7d8 0 11%, #f3c97a 12% 28%, rgba(243, 201, 122, 0.25) 29% 44%, rgba(255, 255, 255, 0.04) 45% 100%);
+  box-shadow: 0 0 34px rgba(243, 201, 122, 0.35), 0 0 78px rgba(122, 243, 255, 0.18);
+  animation: moonFloat 5.5s ease-in-out infinite;
+  color: #05070d;
+  font-weight: 950;
+  font-size: clamp(2.8rem, 9vw, 4.8rem);
+}
+
+.flow-steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.6rem;
+  margin: 1rem 0;
+}
+
+.flow-step {
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.035);
+  text-align: center;
+  color: var(--muted);
+  font-weight: 850;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.flow-step strong {
+  display: block;
+  color: var(--gold);
+}
+
+.flow-step:hover {
+  transform: translateY(-2px);
+  border-color: rgba(122, 243, 255, 0.35);
+  background: rgba(122, 243, 255, 0.06);
+}
+
+.meter-grid {
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.85rem;
+}
+
+.meter-card {
+  padding: 0.9rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.meter-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 900;
 }
 
 .meter-bar {
-  position: relative;
-  height: 10px;
-  margin-top: 0.45rem;
+  height: 9px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.11);
+  background: rgba(255, 255, 255, 0.08);
   overflow: hidden;
+  margin: 0.6rem 0;
 }
 
 .meter-fill {
-  display: block;
   height: 100%;
-  border-radius: inherit;
-  width: 20%;
-  background: linear-gradient(90deg, var(--accent), var(--gold));
-  transition: width 0.35s ease;
+  width: 42%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--gold), var(--accent));
+  box-shadow: 0 0 16px rgba(122, 243, 255, 0.28);
+  animation: meterBreath 4s ease-in-out infinite;
+}
+
+.meter-card strong {
+  color: var(--gold);
+}
+
+.practice-card {
+  border-color: rgba(159, 247, 200, 0.22);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(159, 247, 200, 0.12), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+}
+
+.practice-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.practice-list div {
+  padding: 0.9rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(0, 0, 0, 0.16);
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+
+.practice-list div:hover {
+  transform: translateY(-2px);
+  border-color: rgba(159, 247, 200, 0.28);
+}
+
+.pattern-memory-grid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem;
+}
+
+.pattern-memory-card {
+  padding: 1rem;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.pattern-memory-card h3 {
+  margin: 0 0 0.35rem;
+  color: var(--gold);
+}
+
+/* Calendars */
+
+.calendar,
+.gregorian {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 7px;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.calDay,
+.gregDay,
+.gregHead,
+.gregPad {
+  min-width: 0;
+}
+
+.calDay,
+.gregDay {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  cursor: pointer;
+  isolation: isolate;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.calDay::before,
+.gregDay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle at 50% 0%, rgba(122, 243, 255, 0.12), transparent 58%);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.calDay:hover::before,
+.gregDay:hover::before,
+.calDay:focus-visible::before,
+.gregDay:focus-visible::before {
+  opacity: 1;
+}
+
+.calDay {
+  min-height: 118px;
+  padding: 0.78rem;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+}
+
+.calDay:hover,
+.calDay:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(122, 243, 255, 0.46);
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28), 0 0 18px rgba(122, 243, 255, 0.08);
+  outline: none;
+}
+
+.calDay strong,
+.gregDay strong {
+  display: block;
+  color: var(--ink);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.calDay strong {
+  font-size: 0.92rem;
+}
+
+.calDay small,
+.gregDay small {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--muted);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.calDay small {
+  font-size: 0.72rem;
+}
+
+.calDay.today,
+.gregDay.today {
+  border-color: rgba(243, 201, 122, 0.86);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(243, 201, 122, 0.19), transparent 60%),
+    linear-gradient(180deg, rgba(243, 201, 122, 0.10), rgba(255, 255, 255, 0.025));
+  box-shadow: 0 0 0 1px rgba(243, 201, 122, 0.10), 0 0 26px rgba(243, 201, 122, 0.14);
+}
+
+.calDay.today::after,
+.gregDay.today::after {
+  content: "TODAY";
+  position: absolute;
+  right: 0.45rem;
+  top: 0.4rem;
+  color: var(--gold);
+  font-size: 0.52rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+.calDay.shabbat,
+.gregDay.shabbat {
+  border-color: rgba(196, 163, 255, 0.5);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(196, 163, 255, 0.16), transparent 60%),
+    rgba(196, 163, 255, 0.045);
+}
+
+.calDay.shabbat::after,
+.gregDay.shabbat::after {
+  content: "שבת";
+  position: absolute;
+  right: 0.45rem;
+  bottom: 0.35rem;
+  color: rgba(199, 182, 255, 0.75);
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+.calDay.preparation,
+.gregDay.preparation {
+  box-shadow: inset 0 0 0 1px rgba(243, 201, 122, 0.18);
+}
+
+.calDay.today.shabbat,
+.gregDay.today.shabbat {
+  border-color: rgba(223, 197, 255, 0.9);
+  box-shadow: 0 0 0 1px rgba(243, 201, 122, 0.16), 0 0 28px rgba(196, 163, 255, 0.22);
+}
+
+.gregHead {
+  padding: 0.45rem 0.2rem;
+  color: var(--gold);
+  text-align: center;
+  font-size: 0.73rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gregDay {
+  min-height: 98px;
+  padding: 0.68rem;
+  border-radius: 15px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.018));
+}
+
+.gregDay:hover,
+.gregDay:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(122, 243, 255, 0.42);
+  background: rgba(122, 243, 255, 0.055);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+  outline: none;
+}
+
+.gregDay strong {
+  font-size: 0.96rem;
+}
+
+.gregDay small {
+  font-size: 0.68rem;
+}
+
+.gregDay.effective,
+.calDay.effective,
+.calDay.selected,
+.gregDay.selected,
+.calDay[aria-selected="true"],
+.gregDay[aria-selected="true"] {
+  border-color: rgba(122, 243, 255, 0.72);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(122, 243, 255, 0.16), transparent 64%),
+    rgba(122, 243, 255, 0.045);
+  box-shadow: inset 0 0 0 1px rgba(122, 243, 255, 0.12), 0 0 22px rgba(122, 243, 255, 0.10);
+}
+
+.gregPad {
+  min-height: 98px;
+  border-radius: 15px;
+  border: 1px dashed rgba(255, 255, 255, 0.045);
+  background: rgba(255, 255, 255, 0.012);
+}
+
+.calendar-card,
+.calendar-wrap {
+  overflow-x: hidden;
+}
+
+#yearMapBody td,
+#yearMapBody th {
+  overflow-wrap: anywhere;
+}
+
+/* Mirror */
+
+.reading-focus {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.55fr) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: end;
+  margin-top: 1rem;
+}
+
+.mirror-card {
+  padding: 1rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.output,
+.copy-scroll {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+#simMoon {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 520 / 340;
 }
 
 .mobile-dock {
-  position: fixed;
-  left: max(12px, env(safe-area-inset-left));
-  right: max(12px, env(safe-area-inset-right));
-  bottom: max(12px, env(safe-area-inset-bottom));
-  z-index: 85;
   display: none;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 8px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 8px;
-  background: rgba(6, 10, 16, 0.92);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(14px);
-}
-
-.mobile-dock a,
-.mobile-dock button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 42px;
-  border: 1px solid rgba(255, 214, 138, 0.3);
-  border-radius: 12px;
-  background: rgba(15, 21, 34, 0.9);
-  color: #f3e6c2;
-  text-decoration: none;
-  font-weight: 800;
-  font-size: 0.8rem;
-}
-
-.mobile-dock-more {
-  cursor: pointer;
-}
-
-.moons-more-menu {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  display: grid;
-  align-items: end;
-  padding: 16px;
-  background: rgba(0, 0, 0, 0.58);
-}
-
-.moons-more-menu[hidden] {
-  display: none;
-}
-
-.moons-more-menu__panel {
-  display: grid;
-  gap: 8px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 12px;
-  background: rgba(7, 11, 18, 0.98);
-}
-
-.moons-more-menu__panel button {
-  width: 100%;
-  text-align: left;
-  border: 1px solid rgba(255, 214, 138, 0.3);
-  border-radius: 10px;
-  padding: 0.68rem 0.78rem;
-  background: rgba(15, 21, 34, 0.9);
-  color: #f3e6c2;
 }
 
 .toast {
   position: fixed;
   left: 50%;
-  bottom: max(74px, calc(env(safe-area-inset-bottom) + 74px));
-  z-index: 95;
-  transform: translate(-50%, 10px);
+  bottom: 92px;
+  transform: translateX(-50%) translateY(18px);
+  padding: 0.8rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(243, 201, 122, 0.35);
+  background: rgba(8, 12, 20, 0.96);
+  color: var(--ink);
+  box-shadow: var(--shadow-soft);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
-  border: 1px solid rgba(255, 214, 138, 0.45);
-  border-radius: 999px;
-  padding: 0.55rem 0.92rem;
-  background: rgba(8, 12, 20, 0.96);
-  color: #f3e6c2;
-  box-shadow: var(--shadow-soft);
+  z-index: 120;
 }
 
 .toast.show {
   opacity: 1;
-  transform: translate(-50%, 0);
+  transform: translateX(-50%) translateY(0);
 }
 
-.pulse-save {
-  animation: pulseSave 0.8s ease;
-}
+@media (max-width: 1100px) {
+  .command {
+    grid-template-columns: 1fr;
+  }
 
-@keyframes pulseSave {
-  0%,
-  100% { transform: translateY(0); }
-  35% { transform: translateY(-1px) scale(1.01); }
-  70% { transform: translateY(0); }
-}
+  .ritual-layout,
+  .reading-focus {
+    grid-template-columns: 1fr;
+  }
 
-/* ── Image containers inserted by moons-images.js ── */
-
-.moons-app-hero {
-  max-inline-size: min(100%, 360px);
-  margin-inline: auto;
-  margin-block: 1.2rem;
-  border-radius: 20px;
-  overflow: hidden;
-}
-
-.moons-app-hero img {
-  width: 100%;
-  height: auto;
-  max-height: 260px;
-  object-fit: cover;
-  object-position: center;
-}
-
-.current-moon-art {
-  max-inline-size: min(100%, 190px);
-  margin-inline: auto;
-  border-radius: 14px;
-  overflow: hidden;
-}
-
-.current-moon-art img {
-  width: 100%;
-  height: auto;
-}
-
-.panel-banner {
-  border-radius: 16px;
-  overflow: hidden;
-  margin-bottom: 1rem;
-}
-
-.panel-banner img {
-  width: 100%;
-  max-height: 170px;
-  object-fit: cover;
-  object-position: center;
-}
-
-.gate-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
-  gap: 12px;
-  margin: 1rem 0;
-}
-
-.gate-art-card {
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.gate-art-card img {
-  width: 100%;
-  max-height: 120px;
-  object-fit: cover;
-  object-position: center;
-}
-
-.gate-art-card figcaption {
-  padding: 0.35rem 0.5rem;
-  font-size: 0.78rem;
-  text-align: center;
-  color: var(--muted);
-}
-
-.saved-empty-state {
-  display: grid;
-  place-items: center;
-  text-align: center;
-  padding: 2rem 1rem;
-  gap: 0.6rem;
-}
-
-.saved-empty-state img {
-  max-inline-size: 100px;
-  height: auto;
-  opacity: 0.7;
-}
-
-@media (max-width: 1120px) {
-  .log-grid,
-  .hum-grid,
-  .practice-grid,
-  .mirror-grid {
+  .meter-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .col-3,
-  .col-4,
-  .col-5,
-  .col-6,
-  .col-7,
-  .col-8,
-  .col-9 {
-    grid-column: span 6;
-  }
 }
 
-@media (max-width: 760px) {
-  .wrap {
-    width: min(100% - 18px, 1280px);
-    padding-bottom: 116px;
-  }
-
-  .tabs {
-    top: 58px;
-    gap: 8px;
-  }
-
-  .tab {
-    min-width: fit-content;
-    white-space: nowrap;
-  }
-
-  .grid {
-    gap: 10px;
-  }
-
+@media (max-width: 900px) {
   .col-3,
   .col-4,
   .col-5,
@@ -996,23 +1391,453 @@ textarea {
     grid-column: span 12;
   }
 
-  .formrow {
-    grid-template-columns: 1fr;
-  }
-
+  .command-grid,
+  .practice-list,
+  .pattern-memory-grid,
   .log-grid,
   .hum-grid,
   .practice-grid,
   .mirror-grid,
-  .meter-grid {
+  .astrology-grid,
+  .planet-grid,
+  .aspect-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .flow-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .wrap,
+  .footer {
+    width: min(100% - 16px, 1280px);
+  }
+
+  .wrap {
+    padding: 14px 0 88px;
+  }
+
+  .page-head,
+  .card,
+  .notice,
+  .savedEntry,
+  .hum-card,
+  .log-card,
+  .mirror-card,
+  .meter-card,
+  .pattern-memory-card,
+  .astro-card,
+  .planet-card,
+  .aspect-card,
+  .ritual-hero {
+    padding: 16px;
+    border-radius: 22px;
+  }
+
+  .page-head {
+    margin: 0.6rem 0 1rem;
+  }
+
+  .page-head::after {
+    inset: auto 1rem 0 1rem;
+  }
+
+  .crumbs,
+  .tabs,
+  .btnrow,
+  .row {
+    gap: 8px;
+  }
+
+  .crumbs .lab-btn {
+    width: auto;
+    min-height: 40px;
+    flex: 0 1 auto;
+    padding-inline: 0.8rem;
+  }
+
+  .tabs {
+    top: 72px;
+    margin: 14px 0;
+    padding-top: 0.35rem;
+  }
+
+  .tabs .tab {
+    width: auto;
+    min-height: 40px;
+    flex: 0 0 auto;
+    padding: 0.62rem 0.85rem;
+    font-size: 0.92rem;
+  }
+
+  .btnrow .lab-btn,
+  .btnrow button,
+  .btnrow input,
+  .btnrow select {
+    width: 100%;
+    min-height: 48px;
+    flex: 1 1 100%;
+  }
+
+  .formrow,
+  .command-grid,
+  .practice-list,
+  .pattern-memory-grid,
+  .log-grid,
+  .hum-grid,
+  .practice-grid,
+  .mirror-grid,
+  .meter-grid,
+  .astrology-grid,
+  .planet-grid,
+  .aspect-grid,
+  .flow-steps,
+  .reading-focus {
     grid-template-columns: 1fr;
   }
 
-  .week {
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+  .moon-badge,
+  .ritual-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ring {
+    margin-inline: auto;
+  }
+
+  .ritual-title {
+    font-size: clamp(2rem, 12vw, 3.6rem);
+    line-height: 0.96;
+  }
+
+  .ritual-line,
+  .subtitle,
+  .fine,
+  .meta,
+  p {
+    font-size: 0.98rem;
+  }
+
+  .flow-step {
+    min-height: 76px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 0.85rem;
+  }
+
+  .flow-step strong {
+    margin-bottom: 0.2rem;
+    font-size: 1.9rem;
+    line-height: 1;
+  }
+
+  .daily-sigil {
+    min-height: 200px;
+    border-radius: 22px;
+  }
+
+  .daily-sigil .moon-core {
+    width: min(56vw, 190px);
+    font-size: clamp(2.4rem, 12vw, 3.6rem);
+  }
+
+  .shabbat-summary::after {
+    font-size: clamp(2.4rem, 16vw, 4.8rem);
+    right: 0.8rem;
+    top: 0.5rem;
+  }
+
+  .calendar,
+  .gregorian {
+    gap: 4px;
+  }
+
+  .calDay {
+    min-height: 84px;
+    padding: 0.48rem 0.38rem;
+    border-radius: 12px;
+  }
+
+  .calDay strong {
+    font-size: 0.75rem;
+  }
+
+  .calDay small {
+    font-size: 0.6rem;
+    line-height: 1.22;
+  }
+
+  .gregHead {
+    padding-inline: 0;
+    font-size: 0.62rem;
+    letter-spacing: 0.02em;
+  }
+
+  .gregDay,
+  .gregPad {
+    min-height: 72px;
+    padding: 0.42rem 0.28rem;
+    border-radius: 11px;
+  }
+
+  .gregDay strong {
+    font-size: 0.78rem;
+  }
+
+  .gregDay small {
+    font-size: 0.56rem;
+    line-height: 1.2;
+  }
+
+  .calDay.today::after,
+  .gregDay.today::after {
+    display: none;
   }
 
   .mobile-dock {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
     display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.35rem;
+    padding: 0.55rem 0.55rem calc(0.55rem + env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(5, 7, 13, 0.96);
+    backdrop-filter: blur(18px);
+  }
+
+  .mobile-dock a {
+    min-width: 0;
+    padding: 0.55rem 0.3rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--ink);
+    text-decoration: none;
+    text-align: center;
+    font-size: 0.72rem;
+    font-weight: 800;
+    line-height: 1.2;
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+  }
+
+  .mobile-dock a:active {
+    transform: translateY(1px) scale(0.98);
+  }
+
+  .mobile-dock a[aria-current="page"],
+  .mobile-dock a.active {
+    border-color: rgba(243, 201, 122, 0.38);
+    background: rgba(243, 201, 122, 0.10);
+    color: #ffe3a3;
+  }
+
+  .toast {
+    bottom: 84px;
+    width: min(calc(100% - 24px), 420px);
+    text-align: center;
   }
 }
+
+@media (max-width: 520px) {
+  h1 {
+    font-size: clamp(2rem, 12vw, 3rem);
+  }
+
+  h2 {
+    font-size: clamp(1.35rem, 8vw, 2rem);
+  }
+
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+  }
+
+  .flow-step {
+    min-height: 72px;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .flow-step strong {
+    font-size: 1.75rem;
+  }
+
+  .daily-sigil {
+    min-height: 184px;
+  }
+
+  .daily-sigil .moon-core {
+    width: min(54vw, 170px);
+    font-size: clamp(2.1rem, 11vw, 3.1rem);
+  }
+
+  .calendar,
+  .gregorian {
+    gap: 3px;
+  }
+
+  .calDay {
+    min-height: 68px;
+    padding: 0.38rem 0.25rem;
+    border-radius: 9px;
+  }
+
+  .calDay strong {
+    font-size: 0.68rem;
+  }
+
+  .calDay small {
+    font-size: 0.52rem;
+    max-height: 2.5em;
+    overflow: hidden;
+  }
+
+  .gregHead {
+    font-size: 0.56rem;
+  }
+
+  .gregDay,
+  .gregPad {
+    min-height: 58px;
+    padding: 0.32rem 0.2rem;
+    border-radius: 9px;
+  }
+
+  .gregDay strong {
+    font-size: 0.72rem;
+  }
+
+  .gregDay small {
+    font-size: 0.5rem;
+    max-height: 2.4em;
+    overflow: hidden;
+  }
+
+  .calDay.shabbat::after,
+  .gregDay.shabbat::after {
+    font-size: 0.5rem;
+    right: 0.22rem;
+    bottom: 0.18rem;
+  }
+
+  .mobile-dock a {
+    font-size: 0.68rem;
+    padding-inline: 0.2rem;
+  }
+}
+
+@keyframes sofOrbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes moonFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes moonAura {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes ringPulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 14px rgba(243, 201, 122, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 22px rgba(243, 201, 122, 0.72));
+  }
+}
+
+@keyframes sigilBreath {
+  0%,
+  100% {
+    opacity: 0.82;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes meterBreath {
+  0%,
+  100% {
+    opacity: 0.88;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+     }
+
+/* =========================================================
+   REMNANT 13 MOONS — IMAGE INTEGRATION
+   ========================================================= */
+body[data-remnant-boundary]{background:linear-gradient(rgba(5,7,13,.82),rgba(5,7,13,.95)),url("../img/moons/app/app-bg-dark.webp") center top/cover fixed,var(--bg)}
+.moons-app-hero,.panel-banner,.current-moon-art,.gate-art-card,.saved-empty-state{margin:0}
+.moons-app-hero{position:relative;width:min(100%,980px);margin:1.6rem auto 1.3rem;overflow:hidden;border:1px solid rgba(243,201,122,.28);border-radius:28px;background:rgba(5,7,13,.76);box-shadow:0 30px 80px rgba(0,0,0,.48),0 0 44px rgba(122,243,255,.08)}
+.moons-app-hero::after,.panel-banner::after{content:"";position:absolute;inset:0;pointer-events:none}
+.moons-app-hero::after{background:linear-gradient(to bottom,transparent 60%,rgba(5,7,13,.78)),radial-gradient(circle at 50% 42%,transparent 34%,rgba(5,7,13,.22))}
+.moons-app-hero img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+.current-moon-art{align-self:stretch;overflow:hidden;border:1px solid rgba(243,201,122,.25);border-radius:22px;background:rgba(3,7,13,.72);box-shadow:0 18px 44px rgba(0,0,0,.32)}
+.current-moon-art img{display:block;width:100%;height:100%;min-height:280px;aspect-ratio:1;object-fit:cover}
+.moon-badge.has-moon-art{grid-template-columns:minmax(220px,.78fr) auto minmax(280px,1.22fr)}
+.panel-banner{position:relative;width:100%;max-height:460px;margin:0 0 1.5rem;overflow:hidden;border:1px solid rgba(243,201,122,.2);border-radius:24px;background:rgba(5,7,13,.82);box-shadow:0 22px 58px rgba(0,0,0,.34)}
+.panel-banner::after{background:linear-gradient(to bottom,rgba(5,7,13,.01),rgba(5,7,13,.12) 56%,rgba(5,7,13,.86))}
+.panel-banner img{display:block;width:100%;height:clamp(260px,44vw,460px);object-fit:cover;object-position:center}
+.gate-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:1.5rem 0}
+.gate-art-card{position:relative;overflow:hidden;border:1px solid rgba(243,201,122,.22);border-radius:22px;background:rgba(5,7,13,.82);box-shadow:0 18px 42px rgba(0,0,0,.3)}
+.gate-art-card img{display:block;width:100%;aspect-ratio:1;object-fit:cover;transition:transform .4s ease}
+.gate-art-card:hover img{transform:scale(1.025)}
+.gate-art-card figcaption{position:absolute;right:0;bottom:0;left:0;padding:1rem;color:var(--gold);font-family:"Cinzel",serif;text-align:center;letter-spacing:.06em;background:linear-gradient(transparent,rgba(5,7,13,.97))}
+.saved-empty-state{padding:1.4rem;text-align:center;border:1px dashed rgba(243,201,122,.24);border-radius:22px;background:rgba(255,255,255,.025)}
+.saved-empty-state img{display:block;width:min(100%,420px);margin:0 auto 1rem;border-radius:18px;opacity:.9}
+@media(max-width:980px){.moon-badge.has-moon-art{grid-template-columns:1fr}.current-moon-art img{min-height:0}}
+@media(max-width:760px){body[data-remnant-boundary]{background:linear-gradient(rgba(5,7,13,.84),rgba(5,7,13,.96)),url("../img/moons/app/app-bg-dark.webp") center top/auto 100vh fixed,var(--bg)}.moons-app-hero{margin-top:1rem;border-radius:18px}.panel-banner,.gate-art-card,.current-moon-art{border-radius:18px}.gate-gallery{grid-template-columns:1fr}.panel-banner img{height:auto;aspect-ratio:1}}

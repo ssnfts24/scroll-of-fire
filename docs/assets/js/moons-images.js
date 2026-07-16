@@ -11,9 +11,6 @@
 (() => {
   "use strict";
 
-  if (window.__SOF_MOONS_IMAGES_INITIALIZED__) return;
-  window.__SOF_MOONS_IMAGES_INITIALIZED__ = true;
-
   const ROOT = "assets/img/moons";
 
   const MOON_IMAGES = [
@@ -136,9 +133,7 @@
     file,
     alt,
     className,
-    eager = false,
-    width = null,
-    height = null
+    eager = false
   }) {
     const figure = document.createElement("figure");
     figure.className = className;
@@ -149,9 +144,6 @@
     image.alt = alt;
     image.decoding = "async";
     image.loading = eager ? "eager" : "lazy";
-
-    if (width) image.width = width;
-    if (height) image.height = height;
 
     if (eager) {
       image.fetchPriority = "high";
@@ -164,11 +156,8 @@
     image.addEventListener("error", () => {
       figure.classList.add("image-load-failed");
 
-      /* Hide broken images gracefully — do not show browser broken-image icon */
-      image.style.display = "none";
-
-      console.warn(
-        "[Remnant 13 Moons] Image not available:",
+      console.error(
+        "[Remnant 13 Moons] Image failed to load:",
         image.src
       );
     });
@@ -197,9 +186,7 @@
       file: "app/splash-2732.webp",
       alt: "Remnant 13 Moons living calendar",
       className: "moons-app-hero",
-      eager: true,
-      width: 980,
-      height: 980
+      eager: true
     });
 
     const subtitle = pageHead.querySelector(".subtitle");
@@ -231,9 +218,7 @@
     const figure = createImageFigure({
       file: `moons/${firstMoon.file}`,
       alt: firstMoon.alt,
-      className: "current-moon-art",
-      width: 600,
-      height: 600
+      className: "current-moon-art"
     });
 
     const image = figure.querySelector("img");
