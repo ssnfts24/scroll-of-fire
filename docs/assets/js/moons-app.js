@@ -35,6 +35,13 @@
       state.logs = savedLogs;
       state.mirror = engine.buildMirrorReading(state, selectedFocus);
       state.yearMap = engine.buildYearMap(selectedDate, { sunset:currentSunset, today:now });
+      state.cycle = {
+        regularDays: 364,
+        finalRegularDayISO: engine.formatISODate(engine.addDays(state.anchor, 363)),
+        yearGateISO: state.yearMap.yearGate.iso,
+        nextAnchorISO: state.nextAnchorISO,
+        elapsedCivilDays: engine.dayDiff(state.nextAnchor, state.anchor)
+      };
       return state;
     }
 

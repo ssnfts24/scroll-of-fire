@@ -49,6 +49,7 @@
       storageNote: document.querySelector('[data-storage-note]'),
       astrologyText: document.querySelector('[data-astrology-text]'),
       calendarsText: document.querySelector('[data-calendars-text]'),
+      calendarCycleText: document.querySelector('[data-calendar-cycle]'),
       codexText: document.querySelector('[data-codex-text]'),
       timelineText: document.querySelector('[data-timeline-text]'),
       fieldText: document.querySelector('[data-field-text]')
@@ -198,7 +199,8 @@
       setText(dom.mirrorAction, state.mirror.action);
       setText(dom.mirrorText, state.mirror.text);
       setText(dom.astrologyText, `${state.phase} · ${state.illumination.toFixed(1)}% illumination. Astronomical phase remains distinct from the Remnant moon count.`);
-      setText(dom.calendarsText, `${state.yearLabel} · Anchor ${state.anchorISO} · Next anchor ${state.nextAnchorISO}`);
+      setText(dom.calendarsText, `${state.yearLabel} · Anchor ${state.anchorISO} · Final regular day ${state.cycle.finalRegularDayISO} · Year Gate ${state.cycle.yearGateISO} · Next cycle ${state.cycle.nextAnchorISO}`);
+      setText(dom.calendarCycleText, `13 Moons × 28 days = ${state.cycle.regularDays} regular Remnant days. ${state.cycle.yearGateISO} is the separate Year Gate / Day Out of Time with no regular Moon number or Moon day, and ${state.cycle.nextAnchorISO} begins Moon 1 Day 1 of the next cycle. Each cycle spans ${state.cycle.elapsedCivilDays} elapsed civil days, and Gregorian leap day remains an ordinary elapsed day rather than creating an extra Year Gate.`);
       setText(dom.codexText, `${state.daySeal?.title || state.yearGate.title} seals ${state.moonName}. ${state.moonArchetype?.essence || state.yearGate.guidance}`);
       setText(dom.timelineText, `Selected civil date ${state.selectedISO}. Effective Remnant date ${state.effectiveISO}. Continuous week ${state.continuousWeekIndex}.`);
       setText(dom.fieldText, `${state.moonArchetype?.element || 'Threshold'} · ${state.moonArchetype?.frequency || state.sunset} · ${state.shabbat.label}`);
