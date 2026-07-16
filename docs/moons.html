@@ -20,17 +20,7 @@
     gtag("config", "G-2TBMEK502C");
   </script>
 
-  <base href="/">
-
-  <script>
-    if (location.hostname === "ssnfts24.github.io") {
-      const base = document.querySelector("base");
-
-      if (base) {
-        base.setAttribute("href", "/scroll-of-fire/");
-      }
-    }
-  </script>
+  <base href="./">
 
   <meta charset="utf-8">
 
@@ -61,6 +51,11 @@
   >
 
   <meta name="theme-color" content="#05070d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="13 Moons">
+  <link rel="manifest" href="manifest.webmanifest">
 
   <link
     rel="canonical"
@@ -122,7 +117,8 @@
 
   <link
     rel="apple-touch-icon"
-    href="assets/img/shared/branding/icon-1024.png"
+    sizes="180x180"
+    href="assets/img/moons/app/apple-touch-icon.png"
   >
 
   <!-- Styles -->
@@ -138,6 +134,7 @@
     rel="stylesheet"
     href="assets/css/astrology.css?v=20260714-10"
   >
+  <link rel="stylesheet" href="assets/css/pwa.css?v=20260716-1">
 
   <link rel="stylesheet" href="assets/css/animations.css">
 
@@ -413,6 +410,32 @@
         unbroken through the Year Gate.
       </aside>
 
+      <section class="app-install-card" aria-labelledby="installTitle">
+        <p class="eyebrow">Installable Living Calendar</p>
+        <h2 id="installTitle">Carry 13 Moons as an app</h2>
+        <p>Installation adds a Home Screen icon, opens the calendar without the normal browser bar where supported, and prepares essential files for offline use. Your records remain on this device.</p>
+        <div class="btnrow">
+          <button id="installApp" class="lab-btn" type="button" disabled>Install 13 Moons</button>
+          <button class="lab-btn ghost" type="button" data-tab-jump="settingsPanel">Installation Help</button>
+        </div>
+        <p id="appStatus" class="app-status">Checking installation support…</p>
+        <p id="inAppBrowserWarning" class="warning" hidden>To install 13 Moons on iPhone, open this page in Safari first. Use the browser menu to open the page in Safari, then return here.</p>
+        <div id="iosInstallHelp" hidden>
+          <strong>Install on iPhone or iPad with Safari</strong>
+          <ol class="install-steps">
+            <li>Open this page in Safari.</li>
+            <li>Tap the Share button.</li>
+            <li>Select Add to Home Screen.</li>
+            <li>Confirm the name 13 Moons.</li>
+            <li>Tap Add, then open the new icon.</li>
+          </ol>
+        </div>
+        <div id="offlineSnapshot" class="warning" hidden></div>
+        <div id="updateNotice" class="warning" hidden>
+          A new version is ready. Saved logs will be preserved. Open App Settings to apply it.
+        </div>
+      </section>
+
       <div class="tabs" aria-label="Calendar tools">
         <button
           class="tab active"
@@ -508,6 +531,14 @@
           type="button"
         >
           Saved Logs
+        </button>
+
+        <button
+          class="tab"
+          data-tab="settingsPanel"
+          type="button"
+        >
+          App Settings
         </button>
       </div>
     </header>
@@ -2057,6 +2088,87 @@
           </article>
         </section>
       </section>
+
+      <!-- APP SETTINGS -->
+      <section id="settingsPanel" class="tabPanel">
+        <section class="grid">
+          <article class="card col-7">
+            <p class="eyebrow">Installation &amp; Recovery</p>
+            <h2>App Settings</h2>
+            <p class="subtitle">Updates and refreshed app files preserve saved records. Reinstall only as a recovery step.</p>
+            <dl class="app-status-grid">
+              <div><dt>App version</dt><dd id="appVersion">—</dd></div>
+              <div><dt>Service-worker version</dt><dd id="serviceWorkerVersion">—</dd></div>
+              <div><dt>Installed status</dt><dd id="installedStatus">—</dd></div>
+              <div><dt>Standalone status</dt><dd id="standaloneStatus">—</dd></div>
+              <div><dt>Network</dt><dd id="networkStatus">—</dd></div>
+              <div><dt>Update status</dt><dd id="updateStatus">Up to date</dd></div>
+              <div><dt>Saved records</dt><dd id="savedRecordCount">0</dd></div>
+              <div><dt>Last update</dt><dd id="lastUpdateDate">—</dd></div>
+            </dl>
+            <div class="btnrow">
+              <button id="checkForUpdates" class="lab-btn" type="button">Check for Updates</button>
+              <button id="updateApp" class="lab-btn" type="button" disabled>Update App</button>
+              <button id="refreshAppFiles" class="lab-btn ghost" type="button">Refresh App Files</button>
+              <button id="resetAppSettings" class="lab-btn ghost" type="button">Reset App Settings</button>
+            </div>
+            <p class="fine">Refresh App Files unregisters the service worker, clears only 13 Moons caches, reloads fresh files, and registers the current worker again. It does not delete logs or settings.</p>
+          </article>
+
+          <article class="card col-5">
+            <h2>Data Protection</h2>
+            <p class="fine">Records, settings, imported backups, and optional location stay in this browser. Witness text, readings, notes, precise location, and backups are not sent to analytics. Location is optional and is used only to calculate sunset; manual sunset works without it.</p>
+            <div class="btnrow">
+              <button id="exportAllData" class="lab-btn" type="button">Export All Data</button>
+              <button id="downloadBackup" class="lab-btn ghost" type="button">Download Backup</button>
+              <button id="exportCurrentWitness" class="lab-btn ghost" type="button">Export Current Witness</button>
+              <button id="copyCurrentReading" class="lab-btn ghost" type="button">Copy Current Reading</button>
+            </div>
+            <label for="importMode">Import behavior</label>
+            <select id="importMode">
+              <option value="merge">Merge with existing records</option>
+              <option value="replace">Replace 13 Moons records</option>
+            </select>
+            <input id="importDataFile" type="file" accept="application/json" hidden>
+            <button id="importAllData" class="lab-btn ghost" type="button">Import Data</button>
+            <p class="fine">Import validates the backup, reports record counts, and creates a local rollback backup before making changes.</p>
+          </article>
+
+          <article class="card col-6">
+            <h2>Android Reinstall</h2>
+            <ol class="install-steps">
+              <li>Export important witness logs.</li>
+              <li>Try Check for Updates, then Refresh App Files.</li>
+              <li>Close the app and long-press its icon.</li>
+              <li>Choose App info or Uninstall and remove it.</li>
+              <li>Open codexofreality.org/moons.html in Chrome.</li>
+              <li>Select Install 13 Moons and import logs if needed.</li>
+            </ol>
+          </article>
+
+          <article class="card col-6">
+            <h2>iPhone Reinstall</h2>
+            <ol class="install-steps">
+              <li>Export important witness logs.</li>
+              <li>Try Check for Updates first.</li>
+              <li>Remove the 13 Moons Home Screen icon.</li>
+              <li>Open codexofreality.org/moons.html in Safari.</li>
+              <li>Tap Share, choose Add to Home Screen, then Add.</li>
+              <li>Import saved logs if needed.</li>
+            </ol>
+            <p class="fine">Removing the icon may not erase Safari website storage. Clearing app files is different from deleting logs.</p>
+          </article>
+
+          <article class="card col-12">
+            <h2>Erase Local App Data</h2>
+            <p class="warning">Destructive: removes only 13 Moons-owned settings, logs, witness entries, mirror entries, patterns, and local backups. Export important records first.</p>
+            <label><input id="eraseDataConfirm" type="checkbox"> I exported important records and understand what will be removed.</label>
+            <div class="btnrow">
+              <button id="eraseLocalData" class="lab-btn danger" type="button">Erase Local App Data</button>
+            </div>
+          </article>
+        </section>
+      </section>
     
     <div class="section-shell">
       <div class="record-witness-band" data-witness-context>
@@ -2090,13 +2202,6 @@
     </a>
 
     <a
-      href="#flowPanel"
-      data-mobile-tab="flowPanel"
-    >
-      Flow
-    </a>
-
-    <a
       href="#mirrorPanel"
       data-mobile-tab="mirrorPanel"
     >
@@ -2111,17 +2216,10 @@
     </a>
 
     <a
-      href="#astrologyPanel"
-      data-mobile-tab="astrologyPanel"
+      href="#settingsPanel"
+      data-mobile-tab="settingsPanel"
     >
-      Astro
-    </a>
-
-    <a
-      href="#savedPanel"
-      data-mobile-tab="savedPanel"
-    >
-      Logs
+      More
     </a>
   </nav>
 
@@ -2156,6 +2254,12 @@
     </p>
   </footer>
 
+  <p id="appStatusLive" class="visually-hidden" role="status" aria-live="polite"></p>
+
+  <script src="assets/js/moons-version.js?v=20260716-1"></script>
+  <script src="assets/js/moons-migrations.js?v=20260716-1"></script>
+  <script src="assets/js/moons-storage.js?v=20260716-1"></script>
+
   <!-- Main calendar engine -->
   <script src="assets/js/moons.js?v=20260714-10"></script>
 
@@ -2164,6 +2268,7 @@
 
   <!-- Remnant artwork integration -->
   <script src="assets/js/moons-images.js?v=20260714-10"></script>
+  <script src="assets/js/pwa.js?v=20260716-1"></script>
 
   <!-- Page-specific interaction layer -->
   <script>
@@ -2191,36 +2296,13 @@
       }
 
       function showTab(id) {
-        document.querySelectorAll(".tabPanel").forEach(function (panel) {
-          panel.classList.toggle("active", panel.id === id);
-        });
-
-        document.querySelectorAll(".tab").forEach(function (tab) {
-          tab.classList.toggle("active", tab.dataset.tab === id);
-        });
-
-        document
-          .querySelectorAll("[data-mobile-tab]")
-          .forEach(function (link) {
-            const active = link.dataset.mobileTab === id;
-
-            link.classList.toggle("active", active);
-
-            if (active) {
-              link.setAttribute("aria-current", "page");
-            } else {
-              link.removeAttribute("aria-current");
-            }
-          });
-
-        const panel = $(id);
-
-        if (panel) {
-          panel.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
-        }
+        document.dispatchEvent(new CustomEvent("sof:activate-tab", {
+          detail: {
+            id: id,
+            updateHistory: true,
+            scroll: true
+          }
+        }));
       }
 
       function showToast(message) {

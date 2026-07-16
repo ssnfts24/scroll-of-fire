@@ -1,0 +1,159 @@
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
+
+body {
+  min-height: 100dvh;
+  padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+  overscroll-behavior-y: none;
+}
+
+.app-install-card,
+.recovery-card {
+  margin-top: 1rem;
+  padding: clamp(1rem, 4vw, 1.5rem);
+  border: 1px solid rgba(122, 243, 255, 0.24);
+  border-radius: 18px;
+  background: rgba(5, 10, 18, 0.88);
+}
+
+.app-install-card h2,
+.recovery-card h2 {
+  margin-top: 0;
+}
+
+.app-status {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.app-status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 1rem 0;
+}
+
+.app-status-grid div {
+  min-width: 0;
+  padding: 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.app-status-grid dt {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.app-status-grid dd {
+  margin: 0.2rem 0 0;
+  overflow-wrap: anywhere;
+  font-weight: 800;
+}
+
+.install-steps {
+  padding-left: 1.4rem;
+}
+
+.warning {
+  padding: 0.8rem;
+  border-left: 4px solid var(--gold);
+  background: var(--gold-soft);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 760px) {
+  html {
+    scroll-padding-bottom: calc(5.25rem + var(--safe-bottom));
+  }
+
+  body {
+    touch-action: manipulation;
+  }
+
+  .wrap,
+  .footer {
+    width: min(100% - 1rem, 1280px);
+  }
+
+  .tabs {
+    display: none;
+  }
+
+  .mobile-dock {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding-right: max(0.5rem, var(--safe-right));
+    padding-bottom: max(0.5rem, var(--safe-bottom));
+    padding-left: max(0.5rem, var(--safe-left));
+  }
+
+  .mobile-dock a {
+    min-height: 48px;
+    display: grid;
+    place-items: center;
+  }
+
+  .app-status-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  input,
+  select,
+  textarea {
+    min-width: 0;
+    max-width: 100%;
+    font-size: 16px;
+  }
+
+  button,
+  .lab-btn {
+    min-height: 44px;
+  }
+
+  .grid,
+  .card,
+  .tabPanel,
+  .command,
+  .moon-badge,
+  .reading-focus {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 430px) {
+  .page-head,
+  .card,
+  .notice,
+  .app-install-card,
+  .recovery-card {
+    padding: 0.9rem;
+    border-radius: 16px;
+  }
+
+  .mobile-dock a {
+    padding-inline: 0.15rem;
+    font-size: 0.68rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
