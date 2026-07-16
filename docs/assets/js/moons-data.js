@@ -68,8 +68,12 @@
     { key:'body', label:'Body signal', placeholder:'Tension, energy, pain, appetite.' },
     { key:'emotion', label:'Emotional weather', placeholder:'Mood, shifts, triggers.' },
     { key:'signs', label:'Repeated signs', placeholder:'Numbers, words, animals, timing.' },
+    { key:'technology', label:'Technology', placeholder:'Tools, failures, glitches, assists.' },
+    { key:'animals', label:'Animals', placeholder:'Animal sightings, interactions, behavior.' },
+    { key:'weather', label:'Weather', placeholder:'Wind, pressure, storms, temperature changes.' },
     { key:'action', label:'Action', placeholder:'One clean thing you did or will do.' },
     { key:'lesson', label:'Lesson', placeholder:'What the day is teaching.' },
+    { key:'field', label:'Earth Hum / Kp', placeholder:'Manual Earth hum or Kp context.' },
     { key:'witness', label:'Witness notes', placeholder:'Free record. Interpret later.' }
   ];
   const sealPrompts = [

@@ -1,0 +1,1497 @@
+{
+  "commit": null,
+  "browser": "Playwright Chromium (local install in /tmp/sofbrowser)",
+  "baseUrl": "http://127.0.0.1:4173",
+  "routes": [
+    "/",
+    "/moons",
+    "/moons/",
+    "/moons.html",
+    "/moons?date=2026-07-16",
+    "/moons.html?date=2026-07-16"
+  ],
+  "viewports": [
+    {
+      "width": 320,
+      "height": 800
+    },
+    {
+      "width": 375,
+      "height": 812
+    },
+    {
+      "width": 390,
+      "height": 844
+    },
+    {
+      "width": 430,
+      "height": 932
+    },
+    {
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "width": 1024,
+      "height": 900
+    },
+    {
+      "width": 1440,
+      "height": 1000
+    }
+  ],
+  "routeViewportChecks": [
+    {
+      "route": "/",
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 801,
+      "clientWidth": 768,
+      "noHorizontalOverflow": false
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 1051,
+      "clientWidth": 1024,
+      "noHorizontalOverflow": false
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons",
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 801,
+      "clientWidth": 768,
+      "noHorizontalOverflow": false
+    },
+    {
+      "route": "/moons",
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 1051,
+      "clientWidth": 1024,
+      "noHorizontalOverflow": false
+    },
+    {
+      "route": "/moons",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons/",
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons/",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons/",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons/",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 801,
+      "clientWidth": 768,
+      "noHorizontalOverflow": false
+    },
+    {
+      "route": "/moons/",
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 1051,
+      "clientWidth": 1024,
+      "noHorizontalOverflow": false
+    },
+    {
+      "route": "/moons/",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html",
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 801,
+      "clientWidth": 768,
+      "noHorizontalOverflow": false
+    },
+    {
+      "route": "/moons.html",
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 1051,
+      "clientWidth": 1024,
+      "noHorizontalOverflow": false
+    },
+    {
+      "route": "/moons.html",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons?date=2026-07-16",
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons?date=2026-07-16",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons?date=2026-07-16",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons?date=2026-07-16",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons?date=2026-07-16",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 801,
+      "clientWidth": 768,
+      "noHorizontalOverflow": false
+    },
+    {
+      "route": "/moons?date=2026-07-16",
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 1051,
+      "clientWidth": 1024,
+      "noHorizontalOverflow": false
+    },
+    {
+      "route": "/moons?date=2026-07-16",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html?date=2026-07-16",
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html?date=2026-07-16",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html?date=2026-07-16",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html?date=2026-07-16",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html?date=2026-07-16",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 801,
+      "clientWidth": 768,
+      "noHorizontalOverflow": false
+    },
+    {
+      "route": "/moons.html?date=2026-07-16",
+      "viewport": {
+        "width": 1024,
+        "height": 900
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 1051,
+      "clientWidth": 1024,
+      "noHorizontalOverflow": false
+    },
+    {
+      "route": "/moons.html?date=2026-07-16",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "noHorizontalOverflow": true
+    }
+  ],
+  "mobileOverflowChecks": [
+    {
+      "route": "/",
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons",
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons/",
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons/",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons/",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html",
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons?date=2026-07-16",
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons?date=2026-07-16",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons?date=2026-07-16",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons?date=2026-07-16",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html?date=2026-07-16",
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html?date=2026-07-16",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html?date=2026-07-16",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "noHorizontalOverflow": true
+    },
+    {
+      "route": "/moons.html?date=2026-07-16",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "status": 200,
+      "navigated": true,
+      "error": null,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "noHorizontalOverflow": true
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "homepage-mobile-current.png",
+      "exists": true,
+      "size": 2107773
+    },
+    {
+      "file": "homepage-desktop-current.png",
+      "exists": true,
+      "size": 3437372
+    },
+    {
+      "file": "homepage-living-signal-current.png",
+      "exists": true,
+      "size": 196847
+    },
+    {
+      "file": "homepage-continue-path-current.png",
+      "exists": true,
+      "size": 194026
+    },
+    {
+      "file": "homepage-system-map-current.png",
+      "exists": true,
+      "size": 822347
+    },
+    {
+      "file": "homepage-artifacts-caravan-current.png",
+      "exists": true,
+      "size": 527585
+    },
+    {
+      "file": "moons-today-current.png",
+      "exists": true,
+      "size": 317491
+    },
+    {
+      "file": "moons-shabbat-current.png",
+      "exists": true,
+      "size": 139920
+    },
+    {
+      "file": "moons-daily-flow-current.png",
+      "exists": true,
+      "size": 86776
+    },
+    {
+      "file": "moons-mirror-current.png",
+      "exists": true,
+      "size": 164829
+    },
+    {
+      "file": "moons-witness-current.png",
+      "exists": true,
+      "size": 310986
+    },
+    {
+      "file": "moons-astrology-current.png",
+      "exists": true,
+      "size": 158060
+    },
+    {
+      "file": "moons-calendars-current.png",
+      "exists": true,
+      "size": 81723
+    },
+    {
+      "file": "moons-year-map-current.png",
+      "exists": true,
+      "size": 567760
+    },
+    {
+      "file": "moons-codex-current.png",
+      "exists": true,
+      "size": 83970
+    },
+    {
+      "file": "moons-timeline-current.png",
+      "exists": true,
+      "size": 91881
+    },
+    {
+      "file": "moons-field-current.png",
+      "exists": true,
+      "size": 78134
+    },
+    {
+      "file": "moons-saved-current.png",
+      "exists": true,
+      "size": 70192
+    },
+    {
+      "file": "moons-mobile-current.png",
+      "exists": true,
+      "size": 746476
+    }
+  ],
+  "interactionChecks": {
+    "tabsSwitch": true,
+    "previousWorked": true,
+    "nextWorked": true,
+    "todayWorked": true,
+    "selectedDateInputWorked": true,
+    "dateQueryParameterApplied": true,
+    "manualSunsetApplied": true,
+    "midnightBoundaryBefore": "Sunset boundary set for 19:30 · Moon 4 Day 7 / Year Day 91/364",
+    "midnightBoundaryAfter": "Sunset boundary passed at 19:30 · Moon 4 Day 8 / Year Day 92/364",
+    "copyLinkClicked": true,
+    "buildReadingWorked": true,
+    "copyReadingClicked": true,
+    "buildWitnessWorked": true,
+    "saveLocalWorked": true,
+    "deleteSavedLogWorked": true,
+    "copyAllLogsClicked": true,
+    "exportJsonClicked": true,
+    "importValidJsonWorked": true,
+    "malformedJsonRejectedSafely": true,
+    "clearLogsWorked": true,
+    "deniedGeolocationHandled": true,
+    "mobileMenuWorked": true,
+    "pwaUpdateControlVisibleDuringTest": false
+  },
+  "homepageVisualChecks": {
+    "imageChecks": [
+      {
+        "label": "approved hero artwork",
+        "present": true
+      },
+      {
+        "label": "seal row",
+        "present": true
+      },
+      {
+        "label": "living signal rail",
+        "present": true
+      },
+      {
+        "label": "Continue Path",
+        "present": true
+      },
+      {
+        "label": "Your Codex",
+        "present": true
+      },
+      {
+        "label": "system map",
+        "present": true
+      },
+      {
+        "label": "Covenant Caravan imagery",
+        "present": true
+      },
+      {
+        "label": "Artifact Registry imagery",
+        "present": true
+      }
+    ],
+    "requiredLabels": [
+      {
+        "label": "Scroll of Fire — Codex of Reality",
+        "present": true
+      },
+      {
+        "label": "Observe. Breathe. Align. Return.",
+        "present": true
+      },
+      {
+        "label": "expanded Today",
+        "present": false
+      },
+      {
+        "label": "Continue Path",
+        "present": true
+      },
+      {
+        "label": "Your Codex",
+        "present": true
+      },
+      {
+        "label": "local-memory continuity",
+        "present": true
+      },
+      {
+        "label": "13 Moons",
+        "present": true
+      },
+      {
+        "label": "Frequency Governance",
+        "present": true
+      },
+      {
+        "label": "Covenant Caravan",
+        "present": true
+      },
+      {
+        "label": "Artifact Registry",
+        "present": true
+      },
+      {
+        "label": "Witness Ledger",
+        "present": true
+      },
+      {
+        "label": "Genesis Oracle",
+        "present": true
+      },
+      {
+        "label": "Theory / Canon",
+        "present": true
+      },
+      {
+        "label": "Living Technology",
+        "present": true
+      },
+      {
+        "label": "Manifest",
+        "present": true
+      },
+      {
+        "label": "Hub",
+        "present": true
+      },
+      {
+        "label": "daily return",
+        "present": true
+      }
+    ],
+    "duplicateCards": {
+      "pathwayCount": 6,
+      "artifactCount": 6
+    },
+    "missingImages": [],
+    "overflowSections": []
+  },
+  "moonsPanelChecks": {
+    "Shabbat": {
+      "visible": true,
+      "hasInputs": false,
+      "hasImage": false,
+      "textLength": 1004
+    },
+    "Daily Flow": {
+      "visible": true,
+      "hasInputs": false,
+      "hasImage": false,
+      "textLength": 515
+    },
+    "Mirror": {
+      "visible": true,
+      "hasInputs": true,
+      "hasImage": false,
+      "textLength": 874
+    },
+    "Witness": {
+      "visible": true,
+      "hasInputs": true,
+      "hasImage": false,
+      "textLength": 831
+    },
+    "Astrology": {
+      "visible": true,
+      "hasInputs": false,
+      "hasImage": false,
+      "textLength": 1027
+    },
+    "Calendars": {
+      "visible": true,
+      "hasInputs": false,
+      "hasImage": false,
+      "textLength": 546
+    },
+    "Year Map": {
+      "visible": true,
+      "hasInputs": true,
+      "hasImage": false,
+      "textLength": 3024
+    },
+    "Codex": {
+      "visible": true,
+      "hasInputs": true,
+      "hasImage": false,
+      "textLength": 380
+    },
+    "Timeline": {
+      "visible": true,
+      "hasInputs": false,
+      "hasImage": false,
+      "textLength": 444
+    },
+    "Field": {
+      "visible": true,
+      "hasInputs": false,
+      "hasImage": false,
+      "textLength": 463
+    },
+    "Saved": {
+      "visible": true,
+      "hasInputs": true,
+      "hasImage": false,
+      "textLength": 186
+    }
+  },
+  "homepageScriptLoadChecks": {
+    "hasMoonsUIRoot": false,
+    "hasHomeTodayBindings": true,
+    "loadedHomeTodayValue": "Moon 4 · Day 7 · Year Day 91",
+    "loadedScripts": [
+      "http://127.0.0.1:4173/assets/js/moons-data.js",
+      "http://127.0.0.1:4173/assets/js/moons-engine.js",
+      "http://127.0.0.1:4173/assets/js/moons-storage.js",
+      "http://127.0.0.1:4173/assets/js/home.js"
+    ],
+    "hasErrors": false
+  },
+  "serviceWorkerChecks": {
+    "hasRegistration": true,
+    "activeScriptURL": "http://127.0.0.1:4173/service-worker.js",
+    "hasController": true,
+    "cacheKeys": [
+      "scroll-of-fire-v20260716-r4-assets",
+      "scroll-of-fire-v20260716-r4-html",
+      "scroll-of-fire-v20260716-r4-images"
+    ],
+    "hasExpectedCachePrefix": true,
+    "oldCacheDeleted": true,
+    "firstOnlineVisit": true,
+    "reloadWorked": true,
+    "activationObserved": true,
+    "offlineRevisitWorked": true,
+    "onlineReturnWorked": true,
+    "forcedReloadLoopObserved": false,
+    "htmlServedForJsCss": false
+  },
+  "consoleErrors": [
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "[sw-test] Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "[sw-test] Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+    "[sw-test] Failed to load resource: net::ERR_INTERNET_DISCONNECTED",
+    "[sw-test] Failed to load resource: net::ERR_NAME_NOT_RESOLVED"
+  ],
+  "pageErrors": [],
+  "requestFailures": [
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/img/home/sections/home-core-gates.webp",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    },
+    {
+      "url": "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+      "failure": "net::ERR_NAME_NOT_RESOLVED"
+    }
+  ],
+  "jsCssContentTypeMismatches": []
+}

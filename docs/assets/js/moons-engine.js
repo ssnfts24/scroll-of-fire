@@ -269,12 +269,38 @@
     const illumination = typeof state.illumination === 'number' ? state.illumination : calculateIllumination(effective);
     const carrier = state.moonArchetype?.frequency || '—';
     const element = state.moonArchetype?.element || solar.element;
+    const bodyHouseByElement = {
+      Fire: 'Heart / blood / endocrine heat',
+      Earth: 'Bones / gut / structure / repair',
+      Air: 'Lungs / nerves / communication pathways',
+      Water: 'Kidneys / lymph / emotional tides',
+      Aether: 'Crown / integration / coherence'
+    };
+    const aspectMirror = [
+      'Sun ⨯ Moon: intention vs felt reality',
+      'Mercury ⨯ Saturn: disciplined language',
+      'Venus ⨯ Mars: value and action alignment',
+      'Jupiter ⨯ Moon: mercy under pressure'
+    ];
+    const dayIndex = Number.isFinite(state.dayInMoon) ? state.dayInMoon : 1;
+    const weekIndex = Number.isFinite(state.continuousWeekIndex) ? state.continuousWeekIndex : 1;
+    const placements = data.planetWheel.map((planet, index) => {
+      const house = ((dayIndex + index - 1) % 12) + 1;
+      const gate = data.solarGates[(weekIndex + index - 1) % data.solarGates.length];
+      return { ...planet, house, gate:gate.sign, placement:`House ${house} · ${gate.sign}` };
+    });
+    const dailyCounsel = `Solar Gate ${solar.sign} with ${phase.toLowerCase()} asks for ${element.toLowerCase()} discipline through ${carrier}.`;
+    const elementMirror = `${element} mirror: balance body demand, relational signal, and witness pacing before interpretation.`;
     return {
       note: data.astrologyNote,
       solar: { sign:solar.sign, element:solar.element, meaning:solar.meaning, label:`${solar.sign} · ${solar.element}` },
       moonMirror: { phase, illumination, label:`${phase} · ${illumination.toFixed(1)}% illuminated`, essence:state.moonArchetype?.essence || data.yearGate.guidance },
-      planets: data.planetWheel.map(planet => ({ ...planet })),
-      integration: { element, carrier, counsel:`Ground ${element.toLowerCase()} through ${carrier}. Witness before you interpret.` }
+      planets: placements,
+      integration: { element, carrier, counsel:`Ground ${element.toLowerCase()} through ${carrier}. Witness before you interpret.` },
+      bodyHouse: bodyHouseByElement[element] || bodyHouseByElement[solar.element] || 'Whole-body coherence',
+      aspectMirror,
+      dailyCounsel,
+      elementMirror
     };
   }
 
@@ -301,7 +327,29 @@
       '',
       'Seal: Observe first. Record clearly. Interpret slowly. Repair one thing. Carry the witness forward.'
     ];
-    return { title, prompts:data.sealPrompts.slice(), text:lines.join('\n') };
+    return {
+      title,
+      prompts:data.sealPrompts.slice(),
+      witnessPrompt:data.sealPrompts[0],
+      closingLine:'Seal: Observe first. Record clearly. Interpret slowly. Repair one thing. Carry the witness forward.',
+      details:{
+        date:state.selectedISO,
+        effectiveDate:state.effectiveISO,
+        moon:state.moonName,
+        moonDay:state.dayInMoon,
+        yearDay:state.yearDay,
+        phase:state.phase,
+        daySeal:state.daySeal?.title || data.yearGate.title,
+        weekGate:state.weekGate.title,
+        archetype:state.daySeal?.title || data.yearGate.title,
+        element:state.moonArchetype?.element || solar.element,
+        frequency:state.moonArchetype?.frequency || 'Unavailable from selected moon',
+        solarGate:`${solar.sign} · ${solar.element}`,
+        field:`${state.moonArchetype?.element || 'Threshold'} · ${state.shabbat.label}`,
+        shabbat:state.shabbat.label
+      },
+      text:lines.join('\n')
+    };
   }
 
   function buildWitnessTemplate(state, fields = {}) {
@@ -331,7 +379,14 @@
   function detectPatterns(logs) {
     const list = Array.isArray(logs) ? logs : [];
     const windows = [3, 7, 14, 28];
-    const result = { count:0, top:[], windows:{} };
+    const result = { count:0, top:[], windows:{}, categories:{ words:[], body:[], emotion:[], field:[], action:[], lesson:[] } };
+    const summarize = values => {
+      const counts = {};
+      (values || []).forEach(value => {
+        String(value || '').toLowerCase().split(/[,\n]/).map(item => item.trim()).filter(Boolean).forEach(item => { counts[item] = (counts[item] || 0) + 1; });
+      });
+      return Object.entries(counts).filter(([, count]) => count >= 2).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    };
     windows.forEach(windowSize => {
       const joined = list.slice(0, windowSize).map(entry => {
         const notes = entry.notes && typeof entry.notes === 'object' ? entry.notes : {};
@@ -342,7 +397,17 @@
       terms.forEach(term => { if (PATTERN_SKIP.has(term)) return; counts[term] = (counts[term] || 0) + 1; });
       const top = Object.entries(counts).filter(([, count]) => count >= 2).sort((a, b) => b[1] - a[1]).slice(0, 5);
       result.windows[windowSize] = top;
-      if (windowSize === 28) { result.count = top.length; result.top = top; }
+      if (windowSize === 28) {
+        result.count = top.length;
+        result.top = top;
+        const sample = list.slice(0, 28);
+        result.categories.words = top;
+        result.categories.body = summarize(sample.map(entry => entry.notes?.body));
+        result.categories.emotion = summarize(sample.map(entry => entry.notes?.emotion));
+        result.categories.field = summarize(sample.map(entry => [entry.notes?.field, entry.notes?.weather, entry.notes?.animals, entry.notes?.technology, entry.shabbat].filter(Boolean).join(', ')));
+        result.categories.action = summarize(sample.map(entry => entry.notes?.action));
+        result.categories.lesson = summarize(sample.map(entry => entry.notes?.lesson));
+      }
     });
     return result;
   }
