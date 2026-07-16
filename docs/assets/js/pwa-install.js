@@ -49,14 +49,38 @@
     node.textContent = hidden ? "" : message;
   }
 
+  function setCardHelp(message = "") {
+    const node = $("#appInstallCardHelp");
+    if (!node) return;
+    node.textContent = message;
+  }
+
+  function getPlatform() {
+    if (isIos()) return "ios";
+    if (isChromium()) return "chrome";
+    return "other";
+  }
+
+  function applyInstallCardPlatform() {
+    const card = document.querySelector(".install-guide-card");
+    if (!card) return;
+    const platform = getPlatform();
+    card.dataset.platform = platform;
+  }
+
   function updateInstallUI() {
     const installButton = $("#installApp");
-    if (!installButton) return;
+    const cardButton = $("#installAppCard");
 
     const standalone = isStandalone();
-    installButton.hidden = standalone || !deferredPrompt || wasDismissedRecently();
+    const showPromptButton = !standalone && !!deferredPrompt && !wasDismissedRecently();
+
+    if (installButton) installButton.hidden = !showPromptButton;
+    if (cardButton) cardButton.hidden = !showPromptButton;
+
     if (standalone) {
       setInstallHelp("13 Moons is running as an installed app.", { hidden: false });
+      setCardHelp("13 Moons is already installed on this device.");
       return;
     }
 
@@ -64,20 +88,24 @@
 
     if (deferredPrompt && !wasDismissedRecently()) {
       setInstallHelp("Install this living calendar for offline opening and daily use.", { hidden: false });
+      setCardHelp("Click the button above to install 13 Moons to your device.");
       return;
     }
 
     if (isIos()) {
       setInstallHelp("On iPhone or iPad Safari: tap Share, then choose Add to Home Screen.", { hidden: false });
+      setCardHelp("Follow the iPhone / iPad step above to add 13 Moons to your home screen.");
       return;
     }
 
     if (!isChromium()) {
       setInstallHelp("Installation is browser-dependent. In supported desktop browsers, use the browser install option for this page.", { hidden: false });
+      setCardHelp("Use your browser's menu to install or add this page to your home screen.");
       return;
     }
 
-    setInstallHelp("", { hidden: true });
+    setInstallHelp("To install: look for the install icon (⊕) in your browser's address bar, or choose 'Install app' from the browser menu.", { hidden: false });
+    setCardHelp("Follow the Chrome / Edge step above, or wait — an Install button will appear here when your browser is ready.");
   }
 
   function showUpdateButton(show) {
@@ -142,12 +170,14 @@
         if (typeof gtag === "function") gtag("event", "moons_install_accepted");
       } catch {}
       setInstallHelp("13 Moons is being installed.", { hidden: false });
+      setCardHelp("13 Moons is being installed to your device.");
     } else {
       dismissInstallPrompt();
       try {
         if (typeof gtag === "function") gtag("event", "moons_install_dismissed");
       } catch {}
       setInstallHelp("Installation dismissed for now.", { hidden: false });
+      setCardHelp("Installation was dismissed. You can install again from your browser menu at any time.");
     }
 
     updateInstallUI();
@@ -155,13 +185,17 @@
 
   function setup() {
     const installButton = $("#installApp");
+    const cardButton = $("#installAppCard");
     const updateButton = $("#appUpdate");
 
     installButton?.addEventListener("click", promptInstall);
+    cardButton?.addEventListener("click", promptInstall);
     updateButton?.addEventListener("click", () => {
       if (!registration?.waiting) return;
       registration.waiting.postMessage({ type: "SKIP_WAITING" });
     });
+
+    applyInstallCardPlatform();
 
     window.addEventListener("beforeinstallprompt", event => {
       event.preventDefault();
@@ -176,6 +210,7 @@
       deferredPrompt = null;
       showUpdateButton(false);
       setInstallHelp("13 Moons installed successfully.", { hidden: false });
+      setCardHelp("13 Moons has been installed successfully. Launch it from your home screen or app launcher.");
     });
 
     window.addEventListener("online", updateInstallUI);
@@ -196,3 +231,4 @@
     setup();
   }
 })();
+
