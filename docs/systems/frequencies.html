@@ -13,11 +13,11 @@
   gtag("js", new Date());
   gtag("config", "G-4EPTLXGS0M");
 </script>
-  <base href="https://ssnfts24.github.io/scroll-of-fire/">
+  <base href="/">
   <script>
-    if (location.hostname !== "ssnfts24.github.io") {
-      var _b = document.querySelector("base");
-      if (_b) _b.setAttribute("href", "/");
+    if (location.hostname === "ssnfts24.github.io") {
+      const base = document.querySelector("base");
+      if (base) base.setAttribute("href", "/scroll-of-fire/");
     }
   </script>
 
@@ -39,13 +39,13 @@
   <meta property="og:title" content="Frequency Governance — Scroll of Fire">
   <meta property="og:description" content="A living sound observatory for intent paths, harmonic presets, T-7 field practice, Lift Loop training, geometry visuals, and witness logs.">
   <meta property="og:url" content="https://codexofreality.org/systems/frequencies.html">
-  <meta property="og:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
+  <meta property="og:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
   <meta property="og:image:alt" content="Scroll of Fire Frequency Governance sound observatory">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Frequency Governance — Scroll of Fire">
   <meta name="twitter:description" content="Quick sound paths, sacred geometry visuals, T-7 field practice, Lift Loop training, and private witness logs.">
-  <meta name="twitter:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
+  <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
 
   <link rel="stylesheet" href="assets/css/codex.css">
     <link rel="stylesheet" href="assets/css/navigation.css">
@@ -78,562 +78,13 @@
   }
   </script>
 
-  <style>
-    :root{
-      --fg-bg:#05070d;
-      --fg-panel:rgba(8,13,24,.78);
-      --fg-panel-2:rgba(255,255,255,.045);
-      --fg-ink:#f7efe0;
-      --fg-muted:rgba(247,239,224,.72);
-      --fg-soft:rgba(247,239,224,.55);
-      --fg-gold:#f3c97a;
-      --fg-cyan:#7af3ff;
-      --fg-ember:#ff9a5f;
-      --fg-red:#ff6d6d;
-      --fg-line:rgba(255,255,255,.12);
-      --fg-line-gold:rgba(243,201,122,.28);
-      --fg-radius:28px;
-      --fg-shadow:0 30px 90px rgba(0,0,0,.48);
-    }
-
-    html{scroll-behavior:smooth}
-
-    body{
-      background:
-        radial-gradient(circle at 12% 0%,rgba(122,243,255,.09),transparent 30rem),
-        radial-gradient(circle at 86% 12%,rgba(243,201,122,.12),transparent 34rem),
-        radial-gradient(circle at 50% 105%,rgba(255,154,95,.07),transparent 38rem),
-        var(--fg-bg);
-      color:var(--fg-ink);
-      overflow-x:hidden;
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:-20%;
-      pointer-events:none;
-      z-index:0;
-      background:
-        radial-gradient(circle at 20% 25%,rgba(122,243,255,.08),transparent 28rem),
-        radial-gradient(circle at 80% 20%,rgba(243,201,122,.11),transparent 30rem),
-        radial-gradient(circle at 50% 85%,rgba(255,154,95,.08),transparent 34rem);
-      filter:blur(10px);
-      animation:fgFieldDrift 24s ease-in-out infinite alternate;
-    }
-
-    body::after{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:0;
-      background-image:
-        linear-gradient(rgba(243,201,122,.055) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(122,243,255,.04) 1px,transparent 1px);
-      background-size:86px 86px;
-      mask-image:radial-gradient(circle at center,black,transparent 72%);
-      opacity:.28;
-    }
-
-    .fg-hero,
-    .fg-shell,
-    .mobile-dock,
-    .fg-footer{position:relative;z-index:1}
-
-    .fg-hero{
-      min-height:78vh;
-      position:relative;
-      overflow:hidden;
-      padding:1rem clamp(1rem,4vw,2rem) 2.8rem;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      isolation:isolate;
-    }
-
-    .fg-hero::before,
-    .fg-hero::after{
-      content:"";
-      position:absolute;
-      inset:-20%;
-      pointer-events:none;
-      z-index:0;
-    }
-
-    .fg-hero::before{
-      background:
-        radial-gradient(circle at 16% 18%, rgba(122,243,255,0.22), transparent 28rem),
-        radial-gradient(circle at 82% 18%, rgba(243,201,122,0.20), transparent 30rem),
-        radial-gradient(circle at 50% 92%, rgba(255,255,255,0.07), transparent 34rem);
-      animation:fgAura 16s ease-in-out infinite alternate;
-    }
-
-    .fg-hero::after{
-      background:
-        conic-gradient(from 180deg at 50% 50%,transparent,rgba(122,243,255,.08),transparent,rgba(243,201,122,.09),transparent);
-      opacity:.4;
-      filter:blur(18px);
-      animation:fgRotate 30s linear infinite;
-    }
-
-    .fg-hero > *{position:relative;z-index:1}
-
-    .fg-crumbs{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:.45rem;
-      align-items:center;
-      margin:0 auto 1rem;
-      color:var(--fg-muted);
-      font-size:.92rem;
-    }
-
-    .fg-crumbs a{
-      color:var(--fg-gold);
-      text-decoration:none;
-      font-weight:800;
-    }
-
-    .fg-crumbs a:hover,
-    .fg-crumbs a:focus-visible{text-decoration:underline;outline:none}
-
-    .fg-hero h1{
-      margin:.25rem 0 .8rem;
-      font-size:clamp(3rem,8vw,7.4rem);
-      line-height:.95;
-      letter-spacing:-.06em;
-      text-shadow:0 0 52px rgba(122,243,255,.12);
-    }
-
-    .fg-hero .hero-copy{
-      width:min(980px,100%);
-      margin:0 auto;
-      color:var(--fg-muted);
-      font-size:clamp(1.05rem,2vw,1.28rem);
-    }
-
-    .notice{
-      width:min(1050px,100%);
-      margin:1.2rem auto 0;
-      padding:1rem 1.1rem;
-      border:1px solid rgba(243,201,122,.25);
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 12% 0%,rgba(243,201,122,.1),transparent 25rem),
-        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
-      color:var(--fg-muted);
-      box-shadow:0 18px 60px rgba(0,0,0,.22);
-      backdrop-filter:blur(14px);
-    }
-
-    .notice strong{color:var(--fg-gold)}
-
-    .hero-pills{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.55rem;
-      justify-content:center;
-      width:min(1100px,100%);
-      margin:1.25rem auto 0;
-    }
-
-    .hero-pills span{
-      padding:.48rem .72rem;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.04);
-      color:var(--fg-muted);
-      font-weight:800;
-      font-size:.86rem;
-    }
-
-    .fg-top-nav{
-      display:flex;
-      flex-wrap:wrap;
-      gap:.5rem;
-      justify-content:center;
-      margin-top:1rem;
-    }
-
-    .fg-top-nav a{
-      text-decoration:none;
-      padding:.62rem .86rem;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.04);
-      color:inherit;
-      font-weight:900;
-      font-size:.92rem;
-      transition:transform .18s ease,background .18s ease,border-color .18s ease;
-    }
-
-    .fg-top-nav a:hover,
-    .fg-top-nav a:focus-visible{
-      transform:translateY(-2px);
-      background:rgba(122,243,255,.09);
-      border-color:rgba(122,243,255,.28);
-      outline:none;
-    }
-
-    .use-order{text-align:center}
-
-    .fg-shell{
-      width:min(1220px,calc(100% - 2rem));
-      margin-inline:auto;
-    }
-
-    .fg-shell section{
-      margin-block:1rem;
-    }
-
-    .quick-card,
-    .sacred-name,
-    .intent-card,
-    .sound-card,
-    .audio-card,
-    .card{
-      box-shadow:var(--fg-shadow);
-    }
-
-    .launch-panel{
-      display:grid;
-      grid-template-columns:minmax(0,1.12fr) minmax(320px,.88fr);
-      gap:1rem;
-      align-items:stretch;
-      margin-top:1.3rem;
-    }
-
-    .quick-card,
-    .sacred-name,
-    .intent-card,
-    .sound-card,
-    .audio-card,
-    .codex-map,
-    .ritual-card{
-      position:relative;
-      overflow:hidden;
-      padding:1rem;
-      border-radius:var(--fg-radius);
-      border:1px solid var(--fg-line);
-      background:
-        radial-gradient(circle at 10% 0%,rgba(243,201,122,.1),transparent 36%),
-        radial-gradient(circle at 90% 100%,rgba(122,243,255,.075),transparent 38%),
-        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.018));
-    }
-
-    .quick-card::before,
-    .sacred-name::before,
-    .intent-card::before,
-    .sound-card::before,
-    .audio-card::before,
-    .card::before{
-      content:"";
-      position:absolute;
-      inset:-1px;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 10% 0%,rgba(243,201,122,.1),transparent 32%),
-        radial-gradient(circle at 100% 100%,rgba(122,243,255,.08),transparent 36%);
-      opacity:.75;
-    }
-
-    .quick-card > *,
-    .sacred-name > *,
-    .intent-card > *,
-    .sound-card > *,
-    .audio-card > *,
-    .card > *{position:relative;z-index:1}
-
-    .audio-first-grid,
-    .quick-grid,
-    .intent-grid,
-    .name-grid,
-    .geometry-grid,
-    .field-status-grid,
-    .journey-strip,
-    .codex-map-grid{
-      display:grid;
-      gap:.75rem;
-      margin-top:1rem;
-    }
-
-    .audio-first-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-    .quick-grid,.intent-grid,.name-grid,.geometry-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .field-status-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-    .journey-strip{grid-template-columns:repeat(5,minmax(0,1fr))}
-    .codex-map-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-
-    .audio-first-step,
-    .field-status,
-    .journey-step,
-    .map-step{
-      padding:.86rem;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.035);
-    }
-
-    .audio-first-step strong,
-    .field-status strong,
-    .journey-step strong,
-    .map-step strong{
-      display:block;
-      color:var(--fg-gold);
-      margin-bottom:.25rem;
-    }
-
-    .field-status span{
-      display:block;
-      color:var(--fg-soft);
-      font-size:.78rem;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-    }
-
-    .quick-preset,
-    .intent-btn,
-    .geometry-btn{
-      min-height:118px;
-      text-align:left;
-      border-radius:22px;
-      padding:.95rem;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.04);
-      color:inherit;
-      cursor:pointer;
-      font:inherit;
-      transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;
-    }
-
-    .quick-preset strong,
-    .intent-btn strong,
-    .geometry-btn strong{
-      display:block;
-      color:var(--fg-gold);
-      margin-bottom:.25rem;
-      font-size:1rem;
-    }
-
-    .quick-preset span,
-    .intent-btn span,
-    .geometry-btn span{
-      display:block;
-      color:var(--fg-muted);
-      font-size:.88rem;
-      line-height:1.35;
-    }
-
-    .quick-preset:hover,
-    .quick-preset:focus-visible,
-    .intent-btn:hover,
-    .intent-btn:focus-visible,
-    .geometry-btn:hover,
-    .geometry-btn:focus-visible{
-      transform:translateY(-3px);
-      border-color:rgba(122,243,255,.32);
-      background:rgba(122,243,255,.08);
-      box-shadow:0 12px 40px rgba(0,0,0,.2);
-      outline:none;
-    }
-
-    .sacred-name{
-      display:grid;
-      place-items:center;
-      min-height:100%;
-      text-align:center;
-      border-color:rgba(243,201,122,.26);
-      background:
-        radial-gradient(circle at 50% 24%,rgba(243,201,122,.2),transparent 40%),
-        radial-gradient(circle at 50% 90%,rgba(122,243,255,.12),transparent 45%),
-        rgba(255,255,255,.035);
-    }
-
-    .sacred-name .paleo{
-      font-size:clamp(3.5rem,10vw,7.4rem);
-      line-height:1;
-      color:var(--fg-gold);
-      text-shadow:0 0 34px rgba(243,201,122,.24);
-      letter-spacing:.05em;
-    }
-
-    .audio-card{
-      border-color:rgba(122,243,255,.24);
-      background:
-        radial-gradient(circle at 10% 10%,rgba(122,243,255,.12),transparent 36%),
-        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
-    }
-
-    .audio-card .fine-print{
-      margin-top:.75rem;
-      color:var(--fg-soft);
-      font-size:.88rem;
-    }
-
-    .fg-command{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(320px,.72fr);
-      gap:1rem;
-      align-items:center;
-    }
-
-    .command-stats{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.65rem;
-    }
-
-    .command-stats .stat{
-      padding:.8rem;
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.1);
-    }
-
-    .command-stats .stat span{
-      display:block;
-      color:var(--fg-soft);
-      font-size:.75rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .command-stats .stat strong{
-      color:var(--fg-gold);
-      font-size:1rem;
-    }
-
-    .audio-control-grid,
-    .mode-row{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:.75rem;
-      margin-top:.75rem;
-    }
-
-    .mode-row{grid-template-columns:repeat(4,minmax(0,1fr))}
-
-    .audio-control-grid label,
-    .mode-row label{
-      padding:.8rem;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.035);
-    }
-
-    .advanced-lab{
-      border-radius:28px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.025);
-      overflow:hidden;
-    }
-
-    .advanced-lab summary{
-      cursor:pointer;
-      padding:1rem;
-      font-weight:900;
-      color:var(--fg-gold);
-      border-bottom:1px solid rgba(255,255,255,.08);
-    }
-
-    .advanced-lab[open] summary{background:rgba(243,201,122,.055)}
-    .advanced-inner{padding:1rem}
-
-    .safety-card{
-      border-color:rgba(243,201,122,.14);
-      opacity:.86;
-    }
-
-    .safety-card h2{
-      font-size:1.25rem;
-    }
-
-    .safety-card .fine{
-      font-size:.88rem;
-      color:var(--fg-soft);
-    }
-
-    .mobile-dock{
-      backdrop-filter:blur(18px);
-      border-top:1px solid rgba(255,255,255,.12);
-      background:rgba(5,7,13,.82);
-    }
-
-    @keyframes fgFieldDrift{
-      from{transform:translate3d(-1.5%,0,0) scale(1)}
-      to{transform:translate3d(1.5%,-1%,0) scale(1.04)}
-    }
-
-    @keyframes fgAura{
-      from{transform:translate3d(-1%,0,0) scale(1)}
-      to{transform:translate3d(1.5%,1%,0) scale(1.04)}
-    }
-
-    @keyframes fgRotate{
-      from{transform:rotate(0deg) scale(1)}
-      to{transform:rotate(360deg) scale(1.04)}
-    }
-
-    @media(max-width:1100px){
-      .launch-panel,
-      .fg-command{grid-template-columns:1fr}
-
-      .quick-grid,
-      .intent-grid,
-      .name-grid,
-      .geometry-grid,
-      .field-status-grid,
-      .journey-strip,
-      .audio-first-grid,
-      .codex-map-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-
-      .mode-row,
-      .command-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
-
-    @media(max-width:760px){
-      .fg-hero{
-        min-height:auto;
-        padding-top:1.2rem;
-      }
-
-      .quick-grid,
-      .intent-grid,
-      .name-grid,
-      .geometry-grid,
-      .field-status-grid,
-      .journey-strip,
-      .mode-row,
-      .audio-first-grid,
-      .audio-control-grid,
-      .command-stats,
-      .codex-map-grid{
-        grid-template-columns:1fr;
-      }
-
-      .quick-preset,
-      .intent-btn,
-      .geometry-btn{min-height:auto}
-    }
-
-    @media(prefers-reduced-motion:reduce){
-      *,*::before,*::after{
-        animation:none!important;
-        transition:none!important;
-        scroll-behavior:auto!important;
-      }
-    }
-  </style>
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
-  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
-  <link rel="apple-touch-icon" href="../assets/img/favicon.png">
+  <script defer src="assets/js/codex-witness.js"></script>
+  <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
+  <!-- build: 20260716-01 -->
 </head>
 
 <body>
@@ -655,36 +106,70 @@
     </button>
 
     <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
-      <a href="./start.html">Start</a>
-      <a class="is-featured" href="./moons.html">13 Moons</a>
-      <a href="./covenant-caravan.html">Caravan</a>
-      <a href="./teach.html">Manifest</a>
-      <a href="./shop.html">Artifacts</a>
-      <a href="./hub.html">Hub</a>
-      <a href="./ledger.html">Ledger</a>
-      <a href="./systems/frequencies.html">Frequency</a>
 
       <div class="nav-dropdown" data-dropdown>
-        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="more-navigation" data-dropdown-toggle>
-          More <span aria-hidden="true">▾</span>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-today" data-dropdown-toggle>
+          Today <span aria-hidden="true">▾</span>
         </button>
-        <div id="more-navigation" class="nav-drop-menu">
-          <a href="./genesis-oracle.html">Genesis Oracle</a>
-          <a href="./theory.html">Theory / Canon</a>
-          <a href="./systems/t-7.html">T-7 Conduit</a>
-          <a href="./systems/witness.html">Witness System</a>
-          <a href="./systems/recoder.html">Reality Recoder</a>
-          <a href="./systems/mind-renewal.html">Mind Renewal</a>
-          <a href="./systems/archive.html">Systems Archive</a>
-          <a href="./guide.html">Guide</a>
-          <a href="./lab.html">Remnant Lab</a>
-          <a href="./invoke.html">Invoke</a>
-          <a href="./circle.html">Circle</a>
-          <a href="./ethics.html">Ethics</a>
-          <a href="./glossary.html">Glossary</a>
-          <a href="./downloads.html">Downloads</a>
+        <div id="nav-today" class="nav-drop-menu">
+          <a href="./moons.html">13 Moons</a>
+          <a href="./ledger.html">Witness Ledger</a>
+          <a href="./hub.html">Year Map</a>
         </div>
       </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-explore" data-dropdown-toggle>
+          Explore <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-explore" class="nav-drop-menu">
+          <a href="./theory.html">Theory</a>
+          <a href="./theory/canon.html">Canon</a>
+          <a href="./genesis-oracle.html">Genesis Oracle</a>
+          <a href="./glossary.html">Glossary</a>
+          <a href="./systems/archive.html">Systems Archive</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-build" data-dropdown-toggle>
+          Build <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-build" class="nav-drop-menu">
+          <a href="./systems/frequencies.html">Frequency Governance</a>
+          <a href="./systems/t-7.html">T-7 Conduit</a>
+          <a href="./systems/recoder.html">Reality Recoder</a>
+          <a href="./systems/mind-renewal.html">Mind Renewal</a>
+          <a href="./lab.html">Remnant Lab</a>
+          <a href="./invoke.html">Invoke</a>
+          <a href="./systems/witness.html">Witness System</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-artifacts" data-dropdown-toggle>
+          Artifacts <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-artifacts" class="nav-drop-menu">
+          <a href="./shop.html">Artifact Registry</a>
+          <a href="./circle.html">Covenant Circle</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-about" data-dropdown-toggle>
+          About <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-about" class="nav-drop-menu">
+          <a href="./start.html">Start Here</a>
+          <a href="./covenant-caravan.html">Covenant Caravan</a>
+          <a href="./teach.html">Manifest</a>
+          <a href="./ethics.html">Ethics</a>
+          <a href="./downloads.html">Downloads</a>
+          <a href="./guide.html">About Aaron</a>
+        </div>
+      </div>
+
     </nav>
   </header>
   <section class="living-signal-shell" aria-label="Living signal">
@@ -697,6 +182,17 @@
 
 
   <main id="main" class="fg-shell">
+    <figure class="page-hero-figure">
+      <img
+        src="assets/img/home/gates/home-gate-frequency-governance.webp"
+        alt="Frequency Governance — carrier tones, harmonic layers, and structured listening practice"
+        width="2048"
+        height="1152"
+        loading="eager"
+        decoding="async"
+        fetchpriority="high">
+    </figure>
+
     <section id="quickStart" class="launch-panel">
       <article class="quick-card">
         <p class="eyebrow">Start Here</p>
@@ -705,6 +201,15 @@
           Press one path to begin. For first-time testing, press <strong>Sound Check</strong>,
           raise your media volume, then choose the path that matches the state you are entering.
         </p>
+
+        <aside class="fg-safety-notice" role="note" aria-label="Safe use guidance">
+          <ul>
+            <li>Begin at a comfortable, moderate volume.</li>
+            <li>Do not use while driving, operating machinery, or in situations requiring full attention.</li>
+            <li>Stop if you experience discomfort, headache, or increased distress.</li>
+            <li>This is a reflective and experimental practice tool — not medical treatment, therapy, or clinical sound therapy.</li>
+          </ul>
+        </aside>
 
         <div class="audio-first-grid" aria-label="Recommended use order">
           <div class="audio-first-step"><strong>1 · Check</strong><span>Unlock browser audio with one tap.</span></div>
@@ -1352,6 +857,17 @@ Press Escape to stop.</pre>
         or doing anything that needs full attention. Stop if discomfort increases.
       </p>
     </section>
+  
+    <div class="section-shell">
+      <div class="record-witness-band" data-witness-context>
+        <span class="record-witness-icon" aria-hidden="true">Ξ</span>
+        <div class="record-witness-text">
+          <strong>Record in Witness Ledger</strong>
+          <span>Save an observation, insight, or result from this page to your local Codex.</span>
+        </div>
+        <a class="record-witness-link" href="./ledger.html" data-witness-link>Record</a>
+      </div>
+    </div>
   </main>
 
   <div class="mobile-dock">
@@ -1364,9 +880,7 @@ Press Escape to stop.</pre>
     <button id="dockLog" type="button">Log</button>
   </div>
 
-  <footer class="fg-footer">
-    <p>© <span id="yr">2026</span> Aaron Paul Laird — Scroll of Fire · Scribe of Circuits</p>
-  </footer>
+
 
   <script src="assets/js/frequency-governance.js"></script>
   <footer class="site-footer">
