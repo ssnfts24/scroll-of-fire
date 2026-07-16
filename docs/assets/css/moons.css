@@ -863,6 +863,89 @@ textarea {
   70% { transform: translateY(0); }
 }
 
+/* ── Image containers inserted by moons-images.js ── */
+
+.moons-app-hero {
+  max-inline-size: min(100%, 360px);
+  margin-inline: auto;
+  margin-block: 1.2rem;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.moons-app-hero img {
+  width: 100%;
+  height: auto;
+  max-height: 260px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.current-moon-art {
+  max-inline-size: min(100%, 190px);
+  margin-inline: auto;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.current-moon-art img {
+  width: 100%;
+  height: auto;
+}
+
+.panel-banner {
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.panel-banner img {
+  width: 100%;
+  max-height: 170px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.gate-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+  gap: 12px;
+  margin: 1rem 0;
+}
+
+.gate-art-card {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.gate-art-card img {
+  width: 100%;
+  max-height: 120px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.gate-art-card figcaption {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.78rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+.saved-empty-state {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 2rem 1rem;
+  gap: 0.6rem;
+}
+
+.saved-empty-state img {
+  max-inline-size: 100px;
+  height: auto;
+  opacity: 0.7;
+}
+
 @media (max-width: 1120px) {
   .log-grid,
   .hum-grid,
