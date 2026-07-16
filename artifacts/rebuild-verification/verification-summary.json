@@ -1,96 +1,130 @@
 {
-  "index": {
-    "375x812": {
-      "scrollWidth": 375,
-      "clientWidth": 375,
-      "sections": true,
-      "cards": 29
+  "archiveLocation": "archive/pre-rebuild-20260716/",
+  "docsProductionOnly": {
+    "archivedHtmlUnderDocs": false,
+    "archivedJavaScriptUnderDocs": false,
+    "productionPagesLinkToArchive": false
+  },
+  "boundaries": {
+    "currentCycle": {
+      "anchor": "2026-04-17",
+      "finalRegularDay": "2027-04-15",
+      "yearGate": "2027-04-16",
+      "nextCycleAnchor": "2027-04-17"
     },
-    "390x844": {
-      "scrollWidth": 390,
-      "clientWidth": 390,
-      "sections": true,
-      "cards": 29
+    "derivedNextCycle": {
+      "anchor": "2027-04-17",
+      "finalRegularDay": "2028-04-14",
+      "yearGate": "2028-04-15",
+      "nextCycleAnchor": "2028-04-16",
+      "leapDay": {
+        "moonName": "River of Signs",
+        "moonNumber": 12,
+        "dayInMoon": 11,
+        "yearDay": 319,
+        "isYearGate": false,
+        "nextAnchorISO": "2028-04-16"
+      }
     },
-    "430x932": {
-      "scrollWidth": 430,
-      "clientWidth": 430,
-      "sections": true,
-      "cards": 29
-    },
-    "768x1024": {
-      "scrollWidth": 768,
-      "clientWidth": 768,
-      "sections": true,
-      "cards": 29
-    },
-    "1440x1000": {
-      "scrollWidth": 1440,
-      "clientWidth": 1440,
-      "sections": true,
-      "cards": 29
+    "distinction": {
+      "regularRemnantDays": 364,
+      "separateYearGateDays": 1,
+      "elapsedCivilDaysPerCycle": 365
     }
   },
-  "moons": {
-    "375x812": {
-      "moonName": "Stone Witness",
-      "moonDay": "7",
-      "yearDay": "91",
-      "phase": "Waxing Crescent",
-      "shabbat": "Ordinary day",
-      "yearMapReady": true,
-      "selectedDate": "2026-07-16",
-      "scrollWidth": 375,
-      "clientWidth": 375
+  "homepage": {
+    "sectionOrder": [
+      "Scroll of Fire — Codex of Reality",
+      "Observe. Breathe. Align. Return.",
+      "Compact live preview",
+      "Current project gateways",
+      "One coherent living system",
+      "Remnant 13 Moons",
+      "Frequency Governance",
+      "Covenant Caravan",
+      "Living Technology Archive",
+      "Theory / Canon",
+      "The daily return"
+    ],
+    "cards": 29,
+    "duplicateSectionsDetected": false,
+    "previews": [
+      "index-mobile-390x2600.png",
+      "index-desktop-1440x2200.png"
+    ]
+  },
+  "dependencies": {
+    "indexHtml": {
+      "css": [
+        "assets/css/codex-core.css?v=20260716-r1",
+        "assets/css/navigation.css?v=20260715-10",
+        "assets/css/components.css?v=20260715-10",
+        "assets/css/home-rebuild.css?v=20260716-r1"
+      ],
+      "js": [
+        "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+        "assets/js/site.js",
+        "assets/js/navigation.js",
+        "assets/js/pwa.js",
+        "assets/js/home.js"
+      ]
     },
-    "390x844": {
-      "moonName": "Stone Witness",
-      "moonDay": "7",
-      "yearDay": "91",
-      "phase": "Waxing Crescent",
-      "shabbat": "Ordinary day",
-      "yearMapReady": true,
-      "selectedDate": "2026-07-16",
-      "scrollWidth": 390,
-      "clientWidth": 390
+    "moonsHtml": {
+      "css": [
+        "assets/css/codex-core.css?v=20260716-r1",
+        "assets/css/navigation.css?v=20260715-10",
+        "assets/css/components.css?v=20260715-10",
+        "assets/css/moons-rebuild.css?v=20260716-r1"
+      ],
+      "js": [
+        "https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M",
+        "assets/js/site.js",
+        "assets/js/navigation.js",
+        "assets/js/pwa.js",
+        "assets/js/moons-data.js",
+        "assets/js/moons-engine.js",
+        "assets/js/moons-storage.js",
+        "assets/js/moons-ui.js",
+        "assets/js/moons-app.js"
+      ]
     },
-    "430x932": {
-      "moonName": "Stone Witness",
-      "moonDay": "7",
-      "yearDay": "91",
-      "phase": "Waxing Crescent",
-      "shabbat": "Ordinary day",
-      "yearMapReady": true,
-      "selectedDate": "2026-07-16",
-      "scrollWidth": 430,
-      "clientWidth": 430
-    },
-    "768x1024": {
-      "moonName": "Stone Witness",
-      "moonDay": "7",
-      "yearDay": "91",
-      "phase": "Waxing Crescent",
-      "shabbat": "Ordinary day",
-      "yearMapReady": true,
-      "selectedDate": "2026-07-16",
-      "scrollWidth": 768,
-      "clientWidth": 768
-    },
-    "1440x1000": {
-      "moonName": "Stone Witness",
-      "moonDay": "7",
-      "yearDay": "91",
-      "phase": "Waxing Crescent",
-      "shabbat": "Ordinary day",
-      "yearMapReady": true,
-      "selectedDate": "2026-07-16",
-      "scrollWidth": 1440,
-      "clientWidth": 1440
+    "forbiddenLoaded": {
+      "archivedFiles": false,
+      "oldHomeCss": false,
+      "oldMoonsCss": false,
+      "oldMoonsJs": false,
+      "calendarCorJs": false,
+      "livingCodexJs": false,
+      "duplicateNavigationScripts": false,
+      "duplicatePwaScripts": false,
+      "duplicateGa4Loaders": false
     }
   },
-  "storageFallback": {
-    "moonName": "Stone Witness",
-    "moonDay": "7",
-    "storageNote": "Local storage is unavailable in this browser, so witness logs cannot be saved here."
-  }
+  "screenshots": {
+    "moons": {
+      "selectedDate": "2026-07-16 → 2026-07-16",
+      "moonName": "Stone Witness",
+      "moonDay": "7",
+      "yearDay": "91",
+      "shabbat": "Ordinary day",
+      "yearMapMeta": "2026/2027 · Anchor 2026-04-17",
+      "previews": [
+        "moons-mobile-390x3300.png",
+        "moons-desktop-1440x3000.png"
+      ]
+    },
+    "inspection": [
+      "Dark navy, gold, and cyan identity preserved.",
+      "Hero artwork present on homepage and moons page.",
+      "Typography remains readable at mobile and desktop preview sizes.",
+      "Homepage cards remain at 29 with no duplicate top-level sections detected.",
+      "No obvious block overlap, clipped navigation, broken images, or debug/test copy observed in regenerated captures.",
+      "Moons Today values, Shabbat state, and Year Map are visibly populated in the moons previews."
+    ]
+  },
+  "automatedChecks": [
+    "node scripts/validate-site.js",
+    "node --test tests/moons-engine.test.js",
+    "node scripts/validate-codex-data.js"
+  ]
 }
