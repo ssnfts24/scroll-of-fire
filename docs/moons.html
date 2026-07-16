@@ -43,12 +43,12 @@
 
   <meta
     name="description"
-    content="A living 13×28 Remnant calendar with sunset day boundaries, Shabbat alignment, moon phase, prophetic mirror readings, daily witness logs, astrology mirror, planetary alignments, field layers, pattern tracking, Codex seals, and Scroll of Fire coherence tools."
+    content="The Remnant 13 Moons is Aaron Paul Laird's original symbolic calendar system: 13 moons of 28 days plus one Day Out of Time, with sunset day boundaries, Shabbat alignment, moon phase, daily mirror readings, witness logs, and Codex of Reality reflective practice tools."
   >
 
   <meta
     name="keywords"
-    content="Remnant 13 Moons, 13×28 calendar, Shabbat calendar, sunset day boundary, Scroll of Fire, Codex of Reality, moon phase, witness ledger, Aaron Paul Laird"
+    content="Remnant 13 Moons, 13×28 calendar, Shabbat calendar, sunset day boundary, Scroll of Fire, Codex of Reality, moon phase, witness ledger, Aaron Paul Laird, symbolic calendar, reflective practice"
   >
 
   <meta name="author" content="Aaron Paul Laird">
@@ -131,12 +131,12 @@
 
   <link
     rel="stylesheet"
-    href="assets/css/moons.css?v=20260714-10"
+    href="assets/css/moons.css?v=20260715-11"
   >
 
   <link
     rel="stylesheet"
-    href="assets/css/astrology.css?v=20260714-10"
+    href="assets/css/astrology.css?v=20260715-11"
   >
 
   <link rel="stylesheet" href="assets/css/animations.css">
@@ -181,7 +181,7 @@
           "@id": "https://codexofreality.org/#organization"
         },
         "image": "https://codexofreality.org/assets/img/moons/app/og-image-1200x630.webp",
-        "description": "A symbolic 13×28 calendar and witness interface with sunset day boundaries, Shabbat alignment, moon phase, mirror readings, astrology, field layers, and Codex seals."
+        "description": "The Remnant 13 Moons is Aaron Paul Laird's original symbolic and reflective calendar system, part of Codex of Reality / Scroll of Fire. It uses 13 moons of 28 days plus one Day Out of Time (364 + 1 = 365). It is not affiliated with unrelated Codex books or research projects. It is a symbolic reflective calendar and does not replace scientific, legal, or conventional calendar systems."
       },
       {
         "@type": "Person",
@@ -314,6 +314,7 @@
           About <span aria-hidden="true">▾</span>
         </button>
         <div id="nav-about" class="nav-drop-menu">
+          <a href="./about.html">About the Codex</a>
           <a href="./start.html">Start Here</a>
           <a href="./covenant-caravan.html">Covenant Caravan</a>
           <a href="./teach.html">Manifest</a>
@@ -413,11 +414,15 @@
         unbroken through the Year Gate.
       </aside>
 
-      <div class="tabs" aria-label="Calendar tools">
+      <div class="tabs" role="tablist" aria-label="Calendar tools">
         <button
           class="tab active"
           data-tab="todayPanel"
           type="button"
+          id="tab-today"
+          role="tab"
+          aria-selected="true"
+          aria-controls="todayPanel"
         >
           Today
         </button>
@@ -426,6 +431,10 @@
           class="tab"
           data-tab="shabbatPanel"
           type="button"
+          id="tab-shabbat"
+          role="tab"
+          aria-selected="false"
+          aria-controls="shabbatPanel"
         >
           Shabbat
         </button>
@@ -434,6 +443,10 @@
           class="tab"
           data-tab="flowPanel"
           type="button"
+          id="tab-flow"
+          role="tab"
+          aria-selected="false"
+          aria-controls="flowPanel"
         >
           Daily Flow
         </button>
@@ -442,6 +455,10 @@
           class="tab"
           data-tab="mirrorPanel"
           type="button"
+          id="tab-mirror"
+          role="tab"
+          aria-selected="false"
+          aria-controls="mirrorPanel"
         >
           Mirror Reading
         </button>
@@ -450,6 +467,10 @@
           class="tab"
           data-tab="witnessPanel"
           type="button"
+          id="tab-witness"
+          role="tab"
+          aria-selected="false"
+          aria-controls="witnessPanel"
         >
           Daily Witness
         </button>
@@ -458,6 +479,10 @@
           class="tab"
           data-tab="astrologyPanel"
           type="button"
+          id="tab-astrology"
+          role="tab"
+          aria-selected="false"
+          aria-controls="astrologyPanel"
         >
           Astrology
         </button>
@@ -466,6 +491,10 @@
           class="tab"
           data-tab="calendarPanel"
           type="button"
+          id="tab-calendar"
+          role="tab"
+          aria-selected="false"
+          aria-controls="calendarPanel"
         >
           Calendars
         </button>
@@ -474,6 +503,10 @@
           class="tab"
           data-tab="yearPanel"
           type="button"
+          id="tab-year"
+          role="tab"
+          aria-selected="false"
+          aria-controls="yearPanel"
         >
           Year Map
         </button>
@@ -482,6 +515,10 @@
           class="tab"
           data-tab="codexPanel"
           type="button"
+          id="tab-codex"
+          role="tab"
+          aria-selected="false"
+          aria-controls="codexPanel"
         >
           Codex Seal
         </button>
@@ -490,6 +527,10 @@
           class="tab"
           data-tab="timelinePanel"
           type="button"
+          id="tab-timeline"
+          role="tab"
+          aria-selected="false"
+          aria-controls="timelinePanel"
         >
           Timeline
         </button>
@@ -498,6 +539,10 @@
           class="tab"
           data-tab="fieldPanel"
           type="button"
+          id="tab-field"
+          role="tab"
+          aria-selected="false"
+          aria-controls="fieldPanel"
         >
           Field Layers
         </button>
@@ -506,6 +551,10 @@
           class="tab"
           data-tab="savedPanel"
           type="button"
+          id="tab-saved"
+          role="tab"
+          aria-selected="false"
+          aria-controls="savedPanel"
         >
           Saved Logs
         </button>
@@ -516,6 +565,9 @@
       <!-- TODAY -->
       <section
         id="todayPanel"
+        role="tabpanel"
+        aria-labelledby="tab-today"
+        tabindex="0"
         class="tabPanel active"
       >
         <!-- Today artwork is inserted by moons-images.js. -->
@@ -867,6 +919,9 @@
       <!-- SHABBAT -->
       <section
         id="shabbatPanel"
+        role="tabpanel"
+        aria-labelledby="tab-shabbat"
+        tabindex="0"
         class="tabPanel"
       >
         <section class="ritual-hero shabbat-hero">
@@ -1021,6 +1076,9 @@
       <!-- DAILY FLOW -->
       <section
         id="flowPanel"
+        role="tabpanel"
+        aria-labelledby="tab-flow"
+        tabindex="0"
         class="tabPanel"
       >
         <!-- Transmission artwork is inserted by moons-images.js. -->
@@ -1278,6 +1336,9 @@
       <!-- MIRROR -->
       <section
         id="mirrorPanel"
+        role="tabpanel"
+        aria-labelledby="tab-mirror"
+        tabindex="0"
         class="tabPanel"
       >
         <!-- Memory artwork is inserted by moons-images.js. -->
@@ -1388,6 +1449,9 @@
       <!-- WITNESS -->
       <section
         id="witnessPanel"
+        role="tabpanel"
+        aria-labelledby="tab-witness"
+        tabindex="0"
         class="tabPanel"
       >
         <!-- Witness artwork is inserted by moons-images.js. -->
@@ -1548,6 +1612,9 @@
       <!-- ASTROLOGY -->
       <section
         id="astrologyPanel"
+        role="tabpanel"
+        aria-labelledby="tab-astrology"
+        tabindex="0"
         class="tabPanel"
         data-astrology-panel
       >
@@ -1723,6 +1790,9 @@
       <!-- CALENDARS -->
       <section
         id="calendarPanel"
+        role="tabpanel"
+        aria-labelledby="tab-calendar"
+        tabindex="0"
         class="tabPanel"
       >
         <!-- Calendar artwork is inserted by moons-images.js. -->
@@ -1761,6 +1831,9 @@
       <!-- YEAR MAP -->
       <section
         id="yearPanel"
+        role="tabpanel"
+        aria-labelledby="tab-year"
+        tabindex="0"
         class="tabPanel"
       >
         <section class="card">
@@ -1802,6 +1875,9 @@
       <!-- CODEX -->
       <section
         id="codexPanel"
+        role="tabpanel"
+        aria-labelledby="tab-codex"
+        tabindex="0"
         class="tabPanel"
       >
         <!-- Builder artwork is inserted by moons-images.js. -->
@@ -1846,6 +1922,9 @@
       <!-- TIMELINE -->
       <section
         id="timelinePanel"
+        role="tabpanel"
+        aria-labelledby="tab-timeline"
+        tabindex="0"
         class="tabPanel"
       >
         <section class="grid">
@@ -1876,6 +1955,9 @@
       <!-- FIELD -->
       <section
         id="fieldPanel"
+        role="tabpanel"
+        aria-labelledby="tab-field"
+        tabindex="0"
         class="tabPanel"
       >
         <!-- Frequency artwork is inserted by moons-images.js. -->
@@ -1990,6 +2072,9 @@
       <!-- SAVED LOGS -->
       <section
         id="savedPanel"
+        role="tabpanel"
+        aria-labelledby="tab-saved"
+        tabindex="0"
         class="tabPanel"
       >
         <section class="grid">
@@ -2118,6 +2203,41 @@
     </a>
 
     <a
+      href="#calendarPanel"
+      data-mobile-tab="calendarPanel"
+    >
+      Calendar
+    </a>
+
+    <a
+      href="#yearPanel"
+      data-mobile-tab="yearPanel"
+    >
+      Year Map
+    </a>
+
+    <a
+      href="#codexPanel"
+      data-mobile-tab="codexPanel"
+    >
+      Seal
+    </a>
+
+    <a
+      href="#timelinePanel"
+      data-mobile-tab="timelinePanel"
+    >
+      Timeline
+    </a>
+
+    <a
+      href="#fieldPanel"
+      data-mobile-tab="fieldPanel"
+    >
+      Fields
+    </a>
+
+    <a
       href="#savedPanel"
       data-mobile-tab="savedPanel"
     >
@@ -2157,13 +2277,13 @@
   </footer>
 
   <!-- Main calendar engine -->
-  <script src="assets/js/moons.js?v=20260714-10"></script>
+  <script src="assets/js/moons.js?v=20260715-11"></script>
 
   <!-- Astrology and planetary mirror -->
-  <script src="assets/js/astrology.js?v=20260714-10"></script>
+  <script src="assets/js/astrology.js?v=20260715-11"></script>
 
   <!-- Remnant artwork integration -->
-  <script src="assets/js/moons-images.js?v=20260714-10"></script>
+  <script src="assets/js/moons-images.js?v=20260715-11"></script>
 
   <!-- Page-specific interaction layer -->
   <script>
@@ -2172,6 +2292,7 @@
 
       const BOUNDARY_KEY = "sof_moons_boundary_v1";
       const SUNSET_KEY = "sof_moons_sunset_v1";
+      const LAST_TAB_KEY = "sof_moons_last_tab_v1";
 
       function $(id) {
         return document.getElementById(id);
@@ -2195,9 +2316,20 @@
           panel.classList.toggle("active", panel.id === id);
         });
 
+        var activeTabBtn = null;
+
         document.querySelectorAll(".tab").forEach(function (tab) {
-          tab.classList.toggle("active", tab.dataset.tab === id);
+          const isActive = tab.dataset.tab === id;
+          tab.classList.toggle("active", isActive);
+          tab.setAttribute("aria-selected", isActive ? "true" : "false");
+          tab.setAttribute("tabindex", isActive ? "0" : "-1");
+          if (isActive) activeTabBtn = tab;
         });
+
+        /* Scroll active tab button into view within the tab rail */
+        if (activeTabBtn) {
+          activeTabBtn.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+        }
 
         document
           .querySelectorAll("[data-mobile-tab]")
@@ -2212,6 +2344,11 @@
               link.removeAttribute("aria-current");
             }
           });
+
+        /* Persist last-viewed tab */
+        try {
+          localStorage.setItem(LAST_TAB_KEY, id);
+        } catch (_) {}
 
         const panel = $(id);
 
@@ -2890,6 +3027,10 @@ Let the next step be firm.`;
             }
 
             showToast("Reading copied.");
+
+            try {
+              if (typeof gtag === "function") gtag("event", "share_daily_mirror");
+            } catch (_) {}
           }
         );
       }
