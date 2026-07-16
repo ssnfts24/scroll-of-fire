@@ -1233,20 +1233,75 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
   }
 
   function setupTabs() {
+    const panels = new Set($$(".tabPanel").map(panel => panel.id));
+
+    function requestedTab() {
+      const queryTab = new URLSearchParams(location.search).get("tab");
+      const hashTab = location.hash.replace(/^#/, "");
+      return [queryTab, hashTab].find(id => panels.has(id)) || "todayPanel";
+    }
+
+    function activateTab(id, options = {}) {
+      if (!panels.has(id)) id = "todayPanel";
+      const { updateHistory = false, scroll = false } = options;
+
+      $$(".tab").forEach(tab => {
+        const active = tab.dataset.tab === id;
+        tab.classList.toggle("active", active);
+        tab.setAttribute("role", "tab");
+        tab.setAttribute("aria-selected", String(active));
+        tab.setAttribute("tabindex", active ? "0" : "-1");
+      });
+
+      $$(".tabPanel").forEach(panel => {
+        const active = panel.id === id;
+        panel.classList.toggle("active", active);
+        panel.hidden = !active;
+        panel.setAttribute("role", "tabpanel");
+      });
+
+      $$("[data-mobile-tab]").forEach(link => {
+        const active = link.dataset.mobileTab === id;
+        link.classList.toggle("active", active);
+        if (active) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+      });
+
+      safeSet("sof_moons_last_tab_v1", id);
+      if (updateHistory) {
+        const url = new URL(location.href);
+        url.searchParams.set("tab", id);
+        url.hash = "";
+        history.pushState({ moonsTab: id }, "", url);
+      }
+      if (scroll) $("#" + id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    $(".tabs")?.setAttribute("role", "tablist");
     $$(".tab").forEach(button => {
       button.addEventListener("click", () => {
         const id = button.dataset.tab;
         if (!id) return;
-
-        $$(".tab").forEach(tab => {
-          tab.classList.toggle("active", tab === button);
-        });
-
-        $$(".tabPanel").forEach(panel => {
-          panel.classList.toggle("active", panel.id === id);
-        });
+        activateTab(id, { updateHistory: true });
       });
     });
+
+    document.addEventListener("sof:activate-tab", event => {
+      activateTab(event.detail?.id, {
+        updateHistory: event.detail?.updateHistory !== false,
+        scroll: event.detail?.scroll !== false
+      });
+    });
+    addEventListener("popstate", event => {
+      activateTab(event.state?.moonsTab || requestedTab());
+    });
+
+    const initial = requestedTab();
+    activateTab(initial);
+    const initialUrl = new URL(location.href);
+    initialUrl.searchParams.set("tab", initial);
+    initialUrl.hash = "";
+    history.replaceState({ moonsTab: initial }, "", initialUrl);
   }
 
   function setupBoundaryControls() {
