@@ -3,7 +3,7 @@
   if (window.RemnantCalendarUI) return;
 
   const REQUIRED_OUTPUTS = ['moon-name','moon-day','year-day','visible-phase','illumination','week-gate','shabbat-state','sunset','mirror-title'];
-  const WITNESS_FIELDS = ['body','emotion','dreams','signs','sleep','action','lesson','field','context'];
+  const WITNESS_FIELDS = ['body','emotion','dreams','signs','sleep','technology','animals','weather','action','lesson','field','context'];
 
   function create() {
     const outputs = Object.fromEntries(REQUIRED_OUTPUTS.map(name => [name, document.querySelector(`[data-moon-output="${name}"]`)]));
@@ -219,10 +219,10 @@
     function renderAstrology(state) {
       const astro = state.astrology;
       if (!astro) return;
-      setText(dom.astrologyNote, astro.note);
+      setText(dom.astrologyNote, `${astro.note} Body house: ${astro.bodyHouse}.`);
       setText(dom.astrologySolar, `${astro.solar.label} — ${astro.solar.meaning}`);
-      setText(dom.astrologyMoon, astro.moonMirror.label);
-      setText(dom.astrologyIntegration, astro.integration.counsel);
+      setText(dom.astrologyMoon, `${astro.moonMirror.label} · ${astro.bodyHouse}`);
+      setText(dom.astrologyIntegration, `${astro.integration.counsel} Aspect mirror: ${astro.aspectMirror.join(' · ')}`);
       if (dom.astrologyPlanets) {
         dom.astrologyPlanets.innerHTML = '';
         astro.planets.forEach(planet => {
@@ -252,7 +252,7 @@
     function renderTimeline(state) {
       const patterns = state.patterns;
       if (!patterns) return;
-      setText(dom.timelineSummary, patterns.count ? `${patterns.count} recurring signal${patterns.count === 1 ? '' : 's'} across the last 28 witness logs.` : 'Not enough witness logs yet to surface repeating signals. Record across 3, 7, 14, and 28 days.');
+      setText(dom.timelineSummary, patterns.count ? `${patterns.count} recurring signal${patterns.count === 1 ? '' : 's'} across the last 28 witness logs. Words:${patterns.categories.words.length || 0} · Body:${patterns.categories.body.length || 0} · Emotion:${patterns.categories.emotion.length || 0} · Field:${patterns.categories.field.length || 0}` : 'Not enough witness logs yet to surface repeating signals. Record across 3, 7, 14, and 28 days.');
       if (dom.timelineWindows) {
         dom.timelineWindows.innerHTML = '';
         [3, 7, 14, 28].forEach(windowSize => {
@@ -263,6 +263,13 @@
           cell.innerHTML = `<strong>${windowSize}-day window</strong><div class="moons-chip-row">${chips}</div>`;
           dom.timelineWindows.appendChild(cell);
         });
+        if (patterns.categories) {
+          const categories = document.createElement('div');
+          categories.className = 'moons-timeline-window';
+          const group = (label, list) => `<p><strong>${label}</strong> ${list.length ? list.map(([term, count]) => `${term}(${count})`).join(', ') : 'No repeats yet.'}</p>`;
+          categories.innerHTML = `${group('Repeated words', patterns.categories.words || [])}${group('Body signals', patterns.categories.body || [])}${group('Emotional states', patterns.categories.emotion || [])}${group('Field signs', patterns.categories.field || [])}`;
+          dom.timelineWindows.appendChild(categories);
+        }
       }
     }
 
@@ -313,23 +320,23 @@
       setText(outputs['sunset'], state.sunset);
       setText(outputs['mirror-title'], `${state.moonName} · ${state.daySeal?.title || state.yearGate.title}`);
       setText(dom.selectedDateLabel, `${state.selectedISO} → ${state.effectiveISO}`);
-      setText(dom.selectedModeLabel, state.afterBoundary ? `Sunset boundary passed at ${state.sunset}` : `Sunset boundary set for ${state.sunset}`);
+      setText(dom.selectedModeLabel, `${state.afterBoundary ? `Sunset boundary passed at ${state.sunset}` : `Sunset boundary set for ${state.sunset}`} · ${state.insideYear ? `Moon ${state.moonNumber} Day ${state.dayInMoon} / Year Day ${state.yearDay}/364` : 'Year Gate / Day Out of Time'}`);
       setText(dom.timezoneLabel, state.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone);
       setText(dom.moonEssence, state.moonArchetype?.essence || state.yearGate.guidance);
       setText(dom.moonPractice, state.moonArchetype?.practice || state.yearGate.guidance);
       setText(dom.moonElement, state.moonArchetype?.element || 'Threshold');
       setText(dom.moonFrequency, state.moonArchetype?.frequency || '—');
-      setText(dom.shabbatDetail, state.shabbat.detail);
-      setText(dom.shabbatWindow, state.shabbat.moonDays && state.shabbat.moonDays.length ? `Shabbat moon days: ${state.shabbat.moonDays.join(', ')} of 28` : 'Shabbat aligns with the weekly sunset boundary.');
-      setText(dom.flowPrimary, state.daySeal?.guidance || state.yearGate.guidance);
-      setText(dom.flowSecondary, state.weekGate.guidance);
-      setText(dom.flowTertiary, state.moonArchetype?.practice || state.yearGate.guidance);
+      setText(dom.shabbatDetail, `Current State: ${state.shabbat.label}. Window: ${state.shabbat.window}. Moon Position: ${state.insideYear ? `Day ${state.dayInMoon} / 28` : 'Year Gate'}. Seal: ${state.daySeal?.title || state.yearGate.title}. Full reading: Prepare before sunset Friday; Cease + Rest Friday sunset through Saturday nightfall; Witness + Return after the gate.`);
+      setText(dom.shabbatWindow, `${state.shabbat.moonDays && state.shabbat.moonDays.length ? `Moon Days ${state.shabbat.moonDays.join(', ')} remain visible markers.` : 'Shabbat aligns with the weekly sunset boundary.'} Household guidance: reduce unfinished pressure. Body guidance: sleep, prayer, food, quiet. Witness guidance: record and carry one deliberate return action. Codex Stop Rule: do not turn rest into performance.`);
+      setText(dom.flowPrimary, `Read: ${state.daySeal?.guidance || state.yearGate.guidance} Breath/Word anchor.`);
+      setText(dom.flowSecondary, `Witness: ${state.weekGate.guidance} Body + grounding + coherence.`);
+      setText(dom.flowTertiary, `Log/Pattern/Seal: ${state.moonArchetype?.practice || state.yearGate.guidance} Action + field intensity + signal repeat.`);
       setText(dom.flowSequence, state.daypart ? `Day-part: ${state.daypart}. ${Array.isArray(state.breathSequence) ? state.breathSequence.map(step => step.step || step).join(' · ') : ''}` : '');
       setText(dom.mirrorSignal, state.mirror.signal);
       setText(dom.mirrorCrossing, state.mirror.crossing);
       setText(dom.mirrorAction, state.mirror.action);
       setText(dom.mirrorText, state.mirror.text);
-      setText(dom.astrologyText, `${state.phase} · ${state.illumination.toFixed(1)}% illumination. Astronomical phase remains distinct from the Remnant moon count.`);
+      setText(dom.astrologyText, `${state.phase} · ${state.illumination.toFixed(1)}% illumination. Astronomical phase remains distinct from the Remnant moon count. Solar Gate and Moon Mirror are symbolic counsel, not live astronomy.`);
       setText(dom.calendarsText, `${state.yearLabel} · Anchor ${state.anchorISO} · Final regular day ${state.cycle.finalRegularDayISO} · Year Gate ${state.cycle.yearGateISO} · Next cycle ${state.cycle.nextAnchorISO}`);
       setText(dom.calendarCycleText, `13 Moons × 28 days = ${state.cycle.regularDays} regular Remnant days. ${state.cycle.yearGateISO} is the separate Year Gate / Day Out of Time with no regular Moon number or Moon day, and ${state.cycle.nextAnchorISO} begins Moon 1 Day 1 of the next cycle. Each cycle spans ${state.cycle.elapsedCivilDays} elapsed civil days, and Gregorian leap day remains an ordinary elapsed day rather than creating an extra Year Gate.`);
       if (state.gregorian) setText(dom.calendarsGregorian, `Gregorian ${state.gregorian.long} (${state.gregorian.weekday}) maps to ${state.insideYear ? `Moon ${state.moonNumber} · Day ${state.dayInMoon} of 28` : state.yearGate.title}. Solar gate ${state.solarGate?.sign || '—'} · ${state.solarGate?.element || ''}.`);

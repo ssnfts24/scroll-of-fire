@@ -84,6 +84,24 @@
     function render() {
       const state = buildState();
       lastState = state;
+      window.CodexState = {
+        selectedDate: state.selectedISO,
+        effectiveDate: state.effectiveISO,
+        moon: state.moonNumber,
+        moonDay: state.dayInMoon,
+        yearDay: state.yearDay,
+        yearGate: state.isYearGate,
+        shabbat: state.shabbat.label,
+        week: state.weekGate.title,
+        phase: state.phase,
+        illumination: state.illumination,
+        sunset: state.sunset,
+        archetype: state.daySeal?.title || state.yearGate.title,
+        element: state.moonArchetype?.element || state.solarGate?.element || 'Threshold',
+        frequency: state.moonArchetype?.frequency || '—',
+        solarGate: `${state.solarGate?.sign || '—'} · ${state.solarGate?.element || ''}`.trim(),
+        field: `${state.moonArchetype?.element || 'Threshold'} · ${state.shabbat.label}`
+      };
       ui.renderCalendarState(state);
       ui.renderLogs(savedLogs, storageAvailable);
       updateUrl(state.selectedISO);
