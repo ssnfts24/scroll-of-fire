@@ -19,19 +19,22 @@ function hrefs(html) {
 
 function localHrefTargets(fileRelativePath) {
   const html = read(fileRelativePath);
+  const baseHref = html.match(/<base[^>]+href="([^"]+)"/i)?.[1] || "/";
   return hrefs(html)
     .filter(href => !href.startsWith("#"))
-    .filter(href => !/^(?:https?:|mailto:|tel:|data:|javascript:)/.test(href));
+    .filter(href => !/^(?:https?:|mailto:|tel:|data:|javascript:)/.test(href))
+    .map(href => ({ href, baseHref }));
 }
 
 test("theory subpages use resolvable site-root links", () => {
   for (const entry of fs.readdirSync(theoryRoot)) {
     if (!entry.endsWith(".html")) continue;
     const relativePath = path.posix.join("docs", "theory", entry);
-    for (const href of localHrefTargets(relativePath)) {
-      const targetPath = href.split("#", 1)[0].split("?", 1)[0];
+    for (const { href, baseHref } of localHrefTargets(relativePath)) {
+      const resolved = new URL(href, `https://example.test${baseHref}`);
+      const targetPath = resolved.pathname;
       assert.ok(targetPath, `${relativePath} contains an empty href target`);
-      const absoluteTarget = path.join(docsRoot, targetPath);
+      const absoluteTarget = path.join(docsRoot, targetPath.replace(/^\//, ""));
       assert.ok(fs.existsSync(absoluteTarget), `${relativePath} -> ${href} is missing`);
     }
   }
