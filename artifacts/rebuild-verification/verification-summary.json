@@ -1,0 +1,96 @@
+{
+  "index": {
+    "375x812": {
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "sections": true,
+      "cards": 29
+    },
+    "390x844": {
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "sections": true,
+      "cards": 29
+    },
+    "430x932": {
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "sections": true,
+      "cards": 29
+    },
+    "768x1024": {
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "sections": true,
+      "cards": 29
+    },
+    "1440x1000": {
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "sections": true,
+      "cards": 29
+    }
+  },
+  "moons": {
+    "375x812": {
+      "moonName": "Stone Witness",
+      "moonDay": "7",
+      "yearDay": "91",
+      "phase": "Waxing Crescent",
+      "shabbat": "Ordinary day",
+      "yearMapReady": true,
+      "selectedDate": "2026-07-16",
+      "scrollWidth": 375,
+      "clientWidth": 375
+    },
+    "390x844": {
+      "moonName": "Stone Witness",
+      "moonDay": "7",
+      "yearDay": "91",
+      "phase": "Waxing Crescent",
+      "shabbat": "Ordinary day",
+      "yearMapReady": true,
+      "selectedDate": "2026-07-16",
+      "scrollWidth": 390,
+      "clientWidth": 390
+    },
+    "430x932": {
+      "moonName": "Stone Witness",
+      "moonDay": "7",
+      "yearDay": "91",
+      "phase": "Waxing Crescent",
+      "shabbat": "Ordinary day",
+      "yearMapReady": true,
+      "selectedDate": "2026-07-16",
+      "scrollWidth": 430,
+      "clientWidth": 430
+    },
+    "768x1024": {
+      "moonName": "Stone Witness",
+      "moonDay": "7",
+      "yearDay": "91",
+      "phase": "Waxing Crescent",
+      "shabbat": "Ordinary day",
+      "yearMapReady": true,
+      "selectedDate": "2026-07-16",
+      "scrollWidth": 768,
+      "clientWidth": 768
+    },
+    "1440x1000": {
+      "moonName": "Stone Witness",
+      "moonDay": "7",
+      "yearDay": "91",
+      "phase": "Waxing Crescent",
+      "shabbat": "Ordinary day",
+      "yearMapReady": true,
+      "selectedDate": "2026-07-16",
+      "scrollWidth": 1440,
+      "clientWidth": 1440
+    }
+  },
+  "storageFallback": {
+    "moonName": "Stone Witness",
+    "moonDay": "7",
+    "storageNote": "Local storage is unavailable in this browser, so witness logs cannot be saved here."
+  }
+}
