@@ -1,6 +1,9 @@
 (() => {
   "use strict";
 
+  if (window.__SOF_MOONS_APP_INITIALIZED__) return;
+  window.__SOF_MOONS_APP_INITIALIZED__ = true;
+
   const $ = selector => document.querySelector(selector);
   const $$ = selector => Array.from(document.querySelectorAll(selector));
 
