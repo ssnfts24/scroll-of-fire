@@ -8,7 +8,6 @@
     CSS_RELEASE,
     SERVICE_WORKER_BUILD,
     DEPLOYMENT_COMMIT,
-    START_URL,
     APP_SCOPE,
     MANIFEST_PATH
   } = window.SOF_13_MOONS;
@@ -53,10 +52,6 @@
 
   function resolveScope() {
     return new URL(APP_SCOPE, document.baseURI).toString();
-  }
-
-  function currentStartUrl() {
-    return manifestDetails?.resolvedStartUrl || new URL(START_URL, document.baseURI).toString();
   }
 
   function scrollToInstallHelp() {
@@ -129,28 +124,6 @@
       };
     }
 
-    if (previousInstall && !issue) {
-      return {
-        key: "open-installed",
-        label: "Open Installed App",
-        note: "Chrome appears to already recognize 13 Moons on this device. If you need to reinstall, export data first, remove the old app, then reopen this page in Chrome.",
-        action: "open-installed",
-        disabled: false,
-        status: "A previous 13 Moons installation was detected on this device."
-      };
-    }
-
-    if (previousInstall) {
-      return {
-        key: "reinstall",
-        label: "Remove previous installation to reinstall",
-        note: "A previous 13 Moons installation was detected. Export data before uninstalling. Removing the app does not automatically erase your Chrome logs or settings.",
-        action: "reinstall-help",
-        disabled: false,
-        status: "A previous installation must be removed before reinstalling."
-      };
-    }
-
     if (!("serviceWorker" in navigator)) {
       return {
         key: "unsupported-service-worker",
@@ -187,10 +160,14 @@
     return {
       key: "not-ready",
       label: "Installation unavailable in this browser",
-      note: "The install prompt is not available yet. Let the page finish loading, confirm the service worker is active, or use Chrome menu → Install app/Add to Home screen.",
+      note: previousInstall
+        ? "The install prompt is not available yet. Chrome still remembers an earlier 13 Moons install on this device, so reopen this page in Chrome and use Chrome menu → Install app/Add to Home screen if the prompt does not return."
+        : "The install prompt is not available yet. Let the page finish loading, confirm the service worker is active, or use Chrome menu → Install app/Add to Home screen.",
       action: "settings-help",
       disabled: false,
-      status: "Installation is not available yet."
+      status: previousInstall
+        ? "Chrome is re-checking install availability after a previous installation."
+        : "Installation is not available yet."
     };
   }
 
@@ -369,26 +346,15 @@
     updateInstallUI();
   }
 
-  function openInstalledApp() {
-    const target = currentStartUrl();
-    status("Opening the installed 13 Moons start URL…");
-    if (typeof location.assign === "function") location.assign(target);
-    else location.href = target;
-  }
-
   async function onInstallAction() {
     switch (installUiState?.action) {
       case "prompt":
         await install();
         return;
-      case "open-installed":
-        openInstalledApp();
-        return;
       case "ios-help":
         scrollToIosHelp();
         status(installUiState.note);
         return;
-      case "reinstall-help":
       case "settings-help":
         scrollToInstallHelp();
         status(installUiState.note);

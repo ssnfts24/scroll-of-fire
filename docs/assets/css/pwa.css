@@ -8,7 +8,7 @@
 body {
   min-height: 100dvh;
   padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: contain;
 }
 
 .app-install-card,
@@ -83,7 +83,7 @@ body {
   }
 
   body {
-    touch-action: manipulation;
+    touch-action: auto;
   }
 
   .wrap,

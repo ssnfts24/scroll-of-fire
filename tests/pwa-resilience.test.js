@@ -954,19 +954,20 @@ test("install UI shows prompt-ready state and diagnostics", async () => {
   assert.equal(harness.nodes.serviceWorkerRegistrations.textContent, "1");
 });
 
-test("install UI opens the installed app when a previous install was accepted", async () => {
+test("install UI does not treat a previous accepted install as a current install", async () => {
   const harness = pwaUiHarness({
     storageEntries: { sof_moons_install_result: "accepted" }
   });
   await harness.flush();
 
-  assert.equal(harness.nodes.installApp.textContent, "Open Installed App");
-  assert.match(harness.nodes.installStateNote.textContent, /remove the old app/i);
-  harness.nodes.installApp.click();
   assert.equal(
-    harness.location.assigned,
-    "https://example.test/project/moons.html?source=installed"
+    harness.nodes.installApp.textContent,
+    "Installation unavailable in this browser"
   );
+  assert.match(harness.nodes.installStateNote.textContent, /Chrome still remembers an earlier 13 Moons install/i);
+  harness.nodes.installApp.click();
+  assert.equal(harness.nodes.settingsJump.clicked, true);
+  assert.equal(harness.location.assigned, null);
 });
 
 test("install UI shows Safari guidance inside iPhone in-app browsers", async () => {
