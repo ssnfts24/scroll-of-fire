@@ -946,9 +946,12 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       ? list.map((entry, index) => `
         <article class="savedEntry">
           <strong>${escapeHTML(entry.effectiveDate || entry.date)} · ${escapeHTML(entry.moon || "Remnant Log")}</strong>
-          <p class="meta">${escapeHTML(entry.shabbat || "")}${entry.shabbat ? " · " : ""}Saved ${new Date(entry.saved).toLocaleString()}</p>
+          <p class="meta">${escapeHTML(entry.shabbat || "")}${entry.shabbat ? " · " : ""}Moon Day ${entry.moonDay || "—"} · Saved ${new Date(entry.saved).toLocaleString()}</p>
           <pre class="fine">${escapeHTML(entry.text)}</pre>
-          <button class="lab-btn ghost copySaved" data-i="${index}" type="button">Copy</button>
+          <div class="btnrow">
+            <button class="lab-btn ghost copySaved" data-i="${index}" type="button">Copy</button>
+            <button class="lab-btn danger deleteSaved" data-i="${index}" type="button" aria-label="Delete log from ${escapeHTML(entry.effectiveDate || entry.date)}">Delete</button>
+          </div>
         </article>
       `).join("")
       : `<p class="meta">No saved logs yet.</p>`;
@@ -958,6 +961,18 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
         const item = list[Number(button.dataset.i)];
         if (navigator.clipboard) navigator.clipboard.writeText(item.text);
         toast("Copied");
+      });
+    });
+
+    $$(".deleteSaved").forEach(button => {
+      button.addEventListener("click", () => {
+        const idx = Number(button.dataset.i);
+        const entry = list[idx];
+        if (!confirm(`Delete the log from ${entry?.effectiveDate || entry?.date}?`)) return;
+        list.splice(idx, 1);
+        saveLogs(list);
+        renderSaved();
+        toast("Log deleted");
       });
     });
   }
@@ -1260,12 +1275,19 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     function activateTab(id) {
       if (!id) return;
 
+      const activeButton = document.querySelector(`[data-tab="${id}"]`);
+
       $$(".tab").forEach(tab => {
-        const isActive = tab === document.querySelector(`[data-tab="${id}"]`);
+        const isActive = tab === activeButton;
         tab.classList.toggle("active", isActive);
         tab.setAttribute("aria-selected", isActive ? "true" : "false");
         tab.setAttribute("tabindex", isActive ? "0" : "-1");
       });
+
+      /* Scroll active tab into view within the tab rail */
+      if (activeButton) {
+        activeButton.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+      }
 
       $$(".tabPanel").forEach(panel => {
         panel.classList.toggle("active", panel.id === id);
@@ -1540,6 +1562,10 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       anchor.click();
 
       setTimeout(() => URL.revokeObjectURL(anchor.href), 800);
+
+      try {
+        if (typeof gtag === "function") gtag("event", "export_witness");
+      } catch (_) {}
     });
 
     on("importLogs", "click", () => {

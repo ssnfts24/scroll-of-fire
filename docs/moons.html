@@ -2316,12 +2316,20 @@
           panel.classList.toggle("active", panel.id === id);
         });
 
+        var activeTabBtn = null;
+
         document.querySelectorAll(".tab").forEach(function (tab) {
           const isActive = tab.dataset.tab === id;
           tab.classList.toggle("active", isActive);
           tab.setAttribute("aria-selected", isActive ? "true" : "false");
           tab.setAttribute("tabindex", isActive ? "0" : "-1");
+          if (isActive) activeTabBtn = tab;
         });
+
+        /* Scroll active tab button into view within the tab rail */
+        if (activeTabBtn) {
+          activeTabBtn.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+        }
 
         document
           .querySelectorAll("[data-mobile-tab]")
@@ -3019,6 +3027,10 @@ Let the next step be firm.`;
             }
 
             showToast("Reading copied.");
+
+            try {
+              if (typeof gtag === "function") gtag("event", "share_daily_mirror");
+            } catch (_) {}
           }
         );
       }

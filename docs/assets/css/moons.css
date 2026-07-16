@@ -163,6 +163,54 @@ canvas {
   max-width: 100%;
 }
 
+/* Scrollable table container — used by Year Map */
+.scroller {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 14px;
+  margin: 0.8rem 0;
+}
+
+.scroller table,
+table.year-map {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  white-space: nowrap;
+}
+
+.scroller th,
+.scroller td,
+table.year-map th,
+table.year-map td {
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.scroller th,
+table.year-map th {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(5, 7, 13, 0.72);
+  position: sticky;
+  top: 0;
+}
+
+.scroller tr:last-child td,
+table.year-map tr:last-child td {
+  border-bottom: none;
+}
+
+.scroller tr:hover td,
+table.year-map tr:hover td {
+  background: rgba(122, 243, 255, 0.04);
+}
+
 button,
 input,
 select,
@@ -1493,7 +1541,6 @@ body[data-shabbat-state="active"] .hero-sigil {
   }
 
   .formrow,
-  .command-grid,
   .practice-list,
   .pattern-memory-grid,
   .log-grid,
@@ -1507,6 +1554,16 @@ body[data-shabbat-state="active"] .hero-sigil {
   .flow-steps,
   .reading-focus {
     grid-template-columns: 1fr;
+  }
+
+  .command-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .stat {
+    padding: 0.65rem 0.7rem;
+    border-radius: 14px;
   }
 
   .moon-badge,
