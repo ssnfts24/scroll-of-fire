@@ -8,14 +8,11 @@
   const MOBILE_BREAKPOINT = 760;
 
   document.documentElement.classList.add("js-ready");
-  const navManagedExternally = document.documentElement.hasAttribute("data-sof-nav-managed");
 
   document.addEventListener("DOMContentLoaded", function () {
     setHeaderHeight();
     markActiveNav();
-    if (!navManagedExternally) {
-      setupSiteNavigation();
-    }
+    setupSiteNavigation();
     setupTheoryNavigation();
     enableCopyButtons();
     enhanceMediaLoading();

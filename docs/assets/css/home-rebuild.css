@@ -1,0 +1,24 @@
+/* Scroll of Fire — homepage rebuild */
+.home-hero,.home-today,.home-pathways,.home-system-map,.home-moons,.home-frequency,.home-caravan,.home-artifacts,.home-theory,.home-witness{min-width:0}
+.home-hero-shell,.home-section-shell{padding:clamp(1.1rem,2.5vw,2rem);border:1px solid var(--line);border-radius:32px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));box-shadow:var(--shadow-soft)}
+.home-hero-grid,.home-today-grid,.home-pathway-grid,.home-system-grid,.home-moon-grid,.home-frequency-grid,.home-caravan-grid,.home-artifact-grid,.home-theory-grid,.home-witness-grid,.home-signal-grid{display:grid;gap:clamp(1rem,2.5vw,1.5rem);grid-template-columns:repeat(1,minmax(0,1fr))}
+.home-hero-copy,.home-hero-art,.home-today-copy,.home-today-status,.home-feature-card,.home-system-card,.home-path-card,.home-witness-card,.home-frequency-card,.home-theory-card,.home-artifact-card,.home-caravan-card,.home-live-card,.home-hero-seals,.home-link-list,.home-system-visual,.home-today-actions,.home-today-points,.home-system-copy,.home-caravan-steps,.home-artifact-actions,.home-theory-actions{min-width:0;max-width:100%}
+.home-hero-shell{overflow:hidden}.home-hero-copy>p,.home-today-copy>p,.home-system-copy>p,.home-feature-card p,.home-system-card p,.home-path-card p,.home-witness-card p,.home-frequency-card p,.home-theory-card p,.home-artifact-card p,.home-caravan-card p{color:var(--muted)}
+.home-hero-title{max-width:14ch}.home-hero-tagline{margin-bottom:.9rem;color:var(--cyan);font-size:clamp(1rem,2vw,1.35rem);font-weight:700}
+.home-hero-actions,.home-cta-row,.home-artifact-actions,.home-theory-actions,.home-today-actions{display:flex;flex-wrap:wrap;gap:.85rem}
+.home-hero-seals{display:flex;flex-wrap:wrap;gap:.75rem;margin:1rem 0 0;padding:0;list-style:none}
+.home-hero-seals li,.home-live-card,.home-feature-card,.home-system-card,.home-path-card,.home-witness-card,.home-frequency-card,.home-theory-card,.home-artifact-card,.home-caravan-card{padding:1rem;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.04)}
+.home-hero-art,.home-feature-image,.home-system-visual{overflow:hidden;border:1px solid var(--line);border-radius:28px;background:rgba(255,255,255,.03)}
+.home-hero-art img,.home-system-visual img,.home-feature-image img{display:block;width:100%;max-width:100%;height:100%;object-fit:cover}
+.home-hero-art figcaption,.home-system-visual figcaption,.home-feature-image figcaption{padding:1rem;color:var(--muted)}
+.home-live-card strong,.home-feature-card h3,.home-system-card h3,.home-path-card h3,.home-frequency-card h3,.home-theory-card h3,.home-artifact-card h3,.home-witness-card h3,.home-caravan-card h3{display:block;margin-bottom:.45rem;color:var(--gold)}
+.home-link-list{display:grid;gap:.55rem}.home-link-list a{color:var(--text);text-decoration:none}.home-link-list a:hover,.home-link-list a:focus-visible{color:var(--gold)}
+.home-artifact-card img{aspect-ratio:1/1;border-radius:18px;object-fit:cover;margin-bottom:.85rem}
+.home-caravan-steps{display:grid;gap:.85rem}.home-caravan-step{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.8rem;align-items:start;min-width:0}
+.home-caravan-step b{display:grid;place-items:center;width:2rem;height:2rem;border-radius:999px;color:#071018;background:linear-gradient(135deg,var(--gold),var(--cyan))}
+.home-today-status-value{display:block;margin-bottom:.35rem;color:var(--cyan);font-size:1.5rem;font-weight:800}
+.home-today-points{display:grid;gap:.55rem}.home-today-points p,.home-system-card p:last-child,.home-feature-card p:last-child,.home-path-card p:last-child,.home-witness-card p:last-child,.home-frequency-card p:last-child,.home-theory-card p:last-child,.home-artifact-card p:last-child,.home-caravan-card p:last-child{margin-bottom:0}
+.home-section-heading{max-width:min(100%,46rem);margin-bottom:1rem}.home-section-heading p{color:var(--muted)}
+@media (max-width:560px){.home-hero-actions .btn,.home-cta-row .btn,.home-artifact-actions .btn,.home-theory-actions .btn,.home-today-actions .btn{width:100%;flex:1 1 100%}}
+@media (min-width:700px){.home-today-grid,.home-pathway-grid,.home-witness-grid,.home-signal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-artifact-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:1050px){.home-hero-grid,.home-moon-grid,.home-frequency-grid,.home-caravan-grid,.home-theory-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:center}.home-today-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.home-pathway-grid,.home-system-grid,.home-artifact-grid,.home-witness-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.home-signal-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
