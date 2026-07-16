@@ -29,8 +29,9 @@
 - [x] Optional artwork failures do not block mandatory app-shell installation
 - [x] Available updates wait for user activation and reload once
 - [x] Update activation warns when a witness entry contains unsaved text
-- [x] Refresh App Files preserves local records and clears only 13 Moons caches
+- [x] Refresh App Files retires only 13 Moons recovery caches after verified startup
 - [x] Refresh App Files is disabled offline and verifies network access before cleanup
+- [x] Mandatory precache failure, stale readiness, and lifecycle timeout preserve recovery
 - [x] Export/import validates records and creates a rollback backup
 - [x] Merge imports deduplicate arrays, preserve settings, and report conflicts
 - [x] Destructive erase requires a checkbox and two confirmations

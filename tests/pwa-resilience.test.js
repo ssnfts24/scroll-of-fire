@@ -12,6 +12,7 @@ const read = relative => fs.readFileSync(path.join(root, relative), "utf8");
 function serviceWorkerHarness(failingPath) {
   const listeners = {};
   const stores = new Map();
+  const clientMessages = [];
   const cacheApi = {
     async open(name) {
       if (!stores.has(name)) stores.set(name, new Map());
@@ -45,7 +46,14 @@ function serviceWorkerHarness(failingPath) {
     },
     registration: { scope: "https://example.test/project/" },
     location: { origin: "https://example.test", hostname: "example.test" },
-    clients: { claim: async () => {} },
+    clients: {
+      claim: async () => {},
+      matchAll: async () => [{
+        postMessage(message) {
+          clientMessages.push(message);
+        }
+      }]
+    },
     addEventListener(type, callback) {
       listeners[type] = callback;
     },
@@ -66,7 +74,7 @@ function serviceWorkerHarness(failingPath) {
     }
   };
   vm.runInNewContext(read("docs/service-worker.js"), context);
-  return { context, listeners, stores };
+  return { context, listeners, stores, clientMessages };
 }
 
 async function installWorker(harness) {
@@ -79,9 +87,29 @@ async function installWorker(harness) {
   return installation;
 }
 
+async function activateWorker(harness) {
+  let activation;
+  harness.listeners.activate({
+    waitUntil(promise) {
+      activation = promise;
+    }
+  });
+  return activation;
+}
+
 test("missing optional image does not block install or offline startup", async () => {
   const harness = serviceWorkerHarness("apple-touch-icon.png");
   await installWorker(harness);
+  assert.deepEqual(
+    { ...harness.clientMessages.at(-1) },
+    {
+      type: "APP_SHELL_READY",
+      appVersion: "2026.07.16.2",
+      serviceWorkerBuild: "2026.07.16.2",
+      mandatoryAssetCount: 26
+    }
+  );
+  await activateWorker(harness);
   const core = harness.stores.get("sof-13-moons-core-2026.07.16.2");
   assert.ok(core.has("https://example.test/project/moons.html"));
   assert.ok(core.has("https://example.test/project/offline.html"));
@@ -109,6 +137,8 @@ test("missing optional image does not block install or offline startup", async (
 test("missing mandatory shell file blocks service-worker installation", async () => {
   const harness = serviceWorkerHarness("offline.html");
   await assert.rejects(installWorker(harness), /404 Not Found/);
+  assert.equal(harness.clientMessages.at(-1).type, "APP_SHELL_FAILED");
+  assert.equal(harness.stores.has("sof-13-moons-install-2026.07.16.2"), false);
 });
 
 test("service-worker build marker matches the central app version", () => {
@@ -121,7 +151,26 @@ test("service-worker build marker matches the central app version", () => {
   assert.match(read("docs/service-worker.js"), new RegExp(`core-\\$\\{VERSION\\}`));
 });
 
-function refreshHarness({ online = true } = {}) {
+class MockEventTarget {
+  constructor() {
+    this.listeners = new Map();
+  }
+
+  addEventListener(type, callback) {
+    if (!this.listeners.has(type)) this.listeners.set(type, new Set());
+    this.listeners.get(type).add(callback);
+  }
+
+  removeEventListener(type, callback) {
+    this.listeners.get(type)?.delete(callback);
+  }
+
+  dispatch(type, event = {}) {
+    this.listeners.get(type)?.forEach(callback => callback(event));
+  }
+}
+
+function refreshHarness({ online = true, scenario = "success" } = {}) {
   const deleted = [];
   const unregistered = [];
   const registered = [];
@@ -131,42 +180,111 @@ function refreshHarness({ online = true } = {}) {
     ["sof_moons_tz_v2", "UTC"]
   ]);
   const workerUrl = "https://example.test/project/service-worker.js";
+  const serviceWorkers = new MockEventTarget();
+  const worker = new MockEventTarget();
+  worker.state = "installing";
+  worker.scriptURL = workerUrl;
+  const registration = new MockEventTarget();
+  registration.scope = "https://example.test/project/";
+  registration.installing = worker;
+  let registerCount = 0;
+  let readyRequested = false;
+  const sendMessage = data => serviceWorkers.dispatch("message", { data, source: worker });
+  const ready = (version = "2026.07.16.2", build = version) => sendMessage({
+    type: "APP_SHELL_READY",
+    appVersion: version,
+    serviceWorkerBuild: build,
+    mandatoryAssetCount: 26
+  });
+  const setWorkerState = state => {
+    worker.state = state;
+    worker.dispatch("statechange");
+  };
+  worker.postMessage = message => {
+    if (message.type === "GET_APP_SHELL_READY" && worker.state === "activated") {
+      setTimeout(() => ready(), 0);
+      return;
+    }
+    if (message.type === "GET_APP_SHELL_READY" && !readyRequested) {
+      readyRequested = true;
+      if (scenario === "timeout") return;
+      setTimeout(() => {
+        if (scenario === "precache-failure") {
+          sendMessage({
+            type: "APP_SHELL_FAILED",
+            appVersion: "2026.07.16.2",
+            serviceWorkerBuild: "2026.07.16.2",
+            mandatoryAssetCount: 26
+          });
+          setWorkerState("redundant");
+          return;
+        }
+        if (scenario === "stale-only") {
+          ready("2026.07.16.1", "2026.07.16.1");
+          setWorkerState("installed");
+          return;
+        }
+        ready();
+        setWorkerState("installed");
+      }, 0);
+    }
+    if (message.type === "SKIP_WAITING") {
+      setTimeout(() => {
+        setWorkerState("activating");
+        registration.installing = null;
+        registration.active = worker;
+        setWorkerState("activated");
+        serviceWorkers.controller = worker;
+        serviceWorkers.dispatch("controllerchange");
+      }, 0);
+    }
+  };
+  registration.unregister = async () => {
+    unregistered.push(registerCount ? "replacement" : "moons");
+    return true;
+  };
+  serviceWorkers.getRegistrations = async () => [
+    {
+      scope: "https://example.test/project/",
+      active: { scriptURL: workerUrl },
+      async unregister() {
+        unregistered.push("moons");
+        return true;
+      }
+    },
+    {
+      scope: "https://example.test/",
+      active: { scriptURL: "https://example.test/service-worker.js" },
+      async unregister() {
+        unregistered.push("codex");
+        return true;
+      }
+    }
+  ];
+  serviceWorkers.getRegistration = async () => registration;
+  serviceWorkers.register = async url => {
+    registered.push(url);
+    registerCount += 1;
+    if (registerCount > 1) {
+      return {
+        scope: registration.scope,
+        active: { state: "activated", scriptURL: workerUrl },
+        addEventListener() {}
+      };
+    }
+    return registration;
+  };
+  const sessionValues = new Map();
   const context = {
     URL,
     Date,
+    clearTimeout,
+    setTimeout,
     window: {},
     document: { baseURI: "https://example.test/project/moons.html" },
     navigator: {
       onLine: online,
-      serviceWorker: {
-        async getRegistrations() {
-          return [
-            {
-              scope: "https://example.test/project/",
-              active: { scriptURL: workerUrl },
-              async unregister() {
-                unregistered.push("moons");
-                return true;
-              }
-            },
-            {
-              scope: "https://example.test/",
-              active: { scriptURL: "https://example.test/service-worker.js" },
-              async unregister() {
-                unregistered.push("codex");
-                return true;
-              }
-            }
-          ];
-        },
-        async register(url) {
-          registered.push(url);
-          return {
-            scope: "https://example.test/project/",
-            active: { state: "activated" }
-          };
-        }
-      }
+      serviceWorker: serviceWorkers
     },
     caches: {
       async keys() {
@@ -190,20 +308,42 @@ function refreshHarness({ online = true } = {}) {
     },
     localStorage: {
       getItem: key => storage.get(key) ?? null
+    },
+    sessionStorage: {
+      getItem: key => sessionValues.get(key) ?? null,
+      setItem: (key, value) => sessionValues.set(key, String(value)),
+      removeItem: key => sessionValues.delete(key)
     }
   };
   context.window = context;
   vm.runInNewContext(read("docs/assets/js/pwa-refresh.js"), context);
-  return { context, deleted, unregistered, registered, messages, storage };
+  return {
+    context,
+    deleted,
+    unregistered,
+    registered,
+    messages,
+    registration,
+    serviceWorkers,
+    sessionValues,
+    storage,
+    worker
+  };
 }
+
+const refreshOptions = (harness, overrides = {}) => ({
+  cachePrefix: "sof-13-moons-",
+  currentCoreCache: "sof-13-moons-core-old",
+  expectedVersion: "2026.07.16.2",
+  expectedBuild: "2026.07.16.2",
+  status: message => harness.messages.push(message),
+  lifecycleTimeoutMs: 25,
+  ...overrides
+});
 
 test("Refresh App Files performs no destructive action while offline", async () => {
   const harness = refreshHarness({ online: false });
-  await harness.context.MoonsPwaRefresh.refreshAppFiles({
-    cachePrefix: "sof-13-moons-",
-    currentCoreCache: "sof-13-moons-core-2026.07.16.2",
-    status: message => harness.messages.push(message)
-  });
+  await harness.context.MoonsPwaRefresh.refreshAppFiles(refreshOptions(harness));
   assert.deepEqual(harness.deleted, []);
   assert.deepEqual(harness.unregistered, []);
   assert.deepEqual(harness.registered, []);
@@ -213,14 +353,16 @@ test("Refresh App Files performs no destructive action while offline", async () 
   );
 });
 
-test("Refresh App Files preserves data and removes only owned caches", async () => {
+test("successful installation and startup retire only owned recovery caches", async () => {
   const harness = refreshHarness();
   const before = new Map(harness.storage);
-  await harness.context.MoonsPwaRefresh.refreshAppFiles({
-    cachePrefix: "sof-13-moons-",
-    currentCoreCache: "sof-13-moons-core-old",
-    status: message => harness.messages.push(message)
-  });
+  await harness.context.MoonsPwaRefresh.refreshAppFiles(refreshOptions(harness));
+  assert.deepEqual(harness.deleted, []);
+  assert.ok(
+    harness.sessionValues.has("sof_moons_refresh_pending"),
+    harness.messages.join(" | ")
+  );
+  await harness.context.MoonsPwaRefresh.completePendingRefresh(refreshOptions(harness));
   assert.deepEqual(
     harness.deleted.sort(),
     ["sof-13-moons-runtime-old"]
@@ -229,22 +371,44 @@ test("Refresh App Files preserves data and removes only owned caches", async () 
   assert.equal(harness.registered.length, 1);
   assert.deepEqual(harness.storage, before);
   assert.match(harness.context.replaced, /moons\.html\?refresh=/);
+  assert.equal(harness.sessionValues.has("sof_moons_refresh_pending"), false);
+  assert.match(harness.messages.at(-1), /safely retired/);
 });
 
-test("Refresh App Files keeps recovery caches when replacement install fails", async () => {
-  const harness = refreshHarness();
-  harness.context.navigator.serviceWorker.register = async url => {
-    harness.registered.push(url);
-    return { installing: { state: "redundant" } };
-  };
-  await harness.context.MoonsPwaRefresh.refreshAppFiles({
-    cachePrefix: "sof-13-moons-",
-    currentCoreCache: "sof-13-moons-core-old",
-    status: message => harness.messages.push(message)
-  });
+test("register success followed by mandatory precache failure preserves recovery", async () => {
+  const harness = refreshHarness({ scenario: "precache-failure" });
+  const before = new Map(harness.storage);
+  await harness.context.MoonsPwaRefresh.refreshAppFiles(refreshOptions(harness));
   assert.deepEqual(harness.deleted, []);
   assert.equal(harness.context.replaced, undefined);
-  assert.match(harness.messages.at(-1), /saved data was preserved/);
+  assert.deepEqual(harness.storage, before);
+  assert.equal(harness.sessionValues.has("sof_moons_refresh_pending"), false);
+  assert.equal(
+    harness.messages.at(-1),
+    "App file refresh could not be completed. Your previous recovery files were preserved. Please check your connection and try again."
+  );
+});
+
+test("installation timeout preserves recovery and does not reload", async () => {
+  const harness = refreshHarness({ scenario: "timeout" });
+  await harness.context.MoonsPwaRefresh.refreshAppFiles(
+    refreshOptions(harness, { lifecycleTimeoutMs: 5 })
+  );
+  assert.deepEqual(harness.deleted, []);
+  assert.equal(harness.context.replaced, undefined);
+  assert.equal(harness.sessionValues.has("sof_moons_refresh_pending"), false);
+  assert.equal(harness.messages.at(-1), harness.context.MoonsPwaRefresh.failureMessage);
+});
+
+test("stale readiness and mismatched build do not authorize refresh", async () => {
+  const harness = refreshHarness({ scenario: "stale-only" });
+  await harness.context.MoonsPwaRefresh.refreshAppFiles(
+    refreshOptions(harness, { lifecycleTimeoutMs: 10 })
+  );
+  assert.deepEqual(harness.deleted, []);
+  assert.equal(harness.context.replaced, undefined);
+  assert.equal(harness.sessionValues.has("sof_moons_refresh_pending"), false);
+  assert.equal(harness.messages.at(-1), harness.context.MoonsPwaRefresh.failureMessage);
 });
 
 class MemoryStorage {
