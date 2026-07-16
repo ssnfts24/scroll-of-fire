@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>13 Moons Offline | Scroll of Fire</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #05070d;
+      --card: rgba(14, 18, 28, 0.92);
+      --line: rgba(255,255,255,0.14);
+      --ink: #f4f1e8;
+      --muted: #aeb7c8;
+      --gold: #f3c97a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: max(1.25rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+      background: radial-gradient(circle at top, rgba(122,243,255,.12), transparent 40%), linear-gradient(180deg, var(--bg), #090d14 78%, var(--bg));
+      color: var(--ink);
+      font: 400 16px/1.6 Inter, system-ui, sans-serif;
+    }
+    main {
+      width: min(100%, 38rem);
+      padding: 1.4rem;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--card);
+      box-shadow: 0 24px 60px rgba(0,0,0,.38);
+    }
+    h1 { margin: 0 0 .6rem; color: var(--gold); }
+    p { margin: 0 0 1rem; color: var(--muted); }
+    a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: .75rem 1rem;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      text-decoration: none;
+      background: rgba(255,255,255,.04);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Remnant 13 Moons is offline</h1>
+    <p>The app shell is cached after the first successful visit. If this is your first visit, reconnect once so the living calendar can be stored for offline opening.</p>
+    <a href="./moons.html">Open cached 13 Moons</a>
+  </main>
+</body>
+</html>

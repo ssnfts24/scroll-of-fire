@@ -4,12 +4,13 @@
   const $ = selector => document.querySelector(selector);
   const $$ = selector => Array.from(document.querySelectorAll(selector));
 
-  const LOG_KEY = "sof_moon_logs_v3";
-  const LEGACY_LOG_KEY = "sof_moon_logs_v2";
+  const LOG_KEY = "sof_moon_logs_v4";
+  const LEGACY_LOG_KEYS = ["sof_moon_logs_v3", "sof_moon_logs_v2"];
   const TZ_KEY = "sof_moons_tz_v2";
   const BOUNDARY_KEY = "sof_moons_boundary_v1";
   const SUNSET_KEY = "sof_moons_sunset_v1";
   const LOCATION_KEY = "sof_moons_location_v1";
+  const LAST_TAB_KEY = "sof_moons_last_tab_v1";
 
   const DEFAULT_CONFIG = {
     dayBoundary: "sunset",
@@ -133,6 +134,40 @@
     } catch {}
   }
 
+  function safeJSONParse(value, fallback = null) {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return fallback;
+    }
+  }
+
+  function uid() {
+    if (window.crypto?.randomUUID) return window.crypto.randomUUID();
+    return `moon-log-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  }
+
+  async function copyText(value, successMessage = "Copied") {
+    if (!value) {
+      toast("Nothing to copy yet");
+      return false;
+    }
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(value);
+      } else {
+        throw new Error("Clipboard unavailable");
+      }
+
+      toast(successMessage);
+      return true;
+    } catch {
+      toast("Copy failed");
+      return false;
+    }
+  }
+
   function text(id, value) {
     const node = $("#" + id);
     if (node) node.textContent = value;
@@ -253,6 +288,12 @@
     return control?.value || params.get("sunset") || safeGet(SUNSET_KEY) || CONFIG.fallbackSunset;
   }
 
+  /*
+    Gregorian-to-Remnant conversion starts from the selected civil date in the
+    chosen time zone, then advances to the next counted day only after the
+    selected boundary is reached. Sunset mode keeps the civil day visible while
+    shifting the effective Remnant date after local sunset.
+  */
   function effectiveContext() {
     const mode = boundaryMode();
     const sunset = sunsetValue();
@@ -316,17 +357,30 @@
     return cursor;
   }
 
+  /*
+    Anchor date:
+    The counted Remnant year begins on the configured anchor for that civil
+    year. If no explicit override is supplied, the engine uses the first new
+    moon after the March equinox window. Do not silently change overrides
+    without migrating all dependent dates.
+  */
   function anchorForYear(year) {
     const override = fromISO(CONFIG.anchorOverrides[year]);
     return override || nearestNewMoonAfter(new Date(year, 2, 20, 12, 0, 0));
   }
 
+  /*
+    Year Gate rule:
+    13 moons × 28 days = 364 counted days. Any day after the 364-day cycle is
+    treated as an outside day and does not reset the seven-day week count.
+  */
   function yearAnchorFor(date) {
     const year = date.getFullYear();
     const candidate = anchorForYear(year);
     return date < candidate ? anchorForYear(year - 1) : candidate;
   }
 
+  /* Converts the effective Gregorian date into the active Remnant moon/day. */
   function remnantInfo(date) {
     const anchor = yearAnchorFor(date);
     const diff = dayDiff(date, anchor);
@@ -351,6 +405,11 @@
     };
   }
 
+  /*
+    Shabbat determination:
+    Weekly Shabbat remains aligned to the continuous seven-day cycle while
+    exposing the stable moon-day markers 2, 9, 16, and 23 inside each moon.
+  */
   function shabbatInfo(effectiveDate, info = remnantInfo(effectiveDate)) {
     const weekday = effectiveDate.getDay();
     const moonDays = new Set(CONFIG.shabbat.moonDays || [2, 9, 16, 23]);
@@ -430,23 +489,94 @@
     return gates[index];
   }
 
-  function logs() {
-    try {
-      const current = JSON.parse(safeGet(LOG_KEY) || "null");
-      if (Array.isArray(current)) return current;
+  function normalizeLogEntry(entry = {}) {
+    if (!entry || typeof entry !== "object") return null;
 
-      const legacy = JSON.parse(safeGet(LEGACY_LOG_KEY) || "[]");
-      if (Array.isArray(legacy)) {
-        saveLogs(legacy);
-        return legacy;
+    const id = String(entry.id || entry.saved || entry.effectiveDate || entry.date || uid());
+    const notes =
+      typeof entry.notes === "object" && entry.notes
+        ? entry.notes
+        : {};
+
+    const technology = String(entry.technology ?? notes.technology ?? "").trim();
+    const animal = String(entry.animal ?? notes.animal ?? "").trim();
+    const weather = String(entry.weather ?? notes.weather ?? "").trim();
+    const action = String(entry.action ?? notes.action ?? "").trim();
+    const lesson = String(entry.lesson ?? notes.lesson ?? entry.lessonInput ?? "").trim();
+    const witnessNotes = String(entry.witnessNotes ?? notes.witness ?? "").trim();
+    const legacyField = String(entry.field ?? entry.fieldInput ?? "").trim();
+
+    return {
+      id,
+      date: String(entry.date || entry.effectiveDate || ""),
+      effectiveDate: String(entry.effectiveDate || entry.date || ""),
+      moon: String(entry.moon || "Remnant Log"),
+      moonDay: Number.isFinite(Number(entry.moonDay)) ? Number(entry.moonDay) : null,
+      text: String(entry.text || "").trim(),
+      saved: String(entry.saved || new Date().toISOString()),
+      updated: String(entry.updated || entry.saved || new Date().toISOString()),
+      timezone: String(entry.timezone || selectedTZ),
+      boundary: String(entry.boundary || CONFIG.dayBoundary),
+      sunset: String(entry.sunset || CONFIG.fallbackSunset),
+      shabbat: String(entry.shabbat || ""),
+      kp: String(entry.kp || ""),
+      sleep: String(entry.sleep || ""),
+      signs: String(entry.signs || ""),
+      body: String(entry.body || ""),
+      dreams: String(entry.dreams || ""),
+      emotion: String(entry.emotion || ""),
+      technology,
+      animal,
+      weather,
+      action,
+      lesson,
+      witnessNotes,
+      notes: {
+        technology,
+        animal,
+        weather,
+        action,
+        lesson,
+        witness: witnessNotes
+      },
+      legacyField
+    };
+  }
+
+  function dedupeLogs(list) {
+    const map = new Map();
+    list
+      .map(normalizeLogEntry)
+      .filter(Boolean)
+      .sort((a, b) => new Date(b.saved).getTime() - new Date(a.saved).getTime())
+      .forEach(entry => {
+        if (!map.has(entry.id)) {
+          map.set(entry.id, entry);
+        }
+      });
+    return [...map.values()].slice(0, 300);
+  }
+
+  function logs() {
+    const current = safeJSONParse(safeGet(LOG_KEY), null);
+    if (Array.isArray(current)) {
+      return dedupeLogs(current);
+    }
+
+    for (const legacyKey of LEGACY_LOG_KEYS) {
+      const legacy = safeJSONParse(safeGet(legacyKey), null);
+      if (Array.isArray(legacy) && legacy.length) {
+        const migrated = dedupeLogs(legacy);
+        saveLogs(migrated);
+        return migrated;
       }
-    } catch {}
+    }
 
     return [];
   }
 
   function saveLogs(list) {
-    safeSet(LOG_KEY, JSON.stringify(list.slice(0, 300)));
+    safeSet(LOG_KEY, JSON.stringify(dedupeLogs(list)));
   }
 
   function drawMoon(age) {
@@ -633,10 +763,18 @@ Dreams: ${val("dreamInput")}
 Body Signal: ${val("bodyInput")}
 Emotional Weather: ${val("emotionInput")}
 Repeated Signs: ${val("signsInput")}
-Technology / Animal / Weather Notes: ${val("fieldInput")}
+Technology Notes: ${val("technologyInput")}
+Animal Notes: ${val("animalInput")}
+Weather Notes: ${val("weatherInput")}
 
-Action / Lesson:
+Action:
+${val("actionInput")}
+
+Lesson:
 ${val("lessonInput")}
+
+Witness Notes:
+${val("witnessNotesInput")}
 
 Witness:
 Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
@@ -896,29 +1034,47 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
   function saveLog() {
     const context = lastContext || effectiveContext();
     const list = logs();
-
-    list.unshift({
+    const entryId = val("witnessEntryId") || uid();
+    const nextEntry = normalizeLogEntry({
+      id: entryId,
       date: context.civilISO,
       effectiveDate: context.effectiveISO,
       moon: context.info.moon.name,
       moonDay: context.info.dayInMoon,
       text: buildWitness(),
       saved: new Date().toISOString(),
+      updated: new Date().toISOString(),
       timezone: selectedTZ,
       boundary: context.mode,
       sunset: context.sunset,
       shabbat: context.shabbat.state,
+      sleep: val("sleepInput"),
       kp: val("kpInput"),
       signs: val("signsInput"),
       body: val("bodyInput"),
       dreams: val("dreamInput"),
-      emotion: val("emotionInput")
+      emotion: val("emotionInput"),
+      technology: val("technologyInput"),
+      animal: val("animalInput"),
+      weather: val("weatherInput"),
+      action: val("actionInput"),
+      lesson: val("lessonInput"),
+      witnessNotes: val("witnessNotesInput")
     });
 
+    const existingIndex = list.findIndex(entry => entry.id === entryId);
+    if (existingIndex >= 0) {
+      nextEntry.saved = list[existingIndex].saved || nextEntry.saved;
+      list.splice(existingIndex, 1);
+    }
+
+    list.unshift(nextEntry);
+
     saveLogs(list);
+    setValue("witnessEntryId", "");
     renderSaved();
     renderTimeline();
-    toast("Witness saved");
+    toast(existingIndex >= 0 ? "Witness updated" : "Witness saved");
 
     /* GA4 event — no private content sent */
     try {
@@ -946,21 +1102,45 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       ? list.map((entry, index) => `
         <article class="savedEntry">
           <strong>${escapeHTML(entry.effectiveDate || entry.date)} · ${escapeHTML(entry.moon || "Remnant Log")}</strong>
-          <p class="meta">${escapeHTML(entry.shabbat || "")}${entry.shabbat ? " · " : ""}Moon Day ${entry.moonDay || "—"} · Saved ${new Date(entry.saved).toLocaleString()}</p>
+          <p class="meta">${escapeHTML(entry.shabbat || "")}${entry.shabbat ? " · " : ""}Moon Day ${entry.moonDay || "—"} · Saved ${new Date(entry.saved).toLocaleString()}${entry.updated && entry.updated !== entry.saved ? ` · Updated ${new Date(entry.updated).toLocaleString()}` : ""}</p>
           <pre class="fine">${escapeHTML(entry.text)}</pre>
-          <div class="btnrow">
+          <div class="btnrow saved-actions">
+            <button class="lab-btn ghost editSaved" data-i="${index}" type="button">Edit</button>
             <button class="lab-btn ghost copySaved" data-i="${index}" type="button">Copy</button>
             <button class="lab-btn danger deleteSaved" data-i="${index}" type="button" aria-label="Delete log from ${escapeHTML(entry.effectiveDate || entry.date)}">Delete</button>
           </div>
         </article>
       `).join("")
-      : `<p class="meta">No saved logs yet.</p>`;
+      : `<p class="meta">No saved logs yet. Build a witness, save it locally, then return here to review, edit, export, or compare patterns.</p>`;
 
-    $$(".copySaved").forEach(button => {
+    $$(".editSaved").forEach(button => {
       button.addEventListener("click", () => {
         const item = list[Number(button.dataset.i)];
-        if (navigator.clipboard) navigator.clipboard.writeText(item.text);
-        toast("Copied");
+        if (!item) return;
+        setValue("witnessEntryId", item.id || "");
+        setValue("sleepInput", item.sleep || "");
+        setValue("bodyInput", item.body || "");
+        setValue("dreamInput", item.dreams || "");
+        setValue("emotionInput", item.emotion || "");
+        setValue("signsInput", item.signs || "");
+        setValue("technologyInput", item.technology || item.legacyField || "");
+        setValue("animalInput", item.animal || "");
+        setValue("weatherInput", item.weather || "");
+        setValue("actionInput", item.action || "");
+        setValue("lessonInput", item.lesson || "");
+        setValue("witnessNotesInput", item.witnessNotes || "");
+        setValue("kpInput", item.kp || "Unknown / not checked");
+        setValue("shabbatInput", item.shabbat || "Not marked");
+        buildWitness();
+        activateTab("witnessPanel", { focusPanel: true });
+        toast("Witness loaded for editing");
+      });
+    });
+
+    $$(".copySaved").forEach(button => {
+      button.addEventListener("click", async () => {
+        const item = list[Number(button.dataset.i)];
+        await copyText(item?.text, "Saved witness copied");
       });
     });
 
@@ -978,37 +1158,60 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
   }
 
   function detectPatterns(list) {
-    const joined = list
-      .slice(0, 28)
-      .map(entry => [
-        entry.signs,
-        entry.body,
-        entry.dreams,
-        entry.emotion,
-        entry.kp,
-        entry.shabbat
-      ].join(" "))
-      .join(" ")
-      .toLowerCase();
-
-    const terms = joined.match(/\b[0-9]{2,4}\b|\b[a-z]{4,}\b/g) || [];
+    const windows = [3, 7, 14, 28];
     const skip = new Set([
       "unknown", "checked", "field", "moon", "body", "dreams", "sleep",
-      "weather", "signal", "with", "from", "this", "that", "have"
+      "weather", "signal", "with", "from", "this", "that", "have", "would",
+      "there", "their", "about", "because", "through"
     ]);
-    const counts = {};
 
-    terms.forEach(term => {
-      if (skip.has(term)) return;
-      counts[term] = (counts[term] || 0) + 1;
+    const result = {
+      count: 0,
+      top: [],
+      windows: {}
+    };
+
+    windows.forEach(windowSize => {
+      const joined = list
+        .slice(0, windowSize)
+        .map(entry => [
+          entry.signs,
+          entry.body,
+          entry.dreams,
+          entry.emotion,
+          entry.kp,
+          entry.shabbat,
+          entry.technology,
+          entry.animal,
+          entry.weather,
+          entry.action,
+          entry.lesson,
+          entry.witnessNotes
+        ].join(" "))
+        .join(" ")
+        .toLowerCase();
+
+      const terms = joined.match(/\b[0-9]{2,4}\b|\b[a-z]{4,}\b/g) || [];
+      const counts = {};
+
+      terms.forEach(term => {
+        if (skip.has(term)) return;
+        counts[term] = (counts[term] || 0) + 1;
+      });
+
+      const top = Object.entries(counts)
+        .filter(([, count]) => count >= 2)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      result.windows[windowSize] = top;
+      if (windowSize === 28) {
+        result.count = top.length;
+        result.top = top;
+      }
     });
 
-    const top = Object.entries(counts)
-      .filter(([, count]) => count >= 2)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 8);
-
-    return { count: top.length, top };
+    return result;
   }
 
   function renderTimeline() {
@@ -1018,14 +1221,18 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
 
     const alerts = $("#patternAlerts");
     if (alerts) {
-      alerts.innerHTML = patterns.top.length
-        ? patterns.top.map(([term, count]) => `
-          <article class="mini pattern-memory-card">
-            <h3>${escapeHTML(term)}</h3>
-            <p class="meta">Repeated ${count} times in recent logs.</p>
+      alerts.innerHTML = Object.entries(patterns.windows)
+        .map(([windowSize, entries]) => `
+          <article class="pattern-memory-card">
+            <h3>${windowSize}-Day Window</h3>
+            <p class="meta">${
+              entries.length
+                ? entries.map(([term, count]) => `${escapeHTML(term)} ×${count}`).join(" · ")
+                : "No repeated terms detected yet."
+            }</p>
           </article>
-        `).join("")
-        : `<p class="meta">No repeated patterns detected yet. Save more daily logs.</p>`;
+        `)
+        .join("");
     }
 
     const timeline = $("#timelineList");
@@ -1269,50 +1476,66 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     });
   }
 
-  function setupTabs() {
-    const LAST_TAB_KEY = "sof_moons_last_tab_v1";
+  function activateTab(id, options = {}) {
+    if (!id) return;
 
-    function activateTab(id) {
-      if (!id) return;
+    const {
+      updateHistory = true,
+      replaceHistory = false,
+      focusPanel = false,
+      scrollButton = true
+    } = options;
 
-      const activeButton = document.querySelector(`[data-tab="${id}"]`);
+    const activeButton = document.querySelector(`[data-tab="${id}"]`);
+    const activePanel = document.getElementById(id);
 
-      $$(".tab").forEach(tab => {
-        const isActive = tab === activeButton;
-        tab.classList.toggle("active", isActive);
-        tab.setAttribute("aria-selected", isActive ? "true" : "false");
-        tab.setAttribute("tabindex", isActive ? "0" : "-1");
-      });
+    $$(".tab").forEach(tab => {
+      const isActive = tab === activeButton;
+      tab.classList.toggle("is-moons-tab-active", isActive);
+      tab.setAttribute("aria-selected", isActive ? "true" : "false");
+      tab.setAttribute("tabindex", isActive ? "0" : "-1");
+    });
 
-      /* Scroll active tab into view within the tab rail */
-      if (activeButton) {
-        activeButton.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-      }
-
-      $$(".tabPanel").forEach(panel => {
-        panel.classList.toggle("active", panel.id === id);
-      });
-
-      /* Sync mobile dock */
-      $$("[data-mobile-tab]").forEach(link => {
-        const active = link.dataset.mobileTab === id;
-        link.classList.toggle("active", active);
-        if (active) {
-          link.setAttribute("aria-current", "page");
-        } else {
-          link.removeAttribute("aria-current");
-        }
-      });
-
-      try { localStorage.setItem(LAST_TAB_KEY, id); } catch (_) {}
-
-      /* GA4 analytics — tab view (non-private) */
-      try {
-        if (typeof gtag === "function") {
-          gtag("event", "change_moon_view", { view_name: id });
-        }
-      } catch (_) {}
+    if (activeButton && scrollButton) {
+      activeButton.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
     }
+
+    $$(".tabPanel").forEach(panel => {
+      panel.classList.toggle("is-moons-panel-visible", panel.id === id);
+    });
+
+    $$("[data-mobile-tab]").forEach(link => {
+      const active = link.dataset.mobileTab === id;
+      link.classList.toggle("is-moons-tab-active", active);
+      if (active) {
+        link.setAttribute("aria-current", "page");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
+
+    try { localStorage.setItem(LAST_TAB_KEY, id); } catch (_) {}
+
+    if (updateHistory) {
+      const nextUrl = new URL(location.href);
+      nextUrl.hash = id;
+      const method = replaceHistory ? "replaceState" : "pushState";
+      history[method]({ tab: id }, "", nextUrl);
+    }
+
+    if (focusPanel && activePanel) {
+      activePanel.focus({ preventScroll: false });
+    }
+
+    try {
+      if (typeof gtag === "function") {
+        gtag("event", "moons_section_opened", { section_name: id });
+      }
+    } catch (_) {}
+  }
+
+  function setupTabs() {
+    const validIds = $$(".tabPanel").map(panel => panel.id);
 
     $$(".tab").forEach(button => {
       button.addEventListener("click", () => {
@@ -1343,20 +1566,39 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       });
     });
 
-    /* Restore last-viewed tab on page load */
+    $$("[data-mobile-tab]").forEach(link => {
+      link.addEventListener("click", event => {
+        event.preventDefault();
+        activateTab(link.dataset.mobileTab, { focusPanel: true });
+      });
+    });
+
+    $$("[data-tab-jump]").forEach(button => {
+      button.addEventListener("click", () => {
+        activateTab(button.dataset.tabJump, { focusPanel: true });
+      });
+    });
+
     let restoredTab = null;
     try { restoredTab = localStorage.getItem(LAST_TAB_KEY); } catch (_) {}
-
-    /* Also respect URL hash */
     const hashTarget = location.hash.replace("#", "");
-    const validIds = $$(".tabPanel").map(p => p.id);
     const startTab = (hashTarget && validIds.includes(hashTarget))
       ? hashTarget
-      : (restoredTab && validIds.includes(restoredTab) ? restoredTab : null);
+      : (restoredTab && validIds.includes(restoredTab) ? restoredTab : "todayPanel");
 
-    if (startTab && startTab !== "todayPanel") {
-      activateTab(startTab);
-    }
+    activateTab(startTab, {
+      updateHistory: true,
+      replaceHistory: true,
+      scrollButton: false
+    });
+
+    window.addEventListener("popstate", () => {
+      const target = location.hash.replace("#", "");
+      activateTab(validIds.includes(target) ? target : "todayPanel", {
+        updateHistory: false,
+        scrollButton: false
+      });
+    });
   }
 
   function setupBoundaryControls() {
@@ -1448,12 +1690,18 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       safeSet(TZ_KEY, selectedTZ);
       refreshCalculatedSunset();
       render();
+      try {
+        if (typeof gtag === "function") gtag("event", "moons_date_changed", { source: "timezone" });
+      } catch (_) {}
     });
 
     on("datePick", "change", event => {
       selectedDate = fromISO(event.target.value) || todayInTimeZone(selectedTZ);
       refreshCalculatedSunset();
       render();
+      try {
+        if (typeof gtag === "function") gtag("event", "moons_date_changed", { source: "date_picker" });
+      } catch (_) {}
     });
 
     on("btnToday", "click", () => {
@@ -1466,23 +1714,27 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       selectedDate = addDays(selectedDate, -1);
       refreshCalculatedSunset();
       render();
+      try {
+        if (typeof gtag === "function") gtag("event", "moons_date_changed", { source: "previous_day" });
+      } catch (_) {}
     });
 
     on("nextDay", "click", () => {
       selectedDate = addDays(selectedDate, 1);
       refreshCalculatedSunset();
       render();
+      try {
+        if (typeof gtag === "function") gtag("event", "moons_date_changed", { source: "next_day" });
+      } catch (_) {}
     });
 
-    on("shareLink", "click", () => {
+    on("shareLink", "click", async () => {
       const url = new URL(location.href);
       url.searchParams.set("date", toISO(selectedDate));
       url.searchParams.set("tz", selectedTZ);
       url.searchParams.set("boundary", boundaryMode());
       url.searchParams.set("sunset", sunsetValue());
-
-      if (navigator.clipboard) navigator.clipboard.writeText(url.toString());
-      toast("Link copied");
+      await copyText(url.toString(), "Link copied");
     });
 
     [
@@ -1491,8 +1743,12 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       "dreamInput",
       "emotionInput",
       "signsInput",
-      "fieldInput",
-      "lessonInput"
+      "technologyInput",
+      "animalInput",
+      "weatherInput",
+      "actionInput",
+      "lessonInput",
+      "witnessNotesInput"
     ].forEach(id => {
       on(id, "input", buildWitness);
     });
@@ -1506,9 +1762,8 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
 
     on("buildWitness", "click", buildWitness);
 
-    on("copyWitness", "click", () => {
-      if (navigator.clipboard) navigator.clipboard.writeText(buildWitness());
-      toast("Witness copied");
+    on("copyWitness", "click", async () => {
+      await copyText(buildWitness(), "Witness copied");
     });
 
     on("saveWitness", "click", saveLog);
@@ -1520,8 +1775,13 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
         "dreamInput",
         "emotionInput",
         "signsInput",
-        "fieldInput",
-        "lessonInput"
+        "technologyInput",
+        "animalInput",
+        "weatherInput",
+        "actionInput",
+        "lessonInput",
+        "witnessNotesInput",
+        "witnessEntryId"
       ].forEach(id => setValue(id, ""));
 
       const kp = $("#kpInput");
@@ -1534,20 +1794,16 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       toast("Cleared");
     });
 
-    on("copySeal", "click", () => {
+    on("copySeal", "click", async () => {
       const seal = $("#sealBody");
-      if (seal && navigator.clipboard) navigator.clipboard.writeText(seal.textContent);
-      toast("Seal copied");
+      await copyText(seal?.textContent, "Seal copied");
     });
 
-    on("copyAllLogs", "click", () => {
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(
-          logs().map(entry => entry.text).join("\n\n---\n\n")
-        );
-      }
-
-      toast("All logs copied");
+    on("copyAllLogs", "click", async () => {
+      await copyText(
+        logs().map(entry => entry.text).join("\n\n---\n\n"),
+        "All logs copied"
+      );
     });
 
     on("exportLogs", "click", () => {
@@ -1580,12 +1836,15 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       try {
         const data = JSON.parse(await file.text());
         if (!Array.isArray(data)) throw new Error("Invalid log file");
-
-        saveLogs(data.concat(logs()));
+        const normalized = data
+          .map(normalizeLogEntry)
+          .filter(entry => entry && entry.text && (entry.effectiveDate || entry.date));
+        if (!normalized.length) throw new Error("No valid log entries");
+        saveLogs(normalized.concat(logs()));
         render();
         toast("Logs imported");
       } catch {
-        toast("Import failed");
+        toast("Import failed: invalid JSON");
       }
 
       event.target.value = "";
@@ -1594,7 +1853,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     on("clearAllLogs", "click", () => {
       if (!confirm("Clear all saved moon logs from this browser?")) return;
       safeRemove(LOG_KEY);
-      safeRemove(LEGACY_LOG_KEY);
+      LEGACY_LOG_KEYS.forEach(safeRemove);
       render();
       toast("Logs cleared");
     });
@@ -1610,6 +1869,8 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     window.ScrollOfFireMoons = {
       render,
       logs,
+      activateTab,
+      buildWitness,
       remnantInfo: date => remnantInfo(date || effectiveContext().effectiveDate),
       shabbatInfo: date => shabbatInfo(date || effectiveContext().effectiveDate),
       selectedDate: () => new Date(selectedDate),

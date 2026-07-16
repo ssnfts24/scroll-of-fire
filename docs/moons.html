@@ -64,7 +64,7 @@
 
   <link
     rel="canonical"
-    href="https://codexofreality.org/moons.html"
+    href="https://codexofreality.org/moons"
   >
 
   <!-- Open Graph -->
@@ -79,7 +79,7 @@
 
   <meta
     property="og:url"
-    content="https://codexofreality.org/moons.html"
+    content="https://codexofreality.org/moons"
   >
 
   <meta
@@ -120,10 +120,16 @@
     href="assets/img/moons/app/icon-512.webp"
   >
 
+  <link rel="manifest" href="manifest.webmanifest">
+
   <link
     rel="apple-touch-icon"
-    href="assets/img/shared/branding/icon-1024.png"
+    href="assets/img/moons/app/apple-touch-icon.png"
   >
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="13 Moons">
 
   <!-- Styles -->
   <link rel="stylesheet" href="assets/css/codex.css">
@@ -168,9 +174,9 @@
     "@graph": [
       {
         "@type": "WebApplication",
-        "@id": "https://codexofreality.org/moons.html#app",
+        "@id": "https://codexofreality.org/moons#app",
         "name": "Remnant 13 Moons — Living Calendar",
-        "url": "https://codexofreality.org/moons.html",
+        "url": "https://codexofreality.org/moons",
         "applicationCategory": "LifestyleApplication",
         "operatingSystem": "Any",
         "inLanguage": "en-US",
@@ -211,7 +217,7 @@
             "@type": "ListItem",
             "position": 2,
             "name": "Remnant 13 Moons",
-            "item": "https://codexofreality.org/moons.html"
+            "item": "https://codexofreality.org/moons"
           }
         ]
       }
@@ -414,9 +420,14 @@
         unbroken through the Year Gate.
       </aside>
 
-      <div class="tabs" role="tablist" aria-label="Calendar tools">
+      <div
+        id="moonsTabRail"
+        class="tabs"
+        role="tablist"
+        aria-label="Calendar tools"
+      >
         <button
-          class="tab active"
+          class="tab is-moons-tab-active"
           data-tab="todayPanel"
           type="button"
           id="tab-today"
@@ -568,7 +579,7 @@
         role="tabpanel"
         aria-labelledby="tab-today"
         tabindex="0"
-        class="tabPanel active"
+        class="tabPanel is-moons-panel-visible"
       >
         <!-- Today artwork is inserted by moons-images.js. -->
 
@@ -695,7 +706,7 @@
               <span id="nowTZ" class="meta">—</span>
             </p>
 
-            <div class="formrow">
+            <div class="formrow time-gate-form">
               <label>
                 Time Zone
 
@@ -748,7 +759,7 @@
               </label>
             </div>
 
-            <div class="btnrow">
+            <div class="btnrow time-gate-actions">
               <button
                 id="btnToday"
                 class="lab-btn active"
@@ -788,6 +799,24 @@
               >
                 Copy Link
               </button>
+
+              <button
+                id="installApp"
+                class="lab-btn ghost"
+                type="button"
+                hidden
+              >
+                Install 13 Moons
+              </button>
+
+              <button
+                id="appUpdate"
+                class="lab-btn ghost"
+                type="button"
+                hidden
+              >
+                Update Available
+              </button>
             </div>
 
             <p
@@ -799,6 +828,14 @@
               Calendar day changes at local sunset. When location is
               unavailable, 6:00 PM is used.
             </p>
+
+            <p
+              id="appInstallHelp"
+              class="meta app-install-help"
+              role="status"
+              aria-live="polite"
+              hidden
+            ></p>
           </article>
 
           <article class="card col-6">
@@ -896,7 +933,7 @@
             scattered things return to order.
           </p>
 
-          <div class="btnrow">
+          <div class="btnrow saved-actions">
             <button
               class="lab-btn active"
               data-tab-jump="shabbatPanel"
@@ -1353,6 +1390,10 @@
               visible phase, field, and witness into one reading.
             </p>
 
+            <p class="fine reflective-note">
+              This does not command the day. It reflects the pattern being walked through.
+            </p>
+
             <div class="reading-focus">
               <label>
                 Reading Focus
@@ -1384,7 +1425,7 @@
                 </select>
               </label>
 
-              <div class="btnrow">
+              <div class="btnrow mirror-actions">
                 <button
                   id="buildMirror"
                   class="lab-btn active"
@@ -1435,7 +1476,7 @@
               </article>
 
               <article class="mirror-card">
-                <h3>Command</h3>
+                <h3>Grounded Action</h3>
 
                 <p id="mirrorAction">
                   The clean action appears here.
@@ -1465,7 +1506,9 @@
               Fill it out, generate the witness, copy it, or save it locally.
             </p>
 
-            <div class="formrow">
+            <input id="witnessEntryId" type="hidden">
+
+            <div class="formrow witness-form-grid">
               <label>
                 Sleep
 
@@ -1546,26 +1589,63 @@
             </div>
 
             <label>
-              Technology / Animal / Weather Notes
+              Technology Notes
 
               <textarea
-                id="fieldInput"
-                placeholder="Tech glitches, animal behavior, weather shifts, strange timing, body-field reactions..."
+                id="technologyInput"
+                placeholder="Tech glitches, unusual device behavior, signal interference..."
               ></textarea>
             </label>
 
             <label>
-              Action / Lesson / Witness
+              Animal Notes
 
               <textarea
-                id="lessonInput"
-                placeholder="What did the day teach? What needs repair? What pattern repeated?"
+                id="animalInput"
+                placeholder="Animal behavior, crossings, repeated appearances, unusual movement..."
               ></textarea>
             </label>
 
-            <div class="btnrow">
-              <button
-                id="buildWitness"
+            <label>
+              Weather Notes
+
+              <textarea
+                id="weatherInput"
+                placeholder="Storms, stillness, pressure shifts, heat, wind, rain, unusual skies..."
+              ></textarea>
+            </label>
+
+            <label>
+              Action
+
+              <textarea
+                id="actionInput"
+                placeholder="What grounded action belongs to this day?"
+              ></textarea>
+            </label>
+
+            <label>
+              Lesson
+
+              <textarea
+                id="lessonInput"
+                placeholder="What did the day teach? What needed repair?"
+              ></textarea>
+            </label>
+
+            <label>
+              Witness
+
+              <textarea
+                id="witnessNotesInput"
+                placeholder="What repeated? What should be recorded without exaggeration?"
+              ></textarea>
+            </label>
+            </div>
+
+            <div class="btnrow witness-actions">
+            <button
+              id="buildWitness"
                 class="lab-btn active"
                 type="button"
               >
@@ -1628,6 +1708,10 @@
             <p class="subtitle">
               A symbolic mirror for season, element, body, emotion, speech,
               timing, planetary alignments, and witness.
+            </p>
+
+            <p class="fine reflective-note">
+              Planetary placements here are symbolic interface mirrors unless a live ephemeris is explicitly connected.
             </p>
           </div>
 
@@ -2195,55 +2279,32 @@
       Witness
     </a>
 
-    <a
-      href="#astrologyPanel"
-      data-mobile-tab="astrologyPanel"
+    <button
+      id="moonsMoreButton"
+      class="mobile-dock-more"
+      type="button"
+      aria-expanded="false"
+      aria-controls="moonsMoreMenu"
     >
-      Astro
-    </a>
-
-    <a
-      href="#calendarPanel"
-      data-mobile-tab="calendarPanel"
-    >
-      Calendar
-    </a>
-
-    <a
-      href="#yearPanel"
-      data-mobile-tab="yearPanel"
-    >
-      Year Map
-    </a>
-
-    <a
-      href="#codexPanel"
-      data-mobile-tab="codexPanel"
-    >
-      Seal
-    </a>
-
-    <a
-      href="#timelinePanel"
-      data-mobile-tab="timelinePanel"
-    >
-      Timeline
-    </a>
-
-    <a
-      href="#fieldPanel"
-      data-mobile-tab="fieldPanel"
-    >
-      Fields
-    </a>
-
-    <a
-      href="#savedPanel"
-      data-mobile-tab="savedPanel"
-    >
-      Logs
-    </a>
+      More
+    </button>
   </nav>
+
+  <div
+    id="moonsMoreMenu"
+    class="moons-more-menu"
+    hidden
+  >
+    <div class="moons-more-menu__panel" role="menu" aria-label="More 13 Moons sections">
+      <button type="button" role="menuitem" data-mobile-tab="astrologyPanel">Astrology</button>
+      <button type="button" role="menuitem" data-mobile-tab="calendarPanel">Calendars</button>
+      <button type="button" role="menuitem" data-mobile-tab="yearPanel">Year Map</button>
+      <button type="button" role="menuitem" data-mobile-tab="codexPanel">Codex Seal</button>
+      <button type="button" role="menuitem" data-mobile-tab="timelinePanel">Timeline</button>
+      <button type="button" role="menuitem" data-mobile-tab="fieldPanel">Field Layers</button>
+      <button type="button" role="menuitem" data-mobile-tab="savedPanel">Saved Logs</button>
+    </div>
+  </div>
 
   <div
     id="sofToast"
@@ -2285,964 +2346,7 @@
   <!-- Remnant artwork integration -->
   <script src="assets/js/moons-images.js?v=20260715-11"></script>
 
-  <!-- Page-specific interaction layer -->
-  <script>
-    (function () {
-      "use strict";
-
-      const BOUNDARY_KEY = "sof_moons_boundary_v1";
-      const SUNSET_KEY = "sof_moons_sunset_v1";
-      const LAST_TAB_KEY = "sof_moons_last_tab_v1";
-
-      function $(id) {
-        return document.getElementById(id);
-      }
-
-      function text(id) {
-        const node = $(id);
-        return node ? (node.textContent || "").trim() : "";
-      }
-
-      function setText(id, value) {
-        const node = $(id);
-
-        if (node) {
-          node.textContent = value;
-        }
-      }
-
-      function showTab(id) {
-        document.querySelectorAll(".tabPanel").forEach(function (panel) {
-          panel.classList.toggle("active", panel.id === id);
-        });
-
-        var activeTabBtn = null;
-
-        document.querySelectorAll(".tab").forEach(function (tab) {
-          const isActive = tab.dataset.tab === id;
-          tab.classList.toggle("active", isActive);
-          tab.setAttribute("aria-selected", isActive ? "true" : "false");
-          tab.setAttribute("tabindex", isActive ? "0" : "-1");
-          if (isActive) activeTabBtn = tab;
-        });
-
-        /* Scroll active tab button into view within the tab rail */
-        if (activeTabBtn) {
-          activeTabBtn.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-        }
-
-        document
-          .querySelectorAll("[data-mobile-tab]")
-          .forEach(function (link) {
-            const active = link.dataset.mobileTab === id;
-
-            link.classList.toggle("active", active);
-
-            if (active) {
-              link.setAttribute("aria-current", "page");
-            } else {
-              link.removeAttribute("aria-current");
-            }
-          });
-
-        /* Persist last-viewed tab */
-        try {
-          localStorage.setItem(LAST_TAB_KEY, id);
-        } catch (_) {}
-
-        const panel = $(id);
-
-        if (panel) {
-          panel.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
-        }
-      }
-
-      function showToast(message) {
-        const toast = $("sofToast");
-
-        if (!toast) {
-          return;
-        }
-
-        toast.textContent = message;
-        toast.classList.add("show");
-
-        clearTimeout(window.__sofToastTimer);
-
-        window.__sofToastTimer = window.setTimeout(function () {
-          toast.classList.remove("show");
-        }, 1800);
-      }
-
-      function width(id, value) {
-        const node = $(id);
-
-        if (node) {
-          node.style.width =
-            Math.max(8, Math.min(100, value)) + "%";
-        }
-      }
-
-      function parseClock(value) {
-        const match = /^(\d{2}):(\d{2})$/.exec(value || "");
-
-        if (!match) {
-          return {
-            hour: 18,
-            minute: 0
-          };
-        }
-
-        return {
-          hour: Number(match[1]),
-          minute: Number(match[2])
-        };
-      }
-
-      function selectedCivilDate() {
-        const input = $("datePick");
-
-        if (!input || !input.value) {
-          return new Date();
-        }
-
-        const parts = input.value.split("-").map(Number);
-
-        return new Date(
-          parts[0],
-          parts[1] - 1,
-          parts[2],
-          12,
-          0,
-          0
-        );
-      }
-
-      function boundarySnapshot() {
-        const mode = $("boundaryMode")
-          ? $("boundaryMode").value
-          : "sunset";
-
-        const clock = parseClock(
-          $("sunsetInput")
-            ? $("sunsetInput").value
-            : "18:00"
-        );
-
-        const now = new Date();
-        const date = selectedCivilDate();
-
-        const isToday =
-          date.getFullYear() === now.getFullYear() &&
-          date.getMonth() === now.getMonth() &&
-          date.getDate() === now.getDate();
-
-        const boundary = new Date(
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate(),
-          mode === "midnight" ? 24 : clock.hour,
-          mode === "midnight" ? 0 : clock.minute,
-          0,
-          0
-        );
-
-        const afterBoundary =
-          isToday &&
-          mode !== "midnight" &&
-          now >= boundary;
-
-        return {
-          mode,
-          clock,
-          civilDate: date,
-          afterBoundary,
-
-          label:
-            mode === "midnight"
-              ? "Midnight"
-              : mode === "manual"
-                ? "Manual Sunset"
-                : "Local Sunset"
-        };
-      }
-
-      function shabbatSnapshot() {
-        const boundary = boundarySnapshot();
-        const now = new Date();
-        const effective = new Date(boundary.civilDate);
-
-        if (
-          boundary.mode !== "midnight" &&
-          boundary.afterBoundary
-        ) {
-          effective.setDate(effective.getDate() + 1);
-        }
-
-        const weekday = effective.getDay();
-        const moonDay = Number(text("dayInMoon")) || null;
-
-        const shabbatMoonDays = new Set([
-          2,
-          9,
-          16,
-          23
-        ]);
-
-        let state = "Ordinary Week Gate";
-
-        let instruction =
-          "Work with measure. Prepare for the next appointed stop.";
-
-        if (weekday === 5 && !boundary.afterBoundary) {
-          state = "Preparation Gate";
-
-          instruction =
-            "Finish what is necessary. Prepare the household. Do not carry avoidable disorder into rest.";
-        } else if (
-          weekday === 6 ||
-          (
-            boundary.mode !== "midnight" &&
-            now.getDay() === 5 &&
-            boundary.afterBoundary
-          )
-        ) {
-          state = "Shabbat · Ceasing and Rest";
-
-          instruction =
-            "Stop forcing. Guard the household. Share food. Rest, pray, review, and restore.";
-        } else if (
-          weekday === 0 &&
-          boundary.mode !== "midnight" &&
-          now.getDay() === 6 &&
-          boundary.afterBoundary
-        ) {
-          state = "Return Gate";
-
-          instruction =
-            "Preserve the lesson and return to work through one deliberate next step.";
-        }
-
-        const position =
-          moonDay && shabbatMoonDays.has(moonDay)
-            ? "Aligned · Moon Day " + moonDay
-            : moonDay
-              ? "Moon Day " + moonDay
-              : "Waiting for moon engine";
-
-        return {
-          state,
-          instruction,
-          position,
-          effective
-        };
-      }
-
-      function updateBoundaryUI() {
-        const boundary = boundarySnapshot();
-        const shabbat = shabbatSnapshot();
-
-        const sunsetInput = $("sunsetInput");
-
-        document.body.dataset.remnantBoundary = boundary.mode;
-        document.documentElement.dataset.dayBoundary = boundary.mode;
-
-        setText("statBoundary", boundary.label);
-        setText("statShabbat", shabbat.state);
-        setText("shabbatState", shabbat.state);
-        setText("shabbatMoonPosition", shabbat.position);
-        setText("shabbatInstruction", shabbat.instruction);
-
-        if (
-          $("shabbatInput") &&
-          $("shabbatInput").value === "Not marked"
-        ) {
-          if (/Preparation/.test(shabbat.state)) {
-            $("shabbatInput").value = "Preparation Gate";
-          }
-
-          if (/Shabbat/.test(shabbat.state)) {
-            $("shabbatInput").value =
-              "Shabbat · Ceasing and Rest";
-          }
-
-          if (/Return/.test(shabbat.state)) {
-            $("shabbatInput").value = "Return Gate";
-          }
-        }
-
-        if ($("boundaryStatus")) {
-          const time = sunsetInput
-            ? sunsetInput.value
-            : "18:00";
-
-          $("boundaryStatus").textContent =
-            boundary.mode === "midnight"
-              ? "Midnight mode is active. Shabbat still begins Friday sunset, so this mode does not fully align the calendar day with Shabbat."
-              : boundary.label +
-                " is active at " +
-                time +
-                ". After the boundary, the effective Remnant day advances.";
-        }
-
-        document.dispatchEvent(
-          new CustomEvent("sof:boundary-change", {
-            detail: {
-              ...boundary,
-              shabbat,
-              sunset: sunsetInput
-                ? sunsetInput.value
-                : "18:00"
-            }
-          })
-        );
-      }
-
-      const focusCopy = {
-        general: {
-          title: "General Scroll",
-
-          opening:
-            "The day opens like a scroll unsealed: the outer world speaks in timing, and the inner witness is called to stand upright.",
-
-          signal:
-            "Watch the repeated word, the delayed door, the sudden message, the return of an old pattern, and the thing that asks to be written before it is explained.",
-
-          crossing:
-            "The crossing is haste. The false gate is reaction. The clean path is witness before movement.",
-
-          command:
-            "Write the signal. Name the pressure. Move only one true step. Let the day prove itself by repetition."
-        },
-
-        family: {
-          title: "Family / Custody / Children",
-
-          opening:
-            "The house-line is before the altar today: child, shelter, order, testimony, and the burden of protection.",
-
-          signal:
-            "The child is the center of the reading. The noise around the child must bow to stability, pattern, record, and peace.",
-
-          crossing:
-            "The crossing is emotional fire. Do not let another person’s disorder become the language of your next move.",
-
-          command:
-            "Hold the center. Keep the record clean. Let every action answer one question: does this build safety, order, and a faithful future for the child?"
-        },
-
-        work: {
-          title: "Work / Money / Provision",
-
-          opening:
-            "Provision stands at the gate: tool, hand, labor, repair, debt, shelter, food, and the ground beneath the feet.",
-
-          signal:
-            "The material world is speaking through what breaks, what costs, what must be fixed, and what must finally be organized.",
-
-          crossing:
-            "The crossing is scatter. Ten fires call for your hand, but only one can be sealed first.",
-
-          command:
-            "Choose the repair that unlocks the next door. Build the ledger. Steward the tool. Turn pressure into order."
-        },
-
-        body: {
-          title: "Body / Health / Rest",
-
-          opening:
-            "The body becomes the first prophet today: breath, hunger, sleep, pressure, pain, calm, and the hidden weather beneath thought.",
-
-          signal:
-            "The body is not background. It is the instrument through which the day is being read.",
-
-          crossing:
-            "The crossing is forcing meaning through exhaustion. A weary vessel distorts the signal.",
-
-          command:
-            "Return to water, food, breath, sunlight, and rest. Let the body settle before the scroll is interpreted."
-        },
-
-        spiritual: {
-          title: "Spiritual / Prayer / Scripture",
-
-          opening:
-            "The day stands beneath the lamp: prayer, word, conscience, mercy, judgment, and the quiet fire of alignment.",
-
-          signal:
-            "The holy signal arrives as fruit: patience, truth, humility, courage, mercy, and clean action.",
-
-          crossing:
-            "The crossing is mistaking intensity for instruction. Fire must be governed before it becomes light.",
-
-          command:
-            "Pray, wait, write, test the fruit, and walk only the step that carries peace with strength."
-        },
-
-        creative: {
-          title: "Creative / Codex / Building",
-
-          opening:
-            "The Codex gate opens through language, symbol, design, memory, and the hand that turns vision into form.",
-
-          signal:
-            "The work is alive when it becomes coherent: one page, one function, one image, one clean bridge at a time.",
-
-          crossing:
-            "The crossing is trying to carry the whole mountain in one breath.",
-
-          command:
-            "Build one finished piece. Seal one clean layer. Let the larger scroll assemble by faithful parts."
-        }
-      };
-
-      function buildMirror() {
-        const focus = $("readingFocus");
-
-        const key = focus
-          ? focus.value
-          : "general";
-
-        const copy =
-          focusCopy[key] ||
-          focusCopy.general;
-
-        const moon =
-          text("moonName") ||
-          "Remnant Moon";
-
-        const moonLine =
-          text("moonLine") ||
-          "Moon cadence loading";
-
-        const phase =
-          text("phaseLine") ||
-          "Visible moon loading";
-
-        const archetype =
-          text("dayArchetype") ||
-          "Witness";
-
-        const archetypeCopy =
-          text("dayArchetypeCopy") ||
-          "Record what is actually there.";
-
-        const week =
-          text("weekGate") ||
-          "Week Gate";
-
-        const weekCopy =
-          text("weekGateCopy") ||
-          "The week gate is opening.";
-
-        const solar =
-          text("solarGate") ||
-          "Solar Gate";
-
-        const solarCopy =
-          text("skyMirrorCopy") ||
-          "The sky mirror is forming.";
-
-        const field =
-          text("statField") ||
-          "Unknown";
-
-        const shabbat = shabbatSnapshot();
-
-        const title =
-          moon +
-          " · " +
-          archetype +
-          " Reading";
-
-        const reading =
-`☲ DAILY MIRROR READING ☲
-
-${copy.title}
-${moon}
-${moonLine}
-
-The Opening
-${copy.opening}
-
-Moon Gate
-The moon stands in ${moon}. Its tone is carried through the line:
-${moonLine}
-
-Visible Sign
-${phase}
-
-Day Seal
-${archetype} — ${archetypeCopy}
-
-Week Gate
-${week}
-${weekCopy}
-
-Shabbat Gate
-${shabbat.state}
-${shabbat.instruction}
-
-Solar Gate
-${solar}
-${solarCopy}
-
-Field Layer
-${field}
-
-The Signal
-${copy.signal}
-
-The Crossing
-${copy.crossing}
-
-The Command
-${copy.command}
-
-Witness Questions
-1. What repeated before I tried to explain it?
-2. What word, message, delay, body signal, or timing is asking to be recorded?
-3. What must be guarded: speech, child, body, money, home, tool, or vow?
-4. What is the cleanest action that brings order without surrendering truth?
-5. What must be sealed tonight so tomorrow can open clean?
-
-Closing Seal
-Let the scattered pieces come under order.
-Let the witness stand without panic.
-Let the false door close.
-Let the true gate open.
-Let the record be clean.
-Let the next step be firm.`;
-
-        setText("mirrorTitle", title);
-
-        if ($("mirrorOutput")) {
-          $("mirrorOutput").textContent = reading;
-        }
-
-        setText("mirrorSignal", copy.signal);
-        setText("mirrorShadow", copy.crossing);
-        setText("mirrorAction", copy.command);
-
-        return reading;
-      }
-
-      function hydrateRitualUI() {
-        const moon =
-          text("moonName") ||
-          "Remnant Moon";
-
-        const line =
-          text("moonLine") ||
-          "Read the signal. Record the witness. Ground the body.";
-
-        const phase =
-          text("phaseLine") ||
-          "Visible moon";
-
-        const day =
-          text("dayInMoon") ||
-          "☾";
-
-        const field =
-          text("statField") ||
-          "Unknown";
-
-        setText("ritualTitle", moon);
-        setText("ritualLine", line + " · " + phase);
-        setText("ritualMoonCore", day);
-
-        const logs =
-          parseInt(text("statLogs") || "0", 10) || 0;
-
-        const patterns =
-          parseInt(text("statPatterns") || "0", 10) || 0;
-
-        const fieldBoost =
-          /storm|elevated|charged/i.test(field)
-            ? 80
-            : /quiet/i.test(field)
-              ? 35
-              : 52;
-
-        width(
-          "meterCoherence",
-          38 + Math.min(34, logs * 8)
-        );
-
-        width("meterBody", 48);
-
-        width(
-          "meterSignal",
-          28 + Math.min(52, patterns * 18)
-        );
-
-        width("meterField", fieldBoost);
-
-        width(
-          "meterGround",
-          fieldBoost > 65 ? 86 : 58
-        );
-
-        setText(
-          "meterCoherenceText",
-          logs ? "Witness active" : "Gathering"
-        );
-
-        setText(
-          "meterSignalText",
-          patterns ? "Pattern seen" : "Listening"
-        );
-
-        setText("meterFieldText", field);
-
-        setText(
-          "meterGroundText",
-          fieldBoost > 65
-            ? "High priority"
-            : "Recommended"
-        );
-      }
-
-      function scanLocalLogs() {
-        const raw = [];
-
-        try {
-          Object.keys(localStorage).forEach(function (key) {
-            if (/moon|witness|scroll|remnant/i.test(key)) {
-              const value = localStorage.getItem(key);
-
-              if (value) {
-                raw.push(value);
-              }
-            }
-          });
-        } catch (_) {}
-
-        const blob = raw
-          .join(" ")
-          .toLowerCase();
-
-        const themes = [
-          "speech",
-          "court",
-          "custody",
-          "child",
-          "money",
-          "housing",
-          "dream",
-          "water",
-          "body",
-          "repair",
-          "work",
-          "family",
-          "signal",
-          "fire",
-          "moon",
-          "sleep",
-          "pressure",
-          "clarity",
-          "peace",
-          "record"
-        ];
-
-        const counts = themes
-          .map(function (theme) {
-            const match = blob.match(
-              new RegExp("\\b" + theme + "\\b", "g")
-            );
-
-            return {
-              theme,
-              count: match ? match.length : 0
-            };
-          })
-          .filter(function (item) {
-            return item.count > 0;
-          })
-          .sort(function (a, b) {
-            return b.count - a.count;
-          })
-          .slice(0, 5);
-
-        if (!counts.length) {
-          return;
-        }
-
-        setText(
-          "memoryWordsCopy",
-          counts
-            .map(function (item) {
-              return item.theme + " ×" + item.count;
-            })
-            .join(" · ")
-        );
-
-        setText(
-          "memoryBodyCopy",
-          "The body becomes clearer when the witness is repeated daily."
-        );
-
-        setText(
-          "memoryFieldCopy",
-          "Pattern memory is active in this browser. Export logs before clearing storage."
-        );
-      }
-
-      document
-        .querySelectorAll("[data-mobile-tab]")
-        .forEach(function (link) {
-          link.addEventListener("click", function (event) {
-            event.preventDefault();
-            showTab(link.dataset.mobileTab);
-          });
-        });
-
-      document
-        .querySelectorAll("[data-tab-jump]")
-        .forEach(function (button) {
-          button.addEventListener("click", function () {
-            showTab(button.dataset.tabJump);
-          });
-        });
-
-      if ($("buildMirror")) {
-        $("buildMirror").addEventListener(
-          "click",
-          buildMirror
-        );
-      }
-
-      if ($("copyMirror")) {
-        $("copyMirror").addEventListener(
-          "click",
-          async function () {
-            const reading = buildMirror();
-
-            if (navigator.clipboard) {
-              await navigator.clipboard.writeText(reading);
-            }
-
-            showToast("Reading copied.");
-
-            try {
-              if (typeof gtag === "function") gtag("event", "share_daily_mirror");
-            } catch (_) {}
-          }
-        );
-      }
-
-      if ($("boundaryMode")) {
-        let savedBoundary = "sunset";
-
-        try {
-          savedBoundary =
-            localStorage.getItem(BOUNDARY_KEY) ||
-            "sunset";
-        } catch (_) {}
-
-        $("boundaryMode").value = savedBoundary;
-
-        $("boundaryMode").addEventListener(
-          "change",
-          function () {
-            try {
-              localStorage.setItem(
-                BOUNDARY_KEY,
-                $("boundaryMode").value
-              );
-            } catch (_) {}
-
-            updateBoundaryUI();
-            buildMirror();
-          }
-        );
-      }
-
-      if ($("sunsetInput")) {
-        let savedSunset = "18:00";
-
-        try {
-          savedSunset =
-            localStorage.getItem(SUNSET_KEY) ||
-            "18:00";
-        } catch (_) {}
-
-        $("sunsetInput").value = savedSunset;
-
-        $("sunsetInput").addEventListener(
-          "change",
-          function () {
-            try {
-              localStorage.setItem(
-                SUNSET_KEY,
-                $("sunsetInput").value
-              );
-            } catch (_) {}
-
-            updateBoundaryUI();
-            buildMirror();
-          }
-        );
-      }
-
-      if ($("useLocalSunset")) {
-        $("useLocalSunset").addEventListener(
-          "click",
-          function () {
-            if (!navigator.geolocation) {
-              showToast(
-                "Location is unavailable. Using the saved sunset time."
-              );
-
-              return;
-            }
-
-            navigator.geolocation.getCurrentPosition(
-              function (position) {
-                document.dispatchEvent(
-                  new CustomEvent("sof:request-sunset", {
-                    detail: {
-                      latitude:
-                        position.coords.latitude,
-
-                      longitude:
-                        position.coords.longitude,
-
-                      date:
-                        selectedCivilDate()
-                    }
-                  })
-                );
-
-                showToast(
-                  "Location received. The moon engine will calculate local sunset."
-                );
-              },
-
-              function () {
-                showToast(
-                  "Location was not available. Using the saved sunset time."
-                );
-              },
-
-              {
-                enableHighAccuracy: false,
-                timeout: 9000,
-                maximumAge: 3600000
-              }
-            );
-          }
-        );
-      }
-
-      [
-        "saveWitness",
-        "copyWitness",
-        "copySeal",
-        "copyAllLogs",
-        "exportLogs"
-      ].forEach(function (id) {
-        const button = $(id);
-
-        if (!button) {
-          return;
-        }
-
-        button.addEventListener("click", function () {
-          button.classList.add("pulse-save");
-
-          window.setTimeout(function () {
-            button.classList.remove("pulse-save");
-          }, 800);
-
-          showToast(
-            id.indexOf("save") >= 0
-              ? "Witness sealed."
-              : "Copied to Scroll."
-          );
-
-          window.setTimeout(function () {
-            hydrateRitualUI();
-            scanLocalLogs();
-          }, 200);
-        });
-      });
-
-      document.addEventListener(
-        "sof:sunset-calculated",
-        function (event) {
-          const value =
-            event.detail &&
-            event.detail.time;
-
-          if (!value || !$("sunsetInput")) {
-            return;
-          }
-
-          $("sunsetInput").value = value;
-
-          try {
-            localStorage.setItem(
-              SUNSET_KEY,
-              value
-            );
-          } catch (_) {}
-
-          updateBoundaryUI();
-          buildMirror();
-          showToast("Local sunset updated.");
-        }
-      );
-
-      document.addEventListener(
-        "sof:moon-render",
-        function () {
-          updateBoundaryUI();
-          buildMirror();
-          hydrateRitualUI();
-          scanLocalLogs();
-        }
-      );
-
-      window.addEventListener(
-        "load",
-        function () {
-          window.setTimeout(function () {
-            updateBoundaryUI();
-            buildMirror();
-            hydrateRitualUI();
-            scanLocalLogs();
-          }, 550);
-        }
-      );
-
-      document.addEventListener(
-        "change",
-        function (event) {
-          if (
-            event.target &&
-            /Input|readingFocus|datePick|tzPick/.test(
-              event.target.id || ""
-            )
-          ) {
-            window.setTimeout(function () {
-              updateBoundaryUI();
-              buildMirror();
-              hydrateRitualUI();
-            }, 120);
-          }
-        }
-      );
-
-      window.setInterval(
-        updateBoundaryUI,
-        30000
-      );
-    })();
-  </script>
+  <script src="assets/js/moons-app.js?v=20260716-01"></script>
+  <script src="assets/js/pwa-install.js?v=20260716-01"></script>
 </body>
 </html>
