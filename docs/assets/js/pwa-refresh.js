@@ -17,6 +17,7 @@
     expectedVersion,
     expectedBuild,
     preserveRecovery = false,
+    recoveryCaches = [],
     timeoutMs
   }) {
     return new Promise((resolve, reject) => {
@@ -60,7 +61,8 @@
             !activationRequested) {
           activationRequested = true;
           worker.postMessage?.({
-            type: preserveRecovery ? "ACTIVATE_VERIFIED_REFRESH" : "SKIP_WAITING"
+            type: preserveRecovery ? "ACTIVATE_VERIFIED_REFRESH" : "SKIP_WAITING",
+            recoveryCaches: preserveRecovery ? recoveryCaches : undefined
           });
         }
         if (!ready || worker.state !== "activated") return;
@@ -176,6 +178,8 @@
       });
 
       status("Downloading and verifying a fresh 13 Moons app shell…");
+      const keysBeforeRefresh = await caches.keys();
+      const recoveryCaches = keysBeforeRefresh.filter(key => key === currentCoreCache);
       await Promise.all(applicable.map(reg => reg.unregister()));
       replacement = await navigator.serviceWorker.register(workerUrl, {
         scope: new URL("./", document.baseURI).pathname,
@@ -189,19 +193,16 @@
         expectedVersion,
         expectedBuild,
         preserveRecovery: true,
+        recoveryCaches,
         timeoutMs: lifecycleTimeoutMs
       });
 
       const keys = await caches.keys();
-      const recoveryCaches = keys.filter(key =>
-        key.startsWith(cachePrefix) &&
-        key !== currentCoreCache &&
-        !key.startsWith(`${cachePrefix}install-`)
-      );
       sessionStorage.setItem(pendingKey, JSON.stringify({
         appVersion: expectedVersion,
         serviceWorkerBuild: expectedBuild,
-        recoveryCaches
+        recoveryCaches,
+        transactionCache: `${cachePrefix}refresh-preserve-${expectedBuild}`
       }));
       status("Replacement app shell verified. Reloading to complete recovery checks…");
       location.replace(appUrl.toString());
@@ -221,6 +222,7 @@
 
   async function completePendingRefresh({
     currentCoreCache,
+    cachePrefix,
     expectedVersion,
     expectedBuild = expectedVersion,
     status,
@@ -255,6 +257,10 @@
       await Promise.all((pending.recoveryCaches || [])
         .filter(key => key !== currentCoreCache)
         .map(key => caches.delete(key)));
+      if (pending.transactionCache ===
+          `${cachePrefix}refresh-preserve-${expectedBuild}`) {
+        await caches.delete(pending.transactionCache);
+      }
       sessionStorage.removeItem(pendingKey);
       status("Fresh app files are ready. Previous recovery files were safely retired.");
       return true;

@@ -9,7 +9,7 @@ const vm = require("node:vm");
 const root = path.resolve(__dirname, "..");
 const read = relative => fs.readFileSync(path.join(root, relative), "utf8");
 
-function serviceWorkerHarness(failingPath) {
+function serviceWorkerHarness(failingPath, { failPromotion = false } = {}) {
   const listeners = {};
   const stores = new Map();
   const clientMessages = [];
@@ -19,10 +19,22 @@ function serviceWorkerHarness(failingPath) {
       const store = stores.get(name);
       return {
         async put(key, value) {
+          if (failPromotion &&
+              name === "sof-13-moons-core-2026.07.16.2" &&
+              String(key).endsWith("/assets/js/pwa.js")) {
+            throw new Error("promotion failed");
+          }
           store.set(String(key), value);
         },
-        async match(key) {
-          return store.get(String(key));
+        async match(key, options = {}) {
+          const requested = key?.url || String(key);
+          if (!options.ignoreSearch) return store.get(requested);
+          const withoutSearch = new URL(requested).origin + new URL(requested).pathname;
+          for (const [storedKey, value] of store) {
+            const storedUrl = new URL(storedKey);
+            if (`${storedUrl.origin}${storedUrl.pathname}` === withoutSearch) return value;
+          }
+          return undefined;
         }
       };
     },
@@ -64,13 +76,23 @@ function serviceWorkerHarness(failingPath) {
     caches: cacheApi,
     URL,
     console,
+    Response,
     importScripts() {},
     fetch: async request => {
       const url = String(request);
       if (failingPath && url.endsWith(failingPath)) {
         return { ok: false, status: 404, statusText: "Not Found" };
       }
-      return { ok: true, status: 200, statusText: "OK", url };
+      return {
+        ok: true,
+        status: 200,
+        statusText: "OK",
+        url,
+        body: `NEW:${url}`,
+        clone() {
+          return this;
+        }
+      };
     }
   };
   vm.runInNewContext(read("docs/service-worker.js"), context);
@@ -103,6 +125,22 @@ async function messageWorker(harness, data) {
     data,
     source: null,
     waitUntil(promise) {
+      result = promise;
+    }
+  });
+  return result;
+}
+
+async function fetchWorker(harness, url, destination) {
+  let result;
+  harness.listeners.fetch({
+    request: {
+      method: "GET",
+      mode: "same-origin",
+      destination,
+      url
+    },
+    respondWith(promise) {
       result = promise;
     }
   });
@@ -155,19 +193,104 @@ test("missing mandatory shell file blocks service-worker installation", async ()
 
 test("normal activation retires old caches after mandatory precaching", async () => {
   const harness = serviceWorkerHarness();
-  await harness.context.caches.open("sof-13-moons-core-old");
+  await Promise.all([
+    harness.context.caches.open("sof-13-moons-core-old"),
+    harness.context.caches.open("sof-13-moons-runtime-old"),
+    harness.context.caches.open("sof-13-moons-images-old"),
+    harness.context.caches.open("sof-13-moons-core-older"),
+    harness.context.caches.open("sof-13-moons-runtime-2026.07.16.2"),
+    harness.context.caches.open("sof-13-moons-images-2026.07.16.2")
+  ]);
   await installWorker(harness);
   await activateWorker(harness);
-  assert.equal(harness.stores.has("sof-13-moons-core-old"), false);
+  assert.deepEqual(
+    [...harness.stores.keys()].sort(),
+    [
+      "sof-13-moons-core-2026.07.16.2",
+      "sof-13-moons-images-2026.07.16.2",
+      "sof-13-moons-runtime-2026.07.16.2"
+    ]
+  );
 });
 
 test("verified manual refresh preserves recovery caches through activation", async () => {
   const harness = serviceWorkerHarness();
-  await harness.context.caches.open("sof-13-moons-core-old");
+  await Promise.all([
+    harness.context.caches.open("sof-13-moons-core-old"),
+    harness.context.caches.open("sof-13-moons-runtime-old")
+  ]);
   await installWorker(harness);
-  await messageWorker(harness, { type: "ACTIVATE_VERIFIED_REFRESH" });
+  await messageWorker(harness, {
+    type: "ACTIVATE_VERIFIED_REFRESH",
+    recoveryCaches: ["sof-13-moons-core-old"]
+  });
   await activateWorker(harness);
   assert.equal(harness.stores.has("sof-13-moons-core-old"), true);
+  assert.equal(harness.stores.has("sof-13-moons-runtime-old"), false);
+});
+
+test("stale completed refresh metadata does not retain old caches", async () => {
+  const harness = serviceWorkerHarness();
+  await Promise.all([
+    harness.context.caches.open("sof-13-moons-core-old"),
+    harness.context.caches.open("sof-13-moons-refresh-preserve-2026.07.16.2")
+  ]);
+  await installWorker(harness);
+  await activateWorker(harness);
+  assert.equal(harness.stores.has("sof-13-moons-core-old"), false);
+  assert.equal(
+    harness.stores.has("sof-13-moons-refresh-preserve-2026.07.16.2"),
+    false
+  );
+});
+
+test("failed current-core promotion preserves last working caches", async () => {
+  const harness = serviceWorkerHarness(null, { failPromotion: true });
+  await harness.context.caches.open("sof-13-moons-core-old");
+  await installWorker(harness);
+  await assert.rejects(activateWorker(harness), /promotion failed/);
+  assert.equal(harness.stores.has("sof-13-moons-core-old"), true);
+});
+
+test("core requests resolve from the current named cache, never an older cache", async () => {
+  const harness = serviceWorkerHarness();
+  const legacy = await harness.context.caches.open("legacy-unrelated-cache");
+  const urls = [
+    "https://example.test/project/assets/js/pwa.js",
+    "https://example.test/project/assets/css/moons.css",
+    "https://example.test/project/offline.html"
+  ];
+  await Promise.all(urls.map(url => legacy.put(url, {
+    ok: true,
+    body: `OLD:${url}`,
+    clone() {
+      return this;
+    }
+  })));
+  await installWorker(harness);
+  await activateWorker(harness);
+  harness.context.fetch = async () => {
+    throw new Error("offline");
+  };
+
+  const responses = await Promise.all([
+    fetchWorker(
+      harness,
+      `${urls[0]}?v=20260716-2`,
+      "script"
+    ),
+    fetchWorker(
+      harness,
+      `${urls[1]}?v=20260716-2`,
+      "style"
+    ),
+    fetchWorker(harness, urls[2], "document")
+  ]);
+  responses.forEach(response => assert.match(response.body, /^NEW:/));
+  assert.equal([...harness.stores.keys()].filter(name =>
+    name.startsWith("sof-13-moons-") &&
+    /-(?:old|older)$/.test(name)
+  ).length, 0);
 });
 
 test("service-worker build marker matches the central app version", () => {
@@ -178,6 +301,7 @@ test("service-worker build marker matches the central app version", () => {
   assert.equal(version, "2026.07.16.2");
   assert.equal(build, version);
   assert.match(read("docs/service-worker.js"), new RegExp(`core-\\$\\{VERSION\\}`));
+  assert.doesNotMatch(read("docs/service-worker.js"), /\bcaches\.match\(/);
   assert.match(read("docs/assets/js/pwa.js"), /setText\("appVersion", APP_VERSION\)/);
   assert.match(read("docs/13-moons-release-checklist.md"), /App version: `2026\.07\.16\.2`/);
   assert.match(read("docs/13-moons-version-history.md"), /## 2026\.07\.16\.2/);
@@ -218,6 +342,7 @@ function refreshHarness({ online = true, scenario = "success" } = {}) {
   ]);
   const workerUrl = "https://example.test/project/service-worker.js";
   const serviceWorkers = new MockEventTarget();
+  const activationMessages = [];
   const worker = new MockEventTarget();
   worker.state = "installing";
   worker.scriptURL = workerUrl;
@@ -271,6 +396,10 @@ function refreshHarness({ online = true, scenario = "success" } = {}) {
       }, 0);
     }
     if (["SKIP_WAITING", "ACTIVATE_VERIFIED_REFRESH"].includes(message.type)) {
+      activationMessages.push(message);
+      if (message.type === "ACTIVATE_VERIFIED_REFRESH") {
+        deleted.push("sof-13-moons-runtime-old");
+      }
       setTimeout(() => {
         setWorkerState("activating");
         registration.installing = null;
@@ -361,6 +490,7 @@ function refreshHarness({ online = true, scenario = "success" } = {}) {
   vm.runInNewContext(read("docs/assets/js/pwa-refresh.js"), context);
   return {
     context,
+    activationMessages,
     deleted,
     unregistered,
     registered,
@@ -399,7 +529,7 @@ test("successful installation and startup retire only owned recovery caches", as
   const harness = refreshHarness();
   const before = new Map(harness.storage);
   await harness.context.MoonsPwaRefresh.refreshAppFiles(refreshOptions(harness));
-  assert.deepEqual(harness.deleted, []);
+  assert.deepEqual(harness.deleted, ["sof-13-moons-runtime-old"]);
   assert.ok(
     harness.sessionValues.has("sof_moons_refresh_pending"),
     harness.messages.join(" | ")
@@ -407,7 +537,14 @@ test("successful installation and startup retire only owned recovery caches", as
   await harness.context.MoonsPwaRefresh.completePendingRefresh(refreshOptions(harness));
   assert.deepEqual(
     harness.deleted.sort(),
-    ["sof-13-moons-runtime-old"]
+    [
+      "sof-13-moons-refresh-preserve-2026.07.16.2",
+      "sof-13-moons-runtime-old"
+    ]
+  );
+  assert.deepEqual(
+    [...harness.activationMessages[0].recoveryCaches],
+    ["sof-13-moons-core-old"]
   );
   assert.deepEqual(harness.unregistered, ["moons"]);
   assert.equal(harness.registered.length, 1);
@@ -463,6 +600,16 @@ test("matching app version with the wrong worker build is rejected", async () =>
   assert.equal(harness.context.replaced, undefined);
   assert.equal(harness.sessionValues.has("sof_moons_refresh_pending"), false);
   assert.equal(harness.messages.at(-1), harness.context.MoonsPwaRefresh.failureMessage);
+});
+
+test("pending refresh cleanup is a no-op without a transaction marker", async () => {
+  const harness = refreshHarness();
+  const completed = await harness.context.MoonsPwaRefresh.completePendingRefresh(
+    refreshOptions(harness)
+  );
+  assert.equal(completed, false);
+  assert.deepEqual(harness.deleted, []);
+  assert.deepEqual(harness.messages, []);
 });
 
 class MemoryStorage {

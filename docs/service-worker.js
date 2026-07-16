@@ -12,6 +12,8 @@ const RUNTIME_CACHE = `${CACHE_PREFIX}runtime-${VERSION}`;
 const IMAGE_CACHE = `${CACHE_PREFIX}images-${VERSION}`;
 const INSTALL_CACHE = `${CACHE_PREFIX}install-${SERVICE_WORKER_BUILD}`;
 const PRESERVE_CACHE = `${CACHE_PREFIX}refresh-preserve-${SERVICE_WORKER_BUILD}`;
+const RECOVERY_METADATA_URL = new URL("./__refresh-recovery__", self.registration.scope).toString();
+const CURRENT_CACHES = new Set([CORE_CACHE, RUNTIME_CACHE, IMAGE_CACHE, INSTALL_CACHE]);
 const ROOT = self.registration.scope;
 
 const mandatoryPaths = [
@@ -94,6 +96,26 @@ async function mandatoryCacheReady() {
   return false;
 }
 
+async function activeRecoveryCaches(keys) {
+  if (!keys.includes(PRESERVE_CACHE)) return null;
+  try {
+    const cache = await caches.open(PRESERVE_CACHE);
+    const response = await cache.match(RECOVERY_METADATA_URL);
+    const metadata = await response?.json();
+    if (metadata?.appVersion !== VERSION ||
+        metadata?.serviceWorkerBuild !== SERVICE_WORKER_BUILD ||
+        !Array.isArray(metadata?.recoveryCaches)) return null;
+    return metadata.recoveryCaches.filter(name =>
+      typeof name === "string" &&
+      name.startsWith(CACHE_PREFIX) &&
+      !name.startsWith(`${CACHE_PREFIX}install-`) &&
+      !name.startsWith(`${CACHE_PREFIX}refresh-preserve-`)
+    );
+  } catch {
+    return null;
+  }
+}
+
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
     await caches.delete(INSTALL_CACHE);
@@ -136,15 +158,22 @@ self.addEventListener("activate", event => {
       const response = await installCache.match(url);
       if (response) await coreCache.put(url, response);
     }));
+    const promoted = await Promise.all(mandatoryUrls.map(url => coreCache.match(url)));
+    if (!promoted.every(Boolean)) {
+      throw new Error("Current app-shell cache promotion was incomplete.");
+    }
     await caches.delete(INSTALL_CACHE);
     const keys = await caches.keys();
-    if (!keys.includes(PRESERVE_CACHE)) {
-      const current = new Set([CORE_CACHE, RUNTIME_CACHE, IMAGE_CACHE]);
-      await Promise.all(keys.map(key => {
-        if (key.startsWith(CACHE_PREFIX) && !current.has(key)) return caches.delete(key);
-        return Promise.resolve(false);
-      }));
+    const recoveryCaches = await activeRecoveryCaches(keys);
+    const allowed = new Set(CURRENT_CACHES);
+    if (recoveryCaches) {
+      allowed.add(PRESERVE_CACHE);
+      recoveryCaches.forEach(name => allowed.add(name));
     }
+    await Promise.all(keys.map(key => {
+      if (key.startsWith(CACHE_PREFIX) && !allowed.has(key)) return caches.delete(key);
+      return Promise.resolve(false);
+    }));
     await self.clients.claim();
   })());
 });
@@ -156,7 +185,20 @@ self.addEventListener("message", event => {
   }
   if (event.data?.type === "ACTIVATE_VERIFIED_REFRESH") {
     event.waitUntil((async () => {
-      await caches.open(PRESERVE_CACHE);
+      const recoveryCaches = Array.isArray(event.data.recoveryCaches)
+        ? event.data.recoveryCaches.filter(name =>
+          typeof name === "string" &&
+          name.startsWith(CACHE_PREFIX) &&
+          !name.startsWith(`${CACHE_PREFIX}install-`) &&
+          !name.startsWith(`${CACHE_PREFIX}refresh-preserve-`)
+        )
+        : [];
+      const cache = await caches.open(PRESERVE_CACHE);
+      await cache.put(RECOVERY_METADATA_URL, new Response(JSON.stringify({
+        appVersion: VERSION,
+        serviceWorkerBuild: SERVICE_WORKER_BUILD,
+        recoveryCaches
+      }), { headers: { "Content-Type": "application/json" } }));
       await self.skipWaiting();
     })());
     return;
@@ -172,20 +214,21 @@ self.addEventListener("message", event => {
 
 async function networkFirst(request) {
   const cache = await caches.open(RUNTIME_CACHE);
+  const coreCache = await caches.open(CORE_CACHE);
   try {
     const response = await fetch(request);
     if (response.ok) await cache.put(request, response.clone());
     return response;
   } catch {
     return (await cache.match(request)) ||
-      (await caches.match(appUrl)) ||
-      (await caches.match(offlineUrl));
+      (await coreCache.match(appUrl)) ||
+      (await coreCache.match(offlineUrl));
   }
 }
 
-async function staleWhileRevalidate(request) {
-  const cache = await caches.open(RUNTIME_CACHE);
-  const cached = await caches.match(request, { ignoreSearch: true });
+async function staleWhileRevalidate(request, cacheName = CORE_CACHE) {
+  const cache = await caches.open(cacheName);
+  const cached = await cache.match(request, { ignoreSearch: true });
   const update = fetch(request).then(response => {
     if (response.ok) cache.put(request, response.clone());
     return response;
@@ -195,7 +238,7 @@ async function staleWhileRevalidate(request) {
 
 async function cacheImage(request) {
   const cache = await caches.open(IMAGE_CACHE);
-  const cached = await caches.match(request, { ignoreSearch: true });
+  const cached = await cache.match(request, { ignoreSearch: true });
   if (cached) return cached;
   const response = await fetch(request);
   if (response.ok) await cache.put(request, response.clone());

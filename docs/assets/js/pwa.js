@@ -264,6 +264,7 @@
     });
     register().then(async () => {
       await window.MoonsPwaRefresh.completePendingRefresh({
+        cachePrefix: CACHE_PREFIX,
         currentCoreCache: `${CACHE_PREFIX}core-${APP_VERSION}`,
         expectedVersion: APP_VERSION,
         expectedBuild: APP_VERSION,
