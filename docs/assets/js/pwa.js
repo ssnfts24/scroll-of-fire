@@ -212,8 +212,11 @@
         setHelp('13 Moons installed. Open it from your home screen or app launcher.');
         updateInstallGuidance();
       }
-      if (type === 'waiting') setUpdateReady(true);
-      if (type === 'controllerchange') handleControllerChange();
+      if (type === 'waiting' || type === 'updatefound') setUpdateReady(true);
+      if (type === 'controllerchange') {
+        pendingReload = true;
+        handleControllerChange();
+      }
     }
   };
 })();
