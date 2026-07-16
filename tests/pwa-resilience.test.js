@@ -54,6 +54,7 @@ function serviceWorkerHarness(failingPath, { failPromotion = false } = {}) {
   const self = {
     SOF_13_MOONS: {
       APP_VERSION: "2026.07.16.3",
+      SERVICE_WORKER_BUILD: "2026.07.16.3",
       CACHE_PREFIX: "sof-13-moons-"
     },
     registration: { scope: "https://example.test/project/" },
@@ -294,17 +295,16 @@ test("core requests resolve from the current named cache, never an older cache",
 });
 
 test("service-worker build marker matches the central app version", () => {
-  const version = read("docs/assets/js/moons-version.js")
-    .match(/APP_VERSION = "([^"]+)"/)[1];
-  const build = read("docs/service-worker.js")
-    .match(/SERVICE_WORKER_BUILD = "([^"]+)"/)[1];
+  const versionFile = read("docs/assets/js/moons-version.js");
+  const version = versionFile.match(/APP_VERSION = "([^"]+)"/)[1];
+  const build = versionFile.match(/SERVICE_WORKER_BUILD = APP_VERSION/);
   assert.equal(version, "2026.07.16.3");
-  assert.equal(build, version);
+  assert.ok(build);
   assert.match(read("docs/service-worker.js"), new RegExp(`core-\\$\\{VERSION\\}`));
   assert.doesNotMatch(read("docs/service-worker.js"), /\bcaches\.match\(/);
   assert.match(read("docs/assets/js/pwa.js"), /setText\("appVersion", APP_VERSION\)/);
-  assert.match(read("docs/13-moons-release-checklist.md"), /App version: `2026\.07\.16\.2`/);
-  assert.match(read("docs/13-moons-version-history.md"), /## 2026\.07\.16\.2/);
+  assert.match(read("docs/13-moons-release-checklist.md"), /App version: `2026\.07\.16\.3`/);
+  assert.match(read("docs/13-moons-version-history.md"), /## 2026\.07\.16\.3/);
   const cacheBusters = [
     ...read("docs/moons.html").matchAll(/[?&]v=(\d{8}-\d+)/g)
   ].map(match => match[1]);
