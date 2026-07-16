@@ -28,6 +28,8 @@
   top: 0;
   z-index: 800;
   display: flex;
+  width: 100%;
+  max-width: 100%;
   align-items: center;
   justify-content: space-between;
   gap: 1.25rem;
@@ -99,6 +101,7 @@
   flex: 1 1 auto;
   flex-wrap: nowrap;
   min-width: 0;
+  max-width: 100%;
 }
 
 .site-nav a,
@@ -238,6 +241,7 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  min-width: 0;
 }
 
 .nav-drop-btn {

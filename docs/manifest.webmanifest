@@ -1,14 +1,14 @@
 {
-  "name": "Remnant 13 Moons — Living Calendar",
-  "short_name": "13 Moons",
-  "id": "./moons/",
-  "start_url": "./moons/",
+  "name": "Codex of Reality",
+  "short_name": "Codex",
+  "id": "./",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#05070d",
   "theme_color": "#05070d",
-  "description": "A living Remnant calendar app with the current moon, moon day, Shabbat state, visible moon phase, daily mirror reading, and witness dashboard.",
+  "description": "Scroll of Fire \u2014 Remnant 13 Moons, Frequency Governance, Living Technology, Covenant Caravan, Artifact Registry",
   "icons": [
     {
       "src": "assets/img/moons/app/icon-192.png",
