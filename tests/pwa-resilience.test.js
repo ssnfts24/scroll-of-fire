@@ -97,6 +97,18 @@ async function activateWorker(harness) {
   return activation;
 }
 
+async function messageWorker(harness, data) {
+  let result;
+  harness.listeners.message({
+    data,
+    source: null,
+    waitUntil(promise) {
+      result = promise;
+    }
+  });
+  return result;
+}
+
 test("missing optional image does not block install or offline startup", async () => {
   const harness = serviceWorkerHarness("apple-touch-icon.png");
   await installWorker(harness);
@@ -141,6 +153,23 @@ test("missing mandatory shell file blocks service-worker installation", async ()
   assert.equal(harness.stores.has("sof-13-moons-install-2026.07.16.2"), false);
 });
 
+test("normal activation retires old caches after mandatory precaching", async () => {
+  const harness = serviceWorkerHarness();
+  await harness.context.caches.open("sof-13-moons-core-old");
+  await installWorker(harness);
+  await activateWorker(harness);
+  assert.equal(harness.stores.has("sof-13-moons-core-old"), false);
+});
+
+test("verified manual refresh preserves recovery caches through activation", async () => {
+  const harness = serviceWorkerHarness();
+  await harness.context.caches.open("sof-13-moons-core-old");
+  await installWorker(harness);
+  await messageWorker(harness, { type: "ACTIVATE_VERIFIED_REFRESH" });
+  await activateWorker(harness);
+  assert.equal(harness.stores.has("sof-13-moons-core-old"), true);
+});
+
 test("service-worker build marker matches the central app version", () => {
   const version = read("docs/assets/js/moons-version.js")
     .match(/APP_VERSION = "([^"]+)"/)[1];
@@ -149,6 +178,14 @@ test("service-worker build marker matches the central app version", () => {
   assert.equal(version, "2026.07.16.2");
   assert.equal(build, version);
   assert.match(read("docs/service-worker.js"), new RegExp(`core-\\$\\{VERSION\\}`));
+  assert.match(read("docs/assets/js/pwa.js"), /setText\("appVersion", APP_VERSION\)/);
+  assert.match(read("docs/13-moons-release-checklist.md"), /App version: `2026\.07\.16\.2`/);
+  assert.match(read("docs/13-moons-version-history.md"), /## 2026\.07\.16\.2/);
+  const cacheBusters = [
+    ...read("docs/moons.html").matchAll(/[?&]v=(\d{8}-\d+)/g)
+  ].map(match => match[1]);
+  assert.ok(cacheBusters.length > 0);
+  assert.deepEqual([...new Set(cacheBusters)], ["20260716-2"]);
 });
 
 class MockEventTarget {
@@ -224,11 +261,16 @@ function refreshHarness({ online = true, scenario = "success" } = {}) {
           setWorkerState("installed");
           return;
         }
+        if (scenario === "wrong-build-only") {
+          ready("2026.07.16.2", "2026.07.16.1");
+          setWorkerState("installed");
+          return;
+        }
         ready();
         setWorkerState("installed");
       }, 0);
     }
-    if (message.type === "SKIP_WAITING") {
+    if (["SKIP_WAITING", "ACTIVATE_VERIFIED_REFRESH"].includes(message.type)) {
       setTimeout(() => {
         setWorkerState("activating");
         registration.installing = null;
@@ -382,6 +424,7 @@ test("register success followed by mandatory precache failure preserves recovery
   assert.deepEqual(harness.deleted, []);
   assert.equal(harness.context.replaced, undefined);
   assert.deepEqual(harness.storage, before);
+  assert.equal(harness.worker.state, "redundant");
   assert.equal(harness.sessionValues.has("sof_moons_refresh_pending"), false);
   assert.equal(
     harness.messages.at(-1),
@@ -402,6 +445,17 @@ test("installation timeout preserves recovery and does not reload", async () => 
 
 test("stale readiness and mismatched build do not authorize refresh", async () => {
   const harness = refreshHarness({ scenario: "stale-only" });
+  await harness.context.MoonsPwaRefresh.refreshAppFiles(
+    refreshOptions(harness, { lifecycleTimeoutMs: 10 })
+  );
+  assert.deepEqual(harness.deleted, []);
+  assert.equal(harness.context.replaced, undefined);
+  assert.equal(harness.sessionValues.has("sof_moons_refresh_pending"), false);
+  assert.equal(harness.messages.at(-1), harness.context.MoonsPwaRefresh.failureMessage);
+});
+
+test("matching app version with the wrong worker build is rejected", async () => {
+  const harness = refreshHarness({ scenario: "wrong-build-only" });
   await harness.context.MoonsPwaRefresh.refreshAppFiles(
     refreshOptions(harness, { lifecycleTimeoutMs: 10 })
   );

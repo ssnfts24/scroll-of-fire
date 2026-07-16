@@ -16,6 +16,7 @@
     scopeUrl,
     expectedVersion,
     expectedBuild,
+    preserveRecovery = false,
     timeoutMs
   }) {
     return new Promise((resolve, reject) => {
@@ -23,6 +24,7 @@
       let ready = false;
       let checking = false;
       let settled = false;
+      let activationRequested = false;
 
       const cleanup = () => {
         clearTimeout(timeout);
@@ -54,8 +56,12 @@
           fail(new Error("The replacement service worker became redundant."));
           return;
         }
-        if (ready && ["installed", "waiting"].includes(worker.state)) {
-          worker.postMessage?.({ type: "SKIP_WAITING" });
+        if (ready && ["installed", "waiting"].includes(worker.state) &&
+            !activationRequested) {
+          activationRequested = true;
+          worker.postMessage?.({
+            type: preserveRecovery ? "ACTIVATE_VERIFIED_REFRESH" : "SKIP_WAITING"
+          });
         }
         if (!ready || worker.state !== "activated") return;
         checking = true;
@@ -182,6 +188,7 @@
         scopeUrl,
         expectedVersion,
         expectedBuild,
+        preserveRecovery: true,
         timeoutMs: lifecycleTimeoutMs
       });
 

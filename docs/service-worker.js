@@ -11,6 +11,7 @@ const CORE_CACHE = `${CACHE_PREFIX}core-${VERSION}`;
 const RUNTIME_CACHE = `${CACHE_PREFIX}runtime-${VERSION}`;
 const IMAGE_CACHE = `${CACHE_PREFIX}images-${VERSION}`;
 const INSTALL_CACHE = `${CACHE_PREFIX}install-${SERVICE_WORKER_BUILD}`;
+const PRESERVE_CACHE = `${CACHE_PREFIX}refresh-preserve-${SERVICE_WORKER_BUILD}`;
 const ROOT = self.registration.scope;
 
 const mandatoryPaths = [
@@ -136,6 +137,14 @@ self.addEventListener("activate", event => {
       if (response) await coreCache.put(url, response);
     }));
     await caches.delete(INSTALL_CACHE);
+    const keys = await caches.keys();
+    if (!keys.includes(PRESERVE_CACHE)) {
+      const current = new Set([CORE_CACHE, RUNTIME_CACHE, IMAGE_CACHE]);
+      await Promise.all(keys.map(key => {
+        if (key.startsWith(CACHE_PREFIX) && !current.has(key)) return caches.delete(key);
+        return Promise.resolve(false);
+      }));
+    }
     await self.clients.claim();
   })());
 });
@@ -143,6 +152,13 @@ self.addEventListener("activate", event => {
 self.addEventListener("message", event => {
   if (event.data?.type === "SKIP_WAITING") {
     self.skipWaiting();
+    return;
+  }
+  if (event.data?.type === "ACTIVATE_VERIFIED_REFRESH") {
+    event.waitUntil((async () => {
+      await caches.open(PRESERVE_CACHE);
+      await self.skipWaiting();
+    })());
     return;
   }
   if (event.data?.type === "GET_APP_SHELL_READY") {
