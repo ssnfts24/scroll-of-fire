@@ -45,8 +45,11 @@ html,
 body {
   margin: 0;
   width: 100%;
+  max-width: 100%;
   min-height: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
+  overflow-y: auto;
+  touch-action: pan-y;
 }
 
 body {
