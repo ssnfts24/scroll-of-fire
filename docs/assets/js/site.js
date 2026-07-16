@@ -8,14 +8,11 @@
   const MOBILE_BREAKPOINT = 760;
 
   document.documentElement.classList.add("js-ready");
-  const navManagedExternally = document.documentElement.hasAttribute("data-sof-nav-managed");
 
   document.addEventListener("DOMContentLoaded", function () {
     setHeaderHeight();
     markActiveNav();
-    if (!navManagedExternally) {
-      setupSiteNavigation();
-    }
+    setupSiteNavigation();
     setupTheoryNavigation();
     enableCopyButtons();
     enhanceMediaLoading();
@@ -133,6 +130,10 @@
     const nav = document.querySelector("[data-site-nav]");
 
     if (!toggle || !nav) return;
+    nav.setAttribute(
+      "aria-hidden",
+      window.innerWidth <= MOBILE_BREAKPOINT ? "true" : "false"
+    );
 
     toggle.addEventListener("click", function () {
       const isOpen = nav.classList.contains("is-site-nav-open");
@@ -163,6 +164,12 @@
         !clickedNav
       ) {
         closeAllDropdowns();
+        if (
+          document.body.classList.contains("site-menu-open") &&
+          window.innerWidth <= MOBILE_BREAKPOINT
+        ) {
+          closeSiteMenu();
+        }
       }
     });
 
@@ -295,6 +302,7 @@
 
   function openSiteMenu(toggle, nav) {
     nav.classList.add("is-site-nav-open");
+    nav.setAttribute("aria-hidden", "false");
     document.body.classList.add("site-menu-open");
 
     toggle.setAttribute("aria-expanded", "true");
@@ -307,6 +315,10 @@
 
     if (nav) {
       nav.classList.remove("is-site-nav-open");
+      nav.setAttribute(
+        "aria-hidden",
+        window.innerWidth <= MOBILE_BREAKPOINT ? "true" : "false"
+      );
     }
 
     document.body.classList.remove("site-menu-open");
