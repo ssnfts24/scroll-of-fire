@@ -149,12 +149,17 @@
   }
 
   async function refreshFiles() {
-    registration = await window.MoonsPwaRefresh.refreshAppFiles({
+    const replacement = await window.MoonsPwaRefresh.refreshAppFiles({
       cachePrefix: CACHE_PREFIX,
       currentCoreCache: `${CACHE_PREFIX}core-${APP_VERSION}`,
+      expectedVersion: APP_VERSION,
+      expectedBuild: APP_VERSION,
       status,
       onRegistered: reg => watch(reg)
-    }) || registration;
+    });
+    registration = replacement || registration;
+    const actions = byId("refreshRecoveryActions");
+    if (actions) actions.hidden = Boolean(replacement);
   }
 
   function bindStorageControls() {
@@ -216,6 +221,12 @@
     });
     byId("updateApp")?.addEventListener("click", applyUpdate);
     byId("refreshAppFiles")?.addEventListener("click", refreshFiles);
+    byId("retryRefreshAppFiles")?.addEventListener("click", refreshFiles);
+    byId("cancelRefreshAppFiles")?.addEventListener("click", () => {
+      const actions = byId("refreshRecoveryActions");
+      if (actions) actions.hidden = true;
+      status("App file refresh cancelled. Your previous recovery files remain available.");
+    });
     bindStorageControls();
     addEventListener("beforeinstallprompt", event => {
       event.preventDefault();
@@ -251,7 +262,14 @@
       } catch {}
       updateDeviceStatus();
     });
-    register();
+    register().then(async () => {
+      await window.MoonsPwaRefresh.completePendingRefresh({
+        currentCoreCache: `${CACHE_PREFIX}core-${APP_VERSION}`,
+        expectedVersion: APP_VERSION,
+        expectedBuild: APP_VERSION,
+        status
+      });
+    });
     updateInstallUI();
   }
 

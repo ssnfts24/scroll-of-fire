@@ -2112,7 +2112,11 @@
               <button id="refreshAppFiles" class="lab-btn ghost" type="button">Refresh App Files</button>
               <button id="resetAppSettings" class="lab-btn ghost" type="button">Reset App Settings</button>
             </div>
-            <p class="fine">Refresh App Files unregisters the service worker, clears only 13 Moons caches, reloads fresh files, and registers the current worker again. It does not delete logs or settings.</p>
+            <div id="refreshRecoveryActions" class="btnrow" hidden>
+              <button id="retryRefreshAppFiles" class="lab-btn" type="button">Retry</button>
+              <button id="cancelRefreshAppFiles" class="lab-btn ghost" type="button">Cancel</button>
+            </div>
+            <p class="fine">Refresh App Files verifies and activates a fresh service worker before reloading. Previous recovery files remain available until the refreshed app starts successfully. It does not delete logs or settings.</p>
           </article>
 
           <article class="card col-5">

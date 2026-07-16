@@ -10,6 +10,7 @@ if (SERVICE_WORKER_BUILD !== VERSION) {
 const CORE_CACHE = `${CACHE_PREFIX}core-${VERSION}`;
 const RUNTIME_CACHE = `${CACHE_PREFIX}runtime-${VERSION}`;
 const IMAGE_CACHE = `${CACHE_PREFIX}images-${VERSION}`;
+const INSTALL_CACHE = `${CACHE_PREFIX}install-${SERVICE_WORKER_BUILD}`;
 const ROOT = self.registration.scope;
 
 const mandatoryPaths = [
@@ -71,9 +72,31 @@ const offlineUrl = new URL("./offline.html", ROOT).toString();
 const appUrl = new URL("./moons.html", ROOT).toString();
 const development = ["localhost", "127.0.0.1"].includes(self.location.hostname);
 
+const readyMessage = type => ({
+  type,
+  appVersion: VERSION,
+  serviceWorkerBuild: SERVICE_WORKER_BUILD,
+  mandatoryAssetCount: mandatoryUrls.length
+});
+
+async function notifyClients(message) {
+  const clients = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+  clients.forEach(client => client.postMessage(message));
+}
+
+async function mandatoryCacheReady() {
+  for (const cacheName of [INSTALL_CACHE, CORE_CACHE]) {
+    const cache = await caches.open(cacheName);
+    const matches = await Promise.all(mandatoryUrls.map(url => cache.match(url)));
+    if (matches.every(Boolean)) return true;
+  }
+  return false;
+}
+
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
-    const cache = await caches.open(CORE_CACHE);
+    await caches.delete(INSTALL_CACHE);
+    const cache = await caches.open(INSTALL_CACHE);
     try {
       await Promise.all(mandatoryUrls.map(async url => {
         const response = await fetch(url, { cache: "reload" });
@@ -82,6 +105,8 @@ self.addEventListener("install", event => {
       }));
     } catch (error) {
       console.error("13 Moons service-worker install failed: mandatory app-shell file unavailable.", error);
+      await caches.delete(INSTALL_CACHE);
+      await notifyClients(readyMessage("APP_SHELL_FAILED"));
       throw error;
     }
 
@@ -98,23 +123,35 @@ self.addEventListener("install", event => {
         }
       });
     }
+    await notifyClients(readyMessage("APP_SHELL_READY"));
   })());
 });
 
 self.addEventListener("activate", event => {
   event.waitUntil((async () => {
-    const current = new Set([CORE_CACHE, RUNTIME_CACHE, IMAGE_CACHE]);
-    const keys = await caches.keys();
-    await Promise.all(keys.map(key => {
-      if (key.startsWith(CACHE_PREFIX) && !current.has(key)) return caches.delete(key);
-      return Promise.resolve(false);
+    const installCache = await caches.open(INSTALL_CACHE);
+    const coreCache = await caches.open(CORE_CACHE);
+    await Promise.all(coreUrls.map(async url => {
+      const response = await installCache.match(url);
+      if (response) await coreCache.put(url, response);
     }));
+    await caches.delete(INSTALL_CACHE);
     await self.clients.claim();
   })());
 });
 
 self.addEventListener("message", event => {
-  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
+  if (event.data?.type === "SKIP_WAITING") {
+    self.skipWaiting();
+    return;
+  }
+  if (event.data?.type === "GET_APP_SHELL_READY") {
+    event.waitUntil((async () => {
+      if (await mandatoryCacheReady()) {
+        event.source?.postMessage(readyMessage("APP_SHELL_READY"));
+      }
+    })());
+  }
 });
 
 async function networkFirst(request) {
