@@ -1,6 +1,9 @@
 (() => {
   "use strict";
 
+  if (window.__SOF_MOONS_CORE_INITIALIZED__) return;
+  window.__SOF_MOONS_CORE_INITIALIZED__ = true;
+
   const $ = selector => document.querySelector(selector);
   const $$ = selector => Array.from(document.querySelectorAll(selector));
 
@@ -1488,8 +1491,16 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     });
   }
 
+  function resolveTabId(id) {
+    const validIds = $$(".tabPanel").map(panel => panel.id);
+    if (validIds.includes(id)) return id;
+    if (validIds.includes("todayPanel")) return "todayPanel";
+    return validIds[0] || null;
+  }
+
   function activateTab(id, options = {}) {
-    if (!id) return;
+    const targetId = resolveTabId(id);
+    if (!targetId) return;
 
     const {
       updateHistory = true,
@@ -1498,8 +1509,8 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       scrollButton = true
     } = options;
 
-    const activeButton = document.querySelector(`[data-tab="${id}"]`);
-    const activePanel = document.getElementById(id);
+    const activeButton = document.querySelector(`[data-tab="${targetId}"]`);
+    const activePanel = document.getElementById(targetId);
 
     $$(".tab").forEach(tab => {
       const isActive = tab === activeButton;
@@ -1513,11 +1524,11 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     }
 
     $$(".tabPanel").forEach(panel => {
-      panel.classList.toggle("is-moons-panel-visible", panel.id === id);
+      panel.classList.toggle("is-moons-panel-visible", panel.id === targetId);
     });
 
     $$("[data-mobile-tab]").forEach(link => {
-      const active = link.dataset.mobileTab === id;
+      const active = link.dataset.mobileTab === targetId;
       link.classList.toggle("is-moons-tab-active", active);
       if (active) {
         link.setAttribute("aria-current", "page");
@@ -1526,13 +1537,13 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       }
     });
 
-    try { localStorage.setItem(LAST_TAB_KEY, id); } catch (_) {}
+    try { localStorage.setItem(LAST_TAB_KEY, targetId); } catch (_) {}
 
     if (updateHistory) {
       const nextUrl = new URL(location.href);
-      nextUrl.hash = id;
+      nextUrl.hash = targetId;
       const method = replaceHistory ? "replaceState" : "pushState";
-      history[method]({ tab: id }, "", nextUrl);
+      history[method]({ tab: targetId }, "", nextUrl);
     }
 
     if (focusPanel && activePanel) {
@@ -1541,7 +1552,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
 
     try {
       if (typeof gtag === "function") {
-        gtag("event", "moons_section_opened", { section_name: id });
+        gtag("event", "moons_section_opened", { section_name: targetId });
       }
     } catch (_) {}
   }

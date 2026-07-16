@@ -1,6 +1,9 @@
 (() => {
   "use strict";
 
+  if (window.__SOF_MOONS_PWA_INSTALL_INITIALIZED__) return;
+  window.__SOF_MOONS_PWA_INSTALL_INITIALIZED__ = true;
+
   const DISMISS_KEY = "sof_moons_install_dismissed_v1";
   const DISMISS_MS = 1000 * 60 * 60 * 24 * 7;
   let deferredPrompt = null;
@@ -231,4 +234,3 @@
     setup();
   }
 })();
-

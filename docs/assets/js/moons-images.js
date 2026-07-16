@@ -11,6 +11,9 @@
 (() => {
   "use strict";
 
+  if (window.__SOF_MOONS_IMAGES_INITIALIZED__) return;
+  window.__SOF_MOONS_IMAGES_INITIALIZED__ = true;
+
   const ROOT = "assets/img/moons";
 
   const MOON_IMAGES = [
