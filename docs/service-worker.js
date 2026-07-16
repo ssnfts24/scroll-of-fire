@@ -1,4 +1,4 @@
-const CACHE_VERSION = "remnant-13-moons-v20260716-01";
+const CACHE_VERSION = "remnant-13-moons-v20260716-02";
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const ROOT = self.registration.scope;
@@ -10,7 +10,7 @@ const PRECACHE_PATHS = [
   "./manifest.webmanifest",
   "./assets/css/codex.css",
   "./assets/css/navigation.css",
-  "./assets/css/moons.css?v=20260715-11",
+  "./assets/css/moons.css?v=20260716-03",
   "./assets/css/astrology.css?v=20260715-11",
   "./assets/css/animations.css",
   "./assets/js/site.js",
@@ -22,7 +22,7 @@ const PRECACHE_PATHS = [
   "./assets/js/astrology.js?v=20260715-11",
   "./assets/js/moons-images.js?v=20260715-11",
   "./assets/js/moons-app.js?v=20260716-01",
-  "./assets/js/pwa-install.js?v=20260716-01",
+  "./assets/js/pwa-install.js?v=20260716-02",
   "./assets/img/moons/app/icon-192.png",
   "./assets/img/moons/app/icon-512.png",
   "./assets/img/moons/app/icon-maskable-512.png",

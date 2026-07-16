@@ -168,6 +168,18 @@
     }
   }
 
+  function toast(message) {
+    const node = $("#sofToast");
+    if (!node) return;
+    node.textContent = message;
+    node.classList.add("show");
+    clearTimeout(window.__sofToastTimer);
+    window.__sofToastTimer = window.setTimeout(
+      () => node.classList.remove("show"),
+      1800
+    );
+  }
+
   function text(id, value) {
     const node = $("#" + id);
     if (node) node.textContent = value;
