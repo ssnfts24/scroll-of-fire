@@ -5,6 +5,7 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#05070d",
   "theme_color": "#05070d",
   "description": "Scroll of Fire — Remnant 13 Moons, Frequency Governance, Living Technology, Covenant Caravan, Artifact Registry",
@@ -12,5 +13,17 @@
     { "src": "assets/img/moons/app/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "assets/img/moons/app/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "assets/img/moons/app/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
-  ]
+  ],
+  "screenshots": [
+    { "src": "assets/img/moons/app/og-image-1200x630.webp", "sizes": "1200x630", "type": "image/webp", "label": "Remnant 13 Moons today view", "form_factor": "wide" },
+    { "src": "assets/img/moons/app/splash-2732.webp", "sizes": "2732x2732", "type": "image/webp", "label": "Remnant 13 Moons application artwork" }
+  ],
+  "shortcuts": [
+    { "name": "Today", "short_name": "Today", "url": "./moons.html#today-panel" },
+    { "name": "Shabbat", "short_name": "Shabbat", "url": "./moons.html#shabbat-panel" },
+    { "name": "Daily Mirror", "short_name": "Mirror", "url": "./moons.html#mirror-panel" },
+    { "name": "Write Witness", "short_name": "Witness", "url": "./moons.html#witness-panel" },
+    { "name": "Year Map", "short_name": "Year", "url": "./moons.html#year-panel" }
+  ],
+  "prefer_related_applications": false
 }

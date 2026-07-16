@@ -1,4 +1,4 @@
-const CACHE_NAME = 'scroll-of-fire-v20260716-r1';
+const CACHE_NAME = 'scroll-of-fire-v20260716-r3';
 const HTML_CACHE = `${CACHE_NAME}-html`;
 const ASSET_CACHE = `${CACHE_NAME}-assets`;
 const IMAGE_CACHE = `${CACHE_NAME}-images`;
