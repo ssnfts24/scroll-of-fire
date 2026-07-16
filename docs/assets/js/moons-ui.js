@@ -3,7 +3,7 @@
   if (window.RemnantCalendarUI) return;
 
   const REQUIRED_OUTPUTS = ['moon-name','moon-day','year-day','visible-phase','illumination','week-gate','shabbat-state','sunset','mirror-title'];
-  const WITNESS_FIELDS = ['body','emotion','dreams','signs','sleep','action','lesson'];
+  const WITNESS_FIELDS = ['body','emotion','dreams','signs','sleep','action','lesson','field','context'];
 
   function create() {
     const outputs = Object.fromEntries(REQUIRED_OUTPUTS.map(name => [name, document.querySelector(`[data-moon-output="${name}"]`)]));
@@ -56,6 +56,9 @@
       witnessFields: Object.fromEntries(WITNESS_FIELDS.map(key => [key, q(`[data-log-${key}]`)])),
       witnessPreview: q('[data-witness-preview]'),
       witnessCopy: q('[data-copy-witness]'),
+      witnessBuild: q('[data-build-witness]'),
+      witnessClear: q('[data-clear-witness]'),
+      mirrorBuild: q('[data-build-mirror]'),
       exportButton: q('[data-export-logs]'),
       copyAllButton: q('[data-copy-all]'),
       clearButton: q('[data-clear-logs]'),
@@ -131,7 +134,13 @@
       dom.retryButton?.addEventListener('click', () => handlers.onRetry());
       dom.mirrorFocus?.addEventListener('change', event => handlers.onFocus(event.target.value));
       dom.mirrorCopy?.addEventListener('click', () => handlers.onCopyMirror());
+      dom.mirrorBuild?.addEventListener('click', () => handlers.onFocus(dom.mirrorFocus?.value || 'general'));
       dom.codexCopy?.addEventListener('click', () => handlers.onCopySeal());
+      dom.witnessBuild?.addEventListener('click', () => handlers.onWitnessInput(readWitnessFields()));
+      dom.witnessClear?.addEventListener('click', () => {
+        dom.logForm?.reset();
+        handlers.onWitnessInput(readWitnessFields());
+      });
       dom.witnessCopy?.addEventListener('click', () => handlers.onCopyWitness(readWitnessFields()));
       Object.values(dom.witnessFields).forEach(node => node?.addEventListener('input', () => handlers.onWitnessInput(readWitnessFields())));
       dom.logNote?.addEventListener('input', () => handlers.onWitnessInput(readWitnessFields()));

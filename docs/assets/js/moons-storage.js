@@ -50,7 +50,9 @@
         sleep: String(notes.sleep || '').trim(),
         action: String(notes.action || '').trim(),
         lesson: String(notes.lesson || '').trim(),
-        witness: String(notes.witness || '').trim()
+        witness: String(notes.witness || '').trim(),
+        field: String(notes.field || '').trim(),
+        context: String(notes.context || '').trim()
       }
     };
   }
@@ -143,7 +145,9 @@
       notes.sleep ? `Sleep: ${notes.sleep}` : '',
       notes.action ? `Action: ${notes.action}` : '',
       notes.lesson ? `Lesson: ${notes.lesson}` : '',
-      notes.witness ? `Witness: ${notes.witness}` : ''
+      notes.witness ? `Witness: ${notes.witness}` : '',
+      notes.field ? `Field: ${notes.field}` : '',
+      notes.context ? `Context: ${notes.context}` : ''
     ];
     return lines.filter(line => line !== '').join('\n').replace(/\n{3,}/g, '\n\n');
   }
