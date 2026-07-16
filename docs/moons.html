@@ -127,14 +127,14 @@
 
   <link
     rel="stylesheet"
-    href="assets/css/moons.css?v=20260716-2"
+    href="assets/css/moons.css?v=20260716-3"
   >
 
   <link
     rel="stylesheet"
-    href="assets/css/astrology.css?v=20260716-2"
+    href="assets/css/astrology.css?v=20260716-3"
   >
-  <link rel="stylesheet" href="assets/css/pwa.css?v=20260716-2">
+  <link rel="stylesheet" href="assets/css/pwa.css?v=20260716-3">
 
   <link rel="stylesheet" href="assets/css/animations.css">
 
@@ -415,10 +415,11 @@
         <h2 id="installTitle">Carry 13 Moons as an app</h2>
         <p>Installation adds a Home Screen icon, opens the calendar without the normal browser bar where supported, and prepares essential files for offline use. Your records remain on this device.</p>
         <div class="btnrow">
-          <button id="installApp" class="lab-btn" type="button" disabled>Install 13 Moons</button>
+          <button id="installApp" class="lab-btn" type="button" aria-describedby="appStatus installStateNote">Install 13 Moons</button>
           <button class="lab-btn ghost" type="button" data-tab-jump="settingsPanel">Installation Help</button>
         </div>
         <p id="appStatus" class="app-status">Checking installation support…</p>
+        <p id="installStateNote" class="fine app-install-note">Waiting for browser install state…</p>
         <p id="inAppBrowserWarning" class="warning" hidden>To install 13 Moons on iPhone, open this page in Safari first. Use the browser menu to open the page in Safari, then return here.</p>
         <div id="iosInstallHelp" hidden>
           <strong>Install on iPhone or iPad with Safari</strong>
@@ -2098,10 +2099,22 @@
             <p class="subtitle">Updates and refreshed app files preserve saved records. Reinstall only as a recovery step.</p>
             <dl class="app-status-grid">
               <div><dt>App version</dt><dd id="appVersion">—</dd></div>
-              <div><dt>Service-worker version</dt><dd id="serviceWorkerVersion">—</dd></div>
-              <div><dt>Installed status</dt><dd id="installedStatus">—</dd></div>
-              <div><dt>Standalone status</dt><dd id="standaloneStatus">—</dd></div>
-              <div><dt>Network</dt><dd id="networkStatus">—</dd></div>
+              <div><dt>Service-worker build</dt><dd id="serviceWorkerVersion">—</dd></div>
+              <div><dt>CSS release</dt><dd id="cssRelease">—</dd></div>
+              <div><dt>Page build</dt><dd id="pageBuild">—</dd></div>
+              <div><dt>Deployment commit</dt><dd id="deploymentCommit">—</dd></div>
+              <div><dt>Browser mode</dt><dd id="standaloneStatus">—</dd></div>
+              <div><dt>Install state</dt><dd id="installedStatus">—</dd></div>
+              <div><dt>Online/offline</dt><dd id="networkStatus">—</dd></div>
+              <div><dt>beforeinstallprompt</dt><dd id="beforeInstallPromptStatus">—</dd></div>
+              <div><dt>appinstalled</dt><dd id="appInstalledEventStatus">—</dd></div>
+              <div><dt>Service-worker control</dt><dd id="serviceWorkerControl">—</dd></div>
+              <div><dt>Service-worker scope</dt><dd id="serviceWorkerScope">—</dd></div>
+              <div><dt>Matching registrations</dt><dd id="serviceWorkerRegistrations">—</dd></div>
+              <div><dt>Manifest ID</dt><dd id="manifestId">—</dd></div>
+              <div><dt>Manifest start URL</dt><dd id="manifestStartUrl">—</dd></div>
+              <div><dt>Manifest scope</dt><dd id="manifestScope">—</dd></div>
+              <div><dt>Manifest display</dt><dd id="manifestDisplay">—</dd></div>
               <div><dt>Update status</dt><dd id="updateStatus">Up to date</dd></div>
               <div><dt>Saved records</dt><dd id="savedRecordCount">0</dd></div>
               <div><dt>Last update</dt><dd id="lastUpdateDate">—</dd></div>
@@ -2145,6 +2158,7 @@
               <li>Try Check for Updates, then Refresh App Files.</li>
               <li>Close the app and long-press its icon.</li>
               <li>Choose App info or Uninstall and remove it.</li>
+              <li>Logs and settings stay in Chrome unless you also erase local app data.</li>
               <li>Open codexofreality.org/moons.html in Chrome.</li>
               <li>Select Install 13 Moons and import logs if needed.</li>
             </ol>
@@ -2260,20 +2274,20 @@
 
   <p id="appStatusLive" class="visually-hidden" role="status" aria-live="polite"></p>
 
-  <script src="assets/js/moons-version.js?v=20260716-2"></script>
-  <script src="assets/js/moons-migrations.js?v=20260716-2"></script>
-  <script src="assets/js/moons-storage.js?v=20260716-2"></script>
+  <script src="assets/js/moons-version.js?v=20260716-3"></script>
+  <script src="assets/js/moons-migrations.js?v=20260716-3"></script>
+  <script src="assets/js/moons-storage.js?v=20260716-3"></script>
 
   <!-- Main calendar engine -->
-  <script src="assets/js/moons.js?v=20260716-2"></script>
+  <script src="assets/js/moons.js?v=20260716-3"></script>
 
   <!-- Astrology and planetary mirror -->
-  <script src="assets/js/astrology.js?v=20260716-2"></script>
+  <script src="assets/js/astrology.js?v=20260716-3"></script>
 
   <!-- Remnant artwork integration -->
-  <script src="assets/js/moons-images.js?v=20260716-2"></script>
-  <script src="assets/js/pwa-refresh.js?v=20260716-2"></script>
-  <script src="assets/js/pwa.js?v=20260716-2"></script>
+  <script src="assets/js/moons-images.js?v=20260716-3"></script>
+  <script src="assets/js/pwa-refresh.js?v=20260716-3"></script>
+  <script src="assets/js/pwa.js?v=20260716-3"></script>
 
   <!-- Page-specific interaction layer -->
   <script>

@@ -2,8 +2,7 @@
 
 importScripts("./assets/js/moons-version.js");
 
-const { APP_VERSION: VERSION, CACHE_PREFIX } = self.SOF_13_MOONS;
-const SERVICE_WORKER_BUILD = "2026.07.16.2";
+const { APP_VERSION: VERSION, CACHE_PREFIX, SERVICE_WORKER_BUILD } = self.SOF_13_MOONS;
 if (SERVICE_WORKER_BUILD !== VERSION) {
   throw new Error(`Service-worker build ${SERVICE_WORKER_BUILD} does not match app version ${VERSION}`);
 }

@@ -1,5 +1,11 @@
 # Remnant 13 Moons Version History
 
+## 2026.07.16.3
+
+- Restored explicit install-state messaging for Android Chrome, standalone mode, previous installs, unsupported browsers, and iPhone Safari guidance.
+- Added live Installation & Recovery diagnostics for build IDs, service-worker control, manifest fields, browser mode, and install state.
+- Extended mobile touch handling so vertical scrolling can begin over cards, artwork, the moon ring, tab panels, blank areas, and buttons.
+
 ## 2026.07.16.2
 
 - Split mandatory app-shell and optional artwork precaching.
