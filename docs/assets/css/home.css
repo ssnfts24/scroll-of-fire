@@ -14,10 +14,7 @@
 
 .home-page .section-shell {
   position: relative;
-  width: min(
-    var(--content-main, 1180px),
-    calc(100% - max(clamp(2rem, 4vw, 3rem), env(safe-area-inset-left, 0px)) - max(clamp(2rem, 4vw, 3rem), env(safe-area-inset-right, 0px)))
-  );
+  width: min(var(--content-main, 1180px), calc(100% - clamp(2rem, 4vw, 3rem)));
   margin-inline: auto;
   padding-block: clamp(3.1rem, 6vw, 6.25rem);
 }
@@ -256,7 +253,6 @@
 .hero-image-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: #03050a;
 }
@@ -277,7 +273,7 @@
 .hero-image-card img {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
   max-width: 100%;
   object-fit: contain;
   object-position: center;
@@ -934,20 +930,17 @@
 
 @media (max-width: 760px) {
   .home-page .section-shell {
-    width: min(
-      1180px,
-      calc(100% - max(0.75rem, env(safe-area-inset-left, 0px)) - max(0.75rem, env(safe-area-inset-right, 0px)))
-    );
+    width: min(100% - 1rem, 1180px);
     padding-block: 2.7rem;
   }
 
   .home-hero {
-    padding-top: 0.8rem;
+    padding-top: 1.35rem;
   }
 
   .hero-copy-stack h1 {
     max-width: none;
-    font-size: clamp(2.1rem, 11vw, 3.35rem);
+    font-size: clamp(2.35rem, 12vw, 4rem);
     line-height: 0.97;
   }
 
@@ -970,8 +963,7 @@
   }
 
   .hero-actions .btn {
-    flex: 1 1 150px;
-    min-height: 46px;
+    flex: 1 1 170px;
     justify-content: center;
     text-align: center;
   }
@@ -990,10 +982,6 @@
   .hero-image-caption {
     padding: 0.85rem;
     font-size: 0.85rem;
-  }
-
-  .hero-image-frame {
-    aspect-ratio: 7 / 5;
   }
 
   .section-heading--split {
@@ -1052,10 +1040,7 @@
 
 @media (max-width: 430px) {
   .home-page .section-shell {
-    width: min(
-      1180px,
-      calc(100% - max(0.5rem, env(safe-area-inset-left, 0px)) - max(0.5rem, env(safe-area-inset-right, 0px)))
-    );
+    width: min(100% - 0.75rem, 1180px);
   }
 
   .hero-copy-stack h1 {
@@ -1082,10 +1067,6 @@
 
   .hero-image-card {
     border-radius: 18px;
-  }
-
-  .hero-image-frame {
-    aspect-ratio: 4 / 3;
   }
 }
 
