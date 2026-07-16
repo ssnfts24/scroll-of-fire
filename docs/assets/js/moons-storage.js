@@ -103,10 +103,60 @@
     return classify(data.records);
   }
 
+  function stable(value) {
+    if (Array.isArray(value)) return `[${value.map(stable).join(",")}]`;
+    if (value && typeof value === "object") {
+      return `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${stable(value[key])}`).join(",")}}`;
+    }
+    return JSON.stringify(value);
+  }
+
+  function identity(entry) {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) return null;
+    const field = ["id", "uuid", "saved", "createdAt", "timestamp"]
+      .find(key => entry[key] !== undefined && entry[key] !== null);
+    return field ? `${field}:${stable(entry[field])}` : null;
+  }
+
+  function mergeArrays(existing, incoming, result) {
+    const merged = [...existing];
+    incoming.forEach(entry => {
+      const exact = stable(entry);
+      if (merged.some(current => stable(current) === exact)) {
+        result.skipped += 1;
+        return;
+      }
+      const marker = identity(entry);
+      if (marker && merged.some(current => identity(current) === marker)) {
+        result.conflicts += 1;
+        return;
+      }
+      merged.push(entry);
+      result.merged += 1;
+    });
+    return merged;
+  }
+
+  function mergeObjects(existing, incoming, result) {
+    const merged = { ...existing };
+    Object.entries(incoming).forEach(([key, value]) => {
+      if (!(key in merged)) {
+        merged[key] = value;
+        result.merged += 1;
+      } else if (stable(merged[key]) === stable(value)) {
+        result.skipped += 1;
+      } else {
+        result.conflicts += 1;
+      }
+    });
+    return merged;
+  }
+
   function importData(data, mode) {
-    const counts = validate(data);
+    validate(data);
     if (!["merge", "replace"].includes(mode)) throw new Error("Choose Merge or Replace.");
     const before = readOwned();
+    const result = { imported: 0, merged: 0, skipped: 0, conflicts: 0 };
     localStorage.setItem(ROLLBACK_KEY, JSON.stringify({
       createdAt: new Date().toISOString(),
       records: before
@@ -114,22 +164,36 @@
     if (mode === "replace") Object.keys(before).forEach(key => localStorage.removeItem(key));
 
     Object.entries(data.records).forEach(([key, value]) => {
-      if (value === null) return;
-      if (mode === "merge" && (LOG_KEYS.has(key) || /witness|mirror|pattern/i.test(key))) {
-        const existing = parse(localStorage.getItem(key), []);
-        const incoming = parse(value, []);
-        if (Array.isArray(existing) && Array.isArray(incoming)) {
-          const merged = [...existing, ...incoming].filter((entry, index, all) => {
-            const marker = JSON.stringify(entry);
-            return all.findIndex(item => JSON.stringify(item) === marker) === index;
-          });
-          localStorage.setItem(key, JSON.stringify(merged));
-          return;
-        }
+      if (value === null) {
+        result.skipped += 1;
+        return;
       }
-      localStorage.setItem(key, value);
+      const currentValue = localStorage.getItem(key);
+      if (mode === "replace" || currentValue === null) {
+        localStorage.setItem(key, value);
+        result.imported += 1;
+        return;
+      }
+      if (SETTINGS_KEYS.has(key)) {
+        result.skipped += 1;
+        return;
+      }
+
+      const existing = parse(currentValue, undefined);
+      const incoming = parse(value, undefined);
+      if (Array.isArray(existing) && Array.isArray(incoming)) {
+        localStorage.setItem(key, JSON.stringify(mergeArrays(existing, incoming, result)));
+      } else if (existing && incoming &&
+          typeof existing === "object" && typeof incoming === "object" &&
+          !Array.isArray(existing) && !Array.isArray(incoming)) {
+        localStorage.setItem(key, JSON.stringify(mergeObjects(existing, incoming, result)));
+      } else if (stable(existing) === stable(incoming)) {
+        result.skipped += 1;
+      } else {
+        result.conflicts += 1;
+      }
     });
-    return counts;
+    return result;
   }
 
   function recordCount() {

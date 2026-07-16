@@ -3,12 +3,16 @@
 importScripts("./assets/js/moons-version.js");
 
 const { APP_VERSION: VERSION, CACHE_PREFIX } = self.SOF_13_MOONS;
+const SERVICE_WORKER_BUILD = "2026.07.16.2";
+if (SERVICE_WORKER_BUILD !== VERSION) {
+  throw new Error(`Service-worker build ${SERVICE_WORKER_BUILD} does not match app version ${VERSION}`);
+}
 const CORE_CACHE = `${CACHE_PREFIX}core-${VERSION}`;
 const RUNTIME_CACHE = `${CACHE_PREFIX}runtime-${VERSION}`;
 const IMAGE_CACHE = `${CACHE_PREFIX}images-${VERSION}`;
 const ROOT = self.registration.scope;
 
-const corePaths = [
+const mandatoryPaths = [
   "./moons.html",
   "./offline.html",
   "./manifest.webmanifest",
@@ -24,6 +28,7 @@ const corePaths = [
   "./assets/js/moons-images.js",
   "./assets/js/moons-migrations.js",
   "./assets/js/moons-storage.js",
+  "./assets/js/pwa-refresh.js",
   "./assets/js/pwa.js",
   "./assets/js/site.js",
   "./assets/js/calendar-cor.js",
@@ -33,7 +38,9 @@ const corePaths = [
   "./assets/data/moons.json",
   "./assets/img/moons/app/icon-192.png",
   "./assets/img/moons/app/icon-512.png",
-  "./assets/img/moons/app/icon-maskable-512.png",
+  "./assets/img/moons/app/icon-maskable-512.png"
+];
+const optionalPaths = [
   "./assets/img/moons/app/apple-touch-icon.png",
   "./assets/img/moons/app/screenshot-mobile-390x844.png",
   "./assets/img/moons/app/screenshot-mobile-430x932.png",
@@ -57,24 +64,40 @@ const corePaths = [
   "./assets/img/moons/moons/moon-12-river-of-signs.webp",
   "./assets/img/moons/moons/moon-13-completion-seal.webp"
 ];
-const coreUrls = corePaths.map(path => new URL(path, ROOT).toString());
-const requiredUrls = coreUrls.slice(0, 26);
-const optionalUrls = coreUrls.slice(26);
+const mandatoryUrls = mandatoryPaths.map(path => new URL(path, ROOT).toString());
+const optionalUrls = optionalPaths.map(path => new URL(path, ROOT).toString());
+const coreUrls = [...mandatoryUrls, ...optionalUrls];
 const offlineUrl = new URL("./offline.html", ROOT).toString();
 const appUrl = new URL("./moons.html", ROOT).toString();
+const development = ["localhost", "127.0.0.1"].includes(self.location.hostname);
 
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CORE_CACHE);
-    await Promise.all(requiredUrls.map(async url => {
+    try {
+      await Promise.all(mandatoryUrls.map(async url => {
+        const response = await fetch(url, { cache: "reload" });
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`.trim());
+        await cache.put(url, response);
+      }));
+    } catch (error) {
+      console.error("13 Moons service-worker install failed: mandatory app-shell file unavailable.", error);
+      throw error;
+    }
+
+    const optionalResults = await Promise.allSettled(optionalUrls.map(async url => {
       const response = await fetch(url, { cache: "reload" });
-      if (!response.ok) throw new Error(`Unable to cache ${url}`);
+      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`.trim());
       await cache.put(url, response);
+      return url;
     }));
-    await Promise.allSettled(optionalUrls.map(async url => {
-      const response = await fetch(url, { cache: "reload" });
-      if (response.ok) await cache.put(url, response);
-    }));
+    if (development) {
+      optionalResults.forEach((result, index) => {
+        if (result.status === "rejected") {
+          console.warn(`Optional 13 Moons asset was not cached: ${optionalUrls[index]}`, result.reason);
+        }
+      });
+    }
   })());
 });
 

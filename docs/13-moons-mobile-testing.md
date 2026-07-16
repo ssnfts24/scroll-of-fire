@@ -9,12 +9,16 @@
 | Codex data validator | Pass |
 | Service-worker registration | Pass |
 | Core cache creation | Pass |
+| Missing optional precache asset | Pass: installation continues |
+| Missing mandatory precache asset | Pass: installation fails intentionally |
 | Offline shell with server stopped | Pass |
 | User-controlled service-worker update | Pass |
 | Single update reload | Pass |
 | Export/replace-import round trip | Pass: 1 record before and after |
 | Import rollback backup | Pass |
 | Unrelated local storage preservation | Pass |
+| Offline Refresh App Files guard | Pass: no registrations or caches changed |
+| Merge import conflict handling | Pass: existing records and settings preserved |
 | 320px document overflow | Pass: 320px content on 320px viewport |
 | 360px document overflow | Pass: 360px content on 360px viewport |
 | 375px document overflow | Pass: 375px content on 375px viewport |

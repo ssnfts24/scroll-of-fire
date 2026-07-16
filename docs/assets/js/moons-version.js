@@ -1,4 +1,4 @@
-const APP_VERSION = "2026.07.16.1";
+const APP_VERSION = "2026.07.16.2";
 const DATA_SCHEMA_VERSION = 1;
 
 globalThis.SOF_13_MOONS = Object.freeze({

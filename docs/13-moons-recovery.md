@@ -20,7 +20,9 @@ delete, overwrite, or force-update them.
 
 Try **Check for Updates**, then **Refresh App Files**, before reinstalling.
 Refreshing app files removes only 13 Moons caches and does not remove saved
-logs or settings. Export important records before destructive recovery.
+logs or settings. It is disabled offline and verifies that `moons.html` is
+available from the network before cleanup. Export important records before
+destructive recovery.
 
 Removing an installed Home Screen icon does not reliably erase browser
 storage. Reinstallation is a recovery step, not the normal update process.

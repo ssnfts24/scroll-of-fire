@@ -32,6 +32,13 @@
     setText("savedRecordCount", String(window.MoonsStorage?.recordCount() || 0));
     setText("lastUpdateDate", localStorage.getItem("sof_moons_last_update") || "Not recorded");
     document.documentElement.classList.toggle("is-standalone", standalone());
+    const refreshButton = byId("refreshAppFiles");
+    if (refreshButton) {
+      refreshButton.disabled = !navigator.onLine;
+      refreshButton.title = navigator.onLine
+        ? ""
+        : window.MoonsPwaRefresh.offlineMessage;
+    }
     const snapshotNode = byId("offlineSnapshot");
     if (snapshotNode) {
       let snapshot = null;
@@ -142,25 +149,12 @@
   }
 
   async function refreshFiles() {
-    if (!navigator.onLine) {
-      status("Reconnect before refreshing app files so the application can download a fresh shell.");
-      return;
-    }
-    if (!confirm("Refresh 13 Moons app files? Saved logs and settings will remain.")) return;
-    const registrations = await navigator.serviceWorker.getRegistrations();
-    const workerUrl = new URL("service-worker.js", document.baseURI).toString();
-    await Promise.all(registrations
-      .filter(reg => [
-        reg.active?.scriptURL,
-        reg.waiting?.scriptURL,
-        reg.installing?.scriptURL
-      ].includes(workerUrl))
-      .map(reg => reg.unregister()));
-    const keys = await caches.keys();
-    await Promise.all(keys
-      .filter(key => key.startsWith(CACHE_PREFIX))
-      .map(key => caches.delete(key)));
-    location.reload();
+    registration = await window.MoonsPwaRefresh.refreshAppFiles({
+      cachePrefix: CACHE_PREFIX,
+      currentCoreCache: `${CACHE_PREFIX}core-${APP_VERSION}`,
+      status,
+      onRegistered: reg => watch(reg)
+    }) || registration;
   }
 
   function bindStorageControls() {
@@ -178,8 +172,8 @@
       try {
         const data = JSON.parse(await file.text());
         const mode = byId("importMode")?.value || "merge";
-        const counts = window.MoonsStorage.importData(data, mode);
-        status(`Import complete: ${counts.logs.length} logs, ${counts.mirrorEntries.length} mirror entries, ${counts.savedPatterns.length} patterns. A rollback backup was created.`);
+        const result = window.MoonsStorage.importData(data, mode);
+        status(`Import complete: ${result.imported} imported, ${result.merged} merged, ${result.skipped} skipped, ${result.conflicts} conflicting records. A rollback backup was created.`);
         updateDeviceStatus();
       } catch (error) {
         status(`Import failed: ${error.message}`);

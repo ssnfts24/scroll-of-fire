@@ -2,7 +2,8 @@
 
 ## Release identity
 
-- App version: `2026.07.16.1`
+- App version: `2026.07.16.2`
+- Service-worker build: `2026.07.16.2`
 - Data schema version: `1`
 - Manifest: `docs/manifest.webmanifest`
 - Service worker: `docs/service-worker.js`
@@ -25,10 +26,13 @@
 - [x] Safe-area padding and 16px mobile form controls are present
 - [x] No document-level horizontal overflow at 320px, 390px, or 430px
 - [x] Essential files open from the service-worker cache without the server
+- [x] Optional artwork failures do not block mandatory app-shell installation
 - [x] Available updates wait for user activation and reload once
 - [x] Update activation warns when a witness entry contains unsaved text
 - [x] Refresh App Files preserves local records and clears only 13 Moons caches
+- [x] Refresh App Files is disabled offline and verifies network access before cleanup
 - [x] Export/import validates records and creates a rollback backup
+- [x] Merge imports deduplicate arrays, preserve settings, and report conflicts
 - [x] Destructive erase requires a checkbox and two confirmations
 - [x] Unrelated local-storage records and unrelated caches are not erased
 - [x] JavaScript syntax, manifest JSON, and Codex data validation pass

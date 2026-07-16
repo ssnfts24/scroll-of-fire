@@ -1,5 +1,11 @@
 # Remnant 13 Moons Version History
 
+## 2026.07.16.2
+
+- Split mandatory app-shell and optional artwork precaching.
+- Guarded Refresh App Files while offline and added a network preflight.
+- Made Merge imports preserve settings, deduplicate arrays, and report conflicts.
+
 ## Working baseline
 
 - Protected commit: `d2c42a174293373d34e9c1d002f99a3135d23d5c`
