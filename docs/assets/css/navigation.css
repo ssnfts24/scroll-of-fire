@@ -33,9 +33,7 @@
   gap: 1.25rem;
   min-height: var(--header-h, 72px);
   padding-block: 0.72rem;
-  padding-inline:
-    max(var(--shell-pad, 1rem), env(safe-area-inset-left, 0px), calc((100vw - var(--content-wide, 1440px)) / 2 + var(--shell-pad, 1rem)))
-    max(var(--shell-pad, 1rem), env(safe-area-inset-right, 0px), calc((100vw - var(--content-wide, 1440px)) / 2 + var(--shell-pad, 1rem)));
+  padding-inline: max(var(--shell-pad, 1rem), calc((100vw - var(--content-wide, 1440px)) / 2 + var(--shell-pad, 1rem)));
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(5, 7, 13, 0.92);
   -webkit-backdrop-filter: blur(12px);
@@ -108,7 +106,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
+  min-height: 40px;
   padding: 0.58rem 0.86rem;
   border: 0;
   border-radius: 999px;
@@ -445,11 +443,7 @@ body.site-menu-open {
     top: 0;
     z-index: 900;
     min-height: var(--header-h, 72px);
-    padding:
-      max(0.72rem, env(safe-area-inset-top, 0px))
-      max(1rem, env(safe-area-inset-right, 0px))
-      0.72rem
-      max(1rem, env(safe-area-inset-left, 0px));
+    padding: 0.72rem 1rem;
   }
 
   .brand {
@@ -478,26 +472,18 @@ body.site-menu-open {
 
   .site-nav {
     position: fixed;
-    inset:
-      var(--header-h, 72px)
-      max(env(safe-area-inset-right, 0px), 0px)
-      0
-      max(env(safe-area-inset-left, 0px), 0px);
+    inset: var(--header-h, 72px) 0 0;
     z-index: 895;
     width: 100%;
-    height: calc(100vh - var(--header-h, 72px));
-    height: calc(100svh - var(--header-h, 72px));
     height: calc(100dvh - var(--header-h, 72px));
     display: flex;
     visibility: hidden;
     overflow-y: auto;
     overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
     padding:
       1rem
-      max(1rem, env(safe-area-inset-right, 0px))
-      max(2rem, env(safe-area-inset-bottom, 0px))
-      max(1rem, env(safe-area-inset-left, 0px));
+      1rem
+      max(2rem, env(safe-area-inset-bottom));
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     background: rgba(5, 7, 13, 0.995);
     -webkit-backdrop-filter: blur(24px);
@@ -525,7 +511,7 @@ body.site-menu-open {
   .site-nav a,
   .nav-drop-btn {
     width: 100%;
-    min-height: 50px;
+    min-height: 48px;
     justify-content: flex-start;
     padding: 0.78rem 0.9rem;
     border: 1px solid transparent;
