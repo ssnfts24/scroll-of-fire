@@ -162,3 +162,32 @@ CC BY-NC 4.0 — Aaron Paul Laird
 
 The Recent Codex Activity panel reads from `/docs/assets/data/codex-updates.json`.
 Add new entries manually with a real `date`, `type`, `title`, `summary`, `url`, and `symbol`, and keep the list truthful and ordered by actual update date.
+
+## Development & Deployment
+
+**Live site:** https://codexofreality.org/
+
+**GitHub Pages mirror:** https://ssnfts24.github.io/scroll-of-fire/
+
+### Repository structure
+- `docs/` — all deployable website files (GitHub Pages source)
+- `docs/assets/` — CSS, JS, images, data files
+- `docs/systems/` — system pages (Frequencies, T-7, Recoder, etc.)
+- `docs/theory/` — theory chapter pages
+- `docs/moons/` — 13 Moons sub-app
+- `scripts/` — utility and validation scripts
+
+### Deployment
+The site deploys automatically from the `main` branch `/docs` folder via GitHub Pages.
+No build step is required — files are served directly.
+
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for full deployment documentation.
+
+### Validation
+```bash
+# Validate Codex data files
+node scripts/validate-codex-data.js
+
+# Check JS syntax
+for f in docs/assets/js/*.js; do node --check "$f"; done
+```
