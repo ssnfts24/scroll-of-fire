@@ -14,7 +14,10 @@
 
 .home-page .section-shell {
   position: relative;
-  width: min(var(--content-main, 1180px), calc(100% - clamp(2rem, 4vw, 3rem)));
+  width: min(
+    var(--content-main, 1180px),
+    calc(100% - max(clamp(2rem, 4vw, 3rem), env(safe-area-inset-left, 0px)) - max(clamp(2rem, 4vw, 3rem), env(safe-area-inset-right, 0px)))
+  );
   margin-inline: auto;
   padding-block: clamp(3.1rem, 6vw, 6.25rem);
 }
@@ -253,6 +256,7 @@
 .hero-image-frame {
   position: relative;
   width: 100%;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: #03050a;
 }
@@ -273,7 +277,7 @@
 .hero-image-card img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   max-width: 100%;
   object-fit: contain;
   object-position: center;
@@ -879,6 +883,270 @@
   gap: 1rem;
 }
 
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .today-card--primary {
+    grid-row: auto;
+  }
+
+  .artifact-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .today-grid,
+  .world-grid,
+  .codex-live-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .living-path {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .moons-explainer {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 960px) {
+  .home-hero-grid,
+  .caravan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-image-card {
+    width: 100%;
+    max-width: 680px;
+    justify-self: center;
+  }
+
+  .hero-copy-stack {
+    padding-top: 0;
+  }
+
+  .hero-copy-stack h1 {
+    max-width: 15ch;
+  }
+}
+
+@media (max-width: 760px) {
+  .home-page .section-shell {
+    width: min(
+      1180px,
+      calc(100% - max(0.75rem, env(safe-area-inset-left, 0px)) - max(0.75rem, env(safe-area-inset-right, 0px)))
+    );
+    padding-block: 2.7rem;
+  }
+
+  .home-hero {
+    padding-top: 0.8rem;
+  }
+
+  .hero-copy-stack h1 {
+    max-width: none;
+    font-size: clamp(2.1rem, 11vw, 3.35rem);
+    line-height: 0.97;
+  }
+
+  .hero-copy {
+    font-size: 1rem;
+  }
+
+  .hero-seal-row {
+    gap: 0.42rem;
+  }
+
+  .hero-seal {
+    min-height: 34px;
+    padding: 0.42rem 0.58rem;
+    font-size: 0.76rem;
+  }
+
+  .hero-actions {
+    align-items: stretch;
+  }
+
+  .hero-actions .btn {
+    flex: 1 1 150px;
+    min-height: 46px;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hero-secondary-links {
+    font-size: 0.86rem;
+  }
+
+  .hero-image-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    border-radius: 22px;
+  }
+
+  .hero-image-caption {
+    padding: 0.85rem;
+    font-size: 0.85rem;
+  }
+
+  .hero-image-frame {
+    aspect-ratio: 7 / 5;
+  }
+
+  .section-heading--split {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .today-grid,
+  .door-grid,
+  .world-grid,
+  .theory-entry-grid,
+  .living-path,
+  .spotlight-grid,
+  .witness-grid,
+  .codex-live-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mini-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .action-list a {
+    grid-template-columns: 1fr;
+  }
+
+  .artifact-strip {
+    display: flex;
+    gap: 0.8rem;
+    overflow-x: auto;
+    padding: 0.1rem 0.1rem 0.8rem;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+
+  .artifact-card-mini {
+    flex: 0 0 min(78vw, 300px);
+    scroll-snap-align: start;
+  }
+
+  .path-row {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 0.7rem;
+    padding: 0.75rem;
+  }
+
+  .path-row b {
+    width: 34px;
+    height: 34px;
+  }
+
+  .equation {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .home-page .section-shell {
+    width: min(
+      1180px,
+      calc(100% - max(0.5rem, env(safe-area-inset-left, 0px)) - max(0.5rem, env(safe-area-inset-right, 0px)))
+    );
+  }
+
+  .hero-copy-stack h1 {
+    font-size: clamp(2.15rem, 13vw, 3.25rem);
+  }
+
+  .hero-actions .btn {
+    flex-basis: 100%;
+  }
+
+  .mini-stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .notice-band,
+  .today-card,
+  .door-card,
+  .world-card,
+  .theory-entry,
+  .caravan-card,
+  .action-list a {
+    border-radius: 18px;
+  }
+
+  .hero-image-card {
+    border-radius: 18px;
+  }
+
+  .hero-image-frame {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-image-card img,
+  .door-card,
+  .action-list a {
+    transition: none;
+  }
+
+  .hero-image-card:hover img,
+  .door-card:hover,
+  .action-list a:hover {
+    transform: none;
+    filter: none;
+  }
+}
+
+.home-page {
+  --home-field-opacity: 0.88;
+  --home-field-speed: 20s;
+}
+
+.home-page[data-codex-daypart="dawn"] {
+  --home-field-opacity: 1;
+  --home-field-speed: 24s;
+}
+
+.home-page[data-codex-daypart="day"] {
+  --home-field-opacity: 0.92;
+  --home-field-speed: 18s;
+}
+
+.home-page[data-codex-daypart="dusk"] {
+  --home-field-opacity: 0.82;
+  --home-field-speed: 22s;
+}
+
+.home-page[data-codex-daypart="night"] {
+  --home-field-opacity: 0.72;
+  --home-field-speed: 30s;
+}
+
+.home-page .home-hero::before {
+  opacity: var(--home-field-opacity);
+  animation: codex-field-drift var(--home-field-speed) ease-in-out infinite alternate;
+}
+
+.home-page[data-codex-motion="off"] .home-hero::before {
+  animation: none;
+}
+
+.home-page .hero-line,
+.home-page .notice-band strong,
+.home-page .notice-band span {
+  transition: color 0.35s ease, opacity 0.35s ease;
+}
 
 .codex-live-grid {
   display: grid;
@@ -886,10 +1154,10 @@
   grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
 }
 
-.today-codex-panel:not([hidden]),
-.continue-path-panel:not([hidden]),
-.codex-activity-panel:not([hidden]),
-.your-codex-panel:not([hidden]) {
+.today-codex-panel,
+.continue-path-panel,
+.codex-activity-panel,
+.your-codex-panel {
   display: grid;
   gap: 1rem;
 }
@@ -978,256 +1246,6 @@
 
 .continue-path-panel--fallback {
   margin-top: 0;
-}
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
-@media (max-width: 1100px) {
-  .today-card--primary {
-    grid-row: auto;
-  }
-
-  .artifact-strip {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .today-grid,
-  .world-grid,
-  .codex-live-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .living-path {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .moons-explainer {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 960px) {
-  .home-hero-grid,
-  .caravan-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-image-card {
-    width: 100%;
-    max-width: 680px;
-    justify-self: center;
-  }
-
-  .hero-copy-stack {
-    padding-top: 0;
-  }
-
-  .hero-copy-stack h1 {
-    max-width: 15ch;
-  }
-}
-
-@media (max-width: 760px) {
-  .home-page .section-shell {
-    width: min(100% - 1rem, 1180px);
-    padding-block: 2.7rem;
-  }
-
-  .home-hero {
-    padding-top: 1.35rem;
-  }
-
-  .hero-copy-stack h1 {
-    max-width: none;
-    font-size: clamp(2.35rem, 12vw, 4rem);
-    line-height: 0.97;
-  }
-
-  .hero-copy {
-    font-size: 1rem;
-  }
-
-  .hero-seal-row {
-    gap: 0.42rem;
-  }
-
-  .hero-seal {
-    min-height: 34px;
-    padding: 0.42rem 0.58rem;
-    font-size: 0.76rem;
-  }
-
-  .hero-actions {
-    align-items: stretch;
-  }
-
-  .hero-actions .btn {
-    flex: 1 1 170px;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .hero-secondary-links {
-    font-size: 0.86rem;
-  }
-
-  .hero-image-card {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    border-radius: 22px;
-  }
-
-  .hero-image-caption {
-    padding: 0.85rem;
-    font-size: 0.85rem;
-  }
-
-  .section-heading--split {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .today-grid,
-  .door-grid,
-  .world-grid,
-  .theory-entry-grid,
-  .living-path,
-  .spotlight-grid,
-  .witness-grid,
-  .codex-live-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .mini-stat-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .action-list a {
-    grid-template-columns: 1fr;
-  }
-
-  .artifact-strip {
-    display: flex;
-    gap: 0.8rem;
-    overflow-x: auto;
-    padding: 0.1rem 0.1rem 0.8rem;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: thin;
-  }
-
-  .artifact-card-mini {
-    flex: 0 0 min(78vw, 300px);
-    scroll-snap-align: start;
-  }
-
-  .path-row {
-    grid-template-columns: 40px minmax(0, 1fr);
-    gap: 0.7rem;
-    padding: 0.75rem;
-  }
-
-  .path-row b {
-    width: 34px;
-    height: 34px;
-  }
-
-  .equation {
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 430px) {
-  .home-page .section-shell {
-    width: min(100% - 0.75rem, 1180px);
-  }
-
-  .hero-copy-stack h1 {
-    font-size: clamp(2.15rem, 13vw, 3.25rem);
-  }
-
-  .hero-actions .btn {
-    flex-basis: 100%;
-  }
-
-  .mini-stat-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .notice-band,
-  .today-card,
-  .door-card,
-  .world-card,
-  .theory-entry,
-  .caravan-card,
-  .action-list a {
-    border-radius: 18px;
-  }
-
-  .hero-image-card {
-    border-radius: 18px;
-  }
-}
-
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-image-card img,
-  .door-card,
-  .action-list a {
-    transition: none;
-  }
-
-  .hero-image-card:hover img,
-  .door-card:hover,
-  .action-list a:hover {
-    transform: none;
-    filter: none;
-  }
-}
-
-.home-page {
-  --home-field-opacity: 0.88;
-  --home-field-speed: 20s;
-}
-
-.home-page[data-codex-daypart="dawn"] {
-  --home-field-opacity: 1;
-  --home-field-speed: 24s;
-}
-
-.home-page[data-codex-daypart="day"] {
-  --home-field-opacity: 0.92;
-  --home-field-speed: 18s;
-}
-
-.home-page[data-codex-daypart="dusk"] {
-  --home-field-opacity: 0.82;
-  --home-field-speed: 22s;
-}
-
-.home-page[data-codex-daypart="night"] {
-  --home-field-opacity: 0.72;
-  --home-field-speed: 30s;
-}
-
-.home-page .home-hero::before {
-  opacity: var(--home-field-opacity);
-  animation: codex-field-drift var(--home-field-speed) ease-in-out infinite alternate;
-}
-
-.home-page[data-codex-motion="off"] .home-hero::before {
-  animation: none;
-}
-
-.home-page .hero-line,
-.home-page .notice-band strong,
-.home-page .notice-band span {
-  transition: color 0.35s ease, opacity 0.35s ease;
 }
 
 @keyframes codex-field-drift {

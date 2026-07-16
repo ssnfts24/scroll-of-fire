@@ -48,7 +48,10 @@ body {
     radial-gradient(900px 650px at 90% 12%, rgba(243, 201, 122, 0.12), transparent 70%),
     radial-gradient(780px 540px at 10% 42%, rgba(196, 163, 255, 0.10), transparent 72%),
     linear-gradient(180deg, var(--bg), var(--bg2) 58%, var(--bg));
-  padding-bottom: 92px;
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  padding-bottom: max(92px, env(safe-area-inset-bottom, 0px));
 }
 
 body::before {
@@ -74,6 +77,8 @@ a {
   z-index: -10;
   width: 100vw;
   height: 100vh;
+  height: 100svh;
+  height: 100dvh;
   pointer-events: none;
   opacity: 0.82;
 }
@@ -81,7 +86,10 @@ a {
 .fg-hero,
 .fg-shell,
 .fg-footer {
-  width: min(calc(100% - clamp(2rem, 4vw, 3rem)), var(--content-wide, 1440px));
+  width: min(
+    calc(100% - max(clamp(1rem, 4vw, 1.5rem), env(safe-area-inset-left, 0px)) - max(clamp(1rem, 4vw, 1.5rem), env(safe-area-inset-right, 0px))),
+    var(--content-wide, 1440px)
+  );
   margin-inline: auto;
 }
 
@@ -354,7 +362,7 @@ h3 {
   display: grid;
   gap: 12px;
   margin-top: 14px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
 }
 
 .audio-first-step,
@@ -370,6 +378,23 @@ h3 {
   display: block;
   color: var(--gold);
   margin-bottom: 0.25rem;
+}
+
+.audio-status-card {
+  margin-top: 12px;
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(122, 243, 255, 0.26);
+  background: rgba(122, 243, 255, 0.06);
+}
+
+.audio-status-card p {
+  margin: 0;
+}
+
+.audio-status-card p + p {
+  margin-top: 0.4rem;
+  color: var(--muted);
 }
 
 .fine-print {
@@ -642,6 +667,7 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
   text-decoration: none;
   border-radius: 15px;
+  min-height: 44px;
   padding: 0.76rem 1rem;
   font: inherit;
   font-weight: 880;
@@ -904,9 +930,9 @@ input[type="range"]::-moz-range-thumb {
 
 .mobile-dock {
   position: fixed;
-  left: 10px;
-  right: 10px;
-  bottom: 10px;
+  left: max(10px, env(safe-area-inset-left, 0px));
+  right: max(10px, env(safe-area-inset-right, 0px));
+  bottom: max(10px, env(safe-area-inset-bottom, 0px));
   z-index: 9999;
   display: none;
   grid-template-columns: repeat(5, 1fr);
@@ -970,13 +996,16 @@ input[type="range"]::-moz-range-thumb {
 
 @media (max-width: 720px) {
   body {
-    padding-bottom: 104px;
+    padding-bottom: max(104px, calc(84px + env(safe-area-inset-bottom, 0px)));
   }
 
   .fg-hero,
   .fg-shell,
   .fg-footer {
-    width: min(calc(100% - 22px), 1380px);
+    width: min(
+      calc(100% - max(11px, env(safe-area-inset-left, 0px)) - max(11px, env(safe-area-inset-right, 0px))),
+      1380px
+    );
   }
 
   .fg-hero {
