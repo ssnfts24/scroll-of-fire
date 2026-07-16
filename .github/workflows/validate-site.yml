@@ -1,0 +1,72 @@
+name: Validate Site
+
+on:
+  push:
+    paths:
+      - 'docs/**'
+  pull_request:
+    paths:
+      - 'docs/**'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required files exist
+        run: |
+          errors=0
+          
+          [ -f docs/CNAME ] || { echo "MISSING: docs/CNAME"; errors=$((errors+1)); }
+          [ -f docs/.nojekyll ] || { echo "MISSING: docs/.nojekyll"; errors=$((errors+1)); }
+          [ -f docs/manifest.webmanifest ] || { echo "MISSING: docs/manifest.webmanifest"; errors=$((errors+1)); }
+          [ -f docs/service-worker.js ] || { echo "MISSING: docs/service-worker.js"; errors=$((errors+1)); }
+          [ -f docs/offline.html ] || { echo "MISSING: docs/offline.html"; errors=$((errors+1)); }
+          
+          if [ $errors -gt 0 ]; then
+            echo "::error::$errors required file(s) missing"
+            exit 1
+          fi
+          echo "All required files present ✓"
+
+      - name: Check GA ID consistency
+        run: |
+          CORRECT_ID="G-4EPTLXGS0M"
+          WRONG_ID="G-2TBMEK502C"
+          
+          bad_files=$(grep -rl "$WRONG_ID" docs/ --include="*.html" 2>/dev/null || true)
+          if [ -n "$bad_files" ]; then
+            echo "::error::Files with wrong GA ID ($WRONG_ID instead of $CORRECT_ID):"
+            echo "$bad_files"
+            exit 1
+          fi
+          echo "GA ID correct on all HTML files ✓"
+
+      - name: Check manifest icons exist
+        run: |
+          errors=0
+          while IFS= read -r src; do
+            path="docs/$src"
+            [ -f "$path" ] || { echo "MISSING manifest icon: $path"; errors=$((errors+1)); }
+          done < <(node -e "const m=require('./docs/manifest.webmanifest'); m.icons.forEach(i=>console.log(i.src))" 2>/dev/null || true)
+          
+          if [ $errors -gt 0 ]; then
+            echo "::warning::$errors manifest icon(s) missing"
+          else
+            echo "Manifest icons present ✓"
+          fi
+
+      - name: Check JavaScript syntax
+        run: |
+          errors=0
+          for f in docs/assets/js/*.js; do
+            node --check "$f" || { echo "Syntax error in $f"; errors=$((errors+1)); }
+          done
+          
+          if [ $errors -gt 0 ]; then
+            echo "::error::$errors JS file(s) have syntax errors"
+            exit 1
+          fi
+          echo "JavaScript syntax OK ✓"
