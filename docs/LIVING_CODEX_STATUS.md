@@ -247,7 +247,7 @@ Manual visual testing at the following breakpoints is recommended:
 - Additional `codex-updates.json` entries as the Codex grows.
 - Field notes authored as `"type": "field note"` entries.
 - Moon `essay` and `codex` content in `moons.json` (currently blank for most moons).
-- Social cover image at `assets/img/codex-social-cover.jpg` (referenced in Open Graph metadata).
+- Social cover image at `assets/img/shared/social/codex-og-cover.jpg` (referenced in Open Graph metadata).
 - Confirm correct moon epoch date in `calendar-cor.js` for the Remnant 13 Moons system.
 
 ---

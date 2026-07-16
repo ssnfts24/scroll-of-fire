@@ -3,7 +3,7 @@
 <html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
 <head>
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2TBMEK502C"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4EPTLXGS0M"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
 
@@ -22,8 +22,8 @@
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="description" content="Invocation Lab — a guided run space for Σ → ∇φ → ℛ → ΔΣ with numbers, carriers, ethics, witnesses, and sealed export to the Ledger.">
   <link rel="canonical" href="./invoke.html">
-  <base href="https://ssnfts24.github.io/scroll-of-fire/">
-  <script>if(location.hostname!=="ssnfts24.github.io"){var _b=document.querySelector("base");if(_b)_b.setAttribute("href","/");}</script>
+  <base href="/">
+  <script>if(location.hostname==="ssnfts24.github.io"){const base=document.querySelector("base");if(base)base.setAttribute("href","/scroll-of-fire/");}</script>
   <!-- Fonts & CSS from site -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -119,11 +119,14 @@ header .nav{display:flex;align-items:center;justify-content:space-between;gap:10
 
   </style>
     <script defer src="assets/js/site.js"></script>
-  <link rel="icon" type="image/png" href="assets/img/favicon.png">
-  <link rel="apple-touch-icon" href="assets/img/favicon.png">
+  <script defer src="assets/js/calendar-cor.js"></script>
+  <script defer src="assets/js/living-codex.js"></script>
+  <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
+  <!-- build: 20260716-01 -->
 </head>
 <body class="stars living-all carrier-432" data-theme="dark">
-  <a class="skip" href="#main">Skip to content</a>
+  <a class="skip-link" href="#main">Skip to content</a>
   <!-- Header (kept minimal; site-level header can replace this if included globally) -->
     <header class="site-header" data-sof-header>
     <a class="brand" href="./" aria-label="Scroll of Fire home">
@@ -139,44 +142,87 @@ header .nav{display:flex;align-items:center;justify-content:space-between;gap:10
     </button>
 
     <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
-      <a href="./start.html">Start</a>
-      <a class="is-featured" href="./moons.html">13 Moons</a>
-      <a href="./covenant-caravan.html">Caravan</a>
-      <a href="./teach.html">Manifest</a>
-      <a href="./shop.html">Artifacts</a>
-      <a href="./hub.html">Hub</a>
-      <a href="./ledger.html">Ledger</a>
-      <a href="./systems/frequencies.html">Frequency</a>
 
       <div class="nav-dropdown" data-dropdown>
-        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="more-navigation" data-dropdown-toggle>
-          More <span aria-hidden="true">▾</span>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-today" data-dropdown-toggle>
+          Today <span aria-hidden="true">▾</span>
         </button>
-        <div id="more-navigation" class="nav-drop-menu">
-          <a href="./genesis-oracle.html">Genesis Oracle</a>
-          <a href="./theory.html">Theory / Canon</a>
-          <a href="./systems/t-7.html">T-7 Conduit</a>
-          <a href="./systems/witness.html">Witness System</a>
-          <a href="./systems/recoder.html">Reality Recoder</a>
-          <a href="./systems/mind-renewal.html">Mind Renewal</a>
-          <a href="./systems/archive.html">Systems Archive</a>
-          <a href="./guide.html">Guide</a>
-          <a href="./lab.html">Remnant Lab</a>
-          <a href="./invoke.html">Invoke</a>
-          <a href="./circle.html">Circle</a>
-          <a href="./ethics.html">Ethics</a>
-          <a href="./glossary.html">Glossary</a>
-          <a href="./downloads.html">Downloads</a>
+        <div id="nav-today" class="nav-drop-menu">
+          <a href="./moons.html">13 Moons</a>
+          <a href="./ledger.html">Witness Ledger</a>
+          <a href="./hub.html">Year Map</a>
         </div>
       </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-explore" data-dropdown-toggle>
+          Explore <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-explore" class="nav-drop-menu">
+          <a href="./theory.html">Theory</a>
+          <a href="./theory/canon.html">Canon</a>
+          <a href="./genesis-oracle.html">Genesis Oracle</a>
+          <a href="./glossary.html">Glossary</a>
+          <a href="./systems/archive.html">Systems Archive</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-build" data-dropdown-toggle>
+          Build <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-build" class="nav-drop-menu">
+          <a href="./systems/frequencies.html">Frequency Governance</a>
+          <a href="./systems/t-7.html">T-7 Conduit</a>
+          <a href="./systems/recoder.html">Reality Recoder</a>
+          <a href="./systems/mind-renewal.html">Mind Renewal</a>
+          <a href="./lab.html">Remnant Lab</a>
+          <a href="./invoke.html">Invoke</a>
+          <a href="./systems/witness.html">Witness System</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-artifacts" data-dropdown-toggle>
+          Artifacts <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-artifacts" class="nav-drop-menu">
+          <a href="./shop.html">Artifact Registry</a>
+          <a href="./circle.html">Covenant Circle</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-about" data-dropdown-toggle>
+          About <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-about" class="nav-drop-menu">
+          <a href="./about.html">About the Codex</a>
+          <a href="./start.html">Start Here</a>
+          <a href="./covenant-caravan.html">Covenant Caravan</a>
+          <a href="./teach.html">Manifest</a>
+          <a href="./ethics.html">Ethics</a>
+          <a href="./downloads.html">Downloads</a>
+          <a href="./guide.html">About Aaron</a>
+        </div>
+      </div>
+
     </nav>
-  </header>  <!-- Hero banner with aura -->  <figure class="lab-hero" aria-label="Scroll of Fire — Invocation Lab banner">
-    <img src="assets/file_0000000052e861f98b087ad0b80cbefc%20(1).png" alt="Scroll of Fire — sigil banner" width="2100" height="900" decoding="async" loading="eager">
+  </header>
+  <section class="living-signal-shell" aria-label="Living signal">
+    <ul class="living-signal-bar" data-living-signal-root>
+      <li class="living-signal-item">Daily signal loads with your local time and Codex data when JavaScript is available.</li>
+      <li class="living-signal-item"><a class="living-signal-link" href="./moons.html">Open 13 Moons</a></li>
+      <li class="living-signal-item"><a class="living-signal-link" href="./ledger.html">Record Witness</a></li>
+    </ul>
+  </section>  <!-- Hero banner with aura -->  <figure class="lab-hero" aria-label="Scroll of Fire — Invocation Lab banner">
+    <img src="assets/img/shared/branding/codex-sigil-banner.png" alt="Scroll of Fire — sigil banner" width="2100" height="900" decoding="async" loading="eager">
     <div class="field" aria-hidden="true"></div>
   </figure>  <main id="main" class="wrap" role="main" tabindex="-1">
     <div class="lab-header">
       <div>
         <h1 class="title sheen lab-title">✨ Invocation Lab</h1>
+    <span class="codex-status" data-status="personal-practice">Personal Practice</span>
         <p class="subtitle">Guided run: <strong>Σ → ∇φ → ℛ → ΔΣ</strong> • seal + export to Ledger</p>
       </div>
       <div class="xi-dial" aria-live="polite"><span class="xi-dot" aria-hidden="true"></span> <strong id="xiLabel">Ξ 0%</strong></div>
