@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-07-16",
+    "type": "system",
+    "title": "13 Moons install card added — app now installable directly from the page",
+    "summary": "A dedicated 'Install 13 Moons' card now appears on the Today panel with step-by-step instructions for Chrome, iOS Safari, and other browsers. The install button activates automatically when your browser is ready. Layout clipping on buttons near the top of the page header has also been corrected.",
+    "url": "./moons.html",
+    "symbol": "📲"
+  },
+  {
     "date": "2026-07-13",
     "type": "system",
     "title": "Living Codex layer activated across the main gates",
@@ -32,3 +40,4 @@
     "symbol": "▲"
   }
 ]
+
