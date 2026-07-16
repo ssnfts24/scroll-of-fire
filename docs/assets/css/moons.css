@@ -523,8 +523,7 @@ textarea {
 
 /* Header compatibility */
 
-.sof-topbar,
-.site-header {
+.sof-topbar {
   position: sticky;
   top: 0;
   z-index: 80;
@@ -536,16 +535,14 @@ textarea {
   backdrop-filter: blur(18px);
 }
 
-.sof-brand,
-.brand {
+.sof-brand {
   display: inline-flex;
   align-items: center;
   gap: 0.72rem;
   text-decoration: none;
 }
 
-.sof-brand .mark,
-.brand-mark {
+.sof-brand .mark {
   width: 42px;
   height: 42px;
   display: grid;
@@ -561,36 +558,31 @@ textarea {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.sof-brand:hover .mark,
-.brand:hover .brand-mark {
+.sof-brand:hover .mark {
   transform: rotate(-4deg) scale(1.04);
   box-shadow: 0 0 42px rgba(243, 201, 122, 0.18);
 }
 
-.sof-brand strong,
-.brand strong {
+.sof-brand strong {
   display: block;
   color: var(--ink);
   line-height: 1.05;
 }
 
-.sof-brand small,
-.brand small {
+.sof-brand small {
   display: block;
   color: var(--muted);
   font-size: 0.78rem;
 }
 
-.sof-nav,
-.site-nav {
+.sof-nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.45rem;
 }
 
-.sof-nav a,
-.site-nav > a {
+.sof-nav a {
   text-decoration: none;
   padding: 0.55rem 0.75rem;
   border-radius: 999px;
@@ -603,18 +595,11 @@ textarea {
 
 .sof-nav a:hover,
 .sof-nav a:focus-visible,
-.sof-nav a[aria-current="page"],
-.site-nav > a:hover,
-.site-nav > a:focus-visible,
-.site-nav > a[aria-current="page"] {
+.sof-nav a[aria-current="page"] {
   background: rgba(122, 243, 255, 0.09);
   border-color: rgba(122, 243, 255, 0.22);
   outline: none;
   transform: translateY(-1px);
-}
-
-.nav-toggle {
-  display: none;
 }
 
 /* Hero */
