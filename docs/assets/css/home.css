@@ -1169,6 +1169,30 @@
   gap: 1rem;
 }
 
+/* =========================================================
+   CODEX LIVE GRID — MOBILE OVERRIDE
+   Must appear after .codex-live-grid (line ~1158) so the
+   cascade properly restores single-column layout on mobile.
+   The desktop rule above overrides the earlier @media block
+   at line 1014 because it appears later in the file.
+   ========================================================= */
+
+@media (max-width: 760px) {
+  .codex-live-grid {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .today-codex-panel,
+  .continue-path-panel,
+  .codex-activity-panel,
+  .your-codex-panel {
+    align-content: start;
+    height: auto;
+    min-height: 0;
+  }
+}
+
 .today-codex-meta {
   margin: 0;
   color: var(--muted, #b9c1c7);
