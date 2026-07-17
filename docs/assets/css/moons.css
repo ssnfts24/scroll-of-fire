@@ -2146,23 +2146,26 @@ body[data-remnant-boundary]{background:linear-gradient(rgba(5,7,13,.84),rgba(5,7
 
 /* ── Compact install shortcut row ────────────────────────────────────────── */
 
-.install-shortcut {
-  display: flex;
-  flex-wrap: wrap;
+.app-shortcuts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
-  margin-bottom: 8px;
+  margin: 12px 0 16px;
+  width: 100%;
+}
+
+@media (max-width: 350px) {
+  .app-shortcuts {
+    grid-template-columns: 1fr;
+  }
 }
 
 .install-shortcut-btn {
-  flex: 1 1 140px;
+  min-height: 44px;
   font-size: 0.82rem;
   padding: 0.52rem 0.9rem;
-  min-height: 44px;
+  text-align: center;
+  white-space: normal;
   border-color: rgba(255, 255, 255, 0.12);
 }
 
-@media (max-width: 360px) {
-  .install-shortcut-btn {
-    flex: 1 1 100%;
-  }
-}
