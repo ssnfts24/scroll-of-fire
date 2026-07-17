@@ -373,6 +373,7 @@ button {
 
 .today-summary-stat .label {
   display: block;
+  position: static;
   font-size: 0.69rem;
   color: var(--muted);
   letter-spacing: 0.08em;
@@ -961,8 +962,7 @@ textarea {
   animation: ringPulse 5.5s ease-in-out infinite;
 }
 
-.ring .label,
-.label {
+.ring .label {
   position: absolute;
   inset: 0;
   display: flex;
