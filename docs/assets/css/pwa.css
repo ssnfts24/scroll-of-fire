@@ -111,19 +111,18 @@ body {
     touch-action: auto;
   }
 
-  .mobile-dock {
-    display: none;
-  }
-
   .wrap {
-    padding-bottom: calc(3.5rem + var(--safe-bottom));
+    padding-bottom: calc(7rem + var(--safe-bottom));
   }
 
   #sofToast {
-    bottom: calc(1rem + var(--safe-bottom));
+    bottom: calc(5.25rem + var(--safe-bottom));
   }
 
   .mobile-dock {
+    position: fixed;
+    bottom: 0;
+    z-index: 1200;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     padding-right: max(0.5rem, var(--safe-right));
     padding-bottom: max(0.5rem, var(--safe-bottom));

@@ -765,6 +765,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     text("weekGateCopy", week[1]);
     text("solarGate", `${solar[0]} · ${solar[1]}`);
     text("skyMirrorCopy", solar[2]);
+    renderTodaySummary(context, phase, lit, week);
 
     renderClockOnly();
     renderRemnantCalendar(context);
@@ -801,6 +802,104 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
         patterns: detectPatterns(logs())
       }
     }));
+  }
+
+  function renderTodaySummary(context, phase, lit, week) {
+    text("todaySummaryTitle", formatDateOnly(context.civilDate, {
+      year: undefined,
+      month: undefined,
+      day: undefined,
+      weekday: "long"
+    }));
+    text("todaySummaryDate", formatDateOnly(context.civilDate, {
+      weekday: undefined,
+      month: "long",
+      day: "numeric",
+      year: "numeric"
+    }));
+
+    const info = context.info;
+    text(
+      "todaySummaryMoonLine",
+      info.inside
+        ? `Moon ${info.moon.idx} · ${info.moon.name}`
+        : "Outside Count · Completion Seal"
+    );
+    text("todaySummaryMoonDay", info.inside ? String(info.dayInMoon) : "⊙");
+    text("todaySummaryMoonProgress", info.inside ? `Day ${info.dayInMoon} of 28` : "Outside Count");
+    text("todaySummaryMoonName", `Moon ${info.moon.idx} · ${info.moon.name}`);
+
+    const weekNumber = info.inside ? Math.floor((info.dayInMoon - 1) / 7) + 1 : null;
+    const weekName = week[0]?.split("·")[1]?.trim() || week[0] || "Outside Gate";
+    text(
+      "todaySummaryWeek",
+      weekNumber ? `Week ${weekNumber} · ${weekName}` : "Outside Gate"
+    );
+    text("todaySummaryPhase", `${phase} · ${Math.round(lit * 100)}%`);
+    text("todaySummaryBoundary", `${context.modeLabel} · ${context.sunset}`);
+    text("todaySummaryShabbat", context.shabbat.state);
+
+    const grid = $("#todaySummaryMoonGrid");
+    if (!grid) return;
+
+    const shabbatDays = new Set(CONFIG.shabbat.moonDays);
+    const preparationDay = Number(CONFIG.shabbat.preparationDay);
+    const returnDay = Number(CONFIG.shabbat.returnDay);
+    const selectedDay = info.inside ? info.dayInMoon : null;
+
+    const nowInfo = remnantInfo(todayInTimeZone(selectedTZ));
+    const realCurrentDay =
+      nowInfo.inside && nowInfo.moon.idx === info.moon.idx ? nowInfo.dayInMoon : null;
+
+    const logDays = new Set(
+      logs()
+        .filter(entry => entry && entry.moon === info.moon.name)
+        .map(entry => Number(entry.moonDay))
+        .filter(day => Number.isInteger(day) && day >= 1 && day <= 28)
+    );
+
+    grid.innerHTML = Array.from({ length: 28 }, (_, index) => {
+      const day = index + 1;
+      const classes = ["today-summary-grid-day"];
+      const labels = [`Day ${day}`];
+
+      if (selectedDay === day) {
+        classes.push("selected");
+        labels.push("selected");
+      }
+      if (realCurrentDay === day) {
+        classes.push("today");
+        labels.push("today");
+      }
+      if (shabbatDays.has(day)) {
+        classes.push("shabbat");
+        labels.push("Shabbat");
+      }
+      if (day === preparationDay) {
+        classes.push("preparation");
+        labels.push("Preparation");
+      }
+      if (day === returnDay) {
+        classes.push("return");
+        labels.push("Return");
+      }
+      if (logDays.has(day)) {
+        classes.push("has-log");
+        labels.push("Witness log");
+      }
+
+      const note =
+        shabbatDays.has(day) ? "Shabbat"
+          : day === preparationDay ? "Prep"
+            : day === returnDay ? "Return"
+              : logDays.has(day) ? "Log"
+                : "";
+
+      return `<button type="button" class="${classes.join(" ")}" data-moon-day="${day}" aria-label="${labels.join(" · ")}" ${selectedDay === day ? 'aria-current="date"' : ""}>
+        <strong>${day}</strong>
+        <small>${note || "Moon Day"}</small>
+      </button>`;
+    }).join("");
   }
 
   function renderRemnantCalendar(context) {
@@ -1437,6 +1536,16 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
 
     setValue("datePick", toISO(selectedDate));
 
+    function setSelectedDay(nextDate) {
+      selectedDate = nextDate;
+      refreshCalculatedSunset();
+      render();
+    }
+
+    function shiftDay(amount) {
+      setSelectedDay(addDays(selectedDate, amount));
+    }
+
     on("tzPick", "change", event => {
       selectedTZ = event.target.value;
       safeSet(TZ_KEY, selectedTZ);
@@ -1445,27 +1554,46 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     });
 
     on("datePick", "change", event => {
-      selectedDate = fromISO(event.target.value) || todayInTimeZone(selectedTZ);
-      refreshCalculatedSunset();
-      render();
+      setSelectedDay(fromISO(event.target.value) || todayInTimeZone(selectedTZ));
     });
 
     on("btnToday", "click", () => {
-      selectedDate = todayInTimeZone(selectedTZ);
-      refreshCalculatedSunset();
-      render();
+      setSelectedDay(todayInTimeZone(selectedTZ));
     });
 
     on("prevDay", "click", () => {
-      selectedDate = addDays(selectedDate, -1);
-      refreshCalculatedSunset();
-      render();
+      shiftDay(-1);
     });
 
     on("nextDay", "click", () => {
-      selectedDate = addDays(selectedDate, 1);
-      refreshCalculatedSunset();
-      render();
+      shiftDay(1);
+    });
+
+    on("summaryToday", "click", () => {
+      setSelectedDay(todayInTimeZone(selectedTZ));
+    });
+
+    on("summaryPrevDay", "click", () => {
+      shiftDay(-1);
+    });
+
+    on("summaryNextDay", "click", () => {
+      shiftDay(1);
+    });
+
+    $("#todaySummaryMoonGrid")?.addEventListener("click", event => {
+      const origin = event.target;
+      if (!(origin instanceof Element)) return;
+      const target = origin.closest("[data-moon-day]");
+      if (!target) return;
+
+      const day = Number(target.dataset.moonDay);
+      if (!Number.isInteger(day)) return;
+
+      const context = lastContext || effectiveContext();
+      if (!context.info.inside) return;
+
+      shiftDay(day - context.info.dayInMoon);
     });
 
     on("shareLink", "click", () => {

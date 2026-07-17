@@ -552,6 +552,58 @@
       >
         <!-- Today artwork is inserted by moons-images.js. -->
 
+        <section class="card today-calendar-summary" aria-labelledby="todaySummaryTitle">
+          <span class="today-summary-glow" aria-hidden="true"></span>
+          <div class="today-summary-head">
+            <div class="today-summary-date">
+              <p class="eyebrow">Today Calendar</p>
+              <h2 id="todaySummaryTitle">—</h2>
+              <p id="todaySummaryDate" class="subtitle">—</p>
+              <p id="todaySummaryMoonLine" class="pill">—</p>
+            </div>
+            <div class="today-summary-controls btnrow" aria-label="Calendar day controls">
+              <button id="summaryPrevDay" class="lab-btn ghost" type="button">← Previous</button>
+              <button id="summaryToday" class="lab-btn active" type="button">Today</button>
+              <button id="summaryNextDay" class="lab-btn ghost" type="button">Next →</button>
+            </div>
+          </div>
+
+          <div class="today-summary-stats">
+            <article class="today-summary-stat today-summary-day">
+              <span class="label">Moon Day</span>
+              <strong id="todaySummaryMoonDay">—</strong>
+              <small id="todaySummaryMoonProgress">—</small>
+            </article>
+            <article class="today-summary-stat">
+              <span class="label">Moon</span>
+              <strong id="todaySummaryMoonName">—</strong>
+            </article>
+            <article class="today-summary-stat">
+              <span class="label">Week Gate</span>
+              <strong id="todaySummaryWeek">—</strong>
+            </article>
+            <article class="today-summary-stat">
+              <span class="label">Visible Moon</span>
+              <strong id="todaySummaryPhase">—</strong>
+            </article>
+            <article class="today-summary-stat">
+              <span class="label">Day Boundary</span>
+              <strong id="todaySummaryBoundary">—</strong>
+            </article>
+            <article class="today-summary-stat">
+              <span class="label">Shabbat</span>
+              <strong id="todaySummaryShabbat">—</strong>
+            </article>
+          </div>
+
+          <div
+            id="todaySummaryMoonGrid"
+            class="today-summary-grid"
+            role="grid"
+            aria-label="Moon days 1 through 28"
+          ></div>
+        </section>
+
         <section class="command card">
           <div>
             <p class="eyebrow">☲ Remnant Command Center ☲</p>
