@@ -25,9 +25,11 @@
 
 .share-day-dialog {
   position: relative;
-  width: min(860px, 100%);
+  width: min(880px, 100%);
   max-height: min(92vh, 920px);
   overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   background: linear-gradient(180deg, rgba(8, 12, 23, 0.98), rgba(4, 8, 16, 0.98));
   border: 1px solid rgba(243, 201, 122, 0.36);
   border-radius: 16px;
@@ -94,6 +96,10 @@
   margin-bottom: 0.8rem;
 }
 
+.share-day-mode {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .share-day-format button[aria-selected="true"] {
   border-color: rgba(122, 243, 255, 0.8);
   background: rgba(122, 243, 255, 0.14);
@@ -150,7 +156,8 @@
   font-size: 0.85rem;
 }
 
-.share-day-text {
+.share-day-text,
+.share-day-complete-preview {
   width: 100%;
   min-height: 120px;
   border-radius: 10px;
@@ -159,6 +166,24 @@
   color: #f4f1e8;
   padding: 0.65rem;
   resize: vertical;
+  white-space: pre-wrap;
+}
+
+.share-day-complete-preview {
+  min-height: 110px;
+  margin-top: 0.2rem;
+  overflow: auto;
+}
+
+.share-day-meta {
+  margin: 0.35rem 0;
+  color: #d6deea;
+  font-size: 0.85rem;
+}
+
+.share-day-warning {
+  color: #f3c97a;
+  min-height: 1.2em;
 }
 
 .share-day-actions {
@@ -187,6 +212,7 @@
   }
 
   .share-day-format,
+  .share-day-mode,
   .share-day-actions {
     grid-template-columns: 1fr;
   }
