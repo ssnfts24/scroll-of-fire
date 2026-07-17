@@ -39,7 +39,6 @@
   const settingsJump = () =>
     document.querySelector('[data-tab="settingsPanel"]') ||
     document.querySelector('[data-tab-jump="settingsPanel"]');
-  const installCard = () => byId("installCard");
   const cssUrl = () =>
     document.querySelector('link[href*="assets/css/moons.css"]')?.href ||
     new URL("assets/css/moons.css", document.baseURI).toString();
@@ -189,10 +188,6 @@
     setText("beforeInstallPromptStatus", promptEvent ? "Captured" : "Not captured");
     setText("appInstalledEventStatus", appInstalledSeen ? "Seen" : "Not seen");
     document.documentElement.classList.toggle("is-standalone", standalone());
-    const installPanel = installCard();
-    if (installPanel) {
-      installPanel.hidden = standalone() || previousInstallDetected();
-    }
 
     const refreshButton = byId("refreshAppFiles");
     if (refreshButton) {
