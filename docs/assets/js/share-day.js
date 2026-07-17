@@ -724,6 +724,16 @@
     const theme = getMoonTheme(shareState.moonNumber);
     drawBackground(ctx, dims.width, dims.height, theme);
 
+    // Pre-calculate footer geometry so content can respect the reserved area.
+    // Border inner bottom = height * (1 - 0.03); leave 48 px above it for safety.
+    const borderSafeBottom = dims.height * (1 - 0.03) - 48;
+    const brandFontPx   = Math.round(dims.width * 0.027);
+    const ctxFontPx     = Math.round(dims.width * 0.022);
+    const FOOTER_GAP    = 28; // px between footer lines (≥ 24 required)
+    const brandY        = borderSafeBottom;
+    const contextY      = brandY - brandFontPx - FOOTER_GAP;
+    const footerTop     = contextY - ctxFontPx - 12; // top edge of reserved footer area
+
     const artwork = await loadArtwork(shareState.moonNumber);
     if (artwork) {
       const size = Math.min(dims.width, dims.height) * (format === "story" ? 0.42 : 0.34);
@@ -799,12 +809,7 @@
     ctx.font = `700 ${Math.round(dims.width * 0.025)}px system-ui, -apple-system, Segoe UI, sans-serif`;
     ctx.fillText(clampText(shareState.shabbatState || "Ordinary Day", 48), dims.width / 2, y);
 
-    if (options.includeSunset && shareState.sunset) {
-      y += dims.height * 0.034;
-      ctx.fillStyle = "#d6deea";
-      ctx.font = `500 ${Math.round(dims.width * 0.022)}px system-ui, -apple-system, Segoe UI, sans-serif`;
-      ctx.fillText(`Sunset Boundary ${shareState.sunset}`, dims.width / 2, y);
-    }
+    // Sunset line moves to the footer context — removed from content body.
 
     if (options.includeMovement && shareState.movement) {
       y += dims.height * 0.065;
@@ -813,27 +818,48 @@
       ctx.fillText("TODAY'S MOVEMENT", dims.width / 2, y);
 
       y += dims.height * 0.03;
+      ctx.fillStyle = "#f4f1e8";
       ctx.font = `500 ${Math.round(dims.width * 0.026)}px system-ui, -apple-system, Segoe UI, sans-serif`;
       ctx.textAlign = "left";
-      const lines = wrapText(ctx, clampText(shareState.movement, 180), left, y, textMax, dims.height * 0.03, format === "story" ? 6 : 3);
-      y += lines * dims.height * 0.03;
+      // Square: max 2 lines; Story: max 4 lines — keeps content above the footer area.
+      const maxMovLines = format === "story" ? 4 : 2;
+      const movLines = wrapText(ctx, clampText(shareState.movement, 180), left, y, textMax, dims.height * 0.03, maxMovLines);
+      y += movLines * dims.height * 0.03;
       ctx.textAlign = "center";
     }
 
+    // Mirror line: only draw if it fits above the reserved footer area.
     if (shareState.mirrorLine) {
-      y += dims.height * 0.03;
-      ctx.fillStyle = "#7af3ff";
-      ctx.font = `500 ${Math.round(dims.width * 0.022)}px system-ui, -apple-system, Segoe UI, sans-serif`;
-      ctx.fillText(clampText(shareState.mirrorLine, 84), dims.width / 2, y);
+      const nextY = y + dims.height * 0.03;
+      if (nextY <= footerTop - 16) {
+        y = nextY;
+        ctx.fillStyle = "#7af3ff";
+        ctx.font = `500 ${Math.round(dims.width * 0.022)}px system-ui, -apple-system, Segoe UI, sans-serif`;
+        ctx.fillText(clampText(shareState.mirrorLine, 84), dims.width / 2, y);
+      }
     }
 
-    ctx.fillStyle = "#d6deea";
-    ctx.font = `500 ${Math.round(dims.width * 0.022)}px system-ui, -apple-system, Segoe UI, sans-serif`;
-    ctx.fillText(clampText(shareState.readableDate || "", 44), dims.width / 2, dims.height * 0.9);
+    // --- Footer ---
+    // Optional context line: shabbatState · Sunset HH:MM PM
+    // Drawn only when content y hasn't overflowed into the footer area.
+    // Raw Gregorian date removed per design spec.
+    const footerParts = [];
+    if (shareState.shabbatState) footerParts.push(clampText(shareState.shabbatState, 32));
+    if (options.includeSunset && shareState.sunset) footerParts.push(`Sunset ${shareState.sunset}`);
+    const footerContextLine = footerParts.join(" · ");
 
+    if (footerContextLine && y <= footerTop - 16) {
+      ctx.fillStyle = "#d6deea";
+      ctx.font = `500 ${ctxFontPx}px system-ui, -apple-system, Segoe UI, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.fillText(footerContextLine, dims.width / 2, contextY);
+    }
+
+    // Brand line is always the final, lowest text — inside the gold border.
     ctx.fillStyle = "#f3c97a";
-    ctx.font = `700 ${Math.round(dims.width * 0.027)}px system-ui, -apple-system, Segoe UI, sans-serif`;
-    ctx.fillText(BRAND_LINE, dims.width / 2, dims.height * 0.94);
+    ctx.font = `700 ${brandFontPx}px system-ui, -apple-system, Segoe UI, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.fillText(BRAND_LINE, dims.width / 2, brandY);
 
     return canvas;
   }
