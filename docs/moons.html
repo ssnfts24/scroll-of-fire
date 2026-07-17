@@ -374,7 +374,10 @@
       <h1>Remnant 13 Moons</h1>
     <span class="codex-status" data-status="live">Live</span>
 
-      <details class="moons-intro-details">
+      <details
+        id="aboutCalendar"
+        class="moons-intro-details"
+      >
         <summary>About this calendar</summary>
 
         <nav
@@ -416,109 +419,134 @@
       </details>
 
       <div class="tabs" aria-label="Calendar tools">
-        <button
-          class="tab active"
-          data-tab="todayPanel"
-          type="button"
-        >
-          Today
-        </button>
+        <section class="tab-group" aria-labelledby="tabGroupToday">
+          <p id="tabGroupToday" class="tab-group-label">Today</p>
+          <div class="tab-group-buttons">
+            <button
+              class="tab active"
+              data-tab="todayPanel"
+              type="button"
+            >
+              Today
+            </button>
+          </div>
+        </section>
 
-        <button
-          class="tab"
-          data-tab="shabbatPanel"
-          type="button"
-        >
-          Shabbat
-        </button>
+        <section class="tab-group" aria-labelledby="tabGroupCalendar">
+          <p id="tabGroupCalendar" class="tab-group-label">Calendar</p>
+          <div class="tab-group-buttons">
+            <button
+              class="tab"
+              data-tab="calendarPanel"
+              type="button"
+            >
+              Calendars
+            </button>
 
-        <button
-          class="tab"
-          data-tab="flowPanel"
-          type="button"
-        >
-          Daily Flow
-        </button>
+            <button
+              class="tab"
+              data-tab="yearPanel"
+              type="button"
+            >
+              Year Map
+            </button>
 
-        <button
-          class="tab"
-          data-tab="mirrorPanel"
-          type="button"
-        >
-          Mirror Reading
-        </button>
+            <button
+              class="tab"
+              data-tab="timelinePanel"
+              type="button"
+            >
+              Timeline
+            </button>
 
-        <button
-          class="tab"
-          data-tab="witnessPanel"
-          type="button"
-        >
-          Daily Witness
-        </button>
+            <button
+              class="tab"
+              data-tab="fieldPanel"
+              type="button"
+            >
+              Field Layers
+            </button>
+          </div>
+        </section>
 
-        <button
-          class="tab"
-          data-tab="astrologyPanel"
-          type="button"
-        >
-          Astrology
-        </button>
+        <section class="tab-group" aria-labelledby="tabGroupWitness">
+          <p id="tabGroupWitness" class="tab-group-label">Witness</p>
+          <div class="tab-group-buttons">
+            <button
+              class="tab"
+              data-tab="witnessPanel"
+              type="button"
+            >
+              Daily Witness
+            </button>
 
-        <button
-          class="tab"
-          data-tab="calendarPanel"
-          type="button"
-        >
-          Calendars
-        </button>
+            <button
+              class="tab"
+              data-tab="savedPanel"
+              type="button"
+            >
+              Saved Logs
+            </button>
+          </div>
+        </section>
 
-        <button
-          class="tab"
-          data-tab="yearPanel"
-          type="button"
-        >
-          Year Map
-        </button>
+        <section class="tab-group" aria-labelledby="tabGroupMirror">
+          <p id="tabGroupMirror" class="tab-group-label">Mirror</p>
+          <div class="tab-group-buttons">
+            <button
+              class="tab"
+              data-tab="mirrorPanel"
+              type="button"
+            >
+              Mirror Reading
+            </button>
 
-        <button
-          class="tab"
-          data-tab="codexPanel"
-          type="button"
-        >
-          Codex Seal
-        </button>
+            <button
+              class="tab"
+              data-tab="astrologyPanel"
+              type="button"
+            >
+              Astrology
+            </button>
 
-        <button
-          class="tab"
-          data-tab="timelinePanel"
-          type="button"
-        >
-          Timeline
-        </button>
+            <button
+              class="tab"
+              data-tab="codexPanel"
+              type="button"
+            >
+              Codex Seal
+            </button>
+          </div>
+        </section>
 
-        <button
-          class="tab"
-          data-tab="fieldPanel"
-          type="button"
-        >
-          Field Layers
-        </button>
+        <section class="tab-group" aria-labelledby="tabGroupMore">
+          <p id="tabGroupMore" class="tab-group-label">More</p>
+          <div class="tab-group-buttons">
+            <button
+              class="tab"
+              data-tab="shabbatPanel"
+              type="button"
+            >
+              Shabbat
+            </button>
 
-        <button
-          class="tab"
-          data-tab="savedPanel"
-          type="button"
-        >
-          Saved Logs
-        </button>
+            <button
+              class="tab"
+              data-tab="flowPanel"
+              type="button"
+            >
+              Daily Flow
+            </button>
 
-        <button
-          class="tab"
-          data-tab="settingsPanel"
-          type="button"
-        >
-          App Settings
-        </button>
+            <button
+              class="tab"
+              data-tab="settingsPanel"
+              type="button"
+            >
+              App Settings
+            </button>
+          </div>
+        </section>
       </div>
     </header>
 
@@ -2210,25 +2238,91 @@
     class="mobile-dock"
     aria-label="Mobile quick navigation"
   >
-    <a href="#todayPanel" data-mobile-tab="todayPanel">Today</a>
-    <a href="#calendarPanel" data-mobile-tab="calendarPanel">Calendar</a>
-    <a href="#witnessPanel" data-mobile-tab="witnessPanel">Witness</a>
-    <a href="#mirrorPanel" data-mobile-tab="mirrorPanel">Mirror</a>
-    <details data-mobile-more>
-      <summary class="mobile-dock-more-toggle">More</summary>
-      <div class="mobile-dock-more-menu">
-        <a href="#shabbatPanel" data-mobile-tab="shabbatPanel">Shabbat</a>
-        <a href="#flowPanel" data-mobile-tab="flowPanel">Daily Flow</a>
-        <a href="#astrologyPanel" data-mobile-tab="astrologyPanel">Astrology</a>
-        <a href="#yearPanel" data-mobile-tab="yearPanel">Year Map</a>
-        <a href="#codexPanel" data-mobile-tab="codexPanel">Codex Seal</a>
-        <a href="#timelinePanel" data-mobile-tab="timelinePanel">Timeline</a>
-        <a href="#fieldPanel" data-mobile-tab="fieldPanel">Field Layers</a>
-        <a href="#savedPanel" data-mobile-tab="savedPanel">Saved Logs</a>
-        <a href="#settingsPanel" data-mobile-tab="settingsPanel">App Settings</a>
-      </div>
-    </details>
+    <a
+      href="#todayPanel"
+      class="mobile-dock-item"
+      data-mobile-tab="todayPanel"
+      data-mobile-primary="today"
+    >
+      <span class="mobile-dock-icon" aria-hidden="true">☼</span>
+      <span class="mobile-dock-label">Today</span>
+    </a>
+    <a
+      href="#calendarPanel"
+      class="mobile-dock-item"
+      data-mobile-tab="calendarPanel"
+      data-mobile-primary="calendar"
+    >
+      <span class="mobile-dock-icon" aria-hidden="true">◫</span>
+      <span class="mobile-dock-label">Calendar</span>
+    </a>
+    <a
+      href="#witnessPanel"
+      class="mobile-dock-item"
+      data-mobile-tab="witnessPanel"
+      data-mobile-primary="witness"
+    >
+      <span class="mobile-dock-icon" aria-hidden="true">◌</span>
+      <span class="mobile-dock-label">Witness</span>
+    </a>
+    <a
+      href="#mirrorPanel"
+      class="mobile-dock-item"
+      data-mobile-tab="mirrorPanel"
+      data-mobile-primary="mirror"
+    >
+      <span class="mobile-dock-icon" aria-hidden="true">◈</span>
+      <span class="mobile-dock-label">Mirror</span>
+    </a>
+    <button
+      type="button"
+      class="mobile-dock-more-toggle mobile-dock-item"
+      data-mobile-more-toggle
+      data-mobile-primary="more"
+      aria-expanded="false"
+      aria-controls="mobileMoreSheet"
+    >
+      <span class="mobile-dock-icon" aria-hidden="true">⋯</span>
+      <span class="mobile-dock-label">More</span>
+    </button>
   </nav>
+
+  <button
+    type="button"
+    class="mobile-dock-backdrop"
+    data-mobile-more-backdrop
+    hidden
+    aria-label="Close more tools"
+  ></button>
+
+  <section
+    id="mobileMoreSheet"
+    class="mobile-dock-more-sheet"
+    data-mobile-more-sheet
+    aria-label="More calendar tools"
+    hidden
+  >
+    <div class="mobile-dock-more-menu">
+      <p class="mobile-dock-sheet-label">Calendar</p>
+      <a href="#yearPanel" data-mobile-tab="yearPanel">Year Map</a>
+      <a href="#timelinePanel" data-mobile-tab="timelinePanel">Timeline</a>
+      <a href="#fieldPanel" data-mobile-tab="fieldPanel">Field Layers</a>
+
+      <p class="mobile-dock-sheet-label">Witness</p>
+      <a href="#savedPanel" data-mobile-tab="savedPanel">Saved Logs</a>
+
+      <p class="mobile-dock-sheet-label">Mirror</p>
+      <a href="#astrologyPanel" data-mobile-tab="astrologyPanel">Astrology</a>
+      <a href="#codexPanel" data-mobile-tab="codexPanel">Codex Seal</a>
+
+      <p class="mobile-dock-sheet-label">More</p>
+      <a href="#shabbatPanel" data-mobile-tab="shabbatPanel">Shabbat</a>
+      <a href="#flowPanel" data-mobile-tab="flowPanel">Daily Flow</a>
+      <a href="#settingsPanel" data-mobile-tab="settingsPanel">App Settings</a>
+      <button type="button" data-mobile-about>About</button>
+      <a href="guide.html">Guide</a>
+    </div>
+  </section>
 
   <div
     id="sofToast"

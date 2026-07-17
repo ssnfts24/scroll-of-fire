@@ -1294,18 +1294,50 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
 
   function setupTabs() {
     const panels = new Set($$(".tabPanel").map(panel => panel.id));
-    const mobileMore = $("[data-mobile-more]");
-    const mobileMoreSummary = mobileMore?.querySelector("summary");
+    const mobileMoreToggle = $("[data-mobile-more-toggle]");
+    const mobileMoreSheet = $("[data-mobile-more-sheet]");
+    const mobileMoreBackdrop = $("[data-mobile-more-backdrop]");
+    const aboutCalendar = $("#aboutCalendar");
+    const mobilePrimaryTabs = $$("[data-mobile-primary]");
+    const MOBILE_TAB_GROUPS = {
+      todayPanel: "today",
+      calendarPanel: "calendar",
+      yearPanel: "calendar",
+      timelinePanel: "calendar",
+      fieldPanel: "calendar",
+      witnessPanel: "witness",
+      savedPanel: "witness",
+      mirrorPanel: "mirror",
+      astrologyPanel: "mirror",
+      codexPanel: "mirror",
+      shabbatPanel: "more",
+      flowPanel: "more",
+      settingsPanel: "more"
+    };
+
+    function mobileGroupForTab(id) {
+      return MOBILE_TAB_GROUPS[id] || "today";
+    }
+
+    function setMobileMoreOpen(open) {
+      if (!mobileMoreSheet || !mobileMoreBackdrop || !mobileMoreToggle) return;
+      mobileMoreSheet.hidden = !open;
+      mobileMoreBackdrop.hidden = !open;
+      mobileMoreSheet.classList.toggle("is-open", open);
+      mobileMoreBackdrop.classList.toggle("is-open", open);
+      mobileMoreToggle.setAttribute("aria-expanded", String(open));
+      document.body.classList.toggle("mobile-more-open", open);
+    }
 
     function closeMobileMore() {
-      if (mobileMore?.open) {
-        mobileMore.open = false;
-      }
+      setMobileMoreOpen(false);
     }
 
     function keepActiveNavInView(id, behavior) {
       const activeTab = $$(".tab").find(tab => tab.dataset.tab === id);
-      const activeMobileTab = $$("[data-mobile-tab]").find(link => link.dataset.mobileTab === id);
+      const activeMobileTab = mobilePrimaryTabs.find(
+        link => link.dataset.mobilePrimary === mobileGroupForTab(id)
+      );
       const options = {
         behavior,
         block: "nearest",
@@ -1348,16 +1380,12 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
         else link.removeAttribute("aria-current");
       });
 
-      if (mobileMore) {
-        const moreHasActiveChild = !!mobileMore.querySelector(
-          `[data-mobile-tab="${id}"]`
-        );
-
-        mobileMore.classList.toggle(
-          "has-active-child",
-          moreHasActiveChild
-        );
-      }
+      mobilePrimaryTabs.forEach(link => {
+        const active = link.dataset.mobilePrimary === mobileGroupForTab(id);
+        link.classList.toggle("active-destination", active);
+        if (active) link.setAttribute("data-current-group", "true");
+        else link.removeAttribute("data-current-group");
+      });
 
       keepActiveNavInView(id, updateHistory || scroll ? "smooth" : "auto");
       closeMobileMore();
@@ -1388,25 +1416,26 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       });
     });
 
-    mobileMore?.addEventListener("toggle", () => {
-      mobileMoreSummary?.setAttribute(
-        "aria-expanded",
-        String(mobileMore.open)
-      );
+    mobileMoreToggle?.addEventListener("click", () => {
+      setMobileMoreOpen(mobileMoreSheet?.hidden);
     });
 
-    document.addEventListener("click", event => {
-      if (mobileMore?.open && !mobileMore.contains(event.target)) {
-        closeMobileMore();
-      }
+    mobileMoreBackdrop?.addEventListener("click", closeMobileMore);
+
+    $("[data-mobile-about]")?.addEventListener("click", () => {
+      aboutCalendar?.setAttribute("open", "");
+      closeMobileMore();
+      aboutCalendar?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
     document.addEventListener("keydown", event => {
-      if (event.key === "Escape" && mobileMore?.open) {
+      if (event.key === "Escape" && mobileMoreSheet && !mobileMoreSheet.hidden) {
         closeMobileMore();
-        mobileMoreSummary?.focus();
+        mobileMoreToggle?.focus();
       }
     });
+
+    addEventListener("resize", closeMobileMore);
 
     addEventListener("popstate", event => {
       activateTab(event.state?.moonsTab || requestedTab());
