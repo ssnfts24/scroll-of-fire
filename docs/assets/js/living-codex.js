@@ -1220,6 +1220,7 @@
     }
 
     html += '<p class="ld-moons-link"><a href="./moons.html">Open 13 Moons →</a></p>';
+    html += '<p class="ld-moons-link"><button class="ld-share-btn" type="button" data-share-day-open data-share-source="signal">Share Today</button></p>';
 
     panel.innerHTML = html;
   }

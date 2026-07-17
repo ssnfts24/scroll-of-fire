@@ -213,6 +213,25 @@ body.codex-moon-13 { --moon-accent: #9DDAFF; }
   text-decoration: underline;
 }
 
+.ld-share-btn {
+  min-height: 44px;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(243, 201, 122, 0.4);
+  background: rgba(243, 201, 122, 0.12);
+  color: var(--gold, #f3c97a);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ld-share-btn:hover,
+.ld-share-btn:focus-visible {
+  border-color: rgba(243, 201, 122, 0.75);
+  background: rgba(243, 201, 122, 0.2);
+  outline: none;
+}
+
 /* =========================================================
    TODAY IN THE CODEX PANEL — UPGRADED FIELDS
    ========================================================= */
