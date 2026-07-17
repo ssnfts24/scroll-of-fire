@@ -380,6 +380,7 @@
       </nav>
 
       <p class="eyebrow">Remnant Calendar Engine</p>
+      <p class="app-compact-title">Remnant 13 Moons · Living Calendar</p>
 
       <h1>Remnant 13 Moons</h1>
     <span class="codex-status" data-status="live">Live</span>
@@ -409,33 +410,6 @@
         Moon Days 2, 9, 16, and 23, and the continuous seven-day week remains
         unbroken through the Year Gate.
       </aside>
-
-      <section class="app-install-card" aria-labelledby="installTitle">
-        <p class="eyebrow">Installable Living Calendar</p>
-        <h2 id="installTitle">Carry 13 Moons as an app</h2>
-        <p>Installation adds a Home Screen icon, opens the calendar without the normal browser bar where supported, and prepares essential files for offline use. Your records remain on this device.</p>
-        <div class="btnrow">
-          <button id="installApp" class="lab-btn" type="button" aria-describedby="appStatus installStateNote">Install 13 Moons</button>
-          <button class="lab-btn ghost" type="button" data-tab-jump="settingsPanel">Installation Help</button>
-        </div>
-        <p id="appStatus" class="app-status">Checking installation support…</p>
-        <p id="installStateNote" class="fine app-install-note">Waiting for browser install state…</p>
-        <p id="inAppBrowserWarning" class="warning" hidden>To install 13 Moons on iPhone, open this page in Safari first. Use the browser menu to open the page in Safari, then return here.</p>
-        <div id="iosInstallHelp" hidden>
-          <strong>Install on iPhone or iPad with Safari</strong>
-          <ol class="install-steps">
-            <li>Open this page in Safari.</li>
-            <li>Tap the Share button.</li>
-            <li>Select Add to Home Screen.</li>
-            <li>Confirm the name 13 Moons.</li>
-            <li>Tap Add, then open the new icon.</li>
-          </ol>
-        </div>
-        <div id="offlineSnapshot" class="warning" hidden></div>
-        <div id="updateNotice" class="warning" hidden>
-          A new version is ready. Saved logs will be preserved. Open App Settings to apply it.
-        </div>
-      </section>
 
       <div class="tabs" aria-label="Calendar tools">
         <button
@@ -552,91 +526,66 @@
       >
         <!-- Today artwork is inserted by moons-images.js. -->
 
-        <section class="command card">
+        <section class="command card today-priority-card">
           <div>
-            <p class="eyebrow">☲ Remnant Command Center ☲</p>
+            <p class="eyebrow">☲ Living Calendar Today ☲</p>
+            <p id="nowDate" class="today-date-line">—</p>
             <h2 id="commandMoon">—</h2>
             <p id="commandLine" class="subtitle">—</p>
+            <p class="today-meta">
+              <span id="nowClock">—</span>
+              <span id="nowTZ">—</span>
+            </p>
+            <div class="visually-hidden" aria-hidden="true">
+              <span id="dayInMoon">—</span>
+              <span id="moonLength">/28</span>
+              <span id="statSolar">—</span>
+              <span id="statField">—</span>
+            </div>
           </div>
 
-          <div class="command-grid">
+          <div class="command-grid today-priority-grid">
             <div class="stat">
               <span>Moon Day</span>
               <strong id="statMoonDay">—</strong>
             </div>
 
             <div class="stat">
+              <span>Week</span>
+              <strong id="todayWeekNumber">—</strong>
+              <small id="todayWeekGate" class="meta">—</small>
+            </div>
+
+            <div class="stat">
               <span>Visible Moon</span>
               <strong id="statPhase">—</strong>
+              <small id="todayPhaseMeta" class="meta">—</small>
             </div>
 
             <div class="stat">
-              <span>Solar Gate</span>
-              <strong id="statSolar">—</strong>
-            </div>
-
-            <div class="stat">
-              <span>Field</span>
-              <strong id="statField">—</strong>
-            </div>
-
-            <div class="stat">
-              <span>Boundary</span>
-              <strong id="statBoundary">Sunset</strong>
+              <span>Day Boundary</span>
+              <strong id="todayBoundaryTime">—</strong>
+              <small id="statBoundary" class="meta">—</small>
             </div>
 
             <div class="stat">
               <span>Shabbat</span>
               <strong id="statShabbat">Checking…</strong>
+              <small id="todayShabbatMeta" class="meta">—</small>
             </div>
 
             <div class="stat">
-              <span>Logs</span>
+              <span>Saved Witness</span>
               <strong id="statLogs">0</strong>
-            </div>
-
-            <div class="stat">
-              <span>Patterns</span>
-              <strong id="statPatterns">0</strong>
+              <small id="statPatterns" class="meta">0 patterns</small>
             </div>
           </div>
         </section>
 
-        <section class="card moon-badge">
+        <section class="card moon-badge today-calendar-card">
           <!-- Current Moon artwork is inserted here by moons-images.js. -->
 
-          <div
-            class="ring"
-            aria-label="Progress ring for day within 28-day moon"
-          >
-            <svg
-              viewBox="0 0 120 120"
-              role="img"
-              aria-hidden="true"
-            >
-              <circle
-                class="ring-bg"
-                cx="60"
-                cy="60"
-                r="50"
-              ></circle>
-
-              <circle
-                id="moonArc"
-                class="ring-fg"
-                cx="60"
-                cy="60"
-                r="50"
-              ></circle>
-            </svg>
-
-            <div class="label" aria-live="polite">
-              <span id="dayInMoon" class="big">—</span>
-              <span id="moonLength" class="small">/28</span>
-            </div>
-          </div>
-
-          <div>
+          <div class="today-calendar-copy">
             <p class="eyebrow">Current Remnant Moon</p>
 
             <h2 id="moonName">—</h2>
@@ -652,27 +601,75 @@
             <p id="yearSpan" class="meta">—</p>
             <p id="moonPractice" class="meta">—</p>
 
-            <div class="weekrow">
-              <span class="pill">Moon Days</span>
+            <div class="today-calendar-legend" aria-label="Moon calendar legend">
+              <span><i class="legend-dot is-today"></i>Today</span>
+              <span><i class="legend-dot is-selected"></i>Selected</span>
+              <span><i class="legend-dot is-shabbat"></i>Shabbat</span>
+              <span><i class="legend-dot is-log"></i>Witness</span>
+              <span><i class="legend-dot is-prep"></i>Prep</span>
+              <span><i class="legend-dot is-return"></i>Return</span>
+            </div>
+          </div>
 
-              <div
-                id="weekDots"
-                class="week"
-                aria-label="28 moon-day dots"
-              ></div>
+          <div class="today-calendar-main">
+            <div
+              class="calendar moon-calendar"
+              data-remnant-calendar
+              aria-label="Remnant moon calendar"
+            ></div>
+
+            <div class="btnrow today-calendar-nav">
+              <button
+                id="prevDay"
+                class="lab-btn ghost"
+                type="button"
+              >
+                Previous
+              </button>
+
+              <button
+                id="btnToday"
+                class="lab-btn active"
+                type="button"
+              >
+                Today
+              </button>
+
+              <button
+                id="nextDay"
+                class="lab-btn ghost"
+                type="button"
+              >
+                Next
+              </button>
+            </div>
+
+            <div class="btnrow today-quick-actions">
+              <button
+                class="lab-btn active"
+                data-tab-jump="witnessPanel"
+                type="button"
+              >
+                Quick Witness
+              </button>
+              <button
+                class="lab-btn ghost"
+                data-tab-jump="mirrorPanel"
+                type="button"
+              >
+                Open Mirror
+              </button>
+              <a class="lab-btn ghost" href="./ledger.html" data-witness-link>Witness Ledger</a>
             </div>
           </div>
         </section>
 
         <section class="grid">
-          <article class="card col-6">
-            <p class="eyebrow">Time Gate</p>
-            <h2>Selected Day</h2>
-
-            <p>
-              <strong id="nowDate">—</strong><br>
-              <span id="nowClock" class="meta">—</span><br>
-              <span id="nowTZ" class="meta">—</span>
+          <details class="card calendar-settings-card col-6">
+            <summary>Calendar Settings</summary>
+            <p class="fine">
+              Timezone, date, boundary mode, manual sunset, location lookup,
+              and share controls stay here without changing calendar behavior.
             </p>
 
             <div class="formrow">
@@ -730,35 +727,11 @@
 
             <div class="btnrow">
               <button
-                id="btnToday"
-                class="lab-btn active"
-                type="button"
-              >
-                Today
-              </button>
-
-              <button
-                id="prevDay"
-                class="lab-btn ghost"
-                type="button"
-              >
-                ← Prev
-              </button>
-
-              <button
-                id="nextDay"
-                class="lab-btn ghost"
-                type="button"
-              >
-                Next →
-              </button>
-
-              <button
                 id="useLocalSunset"
                 class="lab-btn ghost"
                 type="button"
               >
-                Use My Sunset
+                Use My Location
               </button>
 
               <button
@@ -779,7 +752,7 @@
               Calendar day changes at local sunset. When location is
               unavailable, 6:00 PM is used.
             </p>
-          </article>
+          </details>
 
           <article class="card col-6">
             <p class="eyebrow">Sky Body</p>
@@ -1769,8 +1742,9 @@
             </p>
 
             <div
-              id="remCal"
               class="calendar"
+              data-remnant-calendar
+              aria-label="Remnant moon calendar"
             ></div>
           </section>
 
@@ -2198,6 +2172,33 @@
         <a class="record-witness-link" href="./ledger.html" data-witness-link>Record</a>
       </div>
     </div>
+
+    <section id="installCard" class="app-install-card" aria-labelledby="installTitle">
+      <p class="eyebrow">Installable Living Calendar</p>
+      <h2 id="installTitle">Carry 13 Moons as an app</h2>
+      <p>Installation adds a Home Screen icon, opens the calendar without the normal browser bar where supported, and prepares essential files for offline use. Your records remain on this device.</p>
+      <div class="btnrow">
+        <button id="installApp" class="lab-btn" type="button" aria-describedby="appStatus installStateNote">Install 13 Moons</button>
+        <button class="lab-btn ghost" type="button" data-tab-jump="settingsPanel">Installation Help</button>
+      </div>
+      <p id="appStatus" class="app-status">Checking installation support…</p>
+      <p id="installStateNote" class="fine app-install-note">Waiting for browser install state…</p>
+      <p id="inAppBrowserWarning" class="warning" hidden>To install 13 Moons on iPhone, open this page in Safari first. Use the browser menu to open the page in Safari, then return here.</p>
+      <div id="iosInstallHelp" hidden>
+        <strong>Install on iPhone or iPad with Safari</strong>
+        <ol class="install-steps">
+          <li>Open this page in Safari.</li>
+          <li>Tap the Share button.</li>
+          <li>Select Add to Home Screen.</li>
+          <li>Confirm the name 13 Moons.</li>
+          <li>Tap Add, then open the new icon.</li>
+        </ol>
+      </div>
+      <div id="offlineSnapshot" class="warning" hidden></div>
+      <div id="updateNotice" class="warning" hidden>
+        A new version is ready. Saved logs will be preserved. Open App Settings to apply it.
+      </div>
+    </section>
   </main>
   </div>
 
@@ -2206,18 +2207,23 @@
     aria-label="Mobile quick navigation"
   >
     <a href="#todayPanel" data-mobile-tab="todayPanel">Today</a>
-    <a href="#shabbatPanel" data-mobile-tab="shabbatPanel">Shabbat</a>
-    <a href="#flowPanel" data-mobile-tab="flowPanel">Daily Flow</a>
-    <a href="#calendarPanel" data-mobile-tab="calendarPanel">Calendars</a>
-    <a href="#mirrorPanel" data-mobile-tab="mirrorPanel">Mirror</a>
+    <a href="#calendarPanel" data-mobile-tab="calendarPanel">Calendar</a>
     <a href="#witnessPanel" data-mobile-tab="witnessPanel">Witness</a>
-    <a href="#astrologyPanel" data-mobile-tab="astrologyPanel">Astrology</a>
-    <a href="#yearPanel" data-mobile-tab="yearPanel">Year Map</a>
-    <a href="#codexPanel" data-mobile-tab="codexPanel">Codex Seal</a>
-    <a href="#timelinePanel" data-mobile-tab="timelinePanel">Timeline</a>
-    <a href="#fieldPanel" data-mobile-tab="fieldPanel">Field Layers</a>
-    <a href="#savedPanel" data-mobile-tab="savedPanel">Saved Logs</a>
-    <a href="#settingsPanel" data-mobile-tab="settingsPanel">Settings</a>
+    <a href="#mirrorPanel" data-mobile-tab="mirrorPanel">Mirror</a>
+    <details data-mobile-more>
+      <summary class="mobile-dock-more-toggle">More</summary>
+      <div class="mobile-dock-more-menu">
+        <a href="#shabbatPanel" data-mobile-tab="shabbatPanel">Shabbat</a>
+        <a href="#flowPanel" data-mobile-tab="flowPanel">Daily Flow</a>
+        <a href="#astrologyPanel" data-mobile-tab="astrologyPanel">Astrology</a>
+        <a href="#yearPanel" data-mobile-tab="yearPanel">Year Map</a>
+        <a href="#codexPanel" data-mobile-tab="codexPanel">Codex Seal</a>
+        <a href="#timelinePanel" data-mobile-tab="timelinePanel">Timeline</a>
+        <a href="#fieldPanel" data-mobile-tab="fieldPanel">Field Layers</a>
+        <a href="#savedPanel" data-mobile-tab="savedPanel">Saved Logs</a>
+        <a href="#settingsPanel" data-mobile-tab="settingsPanel">App Settings</a>
+      </div>
+    </details>
   </nav>
 
   <div

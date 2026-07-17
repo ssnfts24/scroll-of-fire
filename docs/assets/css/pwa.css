@@ -76,6 +76,10 @@ body {
   border: 0;
 }
 
+.is-standalone #installCard {
+  display: none;
+}
+
 @media (max-width: 760px) {
   html {
     scroll-padding-bottom: calc(1.5rem + var(--safe-bottom));

@@ -253,14 +253,37 @@
     return control?.value || params.get("sunset") || safeGet(SUNSET_KEY) || CONFIG.fallbackSunset;
   }
 
-  function effectiveContext() {
+  function formatBoundaryTime(value) {
+    const { hour, minute } = parseClock(value);
+    const date = new Date(Date.UTC(2000, 0, 1, hour, minute, 0));
+    return new Intl.DateTimeFormat("en-US", {
+      timeZone: "UTC",
+      hour: "numeric",
+      minute: "2-digit"
+    }).format(date);
+  }
+
+  function repeatingMoonDays(startDay) {
+    const safeStart = Number(startDay);
+    if (!Number.isFinite(safeStart) || safeStart < 1 || safeStart > 7) return new Set();
+
+    return new Set(
+      Array.from({ length: 4 }, (_, index) => safeStart + index * 7).filter(day => day <= 28)
+    );
+  }
+
+  function moonEffectiveDate(info, dayInMoon) {
+    return addDays(info.anchor, info.moonIndex * 28 + (dayInMoon - 1));
+  }
+
+  function effectiveContextForDate(civilDate) {
     const mode = boundaryMode();
     const sunset = sunsetValue();
     const sunsetClock = parseClock(sunset);
     const now = new Date();
     const zoneNow = datePartsInTimeZone(now, selectedTZ);
     const currentZoneISO = `${zoneNow.year}-${pad(zoneNow.month)}-${pad(zoneNow.day)}`;
-    const selectedISO = toISO(selectedDate);
+    const selectedISO = toISO(civilDate);
     const isToday = selectedISO === currentZoneISO;
     const nowMinutes = zoneNow.hour * 60 + zoneNow.minute;
 
@@ -269,12 +292,12 @@
       isToday &&
       nowMinutes >= sunsetClock.minutes;
 
-    const effectiveDate = afterBoundary ? addDays(selectedDate, 1) : new Date(selectedDate);
+    const effectiveDate = afterBoundary ? addDays(civilDate, 1) : new Date(civilDate);
     const info = remnantInfo(effectiveDate);
     const shabbat = shabbatInfo(effectiveDate, info);
 
     return {
-      civilDate: new Date(selectedDate),
+      civilDate: new Date(civilDate),
       civilISO: selectedISO,
       effectiveDate,
       effectiveISO: toISO(effectiveDate),
@@ -292,6 +315,10 @@
       info,
       shabbat
     };
+  }
+
+  function effectiveContext() {
+    return effectiveContextForDate(selectedDate);
   }
 
   function moonAge(date) {
@@ -697,6 +724,11 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     text("nowTZ", `${selectedTZ} · ${context.modeLabel}`);
     updateBoundaryPresentation(context);
 
+    const logsList = logs();
+    const patterns = detectPatterns(logsList);
+    const weekNumber = info.inside ? Math.floor((info.dayInMoon - 1) / 7) + 1 : null;
+    const weekTitle = info.inside ? week[0].split("·").map(part => part.trim()) : [week[0], week[1]];
+
     text("moonName", info.moon.name);
     text("moonEssence", info.moon.essence);
     text(
@@ -713,47 +745,31 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
         : "Review, repair, clear the ledger, preserve the weekly count, and prepare the next anchor."
     );
 
-    text("commandMoon", info.moon.name);
+    text(
+      "commandMoon",
+      info.inside
+        ? `Moon ${info.moon.idx} · ${info.moon.name}`
+        : `Outside Count · ${info.moon.name}`
+    );
     text(
       "commandLine",
       info.inside
-        ? `Moon ${info.moon.idx} · Day ${info.dayInMoon}/28 · ${info.moon.element} · ${info.moon.freq}`
+        ? `Moon Day ${info.dayInMoon} of 28 · ${week[0]}`
         : `Outside Count · ${info.moon.name}`
     );
-    text("statMoonDay", info.inside ? `${info.dayInMoon}/28` : "Outside");
+    text("statMoonDay", info.inside ? `${info.dayInMoon} of 28` : "Outside Count");
+    text("todayWeekNumber", weekNumber ? `Week ${weekNumber}` : "Outside Gate");
+    text("todayWeekGate", weekTitle[1] || week[1]);
     text("statPhase", phase);
     text("statSolar", solar[0]);
     text("statField", (val("kpInput") || "Unknown").split("·")[0].trim());
-    text("statLogs", logs().length);
-    text("statPatterns", detectPatterns(logs()).count);
-
-    text("dayInMoon", info.inside ? info.dayInMoon : "⊙");
+    text("todayPhaseMeta", `${Math.round(lit * 100)}% illuminated`);
+    text("todayBoundaryTime", formatBoundaryTime(context.sunset));
+    text("todayShabbatMeta", context.shabbat.moonPosition);
+    text("statLogs", logsList.length);
+    text("statPatterns", patterns.count === 1 ? "1 pattern" : `${patterns.count} patterns`);
+    text("dayInMoon", info.inside ? info.dayInMoon : "☾");
     text("moonLength", info.inside ? "/28" : "reset");
-
-    const progress = info.inside ? info.dayInMoon / 28 : 1;
-    const arc = $("#moonArc");
-    if (arc) arc.style.strokeDashoffset = String(314 - 314 * progress);
-
-    const weekDots = $("#weekDots");
-    if (weekDots) {
-      const shabbatDays = new Set(CONFIG.shabbat.moonDays);
-
-      weekDots.innerHTML = Array.from({ length: 28 }, (_, index) => {
-        const number = index + 1;
-        const classes = ["dot"];
-
-        if (info.inside && number < info.dayInMoon) classes.push("done");
-        if (info.inside && number === info.dayInMoon) classes.push("today");
-        if (shabbatDays.has(number)) classes.push("shabbat");
-        if ([1, 8, 15, 22].includes(number)) classes.push("preparation");
-
-        const label = shabbatDays.has(number)
-          ? `Day ${number} · Shabbat`
-          : `Day ${number}`;
-
-        return `<span class="${classes.join(" ")}" title="${label}" aria-label="${label}"></span>`;
-      }).join("");
-    }
 
     text("phaseLine", `${phase} · ${Math.round(lit * 100)}% illuminated`);
     text("phaseMeta", `Approximate lunar age: ${age.toFixed(2)} days.`);
@@ -797,36 +813,76 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
         solar,
         dayArch,
         week,
-        logs: logs(),
-        patterns: detectPatterns(logs())
+        logs: logsList,
+        patterns
       }
     }));
   }
 
   function renderRemnantCalendar(context) {
-    const remCal = $("#remCal");
-    if (!remCal) return;
+    const calendars = $$("[data-remnant-calendar]");
+    if (!calendars.length) return;
 
     const info = context.info;
     const shabbatDays = new Set(CONFIG.shabbat.moonDays);
+    const preparationDays = repeatingMoonDays(CONFIG.shabbat.preparationDay || 1);
+    const returnDays = repeatingMoonDays(CONFIG.shabbat.returnDay || 3);
+    const todayContext = effectiveContextForDate(todayInTimeZone(selectedTZ));
+    const sameMoonAsToday =
+      info.anchor.getTime() === todayContext.info.anchor.getTime() &&
+      info.moonIndex === todayContext.info.moonIndex;
+    const todayDay = sameMoonAsToday ? todayContext.info.dayInMoon : null;
+    const selectedDay = info.inside ? info.dayInMoon : null;
+    const logDates = new Set(
+      logs()
+        .flatMap(entry => [entry.effectiveDate, entry.date])
+        .filter(value => typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value))
+    );
 
-    remCal.innerHTML = Array.from({ length: 28 }, (_, index) => {
+    const html = Array.from({ length: 28 }, (_, index) => {
       const number = index + 1;
+      const effectiveDate = moonEffectiveDate(info, number);
+      const effectiveISO = toISO(effectiveDate);
       const classes = ["calDay"];
       const archetype = DAY_ARCHETYPES[index];
+      const tags = [];
 
-      if (info.inside && number === info.dayInMoon) classes.push("today");
-      if (shabbatDays.has(number)) classes.push("shabbat");
-      if ([1, 8, 15, 22].includes(number)) classes.push("preparation");
+      if (todayDay === number) {
+        classes.push("today");
+        tags.push('<span class="calDayTag todayTag">Today</span>');
+      }
+      if (selectedDay === number) {
+        classes.push("selected");
+        tags.push('<span class="calDayTag selectedTag">Selected</span>');
+      }
+      if (shabbatDays.has(number)) {
+        classes.push("shabbat");
+        tags.push('<span class="calDayTag shabbatTag">Shabbat</span>');
+      }
+      if (preparationDays.has(number)) {
+        classes.push("preparation");
+        tags.push('<span class="calDayTag prepTag">Prep</span>');
+      }
+      if (returnDays.has(number)) {
+        classes.push("return");
+        tags.push('<span class="calDayTag returnTag">Return</span>');
+      }
+      if (logDates.has(effectiveISO)) {
+        classes.push("has-log");
+        tags.push('<span class="calDayTag logTag">Witness</span>');
+      }
 
-      return `<div class="${classes.join(" ")}">
-        <strong>${number}</strong>
-        <span>${archetype[0]}</span>
-        ${shabbatDays.has(number) ? `<span class="shabbat-mark">שבת</span>` : ""}
-        <br>
-        <small class="meta">${archetype[1]}</small>
-      </div>`;
+      return `<button class="${classes.join(" ")}" type="button" data-effective-date="${effectiveISO}" data-moon-day="${number}" aria-selected="${selectedDay === number ? "true" : "false"}">
+        <strong>Day ${number}</strong>
+        <span>${fmtShort(effectiveDate)}</span>
+        <small class="meta">${archetype[0]}</small>
+        <span class="calDayTags">${tags.join("")}</span>
+      </button>`;
     }).join("");
+
+    calendars.forEach(calendar => {
+      calendar.innerHTML = html;
+    });
   }
 
   function renderGregorian(context) {
@@ -845,13 +901,17 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       html += `<div class="g-pad"></div>`;
     }
 
+    const todayISO = toISO(todayInTimeZone(selectedTZ));
+
     for (let day = 1; day <= last.getDate(); day++) {
       const current = new Date(year, month, day, 12, 0, 0);
       const info = remnantInfo(current);
       const classes = ["gregDay"];
+      const currentISO = toISO(current);
 
-      if (toISO(current) === context.civilISO) classes.push("today");
-      if (toISO(current) === context.effectiveISO && context.afterBoundary) classes.push("effective");
+      if (currentISO === todayISO) classes.push("today");
+      if (currentISO === context.civilISO) classes.push("selected");
+      if (currentISO === context.effectiveISO && context.afterBoundary) classes.push("effective");
       if (current.getDay() === 6) classes.push("shabbat");
       if (current.getDay() === 5) classes.push("preparation");
 
@@ -989,7 +1049,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
   function renderTimeline() {
     const list = logs();
     const patterns = detectPatterns(list);
-    text("statPatterns", patterns.count);
+    text("statPatterns", patterns.count === 1 ? "1 pattern" : `${patterns.count} patterns`);
 
     const alerts = $("#patternAlerts");
     if (alerts) {
@@ -1464,6 +1524,25 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
 
     on("nextDay", "click", () => {
       selectedDate = addDays(selectedDate, 1);
+      refreshCalculatedSunset();
+      render();
+    });
+
+    document.addEventListener("click", event => {
+      const button = event.target.closest("[data-effective-date]");
+      if (!button || !button.closest("[data-remnant-calendar]")) return;
+
+      const targetDate = fromISO(button.dataset.effectiveDate);
+      if (!targetDate) return;
+
+      const current = lastContext || effectiveContext();
+      selectedDate =
+        current.afterBoundary &&
+        current.isToday &&
+        button.dataset.effectiveDate === current.effectiveISO
+          ? new Date(current.civilDate)
+          : targetDate;
+
       refreshCalculatedSunset();
       render();
     });
