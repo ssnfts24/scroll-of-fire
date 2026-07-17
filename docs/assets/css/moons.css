@@ -2064,3 +2064,17 @@ body[data-remnant-boundary]{background:linear-gradient(rgba(5,7,13,.84),rgba(5,7
 .gate-gallery{grid-template-columns:1fr}
 .panel-banner img{height:auto;aspect-ratio:1}
 }
+
+
+
+
+
+/* Hide the duplicate upper calendar navigation on mobile only */
+@media (max-width: 768px) {
+  .moons-tabs,
+  .section-tabs,
+  .calendar-tabs,
+  .tab-strip:not(.mobile-bottom-nav):not(.moons-mobile-nav) {
+    display: none !important;
+  }
+}
