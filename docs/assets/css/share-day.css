@@ -1,0 +1,219 @@
+/* Scroll of Fire — Share the Day modal and preview */
+
+.share-day-modal-open {
+  overflow: hidden;
+}
+
+.share-day-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1600;
+  display: grid;
+  place-items: center;
+  padding: clamp(0.6rem, 2.5vw, 1rem);
+}
+
+.share-day-modal[hidden] {
+  display: none;
+}
+
+.share-day-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 8, 16, 0.82);
+}
+
+.share-day-dialog {
+  position: relative;
+  width: min(880px, 100%);
+  max-height: min(92vh, 920px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  background: linear-gradient(180deg, rgba(8, 12, 23, 0.98), rgba(4, 8, 16, 0.98));
+  border: 1px solid rgba(243, 201, 122, 0.36);
+  border-radius: 16px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
+  padding: clamp(0.85rem, 2vw, 1.2rem);
+  color: #f4f1e8;
+}
+
+.share-day-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+  margin-bottom: 0.8rem;
+}
+
+.share-day-kicker {
+  margin: 0;
+  color: #f3c97a;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+}
+
+.share-day-head h2 {
+  margin: 0.2rem 0;
+  font-size: 1.25rem;
+  color: #f4f1e8;
+}
+
+.share-day-date {
+  margin: 0;
+  color: #a7b4c7;
+  font-size: 0.85rem;
+}
+
+.share-day-close,
+.share-day-actions button,
+.share-day-format button {
+  min-height: 44px;
+  border-radius: 10px;
+  border: 1px solid rgba(243, 201, 122, 0.34);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f4f1e8;
+  font: inherit;
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+}
+
+.share-day-close:hover,
+.share-day-actions button:hover,
+.share-day-format button:hover,
+.share-day-close:focus-visible,
+.share-day-actions button:focus-visible,
+.share-day-format button:focus-visible {
+  outline: none;
+  border-color: rgba(243, 201, 122, 0.66);
+  background: rgba(243, 201, 122, 0.12);
+}
+
+.share-day-format {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin-bottom: 0.8rem;
+}
+
+.share-day-mode {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.share-day-format button[aria-selected="true"] {
+  border-color: rgba(122, 243, 255, 0.8);
+  background: rgba(122, 243, 255, 0.14);
+}
+
+.share-day-preview-wrap {
+  border: 1px solid rgba(122, 243, 255, 0.32);
+  border-radius: 12px;
+  background: rgba(3, 7, 14, 0.85);
+  display: grid;
+  place-items: center;
+  min-height: 260px;
+  padding: 0.5rem;
+  overflow: auto;
+}
+
+.share-day-preview-wrap[data-loading="true"]::before {
+  content: "Rendering…";
+  color: #a7b4c7;
+}
+
+.share-day-preview-canvas {
+  width: 100%;
+  max-width: min(100%, 460px);
+  height: auto;
+  border-radius: 10px;
+}
+
+.share-day-options {
+  margin: 0.85rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 0.6rem 0.7rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.share-day-options legend {
+  color: #f3c97a;
+  padding: 0 0.2rem;
+}
+
+.share-day-options label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #d6deea;
+}
+
+.share-day-text-label {
+  display: block;
+  color: #f3c97a;
+  margin-bottom: 0.35rem;
+  font-size: 0.85rem;
+}
+
+.share-day-text,
+.share-day-complete-preview {
+  width: 100%;
+  min-height: 120px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(5, 9, 16, 0.92);
+  color: #f4f1e8;
+  padding: 0.65rem;
+  resize: vertical;
+  white-space: pre-wrap;
+}
+
+.share-day-complete-preview {
+  min-height: 110px;
+  margin-top: 0.2rem;
+  overflow: auto;
+}
+
+.share-day-meta {
+  margin: 0.35rem 0;
+  color: #d6deea;
+  font-size: 0.85rem;
+}
+
+.share-day-warning {
+  color: #f3c97a;
+  min-height: 1.2em;
+}
+
+.share-day-actions {
+  margin-top: 0.8rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.share-day-status {
+  margin: 0.75rem 0 0;
+  color: #9ecff2;
+  min-height: 1.2em;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .share-day-dialog {
+    width: 100%;
+    max-height: 94vh;
+  }
+
+  .share-day-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .share-day-format,
+  .share-day-mode,
+  .share-day-actions {
+    grid-template-columns: 1fr;
+  }
+}
