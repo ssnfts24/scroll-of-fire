@@ -544,28 +544,6 @@
       >
         <!-- Today artwork is inserted by moons-images.js. -->
 
-        <section class="card today-hero-actions" aria-labelledby="todayHeroHeading">
-          <span class="today-hero-glow" aria-hidden="true"></span>
-          <p class="eyebrow">Today in the 13 Moons</p>
-          <h2 id="todayHeroHeading">Today's Movement</h2>
-          <p id="heroMovement" class="today-hero-movement">—</p>
-          <button
-            id="heroShareBtn"
-            class="lab-btn share-today-primary"
-            type="button"
-            data-share-day-open
-            data-share-source="moons"
-            aria-label="Share today's Remnant 13 Moons reading as a social card"
-          >
-            ✦ Share Today
-          </button>
-          <div class="today-hero-secondary btnrow">
-            <button class="lab-btn ghost" type="button" data-tab-jump="flowPanel">Open Full Reading</button>
-            <a class="lab-btn ghost" href="./ledger.html">Record Witness</a>
-            <a class="lab-btn ghost" href="./systems/frequencies.html">Start Frequency</a>
-          </div>
-        </section>
-
         <section class="card today-calendar-summary" aria-labelledby="todaySummaryTitle">
           <span class="today-summary-glow" aria-hidden="true"></span>
           <div class="today-summary-head">
@@ -601,11 +579,11 @@
               <strong id="todaySummaryPhase">—</strong>
             </article>
             <article class="today-summary-stat">
-              <span class="label">Day Boundary</span>
+              <span class="label">State</span>
               <strong id="todaySummaryBoundary">—</strong>
             </article>
             <article class="today-summary-stat">
-              <span class="label">Shabbat</span>
+              <span class="label">Year Day</span>
               <strong id="todaySummaryShabbat">—</strong>
             </article>
           </div>
@@ -616,6 +594,29 @@
             role="grid"
             aria-label="Moon days 1 through 28"
           ></div>
+        </section>
+
+        <section class="card today-hero-actions" aria-labelledby="todayHeroHeading">
+          <span class="today-hero-glow" aria-hidden="true"></span>
+          <p class="eyebrow">Today in the 13 Moons</p>
+          <h2 id="todayHeroHeading">Today's Movement</h2>
+          <p id="heroMovement" class="today-hero-movement">Open today's full reading to view the current movement.</p>
+          <p id="todaySelectedNotice" class="meta" hidden></p>
+          <button
+            id="heroShareBtn"
+            class="lab-btn share-today-primary"
+            type="button"
+            data-share-day-open
+            data-share-source="moons"
+            aria-label="Share today's Remnant 13 Moons reading as a social card"
+          >
+            ✦ Share Today
+          </button>
+          <div class="today-hero-secondary btnrow">
+            <button class="lab-btn ghost" type="button" data-tab-jump="flowPanel">Open Full Reading</button>
+            <a class="lab-btn ghost" href="./ledger.html">Record Witness</a>
+            <a class="lab-btn ghost" href="./systems/frequencies.html">Start Frequency</a>
+          </div>
         </section>
 
         <!-- Phase 2: Codex Memory continuity card for Today -->
@@ -718,54 +719,6 @@
             document.addEventListener("codexmemorychange", doRender);
           })();
         </script>
-          <div>
-            <p class="eyebrow">☲ Remnant Command Center ☲</p>
-            <h2 id="commandMoon">—</h2>
-            <p id="commandLine" class="subtitle">—</p>
-          </div>
-
-          <div class="command-grid">
-            <div class="stat">
-              <span>Moon Day</span>
-              <strong id="statMoonDay">—</strong>
-            </div>
-
-            <div class="stat">
-              <span>Visible Moon</span>
-              <strong id="statPhase">—</strong>
-            </div>
-
-            <div class="stat">
-              <span>Solar Gate</span>
-              <strong id="statSolar">—</strong>
-            </div>
-
-            <div class="stat">
-              <span>Field</span>
-              <strong id="statField">—</strong>
-            </div>
-
-            <div class="stat">
-              <span>Boundary</span>
-              <strong id="statBoundary">Sunset</strong>
-            </div>
-
-            <div class="stat">
-              <span>Shabbat</span>
-              <strong id="statShabbat">Checking…</strong>
-            </div>
-
-            <div class="stat">
-              <span>Logs</span>
-              <strong id="statLogs">0</strong>
-            </div>
-
-            <div class="stat">
-              <span>Patterns</span>
-              <strong id="statPatterns">0</strong>
-            </div>
-          </div>
-        </section>
 
         <section class="card moon-badge">
           <!-- Current Moon artwork is inserted here by moons-images.js. -->
@@ -970,6 +923,56 @@
             <p id="phaseLine" class="pill">—</p>
             <p id="phaseMeta" class="meta">—</p>
           </article>
+        </section>
+
+        <section class="card command" aria-labelledby="commandMoon">
+          <div>
+            <p class="eyebrow">☲ Remnant Command Center ☲</p>
+            <h2 id="commandMoon">—</h2>
+            <p id="commandLine" class="subtitle">—</p>
+          </div>
+
+          <div class="command-grid">
+            <div class="stat">
+              <span>Moon Day</span>
+              <strong id="statMoonDay">—</strong>
+            </div>
+
+            <div class="stat">
+              <span>Visible Moon</span>
+              <strong id="statPhase">—</strong>
+            </div>
+
+            <div class="stat">
+              <span>Solar Gate</span>
+              <strong id="statSolar">—</strong>
+            </div>
+
+            <div class="stat">
+              <span>Field</span>
+              <strong id="statField">—</strong>
+            </div>
+
+            <div class="stat">
+              <span>Boundary</span>
+              <strong id="statBoundary">Sunset</strong>
+            </div>
+
+            <div class="stat">
+              <span>Shabbat</span>
+              <strong id="statShabbat">Checking…</strong>
+            </div>
+
+            <div class="stat">
+              <span>Logs</span>
+              <strong id="statLogs">0</strong>
+            </div>
+
+            <div class="stat" id="statPatternsCard">
+              <span>Patterns</span>
+              <strong id="statPatterns">0</strong>
+            </div>
+          </div>
         </section>
 
         <section class="grid">
@@ -2279,7 +2282,7 @@
           <p id="installStateNote" class="fine app-install-note">Waiting for browser install state…</p>
           <p id="inAppBrowserWarning" class="warning" hidden>To install 13 Moons on iPhone, open this page in Safari first. Use the browser menu to open the page in Safari, then return here.</p>
           <div id="iosInstallHelp" hidden>
-            <strong id="iosInstallInstructions">Install on iPhone or iPad with Safari</strong>
+            <h3 id="iosInstallInstructions" tabindex="-1">Install on iPhone or iPad with Safari</h3>
             <ol class="install-steps">
               <li>Open this page in Safari.</li>
               <li>Tap the Share button.</li>
@@ -2402,25 +2405,6 @@
     </div>
   </main>
   </div>
-
-  <nav
-    class="mobile-dock"
-    aria-label="Mobile quick navigation"
-  >
-    <a href="#todayPanel" data-mobile-tab="todayPanel">Today</a>
-    <a href="#shabbatPanel" data-mobile-tab="shabbatPanel">Shabbat</a>
-    <a href="#flowPanel" data-mobile-tab="flowPanel">Daily Flow</a>
-    <a href="#calendarPanel" data-mobile-tab="calendarPanel">Calendars</a>
-    <a href="#mirrorPanel" data-mobile-tab="mirrorPanel">Mirror</a>
-    <a href="#witnessPanel" data-mobile-tab="witnessPanel">Witness</a>
-    <a href="#astrologyPanel" data-mobile-tab="astrologyPanel">Astrology</a>
-    <a href="#yearPanel" data-mobile-tab="yearPanel">Year Map</a>
-    <a href="#codexPanel" data-mobile-tab="codexPanel">Codex Seal</a>
-    <a href="#timelinePanel" data-mobile-tab="timelinePanel">Timeline</a>
-    <a href="#fieldPanel" data-mobile-tab="fieldPanel">Field Layers</a>
-    <a href="#savedPanel" data-mobile-tab="savedPanel">Saved Logs</a>
-    <a href="#settingsPanel" data-mobile-tab="settingsPanel">Settings</a>
-  </nav>
 
   <div
     id="sofToast"

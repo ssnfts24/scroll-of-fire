@@ -218,13 +218,16 @@
     const figure = createImageFigure({
       file: `moons/${firstMoon.file}`,
       alt: firstMoon.alt,
-      className: "current-moon-art"
+      className: "current-moon-art",
+      eager: true
     });
 
     const image = figure.querySelector("img");
 
     if (image) {
       image.id = "currentMoonImage";
+      image.width = 1080;
+      image.height = 1080;
     }
 
     moonBadge.classList.add("has-moon-art");
