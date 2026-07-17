@@ -81,6 +81,19 @@ test("index and moons load share-day assets", () => {
   assert.ok(moons.includes("assets/js/share-day.js"));
 });
 
+test("homepage and moons keep default social metadata", () => {
+  const index = read("docs/index.html");
+  const moons = read("docs/moons.html");
+
+  assert.ok(index.includes("rel=\"canonical\" href=\"https://codexofreality.org/\""));
+  assert.ok(index.includes("property=\"og:image\""));
+  assert.ok(index.includes("name=\"twitter:card\" content=\"summary_large_image\""));
+
+  assert.ok(moons.includes("rel=\"canonical\""));
+  assert.ok(moons.includes("property=\"og:image\""));
+  assert.ok(moons.includes("name=\"twitter:card\" content=\"summary_large_image\""));
+});
+
 test("share buttons exist in required views", () => {
   const index = read("docs/index.html");
   const moons = read("docs/moons.html");
