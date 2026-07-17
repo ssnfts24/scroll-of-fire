@@ -40,6 +40,8 @@
     document.querySelector('link[href*="assets/css/moons.css"]')?.href ||
     new URL("assets/css/moons.css", document.baseURI).toString();
   const browserMode = () => standalone() ? "standalone" : "tab";
+  const scrollMode = () =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
 
   function status(message) {
     setText("appStatus", message);
@@ -60,7 +62,7 @@
     requestAnimationFrame(() => {
       const el = byId(targetId);
       if (!el) return;
-      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      el.scrollIntoView({ behavior: scrollMode(), block: "nearest" });
       setTimeout(() => {
         (byId(focusId) ?? el.querySelector("h2, strong, button, [tabindex='0']") ?? el).focus();
       }, 350);
@@ -358,11 +360,11 @@
         await install();
         return;
       case "ios-help":
-        byId("iosInstallInstructions")?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
+        byId("iosInstallInstructions")?.scrollIntoView?.({ behavior: scrollMode(), block: "nearest" });
         status(installUiState.note);
         return;
       case "settings-help":
-        byId("appInstallCard")?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
+        byId("appInstallCard")?.scrollIntoView?.({ behavior: scrollMode(), block: "nearest" });
         status(installUiState.note);
         return;
       default:
@@ -455,7 +457,7 @@
     byId("openIphoneHelp")?.addEventListener("click", () => {
       const iosHelp = byId("iosInstallHelp");
       if (iosHelp) iosHelp.hidden = false;
-      openAppSettingsAt("iosInstallInstructions");
+      openAppSettingsAt("iosInstallHelp", "iosInstallInstructions");
     });
     byId("checkForUpdates")?.addEventListener("click", async () => {
       await registration?.update();

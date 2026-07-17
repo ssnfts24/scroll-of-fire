@@ -153,6 +153,14 @@
     if (node) node.addEventListener(event, handler);
   }
 
+  function prefersReducedMotion() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function scrollBehavior() {
+    return prefersReducedMotion() ? "auto" : "smooth";
+  }
+
   function pad(number) {
     return String(number).padStart(2, "0");
   }
@@ -692,10 +700,24 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       ? WEEK_GATES[Math.floor((info.dayInMoon - 1) / 7)]
       : ["Outside Gate", "Days beyond the 364-counted cycle."];
 
+    const selectedNotice = $("#todaySelectedNotice");
+    const deterministicMovement = dayArch?.[1] || window.CodexState?.dailyMovement;
+    const movementText = deterministicMovement || "Open today's full reading to view the current movement.";
+    const patternCount = detectPatterns(logs()).count;
+
     setValue("datePick", toISO(selectedDate));
     text("shareDayBtn", context.isToday ? "Share Today" : "Share This Day");
     text("heroShareBtn", context.isToday ? "✦ Share Today" : "✦ Share This Day");
-    text("heroMovement", dayArch[1]);
+    text("heroMovement", movementText);
+    if (selectedNotice) {
+      if (context.isToday) {
+        selectedNotice.hidden = true;
+        selectedNotice.textContent = "";
+      } else {
+        selectedNotice.hidden = false;
+        selectedNotice.textContent = `Viewing selected date ${formatDateOnly(context.civilDate)}.`;
+      }
+    }
     text("nowDate", formatDateOnly(context.civilDate));
     text("nowTZ", `${selectedTZ} · ${context.modeLabel}`);
     updateBoundaryPresentation(context);
@@ -728,7 +750,11 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     text("statSolar", solar[0]);
     text("statField", (val("kpInput") || "Unknown").split("·")[0].trim());
     text("statLogs", logs().length);
-    text("statPatterns", detectPatterns(logs()).count);
+    text("statPatterns", patternCount);
+    const patternsCard = $("#statPatternsCard");
+    if (patternsCard) {
+      patternsCard.hidden = patternCount === 0 && window.matchMedia("(max-width: 760px)").matches;
+    }
 
     text("dayInMoon", info.inside ? info.dayInMoon : "⊙");
     text("moonLength", info.inside ? "/28" : "reset");
@@ -768,7 +794,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     text("weekGateCopy", week[1]);
     text("solarGate", `${solar[0]} · ${solar[1]}`);
     text("skyMirrorCopy", solar[2]);
-    renderTodaySummary(context, phase, lit, week);
+    renderTodaySummary(context, phase, lit, week, movementText);
 
     renderClockOnly();
     renderRemnantCalendar(context);
@@ -807,25 +833,29 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     }));
   }
 
-  function renderTodaySummary(context, phase, lit, week) {
+  function renderTodaySummary(context, phase, lit, week, movementText) {
     text("todaySummaryTitle", formatDateOnly(context.civilDate, {
       year: undefined,
       month: undefined,
       day: undefined,
       weekday: "long"
     }));
-    text("todaySummaryDate", formatDateOnly(context.civilDate, {
+    const selectedDateLine = formatDateOnly(context.civilDate, {
       weekday: undefined,
       month: "long",
       day: "numeric",
       year: "numeric"
-    }));
+    });
+    text(
+      "todaySummaryDate",
+      context.isToday ? selectedDateLine : `${selectedDateLine} · Selected date view`
+    );
 
     const info = context.info;
     text(
       "todaySummaryMoonLine",
       info.inside
-        ? `Moon ${info.moon.idx} · ${info.moon.name}`
+        ? `Moon ${info.moon.idx} · Day ${info.dayInMoon}/28 · Day ${info.dayOfYear}/364`
         : "Outside Count · Completion Seal"
     );
     text("todaySummaryMoonDay", info.inside ? String(info.dayInMoon) : "⊙");
@@ -838,9 +868,10 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       "todaySummaryWeek",
       weekNumber ? `Week ${weekNumber} · ${weekName}` : "Outside Gate"
     );
-    text("todaySummaryPhase", `${phase} · ${Math.round(lit * 100)}%`);
-    text("todaySummaryBoundary", `${context.modeLabel} · ${context.sunset}`);
-    text("todaySummaryShabbat", context.shabbat.state);
+    text("todaySummaryPhase", `${phase} · ${Math.round(lit * 100)}% illuminated`);
+    text("todaySummaryBoundary", context.shabbat.state);
+    text("todaySummaryShabbat", info.inside ? `Day ${info.dayOfYear}/364` : "Outside Count");
+    text("heroMovement", movementText);
 
     const grid = $("#todaySummaryMoonGrid");
     if (!grid) return;
@@ -1349,7 +1380,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       const activeTab = $$(".tab").find(tab => tab.dataset.tab === id);
       const activeMobileTab = $$("[data-mobile-tab]").find(link => link.dataset.mobileTab === id);
       const options = {
-        behavior,
+        behavior: behavior || scrollBehavior(),
         block: "nearest",
         inline: "center"
       };
@@ -1401,7 +1432,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
         );
       }
 
-      keepActiveNavInView(id, updateHistory || scroll ? "smooth" : "auto");
+      keepActiveNavInView(id, updateHistory || scroll ? scrollBehavior() : "auto");
       closeMobileMore();
 
       safeSet("sof_moons_last_tab_v1", id);
@@ -1411,7 +1442,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
         url.hash = "";
         history.pushState({ moonsTab: id }, "", url);
       }
-      if (scroll) $("#" + id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (scroll) $("#" + id)?.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
     }
 
     $(".tabs")?.setAttribute("role", "tablist");
