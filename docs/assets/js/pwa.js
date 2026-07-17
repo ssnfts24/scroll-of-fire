@@ -214,9 +214,12 @@
 
   async function refreshDiagnostics() {
     const manifest = manifestDetails;
-    const registrations = navigator.serviceWorker?.getRegistrations
-      ? await navigator.serviceWorker.getRegistrations()
-      : [];
+    let registrations = [];
+    if (navigator.serviceWorker?.getRegistrations) {
+      try {
+        registrations = await navigator.serviceWorker.getRegistrations();
+      } catch {}
+    }
     const scope = resolveScope();
     const matchingRegistrations = registrations.filter(reg => reg.scope === scope);
 

@@ -735,7 +735,8 @@ function pwaUiHarness({
   platform = "Linux armv81",
   maxTouchPoints = 1,
   standalone = false,
-  storageEntries = {}
+  storageEntries = {},
+  failGetRegistrations = false
 } = {}) {
   const listeners = new Map();
   const localStorage = new MemoryStorage(storageEntries);
@@ -749,7 +750,10 @@ function pwaUiHarness({
   const serviceWorkers = new MockEventTarget();
   serviceWorkers.controller = { scriptURL: workerUrl };
   serviceWorkers.register = async () => registration;
-  serviceWorkers.getRegistrations = async () => [registration];
+  serviceWorkers.getRegistrations = async () => {
+    if (failGetRegistrations) throw new Error("getRegistrations failed");
+    return [registration];
+  };
   serviceWorkers.getRegistration = async () => registration;
   const defaults = {
     id: "./moons.html",
@@ -999,4 +1003,14 @@ test("install UI surfaces manifest eligibility failures", async () => {
   assert.equal(harness.nodes.installApp.textContent, "Installation unavailable in this browser");
   assert.match(harness.nodes.installStateNote.textContent, /manifest ID is/);
   assert.equal(harness.nodes.manifestDisplay.textContent, "browser");
+});
+
+test("install UI diagnostics stay stable when service worker registration lookup fails", async () => {
+  const harness = pwaUiHarness({ failGetRegistrations: true });
+  await harness.flush();
+
+  assert.equal(harness.nodes.serviceWorkerControl.textContent, "Controlled by /project/service-worker.js");
+  assert.equal(harness.nodes.serviceWorkerScope.textContent, "https://example.test/project/");
+  assert.equal(harness.nodes.serviceWorkerRegistrations.textContent, "0");
+  assert.equal(harness.nodes.manifestId.textContent, "./moons.html");
 });
