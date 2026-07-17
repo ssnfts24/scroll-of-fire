@@ -637,6 +637,13 @@ textarea {
   inset: auto 2rem 0 2rem;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(243, 201, 122, 0.55), rgba(122, 243, 255, 0.45), transparent);
+  pointer-events: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .page-head {
+    overflow: clip;
+  }
 }
 
 .page-head h1 {
