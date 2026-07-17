@@ -103,20 +103,8 @@ body {
     width: min(100% - 1rem, 1280px);
   }
 
-  .tabs {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    touch-action: auto;
-  }
-
-  .tabs .tab {
-    touch-action: auto;
-  }
-
   .mobile-dock {
-    display: none;
+    display: flex;
   }
 
   .wrap {
@@ -139,6 +127,10 @@ body {
     min-height: 48px;
     display: grid;
     place-items: center;
+  }
+
+  .tabs {
+    display: none;
   }
 
   .app-status-grid {
