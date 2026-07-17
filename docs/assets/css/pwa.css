@@ -76,11 +76,7 @@ body {
   border: 0;
 }
 
-.is-standalone #installCard {
-  display: none;
-}
-
-@media (max-width: 760px), (pointer: coarse) and (max-height: 500px) {
+@media (max-width: 760px) {
   html {
     scroll-padding-bottom: calc(1.5rem + var(--safe-bottom));
     overflow-y: auto;
@@ -103,8 +99,42 @@ body {
     width: min(100% - 1rem, 1280px);
   }
 
+  .tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: auto;
+  }
+
+  .tabs .tab {
+    touch-action: auto;
+  }
+
+  .mobile-dock {
+    display: none;
+  }
+
+  .wrap {
+    padding-bottom: calc(3.5rem + var(--safe-bottom));
+  }
+
   #sofToast {
     bottom: calc(1rem + var(--safe-bottom));
+  }
+
+  .mobile-dock {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding-right: max(0.5rem, var(--safe-right));
+    padding-bottom: max(0.5rem, var(--safe-bottom));
+    padding-left: max(0.5rem, var(--safe-left));
+  }
+
+  .mobile-dock a,
+  .mobile-dock-more-toggle {
+    min-height: 48px;
+    display: grid;
+    place-items: center;
   }
 
   .app-status-grid {
@@ -146,7 +176,7 @@ body {
   }
 
   .mobile-dock a,
-  .mobile-dock button {
+  .mobile-dock-more-toggle {
     padding-inline: 0.15rem;
     font-size: 0.75rem;
   }
