@@ -1,0 +1,573 @@
+/* Scroll of Fire — Codex Memory — Phase 2 Styles
+   File: docs/assets/css/codex-memory.css
+   Phase: 2 — Codex Memory
+
+   Provides:
+     - Enhanced "Continue Your Path" panel
+     - Daily intention selector
+     - 7-day path summary markers
+     - "What Changed Since Your Last Visit" section
+     - Phase 2 memory privacy controls
+     - Mobile-first, accessible, reduced-motion safe
+*/
+
+/* =========================================================
+   CUSTOM PROPERTIES (inherit site tokens when available)
+   ========================================================= */
+
+:root {
+  --cm-gold:      var(--gold,      #f3c97a);
+  --cm-cyan:      var(--cyan,      #7af3ff);
+  --cm-muted:     var(--muted,     #b9c1c7);
+  --cm-text:      var(--text,      #f4f1e8);
+  --cm-bg:        rgba(255, 255, 255, 0.03);
+  --cm-border:    rgba(255, 255, 255, 0.09);
+  --cm-radius:    8px;
+  --cm-gap:       0.65rem;
+}
+
+/* =========================================================
+   INTENTION SELECTOR
+   ========================================================= */
+
+.codex-intention-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--cm-border);
+  border-radius: var(--cm-radius);
+  background: var(--cm-bg);
+  margin-top: 0.6rem;
+}
+
+.codex-intention-label {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--cm-muted);
+}
+
+.codex-intention-current {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.92rem;
+  color: var(--cm-text);
+  font-weight: 600;
+}
+
+.codex-intention-current .intention-value {
+  color: var(--cm-gold);
+  text-transform: capitalize;
+}
+
+.codex-intention-current .intention-prior {
+  font-size: 0.78rem;
+  color: var(--cm-muted);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.codex-intention-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.codex-intention-picker button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--cm-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--cm-muted);
+  font-size: 0.8rem;
+  font-family: inherit;
+  font-weight: 600;
+  text-transform: capitalize;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.codex-intention-picker button:hover,
+.codex-intention-picker button:focus-visible {
+  background: rgba(243, 201, 122, 0.08);
+  border-color: rgba(243, 201, 122, 0.35);
+  color: var(--cm-text);
+  outline: none;
+}
+
+.codex-intention-picker button:focus-visible {
+  outline: 2px solid var(--cm-gold);
+  outline-offset: 2px;
+}
+
+.codex-intention-picker button[aria-pressed="true"],
+.codex-intention-picker button.is-active {
+  background: rgba(243, 201, 122, 0.13);
+  border-color: var(--cm-gold);
+  color: var(--cm-gold);
+}
+
+.codex-intention-clear {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--cm-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--cm-muted);
+  font-size: 0.75rem;
+  font-family: inherit;
+  cursor: pointer;
+  min-height: 28px;
+  transition: color 0.15s;
+}
+
+.codex-intention-clear:hover,
+.codex-intention-clear:focus-visible {
+  color: var(--cm-text);
+  outline: none;
+}
+
+.codex-intention-clear:focus-visible {
+  outline: 2px solid var(--cm-gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .codex-intention-picker button,
+  .codex-intention-clear {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   7-DAY PATH SUMMARY
+   ========================================================= */
+
+.codex-seven-day {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--cm-border);
+  border-radius: var(--cm-radius);
+  background: var(--cm-bg);
+  margin-top: 0.6rem;
+}
+
+.codex-seven-day-label {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--cm-muted);
+}
+
+.codex-seven-day-markers {
+  display: flex;
+  gap: 0.35rem;
+  align-items: flex-end;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  /* Prevent scrollbar on mobile when markers fit */
+  scrollbar-width: none;
+}
+
+.codex-seven-day-markers::-webkit-scrollbar {
+  display: none;
+}
+
+.codex-seven-day-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 2.4rem;
+  flex: 1 1 0;
+}
+
+.codex-seven-day-marker .day-label {
+  font-size: 0.68rem;
+  color: var(--cm-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.codex-seven-day-marker .day-dot {
+  font-size: 1rem;
+  line-height: 1;
+  /* Color coding by activity type */
+}
+
+/* Dot states */
+.codex-seven-day-marker .day-dot[data-state="full"]     { color: var(--cm-gold); }
+.codex-seven-day-marker .day-dot[data-state="partial"]  { color: var(--cm-cyan); }
+.codex-seven-day-marker .day-dot[data-state="none"]     { color: var(--cm-border); }
+
+/* Today marker */
+.codex-seven-day-marker.is-today .day-label {
+  color: var(--cm-gold);
+  font-weight: 700;
+}
+
+/* Activity pip row below each marker */
+.codex-seven-day-marker .day-pips {
+  display: flex;
+  gap: 2px;
+  flex-wrap: nowrap;
+}
+
+.codex-seven-day-marker .day-pip {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cm-border);
+}
+
+.codex-seven-day-marker .day-pip[data-type="intention"]  { background: var(--cm-gold); }
+.codex-seven-day-marker .day-pip[data-type="witness"]    { background: var(--cm-cyan); }
+.codex-seven-day-marker .day-pip[data-type="frequency"]  { background: #a7cfff; }
+.codex-seven-day-marker .day-pip[data-type="practice"]   { background: #b1ffcf; }
+
+.codex-seven-day-alt {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--cm-muted);
+}
+
+/* =========================================================
+   WHAT CHANGED SINCE LAST VISIT
+   ========================================================= */
+
+.codex-since-visit {
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--cm-border);
+  border-left: 2px solid var(--cm-cyan);
+  border-radius: 0 var(--cm-radius) var(--cm-radius) 0;
+  background: var(--cm-bg);
+  margin-top: 0.6rem;
+}
+
+.codex-since-visit-label {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--cm-cyan);
+}
+
+.codex-since-visit-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.codex-since-visit-list li {
+  font-size: 0.85rem;
+  color: var(--cm-muted);
+  line-height: 1.4;
+}
+
+/* =========================================================
+   ENHANCED CONTINUE YOUR PATH PANEL
+   ========================================================= */
+
+.continue-path-panel--phase2 {
+  position: relative;
+}
+
+.continue-path-panel--phase2 .codex-resume-dismiss {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid var(--cm-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--cm-muted);
+  font-size: 0.74rem;
+  font-family: inherit;
+  cursor: pointer;
+  min-height: 28px;
+  line-height: 1;
+}
+
+.continue-path-panel--phase2 .codex-resume-dismiss:hover,
+.continue-path-panel--phase2 .codex-resume-dismiss:focus-visible {
+  color: var(--cm-text);
+  outline: none;
+}
+
+.continue-path-panel--phase2 .codex-resume-dismiss:focus-visible {
+  outline: 2px solid var(--cm-gold);
+  outline-offset: 2px;
+}
+
+.codex-continue-type {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--cm-muted);
+  margin-bottom: 0.2rem;
+}
+
+.codex-continue-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--cm-text);
+  margin: 0 0 0.15rem;
+}
+
+.codex-continue-meta {
+  font-size: 0.82rem;
+  color: var(--cm-muted);
+  margin: 0 0 0.75rem;
+}
+
+/* =========================================================
+   MEMORY PRIVACY CONTROLS SECTION
+   ========================================================= */
+
+.codex-memory-controls {
+  padding: 0.9rem;
+  border: 1px solid var(--cm-border);
+  border-radius: var(--cm-radius);
+  background: var(--cm-bg);
+}
+
+.codex-memory-controls-heading {
+  margin: 0 0 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--cm-text);
+}
+
+.codex-memory-controls-desc {
+  margin: 0 0 0.75rem;
+  font-size: 0.8rem;
+  color: var(--cm-muted);
+  line-height: 1.45;
+}
+
+.codex-memory-controls-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.codex-memory-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--cm-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--cm-muted);
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.codex-memory-btn:hover,
+.codex-memory-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--cm-text);
+  outline: none;
+}
+
+.codex-memory-btn:focus-visible {
+  outline: 2px solid var(--cm-gold);
+  outline-offset: 2px;
+}
+
+.codex-memory-btn--danger {
+  border-color: rgba(255, 90, 90, 0.3);
+  color: rgba(255, 130, 130, 0.8);
+}
+
+.codex-memory-btn--danger:hover,
+.codex-memory-btn--danger:focus-visible {
+  background: rgba(255, 90, 90, 0.08);
+  color: #ff9a9a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .codex-memory-btn { transition: none; }
+}
+
+/* Memory status display */
+.codex-memory-status {
+  margin-top: 0.6rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--cm-border);
+  border-radius: 6px;
+  font-size: 0.79rem;
+  color: var(--cm-muted);
+  line-height: 1.5;
+  display: none;
+}
+
+.codex-memory-status.is-visible {
+  display: block;
+}
+
+.codex-memory-status pre {
+  margin: 0;
+  font-size: 0.74rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--cm-cyan);
+  font-family: monospace;
+}
+
+/* =========================================================
+   MOBILE — ensure no horizontal overflow
+   ========================================================= */
+
+@media (max-width: 760px) {
+  .codex-intention-picker {
+    gap: 0.28rem;
+  }
+
+  .codex-intention-picker button {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.55rem;
+    min-height: 34px;
+  }
+
+  .codex-seven-day-markers {
+    gap: 0.2rem;
+  }
+
+  .codex-seven-day-marker {
+    min-width: 2rem;
+  }
+
+  .codex-seven-day-marker .day-label {
+    font-size: 0.62rem;
+  }
+
+  .continue-path-panel--phase2 .codex-resume-dismiss {
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .codex-memory-controls-actions {
+    gap: 0.3rem;
+  }
+
+  .codex-memory-btn {
+    font-size: 0.75rem;
+    padding: 0.28rem 0.6rem;
+  }
+}
+
+/* Overflow guards */
+.codex-intention-row,
+.codex-seven-day,
+.codex-since-visit,
+.codex-memory-controls {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* =========================================================
+   ACCESSIBILITY — screen reader only text
+   ========================================================= */
+
+.codex-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =========================================================
+   MOONS.HTML TODAY — memory continuation card
+   ========================================================= */
+
+.codex-memory-today-card {
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--cm-border);
+  border-radius: var(--cm-radius);
+  background: var(--cm-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.codex-memory-today-card[hidden] {
+  display: none;
+}
+
+.codex-memory-today-card .card-label {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--cm-muted);
+}
+
+.codex-memory-today-card .card-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--cm-text);
+}
+
+.codex-memory-today-card .card-row strong {
+  color: var(--cm-gold);
+  font-weight: 600;
+  min-width: 6rem;
+  flex-shrink: 0;
+}
+
+.codex-memory-today-card .card-row a {
+  color: var(--cm-gold);
+  text-decoration: none;
+}
+
+.codex-memory-today-card .card-row a:hover,
+.codex-memory-today-card .card-row a:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
+.codex-memory-today-card .card-row a:focus-visible {
+  outline: 2px solid var(--cm-gold);
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .codex-memory-today-card { padding: 0.65rem 0.75rem; }
+  .codex-memory-today-card .card-row { font-size: 0.82rem; }
+}

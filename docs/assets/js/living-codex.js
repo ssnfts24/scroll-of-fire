@@ -386,6 +386,22 @@
         timestamp: state.now.toISOString()
       });
     }
+
+    /* Phase 2 — record visit in CodexMemory */
+    if (window.CodexMemory && typeof window.CodexMemory.recordVisit === "function") {
+      try {
+        const gate = state.currentGate;
+        if (gate && gate.path) {
+          window.CodexMemory.recordVisit({
+            title:   gate.title || gate.label,
+            path:    gate.href  || gate.path,
+            chamber: gate.label || gate.title
+          });
+        } else {
+          window.CodexMemory.update({ lastVisitAt: state.now.toISOString() });
+        }
+      } catch (_) {}
+    }
   }
 
   function renderSignalBar(state) {
@@ -545,24 +561,28 @@
     const continuePanel = document.querySelector("[data-codex-continue-panel]");
     if (continuePanel) {
       if (state.lastGate && state.lastGate.href && state.lastGate.title) {
-        continuePanel.hidden = false;
-        setText("[data-codex-last-gate-title]", state.lastGate.title);
-        setText(
-          "[data-codex-last-gate-time]",
-          state.lastGate.timestamp ? "Stored " + formatRelativeDate(new Date(state.lastGate.timestamp)) + "." : "Stored locally in this browser."
-        );
-        const returnLink = continuePanel.querySelector("[data-codex-return-link]");
-        if (returnLink) {
-          returnLink.setAttribute("href", state.lastGate.href);
-          returnLink.textContent = "Return to " + state.lastGate.title;
+        /* Phase 2 will render this panel; only set defaults if CodexMemory is absent */
+        if (!window.CodexMemory) {
+          continuePanel.hidden = false;
+          setText("[data-codex-last-gate-title]", state.lastGate.title);
+          setText(
+            "[data-codex-last-gate-time]",
+            state.lastGate.timestamp ? "Stored " + formatRelativeDate(new Date(state.lastGate.timestamp)) + "." : "Stored locally in this browser."
+          );
+          const returnLink = continuePanel.querySelector("[data-codex-return-link]");
+          if (returnLink) {
+            returnLink.setAttribute("href", state.lastGate.href);
+            returnLink.textContent = "Return to " + state.lastGate.title;
+          }
         }
-      } else {
+      } else if (!window.CodexMemory) {
         continuePanel.hidden = true;
       }
     }
 
     renderActivityFeed(state.recentUpdates);
     renderYourCodexPanel(state);
+    renderPhase2All(); /* Phase 2 */
   }
 
   function renderYourCodexPanel(state) {
@@ -643,6 +663,352 @@
         refresh();
       });
     }
+
+    /* Phase 2 — memory controls */
+    setupPhase2MemoryControls(panel);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Phase 2 — Codex Memory rendering                                    */
+  /* ------------------------------------------------------------------ */
+
+  function setupPhase2MemoryControls(panel) {
+    if (!panel || !window.CodexMemory) return;
+
+    /* View memory */
+    const viewBtn = panel.querySelector("[data-memory-view]");
+    if (viewBtn && !viewBtn._sofBound) {
+      viewBtn._sofBound = true;
+      viewBtn.addEventListener("click", function () {
+        const statusEl = panel.querySelector("[data-codex-memory-status]");
+        if (!statusEl) return;
+        const isVisible = statusEl.classList.contains("is-visible");
+        if (isVisible) {
+          statusEl.classList.remove("is-visible");
+          viewBtn.textContent = "View Memory";
+          return;
+        }
+        const mem = window.CodexMemory.getState();
+        const summary = [
+          "Storage key: " + window.CodexMemory.storageKey,
+          "Version: " + mem.version,
+          "Last visit: " + (mem.lastVisitAt || "none"),
+          "Last page: " + (mem.lastPage && mem.lastPage.title ? mem.lastPage.title : "none"),
+          "Intention: " + (mem.dailyIntention ? mem.dailyIntention.value : "none"),
+          "Practice: " + (mem.unfinishedPractice ? mem.unfinishedPractice.title + " [" + mem.unfinishedPractice.status + "]" : "none"),
+          "Recent witness: " + (mem.recentWitness ? mem.recentWitness.label : "none"),
+          "Recent frequency: " + (mem.recentFrequency ? mem.recentFrequency.presetName : "none"),
+          "Witnessed days (this cycle): " + mem.currentCycle.witnessedDays.length,
+          "Recent actions: " + mem.recentActions.length,
+          "Storage available: " + window.CodexMemory.storageAvailable()
+        ].join("\n");
+        statusEl.innerHTML = "<pre>" + escapeHTML(summary) + "</pre>";
+        statusEl.classList.add("is-visible");
+        viewBtn.textContent = "Hide Memory";
+      });
+    }
+
+    /* Export Phase 2 memory */
+    const exportBtn = panel.querySelector("[data-memory-export]");
+    if (exportBtn && !exportBtn._sofBound) {
+      exportBtn._sofBound = true;
+      exportBtn.addEventListener("click", function () {
+        const data = window.CodexMemory.exportMemory();
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "codex-memory-" + todayISO() + ".json";
+        a.click();
+        URL.revokeObjectURL(a.href);
+      });
+    }
+
+    /* Import Phase 2 memory */
+    const importBtn = panel.querySelector("[data-memory-import]");
+    const importFile = panel.querySelector("[data-memory-import-file]");
+    if (importBtn && importFile && !importBtn._sofBound) {
+      importBtn._sofBound = true;
+      importBtn.addEventListener("click", function () { importFile.click(); });
+      importFile.addEventListener("change", async function () {
+        const file = importFile.files && importFile.files[0];
+        if (!file) return;
+        try {
+          const data = JSON.parse(await file.text());
+          const ok = window.CodexMemory.importMemory(data);
+          window.alert(ok ? "Codex Memory imported." : "Import failed: incompatible format.");
+          if (ok) renderPhase2ContinuePanel();
+        } catch (_) {
+          window.alert("Import failed: could not parse the file.");
+        }
+        importFile.value = "";
+      });
+    }
+
+    /* Clear intention only */
+    const clearIntBtn = panel.querySelector("[data-memory-clear-intention]");
+    if (clearIntBtn && !clearIntBtn._sofBound) {
+      clearIntBtn._sofBound = true;
+      clearIntBtn.addEventListener("click", function () {
+        if (!window.confirm("Clear your saved intention? This will not affect witness logs or saved readings.")) return;
+        window.CodexMemory.clearIntention();
+        renderPhase2IntentionSelector();
+      });
+    }
+
+    /* Clear practice only */
+    const clearPracBtn = panel.querySelector("[data-memory-clear-practice]");
+    if (clearPracBtn && !clearPracBtn._sofBound) {
+      clearPracBtn._sofBound = true;
+      clearPracBtn.addEventListener("click", function () {
+        if (!window.confirm("Clear the unfinished practice? This will not affect witness logs or saved readings.")) return;
+        window.CodexMemory.clearPractice();
+        renderPhase2ContinuePanel();
+      });
+    }
+
+    /* Reset all Phase 2 memory */
+    const resetBtn = panel.querySelector("[data-memory-reset]");
+    if (resetBtn && !resetBtn._sofBound) {
+      resetBtn._sofBound = true;
+      resetBtn.addEventListener("click", function () {
+        if (!window.confirm(
+          "Reset all Phase 2 Codex Memory?\n\nThis clears:\n" +
+          "· Daily intention\n· Unfinished practice\n· Recent witness reference\n" +
+          "· Recent frequency reference\n· Visited pages\n· 7-day activity\n\n" +
+          "Your witness ledger entries, moon logs, and saved readings are NOT affected."
+        )) return;
+        window.CodexMemory.resetAll();
+        renderPhase2ContinuePanel();
+        renderPhase2IntentionSelector();
+      });
+    }
+  }
+
+  function renderPhase2ContinuePanel() {
+    if (!window.CodexMemory) return;
+
+    const mem = window.CodexMemory.getState();
+    const continuePanel = document.querySelector("[data-codex-continue-panel]");
+    if (!continuePanel) return;
+
+    /* Dismiss state */
+    if (window.CodexMemory.isResumeDismissed()) {
+      continuePanel.hidden = true;
+      return;
+    }
+
+    const resume = window.CodexMemory.getResumePath();
+    const hasLastGate = readGateRecord();
+    const hasAnyMemory = resume || (mem.lastVisitAt && (
+      mem.dailyIntention || mem.unfinishedPractice || mem.recentWitness || mem.recentFrequency
+    ));
+
+    /* Show panel only when there is confirmed stored activity */
+    if (!hasAnyMemory && !hasLastGate) {
+      continuePanel.hidden = true;
+      return;
+    }
+
+    continuePanel.hidden = false;
+
+    /* Heading — use memory-aware text */
+    const titleEl = continuePanel.querySelector("[data-codex-last-gate-title]");
+    if (titleEl) {
+      const lastPage = mem.lastPage;
+      if (resume && resume.type === "practice") {
+        titleEl.textContent = "Your practice is unfinished.";
+      } else if (lastPage && lastPage.title) {
+        titleEl.textContent = "Welcome back. You were last in " + lastPage.title + ".";
+      } else if (hasLastGate) {
+        titleEl.textContent = hasLastGate.title
+          ? "Welcome back. You were last in " + hasLastGate.title + "."
+          : "Welcome back.";
+      } else {
+        titleEl.textContent = "Welcome back.";
+      }
+    }
+
+    /* Time */
+    const timeEl = continuePanel.querySelector("[data-codex-last-gate-time]");
+    if (timeEl) {
+      const lastVisit = mem.lastVisitAt ? new Date(mem.lastVisitAt) : (hasLastGate && hasLastGate.timestamp ? new Date(hasLastGate.timestamp) : null);
+      timeEl.textContent = lastVisit ? "Last visit: " + formatRelativeDate(lastVisit) + "." : "Stored locally in this browser.";
+    }
+
+    /* Unfinished practice row */
+    const practiceRow = continuePanel.querySelector("[data-codex-practice-row]");
+    const p = mem.unfinishedPractice;
+    if (practiceRow) {
+      const isActive = p && (p.status === "started" || p.status === "paused");
+      practiceRow.hidden = !isActive;
+      if (isActive) {
+        setText("[data-codex-practice-title]", p.title);
+        const contLink = practiceRow.querySelector("[data-codex-practice-continue]");
+        if (contLink && p.sourcePage) {
+          contLink.setAttribute("href", p.sourcePage);
+        }
+        bindOnce(practiceRow.querySelector("[data-codex-practice-complete]"), "click", function () {
+          window.CodexMemory.updatePracticeStatus("completed");
+          renderPhase2ContinuePanel();
+        });
+        bindOnce(practiceRow.querySelector("[data-codex-practice-dismiss]"), "click", function () {
+          window.CodexMemory.updatePracticeStatus("dismissed");
+          renderPhase2ContinuePanel();
+        });
+      }
+    }
+
+    /* Return link */
+    const returnLink = continuePanel.querySelector("[data-codex-return-link]");
+    if (returnLink) {
+      const href = (resume && resume.href) || (hasLastGate && hasLastGate.href) || "./hub.html";
+      const label = (resume && ("Return to " + resume.label)) ||
+        (hasLastGate && hasLastGate.title ? "Return to " + hasLastGate.title : "Return");
+      returnLink.setAttribute("href", href);
+      returnLink.textContent = label;
+    }
+
+    /* What changed since last visit */
+    const sinceEl = continuePanel.querySelector("[data-codex-since-visit]");
+    const sinceList = continuePanel.querySelector("[data-codex-since-visit-list]");
+    if (sinceEl && sinceList && mem.lastVisitAt) {
+      const changes = window.CodexMemory.getChangesSinceLastVisit(window.CodexState || {});
+      if (changes.length) {
+        sinceEl.hidden = false;
+        sinceList.innerHTML = changes.map(function (c) {
+          return "<li>" + escapeHTML(c) + "</li>";
+        }).join("");
+      } else {
+        sinceEl.hidden = true;
+      }
+    }
+
+    /* 7-day summary */
+    renderPhase2SevenDay(continuePanel);
+
+    /* Dismiss button */
+    const dismissBtn = continuePanel.querySelector("[data-codex-resume-dismiss]");
+    bindOnce(dismissBtn, "click", function () {
+      window.CodexMemory.dismissResumeToday();
+      continuePanel.hidden = true;
+    });
+  }
+
+  function renderPhase2SevenDay(container) {
+    if (!window.CodexMemory) return;
+    const wrapper = container && container.querySelector("[data-codex-seven-day]");
+    const markersEl = container && container.querySelector("[data-codex-seven-day-markers]");
+    const altEl = container && container.querySelector("[data-codex-seven-day-alt]");
+    if (!wrapper || !markersEl) return;
+
+    const summary = window.CodexMemory.getSevenDaySummary();
+    const activeDays = summary.filter(function (d) { return d.hasActivity; }).length;
+
+    if (activeDays === 0) {
+      wrapper.hidden = true;
+      return;
+    }
+
+    wrapper.hidden = false;
+
+    const today = new Date();
+    const DAY_ABBR = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
+    markersEl.innerHTML = summary.map(function (day, i) {
+      const d = new Date(day.isoDate + "T12:00:00");
+      const abbr = DAY_ABBR[d.getDay()];
+      const isToday = i === summary.length - 1;
+
+      /* Build pip indicators */
+      var pips = "";
+      if (day.hasIntention)  pips += '<span class="day-pip" data-type="intention" title="Intention"></span>';
+      if (day.hasWitness)    pips += '<span class="day-pip" data-type="witness"   title="Witness"></span>';
+      if (day.hasFrequency)  pips += '<span class="day-pip" data-type="frequency" title="Frequency"></span>';
+      if (day.hasPractice)   pips += '<span class="day-pip" data-type="practice"  title="Practice"></span>';
+      if (!pips)             pips += '<span class="day-pip" title="No activity"></span>';
+
+      /* Dot symbol */
+      const fullActivity = day.hasWitness && day.hasIntention;
+      const dotState = fullActivity ? "full" : (day.hasActivity ? "partial" : "none");
+      const dotSymbol = dotState === "full" ? "●" : (dotState === "partial" ? "◐" : "○");
+
+      return [
+        '<div class="codex-seven-day-marker' + (isToday ? " is-today" : "") + '"',
+        ' role="gridcell" aria-label="' + escapeAttribute(d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" }) + (day.hasActivity ? ": activity recorded" : ": no activity")) + '">',
+        '<span class="day-label">' + escapeHTML(abbr) + "</span>",
+        '<span class="day-dot" data-state="' + dotState + '" aria-hidden="true">' + dotSymbol + "</span>",
+        '<span class="day-pips" aria-hidden="true">' + pips + "</span>",
+        "</div>"
+      ].join("");
+    }).join("");
+
+    if (altEl) {
+      altEl.textContent = activeDays + " of the last 7 days " +
+        (activeDays === 1 ? "contains" : "contain") + " saved activity.";
+    }
+  }
+
+  function renderPhase2IntentionSelector() {
+    if (!window.CodexMemory) return;
+
+    const row = document.querySelector("[data-codex-intention-row]");
+    if (!row) return;
+
+    const intent = window.CodexMemory.getIntention();
+    const displayEl = row.querySelector("[data-codex-intention-display]");
+    const valueEl   = row.querySelector("[data-codex-intention-value]");
+    const priorEl   = row.querySelector("[data-codex-intention-prior]");
+    const picker    = row.querySelector("[data-codex-intention-picker]");
+
+    /* Update display */
+    if (displayEl && valueEl) {
+      if (intent) {
+        displayEl.hidden = false;
+        valueEl.textContent = intent.value.charAt(0).toUpperCase() + intent.value.slice(1);
+        if (priorEl) priorEl.hidden = !intent.isPriorDay;
+      } else {
+        displayEl.hidden = true;
+      }
+    }
+
+    /* Update picker buttons */
+    if (picker) {
+      picker.querySelectorAll("button[data-intention]").forEach(function (btn) {
+        const active = intent && btn.dataset.intention === intent.value;
+        btn.setAttribute("aria-pressed", active ? "true" : "false");
+        btn.classList.toggle("is-active", !!active);
+      });
+    }
+  }
+
+  function setupPhase2IntentionPicker() {
+    const row = document.querySelector("[data-codex-intention-row]");
+    if (!row || !window.CodexMemory) return;
+
+    row.addEventListener("click", function (event) {
+      const btn = event.target.closest("button[data-intention]");
+      if (btn) {
+        window.CodexMemory.setIntention(btn.dataset.intention);
+        renderPhase2IntentionSelector();
+        return;
+      }
+      const clearBtn = event.target.closest("[data-codex-intention-clear]");
+      if (clearBtn) {
+        window.CodexMemory.clearIntention();
+        renderPhase2IntentionSelector();
+      }
+    });
+  }
+
+  function bindOnce(el, event, fn) {
+    if (!el || el._sofBound2) return;
+    el._sofBound2 = true;
+    el.addEventListener(event, fn);
+  }
+
+  function renderPhase2All() {
+    renderPhase2ContinuePanel();
+    renderPhase2IntentionSelector();
   }
 
   function renderActivityFeed(updates) {
@@ -918,6 +1284,13 @@
     setupLifecycle();
     setupLivingDayPanel();
     setupActivityToggle();
+    setupPhase2IntentionPicker(); /* Phase 2 */
+
+    /* Phase 2 — re-render on memory changes */
+    document.addEventListener("codexmemorychange", function () {
+      renderPhase2ContinuePanel();
+      renderPhase2IntentionSelector();
+    });
   }
 
   if (document.readyState === "loading") {

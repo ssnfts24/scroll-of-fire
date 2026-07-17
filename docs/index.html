@@ -66,6 +66,7 @@
   <link rel="stylesheet" href="assets/css/artifact-mobile.css?v=20260715-10">
   <link rel="stylesheet" href="assets/css/themes.moons.css?v=20260715-10">
   <link rel="stylesheet" href="assets/css/living-day.css?v=1">
+  <link rel="stylesheet" href="assets/css/codex-memory.css?v=1">
 
   <script type="application/ld+json">
   {
@@ -147,6 +148,7 @@
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/codex-state.js"></script>
+  <script defer src="assets/js/codex-memory.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
   <script defer src="assets/js/motion.js"></script>
@@ -339,6 +341,29 @@
           <p class="codex-gate-label" data-codex-week-gate></p>
         </div>
 
+        <!-- Intention Selector — Phase 2 -->
+        <div class="codex-intention-row" data-codex-intention-row aria-label="Daily intention">
+          <p class="codex-intention-label">Today's Intention</p>
+          <div class="codex-intention-current" data-codex-intention-display hidden>
+            <span>Intention:</span>
+            <span class="intention-value" data-codex-intention-value></span>
+            <span class="intention-prior" data-codex-intention-prior hidden>(prior day)</span>
+            <button class="codex-intention-clear" type="button" data-codex-intention-clear aria-label="Clear intention">✕</button>
+          </div>
+          <ul class="codex-intention-picker" role="group" aria-label="Select your intention for today" data-codex-intention-picker>
+            <li><button type="button" data-intention="ground" aria-pressed="false">Ground</button></li>
+            <li><button type="button" data-intention="understand" aria-pressed="false">Understand</button></li>
+            <li><button type="button" data-intention="build" aria-pressed="false">Build</button></li>
+            <li><button type="button" data-intention="restore" aria-pressed="false">Restore</button></li>
+            <li><button type="button" data-intention="speak" aria-pressed="false">Speak</button></li>
+            <li><button type="button" data-intention="witness" aria-pressed="false">Witness</button></li>
+            <li><button type="button" data-intention="prepare" aria-pressed="false">Prepare</button></li>
+            <li><button type="button" data-intention="rest" aria-pressed="false">Rest</button></li>
+            <li><button type="button" data-intention="return" aria-pressed="false">Return</button></li>
+            <li><button type="button" data-intention="complete" aria-pressed="false">Complete</button></li>
+          </ul>
+        </div>
+
         <div class="today-codex-stack">
           <p><strong>Moon phase:</strong> <span data-codex-today-phase>Visible in the 13 Moons gate.</span></p>
           <p data-codex-shabbat-row hidden><strong>Day state:</strong> <span data-codex-shabbat-label></span></p>
@@ -366,16 +391,45 @@
         </div>
       </article>
 
-      <article class="card continue-path-panel" data-codex-continue-panel hidden>
+      <!-- Enhanced Continue Your Path panel — Phase 2 -->
+      <article class="card continue-path-panel continue-path-panel--phase2" data-codex-continue-panel hidden aria-labelledby="continue-path-heading">
+        <button class="codex-resume-dismiss" type="button" data-codex-resume-dismiss aria-label="Dismiss this panel for today">Dismiss</button>
         <p class="eyebrow">Continue Your Path</p>
-        <h2 data-codex-last-gate-title>You last entered the Codex.</h2>
+        <h2 id="continue-path-heading" data-codex-last-gate-title>Welcome back.</h2>
         <p class="today-codex-meta" data-codex-last-gate-time>Stored locally in this browser.</p>
-        <div class="hero-actions">
-          <a class="btn primary" href="./hub.html" data-codex-return-link>Return</a>
-          <a class="btn" href="./ledger.html">Continue into the Witness Ledger</a>
-          <button class="btn" type="button" data-codex-clear-path>Clear path</button>
+
+        <!-- What changed since last visit — Phase 2 -->
+        <div class="codex-since-visit" data-codex-since-visit hidden>
+          <p class="codex-since-visit-label" aria-live="polite">Since Your Last Visit</p>
+          <ul class="codex-since-visit-list" data-codex-since-visit-list></ul>
         </div>
-        <p class="codex-privacy-note">Your last gate is stored only in this browser. No account is required. Clearing browser storage removes this path.</p>
+
+        <!-- Unfinished practice — Phase 2 -->
+        <div data-codex-practice-row hidden>
+          <p class="codex-continue-meta">
+            <strong>Unfinished practice:</strong> <span data-codex-practice-title></span>
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#" data-codex-practice-continue>Continue Practice</a>
+            <button class="btn" type="button" data-codex-practice-complete>Mark Complete</button>
+            <button class="btn" type="button" data-codex-practice-dismiss>Dismiss</button>
+          </div>
+        </div>
+
+        <div class="hero-actions" data-codex-continue-actions>
+          <a class="btn primary" href="./hub.html" data-codex-return-link>Return</a>
+          <a class="btn" href="./ledger.html">Open Witness Ledger</a>
+          <button class="btn" type="button" data-codex-clear-path>Start a New Path</button>
+        </div>
+
+        <!-- 7-day path summary — Phase 2 -->
+        <div class="codex-seven-day" data-codex-seven-day hidden aria-label="Seven-day path summary">
+          <p class="codex-seven-day-label">7-Day Path</p>
+          <div class="codex-seven-day-markers" data-codex-seven-day-markers role="img" aria-label="Seven day markers"></div>
+          <p class="codex-seven-day-alt" data-codex-seven-day-alt aria-live="polite"></p>
+        </div>
+
+        <p class="codex-privacy-note">Codex Memory is stored in this browser. It is used to continue your path and is not a user account. No account is required.</p>
       </article>
 
       <noscript>
@@ -420,6 +474,23 @@
           <button class="btn" type="button" data-your-codex-export title="Download all local Codex data as JSON">Export</button>
           <button class="btn" type="button" data-your-codex-clear title="Clear all local Codex data from this browser">Clear</button>
         </div>
+
+        <!-- Phase 2 Memory Controls -->
+        <div class="codex-memory-controls" data-codex-memory-controls>
+          <p class="codex-memory-controls-heading">Codex Memory — Phase 2</p>
+          <p class="codex-memory-controls-desc">Codex Memory is stored in this browser. It is used to continue your path and is not a user account. No remote data is stored.</p>
+          <div class="codex-memory-controls-actions">
+            <button class="codex-memory-btn" type="button" data-memory-view>View Memory</button>
+            <button class="codex-memory-btn" type="button" data-memory-export>Export Memory</button>
+            <button class="codex-memory-btn" type="button" data-memory-import>Import Memory</button>
+            <input type="file" accept="application/json" hidden data-memory-import-file>
+            <button class="codex-memory-btn" type="button" data-memory-clear-intention>Clear Intention</button>
+            <button class="codex-memory-btn" type="button" data-memory-clear-practice>Clear Practice</button>
+            <button class="codex-memory-btn codex-memory-btn--danger" type="button" data-memory-reset>Reset Phase 2 Memory</button>
+          </div>
+          <div class="codex-memory-status" data-codex-memory-status aria-live="polite" aria-label="Codex Memory contents"></div>
+        </div>
+
         <p class="codex-privacy-note">All Codex data stays in this browser. No account required. Clearing browser storage removes all saved data.</p>
       </article>
     </section>
