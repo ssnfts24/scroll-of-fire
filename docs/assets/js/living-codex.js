@@ -845,7 +845,7 @@
         setText("[data-codex-practice-title]", p.title);
         const contLink = practiceRow.querySelector("[data-codex-practice-continue]");
         if (contLink && p.sourcePage) {
-          contLink.setAttribute("href", p.sourcePage);
+          contLink.setAttribute("href", safeHref(p.sourcePage));
         }
         bindOnce(practiceRow.querySelector("[data-codex-practice-complete]"), "click", function () {
           window.CodexMemory.updatePracticeStatus("completed");
@@ -864,7 +864,7 @@
       const href = (resume && resume.href) || (hasLastGate && hasLastGate.href) || "./hub.html";
       const label = (resume && ("Return to " + resume.label)) ||
         (hasLastGate && hasLastGate.title ? "Return to " + hasLastGate.title : "Return");
-      returnLink.setAttribute("href", href);
+      returnLink.setAttribute("href", safeHref(href));
       returnLink.textContent = label;
     }
 
@@ -1066,6 +1066,17 @@
   function setText(selector, value) {
     const node = document.querySelector(selector);
     if (node) node.textContent = value;
+  }
+
+  function safeHref(url) {
+    /* Parse the URL to strip any dangerous scheme such as javascript: or data: */
+    try {
+      var parsed = new URL(String(url || ""), "https://codexofreality.org/");
+      if (parsed.origin === "https://codexofreality.org") {
+        return parsed.pathname + parsed.search + parsed.hash;
+      }
+    } catch (_) {}
+    return "./";
   }
 
   function escapeHTML(value) {
