@@ -392,9 +392,17 @@
             <h2>Visible growth in the archive</h2>
             <p>Recent updates are authored manually in the local Codex feed.</p>
           </div>
+          <button class="codex-activity-toggle" type="button"
+                  aria-expanded="true" aria-controls="codex-activity-content"
+                  data-codex-activity-toggle>
+            <span class="visually-hidden">Toggle activity feed</span>
+            <span class="codex-activity-chevron" aria-hidden="true">▾</span>
+          </button>
         </div>
-        <ul class="codex-activity-list" data-codex-activity-list></ul>
-        <p class="codex-activity-empty" data-codex-activity-empty>Codex updates load from the local activity feed when entries are available.</p>
+        <div id="codex-activity-content" class="codex-activity-content" data-codex-activity-content>
+          <ul class="codex-activity-list" data-codex-activity-list></ul>
+          <p class="codex-activity-empty" data-codex-activity-empty>Codex updates load from the local activity feed when entries are available.</p>
+        </div>
       </article>
 
       <article class="card your-codex-panel" data-your-codex-panel>

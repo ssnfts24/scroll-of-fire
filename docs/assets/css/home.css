@@ -1214,6 +1214,51 @@
 
 .codex-activity-heading {
   margin-bottom: 0;
+  align-items: center;
+}
+
+.codex-activity-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  align-self: flex-start;
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--gold, #f3c97a);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.codex-activity-toggle:hover,
+.codex-activity-toggle:focus-visible {
+  background: rgba(243, 201, 122, 0.1);
+  border-color: rgba(243, 201, 122, 0.35);
+  outline: none;
+}
+
+.codex-activity-toggle:focus-visible {
+  outline: 2px solid var(--gold, #f3c97a);
+  outline-offset: 2px;
+}
+
+.codex-activity-chevron {
+  display: inline-block;
+  transition: transform 0.2s;
+}
+
+.codex-activity-toggle[aria-expanded="false"] .codex-activity-chevron {
+  transform: rotate(-90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .codex-activity-chevron {
+    transition: none;
+  }
 }
 
 .codex-activity-list {

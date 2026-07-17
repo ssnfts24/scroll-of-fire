@@ -897,6 +897,19 @@
     });
   }
 
+  function setupActivityToggle() {
+    document.addEventListener("click", function (event) {
+      const toggle = event.target.closest("[data-codex-activity-toggle]");
+      if (!toggle) return;
+      const content = document.querySelector("[data-codex-activity-content]");
+      if (!content) return;
+      const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+      const willExpand = !isExpanded;
+      toggle.setAttribute("aria-expanded", String(willExpand));
+      content.hidden = !willExpand;
+    });
+  }
+
   function setup() {
     refresh();
     scheduleRefresh();
@@ -904,6 +917,7 @@
     setupPathReset();
     setupLifecycle();
     setupLivingDayPanel();
+    setupActivityToggle();
   }
 
   if (document.readyState === "loading") {
