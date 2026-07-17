@@ -46,20 +46,39 @@
   <link rel="stylesheet" href="assets/css/animations.css">
   <style>
     .archive-jump {
+      display: grid;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      touch-action: pan-y;
+    }
+    .archive-jump-group {
+      display: grid;
+      gap: 0.75rem;
+    }
+    .archive-jump-label {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .archive-jump-links {
       display: flex;
       flex-wrap: wrap;
       gap: 0.75rem;
-      margin: 1.5rem 0;
     }
     .downloads-notice {
       margin-top: 1rem;
     }
     .downloads-archive {
       margin-top: 1rem;
+      touch-action: pan-y;
     }
     .downloads-archive summary {
       cursor: pointer;
       list-style: none;
+      touch-action: manipulation;
     }
     .downloads-archive summary::-webkit-details-marker {
       display: none;
@@ -74,9 +93,11 @@
     }
     .downloads-table-wrap {
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       margin-top: 1rem;
       border-top: 1px solid rgba(255,255,255,0.12);
       padding-top: 1rem;
+      touch-action: pan-x pan-y;
     }
     .downloads-table {
       width: 100%;
@@ -105,8 +126,23 @@
       flex-wrap: wrap;
       gap: 0.75rem;
     }
+    @media (max-width: 760px) {
+      html,
+      body {
+        overflow-y: auto;
+        touch-action: pan-y;
+      }
+      .page,
+      .card,
+      .archive-jump,
+      .archive-jump-links,
+      .downloads-archive,
+      .downloads-archive > * {
+        touch-action: pan-y;
+      }
+    }
     @media (max-width: 700px) {
-      .archive-jump .btn {
+      .archive-jump-links .btn {
         width: 100%;
       }
     }
@@ -237,15 +273,25 @@
     </section>
 
     <nav class="archive-jump" aria-label="Download archive sections">
-        <a class="btn" href="#root-core">Repository Root · Core Scrolls</a>
-        <a class="btn" href="#root-images">Repository Root · Witness Images</a>
-        <a class="btn" href="#1_Codex_of_Reality">1 · Codex of Reality</a>
-        <a class="btn" href="#2_Witness_Scrolls">2 · Witness Scrolls</a>
-        <a class="btn" href="#3_Living_Technology">3 · Living Technology</a>
-        <a class="btn" href="#4_Formalism_and_Physics">4 · Formalism and Physics</a>
-        <a class="btn" href="#5_Living_Scribe">5 · Living Scribe</a>
-        <a class="btn" href="#6_Images_and_Symbols">6 · Images and Symbols</a>
-        <a class="btn" href="#7_Ledger_and_Documentation">7 · Ledger and Documentation</a>
+      <div class="archive-jump-group">
+        <p class="archive-jump-label">Repository root</p>
+        <div class="archive-jump-links">
+          <a class="btn" href="#root-core">Core Scrolls</a>
+          <a class="btn" href="#root-images">Witness Images</a>
+        </div>
+      </div>
+      <div class="archive-jump-group">
+        <p class="archive-jump-label">Archive folders 1–7</p>
+        <div class="archive-jump-links">
+          <a class="btn" href="#1_Codex_of_Reality">1 · Codex of Reality</a>
+          <a class="btn" href="#2_Witness_Scrolls">2 · Witness Scrolls</a>
+          <a class="btn" href="#3_Living_Technology">3 · Living Technology</a>
+          <a class="btn" href="#4_Formalism_and_Physics">4 · Formalism and Physics</a>
+          <a class="btn" href="#5_Living_Scribe">5 · Living Scribe</a>
+          <a class="btn" href="#6_Images_and_Symbols">6 · Images and Symbols</a>
+          <a class="btn" href="#7_Ledger_and_Documentation">7 · Ledger and Documentation</a>
+        </div>
+      </div>
     </nav>
 
       <details class="card downloads-archive" id="root-core" open>
@@ -2665,4 +2711,3 @@
   </footer>
 </body>
 </html>
-
