@@ -79,19 +79,19 @@ body {
 @media (max-width: 760px) {
   html {
     scroll-padding-bottom: calc(1.5rem + var(--safe-bottom));
+    overflow-y: auto;
   }
 
-  body {
-    touch-action: pan-y;
-  }
-
+  body,
   main,
   .wrap,
   .page-head,
   .tabPanel,
   .card,
   .notice {
-    touch-action: pan-y;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    touch-action: auto;
   }
 
   .wrap,
@@ -104,11 +104,11 @@ body {
     flex-wrap: nowrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-x pan-y;
+    touch-action: auto;
   }
 
   .tabs .tab {
-    touch-action: pan-x pan-y;
+    touch-action: auto;
   }
 
   .mobile-dock {
