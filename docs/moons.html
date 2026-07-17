@@ -544,9 +544,7 @@
           id="openIphoneHelp"
           class="lab-btn ghost install-shortcut-btn"
           type="button"
-          aria-expanded="false"
-          aria-controls="iphoneHelpPanel"
-        >iPhone Instructions</button>
+        >iPhone / iPad Instructions</button>
       </div>
 
       <!-- TODAY -->
@@ -2280,7 +2278,7 @@
       <!-- APP SETTINGS -->
       <section id="settingsPanel" class="tabPanel">
 
-        <section class="card app-install-card" aria-labelledby="installTitle">
+        <section id="appInstallCard" class="card app-install-card" aria-labelledby="installTitle">
           <p class="eyebrow">Install the 13 Moons App</p>
           <h2 id="installTitle">Carry 13 Moons as an app</h2>
           <p class="subtitle">Installation adds a Home Screen icon, opens the calendar without the normal browser bar where supported, and prepares essential files for offline use. Your records remain on this device.</p>
@@ -2291,7 +2289,7 @@
           <p id="installStateNote" class="fine app-install-note">Waiting for browser install state…</p>
           <p id="inAppBrowserWarning" class="warning" hidden>To install 13 Moons on iPhone, open this page in Safari first. Use the browser menu to open the page in Safari, then return here.</p>
           <div id="iosInstallHelp" hidden>
-            <strong>Install on iPhone or iPad with Safari</strong>
+            <strong id="iosInstallInstructions">Install on iPhone or iPad with Safari</strong>
             <ol class="install-steps">
               <li>Open this page in Safari.</li>
               <li>Tap the Share button.</li>
@@ -2433,34 +2431,6 @@
     <a href="#savedPanel" data-mobile-tab="savedPanel">Saved Logs</a>
     <a href="#settingsPanel" data-mobile-tab="settingsPanel">Settings</a>
   </nav>
-
-  <!-- iPhone / iPad install instructions panel -->
-  <div
-    id="iphoneHelpPanel"
-    class="install-help-panel"
-    hidden
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="iphoneHelpTitle"
-  >
-    <div class="install-help-backdrop" id="iphoneHelpBackdrop"></div>
-    <div class="install-help-inner">
-      <p class="eyebrow">Install on iPhone or iPad</p>
-      <h2 id="iphoneHelpTitle" class="install-help-heading">Add to Home Screen</h2>
-      <p class="fine">Installation must be done from <strong>Safari</strong>. If you are inside an in-app browser (Instagram, Gmail, etc.), open the page in Safari first using the browser's share or external-browser option.</p>
-      <ol class="install-steps">
-        <li>Open this page in <strong>Safari</strong>.</li>
-        <li>Tap the <strong>Share</strong> icon <span aria-hidden="true">(⬆)</span> at the bottom of the screen.</li>
-        <li>Scroll down and choose <strong>Add to Home Screen</strong>.</li>
-        <li>Confirm the name and tap <strong>Add</strong>.</li>
-      </ol>
-      <p class="fine">The installed app will appear on your Home Screen and open without the browser bar. Complete installation details, diagnostics, and recovery tools are under App Settings.</p>
-      <div class="btnrow">
-        <button id="iphoneHelpMoreSettings" class="lab-btn ghost" type="button">More app settings</button>
-        <button id="iphoneHelpClose" class="lab-btn ghost" type="button" aria-label="Close iPhone instructions">Close</button>
-      </div>
-    </div>
-  </div>
 
   <div
     id="sofToast"

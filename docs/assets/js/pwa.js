@@ -17,7 +17,6 @@
   let manifestDetails = null;
   let installUiState = null;
   let appInstalledSeen = localStorage.getItem("sof_moons_install_result") === "accepted";
-  let helpPanelOpener = null;
 
   const byId = id => document.getElementById(id);
   const standalone = () =>
@@ -37,9 +36,6 @@
   };
   const manifestUrl = () => document.querySelector('link[rel="manifest"]')?.href ||
     new URL(MANIFEST_PATH, document.baseURI).toString();
-  const settingsJump = () =>
-    document.querySelector('[data-tab="settingsPanel"]') ||
-    document.querySelector('[data-tab-jump="settingsPanel"]');
   const cssUrl = () =>
     document.querySelector('link[href*="assets/css/moons.css"]')?.href ||
     new URL("assets/css/moons.css", document.baseURI).toString();
@@ -55,72 +51,20 @@
     return new URL(APP_SCOPE, document.baseURI).toString();
   }
 
-  function scrollToInstallHelp() {
-    settingsJump()?.click?.();
-    byId("settingsPanel")?.scrollIntoView?.({ behavior: "smooth", block: "start" });
-  }
-
-  function scrollToIosHelp() {
-    scrollToInstallHelp();
-    byId("iosInstallHelp")?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
-  }
-
-  function shortcutLabel(state) {
-    if (!state) return "Download App";
-    switch (state.key) {
-      case "standalone": return "Installed";
-      case "ios-safari":
-      case "ios-in-app": return "iPhone Instructions";
-      case "ready": return "Install App";
-      default: return "Installation Help";
-    }
-  }
-
-  function handleHelpPanelKeydown(e) {
-    const panel = byId("iphoneHelpPanel");
-    if (!panel) return;
-    if (e.key === "Escape") {
-      closeHelpPanel();
-      return;
-    }
-    if (e.key === "Tab") {
-      const focusables = Array.from(
-        panel.querySelectorAll("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])")
-      ).filter(el => !el.disabled && !el.hidden);
-      if (focusables.length < 2) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    }
-  }
-
-  function openHelpPanel() {
-    const panel = byId("iphoneHelpPanel");
-    if (!panel) return;
-    helpPanelOpener = document.activeElement;
-    panel.hidden = false;
-    const trigger = byId("openIphoneHelp");
-    if (trigger) trigger.setAttribute("aria-expanded", "true");
-    const closeBtn = byId("iphoneHelpClose");
-    (closeBtn || panel.querySelector("button"))?.focus();
-    document.addEventListener("keydown", handleHelpPanelKeydown);
-  }
-
-  function closeHelpPanel() {
-    const panel = byId("iphoneHelpPanel");
-    if (!panel) return;
-    panel.hidden = true;
-    document.removeEventListener("keydown", handleHelpPanelKeydown);
-    const trigger = byId("openIphoneHelp");
-    if (trigger) trigger.setAttribute("aria-expanded", "false");
-    helpPanelOpener?.focus?.();
-    helpPanelOpener = null;
+  function openAppSettingsAt(targetId, focusId) {
+    document.dispatchEvent(new CustomEvent("sof:activate-tab", {
+      detail: { id: "settingsPanel", updateHistory: true, scroll: false }
+    }));
+    const target = byId(targetId);
+    if (target?.hidden) target.hidden = false;
+    requestAnimationFrame(() => {
+      const el = byId(targetId);
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      setTimeout(() => {
+        (byId(focusId) ?? el.querySelector("h2, strong, button, [tabindex='0']") ?? el).focus();
+      }, 350);
+    });
   }
 
   function currentServiceWorkerControl() {
@@ -342,14 +286,6 @@
       button.dataset.installState = installUiState.key;
     }
 
-    const shortcut = byId("installAppShortcut");
-    if (shortcut) {
-      shortcut.hidden = false;
-      shortcut.disabled = installUiState.disabled;
-      shortcut.textContent = shortcutLabel(installUiState);
-      shortcut.dataset.installState = installUiState.key;
-    }
-
     setText("installStateNote", installUiState.note);
     setVisible("iosInstallHelp", ios());
     setVisible("inAppBrowserWarning", ios() && inApp());
@@ -422,24 +358,16 @@
         await install();
         return;
       case "ios-help":
-        scrollToIosHelp();
+        byId("iosInstallInstructions")?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
         status(installUiState.note);
         return;
       case "settings-help":
-        scrollToInstallHelp();
+        byId("appInstallCard")?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
         status(installUiState.note);
         return;
       default:
         status(installUiState?.note || "Installation state unavailable.");
     }
-  }
-
-  async function onShortcutAction() {
-    if (installUiState?.action === "ios-help") {
-      openHelpPanel();
-      return;
-    }
-    await onInstallAction();
   }
 
   function applyUpdate() {
@@ -521,17 +449,13 @@
 
   function init() {
     byId("installApp")?.addEventListener("click", onInstallAction);
-    byId("installAppShortcut")?.addEventListener("click", onShortcutAction);
-    byId("openIphoneHelp")?.addEventListener("click", openHelpPanel);
-    byId("iphoneHelpClose")?.addEventListener("click", closeHelpPanel);
-    byId("iphoneHelpBackdrop")?.addEventListener("click", closeHelpPanel);
-    byId("iphoneHelpMoreSettings")?.addEventListener("click", () => {
-      closeHelpPanel();
-      settingsJump()?.click?.();
-      setTimeout(() => {
-        byId("installApp")?.scrollIntoView?.({ behavior: "smooth", block: "center" });
-        byId("installTitle")?.focus?.();
-      }, 80);
+    byId("installAppShortcut")?.addEventListener("click", () =>
+      openAppSettingsAt("appInstallCard", "installApp")
+    );
+    byId("openIphoneHelp")?.addEventListener("click", () => {
+      const iosHelp = byId("iosInstallHelp");
+      if (iosHelp) iosHelp.hidden = false;
+      openAppSettingsAt("iosInstallInstructions");
     });
     byId("checkForUpdates")?.addEventListener("click", async () => {
       await registration?.update();
