@@ -103,34 +103,8 @@ body {
     width: min(100% - 1rem, 1280px);
   }
 
-  .mobile-dock {
-    display: grid;
-  }
-
-  .wrap {
-    padding-bottom: calc(3.5rem + var(--safe-bottom));
-  }
-
   #sofToast {
     bottom: calc(1rem + var(--safe-bottom));
-  }
-
-  .mobile-dock {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    padding-right: max(0.5rem, var(--safe-right));
-    padding-bottom: max(0.5rem, var(--safe-bottom));
-    padding-left: max(0.5rem, var(--safe-left));
-  }
-
-  .mobile-dock a,
-  .mobile-dock button {
-    min-height: 48px;
-    display: grid;
-    place-items: center;
-  }
-
-  .tabs {
-    display: none;
   }
 
   .app-status-grid {

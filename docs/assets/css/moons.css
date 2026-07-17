@@ -1818,12 +1818,7 @@ body[data-shabbat-state="active"] .hero-sigil {
   }
 
   .tabs {
-    top: 72px;
-    margin: 14px 0;
-    padding-top: 0.35rem;
-    flex-wrap: nowrap;
-    scroll-snap-type: x proximity;
-    overscroll-behavior-x: contain;
+    display: none;
   }
 
   .tabs .tab {

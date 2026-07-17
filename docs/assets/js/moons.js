@@ -1409,6 +1409,23 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       });
     });
 
+    $$("[data-mobile-tab]").forEach(link => {
+      link.addEventListener("click", event => {
+        event.preventDefault();
+        const id = link.dataset.mobileTab;
+        if (!id) return;
+        activateTab(id, { updateHistory: true, scroll: true });
+      });
+    });
+
+    $$("[data-tab-jump]").forEach(button => {
+      button.addEventListener("click", () => {
+        const id = button.dataset.tabJump;
+        if (!id) return;
+        activateTab(id, { updateHistory: true, scroll: true });
+      });
+    });
+
     document.addEventListener("sof:activate-tab", event => {
       activateTab(event.detail?.id, {
         updateHistory: event.detail?.updateHistory !== false,
