@@ -1,0 +1,336 @@
+/* Scroll of Fire — Living Day Panel
+   File: docs/assets/css/living-day.css
+   Phase: 1 — Living Day
+
+   Provides:
+     - Signal bar expand button and collapsible Living Day panel
+     - codex-moon-01..13 body classes (alias for themes.moons.css theme-moon-1..13)
+     - Moon atmosphere for homepage (backgrounds, accents)
+     - Responsive and accessible: works from 320px to desktop
+     - Honours prefers-reduced-motion
+*/
+
+/* =========================================================
+   CODEX MOON BODY CLASSES
+   Mirrors themes.moons.css theme-moon-1..13 accent colours.
+   Use codex-moon-XX going forward; theme-moon-X stays for
+   backward compat with the 13 Moons app.
+   ========================================================= */
+
+body.codex-moon-01 { --moon-accent: #6FE7FF; }
+body.codex-moon-02 { --moon-accent: #B1C7FF; }
+body.codex-moon-03 { --moon-accent: #7AF3FF; }
+body.codex-moon-04 { --moon-accent: #7BF3B8; }
+body.codex-moon-05 { --moon-accent: #FFD27A; }
+body.codex-moon-06 { --moon-accent: #A7FFCF; }
+body.codex-moon-07 { --moon-accent: #D5B6FF; }
+body.codex-moon-08 { --moon-accent: #A8FFD9; }
+body.codex-moon-09 { --moon-accent: #FFBC6F; }
+body.codex-moon-10 { --moon-accent: #A2FFD1; }
+body.codex-moon-11 { --moon-accent: #A8B8FF; }
+body.codex-moon-12 { --moon-accent: #FFD7A8; }
+body.codex-moon-13 { --moon-accent: #9DDAFF; }
+
+/* =========================================================
+   SIGNAL BAR — EXPAND TOGGLE BUTTON
+   ========================================================= */
+
+.living-signal-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* The bar fills remaining width */
+.living-signal-row .living-signal-bar {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.living-day-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-shrink: 0;
+  min-height: 34px;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--gold, #f3c97a);
+  font-size: 0.8rem;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.living-day-toggle:hover,
+.living-day-toggle:focus-visible {
+  background: rgba(243, 201, 122, 0.1);
+  border-color: rgba(243, 201, 122, 0.35);
+  outline: none;
+}
+
+.living-day-toggle:focus-visible {
+  outline: 2px solid var(--gold, #f3c97a);
+  outline-offset: 2px;
+}
+
+.living-day-toggle .ld-chevron {
+  display: inline-block;
+  transition: transform 0.2s;
+}
+
+.living-day-toggle[aria-expanded="true"] .ld-chevron {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .living-day-toggle .ld-chevron {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   LIVING DAY PANEL
+   ========================================================= */
+
+.living-day-panel {
+  position: relative;
+  overflow: hidden;
+  padding: 1rem max(0.75rem, calc((100vw - var(--content-wide, 1440px)) / 2 + 0.75rem));
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(5, 7, 13, 0.7);
+  animation: ldPanelIn 0.2s ease;
+}
+
+@keyframes ldPanelIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .living-day-panel {
+    animation: none;
+  }
+}
+
+.living-day-panel[hidden] {
+  display: none;
+}
+
+.living-day-panel-content {
+  display: grid;
+  gap: 0.55rem;
+  max-width: var(--content-wide, 1440px);
+  margin: 0 auto;
+}
+
+/* Close button sits top-right inside the panel */
+.living-day-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted, #b9c1c7);
+  font-size: 0.78rem;
+  font-family: inherit;
+  cursor: pointer;
+  min-height: 28px;
+}
+
+.living-day-close:hover,
+.living-day-close:focus-visible {
+  color: var(--text, #f4f1e8);
+  outline: none;
+}
+
+.living-day-close:focus-visible {
+  outline: 2px solid var(--gold, #f3c97a);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   LIVING DAY PANEL — CONTENT ELEMENTS
+   ========================================================= */
+
+.ld-moon-heading {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--moon-accent, var(--gold, #f3c97a));
+}
+
+.ld-moon-line,
+.ld-gate,
+.ld-phase,
+.ld-shabbat,
+.ld-movement,
+.ld-suggested,
+.ld-moons-link,
+.ld-freq {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted, #b9c1c7);
+  line-height: 1.4;
+}
+
+.ld-gate {
+  color: var(--gold, #f3c97a);
+  font-weight: 600;
+}
+
+.ld-movement strong,
+.ld-suggested strong,
+.ld-moon-heading {
+  color: var(--text, #f4f1e8);
+}
+
+.ld-shabbat {
+  color: var(--cyan, #7af3ff);
+  font-style: italic;
+}
+
+.ld-suggested a,
+.ld-moons-link a {
+  color: var(--gold, #f3c97a);
+  text-decoration: none;
+}
+
+.ld-suggested a:hover,
+.ld-suggested a:focus-visible,
+.ld-moons-link a:hover,
+.ld-moons-link a:focus-visible {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   TODAY IN THE CODEX PANEL — UPGRADED FIELDS
+   ========================================================= */
+
+.codex-calendar-summary {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.6rem 0.85rem;
+  margin-bottom: 0.6rem;
+  border-left: 2px solid var(--moon-accent, var(--cyan, #7af3ff));
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0 6px 6px 0;
+}
+
+.codex-moon-label {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--moon-accent, var(--gold, #f3c97a));
+}
+
+.codex-year-label,
+.codex-gate-label {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted, #b9c1c7);
+}
+
+.codex-gate-label {
+  color: var(--gold, #f3c97a);
+}
+
+.codex-suggested {
+  padding: 0.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.codex-suggested-gate,
+.codex-suggested-freq {
+  margin: 0 0 0.3rem;
+  font-size: 0.87rem;
+  color: var(--muted, #b9c1c7);
+}
+
+.codex-suggested-gate a {
+  color: var(--gold, #f3c97a);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.codex-suggested-gate a:hover,
+.codex-suggested-gate a:focus-visible {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   HOMEPAGE MOON ATMOSPHERE
+   Applied when body.codex-moon-XX is set by codex-state.js.
+   Restrained — preserves existing Codex dark-navy identity.
+   ========================================================= */
+
+.home-page .home-hero::before {
+  /* Allow moon accent to subtly tint the hero glow when available */
+  background:
+    radial-gradient(
+      circle at 30% 40%,
+      color-mix(in srgb, var(--moon-accent, #7af3ff) 12%, transparent),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 70% 45%,
+      rgba(243, 201, 122, 0.09),
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 50% 75%,
+      rgba(243, 201, 122, 0.06),
+      transparent 45%
+    );
+}
+
+/* =========================================================
+   RESPONSIVE — MOBILE SAFETY
+   ========================================================= */
+
+@media (max-width: 760px) {
+  .living-signal-row {
+    gap: 0.35rem;
+  }
+
+  .living-day-toggle {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .living-day-panel {
+    padding-inline: 0.8rem;
+    padding-block: 0.85rem;
+  }
+
+  .living-day-close {
+    top: 0.45rem;
+    right: 0.6rem;
+    font-size: 0.74rem;
+  }
+
+  .living-day-panel-content {
+    padding-right: 2.5rem; /* space for close button */
+  }
+
+  .codex-calendar-summary {
+    padding: 0.5rem 0.7rem;
+  }
+}
+
+/* No horizontal overflow at any viewport */
+.living-signal-shell,
+.living-day-panel {
+  max-width: 100vw;
+  overflow-x: hidden;
+}

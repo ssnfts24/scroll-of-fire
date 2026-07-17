@@ -64,6 +64,8 @@
   <link rel="stylesheet" href="assets/css/animations.css?v=20260715-10">
   <link rel="stylesheet" href="assets/css/home.css?v=20260715-10">
   <link rel="stylesheet" href="assets/css/artifact-mobile.css?v=20260715-10">
+  <link rel="stylesheet" href="assets/css/themes.moons.css?v=20260715-10">
+  <link rel="stylesheet" href="assets/css/living-day.css?v=1">
 
   <script type="application/ld+json">
   {
@@ -144,6 +146,7 @@
   </script>
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
+  <script defer src="assets/js/codex-state.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
   <script defer src="assets/js/motion.js"></script>
@@ -233,12 +236,27 @@
 
     </nav>
   </header>
-  <section class="living-signal-shell" aria-label="Living signal">
-    <ul class="living-signal-bar" data-living-signal-root>
-      <li class="living-signal-item">Living signal updates with your local time, saved witness records, and recent Codex changes when JavaScript is available.</li>
-      <li class="living-signal-item"><a class="living-signal-link" href="./moons.html">Open 13 Moons</a></li>
-      <li class="living-signal-item"><a class="living-signal-link" href="./ledger.html">Record Witness</a></li>
-    </ul>
+  <section class="living-signal-shell" aria-label="Living Day">
+    <div class="living-signal-row">
+      <ul class="living-signal-bar" data-living-signal-root aria-label="Today's Codex state">
+        <li class="living-signal-item">Living signal updates with your local time, saved witness records, and recent Codex changes when JavaScript is available.</li>
+        <li class="living-signal-item"><a class="living-signal-link" href="./moons.html">Open 13 Moons</a></li>
+        <li class="living-signal-item"><a class="living-signal-link" href="./ledger.html">Record Witness</a></li>
+      </ul>
+      <button class="living-day-toggle" type="button"
+              aria-expanded="false" aria-controls="living-day-panel"
+              data-living-day-toggle>
+        <span>Today</span>
+        <span class="ld-chevron" aria-hidden="true">▾</span>
+      </button>
+    </div>
+    <div id="living-day-panel" class="living-day-panel" hidden data-living-day-panel>
+      <div class="living-day-panel-content" data-living-day-content>
+        <!-- Filled by living-codex.js renderLivingDayPanel() -->
+        <p class="ld-moon-line">Loading today's Codex state…</p>
+      </div>
+      <button class="living-day-close" type="button" data-living-day-close aria-label="Close Living Day panel">✕ Close</button>
+    </div>
   </section>
 
 
@@ -313,15 +331,38 @@
         <p class="eyebrow">Today in the Codex</p>
         <h2 class="pulse-active" data-codex-today-title>Today in the Codex</h2>
         <p class="today-codex-meta" data-codex-today-layer>Open today’s moon, breathe once, and record what changed.</p>
+
+        <!-- Living Day calendar summary — shown when JS computes moon state -->
+        <div class="codex-calendar-summary" data-codex-calendar-summary hidden>
+          <p class="codex-moon-label" data-codex-moon-label></p>
+          <p class="codex-year-label" data-codex-year-label></p>
+          <p class="codex-gate-label" data-codex-week-gate></p>
+        </div>
+
         <div class="today-codex-stack">
           <p><strong>Moon phase:</strong> <span data-codex-today-phase>Visible in the 13 Moons gate.</span></p>
+          <p data-codex-shabbat-row hidden><strong>Day state:</strong> <span data-codex-shabbat-label></span></p>
+          <p data-codex-movement-row hidden><strong>Today's movement:</strong> <span data-codex-daily-movement></span></p>
           <p><strong>Witness prompt:</strong> <span data-codex-today-prompt>Notice what is moving that you have not yet named.</span></p>
           <p><strong>Breathing pattern:</strong> <span data-codex-today-breath>Inhale 4 · Hold 2 · Exhale 6 · Return</span></p>
-          <p><strong>Direct action:</strong> <span data-codex-today-action>Open today’s cycle and preserve the witness.</span></p>
+          <p><strong>Direct action:</strong> <span data-codex-today-action>Open today's cycle and preserve the witness.</span></p>
         </div>
+
+        <!-- Suggested gate and frequency — shown when state is available -->
+        <div class="codex-suggested" data-codex-suggested hidden>
+          <p class="codex-suggested-gate"><strong>Suggested gate:</strong>
+            <a href="./moons.html" data-codex-suggested-link>Open 13 Moons</a>
+          </p>
+          <p class="codex-suggested-freq" data-codex-freq-row hidden>
+            <strong>Suggested field:</strong> <span data-codex-suggested-freq></span>
+          </p>
+        </div>
+
         <div class="hero-actions">
           <a class="btn primary" href="./moons.html" data-codex-open-today>Open Today</a>
           <a class="btn" href="./ledger.html" data-codex-record-witness>Record Witness</a>
+          <a class="btn" href="./moons.html" data-codex-gate-btn hidden>Follow Suggested Gate</a>
+          <a class="btn" href="./systems/frequencies.html" data-codex-freq-btn hidden>Start Suggested Frequency</a>
         </div>
       </article>
 
