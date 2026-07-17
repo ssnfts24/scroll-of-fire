@@ -78,11 +78,20 @@ body {
 
 @media (max-width: 760px) {
   html {
-    scroll-padding-bottom: calc(5.25rem + var(--safe-bottom));
+    scroll-padding-bottom: calc(1.5rem + var(--safe-bottom));
   }
 
   body {
-    touch-action: auto;
+    touch-action: pan-y;
+  }
+
+  main,
+  .wrap,
+  .page-head,
+  .tabPanel,
+  .card,
+  .notice {
+    touch-action: pan-y;
   }
 
   .wrap,
@@ -91,7 +100,27 @@ body {
   }
 
   .tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+  }
+
+  .tabs .tab {
+    touch-action: pan-x pan-y;
+  }
+
+  .mobile-dock {
     display: none;
+  }
+
+  .wrap {
+    padding-bottom: calc(3.5rem + var(--safe-bottom));
+  }
+
+  #sofToast {
+    bottom: calc(1rem + var(--safe-bottom));
   }
 
   .mobile-dock {
