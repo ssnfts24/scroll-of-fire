@@ -391,28 +391,41 @@
   function renderSignalBar(state) {
     document.querySelectorAll("[data-living-signal-root]").forEach(function (root) {
       const items = [];
+      const ext = window.CodexState || {};
 
-      // Primary moon indicator: Moon name · Day/28 · Phase
-      if (state.moon && state.moon.moon && state.moon.day) {
-        let moonLabel = "☾ Moon " + state.moon.moon;
-        if (state.moon.moonName) moonLabel += " · " + state.moon.moonName;
-        moonLabel += " · Day " + state.moon.day + "/28";
-        if (state.moon.phase) moonLabel += " · " + state.moon.phase;
-        items.push({ text: moonLabel, href: "./moons.html" });
+      // Compact living day line: ☾ Moon Name · Day X/28 | Phase | Gate | Field
+      const moonNum  = (state.moon && state.moon.moon) || ext.moonNumber;
+      const moonDay  = (state.moon && state.moon.day)  || ext.moonDay;
+      const moonNameText = (state.moon && state.moon.moonName) || ext.moonName || "";
+      const phaseText    = (state.moon && state.moon.phase)    || ext.phaseName || "";
+      const weekGateText = ext.weekGate || "";
+      const freqText     = ext.suggestedFrequency ? ext.suggestedFrequency.split(" · ")[1] || ext.suggestedFrequency : "";
+
+      if (moonNum && moonDay) {
+        let compact = "☾ " + moonNameText + " · Day " + moonDay + "/28";
+        if (phaseText)    compact += " | " + phaseText;
+        if (weekGateText) compact += " | " + weekGateText;
+        if (freqText)     compact += " | Field: " + freqText;
+        items.push({ text: compact, href: "./moons.html" });
+      } else {
+        // Fallback when moon data not yet ready
+        if (state.moon && state.moon.moon && state.moon.day) {
+          let moonLabel = "☾ Moon " + state.moon.moon;
+          if (state.moon.moonName) moonLabel += " · " + state.moon.moonName;
+          moonLabel += " · Day " + state.moon.day + "/28";
+          if (state.moon.phase) moonLabel += " | " + state.moon.phase;
+          items.push({ text: moonLabel, href: "./moons.html" });
+        }
       }
 
-      items.push({ text: state.daypart + " Field · " + state.localTime });
+      items.push({ text: state.daypart + " · " + state.localTime });
 
       if (state.witnessCount) {
-        items.push({ text: "Ξ " + state.witnessCount + " witness records", href: "./ledger.html" });
+        items.push({ text: "Ξ " + state.witnessCount + " records", href: "./ledger.html" });
       }
 
       if (state.lastGate && state.lastGate.title) {
         items.push({ text: "Last: " + state.lastGate.title, href: state.lastGate.href });
-      }
-
-      if (state.recentUpdates.length) {
-        items.push({ text: "▲ " + state.recentUpdates.length + " recent updates" });
       }
 
       root.innerHTML = items
@@ -448,7 +461,10 @@
       heroAction.setAttribute("href", daypartCopy.actionHref);
     }
 
-    setText("[data-codex-today-title]", state.moon && state.moon.moon ? "Moon " + state.moon.moon + " · Day " + state.moon.day : "Today in the Codex");
+    const moonName = (state.moon && state.moon.moonName) || "";
+    setText("[data-codex-today-title]", state.moon && state.moon.moon
+      ? "Moon " + state.moon.moon + " · " + (moonName || "Day " + state.moon.day)
+      : "Today in the Codex");
     setText("[data-codex-today-layer]", state.symbolicLayer || "Witness the present field.");
     setText("[data-codex-today-phase]", state.moon?.phase || "Moon phase becomes visible inside the 13 Moons gate.");
     setText("[data-codex-today-prompt]", state.witnessPrompt || TODAY_PANEL_FALLBACK);
@@ -458,6 +474,72 @@
     const openToday = document.querySelector("[data-codex-open-today]");
     if (openToday) {
       openToday.setAttribute("href", "./moons.html?date=" + encodeURIComponent(state.isoDate));
+    }
+
+    // --- Living Day: calendar summary and extended fields from codex-state.js ---
+    const ext = window.CodexState || {};
+    const moonNum = (state.moon && state.moon.moon) || ext.moonNumber;
+    const moonDay = (state.moon && state.moon.day)  || ext.moonDay;
+    const yearDay = ext.yearDay || null;
+    const weekGate = ext.weekGate || null;
+    const shabbatLabel = ext.shabbatLabel || null;
+    const shabbatCode = ext.shabbatState || null;
+    const dailyMovement = ext.dailyMovement || null;
+    const suggestedPath = ext.suggestedPath || null;
+    const suggestedPathUrl = ext.suggestedPathUrl || null;
+    const suggestedFrequency = ext.suggestedFrequency || null;
+
+    const calSummary = document.querySelector("[data-codex-calendar-summary]");
+    if (calSummary && moonNum) {
+      calSummary.hidden = false;
+      setText("[data-codex-moon-label]", "Moon " + moonNum + " · Day " + (moonDay || "—") + "/28");
+      if (yearDay) setText("[data-codex-year-label]", "Day " + yearDay + "/364");
+      if (weekGate) setText("[data-codex-week-gate]", weekGate);
+    }
+
+    // Shabbat state row (only show when not ordinary)
+    const shabbatRow = document.querySelector("[data-codex-shabbat-row]");
+    if (shabbatRow && shabbatCode && shabbatCode !== "ordinary" && shabbatLabel) {
+      shabbatRow.hidden = false;
+      setText("[data-codex-shabbat-label]", shabbatLabel);
+    }
+
+    // Daily movement row
+    const movementRow = document.querySelector("[data-codex-movement-row]");
+    if (movementRow && dailyMovement) {
+      movementRow.hidden = false;
+      setText("[data-codex-daily-movement]", dailyMovement);
+    }
+
+    // Suggested gate section
+    const suggestedSection = document.querySelector("[data-codex-suggested]");
+    if (suggestedSection && suggestedPath && suggestedPathUrl) {
+      suggestedSection.hidden = false;
+
+      const suggestedLink = document.querySelector("[data-codex-suggested-link]");
+      if (suggestedLink) {
+        suggestedLink.textContent = suggestedPath;
+        suggestedLink.setAttribute("href", suggestedPathUrl);
+      }
+
+      if (suggestedFrequency) {
+        setText("[data-codex-suggested-freq]", suggestedFrequency);
+        const freqRow = document.querySelector("[data-codex-freq-row]");
+        if (freqRow) freqRow.hidden = false;
+      }
+
+      const gateBtn = document.querySelector("[data-codex-gate-btn]");
+      if (gateBtn) {
+        gateBtn.setAttribute("href", suggestedPathUrl);
+        const shortLabel = suggestedPath.replace(/^Open\s+/, "").replace(/^Read\s+/, "");
+        gateBtn.textContent = "Open " + shortLabel;
+        gateBtn.hidden = false;
+      }
+
+      const freqBtn = document.querySelector("[data-codex-freq-btn]");
+      if (freqBtn && suggestedFrequency) {
+        freqBtn.hidden = false;
+      }
     }
 
     const continuePanel = document.querySelector("[data-codex-continue-panel]");
@@ -722,12 +804,120 @@
     });
   }
 
+  function renderLivingDayPanel() {
+    const panel = document.querySelector("[data-living-day-content]");
+    if (!panel) return;
+
+    const ext = window.CodexState || {};
+
+    let html = "";
+
+    if (ext.moonNumber && ext.moonName) {
+      html += '<p class="ld-moon-heading">' + escapeHTML(ext.moonName) + "</p>";
+      const dayLine = "Moon " + ext.moonNumber + " · Day " + (ext.moonDay || "—") + "/28"
+        + (ext.yearDay ? " · Day " + ext.yearDay + "/364" : "");
+      html += '<p class="ld-moon-line">' + escapeHTML(dayLine) + "</p>";
+      if (ext.weekGate) {
+        html += '<p class="ld-gate">' + escapeHTML(ext.weekGate) + "</p>";
+      }
+      if (ext.phaseName) {
+        html += '<p class="ld-phase">' + escapeHTML(ext.phaseName) + "</p>";
+      }
+      if (ext.shabbatState && ext.shabbatState !== "ordinary" && ext.shabbatLabel) {
+        html += '<p class="ld-shabbat">' + escapeHTML(ext.shabbatLabel) + "</p>";
+      }
+    } else {
+      html += '<p class="ld-moon-line">Calculating today\'s moon state…</p>';
+    }
+
+    if (ext.dailyMovement) {
+      html += '<p class="ld-movement"><strong>Today\'s movement:</strong> ' + escapeHTML(ext.dailyMovement) + "</p>";
+    }
+
+    if (ext.suggestedPath && ext.suggestedPathUrl) {
+      html += '<p class="ld-suggested"><strong>Suggested gate:</strong> <a href="' + escapeAttribute(ext.suggestedPathUrl) + '">' + escapeHTML(ext.suggestedPath) + "</a></p>";
+    }
+
+    if (ext.suggestedFrequency) {
+      html += '<p class="ld-freq"><strong>Suggested field:</strong> ' + escapeHTML(ext.suggestedFrequency) + "</p>";
+    }
+
+    html += '<p class="ld-moons-link"><a href="./moons.html">Open 13 Moons →</a></p>';
+
+    panel.innerHTML = html;
+  }
+
+  function setupLivingDayPanel() {
+    document.addEventListener("click", function (event) {
+      const toggle = event.target.closest("[data-living-day-toggle]");
+      const close  = event.target.closest("[data-living-day-close]");
+      const panel  = document.querySelector("[data-living-day-panel]");
+
+      if (toggle && panel) {
+        const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+        const willExpand = !isExpanded;
+        toggle.setAttribute("aria-expanded", String(willExpand));
+        panel.hidden = !willExpand;
+        if (willExpand) {
+          renderLivingDayPanel();
+          /* Move focus into panel for keyboard users */
+          const firstFocusable = panel.querySelector("a[href], button");
+          if (firstFocusable) firstFocusable.focus();
+        }
+        return;
+      }
+
+      if (close && panel) {
+        panel.hidden = true;
+        const toggle2 = document.querySelector("[data-living-day-toggle]");
+        if (toggle2) {
+          toggle2.setAttribute("aria-expanded", "false");
+          toggle2.focus();
+        }
+      }
+    });
+
+    /* Close panel on Escape */
+    document.addEventListener("keydown", function (event) {
+      if (event.key !== "Escape") return;
+      const panel = document.querySelector("[data-living-day-panel]");
+      if (!panel || panel.hidden) return;
+      panel.hidden = true;
+      const toggle = document.querySelector("[data-living-day-toggle]");
+      if (toggle) {
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.focus();
+      }
+    });
+
+    /* Re-render panel content when codex state refreshes */
+    document.addEventListener("codexstatechange", function () {
+      const panel = document.querySelector("[data-living-day-panel]");
+      if (panel && !panel.hidden) renderLivingDayPanel();
+    });
+  }
+
+  function setupActivityToggle() {
+    document.addEventListener("click", function (event) {
+      const toggle = event.target.closest("[data-codex-activity-toggle]");
+      if (!toggle) return;
+      const content = document.querySelector("[data-codex-activity-content]");
+      if (!content) return;
+      const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+      const willExpand = !isExpanded;
+      toggle.setAttribute("aria-expanded", String(willExpand));
+      content.hidden = !willExpand;
+    });
+  }
+
   function setup() {
     refresh();
     scheduleRefresh();
     setupMoonListener();
     setupPathReset();
     setupLifecycle();
+    setupLivingDayPanel();
+    setupActivityToggle();
   }
 
   if (document.readyState === "loading") {
