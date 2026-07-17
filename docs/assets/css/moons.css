@@ -1657,42 +1657,92 @@ body[data-shabbat-state="active"] .hero-sigil {
     right: 0;
     bottom: 0;
     z-index: 100;
-    display: flex;
-    gap: 0.35rem;
-    padding: 0.55rem 0.55rem calc(0.55rem + env(safe-area-inset-bottom));
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(5, 7, 13, 0.96);
-    backdrop-filter: blur(18px);
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x proximity;
-    scrollbar-width: thin;
-    -webkit-overflow-scrolling: touch;
+   display: grid;
+   grid-template-columns: repeat(5, minmax(0, 1fr));
+   gap: 0.35rem;
+   padding: 0.55rem 0.55rem calc(0.55rem + env(safe-area-inset-bottom));
+   border-top: 1px solid rgba(255, 255, 255, 0.1);
+   background: rgba(5, 7, 13, 0.96);
+   backdrop-filter: blur(18px);
+   align-items: stretch;
   }
 
-  .mobile-dock a {
-    flex: 0 0 auto;
-    min-width: 74px;
-    padding: 0.55rem 0.3rem;
+  .mobile-dock a,
+  .mobile-dock-more-toggle {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    padding: 0.55rem 0.45rem;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     background: rgba(255, 255, 255, 0.04);
     color: var(--ink);
     text-decoration: none;
     text-align: center;
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     font-weight: 800;
     line-height: 1.2;
     transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
-    scroll-snap-align: center;
   }
 
-  .mobile-dock a:active {
+  .mobile-dock-more {
+    position: relative;
+    min-width: 0;
+  }
+
+  .mobile-dock-more summary {
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .mobile-dock-more summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-dock-more-menu {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.5rem);
+    width: min(280px, calc(100vw - 1rem));
+    max-height: min(60vh, 420px);
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.55rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    background: rgba(8, 12, 20, 0.98);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.42);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+  }
+
+  .mobile-dock-more[open] .mobile-dock-more-menu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .mobile-dock-more-menu a {
+    justify-items: start;
+    padding-inline: 0.8rem;
+  }
+
+  .mobile-dock a:active,
+  .mobile-dock-more-toggle:active {
     transform: translateY(1px) scale(0.98);
   }
 
   .mobile-dock a[aria-current="page"],
-  .mobile-dock a.active {
+  .mobile-dock a.active,
+  .mobile-dock-more.has-active-child .mobile-dock-more-toggle {
     border-color: rgba(243, 201, 122, 0.38);
     background: rgba(243, 201, 122, 0.10);
     color: #ffe3a3;

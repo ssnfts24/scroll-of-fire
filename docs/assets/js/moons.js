@@ -1234,6 +1234,14 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
 
   function setupTabs() {
     const panels = new Set($$(".tabPanel").map(panel => panel.id));
+    const mobileMore = $("[data-mobile-more]");
+    const mobileMoreSummary = mobileMore?.querySelector("summary");
+
+    function closeMobileMore() {
+      if (mobileMore?.open) {
+        mobileMore.open = false;
+      }
+    }
 
     function keepActiveNavInView(id, behavior) {
       const activeTab = $$(".tab").find(tab => tab.dataset.tab === id);
@@ -1280,7 +1288,19 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
         else link.removeAttribute("aria-current");
       });
 
+      if (mobileMore) {
+        const moreHasActiveChild = !!mobileMore.querySelector(
+          `[data-mobile-tab="${id}"]`
+        );
+
+        mobileMore.classList.toggle(
+          "has-active-child",
+          moreHasActiveChild
+        );
+      }
+
       keepActiveNavInView(id, updateHistory || scroll ? "smooth" : "auto");
+      closeMobileMore();
 
       safeSet("sof_moons_last_tab_v1", id);
       if (updateHistory) {
@@ -1307,6 +1327,27 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
         scroll: event.detail?.scroll !== false
       });
     });
+
+    mobileMore?.addEventListener("toggle", () => {
+      mobileMoreSummary?.setAttribute(
+        "aria-expanded",
+        String(mobileMore.open)
+      );
+    });
+
+    document.addEventListener("click", event => {
+      if (mobileMore?.open && !mobileMore.contains(event.target)) {
+        closeMobileMore();
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && mobileMore?.open) {
+        closeMobileMore();
+        mobileMoreSummary?.focus();
+      }
+    });
+
     addEventListener("popstate", event => {
       activateTab(event.state?.moonsTab || requestedTab());
     });

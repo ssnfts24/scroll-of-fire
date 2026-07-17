@@ -8,7 +8,6 @@
 body {
   min-height: 100dvh;
   padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
-  overscroll-behavior-y: contain;
 }
 
 .app-install-card,
@@ -102,7 +101,8 @@ body {
     padding-left: max(0.5rem, var(--safe-left));
   }
 
-  .mobile-dock a {
+  .mobile-dock a,
+  .mobile-dock-more-toggle {
     min-height: 48px;
     display: grid;
     place-items: center;
@@ -146,7 +146,8 @@ body {
     border-radius: 16px;
   }
 
-  .mobile-dock a {
+  .mobile-dock a,
+  .mobile-dock-more-toggle {
     padding-inline: 0.15rem;
     font-size: 0.68rem;
   }
