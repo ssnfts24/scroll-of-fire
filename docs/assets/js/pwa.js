@@ -17,6 +17,7 @@
   let manifestDetails = null;
   let installUiState = null;
   let appInstalledSeen = localStorage.getItem("sof_moons_install_result") === "accepted";
+  let helpPanelOpener = null;
 
   const byId = id => document.getElementById(id);
   const standalone = () =>
@@ -62,6 +63,64 @@
   function scrollToIosHelp() {
     scrollToInstallHelp();
     byId("iosInstallHelp")?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
+  }
+
+  function shortcutLabel(state) {
+    if (!state) return "Download App";
+    switch (state.key) {
+      case "standalone": return "Installed";
+      case "ios-safari":
+      case "ios-in-app": return "iPhone Instructions";
+      case "ready": return "Install App";
+      default: return "Installation Help";
+    }
+  }
+
+  function handleHelpPanelKeydown(e) {
+    const panel = byId("iphoneHelpPanel");
+    if (!panel) return;
+    if (e.key === "Escape") {
+      closeHelpPanel();
+      return;
+    }
+    if (e.key === "Tab") {
+      const focusables = Array.from(
+        panel.querySelectorAll("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])")
+      ).filter(el => !el.disabled && !el.hidden);
+      if (focusables.length < 2) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  }
+
+  function openHelpPanel() {
+    const panel = byId("iphoneHelpPanel");
+    if (!panel) return;
+    helpPanelOpener = document.activeElement;
+    panel.hidden = false;
+    const trigger = byId("openIphoneHelp");
+    if (trigger) trigger.setAttribute("aria-expanded", "true");
+    const closeBtn = byId("iphoneHelpClose");
+    (closeBtn || panel.querySelector("button"))?.focus();
+    document.addEventListener("keydown", handleHelpPanelKeydown);
+  }
+
+  function closeHelpPanel() {
+    const panel = byId("iphoneHelpPanel");
+    if (!panel) return;
+    panel.hidden = true;
+    document.removeEventListener("keydown", handleHelpPanelKeydown);
+    const trigger = byId("openIphoneHelp");
+    if (trigger) trigger.setAttribute("aria-expanded", "false");
+    helpPanelOpener?.focus?.();
+    helpPanelOpener = null;
   }
 
   function currentServiceWorkerControl() {
@@ -283,6 +342,14 @@
       button.dataset.installState = installUiState.key;
     }
 
+    const shortcut = byId("installAppShortcut");
+    if (shortcut) {
+      shortcut.hidden = false;
+      shortcut.disabled = installUiState.disabled;
+      shortcut.textContent = shortcutLabel(installUiState);
+      shortcut.dataset.installState = installUiState.key;
+    }
+
     setText("installStateNote", installUiState.note);
     setVisible("iosInstallHelp", ios());
     setVisible("inAppBrowserWarning", ios() && inApp());
@@ -367,6 +434,14 @@
     }
   }
 
+  async function onShortcutAction() {
+    if (installUiState?.action === "ios-help") {
+      openHelpPanel();
+      return;
+    }
+    await onInstallAction();
+  }
+
   function applyUpdate() {
     if (!registration?.waiting) {
       registration?.update();
@@ -446,6 +521,18 @@
 
   function init() {
     byId("installApp")?.addEventListener("click", onInstallAction);
+    byId("installAppShortcut")?.addEventListener("click", onShortcutAction);
+    byId("openIphoneHelp")?.addEventListener("click", openHelpPanel);
+    byId("iphoneHelpClose")?.addEventListener("click", closeHelpPanel);
+    byId("iphoneHelpBackdrop")?.addEventListener("click", closeHelpPanel);
+    byId("iphoneHelpMoreSettings")?.addEventListener("click", () => {
+      closeHelpPanel();
+      settingsJump()?.click?.();
+      setTimeout(() => {
+        byId("installApp")?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+        byId("installTitle")?.focus?.();
+      }, 80);
+    });
     byId("checkForUpdates")?.addEventListener("click", async () => {
       await registration?.update();
       status(registration?.waiting ? "Update available." : "13 Moons is up to date.");

@@ -532,6 +532,23 @@
     </header>
 
     <main id="main">
+      <!-- COMPACT INSTALL SHORTCUT — always visible, independent of active tab -->
+      <div class="install-shortcut" id="installShortcutRow" aria-label="App install shortcuts">
+        <button
+          id="installAppShortcut"
+          class="lab-btn ghost install-shortcut-btn"
+          type="button"
+          aria-describedby="appStatusLive"
+        >Download App</button>
+        <button
+          id="openIphoneHelp"
+          class="lab-btn ghost install-shortcut-btn"
+          type="button"
+          aria-expanded="false"
+          aria-controls="iphoneHelpPanel"
+        >iPhone Instructions</button>
+      </div>
+
       <!-- TODAY -->
       <section
         id="todayPanel"
@@ -2416,6 +2433,34 @@
     <a href="#savedPanel" data-mobile-tab="savedPanel">Saved Logs</a>
     <a href="#settingsPanel" data-mobile-tab="settingsPanel">Settings</a>
   </nav>
+
+  <!-- iPhone / iPad install instructions panel -->
+  <div
+    id="iphoneHelpPanel"
+    class="install-help-panel"
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="iphoneHelpTitle"
+  >
+    <div class="install-help-backdrop" id="iphoneHelpBackdrop"></div>
+    <div class="install-help-inner">
+      <p class="eyebrow">Install on iPhone or iPad</p>
+      <h2 id="iphoneHelpTitle" class="install-help-heading">Add to Home Screen</h2>
+      <p class="fine">Installation must be done from <strong>Safari</strong>. If you are inside an in-app browser (Instagram, Gmail, etc.), open the page in Safari first using the browser's share or external-browser option.</p>
+      <ol class="install-steps">
+        <li>Open this page in <strong>Safari</strong>.</li>
+        <li>Tap the <strong>Share</strong> icon <span aria-hidden="true">(⬆)</span> at the bottom of the screen.</li>
+        <li>Scroll down and choose <strong>Add to Home Screen</strong>.</li>
+        <li>Confirm the name and tap <strong>Add</strong>.</li>
+      </ol>
+      <p class="fine">The installed app will appear on your Home Screen and open without the browser bar. Complete installation details, diagnostics, and recovery tools are under App Settings.</p>
+      <div class="btnrow">
+        <button id="iphoneHelpMoreSettings" class="lab-btn ghost" type="button">More app settings</button>
+        <button id="iphoneHelpClose" class="lab-btn ghost" type="button" aria-label="Close iPhone instructions">Close</button>
+      </div>
+    </div>
+  </div>
 
   <div
     id="sofToast"
