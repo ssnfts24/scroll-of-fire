@@ -641,6 +641,32 @@
     updateCaptionPreview();
   }
 
+  function drawCenteredWrappedText(ctx, text, centerX, startY, maxWidth, lineHeight, maxLines) {
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    const words = String(text || "").split(/\s+/).filter(Boolean);
+    const lines = [];
+    let current = "";
+
+    for (let i = 0; i < words.length; i += 1) {
+      const next = current ? `${current} ${words[i]}` : words[i];
+      if (ctx.measureText(next).width <= maxWidth) {
+        current = next;
+      } else {
+        if (current) lines.push(current);
+        current = words[i];
+      }
+      if (lines.length >= maxLines) break;
+    }
+    if (current && lines.length < maxLines) lines.push(current);
+
+    lines.slice(0, maxLines).forEach((line, index) => {
+      ctx.fillText(line, centerX, startY + index * lineHeight);
+    });
+
+    return lines.length;
+  }
+
   function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
     const words = String(text || "").split(/\s+/).filter(Boolean);
     const lines = [];
@@ -820,10 +846,9 @@
       y += dims.height * 0.03;
       ctx.fillStyle = "#f4f1e8";
       ctx.font = `500 ${Math.round(dims.width * 0.026)}px system-ui, -apple-system, Segoe UI, sans-serif`;
-      ctx.textAlign = "left";
       // Square: max 2 lines; Story: max 4 lines — keeps content above the footer area.
       const maxMovLines = format === "story" ? 4 : 2;
-      const movLines = wrapText(ctx, clampText(shareState.movement, 180), left, y, textMax, dims.height * 0.03, maxMovLines);
+      const movLines = drawCenteredWrappedText(ctx, clampText(shareState.movement, 180), dims.width / 2, y, textMax, dims.height * 0.03, maxMovLines);
       y += movLines * dims.height * 0.03;
       ctx.textAlign = "center";
     }
