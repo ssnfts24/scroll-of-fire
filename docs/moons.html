@@ -413,33 +413,6 @@
         unbroken through the Year Gate.
       </aside>
 
-      <section class="app-install-card" aria-labelledby="installTitle">
-        <p class="eyebrow">Installable Living Calendar</p>
-        <h2 id="installTitle">Carry 13 Moons as an app</h2>
-        <p>Installation adds a Home Screen icon, opens the calendar without the normal browser bar where supported, and prepares essential files for offline use. Your records remain on this device.</p>
-        <div class="btnrow">
-          <button id="installApp" class="lab-btn" type="button" aria-describedby="appStatus installStateNote">Install 13 Moons</button>
-          <button class="lab-btn ghost" type="button" data-tab-jump="settingsPanel">Installation Help</button>
-        </div>
-        <p id="appStatus" class="app-status">Checking installation support…</p>
-        <p id="installStateNote" class="fine app-install-note">Waiting for browser install state…</p>
-        <p id="inAppBrowserWarning" class="warning" hidden>To install 13 Moons on iPhone, open this page in Safari first. Use the browser menu to open the page in Safari, then return here.</p>
-        <div id="iosInstallHelp" hidden>
-          <strong>Install on iPhone or iPad with Safari</strong>
-          <ol class="install-steps">
-            <li>Open this page in Safari.</li>
-            <li>Tap the Share button.</li>
-            <li>Select Add to Home Screen.</li>
-            <li>Confirm the name 13 Moons.</li>
-            <li>Tap Add, then open the new icon.</li>
-          </ol>
-        </div>
-        <div id="offlineSnapshot" class="warning" hidden></div>
-        <div id="updateNotice" class="warning" hidden>
-          A new version is ready. Saved logs will be preserved. Open App Settings to apply it.
-        </div>
-      </section>
-
       <div class="tabs" aria-label="Calendar tools">
         <button
           class="tab active"
@@ -565,6 +538,28 @@
         class="tabPanel active"
       >
         <!-- Today artwork is inserted by moons-images.js. -->
+
+        <section class="card today-hero-actions" aria-labelledby="todayHeroHeading">
+          <span class="today-hero-glow" aria-hidden="true"></span>
+          <p class="eyebrow">Today in the 13 Moons</p>
+          <h2 id="todayHeroHeading">Today's Movement</h2>
+          <p id="heroMovement" class="today-hero-movement">—</p>
+          <button
+            id="heroShareBtn"
+            class="lab-btn share-today-primary"
+            type="button"
+            data-share-day-open
+            data-share-source="moons"
+            aria-label="Share today's Remnant 13 Moons reading as a social card"
+          >
+            ✦ Share Today
+          </button>
+          <div class="today-hero-secondary btnrow">
+            <button class="lab-btn ghost" type="button" data-tab-jump="flowPanel">Open Full Reading</button>
+            <a class="lab-btn ghost" href="./ledger.html">Record Witness</a>
+            <a class="lab-btn ghost" href="./systems/frequencies.html">Start Frequency</a>
+          </div>
+        </section>
 
         <section class="card today-calendar-summary" aria-labelledby="todaySummaryTitle">
           <span class="today-summary-glow" aria-hidden="true"></span>
@@ -2267,6 +2262,33 @@
 
       <!-- APP SETTINGS -->
       <section id="settingsPanel" class="tabPanel">
+
+        <section class="card app-install-card" aria-labelledby="installTitle">
+          <p class="eyebrow">Install the 13 Moons App</p>
+          <h2 id="installTitle">Carry 13 Moons as an app</h2>
+          <p class="subtitle">Installation adds a Home Screen icon, opens the calendar without the normal browser bar where supported, and prepares essential files for offline use. Your records remain on this device.</p>
+          <div class="btnrow">
+            <button id="installApp" class="lab-btn" type="button" aria-describedby="appStatus installStateNote">Install 13 Moons</button>
+          </div>
+          <p id="appStatus" class="app-status">Checking installation support…</p>
+          <p id="installStateNote" class="fine app-install-note">Waiting for browser install state…</p>
+          <p id="inAppBrowserWarning" class="warning" hidden>To install 13 Moons on iPhone, open this page in Safari first. Use the browser menu to open the page in Safari, then return here.</p>
+          <div id="iosInstallHelp" hidden>
+            <strong>Install on iPhone or iPad with Safari</strong>
+            <ol class="install-steps">
+              <li>Open this page in Safari.</li>
+              <li>Tap the Share button.</li>
+              <li>Select Add to Home Screen.</li>
+              <li>Confirm the name 13 Moons.</li>
+              <li>Tap Add, then open the new icon.</li>
+            </ol>
+          </div>
+          <div id="offlineSnapshot" class="warning" hidden></div>
+          <div id="updateNotice" class="warning" hidden>
+            A new version is ready. Saved logs will be preserved. Use Check for Updates below to apply it.
+          </div>
+        </section>
+
         <section class="grid">
           <article class="card col-7">
             <p class="eyebrow">Installation &amp; Recovery</p>
