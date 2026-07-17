@@ -632,6 +632,20 @@
     updateUI();
     recordEvent("path", { name, label: path.label });
     log(`Path loaded: ${path.label}.`);
+
+    /* Phase 2 — record frequency session start in CodexMemory */
+    if (autoPlay && window.CodexMemory && typeof window.CodexMemory.recordFrequency === "function") {
+      try {
+        const lead = path.decks && path.decks[0];
+        const carrier = lead ? Math.round(lead.freq) + " Hz" : "";
+        window.CodexMemory.recordFrequency({
+          presetName: path.label,
+          carrier:    carrier,
+          startedAt:  new Date().toISOString(),
+          sourceUrl:  window.location.href
+        });
+      } catch (_) {}
+    }
   }
 
   function setDeckFreq(index, freq, volume = 64) {
@@ -850,6 +864,21 @@ ${$("#journalNote")?.value || ""}`;
     setJournal(items.slice(0, 120));
     renderJournal();
     log("Witness saved.");
+
+    /* Phase 2 — record frequency session in CodexMemory */
+    if (window.CodexMemory && typeof window.CodexMemory.recordFrequency === "function") {
+      try {
+        const lead = leadDeck();
+        const carrier = lead ? Math.round(lead.freq) + " Hz" : "";
+        window.CodexMemory.recordFrequency({
+          presetName:  activePath || "Custom Field",
+          carrier:     carrier,
+          startedAt:   new Date().toISOString(),
+          completedAt: new Date().toISOString(),
+          sourceUrl:   window.location.href
+        });
+      } catch (_) {}
+    }
   }
 
   function exportJournal() {

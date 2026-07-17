@@ -137,6 +137,7 @@
   <link rel="stylesheet" href="assets/css/pwa.css?v=20260716-3">
 
   <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/codex-memory.css?v=1">
 
   <script>
     window.SOF_MOONS_CONFIG = Object.freeze({
@@ -218,6 +219,7 @@
 
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
+  <script defer src="assets/js/codex-memory.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
   <script defer src="assets/js/motion.js"></script>
@@ -615,7 +617,106 @@
           ></div>
         </section>
 
-        <section class="command card">
+        <!-- Phase 2: Codex Memory continuity card for Today -->
+        <section class="card codex-memory-today-card" id="moonsMemoryCard" hidden aria-label="Your Codex continuation">
+          <p class="card-label">Your Path Today</p>
+          <div class="card-row" id="moonsMemoryIntention" hidden>
+            <strong>Intention</strong>
+            <span id="moonsMemoryIntentionValue"></span>
+          </div>
+          <div class="card-row" id="moonsMemoryPractice" hidden>
+            <strong>Practice</strong>
+            <span id="moonsMemoryPracticeValue"></span>
+          </div>
+          <div class="card-row" id="moonsMemoryWitness" hidden>
+            <strong>Last Witness</strong>
+            <span id="moonsMemoryWitnessValue"></span>
+          </div>
+          <div class="card-row" id="moonsMemoryFreq" hidden>
+            <strong>Last Field</strong>
+            <a href="./systems/frequencies.html" id="moonsMemoryFreqValue"></a>
+          </div>
+          <div class="card-row" id="moonsMemoryDays" hidden>
+            <strong>Witnessed</strong>
+            <span id="moonsMemoryDaysValue"></span>
+          </div>
+        </section>
+
+        <script>
+          /* Phase 2 — render memory card when CodexMemory is available */
+          (function renderMoonsMemoryCard() {
+            function doRender() {
+              if (!window.CodexMemory) return;
+              var mem = window.CodexMemory.getState();
+              var card = document.getElementById("moonsMemoryCard");
+              if (!card) return;
+
+              var hasContent = false;
+
+              /* Intention */
+              var intent = window.CodexMemory.getIntention();
+              var intRow = document.getElementById("moonsMemoryIntention");
+              var intVal = document.getElementById("moonsMemoryIntentionValue");
+              if (intent && intRow && intVal) {
+                intRow.hidden = false;
+                intVal.textContent = intent.value.charAt(0).toUpperCase() + intent.value.slice(1) +
+                  (intent.isPriorDay ? " (prior day)" : "");
+                hasContent = true;
+              } else if (intRow) { intRow.hidden = true; }
+
+              /* Practice */
+              var p = mem.unfinishedPractice;
+              var pracRow = document.getElementById("moonsMemoryPractice");
+              var pracVal = document.getElementById("moonsMemoryPracticeValue");
+              if (p && (p.status === "started" || p.status === "paused") && pracRow && pracVal) {
+                pracRow.hidden = false;
+                pracVal.textContent = p.title + " [" + p.status + "]";
+                hasContent = true;
+              } else if (pracRow) { pracRow.hidden = true; }
+
+              /* Witness */
+              var w = mem.recentWitness;
+              var witRow = document.getElementById("moonsMemoryWitness");
+              var witVal = document.getElementById("moonsMemoryWitnessValue");
+              if (w && witRow && witVal) {
+                witRow.hidden = false;
+                var wDate = w.date ? new Date(w.date).toLocaleDateString() : "";
+                witVal.textContent = (w.label || "Witness entry") + (wDate ? " · " + wDate : "");
+                hasContent = true;
+              } else if (witRow) { witRow.hidden = true; }
+
+              /* Frequency */
+              var f = mem.recentFrequency;
+              var freqRow = document.getElementById("moonsMemoryFreq");
+              var freqVal = document.getElementById("moonsMemoryFreqValue");
+              if (f && freqRow && freqVal) {
+                freqRow.hidden = false;
+                freqVal.textContent = f.presetName + (f.carrier ? " · " + f.carrier : "");
+                hasContent = true;
+              } else if (freqRow) { freqRow.hidden = true; }
+
+              /* Witnessed days this cycle */
+              var daysRow = document.getElementById("moonsMemoryDays");
+              var daysVal = document.getElementById("moonsMemoryDaysValue");
+              var wd = mem.currentCycle.witnessedDays;
+              if (wd && wd.length && daysRow && daysVal) {
+                daysRow.hidden = false;
+                daysVal.textContent = wd.length + " day" + (wd.length === 1 ? "" : "s") + " this cycle";
+                hasContent = true;
+              } else if (daysRow) { daysRow.hidden = true; }
+
+              card.hidden = !hasContent;
+            }
+
+            /* Render when DOM is ready and re-render on memory changes */
+            if (document.readyState === "loading") {
+              document.addEventListener("DOMContentLoaded", doRender);
+            } else {
+              doRender();
+            }
+            document.addEventListener("codexmemorychange", doRender);
+          })();
+        </script>
           <div>
             <p class="eyebrow">☲ Remnant Command Center ☲</p>
             <h2 id="commandMoon">—</h2>

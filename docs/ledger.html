@@ -48,6 +48,7 @@
   <link rel="stylesheet" href="assets/css/animations.css">
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
+  <script defer src="assets/js/codex-memory.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
 </head>
 <body>
@@ -233,6 +234,22 @@
       $("note").value = "";
       $("tags").value = "";
       render();
+
+      /* Phase 2 — record witness in CodexMemory */
+      if (window.CodexMemory && typeof window.CodexMemory.recordWitness === "function") {
+        try {
+          const cs = window.CodexState || {};
+          const label = note.slice(0, 80) + (note.length > 80 ? "…" : "");
+          window.CodexMemory.recordWitness({
+            date:       entry.date,
+            label:      label,
+            moonNumber: typeof cs.moonNumber === "number" ? cs.moonNumber : null,
+            moonName:   cs.moonName || "",
+            moonDay:    typeof cs.moonDay === "number" ? cs.moonDay : null,
+            pagePath:   window.location.href
+          });
+        } catch (_) {}
+      }
     }
 
     function render() {
