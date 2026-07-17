@@ -694,6 +694,8 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
 
     setValue("datePick", toISO(selectedDate));
     text("shareDayBtn", context.isToday ? "Share Today" : "Share This Day");
+    text("heroShareBtn", context.isToday ? "✦ Share Today" : "✦ Share This Day");
+    text("heroMovement", dayArch[1]);
     text("nowDate", formatDateOnly(context.civilDate));
     text("nowTZ", `${selectedTZ} · ${context.modeLabel}`);
     updateBoundaryPresentation(context);

@@ -36,9 +36,6 @@
   };
   const manifestUrl = () => document.querySelector('link[rel="manifest"]')?.href ||
     new URL(MANIFEST_PATH, document.baseURI).toString();
-  const settingsJump = () =>
-    document.querySelector('[data-tab="settingsPanel"]') ||
-    document.querySelector('[data-tab-jump="settingsPanel"]');
   const cssUrl = () =>
     document.querySelector('link[href*="assets/css/moons.css"]')?.href ||
     new URL("assets/css/moons.css", document.baseURI).toString();
@@ -54,14 +51,20 @@
     return new URL(APP_SCOPE, document.baseURI).toString();
   }
 
-  function scrollToInstallHelp() {
-    settingsJump()?.click?.();
-    byId("settingsPanel")?.scrollIntoView?.({ behavior: "smooth", block: "start" });
-  }
-
-  function scrollToIosHelp() {
-    scrollToInstallHelp();
-    byId("iosInstallHelp")?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
+  function openAppSettingsAt(targetId, focusId) {
+    document.dispatchEvent(new CustomEvent("sof:activate-tab", {
+      detail: { id: "settingsPanel", updateHistory: true, scroll: false }
+    }));
+    const target = byId(targetId);
+    if (target?.hidden) target.hidden = false;
+    requestAnimationFrame(() => {
+      const el = byId(targetId);
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      setTimeout(() => {
+        (byId(focusId) ?? el.querySelector("h2, strong, button, [tabindex='0']") ?? el).focus();
+      }, 350);
+    });
   }
 
   function currentServiceWorkerControl() {
@@ -355,11 +358,11 @@
         await install();
         return;
       case "ios-help":
-        scrollToIosHelp();
+        byId("iosInstallInstructions")?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
         status(installUiState.note);
         return;
       case "settings-help":
-        scrollToInstallHelp();
+        byId("appInstallCard")?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
         status(installUiState.note);
         return;
       default:
@@ -446,6 +449,14 @@
 
   function init() {
     byId("installApp")?.addEventListener("click", onInstallAction);
+    byId("installAppShortcut")?.addEventListener("click", () =>
+      openAppSettingsAt("appInstallCard", "installApp")
+    );
+    byId("openIphoneHelp")?.addEventListener("click", () => {
+      const iosHelp = byId("iosInstallHelp");
+      if (iosHelp) iosHelp.hidden = false;
+      openAppSettingsAt("iosInstallInstructions");
+    });
     byId("checkForUpdates")?.addEventListener("click", async () => {
       await registration?.update();
       status(registration?.waiting ? "Update available." : "13 Moons is up to date.");

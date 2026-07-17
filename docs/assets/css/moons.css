@@ -255,6 +255,71 @@ button {
   box-shadow: var(--shadow-glow);
 }
 
+/* Today hero actions — primary daily card shown first in todayPanel */
+.today-hero-actions {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.today-hero-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(243, 201, 122, 0.15), transparent 58%),
+    radial-gradient(circle at 85% 100%, rgba(122, 243, 255, 0.09), transparent 54%);
+}
+
+.today-hero-actions .eyebrow,
+.today-hero-actions h2,
+.today-hero-movement,
+.today-hero-secondary,
+.share-today-primary {
+  position: relative;
+  z-index: 1;
+}
+
+.today-hero-movement {
+  font-size: clamp(1rem, 2.4vw, 1.15rem);
+  line-height: 1.58;
+  margin: 0.5rem 0 1.25rem;
+  max-width: 72ch;
+}
+
+.share-today-primary {
+  display: flex;
+  width: 100%;
+  min-height: 52px;
+  justify-content: center;
+  font-size: 1.05rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  border-color: rgba(243, 201, 122, 0.72);
+  background: linear-gradient(135deg, rgba(243, 201, 122, 0.17), rgba(122, 243, 255, 0.08));
+  color: #ffe3a3;
+  box-shadow: 0 0 24px rgba(243, 201, 122, 0.12);
+  margin-bottom: 0.85rem;
+}
+
+.share-today-primary:hover,
+.share-today-primary:focus-visible {
+  border-color: rgba(243, 201, 122, 0.96);
+  background: linear-gradient(135deg, rgba(243, 201, 122, 0.26), rgba(122, 243, 255, 0.14));
+  box-shadow: 0 0 36px rgba(243, 201, 122, 0.22);
+  color: #fff8e6;
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.share-today-primary:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.today-hero-secondary.btnrow {
+  gap: 8px;
+}
+
 .today-calendar-summary {
   position: relative;
   overflow: hidden;
@@ -1610,6 +1675,8 @@ body[data-shabbat-state="active"] .hero-sigil {
 
   .page-head {
     margin: 0.6rem 0 1rem;
+    height: auto;
+    min-height: 0;
   }
 
   .page-head::after {
@@ -2078,3 +2145,29 @@ body[data-remnant-boundary]{background:linear-gradient(rgba(5,7,13,.84),rgba(5,7
     display: none !important;
   }
 }
+
+/* ── Compact install shortcut row ────────────────────────────────────────── */
+
+.app-shortcuts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 12px 0 16px;
+  width: 100%;
+}
+
+@media (max-width: 350px) {
+  .app-shortcuts {
+    grid-template-columns: 1fr;
+  }
+}
+
+.install-shortcut-btn {
+  min-height: 44px;
+  font-size: 0.82rem;
+  padding: 0.52rem 0.9rem;
+  text-align: center;
+  white-space: normal;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
