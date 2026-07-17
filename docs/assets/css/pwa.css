@@ -8,7 +8,6 @@
 body {
   min-height: 100dvh;
   padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
-  overscroll-behavior-y: none;
 }
 
 .app-install-card,
@@ -79,11 +78,20 @@ body {
 
 @media (max-width: 760px) {
   html {
-    scroll-padding-bottom: calc(5.25rem + var(--safe-bottom));
+    scroll-padding-bottom: calc(1.5rem + var(--safe-bottom));
+    overflow-y: auto;
   }
 
-  body {
-    touch-action: manipulation;
+  body,
+  main,
+  .wrap,
+  .page-head,
+  .tabPanel,
+  .card,
+  .notice {
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    touch-action: auto;
   }
 
   .wrap,
@@ -92,7 +100,27 @@ body {
   }
 
   .tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: auto;
+  }
+
+  .tabs .tab {
+    touch-action: auto;
+  }
+
+  .mobile-dock {
     display: none;
+  }
+
+  .wrap {
+    padding-bottom: calc(3.5rem + var(--safe-bottom));
+  }
+
+  #sofToast {
+    bottom: calc(1rem + var(--safe-bottom));
   }
 
   .mobile-dock {
@@ -102,7 +130,8 @@ body {
     padding-left: max(0.5rem, var(--safe-left));
   }
 
-  .mobile-dock a {
+  .mobile-dock a,
+  .mobile-dock-more-toggle {
     min-height: 48px;
     display: grid;
     place-items: center;
@@ -146,9 +175,10 @@ body {
     border-radius: 16px;
   }
 
-  .mobile-dock a {
+  .mobile-dock a,
+  .mobile-dock-more-toggle {
     padding-inline: 0.15rem;
-    font-size: 0.68rem;
+    font-size: 0.75rem;
   }
 }
 

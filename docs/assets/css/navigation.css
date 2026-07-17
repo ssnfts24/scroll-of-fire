@@ -438,6 +438,11 @@ body.site-menu-open {
    ========================================================= */
 
 @media (max-width: 760px) {
+  body.site-menu-open {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
   .site-header {
     position: sticky;
     top: 0;
@@ -479,7 +484,9 @@ body.site-menu-open {
     display: flex;
     visibility: hidden;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
+    touch-action: pan-y;
     padding:
       1rem
       1rem
@@ -551,6 +558,8 @@ body.site-menu-open {
     backdrop-filter: none;
     overflow: hidden;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;

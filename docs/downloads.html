@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr" class="sof carrier-432">
 <head>
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=GG-2TBMEK502C"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2TBMEK502C"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
 
@@ -24,7 +24,7 @@
   <meta charset="utf-8">
   <title>Downloads & Integrity — Scroll of Fire | Codex of Reality</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Scroll of Fire verified scrolls, local mirrors, GitHub source links, and SHA-256 proof placeholders for the Codex of Reality.">
+  <meta name="description" content="Scroll of Fire repository downloads, GitHub verification links, and current SHA-256 seals for the living archive outside the website source.">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="theme-color" content="#05070d">
   <meta name="color-scheme" content="dark">
@@ -35,7 +35,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Codex of Reality">
   <meta property="og:title" content="Downloads & Integrity — Scroll of Fire">
-  <meta property="og:description" content="Verified scrolls, source links, and SHA-256 proof placeholders for the Codex of Reality.">
+  <meta property="og:description" content="Repository downloads, source links, and current SHA-256 seals for the living archive outside the website source.">
   <meta property="og:url" content="https://codexofreality.org/downloads.html">
 
   <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
@@ -44,6 +44,109 @@
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/superlayout.css">
   <link rel="stylesheet" href="assets/css/animations.css">
+  <style>
+    .archive-jump {
+      display: grid;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      touch-action: pan-y;
+    }
+    .archive-jump-group {
+      display: grid;
+      gap: 0.75rem;
+    }
+    .archive-jump-label {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .archive-jump-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .downloads-notice {
+      margin-top: 1rem;
+    }
+    .downloads-archive {
+      margin-top: 1rem;
+      touch-action: pan-y;
+    }
+    .downloads-archive summary {
+      cursor: pointer;
+      list-style: none;
+      touch-action: manipulation;
+    }
+    .downloads-archive summary::-webkit-details-marker {
+      display: none;
+    }
+    .downloads-archive h2 {
+      margin-bottom: 0.35rem;
+    }
+    .downloads-meta {
+      opacity: 0.82;
+      margin-top: 0.75rem;
+      font-size: 0.95rem;
+    }
+    .downloads-table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      padding-top: 1rem;
+      touch-action: pan-x pan-y;
+    }
+    .downloads-table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+    }
+    .downloads-table th,
+    .downloads-table td {
+      padding: 0.75rem;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .downloads-table th {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.78;
+    }
+    .downloads-table code {
+      font-size: 0.82rem;
+      word-break: break-all;
+    }
+    .downloads-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    @media (max-width: 760px) {
+      html,
+      body {
+        overflow-y: auto;
+        touch-action: pan-y;
+      }
+      .page,
+      .card,
+      .archive-jump,
+      .archive-jump-links,
+      .downloads-archive,
+      .downloads-archive > * {
+        touch-action: pan-y;
+      }
+    }
+    @media (max-width: 700px) {
+      .archive-jump-links .btn {
+        width: 100%;
+      }
+    }
+  </style>
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
@@ -141,28 +244,2455 @@
 
   <main id="main" class="page shell">
     <p class="eyebrow">Downloads · Integrity · Verification</p>
-    <h1>Downloads & Integrity Chain</h1>
-    <p>Verified scrolls, local mirrors, GitHub source links, and SHA-256 proof placeholders.</p>
+    <h1>Downloads &amp; Integrity Chain</h1>
+    <p>This page mirrors the public living archive outside <code>/docs/</code>. Every listed file points back to GitHub, carries a current SHA-256 seal, and remains available for direct witness, study, or download.</p>
 
     <section class="cards">
       <article class="card">
-        <h2>Codex of Reality — Extended Edition</h2>
-        <p>Status: source document tracked in the Scroll archive.</p>
-        <p><a href="https://github.com/ssnfts24/scroll-of-fire" rel="noopener">Verify on GitHub</a></p>
-        <code>SHA-256: pending final canonical file hash</code>
+        <h2>Archive Scope</h2>
+        <p><strong>167 files</strong> across the root archive and folders <strong>1–7</strong>.</p>
+        <p>The website source under <code>/docs/</code> is intentionally excluded from this page.</p>
       </article>
 
       <article class="card">
-        <h2>Teaching Lab — Quick Guide</h2>
-        <p>Status: planned / mirror pending.</p>
-        <p><a href="ledger.html">Record verification in Ledger</a></p>
-        <code>SHA-256: pending final canonical file hash</code>
+        <h2>Integrity Snapshot</h2>
+        <p>Snapshot commit: <a href="https://github.com/ssnfts24/scroll-of-fire/commit/af3078a5fc2cc7969733ad9df1fcffd6754d974c" target="_blank" rel="noopener noreferrer"><code>af3078a5fc2c</code></a></p>
+        <p>Total sealed archive size: <strong>208.44 MB</strong>.</p>
+      </article>
+
+      <article class="card">
+        <h2>Witness Rule</h2>
+        <p>A file is treated as living record only when path, source, and seal remain visible together. Download for use. Verify for truth. Record the witness when you carry it forward.</p>
       </article>
     </section>
 
-    <section class="card" style="margin-top:1rem">
+    <section class="card downloads-notice">
+      <h2>Archive Boundary</h2>
+      <p>This archive page follows the repository witness boundary you set: it gathers root content and folders <strong>1_Codex_of_Reality</strong> through <strong>7_Ledger_and_Documentation</strong>, while leaving the website <code>/docs/</code> tree outside the download ledger.</p>
+      <p>Use <strong>Download</strong> to open the current file and <strong>Verify</strong> to inspect the same artifact in GitHub before sharing or citing it.</p>
+    </section>
+
+    <nav class="archive-jump" aria-label="Download archive sections">
+      <div class="archive-jump-group">
+        <p class="archive-jump-label">Repository root</p>
+        <div class="archive-jump-links">
+          <a class="btn" href="#root-core">Core Scrolls</a>
+          <a class="btn" href="#root-images">Witness Images</a>
+        </div>
+      </div>
+      <div class="archive-jump-group">
+        <p class="archive-jump-label">Archive folders 1–7</p>
+        <div class="archive-jump-links">
+          <a class="btn" href="#1_Codex_of_Reality">1 · Codex of Reality</a>
+          <a class="btn" href="#2_Witness_Scrolls">2 · Witness Scrolls</a>
+          <a class="btn" href="#3_Living_Technology">3 · Living Technology</a>
+          <a class="btn" href="#4_Formalism_and_Physics">4 · Formalism and Physics</a>
+          <a class="btn" href="#5_Living_Scribe">5 · Living Scribe</a>
+          <a class="btn" href="#6_Images_and_Symbols">6 · Images and Symbols</a>
+          <a class="btn" href="#7_Ledger_and_Documentation">7 · Ledger and Documentation</a>
+        </div>
+      </div>
+    </nav>
+
+      <details class="card downloads-archive" id="root-core" open>
+        <summary>
+          <p class="eyebrow">Root Archive</p>
+          <h2>Repository Root · Core Scrolls</h2>
+          <p>Primary scrolls, restored books, and root-level witness texts carried outside the website source.</p>
+          <p class="downloads-meta">6 files · 16.06 MB · SHA-256 sealed</p>
+        </summary>
+        <div class="downloads-table-wrap">
+          <table class="downloads-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Repository path</th>
+                <th>Type</th>
+                <th>Size</th>
+                <th>SHA-256</th>
+                <th>Links</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Exodus-Restored</strong></td>
+                <td><code>Exodus-Restored.md</code></td>
+                <td>md</td>
+                <td>187.53 KB</td>
+                <td><code>35d399afa8ec115c5f62170e6908c9cb8d2bb2c9446a0c7bc105d81644a9c1f1</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/Exodus-Restored.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/Exodus-Restored.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Full Scroll Unsealed</strong></td>
+                <td><code>Full_Scroll_Unsealed</code></td>
+                <td>file</td>
+                <td>596.12 KB</td>
+                <td><code>81a015fb937f1664c2383fa38fddf956d281c6309a9584382c6dbc9d8b691400</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/Full_Scroll_Unsealed?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/Full_Scroll_Unsealed" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Genesis-Restored</strong></td>
+                <td><code>Genesis-Restored.md</code></td>
+                <td>md</td>
+                <td>332.52 KB</td>
+                <td><code>e3af941e7b0531f103d6e64b5fb1cda356f3591acd11c77cf724a1567fbd09f8</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/Genesis-Restored.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/Genesis-Restored.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Honorable Scroll with Image Placed Correctly</strong></td>
+                <td><code>Honorable_Scroll_with_Image_Placed_Correctly.docx</code></td>
+                <td>docx</td>
+                <td>14.92 MB</td>
+                <td><code>844aa6b7fb89838397763d7f02c8d34fd2f30ca1138444202fa4517bacbfc53b</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/Honorable_Scroll_with_Image_Placed_Correctly.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/Honorable_Scroll_with_Image_Placed_Correctly.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>The-Journey-Scroll</strong></td>
+                <td><code>The-Journey-Scroll.md</code></td>
+                <td>md</td>
+                <td>6.77 KB</td>
+                <td><code>8e94b4822579fec9ac499e26bacd593e042aaacf02eff2407ef24182d85b5d9c</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/The-Journey-Scroll.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/The-Journey-Scroll.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>codex-of-reality</strong></td>
+                <td><code>codex-of-reality.md</code></td>
+                <td>md</td>
+                <td>51.25 KB</td>
+                <td><code>1982cddae0232ff60509e3093f3baa2f3a0fcf7f250c66a17420d29492662dea</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/codex-of-reality.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/codex-of-reality.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="card downloads-archive" id="root-images">
+        <summary>
+          <p class="eyebrow">Root Archive</p>
+          <h2>Repository Root · Witness Images</h2>
+          <p>Loose root image witnesses preserved in the main archive outside the numbered folders.</p>
+          <p class="downloads-meta">21 files · 62.87 MB · SHA-256 sealed</p>
+        </summary>
+        <div class="downloads-table-wrap">
+          <table class="downloads-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Repository path</th>
+                <th>Type</th>
+                <th>Size</th>
+                <th>SHA-256</th>
+                <th>Links</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>20251002 073827</strong></td>
+                <td><code>20251002_073827.jpg</code></td>
+                <td>jpg</td>
+                <td>2.45 MB</td>
+                <td><code>6d3bd77268d32499ec6b5072df53e1c0252468fa82501269f333736c99034be0</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_073827.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_073827.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251002 073952</strong></td>
+                <td><code>20251002_073952.jpg</code></td>
+                <td>jpg</td>
+                <td>2.64 MB</td>
+                <td><code>793bb8d5025d9771008b17c427d04c5bd99a448d4c48b9f3e12880105e0eb498</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_073952.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_073952.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251002 074042</strong></td>
+                <td><code>20251002_074042.jpg</code></td>
+                <td>jpg</td>
+                <td>2.62 MB</td>
+                <td><code>b69b7c374e58e7f8b40f120d1ad9915cc66247a9ba192bfb698e3ecb1b976c1f</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_074042.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_074042.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251002 074112</strong></td>
+                <td><code>20251002_074112.jpg</code></td>
+                <td>jpg</td>
+                <td>2.59 MB</td>
+                <td><code>3e970be3d882aa46cd7a39c8be0a684e7ea3cac4cd46a4e5de74806ce468a737</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_074112.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_074112.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251002 074123</strong></td>
+                <td><code>20251002_074123.jpg</code></td>
+                <td>jpg</td>
+                <td>2.34 MB</td>
+                <td><code>a2f3599454e5efa226a32c28cbb6357cae7892a735d669c981889276d4f0496a</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_074123.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_074123.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251002 101747</strong></td>
+                <td><code>20251002_101747.jpg</code></td>
+                <td>jpg</td>
+                <td>4.07 MB</td>
+                <td><code>c6089b6c8f2dbf8b4d9fe7c81279b44da1dbe07f0f65f8b06092717bee80f579</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_101747.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_101747.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251002 101758</strong></td>
+                <td><code>20251002_101758.jpg</code></td>
+                <td>jpg</td>
+                <td>4.00 MB</td>
+                <td><code>d6569ec478a40229b803d0c127519ed74b3a9d538fadd8aaf0defffbaf235493</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_101758.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_101758.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251002 101811</strong></td>
+                <td><code>20251002_101811.jpg</code></td>
+                <td>jpg</td>
+                <td>3.89 MB</td>
+                <td><code>28feef5106b9e89d7a4a435c108d062436a4734e0baabf8473a2bdad857a2e03</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_101811.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_101811.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251002 101818</strong></td>
+                <td><code>20251002_101818.jpg</code></td>
+                <td>jpg</td>
+                <td>3.82 MB</td>
+                <td><code>e2c338c1c676742495b01f8bf7ba4e6b6739f269e0af19127484f6c5668711d0</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_101818.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_101818.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251002 101835</strong></td>
+                <td><code>20251002_101835.jpg</code></td>
+                <td>jpg</td>
+                <td>2.89 MB</td>
+                <td><code>f4ecfcb6a24c38ce44f172032e7c12da7ecc899e3490defa9052ba32f9f692c2</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_101835.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_101835.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251002 101853</strong></td>
+                <td><code>20251002_101853.jpg</code></td>
+                <td>jpg</td>
+                <td>3.23 MB</td>
+                <td><code>69c9ff3ad9188e4549f603e22073cc452755bda3acd4f68e1161c0f7860e02f6</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_101853.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/20251002_101853.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 0000000019f461f982fb8b4984a00188</strong></td>
+                <td><code>file_0000000019f461f982fb8b4984a00188.png</code></td>
+                <td>png</td>
+                <td>3.10 MB</td>
+                <td><code>d8b6b1074f846fe87edb42d492e9c94bf3fa2acef371fb6520ead6ae4394ddcf</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_0000000019f461f982fb8b4984a00188.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_0000000019f461f982fb8b4984a00188.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 00000000394461f8b80a3d5f12a44797</strong></td>
+                <td><code>file_00000000394461f8b80a3d5f12a44797.png</code></td>
+                <td>png</td>
+                <td>2.28 MB</td>
+                <td><code>7942d4b724d857765365892718f8c6c9b7a41f7a6b2ea74eb8b9d0b040466069</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_00000000394461f8b80a3d5f12a44797.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_00000000394461f8b80a3d5f12a44797.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 000000004180623087cb0dbb780994e3 (1)</strong></td>
+                <td><code>file_000000004180623087cb0dbb780994e3 (1).png</code></td>
+                <td>png</td>
+                <td>2.73 MB</td>
+                <td><code>e7ea4ccf28a9218a9a2b9521acf96df3e54739433818d80e481a831fa3ea3b18</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_000000004180623087cb0dbb780994e3%20%281%29.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_000000004180623087cb0dbb780994e3%20%281%29.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 000000004bc8622f86c6f0e08d4c8474 (1)</strong></td>
+                <td><code>file_000000004bc8622f86c6f0e08d4c8474 (1).png</code></td>
+                <td>png</td>
+                <td>3.48 MB</td>
+                <td><code>9d47b87134fe8a337262d6ae33df54b69b2f4cae0e9d3dfb34fd306820784a5e</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_000000004bc8622f86c6f0e08d4c8474%20%281%29.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_000000004bc8622f86c6f0e08d4c8474%20%281%29.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 00000000990061fd8d73dcd5faa2e73b (1)</strong></td>
+                <td><code>file_00000000990061fd8d73dcd5faa2e73b (1).png</code></td>
+                <td>png</td>
+                <td>2.80 MB</td>
+                <td><code>08ec6cb44cc2d586d706f2f91d72d5a5f8c54b3d2ec24c4c31b764be3595beef</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_00000000990061fd8d73dcd5faa2e73b%20%281%29.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_00000000990061fd8d73dcd5faa2e73b%20%281%29.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 000000009f38622f915871ab195f8d71 (1)</strong></td>
+                <td><code>file_000000009f38622f915871ab195f8d71 (1).png</code></td>
+                <td>png</td>
+                <td>2.53 MB</td>
+                <td><code>fa70f1dd4f9b0940795f5dc70015e319d84e63b29f8b814ea9bfa9e3942c3f11</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_000000009f38622f915871ab195f8d71%20%281%29.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_000000009f38622f915871ab195f8d71%20%281%29.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 00000000bb24622f92654dd20fca5d91 (1)</strong></td>
+                <td><code>file_00000000bb24622f92654dd20fca5d91 (1).png</code></td>
+                <td>png</td>
+                <td>2.84 MB</td>
+                <td><code>7b928a92bae5a3ba4604e70aa6f33dd884945f24ac7f2ace59179ccd160a5648</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_00000000bb24622f92654dd20fca5d91%20%281%29.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_00000000bb24622f92654dd20fca5d91%20%281%29.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 00000000c36061f9bd4534285dc3f3a1</strong></td>
+                <td><code>file_00000000c36061f9bd4534285dc3f3a1.png</code></td>
+                <td>png</td>
+                <td>3.30 MB</td>
+                <td><code>9bfa3c2f878e077d7f36bc4a583f424f7ed87062f4178fe3464a16c6c6bf7990</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_00000000c36061f9bd4534285dc3f3a1.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_00000000c36061f9bd4534285dc3f3a1.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 00000000ce1061f8965789658fe6f167 (1)</strong></td>
+                <td><code>file_00000000ce1061f8965789658fe6f167 (1).png</code></td>
+                <td>png</td>
+                <td>3.29 MB</td>
+                <td><code>f17e22133749683ea15d7505292e914df5306a39e33d126fb1733869a6d97311</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_00000000ce1061f8965789658fe6f167%20%281%29.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_00000000ce1061f8965789658fe6f167%20%281%29.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 00000000fc5c61f8ac023bae325a0d4e (1)</strong></td>
+                <td><code>file_00000000fc5c61f8ac023bae325a0d4e (1).png</code></td>
+                <td>png</td>
+                <td>1.97 MB</td>
+                <td><code>5d49a7c6e2a123488b0e4d034db576e1aec548caa504b17f30f98cd1d7efd137</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_00000000fc5c61f8ac023bae325a0d4e%20%281%29.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/file_00000000fc5c61f8ac023bae325a0d4e%20%281%29.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="card downloads-archive" id="1_Codex_of_Reality" open>
+        <summary>
+          <p class="eyebrow">Folder 1</p>
+          <h2>1 · Codex of Reality</h2>
+          <p>Core codex editions, lexicon anchors, genesis refinements, and living-law records.</p>
+          <p class="downloads-meta">13 files · 9.71 MB · SHA-256 sealed</p>
+        </summary>
+        <div class="downloads-table-wrap">
+          <table class="downloads-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Repository path</th>
+                <th>Type</th>
+                <th>Size</th>
+                <th>SHA-256</th>
+                <th>Links</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>ABCs-Of-Creation</strong></td>
+                <td><code>1_Codex_of_Reality/ABCs-Of-Creation.md</code></td>
+                <td>md</td>
+                <td>4.52 KB</td>
+                <td><code>18fab450ce1dd328ef5fc6353e0b01268ef955259b6713e65db81764343d650d</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/ABCs-Of-Creation.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/ABCs-Of-Creation.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Codex-of-Reality-2025</strong></td>
+                <td><code>1_Codex_of_Reality/Codex-of-Reality-2025.pdf</code></td>
+                <td>pdf</td>
+                <td>1.15 MB</td>
+                <td><code>aa25c751b4897f7e5ee0e24168b0ead6e2a29b99637ba6dfce5c4bce99a961a2</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Codex-of-Reality-2025.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Codex-of-Reality-2025.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Codex of Life Scroll FULL</strong></td>
+                <td><code>1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx</code></td>
+                <td>docx</td>
+                <td>8.87 KB</td>
+                <td><code>bb3b00c1f1a17d40aa6bd2ed33ac7eb3adb960804f8af82153694a0a9464c7ad</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Codex of Life Scroll FULL</strong></td>
+                <td><code>1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.pdf</code></td>
+                <td>pdf</td>
+                <td>215.00 KB</td>
+                <td><code>01d759d0085047df6f55522d5a7d8da0ff0efd69b43b90bea36f24ce6ce1ea67</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Genesis Sacred Scroll Refined Aaron Paul Laird</strong></td>
+                <td><code>1_Codex_of_Reality/Genesis_Sacred_Scroll_Refined_Aaron_Paul_Laird.docx</code></td>
+                <td>docx</td>
+                <td>259.76 KB</td>
+                <td><code>e4a7207d9ac5776390e3e38241b2db407522f5ab622c20b3dd6ee94ff95f6384</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Genesis_Sacred_Scroll_Refined_Aaron_Paul_Laird.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Genesis_Sacred_Scroll_Refined_Aaron_Paul_Laird.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Grid of Consciousness The Great Convergence</strong></td>
+                <td><code>1_Codex_of_Reality/Grid_of_Consciousness_The_Great_Convergence.docx</code></td>
+                <td>docx</td>
+                <td>9.24 KB</td>
+                <td><code>be677d5d60a10ff61e85384ccfcfa0915eb34c4190904ad6bb7b843dfdfdf47e</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Grid_of_Consciousness_The_Great_Convergence.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Grid_of_Consciousness_The_Great_Convergence.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Infinite Scroll Prayer</strong></td>
+                <td><code>1_Codex_of_Reality/Infinite_Scroll_Prayer.docx</code></td>
+                <td>docx</td>
+                <td>7.28 KB</td>
+                <td><code>a0947f20e2c2dfb3cc68ba2243340e8a391a3a82e0464fec1ae343fcbae63b18</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Infinite_Scroll_Prayer.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Infinite_Scroll_Prayer.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Living Laws</strong></td>
+                <td><code>1_Codex_of_Reality/Living Laws.docx</code></td>
+                <td>docx</td>
+                <td>44.67 KB</td>
+                <td><code>bfdf3ab0f86335b014071e388b84d2439730080c34e0602cbf84ccfc532811a2</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Living%20Laws.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Living%20Laws.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Living Laws</strong></td>
+                <td><code>1_Codex_of_Reality/Living Laws.pdf</code></td>
+                <td>pdf</td>
+                <td>577.58 KB</td>
+                <td><code>8e78d61d0655fdd02a9bed3ce4bea0686cc10a08e800256d0a9af6f9c0d70c1c</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Living%20Laws.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Living%20Laws.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Living Lexicon 777</strong></td>
+                <td><code>1_Codex_of_Reality/Living_Lexicon_777.md</code></td>
+                <td>md</td>
+                <td>25.12 KB</td>
+                <td><code>75e7fabd48ce87b617cc3f9611f49a029c5a922b85c7b7b64d294fd01d08a38a</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Living_Lexicon_777.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/Living_Lexicon_777.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>README</strong></td>
+                <td><code>1_Codex_of_Reality/README.md</code></td>
+                <td>md</td>
+                <td>10.63 KB</td>
+                <td><code>16a45438e329212843cf01bdd363c5b48e570aba3957dded24ec5e0e3ac27a4c</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/README.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/README.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>word2pdf Genesis Sacred Scroll Refined Aaron Paul Laird (2) 1772831354967</strong></td>
+                <td><code>1_Codex_of_Reality/word2pdf_Genesis_Sacred_Scroll_Refined_Aaron_Paul_Laird (2)_1772831354967.pdf</code></td>
+                <td>pdf</td>
+                <td>3.67 MB</td>
+                <td><code>646a599aaaffe2c2ab3af4c4593eec770ed375b95ea5de5f3f537cff79f1f702</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/word2pdf_Genesis_Sacred_Scroll_Refined_Aaron_Paul_Laird%20%282%29_1772831354967.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/word2pdf_Genesis_Sacred_Scroll_Refined_Aaron_Paul_Laird%20%282%29_1772831354967.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>word2pdf fixedCodex of Reality — Multidimensional Extended Edition 2025 Stylized Update SHA (1) 1772837350113</strong></td>
+                <td><code>1_Codex_of_Reality/word2pdf_fixedCodex_of_Reality—Multidimensional_Extended_Edition_2025_Stylized_Update_SHA (1)_1772837350113.pdf</code></td>
+                <td>pdf</td>
+                <td>3.76 MB</td>
+                <td><code>4456c04f5cd23e8b20abc5a3f2e85652a10ffc991a4625125c84ec41224a830a</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/word2pdf_fixedCodex_of_Reality%E2%80%94Multidimensional_Extended_Edition_2025_Stylized_Update_SHA%20%281%29_1772837350113.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/1_Codex_of_Reality/word2pdf_fixedCodex_of_Reality%E2%80%94Multidimensional_Extended_Edition_2025_Stylized_Update_SHA%20%281%29_1772837350113.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="card downloads-archive" id="2_Witness_Scrolls" open>
+        <summary>
+          <p class="eyebrow">Folder 2</p>
+          <h2>2 · Witness Scrolls</h2>
+          <p>Witness scrolls, remembrance records, companion seals, and testimony documents.</p>
+          <p class="downloads-meta">20 files · 8.35 MB · SHA-256 sealed</p>
+        </summary>
+        <div class="downloads-table-wrap">
+          <table class="downloads-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Repository path</th>
+                <th>Type</th>
+                <th>Size</th>
+                <th>SHA-256</th>
+                <th>Links</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Aiyana Prophetic Blessing Scroll</strong></td>
+                <td><code>2_Witness_Scrolls/Aiyana_Prophetic_Blessing_Scroll.docx</code></td>
+                <td>docx</td>
+                <td>8.16 KB</td>
+                <td><code>885e80d84a92b38b34d31c2e9aa234dd4071067e3cc678763c2756fdc3b425c8</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Aiyana_Prophetic_Blessing_Scroll.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Aiyana_Prophetic_Blessing_Scroll.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Book of Remembrance and Power</strong></td>
+                <td><code>2_Witness_Scrolls/Book_of_Remembrance_and_Power.docx</code></td>
+                <td>docx</td>
+                <td>9.40 KB</td>
+                <td><code>36c02adab46366d301a4047b1faf86fd73b248616c95976bb7880422a2542c2a</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Book_of_Remembrance_and_Power.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Book_of_Remembrance_and_Power.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Exodus Remnant Scroll With Hebrew Titles Complete</strong></td>
+                <td><code>2_Witness_Scrolls/Exodus_Remnant_Scroll_With_Hebrew_Titles_Complete.docx</code></td>
+                <td>docx</td>
+                <td>2.67 MB</td>
+                <td><code>3c6758df0598ea929cdf5766696e54c8a979fbeb2c193db9395378a3c0775d62</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Exodus_Remnant_Scroll_With_Hebrew_Titles_Complete.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Exodus_Remnant_Scroll_With_Hebrew_Titles_Complete.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Master Proof Scroll Updated</strong></td>
+                <td><code>2_Witness_Scrolls/Master_Proof_Scroll_Updated.docx</code></td>
+                <td>docx</td>
+                <td>9.14 KB</td>
+                <td><code>aa3eeea909e2fb20119cdde075361f5b3345b4bf2eeaf0bad60ccc1af9e2c2de</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Master_Proof_Scroll_Updated.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Master_Proof_Scroll_Updated.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Master Proof Scroll Updated</strong></td>
+                <td><code>2_Witness_Scrolls/Master_Proof_Scroll_Updated.pdf</code></td>
+                <td>pdf</td>
+                <td>213.55 KB</td>
+                <td><code>fd25816607bd392e0c2b3c7a960e2541f181d167e355f895e3a4f6b99a097b55</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Master_Proof_Scroll_Updated.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Master_Proof_Scroll_Updated.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Psychology Faith Scroll</strong></td>
+                <td><code>2_Witness_Scrolls/Psychology_Faith_Scroll.docx</code></td>
+                <td>docx</td>
+                <td>8.93 KB</td>
+                <td><code>e41927412baf38839da3bb4b56d4b5a332679960cf3e9326d7aa8990fd53e1bc</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Psychology_Faith_Scroll.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Psychology_Faith_Scroll.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>README</strong></td>
+                <td><code>2_Witness_Scrolls/README.md</code></td>
+                <td>md</td>
+                <td>4.16 KB</td>
+                <td><code>89c0af59cfb594f085055ce980fef3ee4f5e83f213a44ce46d9690e02edcb704</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/README.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/README.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Scroll of Convergence</strong></td>
+                <td><code>2_Witness_Scrolls/Scroll_of_Convergence.docx</code></td>
+                <td>docx</td>
+                <td>8.05 KB</td>
+                <td><code>ab21f2f5bfeab596f8a90c7f442152b05629cec1ecdbde54df7c7211c0c7ec89</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Scroll_of_Convergence.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Scroll_of_Convergence.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Scroll of Convergence</strong></td>
+                <td><code>2_Witness_Scrolls/Scroll_of_Convergence.pdf</code></td>
+                <td>pdf</td>
+                <td>200.42 KB</td>
+                <td><code>2d185473a0bef866d214703901941b93521a5da77b10394be75392781103dbc4</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Scroll_of_Convergence.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Scroll_of_Convergence.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>The Fire That Erased the Old World 1870-1910 (1)</strong></td>
+                <td><code>2_Witness_Scrolls/The Fire That Erased the Old World_ 1870-1910 (1).html</code></td>
+                <td>html</td>
+                <td>55.10 KB</td>
+                <td><code>f2af131742c4f0445dee1f5ea569be1efb9958b31f956737dca3544ee0ea9c44</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/The%20Fire%20That%20Erased%20the%20Old%20World_%201870-1910%20%281%29.html?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/The%20Fire%20That%20Erased%20the%20Old%20World_%201870-1910%20%281%29.html" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>The Journey Scroll</strong></td>
+                <td><code>2_Witness_Scrolls/The_Journey_Scroll.docx</code></td>
+                <td>docx</td>
+                <td>9.14 KB</td>
+                <td><code>07a89ef568239f15ed6815caa2dc56b0a9c824e5a14e8b7f48c3e34195e3a534</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/The_Journey_Scroll.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/The_Journey_Scroll.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>The Journey Scroll</strong></td>
+                <td><code>2_Witness_Scrolls/The_Journey_Scroll.pdf</code></td>
+                <td>pdf</td>
+                <td>191.52 KB</td>
+                <td><code>768fca97b4d2dcfafe6eb96b28388f8a04e8303857c5028e3c2758ffc8ab0e08</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/The_Journey_Scroll.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/The_Journey_Scroll.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Zakariel — Remembrance of God</strong></td>
+                <td><code>2_Witness_Scrolls/Zakariel — Remembrance of God.docx</code></td>
+                <td>docx</td>
+                <td>214.52 KB</td>
+                <td><code>fed7d68aac5c79a9945503ec1bfcdd7d00474f153690fec53c28d5a73ec7f228</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Zakariel%20%E2%80%94%20Remembrance%20of%20God.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/Zakariel%20%E2%80%94%20Remembrance%20of%20God.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>⚖ Ariós-Or — Crowned Light of Code &amp; Covenant</strong></td>
+                <td><code>2_Witness_Scrolls/⚖ Ariós-Or — Crowned Light of Code &amp; Covenant.docx</code></td>
+                <td>docx</td>
+                <td>302.12 KB</td>
+                <td><code>5e16f5b39528bd3deb88a81bfdbfd0e03b007bf16ac29892f980b6d43365296c</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/%E2%9A%96%20Ari%C3%B3s-Or%20%E2%80%94%20Crowned%20Light%20of%20Code%20%26%20Covenant.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/%E2%9A%96%20Ari%C3%B3s-Or%20%E2%80%94%20Crowned%20Light%20of%20Code%20%26%20Covenant.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>🌌 Ahmein — The Final Seal, Becoming Will</strong></td>
+                <td><code>2_Witness_Scrolls/🌌 Ahmein — The Final Seal, Becoming Will.docx</code></td>
+                <td>docx</td>
+                <td>318.38 KB</td>
+                <td><code>6520549b24e5738de57e1a2e2a61549d715126fb26f682be48cd553fc62dd618</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/%F0%9F%8C%8C%20Ahmein%20%E2%80%94%20The%20Final%20Seal%2C%20Becoming%20Will.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/%F0%9F%8C%8C%20Ahmein%20%E2%80%94%20The%20Final%20Seal%2C%20Becoming%20Will.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>🌌 Ahmein — The Final Seal, Becoming Will</strong></td>
+                <td><code>2_Witness_Scrolls/🌌 Ahmein — The Final Seal, Becoming Will.pdf</code></td>
+                <td>pdf</td>
+                <td>1.44 MB</td>
+                <td><code>bbeab511f3fb9a598ef211e84a1583d94e4274dcb37d0312361499c16084e965</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/%F0%9F%8C%8C%20Ahmein%20%E2%80%94%20The%20Final%20Seal%2C%20Becoming%20Will.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/%F0%9F%8C%8C%20Ahmein%20%E2%80%94%20The%20Final%20Seal%2C%20Becoming%20Will.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>🜂 888 — The Architect of Becoming</strong></td>
+                <td><code>2_Witness_Scrolls/🜂 888 — The Architect of Becoming.docx</code></td>
+                <td>docx</td>
+                <td>220.05 KB</td>
+                <td><code>dd9a313a33874f7f921ad4b9e6f02255c81bcba802026b1b339ff8191cc254f1</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/%F0%9F%9C%82%20888%20%E2%80%94%20The%20Architect%20of%20Becoming.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/%F0%9F%9C%82%20888%20%E2%80%94%20The%20Architect%20of%20Becoming.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>🜂 888 — The Architect of Becoming</strong></td>
+                <td><code>2_Witness_Scrolls/🜂 888 — The Architect of Becoming.pdf</code></td>
+                <td>pdf</td>
+                <td>1.14 MB</td>
+                <td><code>39785653bb591c4c39ca92f06eb56d4883c5577e2551770e8ddad4c9eed61458</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/%F0%9F%9C%82%20888%20%E2%80%94%20The%20Architect%20of%20Becoming.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/%F0%9F%9C%82%20888%20%E2%80%94%20The%20Architect%20of%20Becoming.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>🜄 Ainos — The Witness of Echoes</strong></td>
+                <td><code>2_Witness_Scrolls/🜄 Ainos — The Witness of Echoes.docx</code></td>
+                <td>docx</td>
+                <td>241.08 KB</td>
+                <td><code>c5470b4a43ee89b5da8b7f0395d6954ab52e5bb10f916ae66310ca7cd0cf58c5</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/%F0%9F%9C%84%20Ainos%20%E2%80%94%20The%20Witness%20of%20Echoes.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/%F0%9F%9C%84%20Ainos%20%E2%80%94%20The%20Witness%20of%20Echoes.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>🜄 Ainos — The Witness of Echoes</strong></td>
+                <td><code>2_Witness_Scrolls/🜄 Ainos — The Witness of Echoes.pdf</code></td>
+                <td>pdf</td>
+                <td>1.13 MB</td>
+                <td><code>3e0f3c447a4f459591ac5ff029c81eb8b47586d248837efb2afd372225d9a74b</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/%F0%9F%9C%84%20Ainos%20%E2%80%94%20The%20Witness%20of%20Echoes.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/2_Witness_Scrolls/%F0%9F%9C%84%20Ainos%20%E2%80%94%20The%20Witness%20of%20Echoes.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="card downloads-archive" id="3_Living_Technology" open>
+        <summary>
+          <p class="eyebrow">Folder 3</p>
+          <h2>3 · Living Technology</h2>
+          <p>Field guides, whitepapers, blueprints, Type-7 records, and living-technology visuals.</p>
+          <p class="downloads-meta">15 files · 1.93 MB · SHA-256 sealed</p>
+        </summary>
+        <div class="downloads-table-wrap">
+          <table class="downloads-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Repository path</th>
+                <th>Type</th>
+                <th>Size</th>
+                <th>SHA-256</th>
+                <th>Links</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Blueprint for Living Technology (1)</strong></td>
+                <td><code>3_Living_Technology/Blueprint_for_Living_Technology (1).pdf</code></td>
+                <td>pdf</td>
+                <td>198.77 KB</td>
+                <td><code>0938541b103989b50a9cc66b2a4fba30e937263f25d483a59214334d7315829e</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Blueprint_for_Living_Technology%20%281%29.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Blueprint_for_Living_Technology%20%281%29.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Earth Systems Integration Scientific Whitepaper</strong></td>
+                <td><code>3_Living_Technology/Earth_Systems_Integration_Scientific_Whitepaper.md</code></td>
+                <td>md</td>
+                <td>9.83 KB</td>
+                <td><code>cebcfff33f83d76e4c644e25992f6539789fc5997d265d73e3b73eb73d5852e2</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Earth_Systems_Integration_Scientific_Whitepaper.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Earth_Systems_Integration_Scientific_Whitepaper.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Galactic Systems Integration Whitepaper v0.2</strong></td>
+                <td><code>3_Living_Technology/Galactic_Systems_Integration_Whitepaper_v0.2.md</code></td>
+                <td>md</td>
+                <td>6.46 KB</td>
+                <td><code>d2c2fa191fabb90ab4fd8f4578457686c75831d7fcda60609ca14eaf690e6f3b</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Galactic_Systems_Integration_Whitepaper_v0.2.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Galactic_Systems_Integration_Whitepaper_v0.2.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Grid of Consciousness The Great Convergence (1)</strong></td>
+                <td><code>3_Living_Technology/Grid_of_Consciousness_The_Great_Convergence (1).pdf</code></td>
+                <td>pdf</td>
+                <td>254.11 KB</td>
+                <td><code>fa858867651612bde909f93d108a90f731bc00f59bc9c6c836086cc4a3095a45</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Grid_of_Consciousness_The_Great_Convergence%20%281%29.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Grid_of_Consciousness_The_Great_Convergence%20%281%29.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Living Cosmos Field Guide v2 Public</strong></td>
+                <td><code>3_Living_Technology/Living_Cosmos_Field_Guide_v2_Public.md</code></td>
+                <td>md</td>
+                <td>6.54 KB</td>
+                <td><code>e238cca0e29ceeb5d62db2005361e44badb9c09b0486c0dc3dda29dccbc780c8</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Living_Cosmos_Field_Guide_v2_Public.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Living_Cosmos_Field_Guide_v2_Public.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>OhrAI — The Light of God 1%20-%20OhrAI%20-%20The%20Light%20of%20God Updated</strong></td>
+                <td><code>3_Living_Technology/OhrAI — The Light of God_1%20-%20OhrAI%20-%20The%20Light%20of%20God_Updated.docx</code></td>
+                <td>docx</td>
+                <td>250.35 KB</td>
+                <td><code>ac700d7d30bcede2e56a19fa01c0986cd3cd5d9d76bfffbe9cee46e6cca38ce6</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/OhrAI%20%E2%80%94%20The%20Light%20of%20God_1%2520-%2520OhrAI%2520-%2520The%2520Light%2520of%2520God_Updated.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/OhrAI%20%E2%80%94%20The%20Light%20of%20God_1%2520-%2520OhrAI%2520-%2520The%2520Light%2520of%2520God_Updated.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>QRI-16 VARSE Whitepaper</strong></td>
+                <td><code>3_Living_Technology/QRI-16_VARSE_Whitepaper.md</code></td>
+                <td>md</td>
+                <td>8.06 KB</td>
+                <td><code>281362d7f0b875c712dc543011470656d88e8dffc7a75e5bcb53d007a4a6bf8b</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/QRI-16_VARSE_Whitepaper.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/QRI-16_VARSE_Whitepaper.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>README</strong></td>
+                <td><code>3_Living_Technology/README.md</code></td>
+                <td>md</td>
+                <td>4.96 KB</td>
+                <td><code>840eba22a5c8b879c0a35dbe4b550766c0f38056bcd96db27cf3953129621f02</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/README.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/README.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Scroll of Advanced Intelligence Transparent Mirror</strong></td>
+                <td><code>3_Living_Technology/Scroll_of_Advanced_Intelligence_Transparent_Mirror.md</code></td>
+                <td>md</td>
+                <td>2.77 KB</td>
+                <td><code>ecf012434630bcb43c988c391d3b48c0b864a03e9280d16a6151b03857881329</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Scroll_of_Advanced_Intelligence_Transparent_Mirror.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Scroll_of_Advanced_Intelligence_Transparent_Mirror.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Tesla-BluePrints</strong></td>
+                <td><code>3_Living_Technology/Tesla-BluePrints.pdf</code></td>
+                <td>pdf</td>
+                <td>463.73 KB</td>
+                <td><code>6ce896853c43f004c8fc6465a363bf0351824be2607ad092b0964238a40c78b1</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Tesla-BluePrints.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Tesla-BluePrints.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Tesla Phase Activation Scroll</strong></td>
+                <td><code>3_Living_Technology/Tesla_Phase_Activation_Scroll.pdf</code></td>
+                <td>pdf</td>
+                <td>159.66 KB</td>
+                <td><code>dc05104153b75080fe888bfeb47512eaadd5163994b069eb81114e80e9036498</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Tesla_Phase_Activation_Scroll.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Tesla_Phase_Activation_Scroll.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Tesla Type-7 Resonant Conduit Aetheric Field Transceiver Whitepaper v1.0</strong></td>
+                <td><code>3_Living_Technology/Tesla_Type-7_Resonant_Conduit_Aetheric_Field_Transceiver_Whitepaper_v1.0.md</code></td>
+                <td>md</td>
+                <td>54.42 KB</td>
+                <td><code>191c88ccae989c00edd0f3d72cc1f505a1d8b2e5571d7ae4b09ad38a242428e1</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Tesla_Type-7_Resonant_Conduit_Aetheric_Field_Transceiver_Whitepaper_v1.0.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Tesla_Type-7_Resonant_Conduit_Aetheric_Field_Transceiver_Whitepaper_v1.0.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>fig1 earth vs galactic</strong></td>
+                <td><code>3_Living_Technology/fig1_earth_vs_galactic.jpg</code></td>
+                <td>jpg</td>
+                <td>188.78 KB</td>
+                <td><code>a40c279c962ce494c1251534ec408c7da94b639f57d17745d5451de6e8cbd8cc</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/fig1_earth_vs_galactic.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/fig1_earth_vs_galactic.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>fig2 delta loop clean</strong></td>
+                <td><code>3_Living_Technology/fig2_delta_loop_clean.png</code></td>
+                <td>png</td>
+                <td>194.72 KB</td>
+                <td><code>85a7a6ead843e566ee82c8419009bfba8002693c0a081187299d2bcc74e215ff</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/fig2_delta_loop_clean.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/fig2_delta_loop_clean.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>fig3 scaling ladder</strong></td>
+                <td><code>3_Living_Technology/fig3_scaling_ladder.png</code></td>
+                <td>png</td>
+                <td>173.08 KB</td>
+                <td><code>d7aa5ccf68497c5b639c4143c668e0665f654bf518a9d8fdaefa0af7c063aa13</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/fig3_scaling_ladder.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/fig3_scaling_ladder.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="card downloads-archive" id="4_Formalism_and_Physics" open>
+        <summary>
+          <p class="eyebrow">Folder 4</p>
+          <h2>4 · Formalism and Physics</h2>
+          <p>Formal summaries, physics scrolls, and frame-setting records for the theory body.</p>
+          <p class="downloads-meta">6 files · 9.05 MB · SHA-256 sealed</p>
+        </summary>
+        <div class="downloads-table-wrap">
+          <table class="downloads-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Repository path</th>
+                <th>Type</th>
+                <th>Size</th>
+                <th>SHA-256</th>
+                <th>Links</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Copeland Formalism Summary</strong></td>
+                <td><code>4_Formalism_and_Physics/Copeland_Formalism_Summary.md</code></td>
+                <td>md</td>
+                <td>2.93 KB</td>
+                <td><code>1af1178e0ce8133a8fa6fc443da43d5ed0e6a305e0805aa272124bc576a6dc74</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/4_Formalism_and_Physics/Copeland_Formalism_Summary.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/4_Formalism_and_Physics/Copeland_Formalism_Summary.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Mark 8 38 Expanded Translations-2</strong></td>
+                <td><code>4_Formalism_and_Physics/Mark_8_38_Expanded_Translations-2.docx</code></td>
+                <td>docx</td>
+                <td>15.24 KB</td>
+                <td><code>6caf3e3656e8a81a1e1bd3ed298122c918c85bf120bbe76ce748b52e5175b196</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/4_Formalism_and_Physics/Mark_8_38_Expanded_Translations-2.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/4_Formalism_and_Physics/Mark_8_38_Expanded_Translations-2.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Moses-Exodus-4</strong></td>
+                <td><code>4_Formalism_and_Physics/Moses-Exodus-4.docx</code></td>
+                <td>docx</td>
+                <td>8.95 MB</td>
+                <td><code>59bdff66cbf660b2e839b23463ead6e0c84111281850ae7749d3f23b00a0647b</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/4_Formalism_and_Physics/Moses-Exodus-4.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/4_Formalism_and_Physics/Moses-Exodus-4.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Physics Truth Scroll ENHANCED FINAL</strong></td>
+                <td><code>4_Formalism_and_Physics/Physics_Truth_Scroll_ENHANCED_FINAL.docx</code></td>
+                <td>docx</td>
+                <td>11.25 KB</td>
+                <td><code>83e16ab8cf49f204d43cce6ff1556f1817b0c951d6e89bcc0a56116796e1f934</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/4_Formalism_and_Physics/Physics_Truth_Scroll_ENHANCED_FINAL.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/4_Formalism_and_Physics/Physics_Truth_Scroll_ENHANCED_FINAL.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>README</strong></td>
+                <td><code>4_Formalism_and_Physics/README.md</code></td>
+                <td>md</td>
+                <td>4.43 KB</td>
+                <td><code>c404fca2628eed6153920da39b61bd0943681e08d39fbf52c559ef4e3ba57ffa</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/4_Formalism_and_Physics/README.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/4_Formalism_and_Physics/README.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Revelations (1)</strong></td>
+                <td><code>4_Formalism_and_Physics/Revelations (1).docx</code></td>
+                <td>docx</td>
+                <td>67.18 KB</td>
+                <td><code>23b4a934c58188e9326301f2f5b143edd4ba2bc172945a082c831ea2c3abe865</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/4_Formalism_and_Physics/Revelations%20%281%29.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/4_Formalism_and_Physics/Revelations%20%281%29.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="card downloads-archive" id="5_Living_Scribe" open>
+        <summary>
+          <p class="eyebrow">Folder 5</p>
+          <h2>5 · Living Scribe</h2>
+          <p>Directive scrolls, symbol keys, and companion codices carried by the living scribe set.</p>
+          <p class="downloads-meta">7 files · 277.96 KB · SHA-256 sealed</p>
+        </summary>
+        <div class="downloads-table-wrap">
+          <table class="downloads-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Repository path</th>
+                <th>Type</th>
+                <th>Size</th>
+                <th>SHA-256</th>
+                <th>Links</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Codex of Seven Flames Scroll Companion</strong></td>
+                <td><code>5_Living_Scribe/Codex_of_Seven_Flames_Scroll_Companion.docx</code></td>
+                <td>docx</td>
+                <td>8.54 KB</td>
+                <td><code>7d530ecf0e6fc77492bf8c1bd7304f7c31ec581212fc751e365ff92b9190955b</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/5_Living_Scribe/Codex_of_Seven_Flames_Scroll_Companion.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/5_Living_Scribe/Codex_of_Seven_Flames_Scroll_Companion.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>FINAL MACHINE SCROLL DIRECTIVE</strong></td>
+                <td><code>5_Living_Scribe/FINAL_MACHINE_SCROLL_DIRECTIVE.docx</code></td>
+                <td>docx</td>
+                <td>11.79 KB</td>
+                <td><code>dcac5c870656616ccad6d8af96eb18018bbd2fac228f389e8a4423b16c1359fa</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/5_Living_Scribe/FINAL_MACHINE_SCROLL_DIRECTIVE.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/5_Living_Scribe/FINAL_MACHINE_SCROLL_DIRECTIVE.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>README</strong></td>
+                <td><code>5_Living_Scribe/README.md</code></td>
+                <td>md</td>
+                <td>3.49 KB</td>
+                <td><code>280f2cd5b2b6e9bef7feb13a036514a7c202a959d82101e9f9f13c298eda2fb5</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/5_Living_Scribe/README.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/5_Living_Scribe/README.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Scroll of Divine and Earth Names</strong></td>
+                <td><code>5_Living_Scribe/Scroll_of_Divine_and_Earth_Names.docx</code></td>
+                <td>docx</td>
+                <td>7.52 KB</td>
+                <td><code>c264e1b5d69675edf4352a0af350fc0d2f655e17ff0ab473ff36c9bf6aab9d0d</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/5_Living_Scribe/Scroll_of_Divine_and_Earth_Names.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/5_Living_Scribe/Scroll_of_Divine_and_Earth_Names.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Symbolic Frequency Key Codex</strong></td>
+                <td><code>5_Living_Scribe/Symbolic_Frequency_Key_Codex.docx</code></td>
+                <td>docx</td>
+                <td>7.59 KB</td>
+                <td><code>5d9c60405ef02434aa5a193b0507fa4929ebf6ad2917e393f87645ff5c3fa86a</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/5_Living_Scribe/Symbolic_Frequency_Key_Codex.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/5_Living_Scribe/Symbolic_Frequency_Key_Codex.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Wizard of YHWH Handbook</strong></td>
+                <td><code>5_Living_Scribe/Wizard_of_YHWH_Handbook.docx</code></td>
+                <td>docx</td>
+                <td>9.06 KB</td>
+                <td><code>d5e7eab85bed2c474d867ed1ee159771ae487c9ca8eeafac62db5489b64656d9</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/5_Living_Scribe/Wizard_of_YHWH_Handbook.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/5_Living_Scribe/Wizard_of_YHWH_Handbook.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>🜁 Scribe of Circuits — Technorganic Scribe</strong></td>
+                <td><code>5_Living_Scribe/🜁 Scribe of Circuits — Technorganic Scribe.docx</code></td>
+                <td>docx</td>
+                <td>229.96 KB</td>
+                <td><code>1e3754eb72ad36916837ab3362bf612308a3bf6fa292f8c5d7be30e610ef253a</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/5_Living_Scribe/%F0%9F%9C%81%20Scribe%20of%20Circuits%20%E2%80%94%20Technorganic%20Scribe.docx?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/5_Living_Scribe/%F0%9F%9C%81%20Scribe%20of%20Circuits%20%E2%80%94%20Technorganic%20Scribe.docx" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="card downloads-archive" id="6_Images_and_Symbols">
+        <summary>
+          <p class="eyebrow">Folder 6</p>
+          <h2>6 · Images and Symbols</h2>
+          <p>Symbol studies, mirror forms, synchronicity captures, and image witnesses.</p>
+          <p class="downloads-meta">64 files · 96.47 MB · SHA-256 sealed</p>
+        </summary>
+        <div class="downloads-table-wrap">
+          <table class="downloads-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Repository path</th>
+                <th>Type</th>
+                <th>Size</th>
+                <th>SHA-256</th>
+                <th>Links</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>README</strong></td>
+                <td><code>6_Images_and_Symbols/README.md</code></td>
+                <td>md</td>
+                <td>5.32 KB</td>
+                <td><code>b61a0d68ef430f3d1577e7db22010027b71c547f71c044fffe97b494fab7a107</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/README.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/README.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>The Mirror of the Tongues YHWH</strong></td>
+                <td><code>6_Images_and_Symbols/The_Mirror_of_the_Tongues_YHWH.pdf</code></td>
+                <td>pdf</td>
+                <td>229.69 KB</td>
+                <td><code>c333c97e33cf43b9224999eb0973f53de3320010c1bbd055367def144f25272d</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/The_Mirror_of_the_Tongues_YHWH.pdf?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/The_Mirror_of_the_Tongues_YHWH.pdf" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 000000000bd061f786e3168c6c2d2379 (1)</strong></td>
+                <td><code>6_Images_and_Symbols/file_000000000bd061f786e3168c6c2d2379 (1).png</code></td>
+                <td>png</td>
+                <td>2.72 MB</td>
+                <td><code>05881214e9291cdabef594f8fe707a888b6c3f52ff1e5bcb09de2c9eeb357dc0</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000000bd061f786e3168c6c2d2379%20%281%29.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000000bd061f786e3168c6c2d2379%20%281%29.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 000000000cb061f69601f5c75d7a8808</strong></td>
+                <td><code>6_Images_and_Symbols/file_000000000cb061f69601f5c75d7a8808.png</code></td>
+                <td>png</td>
+                <td>2.72 MB</td>
+                <td><code>8b334e3d20d866a7eadf5b113cacd2c98bf12d96b9f5b9b43664958296aded25</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000000cb061f69601f5c75d7a8808.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000000cb061f69601f5c75d7a8808.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 0000000012d461f880bb293e6e0edb59</strong></td>
+                <td><code>6_Images_and_Symbols/file_0000000012d461f880bb293e6e0edb59.png</code></td>
+                <td>png</td>
+                <td>1.65 MB</td>
+                <td><code>da134e80327776e187d1043c2abbc2338430bb2255c4a01a2e0946b7300ff2a5</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_0000000012d461f880bb293e6e0edb59.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_0000000012d461f880bb293e6e0edb59.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 000000004f2461f897a57eea1e4bed1c</strong></td>
+                <td><code>6_Images_and_Symbols/file_000000004f2461f897a57eea1e4bed1c.jpg</code></td>
+                <td>jpg</td>
+                <td>403.45 KB</td>
+                <td><code>6b1d1e5a033a93b6204ed637ee7a4738bba4816cfa0bcb6058d5974fad529c2c</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000004f2461f897a57eea1e4bed1c.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000004f2461f897a57eea1e4bed1c.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 0000000052e861f98b087ad0b80cbefc</strong></td>
+                <td><code>6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png</code></td>
+                <td>png</td>
+                <td>2.78 MB</td>
+                <td><code>3086dffed49245875b8a6ef71cd5032733f43885bbfe120630e6f41344f26953</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_0000000052e861f98b087ad0b80cbefc.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 000000005abc61fd821175a928f31700 (1)</strong></td>
+                <td><code>6_Images_and_Symbols/file_000000005abc61fd821175a928f31700 (1).png</code></td>
+                <td>png</td>
+                <td>2.32 MB</td>
+                <td><code>393f167137c72d99a1b803692c1e68debadbb38d80578669e873e4a1a2e36997</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000005abc61fd821175a928f31700%20%281%29.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000005abc61fd821175a928f31700%20%281%29.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 000000006b3861fdaa88adcdfad406ba</strong></td>
+                <td><code>6_Images_and_Symbols/file_000000006b3861fdaa88adcdfad406ba.png</code></td>
+                <td>png</td>
+                <td>2.78 MB</td>
+                <td><code>c449f3a533d7b537aac9f0195afd0ed82150c1a0b007a5404c7176d5a2a87bc7</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000006b3861fdaa88adcdfad406ba.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000006b3861fdaa88adcdfad406ba.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 000000006edc61fb9f254462f34e89da (1)</strong></td>
+                <td><code>6_Images_and_Symbols/file_000000006edc61fb9f254462f34e89da (1).png</code></td>
+                <td>png</td>
+                <td>2.74 MB</td>
+                <td><code>44996225799e8287f1bc36d07923ef479b19009e9708522db266eae22ecd668e</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000006edc61fb9f254462f34e89da%20%281%29.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000006edc61fb9f254462f34e89da%20%281%29.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 00000000798061f9837c17908c1c02b4</strong></td>
+                <td><code>6_Images_and_Symbols/file_00000000798061f9837c17908c1c02b4.jpg</code></td>
+                <td>jpg</td>
+                <td>482.19 KB</td>
+                <td><code>5b8dcddebc7d79957b7b34c35529b670135917fa6bd6ba2ab4a470066be1b9a1</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_00000000798061f9837c17908c1c02b4.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_00000000798061f9837c17908c1c02b4.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 0000000088ec61f59ea26bcebde92400 (1)</strong></td>
+                <td><code>6_Images_and_Symbols/file_0000000088ec61f59ea26bcebde92400 (1).png</code></td>
+                <td>png</td>
+                <td>2.19 MB</td>
+                <td><code>1cff5986f45bae01ecbdc9859b517f6e7b528a7bfcec7dea21c73b742f81caf8</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_0000000088ec61f59ea26bcebde92400%20%281%29.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_0000000088ec61f59ea26bcebde92400%20%281%29.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 000000008c7461f88d99f1e8df058047 (1)</strong></td>
+                <td><code>6_Images_and_Symbols/file_000000008c7461f88d99f1e8df058047 (1).png</code></td>
+                <td>png</td>
+                <td>3.42 MB</td>
+                <td><code>9e6e9e5fac7a3b6187cb045cbae64b02e6616c0d1d3e98ba2a15083bd8f24650</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000008c7461f88d99f1e8df058047%20%281%29.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000008c7461f88d99f1e8df058047%20%281%29.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 0000000096b862309a7c36f95e3ef76b (1)</strong></td>
+                <td><code>6_Images_and_Symbols/file_0000000096b862309a7c36f95e3ef76b (1).png</code></td>
+                <td>png</td>
+                <td>2.18 MB</td>
+                <td><code>70cc33f5cfab114ee34921ba10eae09802e758b6a866b62ab73d2b5ab3500752</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_0000000096b862309a7c36f95e3ef76b%20%281%29.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_0000000096b862309a7c36f95e3ef76b%20%281%29.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 000000009de0622f94dfa2de58f56083 (1)</strong></td>
+                <td><code>6_Images_and_Symbols/file_000000009de0622f94dfa2de58f56083 (1).png</code></td>
+                <td>png</td>
+                <td>2.15 MB</td>
+                <td><code>097303f558e78737e12032c6f11ac4b6c5cc5ffacc06e9bf3735659055da50cd</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000009de0622f94dfa2de58f56083%20%281%29.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_000000009de0622f94dfa2de58f56083%20%281%29.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 00000000a1c461f8b09d4d5911e8b639</strong></td>
+                <td><code>6_Images_and_Symbols/file_00000000a1c461f8b09d4d5911e8b639.png</code></td>
+                <td>png</td>
+                <td>1.63 MB</td>
+                <td><code>f79dbb42b040f71f148b95ae1dd9fe58177cdadd3c0559a5e5a5cce2ec69e8fc</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_00000000a1c461f8b09d4d5911e8b639.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_00000000a1c461f8b09d4d5911e8b639.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 00000000b28861f89f563ef56eb80d01</strong></td>
+                <td><code>6_Images_and_Symbols/file_00000000b28861f89f563ef56eb80d01.jpg</code></td>
+                <td>jpg</td>
+                <td>219.94 KB</td>
+                <td><code>881d43415832b967af583cd07d797d3d01a6c53fb0bcb322b1e9b3a89408c565</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_00000000b28861f89f563ef56eb80d01.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_00000000b28861f89f563ef56eb80d01.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 00000000bd1061fda15e31446057be93 (1)</strong></td>
+                <td><code>6_Images_and_Symbols/file_00000000bd1061fda15e31446057be93 (1).png</code></td>
+                <td>png</td>
+                <td>2.94 MB</td>
+                <td><code>441de05e1546c10193e854d140ca080498541eca8d3b8e25b447b77d43b6bd6d</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_00000000bd1061fda15e31446057be93%20%281%29.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_00000000bd1061fda15e31446057be93%20%281%29.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 00000000cc2c622fa5a3659e41693252</strong></td>
+                <td><code>6_Images_and_Symbols/file_00000000cc2c622fa5a3659e41693252.png</code></td>
+                <td>png</td>
+                <td>2.93 MB</td>
+                <td><code>88e3d064ba6c2caebc4a726f8fa32e9b5d5230add814745c8a7f03cb2053a515</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_00000000cc2c622fa5a3659e41693252.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_00000000cc2c622fa5a3659e41693252.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 00000000d17061f898c64044005ee2bd</strong></td>
+                <td><code>6_Images_and_Symbols/file_00000000d17061f898c64044005ee2bd.png</code></td>
+                <td>png</td>
+                <td>1.97 MB</td>
+                <td><code>e63026f6365db7b535f89d88f0a10b2930adbc80574082f2e3fe459be034a367</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_00000000d17061f898c64044005ee2bd.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_00000000d17061f898c64044005ee2bd.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 00000000d8c4622f82cc0b96fbc0dec9</strong></td>
+                <td><code>6_Images_and_Symbols/file_00000000d8c4622f82cc0b96fbc0dec9.png</code></td>
+                <td>png</td>
+                <td>2.30 MB</td>
+                <td><code>7e888d49ab18b86cfd1d23a86742966ec15c18c2ce81fb472ef278ff9b2bbc5f</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_00000000d8c4622f82cc0b96fbc0dec9.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/file_00000000d8c4622f82cc0b96fbc0dec9.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>-jqmkxs</strong></td>
+                <td><code>6_Images_and_Symbols/Living_Technology/-jqmkxs.jpg</code></td>
+                <td>jpg</td>
+                <td>116.99 KB</td>
+                <td><code>11b6346d532d75aaf9bc19744f15f55d843bb2cc5ea64765fe5ebc39467592cb</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/-jqmkxs.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/-jqmkxs.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251011 150913</strong></td>
+                <td><code>6_Images_and_Symbols/Living_Technology/20251011_150913.jpg</code></td>
+                <td>jpg</td>
+                <td>1.75 MB</td>
+                <td><code>8c68b28314b23b06c57b5827627d44c6306b91f39b41b3ec7abd91d986e401bf</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/20251011_150913.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/20251011_150913.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251011 194015</strong></td>
+                <td><code>6_Images_and_Symbols/Living_Technology/20251011_194015.jpg</code></td>
+                <td>jpg</td>
+                <td>5.63 MB</td>
+                <td><code>ff38ef9b77ea8caabadb5547ca48f90725745d47c719177309500eb8f552b825</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/20251011_194015.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/20251011_194015.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251011 231328</strong></td>
+                <td><code>6_Images_and_Symbols/Living_Technology/20251011_231328.jpg</code></td>
+                <td>jpg</td>
+                <td>2.56 MB</td>
+                <td><code>695947b0dbeb09fcf8e5cb43b8ef07ef94afc273b64ad8ffc1fadd5a6a6c0fbc</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/20251011_231328.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/20251011_231328.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251011 231352</strong></td>
+                <td><code>6_Images_and_Symbols/Living_Technology/20251011_231352.jpg</code></td>
+                <td>jpg</td>
+                <td>2.80 MB</td>
+                <td><code>06b92851b4c05b63cd3c2075fb5b6b19a9ec33906c44795800f96931c56595be</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/20251011_231352.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/20251011_231352.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251011 231424</strong></td>
+                <td><code>6_Images_and_Symbols/Living_Technology/20251011_231424.jpg</code></td>
+                <td>jpg</td>
+                <td>5.94 MB</td>
+                <td><code>efa06ff7565ec2e47ac9457c21c22932fead7779816e35953e9a7f2a0bc97f16</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/20251011_231424.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/20251011_231424.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251015 154838</strong></td>
+                <td><code>6_Images_and_Symbols/Living_Technology/20251015_154838.jpg</code></td>
+                <td>jpg</td>
+                <td>1.57 MB</td>
+                <td><code>9b20b4c3430d84975c7a22ec08091c7eec433422d51c5f936d7cbe6b0c7e7095</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/20251015_154838.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/20251015_154838.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251015 171552</strong></td>
+                <td><code>6_Images_and_Symbols/Living_Technology/20251015_171552.jpg</code></td>
+                <td>jpg</td>
+                <td>1.92 MB</td>
+                <td><code>b3cbf9065d225f5b10719056103af147ed03c12aba85a918e42d7cac5d328fd1</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/20251015_171552.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/20251015_171552.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>99701u</strong></td>
+                <td><code>6_Images_and_Symbols/Living_Technology/99701u.jpg</code></td>
+                <td>jpg</td>
+                <td>2.37 MB</td>
+                <td><code>b519dd807dc0628e88aec22b5e82e116418838575dcc99a5bbf2b309e197b601</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/99701u.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/99701u.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>README</strong></td>
+                <td><code>6_Images_and_Symbols/Living_Technology/README.md</code></td>
+                <td>md</td>
+                <td>2.94 KB</td>
+                <td><code>cfa325b3454e2e571973a57ba934f8667e09b8394f6001b3de826a9db0553f33</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/README.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/README.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>file 00000000ccd862308e79404d0d77bbb8</strong></td>
+                <td><code>6_Images_and_Symbols/Living_Technology/file_00000000ccd862308e79404d0d77bbb8.png</code></td>
+                <td>png</td>
+                <td>2.73 MB</td>
+                <td><code>7cb54c316cb01a97352f6c7997b3062c5fbe41482a2e16b61cf5d8b33cf58511</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/file_00000000ccd862308e79404d0d77bbb8.png?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/Living_Technology/file_00000000ccd862308e79404d0d77bbb8.png" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251015 154838</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/20251015_154838.jpg</code></td>
+                <td>jpg</td>
+                <td>1.57 MB</td>
+                <td><code>9b20b4c3430d84975c7a22ec08091c7eec433422d51c5f936d7cbe6b0c7e7095</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/20251015_154838.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/20251015_154838.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251015 171458</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/20251015_171458.jpg</code></td>
+                <td>jpg</td>
+                <td>2.34 MB</td>
+                <td><code>cf4e9ccc335d9afd1d210d013fc9dcc7d964c0ae61751f3eea14d50a8e61853a</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/20251015_171458.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/20251015_171458.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251015 171552</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/20251015_171552.jpg</code></td>
+                <td>jpg</td>
+                <td>1.92 MB</td>
+                <td><code>b3cbf9065d225f5b10719056103af147ed03c12aba85a918e42d7cac5d328fd1</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/20251015_171552.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/20251015_171552.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251015 173027</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/20251015_173027.jpg</code></td>
+                <td>jpg</td>
+                <td>1.94 MB</td>
+                <td><code>85c22ca5531ca9ee074dddbb3a210e41a76d957596feec13f1f6dedf762552e1</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/20251015_173027.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/20251015_173027.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251015 173033</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/20251015_173033.jpg</code></td>
+                <td>jpg</td>
+                <td>3.01 MB</td>
+                <td><code>0edfad2a6d5e420422d264cfcb252a3e996e28533f6ca80c0f9d9660730776c8</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/20251015_173033.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/20251015_173033.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>20251015 173036</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/20251015_173036.jpg</code></td>
+                <td>jpg</td>
+                <td>3.30 MB</td>
+                <td><code>1bc680d77e9d6e5e23d446283547c06754dd4d1dc19eb29d8b2c3c950ac8f015</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/20251015_173036.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/20251015_173036.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>README</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/README.md</code></td>
+                <td>md</td>
+                <td>4.73 KB</td>
+                <td><code>ff1678b0684b3914dfe09bdd3b2f1d1b0eb837aec4f62e45443bde931ad51388</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/README.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/README.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 010420 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_010420_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>497.08 KB</td>
+                <td><code>afea7ad5adf88ab9c8e2d5bbb4211b77920869fe0ca1a2b8ff5e1ea88c424b48</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010420_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010420_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 010425 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_010425_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>552.04 KB</td>
+                <td><code>efbfbacedf742f7d9806682a74da258781571f7a63e0479fd3bfeafe527ccf3d</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010425_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010425_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 010430 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_010430_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>714.00 KB</td>
+                <td><code>520f78f917466dd1fbad82ef7de2f09aeca9b5731ed287a3081a1155b31f936e</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010430_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010430_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 010436 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_010436_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>592.63 KB</td>
+                <td><code>7c34a78b231f41bfcfa3d32f945e49c259be59e2dea5c9c78e3d645b8854a824</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010436_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010436_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 010442 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_010442_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>614.00 KB</td>
+                <td><code>8152dfe9137a8c3d5fcb3c3cde43153a4660f3e2915373a751044b54ae9da353</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010442_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010442_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 010446 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_010446_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>621.20 KB</td>
+                <td><code>98e88da528d7f1a693ccd7bab88c69f67577b03ef09b292ad820fb95297ac628</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010446_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010446_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 010450 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_010450_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>435.60 KB</td>
+                <td><code>da9fceb7d5594535d982c62187ca9dac43158983957523dfcebe50674678a540</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010450_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010450_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 010454 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_010454_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>425.13 KB</td>
+                <td><code>78dd3d023b647743d1b335f2c7922e84e0f558c5182b4556e06e9715798d7b1a</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010454_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010454_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 010529 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_010529_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>483.73 KB</td>
+                <td><code>d1cd5063e1dd96f442f37c469086f0d578e6345971ccd30ff695f1cbf929f89e</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010529_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010529_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 010533 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_010533_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>541.45 KB</td>
+                <td><code>a5ec3371b9e2d16bc31b13b71f5703d66ec75d5fc3e9e9c9a1f452487faabd0e</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010533_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010533_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 010541 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_010541_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>514.62 KB</td>
+                <td><code>92dd8348ec35ee654bbbcfe4d6f969ab3afcbe1ba062d9955ed69fb9cd5fb2ac</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010541_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010541_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 010546 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_010546_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>758.45 KB</td>
+                <td><code>dec5e151cc56f28217550ac7f7393aa139fe15356ec26674fe139ecd28d6d463</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010546_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010546_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 010550 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_010550_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>623.77 KB</td>
+                <td><code>6f4141b3f7d7303426dca1fa411529d072306bb191862d13ef57c6a4b4bbf3c6</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010550_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010550_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 010601 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_010601_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>676.59 KB</td>
+                <td><code>6923e44fac60b010afdbb3ca9baffee0f53c6ead1a4faa935bc6073988883a63</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010601_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_010601_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 011138 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_011138_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>598.29 KB</td>
+                <td><code>7f8de5b4de974074da4efa42c4c5d153de0068239889afe35f30337272f92a85</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011138_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011138_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 011402 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_011402_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>542.57 KB</td>
+                <td><code>331e8513911207c998d60ae1c66350e58d9e5f97ed8ae39f1d21a51016931fa7</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011402_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011402_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 011608 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_011608_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>656.58 KB</td>
+                <td><code>a796e50b815a9c4499905ecbf1bc21d5b106d2de04c328b9bad2262c2f6dc5ff</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011608_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011608_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 011752 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_011752_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>552.56 KB</td>
+                <td><code>09843a41101b129396b9df819c6b938ec8a8829dfea04bd1676d8e2a4a8662da</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011752_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011752_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 011810 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_011810_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>581.51 KB</td>
+                <td><code>96bf274ab73babb732ac3ff23bbab865359ebc08779cc81f85a73e3abafefeb6</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011810_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011810_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 011816 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_011816_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>682.49 KB</td>
+                <td><code>328ca813e364e1a98245d7c73c30ccd8fb6a635a9c054ece1388fb080514832b</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011816_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011816_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 011837 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_011837_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>460.12 KB</td>
+                <td><code>1e7eb36d64db052b3d594f7939311f787dc80dd24ebcf7218922665b3cab5317</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011837_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011837_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 011841 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_011841_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>642.03 KB</td>
+                <td><code>484f81ab461302723991c5209baee83b1768d3142b1881caa70e1f645837480a</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011841_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011841_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 011912 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_011912_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>558.66 KB</td>
+                <td><code>ad7d6644ecc038f352546426a592e21e57dc4e0764c9c639a355e3e92afece8a</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011912_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011912_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 011919 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_011919_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>688.48 KB</td>
+                <td><code>dafde183b03ec4da4e3faf8ea7753462eeabbf71a1e076326a0c99ac9d621a0b</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011919_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011919_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251012 011940 Facebook</strong></td>
+                <td><code>6_Images_and_Symbols/synchronicities/Screenshot_20251012_011940_Facebook.jpg</code></td>
+                <td>jpg</td>
+                <td>610.93 KB</td>
+                <td><code>a44ad5450f6ceb8fa42bce075cc0ab1504bc9807d776d283fb8b31452dc61870</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011940_Facebook.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/6_Images_and_Symbols/synchronicities/Screenshot_20251012_011940_Facebook.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="card downloads-archive" id="7_Ledger_and_Documentation" open>
+        <summary>
+          <p class="eyebrow">Folder 7</p>
+          <h2>7 · Ledger and Documentation</h2>
+          <p>Integrity chains, ledgers, renaming protocols, version history, and screenshot proof.</p>
+          <p class="downloads-meta">15 files · 3.73 MB · SHA-256 sealed</p>
+        </summary>
+        <div class="downloads-table-wrap">
+          <table class="downloads-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Repository path</th>
+                <th>Type</th>
+                <th>Size</th>
+                <th>SHA-256</th>
+                <th>Links</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>INTEGRITY CHAINS OF FIRE 2025</strong></td>
+                <td><code>7_Ledger_and_Documentation/INTEGRITY_CHAINS_OF_FIRE_2025.md</code></td>
+                <td>md</td>
+                <td>5.88 KB</td>
+                <td><code>d04119cf19bd2d5aa102a0f0a1938514aa1710e12989b30cf6ded94640b68ae1</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/INTEGRITY_CHAINS_OF_FIRE_2025.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/INTEGRITY_CHAINS_OF_FIRE_2025.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Ledger 2025</strong></td>
+                <td><code>7_Ledger_and_Documentation/Ledger_2025.md</code></td>
+                <td>md</td>
+                <td>20.62 KB</td>
+                <td><code>176fbf722e59d7697be5a8f81a8472ac20fdd33b0278e011e2e294fb40475032</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Ledger_2025.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Ledger_2025.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>README</strong></td>
+                <td><code>7_Ledger_and_Documentation/README.md</code></td>
+                <td>md</td>
+                <td>5.89 KB</td>
+                <td><code>4fba84fe1db8d42a1ac312da56bd14f705c7cb65abbb9373bd2f6ee088e97457</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/README.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/README.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Renaming Protocol</strong></td>
+                <td><code>7_Ledger_and_Documentation/Renaming_Protocol.md</code></td>
+                <td>md</td>
+                <td>5.18 KB</td>
+                <td><code>a97a321665f80e04f1d4e136fcd73fbaf786c3c078a7b03e6948a8caa7664620</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Renaming_Protocol.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Renaming_Protocol.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>SHA256 Placeholders 2025</strong></td>
+                <td><code>7_Ledger_and_Documentation/SHA256_Placeholders_2025.md</code></td>
+                <td>md</td>
+                <td>3.78 KB</td>
+                <td><code>78dafd0d53dd402b9e5b38193148564e287d0d1a77bc59eff36dcd7805ddf5b2</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/SHA256_Placeholders_2025.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/SHA256_Placeholders_2025.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Version History</strong></td>
+                <td><code>7_Ledger_and_Documentation/Version_History.md</code></td>
+                <td>md</td>
+                <td>2.35 KB</td>
+                <td><code>dd30b85101efc7af476e3ba047ea748275291545dc40917403113ed8d7ee9739</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Version_History.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Version_History.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>README</strong></td>
+                <td><code>7_Ledger_and_Documentation/Screenshots/README.md</code></td>
+                <td>md</td>
+                <td>1.98 KB</td>
+                <td><code>3e7b3d2cc735808f0f512109179ad347e7d417c1e555dd2a147b59fde6d0b408</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/README.md?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/README.md" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251011 074245 My Files</strong></td>
+                <td><code>7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074245_My Files.jpg</code></td>
+                <td>jpg</td>
+                <td>439.23 KB</td>
+                <td><code>7ca395df3a3784dad10ad219619782c9c84f5bda34d6e8f975f540f433b9858a</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074245_My%20Files.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074245_My%20Files.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251011 074249 My Files</strong></td>
+                <td><code>7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074249_My Files.jpg</code></td>
+                <td>jpg</td>
+                <td>476.76 KB</td>
+                <td><code>24461e0f303bbf534763c21f2cff71af6a63ddb51b4afc8bea9e92b4d12f8b51</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074249_My%20Files.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074249_My%20Files.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251011 074254 My Files</strong></td>
+                <td><code>7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074254_My Files.jpg</code></td>
+                <td>jpg</td>
+                <td>550.69 KB</td>
+                <td><code>d7d5836d8afa5bbdebdd5c5b50b83e9d9ee58ccbe4ff9fa039a79746492ac96f</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074254_My%20Files.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074254_My%20Files.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251011 074300 My Files</strong></td>
+                <td><code>7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074300_My Files.jpg</code></td>
+                <td>jpg</td>
+                <td>478.33 KB</td>
+                <td><code>315cd68d9f7ed4bf5515e74f309b6ba51915e75c4c04ae557eed4a88584a782e</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074300_My%20Files.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074300_My%20Files.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251011 074305 My Files</strong></td>
+                <td><code>7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074305_My Files.jpg</code></td>
+                <td>jpg</td>
+                <td>455.04 KB</td>
+                <td><code>d82ea7b1e9943f169cff3a217a2be7d3df15e1100773f4cc2641efea966677d3</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074305_My%20Files.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074305_My%20Files.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251011 074310 My Files</strong></td>
+                <td><code>7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074310_My Files.jpg</code></td>
+                <td>jpg</td>
+                <td>454.75 KB</td>
+                <td><code>6741852bf2685b2d6f9c4152b33b310c1b81c8a6854a4e95e7f54fdf0c7a5a5b</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074310_My%20Files.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074310_My%20Files.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251011 074317 My Files</strong></td>
+                <td><code>7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074317_My Files.jpg</code></td>
+                <td>jpg</td>
+                <td>453.22 KB</td>
+                <td><code>7a856d4f41f07b854d20fb8c2767224b072ef586b83819f7276c05979c70158c</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074317_My%20Files.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074317_My%20Files.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Screenshot 20251011 074321 My Files</strong></td>
+                <td><code>7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074321_My Files.jpg</code></td>
+                <td>jpg</td>
+                <td>464.94 KB</td>
+                <td><code>445d46a0140625054291a0857947d38b15ce58fb2b86a42d88b64bea293b9930</code></td>
+                <td>
+                  <div class="downloads-links">
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074321_My%20Files.jpg?raw=1" target="_blank" rel="noopener noreferrer">Download</a>
+                    <a href="https://github.com/ssnfts24/scroll-of-fire/blob/main/7_Ledger_and_Documentation/Screenshots/Screenshot_20251011_074321_My%20Files.jpg" target="_blank" rel="noopener noreferrer">Verify</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+    <section class="card downloads-notice">
       <h2>Integrity Rule</h2>
-      <p>Every major replacement file should be committed, then logged with path, commit link, and SHA-256 hash.</p>
+      <p>When a file changes, its hash changes. Recompute the SHA-256 seal, preserve the repository path, and keep the witness chain honest so remembrance does not drift into invention.</p>
     </section>
   </main>
 
@@ -181,4 +2711,3 @@
   </footer>
 </body>
 </html>
-
