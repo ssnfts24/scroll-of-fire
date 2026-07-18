@@ -326,6 +326,41 @@ button {
   margin-bottom: 1rem;
 }
 
+/* Loading / ready / error state classes */
+.today-calendar-summary.is-loading .today-summary-stats,
+.today-calendar-summary.is-loading .today-summary-grid {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.today-calendar-summary.is-loading::before {
+  content: "Loading calendar…";
+  display: block;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.today-calendar-summary.is-ready::before {
+  display: none;
+}
+
+.today-calendar-summary.has-error::before {
+  display: none;
+}
+
+.calendar-error-msg {
+  margin: 0.75rem 0 0;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid rgba(255, 100, 80, 0.35);
+  border-radius: 12px;
+  background: rgba(255, 80, 60, 0.08);
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
 .today-summary-glow {
   position: absolute;
   inset: 0;
@@ -355,6 +390,28 @@ button {
 .today-summary-controls {
   margin-top: 0;
   justify-content: flex-end;
+  /* Ensure the three nav buttons never use absolute positioning */
+  position: static;
+}
+
+/* Explicit grid layout for the three calendar nav buttons on mobile —
+   prevents any button from accidentally overlapping the others or adjacent text. */
+@media (max-width: 760px) {
+  .today-summary-controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 0.75rem;
+  }
+
+  .today-summary-controls .lab-btn {
+    width: 100%;
+    min-height: 44px;
+    flex: none;
+    text-align: center;
+    justify-content: center;
+  }
 }
 
 .today-summary-stats {

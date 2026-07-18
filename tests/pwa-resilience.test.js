@@ -298,18 +298,18 @@ test("service-worker build marker matches the central app version", () => {
   const versionFile = read("docs/assets/js/moons-version.js");
   const version = versionFile.match(/APP_VERSION = "([^"]+)"/)[1];
   const build = versionFile.match(/SERVICE_WORKER_BUILD = APP_VERSION/);
-  assert.equal(version, "2026.07.16.3");
+  assert.equal(version, "2026.07.18.1");
   assert.ok(build);
   assert.match(read("docs/service-worker.js"), new RegExp(`core-\\$\\{VERSION\\}`));
   assert.doesNotMatch(read("docs/service-worker.js"), /\bcaches\.match\(/);
   assert.match(read("docs/assets/js/pwa.js"), /setText\("appVersion", APP_VERSION\)/);
-  assert.match(read("docs/13-moons-release-checklist.md"), /App version: `2026\.07\.16\.3`/);
-  assert.match(read("docs/13-moons-version-history.md"), /## 2026\.07\.16\.3/);
+  assert.match(read("docs/13-moons-release-checklist.md"), /App version: `2026\.07\.18\.1`/);
+  assert.match(read("docs/13-moons-version-history.md"), /## 2026\.07\.18\.1/);
   const cacheBusters = [
     ...read("docs/moons.html").matchAll(/[?&]v=(\d{8}-\d+)/g)
   ].map(match => match[1]);
   assert.ok(cacheBusters.length > 0);
-  assert.deepEqual([...new Set(cacheBusters)], ["20260716-3"]);
+  assert.deepEqual([...new Set(cacheBusters)], ["20260718-1"]);
 });
 
 class MockEventTarget {
