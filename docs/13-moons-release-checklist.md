@@ -2,8 +2,8 @@
 
 ## Release identity
 
-- App version: `2026.07.16.3`
-- Service-worker build: `2026.07.16.3`
+- App version: `2026.07.18.1`
+- Service-worker build: `2026.07.18.1`
 - Data schema version: `1`
 - Manifest: `docs/manifest.webmanifest`
 - Service worker: `docs/service-worker.js`

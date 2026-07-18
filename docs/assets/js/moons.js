@@ -190,20 +190,41 @@
   }
 
   function datePartsInTimeZone(date, timeZone) {
-    const parts = new Intl.DateTimeFormat("en-US", {
-      timeZone,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hourCycle: "h23"
-    }).formatToParts(date);
+    // Use hour12: false as the primary approach for widest Safari compatibility.
+    // hourCycle:"h23" is equivalent for "en-US" but has narrower support in older Safari.
+    let parts;
+    try {
+      parts = new Intl.DateTimeFormat("en-US", {
+        timeZone,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).formatToParts(date);
+    } catch {
+      // Fallback: use UTC if the timezone string is invalid
+      parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: "UTC",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).formatToParts(date);
+    }
 
     const result = {};
     parts.forEach(part => {
-      if (part.type !== "literal") result[part.type] = Number(part.value);
+      if (part.type !== "literal") {
+        // hour12: false can return "24" for midnight in some locales; normalise to 0
+        const val = Number(part.value);
+        result[part.type] = (part.type === "hour" && val === 24) ? 0 : val;
+      }
     });
     return result;
   }
@@ -684,8 +705,40 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     }
   }
 
+  function setCalendarState(state, message) {
+    const card = document.querySelector(".today-calendar-summary");
+    if (!card) return;
+    card.classList.remove("is-loading", "is-ready", "has-error");
+    card.classList.add(state);
+    if (state === "has-error") {
+      let errNode = card.querySelector(".calendar-error-msg");
+      if (!errNode) {
+        errNode = document.createElement("p");
+        errNode.className = "calendar-error-msg";
+        errNode.setAttribute("role", "alert");
+        card.appendChild(errNode);
+      }
+      errNode.textContent = message || "Calendar unavailable. Previous, Today, and Next still work.";
+    } else {
+      const errNode = card.querySelector(".calendar-error-msg");
+      if (errNode) errNode.remove();
+    }
+    // Announce ready state once for accessibility
+    if (state === "is-ready") {
+      const live = document.getElementById("appStatusLive");
+      if (live && live.textContent === "Loading calendar…") live.textContent = "";
+    }
+  }
+
   function render() {
-    const context = effectiveContext();
+    let context;
+    try {
+      context = effectiveContext();
+    } catch (err) {
+      console.error("13 Moons: failed to compute effective context", err);
+      setCalendarState("has-error", "Calendar data unavailable. Check your timezone settings.");
+      return;
+    }
     lastContext = context;
 
     const info = context.info;
@@ -831,6 +884,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
         patterns: detectPatterns(logs())
       }
     }));
+    setCalendarState("is-ready");
   }
 
   function renderTodaySummary(context, phase, lit, week, movementText) {
@@ -1241,16 +1295,30 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     const utc = calculateSunsetUTC(date, latitude, longitude);
     if (!utc) return null;
 
-    const parts = new Intl.DateTimeFormat("en-US", {
-      timeZone,
-      hour: "2-digit",
-      minute: "2-digit",
-      hourCycle: "h23"
-    }).formatToParts(utc);
+    let parts;
+    try {
+      parts = new Intl.DateTimeFormat("en-US", {
+        timeZone,
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).formatToParts(utc);
+    } catch {
+      parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: "UTC",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).formatToParts(utc);
+    }
 
     const values = {};
     parts.forEach(part => {
-      if (part.type !== "literal") values[part.type] = part.value;
+      if (part.type !== "literal") {
+        const val = part.value;
+        // Normalise "24" → "00" for midnight
+        values[part.type] = val === "24" ? "00" : val;
+      }
     });
 
     return {
@@ -1554,6 +1622,16 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
   }
 
   function setup() {
+    // Mark the Today Calendar as loading immediately so users see a clean state
+    // rather than a field of unexplained em dashes.
+    const calCard = document.querySelector(".today-calendar-summary");
+    if (calCard) {
+      calCard.classList.add("is-loading");
+      calCard.setAttribute("aria-live", "polite");
+    }
+    const live = document.getElementById("appStatusLive");
+    if (live) live.textContent = "Loading calendar…";
+
     text("yr", new Date().getFullYear());
 
     const timezonePick = $("#tzPick");
