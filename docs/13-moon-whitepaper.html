@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963" data-day-boundary="sunset">
+<head>
+  <base href="/">
+  <script>
+    if (location.hostname === "ssnfts24.github.io") {
+      const base = document.querySelector("base");
+      if (base) base.setAttribute("href", "/scroll-of-fire/");
+    }
+  </script>
+
+  <meta charset="utf-8">
+  <title>Remnant Rollout Whitepaper | The 13 Moons Remnant Living Time Observatory</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="The official rollout whitepaper for The 13 Moons Remnant Living Time Observatory: the phased plan for the Pattern Calendar, Equinox Passage, Alignment Ledger, Witness System, Codex Theory integration, research tools, PWA, API, and Living Time Commons.">
+  <meta name="author" content="Aaron Paul Laird">
+  <meta name="theme-color" content="#05070d">
+  <link rel="canonical" href="https://codexofreality.org/remnant-rollout-whitepaper.html">
+  <link rel="icon" href="assets/icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Remnant Rollout Whitepaper">
+  <meta property="og:description" content="The phased implementation plan for The 13 Moons Remnant Living Time Observatory.">
+  <meta property="og:url" content="https://codexofreality.org/remnant-rollout-whitepaper.html">
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Remnant Rollout Whitepaper">
+  <meta name="twitter:description" content="The complete implementation plan for The 13 Moons Remnant Living Time Observatory.">
+  <meta name="twitter:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2TBMEK502C"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", "G-2TBMEK502C");
+  </script>
+
+  <link rel="stylesheet" href="assets/css/codex.css">
+  <link rel="stylesheet" href="assets/css/navigation.css">
+
+  <style>
+    :root {
+      --rw-bg: #05070d;
+      --rw-panel: rgba(10,16,28,.88);
+      --rw-panel-soft: rgba(255,255,255,.045);
+      --rw-line: rgba(255,255,255,.12);
+      --rw-line-strong: rgba(243,201,122,.32);
+      --rw-gold: var(--gold,#f3c97a);
+      --rw-cyan: var(--cyan,#7af3ff);
+      --rw-text: var(--text,#f4f1e8);
+      --rw-muted: var(--muted,#b9c1c7);
+      --rw-radius: 24px;
+      --rw-shadow: 0 24px 80px rgba(0,0,0,.38);
+      --rw-max: 1220px;
+    }
+    html { scroll-behavior:smooth; background:var(--rw-bg); }
+    body {
+      margin:0;
+      min-height:100vh;
+      color:var(--rw-text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(122,243,255,.08), transparent 28rem),
+        radial-gradient(circle at 85% 5%, rgba(243,201,122,.08), transparent 28rem),
+        linear-gradient(180deg,#05070d 0%,#07101a 48%,#05070d 100%);
+    }
+    .rw-shell { width:min(calc(100% - 32px),var(--rw-max)); margin:0 auto; padding:30px 0 96px; }
+    .rw-hero,.rw-section,.rw-phase,.rw-callout,.rw-footer {
+      border:1px solid var(--rw-line);
+      background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),var(--rw-panel);
+      box-shadow:var(--rw-shadow);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+    }
+    .rw-hero { position:relative; overflow:hidden; border-radius:34px; padding:clamp(28px,5vw,68px); margin-top:24px; }
+    .rw-hero:before {
+      content:""; position:absolute; inset:0; pointer-events:none;
+      background:radial-gradient(circle at 80% 20%,rgba(243,201,122,.12),transparent 22rem),
+                 linear-gradient(130deg,rgba(122,243,255,.05),transparent 45%);
+    }
+    .rw-kicker,.rw-phase-number,.rw-eyebrow {
+      display:inline-flex; align-items:center; gap:8px; letter-spacing:.14em; text-transform:uppercase;
+      font-size:.78rem; font-weight:800; color:var(--rw-gold);
+    }
+    .rw-title { position:relative; max-width:980px; margin:18px 0 16px; font-size:clamp(2.25rem,6vw,5.3rem); line-height:.98; letter-spacing:-.04em; text-wrap:balance; }
+    .rw-subtitle { position:relative; max-width:850px; margin:0; color:var(--rw-muted); font-size:clamp(1rem,2vw,1.28rem); line-height:1.75; }
+    .rw-stats { position:relative; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-top:34px; }
+    .rw-stat { padding:18px; border:1px solid var(--rw-line); border-radius:18px; background:rgba(255,255,255,.035); }
+    .rw-stat strong { display:block; font-size:1.45rem; color:var(--rw-cyan); }
+    .rw-stat span { display:block; margin-top:5px; color:var(--rw-muted); font-size:.88rem; }
+    .rw-actions { position:relative; display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; }
+    .rw-btn {
+      display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:0 18px;
+      border-radius:999px; border:1px solid var(--rw-line-strong); color:var(--rw-text);
+      text-decoration:none; font-weight:800; background:rgba(243,201,122,.08);
+      transition:transform 160ms ease,border-color 160ms ease,background 160ms ease;
+    }
+    .rw-btn:hover,.rw-btn:focus-visible { transform:translateY(-2px); border-color:var(--rw-gold); background:rgba(243,201,122,.14); }
+    .rw-btn.secondary { border-color:rgba(122,243,255,.28); background:rgba(122,243,255,.06); }
+    .rw-layout { display:grid; grid-template-columns:minmax(0,290px) minmax(0,1fr); gap:24px; margin-top:26px; align-items:start; }
+    .rw-toc {
+      position:sticky; top:18px; border:1px solid var(--rw-line); border-radius:var(--rw-radius);
+      background:rgba(9,14,25,.88); padding:20px; box-shadow:var(--rw-shadow);
+      max-height:calc(100vh - 36px); overflow:auto;
+    }
+    .rw-toc h2 { margin:0 0 14px; font-size:1rem; }
+    .rw-toc a { display:block; padding:9px 10px; border-radius:12px; color:var(--rw-muted); text-decoration:none; font-size:.9rem; }
+    .rw-toc a:hover,.rw-toc a:focus-visible { color:var(--rw-text); background:rgba(255,255,255,.055); }
+    .rw-content { min-width:0; }
+    .rw-section { border-radius:var(--rw-radius); padding:clamp(22px,4vw,38px); margin-bottom:22px; scroll-margin-top:18px; }
+    .rw-section h2 { margin:8px 0 16px; font-size:clamp(1.65rem,3vw,2.5rem); line-height:1.12; }
+    .rw-section h3 { margin-top:28px; color:var(--rw-cyan); }
+    .rw-section p,.rw-section li { color:var(--rw-muted); line-height:1.72; }
+    .rw-section strong { color:var(--rw-text); }
+    .rw-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-top:20px; }
+    .rw-card { border:1px solid var(--rw-line); border-radius:18px; padding:20px; background:var(--rw-panel-soft); }
+    .rw-card h3 { margin:0 0 8px; color:var(--rw-text); font-size:1.06rem; }
+    .rw-card p { margin:0; }
+    .rw-quote { margin:24px 0 0; padding:22px; border-left:3px solid var(--rw-gold); border-radius:0 18px 18px 0; background:rgba(243,201,122,.06); color:var(--rw-text); font-size:1.08rem; line-height:1.65; }
+    .rw-phase { border-radius:var(--rw-radius); padding:clamp(22px,4vw,34px); margin-bottom:18px; scroll-margin-top:18px; }
+    .rw-phase h3 { margin:8px 0 8px; font-size:clamp(1.4rem,3vw,2rem); }
+    .rw-phase-summary { margin:0 0 18px; color:var(--rw-muted); line-height:1.7; }
+    .rw-phase-grid { display:grid; grid-template-columns:1.1fr 1fr 1fr; gap:14px; }
+    .rw-phase-col { border:1px solid var(--rw-line); border-radius:16px; padding:18px; background:rgba(255,255,255,.025); }
+    .rw-phase-col h4 { margin:0 0 10px; color:var(--rw-cyan); }
+    .rw-phase-col ul { margin:0; padding-left:18px; }
+    .rw-phase-col li { margin:7px 0; color:var(--rw-muted); line-height:1.55; }
+    .rw-status { display:inline-flex; margin-top:18px; padding:7px 11px; border-radius:999px; border:1px solid rgba(122,243,255,.22); color:var(--rw-cyan); background:rgba(122,243,255,.055); font-size:.82rem; font-weight:800; }
+    .rw-callout { border-radius:var(--rw-radius); padding:clamp(24px,4vw,40px); margin:26px 0; border-color:var(--rw-line-strong); }
+    .rw-callout h2 { margin-top:0; }
+    .rw-code { overflow-x:auto; padding:18px; border:1px solid var(--rw-line); border-radius:16px; background:#03060b; color:#dceaf2; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.84rem; line-height:1.6; white-space:pre; }
+    .rw-checklist { columns:2; column-gap:28px; padding-left:20px; }
+    .rw-checklist li { break-inside:avoid; margin-bottom:9px; }
+    .rw-footer { border-radius:30px; padding:clamp(26px,5vw,52px); text-align:center; }
+    .rw-footer h2 { margin:0 0 14px; font-size:clamp(1.8rem,4vw,3.4rem); }
+    .rw-footer p { max-width:780px; margin:0 auto; color:var(--rw-muted); line-height:1.75; }
+    .rw-meta { margin-top:20px !important; font-size:.85rem; }
+    @media (max-width:980px) {
+      .rw-layout { grid-template-columns:1fr; }
+      .rw-toc { position:relative; top:0; max-height:none; }
+      .rw-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .rw-phase-grid { grid-template-columns:1fr; }
+    }
+    @media (max-width:680px) {
+      .rw-shell { width:min(calc(100% - 20px),var(--rw-max)); padding-top:14px; }
+      .rw-hero { border-radius:24px; padding:24px 20px; }
+      .rw-title { font-size:clamp(2.1rem,13vw,3.4rem); }
+      .rw-stats,.rw-grid { grid-template-columns:1fr; }
+      .rw-actions { flex-direction:column; }
+      .rw-btn { width:100%; }
+      .rw-section,.rw-phase,.rw-callout { border-radius:20px; padding:22px 18px; }
+      .rw-checklist { columns:1; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      html { scroll-behavior:auto; }
+      .rw-btn { transition:none; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"TechArticle",
+    "headline":"Remnant Rollout Whitepaper",
+    "alternativeHeadline":"The Implementation Plan for The 13 Moons Remnant Living Time Observatory",
+    "author":{"@type":"Person","name":"Aaron Paul Laird"},
+    "publisher":{"@type":"Organization","name":"Codex of Reality","url":"https://codexofreality.org"},
+    "mainEntityOfPage":"https://codexofreality.org/remnant-rollout-whitepaper.html",
+    "description":"A phased rollout plan for the Pattern Calendar, Equinox Passage, Alignment Ledger, Witness System, research layer, public API, PWA, and Living Time Commons."
+  }
+  </script>
+</head>
+
+<body data-remnant-boundary="sunset">
+  <a class="skip-link" href="#main-content">Skip to whitepaper</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="index.html" aria-label="Codex of Reality home">
+        <span class="brand-mark" aria-hidden="true">☲</span>
+        <span class="brand-text">Codex of Reality</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" aria-label="Open navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <nav id="site-navigation" class="site-nav" aria-label="Primary navigation">
+        <a href="start.html">Start</a>
+        <a href="moons.html">13 Moons</a>
+        <a href="observatory.html">Observatory</a>
+        <a href="theory.html">Theory</a>
+        <a href="ledger.html">Ledger</a>
+        <a href="downloads.html">Downloads</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="rw-shell">
+    <section class="rw-hero" aria-labelledby="page-title">
+      <span class="rw-kicker">☾ Official Whitepaper · Remnant Rollout</span>
+      <h1 id="page-title" class="rw-title">The 13 Moons Remnant Living Time Observatory</h1>
+      <p class="rw-subtitle">
+        A complete phased implementation plan for building a stable Pattern Calendar,
+        a moving astronomical layer, the Equinox Passage, an Alignment Ledger,
+        a distributed Witness System, Codex Theory mapping, research tools,
+        an installable application, and a long-term Living Time Commons.
+      </p>
+      <div class="rw-stats" aria-label="Whitepaper overview">
+        <div class="rw-stat"><strong>13 × 28</strong><span>Stable Pattern Calendar</span></div>
+        <div class="rw-stat"><strong>13 Phases</strong><span>Ordered Remnant Rollout</span></div>
+        <div class="rw-stat"><strong>2014–2026</strong><span>First Equinox study field</span></div>
+        <div class="rw-stat"><strong>Open Layer</strong><span>API, widgets, and public witness</span></div>
+      </div>
+      <div class="rw-actions">
+        <a class="rw-btn" href="#rollout-phases">Enter the rollout phases</a>
+        <a class="rw-btn secondary" href="moons.html">Open the Living Calendar</a>
+      </div>
+    </section>
+
+    <div class="rw-layout">
+      <aside class="rw-toc" aria-label="Whitepaper contents">
+        <h2>Whitepaper Contents</h2>
+        <a href="#purpose">1. Purpose</a>
+        <a href="#identity">2. Identity</a>
+        <a href="#calendar-architecture">3. Hybrid A Architecture</a>
+        <a href="#equinox-passage">4. Equinox Passage</a>
+        <a href="#alignment-ledger">5. Alignment Ledger</a>
+        <a href="#witness-system">6. Witness System</a>
+        <a href="#theory-integration">7. Theory Integration</a>
+        <a href="#sacred-layer">8. YHWH and Sacred Layer</a>
+        <a href="#research-integrity">9. Research Integrity</a>
+        <a href="#system-architecture">10. System Architecture</a>
+        <a href="#website-integration">11. Website Integration</a>
+        <a href="#rollout-phases">12. Remnant Rollout Phases</a>
+        <a href="#immediate-order">13. Immediate Working Order</a>
+        <a href="#first-release">14. First Public Release</a>
+        <a href="#final-vision">15. Final Vision</a>
+      </aside>
+
+      <div class="rw-content">
+        <section id="purpose" class="rw-section">
+          <span class="rw-eyebrow">01 · Purpose</span>
+          <h2>Not only a calendar—a living observatory</h2>
+          <p>The 13 Moons Remnant Living Time Observatory is a living time, witness, pattern-recognition, research, and reality-observation system. The fixed calendar supplies a stable frame. The sky, Earth, environment, community, invention, and witness supply the changing field.</p>
+          <p>Its purpose is to reveal how cycles align, separate, recur, transform, and become observable across time without forcing symbolic interpretation into scientific fact.</p>
+          <blockquote class="rw-quote">The fixed pattern makes movement measurable. The moving world makes the pattern alive. The witness preserves what occurred.</blockquote>
+        </section>
+
+        <section id="identity" class="rw-section">
+          <span class="rw-eyebrow">02 · Identity</span>
+          <h2>Official project identity</h2>
+          <div class="rw-grid">
+            <article class="rw-card"><h3>Official name</h3><p><strong>The 13 Moons Remnant Living Time Observatory</strong></p></article>
+            <article class="rw-card"><h3>Supporting subtitle</h3><p><strong>Remnant 13 Moons — Living Calendar</strong></p></article>
+            <article class="rw-card"><h3>Primary public function</h3><p>Translate civil dates into Pattern Time while tracking real astronomical, ecological, personal, and collective relationships.</p></article>
+            <article class="rw-card"><h3>Primary research function</h3><p>Build a transparent witness archive that separates observation, interpretation, hypothesis, and outcome.</p></article>
+          </div>
+        </section>
+
+        <section id="calendar-architecture" class="rw-section">
+          <span class="rw-eyebrow">03 · Hybrid A</span>
+          <h2>Stable Pattern Time, moving astronomical time</h2>
+          <h3>Pattern Calendar</h3>
+          <ul>
+            <li>13 moons</li><li>28 days per moon</li><li>4 weeks per moon</li><li>7 days per week</li>
+            <li>364 structured days</li><li>Day Out of Time</li><li>Deep Time Day during leap years</li>
+          </ul>
+          <h3>Confirmed Pattern anchor</h3>
+          <p><strong>April 17, 2026 = Moon 1 · Day 1 · Day 1/364.</strong></p>
+          <p>This makes July 17, 2026 equal to Moon 4 · Day 8 · Day 92/364, matching the current live calendar.</p>
+          <h3>Leap handling</h3>
+          <p>The arithmetic leap structure remains predictable. Intercalary days exist outside the 13 moons, 52 weeks, and ordinary weekday cycle. Astronomical events do not directly change the fixed Pattern Calendar. Their relationship to it is measured separately.</p>
+        </section>
+
+        <section id="equinox-passage" class="rw-section">
+          <span class="rw-eyebrow">04 · Equinox Passage</span>
+          <h2>The changing interval before the Pattern New Year</h2>
+          <p>The Equinox Passage is the variable interval between the astronomical March Equinox Gate and Moon 1 Day 1 of the fixed Pattern Calendar.</p>
+          <div class="rw-grid">
+            <article class="rw-card"><h3>Passage begins</h3><p>The exact astronomical March Equinox Gate.</p></article>
+            <article class="rw-card"><h3>Passage ends</h3><p>The beginning of Moon 1 Day 1.</p></article>
+            <article class="rw-card"><h3>Passage measures</h3><p>Days, hours, local boundaries, lunar conditions, light, and response.</p></article>
+            <article class="rw-card"><h3>Passage purpose</h3><p>Reveal how Earth Time and fixed Pattern Time move in relationship.</p></article>
+          </div>
+          <blockquote class="rw-quote">The Earth crosses balance at the Equinox Gate. The Pattern Year completes its final movement through the Equinox Passage. Moon 1 Day 1 begins the new structured year.</blockquote>
+        </section>
+
+        <section id="alignment-ledger" class="rw-section">
+          <span class="rw-eyebrow">05 · Alignment Ledger</span>
+          <h2>Record the relationship, not only the event</h2>
+          <p>The Alignment Ledger calculates how cycles interact through convergence, separation, recurrence, opposition, measurable clustering, and offset.</p>
+          <div class="rw-grid">
+            <article class="rw-card"><h3>Solar relationships</h3><p>Equinoxes, solstices, sunrise, sunset, daylight, and twilight.</p></article>
+            <article class="rw-card"><h3>Lunar relationships</h3><p>Phase, illumination, moonrise, moonset, distance, and horizon position.</p></article>
+            <article class="rw-card"><h3>Pattern relationships</h3><p>Moon, day, week, gate, annual phase, and intercalary position.</p></article>
+            <article class="rw-card"><h3>Living relationships</h3><p>Ecology, weather, personal witness, community, and invention.</p></article>
+          </div>
+          <h3>First historical study</h3>
+          <p>The first complete Alignment Ledger field will map 2014 through 2026 and display the March equinox in relation to the fixed Pattern Calendar, lunar conditions, passage length, daylight, and local sky.</p>
+        </section>
+
+        <section id="witness-system" class="rw-section">
+          <span class="rw-eyebrow">06 · Witness System</span>
+          <h2>Build disciplined witness at personal and collective scale</h2>
+          <p>The Witness System records personal, environmental, creative, community, and research observations through standardized fields.</p>
+          <div class="rw-grid">
+            <article class="rw-card"><h3>Observation</h3><p>What was directly measured, recorded, or experienced?</p></article>
+            <article class="rw-card"><h3>Interpretation</h3><p>What does the witness believe the observation may mean?</p></article>
+            <article class="rw-card"><h3>Hypothesis</h3><p>What relationship could be tested later?</p></article>
+            <article class="rw-card"><h3>Outcome</h3><p>What happened, failed, changed, remained unclear, or requires replication?</p></article>
+          </div>
+          <blockquote class="rw-quote">The witness may interpret freely. The ledger must record faithfully.</blockquote>
+        </section>
+
+        <section id="theory-integration" class="rw-section">
+          <span class="rw-eyebrow">07 · Codex Theory</span>
+          <h2>Map the full interaction field of reality</h2>
+          <p>The Observatory is not limited to the claim that consciousness shapes reality. It studies how the full Codex field interacts across time.</p>
+          <div class="rw-grid">
+            <article class="rw-card"><h3>Core variables</h3><p>Energy, Information, Intention, Memory, Flow, and Consciousness.</p></article>
+            <article class="rw-card"><h3>Extended operators</h3><p>Time, Space, Polarity, Emergence, Fractality, and Transformation.</p></article>
+            <article class="rw-card"><h3>Primary question</h3><p>How do the components and conditions of reality interact, organize, repeat, transform, and become observable?</p></article>
+            <article class="rw-card"><h3>Primary method</h3><p>Timestamp, measure, compare, preserve contradiction, and allow correction.</p></article>
+          </div>
+        </section>
+
+        <section id="sacred-layer" class="rw-section">
+          <span class="rw-eyebrow">08 · Sacred Layer</span>
+          <h2>YHWH as Living Source, not a variable</h2>
+          <p>YHWH is not placed inside the equation as one force among other forces. YHWH is understood as the Living Source within whom reality, relationship, order, witness, emergence, and transformation become possible.</p>
+          <blockquote class="rw-quote">The Codex maps how reality forms. The Observatory builds the witness. YHWH is the Living Source in whom the movements arise, relate, and return.</blockquote>
+          <p>The sacred interpretation layer remains optional and visibly separate from astronomical calculation, raw observation, and research analysis.</p>
+        </section>
+
+        <section id="research-integrity" class="rw-section">
+          <span class="rw-eyebrow">09 · Research Integrity</span>
+          <h2>Truth before defense of the system</h2>
+          <ul class="rw-checklist">
+            <li>Timestamp predictions before outcomes.</li><li>Define hypotheses and variables.</li><li>Record failed predictions.</li>
+            <li>Preserve negative results.</li><li>Use comparison groups where possible.</li><li>Separate correlation from causation.</li>
+            <li>Publish methods and limitations.</li><li>Preserve raw observations.</li><li>Allow replication.</li>
+            <li>Protect privacy and obtain consent.</li><li>Avoid diagnostic or medical claims.</li><li>Label uncertainty clearly.</li>
+          </ul>
+          <blockquote class="rw-quote">A failed prediction is also a witness.</blockquote>
+        </section>
+
+        <section id="system-architecture" class="rw-section">
+          <span class="rw-eyebrow">10 · System Architecture</span>
+          <h2>Modular structure</h2>
+          <div class="rw-grid">
+            <article class="rw-card"><h3>Pattern Calendar Engine</h3><p>Date conversion, boundaries, moons, weeks, gates, leap state.</p></article>
+            <article class="rw-card"><h3>Astronomical Engine</h3><p>Solar, lunar, horizon, light, and major sky events.</p></article>
+            <article class="rw-card"><h3>Alignment Engine</h3><p>Offsets, convergence, recurrence, passage length, signatures.</p></article>
+            <article class="rw-card"><h3>Witness Ledger</h3><p>Personal, environmental, inventive, community, and research logs.</p></article>
+            <article class="rw-card"><h3>Pattern Recognition Engine</h3><p>Cycle comparison, recurrence, echoes, and long-field analysis.</p></article>
+            <article class="rw-card"><h3>Theory Mapper</h3><p>Maps records to Codex variables and transformation operators.</p></article>
+            <article class="rw-card"><h3>Sacred Interpretation Layer</h3><p>Optional readings, Hebrew connections, Shabbat, and YHWH reflection.</p></article>
+            <article class="rw-card"><h3>Public Observatory</h3><p>Anonymized patterns, annual reports, studies, and public findings.</p></article>
+          </div>
+        </section>
+
+        <section id="website-integration" class="rw-section">
+          <span class="rw-eyebrow">11 · Website Integration</span>
+          <h2>Add the Observatory without breaking the existing site</h2>
+          <p>The Observatory should be introduced through progressive enhancement. Existing routes, navigation, visual identity, calendar functions, PWA behavior, Theory pages, Ledger, Genesis Oracle, and Frequency Governance tools should remain intact.</p>
+          <h3>Integration rules</h3>
+          <ul>
+            <li>Add modules through new tabs, cards, overlays, and dedicated subpages.</li>
+            <li>Use one authoritative Pattern Calendar engine across every page.</li>
+            <li>Keep astronomy separate from symbolic interpretation.</li>
+            <li>Use reusable JavaScript modules rather than one oversized file.</li>
+            <li>Preserve mobile and iPhone fixes before adding visual complexity.</li>
+            <li>Ship each phase independently and test before moving forward.</li>
+          </ul>
+          <div class="rw-code">docs/
+├── moons.html
+├── observatory.html
+├── equinox-passage.html
+├── alignment-ledger.html
+├── witness.html
+├── research.html
+├── theory.html
+├── api/
+├── data/
+├── assets/
+│   ├── css/
+│   ├── js/
+│   │   ├── calendar/
+│   │   ├── astronomy/
+│   │   ├── alignment/
+│   │   ├── witness/
+│   │   ├── research/
+│   │   └── ui/
+│   └── img/
+└── manifest.webmanifest</div>
+        </section>
+
+        <section id="rollout-phases" class="rw-section">
+          <span class="rw-eyebrow">12 · Remnant Rollout</span>
+          <h2>Thirteen ordered implementation phases</h2>
+          <p>Each phase must be completed, tested, documented, and stabilized before the next phase becomes dependent on it.</p>
+        </section>
+
+        <article id="phase-1" class="rw-phase">
+          <span class="rw-phase-number">Remnant Rollout Phase 01</span>
+          <h3>Lock the Calendar Foundation</h3>
+          <p class="rw-phase-summary">Establish one authoritative Pattern Calendar engine and remove conflicting date logic.</p>
+          <div class="rw-phase-grid">
+            <div class="rw-phase-col"><h4>Build</h4><ul><li>Canonical April 17, 2026 anchor</li><li>364-day cycle logic</li><li>Day Out of Time</li><li>Deep Time Day</li><li>Sunset and midnight boundary modes</li></ul></div>
+            <div class="rw-phase-col"><h4>Deliver</h4><ul><li>Calendar specification</li><li>Single conversion module</li><li>Historical date tests</li><li>Leap-year and timezone tests</li></ul></div>
+            <div class="rw-phase-col"><h4>Complete when</h4><ul><li>Every page returns the same Pattern date</li><li>No duplicate calculation logic remains</li><li>Mobile boundary behavior is verified</li></ul></div>
+          </div>
+          <span class="rw-status">Foundation dependency</span>
+        </article>
+
+        <article id="phase-2" class="rw-phase">
+          <span class="rw-phase-number">Remnant Rollout Phase 02</span>
+          <h3>Build the Equinox Passage Engine</h3>
+          <p class="rw-phase-summary">Calculate the March Equinox Gate, its Pattern position, and the changing interval to Pattern New Year.</p>
+          <div class="rw-phase-grid">
+            <div class="rw-phase-col"><h4>Build</h4><ul><li>Equinox instant calculation</li><li>Local time conversion</li><li>Pattern position mapping</li><li>Passage length and progress</li></ul></div>
+            <div class="rw-phase-col"><h4>Deliver</h4><ul><li>Equinox Passage card</li><li>Historical Passage table</li><li>2014–2026 dataset</li><li>Annual Passage record</li></ul></div>
+            <div class="rw-phase-col"><h4>Complete when</h4><ul><li>Every year shows Gate, Pattern date, and interval</li><li>Boundary logic is transparent</li></ul></div>
+          </div>
+          <span class="rw-status">First living-time module</span>
+        </article>
+
+        <article id="phase-3" class="rw-phase">
+          <span class="rw-phase-number">Remnant Rollout Phase 03</span>
+          <h3>Build the Alignment Ledger</h3>
+          <p class="rw-phase-summary">Turn isolated events into measurable relationships across time.</p>
+          <div class="rw-phase-grid">
+            <div class="rw-phase-col"><h4>Build</h4><ul><li>Offset records</li><li>Convergence and separation</li><li>Recurrence detection</li><li>Annual signatures</li></ul></div>
+            <div class="rw-phase-col"><h4>Deliver</h4><ul><li>Alignment Ledger page</li><li>Year comparison mode</li><li>13-year spiral</li><li>JSON and CSV exports</li></ul></div>
+            <div class="rw-phase-col"><h4>Complete when</h4><ul><li>Two years can be compared clearly</li><li>All relationships show their source data</li></ul></div>
+          </div>
+          <span class="rw-status">Core Observatory intelligence</span>
+        </article>
+
+        <article id="phase-4" class="rw-phase">
+          <span class="rw-phase-number">Remnant Rollout Phase 04</span>
+          <h3>Expand the Living Sky Layer</h3>
+          <p class="rw-phase-summary">Add the real local sky without confusing astronomy with the Pattern Calendar.</p>
+          <div class="rw-phase-grid">
+            <div class="rw-phase-col"><h4>Build</h4><ul><li>Lunar phase and illumination</li><li>Moonrise and moonset</li><li>Sunrise, sunset, and twilight</li><li>Solstices and both equinoxes</li></ul></div>
+            <div class="rw-phase-col"><h4>Deliver</h4><ul><li>Living Sky dashboard</li><li>Horizon wheel</li><li>Solar light arc</li><li>Sky event timeline</li></ul></div>
+            <div class="rw-phase-col"><h4>Complete when</h4><ul><li>Pattern and sky layers are visually distinct</li><li>Local sky values work across devices</li></ul></div>
+          </div>
+          <span class="rw-status">Astronomical expansion</span>
+        </article>
+
+        <article id="phase-5" class="rw-phase">
+          <span class="rw-phase-number">Remnant Rollout Phase 05</span>
+          <h3>Build the Personal Witness Ledger</h3>
+          <p class="rw-phase-summary">Give each user a private, exportable, local-first record of lived patterns.</p>
+          <div class="rw-phase-grid">
+            <div class="rw-phase-col"><h4>Build</h4><ul><li>Daily witness form</li><li>Passage journal</li><li>Mood, sleep, energy, and creativity logs</li><li>Observation, interpretation, hypothesis fields</li></ul></div>
+            <div class="rw-phase-col"><h4>Deliver</h4><ul><li>Private local storage</li><li>Export and backup</li><li>Pattern comparison cards</li><li>Privacy controls</li></ul></div>
+            <div class="rw-phase-col"><h4>Complete when</h4><ul><li>A full moon cycle can be recorded</li><li>The same Pattern positions can be compared later</li></ul></div>
+          </div>
+          <span class="rw-status">Private witness foundation</span>
+        </article>
+
+        <article id="phase-6" class="rw-phase">
+          <span class="rw-phase-number">Remnant Rollout Phase 06</span>
+          <h3>Integrate Codex Theory Variables</h3>
+          <p class="rw-phase-summary">Map relevant observations to the wider reality-interaction model.</p>
+          <div class="rw-phase-grid">
+            <div class="rw-phase-col"><h4>Build</h4><ul><li>Energy, Information, Intention</li><li>Memory, Flow, Consciousness</li><li>Time, Space, Polarity</li><li>Emergence, Fractality, Transformation</li></ul></div>
+            <div class="rw-phase-col"><h4>Deliver</h4><ul><li>Reality Interaction Record</li><li>Theory mapping view</li><li>Optional variable tagging</li><li>Relationship visualization</li></ul></div>
+            <div class="rw-phase-col"><h4>Complete when</h4><ul><li>Simple logs remain simple</li><li>Theory mapping never overwrites raw observation</li></ul></div>
+          </div>
+          <span class="rw-status">Codex integration</span>
+        </article>
+
+        <article id="phase-7" class="rw-phase">
+          <span class="rw-phase-number">Remnant Rollout Phase 07</span>
+          <h3>Build the Invention and Emergence Archive</h3>
+          <p class="rw-phase-summary">Preserve the complete process from first signal to practical creation.</p>
+          <div class="rw-phase-grid">
+            <div class="rw-phase-col"><h4>Build</h4><ul><li>Idea origin records</li><li>Prototype timeline</li><li>Failure archive</li><li>Breakthrough and validation markers</li></ul></div>
+            <div class="rw-phase-col"><h4>Deliver</h4><ul><li>Invention record template</li><li>Dream and insight log</li><li>Prototype comparison</li><li>Outcome verification</li></ul></div>
+            <div class="rw-phase-col"><h4>Complete when</h4><ul><li>An idea can be traced from signal to implementation</li><li>Failures remain visible</li></ul></div>
+          </div>
+          <span class="rw-status">Emergence archive</span>
+        </article>
+
+        <article id="phase-8" class="rw-phase">
+          <span class="rw-phase-number">Remnant Rollout Phase 08</span>
+          <h3>Build Community Witness</h3>
+          <p class="rw-phase-summary">Allow communities to participate without surrendering private personal data.</p>
+          <div class="rw-phase-grid">
+            <div class="rw-phase-col"><h4>Build</h4><ul><li>Shared observation campaigns</li><li>Community projects</li><li>Environmental records</li><li>Collective Passage observances</li></ul></div>
+            <div class="rw-phase-col"><h4>Deliver</h4><ul><li>Community fields</li><li>Aggregate dashboards</li><li>Local ecological projects</li><li>Consent controls</li></ul></div>
+            <div class="rw-phase-col"><h4>Complete when</h4><ul><li>Public patterns never expose private records</li><li>Participation is voluntary and reversible</li></ul></div>
+          </div>
+          <span class="rw-status">Collective observation</span>
+        </article>
+
+        <article id="phase-9" class="rw-phase">
+          <span class="rw-phase-number">Remnant Rollout Phase 09</span>
+          <h3>Launch Research Protocols</h3>
+          <p class="rw-phase-summary">Move from pattern recognition toward reproducible studies.</p>
+          <div class="rw-phase-grid">
+            <div class="rw-phase-col"><h4>Build</h4><ul><li>Hypothesis registry</li><li>Timestamped predictions</li><li>Comparison and control support</li><li>Replication records</li></ul></div>
+            <div class="rw-phase-col"><h4>Deliver</h4><ul><li>Study templates</li><li>Outcome classifications</li><li>Methods pages</li><li>Anonymized datasets</li></ul></div>
+            <div class="rw-phase-col"><h4>Complete when</h4><ul><li>A study can be reviewed from hypothesis to limitation</li><li>Negative results remain published</li></ul></div>
+          </div>
+          <span class="rw-status">Research transition</span>
+        </article>
+
+        <article id="phase-10" class="rw-phase">
+          <span class="rw-phase-number">Remnant Rollout Phase 10</span>
+          <h3>Build the Public Living Observatory</h3>
+          <p class="rw-phase-summary">Present long-term patterns with transparent sourcing and visible uncertainty.</p>
+          <div class="rw-phase-grid">
+            <div class="rw-phase-col"><h4>Build</h4><ul><li>Public trend views</li><li>Annual reports</li><li>Environmental maps</li><li>Study archive</li></ul></div>
+            <div class="rw-phase-col"><h4>Deliver</h4><ul><li>Observatory homepage</li><li>Equinox Passage report</li><li>Pattern Year report</li><li>Methodology library</li></ul></div>
+            <div class="rw-phase-col"><h4>Complete when</h4><ul><li>Measured fact, interpretation, and unknown are separated</li><li>Source data is traceable</li></ul></div>
+          </div>
+          <span class="rw-status">Public evidence layer</span>
+        </article>
+
+        <article id="phase-11" class="rw-phase">
+          <span class="rw-phase-number">Remnant Rollout Phase 11</span>
+          <h3>Open the Time Infrastructure</h3>
+          <p class="rw-phase-summary">Let other websites and applications use the system without copying the entire project.</p>
+          <div class="rw-phase-grid">
+            <div class="rw-phase-col"><h4>Build</h4><ul><li>Public API</li><li>JavaScript library</li><li>Calendar feeds</li><li>Embeddable components</li></ul></div>
+            <div class="rw-phase-col"><h4>Deliver</h4><ul><li>Today widget</li><li>Equinox Passage widget</li><li>Developer docs</li><li>Open datasets</li></ul></div>
+            <div class="rw-phase-col"><h4>Complete when</h4><ul><li>An outside developer can retrieve verified data</li><li>Versioning and attribution are documented</li></ul></div>
+          </div>
+          <span class="rw-status">Open infrastructure</span>
+        </article>
+
+        <article id="phase-12" class="rw-phase">
+          <span class="rw-phase-number">Remnant Rollout Phase 12</span>
+          <h3>Installable App and Offline Observatory</h3>
+          <p class="rw-phase-summary">Make the system reliable on mobile and desktop with private offline use.</p>
+          <div class="rw-phase-grid">
+            <div class="rw-phase-col"><h4>Build</h4><ul><li>PWA installation flow</li><li>Offline calendar conversion</li><li>Offline private witness</li><li>Permission-based synchronization</li></ul></div>
+            <div class="rw-phase-col"><h4>Deliver</h4><ul><li>Install prompt</li><li>Service worker improvements</li><li>iPhone and Android testing</li><li>Desktop installation</li></ul></div>
+            <div class="rw-phase-col"><h4>Complete when</h4><ul><li>The app installs across supported platforms</li><li>Core functions survive temporary disconnection</li></ul></div>
+          </div>
+          <span class="rw-status">Application completion</span>
+        </article>
+
+        <article id="phase-13" class="rw-phase">
+          <span class="rw-phase-number">Remnant Rollout Phase 13</span>
+          <h3>The Living Time Commons</h3>
+          <p class="rw-phase-summary">Establish long-term stewardship so the Observatory can outlive one site or one developer.</p>
+          <div class="rw-phase-grid">
+            <div class="rw-phase-col"><h4>Build</h4><ul><li>Open protocol</li><li>Governance charter</li><li>Contributor standards</li><li>Ethics and review structure</li></ul></div>
+            <div class="rw-phase-col"><h4>Deliver</h4><ul><li>Stewardship model</li><li>Research partnerships</li><li>Archive preservation plan</li><li>Community contributor guide</li></ul></div>
+            <div class="rw-phase-col"><h4>Complete when</h4><ul><li>The system can continue across generations</li><li>No single authority controls the witness archive</li></ul></div>
+          </div>
+          <span class="rw-status">Long-term stewardship</span>
+        </article>
+
+        <section id="immediate-order" class="rw-callout">
+          <span class="rw-eyebrow">13 · Immediate Working Order</span>
+          <h2>What gets built next</h2>
+          <ol>
+            <li>Freeze and document the April 17, 2026 Pattern anchor.</li>
+            <li>Audit the existing calendar calculation code.</li>
+            <li>Create one authoritative Pattern Calendar engine.</li>
+            <li>Add automated historical, leap-year, boundary, and timezone tests.</li>
+            <li>Build the Equinox Passage calculation module.</li>
+            <li>Verify the complete 2014–2026 Equinox dataset.</li>
+            <li>Add an Equinox Passage tab to the moons page.</li>
+            <li>Build the first Alignment Ledger view.</li>
+            <li>Add annual Passage signatures.</li>
+            <li>Add local light and lunar data.</li>
+            <li>Build private Witness Ledger storage.</li>
+            <li>Add observation, interpretation, and hypothesis separation.</li>
+            <li>Integrate Codex Theory variables.</li>
+            <li>Build the 13-year spiral visualization.</li>
+            <li>Complete PWA and mobile reliability work.</li>
+            <li>Publish methods, definitions, and limitations.</li>
+            <li>Open the first voluntary community observation project.</li>
+          </ol>
+        </section>
+
+        <section id="first-release" class="rw-section">
+          <span class="rw-eyebrow">14 · First Public Release</span>
+          <h2>Focused, useful, and testable</h2>
+          <div class="rw-grid">
+            <article class="rw-card"><h3>Include</h3><p>Today’s Pattern date, visible Moon, sunrise, sunset, current gate, Equinox Passage status, historical comparison, private witness, 13-year Equinox view, PWA installation, and shareable daily pages.</p></article>
+            <article class="rw-card"><h3>Do not include yet</h3><p>Unsupported causal claims, forced accounts, invasive tracking, medical interpretations, public social complexity, or AI-generated certainty.</p></article>
+          </div>
+        </section>
+
+        <section id="final-vision" class="rw-footer">
+          <span class="rw-eyebrow">15 · Final Vision</span>
+          <h2>Build the witness</h2>
+          <p>The Pattern Calendar gives humanity a stable rhythm. The Equinox Passage measures the changing relationship between Pattern Time and Earth Time. The Alignment Ledger records how cycles converge, separate, and return. The Witness System preserves how people, environments, communities, ideas, and inventions move within those cycles.</p>
+          <blockquote class="rw-quote">Wonder becomes observation. Observation becomes pattern. Pattern becomes hypothesis. Hypothesis becomes experiment. Experiment becomes witness. Witness becomes knowledge. Knowledge becomes responsible creation.</blockquote>
+          <p class="rw-meta">The 13 Moons Remnant Living Time Observatory · Codex of Reality · Remnant Rollout Whitepaper</p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="assets/js/site.js" defer></script>
+</body>
+    </html>
