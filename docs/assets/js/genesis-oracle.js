@@ -178,16 +178,14 @@
     const body = document.getElementById("savedRows");
     const selectA = document.getElementById("compareA");
     const selectB = document.getElementById("compareB");
-    const mirrorProfile = document.getElementById("mirrorProfile");
     if (!body || !selectA || !selectB) return;
 
-    const profiles = globalThis.GenesisOracleStorage.readProfiles();
+    const repo = globalThis.OracleProfileRepository;
+    const profiles = repo ? [...repo.listProfiles(), ...repo.listLegacyProfiles()] : [];
+
     body.innerHTML = "";
     selectA.innerHTML = "";
     selectB.innerHTML = "";
-    if (mirrorProfile) {
-      mirrorProfile.innerHTML = "<option value=\"\">No saved profile selected</option>";
-    }
 
     if (!profiles.length) {
       const row = document.createElement("tr");
@@ -196,7 +194,7 @@
       return;
     }
 
-    profiles.forEach((profile, index) => {
+    profiles.forEach(profile => {
       const row = document.createElement("tr");
       const legacy = profile.legacyRecord ? "legacy" : "v2";
       const values = [
@@ -215,16 +213,14 @@
       });
       body.appendChild(row);
 
+      // Use stable profile ID as the option value (not array index)
+      const label = `${profile.input?.name || "Unnamed"} (${profile.input?.birthDate || ""})`;
       const optionA = document.createElement("option");
-      optionA.value = String(index);
-      optionA.textContent = `${profile.input?.name || "Unnamed"} (${profile.input?.birthDate || ""})`;
+      optionA.value = profile.id || "";
+      optionA.textContent = label;
       const optionB = optionA.cloneNode(true);
       selectA.appendChild(optionA);
       selectB.appendChild(optionB);
-      if (mirrorProfile && !profile.legacyRecord) {
-        const mirrorOption = optionA.cloneNode(true);
-        mirrorProfile.appendChild(mirrorOption);
-      }
     });
   }
 
@@ -241,11 +237,23 @@
   }
 
   function runCompare() {
-    const profiles = globalThis.GenesisOracleStorage.readProfiles();
-    const a = profiles[Number($("#compareA")?.value || -1)];
-    const b = profiles[Number($("#compareB")?.value || -1)];
+    const repo = globalThis.OracleProfileRepository;
     const out = $("#compareResult");
-    if (!a || !b || !out) return;
+    if (!out) return;
+    if (!repo) {
+      out.textContent = "Profile repository not available.";
+      return;
+    }
+
+    const idA = $("#compareA")?.value;
+    const idB = $("#compareB")?.value;
+    const a = idA ? repo.getProfile(idA) : null;
+    const b = idB ? repo.getProfile(idB) : null;
+
+    if (!a || !b) {
+      out.textContent = "Select two profiles to compare.";
+      return;
+    }
 
     const pa = normalizeForCompare(a);
     const pb = normalizeForCompare(b);
@@ -259,24 +267,26 @@
   }
 
   function recalcLegacy() {
-    const profiles = globalThis.GenesisOracleStorage.readProfiles();
-    const selected = profiles[Number($("#legacyRecalc")?.value || -1)];
-    if (!selected?.legacyRecord) {
+    const repo = globalThis.OracleProfileRepository;
+    const legacySelector = $("#legacyRecalc");
+    if (!legacySelector) return;
+
+    const selectedId = legacySelector.value;
+    if (!selectedId) {
       setStatus("Select a legacy profile first.");
       return;
     }
 
+    if (!repo) {
+      setStatus("Profile repository not available.");
+      return;
+    }
+
     try {
-      const result = globalThis.GenesisOracleEngine.run({
-        name: selected.input?.name || "",
-        birthDate: selected.input?.birthDate || "",
-        birthTime: selected.input?.birthTime || "",
-        timeZone: selected.input?.timezone || "UTC",
-        boundaryMode: "midnight",
-        sunsetTime: "18:00"
-      });
-      globalThis.GenesisOracleStorage.saveProfile(result);
+      const migrated = repo.migrateLegacyProfile(selectedId);
       renderProfiles();
+      refreshLegacySelector();
+      updateMirrorSealState(repo.getStatus());
       setStatus("Legacy profile recalculated with Oracle 2.0 and saved as a new versioned entry.");
     } catch (error) {
       setStatus(error.message || "Could not recalculate legacy profile.");
@@ -379,14 +389,7 @@
     ];
 
     if (mirror.mirrorThroughMySeal) {
-      mirrorRows.push(
-        { label: "Mirror Through My Seal", value: mirror.mirrorThroughMySeal.symbolicNotice || "Symbolic reflection only. Not a prediction." },
-        { label: "Support", value: mirror.mirrorThroughMySeal.support || "—" },
-        { label: "Friction", value: mirror.mirrorThroughMySeal.friction || "—" },
-        { label: "Present Emphasis", value: mirror.mirrorThroughMySeal.presentEmphasis || "—" },
-        { label: "Witness Question", value: mirror.mirrorThroughMySeal.witnessQuestion || "—" },
-        { label: "Grounded Action", value: mirror.mirrorThroughMySeal.groundedAction || "—" }
-      );
+      renderMirrorSealContent(mirror.mirrorThroughMySeal);
     }
 
     renderList("todayTransit", mirrorRows);
@@ -512,8 +515,15 @@
       try {
         const result = lastResult || runReadingFromForm();
         if (!result) return;
-        globalThis.GenesisOracleStorage.saveProfile(result);
+        const repo = globalThis.OracleProfileRepository;
+        if (!repo) {
+          setStatus("Profile repository not available.");
+          return;
+        }
+        repo.saveProfile(result);
         renderProfiles();
+        refreshLegacySelector();
+        updateMirrorSealState(repo.getStatus());
         setStatus("Profile saved locally.");
       } catch (error) {
         setStatus(error.message || "Could not save profile.");
@@ -529,21 +539,77 @@
     $("#exportSealPng")?.addEventListener("click", exportSealPng);
 
     $("#clearSaved")?.addEventListener("click", () => {
-      localStorage.removeItem(globalThis.GenesisOracleStorage.STORAGE_KEY);
-      renderProfiles();
+      const repo = globalThis.OracleProfileRepository;
+      if (repo && typeof localStorage !== "undefined") {
+        localStorage.removeItem(repo.STORAGE_KEY_V2);
+      }
+      repo?.initialize().then(() => {
+        renderProfiles();
+        refreshLegacySelector();
+      });
       setStatus("Saved Oracle 2.0 profiles cleared.");
     });
 
     $("#runCompare")?.addEventListener("click", runCompare);
     $("#runLegacyRecalc")?.addEventListener("click", recalcLegacy);
-    $("#mirrorProfile")?.addEventListener("change", () => {
-      if (!lastResult) return;
-      try {
-        const rerun = runReadingFromForm();
-        if (rerun) lastResult = rerun;
-      } catch (error) {
-        setStatus(error.message || "Could not refresh Mirror Through My Seal.");
-      }
+
+    // Profile picker dialog triggers
+    function handleOpenPicker() { openProfilePicker(); }
+    document.getElementById("profilePickerTrigger")?.addEventListener("click", handleOpenPicker);
+    document.getElementById("profilePickerTrigger2")?.addEventListener("click", handleOpenPicker);
+    document.getElementById("profilePickerClose")?.addEventListener("click", closeProfilePicker);
+    document.getElementById("profilePickerDialog")?.addEventListener("click", e => {
+      // Close on backdrop click
+      if (e.target === e.currentTarget) closeProfilePicker();
+    });
+    document.getElementById("profilePickerDialog")?.addEventListener("keydown", e => {
+      if (e.key === "Escape") { e.preventDefault(); closeProfilePicker(); }
+    });
+
+    // Profile picker search
+    document.getElementById("profilePickerSearch")?.addEventListener("input", e => {
+      const repo = globalThis.OracleProfileRepository;
+      const state = repo?.getStatus();
+      _populateProfilePickerList(state?.profiles || [], state?.legacyProfiles || [], e.target.value);
+    });
+
+    // Profile picker manage / import
+    document.getElementById("profilePickerManage")?.addEventListener("click", () => {
+      closeProfilePicker();
+      document.getElementById("savedRows")?.closest(".panel")?.scrollIntoView({ behavior: "smooth" });
+    });
+    document.getElementById("profilePickerImport")?.addEventListener("change", event => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      file.text().then(raw => {
+        try {
+          const repo = globalThis.OracleProfileRepository;
+          if (!repo) { setStatus("Profile repository not available."); return; }
+          const result = repo.importProfiles(raw);
+          renderProfiles();
+          refreshLegacySelector();
+          setStatus(`Imported ${result.imported} profile(s).`);
+          updateMirrorSealState(repo.getStatus());
+          // Repopulate picker list
+          const state = repo.getStatus();
+          _populateProfilePickerList(state.profiles, state.legacyProfiles, "");
+        } catch (error) {
+          setStatus(error.message || "Import failed.");
+        }
+      });
+      event.target.value = "";
+    });
+
+    // Mirror retry
+    document.getElementById("mirrorRetry")?.addEventListener("click", () => {
+      globalThis.OracleProfileRepository?.initialize().then(state => {
+        updateMirrorSealState(globalThis.OracleProfileRepository.getStatus());
+      });
+    });
+
+    // Mirror import trigger (in empty state)
+    document.getElementById("mirrorImportTrigger")?.addEventListener("click", () => {
+      document.getElementById("profilePickerImport")?.click();
     });
 
     $("#importJson")?.addEventListener("change", event => {
@@ -551,9 +617,13 @@
       if (!file) return;
       file.text().then(raw => {
         try {
-          const count = globalThis.GenesisOracleStorage.importProfiles(raw);
+          const repo = globalThis.OracleProfileRepository;
+          if (!repo) { setStatus("Profile repository not available."); return; }
+          const result = repo.importProfiles(raw);
           renderProfiles();
-          setStatus(`Imported ${count} profile(s).`);
+          refreshLegacySelector();
+          updateMirrorSealState(repo.getStatus());
+          setStatus(`Imported ${result.imported} profile(s).`);
         } catch (error) {
           setStatus(error.message || "Import failed.");
         }
@@ -564,40 +634,304 @@
   function refreshLegacySelector() {
     const select = $("#legacyRecalc");
     if (!select) return;
-    const profiles = globalThis.GenesisOracleStorage.readProfiles();
+    const repo = globalThis.OracleProfileRepository;
+    const legacyProfiles = repo ? repo.listLegacyProfiles() : [];
     select.innerHTML = "";
-    profiles.forEach((profile, index) => {
-      if (!profile.legacyRecord) return;
+    legacyProfiles.forEach(profile => {
       const option = document.createElement("option");
-      option.value = String(index);
+      option.value = profile.id || "";
       option.textContent = `${profile.input?.name || "Unnamed"} (${profile.input?.birthDate || ""})`;
       select.appendChild(option);
     });
   }
 
   function getSelectedMirrorProfile() {
-    const select = document.getElementById("mirrorProfile");
-    if (!select || select.value === "") return null;
-    const index = Number(select.value);
-    const profiles = globalThis.GenesisOracleStorage.readProfiles();
-    const profile = profiles[index];
-    if (!profile?.calculated?.patternPosition || !profile?.calculated?.coreSignature) return null;
+    const repo = globalThis.OracleProfileRepository;
+    if (!repo) return null;
+    const profile = repo.getSelectedProfile();
+    if (!profile) return null;
+    if (!profile.calculated?.patternPosition || !profile.calculated?.coreSignature) return null;
     return {
       patternPosition: profile.calculated.patternPosition,
       coreSignature: profile.calculated.coreSignature
     };
   }
 
+  // ── Origin isolation notice ──────────────────────────────────────────────────
+
+  function checkOriginIsolation() {
+    const notice = document.getElementById("mirrorOriginNotice");
+    if (!notice) return;
+    const hostname = location.hostname;
+    const isProduction = hostname === "codexofreality.org" || hostname === "www.codexofreality.org";
+    notice.hidden = isProduction;
+  }
+
+  // ── Profile picker (custom dialog replaces native <select>) ─────────────────
+
+  function _buildProfilePickerItem(profile) {
+    const li = document.createElement("li");
+    li.setAttribute("role", "option");
+    li.setAttribute("data-profile-id", profile.id);
+    li.className = "profile-picker-item";
+    if (profile.legacyRecord) li.classList.add("profile-picker-item--legacy");
+
+    const repo = globalThis.OracleProfileRepository;
+    const selectedId = repo?.getStatus().selectedProfileId;
+    if (profile.id === selectedId) {
+      li.setAttribute("aria-selected", "true");
+      li.classList.add("profile-picker-item--selected");
+    } else {
+      li.setAttribute("aria-selected", "false");
+    }
+
+    const name = profile.input?.name || "Unnamed";
+    const birthDate = profile.input?.birthDate || "";
+    const moon = profile.calculated?.patternPosition?.moonName || "—";
+    const day = profile.calculated?.patternPosition?.dayInMoon || "—";
+    const oracleVer = profile.legacyRecord ? "Legacy" : "Oracle 2.0";
+
+    // Build all child elements with textContent — never interpolate user data into innerHTML
+    const nameSpan = document.createElement("span");
+    nameSpan.className = "picker-item-name";
+    nameSpan.textContent = name;
+
+    const metaSpan = document.createElement("span");
+    metaSpan.className = "picker-item-meta";
+    metaSpan.textContent = `${birthDate} · ${moon} · Day ${day}`;
+
+    const verSpan = document.createElement("span");
+    verSpan.className = "picker-item-version";
+    verSpan.textContent = oracleVer;
+    if (profile.legacyRecord) {
+      const badge = document.createElement("span");
+      badge.className = "picker-legacy-badge";
+      badge.setAttribute("aria-label", "Legacy profile");
+      badge.textContent = "Legacy";
+      verSpan.append(" ", badge);
+    }
+
+    li.append(nameSpan, metaSpan, verSpan);
+
+    li.addEventListener("click", () => {
+      if (profile.legacyRecord) {
+        // Legacy profiles can't be used for Mirror Through My Seal without recalculating
+        setStatus("Recalculate this legacy profile with Oracle 2.0 to use Mirror Through My Seal.");
+        return;
+      }
+      repo?.selectProfile(profile.id);
+      closeProfilePicker();
+      if (lastResult) {
+        try {
+          const rerun = runReadingFromForm();
+          if (rerun) lastResult = rerun;
+        } catch (error) {
+          setStatus(error.message || "Could not refresh Mirror Through My Seal.");
+        }
+      }
+    });
+
+    return li;
+  }
+
+  function _populateProfilePickerList(profiles, legacyProfiles, searchQuery) {
+    const list = document.getElementById("profilePickerList");
+    if (!list) return;
+    list.innerHTML = "";
+
+    const query = (searchQuery || "").toLowerCase().trim();
+    const allProfiles = [...profiles, ...legacyProfiles];
+    const filtered = query
+      ? allProfiles.filter(p => {
+          const name = (p.input?.name || "").toLowerCase();
+          const date = (p.input?.birthDate || "").toLowerCase();
+          return name.includes(query) || date.includes(query);
+        })
+      : allProfiles;
+
+    if (!filtered.length) {
+      const li = document.createElement("li");
+      li.className = "profile-picker-empty";
+      li.textContent = query ? "No profiles match your search." : "No saved profiles found.";
+      list.appendChild(li);
+      return;
+    }
+
+    filtered.forEach(profile => list.appendChild(_buildProfilePickerItem(profile)));
+
+    // Show search input when there are several profiles
+    const searchWrap = document.getElementById("profilePickerSearchWrap");
+    if (searchWrap) searchWrap.hidden = allProfiles.length < 4;
+  }
+
+  let _pickerReturnFocus = null;
+
+  function openProfilePicker() {
+    const dialog = document.getElementById("profilePickerDialog");
+    if (!dialog) return;
+
+    _pickerReturnFocus = document.activeElement;
+
+    const repo = globalThis.OracleProfileRepository;
+    const state = repo?.getStatus();
+    const profiles = state?.profiles || [];
+    const legacyProfiles = state?.legacyProfiles || [];
+    _populateProfilePickerList(profiles, legacyProfiles, "");
+
+    const trigger1 = document.getElementById("profilePickerTrigger");
+    const trigger2 = document.getElementById("profilePickerTrigger2");
+    trigger1?.setAttribute("aria-expanded", "true");
+
+    if (typeof dialog.showModal === "function") {
+      dialog.showModal();
+    } else {
+      dialog.setAttribute("open", "");
+    }
+
+    // Move focus into dialog
+    const closeBtn = document.getElementById("profilePickerClose");
+    closeBtn?.focus();
+  }
+
+  function closeProfilePicker() {
+    const dialog = document.getElementById("profilePickerDialog");
+    if (!dialog) return;
+
+    const trigger1 = document.getElementById("profilePickerTrigger");
+    trigger1?.setAttribute("aria-expanded", "false");
+
+    if (typeof dialog.close === "function") {
+      dialog.close();
+    } else {
+      dialog.removeAttribute("open");
+    }
+
+    // Return focus to trigger
+    if (_pickerReturnFocus && typeof _pickerReturnFocus.focus === "function") {
+      _pickerReturnFocus.focus();
+    }
+    _pickerReturnFocus = null;
+  }
+
+  // ── Mirror Through My Seal state management ──────────────────────────────────
+
+  function updateMirrorSealState(repoState) {
+    const trigger = document.getElementById("profilePickerTrigger");
+    const triggerLabel = document.getElementById("profilePickerLabel");
+    const sealContent = document.getElementById("mirrorSealContent");
+    const sealEmpty = document.getElementById("mirrorSealEmpty");
+    const emptyMsg = document.getElementById("mirrorSealEmptyMsg");
+    const mirrorRetry = document.getElementById("mirrorRetry");
+
+    if (!repoState) return;
+
+    const { status, selectedProfileId, legacyProfiles } = repoState;
+    const hasLegacyOnly = repoState.profiles.length === 0 && legacyProfiles.length > 0;
+
+    // Update trigger label
+    if (triggerLabel) {
+      if (status === "loading") {
+        triggerLabel.textContent = "Loading saved profiles…";
+      } else if (status === "error") {
+        triggerLabel.textContent = "Could not load profiles";
+      } else if (!selectedProfileId) {
+        if (status === "empty") {
+          triggerLabel.textContent = "No Oracle profiles saved on this address";
+        } else if (hasLegacyOnly) {
+          triggerLabel.textContent = "Legacy profiles found — recalculate to use Mirror";
+        } else {
+          triggerLabel.textContent = "Choose a saved Oracle profile";
+        }
+      } else {
+        const profile = globalThis.OracleProfileRepository?.getProfile(selectedProfileId);
+        if (profile) {
+          const moon = profile.calculated?.patternPosition?.moonName || "—";
+          const day = profile.calculated?.patternPosition?.dayInMoon || "—";
+          triggerLabel.textContent = `${profile.input?.name || "Unnamed"} · ${moon} · Day ${day}`;
+        } else {
+          triggerLabel.textContent = "Profile selected";
+        }
+      }
+    }
+
+    // Enable/disable trigger based on state
+    if (trigger) {
+      trigger.disabled = status === "loading";
+    }
+
+    // Show/hide personalized content
+    const hasSelection = Boolean(selectedProfileId);
+    if (sealContent) sealContent.hidden = !hasSelection;
+    if (sealEmpty) sealEmpty.hidden = hasSelection;
+
+    // Update empty state message
+    if (emptyMsg && !hasSelection) {
+      if (status === "loading") {
+        emptyMsg.textContent = "Loading saved Oracle profiles…";
+      } else if (status === "error") {
+        emptyMsg.textContent = "Saved profiles could not be read. Retry or import a profile backup.";
+      } else if (status === "empty") {
+        emptyMsg.textContent = "No Oracle profiles are saved on this site address.";
+      } else if (hasLegacyOnly) {
+        emptyMsg.textContent = "Legacy profiles were found. Recalculate one with Oracle 2.0 to use Mirror Through My Seal.";
+      } else {
+        emptyMsg.textContent = "Choose a saved Oracle profile to compare your Genesis signature with today's Pattern.";
+      }
+    }
+
+    if (mirrorRetry) mirrorRetry.hidden = status !== "error";
+  }
+
+  function renderMirrorSealContent(mirrorThroughMySeal) {
+    const grid = document.getElementById("mirrorSealGrid");
+    const notice = document.getElementById("mirrorSymbolicNotice");
+    if (!grid || !mirrorThroughMySeal) return;
+
+    renderList("mirrorSealGrid", [
+      { label: "Birth Moon × Current Moon", value: mirrorThroughMySeal.support || "—" },
+      { label: "Support", value: mirrorThroughMySeal.support || "—" },
+      { label: "Friction", value: mirrorThroughMySeal.friction || "—" },
+      { label: "Present Emphasis", value: mirrorThroughMySeal.presentEmphasis || "—" },
+      { label: "Witness Question", value: mirrorThroughMySeal.witnessQuestion || "—" },
+      { label: "Grounded Action", value: mirrorThroughMySeal.groundedAction || "—" }
+    ]);
+
+    if (notice) {
+      notice.textContent = mirrorThroughMySeal.symbolicNotice || "Symbolic reflection, not prediction.";
+    }
+  }
+
   function init() {
     initModes();
     bindEvents();
-    renderProfiles();
-    refreshLegacySelector();
+    checkOriginIsolation();
+
+    const repo = globalThis.OracleProfileRepository;
+    if (repo) {
+      // Show loading state immediately before async init
+      updateMirrorSealState({ status: "loading", profiles: [], legacyProfiles: [], selectedProfileId: null });
+
+      repo.subscribe(state => {
+        updateMirrorSealState(state);
+        renderProfiles();
+        refreshLegacySelector();
+      });
+
+      repo.initialize().catch(() => {
+        updateMirrorSealState(repo.getStatus());
+      });
+    } else {
+      // Fallback: use legacy storage directly
+      renderProfiles();
+      refreshLegacySelector();
+      updateMirrorSealState({ status: "ready", profiles: [], legacyProfiles: [], selectedProfileId: null });
+    }
+
     initFromQuery();
 
     globalThis.GenesisOracle = {
       run: input => globalThis.GenesisOracleEngine.run(input),
-      readProfiles: () => globalThis.GenesisOracleStorage.readProfiles(),
+      readProfiles: () => repo ? repo.listProfiles() : [],
       compare: (a, b) => globalThis.GenesisOracleEngine.compareProfiles(a, b),
       versions: {
         calendar: globalThis.GenesisOracleVersion?.calendarVersion,

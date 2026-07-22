@@ -19,25 +19,26 @@
 
   <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
-  <link rel="stylesheet" href="assets/css/genesis-oracle.css?v=20260722-2">
+  <link rel="stylesheet" href="assets/css/genesis-oracle.css?v=20260722-3">
   <link rel="stylesheet" href="assets/css/share-day.css?v=2">
   <script defer src="assets/js/site.js"></script>
 
-  <script defer src="assets/js/calendar/pattern-calendar-version.js?v=20260722-2"></script>
-  <script defer src="assets/js/calendar/pattern-calendar-data.js?v=20260722-2"></script>
-  <script defer src="assets/js/calendar/pattern-calendar-format.js?v=20260722-2"></script>
-  <script defer src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-2"></script>
-  <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-2"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-version.js?v=20260722-3"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-data.js?v=20260722-3"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-format.js?v=20260722-3"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-3"></script>
+  <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-3"></script>
 
-  <script defer src="assets/js/oracle/oracle-version.js?v=20260722-2"></script>
-  <script defer src="assets/js/oracle/oracle-data.js?v=20260722-2"></script>
-  <script defer src="assets/js/oracle/oracle-name-code.js?v=20260722-2"></script>
-  <script defer src="assets/js/oracle/oracle-aspects.js?v=20260722-2"></script>
-  <script defer src="assets/js/oracle/oracle-signature.js?v=20260722-2"></script>
-  <script defer src="assets/js/oracle/oracle-reading.js?v=20260722-2"></script>
-  <script defer src="assets/js/oracle/oracle-compatibility.js?v=20260722-2"></script>
-  <script defer src="assets/js/oracle/oracle-storage.js?v=20260722-2"></script>
-  <script defer src="assets/js/oracle/oracle-engine.js?v=20260722-2"></script>
+  <script defer src="assets/js/oracle/oracle-version.js?v=20260722-3"></script>
+  <script defer src="assets/js/oracle/oracle-data.js?v=20260722-3"></script>
+  <script defer src="assets/js/oracle/oracle-name-code.js?v=20260722-3"></script>
+  <script defer src="assets/js/oracle/oracle-aspects.js?v=20260722-3"></script>
+  <script defer src="assets/js/oracle/oracle-signature.js?v=20260722-3"></script>
+  <script defer src="assets/js/oracle/oracle-reading.js?v=20260722-3"></script>
+  <script defer src="assets/js/oracle/oracle-compatibility.js?v=20260722-3"></script>
+  <script defer src="assets/js/oracle/oracle-storage.js?v=20260722-3"></script>
+  <script defer src="assets/js/oracle/oracle-profile-repository.js?v=20260722-3"></script>
+  <script defer src="assets/js/oracle/oracle-engine.js?v=20260722-3"></script>
 
   <script defer src="assets/js/living-codex.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
@@ -45,7 +46,7 @@
   <script defer src="assets/js/share/remnant-share-image.js?v=20260722-3"></script>
   <script defer src="assets/js/share/remnant-share.js?v=20260722-3"></script>
   <script defer src="assets/js/share-day.js?v=2"></script>
-  <script defer src="assets/js/genesis-oracle.js?v=20260722-2"></script>
+  <script defer src="assets/js/genesis-oracle.js?v=20260722-3"></script>
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/animations.css">
 </head>
@@ -157,12 +158,79 @@
     <section class="panel" data-reading-mode="daily">
       <h2>Daily Mirror</h2>
       <p class="muted">mirror-reading/2.0.0 · Symbolic reflection only — not prediction.</p>
-      <div class="actions">
-        <button class="btn" type="button" data-share-day-open data-share-source-id="oracle-daily-mirror">Share Birth Signature × Today</button>
+
+      <!-- Origin isolation notice: shown when not on the canonical production origin -->
+      <div id="mirrorOriginNotice" class="origin-notice" hidden>
+        <p>Saved Oracle profiles are stored separately for each site address. Profiles from <strong>CodexOfReality.org</strong> have not been deleted. Import a backup or create a temporary profile on this address for testing.</p>
       </div>
-      <label for="mirrorProfile"><span>Mirror Through My Seal (optional saved profile)</span><select id="mirrorProfile"><option value="">No saved profile selected</option></select></label>
-      <div id="todayTransit" class="kv-grid"></div>
+
+      <!-- ── Today's General Mirror ────────────────────────────── -->
+      <div class="mirror-section">
+        <h3 class="mirror-section-heading">Today's General Mirror</h3>
+        <p class="muted mirror-section-desc">Pattern resonance for today — no saved profile required.</p>
+        <div id="todayTransit" class="kv-grid"></div>
+        <div class="actions compact-actions">
+          <button class="btn" type="button" data-share-day-open data-share-source-id="oracle-daily-mirror">Share Today's General Mirror</button>
+        </div>
+      </div>
+
+      <!-- ── Mirror Through My Seal ────────────────────────────── -->
+      <div class="mirror-section mirror-seal-section">
+        <h3 class="mirror-section-heading">Mirror Through My Seal</h3>
+        <p class="muted mirror-section-desc">Compare your Genesis signature with today's Pattern.</p>
+
+        <!-- Profile picker trigger (replaces native <select>) -->
+        <div class="profile-picker-wrap">
+          <button class="btn profile-picker-trigger" type="button" id="profilePickerTrigger" aria-haspopup="dialog" aria-expanded="false">
+            <span id="profilePickerLabel">Loading saved profiles…</span>
+          </button>
+        </div>
+
+        <!-- Personalized Mirror — hidden until a profile is selected -->
+        <div id="mirrorSealContent" class="mirror-seal-content" hidden>
+          <div id="mirrorSealGrid" class="kv-grid"></div>
+          <p class="mirror-symbolic-notice muted" id="mirrorSymbolicNotice"></p>
+          <div class="actions compact-actions">
+            <button class="btn primary" type="button" id="shareSealMirror" data-share-day-open data-share-source-id="oracle-daily-mirror-seal">Share Birth Signature × Today</button>
+          </div>
+        </div>
+
+        <!-- Empty / loading / error states -->
+        <div id="mirrorSealEmpty" class="mirror-seal-empty">
+          <p id="mirrorSealEmptyMsg">Choose a saved Oracle profile to compare your Genesis signature with today's Pattern.</p>
+          <div class="actions compact-actions" id="mirrorSealActions">
+            <button class="btn" type="button" id="profilePickerTrigger2" aria-haspopup="dialog">Choose Profile</button>
+            <button class="btn" type="button" id="mirrorImportTrigger">Import Profile</button>
+            <button class="btn" type="button" id="mirrorRetry" hidden>Retry</button>
+          </div>
+        </div>
+      </div>
     </section>
+
+    <!-- ── Profile picker dialog ───────────────────────────────────────── -->
+    <dialog id="profilePickerDialog" class="profile-picker-dialog" aria-labelledby="profilePickerDialogHeading" aria-modal="true">
+      <div class="profile-picker-inner">
+        <div class="profile-picker-header">
+          <h2 class="profile-picker-heading" id="profilePickerDialogHeading">Choose a Saved Profile</h2>
+          <button class="btn profile-picker-close" type="button" id="profilePickerClose" aria-label="Close profile picker">✕</button>
+        </div>
+
+        <div class="profile-picker-search-wrap" id="profilePickerSearchWrap" hidden>
+          <input class="profile-picker-search" type="search" id="profilePickerSearch" placeholder="Search profiles…" aria-label="Search saved profiles">
+        </div>
+
+        <div class="profile-picker-list-wrap">
+          <ul class="profile-picker-list" id="profilePickerList" role="listbox" aria-label="Saved Oracle profiles">
+            <!-- Populated by JS -->
+          </ul>
+        </div>
+
+        <div class="profile-picker-footer">
+          <button class="btn" type="button" id="profilePickerManage">Manage Profiles</button>
+          <label class="btn upload-btn" for="profilePickerImport">Import Profile<input id="profilePickerImport" type="file" accept="application/json" hidden></label>
+        </div>
+      </div>
+    </dialog>
 
     <section class="panel" data-reading-mode="development">
       <h2>Development Path</h2>
