@@ -509,6 +509,13 @@
     }).completePost;
   }
 
+  function fromEquinoxEngine() {
+    const engine = window.ScrollOfFireEquinoxPassage;
+    if (!engine || typeof engine.currentShareState !== "function") return null;
+    const shareState = engine.currentShareState();
+    return shareState && shareState.source === "equinox-passage" ? shareState : null;
+  }
+
   function fromMoonEngine() {
     const engine = window.ScrollOfFireMoons;
     if (!engine || typeof engine.effectiveContext !== "function") return null;
@@ -528,13 +535,6 @@
       illuminationPct = Math.max(0, Math.min(100, Math.round(detail.illumination * 100)));
     } else if (typeof window.CodexState?.phaseIllumination === "number") {
       illuminationPct = Math.max(0, Math.min(100, Math.round(window.CodexState.phaseIllumination * 100)));
-    }
-
-    function fromEquinoxEngine() {
-      const engine = window.ScrollOfFireEquinoxPassage;
-      if (!engine || typeof engine.currentShareState !== "function") return null;
-      const shareState = engine.currentShareState();
-      return shareState && shareState.source === "equinox-passage" ? shareState : null;
     }
 
     const intentionState = window.CodexMemory && typeof window.CodexMemory.getIntention === "function"
