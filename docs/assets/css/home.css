@@ -1351,3 +1351,120 @@
 [data-codex-first-visit="true"] .hero-actions [data-home-action] {
   box-shadow: 0 0 0 2px rgba(122, 243, 255, 0.4);
 }
+
+/* ─────────────────────────────────────────────────────────
+   13 Moons Living Time Observatory — Homepage Feature Section
+   ──────────────────────────────────────────────────────── */
+.home-observatory-feature {
+  position: relative;
+  width: min(calc(100% - 32px), 1180px);
+  margin: clamp(32px, 6vw, 72px) auto;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  background:
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(243, 201, 122, 0.11),
+      transparent 24rem
+    ),
+    radial-gradient(
+      circle at 10% 90%,
+      rgba(122, 243, 255, 0.08),
+      transparent 24rem
+    ),
+    rgba(9, 14, 25, 0.88);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.36);
+}
+
+.home-observatory-feature__content {
+  position: relative;
+  z-index: 1;
+  max-width: 920px;
+  padding: clamp(26px, 5vw, 58px);
+}
+
+.home-observatory-feature .section-kicker {
+  margin: 0 0 12px;
+  color: var(--gold, #f3c97a);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.home-observatory-feature h2 {
+  max-width: 800px;
+  margin: 0;
+  color: var(--text, #f4f1e8);
+  font-size: clamp(1.9rem, 4.5vw, 3.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.home-observatory-feature__lead {
+  max-width: 780px;
+  margin: 18px 0 10px;
+  color: var(--cyan, #7af3ff);
+  font-size: clamp(1.02rem, 2vw, 1.28rem);
+  line-height: 1.65;
+}
+
+.home-observatory-feature p {
+  max-width: 820px;
+  color: var(--muted, #b9c1c7);
+  line-height: 1.72;
+}
+
+.home-observatory-feature__pillars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0;
+}
+
+.home-observatory-feature__pillars span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid rgba(122, 243, 255, 0.18);
+  border-radius: 999px;
+  color: var(--text, #f4f1e8);
+  background: rgba(122, 243, 255, 0.045);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.home-observatory-feature__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.home-observatory-feature__actions a {
+  text-decoration: none;
+}
+
+@media (max-width: 680px) {
+  .home-observatory-feature {
+    width: min(calc(100% - 20px), 1180px);
+    border-radius: 22px;
+  }
+
+  .home-observatory-feature__content {
+    padding: 24px 18px;
+  }
+
+  .home-observatory-feature__actions {
+    flex-direction: column;
+  }
+
+  .home-observatory-feature__actions a {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+}
