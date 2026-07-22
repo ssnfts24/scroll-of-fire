@@ -56,7 +56,7 @@ test("historical dataset is complete and chronologically ordered for 2014-2026",
   assert.equal(years[0], 2014);
   assert.equal(years.at(-1), 2026);
   const instants = years.map(year => context.EquinoxEngine.getReferenceRecord(year).utcInstant);
-  assert.deepEqual([...instants].sort(), instants);
+  assert.equal([...instants].sort().join("|"), instants.join("|"));
 });
 
 test("timezone conversion supports Los Angeles, New York, and UTC with DST-safe local instants", () => {
@@ -144,7 +144,7 @@ test("share-link reconstruction preserves Equinox Passage parameters", () => {
     boundaryMode: "manual",
     manualSunset: "18:45",
     displayMode: "standard",
-    datasetVersion: "",
+    datasetVersion: "equinox-passage/1.0.0",
     source: "equinox-passage"
   }));
 });
