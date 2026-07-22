@@ -181,8 +181,7 @@
     if (!body || !selectA || !selectB) return;
 
     const repo = globalThis.OracleProfileRepository;
-    const profiles = repo ? [...repo.listProfiles(), ...repo.listLegacyProfiles()] :
-      (globalThis.GenesisOracleStorage?.readProfiles() || []);
+    const profiles = repo ? [...repo.listProfiles(), ...repo.listLegacyProfiles()] : [];
 
     body.innerHTML = "";
     selectA.innerHTML = "";
@@ -195,7 +194,7 @@
       return;
     }
 
-    profiles.forEach((profile, index) => {
+    profiles.forEach(profile => {
       const row = document.createElement("tr");
       const legacy = profile.legacyRecord ? "legacy" : "v2";
       const values = [
@@ -214,9 +213,10 @@
       });
       body.appendChild(row);
 
+      // Use stable profile ID as the option value (not array index)
       const label = `${profile.input?.name || "Unnamed"} (${profile.input?.birthDate || ""})`;
       const optionA = document.createElement("option");
-      optionA.value = String(index);
+      optionA.value = profile.id || "";
       optionA.textContent = label;
       const optionB = optionA.cloneNode(true);
       selectA.appendChild(optionA);
@@ -237,11 +237,23 @@
   }
 
   function runCompare() {
-    const profiles = globalThis.GenesisOracleStorage.readProfiles();
-    const a = profiles[Number($("#compareA")?.value || -1)];
-    const b = profiles[Number($("#compareB")?.value || -1)];
+    const repo = globalThis.OracleProfileRepository;
     const out = $("#compareResult");
-    if (!a || !b || !out) return;
+    if (!out) return;
+    if (!repo) {
+      out.textContent = "Profile repository not available.";
+      return;
+    }
+
+    const idA = $("#compareA")?.value;
+    const idB = $("#compareB")?.value;
+    const a = idA ? repo.getProfile(idA) : null;
+    const b = idB ? repo.getProfile(idB) : null;
+
+    if (!a || !b) {
+      out.textContent = "Select two profiles to compare.";
+      return;
+    }
 
     const pa = normalizeForCompare(a);
     const pb = normalizeForCompare(b);
@@ -265,32 +277,17 @@
       return;
     }
 
+    if (!repo) {
+      setStatus("Profile repository not available.");
+      return;
+    }
+
     try {
-      if (repo) {
-        const migrated = repo.migrateLegacyProfile(selectedId);
-        renderProfiles();
-        refreshLegacySelector();
-        updateMirrorSealState(repo.getStatus());
-        setStatus("Legacy profile recalculated with Oracle 2.0 and saved as a new versioned entry.");
-      } else {
-        const profiles = globalThis.GenesisOracleStorage.readProfiles();
-        const selected = profiles[Number(selectedId)];
-        if (!selected?.legacyRecord) {
-          setStatus("Select a legacy profile first.");
-          return;
-        }
-        const result = globalThis.GenesisOracleEngine.run({
-          name: selected.input?.name || "",
-          birthDate: selected.input?.birthDate || "",
-          birthTime: selected.input?.birthTime || "",
-          timeZone: selected.input?.timezone || "UTC",
-          boundaryMode: "midnight",
-          sunsetTime: "18:00"
-        });
-        globalThis.GenesisOracleStorage.saveProfile(result);
-        renderProfiles();
-        setStatus("Legacy profile recalculated with Oracle 2.0 and saved as a new versioned entry.");
-      }
+      const migrated = repo.migrateLegacyProfile(selectedId);
+      renderProfiles();
+      refreshLegacySelector();
+      updateMirrorSealState(repo.getStatus());
+      setStatus("Legacy profile recalculated with Oracle 2.0 and saved as a new versioned entry.");
     } catch (error) {
       setStatus(error.message || "Could not recalculate legacy profile.");
     }
@@ -519,15 +516,14 @@
         const result = lastResult || runReadingFromForm();
         if (!result) return;
         const repo = globalThis.OracleProfileRepository;
-        if (repo) {
-          repo.saveProfile(result);
-          renderProfiles();
-          refreshLegacySelector();
-          updateMirrorSealState(repo.getStatus());
-        } else {
-          globalThis.GenesisOracleStorage.saveProfile(result);
-          renderProfiles();
+        if (!repo) {
+          setStatus("Profile repository not available.");
+          return;
         }
+        repo.saveProfile(result);
+        renderProfiles();
+        refreshLegacySelector();
+        updateMirrorSealState(repo.getStatus());
         setStatus("Profile saved locally.");
       } catch (error) {
         setStatus(error.message || "Could not save profile.");
@@ -543,11 +539,11 @@
     $("#exportSealPng")?.addEventListener("click", exportSealPng);
 
     $("#clearSaved")?.addEventListener("click", () => {
-      if (typeof localStorage !== "undefined") {
-        localStorage.removeItem(globalThis.OracleProfileRepository?.STORAGE_KEY_V2 ||
-          globalThis.GenesisOracleStorage?.STORAGE_KEY);
+      const repo = globalThis.OracleProfileRepository;
+      if (repo && typeof localStorage !== "undefined") {
+        localStorage.removeItem(repo.STORAGE_KEY_V2);
       }
-      globalThis.OracleProfileRepository?.initialize().then(() => {
+      repo?.initialize().then(() => {
         renderProfiles();
         refreshLegacySelector();
       });
@@ -588,20 +584,15 @@
       file.text().then(raw => {
         try {
           const repo = globalThis.OracleProfileRepository;
-          if (repo) {
-            const result = repo.importProfiles(raw);
-            renderProfiles();
-            refreshLegacySelector();
-            setStatus(`Imported ${result.imported} profile(s).`);
-            updateMirrorSealState(repo.getStatus());
-            // Repopulate picker list
-            const state = repo.getStatus();
-            _populateProfilePickerList(state.profiles, state.legacyProfiles, "");
-          } else {
-            const count = globalThis.GenesisOracleStorage.importProfiles(raw);
-            renderProfiles();
-            setStatus(`Imported ${count} profile(s).`);
-          }
+          if (!repo) { setStatus("Profile repository not available."); return; }
+          const result = repo.importProfiles(raw);
+          renderProfiles();
+          refreshLegacySelector();
+          setStatus(`Imported ${result.imported} profile(s).`);
+          updateMirrorSealState(repo.getStatus());
+          // Repopulate picker list
+          const state = repo.getStatus();
+          _populateProfilePickerList(state.profiles, state.legacyProfiles, "");
         } catch (error) {
           setStatus(error.message || "Import failed.");
         }
@@ -627,17 +618,12 @@
       file.text().then(raw => {
         try {
           const repo = globalThis.OracleProfileRepository;
-          if (repo) {
-            const result = repo.importProfiles(raw);
-            renderProfiles();
-            refreshLegacySelector();
-            updateMirrorSealState(repo.getStatus());
-            setStatus(`Imported ${result.imported} profile(s).`);
-          } else {
-            const count = globalThis.GenesisOracleStorage.importProfiles(raw);
-            renderProfiles();
-            setStatus(`Imported ${count} profile(s).`);
-          }
+          if (!repo) { setStatus("Profile repository not available."); return; }
+          const result = repo.importProfiles(raw);
+          renderProfiles();
+          refreshLegacySelector();
+          updateMirrorSealState(repo.getStatus());
+          setStatus(`Imported ${result.imported} profile(s).`);
         } catch (error) {
           setStatus(error.message || "Import failed.");
         }
@@ -649,12 +635,11 @@
     const select = $("#legacyRecalc");
     if (!select) return;
     const repo = globalThis.OracleProfileRepository;
-    const legacyProfiles = repo ? repo.listLegacyProfiles() :
-      (globalThis.GenesisOracleStorage?.readProfiles().filter(p => p.legacyRecord) || []);
+    const legacyProfiles = repo ? repo.listLegacyProfiles() : [];
     select.innerHTML = "";
-    legacyProfiles.forEach((profile, index) => {
+    legacyProfiles.forEach(profile => {
       const option = document.createElement("option");
-      option.value = profile.id || String(index);
+      option.value = profile.id || "";
       option.textContent = `${profile.input?.name || "Unnamed"} (${profile.input?.birthDate || ""})`;
       select.appendChild(option);
     });
@@ -706,11 +691,27 @@
     const day = profile.calculated?.patternPosition?.dayInMoon || "—";
     const oracleVer = profile.legacyRecord ? "Legacy" : "Oracle 2.0";
 
-    li.innerHTML = `
-      <span class="picker-item-name">${name}</span>
-      <span class="picker-item-meta">${birthDate} · ${moon} · Day ${day}</span>
-      <span class="picker-item-version">${oracleVer}${profile.legacyRecord ? ' <span class="picker-legacy-badge" aria-label="Legacy profile">Legacy</span>' : ''}</span>
-    `;
+    // Build all child elements with textContent — never interpolate user data into innerHTML
+    const nameSpan = document.createElement("span");
+    nameSpan.className = "picker-item-name";
+    nameSpan.textContent = name;
+
+    const metaSpan = document.createElement("span");
+    metaSpan.className = "picker-item-meta";
+    metaSpan.textContent = `${birthDate} · ${moon} · Day ${day}`;
+
+    const verSpan = document.createElement("span");
+    verSpan.className = "picker-item-version";
+    verSpan.textContent = oracleVer;
+    if (profile.legacyRecord) {
+      const badge = document.createElement("span");
+      badge.className = "picker-legacy-badge";
+      badge.setAttribute("aria-label", "Legacy profile");
+      badge.textContent = "Legacy";
+      verSpan.append(" ", badge);
+    }
+
+    li.append(nameSpan, metaSpan, verSpan);
 
     li.addEventListener("click", () => {
       if (profile.legacyRecord) {
@@ -930,7 +931,7 @@
 
     globalThis.GenesisOracle = {
       run: input => globalThis.GenesisOracleEngine.run(input),
-      readProfiles: () => repo ? repo.listProfiles() : globalThis.GenesisOracleStorage?.readProfiles(),
+      readProfiles: () => repo ? repo.listProfiles() : [],
       compare: (a, b) => globalThis.GenesisOracleEngine.compareProfiles(a, b),
       versions: {
         calendar: globalThis.GenesisOracleVersion?.calendarVersion,

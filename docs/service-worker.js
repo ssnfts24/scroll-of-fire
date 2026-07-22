@@ -59,6 +59,7 @@ const optionalPaths = [
   "./assets/js/oracle/oracle-reading.js",
   "./assets/js/oracle/oracle-compatibility.js",
   "./assets/js/oracle/oracle-storage.js",
+  "./assets/js/oracle/oracle-profile-repository.js",
   "./assets/js/oracle/oracle-engine.js",
   "./assets/img/moons/app/apple-touch-icon.png",
   "./assets/img/moons/app/screenshot-mobile-390x844.png",
