@@ -77,3 +77,27 @@ test("oracle default share link excludes personal profile data", () => {
   assert.equal(query.includes("birthTime="), false);
   assert.equal(query.includes("profile="), false);
 });
+
+test("malformed permanent-link params are sanitized on parse", () => {
+  const api = loadUrlModule();
+  const parsed = api.parsePermanentLink("https://codexofreality.org/moons.html?date=not-a-date&tab=mirrorPanel<script>&display=std%20mode&source=daily-mirror");
+  assert.equal(parsed.date, "");
+  assert.equal(parsed.selectedTab, "");
+  assert.equal(parsed.displayMode, "");
+  assert.equal(parsed.source, "daily-mirror");
+});
+
+test("permanent links keep selected tab and display/source modes", () => {
+  const api = loadUrlModule();
+  const link = api.buildPermanentLink({
+    baseUrl: "https://codexofreality.org/moons.html",
+    date: "2026-07-17",
+    selectedTab: "mirrorPanel",
+    displayMode: "professional",
+    source: "daily-mirror"
+  });
+  const parsed = api.parsePermanentLink(link);
+  assert.equal(parsed.selectedTab, "mirrorPanel");
+  assert.equal(parsed.displayMode, "professional");
+  assert.equal(parsed.source, "daily-mirror");
+});

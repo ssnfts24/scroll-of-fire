@@ -20,6 +20,7 @@
   <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
   <link rel="stylesheet" href="assets/css/genesis-oracle.css?v=20260722-2">
+  <link rel="stylesheet" href="assets/css/share-day.css?v=2">
   <script defer src="assets/js/site.js"></script>
 
   <script defer src="assets/js/calendar/pattern-calendar-version.js?v=20260722-2"></script>
@@ -43,6 +44,7 @@
   <script defer src="assets/js/share/remnant-share-url.js?v=20260722-3"></script>
   <script defer src="assets/js/share/remnant-share-image.js?v=20260722-3"></script>
   <script defer src="assets/js/share/remnant-share.js?v=20260722-3"></script>
+  <script defer src="assets/js/share-day.js?v=2"></script>
   <script defer src="assets/js/genesis-oracle.js?v=20260722-2"></script>
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/animations.css">
@@ -112,12 +114,18 @@
 
       <section class="panel" aria-label="Quick Seal" data-reading-mode="quick">
         <h2>Quick Seal</h2>
+        <div class="actions">
+          <button class="btn" type="button" data-share-day-open data-share-source-id="oracle-quick-seal">Share Quick Seal</button>
+        </div>
         <pre id="quickSeal" class="mono">Run a reading.</pre>
       </section>
     </section>
 
     <section class="panel" data-reading-mode="full">
       <h2>Generated Seal Visualization</h2>
+      <div class="actions">
+        <button class="btn" type="button" data-share-day-open data-share-source-id="oracle-generated-seal">Share Generated Seal</button>
+      </div>
       <div id="sealCanvasWrap" class="seal-wrap" aria-live="polite"></div>
       <p id="sealAlt" class="muted">Seal text alternative appears here.</p>
       <div class="actions">
@@ -149,6 +157,9 @@
     <section class="panel" data-reading-mode="daily">
       <h2>Daily Mirror</h2>
       <p class="muted">mirror-reading/2.0.0 · Symbolic reflection only — not prediction.</p>
+      <div class="actions">
+        <button class="btn" type="button" data-share-day-open data-share-source-id="oracle-daily-mirror">Share Birth Signature × Today</button>
+      </div>
       <label for="mirrorProfile"><span>Mirror Through My Seal (optional saved profile)</span><select id="mirrorProfile"><option value="">No saved profile selected</option></select></label>
       <div id="todayTransit" class="kv-grid"></div>
     </section>

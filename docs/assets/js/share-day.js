@@ -161,6 +161,8 @@
     },
     lastDetail: null,
     currentShareState: null,
+    currentSourceId: "today",
+    currentSourcePayload: null,
     currentPackage: null,
     defaultCaption: "",
     userEditedCaption: false,
@@ -593,6 +595,333 @@
     return fromMoonEngine() || fromCodexState();
   }
 
+  function textOf(id) {
+    const node = document.getElementById(id);
+    return node ? String(node.textContent || "").trim() : "";
+  }
+
+  function valueOf(id) {
+    const node = document.getElementById(id);
+    return node ? String(node.value || "").trim() : "";
+  }
+
+  function selectedMoonDate() {
+    const fromInput = safeISO(valueOf("datePick"));
+    return fromInput || safeISO(deriveShareState()?.isoDate) || getTodayISO();
+  }
+
+  function selectedMoodsTab(sourceId) {
+    const bySource = {
+      today: "todayPanel",
+      "daily-mirror": "mirrorPanel",
+      "daily-flow": "flowPanel",
+      shabbat: "shabbatPanel",
+      "daily-witness": "witnessPanel",
+      "year-map": "yearPanel",
+      "generated-seal": "codexPanel"
+    };
+    return bySource[sourceId] || "todayPanel";
+  }
+
+  function buildMoonsLink(sourceId, readingVersion = "mirror-reading/2.0.0", displayMode = "standard") {
+    const date = selectedMoonDate();
+    const tz = valueOf("tzPick") || (() => {
+      try { return localStorage.getItem("sof_moons_tz_v2") || Intl.DateTimeFormat().resolvedOptions().timeZone; } catch { return Intl.DateTimeFormat().resolvedOptions().timeZone; }
+    })();
+    const boundaryMode = valueOf("boundaryMode") || (() => {
+      try { return localStorage.getItem("sof_moons_boundary_v1") || "sunset"; } catch { return "sunset"; }
+    })();
+    const sunset = valueOf("sunsetInput") || (() => {
+      try { return localStorage.getItem("sof_moons_sunset_v1") || ""; } catch { return ""; }
+    })();
+
+    if (window.RemnantShareUrl?.buildPermanentLink) {
+      return window.RemnantShareUrl.buildPermanentLink({
+        baseUrl: "./moons.html",
+        date,
+        timeZone: tz,
+        boundaryMode,
+        manualSunset: sunset,
+        selectedTab: selectedMoodsTab(sourceId),
+        readingVersion,
+        displayMode,
+        source: sourceId
+      });
+    }
+    return buildDeepLink(date);
+  }
+
+  function normalizeForShare(value, max = 1200) {
+    const text = String(value || "").replace(/\s+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+    return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+  }
+
+  function mirrorPayload() {
+    const title = textOf("mirrorTitle") || "Daily Mirror";
+    const full = normalizeForShare(textOf("mirrorOutput"), 6000);
+    const opening = /The Opening\s+([\s\S]*?)\n\nMoon Gate/i.exec(full)?.[1] || "";
+    const witnessQuestion = /Witness Questions\s+1\.\s*([^\n]+)/i.exec(full)?.[1] || "";
+    const closing = /Closing Seal\s+([\s\S]*?)$/i.exec(full)?.[1] || "";
+    const practice = textOf("mirrorAction") || "";
+    const signal = normalizeForShare([
+      `☲ Daily Mirror · ${title}`,
+      opening || textOf("mirrorSignal"),
+      practice ? `Practice: ${practice}` : "",
+      witnessQuestion ? `Witness Question: ${witnessQuestion}` : "",
+      closing ? `Closing Seal: ${closing.split("\n")[0]}` : "",
+      "reading version: mirror-reading/2.0.0"
+    ].filter(Boolean).join("\n"), 900);
+
+    return {
+      title: "Daily Mirror",
+      signal,
+      standard: normalizeForShare([
+        `☲ Daily Mirror`,
+        `Daily Gate summary: ${title}`,
+        opening ? `Opening: ${opening}` : "",
+        practice ? `Practice: ${practice}` : "",
+        witnessQuestion ? `Witness Question: ${witnessQuestion}` : "",
+        closing ? `Closing Seal: ${closing}` : "",
+        "reading version: mirror-reading/2.0.0"
+      ].filter(Boolean).join("\n\n"), 2500),
+      full: full || signal,
+      link: buildMoonsLink("daily-mirror", "mirror-reading/2.0.0", "standard")
+    };
+  }
+
+  function dailyFlowPayload() {
+    const movement = textOf("ritualLine");
+    const stateLine = textOf("meterGroundText") || textOf("meterFieldText") || "Observe";
+    const practicalAction = (() => {
+      const nodes = Array.from(document.querySelectorAll(".practice-card .practice-list div"));
+      const action = nodes.find(node => /Action/i.test(node.textContent || ""));
+      return normalizeForShare(action?.textContent || "", 180);
+    })();
+    const signal = normalizeForShare([
+      "☲ Daily Flow",
+      movement,
+      `State: ${stateLine}`,
+      practicalAction ? `Practical action: ${practicalAction}` : ""
+    ].filter(Boolean).join("\n"), 800);
+
+    return {
+      title: "Daily Flow",
+      signal,
+      standard: normalizeForShare([
+        "☲ Daily Flow",
+        `Current movement: ${movement || "Read · Witness · Ground"}`,
+        `Preparation / Action / Rest state: ${stateLine}`,
+        practicalAction ? `Practical action: ${practicalAction}` : ""
+      ].filter(Boolean).join("\n\n"), 2200),
+      full: normalizeForShare([
+        "☲ Daily Flow — Full Scroll",
+        movement,
+        `Coherence: ${textOf("meterCoherenceText")}`,
+        `Body: ${textOf("meterBodyText")}`,
+        `Signal: ${textOf("meterSignalText")}`,
+        `Field: ${textOf("meterFieldText")}`,
+        `Grounding: ${textOf("meterGroundText")}`,
+        practicalAction ? `Practical action: ${practicalAction}` : ""
+      ].filter(Boolean).join("\n"), 3800),
+      link: buildMoonsLink("daily-flow")
+    };
+  }
+
+  function shabbatPayload() {
+    const shabbatState = textOf("shabbatState") || "Shabbat state unavailable";
+    const stage = /prep|prepare/i.test(shabbatState)
+      ? "Prepare"
+      : /return/i.test(shabbatState)
+        ? "Return"
+        : /shabbat|ceas/i.test(shabbatState)
+          ? "Cease"
+          : /rest/i.test(shabbatState)
+            ? "Rest"
+            : "Witness";
+    const practice = normalizeForShare(textOf("shabbatInstruction"), 220);
+    const signal = `☲ Shabbat · ${shabbatState}\nStage: ${stage}\nPractice: ${practice}`;
+
+    return {
+      title: "Shabbat",
+      signal,
+      standard: normalizeForShare([
+        `☲ Shabbat state: ${shabbatState}`,
+        `Stage: ${stage}`,
+        practice ? `Concise practice: ${practice}` : ""
+      ].filter(Boolean).join("\n\n"), 1800),
+      full: normalizeForShare([
+        `☲ Shabbat`,
+        `State: ${shabbatState}`,
+        `Window: ${textOf("shabbatWindow")}`,
+        `Moon Position: ${textOf("shabbatMoonPosition")}`,
+        `Stage: ${stage}`,
+        practice ? `Practice: ${practice}` : ""
+      ].filter(Boolean).join("\n"), 2500),
+      link: buildMoonsLink("shabbat")
+    };
+  }
+
+  function witnessPayload() {
+    const selected = normalizeForShare(window.getSelection?.().toString() || "", 3000);
+    const warning = "Privacy warning: share only selected text. Private local logs are never included automatically.";
+    const fallback = selected || "Select text in Daily Witness before sharing.";
+    return {
+      title: "Daily Witness",
+      signal: fallback,
+      standard: `${warning}\n\n${fallback}`,
+      full: `${warning}\n\n${fallback}`,
+      link: buildMoonsLink("daily-witness"),
+      warning,
+      requiresSelection: true,
+      hasSelection: Boolean(selected)
+    };
+  }
+
+  function yearMapPayload() {
+    const date = selectedMoonDate();
+    const moon = textOf("moonName");
+    const moonDay = textOf("dayInMoon");
+    const weekGate = textOf("weekGate");
+    const archetype = textOf("dayArchetype");
+    const signal = `☲ Year Map · ${date}\n${moon} · Day ${moonDay}\n${weekGate}`;
+    return {
+      title: "Year Map",
+      signal,
+      standard: normalizeForShare([
+        `☲ Year Map selected date: ${date}`,
+        `Moon: ${moon}`,
+        `Day: ${moonDay}`,
+        `Week Gate: ${weekGate}`,
+        `Archetype: ${archetype}`
+      ].join("\n"), 2000),
+      full: normalizeForShare(textOf("outsideInfo") + "\n\n" + signal, 2800),
+      link: buildMoonsLink("year-map", "year-map/1.0.0")
+    };
+  }
+
+  function todayPayload() {
+    const shareState = deriveShareState();
+    const pkgSignal = buildDescriptionPackage(shareState, "compact");
+    const pkgStandard = buildDescriptionPackage(shareState, "standard");
+    const pkgFull = buildDescriptionPackage(shareState, "professional");
+    return {
+      title: shareState.isSelectedDate ? "Selected Day" : "Today",
+      signal: normalizeForShare([
+        `☲ Pattern date: ${shareState.isoDate}`,
+        `Moon and day: ${shareState.moonName} · Day ${shareState.moonDay || "Outside"}`,
+        `Week Gate: ${shareState.weekGate}`,
+        `Archetype: ${shareState.movement}`,
+        `Daily emphasis: ${pkgSignal.description}`
+      ].join("\n"), 1200),
+      standard: pkgStandard.completePost,
+      full: pkgFull.completePost,
+      link: buildMoonsLink("today", "mirror-reading/2.0.0", state.currentMode || "standard")
+    };
+  }
+
+  function generatedSealPayload() {
+    const seal = normalizeForShare(textOf("sealBody"), 5000);
+    return {
+      title: "Generated Seal",
+      signal: normalizeForShare(seal.split("\n").slice(0, 7).join("\n"), 1200),
+      standard: seal,
+      full: seal,
+      link: buildMoonsLink("generated-seal", "seal/1.0.0")
+    };
+  }
+
+  function oracleQuickSealPayload() {
+    const quick = normalizeForShare(textOf("quickSeal"), 2400)
+      .split("\n")
+      .filter(line => !/(name|birth|date of birth|birth time|profile)/i.test(line))
+      .join("\n")
+      .trim();
+    return {
+      title: "Oracle Quick Seal",
+      signal: quick || "Run a quick seal reading first.",
+      standard: quick || "Run a quick seal reading first.",
+      full: quick || "Run a quick seal reading first.",
+      link: window.RemnantShareUrl?.buildOracleShareLink
+        ? window.RemnantShareUrl.buildOracleShareLink({
+          baseUrl: "./genesis-oracle.html",
+          timeZone: valueOf("inTZ"),
+          boundaryMode: valueOf("inBoundary"),
+          sunsetTime: valueOf("inSunset"),
+          view: "quick",
+          oracleVersion: "genesis-oracle/2.0.0",
+          source: "oracle-quick-seal"
+        })
+        : `${window.location.origin}${window.location.pathname}`
+    };
+  }
+
+  function oracleDailyMirrorPayload() {
+    const mirror = normalizeForShare(document.getElementById("todayTransit")?.textContent || "", 4200)
+      .split("\n")
+      .filter(line => !/(name|birth|date of birth|birth time|profile)/i.test(line))
+      .join("\n")
+      .trim();
+    return {
+      title: "Oracle Birth Signature × Today",
+      signal: mirror.split("\n").slice(0, 8).join("\n"),
+      standard: mirror || "Run a reading to generate the symbolic daily mirror.",
+      full: mirror || "Run a reading to generate the symbolic daily mirror.",
+      link: window.RemnantShareUrl?.buildOracleShareLink
+        ? window.RemnantShareUrl.buildOracleShareLink({
+          baseUrl: "./genesis-oracle.html",
+          timeZone: valueOf("inTZ"),
+          boundaryMode: valueOf("inBoundary"),
+          sunsetTime: valueOf("inSunset"),
+          view: "daily",
+          oracleVersion: "genesis-oracle/2.0.0",
+          source: "oracle-daily-mirror"
+        })
+        : `${window.location.origin}${window.location.pathname}`
+    };
+  }
+
+  function oracleGeneratedSealPayload() {
+    const alt = normalizeForShare(textOf("sealAlt"), 1500);
+    return {
+      title: "Generated Seal",
+      signal: alt || "Generated Seal visualization",
+      standard: alt || "Generated Seal visualization",
+      full: alt || "Generated Seal visualization",
+      link: window.RemnantShareUrl?.buildOracleShareLink
+        ? window.RemnantShareUrl.buildOracleShareLink({
+          baseUrl: "./genesis-oracle.html",
+          timeZone: valueOf("inTZ"),
+          boundaryMode: valueOf("inBoundary"),
+          sunsetTime: valueOf("inSunset"),
+          view: "full",
+          oracleVersion: "genesis-oracle/2.0.0",
+          source: "oracle-generated-seal"
+        })
+        : `${window.location.origin}${window.location.pathname}`
+    };
+  }
+
+  function buildSourcePayload(sourceId) {
+    const normalized = sourceId || "today";
+    const builders = {
+      today: todayPayload,
+      "daily-mirror": mirrorPayload,
+      "daily-flow": dailyFlowPayload,
+      shabbat: shabbatPayload,
+      "daily-witness": witnessPayload,
+      "year-map": yearMapPayload,
+      "generated-seal": generatedSealPayload,
+      "oracle-quick-seal": oracleQuickSealPayload,
+      "oracle-daily-mirror": oracleDailyMirrorPayload,
+      "oracle-generated-seal": oracleGeneratedSealPayload
+    };
+    const builder = builders[normalized] || todayPayload;
+    return {
+      sourceId: normalized,
+      ...builder()
+    };
+  }
+
   function statusText(message) {
     const node = state.modal?.querySelector("[data-share-day-status]");
     if (node) node.textContent = message || "";
@@ -648,7 +977,27 @@
 
   function regeneratePackage(forceResetCaption = false) {
     if (!state.currentShareState || !state.modal) return;
-    state.currentPackage = buildDescriptionPackage(state.currentShareState, state.currentMode, state.captionOptions);
+    state.currentSourcePayload = buildSourcePayload(state.currentSourceId);
+    const payload = state.currentSourcePayload;
+    if (!payload) return;
+    const modeText = state.currentMode === "compact"
+      ? payload.signal
+      : state.currentMode === "professional"
+        ? payload.full
+        : payload.standard;
+    state.currentPackage = {
+      mode: state.currentMode,
+      description: modeText || payload.standard || payload.signal || "",
+      link: payload.link || state.currentShareState.link,
+      hashtags: state.currentMode === "compact" ? CORE_HASHTAGS.slice(0, 3) : buildHashtags(state.currentShareState, "standard"),
+      completePost: buildCompletePost(
+        modeText || payload.standard || payload.signal || "",
+        payload.link || state.currentShareState.link,
+        state.currentMode === "compact" ? CORE_HASHTAGS.slice(0, 3) : buildHashtags(state.currentShareState, "standard"),
+        state.captionOptions.includeLink,
+        state.captionOptions.includeHashtags
+      )
+    };
 
     const textArea = state.modal.querySelector("[data-share-day-text]");
     if (textArea && (forceResetCaption || !state.userEditedCaption)) {
@@ -1036,12 +1385,17 @@
 
   async function nativeShare() {
     if (!state.currentShareState || !state.currentPackage) return;
-    const caption = state.modal?.querySelector("[data-share-day-text]")?.value || state.currentPackage.description;
-    const completePost = getCurrentCompletePost();
+    const payload = state.currentSourcePayload || buildSourcePayload(state.currentSourceId);
+    if (payload?.requiresSelection && !payload?.hasSelection) {
+      statusText(payload.warning || "Select text before sharing.");
+      return;
+    }
+    const caption = state.modal?.querySelector("[data-share-day-text]")?.value || payload?.standard || state.currentPackage.description;
+    const completePost = payload?.full || getCurrentCompletePost();
     const shareData = {
-      title: `Remnant 13 Moons · ${state.currentShareState.moonName}`,
+      title: payload?.title ? `Scroll of Fire · ${payload.title}` : `Remnant 13 Moons · ${state.currentShareState.moonName}`,
       text: caption,
-      url: state.currentPackage.link || state.currentShareState.link
+      url: payload?.link || state.currentPackage.link || state.currentShareState.link
     };
 
     if (!(navigator && typeof navigator.share === "function")) {
@@ -1060,13 +1414,16 @@
 
       if (plan.method === "file-only") {
         await copyText(completePost);
-        await navigator.share(plan.data);
+        if (window.RemnantShare?.nativeShare) await window.RemnantShare.nativeShare(plan.data);
+        else await navigator.share(plan.data);
         statusText("The image is ready to share. The caption has also been copied in case the selected app does not include it automatically.");
       } else if (plan.method === "file-text-link") {
-        await navigator.share(plan.data);
+        if (window.RemnantShare?.nativeShare) await window.RemnantShare.nativeShare(plan.data);
+        else await navigator.share(plan.data);
         statusText("Native share opened.");
       } else if (plan.method === "text-link") {
-        await navigator.share(shareData);
+        if (window.RemnantShare?.nativeShare) await window.RemnantShare.nativeShare(shareData);
+        else await navigator.share(shareData);
         statusText("Native share opened. Download image to attach manually if needed.");
       } else {
         statusText("Native sharing is not available here. Download the image and attach it manually.");
@@ -1091,6 +1448,8 @@
   function setButtonLabels(shareState) {
     document.querySelectorAll("[data-share-day-open]").forEach(button => {
       if (!(button instanceof HTMLElement)) return;
+      const sourceId = button.getAttribute("data-share-source-id");
+      if (sourceId && sourceId !== "today") return;
       const source = button.getAttribute("data-share-source") || "";
       if (source === "moons" || source === "signal") {
         button.textContent = shareState.shareButtonLabel;
@@ -1146,8 +1505,10 @@
     }
   }
 
-  async function openModal(trigger) {
+  async function openModal(trigger, sourceId = "today") {
     state.currentShareState = deriveShareState();
+    state.currentSourceId = sourceId || "today";
+    state.currentSourcePayload = buildSourcePayload(state.currentSourceId);
     setButtonLabels(state.currentShareState);
     state.trigger = trigger || null;
 
@@ -1167,7 +1528,9 @@
 
     const title = state.modal.querySelector("[data-share-day-title]");
     if (title) {
-      title.textContent = state.currentShareState.isSelectedDate ? "Share This Day" : "Share Today";
+      title.textContent = state.currentSourcePayload?.title
+        ? `Share · ${state.currentSourcePayload.title}`
+        : (state.currentShareState.isSelectedDate ? "Share This Day" : "Share Today");
     }
 
     const dateLabel = state.modal.querySelector("[data-share-day-date]");
@@ -1222,6 +1585,7 @@
 
         <div class="share-day-format" role="tablist" aria-label="Share image format">
           <button type="button" data-share-day-format="square" aria-selected="true">Square 1080×1080</button>
+          <button type="button" data-share-day-format="portrait" aria-selected="false">Portrait 1080×1350</button>
           <button type="button" data-share-day-format="story" aria-selected="false">Story 1080×1920</button>
         </div>
 
@@ -1260,15 +1624,42 @@
         <pre id="shareDayCompletePreview" class="share-day-complete-preview" data-share-day-complete-preview></pre>
 
         <div class="share-day-actions">
-          <button type="button" data-share-day-native>Share Image + Description</button>
-          <button type="button" data-share-day-download="square">Download Square</button>
-          <button type="button" data-share-day-download="story">Download Story</button>
-          <button type="button" data-share-day-copy="description">Copy Description</button>
-          <button type="button" data-share-day-copy="complete">Copy Complete Post</button>
-          <button type="button" data-share-day-copy="link">Copy Link</button>
+          <button type="button" data-share-day-copy="signal">Copy Signal</button>
+          <button type="button" data-share-day-copy="standard">Copy Standard</button>
+          <button type="button" data-share-day-copy="full">Copy Full Scroll</button>
+          <button type="button" data-share-day-native>Native Share</button>
+          <button type="button" data-share-day-copy="link">Copy Permanent Link</button>
+          <button type="button" data-share-day-download="square">Generate Share Image · Square</button>
+          <button type="button" data-share-day-download="portrait">Generate Share Image · Portrait</button>
+          <button type="button" data-share-day-download="story">Generate Share Image · Story</button>
           <button type="button" data-share-day-restore>Restore Default Text</button>
           <button type="button" data-share-day-close>Close</button>
         </div>
+
+        <details class="share-day-mobile-menu" data-share-day-mobile-menu>
+          <summary>Share menu</summary>
+          <div class="share-day-mobile-group">
+            <strong>Share text</strong>
+            <button type="button" data-share-day-copy="signal">Copy Signal</button>
+            <button type="button" data-share-day-copy="standard">Copy Standard</button>
+            <button type="button" data-share-day-copy="full">Copy Full Scroll</button>
+            <button type="button" data-share-day-native>Native Share</button>
+          </div>
+          <div class="share-day-mobile-group">
+            <strong>Share image</strong>
+            <button type="button" data-share-day-download="square">Square</button>
+            <button type="button" data-share-day-download="portrait">Portrait</button>
+            <button type="button" data-share-day-download="story">Story</button>
+          </div>
+          <div class="share-day-mobile-group">
+            <strong>Copy link</strong>
+            <button type="button" data-share-day-copy="link">Copy Permanent Link</button>
+          </div>
+          <div class="share-day-mobile-group">
+            <strong>Export</strong>
+            <button type="button" data-share-day-copy="full">Copy Full Scroll</button>
+          </div>
+        </details>
 
         <p class="share-day-status" role="status" aria-live="polite" data-share-day-status></p>
       </div>
@@ -1318,20 +1709,37 @@
       const copy = event.target.closest("[data-share-day-copy]");
       if (copy) {
         const mode = copy.getAttribute("data-share-day-copy");
-        if (mode === "description") {
-          const description = modal.querySelector("[data-share-day-text]")?.value || "";
-          copyText(description).then(ok => {
-            if (ok) statusText("Description copied.");
-          });
-        } else if (mode === "complete") {
-          const text = getCurrentCompletePost();
-          copyText(text).then(ok => {
-            if (ok) statusText("Complete post copied.");
-          });
+        const payload = state.currentSourcePayload || buildSourcePayload(state.currentSourceId);
+        if (payload?.requiresSelection && !payload?.hasSelection) {
+          statusText(payload.warning || "Select text before sharing.");
+          return;
+        }
+        const link = payload?.link || state.currentPackage?.link || state.currentShareState?.link || "";
+        const tags = state.currentPackage?.hashtags || CORE_HASHTAGS.slice(0, 3);
+
+        if (mode === "signal") {
+          const text = payload?.signal || state.currentPackage?.description || "";
+          const copyAction = window.RemnantShare?.copySignal
+            ? window.RemnantShare.copySignal(text, link)
+            : copyText(text);
+          Promise.resolve(copyAction).then(() => statusText("Signal copied."));
+        } else if (mode === "standard") {
+          const text = payload?.standard || state.currentPackage?.description || "";
+          const copyAction = window.RemnantShare?.copyStandard
+            ? window.RemnantShare.copyStandard(text, link, tags)
+            : copyText(text);
+          Promise.resolve(copyAction).then(() => statusText("Standard copied."));
+        } else if (mode === "full") {
+          const text = payload?.full || getCurrentCompletePost();
+          const copyAction = window.RemnantShare?.copyFullScroll
+            ? window.RemnantShare.copyFullScroll(text, link, tags)
+            : copyText(text);
+          Promise.resolve(copyAction).then(() => statusText("Full Scroll copied."));
         } else {
-          copyText(state.currentPackage?.link || state.currentShareState?.link || "").then(ok => {
-            if (ok) statusText("Link copied.");
-          });
+          const copyAction = window.RemnantShare?.copyPermanentLink
+            ? window.RemnantShare.copyPermanentLink(link)
+            : copyText(link);
+          Promise.resolve(copyAction).then(() => statusText("Permanent link copied."));
         }
         return;
       }
@@ -1383,10 +1791,18 @@
 
   function setupButtons() {
     document.addEventListener("click", event => {
-      const trigger = event.target.closest("[data-share-day-open]");
+      const trigger = event.target.closest("[data-share-day-open],[data-remnant-share-open]");
       if (!trigger) return;
       event.preventDefault();
-      openModal(trigger);
+      const sourceId =
+        trigger.getAttribute("data-share-source-id") ||
+        trigger.getAttribute("data-remnant-share-source") ||
+        trigger.getAttribute("data-share-source") ||
+        "today";
+      const normalizedSource = sourceId === "moons" || sourceId === "signal" || sourceId === "homepage"
+        ? "today"
+        : sourceId;
+      openModal(trigger, normalizedSource);
     });
   }
 
@@ -1419,6 +1835,7 @@
     deriveShareState,
     buildDailyText,
     buildDeepLink,
+    buildSourcePayload,
     getMoonTheme,
     buildDescriptionPackage,
     buildHashtags,
@@ -1433,6 +1850,7 @@
       buildReflection,
       buildCompletePost,
       buildNativeSharePlan,
+      buildSourcePayload,
       isDayOutOfTime,
       normalizeShabbatCode,
       isNewMoonTransition,

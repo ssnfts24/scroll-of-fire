@@ -1645,14 +1645,23 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     });
 
     on("shareLink", "click", () => {
-      const url = new URL(location.href);
-      url.searchParams.set("date", toISO(selectedDate));
-      url.searchParams.set("tz", selectedTZ);
-      url.searchParams.set("boundary", boundaryMode());
-      url.searchParams.set("sunset", sunsetValue());
-
-      if (navigator.clipboard) navigator.clipboard.writeText(url.toString());
-      toast("Link copied");
+      const url = globalThis.RemnantShareUrl?.buildPermanentLink
+        ? globalThis.RemnantShareUrl.buildPermanentLink({
+          baseUrl: "./moons.html",
+          date: toISO(selectedDate),
+          timeZone: selectedTZ,
+          boundaryMode: boundaryMode(),
+          manualSunset: sunsetValue(),
+          selectedTab: new URLSearchParams(location.search).get("tab") || "todayPanel",
+          readingVersion: "mirror-reading/2.0.0",
+          displayMode: "standard",
+          source: "today"
+        })
+        : new URL(location.href).toString();
+      const copy = globalThis.RemnantShare?.copyPermanentLink
+        ? globalThis.RemnantShare.copyPermanentLink(url)
+        : navigator.clipboard?.writeText(url);
+      Promise.resolve(copy).then(() => toast("Link copied"));
     });
 
     [
@@ -1677,8 +1686,10 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     on("buildWitness", "click", buildWitness);
 
     on("copyWitness", "click", () => {
-      if (navigator.clipboard) navigator.clipboard.writeText(buildWitness());
-      toast("Witness copied");
+      const copy = globalThis.RemnantShare?.copyFullScroll
+        ? globalThis.RemnantShare.copyFullScroll(buildWitness(), "", [])
+        : navigator.clipboard?.writeText(buildWitness());
+      Promise.resolve(copy).then(() => toast("Witness copied"));
     });
 
     on("saveWitness", "click", saveLog);
@@ -1706,8 +1717,12 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
 
     on("copySeal", "click", () => {
       const seal = $("#sealBody");
-      if (seal && navigator.clipboard) navigator.clipboard.writeText(seal.textContent);
-      toast("Seal copied");
+      const copy = seal
+        ? (globalThis.RemnantShare?.copyStandard
+          ? globalThis.RemnantShare.copyStandard(seal.textContent || "", "", [])
+          : navigator.clipboard?.writeText(seal.textContent || ""))
+        : Promise.resolve();
+      Promise.resolve(copy).then(() => toast("Seal copied"));
     });
 
     on("copyAllLogs", "click", () => {

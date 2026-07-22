@@ -186,7 +186,7 @@
     selectA.innerHTML = "";
     selectB.innerHTML = "";
     if (mirrorProfile) {
-      mirrorProfile.innerHTML = \"<option value=\\\"\\\">No saved profile selected</option>\";
+      mirrorProfile.innerHTML = "<option value=\"\">No saved profile selected</option>";
     }
 
     if (!profiles.length) {
@@ -457,12 +457,15 @@
       `Foundation: ${lastResult.reading.foundation}`,
       `Practical Action: ${lastResult.reading.practicalAction}`
     ].join("\n");
-    navigator.clipboard?.writeText(text)
+    const copy = globalThis.RemnantShare?.copyFullScroll
+      ? globalThis.RemnantShare.copyFullScroll(text, copyShareLink({ silent: true }), [])
+      : navigator.clipboard?.writeText(text);
+    Promise.resolve(copy)
       .then(() => setStatus("Reading copied."))
       .catch(() => setStatus(text));
   }
 
-  function copyShareLink() {
+  function copyShareLink({ silent = false } = {}) {
     const link = globalThis.RemnantShareUrl?.buildOracleShareLink
       ? globalThis.RemnantShareUrl.buildOracleShareLink({
         baseUrl: location.pathname,
@@ -470,12 +473,16 @@
         boundaryMode: $("#inBoundary")?.value || "",
         sunsetTime: $("#inSunset")?.value || "",
         view: "quick",
-        oracleVersion: globalThis.GenesisOracleVersion?.oracleVersion || "genesis-oracle/2.0.0"
+        oracleVersion: globalThis.GenesisOracleVersion?.oracleVersion || "genesis-oracle/2.0.0",
+        source: "oracle-quick-seal"
       })
       : `${location.origin}${location.pathname}`;
-    navigator.clipboard?.writeText(link)
-      .then(() => setStatus("Share link copied."))
-      .catch(() => setStatus(link));
+    if (silent) return link;
+    const copy = globalThis.RemnantShare?.copyPermanentLink
+      ? globalThis.RemnantShare.copyPermanentLink(link)
+      : navigator.clipboard?.writeText(link);
+    Promise.resolve(copy).then(() => setStatus("Share link copied.")).catch(() => setStatus(link));
+    return link;
   }
 
   function initFromQuery() {

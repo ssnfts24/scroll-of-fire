@@ -6,6 +6,11 @@
     return /^\d{4}-\d{2}-\d{2}$/.test(text) ? text : "";
   }
 
+  function normalizeSlug(value) {
+    const text = String(value || "").trim();
+    return /^[a-zA-Z0-9_.-]{1,64}$/.test(text) ? text : "";
+  }
+
   function buildPermanentLink({
     baseUrl,
     date,
@@ -23,10 +28,13 @@
     if (timeZone) url.searchParams.set("tz", String(timeZone));
     if (boundaryMode) url.searchParams.set("boundary", String(boundaryMode));
     if (manualSunset) url.searchParams.set("sunset", String(manualSunset));
-    if (selectedTab) url.searchParams.set("tab", String(selectedTab));
+    const safeTab = normalizeSlug(selectedTab);
+    if (safeTab) url.searchParams.set("tab", safeTab);
     if (readingVersion) url.searchParams.set("readingVersion", String(readingVersion));
-    if (displayMode) url.searchParams.set("display", String(displayMode));
-    if (source) url.searchParams.set("source", String(source));
+    const safeDisplay = normalizeSlug(displayMode);
+    if (safeDisplay) url.searchParams.set("display", safeDisplay);
+    const safeSource = normalizeSlug(source);
+    if (safeSource) url.searchParams.set("source", safeSource);
     return url.toString();
   }
 
@@ -37,20 +45,22 @@
       timeZone: url.searchParams.get("tz") || "",
       boundaryMode: url.searchParams.get("boundary") || "",
       manualSunset: url.searchParams.get("sunset") || "",
-      selectedTab: url.searchParams.get("tab") || "",
+      selectedTab: normalizeSlug(url.searchParams.get("tab")),
       readingVersion: url.searchParams.get("readingVersion") || "",
-      displayMode: url.searchParams.get("display") || "",
-      source: url.searchParams.get("source") || ""
+      displayMode: normalizeSlug(url.searchParams.get("display")),
+      source: normalizeSlug(url.searchParams.get("source"))
     };
   }
 
-  function buildOracleShareLink({ baseUrl, timeZone, boundaryMode, sunsetTime, view, oracleVersion } = {}) {
+  function buildOracleShareLink({ baseUrl, timeZone, boundaryMode, sunsetTime, view, oracleVersion, source } = {}) {
     const url = new URL(baseUrl || globalThis.location?.pathname || "./genesis-oracle.html", globalThis.location?.origin || "https://codexofreality.org");
     if (timeZone) url.searchParams.set("tz", String(timeZone));
     if (boundaryMode) url.searchParams.set("boundary", String(boundaryMode));
     if (sunsetTime) url.searchParams.set("sunset", String(sunsetTime));
-    url.searchParams.set("view", view || "quick");
+    url.searchParams.set("view", normalizeSlug(view) || "quick");
     url.searchParams.set("oracleVersion", oracleVersion || "genesis-oracle/2.0.0");
+    const safeSource = normalizeSlug(source);
+    if (safeSource) url.searchParams.set("source", safeSource);
     return url.toString();
   }
 
