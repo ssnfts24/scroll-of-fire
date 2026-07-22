@@ -1,5 +1,13 @@
 # Remnant 13 Moons Version History
 
+## 2026.07.18.1
+
+- Fixed `hourCycle:"h23"` Intl.DateTimeFormat option replaced with `hour12:false` for wider Safari/iOS compatibility.
+- Added `is-loading`, `is-ready`, and `has-error` state classes on the Today Calendar card so initialization state is visible and em-dash-only display is eliminated.
+- Wrapped `effectiveContext()` in a try/catch guard inside `render()` to prevent a silent exception from leaving the calendar unpopulated on Safari.
+- Fixed `.today-summary-controls` mobile CSS to use an explicit 3-column grid at ≤760px, preventing navigation button overlap.
+- Incremented service-worker version to force cache invalidation and prevent mismatched HTML/JS serving.
+
 ## 2026.07.16.3
 
 - Restored explicit install-state messaging for Android Chrome, standalone mode, previous installs, unsupported browsers, and iPhone Safari guidance.

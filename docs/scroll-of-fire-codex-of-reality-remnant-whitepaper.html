@@ -1,0 +1,972 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963" data-day-boundary="sunset">
+<head>
+  <base href="/">
+  <script>
+    if (location.hostname === "ssnfts24.github.io") {
+      const base = document.querySelector("base");
+      if (base) base.setAttribute("href", "/scroll-of-fire/");
+    }
+  </script>
+
+  <meta charset="utf-8">
+  <title>Scroll of Fire · Codex of Reality · Remnant Whitepaper</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="The official foundational whitepaper for Scroll of Fire and the Codex of Reality: identity, living theory, witness method, systems architecture, research integrity, ethics, artifacts, Frequency Governance, Covenant Caravan, and its relationship to The 13 Moons Remnant Living Time Observatory.">
+  <meta name="keywords" content="Scroll of Fire, Codex of Reality, Remnant, Aaron Paul Laird, Scribe of Circuits, Living Technology, witness system, 13 Moons Remnant Living Time Observatory, Frequency Governance, Genesis Oracle, Covenant Caravan, Artifact Registry">
+  <meta name="author" content="Aaron Paul Laird">
+  <meta name="creator" content="Aaron Paul Laird">
+  <meta name="publisher" content="Scroll of Fire">
+  <meta name="theme-color" content="#05070d">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+
+  <link rel="canonical" href="https://codexofreality.org/scroll-of-fire-codex-of-reality-remnant-whitepaper.html">
+  <link rel="icon" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/favicon.png">
+  <link rel="stylesheet" href="assets/css/codex.css">
+  <link rel="stylesheet" href="assets/css/navigation.css">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:title" content="Scroll of Fire · Codex of Reality · Remnant Whitepaper">
+  <meta property="og:description" content="The foundational architecture, method, ethics, systems, and rollout doctrine of the Scroll of Fire and Codex of Reality.">
+  <meta property="og:url" content="https://codexofreality.org/scroll-of-fire-codex-of-reality-remnant-whitepaper.html">
+  <meta property="og:image" content="https://codexofreality.org/assets/img/codex-social-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Scroll of Fire · Codex of Reality · Remnant Whitepaper">
+  <meta name="twitter:description" content="A living framework for rhythm, witness, pattern, grounded action, research, craft, and return.">
+  <meta name="twitter:image" content="https://codexofreality.org/assets/img/codex-social-cover.jpg">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2TBMEK502C"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", "G-2TBMEK502C");
+  </script>
+
+  <style>
+    :root{
+      --wp-bg:#05070d;
+      --wp-bg-soft:#08101a;
+      --wp-panel:rgba(9,14,25,.86);
+      --wp-panel-soft:rgba(255,255,255,.045);
+      --wp-panel-strong:rgba(13,21,34,.96);
+      --wp-line:rgba(255,255,255,.13);
+      --wp-line-strong:rgba(255,255,255,.22);
+      --wp-gold:var(--gold,#f3c97a);
+      --wp-gold-deep:var(--gold-deep,#d99545);
+      --wp-cyan:var(--cyan,#7af3ff);
+      --wp-ember:var(--ember,#ff7a3d);
+      --wp-green:var(--green,#91ffbc);
+      --wp-text:var(--text,#f4f1e8);
+      --wp-muted:var(--muted,#b9c1c7);
+      --wp-dim:var(--dim,#7d8992);
+      --wp-radius:24px;
+      --wp-shadow:0 24px 70px rgba(0,0,0,.32);
+      --wp-max:1240px;
+    }
+
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:
+        radial-gradient(circle at 15% 0%,rgba(122,243,255,.08),transparent 35rem),
+        radial-gradient(circle at 90% 20%,rgba(243,201,122,.08),transparent 32rem),
+        linear-gradient(180deg,#05070d 0%,#07101a 48%,#05070d 100%);
+      color:var(--wp-text);
+    }
+    .skip-link{
+      position:fixed;left:1rem;top:1rem;z-index:9999;
+      transform:translateY(-180%);padding:.8rem 1rem;border-radius:12px;
+      background:var(--wp-gold);color:#07101a;font-weight:800;
+    }
+    .skip-link:focus{transform:none}
+
+    .whitepaper-shell{width:min(var(--wp-max),calc(100% - 2rem));margin:0 auto;padding:2rem 0 6rem}
+    .wp-hero{
+      position:relative;overflow:hidden;
+      padding:clamp(2rem,6vw,5rem);
+      border:1px solid var(--wp-line);
+      border-radius:clamp(24px,4vw,40px);
+      background:
+        linear-gradient(135deg,rgba(243,201,122,.08),transparent 42%),
+        linear-gradient(315deg,rgba(122,243,255,.08),transparent 44%),
+        var(--wp-panel);
+      box-shadow:var(--wp-shadow);
+      isolation:isolate;
+    }
+    .wp-hero::before,.wp-hero::after{
+      content:"";position:absolute;border:1px solid rgba(243,201,122,.16);border-radius:50%;
+      pointer-events:none;z-index:-1;
+    }
+    .wp-hero::before{width:30rem;height:30rem;right:-12rem;top:-16rem}
+    .wp-hero::after{width:18rem;height:18rem;right:-4rem;top:-4rem;border-color:rgba(122,243,255,.13)}
+    .wp-kicker,.section-kicker{
+      margin:0 0 .75rem;text-transform:uppercase;letter-spacing:.18em;
+      font-size:.76rem;font-weight:800;color:var(--wp-cyan);
+    }
+    .wp-hero h1{
+      max-width:980px;margin:0;
+      font-family:Cinzel,Georgia,serif;
+      font-size:clamp(2.35rem,7vw,5.7rem);
+      line-height:.98;letter-spacing:-.035em;
+    }
+    .wp-hero h1 span{display:block;color:var(--wp-gold)}
+    .wp-subtitle{
+      max-width:850px;margin:1.5rem 0 0;
+      font-size:clamp(1.04rem,2.2vw,1.35rem);line-height:1.7;color:var(--wp-muted);
+    }
+    .wp-seal{
+      margin-top:1.5rem;padding:1rem 1.15rem;border-left:3px solid var(--wp-gold);
+      background:rgba(255,255,255,.035);border-radius:0 14px 14px 0;
+      font-family:Georgia,serif;font-size:1.05rem;line-height:1.6;
+    }
+    .hero-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.6rem}
+    .wp-button{
+      display:inline-flex;align-items:center;justify-content:center;min-height:46px;
+      padding:.75rem 1rem;border:1px solid rgba(243,201,122,.4);border-radius:999px;
+      color:var(--wp-text);text-decoration:none;font-weight:800;
+      background:rgba(243,201,122,.08);
+    }
+    .wp-button:hover,.wp-button:focus-visible{border-color:var(--wp-gold);background:rgba(243,201,122,.15)}
+    .wp-button.secondary{border-color:rgba(122,243,255,.32);background:rgba(122,243,255,.055)}
+
+    .identity-strip{
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem;margin:1rem 0 2rem;
+    }
+    .identity-item{
+      padding:1rem;border:1px solid var(--wp-line);border-radius:18px;background:var(--wp-panel);
+    }
+    .identity-item strong{display:block;color:var(--wp-gold);font-size:1.02rem}
+    .identity-item span{display:block;margin-top:.25rem;color:var(--wp-muted);font-size:.9rem;line-height:1.45}
+
+    .wp-layout{display:grid;grid-template-columns:280px minmax(0,1fr);gap:1.25rem;align-items:start}
+    .wp-toc{
+      position:sticky;top:1rem;max-height:calc(100vh - 2rem);overflow:auto;
+      padding:1rem;border:1px solid var(--wp-line);border-radius:20px;background:rgba(7,12,21,.94);
+    }
+    .wp-toc h2{margin:.1rem 0 .8rem;font-size:1rem;color:var(--wp-gold)}
+    .wp-toc a{
+      display:block;padding:.48rem .55rem;border-radius:10px;
+      color:var(--wp-muted);text-decoration:none;font-size:.88rem;line-height:1.35;
+    }
+    .wp-toc a:hover,.wp-toc a:focus-visible{color:var(--wp-text);background:rgba(255,255,255,.055)}
+
+    .wp-content{min-width:0}
+    .wp-section{
+      scroll-margin-top:1.5rem;margin-bottom:1rem;padding:clamp(1.25rem,3vw,2.1rem);
+      border:1px solid var(--wp-line);border-radius:var(--wp-radius);background:var(--wp-panel);
+      box-shadow:0 18px 45px rgba(0,0,0,.18);
+    }
+    .wp-section h2{
+      margin:.15rem 0 1rem;font-family:Cinzel,Georgia,serif;
+      font-size:clamp(1.55rem,3vw,2.35rem);line-height:1.12;
+    }
+    .wp-section h3{margin:1.4rem 0 .45rem;font-size:1.12rem;color:var(--wp-gold)}
+    .wp-section p,.wp-section li{color:var(--wp-muted);line-height:1.72}
+    .wp-section p:first-of-type{font-size:1.04rem}
+    .wp-section strong{color:var(--wp-text)}
+    .wp-section a{color:var(--wp-cyan)}
+    .wp-section ul,.wp-section ol{padding-left:1.2rem}
+    .wp-section li+li{margin-top:.42rem}
+
+    .lead{
+      padding:1rem 1.1rem;border:1px solid rgba(122,243,255,.18);
+      border-radius:16px;background:rgba(122,243,255,.04);
+      color:var(--wp-text)!important;font-size:1.08rem!important;
+    }
+    .quote{
+      margin:1.2rem 0;padding:1rem 1.15rem;border-left:3px solid var(--wp-gold);
+      background:rgba(243,201,122,.045);border-radius:0 16px 16px 0;
+      color:var(--wp-text);font-family:Georgia,serif;font-size:1.08rem;line-height:1.7;
+    }
+    .equation{
+      margin:1.25rem 0;padding:1.35rem;border:1px solid rgba(243,201,122,.24);
+      border-radius:18px;background:#070d17;text-align:center;overflow-wrap:anywhere;
+    }
+    .equation strong{
+      display:block;font-family:Georgia,serif;color:var(--wp-gold);
+      font-size:clamp(1.08rem,2.5vw,1.65rem);letter-spacing:.015em;
+    }
+    .equation span{display:block;margin-top:.65rem;color:var(--wp-muted);font-size:.9rem;line-height:1.6}
+
+    .grid-2,.grid-3,.grid-4{display:grid;gap:.85rem;margin-top:1rem}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .card{
+      padding:1rem;border:1px solid var(--wp-line);border-radius:18px;background:var(--wp-panel-soft);
+    }
+    .card h3{margin:0 0 .45rem}
+    .card p{margin:.35rem 0 0;font-size:.94rem}
+    .card .symbol{display:block;margin-bottom:.45rem;color:var(--wp-cyan);font-size:1.25rem}
+    .card.gold{border-color:rgba(243,201,122,.25)}
+    .card.cyan{border-color:rgba(122,243,255,.22)}
+    .card.green{border-color:rgba(145,255,188,.2)}
+
+    .system-map{display:grid;gap:.75rem}
+    .system-row{
+      display:grid;grid-template-columns:175px minmax(0,1fr);gap:1rem;
+      padding:1rem;border:1px solid var(--wp-line);border-radius:16px;background:rgba(255,255,255,.03);
+    }
+    .system-row strong{color:var(--wp-gold)}
+    .system-row p{margin:0}
+
+    .truth-table{width:100%;border-collapse:collapse;margin-top:1rem;font-size:.93rem}
+    .truth-table th,.truth-table td{padding:.8rem;border-bottom:1px solid var(--wp-line);text-align:left;vertical-align:top}
+    .truth-table th{color:var(--wp-gold);background:rgba(243,201,122,.04)}
+    .truth-table td{color:var(--wp-muted);line-height:1.55}
+
+    .phase{position:relative;padding:1rem 1rem 1rem 4rem;border:1px solid var(--wp-line);border-radius:18px;background:rgba(255,255,255,.03)}
+    .phase+.phase{margin-top:.75rem}
+    .phase-number{
+      position:absolute;left:1rem;top:1rem;width:2.1rem;height:2.1rem;border-radius:50%;
+      display:grid;place-items:center;border:1px solid rgba(243,201,122,.35);
+      background:rgba(243,201,122,.08);color:var(--wp-gold);font-weight:900;
+    }
+    .phase h3{margin:0 0 .35rem}
+    .phase p{margin:.2rem 0}
+    .phase small{color:var(--wp-dim)}
+
+    .warning{
+      padding:1rem;border:1px solid rgba(255,122,61,.28);border-radius:16px;
+      background:rgba(255,122,61,.055);color:var(--wp-text);
+    }
+    .success{
+      padding:1rem;border:1px solid rgba(145,255,188,.22);border-radius:16px;
+      background:rgba(145,255,188,.045);color:var(--wp-text);
+    }
+
+    .footer-seal{
+      margin-top:1rem;padding:clamp(1.4rem,4vw,2.5rem);text-align:center;
+      border:1px solid rgba(243,201,122,.22);border-radius:24px;
+      background:linear-gradient(135deg,rgba(243,201,122,.07),rgba(122,243,255,.045));
+    }
+    .footer-seal strong{display:block;color:var(--wp-gold);font-family:Cinzel,Georgia,serif;font-size:1.25rem}
+    .footer-seal p{max-width:780px;margin:.8rem auto 0;color:var(--wp-muted);line-height:1.7}
+    .meta-note{margin-top:1.25rem;color:var(--wp-dim);font-size:.84rem;text-align:center}
+
+    @media(max-width:980px){
+      .wp-layout{grid-template-columns:1fr}
+      .wp-toc{position:relative;top:auto;max-height:none;columns:2}
+      .wp-toc h2{column-span:all}
+      .identity-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:700px){
+      .whitepaper-shell{width:min(100% - 1rem,var(--wp-max));padding-top:.5rem}
+      .wp-hero{padding:1.5rem}
+      .identity-strip,.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+      .wp-toc{columns:1}
+      .system-row{grid-template-columns:1fr;gap:.35rem}
+      .truth-table{display:block;overflow-x:auto}
+      .hero-actions{display:grid}
+      .wp-button{width:100%;box-sizing:border-box}
+    }
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+    }
+    @media print{
+      body{background:#fff;color:#111}
+      .site-header,.wp-toc,.hero-actions,.skip-link{display:none!important}
+      .whitepaper-shell{width:100%;padding:0}
+      .wp-layout{display:block}
+      .wp-hero,.wp-section,.identity-item,.footer-seal{box-shadow:none;break-inside:avoid;background:#fff;color:#111;border-color:#bbb}
+      .wp-section p,.wp-section li,.wp-subtitle,.identity-item span,.footer-seal p{color:#333}
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@graph":[
+      {
+        "@type":"TechArticle",
+        "@id":"https://codexofreality.org/scroll-of-fire-codex-of-reality-remnant-whitepaper.html#article",
+        "headline":"Scroll of Fire · Codex of Reality · Remnant Whitepaper",
+        "description":"The foundational architecture, method, ethics, systems, and rollout doctrine of Scroll of Fire and the Codex of Reality.",
+        "author":{"@type":"Person","@id":"https://codexofreality.org/#aaron-paul-laird","name":"Aaron Paul Laird","alternateName":["Scribe of Circuits","Aharon Ben Or"]},
+        "publisher":{"@type":"Organization","@id":"https://codexofreality.org/#organization","name":"Scroll of Fire","alternateName":"Codex of Reality"},
+        "mainEntityOfPage":"https://codexofreality.org/scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+        "inLanguage":"en-US",
+        "isPartOf":{"@id":"https://codexofreality.org/#website"},
+        "about":[
+          "Codex of Reality","Scroll of Fire","Remnant","Living Technology",
+          "Witness practice","Frequency Governance","Genesis Oracle",
+          "Covenant Caravan","Artifact Registry","The 13 Moons Remnant Living Time Observatory"
+        ]
+      },
+      {
+        "@type":"Person",
+        "@id":"https://codexofreality.org/#aaron-paul-laird",
+        "name":"Aaron Paul Laird",
+        "alternateName":["Scribe of Circuits","Aaron Laird","Aharon Ben Or"],
+        "url":"https://codexofreality.org/"
+      }
+    ]
+  }
+  </script>
+</head>
+
+<body data-remnant-boundary="sunset">
+  <a class="skip-link" href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#main-content">Skip to whitepaper</a>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="index.html" aria-label="Codex of Reality home">
+        <span class="brand-mark" aria-hidden="true">☲</span>
+        <span class="brand-text">Codex of Reality</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" aria-label="Open navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <nav id="site-navigation" class="site-nav" aria-label="Primary navigation">
+        <a href="start.html">Start</a>
+        <a href="moons.html">13 Moons</a>
+        <a href="covenant-caravan.html">Caravan</a>
+        <a href="teach.html">Manifest</a>
+        <a href="shop.html">Artifacts</a>
+        <a href="hub.html">Hub</a>
+        <a href="ledger.html">Ledger</a>
+        <a href="systems/frequencies.html">Frequency</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="whitepaper-shell">
+    <article>
+      <header class="wp-hero">
+        <p class="wp-kicker">☲ Foundational Whitepaper · Living Framework · Remnant Architecture</p>
+        <h1>Scroll of Fire <span>Codex of Reality</span> Remnant Whitepaper</h1>
+        <p class="wp-subtitle">
+          The foundational document for a living system of rhythm, witness, pattern recognition,
+          grounded action, ethical experimentation, craft, memory, and return—designed to stand
+          beside <strong>The 13 Moons Remnant Living Time Observatory</strong> as its greater
+          philosophical, practical, and technological framework.
+        </p>
+        <div class="wp-seal">
+          <strong>Observe. Name. Breathe. Record. Compare. Refine. Return.</strong><br>
+          The Codex does not ask the witness to believe first. It asks the witness to become present,
+          preserve what occurred, distinguish fact from interpretation, and carry insight into grounded action.
+        </div>
+        <div class="hero-actions">
+          <a class="wp-button" href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#executive-summary">Enter the Whitepaper</a>
+          <a class="wp-button secondary" href="13-moon-whitepaper.html">Open the 13 Moons Observatory Whitepaper</a>
+          <a class="wp-button secondary" href="theory.html">Open the Living Theory</a>
+        </div>
+      </header>
+
+      <div class="identity-strip" aria-label="Project identity">
+        <div class="identity-item"><strong>Scroll of Fire</strong><span>The vessel, public work, archive, and movement.</span></div>
+        <div class="identity-item"><strong>Codex of Reality</strong><span>The framework that relates rhythm, witness, theory, tools, and action.</span></div>
+        <div class="identity-item"><strong>Remnant</strong><span>What remains, carries forward, and can still be witnessed after change.</span></div>
+        <div class="identity-item"><strong>Living Technology</strong><span>Material, pattern, operator, environment, memory, and observed result in relationship.</span></div>
+      </div>
+
+      <div class="wp-layout">
+        <aside class="wp-toc" aria-label="Whitepaper contents">
+          <h2>Whitepaper Contents</h2>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#executive-summary">1. Executive Summary</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#identity">2. Identity & Naming</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#purpose">3. Purpose</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#thesis">4. Foundational Thesis</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#equation">5. Living Equation</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#remnant">6. The Remnant Principle</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#method">7. Witness Method</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#truth">8. Truth & Evidence Layers</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#architecture">9. Codex Architecture</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#observatory">10. Observatory Relationship</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#systems">11. System Families</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#living-technology">12. Living Technology</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#frequency">13. Frequency Governance</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#oracle">14. Genesis Oracle</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#artifacts">15. Artifact Registry</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#caravan">16. Covenant Caravan</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#ethics">17. Ethics & Stop Rules</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#research">18. Research Integrity</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#data">19. Memory & Data Architecture</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#experience">20. Public Experience</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#governance">21. Stewardship</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#integration">22. Website Integration</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#rollout">23. Remnant Rollout Phases</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#success">24. Measures of Success</a>
+          <a href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html#declaration">25. Final Declaration</a>
+        </aside>
+
+        <div class="wp-content">
+          <section id="executive-summary" class="wp-section">
+            <p class="section-kicker">01 · Executive Summary</p>
+            <h2>A living codex for remembering what happened—and learning what to do next</h2>
+            <p class="lead">
+              Scroll of Fire is the vessel. The Codex of Reality is the framework. Remnant is the
+              continuity principle. The 13 Moons Remnant Living Time Observatory is the time,
+              astronomy, recurrence, and witness engine within the greater system.
+            </p>
+            <p>
+              The Codex of Reality connects daily rhythm, written witness, pattern comparison,
+              symbolic interpretation, structured listening, material craft, personal practice,
+              historical memory, and collective observation. It is designed as a
+              <strong>living framework rather than a closed doctrine</strong>: it may grow,
+              but every addition must declare what it is, where it came from, how it can be tested,
+              and what would cause it to be revised.
+            </p>
+            <p>
+              Its central public usefulness is simple: help a person locate the present moment,
+              record what is happening, recognize recurring relationships, choose a grounded action,
+              and preserve enough context to learn from the outcome. Its deeper research purpose is
+              to build transparent, time-stamped witness records capable of separating observation,
+              interpretation, hypothesis, intention, intervention, and result.
+            </p>
+            <div class="quote">The Codex becomes valuable not when it claims to explain everything, but when it helps people observe more carefully, remember more honestly, compare more responsibly, and act with greater coherence.</div>
+          </section>
+
+          <section id="identity" class="wp-section">
+            <p class="section-kicker">02 · Identity & Naming</p>
+            <h2>One ecosystem, distinct names, clear responsibilities</h2>
+            <div class="system-map">
+              <div class="system-row"><strong>Scroll of Fire</strong><p>The creative vessel and public body of work: writings, systems, experiments, artifacts, interfaces, archives, teachings, and movement created by Aaron Paul Laird.</p></div>
+              <div class="system-row"><strong>Codex of Reality</strong><p>The organizing framework that relates Energy, Information, Intention, Memory, Flow, Consciousness, time, witness, ethics, craft, and observed change.</p></div>
+              <div class="system-row"><strong>Remnant</strong><p>The portion of an event, signal, memory, pattern, object, relationship, or truth claim that remains available for later witness and comparison.</p></div>
+              <div class="system-row"><strong>The Observatory</strong><p><strong>The 13 Moons Remnant Living Time Observatory</strong>: the official timekeeping, astronomical alignment, ecological observation, recurrence, and distributed witness system.</p></div>
+              <div class="system-row"><strong>Living Technology</strong><p>The applied layer in which tools, materials, sound, pattern, operator, environment, intention, memory, and recorded outcomes are studied in relationship.</p></div>
+            </div>
+            <div class="warning" style="margin-top:1rem">
+              The shorter phrase <strong>“Remnant 13 Moons — Living Calendar”</strong> may remain a descriptive subtitle or legacy label. It does not replace the official name of The 13 Moons Remnant Living Time Observatory.
+            </div>
+          </section>
+
+          <section id="purpose" class="wp-section">
+            <p class="section-kicker">03 · Purpose</p>
+            <h2>Why the Codex exists</h2>
+            <div class="grid-3">
+              <article class="card gold"><span class="symbol">◉</span><h3>Orient</h3><p>Locate the witness in time, place, body, environment, and present conditions.</p></article>
+              <article class="card cyan"><span class="symbol">✦</span><h3>Observe</h3><p>Preserve what occurred before memory, emotion, or expectation rewrites it.</p></article>
+              <article class="card green"><span class="symbol">Ξ</span><h3>Relate</h3><p>Compare events across cycles without forcing correlation into causation.</p></article>
+              <article class="card"><span class="symbol">☷</span><h3>Ground</h3><p>Translate insight into responsible action, craft, repair, rest, movement, or service.</p></article>
+              <article class="card"><span class="symbol">☲</span><h3>Create</h3><p>Build writings, tools, artifacts, interfaces, and practices that remain inspectable.</p></article>
+              <article class="card"><span class="symbol">↺</span><h3>Return</h3><p>Review outcomes, preserve lessons, revise the model, and begin the next cycle wiser.</p></article>
+            </div>
+            <h3>The public promise</h3>
+            <p>
+              A person should not need to understand the entire Codex to benefit from it. The public
+              entrance remains: <strong>begin with today, record the witness, recognize the pattern,
+              and choose the next grounded action.</strong> Deeper theory remains available without
+              overwhelming the daily-use layer.
+            </p>
+          </section>
+
+          <section id="thesis" class="wp-section">
+            <p class="section-kicker">04 · Foundational Thesis</p>
+            <h2>Reality is encountered through relationships, not isolated variables</h2>
+            <p>
+              The Codex begins from a working proposition: experienced reality is shaped through
+              relationships among energy, information, intention, memory, flow, consciousness,
+              time, environment, language, material conditions, and action. This is a
+              <strong>framework for inquiry and practice</strong>, not a declaration that every
+              symbolic relationship is a proven physical law.
+            </p>
+            <p>
+              The Codex therefore treats the witness as both participant and observer. The witness
+              can influence choices, language, attention, behavior, and environment; yet the witness
+              must not confuse personal meaning with universal proof. The proper response to an
+              extraordinary pattern is not automatic belief or dismissal, but better records,
+              clearer controls, repeatable methods, and ethical restraint.
+            </p>
+            <div class="quote">Meaning may guide the question. Evidence must govern the claim.</div>
+          </section>
+
+          <section id="equation" class="wp-section">
+            <p class="section-kicker">05 · The Living Equation</p>
+            <h2>A public map of interacting conditions</h2>
+            <div class="equation">
+              <strong>Reality = (Energy × Information × Intention × Memory × Flow)<sup>Consciousness</sup></strong>
+              <span>A conceptual relationship map used to organize observation, design questions, and compare change. It is not presented as an established equation of physics.</span>
+            </div>
+            <div class="grid-3">
+              <article class="card"><h3>Energy</h3><p>Available capacity, force, effort, material condition, physiological state, and measurable activity.</p></article>
+              <article class="card"><h3>Information</h3><p>Signals, language, structure, context, data, instruction, and the distinctions available to the witness.</p></article>
+              <article class="card"><h3>Intention</h3><p>The declared direction of attention and action, recorded before the outcome whenever possible.</p></article>
+              <article class="card"><h3>Memory</h3><p>What persists, what is stored, what is recalled, and what shapes future interpretation or response.</p></article>
+              <article class="card"><h3>Flow</h3><p>Timing, sequence, circulation, adaptation, resistance, continuity, and movement through a system.</p></article>
+              <article class="card"><h3>Consciousness</h3><p>The witnessing and interpretive condition through which experience is noticed, named, chosen, and remembered.</p></article>
+            </div>
+            <h3>Supporting coordinates</h3>
+            <p>
+              The Codex may additionally map <strong>τ Time</strong>, <strong>Δ Space</strong>,
+              <strong>± Polarity</strong>, <strong>Ξ Emergence</strong>,
+              <strong>Ϝ Fractality</strong>, and <strong>T Transformation</strong>.
+              These symbols function as conceptual coordinates and interface language. Their use
+              must remain defined, versioned, and distinguishable from conventional scientific notation.
+            </p>
+          </section>
+
+          <section id="remnant" class="wp-section">
+            <p class="section-kicker">06 · The Remnant Principle</p>
+            <h2>What remains becomes the bridge between moments</h2>
+            <p>
+              A remnant is not merely what survives destruction. It is any preserved trace capable
+              of carrying meaningful continuity: a written entry, timestamp, photograph, measurement,
+              voice note, artifact, recurring phrase, environmental condition, remembered dream,
+              design revision, outcome, failure, or recovered pattern.
+            </p>
+            <div class="grid-2">
+              <article class="card"><h3>Personal Remnant</h3><p>Memory, habit, body state, testimony, intention, choice, and consequence.</p></article>
+              <article class="card"><h3>Material Remnant</h3><p>Objects, wear, repair, craft marks, components, residue, and changed physical conditions.</p></article>
+              <article class="card"><h3>Temporal Remnant</h3><p>Recurring dates, cycles, anniversaries, seasonal relationships, and alignment intervals.</p></article>
+              <article class="card"><h3>Collective Remnant</h3><p>Shared records, repeated observations, cultural memory, public archives, and community witness.</p></article>
+            </div>
+            <p>
+              The Remnant principle gives the Codex its memory. Without preserved remnants, every
+              insight begins again as an impression. With structured remnants, the system can compare,
+              correct, and learn.
+            </p>
+          </section>
+
+          <section id="method" class="wp-section">
+            <p class="section-kicker">07 · Witness Method</p>
+            <h2>The operational heart of the Codex</h2>
+            <div class="grid-4">
+              <article class="card"><h3>1 · Observe</h3><p>Record conditions before explaining them.</p></article>
+              <article class="card"><h3>2 · Name</h3><p>Use specific language; mark unknowns honestly.</p></article>
+              <article class="card"><h3>3 · Breathe</h3><p>Create a pause between signal and reaction.</p></article>
+              <article class="card"><h3>4 · Record</h3><p>Timestamp the witness and preserve context.</p></article>
+              <article class="card"><h3>5 · Compare</h3><p>Look across relevant baselines and cycles.</p></article>
+              <article class="card"><h3>6 · Act</h3><p>Choose a bounded, ethical intervention.</p></article>
+              <article class="card"><h3>7 · Review</h3><p>Document outcome, side effects, and uncertainty.</p></article>
+              <article class="card"><h3>8 · Return</h3><p>Keep the lesson; release the unsupported claim.</p></article>
+            </div>
+            <h3>The 369 practice</h3>
+            <p>
+              The Codex may use the 369 pattern as a practical alignment exercise:
+              <strong>thought, word, and deed</strong> revisited through repeated attention.
+              It is a discipline of coherence and accountability, not a guarantee that repetition
+              mechanically controls external reality.
+            </p>
+          </section>
+
+          <section id="truth" class="wp-section">
+            <p class="section-kicker">08 · Truth & Evidence Layers</p>
+            <h2>Every statement must declare what kind of statement it is</h2>
+            <table class="truth-table">
+              <thead><tr><th>Layer</th><th>Meaning</th><th>Required treatment</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Observed</strong></td><td>Directly recorded or measured condition.</td><td>Preserve timestamp, source, instrument or method, location or time scale when relevant.</td></tr>
+                <tr><td><strong>Reported</strong></td><td>A person’s testimony or imported account.</td><td>Attribute the source; do not silently convert testimony into verified fact.</td></tr>
+                <tr><td><strong>Calculated</strong></td><td>Produced through a declared formula, model, conversion, or algorithm.</td><td>Store model version, inputs, convention, precision, and uncertainty.</td></tr>
+                <tr><td><strong>Interpreted</strong></td><td>Meaning assigned to an observation or relationship.</td><td>Label it as interpretation and preserve alternative readings.</td></tr>
+                <tr><td><strong>Hypothesized</strong></td><td>A testable proposed relationship.</td><td>State predicted evidence, controls, and what would count against it.</td></tr>
+                <tr><td><strong>Symbolic</strong></td><td>Mythic, sacred, poetic, archetypal, or ritual meaning.</td><td>Protect its meaning without presenting it as scientific verification.</td></tr>
+                <tr><td><strong>Unknown</strong></td><td>Insufficient evidence, unresolved conflict, or missing context.</td><td>Remain visibly unknown; never fill the gap with confident language.</td></tr>
+              </tbody>
+            </table>
+            <div class="success" style="margin-top:1rem">
+              The Codex is strongest when users can see the boundary between what happened, what was measured, what was inferred, what was believed, and what remains unknown.
+            </div>
+          </section>
+
+          <section id="architecture" class="wp-section">
+            <p class="section-kicker">09 · Codex Architecture</p>
+            <h2>One living system, built from separable layers</h2>
+            <div class="system-map">
+              <div class="system-row"><strong>Orientation Layer</strong><p>Homepage, Start Here, Today, current Moon day, immediate practices, and the next useful gate.</p></div>
+              <div class="system-row"><strong>Time Layer</strong><p>The 13 Moons Remnant Living Time Observatory, Pattern Time, civil translation, celestial data, historical alignment, and recurrence.</p></div>
+              <div class="system-row"><strong>Witness Layer</strong><p>Daily witness, ledger, notes, intention, outcomes, saved logs, attachments, and comparison tools.</p></div>
+              <div class="system-row"><strong>Theory Layer</strong><p>The Living Theory, Canon, equation library, glossary, research notes, and model versions.</p></div>
+              <div class="system-row"><strong>Practice Layer</strong><p>Frequency Governance, breathing, listening, mind renewal, reality recoding, Shabbat rhythm, and grounded exercises.</p></div>
+              <div class="system-row"><strong>Interpretive Layer</strong><p>Genesis Oracle, mirror readings, symbolic prompts, archetypes, sacred text relationships, and reflective language.</p></div>
+              <div class="system-row"><strong>Material Layer</strong><p>Living Technology, T-7 work, copper artifacts, Artifact Registry, build logs, provenance, tests, and status.</p></div>
+              <div class="system-row"><strong>Movement Layer</strong><p>Covenant Caravan, phases of stabilization and travel, artisan practice, exchange, route memory, and field witness.</p></div>
+              <div class="system-row"><strong>Commons Layer</strong><p>Shared methods, public datasets, APIs, widgets, documentation, exports, and future collective research.</p></div>
+            </div>
+            <p>
+              These layers may share navigation and data contracts, but they must not collapse into
+              one giant script or one undifferentiated page. Each domain requires a clear source of
+              truth, versioning, tests, and a defined relationship to the others.
+            </p>
+          </section>
+
+          <section id="observatory" class="wp-section">
+            <p class="section-kicker">10 · Relationship to the 13 Moons Whitepaper</p>
+            <h2>The Observatory gives the Codex a stable temporal spine</h2>
+            <p>
+              The companion whitepaper for <strong>The 13 Moons Remnant Living Time Observatory</strong>
+              defines the fixed 13 × 28 Pattern Calendar, Day Out of Time, leap-year intercalary handling,
+              confirmed anchor, Equinox Passage, Alignment Ledger, astronomical layer, witness archive,
+              research integrity, application architecture, and Remnant Rollout working order.
+            </p>
+            <div class="grid-2">
+              <article class="card gold"><h3>The Codex Whitepaper governs</h3><p>Identity, philosophy, witness doctrine, ethical law, system relationships, artifact meaning, public experience, stewardship, and overall evolution.</p></article>
+              <article class="card cyan"><h3>The Observatory Whitepaper governs</h3><p>Calendar constitution, time conversion, astronomical and historical alignment, recurrence, sky data, witness schema, time-scale uncertainty, and observatory deployment.</p></article>
+            </div>
+            <h3>Shared constitutional rules</h3>
+            <ul>
+              <li>The confirmed Pattern Calendar anchor remains <strong>Moon 1 · Day 1 = April 17, 2026</strong> unless a formally versioned constitutional revision is published.</li>
+              <li>The calendar uses <strong>Hybrid A architecture</strong>: a fixed 13 × 28 pattern, Day Out of Time, and an additional out-of-week intercalary day in leap years.</li>
+              <li>The week pattern remains continuous through the Year Gate according to the established calendar constitution.</li>
+              <li>Pattern Time, civil time, celestial time, witness time, and historical time remain distinct data layers.</li>
+              <li>Deep-time work must declare calendar convention, time scale, source, model, precision, and uncertainty; it must never imply false civil-time precision.</li>
+              <li>Observation, interpretation, hypothesis, symbolism, and outcome remain separately labeled.</li>
+            </ul>
+          </section>
+
+          <section id="systems" class="wp-section">
+            <p class="section-kicker">11 · System Families</p>
+            <h2>Every tool must serve a visible function</h2>
+            <div class="grid-3">
+              <article class="card"><h3>13 Moons</h3><p>Rhythm, recurrence, astronomical context, Shabbat flow, and the public “Today” surface.</p></article>
+              <article class="card"><h3>Witness Ledger</h3><p>Records observations, intentions, actions, outcomes, attachments, patterns, and later reviews.</p></article>
+              <article class="card"><h3>Frequency Governance</h3><p>Structured listening and sound controls with consent, safety, and truthful limits.</p></article>
+              <article class="card"><h3>Genesis Oracle</h3><p>Reflective symbolic language that invites inquiry without pretending to predict certainty.</p></article>
+              <article class="card"><h3>Living Theory</h3><p>Defines concepts, equations, canons, operators, comparators, stop rules, and research hooks.</p></article>
+              <article class="card"><h3>Living Technology</h3><p>Connects theory to material craft, documented builds, operator context, and observed effects.</p></article>
+              <article class="card"><h3>Artifact Registry</h3><p>Provides identity, provenance, materials, status, ownership state, evidence, and archival history.</p></article>
+              <article class="card"><h3>Covenant Caravan</h3><p>Carries the Codex into movement, field practice, trade, repair, service, route memory, and embodied life.</p></article>
+              <article class="card"><h3>Systems Hub</h3><p>Shows continuity, saved progress, current gates, updates, system map, and the next responsible step.</p></article>
+            </div>
+          </section>
+
+          <section id="living-technology" class="wp-section">
+            <p class="section-kicker">12 · Living Technology</p>
+            <h2>Technology understood as relationship</h2>
+            <p>
+              In the Codex, Living Technology is not a claim that an object is alive in the
+              biological sense. It describes a relational system in which material, geometry,
+              signal, operator, environment, intention, use, memory, and recorded result interact.
+            </p>
+            <div class="equation">
+              <strong>Living Technology = Material × Pattern × Operator × Environment × Memory × Observed Result</strong>
+              <span>A design and documentation model. Every component should be described, bounded, and testable where testing is possible.</span>
+            </div>
+            <h3>Minimum build record</h3>
+            <ul>
+              <li>Registry identity and version.</li>
+              <li>Materials, dimensions, components, assembly sequence, and photographs.</li>
+              <li>Intended function and clearly separated symbolic function.</li>
+              <li>Known electrical, mechanical, acoustic, thermal, magnetic, or other measurable properties.</li>
+              <li>Operator context, environment, protocol, comparison condition, and outcome.</li>
+              <li>Safety limitations, failed tests, modifications, and current status.</li>
+            </ul>
+            <p>
+              Extraordinary interpretations may be documented as hypotheses or symbolic meanings,
+              but the registry must not market unverified medical, physical, or metaphysical effects
+              as established performance.
+            </p>
+          </section>
+
+          <section id="frequency" class="wp-section">
+            <p class="section-kicker">13 · Frequency Governance</p>
+            <h2>Sound as a governed practice, not an uncontrolled promise</h2>
+            <p>
+              Frequency Governance provides structured listening tools, carriers, beats, visual
+              representations, breath pacing, presets, and personal witness. “Governance” means the
+              listener retains control: volume, duration, channel, intention, stop conditions,
+              accessibility, and whether a session is saved.
+            </p>
+            <div class="grid-3">
+              <article class="card"><h3>Carrier</h3><p>The selected audible tone or sound layer, accurately described in hertz when generated.</p></article>
+              <article class="card"><h3>Gate</h3><p>The bounded purpose, timing, protocol, and session conditions.</p></article>
+              <article class="card"><h3>Coherence</h3><p>A reported or calculated measure whose method and limits must be visible.</p></article>
+            </div>
+            <div class="warning" style="margin-top:1rem">
+              Frequency tools must include safe default volume, user-initiated playback, clear stop controls, no hidden audio, reduced-motion support, and no medical treatment claims.
+            </div>
+          </section>
+
+          <section id="oracle" class="wp-section">
+            <p class="section-kicker">14 · Genesis Oracle</p>
+            <h2>A mirror for questions—not an authority over decisions</h2>
+            <p>
+              The Genesis Oracle belongs to the interpretive layer. It may combine symbolic language,
+              seals, archetypes, timing context, scripture, reflection prompts, and remembered themes.
+              Its purpose is to reveal questions, tensions, neglected perspectives, and possible
+              actions—not to remove agency or declare unavoidable futures.
+            </p>
+            <h3>Oracle truth contract</h3>
+            <ul>
+              <li>Present readings as reflective and symbolic.</li>
+              <li>Never claim certainty about health, law, finances, danger, or another person’s hidden intentions.</li>
+              <li>Show the timing and inputs that shaped the reading.</li>
+              <li>Allow the witness to save, reject, annotate, or revisit the result.</li>
+              <li>Connect every reading back to a grounded next action or a deliberate pause.</li>
+            </ul>
+          </section>
+
+          <section id="artifacts" class="wp-section">
+            <p class="section-kicker">15 · Artifact Registry</p>
+            <h2>Every object carries identity, provenance, status, and witness</h2>
+            <p>
+              The Artifact Registry is not only a shop. It is the material memory of the Codex:
+              a versioned record of handcrafted objects, experimental devices, gifted works,
+              personal instruments, completed pieces, unfinished builds, reserved items, and archives.
+            </p>
+            <div class="grid-3">
+              <article class="card"><h3>T7-000</h3><p>Ahhava Or HaDabar — Tesla Type-7 Resonant Conduit. Personal conduit and primary Living Technology research artifact.</p></article>
+              <article class="card"><h3>EN-007</h3><p>Ember Node 7 — Heart Node. Personal artifact within the node taxonomy.</p></article>
+              <article class="card"><h3>HL-001</h3><p>HaLevanah — braided copper with moonstone and tourmaline; Moon Node.</p></article>
+              <article class="card"><h3>TN-001</h3><p>Tiger Node Ring — copper and tiger stone; gifted artifact.</p></article>
+              <article class="card"><h3>TS-001</h3><p>Time Shard Ring — reclaimed copper and green sea glass; Hand Node, in completion.</p></article>
+              <article class="card"><h3>TB-001</h3><p>Tenser Band I — Wrist Node; reserved.</p></article>
+            </div>
+            <h3>Registry requirements</h3>
+            <p>
+              Each item should include canonical ID, title, class, materials, maker, date range,
+              build state, ownership state, images, story, intended use, evidence, safety notes,
+              repair history, and any digital certificate or token relationship. Blockchain or NFT
+              use, if later adopted, should support provenance or optional patronage without replacing
+              the public registry, physical ownership terms, or honest documentation.
+            </p>
+          </section>
+
+          <section id="caravan" class="wp-section">
+            <p class="section-kicker">16 · Covenant Caravan</p>
+            <h2>The embodied movement of the Codex</h2>
+            <p>
+              The Covenant Caravan is the traveling artisan and field-practice expression of Scroll
+              of Fire. It translates theory into movement, repair, trade, craft, witness, route
+              memory, hospitality, service, and adaptive life.
+            </p>
+            <div class="grid-3">
+              <article class="card"><h3>Stabilize</h3><p>Secure safety, health, work, housing, tools, records, and dependable routines.</p></article>
+              <article class="card"><h3>Practice</h3><p>Refine craft, witness, maintenance, communication, and daily rhythm.</p></article>
+              <article class="card"><h3>Build</h3><p>Prepare artifacts, systems, vehicle or shelter, inventory, documentation, and reserves.</p></article>
+              <article class="card"><h3>Trade</h3><p>Exchange skilled labor, repair, artifacts, teaching, and service transparently.</p></article>
+              <article class="card"><h3>Move</h3><p>Travel only when the foundation can carry the people, animals, tools, obligations, and work.</p></article>
+              <article class="card"><h3>Return</h3><p>Review the route, costs, relationships, failures, gifts, and next season.</p></article>
+            </div>
+            <p>
+              The Caravan is not romanticized instability. Its covenant is that movement must remain
+              answerable to safety, family, animals, lawful access, finances, weather, mechanical
+              reality, and the dignity of the people encountered.
+            </p>
+          </section>
+
+          <section id="ethics" class="wp-section">
+            <p class="section-kicker">17 · Ethics & Stop Rules</p>
+            <h2>No pattern is more important than a person’s safety or agency</h2>
+            <div class="grid-2">
+              <article class="card gold"><h3>Consent</h3><p>No recording, sharing, intervention, frequency session, or public witness should bypass informed participation.</p></article>
+              <article class="card gold"><h3>Agency</h3><p>The Codex offers tools and reflections; it does not claim authority over a person’s conscience or choices.</p></article>
+              <article class="card gold"><h3>Privacy</h3><p>Private witness remains private by default. Sharing must be explicit, revocable where technically possible, and scoped.</p></article>
+              <article class="card gold"><h3>Non-harm</h3><p>Stop when a practice creates danger, escalating distress, physical symptoms, coercion, obsession, or loss of grounded judgment.</p></article>
+              <article class="card gold"><h3>Truthfulness</h3><p>Do not market interpretations as measurements or testimonials as universal results.</p></article>
+              <article class="card gold"><h3>Reversibility</h3><p>Prefer bounded experiments, backups, rollback paths, exportable data, and interventions that can be safely stopped.</p></article>
+            </div>
+            <h3>The ethical stop rule</h3>
+            <div class="equation">
+              <strong>Stop when Harm, Coercion, Uncertainty, or Irreversibility exceeds the declared boundary.</strong>
+              <span>Safety overrides symbolic timing, momentum, sunk cost, social pressure, and the desire to prove a theory.</span>
+            </div>
+          </section>
+
+          <section id="research" class="wp-section">
+            <p class="section-kicker">18 · Research Integrity</p>
+            <h2>A witness-building system must be able to discover that it was wrong</h2>
+            <p>
+              The long-term strength of the Codex depends on methodological honesty. The system may
+              explore relationships among consciousness, environment, rhythm, language, materials,
+              astronomy, ecology, intention, creativity, invention, and outcomes. It must do so
+              without presuming the relationship is already proven.
+            </p>
+            <h3>Required research disciplines</h3>
+            <ul>
+              <li>Pre-record hypotheses, intended interventions, expected observations, and stop conditions when practical.</li>
+              <li>Use comparison windows, baselines, blinded or randomized conditions where the question supports them.</li>
+              <li>Preserve null results, failures, contradictory witnesses, and abandoned models.</li>
+              <li>Track multiple comparisons and avoid selecting only meaningful-looking coincidences after the fact.</li>
+              <li>Separate subjective outcomes from instrument measurements while preserving both.</li>
+              <li>Publish methods, schema versions, exclusions, uncertainty, and limitations alongside conclusions.</li>
+              <li>Use outside expertise for domains requiring specialized scientific, medical, engineering, historical, or legal knowledge.</li>
+            </ul>
+            <div class="quote">The purpose of the witness archive is not to make every pattern true. It is to make patterns visible enough to be questioned well.</div>
+          </section>
+
+          <section id="data" class="wp-section">
+            <p class="section-kicker">19 · Memory & Data Architecture</p>
+            <h2>The Codex must remember without trapping the witness</h2>
+            <div class="system-map">
+              <div class="system-row"><strong>Local First</strong><p>Core daily use and private logs should work offline and remain on the user’s device unless sharing is chosen.</p></div>
+              <div class="system-row"><strong>Portable</strong><p>Users need export and import in documented, non-proprietary formats such as JSON and CSV, with readable summaries where practical.</p></div>
+              <div class="system-row"><strong>Versioned</strong><p>Calendar rules, equations, schemas, interpretations, artifacts, and application releases require explicit versions and migration notes.</p></div>
+              <div class="system-row"><strong>Recoverable</strong><p>Backups, migration tests, rollback paths, checksums, and safe handling of existing browser storage are release requirements.</p></div>
+              <div class="system-row"><strong>Minimized</strong><p>Collect only data needed for the declared function; avoid unnecessary identity, location, or sensitive personal fields.</p></div>
+              <div class="system-row"><strong>Shareable by Choice</strong><p>Collective research uses explicit contribution settings, de-identification where appropriate, and a visible withdrawal policy.</p></div>
+            </div>
+            <h3>Canonical record envelope</h3>
+            <p>
+              Every saved record should be capable of carrying: record ID, schema version, created and
+              edited timestamps, civil time, Pattern Time, time zone, boundary convention, location
+              precision, source, observer, privacy state, observation, interpretation, hypothesis,
+              intention, intervention, outcome, uncertainty, tags, linked artifacts, attachments,
+              and revision history.
+            </p>
+          </section>
+
+          <section id="experience" class="wp-section">
+            <p class="section-kicker">20 · Public Experience</p>
+            <h2>Simple at the entrance, profound by consent</h2>
+            <p>
+              CodexOfReality.org should feel like one living application while preserving the
+              individuality of its pages. The homepage remains the entrance and orientation layer,
+              not the place where the entire theory is explained.
+            </p>
+            <div class="grid-3">
+              <article class="card"><h3>Explorer</h3><p>See today, current rhythm, a short witness prompt, and the next gate.</p></article>
+              <article class="card"><h3>Student</h3><p>Learn definitions, system relationships, methods, examples, and historical context.</p></article>
+              <article class="card"><h3>Builder</h3><p>Use tools, schemas, artifacts, equations, APIs, build records, and implementation documentation.</p></article>
+              <article class="card"><h3>Research</h3><p>Inspect sources, uncertainty, datasets, hypotheses, controls, methods, and null findings.</p></article>
+              <article class="card"><h3>Witness</h3><p>Record private or shared observations with clear truth labels and later review.</p></article>
+              <article class="card"><h3>Steward</h3><p>Maintain releases, documentation, ethics, migrations, accessibility, and public trust.</p></article>
+            </div>
+            <p>
+              The system should progressively disclose depth. A first-time visitor receives a clear
+              path. A returning witness sees continuity. A researcher sees methods. A builder sees
+              architecture. None should be forced through the others’ complexity.
+            </p>
+          </section>
+
+          <section id="governance" class="wp-section">
+            <p class="section-kicker">21 · Stewardship & Governance</p>
+            <h2>A living codex needs a constitution, not uncontrolled expansion</h2>
+            <p>
+              Aaron Paul Laird is the creator and founding steward of Scroll of Fire and the Codex of
+              Reality. Stewardship protects authorship and coherent identity while allowing evidence,
+              collaborators, community witness, and future maintainers to refine implementation.
+            </p>
+            <h3>Change classes</h3>
+            <table class="truth-table">
+              <thead><tr><th>Class</th><th>Examples</th><th>Required approval</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Editorial</strong></td><td>Grammar, accessibility labels, clarifying prose, nonsemantic design corrections.</td><td>Normal review and regression check.</td></tr>
+                <tr><td><strong>Implementation</strong></td><td>Performance, modularization, PWA repair, storage migration, UI behavior.</td><td>Tests, rollback, compatibility review, release ledger.</td></tr>
+                <tr><td><strong>Model</strong></td><td>Equation definition, algorithm, interpretation rule, evidence label, scoring method.</td><td>Versioned rationale, examples, migration impact, public note.</td></tr>
+                <tr><td><strong>Constitutional</strong></td><td>Official names, calendar anchor, year architecture, ethical law, core identity.</td><td>Explicit founder/steward decision, permanent change record, compatibility plan.</td></tr>
+              </tbody>
+            </table>
+            <h3>Release doctrine</h3>
+            <p>
+              One phase, one proof. No release should combine unrelated redesign, data migration,
+              calendar rule changes, audio changes, navigation replacement, and content rewrites in
+              a single unreviewable action. Every significant release receives scope, tests, known
+              risks, screenshots, migration notes, and a rollback reference.
+            </p>
+          </section>
+
+          <section id="integration" class="wp-section">
+            <p class="section-kicker">22 · Website Integration</p>
+            <h2>Expand the established site without erasing it</h2>
+            <ol>
+              <li><strong>Add this as a companion page:</strong> recommended filename <code>docs/remnant-whitepaper.html</code>.</li>
+              <li><strong>Keep the current homepage focused:</strong> add a Whitepapers or Foundations entry, not the full text on the homepage.</li>
+              <li><strong>Connect the two papers:</strong> this page links to the Observatory whitepaper; the Observatory paper links back to this foundational paper.</li>
+              <li><strong>Preserve global navigation:</strong> use the established shared navigation markup, state classes, and mobile behavior.</li>
+              <li><strong>Reuse the design system:</strong> retain <code>codex.css</code> as the global foundation and keep whitepaper-specific styles scoped.</li>
+              <li><strong>Do not replace existing pages:</strong> Theory, 13 Moons, Ledger, Frequency, Oracle, Artifacts, Caravan, Ethics, and Downloads remain their own authoritative surfaces.</li>
+              <li><strong>Add discoverability:</strong> include both papers in the Theory/Canon page, Start page, Downloads, sitemap, site search index, and structured data.</li>
+              <li><strong>Deploy safely:</strong> verify both the custom domain and the GitHub Pages base-path fallback before promotion.</li>
+            </ol>
+            <h3>Recommended navigation relationship</h3>
+            <p>
+              <strong>Start → Today / 13 Moons → Witness Ledger → Systems Hub → Theory → Whitepapers.</strong>
+              This keeps the public path usable while allowing the whitepapers to function as the
+              constitutional and architectural foundation beneath the application.
+            </p>
+          </section>
+
+          <section id="rollout" class="wp-section">
+            <p class="section-kicker">23 · Remnant Rollout Phases</p>
+            <h2>The complete working order for the greater Codex</h2>
+
+            <div class="phase"><span class="phase-number">1</span><h3>Constitution & Canonical Inventory</h3><p>Publish this foundational whitepaper, link the Observatory whitepaper, inventory authoritative pages, names, equations, calendar rules, artifact IDs, and data stores.</p><small>Proof: one canonical map with no conflicting official definitions.</small></div>
+
+            <div class="phase"><span class="phase-number">2</span><h3>Preservation & Recovery Line</h3><p>Create a known-good branch/tag, deployment record, browser-storage backup procedure, screenshots, automated smoke tests, and a release ledger.</p><small>Proof: the live site can be restored without guessing.</small></div>
+
+            <div class="phase"><span class="phase-number">3</span><h3>Global Design & Navigation Stabilization</h3><p>Unify foundations in codex.css and navigation.css; fix mobile scrolling, overflow, touch targets, safe areas, focus states, and isolated navigation state classes.</p><small>Proof: core pages work on iPhone, Android, desktop, keyboard, and reduced-motion settings.</small></div>
+
+            <div class="phase"><span class="phase-number">4</span><h3>Living Orientation Layer</h3><p>Keep the homepage simple: “A living system for rhythm, witness, pattern, and grounded action.” Add Today, Start Here, Theory, continuation state, updates, and next-gate guidance.</p><small>Proof: a new visitor understands where to begin within one screen.</small></div>
+
+            <div class="phase"><span class="phase-number">5</span><h3>Observatory Core</h3><p>Execute the established Observatory rollout: Calendar Constitution, test harness, modular Pattern Calendar engine, PWA reliability, Morning and Evening Gates, sky layer, Alignment Ledger, Equinox Passage, recurrence, translator, and archive.</p><small>Proof: Pattern Time remains stable while moving celestial and civil layers are independently verifiable.</small></div>
+
+            <div class="phase"><span class="phase-number">6</span><h3>Unified Witness Architecture</h3><p>Define the canonical record envelope, move safely toward versioned IndexedDB, add exports/imports, private defaults, attachment handling, and links among dates, systems, readings, and artifacts.</p><small>Proof: existing logs migrate with no silent loss.</small></div>
+
+            <div class="phase"><span class="phase-number">7</span><h3>Living Theory & Canon</h3><p>Version equations, definitions, comparators, ethical laws, equation pages, interactive explanations, examples, citations, and research hooks while preserving the public equation as conceptual.</p><small>Proof: every symbol and equation has a definition, status, version, and limitation.</small></div>
+
+            <div class="phase"><span class="phase-number">8</span><h3>Frequency Governance Hardening</h3><p>Repair cross-platform audio, require user initiation, add safe defaults and stop controls, document signal generation, separate visual metaphor from measured audio, and connect sessions to optional witness records.</p><small>Proof: reliable playback with no hidden or uncontrolled sound.</small></div>
+
+            <div class="phase"><span class="phase-number">9</span><h3>Oracle & Reflective Systems</h3><p>Standardize symbolic truth labels, inputs, saved readings, grounded actions, privacy, and no-certainty boundaries across Genesis Oracle, Daily Mirror, recoder, mind-renewal, and related tools.</p><small>Proof: users can always tell reflection from prediction or fact.</small></div>
+
+            <div class="phase"><span class="phase-number">10</span><h3>Artifact Registry & Living Technology Lab</h3><p>Complete registry schemas, canonical images, provenance, build logs, test protocols, safety notes, status workflows, archive history, inquiry flow, and optional digital certificates.</p><small>Proof: every public artifact has a traceable record and truthful status.</small></div>
+
+            <div class="phase"><span class="phase-number">11</span><h3>Covenant Caravan Field System</h3><p>Connect phases, checklists, route notes, costs, service, trade, artifacts, 13 Moons timing, maintenance, safety, and field witness without romanticizing instability.</p><small>Proof: the Caravan supports real planning and accountable movement.</small></div>
+
+            <div class="phase"><span class="phase-number">12</span><h3>Codex Hub & System Graph</h3><p>Turn the Hub into the command center using a shared system map, saved continuation state, active gates, release notes, updates, field notes, next steps, and cross-system links.</p><small>Proof: each system knows what comes before, after, and alongside it.</small></div>
+
+            <div class="phase"><span class="phase-number">13</span><h3>Research Commons</h3><p>Publish methods, schemas, uncertainty, de-identified contribution paths, study templates, comparator tools, null results, datasets, API documentation, and governance for shared witness.</p><small>Proof: outside reviewers can understand how records became conclusions.</small></div>
+
+            <div class="phase"><span class="phase-number">14</span><h3>Publication, Education & Archive</h3><p>Create downloadable whitepapers, guides, glossary, version history, print views, citations, changelogs, social summaries, and educational paths for Explorer, Student, Builder, and Research depths.</p><small>Proof: the Codex can be understood without access to private conversations or developer history.</small></div>
+
+            <div class="phase"><span class="phase-number">15</span><h3>Living Stewardship</h3><p>Establish recurring accessibility reviews, security and privacy checks, data migration drills, artifact audits, research review, broken-link tests, content updates, and constitutional change records.</p><small>Proof: the system can evolve without forgetting what it was or breaking those who rely on it.</small></div>
+          </section>
+
+          <section id="success" class="wp-section">
+            <p class="section-kicker">24 · Measures of Success</p>
+            <h2>Useful, trustworthy, alive, and recoverable</h2>
+            <div class="grid-2">
+              <article class="card green"><h3>Daily Usefulness</h3><p>A person can find today, understand the rhythm, record a witness, and choose a next step without reading the whole theory.</p></article>
+              <article class="card green"><h3>Continuity</h3><p>Returning users see saved progress, previous witnesses, recurring patterns, and the next gate across devices where supported.</p></article>
+              <article class="card green"><h3>Truth Clarity</h3><p>Observed, calculated, reported, interpreted, hypothesized, symbolic, and unknown content remain visibly distinct.</p></article>
+              <article class="card green"><h3>Technical Reliability</h3><p>Navigation, scrolling, PWA installation, offline use, audio, storage, export, and responsive layouts pass defined tests.</p></article>
+              <article class="card green"><h3>Research Value</h3><p>Records carry sufficient context to support comparison, correction, replication attempts, and null findings.</p></article>
+              <article class="card green"><h3>Human Dignity</h3><p>The system strengthens agency, privacy, consent, grounded judgment, safety, and the ability to stop.</p></article>
+              <article class="card green"><h3>Material Integrity</h3><p>Artifacts and Living Technology builds have accurate provenance, status, documentation, and claim boundaries.</p></article>
+              <article class="card green"><h3>Recoverability</h3><p>Every major release has a tested rollback path, migration record, and preserved canonical history.</p></article>
+            </div>
+          </section>
+
+          <section id="declaration" class="wp-section">
+            <p class="section-kicker">25 · Final Declaration</p>
+            <h2>The Codex is not finished because reality is not finished being witnessed</h2>
+            <p>
+              Scroll of Fire is a vessel for carrying what has been observed, built, broken,
+              remembered, questioned, and restored. The Codex of Reality is the framework that keeps
+              those remnants in relationship. The 13 Moons Remnant Living Time Observatory provides
+              the stable temporal field through which recurrence becomes visible. The Ledger preserves
+              witness. The Theory proposes relationships. Frequency Governance structures listening.
+              The Oracle opens reflection. Living Technology enters material form. The Artifact
+              Registry preserves provenance. The Covenant Caravan carries the work into lived movement.
+            </p>
+            <p>
+              None of these systems is complete alone. Together they form a living technology of
+              attention, memory, ethical experimentation, craft, and return. Their authority does not
+              come from demanding belief. It comes from remaining useful, inspectable, revisable,
+              grounded, and honest about what is known.
+            </p>
+            <div class="quote">
+              Let the witness be clear.<br>
+              Let the record remain.<br>
+              Let meaning invite inquiry.<br>
+              Let evidence govern the claim.<br>
+              Let action remain accountable.<br>
+              Let what survives become wisdom.<br>
+              And when the cycle closes—return.
+            </div>
+          </section>
+
+          <footer class="footer-seal">
+            <strong>☲ Scroll of Fire · Codex of Reality</strong>
+            <p>
+              Founded and authored by Aaron Paul Laird — Scribe of Circuits.
+              Companion foundational document to <em>The 13 Moons Remnant Living Time Observatory Whitepaper</em>.
+            </p>
+            <p class="meta-note">Recommended canonical filename: <code>docs/remnant-whitepaper.html</code> · First foundational edition: July 2026</p>
+          </footer>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <script defer src="assets/js/site.js"></script>
+</body>
+          </html>
