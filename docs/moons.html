@@ -127,14 +127,15 @@
 
   <link
     rel="stylesheet"
-    href="assets/css/moons.css?v=20260722-1"
+    href="assets/css/moons.css?v=20260722-4"
   >
 
   <link
     rel="stylesheet"
-    href="assets/css/astrology.css?v=20260722-1"
+    href="assets/css/astrology.css?v=20260722-4"
   >
-  <link rel="stylesheet" href="assets/css/pwa.css?v=20260722-1">
+  <link rel="stylesheet" href="assets/css/pwa.css?v=20260722-4">
+  <link rel="stylesheet" href="assets/css/equinox-passage.css?v=20260722-4">
 
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/share-day.css?v=1">
@@ -925,6 +926,17 @@
             <p id="phaseLine" class="pill">—</p>
             <p id="phaseMeta" class="meta">—</p>
           </article>
+        </section>
+
+        <section id="equinoxCompactCard" class="card equinox-compact-card" aria-labelledby="equinoxCompactTitle">
+          <p class="eyebrow">Observatory Layer</p>
+          <h2 id="equinoxCompactTitle">Equinox Passage</h2>
+          <p id="equinoxCompactStatus" class="pill">Loading Equinox Passage…</p>
+          <p id="equinoxCompactGate">—</p>
+          <p id="equinoxCompactPattern" class="meta">—</p>
+          <div class="btnrow">
+            <a class="lab-btn ghost" href="./equinox-passage.html" id="equinoxCompactLinkText">Open Equinox Passage</a>
+          </div>
         </section>
 
         <section class="card command" aria-labelledby="commandMoon">
@@ -2497,27 +2509,40 @@
 
   <p id="appStatusLive" class="visually-hidden" role="status" aria-live="polite"></p>
 
-  <script src="assets/js/moons-version.js?v=20260722-1"></script>
-  <script src="assets/js/moons-migrations.js?v=20260722-1"></script>
-  <script src="assets/js/moons-storage.js?v=20260722-1"></script>
+  <script src="assets/js/moons-version.js?v=20260722-4"></script>
+  <script src="assets/js/moons-migrations.js?v=20260722-4"></script>
+  <script src="assets/js/moons-storage.js?v=20260722-4"></script>
 
   <!-- Shared fixed Pattern Calendar engine -->
-  <script src="assets/js/calendar/pattern-calendar-version.js?v=20260722-1"></script>
-  <script src="assets/js/calendar/pattern-calendar-data.js?v=20260722-1"></script>
-  <script src="assets/js/calendar/pattern-calendar-format.js?v=20260722-1"></script>
-  <script src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-1"></script>
-  <script src="assets/js/calendar/pattern-calendar.js?v=20260722-1"></script>
+  <script src="assets/js/calendar/pattern-calendar-version.js?v=20260722-4"></script>
+  <script src="assets/js/calendar/pattern-calendar-data.js?v=20260722-4"></script>
+  <script src="assets/js/calendar/pattern-calendar-format.js?v=20260722-4"></script>
+  <script src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-4"></script>
+  <script src="assets/js/calendar/pattern-calendar.js?v=20260722-4"></script>
+  <script src="assets/js/astronomy/astronomy-version.js?v=20260722-4"></script>
+  <script src="assets/js/astronomy/astronomy-sources.js?v=20260722-4"></script>
+  <script src="assets/js/astronomy/timezone-tools.js?v=20260722-4"></script>
+  <script src="assets/js/astronomy/equinox-reference-data.js?v=20260722-4"></script>
+  <script src="assets/js/astronomy/lunar-at-equinox.js?v=20260722-4"></script>
+  <script src="assets/js/astronomy/equinox-engine.js?v=20260722-4"></script>
+  <script src="assets/js/equinox/equinox-passage-format.js?v=20260722-4"></script>
+  <script src="assets/js/equinox/equinox-passage-engine.js?v=20260722-4"></script>
+  <script src="assets/js/equinox/equinox-passage-data.js?v=20260722-4"></script>
+  <script src="assets/js/equinox/equinox-passage-export.js?v=20260722-4"></script>
+  <script src="assets/js/equinox/equinox-passage-storage.js?v=20260722-4"></script>
+  <script src="assets/js/equinox/equinox-passage-visualization-data.js?v=20260722-4"></script>
+  <script src="assets/js/equinox/equinox-passage-ui.js?v=20260722-4"></script>
 
   <!-- Main calendar app -->
-  <script src="assets/js/moons.js?v=20260722-1"></script>
+  <script src="assets/js/moons.js?v=20260722-4"></script>
 
   <!-- Astrology and planetary mirror -->
-  <script src="assets/js/astrology.js?v=20260722-1"></script>
+  <script src="assets/js/astrology.js?v=20260722-4"></script>
 
   <!-- Remnant artwork integration -->
-  <script src="assets/js/moons-images.js?v=20260722-1"></script>
-  <script src="assets/js/pwa-refresh.js?v=20260722-1"></script>
-  <script src="assets/js/pwa.js?v=20260722-1"></script>
+  <script src="assets/js/moons-images.js?v=20260722-4"></script>
+  <script src="assets/js/pwa-refresh.js?v=20260722-4"></script>
+  <script src="assets/js/pwa.js?v=20260722-4"></script>
 
   <!-- Page-specific interaction layer -->
   <script>

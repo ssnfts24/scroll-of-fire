@@ -1,0 +1,11 @@
+.equinox-shell{max-width:1200px;margin:0 auto;padding:clamp(1rem,2vw,2rem)}
+.equinox-hero,.equinox-card{background:rgba(8,12,20,.86);border:1px solid rgba(215,183,104,.22);border-radius:24px;box-shadow:0 20px 48px rgba(0,0,0,.28);padding:1.25rem}
+.equinox-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+.equinox-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;margin:1rem 0}
+.equinox-timeline{position:relative;height:16px;border-radius:999px;background:#162133;overflow:hidden;margin:.75rem 0}
+.equinox-timeline-fill{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#d7b768,#6fe7ff);width:0}
+.equinox-table-wrap{overflow:auto}.equinox-table{width:100%;border-collapse:collapse}.equinox-table th,.equinox-table td{padding:.6rem;border-bottom:1px solid rgba(255,255,255,.1);text-align:left;vertical-align:top}
+.equinox-actions,.equinox-inline-actions{display:flex;flex-wrap:wrap;gap:.6rem}.equinox-note{min-height:120px;width:100%;background:#0b1220;color:#f7f4ea;border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:.8rem}
+.equinox-card .pill{display:inline-block}.equinox-muted{color:#c6cfde}.equinox-signature div{margin:.5rem 0}.equinox-compact-card{margin-top:1rem}
+@media print{.site-header,.nav-toggle,.site-nav,.equinox-actions button{display:none!important}.equinox-hero,.equinox-card{box-shadow:none;background:#fff;color:#000}}
+@media (max-width:320px){.equinox-actions,.equinox-inline-actions{flex-direction:column}.equinox-shell{padding:.75rem}}

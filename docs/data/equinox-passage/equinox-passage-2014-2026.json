@@ -1,0 +1,1315 @@
+[
+  {
+    "schemaVersion": "equinox-passage/1.0.0",
+    "astronomyVersion": "astronomy/1.0.0",
+    "calendarVersion": "pattern-calendar/1.0.0",
+    "selectedYear": 2014,
+    "timeZone": "America/Los_Angeles",
+    "boundaryMode": "sunset",
+    "manualSunset": "18:00",
+    "equinox": {
+      "utcInstant": "2014-03-20T16:57:05Z",
+      "localInstant": "2014-03-20T09:57:05",
+      "civilDate": "2014-03-20",
+      "source": "janmr.com equinoxes and solstices",
+      "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+      "precisionSeconds": 1,
+      "claimedPrecision": "±1 second",
+      "status": "sourced",
+      "validationStatus": "validated-against-bazica",
+      "validationDeltaSeconds": 1.76,
+      "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+    },
+    "patternPosition": {
+      "effectiveDate": "2014-03-20",
+      "patternYear": -12,
+      "moon": 13,
+      "moonName": "Completion Seal",
+      "day": 2,
+      "dayOfPatternYear": 338,
+      "weekGate": "Week 1 · Ignition",
+      "archetype": "Witness",
+      "tone": "Witness",
+      "insideCountedYear": true,
+      "isDayOutOfTime": false,
+      "isDeepTimeDay": false
+    },
+    "passage": {
+      "state": "after-passage",
+      "startInstant": "2014-03-20T16:57:05Z",
+      "endInstant": "2014-04-17T01:00:00.000Z",
+      "totalMilliseconds": 2361775000,
+      "totalDays": 27.335359,
+      "elapsedMilliseconds": 2361775000,
+      "remainingMilliseconds": 0,
+      "progress": 1,
+      "civilMidnightsCrossed": 27,
+      "selectedPatternBoundariesCrossed": 28
+    },
+    "lunarLayer": {
+      "source": "approximate-synodic-phase",
+      "sourceVersion": "13-moons-synodic/1.0.0",
+      "status": "approximate",
+      "ageDays": 19.093536,
+      "cyclePosition": 0.646568,
+      "illumination": 0.802546,
+      "illuminationPercent": 80.3,
+      "phaseName": "Waning Gibbous"
+    },
+    "annualSignature": {
+      "calculated": "Equinox entered at Completion Seal · Day 2.",
+      "astronomical": "Waning Gibbous with approximately 80.3% illumination.",
+      "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
+      "observational": "Passage length: 27 days, 8 hours, 2 minutes. No conclusion until witness records are collected."
+    },
+    "normalizedValues": {
+      "patternCyclePosition": 0.925824,
+      "moonIndex": 12,
+      "dayIndex": 1,
+      "yearProgress": 0.925824,
+      "passageProgress": 1,
+      "equinoxCyclePosition": 0.224044,
+      "lunarCyclePosition": 0.646568,
+      "solarSeasonPosition": 0
+    },
+    "sources": [
+      {
+        "layer": "astronomical-fact",
+        "source": "janmr.com equinoxes and solstices",
+        "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+        "exactUtcInstant": "2014-03-20T16:57:05Z",
+        "precisionSeconds": 1,
+        "sourced": true,
+        "validationStatus": "validated-against-bazica",
+        "validationDeltaSeconds": 1.76,
+        "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+      },
+      {
+        "layer": "pattern-calculation",
+        "source": "pattern-calendar/1.0.0",
+        "sourced": false,
+        "validationStatus": "deterministic-fixed-epoch-arithmetic"
+      },
+      {
+        "layer": "lunar-approximation",
+        "source": "approximate-synodic-phase",
+        "sourceVersion": "13-moons-synodic/1.0.0",
+        "sourced": false,
+        "validationStatus": "approximate"
+      }
+    ],
+    "generatedAt": "2026-07-22T22:25:11.264Z"
+  },
+  {
+    "schemaVersion": "equinox-passage/1.0.0",
+    "astronomyVersion": "astronomy/1.0.0",
+    "calendarVersion": "pattern-calendar/1.0.0",
+    "selectedYear": 2015,
+    "timeZone": "America/Los_Angeles",
+    "boundaryMode": "sunset",
+    "manualSunset": "18:00",
+    "equinox": {
+      "utcInstant": "2015-03-20T22:45:09Z",
+      "localInstant": "2015-03-20T15:45:09",
+      "civilDate": "2015-03-20",
+      "source": "janmr.com equinoxes and solstices",
+      "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+      "precisionSeconds": 1,
+      "claimedPrecision": "±1 second",
+      "status": "sourced",
+      "validationStatus": "validated-against-bazica",
+      "validationDeltaSeconds": 1.5,
+      "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+    },
+    "patternPosition": {
+      "effectiveDate": "2015-03-20",
+      "patternYear": -11,
+      "moon": 13,
+      "moonName": "Completion Seal",
+      "day": 2,
+      "dayOfPatternYear": 338,
+      "weekGate": "Week 1 · Ignition",
+      "archetype": "Witness",
+      "tone": "Witness",
+      "insideCountedYear": true,
+      "isDayOutOfTime": false,
+      "isDeepTimeDay": false
+    },
+    "passage": {
+      "state": "after-passage",
+      "startInstant": "2015-03-20T22:45:09Z",
+      "endInstant": "2015-04-17T01:00:00.000Z",
+      "totalMilliseconds": 2340891000,
+      "totalDays": 27.093646,
+      "elapsedMilliseconds": 2340891000,
+      "remainingMilliseconds": 0,
+      "progress": 1,
+      "civilMidnightsCrossed": 27,
+      "selectedPatternBoundariesCrossed": 28
+    },
+    "lunarLayer": {
+      "source": "approximate-synodic-phase",
+      "sourceVersion": "13-moons-synodic/1.0.0",
+      "status": "approximate",
+      "ageDays": 0.437594,
+      "cyclePosition": 0.014818,
+      "illumination": 0.002166,
+      "illuminationPercent": 0.2,
+      "phaseName": "New Moon"
+    },
+    "annualSignature": {
+      "calculated": "Equinox entered at Completion Seal · Day 2.",
+      "astronomical": "New Moon with approximately 0.2% illumination.",
+      "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
+      "observational": "Passage length: 27 days, 2 hours, 14 minutes. No conclusion until witness records are collected."
+    },
+    "normalizedValues": {
+      "patternCyclePosition": 0.925824,
+      "moonIndex": 12,
+      "dayIndex": 1,
+      "yearProgress": 0.925824,
+      "passageProgress": 1,
+      "equinoxCyclePosition": 0.224044,
+      "lunarCyclePosition": 0.014818,
+      "solarSeasonPosition": 0
+    },
+    "sources": [
+      {
+        "layer": "astronomical-fact",
+        "source": "janmr.com equinoxes and solstices",
+        "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+        "exactUtcInstant": "2015-03-20T22:45:09Z",
+        "precisionSeconds": 1,
+        "sourced": true,
+        "validationStatus": "validated-against-bazica",
+        "validationDeltaSeconds": 1.5,
+        "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+      },
+      {
+        "layer": "pattern-calculation",
+        "source": "pattern-calendar/1.0.0",
+        "sourced": false,
+        "validationStatus": "deterministic-fixed-epoch-arithmetic"
+      },
+      {
+        "layer": "lunar-approximation",
+        "source": "approximate-synodic-phase",
+        "sourceVersion": "13-moons-synodic/1.0.0",
+        "sourced": false,
+        "validationStatus": "approximate"
+      }
+    ],
+    "generatedAt": "2026-07-22T22:25:11.265Z"
+  },
+  {
+    "schemaVersion": "equinox-passage/1.0.0",
+    "astronomyVersion": "astronomy/1.0.0",
+    "calendarVersion": "pattern-calendar/1.0.0",
+    "selectedYear": 2016,
+    "timeZone": "America/Los_Angeles",
+    "boundaryMode": "sunset",
+    "manualSunset": "18:00",
+    "equinox": {
+      "utcInstant": "2016-03-20T04:30:11Z",
+      "localInstant": "2016-03-19T21:30:11",
+      "civilDate": "2016-03-19",
+      "source": "janmr.com equinoxes and solstices",
+      "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+      "precisionSeconds": 1,
+      "claimedPrecision": "±1 second",
+      "status": "sourced",
+      "validationStatus": "validated-against-bazica",
+      "validationDeltaSeconds": 1.33,
+      "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+    },
+    "patternPosition": {
+      "effectiveDate": "2016-03-20",
+      "patternYear": -10,
+      "moon": 13,
+      "moonName": "Completion Seal",
+      "day": 3,
+      "dayOfPatternYear": 339,
+      "weekGate": "Week 1 · Ignition",
+      "archetype": "Breath",
+      "tone": "Breath",
+      "insideCountedYear": true,
+      "isDayOutOfTime": false,
+      "isDeepTimeDay": false
+    },
+    "passage": {
+      "state": "after-passage",
+      "startInstant": "2016-03-20T04:30:11Z",
+      "endInstant": "2016-04-17T01:00:00.000Z",
+      "totalMilliseconds": 2406589000,
+      "totalDays": 27.854039,
+      "elapsedMilliseconds": 2406589000,
+      "remainingMilliseconds": 0,
+      "progress": 1,
+      "civilMidnightsCrossed": 28,
+      "selectedPatternBoundariesCrossed": 28
+    },
+    "lunarLayer": {
+      "source": "approximate-synodic-phase",
+      "sourceVersion": "13-moons-synodic/1.0.0",
+      "status": "approximate",
+      "ageDays": 11.310134,
+      "cyclePosition": 0.382997,
+      "illumination": 0.870865,
+      "illuminationPercent": 87.1,
+      "phaseName": "Waxing Gibbous"
+    },
+    "annualSignature": {
+      "calculated": "Equinox entered at Completion Seal · Day 3.",
+      "astronomical": "Waxing Gibbous with approximately 87.1% illumination.",
+      "symbolic": "Week 1 · Ignition frames a Breath threshold without claiming causation.",
+      "observational": "Passage length: 27 days, 20 hours, 29 minutes. No conclusion until witness records are collected."
+    },
+    "normalizedValues": {
+      "patternCyclePosition": 0.928571,
+      "moonIndex": 12,
+      "dayIndex": 2,
+      "yearProgress": 0.928571,
+      "passageProgress": 1,
+      "equinoxCyclePosition": 0.224044,
+      "lunarCyclePosition": 0.382997,
+      "solarSeasonPosition": 0
+    },
+    "sources": [
+      {
+        "layer": "astronomical-fact",
+        "source": "janmr.com equinoxes and solstices",
+        "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+        "exactUtcInstant": "2016-03-20T04:30:11Z",
+        "precisionSeconds": 1,
+        "sourced": true,
+        "validationStatus": "validated-against-bazica",
+        "validationDeltaSeconds": 1.33,
+        "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+      },
+      {
+        "layer": "pattern-calculation",
+        "source": "pattern-calendar/1.0.0",
+        "sourced": false,
+        "validationStatus": "deterministic-fixed-epoch-arithmetic"
+      },
+      {
+        "layer": "lunar-approximation",
+        "source": "approximate-synodic-phase",
+        "sourceVersion": "13-moons-synodic/1.0.0",
+        "sourced": false,
+        "validationStatus": "approximate"
+      }
+    ],
+    "generatedAt": "2026-07-22T22:25:11.265Z"
+  },
+  {
+    "schemaVersion": "equinox-passage/1.0.0",
+    "astronomyVersion": "astronomy/1.0.0",
+    "calendarVersion": "pattern-calendar/1.0.0",
+    "selectedYear": 2017,
+    "timeZone": "America/Los_Angeles",
+    "boundaryMode": "sunset",
+    "manualSunset": "18:00",
+    "equinox": {
+      "utcInstant": "2017-03-20T10:28:37Z",
+      "localInstant": "2017-03-20T03:28:37",
+      "civilDate": "2017-03-20",
+      "source": "janmr.com equinoxes and solstices",
+      "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+      "precisionSeconds": 1,
+      "claimedPrecision": "±1 second",
+      "status": "sourced",
+      "validationStatus": "validated-against-bazica",
+      "validationDeltaSeconds": 2.049,
+      "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+    },
+    "patternPosition": {
+      "effectiveDate": "2017-03-20",
+      "patternYear": -9,
+      "moon": 13,
+      "moonName": "Completion Seal",
+      "day": 2,
+      "dayOfPatternYear": 338,
+      "weekGate": "Week 1 · Ignition",
+      "archetype": "Witness",
+      "tone": "Witness",
+      "insideCountedYear": true,
+      "isDayOutOfTime": false,
+      "isDeepTimeDay": false
+    },
+    "passage": {
+      "state": "after-passage",
+      "startInstant": "2017-03-20T10:28:37Z",
+      "endInstant": "2017-04-17T01:00:00.000Z",
+      "totalMilliseconds": 2385083000,
+      "totalDays": 27.605127,
+      "elapsedMilliseconds": 2385083000,
+      "remainingMilliseconds": 0,
+      "progress": 1,
+      "civilMidnightsCrossed": 27,
+      "selectedPatternBoundariesCrossed": 28
+    },
+    "lunarLayer": {
+      "source": "approximate-synodic-phase",
+      "sourceVersion": "13-moons-synodic/1.0.0",
+      "status": "approximate",
+      "ageDays": 22.19198,
+      "cyclePosition": 0.751491,
+      "illumination": 0.495315,
+      "illuminationPercent": 49.5,
+      "phaseName": "Last Quarter"
+    },
+    "annualSignature": {
+      "calculated": "Equinox entered at Completion Seal · Day 2.",
+      "astronomical": "Last Quarter with approximately 49.5% illumination.",
+      "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
+      "observational": "Passage length: 27 days, 14 hours, 31 minutes. No conclusion until witness records are collected."
+    },
+    "normalizedValues": {
+      "patternCyclePosition": 0.925824,
+      "moonIndex": 12,
+      "dayIndex": 1,
+      "yearProgress": 0.925824,
+      "passageProgress": 1,
+      "equinoxCyclePosition": 0.224044,
+      "lunarCyclePosition": 0.751491,
+      "solarSeasonPosition": 0
+    },
+    "sources": [
+      {
+        "layer": "astronomical-fact",
+        "source": "janmr.com equinoxes and solstices",
+        "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+        "exactUtcInstant": "2017-03-20T10:28:37Z",
+        "precisionSeconds": 1,
+        "sourced": true,
+        "validationStatus": "validated-against-bazica",
+        "validationDeltaSeconds": 2.049,
+        "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+      },
+      {
+        "layer": "pattern-calculation",
+        "source": "pattern-calendar/1.0.0",
+        "sourced": false,
+        "validationStatus": "deterministic-fixed-epoch-arithmetic"
+      },
+      {
+        "layer": "lunar-approximation",
+        "source": "approximate-synodic-phase",
+        "sourceVersion": "13-moons-synodic/1.0.0",
+        "sourced": false,
+        "validationStatus": "approximate"
+      }
+    ],
+    "generatedAt": "2026-07-22T22:25:11.266Z"
+  },
+  {
+    "schemaVersion": "equinox-passage/1.0.0",
+    "astronomyVersion": "astronomy/1.0.0",
+    "calendarVersion": "pattern-calendar/1.0.0",
+    "selectedYear": 2018,
+    "timeZone": "America/Los_Angeles",
+    "boundaryMode": "sunset",
+    "manualSunset": "18:00",
+    "equinox": {
+      "utcInstant": "2018-03-20T16:15:27Z",
+      "localInstant": "2018-03-20T09:15:27",
+      "civilDate": "2018-03-20",
+      "source": "janmr.com equinoxes and solstices",
+      "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+      "precisionSeconds": 1,
+      "claimedPrecision": "±1 second",
+      "status": "sourced",
+      "validationStatus": "validated-against-bazica",
+      "validationDeltaSeconds": 1.473,
+      "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+    },
+    "patternPosition": {
+      "effectiveDate": "2018-03-20",
+      "patternYear": -8,
+      "moon": 13,
+      "moonName": "Completion Seal",
+      "day": 2,
+      "dayOfPatternYear": 338,
+      "weekGate": "Week 1 · Ignition",
+      "archetype": "Witness",
+      "tone": "Witness",
+      "insideCountedYear": true,
+      "isDayOutOfTime": false,
+      "isDeepTimeDay": false
+    },
+    "passage": {
+      "state": "after-passage",
+      "startInstant": "2018-03-20T16:15:27Z",
+      "endInstant": "2018-04-17T01:00:00.000Z",
+      "totalMilliseconds": 2364273000,
+      "totalDays": 27.364271,
+      "elapsedMilliseconds": 2364273000,
+      "remainingMilliseconds": 0,
+      "progress": 1,
+      "civilMidnightsCrossed": 27,
+      "selectedPatternBoundariesCrossed": 28
+    },
+    "lunarLayer": {
+      "source": "approximate-synodic-phase",
+      "sourceVersion": "13-moons-synodic/1.0.0",
+      "status": "approximate",
+      "ageDays": 3.535182,
+      "cyclePosition": 0.119713,
+      "illumination": 0.134898,
+      "illuminationPercent": 13.5,
+      "phaseName": "Waxing Crescent"
+    },
+    "annualSignature": {
+      "calculated": "Equinox entered at Completion Seal · Day 2.",
+      "astronomical": "Waxing Crescent with approximately 13.5% illumination.",
+      "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
+      "observational": "Passage length: 27 days, 8 hours, 44 minutes. No conclusion until witness records are collected."
+    },
+    "normalizedValues": {
+      "patternCyclePosition": 0.925824,
+      "moonIndex": 12,
+      "dayIndex": 1,
+      "yearProgress": 0.925824,
+      "passageProgress": 1,
+      "equinoxCyclePosition": 0.224044,
+      "lunarCyclePosition": 0.119713,
+      "solarSeasonPosition": 0
+    },
+    "sources": [
+      {
+        "layer": "astronomical-fact",
+        "source": "janmr.com equinoxes and solstices",
+        "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+        "exactUtcInstant": "2018-03-20T16:15:27Z",
+        "precisionSeconds": 1,
+        "sourced": true,
+        "validationStatus": "validated-against-bazica",
+        "validationDeltaSeconds": 1.473,
+        "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+      },
+      {
+        "layer": "pattern-calculation",
+        "source": "pattern-calendar/1.0.0",
+        "sourced": false,
+        "validationStatus": "deterministic-fixed-epoch-arithmetic"
+      },
+      {
+        "layer": "lunar-approximation",
+        "source": "approximate-synodic-phase",
+        "sourceVersion": "13-moons-synodic/1.0.0",
+        "sourced": false,
+        "validationStatus": "approximate"
+      }
+    ],
+    "generatedAt": "2026-07-22T22:25:11.267Z"
+  },
+  {
+    "schemaVersion": "equinox-passage/1.0.0",
+    "astronomyVersion": "astronomy/1.0.0",
+    "calendarVersion": "pattern-calendar/1.0.0",
+    "selectedYear": 2019,
+    "timeZone": "America/Los_Angeles",
+    "boundaryMode": "sunset",
+    "manualSunset": "18:00",
+    "equinox": {
+      "utcInstant": "2019-03-20T21:58:25Z",
+      "localInstant": "2019-03-20T14:58:25",
+      "civilDate": "2019-03-20",
+      "source": "janmr.com equinoxes and solstices",
+      "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+      "precisionSeconds": 1,
+      "claimedPrecision": "±1 second",
+      "status": "sourced",
+      "validationStatus": "validated-against-bazica",
+      "validationDeltaSeconds": 1.961,
+      "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+    },
+    "patternPosition": {
+      "effectiveDate": "2019-03-20",
+      "patternYear": -7,
+      "moon": 13,
+      "moonName": "Completion Seal",
+      "day": 2,
+      "dayOfPatternYear": 338,
+      "weekGate": "Week 1 · Ignition",
+      "archetype": "Witness",
+      "tone": "Witness",
+      "insideCountedYear": true,
+      "isDayOutOfTime": false,
+      "isDeepTimeDay": false
+    },
+    "passage": {
+      "state": "after-passage",
+      "startInstant": "2019-03-20T21:58:25Z",
+      "endInstant": "2019-04-17T01:00:00.000Z",
+      "totalMilliseconds": 2343695000,
+      "totalDays": 27.1261,
+      "elapsedMilliseconds": 2343695000,
+      "remainingMilliseconds": 0,
+      "progress": 1,
+      "civilMidnightsCrossed": 27,
+      "selectedPatternBoundariesCrossed": 28
+    },
+    "lunarLayer": {
+      "source": "approximate-synodic-phase",
+      "sourceVersion": "13-moons-synodic/1.0.0",
+      "status": "approximate",
+      "ageDays": 14.406287,
+      "cyclePosition": 0.487843,
+      "illumination": 0.998542,
+      "illuminationPercent": 99.9,
+      "phaseName": "Full Moon"
+    },
+    "annualSignature": {
+      "calculated": "Equinox entered at Completion Seal · Day 2.",
+      "astronomical": "Full Moon with approximately 99.9% illumination.",
+      "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
+      "observational": "Passage length: 27 days, 3 hours, 1 minute. No conclusion until witness records are collected."
+    },
+    "normalizedValues": {
+      "patternCyclePosition": 0.925824,
+      "moonIndex": 12,
+      "dayIndex": 1,
+      "yearProgress": 0.925824,
+      "passageProgress": 1,
+      "equinoxCyclePosition": 0.224044,
+      "lunarCyclePosition": 0.487843,
+      "solarSeasonPosition": 0
+    },
+    "sources": [
+      {
+        "layer": "astronomical-fact",
+        "source": "janmr.com equinoxes and solstices",
+        "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+        "exactUtcInstant": "2019-03-20T21:58:25Z",
+        "precisionSeconds": 1,
+        "sourced": true,
+        "validationStatus": "validated-against-bazica",
+        "validationDeltaSeconds": 1.961,
+        "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+      },
+      {
+        "layer": "pattern-calculation",
+        "source": "pattern-calendar/1.0.0",
+        "sourced": false,
+        "validationStatus": "deterministic-fixed-epoch-arithmetic"
+      },
+      {
+        "layer": "lunar-approximation",
+        "source": "approximate-synodic-phase",
+        "sourceVersion": "13-moons-synodic/1.0.0",
+        "sourced": false,
+        "validationStatus": "approximate"
+      }
+    ],
+    "generatedAt": "2026-07-22T22:25:11.268Z"
+  },
+  {
+    "schemaVersion": "equinox-passage/1.0.0",
+    "astronomyVersion": "astronomy/1.0.0",
+    "calendarVersion": "pattern-calendar/1.0.0",
+    "selectedYear": 2020,
+    "timeZone": "America/Los_Angeles",
+    "boundaryMode": "sunset",
+    "manualSunset": "18:00",
+    "equinox": {
+      "utcInstant": "2020-03-20T03:49:37Z",
+      "localInstant": "2020-03-19T20:49:37",
+      "civilDate": "2020-03-19",
+      "source": "janmr.com equinoxes and solstices",
+      "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+      "precisionSeconds": 1,
+      "claimedPrecision": "±1 second",
+      "status": "sourced",
+      "validationStatus": "validated-against-bazica",
+      "validationDeltaSeconds": 1.267,
+      "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+    },
+    "patternPosition": {
+      "effectiveDate": "2020-03-20",
+      "patternYear": -6,
+      "moon": 13,
+      "moonName": "Completion Seal",
+      "day": 3,
+      "dayOfPatternYear": 339,
+      "weekGate": "Week 1 · Ignition",
+      "archetype": "Breath",
+      "tone": "Breath",
+      "insideCountedYear": true,
+      "isDayOutOfTime": false,
+      "isDeepTimeDay": false
+    },
+    "passage": {
+      "state": "after-passage",
+      "startInstant": "2020-03-20T03:49:37Z",
+      "endInstant": "2020-04-17T01:00:00.000Z",
+      "totalMilliseconds": 2409023000,
+      "totalDays": 27.882211,
+      "elapsedMilliseconds": 2409023000,
+      "remainingMilliseconds": 0,
+      "progress": 1,
+      "civilMidnightsCrossed": 28,
+      "selectedPatternBoundariesCrossed": 28
+    },
+    "lunarLayer": {
+      "source": "approximate-synodic-phase",
+      "sourceVersion": "13-moons-synodic/1.0.0",
+      "status": "approximate",
+      "ageDays": 25.283109,
+      "cyclePosition": 0.856167,
+      "illumination": 0.190658,
+      "illuminationPercent": 19.1,
+      "phaseName": "Waning Crescent"
+    },
+    "annualSignature": {
+      "calculated": "Equinox entered at Completion Seal · Day 3.",
+      "astronomical": "Waning Crescent with approximately 19.1% illumination.",
+      "symbolic": "Week 1 · Ignition frames a Breath threshold without claiming causation.",
+      "observational": "Passage length: 27 days, 21 hours, 10 minutes. No conclusion until witness records are collected."
+    },
+    "normalizedValues": {
+      "patternCyclePosition": 0.928571,
+      "moonIndex": 12,
+      "dayIndex": 2,
+      "yearProgress": 0.928571,
+      "passageProgress": 1,
+      "equinoxCyclePosition": 0.224044,
+      "lunarCyclePosition": 0.856167,
+      "solarSeasonPosition": 0
+    },
+    "sources": [
+      {
+        "layer": "astronomical-fact",
+        "source": "janmr.com equinoxes and solstices",
+        "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+        "exactUtcInstant": "2020-03-20T03:49:37Z",
+        "precisionSeconds": 1,
+        "sourced": true,
+        "validationStatus": "validated-against-bazica",
+        "validationDeltaSeconds": 1.267,
+        "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+      },
+      {
+        "layer": "pattern-calculation",
+        "source": "pattern-calendar/1.0.0",
+        "sourced": false,
+        "validationStatus": "deterministic-fixed-epoch-arithmetic"
+      },
+      {
+        "layer": "lunar-approximation",
+        "source": "approximate-synodic-phase",
+        "sourceVersion": "13-moons-synodic/1.0.0",
+        "sourced": false,
+        "validationStatus": "approximate"
+      }
+    ],
+    "generatedAt": "2026-07-22T22:25:11.268Z"
+  },
+  {
+    "schemaVersion": "equinox-passage/1.0.0",
+    "astronomyVersion": "astronomy/1.0.0",
+    "calendarVersion": "pattern-calendar/1.0.0",
+    "selectedYear": 2021,
+    "timeZone": "America/Los_Angeles",
+    "boundaryMode": "sunset",
+    "manualSunset": "18:00",
+    "equinox": {
+      "utcInstant": "2021-03-20T09:37:28Z",
+      "localInstant": "2021-03-20T02:37:28",
+      "civilDate": "2021-03-20",
+      "source": "janmr.com equinoxes and solstices",
+      "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+      "precisionSeconds": 1,
+      "claimedPrecision": "±1 second",
+      "status": "sourced",
+      "validationStatus": "validated-against-bazica",
+      "validationDeltaSeconds": 1.688,
+      "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+    },
+    "patternPosition": {
+      "effectiveDate": "2021-03-20",
+      "patternYear": -5,
+      "moon": 13,
+      "moonName": "Completion Seal",
+      "day": 2,
+      "dayOfPatternYear": 338,
+      "weekGate": "Week 1 · Ignition",
+      "archetype": "Witness",
+      "tone": "Witness",
+      "insideCountedYear": true,
+      "isDayOutOfTime": false,
+      "isDeepTimeDay": false
+    },
+    "passage": {
+      "state": "after-passage",
+      "startInstant": "2021-03-20T09:37:28Z",
+      "endInstant": "2021-04-17T01:00:00.000Z",
+      "totalMilliseconds": 2388152000,
+      "totalDays": 27.640648,
+      "elapsedMilliseconds": 2388152000,
+      "remainingMilliseconds": 0,
+      "progress": 1,
+      "civilMidnightsCrossed": 27,
+      "selectedPatternBoundariesCrossed": 28
+    },
+    "lunarLayer": {
+      "source": "approximate-synodic-phase",
+      "sourceVersion": "13-moons-synodic/1.0.0",
+      "status": "approximate",
+      "ageDays": 6.627017,
+      "cyclePosition": 0.224412,
+      "illumination": 0.419959,
+      "illuminationPercent": 42,
+      "phaseName": "First Quarter"
+    },
+    "annualSignature": {
+      "calculated": "Equinox entered at Completion Seal · Day 2.",
+      "astronomical": "First Quarter with approximately 42% illumination.",
+      "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
+      "observational": "Passage length: 27 days, 15 hours, 22 minutes. No conclusion until witness records are collected."
+    },
+    "normalizedValues": {
+      "patternCyclePosition": 0.925824,
+      "moonIndex": 12,
+      "dayIndex": 1,
+      "yearProgress": 0.925824,
+      "passageProgress": 1,
+      "equinoxCyclePosition": 0.224044,
+      "lunarCyclePosition": 0.224412,
+      "solarSeasonPosition": 0
+    },
+    "sources": [
+      {
+        "layer": "astronomical-fact",
+        "source": "janmr.com equinoxes and solstices",
+        "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+        "exactUtcInstant": "2021-03-20T09:37:28Z",
+        "precisionSeconds": 1,
+        "sourced": true,
+        "validationStatus": "validated-against-bazica",
+        "validationDeltaSeconds": 1.688,
+        "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+      },
+      {
+        "layer": "pattern-calculation",
+        "source": "pattern-calendar/1.0.0",
+        "sourced": false,
+        "validationStatus": "deterministic-fixed-epoch-arithmetic"
+      },
+      {
+        "layer": "lunar-approximation",
+        "source": "approximate-synodic-phase",
+        "sourceVersion": "13-moons-synodic/1.0.0",
+        "sourced": false,
+        "validationStatus": "approximate"
+      }
+    ],
+    "generatedAt": "2026-07-22T22:25:11.269Z"
+  },
+  {
+    "schemaVersion": "equinox-passage/1.0.0",
+    "astronomyVersion": "astronomy/1.0.0",
+    "calendarVersion": "pattern-calendar/1.0.0",
+    "selectedYear": 2022,
+    "timeZone": "America/Los_Angeles",
+    "boundaryMode": "sunset",
+    "manualSunset": "18:00",
+    "equinox": {
+      "utcInstant": "2022-03-20T15:33:24Z",
+      "localInstant": "2022-03-20T08:33:24",
+      "civilDate": "2022-03-20",
+      "source": "janmr.com equinoxes and solstices",
+      "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+      "precisionSeconds": 1,
+      "claimedPrecision": "±1 second",
+      "status": "sourced",
+      "validationStatus": "validated-against-bazica",
+      "validationDeltaSeconds": 2.057,
+      "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+    },
+    "patternPosition": {
+      "effectiveDate": "2022-03-20",
+      "patternYear": -4,
+      "moon": 13,
+      "moonName": "Completion Seal",
+      "day": 2,
+      "dayOfPatternYear": 338,
+      "weekGate": "Week 1 · Ignition",
+      "archetype": "Witness",
+      "tone": "Witness",
+      "insideCountedYear": true,
+      "isDayOutOfTime": false,
+      "isDeepTimeDay": false
+    },
+    "passage": {
+      "state": "after-passage",
+      "startInstant": "2022-03-20T15:33:24Z",
+      "endInstant": "2022-04-17T01:00:00.000Z",
+      "totalMilliseconds": 2366796000,
+      "totalDays": 27.393472,
+      "elapsedMilliseconds": 2366796000,
+      "remainingMilliseconds": 0,
+      "progress": 1,
+      "civilMidnightsCrossed": 27,
+      "selectedPatternBoundariesCrossed": 28
+    },
+    "lunarLayer": {
+      "source": "approximate-synodic-phase",
+      "sourceVersion": "13-moons-synodic/1.0.0",
+      "status": "approximate",
+      "ageDays": 17.507127,
+      "cyclePosition": 0.592847,
+      "illumination": 0.917304,
+      "illuminationPercent": 91.7,
+      "phaseName": "Waning Gibbous"
+    },
+    "annualSignature": {
+      "calculated": "Equinox entered at Completion Seal · Day 2.",
+      "astronomical": "Waning Gibbous with approximately 91.7% illumination.",
+      "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
+      "observational": "Passage length: 27 days, 9 hours, 26 minutes. No conclusion until witness records are collected."
+    },
+    "normalizedValues": {
+      "patternCyclePosition": 0.925824,
+      "moonIndex": 12,
+      "dayIndex": 1,
+      "yearProgress": 0.925824,
+      "passageProgress": 1,
+      "equinoxCyclePosition": 0.224044,
+      "lunarCyclePosition": 0.592847,
+      "solarSeasonPosition": 0
+    },
+    "sources": [
+      {
+        "layer": "astronomical-fact",
+        "source": "janmr.com equinoxes and solstices",
+        "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+        "exactUtcInstant": "2022-03-20T15:33:24Z",
+        "precisionSeconds": 1,
+        "sourced": true,
+        "validationStatus": "validated-against-bazica",
+        "validationDeltaSeconds": 2.057,
+        "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+      },
+      {
+        "layer": "pattern-calculation",
+        "source": "pattern-calendar/1.0.0",
+        "sourced": false,
+        "validationStatus": "deterministic-fixed-epoch-arithmetic"
+      },
+      {
+        "layer": "lunar-approximation",
+        "source": "approximate-synodic-phase",
+        "sourceVersion": "13-moons-synodic/1.0.0",
+        "sourced": false,
+        "validationStatus": "approximate"
+      }
+    ],
+    "generatedAt": "2026-07-22T22:25:11.270Z"
+  },
+  {
+    "schemaVersion": "equinox-passage/1.0.0",
+    "astronomyVersion": "astronomy/1.0.0",
+    "calendarVersion": "pattern-calendar/1.0.0",
+    "selectedYear": 2023,
+    "timeZone": "America/Los_Angeles",
+    "boundaryMode": "sunset",
+    "manualSunset": "18:00",
+    "equinox": {
+      "utcInstant": "2023-03-20T21:24:26Z",
+      "localInstant": "2023-03-20T14:24:26",
+      "civilDate": "2023-03-20",
+      "source": "janmr.com equinoxes and solstices",
+      "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+      "precisionSeconds": 1,
+      "claimedPrecision": "±1 second",
+      "status": "sourced",
+      "validationStatus": "validated-against-bazica",
+      "validationDeltaSeconds": 1.653,
+      "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+    },
+    "patternPosition": {
+      "effectiveDate": "2023-03-20",
+      "patternYear": -3,
+      "moon": 13,
+      "moonName": "Completion Seal",
+      "day": 2,
+      "dayOfPatternYear": 338,
+      "weekGate": "Week 1 · Ignition",
+      "archetype": "Witness",
+      "tone": "Witness",
+      "insideCountedYear": true,
+      "isDayOutOfTime": false,
+      "isDeepTimeDay": false
+    },
+    "passage": {
+      "state": "after-passage",
+      "startInstant": "2023-03-20T21:24:26Z",
+      "endInstant": "2023-04-17T01:00:00.000Z",
+      "totalMilliseconds": 2345734000,
+      "totalDays": 27.149699,
+      "elapsedMilliseconds": 2345734000,
+      "remainingMilliseconds": 0,
+      "progress": 1,
+      "civilMidnightsCrossed": 27,
+      "selectedPatternBoundariesCrossed": 28
+    },
+    "lunarLayer": {
+      "source": "approximate-synodic-phase",
+      "sourceVersion": "13-moons-synodic/1.0.0",
+      "status": "approximate",
+      "ageDays": 28.383833,
+      "cyclePosition": 0.961167,
+      "illumination": 0.01481,
+      "illuminationPercent": 1.5,
+      "phaseName": "New Moon"
+    },
+    "annualSignature": {
+      "calculated": "Equinox entered at Completion Seal · Day 2.",
+      "astronomical": "New Moon with approximately 1.5% illumination.",
+      "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
+      "observational": "Passage length: 27 days, 3 hours, 35 minutes. No conclusion until witness records are collected."
+    },
+    "normalizedValues": {
+      "patternCyclePosition": 0.925824,
+      "moonIndex": 12,
+      "dayIndex": 1,
+      "yearProgress": 0.925824,
+      "passageProgress": 1,
+      "equinoxCyclePosition": 0.224044,
+      "lunarCyclePosition": 0.961167,
+      "solarSeasonPosition": 0
+    },
+    "sources": [
+      {
+        "layer": "astronomical-fact",
+        "source": "janmr.com equinoxes and solstices",
+        "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+        "exactUtcInstant": "2023-03-20T21:24:26Z",
+        "precisionSeconds": 1,
+        "sourced": true,
+        "validationStatus": "validated-against-bazica",
+        "validationDeltaSeconds": 1.653,
+        "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+      },
+      {
+        "layer": "pattern-calculation",
+        "source": "pattern-calendar/1.0.0",
+        "sourced": false,
+        "validationStatus": "deterministic-fixed-epoch-arithmetic"
+      },
+      {
+        "layer": "lunar-approximation",
+        "source": "approximate-synodic-phase",
+        "sourceVersion": "13-moons-synodic/1.0.0",
+        "sourced": false,
+        "validationStatus": "approximate"
+      }
+    ],
+    "generatedAt": "2026-07-22T22:25:11.271Z"
+  },
+  {
+    "schemaVersion": "equinox-passage/1.0.0",
+    "astronomyVersion": "astronomy/1.0.0",
+    "calendarVersion": "pattern-calendar/1.0.0",
+    "selectedYear": 2024,
+    "timeZone": "America/Los_Angeles",
+    "boundaryMode": "sunset",
+    "manualSunset": "18:00",
+    "equinox": {
+      "utcInstant": "2024-03-20T03:06:24Z",
+      "localInstant": "2024-03-19T20:06:24",
+      "civilDate": "2024-03-19",
+      "source": "janmr.com equinoxes and solstices",
+      "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+      "precisionSeconds": 1,
+      "claimedPrecision": "±1 second",
+      "status": "sourced",
+      "validationStatus": "validated-against-bazica",
+      "validationDeltaSeconds": 1.264,
+      "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+    },
+    "patternPosition": {
+      "effectiveDate": "2024-03-20",
+      "patternYear": -2,
+      "moon": 13,
+      "moonName": "Completion Seal",
+      "day": 3,
+      "dayOfPatternYear": 339,
+      "weekGate": "Week 1 · Ignition",
+      "archetype": "Breath",
+      "tone": "Breath",
+      "insideCountedYear": true,
+      "isDayOutOfTime": false,
+      "isDeepTimeDay": false
+    },
+    "passage": {
+      "state": "after-passage",
+      "startInstant": "2024-03-20T03:06:24Z",
+      "endInstant": "2024-04-17T01:00:00.000Z",
+      "totalMilliseconds": 2411616000,
+      "totalDays": 27.912222,
+      "elapsedMilliseconds": 2411616000,
+      "remainingMilliseconds": 0,
+      "progress": 1,
+      "civilMidnightsCrossed": 28,
+      "selectedPatternBoundariesCrossed": 28
+    },
+    "lunarLayer": {
+      "source": "approximate-synodic-phase",
+      "sourceVersion": "13-moons-synodic/1.0.0",
+      "status": "approximate",
+      "ageDays": 9.723655,
+      "cyclePosition": 0.329274,
+      "illumination": 0.738876,
+      "illuminationPercent": 73.9,
+      "phaseName": "Waxing Gibbous"
+    },
+    "annualSignature": {
+      "calculated": "Equinox entered at Completion Seal · Day 3.",
+      "astronomical": "Waxing Gibbous with approximately 73.9% illumination.",
+      "symbolic": "Week 1 · Ignition frames a Breath threshold without claiming causation.",
+      "observational": "Passage length: 27 days, 21 hours, 53 minutes. No conclusion until witness records are collected."
+    },
+    "normalizedValues": {
+      "patternCyclePosition": 0.928571,
+      "moonIndex": 12,
+      "dayIndex": 2,
+      "yearProgress": 0.928571,
+      "passageProgress": 1,
+      "equinoxCyclePosition": 0.224044,
+      "lunarCyclePosition": 0.329274,
+      "solarSeasonPosition": 0
+    },
+    "sources": [
+      {
+        "layer": "astronomical-fact",
+        "source": "janmr.com equinoxes and solstices",
+        "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+        "exactUtcInstant": "2024-03-20T03:06:24Z",
+        "precisionSeconds": 1,
+        "sourced": true,
+        "validationStatus": "validated-against-bazica",
+        "validationDeltaSeconds": 1.264,
+        "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+      },
+      {
+        "layer": "pattern-calculation",
+        "source": "pattern-calendar/1.0.0",
+        "sourced": false,
+        "validationStatus": "deterministic-fixed-epoch-arithmetic"
+      },
+      {
+        "layer": "lunar-approximation",
+        "source": "approximate-synodic-phase",
+        "sourceVersion": "13-moons-synodic/1.0.0",
+        "sourced": false,
+        "validationStatus": "approximate"
+      }
+    ],
+    "generatedAt": "2026-07-22T22:25:11.272Z"
+  },
+  {
+    "schemaVersion": "equinox-passage/1.0.0",
+    "astronomyVersion": "astronomy/1.0.0",
+    "calendarVersion": "pattern-calendar/1.0.0",
+    "selectedYear": 2025,
+    "timeZone": "America/Los_Angeles",
+    "boundaryMode": "sunset",
+    "manualSunset": "18:00",
+    "equinox": {
+      "utcInstant": "2025-03-20T09:01:28Z",
+      "localInstant": "2025-03-20T02:01:28",
+      "civilDate": "2025-03-20",
+      "source": "janmr.com equinoxes and solstices",
+      "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+      "precisionSeconds": 1,
+      "claimedPrecision": "±1 second",
+      "status": "sourced",
+      "validationStatus": "validated-against-bazica",
+      "validationDeltaSeconds": 2.009,
+      "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+    },
+    "patternPosition": {
+      "effectiveDate": "2025-03-20",
+      "patternYear": -1,
+      "moon": 13,
+      "moonName": "Completion Seal",
+      "day": 2,
+      "dayOfPatternYear": 338,
+      "weekGate": "Week 1 · Ignition",
+      "archetype": "Witness",
+      "tone": "Witness",
+      "insideCountedYear": true,
+      "isDayOutOfTime": false,
+      "isDeepTimeDay": false
+    },
+    "passage": {
+      "state": "after-passage",
+      "startInstant": "2025-03-20T09:01:28Z",
+      "endInstant": "2025-04-17T01:00:00.000Z",
+      "totalMilliseconds": 2390312000,
+      "totalDays": 27.665648,
+      "elapsedMilliseconds": 2390312000,
+      "remainingMilliseconds": 0,
+      "progress": 1,
+      "civilMidnightsCrossed": 27,
+      "selectedPatternBoundariesCrossed": 28
+    },
+    "lunarLayer": {
+      "source": "approximate-synodic-phase",
+      "sourceVersion": "13-moons-synodic/1.0.0",
+      "status": "approximate",
+      "ageDays": 20.603163,
+      "cyclePosition": 0.697689,
+      "illumination": 0.661397,
+      "illuminationPercent": 66.1,
+      "phaseName": "Last Quarter"
+    },
+    "annualSignature": {
+      "calculated": "Equinox entered at Completion Seal · Day 2.",
+      "astronomical": "Last Quarter with approximately 66.1% illumination.",
+      "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
+      "observational": "Passage length: 27 days, 15 hours, 58 minutes. No conclusion until witness records are collected."
+    },
+    "normalizedValues": {
+      "patternCyclePosition": 0.925824,
+      "moonIndex": 12,
+      "dayIndex": 1,
+      "yearProgress": 0.925824,
+      "passageProgress": 1,
+      "equinoxCyclePosition": 0.224044,
+      "lunarCyclePosition": 0.697689,
+      "solarSeasonPosition": 0
+    },
+    "sources": [
+      {
+        "layer": "astronomical-fact",
+        "source": "janmr.com equinoxes and solstices",
+        "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+        "exactUtcInstant": "2025-03-20T09:01:28Z",
+        "precisionSeconds": 1,
+        "sourced": true,
+        "validationStatus": "validated-against-bazica",
+        "validationDeltaSeconds": 2.009,
+        "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+      },
+      {
+        "layer": "pattern-calculation",
+        "source": "pattern-calendar/1.0.0",
+        "sourced": false,
+        "validationStatus": "deterministic-fixed-epoch-arithmetic"
+      },
+      {
+        "layer": "lunar-approximation",
+        "source": "approximate-synodic-phase",
+        "sourceVersion": "13-moons-synodic/1.0.0",
+        "sourced": false,
+        "validationStatus": "approximate"
+      }
+    ],
+    "generatedAt": "2026-07-22T22:25:11.272Z"
+  },
+  {
+    "schemaVersion": "equinox-passage/1.0.0",
+    "astronomyVersion": "astronomy/1.0.0",
+    "calendarVersion": "pattern-calendar/1.0.0",
+    "selectedYear": 2026,
+    "timeZone": "America/Los_Angeles",
+    "boundaryMode": "sunset",
+    "manualSunset": "18:00",
+    "equinox": {
+      "utcInstant": "2026-03-20T14:45:57Z",
+      "localInstant": "2026-03-20T07:45:57",
+      "civilDate": "2026-03-20",
+      "source": "janmr.com equinoxes and solstices",
+      "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+      "precisionSeconds": 1,
+      "claimedPrecision": "±1 second",
+      "status": "sourced",
+      "validationStatus": "validated-against-bazica",
+      "validationDeltaSeconds": 1.471,
+      "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+    },
+    "patternPosition": {
+      "effectiveDate": "2026-03-20",
+      "patternYear": 0,
+      "moon": 13,
+      "moonName": "Completion Seal",
+      "day": 2,
+      "dayOfPatternYear": 338,
+      "weekGate": "Week 1 · Ignition",
+      "archetype": "Witness",
+      "tone": "Witness",
+      "insideCountedYear": true,
+      "isDayOutOfTime": false,
+      "isDeepTimeDay": false
+    },
+    "passage": {
+      "state": "active-passage",
+      "startInstant": "2026-03-20T14:45:57Z",
+      "endInstant": "2026-04-17T01:00:00.000Z",
+      "totalMilliseconds": 2369643000,
+      "totalDays": 27.426424,
+      "elapsedMilliseconds": 422043000,
+      "remainingMilliseconds": 1947600000,
+      "progress": 0.17810404352047968,
+      "civilMidnightsCrossed": 27,
+      "selectedPatternBoundariesCrossed": 28
+    },
+    "lunarLayer": {
+      "source": "approximate-synodic-phase",
+      "sourceVersion": "13-moons-synodic/1.0.0",
+      "status": "approximate",
+      "ageDays": 1.944732,
+      "cyclePosition": 0.065855,
+      "illumination": 0.042196,
+      "illuminationPercent": 4.2,
+      "phaseName": "Waxing Crescent"
+    },
+    "annualSignature": {
+      "calculated": "Equinox entered at Completion Seal · Day 2.",
+      "astronomical": "Waxing Crescent with approximately 4.2% illumination.",
+      "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
+      "observational": "Passage length: 27 days, 10 hours, 14 minutes. No conclusion until witness records are collected."
+    },
+    "normalizedValues": {
+      "patternCyclePosition": 0.925824,
+      "moonIndex": 12,
+      "dayIndex": 1,
+      "yearProgress": 0.925824,
+      "passageProgress": 0.178104,
+      "equinoxCyclePosition": 0.224044,
+      "lunarCyclePosition": 0.065855,
+      "solarSeasonPosition": 0
+    },
+    "sources": [
+      {
+        "layer": "astronomical-fact",
+        "source": "janmr.com equinoxes and solstices",
+        "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
+        "exactUtcInstant": "2026-03-20T14:45:57Z",
+        "precisionSeconds": 1,
+        "sourced": true,
+        "validationStatus": "validated-against-bazica",
+        "validationDeltaSeconds": 1.471,
+        "generatedOrImportedAt": "2026-07-22T00:00:00Z"
+      },
+      {
+        "layer": "pattern-calculation",
+        "source": "pattern-calendar/1.0.0",
+        "sourced": false,
+        "validationStatus": "deterministic-fixed-epoch-arithmetic"
+      },
+      {
+        "layer": "lunar-approximation",
+        "source": "approximate-synodic-phase",
+        "sourceVersion": "13-moons-synodic/1.0.0",
+        "sourced": false,
+        "validationStatus": "approximate"
+      }
+    ],
+    "generatedAt": "2026-07-22T22:25:11.273Z"
+  }
+]

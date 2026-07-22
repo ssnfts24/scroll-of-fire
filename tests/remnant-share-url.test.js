@@ -101,3 +101,27 @@ test("permanent links keep selected tab and display/source modes", () => {
   assert.equal(parsed.displayMode, "professional");
   assert.equal(parsed.source, "daily-mirror");
 });
+
+test("equinox passage links preserve year dataset and boundary parameters", () => {
+  const api = loadUrlModule();
+  const link = api.buildEquinoxShareLink({
+    baseUrl: "https://codexofreality.org/equinox-passage.html",
+    selectedYear: 2026,
+    timeZone: "America/Los_Angeles",
+    boundaryMode: "manual",
+    manualSunset: "18:45",
+    displayMode: "standard",
+    datasetVersion: "equinox-passage/1.0.0",
+    source: "equinox-passage"
+  });
+  const parsed = api.parseEquinoxShareLink(link);
+  assert.equal(JSON.stringify(parsed), JSON.stringify({
+    selectedYear: "2026",
+    timeZone: "America/Los_Angeles",
+    boundaryMode: "manual",
+    manualSunset: "18:45",
+    displayMode: "standard",
+    datasetVersion: "equinox-passage/1.0.0",
+    source: "equinox-passage"
+  }));
+});

@@ -530,6 +530,13 @@
       illuminationPct = Math.max(0, Math.min(100, Math.round(window.CodexState.phaseIllumination * 100)));
     }
 
+    function fromEquinoxEngine() {
+      const engine = window.ScrollOfFireEquinoxPassage;
+      if (!engine || typeof engine.currentShareState !== "function") return null;
+      const shareState = engine.currentShareState();
+      return shareState && shareState.source === "equinox-passage" ? shareState : null;
+    }
+
     const intentionState = window.CodexMemory && typeof window.CodexMemory.getIntention === "function"
       ? window.CodexMemory.getIntention(isoDate || todayISO)
       : null;
@@ -592,7 +599,7 @@
   }
 
   function deriveShareState() {
-    return fromMoonEngine() || fromCodexState();
+    return fromEquinoxEngine() || fromMoonEngine() || fromCodexState();
   }
 
   function textOf(id) {
@@ -830,6 +837,38 @@
     };
   }
 
+  function equinoxPassagePayload() {
+    const share = fromEquinoxEngine();
+    const record = share?.equinoxRecord;
+    const link = share?.link || window.RemnantShareUrl?.buildEquinoxShareLink?.({
+      baseUrl: "./equinox-passage.html",
+      selectedYear: record?.selectedYear,
+      timeZone: record?.timeZone,
+      boundaryMode: record?.boundaryMode,
+      manualSunset: record?.manualSunset,
+      displayMode: "standard",
+      datasetVersion: record?.schemaVersion || "equinox-passage/1.0.0",
+      source: "equinox-passage"
+    }) || `${window.location.origin}${window.location.pathname}`;
+    const summary = record
+      ? [
+        `☲ Equinox Passage ${record.selectedYear}`,
+        `Equinox Gate UTC: ${record.equinox.utcInstant}`,
+        `Local: ${record.equinox.localInstant} ${record.timeZone}`,
+        `Pattern: ${record.patternPosition.moonName || "Outside Gate"}${record.patternPosition.day ? ` · Day ${record.patternPosition.day}` : ""}`,
+        `Passage: ${record.passage.totalDays.toFixed(3)} days`,
+        `Source: ${record.equinox.source} · ±${record.equinox.precisionSeconds}s`
+      ].join("\n")
+      : "Open an Equinox Passage record first.";
+    return {
+      title: "Equinox Passage",
+      signal: summary,
+      standard: summary,
+      full: record ? JSON.stringify(record, null, 2) : summary,
+      link
+    };
+  }
+
   function oracleQuickSealPayload() {
     const quick = normalizeForShare(textOf("quickSeal"), 2400)
       .split("\n")
@@ -911,6 +950,7 @@
       "daily-witness": witnessPayload,
       "year-map": yearMapPayload,
       "generated-seal": generatedSealPayload,
+      "equinox-passage": equinoxPassagePayload,
       "oracle-quick-seal": oracleQuickSealPayload,
       "oracle-daily-mirror": oracleDailyMirrorPayload,
       "oracle-generated-seal": oracleGeneratedSealPayload
@@ -1808,6 +1848,12 @@
 
   function setupMoonListener() {
     document.addEventListener("sof:moon-render", event => {
+      state.lastDetail = event.detail || null;
+      const shareState = deriveShareState();
+      setButtonLabels(shareState);
+    });
+
+    document.addEventListener("sof:equinox-render", event => {
       state.lastDetail = event.detail || null;
       const shareState = deriveShareState();
       setButtonLabels(shareState);
