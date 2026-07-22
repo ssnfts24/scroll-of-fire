@@ -5,11 +5,7 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2TBMEK502C"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
-
-  function gtag() {
-    window.dataLayer.push(arguments);
-  }
-
+  function gtag() { window.dataLayer.push(arguments); }
   gtag("js", new Date());
   gtag("config", "G-2TBMEK502C");
 </script>
@@ -19,308 +15,208 @@
   <meta charset="utf-8">
   <title>The Genesis Oracle — Seal of Becoming</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Map a birth date into the Remnant 13×28 cadence, living laws, flame path, carrier palette, resonant seal, and name code.">
-  <meta name="theme-color" content="#05070d">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://codexofreality.org/genesis-oracle.html">
-
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Scroll of Fire">
-  <meta property="og:title" content="The Genesis Oracle — Seal of Becoming">
-  <meta property="og:description" content="Birth reading through the Remnant 13×28 calendar, living laws, flame path, carriers, and name code.">
-  <meta property="og:url" content="https://codexofreality.org/genesis-oracle.html">
-  <meta property="og:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="The Genesis Oracle — Seal of Becoming">
-  <meta name="twitter:description" content="Map a birth date into the Remnant 13×28 calendar and symbolic reading system.">
-  <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
+  <meta name="description" content="Deterministic layered Genesis Oracle readings using one shared Pattern Calendar engine.">
 
   <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
+  <link rel="stylesheet" href="assets/css/genesis-oracle.css?v=20260722-2">
+  <link rel="stylesheet" href="assets/css/share-day.css?v=2">
+  <script defer src="assets/js/site.js"></script>
 
-  <link rel="preload" href="assets/css/genesis-oracle.css" as="style">
-  <link rel="stylesheet" href="assets/css/genesis-oracle.css">
-    <script defer src="assets/js/site.js"></script>
-  <script defer src="assets/js/calendar-cor.js"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-version.js?v=20260722-2"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-data.js?v=20260722-2"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-format.js?v=20260722-2"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-2"></script>
+  <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-2"></script>
+
+  <script defer src="assets/js/oracle/oracle-version.js?v=20260722-2"></script>
+  <script defer src="assets/js/oracle/oracle-data.js?v=20260722-2"></script>
+  <script defer src="assets/js/oracle/oracle-name-code.js?v=20260722-2"></script>
+  <script defer src="assets/js/oracle/oracle-aspects.js?v=20260722-2"></script>
+  <script defer src="assets/js/oracle/oracle-signature.js?v=20260722-2"></script>
+  <script defer src="assets/js/oracle/oracle-reading.js?v=20260722-2"></script>
+  <script defer src="assets/js/oracle/oracle-compatibility.js?v=20260722-2"></script>
+  <script defer src="assets/js/oracle/oracle-storage.js?v=20260722-2"></script>
+  <script defer src="assets/js/oracle/oracle-engine.js?v=20260722-2"></script>
+
   <script defer src="assets/js/living-codex.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
-<script defer src="assets/js/genesis-oracle.js"></script>
+  <script defer src="assets/js/share/remnant-share-url.js?v=20260722-3"></script>
+  <script defer src="assets/js/share/remnant-share-image.js?v=20260722-3"></script>
+  <script defer src="assets/js/share/remnant-share.js?v=20260722-3"></script>
+  <script defer src="assets/js/share-day.js?v=2"></script>
+  <script defer src="assets/js/genesis-oracle.js?v=20260722-2"></script>
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/animations.css">
 </head>
-
 <body>
-  <div class="living-aura" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <noscript>
-    <div class="noscript-warning">
-      The Genesis Oracle needs JavaScript enabled to calculate readings, save profiles, and export files.
-    </div>
-  </noscript>
-
-    <header class="site-header" data-sof-header>
-    <a class="brand" href="./" aria-label="Scroll of Fire home">
-      <span class="brand-mark" aria-hidden="true">☲</span>
-      <span>
-        <strong>Scroll of Fire</strong>
-        <small>Codex of Reality</small>
-      </span>
-    </a>
-
-    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
-      <span></span><span></span><span></span>
-    </button>
-
+  <header class="site-header" data-sof-header>
+    <a class="brand" href="./" aria-label="Scroll of Fire home"><span class="brand-mark" aria-hidden="true">☲</span><span><strong>Scroll of Fire</strong><small>Codex of Reality</small></span></a>
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle><span></span><span></span><span></span></button>
     <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
-
-      <div class="nav-dropdown" data-dropdown>
-        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-today" data-dropdown-toggle>
-          Today <span aria-hidden="true">▾</span>
-        </button>
-        <div id="nav-today" class="nav-drop-menu">
-          <a href="./moons.html">13 Moons</a>
-          <a href="./ledger.html">Witness Ledger</a>
-          <a href="./hub.html">Year Map</a>
-        </div>
-      </div>
-
-      <div class="nav-dropdown" data-dropdown>
-        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-explore" data-dropdown-toggle>
-          Explore <span aria-hidden="true">▾</span>
-        </button>
-        <div id="nav-explore" class="nav-drop-menu">
-          <a href="./theory.html">Theory</a>
-          <a href="./theory/canon.html">Canon</a>
-          <a href="./genesis-oracle.html">Genesis Oracle</a>
-          <a href="./glossary.html">Glossary</a>
-          <a href="./systems/archive.html">Systems Archive</a>
-        </div>
-      </div>
-
-      <div class="nav-dropdown" data-dropdown>
-        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-build" data-dropdown-toggle>
-          Build <span aria-hidden="true">▾</span>
-        </button>
-        <div id="nav-build" class="nav-drop-menu">
-          <a href="./systems/frequencies.html">Frequency Governance</a>
-          <a href="./systems/t-7.html">T-7 Conduit</a>
-          <a href="./systems/recoder.html">Reality Recoder</a>
-          <a href="./systems/mind-renewal.html">Mind Renewal</a>
-          <a href="./lab.html">Remnant Lab</a>
-          <a href="./invoke.html">Invoke</a>
-          <a href="./systems/witness.html">Witness System</a>
-        </div>
-      </div>
-
-      <div class="nav-dropdown" data-dropdown>
-        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-artifacts" data-dropdown-toggle>
-          Artifacts <span aria-hidden="true">▾</span>
-        </button>
-        <div id="nav-artifacts" class="nav-drop-menu">
-          <a href="./shop.html">Artifact Registry</a>
-          <a href="./circle.html">Covenant Circle</a>
-        </div>
-      </div>
-
-      <div class="nav-dropdown" data-dropdown>
-        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-about" data-dropdown-toggle>
-          About <span aria-hidden="true">▾</span>
-        </button>
-        <div id="nav-about" class="nav-drop-menu">
-          <a href="./start.html">Start Here</a>
-          <a href="./covenant-caravan.html">Covenant Caravan</a>
-          <a href="./teach.html">Manifest</a>
-          <a href="./ethics.html">Ethics</a>
-          <a href="./downloads.html">Downloads</a>
-          <a href="./scroll-of-fire-codex-of-reality-remnant-whitepaper.html">Remnant Whitepaper</a>
-          <a href="./13-moon-whitepaper.html">13 Moons Whitepaper</a>
-          <a href="./about-aaron.html">About Aaron</a>
-        </div>
-      </div>
-
+      <a href="./moons.html">13 Moons</a>
+      <a href="./ledger.html">Witness Ledger</a>
+      <a href="./genesis-oracle.html">Genesis Oracle</a>
+      <a href="./theory.html">Theory</a>
+      <a href="./downloads.html">Downloads</a>
     </nav>
   </header>
-  <section class="living-signal-shell" aria-label="Living signal">
-    <ul class="living-signal-bar" data-living-signal-root>
-      <li class="living-signal-item">Daily signal loads with your local time and Codex data when JavaScript is available.</li>
-      <li class="living-signal-item"><a class="living-signal-link" href="./moons.html">Open 13 Moons</a></li>
-      <li class="living-signal-item"><a class="living-signal-link" href="./ledger.html">Record Witness</a></li>
-    </ul>
-  </section>
 
-  <main id="main">
-    <section class="oracle-hero">
-      <p class="eyebrow">Seal of Becoming</p>
+  <main id="main" class="oracle-main">
+    <section class="oracle-hero panel">
+      <p class="eyebrow">Seal of Becoming · Oracle 2.0</p>
       <h1>The Genesis Oracle</h1>
-    <span class="codex-status" data-status="live">Live</span>
-      <p>
-        Read a birth date through the Remnant system: first New Moon after Spring Equinox,
-        then 13 fixed moons of 28 days, with tone, law, flame path, carrier, and name-code layers.
-      </p>
+      <p>One authoritative shared Pattern Calendar maps civil date to Pattern position. Oracle layers then derive deterministic symbolic reflections from declared inputs and versioned data.</p>
+      <p class="muted">Anchor reference: April 17, 2026 = Moon 1 · Day 1 · Day 1/364.</p>
     </section>
 
-    <section class="oracle-grid" aria-label="Genesis Oracle input and current signature">
-      <form class="panel input-panel" id="oracleForm" autocomplete="on">
-        <h2>Enter Birth Details</h2>
-        <p class="muted">
-          If birth time is unknown, leave it blank. The Oracle uses local noon for stable day mapping.
-        </p>
+    <section class="panel sticky-modes" aria-label="Reading mode controls">
+      <strong>Reading Modes</strong>
+      <div class="actions compact-actions">
+        <button class="btn" type="button" data-mode="quick" aria-pressed="true">Quick Seal</button>
+        <button class="btn" type="button" data-mode="full" aria-pressed="false">Full Reading</button>
+        <button class="btn" type="button" data-mode="daily" aria-pressed="false">Daily Mirror</button>
+        <button class="btn" type="button" data-mode="development" aria-pressed="false">Development Path</button>
+        <button class="btn" type="button" data-mode="technical" aria-pressed="false">Technical View</button>
+      </div>
+    </section>
 
-        <label for="inName">
-          <span>Full Name</span>
-          <input id="inName" name="name" autocomplete="name" placeholder="Aaron Paul Laird">
-        </label>
-
+    <section class="oracle-grid">
+      <form id="oracleForm" class="panel" autocomplete="on">
+        <h2>Birth Details</h2>
+        <label for="inName"><span>Full Name</span><input id="inName" name="name" autocomplete="name" placeholder="Full name"></label>
         <div class="field-row">
-          <label for="inDate">
-            <span>Date of Birth</span>
-            <input id="inDate" name="date" type="date" required>
-          </label>
-
-          <label for="inTime">
-            <span>Time</span>
-            <input id="inTime" name="time" type="time">
-          </label>
+          <label for="inDate"><span>Date of Birth</span><input id="inDate" name="date" type="date" required></label>
+          <label for="inTime"><span>Birth Time (optional)</span><input id="inTime" name="time" type="time"></label>
         </div>
-
-        <label for="inTZ">
-          <span>Time Zone</span>
-          <input id="inTZ" name="tz" value="America/Los_Angeles" placeholder="America/Los_Angeles">
-        </label>
-
+        <label for="inTZ"><span>Time Zone</span><input id="inTZ" name="tz" value="America/Los_Angeles" placeholder="America/Los_Angeles"></label>
+        <div class="field-row">
+          <label for="inBoundary"><span>Boundary Mode</span>
+            <select id="inBoundary" name="boundary">
+              <option value="midnight">Midnight</option>
+              <option value="sunset">Sunset</option>
+              <option value="manual">Manual Boundary</option>
+            </select>
+          </label>
+          <label for="inSunset"><span>Sunset / Manual Time</span><input id="inSunset" name="sunset" type="time" value="18:00"></label>
+        </div>
         <div class="actions">
           <button class="btn primary" type="submit">Read Birth</button>
-          <button class="btn" type="button" id="saveProfile">Save</button>
+          <button class="btn" type="button" id="saveProfile">Save Profile</button>
+          <button class="btn" type="button" id="copyReading">Copy Reading</button>
           <button class="btn" type="button" id="shareLink">Share Link</button>
+          <button class="btn" type="button" id="printReading">Print</button>
         </div>
-
         <p class="status" id="status" role="status" aria-live="polite">Ready.</p>
       </form>
 
-      <aside class="panel signature-panel" aria-label="Current Oracle signature">
-        <p class="eyebrow">Current Signature</p>
-        <div class="sig-symbol" id="sigSymbol" aria-live="polite">י־ה־ו־ה</div>
-        <p id="sigText">Enter details and press Read Birth.</p>
-
-        <div class="meter">
-          <span id="moonName">—</span>
-          <strong id="moonDay">— /28</strong>
-          <div class="bar" aria-hidden="true"><i id="moonProgress"></i></div>
+      <section class="panel" aria-label="Quick Seal" data-reading-mode="quick">
+        <h2>Quick Seal</h2>
+        <div class="actions">
+          <button class="btn" type="button" data-share-day-open data-share-source-id="oracle-quick-seal">Share Quick Seal</button>
         </div>
-      </aside>
+        <pre id="quickSeal" class="mono">Run a reading.</pre>
+      </section>
     </section>
 
-    <section class="panel reading-panel" aria-labelledby="reading-title">
-      <h2 id="reading-title">Your Reading</h2>
-
-      <div class="result-grid">
-        <div><span>Name</span><strong id="outName">—</strong></div>
-        <div><span>Birth</span><strong id="outBirth">—</strong></div>
-        <div><span>13×28</span><strong id="outDate">—</strong></div>
-        <div><span>Week</span><strong id="outWeek">—</strong></div>
-        <div><span>Tone</span><strong id="outTone">—</strong></div>
-        <div><span>Resonant Sum</span><strong id="outResonant">—</strong></div>
+    <section class="panel" data-reading-mode="full">
+      <h2>Generated Seal Visualization</h2>
+      <div class="actions">
+        <button class="btn" type="button" data-share-day-open data-share-source-id="oracle-generated-seal">Share Generated Seal</button>
       </div>
-
-      <div class="tabs" role="tablist" aria-label="Oracle sections">
-        <button role="tab" type="button" aria-selected="true" data-tab="laws">Living Law</button>
-        <button role="tab" type="button" aria-selected="false" data-tab="flame">Flame Path</button>
-        <button role="tab" type="button" aria-selected="false" data-tab="name">Name Code</button>
-        <button role="tab" type="button" aria-selected="false" data-tab="carriers">Carriers</button>
+      <div id="sealCanvasWrap" class="seal-wrap" aria-live="polite"></div>
+      <p id="sealAlt" class="muted">Seal text alternative appears here.</p>
+      <div class="actions">
+        <button class="btn" type="button" id="exportSealSvg">Export Seal SVG</button>
+        <button class="btn" type="button" id="exportSealPng">Export Seal PNG</button>
       </div>
-
-      <article class="tab-panel" id="panel-laws">
-        <h3 id="lawTitle">Living Law</h3>
-        <p id="lawText">—</p>
-        <div class="mini-list" id="allLaws"></div>
-      </article>
-
-      <article class="tab-panel hidden" id="panel-flame">
-        <h3 id="flameTitle">Flame Path</h3>
-        <p id="flameText">—</p>
-        <p id="flamePractice">—</p>
-      </article>
-
-      <article class="tab-panel hidden" id="panel-name">
-        <h3>Name & Letter Code</h3>
-
-        <label for="nameOverride">
-          <span>Override Name</span>
-          <input id="nameOverride" placeholder="Optional name override">
-        </label>
-
-        <button class="btn" id="computeName" type="button">Compute Name Code</button>
-
-        <div class="result-grid compact">
-          <div><span>Latin-Pythagorean</span><strong id="pythCode">—</strong></div>
-          <div><span>Latin A1–Z26</span><strong id="simpleCode">—</strong></div>
-          <div><span>Hebrew</span><strong id="hebrewCode">—</strong></div>
-          <div><span>Covenant Seal</span><strong id="covenantSeal">—</strong></div>
-        </div>
-      </article>
-
-      <article class="tab-panel hidden" id="panel-carriers">
-        <h3>Carrier Palette</h3>
-        <p><strong id="carrierHz">— Hz</strong></p>
-        <p id="carrierText">—</p>
-        <div class="carrier-row" id="carrierRow"></div>
-      </article>
     </section>
 
-    <section class="panel" aria-labelledby="method-title">
-      <h2 id="method-title">How the Genesis Oracle reads your birth</h2>
-      <ol class="clean-list">
-        <li><strong>Anchor:</strong> the Remnant year begins at the first New Moon after Spring Equinox.</li>
-        <li><strong>Cadence:</strong> 13 fixed moons of 28 days create a 364-day counted year.</li>
-        <li><strong>Outside days:</strong> remaining days after Moon 13 sit outside the counted lattice as reset/intercalary days.</li>
-        <li><strong>Mapping:</strong> your birth date maps to Moon 1–13 and Day 1–28, or to an outside-count span.</li>
-        <li><strong>Tone:</strong> the counted index mod 13 gives the Tone of the Day.</li>
-        <li><strong>Resonant Sum:</strong> the digit reduction of YYYY+MM+DD lights the seal.</li>
-      </ol>
+    <section class="panel" data-reading-mode="full">
+      <h2>Core Genesis Signature</h2>
+      <div id="coreSignature" class="kv-grid"></div>
     </section>
 
-    <section class="panel saved-panel" aria-labelledby="saved-title">
-      <h2 id="saved-title">Saved Profiles</h2>
-      <p class="muted">
-        Profiles are saved locally on this device. Export JSON for structured data or Export Text for readable notes.
-      </p>
+    <section class="panel" data-reading-mode="full">
+      <h2>Moon–Day–Tone Reading</h2>
+      <div id="moonDayToneReading" class="kv-grid"></div>
+    </section>
 
+    <section class="panel" data-reading-mode="full">
+      <h2>Name Signature</h2>
+      <div id="nameSignature" class="kv-grid"></div>
+    </section>
+
+    <section class="panel" data-reading-mode="full">
+      <h2>Living Law and Flame Path</h2>
+      <div id="lawFlame" class="kv-grid"></div>
+    </section>
+
+    <section class="panel" data-reading-mode="daily">
+      <h2>Daily Mirror</h2>
+      <p class="muted">mirror-reading/2.0.0 · Symbolic reflection only — not prediction.</p>
+      <div class="actions">
+        <button class="btn" type="button" data-share-day-open data-share-source-id="oracle-daily-mirror">Share Birth Signature × Today</button>
+      </div>
+      <label for="mirrorProfile"><span>Mirror Through My Seal (optional saved profile)</span><select id="mirrorProfile"><option value="">No saved profile selected</option></select></label>
+      <div id="todayTransit" class="kv-grid"></div>
+    </section>
+
+    <section class="panel" data-reading-mode="development">
+      <h2>Development Path</h2>
+      <div id="developmentPath" class="kv-grid"></div>
+    </section>
+
+    <section class="panel" data-reading-mode="technical">
+      <h2>Technical / Methods View</h2>
+      <pre id="methodsSummary" class="mono">Run a reading to view concise method summary.</pre>
+      <details>
+        <summary>Raw methods and derivations</summary>
+        <details>
+          <summary>Raw JSON</summary>
+          <pre id="methodsRaw" class="mono">Run a reading to view formulas, raw values, and versions.</pre>
+        </details>
+      </details>
+    </section>
+
+    <section class="panel">
+      <h2>Saved Profiles</h2>
+      <p class="muted">New profiles are saved as Oracle 2.0 records. Legacy profiles are kept and can be recalculated on demand.</p>
       <div class="actions">
         <button class="btn" type="button" id="exportJson">Export JSON</button>
-        <button class="btn" type="button" id="exportText">Export Text</button>
-        <button class="btn danger" type="button" id="clearSaved">Clear Saved</button>
+        <button class="btn" type="button" id="exportText">Export Readable Text</button>
+        <label class="btn upload-btn" for="importJson">Import JSON</label>
+        <input id="importJson" type="file" accept="application/json" hidden>
+        <button class="btn danger" type="button" id="clearSaved">Clear Oracle 2.0 Saved</button>
       </div>
-
-      <div class="table-wrap" tabindex="0" aria-label="Saved Genesis Oracle profiles table">
+      <div class="table-wrap" tabindex="0">
         <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Date</th>
-              <th>Moon</th>
-              <th>Day</th>
-              <th>Tone</th>
-              <th>Carrier</th>
-            </tr>
-          </thead>
-          <tbody id="savedRows">
-            <tr><td colspan="6">No saved profiles yet.</td></tr>
-          </tbody>
+          <thead><tr><th>Name</th><th>Date</th><th>Moon</th><th>Day</th><th>Tone</th><th>Calendar</th><th>Type</th></tr></thead>
+          <tbody id="savedRows"><tr><td colspan="7">No saved profiles yet.</td></tr></tbody>
         </table>
       </div>
+      <div class="field-row">
+        <label for="legacyRecalc"><span>Legacy Profile</span><select id="legacyRecalc"></select></label>
+        <label><span>Action</span><button class="btn" type="button" id="runLegacyRecalc">Recalculate with Oracle 2.0</button></label>
+      </div>
     </section>
-  
+
+    <section class="panel">
+      <h2>Optional Profile Comparison</h2>
+      <div class="field-row">
+        <label for="compareA"><span>Profile A</span><select id="compareA"></select></label>
+        <label for="compareB"><span>Profile B</span><select id="compareB"></select></label>
+      </div>
+      <div class="actions"><button class="btn" type="button" id="runCompare">Compare Profiles</button></div>
+      <pre id="compareResult" class="mono">Run comparison after selecting two Oracle 2.0 profiles.</pre>
+    </section>
+
     <div class="section-shell">
       <div class="record-witness-band" data-witness-context>
         <span class="record-witness-icon" aria-hidden="true">Ξ</span>
-        <div class="record-witness-text">
-          <strong>Record in Witness Ledger</strong>
-          <span>Save an observation, insight, or result from this page to your local Codex.</span>
-        </div>
+        <div class="record-witness-text"><strong>Record in Witness Ledger</strong><span>Save an observation, insight, or result from this page to your local Codex.</span></div>
         <a class="record-witness-link" href="./ledger.html" data-witness-link>Record</a>
       </div>
     </div>
@@ -330,18 +226,12 @@
     <nav aria-label="Footer navigation">
       <a href="./start.html">Start</a>
       <a href="./moons.html">13 Moons</a>
-      <a href="./covenant-caravan.html">Caravan</a>
-      <a href="./teach.html">Manifest</a>
-      <a href="./shop.html">Artifacts</a>
-      <a href="./hub.html">Hub</a>
       <a href="./ledger.html">Ledger</a>
-      <a href="./systems/frequencies.html">Frequency</a>
       <a href="./genesis-oracle.html">Oracle</a>
       <a href="./theory.html">Theory</a>
       <a href="./ethics.html">Ethics</a>
-      <a href="./sitemap.xml">Sitemap</a>
     </nav>
-    <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
+    <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality</p>
   </footer>
 </body>
-        </html>
+</html>

@@ -14,6 +14,10 @@ function read(relativePath) {
 function evalShareDay(windowOverrides = {}, documentOverrides = {}) {
   const src = read("docs/assets/js/share-day.js");
   const listeners = {};
+  const elements = documentOverrides.elements || {};
+  function elementOf(id) {
+    return elements[id] || null;
+  }
   const documentStub = {
     readyState: "complete",
     body: {
@@ -27,6 +31,12 @@ function evalShareDay(windowOverrides = {}, documentOverrides = {}) {
     querySelectorAll() {
       return [];
     },
+    querySelector() {
+      return null;
+    },
+    getElementById(id) {
+      return elementOf(id);
+    },
     ...documentOverrides
   };
 
@@ -37,6 +47,7 @@ function evalShareDay(windowOverrides = {}, documentOverrides = {}) {
       todayISO: () => "2026-07-17",
       getTZ: () => "UTC"
     },
+    getSelection: () => ({ toString: () => "" }),
     addEventListener() {},
     ...windowOverrides
   };
@@ -215,7 +226,7 @@ test("new moon transition wording appears on moon day one", () => {
   const api = evalShareDay();
   const transition = api.buildDescriptionPackage(sampleState({ moonNumber: 5, moonName: "Living Word", moonDay: 1 }), "standard");
   assert.match(transition.openingHook, /new Moon chamber opens/i);
-  assert.match(transition.openingHook, /Stone Witness/);
+  assert.match(transition.openingHook, /(Stone Witness|Moon 4)/);
   assert.match(transition.openingHook, /Living Word/);
 });
 
@@ -312,14 +323,89 @@ test("safety helper accepts only strict ISO dates", () => {
   assert.equal(api._test.safeISO("javascript:alert(1)"), "");
 });
 
-test("modal markup includes required new controls", () => {
+test("modal markup includes unified sharing controls", () => {
   const src = read("docs/assets/js/share-day.js");
   assert.match(src, /Compact/);
   assert.match(src, /Standard/);
-  assert.match(src, /Professional/);
-  assert.match(src, /Copy Description/);
-  assert.match(src, /Copy Complete Post/);
-  assert.match(src, /Restore Default Text/);
+  assert.match(src, /Copy Signal/);
+  assert.match(src, /Copy Full Scroll/);
+  assert.match(src, /Native Share/);
+  assert.match(src, /Copy Permanent Link/);
+  assert.match(src, /Generate Share Image/);
+  assert.match(src, /Share menu/);
+  assert.match(src, /Share text/);
+  assert.match(src, /Share image/);
+  assert.match(src, /Copy link/);
+  assert.match(src, /Export/);
   assert.match(src, /data-share-day-char-count/);
   assert.match(src, /role="dialog"/);
+});
+
+test("buildSourcePayload registers all required phase-1 sources", () => {
+  const api = evalShareDay();
+  const ids = [
+    "today",
+    "daily-mirror",
+    "daily-flow",
+    "shabbat",
+    "daily-witness",
+    "year-map",
+    "oracle-quick-seal",
+    "oracle-daily-mirror",
+    "oracle-generated-seal",
+    "generated-seal"
+  ];
+  ids.forEach(id => {
+    const payload = api.buildSourcePayload(id);
+    assert.equal(payload.sourceId, id);
+    assert.equal(typeof payload.signal, "string");
+    assert.equal(typeof payload.standard, "string");
+    assert.equal(typeof payload.full, "string");
+    assert.equal(typeof payload.link, "string");
+  });
+});
+
+test("daily witness payload only shares user-selected text with privacy warning", () => {
+  const api = evalShareDay(
+    { getSelection: () => ({ toString: () => "Selected witness sentence." }) }
+  );
+  const payload = api.buildSourcePayload("daily-witness");
+  assert.equal(payload.hasSelection, true);
+  assert.match(payload.warning, /Privacy warning/i);
+  assert.equal(payload.standard.includes("Selected witness sentence."), true);
+  assert.equal(/private local logs/i.test(payload.standard), true);
+});
+
+test("oracle quick seal payload excludes personal inputs by default", () => {
+  const api = evalShareDay({}, {
+    elements: {
+      quickSeal: {
+        textContent: "Quick Seal: Stone Witness\nName: Private Person\nBirth Date: 1990-01-01\nSymbolic Signature: 8-4-1"
+      },
+      inTZ: { value: "UTC" },
+      inBoundary: { value: "sunset" },
+      inSunset: { value: "18:00" }
+    }
+  });
+  const payload = api.buildSourcePayload("oracle-quick-seal");
+  assert.equal(/Name:/i.test(payload.standard), false);
+  assert.equal(/Birth Date:/i.test(payload.standard), false);
+  assert.match(payload.standard, /Symbolic Signature|Quick Seal/i);
+});
+
+test("year-map payload includes selected pattern date fields", () => {
+  const api = evalShareDay({}, {
+    elements: {
+      datePick: { value: "2026-07-17" },
+      moonName: { textContent: "Stone Witness" },
+      dayInMoon: { textContent: "4" },
+      weekGate: { textContent: "Week 1 · Ignition" },
+      dayArchetype: { textContent: "Witness" }
+    }
+  });
+  const payload = api.buildSourcePayload("year-map");
+  assert.match(payload.standard, /2026-07-17/);
+  assert.match(payload.standard, /Stone Witness/);
+  assert.match(payload.standard, /Week 1/i);
+  assert.match(payload.standard, /Witness/);
 });

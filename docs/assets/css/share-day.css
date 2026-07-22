@@ -91,7 +91,7 @@
 
 .share-day-format {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.55rem;
   margin-bottom: 0.8rem;
 }
@@ -200,6 +200,40 @@
   font-size: 0.85rem;
 }
 
+.share-day-mobile-menu {
+  display: none;
+  margin-top: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  padding: 0.45rem 0.55rem;
+}
+
+.share-day-mobile-menu summary {
+  cursor: pointer;
+  color: #f3c97a;
+  font-weight: 600;
+}
+
+.share-day-mobile-group {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
+}
+
+.share-day-mobile-group strong {
+  color: #d6deea;
+  font-size: 0.84rem;
+}
+
+.share-day-mobile-group button {
+  min-height: 40px;
+  border-radius: 10px;
+  border: 1px solid rgba(243, 201, 122, 0.34);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f4f1e8;
+  font: inherit;
+}
+
 @media (max-width: 640px) {
   .share-day-dialog {
     width: 100%;
@@ -215,5 +249,13 @@
   .share-day-mode,
   .share-day-actions {
     grid-template-columns: 1fr;
+  }
+
+  .share-day-actions {
+    display: none;
+  }
+
+  .share-day-mobile-menu {
+    display: block;
   }
 }

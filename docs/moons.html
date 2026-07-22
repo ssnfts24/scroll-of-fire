@@ -127,14 +127,14 @@
 
   <link
     rel="stylesheet"
-    href="assets/css/moons.css?v=20260718-1"
+    href="assets/css/moons.css?v=20260722-1"
   >
 
   <link
     rel="stylesheet"
-    href="assets/css/astrology.css?v=20260718-1"
+    href="assets/css/astrology.css?v=20260722-1"
   >
-  <link rel="stylesheet" href="assets/css/pwa.css?v=20260718-1">
+  <link rel="stylesheet" href="assets/css/pwa.css?v=20260722-1">
 
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/share-day.css?v=1">
@@ -143,10 +143,6 @@
     window.SOF_MOONS_CONFIG = Object.freeze({
       dayBoundary: "sunset",
       fallbackSunset: "18:00",
-
-      anchorOverrides: {
-        2026: "2026-04-17"
-      },
 
       shabbat: {
         enabled: true,
@@ -218,9 +214,11 @@
   </script>
 
   <script defer src="assets/js/site.js"></script>
-  <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/codex-memory.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
+  <script defer src="assets/js/share/remnant-share-url.js"></script>
+  <script defer src="assets/js/share/remnant-share-image.js"></script>
+  <script defer src="assets/js/share/remnant-share.js"></script>
   <script defer src="assets/js/share-day.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
   <script defer src="assets/js/motion.js"></script>
@@ -610,6 +608,7 @@
             type="button"
             data-share-day-open
             data-share-source="moons"
+            data-share-source-id="today"
             aria-label="Share today's Remnant 13 Moons reading as a social card"
           >
             ✦ Share Today
@@ -895,6 +894,7 @@
                 type="button"
                 data-share-day-open
                 data-share-source="moons"
+                data-share-source-id="today"
               >
                 Share Today
               </button>
@@ -1071,6 +1071,15 @@
               type="button"
             >
               Build Today’s Mirror
+            </button>
+            <button
+              class="lab-btn ghost"
+              type="button"
+              data-share-day-open
+              data-share-source-id="shabbat"
+              aria-label="Share Shabbat guidance"
+            >
+              Share
             </button>
           </div>
         </section>
@@ -1313,6 +1322,15 @@
                 >
                   Check Patterns
                 </button>
+                <button
+                  class="lab-btn ghost"
+                  type="button"
+                  data-share-day-open
+                  data-share-source-id="daily-flow"
+                  aria-label="Share Daily Flow"
+                >
+                  Share
+                </button>
               </div>
             </div>
 
@@ -1551,6 +1569,15 @@
                 >
                   Copy Reading
                 </button>
+                <button
+                  class="lab-btn ghost"
+                  type="button"
+                  data-share-day-open
+                  data-share-source-id="daily-mirror"
+                  aria-label="Share Daily Mirror reading"
+                >
+                  Share
+                </button>
               </div>
             </div>
           </article>
@@ -1742,6 +1769,15 @@
                 type="button"
               >
                 Clear
+              </button>
+              <button
+                class="lab-btn ghost"
+                type="button"
+                data-share-day-open
+                data-share-source-id="daily-witness"
+                aria-label="Share selected Daily Witness text only"
+              >
+                Share Selection
               </button>
             </div>
           </article>
@@ -1985,6 +2021,17 @@
           </p>
 
           <p id="outsideInfo" class="pill">—</p>
+          <div class="btnrow">
+            <button
+              class="lab-btn ghost"
+              type="button"
+              data-share-day-open
+              data-share-source-id="year-map"
+              aria-label="Share selected Year Map date"
+            >
+              Share Selected Date
+            </button>
+          </div>
 
           <div class="scroller">
             <table class="year-map">
@@ -2049,6 +2096,15 @@
                 type="button"
               >
                 Copy Seal
+              </button>
+              <button
+                class="lab-btn ghost"
+                type="button"
+                data-share-day-open
+                data-share-source-id="generated-seal"
+                aria-label="Share generated seal"
+              >
+                Share
               </button>
             </div>
           </article>
@@ -2441,20 +2497,27 @@
 
   <p id="appStatusLive" class="visually-hidden" role="status" aria-live="polite"></p>
 
-  <script src="assets/js/moons-version.js?v=20260718-1"></script>
-  <script src="assets/js/moons-migrations.js?v=20260718-1"></script>
-  <script src="assets/js/moons-storage.js?v=20260718-1"></script>
+  <script src="assets/js/moons-version.js?v=20260722-1"></script>
+  <script src="assets/js/moons-migrations.js?v=20260722-1"></script>
+  <script src="assets/js/moons-storage.js?v=20260722-1"></script>
 
-  <!-- Main calendar engine -->
-  <script src="assets/js/moons.js?v=20260718-1"></script>
+  <!-- Shared fixed Pattern Calendar engine -->
+  <script src="assets/js/calendar/pattern-calendar-version.js?v=20260722-1"></script>
+  <script src="assets/js/calendar/pattern-calendar-data.js?v=20260722-1"></script>
+  <script src="assets/js/calendar/pattern-calendar-format.js?v=20260722-1"></script>
+  <script src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-1"></script>
+  <script src="assets/js/calendar/pattern-calendar.js?v=20260722-1"></script>
+
+  <!-- Main calendar app -->
+  <script src="assets/js/moons.js?v=20260722-1"></script>
 
   <!-- Astrology and planetary mirror -->
-  <script src="assets/js/astrology.js?v=20260718-1"></script>
+  <script src="assets/js/astrology.js?v=20260722-1"></script>
 
   <!-- Remnant artwork integration -->
-  <script src="assets/js/moons-images.js?v=20260718-1"></script>
-  <script src="assets/js/pwa-refresh.js?v=20260718-1"></script>
-  <script src="assets/js/pwa.js?v=20260718-1"></script>
+  <script src="assets/js/moons-images.js?v=20260722-1"></script>
+  <script src="assets/js/pwa-refresh.js?v=20260722-1"></script>
+  <script src="assets/js/pwa.js?v=20260722-1"></script>
 
   <!-- Page-specific interaction layer -->
   <script>
@@ -3153,7 +3216,9 @@ Let the next step be firm.`;
           async function () {
             const reading = buildMirror();
 
-            if (navigator.clipboard) {
+            if (window.RemnantShare && window.RemnantShare.copyFullScroll) {
+              await window.RemnantShare.copyFullScroll(reading, "", []);
+            } else if (navigator.clipboard) {
               await navigator.clipboard.writeText(reading);
             }
 
