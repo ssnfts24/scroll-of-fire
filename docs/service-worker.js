@@ -48,6 +48,18 @@ const mandatoryPaths = [
   "./assets/img/moons/app/icon-maskable-512.png"
 ];
 const optionalPaths = [
+  "./genesis-oracle.html",
+  "./assets/css/genesis-oracle.css",
+  "./assets/js/genesis-oracle.js",
+  "./assets/js/oracle/oracle-version.js",
+  "./assets/js/oracle/oracle-data.js",
+  "./assets/js/oracle/oracle-name-code.js",
+  "./assets/js/oracle/oracle-aspects.js",
+  "./assets/js/oracle/oracle-signature.js",
+  "./assets/js/oracle/oracle-reading.js",
+  "./assets/js/oracle/oracle-compatibility.js",
+  "./assets/js/oracle/oracle-storage.js",
+  "./assets/js/oracle/oracle-engine.js",
   "./assets/img/moons/app/apple-touch-icon.png",
   "./assets/img/moons/app/screenshot-mobile-390x844.png",
   "./assets/img/moons/app/screenshot-mobile-430x932.png",

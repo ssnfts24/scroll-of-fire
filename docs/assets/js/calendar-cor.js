@@ -23,25 +23,9 @@
     }
   };
 
-  const MOONS = [
-    ["Seed Flame", "Beginning, ignition, first witness"],
-    ["Root Waters", "Memory, cleansing, emotional ground"],
-    ["Breath Gate", "Word, air, signal, exchange"],
-    ["Stone Witness", "Body, structure, faithful record"],
-    ["Living Word", "Speech, vow, creative command"],
-    ["Fire Trial", "Testing, courage, purification"],
-    ["Crown Balance", "Completion, justice, centered rule"],
-    ["Deep Mirror", "Reflection, hidden pattern, inner waters"],
-    ["Return Path", "Restoration, repentance, spiral home"],
-    ["Builder’s Hand", "Craft, repair, stewardship"],
-    ["Star Remembrance", "Inheritance, names, celestial memory"],
-    ["River of Signs", "Movement, omens, living flow"],
-    ["Completion Seal", "Harvest, sealing, preparation for reset"]
-  ];
-
-  const TONES = MOONS.map(function (moon) {
-    return moon[0];
-  });
+  const SHARED_MOONS = Array.isArray(globalThis.PatternCalendarData?.moons)
+    ? globalThis.PatternCalendarData.moons
+    : [];
 
   function pad(value) {
     return String(value).padStart(2, "0");
@@ -154,7 +138,57 @@
     return date < candidate ? anchorForYear(year - 1) : candidate;
   }
 
+  function mapWithSharedCalendar(inputISO, tz) {
+    if (!globalThis.PatternCalendar) return null;
+    const zone = tz || getTZ();
+    const iso = inputISO || todayISO(zone);
+    const mapped = globalThis.PatternCalendar.fromCivilDate({
+      date: iso,
+      timeZone: zone,
+      boundaryMode: CONFIG.dayBoundary === "midnight" ? "midnight" : "sunset",
+      sunsetTime: CONFIG.fallbackSunset
+    });
+    const inside = Boolean(mapped.insideCountedYear);
+    if (!inside) {
+      const label = mapped.isDeepTimeDay ? "Deep Time Day" : "Day Out of Time";
+      return {
+        iso: iso,
+        tz: zone,
+        isDayOutOfTime: true,
+        label: label,
+        moon: null,
+        moonName: label,
+        moonEssence: "Outside the counted 13-moon cycle",
+        day: null,
+        week: null,
+        tone: null,
+        toneName: "Outside Count",
+        dayIndex: 364 + Math.max(0, Number(mapped.intercalaryIndex || 1) - 1),
+        year: mapped.patternYear
+      };
+    }
+    const moonMeta = SHARED_MOONS[mapped.moon - 1] || { name: mapped.moonName, essence: "" };
+    return {
+      iso: iso,
+      tz: zone,
+      isDayOutOfTime: false,
+      moon: mapped.moon,
+      moonName: mapped.moonName,
+      moonEssence: moonMeta.essence || "",
+      day: mapped.day,
+      week: mapped.weekOfMoon,
+      tone: ((mapped.dayOfPatternYear - 1) % 13) + 1,
+      toneName: mapped.moonName,
+      dayIndex: mapped.dayOfPatternYear - 1,
+      year: mapped.patternYear,
+      label: `${mapped.moonName} Moon · Day ${mapped.day} · Tone ${((mapped.dayOfPatternYear - 1) % 13) + 1}`
+    };
+  }
+
   function get13Moon(inputISO, tz) {
+    const shared = mapWithSharedCalendar(inputISO, tz);
+    if (shared) return shared;
+
     const zone = tz || getTZ();
     const iso = inputISO || todayISO(zone);
     const date = wallDate(iso);
@@ -193,15 +227,15 @@
       tz: zone,
       isDayOutOfTime: false,
       moon: moon,
-      moonName: MOONS[moon - 1][0],
-      moonEssence: MOONS[moon - 1][1],
+      moonName: SHARED_MOONS[moon - 1]?.name || "Legacy Moon",
+      moonEssence: SHARED_MOONS[moon - 1]?.essence || "",
       day: day,
       week: week,
       tone: tone,
-      toneName: TONES[tone - 1],
+      toneName: SHARED_MOONS[tone - 1]?.name || "Legacy Tone",
       dayIndex: dayIndex,
       year: anchor.getUTCFullYear() + "/" + (anchor.getUTCFullYear() + 1),
-      label: MOONS[moon - 1][0] + " Moon · Day " + day + " · Tone " + tone
+      label: (SHARED_MOONS[moon - 1]?.name || "Legacy Moon") + " Moon · Day " + day + " · Tone " + tone
     };
   }
 
