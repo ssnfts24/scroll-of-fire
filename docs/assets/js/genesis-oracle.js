@@ -9,9 +9,9 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  const MOONS = globalThis.PatternCalendarData?.moonNames || [
-    "Seed Flame", "Root Waters", "Breath Gate", "Stone Witness", "Living Word", "Fire Trial", "Crown Balance", "Deep Mirror", "Return Path", "Builder’s Hand", "Star Remembrance", "River of Signs", "Completion Seal"
-  ];
+  const MOONS = Array.isArray(globalThis.PatternCalendarData?.moonNames)
+    ? globalThis.PatternCalendarData.moonNames
+    : [];
 
   const LAWS = [
     ["Breath", "Begin clean. Receive before forcing."],
@@ -237,7 +237,7 @@
 
     const moonName = mapped.outside
       ? (mapped.isDeepTimeDay ? "Deep Time Day" : "Day Out of Time")
-      : (mapped.moonName || MOONS[mapped.moon - 1]);
+      : (mapped.moonName || MOONS[mapped.moon - 1] || `Moon ${mapped.moon}`);
     const moonDay = mapped.outside ? `Intercalary ${mapped.outsideDay}` : mapped.day;
     const week = mapped.outside ? "Intercalary" : `Week ${mapped.week}`;
 

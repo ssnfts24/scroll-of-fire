@@ -157,7 +157,7 @@ test("missing optional image does not block install or offline startup", async (
       type: "APP_SHELL_READY",
       appVersion: "2026.07.16.3",
       serviceWorkerBuild: "2026.07.16.3",
-      mandatoryAssetCount: 26
+      mandatoryAssetCount: 30
     }
   );
   await activateWorker(harness);
@@ -356,7 +356,7 @@ function refreshHarness({ online = true, scenario = "success" } = {}) {
     type: "APP_SHELL_READY",
     appVersion: version,
     serviceWorkerBuild: build,
-    mandatoryAssetCount: 26
+    mandatoryAssetCount: 30
   });
   const setWorkerState = state => {
     worker.state = state;
@@ -376,7 +376,7 @@ function refreshHarness({ online = true, scenario = "success" } = {}) {
             type: "APP_SHELL_FAILED",
             appVersion: "2026.07.16.3",
             serviceWorkerBuild: "2026.07.16.3",
-            mandatoryAssetCount: 26
+            mandatoryAssetCount: 30
           });
           setWorkerState("redundant");
           return;
