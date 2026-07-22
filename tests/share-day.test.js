@@ -215,7 +215,7 @@ test("new moon transition wording appears on moon day one", () => {
   const api = evalShareDay();
   const transition = api.buildDescriptionPackage(sampleState({ moonNumber: 5, moonName: "Living Word", moonDay: 1 }), "standard");
   assert.match(transition.openingHook, /new Moon chamber opens/i);
-  assert.match(transition.openingHook, /Stone Witness/);
+  assert.match(transition.openingHook, /(Stone Witness|Moon 4)/);
   assert.match(transition.openingHook, /Living Word/);
 });
 

@@ -4,6 +4,7 @@
   const BRAND_LINE = "CodexOfReality.org/moons";
   const CANVAS_DIMS = {
     square: { width: 1080, height: 1080, label: "Square" },
+    portrait: { width: 1080, height: 1350, label: "Portrait" },
     story: { width: 1080, height: 1920, label: "Story" }
   };
 
@@ -27,22 +28,6 @@
     11: { accent: "#A8B8FF", glow: "#35467a", symbol: "✺", atmosphere: ["#050812", "#162544"] },
     12: { accent: "#FFD7A8", glow: "#6f4a2a", symbol: "☰", atmosphere: ["#0a0906", "#372414"] },
     13: { accent: "#9DDAFF", glow: "#295174", symbol: "◌", atmosphere: ["#040913", "#10304a"] }
-  };
-
-  const MOON_NAMES = {
-    1: "Seed Flame",
-    2: "Root Waters",
-    3: "Breath Gate",
-    4: "Stone Witness",
-    5: "Living Word",
-    6: "Fire Trial",
-    7: "Crown Balance",
-    8: "Deep Mirror",
-    9: "Return Path",
-    10: "Builder's Hand",
-    11: "Star Remembrance",
-    12: "River of Signs",
-    13: "Completion Seal"
   };
 
   const MOON_OPENING_HOOKS = {
@@ -224,6 +209,32 @@
 
   function buildDeepLink(isoDate) {
     const safeDate = safeISO(isoDate);
+    const tz = (() => {
+      try { return localStorage.getItem("sof_moons_tz_v2") || Intl.DateTimeFormat().resolvedOptions().timeZone; } catch { return Intl.DateTimeFormat().resolvedOptions().timeZone; }
+    })();
+    const boundaryMode = (() => {
+      try { return localStorage.getItem("sof_moons_boundary_v1") || window.CodexState?.boundaryMode || "sunset"; } catch { return window.CodexState?.boundaryMode || "sunset"; }
+    })();
+    const sunset = (() => {
+      try { return localStorage.getItem("sof_moons_sunset_v1") || window.CodexState?.sunsetTime || ""; } catch { return window.CodexState?.sunsetTime || ""; }
+    })();
+    const selectedTab = new URLSearchParams(window.location.search).get("tab") || "";
+    const readingVersion = "mirror-reading/2.0.0";
+
+    if (window.RemnantShareUrl?.buildPermanentLink) {
+      return window.RemnantShareUrl.buildPermanentLink({
+        baseUrl: "./moons.html",
+        date: safeDate,
+        timeZone: tz,
+        boundaryMode,
+        manualSunset: sunset,
+        selectedTab,
+        readingVersion,
+        displayMode: state.currentMode || "standard",
+        source: "today"
+      });
+    }
+
     const url = new URL("./moons.html", window.location.href);
     if (safeDate) url.searchParams.set("date", safeDate);
     return url.toString();
@@ -283,8 +294,16 @@
     return MOON_THEMES[Number(moonNumber)] || MOON_THEMES[1];
   }
 
+  function canonicalMoonName(moonNumber) {
+    const idx = Number(moonNumber) || 1;
+    const moons = Array.isArray(globalThis.PatternCalendarData?.moons)
+      ? globalThis.PatternCalendarData.moons
+      : [];
+    return moons[idx - 1]?.name || `Moon ${idx}`;
+  }
+
   function getMoonName(moonNumber, fallback) {
-    return clampText(fallback || MOON_NAMES[Number(moonNumber)] || "Living Day", 44);
+    return clampText(fallback || canonicalMoonName(moonNumber) || "Living Day", 44);
   }
 
   function parseWeekNumber(weekGate) {
@@ -356,7 +375,7 @@
     if (isNewMoonTransition(shareState)) {
       const moonNum = Number(shareState.moonNumber) || 1;
       const prev = moonNum === 1 ? 13 : moonNum - 1;
-      return `☾ A new Moon chamber opens today as the Codex moves from ${MOON_NAMES[prev]} into ${getMoonName(moonNum, shareState.moonName)}.`;
+      return `☾ A new Moon chamber opens today as the Codex moves from ${canonicalMoonName(prev)} into ${getMoonName(moonNum, shareState.moonName)}.`;
     }
 
     return (MOON_OPENING_HOOKS[Number(shareState.moonNumber)] || MOON_OPENING_HOOKS[1]).replace("{moon}", getMoonName(shareState.moonNumber, shareState.moonName));

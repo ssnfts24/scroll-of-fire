@@ -40,6 +40,9 @@
 
   <script defer src="assets/js/living-codex.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
+  <script defer src="assets/js/share/remnant-share-url.js?v=20260722-3"></script>
+  <script defer src="assets/js/share/remnant-share-image.js?v=20260722-3"></script>
+  <script defer src="assets/js/share/remnant-share.js?v=20260722-3"></script>
   <script defer src="assets/js/genesis-oracle.js?v=20260722-2"></script>
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/animations.css">
@@ -144,8 +147,9 @@
     </section>
 
     <section class="panel" data-reading-mode="daily">
-      <h2>Birth Signature × Today</h2>
-      <p class="muted">Symbolic reflection only — not prediction.</p>
+      <h2>Daily Mirror</h2>
+      <p class="muted">mirror-reading/2.0.0 · Symbolic reflection only — not prediction.</p>
+      <label for="mirrorProfile"><span>Mirror Through My Seal (optional saved profile)</span><select id="mirrorProfile"><option value="">No saved profile selected</option></select></label>
       <div id="todayTransit" class="kv-grid"></div>
     </section>
 
@@ -158,8 +162,11 @@
       <h2>Technical / Methods View</h2>
       <pre id="methodsSummary" class="mono">Run a reading to view concise method summary.</pre>
       <details>
-        <summary>Raw JSON (expanded methods and derivations)</summary>
-        <pre id="methodsRaw" class="mono">Run a reading to view formulas, raw values, and versions.</pre>
+        <summary>Raw methods and derivations</summary>
+        <details>
+          <summary>Raw JSON</summary>
+          <pre id="methodsRaw" class="mono">Run a reading to view formulas, raw values, and versions.</pre>
+        </details>
       </details>
     </section>
 

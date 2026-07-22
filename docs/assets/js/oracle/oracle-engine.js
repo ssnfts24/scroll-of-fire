@@ -1,6 +1,9 @@
 (() => {
   "use strict";
 
+  const SYNODIC_MONTH = 29.530588853;
+  const KNOWN_NEW_MOON = Date.UTC(2000, 0, 6, 18, 14, 0);
+
   function parseBirthDateParts(dateStr) {
     const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr || "");
     if (!match) return null;
@@ -11,13 +14,143 @@
     };
   }
 
-  function todayPattern({ timeZone, boundaryMode, sunsetTime }) {
+  function moonPhaseName(dateLike) {
+    const date = dateLike instanceof Date ? dateLike : new Date(dateLike);
+    const noon = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 12, 0, 0);
+    const age = (((noon - KNOWN_NEW_MOON) / 86400000) % SYNODIC_MONTH + SYNODIC_MONTH) % SYNODIC_MONTH;
+
+    if (age < 1.2 || age > 28.3) return "New Moon";
+    if (age < 6.4) return "Waxing Crescent";
+    if (age < 8.4) return "First Quarter";
+    if (age < 13.8) return "Waxing Gibbous";
+    if (age < 16.2) return "Full Moon";
+    if (age < 21.6) return "Waning Gibbous";
+    if (age < 23.6) return "Last Quarter";
+    return "Waning Crescent";
+  }
+
+  function shabbatState(dateLike) {
+    const date = dateLike instanceof Date ? dateLike : new Date(dateLike);
+    const weekday = date.getUTCDay();
+    if (weekday === 5) return "Preparation Gate";
+    if (weekday === 6) return "Shabbat · Rest";
+    if (weekday === 0) return "Return Gate";
+    return "Ordinary Day";
+  }
+
+  function todayPattern({ now, timeZone, boundaryMode, sunsetTime }) {
     return globalThis.PatternCalendar.fromCivilDate({
-      date: new Date(),
+      date: now,
       timeZone,
       boundaryMode,
       sunsetTime
     });
+  }
+
+  function compareSealProfiles(birthProfile, currentProfile) {
+    if (!birthProfile || !currentProfile) return null;
+
+    const sameMoon = birthProfile.patternPosition.moonNumber === currentProfile.patternPosition.moonNumber;
+    const sameDay = birthProfile.patternPosition.dayArchetype?.name === currentProfile.patternPosition.dayArchetype?.name;
+    const sameTone = birthProfile.coreSignature.tone === currentProfile.coreSignature.tone;
+    const sameElement = birthProfile.coreSignature.element.moonElement === currentProfile.coreSignature.element.moonElement;
+    const sameWeek = birthProfile.patternPosition.weekGate.title === currentProfile.patternPosition.weekGate.title;
+
+    const support = [];
+    const friction = [];
+
+    if (sameMoon) support.push("Birth Moon aligns with current Moon.");
+    else friction.push("Birth Moon differs from current Moon rhythm.");
+
+    if (sameDay) support.push("Birth Day Archetype echoes the current Day Archetype.");
+    else friction.push("Birth Day Archetype contrasts the current Day Archetype.");
+
+    if (sameTone) support.push("Birth Tone matches the current Tone.");
+    else friction.push("Birth Tone and current Tone call for pacing.");
+
+    if (sameElement) support.push("Elemental field is reinforcing.");
+    else friction.push("Elemental field has contrast to integrate.");
+
+    if (sameWeek) support.push("Week Gate relationship is coherent.");
+    else friction.push("Week Gate relationship is transitional.");
+
+    const presentEmphasis = sameTone && sameElement
+      ? "Carry the day with confidence and restraint."
+      : "Move deliberately and let contrast refine choices.";
+
+    return {
+      symbolicNotice: "Symbolic reflection only. Not a prediction.",
+      birthMoonVsCurrentMoon: `${birthProfile.patternPosition.moonName || "Outside"} → ${currentProfile.patternPosition.moonName || "Outside"}`,
+      birthDayArchetypeVsCurrentDayArchetype: `${birthProfile.patternPosition.dayArchetype?.name || "Outside"} → ${currentProfile.patternPosition.dayArchetype?.name || "Outside"}`,
+      birthToneVsCurrentTone: `${birthProfile.coreSignature.tone} → ${currentProfile.coreSignature.tone}`,
+      elementRelationship: `${birthProfile.coreSignature.element.moonElement} → ${currentProfile.coreSignature.element.moonElement}`,
+      weekGateRelationship: `${birthProfile.patternPosition.weekGate.title} → ${currentProfile.patternPosition.weekGate.title}`,
+      support: support.join(" ") || "Observe support where patterns align.",
+      friction: friction.join(" ") || "Observe tension where patterns differ.",
+      presentEmphasis,
+      witnessQuestion: currentProfile.coreSignature.toneProfile?.question || "What did you observe before interpretation?",
+      groundedAction: currentProfile.coreSignature.toneProfile?.groundingAction || "Take one grounded action."
+    };
+  }
+
+  function buildMirrorReading({ input, birthPattern, birthCore, todayPatternResult, todayCore, todayPosition }) {
+    const lunarPhase = moonPhaseName(todayPatternResult.effectiveDateObject || todayPatternResult.effectiveDate);
+    const dailyGate = {
+      civilDate: todayPatternResult.civilDate,
+      effectiveDate: todayPatternResult.effectiveDate,
+      patternYear: todayPatternResult.patternYear,
+      moon: todayPatternResult.moon,
+      moonName: todayPatternResult.moonName,
+      moonDay: todayPatternResult.day,
+      dayOf364: todayPatternResult.dayOfPatternYear,
+      weekGate: todayPosition.weekGate.title,
+      dayArchetype: todayPosition.dayArchetype?.name || "Outside Day",
+      tone: todayCore.tone,
+      visibleLunarPhase: lunarPhase,
+      timeZone: todayPatternResult.timeZone,
+      boundaryMode: input.boundaryMode,
+      manualSunset: input.boundaryMode === "manual" ? input.sunsetTime : null,
+      shabbatState: shabbatState(todayPatternResult.effectiveDateObject || todayPatternResult.effectiveDate),
+      astronomySource: "approximate-synodic-phase"
+    };
+
+    const opening = `${dailyGate.moonName || "Outside"} opens with ${dailyGate.dayArchetype.toLowerCase()} emphasis in ${dailyGate.weekGate}.`;
+    const pattern = `Pattern Year ${dailyGate.patternYear} · Moon ${dailyGate.moon || "Outside"} · Day ${dailyGate.moonDay || "Outside"} · Day ${dailyGate.dayOf364 || "Outside"}/364 · Tone ${dailyGate.tone}.`;
+    const tension = birthCore.tone === todayCore.tone
+      ? "Low tonal tension. Keep the pace steady."
+      : "Tonal contrast is active. Slow down enough to integrate signal before action.";
+    const practice = todayCore.toneProfile?.groundingAction || "Take one practical step that can be completed today.";
+    const witnessQuestion = todayCore.toneProfile?.question || "What pattern did you verify through direct observation today?";
+    const closingSeal = `${todayCore.element.explanation} ${todayCore.toneProfile?.witnessPrompt || "Record one observed pattern."}`;
+
+    const threefoldCounsel = {
+      signal: todayCore.toneProfile?.function || "Observe the current pattern.",
+      crossing: todayCore.element.explanation,
+      command: practice
+    };
+
+    const currentProfile = {
+      patternPosition: todayPosition,
+      coreSignature: todayCore
+    };
+
+    const mirrorThroughMySeal = input.selectedProfile
+      ? compareSealProfiles(input.selectedProfile, currentProfile)
+      : null;
+
+    return {
+      version: "mirror-reading/2.0.0",
+      symbolicNotice: "Symbolic reflection only. Not a prediction.",
+      dailyGate,
+      opening,
+      pattern,
+      tension,
+      practice,
+      witnessQuestion,
+      closingSeal,
+      threefoldCounsel,
+      mirrorThroughMySeal
+    };
   }
 
   function run(input) {
@@ -94,7 +227,8 @@
         ? "near-harmonic"
         : "divergent";
 
-    const today = todayPattern({ timeZone, boundaryMode, sunsetTime });
+    const now = input.currentDate ? new Date(input.currentDate) : new Date();
+    const today = todayPattern({ now, timeZone, boundaryMode, sunsetTime });
     const todayPosition = globalThis.GenesisOracleSignature.patternPosition(today, boundaryMode, today.civilWeekday, {
       name: "today",
       birthDate: today.civilDate,
@@ -104,23 +238,33 @@
       sunsetTime,
       boundaryMode
     });
+    const nowUtc = new Date(now.toISOString());
     const todayCore = globalThis.GenesisOracleSignature.coreSignature(todayPosition, {
-      year: new Date().getFullYear(),
-      month: new Date().getMonth() + 1,
-      day: new Date().getDate()
+      year: nowUtc.getUTCFullYear(),
+      month: nowUtc.getUTCMonth() + 1,
+      day: nowUtc.getUTCDate()
+    });
+
+    const mirrorReading = buildMirrorReading({
+      input,
+      birthPattern: patternPosition,
+      birthCore: coreSignature,
+      todayPatternResult: today,
+      todayCore,
+      todayPosition
     });
 
     const currentDayTransit = {
-      symbolicNotice: "Symbolic reflection only. Not a prediction.",
+      symbolicNotice: mirrorReading.symbolicNotice,
       birthMoonVsCurrentMoon: `${patternPosition.moonName || "Outside"} → ${todayPosition.moonName || "Outside"}`,
       birthDayArchetypeVsCurrentDayArchetype: `${patternPosition.dayArchetype?.name || "Outside"} → ${todayPosition.dayArchetype?.name || "Outside"}`,
       birthToneVsCurrentTone: `${coreSignature.tone} → ${todayCore.tone}`,
       birthElementVsCurrentElement: `${coreSignature.element.moonElement} → ${todayCore.element.moonElement}`,
-      currentEmphasis: todayCore.toneProfile?.function || "Observe the current pattern.",
-      supportivePattern: todayCore.element.explanation,
-      possibleTension: coreSignature.tone === todayCore.tone ? "Low tonal tension." : "Different tones may require pacing.",
-      witnessPrompt: todayCore.toneProfile?.witnessPrompt || "Record one observed pattern.",
-      groundedAction: todayCore.toneProfile?.groundingAction || "Take one practical step."
+      currentEmphasis: mirrorReading.threefoldCounsel.signal,
+      supportivePattern: mirrorReading.threefoldCounsel.crossing,
+      possibleTension: mirrorReading.tension,
+      witnessPrompt: mirrorReading.witnessQuestion,
+      groundedAction: mirrorReading.practice
     };
 
     const methods = {
@@ -181,7 +325,8 @@
       reading,
       quickSeal: reading.quickSeal,
       currentDayTransit,
-      dailyMirror: currentDayTransit,
+      dailyMirror: mirrorReading,
+      mirrorReading,
       methods
     };
   }

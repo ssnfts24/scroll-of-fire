@@ -178,12 +178,16 @@
     const body = document.getElementById("savedRows");
     const selectA = document.getElementById("compareA");
     const selectB = document.getElementById("compareB");
+    const mirrorProfile = document.getElementById("mirrorProfile");
     if (!body || !selectA || !selectB) return;
 
     const profiles = globalThis.GenesisOracleStorage.readProfiles();
     body.innerHTML = "";
     selectA.innerHTML = "";
     selectB.innerHTML = "";
+    if (mirrorProfile) {
+      mirrorProfile.innerHTML = \"<option value=\\\"\\\">No saved profile selected</option>\";
+    }
 
     if (!profiles.length) {
       const row = document.createElement("tr");
@@ -217,6 +221,10 @@
       const optionB = optionA.cloneNode(true);
       selectA.appendChild(optionA);
       selectB.appendChild(optionB);
+      if (mirrorProfile && !profile.legacyRecord) {
+        const mirrorOption = optionA.cloneNode(true);
+        mirrorProfile.appendChild(mirrorOption);
+      }
     });
   }
 
@@ -345,14 +353,43 @@
       { label: "Flame Path Practice", value: result.coreSignature.flamePath.dailyPractice }
     ]);
 
-    renderList("todayTransit", [
-      { label: "Current Emphasis", value: result.currentDayTransit.currentEmphasis },
-      { label: "Supportive Pattern", value: result.currentDayTransit.supportivePattern },
-      { label: "Possible Tension", value: result.currentDayTransit.possibleTension },
-      { label: "Witness Prompt", value: result.currentDayTransit.witnessPrompt },
-      { label: "Grounded Action", value: result.currentDayTransit.groundedAction },
-      { label: "Notice", value: result.currentDayTransit.symbolicNotice }
-    ]);
+    const mirror = result.mirrorReading || result.dailyMirror || {};
+    const dailyGate = mirror.dailyGate || {};
+    const mirrorRows = [
+      {
+        label: "1. Daily Gate",
+        value: [
+          `${dailyGate.civilDate || "—"} → ${dailyGate.effectiveDate || "—"}`,
+          `Pattern Year ${dailyGate.patternYear ?? "—"} · Moon ${dailyGate.moon ?? "Outside"} ${dailyGate.moonName || ""} · Day ${dailyGate.moonDay ?? "Outside"} · Day ${dailyGate.dayOf364 ?? "Outside"}/364`,
+          `${dailyGate.weekGate || "Week Gate"} · ${dailyGate.dayArchetype || "Day Archetype"} · Tone ${dailyGate.tone ?? "—"}`,
+          `${dailyGate.visibleLunarPhase || "Moon phase"} · ${dailyGate.shabbatState || "Ordinary Day"}`,
+          `${dailyGate.timeZone || "UTC"} · ${dailyGate.boundaryMode || "midnight"}${dailyGate.manualSunset ? ` · ${dailyGate.manualSunset}` : ""} · ${dailyGate.astronomySource || "approximate-synodic-phase"}`
+        ].join(" | ")
+      },
+      { label: "2. Opening", value: mirror.opening || "—" },
+      { label: "3. Pattern", value: mirror.pattern || "—" },
+      { label: "4. Tension", value: mirror.tension || "—" },
+      { label: "5. Practice", value: mirror.practice || "—" },
+      { label: "6. Witness Question", value: mirror.witnessQuestion || "—" },
+      { label: "7. Closing Seal", value: mirror.closingSeal || "—" },
+      {
+        label: "Threefold Counsel (compact)",
+        value: `Signal: ${mirror.threefoldCounsel?.signal || "—"} | Crossing: ${mirror.threefoldCounsel?.crossing || "—"} | Command: ${mirror.threefoldCounsel?.command || "—"}`
+      }
+    ];
+
+    if (mirror.mirrorThroughMySeal) {
+      mirrorRows.push(
+        { label: "Mirror Through My Seal", value: mirror.mirrorThroughMySeal.symbolicNotice || "Symbolic reflection only. Not a prediction." },
+        { label: "Support", value: mirror.mirrorThroughMySeal.support || "—" },
+        { label: "Friction", value: mirror.mirrorThroughMySeal.friction || "—" },
+        { label: "Present Emphasis", value: mirror.mirrorThroughMySeal.presentEmphasis || "—" },
+        { label: "Witness Question", value: mirror.mirrorThroughMySeal.witnessQuestion || "—" },
+        { label: "Grounded Action", value: mirror.mirrorThroughMySeal.groundedAction || "—" }
+      );
+    }
+
+    renderList("todayTransit", mirrorRows);
 
     renderList("developmentPath", [
       { label: "Tone Function", value: result.coreSignature.toneProfile.function },
@@ -377,13 +414,15 @@
   }
 
   function runReadingFromForm() {
+    const selectedProfile = getSelectedMirrorProfile();
     const input = {
       name: $("#inName")?.value.trim() || "",
       birthDate: $("#inDate")?.value || "",
       birthTime: $("#inTime")?.value || "",
       timeZone: $("#inTZ")?.value.trim() || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
       boundaryMode: $("#inBoundary")?.value || "midnight",
-      sunsetTime: $("#inSunset")?.value || "18:00"
+      sunsetTime: $("#inSunset")?.value || "18:00",
+      selectedProfile
     };
 
     if (!input.birthDate) {
@@ -424,14 +463,16 @@
   }
 
   function copyShareLink() {
-    const params = new URLSearchParams();
-    if ($("#inTZ")?.value) params.set("tz", $("#inTZ").value);
-    if ($("#inBoundary")?.value) params.set("boundary", $("#inBoundary").value);
-    if ($("#inSunset")?.value) params.set("sunset", $("#inSunset").value);
-    params.set("view", "quick");
-    params.set("oracleVersion", globalThis.GenesisOracleVersion?.oracleVersion || "genesis-oracle/2.0.0");
-
-    const link = `${location.origin}${location.pathname}${params.toString() ? "?" + params.toString() : ""}`;
+    const link = globalThis.RemnantShareUrl?.buildOracleShareLink
+      ? globalThis.RemnantShareUrl.buildOracleShareLink({
+        baseUrl: location.pathname,
+        timeZone: $("#inTZ")?.value || "",
+        boundaryMode: $("#inBoundary")?.value || "",
+        sunsetTime: $("#inSunset")?.value || "",
+        view: "quick",
+        oracleVersion: globalThis.GenesisOracleVersion?.oracleVersion || "genesis-oracle/2.0.0"
+      })
+      : `${location.origin}${location.pathname}`;
     navigator.clipboard?.writeText(link)
       .then(() => setStatus("Share link copied."))
       .catch(() => setStatus(link));
@@ -488,6 +529,15 @@
 
     $("#runCompare")?.addEventListener("click", runCompare);
     $("#runLegacyRecalc")?.addEventListener("click", recalcLegacy);
+    $("#mirrorProfile")?.addEventListener("change", () => {
+      if (!lastResult) return;
+      try {
+        const rerun = runReadingFromForm();
+        if (rerun) lastResult = rerun;
+      } catch (error) {
+        setStatus(error.message || "Could not refresh Mirror Through My Seal.");
+      }
+    });
 
     $("#importJson")?.addEventListener("change", event => {
       const file = event.target.files?.[0];
@@ -516,6 +566,19 @@
       option.textContent = `${profile.input?.name || "Unnamed"} (${profile.input?.birthDate || ""})`;
       select.appendChild(option);
     });
+  }
+
+  function getSelectedMirrorProfile() {
+    const select = document.getElementById("mirrorProfile");
+    if (!select || select.value === "") return null;
+    const index = Number(select.value);
+    const profiles = globalThis.GenesisOracleStorage.readProfiles();
+    const profile = profiles[index];
+    if (!profile?.calculated?.patternPosition || !profile?.calculated?.coreSignature) return null;
+    return {
+      patternPosition: profile.calculated.patternPosition,
+      coreSignature: profile.calculated.coreSignature
+    };
   }
 
   function init() {

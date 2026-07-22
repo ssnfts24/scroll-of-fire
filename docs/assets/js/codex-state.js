@@ -116,6 +116,29 @@
     try { localStorage.setItem(key, value); return true; } catch (_) { return false; }
   }
 
+  function showCalendarError(message) {
+    if (!document || !document.body || typeof document.getElementById !== "function") return;
+    var node = document.getElementById("sofCalendarError");
+    if (!node) {
+      node = document.createElement("p");
+      node.id = "sofCalendarError";
+      node.setAttribute("role", "alert");
+      node.style.margin = "0";
+      node.style.padding = "0.75rem 1rem";
+      node.style.background = "rgba(125, 20, 20, 0.2)";
+      node.style.borderBottom = "1px solid rgba(255, 120, 120, 0.35)";
+      node.style.color = "#ffe5e5";
+      document.body.insertBefore(node, document.body.firstChild);
+    }
+    node.textContent = message || "Calendar data is unavailable.";
+  }
+
+  function clearCalendarError() {
+    if (!document || typeof document.getElementById !== "function") return;
+    var node = document.getElementById("sofCalendarError");
+    if (node) node.remove();
+  }
+
   /* Shabbat state derived from weekday of the effective date.           */
   /* Mirrors the logic in moons.js shabbatInfo() without importing it.  */
   function computeShabbatState(date) {
@@ -138,7 +161,16 @@
     var tz  = cal.getTZ();
     var iso = cal.todayISO(tz);
 
-    var moonData = cal.get13Moon(iso, tz);
+    var moonData;
+    try {
+      moonData = cal.get13Moon(iso, tz);
+      clearCalendarError();
+    } catch (error) {
+      showCalendarError(error && error.message
+        ? error.message
+        : "Calendar data is unavailable. Please reload after calendar assets are restored.");
+      return null;
+    }
     var phase    = (typeof cal.getMoonPhase === "function") ? cal.getMoonPhase(iso) : null;
     var shabbat  = computeShabbatState(now);
 

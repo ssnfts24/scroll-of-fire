@@ -1,0 +1,59 @@
+name: Remnant Phase 1 — Calendar, Oracle, Mirror and Share
+
+on:
+  pull_request:
+    paths:
+      - 'docs/**/*.html'
+      - 'docs/assets/js/**/*.js'
+      - 'docs/assets/css/**/*.css'
+      - 'docs/service-worker.js'
+      - 'docs/manifest.webmanifest'
+      - 'tests/**/*.test.js'
+      - 'docs/**/*.md'
+      - '.github/workflows/remnant-phase-1-tests.yml'
+
+jobs:
+  remnant-phase-1:
+    name: Remnant Phase 1 — Calendar, Oracle, Mirror and Share
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: JavaScript syntax checks
+        run: |
+          set -euo pipefail
+          find docs/assets/js -name '*.js' -print0 | while IFS= read -r -d '' file; do
+            node --check "$file"
+          done
+
+      - name: Prohibited legacy logic scan
+        run: node --test tests/remnant-legacy-guardrails.test.js
+
+      - name: Pattern calendar and historical conversion
+        run: |
+          node --test tests/pattern-calendar-rollout-phase01.test.js
+          node --test tests/pattern-calendar-historical.test.js
+
+      - name: Oracle parity and Mirror determinism
+        run: |
+          node --test tests/oracle-mirror-determinism.test.js
+
+      - name: Share-link reconstruction and privacy-safe sharing
+        run: |
+          node --test tests/remnant-share-url.test.js
+          node --test tests/share-day.test.js
+
+      - name: PWA resilience
+        run: node --test tests/pwa-resilience.test.js
+
+      - name: Full Remnant Phase 1 test suite
+        run: node --test tests/*.test.js
