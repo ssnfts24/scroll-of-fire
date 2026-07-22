@@ -2,15 +2,15 @@
   "use strict";
 
   const STORAGE_KEY = "sofGenesisProfiles";
+  const ORACLE_VERSION = "genesis-oracle/1.0.0";
+  const LEGACY_CALENDAR_VERSION = "legacy/genesis-oracle/new-moon-anchor";
+  const LEGACY_ORACLE_VERSION = "legacy/genesis-oracle/pre-1.0.0";
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  const MOONS = [
-    "Moon of Breath", "Moon of Flame", "Moon of Waters", "Moon of Stone",
-    "Moon of Seed", "Moon of Voice", "Moon of Witness", "Moon of Balance",
-    "Moon of Return", "Moon of Crown", "Moon of Gate", "Moon of Memory",
-    "Moon of Completion"
+  const MOONS = globalThis.PatternCalendarData?.moonNames || [
+    "Seed Flame", "Root Waters", "Breath Gate", "Stone Witness", "Living Word", "Fire Trial", "Crown Balance", "Deep Mirror", "Return Path", "Builder’s Hand", "Star Remembrance", "River of Signs", "Completion Seal"
   ];
 
   const LAWS = [
@@ -72,10 +72,22 @@
     setText("#status", message);
   }
 
+  function normalizeSavedRecord(row) {
+    if (!row || typeof row !== "object") return null;
+    if (row.calendarVersion || row.oracleVersion) return row;
+    return {
+      ...row,
+      calendarVersion: LEGACY_CALENDAR_VERSION,
+      oracleVersion: LEGACY_ORACLE_VERSION,
+      legacyRecord: true
+    };
+  }
+
   function readSaved() {
     try {
       const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      return Array.isArray(parsed) ? parsed : [];
+      if (!Array.isArray(parsed)) return [];
+      return parsed.map(normalizeSavedRecord).filter(Boolean);
     } catch {
       return [];
     }
@@ -98,62 +110,33 @@
     return Math.floor((date.getTime() - start) / 86400000) + 1;
   }
 
-  function approxAnchor(year) {
-    const anchors = {
-      2020: "2020-03-24",
-      2021: "2021-04-12",
-      2022: "2022-04-01",
-      2023: "2023-03-21",
-      2024: "2024-04-08",
-      2025: "2025-03-29",
-      2026: "2026-03-19",
-      2027: "2027-04-07",
-      2028: "2028-03-26",
-      2029: "2029-04-14",
-      2030: "2030-04-03"
-    };
-
-    return new Date((anchors[year] || `${year}-03-29`) + "T12:00:00Z");
-  }
-
   function parseBirth(dateStr, timeStr) {
     const time = timeStr || "12:00";
     return new Date(`${dateStr}T${time}:00`);
   }
 
-  function mapToRemnant(date) {
-    const y = date.getFullYear();
-    let anchor = approxAnchor(y);
-    const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12));
-    let diff = Math.floor((utcDate - anchor) / 86400000);
-
-    if (diff < 0) {
-      anchor = approxAnchor(y - 1);
-      diff = Math.floor((utcDate - anchor) / 86400000);
+  function mapToPatternCalendar({ dateStr, timeZone }) {
+    if (!globalThis.PatternCalendar) {
+      throw new Error("PatternCalendar engine unavailable");
     }
 
-    if (diff >= 364) {
-      return {
-        outside: true,
-        outsideDay: diff - 363,
-        year: anchor.getUTCFullYear(),
-        moon: null,
-        day: null,
-        week: null,
-        index: diff + 1
-      };
-    }
-
-    const moon = Math.floor(diff / 28) + 1;
-    const day = (diff % 28) + 1;
+    const mapped = globalThis.PatternCalendar.fromCivilDate({
+      date: dateStr,
+      timeZone: timeZone || "UTC",
+      boundaryMode: "midnight"
+    });
 
     return {
-      outside: false,
-      year: anchor.getUTCFullYear(),
-      moon,
-      day,
-      week: Math.floor((day - 1) / 7) + 1,
-      index: diff + 1
+      outside: !mapped.insideCountedYear,
+      outsideDay: mapped.intercalaryIndex || 0,
+      moon: mapped.moon,
+      day: mapped.day,
+      week: mapped.weekOfMoon,
+      index: mapped.dayOfPatternYear,
+      moonName: mapped.moonName,
+      isDayOutOfTime: mapped.isDayOutOfTime,
+      isDeepTimeDay: mapped.isDeepTimeDay,
+      calendarVersion: mapped.calendarVersion
     };
   }
 
@@ -192,16 +175,19 @@
 
     const saved = readSaved();
 
-    table.innerHTML = saved.map(row => `
+    table.innerHTML = saved.map(row => {
+      const legacy = row.legacyRecord || row.calendarVersion === LEGACY_CALENDAR_VERSION;
+      const moonLabel = `${safeText(row.moon)}${legacy ? " · legacy" : ""}`;
+      return `
       <tr>
         <td>${safeText(row.name)}</td>
         <td>${safeText(row.birth)}</td>
-        <td>${safeText(row.moon)}</td>
+        <td>${moonLabel}</td>
         <td>${safeText(row.day)}</td>
         <td>${safeText(row.tone)}</td>
         <td>${safeText(row.carrier)} Hz</td>
-      </tr>
-    `).join("") || `<tr><td colspan="6">No saved profiles yet.</td></tr>`;
+      </tr>`;
+    }).join("") || `<tr><td colspan="6">No saved profiles yet.</td></tr>`;
   }
 
   function computeNameCodes() {
@@ -220,6 +206,7 @@
     const name = $("#inName")?.value.trim() || "Unnamed";
     const dateStr = $("#inDate")?.value || "";
     const timeStr = $("#inTime")?.value || "";
+    const inputTZ = $("#inTZ")?.value.trim() || Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
 
     if (!dateStr) {
       setStatus("Choose a birth date first.");
@@ -233,7 +220,14 @@
       return null;
     }
 
-    const mapped = mapToRemnant(birth);
+    let mapped;
+    try {
+      mapped = mapToPatternCalendar({ dateStr, timeZone: inputTZ });
+    } catch {
+      setStatus("Calendar engine unavailable. Refresh and try again.");
+      return null;
+    }
+
     const dayNumber = dayOfYearUTC(new Date(Date.UTC(birth.getFullYear(), birth.getMonth(), birth.getDate(), 12)));
     const resonant = reduceNum(birth.getFullYear() + birth.getMonth() + 1 + birth.getDate());
     const tone = mapped.outside ? "Outside Count" : ((mapped.index - 1) % 13) + 1;
@@ -241,19 +235,21 @@
     const flameIndex = mapped.outside ? 12 : Number(tone) - 1;
     const [carrierHz, carrierText] = carrierFor(mapped.outside ? resonant : tone);
 
-    const moonName = mapped.outside ? "Outside Day" : MOONS[mapped.moon - 1];
-    const moonDay = mapped.outside ? `Outside ${mapped.outsideDay}` : mapped.day;
-    const week = mapped.outside ? "Reset / Intercalary" : `Week ${mapped.week}`;
+    const moonName = mapped.outside
+      ? (mapped.isDeepTimeDay ? "Deep Time Day" : "Day Out of Time")
+      : (mapped.moonName || MOONS[mapped.moon - 1]);
+    const moonDay = mapped.outside ? `Intercalary ${mapped.outsideDay}` : mapped.day;
+    const week = mapped.outside ? "Intercalary" : `Week ${mapped.week}`;
 
     setText("#outName", name);
     setText("#outBirth", `${dateStr}${timeStr ? " " + timeStr : ""}`);
-    setText("#outDate", mapped.outside ? `Outside Count · Day ${mapped.outsideDay}` : `Moon ${mapped.moon} · Day ${mapped.day}`);
+    setText("#outDate", mapped.outside ? `${moonName} · Day ${mapped.outsideDay}` : `Moon ${mapped.moon} · Day ${mapped.day}`);
     setText("#outWeek", week);
     setText("#outTone", String(tone));
     setText("#outResonant", String(resonant));
 
     setText("#moonName", moonName);
-    setText("#moonDay", mapped.outside ? "Outside" : `${mapped.day} /28`);
+    setText("#moonDay", mapped.outside ? "Intercalary" : `${mapped.day} /28`);
 
     const progress = $("#moonProgress");
     if (progress) progress.style.width = mapped.outside ? "100%" : `${Math.round((mapped.day / 28) * 100)}%`;
@@ -262,7 +258,7 @@
     setText(
       "#sigText",
       mapped.outside
-        ? "This birth rests in the outside-count reset span."
+        ? "This birth maps to an intercalary threshold outside the 364-day counted lattice."
         : `${moonName}, Tone ${tone}, Carrier ${carrierHz} Hz.`
     );
 
@@ -296,7 +292,8 @@
       name,
       birth: dateStr,
       birthTime: timeStr || null,
-      moon: mapped.outside ? "Outside" : mapped.moon,
+      timezone: inputTZ,
+      moon: mapped.outside ? moonName : mapped.moon,
       moonName,
       day: moonDay,
       week,
@@ -307,6 +304,9 @@
       remnantYearDay: mapped.index,
       resonant,
       outsideCount: mapped.outside,
+      calendarVersion: mapped.calendarVersion,
+      oracleVersion: ORACLE_VERSION,
+      legacyRecord: false,
       exportedLabel: `${name} · ${dateStr}`
     };
 
@@ -325,13 +325,17 @@
       notes: [
         "Generated locally in the browser.",
         "Profiles are saved in localStorage on this device.",
-        "Remnant dates use the Genesis Oracle's offline spring-equinoctial new-moon anchor table."
+        "Pattern mapping uses the fixed Pattern Calendar engine and versioned profile metadata."
       ],
       profiles: profiles.map((p, index) => ({
         id: index + 1,
         name: p.name || "Unnamed",
         birthDate: p.birth || "",
         birthTime: p.birthTime || null,
+        timezone: p.timezone || null,
+        calendarVersion: p.calendarVersion || LEGACY_CALENDAR_VERSION,
+        oracleVersion: p.oracleVersion || LEGACY_ORACLE_VERSION,
+        legacyRecord: Boolean(p.legacyRecord),
         remnantCalendar: {
           moon: p.moon,
           moonName: p.moonName || null,
@@ -382,6 +386,9 @@
       lines.push(`Gregorian Year Day: ${profile.remnantCalendar.gregorianYearDay}`);
       lines.push(`Remnant Year Day: ${profile.remnantCalendar.remnantYearDay || "—"}`);
       lines.push(`Resonant Seal: ${profile.remnantCalendar.resonantSeal}`);
+      lines.push(`Calendar Version: ${profile.calendarVersion}`);
+      lines.push(`Oracle Version: ${profile.oracleVersion}`);
+      lines.push(profile.legacyRecord ? "Record Type: Legacy" : "Record Type: Versioned");
       lines.push("");
       lines.push("----------------------------------------");
       lines.push("");
@@ -443,6 +450,7 @@
       if ($("#inName")?.value) params.set("name", $("#inName").value);
       if ($("#inDate")?.value) params.set("date", $("#inDate").value);
       if ($("#inTime")?.value) params.set("time", $("#inTime").value);
+      if ($("#inTZ")?.value) params.set("tz", $("#inTZ").value);
 
       const url = `${location.origin}${location.pathname}${params.toString() ? "?" + params.toString() : ""}`;
 
@@ -473,6 +481,7 @@
     if (qs.get("name") && $("#inName")) $("#inName").value = qs.get("name");
     if (qs.get("date") && $("#inDate")) $("#inDate").value = qs.get("date");
     if (qs.get("time") && $("#inTime")) $("#inTime").value = qs.get("time");
+    if (qs.get("tz") && $("#inTZ")) $("#inTZ").value = qs.get("tz");
 
     if (qs.get("date")) runReading();
   }
@@ -483,6 +492,17 @@
     initFromQueryString();
     renderCarriers(432);
     renderSaved();
+
+    window.GenesisOracle = {
+      runReading,
+      mapToPatternCalendar,
+      readSaved,
+      storageKey: STORAGE_KEY,
+      versions: {
+        oracle: ORACLE_VERSION,
+        calendar: globalThis.PatternCalendarVersion?.version || "unknown"
+      }
+    };
   }
 
   if (document.readyState === "loading") {

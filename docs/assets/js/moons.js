@@ -14,9 +14,6 @@
   const DEFAULT_CONFIG = {
     dayBoundary: "sunset",
     fallbackSunset: "18:00",
-    anchorOverrides: {
-      2026: "2026-04-17"
-    },
     shabbat: {
       enabled: true,
       begins: "Friday sunset",
@@ -32,69 +29,18 @@
   const CONFIG = {
     ...DEFAULT_CONFIG,
     ...suppliedConfig,
-    anchorOverrides: {
-      ...DEFAULT_CONFIG.anchorOverrides,
-      ...(suppliedConfig.anchorOverrides || {})
-    },
     shabbat: {
       ...DEFAULT_CONFIG.shabbat,
       ...(suppliedConfig.shabbat || {})
     }
   };
 
-  const MOONS = [
-    { idx: 1, name: "Seed Flame", element: "Fire", freq: "144 Hz", essence: "Beginning, ignition, first witness", practice: "Start clean. Speak the first word. Mark the seed." },
-    { idx: 2, name: "Root Waters", element: "Water", freq: "432 Hz", essence: "Memory, cleansing, emotional ground", practice: "Cleanse memory. Listen to dreams. Watch emotional weather." },
-    { idx: 3, name: "Breath Gate", element: "Air", freq: "369 Hz", essence: "Word, air, signal, exchange", practice: "Guard speech. Track repeated words. Breathe before response." },
-    { idx: 4, name: "Stone Witness", element: "Earth", freq: "174 Hz", essence: "Body, structure, faithful record", practice: "Build structure. Repair the physical. Record what happened." },
-    { idx: 5, name: "Living Word", element: "Aether", freq: "528 Hz", essence: "Speech, vow, creative command", practice: "Speak with care. Create through ordered language." },
-    { idx: 6, name: "Fire Trial", element: "Fire", freq: "417 Hz", essence: "Testing, courage, purification", practice: "Let false things burn. Choose courage without rushing." },
-    { idx: 7, name: "Crown Balance", element: "Aether", freq: "963 Hz", essence: "Completion, justice, centered rule", practice: "Weigh the pattern. Balance mercy, truth, and consequence." },
-    { idx: 8, name: "Deep Mirror", element: "Water", freq: "396 Hz", essence: "Reflection, hidden pattern, inner waters", practice: "Look beneath the surface. Journal before judging." },
-    { idx: 9, name: "Return Path", element: "Earth", freq: "285 Hz", essence: "Restoration, repentance, spiral home", practice: "Correct course. Repair one broken loop." },
-    { idx: 10, name: "Builder’s Hand", element: "Earth", freq: "741 Hz", essence: "Craft, repair, stewardship", practice: "Build, fix, organize, and make the invisible useful." },
-    { idx: 11, name: "Star Remembrance", element: "Air", freq: "852 Hz", essence: "Inheritance, names, celestial memory", practice: "Remember names, lineage, signs, and the long story." },
-    { idx: 12, name: "River of Signs", element: "Water", freq: "639 Hz", essence: "Movement, omens, living flow", practice: "Track timing. Move with wisdom. Do not force the river." },
-    { idx: 13, name: "Completion Seal", element: "Aether", freq: "111 Hz", essence: "Harvest, sealing, preparation for reset", practice: "Close the loop. Harvest the lesson. Prepare the reset." }
-  ];
+  const CALENDAR = globalThis.PatternCalendar;
+  const CALENDAR_DATA = globalThis.PatternCalendarData;
 
-  const DAY_ARCHETYPES = [
-    ["Spark", "First ignition. Start, name, begin."],
-    ["Witness", "Record what is actually there."],
-    ["Breath", "Speak, listen, exchange."],
-    ["Root", "Ground the body and home."],
-    ["Water", "Feel, cleanse, remember."],
-    ["Stone", "Build structure and boundary."],
-    ["Fire", "Test, purify, choose courage."],
-    ["Gate", "Make a decision or cross a threshold."],
-    ["Mirror", "Reflect before reacting."],
-    ["Hand", "Repair, craft, serve."],
-    ["Voice", "Say the true thing cleanly."],
-    ["River", "Move, adapt, follow flow."],
-    ["Star", "Remember inheritance and direction."],
-    ["Balance", "Weigh, measure, judge fairly."],
-    ["Seed", "Plant the next pattern."],
-    ["Trial", "Face resistance without panic."],
-    ["Mercy", "Release what can be released."],
-    ["Sword", "Cut the false attachment."],
-    ["Oil", "Consecrate the ordinary."],
-    ["Bread", "Receive provision and share it."],
-    ["Watch", "Stay awake to timing."],
-    ["Return", "Correct course."],
-    ["Crown", "Govern the self first."],
-    ["Lamp", "Bring light to one dark corner."],
-    ["Name", "Recover identity and purpose."],
-    ["Field", "Observe relationships."],
-    ["Seal", "Close what is complete."],
-    ["Rest", "Prepare the reset."]
-  ];
-
-  const WEEK_GATES = [
-    ["Week 1 · Ignition", "Begin, gather signal, establish the first witness."],
-    ["Week 2 · Formation", "Shape the pattern through body, speech, and daily structure."],
-    ["Week 3 · Testing", "Watch pressure, resistance, correction, and refinement."],
-    ["Week 4 · Sealing", "Harvest the lesson, close loops, and prepare the next moon."]
-  ];
+  const MOONS = CALENDAR_DATA?.moons || [];
+  const DAY_ARCHETYPES = CALENDAR_DATA?.dayArchetypes || [];
+  const WEEK_GATES = CALENDAR_DATA?.weekGates || [];
 
   const TZONES = [
     Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Los_Angeles",
@@ -181,12 +127,6 @@
     next.setDate(next.getDate() + amount);
     next.setHours(12, 0, 0, 0);
     return next;
-  }
-
-  function dayDiff(a, b) {
-    const A = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-    const B = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-    return Math.floor((A - B) / 86400000);
   }
 
   function datePartsInTimeZone(date, timeZone) {
@@ -331,52 +271,46 @@
     return ((days % synodic) + synodic) % synodic;
   }
 
-  function nearestNewMoonAfter(date) {
-    let cursor = new Date(date);
-
-    for (let i = 0; i < 40; i++) {
-      const age = moonAge(cursor);
-      const nextAge = moonAge(addDays(cursor, 1));
-
-      if (age > 28.5 || nextAge < age) return addDays(cursor, 1);
-      cursor = addDays(cursor, 1);
-    }
-
-    return cursor;
-  }
-
-  function anchorForYear(year) {
-    const override = fromISO(CONFIG.anchorOverrides[year]);
-    return override || nearestNewMoonAfter(new Date(year, 2, 20, 12, 0, 0));
-  }
-
-  function yearAnchorFor(date) {
-    const year = date.getFullYear();
-    const candidate = anchorForYear(year);
-    return date < candidate ? anchorForYear(year - 1) : candidate;
-  }
-
   function remnantInfo(date) {
-    const anchor = yearAnchorFor(date);
-    const diff = dayDiff(date, anchor);
+    if (!CALENDAR) {
+      throw new Error("PatternCalendar engine is unavailable");
+    }
+    const mapped = CALENDAR.fromCivilDate({
+      date,
+      timeZone: selectedTZ,
+      boundaryMode: "midnight"
+    });
+    const inside = Boolean(mapped.insideCountedYear);
+    const moonIndex = inside ? Number(mapped.moon) - 1 : 12;
+    const moon = inside
+      ? MOONS[moonIndex]
+      : {
+        idx: 13,
+        name: mapped.isDeepTimeDay ? "Deep Time Day" : "Day Out of Time",
+        essence: "Intercalary threshold beyond the 364-counted cycle.",
+        element: "Aether",
+        freq: "—",
+        practice: "Review, repair, clear the ledger, preserve the weekly count, and prepare the next anchor."
+      };
+    const dayInMoon = inside ? Number(mapped.day) : null;
+    const diff = inside ? Number(mapped.dayOfPatternYear) - 1 : 364 + Math.max(0, Number(mapped.intercalaryIndex || 1) - 1);
     const cycleDays = 13 * 28;
-    const inside = diff >= 0 && diff < cycleDays;
-    const moonIndex = inside ? Math.floor(diff / 28) : 12;
-    const dayInMoon = inside ? (diff % 28) + 1 : null;
-    const moon = MOONS[moonIndex];
 
     return {
-      anchor,
+      anchor: new Date(mapped.anchorDate),
       diff,
       inside,
       moon,
       moonIndex,
       dayInMoon,
-      dayOfYear: diff + 1,
-      outsideDay: inside ? 0 : Math.max(1, diff - cycleDays + 1),
-      yearEnd: addDays(anchor, cycleDays - 1),
+      dayOfYear: inside ? Number(mapped.dayOfPatternYear) : null,
+      outsideDay: inside ? 0 : Math.max(1, Number(mapped.intercalaryIndex || 1)),
+      yearEnd: addDays(new Date(mapped.anchorDate), cycleDays - 1),
       countedWeeks: 52,
-      continuousWeekIndex: Math.floor(diff / 7) + 1
+      continuousWeekIndex: inside ? Math.floor(diff / 7) + 1 : 52,
+      isDayOutOfTime: Boolean(mapped.isDayOutOfTime),
+      isDeepTimeDay: Boolean(mapped.isDeepTimeDay),
+      calendarVersion: mapped.calendarVersion
     };
   }
 
@@ -634,7 +568,9 @@ Carry the witness forward.`;
     const solar = solarGate(context.effectiveDate);
     const dayArch = info.inside
       ? DAY_ARCHETYPES[info.dayInMoon - 1]
-      : ["Outside Count", "Reset, reflection, year threshold."];
+      : info.isDeepTimeDay
+        ? ["Deep Time Day", "Leap-year intercalary threshold outside the 364-day count."]
+        : ["Day Out of Time", "Intercalary threshold outside the 364-day count."];
 
     const markedShabbat = val("shabbatInput");
     const shabbatLine = markedShabbat && markedShabbat !== "Not marked"
@@ -781,7 +717,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       "moonLine",
       info.inside
         ? `Moon ${info.moon.idx} · Day ${info.dayInMoon}/28 · Day ${info.dayOfYear}/364`
-        : `Outside Count · Day ${info.outsideDay} after Completion Seal`
+        : `${info.moon.name} · Intercalary Day ${info.outsideDay}`
     );
     text("yearSpan", `Anchor: ${fmtShort(info.anchor)} · Counted year ends: ${fmtShort(info.yearEnd)}`);
     text(
@@ -796,7 +732,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       "commandLine",
       info.inside
         ? `Moon ${info.moon.idx} · Day ${info.dayInMoon}/28 · ${info.moon.element} · ${info.moon.freq}`
-        : `Outside Count · ${info.moon.name}`
+        : `${info.moon.name} · Intercalary`
     );
     text("statMoonDay", info.inside ? `${info.dayInMoon}/28` : "Outside");
     text("statPhase", phase);
@@ -910,10 +846,10 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       "todaySummaryMoonLine",
       info.inside
         ? `Moon ${info.moon.idx} · Day ${info.dayInMoon}/28 · Day ${info.dayOfYear}/364`
-        : "Outside Count · Completion Seal"
+        : info.moon.name
     );
     text("todaySummaryMoonDay", info.inside ? String(info.dayInMoon) : "⊙");
-    text("todaySummaryMoonProgress", info.inside ? `Day ${info.dayInMoon} of 28` : "Outside Count");
+    text("todaySummaryMoonProgress", info.inside ? `Day ${info.dayInMoon} of 28` : info.moon.name);
     text("todaySummaryMoonName", `Moon ${info.moon.idx} · ${info.moon.name}`);
 
     const weekNumber = info.inside ? Math.floor((info.dayInMoon - 1) / 7) + 1 : null;
@@ -924,7 +860,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     );
     text("todaySummaryPhase", `${phase} · ${Math.round(lit * 100)}% illuminated`);
     text("todaySummaryBoundary", context.shabbat.state);
-    text("todaySummaryShabbat", info.inside ? `Day ${info.dayOfYear}/364` : "Outside Count");
+    text("todaySummaryShabbat", info.inside ? `Day ${info.dayOfYear}/364` : info.moon.name);
     text("heroMovement", movementText);
 
     const grid = $("#todaySummaryMoonGrid");
@@ -1057,7 +993,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
   function renderYearMap(info) {
     text(
       "outsideInfo",
-      `Counted cycle: ${fmtShort(info.anchor)} through ${fmtShort(info.yearEnd)} · 364 days · 52 complete weeks · outside days begin ${fmtShort(addDays(info.yearEnd, 1))}`
+      `Counted cycle: ${fmtShort(info.anchor)} through ${fmtShort(info.yearEnd)} · 364 days · 52 complete weeks · Day Out of Time begins ${fmtShort(addDays(info.yearEnd, 1))}`
     );
 
     const body = $("#yearMapBody");
