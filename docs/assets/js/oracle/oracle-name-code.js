@@ -108,14 +108,21 @@
     });
   }
 
+  function cyclicDistance(a, b) {
+    if (!Number.isFinite(a) || !Number.isFinite(b)) return 12;
+    const delta = Math.abs(a - b) % 13;
+    return Math.min(delta, 13 - delta);
+  }
+
   function classifyNameBirthResonance(nameSignature, birth) {
-    const keyNumbers = new Set([
+    const keyNumberList = [
       birth?.moonNumber,
       birth?.dayInMoon,
       birth?.tone,
       birth?.resonantSum,
       birth?.carrierReduction
-    ].map(v => Number(v)).filter(v => Number.isFinite(v) && v > 0));
+    ].map(v => Number(v)).filter(v => Number.isFinite(v) && v > 0);
+    const keyNumbers = new Set(keyNumberList);
 
     const nameNumbers = [
       nameSignature?.latinPythagorean?.reduction,
@@ -125,23 +132,87 @@
       nameSignature?.initialsCode?.reduction
     ].map(Number).filter(v => Number.isFinite(v) && v > 0);
 
-    const overlap = nameNumbers.filter(value => keyNumbers.has(value));
-
-    if (overlap.length >= 2) {
-      return { classification: "direct resonance", reason: "Two or more reduced name values directly match birth signature keys." };
-    }
-    if (overlap.length === 1) {
-      return { classification: "harmonic support", reason: "One reduced name value matches a birth signature key." };
-    }
-
-    const parityBirth = Array.from(keyNumbers).reduce((acc, value) => acc + value, 0) % 2;
+    const overlap = [...new Set(nameNumbers.filter(value => keyNumbers.has(value)))];
+    const nearMatches = [];
+    nameNumbers.forEach(value => {
+      keyNumberList.forEach(key => {
+        const distance = cyclicDistance(value, key);
+        if (distance > 0 && distance <= 2) nearMatches.push({ nameValue: value, keyValue: key, distance });
+      });
+    });
+    const repeatedValues = (nameSignature?.repeatedLetterPattern || []).filter(row => row.count >= 2);
+    const parityBirth = keyNumberList.reduce((acc, value) => acc + value, 0) % 2;
     const parityName = nameNumbers.reduce((acc, value) => acc + value, 0) % 2;
+    const parityComplementary = parityBirth !== parityName;
+    const elementPair = [birth?.moonElement, birth?.dayElement].filter(Boolean);
+    const elementComplement = elementPair.length === 2 && elementPair[0] !== elementPair[1];
+    const carrierComplement = Number(birth?.carrierReduction || 0) > 0
+      ? nameNumbers.some(value => cyclicDistance(value, Number(birth.carrierReduction)) <= 1)
+      : false;
 
-    if (parityBirth !== parityName) {
-      return { classification: "complementary tension", reason: "No direct key matches; parity contrast indicates a balancing tension." };
+    const scoreBreakdown = {
+      exactMatches: overlap.map(value => ({ value, points: 6 })),
+      reducedMatches: nearMatches.slice(0, 8).map(match => ({ ...match, points: match.distance === 1 ? 4 : 2 })),
+      cycleProximity: nearMatches.length ? Math.max(...nearMatches.map(match => 3 - match.distance)) : 0,
+      elementRelationship: {
+        state: elementComplement ? "complementary" : "aligned",
+        points: elementComplement ? 3 : 1
+      },
+      carrierRelationship: {
+        state: carrierComplement ? "near-carrier" : "neutral",
+        points: carrierComplement ? 3 : 0
+      },
+      repeatedValues: {
+        count: repeatedValues.length,
+        points: Math.min(3, repeatedValues.length)
+      },
+      complementaryRelationship: {
+        parityBirth,
+        parityName,
+        state: parityComplementary ? "complementary" : "same-parity",
+        points: parityComplementary ? 2 : 0
+      }
+    };
+
+    const totalScore =
+      scoreBreakdown.exactMatches.reduce((sum, row) => sum + row.points, 0) +
+      scoreBreakdown.reducedMatches.reduce((sum, row) => sum + row.points, 0) +
+      scoreBreakdown.cycleProximity +
+      scoreBreakdown.elementRelationship.points +
+      scoreBreakdown.carrierRelationship.points +
+      scoreBreakdown.repeatedValues.points +
+      scoreBreakdown.complementaryRelationship.points;
+
+    if (totalScore >= 18) {
+      return {
+        classification: "direct resonance",
+        reason: "High overlap and cycle proximity align multiple name values with birth signature keys.",
+        score: totalScore,
+        scoreBreakdown
+      };
     }
-
-    return { classification: "neutral", reason: "No direct key matches and parity remains aligned without strong pull." };
+    if (totalScore >= 10) {
+      return {
+        classification: "harmonic support",
+        reason: "Partial overlaps and proximity indicate supportive resonance with workable tension.",
+        score: totalScore,
+        scoreBreakdown
+      };
+    }
+    if (parityComplementary || scoreBreakdown.elementRelationship.state === "complementary") {
+      return {
+        classification: "complementary tension",
+        reason: "Low direct overlap but complementary relationships create growth-oriented pressure.",
+        score: totalScore,
+        scoreBreakdown
+      };
+    }
+    return {
+      classification: "neutral",
+      reason: "Name values show limited overlap or proximity with current birth signature keys.",
+      score: totalScore,
+      scoreBreakdown
+    };
   }
 
   function compute(rawName, birthReference = null) {

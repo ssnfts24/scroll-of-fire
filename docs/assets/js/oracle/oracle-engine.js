@@ -66,7 +66,9 @@
       dayInMoon: patternPosition.dayInMoon,
       tone: coreSignature.tone,
       resonantSum: coreSignature.resonantSum,
-      carrierReduction: coreSignature.carrier.reduction
+      carrierReduction: coreSignature.carrier.reduction,
+      moonElement: coreSignature.element.moonElement,
+      dayElement: coreSignature.element.dayElement
     });
 
     const birthTimeLayer = {
@@ -85,6 +87,12 @@
       coreSignature,
       nameSignature
     });
+    const toneResonantDelta = Math.abs(Number(coreSignature.tone || 0) - Number(coreSignature.resonantSum || 0));
+    const toneResonantRelationship = toneResonantDelta === 0
+      ? "convergent"
+      : toneResonantDelta <= 2
+        ? "near-harmonic"
+        : "divergent";
 
     const today = todayPattern({ timeZone, boundaryMode, sunsetTime });
     const todayPosition = globalThis.GenesisOracleSignature.patternPosition(today, boundaryMode, today.civilWeekday, {
@@ -137,6 +145,12 @@
         nameToBirth: "direct=2+ key matches, harmonic=1 match, complementary=parity contrast, neutral=otherwise",
         elements: "state lookup from deterministic element relationship matrix"
       },
+      toneResonant: {
+        toneRole: "Tone reflects current Pattern-day function and how the day expresses movement.",
+        resonantSumRole: "Resonant Sum reflects birth-date reduction and long-cycle signature pressure.",
+        relationshipState: toneResonantRelationship,
+        delta: toneResonantDelta
+      },
       calendarVersion: globalThis.GenesisOracleVersion?.calendarVersion || mapped.calendarVersion,
       oracleVersion: globalThis.GenesisOracleVersion?.oracleVersion || "genesis-oracle/2.0.0",
       distinctions: {
@@ -165,6 +179,7 @@
       birthTimeLayer,
       relationships,
       reading,
+      quickSeal: reading.quickSeal,
       currentDayTransit,
       dailyMirror: currentDayTransit,
       methods

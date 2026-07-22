@@ -21,7 +21,7 @@
 
   function formatResult(result) {
     return [
-      `Quick Seal: ${result.patternPosition.moonName || "Outside"} · Day ${result.patternPosition.dayInMoon || "Outside"}`,
+      result.quickSeal || `Quick Seal: ${result.patternPosition.moonName || "Outside"} · Day ${result.patternPosition.dayInMoon || "Outside"}`,
       `Tone ${result.coreSignature.tone} (${result.coreSignature.toneProfile?.name || ""})`,
       `Carrier ${result.coreSignature.carrier.hz} Hz`,
       `Name Resonance: ${result.relationships.nameToBirthResonance.classification}`
@@ -105,6 +105,7 @@
 
   function exportReadingJson() {
     if (!lastResult) return;
+    if (!confirmPersonalExport()) return;
     download(
       `genesis-reading-${lastResult.input.birthDate}.json`,
       safeJson(lastResult),
@@ -115,6 +116,7 @@
 
   function exportReadingText() {
     if (!lastResult) return;
+    if (!confirmPersonalExport()) return;
     const lines = [
       "GENESIS ORACLE 2.0",
       `Name: ${lastResult.input.name || "Unnamed"}`,
@@ -274,7 +276,7 @@
   }
 
   function render(result) {
-    setText("quickSeal", formatResult(result));
+    setText("quickSeal", result.quickSeal || formatResult(result));
 
     renderList("coreSignature", [
       { label: "Moon Key", value: result.coreSignature.moonKey },
@@ -282,7 +284,17 @@
       { label: "Week Gate", value: result.coreSignature.weekGate },
       { label: "Tone", value: `${result.coreSignature.tone} · ${result.coreSignature.toneProfile?.name || ""}` },
       { label: "Resonant Sum", value: String(result.coreSignature.resonantSum) },
+      {
+        label: "Tone ↔ Resonant Relationship",
+        value: `${result.methods?.toneResonant?.relationshipState || "—"} (Δ ${result.methods?.toneResonant?.delta ?? "—"})`
+      },
       { label: "Element", value: `${result.coreSignature.element.moonElement} × ${result.coreSignature.element.dayElement} (${result.coreSignature.element.relationship})` },
+      {
+        label: "Birth-Time Gate",
+        value: result.input.timeKnown
+          ? `${result.birthTimeLayer.gate} (${result.input.birthTime} ${result.birthTimeLayer.timezone})`
+          : "unknown (birth time not provided; time-specific interpretation omitted)"
+      },
       { label: "Carrier", value: `${result.coreSignature.carrier.hz} Hz` },
       { label: "Living Law", value: `${result.coreSignature.livingLaw?.index}. ${result.coreSignature.livingLaw?.name}` },
       { label: "Flame Path", value: `${result.coreSignature.flamePath?.index}. ${result.coreSignature.flamePath?.name}` },
@@ -312,7 +324,14 @@
       { label: "Full-Name Reduction", value: String(result.nameSignature.fullNameReduction) },
       { label: "Dominant Number", value: String(result.nameSignature.dominantNumber || "—") },
       { label: "Missing Numbers", value: result.nameSignature.missingNumberPattern.join(", ") || "None" },
-      { label: "Name-to-Birth Resonance", value: `${result.relationships.nameToBirthResonance.classification} — ${result.relationships.nameToBirthResonance.reason}` }
+      {
+        label: "Name-to-Birth Resonance",
+        value: `${result.relationships.nameToBirthResonance.classification} (score ${result.relationships.nameToBirthResonance.score ?? 0}) — ${result.relationships.nameToBirthResonance.reason}`
+      },
+      {
+        label: "Resonance Score Breakdown",
+        value: safeJson(result.relationships.nameToBirthResonance.scoreBreakdown || {})
+      }
     ]);
 
     renderList("lawFlame", [
@@ -343,7 +362,17 @@
       { label: "Grounding", value: result.coreSignature.toneProfile.groundingAction }
     ]);
 
-    setText("methodsRaw", safeJson(result.methods));
+    const methodSummary = [
+      `${result.methods?.toneResonant?.toneRole || "Tone role unavailable."}`,
+      `${result.methods?.toneResonant?.resonantSumRole || "Resonant Sum role unavailable."}`,
+      `Relationship: ${result.methods?.toneResonant?.relationshipState || "unknown"} (Δ ${result.methods?.toneResonant?.delta ?? "—"})`,
+      `Birth-Time Gate: ${result.input.timeKnown ? result.birthTimeLayer.gate : "unknown"}`
+    ].join("\n");
+    setText("methodsSummary", methodSummary);
+    setText("methodsRaw", safeJson({
+      ...result.methods,
+      nameToBirthResonanceScore: result.relationships.nameToBirthResonance
+    }));
     renderSeal(result);
   }
 
@@ -383,6 +412,7 @@
 
   function copyReading() {
     if (!lastResult) return;
+    if (!confirmPersonalExport()) return;
     const text = [
       formatResult(lastResult),
       `Foundation: ${lastResult.reading.foundation}`,
@@ -395,12 +425,11 @@
 
   function copyShareLink() {
     const params = new URLSearchParams();
-    if ($("#inName")?.value) params.set("name", $("#inName").value);
-    if ($("#inDate")?.value) params.set("date", $("#inDate").value);
-    if ($("#inTime")?.value) params.set("time", $("#inTime").value);
     if ($("#inTZ")?.value) params.set("tz", $("#inTZ").value);
     if ($("#inBoundary")?.value) params.set("boundary", $("#inBoundary").value);
     if ($("#inSunset")?.value) params.set("sunset", $("#inSunset").value);
+    params.set("view", "quick");
+    params.set("oracleVersion", globalThis.GenesisOracleVersion?.oracleVersion || "genesis-oracle/2.0.0");
 
     const link = `${location.origin}${location.pathname}${params.toString() ? "?" + params.toString() : ""}`;
     navigator.clipboard?.writeText(link)
@@ -410,14 +439,15 @@
 
   function initFromQuery() {
     const qs = new URLSearchParams(location.search);
-    if (qs.get("name") && $("#inName")) $("#inName").value = qs.get("name");
-    if (qs.get("date") && $("#inDate")) $("#inDate").value = qs.get("date");
-    if (qs.get("time") && $("#inTime")) $("#inTime").value = qs.get("time");
     if (qs.get("tz") && $("#inTZ")) $("#inTZ").value = qs.get("tz");
     if (qs.get("boundary") && $("#inBoundary")) $("#inBoundary").value = qs.get("boundary");
     if (qs.get("sunset") && $("#inSunset")) $("#inSunset").value = qs.get("sunset");
+  }
 
-    if (qs.get("date")) runReadingFromForm();
+  function confirmPersonalExport() {
+    const hasPersonalData = Boolean($("#inName")?.value || $("#inDate")?.value || $("#inTime")?.value);
+    if (!hasPersonalData) return true;
+    return window.confirm("Privacy warning: this export may include personal Oracle input (name or birth details). Continue?");
   }
 
   function bindEvents() {

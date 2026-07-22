@@ -38,25 +38,64 @@
     { hz: 963, meaning: "Stillness, crown perspective, and coherence." }
   ];
 
+  const LAW_FORMS = Object.freeze({
+    Breath: { singular: "breath", plural: "breaths", action: "regulate", quality: "steady", mature: "Steadies breath before reaction.", distorted: "Forces pace and loses regulation.", practical: "Take three measured breaths before the next decision." },
+    Flame: { singular: "flame", plural: "flames", action: "focus", quality: "clear", mature: "Focuses flame into useful work.", distorted: "Scatters fire into urgency.", practical: "Direct one focused interval to a single task." },
+    Waters: { singular: "water", plural: "waters", action: "flow", quality: "responsive", mature: "Lets water move with disciplined responsiveness.", distorted: "Floods boundaries and loses containment.", practical: "Adjust one plan to match real conditions." },
+    Stone: { singular: "stone", plural: "stones", action: "anchor", quality: "grounded", mature: "Anchors commitments with grounded follow-through.", distorted: "Hardens into stubborn resistance.", practical: "Complete one pending obligation fully." },
+    Seed: { singular: "seed", plural: "seeds", action: "cultivate", quality: "patient", mature: "Cultivates small beginnings with patience.", distorted: "Demands harvest before roots form.", practical: "Plant one small step that compounds tomorrow." },
+    Voice: { singular: "voice", plural: "voices", action: "speak", quality: "truthful", mature: "Speaks with truthful restraint.", distorted: "Talks to control instead of clarify.", practical: "State one clear sentence of intent." },
+    Witness: { singular: "witness", plural: "witnesses", action: "record", quality: "observant", mature: "Records before interpretation.", distorted: "Invents meaning before evidence.", practical: "Write one observation without commentary." },
+    Balance: { singular: "balance", plural: "balances", action: "weigh", quality: "proportional", mature: "Weighs options with proportion.", distorted: "Stalls through over-correction.", practical: "Choose one next step after listing limits." },
+    Return: { singular: "return", plural: "returns", action: "restore", quality: "restorative", mature: "Restores what was left open.", distorted: "Loops old patterns without repair.", practical: "Close one open loop from this week." },
+    Crown: { singular: "crown", plural: "crowns", action: "elevate", quality: "integrative", mature: "Elevates perspective without leaving reality.", distorted: "Escapes into abstraction.", practical: "Name one principle and apply it concretely." },
+    Gate: { singular: "gate", plural: "gates", action: "discern", quality: "discerning", mature: "Discerns timing at the threshold.", distorted: "Forces entry before readiness.", practical: "Delay one action until its right window." },
+    Memory: { singular: "memory", plural: "memories", action: "remember", quality: "continuous", mature: "Remembers lessons and keeps continuity.", distorted: "Idealizes the past and stops adapting.", practical: "Document one lesson from today for reuse." },
+    Completion: { singular: "completion", plural: "completions", action: "seal", quality: "integrative", mature: "Seals cycles with clean closure.", distorted: "Closes early and leaves residue.", practical: "Finish one cycle and define the next seed." }
+  });
+
   const livingLaws = [
     "Breath", "Flame", "Waters", "Stone", "Seed", "Voice", "Witness", "Balance", "Return", "Crown", "Gate", "Memory", "Completion"
-  ].map((name, index) => ({
-    index: index + 1,
-    name,
-    conciseMeaning: `${name} as daily orientation in the cycle.`,
-    matureExpression: `Practices ${name.toLowerCase()} with consistency and service.`,
-    shadowExpression: `Forgets the measure of ${name.toLowerCase()} and drifts to reactivity.`,
-    dailyPractice: `Name one ${name.toLowerCase()} action and complete it before day end.`,
-    boundaryStatement: `${name} is guidance, not a claim of fate or certainty.`,
-    serviceExpression: `Use ${name.toLowerCase()} to support others through practical care.`,
-    reflectionQuestion: `Where did ${name.toLowerCase()} appear in my choices today?`
-  }));
+  ].map((name, index) => {
+    const forms = LAW_FORMS[name];
+    return {
+      index: index + 1,
+      name,
+      grammarType: "symbolic-law",
+      forms: {
+        singular: forms.singular,
+        plural: forms.plural,
+        actionForm: forms.action,
+        qualityForm: forms.quality,
+        matureExpression: forms.mature,
+        distortedExpression: forms.distorted,
+        practicalExpression: forms.practical
+      },
+      conciseMeaning: `${name} as daily orientation in the cycle.`,
+      matureExpression: forms.mature,
+      shadowExpression: forms.distorted,
+      dailyPractice: forms.practical,
+      boundaryStatement: `${name} is guidance, not a claim of fate or certainty.`,
+      serviceExpression: `Use ${forms.singular} to support others through practical care.`,
+      reflectionQuestion: `Where did ${forms.singular} appear in my choices today?`
+    };
+  });
 
   const flamePaths = [
     "Ignition", "Refinement", "Mercy", "Foundation", "Growth", "Transmission", "Record", "Justice", "Restoration", "Authority", "Threshold", "Remembrance", "Seal"
   ].map((name, index) => ({
     index: index + 1,
     name,
+    grammarType: "symbolic-path",
+    forms: {
+      singular: name.toLowerCase(),
+      plural: `${name.toLowerCase()} movements`,
+      actionForm: "embody",
+      qualityForm: "directed",
+      matureExpression: `${name} appears as focused and grounded momentum.`,
+      distortedExpression: `${name} can distort into overreach when ungrounded.`,
+      practicalExpression: `Take one action that embodies ${name.toLowerCase()} with restraint.`
+    },
     conciseMeaning: `${name} describes the movement emphasis for this layer.`,
     matureExpression: `${name} appears as focused and grounded momentum.`,
     shadowExpression: `${name} can distort into overreach when ungrounded.`,

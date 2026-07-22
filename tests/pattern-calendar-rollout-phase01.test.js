@@ -152,6 +152,7 @@ test("known and unknown birth time behavior is explicit", () => {
   assert.equal(known.birthTimeLayer.gate, "dawn");
   assert.equal(unknown.birthTimeLayer.gate, "unknown");
   assert.match(unknown.birthTimeLayer.note, /omitted/i);
+  assert.equal(unknown.input.birthTime, "");
 });
 
 test("name code handles punctuation accents and multiple words", () => {
@@ -188,6 +189,20 @@ test("daily mirror and transit layer are present and symbolic", () => {
 
   assert.equal(result.dailyMirror.symbolicNotice, "Symbolic reflection only. Not a prediction.");
   assert.ok(result.currentDayTransit.groundedAction.length > 0);
+  assert.match(result.quickSeal, /\.\s+/);
+});
+
+test("name-to-birth resonance exposes inspectable score breakdown", () => {
+  const context = loadContext();
+  const result = context.GenesisOracleEngine.run(baseInput({ name: "Aaron-Paul O'Neil" }));
+  const resonance = result.relationships.nameToBirthResonance;
+
+  assert.ok(Number.isFinite(resonance.score));
+  assert.ok(resonance.scoreBreakdown);
+  assert.ok(Array.isArray(resonance.scoreBreakdown.exactMatches));
+  assert.ok(Array.isArray(resonance.scoreBreakdown.reducedMatches));
+  assert.equal(typeof resonance.scoreBreakdown.elementRelationship.state, "string");
+  assert.equal(typeof resonance.scoreBreakdown.carrierRelationship.state, "string");
 });
 
 test("profile comparison is symmetric for stable fields", () => {
@@ -230,6 +245,9 @@ test("obsolete remnant-anchor logic is not active in Oracle 2.0 assets", () => {
   assert.doesNotMatch(oracleController, /\bapproxAnchor\b/);
   assert.doesNotMatch(oracleController, /\bmapToRemnant\b/);
   assert.doesNotMatch(oracleHtml, /first New Moon after Spring Equinox/i);
+  assert.doesNotMatch(oracleController, /params\.set\("name"/);
+  assert.doesNotMatch(oracleController, /params\.set\("date"/);
+  assert.doesNotMatch(oracleController, /params\.set\("time"/);
 });
 
 test("oracle and moons both load shared pattern calendar scripts", () => {
