@@ -72,6 +72,11 @@
       "name": "Daily Witness",
       "short_name": "Witness",
       "url": "./moons.html?tab=witnessPanel"
+    },
+    {
+      "name": "Equinox Passage",
+      "short_name": "Equinox",
+      "url": "./equinox-passage.html"
     }
   ],
   "prefer_related_applications": false

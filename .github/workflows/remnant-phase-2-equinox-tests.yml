@@ -1,0 +1,26 @@
+name: Remnant Phase 2 — Equinox Passage
+
+on:
+  push:
+    branches:
+      - main
+      - 'copilot/**'
+  pull_request:
+
+jobs:
+  equinox-passage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax checks
+        run: |
+          find docs/assets/js -name '*.js' -print0 | xargs -0 -n1 node --check
+      - name: Equinox dataset validation
+        run: node --test tests/equinox-passage.test.js
+      - name: Full relevant Node test suite
+        run: node --test tests/*.test.js

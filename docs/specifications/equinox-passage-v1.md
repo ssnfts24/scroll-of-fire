@@ -1,0 +1,35 @@
+# Equinox Passage v1
+
+- Official system name: The 13 Moons Remnant Living Time Observatory.
+- Fixed Pattern anchor: April 17, 2026 = Moon 1 · Day 1 · Day 1/364.
+- Passage start: exact astronomical March equinox instant.
+- Passage end: beginning of Moon 1 Day 1 under the selected boundary model.
+- Shared versions:
+  - `astronomy/1.0.0`
+  - `equinox-passage/1.0.0`
+  - `pattern-calendar/1.0.0`
+- Bundled reference years: 2014–2026.
+- Bundled study timezone: America/Los_Angeles.
+- Bundled boundary model: sunset with `18:00` fallback unless the user supplies another sunset value.
+- Astronomical source policy:
+  - exact UTC instants are copied from a bundled third-party reference table and validated against an independent cross-check table;
+  - the repository currently cannot verify the exact original Skyfield version or JPL kernel, so those fields remain `unknown` in the source metadata and reduce the source-integrity status;
+  - Pattern calculations are deterministic and separate from astronomy;
+  - lunar values are calculated at the equinox instant with a deterministic synodic approximation and labeled as approximate.
+- Timestamp language:
+  - Timestamp resolution: 1 second.
+  - Validation tolerance: 3 seconds.
+  - Maximum measured deviation: 2.057 seconds.
+  - Maximum-deviation year: 2022.
+- Canonical dataset policy:
+  - committed annual JSON and historical CSV contain stable annual facts only;
+  - runtime state is computed separately as `liveState` with `evaluatedAt`, `status`, `elapsedMilliseconds`, `remainingMilliseconds`, and `progress`;
+  - canonical exports must stay byte-stable for the same source metadata and declared boundary settings.
+- Deterministic generator:
+  - `node scripts/generate-equinox-passage-data.mjs`
+  - `node scripts/generate-equinox-passage-data.mjs --verify`
+- Boundary explanation:
+  - in sunset or manual-sunset mode, Moon 1 Day 1 begins at the selected sunset boundary on the preceding civil evening;
+  - the astronomical equinox instant never changes; only the Pattern-date mapping and passage-end boundary change.
+- Renderer-neutral visualization data must expose normalized values for future Living Time Sphere work.
+- Symbolic interpretation must remain visibly separate from astronomical fact, Pattern calculation, and personal observation.

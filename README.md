@@ -9,6 +9,7 @@
 2. **Run daily mirror:** [docs/moons.html](https://codexofreality.org/moons.html)
 3. **Record one note:** [docs/ledger.html](https://codexofreality.org/ledger.html)
 4. **Read the model:** [docs/theory.html](https://codexofreality.org/theory.html)
+5. **Study the Equinox Passage:** [docs/equinox-passage.html](https://codexofreality.org/equinox-passage.html)
 
 If you only have 3 minutes, do steps 1–3.
 
@@ -37,6 +38,10 @@ The Scroll of Fire — Codex of Reality is a living architecture of remembrance,
 🧾 Ledger & Proofs: /7_Ledger_and_Documentation and site → Ledger
 
 🌓 13-Moon: site → Moons (/docs/moons.html)
+
+🌗 Equinox Passage: site → Equinox Passage (/docs/equinox-passage.html)
+
+Equinox Passage source metadata, deterministic annual JSON, and historical CSV live under `/docs/data/equinox-passage/`, with reproducible generation via `node scripts/generate-equinox-passage-data.mjs --verify`.
 
 ⬇️ Downloads: site → Downloads (/docs/downloads.html)
 

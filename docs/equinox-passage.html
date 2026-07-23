@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="sof equinox-passage-page" data-day-boundary="sunset">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2TBMEK502C"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", "G-2TBMEK502C");
+  </script>
+  <base href="/">
+  <script>
+    if (location.hostname === "ssnfts24.github.io") {
+      const base = document.querySelector("base");
+      if (base) base.setAttribute("href", "/scroll-of-fire/");
+    }
+  </script>
+  <meta charset="utf-8">
+  <title>Equinox Passage — The 13 Moons Remnant Living Time Observatory</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="The Equinox Passage measures the moving astronomical March equinox against the fixed Pattern Calendar. The sky moves; the Pattern remains stable.">
+  <meta name="theme-color" content="#05070d">
+  <link rel="canonical" href="https://codexofreality.org/equinox-passage.html">
+  <link rel="stylesheet" href="assets/css/codex.css">
+  <link rel="stylesheet" href="assets/css/navigation.css">
+  <link rel="stylesheet" href="assets/css/moons.css?v=20260722-4">
+  <link rel="stylesheet" href="assets/css/equinox-passage.css?v=20260722-4">
+  <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/share/remnant-share-url.js"></script>
+  <script defer src="assets/js/share/remnant-share.js"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-version.js"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-data.js"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-format.js"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-boundary.js"></script>
+  <script defer src="assets/js/calendar/pattern-calendar.js"></script>
+  <script defer src="assets/js/astronomy/astronomy-version.js"></script>
+  <script defer src="assets/js/astronomy/astronomy-sources.js"></script>
+  <script defer src="assets/js/astronomy/timezone-tools.js"></script>
+  <script defer src="assets/js/astronomy/equinox-reference-data.js"></script>
+  <script defer src="assets/js/astronomy/lunar-at-equinox.js"></script>
+  <script defer src="assets/js/astronomy/equinox-engine.js"></script>
+  <script defer src="assets/js/equinox/equinox-passage-format.js"></script>
+  <script defer src="assets/js/equinox/equinox-passage-engine.js"></script>
+  <script defer src="assets/js/equinox/equinox-passage-data.js"></script>
+  <script defer src="assets/js/equinox/equinox-passage-export.js"></script>
+  <script defer src="assets/js/equinox/equinox-passage-storage.js"></script>
+  <script defer src="assets/js/equinox/equinox-passage-visualization-data.js"></script>
+  <script defer src="assets/js/equinox/equinox-passage-ui.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="wrap">
+    <header class="site-header" data-sof-header>
+      <a class="brand" href="./" aria-label="Scroll of Fire home"><span class="brand-mark" aria-hidden="true">☲</span><span><strong>Scroll of Fire</strong><small>Codex of Reality</small></span></a>
+      <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle><span></span><span></span><span></span></button>
+      <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+        <a href="moons.html">13 Moons</a>
+        <a href="13-moon-whitepaper.html#equinox-passage">Whitepaper</a>
+        <a href="theory.html">Theory</a>
+        <a href="downloads.html">Downloads</a>
+      </nav>
+    </header>
+    <main id="main" class="equinox-shell">
+      <section class="equinox-hero" aria-labelledby="equinoxHeroTitle">
+        <p class="eyebrow">The 13 Moons Remnant Living Time Observatory</p>
+        <h1 id="equinoxHeroTitle">Equinox Passage</h1>
+        <p id="equinoxHeroSummary">The Equinox Passage measures the moving astronomical March equinox against the fixed Pattern Calendar. The sky moves; the Pattern remains stable.</p>
+      </section>
+
+      <section class="equinox-card" aria-labelledby="equinoxControlsTitle">
+        <h2 id="equinoxControlsTitle">Controls</h2>
+        <div class="equinox-controls">
+          <label>Year<select id="equinoxYear" class="lab-input"></select></label>
+          <label>Time Zone<select id="equinoxTimeZone" class="lab-input"></select></label>
+          <label>Boundary<select id="equinoxBoundaryMode" class="lab-input"><option value="sunset">Sunset</option><option value="manual">Manual Sunset</option><option value="midnight">Midnight</option></select></label>
+          <label>Manual Sunset<input id="equinoxManualSunset" class="lab-input" type="time" value="18:00"></label>
+        </div>
+        <p id="equinoxUrlStatus" class="equinox-muted">Permanent-link state will appear here.</p>
+        <p id="equinoxBoundaryExplanation" class="equinox-muted">In sunset or manual-sunset mode, Moon 1 Day 1 begins on the preceding civil evening at the selected boundary. The equinox instant itself never changes.</p>
+      </section>
+
+      <div class="equinox-grid">
+        <section class="equinox-card" aria-labelledby="equinoxGateTitle">
+          <p class="eyebrow">Astronomical fact</p>
+          <h2 id="equinoxGateTitle">Equinox Gate</h2>
+          <p class="pill" id="equinoxGateUtc">—</p>
+          <p id="equinoxGateLocal">—</p>
+          <p id="equinoxGateCivil" class="equinox-muted">—</p>
+          <p id="equinoxGatePrecision" class="equinox-muted">—</p>
+        </section>
+        <section class="equinox-card" aria-labelledby="equinoxPatternTitle">
+          <p class="eyebrow">Pattern calculation</p>
+          <h2 id="equinoxPatternTitle">Pattern Position at the Gate</h2>
+          <p class="pill" id="equinoxPatternPosition">—</p>
+          <p id="equinoxPatternMeta">—</p>
+        </section>
+      </div>
+
+      <section class="equinox-card" aria-labelledby="equinoxPassageTitle">
+        <p class="eyebrow">Passage duration</p>
+        <h2 id="equinoxPassageTitle">Timeline</h2>
+        <p id="equinoxPassageWindow">—</p>
+        <div class="equinox-timeline" aria-hidden="true"><div id="equinoxTimelineFill" class="equinox-timeline-fill"></div></div>
+        <p id="equinoxTimelineAccessible">—</p>
+        <div class="equinox-grid">
+          <div><strong>Total</strong><p id="equinoxPassageDuration">—</p></div>
+          <div><strong>Elapsed</strong><p id="equinoxPassageElapsed">—</p></div>
+          <div><strong>Remaining</strong><p id="equinoxPassageRemaining">—</p></div>
+          <div><strong>Progress</strong><p id="equinoxPassageProgress">—</p></div>
+        </div>
+        <p id="equinoxPassageBoundaryNote" class="equinox-muted">Boundary explanation pending.</p>
+      </section>
+
+      <div class="equinox-grid">
+        <section class="equinox-card" aria-labelledby="equinoxLunarTitle">
+          <p class="eyebrow">Astronomical approximation</p>
+          <h2 id="equinoxLunarTitle">Lunar Condition</h2>
+          <p id="equinoxLunar">—</p>
+        </section>
+        <section class="equinox-card" aria-labelledby="equinoxSignatureTitle">
+          <p class="eyebrow">Annual Passage signature</p>
+          <h2 id="equinoxSignatureTitle">Calculated · Astronomical · Symbolic · Observational</h2>
+          <div class="equinox-signature">
+            <div><strong>Calculated:</strong> <span id="equinoxCalculated">—</span></div>
+            <div><strong>Astronomical:</strong> <span id="equinoxAstronomical">—</span></div>
+            <div><strong>Symbolic:</strong> <span id="equinoxSymbolic">—</span></div>
+            <div><strong>Observational:</strong> <span id="equinoxObservational">—</span></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="equinox-card" aria-labelledby="equinoxCompareTitle">
+        <p class="eyebrow">Historical comparison</p>
+        <h2 id="equinoxCompareTitle">Compare two years</h2>
+        <div class="equinox-controls">
+          <label>First year<select id="equinoxCompareA" class="lab-input"></select></label>
+          <label>Second year<select id="equinoxCompareB" class="lab-input"></select></label>
+        </div>
+        <div class="equinox-grid">
+          <div><strong>Years</strong><p id="equinoxCompareSummary">—</p></div>
+          <div><strong>Duration difference</strong><p id="equinoxCompareDuration">—</p></div>
+          <div><strong>Pattern position difference</strong><p id="equinoxComparePattern">—</p></div>
+          <div><strong>Lunar phase difference</strong><p id="equinoxCompareLunar">—</p></div>
+          <div><strong>Equinox-time shift</strong><p id="equinoxCompareShift">—</p></div>
+          <div><strong>Recurrence notes</strong><p id="equinoxCompareNotes">—</p></div>
+        </div>
+      </section>
+
+      <section class="equinox-card" aria-labelledby="equinoxHistoryTitle">
+        <p class="eyebrow">Annual records</p>
+        <h2 id="equinoxHistoryTitle">2014–2026 historical table</h2>
+        <div class="equinox-table-wrap">
+          <table class="equinox-table">
+            <thead><tr><th>Year</th><th>Equinox UTC</th><th>Pattern Position</th><th>Passage</th><th>Lunar</th><th>Boundary</th><th>Source</th><th>Precision</th></tr></thead>
+            <tbody id="equinoxHistoryBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="equinox-card" aria-labelledby="equinoxMethodsTitle">
+        <p class="eyebrow">Methods, sources, and precision</p>
+        <h2 id="equinoxMethodsTitle">Methods</h2>
+        <p id="equinoxMethods">—</p>
+        <p><strong>Astronomical fact:</strong> exact March equinox instant. <strong>Pattern calculation:</strong> mapping the instant into the fixed Pattern Calendar. <strong>Symbolic interpretation:</strong> optional reflective language only. <strong>Personal observation:</strong> stored locally. <strong>Hypothesis:</strong> not treated as proof.</p>
+        <p id="equinoxMethodsBoundaryNote" class="equinox-muted">Boundary explanation pending.</p>
+        <p><a href="specifications/equinox-passage-v1.md">Open specification</a> · <a href="data/equinox-passage/equinox-source-metadata.json">Source metadata JSON</a> · <a href="data/equinox-passage/equinox-reference-2014-2026.json">Reference JSON</a> · <a href="data/equinox-passage/equinox-passage-2014-2026.csv">Historical CSV</a></p>
+      </section>
+
+      <section class="equinox-card" aria-labelledby="equinoxExportTitle">
+        <p class="eyebrow">Exports and sharing</p>
+        <h2 id="equinoxExportTitle">Share and export</h2>
+        <div class="equinox-actions">
+          <button id="equinoxCopySignal" class="lab-btn" type="button">Copy Signal</button>
+          <button id="equinoxCopyStandard" class="lab-btn ghost" type="button">Copy Standard</button>
+          <button id="equinoxCopyFull" class="lab-btn ghost" type="button">Copy Full Scroll</button>
+          <button id="equinoxNativeShare" class="lab-btn ghost" type="button">Native Share</button>
+          <button id="equinoxCopyLink" class="lab-btn ghost" type="button">Copy Permanent Link</button>
+          <button id="equinoxExportImage" class="lab-btn ghost" type="button">Generate Share Image</button>
+          <button id="equinoxExportJson" class="lab-btn ghost" type="button">Annual JSON</button>
+          <button id="equinoxExportCsv" class="lab-btn ghost" type="button">Historical CSV</button>
+          <button id="equinoxExportText" class="lab-btn ghost" type="button">Readable Text</button>
+        </div>
+      </section>
+
+      <section class="equinox-card" aria-labelledby="equinoxLocalTitle">
+        <p class="eyebrow">Optional local Passage record</p>
+        <h2 id="equinoxLocalTitle">Local-first observations</h2>
+        <textarea id="equinoxObservationNote" class="equinox-note" placeholder="Optional personal observation note. Stored only in this browser."></textarea>
+        <div class="equinox-inline-actions"><button id="equinoxSaveLocal" class="lab-btn" type="button">Save Local Record</button><span id="equinoxLocalSaveStatus" class="equinox-muted"></span></div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
