@@ -199,10 +199,12 @@
           <!-- Mobile "Interact" toggle -->
           <div class="sphere-interact-bar" aria-live="polite">
             <button id="sphere-interact-btn"     class="sphere-interact-toggle" type="button">Interact with Sphere</button>
-            <button id="sphere-interact-end-btn" class="sphere-interact-toggle sphere-interact-end" type="button" style="display:none">Exit Interaction</button>
-            <p class="sphere-interact-hint" id="sphere-interact-hint">Drag to rotate · Pinch to zoom</p>
+            <button id="sphere-interact-end-btn" class="sphere-interact-toggle sphere-interact-end" type="button" style="display:none">Exit Sphere Interaction</button>
+            <p class="sphere-interact-hint" id="sphere-hint-off">Tap to enable rotation and zoom</p>
+            <p class="sphere-interact-hint" id="sphere-hint-on" style="display:none">Drag to rotate · Pinch to zoom</p>
           </div>
 
+          <div id="sphere-state-strip" class="sphere-state-strip" aria-live="polite" aria-atomic="true"></div>
           <div id="sphere-container" role="img" aria-label="Living Time Sphere — interactive" tabindex="0"
                aria-describedby="sphere-text-model">
             <!-- SVG or 3D canvas rendered here by LivingTimeSphereUi.init() -->
@@ -210,19 +212,28 @@
           </div>
 
           <div class="sphere-moon-labels" id="sphere-moon-labels" aria-hidden="true">
-            <span class="sphere-moon-label" data-moon="1"  style="top:2%;left:50%;transform:translateX(-50%)">Moon 1</span>
-            <span class="sphere-moon-label" data-moon="4"  style="top:50%;right:2%">Moon 4</span>
-            <span class="sphere-moon-label" data-moon="7"  style="bottom:2%;left:50%;transform:translateX(-50%)">Moon 7</span>
-            <span class="sphere-moon-label" data-moon="10" style="top:50%;left:2%">Moon 10</span>
-            <span class="sphere-moon-label" data-moon="13" style="top:15%;left:15%">Moon 13</span>
+            <span class="sphere-moon-label" data-moon="1"  style="display:none">Moon 1</span>
+            <span class="sphere-moon-label" data-moon="2"  style="display:none">Moon 2</span>
+            <span class="sphere-moon-label" data-moon="3"  style="display:none">Moon 3</span>
+            <span class="sphere-moon-label" data-moon="4"  style="display:none">Moon 4</span>
+            <span class="sphere-moon-label" data-moon="5"  style="display:none">Moon 5</span>
+            <span class="sphere-moon-label" data-moon="6"  style="display:none">Moon 6</span>
+            <span class="sphere-moon-label" data-moon="7"  style="display:none">Moon 7</span>
+            <span class="sphere-moon-label" data-moon="8"  style="display:none">Moon 8</span>
+            <span class="sphere-moon-label" data-moon="9"  style="display:none">Moon 9</span>
+            <span class="sphere-moon-label" data-moon="10" style="display:none">Moon 10</span>
+            <span class="sphere-moon-label" data-moon="11" style="display:none">Moon 11</span>
+            <span class="sphere-moon-label" data-moon="12" style="display:none">Moon 12</span>
+            <span class="sphere-moon-label" data-moon="13" style="display:none">Moon 13</span>
           </div>
 
           <!-- Camera controls (visible only when 3D is active) -->
-          <div class="sphere-camera-controls" aria-label="Camera controls" role="group">
-            <button id="sphere-cam-reset"   class="sphere-cam-btn" type="button" title="Reset view">⟳ Reset</button>
-            <button id="sphere-cam-pattern" class="sphere-cam-btn" type="button" title="Face Pattern ring">Pattern</button>
-            <button id="sphere-cam-passage" class="sphere-cam-btn" type="button" title="Frame Passage arc">Passage</button>
-            <button id="sphere-cam-years"   class="sphere-cam-btn" type="button" title="Pull back to Years spiral">Years</button>
+          <div class="sphere-camera-controls" aria-label="Camera view presets" role="group">
+            <span class="sphere-cam-label">View:</span>
+            <button id="sphere-cam-reset"   class="sphere-cam-btn" type="button" title="Reset to default view">⟳ Reset</button>
+            <button id="sphere-cam-pattern" class="sphere-cam-btn" type="button" title="Pattern ring view">Pattern View</button>
+            <button id="sphere-cam-passage" class="sphere-cam-btn" type="button" title="Passage arc view">Passage View</button>
+            <button id="sphere-cam-years"   class="sphere-cam-btn" type="button" title="Years spiral view">Years View</button>
           </div>
         </div>
 
@@ -241,14 +252,18 @@
 
         <div class="sphere-legend" id="sphere-legend" aria-label="Sphere legend">
           <h3 class="sphere-legend-heading">Legend</h3>
-          <ul class="sphere-legend-list">
-            <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-today" aria-hidden="true">●</span> Today</li>
-            <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-equinox" aria-hidden="true">▲</span> Equinox Gate</li>
-            <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-yeargate" aria-hidden="true">◆</span> Year Gate</li>
-            <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-lunar" aria-hidden="true">●</span> Lunar position</li>
-            <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-passage" aria-hidden="true">───</span> Passage</li>
-            <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-year" aria-hidden="true">●</span> Selected year</li>
-          </ul>
+          <div class="sphere-legend-rows">
+            <div class="sphere-legend-row-line">
+              <span class="sphere-legend-chip"><span class="sphere-legend-symbol legend-today" aria-hidden="true">●</span> Today</span>
+              <span class="sphere-legend-chip"><span class="sphere-legend-symbol legend-equinox" aria-hidden="true">▲</span> Equinox</span>
+              <span class="sphere-legend-chip"><span class="sphere-legend-symbol legend-yeargate" aria-hidden="true">◆</span> Year Gate</span>
+            </div>
+            <div class="sphere-legend-row-line">
+              <span class="sphere-legend-chip"><span class="sphere-legend-symbol legend-lunar" aria-hidden="true">●</span> Moon</span>
+              <span class="sphere-legend-chip"><span class="sphere-legend-symbol legend-passage" aria-hidden="true">─</span> Passage</span>
+              <span class="sphere-legend-chip"><span class="sphere-legend-symbol legend-year" aria-hidden="true">●</span> Selected Year</span>
+            </div>
+          </div>
           <details class="sphere-legend-expand">
             <summary class="sphere-legend-full-btn">Show full legend</summary>
             <ul class="sphere-legend-list">

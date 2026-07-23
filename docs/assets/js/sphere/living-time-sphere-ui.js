@@ -127,6 +127,7 @@
       _updateTodayDiagnostics(model);
       _updateModeSummary(model);
       _updateWhatAmISeeing(_state.viewMode);
+      _updateStateStrip(_state.viewMode, model);
       return;
     }
     container.style.display = "";
@@ -147,6 +148,7 @@
     _updateTodayDiagnostics(model);
     _updateModeSummary(model);
     _updateWhatAmISeeing(_state.viewMode);
+    _updateStateStrip(_state.viewMode, model);
   }
 
   async function _render3d(container, model, spiral) {
@@ -275,15 +277,19 @@
   // The bar (and its "Exit Interaction" button) should only be active when
   // a real 3D canvas is running. In SVG mode it should stay hidden.
   function _updateInteractBar() {
-    const bar        = document.querySelector(".sphere-interact-bar");
+    const bar         = document.querySelector(".sphere-interact-bar");
     const interactBtn = document.getElementById("sphere-interact-btn");
-    const endBtn     = document.getElementById("sphere-interact-end-btn");
+    const endBtn      = document.getElementById("sphere-interact-end-btn");
+    const hintOff     = document.getElementById("sphere-hint-off");
+    const hintOn      = document.getElementById("sphere-hint-on");
     if (!bar) return;
     // Show/hide the whole bar based on whether 3D is active.
     bar.style.display = _state.active3d ? "" : "none";
     // Always reset to the "Interact" state when the bar is re-shown.
     if (interactBtn) interactBtn.style.display = "";
     if (endBtn)      endBtn.style.display      = "none";
+    if (hintOff)     hintOff.style.display     = "";
+    if (hintOn)      hintOn.style.display      = "none";
   }
 
   function _updateAlternateViews() {
@@ -434,6 +440,38 @@
       pattern: "This view shows the stable 364-day geometry: 13 Moons of 28 days each. The gold marker highlights the current day position."
     };
     el.textContent = texts[mode] || "";
+  }
+
+  function _updateStateStrip(viewMode, model) {
+    const el = document.getElementById("sphere-state-strip");
+    if (!el) return;
+    const year = _state.year || 2026;
+    if (viewMode === "today" && model) {
+      const tp = model.todayPatternPosition;
+      if (tp?.moon != null) {
+        const dayOfYear = (tp.moon - 1) * 28 + tp.day;
+        el.textContent = `Today · Moon ${tp.moon} · Day ${tp.day} · Day ${dayOfYear}/364`;
+      } else {
+        el.textContent = `Today · ${year}`;
+      }
+    } else if (viewMode === "passage" && model) {
+      const rec = model.sourceRecord;
+      const startMoon = rec?.equinox?.patternPosition?.moon ?? "";
+      const startDay  = rec?.equinox?.patternPosition?.day  ?? "";
+      const endMoon   = rec?.yearGate?.patternPosition?.moon ?? 1;
+      el.textContent  = `${year} Equinox Passage · Moon ${startMoon} Day ${startDay} → Moon ${endMoon} Day 1`;
+    } else if (viewMode === "years") {
+      el.textContent = `Alignment Spiral · 2014–2026 · Selected ${year}`;
+    } else if (viewMode === "pattern") {
+      const tp = model?.todayPatternPosition;
+      if (tp?.moon != null) {
+        el.textContent = `13 Moons × 28 Days · Today Moon ${tp.moon} Day ${tp.day}`;
+      } else {
+        el.textContent = `13 Moons × 28 Days`;
+      }
+    } else {
+      el.textContent = "";
+    }
   }
 
   function _setModeDefaultSelectedMarker(mode) {
@@ -644,34 +682,43 @@
     // Only active in 3D mode — _updateInteractBar() hides the bar in SVG mode.
     const interactBtn = document.getElementById("sphere-interact-btn");
     if (interactBtn) {
-      interactBtn.addEventListener("click", () => {
-        // Only enter interact mode if the 3D renderer is actually running.
-        if (!_state.active3d) return;
+      const endBtn   = document.getElementById("sphere-interact-end-btn");
+      const hintOff  = document.getElementById("sphere-hint-off");
+      const hintOn   = document.getElementById("sphere-hint-on");
+
+      function _setInteractOff() {
+        interactBtn.style.display = "";
+        if (endBtn)    endBtn.style.display    = "none";
+        if (hintOff)   hintOff.style.display   = "";
+        if (hintOn)    hintOn.style.display     = "none";
+      }
+      function _setInteractOn() {
         interactBtn.style.display = "none";
-        const endBtn = document.getElementById("sphere-interact-end-btn");
-        if (endBtn) endBtn.style.display = "";
+        if (endBtn)    endBtn.style.display     = "";
+        if (hintOff)   hintOff.style.display    = "none";
+        if (hintOn)    hintOn.style.display      = "";
+      }
+
+      // Initialise to "off" state
+      if (endBtn) endBtn.style.display = "none";
+
+      interactBtn.addEventListener("click", () => {
+        if (!_state.active3d) return;
+        _setInteractOn();
       });
-      const endBtn = document.getElementById("sphere-interact-end-btn");
       if (endBtn) {
-        endBtn.style.display = "none";
         endBtn.addEventListener("click", () => {
-          endBtn.style.display = "none";
-          interactBtn.style.display = "";
-          // Dispatch exit event so 3D renderer can re-enable page scroll.
+          _setInteractOff();
           container.dispatchEvent(new CustomEvent("sphere:interact-end", { bubbles: false }));
         });
       }
       // Listen for interact events from 3D renderer.
       container.addEventListener("sphere:interact-start", () => {
         if (!_state.active3d) return;
-        interactBtn.style.display = "none";
-        const b = document.getElementById("sphere-interact-end-btn");
-        if (b) b.style.display = "";
+        _setInteractOn();
       });
       container.addEventListener("sphere:interact-end", () => {
-        const b = document.getElementById("sphere-interact-end-btn");
-        if (b) b.style.display = "none";
-        interactBtn.style.display = "";
+        _setInteractOff();
       });
     }
 

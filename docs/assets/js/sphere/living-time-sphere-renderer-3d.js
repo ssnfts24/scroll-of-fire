@@ -85,6 +85,10 @@
   const _objects = {};
   let _floatingLabelEl = null;
   let _floatingTimeout = null;
+  // Moon label overlay elements (sphere-anchored HTML projected from 3D)
+  let _moonLabelEls = null;   // Array of 13 DOM span elements
+  let _moonLabelContainer = null;  // The #sphere-moon-labels container
+  const _moonAnchors = [];    // { moon, angle, radius, worldVec } for each of 13 moons
 
   // ── Three.js lazy loader ──────────────────────────────────────────
 
@@ -119,6 +123,167 @@
     return { x: radius * Math.cos(rad), z: radius * Math.sin(rad) };
   }
 
+  // Build canonical world-space anchor for Moon m (1-based) on the pattern ring.
+  // Angle = center of the moon's sector (each sector = 360/13 degrees, Moon 1 starts at 0°).
+  function _moonSectorCenterAngle(moonIndex) {
+    // moonIndex is 0-based (0 = Moon 1, 12 = Moon 13)
+    return ((moonIndex + 0.5) / 13) * 360;
+  }
+
+  function _buildMoonAnchors() {
+    const mat = globalThis.LivingTimeSphereM;
+    const r   = mat.SIZES.patternRing * 1.15;   // slightly outside the ring
+    _moonAnchors.length = 0;
+    for (let i = 0; i < 13; i++) {
+      const angle = _moonSectorCenterAngle(i);
+      const { x, z } = angleToXZ(angle, r);
+      _moonAnchors.push({
+        moon:  i + 1,
+        angle,
+        radius: r,
+        worldX: x,
+        worldY: 0,
+        worldZ: z,
+      });
+    }
+  }
+
+  function _setupMoonLabelEls(container) {
+    _moonLabelContainer = container.parentElement?.querySelector("#sphere-moon-labels") ||
+                          document.getElementById("sphere-moon-labels");
+    if (!_moonLabelContainer) return;
+    // Remove old fixed-position inline styles
+    const spans = _moonLabelContainer.querySelectorAll(".sphere-moon-label");
+    spans.forEach(s => {
+      s.style.cssText = "";   // clear the fixed inline styles
+      s.style.display = "none";
+    });
+    // Build an array indexed by moon (0 = Moon1)
+    _moonLabelEls = Array.from({ length: 13 }, (_, i) => {
+      const moon = i + 1;
+      let el = _moonLabelContainer.querySelector(`[data-moon="${moon}"]`);
+      if (!el) {
+        el = document.createElement("span");
+        el.className = "sphere-moon-label";
+        el.dataset.moon = String(moon);
+        el.textContent = `Moon ${moon}`;
+        _moonLabelContainer.appendChild(el);
+      }
+      el.style.cssText = "";
+      el.style.display = "none";
+      el.style.position = "absolute";
+      return el;
+    });
+  }
+
+  // Called every frame to project 3D moon anchors to screen space and update labels.
+  function _updateMoonLabels(viewMode) {
+    if (!_moonLabelEls || !_camera || !_canvas || !_THREE) return;
+    const THREE = _THREE;
+    const rect   = _canvas.getBoundingClientRect();
+    if (!rect || rect.width === 0) return;
+
+    // Determine which moons to show based on view mode
+    const activeMoon = _model?.todayPatternPosition?.moon || 4;
+    let showSet;
+    if (viewMode === "today") {
+      // Show today's moon prominently, adjacent moons quietly, year-boundary moons
+      showSet = new Set([activeMoon, activeMoon - 1 < 1 ? 13 : activeMoon - 1,
+                         activeMoon + 1 > 13 ? 1 : activeMoon + 1, 1, 13]);
+    } else if (viewMode === "passage") {
+      // Show moons near the passage gates
+      const passageStartMoon = _model?.sourceRecord?.equinox?.patternPosition?.moon || 13;
+      showSet = new Set([passageStartMoon, 1]);
+    } else if (viewMode === "pattern") {
+      showSet = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+    } else {
+      // years: orientation only
+      showSet = new Set([1, 4, 7, 10]);
+    }
+
+    const projVec = new THREE.Vector3();
+    const camDir = new THREE.Vector3();
+    const anchorDir = new THREE.Vector3();
+    _camera.getWorldDirection(camDir);
+    const labelRects = [];  // for collision detection
+
+    for (let i = 0; i < 13; i++) {
+      const anchor = _moonAnchors[i];
+      const moon   = anchor.moon;
+      const el     = _moonLabelEls[i];
+      if (!el) continue;
+
+      if (!showSet.has(moon)) {
+        el.style.display = "none";
+        continue;
+      }
+
+      // Project 3D world position to NDC
+      projVec.set(anchor.worldX, anchor.worldY, anchor.worldZ);
+      projVec.project(_camera);
+
+      // Depth/facing check: if z > 1 it's behind the camera, hide
+      if (projVec.z > 0.98) {
+        el.style.display = "none";
+        continue;
+      }
+
+      // Camera-space depth for fade: projVec.z ranges -1 (front) to +1 (back)
+      // Dot product: direction from origin to anchor vs camera direction
+      anchorDir.set(anchor.worldX, 0, anchor.worldZ).normalize();
+      const dot = anchorDir.dot(camDir);
+      // dot > 0 means anchor is "behind" the plane (far side), hide it
+      if (dot > 0.15) {
+        el.style.display = "none";
+        continue;
+      }
+
+      // Convert NDC to canvas pixels
+      const cx = ((projVec.x + 1) / 2) * rect.width;
+      const cy = ((-projVec.y + 1) / 2) * rect.height;
+
+      // Clamp to canvas bounds with margin
+      const margin = 4;
+      const elW = el.offsetWidth || 42;
+      const elH = el.offsetHeight || 14;
+      const clampedX = Math.max(margin, Math.min(rect.width  - elW - margin, cx - elW / 2));
+      const clampedY = Math.max(margin, Math.min(rect.height - elH - margin, cy - elH / 2));
+
+      // Opacity: fade as dot approaches 0.15 from behind, full opacity at -1
+      const opacity = Math.max(0, Math.min(1, (-dot + 0.15) / 0.6));
+
+      // Emphasis: today mode boosts today's moon
+      const isToday = moon === activeMoon && viewMode === "today";
+      const size    = isToday ? "0.72rem" : "0.62rem";
+      const color   = isToday ? "#64c8b4" : "rgba(100,200,180,0.5)";
+      const fw      = isToday ? "600" : "500";
+
+      // Collision check: hide if overlapping a higher-priority label
+      const thisRect = { x: clampedX, y: clampedY, w: elW + 4, h: elH + 2, moon };
+      let collides = false;
+      for (const prev of labelRects) {
+        if (clampedX < prev.x + prev.w && clampedX + thisRect.w > prev.x &&
+            clampedY < prev.y + prev.h && clampedY + thisRect.h > prev.y) {
+          // Lower priority: hide this moon unless it's the active moon
+          if (moon !== activeMoon) { collides = true; break; }
+        }
+      }
+      if (collides) {
+        el.style.display = "none";
+        continue;
+      }
+      labelRects.push(thisRect);
+
+      el.style.display     = "";
+      el.style.left        = `${clampedX}px`;
+      el.style.top         = `${clampedY}px`;
+      el.style.opacity     = String(opacity);
+      el.style.fontSize    = size;
+      el.style.color       = color;
+      el.style.fontWeight  = fw;
+    }
+  }
+
   // ── Scene construction ────────────────────────────────────────────
 
   function buildScene() {
@@ -127,22 +292,44 @@
     _scene = new THREE.Scene();
     _scene.background = new THREE.Color(mat.COLORS.bg);
 
-    // ── Center core ─────────────────────────────────────────────────
+    // ── Pattern Core (geometric, not planet-like) ─────────────────
     {
-      const geo = new THREE.SphereGeometry(mat.SIZES.coreRadius, 16, 16);
+      // Use icosahedron for a geometric, non-spherical look
+      const geo = new THREE.IcosahedronGeometry(mat.SIZES.coreRadius, 0);
       const m   = new THREE.MeshStandardMaterial({
-        color:     mat.COLORS.center,
+        color:     0xd8e8ff,
         emissive:  mat.COLORS.centerGlow,
         emissiveIntensity: mat.EMISSIVE.center,
-        roughness: 0.4,
-        metalness: 0.1,
+        roughness: 0.1,
+        metalness: 0.6,
         transparent: true,
         opacity:   mat.OPACITY.center,
+        wireframe: false,
       });
       const mesh = new THREE.Mesh(geo, m);
       mesh.name = "core";
       _scene.add(mesh);
       _objects.core = mesh;
+
+      // Two thin accent rings at 90° to each other — NOT equatorial, so not Saturn-like
+      const accentMat = new THREE.MeshBasicMaterial({
+        color: 0x8ab4ff,
+        transparent: true,
+        opacity: 0.45,
+        depthWrite: false,
+      });
+      const r1 = mat.SIZES.coreRadius * 2.2;
+      const ring1 = new THREE.Mesh(new THREE.TorusGeometry(r1, 0.003, 6, 32), accentMat.clone());
+      ring1.rotation.x = Math.PI / 2;  // XZ plane
+      ring1.name = "coreRing1";
+      _scene.add(ring1);
+      _objects.coreRing1 = ring1;
+
+      const ring2 = new THREE.Mesh(new THREE.TorusGeometry(r1, 0.003, 6, 32), accentMat.clone());
+      ring2.rotation.z = Math.PI / 2;  // YZ plane (perpendicular to ring1)
+      ring2.name = "coreRing2";
+      _scene.add(ring2);
+      _objects.coreRing2 = ring2;
 
       // Core glow
       const glowMesh = globalThis.LivingTimeSphereEffects.buildCoreGlow(THREE);
@@ -701,10 +888,41 @@
       }
     }
 
+    if (_objects.todayHalo?.material) {
+      _objects.todayHalo.material.emissiveIntensity = mat.EMISSIVE.todayHalo;
+      _objects.todayHalo.material.opacity = mat.OPACITY.todayHalo;
+    }
+    if (_objects.todayMarker?.material) {
+      _objects.todayMarker.material.emissiveIntensity = mat.EMISSIVE.today;
+    }
+    if (_objects.todayLineGroup) {
+      _objects.todayLineGroup.children.forEach(c => {
+        if (c.material) {
+          c.material.opacity = mat.OPACITY.todayLine;
+          c.material.dashSize = 0.04;
+          c.material.gapSize = 0.025;
+        }
+      });
+    }
+
     // ── Mode-specific layer overrides ───────────────────────────────
     if (_viewMode === "today") {
       if (_objects.spiralPath)        _objects.spiralPath.visible = false;
       if (_objects.recurrenceGroup)   _objects.recurrenceGroup.visible = false;
+      // Boost Today halo and marker for emphasis
+      if (_objects.todayHalo?.material) {
+        _objects.todayHalo.material.emissiveIntensity = 1.1;
+        _objects.todayHalo.material.opacity = 1.0;
+      }
+      if (_objects.todayMarker?.material) {
+        _objects.todayMarker.material.emissiveIntensity = 1.4;
+      }
+      // Today line: make solid for emphasis in Today mode
+      if (_objects.todayLineGroup) {
+        _objects.todayLineGroup.children.forEach(c => {
+          if (c.material) { c.material.opacity = 0.85; c.material.dashSize = 0.06; }
+        });
+      }
     } else if (_viewMode === "passage") {
       if (_objects.spiralPath)        _objects.spiralPath.visible = false;
     } else if (_viewMode === "pattern") {
@@ -840,6 +1058,9 @@
       _objects.selectionRing.scale.setScalar(1.0 + breathVal * 0.08);
     }
 
+    // Update sphere-anchored Moon labels
+    _updateMoonLabels(_viewMode);
+
     _renderer.render(_scene, _camera);
   }
 
@@ -938,6 +1159,10 @@
 
       // ── Pointer interaction ────────────────────────────────────────
       _wirePointerEvents(container, onYearSelect, onMarkerSelect);
+
+      // Build Moon label anchors and set up DOM elements
+      _buildMoonAnchors();
+      _setupMoonLabelEls(container);
 
       // ── Resize ────────────────────────────────────────────────────
       _wireResize(container);
@@ -1217,6 +1442,10 @@
     _hideFloatingLabel();
     if (_floatingLabelEl && _floatingLabelEl.parentNode) _floatingLabelEl.parentNode.removeChild(_floatingLabelEl);
     _floatingLabelEl = null;
+    if (_moonLabelEls) _moonLabelEls.forEach(el => { if (el) el.style.display = "none"; });
+    _moonLabelEls = null;
+    _moonLabelContainer = null;
+    _moonAnchors.length = 0;
     _scene = null;
     _camera = null;
     _initialized  = false;

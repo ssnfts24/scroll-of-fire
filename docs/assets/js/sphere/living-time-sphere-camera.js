@@ -13,11 +13,11 @@
   // phi:   vertical angle from XZ plane (0 = horizontal, π/2 = top-down)
   // theta: horizontal rotation from +Z axis
   const MODE_POSITIONS = Object.freeze({
-    today:   Object.freeze({ distance: 2.8, phi: 0.40, theta: 0.0 }),
-    passage: Object.freeze({ distance: 2.4, phi: 0.30, theta: 0.15 }),
-    years:   Object.freeze({ distance: 4.5, phi: 0.55, theta: 0.0 }),
+    today:   Object.freeze({ distance: 2.8, phi: 0.55, theta: 0.0 }),
+    passage: Object.freeze({ distance: 2.4, phi: 0.55, theta: 0.15 }),
+    years:   Object.freeze({ distance: 4.5, phi: 0.60, theta: 0.0 }),
     pattern: Object.freeze({ distance: 2.6, phi: 1.45, theta: 0.0 }), // nearly top-down
-    default: Object.freeze({ distance: 3.2, phi: 0.42, theta: 0.0 }),
+    default: Object.freeze({ distance: 3.2, phi: 0.55, theta: 0.0 }),
   });
 
   // ── Internal state ─────────────────────────────────────────────────
