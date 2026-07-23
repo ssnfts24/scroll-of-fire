@@ -772,17 +772,65 @@ details[open] > .sphere-settings-summary::before { content: "▾ "; }
   margin-top: 0.5rem;
   font-size: 0.83rem;
   color: rgba(255, 200, 160, 0.9);
+  overflow-x: hidden;
+}
+
+.sphere-fallback-summary {
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+  font-size: 0.87rem;
 }
 
 .sphere-fallback-reason {
   display: block;
   margin-bottom: 0.4rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.sphere-fallback-details {
+  margin: 0.4rem 0;
+  font-size: 0.8rem;
+}
+
+.sphere-fallback-details summary {
+  cursor: pointer;
+  color: rgba(255, 200, 160, 0.7);
+  padding: 0.15rem 0;
+  list-style: none;
+}
+.sphere-fallback-details summary::-webkit-details-marker { display: none; }
+
+.sphere-fallback-detail-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.2rem 0.7rem;
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+}
+
+.sphere-fallback-detail-list dt {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sphere-fallback-wrap {
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .sphere-fallback-actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 420px) {
+  .sphere-fallback-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 }
 
 .sphere-btn-sm {

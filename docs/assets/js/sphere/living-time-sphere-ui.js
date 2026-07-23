@@ -305,6 +305,15 @@
     if (!el) return;
     const reasonEl = el.querySelector(".sphere-fallback-reason");
     if (reasonEl) reasonEl.textContent = `3D unavailable — using SVG (${reason}${detail})`;
+    // Populate inline diagnostics inside the collapsible details block.
+    const r3d = globalThis.LivingTimeSphereRenderer3d;
+    const diag = r3d?.getDiagnostics?.() || {};
+    const _set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val || "—"; };
+    _set("sphere-diag-local-url-warn",      diag.localModuleUrl || r3d?.THREE_LOCAL_REL || "—");
+    _set("sphere-diag-last-error-warn",     diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : (detail || "—"));
+    _set("sphere-diag-module-source-warn",  diag.moduleSource || "none");
+    _set("sphere-diag-webgl-warn",          diag.webglAvailable ? "available" : "unavailable");
+    _set("sphere-diag-webgl2-warn",         diag.webgl2Available ? "available" : "unavailable");
     el.hidden = false;
   }
 
@@ -321,16 +330,18 @@
     if (!r3d) return;
     const diag = r3d.getDiagnostics?.() || {};
     const rows = {
-      "sphere-diag-requested":   "3d",
-      "sphere-diag-active":      _state.active3d ? "WebGL 3D active" : (_state.rendererMode === "svg" ? "Accessible SVG" : "SVG fallback"),
-      "sphere-diag-fallback":    _state.active3d ? "none" : (diag.lastInitError?.reason || "none"),
-      "sphere-diag-webgl":       diag.webglAvailable ? "available" : "unavailable",
-      "sphere-diag-webgl2":      diag.webgl2Available ? "available" : "unavailable",
-      "sphere-diag-lib-version": diag.threeVersion || r3d.THREE_VERSION || "—",
-      "sphere-diag-canvas-size": diag.canvasWidth && diag.canvasHeight ? `${diag.canvasWidth} × ${diag.canvasHeight}` : "—",
-      "sphere-diag-dpr":         String(diag.devicePixelRatio || "—"),
-      "sphere-diag-quality":     _state.quality,
-      "sphere-diag-last-error":  diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : "none",
+      "sphere-diag-requested":    "3d",
+      "sphere-diag-active":       _state.active3d ? "WebGL 3D active" : (_state.rendererMode === "svg" ? "Accessible SVG" : "SVG fallback"),
+      "sphere-diag-fallback":     _state.active3d ? "none" : (diag.lastInitError?.reason || "none"),
+      "sphere-diag-webgl":        diag.webglAvailable ? "available" : "unavailable",
+      "sphere-diag-webgl2":       diag.webgl2Available ? "available" : "unavailable",
+      "sphere-diag-lib-version":  diag.threeVersion || r3d.THREE_VERSION || "—",
+      "sphere-diag-module-source": diag.moduleSource || "none",
+      "sphere-diag-local-url":    diag.localModuleUrl || r3d.THREE_LOCAL_REL || "—",
+      "sphere-diag-canvas-size":  diag.canvasWidth && diag.canvasHeight ? `${diag.canvasWidth} × ${diag.canvasHeight}` : "—",
+      "sphere-diag-dpr":          String(diag.devicePixelRatio || "—"),
+      "sphere-diag-quality":      _state.quality,
+      "sphere-diag-last-error":   diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : "none",
     };
     for (const [id, val] of Object.entries(rows)) {
       const el = document.getElementById(id);
@@ -764,6 +775,12 @@
 
     const container = document.getElementById("sphere-container");
     if (!container) return;
+
+    // Auto-open Sphere Settings panel on non-mobile viewports.
+    const settingsGroup = document.querySelector(".sphere-settings-group");
+    if (settingsGroup && window.innerWidth >= 600) {
+      settingsGroup.open = true;
+    }
 
     // Hide the interact bar immediately — it will be shown only after
     // 3D init succeeds.  This prevents the "Exit Interaction" ghost state.

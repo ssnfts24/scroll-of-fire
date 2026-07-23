@@ -373,8 +373,8 @@ test("LivingTimeSphereRenderer3d: THREE_VERSION is documented", () => {
   const ctx = loadSphereContext();
   const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
   vm.runInNewContext(code, ctx);
-  assert.ok(ctx.LivingTimeSphereRenderer3d.THREE_VERSION, "THREE_VERSION must be set");
-  assert.ok(ctx.LivingTimeSphereRenderer3d.THREE_CDN,     "THREE_CDN must be set");
+  assert.ok(ctx.LivingTimeSphereRenderer3d.THREE_VERSION,   "THREE_VERSION must be set");
+  assert.ok(ctx.LivingTimeSphereRenderer3d.THREE_LOCAL_REL, "THREE_LOCAL_REL must be set");
 });
 
 test("LivingTimeSphereRenderer3d: isInitialized returns false before init", () => {

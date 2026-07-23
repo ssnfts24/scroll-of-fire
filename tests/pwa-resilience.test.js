@@ -298,7 +298,7 @@ test("service-worker build marker matches the central app version", () => {
   const versionFile = read("docs/assets/js/moons-version.js");
   const version = versionFile.match(/APP_VERSION = "([^"]+)"/)[1];
   const build = versionFile.match(/SERVICE_WORKER_BUILD = APP_VERSION/);
-  assert.equal(version, "2026.07.23.3");
+  assert.equal(version, "2026.07.23.4");
   assert.ok(build);
   assert.match(read("docs/service-worker.js"), new RegExp(`core-\\$\\{VERSION\\}`));
   assert.doesNotMatch(read("docs/service-worker.js"), /\bcaches\.match\(/);

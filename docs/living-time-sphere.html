@@ -23,8 +23,8 @@
   <link rel="canonical" href="https://codexofreality.org/living-time-sphere.html">
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
-  <link rel="stylesheet" href="assets/css/moons.css?v=20260723-3">
-  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260723-3">
+  <link rel="stylesheet" href="assets/css/moons.css?v=20260723-4">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260723-4">
 
   <!-- Core engines -->
   <script defer src="assets/js/site.js"></script>
@@ -115,7 +115,7 @@
         </div>
 
         <!-- Sphere Settings (collapsible on mobile) -->
-        <details class="sphere-settings-group" open>
+        <details class="sphere-settings-group">
           <summary class="sphere-settings-summary">Sphere Settings</summary>
           <div class="sphere-settings-body">
             <!-- View/renderer selector -->
@@ -154,11 +154,22 @@
 
         <!-- 3D fallback warning (shown when 3D selected but unavailable) -->
         <div id="sphere-renderer-fallback-warning" class="sphere-fallback-warning" hidden role="alert" aria-live="assertive">
-          <span class="sphere-fallback-reason">3D unavailable — using SVG</span>
+          <p class="sphere-fallback-summary">3D could not start. Accessible SVG is active.</p>
+          <p class="sphere-fallback-reason" aria-live="polite">3D unavailable — using SVG</p>
+          <details class="sphere-fallback-details">
+            <summary>Technical Details</summary>
+            <dl class="sphere-fallback-detail-list">
+              <dt>Local module</dt><dd id="sphere-diag-local-url-warn">—</dd>
+              <dt>Error</dt><dd id="sphere-diag-last-error-warn" class="sphere-fallback-wrap">—</dd>
+              <dt>Module source</dt><dd id="sphere-diag-module-source-warn">—</dd>
+              <dt>WebGL</dt><dd id="sphere-diag-webgl-warn">—</dd>
+              <dt>WebGL2</dt><dd id="sphere-diag-webgl2-warn">—</dd>
+            </dl>
+          </details>
           <div class="sphere-fallback-actions">
-            <button id="sphere-retry-3d" class="sphere-btn sphere-btn-sm" type="button">Retry 3D</button>
-            <button id="sphere-clear-renderer-cache" class="sphere-btn sphere-btn-sm" type="button">Clear Sphere renderer cache</button>
-            <button id="sphere-switch-svg" class="sphere-btn sphere-btn-sm" type="button">Switch to SVG</button>
+            <button id="sphere-retry-3d" class="sphere-btn sphere-btn-sm" type="button">Retry Local 3D</button>
+            <button id="sphere-clear-renderer-cache" class="sphere-btn sphere-btn-sm" type="button">Clear Sphere Cache</button>
+            <button id="sphere-switch-svg" class="sphere-btn sphere-btn-sm" type="button">Continue with SVG</button>
           </div>
         </div>
       </section>
@@ -286,6 +297,8 @@
             <dt>WebGL</dt>               <dd id="sphere-diag-webgl">—</dd>
             <dt>WebGL2</dt>              <dd id="sphere-diag-webgl2">—</dd>
             <dt>Library version</dt>     <dd id="sphere-diag-lib-version">—</dd>
+            <dt>Module source</dt>       <dd id="sphere-diag-module-source">—</dd>
+            <dt>Local module URL</dt>    <dd id="sphere-diag-local-url" style="overflow-wrap:break-word;word-break:break-all">—</dd>
             <dt>Canvas size</dt>         <dd id="sphere-diag-canvas-size">—</dd>
             <dt>Device pixel ratio</dt>  <dd id="sphere-diag-dpr">—</dd>
             <dt>Quality</dt>             <dd id="sphere-diag-quality">—</dd>

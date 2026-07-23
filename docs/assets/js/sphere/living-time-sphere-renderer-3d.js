@@ -2,7 +2,7 @@
   "use strict";
 
   // Living Time Sphere — 3D WebGL renderer (Three.js).
-  // Dependency: Three.js r167  (loaded lazily; UMD build from CDN)
+  // Dependency: Three.js r167  (vendored local ES module — no CDN dependency)
   // License:    MIT  https://github.com/mrdoob/three.js/blob/dev/LICENSE
   // Attribution: three.js by mrdoob and contributors — https://threejs.org
   //
@@ -29,13 +29,27 @@
   //
   // THREE.JS DEPENDENCY
   //   Version pinned: 0.167.1 (r167)
-  //   CDN: https://cdn.jsdelivr.net/npm/three@0.167.1/build/three.min.js
-  //   SRI: verify with: `cat three.min.js | openssl dgst -sha384 -binary | base64`
-  //   Transfer size: ~577 KB minified (~170 KB gzipped over HTTPS).
-  //   Loaded only on this page; only after DOMContentLoaded.
+  //   Local:  assets/vendor/three/three.module.min.js  (ES module, same-origin)
+  //   Integrity: sha384-fPAi39ufYYhieBm2Yj7mAE8pE2HIIJm4iFT2zQEY4g4/OMR9m8GMM5+jen6ptHcu
+  //   Loaded via dynamic import() — no <script> tag, no CDN, works offline.
+  //   The local path resolves relative to document.baseURI so it works on both:
+  //     https://codexofreality.org/            (base href = /)
+  //     https://ssnfts24.github.io/scroll-of-fire/  (base href = /scroll-of-fire/)
 
-  const THREE_VERSION = "0.167.1";
-  const THREE_CDN     = `https://cdn.jsdelivr.net/npm/three@${THREE_VERSION}/build/three.min.js`;
+  const THREE_VERSION    = "0.167.1";
+  const THREE_LOCAL_REL  = "assets/vendor/three/three.module.min.js";
+  // THREE_CDN is intentionally not used in production; retained only for comments.
+  // const THREE_CDN = `https://cdn.jsdelivr.net/npm/three@${THREE_VERSION}/build/three.module.min.js`;
+
+  // Resolve the local module URL against the document base so GitHub Pages
+  // (/scroll-of-fire/) and Netlify root (/) both work.
+  function _localThreeUrl() {
+    try {
+      return new URL(THREE_LOCAL_REL, document.baseURI).href;
+    } catch {
+      return THREE_LOCAL_REL;
+    }
+  }
 
   // ── Dependencies check ────────────────────────────────────────────
 
@@ -50,7 +64,8 @@
 
   // ── Scene state ───────────────────────────────────────────────────
 
-  let _THREE        = null;   // Three.js namespace (set after lazy load)
+  let _THREE        = null;   // Three.js namespace (set after lazy import)
+  let _threeSource  = null;   // "local" after successful local import
   let _renderer     = null;   // WebGLRenderer
   let _scene        = null;
   let _camera       = null;
@@ -76,25 +91,20 @@
   function loadThreeJs() {
     if (_THREE) return Promise.resolve(_THREE);
     if (_loadPromise) return _loadPromise;
-    _loadPromise = new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src           = THREE_CDN;
-      script.crossOrigin   = "anonymous";
-      script.async         = true;
-      script.onload = () => {
-        if (!globalThis.THREE) {
-          _loadPromise = null; // allow retry
-          reject(new Error("Three.js did not expose globalThis.THREE"));
-          return;
-        }
-        _THREE = globalThis.THREE;
-        resolve(_THREE);
-      };
-      script.onerror = () => {
-        _loadPromise = null; // allow retry after failure
-        reject(new Error(`Failed to load Three.js from CDN: ${THREE_CDN}`));
-      };
-      document.head.appendChild(script);
+    const localUrl = _localThreeUrl();
+    _loadPromise = import(localUrl).then(module => {
+      // ES module namespace — contains all named Three.js exports.
+      // Verify it is a real Three.js module by checking a core class.
+      if (!module || typeof module.WebGLRenderer !== "function") {
+        _loadPromise = null;
+        throw new Error(`Local Three.js module at ${localUrl} did not export expected Three.js classes.`);
+      }
+      _THREE = module;
+      _threeSource = "local";
+      return module;
+    }).catch(err => {
+      _loadPromise = null; // allow retry
+      throw new Error(`3D module failed to load from this installation. URL: ${localUrl} — ${err?.message || err}`);
     });
     return _loadPromise;
   }
@@ -973,6 +983,8 @@
     _initialized  = false;
     _initializing = false;
     _loadPromise  = null; // allow Three.js reload after teardown
+    _THREE        = null;
+    _threeSource  = null;
     for (const key of Object.keys(_objects)) delete _objects[key];
   }
 
@@ -1000,6 +1012,8 @@
       webgl2Available:   webgl2Avail,
       threeVersion:      THREE_VERSION,
       threeLoaded:       !!_THREE,
+      moduleSource:      _threeSource || "none",
+      localModuleUrl:    _localThreeUrl(),
       canvasWidth:       canvasW,
       canvasHeight:      canvasH,
       devicePixelRatio:  typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1,
@@ -1028,6 +1042,6 @@
     getDiagnostics,
     exportPng,
     THREE_VERSION,
-    THREE_CDN,
+    THREE_LOCAL_REL,
   });
 })();
