@@ -541,6 +541,9 @@ const NEW_SPHERE_FILES = [
   "docs/assets/js/sphere/living-time-sphere-effects.js",
   "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
   "docs/assets/js/sphere/living-time-sphere-today.js",
+  "docs/assets/js/sphere/living-time-sphere-ui.js",
+  "docs/assets/js/sphere/living-time-sphere-interaction.js",
+  "docs/assets/js/sphere/living-time-sphere-url-state.js",
 ];
 
 for (const file of NEW_SPHERE_FILES) {
