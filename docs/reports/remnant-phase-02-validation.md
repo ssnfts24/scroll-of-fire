@@ -1,14 +1,73 @@
 # Remnant Phase 02 Validation
 
 - Files changed: pending final task summary.
-- Data sources: bundled equinox reference table plus validation cross-check and approximate synodic lunar layer.
-- Source precision: equinox instants ±1 second; validation deltas recorded per year; lunar layer approximate.
-- Validation years: 2014–2026.
-- Tolerance: equinox validation delta must remain <= 3 seconds against the bundled cross-check table.
-- Test results: pending final run.
-- Deployment status: pending.
-- Mobile checklist:
+- Source chain:
+  - Primary source label: janmr.com equinoxes and solstices table.
+  - Primary source URL: unknown.
+  - Source table URL: unknown.
+  - Retrieval date: 2026-07-22.
+  - Source revision/checksum: `6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc`.
+  - Independent validation label: bazica solar-term validation table.
+  - Independent validation URL: unknown.
+  - Independent validation revision/checksum: `79b48bf2`.
+  - Exact Skyfield version: unknown.
+  - Exact JPL kernel filename: unknown.
+  - Ephemeris version/checksum: unknown.
+  - Timescale used: UTC.
+  - Equinox-finding algorithm/function: unknown in the third-party source; repository imports whole-second timestamps rather than reproducing the original computation.
+  - Generation script path: `scripts/generate-equinox-passage-data.mjs`.
+  - Timestamp rounding policy: imported whole-second UTC timestamps are stored exactly as copied; no repository-generated sub-second values are invented.
+  - Generation timestamp recorded in metadata: `2026-07-22T00:00:00Z`.
+- Known unknowns:
+  - the exact original source page URL cannot yet be verified;
+  - the exact original Skyfield version and JPL kernel cannot yet be verified;
+  - source-integrity status is therefore `partial-unverified-third-party-source-chain`.
+- Timestamp language:
+  - Timestamp resolution: 1 second.
+  - Validation tolerance: 3 seconds.
+  - Maximum measured deviation: 2.057 seconds.
+  - Maximum-deviation year: 2022.
+- Yearly measured differences:
+  - 2014: 1.760 seconds
+  - 2015: 1.500 seconds
+  - 2016: 1.330 seconds
+  - 2017: 2.049 seconds
+  - 2018: 1.473 seconds
+  - 2019: 1.961 seconds
+  - 2020: 1.267 seconds
+  - 2021: 1.688 seconds
+  - 2022: 2.057 seconds
+  - 2023: 1.653 seconds
+  - 2024: 1.264 seconds
+  - 2025: 2.009 seconds
+  - 2026: 1.471 seconds
+- Deterministic generation command:
+  - `node scripts/generate-equinox-passage-data.mjs`
+  - `node scripts/generate-equinox-passage-data.mjs --verify`
+- Canonical/live separation:
+  - committed annual JSON and historical CSV contain canonical annual facts only;
+  - runtime status, elapsed time, remaining time, progress, and evaluated-at timestamp are computed as `liveState` at runtime.
+- Permanent-link behavior:
+  - equinox-passage.html now restores supported URL parameters before first render;
+  - invalid year, boundary, manual sunset, and compare-year values fall back safely;
+  - unsupported timezone falls back to UTC with a readable message;
+  - unknown dataset versions are reported and ignored;
+  - malformed or private parameters are ignored without crashing.
+- Boundary explanation:
+  - sunset/manual-sunset mode changes the Pattern boundary and passage end, not the astronomical equinox instant;
+  - 2026 America/Los_Angeles example: sunset/manual `18:00` ends at `2026-04-17T01:00:00Z`, while midnight ends at `2026-04-17T07:00:00Z`.
+- 2026 lunar result:
+  - phase is calculated at the equinox instant;
+  - the current authoritative repository algorithm reports an approximate Waxing Crescent at approximately 4.2% illumination.
+- Visualization-adapter target:
+  - deterministic, DOM-free, canvas-free data adapter with normalized output contracts and safe handling of missing lunar data.
+- CI approval status:
+  - prior workflow runs on this PR show owner-approval `action_required` states for Equinox Passage and SHA-256 workflows before later successful runs on the same head;
+  - after the next push, workflow status must be rechecked rather than treated as a code failure.
+- Owner-device checks:
   - [ ] Android owner device test
   - [ ] iPhone owner device test
   - [ ] Installed PWA owner device test
+- Test results: pending final run.
+- Deployment status: pending.
 - Rollback commit: pending final commit hash.

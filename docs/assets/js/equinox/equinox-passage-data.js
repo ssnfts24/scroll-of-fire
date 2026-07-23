@@ -15,8 +15,18 @@
     }));
   }
 
+  function buildCanonicalDataset({ timeZone, boundaryMode, manualSunset } = {}) {
+    return listYears().map(year => globalThis.EquinoxPassageEngine.buildCanonicalRecord({
+      selectedYear: year,
+      timeZone: timeZone || globalThis.AstronomyVersion.defaultStudyTimeZone,
+      boundaryMode: boundaryMode || globalThis.AstronomyVersion.defaultBoundaryMode,
+      manualSunset: manualSunset || globalThis.AstronomyVersion.defaultSunset
+    }));
+  }
+
   globalThis.EquinoxPassageData = Object.freeze({
     listYears,
-    buildHistoricalDataset
+    buildHistoricalDataset,
+    buildCanonicalDataset
   });
 })();

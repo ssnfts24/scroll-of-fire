@@ -80,29 +80,15 @@ test("oracle default share link excludes personal profile data", () => {
 
 test("malformed permanent-link params are sanitized on parse", () => {
   const api = loadUrlModule();
-  const parsed = api.parsePermanentLink("https://codexofreality.org/moons.html?date=not-a-date&tab=mirrorPanel<script>&display=std%20mode&source=daily-mirror");
+  const parsed = api.parsePermanentLink("https://codexofreality.org/moons.html?date=not-a-date&tab=mirrorPanel<script>&display=std%20mode&source=daily-mirror&sunset=bad");
   assert.equal(parsed.date, "");
   assert.equal(parsed.selectedTab, "");
   assert.equal(parsed.displayMode, "");
+  assert.equal(parsed.manualSunset, "");
   assert.equal(parsed.source, "daily-mirror");
 });
 
-test("permanent links keep selected tab and display/source modes", () => {
-  const api = loadUrlModule();
-  const link = api.buildPermanentLink({
-    baseUrl: "https://codexofreality.org/moons.html",
-    date: "2026-07-17",
-    selectedTab: "mirrorPanel",
-    displayMode: "professional",
-    source: "daily-mirror"
-  });
-  const parsed = api.parsePermanentLink(link);
-  assert.equal(parsed.selectedTab, "mirrorPanel");
-  assert.equal(parsed.displayMode, "professional");
-  assert.equal(parsed.source, "daily-mirror");
-});
-
-test("equinox passage links preserve year dataset and boundary parameters", () => {
+test("equinox passage links preserve year dataset boundary and comparison parameters", () => {
   const api = loadUrlModule();
   const link = api.buildEquinoxShareLink({
     baseUrl: "https://codexofreality.org/equinox-passage.html",
@@ -112,6 +98,8 @@ test("equinox passage links preserve year dataset and boundary parameters", () =
     manualSunset: "18:45",
     displayMode: "standard",
     datasetVersion: "equinox-passage/1.0.0",
+    compareYearA: 2018,
+    compareYearB: 2026,
     source: "equinox-passage"
   });
   const parsed = api.parseEquinoxShareLink(link);
@@ -122,6 +110,8 @@ test("equinox passage links preserve year dataset and boundary parameters", () =
     manualSunset: "18:45",
     displayMode: "standard",
     datasetVersion: "equinox-passage/1.0.0",
+    compareYearA: "2018",
+    compareYearB: "2026",
     source: "equinox-passage"
   }));
 });

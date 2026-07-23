@@ -11,13 +11,30 @@
       "utcInstant": "2014-03-20T16:57:05Z",
       "localInstant": "2014-03-20T09:57:05",
       "civilDate": "2014-03-20",
-      "source": "janmr.com equinoxes and solstices",
+      "source": "janmr.com equinoxes and solstices table",
       "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
-      "precisionSeconds": 1,
-      "claimedPrecision": "±1 second",
+      "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+      "dataOrigin": "third-party-copied-and-validated",
+      "timestampResolutionSeconds": 1,
+      "validationToleranceSeconds": 3,
+      "maximumMeasuredDeviationSeconds": 2.057,
+      "maximumDeviationYear": 2022,
+      "primarySourceUrl": "unknown",
+      "sourceTableUrl": "unknown",
+      "validationUrl": "unknown",
+      "skyfieldVersion": "unknown",
+      "jplKernelFilename": "unknown",
+      "ephemerisVersionOrChecksum": "unknown",
+      "timescale": "UTC",
+      "equinoxFindingAlgorithm": "unknown; repository imports third-party whole-second March equinox timestamps rather than reproducing the original computation",
+      "generationScriptPath": "scripts/generate-equinox-passage-data.mjs",
+      "timestampRoundingPolicy": "Imported whole-second UTC timestamps are stored exactly as copied; the repository does not invent sub-second values",
+      "generationTimestamp": "2026-07-22T00:00:00Z",
       "status": "sourced",
-      "validationStatus": "validated-against-bazica",
+      "validationStatus": "validated-against-independent-table",
+      "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
       "validationDeltaSeconds": 1.76,
+      "validationUtcInstant": "2014-03-20T16:57:06.760Z",
       "generatedOrImportedAt": "2026-07-22T00:00:00Z"
     },
     "patternPosition": {
@@ -35,14 +52,10 @@
       "isDeepTimeDay": false
     },
     "passage": {
-      "state": "after-passage",
       "startInstant": "2014-03-20T16:57:05Z",
       "endInstant": "2014-04-17T01:00:00.000Z",
       "totalMilliseconds": 2361775000,
       "totalDays": 27.335359,
-      "elapsedMilliseconds": 2361775000,
-      "remainingMilliseconds": 0,
-      "progress": 1,
       "civilMidnightsCrossed": 27,
       "selectedPatternBoundariesCrossed": 28
     },
@@ -54,20 +67,21 @@
       "cyclePosition": 0.646568,
       "illumination": 0.802546,
       "illuminationPercent": 80.3,
-      "phaseName": "Waning Gibbous"
+      "phaseName": "Waning Gibbous",
+      "calculationInstantUtc": "2014-03-20T16:57:05Z",
+      "approximate": true
     },
     "annualSignature": {
       "calculated": "Equinox entered at Completion Seal · Day 2.",
-      "astronomical": "Waning Gibbous with approximately 80.3% illumination.",
+      "astronomical": "Approximate lunar phase at the equinox instant: Waning Gibbous with approximately 80.3% illumination.",
       "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
-      "observational": "Passage length: 27 days, 8 hours, 2 minutes. No conclusion until witness records are collected."
+      "observational": "Passage length under the declared boundary settings: 27 days, 8 hours, 2 minutes. No conclusion until witness records are collected."
     },
     "normalizedValues": {
       "patternCyclePosition": 0.925824,
       "moonIndex": 12,
       "dayIndex": 1,
       "yearProgress": 0.925824,
-      "passageProgress": 1,
       "equinoxCyclePosition": 0.224044,
       "lunarCyclePosition": 0.646568,
       "solarSeasonPosition": 0
@@ -75,13 +89,17 @@
     "sources": [
       {
         "layer": "astronomical-fact",
-        "source": "janmr.com equinoxes and solstices",
+        "source": "janmr.com equinoxes and solstices table",
         "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
         "exactUtcInstant": "2014-03-20T16:57:05Z",
-        "precisionSeconds": 1,
-        "sourced": true,
-        "validationStatus": "validated-against-bazica",
+        "timestampResolutionSeconds": 1,
+        "validationToleranceSeconds": 3,
+        "validationStatus": "validated-against-independent-table",
+        "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
         "validationDeltaSeconds": 1.76,
+        "maximumMeasuredDeviationSeconds": 2.057,
+        "maximumDeviationYear": 2022,
+        "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
         "generatedOrImportedAt": "2026-07-22T00:00:00Z"
       },
       {
@@ -97,8 +115,7 @@
         "sourced": false,
         "validationStatus": "approximate"
       }
-    ],
-    "generatedAt": "2026-07-22T22:25:11.264Z"
+    ]
   },
   {
     "schemaVersion": "equinox-passage/1.0.0",
@@ -112,13 +129,30 @@
       "utcInstant": "2015-03-20T22:45:09Z",
       "localInstant": "2015-03-20T15:45:09",
       "civilDate": "2015-03-20",
-      "source": "janmr.com equinoxes and solstices",
+      "source": "janmr.com equinoxes and solstices table",
       "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
-      "precisionSeconds": 1,
-      "claimedPrecision": "±1 second",
+      "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+      "dataOrigin": "third-party-copied-and-validated",
+      "timestampResolutionSeconds": 1,
+      "validationToleranceSeconds": 3,
+      "maximumMeasuredDeviationSeconds": 2.057,
+      "maximumDeviationYear": 2022,
+      "primarySourceUrl": "unknown",
+      "sourceTableUrl": "unknown",
+      "validationUrl": "unknown",
+      "skyfieldVersion": "unknown",
+      "jplKernelFilename": "unknown",
+      "ephemerisVersionOrChecksum": "unknown",
+      "timescale": "UTC",
+      "equinoxFindingAlgorithm": "unknown; repository imports third-party whole-second March equinox timestamps rather than reproducing the original computation",
+      "generationScriptPath": "scripts/generate-equinox-passage-data.mjs",
+      "timestampRoundingPolicy": "Imported whole-second UTC timestamps are stored exactly as copied; the repository does not invent sub-second values",
+      "generationTimestamp": "2026-07-22T00:00:00Z",
       "status": "sourced",
-      "validationStatus": "validated-against-bazica",
+      "validationStatus": "validated-against-independent-table",
+      "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
       "validationDeltaSeconds": 1.5,
+      "validationUtcInstant": "2015-03-20T22:45:10.500Z",
       "generatedOrImportedAt": "2026-07-22T00:00:00Z"
     },
     "patternPosition": {
@@ -136,14 +170,10 @@
       "isDeepTimeDay": false
     },
     "passage": {
-      "state": "after-passage",
       "startInstant": "2015-03-20T22:45:09Z",
       "endInstant": "2015-04-17T01:00:00.000Z",
       "totalMilliseconds": 2340891000,
       "totalDays": 27.093646,
-      "elapsedMilliseconds": 2340891000,
-      "remainingMilliseconds": 0,
-      "progress": 1,
       "civilMidnightsCrossed": 27,
       "selectedPatternBoundariesCrossed": 28
     },
@@ -155,20 +185,21 @@
       "cyclePosition": 0.014818,
       "illumination": 0.002166,
       "illuminationPercent": 0.2,
-      "phaseName": "New Moon"
+      "phaseName": "New Moon",
+      "calculationInstantUtc": "2015-03-20T22:45:09Z",
+      "approximate": true
     },
     "annualSignature": {
       "calculated": "Equinox entered at Completion Seal · Day 2.",
-      "astronomical": "New Moon with approximately 0.2% illumination.",
+      "astronomical": "Approximate lunar phase at the equinox instant: New Moon with approximately 0.2% illumination.",
       "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
-      "observational": "Passage length: 27 days, 2 hours, 14 minutes. No conclusion until witness records are collected."
+      "observational": "Passage length under the declared boundary settings: 27 days, 2 hours, 14 minutes. No conclusion until witness records are collected."
     },
     "normalizedValues": {
       "patternCyclePosition": 0.925824,
       "moonIndex": 12,
       "dayIndex": 1,
       "yearProgress": 0.925824,
-      "passageProgress": 1,
       "equinoxCyclePosition": 0.224044,
       "lunarCyclePosition": 0.014818,
       "solarSeasonPosition": 0
@@ -176,13 +207,17 @@
     "sources": [
       {
         "layer": "astronomical-fact",
-        "source": "janmr.com equinoxes and solstices",
+        "source": "janmr.com equinoxes and solstices table",
         "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
         "exactUtcInstant": "2015-03-20T22:45:09Z",
-        "precisionSeconds": 1,
-        "sourced": true,
-        "validationStatus": "validated-against-bazica",
+        "timestampResolutionSeconds": 1,
+        "validationToleranceSeconds": 3,
+        "validationStatus": "validated-against-independent-table",
+        "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
         "validationDeltaSeconds": 1.5,
+        "maximumMeasuredDeviationSeconds": 2.057,
+        "maximumDeviationYear": 2022,
+        "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
         "generatedOrImportedAt": "2026-07-22T00:00:00Z"
       },
       {
@@ -198,8 +233,7 @@
         "sourced": false,
         "validationStatus": "approximate"
       }
-    ],
-    "generatedAt": "2026-07-22T22:25:11.265Z"
+    ]
   },
   {
     "schemaVersion": "equinox-passage/1.0.0",
@@ -213,13 +247,30 @@
       "utcInstant": "2016-03-20T04:30:11Z",
       "localInstant": "2016-03-19T21:30:11",
       "civilDate": "2016-03-19",
-      "source": "janmr.com equinoxes and solstices",
+      "source": "janmr.com equinoxes and solstices table",
       "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
-      "precisionSeconds": 1,
-      "claimedPrecision": "±1 second",
+      "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+      "dataOrigin": "third-party-copied-and-validated",
+      "timestampResolutionSeconds": 1,
+      "validationToleranceSeconds": 3,
+      "maximumMeasuredDeviationSeconds": 2.057,
+      "maximumDeviationYear": 2022,
+      "primarySourceUrl": "unknown",
+      "sourceTableUrl": "unknown",
+      "validationUrl": "unknown",
+      "skyfieldVersion": "unknown",
+      "jplKernelFilename": "unknown",
+      "ephemerisVersionOrChecksum": "unknown",
+      "timescale": "UTC",
+      "equinoxFindingAlgorithm": "unknown; repository imports third-party whole-second March equinox timestamps rather than reproducing the original computation",
+      "generationScriptPath": "scripts/generate-equinox-passage-data.mjs",
+      "timestampRoundingPolicy": "Imported whole-second UTC timestamps are stored exactly as copied; the repository does not invent sub-second values",
+      "generationTimestamp": "2026-07-22T00:00:00Z",
       "status": "sourced",
-      "validationStatus": "validated-against-bazica",
+      "validationStatus": "validated-against-independent-table",
+      "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
       "validationDeltaSeconds": 1.33,
+      "validationUtcInstant": "2016-03-20T04:30:12.330Z",
       "generatedOrImportedAt": "2026-07-22T00:00:00Z"
     },
     "patternPosition": {
@@ -237,14 +288,10 @@
       "isDeepTimeDay": false
     },
     "passage": {
-      "state": "after-passage",
       "startInstant": "2016-03-20T04:30:11Z",
       "endInstant": "2016-04-17T01:00:00.000Z",
       "totalMilliseconds": 2406589000,
       "totalDays": 27.854039,
-      "elapsedMilliseconds": 2406589000,
-      "remainingMilliseconds": 0,
-      "progress": 1,
       "civilMidnightsCrossed": 28,
       "selectedPatternBoundariesCrossed": 28
     },
@@ -256,20 +303,21 @@
       "cyclePosition": 0.382997,
       "illumination": 0.870865,
       "illuminationPercent": 87.1,
-      "phaseName": "Waxing Gibbous"
+      "phaseName": "Waxing Gibbous",
+      "calculationInstantUtc": "2016-03-20T04:30:11Z",
+      "approximate": true
     },
     "annualSignature": {
       "calculated": "Equinox entered at Completion Seal · Day 3.",
-      "astronomical": "Waxing Gibbous with approximately 87.1% illumination.",
+      "astronomical": "Approximate lunar phase at the equinox instant: Waxing Gibbous with approximately 87.1% illumination.",
       "symbolic": "Week 1 · Ignition frames a Breath threshold without claiming causation.",
-      "observational": "Passage length: 27 days, 20 hours, 29 minutes. No conclusion until witness records are collected."
+      "observational": "Passage length under the declared boundary settings: 27 days, 20 hours, 29 minutes. No conclusion until witness records are collected."
     },
     "normalizedValues": {
       "patternCyclePosition": 0.928571,
       "moonIndex": 12,
       "dayIndex": 2,
       "yearProgress": 0.928571,
-      "passageProgress": 1,
       "equinoxCyclePosition": 0.224044,
       "lunarCyclePosition": 0.382997,
       "solarSeasonPosition": 0
@@ -277,13 +325,17 @@
     "sources": [
       {
         "layer": "astronomical-fact",
-        "source": "janmr.com equinoxes and solstices",
+        "source": "janmr.com equinoxes and solstices table",
         "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
         "exactUtcInstant": "2016-03-20T04:30:11Z",
-        "precisionSeconds": 1,
-        "sourced": true,
-        "validationStatus": "validated-against-bazica",
+        "timestampResolutionSeconds": 1,
+        "validationToleranceSeconds": 3,
+        "validationStatus": "validated-against-independent-table",
+        "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
         "validationDeltaSeconds": 1.33,
+        "maximumMeasuredDeviationSeconds": 2.057,
+        "maximumDeviationYear": 2022,
+        "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
         "generatedOrImportedAt": "2026-07-22T00:00:00Z"
       },
       {
@@ -299,8 +351,7 @@
         "sourced": false,
         "validationStatus": "approximate"
       }
-    ],
-    "generatedAt": "2026-07-22T22:25:11.265Z"
+    ]
   },
   {
     "schemaVersion": "equinox-passage/1.0.0",
@@ -314,13 +365,30 @@
       "utcInstant": "2017-03-20T10:28:37Z",
       "localInstant": "2017-03-20T03:28:37",
       "civilDate": "2017-03-20",
-      "source": "janmr.com equinoxes and solstices",
+      "source": "janmr.com equinoxes and solstices table",
       "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
-      "precisionSeconds": 1,
-      "claimedPrecision": "±1 second",
+      "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+      "dataOrigin": "third-party-copied-and-validated",
+      "timestampResolutionSeconds": 1,
+      "validationToleranceSeconds": 3,
+      "maximumMeasuredDeviationSeconds": 2.057,
+      "maximumDeviationYear": 2022,
+      "primarySourceUrl": "unknown",
+      "sourceTableUrl": "unknown",
+      "validationUrl": "unknown",
+      "skyfieldVersion": "unknown",
+      "jplKernelFilename": "unknown",
+      "ephemerisVersionOrChecksum": "unknown",
+      "timescale": "UTC",
+      "equinoxFindingAlgorithm": "unknown; repository imports third-party whole-second March equinox timestamps rather than reproducing the original computation",
+      "generationScriptPath": "scripts/generate-equinox-passage-data.mjs",
+      "timestampRoundingPolicy": "Imported whole-second UTC timestamps are stored exactly as copied; the repository does not invent sub-second values",
+      "generationTimestamp": "2026-07-22T00:00:00Z",
       "status": "sourced",
-      "validationStatus": "validated-against-bazica",
+      "validationStatus": "validated-against-independent-table",
+      "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
       "validationDeltaSeconds": 2.049,
+      "validationUtcInstant": "2017-03-20T10:28:39.049Z",
       "generatedOrImportedAt": "2026-07-22T00:00:00Z"
     },
     "patternPosition": {
@@ -338,14 +406,10 @@
       "isDeepTimeDay": false
     },
     "passage": {
-      "state": "after-passage",
       "startInstant": "2017-03-20T10:28:37Z",
       "endInstant": "2017-04-17T01:00:00.000Z",
       "totalMilliseconds": 2385083000,
       "totalDays": 27.605127,
-      "elapsedMilliseconds": 2385083000,
-      "remainingMilliseconds": 0,
-      "progress": 1,
       "civilMidnightsCrossed": 27,
       "selectedPatternBoundariesCrossed": 28
     },
@@ -357,20 +421,21 @@
       "cyclePosition": 0.751491,
       "illumination": 0.495315,
       "illuminationPercent": 49.5,
-      "phaseName": "Last Quarter"
+      "phaseName": "Last Quarter",
+      "calculationInstantUtc": "2017-03-20T10:28:37Z",
+      "approximate": true
     },
     "annualSignature": {
       "calculated": "Equinox entered at Completion Seal · Day 2.",
-      "astronomical": "Last Quarter with approximately 49.5% illumination.",
+      "astronomical": "Approximate lunar phase at the equinox instant: Last Quarter with approximately 49.5% illumination.",
       "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
-      "observational": "Passage length: 27 days, 14 hours, 31 minutes. No conclusion until witness records are collected."
+      "observational": "Passage length under the declared boundary settings: 27 days, 14 hours, 31 minutes. No conclusion until witness records are collected."
     },
     "normalizedValues": {
       "patternCyclePosition": 0.925824,
       "moonIndex": 12,
       "dayIndex": 1,
       "yearProgress": 0.925824,
-      "passageProgress": 1,
       "equinoxCyclePosition": 0.224044,
       "lunarCyclePosition": 0.751491,
       "solarSeasonPosition": 0
@@ -378,13 +443,17 @@
     "sources": [
       {
         "layer": "astronomical-fact",
-        "source": "janmr.com equinoxes and solstices",
+        "source": "janmr.com equinoxes and solstices table",
         "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
         "exactUtcInstant": "2017-03-20T10:28:37Z",
-        "precisionSeconds": 1,
-        "sourced": true,
-        "validationStatus": "validated-against-bazica",
+        "timestampResolutionSeconds": 1,
+        "validationToleranceSeconds": 3,
+        "validationStatus": "validated-against-independent-table",
+        "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
         "validationDeltaSeconds": 2.049,
+        "maximumMeasuredDeviationSeconds": 2.057,
+        "maximumDeviationYear": 2022,
+        "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
         "generatedOrImportedAt": "2026-07-22T00:00:00Z"
       },
       {
@@ -400,8 +469,7 @@
         "sourced": false,
         "validationStatus": "approximate"
       }
-    ],
-    "generatedAt": "2026-07-22T22:25:11.266Z"
+    ]
   },
   {
     "schemaVersion": "equinox-passage/1.0.0",
@@ -415,13 +483,30 @@
       "utcInstant": "2018-03-20T16:15:27Z",
       "localInstant": "2018-03-20T09:15:27",
       "civilDate": "2018-03-20",
-      "source": "janmr.com equinoxes and solstices",
+      "source": "janmr.com equinoxes and solstices table",
       "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
-      "precisionSeconds": 1,
-      "claimedPrecision": "±1 second",
+      "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+      "dataOrigin": "third-party-copied-and-validated",
+      "timestampResolutionSeconds": 1,
+      "validationToleranceSeconds": 3,
+      "maximumMeasuredDeviationSeconds": 2.057,
+      "maximumDeviationYear": 2022,
+      "primarySourceUrl": "unknown",
+      "sourceTableUrl": "unknown",
+      "validationUrl": "unknown",
+      "skyfieldVersion": "unknown",
+      "jplKernelFilename": "unknown",
+      "ephemerisVersionOrChecksum": "unknown",
+      "timescale": "UTC",
+      "equinoxFindingAlgorithm": "unknown; repository imports third-party whole-second March equinox timestamps rather than reproducing the original computation",
+      "generationScriptPath": "scripts/generate-equinox-passage-data.mjs",
+      "timestampRoundingPolicy": "Imported whole-second UTC timestamps are stored exactly as copied; the repository does not invent sub-second values",
+      "generationTimestamp": "2026-07-22T00:00:00Z",
       "status": "sourced",
-      "validationStatus": "validated-against-bazica",
+      "validationStatus": "validated-against-independent-table",
+      "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
       "validationDeltaSeconds": 1.473,
+      "validationUtcInstant": "2018-03-20T16:15:28.473Z",
       "generatedOrImportedAt": "2026-07-22T00:00:00Z"
     },
     "patternPosition": {
@@ -439,14 +524,10 @@
       "isDeepTimeDay": false
     },
     "passage": {
-      "state": "after-passage",
       "startInstant": "2018-03-20T16:15:27Z",
       "endInstant": "2018-04-17T01:00:00.000Z",
       "totalMilliseconds": 2364273000,
       "totalDays": 27.364271,
-      "elapsedMilliseconds": 2364273000,
-      "remainingMilliseconds": 0,
-      "progress": 1,
       "civilMidnightsCrossed": 27,
       "selectedPatternBoundariesCrossed": 28
     },
@@ -458,20 +539,21 @@
       "cyclePosition": 0.119713,
       "illumination": 0.134898,
       "illuminationPercent": 13.5,
-      "phaseName": "Waxing Crescent"
+      "phaseName": "Waxing Crescent",
+      "calculationInstantUtc": "2018-03-20T16:15:27Z",
+      "approximate": true
     },
     "annualSignature": {
       "calculated": "Equinox entered at Completion Seal · Day 2.",
-      "astronomical": "Waxing Crescent with approximately 13.5% illumination.",
+      "astronomical": "Approximate lunar phase at the equinox instant: Waxing Crescent with approximately 13.5% illumination.",
       "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
-      "observational": "Passage length: 27 days, 8 hours, 44 minutes. No conclusion until witness records are collected."
+      "observational": "Passage length under the declared boundary settings: 27 days, 8 hours, 44 minutes. No conclusion until witness records are collected."
     },
     "normalizedValues": {
       "patternCyclePosition": 0.925824,
       "moonIndex": 12,
       "dayIndex": 1,
       "yearProgress": 0.925824,
-      "passageProgress": 1,
       "equinoxCyclePosition": 0.224044,
       "lunarCyclePosition": 0.119713,
       "solarSeasonPosition": 0
@@ -479,13 +561,17 @@
     "sources": [
       {
         "layer": "astronomical-fact",
-        "source": "janmr.com equinoxes and solstices",
+        "source": "janmr.com equinoxes and solstices table",
         "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
         "exactUtcInstant": "2018-03-20T16:15:27Z",
-        "precisionSeconds": 1,
-        "sourced": true,
-        "validationStatus": "validated-against-bazica",
+        "timestampResolutionSeconds": 1,
+        "validationToleranceSeconds": 3,
+        "validationStatus": "validated-against-independent-table",
+        "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
         "validationDeltaSeconds": 1.473,
+        "maximumMeasuredDeviationSeconds": 2.057,
+        "maximumDeviationYear": 2022,
+        "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
         "generatedOrImportedAt": "2026-07-22T00:00:00Z"
       },
       {
@@ -501,8 +587,7 @@
         "sourced": false,
         "validationStatus": "approximate"
       }
-    ],
-    "generatedAt": "2026-07-22T22:25:11.267Z"
+    ]
   },
   {
     "schemaVersion": "equinox-passage/1.0.0",
@@ -516,13 +601,30 @@
       "utcInstant": "2019-03-20T21:58:25Z",
       "localInstant": "2019-03-20T14:58:25",
       "civilDate": "2019-03-20",
-      "source": "janmr.com equinoxes and solstices",
+      "source": "janmr.com equinoxes and solstices table",
       "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
-      "precisionSeconds": 1,
-      "claimedPrecision": "±1 second",
+      "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+      "dataOrigin": "third-party-copied-and-validated",
+      "timestampResolutionSeconds": 1,
+      "validationToleranceSeconds": 3,
+      "maximumMeasuredDeviationSeconds": 2.057,
+      "maximumDeviationYear": 2022,
+      "primarySourceUrl": "unknown",
+      "sourceTableUrl": "unknown",
+      "validationUrl": "unknown",
+      "skyfieldVersion": "unknown",
+      "jplKernelFilename": "unknown",
+      "ephemerisVersionOrChecksum": "unknown",
+      "timescale": "UTC",
+      "equinoxFindingAlgorithm": "unknown; repository imports third-party whole-second March equinox timestamps rather than reproducing the original computation",
+      "generationScriptPath": "scripts/generate-equinox-passage-data.mjs",
+      "timestampRoundingPolicy": "Imported whole-second UTC timestamps are stored exactly as copied; the repository does not invent sub-second values",
+      "generationTimestamp": "2026-07-22T00:00:00Z",
       "status": "sourced",
-      "validationStatus": "validated-against-bazica",
+      "validationStatus": "validated-against-independent-table",
+      "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
       "validationDeltaSeconds": 1.961,
+      "validationUtcInstant": "2019-03-20T21:58:26.961Z",
       "generatedOrImportedAt": "2026-07-22T00:00:00Z"
     },
     "patternPosition": {
@@ -540,14 +642,10 @@
       "isDeepTimeDay": false
     },
     "passage": {
-      "state": "after-passage",
       "startInstant": "2019-03-20T21:58:25Z",
       "endInstant": "2019-04-17T01:00:00.000Z",
       "totalMilliseconds": 2343695000,
       "totalDays": 27.1261,
-      "elapsedMilliseconds": 2343695000,
-      "remainingMilliseconds": 0,
-      "progress": 1,
       "civilMidnightsCrossed": 27,
       "selectedPatternBoundariesCrossed": 28
     },
@@ -559,20 +657,21 @@
       "cyclePosition": 0.487843,
       "illumination": 0.998542,
       "illuminationPercent": 99.9,
-      "phaseName": "Full Moon"
+      "phaseName": "Full Moon",
+      "calculationInstantUtc": "2019-03-20T21:58:25Z",
+      "approximate": true
     },
     "annualSignature": {
       "calculated": "Equinox entered at Completion Seal · Day 2.",
-      "astronomical": "Full Moon with approximately 99.9% illumination.",
+      "astronomical": "Approximate lunar phase at the equinox instant: Full Moon with approximately 99.9% illumination.",
       "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
-      "observational": "Passage length: 27 days, 3 hours, 1 minute. No conclusion until witness records are collected."
+      "observational": "Passage length under the declared boundary settings: 27 days, 3 hours, 1 minute. No conclusion until witness records are collected."
     },
     "normalizedValues": {
       "patternCyclePosition": 0.925824,
       "moonIndex": 12,
       "dayIndex": 1,
       "yearProgress": 0.925824,
-      "passageProgress": 1,
       "equinoxCyclePosition": 0.224044,
       "lunarCyclePosition": 0.487843,
       "solarSeasonPosition": 0
@@ -580,13 +679,17 @@
     "sources": [
       {
         "layer": "astronomical-fact",
-        "source": "janmr.com equinoxes and solstices",
+        "source": "janmr.com equinoxes and solstices table",
         "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
         "exactUtcInstant": "2019-03-20T21:58:25Z",
-        "precisionSeconds": 1,
-        "sourced": true,
-        "validationStatus": "validated-against-bazica",
+        "timestampResolutionSeconds": 1,
+        "validationToleranceSeconds": 3,
+        "validationStatus": "validated-against-independent-table",
+        "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
         "validationDeltaSeconds": 1.961,
+        "maximumMeasuredDeviationSeconds": 2.057,
+        "maximumDeviationYear": 2022,
+        "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
         "generatedOrImportedAt": "2026-07-22T00:00:00Z"
       },
       {
@@ -602,8 +705,7 @@
         "sourced": false,
         "validationStatus": "approximate"
       }
-    ],
-    "generatedAt": "2026-07-22T22:25:11.268Z"
+    ]
   },
   {
     "schemaVersion": "equinox-passage/1.0.0",
@@ -617,13 +719,30 @@
       "utcInstant": "2020-03-20T03:49:37Z",
       "localInstant": "2020-03-19T20:49:37",
       "civilDate": "2020-03-19",
-      "source": "janmr.com equinoxes and solstices",
+      "source": "janmr.com equinoxes and solstices table",
       "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
-      "precisionSeconds": 1,
-      "claimedPrecision": "±1 second",
+      "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+      "dataOrigin": "third-party-copied-and-validated",
+      "timestampResolutionSeconds": 1,
+      "validationToleranceSeconds": 3,
+      "maximumMeasuredDeviationSeconds": 2.057,
+      "maximumDeviationYear": 2022,
+      "primarySourceUrl": "unknown",
+      "sourceTableUrl": "unknown",
+      "validationUrl": "unknown",
+      "skyfieldVersion": "unknown",
+      "jplKernelFilename": "unknown",
+      "ephemerisVersionOrChecksum": "unknown",
+      "timescale": "UTC",
+      "equinoxFindingAlgorithm": "unknown; repository imports third-party whole-second March equinox timestamps rather than reproducing the original computation",
+      "generationScriptPath": "scripts/generate-equinox-passage-data.mjs",
+      "timestampRoundingPolicy": "Imported whole-second UTC timestamps are stored exactly as copied; the repository does not invent sub-second values",
+      "generationTimestamp": "2026-07-22T00:00:00Z",
       "status": "sourced",
-      "validationStatus": "validated-against-bazica",
+      "validationStatus": "validated-against-independent-table",
+      "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
       "validationDeltaSeconds": 1.267,
+      "validationUtcInstant": "2020-03-20T03:49:38.267Z",
       "generatedOrImportedAt": "2026-07-22T00:00:00Z"
     },
     "patternPosition": {
@@ -641,14 +760,10 @@
       "isDeepTimeDay": false
     },
     "passage": {
-      "state": "after-passage",
       "startInstant": "2020-03-20T03:49:37Z",
       "endInstant": "2020-04-17T01:00:00.000Z",
       "totalMilliseconds": 2409023000,
       "totalDays": 27.882211,
-      "elapsedMilliseconds": 2409023000,
-      "remainingMilliseconds": 0,
-      "progress": 1,
       "civilMidnightsCrossed": 28,
       "selectedPatternBoundariesCrossed": 28
     },
@@ -660,20 +775,21 @@
       "cyclePosition": 0.856167,
       "illumination": 0.190658,
       "illuminationPercent": 19.1,
-      "phaseName": "Waning Crescent"
+      "phaseName": "Waning Crescent",
+      "calculationInstantUtc": "2020-03-20T03:49:37Z",
+      "approximate": true
     },
     "annualSignature": {
       "calculated": "Equinox entered at Completion Seal · Day 3.",
-      "astronomical": "Waning Crescent with approximately 19.1% illumination.",
+      "astronomical": "Approximate lunar phase at the equinox instant: Waning Crescent with approximately 19.1% illumination.",
       "symbolic": "Week 1 · Ignition frames a Breath threshold without claiming causation.",
-      "observational": "Passage length: 27 days, 21 hours, 10 minutes. No conclusion until witness records are collected."
+      "observational": "Passage length under the declared boundary settings: 27 days, 21 hours, 10 minutes. No conclusion until witness records are collected."
     },
     "normalizedValues": {
       "patternCyclePosition": 0.928571,
       "moonIndex": 12,
       "dayIndex": 2,
       "yearProgress": 0.928571,
-      "passageProgress": 1,
       "equinoxCyclePosition": 0.224044,
       "lunarCyclePosition": 0.856167,
       "solarSeasonPosition": 0
@@ -681,13 +797,17 @@
     "sources": [
       {
         "layer": "astronomical-fact",
-        "source": "janmr.com equinoxes and solstices",
+        "source": "janmr.com equinoxes and solstices table",
         "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
         "exactUtcInstant": "2020-03-20T03:49:37Z",
-        "precisionSeconds": 1,
-        "sourced": true,
-        "validationStatus": "validated-against-bazica",
+        "timestampResolutionSeconds": 1,
+        "validationToleranceSeconds": 3,
+        "validationStatus": "validated-against-independent-table",
+        "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
         "validationDeltaSeconds": 1.267,
+        "maximumMeasuredDeviationSeconds": 2.057,
+        "maximumDeviationYear": 2022,
+        "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
         "generatedOrImportedAt": "2026-07-22T00:00:00Z"
       },
       {
@@ -703,8 +823,7 @@
         "sourced": false,
         "validationStatus": "approximate"
       }
-    ],
-    "generatedAt": "2026-07-22T22:25:11.268Z"
+    ]
   },
   {
     "schemaVersion": "equinox-passage/1.0.0",
@@ -718,13 +837,30 @@
       "utcInstant": "2021-03-20T09:37:28Z",
       "localInstant": "2021-03-20T02:37:28",
       "civilDate": "2021-03-20",
-      "source": "janmr.com equinoxes and solstices",
+      "source": "janmr.com equinoxes and solstices table",
       "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
-      "precisionSeconds": 1,
-      "claimedPrecision": "±1 second",
+      "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+      "dataOrigin": "third-party-copied-and-validated",
+      "timestampResolutionSeconds": 1,
+      "validationToleranceSeconds": 3,
+      "maximumMeasuredDeviationSeconds": 2.057,
+      "maximumDeviationYear": 2022,
+      "primarySourceUrl": "unknown",
+      "sourceTableUrl": "unknown",
+      "validationUrl": "unknown",
+      "skyfieldVersion": "unknown",
+      "jplKernelFilename": "unknown",
+      "ephemerisVersionOrChecksum": "unknown",
+      "timescale": "UTC",
+      "equinoxFindingAlgorithm": "unknown; repository imports third-party whole-second March equinox timestamps rather than reproducing the original computation",
+      "generationScriptPath": "scripts/generate-equinox-passage-data.mjs",
+      "timestampRoundingPolicy": "Imported whole-second UTC timestamps are stored exactly as copied; the repository does not invent sub-second values",
+      "generationTimestamp": "2026-07-22T00:00:00Z",
       "status": "sourced",
-      "validationStatus": "validated-against-bazica",
+      "validationStatus": "validated-against-independent-table",
+      "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
       "validationDeltaSeconds": 1.688,
+      "validationUtcInstant": "2021-03-20T09:37:29.688Z",
       "generatedOrImportedAt": "2026-07-22T00:00:00Z"
     },
     "patternPosition": {
@@ -742,14 +878,10 @@
       "isDeepTimeDay": false
     },
     "passage": {
-      "state": "after-passage",
       "startInstant": "2021-03-20T09:37:28Z",
       "endInstant": "2021-04-17T01:00:00.000Z",
       "totalMilliseconds": 2388152000,
       "totalDays": 27.640648,
-      "elapsedMilliseconds": 2388152000,
-      "remainingMilliseconds": 0,
-      "progress": 1,
       "civilMidnightsCrossed": 27,
       "selectedPatternBoundariesCrossed": 28
     },
@@ -761,20 +893,21 @@
       "cyclePosition": 0.224412,
       "illumination": 0.419959,
       "illuminationPercent": 42,
-      "phaseName": "First Quarter"
+      "phaseName": "First Quarter",
+      "calculationInstantUtc": "2021-03-20T09:37:28Z",
+      "approximate": true
     },
     "annualSignature": {
       "calculated": "Equinox entered at Completion Seal · Day 2.",
-      "astronomical": "First Quarter with approximately 42% illumination.",
+      "astronomical": "Approximate lunar phase at the equinox instant: First Quarter with approximately 42% illumination.",
       "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
-      "observational": "Passage length: 27 days, 15 hours, 22 minutes. No conclusion until witness records are collected."
+      "observational": "Passage length under the declared boundary settings: 27 days, 15 hours, 22 minutes. No conclusion until witness records are collected."
     },
     "normalizedValues": {
       "patternCyclePosition": 0.925824,
       "moonIndex": 12,
       "dayIndex": 1,
       "yearProgress": 0.925824,
-      "passageProgress": 1,
       "equinoxCyclePosition": 0.224044,
       "lunarCyclePosition": 0.224412,
       "solarSeasonPosition": 0
@@ -782,13 +915,17 @@
     "sources": [
       {
         "layer": "astronomical-fact",
-        "source": "janmr.com equinoxes and solstices",
+        "source": "janmr.com equinoxes and solstices table",
         "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
         "exactUtcInstant": "2021-03-20T09:37:28Z",
-        "precisionSeconds": 1,
-        "sourced": true,
-        "validationStatus": "validated-against-bazica",
+        "timestampResolutionSeconds": 1,
+        "validationToleranceSeconds": 3,
+        "validationStatus": "validated-against-independent-table",
+        "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
         "validationDeltaSeconds": 1.688,
+        "maximumMeasuredDeviationSeconds": 2.057,
+        "maximumDeviationYear": 2022,
+        "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
         "generatedOrImportedAt": "2026-07-22T00:00:00Z"
       },
       {
@@ -804,8 +941,7 @@
         "sourced": false,
         "validationStatus": "approximate"
       }
-    ],
-    "generatedAt": "2026-07-22T22:25:11.269Z"
+    ]
   },
   {
     "schemaVersion": "equinox-passage/1.0.0",
@@ -819,13 +955,30 @@
       "utcInstant": "2022-03-20T15:33:24Z",
       "localInstant": "2022-03-20T08:33:24",
       "civilDate": "2022-03-20",
-      "source": "janmr.com equinoxes and solstices",
+      "source": "janmr.com equinoxes and solstices table",
       "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
-      "precisionSeconds": 1,
-      "claimedPrecision": "±1 second",
+      "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+      "dataOrigin": "third-party-copied-and-validated",
+      "timestampResolutionSeconds": 1,
+      "validationToleranceSeconds": 3,
+      "maximumMeasuredDeviationSeconds": 2.057,
+      "maximumDeviationYear": 2022,
+      "primarySourceUrl": "unknown",
+      "sourceTableUrl": "unknown",
+      "validationUrl": "unknown",
+      "skyfieldVersion": "unknown",
+      "jplKernelFilename": "unknown",
+      "ephemerisVersionOrChecksum": "unknown",
+      "timescale": "UTC",
+      "equinoxFindingAlgorithm": "unknown; repository imports third-party whole-second March equinox timestamps rather than reproducing the original computation",
+      "generationScriptPath": "scripts/generate-equinox-passage-data.mjs",
+      "timestampRoundingPolicy": "Imported whole-second UTC timestamps are stored exactly as copied; the repository does not invent sub-second values",
+      "generationTimestamp": "2026-07-22T00:00:00Z",
       "status": "sourced",
-      "validationStatus": "validated-against-bazica",
+      "validationStatus": "validated-against-independent-table",
+      "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
       "validationDeltaSeconds": 2.057,
+      "validationUtcInstant": "2022-03-20T15:33:26.057Z",
       "generatedOrImportedAt": "2026-07-22T00:00:00Z"
     },
     "patternPosition": {
@@ -843,14 +996,10 @@
       "isDeepTimeDay": false
     },
     "passage": {
-      "state": "after-passage",
       "startInstant": "2022-03-20T15:33:24Z",
       "endInstant": "2022-04-17T01:00:00.000Z",
       "totalMilliseconds": 2366796000,
       "totalDays": 27.393472,
-      "elapsedMilliseconds": 2366796000,
-      "remainingMilliseconds": 0,
-      "progress": 1,
       "civilMidnightsCrossed": 27,
       "selectedPatternBoundariesCrossed": 28
     },
@@ -862,20 +1011,21 @@
       "cyclePosition": 0.592847,
       "illumination": 0.917304,
       "illuminationPercent": 91.7,
-      "phaseName": "Waning Gibbous"
+      "phaseName": "Waning Gibbous",
+      "calculationInstantUtc": "2022-03-20T15:33:24Z",
+      "approximate": true
     },
     "annualSignature": {
       "calculated": "Equinox entered at Completion Seal · Day 2.",
-      "astronomical": "Waning Gibbous with approximately 91.7% illumination.",
+      "astronomical": "Approximate lunar phase at the equinox instant: Waning Gibbous with approximately 91.7% illumination.",
       "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
-      "observational": "Passage length: 27 days, 9 hours, 26 minutes. No conclusion until witness records are collected."
+      "observational": "Passage length under the declared boundary settings: 27 days, 9 hours, 26 minutes. No conclusion until witness records are collected."
     },
     "normalizedValues": {
       "patternCyclePosition": 0.925824,
       "moonIndex": 12,
       "dayIndex": 1,
       "yearProgress": 0.925824,
-      "passageProgress": 1,
       "equinoxCyclePosition": 0.224044,
       "lunarCyclePosition": 0.592847,
       "solarSeasonPosition": 0
@@ -883,13 +1033,17 @@
     "sources": [
       {
         "layer": "astronomical-fact",
-        "source": "janmr.com equinoxes and solstices",
+        "source": "janmr.com equinoxes and solstices table",
         "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
         "exactUtcInstant": "2022-03-20T15:33:24Z",
-        "precisionSeconds": 1,
-        "sourced": true,
-        "validationStatus": "validated-against-bazica",
+        "timestampResolutionSeconds": 1,
+        "validationToleranceSeconds": 3,
+        "validationStatus": "validated-against-independent-table",
+        "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
         "validationDeltaSeconds": 2.057,
+        "maximumMeasuredDeviationSeconds": 2.057,
+        "maximumDeviationYear": 2022,
+        "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
         "generatedOrImportedAt": "2026-07-22T00:00:00Z"
       },
       {
@@ -905,8 +1059,7 @@
         "sourced": false,
         "validationStatus": "approximate"
       }
-    ],
-    "generatedAt": "2026-07-22T22:25:11.270Z"
+    ]
   },
   {
     "schemaVersion": "equinox-passage/1.0.0",
@@ -920,13 +1073,30 @@
       "utcInstant": "2023-03-20T21:24:26Z",
       "localInstant": "2023-03-20T14:24:26",
       "civilDate": "2023-03-20",
-      "source": "janmr.com equinoxes and solstices",
+      "source": "janmr.com equinoxes and solstices table",
       "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
-      "precisionSeconds": 1,
-      "claimedPrecision": "±1 second",
+      "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+      "dataOrigin": "third-party-copied-and-validated",
+      "timestampResolutionSeconds": 1,
+      "validationToleranceSeconds": 3,
+      "maximumMeasuredDeviationSeconds": 2.057,
+      "maximumDeviationYear": 2022,
+      "primarySourceUrl": "unknown",
+      "sourceTableUrl": "unknown",
+      "validationUrl": "unknown",
+      "skyfieldVersion": "unknown",
+      "jplKernelFilename": "unknown",
+      "ephemerisVersionOrChecksum": "unknown",
+      "timescale": "UTC",
+      "equinoxFindingAlgorithm": "unknown; repository imports third-party whole-second March equinox timestamps rather than reproducing the original computation",
+      "generationScriptPath": "scripts/generate-equinox-passage-data.mjs",
+      "timestampRoundingPolicy": "Imported whole-second UTC timestamps are stored exactly as copied; the repository does not invent sub-second values",
+      "generationTimestamp": "2026-07-22T00:00:00Z",
       "status": "sourced",
-      "validationStatus": "validated-against-bazica",
+      "validationStatus": "validated-against-independent-table",
+      "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
       "validationDeltaSeconds": 1.653,
+      "validationUtcInstant": "2023-03-20T21:24:27.653Z",
       "generatedOrImportedAt": "2026-07-22T00:00:00Z"
     },
     "patternPosition": {
@@ -944,14 +1114,10 @@
       "isDeepTimeDay": false
     },
     "passage": {
-      "state": "after-passage",
       "startInstant": "2023-03-20T21:24:26Z",
       "endInstant": "2023-04-17T01:00:00.000Z",
       "totalMilliseconds": 2345734000,
       "totalDays": 27.149699,
-      "elapsedMilliseconds": 2345734000,
-      "remainingMilliseconds": 0,
-      "progress": 1,
       "civilMidnightsCrossed": 27,
       "selectedPatternBoundariesCrossed": 28
     },
@@ -963,20 +1129,21 @@
       "cyclePosition": 0.961167,
       "illumination": 0.01481,
       "illuminationPercent": 1.5,
-      "phaseName": "New Moon"
+      "phaseName": "New Moon",
+      "calculationInstantUtc": "2023-03-20T21:24:26Z",
+      "approximate": true
     },
     "annualSignature": {
       "calculated": "Equinox entered at Completion Seal · Day 2.",
-      "astronomical": "New Moon with approximately 1.5% illumination.",
+      "astronomical": "Approximate lunar phase at the equinox instant: New Moon with approximately 1.5% illumination.",
       "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
-      "observational": "Passage length: 27 days, 3 hours, 35 minutes. No conclusion until witness records are collected."
+      "observational": "Passage length under the declared boundary settings: 27 days, 3 hours, 35 minutes. No conclusion until witness records are collected."
     },
     "normalizedValues": {
       "patternCyclePosition": 0.925824,
       "moonIndex": 12,
       "dayIndex": 1,
       "yearProgress": 0.925824,
-      "passageProgress": 1,
       "equinoxCyclePosition": 0.224044,
       "lunarCyclePosition": 0.961167,
       "solarSeasonPosition": 0
@@ -984,13 +1151,17 @@
     "sources": [
       {
         "layer": "astronomical-fact",
-        "source": "janmr.com equinoxes and solstices",
+        "source": "janmr.com equinoxes and solstices table",
         "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
         "exactUtcInstant": "2023-03-20T21:24:26Z",
-        "precisionSeconds": 1,
-        "sourced": true,
-        "validationStatus": "validated-against-bazica",
+        "timestampResolutionSeconds": 1,
+        "validationToleranceSeconds": 3,
+        "validationStatus": "validated-against-independent-table",
+        "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
         "validationDeltaSeconds": 1.653,
+        "maximumMeasuredDeviationSeconds": 2.057,
+        "maximumDeviationYear": 2022,
+        "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
         "generatedOrImportedAt": "2026-07-22T00:00:00Z"
       },
       {
@@ -1006,8 +1177,7 @@
         "sourced": false,
         "validationStatus": "approximate"
       }
-    ],
-    "generatedAt": "2026-07-22T22:25:11.271Z"
+    ]
   },
   {
     "schemaVersion": "equinox-passage/1.0.0",
@@ -1021,13 +1191,30 @@
       "utcInstant": "2024-03-20T03:06:24Z",
       "localInstant": "2024-03-19T20:06:24",
       "civilDate": "2024-03-19",
-      "source": "janmr.com equinoxes and solstices",
+      "source": "janmr.com equinoxes and solstices table",
       "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
-      "precisionSeconds": 1,
-      "claimedPrecision": "±1 second",
+      "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+      "dataOrigin": "third-party-copied-and-validated",
+      "timestampResolutionSeconds": 1,
+      "validationToleranceSeconds": 3,
+      "maximumMeasuredDeviationSeconds": 2.057,
+      "maximumDeviationYear": 2022,
+      "primarySourceUrl": "unknown",
+      "sourceTableUrl": "unknown",
+      "validationUrl": "unknown",
+      "skyfieldVersion": "unknown",
+      "jplKernelFilename": "unknown",
+      "ephemerisVersionOrChecksum": "unknown",
+      "timescale": "UTC",
+      "equinoxFindingAlgorithm": "unknown; repository imports third-party whole-second March equinox timestamps rather than reproducing the original computation",
+      "generationScriptPath": "scripts/generate-equinox-passage-data.mjs",
+      "timestampRoundingPolicy": "Imported whole-second UTC timestamps are stored exactly as copied; the repository does not invent sub-second values",
+      "generationTimestamp": "2026-07-22T00:00:00Z",
       "status": "sourced",
-      "validationStatus": "validated-against-bazica",
+      "validationStatus": "validated-against-independent-table",
+      "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
       "validationDeltaSeconds": 1.264,
+      "validationUtcInstant": "2024-03-20T03:06:25.264Z",
       "generatedOrImportedAt": "2026-07-22T00:00:00Z"
     },
     "patternPosition": {
@@ -1045,14 +1232,10 @@
       "isDeepTimeDay": false
     },
     "passage": {
-      "state": "after-passage",
       "startInstant": "2024-03-20T03:06:24Z",
       "endInstant": "2024-04-17T01:00:00.000Z",
       "totalMilliseconds": 2411616000,
       "totalDays": 27.912222,
-      "elapsedMilliseconds": 2411616000,
-      "remainingMilliseconds": 0,
-      "progress": 1,
       "civilMidnightsCrossed": 28,
       "selectedPatternBoundariesCrossed": 28
     },
@@ -1064,20 +1247,21 @@
       "cyclePosition": 0.329274,
       "illumination": 0.738876,
       "illuminationPercent": 73.9,
-      "phaseName": "Waxing Gibbous"
+      "phaseName": "Waxing Gibbous",
+      "calculationInstantUtc": "2024-03-20T03:06:24Z",
+      "approximate": true
     },
     "annualSignature": {
       "calculated": "Equinox entered at Completion Seal · Day 3.",
-      "astronomical": "Waxing Gibbous with approximately 73.9% illumination.",
+      "astronomical": "Approximate lunar phase at the equinox instant: Waxing Gibbous with approximately 73.9% illumination.",
       "symbolic": "Week 1 · Ignition frames a Breath threshold without claiming causation.",
-      "observational": "Passage length: 27 days, 21 hours, 53 minutes. No conclusion until witness records are collected."
+      "observational": "Passage length under the declared boundary settings: 27 days, 21 hours, 53 minutes. No conclusion until witness records are collected."
     },
     "normalizedValues": {
       "patternCyclePosition": 0.928571,
       "moonIndex": 12,
       "dayIndex": 2,
       "yearProgress": 0.928571,
-      "passageProgress": 1,
       "equinoxCyclePosition": 0.224044,
       "lunarCyclePosition": 0.329274,
       "solarSeasonPosition": 0
@@ -1085,13 +1269,17 @@
     "sources": [
       {
         "layer": "astronomical-fact",
-        "source": "janmr.com equinoxes and solstices",
+        "source": "janmr.com equinoxes and solstices table",
         "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
         "exactUtcInstant": "2024-03-20T03:06:24Z",
-        "precisionSeconds": 1,
-        "sourced": true,
-        "validationStatus": "validated-against-bazica",
+        "timestampResolutionSeconds": 1,
+        "validationToleranceSeconds": 3,
+        "validationStatus": "validated-against-independent-table",
+        "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
         "validationDeltaSeconds": 1.264,
+        "maximumMeasuredDeviationSeconds": 2.057,
+        "maximumDeviationYear": 2022,
+        "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
         "generatedOrImportedAt": "2026-07-22T00:00:00Z"
       },
       {
@@ -1107,8 +1295,7 @@
         "sourced": false,
         "validationStatus": "approximate"
       }
-    ],
-    "generatedAt": "2026-07-22T22:25:11.272Z"
+    ]
   },
   {
     "schemaVersion": "equinox-passage/1.0.0",
@@ -1122,13 +1309,30 @@
       "utcInstant": "2025-03-20T09:01:28Z",
       "localInstant": "2025-03-20T02:01:28",
       "civilDate": "2025-03-20",
-      "source": "janmr.com equinoxes and solstices",
+      "source": "janmr.com equinoxes and solstices table",
       "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
-      "precisionSeconds": 1,
-      "claimedPrecision": "±1 second",
+      "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+      "dataOrigin": "third-party-copied-and-validated",
+      "timestampResolutionSeconds": 1,
+      "validationToleranceSeconds": 3,
+      "maximumMeasuredDeviationSeconds": 2.057,
+      "maximumDeviationYear": 2022,
+      "primarySourceUrl": "unknown",
+      "sourceTableUrl": "unknown",
+      "validationUrl": "unknown",
+      "skyfieldVersion": "unknown",
+      "jplKernelFilename": "unknown",
+      "ephemerisVersionOrChecksum": "unknown",
+      "timescale": "UTC",
+      "equinoxFindingAlgorithm": "unknown; repository imports third-party whole-second March equinox timestamps rather than reproducing the original computation",
+      "generationScriptPath": "scripts/generate-equinox-passage-data.mjs",
+      "timestampRoundingPolicy": "Imported whole-second UTC timestamps are stored exactly as copied; the repository does not invent sub-second values",
+      "generationTimestamp": "2026-07-22T00:00:00Z",
       "status": "sourced",
-      "validationStatus": "validated-against-bazica",
+      "validationStatus": "validated-against-independent-table",
+      "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
       "validationDeltaSeconds": 2.009,
+      "validationUtcInstant": "2025-03-20T09:01:30.009Z",
       "generatedOrImportedAt": "2026-07-22T00:00:00Z"
     },
     "patternPosition": {
@@ -1146,14 +1350,10 @@
       "isDeepTimeDay": false
     },
     "passage": {
-      "state": "after-passage",
       "startInstant": "2025-03-20T09:01:28Z",
       "endInstant": "2025-04-17T01:00:00.000Z",
       "totalMilliseconds": 2390312000,
       "totalDays": 27.665648,
-      "elapsedMilliseconds": 2390312000,
-      "remainingMilliseconds": 0,
-      "progress": 1,
       "civilMidnightsCrossed": 27,
       "selectedPatternBoundariesCrossed": 28
     },
@@ -1165,20 +1365,21 @@
       "cyclePosition": 0.697689,
       "illumination": 0.661397,
       "illuminationPercent": 66.1,
-      "phaseName": "Last Quarter"
+      "phaseName": "Last Quarter",
+      "calculationInstantUtc": "2025-03-20T09:01:28Z",
+      "approximate": true
     },
     "annualSignature": {
       "calculated": "Equinox entered at Completion Seal · Day 2.",
-      "astronomical": "Last Quarter with approximately 66.1% illumination.",
+      "astronomical": "Approximate lunar phase at the equinox instant: Last Quarter with approximately 66.1% illumination.",
       "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
-      "observational": "Passage length: 27 days, 15 hours, 58 minutes. No conclusion until witness records are collected."
+      "observational": "Passage length under the declared boundary settings: 27 days, 15 hours, 58 minutes. No conclusion until witness records are collected."
     },
     "normalizedValues": {
       "patternCyclePosition": 0.925824,
       "moonIndex": 12,
       "dayIndex": 1,
       "yearProgress": 0.925824,
-      "passageProgress": 1,
       "equinoxCyclePosition": 0.224044,
       "lunarCyclePosition": 0.697689,
       "solarSeasonPosition": 0
@@ -1186,13 +1387,17 @@
     "sources": [
       {
         "layer": "astronomical-fact",
-        "source": "janmr.com equinoxes and solstices",
+        "source": "janmr.com equinoxes and solstices table",
         "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
         "exactUtcInstant": "2025-03-20T09:01:28Z",
-        "precisionSeconds": 1,
-        "sourced": true,
-        "validationStatus": "validated-against-bazica",
+        "timestampResolutionSeconds": 1,
+        "validationToleranceSeconds": 3,
+        "validationStatus": "validated-against-independent-table",
+        "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
         "validationDeltaSeconds": 2.009,
+        "maximumMeasuredDeviationSeconds": 2.057,
+        "maximumDeviationYear": 2022,
+        "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
         "generatedOrImportedAt": "2026-07-22T00:00:00Z"
       },
       {
@@ -1208,8 +1413,7 @@
         "sourced": false,
         "validationStatus": "approximate"
       }
-    ],
-    "generatedAt": "2026-07-22T22:25:11.272Z"
+    ]
   },
   {
     "schemaVersion": "equinox-passage/1.0.0",
@@ -1223,13 +1427,30 @@
       "utcInstant": "2026-03-20T14:45:57Z",
       "localInstant": "2026-03-20T07:45:57",
       "civilDate": "2026-03-20",
-      "source": "janmr.com equinoxes and solstices",
+      "source": "janmr.com equinoxes and solstices table",
       "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
-      "precisionSeconds": 1,
-      "claimedPrecision": "±1 second",
+      "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+      "dataOrigin": "third-party-copied-and-validated",
+      "timestampResolutionSeconds": 1,
+      "validationToleranceSeconds": 3,
+      "maximumMeasuredDeviationSeconds": 2.057,
+      "maximumDeviationYear": 2022,
+      "primarySourceUrl": "unknown",
+      "sourceTableUrl": "unknown",
+      "validationUrl": "unknown",
+      "skyfieldVersion": "unknown",
+      "jplKernelFilename": "unknown",
+      "ephemerisVersionOrChecksum": "unknown",
+      "timescale": "UTC",
+      "equinoxFindingAlgorithm": "unknown; repository imports third-party whole-second March equinox timestamps rather than reproducing the original computation",
+      "generationScriptPath": "scripts/generate-equinox-passage-data.mjs",
+      "timestampRoundingPolicy": "Imported whole-second UTC timestamps are stored exactly as copied; the repository does not invent sub-second values",
+      "generationTimestamp": "2026-07-22T00:00:00Z",
       "status": "sourced",
-      "validationStatus": "validated-against-bazica",
+      "validationStatus": "validated-against-independent-table",
+      "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
       "validationDeltaSeconds": 1.471,
+      "validationUtcInstant": "2026-03-20T14:45:58.471Z",
       "generatedOrImportedAt": "2026-07-22T00:00:00Z"
     },
     "patternPosition": {
@@ -1247,14 +1468,10 @@
       "isDeepTimeDay": false
     },
     "passage": {
-      "state": "active-passage",
       "startInstant": "2026-03-20T14:45:57Z",
       "endInstant": "2026-04-17T01:00:00.000Z",
       "totalMilliseconds": 2369643000,
       "totalDays": 27.426424,
-      "elapsedMilliseconds": 422043000,
-      "remainingMilliseconds": 1947600000,
-      "progress": 0.17810404352047968,
       "civilMidnightsCrossed": 27,
       "selectedPatternBoundariesCrossed": 28
     },
@@ -1266,20 +1483,21 @@
       "cyclePosition": 0.065855,
       "illumination": 0.042196,
       "illuminationPercent": 4.2,
-      "phaseName": "Waxing Crescent"
+      "phaseName": "Waxing Crescent",
+      "calculationInstantUtc": "2026-03-20T14:45:57Z",
+      "approximate": true
     },
     "annualSignature": {
       "calculated": "Equinox entered at Completion Seal · Day 2.",
-      "astronomical": "Waxing Crescent with approximately 4.2% illumination.",
+      "astronomical": "Approximate lunar phase at the equinox instant: Waxing Crescent with approximately 4.2% illumination.",
       "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
-      "observational": "Passage length: 27 days, 10 hours, 14 minutes. No conclusion until witness records are collected."
+      "observational": "Passage length under the declared boundary settings: 27 days, 10 hours, 14 minutes. No conclusion until witness records are collected."
     },
     "normalizedValues": {
       "patternCyclePosition": 0.925824,
       "moonIndex": 12,
       "dayIndex": 1,
       "yearProgress": 0.925824,
-      "passageProgress": 0.178104,
       "equinoxCyclePosition": 0.224044,
       "lunarCyclePosition": 0.065855,
       "solarSeasonPosition": 0
@@ -1287,13 +1505,17 @@
     "sources": [
       {
         "layer": "astronomical-fact",
-        "source": "janmr.com equinoxes and solstices",
+        "source": "janmr.com equinoxes and solstices table",
         "sourceVersion": "6262e4eb07b8de0d45f2256eef9f5b94bf3f8fdc",
         "exactUtcInstant": "2026-03-20T14:45:57Z",
-        "precisionSeconds": 1,
-        "sourced": true,
-        "validationStatus": "validated-against-bazica",
+        "timestampResolutionSeconds": 1,
+        "validationToleranceSeconds": 3,
+        "validationStatus": "validated-against-independent-table",
+        "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
         "validationDeltaSeconds": 1.471,
+        "maximumMeasuredDeviationSeconds": 2.057,
+        "maximumDeviationYear": 2022,
+        "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
         "generatedOrImportedAt": "2026-07-22T00:00:00Z"
       },
       {
@@ -1309,7 +1531,6 @@
         "sourced": false,
         "validationStatus": "approximate"
       }
-    ],
-    "generatedAt": "2026-07-22T22:25:11.273Z"
+    ]
   }
 ]

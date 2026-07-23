@@ -41,6 +41,8 @@ The Scroll of Fire — Codex of Reality is a living architecture of remembrance,
 
 🌗 Equinox Passage: site → Equinox Passage (/docs/equinox-passage.html)
 
+Equinox Passage source metadata, deterministic annual JSON, and historical CSV live under `/docs/data/equinox-passage/`, with reproducible generation via `node scripts/generate-equinox-passage-data.mjs --verify`.
+
 ⬇️ Downloads: site → Downloads (/docs/downloads.html)
 
 > Tip (phone): Open any file → tap ✏️ → paste → Commit.

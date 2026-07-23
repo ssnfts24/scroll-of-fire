@@ -75,6 +75,8 @@
           <label>Boundary<select id="equinoxBoundaryMode" class="lab-input"><option value="sunset">Sunset</option><option value="manual">Manual Sunset</option><option value="midnight">Midnight</option></select></label>
           <label>Manual Sunset<input id="equinoxManualSunset" class="lab-input" type="time" value="18:00"></label>
         </div>
+        <p id="equinoxUrlStatus" class="equinox-muted">Permanent-link state will appear here.</p>
+        <p id="equinoxBoundaryExplanation" class="equinox-muted">In sunset or manual-sunset mode, Moon 1 Day 1 begins on the preceding civil evening at the selected boundary. The equinox instant itself never changes.</p>
       </section>
 
       <div class="equinox-grid">
@@ -106,6 +108,7 @@
           <div><strong>Remaining</strong><p id="equinoxPassageRemaining">—</p></div>
           <div><strong>Progress</strong><p id="equinoxPassageProgress">—</p></div>
         </div>
+        <p id="equinoxPassageBoundaryNote" class="equinox-muted">Boundary explanation pending.</p>
       </section>
 
       <div class="equinox-grid">
@@ -159,7 +162,8 @@
         <h2 id="equinoxMethodsTitle">Methods</h2>
         <p id="equinoxMethods">—</p>
         <p><strong>Astronomical fact:</strong> exact March equinox instant. <strong>Pattern calculation:</strong> mapping the instant into the fixed Pattern Calendar. <strong>Symbolic interpretation:</strong> optional reflective language only. <strong>Personal observation:</strong> stored locally. <strong>Hypothesis:</strong> not treated as proof.</p>
-        <p><a href="specifications/equinox-passage-v1.md">Open specification</a> · <a href="data/equinox-passage/equinox-reference-2014-2026.json">Reference JSON</a> · <a href="data/equinox-passage/equinox-passage-2014-2026.csv">Historical CSV</a></p>
+        <p id="equinoxMethodsBoundaryNote" class="equinox-muted">Boundary explanation pending.</p>
+        <p><a href="specifications/equinox-passage-v1.md">Open specification</a> · <a href="data/equinox-passage/equinox-source-metadata.json">Source metadata JSON</a> · <a href="data/equinox-passage/equinox-reference-2014-2026.json">Reference JSON</a> · <a href="data/equinox-passage/equinox-passage-2014-2026.csv">Historical CSV</a></p>
       </section>
 
       <section class="equinox-card" aria-labelledby="equinoxExportTitle">

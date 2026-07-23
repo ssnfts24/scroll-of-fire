@@ -1,36 +1,63 @@
 (() => {
   "use strict";
 
+  function clamp(value, min = 0, max = 1) {
+    return Math.min(max, Math.max(min, Number(value) || 0));
+  }
+
+  function canonicalOf(record) {
+    return record?.canonicalRecord || record || {};
+  }
+
+  function liveOf(record) {
+    return record?.liveState || null;
+  }
+
   function fromRecord(record) {
-    const dayIndex = record.normalizedValues.dayIndex;
-    const moonIndex = record.normalizedValues.moonIndex;
+    const canonical = canonicalOf(record);
+    const liveState = liveOf(record);
+    const normalized = canonical.normalizedValues || {};
+    const dayIndex = clamp(normalized.dayIndex, 0, 27);
+    const moonIndex = clamp(normalized.moonIndex, 0, 12);
+    const passageProgress = clamp(liveState?.progress, 0, 1);
+    const lunarCyclePosition = canonical.lunarLayer ? clamp(normalized.lunarCyclePosition, 0, 1) : null;
+    const phaseName = canonical.lunarLayer?.phaseName || "Lunar data unavailable";
+    const illuminationPercent = canonical.lunarLayer?.illuminationPercent ?? null;
+
     return {
-      normalizedValues: record.normalizedValues,
+      patternCyclePosition: clamp(normalized.patternCyclePosition, 0, 1),
+      moonIndex,
+      dayIndex,
+      yearProgress: clamp(normalized.yearProgress, 0, 1),
+      passageProgress,
+      equinoxCyclePosition: clamp(normalized.equinoxCyclePosition, 0, 1),
+      lunarCyclePosition,
+      solarSeasonPosition: clamp(normalized.solarSeasonPosition, 0, 1),
       rings: {
         moonSectors: Array.from({ length: 13 }, (_, index) => ({ index, active: index === moonIndex })),
         moonDayPoints: Array.from({ length: 28 }, (_, index) => ({ index, active: index === dayIndex })),
         fixedPatternCalendarRing: {
           moonIndex,
           dayIndex,
-          progress: record.normalizedValues.patternCyclePosition
+          progress: clamp(normalized.patternCyclePosition, 0, 1)
         }
       },
       equinoxPassageArc: {
         start: 0,
-        current: record.normalizedValues.passageProgress,
+        current: passageProgress,
         end: 1,
-        label: `${record.selectedYear} Equinox Passage`
+        label: `${canonical.selectedYear || "Unknown"} Equinox Passage`
       },
       movingEquinoxMarker: {
         position: 0,
-        label: record.equinox.utcInstant
+        label: canonical.equinox?.utcInstant || "Unknown equinox"
       },
       lunarPhaseOrbit: {
-        position: record.normalizedValues.lunarCyclePosition,
-        label: `${record.lunarLayer.phaseName} · ${record.lunarLayer.illuminationPercent}%`
+        position: lunarCyclePosition,
+        label: illuminationPercent == null ? phaseName : `${phaseName} · ${illuminationPercent}%`
       },
       solarSeasonAxis: {
-        position: record.normalizedValues.solarSeasonPosition,
+        position: clamp(normalized.solarSeasonPosition, 0, 1),
         label: "March equinox baseline"
       },
       annualComparisonLayers: [],
@@ -38,8 +65,8 @@
       futureOracleProfileMarkers: [],
       accessibleText: [
         `Pattern ring position: moon ${moonIndex + 1}, day ${dayIndex + 1}.`,
-        `Passage progress: ${(record.normalizedValues.passageProgress * 100).toFixed(1)}%.`,
-        `Lunar orbit: ${record.lunarLayer.phaseName} at ${record.lunarLayer.illuminationPercent}% illumination.`
+        `Passage progress: ${(passageProgress * 100).toFixed(1)}%.`,
+        illuminationPercent == null ? "Lunar orbit data unavailable." : `Lunar orbit: ${phaseName} at ${illuminationPercent}% illumination.`
       ]
     };
   }

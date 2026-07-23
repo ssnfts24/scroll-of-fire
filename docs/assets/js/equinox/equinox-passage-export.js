@@ -1,8 +1,16 @@
 (() => {
   "use strict";
 
+  function canonicalOf(record) {
+    return record?.canonicalRecord || record;
+  }
+
+  function liveOf(record) {
+    return record?.liveState || null;
+  }
+
   function annualJson(record) {
-    return JSON.stringify(record, null, 2);
+    return `${JSON.stringify(canonicalOf(record), null, 2)}\n`;
   }
 
   function historicalCsv(records) {
@@ -27,11 +35,16 @@
       "passage_total_milliseconds",
       "passage_total_days",
       "source",
-      "precision_seconds",
-      "validation_delta_seconds"
+      "timestamp_resolution_seconds",
+      "validation_tolerance_seconds",
+      "validation_delta_seconds",
+      "maximum_measured_deviation_seconds",
+      "maximum_deviation_year",
+      "source_integrity_status"
     ];
     const lines = [header.join(",")];
-    records.forEach(record => {
+    records.forEach(entry => {
+      const record = canonicalOf(entry);
       lines.push([
         record.selectedYear,
         record.equinox.utcInstant,
@@ -53,25 +66,41 @@
         record.passage.totalMilliseconds,
         record.passage.totalDays,
         csvValue(record.equinox.source),
-        record.equinox.precisionSeconds,
-        record.equinox.validationDeltaSeconds
+        record.equinox.timestampResolutionSeconds,
+        record.equinox.validationToleranceSeconds,
+        globalThis.EquinoxPassageFormat.fixedSeconds(record.equinox.validationDeltaSeconds),
+        globalThis.EquinoxPassageFormat.fixedSeconds(record.equinox.maximumMeasuredDeviationSeconds),
+        record.equinox.maximumDeviationYear,
+        csvValue(record.equinox.sourceIntegrityStatus)
       ].join(","));
     });
-    return lines.join("\n");
+    return `${lines.join("\n")}\n`;
   }
 
   function readableText(record) {
-    return [
-      `Equinox Passage — ${record.selectedYear}`,
-      `Equinox Gate (UTC): ${record.equinox.utcInstant}`,
-      `Selected local time (${record.timeZone}): ${record.equinox.localInstant}`,
-      `Pattern position: ${record.patternPosition.moonName || "Outside Gate"}${record.patternPosition.day ? ` · Day ${record.patternPosition.day}` : ""}`,
-      `Week Gate: ${record.patternPosition.weekGate}`,
-      `Passage duration: ${globalThis.EquinoxPassageFormat.durationText(record.passage.totalMilliseconds)}`,
-      `Lunar condition: ${record.lunarLayer.phaseName} · ${record.lunarLayer.illuminationPercent}% illuminated`,
-      `Source: ${record.equinox.source} (${globalThis.EquinoxPassageFormat.precisionLabel(record.equinox.precisionSeconds)})`,
-      `Schema: ${record.schemaVersion}`
-    ].join("\n");
+    const canonical = canonicalOf(record);
+    const liveState = liveOf(record);
+    const lines = [
+      `Equinox Passage — ${canonical.selectedYear}`,
+      `Equinox Gate (UTC): ${canonical.equinox.utcInstant}`,
+      `Selected local time (${canonical.timeZone}): ${canonical.equinox.localInstant}`,
+      `Pattern position: ${canonical.patternPosition.moonName || "Outside Gate"}${canonical.patternPosition.day ? ` · Day ${canonical.patternPosition.day}` : ""}`,
+      `Week Gate: ${canonical.patternPosition.weekGate}`,
+      `Passage duration: ${globalThis.EquinoxPassageFormat.durationText(canonical.passage.totalMilliseconds)}`,
+      `Lunar condition at the equinox instant: approximately ${canonical.lunarLayer.phaseName} · ${canonical.lunarLayer.illuminationPercent}% illuminated`,
+      `Timestamp resolution: ${globalThis.EquinoxPassageFormat.resolutionLabel(canonical.equinox.timestampResolutionSeconds)}`,
+      `Validation tolerance: ${globalThis.EquinoxPassageFormat.resolutionLabel(canonical.equinox.validationToleranceSeconds)}`,
+      `Maximum measured deviation: ${globalThis.EquinoxPassageFormat.fixedSeconds(canonical.equinox.maximumMeasuredDeviationSeconds)} seconds (${canonical.equinox.maximumDeviationYear})`,
+      `Source integrity: ${canonical.equinox.sourceIntegrityStatus}`,
+      `Schema: ${canonical.schemaVersion}`
+    ];
+    if (liveState) {
+      lines.push(`Current status: ${liveState.status}`);
+      lines.push(`Elapsed: ${globalThis.EquinoxPassageFormat.durationText(liveState.elapsedMilliseconds)}`);
+      lines.push(`Remaining: ${globalThis.EquinoxPassageFormat.durationText(liveState.remainingMilliseconds)}`);
+      lines.push(`Progress: ${globalThis.EquinoxPassageFormat.percent(liveState.progress)}`);
+    }
+    return lines.join("\n");
   }
 
   function csvValue(value) {
@@ -95,6 +124,8 @@
 
   function renderShareImageCanvas(record, options = {}) {
     if (!globalThis.document) return null;
+    const canonical = canonicalOf(record);
+    const liveState = liveOf(record);
     const width = options.width || 1080;
     const height = options.height || 1080;
     const canvas = document.createElement("canvas");
@@ -113,17 +144,17 @@
     ctx.strokeRect(40, 40, width - 80, height - 80);
     ctx.fillStyle = "#f6f1dc";
     ctx.font = "600 34px sans-serif";
-    ctx.fillText(`Equinox Passage ${record.selectedYear}`, 90, 130);
+    ctx.fillText(`Equinox Passage ${canonical.selectedYear}`, 90, 130);
     ctx.font = "24px sans-serif";
     const lines = [
-      `Equinox Gate UTC: ${record.equinox.utcInstant}`,
-      `Local: ${record.equinox.localInstant} ${record.timeZone}`,
-      `Pattern: ${record.patternPosition.moonName || "Outside Gate"}${record.patternPosition.day ? ` · Day ${record.patternPosition.day}` : ""}`,
-      `Passage: ${globalThis.EquinoxPassageFormat.durationText(record.passage.totalMilliseconds)}`,
-      `Source: ${record.equinox.source}`,
-      `Precision: ${globalThis.EquinoxPassageFormat.precisionLabel(record.equinox.precisionSeconds)}`,
-      `CodexOfReality.org`,
-      `${record.schemaVersion}`
+      `Equinox Gate UTC: ${canonical.equinox.utcInstant}`,
+      `Local: ${canonical.equinox.localInstant} ${canonical.timeZone}`,
+      `Pattern: ${canonical.patternPosition.moonName || "Outside Gate"}${canonical.patternPosition.day ? ` · Day ${canonical.patternPosition.day}` : ""}`,
+      `Passage: ${globalThis.EquinoxPassageFormat.durationText(canonical.passage.totalMilliseconds)}`,
+      `Timestamp resolution: ${globalThis.EquinoxPassageFormat.resolutionLabel(canonical.equinox.timestampResolutionSeconds)}`,
+      `Validation tolerance: ${globalThis.EquinoxPassageFormat.resolutionLabel(canonical.equinox.validationToleranceSeconds)}`,
+      `Max deviation: ${globalThis.EquinoxPassageFormat.fixedSeconds(canonical.equinox.maximumMeasuredDeviationSeconds)}s (${canonical.equinox.maximumDeviationYear})`,
+      liveState ? `Status: ${liveState.status} · ${globalThis.EquinoxPassageFormat.percent(liveState.progress)}` : "CodexOfReality.org"
     ];
     lines.forEach((line, index) => ctx.fillText(line, 90, 220 + index * 72));
     return canvas;

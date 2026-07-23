@@ -17,15 +17,18 @@
   }
 
   function save(record, note = "") {
-    const records = read().filter(item => !(item.selectedYear === record.selectedYear && item.timeZone === record.timeZone && item.boundaryMode === record.boundaryMode));
+    const canonical = record?.canonicalRecord || record;
+    const liveState = record?.liveState || null;
+    const records = read().filter(item => !(item.selectedYear === canonical.selectedYear && item.timeZone === canonical.timeZone && item.boundaryMode === canonical.boundaryMode));
     records.push({
-      selectedYear: record.selectedYear,
-      timeZone: record.timeZone,
-      boundaryMode: record.boundaryMode,
-      manualSunset: record.manualSunset,
+      selectedYear: canonical.selectedYear,
+      timeZone: canonical.timeZone,
+      boundaryMode: canonical.boundaryMode,
+      manualSunset: canonical.manualSunset,
       note: String(note || ""),
       savedAt: new Date().toISOString(),
-      values: record
+      canonicalRecord: canonical,
+      liveState
     });
     return write(records);
   }

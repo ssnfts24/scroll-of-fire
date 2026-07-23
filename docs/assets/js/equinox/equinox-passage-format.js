@@ -9,8 +9,12 @@
     return `${(Math.max(0, Math.min(1, Number(value) || 0)) * 100).toFixed(1)}%`;
   }
 
+  function resolutionLabel(seconds) {
+    return Number(seconds) === 1 ? "1 second" : `${Number(seconds)} seconds`;
+  }
+
   function precisionLabel(seconds) {
-    return Number(seconds) === 1 ? "±1 second" : `±${Number(seconds)} seconds`;
+    return `${resolutionLabel(seconds)} resolution`;
   }
 
   function durationParts(milliseconds) {
@@ -37,11 +41,17 @@
     return `${parts.days}d ${pad(parts.hours)}h ${pad(parts.minutes)}m`;
   }
 
+  function fixedSeconds(value) {
+    return Number(value).toFixed(3).replace(/\.000$/, "");
+  }
+
   globalThis.EquinoxPassageFormat = Object.freeze({
     percent,
+    resolutionLabel,
     precisionLabel,
     durationParts,
     durationText,
-    compactDuration
+    compactDuration,
+    fixedSeconds
   });
 })();

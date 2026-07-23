@@ -31,6 +31,7 @@
   function describeEquinox(year, timeZone) {
     const zone = globalThis.TimeZoneTools.safeTimeZone(timeZone || globalThis.AstronomyVersion?.defaultStudyTimeZone || "UTC");
     const reference = getReferenceRecord(year);
+    const sourceMetadata = globalThis.EquinoxReferenceData.sourceMetadata;
     const utcDate = new Date(reference.utcInstant);
     const localInstant = globalThis.TimeZoneTools.localIsoFromInstant(utcDate, zone);
     const civilDate = globalThis.TimeZoneTools.localDateKey(utcDate, zone);
@@ -45,14 +46,31 @@
       timeZone: zone,
       source: reference.source,
       sourceVersion: reference.sourceVersion,
-      precisionSeconds: reference.claimedPrecisionSeconds,
-      claimedPrecision: reference.claimedPrecision,
+      sourceIntegrityStatus: reference.sourceIntegrityStatus,
+      dataOrigin: reference.dataOrigin,
+      timestampResolutionSeconds: reference.timestampResolutionSeconds,
+      validationToleranceSeconds: reference.validationToleranceSeconds,
+      maximumMeasuredDeviationSeconds: reference.maximumMeasuredDeviationSeconds,
+      maximumDeviationYear: reference.maximumDeviationYear,
+      primarySourceUrl: sourceMetadata.primarySource.primarySourceUrl,
+      sourceTableUrl: sourceMetadata.primarySource.sourceTableUrl,
+      validationUrl: sourceMetadata.independentValidation.independentValidationUrl,
+      validationMethod: sourceMetadata.independentValidation.validationMethod,
+      skyfieldVersion: sourceMetadata.primarySource.skyfieldVersion,
+      jplKernelFilename: sourceMetadata.primarySource.jplKernelFilename,
+      ephemerisVersionOrChecksum: sourceMetadata.primarySource.ephemerisVersionOrChecksum,
+      timescale: sourceMetadata.primarySource.timescale,
+      equinoxFindingAlgorithm: sourceMetadata.primarySource.equinoxFindingAlgorithm,
+      generationScriptPath: sourceMetadata.primarySource.generationScriptPath,
+      timestampRoundingPolicy: sourceMetadata.primarySource.timestampRoundingPolicy,
+      generationTimestamp: sourceMetadata.generationTimestamp,
       status: reference.calculated ? "calculated" : "sourced",
       calculated: reference.calculated,
       validationStatus: reference.validationStatus,
       validationDeltaSeconds: reference.validationDeltaSeconds,
       validationUtcInstant: reference.validationUtcInstant,
       importedAt: reference.importedAt,
+      sourceMetadata,
       lunarLayer
     };
   }

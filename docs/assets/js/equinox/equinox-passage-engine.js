@@ -20,6 +20,10 @@
     return Math.min(max, Math.max(min, value));
   }
 
+  function canonicalOf(record) {
+    return record?.canonicalRecord || record;
+  }
+
   function dayDiffIso(aIso, bIso) {
     const a = new Date(`${aIso}T12:00:00Z`);
     const b = new Date(`${bIso}T12:00:00Z`);
@@ -51,54 +55,49 @@
     };
   }
 
-  function buildAnnualSignature(record) {
-    const duration = globalThis.EquinoxPassageFormat.durationText(record.passage.totalMilliseconds);
+  function buildAnnualSignature(canonicalRecord) {
+    const duration = globalThis.EquinoxPassageFormat.durationText(canonicalRecord.passage.totalMilliseconds);
     return {
-      calculated: `Equinox entered at ${record.patternPosition.moonName || "Outside Gate"}${record.patternPosition.day ? ` · Day ${record.patternPosition.day}` : ""}.`,
-      astronomical: `${record.lunarLayer.phaseName} with approximately ${record.lunarLayer.illuminationPercent}% illumination.`,
-      symbolic: `${record.patternPosition.weekGate} frames a ${record.patternPosition.archetype} threshold without claiming causation.`,
-      observational: `Passage length: ${duration}. No conclusion until witness records are collected.`
+      calculated: `Equinox entered at ${canonicalRecord.patternPosition.moonName || "Outside Gate"}${canonicalRecord.patternPosition.day ? ` · Day ${canonicalRecord.patternPosition.day}` : ""}.`,
+      astronomical: `Approximate lunar phase at the equinox instant: ${canonicalRecord.lunarLayer.phaseName} with approximately ${canonicalRecord.lunarLayer.illuminationPercent}% illumination.`,
+      symbolic: `${canonicalRecord.patternPosition.weekGate} frames a ${canonicalRecord.patternPosition.archetype} threshold without claiming causation.`,
+      observational: `Passage length under the declared boundary settings: ${duration}. No conclusion until witness records are collected.`
     };
   }
 
-  function normalizedValues(record) {
-    const dayIndex = record.patternPosition.day ? record.patternPosition.day - 1 : 27;
-    const moonIndex = record.patternPosition.moon ? record.patternPosition.moon - 1 : 12;
-    const dayOfYear = record.patternPosition.dayOfPatternYear || 364;
+  function normalizedValues(canonicalRecord) {
+    const dayIndex = canonicalRecord.patternPosition.day ? canonicalRecord.patternPosition.day - 1 : 27;
+    const moonIndex = canonicalRecord.patternPosition.moon ? canonicalRecord.patternPosition.moon - 1 : 12;
+    const dayOfYear = canonicalRecord.patternPosition.dayOfPatternYear || 364;
+    const equinoxDate = new Date(canonicalRecord.equinox.utcInstant);
     return {
       patternCyclePosition: Number((((dayOfYear - 1) || 0) / 364).toFixed(6)),
       moonIndex,
       dayIndex,
       yearProgress: Number((((dayOfYear - 1) || 0) / 364).toFixed(6)),
-      passageProgress: Number(record.passage.progress.toFixed(6)),
-      equinoxCyclePosition: Number((((new Date(record.equinox.utcInstant).getUTCMonth() * 31) + new Date(record.equinox.utcInstant).getUTCDate()) / 366).toFixed(6)),
-      lunarCyclePosition: Number(record.lunarLayer.cyclePosition.toFixed(6)),
+      equinoxCyclePosition: Number((((equinoxDate.getUTCMonth() * 31) + equinoxDate.getUTCDate()) / 366).toFixed(6)),
+      lunarCyclePosition: Number(canonicalRecord.lunarLayer.cyclePosition.toFixed(6)),
       solarSeasonPosition: 0
     };
   }
 
-  function buildRecord({ selectedYear, timeZone, boundaryMode, manualSunset, asOf } = {}) {
+  function buildCanonicalRecord({ selectedYear, timeZone, boundaryMode, manualSunset } = {}) {
     assertDependencies();
     const year = globalThis.EquinoxEngine.normalizeYear(selectedYear);
     const zone = globalThis.TimeZoneTools.safeTimeZone(timeZone || globalThis.AstronomyVersion.defaultStudyTimeZone);
     const mode = safeBoundaryMode(boundaryMode || globalThis.AstronomyVersion.defaultBoundaryMode);
     const sunsetTime = safeSunset(manualSunset || globalThis.AstronomyVersion.defaultSunset);
-    const evaluationDate = asOf ? new Date(asOf) : new Date();
     const equinox = globalThis.EquinoxEngine.describeEquinox(year, zone);
     const patternPosition = patternPositionForInstant(equinox.utcDate, zone, mode, sunsetTime);
     const endDate = globalThis.TimeZoneTools.startOfPatternYearUtc(year, zone, mode, sunsetTime);
     const totalMilliseconds = endDate.getTime() - equinox.utcDate.getTime();
-    const elapsedMilliseconds = clamp(evaluationDate.getTime() - equinox.utcDate.getTime(), 0, totalMilliseconds);
-    const remainingMilliseconds = clamp(endDate.getTime() - evaluationDate.getTime(), 0, totalMilliseconds);
-    const progress = totalMilliseconds > 0 ? elapsedMilliseconds / totalMilliseconds : 0;
     const civilDate = globalThis.TimeZoneTools.localDateKey(equinox.utcDate, zone);
     const endCivilDate = globalThis.TimeZoneTools.localDateKey(endDate, zone);
     const effectiveTarget = `${year}-04-17`;
     const selectedPatternBoundariesCrossed = dayDiffIso(effectiveTarget, patternPosition.effectiveDate);
     const civilMidnightsCrossed = dayDiffIso(endCivilDate, civilDate);
-    const passageState = evaluationDate < equinox.utcDate ? "before-passage" : evaluationDate > endDate ? "after-passage" : "active-passage";
 
-    const record = {
+    const canonicalRecord = {
       schemaVersion: "equinox-passage/1.0.0",
       astronomyVersion: globalThis.AstronomyVersion.version,
       calendarVersion: globalThis.PatternCalendarVersion?.version || "pattern-calendar/1.0.0",
@@ -112,27 +111,44 @@
         civilDate,
         source: equinox.source,
         sourceVersion: equinox.sourceVersion,
-        precisionSeconds: equinox.precisionSeconds,
-        claimedPrecision: equinox.claimedPrecision,
+        sourceIntegrityStatus: equinox.sourceIntegrityStatus,
+        dataOrigin: equinox.dataOrigin,
+        timestampResolutionSeconds: equinox.timestampResolutionSeconds,
+        validationToleranceSeconds: equinox.validationToleranceSeconds,
+        maximumMeasuredDeviationSeconds: equinox.maximumMeasuredDeviationSeconds,
+        maximumDeviationYear: equinox.maximumDeviationYear,
+        primarySourceUrl: equinox.primarySourceUrl,
+        sourceTableUrl: equinox.sourceTableUrl,
+        validationUrl: equinox.validationUrl,
+        skyfieldVersion: equinox.skyfieldVersion,
+        jplKernelFilename: equinox.jplKernelFilename,
+        ephemerisVersionOrChecksum: equinox.ephemerisVersionOrChecksum,
+        timescale: equinox.timescale,
+        equinoxFindingAlgorithm: equinox.equinoxFindingAlgorithm,
+        generationScriptPath: equinox.generationScriptPath,
+        timestampRoundingPolicy: equinox.timestampRoundingPolicy,
+        generationTimestamp: equinox.generationTimestamp,
         status: equinox.status,
         validationStatus: equinox.validationStatus,
+        validationMethod: equinox.validationMethod,
         validationDeltaSeconds: equinox.validationDeltaSeconds,
+        validationUtcInstant: equinox.validationUtcInstant,
         generatedOrImportedAt: equinox.importedAt
       },
       patternPosition,
       passage: {
-        state: passageState,
         startInstant: equinox.utcInstant,
         endInstant: endDate.toISOString(),
         totalMilliseconds,
         totalDays: Number((totalMilliseconds / 86400000).toFixed(6)),
-        elapsedMilliseconds,
-        remainingMilliseconds,
-        progress,
         civilMidnightsCrossed,
         selectedPatternBoundariesCrossed
       },
-      lunarLayer: equinox.lunarLayer,
+      lunarLayer: {
+        ...equinox.lunarLayer,
+        calculationInstantUtc: equinox.utcInstant,
+        approximate: true
+      },
       annualSignature: null,
       normalizedValues: null,
       sources: [
@@ -141,10 +157,14 @@
           source: equinox.source,
           sourceVersion: equinox.sourceVersion,
           exactUtcInstant: equinox.utcInstant,
-          precisionSeconds: equinox.precisionSeconds,
-          sourced: true,
+          timestampResolutionSeconds: equinox.timestampResolutionSeconds,
+          validationToleranceSeconds: equinox.validationToleranceSeconds,
           validationStatus: equinox.validationStatus,
+          validationMethod: equinox.validationMethod,
           validationDeltaSeconds: equinox.validationDeltaSeconds,
+          maximumMeasuredDeviationSeconds: equinox.maximumMeasuredDeviationSeconds,
+          maximumDeviationYear: equinox.maximumDeviationYear,
+          sourceIntegrityStatus: equinox.sourceIntegrityStatus,
           generatedOrImportedAt: equinox.importedAt
         },
         {
@@ -160,28 +180,58 @@
           sourced: false,
           validationStatus: "approximate"
         }
-      ],
-      generatedAt: new Date().toISOString()
+      ]
     };
 
-    record.annualSignature = buildAnnualSignature(record);
-    record.normalizedValues = normalizedValues(record);
-    return record;
+    canonicalRecord.annualSignature = buildAnnualSignature(canonicalRecord);
+    canonicalRecord.normalizedValues = normalizedValues(canonicalRecord);
+    return canonicalRecord;
+  }
+
+  function buildLiveState(canonicalRecord, asOf) {
+    const evaluatedAt = asOf ? new Date(asOf) : new Date();
+    const start = new Date(canonicalRecord.passage.startInstant).getTime();
+    const end = new Date(canonicalRecord.passage.endInstant).getTime();
+    const totalMilliseconds = canonicalRecord.passage.totalMilliseconds;
+    const elapsedMilliseconds = clamp(evaluatedAt.getTime() - start, 0, totalMilliseconds);
+    const remainingMilliseconds = clamp(end - evaluatedAt.getTime(), 0, totalMilliseconds);
+    const progress = totalMilliseconds > 0 ? clamp(elapsedMilliseconds / totalMilliseconds, 0, 1) : 0;
+    const status = evaluatedAt.getTime() < start ? "before-passage" : evaluatedAt.getTime() > end ? "after-passage" : "active-passage";
+    return {
+      evaluatedAt: evaluatedAt.toISOString(),
+      status,
+      elapsedMilliseconds,
+      remainingMilliseconds,
+      progress
+    };
+  }
+
+  function buildRecord({ selectedYear, timeZone, boundaryMode, manualSunset, asOf } = {}) {
+    const canonicalRecord = buildCanonicalRecord({ selectedYear, timeZone, boundaryMode, manualSunset });
+    const liveState = buildLiveState(canonicalRecord, asOf);
+    return {
+      canonicalRecord,
+      liveState
+    };
   }
 
   function compareYears(firstRecord, secondRecord) {
+    const first = canonicalOf(firstRecord);
+    const second = canonicalOf(secondRecord);
     return {
-      firstYear: firstRecord.selectedYear,
-      secondYear: secondRecord.selectedYear,
-      durationDifferenceMilliseconds: secondRecord.passage.totalMilliseconds - firstRecord.passage.totalMilliseconds,
-      equinoxShiftSeconds: Math.round((new Date(secondRecord.equinox.utcInstant) - new Date(firstRecord.equinox.utcInstant)) / 1000),
-      patternPositionDifference: `${firstRecord.patternPosition.moonName || "Outside"} ${firstRecord.patternPosition.day || ""}`.trim() + ` → ${secondRecord.patternPosition.moonName || "Outside"} ${secondRecord.patternPosition.day || ""}`.trim(),
-      lunarPhaseDifference: `${firstRecord.lunarLayer.phaseName} → ${secondRecord.lunarLayer.phaseName}`,
+      firstYear: first.selectedYear,
+      secondYear: second.selectedYear,
+      durationDifferenceMilliseconds: second.passage.totalMilliseconds - first.passage.totalMilliseconds,
+      equinoxShiftSeconds: Math.round((new Date(second.equinox.utcInstant) - new Date(first.equinox.utcInstant)) / 1000),
+      patternPositionDifference: `${first.patternPosition.moonName || "Outside"} ${first.patternPosition.day || ""}`.trim() + ` → ${second.patternPosition.moonName || "Outside"} ${second.patternPosition.day || ""}`.trim(),
+      lunarPhaseDifference: `${first.lunarLayer.phaseName} → ${second.lunarLayer.phaseName}`,
       recurrenceNotes: "Observation only. Repeated offsets are not treated as proof of causation."
     };
   }
 
   globalThis.EquinoxPassageEngine = Object.freeze({
+    buildCanonicalRecord,
+    buildLiveState,
     buildRecord,
     compareYears
   });
