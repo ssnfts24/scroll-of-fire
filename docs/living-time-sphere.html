@@ -23,8 +23,8 @@
   <link rel="canonical" href="https://codexofreality.org/living-time-sphere.html">
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
-  <link rel="stylesheet" href="assets/css/moons.css?v=20260722-4">
-  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260723-2">
+  <link rel="stylesheet" href="assets/css/moons.css?v=20260723-3">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260723-3">
 
   <!-- Core engines -->
   <script defer src="assets/js/site.js"></script>
@@ -114,38 +114,54 @@
           <button id="sphere-mode-pattern" class="sphere-mode-btn" type="button" aria-pressed="false">Pattern</button>
         </div>
 
-        <!-- View/renderer selector -->
-        <div class="sphere-renderer-row">
-          <label for="sphere-renderer-select" class="sphere-control-label">View</label>
-          <select id="sphere-renderer-select" class="sphere-control-select" aria-label="Rendering mode">
-            <option value="auto">Auto</option>
-            <option value="3d">3D Sphere</option>
-            <option value="svg">Accessible SVG</option>
-            <option value="table">Data Table</option>
-            <option value="text">Text Summary</option>
-          </select>
+        <!-- Sphere Settings (collapsible on mobile) -->
+        <details class="sphere-settings-group" open>
+          <summary class="sphere-settings-summary">Sphere Settings</summary>
+          <div class="sphere-settings-body">
+            <!-- View/renderer selector -->
+            <div class="sphere-renderer-row">
+              <label for="sphere-renderer-select" class="sphere-control-label">View</label>
+              <select id="sphere-renderer-select" class="sphere-control-select" aria-label="Rendering mode">
+                <option value="auto">Auto</option>
+                <option value="3d">3D Sphere</option>
+                <option value="svg">Accessible SVG</option>
+                <option value="table">Data Table</option>
+                <option value="text">Text Summary</option>
+              </select>
 
-          <label for="sphere-quality-select" class="sphere-control-label">Quality</label>
-          <select id="sphere-quality-select" class="sphere-control-select" aria-label="Visual quality level">
-            <option value="auto">Auto</option>
-            <option value="high">High</option>
-            <option value="balanced">Balanced</option>
-            <option value="lowpower">Low Power</option>
-            <option value="svgonly">SVG Only</option>
-          </select>
+              <label for="sphere-quality-select" class="sphere-control-label">Quality</label>
+              <select id="sphere-quality-select" class="sphere-control-select" aria-label="Visual quality level">
+                <option value="auto">Auto</option>
+                <option value="high">High</option>
+                <option value="balanced">Balanced</option>
+                <option value="lowpower">Low Power</option>
+                <option value="svgonly">SVG Only</option>
+              </select>
+            </div>
+
+            <!-- Year/range controls -->
+            <div class="sphere-year-controls">
+              <label for="sphere-year-select">Selected year</label>
+              <select id="sphere-year-select" aria-label="Select year"></select>
+            </div>
+
+            <!-- Renderer status label -->
+            <p class="sphere-3d-preview-note" aria-live="polite">
+              <span id="sphere-renderer-label">3D Living View — Preview</span>
+            </p>
+          </div>
+        </details>
+
+        <!-- 3D fallback warning (shown when 3D selected but unavailable) -->
+        <div id="sphere-renderer-fallback-warning" class="sphere-fallback-warning" hidden role="alert" aria-live="assertive">
+          <span class="sphere-fallback-reason">3D unavailable — using SVG</span>
+          <div class="sphere-fallback-actions">
+            <button id="sphere-retry-3d" class="sphere-btn sphere-btn-sm" type="button">Retry 3D</button>
+            <button id="sphere-clear-renderer-cache" class="sphere-btn sphere-btn-sm" type="button">Clear Sphere renderer cache</button>
+            <button id="sphere-switch-svg" class="sphere-btn sphere-btn-sm" type="button">Switch to SVG</button>
+          </div>
         </div>
-
-        <!-- 3D Preview label -->
-        <p class="sphere-3d-preview-note" aria-live="polite">
-          <span id="sphere-renderer-label">3D Living View — Preview</span>
-        </p>
       </section>
-
-      <!-- Year/range controls -->
-      <div class="sphere-year-controls">
-        <label for="sphere-year-select">Selected year</label>
-        <select id="sphere-year-select" aria-label="Select year"></select>
-      </div>
 
       <!-- Guided introduction (shown once per session; skippable) -->
       <aside id="sphere-intro" class="sphere-intro" role="complementary" aria-labelledby="sphere-intro-title" hidden>
@@ -240,6 +256,42 @@
       <section aria-labelledby="sphereTextModelHeading">
         <h2 id="sphereTextModelHeading">Accessible text model</h2>
         <pre id="sphere-text-model" class="sphere-text-model" aria-live="polite" aria-atomic="true">Loading…</pre>
+      </section>
+
+      <!-- Preview diagnostics: Today position -->
+      <section aria-labelledby="sphereTodayDiagHeading" class="sphere-diagnostics-section">
+        <details id="sphere-today-diagnostics">
+          <summary id="sphereTodayDiagHeading" class="sphere-diag-summary">Today Diagnostics (preview)</summary>
+          <dl class="sphere-diag-grid">
+            <dt>Civil date</dt>         <dd id="sphere-diag-today-civil">—</dd>
+            <dt>Effective date</dt>     <dd id="sphere-diag-today-effective">—</dd>
+            <dt>Timezone</dt>           <dd id="sphere-diag-today-tz">—</dd>
+            <dt>Boundary</dt>           <dd id="sphere-diag-today-boundary">—</dd>
+            <dt>Sunset</dt>             <dd id="sphere-diag-today-sunset">—</dd>
+            <dt>Pattern position</dt>   <dd id="sphere-diag-today-position">—</dd>
+            <dt>Today marker angle</dt> <dd id="sphere-diag-today-angle">—</dd>
+            <dt>Data source</dt>        <dd id="sphere-diag-today-source">—</dd>
+          </dl>
+        </details>
+      </section>
+
+      <!-- Preview diagnostics: Renderer -->
+      <section aria-labelledby="sphereRendererDiagHeading" class="sphere-diagnostics-section">
+        <details id="sphere-renderer-diagnostics">
+          <summary id="sphereRendererDiagHeading" class="sphere-diag-summary">Technical Renderer (preview)</summary>
+          <dl class="sphere-diag-grid">
+            <dt>Requested renderer</dt>  <dd id="sphere-diag-requested">—</dd>
+            <dt>Active renderer</dt>     <dd id="sphere-diag-active">—</dd>
+            <dt>Fallback</dt>            <dd id="sphere-diag-fallback">—</dd>
+            <dt>WebGL</dt>               <dd id="sphere-diag-webgl">—</dd>
+            <dt>WebGL2</dt>              <dd id="sphere-diag-webgl2">—</dd>
+            <dt>Library version</dt>     <dd id="sphere-diag-lib-version">—</dd>
+            <dt>Canvas size</dt>         <dd id="sphere-diag-canvas-size">—</dd>
+            <dt>Device pixel ratio</dt>  <dd id="sphere-diag-dpr">—</dd>
+            <dt>Quality</dt>             <dd id="sphere-diag-quality">—</dd>
+            <dt>Last init error</dt>     <dd id="sphere-diag-last-error">—</dd>
+          </dl>
+        </details>
       </section>
 
       <!-- 9. Methods and coordinate explanation -->

@@ -733,3 +733,98 @@
 
 /* Prevent 3D from loading on homepage (guard class; set by JS if 3D attempted) */
 .sphere-no-3d .living-time-sphere-3d-canvas { display: none !important; }
+
+/* ── Phase 03 bug-fix additions ──────────────────────────────────── */
+
+/* Sphere Settings collapsible group */
+.sphere-settings-group {
+  margin-top: 0.5rem;
+}
+
+.sphere-settings-summary {
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: rgba(232, 228, 217, 0.55);
+  padding: 0.25rem 0;
+  user-select: none;
+  list-style: none;
+}
+.sphere-settings-summary::-webkit-details-marker { display: none; }
+.sphere-settings-summary::before { content: "▸ "; }
+details[open] > .sphere-settings-summary::before { content: "▾ "; }
+
+.sphere-settings-body {
+  padding: 0.5rem 0 0;
+}
+
+/* On larger screens, keep settings expanded and hide summary text */
+@media (min-width: 640px) {
+  .sphere-settings-group[open] .sphere-settings-summary { display: none; }
+  .sphere-settings-group { display: contents; }
+}
+
+/* Fallback warning banner */
+.sphere-fallback-warning {
+  background: rgba(180, 60, 20, 0.18);
+  border: 1px solid rgba(220, 100, 40, 0.45);
+  border-radius: 6px;
+  padding: 0.6rem 0.9rem;
+  margin-top: 0.5rem;
+  font-size: 0.83rem;
+  color: rgba(255, 200, 160, 0.9);
+}
+
+.sphere-fallback-reason {
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.sphere-fallback-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.sphere-btn-sm {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.78rem;
+}
+
+/* Diagnostics sections */
+.sphere-diagnostics-section {
+  margin: 1.5rem 0;
+}
+
+.sphere-diag-summary {
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(232, 228, 217, 0.5);
+  padding: 0.3rem 0;
+  list-style: none;
+  user-select: none;
+}
+.sphere-diag-summary::-webkit-details-marker { display: none; }
+.sphere-diag-summary::before { content: "▸ "; }
+details[open] > .sphere-diag-summary::before { content: "▾ "; }
+
+.sphere-diag-grid {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.2rem 1rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+}
+
+.sphere-diag-grid dt {
+  color: rgba(232, 228, 217, 0.45);
+  white-space: nowrap;
+  margin: 0;
+}
+
+.sphere-diag-grid dd {
+  color: rgba(232, 228, 217, 0.8);
+  margin: 0;
+  font-family: monospace;
+  word-break: break-word;
+}

@@ -138,6 +138,7 @@
 
     updateAccessibleText(model, spiral);
     updateDetails(model);
+    _updateTodayDiagnostics(model);
   }
 
   async function _render3d(container, model, spiral) {
@@ -192,7 +193,12 @@
         _state.active3d = false;
         const reason = result?.reason || "WebGL unavailable";
         const detail = result?.detail ? ` (${result.detail})` : "";
-        _updateRendererLabel(`SVG fallback — ${reason}${detail}`);
+        const statusText = `SVG fallback — ${reason}${detail}`;
+        _updateRendererLabel(statusText);
+        // Sync the renderer selector so it accurately reflects the active renderer.
+        _syncRendererSelect("svg");
+        // Show the fallback warning row with Retry button.
+        _showRendererFallbackWarning(reason, detail);
         // Remove any stale canvas element left by a failed init.
         const staleCanvas = container.querySelector(".living-time-sphere-3d-canvas");
         if (staleCanvas) staleCanvas.remove();
@@ -203,11 +209,14 @@
         });
         _renderSvgFallback(container, model, spiral, layout);
         _updateInteractBar();
+        _updateTodayDiagnostics(model);
         return;
       }
       _state.active3d = true;
       _updateRendererLabel("WebGL 3D active");
+      _hideRendererFallbackWarning();
       _updateInteractBar();
+      _updateRendererDiagnostics();
     } else {
       renderer.refresh(model, spiral, _state.year, _state.visibleLayers, _state.viewMode);
       renderer.setMode(_state.viewMode);
@@ -283,6 +292,75 @@
     if (el) el.textContent = status;
   }
 
+  // Sync the renderer <select> to reflect the actual active renderer.
+  function _syncRendererSelect(activeRenderer) {
+    const sel = document.getElementById("sphere-renderer-select");
+    if (sel) sel.value = activeRenderer;
+    _state.rendererMode = activeRenderer;
+  }
+
+  // Show the fallback warning banner with Retry / Switch-to-SVG buttons.
+  function _showRendererFallbackWarning(reason, detail) {
+    const el = document.getElementById("sphere-renderer-fallback-warning");
+    if (!el) return;
+    const reasonEl = el.querySelector(".sphere-fallback-reason");
+    if (reasonEl) reasonEl.textContent = `3D unavailable — using SVG (${reason}${detail})`;
+    el.hidden = false;
+  }
+
+  function _hideRendererFallbackWarning() {
+    const el = document.getElementById("sphere-renderer-fallback-warning");
+    if (el) el.hidden = true;
+  }
+
+  // Update the renderer diagnostics panel (hidden by default; shown in Technical view).
+  function _updateRendererDiagnostics() {
+    const panel = document.getElementById("sphere-renderer-diagnostics");
+    if (!panel) return;
+    const r3d = globalThis.LivingTimeSphereRenderer3d;
+    if (!r3d) return;
+    const diag = r3d.getDiagnostics?.() || {};
+    const rows = {
+      "sphere-diag-requested":   "3d",
+      "sphere-diag-active":      _state.active3d ? "WebGL 3D active" : (_state.rendererMode === "svg" ? "Accessible SVG" : "SVG fallback"),
+      "sphere-diag-fallback":    _state.active3d ? "none" : (diag.lastInitError?.reason || "none"),
+      "sphere-diag-webgl":       diag.webglAvailable ? "available" : "unavailable",
+      "sphere-diag-webgl2":      diag.webgl2Available ? "available" : "unavailable",
+      "sphere-diag-lib-version": diag.threeVersion || r3d.THREE_VERSION || "—",
+      "sphere-diag-canvas-size": diag.canvasWidth && diag.canvasHeight ? `${diag.canvasWidth} × ${diag.canvasHeight}` : "—",
+      "sphere-diag-dpr":         String(diag.devicePixelRatio || "—"),
+      "sphere-diag-quality":     _state.quality,
+      "sphere-diag-last-error":  diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : "none",
+    };
+    for (const [id, val] of Object.entries(rows)) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    }
+  }
+
+  // Update the Today diagnostics panel with the current model's today position.
+  function _updateTodayDiagnostics(model) {
+    const panel = document.getElementById("sphere-today-diagnostics");
+    if (!panel) return;
+    const tp = model?.todayPatternPosition;
+    const rows = {
+      "sphere-diag-today-civil":    tp?.civilDate     || "—",
+      "sphere-diag-today-effective": tp?.effectiveDate || "—",
+      "sphere-diag-today-tz":       _state.timeZone   || "—",
+      "sphere-diag-today-boundary": _state.boundaryMode || "—",
+      "sphere-diag-today-sunset":   _state.manualSunset || "—",
+      "sphere-diag-today-position": tp?.moon != null
+        ? `Moon ${tp.moon} · Day ${tp.day} · Day ${tp.dayOfPatternYear}/364`
+        : (tp?.isDayOutOfTime ? "Day Out of Time" : (tp?.isDeepTimeDay ? "Deep Time Day" : "—")),
+      "sphere-diag-today-angle":    model?.currentPatternAngle != null ? `${model.currentPatternAngle.toFixed(2)}°` : "—",
+      "sphere-diag-today-source":   "PatternCalendar.fromCivilDate",
+    };
+    for (const [id, val] of Object.entries(rows)) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    }
+  }
+
   function _syncYearSelect(year) {
     const sel = document.getElementById("sphere-year-select");
     if (sel) sel.value = String(year);
@@ -303,13 +381,34 @@
   function updateDetails(model) {
     const el = document.getElementById("sphere-details");
     if (!el || !model) return;
-    const pos   = model.sourceRecord?.equinox?.patternPosition || {};
+
+    // In today mode, show today's actual Pattern position (from PatternCalendar),
+    // not the Equinox-moment position from the year record.
+    const isToday = _state.viewMode === "today";
+    const todayPos = isToday ? (model.todayPatternPosition || null) : null;
+    const pos   = todayPos ? {
+      moon:            todayPos.moon,
+      day:             todayPos.day,
+      dayOfPatternYear: todayPos.dayOfPatternYear,
+      moonName:        todayPos.moonName,
+      isDayOutOfTime:  todayPos.isDayOutOfTime,
+    } : (model.sourceRecord?.equinox?.patternPosition || {});
     const lunar = model.sourceRecord?.equinox?.lunarLayer       || {};
     const offs  = model.sourceRecord?.offsets || {};
+
+    const posLabel = pos.moon != null ? `Moon ${pos.moon} · Day ${pos.day}` : "Outside count";
+    const dayLabel = pos.dayOfPatternYear != null ? `Day ${pos.dayOfPatternYear}/364` : "—";
+    const heading  = isToday && todayPos
+      ? `Today — ${posLabel} · ${dayLabel}`
+      : `Year ${model.year}`;
+
     el.innerHTML = `
-      <h3 class="sphere-details-heading">Year ${model.year}</h3>
+      <h3 class="sphere-details-heading">${heading}</h3>
       <dl class="sphere-details-grid">
-        <dt>Pattern position</dt><dd>${pos.moon != null ? `Moon ${pos.moon} · Day ${pos.day}` : "Outside count"}</dd>
+        ${isToday && todayPos ? `<dt>Civil date</dt><dd>${todayPos.civilDate || "—"}</dd>` : ""}
+        ${isToday && todayPos ? `<dt>Effective date</dt><dd>${todayPos.effectiveDate || "—"}</dd>` : ""}
+        <dt>Pattern position</dt><dd>${posLabel}</dd>
+        ${isToday && todayPos && pos.dayOfPatternYear ? `<dt>Day of year</dt><dd>${dayLabel}</dd>` : ""}
         <dt>Passage</dt><dd>${Number(((offs.equinoxToYearGateDays || 0) * 24).toFixed(1))} hours</dd>
         <dt>Lunar phase</dt><dd>${lunar.phaseName || "—"}</dd>
         <dt>Equinox angle</dt><dd>${model.passageStartAngle?.toFixed(1) || "—"}°</dd>
@@ -514,6 +613,56 @@
       globalThis.LivingTimeSphereAccessibility.announce(`Year ${y} selected. Switching to Passage view.`);
       renderSphere(container);
     });
+
+    // ── Retry 3D / Clear cache / Switch to SVG ──────────────────────
+
+    const retry3dBtn = document.getElementById("sphere-retry-3d");
+    if (retry3dBtn) {
+      retry3dBtn.addEventListener("click", async () => {
+        // Dispose any partial state, reset renderer mode, attempt fresh init.
+        if (globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
+          globalThis.LivingTimeSphereRenderer3d.teardown();
+        }
+        _state.active3d = false;
+        _state._3dInitInProgress = false;
+        _state.rendererMode = "3d";
+        const sel = document.getElementById("sphere-renderer-select");
+        if (sel) sel.value = "3d";
+        _updateRendererLabel("Retrying 3D renderer…");
+        _hideRendererFallbackWarning();
+        renderSphere(container);
+      });
+    }
+
+    const clearCacheBtn = document.getElementById("sphere-clear-renderer-cache");
+    if (clearCacheBtn) {
+      clearCacheBtn.addEventListener("click", async () => {
+        if (typeof caches !== "undefined") {
+          const keys = await caches.keys();
+          for (const k of keys) await caches.delete(k);
+          clearCacheBtn.textContent = "Cache cleared — reloading…";
+          setTimeout(() => location.reload(), 800);
+        } else {
+          clearCacheBtn.textContent = "No cache API";
+        }
+      });
+    }
+
+    const switchSvgBtn = document.getElementById("sphere-switch-svg");
+    if (switchSvgBtn) {
+      switchSvgBtn.addEventListener("click", () => {
+        if (globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
+          globalThis.LivingTimeSphereRenderer3d.teardown();
+        }
+        _state.active3d = false;
+        _state._3dInitInProgress = false;
+        _state.rendererMode = "svg";
+        const sel = document.getElementById("sphere-renderer-select");
+        if (sel) sel.value = "svg";
+        _hideRendererFallbackWarning();
+        renderSphere(container);
+      });
+    }
   }
 
   // ── Guided introduction ───────────────────────────────────────────

@@ -64,6 +64,7 @@
   let _selectedYear = null;
   let _viewMode     = "today";
   let _visibleLayers = {};
+  let _lastInitError = null;  // last failure reason for diagnostics
 
   // Scene object refs
   const _objects = {};
@@ -81,11 +82,18 @@
       script.crossOrigin   = "anonymous";
       script.async         = true;
       script.onload = () => {
-        if (!globalThis.THREE) { reject(new Error("Three.js did not expose globalThis.THREE")); return; }
+        if (!globalThis.THREE) {
+          _loadPromise = null; // allow retry
+          reject(new Error("Three.js did not expose globalThis.THREE"));
+          return;
+        }
         _THREE = globalThis.THREE;
         resolve(_THREE);
       };
-      script.onerror = () => reject(new Error("Failed to load Three.js from CDN"));
+      script.onerror = () => {
+        _loadPromise = null; // allow retry after failure
+        reject(new Error(`Failed to load Three.js from CDN: ${THREE_CDN}`));
+      };
       document.head.appendChild(script);
     });
     return _loadPromise;
@@ -671,13 +679,18 @@
       assertDeps();
 
       if (!globalThis.LivingTimeSphereEffects.detectWebGl()) {
-        return { success: false, reason: "webgl-unavailable" };
+        _lastInitError = { reason: "webgl-unavailable", detail: "WebGL context creation failed in this environment." };
+        return { success: false, reason: "webgl-unavailable", detail: _lastInitError.detail };
       }
-      if (!quality) return { success: false, reason: "quality-svgonly" };
+      if (!quality) {
+        _lastInitError = { reason: "quality-svgonly", detail: "Quality preset resolved to SVG-only." };
+        return { success: false, reason: "quality-svgonly" };
+      }
 
       try {
         await loadThreeJs();
       } catch (err) {
+        _lastInitError = { reason: "three-load-failed", detail: String(err) };
         return { success: false, reason: "three-load-failed", detail: String(err) };
       }
 
@@ -708,6 +721,7 @@
         });
       } catch (err) {
         // WebGLRenderer constructor can throw if context creation fails.
+        _lastInitError = { reason: "webgl-context-failed", detail: String(err) };
         return { success: false, reason: "webgl-context-failed", detail: String(err) };
       }
       _renderer.setPixelRatio(pixelRatio);
@@ -751,6 +765,7 @@
       _wireResize(container);
 
       _initialized = true;
+      _lastInitError = null;
       return { success: true };
 
     } catch (err) {
@@ -764,6 +779,7 @@
       _scene     = null;
       _camera    = null;
       _initialized = false;
+      _lastInitError = { reason: "init-exception", detail: String(err) };
       return { success: false, reason: "init-exception", detail: String(err) };
     } finally {
       _initializing = false;
@@ -956,11 +972,40 @@
     _camera = null;
     _initialized  = false;
     _initializing = false;
+    _loadPromise  = null; // allow Three.js reload after teardown
     for (const key of Object.keys(_objects)) delete _objects[key];
   }
 
   function isInitialized() { return _initialized; }
   function isInitializing() { return _initializing; }
+
+  function getLastInitError() { return _lastInitError; }
+
+  function getDiagnostics() {
+    let webglAvail = false;
+    let webgl2Avail = false;
+    try {
+      const c = document.createElement("canvas");
+      webglAvail  = !!(c.getContext("webgl") || c.getContext("experimental-webgl"));
+      webgl2Avail = !!(c.getContext("webgl2"));
+    } catch { /* ignore */ }
+    const canvasW = _canvas ? (_canvas.width  || 0) : 0;
+    const canvasH = _canvas ? (_canvas.height || 0) : 0;
+    return {
+      requestedRenderer: "3d",
+      activeRenderer:    _initialized ? "webgl" : "none",
+      initialized:       _initialized,
+      initializing:      _initializing,
+      webglAvailable:    webglAvail,
+      webgl2Available:   webgl2Avail,
+      threeVersion:      THREE_VERSION,
+      threeLoaded:       !!_THREE,
+      canvasWidth:       canvasW,
+      canvasHeight:      canvasH,
+      devicePixelRatio:  typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1,
+      lastInitError:     _lastInitError,
+    };
+  }
 
   function exportPng({ format } = {}) {
     if (!_renderer) return null;
@@ -979,6 +1024,8 @@
     teardown,
     isInitialized,
     isInitializing,
+    getLastInitError,
+    getDiagnostics,
     exportPng,
     THREE_VERSION,
     THREE_CDN,

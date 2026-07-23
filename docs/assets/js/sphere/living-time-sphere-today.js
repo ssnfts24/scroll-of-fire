@@ -32,21 +32,63 @@
   function _getData(opts) {
     const { timeZone, boundaryMode, manualSunset, asOf } = opts || {};
     const now  = asOf ? new Date(asOf) : new Date();
+    const tz   = timeZone     || "America/Los_Angeles";
+    const bm   = boundaryMode || "sunset";
+    const ss   = manualSunset || "18:00";
     const year = now.getUTCFullYear();
 
     const supported = globalThis.AlignmentLedgerData.listSupportedYears();
     const selectedYear = supported.includes(year) ? year : supported[supported.length - 1];
 
-    // Sphere model (today view — uses live pattern cycle position when available)
+    // Sphere model — today view uses PatternCalendar.fromCivilDate internally.
     const todayModel = globalThis.LivingTimeSphereModel.buildTodayModel({
-      year: selectedYear, timeZone, boundaryMode, manualSunset, asOf: now
+      timeZone: tz, boundaryMode: bm, manualSunset: ss, asOf: now
     });
 
-    // Alignment record for richer fields
-    const record = globalThis.AlignmentLedgerData.getRecord({ year: selectedYear, timeZone, boundaryMode, manualSunset });
-    const pos    = record?.equinox?.patternPosition  || {};
-    const lunar  = record?.equinox?.lunarLayer        || {};
-    const offs   = record?.offsets                    || {};
+    // TODAY position: use the canonical result stored on todayModel if available,
+    // otherwise call PatternCalendar directly. Never use the Equinox year record's
+    // patternPosition here — that carries the Equinox-moment position, not today's.
+    let pos = {};
+    if (todayModel.todayPatternPosition) {
+      const tp = todayModel.todayPatternPosition;
+      pos = {
+        moon:            tp.moon,
+        moonName:        tp.moonName,
+        day:             tp.day,
+        dayOfPatternYear: tp.dayOfPatternYear,
+        weekGate:        tp.dayArchetype || null,
+        isDayOutOfTime:  tp.isDayOutOfTime,
+        isDeepTimeDay:   tp.isDeepTimeDay,
+        civilDate:       tp.civilDate,
+        effectiveDate:   tp.effectiveDate,
+        afterBoundary:   tp.afterBoundary,
+        sunsetTime:      tp.sunsetTime,
+        patternYear:     tp.patternYear,
+      };
+    } else if (globalThis.PatternCalendar) {
+      try {
+        const tp = globalThis.PatternCalendar.fromCivilDate({ date: now, timeZone: tz, boundaryMode: bm, sunsetTime: ss });
+        pos = {
+          moon:            tp.moon,
+          moonName:        tp.moonName,
+          day:             tp.day,
+          dayOfPatternYear: tp.dayOfPatternYear,
+          weekGate:        tp.dayArchetype || null,
+          isDayOutOfTime:  tp.isDayOutOfTime,
+          isDeepTimeDay:   tp.isDeepTimeDay,
+          civilDate:       tp.civilDate,
+          effectiveDate:   tp.effectiveDate,
+          afterBoundary:   tp.afterBoundary,
+          sunsetTime:      tp.sunsetTime,
+          patternYear:     tp.patternYear,
+        };
+      } catch (_) { /* leave empty */ }
+    }
+
+    // Alignment record for auxiliary fields (lunar, passage offsets).
+    const record = globalThis.AlignmentLedgerData.getRecord({ year: selectedYear, timeZone: tz, boundaryMode: bm, manualSunset: ss });
+    const lunar  = record?.equinox?.lunarLayer || {};
+    const offs   = record?.offsets             || {};
 
     // Passage status from EquinoxPassageEngine if available
     let passageStatus = null;
@@ -54,18 +96,18 @@
       try {
         const pr = globalThis.EquinoxPassageEngine.buildRecord({
           selectedYear,
-          timeZone:     timeZone     || "America/Los_Angeles",
-          boundaryMode: boundaryMode || "sunset",
-          manualSunset: manualSunset || "18:00",
+          timeZone:     tz,
+          boundaryMode: bm,
+          manualSunset: ss,
           asOf:         now
         });
         const norm = pr?.canonicalRecord?.normalizedValues || pr?.normalizedValues || {};
         passageStatus = {
-          active:       norm.isInPassage   ?? false,
-          elapsed:      norm.passageElapsedDays   ?? null,
-          remaining:    norm.passageRemainingDays  ?? null,
-          totalDays:    offs.equinoxToYearGateDays ?? 0,
-          progress:     norm.passageProgress       ?? null,
+          active:    norm.isInPassage          ?? false,
+          elapsed:   norm.passageElapsedDays   ?? null,
+          remaining: norm.passageRemainingDays ?? null,
+          totalDays: offs.equinoxToYearGateDays ?? 0,
+          progress:  norm.passageProgress      ?? null,
         };
       } catch (_) { /* leave null */ }
     }
@@ -78,19 +120,26 @@
       lunar,
       offs,
       passageStatus,
+      now,
+      timeZone:     tz,
+      boundaryMode: bm,
+      sunsetTime:   ss,
     };
   }
 
   // ── Text summary builder ──────────────────────────────────────────
 
   function buildTextSummary(data) {
-    const { year, pos, lunar, offs, passageStatus } = data;
+    const { year, pos, lunar, offs, passageStatus, timeZone, boundaryMode, sunsetTime } = data;
     const lines = [
       `Year: ${year}`,
-      `Pattern position: ${pos.moon != null ? `Moon ${pos.moon} · Day ${pos.day}` : "Outside count"}`,
+      pos.civilDate     ? `Civil date: ${pos.civilDate}`       : null,
+      pos.effectiveDate ? `Effective date: ${pos.effectiveDate}` : null,
+      timeZone     ? `Timezone: ${timeZone}`                   : null,
+      boundaryMode ? `Boundary: ${boundaryMode}${boundaryMode === "manual" || boundaryMode === "sunset" ? ` · ${sunsetTime || "18:00"}` : ""}` : null,
+      `Pattern position: ${pos.moon != null ? `Moon ${pos.moon} · Day ${pos.day} · Day ${pos.dayOfPatternYear}/364` : "Outside count"}`,
       pos.moonName ? `Moon name: ${pos.moonName}` : null,
-      `Day of 364: ${pos.dayOfPatternYear || "—"}`,
-      pos.weekGate ? `Week Gate: ${pos.weekGate}` : null,
+      pos.weekGate ? `Week Gate: ${Array.isArray(pos.weekGate) ? pos.weekGate[0] : pos.weekGate}` : null,
       `Lunar phase: ${lunar.phaseName || "—"}`,
       `Equinox Passage: ${Number(((offs.equinoxToYearGateDays || 0) * 24).toFixed(1))} h`,
       passageStatus?.active ? `Passage active — ${passageStatus.elapsed != null ? Number((passageStatus.elapsed * 24).toFixed(1)) + " h elapsed" : ""}` : null,
@@ -172,16 +221,16 @@
 
   function populateCard(rootEl, idPrefix, data, linkOpts) {
     const p = idPrefix || "";
-    const { year, pos, lunar, offs, passageStatus, record } = data;
+    const { year, pos, lunar, offs, passageStatus, record, timeZone, boundaryMode, sunsetTime } = data;
 
     _setText(rootEl, `${p}sphere-today-year`,        String(year));
-    _setText(rootEl, `${p}sphere-today-moon`,        pos.moon     != null ? `Moon ${pos.moon}` : "—");
+    _setText(rootEl, `${p}sphere-today-moon`,        pos.moon  != null ? `Moon ${pos.moon}` : "—");
     _setText(rootEl, `${p}sphere-today-moon-name`,   pos.moonName || "—");
-    _setText(rootEl, `${p}sphere-today-moon-day`,    pos.day      != null ? String(pos.day)     : "—");
+    _setText(rootEl, `${p}sphere-today-moon-day`,    pos.day   != null ? String(pos.day)    : "—");
     _setText(rootEl, `${p}sphere-today-day-of-year`, pos.dayOfPatternYear != null ? `Day ${pos.dayOfPatternYear} of 364` : "—");
-    _setText(rootEl, `${p}sphere-today-week-gate`,   pos.weekGate || "—");
+    _setText(rootEl, `${p}sphere-today-week-gate`,   Array.isArray(pos.weekGate) ? pos.weekGate[0] : (pos.weekGate || "—"));
     _setText(rootEl, `${p}sphere-today-lunar`,       lunar.phaseName || "—");
-    _setText(rootEl, `${p}sphere-today-boundary`,    record?.boundary || linkOpts?.boundaryMode || "—");
+    _setText(rootEl, `${p}sphere-today-boundary`,    boundaryMode || record?.boundary || "—");
 
     const passageHours = Number(((offs.equinoxToYearGateDays || 0) * 24).toFixed(1));
     let passageText = `${passageHours} h passage`;
@@ -205,7 +254,7 @@
     if (accEl) accEl.textContent = acc;
 
     // Link
-    const href = buildLink({ ...linkOpts, year });
+    const href = buildLink({ ...linkOpts, year, timeZone, boundaryMode, manualSunset: sunsetTime });
     _setHref(rootEl, `${p}sphere-today-open-link`, href);
 
     // Preview SVG

@@ -168,35 +168,49 @@
   }
 
   // Build the "Today" view model using the current date.
+  // The today pattern position is derived from PatternCalendar.fromCivilDate using the
+  // real current instant, timezone, and boundary mode — NOT from the Equinox year record.
   function buildTodayModel({ timeZone, boundaryMode, manualSunset, asOf } = {}) {
     assertDependencies();
     const now = asOf ? new Date(asOf) : new Date();
-    const year = now.getUTCFullYear();
+    const tz   = timeZone     || "America/Los_Angeles";
+    const bm   = boundaryMode || "sunset";
+    const ss   = manualSunset || "18:00";
 
-    // Get the record for the current or nearest supported year.
+    // Determine which Alignment year record provides the background geometry.
+    const nowYear  = now.getUTCFullYear();
     const supported = globalThis.AlignmentLedgerData.listSupportedYears();
-    const selectedYear = supported.includes(year) ? year : supported[supported.length - 1];
-    const model = buildYearModel({ year: selectedYear, timeZone, boundaryMode, manualSunset });
+    const selectedYear = supported.includes(nowYear) ? nowYear : supported[supported.length - 1];
+    const model = buildYearModel({ year: selectedYear, timeZone: tz, boundaryMode: bm, manualSunset: ss });
 
-    // Approximate "current" pattern position using EquinoxPassageEngine if available.
-    let currentPatternAngle = model.patternAngle;
-    if (globalThis.EquinoxPassageEngine) {
+    // Canonical today Pattern position — always via PatternCalendar, never from the
+    // Equinox year record which carries the Equinox-moment position, not today's.
+    let todayPatternPosition = null;
+    let currentPatternAngle  = model.patternAngle;
+
+    if (globalThis.PatternCalendar) {
       try {
-        const liveRecord = globalThis.EquinoxPassageEngine.buildRecord({
-          selectedYear,
-          timeZone:     timeZone || "America/Los_Angeles",
-          boundaryMode: boundaryMode || "sunset",
-          manualSunset: manualSunset || "18:00",
-          asOf:         now
+        const pcResult = globalThis.PatternCalendar.fromCivilDate({
+          date:         now,
+          timeZone:     tz,
+          boundaryMode: bm,
+          sunsetTime:   ss,
         });
-        const norm = liveRecord?.canonicalRecord?.normalizedValues || liveRecord?.normalizedValues || {};
-        if (norm.patternCyclePosition != null) {
-          currentPatternAngle = Number((norm.patternCyclePosition * 360).toFixed(6));
+        todayPatternPosition = pcResult;
+        if (pcResult.dayOfPatternYear != null) {
+          currentPatternAngle = patternAngleForDayOfYear(pcResult.dayOfPatternYear);
+        } else {
+          // Outside counted year (Day Out of Time / Deep Time Day)
+          currentPatternAngle = patternAngleForDayOfYear(365);
         }
-      } catch (_) { /* fall back to canonical */ }
+      } catch (_) { /* fall back to year-model angle */ }
     }
 
-    return Object.freeze(Object.assign({}, model, { currentPatternAngle, viewMode: "today" }));
+    return Object.freeze(Object.assign({}, model, {
+      currentPatternAngle,
+      todayPatternPosition,
+      viewMode: "today"
+    }));
   }
 
   globalThis.LivingTimeSphereModel = Object.freeze({
