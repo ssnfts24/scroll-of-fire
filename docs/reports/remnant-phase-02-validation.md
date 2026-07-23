@@ -62,12 +62,12 @@
 - Visualization-adapter target:
   - deterministic, DOM-free, canvas-free data adapter with normalized output contracts and safe handling of missing lunar data.
 - CI approval status:
-  - prior workflow runs on this PR show owner-approval `action_required` states for Equinox Passage and SHA-256 workflows before later successful runs on the same head;
-  - after the next push, workflow status must be rechecked rather than treated as a code failure.
+  - current head `dfd55e457374f6ffd2fdf288dc5d1755b44e2e4f` still shows owner-approval `action_required` runs with zero jobs started for Remnant Phase 2 — Equinox Passage, Remnant Phase 1 — Calendar, Oracle, Mirror and Share, and Build SHA-256 Index;
+  - prior runs on the earlier head `73f8d6f866ba075878ed9947396eee3f805590c2` completed successfully after approval, so the current state is still an approval gate rather than a code-test failure.
 - Owner-device checks:
   - [ ] Android owner device test
   - [ ] iPhone owner device test
   - [ ] Installed PWA owner device test
 - Test results: pending final run.
-- Deployment status: pending.
+- Deployment status: Netlify preview comment reports latest commit `dfd55e457374f6ffd2fdf288dc5d1755b44e2e4f` on https://deploy-preview-62--scrolloffire.netlify.app .
 - Rollback commit: pending final commit hash.
