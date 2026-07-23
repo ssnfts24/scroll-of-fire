@@ -12,7 +12,7 @@
     timeZone:      "America/Los_Angeles",
     boundaryMode:  "sunset",
     manualSunset:  "18:00",
-    visibleLayers: { pattern: true, passage: true, lunar: true, solar: true, markers: true, recurrence: false, spiral: true },
+    visibleLayers: { pattern: true, passage: true, lunar: true, solar: false, markers: true, recurrence: false, spiral: false },
     selectedMarker: null,
     useCanvas:     false,
     lowPower:      false,
@@ -102,7 +102,7 @@
 
   function buildCurrentModel() {
     const opts = { year: _state.year, timeZone: _state.timeZone, boundaryMode: _state.boundaryMode, manualSunset: _state.manualSunset };
-    if (_state.viewMode === "today") return globalThis.LivingTimeSphereModel.buildTodayModel(opts);
+    if (_state.viewMode === "today" || _state.viewMode === "pattern") return globalThis.LivingTimeSphereModel.buildTodayModel(opts);
     return globalThis.LivingTimeSphereModel.buildYearModel(opts);
   }
 
@@ -114,11 +114,19 @@
     // Show/hide data table and text summary views
     _updateAlternateViews();
 
+    const model    = buildCurrentModel();
+    const spiral   = globalThis.LivingTimeSphereModel.buildSpiral({ timeZone: _state.timeZone, boundaryMode: _state.boundaryMode, manualSunset: _state.manualSunset });
+
     if (_state.rendererMode === "table" || _state.rendererMode === "text") {
       // Hide 3D / SVG canvas; show alternate view
       _teardown3d();
       container.style.display = "none";
       _updateRendererLabel(_state.rendererMode === "table" ? "Data Table" : "Text Summary");
+      updateAccessibleText(model, spiral);
+      updateDetails(model);
+      _updateTodayDiagnostics(model);
+      _updateModeSummary(model);
+      _updateWhatAmISeeing(_state.viewMode);
       return;
     }
     container.style.display = "";
@@ -126,8 +134,6 @@
     const { w, h } = getContainerSize(container);
     const dpr      = typeof window !== "undefined" ? (window.devicePixelRatio || 1) : 1;
     const layout   = globalThis.LivingTimeSphereLayout.resolveLayout({ containerWidth: w, containerHeight: h, devicePixelRatio: dpr });
-    const model    = buildCurrentModel();
-    const spiral   = globalThis.LivingTimeSphereModel.buildSpiral({ timeZone: _state.timeZone, boundaryMode: _state.boundaryMode, manualSunset: _state.manualSunset });
 
     if (shouldUse3d()) {
       _render3d(container, model, spiral);
@@ -139,6 +145,8 @@
     updateAccessibleText(model, spiral);
     updateDetails(model);
     _updateTodayDiagnostics(model);
+    _updateModeSummary(model);
+    _updateWhatAmISeeing(_state.viewMode);
   }
 
   async function _render3d(container, model, spiral) {
@@ -174,12 +182,15 @@
           onYearSelect: year => {
             _state.year = year;
             _state.viewMode = "passage";
+            _setModeDefaultLayers("passage");
+            _setModeDefaultSelectedMarker("passage");
+            _syncModeButtons();
             _syncYearSelect(year);
             globalThis.LivingTimeSphereAccessibility?.announce?.(`Year ${year} selected. Passage view.`);
             renderSphere(container);
           },
           onMarkerSelect: marker => {
-            _state.selectedMarker = marker?.type === "year" ? `eq-${marker.year}` : null;
+            _state.selectedMarker = marker?.type === "year" ? `eq-${marker.year}` : (marker?.type || null);
           }
         });
       } catch (err) {
@@ -372,6 +383,72 @@
     }
   }
 
+  function _setModeDefaultLayers(mode) {
+    if (mode === "today") {
+      _state.visibleLayers.spiral = false;
+      _state.visibleLayers.recurrence = false;
+      _state.visibleLayers.solar = false;
+    } else if (mode === "pattern") {
+      _state.visibleLayers.spiral = false;
+      _state.visibleLayers.recurrence = false;
+    } else if (mode === "years") {
+      _state.visibleLayers.spiral = true;
+    } else if (mode === "passage") {
+      _state.visibleLayers.spiral = false;
+    }
+    Object.keys(_state.visibleLayers).forEach(layer => {
+      const cb = document.getElementById(`sphere-layer-${layer}`);
+      if (cb) cb.checked = _state.visibleLayers[layer];
+    });
+  }
+
+  function _updateModeSummary(model) {
+    const el = document.getElementById("sphere-mode-summary");
+    if (!el) return;
+    const mode = _state.viewMode;
+    if (mode === "today") {
+      const tp = model?.todayPatternPosition;
+      const pos = tp && tp.moon != null
+        ? `Moon ${tp.moon} · Day ${tp.day} · Day ${tp.dayOfPatternYear}/364`
+        : "—";
+      el.textContent = `Today — ${pos}`;
+    } else if (mode === "passage") {
+      const tp = model?.sourceRecord?.equinox?.patternPosition || {};
+      el.textContent = `${model?.year || "—"} Equinox Passage · Moon ${tp.moon || "—"} · Day ${tp.day || "—"} → Moon 1 · Day 1`;
+    } else if (mode === "years") {
+      el.textContent = `2014–2026 Alignment Spiral · Selected: ${_state.year}`;
+    } else if (mode === "pattern") {
+      const tp = model?.todayPatternPosition;
+      const pos = tp && tp.moon != null ? `Moon ${tp.moon} · Day ${tp.day}` : "—";
+      el.textContent = `13 Moons × 28 Days · Selected: ${pos}`;
+    }
+  }
+
+  function _updateWhatAmISeeing(mode) {
+    const el = document.getElementById("sphere-what-am-i-seeing-body");
+    if (!el) return;
+    const texts = {
+      today:   "This view places the current Pattern Day inside the fixed 13 × 28 calendar. The gold marker is Today. The lunar marker and Equinox Gate move independently around the Pattern structure.",
+      passage: "This view shows the distance between the March Equinox and Moon 1 Day 1 (Year Gate) for the selected year. The gold arc traces the Equinox Passage.",
+      years:   "This view compares the Equinox position and Passage duration across 2014–2026. Each sphere on the spiral is one year.",
+      pattern: "This view shows the stable 364-day geometry: 13 Moons of 28 days each. The gold marker highlights the current day position."
+    };
+    el.textContent = texts[mode] || "";
+  }
+
+  function _setModeDefaultSelectedMarker(mode) {
+    if (mode === "today") _state.selectedMarker = "today";
+    else if (mode === "passage") _state.selectedMarker = `eq-${_state.year}`;
+    else if (mode === "years") _state.selectedMarker = `year-${_state.year}`;
+    else if (mode === "pattern") _state.selectedMarker = "today";
+  }
+
+  function _syncModeButtons() {
+    document.querySelectorAll("[id^='sphere-mode-']").forEach(b => b.setAttribute("aria-pressed", "false"));
+    const active = document.getElementById(`sphere-mode-${_state.viewMode}`);
+    if (active) active.setAttribute("aria-pressed", "true");
+  }
+
   function _syncYearSelect(year) {
     const sel = document.getElementById("sphere-year-select");
     if (sel) sel.value = String(year);
@@ -424,6 +501,9 @@
         <dt>Lunar phase</dt><dd>${lunar.phaseName || "—"}</dd>
         <dt>Equinox angle</dt><dd>${model.passageStartAngle?.toFixed(1) || "—"}°</dd>
       </dl>`;
+    if (isToday) {
+      el.innerHTML += `<p class="sphere-core-note"><strong>Pattern Core</strong> — the fixed center reflects the active 13 × 28 structure.</p>`;
+    }
   }
 
   // ── Control wiring ─────────────────────────────────────────────────
@@ -435,8 +515,9 @@
       if (!btn) return;
       btn.addEventListener("click", () => {
         _state.viewMode = mode;
-        document.querySelectorAll("[id^='sphere-mode-']").forEach(b => b.setAttribute("aria-pressed", "false"));
-        btn.setAttribute("aria-pressed", "true");
+        _setModeDefaultLayers(mode);
+        _setModeDefaultSelectedMarker(mode);
+        _syncModeButtons();
         if (_state.active3d) globalThis.LivingTimeSphereRenderer3d?.setMode(mode);
         renderSphere(container);
       });
@@ -781,6 +862,9 @@
     if (settingsGroup && window.innerWidth >= 600) {
       settingsGroup.open = true;
     }
+    _setModeDefaultLayers(_state.viewMode);
+    if (!_state.selectedMarker) _setModeDefaultSelectedMarker(_state.viewMode);
+    _syncModeButtons();
 
     // Hide the interact bar immediately — it will be shown only after
     // 3D init succeeds.  This prevents the "Exit Interaction" ghost state.

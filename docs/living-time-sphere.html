@@ -113,6 +113,7 @@
           <button id="sphere-mode-years"   class="sphere-mode-btn" type="button" aria-pressed="false">Years</button>
           <button id="sphere-mode-pattern" class="sphere-mode-btn" type="button" aria-pressed="false">Pattern</button>
         </div>
+        <div id="sphere-mode-summary" class="sphere-mode-summary" aria-live="polite">Today</div>
 
         <!-- Sphere Settings (collapsible on mobile) -->
         <details class="sphere-settings-group">
@@ -187,6 +188,11 @@
         </div>
       </aside>
 
+      <details class="sphere-what-am-i-seeing" id="sphere-what-am-i-seeing">
+        <summary class="sphere-what-summary">What am I seeing?</summary>
+        <p id="sphere-what-am-i-seeing-body" class="sphere-what-body">This view places the current Pattern Day inside the fixed 13 × 28 calendar.</p>
+      </details>
+
       <!-- 3. Interactive sphere + sidebar -->
       <div class="sphere-wrapper">
         <div class="sphere-canvas-wrap">
@@ -194,12 +200,21 @@
           <div class="sphere-interact-bar" aria-live="polite">
             <button id="sphere-interact-btn"     class="sphere-interact-toggle" type="button">Interact with Sphere</button>
             <button id="sphere-interact-end-btn" class="sphere-interact-toggle sphere-interact-end" type="button" style="display:none">Exit Interaction</button>
+            <p class="sphere-interact-hint" id="sphere-interact-hint">Drag to rotate · Pinch to zoom</p>
           </div>
 
           <div id="sphere-container" role="img" aria-label="Living Time Sphere — interactive" tabindex="0"
                aria-describedby="sphere-text-model">
             <!-- SVG or 3D canvas rendered here by LivingTimeSphereUi.init() -->
             <p class="sphere-error">Loading sphere…</p>
+          </div>
+
+          <div class="sphere-moon-labels" id="sphere-moon-labels" aria-hidden="true">
+            <span class="sphere-moon-label" data-moon="1"  style="top:2%;left:50%;transform:translateX(-50%)">Moon 1</span>
+            <span class="sphere-moon-label" data-moon="4"  style="top:50%;right:2%">Moon 4</span>
+            <span class="sphere-moon-label" data-moon="7"  style="bottom:2%;left:50%;transform:translateX(-50%)">Moon 7</span>
+            <span class="sphere-moon-label" data-moon="10" style="top:50%;left:2%">Moon 10</span>
+            <span class="sphere-moon-label" data-moon="13" style="top:15%;left:15%">Moon 13</span>
           </div>
 
           <!-- Camera controls (visible only when 3D is active) -->
@@ -224,6 +239,26 @@
           <pre id="sphere-text-summary-content" class="sphere-text-model"></pre>
         </div>
 
+        <div class="sphere-legend" id="sphere-legend" aria-label="Sphere legend">
+          <h3 class="sphere-legend-heading">Legend</h3>
+          <ul class="sphere-legend-list">
+            <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-today" aria-hidden="true">●</span> Today</li>
+            <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-equinox" aria-hidden="true">▲</span> Equinox Gate</li>
+            <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-yeargate" aria-hidden="true">◆</span> Year Gate</li>
+            <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-lunar" aria-hidden="true">●</span> Lunar position</li>
+            <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-passage" aria-hidden="true">───</span> Passage</li>
+            <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-year" aria-hidden="true">●</span> Selected year</li>
+          </ul>
+          <details class="sphere-legend-expand">
+            <summary class="sphere-legend-full-btn">Show full legend</summary>
+            <ul class="sphere-legend-list">
+              <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-pattern" aria-hidden="true">○</span> Pattern ring (13 × 28)</li>
+              <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-spiral" aria-hidden="true">⊙</span> 13-year spiral</li>
+              <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-solar" aria-hidden="true">╌╌</span> Solar axis</li>
+            </ul>
+          </details>
+        </div>
+
         <aside class="sphere-sidebar">
           <!-- 4. Selected marker details -->
           <div class="sphere-sidebar-section">
@@ -240,10 +275,10 @@
               <label class="sphere-layer-row"><input id="sphere-layer-pattern"    type="checkbox" checked> Pattern structure</label>
               <label class="sphere-layer-row"><input id="sphere-layer-passage"    type="checkbox" checked> Equinox Passage</label>
               <label class="sphere-layer-row"><input id="sphere-layer-lunar"      type="checkbox" checked> Lunar orbit</label>
-              <label class="sphere-layer-row"><input id="sphere-layer-solar"      type="checkbox" checked> Solar axis</label>
+              <label class="sphere-layer-row"><input id="sphere-layer-solar"      type="checkbox"> Solar axis</label>
               <label class="sphere-layer-row"><input id="sphere-layer-markers"    type="checkbox" checked> Annual markers</label>
               <label class="sphere-layer-row"><input id="sphere-layer-recurrence" type="checkbox"> Recurrence links</label>
-              <label class="sphere-layer-row"><input id="sphere-layer-spiral"     type="checkbox" checked> 13-year spiral</label>
+              <label class="sphere-layer-row"><input id="sphere-layer-spiral"     type="checkbox"> 13-year spiral</label>
             </div>
           </div>
 

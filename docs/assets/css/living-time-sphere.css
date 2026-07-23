@@ -876,3 +876,140 @@ details[open] > .sphere-diag-summary::before { content: "▾ "; }
   font-family: monospace;
   word-break: break-word;
 }
+
+/* ── Mode summary ─────────────────────────────────────────────── */
+.sphere-mode-summary {
+  font-size: 0.875rem;
+  color: var(--fg-2, #b0b8cc);
+  padding: 0.25rem 0.5rem;
+  text-align: center;
+  min-height: 1.5em;
+}
+
+/* ── "What am I seeing?" ──────────────────────────────────────── */
+.sphere-what-am-i-seeing {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  margin: 0.5rem 0;
+  padding: 0 0.75rem;
+}
+.sphere-what-summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--fg-2, #b0b8cc);
+  padding: 0.5rem 0;
+  list-style: none;
+}
+.sphere-what-summary::marker,
+.sphere-what-summary::-webkit-details-marker { display: none; }
+.sphere-what-summary::before { content: "▶ "; }
+details[open] .sphere-what-summary::before { content: "▼ "; }
+.sphere-what-body {
+  font-size: 0.82rem;
+  color: var(--fg-3, #8892a8);
+  line-height: 1.5;
+  margin: 0 0 0.5rem;
+}
+
+/* ── Interaction hint ─────────────────────────────────────────── */
+.sphere-interact-hint {
+  font-size: 0.75rem;
+  color: var(--fg-3, #8892a8);
+  margin: 0.25rem 0 0;
+  text-align: center;
+}
+
+/* ── Compact legend ───────────────────────────────────────────── */
+.sphere-legend {
+  background: rgba(5,7,13,0.85);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  margin: 0.5rem 0;
+  font-size: 0.8rem;
+}
+.sphere-legend-heading {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--fg-1, #d0d8e8);
+  margin: 0 0 0.4rem;
+}
+.sphere-legend-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+}
+.sphere-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--fg-2, #b0b8cc);
+  white-space: nowrap;
+}
+.sphere-legend-symbol {
+  font-size: 0.9rem;
+  line-height: 1;
+  width: 1.2em;
+  text-align: center;
+}
+.legend-today    { color: #ffd700; }
+.legend-equinox  { color: #fbbf24; }
+.legend-yeargate { color: #64ffb4; }
+.legend-lunar    { color: #b4b4ff; }
+.legend-passage  { color: #ffd060; letter-spacing: -0.05em; }
+.legend-year     { color: #88aacc; }
+.legend-pattern  { color: #334466; }
+.legend-spiral   { color: #64c8b4; }
+.legend-solar    { color: #ffdc50; }
+.sphere-legend-expand > summary {
+  font-size: 0.78rem;
+  color: var(--fg-3, #8892a8);
+  cursor: pointer;
+  padding: 0.35rem 0 0.1rem;
+}
+
+/* ── Floating tap label ──────────────────────────────────────── */
+.sphere-floating-label {
+  background: rgba(5,7,13,0.92);
+  border: 1px solid rgba(255,215,0,0.5);
+  border-radius: 6px;
+  color: #e8eaf0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  padding: 0.35rem 0.6rem;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  max-width: 200px;
+  white-space: pre-wrap;
+}
+
+/* ── Moon labels overlay ─────────────────────────────────────── */
+.sphere-moon-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.sphere-moon-label {
+  position: absolute;
+  font-size: 0.68rem;
+  color: rgba(100,200,180,0.55);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+/* ── Pattern Core note ───────────────────────────────────────── */
+.sphere-core-note {
+  font-size: 0.78rem;
+  color: var(--fg-3, #8892a8);
+  margin-top: 0.5rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 0.4rem;
+}
