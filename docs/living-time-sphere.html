@@ -54,22 +54,28 @@
   <script defer src="assets/js/alignment/alignment-signature.js"></script>
   <script defer src="assets/js/alignment/alignment-export.js"></script>
   <script defer src="assets/js/alignment/alignment-url-state.js"></script>
-  <!-- Sphere modules -->
-  <script defer src="assets/js/sphere/living-time-sphere-version.js"></script>
-  <script defer src="assets/js/sphere/living-time-sphere-model.js"></script>
-  <script defer src="assets/js/sphere/living-time-sphere-layout.js"></script>
-  <script defer src="assets/js/sphere/living-time-sphere-renderer-svg.js"></script>
-  <script defer src="assets/js/sphere/living-time-sphere-renderer-canvas.js"></script>
-  <script defer src="assets/js/sphere/living-time-sphere-interaction.js"></script>
-  <script defer src="assets/js/sphere/living-time-sphere-accessibility.js"></script>
-  <script defer src="assets/js/sphere/living-time-sphere-export.js"></script>
-  <script defer src="assets/js/sphere/living-time-sphere-url-state.js"></script>
-  <script defer src="assets/js/sphere/living-time-sphere-ui.js"></script>
-  <script defer>
-    document.addEventListener("DOMContentLoaded", () => {
-      if (globalThis.LivingTimeSphereUi) LivingTimeSphereUi.init();
-    });
-  </script>
+   <!-- Sphere modules — Phase 03: 3D renderer modules (lazy) -->
+   <script defer src="assets/js/sphere/living-time-sphere-version.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-model.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-layout.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-renderer-svg.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-renderer-canvas.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-materials.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-effects.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-camera.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-animation.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-renderer-3d.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-interaction.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-accessibility.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-export.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-url-state.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-today.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-ui.js"></script>
+   <script defer>
+     document.addEventListener("DOMContentLoaded", () => {
+       if (globalThis.LivingTimeSphereUi) LivingTimeSphereUi.init();
+     });
+   </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -96,15 +102,43 @@
         <p class="sphere-hero-description">The Living Time Sphere places fixed Pattern Time at the center and lets moving astronomical cycles travel around it. Select a day, Passage, or year to witness how the layers meet.</p>
       </section>
 
-      <!-- 2. Viewing-mode controls -->
-      <section aria-labelledby="sphereModeHeading">
+      <!-- 2. Renderer and quality controls -->
+      <section aria-labelledby="sphereModeHeading" class="sphere-controls-bar">
         <h2 id="sphereModeHeading" class="visually-hidden">Viewing mode</h2>
+
+        <!-- Mode buttons -->
         <div class="sphere-mode-controls" role="group" aria-label="Viewing mode">
           <button id="sphere-mode-today"   class="sphere-mode-btn" type="button" aria-pressed="true">Today</button>
           <button id="sphere-mode-passage" class="sphere-mode-btn" type="button" aria-pressed="false">Passage</button>
           <button id="sphere-mode-years"   class="sphere-mode-btn" type="button" aria-pressed="false">Years</button>
           <button id="sphere-mode-pattern" class="sphere-mode-btn" type="button" aria-pressed="false">Pattern</button>
         </div>
+
+        <!-- View/renderer selector -->
+        <div class="sphere-renderer-row">
+          <label for="sphere-renderer-select" class="sphere-control-label">View</label>
+          <select id="sphere-renderer-select" class="sphere-control-select" aria-label="Rendering mode">
+            <option value="auto">Auto</option>
+            <option value="3d">3D Sphere</option>
+            <option value="svg">Accessible SVG</option>
+            <option value="table">Data Table</option>
+            <option value="text">Text Summary</option>
+          </select>
+
+          <label for="sphere-quality-select" class="sphere-control-label">Quality</label>
+          <select id="sphere-quality-select" class="sphere-control-select" aria-label="Visual quality level">
+            <option value="auto">Auto</option>
+            <option value="high">High</option>
+            <option value="balanced">Balanced</option>
+            <option value="lowpower">Low Power</option>
+            <option value="svgonly">SVG Only</option>
+          </select>
+        </div>
+
+        <!-- 3D Preview label -->
+        <p class="sphere-3d-preview-note" aria-live="polite">
+          <span id="sphere-renderer-label">3D Living View — Preview</span>
+        </p>
       </section>
 
       <!-- Year/range controls -->
@@ -113,12 +147,54 @@
         <select id="sphere-year-select" aria-label="Select year"></select>
       </div>
 
+      <!-- Guided introduction (shown once per session; skippable) -->
+      <aside id="sphere-intro" class="sphere-intro" role="complementary" aria-labelledby="sphere-intro-title" hidden>
+        <div class="sphere-intro-content">
+          <p class="sphere-intro-step" id="sphere-intro-step">1 / 6</p>
+          <h2 class="sphere-intro-title" id="sphere-intro-title">Pattern Time — fixed center</h2>
+          <p class="sphere-intro-body" id="sphere-intro-body">The 13 Moon Pattern structure remains fixed at the center. It does not move.</p>
+          <div class="sphere-intro-actions">
+            <button id="sphere-intro-skip" class="sphere-btn" type="button">Skip</button>
+            <button id="sphere-intro-next" class="sphere-btn sphere-btn-primary" type="button">Next</button>
+          </div>
+        </div>
+      </aside>
+
       <!-- 3. Interactive sphere + sidebar -->
       <div class="sphere-wrapper">
-        <div id="sphere-container" role="img" aria-label="Living Time Sphere — interactive" tabindex="0"
-             aria-describedby="sphere-text-model">
-          <!-- SVG rendered here by LivingTimeSphereUi.init() -->
-          <p class="sphere-error">Loading sphere…</p>
+        <div class="sphere-canvas-wrap">
+          <!-- Mobile "Interact" toggle -->
+          <div class="sphere-interact-bar" aria-live="polite">
+            <button id="sphere-interact-btn"     class="sphere-interact-toggle" type="button">Interact with Sphere</button>
+            <button id="sphere-interact-end-btn" class="sphere-interact-toggle sphere-interact-end" type="button" style="display:none">Exit Interaction</button>
+          </div>
+
+          <div id="sphere-container" role="img" aria-label="Living Time Sphere — interactive" tabindex="0"
+               aria-describedby="sphere-text-model">
+            <!-- SVG or 3D canvas rendered here by LivingTimeSphereUi.init() -->
+            <p class="sphere-error">Loading sphere…</p>
+          </div>
+
+          <!-- Camera controls (visible only when 3D is active) -->
+          <div class="sphere-camera-controls" aria-label="Camera controls" role="group">
+            <button id="sphere-cam-reset"   class="sphere-cam-btn" type="button" title="Reset view">⟳ Reset</button>
+            <button id="sphere-cam-pattern" class="sphere-cam-btn" type="button" title="Face Pattern ring">Pattern</button>
+            <button id="sphere-cam-passage" class="sphere-cam-btn" type="button" title="Frame Passage arc">Passage</button>
+            <button id="sphere-cam-years"   class="sphere-cam-btn" type="button" title="Pull back to Years spiral">Years</button>
+          </div>
+        </div>
+
+        <!-- Data table alternate view -->
+        <div id="sphere-data-table-section" class="sphere-alt-view" style="display:none" aria-label="Sphere data table">
+          <h2 class="sphere-sidebar-heading">Sphere Data</h2>
+          <p class="sphere-methods">Use Data Table view to see raw coordinates without graphics.</p>
+          <table class="sphere-coordinate-table" id="sphere-data-table" aria-label="Sphere data table"></table>
+        </div>
+
+        <!-- Text summary alternate view -->
+        <div id="sphere-text-summary-section" class="sphere-alt-view" style="display:none" aria-label="Text summary">
+          <h2 class="sphere-sidebar-heading">Text Summary</h2>
+          <pre id="sphere-text-summary-content" class="sphere-text-model"></pre>
         </div>
 
         <aside class="sphere-sidebar">
@@ -151,6 +227,11 @@
               <button id="sphere-copy-link"  class="sphere-btn"         type="button">Copy Link</button>
               <button id="sphere-export-png" class="sphere-btn sphere-btn-primary" type="button">Export PNG</button>
             </div>
+          </div>
+
+          <!-- Replay intro -->
+          <div class="sphere-sidebar-section">
+            <button id="sphere-intro-replay" class="sphere-btn" type="button">Replay Sphere Introduction</button>
           </div>
         </aside>
       </div>

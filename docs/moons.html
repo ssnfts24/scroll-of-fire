@@ -622,6 +622,60 @@
           </div>
         </section>
 
+        <!-- Phase 3: Living Time Sphere — Today card -->
+        <section id="moons-sphere-today-card" class="card sphere-today-card" aria-labelledby="moonsSphereTitle">
+          <p class="eyebrow">Observatory Layer</p>
+          <h2 id="moonsSphereTitle" class="sphere-compact-card-title">Living Time Sphere — Today</h2>
+
+          <div class="sphere-today-layout">
+            <!-- Compact preview -->
+            <div id="moons-sphere-today-preview" class="sphere-today-preview" aria-hidden="true"></div>
+
+            <!-- Data grid -->
+            <div class="sphere-today-data">
+              <dl class="sphere-today-grid">
+                <dt>Pattern</dt>
+                <dd><span id="moons-sphere-today-moon">—</span> · Day <span id="moons-sphere-today-moon-day">—</span></dd>
+
+                <dt>Moon name</dt>
+                <dd id="moons-sphere-today-moon-name">—</dd>
+
+                <dt>Day of 364</dt>
+                <dd id="moons-sphere-today-day-of-year">—</dd>
+
+                <dt>Week Gate</dt>
+                <dd id="moons-sphere-today-week-gate">—</dd>
+
+                <dt>Lunar phase</dt>
+                <dd id="moons-sphere-today-lunar">—</dd>
+
+                <dt>Passage</dt>
+                <dd id="moons-sphere-today-passage">—</dd>
+
+                <dt>Boundary</dt>
+                <dd id="moons-sphere-today-boundary">—</dd>
+              </dl>
+
+              <p class="sphere-today-orientation" id="moons-sphere-today-orientation">—</p>
+            </div>
+          </div>
+
+          <!-- Accessible text equivalent -->
+          <details class="sphere-today-accessible-wrap">
+            <summary class="sphere-today-accessible-toggle">Text description</summary>
+            <pre id="moons-sphere-today-accessible" class="sphere-today-accessible">—</pre>
+          </details>
+
+          <div class="btnrow">
+            <a id="moons-sphere-today-open-link"
+               class="lab-btn sphere-compact-open"
+               href="./living-time-sphere.html?view=today&source=moons">
+              Enter Today's Sphere ↗
+            </a>
+            <a class="lab-btn ghost" href="./alignment-ledger.html?source=moons">Alignment Ledger</a>
+          </div>
+        </section>
+
         <!-- Phase 2: Codex Memory continuity card for Today -->
         <section class="card codex-memory-today-card" id="moonsMemoryCard" hidden aria-label="Your Codex continuation">
           <p class="card-label">Your Path Today</p>
@@ -2550,11 +2604,12 @@
   <script src="assets/js/alignment/alignment-version.js?v=20260723-1"></script>
   <script src="assets/js/alignment/alignment-ledger-engine.js?v=20260723-1"></script>
   <script src="assets/js/alignment/alignment-ledger-data.js?v=20260723-1"></script>
-  <script src="assets/js/sphere/living-time-sphere-version.js?v=20260723-1"></script>
-  <script src="assets/js/sphere/living-time-sphere-model.js?v=20260723-1"></script>
-  <script src="assets/js/sphere/living-time-sphere-layout.js?v=20260723-1"></script>
-  <script src="assets/js/sphere/living-time-sphere-renderer-svg.js?v=20260723-1"></script>
-  <script src="assets/js/sphere/living-time-sphere-accessibility.js?v=20260723-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-version.js?v=20260723-2"></script>
+  <script src="assets/js/sphere/living-time-sphere-model.js?v=20260723-2"></script>
+  <script src="assets/js/sphere/living-time-sphere-layout.js?v=20260723-2"></script>
+  <script src="assets/js/sphere/living-time-sphere-renderer-svg.js?v=20260723-2"></script>
+  <script src="assets/js/sphere/living-time-sphere-accessibility.js?v=20260723-2"></script>
+  <script src="assets/js/sphere/living-time-sphere-today.js?v=20260723-2"></script>
 
   <!-- Main calendar app -->
   <script src="assets/js/moons.js?v=20260722-4"></script>
@@ -3489,6 +3544,8 @@ Let the next step be firm.`;
   <script>
     (function() {
       "use strict";
+
+      // ── Compact sphere card (existing, secondary position) ─────────
       function initCompactSphere() {
         var preview = document.getElementById("sphere-compact-preview");
         var dateEl  = document.getElementById("sphereCompactDate");
@@ -3527,10 +3584,37 @@ Let the next step be firm.`;
         }
       }
 
+      // ── Today Sphere card (Phase 03 — Today tab, prominent placement) ──
+      function initTodaySphereCard() {
+        var root = document.getElementById("moons-sphere-today-card");
+        if (!root || !globalThis.LivingTimeSphereTodayCard) return;
+
+        // Determine current tz/boundary from page state (moons.js sets these on the DOM)
+        function currentOpts() {
+          var tz  = document.documentElement.dataset.timezone || "America/Los_Angeles";
+          var bnd = document.documentElement.dataset.dayBoundary || "sunset";
+          var sun = document.documentElement.dataset.manualSunset || "18:00";
+          return { timeZone: tz, boundaryMode: bnd, manualSunset: sun, idPrefix: "moons-", source: "moons" };
+        }
+
+        globalThis.LivingTimeSphereTodayCard.render(root, currentOpts());
+        globalThis.LivingTimeSphereTodayCard.attachAutoUpdate(root, currentOpts());
+
+        // Re-render when moons.js changes boundary/timezone
+        document.addEventListener("moons:state-change", function() {
+          globalThis.LivingTimeSphereTodayCard.render(root, currentOpts());
+        });
+      }
+
+      function init() {
+        initCompactSphere();
+        initTodaySphereCard();
+      }
+
       if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initCompactSphere);
+        document.addEventListener("DOMContentLoaded", init);
       } else {
-        setTimeout(initCompactSphere, 0);
+        setTimeout(init, 0);
       }
     })();
   </script>

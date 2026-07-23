@@ -170,12 +170,24 @@
 
   // Resolve the auto preset based on device capabilities.
   function resolveAutoPreset({ reducedMotion, deviceMemoryGb, screenWidth, webglAvailable } = {}) {
-    if (!webglAvailable || reducedMotion) return QUALITY_PRESETS.balanced;
+    if (!webglAvailable) return QUALITY_PRESETS.balanced;
     const mem = deviceMemoryGb || 4;
     const w   = screenWidth   || 1024;
-    if (mem <= 1 || w < 380) return QUALITY_PRESETS.lowpower;
-    if (mem <= 2 || w < 600) return QUALITY_PRESETS.balanced;
-    return QUALITY_PRESETS.high;
+    let base;
+    if (mem <= 1 || w < 380) base = QUALITY_PRESETS.lowpower;
+    else if (mem <= 2 || w < 600) base = QUALITY_PRESETS.balanced;
+    else base = QUALITY_PRESETS.high;
+
+    // Under reduced motion: keep quality level but disable all animations
+    if (reducedMotion) {
+      return Object.freeze(Object.assign({}, base, {
+        idleDrift:    false,
+        breathing:    false,
+        passageFlow:  false,
+        glow:         false,
+      }));
+    }
+    return base;
   }
 
   globalThis.LivingTimeSphereM = Object.freeze({
