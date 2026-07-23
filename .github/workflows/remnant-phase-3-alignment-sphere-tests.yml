@@ -1,0 +1,98 @@
+name: Remnant Phase 3 — Alignment Ledger and Living Time Sphere
+
+on:
+  push:
+    branches:
+      - main
+      - 'copilot/**'
+  pull_request:
+
+jobs:
+  alignment-sphere:
+    name: Alignment Ledger and Living Time Sphere
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Syntax checks — all JS files
+        run: |
+          find docs/assets/js -name '*.js' -print0 | xargs -0 -n1 node --check
+
+      - name: Alignment Ledger tests
+        run: node --test tests/alignment-ledger.test.js
+
+      - name: Living Time Sphere tests
+        run: node --test tests/living-time-sphere.test.js
+
+      - name: Full relevant Node test suite
+        run: node --test tests/*.test.js
+
+      - name: Privacy check — no Oracle fields in alignment exports
+        run: |
+          node - <<'EOF'
+          const fs = require("node:fs");
+          const path = require("node:path");
+          const files = [
+            "docs/assets/js/alignment/alignment-export.js",
+            "docs/assets/js/alignment/alignment-url-state.js",
+            "docs/assets/js/sphere/living-time-sphere-export.js",
+            "docs/assets/js/sphere/living-time-sphere-url-state.js"
+          ];
+          const forbidden = ["birthDate", "birthTime", "birthPlace", "oracleProfile", "witnessAggregation"];
+          let failed = false;
+          for (const f of files) {
+            const code = fs.readFileSync(path.resolve(f), "utf8");
+            for (const word of forbidden) {
+              if (code.includes(word)) {
+                console.error(`FAIL: ${f} contains forbidden field: ${word}`);
+                failed = true;
+              }
+            }
+          }
+          if (failed) process.exit(1);
+          console.log("Privacy check passed.");
+          EOF
+
+      - name: Equinox Passage dataset validation
+        run: node --test tests/equinox-passage.test.js
+
+      - name: PWA and service-worker tests
+        run: node --test tests/pwa-resilience.test.js
+
+      - name: HTML pages exist
+        run: |
+          test -f docs/alignment-ledger.html    || (echo "FAIL: alignment-ledger.html missing" && exit 1)
+          test -f docs/living-time-sphere.html  || (echo "FAIL: living-time-sphere.html missing" && exit 1)
+          echo "HTML pages present."
+
+      - name: Sphere module files exist
+        run: |
+          for f in \
+            docs/assets/js/alignment/alignment-version.js \
+            docs/assets/js/alignment/alignment-ledger-engine.js \
+            docs/assets/js/alignment/alignment-ledger-data.js \
+            docs/assets/js/alignment/alignment-comparison.js \
+            docs/assets/js/alignment/alignment-recurrence.js \
+            docs/assets/js/alignment/alignment-offsets.js \
+            docs/assets/js/alignment/alignment-signature.js \
+            docs/assets/js/alignment/alignment-export.js \
+            docs/assets/js/alignment/alignment-url-state.js \
+            docs/assets/js/alignment/alignment-ui.js \
+            docs/assets/js/sphere/living-time-sphere-version.js \
+            docs/assets/js/sphere/living-time-sphere-model.js \
+            docs/assets/js/sphere/living-time-sphere-layout.js \
+            docs/assets/js/sphere/living-time-sphere-renderer-svg.js \
+            docs/assets/js/sphere/living-time-sphere-renderer-canvas.js \
+            docs/assets/js/sphere/living-time-sphere-interaction.js \
+            docs/assets/js/sphere/living-time-sphere-accessibility.js \
+            docs/assets/js/sphere/living-time-sphere-export.js \
+            docs/assets/js/sphere/living-time-sphere-url-state.js \
+            docs/assets/js/sphere/living-time-sphere-ui.js; do
+            test -f "$f" || (echo "FAIL: $f missing" && exit 1)
+          done
+          echo "All module files present."

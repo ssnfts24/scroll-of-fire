@@ -1,0 +1,18 @@
+package:    three
+version:    0.167.1
+upstream:   https://www.npmjs.com/package/three/v/0.167.1
+source:     https://github.com/mrdoob/three.js/tree/r167
+integrity:  sha384-fPAi39ufYYhieBm2Yj7mAE8pE2HIIJm4iFT2zQEY4g4/OMR9m8GMM5+jen6ptHcu
+file:       three.module.min.js (ES module build)
+added:      2026-07-23
+license:    MIT — see LICENSE.txt
+
+Notes:
+  Vendored to eliminate runtime CDN dependency (jsDelivr was unreachable in
+  some environments).  Only the ES-module production build is included.
+  Examples, editors, loaders, controls, fonts, and unused packages are NOT
+  included.  Update by running:
+    npm pack three@<new-version>
+    tar xzf three-<new-version>.tgz package/build/three.module.min.js package/LICENSE
+  then recalculate the integrity hash with:
+    openssl dgst -sha384 -binary three.module.min.js | base64

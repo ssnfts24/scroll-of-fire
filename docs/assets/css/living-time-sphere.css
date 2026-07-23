@@ -1,0 +1,1060 @@
+/* Living Time Sphere — living-time-sphere.css */
+
+/* ── CSS custom properties (sphere color palette) ─────────────────── */
+:root {
+  --sphere-bg:          #0a0a14;
+  --sphere-border:      rgba(255, 255, 255, 0.15);
+  --sphere-pattern-ring: rgba(255, 255, 255, 0.2);
+  --sphere-moon-fill:   rgba(255, 255, 255, 0.04);
+  --sphere-moon-active: rgba(220, 160, 80, 0.25);
+  --sphere-moon-stroke: rgba(255, 255, 255, 0.15);
+  --sphere-passage:     rgba(251, 191, 36, 0.8);
+  --sphere-equinox:     rgba(251, 191, 36, 0.9);
+  --sphere-yeargate:    rgba(100, 255, 180, 0.9);
+  --sphere-lunar:       rgba(180, 180, 255, 0.8);
+  --sphere-lunar-ring:  rgba(180, 180, 255, 0.2);
+  --sphere-solar:       rgba(255, 220, 80, 0.3);
+  --sphere-annual:      rgba(255, 255, 255, 0.5);
+  --sphere-selected:    rgba(251, 191, 36, 1);
+  --sphere-spiral:      rgba(100, 200, 180, 0.4);
+  --sphere-center:      rgba(255, 255, 255, 0.6);
+  --sphere-label:       rgba(255, 255, 255, 0.5);
+}
+
+/* ── Page layout ─────────────────────────────────────────────────── */
+.sphere-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  color: var(--color-text, #e8e4d9);
+  font-family: var(--font-body, system-ui, sans-serif);
+}
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+.sphere-hero {
+  text-align: center;
+  padding: 2.5rem 1rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 2rem;
+}
+
+.sphere-hero-title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.75rem;
+  color: var(--color-accent, #fbbf24);
+}
+
+.sphere-hero-description {
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.7;
+  color: rgba(232, 228, 217, 0.8);
+  font-size: 1rem;
+}
+
+/* ── View mode controls ───────────────────────────────────────────── */
+.sphere-mode-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.sphere-mode-btn {
+  padding: 0.45rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text, #e8e4d9);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.sphere-mode-btn[aria-pressed="true"],
+.sphere-mode-btn.active {
+  background: rgba(251, 191, 36, 0.15);
+  border-color: rgba(251, 191, 36, 0.5);
+  color: #fbbf24;
+}
+
+.sphere-mode-btn:hover { background: rgba(255, 255, 255, 0.1); }
+.sphere-mode-btn:focus-visible {
+  outline: 2px solid var(--color-accent, #fbbf24);
+  outline-offset: 2px;
+}
+
+/* ── Sphere container ─────────────────────────────────────────────── */
+.sphere-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .sphere-wrapper { flex-direction: row; align-items: flex-start; }
+}
+
+#sphere-container {
+  flex: 1 1 300px;
+  min-width: 0;
+  aspect-ratio: 1;
+  max-width: 480px;
+  width: 100%;
+  position: relative;
+  background: var(--sphere-bg);
+  border-radius: 50%;
+  overflow: visible;
+}
+
+/* Allow page scroll on non-sphere areas */
+.sphere-sidebar {
+  flex: 0 0 220px;
+  min-width: 0;
+}
+
+.sphere-sidebar-section {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0.5rem;
+}
+
+.sphere-sidebar-heading {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(232, 228, 217, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.75rem;
+}
+
+/* ── SVG sphere styles ────────────────────────────────────────────── */
+.living-time-sphere-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+  border-radius: 50%;
+  /* Scope touch-action to the SVG itself so page scroll still works
+     when the user touches outside the sphere container. */
+  touch-action: none;
+}
+
+.living-time-sphere-svg:active { cursor: grabbing; }
+
+/* ── Canvas fallback ──────────────────────────────────────────────── */
+.living-time-sphere-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 50%;
+  cursor: grab;
+}
+
+/* ── Details panel ───────────────────────────────────────────────── */
+.sphere-details {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.sphere-details-heading {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-accent, #fbbf24);
+  margin: 0 0 0.75rem;
+}
+
+.sphere-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 0.2rem 0.75rem;
+}
+
+.sphere-details-grid dt {
+  font-size: 0.8rem;
+  color: rgba(232, 228, 217, 0.5);
+  padding: 0.2rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.sphere-details-grid dd {
+  font-size: 0.875rem;
+  margin: 0;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* ── Layer controls ───────────────────────────────────────────────── */
+.sphere-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.sphere-layer-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.sphere-layer-row input[type="checkbox"] {
+  accent-color: var(--color-accent, #fbbf24);
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+/* ── Year / range controls ────────────────────────────────────────── */
+.sphere-year-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.sphere-year-controls select {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.375rem;
+  color: var(--color-text, #e8e4d9);
+  padding: 0.375rem 0.75rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.sphere-year-controls label {
+  font-size: 0.875rem;
+  color: rgba(232, 228, 217, 0.7);
+}
+
+/* ── Accessible text model ────────────────────────────────────────── */
+.sphere-text-model {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: rgba(232, 228, 217, 0.75);
+  white-space: pre-wrap;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Visually hidden (screen-reader only) ─────────────────────────── */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Action buttons ───────────────────────────────────────────────── */
+.sphere-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.sphere-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text, #e8e4d9);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.sphere-btn:hover { background: rgba(255, 255, 255, 0.1); }
+.sphere-btn:focus-visible {
+  outline: 2px solid var(--color-accent, #fbbf24);
+  outline-offset: 2px;
+}
+
+.sphere-btn-primary {
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: #fbbf24;
+}
+
+/* ── Methods / coordinate explanation ────────────────────────────── */
+.sphere-methods {
+  font-size: 0.875rem;
+  color: rgba(232, 228, 217, 0.65);
+  line-height: 1.7;
+}
+
+.sphere-coordinate-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin-top: 0.75rem;
+}
+
+.sphere-coordinate-table th {
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.75rem;
+  color: rgba(232, 228, 217, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sphere-coordinate-table td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* ── Compact sphere card (used in 13 Moons) ──────────────────────── */
+.sphere-compact-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sphere-compact-card-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-accent, #fbbf24);
+  margin: 0;
+}
+
+.sphere-compact-preview {
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 160px;
+  background: var(--sphere-bg);
+  border-radius: 50%;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.sphere-compact-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-accent, #fbbf24);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(251, 191, 36, 0.3);
+  align-self: flex-start;
+}
+
+.sphere-compact-open:hover { border-bottom-color: rgba(251, 191, 36, 0.7); }
+
+/* ── Error state ──────────────────────────────────────────────────── */
+.sphere-error {
+  color: rgba(248, 113, 113, 0.9);
+  font-size: 0.875rem;
+  padding: 0.5rem;
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+  .living-time-sphere-svg,
+  .living-time-sphere-canvas { cursor: default; }
+}
+
+/* ── High contrast ───────────────────────────────────────────────── */
+@media (forced-colors: active) {
+  .sphere-btn, .sphere-mode-btn { border: 2px solid ButtonText; }
+  .sphere-hero-title { color: Highlight; }
+  .sphere-details-heading { color: Highlight; }
+}
+
+/* ── Narrow viewport (mobile-first overrides) ─────────────────────── */
+@media (max-width: 480px) {
+  .sphere-details-grid { grid-template-columns: 1fr; }
+  #sphere-container { max-width: 100%; border-radius: 0.5rem; }
+  .sphere-mode-controls { gap: 0.35rem; }
+  .sphere-mode-btn { padding: 0.4rem 0.7rem; font-size: 0.8rem; }
+}
+
+/* ── Phase 03: 3D canvas and controls ───────────────────────────── */
+
+.sphere-controls-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.sphere-renderer-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sphere-control-label {
+  font-size: 0.8rem;
+  color: rgba(232, 228, 217, 0.6);
+  white-space: nowrap;
+}
+
+.sphere-control-select {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.375rem;
+  color: var(--color-text, #e8e4d9);
+  font-size: 0.8rem;
+  padding: 0.3rem 0.5rem;
+  cursor: pointer;
+}
+
+.sphere-3d-preview-note {
+  font-size: 0.72rem;
+  color: rgba(251, 191, 36, 0.6);
+  margin: 0;
+  align-self: center;
+}
+
+/* Canvas wrapper with mobile interact overlay */
+.sphere-canvas-wrap {
+  position: relative;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.sphere-interact-bar {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.35rem;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .sphere-interact-bar { display: flex; }
+}
+
+.sphere-interact-toggle {
+  padding: 0.45rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  background: rgba(251, 191, 36, 0.1);
+  color: #fbbf24;
+  cursor: pointer;
+}
+
+.sphere-interact-end {
+  border-color: rgba(248, 113, 113, 0.4);
+  background: rgba(248, 113, 113, 0.08);
+  color: rgba(248, 113, 113, 0.9);
+}
+
+/* 3D canvas */
+.living-time-sphere-3d-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5rem;
+  cursor: grab;
+  touch-action: pan-y; /* default: vertical scroll preserved */
+}
+
+.living-time-sphere-3d-canvas:active { cursor: grabbing; }
+
+/* Camera control buttons (shown in 3D mode) */
+.sphere-camera-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.sphere-cam-label {
+  font-size: 0.68rem;
+  color: var(--fg-3, #8892a8);
+  align-self: center;
+  white-space: nowrap;
+}
+
+.sphere-cam-btn {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.72rem;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(232, 228, 217, 0.7);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.sphere-cam-btn:hover { background: rgba(255, 255, 255, 0.1); }
+
+/* Alternate views (table / text) */
+.sphere-alt-view {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  flex: 1 1 300px;
+}
+
+/* ── SVG view-mode emphasis ───────────────────────────────────────── */
+/* Each mode highlights its primary layer; secondary layers are dimmed. */
+
+/* Passage mode: brighten the arc; dim other astronomical overlays. */
+.sphere-mode-passage .sphere-passage-arc {
+  stroke: rgba(251, 191, 36, 1);
+  stroke-width: 5;
+  filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.6));
+}
+.sphere-mode-passage .sphere-lunar-orbit-ring,
+.sphere-mode-passage .sphere-lunar-marker,
+.sphere-mode-passage .sphere-solar-axis,
+.sphere-mode-passage .sphere-spiral-path,
+.sphere-mode-passage .sphere-annual-marker { opacity: 0.25; }
+
+/* Years mode: highlight the spiral and annual markers. */
+.sphere-mode-years .sphere-spiral-path {
+  stroke: rgba(100, 200, 180, 0.9);
+  stroke-width: 2.5;
+}
+.sphere-mode-years .sphere-annual-marker {
+  opacity: 1;
+}
+.sphere-mode-years .sphere-annual-selected {
+  filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.7));
+}
+.sphere-mode-years .sphere-lunar-orbit-ring,
+.sphere-mode-years .sphere-lunar-marker,
+.sphere-mode-years .sphere-solar-axis,
+.sphere-mode-years .sphere-passage-arc { opacity: 0.2; }
+
+/* Pattern mode: show only the calendar structure; hide astronomical data. */
+.sphere-mode-pattern .sphere-passage-arc,
+.sphere-mode-pattern .sphere-lunar-orbit-ring,
+.sphere-mode-pattern .sphere-lunar-marker,
+.sphere-mode-pattern .sphere-solar-axis,
+.sphere-mode-pattern .sphere-annual-marker,
+.sphere-mode-pattern .sphere-spiral-path { display: none; }
+.sphere-mode-pattern .sphere-moon-sector { opacity: 0.6; }
+.sphere-mode-pattern .sphere-pattern-ring { stroke: rgba(255, 255, 255, 0.4); stroke-width: 3; }
+
+/* ── Guided introduction ──────────────────────────────────────────── */
+
+.sphere-intro {
+  background: rgba(10, 12, 25, 0.92);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.25rem 1rem;
+  margin-bottom: 1rem;
+  backdrop-filter: blur(4px);
+}
+
+.sphere-intro-step {
+  font-size: 0.72rem;
+  color: rgba(251, 191, 36, 0.6);
+  margin: 0 0 0.35rem;
+}
+
+.sphere-intro-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fbbf24;
+  margin: 0 0 0.5rem;
+}
+
+.sphere-intro-body {
+  font-size: 0.875rem;
+  color: rgba(232, 228, 217, 0.85);
+  line-height: 1.6;
+  margin: 0 0 1rem;
+}
+
+.sphere-intro-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+/* ── Today card (moons.html Today tab) ──────────────────────────── */
+
+.sphere-today-card {
+  background: rgba(10, 10, 20, 0.7);
+  border: 1px solid rgba(251, 191, 36, 0.15);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+}
+
+.sphere-today-layout {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-top: 0.75rem;
+}
+
+.sphere-today-preview {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  background: var(--sphere-bg, #0a0a14);
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+@media (max-width: 480px) {
+  .sphere-today-layout { flex-direction: column; }
+  .sphere-today-preview { width: 80px; height: 80px; }
+}
+
+.sphere-today-data { flex: 1; min-width: 0; }
+
+.sphere-today-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.75rem;
+  font-size: 0.82rem;
+  margin: 0 0 0.6rem;
+}
+
+.sphere-today-grid dt {
+  color: rgba(232, 228, 217, 0.5);
+  white-space: nowrap;
+}
+
+.sphere-today-grid dd {
+  color: var(--color-text, #e8e4d9);
+  margin: 0;
+  font-weight: 500;
+}
+
+.sphere-today-orientation {
+  font-size: 0.82rem;
+  color: rgba(232, 228, 217, 0.6);
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+}
+
+.sphere-today-accessible-wrap {
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+}
+
+.sphere-today-accessible-toggle {
+  color: rgba(232, 228, 217, 0.45);
+  cursor: pointer;
+}
+
+.sphere-today-accessible {
+  font-size: 0.75rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  color: rgba(232, 228, 217, 0.5);
+  margin: 0.4rem 0 0;
+}
+
+/* ── Homepage observatory section ────────────────────────────────── */
+
+.sphere-observatory-section {
+  background: linear-gradient(180deg, rgba(5, 7, 15, 0.8) 0%, rgba(10, 10, 20, 0.6) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 2rem 0;
+}
+
+.sphere-observatory-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.sphere-observatory-header {
+  margin-bottom: 1.25rem;
+}
+
+.sphere-observatory-desc {
+  font-size: 0.9rem;
+  color: rgba(232, 228, 217, 0.55);
+  margin: 0.35rem 0 0;
+  line-height: 1.6;
+}
+
+.sphere-observatory-layout {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.sphere-observatory-preview-wrap {
+  flex-shrink: 0;
+  width: 160px;
+}
+
+.sphere-observatory-preview {
+  width: 160px;
+  height: 160px;
+  background: var(--sphere-bg, #0a0a14);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .sphere-observatory-layout { flex-direction: column; align-items: center; }
+  .sphere-observatory-preview-wrap { width: 120px; }
+  .sphere-observatory-preview { width: 120px; height: 120px; }
+}
+
+.sphere-observatory-data {
+  flex: 1;
+  min-width: 0;
+}
+
+.sphere-observatory-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* Prevent 3D from loading on homepage (guard class; set by JS if 3D attempted) */
+.sphere-no-3d .living-time-sphere-3d-canvas { display: none !important; }
+
+/* ── Phase 03 bug-fix additions ──────────────────────────────────── */
+
+/* Sphere Settings collapsible group */
+.sphere-settings-group {
+  margin-top: 0.5rem;
+}
+
+.sphere-settings-summary {
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: rgba(232, 228, 217, 0.55);
+  padding: 0.25rem 0;
+  user-select: none;
+  list-style: none;
+}
+.sphere-settings-summary::-webkit-details-marker { display: none; }
+.sphere-settings-summary::before { content: "▸ "; }
+details[open] > .sphere-settings-summary::before { content: "▾ "; }
+
+.sphere-settings-body {
+  padding: 0.5rem 0 0;
+}
+
+/* On larger screens, keep settings expanded and hide summary text */
+@media (min-width: 640px) {
+  .sphere-settings-group[open] .sphere-settings-summary { display: none; }
+  .sphere-settings-group { display: contents; }
+}
+
+/* Fallback warning banner */
+.sphere-fallback-warning {
+  background: rgba(180, 60, 20, 0.18);
+  border: 1px solid rgba(220, 100, 40, 0.45);
+  border-radius: 6px;
+  padding: 0.6rem 0.9rem;
+  margin-top: 0.5rem;
+  font-size: 0.83rem;
+  color: rgba(255, 200, 160, 0.9);
+  overflow-x: hidden;
+}
+
+.sphere-fallback-summary {
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+  font-size: 0.87rem;
+}
+
+.sphere-fallback-reason {
+  display: block;
+  margin-bottom: 0.4rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.sphere-fallback-details {
+  margin: 0.4rem 0;
+  font-size: 0.8rem;
+}
+
+.sphere-fallback-details summary {
+  cursor: pointer;
+  color: rgba(255, 200, 160, 0.7);
+  padding: 0.15rem 0;
+  list-style: none;
+}
+.sphere-fallback-details summary::-webkit-details-marker { display: none; }
+
+.sphere-fallback-detail-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.2rem 0.7rem;
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+}
+
+.sphere-fallback-detail-list dt {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sphere-fallback-wrap {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.sphere-fallback-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 420px) {
+  .sphere-fallback-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+.sphere-btn-sm {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.78rem;
+}
+
+/* Diagnostics sections */
+.sphere-diagnostics-section {
+  margin: 1.5rem 0;
+}
+
+.sphere-diag-summary {
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(232, 228, 217, 0.5);
+  padding: 0.3rem 0;
+  list-style: none;
+  user-select: none;
+}
+.sphere-diag-summary::-webkit-details-marker { display: none; }
+.sphere-diag-summary::before { content: "▸ "; }
+details[open] > .sphere-diag-summary::before { content: "▾ "; }
+
+.sphere-diag-grid {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.2rem 1rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+}
+
+.sphere-diag-grid dt {
+  color: rgba(232, 228, 217, 0.45);
+  white-space: nowrap;
+  margin: 0;
+}
+
+.sphere-diag-grid dd {
+  color: rgba(232, 228, 217, 0.8);
+  margin: 0;
+  font-family: monospace;
+  word-break: break-word;
+}
+
+/* ── Mode summary ─────────────────────────────────────────────── */
+.sphere-mode-summary {
+  font-size: 0.875rem;
+  color: var(--fg-2, #b0b8cc);
+  padding: 0.25rem 0.5rem;
+  text-align: center;
+  min-height: 1.5em;
+}
+
+/* ── "What am I seeing?" ──────────────────────────────────────── */
+.sphere-what-am-i-seeing {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  margin: 0.5rem 0;
+  padding: 0 0.75rem;
+}
+.sphere-what-summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--fg-2, #b0b8cc);
+  padding: 0.5rem 0;
+  list-style: none;
+}
+.sphere-what-summary::marker,
+.sphere-what-summary::-webkit-details-marker { display: none; }
+.sphere-what-summary::before { content: "▶ "; }
+details[open] .sphere-what-summary::before { content: "▼ "; }
+.sphere-what-body {
+  font-size: 0.82rem;
+  color: var(--fg-3, #8892a8);
+  line-height: 1.5;
+  margin: 0 0 0.5rem;
+}
+
+/* ── Interaction hint ─────────────────────────────────────────── */
+.sphere-interact-hint {
+  font-size: 0.72rem;
+  color: var(--fg-3, #8892a8);
+  margin: 0.1rem 0 0;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* ── Compact legend ───────────────────────────────────────────── */
+.sphere-legend {
+  background: rgba(5,7,13,0.85);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  margin: 0.5rem 0;
+  font-size: 0.8rem;
+}
+.sphere-legend-heading {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--fg-1, #d0d8e8);
+  margin: 0 0 0.4rem;
+}
+.sphere-legend-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+}
+.sphere-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--fg-2, #b0b8cc);
+  white-space: nowrap;
+}
+.sphere-legend-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.sphere-legend-row-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.6rem;
+}
+.sphere-legend-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--fg-2, #b0b8cc);
+  white-space: nowrap;
+  font-size: 0.78rem;
+}
+.sphere-legend-symbol {
+  font-size: 0.9rem;
+  line-height: 1;
+  width: 1.2em;
+  text-align: center;
+}
+.legend-today    { color: #ffd700; }
+.legend-equinox  { color: #fbbf24; }
+.legend-yeargate { color: #64ffb4; }
+.legend-lunar    { color: #b4b4ff; }
+.legend-passage  { color: #ffd060; letter-spacing: -0.05em; }
+.legend-year     { color: #88aacc; }
+.legend-pattern  { color: #334466; }
+.legend-spiral   { color: #64c8b4; }
+.legend-solar    { color: #ffdc50; }
+.sphere-legend-expand > summary {
+  font-size: 0.78rem;
+  color: var(--fg-3, #8892a8);
+  cursor: pointer;
+  padding: 0.35rem 0 0.1rem;
+}
+
+/* ── Current-state strip ─────────────────────────────────────── */
+.sphere-state-strip {
+  font-size: 0.72rem;
+  color: var(--fg-3, #8892a8);
+  text-align: center;
+  padding: 0.2rem 0.5rem;
+  margin-bottom: 0.2rem;
+  letter-spacing: 0.02em;
+  min-height: 1.2em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Floating tap label ──────────────────────────────────────── */
+.sphere-floating-label {
+  background: rgba(5,7,13,0.92);
+  border: 1px solid rgba(255,215,0,0.5);
+  border-radius: 6px;
+  color: #e8eaf0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  padding: 0.35rem 0.6rem;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  max-width: 200px;
+  white-space: pre-wrap;
+}
+
+/* ── Moon labels overlay (sphere-anchored via JS projection) ─── */
+.sphere-moon-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+.sphere-moon-label {
+  position: absolute;
+  font-size: 0.62rem;
+  color: rgba(100,200,180,0.55);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+/* ── Pattern Core note ───────────────────────────────────────── */
+.sphere-core-note {
+  font-size: 0.78rem;
+  color: var(--fg-3, #8892a8);
+  margin-top: 0.5rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 0.4rem;
+}

@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="sof living-time-sphere-page" data-day-boundary="sunset">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2TBMEK502C"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", "G-2TBMEK502C");
+  </script>
+  <base href="/">
+  <script>
+    if (location.hostname === "ssnfts24.github.io") {
+      const base = document.querySelector("base");
+      if (base) base.setAttribute("href", "/scroll-of-fire/");
+    }
+  </script>
+  <meta charset="utf-8">
+  <title>Living Time Sphere — The 13 Moons Remnant Living Time Observatory</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="The Living Time Sphere places fixed Pattern Time at the center and lets moving astronomical cycles travel around it. Select a day, Passage, or year to witness how the layers meet.">
+  <meta name="theme-color" content="#05070d">
+  <link rel="canonical" href="https://codexofreality.org/living-time-sphere.html">
+  <link rel="stylesheet" href="assets/css/codex.css">
+  <link rel="stylesheet" href="assets/css/navigation.css">
+  <link rel="stylesheet" href="assets/css/moons.css?v=20260723-4">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260723-4">
+
+  <!-- Core engines -->
+  <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/share/remnant-share-url.js"></script>
+  <script defer src="assets/js/share/remnant-share.js"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-version.js"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-data.js"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-format.js"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-boundary.js"></script>
+  <script defer src="assets/js/calendar/pattern-calendar.js"></script>
+  <script defer src="assets/js/astronomy/astronomy-version.js"></script>
+  <script defer src="assets/js/astronomy/astronomy-sources.js"></script>
+  <script defer src="assets/js/astronomy/timezone-tools.js"></script>
+  <script defer src="assets/js/astronomy/equinox-reference-data.js"></script>
+  <script defer src="assets/js/astronomy/lunar-at-equinox.js"></script>
+  <script defer src="assets/js/astronomy/equinox-engine.js"></script>
+  <script defer src="assets/js/equinox/equinox-passage-format.js"></script>
+  <script defer src="assets/js/equinox/equinox-passage-engine.js"></script>
+  <script defer src="assets/js/equinox/equinox-passage-data.js"></script>
+  <!-- Alignment modules -->
+  <script defer src="assets/js/alignment/alignment-version.js"></script>
+  <script defer src="assets/js/alignment/alignment-ledger-engine.js"></script>
+  <script defer src="assets/js/alignment/alignment-ledger-data.js"></script>
+  <script defer src="assets/js/alignment/alignment-comparison.js"></script>
+  <script defer src="assets/js/alignment/alignment-recurrence.js"></script>
+  <script defer src="assets/js/alignment/alignment-offsets.js"></script>
+  <script defer src="assets/js/alignment/alignment-signature.js"></script>
+  <script defer src="assets/js/alignment/alignment-export.js"></script>
+  <script defer src="assets/js/alignment/alignment-url-state.js"></script>
+   <!-- Sphere modules — Phase 03: 3D renderer modules (lazy) -->
+   <script defer src="assets/js/sphere/living-time-sphere-version.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-model.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-layout.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-renderer-svg.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-renderer-canvas.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-materials.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-effects.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-camera.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-animation.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-renderer-3d.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-interaction.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-accessibility.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-export.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-url-state.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-today.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-ui.js"></script>
+   <script defer>
+     document.addEventListener("DOMContentLoaded", () => {
+       if (globalThis.LivingTimeSphereUi) LivingTimeSphereUi.init();
+     });
+   </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="wrap">
+    <header class="site-header" data-sof-header>
+      <a class="brand" href="./" aria-label="Scroll of Fire home"><span class="brand-mark" aria-hidden="true">☲</span><span><strong>Scroll of Fire</strong><small>Codex of Reality</small></span></a>
+      <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle><span></span><span></span><span></span></button>
+      <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+        <a href="moons.html">13 Moons</a>
+        <a href="equinox-passage.html">Equinox Passage</a>
+        <a href="alignment-ledger.html">Alignment Ledger</a>
+        <a href="13-moon-whitepaper.html">Whitepaper</a>
+        <a href="theory.html">Theory</a>
+        <a href="downloads.html">Downloads</a>
+      </nav>
+    </header>
+
+    <main id="main" class="sphere-page">
+
+      <!-- 1. Hero -->
+      <section class="sphere-hero" aria-labelledby="sphereHeroTitle">
+        <p class="eyebrow">The 13 Moons Remnant Living Time Observatory</p>
+        <h1 id="sphereHeroTitle" class="sphere-hero-title">Living Time Sphere</h1>
+        <p class="sphere-hero-description">The Living Time Sphere places fixed Pattern Time at the center and lets moving astronomical cycles travel around it. Select a day, Passage, or year to witness how the layers meet.</p>
+      </section>
+
+      <!-- 2. Renderer and quality controls -->
+      <section aria-labelledby="sphereModeHeading" class="sphere-controls-bar">
+        <h2 id="sphereModeHeading" class="visually-hidden">Viewing mode</h2>
+
+        <!-- Mode buttons -->
+        <div class="sphere-mode-controls" role="group" aria-label="Viewing mode">
+          <button id="sphere-mode-today"   class="sphere-mode-btn" type="button" aria-pressed="true">Today</button>
+          <button id="sphere-mode-passage" class="sphere-mode-btn" type="button" aria-pressed="false">Passage</button>
+          <button id="sphere-mode-years"   class="sphere-mode-btn" type="button" aria-pressed="false">Years</button>
+          <button id="sphere-mode-pattern" class="sphere-mode-btn" type="button" aria-pressed="false">Pattern</button>
+        </div>
+        <div id="sphere-mode-summary" class="sphere-mode-summary" aria-live="polite">Today</div>
+
+        <!-- Sphere Settings (collapsible on mobile) -->
+        <details class="sphere-settings-group">
+          <summary class="sphere-settings-summary">Sphere Settings</summary>
+          <div class="sphere-settings-body">
+            <!-- View/renderer selector -->
+            <div class="sphere-renderer-row">
+              <label for="sphere-renderer-select" class="sphere-control-label">View</label>
+              <select id="sphere-renderer-select" class="sphere-control-select" aria-label="Rendering mode">
+                <option value="auto">Auto</option>
+                <option value="3d">3D Sphere</option>
+                <option value="svg">Accessible SVG</option>
+                <option value="table">Data Table</option>
+                <option value="text">Text Summary</option>
+              </select>
+
+              <label for="sphere-quality-select" class="sphere-control-label">Quality</label>
+              <select id="sphere-quality-select" class="sphere-control-select" aria-label="Visual quality level">
+                <option value="auto">Auto</option>
+                <option value="high">High</option>
+                <option value="balanced">Balanced</option>
+                <option value="lowpower">Low Power</option>
+                <option value="svgonly">SVG Only</option>
+              </select>
+            </div>
+
+            <!-- Year/range controls -->
+            <div class="sphere-year-controls">
+              <label for="sphere-year-select">Selected year</label>
+              <select id="sphere-year-select" aria-label="Select year"></select>
+            </div>
+
+            <!-- Renderer status label -->
+            <p class="sphere-3d-preview-note" aria-live="polite">
+              <span id="sphere-renderer-label">3D Living View — Preview</span>
+            </p>
+          </div>
+        </details>
+
+        <!-- 3D fallback warning (shown when 3D selected but unavailable) -->
+        <div id="sphere-renderer-fallback-warning" class="sphere-fallback-warning" hidden role="alert" aria-live="assertive">
+          <p class="sphere-fallback-summary">3D could not start. Accessible SVG is active.</p>
+          <p class="sphere-fallback-reason" aria-live="polite">3D unavailable — using SVG</p>
+          <details class="sphere-fallback-details">
+            <summary>Technical Details</summary>
+            <dl class="sphere-fallback-detail-list">
+              <dt>Local module</dt><dd id="sphere-diag-local-url-warn">—</dd>
+              <dt>Error</dt><dd id="sphere-diag-last-error-warn" class="sphere-fallback-wrap">—</dd>
+              <dt>Module source</dt><dd id="sphere-diag-module-source-warn">—</dd>
+              <dt>WebGL</dt><dd id="sphere-diag-webgl-warn">—</dd>
+              <dt>WebGL2</dt><dd id="sphere-diag-webgl2-warn">—</dd>
+            </dl>
+          </details>
+          <div class="sphere-fallback-actions">
+            <button id="sphere-retry-3d" class="sphere-btn sphere-btn-sm" type="button">Retry Local 3D</button>
+            <button id="sphere-clear-renderer-cache" class="sphere-btn sphere-btn-sm" type="button">Clear Sphere Cache</button>
+            <button id="sphere-switch-svg" class="sphere-btn sphere-btn-sm" type="button">Continue with SVG</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Guided introduction (shown once per session; skippable) -->
+      <aside id="sphere-intro" class="sphere-intro" role="complementary" aria-labelledby="sphere-intro-title" hidden>
+        <div class="sphere-intro-content">
+          <p class="sphere-intro-step" id="sphere-intro-step">1 / 6</p>
+          <h2 class="sphere-intro-title" id="sphere-intro-title">Pattern Time — fixed center</h2>
+          <p class="sphere-intro-body" id="sphere-intro-body">The 13 Moon Pattern structure remains fixed at the center. It does not move.</p>
+          <div class="sphere-intro-actions">
+            <button id="sphere-intro-skip" class="sphere-btn" type="button">Skip</button>
+            <button id="sphere-intro-next" class="sphere-btn sphere-btn-primary" type="button">Next</button>
+          </div>
+        </div>
+      </aside>
+
+      <details class="sphere-what-am-i-seeing" id="sphere-what-am-i-seeing">
+        <summary class="sphere-what-summary">What am I seeing?</summary>
+        <p id="sphere-what-am-i-seeing-body" class="sphere-what-body">This view places the current Pattern Day inside the fixed 13 × 28 calendar.</p>
+      </details>
+
+      <!-- 3. Interactive sphere + sidebar -->
+      <div class="sphere-wrapper">
+        <div class="sphere-canvas-wrap">
+          <!-- Mobile "Interact" toggle -->
+          <div class="sphere-interact-bar" aria-live="polite">
+            <button id="sphere-interact-btn"     class="sphere-interact-toggle" type="button">Interact with Sphere</button>
+            <button id="sphere-interact-end-btn" class="sphere-interact-toggle sphere-interact-end" type="button" style="display:none">Exit Sphere Interaction</button>
+            <p class="sphere-interact-hint" id="sphere-hint-off">Tap to enable rotation and zoom</p>
+            <p class="sphere-interact-hint" id="sphere-hint-on" style="display:none">Drag to rotate · Pinch to zoom</p>
+          </div>
+
+          <div id="sphere-state-strip" class="sphere-state-strip" aria-live="polite" aria-atomic="true"></div>
+          <div id="sphere-container" role="img" aria-label="Living Time Sphere — interactive" tabindex="0"
+               aria-describedby="sphere-text-model">
+            <!-- SVG or 3D canvas rendered here by LivingTimeSphereUi.init() -->
+            <p class="sphere-error">Loading sphere…</p>
+          </div>
+
+          <div class="sphere-moon-labels" id="sphere-moon-labels" aria-hidden="true">
+            <span class="sphere-moon-label" data-moon="1"  style="display:none">Moon 1</span>
+            <span class="sphere-moon-label" data-moon="2"  style="display:none">Moon 2</span>
+            <span class="sphere-moon-label" data-moon="3"  style="display:none">Moon 3</span>
+            <span class="sphere-moon-label" data-moon="4"  style="display:none">Moon 4</span>
+            <span class="sphere-moon-label" data-moon="5"  style="display:none">Moon 5</span>
+            <span class="sphere-moon-label" data-moon="6"  style="display:none">Moon 6</span>
+            <span class="sphere-moon-label" data-moon="7"  style="display:none">Moon 7</span>
+            <span class="sphere-moon-label" data-moon="8"  style="display:none">Moon 8</span>
+            <span class="sphere-moon-label" data-moon="9"  style="display:none">Moon 9</span>
+            <span class="sphere-moon-label" data-moon="10" style="display:none">Moon 10</span>
+            <span class="sphere-moon-label" data-moon="11" style="display:none">Moon 11</span>
+            <span class="sphere-moon-label" data-moon="12" style="display:none">Moon 12</span>
+            <span class="sphere-moon-label" data-moon="13" style="display:none">Moon 13</span>
+          </div>
+
+          <!-- Camera controls (visible only when 3D is active) -->
+          <div class="sphere-camera-controls" aria-label="Camera view presets" role="group">
+            <span class="sphere-cam-label">View:</span>
+            <button id="sphere-cam-reset"   class="sphere-cam-btn" type="button" title="Reset to default view">⟳ Reset</button>
+            <button id="sphere-cam-pattern" class="sphere-cam-btn" type="button" title="Pattern ring view">Pattern View</button>
+            <button id="sphere-cam-passage" class="sphere-cam-btn" type="button" title="Passage arc view">Passage View</button>
+            <button id="sphere-cam-years"   class="sphere-cam-btn" type="button" title="Years spiral view">Years View</button>
+          </div>
+        </div>
+
+        <!-- Data table alternate view -->
+        <div id="sphere-data-table-section" class="sphere-alt-view" style="display:none" aria-label="Sphere data table">
+          <h2 class="sphere-sidebar-heading">Sphere Data</h2>
+          <p class="sphere-methods">Use Data Table view to see raw coordinates without graphics.</p>
+          <table class="sphere-coordinate-table" id="sphere-data-table" aria-label="Sphere data table"></table>
+        </div>
+
+        <!-- Text summary alternate view -->
+        <div id="sphere-text-summary-section" class="sphere-alt-view" style="display:none" aria-label="Text summary">
+          <h2 class="sphere-sidebar-heading">Text Summary</h2>
+          <pre id="sphere-text-summary-content" class="sphere-text-model"></pre>
+        </div>
+
+        <div class="sphere-legend" id="sphere-legend" aria-label="Sphere legend">
+          <h3 class="sphere-legend-heading">Legend</h3>
+          <div class="sphere-legend-rows">
+            <div class="sphere-legend-row-line">
+              <span class="sphere-legend-chip"><span class="sphere-legend-symbol legend-today" aria-hidden="true">●</span> Today</span>
+              <span class="sphere-legend-chip"><span class="sphere-legend-symbol legend-equinox" aria-hidden="true">▲</span> Equinox</span>
+              <span class="sphere-legend-chip"><span class="sphere-legend-symbol legend-yeargate" aria-hidden="true">◆</span> Year Gate</span>
+            </div>
+            <div class="sphere-legend-row-line">
+              <span class="sphere-legend-chip"><span class="sphere-legend-symbol legend-lunar" aria-hidden="true">●</span> Moon</span>
+              <span class="sphere-legend-chip"><span class="sphere-legend-symbol legend-passage" aria-hidden="true">─</span> Passage</span>
+              <span class="sphere-legend-chip"><span class="sphere-legend-symbol legend-year" aria-hidden="true">●</span> Selected Year</span>
+            </div>
+          </div>
+          <details class="sphere-legend-expand">
+            <summary class="sphere-legend-full-btn">Show full legend</summary>
+            <ul class="sphere-legend-list">
+              <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-pattern" aria-hidden="true">○</span> Pattern ring (13 × 28)</li>
+              <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-spiral" aria-hidden="true">⊙</span> 13-year spiral</li>
+              <li class="sphere-legend-row"><span class="sphere-legend-symbol legend-solar" aria-hidden="true">╌╌</span> Solar axis</li>
+            </ul>
+          </details>
+        </div>
+
+        <aside class="sphere-sidebar">
+          <!-- 4. Selected marker details -->
+          <div class="sphere-sidebar-section">
+            <h2 class="sphere-sidebar-heading">Selected marker</h2>
+            <div id="sphere-details" class="sphere-details">
+              <p class="sphere-methods">Select a marker to see details.</p>
+            </div>
+          </div>
+
+          <!-- 5. Layer controls -->
+          <div class="sphere-sidebar-section">
+            <h2 class="sphere-sidebar-heading">Layers</h2>
+            <div class="sphere-layers" role="group" aria-label="Visible layers">
+              <label class="sphere-layer-row"><input id="sphere-layer-pattern"    type="checkbox" checked> Pattern structure</label>
+              <label class="sphere-layer-row"><input id="sphere-layer-passage"    type="checkbox" checked> Equinox Passage</label>
+              <label class="sphere-layer-row"><input id="sphere-layer-lunar"      type="checkbox" checked> Lunar orbit</label>
+              <label class="sphere-layer-row"><input id="sphere-layer-solar"      type="checkbox"> Solar axis</label>
+              <label class="sphere-layer-row"><input id="sphere-layer-markers"    type="checkbox" checked> Annual markers</label>
+              <label class="sphere-layer-row"><input id="sphere-layer-recurrence" type="checkbox"> Recurrence links</label>
+              <label class="sphere-layer-row"><input id="sphere-layer-spiral"     type="checkbox"> 13-year spiral</label>
+            </div>
+          </div>
+
+          <!-- Reset + actions -->
+          <div class="sphere-sidebar-section">
+            <div class="sphere-actions">
+              <button id="sphere-reset"      class="sphere-btn"         type="button">Reset View</button>
+              <button id="sphere-copy-link"  class="sphere-btn"         type="button">Copy Link</button>
+              <button id="sphere-export-png" class="sphere-btn sphere-btn-primary" type="button">Export PNG</button>
+            </div>
+          </div>
+
+          <!-- Replay intro -->
+          <div class="sphere-sidebar-section">
+            <button id="sphere-intro-replay" class="sphere-btn" type="button">Replay Sphere Introduction</button>
+          </div>
+        </aside>
+      </div>
+
+      <!-- 8. Accessible text model -->
+      <section aria-labelledby="sphereTextModelHeading">
+        <h2 id="sphereTextModelHeading">Accessible text model</h2>
+        <pre id="sphere-text-model" class="sphere-text-model" aria-live="polite" aria-atomic="true">Loading…</pre>
+      </section>
+
+      <!-- Preview diagnostics: Today position -->
+      <section aria-labelledby="sphereTodayDiagHeading" class="sphere-diagnostics-section">
+        <details id="sphere-today-diagnostics">
+          <summary id="sphereTodayDiagHeading" class="sphere-diag-summary">Today Diagnostics (preview)</summary>
+          <dl class="sphere-diag-grid">
+            <dt>Civil date</dt>         <dd id="sphere-diag-today-civil">—</dd>
+            <dt>Effective date</dt>     <dd id="sphere-diag-today-effective">—</dd>
+            <dt>Timezone</dt>           <dd id="sphere-diag-today-tz">—</dd>
+            <dt>Boundary</dt>           <dd id="sphere-diag-today-boundary">—</dd>
+            <dt>Sunset</dt>             <dd id="sphere-diag-today-sunset">—</dd>
+            <dt>Pattern position</dt>   <dd id="sphere-diag-today-position">—</dd>
+            <dt>Today marker angle</dt> <dd id="sphere-diag-today-angle">—</dd>
+            <dt>Data source</dt>        <dd id="sphere-diag-today-source">—</dd>
+          </dl>
+        </details>
+      </section>
+
+      <!-- Preview diagnostics: Renderer -->
+      <section aria-labelledby="sphereRendererDiagHeading" class="sphere-diagnostics-section">
+        <details id="sphere-renderer-diagnostics">
+          <summary id="sphereRendererDiagHeading" class="sphere-diag-summary">Technical Renderer (preview)</summary>
+          <dl class="sphere-diag-grid">
+            <dt>Requested renderer</dt>  <dd id="sphere-diag-requested">—</dd>
+            <dt>Active renderer</dt>     <dd id="sphere-diag-active">—</dd>
+            <dt>Fallback</dt>            <dd id="sphere-diag-fallback">—</dd>
+            <dt>WebGL</dt>               <dd id="sphere-diag-webgl">—</dd>
+            <dt>WebGL2</dt>              <dd id="sphere-diag-webgl2">—</dd>
+            <dt>Library version</dt>     <dd id="sphere-diag-lib-version">—</dd>
+            <dt>Module source</dt>       <dd id="sphere-diag-module-source">—</dd>
+            <dt>Local module URL</dt>    <dd id="sphere-diag-local-url" style="overflow-wrap:break-word;word-break:break-all">—</dd>
+            <dt>Canvas size</dt>         <dd id="sphere-diag-canvas-size">—</dd>
+            <dt>Device pixel ratio</dt>  <dd id="sphere-diag-dpr">—</dd>
+            <dt>Quality</dt>             <dd id="sphere-diag-quality">—</dd>
+            <dt>Last init error</dt>     <dd id="sphere-diag-last-error">—</dd>
+          </dl>
+        </details>
+      </section>
+
+      <!-- 9. Methods and coordinate explanation -->
+      <section aria-labelledby="sphereMethodsHeading">
+        <h2 id="sphereMethodsHeading">Methods and coordinate rules</h2>
+        <div class="sphere-methods">
+          <p>All coordinates are measured in degrees, clockwise from the top (12 o'clock = 0°). Zero position = Moon 1, Day 1 (Year Gate). Angles are deterministic: derived from structured data, not manually placed for visual appearance.</p>
+          <table class="sphere-coordinate-table" aria-label="Coordinate conventions">
+            <thead><tr><th>Field</th><th>Zero position</th><th>Range</th><th>Direction</th></tr></thead>
+            <tbody>
+              <tr><td>patternAngle</td><td>Moon 1 Day 1 (Year Gate)</td><td>0–360°</td><td>Clockwise</td></tr>
+              <tr><td>lunarAngle</td><td>New moon</td><td>0–360°</td><td>Clockwise</td></tr>
+              <tr><td>solarSeasonAngle</td><td>March equinox</td><td>0–360°</td><td>Clockwise</td></tr>
+              <tr><td>passageStartAngle</td><td>Equinox position on pattern ring</td><td>0–360°</td><td>Clockwise</td></tr>
+              <tr><td>passageEndAngle</td><td>Year Gate = 0°</td><td>0–360°</td><td>Clockwise</td></tr>
+              <tr><td>yearSpiralAngle</td><td>First study year (2014)</td><td>0–360°+</td><td>Clockwise per revolution</td></tr>
+              <tr><td>yearSpiralRadius</td><td>0 = center</td><td>0–1</td><td>Outward</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 10. Exports and sharing -->
+      <section aria-labelledby="sphereExportHeading">
+        <h2 id="sphereExportHeading">Exports and sharing</h2>
+        <div class="sphere-actions">
+          <button id="sphere-export-png-2"  class="sphere-btn sphere-btn-primary" type="button"
+            onclick="document.getElementById('sphere-export-png')?.click()">Export PNG (square)</button>
+          <a href="alignment-ledger.html" class="sphere-btn">Open Alignment Ledger</a>
+          <a href="equinox-passage.html"  class="sphere-btn">Open Equinox Passage</a>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</body>
+</html>

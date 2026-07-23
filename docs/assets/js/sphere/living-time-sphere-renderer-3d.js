@@ -1,0 +1,1515 @@
+(() => {
+  "use strict";
+
+  // Living Time Sphere — 3D WebGL renderer (Three.js).
+  // Dependency: Three.js r167  (vendored local ES module — no CDN dependency)
+  // License:    MIT  https://github.com/mrdoob/three.js/blob/dev/LICENSE
+  // Attribution: three.js by mrdoob and contributors — https://threejs.org
+  //
+  // ARCHITECTURE
+  //   - Reads coordinates exclusively from LivingTimeSphereModel (no recalculation).
+  //   - Uses LivingTimeSphereCamera for orbit / zoom / mode-specific views.
+  //   - Uses LivingTimeSphereAnimation for the dirty-render loop.
+  //   - Uses LivingTimeSphereEffects for star field, haze, glow, etc.
+  //   - Uses LivingTimeSphereM for color/size constants.
+  //   - Falls back to SVG if WebGL is unavailable or if quality = svgonly.
+  //
+  // FRAME LOOP DISCIPLINE
+  //   Renders only when:
+  //     - the user is dragging / zooming;
+  //     - a transition is active;
+  //     - a state-driven animation is active;
+  //     - the scene data changes;
+  //     - resize occurs.
+  //   Idle drift is capped and stopped when:
+  //     - document.hidden;
+  //     - prefers-reduced-motion;
+  //     - low-power mode;
+  //     - the canvas leaves the viewport.
+  //
+  // THREE.JS DEPENDENCY
+  //   Version pinned: 0.167.1 (r167)
+  //   Local:  assets/vendor/three/three.module.min.js  (ES module, same-origin)
+  //   Integrity: sha384-fPAi39ufYYhieBm2Yj7mAE8pE2HIIJm4iFT2zQEY4g4/OMR9m8GMM5+jen6ptHcu
+  //   Loaded via dynamic import() — no <script> tag, no CDN, works offline.
+  //   The local path resolves relative to document.baseURI so it works on both:
+  //     https://codexofreality.org/            (base href = /)
+  //     https://ssnfts24.github.io/scroll-of-fire/  (base href = /scroll-of-fire/)
+
+  const THREE_VERSION    = "0.167.1";
+  const THREE_LOCAL_REL  = "assets/vendor/three/three.module.min.js";
+  // THREE_CDN is intentionally not used in production; retained only for comments.
+  // const THREE_CDN = `https://cdn.jsdelivr.net/npm/three@${THREE_VERSION}/build/three.module.min.js`;
+
+  // Resolve the local module URL against the document base so GitHub Pages
+  // (/scroll-of-fire/) and Netlify root (/) both work.
+  function _localThreeUrl() {
+    try {
+      return new URL(THREE_LOCAL_REL, document.baseURI).href;
+    } catch {
+      return THREE_LOCAL_REL;
+    }
+  }
+
+  // ── Dependencies check ────────────────────────────────────────────
+
+  function assertDeps() {
+    const needed = ["LivingTimeSphereM", "LivingTimeSphereCamera",
+                    "LivingTimeSphereAnimation", "LivingTimeSphereEffects",
+                    "LivingTimeSphereModel", "LivingTimeSphereLayout"];
+    for (const n of needed) {
+      if (!globalThis[n]) throw new Error(`LivingTimeSphereRenderer3d: ${n} unavailable`);
+    }
+  }
+
+  // ── Scene state ───────────────────────────────────────────────────
+
+  let _THREE        = null;   // Three.js namespace (set after lazy import)
+  let _threeSource  = null;   // "local" after successful local import
+  let _renderer     = null;   // WebGLRenderer
+  let _scene        = null;
+  let _camera       = null;
+  let _canvas       = null;
+  let _container    = null;
+  let _initialized  = false;
+  let _initializing = false;  // Guard against concurrent init calls
+  let _quality      = null;   // current resolved preset object
+  let _model        = null;   // current year model
+  let _spiral       = null;   // 13-year spiral model
+  let _selectedYear = null;
+  let _viewMode     = "today";
+  let _visibleLayers = {};
+  let _lastInitError = null;  // last failure reason for diagnostics
+
+  // Scene object refs
+  const _objects = {};
+  let _floatingLabelEl = null;
+  let _floatingTimeout = null;
+  // Moon label overlay elements (sphere-anchored HTML projected from 3D)
+  let _moonLabelEls = null;   // Array of 13 DOM span elements
+  let _moonLabelContainer = null;  // The #sphere-moon-labels container
+  const _moonAnchors = [];    // { moon, angle, radius, worldVec } for each of 13 moons
+
+  // ── Three.js lazy loader ──────────────────────────────────────────
+
+  let _loadPromise = null;
+
+  function loadThreeJs() {
+    if (_THREE) return Promise.resolve(_THREE);
+    if (_loadPromise) return _loadPromise;
+    const localUrl = _localThreeUrl();
+    _loadPromise = import(localUrl).then(module => {
+      // ES module namespace — contains all named Three.js exports.
+      // Verify it is a real Three.js module by checking a core class.
+      if (!module || typeof module.WebGLRenderer !== "function") {
+        _loadPromise = null;
+        throw new Error(`Local Three.js module at ${localUrl} did not export expected Three.js classes.`);
+      }
+      _THREE = module;
+      _threeSource = "local";
+      return module;
+    }).catch(err => {
+      _loadPromise = null; // allow retry
+      throw new Error(`3D module failed to load from this installation. URL: ${localUrl} — ${err?.message || err}`);
+    });
+    return _loadPromise;
+  }
+
+  // ── Coordinate helpers ────────────────────────────────────────────
+
+  // Convert angle (degrees, CW from top) + radius to XZ plane position (y=0).
+  function angleToXZ(angleDeg, radius) {
+    const rad = ((angleDeg - 90) * Math.PI) / 180;
+    return { x: radius * Math.cos(rad), z: radius * Math.sin(rad) };
+  }
+
+  // Build canonical world-space anchor for Moon m (1-based) on the pattern ring.
+  // Angle = center of the moon's sector (each sector = 360/13 degrees, Moon 1 starts at 0°).
+  function _moonSectorCenterAngle(moonIndex) {
+    // moonIndex is 0-based (0 = Moon 1, 12 = Moon 13)
+    return ((moonIndex + 0.5) / 13) * 360;
+  }
+
+  function _buildMoonAnchors() {
+    const mat = globalThis.LivingTimeSphereM;
+    const r   = mat.SIZES.patternRing * 1.15;   // slightly outside the ring
+    _moonAnchors.length = 0;
+    for (let i = 0; i < 13; i++) {
+      const angle = _moonSectorCenterAngle(i);
+      const { x, z } = angleToXZ(angle, r);
+      _moonAnchors.push({
+        moon:  i + 1,
+        angle,
+        radius: r,
+        worldX: x,
+        worldY: 0,
+        worldZ: z,
+      });
+    }
+  }
+
+  function _setupMoonLabelEls(container) {
+    _moonLabelContainer = container.parentElement?.querySelector("#sphere-moon-labels") ||
+                          document.getElementById("sphere-moon-labels");
+    if (!_moonLabelContainer) return;
+    // Remove old fixed-position inline styles
+    const spans = _moonLabelContainer.querySelectorAll(".sphere-moon-label");
+    spans.forEach(s => {
+      s.style.cssText = "";   // clear the fixed inline styles
+      s.style.display = "none";
+    });
+    // Build an array indexed by moon (0 = Moon1)
+    _moonLabelEls = Array.from({ length: 13 }, (_, i) => {
+      const moon = i + 1;
+      let el = _moonLabelContainer.querySelector(`[data-moon="${moon}"]`);
+      if (!el) {
+        el = document.createElement("span");
+        el.className = "sphere-moon-label";
+        el.dataset.moon = String(moon);
+        el.textContent = `Moon ${moon}`;
+        _moonLabelContainer.appendChild(el);
+      }
+      el.style.cssText = "";
+      el.style.display = "none";
+      el.style.position = "absolute";
+      return el;
+    });
+  }
+
+  // Called every frame to project 3D moon anchors to screen space and update labels.
+  function _updateMoonLabels(viewMode) {
+    if (!_moonLabelEls || !_camera || !_canvas || !_THREE) return;
+    const THREE = _THREE;
+    const rect   = _canvas.getBoundingClientRect();
+    if (!rect || rect.width === 0) return;
+
+    // Determine which moons to show based on view mode
+    const activeMoon = _model?.todayPatternPosition?.moon || 4;
+    let showSet;
+    if (viewMode === "today") {
+      // Show today's moon prominently, adjacent moons quietly, year-boundary moons
+      showSet = new Set([activeMoon, activeMoon - 1 < 1 ? 13 : activeMoon - 1,
+                         activeMoon + 1 > 13 ? 1 : activeMoon + 1, 1, 13]);
+    } else if (viewMode === "passage") {
+      // Show moons near the passage gates
+      const passageStartMoon = _model?.sourceRecord?.equinox?.patternPosition?.moon || 13;
+      showSet = new Set([passageStartMoon, 1]);
+    } else if (viewMode === "pattern") {
+      showSet = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+    } else {
+      // years: orientation only
+      showSet = new Set([1, 4, 7, 10]);
+    }
+
+    const projVec = new THREE.Vector3();
+    const camDir = new THREE.Vector3();
+    const anchorDir = new THREE.Vector3();
+    _camera.getWorldDirection(camDir);
+    const labelRects = [];  // for collision detection
+
+    for (let i = 0; i < 13; i++) {
+      const anchor = _moonAnchors[i];
+      const moon   = anchor.moon;
+      const el     = _moonLabelEls[i];
+      if (!el) continue;
+
+      if (!showSet.has(moon)) {
+        el.style.display = "none";
+        continue;
+      }
+
+      // Project 3D world position to NDC
+      projVec.set(anchor.worldX, anchor.worldY, anchor.worldZ);
+      projVec.project(_camera);
+
+      // Depth/facing check: if z > 1 it's behind the camera, hide
+      if (projVec.z > 0.98) {
+        el.style.display = "none";
+        continue;
+      }
+
+      // Camera-space depth for fade: projVec.z ranges -1 (front) to +1 (back)
+      // Dot product: direction from origin to anchor vs camera direction
+      anchorDir.set(anchor.worldX, 0, anchor.worldZ).normalize();
+      const dot = anchorDir.dot(camDir);
+      // dot > 0 means anchor is "behind" the plane (far side), hide it
+      if (dot > 0.15) {
+        el.style.display = "none";
+        continue;
+      }
+
+      // Convert NDC to canvas pixels
+      const cx = ((projVec.x + 1) / 2) * rect.width;
+      const cy = ((-projVec.y + 1) / 2) * rect.height;
+
+      // Clamp to canvas bounds with margin
+      const margin = 4;
+      const elW = el.offsetWidth || 42;
+      const elH = el.offsetHeight || 14;
+      const clampedX = Math.max(margin, Math.min(rect.width  - elW - margin, cx - elW / 2));
+      const clampedY = Math.max(margin, Math.min(rect.height - elH - margin, cy - elH / 2));
+
+      // Opacity: fade as dot approaches 0.15 from behind, full opacity at -1
+      const opacity = Math.max(0, Math.min(1, (-dot + 0.15) / 0.6));
+
+      // Emphasis: today mode boosts today's moon
+      const isToday = moon === activeMoon && viewMode === "today";
+      const size    = isToday ? "0.72rem" : "0.62rem";
+      const color   = isToday ? "#64c8b4" : "rgba(100,200,180,0.5)";
+      const fw      = isToday ? "600" : "500";
+
+      // Collision check: hide if overlapping a higher-priority label
+      const thisRect = { x: clampedX, y: clampedY, w: elW + 4, h: elH + 2, moon };
+      let collides = false;
+      for (const prev of labelRects) {
+        if (clampedX < prev.x + prev.w && clampedX + thisRect.w > prev.x &&
+            clampedY < prev.y + prev.h && clampedY + thisRect.h > prev.y) {
+          // Lower priority: hide this moon unless it's the active moon
+          if (moon !== activeMoon) { collides = true; break; }
+        }
+      }
+      if (collides) {
+        el.style.display = "none";
+        continue;
+      }
+      labelRects.push(thisRect);
+
+      el.style.display     = "";
+      el.style.left        = `${clampedX}px`;
+      el.style.top         = `${clampedY}px`;
+      el.style.opacity     = String(opacity);
+      el.style.fontSize    = size;
+      el.style.color       = color;
+      el.style.fontWeight  = fw;
+    }
+  }
+
+  // ── Scene construction ────────────────────────────────────────────
+
+  function buildScene() {
+    const THREE = _THREE;
+    const mat   = globalThis.LivingTimeSphereM;
+    _scene = new THREE.Scene();
+    _scene.background = new THREE.Color(mat.COLORS.bg);
+
+    // ── Pattern Core (geometric, not planet-like) ─────────────────
+    {
+      // Use icosahedron for a geometric, non-spherical look
+      const geo = new THREE.IcosahedronGeometry(mat.SIZES.coreRadius, 0);
+      const m   = new THREE.MeshStandardMaterial({
+        color:     0xd8e8ff,
+        emissive:  mat.COLORS.centerGlow,
+        emissiveIntensity: mat.EMISSIVE.center,
+        roughness: 0.1,
+        metalness: 0.6,
+        transparent: true,
+        opacity:   mat.OPACITY.center,
+        wireframe: false,
+      });
+      const mesh = new THREE.Mesh(geo, m);
+      mesh.name = "core";
+      _scene.add(mesh);
+      _objects.core = mesh;
+
+      // Two thin accent rings at 90° to each other — NOT equatorial, so not Saturn-like
+      const accentMat = new THREE.MeshBasicMaterial({
+        color: 0x8ab4ff,
+        transparent: true,
+        opacity: 0.45,
+        depthWrite: false,
+      });
+      const r1 = mat.SIZES.coreRadius * 2.2;
+      const ring1 = new THREE.Mesh(new THREE.TorusGeometry(r1, 0.003, 6, 32), accentMat.clone());
+      ring1.rotation.x = Math.PI / 2;  // XZ plane
+      ring1.name = "coreRing1";
+      _scene.add(ring1);
+      _objects.coreRing1 = ring1;
+
+      const ring2 = new THREE.Mesh(new THREE.TorusGeometry(r1, 0.003, 6, 32), accentMat.clone());
+      ring2.rotation.z = Math.PI / 2;  // YZ plane (perpendicular to ring1)
+      ring2.name = "coreRing2";
+      _scene.add(ring2);
+      _objects.coreRing2 = ring2;
+
+      // Core glow
+      const glowMesh = globalThis.LivingTimeSphereEffects.buildCoreGlow(THREE);
+      _scene.add(glowMesh);
+      _objects.coreGlow = glowMesh;
+    }
+
+    // ── Pattern ring (XZ plane, radius = SIZES.patternRing) ─────────
+    {
+      const r   = mat.SIZES.patternRing;
+      const geo = new THREE.TorusGeometry(r, mat.SIZES.ringTube, 8, 256);
+      const m   = new THREE.MeshStandardMaterial({
+        color:       mat.COLORS.patternRing,
+        transparent: true,
+        opacity:     mat.OPACITY.patternRing,
+        roughness:   0.8,
+      });
+      const mesh = new THREE.Mesh(geo, m);
+      mesh.rotation.x = Math.PI / 2;  // lay flat in XZ plane
+      mesh.name = "patternRing";
+      _scene.add(mesh);
+      _objects.patternRing = mesh;
+    }
+
+    // ── Moon sector dividers (13 lines from center to ring) ─────────
+    {
+      const r  = mat.SIZES.moonSectors;
+      const pts = [];
+      for (let i = 0; i < 13; i++) {
+        const angle = (i / 13) * 360;
+        const { x, z } = angleToXZ(angle, r);
+        pts.push(new _THREE.Vector3(0, 0, 0));
+        pts.push(new _THREE.Vector3(x, 0, z));
+      }
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const m   = new THREE.LineBasicMaterial({
+        color:       mat.COLORS.moonStroke,
+        transparent: true,
+        opacity:     mat.OPACITY.moonStroke,
+        depthWrite:  false,
+      });
+      const lines = new THREE.LineSegments(geo, m);
+      lines.name = "moonDividers";
+      _scene.add(lines);
+      _objects.moonDividers = lines;
+    }
+
+    // ── Day nodes on pattern ring (364 small points) ─────────────────
+    {
+      const r = mat.SIZES.patternRing;
+      const positions = new Float32Array(364 * 3);
+      for (let d = 0; d < 364; d++) {
+        const angle = (d / 364) * 360;
+        const { x, z } = angleToXZ(angle, r);
+        positions[d * 3]     = x;
+        positions[d * 3 + 1] = 0.001;  // slight Y offset so nodes sit on ring
+        positions[d * 3 + 2] = z;
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+      const m = new THREE.PointsMaterial({
+        color:       mat.COLORS.patternRing,
+        size:        0.012,
+        transparent: true,
+        opacity:     0.45,
+        sizeAttenuation: true,
+      });
+      const pts = new THREE.Points(geo, m);
+      pts.name = "dayNodes";
+      _scene.add(pts);
+      _objects.dayNodes = pts;
+    }
+
+    // ── Equinox Gate marker ─── TETRAHEDRON shape ──────────────────
+    {
+      const geo = new THREE.TetrahedronGeometry(mat.SIZES.markerDot * 1.4, 0);
+      const m   = new THREE.MeshStandardMaterial({
+        color:    mat.COLORS.equinox,
+        emissive: mat.COLORS.equinox,
+        emissiveIntensity: mat.EMISSIVE.equinox,
+        roughness: 0.3,
+      });
+      const mesh = new THREE.Mesh(geo, m);
+      mesh.name = "equinoxGate";
+      _scene.add(mesh);
+      _objects.equinoxGate = mesh;
+    }
+
+    // ── Year Gate marker (Moon 1 Day 1 at 0°) ── DIAMOND shape ─────
+    {
+      const geo = new THREE.OctahedronGeometry(mat.SIZES.markerDot * 1.5, 0);
+      const m   = new THREE.MeshStandardMaterial({
+        color:    mat.COLORS.yearGate,
+        emissive: mat.COLORS.yearGate,
+        emissiveIntensity: mat.EMISSIVE.yearGate,
+        roughness: 0.3,
+      });
+      const mesh = new THREE.Mesh(geo, m);
+      mesh.name = "yearGate";
+      const { x, z } = angleToXZ(0, mat.SIZES.patternRing);
+      mesh.position.set(x, 0, z);
+      _scene.add(mesh);
+      _objects.yearGate = mesh;
+    }
+
+    // ── Today marker (gold, halo, center line) ──────────────────────
+    {
+      const geo = new THREE.SphereGeometry(mat.SIZES.todayRadius, 12, 12);
+      const m   = new THREE.MeshStandardMaterial({
+        color:    mat.COLORS.today,
+        emissive: mat.COLORS.todayGlow,
+        emissiveIntensity: mat.EMISSIVE.today,
+        roughness: 0.2,
+        metalness: 0.4,
+        transparent: true,
+        opacity: mat.OPACITY.today,
+      });
+      const mesh = new THREE.Mesh(geo, m);
+      mesh.name = "todayMarker";
+      mesh.visible = false;
+      _scene.add(mesh);
+      _objects.todayMarker = mesh;
+
+      const haloGeo = new THREE.TorusGeometry(mat.SIZES.todayHalo, mat.SIZES.todayHaloTube, 8, 64);
+      const haloMat = new THREE.MeshStandardMaterial({
+        color:    mat.COLORS.todayHalo,
+        emissive: mat.COLORS.todayHalo,
+        emissiveIntensity: mat.EMISSIVE.todayHalo,
+        transparent: true,
+        opacity: mat.OPACITY.todayHalo,
+        roughness: 0.3,
+      });
+      const haloMesh = new THREE.Mesh(haloGeo, haloMat);
+      haloMesh.rotation.x = Math.PI / 2;
+      haloMesh.name = "todayHalo";
+      haloMesh.visible = false;
+      _scene.add(haloMesh);
+      _objects.todayHalo = haloMesh;
+    }
+
+    // ── Today → center connection line ──────────────────────────────
+    _objects.todayLine = null;
+    _objects.todayLineGroup = new THREE.Group();
+    _objects.todayLineGroup.name = "todayLineGroup";
+    _scene.add(_objects.todayLineGroup);
+
+    // ── Passage arc (tube geometry, rebuilt on model change) ─────────
+    // Initialized as empty; rebuilt in updateScene()
+    _objects.passageArc   = null;
+    _objects.passageGroup = new THREE.Group();
+    _objects.passageGroup.name = "passageGroup";
+    _scene.add(_objects.passageGroup);
+
+    // ── Week Gate markers (4 per moon × 13 = 52) ─────────────────────
+    {
+      const r = mat.SIZES.patternRing;
+      const pts = [];
+      for (let m = 0; m < 13; m++) {
+        for (let w = 1; w <= 4; w++) {
+          const dayOfYear = m * 28 + w * 7;
+          const angle = (dayOfYear / 364) * 360;
+          const { x, z } = angleToXZ(angle, r * 1.04);  // slightly outside ring
+          pts.push(new _THREE.Vector3(x, 0, z));
+        }
+      }
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const m   = new THREE.PointsMaterial({
+        color:       mat.COLORS.weekGate,
+        size:        0.018,
+        transparent: true,
+        opacity:     0.5,
+      });
+      const wgPts = new THREE.Points(geo, m);
+      wgPts.name = "weekGates";
+      _scene.add(wgPts);
+      _objects.weekGates = wgPts;
+    }
+
+    // ── Day Out of Time marker (position 365 equivalent) ─────────────
+    {
+      const angle = (364.5 / 364) * 360;  // just past Moon 13 Day 28
+      const { x, z } = angleToXZ(angle, mat.SIZES.patternRing);
+      const geo = new THREE.SphereGeometry(0.018, 8, 8);
+      const m   = new THREE.MeshBasicMaterial({ color: 0xffd080, transparent: true, opacity: 0.6 });
+      const mesh = new THREE.Mesh(geo, m);
+      mesh.position.set(x, 0, z);
+      mesh.name = "dayOutOfTime";
+      mesh.visible = false;  // shown only when relevant
+      _scene.add(mesh);
+      _objects.dayOutOfTime = mesh;
+    }
+
+    // ── Lunar orbit (tilted ring) ────────────────────────────────────
+    {
+      const r   = mat.SIZES.lunarOrbit;
+      const geo = new THREE.TorusGeometry(r, mat.SIZES.ringTube * 0.6, 6, 128);
+      const m   = new THREE.MeshBasicMaterial({
+        color:       mat.COLORS.lunarRing,
+        transparent: true,
+        opacity:     mat.OPACITY.lunarRing,
+        depthWrite:  false,
+      });
+      const mesh = new THREE.Mesh(geo, m);
+      mesh.rotation.x = Math.PI / 2 + 0.09;  // slight tilt ~5°
+      mesh.rotation.z = 0.05;
+      mesh.name = "lunarOrbit";
+      _scene.add(mesh);
+      _objects.lunarOrbit = mesh;
+    }
+
+    // ── Lunar marker ─────────────────────────────────────────────────
+    {
+      const geo = new THREE.SphereGeometry(mat.SIZES.lunarMarker, 12, 12);
+      const m   = new THREE.MeshStandardMaterial({
+        color:    mat.COLORS.lunar,
+        emissive: mat.COLORS.lunar,
+        emissiveIntensity: mat.EMISSIVE.lunar,
+        roughness: 0.6,
+      });
+      const mesh = new THREE.Mesh(geo, m);
+      mesh.name = "lunarMarker";
+      _scene.add(mesh);
+      _objects.lunarMarker = mesh;
+    }
+
+    // ── Solar axis ───────────────────────────────────────────────────
+    {
+      const r  = mat.SIZES.solarAxis;
+      // Axis line (tilted ~23.5° in XY plane)
+      const tilt = 23.5 * Math.PI / 180;
+      const pts  = [
+        new _THREE.Vector3( r * Math.sin(tilt),  r * Math.cos(tilt), 0),
+        new _THREE.Vector3(-r * Math.sin(tilt), -r * Math.cos(tilt), 0),
+      ];
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const m   = new THREE.LineDashedMaterial({
+        color:       mat.COLORS.solar,
+        transparent: true,
+        opacity:     mat.OPACITY.solar,
+        dashSize:    0.05,
+        gapSize:     0.03,
+        depthWrite:  false,
+      });
+      const line = new THREE.Line(geo, m);
+      line.computeLineDistances();
+      line.name = "solarAxis";
+      _scene.add(line);
+      _objects.solarAxis = line;
+
+      // Conceptual season markers (small points)
+      const seasonAngles = [0, 90, 180, 270];   // March Eq, Jun Sol, Sep Eq, Dec Sol
+      const labels = ["ME", "JS", "SE", "DS"];
+      const sPoints = [];
+      for (const a of seasonAngles) {
+        const rad = (a * Math.PI) / 180;
+        sPoints.push(new _THREE.Vector3(
+          r * Math.sin(tilt) * Math.cos(rad) - r * Math.cos(tilt) * Math.sin(rad) * 0,
+          r * Math.cos(tilt) * Math.cos(rad),
+          r * Math.sin(rad)
+        ));
+      }
+      const sGeo = new THREE.BufferGeometry().setFromPoints(sPoints);
+      const sMat = new THREE.PointsMaterial({ color: mat.COLORS.solar, size: 0.035, transparent: true, opacity: 0.55 });
+      const seasonPts = new THREE.Points(sGeo, sMat);
+      seasonPts.name = "seasonMarkers";
+      _scene.add(seasonPts);
+      _objects.seasonMarkers = seasonPts;
+    }
+
+    // ── 13-year spiral annual markers ────────────────────────────────
+    {
+      const group = new THREE.Group();
+      group.name = "spiralGroup";
+      _objects.spiralGroup  = group;
+      _objects.spiralMarkers = [];
+      // Markers are created in updateScene() once spiral data is available
+      _scene.add(group);
+    }
+
+    // ── Spiral path (line through annual markers) ─────────────────────
+    _objects.spiralPath = null;  // created in updateScene()
+
+    // ── Recurrence links (disabled on mobile, off by default) ────────
+    _objects.recurrenceGroup = new THREE.Group();
+    _objects.recurrenceGroup.name = "recurrenceGroup";
+    _objects.recurrenceGroup.visible = false;
+    _scene.add(_objects.recurrenceGroup);
+
+    // ── Active Moon sector highlight ─────────────────────────────────
+    _objects.activeMoonGroup = new THREE.Group();
+    _objects.activeMoonGroup.name = "activeMoonGroup";
+    _scene.add(_objects.activeMoonGroup);
+
+    // ── Active day node highlight ────────────────────────────────────
+    {
+      const geo = new THREE.SphereGeometry(0.022, 10, 10);
+      const m   = new THREE.MeshStandardMaterial({
+        color:    mat.COLORS.today,
+        emissive: mat.COLORS.todayGlow,
+        emissiveIntensity: 0.8,
+        roughness: 0.2,
+      });
+      const mesh = new THREE.Mesh(geo, m);
+      mesh.name = "activeDayNode";
+      mesh.visible = false;
+      _scene.add(mesh);
+      _objects.activeDayNode = mesh;
+    }
+
+    // ── Witness constellation (disabled stub) ─────────────────────────
+    {
+      const wField = globalThis.LivingTimeSphereEffects.buildWitnessField(THREE);
+      _scene.add(wField);
+      _objects.witnessField = wField;
+    }
+
+    // ── Selection ring ───────────────────────────────────────────────
+    {
+      const ring = globalThis.LivingTimeSphereEffects.buildSelectionRing(THREE);
+      _scene.add(ring);
+      _objects.selectionRing = ring;
+    }
+
+    // ── Atmospheric effects ──────────────────────────────────────────
+    {
+      const haze  = globalThis.LivingTimeSphereEffects.buildHazeShell(THREE);
+      _scene.add(haze);
+      _objects.hazeShell = haze;
+
+      const stars = globalThis.LivingTimeSphereEffects.buildStarField(THREE, _quality?.starCount || 150);
+      _scene.add(stars);
+      _objects.starField = stars;
+    }
+
+    // ── Lighting ─────────────────────────────────────────────────────
+    {
+      const ambient = new THREE.AmbientLight(0x1a2030, 1.5);
+      _scene.add(ambient);
+      _objects.ambientLight = ambient;
+
+      const point = new THREE.PointLight(0xffd080, 1.2, 8, 2);
+      point.position.set(0.5, 1.5, 0.5);
+      _scene.add(point);
+      _objects.pointLight = point;
+    }
+  }
+
+  // ── Update scene from model data ──────────────────────────────────
+
+  function buildPassageTube(startAngle, endAngle) {
+    if (!_THREE) return null;
+    const THREE = _THREE;
+    const mat   = globalThis.LivingTimeSphereM;
+    const r     = mat.SIZES.passageArc;
+
+    let sweep = endAngle - startAngle;
+    if (sweep <= 0) sweep += 360;
+    if (sweep > 360) sweep = 360;
+
+    const steps = Math.max(Math.round(sweep * 1.5), 12);
+    const pts   = [];
+    for (let i = 0; i <= steps; i++) {
+      const angle = startAngle + (i / steps) * sweep;
+      const { x, z } = angleToXZ(angle, r);
+      pts.push(new THREE.Vector3(x, 0, z));
+    }
+
+    // Close gap cleanly
+    const curve = new THREE.CatmullRomCurve3(pts, false, "centripetal");
+    const geo   = new THREE.TubeGeometry(curve, steps * 2, mat.SIZES.tubeRadius * 1.5, 6, false);
+    const m     = new THREE.MeshStandardMaterial({
+      color:     mat.COLORS.passage,
+      emissive:  mat.COLORS.passageGlow,
+      emissiveIntensity: mat.EMISSIVE.passage,
+      transparent: true,
+      opacity:   mat.OPACITY.passage,
+      roughness: 0.5,
+    });
+    return new THREE.Mesh(geo, m);
+  }
+
+  function buildSpiralPath(spiralYears) {
+    if (!_THREE || !spiralYears?.length) return null;
+    const THREE = _THREE;
+    const mat   = globalThis.LivingTimeSphereM;
+
+    const pts = spiralYears.map(y => {
+      const r = mat.SIZES.spiralInner + (mat.SIZES.spiralOuter - mat.SIZES.spiralInner) * y.yearSpiralRadius;
+      const { x, z } = angleToXZ(y.yearSpiralAngle % 360, r);
+      // Lift each year slightly in Y to create a true 3D spiral
+      const yOff = (y.yearSpiralRadius - 0.5) * 0.25;
+      return new THREE.Vector3(x, yOff, z);
+    });
+    const geo = new THREE.BufferGeometry().setFromPoints(pts);
+    const m   = new THREE.LineBasicMaterial({
+      color:       mat.COLORS.spiral,
+      transparent: true,
+      opacity:     mat.OPACITY.spiral,
+      depthWrite:  false,
+    });
+    return new THREE.Line(geo, m);
+  }
+
+  function updateScene(model, spiral, selectedYear, visibleLayers, viewMode) {
+    if (!_THREE || !_scene || !model) return;
+    const mat = globalThis.LivingTimeSphereM;
+
+    _model        = model;
+    _spiral       = spiral;
+    _selectedYear = selectedYear;
+    _visibleLayers = visibleLayers || {};
+    _viewMode     = viewMode || "today";
+
+    // ── Layer visibility ────────────────────────────────────────────
+    const vl = _visibleLayers;
+
+    if (_objects.patternRing)  _objects.patternRing.visible  = !!vl.pattern;
+    if (_objects.moonDividers) _objects.moonDividers.visible = !!vl.pattern;
+    if (_objects.dayNodes)     _objects.dayNodes.visible     = !!vl.pattern;
+    if (_objects.weekGates)    _objects.weekGates.visible    = !!vl.pattern;
+    if (_objects.yearGate)     _objects.yearGate.visible     = !!vl.pattern;
+    if (_objects.todayLineGroup) _objects.todayLineGroup.visible = true;
+    if (_objects.lunarOrbit)   _objects.lunarOrbit.visible   = !!vl.lunar;
+    if (_objects.lunarMarker)  _objects.lunarMarker.visible  = !!vl.lunar;
+    if (_objects.solarAxis)    _objects.solarAxis.visible    = !!vl.solar;
+    if (_objects.seasonMarkers)_objects.seasonMarkers.visible = !!vl.solar;
+    if (_objects.spiralGroup)  _objects.spiralGroup.visible  = !!(vl.spiral || vl.markers);
+    if (_objects.passageGroup) _objects.passageGroup.visible = !!vl.passage;
+    if (_objects.equinoxGate)  _objects.equinoxGate.visible  = !!vl.passage || !!vl.markers;
+    if (_objects.activeMoonGroup) _objects.activeMoonGroup.visible = !!vl.pattern;
+
+    // ── Equinox gate position ───────────────────────────────────────
+    if (_objects.equinoxGate && model.passageStartAngle != null) {
+      const { x, z } = angleToXZ(model.passageStartAngle, mat.SIZES.patternRing);
+      _objects.equinoxGate.position.set(x, 0, z);
+    }
+
+    // ── Passage arc ─────────────────────────────────────────────────
+    if (_objects.passageGroup) {
+      // Remove old passage arc
+      while (_objects.passageGroup.children.length) {
+        _objects.passageGroup.remove(_objects.passageGroup.children[0]);
+      }
+      if (vl.passage && model.passage) {
+        const tube = buildPassageTube(model.passage.startAngle, model.passage.endAngle);
+        if (tube) {
+          tube.name = "passageArc";
+          _objects.passageGroup.add(tube);
+          _objects.passageArc = tube;
+        }
+      }
+    }
+
+    // ── Lunar marker ────────────────────────────────────────────────
+    if (_objects.lunarMarker && model.lunarAngle != null) {
+      const r = mat.SIZES.lunarOrbit;
+      // Slight tilt to match the orbit ring (same tilt as lunarOrbit mesh)
+      const tiltAngle = 0.09;
+      const { x, z } = angleToXZ(model.lunarAngle, r);
+      const yOff = z * Math.sin(tiltAngle);
+      _objects.lunarMarker.position.set(x, yOff, z * Math.cos(tiltAngle));
+    }
+
+    // ── 13-year spiral markers ──────────────────────────────────────
+    if (_objects.spiralGroup && spiral?.years) {
+      // Clear existing markers
+      while (_objects.spiralGroup.children.length) {
+        _objects.spiralGroup.remove(_objects.spiralGroup.children[0]);
+      }
+      _objects.spiralMarkers = [];
+
+      for (const y of spiral.years) {
+        const isSelected = y.year === selectedYear;
+        const r  = mat.SIZES.spiralInner + (mat.SIZES.spiralOuter - mat.SIZES.spiralInner) * y.yearSpiralRadius;
+        const { x, z } = angleToXZ(y.yearSpiralAngle % 360, r);
+        const yOff = (y.yearSpiralRadius - 0.5) * 0.25;
+
+        const geo = new _THREE.SphereGeometry(
+          isSelected ? mat.SIZES.markerDotSelected : mat.SIZES.markerDot, 8, 8);
+        const m   = new _THREE.MeshStandardMaterial({
+          color:    isSelected ? mat.COLORS.annualSelected : mat.COLORS.annual,
+          emissive: isSelected ? mat.COLORS.annualSelected : 0x000000,
+          emissiveIntensity: isSelected ? mat.EMISSIVE.annualSelected : 0,
+          roughness: 0.5,
+        });
+        const mesh = new _THREE.Mesh(geo, m);
+        mesh.position.set(x, yOff, z);
+        mesh.name = `year-${y.year}`;
+        mesh.userData.year = y.year;
+        mesh.visible = !!vl.markers;
+        _objects.spiralGroup.add(mesh);
+        _objects.spiralMarkers.push(mesh);
+
+        // Move selection ring to selected marker
+        if (isSelected && _objects.selectionRing) {
+          _objects.selectionRing.position.set(x, yOff, z);
+          _objects.selectionRing.visible = true;
+          _objects.selectionRing.rotation.x = Math.PI / 2;
+        }
+      }
+
+      // Rebuild spiral path
+      if (_objects.spiralPath) {
+        _objects.spiralGroup.remove(_objects.spiralPath);
+      }
+      if (vl.spiral) {
+        _objects.spiralPath = buildSpiralPath(spiral.years);
+        if (_objects.spiralPath) {
+          _objects.spiralPath.visible = !!vl.spiral;
+          _objects.spiralGroup.add(_objects.spiralPath);
+        }
+      }
+    }
+
+    // ── Recurrence links ────────────────────────────────────────────
+    if (_objects.recurrenceGroup) {
+      _objects.recurrenceGroup.visible = !!(vl.recurrence && !_isMobileWidth());
+      if (vl.recurrence && !_isMobileWidth()) {
+        _buildRecurrenceLinks(spiral);
+      }
+    }
+
+    // ── Today marker positioning ────────────────────────────────────
+    const showToday = true;
+    if (_objects.todayMarker) {
+      const angle = model.currentPatternAngle != null ? model.currentPatternAngle : model.patternAngle;
+      const { x, z } = angleToXZ(angle, mat.SIZES.patternRing);
+      _objects.todayMarker.position.set(x, 0.005, z);
+      _objects.todayMarker.visible = showToday;
+
+      if (_objects.todayHalo) {
+        _objects.todayHalo.position.set(x, 0.002, z);
+        _objects.todayHalo.visible = showToday;
+      }
+
+      if (_objects.todayLineGroup) {
+        while (_objects.todayLineGroup.children.length) {
+          _objects.todayLineGroup.remove(_objects.todayLineGroup.children[0]);
+        }
+        if (showToday) {
+          const pts = [new _THREE.Vector3(0, 0, 0), new _THREE.Vector3(x, 0.005, z)];
+          const geo = new _THREE.BufferGeometry().setFromPoints(pts);
+          const lineMat = new _THREE.LineDashedMaterial({
+            color:       mat.COLORS.todayLine,
+            transparent: true,
+            opacity:     mat.OPACITY.todayLine,
+            dashSize:    0.04,
+            gapSize:     0.025,
+            depthWrite:  false,
+          });
+          const line = new _THREE.Line(geo, lineMat);
+          line.computeLineDistances();
+          line.name = "todayCenterLine";
+          _objects.todayLineGroup.add(line);
+        }
+      }
+    }
+
+    if (_objects.todayHalo?.material) {
+      _objects.todayHalo.material.emissiveIntensity = mat.EMISSIVE.todayHalo;
+      _objects.todayHalo.material.opacity = mat.OPACITY.todayHalo;
+    }
+    if (_objects.todayMarker?.material) {
+      _objects.todayMarker.material.emissiveIntensity = mat.EMISSIVE.today;
+    }
+    if (_objects.todayLineGroup) {
+      _objects.todayLineGroup.children.forEach(c => {
+        if (c.material) {
+          c.material.opacity = mat.OPACITY.todayLine;
+          c.material.dashSize = 0.04;
+          c.material.gapSize = 0.025;
+        }
+      });
+    }
+
+    // ── Mode-specific layer overrides ───────────────────────────────
+    if (_viewMode === "today") {
+      if (_objects.spiralPath)        _objects.spiralPath.visible = false;
+      if (_objects.recurrenceGroup)   _objects.recurrenceGroup.visible = false;
+      // Boost Today halo and marker for emphasis
+      if (_objects.todayHalo?.material) {
+        _objects.todayHalo.material.emissiveIntensity = 1.1;
+        _objects.todayHalo.material.opacity = 1.0;
+      }
+      if (_objects.todayMarker?.material) {
+        _objects.todayMarker.material.emissiveIntensity = 1.4;
+      }
+      // Today line: make solid for emphasis in Today mode
+      if (_objects.todayLineGroup) {
+        _objects.todayLineGroup.children.forEach(c => {
+          if (c.material) { c.material.opacity = 0.85; c.material.dashSize = 0.06; }
+        });
+      }
+    } else if (_viewMode === "passage") {
+      if (_objects.spiralPath)        _objects.spiralPath.visible = false;
+    } else if (_viewMode === "pattern") {
+      if (_objects.lunarMarker) _objects.lunarMarker.visible = false;
+      if (_objects.solarAxis)   _objects.solarAxis.visible   = false;
+      if (_objects.seasonMarkers) _objects.seasonMarkers.visible = false;
+      if (_objects.spiralPath) _objects.spiralPath.visible = false;
+    }
+
+    // ── Active Moon sector highlight ────────────────────────────────
+    if (_objects.activeMoonGroup) {
+      while (_objects.activeMoonGroup.children.length) {
+        _objects.activeMoonGroup.remove(_objects.activeMoonGroup.children[0]);
+      }
+      const tp = model.todayPatternPosition;
+      const activeMoon = tp ? (tp.moon || 1) - 1 : (model.sourceRecord?.equinox?.patternPosition?.moon || 1) - 1;
+      const r = mat.SIZES.patternRing;
+      const sectorStart = (activeMoon / 13) * 360;
+      const sectorEnd   = ((activeMoon + 1) / 13) * 360;
+      const steps = 32;
+      const innerR = r * 0.82;
+      const outerR = r * 0.98;
+      const shape = new _THREE.Shape();
+      for (let i = 0; i <= steps; i++) {
+        const a = sectorStart + (i / steps) * (sectorEnd - sectorStart);
+        const { x, z } = angleToXZ(a, outerR);
+        if (i === 0) shape.moveTo(x, z);
+        else shape.lineTo(x, z);
+      }
+      for (let i = steps; i >= 0; i--) {
+        const a = sectorStart + (i / steps) * (sectorEnd - sectorStart);
+        const { x, z } = angleToXZ(a, innerR);
+        shape.lineTo(x, z);
+      }
+      shape.closePath();
+      const geo = new _THREE.ShapeGeometry(shape);
+      geo.rotateX(Math.PI / 2);
+      const sectorMat = new _THREE.MeshBasicMaterial({
+        color:       mat.COLORS.moonHighlight,
+        transparent: true,
+        opacity:     mat.OPACITY.moonHighlight,
+        depthWrite:  false,
+        side:        _THREE.DoubleSide,
+      });
+      const sector = new _THREE.Mesh(geo, sectorMat);
+      sector.name = "activeMoonSector";
+      _objects.activeMoonGroup.add(sector);
+    }
+
+    // ── Active day node highlight ───────────────────────────────────
+    if (_objects.activeDayNode) {
+      const tp = model.todayPatternPosition;
+      if (vl.pattern && tp && tp.moon != null && tp.day != null) {
+        const moonIdx = tp.moon - 1;
+        const dayIdx  = tp.day  - 1;
+        const angle = globalThis.LivingTimeSphereModel.dayAngleWithinMoon(moonIdx, dayIdx);
+        const { x, z } = angleToXZ(angle, mat.SIZES.patternRing);
+        _objects.activeDayNode.position.set(x, 0.008, z);
+        _objects.activeDayNode.visible = true;
+      } else {
+        _objects.activeDayNode.visible = false;
+      }
+    }
+
+    globalThis.LivingTimeSphereAnimation.markDirty();
+  }
+
+  function _isMobileWidth() {
+    return typeof window !== "undefined" && window.innerWidth < 480;
+  }
+
+  function _buildRecurrenceLinks(spiral) {
+    if (!spiral?.years || !_objects.recurrenceGroup) return;
+    const THREE = _THREE;
+    const mat   = globalThis.LivingTimeSphereM;
+
+    // Clear old links
+    while (_objects.recurrenceGroup.children.length) {
+      _objects.recurrenceGroup.remove(_objects.recurrenceGroup.children[0]);
+    }
+
+    // Inspect recurrence values from source records
+    for (let i = 0; i < spiral.years.length; i++) {
+      for (let j = i + 1; j < spiral.years.length; j++) {
+        const a = spiral.years[i];
+        const b = spiral.years[j];
+        // Only link if passage duration is within 3 hours
+        const diff = Math.abs(a.passageDurationDays - b.passageDurationDays);
+        if (diff > 0.125) continue;
+
+        const rA  = mat.SIZES.spiralInner + (mat.SIZES.spiralOuter - mat.SIZES.spiralInner) * a.yearSpiralRadius;
+        const rB  = mat.SIZES.spiralInner + (mat.SIZES.spiralOuter - mat.SIZES.spiralInner) * b.yearSpiralRadius;
+        const pA  = angleToXZ(a.yearSpiralAngle % 360, rA);
+        const pB  = angleToXZ(b.yearSpiralAngle % 360, rB);
+        const yA  = (a.yearSpiralRadius - 0.5) * 0.25;
+        const yB  = (b.yearSpiralRadius - 0.5) * 0.25;
+
+        const pts = [new THREE.Vector3(pA.x, yA, pA.z), new THREE.Vector3(pB.x, yB, pB.z)];
+        const geo = new THREE.BufferGeometry().setFromPoints(pts);
+        const strength = Math.max(0.1, 1 - diff / 0.125);
+        const m   = new THREE.LineBasicMaterial({
+          color:       mat.COLORS.recurrence,
+          transparent: true,
+          opacity:     mat.OPACITY.recurrence * strength,
+          depthWrite:  false,
+        });
+        _objects.recurrenceGroup.add(new THREE.Line(geo, m));
+      }
+    }
+  }
+
+  // ── Frame render ──────────────────────────────────────────────────
+
+  function render(nowMs) {
+    if (!_renderer || !_scene || !_camera) return;
+
+    const breathVal = globalThis.LivingTimeSphereAnimation.breathValue();
+    const flowVal   = globalThis.LivingTimeSphereAnimation.flowValue();
+
+    // Breathing core
+    if (_objects.coreGlow && _quality?.breathing) {
+      globalThis.LivingTimeSphereEffects.updateCoreGlow(_objects.coreGlow, breathVal);
+    }
+
+    // Passage flow: subtle emissive pulse on the arc
+    if (_objects.passageArc && _objects.passageArc.material && _quality?.passageFlow) {
+      const mat = globalThis.LivingTimeSphereM;
+      _objects.passageArc.material.emissiveIntensity = mat.EMISSIVE.passage + flowVal * 0.3;
+    }
+
+    // Selection ring gentle scale pulse
+    if (_objects.selectionRing?.visible) {
+      _objects.selectionRing.scale.setScalar(1.0 + breathVal * 0.08);
+    }
+
+    // Update sphere-anchored Moon labels
+    _updateMoonLabels(_viewMode);
+
+    _renderer.render(_scene, _camera);
+  }
+
+  // ── Init / teardown ────────────────────────────────────────────────
+
+  async function init({ container, model, spiral, quality, selectedYear, visibleLayers, viewMode, reducedMotion, onYearSelect, onMarkerSelect }) {
+    // Guard against concurrent or duplicate init calls.
+    if (_initializing || _initialized) {
+      return { success: false, reason: "already-running" };
+    }
+    _initializing = true;
+
+    try {
+      assertDeps();
+
+      if (!globalThis.LivingTimeSphereEffects.detectWebGl()) {
+        _lastInitError = { reason: "webgl-unavailable", detail: "WebGL context creation failed in this environment." };
+        return { success: false, reason: "webgl-unavailable", detail: _lastInitError.detail };
+      }
+      if (!quality) {
+        _lastInitError = { reason: "quality-svgonly", detail: "Quality preset resolved to SVG-only." };
+        return { success: false, reason: "quality-svgonly" };
+      }
+
+      try {
+        await loadThreeJs();
+      } catch (err) {
+        _lastInitError = { reason: "three-load-failed", detail: String(err) };
+        return { success: false, reason: "three-load-failed", detail: String(err) };
+      }
+
+      const THREE = _THREE;
+      _container = container;
+
+      // ── Canvas ────────────────────────────────────────────────────
+      _canvas = document.createElement("canvas");
+      _canvas.className = "living-time-sphere-3d-canvas";
+      _canvas.setAttribute("role", "img");
+      _canvas.setAttribute("aria-label", "Living Time Sphere 3D view");
+      _canvas.setAttribute("aria-describedby", "sphere-text-model");
+      // touch-action: pan-y by default — vertical page scroll preserved.
+      _canvas.style.touchAction = "pan-y";
+      container.appendChild(_canvas);
+      _ensureFloatingLabel(container);
+
+      // ── Renderer ──────────────────────────────────────────────────
+      const pixelRatio = Math.min(
+        quality.pixelRatioMax || 2,
+        typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1
+      );
+      try {
+        _renderer = new THREE.WebGLRenderer({
+          canvas:    _canvas,
+          antialias: quality.antialias !== false,
+          alpha:     false,
+          powerPreference: quality === globalThis.LivingTimeSphereM?.QUALITY_PRESETS?.lowpower ? "low-power" : "default",
+        });
+      } catch (err) {
+        // WebGLRenderer constructor can throw if context creation fails.
+        _lastInitError = { reason: "webgl-context-failed", detail: String(err) };
+        return { success: false, reason: "webgl-context-failed", detail: String(err) };
+      }
+      _renderer.setPixelRatio(pixelRatio);
+      _quality = quality;
+
+      // ── Camera ────────────────────────────────────────────────────
+      // Wait one rAF to ensure the container has stable layout dimensions.
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      const rect = container.getBoundingClientRect();
+      const w    = Math.max(rect.width  || 320, 100);
+      const h    = Math.max(rect.height || 320, 100);
+      _renderer.setSize(w, h);
+
+      _camera = globalThis.LivingTimeSphereCamera.create(THREE, w, h);
+      globalThis.LivingTimeSphereCamera.setMode(viewMode || "today", performance.now(), false);
+
+      // ── Build scene ───────────────────────────────────────────────
+      buildScene();
+
+      // ── Load initial data ─────────────────────────────────────────
+      updateScene(model, spiral, selectedYear, visibleLayers, viewMode);
+
+      // ── Animation ─────────────────────────────────────────────────
+      globalThis.LivingTimeSphereAnimation.applyPreset(quality);
+      globalThis.LivingTimeSphereAnimation.setReducedMotion(reducedMotion || _prefersReducedMotion());
+      globalThis.LivingTimeSphereAnimation.attachPageVisibility();
+      globalThis.LivingTimeSphereAnimation.attachIntersection(_canvas);
+
+      // Start idle drift if quality allows
+      if (quality.idleDrift && !_prefersReducedMotion()) {
+        globalThis.LivingTimeSphereCamera.startDrift(performance.now());
+      }
+
+      globalThis.LivingTimeSphereAnimation.start(render);
+      globalThis.LivingTimeSphereAnimation.markDirty();
+
+      // ── Pointer interaction ────────────────────────────────────────
+      _wirePointerEvents(container, onYearSelect, onMarkerSelect);
+
+      // Build Moon label anchors and set up DOM elements
+      _buildMoonAnchors();
+      _setupMoonLabelEls(container);
+
+      // ── Resize ────────────────────────────────────────────────────
+      _wireResize(container);
+
+      _initialized = true;
+      _lastInitError = null;
+      return { success: true };
+
+    } catch (err) {
+      // Unexpected error: clean up any partially-created canvas so it does
+      // not appear as a broken/blank element in the DOM.
+      if (_canvas && _canvas.parentNode) {
+        _canvas.parentNode.removeChild(_canvas);
+      }
+      _canvas    = null;
+      _renderer  = null;
+      _scene     = null;
+      _camera    = null;
+      _initialized = false;
+      _lastInitError = { reason: "init-exception", detail: String(err) };
+      return { success: false, reason: "init-exception", detail: String(err) };
+    } finally {
+      _initializing = false;
+    }
+  }
+
+  function _prefersReducedMotion() {
+    try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; }
+  }
+
+  function _wirePointerEvents(container, onYearSelect, onMarkerSelect) {
+    let pinchActive   = false;
+    let pinchDist0    = 0;
+    let pointerCache  = new Map();
+    let interactMode  = false;    // on small screens, require explicit engage
+
+    function enterInteractMode() {
+      interactMode = true;
+      if (_canvas) _canvas.style.touchAction = "none";
+      container.dispatchEvent(new CustomEvent("sphere:interact-start", { bubbles: true }));
+    }
+    function exitInteractMode() {
+      interactMode = false;
+      if (_canvas) _canvas.style.touchAction = "pan-y";
+      globalThis.LivingTimeSphereCamera.onPointerUp();
+      container.dispatchEvent(new CustomEvent("sphere:interact-end", { bubbles: true }));
+    }
+
+    _canvas.addEventListener("pointerdown", e => {
+      _hideFloatingLabel();
+      pointerCache.set(e.pointerId, e);
+
+      if (pointerCache.size === 2) {
+        // Pinch start
+        const pts = [...pointerCache.values()];
+        const d = Math.hypot(pts[0].clientX - pts[1].clientX, pts[0].clientY - pts[1].clientY);
+        globalThis.LivingTimeSphereCamera.onPinchStart(d);
+        pinchActive = true;
+        return;
+      }
+
+      // On narrow screens (< 480 px), require deliberate interact mode
+      if (window.innerWidth < 480 && !interactMode) return;
+
+      enterInteractMode();
+      globalThis.LivingTimeSphereCamera.onPointerDown(e.clientX, e.clientY);
+      _canvas.setPointerCapture(e.pointerId);
+      globalThis.LivingTimeSphereAnimation.markDirty();
+      e.preventDefault();
+    });
+
+    _canvas.addEventListener("pointermove", e => {
+      pointerCache.set(e.pointerId, e);
+
+      if (pointerCache.size === 2) {
+        const pts = [...pointerCache.values()];
+        const d = Math.hypot(pts[0].clientX - pts[1].clientX, pts[0].clientY - pts[1].clientY);
+        globalThis.LivingTimeSphereCamera.onPinchMove(d);
+        globalThis.LivingTimeSphereAnimation.markDirty();
+        return;
+      }
+
+      if (!interactMode) return;
+      const moved = globalThis.LivingTimeSphereCamera.onPointerMove(e.clientX, e.clientY);
+      if (moved) {
+        globalThis.LivingTimeSphereAnimation.markDirty();
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    _canvas.addEventListener("pointerup", e => {
+      pointerCache.delete(e.pointerId);
+      if (pinchActive && pointerCache.size < 2) {
+        globalThis.LivingTimeSphereCamera.onPinchEnd();
+        pinchActive = false;
+      }
+      if (pointerCache.size === 0 && interactMode) {
+        globalThis.LivingTimeSphereCamera.onPointerUp();
+        // On narrow screens, exit interact mode on finger up (re-enables page scroll)
+        if (window.innerWidth < 480) exitInteractMode();
+      }
+      // Restart drift after interaction ends
+      if (_quality?.idleDrift && !_prefersReducedMotion()) {
+        globalThis.LivingTimeSphereCamera.startDrift(performance.now());
+      }
+    });
+
+    _canvas.addEventListener("pointercancel", e => {
+      pointerCache.delete(e.pointerId);
+      globalThis.LivingTimeSphereCamera.onPointerUp();
+      if (window.innerWidth < 480) exitInteractMode();
+    });
+
+    // Wheel zoom (desktop)
+    _canvas.addEventListener("wheel", e => {
+      globalThis.LivingTimeSphereCamera.onWheel(e);
+      globalThis.LivingTimeSphereAnimation.markDirty();
+      e.preventDefault();
+    }, { passive: false });
+
+    // Raycasting for marker selection on click
+    let _clickStart = { x: 0, y: 0 };
+    _canvas.addEventListener("pointerdown", e => {
+      if (pointerCache.size === 1) { _clickStart = { x: e.clientX, y: e.clientY }; }
+    });
+    _canvas.addEventListener("pointerup", e => {
+      const dx = Math.abs(e.clientX - _clickStart.x);
+      const dy = Math.abs(e.clientY - _clickStart.y);
+      if (dx < 6 && dy < 6) _handleClick(e, onYearSelect, onMarkerSelect);
+    });
+  }
+
+  function _getMarkerLabel(type) {
+    if (!_model) return "";
+    const tp = _model.todayPatternPosition;
+    if (type === "today") {
+      if (tp && tp.moon != null) {
+        return `Today\nMoon ${tp.moon} · Day ${tp.day}\nDay ${tp.dayOfPatternYear}/364`;
+      }
+      return "Today";
+    }
+    if (type === "equinox") {
+      return `Equinox Gate\n${_model.year} March Equinox\nAngle ${_model.passageStartAngle?.toFixed(1)}°`;
+    }
+    if (type === "yearGate") {
+      return "Year Gate\nMoon 1 · Day 1\nAngle 0°";
+    }
+    if (type === "lunar") {
+      return `Lunar Position\n${_model.markers?.lunarMarker?.label || "Lunar marker"}\n${_model.markers?.lunarMarker?.detail || ""}`;
+    }
+    return type;
+  }
+
+  function _ensureFloatingLabel(container) {
+    if (!_floatingLabelEl) {
+      _floatingLabelEl = document.createElement("div");
+      _floatingLabelEl.className = "sphere-floating-label";
+      _floatingLabelEl.style.cssText = "position:absolute;pointer-events:none;display:none;z-index:10;";
+      container.style.position = "relative";
+      container.appendChild(_floatingLabelEl);
+    }
+  }
+
+  function _showFloatingLabel(worldPos, text, clientX, clientY) {
+    if (!_floatingLabelEl || !_camera || !_canvas) return;
+    const rect = _canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    _floatingLabelEl.innerHTML = text.replace(/\n/g, "<br>");
+    _floatingLabelEl.style.left = `${x + 12}px`;
+    _floatingLabelEl.style.top  = `${y - 12}px`;
+    _floatingLabelEl.style.display = "block";
+    if (_floatingTimeout) clearTimeout(_floatingTimeout);
+    _floatingTimeout = setTimeout(() => {
+      if (_floatingLabelEl) _floatingLabelEl.style.display = "none";
+    }, 4000);
+  }
+
+  function _hideFloatingLabel() {
+    if (_floatingLabelEl) _floatingLabelEl.style.display = "none";
+    if (_floatingTimeout) clearTimeout(_floatingTimeout);
+  }
+
+  function _handleClick(e, onYearSelect, onMarkerSelect) {
+    if (!_renderer || !_scene || !_camera || !_THREE) return;
+    const THREE = _THREE;
+    const rect  = _canvas.getBoundingClientRect();
+    const mouse = new THREE.Vector2(
+      ((e.clientX - rect.left) / rect.width)  * 2 - 1,
+      -((e.clientY - rect.top)  / rect.height) * 2 + 1
+    );
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse, _camera);
+
+    const namedMarkers = [
+      _objects.todayMarker, _objects.equinoxGate, _objects.yearGate, _objects.lunarMarker
+    ].filter(Boolean).filter(m => m.visible);
+    const namedHits = raycaster.intersectObjects(namedMarkers);
+    if (namedHits.length > 0) {
+      const obj = namedHits[0].object;
+      const type = obj.name === "todayMarker" ? "today"
+                 : obj.name === "equinoxGate" ? "equinox"
+                 : obj.name === "yearGate"    ? "yearGate"
+                 : obj.name === "lunarMarker" ? "lunar"
+                 : "unknown";
+      _showFloatingLabel(obj.position, _getMarkerLabel(type), e.clientX, e.clientY);
+      if (onMarkerSelect) onMarkerSelect({ type, year: _model?.year });
+      return;
+    }
+
+    const markers = (_objects.spiralMarkers || []).filter(m => m.visible);
+    const hits    = raycaster.intersectObjects(markers);
+    if (hits.length > 0) {
+      const year = hits[0].object.userData.year;
+      if (year && onYearSelect) onYearSelect(year);
+      if (year && onMarkerSelect) onMarkerSelect({ type: "year", year });
+      _showFloatingLabel(hits[0].object.position, `${year}`, e.clientX, e.clientY);
+    }
+  }
+
+  function _wireResize(container) {
+    if (typeof ResizeObserver === "undefined") return;
+    new ResizeObserver(() => {
+      if (!_renderer || !_canvas || !_camera) return;
+      const rect = container.getBoundingClientRect();
+      const w    = Math.max(rect.width  || 320, 100);
+      const h    = Math.max(rect.height || 320, 100);
+      _renderer.setSize(w, h);
+      globalThis.LivingTimeSphereCamera.resize(w, h);
+      globalThis.LivingTimeSphereAnimation.markDirty();
+    }).observe(container);
+  }
+
+  // ── Public API ────────────────────────────────────────────────────
+
+  function refresh(model, spiral, selectedYear, visibleLayers, viewMode) {
+    if (!_initialized) return;
+    updateScene(model, spiral, selectedYear, visibleLayers, viewMode);
+    globalThis.LivingTimeSphereAnimation.markDirty();
+  }
+
+  function setQuality(preset) {
+    if (!_initialized || !preset) return;
+    _quality = preset;
+    globalThis.LivingTimeSphereAnimation.applyPreset(preset);
+    if (_renderer) _renderer.setPixelRatio(Math.min(preset.pixelRatioMax || 2, devicePixelRatio || 1));
+    if (preset.idleDrift && !_prefersReducedMotion()) {
+      globalThis.LivingTimeSphereCamera.startDrift(performance.now());
+    } else {
+      globalThis.LivingTimeSphereCamera.stopDrift();
+    }
+    if (_objects.starField) _objects.starField.visible = preset.starCount > 0;
+    if (_objects.hazeShell) _objects.hazeShell.visible = preset.glow !== false;
+    globalThis.LivingTimeSphereAnimation.markDirty();
+  }
+
+  function requestSingleRender() {
+    globalThis.LivingTimeSphereAnimation.requestRender();
+  }
+
+  function resetView() {
+    globalThis.LivingTimeSphereCamera.resetView(performance.now());
+    globalThis.LivingTimeSphereAnimation.markDirty();
+  }
+
+  function setMode(mode) {
+    globalThis.LivingTimeSphereCamera.setMode(mode, performance.now(), true);
+    globalThis.LivingTimeSphereAnimation.markDirty();
+  }
+
+  function teardown() {
+    globalThis.LivingTimeSphereAnimation.stop();
+    globalThis.LivingTimeSphereAnimation.detachIntersection();
+    if (_renderer) { _renderer.dispose(); _renderer = null; }
+    if (_canvas && _canvas.parentNode) _canvas.parentNode.removeChild(_canvas);
+    _canvas = null;
+    _hideFloatingLabel();
+    if (_floatingLabelEl && _floatingLabelEl.parentNode) _floatingLabelEl.parentNode.removeChild(_floatingLabelEl);
+    _floatingLabelEl = null;
+    if (_moonLabelEls) _moonLabelEls.forEach(el => { if (el) el.style.display = "none"; });
+    _moonLabelEls = null;
+    _moonLabelContainer = null;
+    _moonAnchors.length = 0;
+    _scene = null;
+    _camera = null;
+    _initialized  = false;
+    _initializing = false;
+    _loadPromise  = null; // allow Three.js reload after teardown
+    _THREE        = null;
+    _threeSource  = null;
+    for (const key of Object.keys(_objects)) delete _objects[key];
+  }
+
+  function isInitialized() { return _initialized; }
+  function isInitializing() { return _initializing; }
+
+  function getLastInitError() { return _lastInitError; }
+
+  function getDiagnostics() {
+    let webglAvail = false;
+    let webgl2Avail = false;
+    try {
+      const c = document.createElement("canvas");
+      webglAvail  = !!(c.getContext("webgl") || c.getContext("experimental-webgl"));
+      webgl2Avail = !!(c.getContext("webgl2"));
+    } catch { /* ignore */ }
+    const canvasW = _canvas ? (_canvas.width  || 0) : 0;
+    const canvasH = _canvas ? (_canvas.height || 0) : 0;
+    return {
+      requestedRenderer: "3d",
+      activeRenderer:    _initialized ? "webgl" : "none",
+      initialized:       _initialized,
+      initializing:      _initializing,
+      webglAvailable:    webglAvail,
+      webgl2Available:   webgl2Avail,
+      threeVersion:      THREE_VERSION,
+      threeLoaded:       !!_THREE,
+      moduleSource:      _threeSource || "none",
+      localModuleUrl:    _localThreeUrl(),
+      canvasWidth:       canvasW,
+      canvasHeight:      canvasH,
+      devicePixelRatio:  typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1,
+      lastInitError:     _lastInitError,
+    };
+  }
+
+  function exportPng({ format } = {}) {
+    if (!_renderer) return null;
+    // Force a render first
+    render(performance.now());
+    return _canvas?.toDataURL("image/png") || null;
+  }
+
+  globalThis.LivingTimeSphereRenderer3d = Object.freeze({
+    init,
+    refresh,
+    setQuality,
+    requestSingleRender,
+    resetView,
+    setMode,
+    teardown,
+    isInitialized,
+    isInitializing,
+    getLastInitError,
+    getDiagnostics,
+    exportPng,
+    THREE_VERSION,
+    THREE_LOCAL_REL,
+  });
+})();

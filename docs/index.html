@@ -340,11 +340,67 @@
       </div>
     </section>
 
+    <!-- Living Observatory Today — Phase 03 integration (lazy, no 3D on startup) -->
+    <section class="section-shell sphere-observatory-section" id="home-sphere-observatory"
+             aria-labelledby="home-sphere-title">
+      <div class="sphere-observatory-inner">
+        <header class="sphere-observatory-header">
+          <p class="eyebrow">Living Time Observatory</p>
+          <h2 id="home-sphere-title">Today in the Living Sphere</h2>
+          <p class="sphere-observatory-desc">Fixed Pattern Time at the center. Moving astronomical cycles around it.</p>
+        </header>
+
+        <div class="sphere-observatory-layout">
+          <!-- Compact sphere preview (SVG, no 3D) -->
+          <div class="sphere-observatory-preview-wrap" aria-hidden="true">
+            <div id="home-sphere-today-preview" class="sphere-observatory-preview"></div>
+          </div>
+
+          <!-- Today data -->
+          <div class="sphere-observatory-data">
+            <dl class="sphere-today-grid">
+              <dt>Pattern</dt>
+              <dd><span id="home-sphere-today-moon">—</span> · Day <span id="home-sphere-today-moon-day">—</span></dd>
+
+              <dt>Moon</dt>
+              <dd id="home-sphere-today-moon-name">—</dd>
+
+              <dt>Day of 364</dt>
+              <dd id="home-sphere-today-day-of-year">—</dd>
+
+              <dt>Week Gate</dt>
+              <dd id="home-sphere-today-week-gate">—</dd>
+
+              <dt>Lunar phase</dt>
+              <dd id="home-sphere-today-lunar">—</dd>
+
+              <dt>Equinox Passage</dt>
+              <dd id="home-sphere-today-passage">—</dd>
+            </dl>
+
+            <p class="sphere-today-orientation" id="home-sphere-today-orientation">—</p>
+
+            <!-- Accessible description (always visible) -->
+            <p class="visually-hidden" id="home-sphere-today-accessible" aria-live="polite">Loading today's sphere position…</p>
+
+            <div class="sphere-observatory-actions">
+              <a id="home-sphere-today-open-link"
+                 class="btn primary"
+                 href="./living-time-sphere.html?view=today&source=home">
+                Enter Today's Sphere
+              </a>
+              <a class="btn" href="./moons.html">Open 13 Moons</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="section-shell codex-live-grid" aria-label="Living Codex panels">
       <article class="card today-codex-panel">
         <p class="eyebrow">Today in the Codex</p>
         <h2 class="pulse-active" data-codex-today-title>Today in the Codex</h2>
-        <p class="today-codex-meta" data-codex-today-layer>Open today’s moon, breathe once, and record what changed.</p>
+        <p class="today-codex-meta" data-codex-today-layer>Open today's moon, breathe once, and record what changed.</p>
 
         <!-- Living Day calendar summary — shown when JS computes moon state -->
         <div class="codex-calendar-summary" data-codex-calendar-summary hidden>
@@ -843,5 +899,84 @@
     </nav>
     <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
   </footer>
+
+  <!-- Sphere observatory — lazy-loaded after critical content; no 3D engine on homepage -->
+  <script>
+    (function() {
+      "use strict";
+      var SPHERE_SCRIPTS = [
+        "assets/js/calendar/pattern-calendar-version.js",
+        "assets/js/calendar/pattern-calendar-data.js",
+        "assets/js/calendar/pattern-calendar-format.js",
+        "assets/js/calendar/pattern-calendar-boundary.js",
+        "assets/js/calendar/pattern-calendar.js",
+        "assets/js/astronomy/astronomy-version.js",
+        "assets/js/astronomy/astronomy-sources.js",
+        "assets/js/astronomy/timezone-tools.js",
+        "assets/js/astronomy/equinox-reference-data.js",
+        "assets/js/astronomy/lunar-at-equinox.js",
+        "assets/js/astronomy/equinox-engine.js",
+        "assets/js/equinox/equinox-passage-format.js",
+        "assets/js/equinox/equinox-passage-engine.js",
+        "assets/js/equinox/equinox-passage-data.js",
+        "assets/js/alignment/alignment-version.js",
+        "assets/js/alignment/alignment-ledger-engine.js",
+        "assets/js/alignment/alignment-ledger-data.js",
+        "assets/js/sphere/living-time-sphere-version.js",
+        "assets/js/sphere/living-time-sphere-model.js",
+        "assets/js/sphere/living-time-sphere-layout.js",
+        "assets/js/sphere/living-time-sphere-renderer-svg.js",
+        "assets/js/sphere/living-time-sphere-today.js"
+      ];
+
+      var loaded = false;
+
+      function loadSphereScripts(onReady) {
+        if (loaded) { onReady(); return; }
+        var remaining = SPHERE_SCRIPTS.length;
+        function onLoad() { if (--remaining === 0) { loaded = true; onReady(); } }
+        SPHERE_SCRIPTS.forEach(function(src) {
+          // Check if already in DOM (e.g. added by living-codex)
+          if (document.querySelector('script[src*="' + src.split("/").pop() + '"]')) {
+            onLoad(); return;
+          }
+          var s = document.createElement("script");
+          s.src = src;
+          s.async = false;  // sequential so deps load in order
+          s.onload = onLoad;
+          s.onerror = onLoad; // continue even if one fails
+          document.body.appendChild(s);
+        });
+      }
+
+      function initObservatory() {
+        var root = document.getElementById("home-sphere-observatory");
+        if (!root || !globalThis.LivingTimeSphereTodayCard) return;
+        globalThis.LivingTimeSphereTodayCard.render(root, { idPrefix: "home-", source: "home" });
+      }
+
+      // Use IntersectionObserver for lazy initialization
+      var target = document.getElementById("home-sphere-observatory");
+      if (!target) return;
+
+      if (!("IntersectionObserver" in window)) {
+        // Fallback: load on DOMContentLoaded
+        document.addEventListener("DOMContentLoaded", function() {
+          loadSphereScripts(initObservatory);
+        });
+        return;
+      }
+
+      var io = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting) {
+          io.disconnect();
+          loadSphereScripts(function() {
+            requestAnimationFrame(initObservatory);
+          });
+        }
+      }, { rootMargin: "200px" });
+      io.observe(target);
+    })();
+  </script>
 </body>
 </html>

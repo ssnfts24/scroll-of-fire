@@ -136,6 +136,7 @@
   >
   <link rel="stylesheet" href="assets/css/pwa.css?v=20260722-4">
   <link rel="stylesheet" href="assets/css/equinox-passage.css?v=20260722-4">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260723-1">
 
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/share-day.css?v=1">
@@ -621,6 +622,60 @@
           </div>
         </section>
 
+        <!-- Phase 3: Living Time Sphere — Today card -->
+        <section id="moons-sphere-today-card" class="card sphere-today-card" aria-labelledby="moonsSphereTitle">
+          <p class="eyebrow">Observatory Layer</p>
+          <h2 id="moonsSphereTitle" class="sphere-compact-card-title">Living Time Sphere — Today</h2>
+
+          <div class="sphere-today-layout">
+            <!-- Compact preview -->
+            <div id="moons-sphere-today-preview" class="sphere-today-preview" aria-hidden="true"></div>
+
+            <!-- Data grid -->
+            <div class="sphere-today-data">
+              <dl class="sphere-today-grid">
+                <dt>Pattern</dt>
+                <dd><span id="moons-sphere-today-moon">—</span> · Day <span id="moons-sphere-today-moon-day">—</span></dd>
+
+                <dt>Moon name</dt>
+                <dd id="moons-sphere-today-moon-name">—</dd>
+
+                <dt>Day of 364</dt>
+                <dd id="moons-sphere-today-day-of-year">—</dd>
+
+                <dt>Week Gate</dt>
+                <dd id="moons-sphere-today-week-gate">—</dd>
+
+                <dt>Lunar phase</dt>
+                <dd id="moons-sphere-today-lunar">—</dd>
+
+                <dt>Passage</dt>
+                <dd id="moons-sphere-today-passage">—</dd>
+
+                <dt>Boundary</dt>
+                <dd id="moons-sphere-today-boundary">—</dd>
+              </dl>
+
+              <p class="sphere-today-orientation" id="moons-sphere-today-orientation">—</p>
+            </div>
+          </div>
+
+          <!-- Accessible text equivalent -->
+          <details class="sphere-today-accessible-wrap">
+            <summary class="sphere-today-accessible-toggle">Text description</summary>
+            <pre id="moons-sphere-today-accessible" class="sphere-today-accessible">—</pre>
+          </details>
+
+          <div class="btnrow">
+            <a id="moons-sphere-today-open-link"
+               class="lab-btn sphere-compact-open"
+               href="./living-time-sphere.html?view=today&source=moons">
+              Enter Today's Sphere ↗
+            </a>
+            <a class="lab-btn ghost" href="./alignment-ledger.html?source=moons">Alignment Ledger</a>
+          </div>
+        </section>
+
         <!-- Phase 2: Codex Memory continuity card for Today -->
         <section class="card codex-memory-today-card" id="moonsMemoryCard" hidden aria-label="Your Codex continuation">
           <p class="card-label">Your Path Today</p>
@@ -936,6 +991,18 @@
           <p id="equinoxCompactPattern" class="meta">—</p>
           <div class="btnrow">
             <a class="lab-btn ghost" href="./equinox-passage.html?source=equinox-passage" id="equinoxCompactLinkText">Open Equinox Passage</a>
+          </div>
+        </section>
+
+        <section id="sphereCompactCard" class="card sphere-compact-card" aria-labelledby="sphereCompactTitle">
+          <p class="eyebrow">Observatory Layer</p>
+          <h2 id="sphereCompactTitle" class="sphere-compact-card-title">Living Time Sphere</h2>
+          <p id="sphereCompactDate" class="meta">—</p>
+          <p id="sphereCompactPassage" class="meta">—</p>
+          <div id="sphere-compact-preview" class="sphere-compact-preview" aria-hidden="true"></div>
+          <div class="btnrow">
+            <a class="lab-btn ghost sphere-compact-open" href="./living-time-sphere.html?source=moons" id="sphereCompactLink">Open Living Time Sphere</a>
+            <a class="lab-btn ghost" href="./alignment-ledger.html?source=moons">Alignment Ledger</a>
           </div>
         </section>
 
@@ -2533,6 +2600,17 @@
   <script src="assets/js/equinox/equinox-passage-visualization-data.js?v=20260722-4"></script>
   <script src="assets/js/equinox/equinox-passage-ui.js?v=20260722-4"></script>
 
+  <!-- Alignment Ledger and Living Time Sphere (Phase 03) -->
+  <script src="assets/js/alignment/alignment-version.js?v=20260723-1"></script>
+  <script src="assets/js/alignment/alignment-ledger-engine.js?v=20260723-1"></script>
+  <script src="assets/js/alignment/alignment-ledger-data.js?v=20260723-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-version.js?v=20260723-2"></script>
+  <script src="assets/js/sphere/living-time-sphere-model.js?v=20260723-2"></script>
+  <script src="assets/js/sphere/living-time-sphere-layout.js?v=20260723-2"></script>
+  <script src="assets/js/sphere/living-time-sphere-renderer-svg.js?v=20260723-2"></script>
+  <script src="assets/js/sphere/living-time-sphere-accessibility.js?v=20260723-2"></script>
+  <script src="assets/js/sphere/living-time-sphere-today.js?v=20260723-2"></script>
+
   <!-- Main calendar app -->
   <script src="assets/js/moons.js?v=20260722-4"></script>
 
@@ -3459,6 +3537,85 @@ Let the next step be firm.`;
         updateBoundaryUI,
         30000
       );
+    })();
+  </script>
+
+  <!-- Compact Living Time Sphere card init (Phase 03) -->
+  <script>
+    (function() {
+      "use strict";
+
+      // ── Compact sphere card (existing, secondary position) ─────────
+      function initCompactSphere() {
+        var preview = document.getElementById("sphere-compact-preview");
+        var dateEl  = document.getElementById("sphereCompactDate");
+        var passageEl = document.getElementById("sphereCompactPassage");
+        var linkEl  = document.getElementById("sphereCompactLink");
+
+        if (!preview || !globalThis.LivingTimeSphereModel || !globalThis.AlignmentLedgerData) return;
+
+        try {
+          var year = new Date().getUTCFullYear();
+          var supported = globalThis.AlignmentLedgerData.listSupportedYears();
+          if (!supported.includes(year)) year = supported[supported.length - 1];
+
+          var model  = globalThis.LivingTimeSphereModel.buildYearModel({ year: year });
+          var spiral = globalThis.LivingTimeSphereModel.buildSpiral({});
+
+          var w = preview.clientWidth  || 160;
+          var h = preview.clientHeight || 160;
+          if (w < 40) w = 160;
+          if (h < 40) h = 160;
+          var layout = globalThis.LivingTimeSphereLayout.resolveLayout({ containerWidth: w, containerHeight: h });
+          globalThis.LivingTimeSphereRendererSvg.renderInto(preview, {
+            model: model, spiral: spiral, layout: layout,
+            visibleLayers: { pattern: true, passage: true, lunar: false, solar: false, markers: false, recurrence: false, spiral: false },
+            selectedYear: year
+          });
+
+          var rec = globalThis.AlignmentLedgerData.getRecord({ year: year });
+          var pos = rec.equinox && rec.equinox.patternPosition ? rec.equinox.patternPosition : {};
+          if (dateEl) dateEl.textContent = pos.moonName ? "Moon " + pos.moon + " · Day " + pos.day : "—";
+          var offs = rec.offsets || {};
+          if (passageEl) passageEl.textContent = "Passage: " + Number(((offs.equinoxToYearGateDays || 0) * 24).toFixed(1)) + " h";
+          if (linkEl) linkEl.href = "./living-time-sphere.html?year=" + year + "&source=moons";
+        } catch (e) {
+          if (preview) preview.innerHTML = "<p class='sphere-error'>Sphere unavailable</p>";
+        }
+      }
+
+      // ── Today Sphere card (Phase 03 — Today tab, prominent placement) ──
+      function initTodaySphereCard() {
+        var root = document.getElementById("moons-sphere-today-card");
+        if (!root || !globalThis.LivingTimeSphereTodayCard) return;
+
+        // Determine current tz/boundary from page state (moons.js sets these on the DOM)
+        function currentOpts() {
+          var tz  = document.documentElement.dataset.timezone || "America/Los_Angeles";
+          var bnd = document.documentElement.dataset.dayBoundary || "sunset";
+          var sun = document.documentElement.dataset.manualSunset || "18:00";
+          return { timeZone: tz, boundaryMode: bnd, manualSunset: sun, idPrefix: "moons-", source: "moons" };
+        }
+
+        globalThis.LivingTimeSphereTodayCard.render(root, currentOpts());
+        globalThis.LivingTimeSphereTodayCard.attachAutoUpdate(root, currentOpts());
+
+        // Re-render when moons.js changes boundary/timezone
+        document.addEventListener("moons:state-change", function() {
+          globalThis.LivingTimeSphereTodayCard.render(root, currentOpts());
+        });
+      }
+
+      function init() {
+        initCompactSphere();
+        initTodaySphereCard();
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        setTimeout(init, 0);
+      }
     })();
   </script>
 </body>
