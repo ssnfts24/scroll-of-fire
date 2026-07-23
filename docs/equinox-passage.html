@@ -188,6 +188,43 @@
         <textarea id="equinoxObservationNote" class="equinox-note" placeholder="Optional personal observation note. Stored only in this browser."></textarea>
         <div class="equinox-inline-actions"><button id="equinoxSaveLocal" class="lab-btn" type="button">Save Local Record</button><span id="equinoxLocalSaveStatus" class="equinox-muted"></span></div>
       </section>
+
+      <section class="equinox-card" aria-labelledby="equinoxPhase3LinksTitle">
+        <p class="eyebrow">Observatory integration</p>
+        <h2 id="equinoxPhase3LinksTitle">Open in</h2>
+        <div class="equinox-inline-actions">
+          <a id="equinoxOpenAlignment" href="alignment-ledger.html" class="lab-btn">Alignment Ledger</a>
+          <a id="equinoxOpenSphere"    href="living-time-sphere.html" class="lab-btn ghost">Living Time Sphere</a>
+        </div>
+        <script>
+          (function() {
+            function updateObservatoryLinks() {
+              var year = document.getElementById("equinoxYear")?.value;
+              var tz   = document.getElementById("equinoxTimeZone")?.value;
+              var bnd  = document.getElementById("equinoxBoundaryMode")?.value;
+              var ss   = document.getElementById("equinoxManualSunset")?.value;
+              var alA  = document.getElementById("equinoxOpenAlignment");
+              var spA  = document.getElementById("equinoxOpenSphere");
+              if (!alA || !spA) return;
+              var alBase = alA.getAttribute("href").split("?")[0];
+              var spBase = spA.getAttribute("href").split("?")[0];
+              var q = [];
+              if (year) q.push("year=" + encodeURIComponent(year));
+              if (tz)   q.push("tz="   + encodeURIComponent(tz));
+              if (bnd)  q.push("boundary=" + encodeURIComponent(bnd));
+              if (ss)   q.push("sunset=" + encodeURIComponent(ss));
+              var qs = q.length ? "?" + q.join("&") : "";
+              alA.href = alBase + qs;
+              spA.href = spBase + qs;
+            }
+            ["equinoxYear","equinoxTimeZone","equinoxBoundaryMode","equinoxManualSunset"].forEach(function(id) {
+              var el = document.getElementById(id);
+              if (el) el.addEventListener("change", updateObservatoryLinks);
+            });
+            updateObservatoryLinks();
+          })();
+        </script>
+      </section>
     </main>
   </div>
 </body>

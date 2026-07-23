@@ -4,7 +4,11 @@
   const VALID_YEARS = new Set(
     Array.from({ length: 13 }, (_, i) => String(2014 + i))
   );
-  const VALID_MODES  = new Set(["ledger", "comparison", "recurrence", "spiral"]);
+  // Alignment page modes
+  const VALID_ALIGNMENT_MODES = new Set(["ledger", "comparison", "recurrence", "spiral"]);
+  // Sphere viewing modes
+  const VALID_SPHERE_MODES = new Set(["today", "passage", "years", "pattern"]);
+  const VALID_MODES  = new Set([...VALID_ALIGNMENT_MODES, ...VALID_SPHERE_MODES]);
   const VALID_LAYERS = new Set(["pattern", "passage", "lunar", "solar", "markers", "recurrence", "spiral"]);
 
   function normalizeYear(value) {
@@ -25,7 +29,12 @@
 
   function normalizeClock(value) {
     const s = String(value || "").trim();
-    return /^\d{2}:\d{2}$/.test(s) ? s : null;
+    const match = /^\d{2}:\d{2}$/.exec(s);
+    if (!match) return null;
+    const hour = Number(s.slice(0, 2));
+    const min  = Number(s.slice(3, 5));
+    if (hour < 0 || hour > 23 || min < 0 || min > 59) return null;
+    return s;
   }
 
   function normalizeMode(value) {

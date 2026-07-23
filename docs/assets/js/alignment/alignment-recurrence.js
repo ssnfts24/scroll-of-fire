@@ -69,7 +69,7 @@
       equinoxShiftHours: Number(equinoxShiftHours.toFixed(4)),
       closeLunar,
       lunarCycleDistance: Number(lunarDist.toFixed(6)),
-      closeSpherePos,
+      closeSpherePos: closeSphere,
       normalizedSphereDistance: Number(sphereDist.toFixed(6)),
       dimensionScores: scores,
       overallSimilarityScore,

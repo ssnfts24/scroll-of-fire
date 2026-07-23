@@ -141,11 +141,113 @@
     };
   }
 
+  // ── Alignment Ledger share links ───────────────────────────────────
+
+  function buildAlignmentShareLink({
+    baseUrl,
+    selectedYear,
+    compareYear,
+    timeZone,
+    boundaryMode,
+    manualSunset,
+    mode,
+    layers,
+    marker,
+    datasetVersion,
+    source
+  } = {}) {
+    const url = safeUrl(baseUrl || "./alignment-ledger.html", "https://codexofreality.org/alignment-ledger.html");
+    const safeYear = normalizeYear(selectedYear);
+    if (safeYear)             url.searchParams.set("year",    safeYear);
+    const safeCmp = normalizeYear(compareYear);
+    if (safeCmp)              url.searchParams.set("cmpYear", safeCmp);
+    if (timeZone)             url.searchParams.set("tz",      String(timeZone));
+    if (boundaryMode)         url.searchParams.set("boundary",String(boundaryMode));
+    const safeSunsetVal = normalizeClock(manualSunset);
+    if (safeSunsetVal)        url.searchParams.set("sunset",  safeSunsetVal);
+    const safeMode = normalizeSlug(mode);
+    if (safeMode)             url.searchParams.set("mode",    safeMode);
+    if (Array.isArray(layers) && layers.length) url.searchParams.set("layers", layers.join(","));
+    const safeMarker = normalizeSlug(marker);
+    if (safeMarker)           url.searchParams.set("marker",  safeMarker);
+    const safeDataset = normalizeVersion(datasetVersion);
+    if (safeDataset)          url.searchParams.set("dataset", safeDataset);
+    const safeSrc = normalizeSlug(source);
+    if (safeSrc)              url.searchParams.set("source",  safeSrc);
+    return url.toString();
+  }
+
+  function parseAlignmentShareLink(urlLike) {
+    const url = safeUrl(urlLike, "https://codexofreality.org/alignment-ledger.html");
+    return {
+      selectedYear:   normalizeYear(url.searchParams.get("year")),
+      compareYear:    normalizeYear(url.searchParams.get("cmpYear")),
+      timeZone:       url.searchParams.get("tz")        || null,
+      boundaryMode:   url.searchParams.get("boundary")  || null,
+      manualSunset:   normalizeClock(url.searchParams.get("sunset")),
+      mode:           normalizeSlug(url.searchParams.get("mode")),
+      layers:         url.searchParams.get("layers")?.split(",").filter(Boolean) || null,
+      marker:         normalizeSlug(url.searchParams.get("marker")),
+      datasetVersion: normalizeVersion(url.searchParams.get("dataset"))
+    };
+  }
+
+  // ── Living Time Sphere share links ─────────────────────────────────
+
+  function buildSphereShareLink({
+    baseUrl,
+    selectedYear,
+    viewMode,
+    layers,
+    marker,
+    timeZone,
+    boundaryMode,
+    manualSunset,
+    datasetVersion,
+    source
+  } = {}) {
+    const url = safeUrl(baseUrl || "./living-time-sphere.html", "https://codexofreality.org/living-time-sphere.html");
+    const safeYear = normalizeYear(selectedYear);
+    if (safeYear)            url.searchParams.set("year",    safeYear);
+    const safeView = normalizeSlug(viewMode);
+    if (safeView)            url.searchParams.set("view",    safeView);
+    if (Array.isArray(layers) && layers.length) url.searchParams.set("layers", layers.join(","));
+    const safeMarker = normalizeSlug(marker);
+    if (safeMarker)          url.searchParams.set("marker",  safeMarker);
+    if (timeZone)            url.searchParams.set("tz",      String(timeZone));
+    if (boundaryMode)        url.searchParams.set("boundary",String(boundaryMode));
+    const safeSunsetVal = normalizeClock(manualSunset);
+    if (safeSunsetVal)       url.searchParams.set("sunset",  safeSunsetVal);
+    const safeDataset = normalizeVersion(datasetVersion);
+    if (safeDataset)         url.searchParams.set("dataset", safeDataset);
+    const safeSrc = normalizeSlug(source);
+    if (safeSrc)             url.searchParams.set("source",  safeSrc);
+    return url.toString();
+  }
+
+  function parseSphereShareLink(urlLike) {
+    const url = safeUrl(urlLike, "https://codexofreality.org/living-time-sphere.html");
+    return {
+      selectedYear:   normalizeYear(url.searchParams.get("year")),
+      viewMode:       normalizeSlug(url.searchParams.get("view")),
+      layers:         url.searchParams.get("layers")?.split(",").filter(Boolean) || null,
+      marker:         normalizeSlug(url.searchParams.get("marker")),
+      timeZone:       url.searchParams.get("tz")       || null,
+      boundaryMode:   url.searchParams.get("boundary") || null,
+      manualSunset:   normalizeClock(url.searchParams.get("sunset")),
+      datasetVersion: normalizeVersion(url.searchParams.get("dataset"))
+    };
+  }
+
   globalThis.RemnantShareUrl = Object.freeze({
     buildPermanentLink,
     parsePermanentLink,
     buildOracleShareLink,
     buildEquinoxShareLink,
-    parseEquinoxShareLink
+    parseEquinoxShareLink,
+    buildAlignmentShareLink,
+    parseAlignmentShareLink,
+    buildSphereShareLink,
+    parseSphereShareLink
   });
 })();

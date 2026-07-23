@@ -136,6 +136,7 @@
   >
   <link rel="stylesheet" href="assets/css/pwa.css?v=20260722-4">
   <link rel="stylesheet" href="assets/css/equinox-passage.css?v=20260722-4">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260723-1">
 
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/share-day.css?v=1">
@@ -936,6 +937,18 @@
           <p id="equinoxCompactPattern" class="meta">—</p>
           <div class="btnrow">
             <a class="lab-btn ghost" href="./equinox-passage.html?source=equinox-passage" id="equinoxCompactLinkText">Open Equinox Passage</a>
+          </div>
+        </section>
+
+        <section id="sphereCompactCard" class="card sphere-compact-card" aria-labelledby="sphereCompactTitle">
+          <p class="eyebrow">Observatory Layer</p>
+          <h2 id="sphereCompactTitle" class="sphere-compact-card-title">Living Time Sphere</h2>
+          <p id="sphereCompactDate" class="meta">—</p>
+          <p id="sphereCompactPassage" class="meta">—</p>
+          <div id="sphere-compact-preview" class="sphere-compact-preview" aria-hidden="true"></div>
+          <div class="btnrow">
+            <a class="lab-btn ghost sphere-compact-open" href="./living-time-sphere.html?source=moons" id="sphereCompactLink">Open Living Time Sphere</a>
+            <a class="lab-btn ghost" href="./alignment-ledger.html?source=moons">Alignment Ledger</a>
           </div>
         </section>
 
@@ -2533,6 +2546,16 @@
   <script src="assets/js/equinox/equinox-passage-visualization-data.js?v=20260722-4"></script>
   <script src="assets/js/equinox/equinox-passage-ui.js?v=20260722-4"></script>
 
+  <!-- Alignment Ledger and Living Time Sphere (Phase 03) -->
+  <script src="assets/js/alignment/alignment-version.js?v=20260723-1"></script>
+  <script src="assets/js/alignment/alignment-ledger-engine.js?v=20260723-1"></script>
+  <script src="assets/js/alignment/alignment-ledger-data.js?v=20260723-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-version.js?v=20260723-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-model.js?v=20260723-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-layout.js?v=20260723-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-renderer-svg.js?v=20260723-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-accessibility.js?v=20260723-1"></script>
+
   <!-- Main calendar app -->
   <script src="assets/js/moons.js?v=20260722-4"></script>
 
@@ -3459,6 +3482,56 @@ Let the next step be firm.`;
         updateBoundaryUI,
         30000
       );
+    })();
+  </script>
+
+  <!-- Compact Living Time Sphere card init (Phase 03) -->
+  <script>
+    (function() {
+      "use strict";
+      function initCompactSphere() {
+        var preview = document.getElementById("sphere-compact-preview");
+        var dateEl  = document.getElementById("sphereCompactDate");
+        var passageEl = document.getElementById("sphereCompactPassage");
+        var linkEl  = document.getElementById("sphereCompactLink");
+
+        if (!preview || !globalThis.LivingTimeSphereModel || !globalThis.AlignmentLedgerData) return;
+
+        try {
+          var year = new Date().getUTCFullYear();
+          var supported = globalThis.AlignmentLedgerData.listSupportedYears();
+          if (!supported.includes(year)) year = supported[supported.length - 1];
+
+          var model  = globalThis.LivingTimeSphereModel.buildYearModel({ year: year });
+          var spiral = globalThis.LivingTimeSphereModel.buildSpiral({});
+
+          var w = preview.clientWidth  || 160;
+          var h = preview.clientHeight || 160;
+          if (w < 40) w = 160;
+          if (h < 40) h = 160;
+          var layout = globalThis.LivingTimeSphereLayout.resolveLayout({ containerWidth: w, containerHeight: h });
+          globalThis.LivingTimeSphereRendererSvg.renderInto(preview, {
+            model: model, spiral: spiral, layout: layout,
+            visibleLayers: { pattern: true, passage: true, lunar: false, solar: false, markers: false, recurrence: false, spiral: false },
+            selectedYear: year
+          });
+
+          var rec = globalThis.AlignmentLedgerData.getRecord({ year: year });
+          var pos = rec.equinox && rec.equinox.patternPosition ? rec.equinox.patternPosition : {};
+          if (dateEl) dateEl.textContent = pos.moonName ? "Moon " + pos.moon + " · Day " + pos.day : "—";
+          var offs = rec.offsets || {};
+          if (passageEl) passageEl.textContent = "Passage: " + Number(((offs.equinoxToYearGateDays || 0) * 24).toFixed(1)) + " h";
+          if (linkEl) linkEl.href = "./living-time-sphere.html?year=" + year + "&source=moons";
+        } catch (e) {
+          if (preview) preview.innerHTML = "<p class='sphere-error'>Sphere unavailable</p>";
+        }
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initCompactSphere);
+      } else {
+        setTimeout(initCompactSphere, 0);
+      }
     })();
   </script>
 </body>

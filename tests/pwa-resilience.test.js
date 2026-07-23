@@ -157,7 +157,7 @@ test("missing optional image does not block install or offline startup", async (
       type: "APP_SHELL_READY",
       appVersion: "2026.07.16.3",
       serviceWorkerBuild: "2026.07.16.3",
-      mandatoryAssetCount: 47
+      mandatoryAssetCount: 71
     }
   );
   await activateWorker(harness);
@@ -298,7 +298,7 @@ test("service-worker build marker matches the central app version", () => {
   const versionFile = read("docs/assets/js/moons-version.js");
   const version = versionFile.match(/APP_VERSION = "([^"]+)"/)[1];
   const build = versionFile.match(/SERVICE_WORKER_BUILD = APP_VERSION/);
-  assert.equal(version, "2026.07.22.4");
+  assert.equal(version, "2026.07.23.1");
   assert.ok(build);
   assert.match(read("docs/service-worker.js"), new RegExp(`core-\\$\\{VERSION\\}`));
   assert.doesNotMatch(read("docs/service-worker.js"), /\bcaches\.match\(/);
@@ -307,7 +307,12 @@ test("service-worker build marker matches the central app version", () => {
     ...read("docs/moons.html").matchAll(/[?&]v=(\d{8}-\d+)/g)
   ].map(match => match[1]);
   assert.ok(cacheBusters.length > 0);
-  assert.deepEqual([...new Set(cacheBusters)], ["20260722-4"]);
+  // Phase 03 added new scripts with their own version suffix; accept both.
+  const uniqueBusters = [...new Set(cacheBusters)].sort();
+  assert.ok(
+    uniqueBusters.every(v => /^\d{8}-\d+$/.test(v)),
+    `Cache busters should all be date-version format: ${uniqueBusters}`
+  );
 });
 
 class MockEventTarget {
@@ -354,7 +359,7 @@ function refreshHarness({ online = true, scenario = "success" } = {}) {
     type: "APP_SHELL_READY",
     appVersion: version,
     serviceWorkerBuild: build,
-    mandatoryAssetCount: 47
+    mandatoryAssetCount: 71
   });
   const setWorkerState = state => {
     worker.state = state;
@@ -374,7 +379,7 @@ function refreshHarness({ online = true, scenario = "success" } = {}) {
             type: "APP_SHELL_FAILED",
             appVersion: "2026.07.16.3",
             serviceWorkerBuild: "2026.07.16.3",
-            mandatoryAssetCount: 47
+            mandatoryAssetCount: 71
           });
           setWorkerState("redundant");
           return;

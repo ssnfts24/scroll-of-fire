@@ -10,6 +10,8 @@
 3. **Record one note:** [docs/ledger.html](https://codexofreality.org/ledger.html)
 4. **Read the model:** [docs/theory.html](https://codexofreality.org/theory.html)
 5. **Study the Equinox Passage:** [docs/equinox-passage.html](https://codexofreality.org/equinox-passage.html)
+6. **Explore the Alignment Ledger:** [docs/alignment-ledger.html](https://codexofreality.org/alignment-ledger.html)
+7. **Open the Living Time Sphere:** [docs/living-time-sphere.html](https://codexofreality.org/living-time-sphere.html)
 
 If you only have 3 minutes, do steps 1–3.
 
@@ -41,7 +43,13 @@ The Scroll of Fire — Codex of Reality is a living architecture of remembrance,
 
 🌗 Equinox Passage: site → Equinox Passage (/docs/equinox-passage.html)
 
+🌀 Alignment Ledger: site → Alignment Ledger (/docs/alignment-ledger.html)
+
+⭕ Living Time Sphere: site → Living Time Sphere (/docs/living-time-sphere.html)
+
 Equinox Passage source metadata, deterministic annual JSON, and historical CSV live under `/docs/data/equinox-passage/`, with reproducible generation via `node scripts/generate-equinox-passage-data.mjs --verify`.
+
+Phase 03 Alignment Ledger and Living Time Sphere specifications live under `docs/specifications/`. Validation report: `docs/reports/remnant-phase-03-validation.md`.
 
 ⬇️ Downloads: site → Downloads (/docs/downloads.html)
 
