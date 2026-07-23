@@ -109,7 +109,6 @@
   background: var(--sphere-bg);
   border-radius: 50%;
   overflow: visible;
-  touch-action: none; /* prevent interference with sphere drag */
 }
 
 /* Allow page scroll on non-sphere areas */
@@ -142,6 +141,9 @@
   display: block;
   cursor: grab;
   border-radius: 50%;
+  /* Scope touch-action to the SVG itself so page scroll still works
+     when the user touches outside the sphere container. */
+  touch-action: none;
 }
 
 .living-time-sphere-svg:active { cursor: grabbing; }
@@ -510,6 +512,47 @@
   padding: 1rem;
   flex: 1 1 300px;
 }
+
+/* ── SVG view-mode emphasis ───────────────────────────────────────── */
+/* Each mode highlights its primary layer; secondary layers are dimmed. */
+
+/* Passage mode: brighten the arc; dim other astronomical overlays. */
+.sphere-mode-passage .sphere-passage-arc {
+  stroke: rgba(251, 191, 36, 1);
+  stroke-width: 5;
+  filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.6));
+}
+.sphere-mode-passage .sphere-lunar-orbit-ring,
+.sphere-mode-passage .sphere-lunar-marker,
+.sphere-mode-passage .sphere-solar-axis,
+.sphere-mode-passage .sphere-spiral-path,
+.sphere-mode-passage .sphere-annual-marker { opacity: 0.25; }
+
+/* Years mode: highlight the spiral and annual markers. */
+.sphere-mode-years .sphere-spiral-path {
+  stroke: rgba(100, 200, 180, 0.9);
+  stroke-width: 2.5;
+}
+.sphere-mode-years .sphere-annual-marker {
+  opacity: 1;
+}
+.sphere-mode-years .sphere-annual-selected {
+  filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.7));
+}
+.sphere-mode-years .sphere-lunar-orbit-ring,
+.sphere-mode-years .sphere-lunar-marker,
+.sphere-mode-years .sphere-solar-axis,
+.sphere-mode-years .sphere-passage-arc { opacity: 0.2; }
+
+/* Pattern mode: show only the calendar structure; hide astronomical data. */
+.sphere-mode-pattern .sphere-passage-arc,
+.sphere-mode-pattern .sphere-lunar-orbit-ring,
+.sphere-mode-pattern .sphere-lunar-marker,
+.sphere-mode-pattern .sphere-solar-axis,
+.sphere-mode-pattern .sphere-annual-marker,
+.sphere-mode-pattern .sphere-spiral-path { display: none; }
+.sphere-mode-pattern .sphere-moon-sector { opacity: 0.6; }
+.sphere-mode-pattern .sphere-pattern-ring { stroke: rgba(255, 255, 255, 0.4); stroke-width: 3; }
 
 /* ── Guided introduction ──────────────────────────────────────────── */
 

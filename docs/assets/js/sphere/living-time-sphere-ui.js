@@ -21,6 +21,7 @@
     quality:       "auto",   // "auto" | "high" | "balanced" | "lowpower" | "svgonly"
     active3d:      false,    // true when 3D renderer is active
     introShown:    false,
+    _3dInitInProgress: false, // guard against concurrent 3D init calls
   };
 
   // ── Dependency check ───────────────────────────────────────────────
@@ -146,48 +147,67 @@
     const renderer = globalThis.LivingTimeSphereRenderer3d;
 
     if (!renderer.isInitialized()) {
-      // Remove any existing SVG content
+      // Prevent concurrent init: if one is already in progress (either in this module
+      // or inside the renderer itself), skip and leave the in-progress call to finish.
+      if (_state._3dInitInProgress || renderer.isInitializing?.()) return;
+      _state._3dInitInProgress = true;
+
+      // Remove any existing SVG / canvas content before inserting 3D canvas.
       container.innerHTML = "";
+      _updateRendererLabel("Loading 3D renderer…");
 
       const reducedMotion = typeof window !== "undefined" &&
         window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
-      const result = await renderer.init({
-        container,
-        model,
-        spiral,
-        quality:       preset,
-        selectedYear:  _state.year,
-        visibleLayers: _state.visibleLayers,
-        viewMode:      _state.viewMode,
-        reducedMotion,
-        onYearSelect: year => {
-          _state.year = year;
-          _state.viewMode = "passage";
-          _syncYearSelect(year);
-          globalThis.LivingTimeSphereAccessibility?.announce?.(`Year ${year} selected. Passage view.`);
-          renderSphere(container);
-        },
-        onMarkerSelect: marker => {
-          _state.selectedMarker = marker?.type === "year" ? `eq-${marker.year}` : null;
-        }
-      });
+      let result;
+      try {
+        result = await renderer.init({
+          container,
+          model,
+          spiral,
+          quality:       preset,
+          selectedYear:  _state.year,
+          visibleLayers: _state.visibleLayers,
+          viewMode:      _state.viewMode,
+          reducedMotion,
+          onYearSelect: year => {
+            _state.year = year;
+            _state.viewMode = "passage";
+            _syncYearSelect(year);
+            globalThis.LivingTimeSphereAccessibility?.announce?.(`Year ${year} selected. Passage view.`);
+            renderSphere(container);
+          },
+          onMarkerSelect: marker => {
+            _state.selectedMarker = marker?.type === "year" ? `eq-${marker.year}` : null;
+          }
+        });
+      } catch (err) {
+        result = { success: false, reason: "init-exception", detail: String(err) };
+      } finally {
+        _state._3dInitInProgress = false;
+      }
 
-      if (!result.success) {
-        // Fall back to SVG
+      if (!result || !result.success) {
+        // Fall back to SVG.
         _state.active3d = false;
-        const reason = result.reason || "WebGL unavailable";
-        _updateRendererLabel(`SVG fallback — ${reason}`);
+        const reason = result?.reason || "WebGL unavailable";
+        const detail = result?.detail ? ` (${result.detail})` : "";
+        _updateRendererLabel(`SVG fallback — ${reason}${detail}`);
+        // Remove any stale canvas element left by a failed init.
+        const staleCanvas = container.querySelector(".living-time-sphere-3d-canvas");
+        if (staleCanvas) staleCanvas.remove();
         const layout = globalThis.LivingTimeSphereLayout.resolveLayout({
-          containerWidth: container.offsetWidth || 320,
+          containerWidth:  container.offsetWidth  || 320,
           containerHeight: container.offsetHeight || 320,
-          devicePixelRatio: devicePixelRatio || 1
+          devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
         });
         _renderSvgFallback(container, model, spiral, layout);
+        _updateInteractBar();
         return;
       }
       _state.active3d = true;
       _updateRendererLabel("WebGL 3D active");
+      _updateInteractBar();
     } else {
       renderer.refresh(model, spiral, _state.year, _state.visibleLayers, _state.viewMode);
       renderer.setMode(_state.viewMode);
@@ -199,6 +219,8 @@
       globalThis.LivingTimeSphereRenderer3d.teardown();
     }
     _state.active3d = false;
+    _state._3dInitInProgress = false;
+    _updateInteractBar();
   }
 
   function _renderSvgFallback(container, model, spiral, layout) {
@@ -227,6 +249,21 @@
       selectedYear:  _state.year,
       viewMode:      _state.viewMode
     });
+  }
+
+  // Keep the mobile interact bar in sync with the 3D renderer state.
+  // The bar (and its "Exit Interaction" button) should only be active when
+  // a real 3D canvas is running. In SVG mode it should stay hidden.
+  function _updateInteractBar() {
+    const bar        = document.querySelector(".sphere-interact-bar");
+    const interactBtn = document.getElementById("sphere-interact-btn");
+    const endBtn     = document.getElementById("sphere-interact-end-btn");
+    if (!bar) return;
+    // Show/hide the whole bar based on whether 3D is active.
+    bar.style.display = _state.active3d ? "" : "none";
+    // Always reset to the "Interact" state when the bar is re-shown.
+    if (interactBtn) interactBtn.style.display = "";
+    if (endBtn)      endBtn.style.display      = "none";
   }
 
   function _updateAlternateViews() {
@@ -413,9 +450,12 @@
     }
 
     // "Interact with Sphere" button for small screens.
+    // Only active in 3D mode — _updateInteractBar() hides the bar in SVG mode.
     const interactBtn = document.getElementById("sphere-interact-btn");
     if (interactBtn) {
       interactBtn.addEventListener("click", () => {
+        // Only enter interact mode if the 3D renderer is actually running.
+        if (!_state.active3d) return;
         interactBtn.style.display = "none";
         const endBtn = document.getElementById("sphere-interact-end-btn");
         if (endBtn) endBtn.style.display = "";
@@ -426,19 +466,20 @@
         endBtn.addEventListener("click", () => {
           endBtn.style.display = "none";
           interactBtn.style.display = "";
+          // Dispatch exit event so 3D renderer can re-enable page scroll.
+          container.dispatchEvent(new CustomEvent("sphere:interact-end", { bubbles: false }));
         });
       }
-      // Listen for interact events from 3D renderer
+      // Listen for interact events from 3D renderer.
       container.addEventListener("sphere:interact-start", () => {
+        if (!_state.active3d) return;
         interactBtn.style.display = "none";
-        if (document.getElementById("sphere-interact-end-btn")) {
-          document.getElementById("sphere-interact-end-btn").style.display = "";
-        }
+        const b = document.getElementById("sphere-interact-end-btn");
+        if (b) b.style.display = "";
       });
       container.addEventListener("sphere:interact-end", () => {
-        if (document.getElementById("sphere-interact-end-btn")) {
-          document.getElementById("sphere-interact-end-btn").style.display = "none";
-        }
+        const b = document.getElementById("sphere-interact-end-btn");
+        if (b) b.style.display = "none";
         interactBtn.style.display = "";
       });
     }
@@ -575,18 +616,30 @@
     const container = document.getElementById("sphere-container");
     if (!container) return;
 
+    // Hide the interact bar immediately — it will be shown only after
+    // 3D init succeeds.  This prevents the "Exit Interaction" ghost state.
+    _updateInteractBar();
+
     wireControls(container);
     wireInteraction(container);
-    renderSphere(container);
+
+    // Defer first render by one animation frame so the container has a
+    // stable, non-zero bounding rect before 3D dimensions are measured.
+    requestAnimationFrame(() => {
+      renderSphere(container);
+    });
 
     // Re-render on resize (debounced).
     let resizeTimer;
     if (typeof ResizeObserver !== "undefined") {
       new ResizeObserver(() => {
+        // Skip resize re-renders while 3D is still initializing — a
+        // mid-init resize would start a second concurrent init call.
+        if (_state._3dInitInProgress) return;
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
           if (!_state.active3d) renderSphere(container);
-        }, 100);
+        }, 150);
       }).observe(container);
     }
   }

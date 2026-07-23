@@ -122,7 +122,7 @@
     };
 
     const parts = [
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" class="living-time-sphere-svg" role="img" aria-label="Living Time Sphere — ${esc(String(selectedYear || model?.year || ""))}">`,
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" class="living-time-sphere-svg sphere-mode-${esc(viewMode || "today")}" role="img" aria-label="Living Time Sphere — ${esc(String(selectedYear || model?.year || ""))}">`,
       `<title>Living Time Sphere</title>`,
       `<desc>Interactive sphere showing 13 Moon Pattern structure and astronomical cycles.</desc>`,
       renderOuterBorder(rings, cx, cy),

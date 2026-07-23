@@ -57,6 +57,7 @@
   let _canvas       = null;
   let _container    = null;
   let _initialized  = false;
+  let _initializing = false;  // Guard against concurrent init calls
   let _quality      = null;   // current resolved preset object
   let _model        = null;   // current year model
   let _spiral       = null;   // 13-year spiral model
@@ -660,83 +661,113 @@
   // ── Init / teardown ────────────────────────────────────────────────
 
   async function init({ container, model, spiral, quality, selectedYear, visibleLayers, viewMode, reducedMotion, onYearSelect, onMarkerSelect }) {
-    assertDeps();
-
-    if (!globalThis.LivingTimeSphereEffects.detectWebGl()) {
-      return { success: false, reason: "webgl-unavailable" };
+    // Guard against concurrent or duplicate init calls.
+    if (_initializing || _initialized) {
+      return { success: false, reason: "already-running" };
     }
-    if (!quality) return { success: false, reason: "quality-svgonly" };
+    _initializing = true;
 
     try {
-      await loadThreeJs();
+      assertDeps();
+
+      if (!globalThis.LivingTimeSphereEffects.detectWebGl()) {
+        return { success: false, reason: "webgl-unavailable" };
+      }
+      if (!quality) return { success: false, reason: "quality-svgonly" };
+
+      try {
+        await loadThreeJs();
+      } catch (err) {
+        return { success: false, reason: "three-load-failed", detail: String(err) };
+      }
+
+      const THREE = _THREE;
+      _container = container;
+
+      // ── Canvas ────────────────────────────────────────────────────
+      _canvas = document.createElement("canvas");
+      _canvas.className = "living-time-sphere-3d-canvas";
+      _canvas.setAttribute("role", "img");
+      _canvas.setAttribute("aria-label", "Living Time Sphere 3D view");
+      _canvas.setAttribute("aria-describedby", "sphere-text-model");
+      // touch-action: pan-y by default — vertical page scroll preserved.
+      _canvas.style.touchAction = "pan-y";
+      container.appendChild(_canvas);
+
+      // ── Renderer ──────────────────────────────────────────────────
+      const pixelRatio = Math.min(
+        quality.pixelRatioMax || 2,
+        typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1
+      );
+      try {
+        _renderer = new THREE.WebGLRenderer({
+          canvas:    _canvas,
+          antialias: quality.antialias !== false,
+          alpha:     false,
+          powerPreference: quality === globalThis.LivingTimeSphereM?.QUALITY_PRESETS?.lowpower ? "low-power" : "default",
+        });
+      } catch (err) {
+        // WebGLRenderer constructor can throw if context creation fails.
+        return { success: false, reason: "webgl-context-failed", detail: String(err) };
+      }
+      _renderer.setPixelRatio(pixelRatio);
+      _quality = quality;
+
+      // ── Camera ────────────────────────────────────────────────────
+      // Wait one rAF to ensure the container has stable layout dimensions.
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      const rect = container.getBoundingClientRect();
+      const w    = Math.max(rect.width  || 320, 100);
+      const h    = Math.max(rect.height || 320, 100);
+      _renderer.setSize(w, h);
+
+      _camera = globalThis.LivingTimeSphereCamera.create(THREE, w, h);
+      globalThis.LivingTimeSphereCamera.setMode(viewMode || "today", performance.now(), false);
+
+      // ── Build scene ───────────────────────────────────────────────
+      buildScene();
+
+      // ── Load initial data ─────────────────────────────────────────
+      updateScene(model, spiral, selectedYear, visibleLayers, viewMode);
+
+      // ── Animation ─────────────────────────────────────────────────
+      globalThis.LivingTimeSphereAnimation.applyPreset(quality);
+      globalThis.LivingTimeSphereAnimation.setReducedMotion(reducedMotion || _prefersReducedMotion());
+      globalThis.LivingTimeSphereAnimation.attachPageVisibility();
+      globalThis.LivingTimeSphereAnimation.attachIntersection(_canvas);
+
+      // Start idle drift if quality allows
+      if (quality.idleDrift && !_prefersReducedMotion()) {
+        globalThis.LivingTimeSphereCamera.startDrift(performance.now());
+      }
+
+      globalThis.LivingTimeSphereAnimation.start(render);
+      globalThis.LivingTimeSphereAnimation.markDirty();
+
+      // ── Pointer interaction ────────────────────────────────────────
+      _wirePointerEvents(container, onYearSelect, onMarkerSelect);
+
+      // ── Resize ────────────────────────────────────────────────────
+      _wireResize(container);
+
+      _initialized = true;
+      return { success: true };
+
     } catch (err) {
-      return { success: false, reason: "three-load-failed", detail: String(err) };
+      // Unexpected error: clean up any partially-created canvas so it does
+      // not appear as a broken/blank element in the DOM.
+      if (_canvas && _canvas.parentNode) {
+        _canvas.parentNode.removeChild(_canvas);
+      }
+      _canvas    = null;
+      _renderer  = null;
+      _scene     = null;
+      _camera    = null;
+      _initialized = false;
+      return { success: false, reason: "init-exception", detail: String(err) };
+    } finally {
+      _initializing = false;
     }
-
-    const THREE = _THREE;
-    _container = container;
-
-    // ── Canvas ──────────────────────────────────────────────────────
-    _canvas = document.createElement("canvas");
-    _canvas.className = "living-time-sphere-3d-canvas";
-    _canvas.setAttribute("role", "img");
-    _canvas.setAttribute("aria-label", "Living Time Sphere 3D view");
-    _canvas.setAttribute("aria-describedby", "sphere-text-model");
-    // touch-action: pan-y by default — vertical page scroll preserved.
-    _canvas.style.touchAction = "pan-y";
-    container.appendChild(_canvas);
-
-    // ── Renderer ────────────────────────────────────────────────────
-    const pixelRatio = Math.min(
-      quality.pixelRatioMax || 2,
-      typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1
-    );
-    _renderer = new THREE.WebGLRenderer({
-      canvas:    _canvas,
-      antialias: quality.antialias !== false,
-      alpha:     false,
-      powerPreference: quality === globalThis.LivingTimeSphereM?.QUALITY_PRESETS?.lowpower ? "low-power" : "default",
-    });
-    _renderer.setPixelRatio(pixelRatio);
-    _quality = quality;
-
-    // ── Camera ──────────────────────────────────────────────────────
-    const rect = container.getBoundingClientRect();
-    const w    = Math.max(rect.width  || 320, 100);
-    const h    = Math.max(rect.height || 320, 100);
-    _renderer.setSize(w, h);
-
-    _camera = globalThis.LivingTimeSphereCamera.create(THREE, w, h);
-    globalThis.LivingTimeSphereCamera.setMode(viewMode || "today", performance.now(), false);
-
-    // ── Build scene ─────────────────────────────────────────────────
-    buildScene();
-
-    // ── Load initial data ───────────────────────────────────────────
-    updateScene(model, spiral, selectedYear, visibleLayers, viewMode);
-
-    // ── Animation ───────────────────────────────────────────────────
-    globalThis.LivingTimeSphereAnimation.applyPreset(quality);
-    globalThis.LivingTimeSphereAnimation.setReducedMotion(reducedMotion || _prefersReducedMotion());
-    globalThis.LivingTimeSphereAnimation.attachPageVisibility();
-    globalThis.LivingTimeSphereAnimation.attachIntersection(_canvas);
-
-    // Start idle drift if quality allows
-    if (quality.idleDrift && !_prefersReducedMotion()) {
-      globalThis.LivingTimeSphereCamera.startDrift(performance.now());
-    }
-
-    globalThis.LivingTimeSphereAnimation.start(render);
-    globalThis.LivingTimeSphereAnimation.markDirty();
-
-    // ── Pointer interaction ──────────────────────────────────────────
-    _wirePointerEvents(container, onYearSelect, onMarkerSelect);
-
-    // ── Resize ──────────────────────────────────────────────────────
-    _wireResize(container);
-
-    _initialized = true;
-    return { success: true };
   }
 
   function _prefersReducedMotion() {
@@ -923,11 +954,13 @@
     _canvas = null;
     _scene  = null;
     _camera = null;
-    _initialized = false;
+    _initialized  = false;
+    _initializing = false;
     for (const key of Object.keys(_objects)) delete _objects[key];
   }
 
   function isInitialized() { return _initialized; }
+  function isInitializing() { return _initializing; }
 
   function exportPng({ format } = {}) {
     if (!_renderer) return null;
@@ -945,6 +978,7 @@
     setMode,
     teardown,
     isInitialized,
+    isInitializing,
     exportPng,
     THREE_VERSION,
     THREE_CDN,
