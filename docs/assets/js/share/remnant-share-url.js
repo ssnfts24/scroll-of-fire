@@ -23,7 +23,12 @@
 
   function normalizeClock(value) {
     const text = String(value || "").trim();
-    return /^\d{2}:\d{2}$/.test(text) ? text : "";
+    const match = /^(\d{2}):(\d{2})$/.exec(text);
+    if (!match) return "";
+    const hour = Number(match[1]);
+    const minute = Number(match[2]);
+    if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return "";
+    return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
   }
 
   function safeUrl(urlLike, fallback) {
