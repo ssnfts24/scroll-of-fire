@@ -5,25 +5,26 @@
   // Works with THREE.PerspectiveCamera.
   // Does not import THREE directly; receives camera + renderer from renderer-3d.
 
-  const MIN_ZOOM = 1.2;   // closest allowed distance from origin
+  const MIN_ZOOM = 1.05;   // closest allowed distance from origin
   const MAX_ZOOM = 8.0;   // furthest allowed
   const FOV      = 55;    // field-of-view degrees
 
-  // Mode-specific camera targets: { distance, phi, theta }
+  // Mode-specific camera targets: { distance, phi, theta, targetRadius }
   // phi:   vertical angle from XZ plane (0 = horizontal, π/2 = top-down)
   // theta: horizontal rotation from +Z axis
   const MODE_POSITIONS = Object.freeze({
-    today:   Object.freeze({ distance: 2.8, phi: 0.55, theta: 0.0 }),
-    passage: Object.freeze({ distance: 2.4, phi: 0.55, theta: 0.15 }),
-    years:   Object.freeze({ distance: 4.5, phi: 0.60, theta: 0.0 }),
-    pattern: Object.freeze({ distance: 2.6, phi: 1.45, theta: 0.0 }), // nearly top-down
-    default: Object.freeze({ distance: 3.2, phi: 0.55, theta: 0.0 }),
+    today:   Object.freeze({ distance: 2.25, phi: 0.78, theta: Math.PI, targetRadius: 0.2 }),
+    passage: Object.freeze({ distance: 2.35, phi: 0.62, theta: Math.PI * 0.92, targetRadius: 0.1 }),
+    years:   Object.freeze({ distance: 3.75, phi: 0.82, theta: Math.PI, targetRadius: 0.05 }),
+    pattern: Object.freeze({ distance: 2.05, phi: 1.28, theta: Math.PI, targetRadius: 0.08 }),
+    default: Object.freeze({ distance: 2.8, phi: 0.7, theta: Math.PI, targetRadius: 0 }),
   });
 
   // ── Internal state ─────────────────────────────────────────────────
 
   let _cam     = null;   // THREE.PerspectiveCamera
   let _target  = { x: 0, y: 0, z: 0 };  // look-at point (always origin)
+  let _mode    = "today";
 
   // Current spherical coords (the camera orbits the origin)
   let _phi     = MODE_POSITIONS.default.phi;
@@ -60,6 +61,34 @@
     if (!_cam) return;
     _cam.aspect = width / height;
     _cam.updateProjectionMatrix();
+  }
+
+  function _isMobileViewport() {
+    return typeof window !== "undefined" && window.innerWidth < 680;
+  }
+
+  function _presetForMode(mode) {
+    const base = MODE_POSITIONS[mode] || MODE_POSITIONS.default;
+    if (!_isMobileViewport()) return base;
+    return {
+      ...base,
+      distance: Math.max(MIN_ZOOM, base.distance - (mode === "years" ? 0.45 : 0.35)),
+      phi: mode === "pattern" ? Math.min(1.42, base.phi + 0.05) : base.phi,
+      targetRadius: mode === "today" ? 0.26 : mode === "pattern" ? 0.12 : base.targetRadius,
+    };
+  }
+
+  function _resolveFocusTarget(mode, focus = {}) {
+    const preset = _presetForMode(mode);
+    const target = focus.target || {};
+    return {
+      dist: focus.dist ?? preset.distance,
+      phi: focus.phi ?? preset.phi,
+      theta: focus.theta ?? preset.theta,
+      targetX: target.x ?? 0,
+      targetY: target.y ?? 0,
+      targetZ: target.z ?? 0,
+    };
   }
 
   // ── Position helpers ──────────────────────────────────────────────
@@ -99,6 +128,9 @@
       _dist  = _lerpAngle(_transition.fromDist,  _transition.toDist,  e);
       _phi   = _lerpAngle(_transition.fromPhi,   _transition.toPhi,   e);
       _theta = _lerpAngle(_transition.fromTheta, _transition.toTheta, e);
+      _target.x = _lerpAngle(_transition.fromTargetX, _transition.toTargetX, e);
+      _target.y = _lerpAngle(_transition.fromTargetY, _transition.toTargetY, e);
+      _target.z = _lerpAngle(_transition.fromTargetZ, _transition.toTargetZ, e);
       _apply();
       dirty = true;
       if (t >= 1) _transition = null;
@@ -192,16 +224,19 @@
 
   // ── Named positions ───────────────────────────────────────────────
 
-  function setMode(mode, nowMs, animated) {
-    const pos = MODE_POSITIONS[mode] || MODE_POSITIONS.default;
-    moveTo({ dist: pos.distance, phi: pos.phi, theta: _theta, nowMs, animated });
+  function setMode(mode, nowMs, animated, focus) {
+    _mode = mode || _mode;
+    moveTo({ ..._resolveFocusTarget(_mode, focus), nowMs, animated });
   }
 
-  function moveTo({ dist, phi, theta, nowMs, animated, durationMs } = {}) {
+  function moveTo({ dist, phi, theta, targetX, targetY, targetZ, nowMs, animated, durationMs } = {}) {
     if (!animated) {
       _dist  = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, dist ?? _dist));
       _phi   = phi   ?? _phi;
       _theta = theta ?? _theta;
+      _target.x = targetX ?? _target.x;
+      _target.y = targetY ?? _target.y;
+      _target.z = targetZ ?? _target.z;
       _apply();
       return;
     }
@@ -209,22 +244,22 @@
       fromDist:  _dist,
       fromPhi:   _phi,
       fromTheta: _theta,
+      fromTargetX: _target.x,
+      fromTargetY: _target.y,
+      fromTargetZ: _target.z,
       toDist:    Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, dist ?? _dist)),
       toPhi:     phi   ?? _phi,
       toTheta:   theta ?? _theta,
+      toTargetX: targetX ?? _target.x,
+      toTargetY: targetY ?? _target.y,
+      toTargetZ: targetZ ?? _target.z,
       startMs:   nowMs || performance.now(),
       durationMs: durationMs || 700,
     };
   }
 
-  function resetView(nowMs) {
-    moveTo({
-      dist:  MODE_POSITIONS.default.distance,
-      phi:   MODE_POSITIONS.default.phi,
-      theta: 0,
-      nowMs,
-      animated: true,
-    });
+  function resetView(nowMs, focus) {
+    setMode(_mode, nowMs, true, focus);
   }
 
   function focusMarker(theta, nowMs) {
@@ -243,6 +278,9 @@
     if (s.dist  != null) _dist  = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, s.dist));
     if (s.phi   != null) _phi   = s.phi;
     if (s.theta != null) _theta = s.theta;
+    if (s.targetX != null) _target.x = s.targetX;
+    if (s.targetY != null) _target.y = s.targetY;
+    if (s.targetZ != null) _target.z = s.targetZ;
     _apply();
   }
 

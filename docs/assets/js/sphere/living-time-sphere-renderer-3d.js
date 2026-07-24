@@ -91,6 +91,7 @@
   let _moonLabelConnectorEl = null;
   let _moonLabelMode = "contextual";
   const _moonAnchors = [];    // { moon, angle, radius, worldVec } for each of 13 moons
+  let _lastCameraFocusKey = null;
 
   // ── Three.js lazy loader ──────────────────────────────────────────
 
@@ -133,10 +134,10 @@
   }
 
   function _moonLabelRadiusMultiplier(viewMode) {
-    if (viewMode === "today") return 1.075;
-    if (viewMode === "pattern") return 1.085;
-    if (viewMode === "years") return 1.1;
-    return 1.08;
+    if (viewMode === "today") return _isMobileWidth() ? 1.02 : 1.055;
+    if (viewMode === "pattern") return _isMobileWidth() ? 1.035 : 1.07;
+    if (viewMode === "years") return _isMobileWidth() ? 1.05 : 1.085;
+    return _isMobileWidth() ? 1.03 : 1.06;
   }
 
   function _buildMoonAnchors(viewMode = _viewMode) {
@@ -208,9 +209,12 @@
       return new Set([selectedMoon, ..._adjacentMoons(selectedMoon), 1, 13].filter(Boolean));
     }
     if (viewMode === "passage") {
-      return new Set([equinoxMoon, 1, todayMoon].filter(Boolean));
+      return new Set([selectedMoon, equinoxMoon, ..._adjacentMoons(selectedMoon), 1, todayMoon].filter(Boolean));
     }
     if (viewMode === "pattern") {
+      if (_isMobileWidth()) {
+        return new Set([selectedMoon, ..._adjacentMoons(selectedMoon), 1, todayMoon].filter(Boolean));
+      }
       return new Set(Array.from({ length: 13 }, (_, i) => i + 1));
     }
     return new Set([1, 4, 7, 10, selectedMoon].filter(Boolean));
@@ -493,15 +497,39 @@
       geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
       const m = new THREE.PointsMaterial({
         color:       mat.COLORS.patternRing,
-        size:        0.012,
+        size:        _isMobileWidth() ? 0.02 : 0.016,
         transparent: true,
-        opacity:     0.45,
+        opacity:     0.7,
         sizeAttenuation: true,
       });
       const pts = new THREE.Points(geo, m);
       pts.name = "dayNodes";
       _scene.add(pts);
       _objects.dayNodes = pts;
+    }
+
+    // ── Shabbat day markers (Moon days 2, 9, 16, 23) ─────────────────
+    {
+      const r = mat.SIZES.patternRing * 1.01;
+      const pts = [];
+      for (let moon = 0; moon < 13; moon++) {
+        [2, 9, 16, 23].forEach(day => {
+          const angle = globalThis.LivingTimeSphereModel.dayAngleWithinMoon(moon, day - 1);
+          const { x, z } = angleToXZ(angle, r);
+          pts.push(new _THREE.Vector3(x, 0.003, z));
+        });
+      }
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const m = new THREE.PointsMaterial({
+        color: 0x7de2d1,
+        size: _isMobileWidth() ? 0.03 : 0.024,
+        transparent: true,
+        opacity: 0.82,
+      });
+      const markers = new THREE.Points(geo, m);
+      markers.name = "shabbatNodes";
+      _scene.add(markers);
+      _objects.shabbatNodes = markers;
     }
 
     // ── Equinox Gate marker ─── TETRAHEDRON shape ──────────────────
@@ -834,6 +862,62 @@
     return new THREE.Line(geo, m);
   }
 
+  function _focusFromAngle(angleDeg, radius, mode) {
+    const { x, z } = angleToXZ(angleDeg, radius);
+    const theta = Math.atan2(x, z);
+    const targetScale = mode === "today" ? 0.32 : mode === "pattern" ? 0.18 : 0.12;
+    return {
+      theta,
+      target: {
+        x: x * targetScale,
+        y: mode === "years" ? 0.04 : 0,
+        z: z * targetScale,
+      },
+    };
+  }
+
+  function _resolveCameraFocus(model, spiral, viewMode, selectedYear) {
+    const mat = globalThis.LivingTimeSphereM;
+    const selected = model?.selectedPatternPosition || model?.todayPatternPosition || null;
+    if (viewMode === "years") {
+      const match = spiral?.years?.find(year => year.year === selectedYear);
+      if (match) {
+        const r = mat.SIZES.spiralInner + (mat.SIZES.spiralOuter - mat.SIZES.spiralInner) * match.yearSpiralRadius;
+        const focus = _focusFromAngle(match.yearSpiralAngle % 360, r, "years");
+        focus.target.y = (match.yearSpiralRadius - 0.5) * 0.18;
+        return focus;
+      }
+      return null;
+    }
+
+    if (viewMode === "passage" && model?.passage) {
+      let sweep = model.passage.endAngle - model.passage.startAngle;
+      if (sweep <= 0) sweep += 360;
+      const midAngle = (model.passage.startAngle + sweep / 2) % 360;
+      return _focusFromAngle(midAngle, mat.SIZES.passageArc, "passage");
+    }
+
+    const dayAngle = selected?.dayOfPatternYear != null
+      ? globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(selected.dayOfPatternYear)
+      : (model?.currentPatternAngle ?? model?.patternAngle ?? 0);
+    return _focusFromAngle(dayAngle, mat.SIZES.patternRing, viewMode);
+  }
+
+  function _syncCameraFocus(model, spiral, selectedYear, animated) {
+    const focus = _resolveCameraFocus(model, spiral, _viewMode, selectedYear);
+    const focusKey = JSON.stringify({
+      mode: _viewMode,
+      year: selectedYear,
+      theta: focus?.theta != null ? Number(focus.theta.toFixed(4)) : null,
+      x: focus?.target?.x != null ? Number(focus.target.x.toFixed(4)) : null,
+      y: focus?.target?.y != null ? Number(focus.target.y.toFixed(4)) : null,
+      z: focus?.target?.z != null ? Number(focus.target.z.toFixed(4)) : null,
+    });
+    if (focusKey === _lastCameraFocusKey) return;
+    _lastCameraFocusKey = focusKey;
+    globalThis.LivingTimeSphereCamera.setMode(_viewMode, performance.now(), animated !== false, focus || undefined);
+  }
+
   function updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode = _moonLabelMode) {
     if (!_THREE || !_scene || !model) return;
     const mat = globalThis.LivingTimeSphereM;
@@ -852,6 +936,7 @@
     if (_objects.patternRing)  _objects.patternRing.visible  = !!vl.pattern;
     if (_objects.moonDividers) _objects.moonDividers.visible = !!vl.pattern;
     if (_objects.dayNodes)     _objects.dayNodes.visible     = !!vl.pattern;
+    if (_objects.shabbatNodes) _objects.shabbatNodes.visible = !!vl.pattern;
     if (_objects.weekGates)    _objects.weekGates.visible    = !!vl.pattern;
     if (_objects.yearGate)     _objects.yearGate.visible     = !!vl.pattern;
     if (_objects.todayLineGroup) _objects.todayLineGroup.visible = true;
@@ -1040,7 +1125,7 @@
       while (_objects.activeMoonGroup.children.length) {
         _objects.activeMoonGroup.remove(_objects.activeMoonGroup.children[0]);
       }
-      const tp = model.todayPatternPosition;
+      const tp = model.selectedPatternPosition || model.todayPatternPosition;
       const activeMoon = tp ? (tp.moon || 1) - 1 : (model.sourceRecord?.equinox?.patternPosition?.moon || 1) - 1;
       const r = mat.SIZES.patternRing;
       const sectorStart = (activeMoon / 13) * 360;
@@ -1093,18 +1178,30 @@
 
     // ── Active day node highlight ───────────────────────────────────
     if (_objects.activeDayNode) {
-      const tp = model.todayPatternPosition;
-      if (vl.pattern && tp && tp.moon != null && tp.day != null && _viewMode === "pattern") {
+      const tp = model.selectedPatternPosition || model.todayPatternPosition;
+      if (vl.pattern && tp && tp.moon != null && tp.day != null) {
         const moonIdx = tp.moon - 1;
         const dayIdx  = tp.day  - 1;
         const angle = globalThis.LivingTimeSphereModel.dayAngleWithinMoon(moonIdx, dayIdx);
         const { x, z } = angleToXZ(angle, mat.SIZES.patternRing);
         _objects.activeDayNode.position.set(x, 0.008, z);
         _objects.activeDayNode.visible = true;
+        if (_objects.selectionRing && _viewMode !== "years") {
+          _objects.selectionRing.position.set(x, 0.01, z);
+          _objects.selectionRing.visible = true;
+          _objects.selectionRing.rotation.x = Math.PI / 2;
+        }
       } else {
         _objects.activeDayNode.visible = false;
       }
     }
+
+    if (_viewMode === "years" && _objects.selectionRing && !_objects.selectionRing.visible) {
+      _objects.selectionRing.visible = true;
+      _objects.selectionRing.rotation.x = Math.PI / 2;
+    }
+
+    _syncCameraFocus(model, spiral, selectedYear, true);
 
     globalThis.LivingTimeSphereAnimation.markDirty();
   }
@@ -1254,13 +1351,13 @@
       _renderer.setSize(w, h);
 
       _camera = globalThis.LivingTimeSphereCamera.create(THREE, w, h);
-      globalThis.LivingTimeSphereCamera.setMode(viewMode || "today", performance.now(), false);
 
       // ── Build scene ───────────────────────────────────────────────
       buildScene();
 
       // ── Load initial data ─────────────────────────────────────────
       updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode);
+      _syncCameraFocus(model, spiral, selectedYear, false);
 
       // ── Animation ─────────────────────────────────────────────────
       globalThis.LivingTimeSphereAnimation.applyPreset(quality);
@@ -1499,6 +1596,32 @@
       if (year && onYearSelect) onYearSelect(year);
       if (year && onMarkerSelect) onMarkerSelect({ type: "year", year });
       _showFloatingLabel(hits[0].object.position, `${year}`, e.clientX, e.clientY);
+      return;
+    }
+
+    const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+    const point = new THREE.Vector3();
+    if (!raycaster.ray.intersectPlane(plane, point)) {
+      return;
+    }
+
+    const radius = Math.hypot(point.x, point.z);
+    const patternRadius = globalThis.LivingTimeSphereM?.SIZES?.patternRing || 1;
+    const angle = ((Math.atan2(point.z, point.x) * 180) / Math.PI + 90 + 360) % 360;
+
+    if (radius >= patternRadius * 0.82 && radius <= patternRadius * 1.12) {
+      const dayOfPatternYear = Math.max(1, Math.min(364, Math.round((angle / 360) * 364 + 0.5)));
+      const moon = Math.max(1, Math.min(13, Math.floor((dayOfPatternYear - 1) / 28) + 1));
+      const day = ((dayOfPatternYear - 1) % 28) + 1;
+      if (onMarkerSelect) onMarkerSelect({ type: "day", moon, day, dayOfPatternYear });
+      _showFloatingLabel(point, `Selected Day\nMoon ${moon} · Day ${day}\nDay ${dayOfPatternYear}/364`, e.clientX, e.clientY);
+      return;
+    }
+
+    if (radius >= patternRadius * 0.35 && radius < patternRadius * 0.82) {
+      const moon = Math.max(1, Math.min(13, Math.floor((angle / 360) * 13) + 1));
+      if (onMarkerSelect) onMarkerSelect({ type: "moon", moon, day: 1 });
+      _showFloatingLabel(point, `Moon ${moon}\nTap outer ring for a day`, e.clientX, e.clientY);
     }
   }
 
@@ -1543,12 +1666,15 @@
   }
 
   function resetView() {
-    globalThis.LivingTimeSphereCamera.resetView(performance.now());
+    _lastCameraFocusKey = null;
+    _syncCameraFocus(_model, _spiral, _selectedYear, true);
     globalThis.LivingTimeSphereAnimation.markDirty();
   }
 
   function setMode(mode) {
-    globalThis.LivingTimeSphereCamera.setMode(mode, performance.now(), true);
+    _viewMode = mode;
+    _lastCameraFocusKey = null;
+    _syncCameraFocus(_model, _spiral, _selectedYear, true);
     globalThis.LivingTimeSphereAnimation.markDirty();
   }
 

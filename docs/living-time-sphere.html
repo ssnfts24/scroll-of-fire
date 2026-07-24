@@ -21,6 +21,8 @@
   <meta name="description" content="The Living Time Sphere places fixed Pattern Time at the center and lets moving astronomical cycles travel around it. Select a day, Passage, or year to witness how the layers meet.">
   <meta name="theme-color" content="#05070d">
   <link rel="canonical" href="https://codexofreality.org/living-time-sphere.html">
+  <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/moons.css?v=20260723-4">
@@ -37,6 +39,8 @@
   <script defer src="assets/js/calendar/pattern-calendar-format.js"></script>
   <script defer src="assets/js/calendar/pattern-calendar-boundary.js"></script>
   <script defer src="assets/js/calendar/pattern-calendar.js"></script>
+  <script defer src="assets/js/calendar-cor.js"></script>
+  <script defer src="assets/js/codex-state.js"></script>
   <script defer src="assets/js/astronomy/astronomy-version.js"></script>
   <script defer src="assets/js/astronomy/astronomy-sources.js"></script>
   <script defer src="assets/js/astronomy/timezone-tools.js"></script>
@@ -117,6 +121,7 @@
           <button id="sphere-mode-pattern" class="sphere-mode-btn" type="button" aria-pressed="false">Pattern</button>
         </div>
         <div id="sphere-mode-summary" class="sphere-mode-summary" aria-live="polite">Today</div>
+        <div id="sphere-current-status" class="sphere-current-status" aria-live="polite">Today — Moon — · Day — · Day —/364</div>
 
         <!-- Sphere Settings (collapsible on mobile) -->
         <details class="sphere-settings-group">
@@ -287,9 +292,20 @@
         <aside class="sphere-sidebar">
           <!-- 4. Selected marker details -->
           <div class="sphere-sidebar-section">
-            <h2 class="sphere-sidebar-heading">Selected marker</h2>
+            <h2 class="sphere-sidebar-heading">Selected day</h2>
+            <div class="sphere-detail-nav" role="group" aria-label="Selected day controls">
+              <button id="sphere-prev-moon" class="sphere-btn sphere-btn-sm" type="button">← Previous Moon</button>
+              <button id="sphere-prev-day" class="sphere-btn sphere-btn-sm" type="button">← Previous Day</button>
+              <button id="sphere-next-day" class="sphere-btn sphere-btn-sm" type="button">Next Day →</button>
+              <button id="sphere-next-moon" class="sphere-btn sphere-btn-sm" type="button">Next Moon →</button>
+            </div>
             <div id="sphere-details" class="sphere-details">
               <p class="sphere-methods">Select a marker to see details.</p>
+            </div>
+            <div class="sphere-detail-actions" role="group" aria-label="Selected day actions">
+              <a id="sphere-day-open-moons" class="sphere-btn sphere-btn-primary" href="moons.html">Open 13 Moons</a>
+              <a id="sphere-day-witness-link" class="sphere-btn" href="ledger.html">Witness / Log</a>
+              <a id="sphere-day-mirror-link" class="sphere-btn" href="genesis-oracle.html">Mirror</a>
             </div>
           </div>
 

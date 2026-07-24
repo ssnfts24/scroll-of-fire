@@ -966,11 +966,29 @@
       ];
 
       var loaded = false;
+      var loading = false;
+      var initialized = false;
 
       function loadSphereScripts(onReady) {
         if (loaded) { onReady(); return; }
+        if (loading) {
+          var wait = setInterval(function() {
+            if (loaded) {
+              clearInterval(wait);
+              onReady();
+            }
+          }, 80);
+          return;
+        }
+        loading = true;
         var remaining = SPHERE_SCRIPTS.length;
-        function onLoad() { if (--remaining === 0) { loaded = true; onReady(); } }
+        function onLoad() {
+          if (--remaining === 0) {
+            loaded = true;
+            loading = false;
+            onReady();
+          }
+        }
         SPHERE_SCRIPTS.forEach(function(src) {
           // Check if already in DOM (e.g. added by living-codex)
           if (document.querySelector('script[src*="' + src.split("/").pop() + '"]')) {
@@ -987,7 +1005,8 @@
 
       function initObservatory() {
         var root = document.getElementById("home-sphere-observatory");
-        if (!root || !globalThis.LivingTimeSphereTodayCard) return;
+        if (!root || initialized || !globalThis.LivingTimeSphereTodayCard) return;
+        initialized = true;
         globalThis.LivingTimeSphereTodayCard.wireInteractive(root, { idPrefix: "home-", source: "home" });
         globalThis.LivingTimeSphereTodayCard.renderInteractive(root, { idPrefix: "home-", source: "home" });
         globalThis.LivingTimeSphereTodayCard.attachAutoUpdate(root, {
@@ -1018,6 +1037,14 @@
         }
       }, { rootMargin: "200px" });
       io.observe(target);
+
+      setTimeout(function() {
+        if (!initialized) {
+          loadSphereScripts(function() {
+            requestAnimationFrame(initObservatory);
+          });
+        }
+      }, 2200);
     })();
   </script>
 </body>

@@ -93,6 +93,7 @@
   flex-direction: column;
   gap: 1.25rem;
   margin-bottom: 1.5rem;
+  align-items: stretch;
 }
 
 @media (min-width: 640px) {
@@ -102,20 +103,30 @@
 #sphere-container {
   flex: 1 1 300px;
   min-width: 0;
-  aspect-ratio: 1;
-  max-width: 560px;
+  width: min(100%, 560px);
+  min-height: 360px;
+  height: clamp(360px, 70vw, 520px);
+  max-height: 520px;
   width: 100%;
   margin-inline: auto;
   position: relative;
   background: var(--sphere-bg);
-  border-radius: 50%;
-  overflow: visible;
+  border-radius: 1.2rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
 }
 
 /* Allow page scroll on non-sphere areas */
 .sphere-sidebar {
   flex: 0 0 220px;
   min-width: 0;
+}
+
+@media (min-width: 900px) {
+  .sphere-sidebar {
+    flex: 0 0 300px;
+  }
 }
 
 .sphere-sidebar-section {
@@ -178,6 +189,20 @@
   display: grid;
   grid-template-columns: 1fr 1.5fr;
   gap: 0.2rem 0.75rem;
+}
+
+.sphere-details-section + .sphere-details-section {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sphere-details-subheading {
+  margin: 0 0 0.55rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(251, 191, 36, 0.82);
 }
 
 .sphere-details-grid dt {
@@ -446,6 +471,7 @@
   flex: 1 1 320px;
   min-width: 0;
   max-width: 100%;
+  order: 1;
 }
 
 .sphere-interact-bar {
@@ -496,6 +522,7 @@
   flex-wrap: wrap;
   gap: 0.35rem;
   margin-top: 0.5rem;
+  justify-content: center;
 }
 
 .sphere-cam-label {
@@ -945,6 +972,20 @@ details[open] > .sphere-settings-summary::before { content: "▾ "; }
   font-size: 0.78rem;
 }
 
+.sphere-current-status {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(244, 239, 223, 0.92);
+  text-align: center;
+  margin: 0.2rem auto 0.65rem;
+  padding: 0.7rem 0.95rem;
+  max-width: 560px;
+  border-radius: 0.9rem;
+  background: linear-gradient(180deg, rgba(20, 26, 44, 0.88), rgba(8, 12, 24, 0.74));
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+}
+
 /* Diagnostics sections */
 .sphere-diagnostics-section {
   margin: 1.5rem 0;
@@ -1118,6 +1159,39 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
+.sphere-detail-nav,
+.sphere-detail-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.sphere-detail-nav {
+  margin: 0 0 0.8rem;
+}
+
+.sphere-detail-actions {
+  margin-top: 0.9rem;
+}
+
+.sphere-detail-nav .sphere-btn,
+.sphere-detail-actions .sphere-btn {
+  justify-content: center;
+}
+
+.sphere-field-note {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: rgba(232, 228, 217, 0.62);
+  margin: 0.5rem 0 0;
+}
+
+.sphere-inline-note {
+  display: inline-block;
+  font-size: 0.72rem;
+  color: rgba(232, 228, 217, 0.54);
+}
+
 /* ── Floating tap label ──────────────────────────────────────── */
 .sphere-floating-label {
   background: rgba(5,7,13,0.92);
@@ -1187,4 +1261,67 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   margin-top: 0.5rem;
   border-top: 1px solid rgba(255,255,255,0.06);
   padding-top: 0.4rem;
+}
+
+@media (max-width: 899px) {
+  .sphere-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .sphere-canvas-wrap {
+    order: 1;
+  }
+
+  .sphere-legend {
+    order: 3;
+  }
+
+  .sphere-sidebar {
+    order: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .sphere-page {
+    padding-inline: 0.8rem;
+  }
+
+  .sphere-mode-controls {
+    justify-content: center;
+  }
+
+  .sphere-current-status,
+  .sphere-state-strip {
+    white-space: normal;
+    line-height: 1.45;
+    border-radius: 1rem;
+  }
+
+  .sphere-camera-controls {
+    width: 100%;
+  }
+
+  .sphere-camera-controls .sphere-cam-label {
+    width: 100%;
+    text-align: center;
+  }
+
+  .sphere-camera-controls .sphere-cam-btn {
+    flex: 1 1 calc(50% - 0.35rem);
+    justify-content: center;
+  }
+
+  .sphere-details-grid {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  }
+
+  .sphere-detail-nav,
+  .sphere-detail-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .sphere-legend {
+    margin-top: 0.1rem;
+  }
 }

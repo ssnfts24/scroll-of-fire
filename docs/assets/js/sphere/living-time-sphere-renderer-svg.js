@@ -29,10 +29,13 @@
       const { x: x2, y: y2 } = polarToXY(s.endAngle,   rings.moonSectors, cx, cy);
       const { x: cx2, y: cy2 } = polarToXY((s.startAngle + s.endAngle) / 2, rings.moonDayPoints - 8, cx, cy);
       const large = (s.endAngle - s.startAngle) > 180 ? 1 : 0;
-      const pathD = `M ${cx} ${cy} L ${x1} ${y1} A ${rings.moonSectors} ${rings.moonSectors} 0 ${large} 1 ${x2} ${y2} Z`;
+      const innerRadius = rings.patternRing * 0.3;
+      const { x: ix1, y: iy1 } = polarToXY(s.startAngle, innerRadius, cx, cy);
+      const { x: ix2, y: iy2 } = polarToXY(s.endAngle, innerRadius, cx, cy);
+      const pathD = `M ${ix1} ${iy1} L ${x1} ${y1} A ${rings.moonSectors} ${rings.moonSectors} 0 ${large} 1 ${x2} ${y2} L ${ix2} ${iy2} A ${innerRadius} ${innerRadius} 0 ${large} 0 ${ix1} ${iy1} Z`;
       const fill  = s.active ? "var(--sphere-moon-active, rgba(220,160,80,0.25))" : "var(--sphere-moon-fill, rgba(255,255,255,0.04))";
       const stroke = "var(--sphere-moon-stroke, rgba(255,255,255,0.15))";
-      return `<path class="sphere-moon-sector${s.active ? " sphere-moon-active" : ""}" d="${esc(pathD)}" fill="${fill}" stroke="${stroke}" stroke-width="1" role="img" aria-label="Moon ${s.moonNumber}">
+      return `<path class="sphere-moon-sector${s.active ? " sphere-moon-active" : ""}" d="${esc(pathD)}" fill="${fill}" stroke="${stroke}" stroke-width="1" role="button" aria-label="Moon ${s.moonNumber}" tabindex="0" data-moon-sector="${s.moonNumber}">
         <title>Moon ${s.moonNumber}</title>
       </path>
       <text class="sphere-moon-label" x="${cx2}" y="${cy2}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="var(--sphere-label, rgba(255,255,255,0.5))" pointer-events="none">${s.moonNumber}</text>`;
@@ -97,6 +100,62 @@
     return `<circle class="sphere-pattern-ring" cx="${cx}" cy="${cy}" r="${rings.patternRing}" fill="none" stroke="var(--sphere-pattern-ring, rgba(255,255,255,0.2))" stroke-width="2" />`;
   }
 
+  function renderDayPoints(model, rings, cx, cy, viewMode, width) {
+    const selected = model?.selectedPatternPosition || model?.todayPatternPosition || null;
+    const today = model?.todayPatternPosition || null;
+    const mobile = width < 420;
+    const activeMoon = selected?.moon ?? today?.moon ?? null;
+    const dayStep = 360 / 364;
+    let output = "";
+    for (let dayOfYear = 1; dayOfYear <= 364; dayOfYear += 1) {
+      const moon = Math.floor((dayOfYear - 1) / 28) + 1;
+      const day = ((dayOfYear - 1) % 28) + 1;
+      const angle = globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(dayOfYear);
+      const { x, y } = polarToXY(angle, rings.patternRing, cx, cy);
+      const isSelected = selected?.dayOfPatternYear === dayOfYear;
+      const isToday = today?.dayOfPatternYear === dayOfYear;
+      const isShabbat = [2, 9, 16, 23].includes(day);
+      const isWeekGate = day % 7 === 0;
+      const show = viewMode === "pattern"
+        || isSelected
+        || isToday
+        || isWeekGate
+        || (activeMoon != null && moon === activeMoon)
+        || (!mobile && day % 7 === 1);
+      if (!show) continue;
+      const radius = isSelected ? 4.4 : isToday ? 3.6 : isShabbat ? 2.6 : 1.8;
+      const fill = isSelected
+        ? "var(--sphere-selected, rgba(251,191,36,1))"
+        : isToday
+          ? "rgba(148, 205, 255, 0.95)"
+          : isShabbat
+            ? "rgba(125, 226, 209, 0.9)"
+            : "rgba(232, 228, 217, 0.65)";
+      const opacity = viewMode === "pattern" || isSelected || isToday || moon === activeMoon ? 1 : 0.52;
+      output += `<circle class="sphere-day-point${isSelected ? " is-selected" : ""}" cx="${x}" cy="${y}" r="${radius}" fill="${fill}" opacity="${opacity}" role="button" tabindex="0" data-day-of-year="${dayOfYear}" data-moon="${moon}" data-day="${day}">
+        <title>Moon ${moon} Day ${day} · Day ${dayOfYear}/364</title>
+      </circle>`;
+      if ((isSelected || isToday) && (viewMode !== "years")) {
+        const labelRadius = rings.patternRing + (isSelected ? 18 : 12);
+        const labelPoint = polarToXY(angle, labelRadius, cx, cy);
+        const label = isSelected ? `Selected · ${moon}/${day}` : `Today · ${moon}/${day}`;
+        output += `<text x="${labelPoint.x}" y="${labelPoint.y}" text-anchor="middle" dominant-baseline="middle" font-size="${isSelected ? 11 : 10}" fill="${isSelected ? "#fff1c2" : "rgba(189,221,255,0.95)"}" class="sphere-day-label">${label}</text>`;
+      }
+    }
+    return output;
+  }
+
+  function renderYearLabels(spiral, rings, cx, cy, selectedYear, visible, viewMode) {
+    if (!visible || viewMode !== "years" || !spiral?.years) return "";
+    return spiral.years.map(year => {
+      if (year.year !== selectedYear && year.year !== new Date().getUTCFullYear()) return "";
+      const r = rings.spiralInner + (rings.spiralOuter - rings.spiralInner) * year.yearSpiralRadius;
+      const { x, y } = polarToXY(year.yearSpiralAngle % 360, r + 18, cx, cy);
+      const fill = year.year === selectedYear ? "#fff1c2" : "rgba(232,228,217,0.75)";
+      return `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" font-size="${year.year === selectedYear ? 12 : 10}" fill="${fill}" class="sphere-year-label">${year.year}</text>`;
+    }).join("");
+  }
+
   function renderSolarAxis(rings, cx, cy) {
     const { x: x1, y: y1 } = polarToXY(0,   rings.solarAxis, cx, cy);
     const { x: x2, y: y2 } = polarToXY(180, rings.solarAxis, cx, cy);
@@ -128,11 +187,13 @@
       renderOuterBorder(rings, cx, cy),
       vl.pattern  ? renderPatternRing(rings, cx, cy) : "",
       vl.pattern  ? renderMoonSectors(model?.moonSectors || [], rings, cx, cy) : "",
+      vl.pattern  ? renderDayPoints(model, rings, cx, cy, viewMode, w) : "",
       vl.solar    ? renderSolarAxis(rings, cx, cy) : "",
       vl.spiral   ? renderSpiralPath(spiral, rings, cx, cy, vl.spiral) : "",
       vl.passage  ? renderPassageArc(model?.passage  || {}, rings, cx, cy, vl.passage) : "",
       vl.lunar    ? renderLunarOrbit(model?.lunarAngle || 0, rings, cx, cy, vl.lunar) : "",
       vl.markers  ? renderAnnualMarkers(spiral, rings, cx, cy, selectedYear, vl.markers) : "",
+      vl.markers  ? renderYearLabels(spiral, rings, cx, cy, selectedYear, vl.markers, viewMode) : "",
       model        ? renderEquinoxGate(model, rings, cx, cy) : "",
       model        ? renderYearGate(model, rings, cx, cy) : "",
       renderCenterPoint(cx, cy),
@@ -159,6 +220,43 @@
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           el.click();
+        }
+      });
+    });
+
+    container.querySelectorAll("[data-day-of-year]").forEach(el => {
+      const selectDay = () => {
+        container.dispatchEvent(new CustomEvent("sphere:marker-select", {
+          detail: {
+            type: "day",
+            dayOfPatternYear: Number(el.dataset.dayOfYear),
+            moon: Number(el.dataset.moon),
+            day: Number(el.dataset.day),
+          },
+          bubbles: true
+        }));
+      };
+      el.addEventListener("click", selectDay);
+      el.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          selectDay();
+        }
+      });
+    });
+
+    container.querySelectorAll("[data-moon-sector]").forEach(el => {
+      const selectMoon = () => {
+        container.dispatchEvent(new CustomEvent("sphere:marker-select", {
+          detail: { type: "moon", moon: Number(el.dataset.moonSector), day: 1 },
+          bubbles: true
+        }));
+      };
+      el.addEventListener("click", selectMoon);
+      el.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          selectMoon();
         }
       });
     });
