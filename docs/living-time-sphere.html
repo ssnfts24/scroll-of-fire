@@ -334,6 +334,14 @@
           <!-- 4. Selected marker details -->
           <div class="sphere-sidebar-section">
             <h2 class="sphere-sidebar-heading">Selected day</h2>
+            <div class="sphere-field-range-controls" role="group" aria-label="Field Layer range">
+              <button id="sphere-field-range-now" class="sphere-chip-btn" type="button" aria-pressed="true">Now</button>
+              <button id="sphere-field-range-today" class="sphere-chip-btn" type="button" aria-pressed="false">Today</button>
+              <button id="sphere-field-range-pattern-week" class="sphere-chip-btn" type="button" aria-pressed="false">Pattern Week</button>
+              <button id="sphere-field-range-pattern-moon" class="sphere-chip-btn" type="button" aria-pressed="false">Pattern Moon</button>
+              <button id="sphere-field-range-pattern-year" class="sphere-chip-btn" type="button" aria-pressed="false">Pattern Year</button>
+              <button id="sphere-field-range-historical" class="sphere-chip-btn" type="button" aria-pressed="false">Historical comparison</button>
+            </div>
             <div class="sphere-detail-nav" role="group" aria-label="Selected day controls">
               <label class="visually-hidden" for="sphere-select-moon">Select Pattern Moon</label>
               <select id="sphere-select-moon" class="sphere-control-select" aria-label="Select Pattern Moon"></select>

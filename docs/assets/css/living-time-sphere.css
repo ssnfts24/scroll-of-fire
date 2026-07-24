@@ -219,6 +219,194 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
+.sphere-details-grid-tight dt,
+.sphere-details-grid-tight dd {
+  border-bottom: 0;
+}
+
+.sphere-field-range-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.85rem;
+}
+
+.sphere-chip-btn,
+.sphere-field-summary-pill,
+.sphere-status-chip,
+.sphere-availability-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.4rem 0.7rem;
+}
+
+.sphere-chip-btn {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text, #e8e4d9);
+  cursor: pointer;
+}
+
+.sphere-chip-btn[aria-pressed="true"] {
+  border-color: rgba(251, 191, 36, 0.55);
+  background: rgba(251, 191, 36, 0.16);
+  color: #fbbf24;
+}
+
+.sphere-field-summary {
+  display: grid;
+  gap: 0.8rem;
+  margin-bottom: 0.85rem;
+}
+
+.sphere-field-summary-label,
+.sphere-field-range-note,
+.sphere-field-note {
+  margin: 0;
+  font-size: 0.82rem;
+  color: rgba(232, 228, 217, 0.68);
+}
+
+.sphere-field-summary-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.45rem;
+}
+
+.sphere-field-summary-pill,
+.sphere-availability-chip {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(232, 228, 217, 0.88);
+}
+
+.sphere-actions-compact {
+  margin-top: 0;
+}
+
+.sphere-field-cards {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.8rem;
+}
+
+.sphere-field-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  padding: 0.85rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.sphere-field-card.is-core {
+  border-color: rgba(251, 191, 36, 0.18);
+}
+
+.sphere-field-card.is-conditional {
+  border-color: rgba(122, 243, 255, 0.14);
+}
+
+.sphere-field-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.7rem;
+}
+
+.sphere-field-title {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-text, #e8e4d9);
+}
+
+.sphere-field-value {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  color: rgba(232, 228, 217, 0.9);
+}
+
+.sphere-field-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: flex-end;
+}
+
+.sphere-status-chip {
+  border: 1px solid transparent;
+  color: #05070d;
+  font-weight: 600;
+}
+
+.sphere-status-live { background: rgba(116, 244, 180, 0.92); }
+.sphere-status-calculated { background: rgba(251, 191, 36, 0.92); }
+.sphere-status-cached { background: rgba(129, 198, 255, 0.92); }
+.sphere-status-user-logged { background: rgba(211, 170, 255, 0.92); }
+.sphere-status-unavailable { background: rgba(255, 143, 143, 0.92); }
+.sphere-status-not-checked { background: rgba(201, 201, 201, 0.92); }
+
+.sphere-field-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem 0.8rem;
+  margin-top: 0.8rem;
+}
+
+.sphere-field-meta div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+}
+
+.sphere-field-meta span {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(232, 228, 217, 0.52);
+}
+
+.sphere-field-meta strong {
+  font-size: 0.84rem;
+  color: rgba(232, 228, 217, 0.9);
+  font-weight: 500;
+}
+
+.sphere-field-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+
+.sphere-field-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.84rem;
+  color: #fbbf24;
+  text-decoration: none;
+}
+
+.sphere-field-details,
+.sphere-field-disclosure {
+  margin-top: 0.75rem;
+}
+
+.sphere-inline-list {
+  margin: 0.4rem 0 0;
+  padding-left: 1.15rem;
+  color: rgba(232, 228, 217, 0.84);
+}
+
+.sphere-field-footer-actions {
+  margin-top: 0.95rem;
+}
+
 /* ── Layer controls ───────────────────────────────────────────────── */
 .sphere-layers {
   display: flex;
@@ -317,6 +505,23 @@
 .sphere-btn:focus-visible {
   outline: 2px solid var(--color-accent, #fbbf24);
   outline-offset: 2px;
+}
+
+.sphere-btn:disabled,
+.sphere-chip-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .sphere-details-grid,
+  .sphere-field-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .sphere-field-card {
+    padding: 0.8rem;
+  }
 }
 
 .sphere-btn-primary {
