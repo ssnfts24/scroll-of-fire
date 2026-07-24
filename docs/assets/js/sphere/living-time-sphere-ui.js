@@ -1409,10 +1409,11 @@
       const actionLink = item.actionHref && item.actionLabel
         ? `<a class="sphere-field-link" href="${_escapeHtml(item.actionHref)}">${_escapeHtml(item.actionLabel)}</a>`
         : "";
-      const toggleLabel = item.layerId
+      const canToggle = !!item.layerId && item.status !== "Unavailable" && item.status !== "Not checked";
+      const toggleLabel = canToggle
         ? `${item.visibleOnSphere ? "Hide on Sphere" : "Show on Sphere"}`
         : "Not available on Sphere";
-      const toggleDisabled = item.layerId ? "" : " disabled";
+      const toggleDisabled = canToggle ? "" : " disabled";
       return `<article class="sphere-field-card${item.hierarchy === "Always available" ? " is-core" : " is-conditional"}">
           <div class="sphere-field-head">
             <div>

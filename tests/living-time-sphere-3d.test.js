@@ -540,10 +540,11 @@ test("Sphere page: quality and renderer controls present", () => {
 
 test("Sphere page: field layer observatory controls present", () => {
   const html = read("docs/living-time-sphere.html");
+  const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
   assert.ok(html.includes("sphere-field-range-now"), "field range now control present");
   assert.ok(html.includes("sphere-field-range-historical"), "historical comparison range control present");
-  assert.ok(html.includes("Record Observation"), "record observation action present");
-  assert.ok(html.includes("Compare Historical Fields"), "historical comparison action present");
+  assert.ok(ui.includes("Record Observation"), "record observation action present");
+  assert.ok(ui.includes("Compare Historical Fields"), "historical comparison action present");
 });
 
 test("Sphere page: shared mount initializer is used", () => {
