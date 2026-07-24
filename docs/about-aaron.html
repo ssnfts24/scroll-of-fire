@@ -135,6 +135,7 @@
         "inLanguage": "en-US",
         "isPartOf": { "@type": "BookSeries", "name": "Remnant Rising" },
         "description": "A philosophical and practical framework examining energy, information, intention, memory, flow, consciousness, observation, interpretation, action, and return.",
+        "image": "https://codexofreality.org/assets/img/shared/social/file_00000000eeb081fd970fa27d23ff8f61.png",
         "url": "https://a.co/d/05pNUG3G"
       },
       {
@@ -147,6 +148,7 @@
         "inLanguage": "en-US",
         "isPartOf": { "@type": "BookSeries", "name": "Remnant Rising" },
         "description": "A thematic memoir tracing how fatherhood, labor, family responsibility, faith, housing instability, creativity, craftsmanship, technology, observation, and survival became one connected body of work.",
+        "image": "https://codexofreality.org/assets/img/shared/social/file_000000002cfc81f798fdc89fcb61c72e.png",
         "url": "https://a.co/d/094vswCB"
       }
     ]
@@ -398,6 +400,31 @@
       line-height: 1.4;
     }
 
+    /* Real published wraparound cover artwork */
+    .aa-book-cover.aa-book-cover--image {
+      display: block;
+      padding: 0;
+      min-height: 0;
+      aspect-ratio: 1.5 / 1;
+      border-radius: var(--radius-md);
+      background: #05070d;
+      isolation: auto;
+    }
+
+    .aa-book-cover.aa-book-cover--image::after {
+      display: none;
+    }
+
+    .aa-book-cover.aa-book-cover--image img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+      object-position: center;
+      border-radius: inherit;
+      background: #05070d;
+    }
+
     .aa-book-details {
       display: flex;
       flex-direction: column;
@@ -489,6 +516,13 @@
         width: min(13rem, 82%);
         min-height: 19rem;
         margin-inline: auto;
+      }
+
+      .aa-book-cover.aa-book-cover--image {
+        width: 100%;
+        min-height: 0;
+        margin-inline: 0;
+        aspect-ratio: 1.5 / 1;
       }
     }
 
@@ -1164,14 +1198,15 @@
 
       <div class="aa-books-grid">
         <article class="aa-book-card" aria-labelledby="codex-reality-book-title">
-          <div class="aa-book-cover aa-book-cover--codex" role="img" aria-label="Presentation of The Codex of Reality book">
-            <span class="aa-book-cover-kicker">Remnant Rising</span>
-            <span>
-              <strong class="aa-book-cover-title">The Codex<br>of Reality</strong>
-              <span class="aa-book-cover-subtitle">Energy · Information · Intention<br>Memory · Flow · Consciousness</span>
-            </span>
-            <span class="aa-book-cover-author">Aaron Paul Laird</span>
-          </div>
+          <a class="aa-book-cover aa-book-cover--image" href="https://a.co/d/05pNUG3G" target="_blank" rel="noopener noreferrer sponsored" aria-label="View The Codex of Reality on Amazon" data-ga-event="about_book_cover_open" data-ga-label="codex_of_reality_cover">
+            <img
+              src="assets/img/shared/social/file_00000000eeb081fd970fa27d23ff8f61.png"
+              alt="Full wraparound cover for The Codex of Reality by Aaron Laird, showing the back cover, spine, and front cover"
+              loading="lazy"
+              decoding="async"
+              width="1600"
+              height="1067">
+          </a>
           <div class="aa-book-details">
             <p class="eyebrow">The Framework</p>
             <h3 id="codex-reality-book-title">The Codex of Reality</h3>
@@ -1193,14 +1228,15 @@
         </article>
 
         <article class="aa-book-card" aria-labelledby="still-becoming-book-title">
-          <div class="aa-book-cover aa-book-cover--becoming" role="img" aria-label="Presentation of Still Becoming book">
-            <span class="aa-book-cover-kicker">Remnant Rising</span>
-            <span>
-              <strong class="aa-book-cover-title">Still<br>Becoming</strong>
-              <span class="aa-book-cover-subtitle">A Life of Choices, Consciousness,<br>and the Codex of Reality</span>
-            </span>
-            <span class="aa-book-cover-author">Aaron Paul Laird</span>
-          </div>
+          <a class="aa-book-cover aa-book-cover--image" href="https://a.co/d/094vswCB" target="_blank" rel="noopener noreferrer sponsored" aria-label="View Still Becoming on Amazon" data-ga-event="about_book_cover_open" data-ga-label="still_becoming_cover">
+            <img
+              src="assets/img/shared/social/file_000000002cfc81f798fdc89fcb61c72e.png"
+              alt="Full wraparound cover for Still Becoming by Aaron Paul Laird, showing the back cover, spine, and front cover"
+              loading="lazy"
+              decoding="async"
+              width="1600"
+              height="1067">
+          </a>
           <div class="aa-book-details">
             <p class="eyebrow">The Human Story</p>
             <h3 id="still-becoming-book-title">Still Becoming</h3>
@@ -1484,4 +1520,4 @@
     });
   </script>
 </body>
-</html>
+  </html>
