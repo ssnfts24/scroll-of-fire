@@ -527,6 +527,11 @@
   function updateDetails(model) {
     const el = document.getElementById("sphere-details");
     if (!el || !model) return;
+    const live = globalThis.LivingTimeSphereLiveData?.getSnapshot?.({
+      timeZone: _state.timeZone,
+      boundaryMode: _state.boundaryMode,
+      manualSunset: _state.manualSunset,
+    }) || null;
 
     // In today mode, show today's actual Pattern position (from PatternCalendar),
     // not the Equinox-moment position from the year record.
@@ -557,10 +562,17 @@
         ${isToday && todayPos && pos.dayOfPatternYear ? `<dt>Day of year</dt><dd>${dayLabel}</dd>` : ""}
         <dt>Passage</dt><dd>${Number(((offs.equinoxToYearGateDays || 0) * 24).toFixed(1))} hours</dd>
         <dt>Lunar phase</dt><dd>${lunar.phaseName || "—"}</dd>
+        <dt>Solar gate</dt><dd>${live?.solar?.gate ? `${live.solar.gate} · ${live.solar.element || "—"}` : "—"}</dd>
+        <dt>Season gate</dt><dd>${live?.solar?.season?.label ? `${live.solar.season.label} · ${Math.round((live.solar.season.progress || 0) * 100)}%` : "—"}</dd>
+        <dt>Witness</dt><dd>${live?.witness?.label || "No witness saved in this browser yet."}</dd>
+        <dt>Environment</dt><dd>${live?.environment ? `${live.environment.online ? "online" : "offline"}${live.environment.touch ? " · touch" : ""}${live.environment.reducedMotion ? " · reduced motion" : ""}` : "—"}</dd>
         <dt>Equinox angle</dt><dd>${model.passageStartAngle?.toFixed(1) || "—"}°</dd>
       </dl>`;
+    const recurrenceText = Array.isArray(live?.history?.recurrences) && live.history.recurrences[0]
+      ? `Closest recurrence: ${live.history.recurrences[0].year} at ${Math.round(live.history.recurrences[0].overallSimilarityScore * 100)}% similarity.`
+      : "No close recurrence above the current threshold in the study range.";
     if (isToday) {
-      el.innerHTML += `<p class="sphere-core-note"><strong>Pattern Core</strong> — the fixed center reflects the active 13 × 28 structure.</p>`;
+      el.innerHTML += `<p class="sphere-core-note"><strong>Pattern Core</strong> — the fixed center reflects the active 13 × 28 structure.</p><p class="sphere-core-note">${recurrenceText}</p>`;
     }
   }
 

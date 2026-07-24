@@ -83,6 +83,7 @@ function loadSphereContext() {
     "docs/assets/js/sphere/living-time-sphere-camera.js",
     "docs/assets/js/sphere/living-time-sphere-animation.js",
     "docs/assets/js/sphere/living-time-sphere-effects.js",
+    "docs/assets/js/sphere/living-time-sphere-live-data.js",
     "docs/assets/js/sphere/living-time-sphere-today.js",
   ];
 
@@ -353,6 +354,27 @@ test("LivingTimeSphereTodayCard: buildLink includes expected params", () => {
   assert.ok(!link.includes("genesis"), "must not include genesis data");
 });
 
+test("LivingTimeSphereLiveData: snapshot exposes shared astronomy and witness context", () => {
+  const ctx = loadSphereContext();
+  ctx.CodexMemory = {
+    getState() {
+      return {
+        recentWitness: { label: "Witness entry", date: "2026-07-24" },
+        currentCycle: { witnessedDays: ["2026-07-20", "2026-07-21"] },
+      };
+    }
+  };
+  const snapshot = ctx.LivingTimeSphereLiveData.getSnapshot({
+    asOf: new Date("2026-07-24T12:00:00Z"),
+    timeZone: "UTC",
+    boundaryMode: "midnight",
+  });
+  assert.equal(snapshot.pattern.civilDate, "2026-07-24");
+  assert.ok(snapshot.lunar.phaseName, "lunar state available");
+  assert.ok(snapshot.solar.gate, "solar gate available");
+  assert.equal(snapshot.witness.count, 2);
+});
+
 test("LivingTimeSphereTodayCard: buildTextSummary returns multi-line string", () => {
   const ctx = loadSphereContext();
   const supported = ctx.AlignmentLedgerData.listSupportedYears();
@@ -458,6 +480,8 @@ test("Homepage: observatory section exists with expected elements", () => {
   assert.ok(html.includes("Enter Today's Sphere"),        "CTA link present");
   assert.ok(html.includes("home-sphere-today-preview"),   "preview element present");
   assert.ok(html.includes("home-sphere-today-open-link"), "open link element present");
+  assert.ok(html.includes("data-sphere-mode=\"years\""),  "interactive years mode present");
+  assert.ok(html.includes("home-sphere-today-witness"),   "witness summary present");
 });
 
 // ── 13 Moons page: Today sphere card present ──────────────────────────
@@ -467,6 +491,7 @@ test("Moons page: Today Sphere card is in Today tab", () => {
   assert.ok(html.includes("moons-sphere-today-card"), "Today Sphere card ID present");
   assert.ok(html.includes("Enter Today's Sphere"),    "CTA link present");
   assert.ok(html.includes("moons-sphere-today-preview"), "preview element present");
+  assert.ok(html.includes("living-time-sphere-live-data.js"), "shared live-data module script present");
   assert.ok(html.includes("living-time-sphere-today.js"), "today module script present");
 });
 
@@ -483,6 +508,7 @@ test("Sphere page: 3D module scripts included", () => {
   assert.ok(html.includes("living-time-sphere-camera.js"),     "camera loaded");
   assert.ok(html.includes("living-time-sphere-animation.js"),  "animation loaded");
   assert.ok(html.includes("living-time-sphere-effects.js"),    "effects loaded");
+  assert.ok(html.includes("living-time-sphere-live-data.js"),  "live-data module loaded");
   assert.ok(html.includes("living-time-sphere-renderer-3d.js"),"renderer-3d loaded");
   assert.ok(html.includes("living-time-sphere-today.js"),      "today module loaded");
 });
@@ -504,6 +530,7 @@ test("Service worker: caches all Phase 03 sphere JS files", () => {
   assert.ok(sw.includes("living-time-sphere-camera.js"),     "camera cached");
   assert.ok(sw.includes("living-time-sphere-animation.js"),  "animation cached");
   assert.ok(sw.includes("living-time-sphere-effects.js"),    "effects cached");
+  assert.ok(sw.includes("living-time-sphere-live-data.js"),  "live-data cached");
   assert.ok(sw.includes("living-time-sphere-renderer-3d.js"),"renderer-3d cached");
   assert.ok(sw.includes("living-time-sphere-today.js"),      "today card cached");
 });
@@ -547,6 +574,7 @@ const NEW_SPHERE_FILES = [
   "docs/assets/js/sphere/living-time-sphere-camera.js",
   "docs/assets/js/sphere/living-time-sphere-animation.js",
   "docs/assets/js/sphere/living-time-sphere-effects.js",
+  "docs/assets/js/sphere/living-time-sphere-live-data.js",
   "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
   "docs/assets/js/sphere/living-time-sphere-today.js",
   "docs/assets/js/sphere/living-time-sphere-ui.js",

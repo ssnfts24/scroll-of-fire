@@ -68,6 +68,7 @@
   <link rel="stylesheet" href="assets/css/living-day.css?v=1">
   <link rel="stylesheet" href="assets/css/codex-memory.css?v=1">
   <link rel="stylesheet" href="assets/css/share-day.css?v=1">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260724-1">
 
   <script type="application/ld+json">
   {
@@ -350,13 +351,32 @@
           <p class="sphere-observatory-desc">Fixed Pattern Time at the center. Moving astronomical cycles around it.</p>
         </header>
 
+        <div class="sphere-observatory-toolbar" aria-label="Homepage sphere controls">
+          <div class="sphere-observatory-mode-group" role="group" aria-label="Observatory mode">
+            <button type="button" class="sphere-chip-btn" data-sphere-mode="today" aria-pressed="true">Today</button>
+            <button type="button" class="sphere-chip-btn" data-sphere-mode="passage" aria-pressed="false">Passage</button>
+            <button type="button" class="sphere-chip-btn" data-sphere-mode="years" aria-pressed="false">Years</button>
+            <button type="button" class="sphere-chip-btn" data-sphere-mode="pattern" aria-pressed="false">Pattern</button>
+          </div>
+          <div class="sphere-observatory-layer-group" role="group" aria-label="Observatory layers">
+            <button type="button" class="sphere-chip-btn sphere-chip-btn--layer" data-sphere-layer="lunar" aria-pressed="true">Moon</button>
+            <button type="button" class="sphere-chip-btn sphere-chip-btn--layer" data-sphere-layer="solar" aria-pressed="false">Solar</button>
+            <button type="button" class="sphere-chip-btn sphere-chip-btn--layer" data-sphere-layer="spiral" aria-pressed="false">Spiral</button>
+            <button type="button" class="sphere-chip-btn sphere-chip-btn--layer" data-sphere-layer="recurrence" aria-pressed="false">Recurrence</button>
+          </div>
+          <div class="sphere-observatory-year-nav" role="group" aria-label="Selected historical year">
+            <button type="button" class="sphere-chip-btn sphere-chip-btn--year" data-sphere-year-step="-1" aria-label="Show previous year">←</button>
+            <span class="sphere-observatory-year-label" data-sphere-year-label>2026</span>
+            <button type="button" class="sphere-chip-btn sphere-chip-btn--year" data-sphere-year-step="1" aria-label="Show next year">→</button>
+          </div>
+        </div>
+
         <div class="sphere-observatory-layout">
-          <!-- Compact sphere preview (SVG, no 3D) -->
-          <div class="sphere-observatory-preview-wrap" aria-hidden="true">
-            <div id="home-sphere-today-preview" class="sphere-observatory-preview"></div>
+          <div class="sphere-observatory-preview-wrap">
+            <div id="home-sphere-today-preview" class="sphere-observatory-preview sphere-observatory-preview--interactive" data-sphere-interactive-preview role="img" aria-label="Interactive homepage Living Time Sphere"></div>
+            <p class="sphere-observatory-mode-summary" data-sphere-mode-summary>Today · Moon — · Day —</p>
           </div>
 
-          <!-- Today data -->
           <div class="sphere-observatory-data">
             <dl class="sphere-today-grid">
               <dt>Pattern</dt>
@@ -376,11 +396,21 @@
 
               <dt>Equinox Passage</dt>
               <dd id="home-sphere-today-passage">—</dd>
+
+              <dt>Solar Gate</dt>
+              <dd id="home-sphere-today-solar">—</dd>
+
+              <dt>Season Gate</dt>
+              <dd id="home-sphere-today-season">—</dd>
             </dl>
 
             <p class="sphere-today-orientation" id="home-sphere-today-orientation">—</p>
+            <ul class="sphere-observatory-notes" aria-label="Observatory live notes">
+              <li><strong>Witness</strong><span id="home-sphere-today-witness">No witness saved yet.</span></li>
+              <li><strong>History</strong><span id="home-sphere-today-history">No recurrence selected.</span></li>
+              <li><strong>Environment</strong><span id="home-sphere-today-environment">Checking device context…</span></li>
+            </ul>
 
-            <!-- Accessible description (always visible) -->
             <p class="visually-hidden" id="home-sphere-today-accessible" aria-live="polite">Loading today's sphere position…</p>
 
             <div class="sphere-observatory-actions">
@@ -390,6 +420,9 @@
                 Enter Today's Sphere
               </a>
               <a class="btn" href="./moons.html">Open 13 Moons</a>
+              <a id="home-sphere-today-witness-link" class="btn" href="./ledger.html">Record Witness</a>
+              <a id="home-sphere-today-ledger-link" class="btn" href="./alignment-ledger.html">Alignment Ledger</a>
+              <a id="home-sphere-today-oracle-link" class="btn" href="./genesis-oracle.html">Genesis Oracle</a>
             </div>
           </div>
         </div>
@@ -922,10 +955,13 @@
         "assets/js/alignment/alignment-version.js",
         "assets/js/alignment/alignment-ledger-engine.js",
         "assets/js/alignment/alignment-ledger-data.js",
+        "assets/js/alignment/alignment-comparison.js",
+        "assets/js/alignment/alignment-recurrence.js",
         "assets/js/sphere/living-time-sphere-version.js",
         "assets/js/sphere/living-time-sphere-model.js",
         "assets/js/sphere/living-time-sphere-layout.js",
         "assets/js/sphere/living-time-sphere-renderer-svg.js",
+        "assets/js/sphere/living-time-sphere-live-data.js",
         "assets/js/sphere/living-time-sphere-today.js"
       ];
 
@@ -952,7 +988,13 @@
       function initObservatory() {
         var root = document.getElementById("home-sphere-observatory");
         if (!root || !globalThis.LivingTimeSphereTodayCard) return;
-        globalThis.LivingTimeSphereTodayCard.render(root, { idPrefix: "home-", source: "home" });
+        globalThis.LivingTimeSphereTodayCard.wireInteractive(root, { idPrefix: "home-", source: "home" });
+        globalThis.LivingTimeSphereTodayCard.renderInteractive(root, { idPrefix: "home-", source: "home" });
+        globalThis.LivingTimeSphereTodayCard.attachAutoUpdate(root, {
+          idPrefix: "home-",
+          source: "home",
+          render: "interactive"
+        });
       }
 
       // Use IntersectionObserver for lazy initialization

@@ -382,6 +382,7 @@ test("PatternCalendar: Deep Time Day is not a regular moon-day", () => {
 
 const filesToSyntaxCheck = [
   "docs/assets/js/sphere/living-time-sphere-model.js",
+  "docs/assets/js/sphere/living-time-sphere-live-data.js",
   "docs/assets/js/sphere/living-time-sphere-today.js",
   "docs/assets/js/sphere/living-time-sphere-ui.js",
   "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
