@@ -354,20 +354,9 @@
         <div class="sphere-observatory-toolbar" aria-label="Homepage sphere controls">
           <div class="sphere-observatory-mode-group" role="group" aria-label="Observatory mode">
             <button type="button" class="sphere-chip-btn" data-sphere-mode="today" aria-pressed="true">Today</button>
-            <button type="button" class="sphere-chip-btn" data-sphere-mode="passage" aria-pressed="false">Passage</button>
-            <button type="button" class="sphere-chip-btn" data-sphere-mode="years" aria-pressed="false">Years</button>
             <button type="button" class="sphere-chip-btn" data-sphere-mode="pattern" aria-pressed="false">Pattern</button>
-          </div>
-          <div class="sphere-observatory-layer-group" role="group" aria-label="Observatory layers">
-            <button type="button" class="sphere-chip-btn sphere-chip-btn--layer" data-sphere-layer="lunar" aria-pressed="true">Moon</button>
-            <button type="button" class="sphere-chip-btn sphere-chip-btn--layer" data-sphere-layer="solar" aria-pressed="false">Solar</button>
-            <button type="button" class="sphere-chip-btn sphere-chip-btn--layer" data-sphere-layer="spiral" aria-pressed="false">Spiral</button>
-            <button type="button" class="sphere-chip-btn sphere-chip-btn--layer" data-sphere-layer="recurrence" aria-pressed="false">Recurrence</button>
-          </div>
-          <div class="sphere-observatory-year-nav" role="group" aria-label="Selected historical year">
-            <button type="button" class="sphere-chip-btn sphere-chip-btn--year" data-sphere-year-step="-1" aria-label="Show previous year">←</button>
-            <span class="sphere-observatory-year-label" data-sphere-year-label>2026</span>
-            <button type="button" class="sphere-chip-btn sphere-chip-btn--year" data-sphere-year-step="1" aria-label="Show next year">→</button>
+            <button type="button" class="sphere-chip-btn" data-sphere-mode="passage" aria-pressed="false">Passage</button>
+            <button type="button" class="sphere-chip-btn" data-home-sphere-reset>Reset</button>
           </div>
         </div>
 
@@ -957,11 +946,22 @@
         "assets/js/alignment/alignment-ledger-data.js",
         "assets/js/alignment/alignment-comparison.js",
         "assets/js/alignment/alignment-recurrence.js",
+        "assets/js/sphere/living-time-sphere-state.js",
         "assets/js/sphere/living-time-sphere-version.js",
         "assets/js/sphere/living-time-sphere-model.js",
         "assets/js/sphere/living-time-sphere-layout.js",
+        "assets/js/sphere/living-time-sphere-connections.js",
         "assets/js/sphere/living-time-sphere-renderer-svg.js",
+        "assets/js/sphere/living-time-sphere-materials.js",
+        "assets/js/sphere/living-time-sphere-effects.js",
+        "assets/js/sphere/living-time-sphere-camera.js",
+        "assets/js/sphere/living-time-sphere-animation.js",
+        "assets/js/sphere/living-time-sphere-renderer-3d.js",
+        "assets/js/sphere/living-time-sphere-interaction.js",
+        "assets/js/sphere/living-time-sphere-accessibility.js",
         "assets/js/sphere/living-time-sphere-live-data.js",
+        "assets/js/sphere/living-time-sphere-url-state.js",
+        "assets/js/sphere/living-time-sphere-mount.js",
         "assets/js/sphere/living-time-sphere-today.js"
       ];
 
@@ -1007,6 +1007,29 @@
         var root = document.getElementById("home-sphere-observatory");
         if (!root || initialized || !globalThis.LivingTimeSphereTodayCard) return;
         initialized = true;
+        var preview = document.getElementById("home-sphere-today-preview");
+        if (preview && globalThis.LivingTimeSphere?.mount) {
+          preview.dataset.ltsManagedMount = "true";
+          preview.__livingTimeSphereMount = globalThis.LivingTimeSphere.mount({
+            container: preview,
+            compact: true,
+            mode: "today",
+            renderer: "auto",
+            visibleLayers: {
+              pattern: true,
+              exactDays: true,
+              weekGates: true,
+              passage: true,
+              lunar: true,
+              solar: true,
+              markers: true,
+              spiral: false,
+              recurrence: false,
+              environment: false,
+              connections: true
+            }
+          });
+        }
         globalThis.LivingTimeSphereTodayCard.wireInteractive(root, { idPrefix: "home-", source: "home" });
         globalThis.LivingTimeSphereTodayCard.renderInteractive(root, { idPrefix: "home-", source: "home" });
         globalThis.LivingTimeSphereTodayCard.attachAutoUpdate(root, {

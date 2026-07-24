@@ -45,8 +45,10 @@ function loadSphereContext() {
     "docs/assets/js/alignment/alignment-export.js",
     "docs/assets/js/alignment/alignment-url-state.js",
     "docs/assets/js/sphere/living-time-sphere-version.js",
+    "docs/assets/js/sphere/living-time-sphere-state.js",
     "docs/assets/js/sphere/living-time-sphere-model.js",
     "docs/assets/js/sphere/living-time-sphere-layout.js",
+    "docs/assets/js/sphere/living-time-sphere-connections.js",
     "docs/assets/js/sphere/living-time-sphere-renderer-svg.js",
     "docs/assets/js/sphere/living-time-sphere-accessibility.js",
     "docs/assets/js/sphere/living-time-sphere-export.js",
@@ -166,16 +168,42 @@ test("LivingTimeSphereModel: spiral year indices are sequential", () => {
   }
 });
 
-test("LivingTimeSphereModel: patternAngleForDayOfYear(1) = 0", () => {
+test("LivingTimeSphereModel: patternAngleForDayOfYear uses center-of-day mapping", () => {
   const ctx = loadSphereContext();
-  assert.equal(ctx.LivingTimeSphereModel.patternAngleForDayOfYear(1), 0);
+  assert.equal(ctx.LivingTimeSphereModel.patternAngleForDayOfYear(1), Number((0.5 / 364 * 360).toFixed(6)));
 });
 
-test("LivingTimeSphereModel: patternAngleForDayOfYear(365) ≈ 360", () => {
+test("LivingTimeSphereModel: patternAngleForDayOfYear(365) stays on last day center", () => {
   const ctx = loadSphereContext();
   const angle = ctx.LivingTimeSphereModel.patternAngleForDayOfYear(365);
-  // 364/364 * 360 = 360 but clamped to 363 (last index 363 of 364 total)
-  assert.ok(angle > 358 && angle <= 360, `angle was ${angle}`);
+  assert.ok(angle > 359 && angle < 360, `angle was ${angle}`);
+});
+
+test("LivingTimeSphereModel: dayOfYearForPatternAngle round-trips day centers", () => {
+  const ctx = loadSphereContext();
+  const angle = ctx.LivingTimeSphereModel.patternAngleForDayOfYear(99);
+  assert.equal(ctx.LivingTimeSphereModel.dayOfYearForPatternAngle(angle), 99);
+});
+
+test("LivingTimeSphereState: mode layer defaults expose shared observatory layers", () => {
+  const ctx = loadSphereContext();
+  const state = ctx.LivingTimeSphereState.createState({ mode: "today", compact: true });
+  assert.equal(state.visibleLayers.pattern, true);
+  assert.equal(state.visibleLayers.exactDays, true);
+  assert.equal(state.visibleLayers.connections, true);
+  assert.equal(state.motionMode, "still");
+});
+
+test("LivingTimeSphereConnections: contextual registry returns selected day and passage connections", () => {
+  const ctx = loadSphereContext();
+  const model = ctx.LivingTimeSphereModel.buildTodayModel({ asOf: "2026-07-23T12:00:00Z" });
+  const registry = ctx.LivingTimeSphereConnections.buildRegistry({
+    model: { ...model, selectedPatternPosition: model.todayPatternPosition },
+    spiral: ctx.LivingTimeSphereModel.buildSpiral(),
+    state: ctx.LivingTimeSphereState.createState({ mode: "today" })
+  });
+  assert.ok(registry.some(connection => connection.id === "today-core"));
+  assert.ok(registry.some(connection => connection.id === "today-lunar"));
 });
 
 // ── Layout ────────────────────────────────────────────────────────────

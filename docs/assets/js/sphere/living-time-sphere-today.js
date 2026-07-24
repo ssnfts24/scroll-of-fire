@@ -227,6 +227,16 @@
 
   function renderPreview(previewEl, data) {
     if (!previewEl) return;
+    if (previewEl.dataset.ltsManagedMount === "true" && previewEl.__livingTimeSphereMount?.refresh) {
+      previewEl.__livingTimeSphereMount.refresh({
+        instant: data.instant,
+        timeZone: data.timeZone,
+        boundaryMode: data.boundaryMode,
+        manualSunset: data.sunsetTime,
+        selectedYear: data.year,
+      });
+      return;
+    }
     try {
       const { todayModel, year } = data;
       const spiral = globalThis.LivingTimeSphereModel.buildSpiral({});
@@ -443,14 +453,26 @@
       containerHeight: Math.max(h, 160),
       devicePixelRatio: typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1,
     });
-    globalThis.LivingTimeSphereRendererSvg.renderInto(previewEl, {
-      model,
-      spiral,
-      layout,
-      visibleLayers: state.layers,
-      selectedYear,
-      viewMode: state.viewMode,
-    });
+    if (previewEl.dataset.ltsManagedMount === "true" && previewEl.__livingTimeSphereMount?.refresh) {
+      previewEl.__livingTimeSphereMount.refresh({
+        instant: data.instant,
+        selectedYear,
+        selectedDay: data.pos?.dayOfPatternYear || null,
+        selectedMoon: data.pos?.moon || null,
+        mode: state.viewMode,
+        visibleLayers: state.layers,
+        renderer: "auto",
+      });
+    } else {
+      globalThis.LivingTimeSphereRendererSvg.renderInto(previewEl, {
+        model,
+        spiral,
+        layout,
+        visibleLayers: state.layers,
+        selectedYear,
+        viewMode: state.viewMode,
+      });
+    }
 
     const summary = rootEl.querySelector("[data-sphere-mode-summary]");
     if (summary) {
@@ -518,6 +540,16 @@
         renderInteractive(rootEl, opts);
       });
     });
+
+    const resetBtn = rootEl.querySelector("[data-home-sphere-reset]");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        state.viewMode = "today";
+        state.layers = { ...INTERACTIVE_DEFAULTS.layers };
+        state.yearOffset = 0;
+        renderInteractive(rootEl, opts);
+      });
+    }
   }
 
   // ── Lazy initialization via IntersectionObserver ──────────────────

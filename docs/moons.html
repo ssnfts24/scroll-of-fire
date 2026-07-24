@@ -2604,12 +2604,22 @@
   <script src="assets/js/alignment/alignment-version.js?v=20260723-1"></script>
   <script src="assets/js/alignment/alignment-ledger-engine.js?v=20260723-1"></script>
   <script src="assets/js/alignment/alignment-ledger-data.js?v=20260723-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-state.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-version.js?v=20260723-2"></script>
   <script src="assets/js/sphere/living-time-sphere-model.js?v=20260723-2"></script>
   <script src="assets/js/sphere/living-time-sphere-layout.js?v=20260723-2"></script>
+  <script src="assets/js/sphere/living-time-sphere-connections.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-renderer-svg.js?v=20260723-2"></script>
+  <script src="assets/js/sphere/living-time-sphere-materials.js?v=20260724-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-effects.js?v=20260724-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-camera.js?v=20260724-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-animation.js?v=20260724-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260724-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-interaction.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-accessibility.js?v=20260723-2"></script>
   <script src="assets/js/sphere/living-time-sphere-live-data.js?v=20260724-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-url-state.js?v=20260724-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-mount.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-today.js?v=20260724-1"></script>
 
   <!-- Main calendar app -->
@@ -3560,6 +3570,30 @@ Let the next step be firm.`;
           var supported = globalThis.AlignmentLedgerData.listSupportedYears();
           if (!supported.includes(year)) year = supported[supported.length - 1];
 
+          if (globalThis.LivingTimeSphere && !preview.__livingTimeSphereMount) {
+            preview.dataset.ltsManagedMount = "true";
+            preview.__livingTimeSphereMount = globalThis.LivingTimeSphere.mount({
+              container: preview,
+              compact: true,
+              mode: "today",
+              renderer: "auto",
+              state: { selectedYear: year },
+              visibleLayers: {
+                pattern: true,
+                exactDays: true,
+                weekGates: true,
+                passage: true,
+                lunar: true,
+                solar: false,
+                markers: true,
+                spiral: false,
+                recurrence: false,
+                environment: false,
+                connections: true
+              }
+            });
+          }
+
           var model  = globalThis.LivingTimeSphereModel.buildYearModel({ year: year });
           var spiral = globalThis.LivingTimeSphereModel.buildSpiral({});
 
@@ -3589,6 +3623,29 @@ Let the next step be firm.`;
       function initTodaySphereCard() {
         var root = document.getElementById("moons-sphere-today-card");
         if (!root || !globalThis.LivingTimeSphereTodayCard) return;
+        var preview = document.getElementById("moons-sphere-today-preview");
+        if (preview && globalThis.LivingTimeSphere && !preview.__livingTimeSphereMount) {
+          preview.dataset.ltsManagedMount = "true";
+          preview.__livingTimeSphereMount = globalThis.LivingTimeSphere.mount({
+            container: preview,
+            compact: true,
+            mode: "today",
+            renderer: "auto",
+            visibleLayers: {
+              pattern: true,
+              exactDays: true,
+              weekGates: true,
+              passage: true,
+              lunar: true,
+              solar: false,
+              markers: true,
+              spiral: false,
+              recurrence: false,
+              environment: false,
+              connections: true
+            }
+          });
+        }
 
         // Determine current tz/boundary from page state (moons.js sets these on the DOM)
         function currentOpts() {

@@ -292,8 +292,8 @@ test("buildTodayModel: currentPatternAngle differs before vs after boundary", ()
   // currentPatternAngle for Day 97 != Day 98
   assert.notEqual(mBefore.currentPatternAngle, mAfter.currentPatternAngle,
     "currentPatternAngle must change after boundary transition");
-  // Day 97 → (96/364)*360 ≈ 94.725°
-  const expected97 = (96 / 364) * 360;
+  // Day 97 → ((97 - 0.5)/364)*360 ≈ 95.44°
+  const expected97 = ((97 - 0.5) / 364) * 360;
   assert.ok(Math.abs(mBefore.currentPatternAngle - expected97) < 0.1,
     `Day 97 angle expected ~${expected97.toFixed(2)}°, got ${mBefore.currentPatternAngle}`);
 });
@@ -382,7 +382,10 @@ test("PatternCalendar: Deep Time Day is not a regular moon-day", () => {
 
 const filesToSyntaxCheck = [
   "docs/assets/js/sphere/living-time-sphere-model.js",
+  "docs/assets/js/sphere/living-time-sphere-state.js",
+  "docs/assets/js/sphere/living-time-sphere-connections.js",
   "docs/assets/js/sphere/living-time-sphere-live-data.js",
+  "docs/assets/js/sphere/living-time-sphere-mount.js",
   "docs/assets/js/sphere/living-time-sphere-today.js",
   "docs/assets/js/sphere/living-time-sphere-ui.js",
   "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",

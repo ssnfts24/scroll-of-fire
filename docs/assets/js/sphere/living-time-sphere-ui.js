@@ -13,7 +13,7 @@
     boundaryMode:  "sunset",
     manualSunset:  "18:00",
     selectedDayOfYear: null,
-    visibleLayers: { pattern: true, passage: true, lunar: true, solar: false, markers: true, recurrence: false, spiral: false },
+    visibleLayers: { pattern: true, exactDays: true, weekGates: true, outsideDays: false, passage: true, lunar: true, solar: false, markers: true, recurrence: false, spiral: false, environment: false, connections: true },
     selectedMarker: null,
     useCanvas:     false,
     lowPower:      false,
@@ -21,6 +21,10 @@
     rendererMode:  "auto",   // "auto" | "3d" | "svg" | "table" | "text"
     quality:       "auto",   // "auto" | "high" | "balanced" | "lowpower" | "svgonly"
     moonLabelMode: "contextual", // "contextual" | "all" | "selected" | "hidden"
+    moonLabelDistance: "standard",
+    dayLabelMode: "key",
+    connectionMode: "contextual",
+    motionMode: "still",
     active3d:      false,    // true when 3D renderer is active
     introShown:    false,
     _3dInitInProgress: false, // guard against concurrent 3D init calls
@@ -54,6 +58,10 @@
     if (parsed.marker)       _state.selectedMarker = parsed.marker;
     if (parsed.renderer)     _state.rendererMode = parsed.renderer;
     if (parsed.quality)      _state.quality      = parsed.quality;
+    if (parsed.connectionMode) _state.connectionMode = parsed.connectionMode;
+    if (parsed.motionMode)     _state.motionMode = parsed.motionMode;
+    if (parsed.moonLabelDistance) _state.moonLabelDistance = parsed.moonLabelDistance;
+    if (parsed.dayLabelMode)   _state.dayLabelMode = parsed.dayLabelMode;
     if (parsed.layers) {
       for (const k of Object.keys(_state.visibleLayers)) _state.visibleLayers[k] = false;
       for (const l of parsed.layers) _state.visibleLayers[l] = true;
@@ -128,6 +136,11 @@
     }
     if (typeof window !== "undefined" && window.innerWidth < 640) return "contextual";
     return _state.moonLabelMode || "contextual";
+  }
+
+  function _resolveMoonLabelDistance() {
+    if (typeof window !== "undefined" && window.innerWidth < 640) return "tight";
+    return _state.moonLabelDistance || "standard";
   }
 
   function _pad(value) {
@@ -329,6 +342,10 @@
           visibleLayers: _state.visibleLayers,
           viewMode:      _state.viewMode,
           moonLabelMode: _state.moonLabelMode,
+          moonLabelDistance: _state.moonLabelDistance,
+          dayLabelMode: _state.dayLabelMode,
+          connectionRegistry: globalThis.LivingTimeSphereConnections?.buildRegistry?.({ model, spiral, state: _state }) || [],
+          motionMode: _state.motionMode,
           reducedMotion,
           onYearSelect: year => {
             _state.year = year;
@@ -345,6 +362,7 @@
             if (marker.type === "day" && marker.dayOfPatternYear) {
               _state.selectedDayOfYear = marker.dayOfPatternYear;
               _state.selectedMarker = `day-${marker.dayOfPatternYear}`;
+              globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${marker.day}, Day ${marker.dayOfPatternYear} of 364.`);
               if (_state.viewMode === "years") {
                 _state.viewMode = "pattern";
                 _setModeDefaultLayers("pattern");
@@ -357,6 +375,7 @@
               const day = Math.max(1, Math.min(28, marker.day || 1));
               _state.selectedDayOfYear = (marker.moon - 1) * 28 + day;
               _state.selectedMarker = `moon-${marker.moon}`;
+              globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${day}.`);
               renderSphere(container);
               return;
             }
@@ -400,7 +419,18 @@
       _updateInteractBar();
       _updateRendererDiagnostics();
     } else {
-      renderer.refresh(model, spiral, _state.year, _state.visibleLayers, _state.viewMode, _state.moonLabelMode);
+      renderer.refresh(
+        model,
+        spiral,
+        _state.year,
+        _state.visibleLayers,
+        _state.viewMode,
+        _state.moonLabelMode,
+        _state.moonLabelDistance,
+        _state.dayLabelMode,
+        globalThis.LivingTimeSphereConnections?.buildRegistry?.({ model, spiral, state: _state }) || [],
+        _state.motionMode
+      );
       renderer.setMode(_state.viewMode);
     }
   }
@@ -438,7 +468,11 @@
       model, spiral, layout,
       visibleLayers: _state.visibleLayers,
       selectedYear:  _state.year,
-      viewMode:      _state.viewMode
+      viewMode:      _state.viewMode,
+      moonLabelMode: _state.moonLabelMode,
+      moonLabelDistance: _state.moonLabelDistance,
+      dayLabelMode: _state.dayLabelMode,
+      connectionRegistry: globalThis.LivingTimeSphereConnections?.buildRegistry?.({ model, spiral, state: _state }) || []
     });
   }
 
@@ -560,15 +594,27 @@
 
   function _setModeDefaultLayers(mode) {
     if (mode === "today") {
+      _state.visibleLayers.exactDays = true;
+      _state.visibleLayers.weekGates = true;
+      _state.visibleLayers.connections = true;
       _state.visibleLayers.spiral = false;
       _state.visibleLayers.recurrence = false;
       _state.visibleLayers.solar = false;
     } else if (mode === "pattern") {
+      _state.visibleLayers.exactDays = true;
+      _state.visibleLayers.weekGates = true;
+      _state.visibleLayers.connections = true;
       _state.visibleLayers.spiral = false;
       _state.visibleLayers.recurrence = false;
     } else if (mode === "years") {
+      _state.visibleLayers.exactDays = false;
+      _state.visibleLayers.weekGates = false;
+      _state.visibleLayers.connections = true;
       _state.visibleLayers.spiral = true;
     } else if (mode === "passage") {
+      _state.visibleLayers.exactDays = true;
+      _state.visibleLayers.weekGates = true;
+      _state.visibleLayers.connections = true;
       _state.visibleLayers.spiral = false;
     }
     Object.keys(_state.visibleLayers).forEach(layer => {
@@ -682,6 +728,9 @@
       : "No close recurrence above the current threshold in the study range.";
     const selectedLabel = selected?.moon != null ? `Moon ${selected.moon} · ${selected.moonName || "Unavailable"} · Day ${selected.day}` : "Unavailable";
     const day364 = selected?.dayOfPatternYear != null ? `Day ${selected.dayOfPatternYear}/364` : "Unavailable — selected day is outside the counted year.";
+    const patternAngle = selected?.dayOfPatternYear != null
+      ? `${globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(selected.dayOfPatternYear).toFixed(1)}°`
+      : "Unavailable";
     const shabbatLabel = selected?.moon == null
       ? "Unavailable — outside counted day set."
       : selected.shabbat
@@ -713,6 +762,7 @@
         <dl class="sphere-details-grid">
           <dt>Pattern</dt><dd>${selectedLabel}</dd>
           <dt>Day of 364</dt><dd>${day364}</dd>
+          <dt>Pattern angle</dt><dd>${patternAngle}</dd>
           <dt>Pattern date</dt><dd>${selected?.effectiveDate || "Unavailable — date conversion failed."}</dd>
           <dt>Day Seal</dt><dd>${selected?.daySeal || "Unavailable"} <span class="sphere-inline-note">${selected?.daySealMeaning || ""}</span></dd>
           <dt>Week Gate</dt><dd>${selected?.weekGate?.[0] || "Unavailable — week gate missing."}</dd>
@@ -759,10 +809,27 @@
   // ── Control wiring ─────────────────────────────────────────────────
 
   function wireControls(container) {
+    const syncDaySelectors = () => {
+      const moonSel = document.getElementById("sphere-select-moon");
+      const daySel = document.getElementById("sphere-select-day");
+      if (!moonSel || !daySel) return;
+      if (!moonSel.options.length) {
+        moonSel.innerHTML = Array.from({ length: 13 }, (_, index) => `<option value="${index + 1}">Moon ${index + 1}</option>`).join("");
+      }
+      if (!daySel.options.length) {
+        daySel.innerHTML = Array.from({ length: 28 }, (_, index) => `<option value="${index + 1}">Day ${index + 1}</option>`).join("");
+      }
+      const model = buildCurrentModel();
+      const selected = model.selectedPatternPosition || _resolveSelectedPatternPosition(model);
+      moonSel.value = String(selected?.moon || 1);
+      daySel.value = String(selected?.day || 1);
+    };
+
     const shiftSelectedDay = delta => {
       _state.selectedDayOfYear = Math.max(1, Math.min(364, (_state.selectedDayOfYear ?? _resolveSelectedDayOfYear(buildCurrentModel())) + delta));
       _state.selectedMarker = `day-${_state.selectedDayOfYear}`;
       renderSphere(container);
+      syncDaySelectors();
     };
 
     const shiftSelectedMoon = delta => {
@@ -774,6 +841,7 @@
       _state.selectedDayOfYear = (nextMoon - 1) * 28 + currentDay;
       _state.selectedMarker = `moon-${nextMoon}`;
       renderSphere(container);
+      syncDaySelectors();
     };
 
     // View mode buttons.
@@ -817,6 +885,28 @@
       if (btn) btn.addEventListener("click", handler);
     });
 
+    const moonSelect = document.getElementById("sphere-select-moon");
+    const daySelect = document.getElementById("sphere-select-day");
+    if (moonSelect) {
+      moonSelect.addEventListener("change", () => {
+        const moon = Math.max(1, Math.min(13, Number(moonSelect.value) || 1));
+        const day = Math.max(1, Math.min(28, Number(daySelect?.value) || 1));
+        _state.selectedDayOfYear = (moon - 1) * 28 + day;
+        _state.selectedMarker = `moon-${moon}`;
+        renderSphere(container);
+      });
+    }
+    if (daySelect) {
+      daySelect.addEventListener("change", () => {
+        const moon = Math.max(1, Math.min(13, Number(moonSelect?.value) || 1));
+        const day = Math.max(1, Math.min(28, Number(daySelect.value) || 1));
+        _state.selectedDayOfYear = (moon - 1) * 28 + day;
+        _state.selectedMarker = `day-${_state.selectedDayOfYear}`;
+        renderSphere(container);
+      });
+    }
+    syncDaySelectors();
+
     // Layer toggles.
     Object.keys(_state.visibleLayers).forEach(layer => {
       const cb = document.getElementById(`sphere-layer-${layer}`);
@@ -857,6 +947,10 @@
           datasetVersion: globalThis.LivingTimeSphereVersion?.version,
           renderer:      _state.active3d ? "3d" : "svg",
           quality:       _state.quality,
+          connectionMode:_state.connectionMode,
+          motionMode:    _state.motionMode,
+          moonLabelDistance: _state.moonLabelDistance,
+          dayLabelMode:  _state.dayLabelMode,
           cameraTheta:   camState.theta,
           cameraDist:    camState.dist,
         });
@@ -929,6 +1023,45 @@
       moonLabelMode.addEventListener("change", () => {
         _state.moonLabelMode = moonLabelMode.value || "contextual";
         _writeLocalSetting(MOON_LABEL_MODE_KEY, _state.moonLabelMode);
+        renderSphere(container);
+      });
+    }
+
+    const moonLabelDistance = document.getElementById("sphere-moon-label-distance");
+    if (moonLabelDistance) {
+      moonLabelDistance.value = _state.moonLabelDistance;
+      moonLabelDistance.addEventListener("change", () => {
+        _state.moonLabelDistance = moonLabelDistance.value || "standard";
+        renderSphere(container);
+      });
+    }
+
+    const dayLabelMode = document.getElementById("sphere-day-label-mode");
+    if (dayLabelMode) {
+      dayLabelMode.value = _state.dayLabelMode;
+      dayLabelMode.addEventListener("change", () => {
+        _state.dayLabelMode = dayLabelMode.value || "key";
+        renderSphere(container);
+      });
+    }
+
+    const connectionMode = document.getElementById("sphere-connection-mode");
+    if (connectionMode) {
+      connectionMode.value = _state.connectionMode;
+      connectionMode.addEventListener("change", () => {
+        _state.connectionMode = connectionMode.value || "contextual";
+        renderSphere(container);
+      });
+    }
+
+    const motionMode = document.getElementById("sphere-motion-mode");
+    if (motionMode) {
+      motionMode.value = _state.motionMode;
+      motionMode.addEventListener("change", () => {
+        _state.motionMode = motionMode.value || "still";
+        if (_state.active3d && globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
+          globalThis.LivingTimeSphereRenderer3d.setQuality(resolveQualityPreset());
+        }
         renderSphere(container);
       });
     }
@@ -1014,10 +1147,20 @@
       if (marker.type === "day" && marker.dayOfPatternYear) {
         _state.selectedDayOfYear = marker.dayOfPatternYear;
         _state.selectedMarker = `day-${marker.dayOfPatternYear}`;
+        globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${marker.day}, Day ${marker.dayOfPatternYear} of 364.`);
+        const moonSelect = document.getElementById("sphere-select-moon");
+        const daySelect = document.getElementById("sphere-select-day");
+        if (moonSelect) moonSelect.value = String(marker.moon || 1);
+        if (daySelect) daySelect.value = String(marker.day || 1);
         renderSphere(container);
       } else if (marker.type === "moon" && marker.moon) {
         _state.selectedDayOfYear = (marker.moon - 1) * 28 + Math.max(1, Math.min(28, marker.day || 1));
         _state.selectedMarker = `moon-${marker.moon}`;
+        globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${Math.max(1, Math.min(28, marker.day || 1))}.`);
+        const moonSelect = document.getElementById("sphere-select-moon");
+        const daySelect = document.getElementById("sphere-select-day");
+        if (moonSelect) moonSelect.value = String(marker.moon);
+        if (daySelect) daySelect.value = String(Math.max(1, Math.min(28, marker.day || 1)));
         renderSphere(container);
       }
     });
@@ -1170,6 +1313,7 @@
     }
     applyUrlState();
     _state.moonLabelMode = _resolveMoonLabelMode();
+    _state.moonLabelDistance = _resolveMoonLabelDistance();
 
     const container = document.getElementById("sphere-container");
     if (!container) return;

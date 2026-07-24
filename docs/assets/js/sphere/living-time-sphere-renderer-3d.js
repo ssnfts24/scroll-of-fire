@@ -90,6 +90,10 @@
   let _moonLabelContainer = null;  // The #sphere-moon-labels container
   let _moonLabelConnectorEl = null;
   let _moonLabelMode = "contextual";
+  let _moonLabelDistance = "standard";
+  let _dayLabelMode = "key";
+  let _connectionRegistry = [];
+  let _motionMode = "still";
   const _moonAnchors = [];    // { moon, angle, radius, worldVec } for each of 13 moons
   let _lastCameraFocusKey = null;
 
@@ -133,16 +137,19 @@
     return ((moonIndex + 0.5) / 13) * 360;
   }
 
-  function _moonLabelRadiusMultiplier(viewMode) {
-    if (viewMode === "today") return _isMobileWidth() ? 1.02 : 1.055;
-    if (viewMode === "pattern") return _isMobileWidth() ? 1.035 : 1.07;
-    if (viewMode === "years") return _isMobileWidth() ? 1.05 : 1.085;
-    return _isMobileWidth() ? 1.03 : 1.06;
+  function _moonLabelRadiusMultiplier(viewMode, distanceMode = _moonLabelDistance) {
+    const compact = _isMobileWidth();
+    if (distanceMode === "tight") return compact ? 1.032 : 1.045;
+    if (distanceMode === "wide") return compact ? 1.085 : 1.105;
+    if (viewMode === "today") return compact ? 1.038 : 1.052;
+    if (viewMode === "pattern") return compact ? 1.04 : 1.06;
+    if (viewMode === "years") return compact ? 1.05 : 1.08;
+    return compact ? 1.04 : 1.055;
   }
 
   function _buildMoonAnchors(viewMode = _viewMode) {
     const mat = globalThis.LivingTimeSphereM;
-    const r   = mat.SIZES.patternRing * _moonLabelRadiusMultiplier(viewMode);
+    const r   = mat.SIZES.patternRing * _moonLabelRadiusMultiplier(viewMode, _moonLabelDistance);
     _moonAnchors.length = 0;
     for (let i = 0; i < 13; i++) {
       const angle = _moonSectorCenterAngle(i);
@@ -152,7 +159,7 @@
         angle,
         radius: r,
         worldX: x,
-        worldY: 0.012,
+        worldY: mat.SIZES.ringTube * 1.5,
         worldZ: z,
       });
     }
@@ -747,6 +754,10 @@
     _objects.recurrenceGroup.visible = false;
     _scene.add(_objects.recurrenceGroup);
 
+    _objects.connectionGroup = new THREE.Group();
+    _objects.connectionGroup.name = "connectionGroup";
+    _scene.add(_objects.connectionGroup);
+
     // ── Active Moon sector highlight ─────────────────────────────────
     _objects.activeMoonGroup = new THREE.Group();
     _objects.activeMoonGroup.name = "activeMoonGroup";
@@ -918,7 +929,51 @@
     globalThis.LivingTimeSphereCamera.setMode(_viewMode, performance.now(), animated !== false, focus || undefined);
   }
 
-  function updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode = _moonLabelMode) {
+  function _connectionPoint(id) {
+    if (!id) return null;
+    if (id === "core" || id === "passageMidpoint") return new _THREE.Vector3(0, 0, 0);
+    if (id === "today") return _objects.todayMarker?.position?.clone?.() || null;
+    if (id === "lunar") return _objects.lunarMarker?.position?.clone?.() || null;
+    if (id === "equinox") return _objects.equinoxGate?.position?.clone?.() || null;
+    if (id === "yearGate") return _objects.yearGate?.position?.clone?.() || null;
+    const dayMatch = /^day-(\d+)$/.exec(id);
+    if (dayMatch) {
+      const angle = globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(Number(dayMatch[1]));
+      const point = angleToXZ(angle, globalThis.LivingTimeSphereM.SIZES.patternRing);
+      return new _THREE.Vector3(point.x, 0.006, point.z);
+    }
+    return null;
+  }
+
+  function _buildConnections() {
+    if (!_objects.connectionGroup) return;
+    while (_objects.connectionGroup.children.length) {
+      _objects.connectionGroup.remove(_objects.connectionGroup.children[0]);
+    }
+    if (!_visibleLayers.connections || !Array.isArray(_connectionRegistry) || !_connectionRegistry.length) return;
+    const mat = globalThis.LivingTimeSphereM;
+    _connectionRegistry.forEach(connection => {
+      const from = _connectionPoint(connection.sourceMarkerId);
+      const to = _connectionPoint(connection.targetMarkerId);
+      if (!from || !to) return;
+      const points = [from, to];
+      const geometry = new _THREE.BufferGeometry().setFromPoints(points);
+      const material = new _THREE.LineDashedMaterial({
+        color: connection.selected ? mat.COLORS.todayHalo : 0xe7e1c8,
+        transparent: true,
+        opacity: connection.selected ? 0.88 : Math.max(0.22, connection.style?.opacity || 0.48),
+        dashSize: connection.style?.strokeDasharray ? 0.04 : 0.12,
+        gapSize: connection.style?.strokeDasharray ? 0.03 : 0.001,
+        depthWrite: false,
+      });
+      const line = new _THREE.Line(geometry, material);
+      line.computeLineDistances();
+      line.name = `connection-${connection.id}`;
+      _objects.connectionGroup.add(line);
+    });
+  }
+
+  function updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode = _moonLabelMode, moonLabelDistance = _moonLabelDistance, dayLabelMode = _dayLabelMode, connectionRegistry = _connectionRegistry, motionMode = _motionMode) {
     if (!_THREE || !_scene || !model) return;
     const mat = globalThis.LivingTimeSphereM;
 
@@ -928,6 +983,10 @@
     _visibleLayers = visibleLayers || {};
     _viewMode     = viewMode || "today";
     _moonLabelMode = moonLabelMode || "contextual";
+    _moonLabelDistance = moonLabelDistance || "standard";
+    _dayLabelMode = dayLabelMode || "key";
+    _connectionRegistry = Array.isArray(connectionRegistry) ? connectionRegistry : [];
+    _motionMode = motionMode || "still";
     _buildMoonAnchors(_viewMode);
 
     // ── Layer visibility ────────────────────────────────────────────
@@ -935,9 +994,9 @@
 
     if (_objects.patternRing)  _objects.patternRing.visible  = !!vl.pattern;
     if (_objects.moonDividers) _objects.moonDividers.visible = !!vl.pattern;
-    if (_objects.dayNodes)     _objects.dayNodes.visible     = !!vl.pattern;
+    if (_objects.dayNodes)     _objects.dayNodes.visible     = !!vl.pattern && vl.exactDays !== false;
     if (_objects.shabbatNodes) _objects.shabbatNodes.visible = !!vl.pattern;
-    if (_objects.weekGates)    _objects.weekGates.visible    = !!vl.pattern;
+    if (_objects.weekGates)    _objects.weekGates.visible    = !!vl.pattern && vl.weekGates !== false;
     if (_objects.yearGate)     _objects.yearGate.visible     = !!vl.pattern;
     if (_objects.todayLineGroup) _objects.todayLineGroup.visible = true;
     if (_objects.lunarOrbit)   _objects.lunarOrbit.visible   = !!vl.lunar;
@@ -948,6 +1007,7 @@
     if (_objects.passageGroup) _objects.passageGroup.visible = !!vl.passage;
     if (_objects.equinoxGate)  _objects.equinoxGate.visible  = !!vl.passage || !!vl.markers;
     if (_objects.activeMoonGroup) _objects.activeMoonGroup.visible = !!vl.pattern;
+    if (_objects.connectionGroup) _objects.connectionGroup.visible = !!vl.connections;
 
     // ── Equinox gate position ───────────────────────────────────────
     if (_objects.equinoxGate && model.passageStartAngle != null) {
@@ -1057,6 +1117,8 @@
         while (_objects.todayLineGroup.children.length) {
           _objects.todayLineGroup.remove(_objects.todayLineGroup.children[0]);
         }
+
+        _buildConnections();
         if (showToday) {
           const pts = [new _THREE.Vector3(0, 0, 0), new _THREE.Vector3(x, 0.005, z)];
           const geo = new _THREE.BufferGeometry().setFromPoints(pts);
@@ -1282,7 +1344,7 @@
 
   // ── Init / teardown ────────────────────────────────────────────────
 
-  async function init({ container, model, spiral, quality, selectedYear, visibleLayers, viewMode, moonLabelMode, reducedMotion, onYearSelect, onMarkerSelect }) {
+  async function init({ container, model, spiral, quality, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, reducedMotion, onYearSelect, onMarkerSelect }) {
     // Guard against concurrent or duplicate init calls.
     if (_initializing || _initialized) {
       return { success: false, reason: "already-running" };
@@ -1356,7 +1418,7 @@
       buildScene();
 
       // ── Load initial data ─────────────────────────────────────────
-      updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode);
+      updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode);
       _syncCameraFocus(model, spiral, selectedYear, false);
 
       // ── Animation ─────────────────────────────────────────────────
@@ -1366,7 +1428,7 @@
       globalThis.LivingTimeSphereAnimation.attachIntersection(_canvas);
 
       // Start idle drift if quality allows
-      if (quality.idleDrift && !_prefersReducedMotion()) {
+      if (motionMode === "drift" && quality.idleDrift && !_prefersReducedMotion()) {
         globalThis.LivingTimeSphereCamera.startDrift(performance.now());
       }
 
@@ -1610,7 +1672,9 @@
     const angle = ((Math.atan2(point.z, point.x) * 180) / Math.PI + 90 + 360) % 360;
 
     if (radius >= patternRadius * 0.82 && radius <= patternRadius * 1.12) {
-      const dayOfPatternYear = Math.max(1, Math.min(364, Math.round((angle / 360) * 364 + 0.5)));
+      const dayOfPatternYear = globalThis.LivingTimeSphereModel?.dayOfYearForPatternAngle
+        ? globalThis.LivingTimeSphereModel.dayOfYearForPatternAngle(angle)
+        : Math.max(1, Math.min(364, Math.floor((angle / 360) * 364) + 1));
       const moon = Math.max(1, Math.min(13, Math.floor((dayOfPatternYear - 1) / 28) + 1));
       const day = ((dayOfPatternYear - 1) % 28) + 1;
       if (onMarkerSelect) onMarkerSelect({ type: "day", moon, day, dayOfPatternYear });
@@ -1640,9 +1704,9 @@
 
   // ── Public API ────────────────────────────────────────────────────
 
-  function refresh(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode) {
+  function refresh(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode) {
     if (!_initialized) return;
-    updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode);
+    updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode);
     globalThis.LivingTimeSphereAnimation.markDirty();
   }
 
@@ -1651,7 +1715,7 @@
     _quality = preset;
     globalThis.LivingTimeSphereAnimation.applyPreset(preset);
     if (_renderer) _renderer.setPixelRatio(Math.min(preset.pixelRatioMax || 2, devicePixelRatio || 1));
-    if (preset.idleDrift && !_prefersReducedMotion()) {
+    if (_motionMode === "drift" && preset.idleDrift && !_prefersReducedMotion()) {
       globalThis.LivingTimeSphereCamera.startDrift(performance.now());
     } else {
       globalThis.LivingTimeSphereCamera.stopDrift();

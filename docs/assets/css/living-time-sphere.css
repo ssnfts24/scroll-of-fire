@@ -1208,6 +1208,21 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   white-space: pre-wrap;
 }
 
+.sphere-day-guide,
+.sphere-connection-line {
+  pointer-events: none;
+}
+
+.sphere-active-day-number.is-selected,
+.sphere-day-label {
+  font-weight: 700;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+}
+
+.sphere-connection-line.is-selected {
+  filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.36));
+}
+
 /* ── Moon labels overlay (sphere-anchored via JS projection) ─── */
 .sphere-moon-labels {
   position: absolute;

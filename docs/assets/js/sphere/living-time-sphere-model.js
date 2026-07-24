@@ -19,10 +19,16 @@
   function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
 
   // Pattern ring: 364 positions, one per Pattern day.
-  // Angle 0° = Moon 1 Day 1 (Year Gate), 360° / 364 per day, clockwise.
+  // Uses the center of each counted day so every renderer, tooltip, and export
+  // describes the same exact Pattern angle.
   function patternAngleForDayOfYear(dayOfYear) {
-    const idx = clamp((dayOfYear || 1) - 1, 0, PATTERN_DAYS - 1);
+    const idx = clamp((dayOfYear || 1) - 0.5, 0.5, PATTERN_DAYS - 0.5);
     return Number(((idx / PATTERN_DAYS) * 360).toFixed(6));
+  }
+
+  function dayOfYearForPatternAngle(angle) {
+    const normalized = ((((Number(angle) || 0) % 360) + 360) % 360);
+    return clamp(Math.floor((normalized / 360) * PATTERN_DAYS) + 1, 1, PATTERN_DAYS);
   }
 
   // Moon-sector angle: center of Moon m's sector.
@@ -218,6 +224,7 @@
     buildSpiral,
     buildTodayModel,
     patternAngleForDayOfYear,
+    dayOfYearForPatternAngle,
     moonSectorAngle,
     dayAngleWithinMoon,
     lunarAngleForCyclePosition,
