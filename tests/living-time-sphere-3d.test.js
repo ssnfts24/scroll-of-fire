@@ -35,6 +35,12 @@ function loadSphereContext() {
       setItem(k, v) { this._store[k] = String(v); },
       removeItem(k) { delete this._store[k]; },
     },
+    localStorage: {
+      _store: {},
+      getItem(k)    { return this._store[k] ?? null; },
+      setItem(k, v) { this._store[k] = String(v); },
+      removeItem(k) { delete this._store[k]; },
+    },
     IntersectionObserver: null,  // not available in Node
     ResizeObserver:       null,
     document: null,
@@ -67,8 +73,10 @@ function loadSphereContext() {
     "docs/assets/js/alignment/alignment-export.js",
     "docs/assets/js/alignment/alignment-url-state.js",
     "docs/assets/js/sphere/living-time-sphere-version.js",
+    "docs/assets/js/sphere/living-time-sphere-state.js",
     "docs/assets/js/sphere/living-time-sphere-model.js",
     "docs/assets/js/sphere/living-time-sphere-layout.js",
+    "docs/assets/js/sphere/living-time-sphere-connections.js",
     "docs/assets/js/sphere/living-time-sphere-renderer-svg.js",
     "docs/assets/js/sphere/living-time-sphere-accessibility.js",
     "docs/assets/js/sphere/living-time-sphere-export.js",
@@ -77,6 +85,8 @@ function loadSphereContext() {
     "docs/assets/js/sphere/living-time-sphere-camera.js",
     "docs/assets/js/sphere/living-time-sphere-animation.js",
     "docs/assets/js/sphere/living-time-sphere-effects.js",
+    "docs/assets/js/sphere/living-time-sphere-live-data.js",
+    "docs/assets/js/sphere/living-time-sphere-mount.js",
     "docs/assets/js/sphere/living-time-sphere-today.js",
   ];
 
@@ -234,13 +244,15 @@ test("LivingTimeSphereAnimation: low-power mode disables idle drift", () => {
   assert.equal(ctx.LivingTimeSphereCamera.isDrifting(), false);
 });
 
-test("LivingTimeSphereAnimation: intro dismissal persists in sessionStorage", () => {
+test("LivingTimeSphereAnimation: intro dismissal persists in localStorage", () => {
   const ctx = loadSphereContext();
   assert.equal(ctx.LivingTimeSphereAnimation.isIntroDismissed(), false);
   ctx.LivingTimeSphereAnimation.dismissIntro();
   assert.equal(ctx.LivingTimeSphereAnimation.isIntroDismissed(), true);
+  assert.equal(ctx.localStorage.getItem("lts-intro-dismissed"), "1");
   ctx.LivingTimeSphereAnimation.resetIntroForSession();
   assert.equal(ctx.LivingTimeSphereAnimation.isIntroDismissed(), false);
+  assert.equal(ctx.localStorage.getItem("lts-intro-dismissed"), null);
 });
 
 // ── Effects module ────────────────────────────────────────────────────
@@ -345,6 +357,27 @@ test("LivingTimeSphereTodayCard: buildLink includes expected params", () => {
   assert.ok(!link.includes("genesis"), "must not include genesis data");
 });
 
+test("LivingTimeSphereLiveData: snapshot exposes shared astronomy and witness context", () => {
+  const ctx = loadSphereContext();
+  ctx.CodexMemory = {
+    getState() {
+      return {
+        recentWitness: { label: "Witness entry", date: "2026-07-24" },
+        currentCycle: { witnessedDays: ["2026-07-20", "2026-07-21"] },
+      };
+    }
+  };
+  const snapshot = ctx.LivingTimeSphereLiveData.getSnapshot({
+    asOf: new Date("2026-07-24T12:00:00Z"),
+    timeZone: "UTC",
+    boundaryMode: "midnight",
+  });
+  assert.equal(snapshot.pattern.civilDate, "2026-07-24");
+  assert.ok(snapshot.lunar.phaseName, "lunar state available");
+  assert.ok(snapshot.solar.gate, "solar gate available");
+  assert.equal(snapshot.witness.count, 2);
+});
+
 test("LivingTimeSphereTodayCard: buildTextSummary returns multi-line string", () => {
   const ctx = loadSphereContext();
   const supported = ctx.AlignmentLedgerData.listSupportedYears();
@@ -388,10 +421,9 @@ test("LivingTimeSphereRenderer3d: isInitialized returns false before init", () =
 
 test("3D parity: model angle functions match SVG renderer expectations", () => {
   const ctx = loadSphereContext();
-  // The 3D renderer uses the same coordinate conventions as the SVG renderer.
-  // Verify that Moon 1 Day 1 is at angle 0° (Year Gate).
+  // The 3D renderer uses the same center-of-day convention as the SVG renderer.
   const angle = ctx.LivingTimeSphereModel.patternAngleForDayOfYear(1);
-  assert.equal(angle, 0, "Day 1 should be at 0° (Year Gate)");
+  assert.equal(angle, Number((0.5 / 364 * 360).toFixed(6)), "Day 1 should use the first day center");
 });
 
 test("3D parity: model passage startAngle matches alignment record for each year", () => {
@@ -450,6 +482,14 @@ test("Homepage: observatory section exists with expected elements", () => {
   assert.ok(html.includes("Enter Today's Sphere"),        "CTA link present");
   assert.ok(html.includes("home-sphere-today-preview"),   "preview element present");
   assert.ok(html.includes("home-sphere-today-open-link"), "open link element present");
+  assert.ok(html.includes("data-sphere-mode=\"pattern\""),  "interactive pattern mode present");
+  assert.ok(html.includes("data-home-sphere-reset"),  "homepage reset control present");
+  assert.ok(html.includes("home-sphere-today-witness"),   "witness summary present");
+});
+
+test("Homepage: shared mount initializer is used", () => {
+  const html = read("docs/index.html");
+  assert.ok(html.includes("LivingTimeSphere.mount"), "homepage uses shared mount initializer");
 });
 
 // ── 13 Moons page: Today sphere card present ──────────────────────────
@@ -459,12 +499,18 @@ test("Moons page: Today Sphere card is in Today tab", () => {
   assert.ok(html.includes("moons-sphere-today-card"), "Today Sphere card ID present");
   assert.ok(html.includes("Enter Today's Sphere"),    "CTA link present");
   assert.ok(html.includes("moons-sphere-today-preview"), "preview element present");
+  assert.ok(html.includes("living-time-sphere-live-data.js"), "shared live-data module script present");
   assert.ok(html.includes("living-time-sphere-today.js"), "today module script present");
 });
 
 test("Moons page: Today Sphere card loads today module", () => {
   const html = read("docs/moons.html");
   assert.ok(html.includes("LivingTimeSphereTodayCard"), "initTodaySphereCard references module");
+});
+
+test("Moons page: shared mount initializer is used", () => {
+  const html = read("docs/moons.html");
+  assert.ok(html.includes("LivingTimeSphere.mount"), "moons page uses shared mount initializer");
 });
 
 // ── Sphere page: Phase 03 scripts and UI controls ─────────────────────
@@ -475,6 +521,7 @@ test("Sphere page: 3D module scripts included", () => {
   assert.ok(html.includes("living-time-sphere-camera.js"),     "camera loaded");
   assert.ok(html.includes("living-time-sphere-animation.js"),  "animation loaded");
   assert.ok(html.includes("living-time-sphere-effects.js"),    "effects loaded");
+  assert.ok(html.includes("living-time-sphere-live-data.js"),  "live-data module loaded");
   assert.ok(html.includes("living-time-sphere-renderer-3d.js"),"renderer-3d loaded");
   assert.ok(html.includes("living-time-sphere-today.js"),      "today module loaded");
 });
@@ -483,20 +530,47 @@ test("Sphere page: quality and renderer controls present", () => {
   const html = read("docs/living-time-sphere.html");
   assert.ok(html.includes("sphere-quality-select"),   "quality selector present");
   assert.ok(html.includes("sphere-renderer-select"),  "renderer selector present");
+  assert.ok(html.includes("sphere-moon-label-distance"), "moon label distance selector present");
+  assert.ok(html.includes("sphere-day-label-mode"), "day label mode selector present");
+  assert.ok(html.includes("sphere-connection-mode"), "connection mode selector present");
   assert.ok(html.includes("sphere-intro"),            "intro panel present");
   assert.ok(html.includes("sphere-cam-reset"),        "camera reset button present");
   assert.ok(html.includes("sphere-interact-btn"),     "mobile interact button present");
+});
+
+test("Sphere page: field layer observatory controls present", () => {
+  const html = read("docs/living-time-sphere.html");
+  const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
+  assert.ok(html.includes("sphere-field-range-now"), "field range now control present");
+  assert.ok(html.includes("sphere-field-range-historical"), "historical comparison range control present");
+  assert.ok(ui.includes("Record Observation"), "record observation action present");
+  assert.ok(ui.includes("Compare Historical Fields"), "historical comparison action present");
+});
+
+test("Sphere page: shared mount initializer is used", () => {
+  const html = read("docs/living-time-sphere.html");
+  assert.ok(html.includes("LivingTimeSphere.mount"), "full sphere page uses shared mount initializer");
+});
+
+test("Equinox Passage page: shared mount initializer is used", () => {
+  const html = read("docs/equinox-passage.html");
+  assert.ok(html.includes("equinox-sphere-preview"), "passage sphere preview present");
+  assert.ok(html.includes("LivingTimeSphere.mount"), "passage page uses shared mount initializer");
 });
 
 // ── Service worker: caches new sphere files ───────────────────────────
 
 test("Service worker: caches all Phase 03 sphere JS files", () => {
   const sw = read("docs/service-worker.js");
+  assert.ok(sw.includes("living-time-sphere-state.js"), "state cached");
+  assert.ok(sw.includes("living-time-sphere-connections.js"), "connections cached");
   assert.ok(sw.includes("living-time-sphere-materials.js"),  "materials cached");
   assert.ok(sw.includes("living-time-sphere-camera.js"),     "camera cached");
   assert.ok(sw.includes("living-time-sphere-animation.js"),  "animation cached");
   assert.ok(sw.includes("living-time-sphere-effects.js"),    "effects cached");
+  assert.ok(sw.includes("living-time-sphere-live-data.js"),  "live-data cached");
   assert.ok(sw.includes("living-time-sphere-renderer-3d.js"),"renderer-3d cached");
+  assert.ok(sw.includes("living-time-sphere-mount.js"),      "mount cached");
   assert.ok(sw.includes("living-time-sphere-today.js"),      "today card cached");
 });
 
@@ -535,10 +609,14 @@ test("Today card buildTextSummary is deterministic for same input", () => {
 // ── JS syntax validation for all new sphere files ─────────────────────
 
 const NEW_SPHERE_FILES = [
+  "docs/assets/js/sphere/living-time-sphere-state.js",
   "docs/assets/js/sphere/living-time-sphere-materials.js",
   "docs/assets/js/sphere/living-time-sphere-camera.js",
   "docs/assets/js/sphere/living-time-sphere-animation.js",
   "docs/assets/js/sphere/living-time-sphere-effects.js",
+  "docs/assets/js/sphere/living-time-sphere-connections.js",
+  "docs/assets/js/sphere/living-time-sphere-live-data.js",
+  "docs/assets/js/sphere/living-time-sphere-mount.js",
   "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
   "docs/assets/js/sphere/living-time-sphere-today.js",
   "docs/assets/js/sphere/living-time-sphere-ui.js",

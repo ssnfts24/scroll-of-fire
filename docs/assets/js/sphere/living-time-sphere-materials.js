@@ -40,11 +40,11 @@
   // ── Opacity levels ────────────────────────────────────────────────
 
   const OPACITY = Object.freeze({
-    patternRing:   0.30,
+    patternRing:   0.42,
     moonFill:      0.06,
     moonActive:    0.25,
-    moonHighlight: 0.35,
-    moonStroke:    0.15,
+    moonHighlight: 0.38,
+    moonStroke:    0.24,
     today:         1.00,
     todayHalo:     1.00,
     todayLine:     0.70,
@@ -92,9 +92,9 @@
     coreGlowRadius:0.12,
     markerDot:     0.025,
     markerDotSelected: 0.038,
-    todayRadius:   0.046,
-    todayHalo:     0.080,
-    todayHaloTube: 0.006,
+    todayRadius:   0.038,
+    todayHalo:     0.068,
+    todayHaloTube: 0.005,
     todayLine:     0.003,
     lunarMarker:   0.035,
     starFieldRadius: 5.0,

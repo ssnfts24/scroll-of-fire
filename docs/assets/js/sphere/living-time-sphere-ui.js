@@ -12,17 +12,37 @@
     timeZone:      "America/Los_Angeles",
     boundaryMode:  "sunset",
     manualSunset:  "18:00",
-    visibleLayers: { pattern: true, passage: true, lunar: true, solar: false, markers: true, recurrence: false, spiral: false },
+    selectedDayOfYear: null,
+    fieldRange:    "now",
+    visibleLayers: { pattern: true, exactDays: true, weekGates: true, outsideDays: false, passage: true, lunar: true, solar: false, markers: true, recurrence: false, spiral: false, environment: false, connections: true },
     selectedMarker: null,
     useCanvas:     false,
     lowPower:      false,
     // Phase 03 additions
     rendererMode:  "auto",   // "auto" | "3d" | "svg" | "table" | "text"
     quality:       "auto",   // "auto" | "high" | "balanced" | "lowpower" | "svgonly"
+    moonLabelMode: "contextual", // "contextual" | "all" | "selected" | "hidden"
+    moonLabelDistance: "standard",
+    dayLabelMode: "key",
+    connectionMode: "contextual",
+    motionMode: "still",
     active3d:      false,    // true when 3D renderer is active
     introShown:    false,
     _3dInitInProgress: false, // guard against concurrent 3D init calls
   };
+  const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const SHABBAT_DAYS = new Set([2, 9, 16, 23]);
+  const MOON_LOG_KEY = "sof_moon_logs_v3";
+  const LEGACY_MOON_LOG_KEY = "sof_moon_logs_v2";
+  const FIELD_RANGE_LABELS = Object.freeze({
+    now: "Now",
+    today: "Today",
+    "pattern-week": "Pattern Week",
+    "pattern-moon": "Pattern Moon",
+    "pattern-year": "Pattern Year",
+    historical: "Historical comparison",
+  });
 
   // ── Dependency check ───────────────────────────────────────────────
 
@@ -49,6 +69,10 @@
     if (parsed.marker)       _state.selectedMarker = parsed.marker;
     if (parsed.renderer)     _state.rendererMode = parsed.renderer;
     if (parsed.quality)      _state.quality      = parsed.quality;
+    if (parsed.connectionMode) _state.connectionMode = parsed.connectionMode;
+    if (parsed.motionMode)     _state.motionMode = parsed.motionMode;
+    if (parsed.moonLabelDistance) _state.moonLabelDistance = parsed.moonLabelDistance;
+    if (parsed.dayLabelMode)   _state.dayLabelMode = parsed.dayLabelMode;
     if (parsed.layers) {
       for (const k of Object.keys(_state.visibleLayers)) _state.visibleLayers[k] = false;
       for (const l of parsed.layers) _state.visibleLayers[l] = true;
@@ -102,8 +126,790 @@
 
   function buildCurrentModel() {
     const opts = { year: _state.year, timeZone: _state.timeZone, boundaryMode: _state.boundaryMode, manualSunset: _state.manualSunset };
-    if (_state.viewMode === "today" || _state.viewMode === "pattern") return globalThis.LivingTimeSphereModel.buildTodayModel(opts);
-    return globalThis.LivingTimeSphereModel.buildYearModel(opts);
+    const baseModel = (_state.viewMode === "today" || _state.viewMode === "pattern")
+      ? globalThis.LivingTimeSphereModel.buildTodayModel(opts)
+      : globalThis.LivingTimeSphereModel.buildYearModel(opts);
+    return _decorateModel(baseModel);
+  }
+
+  function _readLocalSetting(key) {
+    try { return globalThis.localStorage?.getItem(key) ?? null; } catch { return null; }
+  }
+
+  function _writeLocalSetting(key, value) {
+    try { globalThis.localStorage?.setItem(key, value); } catch { /* ignore */ }
+  }
+
+  function _resolveMoonLabelMode() {
+    const stored = _readLocalSetting(MOON_LABEL_MODE_KEY);
+    if (stored === "contextual" || stored === "all" || stored === "selected" || stored === "hidden") {
+      return stored;
+    }
+    if (typeof window !== "undefined" && window.innerWidth < 640) return "contextual";
+    return _state.moonLabelMode || "contextual";
+  }
+
+  function _resolveMoonLabelDistance() {
+    if (typeof window !== "undefined" && window.innerWidth < 640) return "tight";
+    return _state.moonLabelDistance || "standard";
+  }
+
+  function _pad(value) {
+    return String(value).padStart(2, "0");
+  }
+
+  function _toIso(date) {
+    return `${date.getUTCFullYear()}-${_pad(date.getUTCMonth() + 1)}-${_pad(date.getUTCDate())}`;
+  }
+
+  function _patternDateFromDayOfYear(year, dayOfYear) {
+    const epoch = globalThis.PatternCalendar?.epochForYear?.(year);
+    if (!epoch) return null;
+    return new Date(epoch.getTime() + (Math.max(1, Math.min(364, dayOfYear || 1)) - 1) * DAY_MS);
+  }
+
+  function _currentSnapshot() {
+    return globalThis.LivingTimeSphereLiveData?.getSnapshot?.({
+      timeZone: _state.timeZone,
+      boundaryMode: _state.boundaryMode,
+      manualSunset: _state.manualSunset,
+    }) || null;
+  }
+
+  function _resolveSelectedDayOfYear(baseModel) {
+    const live = _currentSnapshot();
+    const todayPatternYear = live?.pattern?.patternYear ?? baseModel?.todayPatternPosition?.patternYear ?? null;
+    const todayDay = live?.pattern?.dayOfPatternYear ?? baseModel?.todayPatternPosition?.dayOfPatternYear ?? null;
+
+    if (_state.selectedDayOfYear == null) {
+      _state.selectedDayOfYear = todayPatternYear === _state.year && todayDay ? todayDay : 1;
+    }
+
+    if (todayPatternYear !== _state.year && _state.selectedDayOfYear === todayDay && _state.viewMode === "today") {
+      _state.selectedDayOfYear = 1;
+    }
+
+    _state.selectedDayOfYear = Math.max(1, Math.min(364, Number(_state.selectedDayOfYear) || 1));
+    return _state.selectedDayOfYear;
+  }
+
+  function _resolveSelectedPatternPosition(baseModel) {
+    const dayOfYear = _resolveSelectedDayOfYear(baseModel);
+    const effectiveDate = _patternDateFromDayOfYear(_state.year, dayOfYear);
+    const selected = effectiveDate && globalThis.PatternCalendar?.fromCivilDate
+      ? globalThis.PatternCalendar.fromCivilDate({
+          date: _toIso(effectiveDate),
+          timeZone: _state.timeZone,
+          boundaryMode: "midnight",
+          sunsetTime: _state.manualSunset,
+        })
+      : null;
+    const dayArchetype = Array.isArray(selected?.dayArchetype) ? selected.dayArchetype : [selected?.dayArchetype || null, ""];
+    const weekGate = selected?.weekOfMoon
+      ? globalThis.PatternCalendarData?.weekGates?.[selected.weekOfMoon - 1] || null
+      : null;
+    const moonData = selected?.moon != null
+      ? globalThis.PatternCalendarData?.moons?.[selected.moon - 1] || null
+      : null;
+    const phase = globalThis.SOFCalendar?.getMoonPhase?.(_toIso(effectiveDate)) || null;
+    const live = _currentSnapshot();
+    const isToday = selected?.patternYear === live?.pattern?.patternYear
+      && selected?.dayOfPatternYear != null
+      && selected.dayOfPatternYear === live?.pattern?.dayOfPatternYear;
+    const solar = globalThis.LivingTimeSphereLiveData?.getSnapshot?.({
+      asOf: effectiveDate,
+      timeZone: _state.timeZone,
+      boundaryMode: "midnight",
+      manualSunset: _state.manualSunset,
+    })?.solar || live?.solar || null;
+
+    return selected ? {
+      ...selected,
+      effectiveDate: _toIso(effectiveDate),
+      civilDate: _toIso(effectiveDate),
+      dateObject: effectiveDate,
+      weekGate,
+      moonData,
+      daySeal: dayArchetype[0] || "Unavailable",
+      daySealMeaning: dayArchetype[1] || "Unavailable",
+      shabbat: selected.day != null && SHABBAT_DAYS.has(selected.day),
+      lunarPhase: phase ? phase.name : (isToday ? live?.lunar?.phaseName : null),
+      lunarIllumination: phase && typeof phase.illumination === "number"
+        ? Number((phase.illumination * 100).toFixed(1))
+        : (isToday ? live?.lunar?.illuminationPercent ?? null : null),
+      solar,
+      isToday,
+      witnessPrompt: moonData?.practice || dayArchetype[1] || "Observe the day and record what is actually there.",
+      shortMirror: moonData?.essence || "Mirror summary unavailable for this day.",
+    } : null;
+  }
+
+  function _decorateModel(baseModel) {
+    const live = _currentSnapshot();
+    const selected = _resolveSelectedPatternPosition(baseModel);
+    const activeMoon = selected?.moon ?? live?.pattern?.moon ?? baseModel?.todayPatternPosition?.moon ?? baseModel?.sourceRecord?.equinox?.patternPosition?.moon ?? 1;
+    return {
+      ...baseModel,
+      selectedPatternPosition: selected,
+      todayPatternPosition: live?.todayModel?.todayPatternPosition || baseModel?.todayPatternPosition || null,
+      moonSectors: Array.isArray(baseModel?.moonSectors)
+        ? baseModel.moonSectors.map(sector => ({ ...sector, active: sector.moonNumber === activeMoon }))
+        : [],
+    };
+  }
+
+  function _selectedDaySummary(selected) {
+    if (!selected?.moon) return "Selected — Unavailable";
+    return `${selected.isToday ? "Today" : "Selected"} — Moon ${selected.moon} · Day ${selected.day} · Day ${selected.dayOfPatternYear}/364`;
+  }
+
+  function _escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function _titleCaseWords(value) {
+    return String(value || "")
+      .split(/\s+/)
+      .filter(Boolean)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
+
+  function _pluralize(count, singular, plural) {
+    return `${count} ${count === 1 ? singular : plural}`;
+  }
+
+  function _formatLocalInstant(value) {
+    if (!value) return "Not recorded";
+    const date = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(date.getTime())) return "Not recorded";
+    try {
+      return date.toLocaleString(undefined, {
+        dateStyle: "medium",
+        timeStyle: "short",
+      });
+    } catch {
+      return date.toISOString();
+    }
+  }
+
+  function _formatFreshness(value, now) {
+    if (!value) return "Not checked";
+    const date = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(date.getTime())) return "Not checked";
+    const diffMs = Math.max(0, (now instanceof Date ? now : new Date(now)).getTime() - date.getTime());
+    const diffMinutes = Math.round(diffMs / 60000);
+    if (diffMinutes <= 1) return "Just updated";
+    if (diffMinutes < 60) return `${diffMinutes} min ago`;
+    const diffHours = Math.round(diffMinutes / 60);
+    if (diffHours < 48) return `${diffHours} h ago`;
+    return `${Math.round(diffHours / 24)} d ago`;
+  }
+
+  function _readLocalJson(key) {
+    try {
+      const raw = globalThis.localStorage?.getItem(key);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function _readMoonLogs() {
+    const current = _readLocalJson(MOON_LOG_KEY);
+    if (Array.isArray(current)) return current;
+    const legacy = _readLocalJson(LEGACY_MOON_LOG_KEY);
+    return Array.isArray(legacy) ? legacy : [];
+  }
+
+  function _buildMoonsLink(selected, hash = "") {
+    const params = new URLSearchParams();
+    if (selected?.effectiveDate) params.set("date", selected.effectiveDate);
+    if (_state.timeZone) params.set("tz", _state.timeZone);
+    if (_state.boundaryMode) params.set("boundary", _state.boundaryMode);
+    if (_state.manualSunset) params.set("sunset", _state.manualSunset);
+    const query = params.toString();
+    return `moons.html${query ? `?${query}` : ""}${hash}`;
+  }
+
+  function _buildAlignmentLink(mode = "recurrence") {
+    if (globalThis.AlignmentUrlState?.buildAlignmentShareLink) {
+      return globalThis.AlignmentUrlState.buildAlignmentShareLink({
+        baseUrl: typeof location !== "undefined" ? `${location.origin}${location.pathname.replace("living-time-sphere.html", "alignment-ledger.html")}` : "https://codexofreality.org/alignment-ledger.html",
+        year: _state.year,
+        timeZone: _state.timeZone,
+        boundaryMode: _state.boundaryMode,
+        manualSunset: _state.manualSunset,
+        mode,
+        datasetVersion: globalThis.LivingTimeSphereVersion?.version,
+      });
+    }
+    return `alignment-ledger.html?year=${encodeURIComponent(_state.year)}&mode=${encodeURIComponent(mode)}`;
+  }
+
+  function _syncLayerCheckboxes() {
+    Object.keys(_state.visibleLayers).forEach(layer => {
+      const cb = document.getElementById(`sphere-layer-${layer}`);
+      if (cb) cb.checked = !!_state.visibleLayers[layer];
+    });
+  }
+
+  function _mappedLayerVisible(layerId) {
+    if (!layerId) return false;
+    if (Array.isArray(layerId)) return layerId.some(item => _mappedLayerVisible(item));
+    return !!_state.visibleLayers[layerId];
+  }
+
+  function _setMappedLayer(layerId, enabled) {
+    if (!layerId) return;
+    if (Array.isArray(layerId)) {
+      layerId.forEach(item => _setMappedLayer(item, enabled));
+      return;
+    }
+    if (Object.prototype.hasOwnProperty.call(_state.visibleLayers, layerId)) {
+      _state.visibleLayers[layerId] = enabled;
+    }
+  }
+
+  function _applyFieldRangePreset(range) {
+    const live = _currentSnapshot();
+    _state.fieldRange = FIELD_RANGE_LABELS[range] ? range : "now";
+    switch (_state.fieldRange) {
+      case "today":
+      case "now":
+        _state.viewMode = "today";
+        if (live?.pattern?.patternYear === _state.year && live?.pattern?.dayOfPatternYear) {
+          _state.selectedDayOfYear = live.pattern.dayOfPatternYear;
+          _state.selectedMarker = "today";
+        }
+        _state.visibleLayers.pattern = true;
+        _state.visibleLayers.exactDays = true;
+        _state.visibleLayers.weekGates = true;
+        _state.visibleLayers.passage = true;
+        _state.visibleLayers.lunar = true;
+        _state.visibleLayers.connections = true;
+        break;
+      case "pattern-week":
+        _state.viewMode = "pattern";
+        _state.visibleLayers.pattern = true;
+        _state.visibleLayers.weekGates = true;
+        _state.visibleLayers.exactDays = true;
+        _state.visibleLayers.connections = true;
+        break;
+      case "pattern-moon":
+        _state.viewMode = "pattern";
+        _state.visibleLayers.pattern = true;
+        _state.visibleLayers.exactDays = true;
+        _state.visibleLayers.lunar = true;
+        _state.visibleLayers.markers = true;
+        break;
+      case "pattern-year":
+        _state.viewMode = "years";
+        _state.visibleLayers.pattern = true;
+        _state.visibleLayers.passage = true;
+        _state.visibleLayers.lunar = true;
+        _state.visibleLayers.spiral = true;
+        break;
+      case "historical":
+        _state.viewMode = "years";
+        _state.visibleLayers.pattern = true;
+        _state.visibleLayers.passage = true;
+        _state.visibleLayers.lunar = true;
+        _state.visibleLayers.recurrence = true;
+        _state.visibleLayers.spiral = true;
+        _state.visibleLayers.connections = true;
+        break;
+      default:
+        break;
+    }
+  }
+
+  function _syncFieldRangeButtons() {
+    Object.keys(FIELD_RANGE_LABELS).forEach(range => {
+      const btn = document.getElementById(`sphere-field-range-${range}`);
+      if (btn) btn.setAttribute("aria-pressed", range === _state.fieldRange ? "true" : "false");
+    });
+  }
+
+  function _resolveSavedObservation(selected) {
+    const logs = _readMoonLogs();
+    if (!logs.length) return null;
+    const targetDate = selected?.effectiveDate || selected?.civilDate || "";
+    return logs.find(entry => (entry?.effectiveDate || entry?.date) === targetDate)
+      || (selected?.isToday ? logs[0] : null);
+  }
+
+  function _buildFieldLayerSnapshot(selected, model) {
+    const live = _currentSnapshot();
+    const now = new Date(live?.instant || Date.now());
+    const yearRecord = model?.sourceRecord || live?.yearModel?.sourceRecord || null;
+    const memory = globalThis.CodexMemory?.getState?.() || null;
+    const observation = _resolveSavedObservation(selected);
+    const witnessCount = Number(live?.witness?.count || 0);
+    const recurrence = Array.isArray(live?.history?.recurrences) ? live.history.recurrences[0] : null;
+    const providerConfigured = false;
+    const environmentSource = providerConfigured ? "Live environment provider" : "No provider configured";
+    const daylightState = selected?.afterBoundary
+      ? `After ${_state.boundaryMode === "midnight" ? "midnight" : "boundary"}`
+      : `Before ${_state.boundaryMode === "midnight" ? "midnight" : "boundary"}`;
+    const bodySignalValue = [observation?.body, observation?.emotion].filter(Boolean).join(" · ");
+    const patternTagValue = memory?.dailyIntention?.value
+      ? _titleCaseWords(memory.dailyIntention.value)
+      : (observation?.signs || "").trim();
+    const recurrenceMissing = [];
+    if (!providerConfigured) recurrenceMissing.push("weather");
+    if (!witnessCount) recurrenceMissing.push("witness records");
+    const recurrenceCompared = [
+      "Pattern position",
+      "Equinox angle",
+      "Passage duration",
+      "lunar state",
+    ];
+    const basePatternRelation = selected?.moon != null
+      ? `Selected Pattern Day: Moon ${selected.moon} · Day ${selected.day}`
+      : "Selected Pattern Day is outside the counted year";
+    const historicalAvailability = recurrence
+      ? `${recurrence.year} · ${Math.round(recurrence.overallSimilarityScore * 100)}%`
+      : "Not available";
+    const selectedWeek = selected?.weekOfMoon || (selected?.day ? Math.floor((selected.day - 1) / 7) + 1 : null);
+    const personalFieldCount = [bodySignalValue, patternTagValue].filter(Boolean).length;
+    const summaryItems = ["Pattern", "Lunar", "Passage", "Local boundary"];
+    if (personalFieldCount) summaryItems.push(`${personalFieldCount} personal ${personalFieldCount === 1 ? "field" : "fields"}`);
+    if (providerConfigured) summaryItems.push("Environment");
+
+    const fields = [
+      {
+        id: "weather",
+        label: "Weather",
+        value: selected?.isToday ? "Not checked" : "Unavailable for this selected day",
+        status: "Not checked",
+        source: environmentSource,
+        timestamp: "",
+        freshness: "Not checked",
+        availability: providerConfigured
+          ? "Live provider is available."
+          : "No provider is configured, so weather cannot be checked here.",
+        relation: selected?.isToday
+          ? "Current live field for the selected Pattern Day."
+          : "Live weather is current-only and is not stored for non-current Pattern Days.",
+        layerId: "environment",
+        sphereLabel: "Environmental shell",
+        visibleOnSphere: _mappedLayerVisible("environment"),
+        comparison: "Not available",
+        hierarchy: "Conditional",
+      },
+      {
+        id: "temperature",
+        label: "Temperature",
+        value: selected?.isToday ? "Unavailable" : "Unavailable for this selected day",
+        status: "Unavailable",
+        source: environmentSource,
+        timestamp: "",
+        freshness: "Not checked",
+        availability: "Temperature requires a live environment provider.",
+        relation: selected?.isToday ? "Would apply to the selected Pattern Day now." : "No historical environment provider is configured.",
+        layerId: "environment",
+        sphereLabel: "Environmental intensity",
+        visibleOnSphere: _mappedLayerVisible("environment"),
+        comparison: "Not available",
+        hierarchy: "Conditional",
+      },
+      {
+        id: "wind",
+        label: "Wind",
+        value: selected?.isToday ? "Unavailable" : "Unavailable for this selected day",
+        status: "Unavailable",
+        source: environmentSource,
+        timestamp: "",
+        freshness: "Not checked",
+        availability: "Wind requires a live environment provider.",
+        relation: selected?.isToday ? "Would apply to the selected Pattern Day now." : "No historical environment provider is configured.",
+        layerId: "environment",
+        sphereLabel: "Directional stream",
+        visibleOnSphere: _mappedLayerVisible("environment"),
+        comparison: "Not available",
+        hierarchy: "Conditional",
+      },
+      {
+        id: "cloud",
+        label: "Cloud",
+        value: selected?.isToday ? "Unavailable" : "Unavailable for this selected day",
+        status: "Unavailable",
+        source: environmentSource,
+        timestamp: "",
+        freshness: "Not checked",
+        availability: "Cloud cover requires a live environment provider.",
+        relation: selected?.isToday ? "Would apply to the selected Pattern Day now." : "No historical environment provider is configured.",
+        layerId: "environment",
+        sphereLabel: "Atmospheric veil",
+        visibleOnSphere: _mappedLayerVisible("environment"),
+        comparison: "Not available",
+        hierarchy: "Conditional",
+      },
+      {
+        id: "pattern-moon",
+        label: "Pattern Moon",
+        value: selected?.moon != null ? `Moon ${selected.moon} · ${selected.moonName || "Unnamed"}` : "Outside counted year",
+        status: "Calculated",
+        source: "PatternCalendar",
+        timestamp: live?.instant || "",
+        freshness: "Current calculation",
+        availability: "Always available from the calendar engine.",
+        relation: basePatternRelation,
+        layerId: "pattern",
+        sphereLabel: "Pattern structure",
+        visibleOnSphere: _mappedLayerVisible("pattern"),
+        comparison: historicalAvailability,
+        hierarchy: "Always available",
+      },
+      {
+        id: "pattern-day",
+        label: "Pattern Day",
+        value: selected?.day != null ? `Day ${selected.day}${selected?.dayOfPatternYear != null ? ` · ${selected.dayOfPatternYear}/364` : ""}` : "Outside counted year",
+        status: "Calculated",
+        source: "PatternCalendar",
+        timestamp: live?.instant || "",
+        freshness: "Current calculation",
+        availability: "Always available from the calendar engine.",
+        relation: basePatternRelation,
+        layerId: ["pattern", "exactDays"],
+        sphereLabel: "Selected Pattern Day field",
+        visibleOnSphere: _mappedLayerVisible(["pattern", "exactDays"]),
+        comparison: historicalAvailability,
+        hierarchy: "Always available",
+      },
+      {
+        id: "week-gate",
+        label: "Week Gate",
+        value: selected?.weekGate?.[0] || "Unavailable",
+        status: "Calculated",
+        source: "PatternCalendarData",
+        timestamp: live?.instant || "",
+        freshness: "Current calculation",
+        availability: "Always available from Pattern week mapping.",
+        relation: selectedWeek ? `Week ${selectedWeek} of the selected Pattern Moon.` : basePatternRelation,
+        layerId: "weekGates",
+        sphereLabel: "Pattern structure",
+        visibleOnSphere: _mappedLayerVisible("weekGates"),
+        comparison: historicalAvailability,
+        hierarchy: "Always available",
+      },
+      {
+        id: "archetype",
+        label: "Archetype",
+        value: selected?.daySeal || "Unavailable",
+        status: "Calculated",
+        source: "PatternCalendarData",
+        timestamp: live?.instant || "",
+        freshness: "Current calculation",
+        availability: "Always available from the canonical day archetype table.",
+        relation: basePatternRelation,
+        layerId: "pattern",
+        sphereLabel: "Selected Pattern Day field",
+        visibleOnSphere: _mappedLayerVisible("pattern"),
+        comparison: historicalAvailability,
+        hierarchy: "Always available",
+      },
+      {
+        id: "tone",
+        label: "Tone",
+        value: selected?.daySeal || "Unavailable",
+        status: "Calculated",
+        source: "AlignmentLedgerData symbolic tone mapping",
+        timestamp: live?.instant || "",
+        freshness: "Current calculation",
+        availability: "Always available as a symbolic layer tied to the selected Pattern Day.",
+        relation: basePatternRelation,
+        layerId: "connections",
+        sphereLabel: "Selected Pattern Day field",
+        visibleOnSphere: _mappedLayerVisible("connections"),
+        comparison: historicalAvailability,
+        hierarchy: "Always available",
+      },
+      {
+        id: "sunset",
+        label: _state.manualSunset === "18:00" ? "Sunset boundary" : "Local sunset",
+        value: _state.manualSunset === "18:00"
+          ? `Manual fallback · ${_state.manualSunset}`
+          : `${_state.manualSunset || "18:00"}`,
+        status: "Calculated",
+        source: _state.manualSunset === "18:00" ? "Manual fallback" : "Configured boundary",
+        timestamp: live?.instant || "",
+        freshness: "Current calculation",
+        availability: "Always available from the current boundary configuration.",
+        relation: selected?.afterBoundary
+          ? "The selected Pattern Day has already crossed the configured boundary."
+          : "The selected Pattern Day has not yet crossed the configured boundary.",
+        layerId: "solar",
+        sphereLabel: "Local solar marker",
+        visibleOnSphere: _mappedLayerVisible("solar"),
+        comparison: "Not available",
+        hierarchy: "Always available",
+      },
+      {
+        id: "moon-phase",
+        label: "Moon phase",
+        value: selected?.lunarPhase || live?.lunar?.phaseName || "Unavailable",
+        status: "Calculated",
+        source: live?.lunar?.source || "AstronomySources.lunar",
+        timestamp: live?.instant || "",
+        freshness: "Current calculation",
+        availability: "Always available from the astronomy dataset.",
+        relation: basePatternRelation,
+        layerId: "lunar",
+        sphereLabel: "Lunar Position",
+        visibleOnSphere: _mappedLayerVisible("lunar"),
+        comparison: historicalAvailability,
+        hierarchy: "Always available",
+      },
+      {
+        id: "lunar-illumination",
+        label: "Lunar illumination",
+        value: selected?.lunarIllumination != null ? `${selected.lunarIllumination}%` : (live?.lunar?.illuminationPercent != null ? `${live.lunar.illuminationPercent}%` : "Unavailable"),
+        status: "Calculated",
+        source: live?.lunar?.source || "AstronomySources.lunar",
+        timestamp: live?.instant || "",
+        freshness: "Current calculation",
+        availability: "Always available from the astronomy dataset.",
+        relation: basePatternRelation,
+        layerId: "lunar",
+        sphereLabel: "Lunar Position",
+        visibleOnSphere: _mappedLayerVisible("lunar"),
+        comparison: historicalAvailability,
+        hierarchy: "Always available",
+      },
+      {
+        id: "passage",
+        label: "Equinox Passage",
+        value: live?.passage?.active
+          ? `Active · ${live.passage.elapsed != null ? `${Number((live.passage.elapsed * 24).toFixed(1))} h elapsed` : "in progress"}`
+          : `Inactive · ${live?.passage?.durationHours != null ? `${live.passage.durationHours} h span` : "duration unavailable"}`,
+        status: "Calculated",
+        source: "EquinoxPassageEngine",
+        timestamp: yearRecord?.equinox?.utcInstant || live?.instant || "",
+        freshness: "Canonical dataset",
+        availability: "Always available from canonical Passage data.",
+        relation: `Selected year ${_state.year} Passage state.`,
+        layerId: "passage",
+        sphereLabel: "Passage arc",
+        visibleOnSphere: _mappedLayerVisible("passage"),
+        comparison: historicalAvailability,
+        hierarchy: "Always available",
+      },
+      {
+        id: "solar-gate",
+        label: "Nearest solar gate",
+        value: selected?.solar?.gate ? `${selected.solar.gate} · ${selected.solar.element || "—"}` : "Unavailable",
+        status: "Calculated",
+        source: "LivingTimeSphereLiveData seasonal gate lookup",
+        timestamp: live?.instant || "",
+        freshness: "Current calculation",
+        availability: "Always available from deterministic solar context lookup.",
+        relation: basePatternRelation,
+        layerId: "solar",
+        sphereLabel: "Local solar marker",
+        visibleOnSphere: _mappedLayerVisible("solar"),
+        comparison: historicalAvailability,
+        hierarchy: "Always available",
+      },
+      {
+        id: "daylight-state",
+        label: "Daylight state",
+        value: daylightState,
+        status: "Calculated",
+        source: _state.boundaryMode === "midnight" ? "Midnight boundary" : "Configured sunset boundary",
+        timestamp: live?.instant || "",
+        freshness: "Current calculation",
+        availability: "Always available from boundary state.",
+        relation: basePatternRelation,
+        layerId: "solar",
+        sphereLabel: "Local solar marker",
+        visibleOnSphere: _mappedLayerVisible("solar"),
+        comparison: "Not available",
+        hierarchy: "Always available",
+      },
+      {
+        id: "boundary",
+        label: "Configured boundary",
+        value: _state.boundaryMode === "midnight" ? "Midnight boundary" : `Sunset boundary · ${_state.manualSunset || "18:00"}`,
+        status: "Calculated",
+        source: "Living Time Sphere settings",
+        timestamp: live?.instant || "",
+        freshness: "Current calculation",
+        availability: "Always available from current Observatory settings.",
+        relation: basePatternRelation,
+        layerId: "markers",
+        sphereLabel: "Boundary marker",
+        visibleOnSphere: _mappedLayerVisible("markers"),
+        comparison: "Not available",
+        hierarchy: "Always available",
+      },
+      {
+        id: "cached-environment",
+        label: "Cached environment timestamp",
+        value: live?.instant ? _formatLocalInstant(live.instant) : "No cached environment snapshot",
+        status: "Cached",
+        source: "LivingTimeSphereLiveData snapshot",
+        timestamp: live?.instant || "",
+        freshness: _formatFreshness(live?.instant, now),
+        availability: "Always available as the current snapshot timestamp.",
+        relation: "Indicates when this field layer snapshot was assembled.",
+        layerId: "environment",
+        sphereLabel: "Environmental shell",
+        visibleOnSphere: _mappedLayerVisible("environment"),
+        comparison: "Not available",
+        hierarchy: "Always available",
+      },
+      {
+        id: "kp",
+        label: "Kp",
+        value: "Unavailable",
+        status: "Unavailable",
+        source: "No geomagnetic provider configured",
+        timestamp: "",
+        freshness: "Not checked",
+        availability: "Kp is conditional on a geomagnetic provider.",
+        relation: selected?.isToday ? "Would apply to the current selected Pattern Day." : "Historical Kp is not available in this Observatory.",
+        layerId: "environment",
+        sphereLabel: "Geomagnetic shell",
+        visibleOnSphere: _mappedLayerVisible("environment"),
+        comparison: "Not available",
+        hierarchy: "Conditional",
+      },
+      {
+        id: "body-signal",
+        label: "Body signal",
+        value: bodySignalValue || "No body signal recorded",
+        status: bodySignalValue ? "User logged" : "Unavailable",
+        source: bodySignalValue ? "Local witness log" : "No body signal recorded",
+        timestamp: observation?.saved || observation?.date || "",
+        freshness: bodySignalValue ? _formatFreshness(observation?.saved || observation?.date, now) : "Not checked",
+        availability: bodySignalValue
+          ? "Saved local observation is available."
+          : "No body signal has been recorded for this Pattern Day in local storage.",
+        relation: selected?.effectiveDate
+          ? `Matches local observation for ${selected.effectiveDate}.`
+          : "No selected Pattern Day date is available.",
+        layerId: "connections",
+        sphereLabel: "Local personal field",
+        visibleOnSphere: _mappedLayerVisible("connections"),
+        comparison: witnessCount ? `${_pluralize(witnessCount, "saved record", "saved records")}` : "Not available",
+        hierarchy: "Always available",
+        actionHref: _buildMoonsLink(selected, "#bodyInput"),
+        actionLabel: "Record Body Signal",
+      },
+      {
+        id: "pattern-tag",
+        label: "Pattern tag",
+        value: patternTagValue || "No Pattern tag recorded",
+        status: patternTagValue ? "User logged" : "Unavailable",
+        source: memory?.dailyIntention?.value
+          ? "CodexMemory intention"
+          : (patternTagValue ? "Local witness log" : "No Pattern tag recorded"),
+        timestamp: memory?.dailyIntention?.selectedAt || observation?.saved || "",
+        freshness: patternTagValue ? _formatFreshness(memory?.dailyIntention?.selectedAt || observation?.saved, now) : "Not checked",
+        availability: patternTagValue
+          ? "Saved Pattern tag is available."
+          : "No Pattern tag has been saved for this Pattern Day in local storage.",
+        relation: basePatternRelation,
+        layerId: "connections",
+        sphereLabel: "Selected Pattern Day field",
+        visibleOnSphere: _mappedLayerVisible("connections"),
+        comparison: historicalAvailability,
+        hierarchy: "Always available",
+        actionHref: _buildMoonsLink(selected, "#signsInput"),
+        actionLabel: "Add Pattern Tag",
+      },
+      {
+        id: "witness",
+        label: "Witness",
+        value: `${_pluralize(witnessCount, "saved record", "saved records")}${live?.witness?.label && witnessCount ? ` · ${live.witness.label}` : ""}`,
+        status: witnessCount ? "User logged" : "Unavailable",
+        source: live?.witness?.source === "CodexMemory" ? "Local browser witness storage" : "Witness storage unavailable",
+        timestamp: live?.witness?.date || "",
+        freshness: live?.witness?.date ? _formatFreshness(live.witness.date, now) : "Not checked",
+        availability: witnessCount
+          ? "Saved witness records are available in this browser."
+          : "No local witness records are saved yet in this browser.",
+        relation: basePatternRelation,
+        layerId: "connections",
+        sphereLabel: "Witness constellation",
+        visibleOnSphere: _mappedLayerVisible("connections"),
+        comparison: witnessCount ? `${_pluralize(witnessCount, "local witness", "local witnesses")}` : "Not available",
+        hierarchy: "Always available",
+        actionHref: live?.links?.witness || "./ledger.html",
+        actionLabel: "Record Observation",
+      },
+      {
+        id: "recurrence",
+        label: "Recurrence",
+        value: recurrence
+          ? `${recurrence.year} · ${Math.round(recurrence.overallSimilarityScore * 100)}%`
+          : "No supported recurrence above threshold",
+        status: recurrence ? "Calculated" : "Unavailable",
+        source: "AlignmentRecurrence",
+        timestamp: live?.instant || "",
+        freshness: "Canonical dataset",
+        availability: recurrence
+          ? "Historical comparison exists in the supported study range."
+          : "No recurrence currently clears the supported similarity threshold.",
+        relation: `Compares selected year ${_state.year} across the 2014–2026 study range.`,
+        layerId: "recurrence",
+        sphereLabel: "Historical connection line",
+        visibleOnSphere: _mappedLayerVisible("recurrence"),
+        comparison: recurrence
+          ? `Compared dimensions: ${recurrenceCompared.join(", ")}${recurrenceMissing.length ? ` · Missing: ${recurrenceMissing.join(", ")}` : ""}`
+          : "Not available",
+        hierarchy: "Conditional",
+        comparedDimensions: recurrenceCompared,
+        missingDimensions: recurrenceMissing,
+        actionHref: _buildAlignmentLink("recurrence"),
+        actionLabel: "Open comparison",
+      },
+    ];
+
+    const activeConnectionCount = fields.filter(field => field.visibleOnSphere && field.status !== "Unavailable" && field.status !== "Not checked").length;
+
+    return {
+      rangeLabel: FIELD_RANGE_LABELS[_state.fieldRange] || FIELD_RANGE_LABELS.now,
+      summaryItems,
+      fields,
+      activeConnectionCount,
+      livingContext: {
+        witness: `${_pluralize(witnessCount, "saved record", "saved records")}${live?.witness?.label && witnessCount ? ` · ${live.witness.label}` : ""}`,
+        environment: `${live?.environment?.online === false ? "Offline" : "Online"} · ${providerConfigured ? "live provider active" : "live provider unavailable"}`,
+        recurrence: recurrence
+          ? `Closest supported recurrence: ${recurrence.year} · ${Math.round(recurrence.overallSimilarityScore * 100)}%`
+          : "Closest supported recurrence: Not available",
+        selectedPatternPosition: selected?.moon != null ? `Moon ${selected.moon} · Day ${selected.day}` : "Outside counted year",
+        solarContext: selected?.solar?.gate ? `${selected.solar.gate} · ${selected.solar.element || "—"}` : "Unavailable",
+        lunarContext: selected?.lunarPhase || live?.lunar?.phaseName || "Unavailable",
+        fieldConnections: `${activeConnectionCount} active`,
+      },
+      sources: {
+        patternEngineVersion: globalThis.PatternCalendarVersion?.version || "pattern-calendar/1.0.0",
+        astronomyDatasetVersion: globalThis.AstronomySources?.sourceMetadata?.datasetVersion || globalThis.AstronomyVersion?.version || "astronomy/1.0.0",
+        environmentProvider: environmentSource,
+        lastEnvironmentUpdate: live?.instant || "",
+        sunsetSource: _state.manualSunset === "18:00" ? "Manual fallback" : "Configured local boundary",
+        lunarCalculationSource: globalThis.AstronomySources?.sources?.lunar?.label || live?.lunar?.source || "Lunar calculation unavailable",
+        witnessStorageState: live?.witness?.source === "CodexMemory" ? `Local browser storage · ${_pluralize(witnessCount, "record", "records")}` : "Local browser storage unavailable",
+        recurrenceDatasetRange: (() => {
+          const years = globalThis.AlignmentLedgerData?.listSupportedYears?.() || [];
+          return years.length ? `${years[0]}–${years[years.length - 1]}` : "Unavailable";
+        })(),
+      },
+      providerConfigured,
+    };
+  }
+
+  function _fieldLayerSnapshot(selected, model) {
+    return _buildFieldLayerSnapshot(selected, model);
   }
 
   // ── Render dispatch ────────────────────────────────────────────────
@@ -113,6 +919,9 @@
 
     // Show/hide data table and text summary views
     _updateAlternateViews();
+    _syncModeButtons();
+    _syncFieldRangeButtons();
+    _syncLayerCheckboxes();
 
     const model    = buildCurrentModel();
     const spiral   = globalThis.LivingTimeSphereModel.buildSpiral({ timeZone: _state.timeZone, boundaryMode: _state.boundaryMode, manualSunset: _state.manualSunset });
@@ -180,6 +989,11 @@
           selectedYear:  _state.year,
           visibleLayers: _state.visibleLayers,
           viewMode:      _state.viewMode,
+          moonLabelMode: _state.moonLabelMode,
+          moonLabelDistance: _state.moonLabelDistance,
+          dayLabelMode: _state.dayLabelMode,
+          connectionRegistry: globalThis.LivingTimeSphereConnections?.buildRegistry?.({ model, spiral, state: _state }) || [],
+          motionMode: _state.motionMode,
           reducedMotion,
           onYearSelect: year => {
             _state.year = year;
@@ -192,7 +1006,29 @@
             renderSphere(container);
           },
           onMarkerSelect: marker => {
+            if (!marker) return;
+            if (marker.type === "day" && marker.dayOfPatternYear) {
+              _state.selectedDayOfYear = marker.dayOfPatternYear;
+              _state.selectedMarker = `day-${marker.dayOfPatternYear}`;
+              globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${marker.day}, Day ${marker.dayOfPatternYear} of 364.`);
+              if (_state.viewMode === "years") {
+                _state.viewMode = "pattern";
+                _setModeDefaultLayers("pattern");
+                _syncModeButtons();
+              }
+              renderSphere(container);
+              return;
+            }
+            if (marker.type === "moon" && marker.moon) {
+              const day = Math.max(1, Math.min(28, marker.day || 1));
+              _state.selectedDayOfYear = (marker.moon - 1) * 28 + day;
+              _state.selectedMarker = `moon-${marker.moon}`;
+              globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${day}.`);
+              renderSphere(container);
+              return;
+            }
             _state.selectedMarker = marker?.type === "year" ? `eq-${marker.year}` : (marker?.type || null);
+            renderSphere(container);
           }
         });
       } catch (err) {
@@ -231,7 +1067,18 @@
       _updateInteractBar();
       _updateRendererDiagnostics();
     } else {
-      renderer.refresh(model, spiral, _state.year, _state.visibleLayers, _state.viewMode);
+      renderer.refresh(
+        model,
+        spiral,
+        _state.year,
+        _state.visibleLayers,
+        _state.viewMode,
+        _state.moonLabelMode,
+        _state.moonLabelDistance,
+        _state.dayLabelMode,
+        globalThis.LivingTimeSphereConnections?.buildRegistry?.({ model, spiral, state: _state }) || [],
+        _state.motionMode
+      );
       renderer.setMode(_state.viewMode);
     }
   }
@@ -269,7 +1116,11 @@
       model, spiral, layout,
       visibleLayers: _state.visibleLayers,
       selectedYear:  _state.year,
-      viewMode:      _state.viewMode
+      viewMode:      _state.viewMode,
+      moonLabelMode: _state.moonLabelMode,
+      moonLabelDistance: _state.moonLabelDistance,
+      dayLabelMode: _state.dayLabelMode,
+      connectionRegistry: globalThis.LivingTimeSphereConnections?.buildRegistry?.({ model, spiral, state: _state }) || []
     });
   }
 
@@ -391,15 +1242,27 @@
 
   function _setModeDefaultLayers(mode) {
     if (mode === "today") {
+      _state.visibleLayers.exactDays = true;
+      _state.visibleLayers.weekGates = true;
+      _state.visibleLayers.connections = true;
       _state.visibleLayers.spiral = false;
       _state.visibleLayers.recurrence = false;
       _state.visibleLayers.solar = false;
     } else if (mode === "pattern") {
+      _state.visibleLayers.exactDays = true;
+      _state.visibleLayers.weekGates = true;
+      _state.visibleLayers.connections = true;
       _state.visibleLayers.spiral = false;
       _state.visibleLayers.recurrence = false;
     } else if (mode === "years") {
+      _state.visibleLayers.exactDays = false;
+      _state.visibleLayers.weekGates = false;
+      _state.visibleLayers.connections = true;
       _state.visibleLayers.spiral = true;
     } else if (mode === "passage") {
+      _state.visibleLayers.exactDays = true;
+      _state.visibleLayers.weekGates = true;
+      _state.visibleLayers.connections = true;
       _state.visibleLayers.spiral = false;
     }
     Object.keys(_state.visibleLayers).forEach(layer => {
@@ -412,66 +1275,61 @@
     const el = document.getElementById("sphere-mode-summary");
     if (!el) return;
     const mode = _state.viewMode;
+    const selected = model?.selectedPatternPosition || _resolveSelectedPatternPosition(model);
+    const selectedLabel = selected?.moon != null
+      ? `Moon ${selected.moon} · Day ${selected.day} · Day ${selected.dayOfPatternYear}/364`
+      : "Unavailable";
     if (mode === "today") {
-      const tp = model?.todayPatternPosition;
-      const pos = tp && tp.moon != null
-        ? `Moon ${tp.moon} · Day ${tp.day} · Day ${tp.dayOfPatternYear}/364`
-        : "—";
-      el.textContent = `Today — ${pos}`;
+      el.textContent = _selectedDaySummary(selected);
     } else if (mode === "passage") {
       const tp = model?.sourceRecord?.equinox?.patternPosition || {};
-      el.textContent = `${model?.year || "—"} Equinox Passage · Moon ${tp.moon || "—"} · Day ${tp.day || "—"} → Moon 1 · Day 1`;
+      el.textContent = `${model?.year || "—"} Equinox Passage · Moon ${tp.moon || "—"} · Day ${tp.day || "—"} → Year Gate · ${selectedLabel}`;
     } else if (mode === "years") {
-      el.textContent = `2014–2026 Alignment Spiral · Selected: ${_state.year}`;
+      el.textContent = `2014–2026 Alignment Spiral · Year ${_state.year} · ${selectedLabel}`;
     } else if (mode === "pattern") {
-      const tp = model?.todayPatternPosition;
-      const pos = tp && tp.moon != null ? `Moon ${tp.moon} · Day ${tp.day}` : "—";
-      el.textContent = `13 Moons × 28 Days · Selected: ${pos}`;
+      el.textContent = `13 Moons × 28 Days · ${selectedLabel}`;
     }
   }
 
   function _updateWhatAmISeeing(mode) {
     const el = document.getElementById("sphere-what-am-i-seeing-body");
     if (!el) return;
+    const selected = _resolveSelectedPatternPosition(buildCurrentModel());
     const texts = {
-      today:   "This view places the current Pattern Day inside the fixed 13 × 28 calendar. The gold marker is Today. The lunar marker and Equinox Gate move independently around the Pattern structure.",
-      passage: "This view shows the distance between the March Equinox and Moon 1 Day 1 (Year Gate) for the selected year. The gold arc traces the Equinox Passage.",
-      years:   "This view compares the Equinox position and Passage duration across 2014–2026. Each sphere on the spiral is one year.",
-      pattern: "This view shows the stable 364-day geometry: 13 Moons of 28 days each. The gold marker highlights the current day position."
+      today:   `This view places the active Pattern day inside the fixed 13 × 28 calendar. The bright marker highlights ${selected?.moon != null ? `Moon ${selected.moon} Day ${selected.day}` : "the selected day"}, and the lunar marker remains independent of the Pattern ring.`,
+      passage: "This view shows the distance between the March Equinox and Moon 1 Day 1 for the selected year. The passage arc, Year Gate, and selected day stay aligned to the same calendar engine.",
+      years:   "This view compares the Equinox position and Passage duration across 2014–2026. Tap a year marker to inspect that year, while the selected day stays readable in the detail panel.",
+      pattern: "This view shows the full 13 × 28 geometry. Day dots mark all 364 counted days, Shabbat gates, the selected day, and today without leaving the current visual system."
     };
     el.textContent = texts[mode] || "";
   }
 
   function _updateStateStrip(viewMode, model) {
-    const el = document.getElementById("sphere-state-strip");
-    if (!el) return;
+    const strips = [
+      document.getElementById("sphere-state-strip"),
+      document.getElementById("sphere-current-status"),
+    ].filter(Boolean);
+    if (!strips.length) return;
     const year = _state.year || 2026;
+    const selected = model?.selectedPatternPosition || _resolveSelectedPatternPosition(model);
+    let text = "";
     if (viewMode === "today" && model) {
-      const tp = model.todayPatternPosition;
-      if (tp?.moon != null) {
-        const dayOfYear = (tp.moon - 1) * 28 + tp.day;
-        el.textContent = `Today · Moon ${tp.moon} · Day ${tp.day} · Day ${dayOfYear}/364`;
-      } else {
-        el.textContent = `Today · ${year}`;
-      }
+      text = _selectedDaySummary(selected);
     } else if (viewMode === "passage" && model) {
       const rec = model.sourceRecord;
       const startMoon = rec?.equinox?.patternPosition?.moon ?? "";
       const startDay  = rec?.equinox?.patternPosition?.day  ?? "";
-      const endMoon   = rec?.yearGate?.patternPosition?.moon ?? 1;
-      el.textContent  = `${year} Equinox Passage · Moon ${startMoon} Day ${startDay} → Moon ${endMoon} Day 1`;
+      const selectedLabel = selected?.moon != null ? `Selected Moon ${selected.moon} Day ${selected.day}` : "Selected day unavailable";
+      text = `${year} Passage · Moon ${startMoon} Day ${startDay} → Moon 1 Day 1 · ${selectedLabel}`;
     } else if (viewMode === "years") {
-      el.textContent = `Alignment Spiral · 2014–2026 · Selected ${year}`;
+      const selectedLabel = selected?.moon != null ? `Moon ${selected.moon} · Day ${selected.day}` : "No day selected";
+      text = `Alignment Spiral · 2014–2026 · Year ${year} · ${selectedLabel}`;
     } else if (viewMode === "pattern") {
-      const tp = model?.todayPatternPosition;
-      if (tp?.moon != null) {
-        el.textContent = `13 Moons × 28 Days · Today Moon ${tp.moon} Day ${tp.day}`;
-      } else {
-        el.textContent = `13 Moons × 28 Days`;
-      }
-    } else {
-      el.textContent = "";
+      text = selected?.moon != null
+        ? `13 Moons × 28 Days · Moon ${selected.moon} · Day ${selected.day} · Day ${selected.dayOfPatternYear}/364`
+        : "13 Moons × 28 Days";
     }
+    strips.forEach(strip => { strip.textContent = text; });
   }
 
   function _setModeDefaultSelectedMarker(mode) {
@@ -507,46 +1365,242 @@
   function updateDetails(model) {
     const el = document.getElementById("sphere-details");
     if (!el || !model) return;
+    const selected = model.selectedPatternPosition || _resolveSelectedPatternPosition(model);
+    const yearRecord = model.sourceRecord || {};
+    const yearPos = yearRecord?.equinox?.patternPosition || {};
+    const offs = yearRecord?.offsets || {};
+    const field = _fieldLayerSnapshot(selected, model);
+    const selectedLabel = selected?.moon != null ? `Moon ${selected.moon} · ${selected.moonName || "Unavailable"} · Day ${selected.day}` : "Unavailable";
+    const day364 = selected?.dayOfPatternYear != null ? `Day ${selected.dayOfPatternYear}/364` : "Unavailable — selected day is outside the counted year.";
+    const patternAngle = selected?.dayOfPatternYear != null
+      ? `${globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(selected.dayOfPatternYear).toFixed(1)}°`
+      : "Unavailable";
+    const shabbatLabel = selected?.moon == null
+      ? "Unavailable — outside counted day set."
+      : selected.shabbat
+        ? "Shabbat Gate · Active"
+        : `Common day · next Shabbat on Moon Day ${[2, 9, 16, 23].find(day => day > selected.day) || 2}`;
+    const solarLabel = selected?.solar?.gate
+      ? `${selected.solar.gate} · ${selected.solar.element || "—"}`
+      : "Unavailable — solar layer not loaded for this date.";
+    const seasonLabel = selected?.solar?.season?.label
+      ? `${selected.solar.season.label} · ${Math.round((selected.solar.season.progress || 0) * 100)}%`
+      : "Unavailable — seasonal progress not loaded.";
+    const yearSummary = _state.viewMode === "years"
+      ? `<div class="sphere-details-section">
+          <h4 class="sphere-details-subheading">Year layer</h4>
+          <dl class="sphere-details-grid">
+            <dt>Selected year</dt><dd>${_escapeHtml(_state.year)}</dd>
+            <dt>Equinox Gate</dt><dd>Moon ${_escapeHtml(yearPos.moon || "—")} · Day ${_escapeHtml(yearPos.day || "—")}</dd>
+            <dt>Year Gate</dt><dd>Moon 1 · Day 1 · April 17, 2026 anchor</dd>
+            <dt>Passage span</dt><dd>${_escapeHtml(Number(((offs.equinoxToYearGateDays || 0) * 24).toFixed(1)))} hours</dd>
+            <dt>Equinox angle</dt><dd>${_escapeHtml(model.passageStartAngle?.toFixed(1) || "Unavailable")}°</dd>
+          </dl>
+        </div>`
+      : "";
 
-    // In today mode, show today's actual Pattern position (from PatternCalendar),
-    // not the Equinox-moment position from the year record.
-    const isToday = _state.viewMode === "today";
-    const todayPos = isToday ? (model.todayPatternPosition || null) : null;
-    const pos   = todayPos ? {
-      moon:            todayPos.moon,
-      day:             todayPos.day,
-      dayOfPatternYear: todayPos.dayOfPatternYear,
-      moonName:        todayPos.moonName,
-      isDayOutOfTime:  todayPos.isDayOutOfTime,
-    } : (model.sourceRecord?.equinox?.patternPosition || {});
-    const lunar = model.sourceRecord?.equinox?.lunarLayer       || {};
-    const offs  = model.sourceRecord?.offsets || {};
+    const renderFieldCard = item => {
+      const comparedDimensions = Array.isArray(item.comparedDimensions) && item.comparedDimensions.length
+        ? `<li>${item.comparedDimensions.map(value => _escapeHtml(value)).join("</li><li>")}</li>`
+        : "";
+      const missingDimensions = Array.isArray(item.missingDimensions) && item.missingDimensions.length
+        ? `<li>${item.missingDimensions.map(value => _escapeHtml(value)).join("</li><li>")}</li>`
+        : "";
+      const actionLink = item.actionHref && item.actionLabel
+        ? `<a class="sphere-field-link" href="${_escapeHtml(item.actionHref)}">${_escapeHtml(item.actionLabel)}</a>`
+        : "";
+      const canToggle = !!item.layerId && item.status !== "Unavailable" && item.status !== "Not checked";
+      const toggleLabel = canToggle
+        ? `${item.visibleOnSphere ? "Hide on Sphere" : "Show on Sphere"}`
+        : "Not available on Sphere";
+      const toggleDisabled = canToggle ? "" : " disabled";
+      return `<article class="sphere-field-card${item.hierarchy === "Always available" ? " is-core" : " is-conditional"}">
+          <div class="sphere-field-head">
+            <div>
+              <h5 class="sphere-field-title">${_escapeHtml(item.label)}</h5>
+              <p class="sphere-field-value">${_escapeHtml(item.value)}</p>
+            </div>
+            <div class="sphere-field-badges">
+              <span class="sphere-status-chip sphere-status-${_escapeHtml(item.status.toLowerCase().replace(/\s+/g, "-"))}">${_escapeHtml(item.status)}</span>
+              <span class="sphere-availability-chip">${_escapeHtml(item.hierarchy)}</span>
+            </div>
+          </div>
+          <div class="sphere-field-meta">
+            <div><span>Status</span><strong>${_escapeHtml(item.status)}</strong></div>
+            <div><span>Source</span><strong>${_escapeHtml(item.source)}</strong></div>
+            <div><span>Timestamp</span><strong>${_escapeHtml(item.timestamp ? _formatLocalInstant(item.timestamp) : "Not recorded")}</strong></div>
+            <div><span>Freshness</span><strong>${_escapeHtml(item.freshness)}</strong></div>
+            <div><span>Availability</span><strong>${_escapeHtml(item.availability)}</strong></div>
+            <div><span>Pattern relation</span><strong>${_escapeHtml(item.relation)}</strong></div>
+            <div><span>Sphere layer</span><strong>${_escapeHtml(item.sphereLabel)} · ${item.visibleOnSphere ? "On" : "Off"}</strong></div>
+            <div><span>Historical comparison</span><strong>${_escapeHtml(item.comparison)}</strong></div>
+          </div>
+          <div class="sphere-field-actions">
+            <button class="sphere-btn sphere-btn-sm" type="button" data-field-layer="${_escapeHtml(item.id)}"${toggleDisabled}>${_escapeHtml(toggleLabel)}</button>
+            ${actionLink}
+          </div>
+          ${(comparedDimensions || missingDimensions) ? `<details class="sphere-field-details">
+            <summary>Comparison details</summary>
+            ${comparedDimensions ? `<div><strong>Compared dimensions</strong><ul class="sphere-inline-list">${comparedDimensions}</ul></div>` : ""}
+            ${missingDimensions ? `<div><strong>Missing dimensions</strong><ul class="sphere-inline-list">${missingDimensions}</ul></div>` : ""}
+          </details>` : ""}
+        </article>`;
+    };
 
-    const posLabel = pos.moon != null ? `Moon ${pos.moon} · Day ${pos.day}` : "Outside count";
-    const dayLabel = pos.dayOfPatternYear != null ? `Day ${pos.dayOfPatternYear}/364` : "—";
-    const heading  = isToday && todayPos
-      ? `Today — ${posLabel} · ${dayLabel}`
-      : `Year ${model.year}`;
+    const fieldCards = field.fields.map(renderFieldCard).join("");
+    const livingContextEntries = [
+      ["Witness", field.livingContext.witness],
+      ["Environment", field.livingContext.environment],
+      ["Recurrence", field.livingContext.recurrence],
+      ["Selected Pattern position", field.livingContext.selectedPatternPosition],
+      ["Solar context", field.livingContext.solarContext],
+      ["Lunar context", field.livingContext.lunarContext],
+      ["Field connections", field.livingContext.fieldConnections],
+    ].map(([label, value]) => `<dt>${_escapeHtml(label)}</dt><dd>${_escapeHtml(value)}</dd>`).join("");
+    const sourcesEntries = [
+      ["Pattern engine version", field.sources.patternEngineVersion],
+      ["Astronomy dataset version", field.sources.astronomyDatasetVersion],
+      ["Environment provider", field.sources.environmentProvider],
+      ["Last environment update", field.sources.lastEnvironmentUpdate ? _formatLocalInstant(field.sources.lastEnvironmentUpdate) : "Not recorded"],
+      ["Sunset source", field.sources.sunsetSource],
+      ["Lunar calculation source", field.sources.lunarCalculationSource],
+      ["Witness storage state", field.sources.witnessStorageState],
+      ["Recurrence dataset range", field.sources.recurrenceDatasetRange],
+    ].map(([label, value]) => `<dt>${_escapeHtml(label)}</dt><dd>${_escapeHtml(value)}</dd>`).join("");
+    const refreshDisabled = field.providerConfigured ? "" : " disabled";
+    const refreshHelp = field.providerConfigured
+      ? "Live provider ready."
+      : "Live data becomes available after a weather or geomagnetic provider is configured.";
 
     el.innerHTML = `
-      <h3 class="sphere-details-heading">${heading}</h3>
-      <dl class="sphere-details-grid">
-        ${isToday && todayPos ? `<dt>Civil date</dt><dd>${todayPos.civilDate || "—"}</dd>` : ""}
-        ${isToday && todayPos ? `<dt>Effective date</dt><dd>${todayPos.effectiveDate || "—"}</dd>` : ""}
-        <dt>Pattern position</dt><dd>${posLabel}</dd>
-        ${isToday && todayPos && pos.dayOfPatternYear ? `<dt>Day of year</dt><dd>${dayLabel}</dd>` : ""}
-        <dt>Passage</dt><dd>${Number(((offs.equinoxToYearGateDays || 0) * 24).toFixed(1))} hours</dd>
-        <dt>Lunar phase</dt><dd>${lunar.phaseName || "—"}</dd>
-        <dt>Equinox angle</dt><dd>${model.passageStartAngle?.toFixed(1) || "—"}°</dd>
-      </dl>`;
-    if (isToday) {
-      el.innerHTML += `<p class="sphere-core-note"><strong>Pattern Core</strong> — the fixed center reflects the active 13 × 28 structure.</p>`;
+      <h3 class="sphere-details-heading">${_escapeHtml(_selectedDaySummary(selected))}</h3>
+      <div class="sphere-details-section">
+        <h4 class="sphere-details-subheading">Selected Day</h4>
+        <dl class="sphere-details-grid">
+          <dt>Pattern</dt><dd>${_escapeHtml(selectedLabel)}</dd>
+          <dt>Day of 364</dt><dd>${_escapeHtml(day364)}</dd>
+          <dt>Pattern angle</dt><dd>${_escapeHtml(patternAngle)}</dd>
+          <dt>Pattern date</dt><dd>${_escapeHtml(selected?.effectiveDate || "Unavailable — date conversion failed.")}</dd>
+          <dt>Day Seal</dt><dd>${_escapeHtml(selected?.daySeal || "Unavailable")} <span class="sphere-inline-note">${_escapeHtml(selected?.daySealMeaning || "")}</span></dd>
+          <dt>Week Gate</dt><dd>${_escapeHtml(selected?.weekGate?.[0] || "Unavailable — week gate missing.")}</dd>
+          <dt>Shabbat Gate</dt><dd>${_escapeHtml(shabbatLabel)}</dd>
+          <dt>Lunar phase</dt><dd>${_escapeHtml(selected?.lunarPhase || "Unavailable — moon phase service not loaded.")}${selected?.lunarIllumination != null ? ` · ${_escapeHtml(selected.lunarIllumination)}%` : ""}</dd>
+          <dt>Solar gate</dt><dd>${_escapeHtml(solarLabel)}</dd>
+          <dt>Season gate</dt><dd>${_escapeHtml(seasonLabel)}</dd>
+          <dt>Mirror summary</dt><dd>${_escapeHtml(selected?.shortMirror || "Unavailable — no mirror summary stored for this day.")}</dd>
+          <dt>Witness prompt</dt><dd>${_escapeHtml(selected?.witnessPrompt || "Observe the day and record what is actually there.")}</dd>
+        </dl>
+      </div>
+      <div class="sphere-details-section">
+        <h4 class="sphere-details-subheading">Field Layer</h4>
+        <div class="sphere-field-summary">
+          <div>
+            <p class="sphere-field-summary-label">Active Fields</p>
+            <div class="sphere-field-summary-list">${field.summaryItems.map(item => `<span class="sphere-field-summary-pill">${_escapeHtml(item)}</span>`).join("")}</div>
+          </div>
+          <div class="sphere-actions sphere-actions-compact">
+            <button class="sphere-btn sphere-btn-sm" type="button" data-sphere-action="open-field-map">Open Field Map</button>
+            <button class="sphere-btn sphere-btn-sm" type="button" data-sphere-action="show-fields">Show on Sphere</button>
+            <a class="sphere-btn sphere-btn-sm" href="${_escapeHtml(_buildAlignmentLink("recurrence"))}">Compare Fields</a>
+          </div>
+        </div>
+        <p class="sphere-field-range-note">Range · ${_escapeHtml(field.rangeLabel)}</p>
+        <div class="sphere-field-cards">${fieldCards}</div>
+        <details class="sphere-field-disclosure">
+          <summary>Sources and freshness</summary>
+          <dl class="sphere-details-grid sphere-details-grid-tight">${sourcesEntries}</dl>
+        </details>
+        <div class="sphere-actions sphere-field-footer-actions">
+          <button class="sphere-btn" type="button" data-sphere-action="refresh-live"${refreshDisabled}>Refresh Live Fields</button>
+          <a class="sphere-btn" href="${_escapeHtml((field.fields.find(item => item.id === "witness")?.actionHref) || "./ledger.html")}">Record Observation</a>
+          <button class="sphere-btn" type="button" data-sphere-action="open-field-map">Open Field Map</button>
+          <button class="sphere-btn sphere-btn-primary" type="button" data-sphere-action="show-fields">Show Fields on Sphere</button>
+          <a class="sphere-btn" href="${_escapeHtml(_buildAlignmentLink("recurrence"))}">Compare Historical Fields</a>
+        </div>
+        <p class="sphere-field-note">${_escapeHtml(refreshHelp)}</p>
+      </div>
+      ${yearSummary}
+      <div class="sphere-details-section">
+        <h4 class="sphere-details-subheading">Living context</h4>
+        <dl class="sphere-details-grid">${livingContextEntries}</dl>
+      </div>
+      <p class="sphere-core-note"><strong>Pattern Core</strong> — the fixed center reflects the same 13 × 28 calendar engine used by Today, Passage, Years, and Pattern views.</p>`;
+
+    el.querySelectorAll("[data-field-layer]").forEach(button => {
+      button.addEventListener("click", () => {
+        const id = button.getAttribute("data-field-layer");
+        const item = field.fields.find(entry => entry.id === id);
+        if (!item?.layerId) return;
+        _setMappedLayer(item.layerId, !_mappedLayerVisible(item.layerId));
+        _syncLayerCheckboxes();
+        renderSphere(document.getElementById("sphere-container"));
+      });
+    });
+
+    el.querySelectorAll("[data-sphere-action]").forEach(button => {
+      button.addEventListener("click", () => {
+        const action = button.getAttribute("data-sphere-action");
+        if (action === "show-fields") {
+          field.fields.forEach(item => {
+            if (item.layerId && item.status !== "Unavailable" && item.status !== "Not checked") {
+              _setMappedLayer(item.layerId, true);
+            }
+          });
+          _syncLayerCheckboxes();
+          renderSphere(document.getElementById("sphere-container"));
+        } else if (action === "open-field-map") {
+          const wrapper = document.getElementById("sphere-container");
+          if (wrapper?.scrollIntoView) wrapper.scrollIntoView({ behavior: "smooth", block: "center" });
+        } else if (action === "refresh-live" && field.providerConfigured) {
+          renderSphere(document.getElementById("sphere-container"));
+        }
+      });
+    });
+
+    const openMoons = document.getElementById("sphere-day-open-moons");
+    if (openMoons && selected?.effectiveDate) {
+      openMoons.href = _buildMoonsLink(selected);
     }
   }
 
   // ── Control wiring ─────────────────────────────────────────────────
 
   function wireControls(container) {
+    const syncDaySelectors = () => {
+      const moonSel = document.getElementById("sphere-select-moon");
+      const daySel = document.getElementById("sphere-select-day");
+      if (!moonSel || !daySel) return;
+      if (!moonSel.options.length) {
+        moonSel.innerHTML = Array.from({ length: 13 }, (_, index) => `<option value="${index + 1}">Moon ${index + 1}</option>`).join("");
+      }
+      if (!daySel.options.length) {
+        daySel.innerHTML = Array.from({ length: 28 }, (_, index) => `<option value="${index + 1}">Day ${index + 1}</option>`).join("");
+      }
+      const model = buildCurrentModel();
+      const selected = model.selectedPatternPosition || _resolveSelectedPatternPosition(model);
+      moonSel.value = String(selected?.moon || 1);
+      daySel.value = String(selected?.day || 1);
+    };
+
+    const shiftSelectedDay = delta => {
+      _state.selectedDayOfYear = Math.max(1, Math.min(364, (_state.selectedDayOfYear ?? _resolveSelectedDayOfYear(buildCurrentModel())) + delta));
+      _state.selectedMarker = `day-${_state.selectedDayOfYear}`;
+      renderSphere(container);
+      syncDaySelectors();
+    };
+
+    const shiftSelectedMoon = delta => {
+      const model = buildCurrentModel();
+      const selected = model.selectedPatternPosition || _resolveSelectedPatternPosition(model);
+      const currentMoon = selected?.moon || 1;
+      const currentDay = selected?.day || 1;
+      const nextMoon = ((currentMoon - 1 + delta + 13) % 13) + 1;
+      _state.selectedDayOfYear = (nextMoon - 1) * 28 + currentDay;
+      _state.selectedMarker = `moon-${nextMoon}`;
+      renderSphere(container);
+      syncDaySelectors();
+    };
+
     // View mode buttons.
     ["today", "passage", "years", "pattern"].forEach(mode => {
       const btn = document.getElementById(`sphere-mode-${mode}`);
@@ -568,9 +1622,60 @@
       yearSelect.innerHTML = years.map(y => `<option value="${y}"${y === _state.year ? " selected" : ""}>${y}</option>`).join("");
       yearSelect.addEventListener("change", () => {
         const y = Number(yearSelect.value);
-        if (y) { _state.year = y; renderSphere(container); }
+        if (y) {
+          _state.year = y;
+          if (_state.viewMode === "today" && _currentSnapshot()?.pattern?.patternYear !== y) {
+            _state.selectedDayOfYear = 1;
+          }
+          renderSphere(container);
+        }
       });
     }
+
+    Object.keys(FIELD_RANGE_LABELS).forEach(range => {
+      const btn = document.getElementById(`sphere-field-range-${range}`);
+      if (!btn) return;
+      btn.addEventListener("click", () => {
+        _applyFieldRangePreset(range);
+        _syncFieldRangeButtons();
+        _syncModeButtons();
+        _syncLayerCheckboxes();
+        renderSphere(container);
+      });
+    });
+    _syncFieldRangeButtons();
+
+    [
+      ["sphere-prev-day", () => shiftSelectedDay(-1)],
+      ["sphere-next-day", () => shiftSelectedDay(1)],
+      ["sphere-prev-moon", () => shiftSelectedMoon(-1)],
+      ["sphere-next-moon", () => shiftSelectedMoon(1)],
+    ].forEach(([id, handler]) => {
+      const btn = document.getElementById(id);
+      if (btn) btn.addEventListener("click", handler);
+    });
+
+    const moonSelect = document.getElementById("sphere-select-moon");
+    const daySelect = document.getElementById("sphere-select-day");
+    if (moonSelect) {
+      moonSelect.addEventListener("change", () => {
+        const moon = Math.max(1, Math.min(13, Number(moonSelect.value) || 1));
+        const day = Math.max(1, Math.min(28, Number(daySelect?.value) || 1));
+        _state.selectedDayOfYear = (moon - 1) * 28 + day;
+        _state.selectedMarker = `moon-${moon}`;
+        renderSphere(container);
+      });
+    }
+    if (daySelect) {
+      daySelect.addEventListener("change", () => {
+        const moon = Math.max(1, Math.min(13, Number(moonSelect?.value) || 1));
+        const day = Math.max(1, Math.min(28, Number(daySelect.value) || 1));
+        _state.selectedDayOfYear = (moon - 1) * 28 + day;
+        _state.selectedMarker = `day-${_state.selectedDayOfYear}`;
+        renderSphere(container);
+      });
+    }
+    syncDaySelectors();
 
     // Layer toggles.
     Object.keys(_state.visibleLayers).forEach(layer => {
@@ -612,6 +1717,10 @@
           datasetVersion: globalThis.LivingTimeSphereVersion?.version,
           renderer:      _state.active3d ? "3d" : "svg",
           quality:       _state.quality,
+          connectionMode:_state.connectionMode,
+          motionMode:    _state.motionMode,
+          moonLabelDistance: _state.moonLabelDistance,
+          dayLabelMode:  _state.dayLabelMode,
           cameraTheta:   camState.theta,
           cameraDist:    camState.dist,
         });
@@ -675,6 +1784,55 @@
         } else {
           renderSphere(container);
         }
+      });
+    }
+
+    const moonLabelMode = document.getElementById("sphere-moon-label-mode");
+    if (moonLabelMode) {
+      moonLabelMode.value = _state.moonLabelMode;
+      moonLabelMode.addEventListener("change", () => {
+        _state.moonLabelMode = moonLabelMode.value || "contextual";
+        _writeLocalSetting(MOON_LABEL_MODE_KEY, _state.moonLabelMode);
+        renderSphere(container);
+      });
+    }
+
+    const moonLabelDistance = document.getElementById("sphere-moon-label-distance");
+    if (moonLabelDistance) {
+      moonLabelDistance.value = _state.moonLabelDistance;
+      moonLabelDistance.addEventListener("change", () => {
+        _state.moonLabelDistance = moonLabelDistance.value || "standard";
+        renderSphere(container);
+      });
+    }
+
+    const dayLabelMode = document.getElementById("sphere-day-label-mode");
+    if (dayLabelMode) {
+      dayLabelMode.value = _state.dayLabelMode;
+      dayLabelMode.addEventListener("change", () => {
+        _state.dayLabelMode = dayLabelMode.value || "key";
+        renderSphere(container);
+      });
+    }
+
+    const connectionMode = document.getElementById("sphere-connection-mode");
+    if (connectionMode) {
+      connectionMode.value = _state.connectionMode;
+      connectionMode.addEventListener("change", () => {
+        _state.connectionMode = connectionMode.value || "contextual";
+        renderSphere(container);
+      });
+    }
+
+    const motionMode = document.getElementById("sphere-motion-mode");
+    if (motionMode) {
+      motionMode.value = _state.motionMode;
+      motionMode.addEventListener("change", () => {
+        _state.motionMode = motionMode.value || "still";
+        if (_state.active3d && globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
+          globalThis.LivingTimeSphereRenderer3d.setQuality(resolveQualityPreset());
+        }
+        renderSphere(container);
       });
     }
 
@@ -751,6 +1909,30 @@
       _syncYearSelect(y);
       globalThis.LivingTimeSphereAccessibility.announce(`Year ${y} selected. Switching to Passage view.`);
       renderSphere(container);
+    });
+
+    container.addEventListener("sphere:marker-select", e => {
+      const marker = e.detail;
+      if (!marker) return;
+      if (marker.type === "day" && marker.dayOfPatternYear) {
+        _state.selectedDayOfYear = marker.dayOfPatternYear;
+        _state.selectedMarker = `day-${marker.dayOfPatternYear}`;
+        globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${marker.day}, Day ${marker.dayOfPatternYear} of 364.`);
+        const moonSelect = document.getElementById("sphere-select-moon");
+        const daySelect = document.getElementById("sphere-select-day");
+        if (moonSelect) moonSelect.value = String(marker.moon || 1);
+        if (daySelect) daySelect.value = String(marker.day || 1);
+        renderSphere(container);
+      } else if (marker.type === "moon" && marker.moon) {
+        _state.selectedDayOfYear = (marker.moon - 1) * 28 + Math.max(1, Math.min(28, marker.day || 1));
+        _state.selectedMarker = `moon-${marker.moon}`;
+        globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${Math.max(1, Math.min(28, marker.day || 1))}.`);
+        const moonSelect = document.getElementById("sphere-select-moon");
+        const daySelect = document.getElementById("sphere-select-day");
+        if (moonSelect) moonSelect.value = String(marker.moon);
+        if (daySelect) daySelect.value = String(Math.max(1, Math.min(28, marker.day || 1)));
+        renderSphere(container);
+      }
     });
 
     // ── Retry 3D / Clear cache / Switch to SVG ──────────────────────
@@ -900,6 +2082,8 @@
       return;
     }
     applyUrlState();
+    _state.moonLabelMode = _resolveMoonLabelMode();
+    _state.moonLabelDistance = _resolveMoonLabelDistance();
 
     const container = document.getElementById("sphere-container");
     if (!container) return;

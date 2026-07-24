@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/moons.css?v=20260722-4">
   <link rel="stylesheet" href="assets/css/equinox-passage.css?v=20260722-4">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260724-1">
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/share/remnant-share-url.js"></script>
   <script defer src="assets/js/share/remnant-share.js"></script>
@@ -192,12 +193,54 @@
       <section class="equinox-card" aria-labelledby="equinoxPhase3LinksTitle">
         <p class="eyebrow">Observatory integration</p>
         <h2 id="equinoxPhase3LinksTitle">Open in</h2>
+        <div id="equinox-sphere-preview" class="sphere-observatory-preview sphere-observatory-preview--interactive" aria-label="Equinox Passage sphere preview"></div>
         <div class="equinox-inline-actions">
           <a id="equinoxOpenAlignment" href="alignment-ledger.html" class="lab-btn">Alignment Ledger</a>
           <a id="equinoxOpenSphere"    href="living-time-sphere.html" class="lab-btn ghost">Living Time Sphere</a>
+          <a id="equinoxCompareYears"  href="living-time-sphere.html?view=years" class="lab-btn ghost">Compare Years</a>
         </div>
         <script>
           (function() {
+            var sphereScriptsLoaded = false;
+            function loadSphereScripts(onReady) {
+              if (sphereScriptsLoaded) { onReady(); return; }
+              var scripts = [
+                "assets/js/sphere/living-time-sphere-state.js",
+                "assets/js/sphere/living-time-sphere-version.js",
+                "assets/js/sphere/living-time-sphere-model.js",
+                "assets/js/sphere/living-time-sphere-layout.js",
+                "assets/js/sphere/living-time-sphere-connections.js",
+                "assets/js/sphere/living-time-sphere-renderer-svg.js",
+                "assets/js/sphere/living-time-sphere-materials.js",
+                "assets/js/sphere/living-time-sphere-effects.js",
+                "assets/js/sphere/living-time-sphere-camera.js",
+                "assets/js/sphere/living-time-sphere-animation.js",
+                "assets/js/sphere/living-time-sphere-renderer-3d.js",
+                "assets/js/sphere/living-time-sphere-interaction.js",
+                "assets/js/sphere/living-time-sphere-accessibility.js",
+                "assets/js/sphere/living-time-sphere-live-data.js",
+                "assets/js/sphere/living-time-sphere-url-state.js",
+                "assets/js/sphere/living-time-sphere-mount.js"
+              ];
+              var remaining = scripts.length;
+              function done() {
+                remaining -= 1;
+                if (remaining <= 0) {
+                  sphereScriptsLoaded = true;
+                  onReady();
+                }
+              }
+              scripts.forEach(function(src) {
+                if (document.querySelector('script[src*="' + src.split("/").pop() + '"]')) { done(); return; }
+                var s = document.createElement("script");
+                s.src = src;
+                s.async = false;
+                s.onload = done;
+                s.onerror = done;
+                document.body.appendChild(s);
+              });
+            }
+
             function updateObservatoryLinks() {
               var year = document.getElementById("equinoxYear")?.value;
               var tz   = document.getElementById("equinoxTimeZone")?.value;
@@ -205,9 +248,11 @@
               var ss   = document.getElementById("equinoxManualSunset")?.value;
               var alA  = document.getElementById("equinoxOpenAlignment");
               var spA  = document.getElementById("equinoxOpenSphere");
+              var yearsA = document.getElementById("equinoxCompareYears");
               if (!alA || !spA) return;
               var alBase = alA.getAttribute("href").split("?")[0];
               var spBase = spA.getAttribute("href").split("?")[0];
+              var yearsBase = yearsA ? yearsA.getAttribute("href").split("?")[0] : "";
               var q = [];
               if (year) q.push("year=" + encodeURIComponent(year));
               if (tz)   q.push("tz="   + encodeURIComponent(tz));
@@ -216,6 +261,42 @@
               var qs = q.length ? "?" + q.join("&") : "";
               alA.href = alBase + qs;
               spA.href = spBase + qs;
+              if (yearsA) yearsA.href = yearsBase + qs + (qs ? "&" : "?") + "view=years";
+              loadSphereScripts(function() {
+                var preview = document.getElementById("equinox-sphere-preview");
+                if (!preview || !globalThis.LivingTimeSphere) return;
+                if (!preview.__livingTimeSphereMount) {
+                  preview.dataset.ltsManagedMount = "true";
+                  preview.__livingTimeSphereMount = globalThis.LivingTimeSphere.mount({
+                    container: preview,
+                    compact: true,
+                    mode: "passage",
+                    renderer: "auto",
+                    state: { selectedYear: Number(year) || new Date().getUTCFullYear(), timeZone: tz, boundaryMode: bnd, manualSunset: ss },
+                    visibleLayers: {
+                      pattern: true,
+                      exactDays: true,
+                      weekGates: true,
+                      passage: true,
+                      lunar: true,
+                      solar: true,
+                      markers: true,
+                      spiral: false,
+                      recurrence: false,
+                      environment: false,
+                      connections: true
+                    }
+                  });
+                } else {
+                  preview.__livingTimeSphereMount.refresh({
+                    selectedYear: Number(year) || new Date().getUTCFullYear(),
+                    timeZone: tz,
+                    boundaryMode: bnd,
+                    manualSunset: ss,
+                    mode: "passage"
+                  });
+                }
+              });
             }
             ["equinoxYear","equinoxTimeZone","equinoxBoundaryMode","equinoxManualSunset"].forEach(function(id) {
               var el = document.getElementById(id);

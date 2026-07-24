@@ -21,6 +21,8 @@
   <meta name="description" content="The Living Time Sphere places fixed Pattern Time at the center and lets moving astronomical cycles travel around it. Select a day, Passage, or year to witness how the layers meet.">
   <meta name="theme-color" content="#05070d">
   <link rel="canonical" href="https://codexofreality.org/living-time-sphere.html">
+  <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/moons.css?v=20260723-4">
@@ -28,6 +30,8 @@
 
   <!-- Core engines -->
   <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/codex-memory.js"></script>
+  <script defer src="assets/js/codex-witness.js"></script>
   <script defer src="assets/js/share/remnant-share-url.js"></script>
   <script defer src="assets/js/share/remnant-share.js"></script>
   <script defer src="assets/js/calendar/pattern-calendar-version.js"></script>
@@ -35,6 +39,8 @@
   <script defer src="assets/js/calendar/pattern-calendar-format.js"></script>
   <script defer src="assets/js/calendar/pattern-calendar-boundary.js"></script>
   <script defer src="assets/js/calendar/pattern-calendar.js"></script>
+  <script defer src="assets/js/calendar-cor.js"></script>
+  <script defer src="assets/js/codex-state.js"></script>
   <script defer src="assets/js/astronomy/astronomy-version.js"></script>
   <script defer src="assets/js/astronomy/astronomy-sources.js"></script>
   <script defer src="assets/js/astronomy/timezone-tools.js"></script>
@@ -57,8 +63,11 @@
    <!-- Sphere modules — Phase 03: 3D renderer modules (lazy) -->
    <script defer src="assets/js/sphere/living-time-sphere-version.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-model.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-state.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-layout.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-connections.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-svg.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-live-data.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-canvas.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-materials.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-effects.js"></script>
@@ -69,11 +78,19 @@
    <script defer src="assets/js/sphere/living-time-sphere-accessibility.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-export.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-url-state.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-mount.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-today.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-ui.js"></script>
    <script defer>
      document.addEventListener("DOMContentLoaded", () => {
-       if (globalThis.LivingTimeSphereUi) LivingTimeSphereUi.init();
+       if (globalThis.LivingTimeSphere?.mount) {
+         globalThis.LivingTimeSphere.mount({
+           container: document.getElementById("sphere-container"),
+           fullPage: true
+         });
+       } else if (globalThis.LivingTimeSphereUi) {
+         LivingTimeSphereUi.init();
+       }
      });
    </script>
 </head>
@@ -114,6 +131,7 @@
           <button id="sphere-mode-pattern" class="sphere-mode-btn" type="button" aria-pressed="false">Pattern</button>
         </div>
         <div id="sphere-mode-summary" class="sphere-mode-summary" aria-live="polite">Today</div>
+        <div id="sphere-current-status" class="sphere-current-status" aria-live="polite">Today — Moon — · Day — · Day —/364</div>
 
         <!-- Sphere Settings (collapsible on mobile) -->
         <details class="sphere-settings-group">
@@ -137,6 +155,45 @@
                 <option value="balanced">Balanced</option>
                 <option value="lowpower">Low Power</option>
                 <option value="svgonly">SVG Only</option>
+              </select>
+
+              <label for="sphere-moon-label-mode" class="sphere-control-label">Moon labels</label>
+              <select id="sphere-moon-label-mode" class="sphere-control-select" aria-label="Moon label visibility">
+                <option value="contextual">Contextual</option>
+                <option value="all">All visible</option>
+                <option value="selected">Selected only</option>
+                <option value="hidden">Hidden</option>
+              </select>
+
+              <label for="sphere-moon-label-distance" class="sphere-control-label">Moon label distance</label>
+              <select id="sphere-moon-label-distance" class="sphere-control-select" aria-label="Moon label distance">
+                <option value="tight">Tight</option>
+                <option value="standard" selected>Standard</option>
+                <option value="wide">Wide</option>
+              </select>
+
+              <label for="sphere-day-label-mode" class="sphere-control-label">Day labels</label>
+              <select id="sphere-day-label-mode" class="sphere-control-select" aria-label="Day label visibility">
+                <option value="key" selected>Key days</option>
+                <option value="all">All 28</option>
+                <option value="selected">Selected only</option>
+                <option value="hidden">Hidden</option>
+              </select>
+
+              <label for="sphere-connection-mode" class="sphere-control-label">Connections</label>
+              <select id="sphere-connection-mode" class="sphere-control-select" aria-label="Connection line visibility">
+                <option value="off">Off</option>
+                <option value="selected">Selected only</option>
+                <option value="contextual" selected>Contextual</option>
+                <option value="full">Full network</option>
+                <option value="custom">Custom</option>
+              </select>
+
+              <label for="sphere-motion-mode" class="sphere-control-label">Motion</label>
+              <select id="sphere-motion-mode" class="sphere-control-select" aria-label="Sphere motion mode">
+                <option value="still" selected>Still</option>
+                <option value="drift">Gentle Drift</option>
+                <option value="reduced">Reduced Motion</option>
               </select>
             </div>
 
@@ -175,19 +232,6 @@
         </div>
       </section>
 
-      <!-- Guided introduction (shown once per session; skippable) -->
-      <aside id="sphere-intro" class="sphere-intro" role="complementary" aria-labelledby="sphere-intro-title" hidden>
-        <div class="sphere-intro-content">
-          <p class="sphere-intro-step" id="sphere-intro-step">1 / 6</p>
-          <h2 class="sphere-intro-title" id="sphere-intro-title">Pattern Time — fixed center</h2>
-          <p class="sphere-intro-body" id="sphere-intro-body">The 13 Moon Pattern structure remains fixed at the center. It does not move.</p>
-          <div class="sphere-intro-actions">
-            <button id="sphere-intro-skip" class="sphere-btn" type="button">Skip</button>
-            <button id="sphere-intro-next" class="sphere-btn sphere-btn-primary" type="button">Next</button>
-          </div>
-        </div>
-      </aside>
-
       <details class="sphere-what-am-i-seeing" id="sphere-what-am-i-seeing">
         <summary class="sphere-what-summary">What am I seeing?</summary>
         <p id="sphere-what-am-i-seeing-body" class="sphere-what-body">This view places the current Pattern Day inside the fixed 13 × 28 calendar.</p>
@@ -201,10 +245,22 @@
             <button id="sphere-interact-btn"     class="sphere-interact-toggle" type="button">Interact with Sphere</button>
             <button id="sphere-interact-end-btn" class="sphere-interact-toggle sphere-interact-end" type="button" style="display:none">Exit Sphere Interaction</button>
             <p class="sphere-interact-hint" id="sphere-hint-off">Tap to enable rotation and zoom</p>
-            <p class="sphere-interact-hint" id="sphere-hint-on" style="display:none">Drag to rotate · Pinch to zoom</p>
+            <p class="sphere-interact-hint" id="sphere-hint-on" style="display:none">Drag to rotate · Pinch to zoom · Twist to roll</p>
           </div>
 
           <div id="sphere-state-strip" class="sphere-state-strip" aria-live="polite" aria-atomic="true"></div>
+          <!-- Guided introduction (shown once until dismissed; skippable) -->
+          <aside id="sphere-intro" class="sphere-intro" role="complementary" aria-labelledby="sphere-intro-title" hidden>
+            <div class="sphere-intro-content">
+              <p class="sphere-intro-step" id="sphere-intro-step">1 / 6</p>
+              <h2 class="sphere-intro-title" id="sphere-intro-title">Pattern Time — fixed center</h2>
+              <p class="sphere-intro-body" id="sphere-intro-body">The 13 Moon Pattern structure remains fixed at the center. It does not move.</p>
+              <div class="sphere-intro-actions">
+                <button id="sphere-intro-skip" class="sphere-btn" type="button">Skip</button>
+                <button id="sphere-intro-next" class="sphere-btn sphere-btn-primary" type="button">Next</button>
+              </div>
+            </div>
+          </aside>
           <div id="sphere-container" role="img" aria-label="Living Time Sphere — interactive" tabindex="0"
                aria-describedby="sphere-text-model">
             <!-- SVG or 3D canvas rendered here by LivingTimeSphereUi.init() -->
@@ -229,11 +285,11 @@
 
           <!-- Camera controls (visible only when 3D is active) -->
           <div class="sphere-camera-controls" aria-label="Camera view presets" role="group">
-            <span class="sphere-cam-label">View:</span>
-            <button id="sphere-cam-reset"   class="sphere-cam-btn" type="button" title="Reset to default view">⟳ Reset</button>
-            <button id="sphere-cam-pattern" class="sphere-cam-btn" type="button" title="Pattern ring view">Pattern View</button>
-            <button id="sphere-cam-passage" class="sphere-cam-btn" type="button" title="Passage arc view">Passage View</button>
-            <button id="sphere-cam-years"   class="sphere-cam-btn" type="button" title="Years spiral view">Years View</button>
+            <span class="sphere-cam-label">Camera:</span>
+            <button id="sphere-cam-reset"   class="sphere-cam-btn" type="button" title="Reset to mode view">Reset Mode View</button>
+            <button id="sphere-cam-pattern" class="sphere-cam-btn" type="button" title="Top pattern view">Top View</button>
+            <button id="sphere-cam-passage" class="sphere-cam-btn" type="button" title="Tilted passage framing">Tilted View</button>
+            <button id="sphere-cam-years"   class="sphere-cam-btn" type="button" title="Edge spiral framing">Edge View</button>
           </div>
         </div>
 
@@ -277,9 +333,32 @@
         <aside class="sphere-sidebar">
           <!-- 4. Selected marker details -->
           <div class="sphere-sidebar-section">
-            <h2 class="sphere-sidebar-heading">Selected marker</h2>
+            <h2 class="sphere-sidebar-heading">Selected day</h2>
+            <div class="sphere-field-range-controls" role="group" aria-label="Field Layer range">
+              <button id="sphere-field-range-now" class="sphere-chip-btn" type="button" aria-pressed="true">Now</button>
+              <button id="sphere-field-range-today" class="sphere-chip-btn" type="button" aria-pressed="false">Today</button>
+              <button id="sphere-field-range-pattern-week" class="sphere-chip-btn" type="button" aria-pressed="false">Pattern Week</button>
+              <button id="sphere-field-range-pattern-moon" class="sphere-chip-btn" type="button" aria-pressed="false">Pattern Moon</button>
+              <button id="sphere-field-range-pattern-year" class="sphere-chip-btn" type="button" aria-pressed="false">Pattern Year</button>
+              <button id="sphere-field-range-historical" class="sphere-chip-btn" type="button" aria-pressed="false">Historical comparison</button>
+            </div>
+            <div class="sphere-detail-nav" role="group" aria-label="Selected day controls">
+              <label class="visually-hidden" for="sphere-select-moon">Select Pattern Moon</label>
+              <select id="sphere-select-moon" class="sphere-control-select" aria-label="Select Pattern Moon"></select>
+              <label class="visually-hidden" for="sphere-select-day">Select Moon Day</label>
+              <select id="sphere-select-day" class="sphere-control-select" aria-label="Select Pattern Day"></select>
+              <button id="sphere-prev-moon" class="sphere-btn sphere-btn-sm" type="button">← Previous Moon</button>
+              <button id="sphere-prev-day" class="sphere-btn sphere-btn-sm" type="button">← Previous Day</button>
+              <button id="sphere-next-day" class="sphere-btn sphere-btn-sm" type="button">Next Day →</button>
+              <button id="sphere-next-moon" class="sphere-btn sphere-btn-sm" type="button">Next Moon →</button>
+            </div>
             <div id="sphere-details" class="sphere-details">
               <p class="sphere-methods">Select a marker to see details.</p>
+            </div>
+            <div class="sphere-detail-actions" role="group" aria-label="Selected day actions">
+              <a id="sphere-day-open-moons" class="sphere-btn sphere-btn-primary" href="moons.html">Open 13 Moons</a>
+              <a id="sphere-day-witness-link" class="sphere-btn" href="ledger.html">Witness / Log</a>
+              <a id="sphere-day-mirror-link" class="sphere-btn" href="genesis-oracle.html">Mirror</a>
             </div>
           </div>
 
@@ -288,12 +367,17 @@
             <h2 class="sphere-sidebar-heading">Layers</h2>
             <div class="sphere-layers" role="group" aria-label="Visible layers">
               <label class="sphere-layer-row"><input id="sphere-layer-pattern"    type="checkbox" checked> Pattern structure</label>
+              <label class="sphere-layer-row"><input id="sphere-layer-exactDays"  type="checkbox" checked> Exact days</label>
+              <label class="sphere-layer-row"><input id="sphere-layer-weekGates"  type="checkbox" checked> Week Gates</label>
+              <label class="sphere-layer-row"><input id="sphere-layer-outsideDays" type="checkbox"> Outside days</label>
               <label class="sphere-layer-row"><input id="sphere-layer-passage"    type="checkbox" checked> Equinox Passage</label>
               <label class="sphere-layer-row"><input id="sphere-layer-lunar"      type="checkbox" checked> Lunar orbit</label>
               <label class="sphere-layer-row"><input id="sphere-layer-solar"      type="checkbox"> Solar axis</label>
               <label class="sphere-layer-row"><input id="sphere-layer-markers"    type="checkbox" checked> Annual markers</label>
               <label class="sphere-layer-row"><input id="sphere-layer-recurrence" type="checkbox"> Recurrence links</label>
               <label class="sphere-layer-row"><input id="sphere-layer-spiral"     type="checkbox"> 13-year spiral</label>
+              <label class="sphere-layer-row"><input id="sphere-layer-environment" type="checkbox"> Environment</label>
+              <label class="sphere-layer-row"><input id="sphere-layer-connections" type="checkbox" checked> Connections</label>
             </div>
           </div>
 
