@@ -138,6 +138,14 @@
                 <option value="lowpower">Low Power</option>
                 <option value="svgonly">SVG Only</option>
               </select>
+
+              <label for="sphere-moon-label-mode" class="sphere-control-label">Moon labels</label>
+              <select id="sphere-moon-label-mode" class="sphere-control-select" aria-label="Moon label visibility">
+                <option value="contextual">Contextual</option>
+                <option value="all">All visible</option>
+                <option value="selected">Selected only</option>
+                <option value="hidden">Hidden</option>
+              </select>
             </div>
 
             <!-- Year/range controls -->
@@ -175,19 +183,6 @@
         </div>
       </section>
 
-      <!-- Guided introduction (shown once per session; skippable) -->
-      <aside id="sphere-intro" class="sphere-intro" role="complementary" aria-labelledby="sphere-intro-title" hidden>
-        <div class="sphere-intro-content">
-          <p class="sphere-intro-step" id="sphere-intro-step">1 / 6</p>
-          <h2 class="sphere-intro-title" id="sphere-intro-title">Pattern Time — fixed center</h2>
-          <p class="sphere-intro-body" id="sphere-intro-body">The 13 Moon Pattern structure remains fixed at the center. It does not move.</p>
-          <div class="sphere-intro-actions">
-            <button id="sphere-intro-skip" class="sphere-btn" type="button">Skip</button>
-            <button id="sphere-intro-next" class="sphere-btn sphere-btn-primary" type="button">Next</button>
-          </div>
-        </div>
-      </aside>
-
       <details class="sphere-what-am-i-seeing" id="sphere-what-am-i-seeing">
         <summary class="sphere-what-summary">What am I seeing?</summary>
         <p id="sphere-what-am-i-seeing-body" class="sphere-what-body">This view places the current Pattern Day inside the fixed 13 × 28 calendar.</p>
@@ -205,6 +200,18 @@
           </div>
 
           <div id="sphere-state-strip" class="sphere-state-strip" aria-live="polite" aria-atomic="true"></div>
+          <!-- Guided introduction (shown once until dismissed; skippable) -->
+          <aside id="sphere-intro" class="sphere-intro" role="complementary" aria-labelledby="sphere-intro-title" hidden>
+            <div class="sphere-intro-content">
+              <p class="sphere-intro-step" id="sphere-intro-step">1 / 6</p>
+              <h2 class="sphere-intro-title" id="sphere-intro-title">Pattern Time — fixed center</h2>
+              <p class="sphere-intro-body" id="sphere-intro-body">The 13 Moon Pattern structure remains fixed at the center. It does not move.</p>
+              <div class="sphere-intro-actions">
+                <button id="sphere-intro-skip" class="sphere-btn" type="button">Skip</button>
+                <button id="sphere-intro-next" class="sphere-btn sphere-btn-primary" type="button">Next</button>
+              </div>
+            </div>
+          </aside>
           <div id="sphere-container" role="img" aria-label="Living Time Sphere — interactive" tabindex="0"
                aria-describedby="sphere-text-model">
             <!-- SVG or 3D canvas rendered here by LivingTimeSphereUi.init() -->

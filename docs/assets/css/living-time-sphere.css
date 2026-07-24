@@ -103,8 +103,9 @@
   flex: 1 1 300px;
   min-width: 0;
   aspect-ratio: 1;
-  max-width: 480px;
+  max-width: 560px;
   width: 100%;
+  margin-inline: auto;
   position: relative;
   background: var(--sphere-bg);
   border-radius: 50%;
@@ -439,8 +440,12 @@
 /* Canvas wrapper with mobile interact overlay */
 .sphere-canvas-wrap {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   flex: 1 1 320px;
   min-width: 0;
+  max-width: 100%;
 }
 
 .sphere-interact-bar {
@@ -566,12 +571,19 @@
 /* ── Guided introduction ──────────────────────────────────────────── */
 
 .sphere-intro {
+  position: absolute;
+  top: 2.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  width: min(calc(100% - 1rem), 29rem);
   background: rgba(10, 12, 25, 0.92);
   border: 1px solid rgba(251, 191, 36, 0.3);
   border-radius: 0.5rem;
   padding: 1.25rem 1.25rem 1rem;
-  margin-bottom: 1rem;
+  margin: 0;
   backdrop-filter: blur(4px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
 }
 
 .sphere-intro-step {
@@ -1002,16 +1014,22 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
 
 /* ── Current-state strip ─────────────────────────────────────── */
 .sphere-state-strip {
-  font-size: 0.72rem;
-  color: var(--fg-3, #8892a8);
+  width: min(100%, 560px);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(232, 238, 244, 0.9);
   text-align: center;
-  padding: 0.2rem 0.5rem;
-  margin-bottom: 0.2rem;
-  letter-spacing: 0.02em;
-  min-height: 1.2em;
+  padding: 0.42rem 0.8rem;
+  margin: 0 0 0.45rem;
+  letter-spacing: 0.03em;
+  min-height: 1.5em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  background: linear-gradient(180deg, rgba(14, 18, 34, 0.84), rgba(8, 12, 24, 0.62));
+  border: 1px solid rgba(100, 200, 180, 0.16);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 /* ── Floating tap label ──────────────────────────────────────── */
@@ -1035,19 +1053,45 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 2;
+  z-index: 3;
   overflow: hidden;
+}
+.sphere-moon-label-connector {
+  position: absolute;
+  height: 1px;
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, rgba(251, 191, 36, 0.68), rgba(251, 191, 36, 0));
+  opacity: 0;
+  transition: opacity 0.18s ease;
 }
 .sphere-moon-label {
   position: absolute;
-  font-size: 0.62rem;
-  color: rgba(100,200,180,0.55);
+  font-size: 0.65rem;
+  color: rgba(186, 225, 216, 0.92);
   font-weight: 500;
-  letter-spacing: 0.02em;
-  line-height: 1;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
-  transition: opacity 0.15s;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.92);
+  transition: opacity 0.18s ease, transform 0.18s ease;
   white-space: nowrap;
+  padding: 0.16rem 0.42rem;
+  border-radius: 999px;
+  background: rgba(6, 10, 20, 0.62);
+  border: 1px solid rgba(100, 200, 180, 0.18);
+  backdrop-filter: blur(4px);
+}
+.sphere-moon-label.is-quiet {
+  background: rgba(6, 10, 20, 0.48);
+  border-color: rgba(100, 200, 180, 0.12);
+}
+.sphere-moon-label.is-selected {
+  color: #fff1c2;
+  background: rgba(52, 36, 10, 0.82);
+  border-color: rgba(251, 191, 36, 0.45);
+  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.12), 0 8px 16px rgba(0, 0, 0, 0.24);
+}
+.sphere-moon-label.is-front {
+  text-shadow: 0 1px 4px rgba(0,0,0,0.96), 0 0 12px rgba(100,200,180,0.12);
 }
 
 /* ── Pattern Core note ───────────────────────────────────────── */

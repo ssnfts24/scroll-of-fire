@@ -230,17 +230,22 @@
   // ── Intro guide dismissal (local session) ─────────────────────────
 
   const INTRO_KEY = "lts-intro-dismissed";
+  function _introStorage() {
+    try { if (globalThis.localStorage) return globalThis.localStorage; } catch { /* ignore */ }
+    try { if (globalThis.sessionStorage) return globalThis.sessionStorage; } catch { /* ignore */ }
+    return null;
+  }
 
   function isIntroDismissed() {
-    try { return !!sessionStorage.getItem(INTRO_KEY); } catch { return false; }
+    try { return !!_introStorage()?.getItem(INTRO_KEY); } catch { return false; }
   }
 
   function dismissIntro() {
-    try { sessionStorage.setItem(INTRO_KEY, "1"); } catch { /* ignore */ }
+    try { _introStorage()?.setItem(INTRO_KEY, "1"); } catch { /* ignore */ }
   }
 
   function resetIntroForSession() {
-    try { sessionStorage.removeItem(INTRO_KEY); } catch { /* ignore */ }
+    try { _introStorage()?.removeItem(INTRO_KEY); } catch { /* ignore */ }
   }
 
   globalThis.LivingTimeSphereAnimation = Object.freeze({

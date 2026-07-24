@@ -35,6 +35,12 @@ function loadSphereContext() {
       setItem(k, v) { this._store[k] = String(v); },
       removeItem(k) { delete this._store[k]; },
     },
+    localStorage: {
+      _store: {},
+      getItem(k)    { return this._store[k] ?? null; },
+      setItem(k, v) { this._store[k] = String(v); },
+      removeItem(k) { delete this._store[k]; },
+    },
     IntersectionObserver: null,  // not available in Node
     ResizeObserver:       null,
     document: null,
@@ -234,13 +240,15 @@ test("LivingTimeSphereAnimation: low-power mode disables idle drift", () => {
   assert.equal(ctx.LivingTimeSphereCamera.isDrifting(), false);
 });
 
-test("LivingTimeSphereAnimation: intro dismissal persists in sessionStorage", () => {
+test("LivingTimeSphereAnimation: intro dismissal persists in localStorage", () => {
   const ctx = loadSphereContext();
   assert.equal(ctx.LivingTimeSphereAnimation.isIntroDismissed(), false);
   ctx.LivingTimeSphereAnimation.dismissIntro();
   assert.equal(ctx.LivingTimeSphereAnimation.isIntroDismissed(), true);
+  assert.equal(ctx.localStorage.getItem("lts-intro-dismissed"), "1");
   ctx.LivingTimeSphereAnimation.resetIntroForSession();
   assert.equal(ctx.LivingTimeSphereAnimation.isIntroDismissed(), false);
+  assert.equal(ctx.localStorage.getItem("lts-intro-dismissed"), null);
 });
 
 // ── Effects module ────────────────────────────────────────────────────

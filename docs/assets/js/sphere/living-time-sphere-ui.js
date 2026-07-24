@@ -19,10 +19,12 @@
     // Phase 03 additions
     rendererMode:  "auto",   // "auto" | "3d" | "svg" | "table" | "text"
     quality:       "auto",   // "auto" | "high" | "balanced" | "lowpower" | "svgonly"
+    moonLabelMode: "contextual", // "contextual" | "all" | "selected" | "hidden"
     active3d:      false,    // true when 3D renderer is active
     introShown:    false,
     _3dInitInProgress: false, // guard against concurrent 3D init calls
   };
+  const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
 
   // ── Dependency check ───────────────────────────────────────────────
 
@@ -106,6 +108,23 @@
     return globalThis.LivingTimeSphereModel.buildYearModel(opts);
   }
 
+  function _readLocalSetting(key) {
+    try { return globalThis.localStorage?.getItem(key) ?? null; } catch { return null; }
+  }
+
+  function _writeLocalSetting(key, value) {
+    try { globalThis.localStorage?.setItem(key, value); } catch { /* ignore */ }
+  }
+
+  function _resolveMoonLabelMode() {
+    const stored = _readLocalSetting(MOON_LABEL_MODE_KEY);
+    if (stored === "contextual" || stored === "all" || stored === "selected" || stored === "hidden") {
+      return stored;
+    }
+    if (typeof window !== "undefined" && window.innerWidth < 640) return "contextual";
+    return _state.moonLabelMode || "contextual";
+  }
+
   // ── Render dispatch ────────────────────────────────────────────────
 
   function renderSphere(container) {
@@ -180,6 +199,7 @@
           selectedYear:  _state.year,
           visibleLayers: _state.visibleLayers,
           viewMode:      _state.viewMode,
+          moonLabelMode: _state.moonLabelMode,
           reducedMotion,
           onYearSelect: year => {
             _state.year = year;
@@ -231,7 +251,7 @@
       _updateInteractBar();
       _updateRendererDiagnostics();
     } else {
-      renderer.refresh(model, spiral, _state.year, _state.visibleLayers, _state.viewMode);
+      renderer.refresh(model, spiral, _state.year, _state.visibleLayers, _state.viewMode, _state.moonLabelMode);
       renderer.setMode(_state.viewMode);
     }
   }
@@ -426,7 +446,7 @@
     } else if (mode === "pattern") {
       const tp = model?.todayPatternPosition;
       const pos = tp && tp.moon != null ? `Moon ${tp.moon} · Day ${tp.day}` : "—";
-      el.textContent = `13 Moons × 28 Days · Selected: ${pos}`;
+      el.textContent = `13 Moons × 28 Days · Selected ${pos}`;
     }
   }
 
@@ -465,7 +485,7 @@
     } else if (viewMode === "pattern") {
       const tp = model?.todayPatternPosition;
       if (tp?.moon != null) {
-        el.textContent = `13 Moons × 28 Days · Today Moon ${tp.moon} Day ${tp.day}`;
+        el.textContent = `13 Moons × 28 Days · Selected Moon ${tp.moon} Day ${tp.day}`;
       } else {
         el.textContent = `13 Moons × 28 Days`;
       }
@@ -675,6 +695,16 @@
         } else {
           renderSphere(container);
         }
+      });
+    }
+
+    const moonLabelMode = document.getElementById("sphere-moon-label-mode");
+    if (moonLabelMode) {
+      moonLabelMode.value = _state.moonLabelMode;
+      moonLabelMode.addEventListener("change", () => {
+        _state.moonLabelMode = moonLabelMode.value || "contextual";
+        _writeLocalSetting(MOON_LABEL_MODE_KEY, _state.moonLabelMode);
+        renderSphere(container);
       });
     }
 
@@ -900,6 +930,7 @@
       return;
     }
     applyUrlState();
+    _state.moonLabelMode = _resolveMoonLabelMode();
 
     const container = document.getElementById("sphere-container");
     if (!container) return;

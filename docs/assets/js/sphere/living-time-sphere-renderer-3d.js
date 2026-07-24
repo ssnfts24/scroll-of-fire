@@ -88,6 +88,8 @@
   // Moon label overlay elements (sphere-anchored HTML projected from 3D)
   let _moonLabelEls = null;   // Array of 13 DOM span elements
   let _moonLabelContainer = null;  // The #sphere-moon-labels container
+  let _moonLabelConnectorEl = null;
+  let _moonLabelMode = "contextual";
   const _moonAnchors = [];    // { moon, angle, radius, worldVec } for each of 13 moons
 
   // ── Three.js lazy loader ──────────────────────────────────────────
@@ -130,9 +132,16 @@
     return ((moonIndex + 0.5) / 13) * 360;
   }
 
-  function _buildMoonAnchors() {
+  function _moonLabelRadiusMultiplier(viewMode) {
+    if (viewMode === "today") return 1.075;
+    if (viewMode === "pattern") return 1.085;
+    if (viewMode === "years") return 1.1;
+    return 1.08;
+  }
+
+  function _buildMoonAnchors(viewMode = _viewMode) {
     const mat = globalThis.LivingTimeSphereM;
-    const r   = mat.SIZES.patternRing * 1.15;   // slightly outside the ring
+    const r   = mat.SIZES.patternRing * _moonLabelRadiusMultiplier(viewMode);
     _moonAnchors.length = 0;
     for (let i = 0; i < 13; i++) {
       const angle = _moonSectorCenterAngle(i);
@@ -142,7 +151,7 @@
         angle,
         radius: r,
         worldX: x,
-        worldY: 0,
+        worldY: 0.012,
         worldZ: z,
       });
     }
@@ -157,7 +166,15 @@
     spans.forEach(s => {
       s.style.cssText = "";   // clear the fixed inline styles
       s.style.display = "none";
+      s.classList.remove("is-selected", "is-front", "is-quiet");
     });
+    _moonLabelConnectorEl = _moonLabelContainer.querySelector(".sphere-moon-label-connector");
+    if (!_moonLabelConnectorEl) {
+      _moonLabelConnectorEl = document.createElement("div");
+      _moonLabelConnectorEl.className = "sphere-moon-label-connector";
+      _moonLabelConnectorEl.style.display = "none";
+      _moonLabelContainer.appendChild(_moonLabelConnectorEl);
+    }
     // Build an array indexed by moon (0 = Moon1)
     _moonLabelEls = Array.from({ length: 13 }, (_, i) => {
       const moon = i + 1;
@@ -172,115 +189,199 @@
       el.style.cssText = "";
       el.style.display = "none";
       el.style.position = "absolute";
+      el.classList.remove("is-selected", "is-front", "is-quiet");
       return el;
     });
+  }
+
+  function _adjacentMoons(moon) {
+    if (!moon) return [];
+    return [moon - 1 < 1 ? 13 : moon - 1, moon + 1 > 13 ? 1 : moon + 1];
+  }
+
+  function _moonLabelSet(viewMode, labelMode, selectedMoon, todayMoon, equinoxMoon) {
+    if (labelMode === "hidden") return new Set();
+    if (labelMode === "selected") return new Set(selectedMoon ? [selectedMoon] : []);
+    if (labelMode === "all") return new Set(Array.from({ length: 13 }, (_, i) => i + 1));
+
+    if (viewMode === "today") {
+      return new Set([selectedMoon, ..._adjacentMoons(selectedMoon), 1, 13].filter(Boolean));
+    }
+    if (viewMode === "passage") {
+      return new Set([equinoxMoon, 1, todayMoon].filter(Boolean));
+    }
+    if (viewMode === "pattern") {
+      return new Set(Array.from({ length: 13 }, (_, i) => i + 1));
+    }
+    return new Set([1, 4, 7, 10, selectedMoon].filter(Boolean));
+  }
+
+  function _moonLabelPriority(moon, { selectedMoon, todayMoon, equinoxMoon, viewMode }) {
+    let priority = 10;
+    if (moon === selectedMoon) priority = 100;
+    else if (moon === todayMoon) priority = 90;
+    else if (moon === equinoxMoon) priority = 80;
+    else if (moon === 1) priority = 70;
+    else if (moon === 13 && viewMode === "today") priority = 65;
+    else if (_adjacentMoons(selectedMoon).includes(moon)) priority = 60;
+    return priority;
+  }
+
+  function _hideMoonLabel(el) {
+    if (!el) return;
+    el.style.display = "none";
+    el.classList.remove("is-selected", "is-front", "is-quiet");
+  }
+
+  function _hideMoonConnector() {
+    if (!_moonLabelConnectorEl) return;
+    _moonLabelConnectorEl.style.display = "none";
+    _moonLabelConnectorEl.style.opacity = "0";
   }
 
   // Called every frame to project 3D moon anchors to screen space and update labels.
   function _updateMoonLabels(viewMode) {
     if (!_moonLabelEls || !_camera || !_canvas || !_THREE) return;
     const THREE = _THREE;
-    const rect   = _canvas.getBoundingClientRect();
+    const rect = _canvas.getBoundingClientRect();
     if (!rect || rect.width === 0) return;
 
-    // Determine which moons to show based on view mode
-    const activeMoon = _model?.todayPatternPosition?.moon || 4;
-    let showSet;
-    if (viewMode === "today") {
-      // Show today's moon prominently, adjacent moons quietly, year-boundary moons
-      showSet = new Set([activeMoon, activeMoon - 1 < 1 ? 13 : activeMoon - 1,
-                         activeMoon + 1 > 13 ? 1 : activeMoon + 1, 1, 13]);
-    } else if (viewMode === "passage") {
-      // Show moons near the passage gates
-      const passageStartMoon = _model?.sourceRecord?.equinox?.patternPosition?.moon || 13;
-      showSet = new Set([passageStartMoon, 1]);
-    } else if (viewMode === "pattern") {
-      showSet = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
-    } else {
-      // years: orientation only
-      showSet = new Set([1, 4, 7, 10]);
-    }
-
+    const mat = globalThis.LivingTimeSphereM;
+    const todayMoon = _model?.todayPatternPosition?.moon || null;
+    const selectedMoon = todayMoon || (_model?.sourceRecord?.equinox?.patternPosition?.moon ?? 1);
+    const equinoxMoon = _model?.sourceRecord?.equinox?.patternPosition?.moon || null;
+    const showSet = _moonLabelSet(viewMode, _moonLabelMode, selectedMoon, todayMoon, equinoxMoon);
+    const centerVec = new THREE.Vector3(0, 0, 0).project(_camera);
+    const centerX = ((centerVec.x + 1) / 2) * rect.width;
+    const centerY = ((-centerVec.y + 1) / 2) * rect.height;
     const projVec = new THREE.Vector3();
+    const innerVec = new THREE.Vector3();
     const camDir = new THREE.Vector3();
     const anchorDir = new THREE.Vector3();
+    const labelRects = [];
+    const visibleCandidates = [];
     _camera.getWorldDirection(camDir);
-    const labelRects = [];  // for collision detection
+    _hideMoonConnector();
 
     for (let i = 0; i < 13; i++) {
       const anchor = _moonAnchors[i];
-      const moon   = anchor.moon;
-      const el     = _moonLabelEls[i];
+      const moon = anchor.moon;
+      const el = _moonLabelEls[i];
       if (!el) continue;
+      _hideMoonLabel(el);
+      if (!showSet.has(moon)) continue;
 
-      if (!showSet.has(moon)) {
-        el.style.display = "none";
-        continue;
-      }
+      projVec.set(anchor.worldX, anchor.worldY, anchor.worldZ).project(_camera);
+      if (projVec.z >= 0.995) continue;
 
-      // Project 3D world position to NDC
-      projVec.set(anchor.worldX, anchor.worldY, anchor.worldZ);
-      projVec.project(_camera);
-
-      // Depth/facing check: if z > 1 it's behind the camera, hide
-      if (projVec.z > 0.98) {
-        el.style.display = "none";
-        continue;
-      }
-
-      // Camera-space depth for fade: projVec.z ranges -1 (front) to +1 (back)
-      // Dot product: direction from origin to anchor vs camera direction
       anchorDir.set(anchor.worldX, 0, anchor.worldZ).normalize();
       const dot = anchorDir.dot(camDir);
-      // dot > 0 means anchor is "behind" the plane (far side), hide it
-      if (dot > 0.15) {
-        el.style.display = "none";
+      if (dot >= 0.12) continue;
+
+      const anchorX = ((projVec.x + 1) / 2) * rect.width;
+      const anchorY = ((-projVec.y + 1) / 2) * rect.height;
+      innerVec.set(
+        anchor.worldX * (mat.SIZES.patternRing * 0.82 / anchor.radius),
+        anchor.worldY,
+        anchor.worldZ * (mat.SIZES.patternRing * 0.82 / anchor.radius)
+      ).project(_camera);
+      const innerX = ((innerVec.x + 1) / 2) * rect.width;
+      const innerY = ((-innerVec.y + 1) / 2) * rect.height;
+      const anchorCenterDist = Math.hypot(anchorX - centerX, anchorY - centerY);
+      const innerCenterDist = Math.hypot(innerX - centerX, innerY - centerY);
+      if (anchorCenterDist <= innerCenterDist + 16) continue;
+
+      const frontness = Math.max(0, Math.min(1, (0.18 - dot) / 1.08));
+      if (frontness <= 0.04) continue;
+
+      const priority = _moonLabelPriority(moon, { selectedMoon, todayMoon, equinoxMoon, viewMode });
+      visibleCandidates.push({
+        moon,
+        el,
+        priority,
+        frontness,
+        anchorX,
+        anchorY,
+        selected: moon === selectedMoon,
+        quiet: viewMode === "today" && moon !== selectedMoon && moon !== todayMoon,
+      });
+    }
+
+    visibleCandidates.sort((a, b) => (b.priority + b.frontness) - (a.priority + a.frontness));
+
+    for (const candidate of visibleCandidates) {
+      const { moon, el, anchorX, anchorY, selected, quiet, frontness } = candidate;
+      el.style.display = "";
+      const elW = el.offsetWidth || 58;
+      const elH = el.offsetHeight || 20;
+      const desiredX = anchorX - elW / 2;
+      const desiredY = anchorY - elH / 2;
+      const margin = 6;
+      const clampedX = Math.max(margin, Math.min(rect.width - elW - margin, desiredX));
+      const clampedY = Math.max(margin, Math.min(rect.height - elH - margin, desiredY));
+      const clampShift = Math.max(Math.abs(clampedX - desiredX), Math.abs(clampedY - desiredY));
+      const edgeFade = clampShift >= 28 ? 0 : Math.max(0, 1 - (clampShift / 28) * 0.85);
+      let opacity = Math.max(0, Math.min(1, 0.35 + (frontness ** 1.08) * 0.65)) * edgeFade;
+      if (selected) opacity = Math.max(opacity, 0.95);
+      if (opacity <= 0.02) {
+        _hideMoonLabel(el);
         continue;
       }
 
-      // Convert NDC to canvas pixels
-      const cx = ((projVec.x + 1) / 2) * rect.width;
-      const cy = ((-projVec.y + 1) / 2) * rect.height;
-
-      // Clamp to canvas bounds with margin
-      const margin = 4;
-      const elW = el.offsetWidth || 42;
-      const elH = el.offsetHeight || 14;
-      const clampedX = Math.max(margin, Math.min(rect.width  - elW - margin, cx - elW / 2));
-      const clampedY = Math.max(margin, Math.min(rect.height - elH - margin, cy - elH / 2));
-
-      // Opacity: fade as dot approaches 0.15 from behind, full opacity at -1
-      const opacity = Math.max(0, Math.min(1, (-dot + 0.15) / 0.6));
-
-      // Emphasis: today mode boosts today's moon
-      const isToday = moon === activeMoon && viewMode === "today";
-      const size    = isToday ? "0.72rem" : "0.62rem";
-      const color   = isToday ? "#64c8b4" : "rgba(100,200,180,0.5)";
-      const fw      = isToday ? "600" : "500";
-
-      // Collision check: hide if overlapping a higher-priority label
-      const thisRect = { x: clampedX, y: clampedY, w: elW + 4, h: elH + 2, moon };
+      const thisRect = { x: clampedX, y: clampedY, w: elW + 8, h: elH + 6 };
       let collides = false;
       for (const prev of labelRects) {
         if (clampedX < prev.x + prev.w && clampedX + thisRect.w > prev.x &&
             clampedY < prev.y + prev.h && clampedY + thisRect.h > prev.y) {
-          // Lower priority: hide this moon unless it's the active moon
-          if (moon !== activeMoon) { collides = true; break; }
+          collides = true;
+          break;
         }
       }
-      if (collides) {
-        el.style.display = "none";
+      if (collides && !selected) {
+        _hideMoonLabel(el);
         continue;
       }
       labelRects.push(thisRect);
 
-      el.style.display     = "";
-      el.style.left        = `${clampedX}px`;
-      el.style.top         = `${clampedY}px`;
-      el.style.opacity     = String(opacity);
-      el.style.fontSize    = size;
-      el.style.color       = color;
-      el.style.fontWeight  = fw;
+      el.style.left = `${clampedX}px`;
+      el.style.top = `${clampedY}px`;
+      el.style.opacity = String(opacity);
+      el.style.fontSize = selected ? "0.84rem" : candidate.priority >= 80 ? "0.74rem" : "0.68rem";
+      el.style.fontWeight = selected ? "700" : candidate.priority >= 80 ? "600" : "500";
+      el.style.color = selected ? "#fff1c2" : frontness > 0.72 ? "rgba(214,241,234,0.96)" : "rgba(160,212,201,0.88)";
+      el.style.transform = `translateZ(0) scale(${selected ? 1.04 : frontness > 0.7 ? 1 : 0.96})`;
+      el.classList.toggle("is-selected", selected);
+      el.classList.toggle("is-front", frontness > 0.72);
+      el.classList.toggle("is-quiet", quiet || frontness < 0.55);
+      el.dataset.facing = frontness.toFixed(3);
+      el.dataset.priority = String(candidate.priority);
+      candidate.boxCenterX = clampedX + elW / 2;
+      candidate.boxCenterY = clampedY + elH / 2;
+      candidate.opacity = opacity;
+    }
+
+    const connectorTarget = visibleCandidates.find(candidate =>
+      candidate.selected && candidate.el.style.display !== "none" && (viewMode === "today" || viewMode === "pattern")
+    );
+    if (connectorTarget && _moonLabelConnectorEl && _objects.todayMarker) {
+      projVec.copy(_objects.todayMarker.position).project(_camera);
+      if (projVec.z < 0.995) {
+        const startX = ((projVec.x + 1) / 2) * rect.width;
+        const startY = ((-projVec.y + 1) / 2) * rect.height;
+        const endX = connectorTarget.boxCenterX;
+        const endY = connectorTarget.boxCenterY;
+        const dx = endX - startX;
+        const dy = endY - startY;
+        const len = Math.hypot(dx, dy);
+        if (len > 18) {
+          _moonLabelConnectorEl.style.display = "";
+          _moonLabelConnectorEl.style.left = `${startX}px`;
+          _moonLabelConnectorEl.style.top = `${startY}px`;
+          _moonLabelConnectorEl.style.width = `${len}px`;
+          _moonLabelConnectorEl.style.transform = `rotate(${Math.atan2(dy, dx)}rad)`;
+          _moonLabelConnectorEl.style.opacity = String(Math.min(0.72, connectorTarget.opacity * 0.72));
+        }
+      }
     }
   }
 
@@ -733,7 +834,7 @@
     return new THREE.Line(geo, m);
   }
 
-  function updateScene(model, spiral, selectedYear, visibleLayers, viewMode) {
+  function updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode = _moonLabelMode) {
     if (!_THREE || !_scene || !model) return;
     const mat = globalThis.LivingTimeSphereM;
 
@@ -742,6 +843,8 @@
     _selectedYear = selectedYear;
     _visibleLayers = visibleLayers || {};
     _viewMode     = viewMode || "today";
+    _moonLabelMode = moonLabelMode || "contextual";
+    _buildMoonAnchors(_viewMode);
 
     // ── Layer visibility ────────────────────────────────────────────
     const vl = _visibleLayers;
@@ -963,19 +1066,35 @@
       const sectorMat = new _THREE.MeshBasicMaterial({
         color:       mat.COLORS.moonHighlight,
         transparent: true,
-        opacity:     mat.OPACITY.moonHighlight,
+        opacity:     _viewMode === "today" ? 0.42 : mat.OPACITY.moonHighlight,
         depthWrite:  false,
         side:        _THREE.DoubleSide,
       });
       const sector = new _THREE.Mesh(geo, sectorMat);
       sector.name = "activeMoonSector";
       _objects.activeMoonGroup.add(sector);
+
+      const linePts = [];
+      for (let i = 0; i <= steps; i++) {
+        const a = sectorStart + (i / steps) * (sectorEnd - sectorStart);
+        const { x, z } = angleToXZ(a, outerR * 1.005);
+        linePts.push(new _THREE.Vector3(x, 0.012, z));
+      }
+      const boundaryGeo = new _THREE.BufferGeometry().setFromPoints(linePts);
+      const boundary = new _THREE.Line(boundaryGeo, new _THREE.LineBasicMaterial({
+        color: mat.COLORS.todayGlow,
+        transparent: true,
+        opacity: _viewMode === "today" ? 0.95 : 0.72,
+        depthWrite: false,
+      }));
+      boundary.name = "activeMoonBoundary";
+      _objects.activeMoonGroup.add(boundary);
     }
 
     // ── Active day node highlight ───────────────────────────────────
     if (_objects.activeDayNode) {
       const tp = model.todayPatternPosition;
-      if (vl.pattern && tp && tp.moon != null && tp.day != null) {
+      if (vl.pattern && tp && tp.moon != null && tp.day != null && _viewMode === "pattern") {
         const moonIdx = tp.moon - 1;
         const dayIdx  = tp.day  - 1;
         const angle = globalThis.LivingTimeSphereModel.dayAngleWithinMoon(moonIdx, dayIdx);
@@ -1066,7 +1185,7 @@
 
   // ── Init / teardown ────────────────────────────────────────────────
 
-  async function init({ container, model, spiral, quality, selectedYear, visibleLayers, viewMode, reducedMotion, onYearSelect, onMarkerSelect }) {
+  async function init({ container, model, spiral, quality, selectedYear, visibleLayers, viewMode, moonLabelMode, reducedMotion, onYearSelect, onMarkerSelect }) {
     // Guard against concurrent or duplicate init calls.
     if (_initializing || _initialized) {
       return { success: false, reason: "already-running" };
@@ -1141,7 +1260,7 @@
       buildScene();
 
       // ── Load initial data ─────────────────────────────────────────
-      updateScene(model, spiral, selectedYear, visibleLayers, viewMode);
+      updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode);
 
       // ── Animation ─────────────────────────────────────────────────
       globalThis.LivingTimeSphereAnimation.applyPreset(quality);
@@ -1161,7 +1280,7 @@
       _wirePointerEvents(container, onYearSelect, onMarkerSelect);
 
       // Build Moon label anchors and set up DOM elements
-      _buildMoonAnchors();
+      _buildMoonAnchors(viewMode);
       _setupMoonLabelEls(container);
 
       // ── Resize ────────────────────────────────────────────────────
@@ -1398,9 +1517,9 @@
 
   // ── Public API ────────────────────────────────────────────────────
 
-  function refresh(model, spiral, selectedYear, visibleLayers, viewMode) {
+  function refresh(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode) {
     if (!_initialized) return;
-    updateScene(model, spiral, selectedYear, visibleLayers, viewMode);
+    updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode);
     globalThis.LivingTimeSphereAnimation.markDirty();
   }
 
@@ -1445,6 +1564,7 @@
     if (_moonLabelEls) _moonLabelEls.forEach(el => { if (el) el.style.display = "none"; });
     _moonLabelEls = null;
     _moonLabelContainer = null;
+    _moonLabelConnectorEl = null;
     _moonAnchors.length = 0;
     _scene = null;
     _camera = null;
