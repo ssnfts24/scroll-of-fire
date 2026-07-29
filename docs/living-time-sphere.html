@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/moons.css?v=20260723-4">
-  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260723-4">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260729-1">
 
   <!-- Core engines -->
   <script defer src="assets/js/site.js"></script>
@@ -83,15 +83,25 @@
    <script defer src="assets/js/sphere/living-time-sphere-ui.js"></script>
    <script defer>
      document.addEventListener("DOMContentLoaded", () => {
+       const container = document.getElementById("sphere-container");
+       if (!container) return;
+
        if (globalThis.LivingTimeSphere?.mount) {
-         globalThis.LivingTimeSphere.mount({
-           container: document.getElementById("sphere-container"),
-           fullPage: true
+         const mounted = globalThis.LivingTimeSphere.mount({
+           container,
+           fullPage: true,
+           mode: "today",
+           renderer: "auto"
          });
+         if (!mounted && globalThis.LivingTimeSphereUi) {
+           globalThis.LivingTimeSphereUi.init();
+         }
        } else if (globalThis.LivingTimeSphereUi) {
-         LivingTimeSphereUi.init();
+         globalThis.LivingTimeSphereUi.init();
+       } else {
+         container.innerHTML = '<p class="sphere-load-error">The Living Time Sphere could not initialize. Reload the page or use the text view.</p>';
        }
-     });
+     }, { once: true });
    </script>
 </head>
 <body>
