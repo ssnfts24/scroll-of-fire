@@ -257,27 +257,19 @@ test("LivingTimeSphereAnimation: intro dismissal persists in localStorage", () =
 
 // ── Effects module ────────────────────────────────────────────────────
 
-test("LivingTimeSphereEffects: witnessLayer is disabled stub", () => {
+test("LivingTimeSphereEffects: witness layer is operational and local-only", () => {
   const ctx = loadSphereContext();
   const wl  = ctx.LivingTimeSphereEffects.witnessLayer;
-  assert.equal(wl.enabled,            false);
-  assert.equal(wl.source,             "local-only");
-  assert.equal(wl.witnessPoints.length, 0, "witnessPoints must be empty in Phase 03");
+  assert.equal(wl.source, "local-only");
+  assert.equal(wl.storageKey, "sof.observatory.records.v1");
+  assert.ok(wl.maximumRenderedRecords >= 1000);
+  assert.equal(typeof ctx.LivingTimeSphereEffects.buildWitnessField, "function");
 });
 
-test("LivingTimeSphereEffects: personalSealStub is disabled", () => {
+test("LivingTimeSphereEffects: no disabled personal or sound placeholders are exported", () => {
   const ctx = loadSphereContext();
-  const ps  = ctx.LivingTimeSphereEffects.personalSealStub;
-  assert.equal(ps.enabled,            false);
-  assert.equal(ps.personalSealMarker, null);
-  assert.equal(ps.privacy,            "local-only");
-});
-
-test("LivingTimeSphereEffects: soundLayer is disabled and muted by default", () => {
-  const ctx = loadSphereContext();
-  const sl  = ctx.LivingTimeSphereEffects.soundLayer;
-  assert.equal(sl.enabled, false);
-  assert.equal(sl.muted,   true);
+  assert.equal("personalSealStub" in ctx.LivingTimeSphereEffects, false);
+  assert.equal("soundLayer" in ctx.LivingTimeSphereEffects, false);
 });
 
 // ── URL state — Phase 03 additions ────────────────────────────────────

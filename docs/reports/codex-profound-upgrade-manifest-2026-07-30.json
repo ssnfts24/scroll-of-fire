@@ -1,0 +1,140 @@
+{
+  "release": "Codex Profound System Upgrade 2026-07-30",
+  "type": "complete replacement files",
+  "fileCount": 23,
+  "features": [
+    "Shared homepage Living Time Sphere with IntersectionObserver lazy loading",
+    "Deep-time seasonal ledger from 1000\u20133000 CE",
+    "March/September equinoxes and June/December solstices",
+    "Sourced versus computed confidence and provenance tiers",
+    "13 Moons deep-time browser",
+    "Observatory Mission Control",
+    "Codex system network with 14 registered systems",
+    "Natural participation, questions, recurring quests, archive and recurrence",
+    "Deep-time witness map up to 1,000 years with indexed relationship generation",
+    "PWA optional caching for advanced modules"
+  ],
+  "validation": {
+    "repositoryTests": "all passed",
+    "javascriptSyntax": "101 files passed node --check",
+    "changedHtmlMissingLocalReferences": 0,
+    "changedHtmlDuplicateIds": 0
+  },
+  "files": [
+    {
+      "path": "UPLOAD-INSTRUCTIONS.txt",
+      "bytes": 687,
+      "sha256": "3082e178875c5fdd57cf28f2ad2a4b4c0148296e87ad24c0b233133268217430"
+    },
+    {
+      "path": "docs/13-moon-whitepaper.html",
+      "bytes": 45781,
+      "sha256": "50258b932811f8f777fa38fa1530848e677fd08f8b509f44fd5d520e13f66c7f"
+    },
+    {
+      "path": "docs/assets/css/home.css",
+      "bytes": 28044,
+      "sha256": "7f0ab20d9a26d7135d4844143946c3fd70c1a3ce615a76b0354c605506cef6cb"
+    },
+    {
+      "path": "docs/assets/css/living-time-sphere.css",
+      "bytes": 46702,
+      "sha256": "d330b048a7d747e521e82c548a9cb8ea8c6eb84e4023218a1dd5541fc624c818"
+    },
+    {
+      "path": "docs/assets/css/moons.css",
+      "bytes": 47057,
+      "sha256": "46a16a487886459029667141b741f495d7fcd42f3393a8248496e98643b1ac8b"
+    },
+    {
+      "path": "docs/assets/js/astronomy/deep-time-seasonal-ledger.js",
+      "bytes": 6881,
+      "sha256": "733e84520f916c2dbe990824c758f72c2a2f8013762b835779478d93abc26914"
+    },
+    {
+      "path": "docs/assets/js/codex-system-registry.js",
+      "bytes": 6338,
+      "sha256": "164d65f5fb488a7e8396c01c733400d71c32b9a0ddbbcc943e43614ae26b6b76"
+    },
+    {
+      "path": "docs/assets/js/moons-deep-time-console.js",
+      "bytes": 2561,
+      "sha256": "421c543d72b0bd958147d9687f7644dc7703b77caa4fa8cd4e8246422ab36c68"
+    },
+    {
+      "path": "docs/assets/js/sphere/living-time-multiyear-map.js",
+      "bytes": 7739,
+      "sha256": "e02348121f79f9f14f7c281fae98e146de44387facf70ef5650bb6d55a2170cc"
+    },
+    {
+      "path": "docs/assets/js/sphere/living-time-natural-participation.js",
+      "bytes": 5382,
+      "sha256": "dc728e734b72587515825268cb3634cbb7cf1ab62c8c86649d977cfafbe40406"
+    },
+    {
+      "path": "docs/assets/js/sphere/living-time-observatory-dashboard.js",
+      "bytes": 9028,
+      "sha256": "05500db5a15c3b914cfbcaddeba31acb5010039ed7faa2b9f2388a6570593409"
+    },
+    {
+      "path": "docs/assets/js/sphere/living-time-observatory-records.js",
+      "bytes": 11987,
+      "sha256": "9b4aa60847c457009dd5bc50fb665c2fede68c848a8714b8903ca933de2a5d51"
+    },
+    {
+      "path": "docs/assets/js/sphere/living-time-observatory-recurrence.js",
+      "bytes": 3505,
+      "sha256": "8fdfa279da2e10d941364b5500987f1a212cfcd775cac454ba0d988e370ca72f"
+    },
+    {
+      "path": "docs/assets/js/sphere/living-time-question-quests.js",
+      "bytes": 24601,
+      "sha256": "17a2018b698570473559bdf0c6fdf3dda2a7a7f7f6bc74b3be6701b3f5fe22eb"
+    },
+    {
+      "path": "docs/assets/js/sphere/living-time-seasonal-environment.js",
+      "bytes": 4094,
+      "sha256": "22cbe7c32639b70b13218acfa3dfcd29690d3a17b97f26b95e9f47482f2513e1"
+    },
+    {
+      "path": "docs/assets/js/sphere/observatory-mission-control.js",
+      "bytes": 7275,
+      "sha256": "07e0376e3853efb54fc454a6d813740a7f40f88af3d1e5ea01142c87d6b652ff"
+    },
+    {
+      "path": "docs/index.html",
+      "bytes": 93591,
+      "sha256": "64a2b660cac4fdb3ced9aa597eec9f20988a71003d5c28ad3582889c049ec370"
+    },
+    {
+      "path": "docs/living-time-sphere.html",
+      "bytes": 55549,
+      "sha256": "6a7b7c7489cf75ba7350b22ae878651d61185e3d6bc15eeb03ac8fbd9dd77882"
+    },
+    {
+      "path": "docs/moons.html",
+      "bytes": 115354,
+      "sha256": "8b37448fb9c8bec8f3c52a5dbb50030b1391c9e1b7a0f730811e98f0ba899b9d"
+    },
+    {
+      "path": "docs/scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+      "bytes": 71552,
+      "sha256": "54a2e68f460c6f74f42af792db7331e143f7215cf46ac6c6176a29a107c7d191"
+    },
+    {
+      "path": "docs/service-worker.js",
+      "bytes": 13995,
+      "sha256": "c2097a3865d8f783c2dee75dc846d32992f3659c21ad8976c5fe5672e64bf078"
+    },
+    {
+      "path": "docs/specifications/codex-system-network-v1.md",
+      "bytes": 1365,
+      "sha256": "744843f4bf652e117de416f6a87e8da128a070a6472f692f750d19eb7c3cb5fe"
+    },
+    {
+      "path": "docs/specifications/deep-time-seasonal-ledger-v1.md",
+      "bytes": 1871,
+      "sha256": "55765690a46f8351659784c70a881bc5c5daba8438c1d85471bad47fb0b603c6"
+    }
+  ]
+}

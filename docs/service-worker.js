@@ -100,6 +100,17 @@ const mandatoryPaths = [
   "./assets/img/moons/app/icon-maskable-512.png"
 ];
 const optionalPaths = [
+  "./assets/js/astronomy/deep-time-seasonal-ledger.js",
+  "./assets/js/codex-system-registry.js",
+  "./assets/js/moons-deep-time-console.js",
+  "./assets/js/sphere/living-time-seasonal-environment.js",
+  "./assets/js/sphere/living-time-observatory-records.js",
+  "./assets/js/sphere/living-time-observatory-recurrence.js",
+  "./assets/js/sphere/living-time-multiyear-map.js",
+  "./assets/js/sphere/living-time-observatory-dashboard.js",
+  "./assets/js/sphere/living-time-natural-participation.js",
+  "./assets/js/sphere/living-time-question-quests.js",
+  "./assets/js/sphere/observatory-mission-control.js",
   "./genesis-oracle.html",
   "./assets/css/genesis-oracle.css",
   "./assets/js/genesis-oracle.js",

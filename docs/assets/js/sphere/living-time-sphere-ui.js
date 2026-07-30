@@ -14,7 +14,7 @@
     manualSunset:  "18:00",
     selectedDayOfYear: null,
     fieldRange:    "now",
-    visibleLayers: { pattern: true, exactDays: true, weekGates: true, outsideDays: false, passage: true, lunar: true, solar: false, markers: true, recurrence: false, spiral: false, environment: false, connections: true },
+    visibleLayers: { pattern: true, exactDays: true, weekGates: true, outsideDays: false, passage: true, lunar: true, solar: false, markers: true, recurrence: false, spiral: false, environment: false, witness: false, connections: true },
     selectedMarker: null,
     useCanvas:     false,
     lowPower:      false,
@@ -29,6 +29,8 @@
     active3d:      false,    // true when 3D renderer is active
     introShown:    false,
     _3dInitInProgress: false, // guard against concurrent 3D init calls
+    deepTimeYear: null,
+    deepTimeEvent: null,
   };
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
   const DAY_MS = 24 * 60 * 60 * 1000;
@@ -62,6 +64,7 @@
     if (typeof location === "undefined") return;
     const parsed = globalThis.LivingTimeSphereUrlState.parseSphereUrl(location.href);
     if (parsed.year)         _state.year         = parsed.year;
+    if (parsed.deepTimeYear) _state.deepTimeYear = parsed.deepTimeYear;
     if (parsed.viewMode)     _state.viewMode     = parsed.viewMode;
     if (parsed.timeZone)     _state.timeZone     = parsed.timeZone;
     if (parsed.boundaryMode) _state.boundaryMode = parsed.boundaryMode;
@@ -2074,6 +2077,25 @@
     });
   }
 
+  function loadDeepTimeEvent(event) {
+    const day = Number(event?.pattern?.dayOfPatternYear);
+    if (!event || !Number.isFinite(day)) return false;
+    _state.deepTimeYear = Number(event.year) || null;
+    _state.deepTimeEvent = event;
+    _state.selectedDayOfYear = Math.max(1, Math.min(364, day));
+    _state.selectedMarker = `day-${_state.selectedDayOfYear}`;
+    _state.viewMode = "pattern";
+    _setModeDefaultLayers("pattern");
+    _state.visibleLayers.solar = true;
+    _state.visibleLayers.markers = true;
+    _state.visibleLayers.connections = true;
+    _syncModeButtons();
+    const container = document.getElementById("sphere-container");
+    if (container) renderSphere(container);
+    globalThis.LivingTimeSphereAccessibility?.announce?.(`Loaded ${event.year} ${event.label} at Pattern day ${_state.selectedDayOfYear}. Computed deep-time event; the verified annual alignment dataset remains separate.`);
+    return true;
+  }
+
   // ── Init ──────────────────────────────────────────────────────────
 
   function init() {
@@ -2129,5 +2151,6 @@
     init,
     getState: () => Object.assign({}, _state),
     renderSphere: (container) => renderSphere(container || document.getElementById("sphere-container")),
+    loadDeepTimeEvent,
   });
 })();

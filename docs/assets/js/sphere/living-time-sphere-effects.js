@@ -139,43 +139,67 @@
     mesh.scale.setScalar(scale);
   }
 
-  // ── Witness constellation layer (disabled stub) ───────────────────
-  // Future: witness records appear as constellation points.
-  // During Phase 03, this layer is prepared but never populated.
+  // ── Local witness constellation ──────────────────────────────────
+  // Uses only records already stored in this browser. No network request is made,
+  // and no witness text is placed into the Three.js scene.
 
-  const witnessLayer = Object.freeze({
-    witnessPoints: [],
-    enabled:       false,
-    source:        "local-only",
+  const WITNESS_STORAGE_KEY = "sof.observatory.records.v1";
+  const CLAIM_COLORS = Object.freeze({
+    observed: [0.45, 0.86, 1.0], measured: [0.45, 1.0, 0.68], reported: [0.92, 0.82, 0.45],
+    inferred: [0.95, 0.62, 0.35], symbolic: [0.78, 0.55, 1.0], experimental: [1.0, 0.45, 0.55],
+    theoretical: [0.52, 0.68, 1.0], disputed: [1.0, 0.34, 0.34], corrected: [0.55, 0.95, 0.9],
+    unresolved: [0.72, 0.75, 0.82]
   });
 
-  function buildWitnessField(THREE) {
-    // Returns an empty Points object; to be populated by a future local-only feature.
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(0), 3));
-    const mat = new THREE.PointsMaterial({ color: 0x80c0ff, size: 0.02, transparent: true, opacity: 0.6 });
-    const pts = new THREE.Points(geo, mat);
-    pts.name = "witnessField";
-    pts.userData.effect = "witness";
-    pts.visible = false;   // always off in Phase 03
-    return pts;
+  function loadLocalWitnessRecords(limit = 1200) {
+    try {
+      const parsed = JSON.parse(globalThis.localStorage?.getItem(WITNESS_STORAGE_KEY) || "null");
+      return Array.isArray(parsed?.records) ? parsed.records.slice(-Math.max(0, limit)) : [];
+    } catch { return []; }
   }
 
-  // ── Personal Seal marker (disabled stub) ─────────────────────────
+  function witnessPosition(record, index, count) {
+    const day = Math.max(1, Math.min(364, Number(record?.pattern?.dayOf364 || record?.pattern?.dayOfPatternYear || 1)));
+    const angle = ((day - 0.5) / 364) * Math.PI * 2 - Math.PI / 2;
+    const year = Number(record?.pattern?.patternYear || new Date(record?.instant || Date.now()).getUTCFullYear());
+    const currentYear = new Date().getUTCFullYear();
+    const yearOffset = Math.max(-0.58, Math.min(0.58, (year - currentYear) / 36));
+    const sequenceOffset = count > 1 ? ((index / (count - 1)) - 0.5) * 0.12 : 0;
+    const radius = 1.34 + Math.max(-0.08, Math.min(0.16, yearOffset * 0.15));
+    return [Math.cos(angle) * radius, yearOffset + sequenceOffset, Math.sin(angle) * radius];
+  }
 
-  const personalSealStub = Object.freeze({
-    personalSealMarker: null,
-    enabled:            false,
-    privacy:            "local-only",
-  });
+  function buildWitnessField(THREE, records = loadLocalWitnessRecords()) {
+    const limited = Array.isArray(records) ? records.slice(-1200) : [];
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(limited.length * 3);
+    const colors = new Float32Array(limited.length * 3);
+    limited.forEach((record, index) => {
+      const pos = witnessPosition(record, index, limited.length);
+      positions.set(pos, index * 3);
+      const color = CLAIM_COLORS[record?.claim?.type] || CLAIM_COLORS.observed;
+      colors.set(color, index * 3);
+    });
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    const material = new THREE.PointsMaterial({
+      size: 0.032, transparent: true, opacity: 0.82, vertexColors: true,
+      sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending
+    });
+    const points = new THREE.Points(geometry, material);
+    points.name = "witnessField";
+    points.userData.effect = "witness";
+    points.userData.source = "local-only";
+    points.userData.recordCount = limited.length;
+    points.visible = false;
+    return points;
+  }
 
-  // ── Sound layer stub (optional, always off by default) ───────────
-
-  const soundLayer = Object.freeze({
-    enabled:       false,
-    volume:        0.5,
-    muted:         true,
-    // Never autoplay; requires explicit user activation.
+  const witnessLayer = Object.freeze({
+    storageKey: WITNESS_STORAGE_KEY,
+    source: "local-only",
+    maximumRenderedRecords: 1200,
+    claimColors: CLAIM_COLORS
   });
 
   // ── Export ───────────────────────────────────────────────────────
@@ -190,7 +214,5 @@
     updateCoreGlow,
     witnessLayer,
     buildWitnessField,
-    personalSealStub,
-    soundLayer,
   });
 })();

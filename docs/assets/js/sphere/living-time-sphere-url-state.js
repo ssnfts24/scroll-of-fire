@@ -3,7 +3,9 @@
 
   const VALID_VIEW_MODES  = new Set(["today", "passage", "years", "pattern"]);
   const VALID_LAYERS      = new Set(["pattern", "exactDays", "weekGates", "outsideDays", "passage", "lunar", "solar", "markers", "recurrence", "spiral", "environment", "connections"]);
-  const VALID_YEARS       = new Set(Array.from({ length: 13 }, (_, i) => String(2014 + i)));
+  const VALID_YEARS = new Set(Array.from({ length: 13 }, (_, i) => String(2014 + i)));
+  const MIN_DEEP_YEAR = 1000;
+  const MAX_DEEP_YEAR = 3000;
   const VALID_RENDERERS   = new Set(["3d", "svg", "table", "text"]);
   const VALID_QUALITIES   = new Set(["auto", "high", "balanced", "lowpower", "svgonly"]);
   const VALID_CONNECTIONS = new Set(["off", "selected", "contextual", "full", "custom"]);
@@ -14,6 +16,11 @@
   function normalizeYear(value) {
     const s = String(value || "").trim();
     return VALID_YEARS.has(s) ? Number(s) : null;
+  }
+
+  function normalizeDeepYear(value) {
+    const n = Number(String(value || "").trim());
+    return Number.isInteger(n) && n >= MIN_DEEP_YEAR && n <= MAX_DEEP_YEAR ? n : null;
   }
 
   function normalizeTz(value) {
@@ -62,12 +69,13 @@
     return /^[a-zA-Z0-9_-]{1,64}$/.test(s) ? s : null;
   }
 
-  function buildSphereUrl({ baseUrl, year, viewMode, layers, marker, timeZone, boundaryMode, manualSunset, datasetVersion, renderer, quality, cameraTheta, cameraDist, connectionMode, motionMode, moonLabelDistance, dayLabelMode } = {}) {
+  function buildSphereUrl({ baseUrl, year, deepTimeYear, viewMode, layers, marker, timeZone, boundaryMode, manualSunset, datasetVersion, renderer, quality, cameraTheta, cameraDist, connectionMode, motionMode, moonLabelDistance, dayLabelMode } = {}) {
     const base = baseUrl || (typeof location !== "undefined" ? String(location.origin + location.pathname) : "https://codexofreality.org/living-time-sphere.html");
     let url;
     try { url = new URL(base); } catch { url = new URL("https://codexofreality.org/living-time-sphere.html"); }
 
     if (year != null)      url.searchParams.set("year",    String(year));
+    if (deepTimeYear != null) url.searchParams.set("deep_year", String(deepTimeYear));
     if (viewMode)          url.searchParams.set("view",    viewMode);
     if (layers?.length)    url.searchParams.set("layers",  layers.join(","));
     if (marker)            url.searchParams.set("marker",  marker);
@@ -101,6 +109,7 @@
 
     return {
       year:         normalizeYear(url.searchParams.get("year")),
+      deepTimeYear: normalizeDeepYear(url.searchParams.get("deep_year")),
       viewMode:     normalizeViewMode(url.searchParams.get("view")),
       layers:       normalizeLayers(url.searchParams.get("layers")),
       marker:       normalizeMarker(url.searchParams.get("marker")),
@@ -134,5 +143,6 @@
     VALID_LAYERS:     [...VALID_LAYERS],
     VALID_RENDERERS:  [...VALID_RENDERERS],
     VALID_QUALITIES:  [...VALID_QUALITIES],
+    MIN_DEEP_YEAR, MAX_DEEP_YEAR,
   });
 })();
