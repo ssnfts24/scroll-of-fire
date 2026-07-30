@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/moons.css?v=20260723-4">
-  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260729-1">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260729-luxury-1">
 
   <!-- Core engines -->
   <script defer src="assets/js/site.js"></script>
@@ -78,6 +78,13 @@
    <script defer src="assets/js/sphere/living-time-sphere-accessibility.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-export.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-url-state.js"></script>
+   <script defer src="assets/js/sphere/living-time-seasonal-environment.js?v=20260729-2"></script>
+   <script defer src="assets/js/sphere/living-time-observatory-records.js?v=20260729-2"></script>
+   <script defer src="assets/js/sphere/living-time-observatory-recurrence.js?v=20260729-1"></script>
+   <script defer src="assets/js/sphere/living-time-multiyear-map.js?v=20260729-2"></script>
+   <script defer src="assets/js/sphere/living-time-observatory-dashboard.js?v=20260729-2"></script>
+   <script defer src="assets/js/sphere/living-time-natural-participation.js?v=20260729-3"></script>
+  <script defer src="assets/js/sphere/living-time-question-quests.js?v=20260729-4"></script>
    <script defer src="assets/js/sphere/living-time-sphere-mount.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-today.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-ui.js"></script>
@@ -104,7 +111,7 @@
      }, { once: true });
    </script>
 </head>
-<body>
+<body class="lts-luxury">
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="wrap">
     <header class="site-header" data-sof-header>
@@ -125,8 +132,14 @@
       <!-- 1. Hero -->
       <section class="sphere-hero" aria-labelledby="sphereHeroTitle">
         <p class="eyebrow">The 13 Moons Remnant Living Time Observatory</p>
+        <div class="sphere-hero-sigil" aria-hidden="true"><span>13</span><i>×</i><span>28</span></div>
         <h1 id="sphereHeroTitle" class="sphere-hero-title">Living Time Sphere</h1>
         <p class="sphere-hero-description">The Living Time Sphere places fixed Pattern Time at the center and lets moving astronomical cycles travel around it. Select a day, Passage, or year to witness how the layers meet.</p>
+        <div class="sphere-hero-meta" aria-label="Observatory capabilities">
+          <span><b>364</b> exact Pattern days</span>
+          <span><b>4</b> living views</span>
+          <span><b>3D</b> with accessible fallback</span>
+        </div>
       </section>
 
       <!-- 2. Renderer and quality controls -->
@@ -154,6 +167,7 @@
                 <option value="auto">Auto</option>
                 <option value="3d">3D Sphere</option>
                 <option value="svg">Accessible SVG</option>
+                <option value="canvas">Canvas Instrument</option>
                 <option value="table">Data Table</option>
                 <option value="text">Text Summary</option>
               </select>
@@ -271,10 +285,21 @@
               </div>
             </div>
           </aside>
-          <div id="sphere-container" role="img" aria-label="Living Time Sphere — interactive" tabindex="0"
-               aria-describedby="sphere-text-model">
-            <!-- SVG or 3D canvas rendered here by LivingTimeSphereUi.init() -->
-            <p class="sphere-error">Loading sphere…</p>
+          <div class="sphere-instrument-shell" data-luxury-instrument>
+            <div class="sphere-instrument-topline" aria-hidden="true">
+              <span>REMNANT LIVING TIME OBSERVATORY</span><span class="sphere-live-dot">LIVE FIELD</span>
+            </div>
+            <div id="sphere-container" role="img" aria-label="Living Time Sphere — interactive" tabindex="0"
+                 aria-describedby="sphere-text-model" aria-busy="true">
+              <!-- SVG or 3D canvas rendered here by LivingTimeSphereUi.init() -->
+              <div class="sphere-luxury-loader" role="status" aria-live="polite">
+                <span class="sphere-loader-orbit" aria-hidden="true"></span>
+                <strong>Aligning Living Time</strong>
+                <small>Pattern · Lunar · Solar · Passage</small>
+              </div>
+            </div>
+            <div class="sphere-instrument-corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            <div class="sphere-instrument-footer" aria-hidden="true"><span>FIXED PATTERN CENTER</span><span>MOVING ASTRONOMICAL LAYERS</span></div>
           </div>
 
           <div class="sphere-moon-labels" id="sphere-moon-labels" aria-hidden="true">
@@ -407,6 +432,115 @@
         </aside>
       </div>
 
+
+      <!-- Observatory Archive, provenance, privacy and recurrence -->
+      <section class="observatory-console" id="observatory-console" aria-labelledby="observatory-console-title">
+        <header class="obs-console-head">
+          <div><p class="eyebrow">Living Witness Architecture</p><h2 id="observatory-console-title">Observatory Archive</h2><p>Preserve observations with the Pattern, astronomical, environmental, provenance, and privacy context needed for meaningful future comparison.</p></div>
+          <span class="obs-live-seal">Local-first · Versioned · Portable</span>
+        </header>
+        <div class="obs-current-grid" aria-label="Current canonical Observatory state">
+          <article><small>Pattern</small><strong id="obs-current-pattern">—</strong></article>
+          <article><small>Day of 364</small><strong id="obs-current-day">—</strong></article>
+          <article><small>Lunar</small><strong id="obs-current-lunar">—</strong></article>
+          <article><small>Passage</small><strong id="obs-current-passage">—</strong></article>
+          <article><small>Source</small><strong id="obs-current-source">—</strong></article>
+          <article><small>Engine</small><strong id="obs-current-version">—</strong></article>
+          <article><small>Season</small><strong id="obs-current-season">—</strong></article>
+          <article><small>Daylight</small><strong id="obs-current-daylight">—</strong></article>
+        </div>
+        <div class="obs-console-grid">
+          <section class="obs-question-system" aria-labelledby="obs-question-system-title">
+            <header class="obs-question-system-head">
+              <div><p class="eyebrow">Gentle Guidance</p><h3 id="obs-question-system-title">Questions &amp; Personal Quests</h3><p>The Observatory may offer one relevant question when you arrive. You can answer, skip, snooze, reduce the frequency, or turn it off completely. Everything stays local unless you choose otherwise.</p></div>
+              <button class="obs-luxury-btn" id="obs-question-ask-now" type="button">Ask Me a Question</button>
+            </header>
+
+            <article id="obs-question-shell" class="obs-question-shell" hidden aria-live="polite">
+              <button id="obs-question-close" class="obs-question-close" type="button" aria-label="Close question">×</button>
+              <span id="obs-question-category" class="obs-question-category">Check-in</span>
+              <h4 id="obs-question-text">What stands out right now?</h4>
+              <p id="obs-question-reason" class="obs-question-reason"></p>
+              <textarea id="obs-question-answer" maxlength="6000" placeholder="A sentence is enough."></textarea>
+              <div class="obs-question-actions"><button id="obs-question-answer-save" class="obs-luxury-btn is-primary" type="button">Preserve Answer</button><button id="obs-question-skip" class="obs-luxury-btn" type="button">Skip</button><button id="obs-question-snooze" class="obs-luxury-btn" type="button">Snooze 4 Hours</button></div>
+              <small>Ctrl/⌘ + Enter preserves the answer. Current time, season, environment, and Pattern context attach automatically.</small>
+            </article>
+
+            <details class="obs-question-settings">
+              <summary>Configure Questions</summary>
+              <div class="obs-question-settings-grid">
+                <label class="obs-toggle-row"><input id="obs-question-enabled" type="checkbox" checked> Enable gentle questions</label>
+                <label>Guidance level<select id="obs-question-level"><option value="off">Off</option><option value="light">Light · about 1/day</option><option value="balanced">Balanced · up to 2/day</option><option value="active">Active · up to 3/day</option><option value="deep">Deep practice · up to 5/day</option></select></label>
+                <label class="obs-toggle-row"><input id="obs-question-on-open" type="checkbox" checked> Offer a question when opening</label>
+                <label class="obs-toggle-row"><input id="obs-question-show-reason" type="checkbox" checked> Explain why it was selected</label>
+                <label>Quiet hours begin<input id="obs-question-quiet-start" type="time" value="21:30"></label>
+                <label>Quiet hours end<input id="obs-question-quiet-end" type="time" value="07:30"></label>
+              </div>
+              <fieldset class="obs-question-categories"><legend>Question themes</legend>
+                <label><input data-question-category type="checkbox" value="awareness"> Awareness</label><label><input data-question-category type="checkbox" value="direction"> Direction</label><label><input data-question-category type="checkbox" value="wellbeing"> Wellbeing</label><label><input data-question-category type="checkbox" value="relationships"> Relationships</label><label><input data-question-category type="checkbox" value="work"> Work</label><label><input data-question-category type="checkbox" value="environment"> Environment</label><label><input data-question-category type="checkbox" value="patterns"> Patterns</label><label><input data-question-category type="checkbox" value="gratitude"> Gratitude</label><label><input data-question-category type="checkbox" value="family"> Family</label><label><input data-question-category type="checkbox" value="projects"> Projects</label>
+              </fieldset>
+              <button id="obs-question-save-settings" class="obs-luxury-btn" type="button">Save Question Preferences</button>
+            </details>
+
+            <details class="obs-quest-builder">
+              <summary>Create &amp; Manage Personal Quests</summary>
+              <p class="obs-panel-intro">A quest is a personal question you want the Observatory to repeat. Use it for a project, habit, family responsibility, experiment, practice, or long-term goal.</p>
+              <form id="obs-quest-form" class="obs-quest-form">
+                <label>Quest title<input name="title" maxlength="90" placeholder="Example: Build the Caravan"></label>
+                <label class="is-wide">Question<textarea name="question" required maxlength="600" placeholder="What concrete step moved the Caravan forward?"></textarea></label>
+                <label>Intention<input name="intention" maxlength="80" placeholder="Build"></label>
+                <label>Repeat<select name="schedule"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="interval">Every number of days</option><option value="moonDay">On a Moon Day</option></select></label>
+                <label>Interval days<input name="intervalDays" type="number" min="1" max="365" value="3"></label>
+                <label>Moon Day<input name="moonDay" type="number" min="1" max="28" value="1"></label>
+                <label>Priority<select name="priority"><option value="1">Normal</option><option value="2">High</option><option value="3">Primary</option></select></label>
+                <button class="obs-luxury-btn is-primary" type="submit">Create Recurring Quest</button>
+              </form>
+              <div id="obs-quest-list" class="obs-quest-list"></div>
+            </details>
+          </section>
+
+          <article class="obs-panel obs-participation-panel">
+            <div class="obs-participation-head"><div><p class="eyebrow">Natural Participation</p><h3>Record What Stands Out</h3><p class="obs-panel-intro">One clear observation is enough. Time, season, lunar state, active layers, provenance, and privacy defaults are attached automatically.</p></div><div class="obs-mode-switch" aria-label="Participation depth"><button type="button" data-participation-mode="simple" aria-pressed="true">Simple</button><button type="button" data-participation-mode="guided" aria-pressed="false">Guided</button><button type="button" data-participation-mode="deep" aria-pressed="false">Deep</button></div></div>
+            <div class="obs-auto-context"><span>Attached automatically</span><strong id="obs-auto-context">Current Living Time context will be attached automatically.</strong></div>
+            <div class="obs-prompt-chips" aria-label="Observation prompts"><button type="button" data-obs-prompt="What stands out right now?" data-obs-intention="Notice">Notice</button><button type="button" data-obs-prompt="What changed since your last witness?" data-obs-intention="Track change">Change</button><button type="button" data-obs-prompt="What repeated, aligned, or felt connected?" data-obs-intention="Recognize pattern">Pattern</button><button type="button" data-obs-prompt="What needs action, repair, or follow-through?" data-obs-intention="Respond">Action</button><button type="button" data-obs-prompt="What did you notice in the sky, weather, plants, animals, water, or place around you?" data-obs-intention="Observe environment">Environment</button></div>
+            <form id="observatory-witness-form">
+              <div class="obs-form-grid">
+                <div class="obs-field"><label for="obs-intention">Intention</label><input id="obs-intention" name="intention" maxlength="240" placeholder="What are you carrying into this observation?"></div>
+                <div class="obs-field"><label for="obs-tags">Tags</label><input id="obs-tags" name="tags" maxlength="500" placeholder="work, family, pattern, weather"></div>
+                <div class="obs-field is-wide"><label for="obs-observation">Observation</label><textarea id="obs-observation" name="observation" required maxlength="6000" placeholder="What actually happened? Preserve the observable details first."></textarea></div>
+                <details id="obs-deeper-fields" class="obs-deeper-fields is-wide"><summary>Continue with meaning, action, personal state, and environment</summary><div class="obs-form-grid obs-form-grid-nested">
+                <div class="obs-field"><label for="obs-interpretation">Interpretation</label><textarea id="obs-interpretation" name="interpretation" maxlength="6000" placeholder="What meaning or relationship might be present?"></textarea></div>
+                <div class="obs-field"><label for="obs-uncertainty">Uncertainty</label><textarea id="obs-uncertainty" name="uncertainty" maxlength="3000" placeholder="What remains unknown or could have another explanation?"></textarea></div>
+                <div class="obs-field"><label for="obs-action">Action</label><textarea id="obs-action" name="action" maxlength="3000" placeholder="What action follows from this witness?"></textarea></div>
+                <div class="obs-field"><label for="obs-outcome">Outcome</label><textarea id="obs-outcome" name="outcome" maxlength="3000" placeholder="What changed afterward? This can be updated later."></textarea></div>
+                <div class="obs-field is-wide"><label>Optional personal state</label><div class="obs-range-row"><input name="energy" type="number" min="0" max="10" step="1" placeholder="Energy 0–10"><input name="stress" type="number" min="0" max="10" step="1" placeholder="Stress 0–10"><input name="focus" type="number" min="0" max="10" step="1" placeholder="Focus 0–10"></div></div>
+                <div class="obs-field"><label for="obs-claim-type">Claim type</label><select id="obs-claim-type" name="claimType"><option value="observed">Observed</option><option value="measured">Measured</option><option value="reported">Reported</option><option value="inferred">Inferred</option><option value="symbolic">Symbolic</option><option value="experimental">Experimental</option><option value="theoretical">Theoretical</option><option value="unresolved">Unresolved</option></select></div>
+                <div class="obs-field"><label for="obs-place-id">Place ID</label><input id="obs-place-id" name="placeId" placeholder="NODE-SEATTLE-001 or place name"></div>
+                <div class="obs-field is-wide"><label>Environmental observation</label><div class="obs-range-row obs-env-row"><input name="temperatureC" type="number" step="0.1" placeholder="Temp °C"><input name="humidityPercent" type="number" min="0" max="100" placeholder="Humidity %"><input name="cloudCoverPercent" type="number" min="0" max="100" placeholder="Cloud %"><input name="windKph" type="number" step="0.1" placeholder="Wind km/h"></div><textarea name="fieldNotes" maxlength="1500" placeholder="Sky, weather, sound, water, soil, animal, plant, or other field conditions"></textarea><button class="obs-luxury-btn" id="obs-capture-location" type="button">Use Device Location</button><input id="obs-location-json" name="locationJson" type="hidden"></div>
+                <div class="obs-field"><label for="obs-visibility">Privacy</label><select id="obs-visibility" name="visibility"><option value="private">Private · local only</option><option value="anonymous">Anonymous export</option><option value="public">Public-ready export</option></select></div>
+                </div></details>
+              </div>
+              <div class="obs-form-actions obs-natural-actions"><button class="obs-luxury-btn primary" id="obs-quick-save" type="button">Preserve This Moment</button><button class="obs-luxury-btn" id="obs-reflection-save" type="button">Save Reflection</button><button class="obs-luxury-btn obs-full-submit" type="submit">Preserve Full Witness</button><span id="obs-draft-state" class="obs-draft-state" aria-live="polite"></span><span id="observatory-status" role="status" aria-live="polite"></span></div>
+            </form>
+            <p class="obs-provenance-note">Pattern and astronomy fields are recorded as context, not proof of causation. Recurrence results remain descriptive and include their evidence limits.</p>
+          </article>
+          <article class="obs-panel">
+            <h3>Local Archive</h3><p class="obs-panel-intro">Portable, versioned records with stable IDs and migration support.</p>
+            <div class="obs-archive-tools"><button class="obs-luxury-btn" id="obs-export" type="button">Export JSON</button><button class="obs-luxury-btn" id="obs-import" type="button">Import</button><input id="obs-import-file" type="file" accept="application/json" hidden><span class="obs-record-count"><b id="obs-record-count">0</b> records</span></div>
+            <div class="obs-top-tags" id="obs-top-tags" aria-label="Most frequent tags"></div>
+            <div class="obs-record-list" id="obs-record-list"></div>
+          </article>
+        </div>
+        <section class="obs-panel observatory-century" id="observatory-century" aria-labelledby="obs-century-title">
+          <header class="obs-century-head"><div><p class="eyebrow">Deep Time Cartography</p><h3 id="obs-century-title">200-Year Living Time Field</h3><p>Witnesses, seasons, places, artifacts, and recurring Pattern positions are anchored across a rolling two-century map. Lines show explainable relationships rather than hidden inference.</p></div><div class="obs-century-controls"><label>End year <input id="obs-century-end" type="number" min="1600" max="2600"></label><label>Span <select id="obs-century-span"><option value="50">50 years</option><option value="100">100 years</option><option value="200" selected>200 years</option><option value="300">300 years</option><option value="500">500 years</option></select></label><label><input id="obs-century-lines" type="checkbox" checked> Relationship lines</label></div></header>
+          <div id="obs-century-map" class="obs-century-map" tabindex="0"></div><div id="obs-century-legend" class="obs-century-legend"><span>● Spring</span><span>● Summer</span><span>● Autumn</span><span>● Winter</span><span>Lines: shared Moon, Moon Day, tags, place, artifact, or season</span></div>
+        </section>
+        <section class="obs-panel observatory-recurrence" id="observatory-recurrence" aria-labelledby="obs-recurrence-title">
+          <h3 id="obs-recurrence-title">Recurrence Lens</h3><p class="obs-panel-intro">Compares Pattern-day proximity, Moon position, lunar age, season, tags, and intention. It never labels similarity as prediction or causation.</p>
+          <div class="obs-recurrence-results" id="obs-recurrence-results"></div>
+        </section>
+      </section>
+
       <!-- 8. Accessible text model -->
       <section aria-labelledby="sphereTextModelHeading">
         <h2 id="sphereTextModelHeading">Accessible text model</h2>
@@ -485,4 +619,4 @@
     </main>
   </div>
 </body>
-</html>
+        </html>
