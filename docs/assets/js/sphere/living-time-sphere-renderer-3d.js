@@ -779,7 +779,7 @@
       _objects.activeDayNode = mesh;
     }
 
-    // ── Witness constellation (disabled stub) ─────────────────────────
+    // ── Local witness constellation ─────────────────────────────────────
     {
       const wField = globalThis.LivingTimeSphereEffects.buildWitnessField(THREE);
       _scene.add(wField);
@@ -1008,6 +1008,7 @@
     if (_objects.equinoxGate)  _objects.equinoxGate.visible  = !!vl.passage || !!vl.markers;
     if (_objects.activeMoonGroup) _objects.activeMoonGroup.visible = !!vl.pattern;
     if (_objects.connectionGroup) _objects.connectionGroup.visible = !!vl.connections;
+    if (_objects.witnessField) _objects.witnessField.visible = !!vl.witness && (_objects.witnessField.userData.recordCount || 0) > 0;
 
     // ── Equinox gate position ───────────────────────────────────────
     if (_objects.equinoxGate && model.passageStartAngle != null) {
