@@ -11,7 +11,7 @@
   const DEFAULT_MOTION_MODE = "still";
   const DEFAULT_CAMERA_PRESET = "reset";
   const DEFAULT_MOON_LABEL_DISTANCE = "standard";
-  const DEFAULT_MOON_LABEL_MODE = "contextual";
+  const DEFAULT_MOON_LABEL_MODE = "balanced";
   const DEFAULT_DAY_LABEL_MODE = "key";
 
   const VALID_MODES = Object.freeze(["today", "pattern", "passage", "years"]);
@@ -19,7 +19,7 @@
   const VALID_CONNECTION_MODES = Object.freeze(["off", "selected", "contextual", "full", "custom"]);
   const VALID_MOTION_MODES = Object.freeze(["still", "drift", "reduced"]);
   const VALID_CAMERA_PRESETS = Object.freeze(["reset", "top", "tilted", "edge", "focus", "overview", "detail", "spiral"]);
-  const VALID_MOON_LABEL_MODES = Object.freeze(["contextual", "all", "selected", "hidden"]);
+  const VALID_MOON_LABEL_MODES = Object.freeze(["essential", "balanced", "all", "none", "contextual", "selected", "hidden"]);
   const VALID_MOON_LABEL_DISTANCES = Object.freeze(["tight", "standard", "wide"]);
   const VALID_DAY_LABEL_MODES = Object.freeze(["key", "all", "selected", "hidden"]);
 
@@ -40,43 +40,85 @@
     connections: Object.freeze({ id: "connections", group: "Connections", label: "Connections",       public: true,  compactDefault: true }),
   });
 
-  const BASE_VISIBLE_LAYERS = Object.freeze({
+  const FULL_OBSERVATORY_LAYERS = Object.freeze({
     pattern: true,
     exactDays: true,
     weekGates: true,
-    outsideDays: false,
+    outsideDays: true,
     lunar: true,
-    solar: false,
+    solar: true,
     passage: true,
     markers: true,
-    spiral: false,
-    recurrence: false,
-    environment: false,
+    spiral: true,
+    recurrence: true,
+    environment: true,
     witness: false,
     personal: false,
     connections: true,
   });
 
+  const COMPACT_VISIBLE_LAYERS = Object.freeze({
+    pattern: true,
+    exactDays: true,
+    weekGates: true,
+    outsideDays: false,
+    lunar: true,
+    solar: true,
+    passage: true,
+    markers: true,
+    spiral: false,
+    recurrence: false,
+    environment: true,
+    witness: false,
+    personal: false,
+    connections: true,
+  });
+
+  const BASE_VISIBLE_LAYERS = FULL_OBSERVATORY_LAYERS;
+
   const MODE_LAYER_DEFAULTS = Object.freeze({
-    today: Object.freeze({
-      pattern: true, exactDays: true, weekGates: true, outsideDays: false,
-      lunar: true, solar: true, passage: true, markers: true,
-      spiral: false, recurrence: false, environment: false, witness: false, personal: false, connections: true,
-    }),
-    pattern: Object.freeze({
+    today: FULL_OBSERVATORY_LAYERS,
+    pattern: FULL_OBSERVATORY_LAYERS,
+    passage: FULL_OBSERVATORY_LAYERS,
+    years: FULL_OBSERVATORY_LAYERS,
+  });
+
+  const LAYER_PRESETS = Object.freeze({
+    fullObservatory: Object.freeze({ ...FULL_OBSERVATORY_LAYERS }),
+    cleanPattern: Object.freeze({
       pattern: true, exactDays: true, weekGates: true, outsideDays: true,
-      lunar: true, solar: true, passage: false, markers: true,
-      spiral: false, recurrence: false, environment: false, witness: false, personal: false, connections: true,
+      lunar: false, solar: false, passage: false, markers: true,
+      spiral: false, recurrence: false, environment: false, witness: false, personal: false, connections: false
+    }),
+    livingSky: Object.freeze({
+      pattern: true, exactDays: false, weekGates: false, outsideDays: false,
+      lunar: true, solar: true, passage: true, markers: true,
+      spiral: false, recurrence: false, environment: true, witness: false, personal: false, connections: true
+    }),
+    weatherField: Object.freeze({
+      pattern: true, exactDays: false, weekGates: false, outsideDays: false,
+      lunar: false, solar: true, passage: false, markers: false,
+      spiral: false, recurrence: false, environment: true, witness: false, personal: false, connections: false
     }),
     passage: Object.freeze({
       pattern: true, exactDays: true, weekGates: true, outsideDays: false,
       lunar: true, solar: true, passage: true, markers: true,
-      spiral: false, recurrence: false, environment: false, witness: false, personal: false, connections: true,
+      spiral: false, recurrence: false, environment: true, witness: false, personal: false, connections: true
     }),
-    years: Object.freeze({
+    witnessMap: Object.freeze({
+      pattern: true, exactDays: true, weekGates: false, outsideDays: false,
+      lunar: true, solar: false, passage: false, markers: true,
+      spiral: false, recurrence: true, environment: false, witness: true, personal: false, connections: true
+    }),
+    historicalField: Object.freeze({
       pattern: true, exactDays: false, weekGates: false, outsideDays: false,
-      lunar: false, solar: true, passage: true, markers: true,
-      spiral: true, recurrence: true, environment: false, witness: false, personal: false, connections: true,
+      lunar: true, solar: true, passage: true, markers: true,
+      spiral: true, recurrence: true, environment: true, witness: true, personal: false, connections: true
+    }),
+    lowPower: Object.freeze({
+      pattern: true, exactDays: true, weekGates: true, outsideDays: false,
+      lunar: true, solar: true, passage: true, markers: true,
+      spiral: false, recurrence: false, environment: false, witness: false, personal: false, connections: true
     }),
   });
 
@@ -96,13 +138,26 @@
   function modeLayerDefaults(mode, compact) {
     const base = _cloneLayers(MODE_LAYER_DEFAULTS[_pick(mode, VALID_MODES, DEFAULT_MODE)]);
     if (compact) {
+      Object.keys(base).forEach(key => { base[key] = !!COMPACT_VISIBLE_LAYERS[key]; });
       base.spiral = false;
       base.recurrence = false;
-      base.environment = false;
       base.witness = false;
       base.personal = false;
     }
     return base;
+  }
+
+  function presetLayers(presetName, { compact = false, environmentAvailable = true, witnessAvailable = true } = {}) {
+    const key = Object.prototype.hasOwnProperty.call(LAYER_PRESETS, presetName) ? presetName : "fullObservatory";
+    const resolved = _cloneLayers(LAYER_PRESETS[key]);
+    if (!environmentAvailable) resolved.environment = false;
+    if (!witnessAvailable) resolved.witness = false;
+    if (compact) {
+      Object.keys(resolved).forEach(layer => {
+        resolved[layer] = !!(resolved[layer] && COMPACT_VISIBLE_LAYERS[layer]);
+      });
+    }
+    return resolved;
   }
 
   function createState(overrides = {}) {
@@ -173,7 +228,10 @@
   globalThis.LivingTimeSphereState = Object.freeze({
     LAYER_REGISTRY,
     BASE_VISIBLE_LAYERS,
+    FULL_OBSERVATORY_LAYERS,
+    COMPACT_VISIBLE_LAYERS,
     MODE_LAYER_DEFAULTS,
+    LAYER_PRESETS,
     VALID_MODES,
     VALID_RENDERERS,
     VALID_CONNECTION_MODES,
@@ -185,6 +243,7 @@
     createState,
     mergeState,
     modeLayerDefaults,
+    presetLayers,
     toPublicUrlState,
   });
 })();

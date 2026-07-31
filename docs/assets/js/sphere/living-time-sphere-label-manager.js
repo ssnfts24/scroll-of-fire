@@ -24,11 +24,11 @@
   }
 
   function buildLabelSet({ labelMode, selectedMoon, todayMoon, equinoxMoon, mobile, showAllMobileLabels }) {
-    if (labelMode === "hidden") return new Set();
+    if (labelMode === "none" || labelMode === "hidden") return new Set();
     if (mobile && !showAllMobileLabels) {
       return new Set([todayMoon, selectedMoon, 1, 13].filter(Boolean));
     }
-    if (labelMode === "selected") return new Set(selectedMoon ? [selectedMoon] : []);
+    if (labelMode === "essential" || labelMode === "selected") return new Set(selectedMoon ? [selectedMoon] : []);
     if (labelMode === "all") return new Set(Array.from({ length: 13 }, (_, i) => i + 1));
     return new Set([selectedMoon, todayMoon, equinoxMoon, 1, 13].filter(Boolean));
   }

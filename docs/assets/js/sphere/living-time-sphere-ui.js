@@ -14,16 +14,18 @@
     manualSunset:  "18:00",
     selectedDayOfYear: null,
     fieldRange:    "now",
-    visibleLayers: { pattern: true, exactDays: true, weekGates: true, outsideDays: false, passage: true, lunar: true, solar: false, markers: true, recurrence: false, spiral: false, environment: false, connections: true },
+    visibleLayers: { pattern: true, exactDays: true, weekGates: true, outsideDays: true, passage: true, lunar: true, solar: true, markers: true, recurrence: true, spiral: true, environment: true, witness: false, personal: false, connections: true },
     selectedMarker: null,
     useCanvas:     false,
     lowPower:      false,
     // Phase 03 additions
     rendererMode:  "auto",   // "auto" | "3d" | "svg" | "table" | "text"
     quality:       "auto",   // "auto" | "high" | "balanced" | "lowpower" | "svgonly"
-    moonLabelMode: "contextual", // "contextual" | "all" | "selected" | "hidden"
+    moonLabelMode: "balanced", // "essential" | "balanced" | "all" | "none"
     moonLabelDistance: "standard",
     dayLabelMode: "key",
+    showLabels: true,
+    layerPreset: "fullObservatory",
     connectionMode: "contextual",
     motionMode: "still",
     active3d:      false,    // true when 3D renderer is active
@@ -32,6 +34,7 @@
   };
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
   const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
+  const LAYER_PREFERENCES_KEY = "sof.sphere.layerPreferences.v2";
   const DAY_MS = 24 * 60 * 60 * 1000;
   const SHABBAT_DAYS = new Set([2, 9, 16, 23]);
   const MOON_LOG_KEY = "sof_moon_logs_v3";
@@ -44,6 +47,9 @@
     "pattern-year": "Pattern Year",
     historical: "Historical comparison",
   });
+  const LAYER_PRESET_OPTIONS = Object.freeze(["fullObservatory", "cleanPattern", "livingSky", "weatherField", "passage", "witnessMap", "historicalField", "lowPower"]);
+
+  let _urlHasExplicitLayers = false;
 
   // ── Dependency check ───────────────────────────────────────────────
 
@@ -61,6 +67,7 @@
 
   function applyUrlState() {
     if (typeof location === "undefined") return;
+    _urlHasExplicitLayers = false;
     const parsed = globalThis.LivingTimeSphereUrlState.parseSphereUrl(location.href);
     if (parsed.year)         _state.year         = parsed.year;
     if (parsed.viewMode)     _state.viewMode     = parsed.viewMode;
@@ -77,9 +84,11 @@
     if (parsed.moonLabelDistance) _state.moonLabelDistance = parsed.moonLabelDistance;
     if (parsed.dayLabelMode)   _state.dayLabelMode = parsed.dayLabelMode;
     if (parsed.layers) {
+      _urlHasExplicitLayers = parsed.layers.length > 0;
       for (const k of Object.keys(_state.visibleLayers)) _state.visibleLayers[k] = false;
       for (const l of parsed.layers) _state.visibleLayers[l] = true;
     }
+    if (parsed.moonLabelMode) _state.moonLabelMode = parsed.moonLabelMode;
     // Restore camera from URL (validated in url-state module)
     if ((parsed.cameraTheta != null || parsed.cameraDist != null) &&
         globalThis.LivingTimeSphereCamera) {
@@ -145,11 +154,14 @@
 
   function _resolveMoonLabelMode() {
     const stored = _readLocalSetting(MOON_LABEL_MODE_KEY);
-    if (stored === "contextual" || stored === "all" || stored === "selected" || stored === "hidden") {
+    if (stored === "contextual") return "balanced";
+    if (stored === "selected") return "essential";
+    if (stored === "hidden") return "none";
+    if (stored === "essential" || stored === "balanced" || stored === "all" || stored === "none") {
       return stored;
     }
-    if (typeof window !== "undefined" && window.innerWidth < 640) return "contextual";
-    return _state.moonLabelMode || "contextual";
+    if (typeof window !== "undefined" && window.innerWidth < 640) return "essential";
+    return _state.moonLabelMode || "balanced";
   }
 
   function _resolveMoonLabelDistance() {
