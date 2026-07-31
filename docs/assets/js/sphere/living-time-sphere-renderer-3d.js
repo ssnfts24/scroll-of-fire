@@ -1676,6 +1676,7 @@
     let pinchActive   = false;
     let pinchDist0    = 0;
     let pointerCache  = new Map();
+    let panCentroid0  = null;
     let interactMode  = false;    // on small screens, require explicit engage
 
     function enterInteractMode() {
@@ -1699,7 +1700,11 @@
         const pts = [...pointerCache.values()];
         const d = Math.hypot(pts[0].clientX - pts[1].clientX, pts[0].clientY - pts[1].clientY);
         globalThis.LivingTimeSphereCamera.onPinchStart(d);
+        panCentroid0 = { x: (pts[0].clientX + pts[1].clientX) / 2, y: (pts[0].clientY + pts[1].clientY) / 2 };
+        globalThis.LivingTimeSphereCamera.onPanStart?.(panCentroid0.x, panCentroid0.y);
         pinchActive = true;
+        enterInteractMode();
+        e.preventDefault();
         return;
       }
 
@@ -1720,7 +1725,12 @@
         const pts = [...pointerCache.values()];
         const d = Math.hypot(pts[0].clientX - pts[1].clientX, pts[0].clientY - pts[1].clientY);
         globalThis.LivingTimeSphereCamera.onPinchMove(d);
+        const cx = (pts[0].clientX + pts[1].clientX) / 2;
+        const cy = (pts[0].clientY + pts[1].clientY) / 2;
+        globalThis.LivingTimeSphereCamera.onPanMove?.(cx, cy);
+        panCentroid0 = { x: cx, y: cy };
         globalThis.LivingTimeSphereAnimation.markDirty();
+        e.preventDefault();
         return;
       }
 
@@ -1736,6 +1746,8 @@
       pointerCache.delete(e.pointerId);
       if (pinchActive && pointerCache.size < 2) {
         globalThis.LivingTimeSphereCamera.onPinchEnd();
+        globalThis.LivingTimeSphereCamera.onPanEnd?.();
+        panCentroid0 = null;
         pinchActive = false;
       }
       if (pointerCache.size === 0 && interactMode) {
@@ -1752,6 +1764,7 @@
     _canvas.addEventListener("pointercancel", e => {
       pointerCache.delete(e.pointerId);
       globalThis.LivingTimeSphereCamera.onPointerUp();
+      globalThis.LivingTimeSphereCamera.onPanEnd?.();
       if (window.innerWidth < 480) exitInteractMode();
     });
 
@@ -1811,9 +1824,13 @@
     const x = clientX - rect.left;
     const y = clientY - rect.top;
     _floatingLabelEl.innerHTML = text.replace(/\n/g, "<br>");
-    _floatingLabelEl.style.left = `${x + 12}px`;
-    _floatingLabelEl.style.top  = `${y - 12}px`;
     _floatingLabelEl.style.display = "block";
+    const width = _floatingLabelEl.offsetWidth || 170;
+    const height = _floatingLabelEl.offsetHeight || 62;
+    const left = Math.max(8, Math.min(rect.width - width - 8, x + 12));
+    const top = Math.max(8, Math.min(rect.height - height - 8, y - 12));
+    _floatingLabelEl.style.left = `${left}px`;
+    _floatingLabelEl.style.top  = `${top}px`;
     if (_floatingTimeout) clearTimeout(_floatingTimeout);
     _floatingTimeout = setTimeout(() => {
       if (_floatingLabelEl) _floatingLabelEl.style.display = "none";
