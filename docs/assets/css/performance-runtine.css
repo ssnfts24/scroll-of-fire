@@ -1,0 +1,42 @@
+/* Adaptive rendering layer: preserves detail while preventing offscreen work. */
+@supports (content-visibility: auto) {
+  main > section:not(.hero):not(.home-hero),
+  main > article,
+  .participation-chapter,
+  .card-grid > *,
+  .codex-live-grid > * {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 720px;
+  }
+
+  .participation-chapter { contain-intrinsic-size: 1px 520px; }
+}
+
+img, video, canvas, svg { max-width: 100%; }
+img { height: auto; }
+
+.sof-reduced-data .ambient-layer,
+.sof-reduced-data .particle-field,
+.sof-constrained-device .home-living-sphere__fx-canvas {
+  display: none !important;
+}
+
+.sof-constrained-device .glass,
+.sof-constrained-device .card,
+.sof-constrained-device .home-living-sphere__stage {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.sof-constrained-device .home-living-sphere__viewport {
+  contain: strict;
+}
+
+.sof-reduced-motion *,
+.sof-reduced-motion *::before,
+.sof-reduced-motion *::after {
+  scroll-behavior: auto !important;
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
