@@ -8,6 +8,8 @@
   const SNAPSHOT_KEY = "sof.environment.snapshot.v2";
 
   let _lastResult = null;
+  let _inFlight = null;
+  let _inFlightKey = "";
   let _sessionActivePlace = null;
   const _memoryStore = new Map();
 
@@ -281,11 +283,17 @@
       provenance: "open-meteo-adapter",
     });
 
-    const result = await provider.getForecastSnapshot({
+    const requestKey = `${place.latitude.toFixed(4)},${place.longitude.toFixed(4)}:${options.force ? "force" : "normal"}`;
+    if (_inFlight && _inFlightKey === requestKey) return _inFlight;
+    _inFlightKey = requestKey;
+    _inFlight = provider.getForecastSnapshot({
       place,
       force: !!options.force,
       signal: options.signal
     });
+    let result;
+    try { result = await _inFlight; }
+    finally { _inFlight = null; _inFlightKey = ""; }
     _lastResult = result;
     const mapped = mapSnapshot(result, place);
     globalThis.SofEnvironmentState?.setEnvironmentState?.(mapped);
@@ -294,6 +302,21 @@
 
   function getSnapshot() {
     return safeRead(SNAPSHOT_KEY) || mapSnapshot(_lastResult, readActivePlace());
+  }
+
+  function bootstrapEnvironmentState({ refresh = false } = {}) {
+    const cached = safeRead(SNAPSHOT_KEY);
+    const place = readActivePlace();
+    if (cached && place) {
+      const hydrated = { ...cached, place, providerConfigured: true };
+      globalThis.SofEnvironmentState?.setEnvironmentState?.(hydrated);
+      if (refresh) requestRefresh({ force: false }).catch(() => {});
+      return hydrated;
+    }
+    const empty = mapSnapshot(null, place);
+    globalThis.SofEnvironmentState?.setEnvironmentState?.(empty);
+    if (place && refresh) requestRefresh({ force: false }).catch(() => {});
+    return empty;
   }
 
   function validLatLon(latitude, longitude) {
@@ -403,17 +426,6 @@
     };
   }
 
-  function bootstrapEnvironmentState() {
-    const place = readActivePlace();
-    const cached = safeRead(SNAPSHOT_KEY);
-    if (cached && (!place || !cached.place || (Number(cached.place.latitude) === Number(place.latitude) && Number(cached.place.longitude) === Number(place.longitude)))) {
-      globalThis.SofEnvironmentState?.setEnvironmentState?.({ ...cached, place: place || cached.place });
-      return cached;
-    }
-    const empty = mapSnapshot({ errorMessage: place ? "Weather has not been loaded yet." : "Location required." }, place);
-    globalThis.SofEnvironmentState?.setEnvironmentState?.(empty);
-    return empty;
-  }
 
   globalThis.OpenMeteoAdapter = Object.freeze({
     requestRefresh,
