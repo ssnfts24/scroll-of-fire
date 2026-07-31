@@ -105,6 +105,8 @@ const mandatoryPaths = [
 ];
 const optionalPaths = [
   "./assets/css/living-time-app-enhancements.css",
+  "./assets/css/performance-runtime.css",
+  "./assets/js/performance-runtime.js",
   "./assets/js/living-time-app-enhancements.js",
   "./genesis-oracle.html",
   "./assets/css/genesis-oracle.css",
