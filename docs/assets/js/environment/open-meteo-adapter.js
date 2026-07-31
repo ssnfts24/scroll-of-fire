@@ -9,20 +9,35 @@
 
   let _lastResult = null;
   let _sessionActivePlace = null;
+  const _memoryStore = new Map();
 
-  function safeRead(key) {
+  function _storageForKey(key) {
     try {
-      const raw = localStorage.getItem(key);
-      return raw ? JSON.parse(raw) : null;
+      if (key === UNITS_KEY) return globalThis.localStorage || null;
+      return globalThis.sessionStorage || null;
     } catch {
       return null;
     }
   }
 
-  function safeWrite(key, value) {
-    if (key !== UNITS_KEY) return false;
+  function safeRead(key) {
     try {
-      localStorage.setItem(key, JSON.stringify(value));
+      const storage = _storageForKey(key);
+      const raw = storage?.getItem?.(key);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      const raw = _memoryStore.get(key);
+      if (!raw) return null;
+      try { return JSON.parse(raw); } catch { return null; }
+    }
+  }
+
+  function safeWrite(key, value) {
+    try {
+      const serialized = JSON.stringify(value);
+      const storage = _storageForKey(key);
+      storage?.setItem?.(key, serialized);
+      _memoryStore.set(key, serialized);
       return true;
     } catch {
       return false;
@@ -350,7 +365,8 @@
   }
 
   function continueWithoutLocation() {
-    localStorage.removeItem(ACTIVE_PLACE_KEY);
+    try { globalThis.sessionStorage?.removeItem?.(ACTIVE_PLACE_KEY); } catch {}
+    _memoryStore.delete(ACTIVE_PLACE_KEY);
     _sessionActivePlace = null;
     globalThis.SofEnvironmentState?.setEnvironmentState?.({
       status: "unavailable",

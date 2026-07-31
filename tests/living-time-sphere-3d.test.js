@@ -615,6 +615,7 @@ test("UI selected-date authority: URL marker parsing and local persistence are p
   assert.ok(ui.includes("SELECTED_STATE_KEY"), "selected state storage key should exist");
   assert.ok(ui.includes("_restoreSelectedStateIfNeeded"), "selected state restore should exist");
   assert.ok(ui.includes("_persistSelectedState"), "selected state persistence should exist");
+  assert.ok(/function _readLocalJson[\s\S]+?}\n\n  function _selectedDayFromMarker/.test(ui), "selected-day helpers should not be trapped inside _readLocalJson");
   assert.ok(!ui.includes("todayPatternYear !== _state.year && _state.selectedDayOfYear === todayDay"), "year mismatch should not force reset to day 1");
 });
 

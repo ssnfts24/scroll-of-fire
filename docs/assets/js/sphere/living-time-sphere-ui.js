@@ -188,16 +188,19 @@
     const currentIso = _toIso(nowDate);
     const selectedIso = selected?.effectiveDate || selected?.civilDate || currentIso;
     if (_state.fieldRange === "now" || _state.fieldRange === "today" || selected?.isToday || selectedIso === currentIso) {
-      return { kind: "current", label: "Current civil time" };
+      return { kind: "current", label: "LIVE CURRENT" };
     }
     const dailyTimes = Array.isArray(weather?.daily?.time) ? weather.daily.time : [];
     if (dailyTimes.includes(selectedIso)) {
       const cmp = selectedIso.localeCompare(currentIso);
-      if (cmp > 0) return { kind: "forecast", label: "Forecast window" };
-      if (cmp < 0) return { kind: "historical-supported", label: "Historical supported date" };
+      if (cmp > 0) return { kind: "forecast", label: "FORECAST" };
+      if (cmp < 0) return { kind: "historical-forecast", label: "HISTORICAL FORECAST" };
     }
-    if (selected?.patternYear && selected.patternYear < 2014) return { kind: "historical-unsupported", label: "Unsupported historical date" };
-    return { kind: "historical-supported", label: "Historical supported date" };
+    const selectedYear = Number(String(selectedIso || "").slice(0, 4));
+    if (Number.isFinite(selectedYear) && selectedYear >= 1940) {
+      return { kind: "reanalysis", label: "REANALYSIS" };
+    }
+    return { kind: "historical-unsupported", label: "UNAVAILABLE" };
   }
 
   function _patternDateFromDayOfYear(year, dayOfYear) {
@@ -355,49 +358,49 @@
     } catch {
       return null;
     }
+  }
 
-    function _selectedDayFromMarker(marker) {
-      const value = String(marker || "");
-      const dayMatch = /^day-(\d+)$/.exec(value);
-      if (dayMatch) return Math.max(1, Math.min(364, Number(dayMatch[1]) || 1));
-      const moonMatch = /^moon-(\d+)$/.exec(value);
-      if (moonMatch) {
-        const moon = Math.max(1, Math.min(13, Number(moonMatch[1]) || 1));
-        return (moon - 1) * 28 + 1;
-      }
-      return null;
+  function _selectedDayFromMarker(marker) {
+    const value = String(marker || "");
+    const dayMatch = /^day-(\d+)$/.exec(value);
+    if (dayMatch) return Math.max(1, Math.min(364, Number(dayMatch[1]) || 1));
+    const moonMatch = /^moon-(\d+)$/.exec(value);
+    if (moonMatch) {
+      const moon = Math.max(1, Math.min(13, Number(moonMatch[1]) || 1));
+      return (moon - 1) * 28 + 1;
     }
+    return null;
+  }
 
-    function _readSelectedState() {
-      return _readLocalJson(SELECTED_STATE_KEY);
+  function _readSelectedState() {
+    return _readLocalJson(SELECTED_STATE_KEY);
+  }
+
+  function _persistSelectedState() {
+    try {
+      globalThis.localStorage?.setItem(SELECTED_STATE_KEY, JSON.stringify({
+        selectedDayOfYear: _state.selectedDayOfYear,
+        selectedMarker: _state.selectedMarker,
+        year: _state.year,
+      }));
+    } catch {
+      // ignore storage failures
     }
+  }
 
-    function _persistSelectedState() {
-      try {
-        globalThis.localStorage?.setItem(SELECTED_STATE_KEY, JSON.stringify({
-          selectedDayOfYear: _state.selectedDayOfYear,
-          selectedMarker: _state.selectedMarker,
-          year: _state.year,
-        }));
-      } catch {
-        // ignore storage failures
-      }
+  function _restoreSelectedStateIfNeeded() {
+    if (_state.selectedDayOfYear != null) return;
+    const saved = _readSelectedState();
+    if (!saved || typeof saved !== "object") return;
+    const day = Number(saved.selectedDayOfYear);
+    if (Number.isFinite(day)) {
+      _state.selectedDayOfYear = Math.max(1, Math.min(364, day));
     }
-
-    function _restoreSelectedStateIfNeeded() {
-      if (_state.selectedDayOfYear != null) return;
-      const saved = _readSelectedState();
-      if (!saved || typeof saved !== "object") return;
-      const day = Number(saved.selectedDayOfYear);
-      if (Number.isFinite(day)) {
-        _state.selectedDayOfYear = Math.max(1, Math.min(364, day));
-      }
-      if (!_state.selectedMarker && typeof saved.selectedMarker === "string") {
-        _state.selectedMarker = saved.selectedMarker;
-      }
-      if (!Number.isFinite(Number(_state.year)) && Number.isFinite(Number(saved.year))) {
-        _state.year = Number(saved.year);
-      }
+    if (!_state.selectedMarker && typeof saved.selectedMarker === "string") {
+      _state.selectedMarker = saved.selectedMarker;
+    }
+    if (!Number.isFinite(Number(_state.year)) && Number.isFinite(Number(saved.year))) {
+      _state.year = Number(saved.year);
     }
   }
 
@@ -541,14 +544,16 @@
     const weatherTimestamp = weather?.updatedAt || "";
     const weatherFreshness = weather?.freshness?.label || "Not checked";
     const dateClass = _classifyActiveDate(selected, weather, now);
-    const canUseLiveWeather = providerConfigured && (dateClass.kind === "current" || dateClass.kind === "forecast");
+    const canUseLiveWeather = providerConfigured && (dateClass.kind === "current" || dateClass.kind === "forecast" || dateClass.kind === "historical-forecast");
     const weatherDisplayState = environmentClassification
       || (canUseLiveWeather ? (weather?.freshness?.stale ? "CACHED" : "LIVE WEATHER") : "UNAVAILABLE");
     const weatherUnavailableReason = !providerConfigured
       ? "Set location"
       : (dateClass.kind === "historical-unsupported"
         ? "Unavailable for unsupported historical date"
-        : "Unavailable for this selected historical day");
+        : dateClass.kind === "reanalysis"
+          ? "Reanalysis not configured"
+          : "Unavailable for this selected historical day");
     const daylightState = selected?.afterBoundary
       ? `After ${_state.boundaryMode === "midnight" ? "midnight" : "boundary"}`
       : `Before ${_state.boundaryMode === "midnight" ? "midnight" : "boundary"}`;

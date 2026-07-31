@@ -26,6 +26,7 @@ function loadEnvContext(fetchImpl) {
     console,
     AbortController,
     localStorage: storage(),
+    sessionStorage: storage(),
     navigator: { onLine: true },
     fetch: fetchImpl,
   };
@@ -95,6 +96,8 @@ test("manual coordinates validate and persist as active place", () => {
   const active = ctx.OpenMeteoAdapter.getActivePlace();
   assert.equal(active.name, "Seattle");
   assert.ok(Math.abs(active.latitude - 47.61) < 0.0001);
+  const persisted = JSON.parse(ctx.sessionStorage.getItem(ctx.OpenMeteoAdapter.keys.activePlace));
+  assert.equal(persisted.name, "Seattle");
 });
 
 test("provider request includes required forecast endpoint parameters", async () => {
