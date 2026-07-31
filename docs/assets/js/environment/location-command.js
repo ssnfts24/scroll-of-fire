@@ -35,10 +35,23 @@
 
     const refreshState = () => {
       const place = adapter.getActivePlace?.() || null;
+      root.classList.toggle("has-active-place", !!place);
+      root.classList.toggle("is-editing-place", !place);
       if (stateEl) stateEl.textContent = place ? formatPlace(place) : "LOCATION NOT SET";
-      if (statusEl && !statusEl.textContent.trim()) {
-        statusEl.textContent = place ? "Location ready." : "Choose a location to enable environmental layers.";
+      if (statusEl) statusEl.textContent = place
+        ? "Active place ready. Weather is shared across the homepage, calendar, and Observatory."
+        : "Choose a location to enable environmental layers.";
+      let change = root.querySelector("[data-location-change]");
+      if (place && !change) {
+        change = document.createElement("button");
+        change.type = "button";
+        change.className = "sphere-chip-btn sphere-location-change";
+        change.dataset.locationChange = "";
+        change.textContent = "Change location";
+        change.addEventListener("click", () => root.classList.toggle("is-editing-place"));
+        stateEl?.insertAdjacentElement("afterend", change);
       }
+      if (!place && change) change.remove();
     };
 
     const broadcast = () => {
