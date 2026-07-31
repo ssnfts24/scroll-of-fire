@@ -1,9 +1,9 @@
 (() => {
   "use strict";
 
-  const MIN_OFFSET = 12;
-  const MAX_OFFSET = 24;
-  const STAGE_PADDING = 8;
+  const MIN_OFFSET = 8;
+  const MAX_OFFSET = 16;
+  const STAGE_PADDING = 10;
 
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
@@ -26,7 +26,7 @@
   function buildLabelSet({ labelMode, selectedMoon, todayMoon, equinoxMoon, mobile, showAllMobileLabels }) {
     if (labelMode === "none" || labelMode === "hidden") return new Set();
     if (mobile && !showAllMobileLabels) {
-      return new Set([todayMoon, selectedMoon, 1, 13].filter(Boolean));
+      return new Set([todayMoon, selectedMoon, 1, 13, equinoxMoon].filter(Boolean));
     }
     if (labelMode === "essential" || labelMode === "selected") return new Set(selectedMoon ? [selectedMoon] : []);
     if (labelMode === "all") return new Set(Array.from({ length: 13 }, (_, i) => i + 1));
@@ -188,8 +188,8 @@
         const w = el.offsetWidth || 62;
         const h = el.offsetHeight || 22;
 
-        const left = clamp(targetX - w / 2, STAGE_PADDING, rect.width - w - STAGE_PADDING);
-        const top = clamp(targetY - h / 2, STAGE_PADDING, rect.height - h - STAGE_PADDING);
+        const left = clamp(targetX - w / 2, STAGE_PADDING, Math.max(STAGE_PADDING, rect.width - w - STAGE_PADDING));
+        const top = clamp(targetY - h / 2, STAGE_PADDING, Math.max(STAGE_PADDING, rect.height - h - STAGE_PADDING));
         const rectBox = { x: left, y: top, w, h };
 
         let collides = false;
