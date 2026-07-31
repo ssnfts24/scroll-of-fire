@@ -97,6 +97,32 @@
   let _motionMode = "still";
   const _moonAnchors = [];    // { moon, angle, radius, worldVec } for each of 13 moons
   let _lastCameraFocusKey = null;
+  const _environmentLayerEnabled = {
+    atmosphere: true,
+    clouds: true,
+    wind: true,
+    precipitation: true,
+    temperature: true,
+    pressure: true,
+    radiation: true,
+    airQuality: true,
+    spaceWeather: true,
+  };
+  let _environmentLayerVisible = true;
+  let _environmentDiagnostics = [];
+  const EMPTY_ENVIRONMENT_STATE = Object.freeze({
+    status: "unavailable",
+    reason: "location-not-set",
+    place: null,
+    current: null,
+    hourly: [],
+    daily: [],
+    airQuality: null,
+    spaceWeather: null,
+    fetchedAt: null,
+    stale: false,
+  });
+  let _environmentState = EMPTY_ENVIRONMENT_STATE;
 
   // ── Three.js lazy loader ──────────────────────────────────────────
 
@@ -703,6 +729,287 @@
 
   // ── Update scene from model data ──────────────────────────────────
 
+  function _temperatureColorHex(valueC) {
+    if (!Number.isFinite(valueC)) return 0x95c7ff;
+    if (valueC <= 0) return 0x86b7ff;
+    if (valueC <= 15) return 0x8fd3ff;
+    if (valueC <= 25) return 0xf5cd72;
+    if (valueC <= 35) return 0xf1984d;
+    return 0xe76448;
+  }
+
+  function _num(value, fallback = 0) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function _clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function _normalizedEnvironmentState(input) {
+    const normalizer = globalThis.SofEnvironmentState?.normalizeEnvironmentState;
+    if (typeof normalizer === "function") return normalizer(input || EMPTY_ENVIRONMENT_STATE);
+    const source = input || EMPTY_ENVIRONMENT_STATE;
+    return {
+      ...EMPTY_ENVIRONMENT_STATE,
+      ...source,
+      hourly: Array.isArray(source.hourly) ? source.hourly : [],
+      daily: source.daily && typeof source.daily === "object" ? source.daily : {},
+    };
+  }
+
+  function _recordEnvironmentDiagnostic(layer, error) {
+    _environmentDiagnostics = [{
+      layer,
+      message: String(error?.message || error || "unknown-error"),
+      at: new Date().toISOString(),
+    }, ..._environmentDiagnostics].slice(0, 20);
+  }
+
+  function _setEnvironmentObjectVisible(layer, visible) {
+    if (layer === "atmosphere") {
+      if (_objects.environmentShell) _objects.environmentShell.visible = visible;
+      return;
+    }
+    if (layer === "clouds") {
+      if (_objects.environmentCloudBands) _objects.environmentCloudBands.visible = visible;
+      return;
+    }
+    if (layer === "wind") {
+      if (_objects.environmentWindVectors) _objects.environmentWindVectors.visible = visible;
+      return;
+    }
+    if (layer === "precipitation") {
+      if (_objects.environmentPrecip) _objects.environmentPrecip.visible = visible;
+      return;
+    }
+    if (layer === "temperature") {
+      if (_objects.environmentTemperatureArc) _objects.environmentTemperatureArc.visible = visible;
+      return;
+    }
+    if (layer === "pressure") {
+      if (_objects.environmentPressureRing) _objects.environmentPressureRing.visible = visible;
+      return;
+    }
+    if (layer === "radiation") {
+      if (_objects.environmentTerminator) _objects.environmentTerminator.visible = visible;
+      return;
+    }
+  }
+
+  function _buildEnvironmentLayerObjects() {
+    if (!_THREE || _objects.environmentGroup) return;
+    const THREE = _THREE;
+    const group = new THREE.Group();
+    group.name = "environmentGroup";
+    group.visible = false;
+
+    const shell = new THREE.Mesh(
+      new THREE.SphereGeometry(1.18, 44, 44),
+      new THREE.MeshBasicMaterial({
+        color: 0x8fd3ff,
+        transparent: true,
+        opacity: 0.08,
+        depthWrite: false,
+        side: THREE.DoubleSide
+      })
+    );
+    shell.name = "environment-shell";
+    group.add(shell);
+
+    const cloudBands = new THREE.Group();
+    [-0.18, 0, 0.18].forEach((y, index) => {
+      const band = new THREE.Mesh(
+        new THREE.TorusGeometry(1.14 + index * 0.015, 0.014, 10, 96),
+        new THREE.MeshBasicMaterial({ color: 0xcfe8ff, transparent: true, opacity: 0.06, depthWrite: false })
+      );
+      band.rotation.x = Math.PI / 2;
+      band.position.y = y;
+      cloudBands.add(band);
+    });
+    cloudBands.name = "environment-cloud-bands";
+    group.add(cloudBands);
+
+    const windGroup = new THREE.Group();
+    for (let i = 0; i < 8; i += 1) {
+      const geo = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(0.86, -0.12 + i * 0.035, 0),
+        new THREE.Vector3(1.1, -0.12 + i * 0.035, 0)
+      ]);
+      const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0xa7f3d0, transparent: true, opacity: 0.56 }));
+      windGroup.add(line);
+    }
+    windGroup.name = "environment-wind-vectors";
+    group.add(windGroup);
+
+    const tempArc = new THREE.Mesh(
+      new THREE.TorusGeometry(1.08, 0.018, 12, 120, Math.PI * 1.15),
+      new THREE.MeshBasicMaterial({ color: 0xf5cd72, transparent: true, opacity: 0.72, depthWrite: false })
+    );
+    tempArc.name = "environment-temperature-arc";
+    tempArc.rotation.x = Math.PI / 2;
+    tempArc.rotation.z = Math.PI * 0.25;
+    group.add(tempArc);
+
+    const pressureRing = new THREE.Mesh(
+      new THREE.TorusGeometry(1.03, 0.008, 10, 96),
+      new THREE.MeshBasicMaterial({ color: 0x9dc1ff, transparent: true, opacity: 0.58, depthWrite: false })
+    );
+    pressureRing.rotation.x = Math.PI / 2;
+    pressureRing.name = "environment-pressure-ring";
+    group.add(pressureRing);
+
+    const precip = new THREE.Mesh(
+      new THREE.SphereGeometry(1.16, 6, 6),
+      new THREE.MeshBasicMaterial({ color: 0x84d8ff, transparent: true, opacity: 0.04, wireframe: true, depthWrite: false })
+    );
+    precip.name = "environment-precip-particles";
+    group.add(precip);
+
+    const terminator = new THREE.Mesh(
+      new THREE.TorusGeometry(1.0, 0.004, 8, 120),
+      new THREE.MeshBasicMaterial({ color: 0xffd47a, transparent: true, opacity: 0.48, depthWrite: false })
+    );
+    terminator.rotation.x = Math.PI / 2;
+    terminator.name = "environment-day-night-terminator";
+    group.add(terminator);
+
+    _scene.add(group);
+    _objects.environmentGroup = group;
+    _objects.environmentShell = shell;
+    _objects.environmentCloudBands = cloudBands;
+    _objects.environmentWindVectors = windGroup;
+    _objects.environmentTemperatureArc = tempArc;
+    _objects.environmentPressureRing = pressureRing;
+    _objects.environmentPrecip = precip;
+    _objects.environmentTerminator = terminator;
+  }
+
+  function _runEnvironmentLayer(layer, fn) {
+    if (_environmentLayerEnabled[layer] === false) return;
+    try {
+      fn();
+      _setEnvironmentObjectVisible(layer, true);
+    } catch (error) {
+      _environmentLayerEnabled[layer] = false;
+      _setEnvironmentObjectVisible(layer, false);
+      _recordEnvironmentDiagnostic(layer, error);
+    }
+  }
+
+  function _applyEnvironmentState() {
+    _buildEnvironmentLayerObjects();
+    if (!_objects.environmentGroup) return;
+    const snapshot = _normalizedEnvironmentState(_environmentState);
+    const current = snapshot?.current || null;
+    const hourly = snapshot?.hourly || [];
+    const daily = snapshot?.daily || {};
+    const hasData = !!(_environmentLayerVisible && snapshot && current);
+    _objects.environmentGroup.visible = hasData;
+    if (!hasData) return;
+
+    const cloud = _clamp(_num(current.cloudCover ?? current.cloud_cover, 0), 0, 100);
+    const humidity = _clamp(_num(current.humidity ?? current.relative_humidity_2m, 0), 0, 100);
+    const windSpeed = Math.max(0, _num(current.windSpeed ?? current.wind_speed_10m, 0));
+    const windDirection = _num(current.windDirection ?? current.wind_direction_10m, 0);
+    const gusts = Math.max(0, _num(current.windGust ?? current.wind_gusts_10m, windSpeed));
+    const precipitation = Math.max(0, _num(current.precipitation, 0));
+    const pressure = _num(current.pressure ?? current.pressure_msl, 1013);
+    const shortwave = Math.max(0, _num(current.solarRadiation ?? current.shortwave_radiation, 0));
+    const tempC = _num(current.temperature ?? current.temperature_2m, 0);
+
+    _runEnvironmentLayer("atmosphere", () => {
+      _objects.environmentShell.material.opacity = 0.06 + (cloud / 100) * 0.24 + (humidity / 100) * 0.16;
+    });
+
+    _runEnvironmentLayer("clouds", () => {
+      const low = _num(hourly?.cloud_cover_low?.[0], cloud);
+      const mid = _num(hourly?.cloud_cover_mid?.[0], cloud);
+      const high = _num(hourly?.cloud_cover_high?.[0], cloud);
+      const bands = _objects.environmentCloudBands?.children || [];
+      [low, mid, high].forEach((value, index) => {
+        const band = bands[index];
+        if (!band) return;
+        band.material.opacity = 0.04 + _clamp(value, 0, 100) / 100 * 0.42;
+      });
+    });
+
+    _runEnvironmentLayer("wind", () => {
+      _objects.environmentWindVectors.rotation.y = (windDirection * Math.PI) / 180;
+      const windScale = 0.8 + Math.min(2.2, windSpeed / 12);
+      _objects.environmentWindVectors.scale.set(windScale, 1, 1 + Math.min(1.8, gusts / 22));
+    });
+
+    _runEnvironmentLayer("temperature", () => {
+      _objects.environmentTemperatureArc.material.color.setHex(_temperatureColorHex(tempC));
+      _objects.environmentTemperatureArc.material.opacity = 0.36 + Math.min(0.46, Math.abs(tempC - 16) / 40);
+    });
+
+    _runEnvironmentLayer("pressure", () => {
+      _objects.environmentPressureRing.scale.setScalar(1 + _clamp((pressure - 1013) / 500, -0.05, 0.05));
+      _objects.environmentPressureRing.material.opacity = 0.42 + Math.min(0.32, Math.abs(pressure - 1013) / 45);
+    });
+
+    _runEnvironmentLayer("precipitation", () => {
+      _objects.environmentPrecip.material.opacity = 0.02 + Math.min(0.32, precipitation / 6);
+    });
+
+    _runEnvironmentLayer("radiation", () => {
+      const dayStart = daily?.sunrise ? new Date(daily.sunrise).getTime() : NaN;
+      const dayEnd = daily?.sunset ? new Date(daily.sunset).getTime() : NaN;
+      let dayAngle = 0;
+      if (Number.isFinite(dayStart) && Number.isFinite(dayEnd) && dayEnd > dayStart) {
+        const progress = _clamp((Date.now() - dayStart) / (dayEnd - dayStart), 0, 1);
+        dayAngle = progress * Math.PI * 2;
+      }
+      _objects.environmentTerminator.rotation.z = dayAngle;
+      if (_objects.pointLight) _objects.pointLight.intensity = 0.85 + Math.min(1.35, shortwave / 360);
+      if (_objects.hazeShell) _objects.hazeShell.material.opacity = Math.max(_objects.hazeShell.material.opacity, 0.08 + Math.min(0.28, shortwave / 1200));
+    });
+
+    _runEnvironmentLayer("airQuality", () => {});
+    _runEnvironmentLayer("spaceWeather", () => {});
+  }
+
+  const _environmentController = {
+    initialize(environmentState) {
+      Object.keys(_environmentLayerEnabled).forEach(layer => {
+        _environmentLayerEnabled[layer] = true;
+      });
+      _environmentState = _normalizedEnvironmentState(environmentState || EMPTY_ENVIRONMENT_STATE);
+      _environmentDiagnostics = [];
+      _applyEnvironmentState();
+    },
+    update(environmentState) {
+      _environmentState = _normalizedEnvironmentState(environmentState || EMPTY_ENVIRONMENT_STATE);
+      _applyEnvironmentState();
+    },
+    setLayerVisibility(layerName, visible) {
+      if (layerName === "environment") {
+        _environmentLayerVisible = !!visible;
+      } else if (Object.prototype.hasOwnProperty.call(_environmentLayerEnabled, layerName)) {
+        _environmentLayerEnabled[layerName] = !!visible;
+      }
+      _applyEnvironmentState();
+    },
+    dispose() {
+      _environmentState = EMPTY_ENVIRONMENT_STATE;
+      _environmentLayerVisible = true;
+      _environmentDiagnostics = [];
+      Object.keys(_environmentLayerEnabled).forEach(layer => {
+        _environmentLayerEnabled[layer] = true;
+      });
+      if (_objects.environmentGroup) _objects.environmentGroup.visible = false;
+    },
+    diagnostics() {
+      return {
+        layerEnabled: { ..._environmentLayerEnabled },
+        issues: _environmentDiagnostics.slice(0),
+      };
+    },
+  };
+
   function buildPassageTube(startAngle, endAngle) {
     if (!_THREE) return null;
     const THREE = _THREE;
@@ -719,166 +1026,6 @@
       const angle = startAngle + (i / steps) * sweep;
       const { x, z } = angleToXZ(angle, r);
       pts.push(new THREE.Vector3(x, 0, z));
-    }
-
-    function _temperatureColorHex(valueC) {
-      if (!Number.isFinite(valueC)) return 0x95c7ff;
-      if (valueC <= 0) return 0x86b7ff;
-      if (valueC <= 15) return 0x8fd3ff;
-      if (valueC <= 25) return 0xf5cd72;
-      if (valueC <= 35) return 0xf1984d;
-      return 0xe76448;
-    }
-
-    function _buildEnvironmentLayerObjects() {
-      if (!_THREE || _objects.environmentGroup) return;
-      const THREE = _THREE;
-      const group = new THREE.Group();
-      group.name = "environmentGroup";
-      group.visible = false;
-
-      const shell = new THREE.Mesh(
-        new THREE.SphereGeometry(1.18, 44, 44),
-        new THREE.MeshBasicMaterial({
-          color: 0x8fd3ff,
-          transparent: true,
-          opacity: 0.08,
-          depthWrite: false,
-          side: THREE.DoubleSide
-        })
-      );
-      shell.name = "environment-shell";
-      group.add(shell);
-
-      const cloudBands = new THREE.Group();
-      [-0.18, 0, 0.18].forEach((y, index) => {
-        const band = new THREE.Mesh(
-          new THREE.TorusGeometry(1.14 + index * 0.015, 0.014, 10, 96),
-          new THREE.MeshBasicMaterial({ color: 0xcfe8ff, transparent: true, opacity: 0.06, depthWrite: false })
-        );
-        band.rotation.x = Math.PI / 2;
-        band.position.y = y;
-        cloudBands.add(band);
-      });
-      cloudBands.name = "environment-cloud-bands";
-      group.add(cloudBands);
-
-      const windGroup = new THREE.Group();
-      for (let i = 0; i < 8; i += 1) {
-        const geo = new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(0.86, -0.12 + i * 0.035, 0),
-          new THREE.Vector3(1.1, -0.12 + i * 0.035, 0)
-        ]);
-        const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0xa7f3d0, transparent: true, opacity: 0.56 }));
-        windGroup.add(line);
-      }
-      windGroup.name = "environment-wind-vectors";
-      group.add(windGroup);
-
-      const tempArc = new THREE.Mesh(
-        new THREE.TorusGeometry(1.08, 0.018, 12, 120, Math.PI * 1.15),
-        new THREE.MeshBasicMaterial({ color: 0xf5cd72, transparent: true, opacity: 0.72, depthWrite: false })
-      );
-      tempArc.name = "environment-temperature-arc";
-      tempArc.rotation.x = Math.PI / 2;
-      tempArc.rotation.z = Math.PI * 0.25;
-      group.add(tempArc);
-
-      const pressureRing = new THREE.Mesh(
-        new THREE.TorusGeometry(1.03, 0.008, 10, 96),
-        new THREE.MeshBasicMaterial({ color: 0x9dc1ff, transparent: true, opacity: 0.58, depthWrite: false })
-      );
-      pressureRing.rotation.x = Math.PI / 2;
-      pressureRing.name = "environment-pressure-ring";
-      group.add(pressureRing);
-
-      const precip = new THREE.Mesh(
-        new THREE.SphereGeometry(1.16, 6, 6),
-        new THREE.MeshBasicMaterial({ color: 0x84d8ff, transparent: true, opacity: 0.04, wireframe: true, depthWrite: false })
-      );
-      precip.name = "environment-precip-particles";
-      group.add(precip);
-
-      const terminator = new THREE.Mesh(
-        new THREE.TorusGeometry(1.0, 0.004, 8, 120),
-        new THREE.MeshBasicMaterial({ color: 0xffd47a, transparent: true, opacity: 0.48, depthWrite: false })
-      );
-      terminator.rotation.x = Math.PI / 2;
-      terminator.name = "environment-day-night-terminator";
-      group.add(terminator);
-
-      _scene.add(group);
-      _objects.environmentGroup = group;
-      _objects.environmentShell = shell;
-      _objects.environmentCloudBands = cloudBands;
-      _objects.environmentWindVectors = windGroup;
-      _objects.environmentTemperatureArc = tempArc;
-      _objects.environmentPressureRing = pressureRing;
-      _objects.environmentPrecip = precip;
-      _objects.environmentTerminator = terminator;
-    }
-
-    function _updateEnvironmentLayer(visible) {
-      _buildEnvironmentLayerObjects();
-      if (!_objects.environmentGroup) return;
-      const snapshot = _model?.environmentSnapshot || null;
-      const current = snapshot?.current || null;
-      const hourly = snapshot?.hourly || null;
-      const daily = snapshot?.daily || null;
-      const hasData = !!(visible && snapshot && current);
-
-      _objects.environmentGroup.visible = hasData;
-      if (!hasData) return;
-
-      const cloud = Math.max(0, Math.min(100, Number(current.cloudCover ?? current.cloud_cover ?? 0)));
-      const humidity = Math.max(0, Math.min(100, Number(current.humidity ?? current.relative_humidity_2m ?? 0)));
-      const windSpeed = Math.max(0, Number(current.windSpeed ?? current.wind_speed_10m ?? 0));
-      const windDirection = Number(current.windDirection ?? current.wind_direction_10m ?? 0);
-      const gusts = Math.max(0, Number(current.windGust ?? current.wind_gusts_10m ?? windSpeed));
-      const precipitation = Math.max(0, Number(current.precipitation ?? 0));
-      const pressure = Number(current.pressure ?? current.pressure_msl ?? 1013);
-      const shortwave = Math.max(0, Number(current.solarRadiation ?? current.shortwave_radiation ?? 0));
-      const tempC = Number(current.temperature ?? current.temperature_2m ?? 0);
-
-      _objects.environmentShell.material.opacity = 0.06 + (cloud / 100) * 0.24 + (humidity / 100) * 0.16;
-
-      const low = Number(hourly?.cloud_cover_low?.[0] ?? cloud);
-      const mid = Number(hourly?.cloud_cover_mid?.[0] ?? cloud);
-      const high = Number(hourly?.cloud_cover_high?.[0] ?? cloud);
-      const bands = _objects.environmentCloudBands?.children || [];
-      [low, mid, high].forEach((value, index) => {
-        const band = bands[index];
-        if (!band) return;
-        band.material.opacity = 0.04 + Math.max(0, Math.min(100, value)) / 100 * 0.42;
-      });
-
-      _objects.environmentWindVectors.rotation.y = ((windDirection || 0) * Math.PI) / 180;
-      const windScale = 0.8 + Math.min(2.2, windSpeed / 12);
-      _objects.environmentWindVectors.scale.set(windScale, 1, 1 + Math.min(1.8, gusts / 22));
-
-      _objects.environmentTemperatureArc.material.color.setHex(_temperatureColorHex(tempC));
-      _objects.environmentTemperatureArc.material.opacity = 0.36 + Math.min(0.46, Math.abs(tempC - 16) / 40);
-
-      _objects.environmentPressureRing.scale.setScalar(1 + Math.max(-0.05, Math.min(0.05, (pressure - 1013) / 500)));
-      _objects.environmentPressureRing.material.opacity = 0.42 + Math.min(0.32, Math.abs(pressure - 1013) / 45);
-
-      _objects.environmentPrecip.material.opacity = 0.02 + Math.min(0.32, precipitation / 6);
-
-      const dayStart = daily?.sunrise ? new Date(daily.sunrise).getTime() : NaN;
-      const dayEnd = daily?.sunset ? new Date(daily.sunset).getTime() : NaN;
-      let dayAngle = 0;
-      if (Number.isFinite(dayStart) && Number.isFinite(dayEnd) && dayEnd > dayStart) {
-        const progress = Math.max(0, Math.min(1, (Date.now() - dayStart) / (dayEnd - dayStart)));
-        dayAngle = progress * Math.PI * 2;
-      }
-      _objects.environmentTerminator.rotation.z = dayAngle;
-
-      if (_objects.pointLight) {
-        _objects.pointLight.intensity = 0.85 + Math.min(1.35, shortwave / 360);
-      }
-      if (_objects.hazeShell) {
-        _objects.hazeShell.material.opacity = Math.max(_objects.hazeShell.material.opacity, 0.08 + Math.min(0.28, shortwave / 1200));
-      }
     }
 
     // Close gap cleanly
@@ -1053,7 +1200,8 @@
     if (_objects.equinoxGate)  _objects.equinoxGate.visible  = !!vl.passage || !!vl.markers;
     if (_objects.activeMoonGroup) _objects.activeMoonGroup.visible = !!vl.pattern;
     if (_objects.connectionGroup) _objects.connectionGroup.visible = !!vl.connections;
-    _updateEnvironmentLayer(!!vl.environment);
+    _environmentController.setLayerVisibility("environment", !!vl.environment);
+    _environmentController.update(_environmentState);
 
     // ── Equinox gate position ───────────────────────────────────────
     if (_objects.equinoxGate && model.passageStartAngle != null) {
@@ -1390,7 +1538,7 @@
 
   // ── Init / teardown ────────────────────────────────────────────────
 
-  async function init({ container, model, spiral, quality, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, reducedMotion, onYearSelect, onMarkerSelect }) {
+  async function init({ container, model, spiral, quality, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, environmentState, reducedMotion, onYearSelect, onMarkerSelect }) {
     // Guard against concurrent or duplicate init calls.
     if (_initializing || _initialized) {
       return { success: false, reason: "already-running" };
@@ -1468,6 +1616,7 @@
       buildScene();
 
       // ── Load initial data ─────────────────────────────────────────
+      _environmentController.initialize(environmentState || globalThis.SofEnvironmentState?.getEnvironmentState?.() || EMPTY_ENVIRONMENT_STATE);
       updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode);
       _syncCameraFocus(model, spiral, selectedYear, false);
 
@@ -1510,6 +1659,7 @@
       _renderer  = null;
       _scene     = null;
       _camera    = null;
+      _environmentController.dispose();
       _initialized = false;
       _lastInitError = { reason: "init-exception", detail: String(err) };
       return { success: false, reason: "init-exception", detail: String(err) };
@@ -1762,6 +1912,11 @@
     globalThis.LivingTimeSphereAnimation.markDirty();
   }
 
+  function updateEnvironment(environmentState) {
+    _environmentController.update(environmentState || EMPTY_ENVIRONMENT_STATE);
+    if (_initialized) globalThis.LivingTimeSphereAnimation.markDirty();
+  }
+
   function setQuality(preset) {
     if (!_initialized || !preset) return;
     _quality = preset;
@@ -1809,6 +1964,7 @@
     _moonLabelConnectorEl = null;
     _moonLabelManager = null;
     _moonAnchors.length = 0;
+    _environmentController.dispose();
     _scene = null;
     _camera = null;
     _initialized  = false;
@@ -1849,6 +2005,7 @@
       canvasHeight:      canvasH,
       devicePixelRatio:  typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1,
       lastInitError:     _lastInitError,
+      environment:       _environmentController.diagnostics(),
     };
   }
 
@@ -1862,6 +2019,7 @@
   globalThis.LivingTimeSphereRenderer3d = Object.freeze({
     init,
     refresh,
+    updateEnvironment,
     setQuality,
     requestSingleRender,
     resetView,
@@ -1874,5 +2032,11 @@
     exportPng,
     THREE_VERSION,
     THREE_LOCAL_REL,
+    environment: Object.freeze({
+      initialize: _environmentController.initialize.bind(_environmentController),
+      update: _environmentController.update.bind(_environmentController),
+      setLayerVisibility: _environmentController.setLayerVisibility.bind(_environmentController),
+      dispose: _environmentController.dispose.bind(_environmentController),
+    }),
   });
 })();

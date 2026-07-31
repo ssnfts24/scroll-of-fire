@@ -1158,6 +1158,10 @@ details[open] > .sphere-settings-summary::before { content: "▾ "; }
   word-break: break-word;
 }
 
+.sphere-fallback-details .sphere-btn {
+  margin-top: 0.5rem;
+}
+
 .sphere-fallback-actions {
   display: flex;
   flex-direction: column;
@@ -1478,6 +1482,18 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   display: grid;
   gap: 0.2rem;
   padding: 0.35rem 0.55rem 0.45rem;
+}
+
+.sphere-instrument-topline {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.sphere-instrument-topline-primary,
+.sphere-live-dot {
+  display: block;
+  margin: 0;
+  line-height: 1.2;
 }
 
 .sphere-instrument-footer-line {

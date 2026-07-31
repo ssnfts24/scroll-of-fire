@@ -86,6 +86,7 @@ function loadSphereContext() {
     "docs/assets/js/sphere/living-time-sphere-animation.js",
     "docs/assets/js/sphere/living-time-sphere-label-manager.js",
     "docs/assets/js/sphere/living-time-sphere-effects.js",
+    "docs/assets/js/environment/environment-state.js",
     "docs/assets/js/environment/providers/open-meteo-forecast.js",
     "docs/assets/js/environment/open-meteo-adapter.js",
     "docs/assets/js/sphere/living-time-sphere-live-data.js",
@@ -120,6 +121,17 @@ test("LivingTimeSphereEffects: detectWebGl false implies SVG fallback needed", (
   // Even in fallback mode, a preset object is returned (balanced/lowpower)
   assert.ok(preset !== null);
   assert.ok(typeof preset.antialias === "boolean");
+});
+
+test("Environment state store: exposes empty normalized state and event contract", () => {
+  const ctx = loadSphereContext();
+  const store = ctx.SofEnvironmentState;
+  assert.ok(store, "SofEnvironmentState should be available");
+  assert.equal(store.EVENT_NAME, "sof:environment-change");
+  const empty = store.getEnvironmentState();
+  assert.equal(empty.status, "unavailable");
+  assert.equal(empty.reason, "location-not-set");
+  assert.equal(empty.classification, "LOCATION NOT SET");
 });
 
 // ── Materials module ──────────────────────────────────────────────────
@@ -525,6 +537,7 @@ test("Sphere page: 3D module scripts included", () => {
   assert.ok(html.includes("living-time-sphere-animation.js"),  "animation loaded");
   assert.ok(html.includes("living-time-sphere-label-manager.js"),  "label manager loaded");
   assert.ok(html.includes("living-time-sphere-effects.js"),    "effects loaded");
+  assert.ok(html.includes("environment/environment-state.js"), "environment state store loaded");
   assert.ok(html.includes("environment/providers/open-meteo-forecast.js"), "forecast provider loaded");
   assert.ok(html.includes("environment/open-meteo-adapter.js"), "adapter loaded");
   assert.ok(html.includes("environment/location-command.js"), "location command loaded");
@@ -554,6 +567,57 @@ test("Sphere page: field layer observatory controls present", () => {
   assert.ok(ui.includes("Compare Historical Fields"), "historical comparison action present");
 });
 
+test("Renderer 3D: environment interface is explicit and updateEnvironment is exported", () => {
+  const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
+  assert.ok(code.includes("updateEnvironment"), "renderer exports updateEnvironment");
+  assert.ok(code.includes("environment: Object.freeze"), "renderer exports environment interface");
+  assert.ok(code.includes("setLayerVisibility"), "environment interface includes setLayerVisibility");
+});
+
+test("Renderer 3D: no private _updateEnvironmentLayer call remains", () => {
+  const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
+  assert.ok(!code.includes("_updateEnvironmentLayer("), "private _updateEnvironmentLayer call should be removed");
+});
+
+test("Sphere page: fallback panel remains compact with collapsed technical details", () => {
+  const html = read("docs/living-time-sphere.html");
+  assert.ok(html.includes('class="sphere-fallback-summary">3D unavailable<'), "compact fallback heading present");
+  assert.ok(html.includes('class="sphere-fallback-reason"'), "fallback reason line present");
+  assert.ok(html.includes("Technical Details"), "technical details section present");
+  assert.ok(html.includes('id="sphere-retry-3d"'), "Retry 3D action present");
+  assert.ok(html.includes('id="sphere-switch-svg"'), "Continue with SVG action present");
+});
+
+test("Sphere page: observatory and live field headings are separate elements", () => {
+  const html = read("docs/living-time-sphere.html");
+  assert.ok(html.includes('<p class="sphere-instrument-topline-primary">REMNANT LIVING TIME OBSERVATORY</p>'));
+  assert.ok(html.includes('<p class="sphere-live-dot">LIVE FIELD</p>'));
+  assert.ok(html.includes('<p class="sphere-instrument-footer-line">FIXED PATTERN CENTRE</p>'));
+  assert.ok(html.includes('<p class="sphere-instrument-footer-line">MOVING ASTRONOMICAL LAYERS</p>'));
+});
+
+test("Sphere page: environment scripts load after renderer core and before UI", () => {
+  const html = read("docs/living-time-sphere.html");
+  const iRenderer = html.indexOf("living-time-sphere-renderer-3d.js");
+  const iEnvState = html.indexOf("environment/environment-state.js");
+  const iProvider = html.indexOf("environment/providers/open-meteo-forecast.js");
+  const iAdapter = html.indexOf("environment/open-meteo-adapter.js");
+  const iUi = html.indexOf("living-time-sphere-ui.js");
+  assert.ok(iRenderer >= 0 && iEnvState > iRenderer, "environment state should load after renderer core");
+  assert.ok(iProvider > iEnvState, "provider should load after environment state");
+  assert.ok(iAdapter > iProvider, "adapter should load after provider");
+  assert.ok(iUi > iAdapter, "ui should load after environment stack");
+});
+
+test("UI selected-date authority: URL marker parsing and local persistence are present", () => {
+  const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
+  assert.ok(ui.includes("function _selectedDayFromMarker"), "URL marker parser should exist");
+  assert.ok(ui.includes("SELECTED_STATE_KEY"), "selected state storage key should exist");
+  assert.ok(ui.includes("_restoreSelectedStateIfNeeded"), "selected state restore should exist");
+  assert.ok(ui.includes("_persistSelectedState"), "selected state persistence should exist");
+  assert.ok(!ui.includes("todayPatternYear !== _state.year && _state.selectedDayOfYear === todayDay"), "year mismatch should not force reset to day 1");
+});
+
 test("Sphere page: shared mount initializer is used", () => {
   const html = read("docs/living-time-sphere.html");
   assert.ok(html.includes("LivingTimeSphere.mount"), "full sphere page uses shared mount initializer");
@@ -576,6 +640,7 @@ test("Service worker: caches all Phase 03 sphere JS files", () => {
   assert.ok(sw.includes("living-time-sphere-animation.js"),  "animation cached");
   assert.ok(sw.includes("living-time-sphere-label-manager.js"),  "label manager cached");
   assert.ok(sw.includes("living-time-sphere-effects.js"),    "effects cached");
+  assert.ok(sw.includes("environment/environment-state.js"), "environment state store cached");
   assert.ok(sw.includes("environment/providers/open-meteo-forecast.js"), "forecast provider cached");
   assert.ok(sw.includes("environment/open-meteo-adapter.js"), "adapter cached");
   assert.ok(sw.includes("environment/location-command.js"), "location command cached");
@@ -626,6 +691,7 @@ const NEW_SPHERE_FILES = [
   "docs/assets/js/sphere/living-time-sphere-animation.js",
   "docs/assets/js/sphere/living-time-sphere-label-manager.js",
   "docs/assets/js/sphere/living-time-sphere-effects.js",
+  "docs/assets/js/environment/environment-state.js",
   "docs/assets/js/environment/providers/open-meteo-forecast.js",
   "docs/assets/js/environment/open-meteo-adapter.js",
   "docs/assets/js/environment/location-command.js",

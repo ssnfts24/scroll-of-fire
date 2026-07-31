@@ -67,10 +67,6 @@
    <script defer src="assets/js/sphere/living-time-sphere-layout.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-connections.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-svg.js"></script>
-   <script defer src="assets/js/environment/providers/open-meteo-forecast.js"></script>
-   <script defer src="assets/js/environment/open-meteo-adapter.js"></script>
-   <script defer src="assets/js/environment/location-command.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-live-data.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-canvas.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-materials.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-effects.js"></script>
@@ -78,6 +74,11 @@
    <script defer src="assets/js/sphere/living-time-sphere-animation.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-label-manager.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-3d.js"></script>
+   <script defer src="assets/js/environment/environment-state.js"></script>
+   <script defer src="assets/js/environment/providers/open-meteo-forecast.js"></script>
+   <script defer src="assets/js/environment/open-meteo-adapter.js"></script>
+   <script defer src="assets/js/environment/location-command.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-live-data.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-interaction.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-accessibility.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-export.js"></script>
@@ -233,8 +234,12 @@
 
         <!-- 3D fallback warning (shown when 3D selected but unavailable) -->
         <div id="sphere-renderer-fallback-warning" class="sphere-fallback-warning" hidden role="alert" aria-live="assertive">
-          <p class="sphere-fallback-summary">3D could not start. Accessible SVG is active.</p>
-          <p class="sphere-fallback-reason" aria-live="polite">3D unavailable — using SVG</p>
+          <p class="sphere-fallback-summary">3D unavailable</p>
+          <p class="sphere-fallback-reason" aria-live="polite">Accessible SVG view is active</p>
+          <div class="sphere-fallback-actions">
+            <button id="sphere-retry-3d" class="sphere-btn sphere-btn-sm" type="button">Retry 3D</button>
+            <button id="sphere-switch-svg" class="sphere-btn sphere-btn-sm" type="button">Continue with SVG</button>
+          </div>
           <details class="sphere-fallback-details">
             <summary>Technical Details</summary>
             <dl class="sphere-fallback-detail-list">
@@ -244,12 +249,8 @@
               <dt>WebGL</dt><dd id="sphere-diag-webgl-warn">—</dd>
               <dt>WebGL2</dt><dd id="sphere-diag-webgl2-warn">—</dd>
             </dl>
-          </details>
-          <div class="sphere-fallback-actions">
-            <button id="sphere-retry-3d" class="sphere-btn sphere-btn-sm" type="button">Retry Local 3D</button>
             <button id="sphere-clear-renderer-cache" class="sphere-btn sphere-btn-sm" type="button">Clear Sphere Cache</button>
-            <button id="sphere-switch-svg" class="sphere-btn sphere-btn-sm" type="button">Continue with SVG</button>
-          </div>
+          </details>
         </div>
       </section>
 
@@ -284,7 +285,8 @@
           </aside>
           <div class="sphere-instrument-shell" data-luxury-instrument>
             <div class="sphere-instrument-topline" aria-hidden="true">
-              <span>REMNANT LIVING TIME OBSERVATORY</span><span class="sphere-live-dot">LIVE FIELD</span>
+              <p class="sphere-instrument-topline-primary">REMNANT LIVING TIME OBSERVATORY</p>
+              <p class="sphere-live-dot">LIVE FIELD</p>
             </div>
             <div id="sphere-container" role="img" aria-label="Living Time Sphere — interactive" tabindex="0"
                  aria-describedby="sphere-text-model" aria-busy="true">

@@ -31,6 +31,7 @@
     _3dInitInProgress: false, // guard against concurrent 3D init calls
   };
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
+  const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
   const DAY_MS = 24 * 60 * 60 * 1000;
   const SHABBAT_DAYS = new Set([2, 9, 16, 23]);
   const MOON_LOG_KEY = "sof_moon_logs_v3";
@@ -67,6 +68,8 @@
     if (parsed.boundaryMode) _state.boundaryMode = parsed.boundaryMode;
     if (parsed.manualSunset) _state.manualSunset = parsed.manualSunset;
     if (parsed.marker)       _state.selectedMarker = parsed.marker;
+    const markerDay = _selectedDayFromMarker(parsed.marker);
+    if (markerDay != null) _state.selectedDayOfYear = markerDay;
     if (parsed.renderer)     _state.rendererMode = parsed.renderer;
     if (parsed.quality)      _state.quality      = parsed.quality;
     if (parsed.connectionMode) _state.connectionMode = parsed.connectionMode;
@@ -217,14 +220,11 @@
     const todayDay = live?.pattern?.dayOfPatternYear ?? baseModel?.todayPatternPosition?.dayOfPatternYear ?? null;
 
     if (_state.selectedDayOfYear == null) {
-      _state.selectedDayOfYear = todayPatternYear === _state.year && todayDay ? todayDay : 1;
-    }
-
-    if (todayPatternYear !== _state.year && _state.selectedDayOfYear === todayDay && _state.viewMode === "today") {
-      _state.selectedDayOfYear = 1;
+      _state.selectedDayOfYear = todayDay || baseModel?.todayPatternPosition?.dayOfPatternYear || 1;
     }
 
     _state.selectedDayOfYear = Math.max(1, Math.min(364, Number(_state.selectedDayOfYear) || 1));
+    _persistSelectedState();
     return _state.selectedDayOfYear;
   }
 
@@ -281,11 +281,13 @@
 
   function _decorateModel(baseModel) {
     const live = _currentSnapshot();
+    const environmentState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
     const selected = _resolveSelectedPatternPosition(baseModel);
     const activeMoon = selected?.moon ?? live?.pattern?.moon ?? baseModel?.todayPatternPosition?.moon ?? baseModel?.sourceRecord?.equinox?.patternPosition?.moon ?? 1;
     return {
       ...baseModel,
       selectedPatternPosition: selected,
+      environmentSnapshot: environmentState,
       todayPatternPosition: live?.todayModel?.todayPatternPosition || baseModel?.todayPatternPosition || null,
       moonSectors: Array.isArray(baseModel?.moonSectors)
         ? baseModel.moonSectors.map(sector => ({ ...sector, active: sector.moonNumber === activeMoon }))
@@ -352,6 +354,50 @@
       return raw ? JSON.parse(raw) : null;
     } catch {
       return null;
+    }
+
+    function _selectedDayFromMarker(marker) {
+      const value = String(marker || "");
+      const dayMatch = /^day-(\d+)$/.exec(value);
+      if (dayMatch) return Math.max(1, Math.min(364, Number(dayMatch[1]) || 1));
+      const moonMatch = /^moon-(\d+)$/.exec(value);
+      if (moonMatch) {
+        const moon = Math.max(1, Math.min(13, Number(moonMatch[1]) || 1));
+        return (moon - 1) * 28 + 1;
+      }
+      return null;
+    }
+
+    function _readSelectedState() {
+      return _readLocalJson(SELECTED_STATE_KEY);
+    }
+
+    function _persistSelectedState() {
+      try {
+        globalThis.localStorage?.setItem(SELECTED_STATE_KEY, JSON.stringify({
+          selectedDayOfYear: _state.selectedDayOfYear,
+          selectedMarker: _state.selectedMarker,
+          year: _state.year,
+        }));
+      } catch {
+        // ignore storage failures
+      }
+    }
+
+    function _restoreSelectedStateIfNeeded() {
+      if (_state.selectedDayOfYear != null) return;
+      const saved = _readSelectedState();
+      if (!saved || typeof saved !== "object") return;
+      const day = Number(saved.selectedDayOfYear);
+      if (Number.isFinite(day)) {
+        _state.selectedDayOfYear = Math.max(1, Math.min(364, day));
+      }
+      if (!_state.selectedMarker && typeof saved.selectedMarker === "string") {
+        _state.selectedMarker = saved.selectedMarker;
+      }
+      if (!Number.isFinite(Number(_state.year)) && Number.isFinite(Number(saved.year))) {
+        _state.year = Number(saved.year);
+      }
     }
   }
 
@@ -488,12 +534,16 @@
     const witnessCount = Number(live?.witness?.count || 0);
     const recurrence = Array.isArray(live?.history?.recurrences) ? live.history.recurrences[0] : null;
     const weather = live?.weather || null;
+    const environmentState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+    const environmentClassification = environmentState?.classification || null;
     const providerConfigured = !!weather?.providerConfigured;
     const environmentSource = providerConfigured ? (weather?.source || "Open-Meteo") : "No provider configured";
     const weatherTimestamp = weather?.updatedAt || "";
     const weatherFreshness = weather?.freshness?.label || "Not checked";
     const dateClass = _classifyActiveDate(selected, weather, now);
     const canUseLiveWeather = providerConfigured && (dateClass.kind === "current" || dateClass.kind === "forecast");
+    const weatherDisplayState = environmentClassification
+      || (canUseLiveWeather ? (weather?.freshness?.stale ? "CACHED" : "LIVE WEATHER") : "UNAVAILABLE");
     const weatherUnavailableReason = !providerConfigured
       ? "Set location"
       : (dateClass.kind === "historical-unsupported"
@@ -534,8 +584,8 @@
         label: "Weather",
         value: canUseLiveWeather
           ? (weather?.current?.condition || weather?.statusLabel || "Live observation")
-          : weatherUnavailableReason,
-        status: canUseLiveWeather ? (weather?.freshness?.stale ? "Cached" : "Live") : "Unavailable",
+          : weatherDisplayState,
+        status: weatherDisplayState,
         source: environmentSource,
         timestamp: weatherTimestamp,
         freshness: weatherFreshness,
@@ -933,7 +983,7 @@
       {
         key: "weather",
         label: "Weather",
-        value: canUseLiveWeather ? (weather?.current?.condition || weather?.statusLabel || "Live observation") : "Set location",
+        value: canUseLiveWeather ? (weather?.current?.condition || weather?.statusLabel || "Live observation") : weatherDisplayState,
       },
       {
         key: "temperature",
@@ -1104,6 +1154,7 @@
           dayLabelMode: _state.dayLabelMode,
           connectionRegistry: globalThis.LivingTimeSphereConnections?.buildRegistry?.({ model, spiral, state: _state }) || [],
           motionMode: _state.motionMode,
+          environmentState: globalThis.SofEnvironmentState?.getEnvironmentState?.() || null,
           reducedMotion,
           onYearSelect: year => {
             _state.year = year;
@@ -1151,13 +1202,12 @@
         // Fall back to SVG.
         _state.active3d = false;
         const reason = result?.reason || "WebGL unavailable";
-        const detail = result?.detail ? ` (${result.detail})` : "";
-        const statusText = `SVG fallback — ${reason}${detail}`;
+        const statusText = `SVG fallback — ${reason}`;
         _updateRendererLabel(statusText);
         // Sync the renderer selector so it accurately reflects the active renderer.
         _syncRendererSelect("svg");
         // Show the fallback warning row with Retry button.
-        _showRendererFallbackWarning(reason, detail);
+        _showRendererFallbackWarning(reason, result?.detail || "");
         // Remove any stale canvas element left by a failed init.
         const staleCanvas = container.querySelector(".living-time-sphere-3d-canvas");
         if (staleCanvas) staleCanvas.remove();
@@ -1189,6 +1239,7 @@
         globalThis.LivingTimeSphereConnections?.buildRegistry?.({ model, spiral, state: _state }) || [],
         _state.motionMode
       );
+      renderer.updateEnvironment?.(globalThis.SofEnvironmentState?.getEnvironmentState?.() || null);
       renderer.setMode(_state.viewMode);
     }
   }
@@ -1282,13 +1333,13 @@
     const el = document.getElementById("sphere-renderer-fallback-warning");
     if (!el) return;
     const reasonEl = el.querySelector(".sphere-fallback-reason");
-    if (reasonEl) reasonEl.textContent = `3D unavailable — using SVG (${reason}${detail})`;
+    if (reasonEl) reasonEl.textContent = "Accessible SVG view is active";
     // Populate inline diagnostics inside the collapsible details block.
     const r3d = globalThis.LivingTimeSphereRenderer3d;
     const diag = r3d?.getDiagnostics?.() || {};
     const _set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val || "—"; };
     _set("sphere-diag-local-url-warn",      diag.localModuleUrl || r3d?.THREE_LOCAL_REL || "—");
-    _set("sphere-diag-last-error-warn",     diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : (detail || "—"));
+    _set("sphere-diag-last-error-warn",     diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : `${reason}${detail ? `: ${detail}` : ""}`);
     _set("sphere-diag-module-source-warn",  diag.moduleSource || "none");
     _set("sphere-diag-webgl-warn",          diag.webglAvailable ? "available" : "unavailable");
     _set("sphere-diag-webgl2-warn",         diag.webgl2Available ? "available" : "unavailable");
@@ -2212,6 +2263,7 @@
       return;
     }
     applyUrlState();
+    _restoreSelectedStateIfNeeded();
     _state.moonLabelMode = _resolveMoonLabelMode();
     _state.moonLabelDistance = _resolveMoonLabelDistance();
 
@@ -2233,10 +2285,23 @@
 
     wireControls(container);
     wireInteraction(container);
+    const environmentApi = globalThis.SofEnvironmentState;
+    if (environmentApi?.getEnvironmentState && !environmentApi.getEnvironmentState()) {
+      environmentApi.setEnvironmentState(environmentApi.EMPTY_STATE);
+    }
     window.addEventListener("sof:location-changed", () => {
       Promise.resolve(globalThis.OpenMeteoAdapter?.requestRefresh?.({ force: true }))
         .catch(() => null)
         .finally(() => renderSphere(container));
+    });
+    window.addEventListener(globalThis.SofEnvironmentState?.EVENT_NAME || "sof:environment-change", event => {
+      const nextState = event?.detail?.state || globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+      const renderer = globalThis.LivingTimeSphereRenderer3d;
+      if (_state.active3d && renderer?.isInitialized?.()) {
+        renderer.updateEnvironment?.(nextState);
+      } else {
+        renderSphere(container);
+      }
     });
 
     // Defer first render by one animation frame so the container has a

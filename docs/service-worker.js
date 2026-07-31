@@ -117,6 +117,7 @@ const optionalPaths = [
   "./assets/js/oracle/oracle-storage.js",
   "./assets/js/oracle/oracle-profile-repository.js",
   "./assets/js/oracle/oracle-engine.js",
+  "./assets/js/environment/environment-state.js",
   "./assets/vendor/three/three.module.min.js",
   "./assets/img/moons/app/apple-touch-icon.png",
   "./assets/img/moons/app/screenshot-mobile-390x844.png",

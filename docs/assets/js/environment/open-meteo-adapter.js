@@ -8,6 +8,7 @@
   const SNAPSHOT_KEY = "sof.environment.snapshot.v2";
 
   let _lastResult = null;
+  let _sessionActivePlace = null;
 
   function safeRead(key) {
     try {
@@ -19,6 +20,7 @@
   }
 
   function safeWrite(key, value) {
+    if (key !== UNITS_KEY) return false;
     try {
       localStorage.setItem(key, JSON.stringify(value));
       return true;
@@ -75,6 +77,7 @@
   }
 
   function readActivePlace() {
+    if (_sessionActivePlace) return _sessionActivePlace;
     let place = normalizePlace(safeRead(ACTIVE_PLACE_KEY));
     if (place) return place;
     const legacy = normalizePlace(safeRead(LEGACY_COORDS_KEY));
@@ -105,6 +108,7 @@
   function setActivePlace(place) {
     const normalized = savePlace(place);
     if (!normalized) return null;
+    _sessionActivePlace = normalized;
     safeWrite(ACTIVE_PLACE_KEY, normalized);
     return normalized;
   }
@@ -127,8 +131,17 @@
   }
 
   function mapSnapshot(result, place) {
+    const classifications = globalThis.SofEnvironmentState?.CLASSIFICATIONS;
+    const offline = typeof navigator !== "undefined" && navigator.onLine === false;
     if (!result?.snapshot) {
       return {
+        status: result?.errorMessage ? "error" : "unavailable",
+        reason: place ? "provider-error" : "location-not-set",
+        classification: !place
+          ? (classifications?.LOCATION_NOT_SET || "LOCATION NOT SET")
+          : (result?.errorMessage
+              ? (classifications?.ERROR || "ERROR")
+              : (classifications?.UNAVAILABLE || "UNAVAILABLE")),
         providerConfigured: !!place,
         statusLabel: place ? (result?.errorMessage || "Unavailable") : "Location required",
         source: "Open-Meteo",
@@ -140,7 +153,8 @@
         daily: null,
         environmental: null,
         stale: true,
-        errorMessage: result?.errorMessage || ""
+        errorMessage: result?.errorMessage || "",
+        provenance: "open-meteo-adapter"
       };
     }
 
@@ -152,6 +166,11 @@
     const daily = snap.daily || {};
 
     const mapped = {
+      status: stale ? (offline ? "offline" : "cached") : "available",
+      reason: stale ? (offline ? "offline" : "stale-cache") : "live",
+      classification: stale
+        ? (offline ? (classifications?.OFFLINE || "OFFLINE") : (classifications?.CACHED || "CACHED"))
+        : (classifications?.LIVE_WEATHER || "LIVE WEATHER"),
       provider: snap.provider,
       providerConfigured: !!place,
       statusLabel: stale ? "Cached snapshot" : "Live observation",
@@ -202,7 +221,8 @@
         condition: current.condition,
         provider: snap.provider,
         updateAgeMinutes: ageMinutes
-      }
+      },
+      provenance: "open-meteo-adapter"
     };
 
     safeWrite(SNAPSHOT_KEY, mapped);
@@ -217,7 +237,27 @@
 
     const override = normalizePlace(options.coords || options.place);
     const place = override || readActivePlace();
-    if (!place) return mapSnapshot({ errorMessage: "Location required." }, null);
+    if (!place) {
+      const empty = mapSnapshot({ errorMessage: "Location required." }, null);
+      globalThis.SofEnvironmentState?.setEnvironmentState?.(empty);
+      return empty;
+    }
+
+    globalThis.SofEnvironmentState?.setEnvironmentState?.({
+      status: "loading",
+      reason: "request-refresh",
+      classification: globalThis.SofEnvironmentState?.CLASSIFICATIONS?.LOADING_WEATHER || "LOADING WEATHER",
+      providerConfigured: true,
+      place,
+      current: null,
+      hourly: [],
+      daily: [],
+      airQuality: null,
+      spaceWeather: null,
+      fetchedAt: null,
+      stale: false,
+      provenance: "open-meteo-adapter",
+    });
 
     const result = await provider.getForecastSnapshot({
       place,
@@ -225,7 +265,9 @@
       signal: options.signal
     });
     _lastResult = result;
-    return mapSnapshot(result, place);
+    const mapped = mapSnapshot(result, place);
+    globalThis.SofEnvironmentState?.setEnvironmentState?.(mapped);
+    return mapped;
   }
 
   function getSnapshot() {
@@ -272,7 +314,10 @@
       longitude: Number(position.coords.longitude),
       source: "device"
     };
-    return setActivePlace(place);
+    const normalized = normalizePlace(place);
+    if (!normalized) return false;
+    _sessionActivePlace = normalized;
+    return true;
   }
 
   async function searchCity(query, signal) {
@@ -306,6 +351,22 @@
 
   function continueWithoutLocation() {
     localStorage.removeItem(ACTIVE_PLACE_KEY);
+    _sessionActivePlace = null;
+    globalThis.SofEnvironmentState?.setEnvironmentState?.({
+      status: "unavailable",
+      reason: "location-not-set",
+      classification: globalThis.SofEnvironmentState?.CLASSIFICATIONS?.LOCATION_NOT_SET || "LOCATION NOT SET",
+      providerConfigured: false,
+      place: null,
+      current: null,
+      hourly: [],
+      daily: [],
+      airQuality: null,
+      spaceWeather: null,
+      fetchedAt: null,
+      stale: false,
+      provenance: "open-meteo-adapter",
+    });
     return { mode: "none", label: "No location selected" };
   }
 

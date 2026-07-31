@@ -234,16 +234,18 @@
 
   function resolveWeather(options) {
     const adapter = globalThis.OpenMeteoAdapter;
+    const environmentState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
     if (!adapter?.getSnapshot) {
       return {
         providerConfigured: false,
         statusLabel: "Set location",
+        classification: environmentState?.classification || "LOCATION NOT SET",
       };
     }
 
     const locationState = adapter.getLocationState?.() || null;
     const providerConfigured = Number.isFinite(locationState?.latitude) && Number.isFinite(locationState?.longitude);
-    const snapshot = adapter.getSnapshot() || {};
+    const adapterSnapshot = adapter.getSnapshot() || {};
     const asOf = options?.asOf instanceof Date ? options.asOf : new Date(options?.asOf || Date.now());
     const nearNow = Math.abs(Date.now() - asOf.getTime()) <= 36 * 60 * 60 * 1000;
 
@@ -251,14 +253,20 @@
       Promise.resolve(adapter.requestRefresh({ force: false })).catch(() => {});
     }
 
-    return {
-      ...snapshot,
+    const snapshot = {
+      ...adapterSnapshot,
       providerConfigured,
       locationState,
-      source: snapshot?.source || "Open-Meteo adapter",
-      statusLabel: snapshot?.statusLabel || (providerConfigured ? "Live observation" : "Set location"),
-      updatedAt: snapshot?.updatedAt || "",
+      source: adapterSnapshot?.source || "Open-Meteo adapter",
+      statusLabel: adapterSnapshot?.statusLabel || (providerConfigured ? "Live observation" : "Set location"),
+      updatedAt: adapterSnapshot?.updatedAt || "",
     };
+    if (environmentState) {
+      snapshot.classification = environmentState.classification || snapshot.classification;
+      snapshot.status = environmentState.status || snapshot.status;
+      snapshot.reason = environmentState.reason || snapshot.reason;
+    }
+    return snapshot;
   }
 
   function resolveHistory(selectedYear, options) {
