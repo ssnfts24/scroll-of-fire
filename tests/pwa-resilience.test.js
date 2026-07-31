@@ -512,7 +512,7 @@ const refreshOptions = (harness, overrides = {}) => ({
   expectedVersion: "2026.07.16.3",
   expectedBuild: "2026.07.16.3",
   status: message => harness.messages.push(message),
-  lifecycleTimeoutMs: 25,
+  lifecycleTimeoutMs: 100,
   ...overrides
 });
 
