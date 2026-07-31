@@ -38,6 +38,14 @@
   let _dragPhi0    = 0;
   let _dragTheta0  = 0;
 
+  // Two-pointer / right-drag pan state. Pan moves the look target while
+  // preserving the camera orbit around that target.
+  let _panning = false;
+  let _panStartX = 0;
+  let _panStartY = 0;
+  let _panTarget0 = { x: 0, y: 0, z: 0 };
+  const MAX_PAN = 1.6;
+
   // Idle drift
   let _driftEnabled  = false;
   let _driftRate     = 0.00008;   // radians per millisecond
@@ -187,7 +195,40 @@
     _dragging = false;
   }
 
-  function isDragging() { return _dragging; }
+  function isDragging() { return _dragging || _panning; }
+
+  function onPanStart(x, y) {
+    _panning = true;
+    _panStartX = x;
+    _panStartY = y;
+    _panTarget0 = { ..._target };
+    _transition = null;
+    stopDrift();
+  }
+
+  function onPanMove(x, y) {
+    if (!_panning || !_cam) return false;
+    const dx = x - _panStartX;
+    const dy = y - _panStartY;
+    // Scale pan by camera distance so movement remains predictable at every zoom.
+    const scale = Math.max(0.0007, _dist * 0.00115);
+    const right = { x: _cam.matrix.elements[0], y: _cam.matrix.elements[1], z: _cam.matrix.elements[2] };
+    const up = { x: _cam.matrix.elements[4], y: _cam.matrix.elements[5], z: _cam.matrix.elements[6] };
+    const nx = _panTarget0.x - right.x * dx * scale + up.x * dy * scale;
+    const ny = _panTarget0.y - right.y * dx * scale + up.y * dy * scale;
+    const nz = _panTarget0.z - right.z * dx * scale + up.z * dy * scale;
+    const len = Math.hypot(nx, ny, nz);
+    const f = len > MAX_PAN ? MAX_PAN / len : 1;
+    _target.x = nx * f; _target.y = ny * f; _target.z = nz * f;
+    _apply();
+    return true;
+  }
+
+  function onPanEnd() { _panning = false; }
+
+  function centerTarget(animated = true) {
+    moveTo({ targetX: 0, targetY: 0, targetZ: 0, animated, nowMs: performance.now(), durationMs: 500 });
+  }
 
   // ── Zoom ─────────────────────────────────────────────────────────
 
@@ -298,6 +339,10 @@
     onPointerDown,
     onPointerMove,
     onPointerUp,
+    onPanStart,
+    onPanMove,
+    onPanEnd,
+    centerTarget,
     isDragging,
     zoom,
     onWheel,
