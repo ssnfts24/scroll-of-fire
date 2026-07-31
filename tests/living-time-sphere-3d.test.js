@@ -84,7 +84,10 @@ function loadSphereContext() {
     "docs/assets/js/sphere/living-time-sphere-materials.js",
     "docs/assets/js/sphere/living-time-sphere-camera.js",
     "docs/assets/js/sphere/living-time-sphere-animation.js",
+    "docs/assets/js/sphere/living-time-sphere-label-manager.js",
     "docs/assets/js/sphere/living-time-sphere-effects.js",
+    "docs/assets/js/environment/providers/open-meteo-forecast.js",
+    "docs/assets/js/environment/open-meteo-adapter.js",
     "docs/assets/js/sphere/living-time-sphere-live-data.js",
     "docs/assets/js/sphere/living-time-sphere-mount.js",
     "docs/assets/js/sphere/living-time-sphere-today.js",
@@ -520,7 +523,11 @@ test("Sphere page: 3D module scripts included", () => {
   assert.ok(html.includes("living-time-sphere-materials.js"),  "materials loaded");
   assert.ok(html.includes("living-time-sphere-camera.js"),     "camera loaded");
   assert.ok(html.includes("living-time-sphere-animation.js"),  "animation loaded");
+  assert.ok(html.includes("living-time-sphere-label-manager.js"),  "label manager loaded");
   assert.ok(html.includes("living-time-sphere-effects.js"),    "effects loaded");
+  assert.ok(html.includes("environment/providers/open-meteo-forecast.js"), "forecast provider loaded");
+  assert.ok(html.includes("environment/open-meteo-adapter.js"), "adapter loaded");
+  assert.ok(html.includes("environment/location-command.js"), "location command loaded");
   assert.ok(html.includes("living-time-sphere-live-data.js"),  "live-data module loaded");
   assert.ok(html.includes("living-time-sphere-renderer-3d.js"),"renderer-3d loaded");
   assert.ok(html.includes("living-time-sphere-today.js"),      "today module loaded");
@@ -567,7 +574,11 @@ test("Service worker: caches all Phase 03 sphere JS files", () => {
   assert.ok(sw.includes("living-time-sphere-materials.js"),  "materials cached");
   assert.ok(sw.includes("living-time-sphere-camera.js"),     "camera cached");
   assert.ok(sw.includes("living-time-sphere-animation.js"),  "animation cached");
+  assert.ok(sw.includes("living-time-sphere-label-manager.js"),  "label manager cached");
   assert.ok(sw.includes("living-time-sphere-effects.js"),    "effects cached");
+  assert.ok(sw.includes("environment/providers/open-meteo-forecast.js"), "forecast provider cached");
+  assert.ok(sw.includes("environment/open-meteo-adapter.js"), "adapter cached");
+  assert.ok(sw.includes("environment/location-command.js"), "location command cached");
   assert.ok(sw.includes("living-time-sphere-live-data.js"),  "live-data cached");
   assert.ok(sw.includes("living-time-sphere-renderer-3d.js"),"renderer-3d cached");
   assert.ok(sw.includes("living-time-sphere-mount.js"),      "mount cached");
@@ -613,7 +624,11 @@ const NEW_SPHERE_FILES = [
   "docs/assets/js/sphere/living-time-sphere-materials.js",
   "docs/assets/js/sphere/living-time-sphere-camera.js",
   "docs/assets/js/sphere/living-time-sphere-animation.js",
+  "docs/assets/js/sphere/living-time-sphere-label-manager.js",
   "docs/assets/js/sphere/living-time-sphere-effects.js",
+  "docs/assets/js/environment/providers/open-meteo-forecast.js",
+  "docs/assets/js/environment/open-meteo-adapter.js",
+  "docs/assets/js/environment/location-command.js",
   "docs/assets/js/sphere/living-time-sphere-connections.js",
   "docs/assets/js/sphere/living-time-sphere-live-data.js",
   "docs/assets/js/sphere/living-time-sphere-mount.js",

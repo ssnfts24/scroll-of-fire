@@ -67,13 +67,16 @@
    <script defer src="assets/js/sphere/living-time-sphere-layout.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-connections.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-svg.js"></script>
+   <script defer src="assets/js/environment/providers/open-meteo-forecast.js"></script>
    <script defer src="assets/js/environment/open-meteo-adapter.js"></script>
+   <script defer src="assets/js/environment/location-command.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-live-data.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-canvas.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-materials.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-effects.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-camera.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-animation.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-label-manager.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-3d.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-interaction.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-accessibility.js"></script>
@@ -293,7 +296,10 @@
               </div>
             </div>
             <div class="sphere-instrument-corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-            <div class="sphere-instrument-footer" aria-hidden="true"><span>FIXED PATTERN CENTER</span><span>MOVING ASTRONOMICAL LAYERS</span></div>
+            <div class="sphere-instrument-footer" aria-hidden="true">
+              <p class="sphere-instrument-footer-line">FIXED PATTERN CENTRE</p>
+              <p class="sphere-instrument-footer-line">MOVING ASTRONOMICAL LAYERS</p>
+            </div>
           </div>
 
           <div class="sphere-moon-labels" id="sphere-moon-labels" aria-hidden="true">
@@ -360,6 +366,30 @@
         </div>
 
         <aside class="sphere-sidebar">
+          <div class="sphere-sidebar-section sphere-location-command" data-sof-location-command>
+            <h2 class="sphere-sidebar-heading">Location</h2>
+            <p class="sphere-location-state" data-location-state>LOCATION NOT SET</p>
+            <div class="sphere-location-actions">
+              <button type="button" class="sphere-btn sphere-btn-sm" data-location-use-device>Use My Location</button>
+              <button type="button" class="sphere-btn sphere-btn-sm" data-location-search-submit>Search Place</button>
+              <button type="button" class="sphere-btn sphere-btn-sm" data-location-coords-submit>Enter Coordinates</button>
+              <button type="button" class="sphere-btn sphere-btn-sm" data-location-continue-without>Continue Without Weather</button>
+            </div>
+            <div class="sphere-location-inputs">
+              <label class="visually-hidden" for="sphere-location-search">Search place</label>
+              <input id="sphere-location-search" data-location-search-input class="sphere-control-select" type="text" placeholder="Search place">
+              <div class="sphere-location-coords">
+                <label class="visually-hidden" for="sphere-location-lat">Latitude</label>
+                <input id="sphere-location-lat" data-location-lat class="sphere-control-select" type="number" step="0.0001" min="-90" max="90" placeholder="Latitude -90 to 90">
+                <label class="visually-hidden" for="sphere-location-lon">Longitude</label>
+                <input id="sphere-location-lon" data-location-lon class="sphere-control-select" type="number" step="0.0001" min="-180" max="180" placeholder="Longitude -180 to 180">
+                <label class="visually-hidden" for="sphere-location-name">Place name</label>
+                <input id="sphere-location-name" data-location-name class="sphere-control-select" type="text" placeholder="Optional place name">
+              </div>
+            </div>
+            <div class="sphere-location-results" data-location-results aria-live="polite"></div>
+            <p class="sphere-field-note" data-location-status>Choose a location to activate environmental layers.</p>
+          </div>
           <!-- 4. Selected marker details -->
           <div class="sphere-sidebar-section">
             <h2 class="sphere-sidebar-heading">Selected day</h2>

@@ -622,6 +622,28 @@
           </div>
         </section>
 
+        <section class="card sphere-location-command sphere-location-command-compact" data-sof-location-command aria-labelledby="moonsLocationTitle">
+          <p class="eyebrow">Environment</p>
+          <h2 id="moonsLocationTitle" class="sphere-compact-card-title">Location</h2>
+          <p class="sphere-location-state" data-location-state>LOCATION NOT SET</p>
+          <div class="sphere-location-actions">
+            <button type="button" class="lab-btn ghost" data-location-use-device>Use My Location</button>
+            <button type="button" class="lab-btn ghost" data-location-search-submit>Search Place</button>
+            <button type="button" class="lab-btn ghost" data-location-coords-submit>Enter Coordinates</button>
+            <button type="button" class="lab-btn ghost" data-location-continue-without>Continue Without Weather</button>
+          </div>
+          <div class="sphere-location-inputs">
+            <input data-location-search-input class="field" type="text" placeholder="Search place">
+            <div class="sphere-location-coords">
+              <input data-location-lat class="field" type="number" step="0.0001" min="-90" max="90" placeholder="Latitude -90 to 90">
+              <input data-location-lon class="field" type="number" step="0.0001" min="-180" max="180" placeholder="Longitude -180 to 180">
+              <input data-location-name class="field" type="text" placeholder="Optional place name">
+            </div>
+          </div>
+          <div class="sphere-location-results" data-location-results aria-live="polite"></div>
+          <p class="sphere-field-note" data-location-status>Choose a location to enable weather, sunrise, and sunset.</p>
+        </section>
+
         <!-- Phase 3: Living Time Sphere — Today card -->
         <section id="moons-sphere-today-card" class="card sphere-today-card" aria-labelledby="moonsSphereTitle">
           <p class="eyebrow">Observatory Layer</p>
@@ -2605,6 +2627,9 @@
   <script src="assets/js/alignment/alignment-ledger-engine.js?v=20260723-1"></script>
   <script src="assets/js/alignment/alignment-ledger-data.js?v=20260723-1"></script>
   <script src="assets/js/sphere/living-time-sphere-state.js?v=20260724-1"></script>
+  <script src="assets/js/environment/providers/open-meteo-forecast.js?v=20260731-1"></script>
+  <script src="assets/js/environment/open-meteo-adapter.js?v=20260731-1"></script>
+  <script src="assets/js/environment/location-command.js?v=20260731-1"></script>
   <script src="assets/js/sphere/living-time-sphere-version.js?v=20260723-2"></script>
   <script src="assets/js/sphere/living-time-sphere-model.js?v=20260723-2"></script>
   <script src="assets/js/sphere/living-time-sphere-layout.js?v=20260723-2"></script>
@@ -2614,6 +2639,7 @@
   <script src="assets/js/sphere/living-time-sphere-effects.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-camera.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-animation.js?v=20260724-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-label-manager.js?v=20260731-1"></script>
   <script src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-interaction.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-accessibility.js?v=20260723-2"></script>

@@ -162,6 +162,41 @@
     return `${date.getUTCFullYear()}-${_pad(date.getUTCMonth() + 1)}-${_pad(date.getUTCDate())}`;
   }
 
+  function _windBearingLabel(deg) {
+    if (!Number.isFinite(deg)) return "";
+    const dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+    return dirs[Math.round((((deg % 360) + 360) % 360) / 45) % 8];
+  }
+
+  function _formatTemperature(value, units = "fahrenheit") {
+    if (!Number.isFinite(value)) return "Location required";
+    if (units === "celsius") return `${Math.round(value)}°C`;
+    return `${Math.round(value * 9 / 5 + 32)}°F`;
+  }
+
+  function _formatDurationHours(seconds) {
+    if (!Number.isFinite(seconds) || seconds <= 0) return "Location required";
+    const h = Math.floor(seconds / 3600);
+    const m = Math.round((seconds % 3600) / 60);
+    return `${h}h ${String(m).padStart(2, "0")}m`;
+  }
+
+  function _classifyActiveDate(selected, weather, nowDate = new Date()) {
+    const currentIso = _toIso(nowDate);
+    const selectedIso = selected?.effectiveDate || selected?.civilDate || currentIso;
+    if (_state.fieldRange === "now" || _state.fieldRange === "today" || selected?.isToday || selectedIso === currentIso) {
+      return { kind: "current", label: "Current civil time" };
+    }
+    const dailyTimes = Array.isArray(weather?.daily?.time) ? weather.daily.time : [];
+    if (dailyTimes.includes(selectedIso)) {
+      const cmp = selectedIso.localeCompare(currentIso);
+      if (cmp > 0) return { kind: "forecast", label: "Forecast window" };
+      if (cmp < 0) return { kind: "historical-supported", label: "Historical supported date" };
+    }
+    if (selected?.patternYear && selected.patternYear < 2014) return { kind: "historical-unsupported", label: "Unsupported historical date" };
+    return { kind: "historical-supported", label: "Historical supported date" };
+  }
+
   function _patternDateFromDayOfYear(year, dayOfYear) {
     const epoch = globalThis.PatternCalendar?.epochForYear?.(year);
     if (!epoch) return null;
@@ -457,7 +492,13 @@
     const environmentSource = providerConfigured ? (weather?.source || "Open-Meteo") : "No provider configured";
     const weatherTimestamp = weather?.updatedAt || "";
     const weatherFreshness = weather?.freshness?.label || "Not checked";
-    const canUseLiveWeather = providerConfigured && selected?.isToday;
+    const dateClass = _classifyActiveDate(selected, weather, now);
+    const canUseLiveWeather = providerConfigured && (dateClass.kind === "current" || dateClass.kind === "forecast");
+    const weatherUnavailableReason = !providerConfigured
+      ? "Set location"
+      : (dateClass.kind === "historical-unsupported"
+        ? "Unavailable for unsupported historical date"
+        : "Unavailable for this selected historical day");
     const daylightState = selected?.afterBoundary
       ? `After ${_state.boundaryMode === "midnight" ? "midnight" : "boundary"}`
       : `Before ${_state.boundaryMode === "midnight" ? "midnight" : "boundary"}`;
@@ -485,24 +526,25 @@
     const summaryItems = ["Pattern", "Lunar", "Passage", "Local boundary"];
     if (personalFieldCount) summaryItems.push(`${personalFieldCount} personal ${personalFieldCount === 1 ? "field" : "fields"}`);
     if (providerConfigured) summaryItems.push("Environment");
+    if (!providerConfigured) summaryItems.push("Set location");
 
     const fields = [
       {
         id: "weather",
         label: "Weather",
         value: canUseLiveWeather
-          ? (weather?.statusLabel || "Live observation")
-          : "Unavailable for this selected day",
+          ? (weather?.current?.condition || weather?.statusLabel || "Live observation")
+          : weatherUnavailableReason,
         status: canUseLiveWeather ? (weather?.freshness?.stale ? "Cached" : "Live") : "Unavailable",
         source: environmentSource,
         timestamp: weatherTimestamp,
         freshness: weatherFreshness,
         availability: providerConfigured
           ? "Live provider is available for current-day context."
-          : "No provider is configured, so weather cannot be checked here.",
+          : "Location is required before weather can be checked.",
         relation: canUseLiveWeather
-          ? "Current live field for the selected Pattern Day."
-          : "Live weather is current-only and is not stored for non-current Pattern Days.",
+          ? `Weather is attached to ${dateClass.label.toLowerCase()}.`
+          : "Live weather is never attached to older selected Pattern days.",
         layerId: "environment",
         sphereLabel: "Environmental shell",
         visibleOnSphere: _mappedLayerVisible("environment"),
@@ -513,8 +555,8 @@
         id: "temperature",
         label: "Temperature",
         value: canUseLiveWeather && typeof weather?.current?.temperature === "number"
-          ? `${Math.round(weather.current.temperature)}°C`
-          : "Unavailable for this selected day",
+          ? _formatTemperature(weather.current.temperature, globalThis.OpenMeteoAdapter?.getUnits?.()?.temperature || "fahrenheit")
+          : weatherUnavailableReason,
         status: canUseLiveWeather && typeof weather?.current?.temperature === "number" ? "Live" : "Unavailable",
         source: environmentSource,
         timestamp: weatherTimestamp,
@@ -531,8 +573,8 @@
         id: "wind",
         label: "Wind",
         value: canUseLiveWeather && typeof weather?.current?.windSpeed === "number"
-          ? `${Math.round(weather.current.windSpeed)} km/h${typeof weather?.current?.windDirection === "number" ? ` · ${Math.round(weather.current.windDirection)}°` : ""}`
-          : "Unavailable for this selected day",
+          ? `${Math.round(weather.current.windSpeed)} km/h${typeof weather?.current?.windDirection === "number" ? ` ${_windBearingLabel(weather.current.windDirection)}` : ""}`
+          : weatherUnavailableReason,
         status: canUseLiveWeather && typeof weather?.current?.windSpeed === "number" ? "Live" : "Unavailable",
         source: environmentSource,
         timestamp: weatherTimestamp,
@@ -550,7 +592,7 @@
         label: "Cloud",
         value: canUseLiveWeather && typeof weather?.current?.cloudCover === "number"
           ? `${Math.round(weather.current.cloudCover)}%`
-          : "Unavailable for this selected day",
+          : weatherUnavailableReason,
         status: canUseLiveWeather && typeof weather?.current?.cloudCover === "number" ? "Live" : "Unavailable",
         source: environmentSource,
         timestamp: weatherTimestamp,
@@ -886,6 +928,58 @@
     ];
 
     const activeConnectionCount = fields.filter(field => field.visibleOnSphere && field.status !== "Unavailable" && field.status !== "Not checked").length;
+    const locationName = weather?.place?.name || weather?.locationState?.label || "Set location";
+    const sensorMatrix = [
+      {
+        key: "weather",
+        label: "Weather",
+        value: canUseLiveWeather ? (weather?.current?.condition || weather?.statusLabel || "Live observation") : "Set location",
+      },
+      {
+        key: "temperature",
+        label: "Temperature",
+        value: canUseLiveWeather && Number.isFinite(weather?.current?.temperature)
+          ? _formatTemperature(weather.current.temperature, globalThis.OpenMeteoAdapter?.getUnits?.()?.temperature || "fahrenheit")
+          : "Location required",
+      },
+      {
+        key: "humidity",
+        label: "Humidity",
+        value: canUseLiveWeather && Number.isFinite(weather?.current?.humidity)
+          ? `${Math.round(weather.current.humidity)}%`
+          : "Location required",
+      },
+      {
+        key: "wind",
+        label: "Wind",
+        value: canUseLiveWeather && Number.isFinite(weather?.current?.windSpeed)
+          ? `${Math.round(weather.current.windSpeed)} km/h ${_windBearingLabel(weather.current.windDirection)}`
+          : "Location required",
+      },
+      {
+        key: "sunrise",
+        label: "Sunrise",
+        value: canUseLiveWeather && weather?.daily?.sunrise ? _formatLocalInstant(weather.daily.sunrise) : "Location required",
+      },
+      {
+        key: "sunset",
+        label: "Sunset",
+        value: canUseLiveWeather && weather?.daily?.sunset ? _formatLocalInstant(weather.daily.sunset) : "Location required",
+      },
+      {
+        key: "daylight",
+        label: "Daylight",
+        value: canUseLiveWeather && Number.isFinite(weather?.daily?.daylightDurationSeconds)
+          ? _formatDurationHours(weather.daily.daylightDurationSeconds)
+          : "Location required",
+      },
+      {
+        key: "provider",
+        label: "Provider",
+        value: providerConfigured ? `${weather?.provider || "Open-Meteo"} · ${weatherFreshness}` : "Set location",
+      }
+    ];
+    const environmentLayerReady = providerConfigured && canUseLiveWeather;
 
     return {
       rangeLabel: FIELD_RANGE_LABELS[_state.fieldRange] || FIELD_RANGE_LABELS.now,
@@ -917,6 +1011,10 @@
         })(),
       },
       providerConfigured,
+      dateClass,
+      sensorMatrix,
+      locationName,
+      environmentLayerReady,
     };
   }
 
@@ -1382,6 +1480,10 @@
     const yearPos = yearRecord?.equinox?.patternPosition || {};
     const offs = yearRecord?.offsets || {};
     const field = _fieldLayerSnapshot(selected, model);
+    if (!field.environmentLayerReady && _state.visibleLayers.environment) {
+      _state.visibleLayers.environment = false;
+      _syncLayerCheckboxes();
+    }
     const selectedLabel = selected?.moon != null ? `Moon ${selected.moon} · ${selected.moonName || "Unavailable"} · Day ${selected.day}` : "Unavailable";
     const day364 = selected?.dayOfPatternYear != null ? `Day ${selected.dayOfPatternYear}/364` : "Unavailable — selected day is outside the counted year.";
     const patternAngle = selected?.dayOfPatternYear != null
@@ -1460,6 +1562,12 @@
     };
 
     const fieldCards = field.fields.map(renderFieldCard).join("");
+    const matrixRows = (field.sensorMatrix || []).map(row => `
+      <div class="sphere-sensor-row" data-sensor-row="${_escapeHtml(row.key)}">
+        <span class="sphere-sensor-label">${_escapeHtml(row.label)}</span>
+        <strong class="sphere-sensor-value">${_escapeHtml(row.value)}</strong>
+      </div>
+    `).join("");
     const livingContextEntries = [
       ["Witness", field.livingContext.witness],
       ["Environment", field.livingContext.environment],
@@ -1505,6 +1613,12 @@
       </div>
       <div class="sphere-details-section">
         <h4 class="sphere-details-subheading">Field Layer</h4>
+        <p class="sphere-field-range-note">Range · ${_escapeHtml(field.rangeLabel)} · ${_escapeHtml(field.dateClass?.label || "Current civil time")}</p>
+        <p class="sphere-field-note"><strong>Location</strong> · ${_escapeHtml(field.locationName || "Set location")}</p>
+        <div class="sphere-sensor-matrix" aria-label="Environmental sensor matrix">
+          ${matrixRows}
+        </div>
+        <p class="sphere-field-note">${field.environmentLayerReady ? "Environmental layers are active from live values." : "Set a location to activate environmental layers."}</p>
         <div class="sphere-field-summary">
           <div>
             <p class="sphere-field-summary-label">Active Fields</p>
@@ -1516,8 +1630,10 @@
             <a class="sphere-btn sphere-btn-sm" href="${_escapeHtml(_buildAlignmentLink("recurrence"))}">Compare Fields</a>
           </div>
         </div>
-        <p class="sphere-field-range-note">Range · ${_escapeHtml(field.rangeLabel)}</p>
-        <div class="sphere-field-cards">${fieldCards}</div>
+        <details class="sphere-field-disclosure">
+          <summary>Expanded field details</summary>
+          <div class="sphere-field-cards">${fieldCards}</div>
+        </details>
         <details class="sphere-field-disclosure">
           <summary>Sources and freshness</summary>
           <dl class="sphere-details-grid sphere-details-grid-tight">${sourcesEntries}</dl>
@@ -2117,6 +2233,11 @@
 
     wireControls(container);
     wireInteraction(container);
+    window.addEventListener("sof:location-changed", () => {
+      Promise.resolve(globalThis.OpenMeteoAdapter?.requestRefresh?.({ force: true }))
+        .catch(() => null)
+        .finally(() => renderSphere(container));
+    });
 
     // Defer first render by one animation frame so the container has a
     // stable, non-zero bounding rect before 3D dimensions are measured.

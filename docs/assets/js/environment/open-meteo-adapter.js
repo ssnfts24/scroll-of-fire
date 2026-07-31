@@ -1,9 +1,13 @@
 (() => {
   "use strict";
 
-  const CACHE_KEY = "sof.environment.openmeteo.cache.v1";
-  const COORDS_KEY = "sof.environment.location.v1";
-  const FRESH_MS = 15 * 60 * 1000;
+  const PLACES_KEY = "sof.environment.places.v1";
+  const ACTIVE_PLACE_KEY = "sof.environment.activePlace.v1";
+  const UNITS_KEY = "sof.environment.units.v1";
+  const LEGACY_COORDS_KEY = "sof.environment.location.v1";
+  const SNAPSHOT_KEY = "sof.environment.snapshot.v2";
+
+  let _lastResult = null;
 
   function safeRead(key) {
     try {
@@ -23,181 +27,238 @@
     }
   }
 
-  function nowIso() {
-    return new Date().toISOString();
+  function clamp(n, min, max) {
+    return Math.min(max, Math.max(min, n));
   }
 
-  function ageMinutes(updatedAt) {
-    if (!updatedAt) return null;
+  function ageLabel(updatedAt) {
+    if (!updatedAt) return "No data";
     const t = new Date(updatedAt).getTime();
-    if (!Number.isFinite(t)) return null;
-    return Math.max(0, Math.round((Date.now() - t) / 60000));
+    if (!Number.isFinite(t)) return "Unknown";
+    const minutes = Math.max(0, Math.round((Date.now() - t) / 60000));
+    if (minutes <= 1) return "Just updated";
+    return `${minutes} min ago`;
   }
 
-  function resolveCoordinates(override) {
-    if (override && Number.isFinite(override.latitude) && Number.isFinite(override.longitude)) {
-      return {
-        latitude: Number(override.latitude),
-        longitude: Number(override.longitude),
-        label: override.label || "Manual coordinates",
-        mode: override.mode || "manual"
-      };
+  function normalizePlace(place) {
+    const provider = globalThis.OpenMeteoForecastProvider;
+    if (provider?.normalizePlace) return provider.normalizePlace(place);
+    if (!place) return null;
+    const latitude = Number(place.latitude);
+    const longitude = Number(place.longitude);
+    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return null;
+    return {
+      name: String(place.name || place.label || "Selected location"),
+      region: place.region || null,
+      country: place.country || null,
+      timezone: place.timezone || null,
+      latitude,
+      longitude,
+      source: place.source || place.mode || "manual"
+    };
+  }
+
+  function locationLabel(place) {
+    if (!place) return "Location not set";
+    const bits = [place.name, place.region, place.country].filter(Boolean);
+    if (bits.length) return bits.join(", ");
+    return `${place.latitude.toFixed(3)}, ${place.longitude.toFixed(3)}`;
+  }
+
+  function readPlaces() {
+    const places = safeRead(PLACES_KEY);
+    return Array.isArray(places) ? places.filter(Boolean) : [];
+  }
+
+  function writePlaces(places) {
+    safeWrite(PLACES_KEY, places.slice(0, 20));
+  }
+
+  function readActivePlace() {
+    let place = normalizePlace(safeRead(ACTIVE_PLACE_KEY));
+    if (place) return place;
+    const legacy = normalizePlace(safeRead(LEGACY_COORDS_KEY));
+    if (legacy) {
+      setActivePlace(legacy);
+      return legacy;
     }
-    const saved = safeRead(COORDS_KEY);
-    if (saved && Number.isFinite(saved.latitude) && Number.isFinite(saved.longitude)) return saved;
     return null;
   }
 
-  function mapResponse(payload, coords) {
-    const current = payload?.current || {};
-    const daily = payload?.daily || {};
-    const first = field => Array.isArray(field) ? field[0] : null;
-
-    return {
-      provider: "Open-Meteo",
-      providerConfigured: true,
-      coordinates: coords,
-      updatedAt: nowIso(),
-      dataClass: "live observation",
-      source: "https://open-meteo.com/",
-      current: {
-        temperature: current.temperature_2m ?? null,
-        apparentTemperature: current.apparent_temperature ?? null,
-        humidity: current.relative_humidity_2m ?? null,
-        dewPoint: current.dew_point_2m ?? null,
-        cloudCover: current.cloud_cover ?? null,
-        pressure: current.pressure_msl ?? null,
-        windSpeed: current.wind_speed_10m ?? null,
-        windDirection: current.wind_direction_10m ?? null,
-        windGust: current.wind_gusts_10m ?? null,
-        precipitation: current.precipitation ?? null,
-        weatherCode: current.weather_code ?? null,
-        visibility: current.visibility ?? null,
-        solarRadiation: current.shortwave_radiation ?? null,
-        uv: current.uv_index ?? null,
-        isDay: current.is_day ?? null,
-      },
-      daily: {
-        sunrise: first(daily.sunrise),
-        sunset: first(daily.sunset),
-        daylightDurationSeconds: first(daily.daylight_duration),
-        tempMax: first(daily.temperature_2m_max),
-        tempMin: first(daily.temperature_2m_min),
-        precipProbability: first(daily.precipitation_probability_max),
-        uvMax: first(daily.uv_index_max),
-        windSpeed: first(daily.wind_speed_10m_max),
-      },
-      field: {
-        soilTemperature: current.soil_temperature_0cm ?? null,
-        soilMoisture: current.soil_moisture_0_to_1cm ?? null,
-        evapotranspiration: first(daily.et0_fao_evapotranspiration),
-        shortwaveRadiation: first(daily.shortwave_radiation_sum),
-      }
-    };
+  function listPlaces() {
+    return readPlaces();
   }
 
-  function addFreshness(snapshot) {
-    if (!snapshot) {
+  function savePlace(place) {
+    const normalized = normalizePlace(place);
+    if (!normalized) return null;
+    const places = readPlaces();
+    const key = `${normalized.latitude.toFixed(4)},${normalized.longitude.toFixed(4)}`;
+    const deduped = [
+      normalized,
+      ...places.filter(item => `${Number(item.latitude).toFixed(4)},${Number(item.longitude).toFixed(4)}` !== key)
+    ];
+    writePlaces(deduped);
+    return normalized;
+  }
+
+  function setActivePlace(place) {
+    const normalized = savePlace(place);
+    if (!normalized) return null;
+    safeWrite(ACTIVE_PLACE_KEY, normalized);
+    return normalized;
+  }
+
+  function getActivePlace() {
+    return readActivePlace();
+  }
+
+  function setUnits(units) {
+    const next = {
+      temperature: units?.temperature === "fahrenheit" ? "fahrenheit" : "celsius",
+      wind: units?.wind === "mph" ? "mph" : "kmh"
+    };
+    safeWrite(UNITS_KEY, next);
+    return next;
+  }
+
+  function getUnits() {
+    return safeRead(UNITS_KEY) || { temperature: "celsius", wind: "kmh" };
+  }
+
+  function mapSnapshot(result, place) {
+    if (!result?.snapshot) {
       return {
-        providerConfigured: false,
-        statusLabel: "Location required",
-        freshness: { stale: true, ageMinutes: null, label: "No data" },
+        providerConfigured: !!place,
+        statusLabel: place ? (result?.errorMessage || "Unavailable") : "Location required",
+        source: "Open-Meteo",
+        place,
+        updatedAt: "",
+        freshness: { stale: true, label: "No data", ageMinutes: null },
+        current: null,
+        hourly: null,
+        daily: null,
+        environmental: null,
+        stale: true,
+        errorMessage: result?.errorMessage || ""
       };
     }
-    const age = ageMinutes(snapshot.updatedAt);
-    const stale = age == null ? true : age > 30;
-    return {
-      ...snapshot,
+
+    const snap = result.snapshot;
+    const updatedAt = snap.fetchedAt;
+    const ageMinutes = result.ageMinutes;
+    const stale = !!result.stale;
+    const current = snap.current || {};
+    const daily = snap.daily || {};
+
+    const mapped = {
+      provider: snap.provider,
+      providerConfigured: !!place,
+      statusLabel: stale ? "Cached snapshot" : "Live observation",
+      source: snap.providerUrl || "https://api.open-meteo.com/v1/forecast",
+      place,
+      updatedAt,
       freshness: {
         stale,
-        ageMinutes: age,
-        label: age == null ? "Unknown" : (age <= 1 ? "Just updated" : `${age} min ago`)
+        ageMinutes,
+        label: ageLabel(updatedAt)
       },
-      statusLabel: stale ? "Cached snapshot" : "Live observation",
+      stale,
+      staleReason: result.staleReason || "",
+      errorMessage: result.errorMessage || "",
+      current: {
+        temperature: current.temperature_2m,
+        apparentTemperature: current.apparent_temperature,
+        humidity: current.relative_humidity_2m,
+        dewPoint: current.dew_point_2m,
+        precipitation: current.precipitation,
+        rain: current.rain,
+        snowfall: current.snowfall,
+        weatherCode: current.weather_code,
+        condition: current.condition,
+        cloudCover: current.cloud_cover,
+        pressure: current.pressure_msl,
+        windSpeed: current.wind_speed_10m,
+        windDirection: current.wind_direction_10m,
+        windGust: current.wind_gusts_10m,
+        solarRadiation: current.shortwave_radiation,
+        isDay: current.is_day
+      },
+      hourly: snap.hourly,
+      daily: {
+        ...daily,
+        sunrise: daily.sunrise,
+        sunset: daily.sunset,
+        daylightDurationSeconds: daily.daylight_duration,
+        sunshineDurationSeconds: daily.sunshine_duration,
+        tempMax: Array.isArray(daily.temperature_2m_max) ? daily.temperature_2m_max[0] : daily.temperature_2m_max,
+        tempMin: Array.isArray(daily.temperature_2m_min) ? daily.temperature_2m_min[0] : daily.temperature_2m_min,
+        precipProbability: Array.isArray(daily.precipitation_probability_max) ? daily.precipitation_probability_max[0] : daily.precipitation_probability_max,
+        precipSum: Array.isArray(daily.precipitation_sum) ? daily.precipitation_sum[0] : daily.precipitation_sum,
+        uvMax: Array.isArray(daily.uv_index_max) ? daily.uv_index_max[0] : daily.uv_index_max,
+      },
+      environmental: {
+        locationName: locationLabel(place),
+        condition: current.condition,
+        provider: snap.provider,
+        updateAgeMinutes: ageMinutes
+      }
     };
-  }
 
-  async function fetchSnapshot(coords) {
-    const params = new URLSearchParams({
-      latitude: String(coords.latitude),
-      longitude: String(coords.longitude),
-      current: [
-        "temperature_2m",
-        "apparent_temperature",
-        "relative_humidity_2m",
-        "dew_point_2m",
-        "cloud_cover",
-        "pressure_msl",
-        "wind_speed_10m",
-        "wind_direction_10m",
-        "wind_gusts_10m",
-        "precipitation",
-        "weather_code",
-        "visibility",
-        "shortwave_radiation",
-        "uv_index",
-        "is_day",
-        "soil_temperature_0cm",
-        "soil_moisture_0_to_1cm"
-      ].join(","),
-      daily: [
-        "sunrise",
-        "sunset",
-        "daylight_duration",
-        "temperature_2m_max",
-        "temperature_2m_min",
-        "precipitation_probability_max",
-        "uv_index_max",
-        "wind_speed_10m_max",
-        "et0_fao_evapotranspiration",
-        "shortwave_radiation_sum"
-      ].join(","),
-      timezone: "auto"
-    });
-    const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params.toString()}`, { cache: "no-store" });
-    if (!response.ok) throw new Error(`Open-Meteo ${response.status}`);
-    const json = await response.json();
-    return mapResponse(json, coords);
+    safeWrite(SNAPSHOT_KEY, mapped);
+    return mapped;
   }
 
   async function requestRefresh(options = {}) {
-    const coords = resolveCoordinates(options.coords);
-    if (!coords) return addFreshness(null);
-    const existing = safeRead(CACHE_KEY);
-    const age = ageMinutes(existing?.updatedAt);
-    if (!options.force && existing && age != null && age < 10) {
-      return addFreshness(existing);
+    const provider = globalThis.OpenMeteoForecastProvider;
+    if (!provider?.getForecastSnapshot) {
+      return mapSnapshot({ errorMessage: "Open-Meteo provider module unavailable." }, readActivePlace());
     }
-    if (typeof navigator !== "undefined" && navigator.onLine === false) {
-      return addFreshness(existing || null);
-    }
-    try {
-      const fresh = await fetchSnapshot(coords);
-      safeWrite(CACHE_KEY, fresh);
-      return addFreshness(fresh);
-    } catch {
-      return addFreshness(existing || null);
-    }
+
+    const override = normalizePlace(options.coords || options.place);
+    const place = override || readActivePlace();
+    if (!place) return mapSnapshot({ errorMessage: "Location required." }, null);
+
+    const result = await provider.getForecastSnapshot({
+      place,
+      force: !!options.force,
+      signal: options.signal
+    });
+    _lastResult = result;
+    return mapSnapshot(result, place);
   }
 
   function getSnapshot() {
-    return addFreshness(safeRead(CACHE_KEY));
+    return safeRead(SNAPSHOT_KEY) || mapSnapshot(_lastResult, readActivePlace());
   }
 
-  function setManualCoordinates(latitude, longitude, label = "Manual coordinates") {
-    const coords = {
-      latitude: Number(latitude),
-      longitude: Number(longitude),
-      label,
-      mode: "manual"
+  function validLatLon(latitude, longitude) {
+    const lat = Number(latitude);
+    const lon = Number(longitude);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return null;
+    return {
+      latitude: clamp(lat, -90, 90),
+      longitude: clamp(lon, -180, 180)
     };
-    if (!Number.isFinite(coords.latitude) || !Number.isFinite(coords.longitude)) return false;
-    safeWrite(COORDS_KEY, coords);
-    return true;
+  }
+
+  function setManualCoordinates(latitude, longitude, name = "Manual coordinates") {
+    const value = validLatLon(latitude, longitude);
+    if (!value) return false;
+    const place = {
+      name: String(name || "Manual coordinates"),
+      latitude: value.latitude,
+      longitude: value.longitude,
+      source: "manual"
+    };
+    return !!setActivePlace(place);
   }
 
   async function requestDeviceLocation() {
-    if (!("geolocation" in navigator)) return null;
+    if (!("geolocation" in navigator)) {
+      throw new Error("Geolocation is unavailable on this device.");
+    }
     const position = await new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject, {
         enableHighAccuracy: false,
@@ -205,17 +266,16 @@
         maximumAge: 5 * 60 * 1000,
       });
     });
-    const coords = {
+    const place = {
+      name: "Device location",
       latitude: Number(position.coords.latitude),
       longitude: Number(position.coords.longitude),
-      label: "Device location",
-      mode: "device"
+      source: "device"
     };
-    safeWrite(COORDS_KEY, coords);
-    return coords;
+    return setActivePlace(place);
   }
 
-  async function searchCity(query) {
+  async function searchCity(query, signal) {
     const q = String(query || "").trim();
     if (!q) return [];
     const params = new URLSearchParams({
@@ -224,24 +284,39 @@
       language: "en",
       format: "json"
     });
-    const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?${params.toString()}`, { cache: "no-store" });
-    if (!response.ok) return [];
-    const json = await response.json();
-    return Array.isArray(json?.results) ? json.results.map(item => ({
-      name: [item.name, item.admin1, item.country].filter(Boolean).join(", "),
-      latitude: item.latitude,
-      longitude: item.longitude,
-      timezone: item.timezone || null,
-      mode: "city"
-    })) : [];
+    const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?${params.toString()}`, {
+      cache: "no-store",
+      signal
+    });
+    if (!response.ok) {
+      throw new Error(`Place search failed (${response.status}).`);
+    }
+    const payload = await response.json();
+    const rows = Array.isArray(payload?.results) ? payload.results : [];
+    return rows.map(row => ({
+      name: row.name || "Unknown place",
+      region: row.admin1 || row.admin2 || null,
+      country: row.country || null,
+      latitude: Number(row.latitude),
+      longitude: Number(row.longitude),
+      timezone: row.timezone || null,
+      source: "search"
+    })).filter(item => Number.isFinite(item.latitude) && Number.isFinite(item.longitude));
   }
 
   function continueWithoutLocation() {
-    safeWrite(COORDS_KEY, { mode: "none", label: "No location selected" });
+    localStorage.removeItem(ACTIVE_PLACE_KEY);
+    return { mode: "none", label: "No location selected" };
   }
 
   function getLocationState() {
-    return resolveCoordinates() || safeRead(COORDS_KEY) || { mode: "none", label: "No location selected" };
+    const place = readActivePlace();
+    if (!place) return { mode: "none", label: "Location not set" };
+    return {
+      mode: place.source || "manual",
+      label: locationLabel(place),
+      ...place
+    };
   }
 
   globalThis.OpenMeteoAdapter = Object.freeze({
@@ -252,5 +327,16 @@
     searchCity,
     continueWithoutLocation,
     getLocationState,
+    setActivePlace,
+    getActivePlace,
+    savePlace,
+    listPlaces,
+    getUnits,
+    setUnits,
+    keys: Object.freeze({
+      places: PLACES_KEY,
+      activePlace: ACTIVE_PLACE_KEY,
+      units: UNITS_KEY
+    })
   });
 })();

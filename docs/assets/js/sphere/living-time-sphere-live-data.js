@@ -237,7 +237,7 @@
     if (!adapter?.getSnapshot) {
       return {
         providerConfigured: false,
-        statusLabel: "No provider configured",
+        statusLabel: "Set location",
       };
     }
 
@@ -256,7 +256,7 @@
       providerConfigured,
       locationState,
       source: snapshot?.source || "Open-Meteo adapter",
-      statusLabel: snapshot?.statusLabel || (providerConfigured ? "Live observation" : "Location required"),
+      statusLabel: snapshot?.statusLabel || (providerConfigured ? "Live observation" : "Set location"),
       updatedAt: snapshot?.updatedAt || "",
     };
   }

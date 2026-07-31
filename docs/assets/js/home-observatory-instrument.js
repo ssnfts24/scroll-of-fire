@@ -28,7 +28,9 @@
     "assets/js/sphere/living-time-sphere-live-data.js",
     "assets/js/sphere/living-time-sphere-mount.js",
     "assets/js/sphere/living-time-sphere-today.js",
-    "assets/js/environment/open-meteo-adapter.js"
+    "assets/js/environment/providers/open-meteo-forecast.js",
+    "assets/js/environment/open-meteo-adapter.js",
+    "assets/js/environment/location-command.js"
   ];
 
   let loadingPromise = null;
@@ -107,7 +109,7 @@
 
   function weatherSummary(weather) {
     if (!weather) return "Unavailable";
-    if (!weather.providerConfigured) return "Provider not set";
+    if (!weather.providerConfigured) return "Set location";
     if (!weather.current) return weather.statusLabel || "Unavailable";
     const temp = typeof weather.current.temperature === "number" ? `${Math.round(weather.current.temperature)}°C` : null;
     const cloud = typeof weather.current.cloudCover === "number" ? `${Math.round(weather.current.cloudCover)}% cloud` : null;
@@ -298,6 +300,10 @@
       }
     };
     document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("sof:location-changed", () => {
+      if (!activeRoot) return;
+      refreshWeather(true).finally(() => updateExtraTelemetry(activeRoot));
+    });
 
     if (!("IntersectionObserver" in window)) {
       activateInstrument(root);

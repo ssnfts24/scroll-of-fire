@@ -163,6 +163,9 @@
   <script defer src="assets/js/share-day.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
   <script defer src="assets/js/motion.js"></script>
+  <script defer src="assets/js/environment/providers/open-meteo-forecast.js?v=20260731-1"></script>
+  <script defer src="assets/js/environment/open-meteo-adapter.js?v=20260731-1"></script>
+  <script defer src="assets/js/environment/location-command.js?v=20260731-1"></script>
   <script defer src="assets/js/home-observatory-instrument.js?v=20260731-1"></script>
   <script>
     window.__homeSphereBoot = {
@@ -539,6 +542,26 @@
             <li><strong>Active Quests</strong><span id="home-sphere-quest-count">—</span></li>
             <li><strong>Selected Day</strong><span id="home-sphere-selected-day">Today</span></li>
           </ul>
+
+          <section class="sphere-location-command sphere-location-command-compact" data-sof-location-command aria-label="Homepage location command">
+            <p class="sphere-location-state" data-location-state>LOCATION NOT SET</p>
+            <div class="sphere-location-actions">
+              <button class="sphere-chip-btn" type="button" data-location-use-device>Use My Location</button>
+              <button class="sphere-chip-btn" type="button" data-location-search-submit>Search Place</button>
+              <button class="sphere-chip-btn" type="button" data-location-coords-submit>Enter Coordinates</button>
+              <button class="sphere-chip-btn" type="button" data-location-continue-without>Continue Without Weather</button>
+            </div>
+            <div class="sphere-location-inputs">
+              <input data-location-search-input type="text" placeholder="Search place">
+              <div class="sphere-location-coords">
+                <input data-location-lat type="number" min="-90" max="90" step="0.0001" placeholder="Latitude">
+                <input data-location-lon type="number" min="-180" max="180" step="0.0001" placeholder="Longitude">
+                <input data-location-name type="text" placeholder="Optional place name">
+              </div>
+            </div>
+            <div class="sphere-location-results" data-location-results></div>
+            <p class="sphere-field-note" data-location-status>Choose a location to enable weather and daylight telemetry.</p>
+          </section>
 
           <div class="home-living-sphere__mode-controls" role="group" aria-label="Homepage instrument controls">
             <button class="sphere-chip-btn" type="button" data-sphere-mode="today" aria-pressed="true">Today</button>
