@@ -104,6 +104,8 @@ const mandatoryPaths = [
   "./assets/img/moons/app/icon-maskable-512.png"
 ];
 const optionalPaths = [
+  "./assets/css/living-time-app-enhancements.css",
+  "./assets/js/living-time-app-enhancements.js",
   "./genesis-oracle.html",
   "./assets/css/genesis-oracle.css",
   "./assets/js/genesis-oracle.js",
