@@ -1665,3 +1665,17 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
     margin-top: 0.1rem;
   }
 }
+
+
+/* 2026-07-30 shared app-state refinements */
+.sphere-location-command.has-active-place:not(.is-editing-place) .sphere-location-actions,
+.sphere-location-command.has-active-place:not(.is-editing-place) .sphere-location-inputs,
+.sphere-location-command.has-active-place:not(.is-editing-place) .sphere-location-results { display:none; }
+.sphere-location-change { margin:.35rem 0 .15rem; }
+.sphere-location-command.has-active-place { border-color:rgba(80,210,170,.34); }
+.sphere-moon-labels { contain:layout paint; }
+@media (max-width:620px){
+  .sphere-moon-label{font-size:.68rem!important;max-width:7.5rem;overflow:hidden;text-overflow:ellipsis;}
+  .sphere-location-actions{grid-template-columns:1fr 1fr;}
+  .sphere-location-coords{grid-template-columns:1fr;}
+}
