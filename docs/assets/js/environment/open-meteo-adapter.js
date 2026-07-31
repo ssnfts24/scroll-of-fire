@@ -13,8 +13,10 @@
 
   function _storageForKey(key) {
     try {
-      if (key === UNITS_KEY) return globalThis.localStorage || null;
-      return globalThis.sessionStorage || null;
+      // Place and weather continuity must survive navigation between the
+      // homepage, calendar, and full Observatory. Keep all canonical
+      // environment state in localStorage; memory remains the safe fallback.
+      return globalThis.localStorage || null;
     } catch {
       return null;
     }
@@ -23,7 +25,7 @@
   function safeRead(key) {
     try {
       const storage = _storageForKey(key);
-      const raw = storage?.getItem?.(key);
+      const raw = storage?.getItem?.(key) || _memoryStore.get(key);
       return raw ? JSON.parse(raw) : null;
     } catch {
       const raw = _memoryStore.get(key);
@@ -37,6 +39,11 @@
       const serialized = JSON.stringify(value);
       const storage = _storageForKey(key);
       storage?.setItem?.(key, serialized);
+      // Mirror to sessionStorage for compatibility with existing tabs and
+      // older builds while localStorage provides cross-page continuity.
+      if (globalThis.sessionStorage && globalThis.sessionStorage !== storage) {
+        globalThis.sessionStorage.setItem?.(key, serialized);
+      }
       _memoryStore.set(key, serialized);
       return true;
     } catch {
@@ -331,7 +338,7 @@
     };
     const normalized = normalizePlace(place);
     if (!normalized) return false;
-    _sessionActivePlace = normalized;
+    setActivePlace(normalized);
     return true;
   }
 
@@ -396,6 +403,18 @@
     };
   }
 
+  function bootstrapEnvironmentState() {
+    const place = readActivePlace();
+    const cached = safeRead(SNAPSHOT_KEY);
+    if (cached && (!place || !cached.place || (Number(cached.place.latitude) === Number(place.latitude) && Number(cached.place.longitude) === Number(place.longitude)))) {
+      globalThis.SofEnvironmentState?.setEnvironmentState?.({ ...cached, place: place || cached.place });
+      return cached;
+    }
+    const empty = mapSnapshot({ errorMessage: place ? "Weather has not been loaded yet." : "Location required." }, place);
+    globalThis.SofEnvironmentState?.setEnvironmentState?.(empty);
+    return empty;
+  }
+
   globalThis.OpenMeteoAdapter = Object.freeze({
     requestRefresh,
     getSnapshot,
@@ -410,10 +429,19 @@
     listPlaces,
     getUnits,
     setUnits,
+    bootstrapEnvironmentState,
     keys: Object.freeze({
       places: PLACES_KEY,
       activePlace: ACTIVE_PLACE_KEY,
       units: UNITS_KEY
     })
   });
+
+  if (typeof document !== "undefined" && document) {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bootstrapEnvironmentState, { once: true });
+    } else {
+      bootstrapEnvironmentState();
+    }
+  }
 })();
