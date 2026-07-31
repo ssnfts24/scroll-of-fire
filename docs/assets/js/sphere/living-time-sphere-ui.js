@@ -452,8 +452,12 @@
     const observation = _resolveSavedObservation(selected);
     const witnessCount = Number(live?.witness?.count || 0);
     const recurrence = Array.isArray(live?.history?.recurrences) ? live.history.recurrences[0] : null;
-    const providerConfigured = false;
-    const environmentSource = providerConfigured ? "Live environment provider" : "No provider configured";
+    const weather = live?.weather || null;
+    const providerConfigured = !!weather?.providerConfigured;
+    const environmentSource = providerConfigured ? (weather?.source || "Open-Meteo") : "No provider configured";
+    const weatherTimestamp = weather?.updatedAt || "";
+    const weatherFreshness = weather?.freshness?.label || "Not checked";
+    const canUseLiveWeather = providerConfigured && selected?.isToday;
     const daylightState = selected?.afterBoundary
       ? `After ${_state.boundaryMode === "midnight" ? "midnight" : "boundary"}`
       : `Before ${_state.boundaryMode === "midnight" ? "midnight" : "boundary"}`;
@@ -486,15 +490,17 @@
       {
         id: "weather",
         label: "Weather",
-        value: selected?.isToday ? "Not checked" : "Unavailable for this selected day",
-        status: "Not checked",
+        value: canUseLiveWeather
+          ? (weather?.statusLabel || "Live observation")
+          : "Unavailable for this selected day",
+        status: canUseLiveWeather ? (weather?.freshness?.stale ? "Cached" : "Live") : "Unavailable",
         source: environmentSource,
-        timestamp: "",
-        freshness: "Not checked",
+        timestamp: weatherTimestamp,
+        freshness: weatherFreshness,
         availability: providerConfigured
-          ? "Live provider is available."
+          ? "Live provider is available for current-day context."
           : "No provider is configured, so weather cannot be checked here.",
-        relation: selected?.isToday
+        relation: canUseLiveWeather
           ? "Current live field for the selected Pattern Day."
           : "Live weather is current-only and is not stored for non-current Pattern Days.",
         layerId: "environment",
@@ -506,13 +512,15 @@
       {
         id: "temperature",
         label: "Temperature",
-        value: selected?.isToday ? "Unavailable" : "Unavailable for this selected day",
-        status: "Unavailable",
+        value: canUseLiveWeather && typeof weather?.current?.temperature === "number"
+          ? `${Math.round(weather.current.temperature)}°C`
+          : "Unavailable for this selected day",
+        status: canUseLiveWeather && typeof weather?.current?.temperature === "number" ? "Live" : "Unavailable",
         source: environmentSource,
-        timestamp: "",
-        freshness: "Not checked",
+        timestamp: weatherTimestamp,
+        freshness: weatherFreshness,
         availability: "Temperature requires a live environment provider.",
-        relation: selected?.isToday ? "Would apply to the selected Pattern Day now." : "No historical environment provider is configured.",
+        relation: canUseLiveWeather ? "Live temperature sampled for the selected Pattern Day now." : "No historical environment provider is configured.",
         layerId: "environment",
         sphereLabel: "Environmental intensity",
         visibleOnSphere: _mappedLayerVisible("environment"),
@@ -522,13 +530,15 @@
       {
         id: "wind",
         label: "Wind",
-        value: selected?.isToday ? "Unavailable" : "Unavailable for this selected day",
-        status: "Unavailable",
+        value: canUseLiveWeather && typeof weather?.current?.windSpeed === "number"
+          ? `${Math.round(weather.current.windSpeed)} km/h${typeof weather?.current?.windDirection === "number" ? ` · ${Math.round(weather.current.windDirection)}°` : ""}`
+          : "Unavailable for this selected day",
+        status: canUseLiveWeather && typeof weather?.current?.windSpeed === "number" ? "Live" : "Unavailable",
         source: environmentSource,
-        timestamp: "",
-        freshness: "Not checked",
+        timestamp: weatherTimestamp,
+        freshness: weatherFreshness,
         availability: "Wind requires a live environment provider.",
-        relation: selected?.isToday ? "Would apply to the selected Pattern Day now." : "No historical environment provider is configured.",
+        relation: canUseLiveWeather ? "Live wind vector sampled for the selected Pattern Day now." : "No historical environment provider is configured.",
         layerId: "environment",
         sphereLabel: "Directional stream",
         visibleOnSphere: _mappedLayerVisible("environment"),
@@ -538,13 +548,15 @@
       {
         id: "cloud",
         label: "Cloud",
-        value: selected?.isToday ? "Unavailable" : "Unavailable for this selected day",
-        status: "Unavailable",
+        value: canUseLiveWeather && typeof weather?.current?.cloudCover === "number"
+          ? `${Math.round(weather.current.cloudCover)}%`
+          : "Unavailable for this selected day",
+        status: canUseLiveWeather && typeof weather?.current?.cloudCover === "number" ? "Live" : "Unavailable",
         source: environmentSource,
-        timestamp: "",
-        freshness: "Not checked",
+        timestamp: weatherTimestamp,
+        freshness: weatherFreshness,
         availability: "Cloud cover requires a live environment provider.",
-        relation: selected?.isToday ? "Would apply to the selected Pattern Day now." : "No historical environment provider is configured.",
+        relation: canUseLiveWeather ? "Live cloud field sampled for the selected Pattern Day now." : "No historical environment provider is configured.",
         layerId: "environment",
         sphereLabel: "Atmospheric veil",
         visibleOnSphere: _mappedLayerVisible("environment"),
@@ -634,13 +646,13 @@
       {
         id: "sunset",
         label: _state.manualSunset === "18:00" ? "Sunset boundary" : "Local sunset",
-        value: _state.manualSunset === "18:00"
-          ? `Manual fallback · ${_state.manualSunset}`
-          : `${_state.manualSunset || "18:00"}`,
+        value: weather?.daily?.sunset
+          ? _formatLocalInstant(weather.daily.sunset)
+          : (_state.manualSunset === "18:00" ? `Manual fallback · ${_state.manualSunset}` : `${_state.manualSunset || "18:00"}`),
         status: "Calculated",
-        source: _state.manualSunset === "18:00" ? "Manual fallback" : "Configured boundary",
-        timestamp: live?.instant || "",
-        freshness: "Current calculation",
+        source: weather?.daily?.sunset ? environmentSource : (_state.manualSunset === "18:00" ? "Manual fallback" : "Configured boundary"),
+        timestamp: weather?.daily?.sunset ? weatherTimestamp : (live?.instant || ""),
+        freshness: weather?.daily?.sunset ? weatherFreshness : "Current calculation",
         availability: "Always available from the current boundary configuration.",
         relation: selected?.afterBoundary
           ? "The selected Pattern Day has already crossed the configured boundary."
@@ -753,10 +765,10 @@
         id: "cached-environment",
         label: "Cached environment timestamp",
         value: live?.instant ? _formatLocalInstant(live.instant) : "No cached environment snapshot",
-        status: "Cached",
-        source: "LivingTimeSphereLiveData snapshot",
-        timestamp: live?.instant || "",
-        freshness: _formatFreshness(live?.instant, now),
+        status: providerConfigured ? "Cached" : "Unavailable",
+        source: providerConfigured ? environmentSource : "LivingTimeSphereLiveData snapshot",
+        timestamp: weatherTimestamp || live?.instant || "",
+        freshness: providerConfigured ? weatherFreshness : _formatFreshness(live?.instant, now),
         availability: "Always available as the current snapshot timestamp.",
         relation: "Indicates when this field layer snapshot was assembled.",
         layerId: "environment",
@@ -882,7 +894,7 @@
       activeConnectionCount,
       livingContext: {
         witness: `${_pluralize(witnessCount, "saved record", "saved records")}${live?.witness?.label && witnessCount ? ` · ${live.witness.label}` : ""}`,
-        environment: `${live?.environment?.online === false ? "Offline" : "Online"} · ${providerConfigured ? "live provider active" : "live provider unavailable"}`,
+        environment: `${live?.environment?.online === false ? "Offline" : "Online"} · ${providerConfigured ? (weather?.statusLabel || "live provider active") : "live provider unavailable"}`,
         recurrence: recurrence
           ? `Closest supported recurrence: ${recurrence.year} · ${Math.round(recurrence.overallSimilarityScore * 100)}%`
           : "Closest supported recurrence: Not available",
@@ -895,7 +907,7 @@
         patternEngineVersion: globalThis.PatternCalendarVersion?.version || "pattern-calendar/1.0.0",
         astronomyDatasetVersion: globalThis.AstronomySources?.sourceMetadata?.datasetVersion || globalThis.AstronomyVersion?.version || "astronomy/1.0.0",
         environmentProvider: environmentSource,
-        lastEnvironmentUpdate: live?.instant || "",
+        lastEnvironmentUpdate: weatherTimestamp || live?.instant || "",
         sunsetSource: _state.manualSunset === "18:00" ? "Manual fallback" : "Configured local boundary",
         lunarCalculationSource: globalThis.AstronomySources?.sources?.lunar?.label || live?.lunar?.source || "Lunar calculation unavailable",
         witnessStorageState: live?.witness?.source === "CodexMemory" ? `Local browser storage · ${_pluralize(witnessCount, "record", "records")}` : "Local browser storage unavailable",
@@ -1552,7 +1564,9 @@
           const wrapper = document.getElementById("sphere-container");
           if (wrapper?.scrollIntoView) wrapper.scrollIntoView({ behavior: "smooth", block: "center" });
         } else if (action === "refresh-live" && field.providerConfigured) {
-          renderSphere(document.getElementById("sphere-container"));
+          Promise.resolve(globalThis.OpenMeteoAdapter?.requestRefresh?.({ force: true }))
+            .catch(() => null)
+            .finally(() => renderSphere(document.getElementById("sphere-container")));
         }
       });
     });

@@ -232,6 +232,35 @@
     };
   }
 
+  function resolveWeather(options) {
+    const adapter = globalThis.OpenMeteoAdapter;
+    if (!adapter?.getSnapshot) {
+      return {
+        providerConfigured: false,
+        statusLabel: "No provider configured",
+      };
+    }
+
+    const locationState = adapter.getLocationState?.() || null;
+    const providerConfigured = Number.isFinite(locationState?.latitude) && Number.isFinite(locationState?.longitude);
+    const snapshot = adapter.getSnapshot() || {};
+    const asOf = options?.asOf instanceof Date ? options.asOf : new Date(options?.asOf || Date.now());
+    const nearNow = Math.abs(Date.now() - asOf.getTime()) <= 36 * 60 * 60 * 1000;
+
+    if (providerConfigured && nearNow && adapter.requestRefresh) {
+      Promise.resolve(adapter.requestRefresh({ force: false })).catch(() => {});
+    }
+
+    return {
+      ...snapshot,
+      providerConfigured,
+      locationState,
+      source: snapshot?.source || "Open-Meteo adapter",
+      statusLabel: snapshot?.statusLabel || (providerConfigured ? "Live observation" : "Location required"),
+      updatedAt: snapshot?.updatedAt || "",
+    };
+  }
+
   function resolveHistory(selectedYear, options) {
     let previous = null;
     let recurrences = [];
@@ -297,6 +326,7 @@
     const passageStatus = resolvePassageStatus(options, selectedYear);
     const witness = resolveWitnessSummary();
     const environment = resolveEnvironment();
+    const weather = resolveWeather(options);
     const history = resolveHistory(selectedYear, options);
     const alignment = yearModel?.sourceRecord || globalThis.AlignmentLedgerData?.getRecord?.({
       year: selectedYear,
@@ -322,6 +352,9 @@
         copy: solarGate.copy,
         season,
         angle: todayModel?.solarSeasonAngle ?? null,
+        sunrise: weather?.daily?.sunrise || null,
+        sunset: weather?.daily?.sunset || null,
+        daylightDurationSeconds: weather?.daily?.daylightDurationSeconds ?? null,
       },
       passage: {
         durationDays: alignment?.offsets?.equinoxToYearGateDays ?? null,
@@ -342,6 +375,7 @@
       history,
       witness,
       environment,
+      weather,
       links,
     };
 
