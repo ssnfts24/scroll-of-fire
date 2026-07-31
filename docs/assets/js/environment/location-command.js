@@ -15,10 +15,7 @@
   function formatPlace(place) {
     if (!place) return "LOCATION NOT SET";
     const parts = [place.name, place.region, place.country].filter(Boolean);
-    const coords = Number.isFinite(place.latitude) && Number.isFinite(place.longitude)
-      ? ` (${place.latitude.toFixed(3)}, ${place.longitude.toFixed(3)})`
-      : "";
-    return `${parts.join(", ") || "Selected place"}${coords}`;
+    return parts.join(", ") || "Device location";
   }
 
   function attach(root) {
@@ -36,7 +33,8 @@
     const refreshState = () => {
       const place = adapter.getActivePlace?.() || null;
       root.classList.toggle("has-active-place", !!place);
-      root.classList.toggle("is-editing-place", !place);
+      if (!place) root.classList.add("is-editing-place");
+      else if (!root.dataset.userEditing) root.classList.remove("is-editing-place");
       if (stateEl) stateEl.textContent = place ? formatPlace(place) : "LOCATION NOT SET";
       if (statusEl) statusEl.textContent = place
         ? "Active place ready. Weather is shared across the homepage, calendar, and Observatory."
@@ -48,7 +46,7 @@
         change.className = "sphere-chip-btn sphere-location-change";
         change.dataset.locationChange = "";
         change.textContent = "Change location";
-        change.addEventListener("click", () => root.classList.toggle("is-editing-place"));
+        change.addEventListener("click", () => { root.dataset.userEditing = "true"; root.classList.toggle("is-editing-place"); });
         stateEl?.insertAdjacentElement("afterend", change);
       }
       if (!place && change) change.remove();
