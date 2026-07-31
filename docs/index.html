@@ -163,6 +163,7 @@
   <script defer src="assets/js/share-day.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
   <script defer src="assets/js/motion.js"></script>
+  <script defer src="assets/js/environment/environment-state.js?v=20260731-2"></script>
   <script defer src="assets/js/environment/providers/open-meteo-forecast.js?v=20260731-1"></script>
   <script defer src="assets/js/environment/open-meteo-adapter.js?v=20260731-1"></script>
   <script defer src="assets/js/environment/location-command.js?v=20260731-1"></script>
@@ -318,7 +319,14 @@
       .home-living-sphere__viewport { height: min(78vw, 400px); min-height: 280px; }
       .home-living-sphere__summary { flex-direction: column; align-items: flex-start; }
     }
-  </style>
+  
+    .home-living-sphere__telemetry li { cursor:pointer; position:relative; transition:border-color .18s ease, background .18s ease, transform .18s ease; }
+    .home-living-sphere__telemetry li:hover, .home-living-sphere__telemetry li:focus-visible, .home-living-sphere__telemetry li.is-expanded { border-color:rgba(251,191,36,.62); background:rgba(16,25,38,.96); transform:translateY(-1px); }
+    .home-living-sphere__telemetry li::after { content:"Tap for details"; display:block; max-height:0; overflow:hidden; opacity:0; color:rgba(203,220,230,.72); font-size:.72rem; transition:max-height .18s ease, opacity .18s ease, margin .18s ease; }
+    .home-living-sphere__telemetry li:hover::after, .home-living-sphere__telemetry li:focus-visible::after, .home-living-sphere__telemetry li.is-expanded::after { max-height:2rem; opacity:1; margin-top:.35rem; }
+    .home-living-sphere__viewport { aspect-ratio:1/1; height:auto!important; max-height:min(88vw,560px); contain:layout paint size; }
+    .home-living-sphere__preview .sphere-moon-labels { overflow:hidden; }
+</style>
   <style id="participation-vision-styles-v20260729">
     .participation-vision::before{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(circle at 50% 0%,rgba(255,154,72,.12),transparent 34rem),radial-gradient(circle at 8% 42%,rgba(111,173,255,.08),transparent 28rem),radial-gradient(circle at 92% 72%,rgba(190,120,255,.07),transparent 30rem)}
     .participation-hero{max-width:960px;margin:0 auto 3rem;text-align:center}.participation-kicker{display:inline-flex;align-items:center;gap:.65rem;margin-bottom:1rem;padding:.55rem .9rem;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.035);font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}.participation-kicker::before{content:"Ξ";color:#ff9f59}.participation-title{max-width:930px;margin:0 auto;font-size:clamp(2.2rem,6vw,5.4rem);line-height:.97;letter-spacing:-.045em;text-wrap:balance}.participation-title span{display:block;margin-top:.18em;color:#ffad70}.participation-lead{max-width:800px;margin:1.5rem auto 0;font-size:clamp(1.05rem,2vw,1.32rem);line-height:1.75;color:rgba(255,255,255,.79)}
@@ -1800,4 +1808,4 @@
     <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
   </footer>
 </body>
-              </html>
+    </html>
