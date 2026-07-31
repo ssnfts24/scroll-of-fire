@@ -48,14 +48,25 @@
 
   function loadScript(path) {
     const src = resolveUrl(path);
-    const existing = Array.from(document.scripts).find(s => s.src === src);
+    const existing = Array.from(document.scripts).find(script => script.src === src);
     if (existing) {
-      if (existing.dataset.loaded === "true") return Promise.resolve();
-      return new Promise(resolve => existing.addEventListener("load", resolve, { once: true }));
+      // A parser/defer script may have completed before this loader starts. Waiting for a
+      // second load event would deadlock the Observatory, so treat completed documents or
+      // known-ready modules as loaded immediately.
+      if (existing.dataset.loaded === "true" || document.readyState !== "loading") {
+        existing.dataset.loaded = "true";
+        return Promise.resolve();
+      }
+      return new Promise((resolve, reject) => {
+        existing.addEventListener("load", () => { existing.dataset.loaded = "true"; resolve(); }, { once: true });
+        existing.addEventListener("error", () => reject(new Error(`Failed loading ${path}`)), { once: true });
+      });
     }
     return new Promise((resolve, reject) => {
       const script = document.createElement("script");
-      script.defer = true;
+      // Dynamic scripts default to async. async=false preserves dependency execution order
+      // while allowing the browser to fetch the full chain in parallel.
+      script.async = false;
       script.src = src;
       script.onload = () => { script.dataset.loaded = "true"; resolve(); };
       script.onerror = () => reject(new Error(`Failed loading ${path}`));
@@ -65,7 +76,7 @@
 
   async function ensureDependencies() {
     if (loadingPromise) return loadingPromise;
-    loadingPromise = DEPENDENCIES.reduce((chain, src) => chain.then(() => loadScript(src)), Promise.resolve());
+    loadingPromise = Promise.all(DEPENDENCIES.map(loadScript));
     return loadingPromise;
   }
 
@@ -122,6 +133,12 @@
     if (!snapshot) return;
     setText("home-sphere-civil-date", snapshot.pattern?.civilDate || "—");
     setText("home-sphere-selected-day", snapshot.pattern?.dayOfPatternYear ? `Day ${snapshot.pattern.dayOfPatternYear}/364` : "Outside count");
+    setText("home-sphere-boundary", snapshot.boundaryMode === "sunset" ? "Sunset boundary" : (snapshot.boundaryMode || "—"));
+    setText("home-sphere-time-zone", snapshot.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone || "Local");
+    setText("home-sphere-lunar-illumination", typeof snapshot.lunar?.illumination === "number" ? `${Math.round(snapshot.lunar.illumination * 100)}%` : "—");
+    setText("home-sphere-recurrence", Array.isArray(snapshot.history?.recurrences) && snapshot.history.recurrences[0]
+      ? `${snapshot.history.recurrences[0].year} · ${Math.round(snapshot.history.recurrences[0].overallSimilarityScore * 100)}%`
+      : "No close match");
     setText("home-sphere-quest-count", String(readQuestCount()));
     setText("home-sphere-today-witness", String(snapshot.witness?.count ?? 0));
 
