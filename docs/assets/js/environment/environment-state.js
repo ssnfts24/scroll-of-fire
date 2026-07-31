@@ -33,6 +33,7 @@
   });
 
   let _state = EMPTY_STATE;
+  const _subscribers = new Set();
 
   function _toArray(value) {
     return Array.isArray(value) ? value : [];
@@ -80,7 +81,15 @@
   function setEnvironmentState(nextState) {
     _state = normalizeEnvironmentState(nextState);
     emitEnvironmentChange(_state);
+    _subscribers.forEach(fn => { try { fn(_state); } catch {} });
     return _state;
+  }
+
+  function subscribe(fn, { immediate = true } = {}) {
+    if (typeof fn !== "function") return () => {};
+    _subscribers.add(fn);
+    if (immediate) { try { fn(getEnvironmentState()); } catch {} }
+    return () => _subscribers.delete(fn);
   }
 
   function getEnvironmentState() {
@@ -95,5 +104,6 @@
     setEnvironmentState,
     getEnvironmentState,
     emitEnvironmentChange,
+    subscribe,
   });
 })();
