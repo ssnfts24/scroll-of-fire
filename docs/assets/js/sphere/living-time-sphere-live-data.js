@@ -232,6 +232,43 @@
     };
   }
 
+  function resolveWeather(options) {
+    const adapter = globalThis.OpenMeteoAdapter;
+    const environmentState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+    if (!adapter?.getSnapshot) {
+      return {
+        providerConfigured: false,
+        statusLabel: "Set location",
+        classification: environmentState?.classification || "LOCATION NOT SET",
+      };
+    }
+
+    const locationState = adapter.getLocationState?.() || null;
+    const providerConfigured = Number.isFinite(locationState?.latitude) && Number.isFinite(locationState?.longitude);
+    const adapterSnapshot = adapter.getSnapshot() || {};
+    const asOf = options?.asOf instanceof Date ? options.asOf : new Date(options?.asOf || Date.now());
+    const nearNow = Math.abs(Date.now() - asOf.getTime()) <= 36 * 60 * 60 * 1000;
+
+    if (providerConfigured && nearNow && adapter.requestRefresh) {
+      Promise.resolve(adapter.requestRefresh({ force: false })).catch(() => {});
+    }
+
+    const snapshot = {
+      ...adapterSnapshot,
+      providerConfigured,
+      locationState,
+      source: adapterSnapshot?.source || "Open-Meteo adapter",
+      statusLabel: adapterSnapshot?.statusLabel || (providerConfigured ? "Live observation" : "Set location"),
+      updatedAt: adapterSnapshot?.updatedAt || "",
+    };
+    if (environmentState) {
+      snapshot.classification = environmentState.classification || snapshot.classification;
+      snapshot.status = environmentState.status || snapshot.status;
+      snapshot.reason = environmentState.reason || snapshot.reason;
+    }
+    return snapshot;
+  }
+
   function resolveHistory(selectedYear, options) {
     let previous = null;
     let recurrences = [];
@@ -297,6 +334,7 @@
     const passageStatus = resolvePassageStatus(options, selectedYear);
     const witness = resolveWitnessSummary();
     const environment = resolveEnvironment();
+    const weather = resolveWeather(options);
     const history = resolveHistory(selectedYear, options);
     const alignment = yearModel?.sourceRecord || globalThis.AlignmentLedgerData?.getRecord?.({
       year: selectedYear,
@@ -322,6 +360,9 @@
         copy: solarGate.copy,
         season,
         angle: todayModel?.solarSeasonAngle ?? null,
+        sunrise: weather?.daily?.sunrise || null,
+        sunset: weather?.daily?.sunset || null,
+        daylightDurationSeconds: weather?.daily?.daylightDurationSeconds ?? null,
       },
       passage: {
         durationDays: alignment?.offsets?.equinoxToYearGateDays ?? null,
@@ -342,6 +383,7 @@
       history,
       witness,
       environment,
+      weather,
       links,
     };
 

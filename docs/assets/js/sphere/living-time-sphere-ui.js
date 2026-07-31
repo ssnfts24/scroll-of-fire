@@ -14,16 +14,18 @@
     manualSunset:  "18:00",
     selectedDayOfYear: null,
     fieldRange:    "now",
-    visibleLayers: { pattern: true, exactDays: true, weekGates: true, outsideDays: false, passage: true, lunar: true, solar: false, markers: true, recurrence: false, spiral: false, environment: false, connections: true },
+    visibleLayers: { pattern: true, exactDays: true, weekGates: true, outsideDays: true, passage: true, lunar: true, solar: true, markers: true, recurrence: true, spiral: true, environment: true, witness: false, personal: false, connections: true },
     selectedMarker: null,
     useCanvas:     false,
     lowPower:      false,
     // Phase 03 additions
     rendererMode:  "auto",   // "auto" | "3d" | "svg" | "table" | "text"
     quality:       "auto",   // "auto" | "high" | "balanced" | "lowpower" | "svgonly"
-    moonLabelMode: "contextual", // "contextual" | "all" | "selected" | "hidden"
+    moonLabelMode: "balanced", // "essential" | "balanced" | "all" | "none"
     moonLabelDistance: "standard",
     dayLabelMode: "key",
+    showLabels: true,
+    layerPreset: "fullObservatory",
     connectionMode: "contextual",
     motionMode: "still",
     active3d:      false,    // true when 3D renderer is active
@@ -31,6 +33,8 @@
     _3dInitInProgress: false, // guard against concurrent 3D init calls
   };
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
+  const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
+  const LAYER_PREFERENCES_KEY = "sof.sphere.layerPreferences.v2";
   const DAY_MS = 24 * 60 * 60 * 1000;
   const SHABBAT_DAYS = new Set([2, 9, 16, 23]);
   const MOON_LOG_KEY = "sof_moon_logs_v3";
@@ -43,6 +47,9 @@
     "pattern-year": "Pattern Year",
     historical: "Historical comparison",
   });
+  const LAYER_PRESET_OPTIONS = Object.freeze(["fullObservatory", "cleanPattern", "livingSky", "weatherField", "passage", "witnessMap", "historicalField", "lowPower"]);
+
+  let _urlHasExplicitLayers = false;
 
   // ── Dependency check ───────────────────────────────────────────────
 
@@ -60,6 +67,7 @@
 
   function applyUrlState() {
     if (typeof location === "undefined") return;
+    _urlHasExplicitLayers = false;
     const parsed = globalThis.LivingTimeSphereUrlState.parseSphereUrl(location.href);
     if (parsed.year)         _state.year         = parsed.year;
     if (parsed.viewMode)     _state.viewMode     = parsed.viewMode;
@@ -67,6 +75,8 @@
     if (parsed.boundaryMode) _state.boundaryMode = parsed.boundaryMode;
     if (parsed.manualSunset) _state.manualSunset = parsed.manualSunset;
     if (parsed.marker)       _state.selectedMarker = parsed.marker;
+    const markerDay = _selectedDayFromMarker(parsed.marker);
+    if (markerDay != null) _state.selectedDayOfYear = markerDay;
     if (parsed.renderer)     _state.rendererMode = parsed.renderer;
     if (parsed.quality)      _state.quality      = parsed.quality;
     if (parsed.connectionMode) _state.connectionMode = parsed.connectionMode;
@@ -74,9 +84,11 @@
     if (parsed.moonLabelDistance) _state.moonLabelDistance = parsed.moonLabelDistance;
     if (parsed.dayLabelMode)   _state.dayLabelMode = parsed.dayLabelMode;
     if (parsed.layers) {
+      _urlHasExplicitLayers = parsed.layers.length > 0;
       for (const k of Object.keys(_state.visibleLayers)) _state.visibleLayers[k] = false;
       for (const l of parsed.layers) _state.visibleLayers[l] = true;
     }
+    if (parsed.moonLabelMode) _state.moonLabelMode = parsed.moonLabelMode;
     // Restore camera from URL (validated in url-state module)
     if ((parsed.cameraTheta != null || parsed.cameraDist != null) &&
         globalThis.LivingTimeSphereCamera) {
@@ -142,11 +154,14 @@
 
   function _resolveMoonLabelMode() {
     const stored = _readLocalSetting(MOON_LABEL_MODE_KEY);
-    if (stored === "contextual" || stored === "all" || stored === "selected" || stored === "hidden") {
+    if (stored === "contextual") return "balanced";
+    if (stored === "selected") return "essential";
+    if (stored === "hidden") return "none";
+    if (stored === "essential" || stored === "balanced" || stored === "all" || stored === "none") {
       return stored;
     }
-    if (typeof window !== "undefined" && window.innerWidth < 640) return "contextual";
-    return _state.moonLabelMode || "contextual";
+    if (typeof window !== "undefined" && window.innerWidth < 640) return "essential";
+    return _state.moonLabelMode || "balanced";
   }
 
   function _resolveMoonLabelDistance() {
@@ -160,6 +175,44 @@
 
   function _toIso(date) {
     return `${date.getUTCFullYear()}-${_pad(date.getUTCMonth() + 1)}-${_pad(date.getUTCDate())}`;
+  }
+
+  function _windBearingLabel(deg) {
+    if (!Number.isFinite(deg)) return "";
+    const dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+    return dirs[Math.round((((deg % 360) + 360) % 360) / 45) % 8];
+  }
+
+  function _formatTemperature(value, units = "fahrenheit") {
+    if (!Number.isFinite(value)) return "Location required";
+    if (units === "celsius") return `${Math.round(value)}°C`;
+    return `${Math.round(value * 9 / 5 + 32)}°F`;
+  }
+
+  function _formatDurationHours(seconds) {
+    if (!Number.isFinite(seconds) || seconds <= 0) return "Location required";
+    const h = Math.floor(seconds / 3600);
+    const m = Math.round((seconds % 3600) / 60);
+    return `${h}h ${String(m).padStart(2, "0")}m`;
+  }
+
+  function _classifyActiveDate(selected, weather, nowDate = new Date()) {
+    const currentIso = _toIso(nowDate);
+    const selectedIso = selected?.effectiveDate || selected?.civilDate || currentIso;
+    if (_state.fieldRange === "now" || _state.fieldRange === "today" || selected?.isToday || selectedIso === currentIso) {
+      return { kind: "current", label: "LIVE CURRENT" };
+    }
+    const dailyTimes = Array.isArray(weather?.daily?.time) ? weather.daily.time : [];
+    if (dailyTimes.includes(selectedIso)) {
+      const cmp = selectedIso.localeCompare(currentIso);
+      if (cmp > 0) return { kind: "forecast", label: "FORECAST" };
+      if (cmp < 0) return { kind: "historical-forecast", label: "HISTORICAL FORECAST" };
+    }
+    const selectedYear = Number(String(selectedIso || "").slice(0, 4));
+    if (Number.isFinite(selectedYear) && selectedYear >= 1940) {
+      return { kind: "reanalysis", label: "REANALYSIS" };
+    }
+    return { kind: "historical-unsupported", label: "UNAVAILABLE" };
   }
 
   function _patternDateFromDayOfYear(year, dayOfYear) {
@@ -182,14 +235,11 @@
     const todayDay = live?.pattern?.dayOfPatternYear ?? baseModel?.todayPatternPosition?.dayOfPatternYear ?? null;
 
     if (_state.selectedDayOfYear == null) {
-      _state.selectedDayOfYear = todayPatternYear === _state.year && todayDay ? todayDay : 1;
-    }
-
-    if (todayPatternYear !== _state.year && _state.selectedDayOfYear === todayDay && _state.viewMode === "today") {
-      _state.selectedDayOfYear = 1;
+      _state.selectedDayOfYear = todayDay || baseModel?.todayPatternPosition?.dayOfPatternYear || 1;
     }
 
     _state.selectedDayOfYear = Math.max(1, Math.min(364, Number(_state.selectedDayOfYear) || 1));
+    _persistSelectedState();
     return _state.selectedDayOfYear;
   }
 
@@ -246,11 +296,13 @@
 
   function _decorateModel(baseModel) {
     const live = _currentSnapshot();
+    const environmentState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
     const selected = _resolveSelectedPatternPosition(baseModel);
     const activeMoon = selected?.moon ?? live?.pattern?.moon ?? baseModel?.todayPatternPosition?.moon ?? baseModel?.sourceRecord?.equinox?.patternPosition?.moon ?? 1;
     return {
       ...baseModel,
       selectedPatternPosition: selected,
+      environmentSnapshot: environmentState,
       todayPatternPosition: live?.todayModel?.todayPatternPosition || baseModel?.todayPatternPosition || null,
       moonSectors: Array.isArray(baseModel?.moonSectors)
         ? baseModel.moonSectors.map(sector => ({ ...sector, active: sector.moonNumber === activeMoon }))
@@ -317,6 +369,50 @@
       return raw ? JSON.parse(raw) : null;
     } catch {
       return null;
+    }
+  }
+
+  function _selectedDayFromMarker(marker) {
+    const value = String(marker || "");
+    const dayMatch = /^day-(\d+)$/.exec(value);
+    if (dayMatch) return Math.max(1, Math.min(364, Number(dayMatch[1]) || 1));
+    const moonMatch = /^moon-(\d+)$/.exec(value);
+    if (moonMatch) {
+      const moon = Math.max(1, Math.min(13, Number(moonMatch[1]) || 1));
+      return (moon - 1) * 28 + 1;
+    }
+    return null;
+  }
+
+  function _readSelectedState() {
+    return _readLocalJson(SELECTED_STATE_KEY);
+  }
+
+  function _persistSelectedState() {
+    try {
+      globalThis.localStorage?.setItem(SELECTED_STATE_KEY, JSON.stringify({
+        selectedDayOfYear: _state.selectedDayOfYear,
+        selectedMarker: _state.selectedMarker,
+        year: _state.year,
+      }));
+    } catch {
+      // ignore storage failures
+    }
+  }
+
+  function _restoreSelectedStateIfNeeded() {
+    if (_state.selectedDayOfYear != null) return;
+    const saved = _readSelectedState();
+    if (!saved || typeof saved !== "object") return;
+    const day = Number(saved.selectedDayOfYear);
+    if (Number.isFinite(day)) {
+      _state.selectedDayOfYear = Math.max(1, Math.min(364, day));
+    }
+    if (!_state.selectedMarker && typeof saved.selectedMarker === "string") {
+      _state.selectedMarker = saved.selectedMarker;
+    }
+    if (!Number.isFinite(Number(_state.year)) && Number.isFinite(Number(saved.year))) {
+      _state.year = Number(saved.year);
     }
   }
 
@@ -452,8 +548,24 @@
     const observation = _resolveSavedObservation(selected);
     const witnessCount = Number(live?.witness?.count || 0);
     const recurrence = Array.isArray(live?.history?.recurrences) ? live.history.recurrences[0] : null;
-    const providerConfigured = false;
-    const environmentSource = providerConfigured ? "Live environment provider" : "No provider configured";
+    const weather = live?.weather || null;
+    const environmentState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+    const environmentClassification = environmentState?.classification || null;
+    const providerConfigured = !!weather?.providerConfigured;
+    const environmentSource = providerConfigured ? (weather?.source || "Open-Meteo") : "No provider configured";
+    const weatherTimestamp = weather?.updatedAt || "";
+    const weatherFreshness = weather?.freshness?.label || "Not checked";
+    const dateClass = _classifyActiveDate(selected, weather, now);
+    const canUseLiveWeather = providerConfigured && (dateClass.kind === "current" || dateClass.kind === "forecast" || dateClass.kind === "historical-forecast");
+    const weatherDisplayState = environmentClassification
+      || (canUseLiveWeather ? (weather?.freshness?.stale ? "CACHED" : "LIVE WEATHER") : "UNAVAILABLE");
+    const weatherUnavailableReason = !providerConfigured
+      ? "Set location"
+      : (dateClass.kind === "historical-unsupported"
+        ? "Unavailable for unsupported historical date"
+        : dateClass.kind === "reanalysis"
+          ? "Reanalysis not configured"
+          : "Unavailable for this selected historical day");
     const daylightState = selected?.afterBoundary
       ? `After ${_state.boundaryMode === "midnight" ? "midnight" : "boundary"}`
       : `Before ${_state.boundaryMode === "midnight" ? "midnight" : "boundary"}`;
@@ -481,22 +593,25 @@
     const summaryItems = ["Pattern", "Lunar", "Passage", "Local boundary"];
     if (personalFieldCount) summaryItems.push(`${personalFieldCount} personal ${personalFieldCount === 1 ? "field" : "fields"}`);
     if (providerConfigured) summaryItems.push("Environment");
+    if (!providerConfigured) summaryItems.push("Set location");
 
     const fields = [
       {
         id: "weather",
         label: "Weather",
-        value: selected?.isToday ? "Not checked" : "Unavailable for this selected day",
-        status: "Not checked",
+        value: canUseLiveWeather
+          ? (weather?.current?.condition || weather?.statusLabel || "Live observation")
+          : weatherDisplayState,
+        status: weatherDisplayState,
         source: environmentSource,
-        timestamp: "",
-        freshness: "Not checked",
+        timestamp: weatherTimestamp,
+        freshness: weatherFreshness,
         availability: providerConfigured
-          ? "Live provider is available."
-          : "No provider is configured, so weather cannot be checked here.",
-        relation: selected?.isToday
-          ? "Current live field for the selected Pattern Day."
-          : "Live weather is current-only and is not stored for non-current Pattern Days.",
+          ? "Live provider is available for current-day context."
+          : "Location is required before weather can be checked.",
+        relation: canUseLiveWeather
+          ? `Weather is attached to ${dateClass.label.toLowerCase()}.`
+          : "Live weather is never attached to older selected Pattern days.",
         layerId: "environment",
         sphereLabel: "Environmental shell",
         visibleOnSphere: _mappedLayerVisible("environment"),
@@ -506,13 +621,15 @@
       {
         id: "temperature",
         label: "Temperature",
-        value: selected?.isToday ? "Unavailable" : "Unavailable for this selected day",
-        status: "Unavailable",
+        value: canUseLiveWeather && typeof weather?.current?.temperature === "number"
+          ? _formatTemperature(weather.current.temperature, globalThis.OpenMeteoAdapter?.getUnits?.()?.temperature || "fahrenheit")
+          : weatherUnavailableReason,
+        status: canUseLiveWeather && typeof weather?.current?.temperature === "number" ? "Live" : "Unavailable",
         source: environmentSource,
-        timestamp: "",
-        freshness: "Not checked",
+        timestamp: weatherTimestamp,
+        freshness: weatherFreshness,
         availability: "Temperature requires a live environment provider.",
-        relation: selected?.isToday ? "Would apply to the selected Pattern Day now." : "No historical environment provider is configured.",
+        relation: canUseLiveWeather ? "Live temperature sampled for the selected Pattern Day now." : "No historical environment provider is configured.",
         layerId: "environment",
         sphereLabel: "Environmental intensity",
         visibleOnSphere: _mappedLayerVisible("environment"),
@@ -522,13 +639,15 @@
       {
         id: "wind",
         label: "Wind",
-        value: selected?.isToday ? "Unavailable" : "Unavailable for this selected day",
-        status: "Unavailable",
+        value: canUseLiveWeather && typeof weather?.current?.windSpeed === "number"
+          ? `${Math.round(weather.current.windSpeed)} km/h${typeof weather?.current?.windDirection === "number" ? ` ${_windBearingLabel(weather.current.windDirection)}` : ""}`
+          : weatherUnavailableReason,
+        status: canUseLiveWeather && typeof weather?.current?.windSpeed === "number" ? "Live" : "Unavailable",
         source: environmentSource,
-        timestamp: "",
-        freshness: "Not checked",
+        timestamp: weatherTimestamp,
+        freshness: weatherFreshness,
         availability: "Wind requires a live environment provider.",
-        relation: selected?.isToday ? "Would apply to the selected Pattern Day now." : "No historical environment provider is configured.",
+        relation: canUseLiveWeather ? "Live wind vector sampled for the selected Pattern Day now." : "No historical environment provider is configured.",
         layerId: "environment",
         sphereLabel: "Directional stream",
         visibleOnSphere: _mappedLayerVisible("environment"),
@@ -538,13 +657,15 @@
       {
         id: "cloud",
         label: "Cloud",
-        value: selected?.isToday ? "Unavailable" : "Unavailable for this selected day",
-        status: "Unavailable",
+        value: canUseLiveWeather && typeof weather?.current?.cloudCover === "number"
+          ? `${Math.round(weather.current.cloudCover)}%`
+          : weatherUnavailableReason,
+        status: canUseLiveWeather && typeof weather?.current?.cloudCover === "number" ? "Live" : "Unavailable",
         source: environmentSource,
-        timestamp: "",
-        freshness: "Not checked",
+        timestamp: weatherTimestamp,
+        freshness: weatherFreshness,
         availability: "Cloud cover requires a live environment provider.",
-        relation: selected?.isToday ? "Would apply to the selected Pattern Day now." : "No historical environment provider is configured.",
+        relation: canUseLiveWeather ? "Live cloud field sampled for the selected Pattern Day now." : "No historical environment provider is configured.",
         layerId: "environment",
         sphereLabel: "Atmospheric veil",
         visibleOnSphere: _mappedLayerVisible("environment"),
@@ -634,13 +755,13 @@
       {
         id: "sunset",
         label: _state.manualSunset === "18:00" ? "Sunset boundary" : "Local sunset",
-        value: _state.manualSunset === "18:00"
-          ? `Manual fallback · ${_state.manualSunset}`
-          : `${_state.manualSunset || "18:00"}`,
+        value: weather?.daily?.sunset
+          ? _formatLocalInstant(weather.daily.sunset)
+          : (_state.manualSunset === "18:00" ? `Manual fallback · ${_state.manualSunset}` : `${_state.manualSunset || "18:00"}`),
         status: "Calculated",
-        source: _state.manualSunset === "18:00" ? "Manual fallback" : "Configured boundary",
-        timestamp: live?.instant || "",
-        freshness: "Current calculation",
+        source: weather?.daily?.sunset ? environmentSource : (_state.manualSunset === "18:00" ? "Manual fallback" : "Configured boundary"),
+        timestamp: weather?.daily?.sunset ? weatherTimestamp : (live?.instant || ""),
+        freshness: weather?.daily?.sunset ? weatherFreshness : "Current calculation",
         availability: "Always available from the current boundary configuration.",
         relation: selected?.afterBoundary
           ? "The selected Pattern Day has already crossed the configured boundary."
@@ -753,10 +874,10 @@
         id: "cached-environment",
         label: "Cached environment timestamp",
         value: live?.instant ? _formatLocalInstant(live.instant) : "No cached environment snapshot",
-        status: "Cached",
-        source: "LivingTimeSphereLiveData snapshot",
-        timestamp: live?.instant || "",
-        freshness: _formatFreshness(live?.instant, now),
+        status: providerConfigured ? "Cached" : "Unavailable",
+        source: providerConfigured ? environmentSource : "LivingTimeSphereLiveData snapshot",
+        timestamp: weatherTimestamp || live?.instant || "",
+        freshness: providerConfigured ? weatherFreshness : _formatFreshness(live?.instant, now),
         availability: "Always available as the current snapshot timestamp.",
         relation: "Indicates when this field layer snapshot was assembled.",
         layerId: "environment",
@@ -874,6 +995,58 @@
     ];
 
     const activeConnectionCount = fields.filter(field => field.visibleOnSphere && field.status !== "Unavailable" && field.status !== "Not checked").length;
+    const locationName = weather?.place?.name || weather?.locationState?.label || "Set location";
+    const sensorMatrix = [
+      {
+        key: "weather",
+        label: "Weather",
+        value: canUseLiveWeather ? (weather?.current?.condition || weather?.statusLabel || "Live observation") : weatherDisplayState,
+      },
+      {
+        key: "temperature",
+        label: "Temperature",
+        value: canUseLiveWeather && Number.isFinite(weather?.current?.temperature)
+          ? _formatTemperature(weather.current.temperature, globalThis.OpenMeteoAdapter?.getUnits?.()?.temperature || "fahrenheit")
+          : "Location required",
+      },
+      {
+        key: "humidity",
+        label: "Humidity",
+        value: canUseLiveWeather && Number.isFinite(weather?.current?.humidity)
+          ? `${Math.round(weather.current.humidity)}%`
+          : "Location required",
+      },
+      {
+        key: "wind",
+        label: "Wind",
+        value: canUseLiveWeather && Number.isFinite(weather?.current?.windSpeed)
+          ? `${Math.round(weather.current.windSpeed)} km/h ${_windBearingLabel(weather.current.windDirection)}`
+          : "Location required",
+      },
+      {
+        key: "sunrise",
+        label: "Sunrise",
+        value: canUseLiveWeather && weather?.daily?.sunrise ? _formatLocalInstant(weather.daily.sunrise) : "Location required",
+      },
+      {
+        key: "sunset",
+        label: "Sunset",
+        value: canUseLiveWeather && weather?.daily?.sunset ? _formatLocalInstant(weather.daily.sunset) : "Location required",
+      },
+      {
+        key: "daylight",
+        label: "Daylight",
+        value: canUseLiveWeather && Number.isFinite(weather?.daily?.daylightDurationSeconds)
+          ? _formatDurationHours(weather.daily.daylightDurationSeconds)
+          : "Location required",
+      },
+      {
+        key: "provider",
+        label: "Provider",
+        value: providerConfigured ? `${weather?.provider || "Open-Meteo"} · ${weatherFreshness}` : "Set location",
+      }
+    ];
+    const environmentLayerReady = providerConfigured && canUseLiveWeather;
 
     return {
       rangeLabel: FIELD_RANGE_LABELS[_state.fieldRange] || FIELD_RANGE_LABELS.now,
@@ -882,7 +1055,7 @@
       activeConnectionCount,
       livingContext: {
         witness: `${_pluralize(witnessCount, "saved record", "saved records")}${live?.witness?.label && witnessCount ? ` · ${live.witness.label}` : ""}`,
-        environment: `${live?.environment?.online === false ? "Offline" : "Online"} · ${providerConfigured ? "live provider active" : "live provider unavailable"}`,
+        environment: `${live?.environment?.online === false ? "Offline" : "Online"} · ${providerConfigured ? (weather?.statusLabel || "live provider active") : "live provider unavailable"}`,
         recurrence: recurrence
           ? `Closest supported recurrence: ${recurrence.year} · ${Math.round(recurrence.overallSimilarityScore * 100)}%`
           : "Closest supported recurrence: Not available",
@@ -895,7 +1068,7 @@
         patternEngineVersion: globalThis.PatternCalendarVersion?.version || "pattern-calendar/1.0.0",
         astronomyDatasetVersion: globalThis.AstronomySources?.sourceMetadata?.datasetVersion || globalThis.AstronomyVersion?.version || "astronomy/1.0.0",
         environmentProvider: environmentSource,
-        lastEnvironmentUpdate: live?.instant || "",
+        lastEnvironmentUpdate: weatherTimestamp || live?.instant || "",
         sunsetSource: _state.manualSunset === "18:00" ? "Manual fallback" : "Configured local boundary",
         lunarCalculationSource: globalThis.AstronomySources?.sources?.lunar?.label || live?.lunar?.source || "Lunar calculation unavailable",
         witnessStorageState: live?.witness?.source === "CodexMemory" ? `Local browser storage · ${_pluralize(witnessCount, "record", "records")}` : "Local browser storage unavailable",
@@ -905,6 +1078,10 @@
         })(),
       },
       providerConfigured,
+      dateClass,
+      sensorMatrix,
+      locationName,
+      environmentLayerReady,
     };
   }
 
@@ -994,6 +1171,7 @@
           dayLabelMode: _state.dayLabelMode,
           connectionRegistry: globalThis.LivingTimeSphereConnections?.buildRegistry?.({ model, spiral, state: _state }) || [],
           motionMode: _state.motionMode,
+          environmentState: globalThis.SofEnvironmentState?.getEnvironmentState?.() || null,
           reducedMotion,
           onYearSelect: year => {
             _state.year = year;
@@ -1041,13 +1219,12 @@
         // Fall back to SVG.
         _state.active3d = false;
         const reason = result?.reason || "WebGL unavailable";
-        const detail = result?.detail ? ` (${result.detail})` : "";
-        const statusText = `SVG fallback — ${reason}${detail}`;
+        const statusText = `SVG fallback — ${reason}`;
         _updateRendererLabel(statusText);
         // Sync the renderer selector so it accurately reflects the active renderer.
         _syncRendererSelect("svg");
         // Show the fallback warning row with Retry button.
-        _showRendererFallbackWarning(reason, detail);
+        _showRendererFallbackWarning(reason, result?.detail || "");
         // Remove any stale canvas element left by a failed init.
         const staleCanvas = container.querySelector(".living-time-sphere-3d-canvas");
         if (staleCanvas) staleCanvas.remove();
@@ -1079,6 +1256,7 @@
         globalThis.LivingTimeSphereConnections?.buildRegistry?.({ model, spiral, state: _state }) || [],
         _state.motionMode
       );
+      renderer.updateEnvironment?.(globalThis.SofEnvironmentState?.getEnvironmentState?.() || null);
       renderer.setMode(_state.viewMode);
     }
   }
@@ -1172,13 +1350,13 @@
     const el = document.getElementById("sphere-renderer-fallback-warning");
     if (!el) return;
     const reasonEl = el.querySelector(".sphere-fallback-reason");
-    if (reasonEl) reasonEl.textContent = `3D unavailable — using SVG (${reason}${detail})`;
+    if (reasonEl) reasonEl.textContent = "Accessible SVG view is active";
     // Populate inline diagnostics inside the collapsible details block.
     const r3d = globalThis.LivingTimeSphereRenderer3d;
     const diag = r3d?.getDiagnostics?.() || {};
     const _set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val || "—"; };
     _set("sphere-diag-local-url-warn",      diag.localModuleUrl || r3d?.THREE_LOCAL_REL || "—");
-    _set("sphere-diag-last-error-warn",     diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : (detail || "—"));
+    _set("sphere-diag-last-error-warn",     diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : `${reason}${detail ? `: ${detail}` : ""}`);
     _set("sphere-diag-module-source-warn",  diag.moduleSource || "none");
     _set("sphere-diag-webgl-warn",          diag.webglAvailable ? "available" : "unavailable");
     _set("sphere-diag-webgl2-warn",         diag.webgl2Available ? "available" : "unavailable");
@@ -1370,6 +1548,10 @@
     const yearPos = yearRecord?.equinox?.patternPosition || {};
     const offs = yearRecord?.offsets || {};
     const field = _fieldLayerSnapshot(selected, model);
+    if (!field.environmentLayerReady && _state.visibleLayers.environment) {
+      _state.visibleLayers.environment = false;
+      _syncLayerCheckboxes();
+    }
     const selectedLabel = selected?.moon != null ? `Moon ${selected.moon} · ${selected.moonName || "Unavailable"} · Day ${selected.day}` : "Unavailable";
     const day364 = selected?.dayOfPatternYear != null ? `Day ${selected.dayOfPatternYear}/364` : "Unavailable — selected day is outside the counted year.";
     const patternAngle = selected?.dayOfPatternYear != null
@@ -1448,6 +1630,12 @@
     };
 
     const fieldCards = field.fields.map(renderFieldCard).join("");
+    const matrixRows = (field.sensorMatrix || []).map(row => `
+      <div class="sphere-sensor-row" data-sensor-row="${_escapeHtml(row.key)}">
+        <span class="sphere-sensor-label">${_escapeHtml(row.label)}</span>
+        <strong class="sphere-sensor-value">${_escapeHtml(row.value)}</strong>
+      </div>
+    `).join("");
     const livingContextEntries = [
       ["Witness", field.livingContext.witness],
       ["Environment", field.livingContext.environment],
@@ -1493,6 +1681,12 @@
       </div>
       <div class="sphere-details-section">
         <h4 class="sphere-details-subheading">Field Layer</h4>
+        <p class="sphere-field-range-note">Range · ${_escapeHtml(field.rangeLabel)} · ${_escapeHtml(field.dateClass?.label || "Current civil time")}</p>
+        <p class="sphere-field-note"><strong>Location</strong> · ${_escapeHtml(field.locationName || "Set location")}</p>
+        <div class="sphere-sensor-matrix" aria-label="Environmental sensor matrix">
+          ${matrixRows}
+        </div>
+        <p class="sphere-field-note">${field.environmentLayerReady ? "Environmental layers are active from live values." : "Set a location to activate environmental layers."}</p>
         <div class="sphere-field-summary">
           <div>
             <p class="sphere-field-summary-label">Active Fields</p>
@@ -1504,8 +1698,10 @@
             <a class="sphere-btn sphere-btn-sm" href="${_escapeHtml(_buildAlignmentLink("recurrence"))}">Compare Fields</a>
           </div>
         </div>
-        <p class="sphere-field-range-note">Range · ${_escapeHtml(field.rangeLabel)}</p>
-        <div class="sphere-field-cards">${fieldCards}</div>
+        <details class="sphere-field-disclosure">
+          <summary>Expanded field details</summary>
+          <div class="sphere-field-cards">${fieldCards}</div>
+        </details>
         <details class="sphere-field-disclosure">
           <summary>Sources and freshness</summary>
           <dl class="sphere-details-grid sphere-details-grid-tight">${sourcesEntries}</dl>
@@ -1552,7 +1748,9 @@
           const wrapper = document.getElementById("sphere-container");
           if (wrapper?.scrollIntoView) wrapper.scrollIntoView({ behavior: "smooth", block: "center" });
         } else if (action === "refresh-live" && field.providerConfigured) {
-          renderSphere(document.getElementById("sphere-container"));
+          Promise.resolve(globalThis.OpenMeteoAdapter?.requestRefresh?.({ force: true }))
+            .catch(() => null)
+            .finally(() => renderSphere(document.getElementById("sphere-container")));
         }
       });
     });
@@ -2082,6 +2280,7 @@
       return;
     }
     applyUrlState();
+    _restoreSelectedStateIfNeeded();
     _state.moonLabelMode = _resolveMoonLabelMode();
     _state.moonLabelDistance = _resolveMoonLabelDistance();
 
@@ -2103,6 +2302,24 @@
 
     wireControls(container);
     wireInteraction(container);
+    const environmentApi = globalThis.SofEnvironmentState;
+    if (environmentApi?.getEnvironmentState && !environmentApi.getEnvironmentState()) {
+      environmentApi.setEnvironmentState(environmentApi.EMPTY_STATE);
+    }
+    window.addEventListener("sof:location-changed", () => {
+      Promise.resolve(globalThis.OpenMeteoAdapter?.requestRefresh?.({ force: true }))
+        .catch(() => null)
+        .finally(() => renderSphere(container));
+    });
+    window.addEventListener(globalThis.SofEnvironmentState?.EVENT_NAME || "sof:environment-change", event => {
+      const nextState = event?.detail?.state || globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+      const renderer = globalThis.LivingTimeSphereRenderer3d;
+      if (_state.active3d && renderer?.isInitialized?.()) {
+        renderer.updateEnvironment?.(nextState);
+      } else {
+        renderSphere(container);
+      }
+    });
 
     // Defer first render by one animation frame so the container has a
     // stable, non-zero bounding rect before 3D dimensions are measured.

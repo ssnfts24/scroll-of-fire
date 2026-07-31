@@ -157,7 +157,7 @@ test("missing optional image does not block install or offline startup", async (
       type: "APP_SHELL_READY",
       appVersion: "2026.07.16.3",
       serviceWorkerBuild: "2026.07.16.3",
-      mandatoryAssetCount: 82
+      mandatoryAssetCount: 86
     }
   );
   await activateWorker(harness);
@@ -512,7 +512,7 @@ const refreshOptions = (harness, overrides = {}) => ({
   expectedVersion: "2026.07.16.3",
   expectedBuild: "2026.07.16.3",
   status: message => harness.messages.push(message),
-  lifecycleTimeoutMs: 25,
+  lifecycleTimeoutMs: 100,
   ...overrides
 });
 

@@ -208,6 +208,7 @@
         dayLabelMode: state.dayLabelMode,
         connectionRegistry: sceneData.connectionRegistry,
         motionMode: state.motionMode,
+        environmentState: globalThis.SofEnvironmentState?.getEnvironmentState?.() || null,
         reducedMotion: state.motionMode === "reduced",
         onYearSelect(year) {
           state = globalThis.LivingTimeSphereState.mergeState(state, { selectedYear: year, mode: "passage", selectedMarker: `year-${year}` });
@@ -241,6 +242,7 @@
       buildScene();
       if (active3d && globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
         globalThis.LivingTimeSphereRenderer3d.refresh(sceneData.model, sceneData.spiral, sceneData.selectedYear, sceneData.visibleLayers, state.mode, state.moonLabelMode, state.moonLabelDistance, state.dayLabelMode, sceneData.connectionRegistry, state.motionMode);
+        globalThis.LivingTimeSphereRenderer3d.updateEnvironment?.(globalThis.SofEnvironmentState?.getEnvironmentState?.() || null);
       } else {
         renderSvg();
       }

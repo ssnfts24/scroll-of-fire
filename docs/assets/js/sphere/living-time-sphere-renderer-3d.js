@@ -89,6 +89,7 @@
   let _moonLabelEls = null;   // Array of 13 DOM span elements
   let _moonLabelContainer = null;  // The #sphere-moon-labels container
   let _moonLabelConnectorEl = null;
+  let _moonLabelManager = null;
   let _moonLabelMode = "contextual";
   let _moonLabelDistance = "standard";
   let _dayLabelMode = "key";
@@ -96,6 +97,32 @@
   let _motionMode = "still";
   const _moonAnchors = [];    // { moon, angle, radius, worldVec } for each of 13 moons
   let _lastCameraFocusKey = null;
+  const _environmentLayerEnabled = {
+    atmosphere: true,
+    clouds: true,
+    wind: true,
+    precipitation: true,
+    temperature: true,
+    pressure: true,
+    radiation: true,
+    airQuality: true,
+    spaceWeather: true,
+  };
+  let _environmentLayerVisible = true;
+  let _environmentDiagnostics = [];
+  const EMPTY_ENVIRONMENT_STATE = Object.freeze({
+    status: "unavailable",
+    reason: "location-not-set",
+    place: null,
+    current: null,
+    hourly: [],
+    daily: [],
+    airQuality: null,
+    spaceWeather: null,
+    fetchedAt: null,
+    stale: false,
+  });
+  let _environmentState = EMPTY_ENVIRONMENT_STATE;
 
   // ── Three.js lazy loader ──────────────────────────────────────────
 
@@ -200,6 +227,15 @@
       el.classList.remove("is-selected", "is-front", "is-quiet");
       return el;
     });
+    if (globalThis.LivingTimeSphereLabelManager?.createManager) {
+      _moonLabelManager = globalThis.LivingTimeSphereLabelManager.createManager();
+      _moonLabelManager.init({
+        stageEl: container,
+        labelContainer: _moonLabelContainer,
+        labelEls: _moonLabelEls,
+        connectorEl: _moonLabelConnectorEl
+      });
+    }
   }
 
   function _adjacentMoons(moon) {
@@ -252,148 +288,22 @@
 
   // Called every frame to project 3D moon anchors to screen space and update labels.
   function _updateMoonLabels(viewMode) {
-    if (!_moonLabelEls || !_camera || !_canvas || !_THREE) return;
-    const THREE = _THREE;
-    const rect = _canvas.getBoundingClientRect();
-    if (!rect || rect.width === 0) return;
-
-    const mat = globalThis.LivingTimeSphereM;
-    const todayMoon = _model?.todayPatternPosition?.moon || null;
-    const selectedMoon = todayMoon || (_model?.sourceRecord?.equinox?.patternPosition?.moon ?? 1);
-    const equinoxMoon = _model?.sourceRecord?.equinox?.patternPosition?.moon || null;
-    const showSet = _moonLabelSet(viewMode, _moonLabelMode, selectedMoon, todayMoon, equinoxMoon);
-    const centerVec = new THREE.Vector3(0, 0, 0).project(_camera);
-    const centerX = ((centerVec.x + 1) / 2) * rect.width;
-    const centerY = ((-centerVec.y + 1) / 2) * rect.height;
-    const projVec = new THREE.Vector3();
-    const innerVec = new THREE.Vector3();
-    const camDir = new THREE.Vector3();
-    const anchorDir = new THREE.Vector3();
-    const labelRects = [];
-    const visibleCandidates = [];
-    _camera.getWorldDirection(camDir);
-    _hideMoonConnector();
-
-    for (let i = 0; i < 13; i++) {
-      const anchor = _moonAnchors[i];
-      const moon = anchor.moon;
-      const el = _moonLabelEls[i];
-      if (!el) continue;
-      _hideMoonLabel(el);
-      if (!showSet.has(moon)) continue;
-
-      projVec.set(anchor.worldX, anchor.worldY, anchor.worldZ).project(_camera);
-      if (projVec.z >= 0.995) continue;
-
-      anchorDir.set(anchor.worldX, 0, anchor.worldZ).normalize();
-      const dot = anchorDir.dot(camDir);
-      if (dot >= 0.12) continue;
-
-      const anchorX = ((projVec.x + 1) / 2) * rect.width;
-      const anchorY = ((-projVec.y + 1) / 2) * rect.height;
-      innerVec.set(
-        anchor.worldX * (mat.SIZES.patternRing * 0.82 / anchor.radius),
-        anchor.worldY,
-        anchor.worldZ * (mat.SIZES.patternRing * 0.82 / anchor.radius)
-      ).project(_camera);
-      const innerX = ((innerVec.x + 1) / 2) * rect.width;
-      const innerY = ((-innerVec.y + 1) / 2) * rect.height;
-      const anchorCenterDist = Math.hypot(anchorX - centerX, anchorY - centerY);
-      const innerCenterDist = Math.hypot(innerX - centerX, innerY - centerY);
-      if (anchorCenterDist <= innerCenterDist + 16) continue;
-
-      const frontness = Math.max(0, Math.min(1, (0.18 - dot) / 1.08));
-      if (frontness <= 0.04) continue;
-
-      const priority = _moonLabelPriority(moon, { selectedMoon, todayMoon, equinoxMoon, viewMode });
-      visibleCandidates.push({
-        moon,
-        el,
-        priority,
-        frontness,
-        anchorX,
-        anchorY,
-        selected: moon === selectedMoon,
-        quiet: viewMode === "today" && moon !== selectedMoon && moon !== todayMoon,
-      });
-    }
-
-    visibleCandidates.sort((a, b) => (b.priority + b.frontness) - (a.priority + a.frontness));
-
-    for (const candidate of visibleCandidates) {
-      const { moon, el, anchorX, anchorY, selected, quiet, frontness } = candidate;
-      el.style.display = "";
-      const elW = el.offsetWidth || 58;
-      const elH = el.offsetHeight || 20;
-      const desiredX = anchorX - elW / 2;
-      const desiredY = anchorY - elH / 2;
-      const margin = 6;
-      const clampedX = Math.max(margin, Math.min(rect.width - elW - margin, desiredX));
-      const clampedY = Math.max(margin, Math.min(rect.height - elH - margin, desiredY));
-      const clampShift = Math.max(Math.abs(clampedX - desiredX), Math.abs(clampedY - desiredY));
-      const edgeFade = clampShift >= 28 ? 0 : Math.max(0, 1 - (clampShift / 28) * 0.85);
-      let opacity = Math.max(0, Math.min(1, 0.35 + (frontness ** 1.08) * 0.65)) * edgeFade;
-      if (selected) opacity = Math.max(opacity, 0.95);
-      if (opacity <= 0.02) {
-        _hideMoonLabel(el);
-        continue;
-      }
-
-      const thisRect = { x: clampedX, y: clampedY, w: elW + 8, h: elH + 6 };
-      let collides = false;
-      for (const prev of labelRects) {
-        if (clampedX < prev.x + prev.w && clampedX + thisRect.w > prev.x &&
-            clampedY < prev.y + prev.h && clampedY + thisRect.h > prev.y) {
-          collides = true;
-          break;
-        }
-      }
-      if (collides && !selected) {
-        _hideMoonLabel(el);
-        continue;
-      }
-      labelRects.push(thisRect);
-
-      el.style.left = `${clampedX}px`;
-      el.style.top = `${clampedY}px`;
-      el.style.opacity = String(opacity);
-      el.style.fontSize = selected ? "0.84rem" : candidate.priority >= 80 ? "0.74rem" : "0.68rem";
-      el.style.fontWeight = selected ? "700" : candidate.priority >= 80 ? "600" : "500";
-      el.style.color = selected ? "#fff1c2" : frontness > 0.72 ? "rgba(214,241,234,0.96)" : "rgba(160,212,201,0.88)";
-      el.style.transform = `translateZ(0) scale(${selected ? 1.04 : frontness > 0.7 ? 1 : 0.96})`;
-      el.classList.toggle("is-selected", selected);
-      el.classList.toggle("is-front", frontness > 0.72);
-      el.classList.toggle("is-quiet", quiet || frontness < 0.55);
-      el.dataset.facing = frontness.toFixed(3);
-      el.dataset.priority = String(candidate.priority);
-      candidate.boxCenterX = clampedX + elW / 2;
-      candidate.boxCenterY = clampedY + elH / 2;
-      candidate.opacity = opacity;
-    }
-
-    const connectorTarget = visibleCandidates.find(candidate =>
-      candidate.selected && candidate.el.style.display !== "none" && (viewMode === "today" || viewMode === "pattern")
-    );
-    if (connectorTarget && _moonLabelConnectorEl && _objects.todayMarker) {
-      projVec.copy(_objects.todayMarker.position).project(_camera);
-      if (projVec.z < 0.995) {
-        const startX = ((projVec.x + 1) / 2) * rect.width;
-        const startY = ((-projVec.y + 1) / 2) * rect.height;
-        const endX = connectorTarget.boxCenterX;
-        const endY = connectorTarget.boxCenterY;
-        const dx = endX - startX;
-        const dy = endY - startY;
-        const len = Math.hypot(dx, dy);
-        if (len > 18) {
-          _moonLabelConnectorEl.style.display = "";
-          _moonLabelConnectorEl.style.left = `${startX}px`;
-          _moonLabelConnectorEl.style.top = `${startY}px`;
-          _moonLabelConnectorEl.style.width = `${len}px`;
-          _moonLabelConnectorEl.style.transform = `rotate(${Math.atan2(dy, dx)}rad)`;
-          _moonLabelConnectorEl.style.opacity = String(Math.min(0.72, connectorTarget.opacity * 0.72));
-        }
-      }
-    }
+    if (!_moonLabelManager || !_camera || !_canvas || !_THREE) return;
+    _moonLabelManager.update({
+      camera: _camera,
+      three: _THREE,
+      anchors: _moonAnchors,
+      model: _model,
+      labelMode: _moonLabelMode,
+      selectedPatternPosition: _model?.selectedPatternPosition || _model?.todayPatternPosition || null,
+      showAllMobileLabels: _moonLabelMode === "all",
+      todayMarkerPosition: _objects.todayMarker?.position
+        ? { x: _objects.todayMarker.position.x, y: _objects.todayMarker.position.y, z: _objects.todayMarker.position.z }
+        : null,
+      viewMode,
+      stageEl: _container,
+      visibleLayersKey: JSON.stringify(_visibleLayers || {})
+    });
   }
 
   // ── Scene construction ────────────────────────────────────────────
@@ -819,6 +729,287 @@
 
   // ── Update scene from model data ──────────────────────────────────
 
+  function _temperatureColorHex(valueC) {
+    if (!Number.isFinite(valueC)) return 0x95c7ff;
+    if (valueC <= 0) return 0x86b7ff;
+    if (valueC <= 15) return 0x8fd3ff;
+    if (valueC <= 25) return 0xf5cd72;
+    if (valueC <= 35) return 0xf1984d;
+    return 0xe76448;
+  }
+
+  function _num(value, fallback = 0) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function _clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function _normalizedEnvironmentState(input) {
+    const normalizer = globalThis.SofEnvironmentState?.normalizeEnvironmentState;
+    if (typeof normalizer === "function") return normalizer(input || EMPTY_ENVIRONMENT_STATE);
+    const source = input || EMPTY_ENVIRONMENT_STATE;
+    return {
+      ...EMPTY_ENVIRONMENT_STATE,
+      ...source,
+      hourly: Array.isArray(source.hourly) ? source.hourly : [],
+      daily: source.daily && typeof source.daily === "object" ? source.daily : {},
+    };
+  }
+
+  function _recordEnvironmentDiagnostic(layer, error) {
+    _environmentDiagnostics = [{
+      layer,
+      message: String(error?.message || error || "unknown-error"),
+      at: new Date().toISOString(),
+    }, ..._environmentDiagnostics].slice(0, 20);
+  }
+
+  function _setEnvironmentObjectVisible(layer, visible) {
+    if (layer === "atmosphere") {
+      if (_objects.environmentShell) _objects.environmentShell.visible = visible;
+      return;
+    }
+    if (layer === "clouds") {
+      if (_objects.environmentCloudBands) _objects.environmentCloudBands.visible = visible;
+      return;
+    }
+    if (layer === "wind") {
+      if (_objects.environmentWindVectors) _objects.environmentWindVectors.visible = visible;
+      return;
+    }
+    if (layer === "precipitation") {
+      if (_objects.environmentPrecip) _objects.environmentPrecip.visible = visible;
+      return;
+    }
+    if (layer === "temperature") {
+      if (_objects.environmentTemperatureArc) _objects.environmentTemperatureArc.visible = visible;
+      return;
+    }
+    if (layer === "pressure") {
+      if (_objects.environmentPressureRing) _objects.environmentPressureRing.visible = visible;
+      return;
+    }
+    if (layer === "radiation") {
+      if (_objects.environmentTerminator) _objects.environmentTerminator.visible = visible;
+      return;
+    }
+  }
+
+  function _buildEnvironmentLayerObjects() {
+    if (!_THREE || _objects.environmentGroup) return;
+    const THREE = _THREE;
+    const group = new THREE.Group();
+    group.name = "environmentGroup";
+    group.visible = false;
+
+    const shell = new THREE.Mesh(
+      new THREE.SphereGeometry(1.18, 44, 44),
+      new THREE.MeshBasicMaterial({
+        color: 0x8fd3ff,
+        transparent: true,
+        opacity: 0.08,
+        depthWrite: false,
+        side: THREE.DoubleSide
+      })
+    );
+    shell.name = "environment-shell";
+    group.add(shell);
+
+    const cloudBands = new THREE.Group();
+    [-0.18, 0, 0.18].forEach((y, index) => {
+      const band = new THREE.Mesh(
+        new THREE.TorusGeometry(1.14 + index * 0.015, 0.014, 10, 96),
+        new THREE.MeshBasicMaterial({ color: 0xcfe8ff, transparent: true, opacity: 0.06, depthWrite: false })
+      );
+      band.rotation.x = Math.PI / 2;
+      band.position.y = y;
+      cloudBands.add(band);
+    });
+    cloudBands.name = "environment-cloud-bands";
+    group.add(cloudBands);
+
+    const windGroup = new THREE.Group();
+    for (let i = 0; i < 8; i += 1) {
+      const geo = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(0.86, -0.12 + i * 0.035, 0),
+        new THREE.Vector3(1.1, -0.12 + i * 0.035, 0)
+      ]);
+      const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0xa7f3d0, transparent: true, opacity: 0.56 }));
+      windGroup.add(line);
+    }
+    windGroup.name = "environment-wind-vectors";
+    group.add(windGroup);
+
+    const tempArc = new THREE.Mesh(
+      new THREE.TorusGeometry(1.08, 0.018, 12, 120, Math.PI * 1.15),
+      new THREE.MeshBasicMaterial({ color: 0xf5cd72, transparent: true, opacity: 0.72, depthWrite: false })
+    );
+    tempArc.name = "environment-temperature-arc";
+    tempArc.rotation.x = Math.PI / 2;
+    tempArc.rotation.z = Math.PI * 0.25;
+    group.add(tempArc);
+
+    const pressureRing = new THREE.Mesh(
+      new THREE.TorusGeometry(1.03, 0.008, 10, 96),
+      new THREE.MeshBasicMaterial({ color: 0x9dc1ff, transparent: true, opacity: 0.58, depthWrite: false })
+    );
+    pressureRing.rotation.x = Math.PI / 2;
+    pressureRing.name = "environment-pressure-ring";
+    group.add(pressureRing);
+
+    const precip = new THREE.Mesh(
+      new THREE.SphereGeometry(1.16, 6, 6),
+      new THREE.MeshBasicMaterial({ color: 0x84d8ff, transparent: true, opacity: 0.04, wireframe: true, depthWrite: false })
+    );
+    precip.name = "environment-precip-particles";
+    group.add(precip);
+
+    const terminator = new THREE.Mesh(
+      new THREE.TorusGeometry(1.0, 0.004, 8, 120),
+      new THREE.MeshBasicMaterial({ color: 0xffd47a, transparent: true, opacity: 0.48, depthWrite: false })
+    );
+    terminator.rotation.x = Math.PI / 2;
+    terminator.name = "environment-day-night-terminator";
+    group.add(terminator);
+
+    _scene.add(group);
+    _objects.environmentGroup = group;
+    _objects.environmentShell = shell;
+    _objects.environmentCloudBands = cloudBands;
+    _objects.environmentWindVectors = windGroup;
+    _objects.environmentTemperatureArc = tempArc;
+    _objects.environmentPressureRing = pressureRing;
+    _objects.environmentPrecip = precip;
+    _objects.environmentTerminator = terminator;
+  }
+
+  function _runEnvironmentLayer(layer, fn) {
+    if (_environmentLayerEnabled[layer] === false) return;
+    try {
+      fn();
+      _setEnvironmentObjectVisible(layer, true);
+    } catch (error) {
+      _environmentLayerEnabled[layer] = false;
+      _setEnvironmentObjectVisible(layer, false);
+      _recordEnvironmentDiagnostic(layer, error);
+    }
+  }
+
+  function _applyEnvironmentState() {
+    _buildEnvironmentLayerObjects();
+    if (!_objects.environmentGroup) return;
+    const snapshot = _normalizedEnvironmentState(_environmentState);
+    const current = snapshot?.current || null;
+    const hourly = snapshot?.hourly || [];
+    const daily = snapshot?.daily || {};
+    const hasData = !!(_environmentLayerVisible && snapshot && current);
+    _objects.environmentGroup.visible = hasData;
+    if (!hasData) return;
+
+    const cloud = _clamp(_num(current.cloudCover ?? current.cloud_cover, 0), 0, 100);
+    const humidity = _clamp(_num(current.humidity ?? current.relative_humidity_2m, 0), 0, 100);
+    const windSpeed = Math.max(0, _num(current.windSpeed ?? current.wind_speed_10m, 0));
+    const windDirection = _num(current.windDirection ?? current.wind_direction_10m, 0);
+    const gusts = Math.max(0, _num(current.windGust ?? current.wind_gusts_10m, windSpeed));
+    const precipitation = Math.max(0, _num(current.precipitation, 0));
+    const pressure = _num(current.pressure ?? current.pressure_msl, 1013);
+    const shortwave = Math.max(0, _num(current.solarRadiation ?? current.shortwave_radiation, 0));
+    const tempC = _num(current.temperature ?? current.temperature_2m, 0);
+
+    _runEnvironmentLayer("atmosphere", () => {
+      _objects.environmentShell.material.opacity = 0.06 + (cloud / 100) * 0.24 + (humidity / 100) * 0.16;
+    });
+
+    _runEnvironmentLayer("clouds", () => {
+      const low = _num(hourly?.cloud_cover_low?.[0], cloud);
+      const mid = _num(hourly?.cloud_cover_mid?.[0], cloud);
+      const high = _num(hourly?.cloud_cover_high?.[0], cloud);
+      const bands = _objects.environmentCloudBands?.children || [];
+      [low, mid, high].forEach((value, index) => {
+        const band = bands[index];
+        if (!band) return;
+        band.material.opacity = 0.04 + _clamp(value, 0, 100) / 100 * 0.42;
+      });
+    });
+
+    _runEnvironmentLayer("wind", () => {
+      _objects.environmentWindVectors.rotation.y = (windDirection * Math.PI) / 180;
+      const windScale = 0.8 + Math.min(2.2, windSpeed / 12);
+      _objects.environmentWindVectors.scale.set(windScale, 1, 1 + Math.min(1.8, gusts / 22));
+    });
+
+    _runEnvironmentLayer("temperature", () => {
+      _objects.environmentTemperatureArc.material.color.setHex(_temperatureColorHex(tempC));
+      _objects.environmentTemperatureArc.material.opacity = 0.36 + Math.min(0.46, Math.abs(tempC - 16) / 40);
+    });
+
+    _runEnvironmentLayer("pressure", () => {
+      _objects.environmentPressureRing.scale.setScalar(1 + _clamp((pressure - 1013) / 500, -0.05, 0.05));
+      _objects.environmentPressureRing.material.opacity = 0.42 + Math.min(0.32, Math.abs(pressure - 1013) / 45);
+    });
+
+    _runEnvironmentLayer("precipitation", () => {
+      _objects.environmentPrecip.material.opacity = 0.02 + Math.min(0.32, precipitation / 6);
+    });
+
+    _runEnvironmentLayer("radiation", () => {
+      const dayStart = daily?.sunrise ? new Date(daily.sunrise).getTime() : NaN;
+      const dayEnd = daily?.sunset ? new Date(daily.sunset).getTime() : NaN;
+      let dayAngle = 0;
+      if (Number.isFinite(dayStart) && Number.isFinite(dayEnd) && dayEnd > dayStart) {
+        const progress = _clamp((Date.now() - dayStart) / (dayEnd - dayStart), 0, 1);
+        dayAngle = progress * Math.PI * 2;
+      }
+      _objects.environmentTerminator.rotation.z = dayAngle;
+      if (_objects.pointLight) _objects.pointLight.intensity = 0.85 + Math.min(1.35, shortwave / 360);
+      if (_objects.hazeShell) _objects.hazeShell.material.opacity = Math.max(_objects.hazeShell.material.opacity, 0.08 + Math.min(0.28, shortwave / 1200));
+    });
+
+    _runEnvironmentLayer("airQuality", () => {});
+    _runEnvironmentLayer("spaceWeather", () => {});
+  }
+
+  const _environmentController = {
+    initialize(environmentState) {
+      Object.keys(_environmentLayerEnabled).forEach(layer => {
+        _environmentLayerEnabled[layer] = true;
+      });
+      _environmentState = _normalizedEnvironmentState(environmentState || EMPTY_ENVIRONMENT_STATE);
+      _environmentDiagnostics = [];
+      _applyEnvironmentState();
+    },
+    update(environmentState) {
+      _environmentState = _normalizedEnvironmentState(environmentState || EMPTY_ENVIRONMENT_STATE);
+      _applyEnvironmentState();
+    },
+    setLayerVisibility(layerName, visible) {
+      if (layerName === "environment") {
+        _environmentLayerVisible = !!visible;
+      } else if (Object.prototype.hasOwnProperty.call(_environmentLayerEnabled, layerName)) {
+        _environmentLayerEnabled[layerName] = !!visible;
+      }
+      _applyEnvironmentState();
+    },
+    dispose() {
+      _environmentState = EMPTY_ENVIRONMENT_STATE;
+      _environmentLayerVisible = true;
+      _environmentDiagnostics = [];
+      Object.keys(_environmentLayerEnabled).forEach(layer => {
+        _environmentLayerEnabled[layer] = true;
+      });
+      if (_objects.environmentGroup) _objects.environmentGroup.visible = false;
+    },
+    diagnostics() {
+      return {
+        layerEnabled: { ..._environmentLayerEnabled },
+        issues: _environmentDiagnostics.slice(0),
+      };
+    },
+  };
+
   function buildPassageTube(startAngle, endAngle) {
     if (!_THREE) return null;
     const THREE = _THREE;
@@ -988,6 +1179,7 @@
     _connectionRegistry = Array.isArray(connectionRegistry) ? connectionRegistry : [];
     _motionMode = motionMode || "still";
     _buildMoonAnchors(_viewMode);
+    _moonLabelManager?.markDirty();
 
     // ── Layer visibility ────────────────────────────────────────────
     const vl = _visibleLayers;
@@ -1008,6 +1200,8 @@
     if (_objects.equinoxGate)  _objects.equinoxGate.visible  = !!vl.passage || !!vl.markers;
     if (_objects.activeMoonGroup) _objects.activeMoonGroup.visible = !!vl.pattern;
     if (_objects.connectionGroup) _objects.connectionGroup.visible = !!vl.connections;
+    _environmentController.setLayerVisibility("environment", !!vl.environment);
+    _environmentController.update(_environmentState);
 
     // ── Equinox gate position ───────────────────────────────────────
     if (_objects.equinoxGate && model.passageStartAngle != null) {
@@ -1344,7 +1538,7 @@
 
   // ── Init / teardown ────────────────────────────────────────────────
 
-  async function init({ container, model, spiral, quality, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, reducedMotion, onYearSelect, onMarkerSelect }) {
+  async function init({ container, model, spiral, quality, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, environmentState, reducedMotion, onYearSelect, onMarkerSelect }) {
     // Guard against concurrent or duplicate init calls.
     if (_initializing || _initialized) {
       return { success: false, reason: "already-running" };
@@ -1413,11 +1607,16 @@
       _renderer.setSize(w, h);
 
       _camera = globalThis.LivingTimeSphereCamera.create(THREE, w, h);
+      globalThis.LivingTimeSphereCamera.onChangeCallback(() => {
+        _moonLabelManager?.markDirty();
+        globalThis.LivingTimeSphereAnimation.markDirty();
+      });
 
       // ── Build scene ───────────────────────────────────────────────
       buildScene();
 
       // ── Load initial data ─────────────────────────────────────────
+      _environmentController.initialize(environmentState || globalThis.SofEnvironmentState?.getEnvironmentState?.() || EMPTY_ENVIRONMENT_STATE);
       updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode);
       _syncCameraFocus(model, spiral, selectedYear, false);
 
@@ -1441,6 +1640,7 @@
       // Build Moon label anchors and set up DOM elements
       _buildMoonAnchors(viewMode);
       _setupMoonLabelEls(container);
+      _moonLabelManager?.markDirty();
 
       // ── Resize ────────────────────────────────────────────────────
       _wireResize(container);
@@ -1459,6 +1659,7 @@
       _renderer  = null;
       _scene     = null;
       _camera    = null;
+      _environmentController.dispose();
       _initialized = false;
       _lastInitError = { reason: "init-exception", detail: String(err) };
       return { success: false, reason: "init-exception", detail: String(err) };
@@ -1698,6 +1899,7 @@
       const h    = Math.max(rect.height || 320, 100);
       _renderer.setSize(w, h);
       globalThis.LivingTimeSphereCamera.resize(w, h);
+      _moonLabelManager?.markDirty();
       globalThis.LivingTimeSphereAnimation.markDirty();
     }).observe(container);
   }
@@ -1708,6 +1910,11 @@
     if (!_initialized) return;
     updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode);
     globalThis.LivingTimeSphereAnimation.markDirty();
+  }
+
+  function updateEnvironment(environmentState) {
+    _environmentController.update(environmentState || EMPTY_ENVIRONMENT_STATE);
+    if (_initialized) globalThis.LivingTimeSphereAnimation.markDirty();
   }
 
   function setQuality(preset) {
@@ -1755,7 +1962,9 @@
     _moonLabelEls = null;
     _moonLabelContainer = null;
     _moonLabelConnectorEl = null;
+    _moonLabelManager = null;
     _moonAnchors.length = 0;
+    _environmentController.dispose();
     _scene = null;
     _camera = null;
     _initialized  = false;
@@ -1796,6 +2005,7 @@
       canvasHeight:      canvasH,
       devicePixelRatio:  typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1,
       lastInitError:     _lastInitError,
+      environment:       _environmentController.diagnostics(),
     };
   }
 
@@ -1809,6 +2019,7 @@
   globalThis.LivingTimeSphereRenderer3d = Object.freeze({
     init,
     refresh,
+    updateEnvironment,
     setQuality,
     requestSingleRender,
     resetView,
@@ -1821,5 +2032,11 @@
     exportPng,
     THREE_VERSION,
     THREE_LOCAL_REL,
+    environment: Object.freeze({
+      initialize: _environmentController.initialize.bind(_environmentController),
+      update: _environmentController.update.bind(_environmentController),
+      setLayerVisibility: _environmentController.setLayerVisibility.bind(_environmentController),
+      dispose: _environmentController.dispose.bind(_environmentController),
+    }),
   });
 })();

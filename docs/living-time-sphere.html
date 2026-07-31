@@ -67,24 +67,22 @@
    <script defer src="assets/js/sphere/living-time-sphere-layout.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-connections.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-svg.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-live-data.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-canvas.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-materials.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-effects.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-camera.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-animation.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-label-manager.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-3d.js"></script>
+   <script defer src="assets/js/environment/environment-state.js"></script>
+   <script defer src="assets/js/environment/providers/open-meteo-forecast.js"></script>
+   <script defer src="assets/js/environment/open-meteo-adapter.js"></script>
+   <script defer src="assets/js/environment/location-command.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-live-data.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-interaction.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-accessibility.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-export.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-url-state.js"></script>
-   <script defer src="assets/js/sphere/living-time-seasonal-environment.js?v=20260729-2"></script>
-   <script defer src="assets/js/sphere/living-time-observatory-records.js?v=20260729-2"></script>
-   <script defer src="assets/js/sphere/living-time-observatory-recurrence.js?v=20260729-1"></script>
-   <script defer src="assets/js/sphere/living-time-multiyear-map.js?v=20260729-2"></script>
-   <script defer src="assets/js/sphere/living-time-observatory-dashboard.js?v=20260729-2"></script>
-   <script defer src="assets/js/sphere/living-time-natural-participation.js?v=20260729-3"></script>
-  <script defer src="assets/js/sphere/living-time-question-quests.js?v=20260729-4"></script>
    <script defer src="assets/js/sphere/living-time-sphere-mount.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-today.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-ui.js"></script>
@@ -236,8 +234,12 @@
 
         <!-- 3D fallback warning (shown when 3D selected but unavailable) -->
         <div id="sphere-renderer-fallback-warning" class="sphere-fallback-warning" hidden role="alert" aria-live="assertive">
-          <p class="sphere-fallback-summary">3D could not start. Accessible SVG is active.</p>
-          <p class="sphere-fallback-reason" aria-live="polite">3D unavailable — using SVG</p>
+          <p class="sphere-fallback-summary">3D unavailable</p>
+          <p class="sphere-fallback-reason" aria-live="polite">Accessible SVG view is active</p>
+          <div class="sphere-fallback-actions">
+            <button id="sphere-retry-3d" class="sphere-btn sphere-btn-sm" type="button">Retry 3D</button>
+            <button id="sphere-switch-svg" class="sphere-btn sphere-btn-sm" type="button">Continue with SVG</button>
+          </div>
           <details class="sphere-fallback-details">
             <summary>Technical Details</summary>
             <dl class="sphere-fallback-detail-list">
@@ -247,12 +249,8 @@
               <dt>WebGL</dt><dd id="sphere-diag-webgl-warn">—</dd>
               <dt>WebGL2</dt><dd id="sphere-diag-webgl2-warn">—</dd>
             </dl>
-          </details>
-          <div class="sphere-fallback-actions">
-            <button id="sphere-retry-3d" class="sphere-btn sphere-btn-sm" type="button">Retry Local 3D</button>
             <button id="sphere-clear-renderer-cache" class="sphere-btn sphere-btn-sm" type="button">Clear Sphere Cache</button>
-            <button id="sphere-switch-svg" class="sphere-btn sphere-btn-sm" type="button">Continue with SVG</button>
-          </div>
+          </details>
         </div>
       </section>
 
@@ -287,7 +285,8 @@
           </aside>
           <div class="sphere-instrument-shell" data-luxury-instrument>
             <div class="sphere-instrument-topline" aria-hidden="true">
-              <span>REMNANT LIVING TIME OBSERVATORY</span><span class="sphere-live-dot">LIVE FIELD</span>
+              <p class="sphere-instrument-topline-primary">REMNANT LIVING TIME OBSERVATORY</p>
+              <p class="sphere-live-dot">LIVE FIELD</p>
             </div>
             <div id="sphere-container" role="img" aria-label="Living Time Sphere — interactive" tabindex="0"
                  aria-describedby="sphere-text-model" aria-busy="true">
@@ -299,7 +298,10 @@
               </div>
             </div>
             <div class="sphere-instrument-corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-            <div class="sphere-instrument-footer" aria-hidden="true"><span>FIXED PATTERN CENTER</span><span>MOVING ASTRONOMICAL LAYERS</span></div>
+            <div class="sphere-instrument-footer" aria-hidden="true">
+              <p class="sphere-instrument-footer-line">FIXED PATTERN CENTRE</p>
+              <p class="sphere-instrument-footer-line">MOVING ASTRONOMICAL LAYERS</p>
+            </div>
           </div>
 
           <div class="sphere-moon-labels" id="sphere-moon-labels" aria-hidden="true">
@@ -366,6 +368,30 @@
         </div>
 
         <aside class="sphere-sidebar">
+          <div class="sphere-sidebar-section sphere-location-command" data-sof-location-command>
+            <h2 class="sphere-sidebar-heading">Location</h2>
+            <p class="sphere-location-state" data-location-state>LOCATION NOT SET</p>
+            <div class="sphere-location-actions">
+              <button type="button" class="sphere-btn sphere-btn-sm" data-location-use-device>Use My Location</button>
+              <button type="button" class="sphere-btn sphere-btn-sm" data-location-search-submit>Search Place</button>
+              <button type="button" class="sphere-btn sphere-btn-sm" data-location-coords-submit>Enter Coordinates</button>
+              <button type="button" class="sphere-btn sphere-btn-sm" data-location-continue-without>Continue Without Weather</button>
+            </div>
+            <div class="sphere-location-inputs">
+              <label class="visually-hidden" for="sphere-location-search">Search place</label>
+              <input id="sphere-location-search" data-location-search-input class="sphere-control-select" type="text" placeholder="Search place">
+              <div class="sphere-location-coords">
+                <label class="visually-hidden" for="sphere-location-lat">Latitude</label>
+                <input id="sphere-location-lat" data-location-lat class="sphere-control-select" type="number" step="0.0001" min="-90" max="90" placeholder="Latitude -90 to 90">
+                <label class="visually-hidden" for="sphere-location-lon">Longitude</label>
+                <input id="sphere-location-lon" data-location-lon class="sphere-control-select" type="number" step="0.0001" min="-180" max="180" placeholder="Longitude -180 to 180">
+                <label class="visually-hidden" for="sphere-location-name">Place name</label>
+                <input id="sphere-location-name" data-location-name class="sphere-control-select" type="text" placeholder="Optional place name">
+              </div>
+            </div>
+            <div class="sphere-location-results" data-location-results aria-live="polite"></div>
+            <p class="sphere-field-note" data-location-status>Choose a location to activate environmental layers.</p>
+          </div>
           <!-- 4. Selected marker details -->
           <div class="sphere-sidebar-section">
             <h2 class="sphere-sidebar-heading">Selected day</h2>

@@ -1158,6 +1158,10 @@ details[open] > .sphere-settings-summary::before { content: "▾ "; }
   word-break: break-word;
 }
 
+.sphere-fallback-details .sphere-btn {
+  margin-top: 0.5rem;
+}
+
 .sphere-fallback-actions {
   display: flex;
   flex-direction: column;
@@ -1472,6 +1476,122 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
 }
 .sphere-moon-label.is-front {
   text-shadow: 0 1px 4px rgba(0,0,0,0.96), 0 0 12px rgba(100,200,180,0.12);
+}
+
+.sphere-instrument-footer {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.35rem 0.55rem 0.45rem;
+}
+
+.sphere-instrument-topline {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.sphere-instrument-topline-primary,
+.sphere-live-dot {
+  display: block;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.sphere-instrument-footer-line {
+  display: block;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+}
+
+.sphere-location-command {
+  border: 1px solid rgba(124, 195, 214, 0.25);
+  border-radius: 10px;
+  padding: 0.75rem;
+  background: rgba(7, 14, 23, 0.72);
+}
+
+.sphere-location-state {
+  margin: 0 0 0.45rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.sphere-location-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.sphere-location-inputs {
+  margin-top: 0.55rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.sphere-location-coords {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.sphere-location-results {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.sphere-location-result {
+  text-align: left;
+  border: 1px solid rgba(145, 207, 222, 0.35);
+  background: rgba(4, 8, 13, 0.82);
+  color: #d8edf4;
+  border-radius: 8px;
+  padding: 0.45rem 0.55rem;
+  font-size: 0.8rem;
+}
+
+.sphere-sensor-matrix {
+  display: grid;
+  gap: 0.42rem;
+  margin: 0.55rem 0 0.75rem;
+}
+
+.sphere-sensor-row {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.8fr) 1fr;
+  gap: 0.5rem;
+  align-items: baseline;
+  border: 1px solid rgba(120, 195, 214, 0.24);
+  background: rgba(8, 13, 20, 0.7);
+  border-radius: 8px;
+  padding: 0.42rem 0.58rem;
+}
+
+.sphere-sensor-label {
+  font-size: 0.78rem;
+  color: rgba(212, 229, 236, 0.84);
+  letter-spacing: 0.02em;
+}
+
+.sphere-sensor-value {
+  font-size: 0.9rem;
+  color: #eef7fb;
+}
+
+.obs-console-head > div > p,
+.obs-console-head > div > h2,
+.obs-console-head > div > .eyebrow {
+  display: block;
+  margin-block: 0;
+}
+
+@media (max-width: 640px) {
+  .sphere-location-actions {
+    grid-template-columns: 1fr;
+  }
+  .sphere-location-coords {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── Pattern Core note ───────────────────────────────────────── */
