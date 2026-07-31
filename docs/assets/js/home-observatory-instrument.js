@@ -125,7 +125,10 @@
     setText("home-sphere-quest-count", String(readQuestCount()));
     setText("home-sphere-today-witness", String(snapshot.witness?.count ?? 0));
 
-    const weather = snapshot.weather || null;
+    const weather = globalThis.SofEnvironmentState?.getEnvironmentState?.()
+      || globalThis.OpenMeteoAdapter?.getSnapshot?.()
+      || snapshot.weather
+      || null;
     setText("home-sphere-weather", weatherSummary(weather));
     setText("home-sphere-sunrise", formatTime(weather?.daily?.sunrise));
     setText("home-sphere-sunset", formatTime(weather?.daily?.sunset));
@@ -211,14 +214,37 @@
   async function refreshWeather(force = false) {
     try {
       if (!globalThis.OpenMeteoAdapter?.requestRefresh) return;
+      globalThis.OpenMeteoAdapter.bootstrapEnvironmentState?.();
+      const place = globalThis.OpenMeteoAdapter.getActivePlace?.();
+      if (!place) return;
       await globalThis.OpenMeteoAdapter.requestRefresh({ force });
     } catch {
-      // ignore fetch errors and keep cached snapshot
+      // Keep the last successful cached snapshot visible.
     }
+  }
+
+  function wireTelemetryCards(root) {
+    const cards = Array.from(root.querySelectorAll(".home-living-sphere__telemetry li"));
+    cards.forEach(card => {
+      card.tabIndex = 0;
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-expanded", "false");
+      const toggle = () => {
+        const next = !card.classList.contains("is-expanded");
+        cards.forEach(other => { other.classList.remove("is-expanded"); other.setAttribute("aria-expanded", "false"); });
+        if (next) { card.classList.add("is-expanded"); card.setAttribute("aria-expanded", "true"); }
+      };
+      card.addEventListener("click", toggle);
+      card.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggle(); }
+      });
+    });
   }
 
   async function initInstrument(root) {
     await ensureDependencies();
+    globalThis.OpenMeteoAdapter?.bootstrapEnvironmentState?.();
+    wireTelemetryCards(root);
     await refreshWeather(false);
 
     const preview = root.querySelector("#home-sphere-today-preview");
@@ -232,6 +258,11 @@
       });
       activeMount = preview.__livingTimeSphereMount;
     }
+
+    window.addEventListener(globalThis.SofEnvironmentState?.EVENT_NAME || "sof:environment-change", () => {
+      updateExtraTelemetry(root);
+      activeMount?.refresh?.({});
+    });
 
     if (globalThis.LivingTimeSphereTodayCard?.renderInteractive) {
       globalThis.LivingTimeSphereTodayCard.renderInteractive(root, {
