@@ -43,7 +43,10 @@
   font-weight: 700;
   letter-spacing: -0.01em;
   margin: 0 0 0.75rem;
-  color: var(--color-accent, #fbbf24);
+  background: linear-gradient(160deg, #fbbf24 0%, #f3f4f6 50%, #6ee7b7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .sphere-hero-description {
@@ -52,6 +55,56 @@
   line-height: 1.7;
   color: rgba(232, 228, 217, 0.8);
   font-size: 1rem;
+}
+
+/* ── Hero sigil ───────────────────────────────────────────────────── */
+.sphere-hero-sigil {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1rem auto 0.75rem;
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--sphere-yeargate, rgba(100, 255, 180, 0.9));
+  text-shadow: 0 0 24px rgba(100, 255, 180, 0.4), 0 0 60px rgba(100, 255, 180, 0.15);
+  animation: sphereSigilBreath 7s ease-in-out infinite;
+}
+
+.sphere-hero-sigil i {
+  font-style: normal;
+  opacity: 0.55;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.7em;
+}
+
+@keyframes sphereSigilBreath {
+  0%, 100% { opacity: 1; text-shadow: 0 0 24px rgba(100, 255, 180, 0.4), 0 0 60px rgba(100, 255, 180, 0.15); }
+  50%       { opacity: 0.8; text-shadow: 0 0 40px rgba(100, 255, 180, 0.6), 0 0 80px rgba(100, 255, 180, 0.25); }
+}
+
+/* ── Hero meta chips ──────────────────────────────────────────────── */
+.sphere-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  margin-top: 1.25rem;
+}
+
+.sphere-hero-meta span {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.78rem;
+  color: rgba(232, 228, 217, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sphere-hero-meta span b {
+  color: var(--sphere-yeargate, rgba(100, 255, 180, 0.9));
+  font-weight: 700;
 }
 
 /* ── View mode controls ───────────────────────────────────────────── */

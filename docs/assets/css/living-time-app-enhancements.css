@@ -1,0 +1,168 @@
+/* Living Time App Enhancements — living-time-app-enhancements.css
+   Styles for the shared metric-expansion layer and bottom app dock
+   used on moons.html and living-time-sphere.html.
+*/
+
+/* ── Expandable metric details ────────────────────────────────────── */
+
+[data-app-expandable="true"] {
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s;
+}
+
+[data-app-expandable="true"]:hover,
+[data-app-expandable="true"]:focus-visible {
+  color: var(--color-accent, #fbbf24);
+  outline: none;
+}
+
+[data-app-expandable="true"]:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 4px;
+  outline: 2px solid var(--color-accent, #fbbf24);
+  pointer-events: none;
+}
+
+.living-metric-detail {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  width: max(220px, 55vw);
+  max-width: 320px;
+  padding: 0.55rem 0.85rem;
+  background: rgba(10, 12, 22, 0.97);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 0.5rem;
+  color: rgba(232, 228, 217, 0.9);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  white-space: normal;
+}
+
+[data-app-expandable="true"].is-expanded .living-metric-detail {
+  display: block;
+}
+
+/* Tooltip arrow */
+.living-metric-detail::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(251, 191, 36, 0.3);
+}
+
+/* When tooltip would clip at the top, flip below */
+@media (max-height: 480px) {
+  .living-metric-detail {
+    bottom: auto;
+    top: calc(100% + 6px);
+  }
+  .living-metric-detail::after {
+    top: auto;
+    bottom: 100%;
+    border-top-color: transparent;
+    border-bottom-color: rgba(251, 191, 36, 0.3);
+  }
+}
+
+/* ── Bottom app dock ──────────────────────────────────────────────── */
+
+.living-app-dock {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  padding: 0 env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+  background: rgba(5, 7, 13, 0.96);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.living-app-dock a,
+.living-app-dock button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 0.25rem;
+  min-height: 52px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(232, 228, 217, 0.6);
+  text-decoration: none;
+  background: none;
+  border: none;
+  border-top: 2px solid transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.living-app-dock a:hover,
+.living-app-dock button:hover,
+.living-app-dock a:focus-visible,
+.living-app-dock button:focus-visible {
+  color: rgba(232, 228, 217, 0.95);
+  outline: none;
+}
+
+.living-app-dock a[aria-current="page"],
+.living-app-dock a.active,
+.living-app-dock button.active {
+  color: var(--color-accent, #fbbf24);
+  border-top-color: var(--color-accent, #fbbf24);
+}
+
+/* Keep page content from hiding behind the dock */
+body:has(.living-app-dock) main,
+body:has(.living-app-dock) #main {
+  padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Hide dock when the user prefers no fixed UI (print) */
+@media print {
+  .living-app-dock { display: none; }
+}
+
+/* ── Shared environment badge ─────────────────────────────────────── */
+
+[data-shared-environment-badge] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(232, 228, 217, 0.6);
+}
+
+[data-shared-environment-badge][data-state="active"] {
+  border-color: rgba(100, 255, 180, 0.3);
+  color: rgba(100, 255, 180, 0.85);
+}
+
+[data-shared-environment-badge][data-state="unavailable"],
+[data-shared-environment-badge][data-state="error"] {
+  color: rgba(232, 228, 217, 0.35);
+}
