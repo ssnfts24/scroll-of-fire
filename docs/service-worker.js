@@ -64,6 +64,7 @@ const mandatoryPaths = [
   "./assets/js/sphere/living-time-sphere-connections.js",
   "./assets/js/sphere/living-time-sphere-renderer-svg.js",
   "./assets/js/sphere/living-time-sphere-renderer-canvas.js",
+  "./assets/js/sphere/observatory-capability-manager.js",
   "./assets/js/sphere/living-time-sphere-materials.js",
   "./assets/js/sphere/living-time-sphere-effects.js",
   "./assets/js/sphere/living-time-sphere-camera.js",

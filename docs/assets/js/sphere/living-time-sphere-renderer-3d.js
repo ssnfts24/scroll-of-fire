@@ -80,6 +80,7 @@
   let _viewMode     = "today";
   let _visibleLayers = {};
   let _lastInitError = null;  // last failure reason for diagnostics
+  let _contextLossDispose = null; // cleanup fn for WebGL context-loss guard
 
   // Scene object refs
   const _objects = {};
@@ -1549,19 +1550,22 @@
       assertDeps();
 
       if (!globalThis.LivingTimeSphereEffects.detectWebGl()) {
-        _lastInitError = { reason: "webgl-unavailable", detail: "WebGL context creation failed in this environment." };
-        return { success: false, reason: "webgl-unavailable", detail: _lastInitError.detail };
+        const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.WEBGL_UNSUPPORTED ?? "webgl-unavailable";
+        _lastInitError = { reason, detail: "WebGL context creation failed in this environment." };
+        return { success: false, reason, detail: _lastInitError.detail };
       }
       if (!quality) {
-        _lastInitError = { reason: "quality-svgonly", detail: "Quality preset resolved to SVG-only." };
-        return { success: false, reason: "quality-svgonly" };
+        const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.QUALITY_SVGONLY ?? "quality-svgonly";
+        _lastInitError = { reason, detail: "Quality preset resolved to SVG-only." };
+        return { success: false, reason };
       }
 
       try {
         await loadThreeJs();
       } catch (err) {
-        _lastInitError = { reason: "three-load-failed", detail: String(err) };
-        return { success: false, reason: "three-load-failed", detail: String(err) };
+        const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.THREE_IMPORT_FAILED ?? "three-load-failed";
+        _lastInitError = { reason, detail: String(err) };
+        return { success: false, reason, detail: String(err) };
       }
 
       const THREE = _THREE;
@@ -1592,9 +1596,32 @@
         });
       } catch (err) {
         // WebGLRenderer constructor can throw if context creation fails.
-        _lastInitError = { reason: "webgl-context-failed", detail: String(err) };
-        return { success: false, reason: "webgl-context-failed", detail: String(err) };
+        const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.CANVAS_INIT_FAILED ?? "webgl-context-failed";
+        _lastInitError = { reason, detail: String(err) };
+        return { success: false, reason, detail: String(err) };
       }
+
+      // Attach WebGL context-loss guard via ObservatoryCapabilityManager.
+      // On context loss we flag fallback and update status so UI can react.
+      // On restoration we trigger a full reinit attempt via the mount module.
+      _contextLossDispose = globalThis.ObservatoryCapabilityManager?.attachContextLossGuard(_canvas, {
+        onLost() {
+          const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.CONTEXT_LOST ?? "CONTEXT_LOST";
+          _lastInitError = { reason, detail: "WebGL context was lost." };
+          _initialized = false;
+          console.warn(`[LivingTimeSphere] 3D context lost (${reason}). UI should show fallback.`);
+          // Notify mount layer so it can trigger SVG fallback or re-init.
+          try {
+            globalThis.LivingTimeSphere?._onContextLost?.();
+          } catch { /* mount notification is best-effort */ }
+        },
+        onRestored() {
+          console.info("[LivingTimeSphere] WebGL context restored — scheduling re-init.");
+          try {
+            globalThis.LivingTimeSphere?._onContextRestored?.();
+          } catch { /* mount notification is best-effort */ }
+        },
+      }) ?? (() => {});
       _renderer.setPixelRatio(pixelRatio);
       _quality = quality;
 
@@ -1661,8 +1688,8 @@
       _camera    = null;
       _environmentController.dispose();
       _initialized = false;
-      _lastInitError = { reason: "init-exception", detail: String(err) };
-      return { success: false, reason: "init-exception", detail: String(err) };
+      _lastInitError = { reason: globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.INIT_EXCEPTION ?? "init-exception", detail: String(err) };
+      return { success: false, reason: _lastInitError.reason, detail: String(err) };
     } finally {
       _initializing = false;
     }
@@ -1982,6 +2009,8 @@
     _moonLabelManager = null;
     _moonAnchors.length = 0;
     _environmentController.dispose();
+    _contextLossDispose?.();
+    _contextLossDispose = null;
     _scene = null;
     _camera = null;
     _initialized  = false;
