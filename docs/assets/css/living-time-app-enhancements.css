@@ -132,14 +132,39 @@
 }
 
 /* Keep page content from hiding behind the dock */
-body:has(.living-app-dock) main,
-body:has(.living-app-dock) #main {
+body.has-living-app-dock main,
+body.has-living-app-dock #main {
   padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px));
 }
 
 /* Hide dock when the user prefers no fixed UI (print) */
 @media print {
   .living-app-dock { display: none; }
+}
+
+/* On very narrow screens expand metric details inline rather than as a floating tooltip */
+@media (max-width: 480px) {
+  .living-metric-detail {
+    position: static;
+    transform: none;
+    width: 100%;
+    max-width: none;
+    margin-top: 0.4rem;
+    bottom: auto;
+    left: auto;
+  }
+  .living-metric-detail::after {
+    display: none;
+  }
+}
+
+/* Suppress transitions for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-app-expandable="true"],
+  .living-app-dock a,
+  .living-app-dock button {
+    transition: none;
+  }
 }
 
 /* ── Shared environment badge ─────────────────────────────────────── */

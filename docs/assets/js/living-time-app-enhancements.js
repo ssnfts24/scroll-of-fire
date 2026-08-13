@@ -68,6 +68,7 @@
       <button type="button" data-app-tab="layers">Layers</button>
       <a href="./ledger.html" data-app-tab="records">Records</a>`;
     document.body.appendChild(dock);
+    document.body.classList.add("has-living-app-dock");
     dock.querySelector("[data-app-tab='weather']")?.addEventListener("click", () => {
       document.querySelector("[data-sof-location-command], .sphere-field-section, #sphere-field-layer")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
