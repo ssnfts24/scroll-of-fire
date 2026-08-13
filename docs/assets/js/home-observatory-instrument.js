@@ -19,6 +19,12 @@
     "assets/js/alignment/alignment-offsets.js",
     "assets/js/alignment/alignment-signature.js",
     "assets/js/sphere/living-time-sphere-version.js",
+    // observatory-capability-manager must load before mount so that
+    // selectTier() / clampPixelRatio() / initTimeout() are available when
+    // LivingTimeSphere.mount() calls activate3d().  This also ensures the
+    // same capability path is used for the homepage preview and the full
+    // Observatory page — there is no separate reliability implementation.
+    "assets/js/sphere/observatory-capability-manager.js",
     "assets/js/sphere/living-time-sphere-model.js",
     "assets/js/sphere/living-time-sphere-state.js",
     "assets/js/sphere/living-time-sphere-layout.js",

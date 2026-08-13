@@ -27,7 +27,14 @@
     CANVAS_INIT_FAILED:   "CANVAS_INIT_FAILED",
     /** WebGL context was lost after successful initialisation. */
     CONTEXT_LOST:         "CONTEXT_LOST",
-    /** Device has insufficient reported memory to safely run 3D. */
+    /**
+     * Device reported memory is so low that 3D rendering is actively refused.
+     * This code is ONLY emitted when device memory is below
+     * GENUINE_3D_REFUSAL_MEMORY_GIB (0.5 GiB) — i.e. a genuine hardware
+     * limitation, not merely a reason to reduce quality.
+     * Low-memory devices above this threshold receive LOWPOWER tier instead.
+     * Do NOT use this code for "constrained but capable" devices.
+     */
     DEVICE_MEMORY_GUARD:  "DEVICE_MEMORY_GUARD",
     /** 3D initialisation did not complete within the allowed timeout. */
     INIT_TIMEOUT:         "INIT_TIMEOUT",
@@ -38,6 +45,13 @@
     /** A required peer module (e.g. LivingTimeSphereCamera) was not loaded. */
     MISSING_DEPENDENCY:   "MISSING_DEPENDENCY",
   });
+
+  /**
+   * Device memory threshold below which 3D rendering is actively refused.
+   * Devices between this value and 2 GiB receive LOWPOWER tier (functional 3D).
+   * Only devices reporting below this threshold emit DEVICE_MEMORY_GUARD.
+   */
+  const GENUINE_3D_REFUSAL_MEMORY_GIB = 0.5;
 
   // ── Performance tier definitions ──────────────────────────────────
 
@@ -147,23 +161,28 @@
     const webgl = webglAvailable ?? probeWebGl().webgl;
     if (!webgl) return PERFORMANCE_TIERS.MINIMAL;
 
-    // 2b. Device memory guard
+    // 2b. Genuine memory refusal — device memory is so low that 3D is
+    //     intentionally refused.  Callers should emit DEVICE_MEMORY_GUARD.
+    //     Devices above this but below 2 GiB receive LOWPOWER (functional 3D).
+    const mem = _deviceMemoryGib();
+    if (mem !== null && mem < GENUINE_3D_REFUSAL_MEMORY_GIB) return PERFORMANCE_TIERS.MINIMAL;
+
+    // 3. Low-memory → LOWPOWER (functional 3D with reduced cost)
     if (isLowMemoryDevice()) return PERFORMANCE_TIERS.LOWPOWER;
 
-    // 3. Reduced-data / constrained network
+    // 4. Reduced-data / constrained network
     if (isReducedDataMode()) return PERFORMANCE_TIERS.LOWPOWER;
 
-    // 3b. Low CPU count
+    // 4b. Low CPU count (≤ 2 threads)
     const cpuCount = typeof navigator !== "undefined" ? navigator.hardwareConcurrency : undefined;
     if (typeof cpuCount === "number" && cpuCount <= 2) return PERFORMANCE_TIERS.LOWPOWER;
 
-    // 4. Balanced — moderate hardware (≤ 4 GB or ≤ 4 CPUs)
-    const mem = _deviceMemoryGib();
+    // 5. Balanced — moderate hardware (≤ 4 GB or ≤ 4 CPUs)
     if ((mem !== null && mem <= 4) || (typeof cpuCount === "number" && cpuCount <= 4)) {
       return PERFORMANCE_TIERS.BALANCED;
     }
 
-    // 5. Default: high
+    // 6. Default: high
     return PERFORMANCE_TIERS.HIGH;
   }
 
@@ -284,6 +303,49 @@
     });
   }
 
+  // ── Performance-runtime integration ──────────────────────────────
+  //
+  // performance-runtime.js publishes a page-level performance profile via
+  // the "sof:performance-profile" custom event.  Observatory-specific
+  // capability decisions are the authority of ObservatoryCapabilityManager;
+  // performance-runtime handles CSS classes and media loading.
+  //
+  // selectTierFromProfile() lets the mount layer combine both signals into
+  // a single authoritative tier decision without calling selectTier() twice.
+
+  /**
+   * Select the best performance tier given a pre-computed performance profile
+   * from performance-runtime.js.
+   *
+   * The profile object should have at least:
+   *   { constrained: bool, reducedData: bool, lowMemory: bool, lowCpu: bool }
+   *
+   * WebGL availability is still probed directly (it is not part of the
+   * performance-runtime profile).
+   *
+   * @param {object} profile  Performance profile from sof:performance-profile event.
+   * @param {object} [options]
+   * @param {string} [options.override]  Explicit tier override.
+   * @param {boolean} [options.webglAvailable]  Pre-probed WebGL result.
+   * @returns {string}  One of PERFORMANCE_TIERS values.
+   */
+  function selectTierFromProfile(profile, { override, webglAvailable } = {}) {
+    const tierValues = new Set(Object.values(PERFORMANCE_TIERS));
+    if (override && tierValues.has(override)) return override;
+
+    const webgl = webglAvailable ?? probeWebGl().webgl;
+    if (!webgl) return PERFORMANCE_TIERS.MINIMAL;
+
+    const mem = _deviceMemoryGib();
+    if (mem !== null && mem < GENUINE_3D_REFUSAL_MEMORY_GIB) return PERFORMANCE_TIERS.MINIMAL;
+
+    if (profile?.lowMemory || isLowMemoryDevice()) return PERFORMANCE_TIERS.LOWPOWER;
+    if (profile?.reducedData || isReducedDataMode()) return PERFORMANCE_TIERS.LOWPOWER;
+    if (profile?.lowCpu) return PERFORMANCE_TIERS.LOWPOWER;
+    if (profile?.constrained) return PERFORMANCE_TIERS.BALANCED;
+    return selectTier({ webglAvailable: webgl });
+  }
+
   // ── Public API ────────────────────────────────────────────────────
 
   globalThis.ObservatoryCapabilityManager = Object.freeze({
@@ -291,6 +353,11 @@
     FALLBACK_REASONS,
     /** Performance tier string constants. */
     PERFORMANCE_TIERS,
+    /**
+     * Device memory threshold (GiB) below which 3D is actively refused.
+     * Devices above this but constrained still receive LOWPOWER tier.
+     */
+    GENUINE_3D_REFUSAL_MEMORY_GIB,
     /** Probe WebGL availability without initialising a renderer. */
     probeWebGl,
     /** Returns true if the device has < 2 GiB reported memory. */
@@ -301,6 +368,12 @@
     prefersReducedMotion,
     /** Automatically select the best performance tier for this device. */
     selectTier,
+    /**
+     * Select the best tier given a pre-computed sof:performance-profile.
+     * Use this when the performance-runtime profile is already available to
+     * avoid duplicate device probes.
+     */
+    selectTierFromProfile,
     /** Clamp devicePixelRatio to the per-tier safe maximum. */
     clampPixelRatio,
     /** Map legacy renderer reason strings to canonical taxonomy codes. */

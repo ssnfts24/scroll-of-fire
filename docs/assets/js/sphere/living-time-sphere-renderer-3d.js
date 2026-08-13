@@ -1539,7 +1539,7 @@
 
   // ── Init / teardown ────────────────────────────────────────────────
 
-  async function init({ container, model, spiral, quality, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, environmentState, reducedMotion, onYearSelect, onMarkerSelect }) {
+  async function init({ container, model, spiral, quality, tier, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, environmentState, reducedMotion, onYearSelect, onMarkerSelect, onContextLost: _onContextLostCb, onContextRestored: _onContextRestoredCb }) {
     // Guard against concurrent or duplicate init calls.
     if (_initializing || _initialized) {
       return { success: false, reason: "already-running" };
@@ -1583,10 +1583,24 @@
       _ensureFloatingLabel(container);
 
       // ── Renderer ──────────────────────────────────────────────────
-      const pixelRatio = Math.min(
-        quality.pixelRatioMax || 2,
-        typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1
-      );
+      // Use ObservatoryCapabilityManager.clampPixelRatio if a tier is known;
+      // otherwise fall back to the quality-preset cap.  This ensures DPR is
+      // always gated through the authoritative capability-manager path.
+      const _dprTier = tier ?? (() => {
+        const presets = globalThis.LivingTimeSphereM?.QUALITY_PRESETS;
+        if (presets && quality === presets.high)      return "high";
+        if (presets && quality === presets.lowpower)  return "lowpower";
+        return "balanced";
+      })();
+      const pixelRatio = globalThis.ObservatoryCapabilityManager
+        ? globalThis.ObservatoryCapabilityManager.clampPixelRatio(
+            _dprTier,
+            typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1
+          )
+        : Math.min(
+            quality.pixelRatioMax || 2,
+            typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1
+          );
       try {
         _renderer = new THREE.WebGLRenderer({
           canvas:    _canvas,
@@ -1602,24 +1616,26 @@
       }
 
       // Attach WebGL context-loss guard via ObservatoryCapabilityManager.
-      // On context loss we flag fallback and update status so UI can react.
-      // On restoration we trigger a full reinit attempt via the mount module.
+      // On context loss: stop the animation loop, mark renderer as not
+      // initialized, and invoke the mount-layer callback so SVG fallback
+      // activates immediately.
+      // On restoration: invoke the mount-layer callback so it can
+      // teardown stale resources and attempt a clean reinit.
       _contextLossDispose = globalThis.ObservatoryCapabilityManager?.attachContextLossGuard(_canvas, {
         onLost() {
           const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.CONTEXT_LOST ?? "CONTEXT_LOST";
           _lastInitError = { reason, detail: "WebGL context was lost." };
           _initialized = false;
-          console.warn(`[LivingTimeSphere] 3D context lost (${reason}). UI should show fallback.`);
-          // Notify mount layer so it can trigger SVG fallback or re-init.
-          try {
-            globalThis.LivingTimeSphere?._onContextLost?.();
-          } catch { /* mount notification is best-effort */ }
+          // Stop the animation loop so we don't render with a lost context.
+          try { globalThis.LivingTimeSphereAnimation?.stop?.(); } catch { /* best-effort */ }
+          console.warn(`[LivingTimeSphere] 3D context lost (${reason}). Activating SVG fallback.`);
+          // Notify mount layer — mount will show SVG fallback.
+          try { _onContextLostCb?.(); } catch { /* mount notification is best-effort */ }
         },
         onRestored() {
-          console.info("[LivingTimeSphere] WebGL context restored — scheduling re-init.");
-          try {
-            globalThis.LivingTimeSphere?._onContextRestored?.();
-          } catch { /* mount notification is best-effort */ }
+          console.info("[LivingTimeSphere] WebGL context restored — notifying mount for reinit.");
+          // Notify mount layer — mount will teardown stale resources and reinit.
+          try { _onContextRestoredCb?.(); } catch { /* mount notification is best-effort */ }
         },
       }) ?? (() => {});
       _renderer.setPixelRatio(pixelRatio);

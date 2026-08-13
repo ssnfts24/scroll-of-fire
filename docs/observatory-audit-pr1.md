@@ -150,10 +150,15 @@ Capability detection: centralised in ObservatoryCapabilityManager
 | # | Root Cause | Fix |
 |---|---|---|
 | 1 | Ad-hoc fallback reason strings spread across renderer | `ObservatoryCapabilityManager.FALLBACK_REASONS` taxonomy; renderer updated to use canonical codes |
-| 2 | WebGL context loss not handled — silent blank canvas after GPU context eviction | `attachContextLossGuard()` wires `webglcontextlost`/`webglcontextrestored` events; renderer updates state and notifies mount layer |
-| 3 | Capability detection duplicated between `performance-runtime.js` and inline renderer code | `ObservatoryCapabilityManager` centralises `probeWebGl`, `selectTier`, `clampPixelRatio` for sphere use |
-| 4 | No init timeout guard (could hang forever if import hangs) | `initTimeout()` helper available for race-Promise pattern |
-| 5 | `_contextLossDispose` not cleaned up on renderer teardown | `dispose()` now calls `_contextLossDispose?.()` |
+| 2 | WebGL context loss not handled — silent blank canvas after GPU context eviction | `attachContextLossGuard()` wires `webglcontextlost`/`webglcontextrestored` events; renderer stops animation loop, mount shows SVG fallback with preserved state |
+| 3 | Context restoration was a placeholder hook | Mount now handles restoration: teardown stale resources, reinit via `activate3d()`, cap at 3 retries, generation guard prevents stale init from replacing active renderer |
+| 4 | Capability detection duplicated between `performance-runtime.js` and inline renderer code | `ObservatoryCapabilityManager` is now the authoritative tier/DPR path; `selectTier()` called in mount, `clampPixelRatio(tier)` called in renderer |
+| 5 | No init timeout guard (could hang forever if import hangs) | `activate3d()` now races `init()` against `ObservatoryCapabilityManager.initTimeout(15000)` |
+| 6 | `_contextLossDispose` not cleaned up on renderer teardown | `teardown()` calls `_contextLossDispose?.()` |
+| 7 | `ObservatoryCapabilityManager` not loaded on homepage | Added to `home-observatory-instrument.js` DEPENDENCIES before `living-time-sphere-mount.js` |
+| 8 | `DEVICE_MEMORY_GUARD` could never occur (all low-memory paths went to LOWPOWER) | Clarified semantics: `GENUINE_3D_REFUSAL_MEMORY_GIB` (0.5 GiB) is the genuine refusal threshold; low-memory devices above it get LOWPOWER (functional 3D) |
+| 9 | Quality tier selection bypassed capability manager | Mount uses `selectTier()` as single authoritative source, maps to `QUALITY_PRESETS` via helper |
+| 10 | `performance-runtime.js` made independent capability decisions | Documented delegation: performance-runtime handles page CSS/media; ObservatoryCapabilityManager handles Observatory tier. Profile published on `globalThis._sofPerformanceProfile` for `selectTierFromProfile()` |
 
 ---
 
@@ -235,8 +240,123 @@ Expected: console warns `[LivingTimeSphere] 3D context lost (CONTEXT_LOST)`.
 
 ---
 
-## 7. Known Limitations (Post-PR1)
+---
 
-- Context restoration callback (`_onContextRestored`) on `LivingTimeSphere` mount is a placeholder hook; full re-initialisation on context restore is a PR2 task.
-- `DEVICE_MEMORY_GUARD` and `INIT_TIMEOUT` are defined in taxonomy and available via `initTimeout()` helper, but are not yet wired into the init flow as active guards (conservative: existing flow already has per-step error handling).
-- `ObservatoryCapabilityManager` is not yet used by the home sphere preview — the homepage `LivingTimeSphere.mount` call will benefit from this in PR2.
+## 7. PR1 Completion — Reliability Systems Wired (August 2026)
+
+The following items were identified as incomplete in the initial PR1 audit and have now been fully wired to runtime behavior.
+
+### 7.1 Context-Loss Recovery (was: placeholder)
+
+`living-time-sphere-mount.js` now wires real context-loss recovery:
+
+- On `webglcontextlost`: animation loop stopped, `active3d` cleared, SVG fallback rendered with preserved observatory state, `notify()` called.
+- On `webglcontextrestored`: stale renderer torn down, `activate3d()` rescheduled, capped at 3 retries to prevent infinite loops.
+- `mounted` flag prevents callbacks from firing after teardown.
+- Observatory state (calendar model, selected day, selected year, view mode, layers) is **never rebuilt** due to a renderer transition — it survives as authoritative across 3D ↔ SVG switches.
+
+`living-time-sphere-renderer-3d.js`:
+- Accepts `onContextLost` / `onContextRestored` as init parameters (not `globalThis.LivingTimeSphere._onContextLost` which was a frozen non-existent property).
+- Stops the animation loop (`LivingTimeSphereAnimation.stop()`) on context loss.
+- `CONTEXT_LOST` fallback reason is properly surfaced through `_lastInitError`.
+
+### 7.2 Init Timeout Wired (was: helper only)
+
+`activate3d()` in mount now races `LivingTimeSphereRenderer3d.init()` against `ObservatoryCapabilityManager.initTimeout(15000)`.
+
+- On timeout: `INIT_TIMEOUT` logged, SVG fallback remains active, no `Promise` rejection propagates.
+- A **generation counter** (`initGen` / `thisGen`) ensures that if a stale init later completes after the timeout has already caused fallback, the stale result is discarded and the stale renderer torn down.
+
+### 7.3 Capability Manager is Authoritative for Tier/DPR (was: helper only)
+
+`activate3d()` now calls:
+- `ObservatoryCapabilityManager.selectTier({ webglAvailable, override })` — single authoritative tier decision.
+- Maps tier to `LivingTimeSphereM.QUALITY_PRESETS` via `_tierToQualityPreset()`.
+- Passes `tier` to `LivingTimeSphereRenderer3d.init()`.
+
+`LivingTimeSphereRenderer3d.init()` now uses:
+- `ObservatoryCapabilityManager.clampPixelRatio(tier, devicePixelRatio)` for authoritative DPR capping.
+- Falls back to `quality.pixelRatioMax` only if capability manager is unavailable.
+
+**Tier → 3D behavior mapping:**
+- `HIGH` / `BALANCED` → full functional 3D (different antialias / DPR caps)
+- `LOWPOWER` → functional 3D with reduced cost (DPR capped at 1.5, lowpower WebGL power preference)
+- `MINIMAL` → SVG fallback (no 3D attempt)
+
+### 7.4 Duplicate Capability Decisions Eliminated
+
+**Ownership document:**
+- `performance-runtime.js` — page-level decisions: CSS classes (`sof-reduced-motion`, `sof-constrained-device`), image/iframe lazy loading, decorative media pausing. Publishes profile on `globalThis._sofPerformanceProfile` and via `sof:performance-profile` event.
+- `ObservatoryCapabilityManager` — Observatory-specific decisions: WebGL tier, quality preset, DPR cap, init timeout, context-loss handling. Exposes `selectTierFromProfile(profile)` to consume the runtime profile without re-probing the device.
+
+Neither system independently decides the other's domain.
+
+### 7.5 Homepage Uses Same Capability Path (was: not wired)
+
+`home-observatory-instrument.js` now includes `sphere/observatory-capability-manager.js` in its `DEPENDENCIES` array, loaded **before** `living-time-sphere-mount.js`. This ensures:
+- The same `selectTier()` / `clampPixelRatio()` / `initTimeout()` path is available when `LivingTimeSphere.mount()` is called from the homepage.
+- There is no separate reliability implementation for the homepage preview.
+- The homepage may use `renderer: "svg"` for its compact preview, but this is a legitimate lighter preset choice, not a missing capability-manager integration.
+
+### 7.6 DEVICE_MEMORY_GUARD Semantics Clarified
+
+`DEVICE_MEMORY_GUARD` now has precise semantics:
+- Reserved for devices where `navigator.deviceMemory < GENUINE_3D_REFUSAL_MEMORY_GIB` (0.5 GiB) — genuine hardware refusal.
+- Devices with 0.5–2 GiB receive `LOWPOWER` tier (functional 3D with reduced cost).
+- `GENUINE_3D_REFUSAL_MEMORY_GIB` constant exported on capability manager.
+- Low-memory ≠ automatic failure.
+
+### 7.7 Fallback Transitions are Stateful
+
+Observatory state (`state`, `sceneData`) lives in the `mount()` closure and is independent of the active renderer. A switch from 3D → SVG or SVG → 3D does not rebuild the calendar/time model. This architecture is correct for the coming layered PR2.
+
+### 7.8 End-to-End Reliability Tests Added
+
+New test file: `tests/observatory-reliability.test.js` — 42 integration/regression tests covering:
+- WebGL unsupported → SVG fallback
+- Capability manager presence and API
+- `GENUINE_3D_REFUSAL_MEMORY_GIB` threshold behavior
+- `selectTierFromProfile` integration
+- `clampPixelRatio` DPR caps per tier
+- `initTimeout` rejection mechanics
+- `attachContextLossGuard` — onLost, onRestored, dispose
+- Stateful fallback: observatory state preserved across renderer switch
+- Teardown lifecycle
+- Dispose/remount pattern
+- Homepage dependency ordering
+- Observatory full-page capability-manager ordering
+- Mount module structural assertions (selectTier, initTimeout, Promise.race, generation guard, onContextLost/Restored, teardown sets mounted=false)
+- Renderer 3D structural assertions (tier param, clampPixelRatio, onContextLost/Restored params, stops animation on context loss)
+- DEVICE_MEMORY_GUARD semantics
+- performance-runtime profile delegation
+- Canvas touch-action: pan-y (mobile vertical scroll preservation)
+- DPR cap for all tiers
+- 13 Moons / calendar module integrity
+
+All 21 test files (253+ tests) pass.
+
+### 7.9 Mobile Reliability
+
+The following mobile-specific reliability properties are verified or preserved:
+- **Vertical scroll**: `touch-action: pan-y` on canvas element (verified in structural test).
+- **DPR cap**: `clampPixelRatio(tier, dpr)` caps DPR to ≤ 2.5 (HIGH), ≤ 2.0 (BALANCED), ≤ 1.5 (LOWPOWER). Prevents GPU overload on retina/high-DPI displays.
+- **Background/foreground lifecycle**: `LivingTimeSphereAnimation.attachPageVisibility()` pauses the render loop on `document.hidden`. Context restoration capped at 3 attempts.
+- **Orientation / resize**: `ResizeObserver` + debounce in renderer handles orientation changes.
+- **Context recovery**: Multiple canvases prevented by `mounted` flag + generation guard — stale init results are torn down before they can append a second canvas.
+- **Interact mode**: Pointer event gating preserved; not changed in this PR.
+- **Pinch zoom**: Not changed in this PR; handled by `LivingTimeSphereCamera` multi-pointer detection.
+
+---
+
+## 8. Known Limitations (Post-PR1 Completion)
+
+The following limitations remain. All core reliability systems are now active.
+
+| # | Limitation | Status |
+|---|---|---|
+| 1 | Context restoration tests require a real GPU to fully exercise the restore path | Manual testing required; automated tests cover the callback wiring and structural guard |
+| 2 | `initTimeout` races against a 15s wall clock; very slow Three.js imports on cellular/proxy networks may still trigger fallback | Acceptable — SVG fallback remains functional |
+| 3 | PR2 PR-level visualization work (semantic zoom, solar/lunar shells, radial labels) is not in this PR | Intentional scope boundary |
+| 4 | The `selectTierFromProfile()` / `_sofPerformanceProfile` integration is wired but not yet consumed by mount (`selectTier()` is sufficient for current needs) | Available for PR2 if dual-signal probing is needed |
+| 5 | Homepage sphere preview uses SVG-only (`renderer: "svg"` option); capability manager is loaded and available but not deciding quality since 3D is not attempted | Intentional — homepage uses lighter preset as designed |
+

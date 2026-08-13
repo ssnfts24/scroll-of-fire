@@ -1,6 +1,22 @@
 (() => {
   "use strict";
 
+  // Performance Runtime — page-level CSS class assignment, image loading, and
+  // media tuning.
+  //
+  // CAPABILITY OWNERSHIP:
+  //   This module handles page-level decisions (CSS classes, image/iframe lazy
+  //   loading, decorative-media pausing).
+  //
+  //   Observatory-specific capability decisions (WebGL tier, quality preset,
+  //   DPR capping, context-loss handling, 3D init timeout) are the authority
+  //   of ObservatoryCapabilityManager (sphere/observatory-capability-manager.js).
+  //
+  //   To avoid duplicate device probes, this module publishes its profile on
+  //   globalThis._sofPerformanceProfile and dispatches "sof:performance-profile".
+  //   ObservatoryCapabilityManager.selectTierFromProfile() can consume this
+  //   profile to produce a coherent tier decision without re-probing the device.
+
   const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
   const reducedData = connection?.saveData === true || /(^|-)2g$/.test(connection?.effectiveType || "");
@@ -37,9 +53,11 @@
   }
 
   function publishProfile() {
-    window.dispatchEvent(new CustomEvent("sof:performance-profile", {
-      detail: Object.freeze({ constrained, reducedData, reducedMotion, lowMemory, lowCpu })
-    }));
+    const profile = Object.freeze({ constrained, reducedData, reducedMotion, lowMemory, lowCpu });
+    // Store on globalThis so ObservatoryCapabilityManager.selectTierFromProfile()
+    // can consume it without re-probing the device.
+    globalThis._sofPerformanceProfile = profile;
+    window.dispatchEvent(new CustomEvent("sof:performance-profile", { detail: profile }));
   }
 
   function init() {
