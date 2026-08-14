@@ -174,6 +174,9 @@
     const span = Math.max(next.start - active.start, 1);
     const progress = clamp((now - active.start) / span, 0, 1);
     return {
+      sourceType: "seasonal-approximation",
+      source: "seasonal-anchor interpolation",
+      precision: "anchor-interpolation",
       key: active.key,
       label: active.label,
       nextLabel: next.label,
@@ -360,6 +363,12 @@
         copy: solarGate.copy,
         season,
         angle: todayModel?.solarSeasonAngle ?? null,
+        seasonalProgressAngle: todayModel?.currentSeasonalProgressAngle ?? todayModel?.currentSolarSeasonAngle ?? null,
+        provenance: {
+          sourceType: "seasonal-approximation",
+          source: "seasonal-anchor interpolation",
+          precision: "anchor-interpolation",
+        },
         sunrise: weather?.daily?.sunrise || null,
         sunset: weather?.daily?.sunset || null,
         daylightDurationSeconds: weather?.daily?.daylightDurationSeconds ?? null,

@@ -74,6 +74,7 @@ function loadSphereContext() {
     "docs/assets/js/alignment/alignment-url-state.js",
     "docs/assets/js/sphere/living-time-sphere-version.js",
     "docs/assets/js/sphere/living-time-sphere-state.js",
+    "docs/assets/js/sphere/living-time-sphere-semantic-zoom.js",
     "docs/assets/js/sphere/living-time-sphere-model.js",
     "docs/assets/js/sphere/living-time-sphere-layout.js",
     "docs/assets/js/sphere/living-time-sphere-connections.js",
@@ -432,6 +433,42 @@ test("LivingTimeSphereRenderer3d: isInitialized returns false before init", () =
   assert.equal(ctx.LivingTimeSphereRenderer3d.isInitialized(), false);
 });
 
+test("LivingTimeSphereRenderer3d: solar progress arc remains callable from renderer internals", () => {
+  const ctx = loadSphereContext();
+  const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
+  vm.runInNewContext(code, ctx);
+  const smoke = ctx.LivingTimeSphereRenderer3d?._internals?.smokeBuildSolarProgressArcForTests;
+  assert.equal(typeof smoke, "function", "solar progress arc smoke helper should be exported");
+
+  class Vector3 {
+    constructor(x = 0, y = 0, z = 0) { this.x = x; this.y = y; this.z = z; }
+  }
+  class BufferGeometry {
+    setFromPoints(points) { this.points = points; return this; }
+  }
+  class LineDashedMaterial {
+    constructor(config) { this.config = config; }
+  }
+  class Line {
+    constructor(geometry, material) { this.geometry = geometry; this.material = material; }
+    computeLineDistances() {}
+  }
+  const fakeThree = { Vector3, BufferGeometry, LineDashedMaterial, Line };
+  const arc = smoke(5, 145, fakeThree);
+  assert.ok(arc, "solar progress arc should be built");
+  assert.ok(Array.isArray(arc.geometry?.points), "arc geometry should include sampled points");
+  assert.ok(arc.geometry.points.length >= 16, "arc geometry should be sampled densely enough");
+});
+
+test("LivingTimeSphereRenderer3d: source retains full geometry + semantic build path", () => {
+  const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
+  assert.ok(code.includes("buildPassageTube(model.passage.startAngle, model.passage.endAngle)"), "passage geometry build call present");
+  assert.ok(code.includes("const arc = buildSolarProgressArc(todaySolarAngle, selectedSolarAngle);"), "solar progression arc build call present");
+  assert.ok(code.includes("_buildConnections();"), "connection build call present");
+  assert.ok(code.includes("_syncSemanticZoomFromCamera(true);"), "semantic zoom sync call present");
+  assert.ok(code.includes("_markStage(\"firstFrame\", \"requested\")"), "first-frame request stage present");
+});
+
 // ── Renderer-neutral model parity ─────────────────────────────────────
 
 test("3D parity: model angle functions match SVG renderer expectations", () => {
@@ -532,6 +569,7 @@ test("Moons page: shared mount initializer is used", () => {
 
 test("Sphere page: 3D module scripts included", () => {
   const html = read("docs/living-time-sphere.html");
+  assert.ok(html.includes("living-time-sphere-semantic-zoom.js"), "semantic zoom module loaded");
   assert.ok(html.includes("living-time-sphere-materials.js"),  "materials loaded");
   assert.ok(html.includes("living-time-sphere-camera.js"),     "camera loaded");
   assert.ok(html.includes("living-time-sphere-animation.js"),  "animation loaded");
@@ -544,6 +582,52 @@ test("Sphere page: 3D module scripts included", () => {
   assert.ok(html.includes("living-time-sphere-live-data.js"),  "live-data module loaded");
   assert.ok(html.includes("living-time-sphere-renderer-3d.js"),"renderer-3d loaded");
   assert.ok(html.includes("living-time-sphere-today.js"),      "today module loaded");
+});
+
+test("LivingTimeSphereSemanticZoom: FAR band suppresses dense pattern detail", () => {
+  const ctx = loadSphereContext();
+  const state = ctx.LivingTimeSphereSemanticZoom.resolveVisibility({
+    baseLayers: { pattern: true, exactDays: true, weekGates: true, recurrence: true, outsideDays: true },
+    band: "far",
+    connectionMode: "contextual",
+  });
+  assert.equal(state.visibility.exactDays, false);
+  assert.equal(state.visibility.weekGates, false);
+  assert.equal(state.dayLabelMode, "hidden");
+  assert.ok(state.maxConnections <= 3);
+});
+
+test("LivingTimeSphereSemanticZoom: live camera distance changes drive band transitions on desktop and phone widths", () => {
+  const ctx = loadSphereContext();
+  const zoom = ctx.LivingTimeSphereSemanticZoom;
+  assert.equal(zoom.resolveBand({ distance: 3.9, screenWidth: 1280 }), "far");
+  assert.equal(zoom.resolveBand({ distance: 2.6, screenWidth: 1280 }), "medium");
+  assert.equal(zoom.resolveBand({ distance: 1.9, screenWidth: 1280 }), "near");
+  assert.equal(zoom.resolveBand({ distance: 1.2, screenWidth: 1280 }), "detail");
+  assert.equal(zoom.resolveBand({ distance: 3.1, screenWidth: 390 }), "far");
+  assert.equal(zoom.resolveBand({ distance: 2.2, screenWidth: 390 }), "medium");
+  assert.equal(zoom.resolveBand({ distance: 1.55, screenWidth: 390 }), "near");
+});
+
+test("LivingTimeSphereRenderer3d: semantic band hysteresis stabilizes near thresholds", () => {
+  const ctx  = loadSphereContext();
+  const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
+  vm.runInNewContext(code, ctx);
+  const stabilize = ctx.LivingTimeSphereRenderer3d._internals.stabilizeBand;
+  const nearFarThreshold = stabilize({
+    candidateBand: "medium",
+    previousBand: "far",
+    distance: 3.20,
+    screenWidth: 390,
+  });
+  assert.equal(nearFarThreshold, "far", "band should not flicker from FAR when still near threshold");
+  const nearDetailThreshold = stabilize({
+    candidateBand: "detail",
+    previousBand: "near",
+    distance: 1.45,
+    screenWidth: 390,
+  });
+  assert.equal(nearDetailThreshold, "near", "band should not flicker from NEAR to DETAIL at threshold edge");
 });
 
 test("Sphere page: quality and renderer controls present", () => {
@@ -581,7 +665,7 @@ test("Renderer 3D: no private _updateEnvironmentLayer call remains", () => {
 
 test("Sphere page: fallback panel remains compact with collapsed technical details", () => {
   const html = read("docs/living-time-sphere.html");
-  assert.ok(html.includes('class="sphere-fallback-summary">3D unavailable<'), "compact fallback heading present");
+  assert.ok(html.includes('class="sphere-fallback-summary">3D view unavailable — using accessible 2D view<'), "compact fallback heading present");
   assert.ok(html.includes('class="sphere-fallback-reason"'), "fallback reason line present");
   assert.ok(html.includes("Technical Details"), "technical details section present");
   assert.ok(html.includes('id="sphere-retry-3d"'), "Retry 3D action present");
@@ -617,6 +701,12 @@ test("UI selected-date authority: URL marker parsing and local persistence are p
   assert.ok(ui.includes("_persistSelectedState"), "selected state persistence should exist");
   assert.ok(/function _readLocalJson[\s\S]+?}\n\n  function _selectedDayFromMarker/.test(ui), "selected-day helpers should not be trapped inside _readLocalJson");
   assert.ok(!ui.includes("todayPatternYear !== _state.year && _state.selectedDayOfYear === todayDay"), "year mismatch should not force reset to day 1");
+});
+
+test("UI selected-date authority: selected-day and live snapshots share configured boundary mode", () => {
+  const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
+  assert.ok(ui.includes("boundaryMode: _state.boundaryMode"), "selected-day and snapshot boundary mode should use configured state");
+  assert.ok(!ui.includes("boundaryMode: \"midnight\""), "selected-day authority should not hardcode midnight boundary");
 });
 
 test("Sphere page: shared mount initializer is used", () => {

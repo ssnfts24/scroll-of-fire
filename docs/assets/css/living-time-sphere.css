@@ -1157,32 +1157,32 @@ details[open] > .sphere-settings-summary::before { content: "▾ "; }
 
 /* Fallback warning banner */
 .sphere-fallback-warning {
-  background: rgba(180, 60, 20, 0.18);
-  border: 1px solid rgba(220, 100, 40, 0.45);
-  border-radius: 6px;
-  padding: 0.6rem 0.9rem;
-  margin-top: 0.5rem;
-  font-size: 0.83rem;
-  color: rgba(255, 200, 160, 0.9);
+  background: rgba(180, 60, 20, 0.14);
+  border: 1px solid rgba(220, 100, 40, 0.36);
+  border-radius: 8px;
+  padding: 0.45rem 0.65rem;
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: rgba(255, 200, 160, 0.92);
   overflow-x: hidden;
 }
 
 .sphere-fallback-summary {
   font-weight: 600;
-  margin: 0 0 0.25rem;
-  font-size: 0.87rem;
+  margin: 0 0 0.2rem;
+  font-size: 0.82rem;
 }
 
 .sphere-fallback-reason {
   display: block;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.28rem;
   overflow-wrap: break-word;
   word-break: break-word;
 }
 
 .sphere-fallback-details {
-  margin: 0.4rem 0;
-  font-size: 0.8rem;
+  margin: 0.28rem 0 0;
+  font-size: 0.76rem;
 }
 
 .sphere-fallback-details summary {
@@ -1196,9 +1196,9 @@ details[open] > .sphere-settings-summary::before { content: "▾ "; }
 .sphere-fallback-detail-list {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: 0.2rem 0.7rem;
-  margin: 0.35rem 0 0;
-  font-size: 0.78rem;
+  gap: 0.15rem 0.55rem;
+  margin: 0.25rem 0 0;
+  font-size: 0.72rem;
 }
 
 .sphere-fallback-detail-list dt {
@@ -1217,21 +1217,31 @@ details[open] > .sphere-settings-summary::before { content: "▾ "; }
 
 .sphere-fallback-actions {
   display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  margin-top: 0.5rem;
-}
-
-@media (min-width: 420px) {
-  .sphere-fallback-actions {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
+  flex-direction: row;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+  flex-wrap: wrap;
 }
 
 .sphere-btn-sm {
   padding: 0.25rem 0.6rem;
   font-size: 0.78rem;
+}
+
+.sphere-fallback-warning.is-minimized {
+  padding: 0.3rem 0.5rem;
+}
+
+.sphere-fallback-warning.is-minimized .sphere-fallback-reason,
+.sphere-fallback-warning.is-minimized .sphere-fallback-actions,
+.sphere-fallback-warning.is-minimized .sphere-fallback-details {
+  display: none;
+}
+
+.sphere-fallback-pill {
+  margin: 0.35rem 0 0;
+  font-size: 0.74rem;
+  color: rgba(232, 228, 217, 0.78);
 }
 
 .sphere-current-status {

@@ -79,7 +79,7 @@
       ? globalThis.PatternCalendar.fromCivilDate({
           date: civilDate,
           timeZone: state.timeZone,
-          boundaryMode: "midnight",
+          boundaryMode: state.boundaryMode,
           sunsetTime: state.manualSunset,
         })
       : null;
@@ -97,6 +97,23 @@
       } : baseModel.selectedPatternPosition || baseModel.todayPatternPosition || null,
     };
     return decorated;
+  }
+
+  function _resolveSemanticState(state, container) {
+    const zoom = globalThis.LivingTimeSphereSemanticZoom;
+    if (!zoom?.resolveBand || !zoom?.resolveVisibility) return null;
+    const cameraState = globalThis.LivingTimeSphereCamera?.getState?.() || {};
+    const fallbackDist = globalThis.LivingTimeSphereCamera?.MODE_POSITIONS?.[state.mode]?.distance || 2.35;
+    const width = container?.clientWidth || (typeof window !== "undefined" ? window.innerWidth : 1024);
+    const band = zoom.resolveBand({
+      distance: Number.isFinite(Number(cameraState.dist)) ? Number(cameraState.dist) : fallbackDist,
+      screenWidth: width
+    });
+    return zoom.resolveVisibility({
+      baseLayers: state.visibleLayers || {},
+      band,
+      connectionMode: state.connectionMode,
+    });
   }
 
   // ── Tier ↔ quality-preset helpers ────────────────────────────────
@@ -171,6 +188,32 @@
     let initGen = 0;          // incremented on each activate3d() call; guards stale inits
     let mounted = true;       // set false on teardown to suppress callbacks
     let restoreAttempts = 0;  // counts context-restoration retries (capped to prevent looping)
+    let pendingSizeObserver = null;
+
+    function _containerHasUsableSize() {
+      if (!container) return false;
+      const rect = typeof container.getBoundingClientRect === "function"
+        ? container.getBoundingClientRect()
+        : null;
+      const width = Number(rect?.width ?? container.clientWidth ?? 0);
+      const height = Number(rect?.height ?? container.clientHeight ?? 0);
+      return width > 0 && height > 0;
+    }
+
+    function _awaitUsableContainerSize() {
+      if (_containerHasUsableSize()) return false;
+      if (pendingSizeObserver || typeof ResizeObserver === "undefined") return true;
+      pendingSizeObserver = new ResizeObserver(() => {
+        if (!mounted || !_containerHasUsableSize()) return;
+        pendingSizeObserver.disconnect();
+        pendingSizeObserver = null;
+        Promise.resolve().then(() => {
+          if (mounted && !active3d) activate3d();
+        });
+      });
+      pendingSizeObserver.observe(container);
+      return true;
+    }
 
     function notify() {
       if (typeof options.onStateChange === "function") {
@@ -192,6 +235,7 @@
         containerHeight: height,
         devicePixelRatio: typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1,
       });
+      const semanticZoomState = _resolveSemanticState(state, container);
       globalThis.LivingTimeSphereRendererSvg.renderInto(container, {
         model: sceneData.model,
         spiral: sceneData.spiral,
@@ -203,6 +247,7 @@
         moonLabelDistance: state.moonLabelDistance,
         dayLabelMode: state.dayLabelMode,
         connectionRegistry: sceneData.connectionRegistry,
+        semanticZoomState,
       });
     }
 
@@ -232,6 +277,7 @@
 
     async function activate3d() {
       if (active3d || state.renderer === "svg" || !globalThis.LivingTimeSphereRenderer3d || !globalThis.LivingTimeSphereM) return;
+      if (_awaitUsableContainerSize()) return;
 
       const capMgr = globalThis.ObservatoryCapabilityManager;
 
@@ -387,6 +433,10 @@
       refresh,
       teardown() {
         mounted = false;
+        if (pendingSizeObserver) {
+          pendingSizeObserver.disconnect();
+          pendingSizeObserver = null;
+        }
         if (active3d && globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
           globalThis.LivingTimeSphereRenderer3d.teardown();
         }

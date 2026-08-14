@@ -27,16 +27,26 @@
     showLabels: true,
     layerPreset: "fullObservatory",
     connectionMode: "contextual",
+    connectionCategories: { calendar: true, pattern: true, solar: true, lunar: true, passage: true, historical: true },
     motionMode: "still",
+    semanticZoom: null,
+    semanticBand: null,
     active3d:      false,    // true when 3D renderer is active
     introShown:    false,
     _3dInitInProgress: false, // guard against concurrent 3D init calls
+    _3dInitGeneration: 0,
+    restoreAttempts: 0,
   };
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
   const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
   const LAYER_PREFERENCES_KEY = "sof.sphere.layerPreferences.v2";
   const DAY_MS = 24 * 60 * 60 * 1000;
-  const SHABBAT_DAYS = new Set([2, 9, 16, 23]);
+  const SHABBAT_DAYS = new Set(
+    (Array.isArray(globalThis.SOF_MOONS_CONFIG?.shabbat?.moonDays)
+      ? globalThis.SOF_MOONS_CONFIG.shabbat.moonDays
+      : [2, 9, 16, 23]
+    ).map(Number).filter(Number.isFinite)
+  );
   const MOON_LOG_KEY = "sof_moon_logs_v3";
   const LEGACY_MOON_LOG_KEY = "sof_moon_logs_v2";
   const FIELD_RANGE_LABELS = Object.freeze({
@@ -124,7 +134,6 @@
     if (_state.quality === "svgonly") return false;
     if (!globalThis.LivingTimeSphereRenderer3d || !globalThis.LivingTimeSphereM || !globalThis.LivingTimeSphereEffects) return false;
     if (!globalThis.LivingTimeSphereEffects.detectWebGl()) return false;
-    if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches && _state.quality !== "high") return false;
     return _state.rendererMode === "3d" || _state.rendererMode === "auto";
   }
 
@@ -134,6 +143,37 @@
     if (typeof window === "undefined") return { w: 320, h: 320 };
     const rect = container.getBoundingClientRect();
     return { w: Math.max(rect.width  || 320, 100), h: Math.max(rect.height || 320, 100) };
+  }
+
+  async function _waitForValidContainer(container, { minWidth = 180, minHeight = 180, timeoutMs = 2500 } = {}) {
+    const valid = () => {
+      const rect = container?.getBoundingClientRect?.() || {};
+      return Number(rect.width) >= minWidth && Number(rect.height) >= minHeight;
+    };
+    if (valid()) return true;
+    const started = Date.now();
+    while (Date.now() - started < timeoutMs) {
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      if (valid()) return true;
+    }
+    return false;
+  }
+
+  function _withTimeout(promise, timeoutMs, timeoutReason = "INIT_TIMEOUT") {
+    let timer = null;
+    const timeoutPromise = new Promise(resolve => {
+      timer = setTimeout(() => resolve({
+        success: false,
+        reason: timeoutReason,
+        detail: `3D initialization exceeded ${timeoutMs}ms`,
+      }), timeoutMs);
+    });
+    return Promise.race([
+      promise,
+      timeoutPromise
+    ]).finally(() => {
+      if (timer) clearTimeout(timer);
+    });
   }
 
   function buildCurrentModel() {
@@ -250,7 +290,7 @@
       ? globalThis.PatternCalendar.fromCivilDate({
           date: _toIso(effectiveDate),
           timeZone: _state.timeZone,
-          boundaryMode: "midnight",
+          boundaryMode: _state.boundaryMode,
           sunsetTime: _state.manualSunset,
         })
       : null;
@@ -262,6 +302,9 @@
       ? globalThis.PatternCalendarData?.moons?.[selected.moon - 1] || null
       : null;
     const phase = globalThis.SOFCalendar?.getMoonPhase?.(_toIso(effectiveDate)) || null;
+    const lunarCyclePosition = typeof phase?.age === "number"
+      ? Number((((phase.age % 29.530588853) + 29.530588853) % 29.530588853 / 29.530588853).toFixed(6))
+      : null;
     const live = _currentSnapshot();
     const isToday = selected?.patternYear === live?.pattern?.patternYear
       && selected?.dayOfPatternYear != null
@@ -269,7 +312,7 @@
     const solar = globalThis.LivingTimeSphereLiveData?.getSnapshot?.({
       asOf: effectiveDate,
       timeZone: _state.timeZone,
-      boundaryMode: "midnight",
+      boundaryMode: _state.boundaryMode,
       manualSunset: _state.manualSunset,
     })?.solar || live?.solar || null;
 
@@ -278,15 +321,23 @@
       effectiveDate: _toIso(effectiveDate),
       civilDate: _toIso(effectiveDate),
       dateObject: effectiveDate,
+      type: "living-day",
       weekGate,
       moonData,
       daySeal: dayArchetype[0] || "Unavailable",
       daySealMeaning: dayArchetype[1] || "Unavailable",
       shabbat: selected.day != null && SHABBAT_DAYS.has(selected.day),
+      dayOfWeekPosition: selected.day != null ? ((selected.day - 1) % 7) + 1 : null,
+      gateStatus: selected.dayOfPatternYear == null
+        ? (selected.isDayOutOfTime ? "day-out-of-time" : (selected.isDeepTimeDay ? "deep-time-day" : "outside-counted-year"))
+        : (selected.day != null && SHABBAT_DAYS.has(selected.day)
+          ? "shabbat-gate"
+          : (((selected.day - 1) % 7) + 1 === 6 ? "preparation-gate" : ((((selected.day - 1) % 7) + 1 === 1 ? "return-gate" : "ordinary-day")))),
       lunarPhase: phase ? phase.name : (isToday ? live?.lunar?.phaseName : null),
       lunarIllumination: phase && typeof phase.illumination === "number"
         ? Number((phase.illumination * 100).toFixed(1))
         : (isToday ? live?.lunar?.illuminationPercent ?? null : null),
+      lunarCyclePosition,
       solar,
       isToday,
       witnessPrompt: moonData?.practice || dayArchetype[1] || "Observe the day and record what is actually there.",
@@ -827,10 +878,10 @@
         label: "Nearest solar gate",
         value: selected?.solar?.gate ? `${selected.solar.gate} · ${selected.solar.element || "—"}` : "Unavailable",
         status: "Calculated",
-        source: "LivingTimeSphereLiveData seasonal gate lookup",
+        source: "Seasonal approximation (anchor interpolation)",
         timestamp: live?.instant || "",
         freshness: "Current calculation",
-        availability: "Always available from deterministic solar context lookup.",
+        availability: "Always available from seasonal anchor interpolation.",
         relation: basePatternRelation,
         layerId: "solar",
         sphereLabel: "Local solar marker",
@@ -1070,6 +1121,7 @@
         environmentProvider: environmentSource,
         lastEnvironmentUpdate: weatherTimestamp || live?.instant || "",
         sunsetSource: _state.manualSunset === "18:00" ? "Manual fallback" : "Configured local boundary",
+        solarCalculationSource: "seasonal-approximation (anchor-interpolation)",
         lunarCalculationSource: globalThis.AstronomySources?.sources?.lunar?.label || live?.lunar?.source || "Lunar calculation unavailable",
         witnessStorageState: live?.witness?.source === "CodexMemory" ? `Local browser storage · ${_pluralize(witnessCount, "record", "records")}` : "Local browser storage unavailable",
         recurrenceDatasetRange: (() => {
@@ -1089,6 +1141,33 @@
     return _buildFieldLayerSnapshot(selected, model);
   }
 
+  function _resolveSemanticZoomState(container) {
+    const zoom = globalThis.LivingTimeSphereSemanticZoom;
+    if (!zoom?.resolveBand || !zoom?.resolveVisibility) return null;
+    const cameraState = globalThis.LivingTimeSphereCamera?.getState?.() || {};
+    const fallbackDist = globalThis.LivingTimeSphereCamera?.MODE_POSITIONS?.[_state.viewMode]?.distance || 2.35;
+    const screenWidth = container?.clientWidth || (typeof window !== "undefined" ? window.innerWidth : 1024);
+    const candidateBand = zoom.resolveBand({
+      distance: Number(cameraState.dist ?? fallbackDist),
+      screenWidth,
+    });
+    const band = globalThis.LivingTimeSphereRenderer3d?._internals?.stabilizeBand
+      ? globalThis.LivingTimeSphereRenderer3d._internals.stabilizeBand({
+          candidateBand,
+          distance: Number(cameraState.dist ?? fallbackDist),
+          screenWidth,
+          previousBand: _state.semanticBand,
+        })
+      : candidateBand;
+    _state.semanticBand = band;
+    const resolved = zoom.resolveVisibility({
+      baseLayers: _state.visibleLayers,
+      band,
+      connectionMode: _state.connectionMode,
+    });
+    return Object.freeze(resolved);
+  }
+
   // ── Render dispatch ────────────────────────────────────────────────
 
   function renderSphere(container) {
@@ -1102,6 +1181,23 @@
 
     const model    = buildCurrentModel();
     const spiral   = globalThis.LivingTimeSphereModel.buildSpiral({ timeZone: _state.timeZone, boundaryMode: _state.boundaryMode, manualSunset: _state.manualSunset });
+    const semanticZoom = _resolveSemanticZoomState(container);
+    _state.semanticZoom = semanticZoom;
+    const effectiveLayers = semanticZoom?.visibility ? { ..._state.visibleLayers, ...semanticZoom.visibility } : { ..._state.visibleLayers };
+    const effectiveMoonLabelMode = semanticZoom?.moonLabelMode || _state.moonLabelMode;
+    const effectiveDayLabelMode = semanticZoom?.dayLabelMode || _state.dayLabelMode;
+    const effectiveConnectionMode = semanticZoom?.connectionMode || _state.connectionMode;
+    const connectionRegistry = globalThis.LivingTimeSphereConnections?.buildRegistry?.({
+      model,
+      spiral,
+      state: {
+        ..._state,
+        visibleLayers: effectiveLayers,
+        connectionMode: effectiveConnectionMode,
+        moonLabelMode: effectiveMoonLabelMode,
+        dayLabelMode: effectiveDayLabelMode,
+      },
+    }) || [];
 
     if (_state.rendererMode === "table" || _state.rendererMode === "text") {
       // Hide 3D / SVG canvas; show alternate view
@@ -1123,10 +1219,10 @@
     const layout   = globalThis.LivingTimeSphereLayout.resolveLayout({ containerWidth: w, containerHeight: h, devicePixelRatio: dpr });
 
     if (shouldUse3d()) {
-      _render3d(container, model, spiral);
+      _render3d(container, model, spiral, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
     } else {
       _teardown3d();
-      _renderSvgFallback(container, model, spiral, layout);
+      _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
     }
 
     updateAccessibleText(model, spiral);
@@ -1135,9 +1231,10 @@
     _updateModeSummary(model);
     _updateWhatAmISeeing(_state.viewMode);
     _updateStateStrip(_state.viewMode, model);
+    _updateRendererDiagnostics();
   }
 
-  async function _render3d(container, model, spiral) {
+  async function _render3d(container, model, spiral, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode) {
     const preset = resolveQualityPreset();
     if (!preset) { _teardown3d(); return; }
 
@@ -1148,6 +1245,7 @@
       // or inside the renderer itself), skip and leave the in-progress call to finish.
       if (_state._3dInitInProgress || renderer.isInitializing?.()) return;
       _state._3dInitInProgress = true;
+      const initGeneration = ++_state._3dInitGeneration;
 
       // Remove any existing SVG / canvas content before inserting 3D canvas.
       container.innerHTML = "";
@@ -1158,19 +1256,33 @@
 
       let result;
       try {
-        result = await renderer.init({
+        const hasStableSize = await _waitForValidContainer(container);
+        if (!hasStableSize) {
+          result = {
+            success: false,
+            reason: "CONTAINER_SIZE_INVALID",
+            detail: "Renderer container did not reach a valid layout size in time.",
+          };
+        } else {
+          result = await _withTimeout(renderer.init({
           container,
           model,
           spiral,
           quality:       preset,
+          tier: _state.quality === "auto"
+            ? globalThis.ObservatoryCapabilityManager?.selectTier?.({
+                webglAvailable: globalThis.ObservatoryCapabilityManager?.probeWebGl?.().webgl ?? true
+              })
+            : _state.quality,
           selectedYear:  _state.year,
-          visibleLayers: _state.visibleLayers,
+          visibleLayers: effectiveLayers,
           viewMode:      _state.viewMode,
-          moonLabelMode: _state.moonLabelMode,
+          moonLabelMode: effectiveMoonLabelMode,
           moonLabelDistance: _state.moonLabelDistance,
-          dayLabelMode: _state.dayLabelMode,
-          connectionRegistry: globalThis.LivingTimeSphereConnections?.buildRegistry?.({ model, spiral, state: _state }) || [],
+          dayLabelMode: effectiveDayLabelMode,
+          connectionRegistry,
           motionMode: _state.motionMode,
+          semanticZoomState,
           environmentState: globalThis.SofEnvironmentState?.getEnvironmentState?.() || null,
           reducedMotion,
           onYearSelect: year => {
@@ -1208,12 +1320,15 @@
             _state.selectedMarker = marker?.type === "year" ? `eq-${marker.year}` : (marker?.type || null);
             renderSphere(container);
           }
-        });
+          }), 25000);
+        }
       } catch (err) {
         result = { success: false, reason: "init-exception", detail: String(err) };
       } finally {
         _state._3dInitInProgress = false;
       }
+
+      if (initGeneration !== _state._3dInitGeneration) return;
 
       if (!result || !result.success) {
         // Fall back to SVG.
@@ -1233,12 +1348,23 @@
           containerHeight: container.offsetHeight || 320,
           devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
         });
-        _renderSvgFallback(container, model, spiral, layout);
+        _renderSvgFallback(
+          container,
+          model,
+          spiral,
+          layout,
+          effectiveLayers,
+          connectionRegistry,
+          semanticZoomState,
+          effectiveMoonLabelMode,
+          effectiveDayLabelMode
+        );
         _updateInteractBar();
         _updateTodayDiagnostics(model);
         return;
       }
       _state.active3d = true;
+      _state.restoreAttempts = 0;
       _updateRendererLabel("WebGL 3D active");
       _hideRendererFallbackWarning();
       _updateInteractBar();
@@ -1248,13 +1374,14 @@
         model,
         spiral,
         _state.year,
-        _state.visibleLayers,
+        effectiveLayers,
         _state.viewMode,
-        _state.moonLabelMode,
+        effectiveMoonLabelMode,
         _state.moonLabelDistance,
-        _state.dayLabelMode,
-        globalThis.LivingTimeSphereConnections?.buildRegistry?.({ model, spiral, state: _state }) || [],
-        _state.motionMode
+        effectiveDayLabelMode,
+        connectionRegistry,
+        _state.motionMode,
+        semanticZoomState
       );
       renderer.updateEnvironment?.(globalThis.SofEnvironmentState?.getEnvironmentState?.() || null);
       renderer.setMode(_state.viewMode);
@@ -1270,7 +1397,7 @@
     _updateInteractBar();
   }
 
-  function _renderSvgFallback(container, model, spiral, layout) {
+  function _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode) {
     // Canvas fallback
     if (_state.useCanvas && globalThis.LivingTimeSphereRendererCanvas?.isCanvasSupported?.()) {
       let canvas = container.querySelector(".living-time-sphere-canvas");
@@ -1280,25 +1407,26 @@
         container.innerHTML = "";
         container.appendChild(canvas);
       }
-      const ok = globalThis.LivingTimeSphereRendererCanvas.renderCanvas({ canvas, model, spiral, layout, visibleLayers: _state.visibleLayers, selectedYear: _state.year });
+      const ok = globalThis.LivingTimeSphereRendererCanvas.renderCanvas({ canvas, model, spiral, layout, visibleLayers: effectiveLayers, selectedYear: _state.year });
       if (ok) { _updateRendererLabel("Canvas fallback"); }
-      else _renderSvgOnly(container, model, spiral, layout);
+      else _renderSvgOnly(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
     } else {
-      _renderSvgOnly(container, model, spiral, layout);
+      _renderSvgOnly(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
     }
   }
 
-  function _renderSvgOnly(container, model, spiral, layout) {
+  function _renderSvgOnly(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode) {
     _updateRendererLabel(_state.rendererMode === "svg" ? "Accessible SVG" : "SVG fallback");
     globalThis.LivingTimeSphereRendererSvg.renderInto(container, {
       model, spiral, layout,
-      visibleLayers: _state.visibleLayers,
+      visibleLayers: effectiveLayers,
       selectedYear:  _state.year,
       viewMode:      _state.viewMode,
-      moonLabelMode: _state.moonLabelMode,
+      moonLabelMode: effectiveMoonLabelMode,
       moonLabelDistance: _state.moonLabelDistance,
-      dayLabelMode: _state.dayLabelMode,
-      connectionRegistry: globalThis.LivingTimeSphereConnections?.buildRegistry?.({ model, spiral, state: _state }) || []
+      dayLabelMode: effectiveDayLabelMode,
+      connectionRegistry,
+      semanticZoomState
     });
   }
 
@@ -1349,8 +1477,12 @@
   function _showRendererFallbackWarning(reason, detail) {
     const el = document.getElementById("sphere-renderer-fallback-warning");
     if (!el) return;
+    el.classList.remove("is-minimized");
     const reasonEl = el.querySelector(".sphere-fallback-reason");
-    if (reasonEl) reasonEl.textContent = "Accessible SVG view is active";
+    const capMgr = globalThis.ObservatoryCapabilityManager;
+    const reasonCode = capMgr?.mapLegacyReason?.(reason) || reason;
+    const reasonText = capMgr?.describeReason?.(reasonCode) || reasonCode || "3D is unavailable.";
+    if (reasonEl) reasonEl.textContent = reasonText;
     // Populate inline diagnostics inside the collapsible details block.
     const r3d = globalThis.LivingTimeSphereRenderer3d;
     const diag = r3d?.getDiagnostics?.() || {};
@@ -1360,12 +1492,63 @@
     _set("sphere-diag-module-source-warn",  diag.moduleSource || "none");
     _set("sphere-diag-webgl-warn",          diag.webglAvailable ? "available" : "unavailable");
     _set("sphere-diag-webgl2-warn",         diag.webgl2Available ? "available" : "unavailable");
+    _set("sphere-diag-three-warn",          diag.threeLoaded ? "loaded" : "failed");
+    _set("sphere-diag-renderer-warn",       diag.stageState?.renderer || (diag.initialized ? "created" : "failed"));
+    _set("sphere-diag-context-warn",        diag.stageState?.context || "unknown");
+    _set("sphere-diag-first-frame-warn",    diag.stageState?.firstFrame || "not rendered");
+    _set("sphere-diag-tier-warn",           diag.tier || _state.quality || "auto");
+    _set("sphere-diag-dpr-warn",            `${diag.requestedDevicePixelRatio || "—"} / ${diag.appliedDevicePixelRatio || "—"}`);
+    _set("sphere-diag-memory-warn",         diag.deviceMemoryGiB != null ? `${diag.deviceMemoryGiB} GiB` : "unknown");
+    _set("sphere-diag-cpu-warn",            diag.hardwareConcurrency != null ? String(diag.hardwareConcurrency) : "unknown");
+    _set("sphere-diag-reduced-warn",        `${diag.reducedMotion ? "motion:reduce" : "motion:normal"} · ${diag.reducedData ? "data:reduce" : "data:normal"}`);
+    _set("sphere-diag-fallback-warn",       reasonCode || "none");
+    _set("sphere-diag-init-duration-warn",  diag.initDurationMs != null ? `${diag.initDurationMs}ms` : "—");
+    _set("sphere-diag-restore-attempts-warn", String(diag.restoreAttempts || 0));
     el.hidden = false;
+    const pill = document.getElementById("sphere-renderer-fallback-pill");
+    if (pill) pill.hidden = true;
   }
 
   function _hideRendererFallbackWarning() {
     const el = document.getElementById("sphere-renderer-fallback-warning");
     if (el) el.hidden = true;
+    const pill = document.getElementById("sphere-renderer-fallback-pill");
+    if (pill) pill.hidden = true;
+    const reasonEl = el?.querySelector?.(".sphere-fallback-reason");
+    if (reasonEl) reasonEl.textContent = "Accessible SVG view is active";
+    [
+      "sphere-diag-webgl-warn",
+      "sphere-diag-webgl2-warn",
+      "sphere-diag-three-warn",
+      "sphere-diag-renderer-warn",
+      "sphere-diag-context-warn",
+      "sphere-diag-first-frame-warn",
+      "sphere-diag-tier-warn",
+      "sphere-diag-dpr-warn",
+      "sphere-diag-memory-warn",
+      "sphere-diag-cpu-warn",
+      "sphere-diag-reduced-warn",
+      "sphere-diag-fallback-warn",
+      "sphere-diag-last-error-warn",
+      "sphere-diag-init-duration-warn",
+      "sphere-diag-restore-attempts-warn",
+      "sphere-diag-module-source-warn",
+      "sphere-diag-local-url-warn",
+    ].forEach(id => {
+      const row = document.getElementById(id);
+      if (row) row.textContent = "—";
+    });
+    const fallbackRow = document.getElementById("sphere-diag-fallback-warn");
+    if (fallbackRow) fallbackRow.textContent = "none";
+  }
+
+  function _minimizeRendererFallbackWarning() {
+    const el = document.getElementById("sphere-renderer-fallback-warning");
+    if (!el) return;
+    el.hidden = false;
+    el.classList.add("is-minimized");
+    const pill = document.getElementById("sphere-renderer-fallback-pill");
+    if (pill) pill.hidden = false;
   }
 
   // Update the renderer diagnostics panel (hidden by default; shown in Technical view).
@@ -1375,6 +1558,7 @@
     const r3d = globalThis.LivingTimeSphereRenderer3d;
     if (!r3d) return;
     const diag = r3d.getDiagnostics?.() || {};
+    const semantic = diag.semanticZoom || {};
     const rows = {
       "sphere-diag-requested":    "3d",
       "sphere-diag-active":       _state.active3d ? "WebGL 3D active" : (_state.rendererMode === "svg" ? "Accessible SVG" : "SVG fallback"),
@@ -1385,13 +1569,34 @@
       "sphere-diag-module-source": diag.moduleSource || "none",
       "sphere-diag-local-url":    diag.localModuleUrl || r3d.THREE_LOCAL_REL || "—",
       "sphere-diag-canvas-size":  diag.canvasWidth && diag.canvasHeight ? `${diag.canvasWidth} × ${diag.canvasHeight}` : "—",
-      "sphere-diag-dpr":          String(diag.devicePixelRatio || "—"),
+      "sphere-diag-dpr":          `${diag.requestedDevicePixelRatio || "—"} → ${diag.appliedDevicePixelRatio || "—"}`,
       "sphere-diag-quality":      _state.quality,
       "sphere-diag-last-error":   diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : "none",
+      "sphere-diag-camera-distance": semantic.distance != null ? `${Number(semantic.distance).toFixed(3)}` : "—",
+      "sphere-diag-semantic-band": semantic.band || "—",
+      "sphere-diag-semantic-prev-band": semantic.previousBand || "—",
+      "sphere-diag-semantic-threshold": semantic.transitionThreshold != null ? String(semantic.transitionThreshold) : "—",
+      "sphere-diag-label-budget": semantic.moonLabelMode || semantic.dayLabelMode
+        ? `${semantic.moonLabelMode || "—"} moon · ${semantic.dayLabelMode || "—"} day`
+        : "—",
+      "sphere-diag-connection-budget": semantic.maxConnections != null ? String(semantic.maxConnections) : "—",
+      "sphere-diag-visible-day-nodes": semantic.visibleDayNodes != null ? String(semantic.visibleDayNodes) : "—",
+      "sphere-diag-visible-moon-labels": semantic.visibleMoonLabels != null ? String(semantic.visibleMoonLabels) : "—",
+      "sphere-diag-visible-connections": semantic.visibleConnections != null ? String(semantic.visibleConnections) : "—",
     };
     for (const [id, val] of Object.entries(rows)) {
       const el = document.getElementById(id);
       if (el) el.textContent = val;
+    }
+    const connectionDebug = document.getElementById("sphere-diag-connections-debug");
+    if (connectionDebug) {
+      const lines = Array.isArray(diag.connectionDiagnostics)
+        ? diag.connectionDiagnostics.slice(0, 24).map(item => {
+          const status = item.visible ? "visible" : `hidden:${item.hiddenReason || "unknown"}`;
+          return `${item.id} · ${item.relationType}\n  ${item.sourceType}:${item.sourceId || "—"} -> ${item.targetType}:${item.targetId || "—"}\n  ${status}`;
+        })
+        : [];
+      connectionDebug.textContent = lines.length ? lines.join("\n") : "No connection diagnostics available.";
     }
   }
 
@@ -1453,19 +1658,14 @@
     const el = document.getElementById("sphere-mode-summary");
     if (!el) return;
     const mode = _state.viewMode;
-    const selected = model?.selectedPatternPosition || _resolveSelectedPatternPosition(model);
-    const selectedLabel = selected?.moon != null
-      ? `Moon ${selected.moon} · Day ${selected.day} · Day ${selected.dayOfPatternYear}/364`
-      : "Unavailable";
     if (mode === "today") {
-      el.textContent = _selectedDaySummary(selected);
+      el.textContent = "Today view";
     } else if (mode === "passage") {
-      const tp = model?.sourceRecord?.equinox?.patternPosition || {};
-      el.textContent = `${model?.year || "—"} Equinox Passage · Moon ${tp.moon || "—"} · Day ${tp.day || "—"} → Year Gate · ${selectedLabel}`;
+      el.textContent = `${model?.year || "—"} Equinox passage`;
     } else if (mode === "years") {
-      el.textContent = `2014–2026 Alignment Spiral · Year ${_state.year} · ${selectedLabel}`;
+      el.textContent = `2014–2026 Alignment spiral · Year ${_state.year}`;
     } else if (mode === "pattern") {
-      el.textContent = `13 Moons × 28 Days · ${selectedLabel}`;
+      el.textContent = "13 Moons × 28 Days";
     }
   }
 
@@ -1485,7 +1685,6 @@
   function _updateStateStrip(viewMode, model) {
     const strips = [
       document.getElementById("sphere-state-strip"),
-      document.getElementById("sphere-current-status"),
     ].filter(Boolean);
     if (!strips.length) return;
     const year = _state.year || 2026;
@@ -1651,6 +1850,7 @@
       ["Environment provider", field.sources.environmentProvider],
       ["Last environment update", field.sources.lastEnvironmentUpdate ? _formatLocalInstant(field.sources.lastEnvironmentUpdate) : "Not recorded"],
       ["Sunset source", field.sources.sunsetSource],
+      ["Solar calculation source", field.sources.solarCalculationSource],
       ["Lunar calculation source", field.sources.lunarCalculationSource],
       ["Witness storage state", field.sources.witnessStorageState],
       ["Recurrence dataset range", field.sources.recurrenceDatasetRange],
@@ -1661,7 +1861,7 @@
       : "Live data becomes available after a weather or geomagnetic provider is configured.";
 
     el.innerHTML = `
-      <h3 class="sphere-details-heading">${_escapeHtml(_selectedDaySummary(selected))}</h3>
+      <h3 class="sphere-details-heading">Selected day details</h3>
       <div class="sphere-details-section">
         <h4 class="sphere-details-subheading">Selected Day</h4>
         <dl class="sphere-details-grid">
@@ -2145,6 +2345,7 @@
         _state.active3d = false;
         _state._3dInitInProgress = false;
         _state.rendererMode = "3d";
+        _state._3dInitGeneration++;
         const sel = document.getElementById("sphere-renderer-select");
         if (sel) sel.value = "3d";
         _updateRendererLabel("Retrying 3D renderer…");
@@ -2178,7 +2379,7 @@
         _state.rendererMode = "svg";
         const sel = document.getElementById("sphere-renderer-select");
         if (sel) sel.value = "svg";
-        _hideRendererFallbackWarning();
+        _minimizeRendererFallbackWarning();
         renderSphere(container);
       });
     }

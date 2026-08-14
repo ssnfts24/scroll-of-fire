@@ -46,6 +46,7 @@ function loadSphereContext() {
     "docs/assets/js/alignment/alignment-url-state.js",
     "docs/assets/js/sphere/living-time-sphere-version.js",
     "docs/assets/js/sphere/living-time-sphere-state.js",
+    "docs/assets/js/sphere/living-time-sphere-semantic-zoom.js",
     "docs/assets/js/sphere/living-time-sphere-model.js",
     "docs/assets/js/sphere/living-time-sphere-layout.js",
     "docs/assets/js/sphere/living-time-sphere-connections.js",
@@ -370,6 +371,107 @@ test("Integration: sphere equinox angle matches pattern position", () => {
     record.equinox.patternPosition.dayOfPatternYear || 364
   );
   assert.equal(model.passageStartAngle, expectedAngle);
+});
+
+test("LivingTimeSphereModel: day metadata includes moon/day/week structure", () => {
+  const ctx = loadSphereContext();
+  const day = ctx.LivingTimeSphereModel.dayMetadataForDayOfYear(110);
+  assert.equal(day.type, "living-day");
+  assert.equal(day.dayOfPatternYear, 110);
+  assert.equal(day.moon, 4);
+  assert.equal(day.day, 26);
+  assert.equal(day.week, 4);
+  assert.equal(day.dayOfWeek, 5);
+  assert.ok(day.moonName && typeof day.moonName === "string");
+});
+
+test("LivingTimeSphereModel: selected day angle maps back to exact day index", () => {
+  const ctx = loadSphereContext();
+  const samples = [1, 110, 300, 364];
+  for (const day of samples) {
+    const angle = ctx.LivingTimeSphereModel.patternAngleForDayOfYear(day);
+    assert.equal(ctx.LivingTimeSphereModel.dayOfYearForPatternAngle(angle), day);
+  }
+});
+
+test("LivingTimeSphereModel: 13 moons × 28 days yields 364 exact positions", () => {
+  const ctx = loadSphereContext();
+  const positions = [];
+  for (let moon = 1; moon <= 13; moon += 1) {
+    for (let day = 1; day <= 28; day += 1) {
+      positions.push(ctx.LivingTimeSphereModel.dayOfPatternYearFromMoonDay(moon, day));
+    }
+  }
+  assert.equal(positions.length, 364);
+  assert.equal(new Set(positions).size, 364, "all positions must be unique");
+  assert.equal(Math.min(...positions), 1);
+  assert.equal(Math.max(...positions), 364);
+});
+
+test("LivingTimeSphereModel: moon transition boundaries are exact and off-by-one safe", () => {
+  const ctx = loadSphereContext();
+  for (let moon = 1; moon <= 12; moon += 1) {
+    const lastDay = ctx.LivingTimeSphereModel.dayOfPatternYearFromMoonDay(moon, 28);
+    const nextFirst = ctx.LivingTimeSphereModel.dayOfPatternYearFromMoonDay(moon + 1, 1);
+    assert.equal(nextFirst, lastDay + 1, `Moon ${moon} Day 28 should be immediately before Moon ${moon + 1} Day 1`);
+  }
+});
+
+test("LivingTimeSphereModel: day metadata gate rules consume canonical shabbat config", () => {
+  const ctx = loadSphereContext();
+  ctx.SOF_MOONS_CONFIG = { shabbat: { moonDays: [4, 11, 18, 25], preparationDay: 3, returnDay: 5 } };
+  const m4 = ctx.LivingTimeSphereModel.dayMetadataForDayOfYear(4);
+  const m3 = ctx.LivingTimeSphereModel.dayMetadataForDayOfYear(3);
+  const m5 = ctx.LivingTimeSphereModel.dayMetadataForDayOfYear(5);
+  assert.equal(m4.shabbatGate, "Shabbat Gate");
+  assert.equal(m3.preparationGate, "Preparation Gate");
+  assert.equal(m5.returnGate, "Return Gate");
+});
+
+test("LivingTimeSphereModel: solar season angles progress through major gates", () => {
+  const ctx = loadSphereContext();
+  const march = ctx.LivingTimeSphereModel.solarSeasonAngleForDate("2026-03-20T12:00:00Z");
+  const june = ctx.LivingTimeSphereModel.solarSeasonAngleForDate("2026-06-20T12:00:00Z");
+  const september = ctx.LivingTimeSphereModel.solarSeasonAngleForDate("2026-09-22T12:00:00Z");
+  const december = ctx.LivingTimeSphereModel.solarSeasonAngleForDate("2026-12-21T12:00:00Z");
+  assert.ok(march >= 0 && march < 15);
+  assert.ok(june >= 75 && june < 110);
+  assert.ok(september >= 165 && september < 205);
+  assert.ok(december >= 250 && december < 295);
+});
+
+test("LivingTimeSphereModel: seasonal interpolation is explicitly tagged as approximation", () => {
+  const ctx = loadSphereContext();
+  const season = ctx.LivingTimeSphereModel.seasonalQuarterProgressForDate("2026-08-14T12:00:00Z");
+  assert.equal(season.sourceType, "seasonal-approximation");
+  assert.equal(season.precision, "anchor-interpolation");
+  assert.equal(season.source, "seasonal-anchor interpolation");
+  assert.ok(season.seasonalProgressAngle >= 0 && season.seasonalProgressAngle <= 360);
+});
+
+test("LunarAtEquinox: cycle position and phase naming stay synchronized", () => {
+  const ctx = loadSphereContext();
+  const layer = ctx.LunarAtEquinox.buildLayer(new Date("2026-08-14T12:00:00Z"));
+  assert.ok(layer.cyclePosition >= 0 && layer.cyclePosition < 1);
+  assert.ok(layer.illumination >= 0 && layer.illumination <= 1);
+  assert.ok(typeof layer.phaseName === "string" && layer.phaseName.length > 0);
+});
+
+test("LivingTimeSphereSemanticZoom: resolves expected bands and visibility", () => {
+  const ctx = loadSphereContext();
+  const zoom = ctx.LivingTimeSphereSemanticZoom;
+  assert.equal(zoom.resolveBand({ distance: 4.1, screenWidth: 1280 }), "far");
+  assert.equal(zoom.resolveBand({ distance: 2.6, screenWidth: 1280 }), "medium");
+  assert.equal(zoom.resolveBand({ distance: 1.8, screenWidth: 1280 }), "near");
+  assert.equal(zoom.resolveBand({ distance: 1.2, screenWidth: 1280 }), "detail");
+  const far = zoom.resolveVisibility({
+    baseLayers: { pattern: true, exactDays: true, weekGates: true, recurrence: true, outsideDays: true },
+    band: "far",
+    connectionMode: "contextual"
+  });
+  assert.equal(far.visibility.exactDays, false);
+  assert.equal(far.visibility.weekGates, false);
+  assert.equal(far.dayLabelMode, "hidden");
 });
 
 // ── PWA: service worker includes Phase 03 assets ──────────────────────

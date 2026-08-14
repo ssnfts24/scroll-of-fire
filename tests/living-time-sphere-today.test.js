@@ -298,6 +298,20 @@ test("buildTodayModel: currentPatternAngle differs before vs after boundary", ()
     `Day 97 angle expected ~${expected97.toFixed(2)}°, got ${mBefore.currentPatternAngle}`);
 });
 
+test("buildTodayModel: today geometry angle matches canonical day-angle mapping", () => {
+  const ctx = loadContext();
+  const now = pdtToUtc("2026-07-22T17:59:00");
+  const model = ctx.LivingTimeSphereModel.buildTodayModel({
+    timeZone: "America/Los_Angeles",
+    boundaryMode: "manual",
+    manualSunset: "18:00",
+    asOf: now,
+  });
+  const dayOfYear = model.todayPatternPosition?.dayOfPatternYear;
+  const expectedAngle = ctx.LivingTimeSphereModel.patternAngleForDayOfYear(dayOfYear);
+  assert.equal(model.currentPatternAngle, expectedAngle, "today marker angle must use canonical day-angle mapping");
+});
+
 test("buildTodayModel: todayPatternPosition does NOT come from Equinox year record", () => {
   const ctx = loadContext();
   const now = pdtToUtc("2026-07-22T12:00:00");

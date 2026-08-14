@@ -60,6 +60,7 @@ const mandatoryPaths = [
   "./assets/js/sphere/living-time-sphere-version.js",
   "./assets/js/sphere/living-time-sphere-model.js",
   "./assets/js/sphere/living-time-sphere-state.js",
+  "./assets/js/sphere/living-time-sphere-semantic-zoom.js",
   "./assets/js/sphere/living-time-sphere-layout.js",
   "./assets/js/sphere/living-time-sphere-connections.js",
   "./assets/js/sphere/living-time-sphere-renderer-svg.js",

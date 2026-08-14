@@ -157,7 +157,7 @@ test("missing optional image does not block install or offline startup", async (
       type: "APP_SHELL_READY",
       appVersion: "2026.07.16.3",
       serviceWorkerBuild: "2026.07.16.3",
-      mandatoryAssetCount: 87
+      mandatoryAssetCount: 88
     }
   );
   await activateWorker(harness);
