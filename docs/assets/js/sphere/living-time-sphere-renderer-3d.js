@@ -127,6 +127,13 @@
   let _activeSemanticBand = null;
   let _motionMode = "still";
   let _dayNodeMetadata = [];
+  let _dayNodeBasePositions = null;
+  let _dayNodeVisibleKey = "";
+  let _dayNodeVisibleCount = 0;
+  let _connectionDiagnostics = [];
+  let _connectionVisibleCount = 0;
+  let _lastSemanticDistance = null;
+  let _lastSemanticSourceType = "unknown";
   const _moonAnchors = [];    // { moon, angle, radius, worldVec } for each of 13 moons
   let _lastCameraFocusKey = null;
   const _environmentLayerEnabled = {
@@ -531,6 +538,9 @@
       }
       const geo = new THREE.BufferGeometry();
       geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+      _dayNodeBasePositions = new Float32Array(positions);
+      _dayNodeVisibleCount = 364;
+      _dayNodeVisibleKey = "";
       const m = new THREE.PointsMaterial({
         color:       mat.COLORS.patternRing,
         size:        _isMobileWidth() ? 0.02 : 0.016,
@@ -1376,14 +1386,16 @@
     if (_objects.dayNodes?.material && semanticState?.dayNodeOpacity != null) {
       _objects.dayNodes.material.opacity = semanticState.dayNodeOpacity;
     }
-    if (_objects.solarTodayMarker) _objects.solarTodayMarker.visible = !!vl.solar && band !== "far" && _objects.solarTodayMarker.visible;
-    if (_objects.solarSelectedMarker) _objects.solarSelectedMarker.visible = !!vl.solar && band !== "far" && _objects.solarSelectedMarker.visible;
-    if (_objects.lunarSelectedMarker) _objects.lunarSelectedMarker.visible = !!vl.lunar && band !== "far" && _objects.lunarSelectedMarker.visible;
+    if (_objects.solarTodayMarker && band === "far") _objects.solarTodayMarker.visible = false;
+    if (_objects.solarSelectedMarker && band === "far") _objects.solarSelectedMarker.visible = false;
+    if (_objects.lunarSelectedMarker && band === "far") _objects.lunarSelectedMarker.visible = false;
   }
 
   function _syncSemanticZoomFromCamera(force = false) {
     const next = _resolveSemanticZoomFromCamera();
     if (!next) return false;
+    _lastSemanticDistance = next.distance ?? null;
+    _lastSemanticSourceType = next.sourceType || "unknown";
     const changed = force
       || !_semanticZoomState
       || next.band !== _semanticZoomState.band
@@ -1435,24 +1447,214 @@
     return null;
   }
 
+  function _resolveLunarAngleForSelected(selected, fallbackAngle = 0) {
+    if (selected?.lunarCyclePosition != null) {
+      const p = Number(selected.lunarCyclePosition);
+      if (Number.isFinite(p)) return ((((p % 1) + 1) % 1) * 360);
+    }
+    const selectedPhase = String(selected?.lunarPhase || "").toLowerCase();
+    if (selectedPhase.includes("new")) return 0;
+    if (selectedPhase.includes("first quarter")) return 90;
+    if (selectedPhase.includes("full")) return 180;
+    if (selectedPhase.includes("last quarter")) return 270;
+    return Number.isFinite(Number(fallbackAngle)) ? Number(fallbackAngle) : 0;
+  }
+
+  function _positionOnSolarAxis(angleDeg, radius) {
+    const tilt = 23.5 * Math.PI / 180;
+    const rad = (Number(angleDeg || 0) * Math.PI) / 180;
+    return {
+      x: radius * Math.sin(tilt) * Math.cos(rad),
+      y: radius * Math.cos(tilt) * Math.cos(rad),
+      z: radius * Math.sin(rad),
+    };
+  }
+
+  function _positionOnLunarOrbit(angleDeg, radius) {
+    const tiltAngle = 0.09;
+    const { x, z } = angleToXZ(angleDeg, radius);
+    const y = z * Math.sin(tiltAngle);
+    return { x, y, z: z * Math.cos(tiltAngle) };
+  }
+
+  function _dayNodeVisibilitySet(band, selectedDayOfYear, todayDayOfYear) {
+    const set = new Set();
+    const add = value => {
+      const n = Number(value);
+      if (!Number.isFinite(n)) return;
+      set.add(_clamp(Math.round(n), 1, 364));
+    };
+    const addWindow = (center, radius) => {
+      const c = Number(center);
+      if (!Number.isFinite(c)) return;
+      for (let d = Math.round(c) - radius; d <= Math.round(c) + radius; d += 1) {
+        if (d >= 1 && d <= 364) set.add(d);
+      }
+    };
+    const addMoonDays = moon => {
+      const m = Number(moon);
+      if (!Number.isFinite(m) || m < 1 || m > 13) return;
+      const start = (m - 1) * 28 + 1;
+      for (let d = start; d < start + 28; d += 1) set.add(d);
+    };
+    const selectedDay = Number.isFinite(Number(selectedDayOfYear)) ? Number(selectedDayOfYear) : null;
+    const todayDay = Number.isFinite(Number(todayDayOfYear)) ? Number(todayDayOfYear) : null;
+    add(selectedDay);
+    add(todayDay);
+    if (band === "far") {
+      for (let moon = 1; moon <= 13; moon += 1) add(((moon - 1) * 28) + 1);
+      return set;
+    }
+    const focusDay = selectedDay ?? todayDay ?? 1;
+    const focusMoon = Math.floor((focusDay - 1) / 28) + 1;
+    if (band === "medium") {
+      addMoonDays(focusMoon);
+      for (let moon = 1; moon <= 13; moon += 1) {
+        [1, 7, 14, 21, 28].forEach(day => add(((moon - 1) * 28) + day));
+      }
+      addWindow(focusDay, 6);
+      return set;
+    }
+    if (band === "near") {
+      addMoonDays(focusMoon);
+      addMoonDays(focusMoon - 1 < 1 ? 13 : focusMoon - 1);
+      addMoonDays(focusMoon + 1 > 13 ? 1 : focusMoon + 1);
+      addWindow(focusDay, 14);
+      return set;
+    }
+    addWindow(focusDay, 7);
+    const weekStart = Math.floor(((focusDay - 1) % 28) / 7) * 7 + ((focusMoon - 1) * 28) + 1;
+    for (let d = weekStart; d < weekStart + 7; d += 1) add(d);
+    return set;
+  }
+
+  function _applyDayNodeVisibility(band, selectedDayOfYear, todayDayOfYear) {
+    if (!_objects.dayNodes?.geometry || !_dayNodeBasePositions) {
+      _dayNodeVisibleCount = 0;
+      return;
+    }
+    const visibleDays = _dayNodeVisibilitySet(band, selectedDayOfYear, todayDayOfYear);
+    const key = `${band}|${selectedDayOfYear || "x"}|${todayDayOfYear || "x"}`;
+    if (key === _dayNodeVisibleKey && _dayNodeVisibleCount > 0) return;
+    const attr = _objects.dayNodes.geometry.getAttribute("position");
+    if (!attr?.array) return;
+    const arr = attr.array;
+    let writeIndex = 0;
+    for (let day = 1; day <= 364; day += 1) {
+      if (!visibleDays.has(day)) continue;
+      const src = (day - 1) * 3;
+      const dst = writeIndex * 3;
+      arr[dst] = _dayNodeBasePositions[src];
+      arr[dst + 1] = _dayNodeBasePositions[src + 1];
+      arr[dst + 2] = _dayNodeBasePositions[src + 2];
+      writeIndex += 1;
+    }
+    attr.needsUpdate = true;
+    _objects.dayNodes.geometry.setDrawRange(0, writeIndex);
+    _dayNodeVisibleCount = writeIndex;
+    _dayNodeVisibleKey = key;
+  }
+
+  function _connectionTypeForId(id) {
+    if (!id) return "unknown";
+    if (id === "core") return "core";
+    if (id === "today") return "today";
+    if (id === "lunar" || id === "lunar-selected") return "lunar";
+    if (id === "solar-selected") return "solar";
+    if (id === "yearGate") return "year-gate";
+    if (id === "equinox") return "equinox";
+    if (/^day-/.test(id)) return "day";
+    if (/^weekgate-/.test(id)) return "week-gate";
+    if (/^year-/.test(id)) return "year";
+    return "unknown";
+  }
+
   function _buildConnections() {
     if (!_objects.connectionGroup) return;
+    _connectionDiagnostics = [];
+    _connectionVisibleCount = 0;
     while (_objects.connectionGroup.children.length) {
       _objects.connectionGroup.remove(_objects.connectionGroup.children[0]);
     }
-    if (!_visibleLayers.connections || !Array.isArray(_connectionRegistry) || !_connectionRegistry.length) return;
+    if (!Array.isArray(_connectionRegistry) || !_connectionRegistry.length) return;
+    if (!_visibleLayers.connections) {
+      _connectionDiagnostics = _connectionRegistry.map(connection => ({
+        id: connection.id,
+        sourceId: connection.sourceMarkerId || null,
+        sourceType: _connectionTypeForId(connection.sourceMarkerId),
+        targetId: connection.targetMarkerId || null,
+        targetType: _connectionTypeForId(connection.targetMarkerId),
+        relationType: connection.relationship || connection.type || "unspecified",
+        visible: false,
+        hiddenReason: "connections-layer-off",
+      }));
+      return;
+    }
     const mat = globalThis.LivingTimeSphereM;
     const band = _semanticZoomState?.band || "medium";
     const budget = Number(_semanticZoomState?.maxConnections || 0);
-    const ordered = _connectionRegistry
+    const visibleCandidates = _connectionRegistry
       .filter(connection => connection.visible !== false)
       .filter(connection => !connection.semanticBands || connection.semanticBands.includes(band))
       .sort((a, b) => (Number(b.priority || 0) - Number(a.priority || 0)) || String(a.id).localeCompare(String(b.id)));
-    const limited = budget > 0 ? ordered.slice(0, budget) : ordered;
+    const limited = budget > 0 ? visibleCandidates.slice(0, budget) : visibleCandidates;
+    const visibleIds = new Set(limited.map(connection => connection.id));
+    _connectionRegistry.forEach(connection => {
+      if (connection.visible === false) {
+        _connectionDiagnostics.push({
+          id: connection.id,
+          sourceId: connection.sourceMarkerId || null,
+          sourceType: _connectionTypeForId(connection.sourceMarkerId),
+          targetId: connection.targetMarkerId || null,
+          targetType: _connectionTypeForId(connection.targetMarkerId),
+          relationType: connection.relationship || connection.type || "unspecified",
+          visible: false,
+          hiddenReason: "connection-hidden-by-registry",
+        });
+        return;
+      }
+      if (connection.semanticBands && !connection.semanticBands.includes(band)) {
+        _connectionDiagnostics.push({
+          id: connection.id,
+          sourceId: connection.sourceMarkerId || null,
+          sourceType: _connectionTypeForId(connection.sourceMarkerId),
+          targetId: connection.targetMarkerId || null,
+          targetType: _connectionTypeForId(connection.targetMarkerId),
+          relationType: connection.relationship || connection.type || "unspecified",
+          visible: false,
+          hiddenReason: `semantic-band-${band}`,
+        });
+        return;
+      }
+      if (!visibleIds.has(connection.id)) {
+        _connectionDiagnostics.push({
+          id: connection.id,
+          sourceId: connection.sourceMarkerId || null,
+          sourceType: _connectionTypeForId(connection.sourceMarkerId),
+          targetId: connection.targetMarkerId || null,
+          targetType: _connectionTypeForId(connection.targetMarkerId),
+          relationType: connection.relationship || connection.type || "unspecified",
+          visible: false,
+          hiddenReason: "connection-budget",
+        });
+      }
+    });
     limited.forEach(connection => {
       const from = _connectionPoint(connection.sourceMarkerId);
       const to = _connectionPoint(connection.targetMarkerId);
-      if (!from || !to) return;
+      if (!from || !to) {
+        _connectionDiagnostics.push({
+          id: connection.id,
+          sourceId: connection.sourceMarkerId || null,
+          sourceType: _connectionTypeForId(connection.sourceMarkerId),
+          targetId: connection.targetMarkerId || null,
+          targetType: _connectionTypeForId(connection.targetMarkerId),
+          relationType: connection.relationship || connection.type || "unspecified",
+          visible: false,
+          hiddenReason: !from ? "missing-source-anchor" : "missing-target-anchor",
+        });
+        return;
+      }
       const points = [from, to];
       const geometry = new _THREE.BufferGeometry().setFromPoints(points);
       const material = new _THREE.LineDashedMaterial({
@@ -1467,6 +1669,17 @@
       line.computeLineDistances();
       line.name = `connection-${connection.id}`;
       _objects.connectionGroup.add(line);
+      _connectionVisibleCount += 1;
+      _connectionDiagnostics.push({
+        id: connection.id,
+        sourceId: connection.sourceMarkerId || null,
+        sourceType: _connectionTypeForId(connection.sourceMarkerId),
+        targetId: connection.targetMarkerId || null,
+        targetType: _connectionTypeForId(connection.targetMarkerId),
+        relationType: connection.relationship || connection.type || "unspecified",
+        visible: true,
+        hiddenReason: "rendered",
+      });
     });
   }
 
@@ -1531,17 +1744,73 @@
       }
     }
 
-    // ── Lunar marker ────────────────────────────────────────────────
-    if (_objects.lunarMarker && model.lunarAngle != null) {
-      const r = mat.SIZES.lunarOrbit;
-      // Slight tilt to match the orbit ring (same tilt as lunarOrbit mesh)
-      const tiltAngle = 0.09;
-      const { x, z } = angleToXZ(model.lunarAngle, r);
-      const yOff = z * Math.sin(tiltAngle);
-      _objects.lunarMarker.position.set(x, yOff, z * Math.cos(tiltAngle));
+    const band = _semanticZoomState?.band || "medium";
+
+    // ── Lunar + Solar marker positions ──────────────────────────────
+    const selected = model.selectedPatternPosition || model.todayPatternPosition || null;
+    const todayLunarAngle = Number(model.lunarAngle ?? 0);
+    const selectedLunarAngle = _resolveLunarAngleForSelected(selected, todayLunarAngle);
+    if (_objects.lunarMarker && Number.isFinite(todayLunarAngle)) {
+      const p = _positionOnLunarOrbit(todayLunarAngle, mat.SIZES.lunarOrbit);
+      _objects.lunarMarker.position.set(p.x, p.y, p.z);
+      _objects.lunarMarker.userData = {
+        type: "lunar-position",
+        role: "today",
+        phase: model.todayPatternPosition?.lunarPhase || null,
+        illumination: model.todayPatternPosition?.lunarIllumination ?? null,
+      };
+    }
+    if (_objects.lunarSelectedMarker && Number.isFinite(selectedLunarAngle)) {
+      const p = _positionOnLunarOrbit(selectedLunarAngle, mat.SIZES.lunarOrbit);
+      _objects.lunarSelectedMarker.position.set(p.x, p.y, p.z);
+      _objects.lunarSelectedMarker.userData = {
+        type: "lunar-position",
+        role: "selected",
+        phase: selected?.lunarPhase || null,
+        illumination: selected?.lunarIllumination ?? null,
+      };
+      _objects.lunarSelectedMarker.visible = !!vl.lunar && band !== "far" && !!selected;
     }
 
-    const band = _semanticZoomState?.band || "medium";
+    const todaySolarAngle = Number(model.currentSolarSeasonAngle ?? model.solarSeasonAngle ?? 0);
+    const selectedSolarAngle = Number(selected?.solar?.angle ?? todaySolarAngle);
+    if (_objects.solarTodayMarker && Number.isFinite(todaySolarAngle)) {
+      const p = _positionOnSolarAxis(todaySolarAngle, mat.SIZES.solarAxis);
+      _objects.solarTodayMarker.position.set(p.x, p.y, p.z);
+      _objects.solarTodayMarker.visible = !!vl.solar && band !== "far";
+      _objects.solarTodayMarker.userData = {
+        type: "solar-position",
+        role: "today",
+        angle: todaySolarAngle,
+        sourceType: "seasonal-approximation",
+        precision: "anchor-interpolation",
+      };
+    }
+    if (_objects.solarSelectedMarker && Number.isFinite(selectedSolarAngle)) {
+      const p = _positionOnSolarAxis(selectedSolarAngle, mat.SIZES.solarAxis);
+      _objects.solarSelectedMarker.position.set(p.x, p.y, p.z);
+      _objects.solarSelectedMarker.visible = !!vl.solar && band !== "far" && !!selected;
+      _objects.solarSelectedMarker.userData = {
+        type: "solar-position",
+        role: "selected",
+        gate: selected?.solar?.gate || null,
+        angle: selectedSolarAngle,
+        sourceType: "seasonal-approximation",
+        precision: "anchor-interpolation",
+      };
+    }
+    if (_objects.solarProgressGroup) {
+      while (_objects.solarProgressGroup.children.length) {
+        _objects.solarProgressGroup.remove(_objects.solarProgressGroup.children[0]);
+      }
+      const arc = buildSolarProgressArc(todaySolarAngle, selectedSolarAngle);
+      if (arc) {
+        arc.name = "solarProgressArc";
+        arc.computeLineDistances?.();
+        arc.visible = !!vl.solar && band !== "far";
+        _objects.solarProgressGroup.add(arc);
+      }
+    }
 
     // ── 13-year spiral markers ──────────────────────────────────────
     if (_objects.spiralGroup && spiral?.years) {
@@ -1684,6 +1953,12 @@
       });
     }
 
+    _applyDayNodeVisibility(
+      band,
+      selected?.dayOfPatternYear ?? model.selectedPatternPosition?.dayOfPatternYear ?? null,
+      model.todayPatternPosition?.dayOfPatternYear ?? null
+    );
+
     // ── Mode-specific layer overrides ───────────────────────────────
     if (_viewMode === "today") {
       if (_objects.spiralPath)        _objects.spiralPath.visible = false;
@@ -1694,74 +1969,6 @@
         _objects.todayHalo.material.opacity = 0.72;
       }
 
-      if (_objects.solarTodayMarker) {
-        const todaySolarAngle = Number(model.currentSolarSeasonAngle ?? model.solarSeasonAngle ?? 0);
-        const solarR = mat.SIZES.solarAxis;
-        const tilt = 23.5 * Math.PI / 180;
-        const sRad = (todaySolarAngle * Math.PI) / 180;
-        _objects.solarTodayMarker.position.set(
-          solarR * Math.sin(tilt) * Math.cos(sRad),
-          solarR * Math.cos(tilt) * Math.cos(sRad),
-          solarR * Math.sin(sRad)
-        );
-        _objects.solarTodayMarker.visible = !!vl.solar && band !== "far";
-        _objects.solarTodayMarker.userData = { type: "solar-position", role: "today", angle: todaySolarAngle };
-      }
-
-      if (_objects.solarSelectedMarker) {
-        const selectedSolarAngle = Number(model.selectedPatternPosition?.solar?.angle ?? model.currentSolarSeasonAngle ?? model.solarSeasonAngle ?? 0);
-        const solarR = mat.SIZES.solarAxis;
-        const tilt = 23.5 * Math.PI / 180;
-        const sRad = (selectedSolarAngle * Math.PI) / 180;
-        _objects.solarSelectedMarker.position.set(
-          solarR * Math.sin(tilt) * Math.cos(sRad),
-          solarR * Math.cos(tilt) * Math.cos(sRad),
-          solarR * Math.sin(sRad)
-        );
-        _objects.solarSelectedMarker.visible = !!vl.solar && band !== "far";
-        _objects.solarSelectedMarker.userData = {
-          type: "solar-position",
-          role: "selected",
-          gate: model.selectedPatternPosition?.solar?.gate || null,
-          angle: selectedSolarAngle,
-        };
-      }
-
-      if (_objects.solarProgressGroup) {
-        while (_objects.solarProgressGroup.children.length) {
-          _objects.solarProgressGroup.remove(_objects.solarProgressGroup.children[0]);
-        }
-        const todaySolarAngle = Number(model.currentSolarSeasonAngle ?? model.solarSeasonAngle ?? 0);
-        const selectedSolarAngle = Number(model.selectedPatternPosition?.solar?.angle ?? todaySolarAngle);
-        const arc = buildSolarProgressArc(todaySolarAngle, selectedSolarAngle);
-        if (arc) {
-          arc.name = "solarProgressArc";
-          arc.computeLineDistances?.();
-          arc.visible = !!vl.solar && band !== "far";
-          _objects.solarProgressGroup.add(arc);
-        }
-      }
-
-      if (_objects.lunarSelectedMarker) {
-        const selectedPhase = String(model.selectedPatternPosition?.lunarPhase || "").toLowerCase();
-        let selectedAngle = model.lunarAngle ?? 0;
-        if (selectedPhase.includes("new")) selectedAngle = 0;
-        else if (selectedPhase.includes("first quarter")) selectedAngle = 90;
-        else if (selectedPhase.includes("full")) selectedAngle = 180;
-        else if (selectedPhase.includes("last quarter")) selectedAngle = 270;
-        const r = mat.SIZES.lunarOrbit;
-        const tiltAngle = 0.09;
-        const { x, z } = angleToXZ(selectedAngle, r);
-        const yOff = z * Math.sin(tiltAngle);
-        _objects.lunarSelectedMarker.position.set(x, yOff, z * Math.cos(tiltAngle));
-        _objects.lunarSelectedMarker.visible = !!vl.lunar && band !== "far";
-        _objects.lunarSelectedMarker.userData = {
-          type: "lunar-position",
-          role: "selected",
-          phase: model.selectedPatternPosition?.lunarPhase || null,
-          illumination: model.selectedPatternPosition?.lunarIllumination ?? null,
-        };
-      }
       if (_objects.todayMarker?.material) _objects.todayMarker.material.emissiveIntensity = 0.9;
       // Today line: make solid for emphasis in Today mode
       if (_objects.todayLineGroup) {
@@ -2529,6 +2736,13 @@
     _moonLabelConnectorEl = null;
     _moonLabelManager = null;
     _moonAnchors.length = 0;
+    _dayNodeBasePositions = null;
+    _dayNodeVisibleKey = "";
+    _dayNodeVisibleCount = 0;
+    _connectionDiagnostics = [];
+    _connectionVisibleCount = 0;
+    _lastSemanticDistance = null;
+    _lastSemanticSourceType = "unknown";
     _environmentController.dispose();
     _contextLossDispose?.();
     _contextLossDispose = null;
@@ -2564,6 +2778,9 @@
     const initDurationMs = _initStartedAt != null && _initEndedAt != null
       ? Math.max(0, Math.round(_initEndedAt - _initStartedAt))
       : null;
+    const visibleMoonLabels = Array.isArray(_moonLabelEls)
+      ? _moonLabelEls.filter(el => el && el.style.display !== "none").length
+      : 0;
     return {
       requestedRenderer: "3d",
       activeRenderer:    _initialized ? "webgl" : "none",
@@ -2589,6 +2806,18 @@
       reducedData,
       restoreAttempts:   _restoreAttempts,
       lastInitError:     _lastInitError,
+      semanticZoom: {
+        band: _semanticZoomState?.band || "medium",
+        distance: _lastSemanticDistance,
+        sourceType: _lastSemanticSourceType,
+        dayLabelMode: _semanticZoomState?.dayLabelMode || _dayLabelMode,
+        moonLabelMode: _semanticZoomState?.moonLabelMode || _moonLabelMode,
+        maxConnections: Number(_semanticZoomState?.maxConnections || 0),
+        visibleDayNodes: Number(_dayNodeVisibleCount || 0),
+        visibleMoonLabels,
+        visibleConnections: Number(_connectionVisibleCount || 0),
+      },
+      connectionDiagnostics: _connectionDiagnostics.slice(0, 80),
       environment:       _environmentController.diagnostics(),
     };
   }
@@ -2625,6 +2854,16 @@
     _internals: Object.freeze({
       semanticThresholds: _semanticThresholds,
       stabilizeBand: _stabilizeBand,
+      buildSolarProgressArc,
+      smokeBuildSolarProgressArcForTests(startAngle, endAngle, threeOverride) {
+        const previous = _THREE;
+        if (threeOverride) _THREE = threeOverride;
+        try {
+          return buildSolarProgressArc(startAngle, endAngle);
+        } finally {
+          if (threeOverride) _THREE = previous;
+        }
+      },
     }),
   });
 })();

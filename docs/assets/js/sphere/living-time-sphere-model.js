@@ -96,9 +96,9 @@
     const date = dateInput instanceof Date ? new Date(dateInput.getTime()) : new Date(dateInput || Date.now());
     if (Number.isNaN(date.getTime())) {
       return Object.freeze({
-        sourceType: "calculated",
-        precision: "seasonal-approximation",
-        source: "quarter interpolation",
+        sourceType: "seasonal-approximation",
+        precision: "anchor-interpolation",
+        source: "seasonal-anchor interpolation",
         anchorKey: "march-equinox",
         nextAnchorKey: "june-solstice",
         seasonalQuarterProgress: 0,
@@ -134,9 +134,9 @@
     const seasonalCyclePosition = (cycle % 1 + 1) % 1;
     const seasonalProgressAngle = seasonalProgressAngleForCyclePosition(seasonalCyclePosition);
     return Object.freeze({
-      sourceType: "calculated",
-      precision: "seasonal-approximation",
-      source: "quarter interpolation",
+      sourceType: "seasonal-approximation",
+      precision: "anchor-interpolation",
+      source: "seasonal-anchor interpolation",
       anchorKey: active.key,
       nextAnchorKey: next.key,
       seasonalQuarterProgress: Number(seasonalQuarterProgress.toFixed(6)),
@@ -224,9 +224,9 @@
       seasonalProgressAngle: seasonalProgressAngleForCyclePosition(solarPos),
       solarSeasonAngle:      seasonalProgressAngleForCyclePosition(solarPos),
       solarGeometry: Object.freeze({
-        sourceType: "calculated",
-        precision: "seasonal-approximation",
-        source: "quarter interpolation",
+        sourceType: "seasonal-approximation",
+        precision: "anchor-interpolation",
+        source: "seasonal-anchor interpolation",
       }),
       passageStartAngle,
       passageEndAngle,

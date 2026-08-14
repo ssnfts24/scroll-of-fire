@@ -433,6 +433,42 @@ test("LivingTimeSphereRenderer3d: isInitialized returns false before init", () =
   assert.equal(ctx.LivingTimeSphereRenderer3d.isInitialized(), false);
 });
 
+test("LivingTimeSphereRenderer3d: solar progress arc remains callable from renderer internals", () => {
+  const ctx = loadSphereContext();
+  const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
+  vm.runInNewContext(code, ctx);
+  const smoke = ctx.LivingTimeSphereRenderer3d?._internals?.smokeBuildSolarProgressArcForTests;
+  assert.equal(typeof smoke, "function", "solar progress arc smoke helper should be exported");
+
+  class Vector3 {
+    constructor(x = 0, y = 0, z = 0) { this.x = x; this.y = y; this.z = z; }
+  }
+  class BufferGeometry {
+    setFromPoints(points) { this.points = points; return this; }
+  }
+  class LineDashedMaterial {
+    constructor(config) { this.config = config; }
+  }
+  class Line {
+    constructor(geometry, material) { this.geometry = geometry; this.material = material; }
+    computeLineDistances() {}
+  }
+  const fakeThree = { Vector3, BufferGeometry, LineDashedMaterial, Line };
+  const arc = smoke(5, 145, fakeThree);
+  assert.ok(arc, "solar progress arc should be built");
+  assert.ok(Array.isArray(arc.geometry?.points), "arc geometry should include sampled points");
+  assert.ok(arc.geometry.points.length >= 16, "arc geometry should be sampled densely enough");
+});
+
+test("LivingTimeSphereRenderer3d: source retains full geometry + semantic build path", () => {
+  const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
+  assert.ok(code.includes("buildPassageTube(model.passage.startAngle, model.passage.endAngle)"), "passage geometry build call present");
+  assert.ok(code.includes("const arc = buildSolarProgressArc(todaySolarAngle, selectedSolarAngle);"), "solar progression arc build call present");
+  assert.ok(code.includes("_buildConnections();"), "connection build call present");
+  assert.ok(code.includes("_syncSemanticZoomFromCamera(true);"), "semantic zoom sync call present");
+  assert.ok(code.includes("_markStage(\"firstFrame\", \"requested\")"), "first-frame request stage present");
+});
+
 // ── Renderer-neutral model parity ─────────────────────────────────────
 
 test("3D parity: model angle functions match SVG renderer expectations", () => {
@@ -665,6 +701,12 @@ test("UI selected-date authority: URL marker parsing and local persistence are p
   assert.ok(ui.includes("_persistSelectedState"), "selected state persistence should exist");
   assert.ok(/function _readLocalJson[\s\S]+?}\n\n  function _selectedDayFromMarker/.test(ui), "selected-day helpers should not be trapped inside _readLocalJson");
   assert.ok(!ui.includes("todayPatternYear !== _state.year && _state.selectedDayOfYear === todayDay"), "year mismatch should not force reset to day 1");
+});
+
+test("UI selected-date authority: selected-day and live snapshots share configured boundary mode", () => {
+  const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
+  assert.ok(ui.includes("boundaryMode: _state.boundaryMode"), "selected-day and snapshot boundary mode should use configured state");
+  assert.ok(!ui.includes("boundaryMode: \"midnight\""), "selected-day authority should not hardcode midnight boundary");
 });
 
 test("Sphere page: shared mount initializer is used", () => {

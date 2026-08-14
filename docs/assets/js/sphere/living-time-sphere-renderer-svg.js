@@ -74,6 +74,21 @@
     return visible;
   }
 
+  function _filterTextCollisions(candidates) {
+    const placed = [];
+    const visible = [];
+    const sorted = candidates.slice().sort((a, b) => b.priority - a.priority || a.id.localeCompare(b.id));
+    for (const candidate of sorted) {
+      const overlap = placed.some(prev =>
+        candidate.x1 < prev.x2 && candidate.x2 > prev.x1 && candidate.y1 < prev.y2 && candidate.y2 > prev.y1
+      );
+      if (overlap && candidate.priority < 95) continue;
+      placed.push(candidate);
+      visible.push(candidate);
+    }
+    return visible;
+  }
+
   function renderMoonSectors(sectors, rings, cx, cy, options = {}) {
     const selected = options.model?.selectedPatternPosition || options.model?.todayPatternPosition || null;
     const today = options.model?.todayPatternPosition || null;
@@ -227,6 +242,7 @@
     const isDetail = band === "detail";
     const dayNeighborWindow = isDetail ? 4 : 2;
     let output = "";
+    const dayLabels = [];
     for (let dayOfYear = 1; dayOfYear <= 364; dayOfYear += 1) {
       const moon = Math.floor((dayOfYear - 1) / 28) + 1;
       const day = ((dayOfYear - 1) % 28) + 1;
@@ -265,7 +281,19 @@
         const labelRadius = rings.patternRing + (isSelected ? 18 : 12);
         const labelPoint = polarToXY(angle, labelRadius, cx, cy);
         const label = isSelected ? `Selected · ${moon}/${day}` : `Today · ${moon}/${day}`;
-        output += `<text x="${labelPoint.x}" y="${labelPoint.y}" text-anchor="middle" dominant-baseline="middle" font-size="${isSelected ? 11 : 10}" fill="${isSelected ? "#fff1c2" : "rgba(189,221,255,0.95)"}" class="sphere-day-label">${label}</text>`;
+        const estW = Math.max(70, label.length * 5.7);
+        const estH = 14;
+        dayLabels.push({
+          id: `${dayOfYear}-summary`,
+          x: labelPoint.x,
+          y: labelPoint.y,
+          x1: labelPoint.x - estW / 2,
+          x2: labelPoint.x + estW / 2,
+          y1: labelPoint.y - estH / 2,
+          y2: labelPoint.y + estH / 2,
+          priority: isSelected ? 110 : 100,
+          html: `<text x="${labelPoint.x}" y="${labelPoint.y}" text-anchor="middle" dominant-baseline="middle" font-size="${isSelected ? 11 : 10}" fill="${isSelected ? "#fff1c2" : "rgba(189,221,255,0.95)"}" class="sphere-day-label">${label}</text>`
+        });
       }
       if (activeMoon === moon && viewMode !== "years" && dayLabelMode !== "hidden") {
         const shouldShowDayLabel = dayLabelMode === "all"
@@ -273,10 +301,25 @@
           || (dayLabelMode === "key" && (isSelected || isToday || sameWeekAsSelected || selectedDelta <= dayNeighborWindow || [1, 7, 14, 21, 28].includes(day)));
         if (shouldShowDayLabel) {
           const labelPoint = polarToXY(angle, rings.patternRing * 0.9, cx, cy);
-          output += `<text class="sphere-active-day-number${isSelected ? " is-selected" : ""}" x="${labelPoint.x}" y="${labelPoint.y}" text-anchor="middle" dominant-baseline="middle" font-size="${isSelected ? 11 : 8.5}" fill="${isSelected ? "#fff1c2" : "rgba(220,228,245,0.76)"}" pointer-events="none">${isSelected ? `Day ${day}` : day}</text>`;
+          const labelText = isSelected ? `Day ${day}` : String(day);
+          const estW = Math.max(10, labelText.length * (isSelected ? 5.8 : 4.8));
+          const estH = isSelected ? 13 : 10;
+          dayLabels.push({
+            id: `${dayOfYear}-detail`,
+            x: labelPoint.x,
+            y: labelPoint.y,
+            x1: labelPoint.x - estW / 2,
+            x2: labelPoint.x + estW / 2,
+            y1: labelPoint.y - estH / 2,
+            y2: labelPoint.y + estH / 2,
+            priority: isSelected ? 105 : isToday ? 96 : sameWeekAsSelected ? 84 : [1, 7, 14, 21, 28].includes(day) ? 74 : 62,
+            html: `<text class="sphere-active-day-number${isSelected ? " is-selected" : ""}" x="${labelPoint.x}" y="${labelPoint.y}" text-anchor="middle" dominant-baseline="middle" font-size="${isSelected ? 11 : 8.5}" fill="${isSelected ? "#fff1c2" : "rgba(220,228,245,0.76)"}" pointer-events="none">${labelText}</text>`
+          });
         }
       }
     }
+    const visibleLabels = _filterTextCollisions(dayLabels);
+    visibleLabels.forEach(label => { output += label.html; });
     return output;
   }
 

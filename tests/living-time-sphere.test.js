@@ -443,9 +443,9 @@ test("LivingTimeSphereModel: solar season angles progress through major gates", 
 test("LivingTimeSphereModel: seasonal interpolation is explicitly tagged as approximation", () => {
   const ctx = loadSphereContext();
   const season = ctx.LivingTimeSphereModel.seasonalQuarterProgressForDate("2026-08-14T12:00:00Z");
-  assert.equal(season.sourceType, "calculated");
-  assert.equal(season.precision, "seasonal-approximation");
-  assert.equal(season.source, "quarter interpolation");
+  assert.equal(season.sourceType, "seasonal-approximation");
+  assert.equal(season.precision, "anchor-interpolation");
+  assert.equal(season.source, "seasonal-anchor interpolation");
   assert.ok(season.seasonalProgressAngle >= 0 && season.seasonalProgressAngle <= 360);
 });
 

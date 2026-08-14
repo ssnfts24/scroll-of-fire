@@ -30,6 +30,7 @@
     connectionCategories: { calendar: true, pattern: true, solar: true, lunar: true, passage: true, historical: true },
     motionMode: "still",
     semanticZoom: null,
+    semanticBand: null,
     active3d:      false,    // true when 3D renderer is active
     introShown:    false,
     _3dInitInProgress: false, // guard against concurrent 3D init calls
@@ -289,7 +290,7 @@
       ? globalThis.PatternCalendar.fromCivilDate({
           date: _toIso(effectiveDate),
           timeZone: _state.timeZone,
-          boundaryMode: "midnight",
+          boundaryMode: _state.boundaryMode,
           sunsetTime: _state.manualSunset,
         })
       : null;
@@ -311,7 +312,7 @@
     const solar = globalThis.LivingTimeSphereLiveData?.getSnapshot?.({
       asOf: effectiveDate,
       timeZone: _state.timeZone,
-      boundaryMode: "midnight",
+      boundaryMode: _state.boundaryMode,
       manualSunset: _state.manualSunset,
     })?.solar || live?.solar || null;
 
@@ -877,10 +878,10 @@
         label: "Nearest solar gate",
         value: selected?.solar?.gate ? `${selected.solar.gate} · ${selected.solar.element || "—"}` : "Unavailable",
         status: "Calculated",
-        source: "LivingTimeSphereLiveData seasonal gate lookup",
+        source: "Seasonal approximation (anchor interpolation)",
         timestamp: live?.instant || "",
         freshness: "Current calculation",
-        availability: "Always available from deterministic solar context lookup.",
+        availability: "Always available from seasonal anchor interpolation.",
         relation: basePatternRelation,
         layerId: "solar",
         sphereLabel: "Local solar marker",
@@ -1120,6 +1121,7 @@
         environmentProvider: environmentSource,
         lastEnvironmentUpdate: weatherTimestamp || live?.instant || "",
         sunsetSource: _state.manualSunset === "18:00" ? "Manual fallback" : "Configured local boundary",
+        solarCalculationSource: "seasonal-approximation (anchor-interpolation)",
         lunarCalculationSource: globalThis.AstronomySources?.sources?.lunar?.label || live?.lunar?.source || "Lunar calculation unavailable",
         witnessStorageState: live?.witness?.source === "CodexMemory" ? `Local browser storage · ${_pluralize(witnessCount, "record", "records")}` : "Local browser storage unavailable",
         recurrenceDatasetRange: (() => {
@@ -1145,10 +1147,19 @@
     const cameraState = globalThis.LivingTimeSphereCamera?.getState?.() || {};
     const fallbackDist = globalThis.LivingTimeSphereCamera?.MODE_POSITIONS?.[_state.viewMode]?.distance || 2.35;
     const screenWidth = container?.clientWidth || (typeof window !== "undefined" ? window.innerWidth : 1024);
-    const band = zoom.resolveBand({
+    const candidateBand = zoom.resolveBand({
       distance: Number(cameraState.dist ?? fallbackDist),
       screenWidth,
     });
+    const band = globalThis.LivingTimeSphereRenderer3d?._internals?.stabilizeBand
+      ? globalThis.LivingTimeSphereRenderer3d._internals.stabilizeBand({
+          candidateBand,
+          distance: Number(cameraState.dist ?? fallbackDist),
+          screenWidth,
+          previousBand: _state.semanticBand,
+        })
+      : candidateBand;
+    _state.semanticBand = band;
     const resolved = zoom.resolveVisibility({
       baseLayers: _state.visibleLayers,
       band,
@@ -1220,6 +1231,7 @@
     _updateModeSummary(model);
     _updateWhatAmISeeing(_state.viewMode);
     _updateStateStrip(_state.viewMode, model);
+    _updateRendererDiagnostics();
   }
 
   async function _render3d(container, model, spiral, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode) {
@@ -1546,6 +1558,7 @@
     const r3d = globalThis.LivingTimeSphereRenderer3d;
     if (!r3d) return;
     const diag = r3d.getDiagnostics?.() || {};
+    const semantic = diag.semanticZoom || {};
     const rows = {
       "sphere-diag-requested":    "3d",
       "sphere-diag-active":       _state.active3d ? "WebGL 3D active" : (_state.rendererMode === "svg" ? "Accessible SVG" : "SVG fallback"),
@@ -1559,10 +1572,29 @@
       "sphere-diag-dpr":          `${diag.requestedDevicePixelRatio || "—"} → ${diag.appliedDevicePixelRatio || "—"}`,
       "sphere-diag-quality":      _state.quality,
       "sphere-diag-last-error":   diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : "none",
+      "sphere-diag-camera-distance": semantic.distance != null ? `${Number(semantic.distance).toFixed(3)}` : "—",
+      "sphere-diag-semantic-band": semantic.band || "—",
+      "sphere-diag-label-budget": semantic.moonLabelMode || semantic.dayLabelMode
+        ? `${semantic.moonLabelMode || "—"} moon · ${semantic.dayLabelMode || "—"} day`
+        : "—",
+      "sphere-diag-connection-budget": semantic.maxConnections != null ? String(semantic.maxConnections) : "—",
+      "sphere-diag-visible-day-nodes": semantic.visibleDayNodes != null ? String(semantic.visibleDayNodes) : "—",
+      "sphere-diag-visible-moon-labels": semantic.visibleMoonLabels != null ? String(semantic.visibleMoonLabels) : "—",
+      "sphere-diag-visible-connections": semantic.visibleConnections != null ? String(semantic.visibleConnections) : "—",
     };
     for (const [id, val] of Object.entries(rows)) {
       const el = document.getElementById(id);
       if (el) el.textContent = val;
+    }
+    const connectionDebug = document.getElementById("sphere-diag-connections-debug");
+    if (connectionDebug) {
+      const lines = Array.isArray(diag.connectionDiagnostics)
+        ? diag.connectionDiagnostics.slice(0, 24).map(item => {
+          const status = item.visible ? "visible" : `hidden:${item.hiddenReason || "unknown"}`;
+          return `${item.id} · ${item.relationType}\n  ${item.sourceType}:${item.sourceId || "—"} -> ${item.targetType}:${item.targetId || "—"}\n  ${status}`;
+        })
+        : [];
+      connectionDebug.textContent = lines.length ? lines.join("\n") : "No connection diagnostics available.";
     }
   }
 
@@ -1816,6 +1848,7 @@
       ["Environment provider", field.sources.environmentProvider],
       ["Last environment update", field.sources.lastEnvironmentUpdate ? _formatLocalInstant(field.sources.lastEnvironmentUpdate) : "Not recorded"],
       ["Sunset source", field.sources.sunsetSource],
+      ["Solar calculation source", field.sources.solarCalculationSource],
       ["Lunar calculation source", field.sources.lunarCalculationSource],
       ["Witness storage state", field.sources.witnessStorageState],
       ["Recurrence dataset range", field.sources.recurrenceDatasetRange],
