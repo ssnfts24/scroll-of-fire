@@ -83,6 +83,11 @@
     },
     actionTrace: [],
     lastEnvironmentFocusDiagnostics: null,
+    initialUrl: "",
+    currentUrl: "",
+    urlIntegrity: "unknown",
+    buildLogEmitted: false,
+    coldBootDiagnostics: null,
   };
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
   const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
@@ -96,6 +101,7 @@
   );
   const MOON_LOG_KEY = "sof_moon_logs_v3";
   const LEGACY_MOON_LOG_KEY = "sof_moon_logs_v2";
+  const SPHERE_STORAGE_PREFIXES = Object.freeze(["lts-", "sof.sphere.", "sof_moon_logs"]);
   const FIELD_RANGE_LABELS = Object.freeze({
     now: "Now",
     today: "Today",
@@ -123,6 +129,104 @@
       "LivingTimeSphereAccessibility", "LivingTimeSphereUrlState"
     ];
     return required.every(d => !!globalThis[d]);
+  }
+
+  function _resolveBuildIdentityLine() {
+    const meta = globalThis.LivingTimeSphereVersion?.buildMetadata || {};
+    const commit = meta.commitSha || "unknown-sha";
+    const stamp = meta.buildTimestamp || "unknown-time";
+    const context = meta.buildContext || "unknown-context";
+    const renderer = meta.rendererVersion || globalThis.LivingTimeSphereVersion?.version || "unknown-renderer";
+    const dataset = meta.datasetVersion || _state.datasetVersion || globalThis.LivingTimeSphereVersion?.version || "unknown-dataset";
+    return `Build: ${commit} · ${stamp} · ${context} · renderer=${renderer} · dataset=${dataset}`;
+  }
+
+  function _readStorageDiagnostics() {
+    const collectMatches = storage => {
+      if (!storage) return [];
+      try {
+        const matches = [];
+        for (let i = 0; i < storage.length; i++) {
+          const key = storage.key(i);
+          if (!key) continue;
+          if (SPHERE_STORAGE_PREFIXES.some(prefix => key.startsWith(prefix))) {
+            matches.push(key);
+          }
+        }
+        return matches;
+      } catch {
+        return [];
+      }
+    };
+    const localKeys = collectMatches(globalThis.localStorage);
+    const sessionKeys = collectMatches(globalThis.sessionStorage);
+    const selectedState = _readSelectedState();
+    return {
+      localKeys,
+      sessionKeys,
+      selectedStatePresent: !!selectedState,
+      selectedMarker: typeof selectedState?.selectedMarker === "string" ? selectedState.selectedMarker : null,
+      selectedDayOfYear: Number.isFinite(Number(selectedState?.selectedDayOfYear)) ? Number(selectedState.selectedDayOfYear) : null,
+    };
+  }
+
+  async function _probeColdBootDiagnostics() {
+    const probe = {
+      at: new Date().toISOString(),
+      locationHref: typeof location !== "undefined" ? location.href : "",
+      serviceWorker: "unsupported",
+      serviceWorkerScript: null,
+      cacheKeyCount: 0,
+      cacheKeys: [],
+      sphereCacheKeys: [],
+      ..._readStorageDiagnostics(),
+    };
+    if ("serviceWorker" in navigator) {
+      try {
+        const controller = navigator.serviceWorker.controller;
+        const registration = await navigator.serviceWorker.getRegistration();
+        probe.serviceWorker = controller ? "controlled" : (registration ? "registered-no-controller" : "unregistered");
+        probe.serviceWorkerScript = registration?.active?.scriptURL || registration?.waiting?.scriptURL || registration?.installing?.scriptURL || null;
+      } catch {
+        probe.serviceWorker = "error";
+      }
+    }
+    if (typeof caches !== "undefined") {
+      try {
+        const keys = await caches.keys();
+        probe.cacheKeyCount = keys.length;
+        probe.cacheKeys = keys.slice(0, 20);
+        probe.sphereCacheKeys = keys.filter(key => /sphere|sof-|moon|codex/i.test(String(key))).slice(0, 12);
+      } catch {
+        probe.cacheKeyCount = -1;
+      }
+    }
+    _state.coldBootDiagnostics = Object.freeze(probe);
+    _updateRendererDiagnostics();
+  }
+
+  function _logBuildIdentityOnce() {
+    if (_state.buildLogEmitted) return;
+    const meta = globalThis.LivingTimeSphereVersion?.buildMetadata || {};
+    const context = meta.buildContext || "";
+    if (!["preview", "development"].includes(context)) return;
+    console.info(`[LivingTimeSphere] build=${meta.commitSha || "unknown-sha"} ts=${meta.buildTimestamp || "unknown-time"} context=${context} renderer=${meta.rendererVersion || "unknown-renderer"} dataset=${meta.datasetVersion || _state.datasetVersion || "unknown-dataset"}`);
+    _state.buildLogEmitted = true;
+  }
+
+  function _evaluateDeepLinkIntegrity(initialUrl, currentUrl) {
+    if (!initialUrl || !currentUrl) return "unknown";
+    try {
+      const initial = new URL(initialUrl, location.href);
+      const current = new URL(currentUrl, location.href);
+      if (initial.hash !== current.hash) return "hash-changed";
+      for (const [key, value] of initial.searchParams.entries()) {
+        if (current.searchParams.get(key) !== value) return `param-changed:${key}`;
+      }
+      return "preserved";
+    } catch {
+      return "unknown";
+    }
   }
 
   // ── URL state ──────────────────────────────────────────────────────
@@ -1155,7 +1259,7 @@
     const cameraState = globalThis.LivingTimeSphereCamera?.getState?.() || {};
     const marker = selected?.dayOfPatternYear ? `day-${selected.dayOfPatternYear}` : (_state.selectedMarker || null);
     const url = globalThis.LivingTimeSphereUrlState.buildSphereUrl({
-      baseUrl: `${location.origin}${location.pathname}`,
+      baseUrl: location.href,
       year: _state.year,
       viewMode: _state.viewMode,
       layers: Object.keys(_state.visibleLayers).filter(key => _state.visibleLayers[key]),
@@ -1173,9 +1277,13 @@
       motionMode: _state.motionMode,
       moonLabelDistance: _state.moonLabelDistance,
       dayLabelMode: _state.dayLabelMode,
+      preserveUnknownParams: true,
+      hash: location.hash || "",
     });
     if (replace) window.history.replaceState({ marker, day: selected?.dayOfPatternYear || null }, "", url);
     else window.history.pushState({ marker, day: selected?.dayOfPatternYear || null }, "", url);
+    _state.currentUrl = String(url || location.href || "");
+    _state.urlIntegrity = _evaluateDeepLinkIntegrity(_state.initialUrl, _state.currentUrl);
   }
 
   function _mappedLayerVisible(layerId) {
@@ -2256,9 +2364,34 @@
     const panel = document.getElementById("sphere-renderer-diagnostics");
     if (!panel) return;
     const r3d = globalThis.LivingTimeSphereRenderer3d;
-    if (!r3d) return;
-    const diag = r3d.getDiagnostics?.() || {};
+    const diag = r3d?.getDiagnostics?.() || {};
     const semantic = diag.semanticZoom || {};
+    const stageState = diag.stageState || {};
+    const buildIdentity = _resolveBuildIdentityLine();
+    const coldBoot = _state.coldBootDiagnostics || null;
+    const swText = coldBoot
+      ? `${coldBoot.serviceWorker}${coldBoot.serviceWorkerScript ? ` · ${coldBoot.serviceWorkerScript}` : ""}`
+      : "pending";
+    const storageText = coldBoot
+      ? `cacheKeys=${coldBoot.cacheKeyCount} · sphereCaches=${(coldBoot.sphereCacheKeys || []).join(",") || "none"} · local=${(coldBoot.localKeys || []).length} · session=${(coldBoot.sessionKeys || []).length} · selectedState=${coldBoot.selectedStatePresent ? "yes" : "no"}`
+      : "pending";
+    const deepLinkText = `integrity=${_state.urlIntegrity || "unknown"} · initial=${_state.initialUrl || "n/a"} · current=${_state.currentUrl || (typeof location !== "undefined" ? location.href : "n/a")}`;
+    const bootstrapStage = _state.active3d
+      ? "rendered"
+      : (diag.lastInitError?.reason || stageState.firstFrame || stageState.renderer || _state.rendererLifecycle || "not-started");
+    const stageTrace = [
+      `capability:${stageState.capability || "idle"}`,
+      `module:${stageState.module || "idle"}`,
+      `dimensions:${stageState.dimensions || "idle"}`,
+      `renderer:${stageState.renderer || "idle"}`,
+      `context:${stageState.context || "idle"}`,
+      `camera:${stageState.camera || "idle"}`,
+      `scene:${stageState.scene || "idle"}`,
+      `geometry:${stageState.geometry || "idle"}`,
+      `listeners:${stageState.listeners || "idle"}`,
+      `semanticZoom:${stageState.semanticZoom || "idle"}`,
+      `firstFrame:${stageState.firstFrame || "idle"}`,
+    ].join(" · ");
     const rows = {
       "sphere-diag-requested":    _state.requestedRendererMode || "auto",
       "sphere-diag-active":       _state.activeRendererMode || (_state.active3d ? "3d" : "svg"),
@@ -2302,6 +2435,12 @@
       "sphere-diag-view-transition-rev": String(Number(_state.modeTransitionRevision || 0)),
       "sphere-diag-view-transition-ms": Number(_state.lastModeTransitionDuration || 0) > 0 ? `${Number(_state.lastModeTransitionDuration).toFixed(2)}ms` : "—",
       "sphere-diag-layer-state-source": _state.layerStateSource || "default",
+      "sphere-diag-bootstrap-stage": bootstrapStage,
+      "sphere-diag-stage-trace": stageTrace,
+      "sphere-diag-build-identity": buildIdentity,
+      "sphere-diag-sw": swText,
+      "sphere-diag-cache-storage": storageText,
+      "sphere-diag-deep-link": deepLinkText,
     };
     for (const [id, val] of Object.entries(rows)) {
       const el = document.getElementById(id);
@@ -3269,11 +3408,28 @@
         if (typeof caches !== "undefined") {
           const keys = await caches.keys();
           for (const k of keys) await caches.delete(k);
-          clearCacheBtn.textContent = "Cache cleared — reloading…";
-          setTimeout(() => location.reload(), 800);
-        } else {
-          clearCacheBtn.textContent = "No cache API";
         }
+        for (const storage of [globalThis.localStorage, globalThis.sessionStorage]) {
+          if (!storage) continue;
+          try {
+            const toDelete = [];
+            for (let i = 0; i < storage.length; i++) {
+              const key = storage.key(i);
+              if (key && SPHERE_STORAGE_PREFIXES.some(prefix => key.startsWith(prefix))) {
+                toDelete.push(key);
+              }
+            }
+            toDelete.forEach(key => storage.removeItem(key));
+          } catch { /* ignore */ }
+        }
+        if ("serviceWorker" in navigator) {
+          try {
+            const regs = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(regs.map(reg => reg.unregister()));
+          } catch { /* ignore */ }
+        }
+        clearCacheBtn.textContent = "Cache/state cleared — reloading…";
+        setTimeout(() => location.reload(), 800);
       });
     }
 
@@ -3391,6 +3547,10 @@
       console.warn("LivingTimeSphereUi: not all dependencies available");
       return;
     }
+    _state.initialUrl = typeof location !== "undefined" ? String(location.href || "") : "";
+    _state.currentUrl = _state.initialUrl;
+    _state.urlIntegrity = "preserved";
+    _logBuildIdentityOnce();
     applyUrlState();
     _restoreSelectedStateIfNeeded();
     _state.moonLabelMode = _resolveMoonLabelMode();
@@ -3404,6 +3564,7 @@
     _installBrokenResourceGuard();
     _installResourceFailureTracker();
     _bindRecoveryHooks(container);
+    _probeColdBootDiagnostics();
     globalThis.getSphereRuntimeDebugSnapshot = _collectRuntimeDebugSnapshot;
     _installSelectedDayLongTaskObserver();
 
@@ -3455,6 +3616,8 @@
       }
     });
     window.addEventListener("popstate", () => {
+      _state.currentUrl = typeof location !== "undefined" ? String(location.href || "") : _state.currentUrl;
+      _state.urlIntegrity = _evaluateDeepLinkIntegrity(_state.initialUrl, _state.currentUrl);
       const parsed = globalThis.LivingTimeSphereUrlState?.parseSphereUrl?.(location.href) || {};
       if (parsed.year) _state.year = parsed.year;
       if (parsed.viewMode) _state.requestedViewMode = parsed.viewMode;
@@ -3555,6 +3718,13 @@
       userCustomizedLayers: !!_state.userCustomizedLayers,
       buildVersion: globalThis.LivingTimeSphereVersion?.buildMetadata || null,
       sphereRendererVersion: globalThis.LivingTimeSphereVersion?.version || null,
+      buildIdentityLine: _resolveBuildIdentityLine(),
+      deepLink: {
+        initialUrl: _state.initialUrl || null,
+        currentUrl: _state.currentUrl || (typeof location !== "undefined" ? location.href : null),
+        integrity: _state.urlIntegrity || "unknown",
+      },
+      coldBootDiagnostics: _state.coldBootDiagnostics || null,
     };
   }
 

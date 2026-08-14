@@ -68,10 +68,33 @@
     return /^[a-z0-9_/-]{1,64}$/.test(s) ? s : null;
   }
 
-  function buildSphereUrl({ baseUrl, year, viewMode, layers, marker, timeZone, boundaryMode, manualSunset, datasetVersion, source, renderer, quality, cameraTheta, cameraDist, connectionMode, motionMode, moonLabelDistance, dayLabelMode } = {}) {
+  function buildSphereUrl({ baseUrl, year, viewMode, layers, marker, timeZone, boundaryMode, manualSunset, datasetVersion, source, renderer, quality, cameraTheta, cameraDist, connectionMode, motionMode, moonLabelDistance, dayLabelMode, preserveUnknownParams = false, hash = null } = {}) {
     const base = baseUrl || (typeof location !== "undefined" ? String(location.origin + location.pathname) : "https://codexofreality.org/living-time-sphere.html");
     let url;
     try { url = new URL(base); } catch { url = new URL("https://codexofreality.org/living-time-sphere.html"); }
+    if (!preserveUnknownParams) {
+      url.search = "";
+    } else {
+      [
+        "year",
+        "view",
+        "layers",
+        "marker",
+        "tz",
+        "boundary",
+        "sunset",
+        "dataset",
+        "source",
+        "renderer",
+        "quality",
+        "cam_t",
+        "cam_d",
+        "connections",
+        "motion",
+        "moon_label_distance",
+        "day_labels",
+      ].forEach(key => url.searchParams.delete(key));
+    }
 
     if (year != null)      url.searchParams.set("year",    String(year));
     if (viewMode)          url.searchParams.set("view",    viewMode);
@@ -96,6 +119,9 @@
         cameraDist >= globalThis.LivingTimeSphereCamera?.MIN_ZOOM &&
         cameraDist <= globalThis.LivingTimeSphereCamera?.MAX_ZOOM) {
       url.searchParams.set("cam_d", cameraDist.toFixed(4));
+    }
+    if (typeof hash === "string") {
+      url.hash = hash;
     }
 
     return url.toString();
