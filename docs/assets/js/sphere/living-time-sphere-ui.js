@@ -16,10 +16,13 @@
     fieldRange:    "now",
     visibleLayers: { pattern: true, exactDays: true, weekGates: true, outsideDays: true, passage: true, lunar: true, solar: true, markers: true, recurrence: true, spiral: true, environment: true, witness: false, personal: false, connections: true },
     selectedMarker: null,
+    source: null,
+    datasetVersion: null,
     useCanvas:     false,
     lowPower:      false,
     // Phase 03 additions
-    rendererMode:  "auto",   // "auto" | "3d" | "svg" | "table" | "text"
+    requestedRendererMode: "auto", // user preference: "auto" | "3d" | "svg" | "canvas" | "table" | "text"
+    activeRendererMode: "svg",     // runtime mode: "svg" | "3d" | "initializing-3d" | "recovering" | "table" | "text"
     quality:       "auto",   // "auto" | "high" | "balanced" | "lowpower" | "svgonly"
     moonLabelMode: "balanced", // "essential" | "balanced" | "all" | "none"
     moonLabelDistance: "standard",
@@ -35,6 +38,8 @@
     introShown:    false,
     _3dInitInProgress: false, // guard against concurrent 3D init calls
     _3dInitGeneration: 0,
+    _pending3dPayload: null,
+    _latestContainerSize: { w: 0, h: 0 },
     restoreAttempts: 0,
     rendererLifecycle: "not-started",
     environmentLifecycle: "idle",
@@ -75,8 +80,7 @@
     const required = [
       "LivingTimeSphereModel", "LivingTimeSphereLayout",
       "LivingTimeSphereRendererSvg", "LivingTimeSphereInteraction",
-      "LivingTimeSphereAccessibility", "LivingTimeSphereUrlState",
-      "AlignmentLedgerData"
+      "LivingTimeSphereAccessibility", "LivingTimeSphereUrlState"
     ];
     return required.every(d => !!globalThis[d]);
   }
@@ -93,18 +97,20 @@
     if (parsed.boundaryMode) _state.boundaryMode = parsed.boundaryMode;
     if (parsed.manualSunset) _state.manualSunset = parsed.manualSunset;
     if (parsed.marker)       _state.selectedMarker = parsed.marker;
+    if (parsed.source)       _state.source = parsed.source;
+    if (parsed.datasetVersion) _state.datasetVersion = parsed.datasetVersion;
     const markerDay = _selectedDayFromMarker(parsed.marker);
     if (markerDay != null) _state.selectedDayOfYear = markerDay;
-    if (parsed.renderer)     _state.rendererMode = parsed.renderer;
+    if (parsed.renderer)     _state.requestedRendererMode = parsed.renderer;
     if (parsed.quality)      _state.quality      = parsed.quality;
     if (parsed.connectionMode) _state.connectionMode = parsed.connectionMode;
     if (parsed.motionMode)     _state.motionMode = parsed.motionMode;
     if (parsed.moonLabelDistance) _state.moonLabelDistance = parsed.moonLabelDistance;
     if (parsed.dayLabelMode)   _state.dayLabelMode = parsed.dayLabelMode;
-    if (parsed.layers) {
-      _urlHasExplicitLayers = parsed.layers.length > 0;
+    if (parsed.hasExplicitLayers) {
+      _urlHasExplicitLayers = true;
       for (const k of Object.keys(_state.visibleLayers)) _state.visibleLayers[k] = false;
-      for (const l of parsed.layers) _state.visibleLayers[l] = true;
+      for (const l of (parsed.layers || [])) _state.visibleLayers[l] = true;
     }
     if (parsed.moonLabelMode) _state.moonLabelMode = parsed.moonLabelMode;
     // Restore camera from URL (validated in url-state module)
@@ -184,9 +190,11 @@
 
   function _scheduleRetry(container, reason) {
     if (!container || _state.retryCount >= 2 || _state._autoRetryTimer) return;
+    if (_state.requestedRendererMode === "svg" || _state.requestedRendererMode === "canvas" || _state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") return;
     const delay = _state.retryCount === 0 ? 180 : 900;
     _state.retryCount += 1;
     _setRendererLifecycle("recovering");
+    _state.activeRendererMode = "recovering";
     _state._autoRetryTimer = setTimeout(() => {
       _state._autoRetryTimer = 0;
       _state._3dInitInProgress = false;
@@ -202,7 +210,7 @@
 
   function _watchForBlankCanvas(container) {
     setTimeout(() => {
-      if (!container || _state.rendererMode === "svg" || _state.rendererLifecycle === "failed") return;
+      if (!container || _state.requestedRendererMode === "svg" || _state.rendererLifecycle === "failed") return;
       const renderer = globalThis.LivingTimeSphereRenderer3d;
       if (!renderer?.isInitialized?.()) return;
       const diag = renderer.getDiagnostics?.() || {};
@@ -245,8 +253,9 @@
     const mat = globalThis.LivingTimeSphereM;
     if (!mat) return null;
     const q = _state.quality;
-    if (q === "svgonly" || _state.rendererMode === "svg" ||
-        _state.rendererMode === "table" || _state.rendererMode === "text") return null;
+    if (q === "svgonly" || _state.requestedRendererMode === "svg" ||
+        _state.requestedRendererMode === "canvas" ||
+        _state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") return null;
     if (q !== "auto" && mat.QUALITY_PRESETS[q]) return mat.QUALITY_PRESETS[q];
     // Auto: detect capabilities
     const reducedMotion = typeof window !== "undefined" &&
@@ -260,11 +269,11 @@
   // ── Renderer mode resolution ───────────────────────────────────────
 
   function shouldUse3d() {
-    if (_state.rendererMode === "svg" || _state.rendererMode === "table" || _state.rendererMode === "text") return false;
+    if (_state.requestedRendererMode === "svg" || _state.requestedRendererMode === "canvas" || _state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") return false;
     if (_state.quality === "svgonly") return false;
     if (!globalThis.LivingTimeSphereRenderer3d || !globalThis.LivingTimeSphereM || !globalThis.LivingTimeSphereEffects) return false;
     if (!globalThis.LivingTimeSphereEffects.detectWebGl()) return false;
-    return _state.rendererMode === "3d" || _state.rendererMode === "auto";
+    return _state.requestedRendererMode === "3d" || _state.requestedRendererMode === "auto";
   }
 
   // ── Container helpers ──────────────────────────────────────────────
@@ -644,7 +653,7 @@
         boundaryMode: _state.boundaryMode,
         manualSunset: _state.manualSunset,
         mode,
-        datasetVersion: globalThis.LivingTimeSphereVersion?.version,
+        datasetVersion: _state.datasetVersion || globalThis.LivingTimeSphereVersion?.version,
       });
     }
     return `alignment-ledger.html?year=${encodeURIComponent(_state.year)}&mode=${encodeURIComponent(mode)}`;
@@ -1352,12 +1361,13 @@
       },
     }) || [];
 
-    if (_state.rendererMode === "table" || _state.rendererMode === "text") {
+    if (_state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") {
       // Hide 3D / SVG canvas; show alternate view
       _teardown3d();
-      _setRendererLifecycle("fallback");
+      _setRendererLifecycle("ready");
+      _state.activeRendererMode = _state.requestedRendererMode;
       container.style.display = "none";
-      _updateRendererLabel(_state.rendererMode === "table" ? "Data Table" : "Text Summary");
+      _updateRendererLabel(_state.requestedRendererMode === "table" ? "Data Table" : "Text Summary");
       updateAccessibleText(model, spiral);
       updateDetails(model);
       _updateTodayDiagnostics(model);
@@ -1373,11 +1383,19 @@
     const dpr      = typeof window !== "undefined" ? (window.devicePixelRatio || 1) : 1;
     const layout   = globalThis.LivingTimeSphereLayout.resolveLayout({ containerWidth: w, containerHeight: h, devicePixelRatio: dpr });
 
+    _state._latestContainerSize = { w, h };
     if (shouldUse3d()) {
-      _render3d(container, model, spiral, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
+      if (_state.active3d && globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
+        _render3d(container, model, spiral, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
+      } else {
+        _state.activeRendererMode = _state._3dInitInProgress ? "initializing-3d" : "svg";
+        _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
+        _render3d(container, model, spiral, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
+      }
     } else {
       _teardown3d();
       _setRendererLifecycle("fallback");
+      _state.activeRendererMode = "svg";
       _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
     }
 
@@ -1400,13 +1418,16 @@
     if (!renderer.isInitialized()) {
       // Prevent concurrent init: if one is already in progress (either in this module
       // or inside the renderer itself), skip and leave the in-progress call to finish.
-      if (_state._3dInitInProgress || renderer.isInitializing?.()) return;
+      if (_state._3dInitInProgress || renderer.isInitializing?.()) {
+        _state._pending3dPayload = {
+          container, model, spiral, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode
+        };
+        return;
+      }
       _state._3dInitInProgress = true;
       const initGeneration = ++_state._3dInitGeneration;
       _setRendererLifecycle("initializing");
-
-      // Remove any existing SVG / canvas content before inserting 3D canvas.
-      container.innerHTML = "";
+      _state.activeRendererMode = "initializing-3d";
       _updateRendererLabel("Loading 3D renderer…");
 
       const reducedMotion = typeof window !== "undefined" &&
@@ -1492,13 +1513,12 @@
       if (!result || !result.success) {
         // Fall back to SVG.
         _state.active3d = false;
+        _state.activeRendererMode = _state.requestedRendererMode === "svg" ? "svg" : "recovering";
         const reason = result?.reason || "WebGL unavailable";
         const transient = reason === "CONTAINER_SIZE_INVALID" || reason === "INIT_TIMEOUT" || reason === "init-exception";
         _setRendererLifecycle(reason === "CONTAINER_SIZE_INVALID" ? "waiting-for-size" : (transient ? "fallback" : "failed"));
         const statusText = `SVG fallback — ${reason}`;
         _updateRendererLabel(statusText);
-        // Sync the renderer selector so it accurately reflects the active renderer.
-        _syncRendererSelect("svg");
         // Show the fallback warning row with Retry button.
         _showRendererFallbackWarning(reason, result?.detail || "");
         // Remove any stale canvas element left by a failed init.
@@ -1509,25 +1529,17 @@
           containerHeight: container.offsetHeight || 320,
           devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
         });
-        _renderSvgFallback(
-          container,
-          model,
-          spiral,
-          layout,
-          effectiveLayers,
-          connectionRegistry,
-          semanticZoomState,
-          effectiveMoonLabelMode,
-          effectiveDayLabelMode
-        );
+        _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
         _updateInteractBar();
         _updateTodayDiagnostics(model);
-        if (transient) {
+        if (transient && _state.requestedRendererMode !== "svg") {
           _scheduleRetry(container, reason);
         }
         return;
       }
+      container.querySelectorAll(".living-time-sphere-svg,.living-time-sphere-canvas").forEach(node => node.remove());
       _state.active3d = true;
+      _state.activeRendererMode = "3d";
       _state.restoreAttempts = 0;
       _state.retryCount = 0;
       _clearAutoRetry();
@@ -1538,6 +1550,20 @@
       _updateLastRenderTimestamp();
       _watchForBlankCanvas(container);
       _updateRendererDiagnostics();
+      if (_state._pending3dPayload) {
+        const pending = _state._pending3dPayload;
+        _state._pending3dPayload = null;
+        _render3d(
+          pending.container,
+          pending.model,
+          pending.spiral,
+          pending.effectiveLayers,
+          pending.connectionRegistry,
+          pending.semanticZoomState,
+          pending.effectiveMoonLabelMode,
+          pending.effectiveDayLabelMode
+        );
+      }
     } else {
       renderer.refresh(
         model,
@@ -1556,6 +1582,7 @@
       renderer.setMode(_state.viewMode);
       _updateLastRenderTimestamp();
       _setRendererLifecycle("ready");
+      _state.activeRendererMode = "3d";
     }
   }
 
@@ -1565,10 +1592,16 @@
     }
     _state.active3d = false;
     _state._3dInitInProgress = false;
-    if (_state.rendererMode === "svg" || _state.rendererMode === "table" || _state.rendererMode === "text") {
+    _state._pending3dPayload = null;
+    if (_state.requestedRendererMode === "svg" || _state.requestedRendererMode === "canvas" || _state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") {
       _setRendererLifecycle("fallback");
     } else {
       _setRendererLifecycle("not-started");
+    }
+    if (_state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") {
+      _state.activeRendererMode = _state.requestedRendererMode;
+    } else {
+      _state.activeRendererMode = "svg";
     }
     _updateInteractBar();
   }
@@ -1592,7 +1625,7 @@
   }
 
   function _renderSvgOnly(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode) {
-    _updateRendererLabel(_state.rendererMode === "svg" ? "Accessible SVG" : "SVG fallback");
+    _updateRendererLabel(_state.requestedRendererMode === "svg" ? "Accessible SVG" : "SVG fallback");
     globalThis.LivingTimeSphereRendererSvg.renderInto(container, {
       model, spiral, layout,
       visibleLayers: effectiveLayers,
@@ -1628,11 +1661,11 @@
   function _updateAlternateViews() {
     // Reveal data table section
     const tableSection = document.getElementById("sphere-data-table-section");
-    if (tableSection) tableSection.style.display = _state.rendererMode === "table" ? "" : "none";
+    if (tableSection) tableSection.style.display = _state.requestedRendererMode === "table" ? "" : "none";
 
     // Reveal text summary section
     const textSection  = document.getElementById("sphere-text-summary-section");
-    if (textSection)  textSection.style.display  = _state.rendererMode === "text"  ? "" : "none";
+    if (textSection)  textSection.style.display  = _state.requestedRendererMode === "text"  ? "" : "none";
   }
 
   // ── Renderer status label ──────────────────────────────────────────
@@ -1645,8 +1678,7 @@
   // Sync the renderer <select> to reflect the actual active renderer.
   function _syncRendererSelect(activeRenderer) {
     const sel = document.getElementById("sphere-renderer-select");
-    if (sel) sel.value = activeRenderer;
-    _state.rendererMode = activeRenderer;
+    if (sel) sel.value = activeRenderer || _state.requestedRendererMode;
   }
 
   // Show the fallback warning banner with Retry / Switch-to-SVG buttons.
@@ -1727,6 +1759,11 @@
     if (pill) pill.hidden = false;
   }
 
+  function containerHasSvg() {
+    const container = document.getElementById("sphere-container");
+    return !!container?.querySelector?.(".living-time-sphere-svg");
+  }
+
   // Update the renderer diagnostics panel (hidden by default; shown in Technical view).
   function _updateRendererDiagnostics() {
     const panel = document.getElementById("sphere-renderer-diagnostics");
@@ -1736,8 +1773,8 @@
     const diag = r3d.getDiagnostics?.() || {};
     const semantic = diag.semanticZoom || {};
     const rows = {
-      "sphere-diag-requested":    "3d",
-      "sphere-diag-active":       _state.active3d ? `WebGL 3D active (${_state.rendererLifecycle})` : (_state.rendererMode === "svg" ? "Accessible SVG" : `SVG fallback (${_state.rendererLifecycle})`),
+      "sphere-diag-requested":    _state.requestedRendererMode || "auto",
+      "sphere-diag-active":       _state.activeRendererMode || (_state.active3d ? "3d" : "svg"),
       "sphere-diag-fallback":     _state.active3d ? "none" : (diag.lastInitError?.reason || _state.rendererLifecycle || "none"),
       "sphere-diag-webgl":        diag.webglAvailable ? "available" : "unavailable",
       "sphere-diag-webgl2":       diag.webgl2Available ? "available" : "unavailable",
@@ -1761,6 +1798,16 @@
       "sphere-diag-visible-day-nodes": semantic.visibleDayNodes != null ? String(semantic.visibleDayNodes) : "—",
       "sphere-diag-visible-moon-labels": semantic.visibleMoonLabels != null ? String(semantic.visibleMoonLabels) : "—",
       "sphere-diag-visible-connections": semantic.visibleConnections != null ? String(semantic.visibleConnections) : "—",
+      "sphere-diag-svg-visible":  containerHasSvg() ? "yes" : "no",
+      "sphere-diag-3d-inflight":  _state._3dInitInProgress ? "yes" : "no",
+      "sphere-diag-3d-attempt":   String(Number(_state._3dInitGeneration || 0)),
+      "sphere-diag-3d-ready":     _state.active3d ? "yes" : "no",
+      "sphere-diag-first-frame-ts": Number(diag.firstFrameTimestamp || 0) > 0 ? String(Number(diag.firstFrameTimestamp)) : "—",
+      "sphere-diag-last-render-ts": Number(diag.lastRenderTimestamp || _state.lastRenderTimestamp || 0) > 0 ? String(Number(diag.lastRenderTimestamp || _state.lastRenderTimestamp || 0)) : "—",
+      "sphere-diag-current-layers": Object.entries(_state.visibleLayers || {}).filter(([, enabled]) => !!enabled).map(([key]) => key).join(",") || "none",
+      "sphere-diag-explicit-layers": _urlHasExplicitLayers ? "yes" : "no",
+      "sphere-diag-env-state": _state.environmentLifecycle || "idle",
+      "sphere-diag-container-size": `${Math.round(Number(_state._latestContainerSize?.w || 0))} × ${Math.round(Number(_state._latestContainerSize?.h || 0))}`,
     };
     for (const [id, val] of Object.entries(rows)) {
       const el = document.getElementById(id);
@@ -1802,6 +1849,7 @@
   }
 
   function _setModeDefaultLayers(mode) {
+    if (_urlHasExplicitLayers) return;
     if (mode === "today") {
       _state.visibleLayers.exactDays = true;
       _state.visibleLayers.weekGates = true;
@@ -2206,7 +2254,9 @@
     // Year select.
     const yearSelect = document.getElementById("sphere-year-select");
     if (yearSelect) {
-      const years = globalThis.AlignmentLedgerData.listSupportedYears();
+      const years = typeof globalThis.AlignmentLedgerData?.listSupportedYears === "function"
+        ? globalThis.AlignmentLedgerData.listSupportedYears()
+        : Array.from({ length: 13 }, (_, i) => 2014 + i);
       yearSelect.innerHTML = years.map(y => `<option value="${y}"${y === _state.year ? " selected" : ""}>${y}</option>`).join("");
       yearSelect.addEventListener("change", () => {
         const y = Number(yearSelect.value);
@@ -2318,6 +2368,7 @@
           boundaryMode:  _state.boundaryMode,
           manualSunset:  _state.manualSunset,
           datasetVersion: globalThis.LivingTimeSphereVersion?.version,
+          source: _state.source || undefined,
           renderer:      _state.active3d ? "3d" : "svg",
           quality:       _state.quality,
           connectionMode:_state.connectionMode,
@@ -2354,13 +2405,15 @@
     // Renderer selector (3D / SVG / Table / Text)
     const rendererSelect = document.getElementById("sphere-renderer-select");
     if (rendererSelect) {
-      rendererSelect.value = _state.rendererMode;
+      rendererSelect.value = _state.requestedRendererMode;
       rendererSelect.addEventListener("change", () => {
-        const prev = _state.rendererMode;
-        _state.rendererMode = rendererSelect.value || "auto";
-        if (prev !== _state.rendererMode && (prev === "3d" || prev === "auto") && _state.active3d) {
+        const prev = _state.requestedRendererMode;
+        _state.requestedRendererMode = rendererSelect.value || "auto";
+        if (prev !== _state.requestedRendererMode && (prev === "3d" || prev === "auto") && _state.active3d) {
           _teardown3d();
         }
+        if (_state.requestedRendererMode === "svg") _clearAutoRetry();
+        _state.retryCount = 0;
         renderSphere(container);
       });
     }
@@ -2550,7 +2603,10 @@
         }
         _state.active3d = false;
         _state._3dInitInProgress = false;
-        _state.rendererMode = "3d";
+        _state.requestedRendererMode = "3d";
+        _state.activeRendererMode = "recovering";
+        _state.retryCount = 0;
+        _clearAutoRetry();
         _state._3dInitGeneration++;
         const sel = document.getElementById("sphere-renderer-select");
         if (sel) sel.value = "3d";
@@ -2582,7 +2638,9 @@
         }
         _state.active3d = false;
         _state._3dInitInProgress = false;
-        _state.rendererMode = "svg";
+        _state.requestedRendererMode = "svg";
+        _state.activeRendererMode = "svg";
+        _clearAutoRetry();
         const sel = document.getElementById("sphere-renderer-select");
         if (sel) sel.value = "svg";
         _minimizeRendererFallbackWarning();
@@ -2764,8 +2822,14 @@
     try { modelReady = !!buildCurrentModel(); } catch { modelReady = false; }
     return {
       rendererState: _state.rendererLifecycle,
+      requestedRendererMode: _state.requestedRendererMode,
+      activeRendererMode: _state.activeRendererMode,
       modelReady,
       selectedDay: _state.selectedDayOfYear,
+      baselineSvgVisible: !!container?.querySelector?.(".living-time-sphere-svg"),
+      threeDInitInProgress: !!_state._3dInitInProgress,
+      threeDInitAttempt: Number(_state._3dInitGeneration || 0),
+      threeDReady: !!_state.active3d,
       canvasPresent: !!container?.querySelector?.("canvas"),
       canvasWidth: Number(rendererDiag.canvasWidth || 0),
       canvasHeight: Number(rendererDiag.canvasHeight || 0),
@@ -2775,7 +2839,10 @@
       contextLost: rendererDiag.stageState?.context === "lost",
       lastRenderTimestamp: Number(rendererDiag.lastRenderTimestamp || _state.lastRenderTimestamp || 0),
       rafActive: !!rendererDiag.rafActive,
+      first3dFrameTimestamp: Number(rendererDiag.firstFrameTimestamp || 0),
       environmentState: _resolveEnvironmentLifecycle(envState),
+      currentLayerSet: Object.entries(_state.visibleLayers || {}).filter(([, enabled]) => !!enabled).map(([key]) => key),
+      explicitUrlLayers: !!_urlHasExplicitLayers,
       locationState: envState?.providerConfigured ? "configured" : "location-needed",
       retryCount: Number(_state.retryCount || 0),
     };

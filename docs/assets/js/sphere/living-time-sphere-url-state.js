@@ -4,7 +4,7 @@
   const VALID_VIEW_MODES  = new Set(["today", "passage", "years", "pattern"]);
   const VALID_LAYERS      = new Set(["pattern", "exactDays", "weekGates", "outsideDays", "passage", "lunar", "solar", "markers", "recurrence", "spiral", "environment", "connections"]);
   const VALID_YEARS       = new Set(Array.from({ length: 13 }, (_, i) => String(2014 + i)));
-  const VALID_RENDERERS   = new Set(["3d", "svg", "table", "text"]);
+  const VALID_RENDERERS   = new Set(["auto", "3d", "svg", "canvas", "table", "text"]);
   const VALID_QUALITIES   = new Set(["auto", "high", "balanced", "lowpower", "svgonly"]);
   const VALID_CONNECTIONS = new Set(["off", "selected", "contextual", "full", "custom"]);
   const VALID_MOTIONS     = new Set(["still", "drift", "reduced"]);
@@ -51,10 +51,11 @@
     return set.has(s) ? s : null;
   }
 
-  function normalizeLayers(value) {
-    if (!value) return null;
+  function normalizeLayers(value, { allowEmpty = false } = {}) {
+    if (value == null) return null;
     const parts = String(value).split(",").map(s => s.trim()).filter(s => VALID_LAYERS.has(s));
-    return parts.length > 0 ? parts : null;
+    if (parts.length > 0) return parts;
+    return allowEmpty ? [] : null;
   }
 
   function normalizeMarker(value) {
@@ -62,7 +63,12 @@
     return /^[a-zA-Z0-9_-]{1,64}$/.test(s) ? s : null;
   }
 
-  function buildSphereUrl({ baseUrl, year, viewMode, layers, marker, timeZone, boundaryMode, manualSunset, datasetVersion, renderer, quality, cameraTheta, cameraDist, connectionMode, motionMode, moonLabelDistance, dayLabelMode } = {}) {
+  function normalizeSource(value) {
+    const s = String(value || "").trim().toLowerCase();
+    return /^[a-z0-9_/-]{1,64}$/.test(s) ? s : null;
+  }
+
+  function buildSphereUrl({ baseUrl, year, viewMode, layers, marker, timeZone, boundaryMode, manualSunset, datasetVersion, source, renderer, quality, cameraTheta, cameraDist, connectionMode, motionMode, moonLabelDistance, dayLabelMode } = {}) {
     const base = baseUrl || (typeof location !== "undefined" ? String(location.origin + location.pathname) : "https://codexofreality.org/living-time-sphere.html");
     let url;
     try { url = new URL(base); } catch { url = new URL("https://codexofreality.org/living-time-sphere.html"); }
@@ -75,6 +81,7 @@
     if (boundaryMode)      url.searchParams.set("boundary",boundaryMode);
     if (manualSunset)      url.searchParams.set("sunset",  manualSunset);
     if (datasetVersion)    url.searchParams.set("dataset", datasetVersion);
+    if (source)            url.searchParams.set("source", source);
     if (renderer)          url.searchParams.set("renderer",renderer);
     if (quality)           url.searchParams.set("quality", quality);
     if (connectionMode)    url.searchParams.set("connections", connectionMode);
@@ -99,15 +106,19 @@
     try { url = new URL(urlLike, typeof location !== "undefined" ? location.href : "https://codexofreality.org/"); }
     catch { return {}; }
 
+    const hasExplicitLayers = url.searchParams.has("layers");
+    const rawLayers = url.searchParams.get("layers");
     return {
       year:         normalizeYear(url.searchParams.get("year")),
       viewMode:     normalizeViewMode(url.searchParams.get("view")),
-      layers:       normalizeLayers(url.searchParams.get("layers")),
+      layers:       normalizeLayers(rawLayers, { allowEmpty: hasExplicitLayers }),
+      hasExplicitLayers,
       marker:       normalizeMarker(url.searchParams.get("marker")),
       timeZone:     normalizeTz(url.searchParams.get("tz")),
       boundaryMode: normalizeBoundary(url.searchParams.get("boundary")),
       manualSunset: normalizeClock(url.searchParams.get("sunset")),
       datasetVersion: url.searchParams.get("dataset") || null,
+      source: normalizeSource(url.searchParams.get("source")),
       renderer:     normalizeRenderer(url.searchParams.get("renderer")),
       quality:      normalizeQuality(url.searchParams.get("quality")),
       connectionMode: _normalizeFromSet(url.searchParams.get("connections"), VALID_CONNECTIONS),

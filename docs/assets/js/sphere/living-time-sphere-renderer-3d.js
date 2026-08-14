@@ -92,6 +92,7 @@
   let _activeTier = null;
   let _restoreAttempts = 0;
   let _lastRenderTimestamp = 0;
+  let _firstFrameTimestamp = 0;
   const _stageState = {
     capability: "idle",
     module: "idle",
@@ -2213,6 +2214,7 @@
     _appliedDpr = null;
     _activeTier = tier || null;
     _restoreAttempts = 0;
+    _firstFrameTimestamp = 0;
 
     try {
       assertDeps();
@@ -2398,6 +2400,7 @@
           });
         });
         _markStage("firstFrame", "rendered");
+        _firstFrameTimestamp = Date.now();
       } catch (err) {
         _markStage("firstFrame", "failed");
         _lastInitError = {
@@ -2907,6 +2910,7 @@
       restoreAttempts:   _restoreAttempts,
       rendererState,
       lastRenderTimestamp: _lastRenderTimestamp,
+      firstFrameTimestamp: _firstFrameTimestamp,
       rafActive: !!globalThis.LivingTimeSphereAnimation?.isRunning?.(),
       contextLost: _stageState.context === "lost",
       lastInitError:     _lastInitError,

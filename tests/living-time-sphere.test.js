@@ -337,6 +337,29 @@ test("LivingTimeSphereUrlState: invalid layer filtered out", () => {
   assert.equal(JSON.stringify(parsed.layers), JSON.stringify(["pattern", "passage"]));
 });
 
+test("LivingTimeSphereUrlState: explicit layers flag and exact deep-link fields are preserved", () => {
+  const ctx = loadSphereContext();
+  const url = "https://codexofreality.org/living-time-sphere.html?year=2026&tz=America%2FLos_Angeles&boundary=sunset&sunset=18%3A00&view=today&layers=pattern%2Cpassage%2Clunar%2Cmarkers&source=moons&dataset=living-time-sphere%2F1.0.0";
+  const parsed = ctx.LivingTimeSphereUrlState.parseSphereUrl(url);
+  assert.equal(parsed.year, 2026);
+  assert.equal(parsed.timeZone, "America/Los_Angeles");
+  assert.equal(parsed.boundaryMode, "sunset");
+  assert.equal(parsed.manualSunset, "18:00");
+  assert.equal(parsed.viewMode, "today");
+  assert.equal(parsed.source, "moons");
+  assert.equal(parsed.datasetVersion, "living-time-sphere/1.0.0");
+  assert.equal(parsed.hasExplicitLayers, true);
+  assert.equal(JSON.stringify(parsed.layers), JSON.stringify(["pattern", "passage", "lunar", "markers"]));
+});
+
+test("LivingTimeSphereUrlState: explicit empty layers are retained as explicit", () => {
+  const ctx = loadSphereContext();
+  const parsed = ctx.LivingTimeSphereUrlState.parseSphereUrl("https://x.com/?layers=");
+  assert.equal(parsed.hasExplicitLayers, true);
+  assert.equal(Array.isArray(parsed.layers), true);
+  assert.equal(parsed.layers.length, 0);
+});
+
 // ── Export ────────────────────────────────────────────────────────────
 
 test("LivingTimeSphereExport: FORMATS has square, portrait, story", () => {

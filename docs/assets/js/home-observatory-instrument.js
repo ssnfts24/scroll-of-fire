@@ -287,7 +287,7 @@
       preview.__livingTimeSphereMount = globalThis.LivingTimeSphere.mount({
         container: preview,
         compact: true,
-        renderer: "svg",
+        renderer: "auto",
         mode: "today",
         visibleLayers: {
           pattern: true,
