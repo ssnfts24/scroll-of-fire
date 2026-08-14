@@ -593,6 +593,7 @@
 .sphere-coordinate-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
   font-size: 0.85rem;
   margin-top: 0.75rem;
 }
@@ -603,11 +604,17 @@
   font-size: 0.75rem;
   color: rgba(232, 228, 217, 0.5);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .sphere-coordinate-table td {
   padding: 0.4rem 0.6rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* ── Compact sphere card (used in 13 Moons) ──────────────────────── */

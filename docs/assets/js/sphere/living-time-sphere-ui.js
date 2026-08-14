@@ -1202,8 +1202,10 @@
     const semanticZoom = _resolveSemanticZoomState(container);
     _state.semanticZoom = semanticZoom;
     const effectiveLayers = semanticZoom?.visibility ? { ..._state.visibleLayers, ...semanticZoom.visibility } : { ..._state.visibleLayers };
-    const effectiveMoonLabelMode = semanticZoom?.moonLabelMode || _state.moonLabelMode;
-    const effectiveDayLabelMode = semanticZoom?.dayLabelMode || _state.dayLabelMode;
+    const moonLabelExplicit = _state.moonLabelMode === "all" || _state.moonLabelMode === "selected" || _state.moonLabelMode === "hidden";
+    const dayLabelExplicit = _state.dayLabelMode === "all" || _state.dayLabelMode === "selected" || _state.dayLabelMode === "hidden";
+    const effectiveMoonLabelMode = moonLabelExplicit ? _state.moonLabelMode : (semanticZoom?.moonLabelMode || _state.moonLabelMode);
+    const effectiveDayLabelMode = dayLabelExplicit ? _state.dayLabelMode : (semanticZoom?.dayLabelMode || _state.dayLabelMode);
     const effectiveConnectionMode = semanticZoom?.connectionMode || _state.connectionMode;
     const connectionRegistry = globalThis.LivingTimeSphereConnections?.buildRegistry?.({
       model,
@@ -2279,11 +2281,12 @@
       interactBtn.addEventListener("click", () => {
         if (!_state.active3d) return;
         _setInteractOn();
+        container.dispatchEvent(new CustomEvent("sphere:interact-request-start", { bubbles: false }));
       });
       if (endBtn) {
         endBtn.addEventListener("click", () => {
           _setInteractOff();
-          container.dispatchEvent(new CustomEvent("sphere:interact-end", { bubbles: false }));
+          container.dispatchEvent(new CustomEvent("sphere:interact-request-end", { bubbles: false }));
         });
       }
       // Listen for interact events from 3D renderer.

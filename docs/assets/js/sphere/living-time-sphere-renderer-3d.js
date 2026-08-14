@@ -62,6 +62,10 @@
     }
   }
 
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
   // ── Scene state ───────────────────────────────────────────────────
 
   let _THREE        = null;   // Three.js namespace (set after lazy import)
@@ -1446,8 +1450,10 @@
     _semanticZoomState = next;
     _activeSemanticBand = next.band;
     _lastSemanticTransitionThreshold = next.transitionThreshold ?? null;
-    _moonLabelMode = next.moonLabelMode || _moonLabelMode;
-    _dayLabelMode = next.dayLabelMode || _dayLabelMode;
+    const explicitMoonLabelMode = _moonLabelMode === "all" || _moonLabelMode === "selected";
+    const explicitDayLabelMode = _dayLabelMode === "all" || _dayLabelMode === "selected";
+    if (!explicitMoonLabelMode) _moonLabelMode = next.moonLabelMode || _moonLabelMode;
+    if (!explicitDayLabelMode) _dayLabelMode = next.dayLabelMode || _dayLabelMode;
     _applySemanticVisibility(_visibleLayers || {}, next);
     _buildConnections();
     _moonLabelManager?.markDirty();
@@ -2459,6 +2465,13 @@
       globalThis.LivingTimeSphereCamera.onPointerUp();
       container.dispatchEvent(new CustomEvent("sphere:interact-end", { bubbles: true }));
     }
+
+    container.addEventListener("sphere:interact-request-start", () => {
+      enterInteractMode();
+    });
+    container.addEventListener("sphere:interact-request-end", () => {
+      exitInteractMode();
+    });
 
     _canvas.addEventListener("pointerdown", e => {
       _hideFloatingLabel();

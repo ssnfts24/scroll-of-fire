@@ -165,22 +165,23 @@
         const moon = anchor?.moon;
         const el = _labelEls[i];
         if (!el || !showSet.has(moon)) continue;
+        const isSelectedMoon = moon === selectedMoon;
 
         worldVec.set(anchor.worldX, anchor.worldY, anchor.worldZ);
         projVec.copy(worldVec).project(camera);
         camSpace.copy(worldVec).applyMatrix4(camera.matrixWorldInverse);
 
-        if (camSpace.z > 0) continue;
-        if (projVec.z < -1 || projVec.z > 1) continue;
+        if (camSpace.z > 0 && !isSelectedMoon) continue;
+        if ((projVec.z < -1 || projVec.z > 1) && !isSelectedMoon) continue;
 
         const anchorX = offsetX + (((projVec.x + 1) / 2) * stageRect.width);
         const anchorY = offsetY + (((-projVec.y + 1) / 2) * stageRect.height);
 
-        if (anchorX < offsetX - 40 || anchorY < offsetY - 40 || anchorX > offsetX + stageRect.width + 40 || anchorY > offsetY + stageRect.height + 40) continue;
+        if ((anchorX < offsetX - 40 || anchorY < offsetY - 40 || anchorX > offsetX + stageRect.width + 40 || anchorY > offsetY + stageRect.height + 40) && !isSelectedMoon) continue;
 
         const toPoint = worldVec.clone().sub(camPos).normalize();
         const frontness = clamp((camForward.dot(toPoint) + 1) * 0.5, 0, 1);
-        if (frontness < 0.06) continue;
+        if (frontness < 0.06 && !isSelectedMoon) continue;
 
         const dxCenter = anchorX - centerX;
         const dyCenter = anchorY - centerY;
