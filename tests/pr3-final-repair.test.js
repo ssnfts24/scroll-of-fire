@@ -73,3 +73,49 @@ test("broken bottom resource handling captures fixed/sticky diagnostics and coll
   assert.ok(css.includes(".sphere-broken-resource-shell-hidden { display:none !important; }"), "CSS should hide collapsed broken shells");
   assert.ok(site.includes("if (shell) shell.hidden = true;"), "global image fallback should hide failed media shells");
 });
+
+test("focus environment control is DOM-only and does not force layer/render state mutation", () => {
+  const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
+  assert.ok(ui.includes("function _focusEnvironmentControls()"), "focus helper should exist");
+  assert.ok(ui.includes("_focusEnvironmentControls();"), "focus button should route through focus helper");
+  const focusStart = ui.indexOf("focusEnvironmentBtn.addEventListener(\"click\", () => {");
+  const focusEnd = focusStart >= 0 ? ui.indexOf("});", focusStart) : -1;
+  const focusSection = focusStart >= 0 && focusEnd > focusStart ? ui.slice(focusStart, focusEnd + 3) : "";
+  assert.ok(focusSection.includes("_focusEnvironmentControls();"), "focus click should invoke DOM focus helper");
+  assert.equal(focusSection.includes("renderSphere(container)"), false, "focus click should not trigger full render");
+  assert.equal(focusSection.includes("sphere-layer-environment"), false, "focus click should not toggle environment layer");
+});
+
+test("selected-scope controls are decoupled from top view-mode mutations", () => {
+  const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
+  const from = ui.indexOf("function _applyFieldRangePreset(range)");
+  const to = ui.indexOf("function _syncFieldRangeButtons()", from);
+  const section = from >= 0 && to > from ? ui.slice(from, to) : "";
+  assert.ok(section.length > 0, "field-range preset section should be present");
+  assert.equal(section.includes("_state.viewMode ="), false, "field-range controls should not set top-level view mode");
+  assert.equal(section.includes("_state.activeViewMode ="), false, "field-range controls should not set active view mode");
+  assert.equal(section.includes("_state.requestedViewMode ="), false, "field-range controls should not set requested view mode");
+});
+
+test("mode transitions preserve user layer state and expose RC8 action counters", () => {
+  const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
+  assert.equal(ui.includes("_setModeDefaultLayers(targetMode);"), false, "normal mode transitions should not reset layer defaults");
+  [
+    "modeUpdateCount",
+    "selectedDayUpdateCount",
+    "layerUpdateCount",
+    "environmentFocusCount",
+    "environmentDataUpdateCount",
+    "fullModelBuildCount",
+    "fullSceneBuildCount",
+    "rendererInitCount",
+    "actionTrace"
+  ].forEach(key => assert.ok(ui.includes(key), `expected RC8 diagnostics key: ${key}`));
+});
+
+test("bottom-strip diagnostics probe required pixel stacks", () => {
+  const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
+  assert.ok(ui.includes("[0.25, 0.5, 0.75]"), "x probes should include 25/50/75%");
+  assert.ok(ui.includes("[20, 50]"), "y probes should include innerHeight-20 and innerHeight-50");
+  assert.ok(ui.includes("document.elementsFromPoint"), "pixel stack diagnostics should use elementsFromPoint");
+});

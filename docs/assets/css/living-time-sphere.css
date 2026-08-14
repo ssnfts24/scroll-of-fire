@@ -1784,6 +1784,12 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
 .sphere-location-command.has-active-place:not(.is-editing-place) .sphere-location-results { display:none; }
 .sphere-location-change { margin:.35rem 0 .15rem; }
 .sphere-location-command.has-active-place { border-color:rgba(80,210,170,.34); }
+.sphere-location-command-focus-pulse {
+  outline: 2px solid rgba(120, 210, 255, 0.9);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px rgba(120, 210, 255, 0.18);
+  transition: outline-color 160ms ease, box-shadow 200ms ease;
+}
 .sphere-broken-resource-hidden { display:none !important; }
 .sphere-broken-resource-shell-hidden { display:none !important; }
 .sphere-moon-labels { contain:layout paint; }

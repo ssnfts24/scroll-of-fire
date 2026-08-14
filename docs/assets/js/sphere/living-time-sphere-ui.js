@@ -74,6 +74,15 @@
     _selectedLongTaskObserver: null,
     layerStateSource: "default",
     userCustomizedLayers: false,
+    actionCounters: {
+      modeUpdateCount: 0,
+      selectedDayUpdateCount: 0,
+      layerUpdateCount: 0,
+      environmentFocusCount: 0,
+      environmentDataUpdateCount: 0,
+    },
+    actionTrace: [],
+    lastEnvironmentFocusDiagnostics: null,
   };
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
   const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
@@ -103,6 +112,7 @@
   let _syncingLayerControls = false;
   let _resourceTrackerInstalled = false;
   const _resourceFailureLog = [];
+  const ENV_FOCUS_PULSE_CLASS = "sphere-location-command-focus-pulse";
 
   // ── Dependency check ───────────────────────────────────────────────
 
@@ -319,11 +329,13 @@
       .map(_inspectElementNode)
       .filter(Boolean)
       .filter(item => item.rect && item.rect.bottom >= bandTop && item.rect.top <= height && item.display !== "none" && item.visibility !== "hidden");
-    const points = [0.1, 0.35, 0.65, 0.9].map(frac => {
+    const points = [0.25, 0.5, 0.75].flatMap(frac => {
       const x = Math.max(0, Math.min(width - 1, Math.round(width * frac)));
-      const y = Math.max(0, height - Math.min(depthPx / 2, 80));
-      const stack = (document.elementsFromPoint?.(x, y) || []).map(_inspectElementNode).filter(Boolean).slice(0, 8);
-      return { x, y, stack };
+      return [20, 50].map(offset => {
+        const y = Math.max(0, height - offset);
+        const stack = (document.elementsFromPoint?.(x, y) || []).map(_inspectElementNode).filter(Boolean).slice(0, 10);
+        return { x, y, stack };
+      });
     });
     return { viewport: { width, height }, bandTop, matches: matches.slice(0, 240), points };
   }
@@ -374,6 +386,109 @@
     if (state.status === "unavailable") return "unavailable";
     if (state.status === "error" || state.reason === "provider-error") return "error";
     return "idle";
+  }
+
+  function _incrementActionCounter(counterKey, amount = 1) {
+    if (!_state.actionCounters || typeof _state.actionCounters !== "object") {
+      _state.actionCounters = {};
+    }
+    _state.actionCounters[counterKey] = Number(_state.actionCounters[counterKey] || 0) + amount;
+    return _state.actionCounters[counterKey];
+  }
+
+  function _recordActionTrace(action, statePatch, subsystemsUpdated) {
+    const entry = Object.freeze({
+      at: Date.now(),
+      action: String(action || "unknown"),
+      statePatch: statePatch && typeof statePatch === "object" ? Object.assign({}, statePatch) : null,
+      subsystemsUpdated: Array.isArray(subsystemsUpdated) ? subsystemsUpdated.slice(0, 12) : [],
+    });
+    _state.actionTrace.push(entry);
+    if (_state.actionTrace.length > 200) _state.actionTrace.shift();
+    if (globalThis.__SOF_DEBUG_ACTION_TRACE__) {
+      console.debug("[LivingTimeSphere][TRACE]", `${entry.action} ->`, entry.statePatch || "no state patch", "->", entry.subsystemsUpdated.join(", "));
+    }
+  }
+
+  function _captureClassListSnapshot() {
+    const classList = node => (node?.classList ? Array.from(node.classList).sort() : []);
+    return {
+      body: classList(document.body),
+      html: classList(document.documentElement),
+      observatory: classList(document.querySelector(".sphere-stage")),
+      sphereContainer: classList(document.getElementById("sphere-container")),
+      overlays: Array.from(document.querySelectorAll("[class*='overlay'],[class*='backdrop'],[class*='modal'],[class*='dim']"))
+        .map(node => ({
+          tagName: String(node.tagName || "").toLowerCase(),
+          id: node.id || "",
+          className: node.className || "",
+        }))
+        .slice(0, 20),
+    };
+  }
+
+  function _captureComputedStyleSnapshot() {
+    const pick = node => {
+      if (!node || !window.getComputedStyle) return null;
+      const style = window.getComputedStyle(node);
+      return {
+        opacity: style.opacity,
+        filter: style.filter,
+        backdropFilter: style.backdropFilter,
+        visibility: style.visibility,
+        pointerEvents: style.pointerEvents,
+        zIndex: style.zIndex,
+        background: style.background,
+        mixBlendMode: style.mixBlendMode,
+      };
+    };
+    return {
+      body: pick(document.body),
+      main: pick(document.querySelector("main")),
+      observatoryWrapper: pick(document.querySelector(".sphere-stage")),
+      sphereContainer: pick(document.getElementById("sphere-container")),
+      rendererHost: pick(document.querySelector(".sphere-visual-shell")),
+    };
+  }
+
+  function _findFirstEnvironmentFocusable(locationPanel) {
+    if (!locationPanel) return null;
+    return locationPanel.querySelector(
+      "[data-location-use-device], [data-location-search-input], [data-location-search-submit], [data-location-lat], [data-location-lon], [data-location-continue-without], button, input, select, textarea, a[href]"
+    );
+  }
+
+  function _focusEnvironmentControls() {
+    const locationPanel = document.querySelector("[data-sof-location-command]");
+    if (!locationPanel) return;
+    const beforeClasses = _captureClassListSnapshot();
+    const beforeStyles = _captureComputedStyleSnapshot();
+    locationPanel.open = true;
+    locationPanel.classList?.add?.(ENV_FOCUS_PULSE_CLASS);
+    if (locationPanel?.scrollIntoView) {
+      locationPanel.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+    }
+    const firstControl = _findFirstEnvironmentFocusable(locationPanel);
+    if (firstControl?.focus) firstControl.focus({ preventScroll: true });
+    setTimeout(() => {
+      locationPanel.classList?.remove?.(ENV_FOCUS_PULSE_CLASS);
+    }, 900);
+    _incrementActionCounter("environmentFocusCount");
+    const afterClasses = _captureClassListSnapshot();
+    const afterStyles = _captureComputedStyleSnapshot();
+    _state.lastEnvironmentFocusDiagnostics = Object.freeze({
+      at: Date.now(),
+      beforeClasses,
+      afterClasses,
+      beforeStyles,
+      afterStyles,
+      focusedElement: document.activeElement ? {
+        tagName: String(document.activeElement.tagName || "").toLowerCase(),
+        id: document.activeElement.id || "",
+        className: document.activeElement.className || "",
+      } : null,
+    });
+    _recordActionTrace("FOCUS_ENVIRONMENT", null, ["dom-scroll", "dom-focus"]);
   }
 
   function _setRendererLifecycle(next) {
@@ -637,11 +752,12 @@
       _state.previousViewMode = previousMode;
       _state.viewMode = targetMode;
       _state.activeViewMode = targetMode;
-      _setModeDefaultLayers(targetMode);
       _setModeDefaultSelectedMarker(targetMode);
       _syncModeButtons();
       if (_state.active3d) globalThis.LivingTimeSphereRenderer3d?.setMode(targetMode);
       renderSphere(container);
+      _incrementActionCounter("modeUpdateCount");
+      _recordActionTrace("VIEW_MODE_CHANGE", { viewMode: targetMode }, ["mode", "camera", "render"]);
       _state.modeTransitionState = "active";
       _state.lastModeTransitionDuration = Number((performance.now() - startedAt).toFixed(2));
       _recordModeTransitionMetric({
@@ -1085,53 +1201,27 @@
     switch (_state.fieldRange) {
       case "today":
       case "now":
-        _state.viewMode = "today";
         if (live?.pattern?.patternYear === _state.year && live?.pattern?.dayOfPatternYear) {
           _state.selectedDayOfYear = live.pattern.dayOfPatternYear;
           _state.selectedMarker = "today";
         }
-        _state.visibleLayers.pattern = true;
-        _state.visibleLayers.exactDays = true;
-        _state.visibleLayers.weekGates = true;
-        _state.visibleLayers.passage = true;
-        _state.visibleLayers.lunar = true;
-        _state.visibleLayers.connections = true;
         break;
       case "pattern-week":
-        _state.viewMode = "pattern";
-        _state.visibleLayers.pattern = true;
-        _state.visibleLayers.weekGates = true;
-        _state.visibleLayers.exactDays = true;
-        _state.visibleLayers.connections = true;
+        _state.selectedMarker = _state.selectedMarker || "today";
         break;
       case "pattern-moon":
-        _state.viewMode = "pattern";
-        _state.visibleLayers.pattern = true;
-        _state.visibleLayers.exactDays = true;
-        _state.visibleLayers.lunar = true;
-        _state.visibleLayers.markers = true;
+        _state.selectedMarker = _state.selectedMarker || "today";
         break;
       case "pattern-year":
-        _state.viewMode = "years";
-        _state.visibleLayers.pattern = true;
-        _state.visibleLayers.passage = true;
-        _state.visibleLayers.lunar = true;
-        _state.visibleLayers.spiral = true;
+        _state.selectedMarker = _state.selectedMarker || `year-${_state.year}`;
         break;
       case "historical":
-        _state.viewMode = "years";
-        _state.visibleLayers.pattern = true;
-        _state.visibleLayers.passage = true;
-        _state.visibleLayers.lunar = true;
-        _state.visibleLayers.recurrence = true;
-        _state.visibleLayers.spiral = true;
-        _state.visibleLayers.connections = true;
+        _state.selectedMarker = _state.selectedMarker || `year-${_state.year}`;
         break;
       default:
         break;
     }
-    _state.requestedViewMode = _state.viewMode;
-    _state.activeViewMode = _state.viewMode;
+    _recordActionTrace("SELECTED_SCOPE_CHANGE", { fieldRange: _state.fieldRange }, ["selected-scope"]);
     _state.layerStateSource = "user-customized";
     _state.userCustomizedLayers = true;
   }
@@ -2752,6 +2842,8 @@
           _updateEnvironmentBridge(model);
           _updateRendererDiagnostics();
         }
+        _incrementActionCounter("selectedDayUpdateCount");
+        _recordActionTrace("SELECTED_DAY_CHANGE", { selectedDayOfYear: nextDay }, incrementalUsed ? ["selected-state", "incremental-render"] : ["selected-state", "full-render"]);
         const completeAt = performance.now();
         _recordSelectedUpdateMetric({
           revision,
@@ -2890,6 +2982,8 @@
         _state.visibleLayers[layer] = cb.checked;
         _state.userCustomizedLayers = true;
         _state.layerStateSource = "user-customized";
+        _incrementActionCounter("layerUpdateCount");
+        _recordActionTrace("LAYER_VISIBILITY_CHANGE", { layer, enabled: !!cb.checked }, ["layers"]);
         const renderer = globalThis.LivingTimeSphereRenderer3d;
         if (_state.active3d && renderer?.isInitialized?.() && typeof renderer.setLayerVisibility === "function") {
           const updated = renderer.setLayerVisibility(layer, cb.checked);
@@ -2903,16 +2997,7 @@
     const focusEnvironmentBtn = document.getElementById("sphere-environment-focus");
     if (focusEnvironmentBtn) {
       focusEnvironmentBtn.addEventListener("click", () => {
-        const envToggle = document.getElementById("sphere-layer-environment");
-        if (envToggle && !_state.visibleLayers.environment) {
-          envToggle.checked = true;
-          _state.visibleLayers.environment = true;
-        }
-        const locationPanel = document.querySelector("[data-sof-location-command]");
-        if (locationPanel?.scrollIntoView) {
-          locationPanel.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-        renderSphere(container);
+        _focusEnvironmentControls();
       });
     }
 
@@ -3345,6 +3430,7 @@
       environmentApi.setEnvironmentState(environmentApi.EMPTY_STATE);
     }
     window.addEventListener("sof:location-changed", () => {
+      _recordActionTrace("LOCATION_CHANGE", null, ["environment-provider-refresh"]);
       Promise.resolve(globalThis.OpenMeteoAdapter?.requestRefresh?.({ force: true }))
         .catch(() => null)
         .finally(() => renderSphere(container));
@@ -3352,16 +3438,20 @@
     window.addEventListener(globalThis.SofEnvironmentState?.EVENT_NAME || "sof:environment-change", event => {
       const nextState = event?.detail?.state || globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
       _state.environmentLifecycle = _resolveEnvironmentLifecycle(nextState);
+      _incrementActionCounter("environmentDataUpdateCount");
       const renderer = globalThis.LivingTimeSphereRenderer3d;
       if (_state.active3d && renderer?.isInitialized?.()) {
         renderer.updateEnvironment?.(nextState);
         _updateEnvironmentBridge(buildCurrentModel());
         _updateRendererDiagnostics();
+        _recordActionTrace("ENVIRONMENT_DATA_CHANGE", { environmentLifecycle: _state.environmentLifecycle }, ["environment-data", "renderer-environment"]);
       } else if (_state.visibleLayers.environment) {
         renderSphere(container);
+        _recordActionTrace("ENVIRONMENT_DATA_CHANGE", { environmentLifecycle: _state.environmentLifecycle }, ["environment-data", "full-render"]);
       } else {
         _updateEnvironmentBridge(buildCurrentModel());
         _updateRendererDiagnostics();
+        _recordActionTrace("ENVIRONMENT_DATA_CHANGE", { environmentLifecycle: _state.environmentLifecycle }, ["environment-data", "ui-bridge-only"]);
       }
     });
     window.addEventListener("popstate", () => {
@@ -3445,12 +3535,22 @@
       retryCount: Number(_state.retryCount || 0),
       fullRenderCount: Number(_state.fullRenderCount || 0),
       selectedLightweightUpdateCount: Number(_state.selectedLightweightUpdateCount || 0),
+      modeUpdateCount: Number(_state.actionCounters?.modeUpdateCount || 0),
+      selectedDayUpdateCount: Number(_state.actionCounters?.selectedDayUpdateCount || 0),
+      layerUpdateCount: Number(_state.actionCounters?.layerUpdateCount || 0),
+      environmentFocusCount: Number(_state.actionCounters?.environmentFocusCount || 0),
+      environmentDataUpdateCount: Number(_state.actionCounters?.environmentDataUpdateCount || 0),
+      rendererInitCount: Number(rendererDiag.rendererInitCount || 0),
+      fullSceneBuildCount: Number(rendererDiag.sceneBuildCount || rendererDiag.sceneRootBuildCount || 0),
+      fullModelBuildCount: Number(rendererDiag.modelBuildCount || 0),
       selectedUpdateRevision: Number(_state.selectedUpdateRevision || 0),
       selectedUpdateStatus: _state.selectedUpdateStatus,
       selectedUpdateMetrics: (_state.selectedUpdateMetrics || []).slice(-20),
       selectedUpdateLongTasks: (_state.selectedUpdateLongTasks || []).slice(-20),
       selectedUpdateLastWatchdog: _state.selectedUpdateLastWatchdog || null,
       runtimeDebug: _collectRuntimeDebugSnapshot(),
+      actionTrace: (_state.actionTrace || []).slice(-60),
+      environmentFocusDiagnostics: _state.lastEnvironmentFocusDiagnostics || null,
       layerStateSource: _state.layerStateSource || "default",
       userCustomizedLayers: !!_state.userCustomizedLayers,
       buildVersion: globalThis.LivingTimeSphereVersion?.buildMetadata || null,

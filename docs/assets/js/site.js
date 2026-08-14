@@ -641,6 +641,32 @@
       });
       observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src", "data"] });
     }
+
+    function collapseBottomFailedMediaSweep() {
+      const viewportBottom = window.innerHeight || 0;
+      if (!viewportBottom) return;
+      const nodes = document.querySelectorAll("img,object,iframe,embed,video,source,picture,svg image");
+      nodes.forEach(node => {
+        if (!(node instanceof Element)) return;
+        const rect = node.getBoundingClientRect?.() || null;
+        if (!rect || rect.bottom < (viewportBottom - 220)) return;
+        const tag = String(node.tagName || "").toUpperCase();
+        if (tag === "IMG") {
+          if (node.complete && node.naturalWidth === 0) collapseBrokenMedia(node);
+          return;
+        }
+        const failed = node.dataset?.imageFallbackFailed === "true" || node.getAttribute?.("aria-hidden") === "true";
+        if (failed) collapseBrokenMedia(node);
+      });
+    }
+
+    window.addEventListener("load", () => {
+      collapseBottomFailedMediaSweep();
+      setTimeout(collapseBottomFailedMediaSweep, 350);
+      setTimeout(collapseBottomFailedMediaSweep, 1200);
+    }, { once: true });
+    window.addEventListener("pageshow", collapseBottomFailedMediaSweep);
+    window.addEventListener("resize", collapseBottomFailedMediaSweep);
   }
 
   function enhanceMediaLoading() {
