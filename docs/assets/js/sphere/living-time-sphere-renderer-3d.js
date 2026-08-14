@@ -91,6 +91,7 @@
   let _appliedDpr = null;
   let _activeTier = null;
   let _restoreAttempts = 0;
+  let _lastRenderTimestamp = 0;
   const _stageState = {
     capability: "idle",
     module: "idle",
@@ -2194,6 +2195,7 @@
     _updateMoonLabels(_viewMode);
 
     _renderer.render(_scene, _camera);
+    _lastRenderTimestamp = Date.now();
   }
 
   // ── Init / teardown ────────────────────────────────────────────────
@@ -2844,6 +2846,7 @@
     _camera = null;
     _initialized  = false;
     _initializing = false;
+    _lastRenderTimestamp = 0;
     _loadPromise  = null; // allow Three.js reload after teardown
     _THREE        = null;
     _threeSource  = null;
@@ -2875,6 +2878,9 @@
     const visibleMoonLabels = Array.isArray(_moonLabelEls)
       ? _moonLabelEls.filter(el => el && el.style.display !== "none").length
       : 0;
+    const rendererState = !_initialized
+      ? (_initializing ? "initializing" : (_stageState?.renderer === "failed" ? "failed" : "not-started"))
+      : (_stageState?.firstFrame === "rendered" ? "rendered" : "ready");
     return {
       requestedRenderer: "3d",
       activeRenderer:    _initialized ? "webgl" : "none",
@@ -2899,6 +2905,10 @@
       reducedMotion:     (() => { try { return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true; } catch { return false; } })(),
       reducedData,
       restoreAttempts:   _restoreAttempts,
+      rendererState,
+      lastRenderTimestamp: _lastRenderTimestamp,
+      rafActive: !!globalThis.LivingTimeSphereAnimation?.isRunning?.(),
+      contextLost: _stageState.context === "lost",
       lastInitError:     _lastInitError,
       semanticZoom: {
         band: _semanticZoomState?.band || "medium",

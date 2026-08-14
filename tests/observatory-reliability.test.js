@@ -489,7 +489,7 @@ test("Mount + teardown + remount on same container produces no duplicate listene
 
 // ── Homepage mount: same capability manager / decision system ─────────
 
-test("home-observatory-instrument.js includes observatory-capability-manager.js in DEPENDENCIES", () => {
+test("home-observatory-instrument.js includes observatory-capability-manager.js in required dependencies", () => {
   const code = read("docs/assets/js/home-observatory-instrument.js");
   assert.ok(
     code.includes("observatory-capability-manager.js"),
@@ -501,9 +501,15 @@ test("observatory-capability-manager.js loads before living-time-sphere-mount.js
   const code = read("docs/assets/js/home-observatory-instrument.js");
   const iCap   = code.indexOf("observatory-capability-manager.js");
   const iMount = code.indexOf("living-time-sphere-mount.js");
-  assert.ok(iCap >= 0,   "observatory-capability-manager.js must appear in DEPENDENCIES");
-  assert.ok(iMount >= 0, "living-time-sphere-mount.js must appear in DEPENDENCIES");
-  assert.ok(iCap < iMount, "capability manager must be listed before mount in DEPENDENCIES");
+  assert.ok(iCap >= 0,   "observatory-capability-manager.js must appear in required dependencies");
+  assert.ok(iMount >= 0, "living-time-sphere-mount.js must appear in required dependencies");
+  assert.ok(iCap < iMount, "capability manager must be listed before mount in required dependencies");
+});
+
+test("home deps load optional environment scripts via Promise.allSettled", () => {
+  const code = read("docs/assets/js/home-observatory-instrument.js");
+  assert.ok(code.includes("OPTIONAL_ENVIRONMENT_DEPENDENCIES"), "home instrument must declare optional environment dependencies");
+  assert.ok(code.includes("Promise.allSettled"), "optional environment dependencies must use Promise.allSettled");
 });
 
 // ── Observatory full-page mount: same decision system ────────────────
@@ -610,6 +616,13 @@ test("Renderer 3D: semantic diagnostics expose previous band and transition thre
   assert.ok(code.includes("transitionThreshold"), "renderer diagnostics must include semantic transition threshold");
 });
 
+test("Renderer 3D: diagnostics expose render timestamp and RAF state", () => {
+  const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
+  assert.ok(code.includes("lastRenderTimestamp"), "renderer diagnostics must include lastRenderTimestamp");
+  assert.ok(code.includes("rafActive"), "renderer diagnostics must include rafActive");
+  assert.ok(code.includes("rendererState"), "renderer diagnostics must include rendererState");
+});
+
 test("Renderer 3D: disconnects resize observer on teardown", () => {
   const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
   assert.ok(code.includes("_resizeObserver?.disconnect"), "renderer must disconnect resize observer during teardown");
@@ -619,6 +632,34 @@ test("UI diagnostics maps semantic hysteresis fields to DOM", () => {
   const code = read("docs/assets/js/sphere/living-time-sphere-ui.js");
   assert.ok(code.includes("sphere-diag-semantic-prev-band"), "UI diagnostics must publish previous semantic band");
   assert.ok(code.includes("sphere-diag-semantic-threshold"), "UI diagnostics must publish semantic threshold");
+});
+
+test("UI exposes getSphereDiagnostics runtime snapshot", () => {
+  const code = read("docs/assets/js/sphere/living-time-sphere-ui.js");
+  assert.ok(code.includes("function getSphereDiagnostics"), "UI must define getSphereDiagnostics");
+  assert.ok(code.includes("globalThis.getSphereDiagnostics"), "UI must publish getSphereDiagnostics globally");
+  assert.ok(code.includes("rendererLifecycle"), "diagnostics must include renderer lifecycle state");
+  assert.ok(code.includes("environmentLifecycle"), "diagnostics must include environment lifecycle state");
+});
+
+test("UI wires pageshow/visibility/orientation recovery hooks", () => {
+  const code = read("docs/assets/js/sphere/living-time-sphere-ui.js");
+  assert.ok(code.includes("window.addEventListener(\"pageshow\""), "UI must handle pageshow for BFCache restore");
+  assert.ok(code.includes("document.addEventListener(\"visibilitychange\""), "UI must handle visibility restores");
+  assert.ok(code.includes("window.addEventListener(\"orientationchange\""), "UI must handle orientation changes");
+});
+
+test("UI installs broken-resource guard as module-level helper", () => {
+  const code = read("docs/assets/js/sphere/living-time-sphere-ui.js");
+  assert.ok(code.includes("function _installBrokenResourceGuard()"), "UI must define broken-resource guard helper");
+  assert.ok(code.includes("_installBrokenResourceGuard();"), "UI init must invoke broken-resource guard");
+});
+
+test("site image fallback handles already-broken cached images", () => {
+  const code = read("docs/assets/js/site.js");
+  assert.ok(code.includes("image.complete && image.naturalWidth === 0"), "site fallback must detect already-broken cached images");
+  assert.ok(code.includes("image.dataset.imageFallbackFailed"), "site fallback must mark and suppress broken images");
+  assert.ok(code.includes("MutationObserver"), "site fallback must handle runtime image insertions");
 });
 
 // ── DEVICE_MEMORY_GUARD semantics ─────────────────────────────────────

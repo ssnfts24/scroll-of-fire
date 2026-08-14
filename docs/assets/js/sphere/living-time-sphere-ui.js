@@ -36,6 +36,13 @@
     _3dInitInProgress: false, // guard against concurrent 3D init calls
     _3dInitGeneration: 0,
     restoreAttempts: 0,
+    rendererLifecycle: "not-started",
+    environmentLifecycle: "idle",
+    retryCount: 0,
+    lastRenderTimestamp: 0,
+    _autoRetryTimer: 0,
+    _recoveryHooksBound: false,
+    _resizeObserver: null,
   };
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
   const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
@@ -109,46 +116,127 @@
       });
     }
 
-    function _installBrokenResourceGuard() {
-      if (_brokenResourceGuardInstalled || typeof MutationObserver === "undefined") return;
-      _brokenResourceGuardInstalled = true;
-      const suppressBrokenImage = image => {
-        if (!image || image.dataset?.sphereBrokenHidden === "true") return;
-        if (!(image instanceof HTMLImageElement)) return;
-        const mark = () => {
-          if (!image.complete || image.naturalWidth > 0 || image.naturalHeight > 0) return;
-          image.dataset.sphereBrokenHidden = "true";
-          image.classList.add("sphere-broken-resource-hidden");
-          image.hidden = true;
-          image.setAttribute("aria-hidden", "true");
-        };
-        if (!image.complete) {
-          image.addEventListener("error", mark, { once: true });
-        } else {
-          mark();
-        }
+  }
+
+  function _installBrokenResourceGuard() {
+    if (_brokenResourceGuardInstalled || typeof MutationObserver === "undefined") return;
+    _brokenResourceGuardInstalled = true;
+    const hasImageCtor = typeof HTMLImageElement !== "undefined";
+    const suppressBrokenImage = image => {
+      if (!image || image.dataset?.sphereBrokenHidden === "true") return;
+      if (hasImageCtor && !(image instanceof HTMLImageElement)) return;
+      const mark = () => {
+        if (!image.complete || image.naturalWidth > 0 || image.naturalHeight > 0) return;
+        image.dataset.sphereBrokenHidden = "true";
+        image.classList.add("sphere-broken-resource-hidden");
+        image.hidden = true;
+        image.setAttribute("aria-hidden", "true");
+        const shell = image.closest?.("picture,figure,[data-home-product-media],[data-home-media-card],.home-product-slide");
+        if (shell && shell.children?.length <= 1) shell.hidden = true;
       };
-      const scan = root => {
-        if (!root?.querySelectorAll) return;
-        root.querySelectorAll("img").forEach(suppressBrokenImage);
-      };
-      scan(document);
-      new MutationObserver(mutations => {
-        mutations.forEach(mutation => {
-          mutation.addedNodes?.forEach(node => {
-            if (!node || node.nodeType !== 1) return;
-            if (node.tagName === "IMG") suppressBrokenImage(node);
-            scan(node);
-          });
-          if (mutation.type === "attributes" && mutation.target?.tagName === "IMG") {
-            suppressBrokenImage(mutation.target);
-          }
+      if (!image.complete) image.addEventListener("error", mark, { once: true });
+      else mark();
+    };
+    const scan = root => {
+      if (!root?.querySelectorAll) return;
+      root.querySelectorAll("img").forEach(suppressBrokenImage);
+    };
+    scan(document);
+    new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        mutation.addedNodes?.forEach(node => {
+          if (!node || node.nodeType !== 1) return;
+          if (node.tagName === "IMG") suppressBrokenImage(node);
+          scan(node);
         });
-      }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
-      window.addEventListener("error", event => {
-        if (event?.target?.tagName === "IMG") suppressBrokenImage(event.target);
-      }, true);
+        if (mutation.type === "attributes" && mutation.target?.tagName === "IMG") {
+          suppressBrokenImage(mutation.target);
+        }
+      });
+    }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
+    window.addEventListener("error", event => {
+      if (event?.target?.tagName === "IMG") suppressBrokenImage(event.target);
+    }, true);
+  }
+
+  function _resolveEnvironmentLifecycle(state) {
+    if (!state) return "idle";
+    if (state.status === "loading") return "loading";
+    if (state.reason === "location-not-set" || state.providerConfigured === false) return "location-needed";
+    if (state.status === "cached") return "cached";
+    if (state.stale) return "stale";
+    if (state.status === "available") return "ready";
+    if (state.status === "unavailable") return "unavailable";
+    if (state.status === "error" || state.reason === "provider-error") return "error";
+    return "idle";
+  }
+
+  function _setRendererLifecycle(next) {
+    _state.rendererLifecycle = next;
+  }
+
+  function _clearAutoRetry() {
+    if (_state._autoRetryTimer) {
+      clearTimeout(_state._autoRetryTimer);
+      _state._autoRetryTimer = 0;
     }
+  }
+
+  function _scheduleRetry(container, reason) {
+    if (!container || _state.retryCount >= 2 || _state._autoRetryTimer) return;
+    const delay = _state.retryCount === 0 ? 180 : 900;
+    _state.retryCount += 1;
+    _setRendererLifecycle("recovering");
+    _state._autoRetryTimer = setTimeout(() => {
+      _state._autoRetryTimer = 0;
+      _state._3dInitInProgress = false;
+      renderSphere(container);
+    }, delay);
+    console.warn(`[LivingTimeSphere] Scheduled renderer retry #${_state.retryCount} (${reason}) in ${delay}ms.`);
+  }
+
+  function _updateLastRenderTimestamp() {
+    const ts = Number(globalThis.LivingTimeSphereRenderer3d?.getDiagnostics?.()?.lastRenderTimestamp || 0);
+    if (ts > 0) _state.lastRenderTimestamp = ts;
+  }
+
+  function _watchForBlankCanvas(container) {
+    setTimeout(() => {
+      if (!container || _state.rendererMode === "svg" || _state.rendererLifecycle === "failed") return;
+      const renderer = globalThis.LivingTimeSphereRenderer3d;
+      if (!renderer?.isInitialized?.()) return;
+      const diag = renderer.getDiagnostics?.() || {};
+      const hasCanvas = Number(diag.canvasWidth || 0) > 0 && Number(diag.canvasHeight || 0) > 0;
+      const firstFrame = diag.stageState?.firstFrame === "rendered";
+      if (hasCanvas && !firstFrame) {
+        _setRendererLifecycle("recovering");
+        renderer.requestSingleRender?.();
+        _scheduleRetry(container, "blank-canvas-watchdog");
+      }
+    }, 1200);
+  }
+
+  function _bindRecoveryHooks(container) {
+    if (_state._recoveryHooksBound) return;
+    _state._recoveryHooksBound = true;
+    window.addEventListener("pageshow", event => {
+      if (!container?.isConnected) return;
+      if (event?.persisted) _setRendererLifecycle("recovering");
+      renderSphere(container);
+    });
+    window.addEventListener("pagehide", () => {
+      _clearAutoRetry();
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (!container?.isConnected || document.hidden) return;
+      const renderer = globalThis.LivingTimeSphereRenderer3d;
+      if (_state.active3d && renderer?.isInitialized?.()) renderer.requestSingleRender?.();
+      renderSphere(container);
+    });
+    window.addEventListener("orientationchange", () => {
+      if (!container?.isConnected) return;
+      setTimeout(() => renderSphere(container), 120);
+    });
   }
 
   // ── Quality resolution ─────────────────────────────────────────────
@@ -189,6 +277,9 @@
 
   async function _waitForValidContainer(container, { minWidth = 180, minHeight = 180, timeoutMs = 2500 } = {}) {
     const valid = () => {
+      if (!container?.isConnected) return false;
+      const style = typeof getComputedStyle === "function" ? getComputedStyle(container) : null;
+      if (style && (style.display === "none" || style.visibility === "hidden")) return false;
       const rect = container?.getBoundingClientRect?.() || {};
       return Number(rect.width) >= minWidth && Number(rect.height) >= minHeight;
     };
@@ -1264,6 +1355,7 @@
     if (_state.rendererMode === "table" || _state.rendererMode === "text") {
       // Hide 3D / SVG canvas; show alternate view
       _teardown3d();
+      _setRendererLifecycle("fallback");
       container.style.display = "none";
       _updateRendererLabel(_state.rendererMode === "table" ? "Data Table" : "Text Summary");
       updateAccessibleText(model, spiral);
@@ -1285,6 +1377,7 @@
       _render3d(container, model, spiral, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
     } else {
       _teardown3d();
+      _setRendererLifecycle("fallback");
       _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
     }
 
@@ -1300,7 +1393,7 @@
 
   async function _render3d(container, model, spiral, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode) {
     const preset = resolveQualityPreset();
-    if (!preset) { _teardown3d(); return; }
+    if (!preset) { _setRendererLifecycle("fallback"); _teardown3d(); return; }
 
     const renderer = globalThis.LivingTimeSphereRenderer3d;
 
@@ -1310,6 +1403,7 @@
       if (_state._3dInitInProgress || renderer.isInitializing?.()) return;
       _state._3dInitInProgress = true;
       const initGeneration = ++_state._3dInitGeneration;
+      _setRendererLifecycle("initializing");
 
       // Remove any existing SVG / canvas content before inserting 3D canvas.
       container.innerHTML = "";
@@ -1322,6 +1416,7 @@
       try {
         const hasStableSize = await _waitForValidContainer(container);
         if (!hasStableSize) {
+          _setRendererLifecycle("waiting-for-size");
           result = {
             success: false,
             reason: "CONTAINER_SIZE_INVALID",
@@ -1398,6 +1493,8 @@
         // Fall back to SVG.
         _state.active3d = false;
         const reason = result?.reason || "WebGL unavailable";
+        const transient = reason === "CONTAINER_SIZE_INVALID" || reason === "INIT_TIMEOUT" || reason === "init-exception";
+        _setRendererLifecycle(reason === "CONTAINER_SIZE_INVALID" ? "waiting-for-size" : (transient ? "fallback" : "failed"));
         const statusText = `SVG fallback — ${reason}`;
         _updateRendererLabel(statusText);
         // Sync the renderer selector so it accurately reflects the active renderer.
@@ -1425,13 +1522,21 @@
         );
         _updateInteractBar();
         _updateTodayDiagnostics(model);
+        if (transient) {
+          _scheduleRetry(container, reason);
+        }
         return;
       }
       _state.active3d = true;
       _state.restoreAttempts = 0;
+      _state.retryCount = 0;
+      _clearAutoRetry();
+      _setRendererLifecycle("rendered");
       _updateRendererLabel("WebGL 3D active");
       _hideRendererFallbackWarning();
       _updateInteractBar();
+      _updateLastRenderTimestamp();
+      _watchForBlankCanvas(container);
       _updateRendererDiagnostics();
     } else {
       renderer.refresh(
@@ -1449,6 +1554,8 @@
       );
       renderer.updateEnvironment?.(globalThis.SofEnvironmentState?.getEnvironmentState?.() || null);
       renderer.setMode(_state.viewMode);
+      _updateLastRenderTimestamp();
+      _setRendererLifecycle("ready");
     }
   }
 
@@ -1458,6 +1565,11 @@
     }
     _state.active3d = false;
     _state._3dInitInProgress = false;
+    if (_state.rendererMode === "svg" || _state.rendererMode === "table" || _state.rendererMode === "text") {
+      _setRendererLifecycle("fallback");
+    } else {
+      _setRendererLifecycle("not-started");
+    }
     _updateInteractBar();
   }
 
@@ -1625,8 +1737,8 @@
     const semantic = diag.semanticZoom || {};
     const rows = {
       "sphere-diag-requested":    "3d",
-      "sphere-diag-active":       _state.active3d ? "WebGL 3D active" : (_state.rendererMode === "svg" ? "Accessible SVG" : "SVG fallback"),
-      "sphere-diag-fallback":     _state.active3d ? "none" : (diag.lastInitError?.reason || "none"),
+      "sphere-diag-active":       _state.active3d ? `WebGL 3D active (${_state.rendererLifecycle})` : (_state.rendererMode === "svg" ? "Accessible SVG" : `SVG fallback (${_state.rendererLifecycle})`),
+      "sphere-diag-fallback":     _state.active3d ? "none" : (diag.lastInitError?.reason || _state.rendererLifecycle || "none"),
       "sphere-diag-webgl":        diag.webglAvailable ? "available" : "unavailable",
       "sphere-diag-webgl2":       diag.webgl2Available ? "available" : "unavailable",
       "sphere-diag-lib-version":  diag.threeVersion || r3d.THREE_VERSION || "—",
@@ -1636,6 +1748,8 @@
       "sphere-diag-dpr":          `${diag.requestedDevicePixelRatio || "—"} → ${diag.appliedDevicePixelRatio || "—"}`,
       "sphere-diag-quality":      _state.quality,
       "sphere-diag-last-error":   diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : "none",
+      "sphere-diag-init-duration-warn": diag.initDurationMs != null ? `${diag.initDurationMs}ms` : "—",
+      "sphere-diag-restore-attempts-warn": String(diag.restoreAttempts || 0),
       "sphere-diag-camera-distance": semantic.distance != null ? `${Number(semantic.distance).toFixed(3)}` : "—",
       "sphere-diag-semantic-band": semantic.band || "—",
       "sphere-diag-semantic-prev-band": semantic.previousBand || "—",
@@ -1779,6 +1893,7 @@
     if (!bridge || !textEl) return;
     const selected = model?.selectedPatternPosition || _resolveSelectedPatternPosition(model);
     const envState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+    _state.environmentLifecycle = _resolveEnvironmentLifecycle(envState);
     const layerVisible = !!_state.visibleLayers.environment;
     const place = envState?.place?.name || envState?.place?.label || "Location not set";
     const status = envState?.classification || envState?.statusLabel || envState?.status || "unavailable";
@@ -2578,7 +2693,9 @@
 
     const container = document.getElementById("sphere-container");
     if (!container) return;
+    _setRendererLifecycle("not-started");
     _installBrokenResourceGuard();
+    _bindRecoveryHooks(container);
 
     // Auto-open Sphere Settings panel on non-mobile viewports.
     const settingsGroup = document.querySelector(".sphere-settings-group");
@@ -2606,6 +2723,7 @@
     });
     window.addEventListener(globalThis.SofEnvironmentState?.EVENT_NAME || "sof:environment-change", event => {
       const nextState = event?.detail?.state || globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+      _state.environmentLifecycle = _resolveEnvironmentLifecycle(nextState);
       const renderer = globalThis.LivingTimeSphereRenderer3d;
       if (_state.active3d && renderer?.isInitialized?.()) {
         renderer.updateEnvironment?.(nextState);
@@ -2623,21 +2741,51 @@
     // Re-render on resize (debounced).
     let resizeTimer;
     if (typeof ResizeObserver !== "undefined") {
-      new ResizeObserver(() => {
+      _state._resizeObserver?.disconnect?.();
+      _state._resizeObserver = new ResizeObserver(() => {
         // Skip resize re-renders while 3D is still initializing — a
         // mid-init resize would start a second concurrent init call.
         if (_state._3dInitInProgress) return;
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
-          if (!_state.active3d) renderSphere(container);
+          renderSphere(container);
         }, 150);
-      }).observe(container);
+      });
+      _state._resizeObserver.observe(container);
     }
+  }
+
+  function getSphereDiagnostics() {
+    const container = document.getElementById("sphere-container");
+    const rendererDiag = globalThis.LivingTimeSphereRenderer3d?.getDiagnostics?.() || {};
+    const rect = container?.getBoundingClientRect?.() || { width: 0, height: 0 };
+    const envState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+    let modelReady = false;
+    try { modelReady = !!buildCurrentModel(); } catch { modelReady = false; }
+    return {
+      rendererState: _state.rendererLifecycle,
+      modelReady,
+      selectedDay: _state.selectedDayOfYear,
+      canvasPresent: !!container?.querySelector?.("canvas"),
+      canvasWidth: Number(rendererDiag.canvasWidth || 0),
+      canvasHeight: Number(rendererDiag.canvasHeight || 0),
+      containerWidth: Number(rect.width || 0),
+      containerHeight: Number(rect.height || 0),
+      webglAvailable: !!rendererDiag.webglAvailable,
+      contextLost: rendererDiag.stageState?.context === "lost",
+      lastRenderTimestamp: Number(rendererDiag.lastRenderTimestamp || _state.lastRenderTimestamp || 0),
+      rafActive: !!rendererDiag.rafActive,
+      environmentState: _resolveEnvironmentLifecycle(envState),
+      locationState: envState?.providerConfigured ? "configured" : "location-needed",
+      retryCount: Number(_state.retryCount || 0),
+    };
   }
 
   globalThis.LivingTimeSphereUi = Object.freeze({
     init,
     getState: () => Object.assign({}, _state),
     renderSphere: (container) => renderSphere(container || document.getElementById("sphere-container")),
+    getSphereDiagnostics,
   });
+  globalThis.getSphereDiagnostics = getSphereDiagnostics;
 })();

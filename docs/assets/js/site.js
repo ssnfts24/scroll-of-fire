@@ -506,41 +506,85 @@
   }
 
   function enableImageFallbacks() {
-    document
-      .querySelectorAll("img[data-fallbacks]")
-      .forEach(function (image) {
-        const fallbackString =
-          image.getAttribute("data-fallbacks") || "";
+    function sanitizeImageSource(value) {
+      const candidate = String(value || "").trim();
+      if (!candidate) return "";
+      try {
+        const url = new URL(candidate, document.baseURI);
+        const allowed = new Set(["http:", "https:", "data:", "blob:"]);
+        return allowed.has(url.protocol) ? url.href : "";
+      } catch (_) {
+        return "";
+      }
+    }
 
-        const fallbacks = fallbackString
-          .split(",")
-          .map(function (item) {
-            return item.trim();
-          })
-          .filter(Boolean);
+    function collapseBrokenMedia(image) {
+      if (!image || image.dataset.imageFallbackFailed === "true") return;
+      if (!image.complete || image.naturalWidth > 0 || image.naturalHeight > 0) return;
+      image.dataset.imageFallbackFailed = "true";
+      image.classList.add("image-fallback-failed");
+      image.hidden = true;
+      image.setAttribute("aria-hidden", "true");
+      const shell = image.closest("picture,figure,[data-home-product-media],[data-home-media-card],.home-product-slide");
+      if (shell && shell.children && shell.children.length <= 1) shell.hidden = true;
+    }
 
-        let fallbackIndex = 0;
+    function wireImage(image) {
+      if (!image || image.dataset.imageFallbackWired === "true") return;
+      image.dataset.imageFallbackWired = "true";
+      const fallbackString = image.getAttribute("data-fallbacks") || "";
+      const fallbacks = fallbackString
+        .split(",")
+        .map(function (item) {
+          return item.trim();
+        })
+        .filter(Boolean);
+      let fallbackIndex = 0;
 
-        function tryNextFallback() {
-          if (fallbackIndex >= fallbacks.length) {
-            image.removeEventListener(
-              "error",
-              tryNextFallback
-            );
-
-            image.classList.add("image-fallback-failed");
-            image.hidden = true;
-            return;
-          }
-
-          const nextSource = fallbacks[fallbackIndex];
-          fallbackIndex += 1;
-
-          image.src = nextSource;
+      function tryNextFallback() {
+        if (fallbackIndex >= fallbacks.length) {
+          image.removeEventListener("error", tryNextFallback);
+          collapseBrokenMedia(image);
+          return;
         }
+        const nextSource = fallbacks[fallbackIndex];
+        fallbackIndex += 1;
+        const safeSource = sanitizeImageSource(nextSource);
+        if (!safeSource) {
+          collapseBrokenMedia(image);
+          return;
+        }
+        image.src = safeSource;
+      }
 
-        image.addEventListener("error", tryNextFallback);
+      if (fallbacks.length) image.addEventListener("error", tryNextFallback);
+      image.addEventListener("error", function () {
+        if (!fallbacks.length) collapseBrokenMedia(image);
       });
+
+      if (image.complete && image.naturalWidth === 0) {
+        if (fallbacks.length) tryNextFallback();
+        else collapseBrokenMedia(image);
+      }
+    }
+
+    document.querySelectorAll("img").forEach(wireImage);
+    if ("MutationObserver" in window) {
+      const observer = new MutationObserver(records => {
+        records.forEach(record => {
+          record.addedNodes.forEach(node => {
+            if (!(node instanceof Element)) return;
+            if (node.tagName === "IMG") wireImage(node);
+            node.querySelectorAll?.("img").forEach(wireImage);
+          });
+          if (record.type === "attributes" && record.target?.tagName === "IMG") {
+            wireImage(record.target);
+            if (record.attributeName === "src") collapseBrokenMedia(record.target);
+          }
+        });
+      });
+      observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
+    }
   }
 
   function enhanceMediaLoading() {

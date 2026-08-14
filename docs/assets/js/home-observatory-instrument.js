@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const DEPENDENCIES = [
+  const REQUIRED_DEPENDENCIES = [
     "assets/js/astronomy/astronomy-version.js",
     "assets/js/astronomy/astronomy-sources.js",
     "assets/js/astronomy/timezone-tools.js",
@@ -34,7 +34,10 @@
     "assets/js/sphere/living-time-sphere-renderer-canvas.js",
     "assets/js/sphere/living-time-sphere-live-data.js",
     "assets/js/sphere/living-time-sphere-mount.js",
-    "assets/js/sphere/living-time-sphere-today.js",
+    "assets/js/sphere/living-time-sphere-today.js"
+  ];
+
+  const OPTIONAL_ENVIRONMENT_DEPENDENCIES = [
     "assets/js/environment/providers/open-meteo-forecast.js",
     "assets/js/environment/open-meteo-adapter.js",
     "assets/js/environment/location-command.js"
@@ -83,7 +86,15 @@
 
   async function ensureDependencies() {
     if (loadingPromise) return loadingPromise;
-    loadingPromise = Promise.all(DEPENDENCIES.map(loadScript));
+    loadingPromise = Promise.all(REQUIRED_DEPENDENCIES.map(loadScript))
+      .then(async () => {
+        const optional = await Promise.allSettled(OPTIONAL_ENVIRONMENT_DEPENDENCIES.map(loadScript));
+        optional
+          .filter(result => result.status === "rejected")
+          .forEach(result => {
+            console.warn("[HomeObservatoryInstrument] Optional environment dependency failed:", result.reason);
+          });
+      });
     return loadingPromise;
   }
 
