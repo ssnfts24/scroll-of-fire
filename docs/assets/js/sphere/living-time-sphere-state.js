@@ -122,6 +122,41 @@
     }),
   });
 
+  const GEOMETRY_LAYER_ARCHITECTURE = Object.freeze({
+    pattern: Object.freeze({
+      id: "pattern",
+      dataSource: ["PatternCalendar", "LivingTimeSphereModel"],
+      geometry: ["moon-sectors", "day-nodes", "week-gates", "year-gate", "outside-days"],
+      selectionMetadataType: "living-day",
+      semanticZoom: Object.freeze({ far: "regions-only", medium: "weeks-and-days", near: "exact-day-context", detail: "local-day-inspection" }),
+      performance: Object.freeze({ high: "full", balanced: "reduced labels", lowpower: "reduced segments", minimal: "svg fallback" }),
+    }),
+    solar: Object.freeze({
+      id: "solar",
+      dataSource: ["LivingTimeSphereModel", "LivingTimeSphereLiveData"],
+      geometry: ["solar-axis", "season-anchors", "solar-position-markers"],
+      selectionMetadataType: "solar-position",
+      semanticZoom: Object.freeze({ far: "major-anchors", medium: "progression-visible", near: "selected-vs-today", detail: "selected-solar-inspection" }),
+      performance: Object.freeze({ high: "all markers", balanced: "core markers", lowpower: "anchors and selected", minimal: "svg fallback" }),
+    }),
+    lunar: Object.freeze({
+      id: "lunar",
+      dataSource: ["SOFCalendar", "LivingTimeSphereModel", "LivingTimeSphereLiveData"],
+      geometry: ["lunar-orbit", "lunar-position-markers", "phase-anchors"],
+      selectionMetadataType: "lunar-position",
+      semanticZoom: Object.freeze({ far: "broad-lunar-state", medium: "phase-anchors", near: "selected-lunar-link", detail: "phase-and-illumination" }),
+      performance: Object.freeze({ high: "full", balanced: "phase anchors", lowpower: "selected/today only", minimal: "svg fallback" }),
+    }),
+    connections: Object.freeze({
+      id: "connections",
+      dataSource: ["LivingTimeSphereConnections"],
+      geometry: ["day-to-core", "day-to-solar", "day-to-lunar", "passage-links"],
+      selectionMetadataType: "connection",
+      semanticZoom: Object.freeze({ far: "selected-only", medium: "contextual", near: "focused-graph", detail: "expanded-local" }),
+      performance: Object.freeze({ high: "more concurrent links", balanced: "contextual subset", lowpower: "selected subset", minimal: "off" }),
+    }),
+  });
+
   function _pick(value, valid, fallback) {
     return valid.includes(value) ? value : fallback;
   }
@@ -232,6 +267,7 @@
     COMPACT_VISIBLE_LAYERS,
     MODE_LAYER_DEFAULTS,
     LAYER_PRESETS,
+    GEOMETRY_LAYER_ARCHITECTURE,
     VALID_MODES,
     VALID_RENDERERS,
     VALID_CONNECTION_MODES,

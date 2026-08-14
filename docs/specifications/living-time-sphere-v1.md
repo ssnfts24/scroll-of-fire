@@ -152,3 +152,45 @@ The sphere remains functional if Canvas or WebGL is unavailable. SVG is the prim
 | `living-time-sphere-export.js` | PNG, SVG, JSON exports |
 | `living-time-sphere-url-state.js` | URL parameter round-trip |
 | `living-time-sphere-ui.js` | DOM orchestration |
+
+## PR2 geometry and semantic zoom extension
+
+### Geometry layer architecture
+
+PR2 formalizes four shared geometry layers on the same observatory state:
+
+- **Pattern layer**: 13 moon sectors, 364 exact day nodes, 52 week gates, year-gate/out-of-week markers.
+- **Solar layer**: seasonal anchors (March/June/September/December), today solar marker, selected-date solar marker.
+- **Lunar layer**: astronomical lunar orbit marker, selected-date lunar marker, phase anchor semantics.
+- **Connections layer**: data-driven relationship lines (selected day ↔ pattern core / solar / lunar / passage).
+
+All layers consume shared selected date, today state, visibility state, and connection mode. No parallel sphere model is introduced.
+
+### Pattern coordinates
+
+- Exact day geometry uses canonical `patternAngleForDayOfYear(day)` (day-center mapping) across SVG and 3D.
+- Day metadata comes from `dayMetadataForDayOfYear(day)` and includes moon/day/week/day-of-week and gate status.
+- Current day and selected day are represented as distinct markers and can coexist.
+
+### Solar coordinates
+
+- Solar progression uses `solarSeasonAngleForDate(date)` with deterministic major seasonal anchors.
+- Major anchors map to March equinox (0°), June solstice (90°), September equinox (180°), December solstice (270°).
+- Selected-day and today solar markers are rendered independently.
+
+### Lunar coordinates
+
+- Lunar layer remains independent of 13-Moon numbering.
+- Astronomical lunar marker remains driven by lunar-cycle angle.
+- Selected-day lunar context carries phase/illumination metadata and separate visual emphasis.
+
+### Semantic zoom
+
+Semantic zoom state is centralized in `living-time-sphere-semantic-zoom.js`:
+
+- **FAR**: structural overview, selected/current emphasis, minimal labels/connections.
+- **MEDIUM**: week/day structure readable with constrained labels/connections.
+- **NEAR**: exact-day context with stronger selected-day relationships.
+- **DETAIL**: local inspection density with highest label/connection budget.
+
+The semantic zoom controller publishes a shared visibility/profile state consumed by renderers, layer visibility, labels, and connection budget.

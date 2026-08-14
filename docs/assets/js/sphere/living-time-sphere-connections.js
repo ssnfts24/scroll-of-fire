@@ -41,6 +41,11 @@
     return visible.filter(item => item.type !== "witness").slice(0, compact ? 8 : 12);
   }
 
+  function _filterByCategory(items, categories) {
+    if (!categories || typeof categories !== "object") return items;
+    return items.filter(item => categories[item.type] !== false);
+  }
+
   function buildRegistry({ model, spiral, state } = {}) {
     if (!model) return Object.freeze([]);
     const selected = model.selectedPatternPosition || model.todayPatternPosition || null;
@@ -73,12 +78,36 @@
       }));
       if (selected.weekGate?.[0]) {
         items.push(_connection(`selected-weekgate-${selected.dayOfPatternYear}`, {
-          type: "pattern",
+          type: "calendar",
           sourceMarkerId: `day-${selected.dayOfPatternYear}`,
-          targetMarkerId: `weekgate-${selected.weekOfMoon || Math.ceil((selected.day || 1) / 7)}`,
+          targetMarkerId: "core",
           relationship: "Selected day to Week Gate",
           direction: "outbound",
-          label: `${selected.weekGate[0]} ↔ Moon ${selected.moon} Day ${selected.day}`,
+          label: `${selected.weekGate[0]} · Week ${selected.weekOfMoon || Math.ceil((selected.day || 1) / 7)}`,
+          style: "comparison",
+          selected: true,
+        }));
+      }
+      if (selected.solar?.angle != null) {
+        items.push(_connection(`selected-solar-${selected.dayOfPatternYear}`, {
+          type: "solar",
+          sourceMarkerId: `day-${selected.dayOfPatternYear}`,
+          targetMarkerId: "solar-selected",
+          relationship: "Selected day to solar position",
+          direction: "outbound",
+          label: `Selected day ↔ ${selected.solar.gate || "Solar position"}`,
+          style: "progression",
+          selected: true,
+        }));
+      }
+      if (selected.lunarPhase || selected.lunarIllumination != null) {
+        items.push(_connection(`selected-lunar-${selected.dayOfPatternYear}`, {
+          type: "lunar",
+          sourceMarkerId: `day-${selected.dayOfPatternYear}`,
+          targetMarkerId: "lunar-selected",
+          relationship: "Selected day to astronomical Moon",
+          direction: "outbound",
+          label: `Selected day ↔ ${selected.lunarPhase || "Lunar state"}`,
           style: "comparison",
           selected: true,
         }));
@@ -150,7 +179,10 @@
       }
     }
 
-    return Object.freeze(_filterByMode(items, state?.connectionMode || "contextual", !!state?.compact));
+    const byMode = _filterByMode(items, state?.connectionMode || "contextual", !!state?.compact);
+    const byCategory = _filterByCategory(byMode, state?.connectionCategories);
+    const maxConnections = Number(state?.semanticZoom?.maxConnections || 0);
+    return Object.freeze(maxConnections > 0 ? byCategory.slice(0, maxConnections) : byCategory);
   }
 
   globalThis.LivingTimeSphereConnections = Object.freeze({

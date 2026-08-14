@@ -99,6 +99,19 @@
     return decorated;
   }
 
+  function _resolveSemanticState(state, container) {
+    const zoom = globalThis.LivingTimeSphereSemanticZoom;
+    if (!zoom?.resolveBand || !zoom?.resolveVisibility) return null;
+    const fallbackDist = globalThis.LivingTimeSphereCamera?.MODE_POSITIONS?.[state.mode]?.distance || 2.35;
+    const width = container?.clientWidth || (typeof window !== "undefined" ? window.innerWidth : 1024);
+    const band = zoom.resolveBand({ distance: fallbackDist, screenWidth: width });
+    return zoom.resolveVisibility({
+      baseLayers: state.visibleLayers || {},
+      band,
+      connectionMode: state.connectionMode,
+    });
+  }
+
   // ── Tier ↔ quality-preset helpers ────────────────────────────────
   //
   // ObservatoryCapabilityManager is the authoritative source for capability
@@ -192,6 +205,7 @@
         containerHeight: height,
         devicePixelRatio: typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1,
       });
+      const semanticZoomState = _resolveSemanticState(state, container);
       globalThis.LivingTimeSphereRendererSvg.renderInto(container, {
         model: sceneData.model,
         spiral: sceneData.spiral,
@@ -203,6 +217,7 @@
         moonLabelDistance: state.moonLabelDistance,
         dayLabelMode: state.dayLabelMode,
         connectionRegistry: sceneData.connectionRegistry,
+        semanticZoomState,
       });
     }
 

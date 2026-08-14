@@ -74,6 +74,7 @@ function loadSphereContext() {
     "docs/assets/js/alignment/alignment-url-state.js",
     "docs/assets/js/sphere/living-time-sphere-version.js",
     "docs/assets/js/sphere/living-time-sphere-state.js",
+    "docs/assets/js/sphere/living-time-sphere-semantic-zoom.js",
     "docs/assets/js/sphere/living-time-sphere-model.js",
     "docs/assets/js/sphere/living-time-sphere-layout.js",
     "docs/assets/js/sphere/living-time-sphere-connections.js",
@@ -532,6 +533,7 @@ test("Moons page: shared mount initializer is used", () => {
 
 test("Sphere page: 3D module scripts included", () => {
   const html = read("docs/living-time-sphere.html");
+  assert.ok(html.includes("living-time-sphere-semantic-zoom.js"), "semantic zoom module loaded");
   assert.ok(html.includes("living-time-sphere-materials.js"),  "materials loaded");
   assert.ok(html.includes("living-time-sphere-camera.js"),     "camera loaded");
   assert.ok(html.includes("living-time-sphere-animation.js"),  "animation loaded");
@@ -544,6 +546,19 @@ test("Sphere page: 3D module scripts included", () => {
   assert.ok(html.includes("living-time-sphere-live-data.js"),  "live-data module loaded");
   assert.ok(html.includes("living-time-sphere-renderer-3d.js"),"renderer-3d loaded");
   assert.ok(html.includes("living-time-sphere-today.js"),      "today module loaded");
+});
+
+test("LivingTimeSphereSemanticZoom: FAR band suppresses dense pattern detail", () => {
+  const ctx = loadSphereContext();
+  const state = ctx.LivingTimeSphereSemanticZoom.resolveVisibility({
+    baseLayers: { pattern: true, exactDays: true, weekGates: true, recurrence: true, outsideDays: true },
+    band: "far",
+    connectionMode: "contextual",
+  });
+  assert.equal(state.visibility.exactDays, false);
+  assert.equal(state.visibility.weekGates, false);
+  assert.equal(state.dayLabelMode, "hidden");
+  assert.ok(state.maxConnections <= 3);
 });
 
 test("Sphere page: quality and renderer controls present", () => {

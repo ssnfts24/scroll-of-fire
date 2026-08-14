@@ -8,6 +8,12 @@
   const MOONS = 13;
   const DAYS_PER_MOON = 28;
   const PATTERN_DAYS = 364; // 13 × 28
+  const SOLAR_ANCHORS = Object.freeze([
+    { key: "march-equinox", month: 2, day: 20, cycle: 0.0 },
+    { key: "june-solstice", month: 5, day: 20, cycle: 0.25 },
+    { key: "september-equinox", month: 8, day: 22, cycle: 0.5 },
+    { key: "december-solstice", month: 11, day: 21, cycle: 0.75 },
+  ]);
 
   function assertDependencies() {
     const required = ["AlignmentLedgerData", "LivingTimeSphereVersion"];
@@ -55,6 +61,60 @@
   // Solar season angle: 0° = March equinox, 90° = June solstice, etc.
   function solarSeasonAngleForCyclePosition(solarPos) {
     return Number((clamp(solarPos, 0, 1) * 360).toFixed(6));
+  }
+
+  function solarSeasonAngleForDate(dateInput) {
+    const date = dateInput instanceof Date ? new Date(dateInput.getTime()) : new Date(dateInput || Date.now());
+    if (Number.isNaN(date.getTime())) return 0;
+    const year = date.getUTCFullYear();
+    const gates = [
+      { key: "march-equinox", start: Date.UTC(year, 2, 20), cycle: 0.0 },
+      { key: "june-solstice", start: Date.UTC(year, 5, 20), cycle: 0.25 },
+      { key: "september-equinox", start: Date.UTC(year, 8, 22), cycle: 0.5 },
+      { key: "december-solstice", start: Date.UTC(year, 11, 21), cycle: 0.75 },
+      { key: "march-equinox-next", start: Date.UTC(year + 1, 2, 20), cycle: 1.0 },
+    ];
+    let active = gates[0];
+    let next = gates[1];
+    const now = date.getTime();
+    for (let i = 0; i < gates.length - 1; i += 1) {
+      if (now >= gates[i].start && now < gates[i + 1].start) {
+        active = gates[i];
+        next = gates[i + 1];
+        break;
+      }
+      if (now < gates[0].start) {
+        active = { key: "december-solstice-prev", start: Date.UTC(year - 1, 11, 21), cycle: -0.25 };
+        next = gates[0];
+      }
+    }
+    const span = Math.max(next.start - active.start, 1);
+    const progress = clamp((now - active.start) / span, 0, 1);
+    const cycle = active.cycle + (next.cycle - active.cycle) * progress;
+    return solarSeasonAngleForCyclePosition((cycle % 1 + 1) % 1);
+  }
+
+  function dayMetadataForDayOfYear(dayOfPatternYear) {
+    const dayOfYear = clamp(Math.round(Number(dayOfPatternYear) || 1), 1, PATTERN_DAYS);
+    const moon = Math.floor((dayOfYear - 1) / DAYS_PER_MOON) + 1;
+    const day = ((dayOfYear - 1) % DAYS_PER_MOON) + 1;
+    const week = Math.floor((day - 1) / 7) + 1;
+    const dayOfWeek = ((day - 1) % 7) + 1;
+    const moonData = globalThis.PatternCalendarData?.moons?.[moon - 1] || null;
+    const weekGate = globalThis.PatternCalendarData?.weekGates?.[week - 1] || null;
+    return Object.freeze({
+      type: "living-day",
+      moon,
+      moonName: moonData?.name || `Moon ${moon}`,
+      day,
+      dayOfPatternYear: dayOfYear,
+      week,
+      dayOfWeek,
+      weekGate: weekGate ? { label: weekGate[0], detail: weekGate[1] } : null,
+      shabbatGate: day === 2 || day === 9 || day === 16 || day === 23 ? "Shabbat Gate" : null,
+      preparationGate: dayOfWeek === 6 ? "Preparation Gate" : null,
+      returnGate: dayOfWeek === 1 ? "Return Gate" : null,
+    });
   }
 
   // Year spiral: 13-year study window, each year one revolution.
@@ -214,6 +274,7 @@
 
     return Object.freeze(Object.assign({}, model, {
       currentPatternAngle,
+      currentSolarSeasonAngle: solarSeasonAngleForDate(now),
       todayPatternPosition,
       viewMode: "today"
     }));
@@ -228,8 +289,11 @@
     moonSectorAngle,
     dayAngleWithinMoon,
     lunarAngleForCyclePosition,
+    solarSeasonAngleForDate,
     spiralAngleForYear,
     spiralRadiusForYear,
+    dayMetadataForDayOfYear,
+    SOLAR_ANCHORS,
     MOONS,
     DAYS_PER_MOON,
     PATTERN_DAYS

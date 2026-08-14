@@ -147,11 +147,13 @@
     return output;
   }
 
-  function renderDayPoints(model, rings, cx, cy, viewMode, width, dayLabelMode = "key") {
+  function renderDayPoints(model, rings, cx, cy, viewMode, width, dayLabelMode = "key", semanticZoomState = null) {
     const selected = model?.selectedPatternPosition || model?.todayPatternPosition || null;
     const today = model?.todayPatternPosition || null;
     const mobile = width < 420;
     const activeMoon = selected?.moon ?? today?.moon ?? null;
+    const band = semanticZoomState?.band || "medium";
+    const isFar = band === "far";
     let output = "";
     for (let dayOfYear = 1; dayOfYear <= 364; dayOfYear += 1) {
       const moon = Math.floor((dayOfYear - 1) / 28) + 1;
@@ -162,6 +164,7 @@
       const isToday = today?.dayOfPatternYear === dayOfYear;
       const isShabbat = [2, 9, 16, 23].includes(day);
       const isWeekGate = day % 7 === 0;
+      if (isFar && !isSelected && !isToday && day !== 1) continue;
       const show = isSelected
         || isToday
         || moon === activeMoon
@@ -201,8 +204,11 @@
     return output;
   }
 
-  function renderConnections(model, connectionRegistry, rings, cx, cy) {
+  function renderConnections(model, connectionRegistry, rings, cx, cy, semanticZoomState = null) {
     if (!Array.isArray(connectionRegistry) || !connectionRegistry.length) return "";
+    const limitedRegistry = semanticZoomState?.maxConnections
+      ? connectionRegistry.slice(0, semanticZoomState.maxConnections)
+      : connectionRegistry;
     const pointForId = (id) => {
       if (!id) return null;
       if (id === "core" || id === "passageMidpoint") return { x: cx, y: cy };
@@ -213,7 +219,7 @@
       if (dayMatch) return polarToXY(globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(Number(dayMatch[1])), rings.patternRing, cx, cy);
       return null;
     };
-    return connectionRegistry.map(connection => {
+    return limitedRegistry.map(connection => {
       const from = pointForId(connection.sourceMarkerId);
       const to = pointForId(connection.targetMarkerId);
       if (!from || !to) return "";
@@ -250,7 +256,7 @@
   }
 
   // Build the complete SVG string for the sphere.
-  function buildSvgString({ model, spiral, layout, visibleLayers, selectedYear, viewMode, moonLabelMode = "contextual", moonLabelDistance = "standard", dayLabelMode = "key", connectionRegistry = [] } = {}) {
+  function buildSvgString({ model, spiral, layout, visibleLayers, selectedYear, viewMode, moonLabelMode = "contextual", moonLabelDistance = "standard", dayLabelMode = "key", connectionRegistry = [], semanticZoomState = null } = {}) {
     assertDeps();
 
     const { w, h, cx, cy, rings } = layout;
@@ -259,20 +265,23 @@
       markers: true, recurrence: false, spiral: true
     };
 
+    const semanticLayers = semanticZoomState?.visibility || {};
+    const effectiveDayLabelMode = semanticZoomState?.dayLabelMode || dayLabelMode;
+    const effectiveMoonLabelMode = semanticZoomState?.moonLabelMode || moonLabelMode;
     const parts = [
       `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" class="living-time-sphere-svg sphere-mode-${esc(viewMode || "today")}" role="img" aria-label="Living Time Sphere — ${esc(String(selectedYear || model?.year || ""))}">`,
       `<title>Living Time Sphere</title>`,
       `<desc>Interactive sphere showing 13 Moon Pattern structure and astronomical cycles.</desc>`,
       renderOuterBorder(rings, cx, cy),
       vl.pattern  ? renderPatternRing(rings, cx, cy) : "",
-      vl.pattern  ? renderMoonSectors(model?.moonSectors || [], rings, cx, cy, { model, viewMode, moonLabelMode, moonLabelDistance }) : "",
-      vl.exactDays !== false && vl.pattern ? renderDayTicks(model, rings, cx, cy) : "",
-      vl.pattern  ? renderDayPoints(model, rings, cx, cy, viewMode, w, dayLabelMode) : "",
+      vl.pattern  ? renderMoonSectors(model?.moonSectors || [], rings, cx, cy, { model, viewMode, moonLabelMode: effectiveMoonLabelMode, moonLabelDistance }) : "",
+      vl.exactDays !== false && semanticLayers.exactDays !== false && vl.pattern ? renderDayTicks(model, rings, cx, cy) : "",
+      vl.pattern  ? renderDayPoints(model, rings, cx, cy, viewMode, w, effectiveDayLabelMode, semanticZoomState) : "",
       vl.solar    ? renderSolarAxis(rings, cx, cy) : "",
       vl.spiral   ? renderSpiralPath(spiral, rings, cx, cy, vl.spiral) : "",
       vl.passage  ? renderPassageArc(model?.passage  || {}, rings, cx, cy, vl.passage) : "",
       vl.lunar    ? renderLunarOrbit(model?.lunarAngle || 0, rings, cx, cy, vl.lunar) : "",
-      vl.connections !== false ? renderConnections(model, connectionRegistry, rings, cx, cy) : "",
+      vl.connections !== false ? renderConnections(model, connectionRegistry, rings, cx, cy, semanticZoomState) : "",
       vl.markers  ? renderAnnualMarkers(spiral, rings, cx, cy, selectedYear, vl.markers) : "",
       vl.markers  ? renderYearLabels(spiral, rings, cx, cy, selectedYear, vl.markers, viewMode) : "",
       model        ? renderEquinoxGate(model, rings, cx, cy) : "",
@@ -285,10 +294,10 @@
   }
 
   // Render into a container DOM element.
-  function renderInto(container, { model, spiral, layout, visibleLayers, selectedYear, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry } = {}) {
+  function renderInto(container, { model, spiral, layout, visibleLayers, selectedYear, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, semanticZoomState } = {}) {
     assertDeps();
     if (!container) return;
-    const svg = buildSvgString({ model, spiral, layout, visibleLayers, selectedYear, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry });
+    const svg = buildSvgString({ model, spiral, layout, visibleLayers, selectedYear, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, semanticZoomState });
     container.innerHTML = svg;
 
     // Wire marker click events.
