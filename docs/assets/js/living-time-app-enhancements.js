@@ -55,9 +55,8 @@
   function mountAppBar() {
     const page = document.body;
     if (!page || document.querySelector(".living-app-dock")) return;
-    const isSphere = /living-time-sphere\.html$/.test(location.pathname);
     const isMoons = /moons\.html$/.test(location.pathname);
-    if (!isSphere && !isMoons) return;
+    if (!isMoons) return;
     const dock = document.createElement("nav");
     dock.className = "living-app-dock";
     dock.setAttribute("aria-label", "Living Time app navigation");

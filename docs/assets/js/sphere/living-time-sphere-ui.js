@@ -1502,6 +1502,32 @@
     if (el) el.hidden = true;
     const pill = document.getElementById("sphere-renderer-fallback-pill");
     if (pill) pill.hidden = true;
+    const reasonEl = el?.querySelector?.(".sphere-fallback-reason");
+    if (reasonEl) reasonEl.textContent = "Accessible SVG view is active";
+    [
+      "sphere-diag-webgl-warn",
+      "sphere-diag-webgl2-warn",
+      "sphere-diag-three-warn",
+      "sphere-diag-renderer-warn",
+      "sphere-diag-context-warn",
+      "sphere-diag-first-frame-warn",
+      "sphere-diag-tier-warn",
+      "sphere-diag-dpr-warn",
+      "sphere-diag-memory-warn",
+      "sphere-diag-cpu-warn",
+      "sphere-diag-reduced-warn",
+      "sphere-diag-fallback-warn",
+      "sphere-diag-last-error-warn",
+      "sphere-diag-init-duration-warn",
+      "sphere-diag-restore-attempts-warn",
+      "sphere-diag-module-source-warn",
+      "sphere-diag-local-url-warn",
+    ].forEach(id => {
+      const row = document.getElementById(id);
+      if (row) row.textContent = "—";
+    });
+    const fallbackRow = document.getElementById("sphere-diag-fallback-warn");
+    if (fallbackRow) fallbackRow.textContent = "none";
   }
 
   function _minimizeRendererFallbackWarning() {
@@ -1598,19 +1624,14 @@
     const el = document.getElementById("sphere-mode-summary");
     if (!el) return;
     const mode = _state.viewMode;
-    const selected = model?.selectedPatternPosition || _resolveSelectedPatternPosition(model);
-    const selectedLabel = selected?.moon != null
-      ? `Moon ${selected.moon} · Day ${selected.day} · Day ${selected.dayOfPatternYear}/364`
-      : "Unavailable";
     if (mode === "today") {
-      el.textContent = _selectedDaySummary(selected);
+      el.textContent = "Today view";
     } else if (mode === "passage") {
-      const tp = model?.sourceRecord?.equinox?.patternPosition || {};
-      el.textContent = `${model?.year || "—"} Equinox Passage · Moon ${tp.moon || "—"} · Day ${tp.day || "—"} → Year Gate · ${selectedLabel}`;
+      el.textContent = `${model?.year || "—"} Equinox passage`;
     } else if (mode === "years") {
-      el.textContent = `2014–2026 Alignment Spiral · Year ${_state.year} · ${selectedLabel}`;
+      el.textContent = `2014–2026 Alignment spiral · Year ${_state.year}`;
     } else if (mode === "pattern") {
-      el.textContent = `13 Moons × 28 Days · ${selectedLabel}`;
+      el.textContent = "13 Moons × 28 Days";
     }
   }
 
@@ -1805,7 +1826,7 @@
       : "Live data becomes available after a weather or geomagnetic provider is configured.";
 
     el.innerHTML = `
-      <h3 class="sphere-details-heading">${_escapeHtml(_selectedDaySummary(selected))}</h3>
+      <h3 class="sphere-details-heading">Selected day details</h3>
       <div class="sphere-details-section">
         <h4 class="sphere-details-subheading">Selected Day</h4>
         <dl class="sphere-details-grid">

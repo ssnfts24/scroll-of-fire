@@ -1244,36 +1244,6 @@
       pts.push(new THREE.Vector3(x, 0, z));
     }
 
-    function buildSolarProgressArc(startAngle, endAngle) {
-      if (!_THREE) return null;
-      const THREE = _THREE;
-      const mat = globalThis.LivingTimeSphereM;
-      const r = mat.SIZES.solarAxis;
-      let sweep = endAngle - startAngle;
-      if (sweep < 0) sweep += 360;
-      const steps = Math.max(16, Math.round(Math.abs(sweep)));
-      const tilt = 23.5 * Math.PI / 180;
-      const pts = [];
-      for (let i = 0; i <= steps; i += 1) {
-        const angle = startAngle + (i / steps) * sweep;
-        const rad = (angle * Math.PI) / 180;
-        pts.push(new THREE.Vector3(
-          r * Math.sin(tilt) * Math.cos(rad),
-          r * Math.cos(tilt) * Math.cos(rad),
-          r * Math.sin(rad)
-        ));
-      }
-      const geo = new THREE.BufferGeometry().setFromPoints(pts);
-      return new THREE.Line(geo, new THREE.LineDashedMaterial({
-        color: 0xffe7a8,
-        transparent: true,
-        opacity: 0.7,
-        dashSize: 0.03,
-        gapSize: 0.02,
-        depthWrite: false,
-      }));
-    }
-
     // Close gap cleanly
     const curve = new THREE.CatmullRomCurve3(pts, false, "centripetal");
     const geo   = new THREE.TubeGeometry(curve, steps * 2, mat.SIZES.tubeRadius * 1.5, 6, false);
@@ -1286,6 +1256,36 @@
       roughness: 0.5,
     });
     return new THREE.Mesh(geo, m);
+  }
+
+  function buildSolarProgressArc(startAngle, endAngle) {
+    if (!_THREE) return null;
+    const THREE = _THREE;
+    const mat = globalThis.LivingTimeSphereM;
+    const r = mat.SIZES.solarAxis;
+    let sweep = endAngle - startAngle;
+    if (sweep < 0) sweep += 360;
+    const steps = Math.max(16, Math.round(Math.abs(sweep)));
+    const tilt = 23.5 * Math.PI / 180;
+    const pts = [];
+    for (let i = 0; i <= steps; i += 1) {
+      const angle = startAngle + (i / steps) * sweep;
+      const rad = (angle * Math.PI) / 180;
+      pts.push(new THREE.Vector3(
+        r * Math.sin(tilt) * Math.cos(rad),
+        r * Math.cos(tilt) * Math.cos(rad),
+        r * Math.sin(rad)
+      ));
+    }
+    const geo = new THREE.BufferGeometry().setFromPoints(pts);
+    return new THREE.Line(geo, new THREE.LineDashedMaterial({
+      color: 0xffe7a8,
+      transparent: true,
+      opacity: 0.7,
+      dashSize: 0.03,
+      gapSize: 0.02,
+      depthWrite: false,
+    }));
   }
 
   function buildSpiralPath(spiralYears) {
