@@ -536,8 +536,8 @@
         image.style.overflow = "hidden";
       }
       const shell = image.closest("picture,figure,[data-home-product-media],[data-home-media-card],.home-product-slide");
+      if (shell) shell.hidden = true;
       if (shell) {
-        shell.hidden = true;
         shell.classList.add("image-fallback-shell-hidden");
       }
       let parent = image.parentElement;
