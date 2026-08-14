@@ -9,6 +9,16 @@
   let _state = {
     year:          2026,
     viewMode:      "today",
+    requestedViewMode: "today",
+    activeViewMode: "today",
+    previousViewMode: "today",
+    latestRequestedMode: null,
+    modeTransitionState: "idle",
+    modeTransitionRevision: 0,
+    modeTransitionInFlight: false,
+    modeTransitionFailure: null,
+    lastModeTransitionDuration: 0,
+    modeTransitionMetrics: [],
     timeZone:      "America/Los_Angeles",
     boundaryMode:  "sunset",
     manualSunset:  "18:00",
@@ -62,6 +72,8 @@
     lastNavActionAt: 0,
     lastNavActionId: "",
     _selectedLongTaskObserver: null,
+    layerStateSource: "default",
+    userCustomizedLayers: false,
   };
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
   const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
@@ -115,6 +127,8 @@
     const parsed = globalThis.LivingTimeSphereUrlState.parseSphereUrl(location.href);
     if (parsed.year)         _state.year         = parsed.year;
     if (parsed.viewMode)     _state.viewMode     = parsed.viewMode;
+    _state.requestedViewMode = _state.viewMode;
+    _state.activeViewMode = _state.viewMode;
     if (parsed.timeZone)     _state.timeZone     = parsed.timeZone;
     if (parsed.boundaryMode) _state.boundaryMode = parsed.boundaryMode;
     if (parsed.manualSunset) _state.manualSunset = parsed.manualSunset;
@@ -131,6 +145,7 @@
     if (parsed.dayLabelMode)   _state.dayLabelMode = parsed.dayLabelMode;
     if (parsed.hasExplicitLayers) {
       _urlHasExplicitLayers = true;
+      _state.layerStateSource = "url-explicit";
       for (const k of Object.keys(_state.visibleLayers)) _state.visibleLayers[k] = false;
       for (const l of (parsed.layers || [])) _state.visibleLayers[l] = true;
     }
@@ -503,11 +518,21 @@
   }
 
   function buildCurrentModel() {
+    return _buildModelForMode(_state.viewMode);
+  }
+
+  function _buildModelForMode(mode) {
     const opts = { year: _state.year, timeZone: _state.timeZone, boundaryMode: _state.boundaryMode, manualSunset: _state.manualSunset };
-    const baseModel = (_state.viewMode === "today" || _state.viewMode === "pattern")
-      ? globalThis.LivingTimeSphereModel.buildTodayModel(opts)
-      : globalThis.LivingTimeSphereModel.buildYearModel(opts);
-    return _decorateModel(baseModel);
+    const baseModel = globalThis.LivingTimeSphereModel.buildYearModel(opts);
+    const model = _decorateModel(baseModel);
+    const selected = model?.selectedPatternPosition || null;
+    const today = model?.todayPatternPosition || null;
+    const dayOfYear = selected?.dayOfPatternYear ?? today?.dayOfPatternYear ?? null;
+    if (dayOfYear != null) {
+      model.currentPatternAngle = globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(dayOfYear);
+    }
+    model.viewMode = mode || _state.viewMode;
+    return model;
   }
 
   function _spiralCacheKey() {
@@ -525,6 +550,119 @@
       _state._spiralCacheKey = key;
     }
     return _state._spiralCache;
+  }
+
+  function _modeReadiness(mode, model, spiral) {
+    const patternReady = !!(model?.moonSectors?.length >= 13);
+    const spiralReady = !!(spiral?.years?.length);
+    const passageReady = !!(model?.passage && Number.isFinite(Number(model.passage.startAngle)) && Number.isFinite(Number(model.passage.endAngle)));
+    const cameraFitReady = !!globalThis.LivingTimeSphereCamera?.MODE_POSITIONS?.[mode || "today"];
+    let ready = patternReady && cameraFitReady;
+    if (mode === "years") ready = ready && spiralReady;
+    if (mode === "passage") ready = ready && passageReady;
+    return {
+      ready: !!ready,
+      patternReady,
+      spiralReady,
+      passageReady,
+      cameraFitReady,
+    };
+  }
+
+  function _recordModeTransitionMetric(metric) {
+    _state.modeTransitionMetrics.push(metric);
+    if (_state.modeTransitionMetrics.length > 120) _state.modeTransitionMetrics.shift();
+  }
+
+  function _flushViewModeTransitions(container) {
+    if (!container || _state.modeTransitionInFlight) return;
+    _state.modeTransitionInFlight = true;
+    while (_state.latestRequestedMode) {
+      const targetMode = _state.latestRequestedMode;
+      _state.latestRequestedMode = null;
+      const revision = ++_state.modeTransitionRevision;
+      const startedAt = performance.now();
+      const previousMode = _state.viewMode;
+      _state.modeTransitionState = "preparing";
+      _state.requestedViewMode = targetMode;
+      _state.modeTransitionFailure = null;
+
+      let model = null;
+      let spiral = null;
+      let readiness = null;
+      try {
+        model = _buildModelForMode(targetMode);
+        spiral = _getCachedSpiral();
+        readiness = _modeReadiness(targetMode, model, spiral);
+      } catch (error) {
+        readiness = { ready: false, patternReady: false, spiralReady: false, passageReady: false, cameraFitReady: false, error: String(error?.message || error || "mode-prepare-failed") };
+      }
+
+      if (_state.latestRequestedMode && _state.latestRequestedMode !== targetMode) {
+        _recordModeTransitionMetric({
+          revision,
+          requestedViewMode: targetMode,
+          previousViewMode: previousMode,
+          activeViewMode: _state.viewMode,
+          modeTransitionState: "stale-discarded",
+          durationMs: Number((performance.now() - startedAt).toFixed(2)),
+          readiness: readiness || null,
+        });
+        continue;
+      }
+
+      if (!readiness?.ready) {
+        _state.modeTransitionState = "failed";
+        _state.modeTransitionFailure = Object.freeze({
+          revision,
+          requestedViewMode: targetMode,
+          activeViewMode: _state.viewMode,
+          readiness: readiness || null,
+          at: Date.now(),
+        });
+        _state.lastModeTransitionDuration = Number((performance.now() - startedAt).toFixed(2));
+        _recordModeTransitionMetric({
+          revision,
+          requestedViewMode: targetMode,
+          previousViewMode: previousMode,
+          activeViewMode: _state.viewMode,
+          modeTransitionState: "failed-readiness",
+          durationMs: _state.lastModeTransitionDuration,
+          readiness: readiness || null,
+        });
+        continue;
+      }
+
+      _state.modeTransitionState = "committing";
+      _state.previousViewMode = previousMode;
+      _state.viewMode = targetMode;
+      _state.activeViewMode = targetMode;
+      _setModeDefaultLayers(targetMode);
+      _setModeDefaultSelectedMarker(targetMode);
+      _syncModeButtons();
+      if (_state.active3d) globalThis.LivingTimeSphereRenderer3d?.setMode(targetMode);
+      renderSphere(container);
+      _state.modeTransitionState = "active";
+      _state.lastModeTransitionDuration = Number((performance.now() - startedAt).toFixed(2));
+      _recordModeTransitionMetric({
+        revision,
+        requestedViewMode: targetMode,
+        previousViewMode: previousMode,
+        activeViewMode: _state.viewMode,
+        modeTransitionState: "applied",
+        durationMs: _state.lastModeTransitionDuration,
+        readiness,
+      });
+    }
+    _state.modeTransitionInFlight = false;
+    if (_state.modeTransitionState !== "failed") _state.modeTransitionState = "idle";
+  }
+
+  function _requestViewModeTransition(container, mode) {
+    const normalized = ["today", "pattern", "years", "passage"].includes(mode) ? mode : "today";
+    _state.requestedViewMode = normalized;
+    _state.latestRequestedMode = normalized;
+    _flushViewModeTransitions(container);
   }
 
   function _readLocalSetting(key) {
@@ -992,6 +1130,10 @@
       default:
         break;
     }
+    _state.requestedViewMode = _state.viewMode;
+    _state.activeViewMode = _state.viewMode;
+    _state.layerStateSource = "user-customized";
+    _state.userCustomizedLayers = true;
   }
 
   function _syncFieldRangeButtons() {
@@ -1591,6 +1733,8 @@
   function renderSphere(container) {
     if (!container) return;
     _state.fullRenderCount += 1;
+    if (!_state.requestedViewMode) _state.requestedViewMode = _state.viewMode;
+    _state.activeViewMode = _state.viewMode;
 
     // Show/hide data table and text summary views
     _updateAlternateViews();
@@ -1715,22 +1859,16 @@
           reducedMotion,
           onYearSelect: year => {
             _state.year = year;
-            _state.viewMode = "passage";
-            _setModeDefaultLayers("passage");
-            _setModeDefaultSelectedMarker("passage");
-            _syncModeButtons();
             _syncYearSelect(year);
             globalThis.LivingTimeSphereAccessibility?.announce?.(`Year ${year} selected. Passage view.`);
-            renderSphere(container);
+            _requestViewModeTransition(container, "passage");
           },
           onMarkerSelect: marker => {
             if (!marker) return;
             if (marker.type === "day" && marker.dayOfPatternYear) {
               globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${marker.day}, Day ${marker.dayOfPatternYear} of 364.`);
               if (_state.viewMode === "years") {
-                _state.viewMode = "pattern";
-                _setModeDefaultLayers("pattern");
-                _syncModeButtons();
+                _requestViewModeTransition(container, "pattern");
               }
               _requestSelectedDayUpdate(container, marker.dayOfPatternYear);
               return;
@@ -2067,6 +2205,13 @@
       "sphere-diag-explicit-layers": _urlHasExplicitLayers ? "yes" : "no",
       "sphere-diag-env-state": _state.environmentLifecycle || "idle",
       "sphere-diag-container-size": `${Math.round(Number(_state._latestContainerSize?.w || 0))} × ${Math.round(Number(_state._latestContainerSize?.h || 0))}`,
+      "sphere-diag-view-requested": _state.requestedViewMode || _state.viewMode || "today",
+      "sphere-diag-view-active": _state.activeViewMode || _state.viewMode || "today",
+      "sphere-diag-view-previous": _state.previousViewMode || "today",
+      "sphere-diag-view-transition-state": _state.modeTransitionState || "idle",
+      "sphere-diag-view-transition-rev": String(Number(_state.modeTransitionRevision || 0)),
+      "sphere-diag-view-transition-ms": Number(_state.lastModeTransitionDuration || 0) > 0 ? `${Number(_state.lastModeTransitionDuration).toFixed(2)}ms` : "—",
+      "sphere-diag-layer-state-source": _state.layerStateSource || "default",
     };
     for (const [id, val] of Object.entries(rows)) {
       const el = document.getElementById(id);
@@ -2109,6 +2254,8 @@
 
   function _setModeDefaultLayers(mode) {
     if (_urlHasExplicitLayers) return;
+    if (_state.userCustomizedLayers) return;
+    _state.layerStateSource = "mode-default";
     if (mode === "today") {
       _state.visibleLayers.exactDays = true;
       _state.visibleLayers.weekGates = true;
@@ -2203,11 +2350,25 @@
     _state.environmentLifecycle = _resolveEnvironmentLifecycle(envState);
     const layerVisible = !!_state.visibleLayers.environment;
     const place = envState?.place?.name || envState?.place?.label || "Location not set";
-    const status = envState?.classification || envState?.statusLabel || envState?.status || "unavailable";
+    const providerState = _state.environmentLifecycle || "idle";
+    const providerLabel = providerState === "loading"
+      ? "Weather loading in background"
+      : providerState === "ready"
+        ? "Weather ready"
+        : providerState === "cached"
+          ? "Weather cached"
+          : providerState === "stale"
+            ? "Weather stale"
+            : providerState === "error"
+              ? "Environment unavailable"
+              : providerState === "location-needed"
+                ? "Location required"
+                : "Environment idle";
     const selectedLabel = selected?.moon != null
       ? `Moon ${selected.moon} Day ${selected.day}`
       : "Selected day unavailable";
-    textEl.textContent = `${layerVisible ? "Environment layer ON" : "Environment layer OFF"} · ${place} · ${status} · mapped around ${selectedLabel}.`;
+    const layerLabel = layerVisible ? "Environment layer ON" : "Environment layer OFF";
+    textEl.textContent = `${layerLabel} · ${providerLabel}${providerState === "loading" || providerState === "ready" || providerState === "cached" ? ` · ${place}` : ""} · mapped around ${selectedLabel}.`;
     bridge.classList.toggle("is-off", !layerVisible);
   }
 
@@ -2220,7 +2381,7 @@
 
   function _syncModeButtons() {
     document.querySelectorAll("[id^='sphere-mode-']").forEach(b => b.setAttribute("aria-pressed", "false"));
-    const active = document.getElementById(`sphere-mode-${_state.viewMode}`);
+    const active = document.getElementById(`sphere-mode-${_state.activeViewMode || _state.viewMode}`);
     if (active) active.setAttribute("aria-pressed", "true");
   }
 
@@ -2424,6 +2585,8 @@
         const id = button.getAttribute("data-field-layer");
         const item = field.fields.find(entry => entry.id === id);
         if (!item?.layerId) return;
+        _state.userCustomizedLayers = true;
+        _state.layerStateSource = "user-customized";
         _setMappedLayer(item.layerId, !_mappedLayerVisible(item.layerId));
         _syncLayerCheckboxes();
         renderSphere(document.getElementById("sphere-container"));
@@ -2434,6 +2597,8 @@
       button.addEventListener("click", () => {
         const action = button.getAttribute("data-sphere-action");
         if (action === "show-fields") {
+          _state.userCustomizedLayers = true;
+          _state.layerStateSource = "user-customized";
           field.fields.forEach(item => {
             if (item.layerId && item.status !== "Unavailable" && item.status !== "Not checked") {
               _setMappedLayer(item.layerId, true);
@@ -2651,12 +2816,7 @@
       const btn = document.getElementById(`sphere-mode-${mode}`);
       if (!btn) return;
       btn.addEventListener("click", () => {
-        _state.viewMode = mode;
-        _setModeDefaultLayers(mode);
-        _setModeDefaultSelectedMarker(mode);
-        _syncModeButtons();
-        if (_state.active3d) globalThis.LivingTimeSphereRenderer3d?.setMode(mode);
-        renderSphere(container);
+        _requestViewModeTransition(container, mode);
       });
     });
 
@@ -2728,6 +2888,8 @@
       cb.addEventListener("change", () => {
         if (_syncingLayerControls) return;
         _state.visibleLayers[layer] = cb.checked;
+        _state.userCustomizedLayers = true;
+        _state.layerStateSource = "user-customized";
         const renderer = globalThis.LivingTimeSphereRenderer3d;
         if (_state.active3d && renderer?.isInitialized?.() && typeof renderer.setLayerVisibility === "function") {
           const updated = renderer.setLayerVisibility(layer, cb.checked);
@@ -2975,10 +3137,9 @@
       const y = e.detail?.year;
       if (!y) return;
       _state.year = y;
-      _state.viewMode = "passage";
       _syncYearSelect(y);
       globalThis.LivingTimeSphereAccessibility.announce(`Year ${y} selected. Switching to Passage view.`);
-      renderSphere(container);
+      _requestViewModeTransition(container, "passage");
     });
 
     container.addEventListener("sphere:marker-select", e => {
@@ -3168,6 +3329,9 @@
     }
     _setModeDefaultLayers(_state.viewMode);
     if (!_state.selectedMarker) _setModeDefaultSelectedMarker(_state.viewMode);
+    _state.requestedViewMode = _state.viewMode;
+    _state.activeViewMode = _state.viewMode;
+    _state.previousViewMode = _state.viewMode;
     _syncModeButtons();
 
     // Hide the interact bar immediately — it will be shown only after
@@ -3191,18 +3355,25 @@
       const renderer = globalThis.LivingTimeSphereRenderer3d;
       if (_state.active3d && renderer?.isInitialized?.()) {
         renderer.updateEnvironment?.(nextState);
-      } else {
+        _updateEnvironmentBridge(buildCurrentModel());
+        _updateRendererDiagnostics();
+      } else if (_state.visibleLayers.environment) {
         renderSphere(container);
+      } else {
+        _updateEnvironmentBridge(buildCurrentModel());
+        _updateRendererDiagnostics();
       }
     });
     window.addEventListener("popstate", () => {
       const parsed = globalThis.LivingTimeSphereUrlState?.parseSphereUrl?.(location.href) || {};
       if (parsed.year) _state.year = parsed.year;
-      if (parsed.viewMode) _state.viewMode = parsed.viewMode;
+      if (parsed.viewMode) _state.requestedViewMode = parsed.viewMode;
       if (parsed.marker) _state.selectedMarker = parsed.marker;
       const markerDay = _selectedDayFromMarker(parsed.marker);
       if (markerDay != null) {
         _requestSelectedDayUpdate(container, markerDay);
+      } else if (parsed.viewMode && parsed.viewMode !== _state.viewMode) {
+        _requestViewModeTransition(container, parsed.viewMode);
       } else {
         renderSphere(container);
       }
@@ -3244,6 +3415,15 @@
       activeRendererMode: _state.activeRendererMode,
       modelReady,
       selectedDay: _state.selectedDayOfYear,
+      requestedViewMode: _state.requestedViewMode || _state.viewMode,
+      activeViewMode: _state.activeViewMode || _state.viewMode,
+      previousViewMode: _state.previousViewMode || _state.viewMode,
+      modeTransitionState: _state.modeTransitionState || "idle",
+      modeTransitionRevision: Number(_state.modeTransitionRevision || 0),
+      latestRequestedMode: _state.latestRequestedMode || null,
+      lastModeTransitionDuration: Number(_state.lastModeTransitionDuration || 0),
+      modeTransitionFailure: _state.modeTransitionFailure || null,
+      modeTransitionMetrics: (_state.modeTransitionMetrics || []).slice(-20),
       baselineSvgVisible: !!container?.querySelector?.(".living-time-sphere-svg"),
       threeDInitInProgress: !!_state._3dInitInProgress,
       threeDInitAttempt: Number(_state._3dInitGeneration || 0),
@@ -3271,6 +3451,10 @@
       selectedUpdateLongTasks: (_state.selectedUpdateLongTasks || []).slice(-20),
       selectedUpdateLastWatchdog: _state.selectedUpdateLastWatchdog || null,
       runtimeDebug: _collectRuntimeDebugSnapshot(),
+      layerStateSource: _state.layerStateSource || "default",
+      userCustomizedLayers: !!_state.userCustomizedLayers,
+      buildVersion: globalThis.LivingTimeSphereVersion?.buildMetadata || null,
+      sphereRendererVersion: globalThis.LivingTimeSphereVersion?.version || null,
     };
   }
 

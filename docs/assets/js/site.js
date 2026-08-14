@@ -520,13 +520,26 @@
 
     function collapseBrokenMedia(image) {
       if (!image || image.dataset.imageFallbackFailed === "true") return;
-      if (!image.complete || image.naturalWidth > 0 || image.naturalHeight > 0) return;
+      const tagName = String(image.tagName || "").toUpperCase();
+      const isImg = tagName === "IMG";
+      if (isImg && (!image.complete || image.naturalWidth > 0 || image.naturalHeight > 0)) return;
       image.dataset.imageFallbackFailed = "true";
       image.classList.add("image-fallback-failed");
       image.hidden = true;
       image.setAttribute("aria-hidden", "true");
+      if (image.style) {
+        image.style.display = "none";
+        image.style.width = "0";
+        image.style.height = "0";
+        image.style.minHeight = "0";
+        image.style.minWidth = "0";
+        image.style.overflow = "hidden";
+      }
       const shell = image.closest("picture,figure,[data-home-product-media],[data-home-media-card],.home-product-slide");
-      if (shell) shell.hidden = true;
+      if (shell) {
+        shell.hidden = true;
+        shell.classList.add("image-fallback-shell-hidden");
+      }
       let parent = image.parentElement;
       while (parent && parent !== document.body) {
         try {
@@ -535,10 +548,19 @@
           const nearBottom = rect ? rect.bottom >= (window.innerHeight - 220) : false;
           if ((style?.position === "fixed" || style?.position === "sticky") && nearBottom) {
             parent.hidden = true;
+            parent.classList?.add?.("image-fallback-shell-hidden");
           }
         } catch (_) { /* best effort */ }
         parent = parent.parentElement;
       }
+    }
+
+    function wireBrokenMediaNode(node) {
+      if (!node || node.dataset.imageFallbackWired === "true") return;
+      node.dataset.imageFallbackWired = "true";
+      node.addEventListener("error", function () {
+        collapseBrokenMedia(node);
+      }, { once: true });
     }
 
     function wireImage(image) {
@@ -581,6 +603,19 @@
     }
 
     document.querySelectorAll("img").forEach(wireImage);
+    document.querySelectorAll("object,iframe,embed,video,source,picture,svg image").forEach(wireBrokenMediaNode);
+    window.addEventListener("error", event => {
+      const target = event?.target;
+      if (!(target instanceof Element)) return;
+      const tag = String(target.tagName || "").toUpperCase();
+      if (tag === "IMG") {
+        collapseBrokenMedia(target);
+        return;
+      }
+      if (["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE", "IMAGE"].includes(tag)) {
+        collapseBrokenMedia(target);
+      }
+    }, true);
     if ("MutationObserver" in window) {
       const observer = new MutationObserver(records => {
         records.forEach(record => {
@@ -588,14 +623,23 @@
             if (!(node instanceof Element)) return;
             if (node.tagName === "IMG") wireImage(node);
             node.querySelectorAll?.("img").forEach(wireImage);
+            if (["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE"].includes(String(node.tagName || "").toUpperCase())) {
+              wireBrokenMediaNode(node);
+            }
+            node.querySelectorAll?.("object,iframe,embed,video,source,picture,svg image").forEach(wireBrokenMediaNode);
           });
           if (record.type === "attributes" && record.target?.tagName === "IMG") {
             wireImage(record.target);
             if (record.attributeName === "src") collapseBrokenMedia(record.target);
+          } else if (record.type === "attributes") {
+            const targetTag = String(record.target?.tagName || "").toUpperCase();
+            if (["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE", "IMAGE"].includes(targetTag)) {
+              wireBrokenMediaNode(record.target);
+            }
           }
         });
       });
-      observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
+      observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src", "data"] });
     }
   }
 

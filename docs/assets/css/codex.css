@@ -60,6 +60,11 @@ img, video, svg, canvas, iframe {
   height: auto;
 }
 
+.image-fallback-failed,
+.image-fallback-shell-hidden {
+  display: none !important;
+}
+
 /* Image wrapper for preserved aspect ratios */
 .img-wrap {
   position: relative;

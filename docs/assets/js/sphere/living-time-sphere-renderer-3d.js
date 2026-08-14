@@ -234,6 +234,9 @@
   let _resizeObserver = null;
   const _moonAnchors = [];    // { moon, angle, radius, worldVec } for each of 13 moons
   let _lastCameraFocusKey = null;
+  let _lastSpiralGeometryKey = "";
+  let _lastPassageGeometryKey = "";
+  let _spiralMarkerAnchors = [];
   const _environmentLayerEnabled = {
     atmosphere: true,
     clouds: true,
@@ -1709,6 +1712,9 @@
     if (!_objects.connectionGroup) return;
     _connectionDiagnostics = [];
     _connectionVisibleCount = 0;
+    _lastSpiralGeometryKey = "";
+    _lastPassageGeometryKey = "";
+    _spiralMarkerAnchors = [];
     while (_objects.connectionGroup.children.length) {
       _objects.connectionGroup.remove(_objects.connectionGroup.children[0]);
     }
@@ -1912,10 +1918,32 @@
     return true;
   }
 
+  function _spiralGeometrySignature(spiral) {
+    const years = Array.isArray(spiral?.years) ? spiral.years : [];
+    if (!years.length) return "";
+    return years.map(item => `${item.year}:${Number(item.yearSpiralAngle || 0).toFixed(4)}:${Number(item.yearSpiralRadius || 0).toFixed(4)}`).join("|");
+  }
+
+  function _passageGeometrySignature(model) {
+    if (!model?.passage) return "";
+    return `${Number(model.passage.startAngle || 0).toFixed(6)}:${Number(model.passage.endAngle || 0).toFixed(6)}`;
+  }
+
+  function _positionSelectionRingForYear(selectedYear) {
+    if (!_objects.selectionRing || !Array.isArray(_spiralMarkerAnchors) || !_spiralMarkerAnchors.length) return;
+    const hit = _spiralMarkerAnchors.find(entry => Number(entry.year) === Number(selectedYear));
+    if (!hit) return;
+    _objects.selectionRing.position.set(hit.x, hit.y, hit.z);
+    _objects.selectionRing.visible = true;
+    _objects.selectionRing.rotation.x = Math.PI / 2;
+  }
+
   function updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode = _moonLabelMode, moonLabelDistance = _moonLabelDistance, dayLabelMode = _dayLabelMode, connectionRegistry = _connectionRegistry, motionMode = _motionMode, semanticZoomState = _semanticZoomState) {
     if (!_THREE || !_scene || !model) return;
     const mat = globalThis.LivingTimeSphereM;
     const updateStartedAt = performance.now();
+    const previousViewMode = _viewMode;
+    const previousSelectedYear = _selectedYear;
     _lastSceneBuildTimestamp = Date.now();
     _geometryBuildRevision += 1;
     _countLifecycle("modelBuildCount");
@@ -1948,18 +1976,23 @@
     // ── Passage arc ─────────────────────────────────────────────────
     if (_objects.passageGroup) {
       const layerStart = performance.now();
-      // Remove old passage arc
-      while (_objects.passageGroup.children.length) {
-        _objects.passageGroup.remove(_objects.passageGroup.children[0]);
-      }
-      if (vl.passage && model.passage) {
-        const tube = buildPassageTube(model.passage.startAngle, model.passage.endAngle);
-        if (tube) {
-          tube.name = "passageArc";
-          _objects.passageGroup.add(tube);
-          _objects.passageArc = tube;
+      const passageSig = _passageGeometrySignature(model);
+      if (_lastPassageGeometryKey !== passageSig) {
+        while (_objects.passageGroup.children.length) {
+          _objects.passageGroup.remove(_objects.passageGroup.children[0]);
         }
+        _objects.passageArc = null;
+        if (model.passage) {
+          const tube = buildPassageTube(model.passage.startAngle, model.passage.endAngle);
+          if (tube) {
+            tube.name = "passageArc";
+            _objects.passageGroup.add(tube);
+            _objects.passageArc = tube;
+          }
+        }
+        _lastPassageGeometryKey = passageSig;
       }
+      _objects.passageGroup.visible = !!vl.passage;
       _markLayerBuild("passage", performance.now() - layerStart);
     }
 
@@ -2036,53 +2069,47 @@
     // ── 13-year spiral markers ──────────────────────────────────────
     if (_objects.spiralGroup && spiral?.years) {
       const layerStart = performance.now();
-      // Clear existing markers
-      while (_objects.spiralGroup.children.length) {
-        _objects.spiralGroup.remove(_objects.spiralGroup.children[0]);
-      }
-      _objects.spiralMarkers = [];
-
-      for (const y of spiral.years) {
-        const isSelected = y.year === selectedYear;
-        const r  = mat.SIZES.spiralInner + (mat.SIZES.spiralOuter - mat.SIZES.spiralInner) * y.yearSpiralRadius;
-        const { x, z } = angleToXZ(y.yearSpiralAngle % 360, r);
-        const yOff = (y.yearSpiralRadius - 0.5) * 0.25;
-
-        const geo = new _THREE.SphereGeometry(
-          isSelected ? mat.SIZES.markerDotSelected : mat.SIZES.markerDot, 8, 8);
-        const m   = new _THREE.MeshStandardMaterial({
-          color:    isSelected ? mat.COLORS.annualSelected : mat.COLORS.annual,
-          emissive: isSelected ? mat.COLORS.annualSelected : 0x000000,
-          emissiveIntensity: isSelected ? mat.EMISSIVE.annualSelected : 0,
-          roughness: 0.5,
-        });
-        const mesh = new _THREE.Mesh(geo, m);
-        mesh.position.set(x, yOff, z);
-        mesh.name = `year-${y.year}`;
-        mesh.userData.year = y.year;
-        mesh.visible = !!vl.markers;
-        _objects.spiralGroup.add(mesh);
-        _objects.spiralMarkers.push(mesh);
-
-        // Move selection ring to selected marker
-        if (isSelected && _objects.selectionRing) {
-          _objects.selectionRing.position.set(x, yOff, z);
-          _objects.selectionRing.visible = true;
-          _objects.selectionRing.rotation.x = Math.PI / 2;
+      const spiralSig = _spiralGeometrySignature(spiral);
+      if (_lastSpiralGeometryKey !== spiralSig) {
+        while (_objects.spiralGroup.children.length) {
+          _objects.spiralGroup.remove(_objects.spiralGroup.children[0]);
         }
-      }
+        _objects.spiralMarkers = [];
+        _spiralMarkerAnchors = [];
 
-      // Rebuild spiral path
-      if (_objects.spiralPath) {
-        _objects.spiralGroup.remove(_objects.spiralPath);
-      }
-      if (vl.spiral) {
+        for (const y of spiral.years) {
+          const r  = mat.SIZES.spiralInner + (mat.SIZES.spiralOuter - mat.SIZES.spiralInner) * y.yearSpiralRadius;
+          const { x, z } = angleToXZ(y.yearSpiralAngle % 360, r);
+          const yOff = (y.yearSpiralRadius - 0.5) * 0.25;
+          const geo = new _THREE.SphereGeometry(mat.SIZES.markerDot, 8, 8);
+          const m   = new _THREE.MeshStandardMaterial({
+            color: mat.COLORS.annual,
+            emissive: 0x000000,
+            emissiveIntensity: 0,
+            roughness: 0.5,
+          });
+          const mesh = new _THREE.Mesh(geo, m);
+          mesh.position.set(x, yOff, z);
+          mesh.name = `year-${y.year}`;
+          mesh.userData.year = y.year;
+          mesh.visible = !!vl.markers;
+          _objects.spiralGroup.add(mesh);
+          _objects.spiralMarkers.push(mesh);
+          _spiralMarkerAnchors.push({ year: y.year, x, y: yOff, z });
+        }
+
         _objects.spiralPath = buildSpiralPath(spiral.years);
         if (_objects.spiralPath) {
           _objects.spiralPath.visible = !!vl.spiral;
           _objects.spiralGroup.add(_objects.spiralPath);
         }
+        _lastSpiralGeometryKey = spiralSig;
       }
+      if (_objects.spiralPath) _objects.spiralPath.visible = !!vl.spiral;
+      _objects.spiralMarkers?.forEach(marker => {
+        if (marker) marker.visible = !!vl.markers;
+      });
+      _positionSelectionRingForYear(selectedYear);
       _markLayerBuild("spiral", performance.now() - layerStart);
     }
 
@@ -2291,7 +2318,9 @@
       _buildConnections();
       _markLayerBuild("connections", performance.now() - layerStart);
     }
-    _syncCameraFocus(model, spiral, selectedYear, true);
+    const shouldRefocus = previousViewMode !== _viewMode
+      || (_viewMode === "years" && Number(previousSelectedYear) !== Number(_selectedYear));
+    if (shouldRefocus) _syncCameraFocus(model, spiral, selectedYear, true);
     _enforceRendererHostContract();
     _validateSceneReadiness({ requireFirstFrame: false });
     _lastLayerUpdateMs = Math.max(0, performance.now() - updateStartedAt);
@@ -3383,6 +3412,7 @@
   }
 
   function setMode(mode) {
+    if (!mode || mode === _viewMode) return;
     _viewMode = mode;
     _lastCameraFocusKey = null;
     _syncCameraFocus(_model, _spiral, _selectedYear, true);
@@ -3524,7 +3554,12 @@
       lifecycleCounters: { ..._lifecycleCounters },
       rendererInitCount: Number(_lifecycleCounters.rendererInitCount || 0),
       sceneRootBuildCount: Number(_lifecycleCounters.sceneRootBuildCount || 0),
+      sceneBuildCount: Number(_lifecycleCounters.sceneRootBuildCount || 0),
       modelBuildCount: Number(_lifecycleCounters.modelBuildCount || 0),
+      spiralReady: !!_lastSpiralGeometryKey,
+      passageReady: !!_lastPassageGeometryKey,
+      patternReady: Number(readiness?.stats?.patternGroupChildren || 0) > 0,
+      cameraFitReady: Number(readiness?.stats?.cameraNear || 0) > 0 && Number(readiness?.stats?.cameraFar || 0) > Number(readiness?.stats?.cameraNear || 0),
       selectedStateUpdateCount: Number(_lifecycleCounters.selectedStateUpdateCount || 0),
       layerVisibilityUpdateCount: Number(_lifecycleCounters.layerVisibilityUpdateCount || 0),
       cameraCreateCount: Number(_lifecycleCounters.cameraCreateCount || 0),
