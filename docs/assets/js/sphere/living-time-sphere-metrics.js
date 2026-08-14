@@ -1,5 +1,6 @@
 (() => {
   "use strict";
+
   const SELECTOR = ".home-living-sphere__telemetry li, .today-summary-stat, .sphere-today-grid > dt";
   const DETAILS = {
     "Moon": "The active 28-day Moon sector in the Pattern Calendar.",
@@ -50,47 +51,13 @@
     });
   }
 
-  function mountMetrics(root=document) { root.querySelectorAll(SELECTOR).forEach(makeExpandable); }
-
-  function mountAppBar() {
-    const page = document.body;
-    if (!page || document.querySelector(".living-app-dock")) return;
-    const isMoons = /moons\.html$/.test(location.pathname);
-    if (!isMoons) return;
-    const dock = document.createElement("nav");
-    dock.className = "living-app-dock";
-    dock.setAttribute("aria-label", "Living Time app navigation");
-    dock.innerHTML = `
-      <a href="./moons.html#todayPanel" data-app-tab="today">Today</a>
-      <a href="./living-time-sphere.html?view=today" data-app-tab="sphere">Sphere</a>
-      <button type="button" data-app-tab="weather">Weather</button>
-      <button type="button" data-app-tab="layers">Layers</button>
-      <a href="./ledger.html" data-app-tab="records">Records</a>`;
-    document.body.appendChild(dock);
-    document.body.classList.add("has-living-app-dock");
-    dock.querySelector("[data-app-tab='weather']")?.addEventListener("click", () => {
-      document.querySelector("[data-sof-location-command], .sphere-field-section, #sphere-field-layer")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-    dock.querySelector("[data-app-tab='layers']")?.addEventListener("click", () => {
-      const settings = document.querySelector("#sphere-settings, details:has(#sphere-layers), .sphere-settings");
-      if (settings?.tagName === "DETAILS") settings.open = true;
-      settings?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+  function mountMetrics(root = document) {
+    root.querySelectorAll(SELECTOR).forEach(makeExpandable);
   }
 
-  function syncEnvironmentBadges(state) {
-    const place = state?.place;
-    document.querySelectorAll("[data-shared-environment-badge]").forEach(el => {
-      el.textContent = place ? `${place.name || "Active place"} · ${state.classification || state.status}` : "Location not set";
-      el.dataset.state = state?.status || "unavailable";
-    });
-  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => mountMetrics(), { once: true });
+  else mountMetrics();
 
-  function init() {
-    mountMetrics();
-    mountAppBar();
-    globalThis.SofEnvironmentState?.subscribe?.(syncEnvironmentBadges);
-  }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, { once: true }); else init();
-  globalThis.LivingTimeAppEnhancements = Object.freeze({ mountMetrics, mountAppBar });
+  globalThis.LivingTimeSphereMetrics = Object.freeze({ mountMetrics });
 })();
+

@@ -83,6 +83,7 @@
     publishProfile();
 
     if ("MutationObserver" in window) {
+      const observeRoot = document.querySelector("main") || document.body;
       const observer = new MutationObserver(records => {
         records.forEach(record => record.addedNodes.forEach(node => {
           if (!(node instanceof Element)) return;
@@ -92,7 +93,7 @@
           suppressBrokenImages(node);
         }));
       });
-      observer.observe(document.body, { childList: true, subtree: true });
+      if (observeRoot) observer.observe(observeRoot, { childList: true, subtree: true });
     }
   }
 

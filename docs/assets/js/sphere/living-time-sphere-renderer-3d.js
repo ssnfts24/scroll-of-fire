@@ -127,6 +127,8 @@
   let _lastLayerUpdateType = "data-update";
   let _lastLayerUpdateMs = 0;
   let _hostContractCheckedAt = 0;
+  let _sceneRepairQueued = false;
+  let _sceneRepairRaf = 0;
 
   function _countLifecycle(key, amount = 1) {
     if (!Object.prototype.hasOwnProperty.call(_lifecycleCounters, key)) return;
@@ -1862,6 +1864,25 @@
       if (_objects.seasonMarkers) _objects.seasonMarkers.visible = false;
       if (_objects.spiralPath) _objects.spiralPath.visible = false;
     }
+
+    function _queueSceneRepair(reason = "scene-repair-requested") {
+      if (_sceneRepairQueued) return;
+      if (!_initialized || !_scene || !_model) return;
+      _sceneRepairQueued = true;
+      _sceneRepairRaf = requestAnimationFrame(() => {
+        _sceneRepairRaf = 0;
+        _sceneRepairQueued = false;
+        if (!_initialized || !_scene || !_model) return;
+        const readiness = _validateSceneReadiness({ requireFirstFrame: true });
+        if (readiness?.ready) return;
+        try {
+          updateScene(_model, _spiral, _selectedYear, _visibleLayers, _viewMode, _moonLabelMode, _moonLabelDistance, _dayLabelMode, _connectionRegistry, _motionMode, _semanticZoomState);
+          globalThis.LivingTimeSphereAnimation.markDirty();
+        } catch (error) {
+          console.warn(`[LivingTimeSphere] Deferred scene repair failed (${reason}).`, error);
+        }
+      });
+    }
   }
 
   function setLayerVisibility(layerName, visible) {
@@ -1877,9 +1898,7 @@
     _applyModeVisibilityOverrides(_visibleLayers);
     const readiness = _validateSceneReadiness({ requireFirstFrame: true });
     if (!readiness?.ready) {
-      try {
-        updateScene(_model, _spiral, _selectedYear, _visibleLayers, _viewMode, _moonLabelMode, _moonLabelDistance, _dayLabelMode, _connectionRegistry, _motionMode, _semanticZoomState);
-      } catch { /* best-effort fallback rebuild */ }
+      _queueSceneRepair("layer-visibility");
     }
     _lastLayerUpdateMs = Math.max(0, performance.now() - t0);
     _markLayerToggle(layerName, _lastLayerUpdateMs);
@@ -1908,9 +1927,7 @@
     _applyModeVisibilityOverrides(_visibleLayers);
     const readiness = _validateSceneReadiness({ requireFirstFrame: true });
     if (!readiness?.ready) {
-      try {
-        updateScene(_model, _spiral, _selectedYear, _visibleLayers, _viewMode, _moonLabelMode, _moonLabelDistance, _dayLabelMode, _connectionRegistry, _motionMode, _semanticZoomState);
-      } catch { /* best-effort fallback rebuild */ }
+      _queueSceneRepair("layer-batch-visibility");
     }
     _lastLayerUpdateMs = Math.max(0, performance.now() - t0);
     _markLayerToggle("batch", _lastLayerUpdateMs);
@@ -3420,6 +3437,9 @@
   }
 
   function teardown() {
+    if (_sceneRepairRaf) cancelAnimationFrame(_sceneRepairRaf);
+    _sceneRepairRaf = 0;
+    _sceneRepairQueued = false;
     globalThis.LivingTimeSphereAnimation.stop();
     globalThis.LivingTimeSphereAnimation.detachIntersection();
     if (_renderer) { _renderer.dispose(); _renderer = null; }

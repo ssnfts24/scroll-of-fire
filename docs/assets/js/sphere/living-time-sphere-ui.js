@@ -116,6 +116,9 @@
   let _urlHasExplicitLayers = false;
   let _urlHasExplicitMoonLabelDistance = false;
   let _syncingLayerControls = false;
+  let _pendingLayerState = null;
+  let _layerStateFlushRaf = 0;
+  let _layerStateFlushContainer = null;
   let _resourceTrackerInstalled = false;
   const _resourceFailureLog = [];
   const ENV_FOCUS_PULSE_CLASS = "sphere-location-command-focus-pulse";
@@ -276,90 +279,33 @@
   }
 
   function _installBrokenResourceGuard() {
-    if (_brokenResourceGuardInstalled || typeof MutationObserver === "undefined") return;
+    if (_brokenResourceGuardInstalled) return;
     _brokenResourceGuardInstalled = true;
-    const hasImageCtor = typeof HTMLImageElement !== "undefined";
-    const collapseResourceNode = node => {
-      if (!node || node.dataset?.sphereBrokenHidden === "true") return;
-      node.dataset.sphereBrokenHidden = "true";
-      node.classList?.add?.("sphere-broken-resource-hidden");
-      node.hidden = true;
-      node.setAttribute?.("aria-hidden", "true");
-      if (node.style) {
-        node.style.display = "none";
-        node.style.width = "0";
-        node.style.height = "0";
-        node.style.minHeight = "0";
-        node.style.minWidth = "0";
-        node.style.overflow = "hidden";
-      }
-      const shell = node.closest?.("picture,figure,[data-home-product-media],[data-home-media-card],.home-product-slide");
-      if (shell) {
-        shell.hidden = true;
-        shell.classList?.add?.("sphere-broken-resource-shell-hidden");
-      }
-      let parent = node.parentElement;
-      while (parent && parent !== document.body) {
-        try {
-          const style = window.getComputedStyle(parent);
-          const pos = style?.position || "";
-          const rect = parent.getBoundingClientRect?.() || null;
-          const nearBottom = rect ? (rect.bottom >= (window.innerHeight - 220)) : false;
-          if ((pos === "fixed" || pos === "sticky") && nearBottom) {
-            parent.hidden = true;
-            parent.classList?.add?.("sphere-broken-resource-shell-hidden");
-          }
-        } catch { /* best effort */ }
-        parent = parent.parentElement;
-      }
-    };
-    const suppressBrokenImage = image => {
-      if (!image || image.dataset?.sphereBrokenHidden === "true") return;
-      if (hasImageCtor && !(image instanceof HTMLImageElement)) return;
-      const mark = () => {
-        if (!image.complete || image.naturalWidth > 0 || image.naturalHeight > 0) return;
-        collapseResourceNode(image);
-      };
-      if (!image.complete) image.addEventListener("error", mark, { once: true });
-      else mark();
-    };
-    const suppressBrokenMedia = node => {
-      if (!node || node.nodeType !== 1) return;
-      if (node.tagName === "IMG") {
-        suppressBrokenImage(node);
-        return;
-      }
-      const tag = String(node.tagName || "").toUpperCase();
-      if (!["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE", "IMAGE"].includes(tag)) return;
-      if (node.dataset?.sphereBrokenWired === "true") return;
-      node.dataset.sphereBrokenWired = "true";
-      node.addEventListener("error", () => collapseResourceNode(node), { once: true });
-    };
-    const scan = root => {
-      if (!root?.querySelectorAll) return;
-      root.querySelectorAll("img").forEach(suppressBrokenImage);
-      root.querySelectorAll("object,iframe,embed,video,source,picture,svg image").forEach(suppressBrokenMedia);
-    };
-    scan(document);
-    new MutationObserver(mutations => {
-      mutations.forEach(mutation => {
-        mutation.addedNodes?.forEach(node => {
-          if (!node || node.nodeType !== 1) return;
-          suppressBrokenMedia(node);
-          scan(node);
-        });
-        if (mutation.type === "attributes") {
-          suppressBrokenMedia(mutation.target);
-          if (mutation.target?.tagName === "IMG") suppressBrokenImage(mutation.target);
-        }
-      });
-    }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
-    window.addEventListener("error", event => {
-      const target = event?.target;
-      if (!target || target.nodeType !== 1) return;
-      if (target.tagName === "IMG") suppressBrokenImage(target);
-      else if (["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE", "IMAGE"].includes(String(target.tagName || "").toUpperCase())) collapseResourceNode(target);
-    }, true);
+  }
+
+  function _flushLayerStateUpdates() {
+    _layerStateFlushRaf = 0;
+    const container = _layerStateFlushContainer;
+    const pending = _pendingLayerState;
+    _layerStateFlushContainer = null;
+    _pendingLayerState = null;
+    if (!container || !pending) return;
+    const renderer = globalThis.LivingTimeSphereRenderer3d;
+    if (_state.active3d && renderer?.isInitialized?.() && typeof renderer.setLayerStates === "function") {
+      const updated = renderer.setLayerStates(pending);
+      if (!updated) renderSphere(container);
+      _updateRendererDiagnostics();
+      return;
+    }
+    renderSphere(container);
+  }
+
+  function _requestLayerStateUpdate(container, layer, enabled) {
+    if (!container || !layer) return;
+    _pendingLayerState = { ...(_pendingLayerState || {}), [layer]: !!enabled };
+    _layerStateFlushContainer = container;
+    if (_layerStateFlushRaf) return;
+    _layerStateFlushRaf = requestAnimationFrame(_flushLayerStateUpdates);
   }
 
   function _resourceUrlForElement(el) {
@@ -3118,19 +3064,13 @@
       cb.checked = _state.visibleLayers[layer];
       cb.addEventListener("change", () => {
         if (_syncingLayerControls) return;
-        _state.visibleLayers[layer] = cb.checked;
+        const next = !!cb.checked;
+        _state.visibleLayers[layer] = next;
         _state.userCustomizedLayers = true;
         _state.layerStateSource = "user-customized";
         _incrementActionCounter("layerUpdateCount");
-        _recordActionTrace("LAYER_VISIBILITY_CHANGE", { layer, enabled: !!cb.checked }, ["layers"]);
-        const renderer = globalThis.LivingTimeSphereRenderer3d;
-        if (_state.active3d && renderer?.isInitialized?.() && typeof renderer.setLayerVisibility === "function") {
-          const updated = renderer.setLayerVisibility(layer, cb.checked);
-          if (!updated) renderSphere(container);
-          _updateRendererDiagnostics();
-        } else {
-          renderSphere(container);
-        }
+        _recordActionTrace("LAYER_VISIBILITY_CHANGE", { layer, enabled: next }, ["layers"]);
+        _requestLayerStateUpdate(container, layer, next);
       });
     });
     const focusEnvironmentBtn = document.getElementById("sphere-environment-focus");

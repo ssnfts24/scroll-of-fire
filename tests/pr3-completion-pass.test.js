@@ -203,7 +203,8 @@ test("spiral + connection controls: UI toggles are wired through state to render
   const renderer = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
   assert.ok(html.includes("sphere-layer-spiral"));
   assert.ok(html.includes("sphere-layer-connections"));
-  assert.ok(ui.includes("_state.visibleLayers[layer] = cb.checked"));
+  assert.ok(ui.includes("_requestLayerStateUpdate(container, layer, next)"));
+  assert.ok(ui.includes("requestAnimationFrame(_flushLayerStateUpdates)"));
   assert.ok(renderer.includes("_objects.spiralGroup.visible"));
   assert.ok(renderer.includes("_objects.connectionGroup.visible"));
   assert.ok(renderer.includes("while (_objects.connectionGroup.children.length)"), "connection rebuild clears duplicates");
