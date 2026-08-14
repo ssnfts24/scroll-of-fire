@@ -109,6 +109,91 @@
     semanticZoom: "idle",
     firstFrame: "idle",
   };
+  const _lifecycleCounters = {
+    rendererInitCount: 0,
+    sceneRootBuildCount: 0,
+    modelBuildCount: 0,
+    layerVisibilityUpdateCount: 0,
+    cameraCreateCount: 0,
+    canvasCreateCount: 0,
+    rafLoopStartCount: 0,
+    resizeObserverCreateCount: 0,
+  };
+  const _geometryBuildCountByLayer = {};
+  const _layerBuildMetrics = {};
+  const _layerToggleMetrics = {};
+  const _hostContractIssues = [];
+  let _lastLayerUpdateType = "data-update";
+  let _lastLayerUpdateMs = 0;
+  let _hostContractCheckedAt = 0;
+
+  function _countLifecycle(key, amount = 1) {
+    if (!Object.prototype.hasOwnProperty.call(_lifecycleCounters, key)) return;
+    _lifecycleCounters[key] += amount;
+  }
+
+  function _markLayerBuild(layer, durationMs) {
+    if (!layer) return;
+    _geometryBuildCountByLayer[layer] = Number(_geometryBuildCountByLayer[layer] || 0) + 1;
+    _layerBuildMetrics[layer] = Number(durationMs || 0);
+  }
+
+  function _markLayerToggle(layer, durationMs) {
+    if (!layer) return;
+    _layerToggleMetrics[layer] = Number(durationMs || 0);
+  }
+
+  function _isUnexpectedHostMedia(node) {
+    if (!node || node.nodeType !== 1) return false;
+    const tag = String(node.tagName || "").toUpperCase();
+    if (tag === "CANVAS") return false;
+    if (tag === "SVG") return false;
+    if (tag === "DIV" && node.classList?.contains("sphere-luxury-loader")) return false;
+    return tag === "IMG" || tag === "PICTURE" || tag === "SOURCE" || tag === "OBJECT" || tag === "IFRAME" || tag === "EMBED" || tag === "VIDEO";
+  }
+
+  function _collapseFailedHostResource(node, reason = "foreign-media-node") {
+    if (!node || node.nodeType !== 1) return false;
+    const entry = {
+      tagName: String(node.tagName || "").toUpperCase(),
+      id: node.id || null,
+      className: node.className || "",
+      reason,
+      src: node.currentSrc || node.src || node.data || null,
+      timestamp: Date.now(),
+    };
+    _hostContractIssues.push(entry);
+    if (_hostContractIssues.length > 80) _hostContractIssues.shift();
+    try {
+      node.hidden = true;
+      node.setAttribute?.("aria-hidden", "true");
+      node.style.display = "none";
+      node.style.width = "0";
+      node.style.height = "0";
+      node.style.minHeight = "0";
+      node.style.minWidth = "0";
+      node.style.overflow = "hidden";
+      node.remove?.();
+    } catch { /* best-effort collapse */ }
+    return true;
+  }
+
+  function _enforceRendererHostContract(container = _container) {
+    if (!container?.children) return;
+    _hostContractCheckedAt = Date.now();
+    Array.from(container.children).forEach(child => {
+      if (_isUnexpectedHostMedia(child)) _collapseFailedHostResource(child);
+    });
+  }
+
+  function _countUnexpectedHostChildren(container = _container) {
+    if (!container?.children) return 0;
+    let count = 0;
+    Array.from(container.children).forEach(child => {
+      if (_isUnexpectedHostMedia(child)) count += 1;
+    });
+    return count;
+  }
 
   function _markStage(stage, state) {
     if (!stage || !_stageState[stage]) return;
@@ -450,6 +535,7 @@
   function buildScene() {
     const THREE = _THREE;
     const mat   = globalThis.LivingTimeSphereM;
+    _countLifecycle("sceneRootBuildCount");
     _scene = new THREE.Scene();
     _scene.background = new THREE.Color(mat.COLORS.bg);
 
@@ -1732,11 +1818,107 @@
     });
   }
 
+  function _applyLayerVisibility(vl, semanticState = _semanticZoomState) {
+    if (!_objects || !vl) return;
+    if (_objects.patternRing)  _objects.patternRing.visible  = !!vl.pattern;
+    if (_objects.moonDividers) _objects.moonDividers.visible = !!vl.pattern;
+    _applySemanticVisibility(vl, semanticState || { band: "medium", visibility: {} });
+    if (_objects.yearGate)     _objects.yearGate.visible     = !!vl.pattern;
+    if (_objects.todayLineGroup) _objects.todayLineGroup.visible = true;
+    if (_objects.lunarOrbit)   _objects.lunarOrbit.visible   = !!vl.lunar;
+    if (_objects.lunarMarker)  _objects.lunarMarker.visible  = !!vl.lunar;
+    if (_objects.solarAxis)    _objects.solarAxis.visible    = !!vl.solar;
+    if (_objects.seasonMarkers)_objects.seasonMarkers.visible = !!vl.solar;
+    if (_objects.solarProgressGroup) _objects.solarProgressGroup.visible = !!vl.solar;
+    if (_objects.spiralGroup)  _objects.spiralGroup.visible  = !!(vl.spiral || vl.markers);
+    if (_objects.passageGroup) _objects.passageGroup.visible = !!vl.passage;
+    if (_objects.equinoxGate)  _objects.equinoxGate.visible  = !!vl.passage || !!vl.markers;
+    if (_objects.activeMoonGroup) _objects.activeMoonGroup.visible = !!vl.pattern;
+    if (_objects.connectionGroup) _objects.connectionGroup.visible = !!vl.connections;
+    _environmentController.setLayerVisibility("environment", !!vl.environment);
+    _environmentController.update(_environmentState);
+  }
+
+  function _applyModeVisibilityOverrides(vl = _visibleLayers) {
+    if (_viewMode === "today") {
+      if (_objects.spiralPath) _objects.spiralPath.visible = false;
+      if (_objects.recurrenceGroup) _objects.recurrenceGroup.visible = false;
+    } else if (_viewMode === "passage") {
+      if (_objects.spiralPath) _objects.spiralPath.visible = false;
+    } else if (_viewMode === "pattern") {
+      if (_objects.lunarMarker) _objects.lunarMarker.visible = false;
+      if (_objects.lunarSelectedMarker) _objects.lunarSelectedMarker.visible = false;
+      if (_objects.solarAxis) _objects.solarAxis.visible = false;
+      if (_objects.solarSelectedMarker) _objects.solarSelectedMarker.visible = false;
+      if (_objects.solarTodayMarker) _objects.solarTodayMarker.visible = false;
+      if (_objects.solarProgressGroup) _objects.solarProgressGroup.visible = false;
+      if (_objects.seasonMarkers) _objects.seasonMarkers.visible = false;
+      if (_objects.spiralPath) _objects.spiralPath.visible = false;
+    }
+  }
+
+  function setLayerVisibility(layerName, visible) {
+    if (!_initialized || !_scene || !_model) return false;
+    if (!layerName || !Object.prototype.hasOwnProperty.call(_visibleLayers, layerName)) return false;
+    const t0 = performance.now();
+    const nextVisible = !!visible;
+    if (_visibleLayers[layerName] === nextVisible) return true;
+    _visibleLayers = { ..._visibleLayers, [layerName]: nextVisible };
+    _countLifecycle("layerVisibilityUpdateCount");
+    _lastLayerUpdateType = "layer-visibility-update";
+    _applyLayerVisibility(_visibleLayers, _semanticZoomState);
+    _applyModeVisibilityOverrides(_visibleLayers);
+    const readiness = _validateSceneReadiness({ requireFirstFrame: true });
+    if (!readiness?.ready) {
+      try {
+        updateScene(_model, _spiral, _selectedYear, _visibleLayers, _viewMode, _moonLabelMode, _moonLabelDistance, _dayLabelMode, _connectionRegistry, _motionMode, _semanticZoomState);
+      } catch { /* best-effort fallback rebuild */ }
+    }
+    _lastLayerUpdateMs = Math.max(0, performance.now() - t0);
+    _markLayerToggle(layerName, _lastLayerUpdateMs);
+    globalThis.LivingTimeSphereAnimation.markDirty();
+    return true;
+  }
+
+  function setLayerStates(nextLayerState) {
+    if (!_initialized || !_scene || !_model || !nextLayerState || typeof nextLayerState !== "object") return false;
+    const t0 = performance.now();
+    const merged = { ..._visibleLayers };
+    let changed = false;
+    Object.keys(nextLayerState).forEach(layerName => {
+      if (!Object.prototype.hasOwnProperty.call(merged, layerName)) return;
+      const value = !!nextLayerState[layerName];
+      if (merged[layerName] !== value) {
+        merged[layerName] = value;
+        changed = true;
+      }
+    });
+    if (!changed) return true;
+    _visibleLayers = merged;
+    _countLifecycle("layerVisibilityUpdateCount");
+    _lastLayerUpdateType = "layer-visibility-batch-update";
+    _applyLayerVisibility(_visibleLayers, _semanticZoomState);
+    _applyModeVisibilityOverrides(_visibleLayers);
+    const readiness = _validateSceneReadiness({ requireFirstFrame: true });
+    if (!readiness?.ready) {
+      try {
+        updateScene(_model, _spiral, _selectedYear, _visibleLayers, _viewMode, _moonLabelMode, _moonLabelDistance, _dayLabelMode, _connectionRegistry, _motionMode, _semanticZoomState);
+      } catch { /* best-effort fallback rebuild */ }
+    }
+    _lastLayerUpdateMs = Math.max(0, performance.now() - t0);
+    _markLayerToggle("batch", _lastLayerUpdateMs);
+    globalThis.LivingTimeSphereAnimation.markDirty();
+    return true;
+  }
+
   function updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode = _moonLabelMode, moonLabelDistance = _moonLabelDistance, dayLabelMode = _dayLabelMode, connectionRegistry = _connectionRegistry, motionMode = _motionMode, semanticZoomState = _semanticZoomState) {
     if (!_THREE || !_scene || !model) return;
     const mat = globalThis.LivingTimeSphereM;
+    const updateStartedAt = performance.now();
     _lastSceneBuildTimestamp = Date.now();
     _geometryBuildRevision += 1;
+    _countLifecycle("modelBuildCount");
+    _lastLayerUpdateType = "data-update";
 
     _model        = model;
     _spiral       = spiral;
@@ -1754,24 +1936,7 @@
 
     // ── Layer visibility ────────────────────────────────────────────
     const vl = _visibleLayers;
-
-    if (_objects.patternRing)  _objects.patternRing.visible  = !!vl.pattern;
-    if (_objects.moonDividers) _objects.moonDividers.visible = !!vl.pattern;
-    _applySemanticVisibility(vl, _semanticZoomState || { band: "medium", visibility: {} });
-    if (_objects.yearGate)     _objects.yearGate.visible     = !!vl.pattern;
-    if (_objects.todayLineGroup) _objects.todayLineGroup.visible = true;
-    if (_objects.lunarOrbit)   _objects.lunarOrbit.visible   = !!vl.lunar;
-    if (_objects.lunarMarker)  _objects.lunarMarker.visible  = !!vl.lunar;
-    if (_objects.solarAxis)    _objects.solarAxis.visible    = !!vl.solar;
-    if (_objects.seasonMarkers)_objects.seasonMarkers.visible = !!vl.solar;
-    if (_objects.solarProgressGroup) _objects.solarProgressGroup.visible = !!vl.solar;
-    if (_objects.spiralGroup)  _objects.spiralGroup.visible  = !!(vl.spiral || vl.markers);
-    if (_objects.passageGroup) _objects.passageGroup.visible = !!vl.passage;
-    if (_objects.equinoxGate)  _objects.equinoxGate.visible  = !!vl.passage || !!vl.markers;
-    if (_objects.activeMoonGroup) _objects.activeMoonGroup.visible = !!vl.pattern;
-    if (_objects.connectionGroup) _objects.connectionGroup.visible = !!vl.connections;
-    _environmentController.setLayerVisibility("environment", !!vl.environment);
-    _environmentController.update(_environmentState);
+    _applyLayerVisibility(vl, _semanticZoomState || { band: "medium", visibility: {} });
 
     // ── Equinox gate position ───────────────────────────────────────
     if (_objects.equinoxGate && model.passageStartAngle != null) {
@@ -1781,6 +1946,7 @@
 
     // ── Passage arc ─────────────────────────────────────────────────
     if (_objects.passageGroup) {
+      const layerStart = performance.now();
       // Remove old passage arc
       while (_objects.passageGroup.children.length) {
         _objects.passageGroup.remove(_objects.passageGroup.children[0]);
@@ -1793,6 +1959,7 @@
           _objects.passageArc = tube;
         }
       }
+      _markLayerBuild("passage", performance.now() - layerStart);
     }
 
     const band = _semanticZoomState?.band || "medium";
@@ -1851,6 +2018,7 @@
       };
     }
     if (_objects.solarProgressGroup) {
+      const layerStart = performance.now();
       while (_objects.solarProgressGroup.children.length) {
         _objects.solarProgressGroup.remove(_objects.solarProgressGroup.children[0]);
       }
@@ -1861,10 +2029,12 @@
         arc.visible = !!vl.solar && band !== "far";
         _objects.solarProgressGroup.add(arc);
       }
+      _markLayerBuild("solar", performance.now() - layerStart);
     }
 
     // ── 13-year spiral markers ──────────────────────────────────────
     if (_objects.spiralGroup && spiral?.years) {
+      const layerStart = performance.now();
       // Clear existing markers
       while (_objects.spiralGroup.children.length) {
         _objects.spiralGroup.remove(_objects.spiralGroup.children[0]);
@@ -1912,14 +2082,17 @@
           _objects.spiralGroup.add(_objects.spiralPath);
         }
       }
+      _markLayerBuild("spiral", performance.now() - layerStart);
     }
 
     // ── Recurrence links ────────────────────────────────────────────
     if (_objects.recurrenceGroup) {
+      const layerStart = performance.now();
       _objects.recurrenceGroup.visible = !!(vl.recurrence && !_isMobileWidth());
       if (vl.recurrence && !_isMobileWidth()) {
         _buildRecurrenceLinks(spiral);
       }
+      _markLayerBuild("recurrence", performance.now() - layerStart);
     }
 
     // ── Today marker positioning ────────────────────────────────────
@@ -2011,9 +2184,8 @@
     );
 
     // ── Mode-specific layer overrides ───────────────────────────────
+    _applyModeVisibilityOverrides(vl);
     if (_viewMode === "today") {
-      if (_objects.spiralPath)        _objects.spiralPath.visible = false;
-      if (_objects.recurrenceGroup)   _objects.recurrenceGroup.visible = false;
       // Boost Today halo and marker for emphasis
       if (_objects.todayHalo?.material) {
         _objects.todayHalo.material.emissiveIntensity = 0.8;
@@ -2027,21 +2199,11 @@
           if (c.material) { c.material.opacity = 0.85; c.material.dashSize = 0.06; }
         });
       }
-    } else if (_viewMode === "passage") {
-      if (_objects.spiralPath)        _objects.spiralPath.visible = false;
-    } else if (_viewMode === "pattern") {
-      if (_objects.lunarMarker) _objects.lunarMarker.visible = false;
-      if (_objects.lunarSelectedMarker) _objects.lunarSelectedMarker.visible = false;
-      if (_objects.solarAxis)   _objects.solarAxis.visible   = false;
-      if (_objects.solarSelectedMarker) _objects.solarSelectedMarker.visible = false;
-      if (_objects.solarTodayMarker) _objects.solarTodayMarker.visible = false;
-      if (_objects.solarProgressGroup) _objects.solarProgressGroup.visible = false;
-      if (_objects.seasonMarkers) _objects.seasonMarkers.visible = false;
-      if (_objects.spiralPath) _objects.spiralPath.visible = false;
     }
 
     // ── Active Moon sector highlight ────────────────────────────────
     if (_objects.activeMoonGroup) {
+      const layerStart = performance.now();
       while (_objects.activeMoonGroup.children.length) {
         _objects.activeMoonGroup.remove(_objects.activeMoonGroup.children[0]);
       }
@@ -2094,6 +2256,7 @@
       }));
       boundary.name = "activeMoonBoundary";
       _objects.activeMoonGroup.add(boundary);
+      _markLayerBuild("pattern", performance.now() - layerStart);
     }
 
     // ── Active day node highlight ───────────────────────────────────
@@ -2122,9 +2285,15 @@
     }
 
     _syncSemanticZoomFromCamera(true);
-    if (!_connectionDiagnostics.length && _connectionRegistry.length) _buildConnections();
+    if (!_connectionDiagnostics.length && _connectionRegistry.length) {
+      const layerStart = performance.now();
+      _buildConnections();
+      _markLayerBuild("connections", performance.now() - layerStart);
+    }
     _syncCameraFocus(model, spiral, selectedYear, true);
+    _enforceRendererHostContract();
     _validateSceneReadiness({ requireFirstFrame: false });
+    _lastLayerUpdateMs = Math.max(0, performance.now() - updateStartedAt);
 
     globalThis.LivingTimeSphereAnimation.markDirty();
   }
@@ -2233,6 +2402,13 @@
       meshCount: 0,
       lineCount: 0,
       patternGroupChildren: 0,
+      lunarGroupChildren: 0,
+      solarGroupChildren: 0,
+      passageGroupChildren: 0,
+      markerGroupChildren: 0,
+      connectionGroupChildren: 0,
+      spiralGroupChildren: 0,
+      environmentGroupChildren: 0,
       astronomyGroupChildren: 0,
       selectedGroupChildren: 0,
       patternGroupVisible: false,
@@ -2297,6 +2473,13 @@
     stats.patternGroupChildren = patternEntries.reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
     stats.astronomyGroupChildren = astronomyEntries.reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
     stats.selectedGroupChildren = selectedEntries.reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.lunarGroupChildren = [_objects.lunarOrbit, _objects.lunarMarker, _objects.lunarSelectedMarker].reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.solarGroupChildren = [_objects.solarAxis, _objects.seasonMarkers, _objects.solarProgressGroup, _objects.solarTodayMarker, _objects.solarSelectedMarker].reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.passageGroupChildren = [_objects.passageGroup, _objects.equinoxGate].reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.markerGroupChildren = [_objects.todayMarker, _objects.selectedDayMarker, _objects.activeDayNode, _objects.activeMoonGroup].reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.connectionGroupChildren = _countObjectPresence(_objects.connectionGroup);
+    stats.spiralGroupChildren = _countObjectPresence(_objects.spiralGroup);
+    stats.environmentGroupChildren = _countObjectPresence(_objects.environmentGroup);
     stats.patternGroupVisible = patternEntries.some(entry => entry?.visible !== false);
 
     if (_THREE && _scene && _camera) {
@@ -2321,6 +2504,7 @@
   }
 
   function _validateSceneReadiness({ requireFirstFrame = false } = {}) {
+    _enforceRendererHostContract();
     const stats = _collectSceneStats();
     const reasons = [];
     const expectedPattern = _visibleLayers?.pattern !== false;
@@ -2343,6 +2527,7 @@
     if (!stats.sceneBoundsFinite) reasons.push("scene-bounds-invalid");
     if (stats.sceneBoundsFinite && !stats.sceneIntersectsFrustum) reasons.push("scene-outside-frustum");
     if (requireFirstFrame && !_firstFrameTimestamp) reasons.push("first-frame-missing");
+    if (_countUnexpectedHostChildren() > 0) reasons.push("renderer-host-contains-foreign-media");
 
     _lastSceneReadiness = {
       ready: reasons.length === 0,
@@ -2361,6 +2546,7 @@
       return { success: false, reason: "already-running" };
     }
     _initializing = true;
+    _countLifecycle("rendererInitCount");
     _resetStages();
     _initStartedAt = performance.now();
     _initEndedAt = null;
@@ -2404,9 +2590,11 @@
 
       const THREE = _THREE;
       _container = container;
+      _enforceRendererHostContract(container);
 
       // ── Canvas ────────────────────────────────────────────────────
       _canvas = document.createElement("canvas");
+      _countLifecycle("canvasCreateCount");
       _canvas.className = "living-time-sphere-3d-canvas";
       _canvas.setAttribute("role", "img");
       _canvas.setAttribute("aria-label", "Living Time Sphere 3D view");
@@ -2414,6 +2602,7 @@
       // touch-action: pan-y by default — vertical page scroll preserved.
       _canvas.style.touchAction = "pan-y";
       container.appendChild(_canvas);
+      _enforceRendererHostContract(container);
       _ensureFloatingLabel(container);
 
       // ── Renderer ──────────────────────────────────────────────────
@@ -2497,6 +2686,7 @@
 
       _markStage("camera", "running");
       _camera = globalThis.LivingTimeSphereCamera.create(THREE, w, h);
+      _countLifecycle("cameraCreateCount");
       _markStage("camera", "created");
       globalThis.LivingTimeSphereCamera.onChangeCallback(() => {
         _syncSemanticZoomFromCamera(false);
@@ -2528,6 +2718,7 @@
       }
 
       globalThis.LivingTimeSphereAnimation.start(render);
+      _countLifecycle("rafLoopStartCount");
       globalThis.LivingTimeSphereAnimation.markDirty();
 
       // ── Pointer interaction ────────────────────────────────────────
@@ -2934,6 +3125,7 @@
   function _wireResize(container) {
     if (typeof ResizeObserver === "undefined") return;
     _resizeObserver?.disconnect?.();
+    _countLifecycle("resizeObserverCreateCount");
     _resizeObserver = new ResizeObserver(() => {
       if (!_renderer || !_canvas || !_camera) return;
       const rect = container.getBoundingClientRect();
@@ -2952,6 +3144,13 @@
   function refresh(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState) {
     if (!_initialized) return;
     updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState);
+    const readiness = _validateSceneReadiness({ requireFirstFrame: true });
+    if (!readiness?.ready) {
+      _lastInitError = {
+        reason: "SCENE_CONTENT_INCOMPLETE",
+        detail: `Refresh readiness failed: ${(readiness.reasons || []).join(", ") || "unknown"}`,
+      };
+    }
     globalThis.LivingTimeSphereAnimation.markDirty();
   }
 
@@ -3097,6 +3296,13 @@
       meshCount: Number(readiness?.stats?.meshCount || 0),
       lineCount: Number(readiness?.stats?.lineCount || 0),
       patternGroupChildren: Number(readiness?.stats?.patternGroupChildren || 0),
+      lunarGroupChildren: Number(readiness?.stats?.lunarGroupChildren || 0),
+      solarGroupChildren: Number(readiness?.stats?.solarGroupChildren || 0),
+      passageGroupChildren: Number(readiness?.stats?.passageGroupChildren || 0),
+      markerGroupChildren: Number(readiness?.stats?.markerGroupChildren || 0),
+      connectionGroupChildren: Number(readiness?.stats?.connectionGroupChildren || 0),
+      spiralGroupChildren: Number(readiness?.stats?.spiralGroupChildren || 0),
+      environmentGroupChildren: Number(readiness?.stats?.environmentGroupChildren || 0),
       astronomyGroupChildren: Number(readiness?.stats?.astronomyGroupChildren || 0),
       selectedGroupChildren: Number(readiness?.stats?.selectedGroupChildren || 0),
       patternGroupVisible: !!readiness?.stats?.patternGroupVisible,
@@ -3112,6 +3318,25 @@
       cameraFar: Number(readiness?.stats?.cameraFar || 0),
       lastSceneBuildTimestamp: _lastSceneBuildTimestamp,
       geometryBuildRevision: _geometryBuildRevision,
+      geometryBuildCountByLayer: { ..._geometryBuildCountByLayer },
+      layerBuildMsByLayer: { ..._layerBuildMetrics },
+      cachedToggleMsByLayer: { ..._layerToggleMetrics },
+      lastLayerUpdateType: _lastLayerUpdateType,
+      lastLayerUpdateMs: Number(_lastLayerUpdateMs || 0),
+      lifecycleCounters: { ..._lifecycleCounters },
+      rendererInitCount: Number(_lifecycleCounters.rendererInitCount || 0),
+      sceneRootBuildCount: Number(_lifecycleCounters.sceneRootBuildCount || 0),
+      modelBuildCount: Number(_lifecycleCounters.modelBuildCount || 0),
+      layerVisibilityUpdateCount: Number(_lifecycleCounters.layerVisibilityUpdateCount || 0),
+      cameraCreateCount: Number(_lifecycleCounters.cameraCreateCount || 0),
+      canvasCreateCount: Number(_lifecycleCounters.canvasCreateCount || 0),
+      rafLoopStartCount: Number(_lifecycleCounters.rafLoopStartCount || 0),
+      resizeObserverCreateCount: Number(_lifecycleCounters.resizeObserverCreateCount || 0),
+      hostContract: {
+        checkedAt: Number(_hostContractCheckedAt || 0),
+        issueCount: Number(_hostContractIssues.length || 0),
+        issues: _hostContractIssues.slice(0, 40),
+      },
       rafActive: !!globalThis.LivingTimeSphereAnimation?.isRunning?.(),
       contextLost: _stageState.context === "lost",
       lastInitError:     _lastInitError,
@@ -3143,9 +3368,12 @@
   globalThis.LivingTimeSphereRenderer3d = Object.freeze({
     init,
     refresh,
+    setLayerVisibility,
+    setLayerStates,
     updateEnvironment,
     setQuality,
     requestSingleRender,
+    markDirty: requestSingleRender,
     resetView,
     setMode,
     teardown,

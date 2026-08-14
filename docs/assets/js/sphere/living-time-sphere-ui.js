@@ -74,6 +74,9 @@
 
   let _urlHasExplicitLayers = false;
   let _urlHasExplicitMoonLabelDistance = false;
+  let _syncingLayerControls = false;
+  let _resourceTrackerInstalled = false;
+  const _resourceFailureLog = [];
 
   // ── Dependency check ───────────────────────────────────────────────
 
@@ -133,41 +136,176 @@
     if (_brokenResourceGuardInstalled || typeof MutationObserver === "undefined") return;
     _brokenResourceGuardInstalled = true;
     const hasImageCtor = typeof HTMLImageElement !== "undefined";
+    const collapseResourceNode = node => {
+      if (!node || node.dataset?.sphereBrokenHidden === "true") return;
+      node.dataset.sphereBrokenHidden = "true";
+      node.classList?.add?.("sphere-broken-resource-hidden");
+      node.hidden = true;
+      node.setAttribute?.("aria-hidden", "true");
+      if (node.style) {
+        node.style.display = "none";
+        node.style.width = "0";
+        node.style.height = "0";
+        node.style.minHeight = "0";
+        node.style.minWidth = "0";
+        node.style.overflow = "hidden";
+      }
+      const shell = node.closest?.("picture,figure,[data-home-product-media],[data-home-media-card],.home-product-slide");
+      if (shell && shell.children?.length <= 1) shell.hidden = true;
+    };
     const suppressBrokenImage = image => {
       if (!image || image.dataset?.sphereBrokenHidden === "true") return;
       if (hasImageCtor && !(image instanceof HTMLImageElement)) return;
       const mark = () => {
         if (!image.complete || image.naturalWidth > 0 || image.naturalHeight > 0) return;
-        image.dataset.sphereBrokenHidden = "true";
-        image.classList.add("sphere-broken-resource-hidden");
-        image.hidden = true;
-        image.setAttribute("aria-hidden", "true");
-        const shell = image.closest?.("picture,figure,[data-home-product-media],[data-home-media-card],.home-product-slide");
-        if (shell && shell.children?.length <= 1) shell.hidden = true;
+        collapseResourceNode(image);
       };
       if (!image.complete) image.addEventListener("error", mark, { once: true });
       else mark();
     };
+    const suppressBrokenMedia = node => {
+      if (!node || node.nodeType !== 1) return;
+      if (node.tagName === "IMG") {
+        suppressBrokenImage(node);
+        return;
+      }
+      const tag = String(node.tagName || "").toUpperCase();
+      if (!["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE"].includes(tag)) return;
+      if (node.dataset?.sphereBrokenWired === "true") return;
+      node.dataset.sphereBrokenWired = "true";
+      node.addEventListener("error", () => collapseResourceNode(node), { once: true });
+    };
     const scan = root => {
       if (!root?.querySelectorAll) return;
       root.querySelectorAll("img").forEach(suppressBrokenImage);
+      root.querySelectorAll("object,iframe,embed,video,source,picture").forEach(suppressBrokenMedia);
     };
     scan(document);
     new MutationObserver(mutations => {
       mutations.forEach(mutation => {
         mutation.addedNodes?.forEach(node => {
           if (!node || node.nodeType !== 1) return;
-          if (node.tagName === "IMG") suppressBrokenImage(node);
+          suppressBrokenMedia(node);
           scan(node);
         });
-        if (mutation.type === "attributes" && mutation.target?.tagName === "IMG") {
-          suppressBrokenImage(mutation.target);
+        if (mutation.type === "attributes") {
+          suppressBrokenMedia(mutation.target);
+          if (mutation.target?.tagName === "IMG") suppressBrokenImage(mutation.target);
         }
       });
     }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
     window.addEventListener("error", event => {
-      if (event?.target?.tagName === "IMG") suppressBrokenImage(event.target);
+      const target = event?.target;
+      if (!target || target.nodeType !== 1) return;
+      if (target.tagName === "IMG") suppressBrokenImage(target);
+      else if (["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE"].includes(String(target.tagName || "").toUpperCase())) collapseResourceNode(target);
     }, true);
+  }
+
+  function _resourceUrlForElement(el) {
+    if (!el) return null;
+    return el.currentSrc || el.src || el.data || el.href || null;
+  }
+
+  function _captureResourceFailure(el, reason = "resource-error") {
+    if (!el || el.nodeType !== 1) return;
+    const entry = {
+      reason,
+      tagName: String(el.tagName || "").toUpperCase(),
+      id: el.id || null,
+      className: el.className || "",
+      src: _resourceUrlForElement(el),
+      timestamp: Date.now(),
+    };
+    _resourceFailureLog.push(entry);
+    if (_resourceFailureLog.length > 120) _resourceFailureLog.shift();
+  }
+
+  function _installResourceFailureTracker() {
+    if (_resourceTrackerInstalled) return;
+    _resourceTrackerInstalled = true;
+    window.addEventListener("error", event => {
+      const el = event?.target;
+      if (!el || el.nodeType !== 1) return;
+      const tag = String(el.tagName || "").toUpperCase();
+      if (!["IMG", "PICTURE", "SOURCE", "OBJECT", "IFRAME", "EMBED", "VIDEO"].includes(tag)) return;
+      _captureResourceFailure(el, "resource-load-failed");
+    }, true);
+  }
+
+  function _inspectElementNode(node) {
+    if (!node || node.nodeType !== 1) return null;
+    const rect = node.getBoundingClientRect?.() || null;
+    const style = window.getComputedStyle?.(node) || null;
+    return {
+      tagName: String(node.tagName || "").toLowerCase(),
+      id: node.id || "",
+      className: node.className || "",
+      rect: rect ? {
+        top: Number(rect.top || 0),
+        left: Number(rect.left || 0),
+        bottom: Number(rect.bottom || 0),
+        right: Number(rect.right || 0),
+        width: Number(rect.width || 0),
+        height: Number(rect.height || 0),
+      } : null,
+      position: style?.position || "",
+      zIndex: style?.zIndex || "",
+      display: style?.display || "",
+      visibility: style?.visibility || "",
+      opacity: style?.opacity || "",
+      overflow: style?.overflow || "",
+      src: _resourceUrlForElement(node),
+      complete: typeof node.complete === "boolean" ? node.complete : null,
+      naturalWidth: Number(node.naturalWidth || 0) || null,
+      naturalHeight: Number(node.naturalHeight || 0) || null,
+      parentTagName: node.parentElement?.tagName?.toLowerCase?.() || null,
+    };
+  }
+
+  function _collectBottomViewportDiagnostics(depthPx = 190) {
+    const width = window.innerWidth || 0;
+    const height = window.innerHeight || 0;
+    if (!width || !height) return { viewport: { width, height }, bandTop: 0, matches: [], points: [] };
+    const bandTop = Math.max(0, height - depthPx);
+    const all = Array.from(document.querySelectorAll("*"));
+    const matches = all
+      .map(_inspectElementNode)
+      .filter(Boolean)
+      .filter(item => item.rect && item.rect.bottom >= bandTop && item.rect.top <= height && item.display !== "none" && item.visibility !== "hidden");
+    const points = [0.1, 0.35, 0.65, 0.9].map(frac => {
+      const x = Math.max(0, Math.min(width - 1, Math.round(width * frac)));
+      const y = Math.max(0, height - Math.min(depthPx / 2, 80));
+      const stack = (document.elementsFromPoint?.(x, y) || []).map(_inspectElementNode).filter(Boolean).slice(0, 8);
+      return { x, y, stack };
+    });
+    return { viewport: { width, height }, bandTop, matches: matches.slice(0, 240), points };
+  }
+
+  function _collectMediaDiagnostics(root = document) {
+    const selectors = "img,picture source,object,iframe,embed,video,svg image";
+    const nodes = Array.from(root.querySelectorAll?.(selectors) || []);
+    return nodes.map(node => {
+      const base = _inspectElementNode(node) || {};
+      const failedImage = base.tagName === "img" && base.complete === true && Number(base.naturalWidth || 0) === 0;
+      return { ...base, failedImage };
+    });
+  }
+
+  function _inspectSphereHostChildren() {
+    const host = document.getElementById("sphere-container");
+    if (!host) return [];
+    return Array.from(host.children || []).map(_inspectElementNode).filter(Boolean);
+  }
+
+  function _collectRuntimeDebugSnapshot() {
+    return {
+      capturedAt: Date.now(),
+      bottomViewport: _collectBottomViewportDiagnostics(190),
+      media: _collectMediaDiagnostics(document),
+      sphereHostChildren: _inspectSphereHostChildren(),
+      failedResources: _resourceFailureLog.slice(0, 120),
+    };
   }
 
   function _resolveEnvironmentLifecycle(state) {
@@ -665,10 +803,12 @@
   }
 
   function _syncLayerCheckboxes() {
+    _syncingLayerControls = true;
     Object.keys(_state.visibleLayers).forEach(layer => {
       const cb = document.getElementById(`sphere-layer-${layer}`);
       if (cb) cb.checked = !!_state.visibleLayers[layer];
     });
+    _syncingLayerControls = false;
   }
 
   function _mappedLayerVisible(layerId) {
@@ -1583,6 +1723,21 @@
         _state.motionMode,
         semanticZoomState
       );
+      const readiness = renderer.getDiagnostics?.().sceneReadiness || { ready: true, reasons: [] };
+      if (!readiness.ready) {
+        _state.active3d = false;
+        _state.activeRendererMode = "recovering";
+        _setRendererLifecycle("recovering");
+        _updateRendererLabel(`Recovering 3D scene… (${(readiness.reasons || []).slice(0, 2).join(", ") || "scene-not-ready"})`);
+        const layout = globalThis.LivingTimeSphereLayout.resolveLayout({
+          containerWidth:  container.offsetWidth  || 320,
+          containerHeight: container.offsetHeight || 320,
+          devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
+        });
+        _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
+        _scheduleRetry(container, "scene-readiness-refresh");
+        return;
+      }
       renderer.updateEnvironment?.(globalThis.SofEnvironmentState?.getEnvironmentState?.() || null);
       renderer.setMode(_state.viewMode);
       _updateLastRenderTimestamp();
@@ -2326,8 +2481,16 @@
       if (!cb) return;
       cb.checked = _state.visibleLayers[layer];
       cb.addEventListener("change", () => {
+        if (_syncingLayerControls) return;
         _state.visibleLayers[layer] = cb.checked;
-        renderSphere(container);
+        const renderer = globalThis.LivingTimeSphereRenderer3d;
+        if (_state.active3d && renderer?.isInitialized?.() && typeof renderer.setLayerVisibility === "function") {
+          const updated = renderer.setLayerVisibility(layer, cb.checked);
+          if (!updated) renderSphere(container);
+          _updateRendererDiagnostics();
+        } else {
+          renderSphere(container);
+        }
       });
     });
     const focusEnvironmentBtn = document.getElementById("sphere-environment-focus");
@@ -2760,7 +2923,9 @@
     if (!container) return;
     _setRendererLifecycle("not-started");
     _installBrokenResourceGuard();
+    _installResourceFailureTracker();
     _bindRecoveryHooks(container);
+    globalThis.getSphereRuntimeDebugSnapshot = _collectRuntimeDebugSnapshot;
 
     // Auto-open Sphere Settings panel on non-mobile viewports.
     const settingsGroup = document.querySelector(".sphere-settings-group");
@@ -2852,6 +3017,7 @@
       explicitUrlLayers: !!_urlHasExplicitLayers,
       locationState: envState?.providerConfigured ? "configured" : "location-needed",
       retryCount: Number(_state.retryCount || 0),
+      runtimeDebug: _collectRuntimeDebugSnapshot(),
     };
   }
 
