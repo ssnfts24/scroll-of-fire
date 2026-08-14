@@ -468,10 +468,28 @@
     assertDeps();
     if (!container) return;
     const svg = buildSvgString({ model, spiral, layout, visibleLayers, selectedYear, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, semanticZoomState });
-    container.innerHTML = svg;
+    const holder = document.createElement("div");
+    holder.innerHTML = svg;
+    const nextSvg = holder.querySelector("svg");
+    if (!nextSvg) return;
+    const currentSvg = container.querySelector(":scope > .living-time-sphere-svg");
+    if (currentSvg && currentSvg.parentNode === container) {
+      currentSvg.replaceWith(nextSvg);
+    } else {
+      const firstCanvas = container.querySelector(":scope > .living-time-sphere-3d-canvas, :scope > .living-time-sphere-canvas");
+      if (firstCanvas && firstCanvas.parentNode === container) {
+        container.insertBefore(nextSvg, firstCanvas);
+      } else {
+        container.prepend(nextSvg);
+      }
+    }
+    container.querySelectorAll(":scope > .living-time-sphere-svg").forEach((node, index) => {
+      if (index > 0) node.remove();
+    });
+    const renderRoot = nextSvg;
 
     // Wire marker click events.
-    container.querySelectorAll("[data-year]").forEach(el => {
+    renderRoot.querySelectorAll("[data-year]").forEach(el => {
       el.addEventListener("click", () => {
         const y = Number(el.dataset.year);
         container.dispatchEvent(new CustomEvent("sphere:year-select", { detail: { year: y }, bubbles: true }));
@@ -484,7 +502,7 @@
       });
     });
 
-    container.querySelectorAll("[data-day-of-year]").forEach(el => {
+    renderRoot.querySelectorAll("[data-day-of-year]").forEach(el => {
       const selectDay = () => {
         container.dispatchEvent(new CustomEvent("sphere:marker-select", {
           detail: {
@@ -505,7 +523,7 @@
       });
     });
 
-    container.querySelectorAll("[data-moon-sector]").forEach(el => {
+    renderRoot.querySelectorAll("[data-moon-sector]").forEach(el => {
       const selectMoon = () => {
         container.dispatchEvent(new CustomEvent("sphere:marker-select", {
           detail: { type: "moon", moon: Number(el.dataset.moonSector), day: 1 },

@@ -93,6 +93,9 @@
   let _restoreAttempts = 0;
   let _lastRenderTimestamp = 0;
   let _firstFrameTimestamp = 0;
+  let _lastSceneBuildTimestamp = 0;
+  let _geometryBuildRevision = 0;
+  let _lastSceneReadiness = null;
   const _stageState = {
     capability: "idle",
     module: "idle",
@@ -1732,6 +1735,8 @@
   function updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode = _moonLabelMode, moonLabelDistance = _moonLabelDistance, dayLabelMode = _dayLabelMode, connectionRegistry = _connectionRegistry, motionMode = _motionMode, semanticZoomState = _semanticZoomState) {
     if (!_THREE || !_scene || !model) return;
     const mat = globalThis.LivingTimeSphereM;
+    _lastSceneBuildTimestamp = Date.now();
+    _geometryBuildRevision += 1;
 
     _model        = model;
     _spiral       = spiral;
@@ -2116,9 +2121,10 @@
       _objects.selectionRing.rotation.x = Math.PI / 2;
     }
 
-    _buildConnections();
-    _syncCameraFocus(model, spiral, selectedYear, true);
     _syncSemanticZoomFromCamera(true);
+    if (!_connectionDiagnostics.length && _connectionRegistry.length) _buildConnections();
+    _syncCameraFocus(model, spiral, selectedYear, true);
+    _validateSceneReadiness({ requireFirstFrame: false });
 
     globalThis.LivingTimeSphereAnimation.markDirty();
   }
@@ -2197,6 +2203,154 @@
 
     _renderer.render(_scene, _camera);
     _lastRenderTimestamp = Date.now();
+  }
+
+  function _isFiniteVec3(vec) {
+    if (!vec) return false;
+    return Number.isFinite(Number(vec.x)) && Number.isFinite(Number(vec.y)) && Number.isFinite(Number(vec.z));
+  }
+
+  function _materialHasVisibleOpacity(material) {
+    if (!material) return false;
+    if (Array.isArray(material)) return material.some(_materialHasVisibleOpacity);
+    const transparent = material.transparent === true;
+    const opacity = Number(material.opacity);
+    if (!Number.isFinite(opacity)) return true;
+    if (!transparent) return opacity > 0;
+    return opacity > 0.01;
+  }
+
+  function _countObjectPresence(entry) {
+    if (!entry) return 0;
+    const count = Number(entry.children?.length || 0);
+    return count > 0 ? count : 1;
+  }
+
+  function _collectSceneStats() {
+    const stats = {
+      sceneObjectCount: 0,
+      visibleObjectCount: 0,
+      meshCount: 0,
+      lineCount: 0,
+      patternGroupChildren: 0,
+      astronomyGroupChildren: 0,
+      selectedGroupChildren: 0,
+      patternGroupVisible: false,
+      activeLayerSet: Object.entries(_visibleLayers || {}).filter(([, enabled]) => !!enabled).map(([key]) => key),
+      sceneBounds: null,
+      sceneBoundsFinite: false,
+      cameraPosition: _camera?.position ? {
+        x: Number(_camera.position.x || 0),
+        y: Number(_camera.position.y || 0),
+        z: Number(_camera.position.z || 0),
+      } : null,
+      cameraTarget: (() => {
+        const st = globalThis.LivingTimeSphereCamera?.getState?.() || null;
+        const t = st?.target || null;
+        return t ? { x: Number(t.x || 0), y: Number(t.y || 0), z: Number(t.z || 0) } : null;
+      })(),
+      cameraNear: Number(_camera?.near || 0),
+      cameraFar: Number(_camera?.far || 0),
+      canvasWidth: Number(_canvas?.width || 0),
+      canvasHeight: Number(_canvas?.height || 0),
+      sceneIntersectsFrustum: false,
+    };
+
+    if (_scene) {
+      _scene.traverse?.(obj => {
+        if (!obj) return;
+        stats.sceneObjectCount += 1;
+        if (obj.visible !== false) stats.visibleObjectCount += 1;
+        const kind = String(obj.type || "").toLowerCase();
+        if (kind.includes("mesh")) stats.meshCount += 1;
+        if (kind.includes("line")) stats.lineCount += 1;
+      });
+    }
+
+    const patternEntries = [
+      _objects.patternRing,
+      _objects.moonDividers,
+      _objects.dayNodes,
+      _objects.weekGates,
+      _objects.weekDividers,
+      _objects.activeMoonGroup,
+      _objects.activeDayNode,
+      _objects.todayMarker,
+      _objects.selectedDayMarker,
+    ];
+    const astronomyEntries = [
+      _objects.lunarOrbit,
+      _objects.lunarMarker,
+      _objects.lunarSelectedMarker,
+      _objects.solarAxis,
+      _objects.seasonMarkers,
+      _objects.solarProgressGroup,
+      _objects.passageGroup,
+      _objects.equinoxGate,
+    ];
+    const selectedEntries = [
+      _objects.selectedDayMarker,
+      _objects.selectedDayHalo,
+      _objects.selectionRing,
+      _objects.activeDayNode,
+    ];
+    stats.patternGroupChildren = patternEntries.reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.astronomyGroupChildren = astronomyEntries.reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.selectedGroupChildren = selectedEntries.reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.patternGroupVisible = patternEntries.some(entry => entry?.visible !== false);
+
+    if (_THREE && _scene && _camera) {
+      const box = new _THREE.Box3().setFromObject(_scene);
+      const min = box?.min;
+      const max = box?.max;
+      const finite = _isFiniteVec3(min) && _isFiniteVec3(max);
+      if (finite) {
+        stats.sceneBoundsFinite = true;
+        stats.sceneBounds = {
+          min: { x: Number(min.x), y: Number(min.y), z: Number(min.z) },
+          max: { x: Number(max.x), y: Number(max.y), z: Number(max.z) },
+        };
+        const proj = new _THREE.Matrix4().multiplyMatrices(_camera.projectionMatrix, _camera.matrixWorldInverse);
+        const frustum = new _THREE.Frustum();
+        frustum.setFromProjectionMatrix(proj);
+        stats.sceneIntersectsFrustum = frustum.intersectsBox(box);
+      }
+    }
+
+    return stats;
+  }
+
+  function _validateSceneReadiness({ requireFirstFrame = false } = {}) {
+    const stats = _collectSceneStats();
+    const reasons = [];
+    const expectedPattern = _visibleLayers?.pattern !== false;
+    const expectedLunar = !!_visibleLayers?.lunar;
+    const cameraValid = _camera
+      && Number.isFinite(Number(_camera.near))
+      && Number.isFinite(Number(_camera.far))
+      && Number(_camera.near) > 0
+      && Number(_camera.far) > Number(_camera.near)
+      && _isFiniteVec3(_camera.position);
+
+    if (!cameraValid) reasons.push("camera-invalid");
+    if (stats.canvasWidth <= 0 || stats.canvasHeight <= 0) reasons.push("canvas-size-invalid");
+    if (stats.sceneObjectCount <= 0) reasons.push("scene-empty");
+    if (stats.visibleObjectCount < 6) reasons.push("visible-object-count-low");
+    if ((stats.meshCount + stats.lineCount) < 6) reasons.push("renderable-count-low");
+    if (expectedPattern && !_materialHasVisibleOpacity([_objects.patternRing?.material, _objects.dayNodes?.material])) reasons.push("pattern-material-opacity-invalid");
+    if (expectedPattern && stats.patternGroupChildren < 3) reasons.push("pattern-geometry-missing");
+    if (expectedLunar && stats.astronomyGroupChildren < 2) reasons.push("astronomy-geometry-missing");
+    if (!stats.sceneBoundsFinite) reasons.push("scene-bounds-invalid");
+    if (stats.sceneBoundsFinite && !stats.sceneIntersectsFrustum) reasons.push("scene-outside-frustum");
+    if (requireFirstFrame && !_firstFrameTimestamp) reasons.push("first-frame-missing");
+
+    _lastSceneReadiness = {
+      ready: reasons.length === 0,
+      reasons: reasons.slice(0, 12),
+      timestamp: Date.now(),
+      stats,
+    };
+    return _lastSceneReadiness;
   }
 
   // ── Init / teardown ────────────────────────────────────────────────
@@ -2293,6 +2447,8 @@
         // WebGLRenderer constructor can throw if context creation fails.
         const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.CANVAS_INIT_FAILED ?? "webgl-context-failed";
         _lastInitError = { reason, detail: String(err) };
+        if (_canvas && _canvas.parentNode) _canvas.parentNode.removeChild(_canvas);
+        _canvas = null;
         _markStage("renderer", "failed");
         _initEndedAt = performance.now();
         return { success: false, reason, detail: String(err) };
@@ -2407,6 +2563,26 @@
           reason: globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.INIT_EXCEPTION ?? "init-exception",
           detail: `First-frame render failed: ${String(err)}`,
         };
+        teardown();
+        _initEndedAt = performance.now();
+        return { success: false, reason: _lastInitError.reason, detail: _lastInitError.detail };
+      }
+
+      let readiness = _validateSceneReadiness({ requireFirstFrame: true });
+      if (!readiness?.ready) {
+        try {
+          updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState);
+          render(performance.now());
+        } catch { /* best-effort recovery pass */ }
+        readiness = _validateSceneReadiness({ requireFirstFrame: true });
+      }
+      if (!readiness?.ready) {
+        _markStage("geometry", "failed");
+        _lastInitError = {
+          reason: "SCENE_CONTENT_INCOMPLETE",
+          detail: `3D scene readiness gate failed: ${(readiness?.reasons || []).join(", ") || "unknown"}`,
+        };
+        teardown();
         _initEndedAt = performance.now();
         return { success: false, reason: _lastInitError.reason, detail: _lastInitError.detail };
       }
@@ -2850,6 +3026,10 @@
     _initialized  = false;
     _initializing = false;
     _lastRenderTimestamp = 0;
+    _firstFrameTimestamp = 0;
+    _lastSceneBuildTimestamp = 0;
+    _geometryBuildRevision = 0;
+    _lastSceneReadiness = null;
     _loadPromise  = null; // allow Three.js reload after teardown
     _THREE        = null;
     _threeSource  = null;
@@ -2884,6 +3064,7 @@
     const rendererState = !_initialized
       ? (_initializing ? "initializing" : (_stageState?.renderer === "failed" ? "failed" : "not-started"))
       : (_stageState?.firstFrame === "rendered" ? "rendered" : "ready");
+    const readiness = _lastSceneReadiness || _validateSceneReadiness({ requireFirstFrame: false });
     return {
       requestedRenderer: "3d",
       activeRenderer:    _initialized ? "webgl" : "none",
@@ -2911,6 +3092,26 @@
       rendererState,
       lastRenderTimestamp: _lastRenderTimestamp,
       firstFrameTimestamp: _firstFrameTimestamp,
+      sceneObjectCount: Number(readiness?.stats?.sceneObjectCount || 0),
+      visibleObjectCount: Number(readiness?.stats?.visibleObjectCount || 0),
+      meshCount: Number(readiness?.stats?.meshCount || 0),
+      lineCount: Number(readiness?.stats?.lineCount || 0),
+      patternGroupChildren: Number(readiness?.stats?.patternGroupChildren || 0),
+      astronomyGroupChildren: Number(readiness?.stats?.astronomyGroupChildren || 0),
+      selectedGroupChildren: Number(readiness?.stats?.selectedGroupChildren || 0),
+      patternGroupVisible: !!readiness?.stats?.patternGroupVisible,
+      activeLayerSet: Array.isArray(readiness?.stats?.activeLayerSet) ? readiness.stats.activeLayerSet.slice(0, 24) : [],
+      sceneBounds: readiness?.stats?.sceneBounds || null,
+      sceneReadiness: {
+        ready: !!readiness?.ready,
+        reasons: Array.isArray(readiness?.reasons) ? readiness.reasons.slice(0, 12) : [],
+      },
+      cameraPosition: readiness?.stats?.cameraPosition || null,
+      cameraTarget: readiness?.stats?.cameraTarget || null,
+      cameraNear: Number(readiness?.stats?.cameraNear || 0),
+      cameraFar: Number(readiness?.stats?.cameraFar || 0),
+      lastSceneBuildTimestamp: _lastSceneBuildTimestamp,
+      geometryBuildRevision: _geometryBuildRevision,
       rafActive: !!globalThis.LivingTimeSphereAnimation?.isRunning?.(),
       contextLost: _stageState.context === "lost",
       lastInitError:     _lastInitError,

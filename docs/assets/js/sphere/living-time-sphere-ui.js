@@ -73,6 +73,7 @@
   const LAYER_PRESET_OPTIONS = Object.freeze(["fullObservatory", "cleanPattern", "livingSky", "weatherField", "passage", "witnessMap", "historicalField", "lowPower"]);
 
   let _urlHasExplicitLayers = false;
+  let _urlHasExplicitMoonLabelDistance = false;
 
   // ── Dependency check ───────────────────────────────────────────────
 
@@ -90,6 +91,10 @@
   function applyUrlState() {
     if (typeof location === "undefined") return;
     _urlHasExplicitLayers = false;
+    _urlHasExplicitMoonLabelDistance = false;
+    let parsedUrl = null;
+    try { parsedUrl = new URL(location.href); } catch { parsedUrl = null; }
+    if (parsedUrl?.searchParams?.has("moon_label_distance")) _urlHasExplicitMoonLabelDistance = true;
     const parsed = globalThis.LivingTimeSphereUrlState.parseSphereUrl(location.href);
     if (parsed.year)         _state.year         = parsed.year;
     if (parsed.viewMode)     _state.viewMode     = parsed.viewMode;
@@ -1613,7 +1618,7 @@
       if (!canvas) {
         canvas = document.createElement("canvas");
         canvas.className = "living-time-sphere-canvas";
-        container.innerHTML = "";
+        container.querySelectorAll(".living-time-sphere-svg,.living-time-sphere-canvas").forEach(node => node.remove());
         container.appendChild(canvas);
       }
       const ok = globalThis.LivingTimeSphereRendererCanvas.renderCanvas({ canvas, model, spiral, layout, visibleLayers: effectiveLayers, selectedYear: _state.year });
@@ -2747,7 +2752,9 @@
     applyUrlState();
     _restoreSelectedStateIfNeeded();
     _state.moonLabelMode = _resolveMoonLabelMode();
-    _state.moonLabelDistance = _resolveMoonLabelDistance();
+    if (!_urlHasExplicitMoonLabelDistance) {
+      _state.moonLabelDistance = _resolveMoonLabelDistance();
+    }
 
     const container = document.getElementById("sphere-container");
     if (!container) return;
