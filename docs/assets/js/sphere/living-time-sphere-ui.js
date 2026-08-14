@@ -1574,6 +1574,8 @@
       "sphere-diag-last-error":   diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : "none",
       "sphere-diag-camera-distance": semantic.distance != null ? `${Number(semantic.distance).toFixed(3)}` : "—",
       "sphere-diag-semantic-band": semantic.band || "—",
+      "sphere-diag-semantic-prev-band": semantic.previousBand || "—",
+      "sphere-diag-semantic-threshold": semantic.transitionThreshold != null ? String(semantic.transitionThreshold) : "—",
       "sphere-diag-label-budget": semantic.moonLabelMode || semantic.dayLabelMode
         ? `${semantic.moonLabelMode || "—"} moon · ${semantic.dayLabelMode || "—"} day`
         : "—",

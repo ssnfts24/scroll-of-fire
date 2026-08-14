@@ -517,6 +517,12 @@ test("Sphere page includes observatory-capability-manager.js before renderer-3d"
   assert.ok(iCap < i3d, "capability manager must appear before renderer-3d");
 });
 
+test("Sphere page includes semantic hysteresis diagnostic rows", () => {
+  const html = read("docs/living-time-sphere.html");
+  assert.ok(html.includes('id="sphere-diag-semantic-prev-band"'), "sphere diagnostics must include previous semantic band row");
+  assert.ok(html.includes('id="sphere-diag-semantic-threshold"'), "sphere diagnostics must include semantic transition threshold row");
+});
+
 // ── Mount module references ObservatoryCapabilityManager ─────────────
 
 test("Mount module: uses ObservatoryCapabilityManager.selectTier for tier selection", () => {
@@ -553,6 +559,19 @@ test("Mount module: teardown sets mounted=false to suppress callbacks", () => {
   assert.ok(code.includes("mounted = false"), "teardown must set mounted=false");
 });
 
+test("Mount module: selected day canonical conversion uses configured boundary mode", () => {
+  const code = read("docs/assets/js/sphere/living-time-sphere-mount.js");
+  assert.ok(code.includes("boundaryMode: state.boundaryMode"), "mount must resolve selected day using configured boundary mode");
+  assert.ok(!code.includes('boundaryMode: "midnight"'), "mount must not hardcode midnight boundary for selected-day conversion");
+});
+
+test("Mount module: defers 3D activation when container dimensions are invalid", () => {
+  const code = read("docs/assets/js/sphere/living-time-sphere-mount.js");
+  assert.ok(code.includes("_containerHasUsableSize"), "mount must check for usable container dimensions");
+  assert.ok(code.includes("_awaitUsableContainerSize"), "mount must defer activation until dimensions are valid");
+  assert.ok(code.includes("pendingSizeObserver"), "mount must track pending size observer for deferred activation");
+});
+
 // ── 3D Renderer: uses callbacks from init params ──────────────────────
 
 test("Renderer 3D: init() accepts onContextLost and onContextRestored params", () => {
@@ -583,6 +602,23 @@ test("Renderer 3D: accepts tier parameter for clampPixelRatio", () => {
   const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
   assert.ok(code.includes("clampPixelRatio"), "renderer must use clampPixelRatio");
   assert.ok(code.includes("tier"), "renderer must accept tier param");
+});
+
+test("Renderer 3D: semantic diagnostics expose previous band and transition threshold", () => {
+  const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
+  assert.ok(code.includes("previousBand"), "renderer diagnostics must include previous semantic band");
+  assert.ok(code.includes("transitionThreshold"), "renderer diagnostics must include semantic transition threshold");
+});
+
+test("Renderer 3D: disconnects resize observer on teardown", () => {
+  const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
+  assert.ok(code.includes("_resizeObserver?.disconnect"), "renderer must disconnect resize observer during teardown");
+});
+
+test("UI diagnostics maps semantic hysteresis fields to DOM", () => {
+  const code = read("docs/assets/js/sphere/living-time-sphere-ui.js");
+  assert.ok(code.includes("sphere-diag-semantic-prev-band"), "UI diagnostics must publish previous semantic band");
+  assert.ok(code.includes("sphere-diag-semantic-threshold"), "UI diagnostics must publish semantic threshold");
 });
 
 // ── DEVICE_MEMORY_GUARD semantics ─────────────────────────────────────

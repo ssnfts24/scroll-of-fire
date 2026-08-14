@@ -79,7 +79,7 @@
       ? globalThis.PatternCalendar.fromCivilDate({
           date: civilDate,
           timeZone: state.timeZone,
-          boundaryMode: "midnight",
+          boundaryMode: state.boundaryMode,
           sunsetTime: state.manualSunset,
         })
       : null;
@@ -188,6 +188,32 @@
     let initGen = 0;          // incremented on each activate3d() call; guards stale inits
     let mounted = true;       // set false on teardown to suppress callbacks
     let restoreAttempts = 0;  // counts context-restoration retries (capped to prevent looping)
+    let pendingSizeObserver = null;
+
+    function _containerHasUsableSize() {
+      if (!container) return false;
+      const rect = typeof container.getBoundingClientRect === "function"
+        ? container.getBoundingClientRect()
+        : null;
+      const width = Number(rect?.width ?? container.clientWidth ?? 0);
+      const height = Number(rect?.height ?? container.clientHeight ?? 0);
+      return width > 0 && height > 0;
+    }
+
+    function _awaitUsableContainerSize() {
+      if (_containerHasUsableSize()) return false;
+      if (pendingSizeObserver || typeof ResizeObserver === "undefined") return true;
+      pendingSizeObserver = new ResizeObserver(() => {
+        if (!mounted || !_containerHasUsableSize()) return;
+        pendingSizeObserver.disconnect();
+        pendingSizeObserver = null;
+        Promise.resolve().then(() => {
+          if (mounted && !active3d) activate3d();
+        });
+      });
+      pendingSizeObserver.observe(container);
+      return true;
+    }
 
     function notify() {
       if (typeof options.onStateChange === "function") {
@@ -251,6 +277,7 @@
 
     async function activate3d() {
       if (active3d || state.renderer === "svg" || !globalThis.LivingTimeSphereRenderer3d || !globalThis.LivingTimeSphereM) return;
+      if (_awaitUsableContainerSize()) return;
 
       const capMgr = globalThis.ObservatoryCapabilityManager;
 
@@ -406,6 +433,10 @@
       refresh,
       teardown() {
         mounted = false;
+        if (pendingSizeObserver) {
+          pendingSizeObserver.disconnect();
+          pendingSizeObserver = null;
+        }
         if (active3d && globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
           globalThis.LivingTimeSphereRenderer3d.teardown();
         }

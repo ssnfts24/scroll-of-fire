@@ -125,6 +125,8 @@
   let _connectionRegistry = [];
   let _semanticZoomState = null;
   let _activeSemanticBand = null;
+  let _previousSemanticBand = null;
+  let _lastSemanticTransitionThreshold = null;
   let _motionMode = "still";
   let _dayNodeMetadata = [];
   let _dayNodeBasePositions = null;
@@ -134,6 +136,7 @@
   let _connectionVisibleCount = 0;
   let _lastSemanticDistance = null;
   let _lastSemanticSourceType = "unknown";
+  let _resizeObserver = null;
   const _moonAnchors = [];    // { moon, angle, radius, worldVec } for each of 13 moons
   let _lastCameraFocusKey = null;
   const _environmentLayerEnabled = {
@@ -230,19 +233,25 @@
     };
   }
 
-  function _stabilizeBand({ candidateBand, distance, screenWidth, previousBand }) {
-    if (!previousBand || candidateBand === previousBand) return candidateBand;
+  function _stabilizeBandWithMeta({ candidateBand, distance, screenWidth, previousBand }) {
+    if (!previousBand || candidateBand === previousBand) {
+      return { band: candidateBand, transitionThreshold: null };
+    }
     const d = Number(distance);
-    if (!Number.isFinite(d)) return candidateBand;
+    if (!Number.isFinite(d)) return { band: candidateBand, transitionThreshold: null };
     const { farMin, mediumMin, nearMin } = _semanticThresholds(screenWidth);
     const margin = 0.12;
-    if (previousBand === "far" && candidateBand === "medium" && d >= farMin - margin) return "far";
-    if (previousBand === "medium" && candidateBand === "far" && d < farMin + margin) return "medium";
-    if (previousBand === "medium" && candidateBand === "near" && d >= mediumMin - margin) return "medium";
-    if (previousBand === "near" && candidateBand === "medium" && d < mediumMin + margin) return "near";
-    if (previousBand === "near" && candidateBand === "detail" && d >= nearMin - margin) return "near";
-    if (previousBand === "detail" && candidateBand === "near" && d < nearMin + margin) return "detail";
-    return candidateBand;
+    if (previousBand === "far" && candidateBand === "medium" && d >= farMin - margin) return { band: "far", transitionThreshold: Number((farMin - margin).toFixed(3)) };
+    if (previousBand === "medium" && candidateBand === "far" && d < farMin + margin) return { band: "medium", transitionThreshold: Number((farMin + margin).toFixed(3)) };
+    if (previousBand === "medium" && candidateBand === "near" && d >= mediumMin - margin) return { band: "medium", transitionThreshold: Number((mediumMin - margin).toFixed(3)) };
+    if (previousBand === "near" && candidateBand === "medium" && d < mediumMin + margin) return { band: "near", transitionThreshold: Number((mediumMin + margin).toFixed(3)) };
+    if (previousBand === "near" && candidateBand === "detail" && d >= nearMin - margin) return { band: "near", transitionThreshold: Number((nearMin - margin).toFixed(3)) };
+    if (previousBand === "detail" && candidateBand === "near" && d < nearMin + margin) return { band: "detail", transitionThreshold: Number((nearMin + margin).toFixed(3)) };
+    return { band: candidateBand, transitionThreshold: null };
+  }
+
+  function _stabilizeBand({ candidateBand, distance, screenWidth, previousBand }) {
+    return _stabilizeBandWithMeta({ candidateBand, distance, screenWidth, previousBand }).band;
   }
 
   function _resolveSemanticZoomFromCamera() {
@@ -254,7 +263,8 @@
     const rawDistance = Number(cameraState.dist);
     const distance = Number.isFinite(rawDistance) ? rawDistance : fallbackDist;
     const candidateBand = zoom.resolveBand({ distance, screenWidth });
-    const band = _stabilizeBand({ candidateBand, distance, screenWidth, previousBand: _activeSemanticBand });
+    const stabilization = _stabilizeBandWithMeta({ candidateBand, distance, screenWidth, previousBand: _activeSemanticBand });
+    const band = stabilization.band;
     const resolved = zoom.resolveVisibility({
       baseLayers: _visibleLayers || {},
       band,
@@ -264,6 +274,8 @@
       ...resolved,
       sourceType: Number.isFinite(rawDistance) ? "camera-distance-live" : "camera-distance-fallback",
       distance,
+      previousBand: _activeSemanticBand || null,
+      transitionThreshold: stabilization.transitionThreshold,
     });
   }
 
@@ -272,6 +284,8 @@
     const r   = mat.SIZES.patternRing * _moonLabelRadiusMultiplier(viewMode, _moonLabelDistance);
     _moonAnchors.length = 0;
     _activeSemanticBand = null;
+    _previousSemanticBand = null;
+    _lastSemanticTransitionThreshold = null;
     for (let i = 0; i < 13; i++) {
       const angle = _moonSectorCenterAngle(i);
       const { x, z } = angleToXZ(angle, r);
@@ -1406,8 +1420,10 @@
       || !!next.visibility?.exactDays !== !!_semanticZoomState.visibility?.exactDays
       || !!next.visibility?.weekGates !== !!_semanticZoomState.visibility?.weekGates;
     if (!changed) return false;
+    _previousSemanticBand = _activeSemanticBand || _semanticZoomState?.band || null;
     _semanticZoomState = next;
     _activeSemanticBand = next.band;
+    _lastSemanticTransitionThreshold = next.transitionThreshold ?? null;
     _moonLabelMode = next.moonLabelMode || _moonLabelMode;
     _dayLabelMode = next.dayLabelMode || _dayLabelMode;
     _applySemanticVisibility(_visibleLayers || {}, next);
@@ -2664,7 +2680,8 @@
 
   function _wireResize(container) {
     if (typeof ResizeObserver === "undefined") return;
-    new ResizeObserver(() => {
+    _resizeObserver?.disconnect?.();
+    _resizeObserver = new ResizeObserver(() => {
       if (!_renderer || !_canvas || !_camera) return;
       const rect = container.getBoundingClientRect();
       const w    = Math.max(rect.width  || 320, 100);
@@ -2673,7 +2690,8 @@
       globalThis.LivingTimeSphereCamera.resize(w, h);
       _moonLabelManager?.markDirty();
       globalThis.LivingTimeSphereAnimation.markDirty();
-    }).observe(container);
+    });
+    _resizeObserver.observe(container);
   }
 
   // ── Public API ────────────────────────────────────────────────────
@@ -2743,7 +2761,11 @@
     _connectionVisibleCount = 0;
     _lastSemanticDistance = null;
     _lastSemanticSourceType = "unknown";
+    _previousSemanticBand = null;
+    _lastSemanticTransitionThreshold = null;
     _environmentController.dispose();
+    _resizeObserver?.disconnect?.();
+    _resizeObserver = null;
     _contextLossDispose?.();
     _contextLossDispose = null;
     _scene = null;
@@ -2808,7 +2830,9 @@
       lastInitError:     _lastInitError,
       semanticZoom: {
         band: _semanticZoomState?.band || "medium",
+        previousBand: _previousSemanticBand,
         distance: _lastSemanticDistance,
+        transitionThreshold: _lastSemanticTransitionThreshold,
         sourceType: _lastSemanticSourceType,
         dayLabelMode: _semanticZoomState?.dayLabelMode || _dayLabelMode,
         moonLabelMode: _semanticZoomState?.moonLabelMode || _moonLabelMode,
