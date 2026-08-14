@@ -80,6 +80,7 @@
   let _viewMode     = "today";
   let _visibleLayers = {};
   let _lastInitError = null;  // last failure reason for diagnostics
+  let _contextLossDispose = null; // cleanup fn for WebGL context-loss guard
 
   // Scene object refs
   const _objects = {};
@@ -1538,7 +1539,7 @@
 
   // ── Init / teardown ────────────────────────────────────────────────
 
-  async function init({ container, model, spiral, quality, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, environmentState, reducedMotion, onYearSelect, onMarkerSelect }) {
+  async function init({ container, model, spiral, quality, tier, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, environmentState, reducedMotion, onYearSelect, onMarkerSelect, onContextLost: _onContextLostCb, onContextRestored: _onContextRestoredCb }) {
     // Guard against concurrent or duplicate init calls.
     if (_initializing || _initialized) {
       return { success: false, reason: "already-running" };
@@ -1549,19 +1550,22 @@
       assertDeps();
 
       if (!globalThis.LivingTimeSphereEffects.detectWebGl()) {
-        _lastInitError = { reason: "webgl-unavailable", detail: "WebGL context creation failed in this environment." };
-        return { success: false, reason: "webgl-unavailable", detail: _lastInitError.detail };
+        const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.WEBGL_UNSUPPORTED ?? "webgl-unavailable";
+        _lastInitError = { reason, detail: "WebGL context creation failed in this environment." };
+        return { success: false, reason, detail: _lastInitError.detail };
       }
       if (!quality) {
-        _lastInitError = { reason: "quality-svgonly", detail: "Quality preset resolved to SVG-only." };
-        return { success: false, reason: "quality-svgonly" };
+        const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.QUALITY_SVGONLY ?? "quality-svgonly";
+        _lastInitError = { reason, detail: "Quality preset resolved to SVG-only." };
+        return { success: false, reason };
       }
 
       try {
         await loadThreeJs();
       } catch (err) {
-        _lastInitError = { reason: "three-load-failed", detail: String(err) };
-        return { success: false, reason: "three-load-failed", detail: String(err) };
+        const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.THREE_IMPORT_FAILED ?? "three-load-failed";
+        _lastInitError = { reason, detail: String(err) };
+        return { success: false, reason, detail: String(err) };
       }
 
       const THREE = _THREE;
@@ -1579,10 +1583,24 @@
       _ensureFloatingLabel(container);
 
       // ── Renderer ──────────────────────────────────────────────────
-      const pixelRatio = Math.min(
-        quality.pixelRatioMax || 2,
-        typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1
-      );
+      // Use ObservatoryCapabilityManager.clampPixelRatio if a tier is known;
+      // otherwise fall back to the quality-preset cap.  This ensures DPR is
+      // always gated through the authoritative capability-manager path.
+      const _dprTier = tier ?? (() => {
+        const presets = globalThis.LivingTimeSphereM?.QUALITY_PRESETS;
+        if (presets && quality === presets.high)      return "high";
+        if (presets && quality === presets.lowpower)  return "lowpower";
+        return "balanced";
+      })();
+      const pixelRatio = globalThis.ObservatoryCapabilityManager
+        ? globalThis.ObservatoryCapabilityManager.clampPixelRatio(
+            _dprTier,
+            typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1
+          )
+        : Math.min(
+            quality.pixelRatioMax || 2,
+            typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1
+          );
       try {
         _renderer = new THREE.WebGLRenderer({
           canvas:    _canvas,
@@ -1592,9 +1610,34 @@
         });
       } catch (err) {
         // WebGLRenderer constructor can throw if context creation fails.
-        _lastInitError = { reason: "webgl-context-failed", detail: String(err) };
-        return { success: false, reason: "webgl-context-failed", detail: String(err) };
+        const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.CANVAS_INIT_FAILED ?? "webgl-context-failed";
+        _lastInitError = { reason, detail: String(err) };
+        return { success: false, reason, detail: String(err) };
       }
+
+      // Attach WebGL context-loss guard via ObservatoryCapabilityManager.
+      // On context loss: stop the animation loop, mark renderer as not
+      // initialized, and invoke the mount-layer callback so SVG fallback
+      // activates immediately.
+      // On restoration: invoke the mount-layer callback so it can
+      // teardown stale resources and attempt a clean reinit.
+      _contextLossDispose = globalThis.ObservatoryCapabilityManager?.attachContextLossGuard(_canvas, {
+        onLost() {
+          const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.CONTEXT_LOST ?? "CONTEXT_LOST";
+          _lastInitError = { reason, detail: "WebGL context was lost." };
+          _initialized = false;
+          // Stop the animation loop so we don't render with a lost context.
+          try { globalThis.LivingTimeSphereAnimation?.stop?.(); } catch { /* best-effort */ }
+          console.warn(`[LivingTimeSphere] 3D context lost (${reason}). Activating SVG fallback.`);
+          // Notify mount layer — mount will show SVG fallback.
+          try { _onContextLostCb?.(); } catch { /* mount notification is best-effort */ }
+        },
+        onRestored() {
+          console.info("[LivingTimeSphere] WebGL context restored — notifying mount for reinit.");
+          // Notify mount layer — mount will teardown stale resources and reinit.
+          try { _onContextRestoredCb?.(); } catch { /* mount notification is best-effort */ }
+        },
+      }) ?? (() => {});
       _renderer.setPixelRatio(pixelRatio);
       _quality = quality;
 
@@ -1661,8 +1704,8 @@
       _camera    = null;
       _environmentController.dispose();
       _initialized = false;
-      _lastInitError = { reason: "init-exception", detail: String(err) };
-      return { success: false, reason: "init-exception", detail: String(err) };
+      _lastInitError = { reason: globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.INIT_EXCEPTION ?? "init-exception", detail: String(err) };
+      return { success: false, reason: _lastInitError.reason, detail: String(err) };
     } finally {
       _initializing = false;
     }
@@ -1982,6 +2025,8 @@
     _moonLabelManager = null;
     _moonAnchors.length = 0;
     _environmentController.dispose();
+    _contextLossDispose?.();
+    _contextLossDispose = null;
     _scene = null;
     _camera = null;
     _initialized  = false;

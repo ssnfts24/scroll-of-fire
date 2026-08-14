@@ -99,6 +99,48 @@
     return decorated;
   }
 
+  // ── Tier ↔ quality-preset helpers ────────────────────────────────
+  //
+  // ObservatoryCapabilityManager is the authoritative source for capability
+  // and tier decisions.  performance-runtime.js handles page-level CSS classes
+  // and image loading; it delegates Observatory-specific tier decisions to
+  // ObservatoryCapabilityManager via the sof:performance-profile event (which
+  // ObservatoryCapabilityManager may optionally consume in future).
+  //
+  // The helpers below map between the two vocabularies so that the mount and
+  // renderer modules stay consistent.
+
+  /**
+   * Map a state.quality string to the corresponding PERFORMANCE_TIERS value
+   * for use as a selectTier() override.  Returns undefined for "auto".
+   */
+  function _qualityStateToTierOverride(qualityState, capMgr) {
+    if (!qualityState || qualityState === "auto" || !capMgr) return undefined;
+    const map = {
+      "high":     capMgr.PERFORMANCE_TIERS.HIGH,
+      "balanced": capMgr.PERFORMANCE_TIERS.BALANCED,
+      "lowpower": capMgr.PERFORMANCE_TIERS.LOWPOWER,
+      "svgonly":  capMgr.PERFORMANCE_TIERS.MINIMAL,
+    };
+    return map[qualityState] || undefined;
+  }
+
+  /**
+   * Map an ObservatoryCapabilityManager tier string to the corresponding
+   * LivingTimeSphereM quality preset object.  Returns null for MINIMAL tier
+   * (SVG-only path — caller should not attempt 3D init).
+   */
+  function _tierToQualityPreset(tier, capMgr) {
+    const LTS = globalThis.LivingTimeSphereM;
+    if (!LTS?.QUALITY_PRESETS) return null;
+    const T = capMgr?.PERFORMANCE_TIERS;
+    if (tier === (T?.HIGH     ?? "high"))     return LTS.QUALITY_PRESETS.high     || LTS.QUALITY_PRESETS.balanced;
+    if (tier === (T?.BALANCED ?? "balanced")) return LTS.QUALITY_PRESETS.balanced;
+    if (tier === (T?.LOWPOWER ?? "lowpower")) return LTS.QUALITY_PRESETS.lowpower;
+    if (tier === (T?.MINIMAL  ?? "svgonly"))  return null;
+    return LTS.QUALITY_PRESETS.balanced;
+  }
+
   function mount(options = {}) {
     if (!assertDeps()) return null;
     if (options.fullPage && globalThis.LivingTimeSphereUi) {
@@ -126,6 +168,9 @@
 
     let sceneData = null;
     let active3d = false;
+    let initGen = 0;          // incremented on each activate3d() call; guards stale inits
+    let mounted = true;       // set false on teardown to suppress callbacks
+    let restoreAttempts = 0;  // counts context-restoration retries (capped to prevent looping)
 
     function notify() {
       if (typeof options.onStateChange === "function") {
@@ -187,53 +232,136 @@
 
     async function activate3d() {
       if (active3d || state.renderer === "svg" || !globalThis.LivingTimeSphereRenderer3d || !globalThis.LivingTimeSphereM) return;
-      const preset = state.quality === "auto"
-        ? globalThis.LivingTimeSphereM.resolveAutoPreset({
-            reducedMotion: state.motionMode === "reduced",
-            deviceMemoryGb: (typeof navigator !== "undefined" && navigator.deviceMemory) || 4,
-            screenWidth: typeof window !== "undefined" ? window.innerWidth : 1024,
-            webglAvailable: !!globalThis.LivingTimeSphereEffects?.detectWebGl?.(),
-          })
-        : globalThis.LivingTimeSphereM.QUALITY_PRESETS[state.quality] || globalThis.LivingTimeSphereM.QUALITY_PRESETS.balanced;
-      const result = await globalThis.LivingTimeSphereRenderer3d.init({
-        container,
-        model: sceneData.model,
-        spiral: sceneData.spiral,
-        quality: preset,
-        selectedYear: sceneData.selectedYear,
-        visibleLayers: sceneData.visibleLayers,
-        viewMode: state.mode,
-        moonLabelMode: state.moonLabelMode,
-        moonLabelDistance: state.moonLabelDistance,
-        dayLabelMode: state.dayLabelMode,
-        connectionRegistry: sceneData.connectionRegistry,
-        motionMode: state.motionMode,
-        environmentState: globalThis.SofEnvironmentState?.getEnvironmentState?.() || null,
-        reducedMotion: state.motionMode === "reduced",
-        onYearSelect(year) {
-          state = globalThis.LivingTimeSphereState.mergeState(state, { selectedYear: year, mode: "passage", selectedMarker: `year-${year}` });
-          buildScene();
-          if (active3d) {
-            globalThis.LivingTimeSphereRenderer3d.refresh(sceneData.model, sceneData.spiral, sceneData.selectedYear, sceneData.visibleLayers, state.mode, state.moonLabelMode, state.moonLabelDistance, state.dayLabelMode, sceneData.connectionRegistry, state.motionMode);
-          }
-          notify();
-        },
-        onMarkerSelect(marker) {
-          if (!marker) return;
-          if (marker.type === "day" && marker.dayOfPatternYear) {
-            state = globalThis.LivingTimeSphereState.mergeState(state, { selectedDay: marker.dayOfPatternYear, selectedMarker: `day-${marker.dayOfPatternYear}`, selectedMoon: marker.moon || null });
-          } else if (marker.type === "moon" && marker.moon) {
-            state = globalThis.LivingTimeSphereState.mergeState(state, { selectedMoon: marker.moon, selectedDay: (marker.moon - 1) * 28 + Math.max(1, Math.min(28, marker.day || 1)), selectedMarker: `moon-${marker.moon}` });
-          } else {
-            state = globalThis.LivingTimeSphereState.mergeState(state, { selectedMarker: marker.type || null });
-          }
-          buildScene();
-          if (active3d) {
-            globalThis.LivingTimeSphereRenderer3d.refresh(sceneData.model, sceneData.spiral, sceneData.selectedYear, sceneData.visibleLayers, state.mode, state.moonLabelMode, state.moonLabelDistance, state.dayLabelMode, sceneData.connectionRegistry, state.motionMode);
-          }
-          notify();
-        },
-      });
+
+      const capMgr = globalThis.ObservatoryCapabilityManager;
+
+      // ── Authoritative tier selection via ObservatoryCapabilityManager ──
+      const webglAvailable = capMgr
+        ? capMgr.probeWebGl().webgl
+        : !!globalThis.LivingTimeSphereEffects?.detectWebGl?.();
+
+      const tierOverride = _qualityStateToTierOverride(state.quality, capMgr);
+      const tier = capMgr
+        ? capMgr.selectTier({ webglAvailable, override: tierOverride })
+        : (webglAvailable ? "balanced" : "svgonly");
+
+      // MINIMAL → capability manager decided 3D is inappropriate; stay on SVG
+      const minimalTier = capMgr?.PERFORMANCE_TIERS?.MINIMAL ?? "svgonly";
+      if (tier === minimalTier) return;
+
+      const preset = _tierToQualityPreset(tier, capMgr);
+      if (!preset) return; // MINIMAL resolves to no preset
+
+      // Generation token — prevents a stale init from replacing an active renderer
+      const thisGen = ++initGen;
+
+      // ── Context-loss/restore callbacks ────────────────────────────────
+      // These are live closures that update mount-level state and orchestrate
+      // the renderer lifecycle.  Observatory state (state, sceneData) is
+      // authoritative across renderer transitions — the calendar/time model
+      // is never rebuilt just because WebGL failed.
+      const onContextLost = () => {
+        if (!mounted) return;
+        active3d = false;
+        // Re-render SVG with the preserved observatory state.
+        buildScene();
+        renderSvg();
+        notify();
+      };
+
+      const MAX_RESTORE_ATTEMPTS = 3;
+      const onContextRestored = () => {
+        if (!mounted || active3d) return;
+        restoreAttempts++;
+        if (restoreAttempts > MAX_RESTORE_ATTEMPTS) {
+          console.warn("[LivingTimeSphere] Max context-restore attempts reached; staying on SVG fallback.");
+          return;
+        }
+        // Teardown stale renderer resources, then attempt a clean 3D reinit.
+        try { globalThis.LivingTimeSphereRenderer3d?.teardown?.(); } catch { /* best-effort */ }
+        Promise.resolve().then(() => {
+          if (mounted && !active3d) activate3d();
+        });
+      };
+
+      // ── Race init against timeout ─────────────────────────────────────
+      // Prevents indefinite hang on slow/frozen Three.js import or renderer
+      // creation.  On timeout, SVG fallback remains active.
+      const timeoutMs = 15000;
+      const timeoutPromise = capMgr
+        ? capMgr.initTimeout(timeoutMs)
+        : new Promise((_, reject) =>
+            setTimeout(() => reject({ reason: "INIT_TIMEOUT", detail: `Timed out after ${timeoutMs}ms` }), timeoutMs)
+          );
+
+      let result;
+      try {
+        result = await Promise.race([
+          globalThis.LivingTimeSphereRenderer3d.init({
+            container,
+            model:              sceneData.model,
+            spiral:             sceneData.spiral,
+            quality:            preset,
+            tier,
+            selectedYear:       sceneData.selectedYear,
+            visibleLayers:      sceneData.visibleLayers,
+            viewMode:           state.mode,
+            moonLabelMode:      state.moonLabelMode,
+            moonLabelDistance:  state.moonLabelDistance,
+            dayLabelMode:       state.dayLabelMode,
+            connectionRegistry: sceneData.connectionRegistry,
+            motionMode:         state.motionMode,
+            environmentState:   globalThis.SofEnvironmentState?.getEnvironmentState?.() || null,
+            reducedMotion:      state.motionMode === "reduced",
+            onContextLost,
+            onContextRestored,
+            onYearSelect(year) {
+              state = globalThis.LivingTimeSphereState.mergeState(state, { selectedYear: year, mode: "passage", selectedMarker: `year-${year}` });
+              buildScene();
+              if (active3d) {
+                globalThis.LivingTimeSphereRenderer3d.refresh(sceneData.model, sceneData.spiral, sceneData.selectedYear, sceneData.visibleLayers, state.mode, state.moonLabelMode, state.moonLabelDistance, state.dayLabelMode, sceneData.connectionRegistry, state.motionMode);
+              }
+              notify();
+            },
+            onMarkerSelect(marker) {
+              if (!marker) return;
+              if (marker.type === "day" && marker.dayOfPatternYear) {
+                state = globalThis.LivingTimeSphereState.mergeState(state, { selectedDay: marker.dayOfPatternYear, selectedMarker: `day-${marker.dayOfPatternYear}`, selectedMoon: marker.moon || null });
+              } else if (marker.type === "moon" && marker.moon) {
+                state = globalThis.LivingTimeSphereState.mergeState(state, { selectedMoon: marker.moon, selectedDay: (marker.moon - 1) * 28 + Math.max(1, Math.min(28, marker.day || 1)), selectedMarker: `moon-${marker.moon}` });
+              } else {
+                state = globalThis.LivingTimeSphereState.mergeState(state, { selectedMarker: marker.type || null });
+              }
+              buildScene();
+              if (active3d) {
+                globalThis.LivingTimeSphereRenderer3d.refresh(sceneData.model, sceneData.spiral, sceneData.selectedYear, sceneData.visibleLayers, state.mode, state.moonLabelMode, state.moonLabelDistance, state.dayLabelMode, sceneData.connectionRegistry, state.motionMode);
+              }
+              notify();
+            },
+          }),
+          timeoutPromise,
+        ]);
+      } catch (err) {
+        // Timeout rejects with { reason, detail }; unexpected errors may also arrive here.
+        // In all cases, SVG fallback is already visible — no additional action needed.
+        if (initGen !== thisGen) return; // stale init — discard silently
+        const reason = err?.reason ?? "INIT_EXCEPTION";
+        if (reason === "INIT_TIMEOUT") {
+          console.warn(`[LivingTimeSphere] 3D init timed out after ${timeoutMs}ms (INIT_TIMEOUT). SVG fallback remains active.`);
+        } else {
+          console.warn(`[LivingTimeSphere] 3D init failed (${reason}). SVG fallback remains active.`);
+        }
+        return;
+      }
+
+      // Guard: if a newer generation started while we were awaiting init, discard this result.
+      if (initGen !== thisGen) {
+        if (result?.success) {
+          try { globalThis.LivingTimeSphereRenderer3d?.teardown?.(); } catch { /* best-effort */ }
+        }
+        return;
+      }
+
       active3d = !!result?.success;
     }
 
@@ -258,6 +386,7 @@
       activate: activate3d,
       refresh,
       teardown() {
+        mounted = false;
         if (active3d && globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
           globalThis.LivingTimeSphereRenderer3d.teardown();
         }
