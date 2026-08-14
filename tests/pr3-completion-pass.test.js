@@ -236,6 +236,8 @@ test("URL/state matrix: today URL handoff parses, invalid params are rejected, d
 test("resize/orientation + broken-resource audit: no duplicate-canvas path and no img directly under camera controls", () => {
   const renderer = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
   const html = read("docs/living-time-sphere.html");
+  const css = read("docs/assets/css/living-time-sphere.css");
+  const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
   assert.ok(renderer.includes("if (_initializing || _initialized)"));
   assert.ok(renderer.includes("if (_canvas && _canvas.parentNode) _canvas.parentNode.removeChild(_canvas)"));
   assert.ok(renderer.includes("new ResizeObserver"));
@@ -243,4 +245,12 @@ test("resize/orientation + broken-resource audit: no duplicate-canvas path and n
   const next = html.indexOf('id="sphere-data-table-section"', start);
   const section = start >= 0 && next > start ? html.slice(start, next) : "";
   assert.ok(!section.includes("<img"), "camera-controls block does not include an image tag");
+  assert.ok(html.includes('id="sphere-environment-bridge"'));
+  assert.ok(html.includes('id="sphere-environment-focus"'));
+  assert.equal((ui.match(/data-sphere-action="open-field-map"/g) || []).length, 1, "open-field-map action is not duplicated");
+  assert.equal((ui.match(/data-sphere-action="show-fields"/g) || []).length, 1, "show-fields action is not duplicated");
+  assert.ok(ui.includes("function _updateEnvironmentBridge(model)"));
+  assert.ok(ui.includes("function _installBrokenResourceGuard()"));
+  assert.ok(css.includes(".sphere-broken-resource-hidden { display:none !important; }"));
+  assert.ok(css.includes("grid-template-areas"));
 });

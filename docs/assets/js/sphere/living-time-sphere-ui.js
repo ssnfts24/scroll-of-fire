@@ -57,6 +57,7 @@
     "pattern-year": "Pattern Year",
     historical: "Historical comparison",
   });
+  let _brokenResourceGuardInstalled = false;
   const LAYER_PRESET_OPTIONS = Object.freeze(["fullObservatory", "cleanPattern", "livingSky", "weatherField", "passage", "witnessMap", "historicalField", "lowPower"]);
 
   let _urlHasExplicitLayers = false;
@@ -106,6 +107,47 @@
         theta: parsed.cameraTheta,
         dist:  parsed.cameraDist
       });
+    }
+
+    function _installBrokenResourceGuard() {
+      if (_brokenResourceGuardInstalled || typeof MutationObserver === "undefined") return;
+      _brokenResourceGuardInstalled = true;
+      const suppressBrokenImage = image => {
+        if (!image || image.dataset?.sphereBrokenHidden === "true") return;
+        if (!(image instanceof HTMLImageElement)) return;
+        const mark = () => {
+          if (!image.complete || image.naturalWidth > 0 || image.naturalHeight > 0) return;
+          image.dataset.sphereBrokenHidden = "true";
+          image.classList.add("sphere-broken-resource-hidden");
+          image.hidden = true;
+          image.setAttribute("aria-hidden", "true");
+        };
+        if (!image.complete) {
+          image.addEventListener("error", mark, { once: true });
+        } else {
+          mark();
+        }
+      };
+      const scan = root => {
+        if (!root?.querySelectorAll) return;
+        root.querySelectorAll("img").forEach(suppressBrokenImage);
+      };
+      scan(document);
+      new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+          mutation.addedNodes?.forEach(node => {
+            if (!node || node.nodeType !== 1) return;
+            if (node.tagName === "IMG") suppressBrokenImage(node);
+            scan(node);
+          });
+          if (mutation.type === "attributes" && mutation.target?.tagName === "IMG") {
+            suppressBrokenImage(mutation.target);
+          }
+        });
+      }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
+      window.addEventListener("error", event => {
+        if (event?.target?.tagName === "IMG") suppressBrokenImage(event.target);
+      }, true);
     }
   }
 
@@ -1230,6 +1272,7 @@
       _updateModeSummary(model);
       _updateWhatAmISeeing(_state.viewMode);
       _updateStateStrip(_state.viewMode, model);
+      _updateEnvironmentBridge(model);
       return;
     }
     container.style.display = "";
@@ -1251,6 +1294,7 @@
     _updateModeSummary(model);
     _updateWhatAmISeeing(_state.viewMode);
     _updateStateStrip(_state.viewMode, model);
+    _updateEnvironmentBridge(model);
     _updateRendererDiagnostics();
   }
 
@@ -1729,6 +1773,22 @@
     strips.forEach(strip => { strip.textContent = text; });
   }
 
+  function _updateEnvironmentBridge(model) {
+    const bridge = document.getElementById("sphere-environment-bridge");
+    const textEl = document.getElementById("sphere-environment-bridge-text");
+    if (!bridge || !textEl) return;
+    const selected = model?.selectedPatternPosition || _resolveSelectedPatternPosition(model);
+    const envState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+    const layerVisible = !!_state.visibleLayers.environment;
+    const place = envState?.place?.name || envState?.place?.label || "Location not set";
+    const status = envState?.classification || envState?.statusLabel || envState?.status || "unavailable";
+    const selectedLabel = selected?.moon != null
+      ? `Moon ${selected.moon} Day ${selected.day}`
+      : "Selected day unavailable";
+    textEl.textContent = `${layerVisible ? "Environment layer ON" : "Environment layer OFF"} · ${place} · ${status} · mapped around ${selectedLabel}.`;
+    bridge.classList.toggle("is-off", !layerVisible);
+  }
+
   function _setModeDefaultSelectedMarker(mode) {
     if (mode === "today") _state.selectedMarker = "today";
     else if (mode === "passage") _state.selectedMarker = `eq-${_state.year}`;
@@ -1911,11 +1971,6 @@
           <div>
             <p class="sphere-field-summary-label">Active Fields</p>
             <div class="sphere-field-summary-list">${field.summaryItems.map(item => `<span class="sphere-field-summary-pill">${_escapeHtml(item)}</span>`).join("")}</div>
-          </div>
-          <div class="sphere-actions sphere-actions-compact">
-            <button class="sphere-btn sphere-btn-sm" type="button" data-sphere-action="open-field-map">Open Field Map</button>
-            <button class="sphere-btn sphere-btn-sm" type="button" data-sphere-action="show-fields">Show on Sphere</button>
-            <a class="sphere-btn sphere-btn-sm" href="${_escapeHtml(_buildAlignmentLink("recurrence"))}">Compare Fields</a>
           </div>
         </div>
         <details class="sphere-field-disclosure">
@@ -2105,6 +2160,21 @@
         renderSphere(container);
       });
     });
+    const focusEnvironmentBtn = document.getElementById("sphere-environment-focus");
+    if (focusEnvironmentBtn) {
+      focusEnvironmentBtn.addEventListener("click", () => {
+        const envToggle = document.getElementById("sphere-layer-environment");
+        if (envToggle && !_state.visibleLayers.environment) {
+          envToggle.checked = true;
+          _state.visibleLayers.environment = true;
+        }
+        const locationPanel = document.querySelector("[data-sof-location-command]");
+        if (locationPanel?.scrollIntoView) {
+          locationPanel.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        renderSphere(container);
+      });
+    }
 
     // Reset view.
     const resetBtn = document.getElementById("sphere-reset");
@@ -2508,6 +2578,7 @@
 
     const container = document.getElementById("sphere-container");
     if (!container) return;
+    _installBrokenResourceGuard();
 
     // Auto-open Sphere Settings panel on non-mobile viewports.
     const settingsGroup = document.querySelector(".sphere-settings-group");
