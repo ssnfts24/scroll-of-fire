@@ -629,7 +629,7 @@ test("Renderer 3D: no private _updateEnvironmentLayer call remains", () => {
 
 test("Sphere page: fallback panel remains compact with collapsed technical details", () => {
   const html = read("docs/living-time-sphere.html");
-  assert.ok(html.includes('class="sphere-fallback-summary">3D unavailable<'), "compact fallback heading present");
+  assert.ok(html.includes('class="sphere-fallback-summary">3D view unavailable — using accessible 2D view<'), "compact fallback heading present");
   assert.ok(html.includes('class="sphere-fallback-reason"'), "fallback reason line present");
   assert.ok(html.includes("Technical Details"), "technical details section present");
   assert.ok(html.includes('id="sphere-retry-3d"'), "Retry 3D action present");

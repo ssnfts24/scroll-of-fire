@@ -33,6 +33,8 @@
     active3d:      false,    // true when 3D renderer is active
     introShown:    false,
     _3dInitInProgress: false, // guard against concurrent 3D init calls
+    _3dInitGeneration: 0,
+    restoreAttempts: 0,
   };
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
   const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
@@ -131,7 +133,6 @@
     if (_state.quality === "svgonly") return false;
     if (!globalThis.LivingTimeSphereRenderer3d || !globalThis.LivingTimeSphereM || !globalThis.LivingTimeSphereEffects) return false;
     if (!globalThis.LivingTimeSphereEffects.detectWebGl()) return false;
-    if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches && _state.quality !== "high") return false;
     return _state.rendererMode === "3d" || _state.rendererMode === "auto";
   }
 
@@ -141,6 +142,37 @@
     if (typeof window === "undefined") return { w: 320, h: 320 };
     const rect = container.getBoundingClientRect();
     return { w: Math.max(rect.width  || 320, 100), h: Math.max(rect.height || 320, 100) };
+  }
+
+  async function _waitForValidContainer(container, { minWidth = 180, minHeight = 180, timeoutMs = 2500 } = {}) {
+    const valid = () => {
+      const rect = container?.getBoundingClientRect?.() || {};
+      return Number(rect.width) >= minWidth && Number(rect.height) >= minHeight;
+    };
+    if (valid()) return true;
+    const started = Date.now();
+    while (Date.now() - started < timeoutMs) {
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      if (valid()) return true;
+    }
+    return false;
+  }
+
+  function _withTimeout(promise, timeoutMs, timeoutReason = "INIT_TIMEOUT") {
+    let timer = null;
+    const timeoutPromise = new Promise(resolve => {
+      timer = setTimeout(() => resolve({
+        success: false,
+        reason: timeoutReason,
+        detail: `3D initialization exceeded ${timeoutMs}ms`,
+      }), timeoutMs);
+    });
+    return Promise.race([
+      promise,
+      timeoutPromise
+    ]).finally(() => {
+      if (timer) clearTimeout(timer);
+    });
   }
 
   function buildCurrentModel() {
@@ -1201,6 +1233,7 @@
       // or inside the renderer itself), skip and leave the in-progress call to finish.
       if (_state._3dInitInProgress || renderer.isInitializing?.()) return;
       _state._3dInitInProgress = true;
+      const initGeneration = ++_state._3dInitGeneration;
 
       // Remove any existing SVG / canvas content before inserting 3D canvas.
       container.innerHTML = "";
@@ -1211,11 +1244,24 @@
 
       let result;
       try {
-        result = await renderer.init({
+        const hasStableSize = await _waitForValidContainer(container);
+        if (!hasStableSize) {
+          result = {
+            success: false,
+            reason: "CONTAINER_SIZE_INVALID",
+            detail: "Renderer container did not reach a valid layout size in time.",
+          };
+        } else {
+          result = await _withTimeout(renderer.init({
           container,
           model,
           spiral,
           quality:       preset,
+          tier: _state.quality === "auto"
+            ? globalThis.ObservatoryCapabilityManager?.selectTier?.({
+                webglAvailable: globalThis.ObservatoryCapabilityManager?.probeWebGl?.().webgl ?? true
+              })
+            : _state.quality,
           selectedYear:  _state.year,
           visibleLayers: effectiveLayers,
           viewMode:      _state.viewMode,
@@ -1262,12 +1308,15 @@
             _state.selectedMarker = marker?.type === "year" ? `eq-${marker.year}` : (marker?.type || null);
             renderSphere(container);
           }
-        });
+          }), 25000);
+        }
       } catch (err) {
         result = { success: false, reason: "init-exception", detail: String(err) };
       } finally {
         _state._3dInitInProgress = false;
       }
+
+      if (initGeneration !== _state._3dInitGeneration) return;
 
       if (!result || !result.success) {
         // Fall back to SVG.
@@ -1303,6 +1352,7 @@
         return;
       }
       _state.active3d = true;
+      _state.restoreAttempts = 0;
       _updateRendererLabel("WebGL 3D active");
       _hideRendererFallbackWarning();
       _updateInteractBar();
@@ -1415,8 +1465,12 @@
   function _showRendererFallbackWarning(reason, detail) {
     const el = document.getElementById("sphere-renderer-fallback-warning");
     if (!el) return;
+    el.classList.remove("is-minimized");
     const reasonEl = el.querySelector(".sphere-fallback-reason");
-    if (reasonEl) reasonEl.textContent = "Accessible SVG view is active";
+    const capMgr = globalThis.ObservatoryCapabilityManager;
+    const reasonCode = capMgr?.mapLegacyReason?.(reason) || reason;
+    const reasonText = capMgr?.describeReason?.(reasonCode) || reasonCode || "3D is unavailable.";
+    if (reasonEl) reasonEl.textContent = reasonText;
     // Populate inline diagnostics inside the collapsible details block.
     const r3d = globalThis.LivingTimeSphereRenderer3d;
     const diag = r3d?.getDiagnostics?.() || {};
@@ -1426,12 +1480,37 @@
     _set("sphere-diag-module-source-warn",  diag.moduleSource || "none");
     _set("sphere-diag-webgl-warn",          diag.webglAvailable ? "available" : "unavailable");
     _set("sphere-diag-webgl2-warn",         diag.webgl2Available ? "available" : "unavailable");
+    _set("sphere-diag-three-warn",          diag.threeLoaded ? "loaded" : "failed");
+    _set("sphere-diag-renderer-warn",       diag.stageState?.renderer || (diag.initialized ? "created" : "failed"));
+    _set("sphere-diag-context-warn",        diag.stageState?.context || "unknown");
+    _set("sphere-diag-first-frame-warn",    diag.stageState?.firstFrame || "not rendered");
+    _set("sphere-diag-tier-warn",           diag.tier || _state.quality || "auto");
+    _set("sphere-diag-dpr-warn",            `${diag.requestedDevicePixelRatio || "—"} / ${diag.appliedDevicePixelRatio || "—"}`);
+    _set("sphere-diag-memory-warn",         diag.deviceMemoryGiB != null ? `${diag.deviceMemoryGiB} GiB` : "unknown");
+    _set("sphere-diag-cpu-warn",            diag.hardwareConcurrency != null ? String(diag.hardwareConcurrency) : "unknown");
+    _set("sphere-diag-reduced-warn",        `${diag.reducedMotion ? "motion:reduce" : "motion:normal"} · ${diag.reducedData ? "data:reduce" : "data:normal"}`);
+    _set("sphere-diag-fallback-warn",       reasonCode || "none");
+    _set("sphere-diag-init-duration-warn",  diag.initDurationMs != null ? `${diag.initDurationMs}ms` : "—");
+    _set("sphere-diag-restore-attempts-warn", String(diag.restoreAttempts || 0));
     el.hidden = false;
+    const pill = document.getElementById("sphere-renderer-fallback-pill");
+    if (pill) pill.hidden = true;
   }
 
   function _hideRendererFallbackWarning() {
     const el = document.getElementById("sphere-renderer-fallback-warning");
     if (el) el.hidden = true;
+    const pill = document.getElementById("sphere-renderer-fallback-pill");
+    if (pill) pill.hidden = true;
+  }
+
+  function _minimizeRendererFallbackWarning() {
+    const el = document.getElementById("sphere-renderer-fallback-warning");
+    if (!el) return;
+    el.hidden = false;
+    el.classList.add("is-minimized");
+    const pill = document.getElementById("sphere-renderer-fallback-pill");
+    if (pill) pill.hidden = false;
   }
 
   // Update the renderer diagnostics panel (hidden by default; shown in Technical view).
@@ -1451,7 +1530,7 @@
       "sphere-diag-module-source": diag.moduleSource || "none",
       "sphere-diag-local-url":    diag.localModuleUrl || r3d.THREE_LOCAL_REL || "—",
       "sphere-diag-canvas-size":  diag.canvasWidth && diag.canvasHeight ? `${diag.canvasWidth} × ${diag.canvasHeight}` : "—",
-      "sphere-diag-dpr":          String(diag.devicePixelRatio || "—"),
+      "sphere-diag-dpr":          `${diag.requestedDevicePixelRatio || "—"} → ${diag.appliedDevicePixelRatio || "—"}`,
       "sphere-diag-quality":      _state.quality,
       "sphere-diag-last-error":   diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : "none",
     };
@@ -1551,7 +1630,6 @@
   function _updateStateStrip(viewMode, model) {
     const strips = [
       document.getElementById("sphere-state-strip"),
-      document.getElementById("sphere-current-status"),
     ].filter(Boolean);
     if (!strips.length) return;
     const year = _state.year || 2026;
@@ -1573,8 +1651,7 @@
         ? `13 Moons × 28 Days · Moon ${selected.moon} · Day ${selected.day} · Day ${selected.dayOfPatternYear}/364`
         : "13 Moons × 28 Days";
     }
-    const zoomBand = _state.semanticZoom?.band ? ` · Zoom ${String(_state.semanticZoom.band).toUpperCase()}` : "";
-    strips.forEach(strip => { strip.textContent = `${text}${zoomBand}`; });
+    strips.forEach(strip => { strip.textContent = text; });
   }
 
   function _setModeDefaultSelectedMarker(mode) {
@@ -2212,6 +2289,7 @@
         _state.active3d = false;
         _state._3dInitInProgress = false;
         _state.rendererMode = "3d";
+        _state._3dInitGeneration++;
         const sel = document.getElementById("sphere-renderer-select");
         if (sel) sel.value = "3d";
         _updateRendererLabel("Retrying 3D renderer…");
@@ -2245,7 +2323,7 @@
         _state.rendererMode = "svg";
         const sel = document.getElementById("sphere-renderer-select");
         if (sel) sel.value = "svg";
-        _hideRendererFallbackWarning();
+        _minimizeRendererFallbackWarning();
         renderSphere(container);
       });
     }

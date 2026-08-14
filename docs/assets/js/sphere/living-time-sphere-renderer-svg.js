@@ -38,11 +38,67 @@
     return moon === selected?.moon || moon === today?.moon || moon === 1 || moon === 13 || Math.abs(moon - (selected?.moon || 0)) === 1;
   }
 
+  function _moonLabelPriority(moon, selected, today, equinoxMoon) {
+    if (moon === selected?.moon) return 100;
+    if (moon === today?.moon) return 92;
+    if (moon === equinoxMoon) return 84;
+    if (moon === 1) return 76;
+    if (moon === 13) return 72;
+    if (selected?.moon && Math.abs(moon - selected.moon) === 1) return 64;
+    return 40;
+  }
+
+  function _filterMoonLabelCollisions(candidates, width, height) {
+    const placed = [];
+    const visible = new Set();
+    const w = Number(width) || 360;
+    const h = Number(height) || 360;
+    const compact = w < 430 || h < 430;
+    for (const candidate of candidates.sort((a, b) => b.priority - a.priority || a.moon - b.moon)) {
+      const text = `Moon ${candidate.moon}`;
+      const estW = Math.max(42, text.length * (compact ? 5.6 : 6.1));
+      const estH = compact ? 12 : 14;
+      const box = {
+        x1: candidate.x - estW / 2,
+        y1: candidate.y - estH / 2,
+        x2: candidate.x + estW / 2,
+        y2: candidate.y + estH / 2,
+      };
+      const overlap = placed.some(prev =>
+        box.x1 < prev.x2 && box.x2 > prev.x1 && box.y1 < prev.y2 && box.y2 > prev.y1
+      );
+      if (overlap && candidate.priority < 90) continue;
+      placed.push(box);
+      visible.add(candidate.moon);
+    }
+    return visible;
+  }
+
   function renderMoonSectors(sectors, rings, cx, cy, options = {}) {
     const selected = options.model?.selectedPatternPosition || options.model?.todayPatternPosition || null;
     const today = options.model?.todayPatternPosition || null;
     const equinoxMoon = options.model?.sourceRecord?.equinox?.patternPosition?.moon || null;
     const labelRadius = rings.patternRing * _moonLabelMultiplier(options.moonLabelDistance);
+    const band = options.semanticZoomState?.band || "medium";
+    const compact = Number(options.width || 0) < 430;
+    const labelCandidates = sectors.map(s => {
+      const p = polarToXY((s.startAngle + s.endAngle) / 2, labelRadius, cx, cy);
+      return {
+        moon: s.moonNumber,
+        x: p.x,
+        y: p.y,
+        priority: _moonLabelPriority(s.moonNumber, selected, today, equinoxMoon),
+      };
+    });
+    let allowed = _filterMoonLabelCollisions(labelCandidates, options.width, options.height);
+    if (band === "far") {
+      allowed = new Set([...allowed].filter(moon => [selected?.moon, today?.moon, equinoxMoon, 1, 13].includes(moon)));
+    } else if (band === "medium" && compact) {
+      allowed = new Set([...allowed].filter(moon => {
+        if (moon === selected?.moon || moon === today?.moon || moon === equinoxMoon) return true;
+        return moon % 2 === 1;
+      }));
+    }
     return sectors.map(s => {
       const { x: x1, y: y1 } = polarToXY(s.startAngle, rings.moonSectors, cx, cy);
       const { x: x2, y: y2 } = polarToXY(s.endAngle,   rings.moonSectors, cx, cy);
@@ -54,7 +110,7 @@
       const pathD = `M ${ix1} ${iy1} L ${x1} ${y1} A ${rings.moonSectors} ${rings.moonSectors} 0 ${large} 1 ${x2} ${y2} L ${ix2} ${iy2} A ${innerRadius} ${innerRadius} 0 ${large} 0 ${ix1} ${iy1} Z`;
       const fill  = s.active ? "var(--sphere-moon-active, rgba(220,160,80,0.25))" : "var(--sphere-moon-fill, rgba(255,255,255,0.04))";
       const stroke = "var(--sphere-moon-stroke, rgba(255,255,255,0.15))";
-      const showLabel = _shouldShowMoonLabel(options.viewMode, options.moonLabelMode || "contextual", s.moonNumber, selected, today, equinoxMoon);
+      const showLabel = allowed.has(s.moonNumber) && _shouldShowMoonLabel(options.viewMode, options.moonLabelMode || "contextual", s.moonNumber, selected, today, equinoxMoon);
       return `<path class="sphere-moon-sector${s.active ? " sphere-moon-active" : ""}" d="${esc(pathD)}" fill="${fill}" stroke="${stroke}" stroke-width="1" role="button" aria-label="Moon ${s.moonNumber}" tabindex="0" data-moon-sector="${s.moonNumber}">
         <title>Moon ${s.moonNumber}</title>
       </path>
@@ -343,7 +399,7 @@
       `<desc>Interactive sphere showing 13 Moon Pattern structure and astronomical cycles.</desc>`,
       renderOuterBorder(rings, cx, cy),
       vl.pattern  ? renderPatternRing(rings, cx, cy) : "",
-      vl.pattern  ? renderMoonSectors(model?.moonSectors || [], rings, cx, cy, { model, viewMode, moonLabelMode: effectiveMoonLabelMode, moonLabelDistance }) : "",
+      vl.pattern  ? renderMoonSectors(model?.moonSectors || [], rings, cx, cy, { model, viewMode, moonLabelMode: effectiveMoonLabelMode, moonLabelDistance, semanticZoomState, width: w, height: h }) : "",
       vl.pattern && vl.weekGates !== false && semanticLayers.weekGates !== false ? renderWeekDividers(rings, cx, cy) : "",
       vl.exactDays !== false && semanticLayers.exactDays !== false && vl.pattern ? renderDayTicks(model, rings, cx, cy) : "",
       vl.pattern  ? renderDayPoints(model, rings, cx, cy, viewMode, w, effectiveDayLabelMode, semanticZoomState) : "",

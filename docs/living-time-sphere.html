@@ -159,7 +159,6 @@
           <button id="sphere-mode-pattern" class="sphere-mode-btn" type="button" aria-pressed="false">Pattern</button>
         </div>
         <div id="sphere-mode-summary" class="sphere-mode-summary" aria-live="polite">Today</div>
-        <div id="sphere-current-status" class="sphere-current-status" aria-live="polite">Today — Moon — · Day — · Day —/364</div>
 
         <!-- Sphere Settings (collapsible on mobile) -->
         <details class="sphere-settings-group">
@@ -241,7 +240,7 @@
 
         <!-- 3D fallback warning (shown when 3D selected but unavailable) -->
         <div id="sphere-renderer-fallback-warning" class="sphere-fallback-warning" hidden role="alert" aria-live="assertive">
-          <p class="sphere-fallback-summary">3D unavailable</p>
+          <p class="sphere-fallback-summary">3D view unavailable — using accessible 2D view</p>
           <p class="sphere-fallback-reason" aria-live="polite">Accessible SVG view is active</p>
           <div class="sphere-fallback-actions">
             <button id="sphere-retry-3d" class="sphere-btn sphere-btn-sm" type="button">Retry 3D</button>
@@ -250,15 +249,28 @@
           <details class="sphere-fallback-details">
             <summary>Technical Details</summary>
             <dl class="sphere-fallback-detail-list">
-              <dt>Local module</dt><dd id="sphere-diag-local-url-warn">—</dd>
-              <dt>Error</dt><dd id="sphere-diag-last-error-warn" class="sphere-fallback-wrap">—</dd>
-              <dt>Module source</dt><dd id="sphere-diag-module-source-warn">—</dd>
               <dt>WebGL</dt><dd id="sphere-diag-webgl-warn">—</dd>
               <dt>WebGL2</dt><dd id="sphere-diag-webgl2-warn">—</dd>
+              <dt>Three.js</dt><dd id="sphere-diag-three-warn">—</dd>
+              <dt>Renderer</dt><dd id="sphere-diag-renderer-warn">—</dd>
+              <dt>Context</dt><dd id="sphere-diag-context-warn">—</dd>
+              <dt>First frame</dt><dd id="sphere-diag-first-frame-warn">—</dd>
+              <dt>Capability tier</dt><dd id="sphere-diag-tier-warn">—</dd>
+              <dt>DPR requested/applied</dt><dd id="sphere-diag-dpr-warn">—</dd>
+              <dt>Device memory</dt><dd id="sphere-diag-memory-warn">—</dd>
+              <dt>Hardware concurrency</dt><dd id="sphere-diag-cpu-warn">—</dd>
+              <dt>Reduced motion/data</dt><dd id="sphere-diag-reduced-warn">—</dd>
+              <dt>Fallback reason</dt><dd id="sphere-diag-fallback-warn">—</dd>
+              <dt>Last renderer error</dt><dd id="sphere-diag-last-error-warn" class="sphere-fallback-wrap">—</dd>
+              <dt>Init duration</dt><dd id="sphere-diag-init-duration-warn">—</dd>
+              <dt>Restore attempts</dt><dd id="sphere-diag-restore-attempts-warn">—</dd>
+              <dt>Module source</dt><dd id="sphere-diag-module-source-warn">—</dd>
+              <dt>Local module</dt><dd id="sphere-diag-local-url-warn">—</dd>
             </dl>
             <button id="sphere-clear-renderer-cache" class="sphere-btn sphere-btn-sm" type="button">Clear Sphere Cache</button>
           </details>
         </div>
+        <p id="sphere-renderer-fallback-pill" class="sphere-fallback-pill" hidden aria-live="polite">Using accessible 2D view</p>
       </section>
 
       <details class="sphere-what-am-i-seeing" id="sphere-what-am-i-seeing">

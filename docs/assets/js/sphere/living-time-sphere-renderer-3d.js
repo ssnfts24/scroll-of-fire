@@ -81,6 +81,34 @@
   let _visibleLayers = {};
   let _lastInitError = null;  // last failure reason for diagnostics
   let _contextLossDispose = null; // cleanup fn for WebGL context-loss guard
+  let _initStartedAt = null;
+  let _initEndedAt = null;
+  let _requestedDpr = null;
+  let _appliedDpr = null;
+  let _activeTier = null;
+  let _restoreAttempts = 0;
+  const _stageState = {
+    capability: "idle",
+    module: "idle",
+    dimensions: "idle",
+    renderer: "idle",
+    context: "idle",
+    camera: "idle",
+    scene: "idle",
+    geometry: "idle",
+    listeners: "idle",
+    semanticZoom: "idle",
+    firstFrame: "idle",
+  };
+
+  function _markStage(stage, state) {
+    if (!stage || !_stageState[stage]) return;
+    _stageState[stage] = state;
+  }
+
+  function _resetStages() {
+    for (const key of Object.keys(_stageState)) _stageState[key] = "idle";
+  }
 
   // Scene object refs
   const _objects = {};
@@ -1925,26 +1953,43 @@
       return { success: false, reason: "already-running" };
     }
     _initializing = true;
+    _resetStages();
+    _initStartedAt = performance.now();
+    _initEndedAt = null;
+    _requestedDpr = typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1;
+    _appliedDpr = null;
+    _activeTier = tier || null;
+    _restoreAttempts = 0;
 
     try {
       assertDeps();
+      _markStage("capability", "running");
 
       if (!globalThis.LivingTimeSphereEffects.detectWebGl()) {
         const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.WEBGL_UNSUPPORTED ?? "webgl-unavailable";
         _lastInitError = { reason, detail: "WebGL context creation failed in this environment." };
+        _markStage("capability", "failed");
+        _initEndedAt = performance.now();
         return { success: false, reason, detail: _lastInitError.detail };
       }
+      _markStage("capability", "ok");
       if (!quality) {
         const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.QUALITY_SVGONLY ?? "quality-svgonly";
         _lastInitError = { reason, detail: "Quality preset resolved to SVG-only." };
+        _markStage("renderer", "failed");
+        _initEndedAt = performance.now();
         return { success: false, reason };
       }
 
       try {
+        _markStage("module", "running");
         await loadThreeJs();
+        _markStage("module", "ok");
       } catch (err) {
         const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.THREE_IMPORT_FAILED ?? "three-load-failed";
         _lastInitError = { reason, detail: String(err) };
+        _markStage("module", "failed");
+        _initEndedAt = performance.now();
         return { success: false, reason, detail: String(err) };
       }
 
@@ -1982,6 +2027,7 @@
             typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1
           );
       try {
+        _markStage("renderer", "running");
         _renderer = new THREE.WebGLRenderer({
           canvas:    _canvas,
           antialias: quality.antialias !== false,
@@ -1992,8 +2038,11 @@
         // WebGLRenderer constructor can throw if context creation fails.
         const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.CANVAS_INIT_FAILED ?? "webgl-context-failed";
         _lastInitError = { reason, detail: String(err) };
+        _markStage("renderer", "failed");
+        _initEndedAt = performance.now();
         return { success: false, reason, detail: String(err) };
       }
+      _markStage("renderer", "created");
 
       // Attach WebGL context-loss guard via ObservatoryCapabilityManager.
       // On context loss: stop the animation loop, mark renderer as not
@@ -2005,6 +2054,7 @@
         onLost() {
           const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.CONTEXT_LOST ?? "CONTEXT_LOST";
           _lastInitError = { reason, detail: "WebGL context was lost." };
+          _markStage("context", "lost");
           _initialized = false;
           // Stop the animation loop so we don't render with a lost context.
           try { globalThis.LivingTimeSphereAnimation?.stop?.(); } catch { /* best-effort */ }
@@ -2013,12 +2063,16 @@
           try { _onContextLostCb?.(); } catch { /* mount notification is best-effort */ }
         },
         onRestored() {
+          _restoreAttempts += 1;
+          _markStage("context", "restored");
           console.info("[LivingTimeSphere] WebGL context restored — notifying mount for reinit.");
           // Notify mount layer — mount will teardown stale resources and reinit.
           try { _onContextRestoredCb?.(); } catch { /* mount notification is best-effort */ }
         },
       }) ?? (() => {});
+      _markStage("context", "active");
       _renderer.setPixelRatio(pixelRatio);
+      _appliedDpr = pixelRatio;
       _quality = quality;
 
       // ── Camera ────────────────────────────────────────────────────
@@ -2027,9 +2081,12 @@
       const rect = container.getBoundingClientRect();
       const w    = Math.max(rect.width  || 320, 100);
       const h    = Math.max(rect.height || 320, 100);
+      _markStage("dimensions", (w > 0 && h > 0) ? `${w}x${h}` : "invalid");
       _renderer.setSize(w, h);
 
+      _markStage("camera", "running");
       _camera = globalThis.LivingTimeSphereCamera.create(THREE, w, h);
+      _markStage("camera", "created");
       globalThis.LivingTimeSphereCamera.onChangeCallback(() => {
         _syncSemanticZoomFromCamera(false);
         _moonLabelManager?.markDirty();
@@ -2037,11 +2094,15 @@
       });
 
       // ── Build scene ───────────────────────────────────────────────
+      _markStage("scene", "running");
       buildScene();
+      _markStage("scene", "created");
 
       // ── Load initial data ─────────────────────────────────────────
       _environmentController.initialize(environmentState || globalThis.SofEnvironmentState?.getEnvironmentState?.() || EMPTY_ENVIRONMENT_STATE);
+      _markStage("geometry", "running");
       updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState);
+      _markStage("geometry", "created");
       _syncCameraFocus(model, spiral, selectedYear, false);
 
       // ── Animation ─────────────────────────────────────────────────
@@ -2060,17 +2121,43 @@
 
       // ── Pointer interaction ────────────────────────────────────────
       _wirePointerEvents(container, onYearSelect, onMarkerSelect);
+      _markStage("listeners", "attached");
 
       // Build Moon label anchors and set up DOM elements
       _buildMoonAnchors(viewMode);
       _setupMoonLabelEls(container);
       _moonLabelManager?.markDirty();
+      _markStage("semanticZoom", "initialized");
 
       // ── Resize ────────────────────────────────────────────────────
       _wireResize(container);
 
+      _markStage("firstFrame", "requested");
+      try {
+        await new Promise((resolve, reject) => {
+          requestAnimationFrame(() => {
+            try {
+              render(performance.now());
+              resolve();
+            } catch (e) {
+              reject(e);
+            }
+          });
+        });
+        _markStage("firstFrame", "rendered");
+      } catch (err) {
+        _markStage("firstFrame", "failed");
+        _lastInitError = {
+          reason: globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.INIT_EXCEPTION ?? "init-exception",
+          detail: `First-frame render failed: ${String(err)}`,
+        };
+        _initEndedAt = performance.now();
+        return { success: false, reason: _lastInitError.reason, detail: _lastInitError.detail };
+      }
+
       _initialized = true;
       _lastInitError = null;
+      _initEndedAt = performance.now();
       return { success: true };
 
     } catch (err) {
@@ -2086,6 +2173,8 @@
       _environmentController.dispose();
       _initialized = false;
       _lastInitError = { reason: globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.INIT_EXCEPTION ?? "init-exception", detail: String(err) };
+      _markStage("renderer", "failed");
+      _initEndedAt = performance.now();
       return { success: false, reason: _lastInitError.reason, detail: String(err) };
     } finally {
       _initializing = false;
@@ -2468,6 +2557,13 @@
     } catch { /* ignore */ }
     const canvasW = _canvas ? (_canvas.width  || 0) : 0;
     const canvasH = _canvas ? (_canvas.height || 0) : 0;
+    const conn = typeof navigator !== "undefined"
+      ? (navigator.connection || navigator.mozConnection || navigator.webkitConnection || null)
+      : null;
+    const reducedData = !!(conn?.saveData || /2g$/i.test(conn?.effectiveType || ""));
+    const initDurationMs = _initStartedAt != null && _initEndedAt != null
+      ? Math.max(0, Math.round(_initEndedAt - _initStartedAt))
+      : null;
     return {
       requestedRenderer: "3d",
       activeRenderer:    _initialized ? "webgl" : "none",
@@ -2482,6 +2578,16 @@
       canvasWidth:       canvasW,
       canvasHeight:      canvasH,
       devicePixelRatio:  typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1,
+      requestedDevicePixelRatio: _requestedDpr,
+      appliedDevicePixelRatio: _appliedDpr,
+      stageState:        { ..._stageState },
+      initDurationMs,
+      tier:              _activeTier,
+      deviceMemoryGiB:   typeof navigator !== "undefined" && typeof navigator.deviceMemory === "number" ? navigator.deviceMemory : null,
+      hardwareConcurrency: typeof navigator !== "undefined" && typeof navigator.hardwareConcurrency === "number" ? navigator.hardwareConcurrency : null,
+      reducedMotion:     (() => { try { return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true; } catch { return false; } })(),
+      reducedData,
+      restoreAttempts:   _restoreAttempts,
       lastInitError:     _lastInitError,
       environment:       _environmentController.diagnostics(),
     };
