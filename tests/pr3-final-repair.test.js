@@ -64,12 +64,13 @@ test("spiral geometry is cached between adjacent selected-day updates", () => {
   assert.ok(ui.includes("const spiral = _getCachedSpiral();"), "selected-day update path should reuse cached spiral");
 });
 
-test("broken bottom resource handling captures fixed/sticky diagnostics and collapses broken shells", () => {
+test("broken bottom resource handling is centralized and diagnostics remain available", () => {
   const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
   const css = read("docs/assets/css/living-time-sphere.css");
   const site = read("docs/assets/js/site.js");
   assert.ok(ui.includes("function _collectFixedStickyDiagnostics()"), "runtime diagnostics should include fixed/sticky nodes");
-  assert.ok(ui.includes("sphere-broken-resource-shell-hidden"), "UI broken-resource guard should collapse broken media shells");
+  assert.ok(ui.includes("function _installBrokenResourceGuard()"), "UI should retain explicit guard ownership hook");
+  assert.equal(ui.includes("new MutationObserver"), false, "UI guard should not run a whole-document mutation observer");
   assert.ok(css.includes(".sphere-broken-resource-shell-hidden { display:none !important; }"), "CSS should hide collapsed broken shells");
   assert.ok(site.includes("if (shell) shell.hidden = true;"), "global image fallback should hide failed media shells");
 });

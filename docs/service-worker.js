@@ -78,11 +78,9 @@ const mandatoryPaths = [
   "./assets/js/sphere/living-time-sphere-url-state.js",
   "./assets/js/sphere/living-time-sphere-mount.js",
   "./assets/js/sphere/living-time-sphere-today.js",
-  "./assets/js/sphere/living-time-sphere-metrics.js",
   "./assets/js/sphere/living-time-sphere-ui.js",
   "./assets/css/alignment-ledger.css",
   "./assets/css/living-time-sphere.css",
-  "./assets/css/living-time-sphere-metrics.css",
   "./alignment-ledger.html",
   "./living-time-sphere.html",
   "./assets/js/astrology.js",
@@ -109,9 +107,11 @@ const mandatoryPaths = [
 ];
 const optionalPaths = [
   "./assets/css/living-time-app-enhancements.css",
+  "./assets/css/living-time-sphere-metrics.css",
   "./assets/css/performance-runtime.css",
   "./assets/js/performance-runtime.js",
   "./assets/js/living-time-app-enhancements.js",
+  "./assets/js/sphere/living-time-sphere-metrics.js",
   "./genesis-oracle.html",
   "./assets/css/genesis-oracle.css",
   "./assets/js/genesis-oracle.js",
