@@ -22,13 +22,20 @@
       source: patch.source || "LivingTimeSphereModel",
       visible: patch.visible !== false,
       selected: !!patch.selected,
+      priority: typeof patch.priority === "number" ? patch.priority : 0,
+      semanticBands: Array.isArray(patch.semanticBands) && patch.semanticBands.length
+        ? Object.freeze(patch.semanticBands.slice())
+        : Object.freeze(["far", "medium", "near", "detail"]),
       style: Object.freeze({ ...(STYLE_REGISTRY[patch.style] || STYLE_REGISTRY.structural) }),
     });
   }
 
-  function _filterByMode(items, connectionMode, compact) {
+  function _filterByMode(items, connectionMode, compact, semanticBand = "medium") {
     if (connectionMode === "off") return [];
-    const visible = items.filter(item => item.visible !== false);
+    const visible = items
+      .filter(item => item.visible !== false)
+      .filter(item => !item.semanticBands || item.semanticBands.includes(semanticBand))
+      .sort((a, b) => b.priority - a.priority || String(a.id).localeCompare(String(b.id)));
     if (connectionMode === "full") {
       return compact ? visible.slice(0, 12) : visible;
     }
@@ -62,10 +69,14 @@
         label: "Today ↔ Pattern Core",
         style: "structural",
         selected: state?.selectedMarker === "today" || selected?.isToday,
+        priority: 35,
+        semanticBands: ["medium", "near", "detail"],
       }));
     }
 
     if (selected?.dayOfPatternYear != null) {
+      const selectedWeekBoundaryDay = (selected.weekOfMoon || Math.ceil((selected.day || 1) / 7)) * 7;
+      const selectedWeekBoundaryDayOfYear = ((selected.moon - 1) * 28) + selectedWeekBoundaryDay;
       items.push(_connection(`selected-core-${selected.dayOfPatternYear}`, {
         type: "pattern",
         sourceMarkerId: `day-${selected.dayOfPatternYear}`,
@@ -75,17 +86,21 @@
         label: `Moon ${selected.moon} Day ${selected.day} ↔ Pattern Core`,
         style: "structural",
         selected: true,
+        priority: 30,
+        semanticBands: ["detail"],
       }));
       if (selected.weekGate?.[0]) {
         items.push(_connection(`selected-weekgate-${selected.dayOfPatternYear}`, {
           type: "calendar",
           sourceMarkerId: `day-${selected.dayOfPatternYear}`,
-          targetMarkerId: "core",
+          targetMarkerId: `weekgate-${selectedWeekBoundaryDayOfYear}`,
           relationship: "Selected day to Week Gate",
           direction: "outbound",
           label: `${selected.weekGate[0]} · Week ${selected.weekOfMoon || Math.ceil((selected.day || 1) / 7)}`,
           style: "comparison",
           selected: true,
+          priority: 80,
+          semanticBands: ["near", "detail"],
         }));
       }
       if (selected.solar?.angle != null) {
@@ -98,6 +113,8 @@
           label: `Selected day ↔ ${selected.solar.gate || "Solar position"}`,
           style: "progression",
           selected: true,
+          priority: 100,
+          semanticBands: ["far", "medium", "near", "detail"],
         }));
       }
       if (selected.lunarPhase || selected.lunarIllumination != null) {
@@ -110,6 +127,22 @@
           label: `Selected day ↔ ${selected.lunarPhase || "Lunar state"}`,
           style: "comparison",
           selected: true,
+          priority: 90,
+          semanticBands: ["medium", "near", "detail"],
+        }));
+      }
+      if (selected.dayOfPatternYear != null) {
+        items.push(_connection(`selected-week-context-${selected.dayOfPatternYear}`, {
+          type: "calendar",
+          sourceMarkerId: `day-${selected.dayOfPatternYear}`,
+          targetMarkerId: `weekgate-${selectedWeekBoundaryDayOfYear}`,
+          relationship: "Selected day to active week boundary",
+          direction: "bidirectional",
+          label: `Selected day ↔ Week ${selected.weekOfMoon || Math.ceil((selected.day || 1) / 7)} boundary`,
+          style: "structural",
+          selected: true,
+          priority: 70,
+          semanticBands: ["near", "detail"],
         }));
       }
     }
@@ -124,6 +157,8 @@
         label: "Today ↔ Lunar Position",
         style: "comparison",
         selected: state?.mode === "today",
+        priority: 55,
+        semanticBands: ["medium", "near", "detail"],
       }));
     }
 
@@ -137,6 +172,8 @@
         label: "Equinox Gate → Year Gate",
         style: "progression",
         selected: state?.mode === "passage",
+        priority: 48,
+        semanticBands: ["medium", "near", "detail"],
       }));
       items.push(_connection(`passage-core-${model.year || state?.selectedYear || "active"}`, {
         type: "passage",
@@ -147,6 +184,8 @@
         label: "Passage ↔ Pattern Core",
         style: "structural",
         selected: state?.mode === "passage",
+        priority: 28,
+        semanticBands: ["detail"],
       }));
     }
 
@@ -163,6 +202,8 @@
           label: `${state.selectedYear} ↔ ${previous.year}`,
           style: "comparison",
           selected: true,
+          priority: 45,
+          semanticBands: ["near", "detail"],
         }));
       }
       if (state?.comparisonYear) {
@@ -175,11 +216,13 @@
           label: `${state.selectedYear} ↔ ${state.comparisonYear}`,
           style: "comparison",
           selected: true,
+          priority: 40,
+          semanticBands: ["detail"],
         }));
       }
     }
 
-    const byMode = _filterByMode(items, state?.connectionMode || "contextual", !!state?.compact);
+    const byMode = _filterByMode(items, state?.connectionMode || "contextual", !!state?.compact, state?.semanticZoom?.band || "medium");
     const byCategory = _filterByCategory(byMode, state?.connectionCategories);
     const maxConnections = Number(state?.semanticZoom?.maxConnections || 0);
     return Object.freeze(maxConnections > 0 ? byCategory.slice(0, maxConnections) : byCategory);

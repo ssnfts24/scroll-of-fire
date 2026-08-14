@@ -8,6 +8,11 @@
   const MOONS = 13;
   const DAYS_PER_MOON = 28;
   const PATTERN_DAYS = 364; // 13 × 28
+  const DEFAULT_SHABBAT_CONFIG = Object.freeze({
+    moonDays: Object.freeze([2, 9, 16, 23]),
+    preparationDay: 1,
+    returnDay: 3,
+  });
   const SOLAR_ANCHORS = Object.freeze([
     { key: "march-equinox", month: 2, day: 20, cycle: 0.0 },
     { key: "june-solstice", month: 5, day: 20, cycle: 0.25 },
@@ -24,6 +29,24 @@
 
   function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
 
+  function _canonicalShabbatConfig() {
+    const cfg = globalThis.SOF_MOONS_CONFIG?.shabbat || {};
+    const moonDays = Array.isArray(cfg.moonDays)
+      ? cfg.moonDays.map(Number).filter(v => Number.isInteger(v) && v >= 1 && v <= DAYS_PER_MOON)
+      : DEFAULT_SHABBAT_CONFIG.moonDays;
+    const preparationDay = Number.isInteger(Number(cfg.preparationDay))
+      ? Number(cfg.preparationDay)
+      : DEFAULT_SHABBAT_CONFIG.preparationDay;
+    const returnDay = Number.isInteger(Number(cfg.returnDay))
+      ? Number(cfg.returnDay)
+      : DEFAULT_SHABBAT_CONFIG.returnDay;
+    return Object.freeze({
+      moonDays: Object.freeze(moonDays.length ? moonDays : DEFAULT_SHABBAT_CONFIG.moonDays),
+      preparationDay: clamp(preparationDay, 1, DAYS_PER_MOON),
+      returnDay: clamp(returnDay, 1, DAYS_PER_MOON),
+    });
+  }
+
   // Pattern ring: 364 positions, one per Pattern day.
   // Uses the center of each counted day so every renderer, tooltip, and export
   // describes the same exact Pattern angle.
@@ -35,6 +58,12 @@
   function dayOfYearForPatternAngle(angle) {
     const normalized = ((((Number(angle) || 0) % 360) + 360) % 360);
     return clamp(Math.floor((normalized / 360) * PATTERN_DAYS) + 1, 1, PATTERN_DAYS);
+  }
+
+  function dayOfPatternYearFromMoonDay(moonNumber, dayNumber) {
+    const moon = clamp(Math.round(Number(moonNumber) || 1), 1, MOONS);
+    const day = clamp(Math.round(Number(dayNumber) || 1), 1, DAYS_PER_MOON);
+    return ((moon - 1) * DAYS_PER_MOON) + day;
   }
 
   // Moon-sector angle: center of Moon m's sector.
@@ -59,39 +88,69 @@
   }
 
   // Solar season angle: 0° = March equinox, 90° = June solstice, etc.
-  function solarSeasonAngleForCyclePosition(solarPos) {
+  function seasonalProgressAngleForCyclePosition(solarPos) {
     return Number((clamp(solarPos, 0, 1) * 360).toFixed(6));
   }
 
-  function solarSeasonAngleForDate(dateInput) {
+  function seasonalQuarterProgressForDate(dateInput) {
     const date = dateInput instanceof Date ? new Date(dateInput.getTime()) : new Date(dateInput || Date.now());
-    if (Number.isNaN(date.getTime())) return 0;
+    if (Number.isNaN(date.getTime())) {
+      return Object.freeze({
+        sourceType: "calculated",
+        precision: "seasonal-approximation",
+        source: "quarter interpolation",
+        anchorKey: "march-equinox",
+        nextAnchorKey: "june-solstice",
+        seasonalQuarterProgress: 0,
+        seasonalCyclePosition: 0,
+        seasonalProgressAngle: 0,
+      });
+    }
     const year = date.getUTCFullYear();
-    const gates = [
+    const anchors = [
       { key: "march-equinox", start: Date.UTC(year, 2, 20), cycle: 0.0 },
       { key: "june-solstice", start: Date.UTC(year, 5, 20), cycle: 0.25 },
       { key: "september-equinox", start: Date.UTC(year, 8, 22), cycle: 0.5 },
       { key: "december-solstice", start: Date.UTC(year, 11, 21), cycle: 0.75 },
       { key: "march-equinox-next", start: Date.UTC(year + 1, 2, 20), cycle: 1.0 },
     ];
-    let active = gates[0];
-    let next = gates[1];
+    let active = anchors[0];
+    let next = anchors[1];
     const now = date.getTime();
-    for (let i = 0; i < gates.length - 1; i += 1) {
-      if (now >= gates[i].start && now < gates[i + 1].start) {
-        active = gates[i];
-        next = gates[i + 1];
+    for (let i = 0; i < anchors.length - 1; i += 1) {
+      if (now >= anchors[i].start && now < anchors[i + 1].start) {
+        active = anchors[i];
+        next = anchors[i + 1];
         break;
       }
-      if (now < gates[0].start) {
+      if (now < anchors[0].start) {
         active = { key: "december-solstice-prev", start: Date.UTC(year - 1, 11, 21), cycle: -0.25 };
-        next = gates[0];
+        next = anchors[0];
       }
     }
     const span = Math.max(next.start - active.start, 1);
-    const progress = clamp((now - active.start) / span, 0, 1);
-    const cycle = active.cycle + (next.cycle - active.cycle) * progress;
-    return solarSeasonAngleForCyclePosition((cycle % 1 + 1) % 1);
+    const seasonalQuarterProgress = clamp((now - active.start) / span, 0, 1);
+    const cycle = active.cycle + (next.cycle - active.cycle) * seasonalQuarterProgress;
+    const seasonalCyclePosition = (cycle % 1 + 1) % 1;
+    const seasonalProgressAngle = seasonalProgressAngleForCyclePosition(seasonalCyclePosition);
+    return Object.freeze({
+      sourceType: "calculated",
+      precision: "seasonal-approximation",
+      source: "quarter interpolation",
+      anchorKey: active.key,
+      nextAnchorKey: next.key,
+      seasonalQuarterProgress: Number(seasonalQuarterProgress.toFixed(6)),
+      seasonalCyclePosition: Number(seasonalCyclePosition.toFixed(6)),
+      seasonalProgressAngle,
+    });
+  }
+
+  function seasonalProgressAngleForDate(dateInput) {
+    return seasonalQuarterProgressForDate(dateInput).seasonalProgressAngle;
+  }
+
+  function solarSeasonAngleForDate(dateInput) {
+    return seasonalProgressAngleForDate(dateInput);
   }
 
   function dayMetadataForDayOfYear(dayOfPatternYear) {
@@ -100,10 +159,13 @@
     const day = ((dayOfYear - 1) % DAYS_PER_MOON) + 1;
     const week = Math.floor((day - 1) / 7) + 1;
     const dayOfWeek = ((day - 1) % 7) + 1;
+    const shabbatCfg = _canonicalShabbatConfig();
     const moonData = globalThis.PatternCalendarData?.moons?.[moon - 1] || null;
     const weekGate = globalThis.PatternCalendarData?.weekGates?.[week - 1] || null;
     return Object.freeze({
       type: "living-day",
+      sourceType: "calendar-calculation",
+      source: "PatternCalendarData + fixed-epoch arithmetic",
       moon,
       moonName: moonData?.name || `Moon ${moon}`,
       day,
@@ -111,9 +173,9 @@
       week,
       dayOfWeek,
       weekGate: weekGate ? { label: weekGate[0], detail: weekGate[1] } : null,
-      shabbatGate: day === 2 || day === 9 || day === 16 || day === 23 ? "Shabbat Gate" : null,
-      preparationGate: dayOfWeek === 6 ? "Preparation Gate" : null,
-      returnGate: dayOfWeek === 1 ? "Return Gate" : null,
+      shabbatGate: shabbatCfg.moonDays.includes(day) ? "Shabbat Gate" : null,
+      preparationGate: day === shabbatCfg.preparationDay ? "Preparation Gate" : null,
+      returnGate: day === shabbatCfg.returnDay ? "Return Gate" : null,
     });
   }
 
@@ -159,7 +221,13 @@
       moonSectorAngle:      moonSectorAngle(moonIndex),
       dayAngleWithinMoon:   dayAngleWithinMoon(moonIndex, dayIndex),
       lunarAngle:           lunarAngleForCyclePosition(lunarPos),
-      solarSeasonAngle:     solarSeasonAngleForCyclePosition(solarPos),
+      seasonalProgressAngle: seasonalProgressAngleForCyclePosition(solarPos),
+      solarSeasonAngle:      seasonalProgressAngleForCyclePosition(solarPos),
+      solarGeometry: Object.freeze({
+        sourceType: "calculated",
+        precision: "seasonal-approximation",
+        source: "quarter interpolation",
+      }),
       passageStartAngle,
       passageEndAngle,
       yearSpiralAngle:      spiralAngleForYear(year),
@@ -274,7 +342,9 @@
 
     return Object.freeze(Object.assign({}, model, {
       currentPatternAngle,
-      currentSolarSeasonAngle: solarSeasonAngleForDate(now),
+      currentSeasonalProgressAngle: seasonalProgressAngleForDate(now),
+      currentSolarSeasonAngle: seasonalProgressAngleForDate(now),
+      seasonalProgress: seasonalQuarterProgressForDate(now),
       todayPatternPosition,
       viewMode: "today"
     }));
@@ -286,9 +356,13 @@
     buildTodayModel,
     patternAngleForDayOfYear,
     dayOfYearForPatternAngle,
+    dayOfPatternYearFromMoonDay,
     moonSectorAngle,
     dayAngleWithinMoon,
     lunarAngleForCyclePosition,
+    seasonalProgressAngleForCyclePosition,
+    seasonalQuarterProgressForDate,
+    seasonalProgressAngleForDate,
     solarSeasonAngleForDate,
     spiralAngleForYear,
     spiralRadiusForYear,

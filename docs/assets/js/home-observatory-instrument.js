@@ -278,7 +278,27 @@
         compact: true,
         renderer: "svg",
         mode: "today",
-        visibleLayers: { pattern: true, exactDays: true, weekGates: true, lunar: true, solar: true, passage: true, markers: true, connections: true }
+        visibleLayers: {
+          pattern: true,
+          exactDays: true,
+          weekGates: true,
+          outsideDays: false,
+          lunar: true,
+          solar: true,
+          passage: false,
+          markers: false,
+          spiral: false,
+          recurrence: false,
+          environment: false,
+          witness: false,
+          personal: false,
+          connections: true,
+        },
+        state: {
+          dayLabelMode: "selected",
+          moonLabelMode: "essential",
+          connectionMode: "selected",
+        }
       });
       activeMount = preview.__livingTimeSphereMount;
     }

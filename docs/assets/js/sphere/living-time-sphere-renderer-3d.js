@@ -96,6 +96,7 @@
   let _dayLabelMode = "key";
   let _connectionRegistry = [];
   let _semanticZoomState = null;
+  let _activeSemanticBand = null;
   let _motionMode = "still";
   let _dayNodeMetadata = [];
   const _moonAnchors = [];    // { moon, angle, radius, worldVec } for each of 13 moons
@@ -177,10 +178,65 @@
     return compact ? 1.04 : 1.055;
   }
 
+  function _semanticScreenWidth() {
+    if (_container?.clientWidth) return _container.clientWidth;
+    if (typeof window !== "undefined") return window.innerWidth || 1024;
+    return 1024;
+  }
+
+  function _semanticThresholds(width) {
+    const w = Number(width) || 1024;
+    const offset = w < 480 ? 0.24 : (w < 760 ? 0.12 : 0);
+    const base = globalThis.LivingTimeSphereSemanticZoom?.BASE_THRESHOLDS || {};
+    return {
+      farMin: (base.farMin ?? 3.25) - offset,
+      mediumMin: (base.mediumMin ?? 2.35) - offset,
+      nearMin: (base.nearMin ?? 1.62) - offset,
+    };
+  }
+
+  function _stabilizeBand({ candidateBand, distance, screenWidth, previousBand }) {
+    if (!previousBand || candidateBand === previousBand) return candidateBand;
+    const d = Number(distance);
+    if (!Number.isFinite(d)) return candidateBand;
+    const { farMin, mediumMin, nearMin } = _semanticThresholds(screenWidth);
+    const margin = 0.12;
+    if (previousBand === "far" && candidateBand === "medium" && d >= farMin - margin) return "far";
+    if (previousBand === "medium" && candidateBand === "far" && d < farMin + margin) return "medium";
+    if (previousBand === "medium" && candidateBand === "near" && d >= mediumMin - margin) return "medium";
+    if (previousBand === "near" && candidateBand === "medium" && d < mediumMin + margin) return "near";
+    if (previousBand === "near" && candidateBand === "detail" && d >= nearMin - margin) return "near";
+    if (previousBand === "detail" && candidateBand === "near" && d < nearMin + margin) return "detail";
+    return candidateBand;
+  }
+
+  function _resolveSemanticZoomFromCamera() {
+    const zoom = globalThis.LivingTimeSphereSemanticZoom;
+    if (!zoom?.resolveBand || !zoom?.resolveVisibility) return _semanticZoomState;
+    const screenWidth = _semanticScreenWidth();
+    const cameraState = globalThis.LivingTimeSphereCamera?.getState?.() || {};
+    const fallbackDist = globalThis.LivingTimeSphereCamera?.MODE_POSITIONS?.[_viewMode]?.distance || 2.35;
+    const rawDistance = Number(cameraState.dist);
+    const distance = Number.isFinite(rawDistance) ? rawDistance : fallbackDist;
+    const candidateBand = zoom.resolveBand({ distance, screenWidth });
+    const band = _stabilizeBand({ candidateBand, distance, screenWidth, previousBand: _activeSemanticBand });
+    const resolved = zoom.resolveVisibility({
+      baseLayers: _visibleLayers || {},
+      band,
+      connectionMode: _semanticZoomState?.connectionMode || "contextual",
+    });
+    return Object.freeze({
+      ...resolved,
+      sourceType: Number.isFinite(rawDistance) ? "camera-distance-live" : "camera-distance-fallback",
+      distance,
+    });
+  }
+
   function _buildMoonAnchors(viewMode = _viewMode) {
     const mat = globalThis.LivingTimeSphereM;
     const r   = mat.SIZES.patternRing * _moonLabelRadiusMultiplier(viewMode, _moonLabelDistance);
     _moonAnchors.length = 0;
+    _activeSemanticBand = null;
     for (let i = 0; i < 13; i++) {
       const angle = _moonSectorCenterAngle(i);
       const { x, z } = angleToXZ(angle, r);
@@ -393,13 +449,41 @@
       const m   = new THREE.LineBasicMaterial({
         color:       mat.COLORS.moonStroke,
         transparent: true,
-        opacity:     mat.OPACITY.moonStroke,
+        opacity:     Math.max(mat.OPACITY.moonStroke || 0.4, 0.72),
         depthWrite:  false,
       });
       const lines = new THREE.LineSegments(geo, m);
       lines.name = "moonDividers";
       _scene.add(lines);
       _objects.moonDividers = lines;
+    }
+
+    // ── Week dividers (3 interior week boundaries per moon) ───────────
+    {
+      const pts = [];
+      const innerR = mat.SIZES.patternRing * 0.86;
+      const outerR = mat.SIZES.patternRing * 1.02;
+      for (let moon = 0; moon < 13; moon += 1) {
+        [7, 14, 21].forEach(dayBoundary => {
+          const dayOfYear = moon * 28 + dayBoundary;
+          const boundaryAngle = (dayOfYear / 364) * 360;
+          const start = angleToXZ(boundaryAngle, innerR);
+          const end = angleToXZ(boundaryAngle, outerR);
+          pts.push(new _THREE.Vector3(start.x, 0.002, start.z));
+          pts.push(new _THREE.Vector3(end.x, 0.002, end.z));
+        });
+      }
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const m = new THREE.LineBasicMaterial({
+        color: 0x8dc0cf,
+        transparent: true,
+        opacity: 0.55,
+        depthWrite: false,
+      });
+      const lines = new THREE.LineSegments(geo, m);
+      lines.name = "weekDividers";
+      _scene.add(lines);
+      _objects.weekDividers = lines;
     }
 
     // ── Day nodes on pattern ring (364 small points) ─────────────────
@@ -438,11 +522,14 @@
       const r = mat.SIZES.patternRing * 1.01;
       const pts = [];
       for (let moon = 0; moon < 13; moon++) {
-        [2, 9, 16, 23].forEach(day => {
+        for (let day = 1; day <= 28; day += 1) {
+          const dayOfYear = moon * 28 + day;
+          const meta = globalThis.LivingTimeSphereModel.dayMetadataForDayOfYear(dayOfYear);
+          if (!meta?.shabbatGate) continue;
           const angle = globalThis.LivingTimeSphereModel.dayAngleWithinMoon(moon, day - 1);
           const { x, z } = angleToXZ(angle, r);
           pts.push(new _THREE.Vector3(x, 0.003, z));
-        });
+        }
       }
       const geo = new THREE.BufferGeometry().setFromPoints(pts);
       const m = new THREE.PointsMaterial({
@@ -535,15 +622,15 @@
 
     // ── Selected-day marker (separate from today) ────────────────────
     {
-      const geo = new THREE.SphereGeometry(mat.SIZES.todayRadius * 0.82, 10, 10);
+      const geo = new THREE.SphereGeometry(mat.SIZES.todayRadius * 1.18, 14, 14);
       const m = new THREE.MeshStandardMaterial({
         color: 0xfff1c2,
         emissive: 0xffe6a3,
-        emissiveIntensity: 0.82,
+        emissiveIntensity: 1.1,
         roughness: 0.28,
         metalness: 0.35,
         transparent: true,
-        opacity: 0.96,
+        opacity: 1,
       });
       const mesh = new THREE.Mesh(geo, m);
       mesh.name = "selectedDayMarker";
@@ -551,6 +638,22 @@
       mesh.userData = { type: "living-day", role: "selected" };
       _scene.add(mesh);
       _objects.selectedDayMarker = mesh;
+
+      const haloGeo = new THREE.TorusGeometry(mat.SIZES.todayHalo * 1.06, mat.SIZES.todayHaloTube * 1.2, 10, 72);
+      const haloMat = new THREE.MeshStandardMaterial({
+        color: 0xfff4c7,
+        emissive: 0xffdc8a,
+        emissiveIntensity: 0.9,
+        transparent: true,
+        opacity: 0.95,
+        roughness: 0.3,
+      });
+      const halo = new THREE.Mesh(haloGeo, haloMat);
+      halo.rotation.x = Math.PI / 2;
+      halo.name = "selectedDayHalo";
+      halo.visible = false;
+      _scene.add(halo);
+      _objects.selectedDayHalo = halo;
     }
 
     // ── Today → center connection line ──────────────────────────────
@@ -724,6 +827,10 @@
       todayMarker.userData = { type: "solar-position", role: "today" };
       _scene.add(todayMarker);
       _objects.solarTodayMarker = todayMarker;
+
+      _objects.solarProgressGroup = new THREE.Group();
+      _objects.solarProgressGroup.name = "solarProgressGroup";
+      _scene.add(_objects.solarProgressGroup);
     }
 
     // ── 13-year spiral annual markers ────────────────────────────────
@@ -1109,6 +1216,36 @@
       pts.push(new THREE.Vector3(x, 0, z));
     }
 
+    function buildSolarProgressArc(startAngle, endAngle) {
+      if (!_THREE) return null;
+      const THREE = _THREE;
+      const mat = globalThis.LivingTimeSphereM;
+      const r = mat.SIZES.solarAxis;
+      let sweep = endAngle - startAngle;
+      if (sweep < 0) sweep += 360;
+      const steps = Math.max(16, Math.round(Math.abs(sweep)));
+      const tilt = 23.5 * Math.PI / 180;
+      const pts = [];
+      for (let i = 0; i <= steps; i += 1) {
+        const angle = startAngle + (i / steps) * sweep;
+        const rad = (angle * Math.PI) / 180;
+        pts.push(new THREE.Vector3(
+          r * Math.sin(tilt) * Math.cos(rad),
+          r * Math.cos(tilt) * Math.cos(rad),
+          r * Math.sin(rad)
+        ));
+      }
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      return new THREE.Line(geo, new THREE.LineDashedMaterial({
+        color: 0xffe7a8,
+        transparent: true,
+        opacity: 0.7,
+        dashSize: 0.03,
+        gapSize: 0.02,
+        depthWrite: false,
+      }));
+    }
+
     // Close gap cleanly
     const curve = new THREE.CatmullRomCurve3(pts, false, "centripetal");
     const geo   = new THREE.TubeGeometry(curve, steps * 2, mat.SIZES.tubeRadius * 1.5, 6, false);
@@ -1201,6 +1338,45 @@
     globalThis.LivingTimeSphereCamera.setMode(_viewMode, performance.now(), animated !== false, focus || undefined);
   }
 
+  function _applySemanticVisibility(vl, semanticState) {
+    const band = semanticState?.band || "medium";
+    const semanticVisibility = semanticState?.visibility || {};
+    if (_objects.dayNodes) _objects.dayNodes.visible = !!vl.pattern && vl.exactDays !== false && semanticVisibility.exactDays !== false;
+    if (_objects.shabbatNodes) _objects.shabbatNodes.visible = !!vl.pattern && band !== "far";
+    if (_objects.weekGates) _objects.weekGates.visible = !!vl.pattern && vl.weekGates !== false && semanticVisibility.weekGates !== false;
+    if (_objects.weekDividers) _objects.weekDividers.visible = !!vl.pattern && vl.weekGates !== false && semanticVisibility.weekGates !== false;
+    if (_objects.dayNodes?.material && semanticState?.dayNodeOpacity != null) {
+      _objects.dayNodes.material.opacity = semanticState.dayNodeOpacity;
+    }
+    if (_objects.solarTodayMarker) _objects.solarTodayMarker.visible = !!vl.solar && band !== "far" && _objects.solarTodayMarker.visible;
+    if (_objects.solarSelectedMarker) _objects.solarSelectedMarker.visible = !!vl.solar && band !== "far" && _objects.solarSelectedMarker.visible;
+    if (_objects.lunarSelectedMarker) _objects.lunarSelectedMarker.visible = !!vl.lunar && band !== "far" && _objects.lunarSelectedMarker.visible;
+  }
+
+  function _syncSemanticZoomFromCamera(force = false) {
+    const next = _resolveSemanticZoomFromCamera();
+    if (!next) return false;
+    const changed = force
+      || !_semanticZoomState
+      || next.band !== _semanticZoomState.band
+      || next.dayLabelMode !== _semanticZoomState.dayLabelMode
+      || next.moonLabelMode !== _semanticZoomState.moonLabelMode
+      || next.maxConnections !== _semanticZoomState.maxConnections
+      || next.dayNodeOpacity !== _semanticZoomState.dayNodeOpacity
+      || !!next.visibility?.exactDays !== !!_semanticZoomState.visibility?.exactDays
+      || !!next.visibility?.weekGates !== !!_semanticZoomState.visibility?.weekGates;
+    if (!changed) return false;
+    _semanticZoomState = next;
+    _activeSemanticBand = next.band;
+    _moonLabelMode = next.moonLabelMode || _moonLabelMode;
+    _dayLabelMode = next.dayLabelMode || _dayLabelMode;
+    _applySemanticVisibility(_visibleLayers || {}, next);
+    _buildConnections();
+    _moonLabelManager?.markDirty();
+    globalThis.LivingTimeSphereAnimation.markDirty();
+    return true;
+  }
+
   function _connectionPoint(id) {
     if (!id) return null;
     if (id === "core" || id === "passageMidpoint") return new _THREE.Vector3(0, 0, 0);
@@ -1210,6 +1386,18 @@
     if (id === "equinox") return _objects.equinoxGate?.position?.clone?.() || null;
     if (id === "yearGate") return _objects.yearGate?.position?.clone?.() || null;
     if (id === "solar-selected") return _objects.solarSelectedMarker?.position?.clone?.() || _objects.solarTodayMarker?.position?.clone?.() || null;
+    const weekGateMatch = /^weekgate-(\d+)$/.exec(id);
+    if (weekGateMatch) {
+      const dayOfYear = clamp(Number(weekGateMatch[1]), 1, 364);
+      const boundaryAngle = (dayOfYear / 364) * 360;
+      const point = angleToXZ(boundaryAngle, globalThis.LivingTimeSphereM.SIZES.patternRing * 1.04);
+      return new _THREE.Vector3(point.x, 0.004, point.z);
+    }
+    const yearMatch = /^year-(\d+)$/.exec(id);
+    if (yearMatch) {
+      const marker = (_objects.spiralMarkers || []).find(item => item?.name === `year-${yearMatch[1]}`);
+      return marker?.position?.clone?.() || null;
+    }
     const dayMatch = /^day-(\d+)$/.exec(id);
     if (dayMatch) {
       const angle = globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(Number(dayMatch[1]));
@@ -1226,7 +1414,14 @@
     }
     if (!_visibleLayers.connections || !Array.isArray(_connectionRegistry) || !_connectionRegistry.length) return;
     const mat = globalThis.LivingTimeSphereM;
-    _connectionRegistry.forEach(connection => {
+    const band = _semanticZoomState?.band || "medium";
+    const budget = Number(_semanticZoomState?.maxConnections || 0);
+    const ordered = _connectionRegistry
+      .filter(connection => connection.visible !== false)
+      .filter(connection => !connection.semanticBands || connection.semanticBands.includes(band))
+      .sort((a, b) => (Number(b.priority || 0) - Number(a.priority || 0)) || String(a.id).localeCompare(String(b.id)));
+    const limited = budget > 0 ? ordered.slice(0, budget) : ordered;
+    limited.forEach(connection => {
       const from = _connectionPoint(connection.sourceMarkerId);
       const to = _connectionPoint(connection.targetMarkerId);
       if (!from || !to) return;
@@ -1261,7 +1456,7 @@
     _dayLabelMode = dayLabelMode || "key";
     _connectionRegistry = Array.isArray(connectionRegistry) ? connectionRegistry : [];
     _motionMode = motionMode || "still";
-    _semanticZoomState = semanticZoomState || null;
+    _semanticZoomState = semanticZoomState || _semanticZoomState || null;
     _buildMoonAnchors(_viewMode);
     _moonLabelManager?.markDirty();
 
@@ -1270,17 +1465,14 @@
 
     if (_objects.patternRing)  _objects.patternRing.visible  = !!vl.pattern;
     if (_objects.moonDividers) _objects.moonDividers.visible = !!vl.pattern;
-    const band = _semanticZoomState?.band || "medium";
-    const semanticVisibility = _semanticZoomState?.visibility || {};
-    if (_objects.dayNodes)     _objects.dayNodes.visible     = !!vl.pattern && vl.exactDays !== false && semanticVisibility.exactDays !== false;
-    if (_objects.shabbatNodes) _objects.shabbatNodes.visible = !!vl.pattern;
-    if (_objects.weekGates)    _objects.weekGates.visible    = !!vl.pattern && vl.weekGates !== false && semanticVisibility.weekGates !== false;
+    _applySemanticVisibility(vl, _semanticZoomState || { band: "medium", visibility: {} });
     if (_objects.yearGate)     _objects.yearGate.visible     = !!vl.pattern;
     if (_objects.todayLineGroup) _objects.todayLineGroup.visible = true;
     if (_objects.lunarOrbit)   _objects.lunarOrbit.visible   = !!vl.lunar;
     if (_objects.lunarMarker)  _objects.lunarMarker.visible  = !!vl.lunar;
     if (_objects.solarAxis)    _objects.solarAxis.visible    = !!vl.solar;
     if (_objects.seasonMarkers)_objects.seasonMarkers.visible = !!vl.solar;
+    if (_objects.solarProgressGroup) _objects.solarProgressGroup.visible = !!vl.solar;
     if (_objects.spiralGroup)  _objects.spiralGroup.visible  = !!(vl.spiral || vl.markers);
     if (_objects.passageGroup) _objects.passageGroup.visible = !!vl.passage;
     if (_objects.equinoxGate)  _objects.equinoxGate.visible  = !!vl.passage || !!vl.markers;
@@ -1321,13 +1513,7 @@
       _objects.lunarMarker.position.set(x, yOff, z * Math.cos(tiltAngle));
     }
 
-    if (_objects.dayNodes?.material && _semanticZoomState?.dayNodeOpacity != null) {
-      _objects.dayNodes.material.opacity = _semanticZoomState.dayNodeOpacity;
-    }
-
-    if (_objects.shabbatNodes) {
-      _objects.shabbatNodes.visible = !!vl.pattern && band !== "far";
-    }
+    const band = _semanticZoomState?.band || "medium";
 
     // ── 13-year spiral markers ──────────────────────────────────────
     if (_objects.spiralGroup && spiral?.years) {
@@ -1443,6 +1629,10 @@
         const { x, z } = angleToXZ(selectedAngle, mat.SIZES.patternRing);
         _objects.selectedDayMarker.position.set(x, 0.01, z);
         _objects.selectedDayMarker.visible = true;
+        if (_objects.selectedDayHalo) {
+          _objects.selectedDayHalo.position.set(x, 0.004, z);
+          _objects.selectedDayHalo.visible = true;
+        }
         _objects.selectedDayMarker.userData = {
           ...selected,
           type: "living-day",
@@ -1450,10 +1640,11 @@
         };
       } else {
         _objects.selectedDayMarker.visible = false;
+        if (_objects.selectedDayHalo) _objects.selectedDayHalo.visible = false;
       }
     }
     if (_objects.todayMarker?.material) {
-      _objects.todayMarker.material.emissiveIntensity = mat.EMISSIVE.today;
+      _objects.todayMarker.material.emissiveIntensity = Math.max(0.45, mat.EMISSIVE.today * 0.72);
     }
     if (_objects.todayLineGroup) {
       _objects.todayLineGroup.children.forEach(c => {
@@ -1471,8 +1662,8 @@
       if (_objects.recurrenceGroup)   _objects.recurrenceGroup.visible = false;
       // Boost Today halo and marker for emphasis
       if (_objects.todayHalo?.material) {
-        _objects.todayHalo.material.emissiveIntensity = 1.1;
-        _objects.todayHalo.material.opacity = 1.0;
+        _objects.todayHalo.material.emissiveIntensity = 0.8;
+        _objects.todayHalo.material.opacity = 0.72;
       }
 
       if (_objects.solarTodayMarker) {
@@ -1508,6 +1699,21 @@
         };
       }
 
+      if (_objects.solarProgressGroup) {
+        while (_objects.solarProgressGroup.children.length) {
+          _objects.solarProgressGroup.remove(_objects.solarProgressGroup.children[0]);
+        }
+        const todaySolarAngle = Number(model.currentSolarSeasonAngle ?? model.solarSeasonAngle ?? 0);
+        const selectedSolarAngle = Number(model.selectedPatternPosition?.solar?.angle ?? todaySolarAngle);
+        const arc = buildSolarProgressArc(todaySolarAngle, selectedSolarAngle);
+        if (arc) {
+          arc.name = "solarProgressArc";
+          arc.computeLineDistances?.();
+          arc.visible = !!vl.solar && band !== "far";
+          _objects.solarProgressGroup.add(arc);
+        }
+      }
+
       if (_objects.lunarSelectedMarker) {
         const selectedPhase = String(model.selectedPatternPosition?.lunarPhase || "").toLowerCase();
         let selectedAngle = model.lunarAngle ?? 0;
@@ -1528,9 +1734,7 @@
           illumination: model.selectedPatternPosition?.lunarIllumination ?? null,
         };
       }
-      if (_objects.todayMarker?.material) {
-        _objects.todayMarker.material.emissiveIntensity = 1.4;
-      }
+      if (_objects.todayMarker?.material) _objects.todayMarker.material.emissiveIntensity = 0.9;
       // Today line: make solid for emphasis in Today mode
       if (_objects.todayLineGroup) {
         _objects.todayLineGroup.children.forEach(c => {
@@ -1545,6 +1749,7 @@
       if (_objects.solarAxis)   _objects.solarAxis.visible   = false;
       if (_objects.solarSelectedMarker) _objects.solarSelectedMarker.visible = false;
       if (_objects.solarTodayMarker) _objects.solarTodayMarker.visible = false;
+      if (_objects.solarProgressGroup) _objects.solarProgressGroup.visible = false;
       if (_objects.seasonMarkers) _objects.seasonMarkers.visible = false;
       if (_objects.spiralPath) _objects.spiralPath.visible = false;
     }
@@ -1632,6 +1837,7 @@
 
     _buildConnections();
     _syncCameraFocus(model, spiral, selectedYear, true);
+    _syncSemanticZoomFromCamera(true);
 
     globalThis.LivingTimeSphereAnimation.markDirty();
   }
@@ -1705,6 +1911,7 @@
     }
 
     // Update sphere-anchored Moon labels
+    _syncSemanticZoomFromCamera(false);
     _updateMoonLabels(_viewMode);
 
     _renderer.render(_scene, _camera);
@@ -1824,6 +2031,7 @@
 
       _camera = globalThis.LivingTimeSphereCamera.create(THREE, w, h);
       globalThis.LivingTimeSphereCamera.onChangeCallback(() => {
+        _syncSemanticZoomFromCamera(false);
         _moonLabelManager?.markDirty();
         globalThis.LivingTimeSphereAnimation.markDirty();
       });
@@ -2030,7 +2238,7 @@
     }
     if (type === "solar-selected") {
       const selected = _model?.selectedPatternPosition;
-      return `Selected Solar\n${selected?.solar?.gate || "Solar position"}\n${selected?.solar?.element || ""}`;
+      return `Selected\nSeasonal position (approx.)\n${selected?.solar?.gate || "Solar position"} ${selected?.solar?.element ? `· ${selected.solar.element}` : ""}`;
     }
     if (type === "lunar-selected") {
       const selected = _model?.selectedPatternPosition;
@@ -2307,6 +2515,10 @@
       update: _environmentController.update.bind(_environmentController),
       setLayerVisibility: _environmentController.setLayerVisibility.bind(_environmentController),
       dispose: _environmentController.dispose.bind(_environmentController),
+    }),
+    _internals: Object.freeze({
+      semanticThresholds: _semanticThresholds,
+      stabilizeBand: _stabilizeBand,
     }),
   });
 })();

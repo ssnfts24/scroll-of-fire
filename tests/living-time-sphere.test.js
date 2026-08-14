@@ -394,6 +394,40 @@ test("LivingTimeSphereModel: selected day angle maps back to exact day index", (
   }
 });
 
+test("LivingTimeSphereModel: 13 moons × 28 days yields 364 exact positions", () => {
+  const ctx = loadSphereContext();
+  const positions = [];
+  for (let moon = 1; moon <= 13; moon += 1) {
+    for (let day = 1; day <= 28; day += 1) {
+      positions.push(ctx.LivingTimeSphereModel.dayOfPatternYearFromMoonDay(moon, day));
+    }
+  }
+  assert.equal(positions.length, 364);
+  assert.equal(new Set(positions).size, 364, "all positions must be unique");
+  assert.equal(Math.min(...positions), 1);
+  assert.equal(Math.max(...positions), 364);
+});
+
+test("LivingTimeSphereModel: moon transition boundaries are exact and off-by-one safe", () => {
+  const ctx = loadSphereContext();
+  for (let moon = 1; moon <= 12; moon += 1) {
+    const lastDay = ctx.LivingTimeSphereModel.dayOfPatternYearFromMoonDay(moon, 28);
+    const nextFirst = ctx.LivingTimeSphereModel.dayOfPatternYearFromMoonDay(moon + 1, 1);
+    assert.equal(nextFirst, lastDay + 1, `Moon ${moon} Day 28 should be immediately before Moon ${moon + 1} Day 1`);
+  }
+});
+
+test("LivingTimeSphereModel: day metadata gate rules consume canonical shabbat config", () => {
+  const ctx = loadSphereContext();
+  ctx.SOF_MOONS_CONFIG = { shabbat: { moonDays: [4, 11, 18, 25], preparationDay: 3, returnDay: 5 } };
+  const m4 = ctx.LivingTimeSphereModel.dayMetadataForDayOfYear(4);
+  const m3 = ctx.LivingTimeSphereModel.dayMetadataForDayOfYear(3);
+  const m5 = ctx.LivingTimeSphereModel.dayMetadataForDayOfYear(5);
+  assert.equal(m4.shabbatGate, "Shabbat Gate");
+  assert.equal(m3.preparationGate, "Preparation Gate");
+  assert.equal(m5.returnGate, "Return Gate");
+});
+
 test("LivingTimeSphereModel: solar season angles progress through major gates", () => {
   const ctx = loadSphereContext();
   const march = ctx.LivingTimeSphereModel.solarSeasonAngleForDate("2026-03-20T12:00:00Z");
@@ -404,6 +438,15 @@ test("LivingTimeSphereModel: solar season angles progress through major gates", 
   assert.ok(june >= 75 && june < 110);
   assert.ok(september >= 165 && september < 205);
   assert.ok(december >= 250 && december < 295);
+});
+
+test("LivingTimeSphereModel: seasonal interpolation is explicitly tagged as approximation", () => {
+  const ctx = loadSphereContext();
+  const season = ctx.LivingTimeSphereModel.seasonalQuarterProgressForDate("2026-08-14T12:00:00Z");
+  assert.equal(season.sourceType, "calculated");
+  assert.equal(season.precision, "seasonal-approximation");
+  assert.equal(season.source, "quarter interpolation");
+  assert.ok(season.seasonalProgressAngle >= 0 && season.seasonalProgressAngle <= 360);
 });
 
 test("LunarAtEquinox: cycle position and phase naming stay synchronized", () => {

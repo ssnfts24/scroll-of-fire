@@ -102,9 +102,13 @@
   function _resolveSemanticState(state, container) {
     const zoom = globalThis.LivingTimeSphereSemanticZoom;
     if (!zoom?.resolveBand || !zoom?.resolveVisibility) return null;
+    const cameraState = globalThis.LivingTimeSphereCamera?.getState?.() || {};
     const fallbackDist = globalThis.LivingTimeSphereCamera?.MODE_POSITIONS?.[state.mode]?.distance || 2.35;
     const width = container?.clientWidth || (typeof window !== "undefined" ? window.innerWidth : 1024);
-    const band = zoom.resolveBand({ distance: fallbackDist, screenWidth: width });
+    const band = zoom.resolveBand({
+      distance: Number.isFinite(Number(cameraState.dist)) ? Number(cameraState.dist) : fallbackDist,
+      screenWidth: width
+    });
     return zoom.resolveVisibility({
       baseLayers: state.visibleLayers || {},
       band,

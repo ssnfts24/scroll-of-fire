@@ -38,7 +38,12 @@
   const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
   const LAYER_PREFERENCES_KEY = "sof.sphere.layerPreferences.v2";
   const DAY_MS = 24 * 60 * 60 * 1000;
-  const SHABBAT_DAYS = new Set([2, 9, 16, 23]);
+  const SHABBAT_DAYS = new Set(
+    (Array.isArray(globalThis.SOF_MOONS_CONFIG?.shabbat?.moonDays)
+      ? globalThis.SOF_MOONS_CONFIG.shabbat.moonDays
+      : [2, 9, 16, 23]
+    ).map(Number).filter(Number.isFinite)
+  );
   const MOON_LOG_KEY = "sof_moon_logs_v3";
   const LEGACY_MOON_LOG_KEY = "sof_moon_logs_v2";
   const FIELD_RANGE_LABELS = Object.freeze({

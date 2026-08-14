@@ -561,6 +561,39 @@ test("LivingTimeSphereSemanticZoom: FAR band suppresses dense pattern detail", (
   assert.ok(state.maxConnections <= 3);
 });
 
+test("LivingTimeSphereSemanticZoom: live camera distance changes drive band transitions on desktop and phone widths", () => {
+  const ctx = loadSphereContext();
+  const zoom = ctx.LivingTimeSphereSemanticZoom;
+  assert.equal(zoom.resolveBand({ distance: 3.9, screenWidth: 1280 }), "far");
+  assert.equal(zoom.resolveBand({ distance: 2.6, screenWidth: 1280 }), "medium");
+  assert.equal(zoom.resolveBand({ distance: 1.9, screenWidth: 1280 }), "near");
+  assert.equal(zoom.resolveBand({ distance: 1.2, screenWidth: 1280 }), "detail");
+  assert.equal(zoom.resolveBand({ distance: 3.1, screenWidth: 390 }), "far");
+  assert.equal(zoom.resolveBand({ distance: 2.2, screenWidth: 390 }), "medium");
+  assert.equal(zoom.resolveBand({ distance: 1.55, screenWidth: 390 }), "near");
+});
+
+test("LivingTimeSphereRenderer3d: semantic band hysteresis stabilizes near thresholds", () => {
+  const ctx  = loadSphereContext();
+  const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
+  vm.runInNewContext(code, ctx);
+  const stabilize = ctx.LivingTimeSphereRenderer3d._internals.stabilizeBand;
+  const nearFarThreshold = stabilize({
+    candidateBand: "medium",
+    previousBand: "far",
+    distance: 3.20,
+    screenWidth: 390,
+  });
+  assert.equal(nearFarThreshold, "far", "band should not flicker from FAR when still near threshold");
+  const nearDetailThreshold = stabilize({
+    candidateBand: "detail",
+    previousBand: "near",
+    distance: 1.45,
+    screenWidth: 390,
+  });
+  assert.equal(nearDetailThreshold, "near", "band should not flicker from NEAR to DETAIL at threshold edge");
+});
+
 test("Sphere page: quality and renderer controls present", () => {
   const html = read("docs/living-time-sphere.html");
   assert.ok(html.includes("sphere-quality-select"),   "quality selector present");
