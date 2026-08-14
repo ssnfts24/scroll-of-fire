@@ -113,6 +113,7 @@
     rendererInitCount: 0,
     sceneRootBuildCount: 0,
     modelBuildCount: 0,
+    selectedStateUpdateCount: 0,
     layerVisibilityUpdateCount: 0,
     cameraCreateCount: 0,
     canvasCreateCount: 0,
@@ -3154,6 +3155,203 @@
     globalThis.LivingTimeSphereAnimation.markDirty();
   }
 
+  function updateSelectedState({
+    model,
+    selectedYear = _selectedYear,
+    visibleLayers = _visibleLayers,
+    viewMode = _viewMode,
+    moonLabelMode = _moonLabelMode,
+    moonLabelDistance = _moonLabelDistance,
+    dayLabelMode = _dayLabelMode,
+    connectionRegistry = _connectionRegistry,
+    motionMode = _motionMode,
+    semanticZoomState = _semanticZoomState,
+    skipCameraFocus = true,
+  } = {}) {
+    if (!_initialized || !_scene || !model) return false;
+    const mat = globalThis.LivingTimeSphereM;
+    const updateStartedAt = performance.now();
+    _countLifecycle("selectedStateUpdateCount");
+    _lastLayerUpdateType = "selected-state-update";
+    _lastSceneBuildTimestamp = Date.now();
+
+    _model = model;
+    _selectedYear = selectedYear;
+    _visibleLayers = visibleLayers || _visibleLayers || {};
+    _viewMode = viewMode || _viewMode || "today";
+    _moonLabelMode = moonLabelMode || _moonLabelMode || "contextual";
+    _moonLabelDistance = moonLabelDistance || _moonLabelDistance || "standard";
+    _dayLabelMode = dayLabelMode || _dayLabelMode || "key";
+    _connectionRegistry = Array.isArray(connectionRegistry) ? connectionRegistry : (_connectionRegistry || []);
+    _motionMode = motionMode || _motionMode || "still";
+    _semanticZoomState = semanticZoomState || _semanticZoomState || null;
+    _buildMoonAnchors(_viewMode);
+    _moonLabelManager?.markDirty();
+
+    const vl = _visibleLayers;
+    _applyLayerVisibility(vl, _semanticZoomState || { band: "medium", visibility: {} });
+    const band = _semanticZoomState?.band || "medium";
+
+    const selected = model.selectedPatternPosition || model.todayPatternPosition || null;
+    const todayLunarAngle = Number(model.lunarAngle ?? 0);
+    const selectedLunarAngle = _resolveLunarAngleForSelected(selected, todayLunarAngle);
+    if (_objects.lunarMarker && Number.isFinite(todayLunarAngle)) {
+      const p = _positionOnLunarOrbit(todayLunarAngle, mat.SIZES.lunarOrbit);
+      _objects.lunarMarker.position.set(p.x, p.y, p.z);
+      _objects.lunarMarker.userData = {
+        type: "lunar-position",
+        role: "today",
+        phase: model.todayPatternPosition?.lunarPhase || null,
+        illumination: model.todayPatternPosition?.lunarIllumination ?? null,
+      };
+    }
+    if (_objects.lunarSelectedMarker && Number.isFinite(selectedLunarAngle)) {
+      const p = _positionOnLunarOrbit(selectedLunarAngle, mat.SIZES.lunarOrbit);
+      _objects.lunarSelectedMarker.position.set(p.x, p.y, p.z);
+      _objects.lunarSelectedMarker.userData = {
+        type: "lunar-position",
+        role: "selected",
+        phase: selected?.lunarPhase || null,
+        illumination: selected?.lunarIllumination ?? null,
+      };
+      _objects.lunarSelectedMarker.visible = !!vl.lunar && band !== "far" && !!selected;
+    }
+
+    const todaySolarAngle = Number(model.currentSolarSeasonAngle ?? model.solarSeasonAngle ?? 0);
+    const selectedSolarAngle = Number(selected?.solar?.angle ?? todaySolarAngle);
+    if (_objects.solarTodayMarker && Number.isFinite(todaySolarAngle)) {
+      const p = _positionOnSolarAxis(todaySolarAngle, mat.SIZES.solarAxis);
+      _objects.solarTodayMarker.position.set(p.x, p.y, p.z);
+      _objects.solarTodayMarker.visible = !!vl.solar && band !== "far";
+    }
+    if (_objects.solarSelectedMarker && Number.isFinite(selectedSolarAngle)) {
+      const p = _positionOnSolarAxis(selectedSolarAngle, mat.SIZES.solarAxis);
+      _objects.solarSelectedMarker.position.set(p.x, p.y, p.z);
+      _objects.solarSelectedMarker.visible = !!vl.solar && band !== "far" && !!selected;
+      _objects.solarSelectedMarker.userData = {
+        type: "solar-position",
+        role: "selected",
+        gate: selected?.solar?.gate || null,
+        angle: selectedSolarAngle,
+      };
+    }
+    if (_objects.solarProgressGroup) {
+      while (_objects.solarProgressGroup.children.length) {
+        _objects.solarProgressGroup.remove(_objects.solarProgressGroup.children[0]);
+      }
+      const arc = buildSolarProgressArc(todaySolarAngle, selectedSolarAngle);
+      if (arc) {
+        arc.name = "solarProgressArc";
+        arc.computeLineDistances?.();
+        arc.visible = !!vl.solar && band !== "far";
+        _objects.solarProgressGroup.add(arc);
+      }
+    }
+
+    if (_objects.selectedDayMarker) {
+      const showSelected = !!(selected?.dayOfPatternYear != null);
+      if (showSelected) {
+        const selectedAngle = globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(selected.dayOfPatternYear);
+        const { x, z } = angleToXZ(selectedAngle, mat.SIZES.patternRing);
+        _objects.selectedDayMarker.position.set(x, 0.01, z);
+        _objects.selectedDayMarker.visible = true;
+        if (_objects.selectedDayHalo) {
+          _objects.selectedDayHalo.position.set(x, 0.004, z);
+          _objects.selectedDayHalo.visible = true;
+        }
+        _objects.selectedDayMarker.userData = {
+          ...selected,
+          type: "living-day",
+          role: "selected",
+        };
+      } else {
+        _objects.selectedDayMarker.visible = false;
+        if (_objects.selectedDayHalo) _objects.selectedDayHalo.visible = false;
+      }
+    }
+
+    _applyDayNodeVisibility(
+      band,
+      selected?.dayOfPatternYear ?? model.selectedPatternPosition?.dayOfPatternYear ?? null,
+      model.todayPatternPosition?.dayOfPatternYear ?? null
+    );
+
+    if (_objects.activeMoonGroup) {
+      while (_objects.activeMoonGroup.children.length) {
+        _objects.activeMoonGroup.remove(_objects.activeMoonGroup.children[0]);
+      }
+      const tp = model.selectedPatternPosition || model.todayPatternPosition;
+      const activeMoon = tp ? (tp.moon || 1) - 1 : (model.sourceRecord?.equinox?.patternPosition?.moon || 1) - 1;
+      const r = mat.SIZES.patternRing;
+      const sectorStart = (activeMoon / 13) * 360;
+      const sectorEnd   = ((activeMoon + 1) / 13) * 360;
+      const steps = 32;
+      const innerR = r * 0.82;
+      const outerR = r * 0.98;
+      const shape = new _THREE.Shape();
+      for (let i = 0; i <= steps; i++) {
+        const a = sectorStart + (i / steps) * (sectorEnd - sectorStart);
+        const { x, z } = angleToXZ(a, outerR);
+        if (i === 0) shape.moveTo(x, z);
+        else shape.lineTo(x, z);
+      }
+      for (let i = steps; i >= 0; i--) {
+        const a = sectorStart + (i / steps) * (sectorEnd - sectorStart);
+        const { x, z } = angleToXZ(a, innerR);
+        shape.lineTo(x, z);
+      }
+      shape.closePath();
+      const geo = new _THREE.ShapeGeometry(shape);
+      geo.rotateX(Math.PI / 2);
+      const sector = new _THREE.Mesh(geo, new _THREE.MeshBasicMaterial({
+        color: mat.COLORS.moonHighlight,
+        transparent: true,
+        opacity: _viewMode === "today" ? 0.42 : mat.OPACITY.moonHighlight,
+        depthWrite: false,
+        side: _THREE.DoubleSide,
+      }));
+      sector.name = "activeMoonSector";
+      _objects.activeMoonGroup.add(sector);
+    }
+
+    if (_objects.activeDayNode) {
+      const tp = model.selectedPatternPosition || model.todayPatternPosition;
+      if (vl.pattern && tp && tp.moon != null && tp.day != null) {
+        const moonIdx = tp.moon - 1;
+        const dayIdx  = tp.day  - 1;
+        const angle = globalThis.LivingTimeSphereModel.dayAngleWithinMoon(moonIdx, dayIdx);
+        const { x, z } = angleToXZ(angle, mat.SIZES.patternRing);
+        _objects.activeDayNode.position.set(x, 0.008, z);
+        _objects.activeDayNode.visible = true;
+        if (_objects.selectionRing && _viewMode !== "years") {
+          _objects.selectionRing.position.set(x, 0.01, z);
+          _objects.selectionRing.visible = true;
+          _objects.selectionRing.rotation.x = Math.PI / 2;
+        }
+      } else {
+        _objects.activeDayNode.visible = false;
+      }
+    }
+
+    if (_objects.connectionGroup && Array.isArray(_connectionRegistry)) {
+      while (_objects.connectionGroup.children.length) {
+        _objects.connectionGroup.remove(_objects.connectionGroup.children[0]);
+      }
+      _connectionDiagnostics = [];
+      _connectionVisibleCount = 0;
+      if (vl.connections && _connectionRegistry.length) _buildConnections();
+    }
+
+    _applyModeVisibilityOverrides(vl);
+    _syncSemanticZoomFromCamera(true);
+    if (!skipCameraFocus) _syncCameraFocus(_model, _spiral, _selectedYear, false);
+    _enforceRendererHostContract();
+    _validateSceneReadiness({ requireFirstFrame: false });
+    _lastLayerUpdateMs = Math.max(0, performance.now() - updateStartedAt);
+    globalThis.LivingTimeSphereAnimation.markDirty();
+    return true;
+  }
+
   function updateEnvironment(environmentState) {
     _environmentController.update(environmentState || EMPTY_ENVIRONMENT_STATE);
     if (_initialized) globalThis.LivingTimeSphereAnimation.markDirty();
@@ -3327,6 +3525,7 @@
       rendererInitCount: Number(_lifecycleCounters.rendererInitCount || 0),
       sceneRootBuildCount: Number(_lifecycleCounters.sceneRootBuildCount || 0),
       modelBuildCount: Number(_lifecycleCounters.modelBuildCount || 0),
+      selectedStateUpdateCount: Number(_lifecycleCounters.selectedStateUpdateCount || 0),
       layerVisibilityUpdateCount: Number(_lifecycleCounters.layerVisibilityUpdateCount || 0),
       cameraCreateCount: Number(_lifecycleCounters.cameraCreateCount || 0),
       canvasCreateCount: Number(_lifecycleCounters.canvasCreateCount || 0),
@@ -3368,6 +3567,7 @@
   globalThis.LivingTimeSphereRenderer3d = Object.freeze({
     init,
     refresh,
+    updateSelectedState,
     setLayerVisibility,
     setLayerStates,
     updateEnvironment,

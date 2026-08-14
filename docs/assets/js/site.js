@@ -526,7 +526,19 @@
       image.hidden = true;
       image.setAttribute("aria-hidden", "true");
       const shell = image.closest("picture,figure,[data-home-product-media],[data-home-media-card],.home-product-slide");
-      if (shell && shell.children && shell.children.length <= 1) shell.hidden = true;
+      if (shell) shell.hidden = true;
+      let parent = image.parentElement;
+      while (parent && parent !== document.body) {
+        try {
+          const style = window.getComputedStyle(parent);
+          const rect = parent.getBoundingClientRect?.() || null;
+          const nearBottom = rect ? rect.bottom >= (window.innerHeight - 220) : false;
+          if ((style?.position === "fixed" || style?.position === "sticky") && nearBottom) {
+            parent.hidden = true;
+          }
+        } catch (_) { /* best effort */ }
+        parent = parent.parentElement;
+      }
     }
 
     function wireImage(image) {

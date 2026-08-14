@@ -1785,6 +1785,7 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
 .sphere-location-change { margin:.35rem 0 .15rem; }
 .sphere-location-command.has-active-place { border-color:rgba(80,210,170,.34); }
 .sphere-broken-resource-hidden { display:none !important; }
+.sphere-broken-resource-shell-hidden { display:none !important; }
 .sphere-moon-labels { contain:layout paint; }
 @media (max-width:620px){
   .sphere-moon-label{font-size:.68rem!important;max-width:7.5rem;overflow:hidden;text-overflow:ellipsis;}

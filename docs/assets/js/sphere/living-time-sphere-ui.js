@@ -48,6 +48,20 @@
     _autoRetryTimer: 0,
     _recoveryHooksBound: false,
     _resizeObserver: null,
+    _spiralCacheKey: "",
+    _spiralCache: null,
+    selectedUpdateStatus: "idle",
+    selectedUpdateRevision: 0,
+    pendingSelectedDay: null,
+    selectedUpdateInFlight: false,
+    fullRenderCount: 0,
+    selectedLightweightUpdateCount: 0,
+    selectedUpdateMetrics: [],
+    selectedUpdateLongTasks: [],
+    selectedUpdateLastWatchdog: null,
+    lastNavActionAt: 0,
+    lastNavActionId: "",
+    _selectedLongTaskObserver: null,
   };
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
   const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
@@ -151,7 +165,24 @@
         node.style.overflow = "hidden";
       }
       const shell = node.closest?.("picture,figure,[data-home-product-media],[data-home-media-card],.home-product-slide");
-      if (shell && shell.children?.length <= 1) shell.hidden = true;
+      if (shell) {
+        shell.hidden = true;
+        shell.classList?.add?.("sphere-broken-resource-shell-hidden");
+      }
+      let parent = node.parentElement;
+      while (parent && parent !== document.body) {
+        try {
+          const style = window.getComputedStyle(parent);
+          const pos = style?.position || "";
+          const rect = parent.getBoundingClientRect?.() || null;
+          const nearBottom = rect ? (rect.bottom >= (window.innerHeight - 220)) : false;
+          if ((pos === "fixed" || pos === "sticky") && nearBottom) {
+            parent.hidden = true;
+            parent.classList?.add?.("sphere-broken-resource-shell-hidden");
+          }
+        } catch { /* best effort */ }
+        parent = parent.parentElement;
+      }
     };
     const suppressBrokenImage = image => {
       if (!image || image.dataset?.sphereBrokenHidden === "true") return;
@@ -170,7 +201,7 @@
         return;
       }
       const tag = String(node.tagName || "").toUpperCase();
-      if (!["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE"].includes(tag)) return;
+      if (!["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE", "IMAGE"].includes(tag)) return;
       if (node.dataset?.sphereBrokenWired === "true") return;
       node.dataset.sphereBrokenWired = "true";
       node.addEventListener("error", () => collapseResourceNode(node), { once: true });
@@ -178,7 +209,7 @@
     const scan = root => {
       if (!root?.querySelectorAll) return;
       root.querySelectorAll("img").forEach(suppressBrokenImage);
-      root.querySelectorAll("object,iframe,embed,video,source,picture").forEach(suppressBrokenMedia);
+      root.querySelectorAll("object,iframe,embed,video,source,picture,svg image").forEach(suppressBrokenMedia);
     };
     scan(document);
     new MutationObserver(mutations => {
@@ -198,7 +229,7 @@
       const target = event?.target;
       if (!target || target.nodeType !== 1) return;
       if (target.tagName === "IMG") suppressBrokenImage(target);
-      else if (["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE"].includes(String(target.tagName || "").toUpperCase())) collapseResourceNode(target);
+      else if (["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE", "IMAGE"].includes(String(target.tagName || "").toUpperCase())) collapseResourceNode(target);
     }, true);
   }
 
@@ -292,6 +323,15 @@
     });
   }
 
+  function _collectFixedStickyDiagnostics() {
+    const nodes = Array.from(document.querySelectorAll("*"));
+    return nodes
+      .map(node => _inspectElementNode(node))
+      .filter(Boolean)
+      .filter(item => item.position === "fixed" || item.position === "sticky")
+      .slice(0, 240);
+  }
+
   function _inspectSphereHostChildren() {
     const host = document.getElementById("sphere-container");
     if (!host) return [];
@@ -302,6 +342,7 @@
     return {
       capturedAt: Date.now(),
       bottomViewport: _collectBottomViewportDiagnostics(190),
+      fixedSticky: _collectFixedStickyDiagnostics(),
       media: _collectMediaDiagnostics(document),
       sphereHostChildren: _inspectSphereHostChildren(),
       failedResources: _resourceFailureLog.slice(0, 120),
@@ -467,6 +508,23 @@
       ? globalThis.LivingTimeSphereModel.buildTodayModel(opts)
       : globalThis.LivingTimeSphereModel.buildYearModel(opts);
     return _decorateModel(baseModel);
+  }
+
+  function _spiralCacheKey() {
+    return `${_state.timeZone}|${_state.boundaryMode}|${_state.manualSunset}|${_state.year}`;
+  }
+
+  function _getCachedSpiral() {
+    const key = _spiralCacheKey();
+    if (!_state._spiralCache || _state._spiralCacheKey !== key) {
+      _state._spiralCache = globalThis.LivingTimeSphereModel.buildSpiral({
+        timeZone: _state.timeZone,
+        boundaryMode: _state.boundaryMode,
+        manualSunset: _state.manualSunset,
+      });
+      _state._spiralCacheKey = key;
+    }
+    return _state._spiralCache;
   }
 
   function _readLocalSetting(key) {
@@ -809,6 +867,61 @@
       if (cb) cb.checked = !!_state.visibleLayers[layer];
     });
     _syncingLayerControls = false;
+  }
+
+  function _clampPatternDay(day) {
+    return Math.max(1, Math.min(364, Number(day) || 1));
+  }
+
+  function _syncDaySelectorsFromModel(model) {
+    const moonSel = document.getElementById("sphere-select-moon");
+    const daySel = document.getElementById("sphere-select-day");
+    if (!moonSel || !daySel) return;
+    if (!moonSel.options.length) {
+      moonSel.innerHTML = Array.from({ length: 13 }, (_, index) => `<option value="${index + 1}">Moon ${index + 1}</option>`).join("");
+    }
+    if (!daySel.options.length) {
+      daySel.innerHTML = Array.from({ length: 28 }, (_, index) => `<option value="${index + 1}">Day ${index + 1}</option>`).join("");
+    }
+    const selected = model?.selectedPatternPosition || _resolveSelectedPatternPosition(model || buildCurrentModel());
+    moonSel.value = String(selected?.moon || 1);
+    daySel.value = String(selected?.day || 1);
+  }
+
+  function _setDayNavDisabled(disabled) {
+    ["sphere-prev-day", "sphere-next-day"].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) btn.setAttribute("aria-busy", disabled ? "true" : "false");
+    });
+  }
+
+  function _updateSphereUrlFromModel(model, { replace = true } = {}) {
+    if (typeof window === "undefined" || !globalThis.LivingTimeSphereUrlState?.buildSphereUrl) return;
+    const selected = model?.selectedPatternPosition || null;
+    const cameraState = globalThis.LivingTimeSphereCamera?.getState?.() || {};
+    const marker = selected?.dayOfPatternYear ? `day-${selected.dayOfPatternYear}` : (_state.selectedMarker || null);
+    const url = globalThis.LivingTimeSphereUrlState.buildSphereUrl({
+      baseUrl: `${location.origin}${location.pathname}`,
+      year: _state.year,
+      viewMode: _state.viewMode,
+      layers: Object.keys(_state.visibleLayers).filter(key => _state.visibleLayers[key]),
+      marker,
+      timeZone: _state.timeZone,
+      boundaryMode: _state.boundaryMode,
+      manualSunset: _state.manualSunset,
+      datasetVersion: _state.datasetVersion || globalThis.LivingTimeSphereVersion?.version || null,
+      source: _state.source || null,
+      renderer: _state.requestedRendererMode === "auto" ? null : _state.requestedRendererMode,
+      quality: _state.quality === "auto" ? null : _state.quality,
+      cameraTheta: Number.isFinite(Number(cameraState.theta)) ? Number(cameraState.theta) : null,
+      cameraDist: Number.isFinite(Number(cameraState.dist)) ? Number(cameraState.dist) : null,
+      connectionMode: _state.connectionMode,
+      motionMode: _state.motionMode,
+      moonLabelDistance: _state.moonLabelDistance,
+      dayLabelMode: _state.dayLabelMode,
+    });
+    if (replace) window.history.replaceState({ marker, day: selected?.dayOfPatternYear || null }, "", url);
+    else window.history.pushState({ marker, day: selected?.dayOfPatternYear || null }, "", url);
   }
 
   function _mappedLayerVisible(layerId) {
@@ -1477,6 +1590,7 @@
 
   function renderSphere(container) {
     if (!container) return;
+    _state.fullRenderCount += 1;
 
     // Show/hide data table and text summary views
     _updateAlternateViews();
@@ -1485,26 +1599,13 @@
     _syncLayerCheckboxes();
 
     const model    = buildCurrentModel();
-    const spiral   = globalThis.LivingTimeSphereModel.buildSpiral({ timeZone: _state.timeZone, boundaryMode: _state.boundaryMode, manualSunset: _state.manualSunset });
-    const semanticZoom = _resolveSemanticZoomState(container);
-    _state.semanticZoom = semanticZoom;
-    const effectiveLayers = semanticZoom?.visibility ? { ..._state.visibleLayers, ...semanticZoom.visibility } : { ..._state.visibleLayers };
-    const moonLabelExplicit = _state.moonLabelMode === "all" || _state.moonLabelMode === "selected" || _state.moonLabelMode === "hidden";
-    const dayLabelExplicit = _state.dayLabelMode === "all" || _state.dayLabelMode === "selected" || _state.dayLabelMode === "hidden";
-    const effectiveMoonLabelMode = moonLabelExplicit ? _state.moonLabelMode : (semanticZoom?.moonLabelMode || _state.moonLabelMode);
-    const effectiveDayLabelMode = dayLabelExplicit ? _state.dayLabelMode : (semanticZoom?.dayLabelMode || _state.dayLabelMode);
-    const effectiveConnectionMode = semanticZoom?.connectionMode || _state.connectionMode;
-    const connectionRegistry = globalThis.LivingTimeSphereConnections?.buildRegistry?.({
-      model,
-      spiral,
-      state: {
-        ..._state,
-        visibleLayers: effectiveLayers,
-        connectionMode: effectiveConnectionMode,
-        moonLabelMode: effectiveMoonLabelMode,
-        dayLabelMode: effectiveDayLabelMode,
-      },
-    }) || [];
+    const spiral   = _getCachedSpiral();
+    const effective = _resolveEffectiveRenderState(model, spiral, container);
+    const semanticZoom = effective.semanticZoom;
+    const effectiveLayers = effective.effectiveLayers;
+    const effectiveMoonLabelMode = effective.effectiveMoonLabelMode;
+    const effectiveDayLabelMode = effective.effectiveDayLabelMode;
+    const connectionRegistry = effective.connectionRegistry;
 
     if (_state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") {
       // Hide 3D / SVG canvas; show alternate view
@@ -1520,6 +1621,7 @@
       _updateWhatAmISeeing(_state.viewMode);
       _updateStateStrip(_state.viewMode, model);
       _updateEnvironmentBridge(model);
+      _updateSphereUrlFromModel(model, { replace: true });
       return;
     }
     container.style.display = "";
@@ -1552,6 +1654,7 @@
     _updateStateStrip(_state.viewMode, model);
     _updateEnvironmentBridge(model);
     _updateRendererDiagnostics();
+    _updateSphereUrlFromModel(model, { replace: true });
   }
 
   async function _render3d(container, model, spiral, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode) {
@@ -1623,23 +1726,19 @@
           onMarkerSelect: marker => {
             if (!marker) return;
             if (marker.type === "day" && marker.dayOfPatternYear) {
-              _state.selectedDayOfYear = marker.dayOfPatternYear;
-              _state.selectedMarker = `day-${marker.dayOfPatternYear}`;
               globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${marker.day}, Day ${marker.dayOfPatternYear} of 364.`);
               if (_state.viewMode === "years") {
                 _state.viewMode = "pattern";
                 _setModeDefaultLayers("pattern");
                 _syncModeButtons();
               }
-              renderSphere(container);
+              _requestSelectedDayUpdate(container, marker.dayOfPatternYear);
               return;
             }
             if (marker.type === "moon" && marker.moon) {
               const day = Math.max(1, Math.min(28, marker.day || 1));
-              _state.selectedDayOfYear = (marker.moon - 1) * 28 + day;
-              _state.selectedMarker = `moon-${marker.moon}`;
               globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${day}.`);
-              renderSphere(container);
+              _requestSelectedDayUpdate(container, (marker.moon - 1) * 28 + day);
               return;
             }
             _state.selectedMarker = marker?.type === "year" ? `eq-${marker.year}` : (marker?.type || null);
@@ -2359,30 +2458,175 @@
     }
   }
 
+  function _recordSelectedUpdateMetric(metric) {
+    _state.selectedUpdateMetrics.push(metric);
+    if (_state.selectedUpdateMetrics.length > 120) _state.selectedUpdateMetrics.shift();
+  }
+
+  function _installSelectedDayLongTaskObserver() {
+    if (_state._selectedLongTaskObserver) return;
+    if (typeof PerformanceObserver === "undefined") return;
+    if (!PerformanceObserver.supportedEntryTypes?.includes?.("longtask")) return;
+    try {
+      _state._selectedLongTaskObserver = new PerformanceObserver(list => {
+        list.getEntries().forEach(entry => {
+          if (_state.selectedUpdateStatus !== "updating") return;
+          _state.selectedUpdateLongTasks.push({
+            at: Date.now(),
+            duration: Number(entry.duration || 0),
+            name: entry.name || "longtask",
+          });
+          if (_state.selectedUpdateLongTasks.length > 80) _state.selectedUpdateLongTasks.shift();
+        });
+      });
+      _state._selectedLongTaskObserver.observe({ entryTypes: ["longtask"] });
+    } catch {
+      _state._selectedLongTaskObserver = null;
+    }
+  }
+
+  function _resolveEffectiveRenderState(model, spiral, container) {
+    const semanticZoom = _resolveSemanticZoomState(container);
+    _state.semanticZoom = semanticZoom;
+    const effectiveLayers = semanticZoom?.visibility ? { ..._state.visibleLayers, ...semanticZoom.visibility } : { ..._state.visibleLayers };
+    const moonLabelExplicit = _state.moonLabelMode === "all" || _state.moonLabelMode === "selected" || _state.moonLabelMode === "hidden";
+    const dayLabelExplicit = _state.dayLabelMode === "all" || _state.dayLabelMode === "selected" || _state.dayLabelMode === "hidden";
+    const effectiveMoonLabelMode = moonLabelExplicit ? _state.moonLabelMode : (semanticZoom?.moonLabelMode || _state.moonLabelMode);
+    const effectiveDayLabelMode = dayLabelExplicit ? _state.dayLabelMode : (semanticZoom?.dayLabelMode || _state.dayLabelMode);
+    const effectiveConnectionMode = semanticZoom?.connectionMode || _state.connectionMode;
+    const connectionRegistry = globalThis.LivingTimeSphereConnections?.buildRegistry?.({
+      model,
+      spiral,
+      state: {
+        ..._state,
+        visibleLayers: effectiveLayers,
+        connectionMode: effectiveConnectionMode,
+        moonLabelMode: effectiveMoonLabelMode,
+        dayLabelMode: effectiveDayLabelMode,
+      },
+    }) || [];
+    return {
+      semanticZoom,
+      effectiveLayers,
+      effectiveMoonLabelMode,
+      effectiveDayLabelMode,
+      connectionRegistry,
+    };
+  }
+
+  async function _flushSelectedDayUpdates(container) {
+    if (_state.selectedUpdateInFlight || !container) return;
+    _state.selectedUpdateInFlight = true;
+    while (_state.pendingSelectedDay != null) {
+      const nextDay = _clampPatternDay(_state.pendingSelectedDay);
+      _state.pendingSelectedDay = null;
+      const revision = ++_state.selectedUpdateRevision;
+      const startedAt = performance.now();
+      _state.selectedUpdateStatus = "updating";
+      _setDayNavDisabled(true);
+      const watchdog = setTimeout(() => {
+        if (_state.selectedUpdateStatus !== "updating" || _state.selectedUpdateRevision !== revision) return;
+        const rendererDiag = globalThis.LivingTimeSphereRenderer3d?.getDiagnostics?.() || {};
+        _state.selectedUpdateLastWatchdog = {
+          revision,
+          selectedDay: _state.selectedDayOfYear,
+          pendingSelectedDay: _state.pendingSelectedDay,
+          rendererState: _state.rendererLifecycle,
+          sceneObjectCount: Number(rendererDiag.sceneObjectCount || 0),
+          lastFrameTime: Number(rendererDiag.lastRenderTimestamp || 0),
+          firedAt: Date.now(),
+        };
+      }, 1400);
+
+      const previous = {
+        selectedDayOfYear: _state.selectedDayOfYear,
+        selectedMarker: _state.selectedMarker,
+      };
+      try {
+        _state.selectedDayOfYear = nextDay;
+        _state.selectedMarker = `day-${nextDay}`;
+        _persistSelectedState();
+        const stateAppliedAt = performance.now();
+
+        const model = buildCurrentModel();
+        _syncDaySelectorsFromModel(model);
+        const selectorsSyncedAt = performance.now();
+        _updateSphereUrlFromModel(model, { replace: true });
+        const urlSyncedAt = performance.now();
+
+        const spiral = _getCachedSpiral();
+        const effective = _resolveEffectiveRenderState(model, spiral, container);
+        let incrementalUsed = false;
+        const renderer = globalThis.LivingTimeSphereRenderer3d;
+        if (_state.active3d && renderer?.isInitialized?.() && typeof renderer.updateSelectedState === "function") {
+          incrementalUsed = renderer.updateSelectedState({
+            model,
+            selectedYear: _state.year,
+            visibleLayers: effective.effectiveLayers,
+            viewMode: _state.viewMode,
+            moonLabelMode: effective.effectiveMoonLabelMode,
+            moonLabelDistance: _state.moonLabelDistance,
+            dayLabelMode: effective.effectiveDayLabelMode,
+            connectionRegistry: effective.connectionRegistry,
+            motionMode: _state.motionMode,
+            semanticZoomState: effective.semanticZoom,
+            skipCameraFocus: true,
+          });
+        }
+        const renderAppliedAt = performance.now();
+        if (!incrementalUsed) {
+          renderSphere(container);
+        } else {
+          _state.selectedLightweightUpdateCount += 1;
+          updateAccessibleText(model, spiral);
+          updateDetails(model);
+          _updateTodayDiagnostics(model);
+          _updateModeSummary(model);
+          _updateWhatAmISeeing(_state.viewMode);
+          _updateStateStrip(_state.viewMode, model);
+          _updateEnvironmentBridge(model);
+          _updateRendererDiagnostics();
+        }
+        const completeAt = performance.now();
+        _recordSelectedUpdateMetric({
+          revision,
+          day: nextDay,
+          totalMs: Number((completeAt - startedAt).toFixed(2)),
+          stateMs: Number((stateAppliedAt - startedAt).toFixed(2)),
+          selectorSyncMs: Number((selectorsSyncedAt - stateAppliedAt).toFixed(2)),
+          urlMs: Number((urlSyncedAt - selectorsSyncedAt).toFixed(2)),
+          renderMs: Number((renderAppliedAt - urlSyncedAt).toFixed(2)),
+          settleMs: Number((completeAt - renderAppliedAt).toFixed(2)),
+          incrementalUsed,
+        });
+      } catch (error) {
+        _state.selectedDayOfYear = previous.selectedDayOfYear;
+        _state.selectedMarker = previous.selectedMarker;
+        _persistSelectedState();
+        renderSphere(container);
+        console.warn("[LivingTimeSphere] Selected-day update failed; reverted to previous state.", error);
+      } finally {
+        clearTimeout(watchdog);
+        if (_state.selectedUpdateRevision === revision) {
+          _state.selectedUpdateStatus = "idle";
+          _setDayNavDisabled(false);
+        }
+      }
+    }
+    _state.selectedUpdateInFlight = false;
+  }
+
+  function _requestSelectedDayUpdate(container, day) {
+    _state.pendingSelectedDay = _clampPatternDay(day);
+    _flushSelectedDayUpdates(container);
+  }
+
   // ── Control wiring ─────────────────────────────────────────────────
 
   function wireControls(container) {
-    const syncDaySelectors = () => {
-      const moonSel = document.getElementById("sphere-select-moon");
-      const daySel = document.getElementById("sphere-select-day");
-      if (!moonSel || !daySel) return;
-      if (!moonSel.options.length) {
-        moonSel.innerHTML = Array.from({ length: 13 }, (_, index) => `<option value="${index + 1}">Moon ${index + 1}</option>`).join("");
-      }
-      if (!daySel.options.length) {
-        daySel.innerHTML = Array.from({ length: 28 }, (_, index) => `<option value="${index + 1}">Day ${index + 1}</option>`).join("");
-      }
-      const model = buildCurrentModel();
-      const selected = model.selectedPatternPosition || _resolveSelectedPatternPosition(model);
-      moonSel.value = String(selected?.moon || 1);
-      daySel.value = String(selected?.day || 1);
-    };
-
     const shiftSelectedDay = delta => {
-      _state.selectedDayOfYear = Math.max(1, Math.min(364, (_state.selectedDayOfYear ?? _resolveSelectedDayOfYear(buildCurrentModel())) + delta));
-      _state.selectedMarker = `day-${_state.selectedDayOfYear}`;
-      renderSphere(container);
-      syncDaySelectors();
+      const baseDay = _state.selectedDayOfYear ?? _resolveSelectedDayOfYear(buildCurrentModel());
+      _requestSelectedDayUpdate(container, baseDay + delta);
     };
 
     const shiftSelectedMoon = delta => {
@@ -2391,10 +2635,15 @@
       const currentMoon = selected?.moon || 1;
       const currentDay = selected?.day || 1;
       const nextMoon = ((currentMoon - 1 + delta + 13) % 13) + 1;
-      _state.selectedDayOfYear = (nextMoon - 1) * 28 + currentDay;
-      _state.selectedMarker = `moon-${nextMoon}`;
-      renderSphere(container);
-      syncDaySelectors();
+      _requestSelectedDayUpdate(container, (nextMoon - 1) * 28 + currentDay);
+    };
+
+    const runGuardedNavAction = (actionId, handler) => () => {
+      const now = Date.now();
+      if (_state.lastNavActionId === actionId && now - Number(_state.lastNavActionAt || 0) < 24) return;
+      _state.lastNavActionId = actionId;
+      _state.lastNavActionAt = now;
+      handler();
     };
 
     // View mode buttons.
@@ -2444,10 +2693,10 @@
     _syncFieldRangeButtons();
 
     [
-      ["sphere-prev-day", () => shiftSelectedDay(-1)],
-      ["sphere-next-day", () => shiftSelectedDay(1)],
-      ["sphere-prev-moon", () => shiftSelectedMoon(-1)],
-      ["sphere-next-moon", () => shiftSelectedMoon(1)],
+      ["sphere-prev-day", runGuardedNavAction("prev-day", () => shiftSelectedDay(-1))],
+      ["sphere-next-day", runGuardedNavAction("next-day", () => shiftSelectedDay(1))],
+      ["sphere-prev-moon", runGuardedNavAction("prev-moon", () => shiftSelectedMoon(-1))],
+      ["sphere-next-moon", runGuardedNavAction("next-moon", () => shiftSelectedMoon(1))],
     ].forEach(([id, handler]) => {
       const btn = document.getElementById(id);
       if (btn) btn.addEventListener("click", handler);
@@ -2459,21 +2708,17 @@
       moonSelect.addEventListener("change", () => {
         const moon = Math.max(1, Math.min(13, Number(moonSelect.value) || 1));
         const day = Math.max(1, Math.min(28, Number(daySelect?.value) || 1));
-        _state.selectedDayOfYear = (moon - 1) * 28 + day;
-        _state.selectedMarker = `moon-${moon}`;
-        renderSphere(container);
+        _requestSelectedDayUpdate(container, (moon - 1) * 28 + day);
       });
     }
     if (daySelect) {
       daySelect.addEventListener("change", () => {
         const moon = Math.max(1, Math.min(13, Number(moonSelect?.value) || 1));
         const day = Math.max(1, Math.min(28, Number(daySelect.value) || 1));
-        _state.selectedDayOfYear = (moon - 1) * 28 + day;
-        _state.selectedMarker = `day-${_state.selectedDayOfYear}`;
-        renderSphere(container);
+        _requestSelectedDayUpdate(container, (moon - 1) * 28 + day);
       });
     }
-    syncDaySelectors();
+    _syncDaySelectorsFromModel(buildCurrentModel());
 
     // Layer toggles.
     Object.keys(_state.visibleLayers).forEach(layer => {
@@ -2740,23 +2985,11 @@
       const marker = e.detail;
       if (!marker) return;
       if (marker.type === "day" && marker.dayOfPatternYear) {
-        _state.selectedDayOfYear = marker.dayOfPatternYear;
-        _state.selectedMarker = `day-${marker.dayOfPatternYear}`;
         globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${marker.day}, Day ${marker.dayOfPatternYear} of 364.`);
-        const moonSelect = document.getElementById("sphere-select-moon");
-        const daySelect = document.getElementById("sphere-select-day");
-        if (moonSelect) moonSelect.value = String(marker.moon || 1);
-        if (daySelect) daySelect.value = String(marker.day || 1);
-        renderSphere(container);
+        _requestSelectedDayUpdate(container, marker.dayOfPatternYear);
       } else if (marker.type === "moon" && marker.moon) {
-        _state.selectedDayOfYear = (marker.moon - 1) * 28 + Math.max(1, Math.min(28, marker.day || 1));
-        _state.selectedMarker = `moon-${marker.moon}`;
         globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${Math.max(1, Math.min(28, marker.day || 1))}.`);
-        const moonSelect = document.getElementById("sphere-select-moon");
-        const daySelect = document.getElementById("sphere-select-day");
-        if (moonSelect) moonSelect.value = String(marker.moon);
-        if (daySelect) daySelect.value = String(Math.max(1, Math.min(28, marker.day || 1)));
-        renderSphere(container);
+        _requestSelectedDayUpdate(container, (marker.moon - 1) * 28 + Math.max(1, Math.min(28, marker.day || 1)));
       }
     });
 
@@ -2926,6 +3159,7 @@
     _installResourceFailureTracker();
     _bindRecoveryHooks(container);
     globalThis.getSphereRuntimeDebugSnapshot = _collectRuntimeDebugSnapshot;
+    _installSelectedDayLongTaskObserver();
 
     // Auto-open Sphere Settings panel on non-mobile viewports.
     const settingsGroup = document.querySelector(".sphere-settings-group");
@@ -2957,6 +3191,18 @@
       const renderer = globalThis.LivingTimeSphereRenderer3d;
       if (_state.active3d && renderer?.isInitialized?.()) {
         renderer.updateEnvironment?.(nextState);
+      } else {
+        renderSphere(container);
+      }
+    });
+    window.addEventListener("popstate", () => {
+      const parsed = globalThis.LivingTimeSphereUrlState?.parseSphereUrl?.(location.href) || {};
+      if (parsed.year) _state.year = parsed.year;
+      if (parsed.viewMode) _state.viewMode = parsed.viewMode;
+      if (parsed.marker) _state.selectedMarker = parsed.marker;
+      const markerDay = _selectedDayFromMarker(parsed.marker);
+      if (markerDay != null) {
+        _requestSelectedDayUpdate(container, markerDay);
       } else {
         renderSphere(container);
       }
@@ -3017,6 +3263,13 @@
       explicitUrlLayers: !!_urlHasExplicitLayers,
       locationState: envState?.providerConfigured ? "configured" : "location-needed",
       retryCount: Number(_state.retryCount || 0),
+      fullRenderCount: Number(_state.fullRenderCount || 0),
+      selectedLightweightUpdateCount: Number(_state.selectedLightweightUpdateCount || 0),
+      selectedUpdateRevision: Number(_state.selectedUpdateRevision || 0),
+      selectedUpdateStatus: _state.selectedUpdateStatus,
+      selectedUpdateMetrics: (_state.selectedUpdateMetrics || []).slice(-20),
+      selectedUpdateLongTasks: (_state.selectedUpdateLongTasks || []).slice(-20),
+      selectedUpdateLastWatchdog: _state.selectedUpdateLastWatchdog || null,
       runtimeDebug: _collectRuntimeDebugSnapshot(),
     };
   }
