@@ -343,7 +343,25 @@
         labelEls: _moonLabelEls,
         connectorEl: _moonLabelConnectorEl
       });
+      _moonLabelManager.markDirty?.();
     }
+  }
+
+  function _moonLabelProtectedRects() {
+    const shell = _container?.closest?.(".sphere-instrument-shell") || null;
+    if (!shell) return [];
+    const protectedEls = [
+      shell.querySelector(".sphere-instrument-topline"),
+      shell.querySelector(".sphere-instrument-footer")
+    ].filter(Boolean);
+    const rects = [];
+    for (const el of protectedEls) {
+      const rect = el.getBoundingClientRect?.();
+      if (rect && Number.isFinite(rect.width) && Number.isFinite(rect.height) && rect.width > 0 && rect.height > 0) {
+        rects.push(rect);
+      }
+    }
+    return rects;
   }
 
   function _adjacentMoons(moon) {
@@ -405,12 +423,16 @@
       labelMode: _moonLabelMode,
       selectedPatternPosition: _model?.selectedPatternPosition || _model?.todayPatternPosition || null,
       showAllMobileLabels: _moonLabelMode === "all",
+      selectedMarkerPosition: _objects.selectedDayMarker?.position
+        ? { x: _objects.selectedDayMarker.position.x, y: _objects.selectedDayMarker.position.y, z: _objects.selectedDayMarker.position.z }
+        : null,
       todayMarkerPosition: _objects.todayMarker?.position
         ? { x: _objects.todayMarker.position.x, y: _objects.todayMarker.position.y, z: _objects.todayMarker.position.z }
         : null,
       viewMode,
       stageEl: _container,
-      visibleLayersKey: JSON.stringify(_visibleLayers || {})
+      visibleLayersKey: JSON.stringify(_visibleLayers || {}),
+      protectedRects: _moonLabelProtectedRects()
     });
   }
 
@@ -1050,7 +1072,7 @@
       new THREE.MeshBasicMaterial({
         color: 0x8fd3ff,
         transparent: true,
-        opacity: 0.08,
+        opacity: 0.04,
         depthWrite: false,
         side: THREE.DoubleSide
       })
@@ -1062,7 +1084,7 @@
     [-0.18, 0, 0.18].forEach((y, index) => {
       const band = new THREE.Mesh(
         new THREE.TorusGeometry(1.14 + index * 0.015, 0.014, 10, 96),
-        new THREE.MeshBasicMaterial({ color: 0xcfe8ff, transparent: true, opacity: 0.06, depthWrite: false })
+        new THREE.MeshBasicMaterial({ color: 0xcfe8ff, transparent: true, opacity: 0.04, depthWrite: false })
       );
       band.rotation.x = Math.PI / 2;
       band.position.y = y;
@@ -1085,7 +1107,7 @@
 
     const tempArc = new THREE.Mesh(
       new THREE.TorusGeometry(1.08, 0.018, 12, 120, Math.PI * 1.15),
-      new THREE.MeshBasicMaterial({ color: 0xf5cd72, transparent: true, opacity: 0.72, depthWrite: false })
+      new THREE.MeshBasicMaterial({ color: 0xf5cd72, transparent: true, opacity: 0.44, depthWrite: false })
     );
     tempArc.name = "environment-temperature-arc";
     tempArc.rotation.x = Math.PI / 2;
@@ -1094,7 +1116,7 @@
 
     const pressureRing = new THREE.Mesh(
       new THREE.TorusGeometry(1.03, 0.008, 10, 96),
-      new THREE.MeshBasicMaterial({ color: 0x9dc1ff, transparent: true, opacity: 0.58, depthWrite: false })
+      new THREE.MeshBasicMaterial({ color: 0x9dc1ff, transparent: true, opacity: 0.34, depthWrite: false })
     );
     pressureRing.rotation.x = Math.PI / 2;
     pressureRing.name = "environment-pressure-ring";
@@ -1102,14 +1124,14 @@
 
     const precip = new THREE.Mesh(
       new THREE.SphereGeometry(1.16, 6, 6),
-      new THREE.MeshBasicMaterial({ color: 0x84d8ff, transparent: true, opacity: 0.04, wireframe: true, depthWrite: false })
+      new THREE.MeshBasicMaterial({ color: 0x84d8ff, transparent: true, opacity: 0.025, wireframe: true, depthWrite: false })
     );
     precip.name = "environment-precip-particles";
     group.add(precip);
 
     const terminator = new THREE.Mesh(
       new THREE.TorusGeometry(1.0, 0.004, 8, 120),
-      new THREE.MeshBasicMaterial({ color: 0xffd47a, transparent: true, opacity: 0.48, depthWrite: false })
+      new THREE.MeshBasicMaterial({ color: 0xffd47a, transparent: true, opacity: 0.36, depthWrite: false })
     );
     terminator.rotation.x = Math.PI / 2;
     terminator.name = "environment-day-night-terminator";
@@ -2411,9 +2433,20 @@
   function _wirePointerEvents(container, onYearSelect, onMarkerSelect) {
     let pinchActive   = false;
     let pinchDist0    = 0;
+    let pinchAngle0   = 0;
+    let twistTheta0   = 0;
+    let twistActive   = false;
     let pointerCache  = new Map();
     let panCentroid0  = null;
     let interactMode  = false;    // on small screens, require explicit engage
+    const TWIST_DEADZONE = 0.09;
+
+    function _angleDelta(now, start) {
+      let delta = now - start;
+      while (delta > Math.PI) delta -= Math.PI * 2;
+      while (delta < -Math.PI) delta += Math.PI * 2;
+      return delta;
+    }
 
     function enterInteractMode() {
       interactMode = true;
@@ -2434,7 +2467,13 @@
       if (pointerCache.size === 2) {
         // Pinch start
         const pts = [...pointerCache.values()];
+        const dx = pts[1].clientX - pts[0].clientX;
+        const dy = pts[1].clientY - pts[0].clientY;
         const d = Math.hypot(pts[0].clientX - pts[1].clientX, pts[0].clientY - pts[1].clientY);
+        pinchDist0 = d;
+        pinchAngle0 = Math.atan2(dy, dx);
+        twistTheta0 = Number(globalThis.LivingTimeSphereCamera?.getState?.().theta) || 0;
+        twistActive = false;
         globalThis.LivingTimeSphereCamera.onPinchStart(d);
         panCentroid0 = { x: (pts[0].clientX + pts[1].clientX) / 2, y: (pts[0].clientY + pts[1].clientY) / 2 };
         globalThis.LivingTimeSphereCamera.onPanStart?.(panCentroid0.x, panCentroid0.y);
@@ -2460,6 +2499,14 @@
       if (pointerCache.size === 2) {
         const pts = [...pointerCache.values()];
         const d = Math.hypot(pts[0].clientX - pts[1].clientX, pts[0].clientY - pts[1].clientY);
+        const dx = pts[1].clientX - pts[0].clientX;
+        const dy = pts[1].clientY - pts[0].clientY;
+        const angle = Math.atan2(dy, dx);
+        const twistDelta = _angleDelta(angle, pinchAngle0);
+        if (Math.abs(twistDelta) > TWIST_DEADZONE || twistActive) {
+          twistActive = true;
+          globalThis.LivingTimeSphereCamera.setState?.({ theta: twistTheta0 - twistDelta });
+        }
         globalThis.LivingTimeSphereCamera.onPinchMove(d);
         const cx = (pts[0].clientX + pts[1].clientX) / 2;
         const cy = (pts[0].clientY + pts[1].clientY) / 2;
@@ -2485,6 +2532,13 @@
         globalThis.LivingTimeSphereCamera.onPanEnd?.();
         panCentroid0 = null;
         pinchActive = false;
+        pinchDist0 = 0;
+        pinchAngle0 = 0;
+        twistActive = false;
+        if (pointerCache.size === 1) {
+          const [remaining] = pointerCache.values();
+          if (remaining) globalThis.LivingTimeSphereCamera.onPointerDown(remaining.clientX, remaining.clientY);
+        }
       }
       if (pointerCache.size === 0 && interactMode) {
         globalThis.LivingTimeSphereCamera.onPointerUp();
@@ -2501,6 +2555,11 @@
       pointerCache.delete(e.pointerId);
       globalThis.LivingTimeSphereCamera.onPointerUp();
       globalThis.LivingTimeSphereCamera.onPanEnd?.();
+      globalThis.LivingTimeSphereCamera.onPinchEnd();
+      pinchActive = false;
+      pinchDist0 = 0;
+      pinchAngle0 = 0;
+      twistActive = false;
       if (window.innerWidth < 480) exitInteractMode();
     });
 

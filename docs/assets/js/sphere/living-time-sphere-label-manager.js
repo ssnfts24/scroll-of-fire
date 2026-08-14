@@ -13,6 +13,22 @@
     return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
   }
 
+  function normalizeRect(rect, referenceRect) {
+    if (!rect || !referenceRect) return null;
+    if (Number.isFinite(rect.x) && Number.isFinite(rect.y) && Number.isFinite(rect.w) && Number.isFinite(rect.h)) {
+      return { x: rect.x, y: rect.y, w: rect.w, h: rect.h };
+    }
+    if (Number.isFinite(rect.left) && Number.isFinite(rect.top) && Number.isFinite(rect.width) && Number.isFinite(rect.height)) {
+      return {
+        x: rect.left - referenceRect.left,
+        y: rect.top - referenceRect.top,
+        w: rect.width,
+        h: rect.height,
+      };
+    }
+    return null;
+  }
+
   function cameraSignature(camera) {
     if (!camera?.matrixWorld?.elements) return "none";
     const p = camera.position || { x: 0, y: 0, z: 0 };
@@ -85,14 +101,23 @@
       selectedPatternPosition,
       showAllMobileLabels,
       todayMarkerPosition,
+      selectedMarkerPosition,
       viewMode,
       stageEl,
-      visibleLayersKey
+      visibleLayersKey,
+      protectedRects
     }) {
       const stage = stageEl || _stageEl;
       if (!stage || !_labelEls?.length || !camera || !three || !Array.isArray(anchors)) return false;
-      const rect = stage.getBoundingClientRect();
-      if (!rect?.width || !rect?.height) return false;
+      const stageRect = stage.getBoundingClientRect();
+      if (!stageRect?.width || !stageRect?.height) return false;
+      const containerRect = _labelContainer?.getBoundingClientRect?.() || stageRect;
+      const offsetX = stageRect.left - containerRect.left;
+      const offsetY = stageRect.top - containerRect.top;
+      camera.updateMatrixWorld?.(true);
+      const blockedRects = Array.isArray(protectedRects)
+        ? protectedRects.map(entry => normalizeRect(entry, containerRect)).filter(Boolean)
+        : [];
 
       const todayMoon = model?.todayPatternPosition?.moon || null;
       const selectedMoon = selectedPatternPosition?.moon || todayMoon || model?.sourceRecord?.equinox?.patternPosition?.moon || 1;
@@ -101,8 +126,8 @@
       const mobile = typeof window !== "undefined" ? window.innerWidth < 600 : false;
       const showSet = buildLabelSet({ labelMode, selectedMoon, todayMoon, equinoxMoon, mobile, showAllMobileLabels: !!showAllMobileLabels || labelMode === "all" });
       const signature = [
-        rect.width,
-        rect.height,
+        stageRect.width,
+        stageRect.height,
         labelMode,
         viewMode,
         selectedMoon,
@@ -121,8 +146,8 @@
 
       const THREE = three;
       const centerVec = new THREE.Vector3(0, 0, 0).project(camera);
-      const centerX = ((centerVec.x + 1) / 2) * rect.width;
-      const centerY = ((-centerVec.y + 1) / 2) * rect.height;
+      const centerX = offsetX + (((centerVec.x + 1) / 2) * stageRect.width);
+      const centerY = offsetY + (((-centerVec.y + 1) / 2) * stageRect.height);
       const camPos = camera.position || new THREE.Vector3();
       const camForward = new THREE.Vector3();
       camera.getWorldDirection?.(camForward);
@@ -148,10 +173,10 @@
         if (camSpace.z > 0) continue;
         if (projVec.z < -1 || projVec.z > 1) continue;
 
-        const anchorX = ((projVec.x + 1) / 2) * rect.width;
-        const anchorY = ((-projVec.y + 1) / 2) * rect.height;
+        const anchorX = offsetX + (((projVec.x + 1) / 2) * stageRect.width);
+        const anchorY = offsetY + (((-projVec.y + 1) / 2) * stageRect.height);
 
-        if (anchorX < -40 || anchorY < -40 || anchorX > rect.width + 40 || anchorY > rect.height + 40) continue;
+        if (anchorX < offsetX - 40 || anchorY < offsetY - 40 || anchorX > offsetX + stageRect.width + 40 || anchorY > offsetY + stageRect.height + 40) continue;
 
         const toPoint = worldVec.clone().sub(camPos).normalize();
         const frontness = clamp((camForward.dot(toPoint) + 1) * 0.5, 0, 1);
@@ -187,21 +212,39 @@
         el.style.display = "";
         const w = el.offsetWidth || 62;
         const h = el.offsetHeight || 22;
-
-        const left = clamp(targetX - w / 2, STAGE_PADDING, Math.max(STAGE_PADDING, rect.width - w - STAGE_PADDING));
-        const top = clamp(targetY - h / 2, STAGE_PADDING, Math.max(STAGE_PADDING, rect.height - h - STAGE_PADDING));
-        const rectBox = { x: left, y: top, w, h };
-
-        let collides = false;
-        for (const prev of placedRects) {
-          if (rectsOverlap(rectBox, prev)) {
-            collides = true;
+        const attempts = [
+          { x: targetX, y: targetY },
+          { x: targetX + (selected ? 26 : 18), y: targetY },
+          { x: targetX - (selected ? 26 : 18), y: targetY },
+          { x: targetX, y: targetY - (selected ? 24 : 16) },
+          { x: targetX, y: targetY + (selected ? 24 : 16) },
+        ];
+        let left = null;
+        let top = null;
+        let rectBox = null;
+        let collides = true;
+        for (const attempt of attempts) {
+          const nextLeft = clamp(attempt.x - w / 2, offsetX + STAGE_PADDING, Math.max(offsetX + STAGE_PADDING, offsetX + stageRect.width - w - STAGE_PADDING));
+          const nextTop = clamp(attempt.y - h / 2, offsetY + STAGE_PADDING, Math.max(offsetY + STAGE_PADDING, offsetY + stageRect.height - h - STAGE_PADDING));
+          const nextRectBox = { x: nextLeft, y: nextTop, w, h };
+          const collidesPlaced = placedRects.some(prev => rectsOverlap(nextRectBox, prev));
+          const collidesBlocked = blockedRects.some(blocked => rectsOverlap(nextRectBox, blocked));
+          if (!collidesPlaced && !collidesBlocked) {
+            left = nextLeft;
+            top = nextTop;
+            rectBox = nextRectBox;
+            collides = false;
             break;
           }
         }
         if (collides && !selected) {
           _hideLabel(el);
           continue;
+        }
+        if (left == null || top == null || !rectBox) {
+          left = clamp(targetX - w / 2, offsetX + STAGE_PADDING, Math.max(offsetX + STAGE_PADDING, offsetX + stageRect.width - w - STAGE_PADDING));
+          top = clamp(targetY - h / 2, offsetY + STAGE_PADDING, Math.max(offsetY + STAGE_PADDING, offsetY + stageRect.height - h - STAGE_PADDING));
+          rectBox = { x: left, y: top, w, h };
         }
 
         placedRects.push(rectBox);
@@ -230,13 +273,14 @@
       }
 
       const marker = todayMarkerPosition;
+      const selectedMarker = selectedMarkerPosition || marker || null;
       if (_connectorEl && selectedTarget?.displaced) {
         let sx = selectedTarget.anchorX;
         let sy = selectedTarget.anchorY;
-        if (marker && marker.x != null && marker.y != null && marker.z != null) {
-          projVec.set(marker.x, marker.y, marker.z).project(camera);
-          sx = ((projVec.x + 1) / 2) * rect.width;
-          sy = ((-projVec.y + 1) / 2) * rect.height;
+        if (selectedMarker && selectedMarker.x != null && selectedMarker.y != null && selectedMarker.z != null) {
+          projVec.set(selectedMarker.x, selectedMarker.y, selectedMarker.z).project(camera);
+          sx = offsetX + (((projVec.x + 1) / 2) * stageRect.width);
+          sy = offsetY + (((-projVec.y + 1) / 2) * stageRect.height);
         }
         const ex = selectedTarget.centerX;
         const ey = selectedTarget.centerY;

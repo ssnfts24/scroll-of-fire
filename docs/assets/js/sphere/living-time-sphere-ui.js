@@ -286,14 +286,32 @@
   function _resolveSelectedPatternPosition(baseModel) {
     const dayOfYear = _resolveSelectedDayOfYear(baseModel);
     const effectiveDate = _patternDateFromDayOfYear(_state.year, dayOfYear);
-    const selected = effectiveDate && globalThis.PatternCalendar?.fromCivilDate
-      ? globalThis.PatternCalendar.fromCivilDate({
-          date: _toIso(effectiveDate),
-          timeZone: _state.timeZone,
+    let selected = null;
+    if (effectiveDate && globalThis.PatternCalendar?.convertEffectiveDate) {
+      const conversion = globalThis.PatternCalendar.convertEffectiveDate(effectiveDate);
+      if (conversion?.inside) {
+        selected = {
+          ...conversion,
+          moonName: conversion.moonName || null,
+          civilDate: _toIso(effectiveDate),
+          effectiveDate: _toIso(effectiveDate),
+          civilDateObject: new Date(effectiveDate),
+          effectiveDateObject: new Date(effectiveDate),
           boundaryMode: _state.boundaryMode,
+          timeZone: _state.timeZone,
           sunsetTime: _state.manualSunset,
-        })
-      : null;
+          afterBoundary: false,
+          conversionMode: "fixed-epoch-arithmetic",
+        };
+      }
+    } else if (effectiveDate && globalThis.PatternCalendar?.fromCivilDate) {
+      selected = globalThis.PatternCalendar.fromCivilDate({
+        date: effectiveDate,
+        timeZone: _state.timeZone,
+        boundaryMode: _state.boundaryMode,
+        sunsetTime: _state.manualSunset,
+      });
+    }
     const dayArchetype = Array.isArray(selected?.dayArchetype) ? selected.dayArchetype : [selected?.dayArchetype || null, ""];
     const weekGate = selected?.weekOfMoon
       ? globalThis.PatternCalendarData?.weekGates?.[selected.weekOfMoon - 1] || null
