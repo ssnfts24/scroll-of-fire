@@ -3563,6 +3563,11 @@
       const size = _renderer.getDrawingBufferSize(new _THREE.Vector2());
       return { width: Number(size?.x || 0), height: Number(size?.y || 0) };
     })();
+    const rendererSize = (() => {
+      if (!_renderer?.getSize || !_THREE?.Vector2) return { width: 0, height: 0 };
+      const size = _renderer.getSize(new _THREE.Vector2());
+      return { width: Number(size?.x || 0), height: Number(size?.y || 0) };
+    })();
     const conn = typeof navigator !== "undefined"
       ? (navigator.connection || navigator.mozConnection || navigator.webkitConnection || null)
       : null;
@@ -3601,6 +3606,8 @@
       } : null,
       drawingBufferWidth: drawingBufferSize.width,
       drawingBufferHeight: drawingBufferSize.height,
+      rendererSizeWidth: rendererSize.width,
+      rendererSizeHeight: rendererSize.height,
       devicePixelRatio:  typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1,
       requestedDevicePixelRatio: _requestedDpr,
       appliedDevicePixelRatio: _appliedDpr,
@@ -3640,6 +3647,7 @@
       cameraTarget: readiness?.stats?.cameraTarget || null,
       cameraNear: Number(readiness?.stats?.cameraNear || 0),
       cameraFar: Number(readiness?.stats?.cameraFar || 0),
+      cameraAspect: Number(_camera?.aspect || 0),
       lastSceneBuildTimestamp: _lastSceneBuildTimestamp,
       geometryBuildRevision: _geometryBuildRevision,
       geometryBuildCountByLayer: { ..._geometryBuildCountByLayer },

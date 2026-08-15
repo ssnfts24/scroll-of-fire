@@ -89,6 +89,8 @@
     buildLogEmitted: false,
     coldBootDiagnostics: null,
     lastRenderSurfaceVerification: null,
+    firstRenderSurfaceFailure: null,
+    initTimeline: [],
   };
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
   const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
@@ -123,6 +125,31 @@
   let _resourceTrackerInstalled = false;
   const _resourceFailureLog = [];
   const SPHERE_MEDIA_TAGS = new Set(["IMG", "PICTURE", "SOURCE", "OBJECT", "IFRAME", "EMBED", "VIDEO", "SVG", "CANVAS"]);
+  const RENDER_SURFACE_REASON = Object.freeze({
+    CANVAS_MISSING: "CANVAS_MISSING",
+    CANVAS_NOT_CONNECTED: "CANVAS_NOT_CONNECTED",
+    CANVAS_WRONG_PARENT: "CANVAS_WRONG_PARENT",
+    CANVAS_ZERO_ATTRIBUTE_WIDTH: "CANVAS_ZERO_ATTRIBUTE_WIDTH",
+    CANVAS_ZERO_ATTRIBUTE_HEIGHT: "CANVAS_ZERO_ATTRIBUTE_HEIGHT",
+    CANVAS_ZERO_CSS_WIDTH: "CANVAS_ZERO_CSS_WIDTH",
+    CANVAS_ZERO_CSS_HEIGHT: "CANVAS_ZERO_CSS_HEIGHT",
+    CANVAS_HIDDEN_DISPLAY: "CANVAS_HIDDEN_DISPLAY",
+    CANVAS_HIDDEN_VISIBILITY: "CANVAS_HIDDEN_VISIBILITY",
+    CANVAS_ZERO_OPACITY: "CANVAS_ZERO_OPACITY",
+    CONTAINER_ZERO_WIDTH: "CONTAINER_ZERO_WIDTH",
+    CONTAINER_ZERO_HEIGHT: "CONTAINER_ZERO_HEIGHT",
+    WEBGL_CONTEXT_MISSING: "WEBGL_CONTEXT_MISSING",
+    WEBGL_CONTEXT_LOST: "WEBGL_CONTEXT_LOST",
+    FIRST_FRAME_NOT_RENDERED: "FIRST_FRAME_NOT_RENDERED",
+    DUPLICATE_RENDER_SURFACE: "DUPLICATE_RENDER_SURFACE",
+    STALE_RENDER_GENERATION: "STALE_RENDER_GENERATION",
+    RENDERER_DISPOSED: "RENDERER_DISPOSED",
+    DRAWING_BUFFER_ZERO: "DRAWING_BUFFER_ZERO",
+    SCENE_EMPTY: "SCENE_EMPTY",
+    CAMERA_INVALID: "CAMERA_INVALID",
+    CANVAS_COVERED: "CANVAS_COVERED",
+    BROKEN_MEDIA_IN_SURFACE: "BROKEN_MEDIA_IN_SURFACE",
+  });
   const ENV_FOCUS_PULSE_CLASS = "sphere-location-command-focus-pulse";
 
   // ── Dependency check ───────────────────────────────────────────────
@@ -320,6 +347,13 @@
     try { return new URL(url, location.href).href; } catch { return url; }
   }
 
+  function _isInvalidResourceUrl(url) {
+    const value = String(url || "").trim();
+    if (!value) return true;
+    const lowered = value.toLowerCase();
+    return lowered === "#" || lowered === "null" || lowered === "undefined" || lowered === "[object object]";
+  }
+
   function _isSphereScopedElement(el) {
     if (!el || el.nodeType !== 1) return false;
     return !!(el.closest?.("#sphere-container") || el.closest?.("#sphere-moon-labels"));
@@ -355,6 +389,26 @@
     };
     _resourceFailureLog.push(entry);
     if (_resourceFailureLog.length > 120) _resourceFailureLog.shift();
+  }
+
+  function _pruneInvalidSphereMedia(container, reason = "invalid-sphere-media") {
+    if (!container?.querySelectorAll) return [];
+    const removed = [];
+    const nodes = Array.from(container.querySelectorAll("img,object,iframe,embed,video,picture,source,svg image"));
+    nodes.forEach(node => {
+      if (!node || node.nodeType !== 1) return;
+      const tag = String(node.tagName || "").toUpperCase();
+      const src = _resourceUrlForElement(node);
+      const failedImage = tag === "IMG" && node.complete === true && Number(node.naturalWidth || 0) === 0;
+      if (!_isInvalidResourceUrl(src) && !failedImage) return;
+      _captureResourceFailure(node, reason);
+      const inspected = _inspectElementNode(node);
+      if (inspected) removed.push(inspected);
+      try { node.remove(); } catch { /* best effort */ }
+      const shell = node.closest?.("picture,figure,[data-home-product-media],[data-home-media-card],.home-product-slide");
+      if (shell) shell.remove?.();
+    });
+    return removed;
   }
 
   function _installResourceFailureTracker() {
@@ -426,6 +480,48 @@
     return { viewport: { width, height }, bandTop, matches: matches.slice(0, 240), points };
   }
 
+  function _collectAncestorIdentity(node, limit = 12) {
+    const list = [];
+    let cur = node;
+    while (cur && cur.nodeType === 1 && list.length < limit) {
+      list.push({
+        tagName: String(cur.tagName || "").toUpperCase(),
+        id: cur.id || "",
+        className: cur.className || "",
+      });
+      if (cur.id || cur.getAttribute?.("data-home-sphere-root") || cur.getAttribute?.("data-luxury-instrument")) break;
+      cur = cur.parentElement;
+    }
+    return list;
+  }
+
+  function _probeBottomBrokenResource() {
+    const viewport = { width: Number(window.innerWidth || 0), height: Number(window.innerHeight || 0) };
+    if (!viewport.width || !viewport.height) return null;
+    const point = { x: Math.max(0, Math.round(viewport.width / 2)), y: Math.max(0, Math.round(viewport.height - 32)) };
+    const stack = Array.from(document.elementsFromPoint?.(point.x, point.y) || []);
+    const target = stack.find(node => {
+      if (!node || node.nodeType !== 1) return false;
+      const tag = String(node.tagName || "").toUpperCase();
+      return tag === "IMG" || tag === "OBJECT" || tag === "IFRAME" || tag === "EMBED" || tag === "VIDEO" || tag === "IMAGE" || tag === "PICTURE" || tag === "SOURCE";
+    }) || null;
+    if (!target) return null;
+    const style = window.getComputedStyle?.(target) || null;
+    return {
+      probePoint: point,
+      element: _inspectElementNode(target),
+      originalSrc: target.getAttribute?.("src") || target.getAttribute?.("data") || target.getAttribute?.("href") || null,
+      absoluteUrl: _resolveAbsoluteResourceUrl(_resourceUrlForElement(target)),
+      parent: target.parentElement ? _inspectElementNode(target.parentElement) : null,
+      computed: style ? {
+        display: style.display || "",
+        position: style.position || "",
+        zIndex: style.zIndex || "",
+      } : null,
+      ancestors: _collectAncestorIdentity(target),
+    };
+  }
+
   function _collectMediaDiagnostics(root = document) {
     const selectors = "img,picture source,object,iframe,embed,video,svg image";
     const nodes = Array.from(root.querySelectorAll?.(selectors) || []);
@@ -481,17 +577,17 @@
     }
   }
 
-  function _verifyRenderSurface(container, { requireVisibleCenter = true } = {}) {
+  function _verifyRenderSurface(container, { requireVisibleCenter = true, expectedGeneration = null } = {}) {
     const renderer = globalThis.LivingTimeSphereRenderer3d;
     const rendererDiag = renderer?.getDiagnostics?.() || {};
     const host = container || document.getElementById("sphere-container");
     if (!host) {
-      return { healthy: false, reason: "container-missing", checks: {}, centerStack: { point: null, stack: [] }, brokenResources: [] };
+      return { healthy: false, reason: "CONTAINER_MISSING", failures: ["CONTAINER_MISSING"], checks: {}, centerStack: { point: null, stack: [] }, brokenResources: [] };
     }
     const canvases = Array.from(host.querySelectorAll(":scope > canvas.living-time-sphere-3d-canvas"));
     const canvas = canvases[0] || null;
-    const rect = host.getBoundingClientRect?.() || { left: 0, top: 0, width: 0, height: 0 };
-    const canvasRect = canvas?.getBoundingClientRect?.() || { width: 0, height: 0 };
+    const hostRect = host.getBoundingClientRect?.() || { left: 0, top: 0, width: 0, height: 0 };
+    const canvasRect = canvas?.getBoundingClientRect?.() || { left: 0, top: 0, width: 0, height: 0 };
     const canvasStyle = canvas ? getComputedStyle(canvas) : null;
     const centerStack = _collectSphereCenterStack(host);
     const viewportW = window.innerWidth || 0;
@@ -506,6 +602,7 @@
       const tag = String(item.tagName || "").toUpperCase();
       if (!SPHERE_MEDIA_TAGS.has(tag)) return false;
       if (tag === "CANVAS" && String(item.className || "").includes("living-time-sphere-3d-canvas")) return false;
+      if (tag === "SVG" && String(item.className || "").includes("living-time-sphere-svg")) return false;
       return true;
     }) || null;
     const sphereMedia = _collectMediaDiagnostics(host);
@@ -517,45 +614,122 @@
       Number(item.rect.height || 0) > 20 &&
       item.failedImage
     );
-    const checks = {
-      canvasExists: typeof HTMLCanvasElement !== "undefined" && canvas instanceof HTMLCanvasElement,
-      singleCanvas: canvases.length === 1,
-      canvasConnected: !!canvas?.isConnected,
-      canvasInContainer: !!(canvas && canvas.parentElement === host),
-      canvasWidthPositive: Number(canvas?.width || 0) > 0,
-      canvasHeightPositive: Number(canvas?.height || 0) > 0,
-      canvasRectWidthPositive: Number(canvasRect.width || 0) > 0,
-      canvasRectHeightPositive: Number(canvasRect.height || 0) > 0,
-      canvasVisible: !!(canvasStyle && canvasStyle.display !== "none" && canvasStyle.visibility !== "hidden" && Number(canvasStyle.opacity || 0) > 0 && !canvas.hidden),
-      containerWidthPositive: Number(rect.width || 0) > 0,
-      containerHeightPositive: Number(rect.height || 0) > 0,
-      firstFrameRendered: rendererDiag.stageState?.firstFrame === "rendered",
-      contextHealthy: rendererDiag.stageState?.context !== "lost",
-      sceneReady: rendererDiag.sceneReadiness?.ready !== false,
-      drawingBufferPositive: Number(rendererDiag.drawingBufferWidth || 0) > 0 && Number(rendererDiag.drawingBufferHeight || 0) > 0,
-      centerCoveredByForeignMedia: !!coveringMedia,
-      centerHitsCanvas: !!canvasInStack,
-      centerInViewport,
-      noBrokenResources: brokenResources.length === 0 && sphereFailureLog.length === 0,
-      canvasTopAtCenter: !!(top && top.tagName === "canvas" && String(top.className || "").includes("living-time-sphere-3d-canvas")),
+    const camera = rendererDiag.cameraPosition || null;
+    const cameraValid = !!camera && Number.isFinite(Number(rendererDiag.cameraNear || 0)) && Number.isFinite(Number(rendererDiag.cameraFar || 0)) && Number(rendererDiag.cameraFar || 0) > Number(rendererDiag.cameraNear || 0);
+    const contextExists = !!(renderer?.getRenderer?.()?.getContext?.() || rendererDiag.webglAvailable);
+    const contextLost = rendererDiag.stageState?.context === "lost" || rendererDiag.contextLost === true;
+    const currentGeneration = Number(_state._3dInitGeneration || 0);
+    const diagnostics = {
+      container: {
+        clientWidth: Number(host.clientWidth || 0),
+        clientHeight: Number(host.clientHeight || 0),
+        rect: {
+          left: Number(hostRect.left || 0),
+          top: Number(hostRect.top || 0),
+          width: Number(hostRect.width || 0),
+          height: Number(hostRect.height || 0),
+          right: Number(hostRect.right || 0),
+          bottom: Number(hostRect.bottom || 0),
+        },
+      },
+      canvas: {
+        width: Number(canvas?.width || 0),
+        height: Number(canvas?.height || 0),
+        clientWidth: Number(canvas?.clientWidth || 0),
+        clientHeight: Number(canvas?.clientHeight || 0),
+        rect: {
+          left: Number(canvasRect.left || 0),
+          top: Number(canvasRect.top || 0),
+          width: Number(canvasRect.width || 0),
+          height: Number(canvasRect.height || 0),
+          right: Number(canvasRect.right || 0),
+          bottom: Number(canvasRect.bottom || 0),
+        },
+        isConnected: !!canvas?.isConnected,
+        parentElement: canvas?.parentElement ? {
+          tagName: String(canvas.parentElement.tagName || "").toUpperCase(),
+          id: canvas.parentElement.id || null,
+          className: canvas.parentElement.className || "",
+        } : null,
+        ownerDocumentIsCurrent: canvas ? canvas.ownerDocument === document : false,
+        style: {
+          display: canvasStyle?.display || "",
+          visibility: canvasStyle?.visibility || "",
+          opacity: canvasStyle?.opacity || "",
+          position: canvasStyle?.position || "",
+          zIndex: canvasStyle?.zIndex || "",
+          pointerEvents: canvasStyle?.pointerEvents || "",
+        },
+      },
+      renderer: {
+        reportedSize: `${Math.round(Number(rendererDiag.rendererSizeWidth || rendererDiag.canvasClientWidth || 0))}x${Math.round(Number(rendererDiag.rendererSizeHeight || rendererDiag.canvasClientHeight || 0))}`,
+        drawingBuffer: `${Math.round(Number(rendererDiag.drawingBufferWidth || 0))}x${Math.round(Number(rendererDiag.drawingBufferHeight || 0))}`,
+        contextExists,
+        contextLost,
+      },
+      scene: {
+        objectCount: Number(rendererDiag.sceneObjectCount || 0),
+      },
+      camera: {
+        position: camera,
+        aspect: Number(rendererDiag.cameraAspect || 0) || null,
+        near: Number(rendererDiag.cameraNear || 0),
+        far: Number(rendererDiag.cameraFar || 0),
+      },
+      devicePixelRatio: Number(window.devicePixelRatio || 1),
+      firstFrameComplete: rendererDiag.stageState?.firstFrame === "rendered",
+      generation: {
+        expected: Number(expectedGeneration || currentGeneration),
+        current: currentGeneration,
+      },
+      canvasCount: canvases.length,
+      centerStack,
+      coveringMedia,
+      brokenResources,
+      resourceFailureLog: sphereFailureLog.slice(0, 80),
     };
-    const requiredChecks = [
-      "canvasExists", "singleCanvas", "canvasConnected", "canvasInContainer",
-      "canvasWidthPositive", "canvasHeightPositive", "canvasRectWidthPositive", "canvasRectHeightPositive",
-      "canvasVisible", "containerWidthPositive", "containerHeightPositive",
-      "firstFrameRendered", "contextHealthy", "sceneReady", "drawingBufferPositive", "noBrokenResources"
-    ];
-    if (requireVisibleCenter && centerInViewport) {
-      requiredChecks.push("centerHitsCanvas");
-      requiredChecks.push("canvasTopAtCenter");
+    const failures = [];
+    if (!(typeof HTMLCanvasElement !== "undefined" && canvas instanceof HTMLCanvasElement)) failures.push(RENDER_SURFACE_REASON.CANVAS_MISSING);
+    if (canvas && !canvas.isConnected) failures.push(RENDER_SURFACE_REASON.CANVAS_NOT_CONNECTED);
+    if (canvas && canvas.parentElement !== host) failures.push(RENDER_SURFACE_REASON.CANVAS_WRONG_PARENT);
+    if (Number(canvas?.width || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CANVAS_ZERO_ATTRIBUTE_WIDTH);
+    if (Number(canvas?.height || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CANVAS_ZERO_ATTRIBUTE_HEIGHT);
+    if (Number(canvasRect.width || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CANVAS_ZERO_CSS_WIDTH);
+    if (Number(canvasRect.height || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CANVAS_ZERO_CSS_HEIGHT);
+    if (canvasStyle?.display === "none") failures.push(RENDER_SURFACE_REASON.CANVAS_HIDDEN_DISPLAY);
+    if (canvasStyle?.visibility === "hidden") failures.push(RENDER_SURFACE_REASON.CANVAS_HIDDEN_VISIBILITY);
+    if (Number(canvasStyle?.opacity || 1) <= 0) failures.push(RENDER_SURFACE_REASON.CANVAS_ZERO_OPACITY);
+    if (Number(hostRect.width || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CONTAINER_ZERO_WIDTH);
+    if (Number(hostRect.height || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CONTAINER_ZERO_HEIGHT);
+    if (!contextExists) failures.push(RENDER_SURFACE_REASON.WEBGL_CONTEXT_MISSING);
+    if (contextLost) failures.push(RENDER_SURFACE_REASON.WEBGL_CONTEXT_LOST);
+    if (rendererDiag.stageState?.firstFrame !== "rendered") failures.push(RENDER_SURFACE_REASON.FIRST_FRAME_NOT_RENDERED);
+    if (Number(canvases.length || 0) !== 1) failures.push(RENDER_SURFACE_REASON.DUPLICATE_RENDER_SURFACE);
+    if (expectedGeneration != null && Number(expectedGeneration) !== currentGeneration) failures.push(RENDER_SURFACE_REASON.STALE_RENDER_GENERATION);
+    if (rendererDiag.initialized === false && _state._3dInitInProgress === false) failures.push(RENDER_SURFACE_REASON.RENDERER_DISPOSED);
+    if (Number(rendererDiag.drawingBufferWidth || 0) <= 0 || Number(rendererDiag.drawingBufferHeight || 0) <= 0) failures.push(RENDER_SURFACE_REASON.DRAWING_BUFFER_ZERO);
+    if (Number(rendererDiag.sceneObjectCount || 0) <= 0) failures.push(RENDER_SURFACE_REASON.SCENE_EMPTY);
+    if (!cameraValid) failures.push(RENDER_SURFACE_REASON.CAMERA_INVALID);
+    if (requireVisibleCenter && centerInViewport && (!canvasInStack || (top && !(top.tagName === "canvas" && String(top.className || "").includes("living-time-sphere-3d-canvas"))))) {
+      failures.push(RENDER_SURFACE_REASON.CANVAS_COVERED);
     }
-    const failures = requiredChecks.filter(key => checks[key] !== true);
-    if (checks.centerCoveredByForeignMedia) failures.push("centerCoveredByForeignMedia");
-    const healthy = failures.length === 0;
+    if (coveringMedia) failures.push(RENDER_SURFACE_REASON.CANVAS_COVERED);
+    if (brokenResources.length > 0) failures.push(RENDER_SURFACE_REASON.BROKEN_MEDIA_IN_SURFACE);
+    const uniqueFailures = Array.from(new Set(failures));
+    const healthy = uniqueFailures.length === 0;
+    const checks = {
+      canvasConnected: !!canvas?.isConnected,
+      canvasVisible: !!(canvasStyle && canvasStyle.display !== "none" && canvasStyle.visibility !== "hidden" && Number(canvasStyle.opacity || 0) > 0 && !canvas?.hidden),
+      centerInViewport,
+      centerHitsCanvas: !!canvasInStack,
+      canvasTopAtCenter: !!(top && top.tagName === "canvas" && String(top.className || "").includes("living-time-sphere-3d-canvas")),
+      firstFrameRendered: rendererDiag.stageState?.firstFrame === "rendered",
+      contextHealthy: !contextLost,
+    };
     const result = {
       healthy,
-      reason: failures[0] || null,
-      failures,
+      reason: uniqueFailures[0] || null,
+      failures: uniqueFailures,
       checks,
       centerStack,
       coveringMedia,
@@ -569,9 +743,18 @@
         visibleObjectCount: Number(rendererDiag.visibleObjectCount || 0),
         drawingBufferWidth: Number(rendererDiag.drawingBufferWidth || 0),
         drawingBufferHeight: Number(rendererDiag.drawingBufferHeight || 0),
-        contextLost: rendererDiag.stageState?.context === "lost",
-      }
+        contextLost,
+      },
+      diagnostics,
     };
+    if (!healthy && !_state.firstRenderSurfaceFailure) {
+      _state.firstRenderSurfaceFailure = Object.freeze({
+        capturedAt: Date.now(),
+        reason: result.reason,
+        failures: result.failures.slice(0, 20),
+        diagnostics: result.diagnostics,
+      });
+    }
     _state.lastRenderSurfaceVerification = result;
     return result;
   }
@@ -585,6 +768,7 @@
       sphereHostChildren: _inspectSphereHostChildren(),
       sphereCenterStack: _collectSphereCenterStack(document.getElementById("sphere-container")),
       renderSurfaceVerification: _verifyRenderSurface(document.getElementById("sphere-container"), { requireVisibleCenter: false }),
+      bottomBrokenResourceProbe: _probeBottomBrokenResource(),
       failedResources: _resourceFailureLog.slice(0, 120),
     };
   }
@@ -593,20 +777,40 @@
     const container = document.getElementById("sphere-container");
     const verification = _verifyRenderSurface(container, { requireVisibleCenter: true });
     const rendererDiag = globalThis.LivingTimeSphereRenderer3d?.getDiagnostics?.() || {};
+    const viewport = { width: Number(window.innerWidth || 0), height: Number(window.innerHeight || 0) };
+    const probePoint = { x: Math.max(0, Math.round(viewport.width / 2)), y: Math.max(0, Math.round(viewport.height - 32)) };
+    const bottomStack = (document.elementsFromPoint?.(probePoint.x, probePoint.y) || []).map(_inspectElementNode).filter(Boolean).slice(0, 10);
+    const bottomProbe = _probeBottomBrokenResource();
     const lines = [
       `Requested renderer: ${_state.requestedRendererMode === "auto" ? "3D" : String(_state.requestedRendererMode || "auto").toUpperCase()}`,
+      `Active renderer: ${_state.activeRendererMode || "unknown"}`,
       `Lifecycle: ${_state.rendererLifecycle || "unknown"}`,
+      `Failure: ${verification.reason || "none"}`,
+      `All failures: ${(verification.failures || []).join(", ") || "none"}`,
       `Container: ${Math.round(Number(_state._latestContainerSize?.w || 0))} × ${Math.round(Number(_state._latestContainerSize?.h || 0))}`,
+      `Container client: ${Math.round(Number(verification.diagnostics?.container?.clientWidth || 0))} × ${Math.round(Number(verification.diagnostics?.container?.clientHeight || 0))}`,
+      `Container rect: ${JSON.stringify(verification.diagnostics?.container?.rect || {})}`,
       `Canvas connected: ${verification.checks?.canvasConnected ? "yes" : "no"}`,
+      `Canvas ownerDocument === document: ${verification.diagnostics?.canvas?.ownerDocumentIsCurrent ? "yes" : "no"}`,
       `Canvas CSS size: ${Math.round(Number(rendererDiag.canvasClientWidth || 0))} × ${Math.round(Number(rendererDiag.canvasClientHeight || 0))}`,
+      `Canvas attr size: ${Math.round(Number(verification.diagnostics?.canvas?.width || 0))} × ${Math.round(Number(verification.diagnostics?.canvas?.height || 0))}`,
+      `Canvas rect: ${JSON.stringify(verification.diagnostics?.canvas?.rect || {})}`,
+      `Canvas style: ${JSON.stringify(verification.diagnostics?.canvas?.style || {})}`,
       `Drawing buffer: ${Math.round(Number(rendererDiag.drawingBufferWidth || 0))} × ${Math.round(Number(rendererDiag.drawingBufferHeight || 0))}`,
-      `WebGL context lost: ${rendererDiag.stageState?.context === "lost" ? "yes" : "no"}`,
+      `WebGL context exists: ${verification.diagnostics?.renderer?.contextExists ? "yes" : "no"}`,
+      `WebGL context lost: ${verification.diagnostics?.renderer?.contextLost ? "yes" : "no"}`,
+      `Renderer generation: ${verification.diagnostics?.generation?.expected || 0} / current ${verification.diagnostics?.generation?.current || 0}`,
       `Canvas visible: ${verification.checks?.canvasVisible ? "yes" : "no"}`,
       `Elements over center:`,
       ...(verification.centerStack?.stack?.slice(0, 8).map(item => `  ${String(item.tagName || "").toUpperCase()}${item.id ? `#${item.id}` : ""}${item.className ? `.${String(item.className).split(/\s+/).filter(Boolean).join(".")}` : ""}`) || ["  (none)"]),
       `First frame: ${rendererDiag.stageState?.firstFrame === "rendered" ? "yes" : "no"}`,
       `Scene objects: ${Number(rendererDiag.sceneObjectCount || 0)}`,
       `Broken resources in sphere: ${Array.isArray(verification.brokenResources) ? verification.brokenResources.length : 0}`,
+      `White-bar probe point: ${probePoint.x},${probePoint.y}`,
+      `White-bar stack:`,
+      ...(bottomStack.map(item => `  ${String(item.tagName || "").toUpperCase()}${item.id ? `#${item.id}` : ""}${item.className ? `.${String(item.className).split(/\s+/).filter(Boolean).join(".")}` : ""} src=${item.absoluteUrl || item.src || "N/A"}`) || ["  (none)"]),
+      `White-bar media element: ${bottomProbe?.element ? `${String(bottomProbe.element.tagName || "").toUpperCase()}#${bottomProbe.element.id || ""}.${String(bottomProbe.element.className || "").split(/\s+/).filter(Boolean).join(".")}` : "none"}`,
+      `White-bar media source: ${bottomProbe?.absoluteUrl || bottomProbe?.originalSrc || "N/A"}`,
       `Duplicate canvases: ${Math.max(0, Number(verification.canvasCount || 0) - 1)}`,
       `Surface healthy: ${verification.healthy ? "yes" : `no (${verification.reason || "unknown"})`}`,
     ];
@@ -647,6 +851,16 @@
     if (globalThis.__SOF_DEBUG_ACTION_TRACE__) {
       console.debug("[LivingTimeSphere][TRACE]", `${entry.action} ->`, entry.statePatch || "no state patch", "->", entry.subsystemsUpdated.join(", "));
     }
+  }
+
+  function _markInitTimeline(stage, payload = null) {
+    _state.initTimeline.push({
+      at: Date.now(),
+      stage: String(stage || "unknown"),
+      payload: payload && typeof payload === "object" ? { ...payload } : payload,
+      generation: Number(_state._3dInitGeneration || 0),
+    });
+    if (_state.initTimeline.length > 80) _state.initTimeline.shift();
   }
 
   function _captureClassListSnapshot() {
@@ -848,12 +1062,27 @@
       return Number(rect.width) >= minWidth && Number(rect.height) >= minHeight;
     };
     if (valid()) return true;
-    const started = Date.now();
-    while (Date.now() - started < timeoutMs) {
-      await new Promise(resolve => requestAnimationFrame(resolve));
-      if (valid()) return true;
-    }
-    return false;
+    if (typeof ResizeObserver === "undefined") return false;
+    return new Promise(resolve => {
+      let settled = false;
+      const finish = value => {
+        if (settled) return;
+        settled = true;
+        observer?.disconnect?.();
+        clearTimeout(timer);
+        resolve(!!value);
+      };
+      const observer = new ResizeObserver(() => {
+        if (valid()) finish(true);
+      });
+      try { observer.observe(container); } catch { finish(false); return; }
+      const timer = setTimeout(() => finish(valid()), timeoutMs);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (valid()) finish(true);
+        });
+      });
+    });
   }
 
   function _withTimeout(promise, timeoutMs, timeoutReason = "INIT_TIMEOUT") {
@@ -2156,6 +2385,7 @@
       }
       _state._3dInitInProgress = true;
       const initGeneration = ++_state._3dInitGeneration;
+      _markInitTimeline("renderer-init-requested", { generation: initGeneration });
       _setRendererLifecycle("initializing");
       _state.activeRendererMode = "initializing-3d";
       _updateRendererLabel("Loading 3D renderer…");
@@ -2167,6 +2397,12 @@
       let result;
       try {
         const hasStableSize = await _waitForValidContainer(container);
+        _markInitTimeline("container-measured", {
+          generation: initGeneration,
+          width: Number(container?.clientWidth || 0),
+          height: Number(container?.clientHeight || 0),
+          hasStableSize,
+        });
         if (!hasStableSize) {
           _setRendererLifecycle("waiting-for-size");
           result = {
@@ -2175,6 +2411,7 @@
             detail: "Renderer container did not reach a valid layout size in time.",
           };
         } else {
+          _markInitTimeline("renderer-init-start", { generation: initGeneration });
           result = await _withTimeout(renderer.init({
           container,
           model,
@@ -2240,6 +2477,7 @@
             renderSphere(container);
           }
           }), 25000);
+          _markInitTimeline("renderer-init-complete", { generation: initGeneration, success: !!result?.success, reason: result?.reason || null });
         }
       } catch (err) {
         result = { success: false, reason: "init-exception", detail: String(err) };
@@ -2277,27 +2515,37 @@
         }
         return;
       }
-      const surfaceCheck = _verifyRenderSurface(container);
+      container.querySelectorAll(".living-time-sphere-svg,.living-time-sphere-canvas").forEach(node => node.remove());
+      _pruneInvalidSphereMedia(container, "svg-handoff-invalid-media");
+      _setSphereLoaderVisibility(container, false);
+      _markInitTimeline("handoff-cleanup-complete", { generation: initGeneration });
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      _markInitTimeline("post-layout-raf", { generation: initGeneration });
+      globalThis.LivingTimeSphereRenderer3d?.requestSingleRender?.();
+      _markInitTimeline("first-frame-validated", { generation: initGeneration });
+      const surfaceCheck = _verifyRenderSurface(container, { requireVisibleCenter: false, expectedGeneration: initGeneration });
+      _markInitTimeline("surface-validation", { generation: initGeneration, healthy: !!surfaceCheck?.healthy, reason: surfaceCheck?.reason || null });
       if (!surfaceCheck.healthy) {
         _state.active3d = false;
         _state.activeRendererMode = "recovering";
         _setRendererLifecycle("failed");
         _updateRendererLabel(`SVG fallback — render surface invalid (${surfaceCheck.reason || "unknown"})`);
-        _showRendererFallbackWarning("RENDER_SURFACE_INVALID", surfaceCheck.reason || "render-surface-check-failed");
+        _showRendererFallbackWarning(surfaceCheck.reason || "RENDER_SURFACE_INVALID", (surfaceCheck.failures || []).join(", ") || "render-surface-check-failed");
         const layout = globalThis.LivingTimeSphereLayout.resolveLayout({
           containerWidth:  container.offsetWidth  || 320,
           containerHeight: container.offsetHeight || 320,
           devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
         });
         _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
+        _pruneInvalidSphereMedia(container, "svg-fallback-invalid-media");
         _setSphereLoaderVisibility(container, false);
         _updateInteractBar();
         _scheduleRetry(container, "render-surface-invalid");
         return;
       }
-      container.querySelectorAll(".living-time-sphere-svg,.living-time-sphere-canvas").forEach(node => node.remove());
       _state.active3d = true;
       _state.activeRendererMode = "3d";
+      _state.firstRenderSurfaceFailure = null;
       _state.restoreAttempts = 0;
       _state.retryCount = 0;
       _clearAutoRetry();
@@ -2350,6 +2598,7 @@
           devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
         });
         _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
+        _pruneInvalidSphereMedia(container, "refresh-fallback-invalid-media");
         _setSphereLoaderVisibility(container, false);
         _scheduleRetry(container, "scene-readiness-refresh");
         return;
@@ -2365,6 +2614,7 @@
           devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
         });
         _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
+        _pruneInvalidSphereMedia(container, "surface-refresh-invalid-media");
         _setSphereLoaderVisibility(container, false);
         _scheduleRetry(container, "surface-health-refresh");
         return;
@@ -2415,6 +2665,7 @@
     } else {
       _renderSvgOnly(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
     }
+    _pruneInvalidSphereMedia(container, "svg-render-invalid-media");
   }
 
   function _renderSvgOnly(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode) {
@@ -2487,6 +2738,7 @@
     // Populate inline diagnostics inside the collapsible details block.
     const r3d = globalThis.LivingTimeSphereRenderer3d;
     const diag = r3d?.getDiagnostics?.() || {};
+    const surface = _state.lastRenderSurfaceVerification || _verifyRenderSurface(document.getElementById("sphere-container"), { requireVisibleCenter: false });
     const _set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val || "—"; };
     _set("sphere-diag-local-url-warn",      diag.localModuleUrl || r3d?.THREE_LOCAL_REL || "—");
     _set("sphere-diag-last-error-warn",     diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : `${reason}${detail ? `: ${detail}` : ""}`);
@@ -2503,6 +2755,11 @@
     _set("sphere-diag-cpu-warn",            diag.hardwareConcurrency != null ? String(diag.hardwareConcurrency) : "unknown");
     _set("sphere-diag-reduced-warn",        `${diag.reducedMotion ? "motion:reduce" : "motion:normal"} · ${diag.reducedData ? "data:reduce" : "data:normal"}`);
     _set("sphere-diag-fallback-warn",       reasonCode || "none");
+    _set("sphere-diag-surface-failure-code-warn", surface?.reason || "none");
+    _set("sphere-diag-surface-failures-warn", Array.isArray(surface?.failures) && surface.failures.length ? surface.failures.join(", ") : "none");
+    _set("sphere-diag-surface-container-warn", `client ${Math.round(Number(surface?.diagnostics?.container?.clientWidth || 0))}×${Math.round(Number(surface?.diagnostics?.container?.clientHeight || 0))} · rect ${Math.round(Number(surface?.diagnostics?.container?.rect?.width || 0))}×${Math.round(Number(surface?.diagnostics?.container?.rect?.height || 0))}`);
+    _set("sphere-diag-surface-canvas-warn", `attr ${Math.round(Number(surface?.diagnostics?.canvas?.width || 0))}×${Math.round(Number(surface?.diagnostics?.canvas?.height || 0))} · css ${Math.round(Number(surface?.diagnostics?.canvas?.clientWidth || 0))}×${Math.round(Number(surface?.diagnostics?.canvas?.clientHeight || 0))} · connected ${surface?.diagnostics?.canvas?.isConnected ? "yes" : "no"}`);
+    _set("sphere-diag-surface-generation-warn", `${Number(surface?.diagnostics?.generation?.expected || 0)} / current ${Number(surface?.diagnostics?.generation?.current || 0)}`);
     _set("sphere-diag-init-duration-warn",  diag.initDurationMs != null ? `${diag.initDurationMs}ms` : "—");
     _set("sphere-diag-restore-attempts-warn", String(diag.restoreAttempts || 0));
     el.hidden = false;
@@ -2530,6 +2787,11 @@
       "sphere-diag-cpu-warn",
       "sphere-diag-reduced-warn",
       "sphere-diag-fallback-warn",
+      "sphere-diag-surface-failure-code-warn",
+      "sphere-diag-surface-failures-warn",
+      "sphere-diag-surface-container-warn",
+      "sphere-diag-surface-canvas-warn",
+      "sphere-diag-surface-generation-warn",
       "sphere-diag-last-error-warn",
       "sphere-diag-init-duration-warn",
       "sphere-diag-restore-attempts-warn",
@@ -2652,6 +2914,10 @@
       "sphere-diag-surface-duplicate-canvases": String(Math.max(0, Number(surface.canvasCount || 0) - 1)),
       "sphere-diag-surface-center-stack": Array.isArray(surface.centerStack?.stack) && surface.centerStack.stack.length
         ? surface.centerStack.stack.slice(0, 4).map(item => `${String(item.tagName || "").toUpperCase()}${item.className ? `.${String(item.className).split(/\s+/).filter(Boolean).join(".")}` : ""}`).join(" → ")
+        : "none",
+      "sphere-diag-surface-init-timeline": (_state.initTimeline || []).slice(-8).map(item => `${item.stage}@${item.generation}`).join(" → ") || "none",
+      "sphere-diag-surface-first-failure": _state.firstRenderSurfaceFailure
+        ? `${_state.firstRenderSurfaceFailure.reason} · ${(Array.isArray(_state.firstRenderSurfaceFailure.failures) ? _state.firstRenderSurfaceFailure.failures.join(", ") : "none")}`
         : "none",
     };
     for (const [id, val] of Object.entries(rows)) {
@@ -3773,6 +4039,11 @@
 
     const container = document.getElementById("sphere-container");
     if (!container) return;
+    _markInitTimeline("dom-ready", { href: typeof location !== "undefined" ? location.href : "" });
+    _markInitTimeline("component-mount", {
+      width: Number(container.clientWidth || 0),
+      height: Number(container.clientHeight || 0),
+    });
     _setRendererLifecycle("not-started");
     _installBrokenResourceGuard();
     _installResourceFailureTracker();
@@ -3848,6 +4119,10 @@
     // Defer first render by one animation frame so the container has a
     // stable, non-zero bounding rect before 3D dimensions are measured.
     requestAnimationFrame(() => {
+      _markInitTimeline("first-raf", {
+        width: Number(container.clientWidth || 0),
+        height: Number(container.clientHeight || 0),
+      });
       renderSphere(container);
     });
 
@@ -3925,6 +4200,8 @@
       selectedUpdateLongTasks: (_state.selectedUpdateLongTasks || []).slice(-20),
       selectedUpdateLastWatchdog: _state.selectedUpdateLastWatchdog || null,
       renderSurfaceVerification: _state.lastRenderSurfaceVerification || _verifyRenderSurface(container, { requireVisibleCenter: false }),
+      firstRenderSurfaceFailure: _state.firstRenderSurfaceFailure || null,
+      initTimeline: (_state.initTimeline || []).slice(-80),
       runtimeDebug: _collectRuntimeDebugSnapshot(),
       actionTrace: (_state.actionTrace || []).slice(-60),
       environmentFocusDiagnostics: _state.lastEnvironmentFocusDiagnostics || null,

@@ -506,8 +506,13 @@
   }
 
   function enableImageFallbacks() {
+    function isSphereRenderSurfaceNode(node) {
+      return !!node?.closest?.("#sphere-container, #sphere-moon-labels");
+    }
+
     function recordFailedMedia(node, reason) {
       if (!(node instanceof Element)) return;
+      if (isSphereRenderSurfaceNode(node)) return;
       const log = window.__SOF_FAILED_MEDIA_LOG__ = window.__SOF_FAILED_MEDIA_LOG__ || [];
       const src = node.currentSrc || node.src || node.getAttribute?.("src") || node.getAttribute?.("data") || null;
       let absoluteUrl = src;
@@ -542,6 +547,7 @@
 
     function collapseBrokenMedia(image) {
       if (!image || image.dataset.imageFallbackFailed === "true") return;
+      if (isSphereRenderSurfaceNode(image)) return;
       const tagName = String(image.tagName || "").toUpperCase();
       const isImg = tagName === "IMG";
       if (isImg && (!image.complete || image.naturalWidth > 0 || image.naturalHeight > 0)) return;
@@ -580,6 +586,7 @@
 
     function wireBrokenMediaNode(node) {
       if (!node || node.dataset.imageFallbackWired === "true") return;
+      if (isSphereRenderSurfaceNode(node)) return;
       node.dataset.imageFallbackWired = "true";
       node.addEventListener("error", function () {
         recordFailedMedia(node, "broken-media-node-error");
@@ -589,6 +596,7 @@
 
     function wireImage(image) {
       if (!image || image.dataset.imageFallbackWired === "true") return;
+      if (isSphereRenderSurfaceNode(image)) return;
       image.dataset.imageFallbackWired = "true";
       const fallbackString = image.getAttribute("data-fallbacks") || "";
       const fallbacks = fallbackString
@@ -631,6 +639,7 @@
     window.addEventListener("error", event => {
       const target = event?.target;
       if (!(target instanceof Element)) return;
+      if (isSphereRenderSurfaceNode(target)) return;
       const tag = String(target.tagName || "").toUpperCase();
       if (tag === "IMG") {
         collapseBrokenMedia(target);
@@ -645,6 +654,7 @@
         records.forEach(record => {
           record.addedNodes.forEach(node => {
             if (!(node instanceof Element)) return;
+            if (isSphereRenderSurfaceNode(node)) return;
             if (node.tagName === "IMG") wireImage(node);
             node.querySelectorAll?.("img").forEach(wireImage);
             if (["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE"].includes(String(node.tagName || "").toUpperCase())) {
@@ -653,9 +663,11 @@
             node.querySelectorAll?.("object,iframe,embed,video,source,picture,svg image").forEach(wireBrokenMediaNode);
           });
           if (record.type === "attributes" && record.target?.tagName === "IMG") {
+            if (isSphereRenderSurfaceNode(record.target)) return;
             wireImage(record.target);
             if (record.attributeName === "src") collapseBrokenMedia(record.target);
           } else if (record.type === "attributes") {
+            if (isSphereRenderSurfaceNode(record.target)) return;
             const targetTag = String(record.target?.tagName || "").toUpperCase();
             if (["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE", "IMAGE"].includes(targetTag)) {
               wireBrokenMediaNode(record.target);
