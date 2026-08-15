@@ -267,6 +267,8 @@
               <dt>Local module</dt><dd id="sphere-diag-local-url-warn">—</dd>
             </dl>
             <button id="sphere-clear-renderer-cache" class="sphere-btn sphere-btn-sm" type="button">Clear Sphere Cache</button>
+            <button id="sphere-verify-render-surface" class="sphere-btn sphere-btn-sm" type="button">Verify Render Surface</button>
+            <pre id="sphere-render-surface-verify-output" class="sphere-text-model">Run “Verify Render Surface” to inspect the active renderer surface.</pre>
           </details>
         </div>
         <p id="sphere-renderer-fallback-pill" class="sphere-fallback-pill" hidden aria-live="polite">Using accessible 2D view</p>
@@ -661,6 +663,16 @@
             <dt>Service worker</dt>      <dd id="sphere-diag-sw" style="overflow-wrap:anywhere">—</dd>
             <dt>Cache/storage</dt>       <dd id="sphere-diag-cache-storage" style="overflow-wrap:anywhere">—</dd>
             <dt>Deep-link exact URL</dt> <dd id="sphere-diag-deep-link" style="overflow-wrap:anywhere">—</dd>
+            <dt>Render surface health</dt> <dd id="sphere-diag-surface-health">—</dd>
+            <dt>Canvas connected</dt>      <dd id="sphere-diag-surface-canvas-connected">—</dd>
+            <dt>Canvas CSS size</dt>       <dd id="sphere-diag-surface-css-size">—</dd>
+            <dt>Drawing buffer</dt>        <dd id="sphere-diag-surface-drawing-buffer">—</dd>
+            <dt>Context lost</dt>          <dd id="sphere-diag-surface-context-lost">—</dd>
+            <dt>First frame complete</dt>  <dd id="sphere-diag-surface-first-frame">—</dd>
+            <dt>Scene objects</dt>         <dd id="sphere-diag-surface-scene-objects">—</dd>
+            <dt>Broken resources in sphere</dt><dd id="sphere-diag-surface-broken-resources">—</dd>
+            <dt>Duplicate canvases</dt>    <dd id="sphere-diag-surface-duplicate-canvases">—</dd>
+            <dt>Center stack</dt>          <dd id="sphere-diag-surface-center-stack" style="overflow-wrap:anywhere">—</dd>
           </dl>
           <details class="sphere-field-disclosure">
             <summary>Connection diagnostics (debug)</summary>

@@ -88,6 +88,7 @@
     urlIntegrity: "unknown",
     buildLogEmitted: false,
     coldBootDiagnostics: null,
+    lastRenderSurfaceVerification: null,
   };
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
   const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
@@ -121,6 +122,7 @@
   let _layerStateFlushContainer = null;
   let _resourceTrackerInstalled = false;
   const _resourceFailureLog = [];
+  const SPHERE_MEDIA_TAGS = new Set(["IMG", "PICTURE", "SOURCE", "OBJECT", "IFRAME", "EMBED", "VIDEO", "SVG", "CANVAS"]);
   const ENV_FOCUS_PULSE_CLASS = "sphere-location-command-focus-pulse";
 
   // ── Dependency check ───────────────────────────────────────────────
@@ -313,6 +315,25 @@
     return el.currentSrc || el.src || el.data || el.href || null;
   }
 
+  function _resolveAbsoluteResourceUrl(url) {
+    if (!url) return null;
+    try { return new URL(url, location.href).href; } catch { return url; }
+  }
+
+  function _isSphereScopedElement(el) {
+    if (!el || el.nodeType !== 1) return false;
+    return !!(el.closest?.("#sphere-container") || el.closest?.("#sphere-moon-labels"));
+  }
+
+  function _resolveElementOwner(el) {
+    if (!el || el.nodeType !== 1) return "unknown";
+    if (el.closest?.("#sphere-container")) return "living-time-sphere-render-surface";
+    if (el.closest?.("#sphere-moon-labels")) return "living-time-sphere-moon-labels";
+    if (el.closest?.("[data-home-sphere-root]")) return "home-observatory-instrument";
+    if (el.closest?.("main")) return "site-main";
+    return "document";
+  }
+
   function _captureResourceFailure(el, reason = "resource-error") {
     if (!el || el.nodeType !== 1) return;
     const entry = {
@@ -321,6 +342,15 @@
       id: el.id || null,
       className: el.className || "",
       src: _resourceUrlForElement(el),
+      currentSrc: el.currentSrc || null,
+      absoluteUrl: _resolveAbsoluteResourceUrl(_resourceUrlForElement(el)),
+      page: typeof location !== "undefined" ? String(location.pathname || "") : "",
+      owner: _resolveElementOwner(el),
+      parent: el.parentElement ? {
+        tagName: String(el.parentElement.tagName || "").toUpperCase(),
+        id: el.parentElement.id || null,
+        className: el.parentElement.className || "",
+      } : null,
       timestamp: Date.now(),
     };
     _resourceFailureLog.push(entry);
@@ -334,7 +364,8 @@
       const el = event?.target;
       if (!el || el.nodeType !== 1) return;
       const tag = String(el.tagName || "").toUpperCase();
-      if (!["IMG", "PICTURE", "SOURCE", "OBJECT", "IFRAME", "EMBED", "VIDEO"].includes(tag)) return;
+      if (!["IMG", "PICTURE", "SOURCE", "OBJECT", "IFRAME", "EMBED", "VIDEO", "SVG", "CANVAS"].includes(tag)) return;
+      if (!_isSphereScopedElement(el)) return;
       _captureResourceFailure(el, "resource-load-failed");
     }, true);
   }
@@ -347,6 +378,8 @@
       tagName: String(node.tagName || "").toLowerCase(),
       id: node.id || "",
       className: node.className || "",
+      isConnected: !!node.isConnected,
+      hidden: !!node.hidden,
       rect: rect ? {
         top: Number(rect.top || 0),
         left: Number(rect.left || 0),
@@ -357,11 +390,14 @@
       } : null,
       position: style?.position || "",
       zIndex: style?.zIndex || "",
+      pointerEvents: style?.pointerEvents || "",
       display: style?.display || "",
       visibility: style?.visibility || "",
       opacity: style?.opacity || "",
       overflow: style?.overflow || "",
       src: _resourceUrlForElement(node),
+      currentSrc: node.currentSrc || "",
+      absoluteUrl: _resolveAbsoluteResourceUrl(_resourceUrlForElement(node)),
       complete: typeof node.complete === "boolean" ? node.complete : null,
       naturalWidth: Number(node.naturalWidth || 0) || null,
       naturalHeight: Number(node.naturalHeight || 0) || null,
@@ -411,8 +447,133 @@
 
   function _inspectSphereHostChildren() {
     const host = document.getElementById("sphere-container");
-    if (!host) return [];
-    return Array.from(host.children || []).map(_inspectElementNode).filter(Boolean);
+    if (!host) return { directChildren: [], nestedChildren: [] };
+    const directChildren = Array.from(host.children || []).map(_inspectElementNode).filter(Boolean);
+    const nestedChildren = Array.from(host.querySelectorAll?.("*") || []).map(_inspectElementNode).filter(Boolean);
+    return { directChildren, nestedChildren };
+  }
+
+  function _collectSphereCenterStack(container) {
+    if (!container?.getBoundingClientRect) return { point: null, stack: [] };
+    const rect = container.getBoundingClientRect();
+    const center = {
+      x: Number(rect.left + (rect.width / 2) || 0),
+      y: Number(rect.top + (rect.height / 2) || 0),
+    };
+    const stack = (document.elementsFromPoint?.(center.x, center.y) || [])
+      .map(_inspectElementNode)
+      .filter(Boolean)
+      .slice(0, 16);
+    return { point: center, stack };
+  }
+
+  function _setSphereLoaderVisibility(container, visible) {
+    const loader = container?.querySelector?.(":scope > .sphere-luxury-loader");
+    if (container?.setAttribute) container.setAttribute("aria-busy", visible ? "true" : "false");
+    if (!loader) return;
+    loader.hidden = !visible;
+    loader.style.display = visible ? "" : "none";
+    if (visible) {
+      loader.setAttribute("data-sphere-renderer-owned", "true");
+      loader.setAttribute("data-sphere-loader-state", "visible");
+    } else {
+      loader.setAttribute("data-sphere-loader-state", "hidden");
+    }
+  }
+
+  function _verifyRenderSurface(container, { requireVisibleCenter = true } = {}) {
+    const renderer = globalThis.LivingTimeSphereRenderer3d;
+    const rendererDiag = renderer?.getDiagnostics?.() || {};
+    const host = container || document.getElementById("sphere-container");
+    if (!host) {
+      return { healthy: false, reason: "container-missing", checks: {}, centerStack: { point: null, stack: [] }, brokenResources: [] };
+    }
+    const canvases = Array.from(host.querySelectorAll(":scope > canvas.living-time-sphere-3d-canvas"));
+    const canvas = canvases[0] || null;
+    const rect = host.getBoundingClientRect?.() || { left: 0, top: 0, width: 0, height: 0 };
+    const canvasRect = canvas?.getBoundingClientRect?.() || { width: 0, height: 0 };
+    const canvasStyle = canvas ? getComputedStyle(canvas) : null;
+    const centerStack = _collectSphereCenterStack(host);
+    const viewportW = window.innerWidth || 0;
+    const viewportH = window.innerHeight || 0;
+    const centerInViewport = centerStack?.point
+      ? centerStack.point.x >= 0 && centerStack.point.x <= viewportW && centerStack.point.y >= 0 && centerStack.point.y <= viewportH
+      : false;
+    const stackItems = Array.isArray(centerStack.stack) ? centerStack.stack : [];
+    const top = stackItems[0] || null;
+    const canvasInStack = stackItems.find(item => item.tagName === "canvas" && String(item.className || "").includes("living-time-sphere-3d-canvas")) || null;
+    const coveringMedia = stackItems.find(item => {
+      const tag = String(item.tagName || "").toUpperCase();
+      if (!SPHERE_MEDIA_TAGS.has(tag)) return false;
+      if (tag === "CANVAS" && String(item.className || "").includes("living-time-sphere-3d-canvas")) return false;
+      return true;
+    }) || null;
+    const sphereMedia = _collectMediaDiagnostics(host);
+    const sphereFailureLog = _resourceFailureLog.filter(item => String(item.owner || "").startsWith("living-time-sphere"));
+    const brokenResources = sphereMedia.filter(item =>
+      item &&
+      item.rect &&
+      Number(item.rect.width || 0) > 20 &&
+      Number(item.rect.height || 0) > 20 &&
+      item.failedImage
+    );
+    const checks = {
+      canvasExists: typeof HTMLCanvasElement !== "undefined" && canvas instanceof HTMLCanvasElement,
+      singleCanvas: canvases.length === 1,
+      canvasConnected: !!canvas?.isConnected,
+      canvasInContainer: !!(canvas && canvas.parentElement === host),
+      canvasWidthPositive: Number(canvas?.width || 0) > 0,
+      canvasHeightPositive: Number(canvas?.height || 0) > 0,
+      canvasRectWidthPositive: Number(canvasRect.width || 0) > 0,
+      canvasRectHeightPositive: Number(canvasRect.height || 0) > 0,
+      canvasVisible: !!(canvasStyle && canvasStyle.display !== "none" && canvasStyle.visibility !== "hidden" && Number(canvasStyle.opacity || 0) > 0 && !canvas.hidden),
+      containerWidthPositive: Number(rect.width || 0) > 0,
+      containerHeightPositive: Number(rect.height || 0) > 0,
+      firstFrameRendered: rendererDiag.stageState?.firstFrame === "rendered",
+      contextHealthy: rendererDiag.stageState?.context !== "lost",
+      sceneReady: rendererDiag.sceneReadiness?.ready !== false,
+      drawingBufferPositive: Number(rendererDiag.drawingBufferWidth || 0) > 0 && Number(rendererDiag.drawingBufferHeight || 0) > 0,
+      centerCoveredByForeignMedia: !!coveringMedia,
+      centerHitsCanvas: !!canvasInStack,
+      centerInViewport,
+      noBrokenResources: brokenResources.length === 0 && sphereFailureLog.length === 0,
+      canvasTopAtCenter: !!(top && top.tagName === "canvas" && String(top.className || "").includes("living-time-sphere-3d-canvas")),
+    };
+    const requiredChecks = [
+      "canvasExists", "singleCanvas", "canvasConnected", "canvasInContainer",
+      "canvasWidthPositive", "canvasHeightPositive", "canvasRectWidthPositive", "canvasRectHeightPositive",
+      "canvasVisible", "containerWidthPositive", "containerHeightPositive",
+      "firstFrameRendered", "contextHealthy", "sceneReady", "drawingBufferPositive", "noBrokenResources"
+    ];
+    if (requireVisibleCenter && centerInViewport) {
+      requiredChecks.push("centerHitsCanvas");
+      requiredChecks.push("canvasTopAtCenter");
+    }
+    const failures = requiredChecks.filter(key => checks[key] !== true);
+    if (checks.centerCoveredByForeignMedia) failures.push("centerCoveredByForeignMedia");
+    const healthy = failures.length === 0;
+    const result = {
+      healthy,
+      reason: failures[0] || null,
+      failures,
+      checks,
+      centerStack,
+      coveringMedia,
+      canvasCount: canvases.length,
+      sphereHostChildren: _inspectSphereHostChildren(),
+      brokenResources,
+      resourceFailureLog: sphereFailureLog.slice(0, 80),
+      rendererDiagnostics: {
+        firstFrameTimestamp: Number(rendererDiag.firstFrameTimestamp || 0),
+        sceneObjectCount: Number(rendererDiag.sceneObjectCount || 0),
+        visibleObjectCount: Number(rendererDiag.visibleObjectCount || 0),
+        drawingBufferWidth: Number(rendererDiag.drawingBufferWidth || 0),
+        drawingBufferHeight: Number(rendererDiag.drawingBufferHeight || 0),
+        contextLost: rendererDiag.stageState?.context === "lost",
+      }
+    };
+    _state.lastRenderSurfaceVerification = result;
+    return result;
   }
 
   function _collectRuntimeDebugSnapshot() {
@@ -422,8 +583,36 @@
       fixedSticky: _collectFixedStickyDiagnostics(),
       media: _collectMediaDiagnostics(document),
       sphereHostChildren: _inspectSphereHostChildren(),
+      sphereCenterStack: _collectSphereCenterStack(document.getElementById("sphere-container")),
+      renderSurfaceVerification: _verifyRenderSurface(document.getElementById("sphere-container"), { requireVisibleCenter: false }),
       failedResources: _resourceFailureLog.slice(0, 120),
     };
+  }
+
+  function _runRenderSurfaceVerification() {
+    const container = document.getElementById("sphere-container");
+    const verification = _verifyRenderSurface(container, { requireVisibleCenter: true });
+    const rendererDiag = globalThis.LivingTimeSphereRenderer3d?.getDiagnostics?.() || {};
+    const lines = [
+      `Requested renderer: ${_state.requestedRendererMode === "auto" ? "3D" : String(_state.requestedRendererMode || "auto").toUpperCase()}`,
+      `Lifecycle: ${_state.rendererLifecycle || "unknown"}`,
+      `Container: ${Math.round(Number(_state._latestContainerSize?.w || 0))} × ${Math.round(Number(_state._latestContainerSize?.h || 0))}`,
+      `Canvas connected: ${verification.checks?.canvasConnected ? "yes" : "no"}`,
+      `Canvas CSS size: ${Math.round(Number(rendererDiag.canvasClientWidth || 0))} × ${Math.round(Number(rendererDiag.canvasClientHeight || 0))}`,
+      `Drawing buffer: ${Math.round(Number(rendererDiag.drawingBufferWidth || 0))} × ${Math.round(Number(rendererDiag.drawingBufferHeight || 0))}`,
+      `WebGL context lost: ${rendererDiag.stageState?.context === "lost" ? "yes" : "no"}`,
+      `Canvas visible: ${verification.checks?.canvasVisible ? "yes" : "no"}`,
+      `Elements over center:`,
+      ...(verification.centerStack?.stack?.slice(0, 8).map(item => `  ${String(item.tagName || "").toUpperCase()}${item.id ? `#${item.id}` : ""}${item.className ? `.${String(item.className).split(/\s+/).filter(Boolean).join(".")}` : ""}`) || ["  (none)"]),
+      `First frame: ${rendererDiag.stageState?.firstFrame === "rendered" ? "yes" : "no"}`,
+      `Scene objects: ${Number(rendererDiag.sceneObjectCount || 0)}`,
+      `Broken resources in sphere: ${Array.isArray(verification.brokenResources) ? verification.brokenResources.length : 0}`,
+      `Duplicate canvases: ${Math.max(0, Number(verification.canvasCount || 0) - 1)}`,
+      `Surface healthy: ${verification.healthy ? "yes" : `no (${verification.reason || "unknown"})`}`,
+    ];
+    const output = document.getElementById("sphere-render-surface-verify-output");
+    if (output) output.textContent = lines.join("\n");
+    return verification;
   }
 
   function _resolveEnvironmentLifecycle(state) {
@@ -580,7 +769,9 @@
       const diag = renderer.getDiagnostics?.() || {};
       const hasCanvas = Number(diag.canvasWidth || 0) > 0 && Number(diag.canvasHeight || 0) > 0;
       const firstFrame = diag.stageState?.firstFrame === "rendered";
-      if (hasCanvas && !firstFrame) {
+      const surface = _verifyRenderSurface(container, { requireVisibleCenter: false });
+      if ((hasCanvas && !firstFrame) || !surface.healthy) {
+        _state.active3d = false;
         _setRendererLifecycle("recovering");
         renderer.requestSingleRender?.();
         _scheduleRetry(container, "blank-canvas-watchdog");
@@ -1901,6 +2092,7 @@
       _setRendererLifecycle("ready");
       _state.activeRendererMode = _state.requestedRendererMode;
       container.style.display = "none";
+      _setSphereLoaderVisibility(container, false);
       _updateRendererLabel(_state.requestedRendererMode === "table" ? "Data Table" : "Text Summary");
       updateAccessibleText(model, spiral);
       updateDetails(model);
@@ -1925,6 +2117,7 @@
       } else {
         _state.activeRendererMode = _state._3dInitInProgress ? "initializing-3d" : "svg";
         _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
+        _setSphereLoaderVisibility(container, true);
         _render3d(container, model, spiral, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
       }
     } else {
@@ -1932,6 +2125,7 @@
       _setRendererLifecycle("fallback");
       _state.activeRendererMode = "svg";
       _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
+      _setSphereLoaderVisibility(container, false);
     }
 
     updateAccessibleText(model, spiral);
@@ -1965,6 +2159,7 @@
       _setRendererLifecycle("initializing");
       _state.activeRendererMode = "initializing-3d";
       _updateRendererLabel("Loading 3D renderer…");
+      _setSphereLoaderVisibility(container, true);
 
       const reducedMotion = typeof window !== "undefined" &&
         window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -2001,6 +2196,24 @@
           semanticZoomState,
           environmentState: globalThis.SofEnvironmentState?.getEnvironmentState?.() || null,
           reducedMotion,
+          onContextLost: () => {
+            if (initGeneration !== _state._3dInitGeneration) return;
+            _state.active3d = false;
+            _state.activeRendererMode = "recovering";
+            _setRendererLifecycle("failed");
+            _updateRendererLabel("3D context lost — falling back");
+            _showRendererFallbackWarning("CONTEXT_LOST", "WebGL context was lost after initialization.");
+            _setSphereLoaderVisibility(container, false);
+            renderSphere(container);
+          },
+          onContextRestored: () => {
+            if (initGeneration !== _state._3dInitGeneration) return;
+            _state.active3d = false;
+            _state.activeRendererMode = "recovering";
+            _setRendererLifecycle("recovering");
+            _setSphereLoaderVisibility(container, true);
+            _scheduleRetry(container, "context-restored");
+          },
           onYearSelect: year => {
             _state.year = year;
             _syncYearSelect(year);
@@ -2056,11 +2269,30 @@
           devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
         });
         _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
+        _setSphereLoaderVisibility(container, false);
         _updateInteractBar();
         _updateTodayDiagnostics(model);
         if (transient && _state.requestedRendererMode !== "svg") {
           _scheduleRetry(container, reason);
         }
+        return;
+      }
+      const surfaceCheck = _verifyRenderSurface(container);
+      if (!surfaceCheck.healthy) {
+        _state.active3d = false;
+        _state.activeRendererMode = "recovering";
+        _setRendererLifecycle("failed");
+        _updateRendererLabel(`SVG fallback — render surface invalid (${surfaceCheck.reason || "unknown"})`);
+        _showRendererFallbackWarning("RENDER_SURFACE_INVALID", surfaceCheck.reason || "render-surface-check-failed");
+        const layout = globalThis.LivingTimeSphereLayout.resolveLayout({
+          containerWidth:  container.offsetWidth  || 320,
+          containerHeight: container.offsetHeight || 320,
+          devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
+        });
+        _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
+        _setSphereLoaderVisibility(container, false);
+        _updateInteractBar();
+        _scheduleRetry(container, "render-surface-invalid");
         return;
       }
       container.querySelectorAll(".living-time-sphere-svg,.living-time-sphere-canvas").forEach(node => node.remove());
@@ -2072,6 +2304,7 @@
       _setRendererLifecycle("rendered");
       _updateRendererLabel("WebGL 3D active");
       _hideRendererFallbackWarning();
+      _setSphereLoaderVisibility(container, false);
       _updateInteractBar();
       _updateLastRenderTimestamp();
       _watchForBlankCanvas(container);
@@ -2105,6 +2338,7 @@
         semanticZoomState
       );
       const readiness = renderer.getDiagnostics?.().sceneReadiness || { ready: true, reasons: [] };
+      const surfaceCheck = _verifyRenderSurface(container, { requireVisibleCenter: false });
       if (!readiness.ready) {
         _state.active3d = false;
         _state.activeRendererMode = "recovering";
@@ -2116,7 +2350,23 @@
           devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
         });
         _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
+        _setSphereLoaderVisibility(container, false);
         _scheduleRetry(container, "scene-readiness-refresh");
+        return;
+      }
+      if (!surfaceCheck.healthy) {
+        _state.active3d = false;
+        _state.activeRendererMode = "recovering";
+        _setRendererLifecycle("recovering");
+        _updateRendererLabel(`Recovering 3D surface… (${surfaceCheck.reason || "surface-unhealthy"})`);
+        const layout = globalThis.LivingTimeSphereLayout.resolveLayout({
+          containerWidth:  container.offsetWidth  || 320,
+          containerHeight: container.offsetHeight || 320,
+          devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
+        });
+        _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
+        _setSphereLoaderVisibility(container, false);
+        _scheduleRetry(container, "surface-health-refresh");
         return;
       }
       renderer.updateEnvironment?.(globalThis.SofEnvironmentState?.getEnvironmentState?.() || null);
@@ -2144,10 +2394,12 @@
     } else {
       _state.activeRendererMode = "svg";
     }
+    _setSphereLoaderVisibility(document.getElementById("sphere-container"), false);
     _updateInteractBar();
   }
 
   function _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode) {
+    _setSphereLoaderVisibility(container, false);
     // Canvas fallback
     if (_state.useCanvas && globalThis.LivingTimeSphereRendererCanvas?.isCanvasSupported?.()) {
       let canvas = container.querySelector(".living-time-sphere-canvas");
@@ -2313,6 +2565,8 @@
     const diag = r3d?.getDiagnostics?.() || {};
     const semantic = diag.semanticZoom || {};
     const stageState = diag.stageState || {};
+    const container = document.getElementById("sphere-container");
+    const surface = _verifyRenderSurface(container, { requireVisibleCenter: false });
     const buildIdentity = _resolveBuildIdentityLine();
     const coldBoot = _state.coldBootDiagnostics || null;
     const swText = coldBoot
@@ -2387,6 +2641,18 @@
       "sphere-diag-sw": swText,
       "sphere-diag-cache-storage": storageText,
       "sphere-diag-deep-link": deepLinkText,
+      "sphere-diag-surface-health": surface.healthy ? "healthy" : `unhealthy (${surface.reason || "unknown"})`,
+      "sphere-diag-surface-canvas-connected": surface.checks?.canvasConnected ? "yes" : "no",
+      "sphere-diag-surface-css-size": `${Math.round(Number(diag.canvasClientWidth || 0))} × ${Math.round(Number(diag.canvasClientHeight || 0))}`,
+      "sphere-diag-surface-drawing-buffer": `${Math.round(Number(diag.drawingBufferWidth || 0))} × ${Math.round(Number(diag.drawingBufferHeight || 0))}`,
+      "sphere-diag-surface-context-lost": diag.stageState?.context === "lost" ? "yes" : "no",
+      "sphere-diag-surface-first-frame": diag.stageState?.firstFrame === "rendered" ? "yes" : "no",
+      "sphere-diag-surface-scene-objects": String(Number(diag.sceneObjectCount || 0)),
+      "sphere-diag-surface-broken-resources": String((Array.isArray(surface.brokenResources) ? surface.brokenResources.length : 0) + (Array.isArray(surface.resourceFailureLog) ? surface.resourceFailureLog.length : 0)),
+      "sphere-diag-surface-duplicate-canvases": String(Math.max(0, Number(surface.canvasCount || 0) - 1)),
+      "sphere-diag-surface-center-stack": Array.isArray(surface.centerStack?.stack) && surface.centerStack.stack.length
+        ? surface.centerStack.stack.slice(0, 4).map(item => `${String(item.tagName || "").toUpperCase()}${item.className ? `.${String(item.className).split(/\s+/).filter(Boolean).join(".")}` : ""}`).join(" → ")
+        : "none",
     };
     for (const [id, val] of Object.entries(rows)) {
       const el = document.getElementById(id);
@@ -3373,6 +3639,13 @@
       });
     }
 
+    const verifySurfaceBtn = document.getElementById("sphere-verify-render-surface");
+    if (verifySurfaceBtn) {
+      verifySurfaceBtn.addEventListener("click", () => {
+        _runRenderSurfaceVerification();
+      });
+    }
+
     const switchSvgBtn = document.getElementById("sphere-switch-svg");
     if (switchSvgBtn) {
       switchSvgBtn.addEventListener("click", () => {
@@ -3651,6 +3924,7 @@
       selectedUpdateMetrics: (_state.selectedUpdateMetrics || []).slice(-20),
       selectedUpdateLongTasks: (_state.selectedUpdateLongTasks || []).slice(-20),
       selectedUpdateLastWatchdog: _state.selectedUpdateLastWatchdog || null,
+      renderSurfaceVerification: _state.lastRenderSurfaceVerification || _verifyRenderSurface(container, { requireVisibleCenter: false }),
       runtimeDebug: _collectRuntimeDebugSnapshot(),
       actionTrace: (_state.actionTrace || []).slice(-60),
       environmentFocusDiagnostics: _state.lastEnvironmentFocusDiagnostics || null,

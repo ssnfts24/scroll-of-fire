@@ -506,6 +506,28 @@
   }
 
   function enableImageFallbacks() {
+    function recordFailedMedia(node, reason) {
+      if (!(node instanceof Element)) return;
+      const log = window.__SOF_FAILED_MEDIA_LOG__ = window.__SOF_FAILED_MEDIA_LOG__ || [];
+      const src = node.currentSrc || node.src || node.getAttribute?.("src") || node.getAttribute?.("data") || null;
+      let absoluteUrl = src;
+      try { if (src) absoluteUrl = new URL(src, window.location.href).href; } catch (_) { /* keep original */ }
+      const rect = node.getBoundingClientRect?.() || null;
+      log.push({
+        reason: reason || "resource-failed",
+        tagName: String(node.tagName || "").toUpperCase(),
+        id: node.id || null,
+        className: node.className || "",
+        src,
+        absoluteUrl,
+        page: window.location.pathname,
+        parentTagName: node.parentElement?.tagName || null,
+        timestamp: Date.now(),
+        rect: rect ? { width: Number(rect.width || 0), height: Number(rect.height || 0), top: Number(rect.top || 0), left: Number(rect.left || 0) } : null,
+      });
+      if (log.length > 200) log.shift();
+    }
+
     function sanitizeImageSource(value) {
       const candidate = String(value || "").trim();
       if (!candidate) return "";
@@ -523,6 +545,7 @@
       const tagName = String(image.tagName || "").toUpperCase();
       const isImg = tagName === "IMG";
       if (isImg && (!image.complete || image.naturalWidth > 0 || image.naturalHeight > 0)) return;
+      recordFailedMedia(image, "collapse-broken-media");
       image.dataset.imageFallbackFailed = "true";
       image.classList.add("image-fallback-failed");
       image.hidden = true;
@@ -559,6 +582,7 @@
       if (!node || node.dataset.imageFallbackWired === "true") return;
       node.dataset.imageFallbackWired = "true";
       node.addEventListener("error", function () {
+        recordFailedMedia(node, "broken-media-node-error");
         collapseBrokenMedia(node);
       }, { once: true });
     }

@@ -93,9 +93,14 @@
   let _restoreAttempts = 0;
   let _lastRenderTimestamp = 0;
   let _firstFrameTimestamp = 0;
+  let _firstFramePixelProbe = null;
   let _lastSceneBuildTimestamp = 0;
   let _geometryBuildRevision = 0;
   let _lastSceneReadiness = null;
+  let _contextLostAt = 0;
+  let _contextRestoredAt = 0;
+  let _contextLossCount = 0;
+  let _contextRestoreCount = 0;
   const _stageState = {
     capability: "idle",
     module: "idle",
@@ -196,6 +201,43 @@
       if (_isUnexpectedHostMedia(child)) count += 1;
     });
     return count;
+  }
+
+  function _probeFirstFramePixelHealth() {
+    if (!_renderer || !_canvas) return null;
+    const result = {
+      checkedAt: Date.now(),
+      ok: false,
+      centerPixel: null,
+      reason: null,
+    };
+    try {
+      const gl = _renderer.getContext?.();
+      if (!gl || typeof gl.readPixels !== "function") {
+        result.reason = "gl-context-unavailable";
+        _firstFramePixelProbe = result;
+        return result;
+      }
+      const width = Number(_canvas.width || 0);
+      const height = Number(_canvas.height || 0);
+      if (width <= 0 || height <= 0) {
+        result.reason = "canvas-size-invalid";
+        _firstFramePixelProbe = result;
+        return result;
+      }
+      const px = new Uint8Array(4);
+      const x = Math.max(0, Math.min(width - 1, Math.floor(width / 2)));
+      const y = Math.max(0, Math.min(height - 1, Math.floor(height / 2)));
+      gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+      result.centerPixel = [Number(px[0]), Number(px[1]), Number(px[2]), Number(px[3])];
+      const nearWhite = px[0] >= 248 && px[1] >= 248 && px[2] >= 248 && px[3] >= 248;
+      result.ok = !nearWhite;
+      result.reason = nearWhite ? "center-pixel-near-white" : null;
+    } catch (err) {
+      result.reason = `pixel-probe-failed:${String(err)}`;
+    }
+    _firstFramePixelProbe = result;
+    return result;
   }
 
   function _markStage(stage, state) {
@@ -2602,6 +2644,11 @@
     _activeTier = tier || null;
     _restoreAttempts = 0;
     _firstFrameTimestamp = 0;
+    _firstFramePixelProbe = null;
+    _contextLostAt = 0;
+    _contextRestoredAt = 0;
+    _contextLossCount = 0;
+    _contextRestoreCount = 0;
 
     try {
       assertDeps();
@@ -2643,6 +2690,8 @@
       _canvas = document.createElement("canvas");
       _countLifecycle("canvasCreateCount");
       _canvas.className = "living-time-sphere-3d-canvas";
+      _canvas.dataset.sphereRenderSurface = "webgl3d";
+      _canvas.dataset.sphereRendererOwned = "true";
       _canvas.setAttribute("role", "img");
       _canvas.setAttribute("aria-label", "Living Time Sphere 3D view");
       _canvas.setAttribute("aria-describedby", "sphere-text-model");
@@ -2702,6 +2751,8 @@
           const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.CONTEXT_LOST ?? "CONTEXT_LOST";
           _lastInitError = { reason, detail: "WebGL context was lost." };
           _markStage("context", "lost");
+          _contextLostAt = Date.now();
+          _contextLossCount += 1;
           _initialized = false;
           // Stop the animation loop so we don't render with a lost context.
           try { globalThis.LivingTimeSphereAnimation?.stop?.(); } catch { /* best-effort */ }
@@ -2712,6 +2763,8 @@
         onRestored() {
           _restoreAttempts += 1;
           _markStage("context", "restored");
+          _contextRestoredAt = Date.now();
+          _contextRestoreCount += 1;
           console.info("[LivingTimeSphere] WebGL context restored — notifying mount for reinit.");
           // Notify mount layer — mount will teardown stale resources and reinit.
           try { _onContextRestoredCb?.(); } catch { /* mount notification is best-effort */ }
@@ -2795,6 +2848,7 @@
         });
         _markStage("firstFrame", "rendered");
         _firstFrameTimestamp = Date.now();
+        _probeFirstFramePixelHealth();
       } catch (err) {
         _markStage("firstFrame", "failed");
         _lastInitError = {
@@ -3474,9 +3528,14 @@
     _initializing = false;
     _lastRenderTimestamp = 0;
     _firstFrameTimestamp = 0;
+    _firstFramePixelProbe = null;
     _lastSceneBuildTimestamp = 0;
     _geometryBuildRevision = 0;
     _lastSceneReadiness = null;
+    _contextLostAt = 0;
+    _contextRestoredAt = 0;
+    _contextLossCount = 0;
+    _contextRestoreCount = 0;
     _loadPromise  = null; // allow Three.js reload after teardown
     _THREE        = null;
     _threeSource  = null;
@@ -3498,6 +3557,12 @@
     } catch { /* ignore */ }
     const canvasW = _canvas ? (_canvas.width  || 0) : 0;
     const canvasH = _canvas ? (_canvas.height || 0) : 0;
+    const canvasRect = _canvas?.getBoundingClientRect?.() || null;
+    const drawingBufferSize = (() => {
+      if (!_renderer?.getDrawingBufferSize || !_THREE?.Vector2) return { width: 0, height: 0 };
+      const size = _renderer.getDrawingBufferSize(new _THREE.Vector2());
+      return { width: Number(size?.x || 0), height: Number(size?.y || 0) };
+    })();
     const conn = typeof navigator !== "undefined"
       ? (navigator.connection || navigator.mozConnection || navigator.webkitConnection || null)
       : null;
@@ -3525,6 +3590,17 @@
       localModuleUrl:    _localThreeUrl(),
       canvasWidth:       canvasW,
       canvasHeight:      canvasH,
+      canvasClientWidth: Number(_canvas?.clientWidth || 0),
+      canvasClientHeight: Number(_canvas?.clientHeight || 0),
+      canvasConnected: !!_canvas?.isConnected,
+      canvasRect: canvasRect ? {
+        left: Number(canvasRect.left || 0),
+        top: Number(canvasRect.top || 0),
+        width: Number(canvasRect.width || 0),
+        height: Number(canvasRect.height || 0),
+      } : null,
+      drawingBufferWidth: drawingBufferSize.width,
+      drawingBufferHeight: drawingBufferSize.height,
       devicePixelRatio:  typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1,
       requestedDevicePixelRatio: _requestedDpr,
       appliedDevicePixelRatio: _appliedDpr,
@@ -3593,6 +3669,11 @@
       },
       rafActive: !!globalThis.LivingTimeSphereAnimation?.isRunning?.(),
       contextLost: _stageState.context === "lost",
+      contextLostAt: Number(_contextLostAt || 0),
+      contextRestoredAt: Number(_contextRestoredAt || 0),
+      contextLossCount: Number(_contextLossCount || 0),
+      contextRestoreCount: Number(_contextRestoreCount || 0),
+      firstFramePixelProbe: _firstFramePixelProbe ? { ..._firstFramePixelProbe } : null,
       lastInitError:     _lastInitError,
       semanticZoom: {
         band: _semanticZoomState?.band || "medium",
