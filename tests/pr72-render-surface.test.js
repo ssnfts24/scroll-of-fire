@@ -18,7 +18,7 @@ test("UI enforces render-surface verification before claiming 3D active", () => 
 
 test("renderer diagnostics expose canvas ownership and first-frame pixel probe", () => {
   const renderer = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
-  assert.ok(renderer.includes("data-sphere-render-surface"), "renderer canvas must mark render-surface ownership");
+  assert.ok(renderer.includes("sphereRenderSurface"), "renderer canvas must mark render-surface ownership");
   assert.ok(renderer.includes("firstFramePixelProbe"), "renderer diagnostics must expose first-frame pixel probe");
   assert.ok(renderer.includes("drawingBufferWidth"), "renderer diagnostics must expose drawing-buffer size");
   assert.ok(renderer.includes("contextLossCount"), "renderer diagnostics must track context loss count");
@@ -28,4 +28,3 @@ test("performance-runtime no longer duplicates broken-image suppression owned by
   const perf = read("docs/assets/js/performance-runtime.js");
   assert.equal(perf.includes("suppressBrokenImages"), false, "performance runtime should not duplicate broken-image suppression");
 });
-
