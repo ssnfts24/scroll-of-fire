@@ -11,10 +11,10 @@ const read = rel => fs.readFileSync(path.join(root, rel), "utf8");
 test("UI enforces render-surface verification before claiming 3D active", () => {
   const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
   assert.ok(ui.includes("function _verifyRenderSurface("), "UI must define render-surface verifier");
-  assert.ok(ui.includes("RENDER_SURFACE_INVALID"), "UI must fail over when surface validation fails");
+  assert.equal(ui.includes("RENDER_SURFACE_INVALID"), false, "UI must not fall back to generic RENDER_SURFACE_INVALID code");
   assert.ok(ui.includes("sphere-verify-render-surface"), "UI must wire Verify Render Surface action");
   assert.ok(ui.includes("document.elementsFromPoint"), "UI surface verifier must inspect center stack");
-  assert.ok(ui.includes("CANVAS_ZERO_CSS_HEIGHT"), "UI verifier must emit specific invariant reason codes");
+  assert.ok(ui.includes("CANVAS_ZERO_HEIGHT"), "UI verifier must emit specific invariant reason codes");
   assert.ok(ui.includes("_showRendererFallbackWarning(surfaceCheck.reason"), "fallback warning must use specific surface reason code");
   assert.ok(ui.includes("bottomBrokenResourceProbe"), "UI debug snapshot must include bottom broken-resource probe");
   assert.ok(ui.includes("initTimeline"), "UI diagnostics must capture initialization timing");

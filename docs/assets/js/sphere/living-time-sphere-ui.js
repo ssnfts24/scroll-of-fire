@@ -91,6 +91,7 @@
     lastRenderSurfaceVerification: null,
     firstRenderSurfaceFailure: null,
     initTimeline: [],
+    renderSurfaceCanvasTrace: [],
   };
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
   const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
@@ -129,19 +130,17 @@
     CANVAS_MISSING: "CANVAS_MISSING",
     CANVAS_NOT_CONNECTED: "CANVAS_NOT_CONNECTED",
     CANVAS_WRONG_PARENT: "CANVAS_WRONG_PARENT",
-    CANVAS_ZERO_ATTRIBUTE_WIDTH: "CANVAS_ZERO_ATTRIBUTE_WIDTH",
-    CANVAS_ZERO_ATTRIBUTE_HEIGHT: "CANVAS_ZERO_ATTRIBUTE_HEIGHT",
-    CANVAS_ZERO_CSS_WIDTH: "CANVAS_ZERO_CSS_WIDTH",
-    CANVAS_ZERO_CSS_HEIGHT: "CANVAS_ZERO_CSS_HEIGHT",
-    CANVAS_HIDDEN_DISPLAY: "CANVAS_HIDDEN_DISPLAY",
-    CANVAS_HIDDEN_VISIBILITY: "CANVAS_HIDDEN_VISIBILITY",
+    CANVAS_ZERO_WIDTH: "CANVAS_ZERO_WIDTH",
+    CANVAS_ZERO_HEIGHT: "CANVAS_ZERO_HEIGHT",
+    CANVAS_DISPLAY_NONE: "CANVAS_DISPLAY_NONE",
+    CANVAS_VISIBILITY_HIDDEN: "CANVAS_VISIBILITY_HIDDEN",
     CANVAS_ZERO_OPACITY: "CANVAS_ZERO_OPACITY",
     CONTAINER_ZERO_WIDTH: "CONTAINER_ZERO_WIDTH",
     CONTAINER_ZERO_HEIGHT: "CONTAINER_ZERO_HEIGHT",
     WEBGL_CONTEXT_MISSING: "WEBGL_CONTEXT_MISSING",
     WEBGL_CONTEXT_LOST: "WEBGL_CONTEXT_LOST",
-    FIRST_FRAME_NOT_RENDERED: "FIRST_FRAME_NOT_RENDERED",
-    DUPLICATE_RENDER_SURFACE: "DUPLICATE_RENDER_SURFACE",
+    FIRST_FRAME_MISSING: "FIRST_FRAME_MISSING",
+    DUPLICATE_CANVAS: "DUPLICATE_CANVAS",
     STALE_RENDER_GENERATION: "STALE_RENDER_GENERATION",
     RENDERER_DISPOSED: "RENDERER_DISPOSED",
     DRAWING_BUFFER_ZERO: "DRAWING_BUFFER_ZERO",
@@ -510,11 +509,18 @@
     return {
       probePoint: point,
       element: _inspectElementNode(target),
+      tagName: String(target.tagName || "").toUpperCase(),
+      id: target.id || "",
+      className: target.className || "",
       originalSrc: target.getAttribute?.("src") || target.getAttribute?.("data") || target.getAttribute?.("href") || null,
       absoluteUrl: _resolveAbsoluteResourceUrl(_resourceUrlForElement(target)),
       parent: target.parentElement ? _inspectElementNode(target.parentElement) : null,
+      grandparent: target.parentElement?.parentElement ? _inspectElementNode(target.parentElement.parentElement) : null,
+      ancestors: _collectAncestorIdentity(target),
       computed: style ? {
         display: style.display || "",
+        visibility: style.visibility || "",
+        opacity: style.opacity || "",
         position: style.position || "",
         zIndex: style.zIndex || "",
       } : null,
@@ -589,6 +595,7 @@
     const hostRect = host.getBoundingClientRect?.() || { left: 0, top: 0, width: 0, height: 0 };
     const canvasRect = canvas?.getBoundingClientRect?.() || { left: 0, top: 0, width: 0, height: 0 };
     const canvasStyle = canvas ? getComputedStyle(canvas) : null;
+    const containerStyle = host ? getComputedStyle(host) : null;
     const centerStack = _collectSphereCenterStack(host);
     const viewportW = window.innerWidth || 0;
     const viewportH = window.innerHeight || 0;
@@ -616,8 +623,9 @@
     );
     const camera = rendererDiag.cameraPosition || null;
     const cameraValid = !!camera && Number.isFinite(Number(rendererDiag.cameraNear || 0)) && Number.isFinite(Number(rendererDiag.cameraFar || 0)) && Number(rendererDiag.cameraFar || 0) > Number(rendererDiag.cameraNear || 0);
-    const contextExists = !!(renderer?.getRenderer?.()?.getContext?.() || rendererDiag.webglAvailable);
-    const contextLost = rendererDiag.stageState?.context === "lost" || rendererDiag.contextLost === true;
+    const glContext = renderer?.getRenderer?.()?.getContext?.() || null;
+    const contextExists = !!(glContext || rendererDiag.webglAvailable);
+    const contextLost = rendererDiag.stageState?.context === "lost" || rendererDiag.contextLost === true || !!glContext?.isContextLost?.();
     const currentGeneration = Number(_state._3dInitGeneration || 0);
     const diagnostics = {
       container: {
@@ -630,6 +638,17 @@
           height: Number(hostRect.height || 0),
           right: Number(hostRect.right || 0),
           bottom: Number(hostRect.bottom || 0),
+        },
+        style: {
+          display: containerStyle?.display || "",
+          visibility: containerStyle?.visibility || "",
+          opacity: containerStyle?.opacity || "",
+          position: containerStyle?.position || "",
+          zIndex: containerStyle?.zIndex || "",
+          overflow: containerStyle?.overflow || "",
+          transform: containerStyle?.transform || "",
+          contain: containerStyle?.contain || "",
+          contentVisibility: containerStyle?.contentVisibility || "",
         },
       },
       canvas: {
@@ -662,8 +681,14 @@
         },
       },
       renderer: {
-        reportedSize: `${Math.round(Number(rendererDiag.rendererSizeWidth || rendererDiag.canvasClientWidth || 0))}x${Math.round(Number(rendererDiag.rendererSizeHeight || rendererDiag.canvasClientHeight || 0))}`,
-        drawingBuffer: `${Math.round(Number(rendererDiag.drawingBufferWidth || 0))}x${Math.round(Number(rendererDiag.drawingBufferHeight || 0))}`,
+        reportedSize: {
+          width: Math.round(Number(rendererDiag.rendererSizeWidth || rendererDiag.canvasClientWidth || 0)),
+          height: Math.round(Number(rendererDiag.rendererSizeHeight || rendererDiag.canvasClientHeight || 0)),
+        },
+        drawingBuffer: {
+          width: Math.round(Number(rendererDiag.drawingBufferWidth || 0)),
+          height: Math.round(Number(rendererDiag.drawingBufferHeight || 0)),
+        },
         contextExists,
         contextLost,
       },
@@ -692,19 +717,17 @@
     if (!(typeof HTMLCanvasElement !== "undefined" && canvas instanceof HTMLCanvasElement)) failures.push(RENDER_SURFACE_REASON.CANVAS_MISSING);
     if (canvas && !canvas.isConnected) failures.push(RENDER_SURFACE_REASON.CANVAS_NOT_CONNECTED);
     if (canvas && canvas.parentElement !== host) failures.push(RENDER_SURFACE_REASON.CANVAS_WRONG_PARENT);
-    if (Number(canvas?.width || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CANVAS_ZERO_ATTRIBUTE_WIDTH);
-    if (Number(canvas?.height || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CANVAS_ZERO_ATTRIBUTE_HEIGHT);
-    if (Number(canvasRect.width || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CANVAS_ZERO_CSS_WIDTH);
-    if (Number(canvasRect.height || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CANVAS_ZERO_CSS_HEIGHT);
-    if (canvasStyle?.display === "none") failures.push(RENDER_SURFACE_REASON.CANVAS_HIDDEN_DISPLAY);
-    if (canvasStyle?.visibility === "hidden") failures.push(RENDER_SURFACE_REASON.CANVAS_HIDDEN_VISIBILITY);
+    if (Number(canvas?.width || 0) <= 0 || Number(canvasRect.width || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CANVAS_ZERO_WIDTH);
+    if (Number(canvas?.height || 0) <= 0 || Number(canvasRect.height || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CANVAS_ZERO_HEIGHT);
+    if (canvasStyle?.display === "none") failures.push(RENDER_SURFACE_REASON.CANVAS_DISPLAY_NONE);
+    if (canvasStyle?.visibility === "hidden") failures.push(RENDER_SURFACE_REASON.CANVAS_VISIBILITY_HIDDEN);
     if (Number(canvasStyle?.opacity || 1) <= 0) failures.push(RENDER_SURFACE_REASON.CANVAS_ZERO_OPACITY);
     if (Number(hostRect.width || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CONTAINER_ZERO_WIDTH);
     if (Number(hostRect.height || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CONTAINER_ZERO_HEIGHT);
     if (!contextExists) failures.push(RENDER_SURFACE_REASON.WEBGL_CONTEXT_MISSING);
     if (contextLost) failures.push(RENDER_SURFACE_REASON.WEBGL_CONTEXT_LOST);
-    if (rendererDiag.stageState?.firstFrame !== "rendered") failures.push(RENDER_SURFACE_REASON.FIRST_FRAME_NOT_RENDERED);
-    if (Number(canvases.length || 0) !== 1) failures.push(RENDER_SURFACE_REASON.DUPLICATE_RENDER_SURFACE);
+    if (rendererDiag.stageState?.firstFrame !== "rendered") failures.push(RENDER_SURFACE_REASON.FIRST_FRAME_MISSING);
+    if (Number(canvases.length || 0) !== 1) failures.push(RENDER_SURFACE_REASON.DUPLICATE_CANVAS);
     if (expectedGeneration != null && Number(expectedGeneration) !== currentGeneration) failures.push(RENDER_SURFACE_REASON.STALE_RENDER_GENERATION);
     if (rendererDiag.initialized === false && _state._3dInitInProgress === false) failures.push(RENDER_SURFACE_REASON.RENDERER_DISPOSED);
     if (Number(rendererDiag.drawingBufferWidth || 0) <= 0 || Number(rendererDiag.drawingBufferHeight || 0) <= 0) failures.push(RENDER_SURFACE_REASON.DRAWING_BUFFER_ZERO);
@@ -755,6 +778,7 @@
         diagnostics: result.diagnostics,
       });
     }
+    _markRenderSurfaceCanvasTrace("after-validation", canvas);
     _state.lastRenderSurfaceVerification = result;
     return result;
   }
@@ -785,12 +809,14 @@
       `Requested renderer: ${_state.requestedRendererMode === "auto" ? "3D" : String(_state.requestedRendererMode || "auto").toUpperCase()}`,
       `Active renderer: ${_state.activeRendererMode || "unknown"}`,
       `Lifecycle: ${_state.rendererLifecycle || "unknown"}`,
-      `Failure: ${verification.reason || "none"}`,
+      `Validation: ${verification.healthy ? "PASS" : `FAIL (${verification.reason || "unknown"})`}`,
       `All failures: ${(verification.failures || []).join(", ") || "none"}`,
       `Container: ${Math.round(Number(_state._latestContainerSize?.w || 0))} × ${Math.round(Number(_state._latestContainerSize?.h || 0))}`,
       `Container client: ${Math.round(Number(verification.diagnostics?.container?.clientWidth || 0))} × ${Math.round(Number(verification.diagnostics?.container?.clientHeight || 0))}`,
       `Container rect: ${JSON.stringify(verification.diagnostics?.container?.rect || {})}`,
+      `Container style: ${JSON.stringify(verification.diagnostics?.container?.style || {})}`,
       `Canvas connected: ${verification.checks?.canvasConnected ? "yes" : "no"}`,
+      `Canvas parent: ${verification.diagnostics?.canvas?.parentElement?.tagName || "none"}#${verification.diagnostics?.canvas?.parentElement?.id || ""}`,
       `Canvas ownerDocument === document: ${verification.diagnostics?.canvas?.ownerDocumentIsCurrent ? "yes" : "no"}`,
       `Canvas CSS size: ${Math.round(Number(rendererDiag.canvasClientWidth || 0))} × ${Math.round(Number(rendererDiag.canvasClientHeight || 0))}`,
       `Canvas attr size: ${Math.round(Number(verification.diagnostics?.canvas?.width || 0))} × ${Math.round(Number(verification.diagnostics?.canvas?.height || 0))}`,
@@ -801,6 +827,7 @@
       `WebGL context lost: ${verification.diagnostics?.renderer?.contextLost ? "yes" : "no"}`,
       `Renderer generation: ${verification.diagnostics?.generation?.expected || 0} / current ${verification.diagnostics?.generation?.current || 0}`,
       `Canvas visible: ${verification.checks?.canvasVisible ? "yes" : "no"}`,
+      `Canvas count: ${Number(verification.canvasCount || 0)}`,
       `Elements over center:`,
       ...(verification.centerStack?.stack?.slice(0, 8).map(item => `  ${String(item.tagName || "").toUpperCase()}${item.id ? `#${item.id}` : ""}${item.className ? `.${String(item.className).split(/\s+/).filter(Boolean).join(".")}` : ""}`) || ["  (none)"]),
       `First frame: ${rendererDiag.stageState?.firstFrame === "rendered" ? "yes" : "no"}`,
@@ -811,6 +838,11 @@
       ...(bottomStack.map(item => `  ${String(item.tagName || "").toUpperCase()}${item.id ? `#${item.id}` : ""}${item.className ? `.${String(item.className).split(/\s+/).filter(Boolean).join(".")}` : ""} src=${item.absoluteUrl || item.src || "N/A"}`) || ["  (none)"]),
       `White-bar media element: ${bottomProbe?.element ? `${String(bottomProbe.element.tagName || "").toUpperCase()}#${bottomProbe.element.id || ""}.${String(bottomProbe.element.className || "").split(/\s+/).filter(Boolean).join(".")}` : "none"}`,
       `White-bar media source: ${bottomProbe?.absoluteUrl || bottomProbe?.originalSrc || "N/A"}`,
+      `White-bar media parent: ${bottomProbe?.parent ? `${String(bottomProbe.parent.tagName || "").toUpperCase()}#${bottomProbe.parent.id || ""}.${String(bottomProbe.parent.className || "").split(/\s+/).filter(Boolean).join(".")}` : "N/A"}`,
+      `White-bar media grandparent: ${bottomProbe?.grandparent ? `${String(bottomProbe.grandparent.tagName || "").toUpperCase()}#${bottomProbe.grandparent.id || ""}.${String(bottomProbe.grandparent.className || "").split(/\s+/).filter(Boolean).join(".")}` : "N/A"}`,
+      `White-bar media computed: ${JSON.stringify(bottomProbe?.computed || {})}`,
+      `White-bar media ancestors: ${(bottomProbe?.ancestors || []).map(item => `${item.tagName}${item.id ? `#${item.id}` : ""}${item.className ? `.${String(item.className).split(/\s+/).filter(Boolean).join(".")}` : ""}`).join(" → ") || "none"}`,
+      `Canvas connectivity trace: ${(Array.isArray(_state.renderSurfaceCanvasTrace) ? _state.renderSurfaceCanvasTrace.map(item => `${item.stage}:${item.connected ? "connected" : "detached"}`).join(" | ") : "none") || "none"}`,
       `Duplicate canvases: ${Math.max(0, Number(verification.canvasCount || 0) - 1)}`,
       `Surface healthy: ${verification.healthy ? "yes" : `no (${verification.reason || "unknown"})`}`,
     ];
@@ -861,6 +893,19 @@
       generation: Number(_state._3dInitGeneration || 0),
     });
     if (_state.initTimeline.length > 80) _state.initTimeline.shift();
+  }
+
+  function _markRenderSurfaceCanvasTrace(stage, canvas) {
+    const node = canvas || document.querySelector?.("#sphere-container > canvas.living-time-sphere-3d-canvas");
+    _state.renderSurfaceCanvasTrace.push({
+      at: Date.now(),
+      stage: String(stage || "unknown"),
+      connected: !!node?.isConnected,
+      parentTag: node?.parentElement ? String(node.parentElement.tagName || "").toUpperCase() : null,
+      parentId: node?.parentElement?.id || null,
+      centerStack: !node?.isConnected ? _collectSphereCenterStack(document.getElementById("sphere-container")) : null,
+    });
+    if (_state.renderSurfaceCanvasTrace.length > 40) _state.renderSurfaceCanvasTrace.shift();
   }
 
   function _captureClassListSnapshot() {
@@ -2385,7 +2430,7 @@
       }
       _state._3dInitInProgress = true;
       const initGeneration = ++_state._3dInitGeneration;
-      _markInitTimeline("renderer-init-requested", { generation: initGeneration });
+      _markInitTimeline("3d-initialization-requested", { generation: initGeneration });
       _setRendererLifecycle("initializing");
       _state.activeRendererMode = "initializing-3d";
       _updateRendererLabel("Loading 3D renderer…");
@@ -2397,7 +2442,7 @@
       let result;
       try {
         const hasStableSize = await _waitForValidContainer(container);
-        _markInitTimeline("container-measured", {
+        _markInitTimeline("container-first-measurable-size", {
           generation: initGeneration,
           width: Number(container?.clientWidth || 0),
           height: Number(container?.clientHeight || 0),
@@ -2411,7 +2456,7 @@
             detail: "Renderer container did not reach a valid layout size in time.",
           };
         } else {
-          _markInitTimeline("renderer-init-start", { generation: initGeneration });
+          _markInitTimeline("3d-initialization-start", { generation: initGeneration });
           result = await _withTimeout(renderer.init({
           container,
           model,
@@ -2439,7 +2484,7 @@
             _state.activeRendererMode = "recovering";
             _setRendererLifecycle("failed");
             _updateRendererLabel("3D context lost — falling back");
-            _showRendererFallbackWarning("CONTEXT_LOST", "WebGL context was lost after initialization.");
+            _showRendererFallbackWarning("WEBGL_CONTEXT_LOST", "WebGL context was lost after initialization.");
             _setSphereLoaderVisibility(container, false);
             renderSphere(container);
           },
@@ -2477,7 +2522,7 @@
             renderSphere(container);
           }
           }), 25000);
-          _markInitTimeline("renderer-init-complete", { generation: initGeneration, success: !!result?.success, reason: result?.reason || null });
+          _markInitTimeline("3d-initialization-complete", { generation: initGeneration, success: !!result?.success, reason: result?.reason || null });
         }
       } catch (err) {
         result = { success: false, reason: "init-exception", detail: String(err) };
@@ -2517,20 +2562,22 @@
       }
       container.querySelectorAll(".living-time-sphere-svg,.living-time-sphere-canvas").forEach(node => node.remove());
       _pruneInvalidSphereMedia(container, "svg-handoff-invalid-media");
+      _markRenderSurfaceCanvasTrace("after-svg-cleanup");
       _setSphereLoaderVisibility(container, false);
-      _markInitTimeline("handoff-cleanup-complete", { generation: initGeneration });
+      _markInitTimeline("svg-removed", { generation: initGeneration });
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       _markInitTimeline("post-layout-raf", { generation: initGeneration });
       globalThis.LivingTimeSphereRenderer3d?.requestSingleRender?.();
-      _markInitTimeline("first-frame-validated", { generation: initGeneration });
+      _markInitTimeline("first-frame-acknowledged", { generation: initGeneration });
       const surfaceCheck = _verifyRenderSurface(container, { requireVisibleCenter: false, expectedGeneration: initGeneration });
+      _markRenderSurfaceCanvasTrace("after-validation");
       _markInitTimeline("surface-validation", { generation: initGeneration, healthy: !!surfaceCheck?.healthy, reason: surfaceCheck?.reason || null });
       if (!surfaceCheck.healthy) {
         _state.active3d = false;
         _state.activeRendererMode = "recovering";
         _setRendererLifecycle("failed");
         _updateRendererLabel(`SVG fallback — render surface invalid (${surfaceCheck.reason || "unknown"})`);
-        _showRendererFallbackWarning(surfaceCheck.reason || "RENDER_SURFACE_INVALID", (surfaceCheck.failures || []).join(", ") || "render-surface-check-failed");
+        _showRendererFallbackWarning(surfaceCheck.reason || (surfaceCheck.failures || [])[0] || "CANVAS_MISSING", (surfaceCheck.failures || []).join(", ") || "render-surface-check-failed");
         const layout = globalThis.LivingTimeSphereLayout.resolveLayout({
           containerWidth:  container.offsetWidth  || 320,
           containerHeight: container.offsetHeight || 320,
@@ -2550,6 +2597,8 @@
       _state.retryCount = 0;
       _clearAutoRetry();
       _setRendererLifecycle("rendered");
+      _markInitTimeline("3d-marked-active", { generation: initGeneration });
+      _markRenderSurfaceCanvasTrace("after-lifecycle-transition");
       _updateRendererLabel("WebGL 3D active");
       _hideRendererFallbackWarning();
       _setSphereLoaderVisibility(container, false);
@@ -2649,6 +2698,7 @@
   }
 
   function _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode) {
+    _markInitTimeline("svg-fallback-mount", { generation: Number(_state._3dInitGeneration || 0) });
     _setSphereLoaderVisibility(container, false);
     // Canvas fallback
     if (_state.useCanvas && globalThis.LivingTimeSphereRendererCanvas?.isCanvasSupported?.()) {
@@ -2757,8 +2807,29 @@
     _set("sphere-diag-fallback-warn",       reasonCode || "none");
     _set("sphere-diag-surface-failure-code-warn", surface?.reason || "none");
     _set("sphere-diag-surface-failures-warn", Array.isArray(surface?.failures) && surface.failures.length ? surface.failures.join(", ") : "none");
-    _set("sphere-diag-surface-container-warn", `client ${Math.round(Number(surface?.diagnostics?.container?.clientWidth || 0))}×${Math.round(Number(surface?.diagnostics?.container?.clientHeight || 0))} · rect ${Math.round(Number(surface?.diagnostics?.container?.rect?.width || 0))}×${Math.round(Number(surface?.diagnostics?.container?.rect?.height || 0))}`);
-    _set("sphere-diag-surface-canvas-warn", `attr ${Math.round(Number(surface?.diagnostics?.canvas?.width || 0))}×${Math.round(Number(surface?.diagnostics?.canvas?.height || 0))} · css ${Math.round(Number(surface?.diagnostics?.canvas?.clientWidth || 0))}×${Math.round(Number(surface?.diagnostics?.canvas?.clientHeight || 0))} · connected ${surface?.diagnostics?.canvas?.isConnected ? "yes" : "no"}`);
+    _set("sphere-diag-surface-container-warn", JSON.stringify({
+      clientWidth: Math.round(Number(surface?.diagnostics?.container?.clientWidth || 0)),
+      clientHeight: Math.round(Number(surface?.diagnostics?.container?.clientHeight || 0)),
+      rect: surface?.diagnostics?.container?.rect || {},
+      style: surface?.diagnostics?.container?.style || {},
+    }));
+    _set("sphere-diag-surface-canvas-warn", JSON.stringify({
+      width: Math.round(Number(surface?.diagnostics?.canvas?.width || 0)),
+      height: Math.round(Number(surface?.diagnostics?.canvas?.height || 0)),
+      clientWidth: Math.round(Number(surface?.diagnostics?.canvas?.clientWidth || 0)),
+      clientHeight: Math.round(Number(surface?.diagnostics?.canvas?.clientHeight || 0)),
+      rect: surface?.diagnostics?.canvas?.rect || {},
+      isConnected: !!surface?.diagnostics?.canvas?.isConnected,
+      parent: surface?.diagnostics?.canvas?.parentElement || null,
+      style: surface?.diagnostics?.canvas?.style || {},
+      rendererSize: surface?.diagnostics?.renderer?.reportedSize || null,
+      drawingBuffer: surface?.diagnostics?.renderer?.drawingBuffer || null,
+      dpr: Number(surface?.diagnostics?.devicePixelRatio || 1),
+      firstFrameComplete: !!surface?.diagnostics?.firstFrameComplete,
+      sceneObjects: Number(surface?.diagnostics?.scene?.objectCount || 0),
+      camera: surface?.diagnostics?.camera || null,
+      canvasCount: Number(surface?.diagnostics?.canvasCount || surface?.canvasCount || 0),
+    }));
     _set("sphere-diag-surface-generation-warn", `${Number(surface?.diagnostics?.generation?.expected || 0)} / current ${Number(surface?.diagnostics?.generation?.current || 0)}`);
     _set("sphere-diag-init-duration-warn",  diag.initDurationMs != null ? `${diag.initDurationMs}ms` : "—");
     _set("sphere-diag-restore-attempts-warn", String(diag.restoreAttempts || 0));
@@ -2915,7 +2986,11 @@
       "sphere-diag-surface-center-stack": Array.isArray(surface.centerStack?.stack) && surface.centerStack.stack.length
         ? surface.centerStack.stack.slice(0, 4).map(item => `${String(item.tagName || "").toUpperCase()}${item.className ? `.${String(item.className).split(/\s+/).filter(Boolean).join(".")}` : ""}`).join(" → ")
         : "none",
-      "sphere-diag-surface-init-timeline": (_state.initTimeline || []).slice(-8).map(item => `${item.stage}@${item.generation}`).join(" → ") || "none",
+      "sphere-diag-surface-init-timeline": [
+        ...((_state.initTimeline || []).slice(-8).map(item => `${item.stage}@${item.generation}`)),
+        ...((diag.initTimeline || []).slice(-12).map(item => item.stage)),
+        ...((_state.renderSurfaceCanvasTrace || []).slice(-8).map(item => `${item.stage}:${item.connected ? "ok" : "lost"}`)),
+      ].join(" → ") || "none",
       "sphere-diag-surface-first-failure": _state.firstRenderSurfaceFailure
         ? `${_state.firstRenderSurfaceFailure.reason} · ${(Array.isArray(_state.firstRenderSurfaceFailure.failures) ? _state.firstRenderSurfaceFailure.failures.join(", ") : "none")}`
         : "none",
@@ -4039,8 +4114,8 @@
 
     const container = document.getElementById("sphere-container");
     if (!container) return;
-    _markInitTimeline("dom-ready", { href: typeof location !== "undefined" ? location.href : "" });
-    _markInitTimeline("component-mount", {
+    _markInitTimeline("DOMContentLoaded", { href: typeof location !== "undefined" ? location.href : "" });
+    _markInitTimeline("sphere-component-mount", {
       width: Number(container.clientWidth || 0),
       height: Number(container.clientHeight || 0),
     });
@@ -4119,7 +4194,7 @@
     // Defer first render by one animation frame so the container has a
     // stable, non-zero bounding rect before 3D dimensions are measured.
     requestAnimationFrame(() => {
-      _markInitTimeline("first-raf", {
+      _markInitTimeline("first-request-animation-frame", {
         width: Number(container.clientWidth || 0),
         height: Number(container.clientHeight || 0),
       });
@@ -4201,6 +4276,7 @@
       selectedUpdateLastWatchdog: _state.selectedUpdateLastWatchdog || null,
       renderSurfaceVerification: _state.lastRenderSurfaceVerification || _verifyRenderSurface(container, { requireVisibleCenter: false }),
       firstRenderSurfaceFailure: _state.firstRenderSurfaceFailure || null,
+      renderSurfaceCanvasTrace: (_state.renderSurfaceCanvasTrace || []).slice(-40),
       initTimeline: (_state.initTimeline || []).slice(-80),
       runtimeDebug: _collectRuntimeDebugSnapshot(),
       actionTrace: (_state.actionTrace || []).slice(-60),

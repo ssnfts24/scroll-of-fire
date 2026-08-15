@@ -246,10 +246,14 @@
       CANVAS_MISSING: "Render surface missing: WebGL canvas was not found.",
       CANVAS_NOT_CONNECTED: "Render surface invalid: canvas is detached from the document.",
       CANVAS_WRONG_PARENT: "Render surface invalid: canvas parent is not the sphere host.",
-      CANVAS_ZERO_ATTRIBUTE_WIDTH: "Render surface invalid: canvas width attribute is zero.",
-      CANVAS_ZERO_ATTRIBUTE_HEIGHT: "Render surface invalid: canvas height attribute is zero.",
-      CANVAS_ZERO_CSS_WIDTH: "Render surface invalid: canvas CSS width is zero.",
-      CANVAS_ZERO_CSS_HEIGHT: "Render surface invalid: canvas CSS height is zero.",
+      CANVAS_ZERO_WIDTH: "Render surface invalid: canvas width is zero.",
+      CANVAS_ZERO_HEIGHT: "Render surface invalid: canvas height is zero.",
+      CANVAS_DISPLAY_NONE: "Render surface invalid: canvas display is none.",
+      CANVAS_VISIBILITY_HIDDEN: "Render surface invalid: canvas visibility is hidden.",
+      CANVAS_ZERO_ATTRIBUTE_WIDTH: "Render surface invalid: canvas width is zero.",
+      CANVAS_ZERO_ATTRIBUTE_HEIGHT: "Render surface invalid: canvas height is zero.",
+      CANVAS_ZERO_CSS_WIDTH: "Render surface invalid: canvas width is zero.",
+      CANVAS_ZERO_CSS_HEIGHT: "Render surface invalid: canvas height is zero.",
       CANVAS_HIDDEN_DISPLAY: "Render surface invalid: canvas display is none.",
       CANVAS_HIDDEN_VISIBILITY: "Render surface invalid: canvas visibility is hidden.",
       CANVAS_ZERO_OPACITY: "Render surface invalid: canvas opacity is zero.",
@@ -257,8 +261,10 @@
       CONTAINER_ZERO_HEIGHT: "Render surface invalid: container height is zero.",
       WEBGL_CONTEXT_MISSING: "Render surface invalid: WebGL context is missing.",
       WEBGL_CONTEXT_LOST: "Render surface invalid: WebGL context is lost.",
+      FIRST_FRAME_MISSING: "Render surface invalid: first frame never completed.",
       FIRST_FRAME_NOT_RENDERED: "Render surface invalid: first frame never completed.",
       CANVAS_COVERED: "Render surface invalid: canvas is covered by another element.",
+      DUPLICATE_CANVAS: "Render surface invalid: duplicate render surfaces detected.",
       DUPLICATE_RENDER_SURFACE: "Render surface invalid: duplicate render surfaces detected.",
       STALE_RENDER_GENERATION: "Render surface invalid: stale renderer generation detected.",
       RENDERER_DISPOSED: "Render surface invalid: renderer was disposed.",
@@ -267,7 +273,7 @@
       CAMERA_INVALID: "Render surface invalid: camera parameters are invalid.",
       BROKEN_MEDIA_IN_SURFACE: "Render surface invalid: broken media node exists in the sphere host.",
     };
-    return descriptions[reasonCode] ?? `Unknown reason: ${reasonCode}`;
+    return descriptions[reasonCode] ?? (reasonCode ? `Unclassified reason: ${reasonCode}` : "Unclassified reason");
   }
 
   // ── Context-loss guard factory ────────────────────────────────────

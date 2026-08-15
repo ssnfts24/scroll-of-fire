@@ -796,6 +796,8 @@
   display: block;
   width: 100%;
   height: 100%;
+  max-width: none;
+  max-height: none;
   border-radius: 0.5rem;
   cursor: grab;
   touch-action: pan-y; /* default: vertical scroll preserved */
@@ -1790,8 +1792,6 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   box-shadow: 0 0 0 3px rgba(120, 210, 255, 0.18);
   transition: outline-color 160ms ease, box-shadow 200ms ease;
 }
-.sphere-broken-resource-hidden { display:none !important; }
-.sphere-broken-resource-shell-hidden { display:none !important; }
 .sphere-moon-labels { contain:layout paint; }
 @media (max-width:620px){
   .sphere-moon-label{font-size:.68rem!important;max-width:7.5rem;overflow:hidden;text-overflow:ellipsis;}

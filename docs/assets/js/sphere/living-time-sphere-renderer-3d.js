@@ -101,6 +101,7 @@
   let _contextRestoredAt = 0;
   let _contextLossCount = 0;
   let _contextRestoreCount = 0;
+  const _initTimeline = [];
   const _stageState = {
     capability: "idle",
     module: "idle",
@@ -140,6 +141,25 @@
     _lifecycleCounters[key] += amount;
   }
 
+  function _pushInitTimeline(stage, payload = null) {
+    _initTimeline.push({
+      at: Date.now(),
+      stage: String(stage || "unknown"),
+      payload: payload && typeof payload === "object" ? { ...payload } : payload,
+      canvasConnected: !!_canvas?.isConnected,
+    });
+    if (_initTimeline.length > 120) _initTimeline.shift();
+  }
+
+  function _recordCanvasConnection(stage) {
+    _pushInitTimeline(`canvas-${stage}`, {
+      connected: !!_canvas?.isConnected,
+      parentTag: _canvas?.parentElement ? String(_canvas.parentElement.tagName || "").toUpperCase() : null,
+      parentId: _canvas?.parentElement?.id || null,
+      ownerDocumentIsCurrent: _canvas ? _canvas.ownerDocument === document : false,
+    });
+  }
+
   function _markLayerBuild(layer, durationMs) {
     if (!layer) return;
     _geometryBuildCountByLayer[layer] = Number(_geometryBuildCountByLayer[layer] || 0) + 1;
@@ -168,6 +188,8 @@
       className: node.className || "",
       reason,
       src: node.currentSrc || node.src || node.data || null,
+      parentTag: node.parentElement ? String(node.parentElement.tagName || "").toUpperCase() : null,
+      parentId: node.parentElement?.id || null,
       timestamp: Date.now(),
     };
     _hostContractIssues.push(entry);
@@ -187,17 +209,27 @@
   }
 
   function _enforceRendererHostContract(container = _container) {
-    if (!container?.children) return;
+    if (!container?.querySelectorAll) return;
     _hostContractCheckedAt = Date.now();
-    Array.from(container.children).forEach(child => {
-      if (_isUnexpectedHostMedia(child)) _collapseFailedHostResource(child);
+    const direct = Array.from(container.children || []);
+    const nested = Array.from(container.querySelectorAll("img,picture,source,object,iframe,embed,video"));
+    const seen = new Set();
+    [...direct, ...nested].forEach(child => {
+      if (!child || seen.has(child)) return;
+      seen.add(child);
+      if (_isUnexpectedHostMedia(child)) _collapseFailedHostResource(child, "unexpected-host-media");
     });
   }
 
   function _countUnexpectedHostChildren(container = _container) {
-    if (!container?.children) return 0;
+    if (!container?.querySelectorAll) return 0;
     let count = 0;
-    Array.from(container.children).forEach(child => {
+    const direct = Array.from(container.children || []);
+    const nested = Array.from(container.querySelectorAll("img,picture,source,object,iframe,embed,video"));
+    const seen = new Set();
+    [...direct, ...nested].forEach(child => {
+      if (!child || seen.has(child)) return;
+      seen.add(child);
       if (_isUnexpectedHostMedia(child)) count += 1;
     });
     return count;
@@ -2649,6 +2681,8 @@
     _contextRestoredAt = 0;
     _contextLossCount = 0;
     _contextRestoreCount = 0;
+    _initTimeline.length = 0;
+    _pushInitTimeline("renderer-init-requested", { containerConnected: !!container?.isConnected });
 
     try {
       assertDeps();
@@ -2698,8 +2732,28 @@
       // touch-action: pan-y by default — vertical page scroll preserved.
       _canvas.style.touchAction = "pan-y";
       container.appendChild(_canvas);
+      _recordCanvasConnection("after-append");
       _enforceRendererHostContract(container);
       _ensureFloatingLabel(container);
+      _pushInitTimeline("canvas-appended");
+
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      const rect = container.getBoundingClientRect();
+      const rawW = Number(rect.width || 0);
+      const rawH = Number(rect.height || 0);
+      _pushInitTimeline("container-first-measurable-size", { width: rawW, height: rawH });
+      if (rawW <= 0 || rawH <= 0) {
+        const reason = rawW <= 0 ? "CONTAINER_ZERO_WIDTH" : "CONTAINER_ZERO_HEIGHT";
+        _lastInitError = { reason, detail: `Container measured as ${rawW}x${rawH} before renderer creation.` };
+        if (_canvas && _canvas.parentNode) _canvas.parentNode.removeChild(_canvas);
+        _canvas = null;
+        _markStage("dimensions", "invalid");
+        _initEndedAt = performance.now();
+        return { success: false, reason, detail: _lastInitError.detail };
+      }
+      const w = Math.max(1, Math.round(rawW));
+      const h = Math.max(1, Math.round(rawH));
+      _markStage("dimensions", `${w}x${h}`);
 
       // ── Renderer ──────────────────────────────────────────────────
       // Use ObservatoryCapabilityManager.clampPixelRatio if a tier is known;
@@ -2722,6 +2776,7 @@
           );
       try {
         _markStage("renderer", "running");
+        _pushInitTimeline("three-webgl-renderer-create-requested");
         _renderer = new THREE.WebGLRenderer({
           canvas:    _canvas,
           antialias: quality.antialias !== false,
@@ -2739,6 +2794,7 @@
         return { success: false, reason, detail: String(err) };
       }
       _markStage("renderer", "created");
+      _pushInitTimeline("three-webgl-renderer-created");
 
       // Attach WebGL context-loss guard via ObservatoryCapabilityManager.
       // On context loss: stop the animation loop, mark renderer as not
@@ -2775,19 +2831,16 @@
       _appliedDpr = pixelRatio;
       _quality = quality;
 
-      // ── Camera ────────────────────────────────────────────────────
-      // Wait one rAF to ensure the container has stable layout dimensions.
-      await new Promise(resolve => requestAnimationFrame(resolve));
-      const rect = container.getBoundingClientRect();
-      const w    = Math.max(rect.width  || 320, 100);
-      const h    = Math.max(rect.height || 320, 100);
-      _markStage("dimensions", (w > 0 && h > 0) ? `${w}x${h}` : "invalid");
       _renderer.setSize(w, h);
+      _recordCanvasConnection("after-setsize");
+      _pushInitTimeline("renderer-set-size", { width: w, height: h });
 
+      // ── Camera ────────────────────────────────────────────────────
       _markStage("camera", "running");
       _camera = globalThis.LivingTimeSphereCamera.create(THREE, w, h);
       _countLifecycle("cameraCreateCount");
       _markStage("camera", "created");
+      _pushInitTimeline("camera-aspect-updated", { aspect: Number(_camera?.aspect || 0) });
       globalThis.LivingTimeSphereCamera.onChangeCallback(() => {
         _syncSemanticZoomFromCamera(false);
         _moonLabelManager?.markDirty();
@@ -2838,7 +2891,9 @@
       try {
         await new Promise((resolve, reject) => {
           requestAnimationFrame(() => {
+            _pushInitTimeline("first-request-animation-frame");
             try {
+              _pushInitTimeline("first-render-call");
               render(performance.now());
               resolve();
             } catch (e) {
@@ -2848,6 +2903,8 @@
         });
         _markStage("firstFrame", "rendered");
         _firstFrameTimestamp = Date.now();
+        _recordCanvasConnection("after-first-frame");
+        _pushInitTimeline("first-frame-completed");
         _probeFirstFramePixelHealth();
       } catch (err) {
         _markStage("firstFrame", "failed");
@@ -2881,6 +2938,7 @@
 
       _initialized = true;
       _lastInitError = null;
+      _recordCanvasConnection("lifecycle-transition-ready");
       _initEndedAt = performance.now();
       return { success: true };
 
@@ -3539,6 +3597,7 @@
     _loadPromise  = null; // allow Three.js reload after teardown
     _THREE        = null;
     _threeSource  = null;
+    _initTimeline.length = 0;
     for (const key of Object.keys(_objects)) delete _objects[key];
   }
 
@@ -3681,6 +3740,7 @@
       contextRestoredAt: Number(_contextRestoredAt || 0),
       contextLossCount: Number(_contextLossCount || 0),
       contextRestoreCount: Number(_contextRestoreCount || 0),
+      initTimeline: _initTimeline.slice(0, 120),
       firstFramePixelProbe: _firstFramePixelProbe ? { ..._firstFramePixelProbe } : null,
       lastInitError:     _lastInitError,
       semanticZoom: {
