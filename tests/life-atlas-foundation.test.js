@@ -733,3 +733,307 @@ test("repository filters civilDate patternDay and week independently", async () 
     2
   );
 });
+
+const Query = require(
+  "../docs/assets/js/life-atlas/life-atlas-query.js"
+);
+
+const Projections = require(
+  "../docs/assets/js/life-atlas/life-atlas-projections.js"
+);
+
+test("query engine resolves records for one temporal selection", async () => {
+  const repository =
+    Repository.createRepository();
+
+  const relations =
+    Relations.createRelationRepository();
+
+  const engine =
+    Query.createQueryEngine({
+      repository,
+      relations
+    });
+
+  await repository.put({
+    id: "event:selected-day",
+    type: "event",
+    temporal: {
+      civilDate: "2026-08-16",
+      patternYear: 2026,
+      moon: 5,
+      moonDay: 10,
+      patternDay: 122
+    }
+  });
+
+  await repository.put({
+    id: "event:other-day",
+    type: "event",
+    temporal: {
+      civilDate: "2026-08-17",
+      patternYear: 2026,
+      moon: 5,
+      moonDay: 11,
+      patternDay: 123
+    }
+  });
+
+  const records =
+    await engine.forTemporalSelection({
+      civilDate: "2026-08-16"
+    });
+
+  assert.equal(records.length, 1);
+
+  assert.equal(
+    records[0].id,
+    "event:selected-day"
+  );
+});
+
+test("query engine reconstructs connected context", async () => {
+  const repository =
+    Repository.createRepository();
+
+  const relations =
+    Relations.createRelationRepository();
+
+  const engine =
+    Query.createQueryEngine({
+      repository,
+      relations
+    });
+
+  await repository.put({
+    id: "project:scroll",
+    type: "project",
+    title: "Scroll"
+  });
+
+  await repository.put({
+    id: "artifact:t7",
+    type: "artifact",
+    title: "T7"
+  });
+
+  await relations.put({
+    fromId: "project:scroll",
+    toId: "artifact:t7",
+    type: "created"
+  });
+
+  const context =
+    await engine.connected(
+      "project:scroll"
+    );
+
+  assert.equal(
+    context.root.id,
+    "project:scroll"
+  );
+
+  assert.equal(
+    context.edges.length,
+    1
+  );
+
+  assert.equal(
+    context.records.length,
+    1
+  );
+
+  assert.equal(
+    context.records[0].id,
+    "artifact:t7"
+  );
+});
+
+test("same Pattern coordinate can return records across years", async () => {
+  const repository =
+    Repository.createRepository();
+
+  const relations =
+    Relations.createRelationRepository();
+
+  const engine =
+    Query.createQueryEngine({
+      repository,
+      relations
+    });
+
+  await repository.put({
+    id: "event:2025",
+    type: "event",
+    temporal: {
+      patternYear: 2025,
+      moon: 5,
+      moonDay: 10
+    }
+  });
+
+  await repository.put({
+    id: "event:2026",
+    type: "event",
+    temporal: {
+      patternYear: 2026,
+      moon: 5,
+      moonDay: 10
+    }
+  });
+
+  const records =
+    await engine.samePatternCoordinate({
+      moon: 5,
+      moonDay: 10
+    });
+
+  assert.equal(records.length, 2);
+});
+
+test("calendar projection groups multiple records into one day", () => {
+  const records = [
+    LifeAtlas.createLifeRecord({
+      id: "event:day",
+      type: "event",
+      temporal: {
+        civilDate: "2026-08-16",
+        patternDay: 122,
+        moon: 5,
+        moonDay: 10
+      }
+    }),
+
+    LifeAtlas.createLifeRecord({
+      id: "witness:day",
+      type: "witness",
+      temporal: {
+        civilDate: "2026-08-16",
+        patternDay: 122,
+        moon: 5,
+        moonDay: 10
+      }
+    })
+  ];
+
+  const days =
+    Projections.calendarProjection(
+      records
+    );
+
+  assert.equal(days.length, 1);
+  assert.equal(days[0].count, 2);
+  assert.equal(days[0].types.event, 1);
+  assert.equal(days[0].types.witness, 1);
+});
+
+test("timeline projection orders records by time", () => {
+  const records = [
+    LifeAtlas.createLifeRecord({
+      id: "event:later",
+      type: "event",
+      temporal: {
+        instant:
+          "2026-08-16T20:00:00Z"
+      }
+    }),
+
+    LifeAtlas.createLifeRecord({
+      id: "event:earlier",
+      type: "event",
+      temporal: {
+        instant:
+          "2026-08-16T18:00:00Z"
+      }
+    })
+  ];
+
+  const timeline =
+    Projections.timelineProjection(
+      records
+    );
+
+  assert.equal(
+    timeline[0].id,
+    "event:earlier"
+  );
+
+  assert.equal(
+    timeline[1].id,
+    "event:later"
+  );
+});
+
+test("map projection includes only spatial records", () => {
+  const records = [
+    LifeAtlas.createLifeRecord({
+      id: "place:located",
+      type: "place",
+      spatial: {
+        latitude: 47.6,
+        longitude: -122.3,
+        precision: "exact"
+      }
+    }),
+
+    LifeAtlas.createLifeRecord({
+      id: "note:no-location",
+      type: "note"
+    })
+  ];
+
+  const map =
+    Projections.mapProjection(
+      records
+    );
+
+  assert.equal(map.length, 1);
+
+  assert.equal(
+    map[0].id,
+    "place:located"
+  );
+});
+
+test("network projection preserves canonical relation edges", () => {
+  const records = [
+    LifeAtlas.createLifeRecord({
+      id: "project:scroll",
+      type: "project"
+    }),
+
+    LifeAtlas.createLifeRecord({
+      id: "artifact:t7",
+      type: "artifact"
+    })
+  ];
+
+  const relation =
+    Relations.createRelation({
+      id: "relation:created",
+      fromId: "project:scroll",
+      toId: "artifact:t7",
+      type: "created"
+    });
+
+  const network =
+    Projections.networkProjection(
+      records,
+      [relation]
+    );
+
+  assert.equal(
+    network.nodes.length,
+    2
+  );
+
+  assert.equal(
+    network.edges.length,
+    1
+  );
+
+  assert.equal(
+    network.edges[0].type,
+    "created"
+  );
+});
