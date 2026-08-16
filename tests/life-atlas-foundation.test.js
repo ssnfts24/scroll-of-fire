@@ -1491,3 +1491,117 @@ test("temporal query normalization preserves missing numeric coordinates as null
     once
   );
 });
+
+const IndexedDb = require(
+  "../docs/assets/js/life-atlas/life-atlas-indexeddb.js"
+);
+
+test("Life Atlas IndexedDB exposes versioned local-first stores", () => {
+  assert.equal(
+    IndexedDb.DB_NAME,
+    "codex-life-atlas"
+  );
+
+  assert.equal(
+    IndexedDb.DB_VERSION,
+    1
+  );
+
+  assert.deepEqual(
+    IndexedDb.STORES,
+    {
+      records: "records",
+      relations: "relations",
+      media: "media",
+      settings: "settings",
+      migrations: "migrations"
+    }
+  );
+});
+
+test("Life Atlas IndexedDB capability detection is explicit", () => {
+  assert.equal(
+    IndexedDb.hasIndexedDb(null),
+    false
+  );
+
+  assert.equal(
+    IndexedDb.hasIndexedDb({}),
+    false
+  );
+
+  assert.equal(
+    IndexedDb.hasIndexedDb({
+      open() {}
+    }),
+    true
+  );
+});
+
+test("IndexedDB diagnostics degrade safely when storage is unavailable", async () => {
+  const result =
+    await IndexedDb.diagnostics({
+      indexedDB: null
+    });
+
+  assert.equal(
+    result.available,
+    false
+  );
+
+  assert.equal(
+    result.opened,
+    false
+  );
+
+  assert.equal(
+    result.error,
+    null
+  );
+});
+
+test("persistent repository creation requires IndexedDB adapter", () => {
+  assert.throws(
+    () =>
+      Repository.createPersistentRepository({
+        IndexedDb: null
+      }),
+    /IndexedDb adapter is required/
+  );
+});
+
+test("persistent repository can be created with an IndexedDB-compatible adapter", async () => {
+  const memory =
+    Repository.createMemoryAdapter();
+
+  const fakeIndexedDb = {
+    createRecordAdapter() {
+      return memory;
+    }
+  };
+
+  const repository =
+    Repository.createPersistentRepository({
+      IndexedDb: fakeIndexedDb
+    });
+
+  await repository.put({
+    id: "event:persistent-contract",
+    type: "event",
+    title: "Persistent contract"
+  });
+
+  assert.equal(
+    await repository.count(),
+    1
+  );
+
+  assert.equal(
+    (
+      await repository.get(
+        "event:persistent-contract"
+      )
+    ).title,
+    "Persistent contract"
+  );
+});

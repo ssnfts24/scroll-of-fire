@@ -307,9 +307,36 @@
     });
   }
 
+  function createPersistentRepository(options = {}) {
+    const IndexedDb =
+      options.IndexedDb ||
+      (
+        typeof globalThis !== "undefined"
+          ? globalThis.CodexLifeAtlasIndexedDb
+          : null
+      );
+
+    if (
+      !IndexedDb ||
+      typeof IndexedDb.createRecordAdapter !== "function"
+    ) {
+      throw new Error(
+        "CodexLifeAtlasIndexedDb adapter is required."
+      );
+    }
+
+    return createRepository({
+      adapter:
+        IndexedDb.createRecordAdapter(
+          options
+        )
+    });
+  }
+
   return Object.freeze({
     createRepository,
     createMemoryAdapter,
+    createPersistentRepository,
     matches,
     normalizeQuery
   });
