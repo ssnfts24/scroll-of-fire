@@ -142,8 +142,8 @@ test("standalone Sphere ships the interactive Atlas as an offline app-shell feat
   assert.ok(html.includes('id="calendar-note-title"'));
   assert.ok(html.includes('id="calendar-local-agenda"'));
   assert.ok(html.includes('id="calendar-export-ics"'));
-  assert.ok(html.includes("living-time-calendar-workbench.js?v=20260815-6"));
-  assert.ok(html.includes("living-time-calendar-workbench.css?v=20260815-6"));
+  assert.ok(html.includes("living-time-calendar-workbench.js?v=20260816-3"));
+  assert.ok(html.includes("living-time-calendar-workbench.css?v=20260816-3"));
   assert.ok(sw.includes("./assets/js/sphere/living-time-calendar-workbench.js"));
   assert.ok(sw.includes("./assets/css/living-time-calendar-workbench.css"));
 });
